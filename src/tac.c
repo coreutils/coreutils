@@ -46,6 +46,7 @@ tac -r -s '.\|
 
 #include "error.h"
 #include "quote.h"
+#include "quotearg.h"
 #include "safe-read.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -230,11 +231,11 @@ tac_seekable (int input_fd, const char *file)
      in the input file. */
 
   if (lseek (input_fd, file_pos, SEEK_SET) < 0)
-    error (0, errno, _("%s: seek failed"), quote (file));
+    error (0, errno, _("%s: seek failed"), quotearg_colon (file));
 
   if (safe_read (input_fd, G_buffer, saved_record_size) != saved_record_size)
     {
-      error (0, errno, "%s", quote (file));
+      error (0, errno, _("%s: read error"), quotearg_colon (file));
       return false;
     }
 
@@ -327,7 +328,7 @@ tac_seekable (int input_fd, const char *file)
 	      file_pos = 0;
 	    }
 	  if (lseek (input_fd, file_pos, SEEK_SET) < 0)
-	    error (0, errno, _("%s: seek failed"), quote (file));
+	    error (0, errno, _("%s: seek failed"), quotearg_colon (file));
 
 	  /* Shift the pending record data right to make room for the new.
 	     The source and destination regions probably overlap.  */
@@ -341,7 +342,7 @@ tac_seekable (int input_fd, const char *file)
 
 	  if (safe_read (input_fd, G_buffer, read_size) != read_size)
 	    {
-	      error (0, errno, "%s", quote (file));
+	      error (0, errno, _("%s: read error"), quotearg_colon (file));
 	      return false;
 	    }
 	}
@@ -385,7 +386,7 @@ unlink_tempfile (void)
 }
 
 static void
-record_tempfile (const char *fn, FILE *fp)
+record_or_unlink_tempfile (char const *fn, FILE *fp)
 {
   if (!file_to_remove)
     {
@@ -395,14 +396,21 @@ record_tempfile (const char *fn, FILE *fp)
     }
 }
 
+#else
+
+static void
+record_or_unlink_tempfile (char const *fn, FILE *fp ATTRIBUTE_UNUSED)
+{
+  unlink (fn);
+}
+
 #endif
 
 /* Copy from file descriptor INPUT_FD (corresponding to the named FILE) to
    a temporary file, and set *G_TMP and *G_TEMPFILE to the resulting stream
-   and file name.  Exit upon any failure.  */
-/* FIXME: don't exit upon failure!!!  */
+   and file name.  Return true if successful.  */
 
-static void
+static bool
 copy_to_temp (FILE **g_tmp, char **g_tempfile, int input_fd, char const *file)
 {
   static char *template = NULL;
@@ -413,26 +421,43 @@ copy_to_temp (FILE **g_tmp, char **g_tempfile, int input_fd, char const *file)
 
   if (template == NULL)
     {
+      char const * const Template = "%s/tacXXXXXX";
       tempdir = getenv ("TMPDIR");
       if (tempdir == NULL)
 	tempdir = DEFAULT_TMPDIR;
-      template = xmalloc (strlen (tempdir) + 11);
+
+      /* Subtract 2 for `%s' and add 1 for the trailing NUL byte.  */
+      template = xmalloc (strlen (tempdir) + strlen (Template) - 2 + 1);
+      sprintf (template, Template, tempdir);
     }
-  sprintf (template, "%s/tacXXXXXX", tempdir);
+
+  /* FIXME: there's a small window between a successful mkstemp call
+     and the unlink that's performed by record_or_unlink_tempfile.
+     If we're interrupted in that interval, this code fails to remove
+     the temporary file.  On systems that define DONT_UNLINK_WHILE_OPEN,
+     the window is much larger -- it extends to the atexit-called
+     unlink_tempfile.
+     FIXME: clean up upon fatal signal.  Don't block them, in case
+     $TMPFILE is a remote file system.  */
+
   tempfile = template;
   fd = mkstemp (template);
   if (fd == -1)
-    error (EXIT_FAILURE, errno, "%s", quote (tempfile));
+    {
+      error (0, errno, _("cannot create temporary file %s"), quote (tempfile));
+      return false;
+    }
 
   tmp = fdopen (fd, "w+");
   if (tmp == NULL)
-    error (EXIT_FAILURE, errno, "%s", quote (tempfile));
+    {
+      error (0, errno, _("cannot open %s for writing"), quote (tempfile));
+      close (fd);
+      unlink (tempfile);
+      return false;
+    }
 
-#if DONT_UNLINK_WHILE_OPEN
-  record_tempfile (tempfile, tmp);
-#else
-  unlink (tempfile);
-#endif
+  record_or_unlink_tempfile (tempfile, tmp);
 
   while (1)
     {
@@ -440,18 +465,32 @@ copy_to_temp (FILE **g_tmp, char **g_tempfile, int input_fd, char const *file)
       if (bytes_read == 0)
 	break;
       if (bytes_read == SAFE_READ_ERROR)
-	error (EXIT_FAILURE, errno, _("%s: read error"), quote (file));
+	{
+	  error (0, errno, _("%s: read error"), quotearg_colon (file));
+	  goto Fail;
+	}
 
       if (fwrite (G_buffer, 1, bytes_read, tmp) != bytes_read)
-	error (EXIT_FAILURE, errno, "%s", quote (tempfile));
+	{
+	  error (0, errno, _("%s: write error"), quotearg_colon (tempfile));
+	  goto Fail;
+	}
     }
 
   if (fflush (tmp) != 0)
-    error (EXIT_FAILURE, errno, "%s", quote (tempfile));
+    {
+      error (0, errno, _("%s: write error"), quotearg_colon (tempfile));
+      goto Fail;
+    }
 
   SET_BINARY (fileno (tmp));
   *g_tmp = tmp;
   *g_tempfile = tempfile;
+  return true;
+
+ Fail:
+  fclose (tmp);
+  return false;
 }
 
 /* Copy INPUT_FD to a temporary, then tac that file.
@@ -511,7 +550,7 @@ tac_file (const char *filename)
 
   if (fd != STDIN_FILENO && close (fd) == -1)
     {
-      error (0, errno, _("closing %s"), quote (filename));
+      error (0, errno, _("%s: read error"), quotearg_colon (filename));
       ok = false;
     }
   return ok;
