@@ -1,4 +1,4 @@
-## Process this file with automake to produce Makefile.in
+## Process this file with automake to produce Makefile.in -*-Makefile-*-
 
 # Generate this list with
 # find . -type f -name '*.m4' -printf '%f\n'|sort |fmt |tr '\012' @ \
