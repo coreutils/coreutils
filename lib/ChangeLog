@@ -1,3 +1,7 @@
+2000-10-26  Jim Meyering  <meyering@lucent.com>
+
+	* strftime.c: Update from libc.
+
 2000-10-25  Jim Meyering  <meyering@lucent.com>
 
 	* obstack.c: Update from libc.
