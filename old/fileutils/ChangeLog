@@ -1,3 +1,12 @@
+2000-05-12  Jim Meyering  <meyering@lucent.com>
+
+	Unlike for mv, -i doesn't cancel the effect of -f
+	and -f doesn't cancel the effect of -i.
+	* src/cp.c (main) ['f']: Don't reset `x.interactive'.
+	['i']: Don't reset `x.force'.
+	* src/copy.c (copy_internal): Fix force and interactive tests.
+	Patch from Michael Stone, reported by Jeff Sheinberg.
+
 2000-05-09  Jim Meyering  <meyering@lucent.com>
 
 	* src/shred.c: Include sys/types.h in shred.c before including
