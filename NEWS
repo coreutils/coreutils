@@ -1,6 +1,6 @@
 [4.5.8]
-* stat accepts a new file format:
-  %B The size in bytes of each block reported by `%b'
+* du -S once again works like it did before the change in 4.5.5
+* stat accepts a new file format, %B, for the size of each block reported by %b
 * du accepts new option: --apparent-size
 * du --bytes (-b) works the same way it did in fileutils-3.16 and before
 * du reports proper sizes for directories (not zero) (broken in 4.5.6 or 4.5.7)
