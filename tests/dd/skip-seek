@@ -27,7 +27,8 @@ my $script_name = $ENV{SCRIPT_NAME};
 my @Tests =
     (
      [
-      'skip-seek-1', qw (bs=1 skip=1 seek=2 conv=notrunc count=3 of=@AUX@ < ),
+      'skip-seek-1',
+      qw (bs=1 skip=1 seek=2 conv=notrunc count=3 status=noxfer of=@AUX@ < ),
       {IN=> '0123456789abcdef'},
       {AUX=> 'zyxwvutsrqponmlkji'},
       {OUT=> ''},
@@ -35,7 +36,8 @@ my @Tests =
       {CMP=> ['zy123utsrqponmlkji', {'@AUX@'=> undef}]},
      ],
      [
-      'skip-seek-2', qw (bs=5 skip=1 seek=1 conv=notrunc count=1 of=@AUX@ < ),
+      'skip-seek-2',
+      qw (bs=5 skip=1 seek=1 conv=notrunc count=1 status=noxfer of=@AUX@ < ),
       {IN=> '0123456789abcdef'},
       {AUX=> 'zyxwvutsrqponmlkji'},
       {OUT=> ''},
@@ -43,7 +45,8 @@ my @Tests =
       {CMP=> ['zyxwv56789ponmlkji', {'@AUX@'=> undef}]},
      ],
      [
-      'skip-seek-3', qw (bs=5 skip=1 seek=1 count=1 of=@AUX@ < ),
+      'skip-seek-3',
+      qw (bs=5 skip=1 seek=1 count=1 status=noxfer of=@AUX@ < ),
       {IN=> '0123456789abcdef'},
       {AUX=> 'zyxwvutsrqponmlkji'},
       {OUT=> ''},
@@ -53,7 +56,7 @@ my @Tests =
      [
       # Before fileutils-4.0.45, the last 10 bytes of output
       # were these "\0\0\0\0\0\0\0\0  ".
-      'block-sync-1', qw(ibs=10 cbs=10), 'conv=block,sync', '<',
+      'block-sync-1', qw(ibs=10 cbs=10 status=noxfer), 'conv=block,sync', '<',
       {IN=> "01234567\nabcdefghijkl\n"},
       {OUT=> "01234567  abcdefghij          "},
       {ERR=> "2+1 records in\n0+1 records out\n1 truncated record\n"},
