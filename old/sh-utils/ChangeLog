@@ -1,3 +1,17 @@
+Sat Oct  5 11:38:23 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* acinclude.m4 (AC_HEADER_SYS_TIME_H): New macro.
+	(AM_FUNC_MKTIME): Require AC_HEADER_SYS_TIME_H so that configure's
+	checking... messages don't get nested.
+
+	* configure.in (GNU_PACKAGE): New variable.
+	(PACKAGE_VERSION): Remove it.
+
+	* acconfig.h (GNU_PACKAGE): New variable.
+	(PACKAGE_VERSION): Remove now-unused variable.
+
+	* src/*.c: Update --version output to conform to the coding standard.
+
 Sun Sep 22 22:41:54 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* configure.in (AC_CHECK_HEADERS): Alphabetize.
