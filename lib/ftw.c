@@ -636,7 +636,7 @@ base_name (char const *name)
 
 static int
 internal_function
-ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
+ftw_startup (const char *dir, int is_nftw, NFTW_FUNC_T func, int descriptors,
 	     int flags)
 {
   struct ftw_data data;
@@ -682,7 +682,7 @@ ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
      every case the callback using the format of the `nftw' version
      and get the correct result since the stack layout for a function
      call in C allows this.  */
-  data.func = (NFTW_FUNC_T) func;
+  data.func = func;
 
   /* Since we internally use the complete set of FTW_* values we need
      to reduce the value range before calling a `ftw' callback.  */
@@ -799,7 +799,7 @@ FTW_NAME (path, func, descriptors)
      FTW_FUNC_T func;
      int descriptors;
 {
-  return ftw_startup (path, 0, func, descriptors, 0);
+  return ftw_startup (path, 0, (NFTW_FUNC_T) func, descriptors, 0);
 }
 
 int
