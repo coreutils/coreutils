@@ -90,9 +90,9 @@ check: $(maint_gen)
 
 $(srcdir)/Makefile.am: ../Makefile.am.in Test.pm $(mk_script)
 	rm -f $@ $@t
-	sed -n '1,/^##test-files-begin/p' $< > $@t
+	sed -n '1,/^##test-files-begin/p' $(srcdir)/../Makefile.am.in > $@t
 	tool=`echo $(subdir)|sed 's/^tests.//;s/-test//'`; \
 	  echo "x = $$tool" >> $@t
 	$(PERL) -I$(srcdir) -w -- $(mk_script) $(srcdir) --list >> $@t
-	sed -n '/^##test-files-end/,$$p' $< >> $@t
+	sed -n '/^##test-files-end/,$$p' $(srcdir)/../Makefile.am.in >> $@t
 	mv $@t $@
