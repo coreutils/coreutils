@@ -52,9 +52,11 @@ fi
 
 set `ls -u a b c`
 test "$*" = 'c b a' && : || fail=1
+test $fail = 1 && ls -l --full-time --time=access a b c
 
 set `ls -t a b c`
 test "$*" = 'a b c' && : || fail=1
+test $fail = 1 && ls -l --full-time a b c
 
 # Now, C should have ctime more recent than A.
 set `ls -c a c`
