@@ -1,3 +1,21 @@
+Sun Oct 29 14:04:36 1995  Jim Meyering  (meyering@comco.com)
+
+	* paste.c (main): Move function body to end of file.
+	Remove forward dcls and protoize.
+	* sum.c (main): Likewise.
+	* nl.c: Protoize.  Reorder functions to obviate forward dcls.
+	Remove forward dcls.
+	* tac.c: Likewise.
+	* src/Makefile.in:
+
+	* sum.c (bsd_sum_file): Give file name parameter const attribute.
+	(sysv_sum_file): Likewise.
+
+	* tac.c (xwrite): Give output buffer parameter const attribute.
+	(output): Likewise for both parameters.
+	(tac): Likewise for file name parameter.
+	(tac_file): Likewise.
+
 Sat Oct 28 16:02:39 1995  Jim Meyering  (meyering@comco.com)
 
 	* md5sum.c (md5_check): Use the same message format when there is
@@ -17,7 +35,7 @@ Mon Oct 23 23:17:04 1995  Jim Meyering  (meyering@comco.com)
 
 	* lib/Makefile.in (INCLUDE, COMPILE): New variables.
 	(.c.o): Rewrite to be more like src/Makefile.in.
-	
+
 	* src/Makefile.in (distclean): Remove .deps.
 	Include @top_srcdir@/mkdep-Makefile.
 
