@@ -24,7 +24,6 @@ AC_DEFUN(jm_MACROS,
     fcntl.h \
     fenv.h \
     float.h \
-    langinfo.h \
     limits.h \
     memory.h \
     mntent.h \
@@ -57,6 +56,9 @@ AC_DEFUN(jm_MACROS,
     utime.h \
     values.h \
   )
+
+  AC_CHECK_HEADERS(langinfo.h)
+  AC_CHECK_FUNCS(nl_langinfo)
 
   jm_INCLUDED_REGEX([lib/regex.c])
 
