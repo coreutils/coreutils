@@ -15,7 +15,6 @@ cut: David Ihnat, David MacKenzie, Jim Meyering
 date: David MacKenzie
 dd: Paul Rubin, David MacKenzie, Stuart Kemp
 df: Torbjorn Granlund, David MacKenzie, Paul Eggert
-df: Torbjorn Granlund, David MacKenzie, Paul Eggert
 dir: Richard Stallman, David MacKenzie
 dircolors: H. Peter Anvin
 dirname: David MacKenzie, Jim Meyering
@@ -29,9 +28,8 @@ false: Jim Meyering
 fmt: Ross Paterson
 fold: David MacKenzie
 ginstall: David MacKenzie
-groups: chroot: Roland McGrath
+groups: David MacKenzie
 head: David MacKenzie, Jim Meyering
-hostid: Jim Meyering
 hostid: Jim Meyering
 hostname: Jim Meyering
 id: Arnold Robbins, David MacKenzie
@@ -47,13 +45,11 @@ mkfifo: David MacKenzie
 mknod: David MacKenzie
 mv: Mike Parker, David MacKenzie, Jim Meyering
 nice: David MacKenzie
-nice: David MacKenzie
 nl: Scott Bartram, David MacKenzie
 nohup: Jim Meyering
 od: Jim Meyering
 paste: David M. Ihnat, David MacKenzie
 pathchk: Paul Eggert, David MacKenzie, Jim Meyering
-pinky: Joseph Arceneaux, David MacKenzie, Kaveh Ghazi
 pinky: Joseph Arceneaux, David MacKenzie, Kaveh Ghazi
 pr: Pete TerMaat, Roland Huebner
 printenv: David MacKenzie, Richard Mlynarik
@@ -71,7 +67,6 @@ sort: Mike Haertel, Paul Eggert
 split: Torbjorn Granlund, Richard M. Stallman
 stat: Michael Meskes
 stty: David MacKenzie
-stty: David MacKenzie
 su: David MacKenzie
 sum: Kayvan Aghaiepour, David MacKenzie
 sync: Jim Meyering
@@ -85,17 +80,13 @@ true: Jim Meyering
 tsort: Mark Kettenis
 tty: David MacKenzie
 uname: David MacKenzie
-uname: David MacKenzie
 unexpand: David MacKenzie
 uniq: Richard Stallman, David MacKenzie
 unlink: Michael Stone
 uptime: Joseph Arceneaux, David MacKenzie, Kaveh Ghazi
-uptime: Joseph Arceneaux, David MacKenzie, Kaveh Ghazi
-users: Joseph Arceneaux, David MacKenzie
 users: Joseph Arceneaux, David MacKenzie
 vdir: Richard Stallman, David MacKenzie
 wc: Paul Rubin, David MacKenzie
-who: Joseph Arceneaux, David MacKenzie, Michael Stone
 who: Joseph Arceneaux, David MacKenzie, Michael Stone
 whoami: Richard Mlynarik
 yes: David MacKenzie
