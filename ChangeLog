@@ -1,6 +1,12 @@
-2004-10-18  Jim Meyering  <jim@meyering.net>
+2004-10-20  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.0.
+
+	* man/uniq.x: Change summary so that it doesn't imply that
+	uniq writes to its input file.  Problem reported by
+	Dan Jacobson.
+
+2004-10-18  Jim Meyering  <jim@meyering.net>
 
 	Plug a leak that would cause rm or a cross-device mv to fail when
 	operating on too many command-line-specified nonempty directories.
