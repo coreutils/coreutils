@@ -281,7 +281,7 @@ extern int errno;
 /* Sometimes both MIPS and sgi are defined, so FSCALE was just defined
    above under #ifdef MIPS.  But we want the sgi value.  */
 #   undef FSCALE
-#   define	FSCALE 1000.0
+#   define FSCALE 1000.0
 #  endif
 
 #  if defined (ardent) && defined (titan)
@@ -299,7 +299,7 @@ extern int errno;
 # endif	/* Not FSCALE.  */
 
 # if !defined (LDAV_CVT) && defined (FSCALE)
-#  define	LDAV_CVT(n) (((double) (n)) / FSCALE)
+#  define LDAV_CVT(n) (((double) (n)) / FSCALE)
 # endif
 
 /* VAX C can't handle multi-line #ifs, or lines longer that 256 characters.  */
