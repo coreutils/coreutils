@@ -1,4 +1,4 @@
-2001-03-16  Jim Meyering  <meyering@lucent.com>
+2001-03-17  Jim Meyering  <meyering@lucent.com>
 
 	* memcmp.m4 (jm_AC_FUNC_MEMCMP): Remove my copy of AC_FUNC_MEMCMP,
 	now that the version in autoconf is equivalent.
