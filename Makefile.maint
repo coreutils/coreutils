@@ -45,8 +45,8 @@ my-distcheck: dist
 	echo "$(distdir).tar.gz is ready for distribution"; \
 	echo "========================"
 
-THIS_VERSION_REGEXP := $(shell echo $(VERSION)|sed 's/\./\\./g')
-# FIXME: this works only for test releases.
+THIS_VERSION_REGEXP = $(subst .,\.,$(VERSION))
+# FIXME: this works only for Gnits-style test releases.
 PREV_VERSION := $(shell echo $(VERSION)|tr a-z Xa-y)
 PREV_VERSION_REGEXP := $(shell echo $(PREV_VERSION)|sed 's/\./\\./g')
 v = Version
