@@ -2,6 +2,9 @@
 
 	* Version 4.1.11.
 
+	* src/stat.c (usage): The short form of --dereference is now -L, not -l.
+	Reported by Kalle Olavi Niemitalo.
+
 	* src/rm.c: Add new option, --presume-input-tty, for testing only.
 	Not documented.
 
