@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2005-01-30.17}
+\def\texinfoversion{2005-02-19.15}
 %
 % Copyright (C) 1985, 1986, 1988, 1990, 1991, 1992, 1993, 1994, 1995,
 % 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005 Free Software
@@ -155,10 +155,12 @@
 
 % In some macros, we cannot use the `\? notation---the left quote is
 % in some cases the escape char.
+\chardef\backChar  = `\\
 \chardef\colonChar = `\:
 \chardef\commaChar = `\,
 \chardef\dotChar   = `\.
 \chardef\exclamChar= `\!
+\chardef\plusChar  = `\+
 \chardef\questChar = `\?
 \chardef\semiChar  = `\;
 \chardef\underChar = `\_
@@ -166,6 +168,12 @@
 \chardef\spaceChar = `\ %
 \chardef\spacecat = 10
 \def\spaceisspace{\catcode\spaceChar=\spacecat}
+
+{% for help with debugging.
+ % example usage: \expandafter\show\activebackslash
+ \catcode`\! = 0 \catcode`\\ = \active
+ !global!def!activebackslash{\}
+}
 
 % Ignore a token.
 %
@@ -566,7 +574,7 @@
 \let\}=\myrbrace
 \begingroup
   % Definitions to produce \{ and \} commands for indices,
-  % and @{ and @} for the aux file.
+  % and @{ and @} for the aux/toc files.
   \catcode`\{ = \other \catcode`\} = \other
   \catcode`\[ = 1 \catcode`\] = 2
   \catcode`\! = 0 \catcode`\\ = \other
@@ -647,13 +655,28 @@
 \let\/=\allowbreak
 
 % @. is an end-of-sentence period.
-\def\.{.\spacefactor=3000 }
+\def\.{.\spacefactor=\endofsentencespacefactor}
 
 % @! is an end-of-sentence bang.
-\def\!{!\spacefactor=3000 }
+\def\!{!\spacefactor=\endofsentencespacefactor}
 
 % @? is an end-of-sentence query.
-\def\?{?\spacefactor=3000 }
+\def\?{?\spacefactor=\endofsentencespacefactor}
+
+% @frenchspacing on|off  says whether to put extra space after punctuation.
+% 
+\def\onword{on}
+\def\offword{off}
+%
+\parseargdef\frenchspacing{%
+  \def\temp{#1}%
+  \ifx\temp\onword \plainfrenchspacing
+  \else\ifx\temp\offword \plainnonfrenchspacing
+  \else
+    \errhelp = \EMsimple
+    \errmessage{Unknown @frenchspacing option `\temp', must be on/off}%
+  \fi\fi
+}
 
 % @w prevents a word break.  Without the \leavevmode, @w at the
 % beginning of a paragraph, when TeX is still in vertical mode, would
@@ -1092,7 +1115,7 @@ where each line of input produces a line of output.}
 %
 \def\enddots{%
   \dots
-  \spacefactor=3000
+  \spacefactor=\endofsentencespacefactor
 }
 
 % @comma{} is so commas can be inserted into text without messing up
@@ -1176,7 +1199,62 @@ where each line of input produces a line of output.}
     \fi
   \fi
 \fi
-%
+
+% PDF uses PostScript string constants for the names of xref targets, to
+% for display in the outlines, and in other places.  Thus, we have to
+% double any backslashes.  Otherwise, a name like "\node" will be
+% interpreted as a newline (\n), followed by o, d, e.  Not good.
+% http://www.ntg.nl/pipermail/ntg-pdftex/2004-July/000654.html
+% (and related messages, the final outcome is that it is up to the TeX
+% user to double the backslashes and otherwise make the string valid, so
+% that's we do).
+
+% double active backslashes.
+% 
+{\catcode`\@=0 \catcode`\\=\active
+ @gdef@activebackslash{@catcode`@\=@active @otherbackslash}
+ @gdef@activebackslashdouble{%
+   @catcode@backChar=@active
+   @let\=@doublebackslash}
+}
+
+% To handle parens, we must adopt a different approach, since parens are
+% not active characters.  hyperref.dtx (which has the same problem as
+% us) handles it with this amazing macro to replace tokens.  I've
+% tinkered with it a little for texinfo, but it's definitely from there.
+% 
+% #1 is the tokens to replace.
+% #2 is the replacement.
+% #3 is the control sequence with the string.
+% 
+\def\HyPsdSubst#1#2#3{%
+  \def\HyPsdReplace##1#1##2\END{%
+    ##1%
+    \ifx\\##2\\%
+    \else
+      #2%
+      \HyReturnAfterFi{%
+        \HyPsdReplace##2\END
+      }%
+    \fi
+  }%
+  \xdef#3{\expandafter\HyPsdReplace#3#1\END}%
+}
+\long\def\HyReturnAfterFi#1\fi{\fi#1}
+
+% #1 is a control sequence in which to do the replacements.
+\def\backslashparens#1{%
+  \xdef#1{#1}% redefine it as its expansion; the definition is simply
+             % \lastnode when called from \setref -> \pdfmkdest.
+  \HyPsdSubst{(}{\backslashlparen}{#1}%
+  \HyPsdSubst{)}{\backslashrparen}{#1}%
+}
+
+{\catcode\exclamChar = 0 \catcode\backChar = \other
+ !gdef!backslashlparen{\(}%
+ !gdef!backslashrparen{\)}%
+}
+
 \ifpdf
   \input pdfcolor
   \pdfcatalog{/PageMode /UseOutlines}%
@@ -1201,13 +1279,19 @@ where each line of input produces a line of output.}
       \pdfrefximage \pdflastximage
     \fi}
   \def\pdfmkdest#1{{%
-    % We have to set dummies so commands such as @code in a section title
-    % aren't expanded.
+    % We have to set dummies so commands such as @code, and characters
+    % such as \, aren't expanded when present in a section title.
     \atdummies
-    \normalturnoffactive
-    \pdfdest name{#1} xyz%
-  }}
-  \def\pdfmkpgn#1{#1}
+    \turnoffactive
+    \activebackslashdouble
+    \def\pdfdestname{#1}%
+    \backslashparens\pdfdestname
+    \pdfdest name{\pdfdestname} xyz%
+  }}%
+  %
+  % used to mark target names; must be expandable.
+  \def\pdfmkpgn#1{#1}%
+  %
   \let\linkcolor = \Blue  % was Cyan, but that seems light?
   \def\endlink{\Black\pdfendlink}
   % Adding outlines to PDF; macros for calculating structure of outlines
@@ -1218,20 +1302,31 @@ where each line of input produces a line of output.}
     \advance\tempnum by 1
     \expandafter\xdef\csname#1\endcsname{\the\tempnum}}
   %
-  % #1 is the section text.  #2 is the pdf expression for the number
-  % of subentries (or empty, for subsubsections).  #3 is the node
-  % text, which might be empty if this toc entry had no
-  % corresponding node.  #4 is the page number.
+  % #1 is the section text, which is what will be displayed in the
+  % outline by the pdf viewer.  #2 is the pdf expression for the number
+  % of subentries (or empty, for subsubsections).  #3 is the node text,
+  % which might be empty if this toc entry had no corresponding node.
+  % #4 is the page number
   %
   \def\dopdfoutline#1#2#3#4{%
     % Generate a link to the node text if that exists; else, use the
     % page number.  We could generate a destination for the section
     % text in the case where a section has no node, but it doesn't
-    % seem worthwhile, since most documents are normally structured.
+    % seem worth the trouble, since most documents are normally structured.
     \def\pdfoutlinedest{#3}%
-    \ifx\pdfoutlinedest\empty \def\pdfoutlinedest{#4}\fi
+    \ifx\pdfoutlinedest\empty
+      \def\pdfoutlinedest{#4}%
+    \else
+      % Doubled backslashes in the name.
+      {\activebackslashdouble \xdef\pdfoutlinedest{#3}%
+       \backslashparens\pdfoutlinedest}%
+    \fi
     %
-    \pdfoutline goto name{\pdfmkpgn{\pdfoutlinedest}}#2{#1}%
+    % Also double the backslashes in the display string.
+    {\activebackslashdouble \xdef\pdfoutlinetext{#1}%
+     \backslashparens\pdfoutlinetext}%
+    %
+    \pdfoutline goto name{\pdfmkpgn{\pdfoutlinedest}}#2{\pdfoutlinetext}%
   }
   %
   \def\pdfmakeoutlines{%
@@ -1272,7 +1367,7 @@ where each line of input produces a line of output.}
       \def\unnsecentry{\numsecentry}%
       \def\unnsubsecentry{\numsubsecentry}%
       \def\unnsubsubsecentry{\numsubsubsecentry}%
-      \input \jobname.toc
+      \readdatafile{toc}%
       %
       % Read toc second time, this time actually producing the outlines.
       % The `-' means take the \expnumber as the absolute number of
@@ -1298,41 +1393,12 @@ where each line of input produces a line of output.}
       % their "best" equivalent, based on the @documentencoding.  Right
       % now, I guess we'll just let the pdf reader have its way.
       \indexnofonts
-      \turnoffactive
+      \setupdatafile
+      \activebackslash
       \input \jobname.toc
     \endgroup
   }
   %
-  \def\makelinks #1,{%
-    \def\params{#1}\def\E{END}%
-    \ifx\params\E
-      \let\nextmakelinks=\relax
-    \else
-      \let\nextmakelinks=\makelinks
-      \ifnum\lnkcount>0,\fi
-      \picknum{#1}%
-      \startlink attr{/Border [0 0 0]}
-        goto name{\pdfmkpgn{\the\pgn}}%
-      \linkcolor #1%
-      \advance\lnkcount by 1%
-      \endlink
-    \fi
-    \nextmakelinks
-  }
-  \def\picknum#1{\expandafter\pn#1}
-  \def\pn#1{%
-    \def\p{#1}%
-    \ifx\p\lbrace
-      \let\nextpn=\ppn
-    \else
-      \let\nextpn=\ppnn
-      \def\first{#1}
-    \fi
-    \nextpn
-  }
-  \def\ppn#1{\pgn=#1\gobble}
-  \def\ppnn{\pgn=\first}
-  \def\pdfmklnk#1{\lnkcount=0\makelinks #1,END,}
   \def\skipspaces#1{\def\PP{#1}\def\D{|}%
     \ifx\PP\D\let\nextsp\relax
     \else\let\nextsp\skipspaces
@@ -1749,14 +1815,21 @@ where each line of input produces a line of output.}
 % sometimes \x has an active definition that messes things up.
 %
 \catcode`@=11
-  \def\frenchspacing{%
+  \def\plainfrenchspacing{%
     \sfcode\dotChar  =\@m \sfcode\questChar=\@m \sfcode\exclamChar=\@m
     \sfcode\colonChar=\@m \sfcode\semiChar =\@m \sfcode\commaChar =\@m
+    \def\endofsentencespacefactor{1000}% for @. and friends
+  }
+  \def\plainnonfrenchspacing{%
+    \sfcode`\.3000\sfcode`\?3000\sfcode`\!3000
+    \sfcode`\:2000\sfcode`\;1500\sfcode`\,1250
+    \def\endofsentencespacefactor{3000}% for @. and friends
   }
 \catcode`@=\other
+\def\endofsentencespacefactor{3000}% default
 
 \def\t#1{%
-  {\tt \rawbackslash \frenchspacing #1}%
+  {\tt \rawbackslash \plainfrenchspacing #1}%
   \null
 }
 \def\samp#1{`\tclose{#1}'\null}
@@ -1793,7 +1866,7 @@ where each line of input produces a line of output.}
     \nohyphenation
     %
     \rawbackslash
-    \frenchspacing
+    \plainfrenchspacing
     #1%
   }%
   \null
@@ -1962,7 +2035,7 @@ where each line of input produces a line of output.}
 % 
 \def\abbr#1{\doabbr #1,,\finish}
 \def\doabbr#1,#2,#3\finish{%
-  {\frenchspacing #1}%
+  {\plainfrenchspacing #1}%
   \def\temp{#2}%
   \ifx\temp\empty \else
     \space ({\unsepspaces \ignorespaces \temp \unskip})%
@@ -3154,9 +3227,10 @@ where each line of input produces a line of output.}
   \commondummies
 }
 
-% For the aux file, @ is the escape character.  So we want to redefine
-% everything using @ instead of \realbackslash.  When everything uses
-% @, this will be simpler.
+% For the aux and toc files, @ is the escape character.  So we want to
+% redefine everything using @ as the escape character (instead of
+% \realbackslash, still used for index files).  When everything uses @,
+% this will be simpler.
 %
 \def\atdummies{%
   \def\@{@@}%
@@ -4482,11 +4556,11 @@ where each line of input produces a line of output.}
     \fi
     %
     \iflinks
-      \toks0 = {#2}%
-      \toks2 = \expandafter{\lastnode}%
-      \edef\temp{\write\tocfile{\realbackslash #1entry{\the\toks0}{#3}%
-                               {\the\toks2}{\noexpand\folio}}}%
-      \temp
+      {\atdummies \turnoffactive
+       \edef\temp{%
+         \write\tocfile{@#1entry{#2}{#3}{\lastnode}{\noexpand\folio}}}%
+       \temp
+      }
     \fi
   \fi
   %
@@ -4497,6 +4571,31 @@ where each line of input produces a line of output.}
   % two pages of the document.  Thus, we'd have two destinations named
   % `1', and two named `2'.
   \ifpdf \global\pdfmakepagedesttrue \fi
+}
+
+
+% These characters do not print properly in the Computer Modern roman
+% fonts, so we must take special care.  This is more or less redundant
+% with the Texinfo input format setup at the end of this file.
+% 
+\def\activecatcodes{%
+  \catcode`\"=\active
+  \catcode`\$=\active
+  \catcode`\<=\active
+  \catcode`\>=\active
+  \catcode`\\=\active
+  \catcode`\^=\active
+  \catcode`\_=\active
+  \catcode`\|=\active
+  \catcode`\~=\active
+}
+
+
+% Read the toc file, which is essentially Texinfo input.
+\def\readtocfile{%
+  \setupdatafile
+  \activecatcodes
+  \input \jobname.toc
 }
 
 \newskip\contentsrightmargin \contentsrightmargin=1in
@@ -4520,11 +4619,7 @@ where each line of input produces a line of output.}
   %
   \savepageno = \pageno
   \begingroup                  % Set up to handle contents files properly.
-    \catcode`\\=0  \catcode`\{=1  \catcode`\}=2  \catcode`\@=11
-    % We can't do this, because then an actual ^ in a section
-    % title fails, e.g., @chapter ^ -- exponentiation.  --karl, 9jul97.
-    %\catcode`\^=7 % to see ^^e4 as \"a etc. juha@piuha.ydi.vtt.fi
-    \raggedbottom             % Worry more about breakpoints than the bottom.
+    \raggedbottom              % Worry more about breakpoints than the bottom.
     \advance\hsize by -\contentsrightmargin % Don't use the full line length.
     %
     % Roman numerals for page numbers.
@@ -4537,7 +4632,7 @@ where each line of input produces a line of output.}
   \startcontents{\putwordTOC}%
     \openin 1 \jobname.toc
     \ifeof 1 \else
-      \input \jobname.toc
+      \readtocfile
     \fi
     \vfill \eject
     \contentsalignmacro % in case @setchapternewpage odd is in effect
@@ -4575,7 +4670,7 @@ where each line of input produces a line of output.}
     \let\unnsubsubsecentry = \numsecentry
     \openin 1 \jobname.toc
     \ifeof 1 \else
-      \input \jobname.toc
+      \readtocfile
     \fi
     \closein 1
     \vfill \eject
@@ -4765,6 +4860,7 @@ where each line of input produces a line of output.}
   \let\/=\ptexslash
   \let\*=\ptexstar
   \let\t=\ptext
+  \let\frenchspacing=\plainfrenchspacing
   %
   \def\endldots{\mathinner{\ldots\ldots\ldots\ldots}}%
   \def\enddots{\relax\ifmmode\endldots\else$\mathsurround=0pt \endldots\,$\fi}%
@@ -5902,7 +5998,6 @@ where each line of input produces a line of output.}
     {%
       \atdummies  % preserve commands, but don't expand them
       \turnoffactive
-      \otherbackslash
       \edef\writexrdef##1##2{%
 	\write\auxfile{@xrdef{#1-% #1 of \setref, expanded by the \edef
 	  ##1}{##2}}% these are parameters of \writexrdef
@@ -5956,13 +6051,17 @@ where each line of input produces a line of output.}
   \ifpdf
     \leavevmode
     \getfilename{#4}%
-    {\turnoffactive \otherbackslash
+    {\turnoffactive
+     % See comments at \activebackslashdouble.
+     {\activebackslashdouble \xdef\pdfxrefdest{#1}%
+      \backslashparens\pdfxrefdest}%
+     %
      \ifnum\filenamelength>0
        \startlink attr{/Border [0 0 0]}%
-         goto file{\the\filename.pdf} name{#1}%
+         goto file{\the\filename.pdf} name{\pdfxrefdest}%
      \else
        \startlink attr{/Border [0 0 0]}%
-         goto name{\pdfmkpgn{#1}}%
+         goto name{\pdfmkpgn{\pdfxrefdest}}%
      \fi
     }%
     \linkcolor
@@ -5976,7 +6075,6 @@ where each line of input produces a line of output.}
     % include an _ in the xref name, etc.
     \indexnofonts
     \turnoffactive
-    \otherbackslash
     \expandafter\global\expandafter\let\expandafter\Xthisreftitle
       \csname XR#1-title\endcsname
   }%
@@ -6011,7 +6109,7 @@ where each line of input produces a line of output.}
       % into the usual \leavevmode...\vrule stuff for purposes of
       % printing. So we \turnoffactive for the \refx-snt, back on for the
       % printing, back off for the \refx-pg.
-      {\turnoffactive \otherbackslash
+      {\turnoffactive
        % Only output a following space if the -snt ref is nonempty; for
        % @unnumbered and @anchor, it won't be.
        \setbox2 = \hbox{\ignorespaces \refx{#1-snt}{}}%
@@ -6024,7 +6122,7 @@ where each line of input produces a line of output.}
       ,\space
       %
       % output the `page 3'.
-      \turnoffactive \otherbackslash \putwordpage\tie\refx{#1-pg}{}%
+      \turnoffactive \putwordpage\tie\refx{#1-pg}{}%
     \fi
   \fi
   \endlink
@@ -6127,13 +6225,13 @@ where each line of input produces a line of output.}
 \def\tryauxfile{%
   \openin 1 \jobname.aux
   \ifeof 1 \else
-    \readauxfile
+    \readdatafile{aux}%
     \global\havexrefstrue
   \fi
   \closein 1
 }
 
-\def\readauxfile{\begingroup
+\def\setupdatafile{%
   \catcode`\^^@=\other
   \catcode`\^^A=\other
   \catcode`\^^B=\other
@@ -6202,11 +6300,11 @@ where each line of input produces a line of output.}
   %
   % Make the characters 128-255 be printing characters.
   {%
-    \count 1=128
+    \count1=128
     \def\loop{%
-      \catcode\count 1=\other
-      \advance\count 1 by 1
-      \ifnum \count 1<256 \loop \fi
+      \catcode\count1=\other
+      \advance\count1 by 1
+      \ifnum \count1<256 \loop \fi
     }%
   }%
   %
@@ -6214,10 +6312,13 @@ where each line of input produces a line of output.}
   \catcode`\{=1
   \catcode`\}=2
   \catcode`\@=0
-  %
-  \input \jobname.aux
-\endgroup}
+}
 
+\def\readdatafile#1{%
+\begingroup
+  \setupdatafile
+  \input\jobname.#1
+\endgroup}
 
 \message{insertions,}
 % including footnotes.
@@ -6564,7 +6665,7 @@ where each line of input produces a line of output.}
       % \floatlabel-lof.  Besides \floatident, we include the short
       % caption if specified, else the full caption if specified, else nothing.
       {%
-        \atdummies \turnoffactive \otherbackslash
+        \atdummies \turnoffactive
         % since we read the caption text in the macro world, where ^^M
         % is turned into a normal character, we have to scan it back, so
         % we don't write the literal three characters "^^M" into the aux file.
@@ -7009,8 +7110,9 @@ should work if nowhere else does.}
  @gdef@otherbackslash{@let\=@realbackslash}
 }
 
-% \realbackslash is an actual character `\' with catcode other.
-{\catcode`\\=\other @gdef@realbackslash{\}}
+% \realbackslash is an actual character `\' with catcode other, and
+% \doublebackslash is two of them (for the pdf outlines).
+{\catcode`\\=\other @gdef@realbackslash{\} @gdef@doublebackslash{\\}}
 
 % \normalbackslash outputs one backslash in fixed width font.
 \def\normalbackslash{{\tt\backslashcurfont}}
@@ -7053,7 +7155,7 @@ should work if nowhere else does.}
 % On the other hand, perhaps the file did not have a `\input texinfo'. Then
 % the first `\{ in the file would cause an error. This macro tries to fix
 % that, assuming it is called before the first `\' could plausibly occur.
-% Also back turn on active characters that might appear in the input
+% Also turn back on active characters that might appear in the input
 % file name, in case not using a pre-dumped format.
 %
 @gdef@fixbackslash{%
