@@ -2,6 +2,11 @@
 
 	* Version 5.2.1.
 
+2004-03-03  Paul Eggert  <eggert@twinsun.com>
+
+	* src/nohup.c (main): Don't invoke set_cloexec_flag with
+	a file descriptor of -1.
+
 2004-03-02  Dmitry V. Levin  <ldv@altlinux.org>
 
 	* src/nohup.c: Include "cloexec.h".
