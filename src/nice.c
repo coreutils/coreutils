@@ -140,7 +140,6 @@ main (int argc, char **argv)
       exit (0);
     }
 
-  printf ("adjustment = %d\n", adjustment);
 #ifndef NICE_PRIORITY
   errno = 0;
   current_priority = GET_PRIORITY ();
