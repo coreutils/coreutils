@@ -1,5 +1,10 @@
 1999-03-07  Jim Meyering  <meyering@ascend.com>
 
+	* lib/xmalloc.c (xalloc_fail): Use "%s" format so the message doesn't
+	have to be scanned for % signs.  Suggestion from François Pinard.
+
+	* Makefile.maint: Add two more URLs and the loops to use them.
+
 	* lib/long-options.c (parse_long_options): Include `Copyright...' line
 	in --version output.
 	Add the `...NO warranty...' message.
