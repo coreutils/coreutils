@@ -21,7 +21,6 @@
 #include <config.h>
 
 #include <stdio.h>
-#include <assert.h>
 #include <getopt.h>
 #include <sys/types.h>
 #include <signal.h>
@@ -768,12 +767,6 @@ process_line_count (const struct control *p, int repetition)
   create_output_file ();
 
   linenum = get_first_line_in_buffer ();
-
-  /* Initially, I wanted to assert linenum < last_line_to_save, but that
-     condition is false for the valid command: echo | csplit - 1 '{*}'.
-     So, relax it just a little.  */
-  assert ((linenum == 1 && last_line_to_save == 1)
-	  || linenum < last_line_to_save);
 
   while (linenum++ < last_line_to_save)
     {
