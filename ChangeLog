@@ -13,9 +13,6 @@
 
 	* NEWS: sort -t '\0' now uses a NUL tab.
 	sort option order no longer matters, unless POSIX requires it.
-	* doc/coreutils.texi (sort invocation): -d now overrides -i.
-	"whitespace" -> "blanks"; "whitespace" isn't correct.
-	-t '\0' now specifies a NUL tab.
 	* src/sort.c (usage): Say "blanks" instead of "whitespace",
 	Similar fixes for many comments.
 	(TAB_DEFAULT): New constant, so that we can support NUL as
