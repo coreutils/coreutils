@@ -1,6 +1,6 @@
 /* timespec -- System time interface
 
-   Copyright (C) 2000, 2002, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2002, 2004, 2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -65,7 +65,7 @@ struct timespec
 int nanosleep ();
 # endif
 
-int gettime (struct timespec *);
+void gettime (struct timespec *);
 int settime (struct timespec const *);
 
 #endif
