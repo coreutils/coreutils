@@ -729,7 +729,7 @@ recheck (struct File_spec *f)
 	   && !S_ISFIFO (new_stats.st_mode))
     {
       fail = 1;
-      f->errnum = -1;	/* FIXME */
+      f->errnum = -1;
       error (0, 0,
 	     _("`%s' has been replaced with a non-regular file;  \
 cannot follow end of non-regular file"),
@@ -750,8 +750,7 @@ cannot follow end of non-regular file"),
   else if (prev_errnum && prev_errnum != ENOENT)
     {
       new_file = 1;
-      /* FIXME-now: is this close ever necessary?  */
-      close_fd (f->fd, pretty_name (f)); /* close the old handle */
+      assert (f->fd == -1);
       error (0, 0, _("`%s' has become accessible"), pretty_name (f));
     }
   else if (f->ino != new_stats.st_ino || f->dev != new_stats.st_dev)
@@ -1102,7 +1101,7 @@ tail_file (struct File_spec *f, off_t n_units)
 	      error (0, 0, _("%s: cannot follow end of non-regular file"),
 		     pretty_name (f));
 	      errors = 1;
-	      f->errnum = -1;	/* FIXME */
+	      f->errnum = -1;
 	    }
 	  if (errors)
 	    {
