@@ -71,7 +71,7 @@ static int print_formatted __P ((char *format, int argc, char **argv));
 static long xstrtol __P ((char *s));
 static unsigned long xstrtoul __P ((char *s));
 static void print_direc __P ((char *start, size_t length, int field_width, int precision, char *argument));
-static void print_esc_char __P ((char c));
+static void print_esc_char __P ((int c));
 static void print_esc_string __P ((char *str));
 static void verify __P ((char *s, char *end));
 
@@ -314,7 +314,7 @@ print_esc (char *escstart)
 /* Output a single-character \ escape.  */
 
 static void
-print_esc_char (char c)
+print_esc_char (int c)
 {
   switch (c)
     {
