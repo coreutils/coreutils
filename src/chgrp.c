@@ -38,6 +38,7 @@
 #include "system.h"
 #include "xstrtoul.h"
 #include "error.h"
+#include "savedir.h"
 
 /* MAXUID may come from limits.h *or* sys/params.h (via system.h) above. */
 #ifndef MAXUID
@@ -66,7 +67,6 @@ enum Change_status
 };
 
 char *group_member ();
-char *savedir ();
 char *xmalloc ();
 char *xrealloc ();
 

@@ -25,6 +25,7 @@
 #include "modechange.h"
 #include "system.h"
 #include "error.h"
+#include "savedir.h"
 
 enum Change_status
 {
@@ -34,7 +35,6 @@ enum Change_status
 };
 
 void mode_string ();
-char *savedir ();
 void strip_trailing_slashes ();
 char *xmalloc ();
 char *xrealloc ();
