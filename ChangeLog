@@ -1,6 +1,32 @@
-2004-06-29  Jim Meyering  <jim@meyering.net>
+2004-06-29  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.0.
+
+	Add support for --no-target-directory option.
+
+	* NEWS: Document it.
+	* doc/coreutils.texi (Common options, Target directory, cp
+	invocation, install invocation, mv invocation, ln invocation):
+	Likewise.
+	(link invocation): Explain how to rewrite link using ln now
+	that we have --no-target-directory.
+	(ln invocation): Explain that --no-target-directory subsumes
+	--no-dereference.
+	(unlink invocation): Modify wording to match new wording in
+	link invocation.
+
+	* src/cp.c (NO_TARGET_DIRECTORY_OPTION): New constant.
+	(long_opts, usage, do_copy, main): Add support for
+	--no-target-directory,
+	* src/install.c (NO_TARGET_DIRECTORY_OPTION, long_options, main,
+	usage): Likewise.
+	* src/ln.c (NO_TARGET_DIRECTORY_OPTION, long_options, usage,
+	main): Likewise.
+	* src/mv.c (NO_TARGET_DIRECTORY_OPTION, long_options, usage,
+	main): Likewise.
+	* src/mv.c (enum): Sort values.
+
+2004-06-29  Jim Meyering  <jim@meyering.net>
 
 	Don't let verbose-mode output from a subshell obscure actual differences.
 	* tests/rm/inaccessible: Turn off command-echoing just before
