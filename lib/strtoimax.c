@@ -1,2 +1,2 @@
 #define STRTOUXMAX_SIGNED
-#include "strtouxmax.c"
+#include "strtoxmax.c"
