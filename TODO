@@ -1,3 +1,6 @@
 restore djgpp, eventually
 merge TODO lists
 add unit tests for lib/*.c
+
+strip: add an option to specify the program used to strip binaries.
+  suggestion from Karl Berry
