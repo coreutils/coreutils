@@ -1,3 +1,8 @@
+2003-07-22  Paul Eggert  <eggert@twinsun.com>
+
+	* xalloc.h (XCALLOC, XREALLOC, CCLONE): Fix under- and
+	over-parenthesization in macros.
+
 2003-07-18  Paul Eggert  <eggert@twinsun.com>
 
 	* closeout.h (close_stdout_set_status, close_stdout_status): Remove.
