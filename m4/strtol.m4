@@ -1,5 +1,5 @@
-# strtol.m4 serial 1
-dnl Copyright (C) 2002 Free Software Foundation, Inc.
+# strtol.m4 serial 2
+dnl Copyright (C) 2002, 2003 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
 dnl Public License, this file may be distributed as part of a program
@@ -17,6 +17,5 @@ AC_DEFUN([gl_FUNC_STRTOL],
 # Prerequisites of lib/strtol.c.
 AC_DEFUN([gl_PREREQ_STRTOL], [
   AC_REQUIRE([AC_HEADER_STDC])
-  AC_CHECK_HEADERS_ONCE(limits.h)
   AC_CHECK_FUNCS_ONCE(isascii)
 ])
