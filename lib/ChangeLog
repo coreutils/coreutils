@@ -1,3 +1,16 @@
+2003-05-05  Jim Meyering  <jim@meyering.net>
+
+	Avoid array overrun.
+	* ftw.c (nftw_arr): Update to reflect complete list of members.
+	(ftw_arr): Likewise
+	Reported by Olatunji Oluwabukunmi Ruwase.
+
+	Make it less likely that the above can happen again.
+	* ftw.c (struct dummy): Ensure that at least the number of
+	initializers matches the number of members in the corresponding enum.
+	* ftw_.h (enum Ftw_option): Name this previously-anonymous enum.
+	(enum Ftw_option) [FTW_N_MEMBERS]: New member.
+
 2003-05-04  Jim Meyering  <jim@meyering.net>
 
 	* setenv.c (__set_errno, LOCK, UNLOCK): Define.
