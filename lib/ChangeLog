@@ -1,3 +1,10 @@
+2003-10-14  Paul Eggert  <eggert@twinsun.com>
+
+	Fix some number-parsing bugs, e.g., "head -n 100k@" wasn't
+	properly diagnosed.
+	* human.c, xstrtoimax.c, xstrtol.c, xstrtol.h, xstrtoul.c, xstrtoumax.c:
+	Sync with gnulib.
+
 2003-10-13  Paul Eggert  <eggert@twinsun.com>
 
 	* xalloc.h, xmalloc.c, xstrdup.c: Import latest version from gnulib.
