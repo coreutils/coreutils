@@ -36,6 +36,12 @@
 # endif
 #endif
 
+/* Some pre-ANSI implementations (e.g. SunOS 4)
+   need stderr defined if assertion checking is enabled.  */
+#ifndef NDEBUG
+# include <stdio.h>
+#endif
+
 #include <assert.h>
 
 #include <errno.h>
