@@ -3,6 +3,7 @@
 	* obstack.c (_): Honor the setting of ENABLE_NLS.  Otherwise,
 	this code would end up calling gettext even in packages built
 	with --disable-nls.
+	* getopt.c (_): Likewise.
 
 2001-10-20  Paul Eggert  <eggert@twinsun.com>
 
