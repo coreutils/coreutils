@@ -635,14 +635,11 @@ It has been replaced with @w{@kbd{--backup}}.
 
 @cindex block size
 
-Some @sc{gnu} programs (at least @command{df}, @code{du}, and @code{ls}) display
-file sizes in ``blocks''.  You can adjust the block size to make file
-sizes easier to read.  The block size used for display is independent of
-any filesystem block size.
-
-Normally, disk usage sizes are rounded up, disk free space sizes are
-rounded down, and other sizes are rounded to the nearest value with ties
-rounding to an even value.
+Some @sc{gnu} programs (at least @command{df}, @code{du}, and
+@code{ls}) display sizes in ``blocks''.  You can adjust the block size
+and method of display to make sizes easier to read.  The block size
+used for display is independent of any filesystem block size.
+Fractional block counts are rounded up to the nearest integer.
 
 @opindex --block-size=@var{size}
 @vindex BLOCK_SIZE
@@ -672,8 +669,9 @@ variables are set, but this variable is set, the block size defaults to 512.
 @end table
 
 If none of the above environment variables are set, the block size
-currently defaults to 1024 bytes, but this number may change in the
-future.
+currently defaults to 1024 bytes in most contexts, but this number may
+change in the future.  For @command{ls} file sizes, the block size
+defaults to 1 byte.
 
 @cindex human-readable output
 @cindex SI output
@@ -693,13 +691,27 @@ powers of 1024; @samp{M} stands for 1,048,576 bytes.
 @code{BLOCK_SIZE=si} is similar, but uses powers of 1000 and appends
 @samp{B}; @samp{MB} stands for 1,000,000 bytes.
 
+@vindex LC_NUMERIC
+A block size specification preceded by @samp{'} causes output sizes to
+be displayed with thousands separators.  The @env{LC_NUMERIC} locale
+specifies the thousands separator and grouping.  For example, in an
+American English locale, @samp{--block-size="'1kB"} would cause a size
+of 1234000 bytes to be displayed as @samp{1,234}.  In the default C
+locale, there is no thousands separator so a leading @samp{'} has no
+effect.
+
 An integer block size can be followed by a suffix to specify a
-multiple of that size; in this case an omitted integer is understood
-to be 1.  A bare size letter, or one followed by @samp{iB}, specifies
+multiple of that size.  A bare size letter,
+or one followed by @samp{iB}, specifies
 a multiple using powers of 1024.  A size letter followed by @samp{B}
-specifies powers of 1000 instead.  For example, @samp{M} and
-@samp{MiB} are equivalent to @samp{1048576}, whereas @samp{MB} is
+specifies powers of 1000 instead.  For example, @samp{1M} and
+@samp{1MiB} are equivalent to @samp{1048576}, whereas @samp{1MB} is
 equivalent to @samp{1000000}.
+
+A plain suffix without a preceding integer acts as if @samp{1} were
+prepended, except that it causes a size indication to be appended to
+the output.  For example, @samp{--block-size="kB"} displays 3000 as
+@samp{3kB}.
 
 The following suffixes are defined.  Large sizes like @code{1Y}
 may be rejected by your computer due to limitations of its arithmetic.
@@ -2112,7 +2124,7 @@ before the output for each @var{file}.
 reverse), since reversing a file is really a different job from printing
 the end of a file; BSD @command{tail} (which is the one with @code{-r}) can
 only reverse files that are at most as large as its buffer, which is
-typically 32k.  A more reliable and versatile way to reverse files is
+typically 32 KiB.  A more reliable and versatile way to reverse files is
 the @sc{gnu} @command{tac} command.
 
 If any option-argument is a number @var{n} starting with a @samp{+},
@@ -4990,6 +5002,7 @@ provide this option for compatibility.)
 @cindex human-readable output
 Append a size letter to each size, such as @samp{M} for mebibytes.
 Powers of 1024 are used, not 1000; @samp{M} stands for 1,048,576 bytes.
+This option is equivalent to @option{--block-size=human} (@pxref{Block size}).
 Use the @option{--si} option if you prefer powers of 1000.
 
 @item -i
@@ -5009,9 +5022,15 @@ uniquely identifies each file within a particular filesystem.)
 @opindex long ls @r{format}
 @opindex verbose ls @r{format}
 In addition to the name of each file, print the file type, permissions,
-number of hard links, owner name, group name, size in bytes, and
+number of hard links, owner name, group name, size, and
 timestamp (@pxref{Formatting file timestamps}), normally
 the modification time.
+
+Normally the size is printed as a byte count without punctuation, but
+this can be overridden (@pxref{Block size}).  For example, @option{-h}
+prints an abbreviated, human-readable count, and
+@samp{--block-size="'1"} prints a byte count with the thousands
+separator of the current locale.
 
 For each directory that is listed, preface the files with a line
 @samp{total @var{blocks}}, where @var{blocks} is the total disk allocation
@@ -5089,7 +5108,9 @@ it also affects the HP-UX @command{ls} program.
 @cindex SI output
 Append an SI-style abbreviation to each size, such as @samp{MB} for
 megabytes.  Powers of 1000 are used, not 1024; @samp{MB} stands for
-1,000,000 bytes.  Use the @option{-h} or @option{--human-readable} option if
+1,000,000 bytes.  This option is equivalent to
+@option{--block-size=si}.  Use the @option{-h} or
+@option{--human-readable} option if
 you prefer powers of 1024.
 
 @end table
