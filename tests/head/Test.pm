@@ -38,6 +38,8 @@ my @tv = (
 # In spite of its name, this test passes -- just to contrast with the above.
 ['fail-1', '-n 2048m', "a\n", "a\n", 0],
 
+# Make sure we don't break like AIX 4.3.1 on files with \0 in them.
+['null-1', '', "a\0a\n", "a\0a\n", 0],
 );
 
 sub test_vector
