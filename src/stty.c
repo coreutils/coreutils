@@ -659,7 +659,7 @@ settings, CHAR is taken literally, or coded as in ^c, 0x37, 0177 or\n\
   exit (status);
 }
 
-/* Return 1 if the string only contains valid options.  */
+/* Return 1 if the string contains only valid options.  */
 int
 valid_options (char *opt, const char *valid_opts,
 	       const char *valid_arg_opts)
