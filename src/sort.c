@@ -340,6 +340,8 @@ xtmpfopen (const char *file)
   FILE *fp;
   int fd;
 
+  /*  Open temporary file exclusively, to foil a common
+      denial-of-service attack.  */
   fd = open (file, O_WRONLY | O_CREAT | O_TRUNC | O_EXCL, 0600);
   if (fd < 0 || (fp = fdopen (fd, "w")) == NULL)
     {

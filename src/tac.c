@@ -394,6 +394,8 @@ save_stdin (FILE **g_tmp, char **g_tempfile)
   sprintf (template, "%s/tacXXXXXX", tempdir);
   tempfile = mktemp (template);
 
+  /*  Open temporary file exclusively, to foil a common
+      denial-of-service attack.  */
   fd = open (tempfile, O_RDWR | O_CREAT | O_TRUNC | O_EXCL, 0600);
   if (fd == -1)
     error (EXIT_FAILURE, errno, "%s", tempfile);
