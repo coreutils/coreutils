@@ -91,11 +91,8 @@ static struct option const longopts[] =
 };
 
 static void
-usage (int status, const char *reason)
+usage (int status)
 {
-  if (reason != NULL)
-    fprintf (stderr, "%s: %s\n", program_name, reason);
-
   if (status != 0)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
@@ -396,31 +393,50 @@ main (int argc, char **argv)
 
 	case 'b':
 	  if (split_type != type_undef)
-	    usage (2, _("cannot split in more than one way"));
+	    {
+	      error (0, 0, _("cannot split in more than one way"));
+	      usage (EXIT_FAILURE);
+	    }
 	  split_type = type_bytes;
 	  if (xstrtol (optarg, NULL, 10, &tmp_long, "bkm") != LONGINT_OK
 	      || tmp_long < 0 || tmp_long > INT_MAX)
-	    usage (2, _("invalid number of bytes"));
+	    {
+	      error (0, 0, _("%s: invalid number of bytes"), optarg);
+	      usage (EXIT_FAILURE);
+	    }
 	  accum = (int) tmp_long;
 	  break;
 
 	case 'l':
 	  if (split_type != type_undef)
-	    usage (2, _("cannot split in more than one way"));
+	    {
+	      error (0, 0, _("cannot split in more than one way"));
+	      usage (EXIT_FAILURE);
+	    }
 	  split_type = type_lines;
 	  if (xstrtol (optarg, NULL, 10, &tmp_long, "") != LONGINT_OK
 	      || tmp_long < 0 || tmp_long > INT_MAX)
-	    usage (2, _("invalid number of lines"));
+	    {
+	      error (0, 0, _("%s: invalid number of lines"), optarg);
+	      usage (EXIT_FAILURE);
+	    }
 	  accum = (int) tmp_long;
 	  break;
 
 	case 'C':
 	  if (split_type != type_undef)
-	    usage (2, _("cannot split in more than one way"));
+	    {
+	      error (0, 0, _("cannot split in more than one way"));
+	      usage (EXIT_FAILURE);
+	    }
+
 	  split_type = type_byteslines;
 	  if (xstrtol (optarg, NULL, 10, &tmp_long, "bkm") != LONGINT_OK
 	      || tmp_long < 0 ||  tmp_long > INT_MAX)
-	    usage (2, _("invalid number of bytes"));
+	    {
+	      error (0, 0, _("%s: invalid number of bytes"), optarg);
+	      usage (EXIT_FAILURE);
+	    }
 	  accum = (int) tmp_long;
 	  break;
 
@@ -435,7 +451,10 @@ main (int argc, char **argv)
 	case '8':
 	case '9':
 	  if (split_type != type_undef && split_type != type_digits)
-	    usage (2, _("cannot split in more than one way"));
+	    {
+	      error (0, 0, _("cannot split in more than one way"));
+	      usage (EXIT_FAILURE);
+	    }
 	  if (digits_optind != 0 && digits_optind != this_optind)
 	    accum = 0;		/* More than one number given; ignore other. */
 	  digits_optind = this_optind;
@@ -448,7 +467,7 @@ main (int argc, char **argv)
 	  break;
 
 	default:
-	  usage (2, (char *)0);
+	  usage (EXIT_FAILURE);
 	}
     }
 
@@ -459,7 +478,7 @@ main (int argc, char **argv)
     }
 
   if (show_help)
-    usage (0, (char *)0);
+    usage (0);
 
   /* Handle default case.  */
   if (split_type == type_undef)
@@ -469,7 +488,10 @@ main (int argc, char **argv)
     }
 
   if (accum < 1)
-    usage (2, _("invalid number"));
+    {
+      error (0, 0, _("invalid number"));
+      usage (EXIT_FAILURE);
+    }
   num = accum;
 
   /* Get out the filename arguments.  */
@@ -481,7 +503,10 @@ main (int argc, char **argv)
     outbase = argv[optind++];
 
   if (optind < argc)
-    usage (2, _("too many arguments"));
+    {
+      error (0, 0, _("too many arguments"));
+      usage (EXIT_FAILURE);
+    }
 
   /* Open the input file.  */
   if (!strcmp (infile, "-"))
