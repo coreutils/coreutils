@@ -1,3 +1,11 @@
+Thu Feb 15 23:08:41 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* cp.c (copy): Detect (and fail) when creating backup file would
+	destroy the source file.  Before, running the commands
+	cd /tmp; rm -f a a~; : > a; echo A > a~; cp -b -V simple a~ a
+	would leave two zero-length files: a and a~.
+ 	Reported by Martin C. Martin <mcm@cs.cmu.edu>.
+
 Mon Feb 12 23:23:25 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* configure.in (LIBOBJS): Split assignment into two statements to
