@@ -28,7 +28,7 @@
 #include "system.h"
 #include "closeout.h"
 #include "error.h"
-#include "human.h"
+#include "inttostr.h"
 #include "long-options.h"
 #include "readtokens.h"
 #include "xstrtol.h"
@@ -147,7 +147,7 @@ print_factors (const char *s)
   uintmax_t n;
   int n_factors;
   int i;
-  char buf[LONGEST_HUMAN_READABLE + 1];
+  char buf[INT_BUFSIZE_BOUND (uintmax_t)];
 
   if (xstrtoumax (s, NULL, 10, &n, "") != LONGINT_OK)
     {
@@ -155,9 +155,9 @@ print_factors (const char *s)
       return 1;
     }
   n_factors = factor (n, MAX_N_FACTORS, factors);
-  printf ("%s:", human_readable (n, buf, 1, 1));
+  printf ("%s:", umaxtostr (n, buf));
   for (i = 0; i < n_factors; i++)
-    printf (" %s", human_readable (factors[i], buf, 1, 1));
+    printf (" %s", umaxtostr (factors[i], buf));
   putchar ('\n');
   return 0;
 }
