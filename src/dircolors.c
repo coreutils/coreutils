@@ -1,5 +1,5 @@
 /* dircolors - output commands to set the LS_COLOR environment variable
-   Copyright (C) 1996-2004 Free Software Foundation, Inc.
+   Copyright (C) 1996-2005 Free Software Foundation, Inc.
    Copyright (C) 1994, 1995, 1997, 1998, 1999, 2000 H. Peter Anvin
 
    This program is free software; you can redistribute it and/or modify
@@ -145,16 +145,16 @@ guess_shell_syntax (void)
 }
 
 static void
-parse_line (unsigned char const *line, char **keyword, char **arg)
+parse_line (char const *line, char **keyword, char **arg)
 {
-  unsigned char const *p;
-  unsigned char const *keyword_start;
-  unsigned char const *arg_start;
+  char const *p;
+  char const *keyword_start;
+  char const *arg_start;
 
   *keyword = NULL;
   *arg = NULL;
 
-  for (p = line; ISSPACE (*p); ++p)
+  for (p = line; ISSPACE (to_uchar (*p)); ++p)
     ;
 
   /* Ignore blank lines and shell-style comments.  */
@@ -163,12 +163,12 @@ parse_line (unsigned char const *line, char **keyword, char **arg)
 
   keyword_start = p;
 
-  while (!ISSPACE (*p) && *p != '\0')
+  while (!ISSPACE (to_uchar (*p)) && *p != '\0')
     {
       ++p;
     }
 
-  *keyword = xstrndup ((const char *) keyword_start, p - keyword_start);
+  *keyword = xstrndup (keyword_start, p - keyword_start);
   if (*p  == '\0')
     return;
 
@@ -176,7 +176,7 @@ parse_line (unsigned char const *line, char **keyword, char **arg)
     {
       ++p;
     }
-  while (ISSPACE (*p));
+  while (ISSPACE (to_uchar (*p)));
 
   if (*p == '\0' || *p == '#')
     return;
@@ -186,13 +186,13 @@ parse_line (unsigned char const *line, char **keyword, char **arg)
   while (*p != '\0' && *p != '#')
     ++p;
 
-  for (--p; ISSPACE (*p); --p)
+  for (--p; ISSPACE (to_uchar (*p)); --p)
     {
       /* empty */
     }
   ++p;
 
-  *arg = xstrndup ((const char *) arg_start, p - arg_start);
+  *arg = xstrndup (arg_start, p - arg_start);
 }
 
 /* FIXME: Write a string to standard out, while watching for "dangerous"
@@ -239,8 +239,10 @@ static bool
 dc_parse_stream (FILE *fp, const char *filename)
 {
   size_t line_number = 0;
-  char *line = NULL;
-  size_t line_chars_allocated = 0;
+  char const *next_G_line = G_line;
+  char *input_line = NULL;
+  size_t input_line_size = 0;
+  char const *line;
   char *term;
   bool ok = true;
 
@@ -254,7 +256,6 @@ dc_parse_stream (FILE *fp, const char *filename)
 
   while (1)
     {
-      ssize_t line_length;
       char *keywd, *arg;
       bool unrecognized;
 
@@ -262,23 +263,22 @@ dc_parse_stream (FILE *fp, const char *filename)
 
       if (fp)
 	{
-	  line_length = getline (&line, &line_chars_allocated, fp);
-	  if (line_length <= 0)
+	  if (getline (&input_line, &input_line_size, fp) <= 0)
 	    {
-	      if (line)
-		free (line);
+	      free (input_line);
 	      break;
 	    }
+	  line = input_line;
 	}
       else
 	{
-	  line = (char *) (G_line[line_number - 1]);
-	  line_length = G_line_length[line_number - 1];
-	  if (line_number > G_N_LINES)
+	  if (next_G_line == G_line + sizeof G_line)
 	    break;
+	  line = next_G_line;
+	  next_G_line += strlen (next_G_line) + 1;
 	}
 
-      parse_line ((unsigned char *) line, &keywd, &arg);
+      parse_line (line, &keywd, &arg);
 
       if (keywd == NULL)
 	continue;
@@ -471,11 +471,11 @@ to select a shell syntax are mutually exclusive"));
 
   if (print_database)
     {
-      int i;
-      for (i = 0; i < G_N_LINES; i++)
+      char const *p = G_line;
+      while (p < G_line + sizeof G_line)
 	{
-	  fwrite (G_line[i], 1, G_line_length[i], stdout);
-	  fputc ('\n', stdout);
+	  puts (p);
+	  p += strlen (p) + 1;
 	}
     }
   else
