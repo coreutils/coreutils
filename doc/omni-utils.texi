@@ -4559,6 +4559,7 @@ Also see @ref{Common options}.
 * Sorting the output::
 * More details about version sort::
 * General output formatting::
+* Formatting file timestamps::
 * Formatting the file names::
 @end menu
 
@@ -4682,6 +4683,12 @@ Finally, output a line of the form:
 @end example
 where @var{word} is the quoting style (@pxref{Formatting the file names}).
 
+@item --full-time
+@opindex --full-time
+Produce long format directory listings, and list times in full.  It is
+equivalent to using @option{--format=long} with
+@option{--time-style=full-iso} (@pxref{Formatting file timestamps}).
+
 @item -g
 @opindex -g
 Produce long format directory listings, but don't display owner information.
@@ -4721,14 +4728,8 @@ uniquely identifies each file within a particular filesystem.)
 @opindex verbose ls @r{format}
 In addition to the name of each file, print the file type, permissions,
 number of hard links, owner name, group name, size in bytes, and
-timestamp (by default, the modification time).  For files with a time
-more than six months old or in the future, the timestamp contains the
-year instead of the time of day.
-
-If the timestamp contains today's date with the year rather than a time
-of day, the file's time is in the future, which means you probably have
-clock skew problems which may break programs like @command{make} that
-rely on file times.
+timestamp (@pxref{Formatting file timestamps}), normally
+the modification time.
 
 For each directory that is listed, preface the files with a line
 @samp{total @var{blocks}}, where @var{blocks} is the total disk allocation
@@ -5007,21 +5008,6 @@ for regular files that are executable, append @samp{*}.  The file type
 indicators are @samp{/} for directories, @samp{@@} for symbolic links,
 @samp{|} for FIFOs, @samp{=} for sockets, and nothing for regular files.
 
-@item --full-time
-@opindex --full-time
-List times in full, rather than using the standard abbreviation
-heuristics.  The format is currently similar to that of @command{date},
-but this is planned to change in a future release, partly because modern
-file time stamps have more precision.  It's not possible to change the
-format, but you can extract out the date string with @code{cut} and then
-pass the result to @code{date -d}.  @xref{date invocation, @code{date}
-invocation, , sh-utils, Shell utilities}.
-
-This is most useful because the time output includes the seconds.  (Unix
-filesystems store file timestamps only to the nearest second, so this
-option shows all the information there is.)  For example, this can help
-when you have a Makefile that is not regenerating files properly.
-
 @item --indicator-style=@var{word}
 @opindex --indicator-style
 Append a character indicator with style @var{word} to entry names,
@@ -5091,6 +5077,68 @@ variable @env{COLUMNS} is used if it is set; otherwise the default
 is 80.
 
 @end table
+
+
+@node Formatting file timestamps
+@subsection Formatting file timestamps
+
+By default, file timestamps are output in abbreviated form.  For files
+with a time more than six months old or in the future, the timestamp
+contains the year instead of the time of day.  If the timestamp contains
+today's date with the year rather than a time of day, the file's time is
+in the future, which means you probably have clock skew problems which
+may break programs like @command{make} that rely on file times.
+
+The following option changes how file timestamps are printed.
+
+@table @samp
+@item --time-style=@var{word}
+@opindex --time-style
+@cindex time style
+Use style @var{word} to output file timestamps.  The @var{word} should
+be one of the following:
+
+@table @samp
+@item full-iso
+List timestamps in full, rather than using the standard abbreviation
+heuristics.  The format is @sc{iso} 8601 date, time, and time zone
+format with nanosecond precision, e.g., @samp{2001-05-14
+23:45:56.477817180 -0700}.  It's not possible to change the format, but
+you can extract out the date string with @code{cut} and then pass the
+result to @code{date -d}.  @xref{date invocation, @code{date}
+invocation, , sh-utils, Shell utilities}.
+
+This is useful because the time output includes all the information that
+is available from the operating system.  For example, this can help
+when you have a Makefile that is not regenerating files properly.
+
+@item iso
+Use @sc{iso}-style time stamps like @samp{2001-05-14@ } and @samp{05-14
+23:45}.
+
+@item locale
+@vindex LC_ALL
+@vindex LC_TIME
+@vindex LANG
+Use locale-dependent dates like @samp{touko@ @ 14 2001} and @samp{touko@
+@ 14 23:45}, time stamps that might occur in a Finnish locale.  The
+locale for formatting timestamps is specified by the first of three
+environment variables @env{LC_ALL}, @env{LC_TIME}, @env{LANG} that is
+set.
+
+@item posix-iso
+Use traditional @sc{posix}-locale dates like @samp{May 14@ @ 2001} and
+@samp{May 14 23:45} unless the user specifies a non-@sc{posix} locale,
+in which case use @sc{iso}-style dates.  This is the default.
+@end table
+@end table
+
+@vindex TIME_STYLE
+You can specify the default value of the @option{--time-style} option
+with the environment variable @env{TIME_STYLE}.  @sc{gnu} Emacs 21 and
+later can parse @sc{iso} dates, but older Emacs versions do not, so if
+you are using an older version of Emacs and specify a non-@sc{posix}
+locale, you may need to set @samp{TIME_STYLE="locale"}.
 
 
 @node Formatting the file names
