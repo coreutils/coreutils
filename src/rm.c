@@ -157,7 +157,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("rm - %s\n", PACKAGE_VERSION);
+      printf ("rm (GNU %s) %s\n", PACKAGE, VERSION);
       exit (0);
     }
 

@@ -572,7 +572,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("df - %s\n", PACKAGE_VERSION);
+      printf ("df (GNU %s) %s\n", PACKAGE, VERSION);
       exit (0);
     }
 

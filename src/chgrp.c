@@ -336,7 +336,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("chgrp - %s\n", PACKAGE_VERSION);
+      printf ("chgrp (GNU %s) %s\n", PACKAGE, VERSION);
       exit (0);
     }
 

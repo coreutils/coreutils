@@ -421,7 +421,7 @@ main (int argc, char **argv)
 
   if (show_version)
     {
-      printf ("ln - %s\n", PACKAGE_VERSION);
+      printf ("ln (GNU %s) %s\n", PACKAGE, VERSION);
       exit (0);
     }
 
