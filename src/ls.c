@@ -60,6 +60,10 @@
 # include <sys/ptem.h>
 #endif
 
+#if HAVE_SYS_ACL_H
+# include <sys/acl.h>
+#endif
+
 #include <stdio.h>
 #include <grp.h>
 #include <pwd.h>
@@ -158,7 +162,19 @@ struct fileinfo
     int linkok;
 
     enum filetype filetype;
+
+#if HAVE_ACL
+    /* For long listings, nonzero if the file has an access control list,
+       otherwise zero.  */
+    int have_acl;
+#endif
   };
+
+#if HAVE_ACL
+# define FILE_HAS_ACL(F) ((F)->have_acl)
+#else
+# define FILE_HAS_ACL(F) 0
+#endif
 
 #define LEN_STR_PAIR(s) sizeof (s) - 1, s
 
@@ -1715,13 +1731,18 @@ gobble_file (const char *name, int explicit_arg, const char *dirname)
 	{
 	  val = stat (path, &files[files_index].stat);
 	  if (val < 0)
-	    /* Perhaps a symbolically-linked to file doesn't exist; stat
-	       the link instead. */
-	    val = lstat (path, &files[files_index].stat);
+	    {
+	      /* Perhaps a symbolically-linked to file doesn't exist; stat
+		 the link instead. */
+	      val = lstat (path, &files[files_index].stat);
+	    }
 	}
       else
 	{
 	  val = lstat (path, &files[files_index].stat);
+#if HAVE_ACL
+	  files[files_index].have_acl = (acl (path, GETACLCNT, 0, NULL) > 4);
+#endif
 	}
 
       if (val < 0)
@@ -2151,7 +2172,7 @@ print_current_files (void)
 static void
 print_long_format (const struct fileinfo *f)
 {
-  char modebuf[11];
+  char modebuf[12];
 
   /* 7 fields that may require LONGEST_HUMAN_READABLE bytes,
      1 10-byte mode string,
@@ -2178,7 +2199,8 @@ print_long_format (const struct fileinfo *f)
   mode_string (f->stat.st_mode, modebuf);
 #endif
 
-  modebuf[10] = '\0';
+  modebuf[10] = (FILE_HAS_ACL (f) ? '+' : ' ');
+  modebuf[11] = '\0';
 
   switch (time_type)
     {
@@ -2235,9 +2257,9 @@ print_long_format (const struct fileinfo *f)
       p += strlen (p);
     }
 
-  /* The space between the mode and the number of links is the POSIX
-     "optional alternate access method flag". */
-  sprintf (p, "%s %3u ", modebuf, (unsigned int) f->stat.st_nlink);
+  /* The last byte of the mode string is the POSIX
+     "optional alternate access method flag".  */
+  sprintf (p, "%s%3u ", modebuf, (unsigned int) f->stat.st_nlink);
   p += strlen (p);
 
   user_name = (numeric_ids ? NULL : getuser (f->stat.st_uid));
