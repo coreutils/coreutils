@@ -65,23 +65,6 @@
 int safe_read ();
 int full_write ();
 
-static RETSIGTYPE interrupt_handler PARAMS ((int));
-static int bit_count PARAMS ((register unsigned int i));
-static uintmax_t parse_integer PARAMS ((char *str, int *));
-static void apply_translations PARAMS ((void));
-static void copy PARAMS ((void));
-static void copy_simple PARAMS ((unsigned char *buf, int nread));
-static void copy_with_block PARAMS ((unsigned char *buf, int nread));
-static void copy_with_unblock PARAMS ((unsigned char *buf, int nread));
-static void parse_conversion PARAMS ((char *str));
-static void translate_charset PARAMS ((const unsigned char *new_trans));
-static void quit PARAMS ((int code));
-static void scanargs PARAMS ((int argc, char **argv));
-static void skip PARAMS ((int fdesc, char *file, uintmax_t records,
-		       size_t blocksize, unsigned char *buf));
-static void usage PARAMS ((int status));
-static void write_output PARAMS ((void));
-
 /* The name this program was run with. */
 char *program_name;
 
@@ -140,6 +123,15 @@ static uintmax_t r_truncate = 0;
    They change if we're converting to EBCDIC.  */
 static unsigned char newline_character = '\n';
 static unsigned char space_character = ' ';
+
+/* Output buffer. */
+static unsigned char *obuf;
+
+/* Current index into `obuf'. */
+static size_t oc = 0;
+
+/* Index into current line, for `conv=block' and `conv=unblock'.  */
+static size_t col = 0;
 
 struct conversion
 {
@@ -288,6 +280,74 @@ static struct option const long_options[] =
 };
 
 static void
+usage (int status)
+{
+  if (status != 0)
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
+	     program_name);
+  else
+    {
+      printf (_("Usage: %s [OPTION]...\n"), program_name);
+      printf (_("\
+Copy a file, converting and formatting according to the options.\n\
+\n\
+  bs=BYTES        force ibs=BYTES and obs=BYTES\n\
+  cbs=BYTES       convert BYTES bytes at a time\n\
+  conv=KEYWORDS   convert the file as per the comma separated keyword list\n\
+  count=BLOCKS    copy only BLOCKS input blocks\n\
+  ibs=BYTES       read BYTES bytes at a time\n\
+  if=FILE         read from FILE instead of stdin\n\
+  obs=BYTES       write BYTES bytes at a time\n\
+  of=FILE         write to FILE instead of stdout\n\
+  seek=BLOCKS     skip BLOCKS obs-sized blocks at start of output\n\
+  skip=BLOCKS     skip BLOCKS ibs-sized blocks at start of input\n\
+      --help      display this help and exit\n\
+      --version   output version information and exit\n\
+\n\
+BYTES may be suffixed: by xM for multiplication by M, by c for x1,\n\
+by w for x2, by b for x512, by k for x1024.  Each KEYWORD may be:\n\
+\n\
+  ascii     from EBCDIC to ASCII\n\
+  ebcdic    from ASCII to EBCDIC\n\
+  ibm       from ASCII to alternated EBCDIC\n\
+  block     pad newline-terminated records with spaces to cbs-size\n\
+  unblock   replace trailing spaces in cbs-size records with newline\n\
+  lcase     change upper case to lower case\n\
+  notrunc   do not truncate the output file\n\
+  ucase     change lower case to upper case\n\
+  swab      swap every pair of input bytes\n\
+  noerror   continue after read errors\n\
+  sync      pad every input block with NULs to ibs-size\n\
+"));
+      puts (_("\nReport bugs to <fileutils-bugs@gnu.org>."));
+      close_stdout ();
+    }
+  exit (status);
+}
+
+static void
+translate_charset (const unsigned char *new_trans)
+{
+  int i;
+
+  for (i = 0; i < 256; i++)
+    trans_table[i] = new_trans[trans_table[i]];
+  translation_needed = 1;
+}
+
+/* Return the number of 1 bits in `i'. */
+
+static int
+bit_count (register unsigned int i)
+{
+  register int set_bits;
+
+  for (set_bits = 0; i != 0; set_bits++)
+    i &= i - 1;
+  return set_bits;
+}
+
+static void
 print_stats (void)
 {
   char buf[2][LONGEST_HUMAN_READABLE + 1];
@@ -298,11 +358,47 @@ print_stats (void)
 	   human_readable (w_full, buf[0], 1, 1, 0),
 	   human_readable (w_partial, buf[1], 1, 1, 0));
   if (r_truncate > 0)
-    fprintf (stderr, "%s %s\n",
-	     human_readable (r_truncate, buf[0], 1, 1, 0),
-	     (r_truncate == 1
-	      ? _("truncated record")
-	      : _("truncated records")));
+    {
+      fprintf (stderr, "%s %s\n",
+	       human_readable (r_truncate, buf[0], 1, 1, 0),
+	       (r_truncate == 1
+		? _("truncated record")
+		: _("truncated records")));
+    }
+}
+
+static void
+cleanup (void)
+{
+  print_stats ();
+  if (close (input_fd) < 0)
+    error (1, errno, "%s", input_file);
+  if (close (output_fd) < 0)
+    error (1, errno, "%s", output_file);
+}
+
+static void
+quit (int code)
+{
+  cleanup ();
+  exit (code);
+}
+
+static RETSIGTYPE
+interrupt_handler (int sig)
+{
+#ifdef SA_INTERRUPT
+  struct sigaction sigact;
+
+  sigact.sa_handler = SIG_DFL;
+  sigemptyset (&sigact.sa_mask);
+  sigact.sa_flags = 0;
+  sigaction (sig, &sigact, NULL);
+#else				/* !SA_INTERRUPT */
+  signal (sig, SIG_DFL);
+#endif				/* SA_INTERRUPT */
+  cleanup ();
+  kill (getpid (), sig);
 }
 
 static RETSIGTYPE
@@ -332,125 +428,260 @@ install_handler (int sig_num, RETSIGTYPE (*sig_handler) (int sig))
 #endif
 }
 
-int
-main (int argc, char **argv)
+/* Write, then empty, the output buffer `obuf'. */
+
+static void
+write_output (void)
+{
+  int nwritten = full_write (output_fd, obuf, output_blocksize);
+  if (nwritten != output_blocksize)
+    {
+      error (0, errno, "%s", output_file);
+      if (nwritten > 0)
+	w_partial++;
+      quit (1);
+    }
+  else
+    w_full++;
+  oc = 0;
+}
+
+/* Interpret one "conv=..." option. */
+
+static void
+parse_conversion (char *str)
+{
+  char *new;
+  int i;
+
+  do
+    {
+      new = strchr (str, ',');
+      if (new != NULL)
+	*new++ = '\0';
+      for (i = 0; conversions[i].convname != NULL; i++)
+	if (STREQ (conversions[i].convname, str))
+	  {
+	    conversions_mask |= conversions[i].conversion;
+	    break;
+	  }
+      if (conversions[i].convname == NULL)
+	{
+	  error (0, 0, _("%s: invalid conversion"), str);
+	  usage (1);
+	}
+      str = new;
+  } while (new != NULL);
+}
+
+/* Return the value of STR, interpreted as a non-negative decimal integer,
+   optionally multiplied by various values.
+   Assign nonzero to *INVALID if STR does not represent a number in
+   this format. */
+
+/* FIXME: use xstrtou?[lq] */
+
+static uintmax_t
+parse_integer (char *str, int *invalid)
+{
+  register uintmax_t n = 0;
+  register char *p = str;
+
+  while (ISDIGIT (*p))
+    {
+      uintmax_t n10 = n * 10;
+      int digit = *p - '0';
+      if (! (n10 / 10 == n && n10 <= n10 + digit))
+	{
+	  *invalid = 1;
+	  return 0;
+	}
+      n = n10 + digit;
+      p++;
+    }
+
+  for (;;)
+    {
+      uintmax_t multiplier;
+
+      switch (*p++)
+	{
+	case '\0':
+	  return n;
+	case 'b':
+	  multiplier = 512;
+	  break;
+	case 'c':
+	  continue;
+	case 'k':
+	  multiplier = 1024;
+	  break;
+	case 'w':
+	  multiplier = 2;
+	  break;
+	case 'x':
+	  multiplier = parse_integer (p, invalid);
+	  p = "";
+	  break;
+	default:
+	  {
+	    *invalid = 1;
+	    return 0;
+	  }
+	}
+
+      if (multiplier != 0 && n * multiplier / multiplier != n)
+	{
+	  *invalid = 1;
+	  return 0;
+	}
+
+      n *= multiplier;
+    }
+}
+
+static void
+scanargs (int argc, char **argv)
+{
+  int i;
+  int c;
+
+  while ((c = getopt_long (argc, argv, "", long_options, NULL)) != -1)
+    {
+      switch (c)
+	{
+	case 0:
+	  break;
+
+	default:
+	  usage (1);
+	}
+    }
+
+  for (i = optind; i < argc; i++)
+    {
+      char *name, *val;
+
+      name = argv[i];
+      val = strchr (name, '=');
+      if (val == NULL)
+	{
+	  error (0, 0, _("unrecognized option `%s'"), name);
+	  usage (1);
+	}
+      *val++ = '\0';
+
+      if (STREQ (name, "if"))
+	input_file = val;
+      else if (STREQ (name, "of"))
+	output_file = val;
+      else if (STREQ (name, "conv"))
+	parse_conversion (val);
+      else
+	{
+	  int invalid = 0;
+	  uintmax_t n = parse_integer (val, &invalid);
+
+	  if (STREQ (name, "ibs"))
+	    {
+	      input_blocksize = n;
+	      invalid |= input_blocksize != n || input_blocksize == 0;
+	      conversions_mask |= C_TWOBUFS;
+	    }
+	  else if (STREQ (name, "obs"))
+	    {
+	      output_blocksize = n;
+	      invalid |= output_blocksize != n || output_blocksize == 0;
+	      conversions_mask |= C_TWOBUFS;
+	    }
+	  else if (STREQ (name, "bs"))
+	    {
+	      output_blocksize = input_blocksize = n;
+	      invalid |= output_blocksize != n || output_blocksize == 0;
+	    }
+	  else if (STREQ (name, "cbs"))
+	    {
+	      conversion_blocksize = n;
+	      invalid |= (conversion_blocksize != n
+			  || conversion_blocksize == 0);
+	    }
+	  else if (STREQ (name, "skip"))
+	    skip_records = n;
+	  else if (STREQ (name, "seek"))
+	    seek_record = n;
+	  else if (STREQ (name, "count"))
+	    max_records = n;
+	  else
+	    {
+	      error (0, 0, _("unrecognized option `%s=%s'"), name, val);
+	      usage (1);
+	    }
+
+	  if (invalid)
+	    error (1, 0, _("invalid number `%s'"), val);
+	}
+    }
+
+  /* If bs= was given, both `input_blocksize' and `output_blocksize' will
+     have been set to positive values.  If either has not been set,
+     bs= was not given, so make sure two buffers are used. */
+  if (input_blocksize == 0 || output_blocksize == 0)
+    conversions_mask |= C_TWOBUFS;
+  if (input_blocksize == 0)
+    input_blocksize = DEFAULT_BLOCKSIZE;
+  if (output_blocksize == 0)
+    output_blocksize = DEFAULT_BLOCKSIZE;
+  if (conversion_blocksize == 0)
+    conversions_mask &= ~(C_BLOCK | C_UNBLOCK);
+}
+
+/* Fix up translation table. */
+
+static void
+apply_translations (void)
 {
   int i;
 
-  program_name = argv[0];
-  setlocale (LC_ALL, "");
-  bindtextdomain (PACKAGE, LOCALEDIR);
-  textdomain (PACKAGE);
-
-  /* Initialize translation table to identity translation. */
-  for (i = 0; i < 256; i++)
-    trans_table[i] = i;
-
-  /* Decode arguments. */
-  scanargs (argc, argv);
-
-  if (show_version)
+#define MX(a) (bit_count (conversions_mask & (a)))
+  if ((MX (C_ASCII | C_EBCDIC | C_IBM) > 1)
+      || (MX (C_BLOCK | C_UNBLOCK) > 1)
+      || (MX (C_LCASE | C_UCASE) > 1)
+      || (MX (C_UNBLOCK | C_SYNC) > 1))
     {
-      printf ("dd (%s) %s\n", GNU_PACKAGE, VERSION);
-      close_stdout ();
-      exit (0);
+      error (1, 0, _("\
+only one conv in {ascii,ebcdic,ibm}, {lcase,ucase}, {block,unblock}, {unblock,sync}"));
+    }
+#undef MX
+
+  if (conversions_mask & C_ASCII)
+    translate_charset (ebcdic_to_ascii);
+
+  if (conversions_mask & C_UCASE)
+    {
+      for (i = 0; i < 256; i++)
+	if (ISLOWER (trans_table[i]))
+	  trans_table[i] = toupper (trans_table[i]);
+      translation_needed = 1;
+    }
+  else if (conversions_mask & C_LCASE)
+    {
+      for (i = 0; i < 256; i++)
+	if (ISUPPER (trans_table[i]))
+	  trans_table[i] = tolower (trans_table[i]);
+      translation_needed = 1;
     }
 
-  if (show_help)
-    usage (0);
-
-  apply_translations ();
-
-  if (input_file != NULL)
+  if (conversions_mask & C_EBCDIC)
     {
-      input_fd = open (input_file, O_RDONLY);
-      if (input_fd < 0)
-	error (1, errno, "%s", input_file);
+      translate_charset (ascii_to_ebcdic);
+      newline_character = ascii_to_ebcdic['\n'];
+      space_character = ascii_to_ebcdic[' '];
     }
-  else
-    input_file = _("standard input");
-
-  if (input_fd == output_fd)
-    error (1, 0, _("%s is closed"), (input_fd == 0
-				     ? _("standard input")
-				     : _("standard output")));
-
-  if (output_file != NULL)
+  else if (conversions_mask & C_IBM)
     {
-      int omode = O_RDWR | O_CREAT;
-
-      if (seek_record == 0 && !(conversions_mask & C_NOTRUNC))
-	omode |= O_TRUNC;
-      output_fd = open (output_file, omode, 0666);
-      if (output_fd < 0)
-	error (1, errno, "%s", output_file);
-#ifdef HAVE_FTRUNCATE
-      if (seek_record != 0 && !(conversions_mask & C_NOTRUNC))
-	{
-	  off_t o = seek_record * output_blocksize;
-	  if (o / output_blocksize != seek_record)
-	    error (1, 0, _("file offset out of range"));
-	  if (ftruncate (output_fd, o) < 0)
-	    error (0, errno, "%s", output_file);
-	}
-#endif
-    }
-  else
-    {
-      output_file = _("standard output");
-    }
-
-  install_handler (SIGINT, interrupt_handler);
-  install_handler (SIGQUIT, interrupt_handler);
-  install_handler (SIGPIPE, interrupt_handler);
-  install_handler (SIGINFO, siginfo_handler);
-
-  copy ();
-}
-
-/* Throw away RECORDS blocks of BLOCKSIZE bytes on file descriptor FDESC,
-   which is open with read permission for FILE.  Store up to BLOCKSIZE
-   bytes of the data at a time in BUF, if necessary. */
-
-static void
-skip (int fdesc, char *file, uintmax_t records, size_t blocksize,
-      unsigned char *buf)
-{
-  struct stat stats;
-  off_t o;
-
-  /* Use fstat instead of checking for errno == ESPIPE because
-     lseek doesn't work on some special files but doesn't return an
-     error, either. */
-  /* FIXME: can this really happen?  What system?  */
-  if (fstat (fdesc, &stats))
-    {
-      error (0, errno, "%s", file);
-      quit (1);
-    }
-
-  /* Try lseek and if an error indicates it was an inappropriate
-     operation, fall back on using read.  */
-  o = records * blocksize;
-  if (o / blocksize != records
-      || lseek (fdesc, o, SEEK_SET) == -1)
-    {
-      while (records-- > 0)
-	{
-	  int nread;
-
-	  nread = safe_read (fdesc, buf, blocksize);
-	  if (nread < 0)
-	    {
-	      error (0, errno, "%s", file);
-	      quit (1);
-	    }
-	  /* POSIX doesn't say what to do when dd detects it has been
-	     asked to skip past EOF, so I assume it's non-fatal.
-	     FIXME: maybe give a warning.  */
-	  if (nread == 0)
-	    break;
-	}
+      translate_charset (ascii_to_ibm);
+      newline_character = ascii_to_ibm['\n'];
+      space_character = ascii_to_ibm[' '];
     }
 }
 
@@ -511,18 +742,149 @@ swab_buffer (unsigned char *buf, int *nread)
   return ++bufstart;
 }
 
-/* Output buffer. */
-static unsigned char *obuf;
+/* Throw away RECORDS blocks of BLOCKSIZE bytes on file descriptor FDESC,
+   which is open with read permission for FILE.  Store up to BLOCKSIZE
+   bytes of the data at a time in BUF, if necessary. */
 
-/* Current index into `obuf'. */
-static size_t oc = 0;
+static void
+skip (int fdesc, char *file, uintmax_t records, size_t blocksize,
+      unsigned char *buf)
+{
+  struct stat stats;
+  off_t o;
 
-/* Index into current line, for `conv=block' and `conv=unblock'.  */
-static size_t col = 0;
+  /* Use fstat instead of checking for errno == ESPIPE because
+     lseek doesn't work on some special files but doesn't return an
+     error, either. */
+  /* FIXME: can this really happen?  What system?  */
+  if (fstat (fdesc, &stats))
+    {
+      error (0, errno, "%s", file);
+      quit (1);
+    }
+
+  /* Try lseek and if an error indicates it was an inappropriate
+     operation, fall back on using read.  */
+  o = records * blocksize;
+  if (o / blocksize != records
+      || lseek (fdesc, o, SEEK_SET) == -1)
+    {
+      while (records-- > 0)
+	{
+	  int nread;
+
+	  nread = safe_read (fdesc, buf, blocksize);
+	  if (nread < 0)
+	    {
+	      error (0, errno, "%s", file);
+	      quit (1);
+	    }
+	  /* POSIX doesn't say what to do when dd detects it has been
+	     asked to skip past EOF, so I assume it's non-fatal.
+	     FIXME: maybe give a warning.  */
+	  if (nread == 0)
+	    break;
+	}
+    }
+}
+
+/* Copy NREAD bytes of BUF, with no conversions.  */
+
+static void
+copy_simple (unsigned char *buf, int nread)
+{
+  int nfree;			/* Number of unused bytes in `obuf'.  */
+  unsigned char *start = buf; /* First uncopied char in BUF.  */
+
+  do
+    {
+      nfree = output_blocksize - oc;
+      if (nfree > nread)
+	nfree = nread;
+
+      memcpy ((char *) (obuf + oc), (char *) start, nfree);
+
+      nread -= nfree;		/* Update the number of bytes left to copy. */
+      start += nfree;
+      oc += nfree;
+      if (oc >= output_blocksize)
+	write_output ();
+    }
+  while (nread > 0);
+}
+
+/* Copy NREAD bytes of BUF, doing conv=block
+   (pad newline-terminated records to `conversion_blocksize',
+   replacing the newline with trailing spaces).  */
+
+static void
+copy_with_block (unsigned char *buf, int nread)
+{
+  register int i;
+
+  for (i = nread; i; i--, buf++)
+    {
+      if (*buf == newline_character)
+	{
+	  if (col < conversion_blocksize)
+	    {
+	      size_t j;
+	      for (j = col; j < conversion_blocksize; j++)
+		output_char (space_character);
+	    }
+	  col = 0;
+	}
+      else
+	{
+	  if (col == conversion_blocksize)
+	    r_truncate++;
+	  else if (col < conversion_blocksize)
+	    output_char (*buf);
+	  col++;
+	}
+    }
+}
+
+/* Copy NREAD bytes of BUF, doing conv=unblock
+   (replace trailing spaces in `conversion_blocksize'-sized records
+   with a newline).  */
+
+static void
+copy_with_unblock (unsigned char *buf, int nread)
+{
+  register int i;
+  register unsigned char c;
+  static int pending_spaces = 0;
+
+  for (i = 0; i < nread; i++)
+    {
+      c = buf[i];
+
+      if (col++ >= conversion_blocksize)
+	{
+	  col = pending_spaces = 0; /* Wipe out any pending spaces.  */
+	  i--;			/* Push the char back; get it later. */
+	  output_char (newline_character);
+	}
+      else if (c == space_character)
+	pending_spaces++;
+      else
+	{
+	  /* `c' is the character after a run of spaces that were not
+	     at the end of the conversion buffer.  Output them.  */
+	  while (pending_spaces)
+	    {
+	      output_char (space_character);
+	      --pending_spaces;
+	    }
+	  output_char (c);
+	}
+    }
+}
 
 /* The main loop.  */
 
-static void
+static int
 copy (void)
 {
   unsigned char *ibuf, *bufstart; /* Input buffer. */
@@ -688,458 +1050,84 @@ copy (void)
   if (obuf != ibuf)
     free (obuf);
 
-  quit (exit_status);
+  return exit_status;
 }
 
-/* Copy NREAD bytes of BUF, with no conversions.  */
-
-static void
-copy_simple (unsigned char *buf, int nread)
-{
-  int nfree;			/* Number of unused bytes in `obuf'.  */
-  unsigned char *start = buf; /* First uncopied char in BUF.  */
-
-  do
-    {
-      nfree = output_blocksize - oc;
-      if (nfree > nread)
-	nfree = nread;
-
-      memcpy ((char *) (obuf + oc), (char *) start, nfree);
-
-      nread -= nfree;		/* Update the number of bytes left to copy. */
-      start += nfree;
-      oc += nfree;
-      if (oc >= output_blocksize)
-	write_output ();
-    }
-  while (nread > 0);
-}
-
-/* Copy NREAD bytes of BUF, doing conv=block
-   (pad newline-terminated records to `conversion_blocksize',
-   replacing the newline with trailing spaces).  */
-
-static void
-copy_with_block (unsigned char *buf, int nread)
-{
-  register int i;
-
-  for (i = nread; i; i--, buf++)
-    {
-      if (*buf == newline_character)
-	{
-	  if (col < conversion_blocksize)
-	    {
-	      size_t j;
-	      for (j = col; j < conversion_blocksize; j++)
-		output_char (space_character);
-	    }
-	  col = 0;
-	}
-      else
-	{
-	  if (col == conversion_blocksize)
-	    r_truncate++;
-	  else if (col < conversion_blocksize)
-	    output_char (*buf);
-	  col++;
-	}
-    }
-}
-
-/* Copy NREAD bytes of BUF, doing conv=unblock
-   (replace trailing spaces in `conversion_blocksize'-sized records
-   with a newline).  */
-
-static void
-copy_with_unblock (unsigned char *buf, int nread)
-{
-  register int i;
-  register unsigned char c;
-  static int pending_spaces = 0;
-
-  for (i = 0; i < nread; i++)
-    {
-      c = buf[i];
-
-      if (col++ >= conversion_blocksize)
-	{
-	  col = pending_spaces = 0; /* Wipe out any pending spaces.  */
-	  i--;			/* Push the char back; get it later. */
-	  output_char (newline_character);
-	}
-      else if (c == space_character)
-	pending_spaces++;
-      else
-	{
-	  /* `c' is the character after a run of spaces that were not
-	     at the end of the conversion buffer.  Output them.  */
-	  while (pending_spaces)
-	    {
-	      output_char (space_character);
-	      --pending_spaces;
-	    }
-	  output_char (c);
-	}
-    }
-}
-
-/* Write, then empty, the output buffer `obuf'. */
-
-static void
-write_output (void)
-{
-  int nwritten = full_write (output_fd, obuf, output_blocksize);
-  if (nwritten != output_blocksize)
-    {
-      error (0, errno, "%s", output_file);
-      if (nwritten > 0)
-	w_partial++;
-      quit (1);
-    }
-  else
-    w_full++;
-  oc = 0;
-}
-
-static void
-scanargs (int argc, char **argv)
+int
+main (int argc, char **argv)
 {
   int i;
-  int c;
+  int exit_status;
 
-  while ((c = getopt_long (argc, argv, "", long_options, NULL)) != -1)
-    {
-      switch (c)
-	{
-	case 0:
-	  break;
+  program_name = argv[0];
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
 
-	default:
-	  usage (1);
-	}
-    }
-
-  for (i = optind; i < argc; i++)
-    {
-      char *name, *val;
-
-      name = argv[i];
-      val = strchr (name, '=');
-      if (val == NULL)
-	{
-	  error (0, 0, _("unrecognized option `%s'"), name);
-	  usage (1);
-	}
-      *val++ = '\0';
-
-      if (STREQ (name, "if"))
-	input_file = val;
-      else if (STREQ (name, "of"))
-	output_file = val;
-      else if (STREQ (name, "conv"))
-	parse_conversion (val);
-      else
-	{
-	  int invalid = 0;
-	  uintmax_t n = parse_integer (val, &invalid);
-
-	  if (STREQ (name, "ibs"))
-	    {
-	      input_blocksize = n;
-	      invalid |= input_blocksize != n || input_blocksize == 0;
-	      conversions_mask |= C_TWOBUFS;
-	    }
-	  else if (STREQ (name, "obs"))
-	    {
-	      output_blocksize = n;
-	      invalid |= output_blocksize != n || output_blocksize == 0;
-	      conversions_mask |= C_TWOBUFS;
-	    }
-	  else if (STREQ (name, "bs"))
-	    {
-	      output_blocksize = input_blocksize = n;
-	      invalid |= output_blocksize != n || output_blocksize == 0;
-	    }
-	  else if (STREQ (name, "cbs"))
-	    {
-	      conversion_blocksize = n;
-	      invalid |= (conversion_blocksize != n
-			  || conversion_blocksize == 0);
-	    }
-	  else if (STREQ (name, "skip"))
-	    skip_records = n;
-	  else if (STREQ (name, "seek"))
-	    seek_record = n;
-	  else if (STREQ (name, "count"))
-	    max_records = n;
-	  else
-	    {
-	      error (0, 0, _("unrecognized option `%s=%s'"), name, val);
-	      usage (1);
-	    }
-
-	  if (invalid)
-	    error (1, 0, _("invalid number `%s'"), val);
-	}
-    }
-
-  /* If bs= was given, both `input_blocksize' and `output_blocksize' will
-     have been set to positive values.  If either has not been set,
-     bs= was not given, so make sure two buffers are used. */
-  if (input_blocksize == 0 || output_blocksize == 0)
-    conversions_mask |= C_TWOBUFS;
-  if (input_blocksize == 0)
-    input_blocksize = DEFAULT_BLOCKSIZE;
-  if (output_blocksize == 0)
-    output_blocksize = DEFAULT_BLOCKSIZE;
-  if (conversion_blocksize == 0)
-    conversions_mask &= ~(C_BLOCK | C_UNBLOCK);
-}
-
-/* Return the value of STR, interpreted as a non-negative decimal integer,
-   optionally multiplied by various values.
-   Assign nonzero to *INVALID if STR does not represent a number in
-   this format. */
-
-/* FIXME: use xstrtou?[lq] */
-
-static uintmax_t
-parse_integer (char *str, int *invalid)
-{
-  register uintmax_t n = 0;
-  register char *p = str;
-
-  while (ISDIGIT (*p))
-    {
-      uintmax_t n10 = n * 10;
-      int digit = *p - '0';
-      if (! (n10 / 10 == n && n10 <= n10 + digit))
-	{
-	  *invalid = 1;
-	  return 0;
-	}
-      n = n10 + digit;
-      p++;
-    }
-
-  for (;;)
-    {
-      uintmax_t multiplier;
-
-      switch (*p++)
-	{
-	case '\0':
-	  return n;
-	case 'b':
-	  multiplier = 512;
-	  break;
-	case 'c':
-	  continue;
-	case 'k':
-	  multiplier = 1024;
-	  break;
-	case 'w':
-	  multiplier = 2;
-	  break;
-	case 'x':
-	  multiplier = parse_integer (p, invalid);
-	  p = "";
-	  break;
-	default:
-	  {
-	    *invalid = 1;
-	    return 0;
-	  }
-	}
-
-      if (multiplier != 0 && n * multiplier / multiplier != n)
-	{
-	  *invalid = 1;
-	  return 0;
-	}
-
-      n *= multiplier;
-    }
-}
-
-/* Interpret one "conv=..." option. */
-
-static void
-parse_conversion (char *str)
-{
-  char *new;
-  int i;
-
-  do
-    {
-      new = strchr (str, ',');
-      if (new != NULL)
-	*new++ = '\0';
-      for (i = 0; conversions[i].convname != NULL; i++)
-	if (STREQ (conversions[i].convname, str))
-	  {
-	    conversions_mask |= conversions[i].conversion;
-	    break;
-	  }
-      if (conversions[i].convname == NULL)
-	{
-	  error (0, 0, _("%s: invalid conversion"), str);
-	  usage (1);
-	}
-      str = new;
-  } while (new != NULL);
-}
-
-/* Fix up translation table. */
-
-static void
-apply_translations (void)
-{
-  int i;
-
-#define MX(a) (bit_count (conversions_mask & (a)))
-  if ((MX (C_ASCII | C_EBCDIC | C_IBM) > 1)
-      || (MX (C_BLOCK | C_UNBLOCK) > 1)
-      || (MX (C_LCASE | C_UCASE) > 1)
-      || (MX (C_UNBLOCK | C_SYNC) > 1))
-    {
-      error (1, 0, _("\
-only one conv in {ascii,ebcdic,ibm}, {lcase,ucase}, {block,unblock}, {unblock,sync}"));
-    }
-#undef MX
-
-  if (conversions_mask & C_ASCII)
-    translate_charset (ebcdic_to_ascii);
-
-  if (conversions_mask & C_UCASE)
-    {
-      for (i = 0; i < 256; i++)
-	if (ISLOWER (trans_table[i]))
-	  trans_table[i] = toupper (trans_table[i]);
-      translation_needed = 1;
-    }
-  else if (conversions_mask & C_LCASE)
-    {
-      for (i = 0; i < 256; i++)
-	if (ISUPPER (trans_table[i]))
-	  trans_table[i] = tolower (trans_table[i]);
-      translation_needed = 1;
-    }
-
-  if (conversions_mask & C_EBCDIC)
-    {
-      translate_charset (ascii_to_ebcdic);
-      newline_character = ascii_to_ebcdic['\n'];
-      space_character = ascii_to_ebcdic[' '];
-    }
-  else if (conversions_mask & C_IBM)
-    {
-      translate_charset (ascii_to_ibm);
-      newline_character = ascii_to_ibm['\n'];
-      space_character = ascii_to_ibm[' '];
-    }
-}
-
-static void
-translate_charset (const unsigned char *new_trans)
-{
-  int i;
-
+  /* Initialize translation table to identity translation. */
   for (i = 0; i < 256; i++)
-    trans_table[i] = new_trans[trans_table[i]];
-  translation_needed = 1;
-}
+    trans_table[i] = i;
 
-/* Return the number of 1 bits in `i'. */
+  /* Decode arguments. */
+  scanargs (argc, argv);
 
-static int
-bit_count (register unsigned int i)
-{
-  register int set_bits;
+  if (show_version)
+    {
+      printf ("dd (%s) %s\n", GNU_PACKAGE, VERSION);
+      close_stdout ();
+      exit (0);
+    }
 
-  for (set_bits = 0; i != 0; set_bits++)
-    i &= i - 1;
-  return set_bits;
-}
+  if (show_help)
+    usage (0);
 
-static void
-cleanup (void)
-{
-  print_stats ();
-  if (close (input_fd) < 0)
-    error (1, errno, "%s", input_file);
-  if (close (output_fd) < 0)
-    error (1, errno, "%s", output_file);
-}
+  apply_translations ();
 
-static void
-quit (int code)
-{
-  cleanup ();
-  exit (code);
-}
+  if (input_file != NULL)
+    {
+      input_fd = open (input_file, O_RDONLY);
+      if (input_fd < 0)
+	error (1, errno, "%s", input_file);
+    }
+  else
+    input_file = _("standard input");
 
-static RETSIGTYPE
-interrupt_handler (int sig)
-{
-#ifdef SA_INTERRUPT
-  struct sigaction sigact;
+  if (input_fd == output_fd)
+    error (1, 0, _("%s is closed"), (input_fd == 0
+				     ? _("standard input")
+				     : _("standard output")));
 
-  sigact.sa_handler = SIG_DFL;
-  sigemptyset (&sigact.sa_mask);
-  sigact.sa_flags = 0;
-  sigaction (sig, &sigact, NULL);
-#else				/* !SA_INTERRUPT */
-  signal (sig, SIG_DFL);
-#endif				/* SA_INTERRUPT */
-  cleanup ();
-  kill (getpid (), sig);
-}
+  if (output_file != NULL)
+    {
+      int omode = O_RDWR | O_CREAT;
 
-static void
-usage (int status)
-{
-  if (status != 0)
-    fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+      if (seek_record == 0 && !(conversions_mask & C_NOTRUNC))
+	omode |= O_TRUNC;
+      output_fd = open (output_file, omode, 0666);
+      if (output_fd < 0)
+	error (1, errno, "%s", output_file);
+#ifdef HAVE_FTRUNCATE
+      if (seek_record != 0 && !(conversions_mask & C_NOTRUNC))
+	{
+	  off_t o = seek_record * output_blocksize;
+	  if (o / output_blocksize != seek_record)
+	    error (1, 0, _("file offset out of range"));
+	  if (ftruncate (output_fd, o) < 0)
+	    error (0, errno, "%s", output_file);
+	}
+#endif
+    }
   else
     {
-      printf (_("Usage: %s [OPTION]...\n"), program_name);
-      printf (_("\
-Copy a file, converting and formatting according to the options.\n\
-\n\
-  bs=BYTES        force ibs=BYTES and obs=BYTES\n\
-  cbs=BYTES       convert BYTES bytes at a time\n\
-  conv=KEYWORDS   convert the file as per the comma separated keyword list\n\
-  count=BLOCKS    copy only BLOCKS input blocks\n\
-  ibs=BYTES       read BYTES bytes at a time\n\
-  if=FILE         read from FILE instead of stdin\n\
-  obs=BYTES       write BYTES bytes at a time\n\
-  of=FILE         write to FILE instead of stdout\n\
-  seek=BLOCKS     skip BLOCKS obs-sized blocks at start of output\n\
-  skip=BLOCKS     skip BLOCKS ibs-sized blocks at start of input\n\
-      --help      display this help and exit\n\
-      --version   output version information and exit\n\
-\n\
-BYTES may be suffixed: by xM for multiplication by M, by c for x1,\n\
-by w for x2, by b for x512, by k for x1024.  Each KEYWORD may be:\n\
-\n\
-  ascii     from EBCDIC to ASCII\n\
-  ebcdic    from ASCII to EBCDIC\n\
-  ibm       from ASCII to alternated EBCDIC\n\
-  block     pad newline-terminated records with spaces to cbs-size\n\
-  unblock   replace trailing spaces in cbs-size records with newline\n\
-  lcase     change upper case to lower case\n\
-  notrunc   do not truncate the output file\n\
-  ucase     change lower case to upper case\n\
-  swab      swap every pair of input bytes\n\
-  noerror   continue after read errors\n\
-  sync      pad every input block with NULs to ibs-size\n\
-"));
-      puts (_("\nReport bugs to <fileutils-bugs@gnu.org>."));
-      close_stdout ();
+      output_file = _("standard output");
     }
-  exit (status);
+
+  install_handler (SIGINT, interrupt_handler);
+  install_handler (SIGQUIT, interrupt_handler);
+  install_handler (SIGPIPE, interrupt_handler);
+  install_handler (SIGINFO, siginfo_handler);
+
+  exit_status = copy ();
+
+  quit (exit_status);
 }
