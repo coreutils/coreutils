@@ -63,6 +63,7 @@ libfetish_a_SOURCES = \
   fts.c fts_.h \
   full-read.c full-read.h \
   full-write.c full-write.h \
+  getcwd.h \
   getline.h \
   getpagesize.h \
   getpass.h \
@@ -83,6 +84,7 @@ libfetish_a_SOURCES = \
   md5.c md5.h \
   memcasecmp.c memcasecmp.h \
   memcoll.c memcoll.h \
+  mempcpy.h \
   modechange.c modechange.h \
   mountlist.h \
   offtostr.c \
