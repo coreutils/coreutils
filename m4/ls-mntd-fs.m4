@@ -10,7 +10,7 @@ dnl
 AC_DEFUN([jm_LIST_MOUNTED_FILESYSTEMS],
   [
 AC_CHECK_FUNCS(listmntent getmntinfo)
-AC_CHECK_HEADERS(mntent.h)
+AC_CHECK_HEADERS(mntent.h sys/param.h sys/ucred.h sys/mount.h sys/fs_types.h)
 
 # Determine how to get the list of mounted filesystems.
 ac_list_mounted_fs=
@@ -109,19 +109,32 @@ if test $ac_cv_func_getmntent = yes; then
 fi
 
 if test -z "$ac_list_mounted_fs"; then
-  # DEC Alpha running OSF/1.
+  # DEC Alpha running OSF/1, and Apple Darwin 1.3.
+  # powerpc-apple-darwin1.3.7 needs sys/param.h sys/ucred.h sys/fs_types.h
+
   AC_MSG_CHECKING([for getfsstat function])
-  AC_CACHE_VAL(fu_cv_sys_mounted_getsstat,
+  AC_CACHE_VAL(fu_cv_sys_mounted_getfsstat,
   [AC_TRY_LINK([
 #include <sys/types.h>
+#if HAVE_SYS_PARAM_H
+# include <sys/param.h> /* needed by powerpc-apple-darwin1.3.7 */
+#endif
+#if HAVE_SYS_UCRED_H
+#include <sys/ucred.h> /* needed by powerpc-apple-darwin1.3.7 */
+#endif
+#if HAVE_SYS_MOUNT_H
 #include <sys/mount.h>
-#include <sys/fs_types.h>],
+#endif
+#if HAVE_SYS_FS_TYPES_H
+#include <sys/fs_types.h> /* needed by powerpc-apple-darwin1.3.7 */
+#endif
+],
   [struct statfs *stats;
   int numsys = getfsstat ((struct statfs *)0, 0L, MNT_WAIT); ],
-    fu_cv_sys_mounted_getsstat=yes,
-    fu_cv_sys_mounted_getsstat=no)])
-  AC_MSG_RESULT($fu_cv_sys_mounted_getsstat)
-  if test $fu_cv_sys_mounted_getsstat = yes; then
+    fu_cv_sys_mounted_getfsstat=yes,
+    fu_cv_sys_mounted_getfsstat=no)])
+  AC_MSG_RESULT($fu_cv_sys_mounted_getfsstat)
+  if test $fu_cv_sys_mounted_getfsstat = yes; then
     ac_list_mounted_fs=found
     AC_DEFINE(MOUNTED_GETFSSTAT, 1,
 	      [Define if there is a function named getfsstat for reading the
