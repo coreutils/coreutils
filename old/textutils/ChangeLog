@@ -1,3 +1,7 @@
+2000-01-30  Jim Meyering  <meyering@lucent.com>
+
+	* Version 2.0d.
+
 2000-01-29  Jim Meyering  <meyering@lucent.com>
 
 	* configure.in: Remove lib-check for cposix now that we use
