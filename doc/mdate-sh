@@ -1,23 +1,23 @@
 #!/bin/sh
-# mdate-sh - get modifaction time of a file and pretty-print it
+# mdate-sh - get modification time of a file and pretty-print it
 # Copyright (C) 1995 Software Foundation, Inc.
-# written by Ulrich Drepper <drepper@gnu.ai.mit.edu>, June 1995
+# Written by Ulrich Drepper <drepper@gnu.ai.mit.edu>, June 1995
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2, or (at your option)
 # any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-# Prevent date giving response in another language
+# Prevent date giving response in another language.
 LANG=C
 export LANG
 LC_ALL=C
@@ -25,19 +25,19 @@ export LC_ALL
 LC_TIME=C
 export LC_TIME
 
-# Get the extended ls output of the file
+# Get the extended ls output of the file.
 if ls -L /dev/null 1>/dev/null 2>&1; then
   set - `ls -L -l $1`
 else
   set - `ls -l $1`
 fi
-# The month is at least the fourth argument
+# The month is at least the fourth argument.
 # (3 shifts here, the next inside the loop)
 shift
 shift
 shift
 
-# Find the month.  Next argument is day, followed by the year or time
+# Find the month.  Next argument is day, followed by the year or time.
 month=
 until test $month
 do
