@@ -113,14 +113,19 @@ struct File_spec
   dev_t dev;
   ino_t ino;
 
+  /* The specified name initially referred to a directory or some other
+     type for which tail isn't meaningful.  Unlike for a permission problem
+     (tailable, below) once this is set, the name is not checked ever again.  */
+  int ignore;
+
   /* See description of DEFAULT_MAX_N_... below.  */
   unsigned int n_unchanged_stats;
 
   /* See description of DEFAULT_MAX_N_... below.  */
   unsigned int n_consecutive_size_changes;
 
-  /* A file is tailable if it is a regular file or a fifo and it is
-     readable.  */
+  /* A file is tailable if it exists, is readable, and is of type
+     IS_TAILABLE_FILE_TYPE.  */
   int tailable;
 
   /* The value of errno seen last time we checked this file.  */
@@ -756,8 +761,10 @@ recheck (struct File_spec *f)
     {
       fail = 1;
       f->errnum = -1;
-      error (0, 0, _("`%s' has been replaced with an untailable file"),
+      error (0, 0, _("`%s' has been replaced with an untailable file;\
+ giving up on this name"),
 	     pretty_name (f));
+      f->ignore = 1;
     }
   else
     {
@@ -822,6 +829,7 @@ recheck (struct File_spec *f)
       f->ino = new_stats.st_ino;
       f->n_unchanged_stats = 0;
       f->n_consecutive_size_changes = 0;
+      f->ignore = 0;
       /* FIXME: check lseek return value  */
       lseek (f->fd, f->size, SEEK_SET);
     }
@@ -867,6 +875,9 @@ tail_forever (struct File_spec *f, int nfiles)
       for (i = 0; i < nfiles; i++)
 	{
 	  struct stat stats;
+
+	  if (f[i].ignore)
+	    continue;
 
 	  if (f[i].fd < 0)
 	    {
@@ -1146,10 +1157,12 @@ tail_file (struct File_spec *f, off_t n_units)
 	    }
 	  else if (!IS_TAILABLE_FILE_TYPE (stats.st_mode))
 	    {
-	      error (0, 0, _("%s: cannot follow end of this type of file"),
+	      error (0, 0, _("%s: cannot follow end of this type of file;\
+ giving up on this name"),
 		     pretty_name (f));
 	      errors = 1;
 	      f->errnum = -1;
+	      f->ignore = 1;
 	    }
 
 	  if (errors)
@@ -1165,6 +1178,7 @@ tail_file (struct File_spec *f, off_t n_units)
 	      f->ino = stats.st_ino;
 	      f->n_unchanged_stats = 0;
 	      f->n_consecutive_size_changes = 0;
+	      f->ignore = 0;
 	    }
 	}
       else
