@@ -25,6 +25,7 @@
 	Based on a patch from Volker Borchert.
 
 	* tests/rwx-to-mode: New file.
+	* tests/Makefile.am (EXTRA_DIST): Add rwx-to-mode.
 	* tests/mkdir/parents: New test for the above mkdir.c fix.
 	* tests/mkdir/Makefile.am (TESTS): Add parents.
 	(TESTS_ENVIRONMENT): Define srcdir=$(srcdir).
