@@ -37,7 +37,6 @@ AC_DEFUN(AC_SEARCH_LIBS,
     else
       LIBS="$ac_cv_search_$1 $LIBS"
       $3
-      # m4_default([$3], [LIBS="$ac_cv_search_$1 $LIBS"])
     fi
   fi
 ])
