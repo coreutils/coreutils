@@ -37,10 +37,13 @@
 
    By tege@sics.se, Torbjorn Granlund,
    and djm@ai.mit.edu, David MacKenzie.
-   Variable blocks added by lm@sgi.com.
+   Variable blocks added by lm@sgi.com and eggert@twinsun.com.
 */
 
 #include <config.h>
+#if HAVE_INTTYPES_H
+# include <inttypes.h>
+#endif
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
@@ -49,6 +52,7 @@
 #include "system.h"
 #include "save-cwd.h"
 #include "error.h"
+#include "human.h"
 #include "xstrtol.h"
 #include "savedir.h"
 
@@ -60,11 +64,6 @@
 
 /* Initial size to allocate for `path'.  */
 #define INITIAL_PATH_SIZE 100
-
-/* The maximum length of a human-readable string.  Be pessimistic
-   and assume `int' is 64-bits wide.  Converting 2^63 - 1 gives the
-   11-character string, 8589934592G.  */
-#define LONGEST_HUMAN_READABLE 11
 
 /* Hash structure for inode and device numbers.  The separate entry
    structure makes it easier to rehash "in place".  */
@@ -102,8 +101,8 @@ int lstat ();
 
 static int hash_insert __P ((ino_t ino, dev_t dev));
 static int hash_insert2 __P ((struct htab *_htab, ino_t ino, dev_t dev));
-static long count_entry __P ((const char *ent, int top, dev_t last_dev,
-			      int depth));
+static uintmax_t count_entry __P ((const char *ent, int top, dev_t last_dev,
+				   int depth));
 static void du_files __P ((char **files));
 static void hash_init __P ((unsigned int modulus,
 			    unsigned int entry_tab_size));
@@ -138,18 +137,12 @@ static int opt_dereference_arguments = 0;
    most MAX_DEPTH levels down from the root of the hierarchy.  The root
    is at level 0, so `du --max-depth=0' is equivalent to `du -s'.  */
 static int max_depth = INT_MAX;
+  
+/* base used for human style output */
+static int human_readable_base;
 
-enum Output_units
-{
-  Unit_byte,			/* 1-byte blocks. */
-  Unit_block,			/* 512-byte blocks. */
-  Unit_kilobyte,		/* 1K blocks. */
-  Unit_megabyte,		/* 1024K blocks. */
-  Unit_variable			/* --human-readable. */
-};
-
-/* The units of output values -- when not --human-readable. */
-static enum Output_units output_units;
+/* The units to count in. */
+static int output_units;
 
 /* Accumulated path for file or directory being processed.  */
 static string path;
@@ -173,8 +166,8 @@ static int show_help;
 /* If nonzero, print the version on standard output and exit.  */
 static int show_version;
 
-/* Grand total size of all args, in units of 512-byte blocks. */
-static long tot_size = 0;
+/* Grand total size of all args, in units of ST_NBLOCKSIZE-byte blocks. */
+static uintmax_t tot_size = 0;
 
 static struct option const long_options[] =
 {
@@ -184,6 +177,7 @@ static struct option const long_options[] =
   {"dereference", no_argument, NULL, 'L'},
   {"dereference-args", no_argument, &opt_dereference_arguments, 1},
   {"human-readable", no_argument, NULL, 'h'},
+  {"si", no_argument, 0, 'H'},
   {"kilobytes", no_argument, NULL, 'k'},
   {"max-depth", required_argument, NULL, 13},
   {"megabytes", no_argument, NULL, 'm'},
@@ -217,10 +211,11 @@ Summarize disk usage of each FILE, recursively for directories.\n\
   -c, --total           produce a grand total\n\
   -D, --dereference-args  dereference PATHs when symbolic link\n\
   -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\n\
-  -k, --kilobytes       use 1024-byte blocks, not 512 despite POSIXLY_CORRECT\n\
+  -H, --si              likewise, but use powers of 1000 not 1024\n\
+  -k, --kilobytes       use 1024-byte blocks\n\
   -l, --count-links     count sizes many times if hard linked\n\
   -L, --dereference     dereference all symbolic links\n\
-  -m, --megabytes       use 1024K-byte blocks, not 512 despite POSIXLY_CORRECT\n\
+  -m, --megabytes       use 1048576-byte blocks\n\
   -S, --separate-dirs   do not include size of subdirectories\n\
   -s, --summarize       display only a total for each argument\n\
   -x, --one-file-system  skip directories on different filesystems\n\
@@ -258,16 +253,22 @@ main (int argc, char **argv)
   xstat = lstat;
 
   if (getenv ("POSIXLY_CORRECT"))
-    output_units = Unit_block;
+    output_units = 512;
   else if ((bs = getenv ("BLOCKSIZE"))
 	   && strncmp (bs, "HUMAN", sizeof ("HUMAN") - 1) == 0)
     {
-      output_units = Unit_variable;
+      human_readable_base = 1024;
+      output_units = 1;
+    }
+  else if (bs && strcmp (bs, "SI") == 0)
+    {
+      human_readable_base = 1000;
+      output_units = 1;
     }
   else
-    output_units = Unit_kilobyte;
+    output_units = 1024;
 
-  while ((c = getopt_long (argc, argv, "abchklmsxDLS", long_options, NULL))
+  while ((c = getopt_long (argc, argv, "abchHklmsxDLS", long_options, NULL))
 	 != -1)
     {
       long int tmp_long;
@@ -281,7 +282,8 @@ main (int argc, char **argv)
 	  break;
 
 	case 'b':
-	  output_units = Unit_byte;
+	  human_readable_base = 0;
+	  output_units = 1;
 	  break;
 
 	case 'c':
@@ -289,11 +291,18 @@ main (int argc, char **argv)
 	  break;
 
 	case 'h':
-	  output_units = Unit_variable;
+	  human_readable_base = 1024;
+	  output_units = 1;
+	  break;
+
+	case 'H':
+	  human_readable_base = 1000;
+	  output_units = 1;
 	  break;
 
 	case 'k':
-	  output_units = Unit_kilobyte;
+	  human_readable_base = 0;
+	  output_units = 1024;
 	  break;
 
 	case 13:		/* --max-depth=N */
@@ -306,7 +315,8 @@ main (int argc, char **argv)
  	  break;
 
 	case 'm':
-	  output_units = Unit_megabyte;
+	  human_readable_base = 0;
+	  output_units = 1024 * 1024;
 	  break;
 
 	case 'l':
@@ -377,103 +387,19 @@ main (int argc, char **argv)
   exit (exit_status);
 }
 
-/* Convert N_BLOCKS, the number of 512-byte blocks, to a more readable
-   string than %d would.
-   Most people visually process strings of 3-4 digits effectively,
-   but longer strings of digits are more prone to misinterpretation.
-   Hence, converting to an abbreviated form usually improves readability.
-   Use a suffix indicating multiples of 1024 (K), 1024*1024 (M), and
-   1024*1024*1024 (G).  For example, 8500 would be converted to 8.3K,
-   133456345 to 127M, 56990456345 to 53G, and so on.  Numbers smaller
-   than 1024 aren't modified.  */
-
-static char *
-human_readable (int n_blocks, char *buf, int buf_len)
-{
-  const char *suffix;
-  double amt;
-  char *p;
-
-  assert (buf_len > LONGEST_HUMAN_READABLE);
-
-  p = buf;
-  amt = n_blocks;
-
-  if (amt >= 1024 * 1024 * 2)
-    {
-      amt /= (1024 * 1024 * 2);
-      suffix = "G";
-    }
-  else if (amt >= 1024 * 2)
-    {
-      amt /= (1024 * 2);
-      suffix = "M";
-    }
-  else if (amt >= 2)
-    {
-      amt /= 2;
-      suffix = "K";
-    }
-  else
-    {
-      suffix = "";
-    }
-
-  if (amt >= 10)
-    {
-      sprintf (p, "%.0f%s", amt, suffix);
-    }
-  else if (amt == 0)
-    {
-      strcpy (p, "0");
-    }
-  else
-    {
-      sprintf (p, "%.1f%s", amt, suffix);
-    }
-  return (p);
-}
-
-/* Convert the number of 512-byte blocks, N_BLOCKS, to OUTPUT_UNITS and
-   then print the the result on stdout.  */
+/* Print N_BLOCKS followed by STRING on a line.  NBLOCKS is the number of
+   ST_NBLOCKSIZE-byte blocks; convert it to OUTPUT_UNITS units before
+   printing.  If HUMAN_READABLE_BASE is nonzero, use a human readable
+   notation instead.  */
 
 static void
-print_size (long int n_blocks)
+print_size (uintmax_t n_blocks, const char *string)
 {
-  if (output_units == Unit_variable)
-    {
-      char buf[LONGEST_HUMAN_READABLE + 1];
-      printf ("%s", human_readable (n_blocks, buf, LONGEST_HUMAN_READABLE + 1));
-    }
-  else
-    {
-      double d;
-
-      /* Convert to double precision before converting N_BLOCKS to output
-	 units in case that number is larger than LONG_MAX.  */
-      switch (output_units)
-	{
-	case Unit_byte:
-	  d = 512 * (double) n_blocks;
-	  break;
-
-	case Unit_block:
-	  d = n_blocks;
-	  break;
-
-	case Unit_kilobyte:
-	  d = (n_blocks + 1) / 2;
-	  break;
-
-	case Unit_megabyte:
-	  d = (n_blocks + 1024) / 2048;
-	  break;
-
-	default:
-	  abort ();
-	}
-      printf ("%.0f", d);
-    }
+  char buf[LONGEST_HUMAN_READABLE + 1];
+  printf ("%s\t%s\n",
+	  human_readable (n_blocks, buf, ST_NBLOCKSIZE, output_units,
+			  human_readable_base),
+	  string);
   fflush (stdout);
 }
 
@@ -534,10 +460,7 @@ du_files (char **files)
     }
 
   if (opt_combined_arguments)
-    {
-      print_size (tot_size);
-      printf ("\ttotal\n");
-    }
+    print_size (tot_size, _("total"));
 
   free_cwd (&cwd);
 }
@@ -549,10 +472,10 @@ du_files (char **files)
    DEPTH is the number of levels (in hierarchy) down from a command
    line argument.  Don't print if DEPTH > max_depth.  */
 
-static long
+static uintmax_t
 count_entry (const char *ent, int top, dev_t last_dev, int depth)
 {
-  long int size;
+  uintmax_t size;
 
   if (((top && opt_dereference_arguments)
        ? stat (ent, &stat_buf)
@@ -607,7 +530,7 @@ count_entry (const char *ent, int top, dev_t last_dev, int depth)
 	}
 
       errno = 0;
-      name_space = savedir (".", stat_buf.st_size);
+      name_space = savedir (".", (unsigned int) stat_buf.st_size);
       if (name_space == NULL)
 	{
 	  if (errno)
@@ -656,10 +579,7 @@ count_entry (const char *ent, int top, dev_t last_dev, int depth)
 
       str_trunc (path, pathlen - 1); /* Remove the "/" we added.  */
       if (depth <= max_depth || top)
-	{
-	  print_size (size);
-	  printf ("\t%s\n", path->length > 0 ? path->text : "/");
-	}
+	print_size (size, path->length > 0 ? path->text : "/");
       return opt_separate_dirs ? 0 : size;
     }
   else if ((opt_all && depth <= max_depth) || top)
@@ -667,10 +587,7 @@ count_entry (const char *ent, int top, dev_t last_dev, int depth)
       /* FIXME: make this an option.  */
       int print_only_dir_size = 0;
       if (!print_only_dir_size)
-	{
-	  print_size (size);
-	  printf ("\t%s\n", path->length > 0 ? path->text : "/");
-	}
+	print_size (size, path->length > 0 ? path->text : "/");
     }
 
   return size;
