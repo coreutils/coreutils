@@ -17,6 +17,10 @@ other_partition_tmpdir=
 # if the mount point name contains `% '.
 dot_mount_point=`df --no-sync -P . | sed -n '2s/.*%  *//p'`
 for d in $CANDIDATE_TMP_DIRS; do
+
+  # Skip nonexistent directories.
+  test -d $d || continue
+
   d_mount_point=`df --no-sync -P $d | sed -n '2s/.*%  *//p'`
 
   # Same partition?  Skip it.
