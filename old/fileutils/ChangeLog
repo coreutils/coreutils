@@ -1,3 +1,8 @@
+2000-12-28  Paul Eggert  <eggert@twinsun.com>
+
+	* tests/group-names: Try /usr/xpg4/bin/id (Solaris 7) if plain
+	'id' doesn't work.
+
 2000-12-28  Jim Meyering  <meyering@lucent.com>
 
 	* tests/cp/cp-parents: Run sticky-check from just-created directory.
