@@ -1,3 +1,12 @@
+2001-10-17  Jim Meyering  <meyering@lucent.com>
+
+	* coreutils.texi (cp invocation): `cp --no-dereference' is
+	no longer equivalent to `cp -d'.
+	`cp -d' is equivalent to `--no-dereference --preserve=links'.
+	cp's -P option means --no-dereference, not --parents.
+	Describe new optional argument to --preserve.
+	Describe new option: --no-preserve=ATTRIBUTE_LIST.
+
 2001-09-23  Jim Meyering  <meyering@lucent.com>
 
 	* Makefile.am (check-texinfo): Redirect stderr of `grep -w' to
