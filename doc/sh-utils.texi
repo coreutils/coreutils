@@ -60,7 +60,7 @@ by the Foundation.
 @titlepage
 @title GNU sh-utils, version @value{VERSION}
 @subtitle A set of shell utilities
-@subtitle for version @value{VERSION}, August 1994
+@subtitle for version @value{VERSION}, @value{RELEASE_DATE}
 @author Jim Meyering
 
 @page
