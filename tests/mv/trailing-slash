@@ -1,0 +1,31 @@
+#!/bin/sh
+# On some operating systems, e.g. SunOS-4.1.1_U1 on sun3x,
+# rename() doesn't accept trailing slashes.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  mv --version
+fi
+
+pwd=`pwd`
+tmp=mv-tslash.$$
+trap 'status=$?; cd $pwd; exec 1>&2; rm -rf $tmp && exit $status' 0
+trap '(exit $?); exit' 1 2 13 15
+
+. $srcdir/../envvar-check
+
+framework_failure=0
+mkdir $tmp || framework_failure=1
+cd $tmp || framework_failure=1
+mkdir foo || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo 'failure in testing framework'
+  exit 1
+fi
+
+fail=0
+
+mv foo/ bar || fail=1
+
+(exit $fail); exit
