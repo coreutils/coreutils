@@ -213,8 +213,7 @@ copy_reg (const char *src_path, const char *dst_path,
     {
       dest_desc = open (dst_path, O_WRONLY | O_TRUNC, dst_mode);
 
-      /* FIXME: Rename force to unlink_dest_upon_failed_open.  */
-      if (dest_desc < 0 && x->force)
+      if (dest_desc < 0 && x->unlink_dest_after_failed_open)
 	{
 	  if (unlink (dst_path))
 	    {
@@ -377,6 +376,177 @@ close_src_desc:
   return return_val;
 }
 
+/* Return nonzero if it's ok that the source and destination
+   files are the `same' by some measure.  The goal is to avoid
+   making the `copy' operation remove both copies of the file
+   in that case, while still allowing the user to e.g., move or
+   copy a regular file onto a symlink that points to it.
+   Try to minimize the cost of this function in the common case.  */
+
+static int
+same_file_ok (const char *src_path, const struct stat *src_sb,
+	      const char *dst_path, const struct stat *dst_sb,
+	      const struct cp_options *x, int *return_now)
+{
+  const struct stat *src_sb_link;
+  const struct stat *dst_sb_link;
+  const struct stat *src_sb_no_link;
+  const struct stat *dst_sb_no_link;
+
+  int same = (SAME_INODE (*src_sb, *dst_sb));
+
+  *return_now = 0;
+
+  /* FIXME: this should (at the very least) be moved into the following
+     if-block.  More likely, it should be removed, because it inhibits
+     making backups.  But removing it will result in a change in behavior
+     that will probably have to be documented -- and tests will have to
+     be updated.  */
+  if (same && x->hard_link)
+    {
+      *return_now = 1;
+      return 1;
+    }
+
+  if (x->xstat == lstat)
+    {
+
+      /* The backup code ensures there's a copy, so it's ok to remove
+	 any destination file.  But there's one exception: when both
+	 source and destination are the same directory entry.  In that
+	 case, moving the destination file aside (in making the backup)
+	 would also rename the source file and result in an error.  */
+      if (x->backup_type != none)
+	{
+	  if (!same)
+	    return 1;
+
+	  return ! same_name (src_path, dst_path);
+	}
+
+      /* They may refer to the same file if we're in move mode and the
+	 target is a symlink.  That is ok, since we remove any existing
+	 destination file before opening it -- via `rename' if they're on
+	 the same file system, via `unlink (DST_PATH)' otherwise.  */
+      if (x->move_mode && S_ISLNK (dst_sb->st_mode))
+	return 1;
+
+      /* If both the source and destination files are symlinks (and we'll
+	 know this here IFF preserving symlinks (aka xstat == lstat),
+	 then it's ok.  */
+      if (S_ISLNK (src_sb->st_mode) && S_ISLNK (dst_sb->st_mode))
+	return 1;
+
+      src_sb_link = src_sb;
+      dst_sb_link = dst_sb;
+    }
+  else
+    {
+      static struct stat tmp_dst_sb;
+      static struct stat tmp_src_sb;
+      if (!same)
+	return 1;
+
+      if (lstat (dst_path, &tmp_dst_sb)
+	  || lstat (src_path, &tmp_src_sb))
+	return 1;
+
+      src_sb_link = &tmp_src_sb;
+      dst_sb_link = &tmp_dst_sb;
+
+      /* If both are symlinks, then it's ok, but only if the destination
+	 will be unlinked before being opened.  This is like the test
+	 above, but with the addition of the unlink_dest_before_opening
+	 conjunct because otherwise, with two symlinks to the same target,
+	 we'd end up truncating the source file.  */
+      if (S_ISLNK (src_sb_link->st_mode) && S_ISLNK (dst_sb_link->st_mode)
+	  && x->unlink_dest_before_opening)
+	return 1;
+
+      /* FIXME: factor this code and above */
+      /* The backup code ensures there's a copy, so it's ok to remove
+	 any destination file.  But there's one exception: when both
+	 source and destination are the same directory entry.  In that
+	 case, moving the destination file aside (in making the backup)
+	 would also rename the source file and result in an error.  */
+      if (x->backup_type != none)
+	{
+	  if (!SAME_INODE (*src_sb_link, *dst_sb_link))
+	    return 1;
+
+	  return ! same_name (src_path, dst_path);
+	}
+    }
+
+#if 0
+  /* If we're making a backup, we'll detect the problem case in
+     copy_reg because SRC_PATH will no longer exist.  Allowing
+     the test to be deferred lets cp do some useful things.
+     But when creating hardlinks and SRC_PATH is a symlink
+     but DST_PATH is not we must test anyway.  */
+  if (x->hard_link
+      || !S_ISLNK (src_sb_link->st_mode)
+      || S_ISLNK (dst_sb_link->st_mode))
+    return 1;
+
+  /* FIXME: explain */
+  if (x->dereference != DEREF_NEVER)
+    return 1;
+#endif
+
+  /* If neither is a symlink, then it's ok as long as they aren't
+     links to the same file.  */
+  if (!S_ISLNK (src_sb_link->st_mode) && !S_ISLNK (dst_sb_link->st_mode))
+    {
+      if (!SAME_INODE (*src_sb_link, *dst_sb_link))
+	return 1;
+
+      /* If they are the same file, it's ok if we're making hard links.  */
+      if (x->hard_link)
+	{
+	  *return_now = 1;
+	  return 1;
+	}
+    }
+
+  if (x->xstat == lstat)
+    {
+      static struct stat tmp_dst_sb;
+      static struct stat tmp_src_sb;
+      if (stat (dst_path, &tmp_dst_sb)
+	  || stat (src_path, &tmp_src_sb)
+	  || ! SAME_INODE (tmp_dst_sb, tmp_dst_sb))
+	return 1;
+
+      /* FIXME: shouldn't this be testing whether we're making symlinks?  */
+      if (x->hard_link)
+	{
+	  *return_now = 1;
+	  return 1;
+	}
+      src_sb_no_link = &tmp_src_sb;
+      dst_sb_no_link = &tmp_dst_sb;
+    }
+  else
+    {
+      src_sb_no_link = src_sb;
+      dst_sb_no_link = dst_sb;
+    }
+
+  /* It's ok to remove a destination symlink.  But that works only when we
+     unlink before opening the destination and when they're on the same
+     partition.  */
+  if (x->unlink_dest_before_opening
+      && S_ISLNK (dst_sb_no_link->st_mode))
+    return src_sb_link->st_dev == src_sb_link->st_dev;
+
+  /* FIXME: explain this!! */
+  if (x->unlink_dest_before_opening && ! same_name (src_path, dst_path))
+    return 1;
+
+  return 0;
+}
+
 /* Copy the file SRC_PATH to the file DST_PATH.  The files may be of
    any type.  NEW_DST should be nonzero if the file DST_PATH cannot
    exist because its parent directory was just created; NEW_DST should
@@ -450,64 +620,17 @@ copy_internal (const char *src_path, const char *dst_path,
 	}
       else
 	{
-	  int same;
+	  int return_now;
+	  int ok = same_file_ok (src_path, &src_sb, dst_path, &dst_sb,
+				 x, &return_now);
+	  if (return_now)
+	    return 0;
 
-	  /* The destination file exists already.  */
-
-	  same = (SAME_INODE (src_sb, dst_sb));
-
-#ifdef S_ISLNK
-	  /* If we're preserving symlinks (--no-dereference) and either
-	     file is a symlink, use stat (not xstat) to see if they refer
-	     to the same file.  */
-	  if (!same
-
-	      /* If we'll remove DST_PATH first, then this doesn't matter.  */
-	      && ! x->force
-
-	      /* Allow them to be the same (and don't set `same') if we're
-		 in move mode and the target is a symlink.  That is ok, since
-		 we remove any existing destination file before opening it --
-		 via `rename' if they're on the same file system,
-		 via `unlink(DST_PATH)' otherwise.  */
-	      && !(move_mode
-		   && S_ISLNK (dst_sb.st_mode))
-
-	      /* If we're making a backup, we'll detect the problem case in
-		 copy_reg because SRC_PATH will no longer exist.  Allowing
-		 the test to be deferred lets cp do some useful things.
-		 But when creating hardlinks and SRC_PATH is a symlink
-		 but DST_PATH is not we must test anyway.  */
-	      && (x->backup_type == none
-		  || (x->hard_link
-		      && S_ISLNK (src_sb.st_mode)
-		      && !S_ISLNK (dst_sb.st_mode)))
-	      && x->dereference == DEREF_NEVER
-	      && (S_ISLNK (dst_sb.st_mode) ^ S_ISLNK (src_sb.st_mode)))
+	  if (! ok)
 	    {
-	      struct stat dst2_sb;
-	      struct stat src2_sb;
-	      if (stat (dst_path, &dst2_sb) == 0
-		  && stat (src_path, &src2_sb) == 0
-		  && SAME_INODE (src2_sb, dst2_sb))
-		{
-		  same = 1;
-		}
-	    }
-#endif
-
-	  if (same)
-	    {
-	      if (x->hard_link)
-		return 0;
-
-	      if (x->backup_type == none
-		  && (!x->force || same_name (src_path, dst_path)))
-		{
-		  error (0, 0, _("%s and %s are the same file"),
-			 quote_n (0, src_path), quote_n (1, dst_path));
-		  return 1;
-		}
+	      error (0, 0, _("%s and %s are the same file"),
+		     quote_n (0, src_path), quote_n (1, dst_path));
+	      return 1;
 	    }
 
 	  if (!S_ISDIR (src_type))
@@ -604,6 +727,18 @@ copy_internal (const char *src_path, const char *dst_path,
 	      else
 		{
 		  backup_succeeded = 1;
+		}
+	      new_dst = 1;
+	    }
+	  else if (x->unlink_dest_before_opening
+		   || (x->xstat == lstat
+		       && ! S_ISREG (src_sb.st_mode)
+		       && ! S_ISDIR (src_sb.st_mode)))
+	    {
+	      if (unlink (dst_path) && errno != ENOENT)
+		{
+		  error (0, errno, _("cannot remove %s"), quote (dst_path));
+		  return 1;
 		}
 	      new_dst = 1;
 	    }
