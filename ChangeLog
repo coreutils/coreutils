@@ -9,6 +9,7 @@
 
 2002-12-06  Jim Meyering  <jim@meyering.net>
 
+	* Use autoconf-2.57.  Regenerate dependent files.
 	* Use automake-1.7.2.  Regenerate dependent files.
 
 	* src/ls.c (gobble_file): Also stat the file if it's a
