@@ -213,7 +213,7 @@ do
   # Skip lots of stat calls in the usual case.
   if test ! -d "$dstdir"; then
     defaultIFS='
-  	'
+	 '
     IFS="${IFS-$defaultIFS}"
 
     oIFS=$IFS
@@ -283,8 +283,8 @@ do
         $doit $rmcmd -f "$dstdir/$dstfile" 2>/dev/null \
         || $doit $mvcmd -f "$dstdir/$dstfile" "$rmtmp" 2>/dev/null \
         || {
-  	  echo "$0: cannot unlink or rename $dstdir/$dstfile" >&2
-  	  (exit 1); exit
+	  echo "$0: cannot unlink or rename $dstdir/$dstfile" >&2
+	  (exit 1); exit
         }
       else
         :
