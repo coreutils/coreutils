@@ -1,3 +1,9 @@
+2003-03-14  Jim Meyering  <jim@meyering.net>
+
+	* Makefile.am (AUTOMAKE_OPTIONS): Remove definition --
+	before it pointed to ../src/ansi2knr.  Some of these files
+	have required an ANSI (c89) compiler for a year or two.
+
 2003-02-04  Dmitry V. Levin  <ldv@altlinux.org>
 
 	* stat.c: Include "xalloc.h".
