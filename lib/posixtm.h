@@ -15,10 +15,7 @@
 #  endif
 # endif
 
-time_t
-posixtime PARAMS ((const char *s, unsigned int syntax_bits));
-
-struct tm *
-posixtm PARAMS ((const char *s, unsigned int syntax_bits));
+bool
+posixtime PARAMS ((time_t *p, const char *s, unsigned int syntax_bits));
 
 #endif
