@@ -3176,13 +3176,37 @@ Ignore differences in case when comparing lines.
 Print only duplicate lines.
 
 @item -D
-@itemx --all-repeated
+@itemx --all-repeated[=@var{delimit-method}]
 @opindex -D
 @opindex --all-repeated
 @cindex all duplicate lines, outputting
 Print all duplicate lines and only duplicate lines.
 This option is useful mainly in conjunction with other options e.g.,
 to ignore case or to compare only selected fields.
+The optional @var{delimit-method} tells how to delimit
+groups of duplicate lines, and must be one of the following:
+
+@table @samp
+
+@item none
+Do not delimit groups of duplicate lines.
+This is equivalent to @option{--all-repeated} (@option{-D}).
+
+@item prepend
+Output a newline before each group of duplicate lines.
+
+@item separate
+Separate groups of duplicate lines with a single newline.
+This is the same as using @samp{prepend}, except that
+there is no newline before the first group, and hence
+may be better suited for output direct to users.
+@end table
+
+Note that when groups are delimited and the input stream contains
+two or more consecutive blank lines, then the output is ambiguous.
+To avoid that, filter the input through @samp{tr -s '\n'} to replace
+each sequence of consecutive newlines with a single newline.
+
 This is a @sc{gnu} extension.
 @c FIXME: give an example showing *how* it's useful
 
