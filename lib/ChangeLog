@@ -1,5 +1,13 @@
 2003-03-18  Jim Meyering  <jim@meyering.net>
 
+	* mountlist.h (ME_REMOTE): Recognize as remote any file system
+	that has an Fs_type with the `nfs' (any case) prefix.
+	This is necessary at least for AIX 5.1 when it uses the
+	MOUNTED_GETMNTENT1 code.  Reported by Mike Jetzer.
+
+	* exclude.c (excluded_filename): Define and use typedef to
+	avoid type mismatch in conditional expression.
+
 	* quote.c (quote_n): Fix typo in comment.
 
 2003-03-17  Jim Meyering  <jim@meyering.net>
