@@ -1,3 +1,8 @@
+2004-02-17  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi (csplit invocation): Correct typo (s/LINE/N/)
+	in description of `N' pattern.  From Reuben Thomas <rrt@sc3d.org>
+
 2004-02-11  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (Time directives): The %s value *is* changed by the
