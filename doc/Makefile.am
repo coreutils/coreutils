@@ -1,2 +1,2 @@
 TEXINFOS = fileutils.texi
-DIST_OTHER = mdate-sh
+DIST_OTHER = perm.texi getdate.texi
