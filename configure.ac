@@ -1,5 +1,5 @@
 dnl Process this file with autoconf to produce a configure script. -*-m4-*-
-AC_INIT(GNU coreutils, 1.0.0, bug-coreutils@gnu.org)
+AC_INIT(GNU coreutils, 0.1.0, bug-coreutils@gnu.org)
 AC_CONFIG_SRCDIR(src/ls.c)
 
 AC_CONFIG_AUX_DIR(config)
@@ -277,7 +277,6 @@ AC_CONFIG_FILES(
   m4/Makefile
   po/Makefile.in
   src/Makefile
-  djgpp/Makefile
   tests/Makefile
   tests/basename/Makefile
   tests/chgrp/Makefile
