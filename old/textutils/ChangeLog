@@ -1,3 +1,8 @@
+2001-03-01  Paul Eggert  <eggert@twinsun.com>
+
+	* src/sort.c (main): When fclose (stdin) fails, do not mention
+	the output file in the error message; mention "-" instead.
+
 2001-02-28  Paul Eggert  <eggert@twinsun.com>
 
 	* src/sort.c (xfopen): Set have_read_stdin to 1 only if file is "-".
