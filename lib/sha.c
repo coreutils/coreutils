@@ -234,10 +234,10 @@ sha_process_bytes (const void *buffer, size_t len, struct sha_ctx *ctx)
 #define K3 0x8f1bbcdcL
 #define K4 0xca62c1d6L
 
-/* Round functions.  Note that f2() is used in both rounds 2 and 4 */
-#define f1(B,C,D) ( D ^ ( B & ( C ^ D ) ) )
-#define f2(B,C,D) (B ^ C ^ D)
-#define f3(B,C,D) ( ( B & C ) | ( D & ( B | C ) ) )
+/* Round functions.  Note that F2() is used in both rounds 2 and 4 */
+#define F1(B,C,D) ( D ^ ( B & ( C ^ D ) ) )
+#define F2(B,C,D) (B ^ C ^ D)
+#define F3(B,C,D) ( ( B & C ) | ( D & ( B | C ) ) )
 
 #if SHA_DEBUG
 char bin2hex[16]={'0','1','2','3','4','5','6','7',
@@ -294,7 +294,7 @@ sha_process_block (const void *buffer, size_t len, struct sha_ctx *ctx)
          the correct round function and constant */
       for (t = 0; t < 20; t++)
 	{
-	  md5_uint32 tmp = rol (A, 5) + f1 (B, C, D) + E + W[t] + K1;
+	  md5_uint32 tmp = rol (A, 5) + F1 (B, C, D) + E + W[t] + K1;
 	  E = D;
 	  D = C;
 	  C = rol (B, 30);
@@ -303,7 +303,7 @@ sha_process_block (const void *buffer, size_t len, struct sha_ctx *ctx)
 	}
       for (; t < 40; t++)
 	{
-	  md5_uint32 tmp = rol (A, 5) + f2 (B, C, D) + E + W[t] + K2;
+	  md5_uint32 tmp = rol (A, 5) + F2 (B, C, D) + E + W[t] + K2;
 	  E = D;
 	  D = C;
 	  C = rol (B, 30);
@@ -312,7 +312,7 @@ sha_process_block (const void *buffer, size_t len, struct sha_ctx *ctx)
 	}
       for (; t < 60; t++)
 	{
-	  md5_uint32 tmp = rol (A, 5) + f3 (B, C, D) + E + W[t] + K3;
+	  md5_uint32 tmp = rol (A, 5) + F3 (B, C, D) + E + W[t] + K3;
 	  E = D;
 	  D = C;
 	  C = rol (B, 30);
@@ -321,7 +321,7 @@ sha_process_block (const void *buffer, size_t len, struct sha_ctx *ctx)
 	}
       for (; t < 80; t++)
 	{
-	  md5_uint32 tmp = rol (A, 5) + f2 (B, C, D) + E + W[t] + K4;
+	  md5_uint32 tmp = rol (A, 5) + F2 (B, C, D) + E + W[t] + K4;
 	  E = D;
 	  D = C;
 	  C = rol (B, 30);
