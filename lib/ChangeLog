@@ -1,3 +1,8 @@
+2003-06-17  Jim Meyering  <jim@meyering.net>
+
+	* acl.c: Include sys/types.h before sys/stat.h.
+	Required on Ultrix 4.3.
+
 2003-05-20  Derek Price  <derek@ximbiot.com>
 
 	* stat.c [LSTAT]: Compile/use slash_aware_lstat only if it is necessary.
