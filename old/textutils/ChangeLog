@@ -1,3 +1,9 @@
+Sun May 28 14:48:58 1995  Jim Meyering  (meyering@comco.com)
+
+	* join.c: Overhauled to make -a1 and -a2 options work.
+	Passed all tests in a fairly thorough test suite.
+	Reported by Michael Hasselberg (mikelh@zonta.ping.de).
+
 Sat May 27 00:35:47 1995  Jim Meyering  (meyering@comco.com)
 
 	* system.h [!STDC_HEADERS && HAVE_MEMORY_H]: Include memory.h.
