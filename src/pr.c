@@ -2069,7 +2069,7 @@ add_line_number (COLUMN *p)
 static void
 pad_across_to (int position)
 {
-  register int h = output_position;
+  int h = output_position;
 
   if (tabify_output)
     spaces_not_printed = position - output_position;
@@ -2089,7 +2089,7 @@ pad_across_to (int position)
 static void
 pad_down (int lines)
 {
-  register int i;
+  int i;
 
   if (use_form_feed)
     putchar ('\f');
@@ -2107,7 +2107,7 @@ pad_down (int lines)
 static void
 read_rest_of_line (COLUMN *p)
 {
-  register int c;
+  int c;
   FILE *f = p->fp;
 
   while ((c = getc (f)) != '\n')
@@ -2141,7 +2141,7 @@ read_rest_of_line (COLUMN *p)
 static void
 skip_read (COLUMN *p, int column_number)
 {
-  register int c;
+  int c;
   FILE *f = p->fp;
   int i;
   bool single_ff = false;
@@ -2208,9 +2208,9 @@ skip_read (COLUMN *p, int column_number)
 static void
 print_white_space (void)
 {
-  register int h_new;
-  register int h_old = output_position;
-  register int goal = h_old + spaces_not_printed;
+  int h_new;
+  int h_old = output_position;
+  int goal = h_old + spaces_not_printed;
 
   while (goal - h_old > 1
 	 && (h_new = POS_AFTER_TAB (chars_per_output_tab, h_old)) <= goal)
@@ -2570,7 +2570,7 @@ print_stored (COLUMN *p)
   int i;
 
   int line = p->current_line++;
-  register char *first = &buff[line_vector[line]];
+  char *first = &buff[line_vector[line]];
   /* FIXME
      UMR: Uninitialized memory read:
      * This is occurring while in:
@@ -2582,7 +2582,7 @@ print_stored (COLUMN *p)
      xmalloc        [xmalloc.c:94]
      init_store_cols [pr.c:1648]
      */
-  register char *last = &buff[line_vector[line + 1]];
+  char *last = &buff[line_vector[line + 1]];
 
   pad_vertically = true;
 
@@ -2639,8 +2639,8 @@ static int
 char_to_clump (char c)
 {
   unsigned char uc = c;
-  register char *s = clump_buff;
-  register int i;
+  char *s = clump_buff;
+  int i;
   char esc_buff[4];
   int width;
   int chars;
