@@ -1033,8 +1033,6 @@ copy_internal (const char *src_path, const char *dst_path,
 	    {
 	      char *tmp_backup = find_backup_file_name (dst_path,
 							x->backup_type);
-	      if (tmp_backup == NULL)
-		xalloc_die ();
 
 	      /* Detect (and fail) when creating the backup file would
 		 destroy the source file.  Before, running the commands
