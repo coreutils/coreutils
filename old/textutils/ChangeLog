@@ -1,3 +1,19 @@
+Tue Nov  7 23:55:24 1995  Jim Meyering  (meyering@comco.com)
+
+	* .version: New file.
+	* configure.in (VERSION): New variable.
+	(PACKAGE): New variable.
+
+	* Makefile.in (DISTFILES): Add .version.
+	(distdir): Use @PACKAGE@-@VERSION@, not distname.
+	Remove all references to distname.
+	* src/Makefile.in (version.c): Generate it.
+	* doc/Makefile.in (version.texi): Use @PACKAGE@-@VERSION@,
+	not version.c
+
+	* */Makefile.in (distdir): Use @PACKAGE@-@VERSION@, not distname.
+	Remove all references to distname.
+
 	* split.c: New option: --verbose.
 	(main): Recognize it.
 	(usage): Document it.
