@@ -1,3 +1,9 @@
+1999-05-15  Jim Meyering  <meyering@ascend.com>
+
+	* tests/join/Test.pm (trailing-sp): New test for this fix.
+	* src/join.c (xfields): Don't interpret a trailing blank as a
+	delimiter when e.g. -t: was specified.  From Tim Smithers.
+
 1999-05-12  Jim Meyering  <meyering@ascend.com>
 
 	* tests/Makefile.am (envvar-check): Renamed from check-local.
