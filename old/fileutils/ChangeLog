@@ -1,5 +1,8 @@
 Mon Sep 30 20:08:45 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/Makefile.am (dircolors.h): Don't depend on anything unless
+	in maintainer-mode.  Reported by Marcus Daniels.
+
 	* lib/path-concat.c (path_concat): Use K&R style function definition.
 
 Sun Sep 29 22:00:44 1996  Jim Meyering  <meyering@na-net.ornl.gov>
