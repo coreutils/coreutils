@@ -21,6 +21,8 @@
 # include "config.h"
 #endif
 
+#include "save-cwd.h"
+
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,12 +38,6 @@
 #endif
 
 #include <errno.h>
-
-#ifndef O_DIRECTORY
-# define O_DIRECTORY 0
-#endif
-
-#include "save-cwd.h"
 
 #include "chdir-long.h"
 #include "xgetcwd.h"
@@ -66,48 +62,49 @@
 int
 save_cwd (struct saved_cwd *cwd)
 {
+#if !HAVE_FCHDIR
+# undef fchdir
+# define fchdir(x) (abort (), 0)
+  bool have_working_fchdir = false;
+  bool fchdir_needs_testing = false;
+#elif (__sgi || __sun)
   static bool have_working_fchdir = true;
+  bool fchdir_needs_testing = true;
+#else
+  bool have_working_fchdir = true;
+  bool fchdir_needs_testing = false;
+#endif
 
   cwd->desc = -1;
   cwd->name = NULL;
 
   if (have_working_fchdir)
     {
-#if HAVE_FCHDIR
-      cwd->desc = open (".", O_RDONLY | O_DIRECTORY);
-      if (cwd->desc < 0)
-	cwd->desc = open (".", O_WRONLY | O_DIRECTORY);
+      cwd->desc = open (".", O_RDONLY);
       if (cwd->desc < 0)
 	{
-	  cwd->name = xgetcwd ();
-	  return cwd->name ? 0 : -1;
+	  cwd->desc = open (".", O_WRONLY);
+	  if (cwd->desc < 0)
+	    {
+	      cwd->name = xgetcwd ();
+	      return cwd->name ? 0 : -1;
+	    }
 	}
 
-# if __sun__ || sun
       /* On SunOS 4 and IRIX 5.3, fchdir returns EINVAL when auditing
 	 is enabled, so we have to fall back to chdir.  */
-      if (fchdir (cwd->desc))
+      if (fchdir_needs_testing && fchdir (cwd->desc) != 0)
 	{
-	  if (errno == EINVAL)
+	  int saved_errno = errno;
+	  close (cwd->desc);
+	  cwd->desc = -1;
+	  if (saved_errno != EINVAL)
 	    {
-	      close (cwd->desc);
-	      cwd->desc = -1;
-	      have_working_fchdir = false;
-	    }
-	  else
-	    {
-	      int saved_errno = errno;
-	      close (cwd->desc);
-	      cwd->desc = -1;
 	      errno = saved_errno;
 	      return -1;
 	    }
+	  have_working_fchdir = false;
 	}
-# endif /* __sun__ || sun */
-#else
-# define fchdir(x) (abort (), 0)
-      have_working_fchdir = false;
-#endif
     }
 
   if (!have_working_fchdir)
