@@ -427,7 +427,6 @@ char *base_name PARAMS ((char const *));
 #define case_GETOPT_VERSION_CHAR(Program_name, Authors)			\
   case GETOPT_VERSION_CHAR:						\
     version_etc (stdout, Program_name, GNU_PACKAGE, VERSION, Authors);	\
-    close_stdout ();							\
     exit (EXIT_SUCCESS);						\
     break;
 
