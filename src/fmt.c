@@ -275,7 +275,7 @@ usage (status)
       printf ("Usage: %s [-DIGITS] [OPTION]... [FILE]...\n", program_name);
       fputs ("\
 Reformat each paragraph in the FILE(s), writing to standard output.\n\
-If no FILE or if FILE is `-', standard input is read.\n\
+If no FILE or if FILE is `-', read standard input.\n\
 \n\
 Mandatory arguments to long options are mandatory for short options too.\n\
   -c, --crown-margin        preserve indentation of first two lines\n\
