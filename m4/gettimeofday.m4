@@ -1,4 +1,4 @@
-#serial 1
+#serial 2
 
 dnl From Jim Meyering.
 dnl
@@ -6,8 +6,8 @@ dnl See if gettimeofday clobbers the static buffer that localtime uses
 dnl for it's return value.  The gettimeofday function from Mac OS X 10.0.4,
 dnl i.e. Darwin 1.3.7 has this problem.
 dnl
-dnl If it does, then arrange to use gettimeofday only via the wrapper
-dnl function that works around the problem.
+dnl If it does, then arrange to use gettimeofday and localtime only via
+dnl the wrapper functions that work around the problem.
 
 AC_DEFUN([AC_FUNC_GETTIMEOFDAY_CLOBBER],
 [
@@ -59,6 +59,8 @@ main ()
   ])
   if test $jm_cv_func_gettimeofday_clobber = yes; then
     AC_LIBOBJ(gettimeofday)
+    AC_DEFINE(localtime, rpl_localtime,
+      [Define to rpl_localtime if the replacement function should be used.])
     AC_DEFINE(gettimeofday, rpl_gettimeofday,
       [Define to rpl_gettimeofday if the replacement function should be used.])
     AC_DEFINE(GETTIMEOFDAY_CLOBBERS_LOCALTIME_BUFFER, 1,
