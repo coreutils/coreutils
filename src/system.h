@@ -466,13 +466,9 @@ initialize_exit_failure (int status)
    errors that the cast doesn't.  */
 static inline unsigned char to_uchar (char ch) { return ch; }
 
-/* Take care of NLS matters.  */
+#include <locale.h>
 
-#if HAVE_LOCALE_H
-# include <locale.h>
-#else
-# define setlocale(Category, Locale) /* empty */
-#endif
+/* Take care of NLS matters.  */
 
 #include "gettext.h"
 #if ! ENABLE_NLS
@@ -484,10 +480,6 @@ static inline unsigned char to_uchar (char ch) { return ch; }
 
 #define _(msgid) gettext (msgid)
 #define N_(msgid) msgid
-
-#ifndef HAVE_SETLOCALE
-# define HAVE_SETLOCALE 0
-#endif
 
 #define STREQ(a, b) (strcmp ((a), (b)) == 0)
 
