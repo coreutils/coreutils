@@ -2,7 +2,7 @@ dnl Process this file with autoconf to produce a configure script. -*-m4-*-
 AC_INIT([GNU coreutils],[5.3.1],[bug-coreutils@gnu.org])
 AC_CONFIG_SRCDIR(src/ls.c)
 
-AC_CONFIG_AUX_DIR(config)
+AC_CONFIG_AUX_DIR(build-aux)
 AC_CONFIG_HEADERS([config.h:config.hin])
 
 AM_INIT_AUTOMAKE([1.8.3 gnits dist-bzip2])
