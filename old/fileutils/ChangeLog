@@ -2,6 +2,9 @@
 
 	* Version 4.0.
 
+	* Makefile.maint (cvs-dist): Search for `$tag:' rather than just $tag
+	to avoid matching a prefix of another tag.
+
 1998-11-10  Jim Meyering  <meyering@ascend.com>
 
 	* configure.in (ALL_LINGUAS): Add greek (el).
