@@ -1,3 +1,8 @@
+1999-01-10  Jim Meyering  <meyering@ascend.com>
+
+	* regex.m4: By default, don't use the included regex.c on systems
+	with glibc 2.  Suggestion from Uli Drepper.
+
 1999-01-02  Jim Meyering  <meyering@ascend.com>
 
 	* jm-macros.m4: Replace strcasecmp and strncasecmp.
