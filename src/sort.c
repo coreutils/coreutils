@@ -1648,27 +1648,27 @@ mergefps (char **files, register int nfiles,
   saved.text = NULL;
 
   /* Read initial lines from each input file. */
-  for (i = 0; i < nfiles; ++i)
+  for (i = 0; i < nfiles; )
     {
       fps[i] = xfopen (files[i], "r");
       initbuf (&buffer[i], sizeof (struct line),
 	       MAX (merge_buffer_size, sort_size / nfiles));
-      /* If a file is empty, eliminate it from future consideration. */
-      while (i < nfiles && !fillbuf (&buffer[i], fps[i], files[i]))
-	{
-	  xfclose (fps[i], files[i]);
-	  zaptemp (files[i]);
-	  --nfiles;
-	  for (j = i; j < nfiles; ++j)
-	    files[j] = files[j + 1];
-	}
-      if (i == nfiles)
-	free (buffer[i].buf);
-      else
+      if (fillbuf (&buffer[i], fps[i], files[i]))
 	{
 	  struct line const *linelim = buffer_linelim (&buffer[i]);
 	  cur[i] = linelim - 1;
 	  base[i] = linelim - buffer[i].nlines;
+	  i++;
+	}
+      else
+	{
+	  /* fps[i] is empty; eliminate it from future consideration.  */
+	  xfclose (fps[i], files[i]);
+	  zaptemp (files[i]);
+	  free (buffer[i].buf);
+	  --nfiles;
+	  for (j = i; j < nfiles; ++j)
+	    files[j] = files[j + 1];
 	}
     }
 
