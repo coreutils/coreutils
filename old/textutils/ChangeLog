@@ -1,3 +1,9 @@
+1999-09-02  Jim Meyering  <meyering@ascend.com>
+
+	* src/cut.c: Remove xstrdup declaration.
+	* src/sort.c: Likewise.
+	* src/tsort.c: Likewise.
+
 1999-08-22  Jim Meyering  <meyering@ascend.com>
 
 	* src/tsort.c (detect_loop): There's no loop if k->top is NULL.
