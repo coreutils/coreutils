@@ -1,5 +1,8 @@
 2000-03-02  Jim Meyering  <meyering@lucent.com>
 
+	* timespec.m4: Require AC_HEADER_TIME before the cache check so
+	the messages come out on separate lines.
+
 	* jm-glibc-io.m4 (jm_FUNC_GLIBC_UNLOCKED_IO): Use AC_CHECK_DECLS,
 	rather than jm_CHECK_DECLARATIONS.
 	* decl.m4: Remove now-unused file.
