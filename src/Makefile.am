@@ -2,7 +2,7 @@
 
 EXTRA_PROGRAMS = chroot df hostid nice pinky stty su uname uptime users who
 
-bin_SCRIPTS = groups $(OPTIONAL_BIN_ZCRIPTS)
+bin_SCRIPTS = groups
 bin_PROGRAMS = [ chgrp chown chmod cp dd dircolors du \
   ginstall link ln dir vdir ls mkdir \
   mkfifo mknod mv nohup readlink rm rmdir shred stat sync touch unlink \
