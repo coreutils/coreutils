@@ -1,5 +1,5 @@
 /* uniq -- remove duplicate lines from a sorted file
-   Copyright (C) 86, 91, 95, 96, 1997 Free Software Foundation, Inc.
+   Copyright (C) 86, 91, 95, 96, 1997, 1998 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -25,18 +25,6 @@
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
-
-#if HAVE_LIMITS_H
-# include <limits.h>
-#endif
-
-#ifndef UINT_MAX
-# define UINT_MAX ((unsigned int) ~(unsigned int) 0)
-#endif
-
-#ifndef INT_MAX
-# define INT_MAX ((int) (UINT_MAX >> 1))
-#endif
 
 #include "system.h"
 #include "linebuffer.h"

@@ -1,5 +1,5 @@
 /* tail -- output the last part of file(s)
-   Copyright (C) 89, 90, 91, 95, 96, 1997 Free Software Foundation, Inc.
+   Copyright (C) 89, 90, 91, 95, 96, 1997, 1998 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -49,25 +49,17 @@
 #include <assert.h>
 #include <getopt.h>
 #include <sys/types.h>
-#if HAVE_LIMITS_H
-# include <limits.h>
-#endif
 
 #include "system.h"
 #include "xstrtoul.h"
 #include "error.h"
 
-#ifndef CHAR_BIT
-# define CHAR_BIT 8
-#endif
-
 #ifndef OFF_T_MIN
-# define OFF_T_MIN (0 < (off_t) -1 ? (off_t) 0 \
-		    : ~ (off_t) 0 << (sizeof (off_t) * CHAR_BIT - 1))
+# define OFF_T_MIN TYPE_MINIMUM (off_t)
 #endif
 
 #ifndef OFF_T_MAX
-# define OFF_T_MAX (~ (off_t) 0 - OFF_T_MIN)
+# define OFF_T_MAX TYPE_MAXIMUM (off_t)
 #endif
 
 /* Disable assertions.  Some systems have broken assert macros.  */

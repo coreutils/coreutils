@@ -1,5 +1,5 @@
 /* od -- dump files in octal and other formats
-   Copyright (C) 92, 95, 96, 1997 Free Software Foundation, Inc.
+   Copyright (C) 92, 95, 96, 1997, 1998 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -37,34 +37,9 @@ typedef long double LONG_DOUBLE;
 typedef double LONG_DOUBLE;
 #endif
 
-#if HAVE_LIMITS_H
-# include <limits.h>
-#endif
-#ifndef SCHAR_MAX
-# define SCHAR_MAX 127
-#endif
-#ifndef SCHAR_MIN
-# define SCHAR_MIN (-128)
-#endif
-#ifndef SHRT_MAX
-# define SHRT_MAX 32767
-#endif
-#ifndef SHRT_MIN
-# define SHRT_MIN (-32768)
-#endif
-#ifndef ULONG_MAX
-# define ULONG_MAX ((unsigned long) ~(unsigned long) 0)
-#endif
-#ifndef LONG_MAX
-# define LONG_MAX ((long int) (ULONG_MAX >> 1))
-#endif
 
 #if HAVE_VALUES_H
 # include <values.h>
-#endif
-
-#ifndef BITSPERBYTE
-# define BITSPERBYTE 8
 #endif
 
 #ifndef MAX

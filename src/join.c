@@ -1,5 +1,5 @@
 /* join - join lines of two files on a common field
-   Copyright (C) 91, 95, 96, 1997 Free Software Foundation, Inc.
+   Copyright (C) 91, 95, 96, 1997, 1998 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -27,18 +27,6 @@
 #include <assert.h>
 #include <sys/types.h>
 #include <getopt.h>
-
-#if HAVE_LIMITS_H
-# include <limits.h>
-#endif
-
-#ifndef UINT_MAX
-# define UINT_MAX ((unsigned int) ~(unsigned int) 0)
-#endif
-
-#ifndef INT_MAX
-# define INT_MAX ((int) (UINT_MAX >> 1))
-#endif
 
 #if _LIBC || STDC_HEADERS
 # define TOLOWER(c) tolower (c)

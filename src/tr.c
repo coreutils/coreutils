@@ -1,5 +1,5 @@
 /* tr -- a filter to translate characters
-   Copyright (C) 91, 95, 96, 1997 Free Software Foundation, Inc.
+   Copyright (C) 91, 95, 96, 1997, 1998 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -29,32 +29,8 @@
 #include <sys/types.h>
 #include <getopt.h>
 
-#if HAVE_LIMITS_H
-# include <limits.h>
-#endif
-
 #include "system.h"
 #include "error.h"
-
-#ifndef ULONG_MAX
-# define ULONG_MAX ((unsigned long) ~(unsigned long) 0)
-#endif
-
-#ifndef LONG_MAX
-# define LONG_MAX ((long int) (ULONG_MAX >> 1))
-#endif
-
-#ifndef UINT_MAX
-# define UINT_MAX ((unsigned int) ~(unsigned int) 0)
-#endif
-
-#ifndef INT_MAX
-# define INT_MAX ((int) (UINT_MAX >> 1))
-#endif
-
-#ifndef UCHAR_MAX
-# define UCHAR_MAX 0xFF
-#endif
 
 #define N_CHARS (UCHAR_MAX + 1)
 

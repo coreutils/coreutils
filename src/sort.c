@@ -43,14 +43,6 @@
 # include <langinfo.h>
 #endif
 
-#ifdef HAVE_LIMITS_H
-# include <limits.h>
-#else
-# ifndef UCHAR_MAX
-#  define UCHAR_MAX 255
-# endif
-#endif
-
 char *xstrdup ();
 
 /* Undefine, to avoid warning about redefinition on some systems.  */

@@ -1,5 +1,5 @@
 /* tac - concatenate and print files in reverse
-   Copyright (C) 88, 89, 90, 91, 95, 96, 1997 Free Software Foundation, Inc.
+   Copyright (C) 88, 89, 90, 91, 95, 96, 1997, 1998 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -40,12 +40,14 @@ tac -r -s '.\|
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
+#include "system.h"
+
 #if WITH_REGEX
 # include <regex.h>
 #else
 # include <rx.h>
 #endif
-#include "system.h"
+
 #include "error.h"
 
 #ifndef DEFAULT_TMPDIR
