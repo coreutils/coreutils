@@ -1,5 +1,5 @@
 /* Compare strings while treating digits characters numerically.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jean-Francois Bignolles <bignolle@ecoledoc.ibp.fr>, 1997.
 
@@ -36,6 +36,15 @@
 #define CMP    2
 #define LEN    3
 
+/* ISDIGIT differs from isdigit, as follows:
+   - Its arg may be any int or unsigned int; it need not be an unsigned char.
+   - It's guaranteed to evaluate its argument exactly once.
+   - It's typically faster.
+   Posix 1003.2-1992 section 2.5.2.1 page 50 lines 1556-1558 says that
+   only '0' through '9' are digits.  Prefer ISDIGIT to isdigit unless
+   it's important to use the locale's definition of `digit' even when the
+   host does not conform to Posix.  */
+#define ISDIGIT(c) ((unsigned) (c) - '0' <= 9)
 
 /* Compare S1 and S2 as strings holding indices/version numbers,
    returning less than, equal to or greater than zero if S1 is less than,
@@ -83,17 +92,17 @@ strverscmp (const char *s1, const char *s2)
   c1 = *p1++;
   c2 = *p2++;
   /* Hint: '0' is a digit too.  */
-  state = S_N | ((c1 == '0') + (isdigit (c1) != 0));
+  state = S_N | ((c1 == '0') + (ISDIGIT (c1) != 0));
 
   while ((diff = c1 - c2) == 0 && c1 != '\0')
     {
       state = next_state[state];
       c1 = *p1++;
       c2 = *p2++;
-      state |= (c1 == '0') + (isdigit (c1) != 0);
+      state |= (c1 == '0') + (ISDIGIT (c1) != 0);
     }
 
-  state = result_type[state << 2 | ((c2 == '0') + (isdigit (c2) != 0))];
+  state = result_type[state << 2 | ((c2 == '0') + (ISDIGIT (c2) != 0))];
 
   switch (state)
     {
@@ -101,11 +110,11 @@ strverscmp (const char *s1, const char *s2)
       return diff;
 
     case LEN:
-      while (isdigit (*p1++))
-	if (!isdigit (*p2++))
+      while (ISDIGIT (*p1++))
+	if (!ISDIGIT (*p2++))
 	  return 1;
 
-      return isdigit (*p2) ? -1 : diff;
+      return ISDIGIT (*p2) ? -1 : diff;
 
     default:
       return state;
