@@ -1,3 +1,13 @@
+2003-08-05  Paul Eggert  <eggert@twinsun.com>
+
+	* jm-macros.m4 (jm_MACROS): Use gl_GETNDELIM2 rather than
+	checking for getdelim.
+	(jm_CHECK_ALL_TYPES): Use gt_TYPE_SSIZE_T for ssize_t rather
+	than rolling our own.
+	Merge getline from gnulib.
+	* getline.m4: Merge from gnulib.
+	* getndelim2.m4, ssize_t.m4: New files, from gnulib.
+
 2003-08-04  Paul Eggert  <eggert@twinsun.com>
 
 	* regex.m4: Merge with gnulib.
