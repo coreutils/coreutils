@@ -566,7 +566,6 @@ print_it (char const *masterformat, char const *filename,
 
   char *dest = xmalloc (strlen (format) + 1);
 
-
   b = format;
   while (b)
     {
@@ -583,9 +582,12 @@ print_it (char const *masterformat, char const *filename,
 	  dest[1 + len] = 0;
 	  p += len;
 
+	  b = p + 1;
 	  switch (*p)
 	    {
 	    case '\0':
+	      b = NULL;
+	      /* fall through */
 	    case '%':
 	      putchar ('%');
 	      break;
@@ -593,7 +595,6 @@ print_it (char const *masterformat, char const *filename,
 	      print_func (dest, *p, filename, data);
 	      break;
 	    }
-	  b = p + 1;
 	}
       else
 	{
