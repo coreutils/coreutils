@@ -1,12 +1,19 @@
+Wed Jan 22 20:12:31 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* m4/mktime.m4 (AM_FUNC_MKTIME): Run tests for each of a few values
+	for the TZ environment variable.  Andre Novaes Cunha provided the
+	hairy TZ setting that exercized the Solaris tzset bug.
+
 1997-01-22  Paul Eggert  <eggert@twinsun.com>
 
 	* lib/strftime.c (_strftime_copytm):
 	New function, to work around Solaris 2.5 tzset bug.
 
-1997-01-22  Paul Eggert  <eggert@twinsun.com>
-
 	* m4/mktime.m4: (AM_FUNC_MKTIME): Fix bug in mktime test -- don't
 	test now, test a couple of thousand times.
+
+	* m4/strftime.m4 (main): Use TZ=GMT0, not TZ=GMT, since only GMT0 is
+	specified by Posix.1.
 
 Sat Jan 18 09:32:26 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
