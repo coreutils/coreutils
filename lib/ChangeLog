@@ -1,3 +1,7 @@
+2003-01-04  Jim Meyering  <jim@meyering.net>
+
+	* version-etc.c: Update copyright date.
+
 2002-12-31  Jim Meyering  <meyering@lucent.com>
 
 	* dev-ino.h: New file.
