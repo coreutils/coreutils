@@ -1,3 +1,7 @@
+1998-08-09  Jim Meyering  <meyering@ascend.com>
+
+	* Version 3.16t.
+
 1998-07-31  Paul Eggert  <eggert@twinsun.com>
 
 	Add support for filesystems whose timestamps have better resolution
