@@ -1,12 +1,12 @@
 #!/p/bin/perl -w
 
 $tr = '../tr +io 5';
-$tr = './tr';
 $tr = 'tr';
+$tr = './tr';
 $test = 0;
 $| = 1;
 
-print ":\nerrors=0\n";
+print "#! /bin/sh\necho 'testing with tr=$tr'\ntr=$tr\nerrors=0\n";
 $expected = '';
 $s1 = '';
 $input = '';
@@ -34,7 +34,7 @@ while (<>)
     close(EXP);
     $arg2 = ($s2 ? " '$s2'" : '');
     $err_output = "t$test_name.err";
-    $cmd = "$tr $flags \'$s1\'$arg2 < $in > $out 2> $err_output";
+    $cmd = "\$tr $flags \'$s1\'$arg2 < $in > $out 2> $err_output";
     print <<EOF ;
 $cmd
 code=\$?
