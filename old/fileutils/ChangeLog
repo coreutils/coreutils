@@ -1,3 +1,8 @@
+2000-05-25  Jim Meyering  <meyering@lucent.com>
+
+	* src/dd.c (close_stdout_wrapper): Don't dereference NULL pointer.
+	From Bob Proulx.
+
 2000-05-23  Jim Meyering  <meyering@lucent.com>
 
 	* tests/shred/remove: Add traps to clean up.
