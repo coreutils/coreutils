@@ -1,4 +1,4 @@
-#serial 29
+#serial 30
 
 dnl We use jm_ for non Autoconf macros.
 m4_pattern_forbid([^jm_[ABCDEFGHIJKLMNOPQRSTUVXYZ]])dnl
@@ -24,7 +24,6 @@ AC_DEFUN([jm_PREREQ],
   AC_REQUIRE([jm_PREREQ_POSIXVER])
   AC_REQUIRE([jm_PREREQ_QUOTEARG])
   AC_REQUIRE([jm_PREREQ_READUTMP])
-  AC_REQUIRE([jm_PREREQ_REGEX])
   AC_REQUIRE([jm_PREREQ_STAT])
   AC_REQUIRE([jm_PREREQ_STRNLEN])
   AC_REQUIRE([jm_PREREQ_TEMPNAME]) # called by mkstemp
@@ -166,17 +165,6 @@ $ac_includes_default
     AC_CHECK_MEMBERS([struct utmp.ut_exit.e_termination],,,[$utmp_includes])
     AC_LIBOBJ(readutmp)
   fi
-])
-
-AC_DEFUN([jm_PREREQ_REGEX],
-[
-  dnl FIXME: Maybe provide a btowc replacement someday: solaris-2.5.1 lacks it.
-  dnl FIXME: Check for wctype and iswctype, and and add -lw if necessary
-  dnl to get them.
-  AC_CHECK_FUNCS(bzero bcopy isascii btowc)
-  AC_CHECK_HEADERS(alloca.h libintl.h wctype.h wchar.h)
-  AC_REQUIRE([AC_HEADER_STDC])
-  AC_REQUIRE([AC_FUNC_ALLOCA])
 ])
 
 AC_DEFUN([jm_PREREQ_STAT],
