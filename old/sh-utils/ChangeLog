@@ -1,3 +1,12 @@
+2000-01-15  Jim Meyering  <meyering@lucent.com>
+
+	* configure.in (AC_REPLACE_FUNCS): Remove gethostname and getusershell.
+	Now that's done in m4/.
+
+2000-01-12  Jim Meyering  <meyering@lucent.com>
+
+	* configure.in: Remove the tests that are now in jm_PREREQ_CANON_HOST.
+
 2000-01-11  Jim Meyering  <meyering@lucent.com>
 
 	Sync lib/ directories of sh-utils, and textutils.
