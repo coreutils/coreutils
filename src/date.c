@@ -170,7 +170,7 @@ batch_convert (const char *input_filename, const char *format)
 	{
 	  if (line[line_length - 1] == '\n')
 	    line[line_length - 1] = '\0';
-	  error (0, 0, _("invalid date ` %s'"), line);
+	  error (0, 0, _("invalid date `%s'"), line);
 	  status = 1;
 	}
       else
