@@ -1,5 +1,5 @@
 /* modechange.c -- file mode manipulation
-   Copyright (C) 1989, 1990, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1989, 1990, 1997, 1998, 1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -171,7 +171,7 @@ mode_compile (const char *mode_string, unsigned int masked_ops)
 	      change->next = talloc (struct mode_change);
 	      if (change->next == NULL)
 		{
-		  mode_free (change);
+		  mode_free (head);
 		  return MODE_MEMORY_EXHAUSTED;
 		}
 	      change = change->next;
