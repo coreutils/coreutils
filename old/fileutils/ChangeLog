@@ -1,5 +1,13 @@
 2001-11-24  Jim Meyering  <meyering@lucent.com>
 
+	* Version 4.1.3.
+
+	* Makefile.maint: Include signatures for the xdelta file, too.
+
+	* Makefile.maint (emit-upload-commands): Rename from
+	emit-rsync-commands.
+	Output only the package name and the prev and current version numbers.
+
 	* Version 4.1.2.
 
 	* src/sync.c (usage): Make --help and --version strings
