@@ -18,7 +18,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 /* Written by David MacKenzie <djm@gnu.ai.mit.edu>.  */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+# include <config.h>
 #endif
 
 #include <stdio.h>
@@ -44,7 +44,7 @@ void exit ();
 #endif
 
 #ifndef _
-#define _(String) String
+# define _(String) String
 #endif
 
 /* If NULL, error will flush stdout, then print on stderr the program
@@ -62,8 +62,8 @@ unsigned int error_message_count;
 #ifdef _LIBC
 /* In the GNU C library, there is a predefined variable for this.  */
 
-#define program_name program_invocation_name
-#include <errno.h>
+# define program_name program_invocation_name
+# include <errno.h>
 
 #else
 
@@ -71,11 +71,11 @@ unsigned int error_message_count;
    name of the executing program.  */
 extern char *program_name;
 
-#if HAVE_STRERROR
-# ifndef strerror		/* On some systems, strerror is a macro */
+# if HAVE_STRERROR
+#  ifndef strerror		/* On some systems, strerror is a macro */
 char *strerror ();
-# endif
-#else
+#  endif
+# else
 static char *
 private_strerror (errnum)
      int errnum;
@@ -87,8 +87,8 @@ private_strerror (errnum)
     return sys_errlist[errnum];
   return _("Unknown system error");
 }
-#define strerror private_strerror
-#endif	/* HAVE_STRERROR */
+#  define strerror private_strerror
+# endif	/* HAVE_STRERROR */
 #endif	/* _LIBC */
 
 /* Print the program name and error message MESSAGE, which is a printf-style
