@@ -1,5 +1,5 @@
 /* seq - print sequence of numbers to standard output.
-   Copyright (C) 94, 1995 Free Software Foundation, Inc.
+   Copyright (C) 94, 1995, 96 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -85,12 +85,13 @@ usage (int status)
 Usage: %s [OPTION]... [START [INCREMENT]] LIMIT\n\
 "), program_name);
       (void) printf (_("\
+Print numbers from FIRST (default 1) to LAST, moving by STEP (default 1).\n\
 \n\
   -f, --format FORMAT      use printf(3) style FORMAT (default: %%g)\n\
-      --help               display this help and exit\n\
   -s, --separator STRING   use STRING for separating numbers (default: \\n)\n\
-      --version            output version information and exit\n\
   -w, --equal-width        equalize width by padding with leading zeroes\n\
+      --help               display this help and exit\n\
+      --version            output version information and exit\n\
 \n\
 START, INCREMENT, and LIMIT are interpreted as floating point values.\n\
 INCREMENT should be positive if START is smaller than LIMIT, and negative\n\
