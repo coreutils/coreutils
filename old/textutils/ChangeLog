@@ -1,4 +1,14 @@
+Sat Dec 28 00:03:23 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/pr.c (TAB_WIDTH): Parenthesize uses of parameters and renamed
+	from tab_width.
+	(POS_AFTER_TAB): Renamed from pos_after_tab.  Define in terms of
+	TAB_WIDTH rather than duplicating the expression.
+
 Fri Dec 27 17:29:02 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* tests/join-test/mk-script.pl: Fix a couple of thinkos and typos.
+	Now it works with pr's tests, too.
 
 	* tests/pr-test/Makefile.am (explicit): Regenerate list of files,
 	this time with duplicates removed.
