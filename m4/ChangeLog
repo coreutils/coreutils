@@ -1,3 +1,8 @@
+2002-12-11  Jim Meyering  <jim@meyering.net>
+
+	* jm-glibc-io.m4: Maintain this file manually rather than generating it.
+	Generating it caused too much trouble.  From gnulib.
+
 2002-11-19  Jim Meyering  <jim@meyering.net>
 
 	* jm-macros.m4: Require Autoconf-2.56.
