@@ -42,13 +42,13 @@
 #include "error.h"
 #include "argmatch.h"
 #include "getdate.h"
+#include "safe-read.h"
 
 #ifndef STDC_HEADERS
 time_t time ();
 #endif
 
 time_t posixtime ();
-int safe_read ();
 int full_write ();
 void invalid_arg ();
 
