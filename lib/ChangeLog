@@ -3,6 +3,7 @@
 	* c-strtod.c (c_strtod): Save and restore original LC_NUMERIC setting,
 	in case it was different from the environment-derived value.
 	Patch by Paul Eggert.
+	Include "xalloc.h" for declaration of xstrdup.
 
 2003-11-24  Paul Eggert  <eggert@twinsun.com>
 
