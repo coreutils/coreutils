@@ -62,8 +62,10 @@ User-visible changes in release 1.12
 * wc is faster when not counting words
 * wc now works even when file pointer isn't at beginning of file
 * expand no longer seg faults with very long tab lists
+
 User-visible changes in release 1.11
 * fmt is built
+
 User-visible changes in release 1.10
 * skeletal texinfo documentation (mainly just the `invoking' nodes)
 * new program: fmt
