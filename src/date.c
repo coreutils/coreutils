@@ -378,9 +378,8 @@ specifies Coordinated Universal Time.  Interpreted sequences are:\n\
   %%Y   year (1970...)\n\
   %%Z   time zone (e.g., EDT), or nothing if no time zone is determinable\n\
 \n\
-By default, `date' pads numeric fields with zeroes.  GNU `date'\n\
-recognizes the following nonstandard modifiers between `%%' and a\n\
-numeric directive.\n\
+By default, date pads numeric fields with zeroes.  GNU date recognizes\n\
+the following modifiers between `%%' and a numeric directive.\n\
 \n\
   `-' (hyphen) do not pad the field\n\
   `_' (underscore) pad the field with spaces\n\
