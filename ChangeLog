@@ -22,7 +22,7 @@
 	`format == long_format', then silently reset dired.  This doesn't
 	change the behavior of ls (all prior uses of dired were protected
 	by `&& format == long_format'), and lets us...
-	(DIRED_INDENT): ... remove `format == long_format' conjunct.
+	(DIRED_INDENT): ... remove the `format == long_format' conjunct.
 	(PUSH_CURRENT_DIRED_POS): Likewise.
 	(main): Likewise.
 
