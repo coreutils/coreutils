@@ -1,6 +1,6 @@
 2003-11-05  Paul Eggert  <eggert@twinsun.com>
 
-	* m4/jm-macros.m4 (jm_CHECK_ALL_TYPES): Check for uintptr_t.
+	* jm-macros.m4 (jm_CHECK_ALL_TYPES): Check for uintptr_t.
 
 2003-11-05  Jim Meyering  <jim@meyering.net>
 
