@@ -13,6 +13,12 @@
 	AIX 5.1's xlc could not compile the former.
 	Patch by Petter Reinholdtsen.  Also reported by Mike Jetzer.
 
+2003-03-17  Richard Dawe  <rich@phekda.freeserve.co.uk>
+
+	* configure.ac: Include $(EXEEXT) in OPTIONAL_BIN_PROGS'
+	program names, since automake only adds $(EXEEXT) to programs
+	in its *_PROGRAMS.
+
 2003-03-16  Jim Meyering  <jim@meyering.net>
 
 	* src/remove.c (rm): Put two local variables in static storage,
