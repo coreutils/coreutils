@@ -1,3 +1,9 @@
+2000-06-15  Paul Eggert  <eggert@twinsun.com>
+
+	* lib/human.c (adjust_value): New function.
+	(human_readable_inexact): Apply rounding style even when
+	printing approximate values.
+
 2000-06-14  Paul Eggert  <eggert@twinsun.com>
 
 	* lib/human.c (human_readable_inexact): Allow an input block
