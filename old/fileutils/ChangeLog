@@ -1,5 +1,17 @@
 2001-01-02  Paul Eggert  <eggert@twinsun.com>
 
+	Make ls -l compatible with POSIX, which requires that the
+	behavior of time formats must depend only on LC_TIME, not on
+	LC_MESSAGES.
+
+	* po/Makefile.in.in (install-data-yes): If the package is
+	fileutils, install LC_TIME as an alias for LC_MESSAGES.
+	* src/sys2.h (dcgettext): New macro.
+	* src/ls.c (decode_switches): Use dcgettext with LC_TIME,
+	not plain gettext, to get the translations of time formats.
+
+2001-01-02  Paul Eggert  <eggert@twinsun.com>
+
 	* src/ls.c (long_time_expected_width): New function.
 	(print_long_format): Use it, so that we don't assume a
 	particular width for time stamps in an internationalized
