@@ -188,6 +188,22 @@ AC_DEFUN(jm_MACROS,
   AC_SUBST(POW_LIBM)
   test $am_cv_func_strtod_needs_libm = yes && POW_LIBM=-lm
 
+  # See if linking `seq' requires -lm.
+  # It does on nearly every system.  The single exception (so far) is
+  # BeOS which doesn't even have a separate math library.
+  AC_SUBST(SEQ_LIBM)
+  ac_seq_body='
+     static double x, y;
+     x = floor (x);
+     x = rint (x);
+     x = modf (x, &y);'
+  AC_TRY_LINK([#include <math.h>], $ac_seq_body, ,
+    [ac_seq_save_LIBS="$LIBS"
+     LIBS="$LIBS -lm"
+     AC_TRY_LINK([#include <math.h>], $ac_seq_body, SEQ_LIBM=-lm)
+     LIBS="$ac_seq_save_LIBS"
+    ])
+
   jm_LANGINFO_CODESET
   jm_GLIBC21
   jm_ICONV
