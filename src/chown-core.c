@@ -50,8 +50,8 @@ chopt_init (struct Chown_option *chopt)
 void
 chopt_free (struct Chown_option *chopt)
 {
-  XFREE (chopt->user_name);
-  XFREE (chopt->group_name);
+  /* Deliberately do not free chopt->user_name or ->group_name.
+     They're not always allocated.  */
 }
 
 /* FIXME: describe */
