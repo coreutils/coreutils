@@ -53,6 +53,11 @@
 	This is different from the SunOS 4.0 install, which gives
 	directories that it creates the default attributes.
 
+  -D
+	Like the -d option, but a file is installed, along with the directory.
+	Useful when installing into a new directory, and the install
+	process doesn't properly comprehend making directories.
+
    David MacKenzie <djm@gnu.ai.mit.edu> */
 
 #ifdef _AIX
@@ -122,6 +127,7 @@ static int change_timestamps PARAMS ((const char *from, const char *to));
 static int change_attributes PARAMS ((const char *path, int no_need_to_chown));
 static int copy_file PARAMS ((const char *from, const char *to,
 			      int *to_created));
+static int install_file_to_path PARAMS ((const char *from, const char *to));
 static int install_file_in_dir PARAMS ((const char *from, const char *to_dir));
 static int install_file_in_file PARAMS ((const char *from, const char *to));
 static void get_ids PARAMS ((void));
@@ -191,6 +197,7 @@ main (int argc, char **argv)
   char *symbolic_mode = NULL;
   int make_backups = 0;
   char *version;
+  int mkdir_and_install = 0;
 
   program_name = argv[0];
   setlocale (LC_ALL, "");
@@ -211,7 +218,7 @@ main (int argc, char **argv)
       simple_backup_suffix = version;
    version = getenv ("VERSION_CONTROL");
 
-  while ((optc = getopt_long (argc, argv, "bcsdg:m:o:pvV:S:", long_options,
+  while ((optc = getopt_long (argc, argv, "bcsDdg:m:o:pvV:S:", long_options,
 			      NULL)) != -1)
     {
       switch (optc)
@@ -229,6 +236,9 @@ main (int argc, char **argv)
 	case 'd':
 	  dir_arg = 1;
 	  break;
+	case 'D':
+	   mkdir_and_install = 1;
+	   break;
 	case 'v':
 	  verbose = 1;
 	  break;
@@ -303,8 +313,10 @@ main (int argc, char **argv)
   else
     {
       if (optind == argc - 2)
-	{
-	  if (!isdir (argv[argc - 1]))
+        {
+          if (mkdir_and_install)
+	    errors = install_file_to_path (argv[argc - 2], argv[argc - 1]);
+	  else if (!isdir (argv[argc - 1]))
 	    errors = install_file_in_file (argv[argc - 2], argv[argc - 1]);
 	  else
 	    errors = install_file_in_dir (argv[argc - 2], argv[argc - 1]);
@@ -323,6 +335,55 @@ main (int argc, char **argv)
   if (verbose)
     close_stdout ();
   exit (errors);
+}
+
+#ifndef S_ISUID
+# define S_ISUID 0
+#endif
+
+#ifndef S_ISGID
+# define S_ISGID 0
+#endif
+
+#ifndef S_ISVTX
+# define S_ISVTX 0
+#endif
+
+#define SPECIAL_BITS (S_ISUID | S_ISGID | S_ISVTX)
+
+/* Copy file FROM onto file TO, creating any missing parent directories of TO.
+   Return 0 if successful, 1 if an error occurs */
+
+static int
+install_file_to_path (const char *from, const char *to)
+{
+  char *dest_dir;
+
+  dest_dir = dirname (to);
+
+  /* check to make sure this is a path (not install a b ) */
+  if (!STREQ (dest_dir, ".")
+      && !isdir (dest_dir))
+    {
+      /* FIXME: Note that it's a little kludgey (maybe even dangerous)
+	 that we derive the permissions for parent directories from the
+	 permissions specfied for the file, but since this option is
+	 intended mainly to help installers when the distribution doesn't
+	 provide proper install rules, it's not so bad.
+	 Maybe use something like this instead:
+	 int parent_dir_mode = (mode | (S_IRUGO | S_IXUGO)) & (~SPECIAL_BITS);
+	 */
+      fail = make_path (dest_dir, mode, mode, owner_id, group_id, 0,
+		    (verbose ? _("creating directory `%s'") : NULL));
+    }
+  else
+    {
+      fail = install_file_in_file (from, to);
+    }
+
+  free (dest_dir);
+
+  return fail;
 }
 
 /* Copy file FROM onto file TO and give TO the appropriate
