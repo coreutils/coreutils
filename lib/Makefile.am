@@ -15,6 +15,7 @@ DEFS = -DLIBDIR=\"$(libdir)\" @DEFS@
 libfetish_a_SOURCES = \
   getdate.h getdate.y \
   posixtm.c posixtm.h \
+  posixver.c posixver.h \
   strftime.c \
   getopt.c getopt.h getopt1.c \
   hash.c hash.h \
