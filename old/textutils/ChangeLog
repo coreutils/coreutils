@@ -1,6 +1,13 @@
-2002-02-17  Jim Meyering  <meyering@lucent.com>
+2002-02-18  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.21.
+
+	* tests/mk-script: When getting input via a pipe, apply the
+	environment settings to the command in question, not to `cat'.
+	No longer allow more than one element in the $Test::env or
+	$Test::env_default arrays.  No caller used that feature.
+
+2002-02-17  Jim Meyering  <meyering@lucent.com>
 
 	* tests/head/Test.pm: Accept pre-POSIX 1003.1-2001 options.
 	* tests/pr/Test.pm: Likewise.
