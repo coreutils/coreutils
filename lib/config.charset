@@ -1,7 +1,7 @@
 #! /bin/sh
 # Output a system dependent table of character encoding aliases.
 #
-#   Copyright (C) 2000-2002 Free Software Foundation, Inc.
+#   Copyright (C) 2000-2003 Free Software Foundation, Inc.
 #
 #   This program is free software; you can redistribute it and/or modify it
 #   under the terms of the GNU Library General Public License as published
@@ -71,7 +71,7 @@
 #   CP1125                    dos
 #   CP1129                    aix
 #   CP1250                    woe32
-#   CP1251                    glibc woe32
+#   CP1251                    glibc solaris woe32
 #   CP1252                    aix woe32
 #   CP1253                    woe32
 #   CP1254                    woe32
@@ -231,6 +231,7 @@ case "$os" in
 	echo "ISO8859-9 ISO-8859-9"
 	echo "ISO8859-15 ISO-8859-15"
 	echo "koi8-r KOI8-R"
+	echo "ansi-1251 CP1251"
 	echo "BIG5 BIG5"
 	echo "Big5-HKSCS BIG5-HKSCS"
 	echo "gb2312 GB2312"
