@@ -1,5 +1,5 @@
 /* Permuted index for GNU, with keywords in their context.
-   Copyright (C) 1990, 1991, 1993, 1998-2002 Free Software Foundation, Inc.
+   Copyright (C) 1990, 1991, 1993, 1998-2003 Free Software Foundation, Inc.
    François Pinard <pinard@iro.umontreal.ca>, 1988.
 
    This program is free software; you can redistribute it and/or modify
@@ -1657,7 +1657,7 @@ output_one_tex_line (void)
   char *cursor;			/* running cursor in source text */
 
   printf ("\\%s ", macro_name);
-  fputs ("{", stdout);
+  putchar ('{');
   print_field (tail);
   fputs ("}{", stdout);
   print_field (before);
@@ -1673,14 +1673,14 @@ output_one_tex_line (void)
   print_field (after);
   fputs ("}{", stdout);
   print_field (head);
-  fputs ("}", stdout);
+  putchar ('}');
   if (auto_reference || input_reference)
     {
-      fputs ("{", stdout);
+      putchar ('{');
       print_field (reference);
-      fputs ("}", stdout);
+      putchar ('}');
     }
-  fputs ("\n", stdout);
+  putchar ('\n');
 }
 
 /*-------------------------------------------------------------------.
@@ -1779,7 +1779,7 @@ output_one_dumb_line (void)
       print_field (reference);
     }
 
-  fputs ("\n", stdout);
+  putchar ('\n');
 }
 
 /*------------------------------------------------------------------------.
