@@ -1,3 +1,7 @@
+2002-07-26  Jim Meyering  <meyering@lucent.com>
+
+	* src/stat.c: Don't include malloc.h -- it was unnecessary.
+
 2002-07-22  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.11.
