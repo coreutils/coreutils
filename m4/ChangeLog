@@ -1,3 +1,7 @@
+2000-03-02  Jim Meyering  <meyering@lucent.com>
+
+	* check-decl.m4 (AC_CHECK_DECLS): Add getlogin, ttyname, and geteuid.
+
 2000-02-27  Jim Meyering  <meyering@lucent.com>
 
 	* check-decl.m4: Add getenv to the list.
