@@ -33,7 +33,17 @@ sub test_vector
      # test-name options input expected-output expected-return-code
      #
      ['1', "-d '$d1' +'%% %a %A %b %B'", {}, '% Sun Sunday Jan January', 0],
-     ['2', "-d '$d1' +'%c'", {}, "Sun Jan 19 $t0 1997", 0],
+
+     # [Actually, skip it on *all* systems. -- this Perl code is run at
+     # distribution-build-time, not at configure/test time.  ]
+
+     # Skip the test of %c on SunOS4 systems.  Such systems would fail this
+     # test because their underlying strftime doesn't handle the %c format
+     # properly.  GNU strftime must rely on the underlying host library
+     # function to get locale-dependent behavior, as strftime is the only
+     # portable interface to that behavior.
+     # ['2', "-d '$d1' +'%c'", {}, "Sun Jan 19 $t0 1997", 0],
+
      ['3', "-d '$d1' +'%d_%D_%e_%h_%H'", {}, '19_01/19/97_19_Jan_08', 0],
      ['4', "-d '$d1' +'%I_%j_%k_%l_%m'", {}, '08_019_ 8_ 8_01', 0],
      ['5', "-d '$d1' +'%M_%n_%p_%r'", {}, "17_\n_AM_$t0 AM", 0],
@@ -142,13 +152,6 @@ sub test_vector
   foreach $t (@tvec)
     {
       my ($test_name, $flags, $in, $exp, $ret) = @$t;
-
-      # Skip the test of %c on SunOS4 systems.  Such systems would fail this
-      # test because their underlying strftime doesn't handle the %c format
-      # properly.  GNU strftime must rely on the underlying host library
-      # function to get locale-dependent behavior, as strftime is the only
-      # portable interface to that behavior.
-      next if $sunos4 && $test_name eq '2';
 
       # Append a newline to end of each expected string.
       push (@tv, [$test_name, $flags, $in, "$exp\n", $ret]);
