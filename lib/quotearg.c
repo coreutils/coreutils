@@ -67,6 +67,7 @@
 size_t mbrtowc ();
 # ifdef mbstate_t
 #  define mbrtowc(pwc, s, n, ps) (mbrtowc) (pwc, s, n, 0)
+#  define mbsinit(ps) 1
 # endif
 #else
 # define mbrtowc(pwc, s, n, ps) ((*(pwc) = *(s)) != 0)
