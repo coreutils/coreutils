@@ -1,5 +1,16 @@
 1997-07-12  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/date.c (MAYBE_SET_TZ_UTC0): New macro.
+	(set_tz): New function.
+	(batch_convert): If necessary, save the initial value of TZ and
+	for each date in the file, restore it before each call to get_date,
+	then set it to UTC0 before each show_date call.
+	(main): Don't set TZ before calling get_date.
+	Set TZ after get_date call and before show_date call.
+	Reported by Matthew Braun.
+	* tests/date/Test.pm: Add new tests for this bug.
+	Add new examples from documentation.
+
 	* stpcpy.c: New file.
 	* configure.in (AC_REPLACE_FUNCS): Add stpcpy.c
 
