@@ -57,7 +57,7 @@ extract_trimmed_name (const STRUCT_UTMP *ut)
    the number of entries, and return zero.  If there is any error,
    return non-zero and don't modify the parameters.  */
 
-#if HAVE_UTMPNAME
+#ifdef UTMP_NAME_FUNCTION
 
 int
 read_utmp (const char *filename, int *n_entries, STRUCT_UTMP **utmp_buf)
