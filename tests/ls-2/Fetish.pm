@@ -12,7 +12,7 @@ use FileHandle;
 use File::Compare qw(compare);
 
 @ISA = qw(Exporter);
-($VERSION = '$Revision: 1.8 $ ') =~ tr/[0-9].//cd;
+($VERSION = '$Revision: 1.9 $ ') =~ tr/[0-9].//cd;
 @EXPORT = qw (run_tests);
 
 my @Types = qw (IN OUT ERR EXIT);
@@ -26,7 +26,6 @@ my $Global_count = 1;
 # 'contents'               contents only (file name is derived from test name)
 # {filename => 'contents'} filename and contents
 # {filename => undef}      filename only -- $(srcdir)/filename must exist
-#                            (FIXME: note to self: get $srcdir from ENV)
 #
 # FIXME: If there is more than one input file, the you can't specify REDIRECT.
 # PIPE is still ok.
