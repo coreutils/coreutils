@@ -82,15 +82,15 @@
    be accepted.
    Some NEW CAPITAL LETTER options ( -J, -S, -W) has been introduced to
    turn off unexpected interferences of small letter options (-s and -w
-   together with the three column options). 
+   together with the three column options).
    -N option and the second argument LAST_PAGE of +FIRST_PAGE offer more
    flexibility; The detailed handling of form feeds set in the input
    files requires -T option.
-   
+
    Capital letter options dominate small letter ones.
 
    Some of the option-arguments cannot be specified as separate arguments
-   from the preceding option letter (already stated in POSIX specification). 
+   from the preceding option letter (already stated in POSIX specification).
 
    Form feeds in the input cause page breaks in the output. Multiple
    form feeds produce empty pages.
@@ -165,7 +165,7 @@
 		-J has been introduced (together with -W and -S) to
 		disentangle the old (POSIX compliant) options -w, -s
 		along with the 3 column options.
-		
+
    -l PAGE_LENGTH, --length=PAGE_LENGTH
 		Set the page length to PAGE_LENGTH lines. Default is 66,
 		including 5 lines of HEADER and 5 lines of TRAILER
@@ -210,7 +210,7 @@
 		fixed number of spaces is always printed in the place of
 		a TAB. The tabification depends upon the output
 		position.
-		
+
 		Default counting of the line numbers starts with 1st
 		line of the input file (not the 1st line printed,
 		compare the --page option and -N option).
@@ -235,7 +235,7 @@
 		-s[CHAR] turns off line truncation of all 3 column options
 		(-COLUMN|-a -COLUMN|-m) except -w is set. That is a POSIX
 		compliant formulation. The source code translates -s into
-		the new options -S and -J, also -W if required. 
+		the new options -S and -J, also -W if required.
 
    -S[STRING], --sep-string[=STRING]
 		Separate columns by any string STRING. The -S option
@@ -255,7 +255,7 @@
 
    -T, --omit-pagination
 		Do not print headers or footers, eliminate any pagination
-		by form feeds set in the input files. 
+		by form feeds set in the input files.
 
    -v, --show-nonprinting
 		Print unprintable characters as escape sequences. Use
@@ -263,7 +263,7 @@
 
    -w PAGE_WIDTH, --width=PAGE_WIDTH
 		Set page width to PAGE_WIDTH characters for multiple
-		text-column output only (default for PAGE_WIDTH is 72). 
+		text-column output only (default for PAGE_WIDTH is 72).
 		-s[CHAR] turns off the default page width and any line
 		truncation. Lines of full length will be merged,
 		regardless of the column options set. A POSIX compliant
@@ -274,7 +274,7 @@
 		with and without a column option. Text lines will be
 		truncated, unless -J is used. Together with one of the
 		column options (-COLUMN| -a -COLUMN| -m) column alignment
-		is always used. 
+		is always used.
 		Default is 72 characters.
 		Without -W PAGE_WIDTH
 		- but with one of the column options default truncation of
@@ -284,8 +284,8 @@
 		- and without any of the column options NO line truncation
 		  is used (to keep downward compatibility and to meet most
 		  frequent tasks). That's equivalent to  -W 72 -J .
-		  
-	        With/without  -W PAGE_WIDTH  the header line is always 
+
+	        With/without  -W PAGE_WIDTH  the header line is always
 		truncated to avoid line overflow.
 
 		(In pr versions newer than 1.14 -S option does no longer
@@ -1062,7 +1062,7 @@ main (int argc, char **argv)
        _("Cannot specify both printing across and printing in parallel."));
 
 /* Translate some old short options to new/long options.
-   To meet downward compatibility with other UNIX pr utilities 
+   To meet downward compatibility with other UNIX pr utilities
    and some POSIX specifications. */
 
   if (old_options)
@@ -1213,7 +1213,7 @@ init_parameters (int number_of_files)
 	    col_sep_string = line_separator;
 	  else
 	    col_sep_string = column_separator;
-	    
+
 	  col_sep_length = 1;
 	  use_col_separator = TRUE;
 	}
@@ -1237,21 +1237,21 @@ init_parameters (int number_of_files)
     {
       int tmp_i;
       int chars_per_default_tab = 8;
-      
+
       line_count = start_line_num;
-      
+
       /* To allow input tab-expansion (-e sensitive) use:
 	 if (number_separator == input_tab_char)
 	   number_width = chars_per_number +
 	     TAB_WIDTH (chars_per_input_tab, chars_per_number);   */
-	     
+
       /* Estimate chars_per_text without any margin and keep it constant. */
       if (number_separator == '\t')
 	number_width = chars_per_number +
 	  TAB_WIDTH (chars_per_default_tab, chars_per_number);
       else
 	number_width = chars_per_number + 1;
-	
+
       /* The number is part of the column width unless we are
 	 printing files in parallel. */
       if (parallel_files)
@@ -2043,7 +2043,7 @@ add_line_number (COLUMN *p)
     }
   line_number++;
   s = number_buff;
-  for (i = chars_per_number; i > 0; i--) 
+  for (i = chars_per_number; i > 0; i--)
     (p->char_func) ((int) *s++);
 
   if (columns > 1)
@@ -2276,8 +2276,8 @@ print_sep_string ()
 		    print_white_space ();
 		  putchar (*s++);
 		  ++output_position;
-		}	 
-	    }    
+		}
+	    }
           /* sep_string ends with some spaces */
 	  if (spaces_not_printed > 0)
 	    print_white_space ();
@@ -2365,7 +2365,7 @@ skip_to_page (int page)
 	     not known in advance */
 	  error (0, 0, _("starting page number larger than total number of pages: `%d'"), n);
           break;
-	}  
+	}
     }
   return files_ready_to_read > 0;
 }
