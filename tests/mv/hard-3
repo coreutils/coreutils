@@ -7,7 +7,7 @@
 # while preserving links, the initial copy must succeed, the attempt
 # to create the second file via `link' must fail, and the final `link'
 # (to create the third) must succeed.  Before the corresponding fix,
-# the first and third destination file would not be linked.
+# the first and third destination files would not be linked.
 #
 # Note that this is nominally a test of `cp', yet it is in the tests/mv
 # directory, because it requires use of the --preserve=link option that
