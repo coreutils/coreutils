@@ -103,6 +103,7 @@ extern int fnmatch (const char *pattern, const char *string, int flags);
 #if defined _LIBC || !defined __GNU_LIBRARY__ || !HAVE_FNMATCH_GNU
 
 
+# undef ISASCII  /* defined in Solaris5.6's /usr/include/sys/euc.h */
 # if defined STDC_HEADERS || !defined isascii
 #  define ISASCII(c) 1
 # else
@@ -120,6 +121,7 @@ extern int fnmatch (const char *pattern, const char *string, int flags);
 #  define ISGRAPH(c) (ISASCII (c) && isprint (c) && !isspace (c))
 # endif
 
+# undef ISPRINT  /* defined in Solaris5.6's /usr/include/sys/euc.h */
 # define ISPRINT(c) (ISASCII (c) && isprint (c))
 # define ISDIGIT(c) (ISASCII (c) && isdigit (c))
 # define ISALNUM(c) (ISASCII (c) && isalnum (c))
