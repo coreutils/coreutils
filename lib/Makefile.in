@@ -153,11 +153,6 @@ noinst_LIBRARIES = libfetish.a
 
 INCLUDES = -I.. -I$(srcdir)
 
-nodist_libfetish_a_SOURCES = \
-  safe-read.c \
-  safe-write.c
-
-
 libfetish_a_SOURCES = \
   acl.h acl.c \
   getdate.h getdate.y \
@@ -220,8 +215,8 @@ libfetish_a_SOURCES = \
   readtokens.c readtokens.h \
   readutmp.h \
   regex.h \
-  safe-read.h \
-  safe-write.h \
+  safe-read.c safe-read.h \
+  safe-write.c safe-write.h \
   same.c same.h \
   save-cwd.c save-cwd.h \
   savedir.c savedir.h \
@@ -256,12 +251,11 @@ libfetish_a_SOURCES = \
 libfetish_a_LIBADD = @LIBOBJS@ @ALLOCA@
 libfetish_a_DEPENDENCIES = $(libfetish_a_LIBADD)
 
-BUILT_SOURCES = getdate.c lstat.c stat.c safe-read.c safe-write.c unlocked-io.h
+BUILT_SOURCES = getdate.c unlocked-io.h
 MAINTAINERCLEANFILES = $(BUILT_SOURCES)
-DISTCLEANFILES = lstat.c stat.c safe-read.c safe-write.c unlocked-io.h
+DISTCLEANFILES = unlocked-io.h
 
-EXTRA_DIST = xstat.in safe-rw.in config.charset \
-  ref-add.sin ref-del.sin gen-uio \
+EXTRA_DIST = config.charset ref-add.sin ref-del.sin gen-uio \
   fnmatch_loop.c inttostr.c inttostr.h
 
 
@@ -302,7 +296,8 @@ am_libfetish_a_OBJECTS = acl$U.$(OBJEXT) getdate$U.$(OBJEXT) \
 	memcasecmp$U.$(OBJEXT) memcoll$U.$(OBJEXT) \
 	modechange$U.$(OBJEXT) offtostr$U.$(OBJEXT) \
 	path-concat$U.$(OBJEXT) physmem$U.$(OBJEXT) quote$U.$(OBJEXT) \
-	quotearg$U.$(OBJEXT) readtokens$U.$(OBJEXT) same$U.$(OBJEXT) \
+	quotearg$U.$(OBJEXT) readtokens$U.$(OBJEXT) \
+	safe-read$U.$(OBJEXT) safe-write$U.$(OBJEXT) same$U.$(OBJEXT) \
 	save-cwd$U.$(OBJEXT) savedir$U.$(OBJEXT) settime$U.$(OBJEXT) \
 	sha$U.$(OBJEXT) stripslash$U.$(OBJEXT) umaxtostr$U.$(OBJEXT) \
 	unicodeio$U.$(OBJEXT) userspec$U.$(OBJEXT) \
@@ -312,10 +307,7 @@ am_libfetish_a_OBJECTS = acl$U.$(OBJEXT) getdate$U.$(OBJEXT) \
 	xreadlink$U.$(OBJEXT) xstrdup$U.$(OBJEXT) xstrtod$U.$(OBJEXT) \
 	xstrtol$U.$(OBJEXT) xstrtoul$U.$(OBJEXT) xstrtoimax$U.$(OBJEXT) \
 	xstrtoumax$U.$(OBJEXT) yesno$U.$(OBJEXT)
-nodist_libfetish_a_OBJECTS = safe-read$U.$(OBJEXT) \
-	safe-write$U.$(OBJEXT)
-libfetish_a_OBJECTS = $(am_libfetish_a_OBJECTS) \
-	$(nodist_libfetish_a_OBJECTS)
+libfetish_a_OBJECTS = $(am_libfetish_a_OBJECTS)
 
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
@@ -414,15 +406,15 @@ DIST_COMMON = README ChangeLog Makefile.am Makefile.in TODO \
 	error.h euidaccess.c fileblocks.c fnmatch.c fsusage.c \
 	ftruncate.c getdate.c getgroups.c gethostname.c getline.c \
 	getloadavg.c getpass.c gettimeofday.c getusershell.c \
-	group-member.c lchown.c malloc.c memchr.c memcmp.c memcpy.c \
-	memmove.c memrchr.c memset.c mkdir.c mkstemp.c mktime.c \
-	mountlist.c nanosleep.c obstack.c obstack.h putenv.c raise.c \
-	readutmp.c realloc.c regex.c rename.c rmdir.c rpmatch.c \
-	sig2str.c stpcpy.c strcasecmp.c strcspn.c strdup.c \
+	group-member.c lchown.c lstat.c malloc.c memchr.c memcmp.c \
+	memcpy.c memmove.c memrchr.c memset.c mkdir.c mkstemp.c \
+	mktime.c mountlist.c nanosleep.c obstack.c obstack.h putenv.c \
+	raise.c readutmp.c realloc.c regex.c rename.c rmdir.c rpmatch.c \
+	sig2str.c stat.c stpcpy.c strcasecmp.c strcspn.c strdup.c \
 	strncasecmp.c strndup.c strnlen.c strpbrk.c strstr.c strtod.c \
 	strtoimax.c strtol.c strtoll.c strtoul.c strtoull.c strtoumax.c \
 	strverscmp.c tempname.c utime.c
-SOURCES = $(libfetish_a_SOURCES) $(nodist_libfetish_a_SOURCES)
+SOURCES = $(libfetish_a_SOURCES)
 
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -1139,48 +1131,6 @@ uninstall-am: uninstall-info-am uninstall-local
 	uninstall-info-am uninstall-local
 
 
-lstat.c: xstat.in
-	sed \
-	  -e '/@IGNORE@/d' \
-	  -e 's/@xstat@/lstat/g' \
-	  -e '/_LSTAT_ONLY@/d' \
-	  -e '/@BEGIN_STAT_ONLY@/,/@END_STAT_ONLY@/d' \
-	  $(srcdir)/xstat.in > t-$@
-	mv t-$@ $@
-
-stat.c: xstat.in
-	sed \
-	  -e '/@IGNORE@/d' \
-	  -e 's/@xstat@/stat/g' \
-	  -e '/_STAT_ONLY@/d' \
-	  -e '/@BEGIN_LSTAT_ONLY@/,/@END_LSTAT_ONLY@/d' \
-	  $(srcdir)/xstat.in > t-$@
-	mv t-$@ $@
-
-safe-read.c: safe-rw.in
-	sed \
-	  -e '/@IGNORE@/d' \
-	  -e 's/@const@//g' \
-	  -e 's/@rw@/read/g' \
-	  -e 's/@Rw@/Read/g' \
-	  -e 's/@RW@/READ/g' \
-	  -e 's/@read_written@/read/g' \
-	  -e 's/@from_to@/from/g' \
-	  $(srcdir)/safe-rw.in > t-$@
-	mv t-$@ $@
-
-safe-write.c: safe-rw.in
-	sed \
-	  -e '/@IGNORE@/d' \
-	  -e 's/@const@/const /g' \
-	  -e 's/@rw@/write/g' \
-	  -e 's/@Rw@/Write/g' \
-	  -e 's/@RW@/WRITE/g' \
-	  -e 's/@read_written@/written/g' \
-	  -e 's/@from_to@/to/g' \
-	  $(srcdir)/safe-rw.in > t-$@
-	mv t-$@ $@
-
 # The following is needed in order to install a simple file in $(libdir)
 # which is shared with other installed packages. We use a list of referencing
 # packages so that "make uninstall" will remove the file if and only if it
@@ -1188,9 +1138,7 @@ safe-write.c: safe-rw.in
 # On systems with glibc-2.1 or newer, the file is redundant, therefore we
 # avoid installing it.
 
-all-local: charset.alias ref-add.sed ref-del.sed \
-  safe-read.c safe-write.c \
-  lstat.c stat.c unlocked-io.h
+all-local: charset.alias ref-add.sed ref-del.sed unlocked-io.h
 install-exec-local: all-local
 	$(mkinstalldirs) $(DESTDIR)$(libdir)
 	if test -f $(charset_alias); then \
