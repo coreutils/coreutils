@@ -21,9 +21,6 @@
 #include <stdio.h>
 #include "cp.h"
 
-char *hash_insert ();
-char *hash_insert2 ();
-
 struct htab *htab;
 char new_file;
 
@@ -31,8 +28,7 @@ char new_file;
    Return 0 if successful, 1 if not. */
 
 int
-remember_created (path)
-     char *path;
+remember_created (const char *path)
 {
   struct stat sb;
 
@@ -51,10 +47,7 @@ remember_created (path)
    Return NULL if inserted, otherwise non-NULL. */
 
 char *
-remember_copied (node, ino, dev)
-     char *node;
-     ino_t ino;
-     dev_t dev;
+remember_copied (const char *node, ino_t ino, dev_t dev)
 {
   return hash_insert (ino, dev, node);
 }
@@ -67,9 +60,7 @@ remember_copied (node, ino, dev)
    doubled.)  */
 
 void
-hash_init (modulus, entry_tab_size)
-     unsigned modulus;
-     unsigned entry_tab_size;
+hash_init (unsigned int modulus, unsigned int entry_tab_size)
 {
   struct htab *htab_r;
 
@@ -90,7 +81,7 @@ hash_init (modulus, entry_tab_size)
    contain no entries.  */
 
 void
-forget_all ()
+forget_all (void)
 {
   int i;
   struct entry **p;
@@ -108,10 +99,7 @@ forget_all ()
    Return NULL if inserted, otherwise non-NULL. */
 
 char *
-hash_insert (ino, dev, node)
-     ino_t ino;
-     dev_t dev;
-     char *node;
+hash_insert (ino_t ino, dev_t dev, const char *node)
 {
   struct htab *htab_r = htab;
 
@@ -178,11 +166,7 @@ hash_insert (ino, dev, node)
    Return NULL if inserted, otherwise non-NULL. */
 
 char *
-hash_insert2 (htab, ino, dev, node)
-     struct htab *htab;
-     ino_t ino;
-     dev_t dev;
-     char *node;
+hash_insert2 (struct htab *htab, ino_t ino, dev_t dev, const char *node)
 {
   struct entry **hp, *ep2, *ep;
   hp = &htab->hash[ino % htab->modulus];
@@ -211,7 +195,7 @@ hash_insert2 (htab, ino, dev, node)
   ep = *hp = &htab->entry_tab[htab->first_free_entry++];
   ep->ino = ino;
   ep->dev = dev;
-  ep->node = node;
+  ep->node = (char *) node;
   ep->coll_link = ep2;		/* ep2 is NULL if not collision.  */
 
   return NULL;
