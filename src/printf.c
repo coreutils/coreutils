@@ -269,7 +269,8 @@ print_esc_string (const char *str)
    '*' values in those fields. */
 
 static void
-print_direc (const char *start, size_t length, int field_width, int precision, const char *argument)
+print_direc (const char *start, size_t length, int field_width,
+	     int precision, const char *argument)
 {
   char *p;		/* Null-terminated copy of % directive. */
 
