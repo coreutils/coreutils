@@ -28,14 +28,9 @@ fail=0
 ls /dev/stdin >/dev/null 2>&1 \
   || { (exit 77); exit; }
 
-# FIXME: skip this test, for now.
-# FIXME: reenable it once I find a way to test whether rm's read (below)
-# would cause the test to hang (i.e., when run in the background).
-(exit 77); exit
-
 touch f
 chmod 0 f
-rm f < /dev/stdin > out 2>&1 &
+rm --presume-input-tty f > out 2>&1 &
 pid=$!
 
 # Wait a second, to give a buggy rm (as in fileutils-4.0.40)
@@ -45,12 +40,12 @@ sleep 1
 # The file must still exist.
 test -f f || fail=1
 
-kill $pid
+kill $pid > /dev/null 2>&1
 
 # Note the trailing `x' -- so I don't have to have a trailing
 # blank in this file :-)
 cat > exp <<\EOF
-rm: remove write-protected file `f'? x
+rm: remove write-protected regular empty file `f'? x
 EOF
 #`
 
