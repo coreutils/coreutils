@@ -1,6 +1,7 @@
 Sat Feb 11 07:31:08 1995  Jim Meyering  (meyering@comco.com)
 
 	* system.h: Remove index/rindex and bcmp/bcopy/bzero references.
+	Separate errno declaration from STDC_HEADERS.
 
 	* wc.c (wc): For efficiency, handle separately the cases in which
 	words need not be counted.  Suggested by Karl Heuer.
