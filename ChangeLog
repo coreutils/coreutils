@@ -1,6 +1,15 @@
-2005-02-03  Paul Eggert  <eggert@cs.ucla.edu>
+2005-02-08  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	* doc/coreutils.texi (stat invocation): Normalize terminology,
+	capitalization, and sort order to match --help output.  Mention %c
+	for file systems.  Say that %s is the "Fundamental block size",
+	since that is what POSIX says; problem reported by Jeroen van
+	Wolffelaar.
+	* src/stat.c (usage): Likewise.
+
+2005-02-03  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/system.h: Include "memrchr.h".
 	(memrchr) [!HAVE_DECL_MEMRCHR]: Remove decl.
