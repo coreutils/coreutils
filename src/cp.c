@@ -96,13 +96,13 @@ static struct option const long_opts[] =
   {"archive", no_argument, NULL, 'a'},
   {"backup", no_argument, NULL, 'b'},
   {"force", no_argument, NULL, 'f'},
-  {"sparse", required_argument, NULL, 2},
+  {"sparse", required_argument, NULL, CHAR_MAX + 1},
   {"interactive", no_argument, NULL, 'i'},
   {"link", no_argument, NULL, 'l'},
   {"no-dereference", no_argument, NULL, 'd'},
   {"one-file-system", no_argument, NULL, 'x'},
-  {"parents", no_argument, &flag_path, 1},
-  {"path", no_argument, &flag_path, 1},
+  {"parents", no_argument, NULL, 'P'},
+  {"path", no_argument, NULL, 'P'},
   {"preserve", no_argument, NULL, 'p'},
   {"recursive", no_argument, NULL, 'R'},
   {"suffix", required_argument, NULL, 'S'},
@@ -654,7 +654,7 @@ main (int argc, char **argv)
 	case 0:
 	  break;
 
-	case 2:
+	case CHAR_MAX + 1:
 	  {
 	    int i;
 
