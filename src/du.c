@@ -109,19 +109,6 @@ typedef struct String String;
 int stat ();
 int lstat ();
 
-static int hash_insert PARAMS ((ino_t ino, dev_t dev));
-static int hash_insert2 PARAMS ((struct htab *_htab, ino_t ino, dev_t dev));
-static uintmax_t count_entry PARAMS ((const char *ent, int top, dev_t last_dev,
-				      int depth));
-static void du_files PARAMS ((char **files));
-static void hash_init PARAMS ((unsigned int modulus,
-			       unsigned int entry_tab_size));
-static void hash_reset PARAMS ((void));
-static void str_concatc PARAMS ((String *s1, char *cstr));
-static void str_copyc PARAMS ((String *s1, char *cstr));
-static void str_init PARAMS ((String **s1, unsigned int size));
-static void str_trunc PARAMS ((String *s1, unsigned int length));
-
 /* Name under which this program was invoked.  */
 char *program_name;
 
@@ -237,6 +224,419 @@ Summarize disk usage of each FILE, recursively for directories.\n\
       close_stdout ();
     }
   exit (status);
+}
+
+/* Initialize string S1 to hold SIZE characters.  */
+
+static void
+str_init (String **s1, unsigned int size)
+{
+  String *s;
+
+  s = (String *) xmalloc (sizeof (struct String));
+  s->text = xmalloc (size + 1);
+
+  s->alloc = size;
+  *s1 = s;
+}
+
+static void
+ensure_space (String *s, unsigned int size)
+{
+  if (s->alloc < size)
+    {
+      s->text = xrealloc (s->text, size + 1);
+      s->alloc = size;
+    }
+}
+
+/* Assign the null-terminated C-string CSTR to S1.  */
+
+static void
+str_copyc (String *s1, const char *cstr)
+{
+  unsigned l = strlen (cstr);
+  ensure_space (s1, l);
+  strcpy (s1->text, cstr);
+  s1->length = l;
+}
+
+static void
+str_concatc (String *s1, const char *cstr)
+{
+  unsigned l1 = s1->length;
+  unsigned l2 = strlen (cstr);
+  unsigned l = l1 + l2;
+
+  ensure_space (s1, l);
+  strcpy (s1->text + l1, cstr);
+  s1->length = l;
+}
+
+/* Truncate the string S1 to have length LENGTH.  */
+
+static void
+str_trunc (String *s1, unsigned int length)
+{
+  if (s1->length > length)
+    {
+      s1->text[length] = 0;
+      s1->length = length;
+    }
+}
+
+/* Print N_BLOCKS followed by STRING on a line.  NBLOCKS is the number of
+   ST_NBLOCKSIZE-byte blocks; convert it to OUTPUT_BLOCK_SIZE units before
+   printing.  If OUTPUT_BLOCK_SIZE is negative, use a human readable
+   notation instead.  */
+
+static void
+print_size (uintmax_t n_blocks, const char *string)
+{
+  char buf[LONGEST_HUMAN_READABLE + 1];
+  printf ("%s\t%s\n",
+	  human_readable (n_blocks, buf, ST_NBLOCKSIZE, output_block_size),
+	  string);
+  fflush (stdout);
+}
+
+/* Reset the hash structure in the global variable `htab' to
+   contain no entries.  */
+
+static void
+hash_reset (void)
+{
+  int i;
+  struct entry **p;
+
+  htab->first_free_entry = 0;
+
+  p = htab->hash;
+  for (i = htab->modulus; i > 0; i--)
+    *p++ = NULL;
+}
+
+/* Allocate space for the hash structures, and set the global
+   variable `htab' to point to it.  The initial hash module is specified in
+   MODULUS, and the number of entries are specified in ENTRY_TAB_SIZE.  (The
+   hash structure will be rebuilt when ENTRY_TAB_SIZE entries have been
+   inserted, and MODULUS and ENTRY_TAB_SIZE in the global `htab' will be
+   doubled.)  */
+
+static void
+hash_init (unsigned int modulus, unsigned int entry_tab_size)
+{
+  struct htab *htab_r;
+
+  htab_r = (struct htab *)
+    xmalloc (sizeof (struct htab) + sizeof (struct entry *) * modulus);
+
+  htab_r->entry_tab = (struct entry *)
+    xmalloc (sizeof (struct entry) * entry_tab_size);
+
+  htab_r->modulus = modulus;
+  htab_r->entry_tab_size = entry_tab_size;
+  htab = htab_r;
+
+  hash_reset ();
+}
+
+/* Insert INO and DEV in the hash structure HTAB, if not
+   already present.  Return zero if inserted and nonzero if it
+   already existed.  */
+
+static int
+hash_insert2 (struct htab *ht, ino_t ino, dev_t dev)
+{
+  struct entry **hp, *ep2, *ep;
+  hp = &ht->hash[ino % ht->modulus];
+  ep2 = *hp;
+
+  /* Collision?  */
+
+  if (ep2 != NULL)
+    {
+      ep = ep2;
+
+      /* Search for an entry with the same data.  */
+
+      do
+	{
+	  if (ep->ino == ino && ep->dev == dev)
+	    return 1;		/* Found an entry with the same data.  */
+	  ep = ep->coll_link;
+	}
+      while (ep != NULL);
+
+      /* Did not find it.  */
+
+    }
+
+  ep = *hp = &ht->entry_tab[ht->first_free_entry++];
+  ep->ino = ino;
+  ep->dev = dev;
+  ep->coll_link = ep2;		/* `ep2' is NULL if no collision.  */
+
+  return 0;
+}
+
+/* Insert an item (inode INO and device DEV) in the hash
+   structure in the global variable `htab', if an entry with the same data
+   was not found already.  Return zero if the item was inserted and nonzero
+   if it wasn't.  */
+
+static int
+hash_insert (ino_t ino, dev_t dev)
+{
+  struct htab *htab_r = htab;	/* Initially a copy of the global `htab'.  */
+
+  if (htab_r->first_free_entry >= htab_r->entry_tab_size)
+    {
+      int i;
+      struct entry *ep;
+      unsigned modulus;
+      unsigned entry_tab_size;
+
+      /* Increase the number of hash entries, and re-hash the data.
+	 The method of shrimping and increasing is made to compactify
+	 the heap.  If twice as much data would be allocated
+	 straightforwardly, we would never re-use a byte of memory.  */
+
+      /* Let `htab' shrimp.  Keep only the header, not the pointer vector.  */
+
+      htab_r = (struct htab *)
+	xrealloc ((char *) htab_r, sizeof (struct htab));
+
+      modulus = 2 * htab_r->modulus;
+      entry_tab_size = 2 * htab_r->entry_tab_size;
+
+      /* Increase the number of possible entries.  */
+
+      htab_r->entry_tab = (struct entry *)
+	xrealloc ((char *) htab_r->entry_tab,
+		  sizeof (struct entry) * entry_tab_size);
+
+      /* Increase the size of htab again.  */
+
+      htab_r = (struct htab *)
+	xrealloc ((char *) htab_r,
+		 sizeof (struct htab) + sizeof (struct entry *) * modulus);
+
+      htab_r->modulus = modulus;
+      htab_r->entry_tab_size = entry_tab_size;
+      htab = htab_r;
+
+      i = htab_r->first_free_entry;
+
+      /* Make the increased hash table empty.  The entries are still
+	 available in htab->entry_tab.  */
+
+      hash_reset ();
+
+      /* Go through the entries and install them in the pointer vector
+	 htab->hash.  The items are actually inserted in htab->entry_tab at
+	 the position where they already are.  The htab->coll_link need
+	 however be updated.  Could be made a little more efficient.  */
+
+      for (ep = htab_r->entry_tab; i > 0; i--)
+	{
+	  hash_insert2 (htab_r, ep->ino, ep->dev);
+	  ep++;
+	}
+    }
+
+  return hash_insert2 (htab_r, ino, dev);
+}
+
+/* Print (if appropriate) the size (in units determined by `output_block_size')
+   of file or directory ENT. Return the size of ENT in units of 512-byte
+   blocks.  TOP is one for external calls, zero for recursive calls.
+   LAST_DEV is the device that the parent directory of ENT is on.
+   DEPTH is the number of levels (in hierarchy) down from a command
+   line argument.  Don't print if DEPTH > max_depth.  */
+
+static uintmax_t
+count_entry (const char *ent, int top, dev_t last_dev, int depth)
+{
+  uintmax_t size;
+
+  if (((top && opt_dereference_arguments)
+       ? stat (ent, &stat_buf)
+       : (*xstat) (ent, &stat_buf)) < 0)
+    {
+      error (0, errno, "%s", path->text);
+      exit_status = 1;
+      return 0;
+    }
+
+  if (!opt_count_all
+      && stat_buf.st_nlink > 1
+      && hash_insert (stat_buf.st_ino, stat_buf.st_dev))
+    return 0;			/* Have counted this already.  */
+
+  size = ST_NBLOCKS (stat_buf);
+  tot_size += size;
+
+  if (S_ISDIR (stat_buf.st_mode))
+    {
+      unsigned pathlen;
+      dev_t dir_dev;
+      char *name_space;
+      char *namep;
+      struct saved_cwd cwd;
+      int through_symlink;
+      struct stat e_buf;
+
+      dir_dev = stat_buf.st_dev;
+
+      if (opt_one_file_system && !top && last_dev != dir_dev)
+	return 0;		/* Don't enter a new file system.  */
+
+#ifndef S_ISLNK
+# define S_ISLNK(s) 0
+#endif
+      /* If we're dereferencing symlinks and we're about to chdir through
+	 a symlink, remember the current directory so we can return to it
+	 later.  In other cases, chdir ("..") works fine.  */
+      through_symlink = (xstat == stat
+			 && lstat (ent, &e_buf) == 0
+			 && S_ISLNK (e_buf.st_mode));
+      if (through_symlink && save_cwd (&cwd))
+	exit (1);
+
+      if (chdir (ent) < 0)
+	{
+	  error (0, errno, _("cannot change to directory %s"), path->text);
+	  exit_status = 1;
+	  return 0;
+	}
+
+      errno = 0;
+      name_space = savedir (".", (unsigned int) stat_buf.st_size);
+      if (name_space == NULL)
+	{
+	  if (errno)
+	    {
+	      error (0, errno, "%s", path->text);
+	      if (through_symlink)
+		{
+		  if (restore_cwd (&cwd, "..", path->text))
+		    exit (1);
+		  free_cwd (&cwd);
+		}
+	      else if (chdir ("..") < 0)
+		  error (1, errno, _("cannot change to `..' from directory %s"),
+			 path->text);
+	      exit_status = 1;
+	      return 0;
+	    }
+	  else
+	    error (1, 0, _("virtual memory exhausted"));
+	}
+
+      /* Remember the current path.  */
+
+      str_concatc (path, "/");
+      pathlen = path->length;
+
+      for (namep = name_space; *namep; namep += strlen (namep) + 1)
+	{
+	  if (!excluded_filename (exclude, namep))
+	    {
+	      str_concatc (path, namep);
+	      size += count_entry (namep, 0, dir_dev, depth + 1);
+	      str_trunc (path, pathlen);
+	    }
+	}
+
+      free (name_space);
+      if (through_symlink)
+	{
+	  restore_cwd (&cwd, "..", path->text);
+	  free_cwd (&cwd);
+	}
+      else if (chdir ("..") < 0)
+	{
+	  error (1, errno,
+		 _("cannot change to `..' from directory %s"), path->text);
+	}
+
+      str_trunc (path, pathlen - 1); /* Remove the "/" we added.  */
+      if (depth <= max_depth || top)
+	print_size (size, path->length > 0 ? path->text : "/");
+      return opt_separate_dirs ? 0 : size;
+    }
+  else if ((opt_all && depth <= max_depth) || top)
+    {
+      /* FIXME: make this an option.  */
+      int print_only_dir_size = 0;
+      if (!print_only_dir_size)
+	print_size (size, path->length > 0 ? path->text : "/");
+    }
+
+  return size;
+}
+
+/* Recursively print the sizes of the directories (and, if selected, files)
+   named in FILES, the last entry of which is NULL.  */
+
+static void
+du_files (char **files)
+{
+  struct saved_cwd cwd;
+  ino_t initial_ino;		/* Initial directory's inode. */
+  dev_t initial_dev;		/* Initial directory's device. */
+  int i;			/* Index in FILES. */
+
+  if (save_cwd (&cwd))
+    exit (1);
+
+  /* Remember the inode and device number of the current directory.  */
+  if (stat (".", &stat_buf))
+    error (1, errno, _("current directory"));
+  initial_ino = stat_buf.st_ino;
+  initial_dev = stat_buf.st_dev;
+
+  for (i = 0; files[i]; i++)
+    {
+      char *arg;
+      int s;
+
+      arg = files[i];
+
+      /* Delete final slash in the argument, unless the slash is alone.  */
+      s = strlen (arg) - 1;
+      if (s != 0)
+	{
+	  if (arg[s] == '/')
+	    arg[s] = 0;
+
+	  str_copyc (path, arg);
+	}
+      else if (arg[0] == '/')
+	str_trunc (path, 0);	/* Null path for root directory.  */
+      else
+	str_copyc (path, arg);
+
+      if (!opt_combined_arguments)
+	hash_reset ();
+
+      count_entry (arg, 1, 0, 0);
+
+      /* chdir if `count_entry' has changed the working directory.  */
+      if (stat (".", &stat_buf))
+	error (1, errno, ".");
+      if (stat_buf.st_ino != initial_ino || stat_buf.st_dev != initial_dev)
+	{
+	  if (restore_cwd (&cwd, _("starting directory"), NULL))
+	    exit (1);
+	}
+    }
+
+  if (opt_combined_arguments)
+    print_size (tot_size, _("total"));
+
+  free_cwd (&cwd);
 }
 
 int
@@ -386,417 +786,4 @@ main (int argc, char **argv)
 
   close_stdout ();
   exit (exit_status);
-}
-
-/* Print N_BLOCKS followed by STRING on a line.  NBLOCKS is the number of
-   ST_NBLOCKSIZE-byte blocks; convert it to OUTPUT_BLOCK_SIZE units before
-   printing.  If OUTPUT_BLOCK_SIZE is negative, use a human readable
-   notation instead.  */
-
-static void
-print_size (uintmax_t n_blocks, const char *string)
-{
-  char buf[LONGEST_HUMAN_READABLE + 1];
-  printf ("%s\t%s\n",
-	  human_readable (n_blocks, buf, ST_NBLOCKSIZE, output_block_size),
-	  string);
-  fflush (stdout);
-}
-
-/* Recursively print the sizes of the directories (and, if selected, files)
-   named in FILES, the last entry of which is NULL.  */
-
-static void
-du_files (char **files)
-{
-  struct saved_cwd cwd;
-  ino_t initial_ino;		/* Initial directory's inode. */
-  dev_t initial_dev;		/* Initial directory's device. */
-  int i;			/* Index in FILES. */
-
-  if (save_cwd (&cwd))
-    exit (1);
-
-  /* Remember the inode and device number of the current directory.  */
-  if (stat (".", &stat_buf))
-    error (1, errno, _("current directory"));
-  initial_ino = stat_buf.st_ino;
-  initial_dev = stat_buf.st_dev;
-
-  for (i = 0; files[i]; i++)
-    {
-      char *arg;
-      int s;
-
-      arg = files[i];
-
-      /* Delete final slash in the argument, unless the slash is alone.  */
-      s = strlen (arg) - 1;
-      if (s != 0)
-	{
-	  if (arg[s] == '/')
-	    arg[s] = 0;
-
-	  str_copyc (path, arg);
-	}
-      else if (arg[0] == '/')
-	str_trunc (path, 0);	/* Null path for root directory.  */
-      else
-	str_copyc (path, arg);
-
-      if (!opt_combined_arguments)
-	hash_reset ();
-
-      count_entry (arg, 1, 0, 0);
-
-      /* chdir if `count_entry' has changed the working directory.  */
-      if (stat (".", &stat_buf))
-	error (1, errno, ".");
-      if (stat_buf.st_ino != initial_ino || stat_buf.st_dev != initial_dev)
-	{
-	  if (restore_cwd (&cwd, _("starting directory"), NULL))
-	    exit (1);
-	}
-    }
-
-  if (opt_combined_arguments)
-    print_size (tot_size, _("total"));
-
-  free_cwd (&cwd);
-}
-
-/* Print (if appropriate) the size (in units determined by `output_block_size')
-   of file or directory ENT. Return the size of ENT in units of 512-byte
-   blocks.  TOP is one for external calls, zero for recursive calls.
-   LAST_DEV is the device that the parent directory of ENT is on.
-   DEPTH is the number of levels (in hierarchy) down from a command
-   line argument.  Don't print if DEPTH > max_depth.  */
-
-static uintmax_t
-count_entry (const char *ent, int top, dev_t last_dev, int depth)
-{
-  uintmax_t size;
-
-  if (((top && opt_dereference_arguments)
-       ? stat (ent, &stat_buf)
-       : (*xstat) (ent, &stat_buf)) < 0)
-    {
-      error (0, errno, "%s", path->text);
-      exit_status = 1;
-      return 0;
-    }
-
-  if (!opt_count_all
-      && stat_buf.st_nlink > 1
-      && hash_insert (stat_buf.st_ino, stat_buf.st_dev))
-    return 0;			/* Have counted this already.  */
-
-  size = ST_NBLOCKS (stat_buf);
-  tot_size += size;
-
-  if (S_ISDIR (stat_buf.st_mode))
-    {
-      unsigned pathlen;
-      dev_t dir_dev;
-      char *name_space;
-      char *namep;
-      struct saved_cwd cwd;
-      int through_symlink;
-      struct stat e_buf;
-
-      dir_dev = stat_buf.st_dev;
-
-      if (opt_one_file_system && !top && last_dev != dir_dev)
-	return 0;		/* Don't enter a new file system.  */
-
-#ifndef S_ISLNK
-# define S_ISLNK(s) 0
-#endif
-      /* If we're dereferencing symlinks and we're about to chdir through
-	 a symlink, remember the current directory so we can return to it
-	 later.  In other cases, chdir ("..") works fine.  */
-      through_symlink = (xstat == stat
-			 && lstat (ent, &e_buf) == 0
-			 && S_ISLNK (e_buf.st_mode));
-      if (through_symlink && save_cwd (&cwd))
-	exit (1);
-
-      if (chdir (ent) < 0)
-	{
-	  error (0, errno, _("cannot change to directory %s"), path->text);
-	  exit_status = 1;
-	  return 0;
-	}
-
-      errno = 0;
-      name_space = savedir (".", (unsigned int) stat_buf.st_size);
-      if (name_space == NULL)
-	{
-	  if (errno)
-	    {
-	      error (0, errno, "%s", path->text);
-	      if (through_symlink)
-		{
-		  if (restore_cwd (&cwd, "..", path->text))
-		    exit (1);
-		  free_cwd (&cwd);
-		}
-	      else if (chdir ("..") < 0)
-		  error (1, errno, _("cannot change to `..' from directory %s"),
-			 path->text);
-	      exit_status = 1;
-	      return 0;
-	    }
-	  else
-	    error (1, 0, _("virtual memory exhausted"));
-	}
-
-      /* Remember the current path.  */
-
-      str_concatc (path, "/");
-      pathlen = path->length;
-
-      for (namep = name_space; *namep; namep += strlen (namep) + 1)
-	{
-	  if (!excluded_filename (exclude, namep))
-	    {
-	      str_concatc (path, namep);
-	      size += count_entry (namep, 0, dir_dev, depth + 1);
-	      str_trunc (path, pathlen);
-	    }
-	}
-
-      free (name_space);
-      if (through_symlink)
-	{
-	  restore_cwd (&cwd, "..", path->text);
-	  free_cwd (&cwd);
-	}
-      else if (chdir ("..") < 0)
-	{
-	  error (1, errno,
-		 _("cannot change to `..' from directory %s"), path->text);
-	}
-
-      str_trunc (path, pathlen - 1); /* Remove the "/" we added.  */
-      if (depth <= max_depth || top)
-	print_size (size, path->length > 0 ? path->text : "/");
-      return opt_separate_dirs ? 0 : size;
-    }
-  else if ((opt_all && depth <= max_depth) || top)
-    {
-      /* FIXME: make this an option.  */
-      int print_only_dir_size = 0;
-      if (!print_only_dir_size)
-	print_size (size, path->length > 0 ? path->text : "/");
-    }
-
-  return size;
-}
-
-/* Allocate space for the hash structures, and set the global
-   variable `htab' to point to it.  The initial hash module is specified in
-   MODULUS, and the number of entries are specified in ENTRY_TAB_SIZE.  (The
-   hash structure will be rebuilt when ENTRY_TAB_SIZE entries have been
-   inserted, and MODULUS and ENTRY_TAB_SIZE in the global `htab' will be
-   doubled.)  */
-
-static void
-hash_init (unsigned int modulus, unsigned int entry_tab_size)
-{
-  struct htab *htab_r;
-
-  htab_r = (struct htab *)
-    xmalloc (sizeof (struct htab) + sizeof (struct entry *) * modulus);
-
-  htab_r->entry_tab = (struct entry *)
-    xmalloc (sizeof (struct entry) * entry_tab_size);
-
-  htab_r->modulus = modulus;
-  htab_r->entry_tab_size = entry_tab_size;
-  htab = htab_r;
-
-  hash_reset ();
-}
-
-/* Reset the hash structure in the global variable `htab' to
-   contain no entries.  */
-
-static void
-hash_reset (void)
-{
-  int i;
-  struct entry **p;
-
-  htab->first_free_entry = 0;
-
-  p = htab->hash;
-  for (i = htab->modulus; i > 0; i--)
-    *p++ = NULL;
-}
-
-/* Insert an item (inode INO and device DEV) in the hash
-   structure in the global variable `htab', if an entry with the same data
-   was not found already.  Return zero if the item was inserted and nonzero
-   if it wasn't.  */
-
-static int
-hash_insert (ino_t ino, dev_t dev)
-{
-  struct htab *htab_r = htab;	/* Initially a copy of the global `htab'.  */
-
-  if (htab_r->first_free_entry >= htab_r->entry_tab_size)
-    {
-      int i;
-      struct entry *ep;
-      unsigned modulus;
-      unsigned entry_tab_size;
-
-      /* Increase the number of hash entries, and re-hash the data.
-	 The method of shrimping and increasing is made to compactify
-	 the heap.  If twice as much data would be allocated
-	 straightforwardly, we would never re-use a byte of memory.  */
-
-      /* Let `htab' shrimp.  Keep only the header, not the pointer vector.  */
-
-      htab_r = (struct htab *)
-	xrealloc ((char *) htab_r, sizeof (struct htab));
-
-      modulus = 2 * htab_r->modulus;
-      entry_tab_size = 2 * htab_r->entry_tab_size;
-
-      /* Increase the number of possible entries.  */
-
-      htab_r->entry_tab = (struct entry *)
-	xrealloc ((char *) htab_r->entry_tab,
-		  sizeof (struct entry) * entry_tab_size);
-
-      /* Increase the size of htab again.  */
-
-      htab_r = (struct htab *)
-	xrealloc ((char *) htab_r,
-		 sizeof (struct htab) + sizeof (struct entry *) * modulus);
-
-      htab_r->modulus = modulus;
-      htab_r->entry_tab_size = entry_tab_size;
-      htab = htab_r;
-
-      i = htab_r->first_free_entry;
-
-      /* Make the increased hash table empty.  The entries are still
-	 available in htab->entry_tab.  */
-
-      hash_reset ();
-
-      /* Go through the entries and install them in the pointer vector
-	 htab->hash.  The items are actually inserted in htab->entry_tab at
-	 the position where they already are.  The htab->coll_link need
-	 however be updated.  Could be made a little more efficient.  */
-
-      for (ep = htab_r->entry_tab; i > 0; i--)
-	{
-	  hash_insert2 (htab_r, ep->ino, ep->dev);
-	  ep++;
-	}
-    }
-
-  return hash_insert2 (htab_r, ino, dev);
-}
-
-/* Insert INO and DEV in the hash structure HTAB, if not
-   already present.  Return zero if inserted and nonzero if it
-   already existed.  */
-
-static int
-hash_insert2 (struct htab *ht, ino_t ino, dev_t dev)
-{
-  struct entry **hp, *ep2, *ep;
-  hp = &ht->hash[ino % ht->modulus];
-  ep2 = *hp;
-
-  /* Collision?  */
-
-  if (ep2 != NULL)
-    {
-      ep = ep2;
-
-      /* Search for an entry with the same data.  */
-
-      do
-	{
-	  if (ep->ino == ino && ep->dev == dev)
-	    return 1;		/* Found an entry with the same data.  */
-	  ep = ep->coll_link;
-	}
-      while (ep != NULL);
-
-      /* Did not find it.  */
-
-    }
-
-  ep = *hp = &ht->entry_tab[ht->first_free_entry++];
-  ep->ino = ino;
-  ep->dev = dev;
-  ep->coll_link = ep2;		/* `ep2' is NULL if no collision.  */
-
-  return 0;
-}
-
-/* Initialize string S1 to hold SIZE characters.  */
-
-static void
-str_init (String **s1, unsigned int size)
-{
-  String *s;
-
-  s = (String *) xmalloc (sizeof (struct String));
-  s->text = xmalloc (size + 1);
-
-  s->alloc = size;
-  *s1 = s;
-}
-
-static void
-ensure_space (String *s, unsigned int size)
-{
-  if (s->alloc < size)
-    {
-      s->text = xrealloc (s->text, size + 1);
-      s->alloc = size;
-    }
-}
-
-/* Assign the null-terminated C-string CSTR to S1.  */
-
-static void
-str_copyc (String *s1, char *cstr)
-{
-  unsigned l = strlen (cstr);
-  ensure_space (s1, l);
-  strcpy (s1->text, cstr);
-  s1->length = l;
-}
-
-static void
-str_concatc (String *s1, char *cstr)
-{
-  unsigned l1 = s1->length;
-  unsigned l2 = strlen (cstr);
-  unsigned l = l1 + l2;
-
-  ensure_space (s1, l);
-  strcpy (s1->text + l1, cstr);
-  s1->length = l;
-}
-
-/* Truncate the string S1 to have length LENGTH.  */
-
-static void
-str_trunc (String *s1, unsigned int length)
-{
-  if (s1->length > length)
-    {
-      s1->text[length] = 0;
-      s1->length = length;
-    }
 }
