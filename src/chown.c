@@ -244,6 +244,10 @@ main (int argc, char **argv)
   char *e;
 
   program_name = argv[0];
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
+
   recurse = force_silent = verbose = changes_only = 0;
 
   while ((optc = getopt_long (argc, argv, "Rcfv", long_options, (int *) 0))

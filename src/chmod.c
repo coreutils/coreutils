@@ -240,6 +240,10 @@ main (int argc, char **argv)
   int c;
 
   program_name = argv[0];
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
+
   recurse = force_silent = verbose = changes_only = 0;
 
   while (1)

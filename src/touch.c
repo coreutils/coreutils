@@ -274,6 +274,10 @@ main (int argc, char **argv)
   int err = 0;
 
   program_name = argv[0];
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
+
   change_times = no_create = use_ref = posix_date = flexible_date = 0;
   newtime = (time_t) -1;
 

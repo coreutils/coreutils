@@ -80,6 +80,10 @@ main (int argc, char **argv)
   int optc;
 
   program_name = argv[0];
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
+
   symbolic_mode = NULL;
 
 #ifndef S_ISFIFO

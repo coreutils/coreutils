@@ -151,6 +151,10 @@ main (int argc, char **argv)
   struct stat *stats;
 
   program_name = argv[0];
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
+
   fs_select_list = NULL;
   fs_exclude_list = NULL;
   inode_format = 0;

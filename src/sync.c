@@ -52,6 +52,9 @@ void
 main (int argc, char **argv)
 {
   program_name = argv[0];
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
 
   parse_long_options (argc, argv, "sync", version_string, usage);
 

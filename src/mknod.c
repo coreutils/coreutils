@@ -92,6 +92,10 @@ main (int argc, char **argv)
   char *s;
 
   program_name = argv[0];
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
+
   symbolic_mode = NULL;
 
   while ((optc = getopt_long (argc, argv, "m:", longopts, (int *) 0)) != EOF)

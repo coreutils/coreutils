@@ -166,6 +166,10 @@ main (int argc, char **argv)
   char *version;
 
   program_name = argv[0];
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
+
   owner_name = NULL;
   group_name = NULL;
   mode = 0755;

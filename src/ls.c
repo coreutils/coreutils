@@ -624,13 +624,17 @@ main (int argc, char **argv)
   register int i;
   register struct pending *thispend;
 
+  program_name = argv[0];
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
+
   exit_status = 0;
   dir_defaulted = 1;
   print_dir_name = 1;
   pending_dirs = 0;
   current_time = time ((time_t *) 0);
 
-  program_name = argv[0];
   i = decode_switches (argc, argv);
 
   if (show_version)

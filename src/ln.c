@@ -306,11 +306,16 @@ main (int argc, char **argv)
   int make_backups = 0;
   char *version;
 
+  program_name = argv[0];
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
+
   version = getenv ("SIMPLE_BACKUP_SUFFIX");
   if (version)
     simple_backup_suffix = version;
   version = getenv ("VERSION_CONTROL");
-  program_name = argv[0];
+
   linkfunc = link;
   symbolic_link = remove_existing_files = interactive = verbose
     = hard_dir_link = 0;

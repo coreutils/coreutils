@@ -117,11 +117,15 @@ main (int argc, char **argv)
   int err = 0;
   int c;
 
+  program_name = argv[0];
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
+
   verbose = ignore_missing_files = recursive = interactive
     = unlink_dirs = 0;
   pnsize = 256;
   pathname = xmalloc (pnsize);
-  program_name = argv[0];
 
   while ((c = getopt_long (argc, argv, "dfirvR", long_opts, (int *) 0)) != EOF)
     {

@@ -327,6 +327,9 @@ main (int argc, char **argv)
   int i;
 
   program_name = argv[0];
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
 
   /* Initialize translation table to identity translation. */
   for (i = 0; i < 256; i++)
