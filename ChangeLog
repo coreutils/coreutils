@@ -1,6 +1,17 @@
-2005-04-03  Jim Meyering  <jim@meyering.net>
+2005-04-04  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* src/kill.c (usage): Mention that some shells provide a
+	built-in function by the same name.
+	* src/printf.c (usage): Likewise.
+	* src/pwd.c (usage): Likewise.
+	* src/stat.c (usage): Likewise.
+	* src/test.c (usage): Likewise.
+	* src/true.c (usage):
+	* src/system.h (USAGE_BUILTIN_WARNING): New macro.
+
+2005-04-03  Jim Meyering  <jim@meyering.net>
 
 	* src/pr.c (main): Fix off-by-one error.
 	pr -$(perl -e 'print "0"x63 . 1') would write one byte beyond the
