@@ -48,7 +48,8 @@ null_AM_MAKEFLAGS = \
   MAKEINFO=false
 
 t=./=test
-my-distcheck: po-check
+my-distcheck: writable-files po-check
+
 	-rm -rf $(t)
 	mkdir $(t)
 	GZIP=$(GZIP) $(AMTAR) -C $(t) -zxf $(distdir).tar.gz
@@ -132,8 +133,15 @@ announcement: NEWS ChangeLog $(distdir).tar.gz
 	      -e 'print "\n"."*"x70 ."\n"; s///; print; print "*"x70 ."\n"'; \
 	)
 
-alpha:
-	$(MAKE) po-check
+writable-files:
+	for file in $(distdir).tar.gz ../release/$(distdir).tar.gz \
+	    ../release/$(xd-delta); do \
+	  test -w $$file \
+	    || { echo ERROR: $$file is not writable; fail=1; }; \
+	done; \
+	test "$$fail" && exit 1
+
+alpha: writable-files po-check
 	$(MAKE) cvs-dist
 	$(MAKE) -s announcement > /tmp/announce-$(distdir)
 	ln $(distdir).tar.gz ../release
