@@ -1,3 +1,7 @@
+1999-11-07  Jim Meyering  <meyering@ascend.com>
+
+	* getloadavg.m4: Add `, 1, [FIXME]' to each use of AC_DEFINE.
+
 1999-11-06  Jim Meyering  <meyering@ascend.com>
 
 	* link-follow.m4 (jm_AC_FUNC_LINK_FOLLOWS_SYMLINK): New file/macro.
