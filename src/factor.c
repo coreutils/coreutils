@@ -101,7 +101,7 @@ factor (uintmax_t n0, size_t max_n_factors, uintmax_t *factors)
   size_t n_factors = 0;
   unsigned char const *w = wheel_tab;
 
-  if (n < 1)
+  if (n <= 1)
     return n_factors;
 
   /* The exit condition in the following loop is correct because
