@@ -1,5 +1,5 @@
 /* Compute MD5 or SHA1 checksum of files or strings
-   Copyright (C) 1995-2001 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -410,7 +410,8 @@ digest_check (const char *checkfile_name, int (*digest_stream)(FILE *, void *))
 		 in check file.  Ignore case of hex digits.  */
 	      for (cnt = 0; cnt < digest_bin_bytes; ++cnt)
 		{
-		  if (TOLOWER (hex_digest[2 * cnt]) != bin2hex[bin_buffer[cnt] >> 4]
+		  if (TOLOWER (hex_digest[2 * cnt])
+		      != bin2hex[bin_buffer[cnt] >> 4]
 		      || (TOLOWER (hex_digest[2 * cnt + 1])
 			  != (bin2hex[bin_buffer[cnt] & 0xf])))
 		    break;
