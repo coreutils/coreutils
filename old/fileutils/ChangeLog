@@ -1,5 +1,10 @@
 2002-07-20  Jim Meyering  <meyering@lucent.com>
 
+	* Version 4.1.11.
+
+	* src/copy.c (copy_internal): Use file_name_lookup, not getdport.
+	Patch by Alfred M. Szmidt.
+
 	* Makefile.maint (news-r1, news-r2): Define.  Better regexp.
 	(announcement): Use them here.  Also makes the line length < 80.
 
