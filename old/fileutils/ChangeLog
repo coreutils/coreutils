@@ -1,9 +1,23 @@
+Thu Dec 21 23:15:06 1995  Jim Meyering  (meyering@comco.com)
+
+	* argmatch.h: New file.
+	* lib/Makefile.am (HEADERS): Add argmatch.h.
+
+	* cp.c: Include argmatch.h.
+	* ls.c: Likewise.
+	* touch.c: Likewise.
+
+	* cp.c (main): Accept new option, --sparse={never,auto,always},
+	to control creation of sparse files.
+	(copy_reg): Set local, make_holes, from global flag_sparse.
+	* cp-aux (usage): Describe new option.
+
 Mon Dec 18 22:29:49 1995  Jim Meyering  (meyering@comco.com)
 
 	* ln.c: [SYMBOLIC_SPACE_STRING]: New macro.
-	(do_link): Use it instead of open-code #ifdef.
-	For --verbose, say `create link DEST to SRC' instead of ambiguous
-	(or inconsistent with cp -v and mv -v) `SRC -> DEST.'
+	(do_link): Use SYMBOLIC_SPACE_STRING instead of open-coded #ifdef.
+	For --verbose, output `create [symbolic ]link DEST to SRC' instead
+	of ambiguous (or inconsistent with cp -v and mv -v) `SRC -> DEST.'
 
 Tue Dec  5 17:38:11 1995  Jim Meyering  (meyering@comco.com)
 
