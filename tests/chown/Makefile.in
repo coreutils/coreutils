@@ -268,8 +268,9 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 AUTOMAKE_OPTIONS = 1.4 gnits
 TESTS = \
+  basic \
   deref \
-  basic
+  separator
 
 EXTRA_DIST = $(TESTS)
 TESTS_ENVIRONMENT = \
