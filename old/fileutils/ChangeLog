@@ -6,6 +6,7 @@
 	here.
 	If the symlink call fails, don't report the failure if the destination
 	already exists and is a symlink pointing to the proper name.
+	Reported by Andrew Burgess.
 	* tests/cp/slink-2-slink: New test.
 	* tests/cp/Makefile.am (TESTS): Add slink-2-slink.
 	* tests/cp/same-file: Adapt to fit new semantics of `cp -d'.
