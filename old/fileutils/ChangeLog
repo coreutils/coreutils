@@ -1,3 +1,8 @@
+Sun Mar  9 22:46:41 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/ls.c (decode_switches): Ignore value of COLUMNS envionment
+	variable when it is the empty string.  Suggestion from Ulrich Drepper.
+
 Wed Feb 26 23:46:39 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/getdate.y: (tYEAR_UNIT): Increase yyRelYear by $1, not just by 1.
