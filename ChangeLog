@@ -2,6 +2,9 @@
 
 	* Version 4.5.4.
 
+	* tests/du/trailing-slash: Allow for a directory of size `0'.
+	That happens at least on file systems of type tmpfs on linux-2.4.18.
+
 	* announce-gen: New script to begin replacing the commands
 	associated with the rule here...
 	* Makefile.maint (announcement): Invoke announce-gen.
