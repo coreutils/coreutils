@@ -1,3 +1,46 @@
+2004-07-23  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Fix bug with "tail -f" reported by Rob Holland in
+	<http://lists.gnu.org/archive/html/bug-coreutils/2004-07/msg00054.html>.
+	Also, remove the undocumented and unsupported-since-2000
+	--max-consecutive-size-changes options.  Fix another related bug:
+	"tail" got confused if stdin, stdout, or stderr were closed.
+	Also, use output buffering even with "tail -f".
+	
+	* NEWS: Document this, plus yesterday's patch.
+	* doc/coreutils.texi (tail invocation): "size has remained the same"
+	-> "file has not changed", which is more accurate for fifos.
+	* lib/Makefile.am (libfetish_a_SOURCES): Add fcntl-safer.h,
+	open-safer.c.
+	* src/tail.c: Include fcntl-safer.h.
+	(COPY_TO_EOF): Set to UINTMAX_MAX, not OFF_T_MAX (which was wrong).
+	(COPY_A_BUFFER): New macro.
+	(struct File_spec): New members mtime, mode, blocking.
+	Remove member n_consecutive_size_changes.
+	(DEFAULT_MAX_N_CONSECUTIVE_SIZE_CHANGES,
+	max_n_consecutive_size_changes_between_opens,
+	MAX_CONSECUTIVE_SIZE_CHANGES_OPTION): Remove.
+	(long_options, tail_forever, parse_options):
+	Remove (non-)support for --max-consecutive-size-changes.
+	(record_open_fd): New function.
+	(recheck, tail_file): Use it.  Don't assume that stdin is open.
+	(dump_remainder): Add support for new COPY_A_BUFFER special value.
+	Treat errno==EAGAIN like EOF, since it might be a nonblocking read.
+	(recheck): New arg BLOCKING, specifying whether to use blocking reads.
+	All uses changed.
+	(n_live_files): Remove, replacing with...
+	(any_live_files): New function.  All uses changed.
+	(tail_forever): Use nonblocking I/O unless we know that blocking I/O
+	is safe; this avoids some hangs when reading from a fifo.
+	Avoid invoking fstat or sleep when using blocking I/O.
+	Do not check for changes to size if the file is not a regular file,
+	as the size is undefined in that case.
+	Check for changes to mtime or mode, too; this works for non-regular
+	files.
+	(tail_forever, main): Redo fflush strategy to work even when input
+	is nonblocking.  Don't use unbuffered output; just flush when needed.
+	* lib/fcntl-safer.h, open-safer.c: New files.
+	
 2004-07-22  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/tail.c (main): Ignore -f if no file operand is specified
