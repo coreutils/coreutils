@@ -65,16 +65,33 @@
 #ifndef TIME_T_MAX
 # define TIME_T_MAX TYPE_MAXIMUM (time_t)
 #endif
+#define TIME_T_MIDPOINT (((TIME_T_MIN + TIME_T_MAX) >> 1) + 1)
 
-#define TM_YEAR_BASE 1900
+/* Verify a requirement at compile-time (unlike assert, which is runtime).  */
+#define verify(name, assertion) struct name { char a[(assertion) ? 1 : -1]; }
+
+verify (time_t_is_integer, (time_t) 0.5 == 0);
+verify (twos_complement_arithmetic, -1 == ~1 + 1);
+verify (right_shift_propagates_sign, -1 >> 1 == -1);
+/* The code also assumes that signed integer overflow silently wraps
+   around, but this assumption can't be stated without causing a
+   diagnostic on some hosts.  */
+
 #define EPOCH_YEAR 1970
+#define TM_YEAR_BASE 1900
+verify (base_year_is_a_multiple_of_100, TM_YEAR_BASE % 100 == 0);
 
-#ifndef __isleap
-/* Nonzero if YEAR is a leap year (every 4 years,
-   except every 100th isn't, and every 400th is).  */
-# define __isleap(year)	\
-  ((year) % 4 == 0 && ((year) % 100 != 0 || (year) % 400 == 0))
-#endif
+/* Return 1 if YEAR + TM_YEAR_BASE is a leap year.  */
+static inline int
+leapyear (int year)
+{
+  /* Don't add YEAR to TM_YEAR_BASE, as that might overflow.
+     Also, work even if YEAR is negative.  */
+  return
+    ((year & 3) == 0
+     && (year % 100 != 0
+	 || ((year / 100) & 3) == (- (TM_YEAR_BASE / 100) & 3)));
+}
 
 /* How many days come before each month (0-12).  */
 #ifndef _LIBC
@@ -106,40 +123,74 @@ my_mktime_localtime_r (const time_t *t, struct tm *tp)
 }
 #endif /* ! _LIBC */
 
+/* Return an integer value measuring (YEAR1-YDAY1 HOUR1:MIN1:SEC1) -
+   (YEAR0-YDAY0 HOUR0:MIN0:SEC0) in seconds, assuming that the clocks
+   were not adjusted between the time stamps.
 
-/* Yield the difference between (YEAR-YDAY HOUR:MIN:SEC) and (*TP),
-   measured in seconds, ignoring leap seconds.
-   YEAR uses the same numbering as TM->tm_year.
-   All values are in range, except possibly YEAR.
-   If TP is null, return a nonzero value.
-   If overflow occurs, yield the low order bits of the correct answer.  */
-static time_t
-ydhms_tm_diff (int year, int yday, int hour, int min, int sec,
-	       const struct tm *tp)
+   The YEAR values uses the same numbering as TP->tm_year.  Values
+   need not be in the usual range.  However, YEAR1 must not be less
+   than 2 * INT_MIN or greater than 2 * INT_MAX.
+
+   The result may overflow.  It is the caller's responsibility to
+   detect overflow.  */
+
+static inline time_t
+ydhms_diff (long int year1, long int yday1, int hour1, int min1, int sec1,
+	    int year0, int yday0, int hour0, int min0, int sec0)
 {
-  if (!tp)
-    return 1;
-  else
+  verify (C99_integer_division, -1 / 2 == 0);
+  verify (long_int_year_and_yday_are_wide_enough,
+	  INT_MAX <= LONG_MAX / 2 || TIME_T_MAX <= UINT_MAX);
+
+  /* Compute intervening leap days correctly even if year is negative.
+     Take care to avoid integer overflow here.  */
+  int a4 = (year1 >> 2) + (TM_YEAR_BASE >> 2) - ! (year1 & 3);
+  int b4 = (year0 >> 2) + (TM_YEAR_BASE >> 2) - ! (year0 & 3);
+  int a100 = a4 / 25 - (a4 % 25 < 0);
+  int b100 = b4 / 25 - (b4 % 25 < 0);
+  int a400 = a100 >> 2;
+  int b400 = b100 >> 2;
+  int intervening_leap_days = (a4 - b4) - (a100 - b100) + (a400 - b400);
+
+  /* Compute the desired time in time_t precision.  Overflow might
+     occur here.  */
+  time_t tyear1 = year1;
+  time_t years = tyear1 - year0;
+  time_t days = 365 * years + yday1 - yday0 + intervening_leap_days;
+  time_t hours = 24 * days + hour1 - hour0;
+  time_t minutes = 60 * hours + min1 - min0;
+  time_t seconds = 60 * minutes + sec1 - sec0;
+  return seconds;
+}
+
+
+/* Return a time_t value corresponding to (YEAR-YDAY HOUR:MIN:SEC),
+   assuming that *T corresponds to *TP and that no clock adjustments
+   occurred between *TP and the desired time.
+   If TP is null, return a value not equal to *T; this avoids false matches.
+   If overflow occurs, yield the minimal or maximal value, except do not
+   yield a value equal to *T.  */
+static time_t
+guess_time_tm (long int year, long int yday, int hour, int min, int sec,
+	       const time_t *t, const struct tm *tp)
+{
+  if (tp)
     {
-      /* Compute intervening leap days correctly even if year is negative.
-	 Take care to avoid int overflow.  time_t overflow is OK, since
-	 only the low order bits of the correct time_t answer are needed.
-	 Don't convert to time_t until after all divisions are done, since
-	 time_t might be unsigned.  */
-      int a4 = (year >> 2) + (TM_YEAR_BASE >> 2) - ! (year & 3);
-      int b4 = (tp->tm_year >> 2) + (TM_YEAR_BASE >> 2) - ! (tp->tm_year & 3);
-      int a100 = a4 / 25 - (a4 % 25 < 0);
-      int b100 = b4 / 25 - (b4 % 25 < 0);
-      int a400 = a100 >> 2;
-      int b400 = b100 >> 2;
-      int intervening_leap_days = (a4 - b4) - (a100 - b100) + (a400 - b400);
-      time_t years = year - (time_t) tp->tm_year;
-      time_t days = (365 * years + intervening_leap_days
-		     + (yday - tp->tm_yday));
-      return (60 * (60 * (24 * days + (hour - tp->tm_hour))
-		    + (min - tp->tm_min))
-	      + (sec - tp->tm_sec));
+      time_t d = ydhms_diff (year, yday, hour, min, sec,
+			     tp->tm_year, tp->tm_yday,
+			     tp->tm_hour, tp->tm_min, tp->tm_sec);
+      time_t t1 = *t + d;
+      if ((t1 < *t) == (TYPE_SIGNED (time_t) ? d < 0 : TIME_T_MAX / 2 < d))
+	return t1;
     }
+
+  /* Overflow occurred one way or another.  Return the nearest result
+     that is actually in range, except don't report a zero difference
+     if the actual difference is nonzero, as that would cause a false
+     match.  */
+  return (*t < TIME_T_MIDPOINT
+	  ? TIME_T_MIN + (*t == TIME_T_MIN)
+	  : TIME_T_MAX - (*t == TIME_T_MAX));
 }
 
 /* Use CONVERT to convert *T to a broken down time in *TP.
@@ -199,9 +250,9 @@ static
 time_t
 __mktime_internal (struct tm *tp,
 		   struct tm *(*convert) (const time_t *, struct tm *),
-		   long int *offset)
+		   time_t *offset)
 {
-  time_t t, dt, t0, t1, t2;
+  time_t t, gt, t0, t1, t2;
   struct tm tm;
 
   /* The maximum number of probes (calls to CONVERT) should be enough
@@ -227,7 +278,8 @@ __mktime_internal (struct tm *tp,
   int mon_remainder = mon % 12;
   int negative_mon_remainder = mon_remainder < 0;
   int mon_years = mon / 12 - negative_mon_remainder;
-  int year = year_requested + mon_years;
+  long int lyear_requested = year_requested;
+  long int year = lyear_requested + mon_years;
 
   /* The other values need not be in range:
      the remaining code handles minor overflows correctly,
@@ -236,35 +288,95 @@ __mktime_internal (struct tm *tp,
 
   /* Calculate day of year from year, month, and day of month.
      The result need not be in range.  */
-  int yday = ((__mon_yday[__isleap (year + TM_YEAR_BASE)]
-	       [mon_remainder + 12 * negative_mon_remainder])
-	      + mday - 1);
+  int mon_yday = ((__mon_yday[leapyear (year)]
+		   [mon_remainder + 12 * negative_mon_remainder])
+		  - 1);
+  long int lmday = mday;
+  long int yday = mon_yday + lmday;
+
+  time_t guessed_offset = *offset;
 
   int sec_requested = sec;
 
-#if LEAP_SECONDS_POSSIBLE
-  /* Handle out-of-range seconds specially,
-     since ydhms_tm_diff assumes every minute has 60 seconds.  */
-  if (sec < 0)
-    sec = 0;
-  if (59 < sec)
-    sec = 59;
-#endif
+  if (LEAP_SECONDS_POSSIBLE)
+    {
+      /* Handle out-of-range seconds specially,
+	 since ydhms_tm_diff assumes every minute has 60 seconds.  */
+      if (sec < 0)
+	sec = 0;
+      if (59 < sec)
+	sec = 59;
+    }
 
-  /* Invert CONVERT by probing.  First assume the same offset as last time.
-     Then repeatedly use the error to improve the guess.  */
+  /* Invert CONVERT by probing.  First assume the same offset as last
+     time.  */
 
-  tm.tm_year = EPOCH_YEAR - TM_YEAR_BASE;
-  tm.tm_yday = tm.tm_hour = tm.tm_min = tm.tm_sec = 0;
-  t0 = ydhms_tm_diff (year, yday, hour, min, sec, &tm);
-  t = t0 + *offset;
-  if ((t < t0) != (*offset < 0))
-    t = t0;
+  t0 = ydhms_diff (year, yday, hour, min, sec,
+		   EPOCH_YEAR - TM_YEAR_BASE, 0, 0, 0, - guessed_offset);
 
-  for (t1 = t2 = t, dst2 = 0;
-       (dt = ydhms_tm_diff (year, yday, hour, min, sec,
-			    ranged_convert (convert, &t, &tm)));
-       t1 = t2, t2 = t, t += dt, dst2 = tm.tm_isdst != 0)
+  if (TIME_T_MAX / INT_MAX / 366 / 24 / 60 / 60 < 3)
+    {
+      /* time_t isn't large enough to rule out overflows, so check
+	 for major overflows.  A gross check suffices, since if t0
+	 has overflowed, it is off by a multiple of TIME_T_MAX -
+	 TIME_T_MIN + 1.  So ignore any component of the difference
+	 that is bounded by a small value.  */
+
+      /* Approximate log base 2 of the number of time units per
+	 biennium.  A biennium is 2 years; use this unit instead of
+	 years to avoid integer overflow.  For example, 2 average
+	 Gregorian years are 2 * 365.2425 * 24 * 60 * 60 seconds,
+	 which is 63113904 seconds, and rint (log2 (63113904)) is
+	 26.  */
+      int ALOG2_SECONDS_PER_BIENNIUM = 26;
+      int ALOG2_MINUTES_PER_BIENNIUM = 20;
+      int ALOG2_HOURS_PER_BIENNIUM = 14;
+      int ALOG2_DAYS_PER_BIENNIUM = 10;
+      int LOG2_YEARS_PER_BIENNIUM = 1;
+
+      int approx_requested_biennia =
+	((year_requested >> LOG2_YEARS_PER_BIENNIUM)
+	 - ((EPOCH_YEAR - TM_YEAR_BASE) >> LOG2_YEARS_PER_BIENNIUM)
+	 + (mday >> ALOG2_DAYS_PER_BIENNIUM)
+	 + (hour >> ALOG2_HOURS_PER_BIENNIUM)
+	 + (min >> ALOG2_MINUTES_PER_BIENNIUM)
+	 + (LEAP_SECONDS_POSSIBLE ? 0 : sec >> ALOG2_SECONDS_PER_BIENNIUM));
+
+      int approx_biennia = t0 >> ALOG2_SECONDS_PER_BIENNIUM;
+      int diff = approx_biennia - approx_requested_biennia;
+      int abs_diff = diff < 0 ? - diff : diff;
+
+      /* IRIX 4.0.5 cc miscaculates TIME_T_MIN / 3: it erroneously
+	 gives a positive value of 715827882.  Setting a variable
+	 first then doing math on it seems to work.
+	 (ghazi@caip.rutgers.edu) */
+      time_t time_t_max = TIME_T_MAX;
+      time_t time_t_min = TIME_T_MIN;
+      time_t overflow_threshold =
+	(time_t_max / 3 - time_t_min / 3) >> ALOG2_SECONDS_PER_BIENNIUM;
+
+      if (overflow_threshold < abs_diff)
+	{
+	  /* Overflow occurred.  Try repairing it; this might work if
+	     the time zone offset is enough to undo the overflow.  */
+	  time_t repaired_t0 = -1 - t0;
+	  approx_biennia = repaired_t0 >> ALOG2_SECONDS_PER_BIENNIUM;
+	  diff = approx_biennia - approx_requested_biennia;
+	  abs_diff = diff < 0 ? - diff : diff;
+	  if (overflow_threshold < abs_diff)
+	    return -1;
+	  guessed_offset += repaired_t0 - t0;
+	  t0 = repaired_t0;
+	}
+    }
+
+  /* Repeatedly use the error to improve the guess.  */
+
+  for (t = t1 = t2 = t0, dst2 = 0;
+       (gt = guess_time_tm (year, yday, hour, min, sec, &t,
+			    ranged_convert (convert, &t, &tm)),
+	t != gt);
+       t1 = t2, t2 = t, t = gt, dst2 = tm.tm_isdst != 0)
     if (t == t1 && t != t2
 	&& (tm.tm_isdst < 0
 	    || (isdst < 0
@@ -272,83 +384,83 @@ __mktime_internal (struct tm *tp,
 		: (isdst != 0) != (tm.tm_isdst != 0))))
       /* We can't possibly find a match, as we are oscillating
 	 between two values.  The requested time probably falls
-	 within a spring-forward gap of size DT.  Follow the common
-	 practice in this case, which is to return a time that is DT
+	 within a spring-forward gap of size GT - T.  Follow the common
+	 practice in this case, which is to return a time that is GT - T
 	 away from the requested time, preferring a time whose
 	 tm_isdst differs from the requested value.  (If no tm_isdst
 	 was requested and only one of the two values has a nonzero
 	 tm_isdst, prefer that value.)  In practice, this is more
 	 useful than returning -1.  */
-      break;
+      goto offset_found;
     else if (--remaining_probes == 0)
       return -1;
 
-  /* If we have a match, check whether tm.tm_isdst has the requested
+  /* We have a match.  Check whether tm.tm_isdst has the requested
      value, if any.  */
-  if (dt == 0 && isdst != tm.tm_isdst && 0 <= isdst && 0 <= tm.tm_isdst)
+  if (isdst != tm.tm_isdst && 0 <= isdst && 0 <= tm.tm_isdst)
     {
       /* tm.tm_isdst has the wrong value.  Look for a neighboring
 	 time with the right value, and use its UTC offset.
-	 Heuristic: probe the previous three calendar quarters (approximately),
-	 looking for the desired isdst.  This isn't perfect,
-	 but it's good enough in practice.  */
-      int quarter = 7889238; /* seconds per average 1/4 Gregorian year */
-      int i;
 
-      /* If we're too close to the time_t limit, look in future quarters.  */
-      if (t < TIME_T_MIN + 3 * quarter)
-	quarter = -quarter;
+	 Heuristic: probe the adjacent timestamps in both directions,
+	 looking for the desired isdst.  This should work for all real
+	 time zone histories in the tz database.  */
 
-      for (i = 1; i <= 3; i++)
-	{
-	  time_t ot = t - i * quarter;
-	  struct tm otm;
-	  ranged_convert (convert, &ot, &otm);
-	  if (otm.tm_isdst == isdst)
-	    {
-	      /* We found the desired tm_isdst.
-		 Extrapolate back to the desired time.  */
-	      t = ot + ydhms_tm_diff (year, yday, hour, min, sec, &otm);
-	      ranged_convert (convert, &t, &tm);
-	      break;
-	    }
-	}
+      /* Distance between probes when looking for a DST boundary.  In
+	 tzdata2003a, the shortest period of DST is 601200 seconds
+	 (e.g., America/Recife starting 2000-10-08 01:00), and the
+	 shortest period of non-DST surrounded by DST is 694800
+	 seconds (Africa/Tunis starting 1943-04-17 01:00).  Use the
+	 minimum of these two values, so we don't miss these short
+	 periods when probing.  */
+      int stride = 601200;
+
+      /* The longest period of DST in tzdata2003a is 536454000 seconds
+	 (e.g., America/Jujuy starting 1946-10-01 01:00).  The longest
+	 period of non-DST is much longer, but it makes no real sense
+	 to search for more than a year of non-DST, so use the DST
+	 max.  */
+      int duration_max = 536454000;
+
+      /* Search in both directions, so the maximum distance is half
+	 the duration; add the stride to avoid off-by-1 problems.  */
+      int delta_bound = duration_max / 2 + stride;
+
+      int delta, direction;
+
+      for (delta = stride; delta < delta_bound; delta += stride)
+	for (direction = -1; direction <= 1; direction += 2)
+	  {
+	    time_t ot = t + delta * direction;
+	    if ((ot < t) == (direction < 0))
+	      {
+		struct tm otm;
+		ranged_convert (convert, &ot, &otm);
+		if (otm.tm_isdst == isdst)
+		  {
+		    /* We found the desired tm_isdst.
+		       Extrapolate back to the desired time.  */
+		    t = guess_time_tm (year, yday, hour, min, sec, &ot, &otm);
+		    ranged_convert (convert, &t, &tm);
+		    goto offset_found;
+		  }
+	      }
+	  }
     }
 
-  *offset = t - t0;
+ offset_found:
+  *offset = guessed_offset + t - t0;
 
-#if LEAP_SECONDS_POSSIBLE
-  if (sec_requested != tm.tm_sec)
+  if (LEAP_SECONDS_POSSIBLE && sec_requested != tm.tm_sec)
     {
       /* Adjust time to reflect the tm_sec requested, not the normalized value.
 	 Also, repair any damage from a false match due to a leap second.  */
-      t += sec_requested - sec + (sec == 0 && tm.tm_sec == 60);
-      if (! (*convert) (&t, &tm))
-	return -1;
-    }
-#endif
-
-  if (TIME_T_MAX / INT_MAX / 366 / 24 / 60 / 60 < 3)
-    {
-      /* time_t isn't large enough to rule out overflows in ydhms_tm_diff,
-	 so check for major overflows.  A gross check suffices,
-	 since if t has overflowed, it is off by a multiple of
-	 TIME_T_MAX - TIME_T_MIN + 1.  So ignore any component of
-	 the difference that is bounded by a small value.  */
-
-      double dyear = (double) year_requested + mon_years - tm.tm_year;
-      double dday = 366 * dyear + mday;
-      double dsec = 60 * (60 * (24 * dday + hour) + min) + sec_requested;
-
-      /* On Irix4.0.5 cc, dividing TIME_T_MIN by 3 does not produce
-	 correct results, ie., it erroneously gives a positive value
-	 of 715827882.  Setting a variable first then doing math on it
-	 seems to work.  (ghazi@caip.rutgers.edu) */
-
-      const time_t time_t_max = TIME_T_MAX;
-      const time_t time_t_min = TIME_T_MIN;
-
-      if (time_t_max / 3 - time_t_min / 3 < (dsec < 0 ? - dsec : dsec))
+      int sec_adjustment = (sec == 0 && tm.tm_sec == 60) - sec;
+      t1 = t + sec_requested;
+      t2 = t1 + sec_adjustment;
+      if (((t1 < t) != (sec_requested < 0))
+	  | ((t2 < t1) != (sec_adjustment < 0))
+	  | ! (*convert) (&t, &tm))
 	return -1;
     }
 
@@ -357,7 +469,11 @@ __mktime_internal (struct tm *tp,
 }
 
 
-static long int localtime_offset;
+/* FIXME: This should use a signed type wide enough to hold any UTC
+   offset in seconds.  'int' should be good enough for GNU code.  We
+   can't fix this unilaterally though, as other modules invoke
+   __mktime_internal.  */
+static time_t localtime_offset;
 
 /* Convert *TP to a time_t value.  */
 time_t
@@ -385,7 +501,7 @@ libc_hidden_weak (timelocal)
 #if DEBUG
 
 static int
-not_equal_tm (struct tm const *a, struct tm const *b)
+not_equal_tm (const struct tm *a, const struct tm *b)
 {
   return ((a->tm_sec ^ b->tm_sec)
 	  | (a->tm_min ^ b->tm_min)
@@ -399,7 +515,7 @@ not_equal_tm (struct tm const *a, struct tm const *b)
 }
 
 static void
-print_tm (struct tm const *tp)
+print_tm (const struct tm *tp)
 {
   if (tp)
     printf ("%04d-%02d-%02d %02d:%02d:%02d yday %03d wday %d isdst %d",
@@ -411,15 +527,15 @@ print_tm (struct tm const *tp)
 }
 
 static int
-check_result (time_t tk, struct tm tmk, time_t tl, struct tm const *lt)
+check_result (time_t tk, struct tm tmk, time_t tl, const struct tm *lt)
 {
   if (tk != tl || !lt || not_equal_tm (&tmk, lt))
     {
       printf ("mktime (");
-      print_tm (&tmk);
-      printf (")\nyields (");
       print_tm (lt);
-      printf (") == %ld, should be %ld\n", (long) tl, (long) tk);
+      printf (")\nyields (");
+      print_tm (&tmk);
+      printf (") == %ld, should be %ld\n", (long int) tk, (long int) tl);
       return 1;
     }
 
@@ -432,7 +548,7 @@ main (int argc, char **argv)
   int status = 0;
   struct tm tm, tmk, tml;
   struct tm *lt;
-  time_t tk, tl;
+  time_t tk, tl, tl1;
   char trailer;
 
   if ((argc == 3 || argc == 4)
@@ -454,7 +570,7 @@ main (int argc, char **argv)
 	  tml = *lt;
 	  lt = &tml;
 	}
-      printf ("mktime returns %ld == ", (long) tl);
+      printf ("mktime returns %ld == ", (long int) tl);
       print_tm (&tmk);
       printf ("\n");
       status = check_result (tl, tmk, tl, lt);
@@ -466,7 +582,7 @@ main (int argc, char **argv)
       time_t to = atol (argv[3]);
 
       if (argc == 4)
-	for (tl = from; tl <= to; tl += by)
+	for (tl = from; by < 0 ? to <= tl : tl <= to; tl = tl1)
 	  {
 	    lt = localtime (&tl);
 	    if (lt)
@@ -477,12 +593,15 @@ main (int argc, char **argv)
 	      }
 	    else
 	      {
-		printf ("localtime (%ld) yields 0\n", (long) tl);
+		printf ("localtime (%ld) yields 0\n", (long int) tl);
 		status = 1;
 	      }
+	    tl1 = tl + by;
+	    if ((tl1 < tl) != (by < 0))
+	      break;
 	  }
       else
-	for (tl = from; tl <= to; tl += by)
+	for (tl = from; by < 0 ? to <= tl : tl <= to; tl = tl1)
 	  {
 	    /* Null benchmark.  */
 	    lt = localtime (&tl);
@@ -494,9 +613,12 @@ main (int argc, char **argv)
 	      }
 	    else
 	      {
-		printf ("localtime (%ld) yields 0\n", (long) tl);
+		printf ("localtime (%ld) yields 0\n", (long int) tl);
 		status = 1;
 	      }
+	    tl1 = tl + by;
+	    if ((tl1 < tl) != (by < 0))
+	      break;
 	  }
     }
   else
