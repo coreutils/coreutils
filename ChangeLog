@@ -1,6 +1,20 @@
-2003-03-26  Jim Meyering  <jim@meyering.net>
+2003-03-27  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.12.
+
+2003-03-24  Paul Eggert  <eggert@twinsun.com>
+
+	Fix buffer overrun problem reported by TAKAI Kousuke, along
+	with some other POSIX incompatibilities.
+
+	* src/printf.c (print_esc): Do not treat \x specially if
+	POSIXLY_CORRECT.  Avoid buffer overrun if the format ends
+	in backslash.  Treat incomplete escape sequences as strings
+	of characters, as POSIX requires.
+	(print_formatted): Allow multiple flags.  Avoid buffer overrun
+	if the format is incomplete.
+
+2003-03-26  Jim Meyering  <jim@meyering.net>
 
 	* src/copy.h (struct cp_options): Add a comment.
 
@@ -862,10 +876,10 @@
 
 	Begin to make AD_* functions more generic.
 	* src/remove.c (AD_push_initial): Don't set status to RM_OK here.
-        (AD_push): Likewise.
-        (AD_INIT_OTHER_MEMBERS): Define.
-        (remove_dir): Define the `status' member manually after each
-        call to AD_push or AD_push_initial.
+	(AD_push): Likewise.
+	(AD_INIT_OTHER_MEMBERS): Define.
+	(remove_dir): Define the `status' member manually after each
+	call to AD_push or AD_push_initial.
 
 	* src/Makefile.am (check-misc): New rule, to ensure that no more
 	S_IS* macro definitions sneak into the code.
