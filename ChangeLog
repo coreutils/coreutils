@@ -1,3 +1,7 @@
+2003-04-08  Jim Meyering  <jim@meyering.net>
+
+	* src/split.c: Rename local variables: nchars -> n_bytes.
+
 2003-04-07  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.1.
