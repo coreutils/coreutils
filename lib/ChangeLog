@@ -1,5 +1,8 @@
 2002-11-21  Jim Meyering  <jim@meyering.net>
 
+	* strdup.c (strdup): Merge in changes from gnulib; mainly to
+	use memcpy rather than strcpy.
+
 	* strcspn.c: Update from gnulib.
 
 	* sig2str.c (str2signum): Use unsigned, not size_t, for type of index.
