@@ -3059,6 +3059,10 @@ hours
 days
 @end table
 
+Historical implementations of @code{sleep} have required that
+@var{number} be an integer.  However, GNU @code{sleep} accepts
+arbitrary floating point numbers.
+
 The only options are @samp{--help} and @samp{--version}.  @xref{Common
 options}.
 
