@@ -48,7 +48,7 @@ int lstat ();
 char *dirname ();
 char *xstrdup ();
 enum backup_type get_version ();
-int eaccess_stat ();
+int euidaccess ();
 int full_write ();
 
 static int do_copy ();
@@ -556,7 +556,7 @@ copy (src_path, dst_path, new_dst, device, ancestors)
 	    {
 	      if (flag_interactive)
 		{
-		  if (eaccess_stat (&dst_sb, W_OK, dst_path) != 0)
+		  if (euidaccess (dst_path, W_OK) != 0)
 		    fprintf (stderr,
 			     "%s: overwrite `%s', overriding mode %04o? ",
 			     program_name, dst_path,
@@ -594,7 +594,7 @@ copy (src_path, dst_path, new_dst, device, ancestors)
 	      if (S_ISDIR (dst_sb.st_mode))
 		{
 		  /* Temporarily change mode to allow overwriting. */
-		  if (eaccess_stat (&dst_sb, W_OK | X_OK, dst_path) != 0)
+		  if (euidaccess (dst_path, W_OK | X_OK) != 0)
 		    {
 		      if (chmod (dst_path, 0700))
 			{
