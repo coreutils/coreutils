@@ -1,3 +1,9 @@
+2005-01-30  Jim Meyering  <jim@meyering.net>
+
+	* Version 5.3.1.
+
+	* src/stty.c: Remove unnecessary parentheses in #if directives.
+
 2005-01-29  Eric Blake  <ebb9@byu.net>  (tiny change)
 
 	* .cvsignore: Ignore config.cache and config.status.lineno.
@@ -12,8 +18,6 @@
 	* tests/chown/separator: Quote user and group names.
 
 2005-01-24  Jim Meyering  <jim@meyering.net>
-
-	* Version 5.3.1.
 
 	* src/cp.c (usage): Merge the descriptions of --no-dereference and -P.
 	Suggestion from Johan Boule.
