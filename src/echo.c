@@ -134,7 +134,7 @@ main (argc, argv)
 
       for (i = 0; temp[i]; i++)
 	{
-	  if (rindex (VALID_ECHO_OPTIONS, temp[i]) == 0)
+	  if (strrchr (VALID_ECHO_OPTIONS, temp[i]) == 0)
 	    goto just_echo;
 	}
 

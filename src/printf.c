@@ -199,7 +199,7 @@ print_formatted (format, argc, argv)
 		}
 	      break;
 	    }
-	  if (index ("-+ #", *f))
+	  if (strchr ("-+ #", *f))
 	    {
 	      ++f;
 	      ++direc_length;
@@ -252,7 +252,7 @@ print_formatted (format, argc, argv)
 	      ++f;
 	      ++direc_length;
 	    }
-	  if (!index ("diouxXfeEgGcs", *f))
+	  if (!strchr ("diouxXfeEgGcs", *f))
 	    error (1, 0, "%%%c: invalid directive", *f);
 	  ++direc_length;
 	  if (argc > 0)
@@ -310,7 +310,7 @@ print_esc (escstart)
 	esc_value = esc_value * 8 + octtobin (*p);
       putchar (esc_value);
     }
-  else if (index ("\"\\abcfnrtv", *p))
+  else if (strchr ("\"\\abcfnrtv", *p))
     print_esc_char (*p++);
   else
     error (1, 0, "\\%c: invalid escape", *p);

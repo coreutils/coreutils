@@ -150,7 +150,7 @@ extract_trimmed_name (const STRUCT_UTMP *ut)
   /* Append a trailing space character.  Some systems pad names shorter than
      the maximum with spaces, others pad with NULs.  Remove any spaces.  */
   trimmed_name[sizeof (ut->ut_name)] = ' ';
-  p = index (trimmed_name, ' ');
+  p = strchr (trimmed_name, ' ');
   if (p != NULL)
     *p = '\0';
   return trimmed_name;

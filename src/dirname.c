@@ -75,7 +75,7 @@ main (argc, argv)
   path = argv[1];
   strip_trailing_slashes (path);
 
-  slash = rindex (path, '/');
+  slash = strrchr (path, '/');
   if (slash == NULL)
     path = (char *) ".";
   else

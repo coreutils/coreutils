@@ -166,7 +166,7 @@ main (argc, argv, envp)
   if (optind != argc && !strcmp (argv[optind], "-"))
     ++optind;
 
-  while (optind < argc && index (argv[optind], '='))
+  while (optind < argc && strchr (argv[optind], '='))
     putenv (argv[optind++]);
 
   /* If no program is specified, print the environment and exit. */

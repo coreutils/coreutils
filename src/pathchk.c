@@ -289,13 +289,13 @@ validate_path (path, portability)
       while (*slash == '/')
 	slash++;
       start = slash;
-      slash = index (slash, '/');
+      slash = strchr (slash, '/');
       if (slash != NULL)
 	*slash = '\0';
       else
 	{
 	  last_elem = 1;
-	  slash = index (start, '\0');
+	  slash = strchr (start, '\0');
 	}
 
       if (!last_elem)
