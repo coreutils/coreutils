@@ -30,7 +30,6 @@ jm-macros.m4 \
 jm-mktime.m4 \
 jm-winsz1.m4 \
 jm-winsz2.m4 \
-largefile.m4 \
 lchown.m4 \
 lcmessage.m4 \
 lib-check.m4 \
