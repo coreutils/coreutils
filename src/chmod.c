@@ -232,11 +232,12 @@ usage (int status)
     {
       printf (_("\
 Usage: %s [OPTION]... MODE[,MODE]... FILE...\n\
-  or:  %s [OPTION]... OCTAL_MODE FILE...\n\
+  or:  %s [OPTION]... OCTAL-MODE FILE...\n\
   or:  %s [OPTION]... --reference=RFILE FILE...\n\
 "),
 	      program_name, program_name, program_name);
       printf (_("\
+Change the mode of each FILE to MODE.\n\
 \n\
   -c, --changes           like verbose but report only when a change is made\n\
   -f, --silent, --quiet   suppress most error messages\n\
