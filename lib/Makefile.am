@@ -43,7 +43,6 @@ libfetish_a_SOURCES = \
   readtokens0.c readtokens0.h \
   regex.h \
   root-dev-ino.c root-dev-ino.h \
-  stat-macros.h \
   stdio-safer.h \
   time_r.c time_r.h \
   unicodeio.c unicodeio.h \
@@ -58,7 +57,6 @@ libfetish_a_SOURCES = \
   xstrndup.c xstrndup.h \
   xstrtod.c xstrtod.h \
   xstrtoimax.c \
-  xstrtoul.c \
   xstrtoumax.c
 
 libfetish_a_SOURCES += \
