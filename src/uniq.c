@@ -132,7 +132,7 @@ standard input), writing to OUTPUT (or standard output).\n\
       --version         output version information and exit\n\
 \n\
 A field is a run of whitespace, than non-whitespace characters.\n\
-Fields are skipped before chars. \n\
+Fields are skipped before chars.\n\
 "));
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
