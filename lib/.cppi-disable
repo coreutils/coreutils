@@ -5,7 +5,6 @@ getopt.c
 getopt1.c
 md5.h
 obstack.h
-obstack.c
 regex.h
 regex.c
 getpagesize.h
