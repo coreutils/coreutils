@@ -1,5 +1,7 @@
 2002-04-27  Jim Meyering  <meyering@lucent.com>
 
+	* Version 4.1.9.
+
 	* src/remove.c (cycle_check): New function containing code factored
 	out of remove_dir.  The sole difference is that upon detecting a
 	cycle, rm now dies unconditionally.  Before, in interactive mode,
@@ -7,8 +9,6 @@
 	(remove_dir): Call cycle_check.
 
 2002-04-25  Jim Meyering  <meyering@lucent.com>
-
-	* Version 4.1.9.
 
 	Avoid new warnings from gcc.
 	* src/dd.c: Declare input_file and output_file to be `const'.
