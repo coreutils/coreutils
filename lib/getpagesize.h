@@ -20,6 +20,13 @@
 # endif
 #endif
 
+#if !defined getpagesize && HAVE_OS_H
+# include <OS.h>
+# if defined B_PAGE_SIZE
+#  define getpagesize() B_PAGE_SIZE
+# endif
+#endif
+
 #ifndef getpagesize
 # include <sys/param.h>
 # ifdef EXEC_PAGESIZE
