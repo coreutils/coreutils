@@ -1,6 +1,13 @@
-2003-05-01  Jim Meyering  <jim@meyering.net>
+2003-05-02  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.1.
+
+	Factor out common code.
+	* src/remove.c (readdir_ignoring_dotdirs): New function.
+	(is_empty_dir): Use it here.
+	(remove_cwd_entries): Use it here.
+
+2003-05-01  Jim Meyering  <jim@meyering.net>
 
 	* tests/rm/r-3: Create 500 rather than just 300 files.
 	There's a bug in Darwin6.5's readdir that shows up only with
