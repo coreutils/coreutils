@@ -1095,14 +1095,14 @@ tail_lines (const char *pretty_filename, int fd, long int n_lines)
     {
       /* Use file_lines only if FD refers to a regular file with
          its file pointer positioned at beginning of file.  */
-      /* FIXME: adding the lseek conjunct is a kludge.
+      /* FIXME: this first lseek conjunct is a kludge.
 	 Once there's a reasonable test suite, fix the true culprit:
 	 file_lines.  file_lines shouldn't presume that the input
 	 file pointer is initially positioned to beginning of file.  */
       if (S_ISREG (stats.st_mode)
-	  && lseek (fd, (off_t) 0, SEEK_CUR) == (off_t) 0)
+	  && lseek (fd, (off_t) 0, SEEK_CUR) == (off_t) 0
+	  && (length = lseek (fd, (off_t) 0, SEEK_END)) >= 0)
 	{
-	  length = lseek (fd, (off_t) 0, SEEK_END);
 	  if (length != 0 && file_lines (pretty_filename, fd, n_lines, length))
 	    return 1;
 	}
