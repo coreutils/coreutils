@@ -57,12 +57,19 @@ static int show_help;
 /* If nonzero, print the version on standard output and exit.  */
 static int show_version;
 
+/* If non-zero, display time in RFC-822 format for mail or news. */
+static int rfc_format = 0;
+
+/* If nonzero, print or set Coordinated Universal Time.  */
+static int universal_time = 0;
+
 static struct option const long_options[] =
 {
   {"date", required_argument, NULL, 'd'},
   {"file", required_argument, NULL, 'f'},
   {"help", no_argument, &show_help, 1},
   {"reference", required_argument, NULL, 'r'},
+  {"rfc-822", no_argument, NULL, 'R'},
   {"set", required_argument, NULL, 's'},
   {"uct", no_argument, NULL, 'u'},
   {"utc", no_argument, NULL, 'u'},
@@ -153,8 +160,8 @@ main (int argc, char **argv)
 
   program_name = argv[0];
 
-  while (optc = getopt_long (argc, argv, "d:f:r:s:u", long_options, (int *) 0),
-	 optc != EOF)
+  while ((optc = getopt_long (argc, argv, "d:f:r:Rs:u", long_options, NULL))
+	 != EOF)
     switch (optc)
       {
       case 0:
@@ -168,11 +175,15 @@ main (int argc, char **argv)
       case 'r':
 	reference = optarg;
 	break;
+      case 'R':
+	rfc_format = 1;
+	break;
       case 's':
 	set_datestr = optarg;
 	set_date = 1;
 	break;
       case 'u':
+ 	universal_time = 1;
 	if (putenv ("TZ=UTC0") != 0)
 	  error (1, 0, "memory exhausted");
 #if LOCALTIME_CACHE
@@ -309,8 +320,16 @@ show_date (const char *format, time_t when)
     {
       /* Print the date in the default format.  Vanilla ANSI C strftime
          doesn't support %e, but POSIX requires it.  If you don't use
-         a GNU strftime, make sure yours supports %e.  */
-      format = "%a %b %e %H:%M:%S %Z %Y";
+         a GNU strftime, make sure yours supports %e.
+	 If you are not using GNU strftime, you want to change %z
+	 in the RFC format to %Z; this gives, however, an invalid
+	 RFC time format outside the continental United States and GMT. */
+
+      format = (rfc_format
+		? (universal_time
+		   ? "%a, %_d %b %Y %H:%M:%S GMT"
+		   : "%a, %_d %b %Y %H:%M:%S %z")
+		: "%a %b %e %H:%M:%S %Z %Y");
     }
   else if (*format == '\0')
     {
@@ -348,6 +367,7 @@ Display the current time in the given FORMAT, or set the system date.\n\
   -d, --date=STRING        display time described by STRING, not `now'\n\
   -f, --file=DATEFILE      like --date once for each line of DATEFILE\n\
   -r, --reference=FILE     display the last modification time of FILE\n\
+  -R, --rfc-822            output RFC-822 compliant date string\n\
   -s, --set=STRING         set time described by STRING\n\
   -u, --utc, --universal   print or set Coordinated Universal Time\n\
       --help               display this help and exit\n\
