@@ -1,3 +1,14 @@
+Sun Mar 24 08:47:40 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* join.c (main): Use EXIT_FAILURE, not 2, as exit code in error call.
+	* od.c (skip, main): Likewise.
+	* tr.c (main): Likewise.
+
+	* cat.c cksum.c comm.c csplit.c cut.c expand.c fmt.c fold.c head.c
+        join.c md5sum.c nl.c od.c paste.c pr.c split.c sum.c tac.c tail.c
+        tr.c unexpand.c uniq.c wc.c: Exit with status EXIT_SUCCESS or
+	EXIT_FAILURE, rather than 0 or 1.
+
 Sat Mar 23 23:14:40 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* system.h [EXIT_FAILURE]: Undefine and define to 1 also if it
