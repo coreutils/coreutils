@@ -50,7 +50,7 @@ sed "s,$other_partition_tmpdir,XXX," out > out2
 
 cat > exp <<\EOF
 .mv-null -> XXX/.mv-null
-removing non-directory .mv-null
+removing .mv-null
 .mv-dir -> XXX/.mv-dir
 .mv-dir/a -> XXX/.mv-dir/a
 .mv-dir/a/b -> XXX/.mv-dir/a/b
@@ -64,14 +64,14 @@ removing all entries of directory .mv-dir
 removing all entries of directory .mv-dir/a
 removing all entries of directory .mv-dir/a/b
 removing all entries of directory .mv-dir/a/b/c
-removing non-directory .mv-dir/a/b/c/file1
+removing .mv-dir/a/b/c/file1
 removing the directory itself: .mv-dir/a/b/c
 removing the directory itself: .mv-dir/a/b
 removing the directory itself: .mv-dir/a
 removing all entries of directory .mv-dir/d
 removing all entries of directory .mv-dir/d/e
 removing all entries of directory .mv-dir/d/e/f
-removing non-directory .mv-dir/d/e/f/file2
+removing .mv-dir/d/e/f/file2
 removing the directory itself: .mv-dir/d/e/f
 removing the directory itself: .mv-dir/d/e
 removing the directory itself: .mv-dir/d
