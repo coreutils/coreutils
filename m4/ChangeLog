@@ -1,3 +1,12 @@
+2003-03-07  Jim Meyering  <jim@meyering.net>
+
+	* jm-macros.m4 (AC_LANG_SOURCE(C)): New macro, undefine, then define
+	using the latest version from cvs.  This avoids problems with #line
+	directives using a vendor (Sun) compiler.
+
+	* jm-macros.m4: Don't require AC_SYS_MMAP_STACK.
+	* mmap-stack.m4 (AC_SYS_MMAP_STACK): Remove file.
+
 2003-03-06  Jim Meyering  <jim@meyering.net>
 
 	* getcwd-path-max.m4 (GL_FUNC_GETCWD_PATH_MAX): Check for
