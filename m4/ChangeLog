@@ -1,3 +1,8 @@
+2002-02-27  Paul Eggert  <eggert@twinsun.com>
+
+	* jm-macros.m4 (jm_MACROS): Do not replace stime; no longer used.
+	Check for clock_settime.
+
 2002-02-25  Paul Eggert  <eggert@twinsun.com>
 
 	* acl.m4: New file.
