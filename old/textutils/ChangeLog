@@ -1,3 +1,7 @@
+1999-05-20  Jim Meyering  <meyering@ascend.com>
+
+	* tests/sort/Test.pm: Add test case from Paul Eggert.
+
 1999-05-20  Paul Eggert  <eggert@twinsun.com>
 
 	* src/sort.c (keycompare): Ignore any length difference if the
