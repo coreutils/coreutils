@@ -1,3 +1,9 @@
+2000-10-21  Jim Meyering  <meyering@lucent.com>
+
+	* check-decl.m4 (jm_CHECK_DECLS): Also check for memrchr.
+	* prereq.m4 (jm_PREREQ_DIRNAME): New macro.
+	* jm-macros.m4 (AC_REPLACE_FUNCS): Add memrchr.
+
 2000-09-18  Jim Meyering  <meyering@lucent.com>
 
 	* getloadavg.m4 (AC_FUNC_GETLOADAVG): Restore the initial value of LIBS.
