@@ -1,5 +1,12 @@
 Fri Dec 27 17:29:02 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* tests/pr-test/Makefile.am (explicit): Regenerate list of files,
+	this time with duplicates removed.
+
+	* src/pr.c (usage): Break long string literal into two separate
+	printf statements to accomodate default maximum of 2048 characters
+	for Irix-4.0.5.  Reported by Kaveh Ghazi.
+
 	* Makefile.am (aclocal.m4): No longer depend on acinclude.m4.
 
 	* tests/Makefile.am (SUBDIRS): Add pr-test.
