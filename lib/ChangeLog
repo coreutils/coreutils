@@ -1,5 +1,8 @@
 2004-11-28  Jim Meyering  <jim@meyering.net>
 
+	* openat.c (rpl_openat): Also accept optional mode parameter.
+	* openat.h (rpl_openat): Adjust prototype.
+
 	* save-cwd.c: Include "chdir.h", so that if save_cwd/getcwd
 	saves a name longer than PATH_MAX, restore_cwd's chdir can use it.
 
