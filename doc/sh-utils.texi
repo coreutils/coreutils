@@ -1140,15 +1140,16 @@ The only options are a lone @samp{--help} or
 Synopses:
 
 @example
-stty [@var{setting}]@dots{}
+stty [@var{option}] [@var{setting}]@dots{}
 stty [@var{option}]
 @end example
 
-If given no arguments, @code{stty} prints the baud rate, line
+If given no line settings, @code{stty} prints the baud rate, line
 discipline number (on systems that support it), and line settings
 that have been changed from the values set by @samp{stty sane}.
-Mode reading and setting are performed on the tty line connected to
-standard input.
+By default, mode reading and setting are performed on the tty line
+connected to standard input, although this can be modified by the
+@samp{--file} option.
 
 @code{stty} accepts many non-option arguments that change aspects of
 the terminal line operation, as described below.
@@ -1160,7 +1161,19 @@ The program accepts the following options.  Also see @ref{Common options}.
 @itemx --all
 @opindex -a
 @opindex --all
-Print all current settings in human-readable form.
+Print all current settings in human-readable form.  This option may not
+be used in combination with any line settings.
+
+@item -F @var{device}
+@itemx --file @var{device}
+@opindex -F
+@opindex --file
+Set the line opened by the filename specified in @var{device} instead of
+the tty line connected to standard input.  This option is necessary
+because opening a POSIX tty requires use of the @code{O_NONDELAY} flag to
+prevent a POSIX tty from blocking until the carrier detect line is high if
+the @code{clocal} flag is not set.  Hence, it is not always possible
+to allow the shell to open the device in the traditional manner.
 
 @item -g
 @itemx --save
@@ -1168,7 +1181,8 @@ Print all current settings in human-readable form.
 @opindex --save
 @cindex machine-readable @code{stty} output
 Print all current settings in a form that can be used as an argument to
-another @code{stty} command to restore the current settings.
+another @code{stty} command to restore the current settings.  This option
+may not be used in combination with any line settings.
 
 @end table
 
