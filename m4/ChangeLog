@@ -1,3 +1,12 @@
+2002-09-07  Bruno Haible  <bruno@clisp.org>
+
+	* host-os.m4 (UTILS_HOST_OS): Add a case for freebsd*-gnu*.
+
+2002-09-17  Jim Meyering  <meyering@lucent.com>
+
+	* jm-macros.m4 (jm_MACROS): Require gt_INTTYPES_PRI.
+	* inttypes-pri.m4 (gt_INTTYPES_PRI): New file, mostly from gettext.
+
 2002-09-16  Jim Meyering  <meyering@lucent.com>
 
 	* prereq.m4: Forbid symbols matching ^jm_[A-Z].

@@ -32,6 +32,7 @@ group-member.m4 \
 host-os.m4 \
 iconv.m4 \
 intdiv0.m4 \
+inttypes-pri.m4 \
 inttypes.m4 \
 isc-posix.m4 \
 jm-glibc-io.m4 \
