@@ -43,6 +43,13 @@ sleep 2
 # Create a link, updating c's ctime.
 ln c d || framework_failure=1
 
+# Date output in ls -l is locale-sensitive, so this test fails if the
+# current locale produces a date that doesn't match the embedded value
+# here (Jan 15 23:00:00 1998), which is in the C (POSIX) locale.  Some
+# systems don't handle LC_ALL at all, so we only force it to C if it is
+# already set.
+test ${LC_ALL+set} = set && LC_ALL=C
+
 # Before we go any further, verify that touch's -m option works.
 set -- `ls --full -l a`
 case "$*" in
