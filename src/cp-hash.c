@@ -1,5 +1,5 @@
 /* cp-hash.c  -- file copying (hash search routines)
-   Copyright (C) 89, 90, 91, 1995-1999 Free Software Foundation.
+   Copyright (C) 89, 90, 91, 1995-2000 Free Software Foundation.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
