@@ -1,6 +1,12 @@
-2004-06-02  Paul Eggert  <eggert@cs.ucla.edu>
+2004-06-04  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.0.
+
+	* src/shred.c (dopass): Don't subtract 1 from the offset after
+	a write error.  Problem reported by Jon Peatfield in:
+	http://lists.gnu.org/archive/html/bug-coreutils/2004-06/msg00020.html
+
+2004-06-02  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Fix bug reported by Buciuman Adrian in
 	<http://mail.gnu.org/archive/html/bug-coreutils/2003-08/msg00105.html>
