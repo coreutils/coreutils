@@ -1,6 +1,9 @@
 GNU coreutils NEWS                                    -*- outline -*-
 * Major changes in release 5.0.1:
 
+** New programs
+- new program: `[' (much like `test')
+
 ** New features
 - head now accepts --lines=-N (--bytes=-N) to print all but the
   N lines (bytes) at the end of the file
