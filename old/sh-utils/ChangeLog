@@ -1,5 +1,15 @@
 Thu Dec 12 06:07:30 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/false.sh (usage): Update bug-reporting address.
+	* src/groups.sh (usage): Likewise.
+	* src/nohup.sh (usage): Likewise.
+	* src/true.sh (usage): Likewise.
+	Reported by Karl Heuer.
+
+	* configure.in (check for 3-argument setpriority function): Add nohup
+	to list of scripts, not the list of programs.
+	From Karl Heuer.
+
 	* POTFILES.in: Add chroot.c.  Reported by Michel Robitaille.
 
 Wed Dec 11 19:33:36 1996  Jim Meyering  <meyering@na-net.ornl.gov>
