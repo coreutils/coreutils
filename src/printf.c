@@ -1,5 +1,5 @@
 /* printf - format and print data
-   Copyright (C) 1990-2004 Free Software Foundation, Inc.
+   Copyright (C) 1990-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -240,7 +240,7 @@ print_esc_char (char c)
 static int
 print_esc (const char *escstart, bool octal_0)
 {
-  register const char *p = escstart + 1;
+  const char *p = escstart + 1;
   int esc_value = 0;		/* Value of \nnn escape. */
   int esc_length;		/* Length of \nnn escape. */
 

@@ -144,7 +144,7 @@ integer_expected_error (char const *pch)
    valid number.  Stuff the converted number into RESULT if RESULT is
    not null.  */
 static bool
-is_int (register char *string, intmax_t *result)
+is_int (char *string, intmax_t *result)
 {
   int sign;
   intmax_t value;
@@ -306,7 +306,7 @@ term (void)
 static bool
 binary_operator (bool l_is_l)
 {
-  register int op;
+  int op;
   struct stat stat_buf, stat_spare;
   intmax_t l, r;
   /* Is the right integer expression of the form '-l string'? */

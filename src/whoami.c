@@ -1,6 +1,6 @@
 /* whoami -- print effective userid
 
-   Copyright (C) 89,90, 1991-1997, 1999-2002, 2004 Free Software
+   Copyright (C) 89,90, 1991-1997, 1999-2002, 2004, 2005 Free Software
    Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -63,8 +63,8 @@ Same as id -un.\n\
 int
 main (int argc, char **argv)
 {
-  register struct passwd *pw;
-  register uid_t uid;
+  struct passwd *pw;
+  uid_t uid;
 
   initialize_main (&argc, &argv);
   program_name = argv[0];

@@ -1,5 +1,5 @@
 /* logname -- print user's login name
-   Copyright (C) 1990-1997, 1999-2004 Free Software Foundation, Inc.
+   Copyright (C) 1990-1997, 1999-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -56,7 +56,7 @@ Print the name of the current user.\n\
 int
 main (int argc, char **argv)
 {
-  register char *cp;
+  char *cp;
 
   initialize_main (&argc, &argv);
   program_name = argv[0];
