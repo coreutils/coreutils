@@ -1,6 +1,13 @@
-2004-04-18  Jim Meyering  <jim@meyering.net>
+2004-04-19  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
+
+	Make pwd work even if the resulting name is so long that getcwd fails.
+	* src/pwd.c: (path_free, path_init, path_prepend): New functions.
+	(nth_parent, find_dir_entry, robust_getcwd): New functions.
+	(main): First try getcwd, then, upon failure, robust_getcwd.
+
+2004-04-18  Jim Meyering  <jim@meyering.net>
 
 	* src/who.c (print_user): Use xrealloc here, rather than
 	unchecked realloc.  Remove anachronistic casts.
