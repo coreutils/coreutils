@@ -1,5 +1,7 @@
 2004-03-29  Jim Meyering  <jim@meyering.net>
 
+	* Version 5.3.0.
+
 	* tests/du/files0-from: Use new OUT_SUBST directive, so that this
 	test is not sensitive to system-dependent block size differences.
 	Prompted by a report of Solaris 8 differences from Paul Eggert.
@@ -18,8 +20,6 @@
 	* src/who.c: Include "vasprintf.h", for asprintf.
 
 2004-03-28  Jim Meyering  <jim@meyering.net>
-
-	* Version 5.3.0.
 
 	Minor optimization:
 	* src/du.c (process_file): Don't record dev/inode for directories.
