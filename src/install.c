@@ -1,5 +1,5 @@
 /* install - copy files and set attributes
-   Copyright (C) 89, 90, 91, 1995-1999 Free Software Foundation, Inc.
+   Copyright (C) 89, 90, 91, 1995-2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -393,7 +393,7 @@ install_file_to_path (const char *from, const char *to,
 		      const struct cp_options *x)
 {
   char *dest_dir;
-  int fail;
+  int fail = 0;
 
   dest_dir = dir_name (to);
 
@@ -408,14 +408,10 @@ install_file_to_path (const char *from, const char *to,
 #define DIR_MODE (S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH)
       fail = make_path (dest_dir, DIR_MODE, DIR_MODE, owner_id, group_id, 0,
 			(x->verbose ? _("creating directory `%s'") : NULL));
+    }
 
-      if (fail == 0)
-	fail = install_file_in_dir (from, dest_dir, x);
-    }
-  else
-    {
-      fail = install_file_in_file (from, to, x);
-    }
+  if (fail == 0)
+    fail = install_file_in_file (from, to, x);
 
   free (dest_dir);
 
