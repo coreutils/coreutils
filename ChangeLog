@@ -2,6 +2,20 @@
 
 	* Version 5.0.1.
 
+	* tests/misc/Makefile.am (TESTS): Add split-fail.
+	* tests/misc/split-fail: New file.
+
+	* tests/basename/basic: Run $PERL to see if it is available,
+	rather than testing its value.
+	* tests/sum/sysv, tests/tsort/basic-1, tests/unexpand/basic-1:
+	* tests/basename/basic, tests/dd/skip-seek, tests/dircolors/simple:
+	* tests/expr/basic, tests/factor/basic, tests/fmt/basic:
+	* tests/ls-2/tests, tests/md5sum/basic-1, tests/md5sum/newline-1:
+	* tests/misc/sort, tests/misc/tty-eof, tests/mv/i-1:
+	* tests/rm/empty-name, tests/rm/fail-eperm, tests/rm/unreadable:
+	* tests/seq/basic, tests/sha1sum/basic-1, tests/sha1sum/sample-vec:
+	* tests/sum/basic-1, tests/seq/basic: Likewise.
+
 	* src/split.c: Rename local variables: nchars -> n_bytes.
 	(main): Rename local variable: s/accum/n_units/.
 
