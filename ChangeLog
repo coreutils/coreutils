@@ -1,6 +1,15 @@
-2004-04-09  Jim Meyering  <jim@meyering.net>
+2004-03-27  Paul Eggert  <eggert@twinsun.com>
 
-	* Version 5.3.0.
+	* NEWS: cp -pu and mv -u (when copying) now take the destination
+	file system time stamp resolution into account.
+	* doc/coreutils.texi (mv invocation): Document this.
+	(cp invocation): Document -u (it was missing!) with new behavior.
+
+	* src/copy.c: Include "utimecmp.h".
+	(copy_internal): Compare time stamps using utimecmp rather than
+	MTIME_CMP.
+
+2004-04-09  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.maint (.re-list): New rule/file, to replace
 	hard-coded list of header file names.
