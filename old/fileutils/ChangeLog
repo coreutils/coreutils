@@ -71,8 +71,8 @@
 	* src/chown.c: Likewise.
 	* src/copy.c: Likewise.
 	* src/du.c: Likewise.
-	Achim Blumensath reported that ``on systems where off_t is 64 bits
-	[not having a prototype] results in passing 0 as name_size...''
+	Achim Blumensath reported that ``on systems like BeOS, where off_t is
+	64 bits [not having a prototype] results in passing 0 as name_size...''
 
 1997-09-27  Jim Meyering  <meyering@na-net.ornl.gov>
 
