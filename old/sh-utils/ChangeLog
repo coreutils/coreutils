@@ -1,6 +1,11 @@
-2002-03-05  Jim Meyering  <meyering@lucent.com>
+2002-03-09  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.12.
+
+	* Makefile.am (EXTRA_DIST): Remove config/config.rpath,
+	now that automake knows about it.
+
+2002-03-05  Jim Meyering  <meyering@lucent.com>
 
 	* Makefile.am (EXTRA_DIST): Add config/config.rpath.
 
