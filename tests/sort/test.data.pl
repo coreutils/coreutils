@@ -102,4 +102,4 @@
 ("13b", '+0.1n', "b-1\naxx\n", "b-1\naxx\n", 0);
 #
 # From Carl Johnson <carlj@cjlinux.home.org>
-("14a", '-d -u', "mal\nmal-\nmala\n", "mal-\nmala\n", 0);
+("14a", '-d -u', "mal\nmal-\nmala\n", "mal\nmala\n", 0);
