@@ -1,4 +1,10 @@
+Mon Oct 21 16:49:08 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/stty.c (main): Remove TAB from diagnostic, for consistency.
+
 Sun Oct 20 09:03:51 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* Makefile.am (install-root): Add it here, too.
 
 	* lib/Makefile.am (INCLUDES): Add -I../intl.  Reported by Eric Backus.
 
