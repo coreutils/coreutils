@@ -2,6 +2,9 @@
 
 	* Version 5.0.91.
 
+	* Makefile.cfg (wget_files): Temporarily disable, until master
+	versions are restored to ftp.gnu.org.
+
 	* configure.ac (AM_INIT_AUTOMAKE): Specify automake-1.7.6.
 
 	Make seq's --width (-w) option work properly even when the
