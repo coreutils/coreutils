@@ -36,7 +36,7 @@
 # define _POSIX_NAME_MAX 14
 #endif
 
-#include <sys/types.h>
+#include <stddef.h>
 #if HAVE_STRING_H
 # include <string.h>
 #else
