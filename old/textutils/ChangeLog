@@ -1,4 +1,11 @@
+1999-05-11  Jim Meyering  <meyering@ascend.com>
+
+	* src/sort.c (usage): Split the --help message into two pieces so that
+	neither is longer than 2048.  For Irix4's cc.  Reported by Kaveh Ghazi.
+
 1999-05-09  Jim Meyering  <meyering@ascend.com>
+
+	* lib/regex.c: Update from libc.
 
 	* Version 1.22k.
 
