@@ -36,6 +36,13 @@ extern int errno;
 # include <unistd.h>
 #endif
 
+/* Some systems (MSDOS) don't have SIGCONT.
+   Using SIGTERM here turns the signal-handling code below
+   into a no-op on such systems. */
+#ifndef SIGCONT
+# define SIGCONT SIGTERM
+#endif
+
 #include "nanosleep.h"
 
 static int suspended;
