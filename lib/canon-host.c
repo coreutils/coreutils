@@ -58,7 +58,7 @@ canon_host (host)
 	{
 #ifdef HAVE_INET_NTOA
 	case AF_INET:
-	  addr = inet_ntoa (*(struct in_addr *)he->h_addr);
+	  addr = inet_ntoa (*(struct in_addr *) he->h_addr);
 	  break;
 #endif /* HAVE_INET_NTOA */
 	}
@@ -67,10 +67,10 @@ canon_host (host)
 	/* gethostbyname() cheated!  Lookup the host name via the address
 	   this time to get the actual host name.  */
 	he = gethostbyaddr (he->h_addr, he->h_length, he->h_addrtype);
-#endif HAVE_GETHOSTBYADDR
+#endif /* HAVE_GETHOSTBYADDR */
 
       if (he)
-	return he->h_name;
+	return (char *) (he->h_name);
     }
 
 #else /* ! HAVE_GETHOSTBYNAME */
