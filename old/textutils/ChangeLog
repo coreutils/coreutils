@@ -14,7 +14,7 @@
 	* tests/misc/Makefile.am: New file.
 	* tests/misc: New directory.
 	* tests/Makefile.am (SUBDIRS): Add misc.
-	* configure.in (AC_OUTPUT): Add test/misc/Makefile.
+	* configure.in (AC_OUTPUT): Add tests/misc/Makefile.
 
 2001-08-14  Jim Meyering  <meyering@lucent.com>
 
