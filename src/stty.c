@@ -1,5 +1,5 @@
 /* stty -- change and print terminal line settings
-   Copyright (C) 1990-1999 Free Software Foundation, Inc.
+   Copyright (C) 1990-2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -467,12 +467,13 @@ wrapf (const char *message,...)
   vsprintf (buf, message, args);
   va_end (args);
   buflen = strlen (buf);
-  if (current_col + (current_col > 0) + buflen >= max_col)
+  if (0 < current_col
+      && max_col <= current_col + (0 < current_col) + buflen)
     {
       putchar ('\n');
       current_col = 0;
     }
-  if (current_col > 0)
+  if (0 < current_col)
     {
       putchar (' ');
       current_col++;
@@ -1425,7 +1426,7 @@ display_window_size (int fancy, int fd, const char *device_name)
 static int
 screen_columns (void)
 {
-#ifdef TIOCGWINSZ
+#if 0
   struct winsize win;
 
   /* With Solaris 2.[123], this ioctl fails and errno is set to
@@ -1434,13 +1435,20 @@ screen_columns (void)
      (but it works for ptys).
      It can also fail on any system when stdout isn't a tty.
      In case of any failure, just use the default.  */
-  if (get_win_size (STDOUT_FILENO, &win) == 0 && win.ws_col > 0)
+  if (get_win_size (STDOUT_FILENO, &win) == 0 && 0 < win.ws_col)
     return win.ws_col;
 #endif
-  /* FIXME: use xstrtol */
-  if (getenv ("COLUMNS"))
-    return atoi (getenv ("COLUMNS"));
-  return 80;
+  {
+    /* Use $COLUMNS if it's in [1..INT_MAX-1].  */
+    char *col_string = getenv ("COLUMNS");
+    long n_columns;
+    if (!(col_string != NULL
+	  && xstrtol (col_string, NULL, 0, &n_columns, "") == LONGINT_OK
+	  && 0 < n_columns
+	  && n_columns < INT_MAX))
+      n_columns = 80;
+    return n_columns;
+  }
 }
 
 static tcflag_t *
