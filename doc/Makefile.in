@@ -1,6 +1,6 @@
-# Makefile.in generated automatically by automake 1.4b from Makefile.am
+# Makefile.in generated automatically by automake 1.4e from Makefile.am
 
-# Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000
+# Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001
 # Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
@@ -48,6 +48,7 @@ INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
 INSTALL_STRIP_FLAG =
+INSTALL_HEADER = $(INSTALL_DATA)
 transform = @program_transform_name@
 
 NORMAL_INSTALL = :
@@ -57,9 +58,10 @@ NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
 
-@SET_MAKE@
 host_alias = @host_alias@
 host_triplet = @host@
+
+@SET_MAKE@
 AMDEP = @AMDEP@
 AMTAR = @AMTAR@
 AWK = @AWK@
@@ -67,8 +69,6 @@ CATALOGS = @CATALOGS@
 CATOBJEXT = @CATOBJEXT@
 CC = @CC@
 CPP = @CPP@
-CXX = @CXX@
-CXXCPP = @CXXCPP@
 DATADIRNAME = @DATADIRNAME@
 DEPDIR = @DEPDIR@
 DF_PROG = @DF_PROG@
@@ -82,6 +82,8 @@ GNU_PACKAGE = @GNU_PACKAGE@
 GT_NO = @GT_NO@
 GT_YES = @GT_YES@
 INCLUDE_LOCALE_H = @INCLUDE_LOCALE_H@
+INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
+INSTALL_STRIP_PROGRAM_ENV = @INSTALL_STRIP_PROGRAM_ENV@
 INSTOBJEXT = @INSTOBJEXT@
 INTLDEPS = @INTLDEPS@
 INTLLIBS = @INTLLIBS@
@@ -106,11 +108,13 @@ POW_LIBM = @POW_LIBM@
 RANLIB = @RANLIB@
 SEQ_LIBM = @SEQ_LIBM@
 SQRT_LIBM = @SQRT_LIBM@
+STRIP = @STRIP@
 U = @U@
 USE_INCLUDED_LIBINTL = @USE_INCLUDED_LIBINTL@
 USE_NLS = @USE_NLS@
 VERSION = @VERSION@
 YACC = @YACC@
+_am_include = @_am_include@
 install_sh = @install_sh@
 l = @l@
 
@@ -130,21 +134,17 @@ EXTRA_DIST = perm.texi getdate.texi
 MAKEINFO = makeinfo --no-split
 subdir = doc
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
-CONFIG_HEADER = ../config.h
+CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES = 
 DIST_SOURCES = 
 TEXI2DVI = texi2dvi
 INFO_DEPS = fileutils.info
 DVIS = fileutils.dvi
 TEXINFOS = fileutils.texi
-DIST_COMMON =  Makefile.am Makefile.in mdate-sh stamp-vti texinfo.tex \
-version.texi
+DIST_COMMON =  version.texi Makefile.am mdate-sh stamp-vti texinfo.tex \
+Makefile.in
 
-
-DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
-
-GZIP_ENV = --best
-all: all-redirect
+all: all-am
 .SUFFIXES:
 .SUFFIXES: .dvi .info .ps .texi .texinfo .txi
 $(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
@@ -152,7 +152,7 @@ $(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4)
 
 Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status
 	cd $(top_builddir) \
-	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status
+	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= CONFIG_LINKS= $(SHELL) ./config.status
 
 
 $(srcdir)/version.texi: $(srcdir)/stamp-vti
@@ -172,10 +172,6 @@ $(srcdir)/stamp-vti: fileutils.texi $(top_srcdir)/configure.in
 
 mostlyclean-vti:
 	-rm -f vti.tmp
-
-clean-vti:
-
-distclean-vti:
 
 maintainer-clean-vti:
 	-rm -f $(srcdir)/stamp-vti $(srcdir)/version.texi
@@ -288,12 +284,9 @@ mostlyclean-aminfo:
 	  fileutils.vrs fileutils.op fileutils.tr fileutils.cv \
 	  fileutils.cn fileutils.cm fileutils.ov
 
-clean-aminfo:
-
-distclean-aminfo:
-
 maintainer-clean-aminfo:
-	cd $(srcdir) && for i in $(INFO_DEPS); do \
+	cd $(srcdir) && \
+	for i in $(INFO_DEPS); do \
 	  rm -f $$i; \
 	  if test "`echo $$i-[0-9]*`" != "$$i-[0-9]*"; then \
 	    rm -f $$i-[0-9]*; \
@@ -303,7 +296,10 @@ tags: TAGS
 TAGS:
 
 
-distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
+DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
+
+top_distdir = ..
+distdir = $(top_distdir)/$(PACKAGE)-$(VERSION)
 
 distdir: $(DISTFILES)
 	@for file in $(DISTFILES); do \
@@ -317,7 +313,9 @@ distdir: $(DISTFILES)
 	    || exit 1; \
 	  fi; \
 	done
-	$(MAKE) $(AM_MAKEFLAGS) top_distdir="$(top_distdir)" distdir="$(distdir)" dist-info
+	$(MAKE) $(AM_MAKEFLAGS) \
+	  top_distdir="${top_distdir}" distdir="$(distdir)" \
+	  dist-info
 info-am: $(INFO_DEPS)
 info: info-am
 dvi-am: $(DVIS)
@@ -338,9 +336,9 @@ install: install-am
 uninstall-am: uninstall-info
 uninstall: uninstall-am
 all-am: Makefile $(INFO_DEPS)
-all-redirect: all-am
 install-strip:
-	$(MAKE) $(AM_MAKEFLAGS) INSTALL_STRIP_FLAG=-s install
+	$(MAKE) $(AM_MAKEFLAGS) INSTALL_PROGRAM="$(INSTALL_STRIP_PROGRAM)" \
+	  INSTALL_PROGRAM_ENV='$(INSTALL_STRIP_PROGRAM_ENV)' install
 installdirs:
 	$(mkinstalldirs)  $(DESTDIR)$(infodir)
 
@@ -354,34 +352,35 @@ distclean-generic:
 	-rm -f config.cache config.log stamp-h stamp-h[0-9]*
 
 maintainer-clean-generic:
+	@echo "This command is intended for maintainers to use"
+	@echo "it deletes files that may require special tools to rebuild."
 	-rm -f Makefile.in
-mostlyclean-am:  mostlyclean-vti mostlyclean-aminfo mostlyclean-generic
+maintainer-clean-am: distclean-am maintainer-clean-aminfo \
+	maintainer-clean-generic maintainer-clean-vti
 
-mostlyclean: mostlyclean-am
-
-clean-am:  clean-vti clean-aminfo clean-generic mostlyclean-am
-
-clean: clean-am
-
-distclean-am:  distclean-vti distclean-aminfo distclean-generic clean-am
+.PHONY: all all-am check check-am clean clean-generic distclean \
+	distclean-generic distdir dvi dvi-am info info-am install \
+	install-am install-data install-data-am install-exec \
+	install-exec-am install-info-am install-strip installcheck \
+	installcheck-am installdirs maintainer-clean \
+	maintainer-clean-aminfo maintainer-clean-generic \
+	maintainer-clean-vti mostlyclean mostlyclean-aminfo \
+	mostlyclean-generic mostlyclean-vti uninstall uninstall-am \
+	uninstall-info
 
 distclean: distclean-am
 
-maintainer-clean-am:  maintainer-clean-vti maintainer-clean-aminfo \
-		maintainer-clean-generic distclean-am
-	@echo "This command is intended for maintainers to use;"
-	@echo "it deletes files that may require special tools to rebuild."
+clean-am: clean-generic mostlyclean-am
+
+distclean-am: clean-am distclean-generic
 
 maintainer-clean: maintainer-clean-am
 
-.PHONY: mostlyclean-vti distclean-vti clean-vti maintainer-clean-vti \
-install-info-am uninstall-info mostlyclean-aminfo distclean-aminfo \
-clean-aminfo maintainer-clean-aminfo tags distdir info-am info dvi-am \
-dvi check check-am installcheck-am installcheck install-exec-am \
-install-exec install-data-am install-data install-am install \
-uninstall-am uninstall all-redirect all-am all install-strip \
-installdirs mostlyclean-generic distclean-generic clean-generic \
-maintainer-clean-generic clean mostlyclean distclean maintainer-clean
+mostlyclean-am: mostlyclean-aminfo mostlyclean-generic mostlyclean-vti
+
+mostlyclean: mostlyclean-am
+
+clean: clean-am
 
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
