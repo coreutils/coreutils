@@ -5,39 +5,49 @@ use strict;
 my $program_name;
 ($program_name = $0) =~ s|.*/||;
 
-# INPUTs
-# ['contents']               contents only (file name is derived from test name)
-# [{filename => 'contents'}] filename and contents
-# [{filename => undef}]      filename only -- $(srcdir)/filename must exist
+# A file spec: a scalar or a reference to a single-keyed hash
+# ================
+# 'contents'               contents only (file name is derived from test name)
+# {filename => 'contents'} filename and contents
+# {filename => undef}      filename only -- $(srcdir)/filename must exist
 #                            (FIXME: note to self: get $srcdir from ENV)
-# The file names from the inputs are concatenated in order on the command line
+#
 # FIXME: If there is more than one input file, the you can't specify REDIRECT.
 # PIPE is still ok.
 #
-# OUTPUTs (always hash refs)
-# {OUT => "data"}    put data in a temp file and compare it to stdout from cmd
-# {OUT => ["filename"]} compare contents of existing filename to stdout from cmd
+# I/O spec: a hash ref with the following properties
+# ================
+# - one key/value pair
+# - the key must be one of these strings: IN, OUT, ERR, EXIT
+# - the value must be a file spec
+# {OUT => 'data'}    put data in a temp file and compare it to stdout from cmd
+# {OUT => {'filename'=>undef}} compare contents of existing filename to
+#           stdout from cmd
 # Ditto for `ERR', but compare with stderr
 # {EXIT => N} expect exit status of cmd to be N
 #
-# The OUT-keyed hash ref is the only one that's required.
-# If the ERR-keyed one is omitted, then expect stderr to be empty.
-# If the EXIT-keyed one is omitted, then expect exit status to be zero.
+# There may be many input file specs.  File names from the input specs
+# are concatenated in order on the command line.
+# There may be at most one of the OUT-, ERR-, and EXIT-keyed specs.
+# If the OUT-(or ERR)-keyed hash ref is omitted, then expect no output
+#   on stdout (or stderr).
+# If the EXIT-keyed one is omitted, then expect the exit status to be zero.
 
+my $q_bell = {IN => {"q\a" => ''}}
 my @Tests =
     (
      # test-name options input expected-output
      #
-     ['q-',        [{"q\a" => ''}], {OUT => "q\a\n"}],
-     ['q-N', '-N', [{"q\a" => ''}], {OUT => "q\a\n"}],
-     ['q-q', '-q', [{"q\a" => ''}], {OUT => "q?\n"}],
-     ['q-Q', '-Q', [{"q\a" => ''}], {OUT => "\"q\\a\"\n"}],
+     ['q-',        $q_bell, {OUT => "q\a\n"}],
+     ['q-N', '-N', $q_bell, {OUT => "q\a\n"}],
+     ['q-q', '-q', $q_bell, {OUT => "q?\n"}],
+     ['q-Q', '-Q', $q_bell, {OUT => "\"q\\a\"\n"}],
 
-     ['q-qs-lit', '--quoting=literal', [{"q\a" => ''}], {OUT => "q\a\n"}],
-     ['q-qs-sh', '--quoting=shell',    [{"q\a" => ''}], {OUT => "q\a\n"}],
-     ['q-qs-sh-a', '--quoting=shell-always', [{"q\a"=>''}], {OUT => "'q\a'\n"}],
-     ['q-qs-c', '--quoting=c',         [{"q\a" => ''}], {OUT => "\"q\\a\"\n"}],
-     ['q-qs-esc', '--quoting=escape',  [{"q\a" => ''}], {OUT => "q\\a\n"}],
+     ['q-qs-lit', '--quoting=literal',       $q_bell, {OUT => "q\a\n"}],
+     ['q-qs-sh', '--quoting=shell',          $q_bell, {OUT => "q\a\n"}],
+     ['q-qs-sh-a', '--quoting=shell-always', $q_bell, {OUT => "'q\a'\n"}],
+     ['q-qs-c', '--quoting=c',               $q_bell, {OUT => "\"q\\a\"\n"}],
+     ['q-qs-esc', '--quoting=escape',        $q_bell, {OUT => "q\\a\n"}],
     );
 
 my $save_temps = 0;
