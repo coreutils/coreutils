@@ -1,5 +1,20 @@
 2000-10-21  Jim Meyering  <meyering@lucent.com>
 
+	The command, `yes ''|./cat -n' would stop printing after INT_MAX lines.
+	* src/cat.c (cat): Never let `newlines' exceed 3.
+
+2000-10-21  Jim Meyering  <meyering@lucent.com>
+
+	Prevent a counter buffer overrun when numbering lines and when
+	processing 100 billion lines (or more) of input.
+	* src/cat.c (LINE_COUNTER_BUF_LEN): Define to allow numbering as
+	many as 10^18 - 1 lines (the old limit was 10^11 - 1, and could
+	be exceeded without too much trouble).	Use this symbol rather
+	than hard-coding the constant everywhere.
+	(next_line_num): Rather than overruning for input with more lines,
+	mark the line number by putting a `>' in the leftmost slot.
+	Patch by Jan Nieuwenhuizen.
+
 	* src/sort.c (SORT_OUT_OF_ORDER): Define.
 	(main): Use it instead of hard-coding the `1'.
 
@@ -8,16 +23,6 @@
 	* src/sort.c (main): Use EXIT_SUCCESS rather than 0.
 	Fail when checking (-c) with more than one file argument,
 	rather than simply ignoring the extra arguments.
-
-2000-09-28  Jim Meyering  <meyering@lucent.com>
-
-	* src/cat.c (MAX_LINE_BUF): Define.
-
-2000-09-22  Jan Nieuwenhuizen  <janneke@gnu.org>
-
-	* src/cat.c (MAX_LINE_BUF): Fixed size of line number buffer to
-	prevent buffer overrun.  Replaced raw value by #define.
-	(next_line_num): Fixed (now academic) possible line buffer overrun.
 
 2000-09-07  Jim Meyering  <meyering@lucent.com>
 
