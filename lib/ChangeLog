@@ -1,7 +1,15 @@
 2000-05-15  Jim Meyering  <meyering@lucent.com>
 
+
 	* version-etc.c (version_etc_copyright): Update the copyright string
 	used in all --version output.
+
+2000-05-14  Jim Meyering  <meyering@lucent.com>
+
+	* closeout.c (close_stdout_set_file_name): New function.
+	(close_stdout_status): Use new file-scoped global.
+	Return right away if fstat says the stdout file descriptor is invalid.
+	* closeout.h (close_stdout_set_file_name): Declare.
 
 2000-05-10  Jim Meyering  <meyering@lucent.com>
 
