@@ -15,6 +15,8 @@
 #  endif
 # endif
 
-char *human_readable PARAMS ((uintmax_t, char *, int, int, int));
+char *human_readable PARAMS ((uintmax_t, char *, int, int));
+
+void human_block_size PARAMS ((char const *, int, int *));
 
 #endif /* HUMAN_H_ */
