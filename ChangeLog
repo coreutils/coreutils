@@ -1,3 +1,20 @@
+2003-02-04  Jim Meyering  <jim@meyering.net>
+
+	* Version 4.5.6.
+
+	`df /dev/block-or-char-device-file--not-mounted' now reports
+	the name of the file system on which the file resides, usually `/'.
+	Before, it would leave the `Mounted on' field blank.
+	* src/df.c (show_disk): Move function to precede find_mount_point.
+	(show_disk): Add parameter: STATP.
+	If we don't find a matching device name, then resort to calling
+	find_mount_point.
+
+2003-02-03  Andreas Schwab  <schwab@suse.de>
+
+	* tests/rm/cycle: Require non-root.
+	* tests/rm/isatty: Likewise.
+
 2003-02-02  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.5.
