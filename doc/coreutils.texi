@@ -530,6 +530,15 @@ Specify the destination @var{directory}.
 @xref{Target directory}.
 @end macro
 
+@macro optNoTargetDirectory
+@item --no-target-directory
+@opindex --no-target-directory
+@cindex target directory
+@cindex destination directory
+Do not treat the last operand specially when it is a directory or a
+symbolic link to a directory.  @xref{Target directory}.
+@end macro
+
 @macro optSi
 @itemx --si
 @opindex --si
@@ -915,17 +924,40 @@ equivalent to @option{--block-size=si}.
 
 @cindex target directory
 
-Some @sc{gnu} programs (at least @command{cp}, @command{install},
-@command{ln}, and @command{mv}) allow you to specify the target directory
-via this option:
+The @command{cp}, @command{install}, @command{ln}, and @command{mv}
+commands normally treat the last operand specially when it is a
+directory or a symbolic link to a directory.  For example, @samp{cp
+source dest} is equivalent to @samp{cp source dest/source} if
+@file{dest} is a directory.  Sometimes this behavior is not exactly
+what is wanted, so these commands support the following options to
+allow more fine-grained control:
 
 @table @samp
+
+@item --no-target-directory
+@opindex --no-target-directory
+@cindex target directory
+@cindex destination directory
+Do not treat the last operand specially when it is a directory or a
+symbolic link to a directory.  This can help avoid race conditions in
+programs that operate in a shared area.  For example, when the command
+@samp{mv /tmp/source /tmp/dest} succeeds, there is no guarantee that
+@file{/tmp/source} was renamed to @file{/tmp/dest}: it could have been
+renamed to @file{/tmp/dest/source} instead, if some other process
+created @file{/tmp/dest} as a directory.  However, if @file{mv
+--no-target-directory /tmp/source /tmp/dest} succeeds, there is no
+question that @file{/tmp/source} was renamed to @file{/tmp/dest}.
+
+In the opposite situation, where you want the last operand to be
+treated as a directory and want a diagnostic otherwise, you can use
+the @option{--target-directory} option instead.
 
 @itemx @w{@kbd{--target-directory}=@var{directory}}
 @opindex --target-directory
 @cindex target directory
 @cindex destination directory
-Specify the destination @var{directory}.
+Use @var{directory} as the directory component of each destination
+file name.
 
 The interface for most programs is that after processing options and a
 finite (possibly zero) number of fixed-position arguments, the remaining
@@ -971,6 +1003,10 @@ find . -mindepth 1 -maxdepth 1 -print0 \
 @end example
 
 @end table
+
+@noindent
+The @option{--target-directory} and @option{--no-target-directory}
+options cannot be combined.
 
 @node Trailing slashes
 @section Trailing slashes
@@ -6261,6 +6297,8 @@ Make hard links instead of copies of non-directories.
 @opindex --dereference
 Always follow symbolic links.
 
+@optNoTargetDirectory
+
 @item -P
 @itemx --no-dereference
 @opindex -P
@@ -6780,6 +6818,8 @@ which can be either an octal number, or a symbolic mode as in
 permissions}).  The default mode is @samp{u=rwx,go=rx}---read, write,
 and execute for the owner, and read and execute for group and other.
 
+@optNoTargetDirectory
+
 @item -o @var{owner}
 @itemx --owner=@var{owner}
 @opindex -o
@@ -6895,6 +6935,8 @@ Do not prompt the user before removing a destination file.
 Prompt whether to overwrite each existing destination file, regardless
 of its permissions.  If the response does not begin with @samp{y} or
 @samp{Y}, the file is skipped.
+
+@optNoTargetDirectory
 
 @itemx @w{@kbd{--reply}[=@var{how}]}
 @opindex --reply
@@ -7308,6 +7350,8 @@ Besides directories, other special file types include named pipes
 It is a minimalist interface to the system-provided
 @code{link} function.  @xref{Hard Links, , , libc,
 The GNU C Library Reference Manual}.
+It avoids the bells and whistles of the more commonly-used
+@command{ln} command (@pxref{ln invocation}).
 Synopsis:
 
 @example
@@ -7318,6 +7362,12 @@ link @var{filename} @var{linkname}
 must specify a nonexistent entry in an existing directory.
 @command{link} simply calls @code{link (@var{filename}, @var{linkname})}
 to create the link.
+
+On a @acronym{GNU} system, this command acts like @samp{ln --directory
+--no-target-directory @var{filename} @var{linkname}}.  However, the
+@option{--directory} and @option{--no-target-directory} options are
+not specified by @acronym{POSIX}, and the @command{link} command is
+more portable in practice.
 
 @exitstatus
 
@@ -7346,7 +7396,7 @@ ln [@var{option}]@dots{} @var{target}@dots{} @var{directory}
 @item If the last argument names an existing directory, @command{ln} creates a
 link to each @var{target} file in that directory, using the
 @var{target}s' names.  (But see the description of the
-@option{--no-dereference} option below.)
+@option{--no-dereference} and @option{--no-target-directory} options below.)
 
 @item If two filenames are given, @command{ln} creates a link from the
 second to the first.
@@ -7417,8 +7467,8 @@ Prompt whether to remove existing destination files.
 @itemx --no-dereference
 @opindex -n
 @opindex --no-dereference
-When given an explicit destination that is a symlink to a directory,
-treat that destination as if it were a normal file.
+Do not treat the last operand specially when it is a symbolic link to
+a directory.  Instead, treat it as if it were a normal file.
 
 When the destination is an actual directory (not a symlink to one),
 there is no ambiguity.  The link is created in that directory.
@@ -7430,6 +7480,11 @@ non-directory---as the symlink itself.  In that case, @command{ln}
 must delete or backup that symlink before creating the new link.
 The default is to treat a destination that is a symlink to a directory
 just like a directory.
+
+This option is weaker than the @option{--no-target-directory} option,
+and has no effect if @option{--no-target-directory} is also given.
+
+@optNoTargetDirectory
 
 @item -s
 @itemx --symbolic
@@ -7761,6 +7816,8 @@ Give a diagnostic for each successful removal.
 It is a minimalist interface to the system-provided
 @code{unlink} function.  @xref{Deleting Files, , , libc,
 The GNU C Library Reference Manual}.  Synopsis:
+It avoids the bells and whistles of the more commonly-used
+@command{rm} command (@pxref{rm invocation}).
 
 @example
 unlink @var{filename}
