@@ -1,6 +1,11 @@
-2003-09-02  Jim Meyering  <jim@meyering.net>
+2003-09-03  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.91.
+
+	* src/du.c (AUTHORS): Remove Larry McVoy's name, since the relatively
+	small amount of code from him was first moved to lib/human.c, and was
+	subsequently rewritten entirely.
+	* src/df.c (AUTHORS): Likewise.
 
 2003-08-22  Lawrence Teo  <lcteo@uncc.edu>
 
