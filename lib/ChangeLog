@@ -1,3 +1,7 @@
+2004-05-30  Jim Meyering  <jim@meyering.net>
+
+	* alloca_.h: Remove trailing blank.
+
 2004-05-29  Jim Meyering  <jim@meyering.net>
 
 	* dirname.h (IS_ABSOLUTE_FILE_NAME, IS_RELATIVE_FILE_NAME): Define.
