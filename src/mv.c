@@ -227,6 +227,9 @@ movefile (source, dest)
       char *new_dest;
 
       base = basename (source);
+      /* Remove a (single) trailing slash if there is at least one.  */
+      if (dest[strlen (dest) - 1] == '/')
+        dest[strlen (dest) - 1] = '\0';
       new_dest = (char *) alloca (strlen (dest) + 1 + strlen (base) + 1);
       stpcpy (stpcpy (stpcpy (new_dest, dest), "/"), base);
       return do_move (source, new_dest);
