@@ -979,8 +979,8 @@ parse_obsolescent_option (int argc, const char *const *argv,
 	{
 	  error (0, 0, _("\
 Warning: it is not portable to use two or more file arguments with\n\
-tail's obsolescent option syntax (%s).  Use the equivalent -n or -c option\n\
-to avoid this warning."), argv[1]);
+tail's obsolescent option syntax (%s).  Use the equivalent -n or -c\n\
+option instead."), argv[1]);
 	}
 
       /* Set globals.  */
