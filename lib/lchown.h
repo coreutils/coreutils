@@ -1,9 +1,9 @@
-/* Some systems don't have ENOSYS.  */
-#ifndef ENOSYS
+/* Some systems don't have EOPNOTSUPP.  */
+#ifndef EOPNOTSUPP
 # ifdef ENOTSUP
-#  define ENOSYS ENOTSUP
+#  define EOPNOTSUPP ENOTSUP
 # else
 /* Some systems don't have ENOTSUP either.  */
-#  define ENOSYS EINVAL
+#  define EOPNOTSUPP EINVAL
 # endif
 #endif
