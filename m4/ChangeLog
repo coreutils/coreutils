@@ -1,3 +1,8 @@
+1998-07-25  Jim Meyering  <meyering@ascend.com>
+
+	* utime.m4 (jm_FUNC_UTIME): New file and macro.
+	* utimes.m4 (jm_FUNC_UTIMES_NULL): New file and macro.
+
 1998-07-09  Manfred Hollstein  <manfred@s-direktnet.de>
 
 	* chown.m4 (jm_FUNC_CHOWN): Add a check to verify that the

@@ -1,5 +1,8 @@
 1998-07-25  Jim Meyering  <meyering@ascend.com>
 
+	* src/copy.c (SAME_INODE): Remove definition.
+	* src/sys2.h (SAME_INODE): Define it here instead.
+
 	* Version 3.16s.
 
 	* src/remove.c (same_file): New function.
