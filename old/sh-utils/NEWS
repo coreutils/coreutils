@@ -1,5 +1,6 @@
 Changes in release 2.1
  [2.0c]
+* fix portability problems with nanosleep.c and with the new code in sleep.c
  [2.0b]
 * Regenerate lib/Makefile.in so that nanosleep.c is distributed.
  [2.0a]
