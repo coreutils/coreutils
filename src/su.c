@@ -109,11 +109,11 @@ uid_t getuid ();
 #endif /* not _POSIX_VERSION */
 
 #ifndef HAVE_ENDGRENT
-#define endgrent()
+# define endgrent() ((void) 0)
 #endif
 
 #ifndef HAVE_ENDPWENT
-#define endpwent()
+# define endpwent() ((void) 0)
 #endif
 
 #ifdef HAVE_SHADOW_H
