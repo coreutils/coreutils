@@ -1,0 +1,27 @@
+Use df to find a writable directory on a file system different from current one:
+
+# Try these:
+tmp_dirs='
+ $TMPDIR
+ /tmp
+ /var/tmp
+ /usr/tmp
+ $HOME
+'
+
+# FIXME
+DF=df
+# FIXME
+MKDIR=mkdir
+
+tmp=df-$$
+
+dot_mount_point=`$DF --no-sync -P . | sed -n '2s/.*% *//p'`
+for d in $tmp_dirs; do
+  d_mount_point=`$DF --no-sync -P $d | sed -n '2s/.*% *//p'`
+
+  # Same partition?  Skip it.
+  test x$d_mount_point = x$dot_mount_point && continue
+
+  # See if we can create a directory in it.
+done
