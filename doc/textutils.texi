@@ -850,7 +850,7 @@ pr [@var{option}]@dots{} [@var{file}]@dots{}
 @end example
 
 By default, a 5-line header is printed: two blank lines; a line with the
-date, the filename, and the page count; and two more blank lines.  A
+date, the file name, and the page count; and two more blank lines.  A
 five line footer (entirely) is also printed.
 
 Form feeds in the input cause page breaks in the output.
@@ -906,7 +906,7 @@ Use a formfeed instead of newlines to separate output pages.
 
 @item -h @var{header}
 @opindex -h
-Replace the filename in the header with the string @var{header}.
+Replace the file name in the header with the string @var{header}.
 
 @item -i[@var{out-tabchar}[@var{out-tabwidth}]]
 @opindex -i
@@ -1056,7 +1056,7 @@ head -@var{number} [@var{option}]@dots{} [@var{file}]@dots{}
 If more than one @var{file} is specicified, @code{head} prints a
 one-line header consisting of
 @example
-==> @var{filename} <==
+==> @var{file name} <==
 @end example
 @noindent 
 before the output for each @var{file}.
@@ -1096,13 +1096,13 @@ Output the first @var{n} lines.
 @opindex -q
 @opindex --quiet
 @opindex --silent
-Never print filename headers.
+Never print file name headers.
 
 @item -v
 @itemx --verbose
 @opindex -v
 @opindex --verbose
-Always print filename headers.
+Always print file name headers.
 
 @end table
 
@@ -1126,7 +1126,7 @@ tail +@var{number} [@var{option}]@dots{} [@var{file}]@dots{}
 If more than one @var{file} is specified, @code{tail} prints a
 one-line header consisting of
 @example
-==> @var{filename} <==
+==> @var{file name} <==
 @end example
 @noindent 
 before the output for each @var{file}.
@@ -1192,13 +1192,13 @@ Output the last @var{n} lines.
 @opindex -q
 @opindex --quiet
 @opindex --silent
-Never print filename headers.
+Never print file name headers.
 
 @item -v
 @itemx --verbose
 @opindex -v
 @opindex --verbose
-Always print filename headers.
+Always print file name headers.
 
 @end table
 
@@ -1221,10 +1221,10 @@ split [@var{option}] [@var{input} [@var{prefix}]]
 By default, @code{split} puts 1000 lines of @var{input} (or whatever is
 left over for the last section), into each output file.
 
-@cindex output filename prefix
+@cindex output file name prefix
 The output files' names consist of @var{prefix} (@samp{x} by default)
 followed by a group of letters @samp{aa}, @samp{ab}, and so on, such
-that concatenating the output files in sorted order by filename produces
+that concatenating the output files in sorted order by file name produces
 the original input file.  (If more than 676 output files are required,
 @code{split} uses @samp{zaa}, @samp{zab}, etc.)
 
@@ -1333,15 +1333,15 @@ The program accepts the following options.  Also see @ref{Common options}.
 @itemx --prefix=@var{prefix}
 @opindex -f
 @opindex --prefix
-@cindex output filename prefix
-Use @var{prefix} as the output filename prefix.
+@cindex output file name prefix
+Use @var{prefix} as the output file name prefix.
 
 @item -b @var{suffix}
 @itemx --suffix=@var{suffix}
 @opindex -b
 @opindex --suffix
-@cindex output filename suffix
-Use @var{suffix} as the output filename suffix.  When this option is
+@cindex output file name suffix
+Use @var{suffix} as the output file name suffix.  When this option is
 specified, the suffix string must include exactly one
 @code{printf(3)}-style conversion specification, possibly including
 format specification flags, a field width, a precision specifications,
@@ -1349,7 +1349,7 @@ or all of these kinds of modifiers.  The format letter must convert a
 binary integer argument to readable form; thus, only @samp{d}, @samp{i},
 @samp{u}, @samp{o}, @samp{x}, and @samp{X} conversions are allowed.  The
 entire @var{suffix} is given (with the current output file number) to
-@code{sprintf(3)} to form the filename suffixes for each of the
+@code{sprintf(3)} to form the file name suffixes for each of the
 individual output files in turn.  If this option is used, the
 @samp{--digits} option is ignored.
 
@@ -1357,7 +1357,7 @@ individual output files in turn.  If this option is used, the
 @itemx --digits=@var{digits}
 @opindex -n
 @opindex --digits
-Use output filenames containing numbers that are @var{digits} digits
+Use output file names containing numbers that are @var{digits} digits
 long instead of the default 2.
 
 @item -k
@@ -1423,9 +1423,9 @@ wc [@var{option}]@dots{} [@var{file}]@dots{}
 
 @cindex total counts
 @code{wc} prints one line of counts for each file, and if the file was
-given as an argument, it prints the filename following the counts.  If
+given as an argument, it prints the file name following the counts.  If
 more than one @var{file} is given, @code{wc} prints a final line
-containing the cumulative counts, with the filename @file{total}.  The
+containing the cumulative counts, with the file name @file{total}.  The
 counts are printed in this order: lines, words, bytes.
 
 By default, @code{wc} prints all three counts.  Options can specify
@@ -1482,7 +1482,7 @@ sum [@var{option}]@dots{} [@var{file}]@dots{}
 
 @code{sum} prints the checksum for each @var{file} followed by the
 number of blocks in the file (rounded up).  If more than one @var{file}
-is given, filenames are also printed (by default).  (With the
+is given, file names are also printed (by default).  (With the
 @samp{--sysv} option, corresponding file name are printed when there is
 at least one file argument.)
 
@@ -1532,7 +1532,7 @@ cksum [@var{option}]@dots{} [@var{file}]@dots{}
 @end example
 
 @code{cksum} prints the CRC for each file along with the number of bytes
-in the file, and the filename unless no arguments were given.
+in the file, and the file name unless no arguments were given.
 
 @code{cksum} is typically used to ensure that files have been
 transferred by unreliable means (e.g., netnews) have not been corrupted,
@@ -1849,7 +1849,7 @@ compared.
 @cindex comparing sorted files
 
 @code{comm} writes to standard output lines that are common, and lines
-that are unique, to two input files; a filename of @samp{-} means
+that are unique, to two input files; a file name of @samp{-} means
 standard input.  Synopsis:
 
 @example
@@ -1886,7 +1886,7 @@ the corresponding columns.  Also see @ref{Common options}.
 
 @pindex cut
 @code{cut} writes to standard output selected parts of each line of each
-input file, or standard input if no files are given or for a filename of
+input file, or standard input if no files are given or for a file name of
 @samp{-}.  Synopsis:
 
 @example
@@ -1957,7 +1957,7 @@ character.
 
 @code{paste} writes to standard output lines consisting of sequentially
 corresponding lines of each given file, separated by @key{TAB}.
-Standard input is used for a filename of @samp{-} or if no input files
+Standard input is used for a file name of @samp{-} or if no input files
 are given.
 
 Synopsis:

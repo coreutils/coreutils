@@ -6,7 +6,7 @@
 
 @include version.texi
 
-@c Define new indices for filenames and options.
+@c Define new indices for file names and options.
 @defcodeindex fl
 @defcodeindex op
 
