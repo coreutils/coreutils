@@ -65,11 +65,6 @@ typedef double LONG_DOUBLE;
 # define LDBL_DIG DBL_DIG
 #endif
 
-#if !HAVE_FSEEKO
-# undef fseeko
-# define fseeko(Stream, Offset, Whence) (-1)
-#endif
-
 enum size_spec
   {
     NO_SIZE,
@@ -986,15 +981,15 @@ skip (off_t n_skip)
       if (n_skip == 0)
 	break;
 
-      /* First try using fseek.  For large offsets, this extra work is
+      /* First try seeking.  For large offsets, this extra work is
 	 worthwhile.  If the offset is below some threshold it may be
 	 more efficient to move the pointer by reading.  There are two
-	 issues when trying to use fseek:
+	 issues when trying to seek:
 	   - the file must be seekable.
 	   - before seeking to the specified position, make sure
 	     that the new position is in the current file.
-	     Try to do that by getting file's size using fstat().
-	     But that will work only for regular files and dirs.  */
+	     Try to do that by getting file's size using fstat.
+	     But that will work only for regular files.  */
 
       if (fstat (fileno (in_stream), &file_stats))
 	{
@@ -1022,10 +1017,7 @@ skip (off_t n_skip)
 	    }
 	  else
 	    {
-	      /* Try fseeko if available, fseek otherwise.  */
-	      if (fseeko (in_stream, n_skip, SEEK_SET) == 0
-		  || (n_skip <= LONG_MAX
-		      && fseek (in_stream, (long) n_skip, SEEK_SET) == 0))
+	      if (0 <= lseek (fileno (in_stream), n_skip, SEEK_CUR))
 		{
 		  n_skip = 0;
 		  break;
