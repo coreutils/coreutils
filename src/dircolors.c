@@ -108,7 +108,7 @@ usage (int status)
 Determine format of output:\n\
   -p, --print-data-base       output defaults\n\
   -b, --sh, --bourne-shell    output Bourne shell code to set LS_COLOR\n\
-  -c, --csh, --c-shell        output C-shell code to set LS_COLOR\n"));
+  -c, --csh, --c-shell        output C shell code to set LS_COLOR\n"));
     }
 
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
@@ -124,7 +124,7 @@ xstrndup (const char *s, size_t n)
 }
 
 /* If the SHELL environment variable is set to `csh' or `tcsh,'
-   assume C-shell.  Else Bourne shell.  */
+   assume C shell.  Else Bourne shell.  */
 
 static enum Shell_syntax
 guess_shell_syntax (void)
@@ -422,7 +422,7 @@ main (int argc, char **argv)
 	syntax = SHELL_SYNTAX_BOURNE;
 	break;
 
-      case 'c':	/* C-shell syntax.  */
+      case 'c':	/* C shell syntax.  */
 	syntax = SHELL_SYNTAX_C;
 	break;
 
