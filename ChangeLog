@@ -1,6 +1,11 @@
-2002-11-17  Jim Meyering  <jim@meyering.net>
+2002-11-19  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.4.
+
+	* tests/sum/sysv: Export LC_ALL=C, to avoid failure when
+	run in a UTF locale.  Report and suggested fix by Bruno Haible.
+
+2002-11-17  Jim Meyering  <jim@meyering.net>
 
 	* configure.ac: Update via autoupdate.
 	Add `AM_GNU_GETTEXT_VERSION(0.11.5)'.
