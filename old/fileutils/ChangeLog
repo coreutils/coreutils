@@ -35,6 +35,8 @@
 	Mark this as an expensive test.
 	* tests/Makefile.am (EXTRA_DIST): Add expensive.
 
+	* doc/fileutils.texi (shred invocation): Give two examples.
+
 2000-10-26  Jim Meyering  <meyering@lucent.com>
 
 	* doc/getdate.texi (Authors of getdate): Add Paul Eggert.
