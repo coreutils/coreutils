@@ -1,5 +1,5 @@
 /* head -- output first part of file(s)
-   Copyright (C) 89, 90, 91, 1995-1999 Free Software Foundation, Inc.
+   Copyright (C) 89, 90, 91, 1995-2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -211,7 +211,7 @@ head_file (const char *filename, uintmax_t n_units, int count_lines)
     }
 }
 
-/* Convert a string of digits, N_STRING, with a single, optional suffix
+/* Convert a string of decimal digits, N_STRING, with a single, optional suffix
    character (b, k, or m) to an integral value.  Upon successful conversion,
    return that value.  If it cannot be converted, give a diagnostic and exit.
    COUNT_LINES indicates whether N_STRING is a number of bytes or a number
@@ -223,7 +223,7 @@ string_to_integer (int count_lines, const char *n_string)
   strtol_error s_err;
   uintmax_t n;
 
-  s_err = xstrtoumax (n_string, NULL, 0, &n, "bkm");
+  s_err = xstrtoumax (n_string, NULL, 10, &n, "bkm");
 
   if (s_err == LONGINT_INVALID)
     {
