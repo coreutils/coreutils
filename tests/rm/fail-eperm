@@ -75,7 +75,8 @@ foreach my $dir (@dir_list)
 		. "  got $status, expected 1\n";
 
 	    my $exp = "rm: cannot remove `$dir/$f':";
-	    $line =~ /^$exp/
+	    my $regex = quotemeta $exp;
+	    $line =~ /^$regex/
 	      or die "$ME: unexpected dignostic from `$cmd';\n"
 		. "  got      $line"
 		. "  expected $exp ...\n";
