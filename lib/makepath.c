@@ -370,7 +370,7 @@ make_path (const char *argpath,
       umask (oldmask);
 
       if (verbose_fmt_string != NULL)
-	error (0, 0, verbose_fmt_string, dirpath);
+	error (0, 0, verbose_fmt_string, quote (dirpath));
 
       if (owner != (uid_t) -1 || group != (gid_t) -1)
 	{
