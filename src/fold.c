@@ -37,13 +37,13 @@
 char *program_name;
 
 /* If nonzero, try to break on whitespace. */
-static int break_spaces;
+static bool break_spaces;
 
 /* If nonzero, count bytes, not column positions. */
-static int count_bytes;
+static bool count_bytes;
 
 /* If nonzero, at least one of the files we read was standard input. */
-static int have_read_stdin;
+static bool have_read_stdin;
 
 static struct option const longopts[] =
 {
@@ -91,8 +91,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
    printing C will move the cursor to.
    The first column is 0. */
 
-static int
-adjust_column (int column, char c)
+static size_t
+adjust_column (size_t column, char c)
 {
   if (!count_bytes)
     {
@@ -122,16 +122,16 @@ fold_file (char *filename, int width)
 {
   FILE *istream;
   register int c;
-  int column = 0;		/* Screen column where next char will go. */
-  int offset_out = 0;	/* Index in `line_out' for next char. */
+  size_t column = 0;		/* Screen column where next char will go. */
+  size_t offset_out = 0;	/* Index in `line_out' for next char. */
   static char *line_out = NULL;
-  static int allocated_out = 0;
+  static size_t allocated_out = 0;
   int saved_errno;
 
   if (STREQ (filename, "-"))
     {
       istream = stdin;
-      have_read_stdin = 1;
+      have_read_stdin = true;
     }
   else
     istream = fopen (filename, "r");
@@ -150,7 +150,7 @@ fold_file (char *filename, int width)
       if (c == '\n')
 	{
 	  line_out[offset_out++] = c;
-	  fwrite (line_out, sizeof (char), (size_t) offset_out, stdout);
+	  fwrite (line_out, sizeof (char), offset_out, stdout);
 	  column = offset_out = 0;
 	  continue;
 	}
@@ -165,16 +165,23 @@ fold_file (char *filename, int width)
 	     start the next line. */
 	  if (break_spaces)
 	    {
-	      /* Look for the last blank. */
-	      int logical_end;
+	      bool found_blank = false;
+	      size_t logical_end = offset_out;
 
-	      for (logical_end = offset_out - 1; logical_end >= 0;
-		   logical_end--)
-		if (ISBLANK (line_out[logical_end]))
-		  break;
-	      if (logical_end >= 0)
+	      /* Look for the last blank. */
+	      while (logical_end)
 		{
-		  int i;
+		  --logical_end;
+		  if (ISBLANK (line_out[logical_end]))
+		    {
+		      found_blank = true;
+		      break;
+		    }
+		}
+
+	      if (found_blank)
+		{
+		  size_t i;
 
 		  /* Found a blank.  Don't output the part after it. */
 		  logical_end++;
@@ -244,7 +251,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  break_spaces = count_bytes = have_read_stdin = 0;
+  break_spaces = count_bytes = have_read_stdin = false;
 
   /* Turn any numeric options into -w options.  */
   for (i = 1; i < argc; i++)
@@ -278,11 +285,11 @@ main (int argc, char **argv)
 	  break;
 
 	case 'b':		/* Count bytes rather than columns. */
-	  count_bytes = 1;
+	  count_bytes = true;
 	  break;
 
 	case 's':		/* Break at word boundaries. */
-	  break_spaces = 1;
+	  break_spaces = true;
 	  break;
 
 	case 'w':		/* Line width. */
