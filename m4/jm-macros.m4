@@ -64,6 +64,7 @@ AC_DEFUN([gl_MACROS],
   # This is for od and stat, and any other program that
   # uses the PRI.MAX macros from inttypes.h.
   AC_REQUIRE([gt_INTTYPES_PRI])
+  AC_REQUIRE([gl_ULLONG_MAX])
 
   AC_REQUIRE([gl_FUNC_GETGROUPS])
 

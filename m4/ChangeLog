@@ -1,3 +1,8 @@
+2005-01-03  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* ullong_max.m4: New file.
+	* jm-macros.m4 (gl_MACROS): Require gl_ULLONG_MAX.
+
 2005-01-03  Jim Meyering  <jim@meyering.net>
 
 	* mkstemp.m4 (gl_FUNC_MKSTEMP): Don't `cd' into the temporary

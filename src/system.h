@@ -368,38 +368,28 @@ initialize_exit_failure (int status)
 # include <stdint.h>
 #endif
 
+#if ULONG_MAX < ULLONG_MAX
+# define LONGEST_MODIFIER "ll"
+#else
+# define LONGEST_MODIFIER "l"
+#endif
 #if PRI_MACROS_BROKEN
 # undef PRIdMAX
 # undef PRIoMAX
 # undef PRIuMAX
 # undef PRIxMAX
 #endif
-
-#if ULONG_MAX < ULLONG_MAX
-# define LONGEST_MODIFIER "ll"
-#else
-# define LONGEST_MODIFIER "l"
-#endif
-
 #ifndef PRIdMAX
 # define PRIdMAX LONGEST_MODIFIER "d"
-# defined USED_LONGEST_MODIFIER
 #endif
 #ifndef PRIoMAX
 # define PRIoMAX LONGEST_MODIFIER "o"
-# defined USED_LONGEST_MODIFIER
 #endif
 #ifndef PRIuMAX
 # define PRIuMAX LONGEST_MODIFIER "u"
-# defined USED_LONGEST_MODIFIER
 #endif
 #ifndef PRIxMAX
 # define PRIxMAX LONGEST_MODIFIER "x"
-# defined USED_LONGEST_MODIFIER
-#endif
-
-#if USED_LONGEST_MODIFIER && (!defined ULONG_MAX || !defined ULLONG_MAX)
-# error "your PRI.MAX macros are broken and we don't work around it"
 #endif
 
 #include <ctype.h>
