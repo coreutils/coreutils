@@ -1,6 +1,74 @@
-2003-12-26  Jim Meyering  <meyering@lucent.com>
+2003-12-30  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.1.1.
+
+2003-12-29  Paul Eggert  <eggert@twinsun.com>
+
+	* NEWS: Remove support for join -j1 FIELD, -j2 FIELD, and -o LIST1
+	LIST2 in POSIX 1003.1-2001 hosts, as required by POSIX.
+
+	* doc/coreutils.texi (join invocation): Remove documentation
+	accordingly.  Document that -t makes all separators significant.
+
+	* src/join.c: Include posixver.h.
+	(obsolete_usage): New var.
+	(longopts): Put obsolete options first.
+	(OBSOLETE_LONG_OPTIONS): New constant.
+	(get_option, add_file_name): New functions.
+	(main): Use them to support new behavior.
+	(usage): Remove documentation for -j1 FIELD and -j2 FIELD.
+	Do not mark -j FIELD as obsolescent; it is longstanding
+	UNIX tradition and is a valid extension to POSIX.
+
+	* tests/join/Test.pm (tv): Avoid obsolete -o usage.
+
+2003-12-28  Paul Eggert  <eggert@twinsun.com>
+
+	* src/join.c (add_field_list): Don't use alloca with unbounded
+	size; just modify the argument, which is no longer const *.
+
+	Various other minor cleanups, mostly to avoid the need for casts.
+
+	(extract_field): Renamed from ADD_FIELD, as it's now a function.
+
+	(struct field.beg): Now char *, not unsigned char const *.  All
+	uses changed.  It shouldn't be const since xmemcoll writes on its
+	arguments.
+	(extract_field): Likewise, for 2nd arg.
+	(keycmp): Remove now-unnecessary cast of xmemcoll args.
+
+	(is_blank): New function, to avoid need to cast arg to unsigned char.
+	(extract_field): Use it.
+
+	(xfields): Rewrite pretty much from scratch.
+
+	(hard_LC_COLLATE): Now bool, not int.
+	(get_line, getseq, add_field_list): Now returns bool, not int.
+	(decode_field_spec, add_field_list): Return true on success (not
+	false), for consistency with the rest of the code.  All uses changed.
+
+	(tab): Now char, not unsigned char.  This wasn't 100% necessary
+	but is slightly cleaner.
+	(prjoin): Hoist (tab ? tab : ' ') expression, to help the compiler.
+
+	(empty_filler): Now const *.
+
+	(make_blank): Remove; wasn't needed.  Remove all calls.
+	(main): Don't set uni_blank.nfields; zero is fine.
+
+2003-12-27  Jim Meyering  <meyering@lucent.com>
+
+	* src/join.c: Include "quote.h".
+	(min, max): Remove definitions.
+	Make a few function parameters and corresponding
+	locals `const'.  Use bool for boolean variables.
+	Use size_t (not int) for all counters and related index variables.
+	(prjoin): Remove now-useless assertion.
+	(string_to_join_field): New function.
+	(main): Accept join fields as large as SIZE_MAX.
+	(keycmp): Rename `min' to MIN and max to MAX.
+
+2003-12-26  Jim Meyering  <meyering@lucent.com>
 
 	fold -s didn't work on e.g., alpha-based systems.
 	* src/fold.c (fold_file): Adjust types (int->size_t) so that using
