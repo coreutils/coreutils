@@ -105,3 +105,10 @@
 ("14a", '-d -u', "mal\nmal-\nmala\n", "mal\nmala\n", 0);
 # Be sure to fix the (translate && ignore) case in keycompare.
 ("14b", '-f -d -u', "mal\nmal-\nmala\n", "mal\nmala\n", 0);
+#
+# Experiment with -i.
+("15a", '-i -u', "a\na\1\n", "a\n", 0);
+("15b", '-i -u', "a\n\1a\n", "a\n", 0);
+("15c", '-i -u', "a\1\na\n", "a\1\n", 0);
+("15d", '-i -u', "\1a\na\n", "\1a\n", 0);
+("15e", '-i -u', "a\n\1\1\1\1\1a\1\1\1\1\n", "a\n", 0);
