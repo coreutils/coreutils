@@ -1,4 +1,7 @@
+User-visible changes in release 1.11
+* fmt is built
 User-visible changes in release 1.10
+* skeletal texinfo documentation (mainly just the `invoking' nodes)
 * new program: fmt
 * tail -f on multiple files reports file truncation
 * tail -q has been fixed so it never prints headers

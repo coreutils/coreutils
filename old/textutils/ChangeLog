@@ -1,3 +1,17 @@
+Sun Nov 06 00:17:21 1994  Jim Meyering  (meyering@comco.com)
+
+	* Version 1.11.
+
+Sat Nov 05 15:14:44 1994  Jim Meyering  (meyering@comco.com)
+
+	* memcmp.c, srtoul.c: Use up-to-date versions.
+	Reported by Franc,ois Pinard.
+
+	* src/Makefile.in (DEFS): Remove -Dlint... again.
+
+	* src/Makefile.in (PROGS): Add fmt!
+	Reported by Andreas Stolcke (stolcke@ICSI.Berkeley.EDU).
+
 Fri Nov 04 17:26:16 1994  Jim Meyering  (meyering@comco.com)
 
 	* Version 1.10.
