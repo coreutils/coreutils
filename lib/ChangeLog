@@ -1,3 +1,10 @@
+2002-11-23  Jim Meyering  <jim@meyering.net>
+
+	* mbswidth.h: Update from gnulib.
+	* mbswidth.c: Likewise.
+	* localcharset.c: Likewise.
+	* config.charset: Likewise.
+
 2002-11-22  Paul Eggert  <eggert@twinsun.com>
 
 	* quotearg.h: Allow multiple inclusion by surrounding with
