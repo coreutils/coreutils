@@ -1,6 +1,12 @@
-2000-11-23  Jim Meyering  <meyering@lucent.com>
+2000-11-24  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.0.33.
+
+	* src/dd.c (main): Use ftruncate only on regular files.
+	Based on a patch from Michael Stone.
+	Reported by andras@kolumbus.fi at http://bugs.debian.org/77174.
+
+2000-11-23  Jim Meyering  <meyering@lucent.com>
 
 	* src/df.c (show_point): Before accepting an entry as a match, make
 	sure that the mount directory exists and has the required device number.
