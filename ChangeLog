@@ -1,11 +1,29 @@
+2003-07-22  Jim Meyering  <jim@meyering.net>
+
+	* Version 5.0.90.
+
+	Begin to address this comment: What if someone wants to
+	extract the 1,000,000-th field of some huge input file?
+	The first step is to rearrange things so that the values
+	in the printable_field array are all 0/1 rather than 0/1/2.
+	* src/cut.c (RANGE_START_SENTINEL): Remove.
+	Store range-start indices in a hash table, rather than
+	overloading the `printable_field' array.
+	(range_start_ht): New global.
+	(hash_int, hash_compare_ints, is_range_start_index): New functions.
+	(print_kth): Use is_range_start_index; don't test printable_field.
+	(set_fields): Detect overflow.
+	(set_fields): Insert each range-start index into range_start_ht.
+	(main): Call set_fields only once, and only after
+	output_delimiter_specified and (if required) range_start_ht have
+	been defined.
+
 2003-07-20  Paul Eggert  <eggert@twinsun.com>
 
 	* src/wc.c (get_input_fstatus): Fix typo: `stat' was being
 	invoked with a null pointer when there were no file arguments.
 
 2003-07-20  Jim Meyering  <jim@meyering.net>
-
-	* Version 5.0.90.
 
 	* Makefile.maint (sc_changelog): Add another nit-picky check.
 
