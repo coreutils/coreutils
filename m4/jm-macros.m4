@@ -106,9 +106,6 @@ AC_DEFUN([gl_MACROS],
     tzset \
   )
 
-  # for test.c
-  AC_CHECK_FUNCS(setreuid setregid)
-
   AC_FUNC_STRTOD
 
   AC_REQUIRE([cu_PREREQ_STAT_PROG])
