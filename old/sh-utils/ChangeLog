@@ -1,5 +1,14 @@
 Sun Dec  4 14:53:12 1994  Jim Meyering  (meyering@comco.com)
 
+	* dirname.c (main): Use strr?chr instead of r?index.
+	* echo.c (main): Likewise.
+	* env.c (main): Likewise.
+	* pathchk.c (validate_path): Likewise.
+	* printf.c (print_formatted, print_esc): Likewise.
+	* who.c (extract_trimmed_name): Likewise.
+	* system.h [!HAVE_STRING_H]: Define strchr to index and strrchr to
+	rindex instead of the other way around.
+
 	* doc/Makefile.in (DISTFILES): Add getdate.texi.
 
 Sat Dec  3 07:59:55 1994  Jim Meyering  (meyering@comco.com)
