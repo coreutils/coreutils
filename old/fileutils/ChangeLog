@@ -1,3 +1,16 @@
+1998-03-19  Paul Eggert  <eggert@twinsun.com>
+
+	* lib/fsusage.h (struct fs_usage): New member
+	fsu_bavail_top_bit_set.
+	* lib/fsusage.c: Include <limits.h>.
+	(CHAR_BIT, EXTRACT_TOP_BIT, PROPAGATE_TOP_BIT): New macros.
+	(get_fs_usage): If top bit of system variable corresponding to
+	fsu_bavail is set, then set fsu_bavail_top_bit_set, and
+	sign-extend the value when storing it into fsu_bavail.
+	* src/df.c (show_dev): If fsu_bavail_top_bit_set is nonzero,
+	assume the original value corresponding to fsu_bavail was negative.
+	Reported by Arne Juul.
+
 1998-03-18  Jim Meyering  <meyering@eng.ascend.com>
 
 	* src/Makefile.am (rm-prep): Add dependency and rule to save users
