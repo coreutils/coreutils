@@ -21,7 +21,7 @@
 #include <stdio.h>
 #include <sys/types.h>
 
-char *xmalloc ();
+#include "xalloc.h"
 
 /* On at least Ultrix 4.3 and NextStep 3.2, getgroups (0, 0) always fails.
    On other systems, it returns the number of supplemental groups for the
