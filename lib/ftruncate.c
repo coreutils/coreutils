@@ -1,10 +1,27 @@
 /* ftruncate emulations that work on some System V's.
-   This file is in the public domain. */
+   This file is in the public domain.  */
+
+#ifdef HAVE_CONFIG_H
+#if defined (CONFIG_BROKETS)
+/* We use <config.h> instead of "config.h" so that a compilation
+   using -I. -I$srcdir will use ./config.h rather than $srcdir/config.h
+   (which it would do because it found this file in $srcdir).  */
+#include <config.h>
+#else
+#include "config.h"
+#endif
+#endif
 
 #include <sys/types.h>
 #include <fcntl.h>
 
+#include <errno.h>
+#ifndef STDC_HEADERS
+extern int errno;
+#endif
+
 #ifdef F_CHSIZE
+
 int
 ftruncate (fd, length)
      int fd;
@@ -12,14 +29,17 @@ ftruncate (fd, length)
 {
   return fcntl (fd, F_CHSIZE, length);
 }
-#else
+
+#else /* not F_CHSIZE */
 #ifdef F_FREESP
-/* The following function was written by
-   kucharsk@Solbourne.com (William Kucharski) */
+
+/* By William Kucharski <kucharsk@netcom.com>.  */
 
 #include <sys/stat.h>
-#include <errno.h>
+
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#endif
 
 int
 ftruncate (fd, length)
@@ -44,23 +64,28 @@ ftruncate (fd, length)
     }
   else
     {
+
       /* Truncate length. */
+
       fl.l_whence = 0;
       fl.l_len = 0;
       fl.l_start = length;
-      fl.l_type = F_WRLCK;	/* Write lock on file space. */
+      fl.l_type = F_WRLCK;	/* write lock on file space */
 
-      /* This relies on the UNDOCUMENTED F_FREESP argument to
-	 fcntl, which truncates the file so that it ends at the
-	 position indicated by fl.l_start.
-	 Will minor miracles never cease? */
+      /* This relies on the *undocumented* F_FREESP argument to fcntl,
+	 which truncates the file so that it ends at the position
+	 indicated by fl.l_start.  Will minor miracles never cease?  */
+
       if (fcntl (fd, F_FREESP, &fl) < 0)
 	return -1;
     }
 
   return 0;
 }
-#else
+
+#else /* not F_CHSIZE nor F_FREESP */
+#ifdef HAVE_CHSIZE
+
 int
 ftruncate (fd, length)
      int fd;
@@ -68,5 +93,18 @@ ftruncate (fd, length)
 {
   return chsize (fd, length);
 }
-#endif
-#endif
+
+#else /* not F_CHSIZE nor F_FREESP nor HAVE_CHSIZE */
+
+int
+ftruncate (fd, length)
+     int fd;
+     off_t length;
+{
+  errno = EIO;
+  return -1;
+}
+
+#endif /* not HAVE_CHSIZE */
+#endif /* not F_FREESP */
+#endif /* not F_CHSIZE */
