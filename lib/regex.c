@@ -59,6 +59,31 @@
 # include <wctype.h>
 #endif
 
+#ifdef _LIBC
+/* We have to keep the namespace clean.  */
+# define regfree(preg) __regfree (preg)
+# define regexec(pr, st, nm, pm, ef) __regexec (pr, st, nm, pm, ef)
+# define regcomp(preg, pattern, cflags) __regcomp (preg, pattern, cflags)
+# define regerror(errcode, preg, errbuf, errbuf_size) \
+	__regerror(errcode, preg, errbuf, errbuf_size)
+# define re_set_registers(bu, re, nu, st, en) \
+	__re_set_registers (bu, re, nu, st, en)
+# define re_match_2(bufp, string1, size1, string2, size2, pos, regs, stop) \
+	__re_match_2 (bufp, string1, size1, string2, size2, pos, regs, stop)
+# define re_match(bufp, string, size, pos, regs) \
+	__re_match (bufp, string, size, pos, regs)
+# define re_search(bufp, string, size, startpos, range, regs) \
+	__re_search (bufp, string, size, startpos, range, regs)
+# define re_compile_pattern(pattern, length, bufp) \
+	__re_compile_pattern (pattern, length, bufp)
+# define re_set_syntax(syntax) __re_set_syntax (syntax)
+# define re_search_2(bufp, st1, s1, st2, s2, startpos, range, regs, stop) \
+	__re_search_2 (bufp, st1, s1, st2, s2, startpos, range, regs, stop)
+# define re_compile_fastmap(bufp) __re_compile_fastmap (bufp)
+
+#define btowc __btowc
+#endif
+
 /* This is for other GNU distributions with internationalized messages.  */
 #if HAVE_LIBINTL_H || defined _LIBC
 # include <libintl.h>
@@ -110,8 +135,12 @@ char *realloc ();
 # ifndef INHIBIT_STRING_HEADER
 #  if defined HAVE_STRING_H || defined STDC_HEADERS || defined _LIBC
 #   include <string.h>
-#   if !defined bzero && !defined _LIBC
-#    define bzero(s, n)		(memset (s, '\0', n), (s))
+#   ifndef bzero
+#    ifndef _LIBC
+#     define bzero(s, n)	(memset (s, '\0', n), (s))
+#    else
+#     define bzero(s, n)	__bzero (s, n)
+#    endif
 #   endif
 #  else
 #   include <strings.h>
@@ -195,7 +224,8 @@ init_syntax_once ()
    STDC_HEADERS is defined, then autoconf has verified that the ctype
    macros don't need to be guarded with references to isascii. ...
    Defining isascii to 1 should let any compiler worth its salt
-   eliminate the && through constant folding."  */
+   eliminate the && through constant folding."
+   Solaris defines some of these symbols so we must undefine them first.  */
 
 #undef ISASCII
 #if defined STDC_HEADERS || (!defined isascii && !defined HAVE_ISASCII)
@@ -971,6 +1001,9 @@ re_set_syntax (syntax)
 #endif /* DEBUG */
   return ret;
 }
+#ifdef _LIBC
+weak_alias (__re_set_syntax, re_set_syntax)
+#endif
 
 /* This table gives an error message for each of the error codes listed
    in regex.h.  Obviously the order here has to be same as there.
@@ -1699,7 +1732,11 @@ typedef struct
 #  define CHAR_CLASS_MAX_LENGTH 256
 # endif
 
-# define IS_CHAR_CLASS(string) wctype (string)
+# ifdef _LIBC
+#  define IS_CHAR_CLASS(string) __wctype (string)
+# else
+#  define IS_CHAR_CLASS(string) wctype (string)
+# endif
 #else
 # define CHAR_CLASS_MAX_LENGTH  6 /* Namely, `xdigit'.  */
 
@@ -2176,14 +2213,14 @@ regex_compile (pattern, size, syntax, bufp)
                     for (;;)
                       {
                         PATFETCH (c);
-                        if (c == ':' || c == ']' || p == pend
+                        if ((c == ':' && *p == ']') || p == pend
                             || c1 == CHAR_CLASS_MAX_LENGTH)
                           break;
                         str[c1++] = c;
                       }
                     str[c1] = '\0';
 
-                    /* If isn't a word bracketed by `[:' and:`]':
+                    /* If isn't a word bracketed by `[:' and `:]':
                        undo the ending character, the letters, and leave
                        the leading `:' and `[' (but set bits for them).  */
                     if (c == ':' && *p == ']')
@@ -2194,7 +2231,7 @@ regex_compile (pattern, size, syntax, bufp)
 			wctype_t wt;
                         int ch;
 
-			wt = wctype (str);
+			wt = IS_CHAR_CLASS (str);
 			if (wt == 0)
 			  FREE_STACK_RETURN (REG_ECTYPE);
 
@@ -2206,8 +2243,13 @@ regex_compile (pattern, size, syntax, bufp)
 
                         for (ch = 0; ch < 1 << BYTEWIDTH; ++ch)
 			  {
+# ifdef _LIBC
+			    if (__iswctype (__btowc (ch), wt))
+			      SET_LIST_BIT (ch);
+#else
 			    if (iswctype (btowc (ch), wt))
 			      SET_LIST_BIT (ch);
+#endif
 
 			    if (translate && (is_upper || is_lower)
 				&& (ISUPPER (ch) || ISLOWER (ch)))
@@ -2691,7 +2733,7 @@ regex_compile (pattern, size, syntax, bufp)
 
 
             case 'w':
-	      if (re_syntax_options & RE_NO_GNU_OPS)
+	      if (syntax & RE_NO_GNU_OPS)
 		goto normal_char;
               laststart = b;
               BUF_PUSH (wordchar);
@@ -2699,7 +2741,7 @@ regex_compile (pattern, size, syntax, bufp)
 
 
             case 'W':
-	      if (re_syntax_options & RE_NO_GNU_OPS)
+	      if (syntax & RE_NO_GNU_OPS)
 		goto normal_char;
               laststart = b;
               BUF_PUSH (notwordchar);
@@ -2707,37 +2749,37 @@ regex_compile (pattern, size, syntax, bufp)
 
 
             case '<':
-	      if (re_syntax_options & RE_NO_GNU_OPS)
+	      if (syntax & RE_NO_GNU_OPS)
 		goto normal_char;
               BUF_PUSH (wordbeg);
               break;
 
             case '>':
-	      if (re_syntax_options & RE_NO_GNU_OPS)
+	      if (syntax & RE_NO_GNU_OPS)
 		goto normal_char;
               BUF_PUSH (wordend);
               break;
 
             case 'b':
-	      if (re_syntax_options & RE_NO_GNU_OPS)
+	      if (syntax & RE_NO_GNU_OPS)
 		goto normal_char;
               BUF_PUSH (wordbound);
               break;
 
             case 'B':
-	      if (re_syntax_options & RE_NO_GNU_OPS)
+	      if (syntax & RE_NO_GNU_OPS)
 		goto normal_char;
               BUF_PUSH (notwordbound);
               break;
 
             case '`':
-	      if (re_syntax_options & RE_NO_GNU_OPS)
+	      if (syntax & RE_NO_GNU_OPS)
 		goto normal_char;
               BUF_PUSH (begbuf);
               break;
 
             case '\'':
-	      if (re_syntax_options & RE_NO_GNU_OPS)
+	      if (syntax & RE_NO_GNU_OPS)
 		goto normal_char;
               BUF_PUSH (endbuf);
               break;
@@ -3375,6 +3417,9 @@ re_compile_fastmap (bufp)
   RESET_FAIL_STACK ();
   return 0;
 } /* re_compile_fastmap */
+#ifdef _LIBC
+weak_alias (__re_compile_fastmap, re_compile_fastmap)
+#endif
 
 /* Set REGS to hold NUM_REGS registers, storing them in STARTS and
    ENDS.  Subsequent matches using PATTERN_BUFFER and REGS will use
@@ -3410,6 +3455,9 @@ re_set_registers (bufp, regs, num_regs, starts, ends)
       regs->start = regs->end = (regoff_t *) 0;
     }
 }
+#ifdef _LIBC
+weak_alias (__re_set_registers, re_set_registers)
+#endif
 
 /* Searching routines.  */
 
@@ -3426,6 +3474,9 @@ re_search (bufp, string, size, startpos, range, regs)
   return re_search_2 (bufp, NULL, 0, string, size, startpos, range,
 		      regs, size);
 }
+#ifdef _LIBC
+weak_alias (__re_search, re_search)
+#endif
 
 
 /* Using the compiled pattern in BUFP->buffer, first tries to match the
@@ -3479,7 +3530,11 @@ re_search_2 (bufp, string1, size1, string2, size2, startpos, range, regs, stop)
 
   /* If the search isn't to be a backwards one, don't waste time in a
      search for a pattern that must be anchored.  */
-  if (bufp->used > 0 && (re_opcode_t) bufp->buffer[0] == begbuf && range > 0)
+  if (bufp->used > 0 && range > 0
+      && ((re_opcode_t) bufp->buffer[0] == begbuf
+	  /* `begline' is like `begbuf' if it cannot match at newlines.  */
+	  || ((re_opcode_t) bufp->buffer[0] == begline
+	      && !bufp->newline_anchor)))
     {
       if (startpos > 0)
 	return -1;
@@ -3582,6 +3637,9 @@ re_search_2 (bufp, string1, size1, string2, size2, startpos, range, regs, stop)
     }
   return -1;
 } /* re_search_2 */
+#ifdef _LIBC
+weak_alias (__re_search_2, re_search_2)
+#endif
 
 /* This converts PTR, a pointer into one of the search strings `string1'
    and `string2' into an offset from the beginning of that string.  */
@@ -3683,6 +3741,9 @@ re_match (bufp, string, size, pos, regs)
 # endif
   return result;
 }
+# ifdef _LIBC
+weak_alias (__re_match, re_match)
+# endif
 #endif /* not emacs */
 
 static boolean group_match_null_string_p _RE_ARGS ((unsigned char **p,
@@ -3728,6 +3789,9 @@ re_match_2 (bufp, string1, size1, string2, size2, pos, regs, stop)
 #endif
   return result;
 }
+#ifdef _LIBC
+weak_alias (__re_match_2, re_match_2)
+#endif
 
 /* This is a separate function so that we can force an alloca cleanup
    afterwards.  */
@@ -5421,6 +5485,9 @@ re_compile_pattern (pattern, length, bufp)
     return NULL;
   return gettext (re_error_msgid[(int) ret]);
 }
+#ifdef _LIBC
+weak_alias (__re_compile_pattern, re_compile_pattern)
+#endif
 
 /* Entry points compatible with 4.2 BSD regex library.  We don't define
    them unless specifically requested.  */
@@ -5453,12 +5520,12 @@ re_comp (s)
     {
       re_comp_buf.buffer = (unsigned char *) malloc (200);
       if (re_comp_buf.buffer == NULL)
-        return gettext (re_error_msgid[(int) REG_ESPACE]);
+        return (char *) gettext (re_error_msgid[(int) REG_ESPACE]);
       re_comp_buf.allocated = 200;
 
       re_comp_buf.fastmap = (char *) malloc (1 << BYTEWIDTH);
       if (re_comp_buf.fastmap == NULL)
-	return gettext (re_error_msgid[(int) REG_ESPACE]);
+	return (char *) gettext (re_error_msgid[(int) REG_ESPACE]);
     }
 
   /* Since `re_exec' always passes NULL for the `regs' argument, we
@@ -5591,6 +5658,9 @@ regcomp (preg, pattern, cflags)
 
   return (int) ret;
 }
+#ifdef _LIBC
+weak_alias (__regcomp, regcomp)
+#endif
 
 
 /* regexec searches for a given pattern, specified by PREG, in the
@@ -5667,6 +5737,9 @@ regexec (preg, string, nmatch, pmatch, eflags)
   /* We want zero return to mean success, unlike `re_search'.  */
   return ret >= 0 ? (int) REG_NOERROR : (int) REG_NOMATCH;
 }
+#ifdef _LIBC
+weak_alias (__regexec, regexec)
+#endif
 
 
 /* Returns a message corresponding to an error code, ERRCODE, returned
@@ -5712,6 +5785,9 @@ regerror (errcode, preg, errbuf, errbuf_size)
 
   return msg_size;
 }
+#ifdef _LIBC
+weak_alias (__regerror, regerror)
+#endif
 
 
 /* Free dynamically allocated space used by PREG.  */
@@ -5736,5 +5812,8 @@ regfree (preg)
     free (preg->translate);
   preg->translate = NULL;
 }
+#ifdef _LIBC
+weak_alias (__regfree, regfree)
+#endif
 
 #endif /* not emacs  */
