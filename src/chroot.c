@@ -77,7 +77,7 @@ main (int argc, char **argv)
 		      usage, AUTHORS, (char const *) NULL);
 
   if (getopt_long (argc, argv, "+", NULL, NULL) != -1)
-    usage (EXIT_FAILURE);
+    usage (EXIT_FAIL);
 
   if (argc <= optind)
     {
