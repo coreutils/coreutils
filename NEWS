@@ -15,7 +15,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
-  `split -a0' works once again.
+  fold -s -wN would infloop for N < 8 with TABs in the input.
+  E.g., this would not terminate: printf 'a\t' | fold -w2 -s
+
+  `split -a0', although of questionable utility, is accepted once again.
 
   `df DIR' used to hang under some conditions on OSF/1 5.1.  Now it doesn't.
 
