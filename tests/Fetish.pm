@@ -12,14 +12,14 @@ use FileHandle;
 use File::Compare qw(compare);
 
 @ISA = qw(Exporter);
-($VERSION = '$Revision: 1.14 $ ') =~ tr/[0-9].//cd;
+($VERSION = '$Revision: 1.15 $ ') =~ tr/[0-9].//cd;
 @EXPORT = qw (run_tests);
 
 my $debug = $ENV{DEBUG};
 
-my @Types = qw (IN OUT ERR AUX CMP EXIT PRE POST);
+my @Types = qw (IN OUT ERR AUX CMP EXIT PRE POST OUT_SUBST ERR_SUBST);
 my %Types = map {$_ => 1} @Types;
-my %Zero_one_type = map {$_ => 1} qw (OUT ERR EXIT PRE POST);
+my %Zero_one_type = map {$_ => 1} qw (OUT ERR EXIT PRE POST OUT_SUBST ERR_SUBST);
 my $srcdir = $ENV{srcdir};
 my $Global_count = 1;
 
@@ -51,7 +51,18 @@ defined $ENV{DJDIR}
 #           $CTOR must create `filename'.
 #           DTOR may be omitted in which case `sub{unlink @_[0]}' is used.
 #           FIXME: implement this
-# Ditto for `ERR', but compare with stderr
+# {ERR => ...}
+#           Same as for OUT, but compare with stderr, not stdout.
+# {OUT_SUBST => 's/variable_output/expected_output/'}
+#   Transform actual standard output before comparing it against expected output.
+#   This is useful e.g. for programs like du that produce output that
+#   varies a lot from system.  E.g., an empty file may consume zero file
+#   blocks, or more, depending on the OS and on the file system type.
+# {ERR_SUBST => 's/variable_output/expected_output/'}
+#   Transform actual stderr output before comparing it against expected.
+#   This is useful when verifying that we get a meaningful diagnostic.
+#   For example, in rm/fail-2eperm, we have to account for three different
+#   diagnostics: Operation not permitted, Not owner, and Permission denied.
 # {EXIT => N} expect exit status of cmd to be N
 #
 # There may be many input file specs.  File names from the input specs
@@ -312,6 +323,13 @@ sub run_tests ($$$$$)
 	      next;
 	    }
 
+	  if ($type =~ /^(OUT|ERR)_SUBST$/)
+	    {
+	      $expect->{RESULT_SUBST} ||= {};
+	      $expect->{RESULT_SUBST}->{$1} = $val;
+	      next;
+	    }
+
 	  my $file = _process_file_spec ($program_name, $test_name, $val,
 					 $type, \@junk_files);
 
@@ -357,11 +375,11 @@ sub run_tests ($$$$$)
 
       warn "$test_name...\n" if $verbose;
       &{$expect->{PRE}} if $expect->{PRE};
-      my %tmp;
-      $tmp{OUT} = "$test_name.O";
-      $tmp{ERR} = "$test_name.E";
-      push @junk_files, $tmp{OUT}, $tmp{ERR};
-      my @cmd = ($prog, @args, "> $tmp{OUT}", "2> $tmp{ERR}");
+      my %actual;
+      $actual{OUT} = "$test_name.O";
+      $actual{ERR} = "$test_name.E";
+      push @junk_files, $actual{OUT}, $actual{ERR};
+      my @cmd = ($prog, @args, "> $actual{OUT}", "2> $actual{ERR}");
       my $cmd_str = join ' ', @cmd;
       warn "Running command: `$cmd_str'\n" if $debug;
       my $rc = 0xffff & system $cmd_str;
@@ -383,16 +401,45 @@ sub run_tests ($$$$$)
 
       foreach my $eo (qw (OUT ERR))
 	{
+	  my $subst_expr = $expect->{RESULT_SUBST}->{$eo};
+	  if (defined $subst_expr)
+	    {
+	      my $out = $actual{$eo};
+	      my $orig = "$out.orig";
+
+	      warn "rename $out, $orig";
+	      # Move $out aside (to $orig), then then recreate $out
+	      # by transforming each line of $orig via $subst_expr.
+	      rename $out, $orig
+		or (warn "$program_name: cannot rename $out to $orig: $!\n"),
+		  $fail = 1, next;
+	      open IN, $orig
+		or (warn "$program_name: cannot open $orig for reading: $!\n"),
+		  $fail = 1, next;
+	      open OUT, ">$out"
+		or (warn "$program_name: cannot open $out for writing: $!\n"),
+		  $fail = 1, next;
+	      while (defined (my $line = <IN>))
+		{
+		  eval "\$_ = \$line; $subst_expr; \$line = \$_";
+		  print OUT $line;
+		}
+	      close IN;
+	      close OUT
+		or (warn "$program_name: failed to write $out: $!\n"),
+		  $fail = 1, next;
+	    }
+
 	  my $eo_lower = lc $eo;
 	  _compare_files ($program_name, $test_name, $eo_lower,
-			  $expect->{$eo}, $tmp{$eo})
+			  $actual{$eo}, $expect->{$eo})
 	    and $fail = 1;
 	}
 
       foreach my $pair (@post_compare)
 	{
-	  my ($a, $b) = @$pair;
-	  _compare_files $program_name, $test_name, undef, $a, $b
+	  my ($expected, $actual) = @$pair;
+	  _compare_files $program_name, $test_name, undef, $actual, $expected
 	    and $fail = 1;
 	}
 
