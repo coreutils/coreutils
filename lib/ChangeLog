@@ -1,5 +1,9 @@
 2005-03-09  Jim Meyering  <jim@meyering.net>
 
+	More migration to AC_LIBSOURCES/AC_LIBOBJ.
+	* Makefile.am (libfetish_a_SOURCES): Remove two more pairs of files:
+	cycle-check.c, cycle-check.h and argmatch.c, argmatch.h.
+
 	* cycle-check.c: Don't include "xalloc.h".  It's not used.
 
 2005-03-01  Paul Eggert  <eggert@cs.ucla.edu>
