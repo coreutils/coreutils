@@ -1,5 +1,5 @@
 /* Utility to help print --version output in a consistent format.
-   Copyright (C) 1999 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@
 /* Default copyright goes to the FSF. */
 
 char* version_etc_copyright =
-  N_("Copyright (C) 1999 Free Software Foundation, Inc.");
+  N_("Copyright (C) 2000 Free Software Foundation, Inc.");
 
 
 /* Display the --version information the standard way.
