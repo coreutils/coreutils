@@ -2,6 +2,7 @@
 
 	* strerror_r.m4 (AC_FUNC_STRERROR_R): Pass a reasonably large buffer
 	to strerror_r.
+	Include <ctype.h> for use of isalpha.
 
 2000-07-05  Paul Eggert  <eggert@twinsun.com>
 	and Bruno Haible  <haible@clisp.cons.org>
