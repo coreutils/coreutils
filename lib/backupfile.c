@@ -19,7 +19,7 @@
    Some algorithms adapted from GNU Emacs. */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+# include <config.h>
 #endif
 
 #include <stdio.h>
@@ -27,45 +27,45 @@
 #include <sys/types.h>
 #include "backupfile.h"
 #ifdef HAVE_STRING_H
-#include <string.h>
+# include <string.h>
 #else
-#include <strings.h>
+# include <strings.h>
 #endif
 
 #ifdef HAVE_DIRENT_H
-#include <dirent.h>
-#define NLENGTH(direct) (strlen((direct)->d_name))
+# include <dirent.h>
+# define NLENGTH(direct) (strlen((direct)->d_name))
 #else /* not HAVE_DIRENT_H */
-#define dirent direct
-#define NLENGTH(direct) ((direct)->d_namlen)
-#ifdef HAVE_SYS_NDIR_H
-#include <sys/ndir.h>
-#endif /* HAVE_SYS_NDIR_H */
-#ifdef HAVE_SYS_DIR_H
-#include <sys/dir.h>
-#endif /* HAVE_SYS_DIR_H */
-#ifdef HAVE_NDIR_H
-#include <ndir.h>
-#endif /* HAVE_NDIR_H */
+# define dirent direct
+# define NLENGTH(direct) ((direct)->d_namlen)
+# ifdef HAVE_SYS_NDIR_H
+#  include <sys/ndir.h>
+# endif /* HAVE_SYS_NDIR_H */
+# ifdef HAVE_SYS_DIR_H
+#  include <sys/dir.h>
+# endif /* HAVE_SYS_DIR_H */
+# ifdef HAVE_NDIR_H
+#  include <ndir.h>
+# endif /* HAVE_NDIR_H */
 #endif /* HAVE_DIRENT_H */
 
 #ifdef CLOSEDIR_VOID
 /* Fake a return value. */
-#define CLOSEDIR(d) (closedir (d), 0)
+# define CLOSEDIR(d) (closedir (d), 0)
 #else
-#define CLOSEDIR(d) closedir (d)
+# define CLOSEDIR(d) closedir (d)
 #endif
 
 #ifdef STDC_HEADERS
-#include <stdlib.h>
+# include <stdlib.h>
 #else
 char *malloc ();
 #endif
 
 #if defined (STDC_HEADERS) || (!defined (isascii) && !defined (HAVE_ISASCII))
-#define ISASCII(c) 1
+# define ISASCII(c) 1
 #else
-#define ISASCII(c) isascii(c)
+# define ISASCII(c) isascii(c)
 #endif
 
 #define ISDIGIT(c) (ISASCII ((unsigned char) (c)) \
@@ -78,9 +78,9 @@ char *malloc ();
 #if defined (_POSIX_VERSION)
 /* POSIX does not require that the d_ino field be present, and some
    systems do not provide it. */
-#define REAL_DIR_ENTRY(dp) 1
+# define REAL_DIR_ENTRY(dp) 1
 #else
-#define REAL_DIR_ENTRY(dp) ((dp)->d_ino != 0)
+# define REAL_DIR_ENTRY(dp) ((dp)->d_ino != 0)
 #endif
 
 /* Which type of backup file names are generated. */
