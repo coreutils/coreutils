@@ -1,6 +1,8 @@
 #ifndef REMOVE_H
 # define REMOVE_H
 
+# include "dev-ino.h"
+
 struct rm_options
 {
   /* If nonzero, ignore nonexistent files.  */
@@ -11,6 +13,10 @@ struct rm_options
 
   /* If nonzero, recursively remove directories.  */
   int recursive;
+
+  /* Pointer to the device and inode numbers of `/', when --recursive.
+     Otherwise NULL.  */
+  struct dev_ino *root_dev_ino;
 
   /* If nonzero, stdin is a tty.  */
   int stdin_tty;
