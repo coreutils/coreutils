@@ -127,7 +127,7 @@ With --reference, change the group of each FILE to that of RFILE.\n\
 \n\
   -c, --changes          like verbose but report only when a change is made\n\
       --dereference      affect the referent of each symbolic link, rather\n\
-                         than the symbolic link itself\n\
+                         than the symbolic link itself (this is the default)\n\
 "), stdout);
       fputs (_("\
   -h, --no-dereference   affect each symbolic link instead of any referenced\n\
