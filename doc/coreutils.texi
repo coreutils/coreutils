@@ -649,6 +649,7 @@ name.
 * Trailing slashes::            --strip-trailing-slashes, in some programs.
 * Traversing symlinks::         -H, -L, or -P, in some programs.
 * Treating / specially::        --preserve-root and --no-preserve-root.
+* Special built-in utilities::  @command{break}, @command{:}, @command{eval}, @dots{}
 * Standards conformance::       Conformance to the @acronym{POSIX} standard.
 @end menu
 
@@ -1125,6 +1126,34 @@ actually unlink files, these commands are arguably more dangerous
 when operating recursively on @file{/}, since they often work much
 more quickly, and hence damage more files before an alert user can
 interrupt them.
+
+@node Special built-in utilities
+@section Special built-in utilities
+
+Some programs like @command{nice} can invoke other programs; for
+example, the command @samp{nice cat file} invokes the program
+@command{cat} by executing the command @samp{cat file}.  However,
+@dfn{special built-in utilities} like @command{exit} cannot be invoked
+this way.  For example, the command @samp{nice exit} does not have a
+well-defined behavior: it may generate an error message instead of
+exiting.
+
+Here is a list of the special built-in utilities that are standardized
+by @acronym{POSIX} 1003.1-2004.
+
+@quotation
+@t{.@: : break continue eval exec exit export readonly
+return set shift times trap unset}
+@end quotation
+
+For example, because @samp{.}, @samp{:}, and @samp{exec} are special,
+the commands @samp{nice . foo.sh}, @samp{nice :}, and @samp{nice exec
+pwd} do not work as you might expect.
+
+Many shells extend this list.  For example, Bash has several extra
+special built-in utilities like @command{history}, and
+@command{suspend}, and with Bash the command @samp{nice suspend}
+generates an error message instead of suspending.
 
 @node Standards conformance
 @section Standards conformance
@@ -9277,7 +9306,7 @@ $ /usr/local/bin/printf '\u4e2d\u6587'
 will be output correctly in all Chinese locales (GB2312, BIG5, UTF-8, etc).
 
 Note that in these examples, the full name of @command{printf} has been
-given, to distinguish it from the GNU @code{bash} builtin function
+given, to distinguish it from the GNU @code{bash} built-in function
 @command{printf}.
 
 For larger strings, you don't need to look up the hexadecimal code
@@ -9430,8 +9459,8 @@ test
 
 @cindex conflicts with shell built-ins
 @cindex built-in shell commands, conflicts with
-Because most shells have a built-in command by the same name, using the
-unadorned command name in a script or interactively may get you
+Because most shells have a built-in @command{test} command, using an
+unadorned @command{test} in a script or interactively may get you
 different functionality than that described here.
 
 If @var{expression} is omitted, @command{test} returns false.
@@ -10200,8 +10229,8 @@ names---none will be symbolic links.
 
 @cindex conflicts with shell built-ins
 @cindex built-in shell commands, conflicts with
-Because most shells have a built-in command by the same name, using the
-unadorned command name in a script or interactively may get you
+Because most shells have a built-in @command{pwd} command, using an
+unadorned @command{pwd} in a script or interactively may get you
 different functionality than that described here.
 
 The only options are a lone @option{--help} or
@@ -12016,6 +12045,8 @@ the directory @var{newroot} (which must exist) and then runs
 @var{command} with optional @var{args}.  If @var{command} is not
 specified, the default is the value of the @env{SHELL} environment
 variable or @command{/bin/sh} if not set, invoked with the @option{-i} option.
+@var{command} must not be a special built-in utility
+(@pxref{Special built-in utilities}).
 
 The only options are @option{--help} and @option{--version}.  @xref{Common
 options}.  Options must precede operands.
@@ -12075,21 +12106,33 @@ env [@var{option}]@dots{} [@var{name}=@var{value}]@dots{} @c
 env
 @end example
 
-Arguments of the form @samp{@var{variable}=@var{value}} set
+Operands of the form @samp{@var{variable}=@var{value}} set
 the environment variable @var{variable} to value @var{value}.
 @var{value} may be empty (@samp{@var{variable}=}).  Setting a variable
 to an empty value is different from unsetting it.
+These operands are evaluated left-to-right, so if two operands
+mention the same variable the earlier is ignored.
+
+Environment variable names can be empty, and can contain any
+characters other than @samp{=} and the null character (@acronym{ASCII}
+@sc{nul}).  However, it is wise to limit yourself to names that
+consist solely of underscores, digits, and @acronym{ASCII} letters,
+and that begin with a non-digit, as applications like the shell do not
+work well with other names.
 
 @vindex PATH
-The first remaining argument specifies the program name to invoke; it is
+The first operand that does not contain the character @samp{=}
+specifies the program to invoke; it is
 searched for according to the @env{PATH} environment variable.  Any
 remaining arguments are passed as arguments to that program.
+The program should not be a special built-in utility
+(@pxref{Special built-in utilities}).
 
 @cindex environment, printing
 
 If no command name is specified following the environment
 specifications, the resulting environment is printed.  This is like
-specifying a command name of @command{printenv}.
+specifying the @command{printenv} program.
 
 The program accepts the following options.  Also see @ref{Common options}.
 Options must precede operands.
@@ -12155,10 +12198,13 @@ enforce more restrictive limits.  An attempt to set the nice value
 outside the supported range is treated as an attempt to use the
 minimum or maximum supported value.
 
+@var{command} must not be a special built-in utility (@pxref{Special
+built-in utilities}).
+
 @cindex conflicts with shell built-ins
 @cindex built-in shell commands, conflicts with
-Because many shells have a built-in command by the same name, using the
-unadorned command name in a script or interactively may get you
+Because many shells have a built-in @command{nice} command, using an
+unadorned @command{nice} in a script or interactively may get you
 different functionality than that described here.
 
 The program accepts the following option.  Also see @ref{Common options}.
@@ -12279,6 +12325,9 @@ background; you must do that explicitly, by ending the command line
 with an @samp{&}.  Also, @command{nohup} does not change the
 scheduling priority of @var{command}; use @command{nice} for that,
 e.g., @samp{nohup nice @var{command}}.
+
+@var{command} must not be a special built-in utility (@pxref{Special
+built-in utilities})
 
 The only options are @option{--help} and @option{--version}.  @xref{Common
 options}.  Options must precede operands.
