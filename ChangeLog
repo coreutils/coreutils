@@ -1,3 +1,19 @@
+2005-01-11  Eric Blake  <ebb9@byu.net>
+
+	* src/Makefile.am (check-README, check-AUTHORS): Account for $(EXEEXT).
+	* man/Makefile.am (all_programs): Account for $(EXEEXT).
+
+2005-01-11  Jim Meyering  <jim@meyering.net>
+
+	* src/unexpand.c (add_tab_stop): Properly diagnose a tabstop list
+	with decreasing values.
+
+	* src/expand.c (main): Likewise.
+	* src/unexpand.c (main): Check for overflow in tabstop values
+	specified via the obsolete form.  E.g., now this command fails:
+	_POSIX2_VERSION=1 ./unexpand -$(echo '2^64+1'|bc)
+	Before it would act like `_POSIX2_VERSION=1 ./unexpand -1'.
+
 2005-01-10  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Respond to POSIX interpretations about pathchk -p dated 2005-01-06.
