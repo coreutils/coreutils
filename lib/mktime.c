@@ -29,9 +29,6 @@
 #ifdef _LIBC
 # define HAVE_LIMITS_H 1
 # define STDC_HEADERS 1
-# define STATIC /* empty */
-#else
-# define STATIC static
 #endif
 
 /* Assume that leap seconds are possible, unless told otherwise.
