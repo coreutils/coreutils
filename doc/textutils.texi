@@ -5,6 +5,7 @@
 @c %**end of header
 
 @include version.texi
+@include constants.texi
 
 @c Define new indices.
 @defcodeindex op
@@ -1550,21 +1551,22 @@ will print a warning if this is the case.
 This option is meaningful only when following by name.
 Use it to control how long @code{tail} follows the descriptor of a file
 that continues growing at a rapid pace even after it is deleted or renamed.
-After detecting @var{n} consecutive size changes for a file,
+After detecting @var{n}
+(default N=@value{DEFAULT_MAX_N_CONSECUTIVE_SIZE_CHANGES})
+consecutive size changes for a file,
 @code{open}/@code{fstat} the file to determine if that file name is
 still associated with the same device/inode-number pair as before.
-See the output of @code{tail --help} for the default value.
 
 @itemx --max-unchanged-stats=@var{n}
 @opindex --max-unchanged-stats
-When tailing a file by name, if there have been this many consecutive
+When tailing a file by name, if there have been @var{n} (default
+N=@value{DEFAULT_MAX_N_UNCHANGED_STATS_BETWEEN_OPENS}) consecutive
 iterations for which the size has remained the same, then
 @code{open}/@code{fstat} the file to determine if that file name is
 still associated with the same device/inode-number pair as before.
 When following a log file that is rotated, this is approximately the
 number of seconds between when tail prints the last pre-rotation lines
 and when it prints the lines that have accumulated in the new log file.
-See the output of @code{tail --help} for the default value.
 This option is meaningful only when following by name.
 
 @itemx -n @var{n}
