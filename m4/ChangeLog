@@ -1,3 +1,12 @@
+2003-08-04  Paul Eggert  <eggert@twinsun.com>
+
+	* regex.m4: Merge with gnulib.
+	(gl_REGEX): New macro.
+	(jm_INCLUDED_REGEX): Don't assume Latin-1 encoding of source code.
+	* restrict.m4: Merge with gnulib.
+	(gl_C_RESTRICT): Renamed from ACX_C_RESTRICT.  All uses changed.
+	Rename cache vars to gl_cv_*.  Incorporate latest Autoconf CVS tricks.
+
 2003-08-05  Paul Eggert  <eggert@twinsun.com>
 
 	* gnu-source.m4: New file, taken from gnulib, with support
