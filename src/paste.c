@@ -134,6 +134,25 @@ collapse_escapes (char const *strptr)
   delim_end = strout;
 }
 
+/* Report a write error and exit.  */
+
+static void write_error (void) ATTRIBUTE_NORETURN;
+static void
+write_error (void)
+{
+  error (EXIT_FAILURE, errno, _("write error"));
+  abort ();
+}
+
+/* Output a single byte, reporting any write errors.  */
+
+static inline void
+xputchar (char c)
+{
+  if (putchar (c) < 0)
+    write_error ();
+}
+
 /* Perform column paste on the NFILES files named in FNAMPTR.
    Return true if successful, false if one or more files could not be
    opened or read. */
@@ -197,14 +216,17 @@ paste_parallel (size_t nfiles, char **fnamptr)
       for (i = 0; i < nfiles && files_open; i++)
 	{
 	  int chr IF_LINT (= 0);	/* Input character. */
+	  int err IF_LINT (= 0);	/* Input errno value.  */
 	  size_t line_length = 0;	/* Number of chars in line. */
 
 	  if (fileptr[i])
 	    {
 	      chr = getc (fileptr[i]);
+	      err = errno;
 	      if (chr != EOF && delims_saved)
 		{
-		  fwrite (delbuf, sizeof (char), delims_saved, stdout);
+		  if (fwrite (delbuf, 1, delims_saved, stdout) != delims_saved)
+		    write_error ();
 		  delims_saved = 0;
 		}
 
@@ -213,8 +235,9 @@ paste_parallel (size_t nfiles, char **fnamptr)
 		  line_length++;
 		  if (chr == '\n')
 		    break;
-		  putc (chr, stdout);
+		  xputchar (chr);
 		  chr = getc (fileptr[i]);
+		  err = errno;
 		}
 	    }
 
@@ -226,7 +249,7 @@ paste_parallel (size_t nfiles, char **fnamptr)
 		{
 		  if (ferror (fileptr[i]))
 		    {
-		      error (0, errno, "%s", fnamptr[i]);
+		      error (0, err, "%s", fnamptr[i]);
 		      ok = false;
 		    }
 		  if (fileptr[i] == stdin)
@@ -250,10 +273,12 @@ paste_parallel (size_t nfiles, char **fnamptr)
 		      /* No.  Some files were not closed for this line. */
 		      if (delims_saved)
 			{
-			  fwrite (delbuf, sizeof (char), delims_saved, stdout);
+			  if (fwrite (delbuf, 1, delims_saved, stdout)
+			      != delims_saved)
+			    write_error ();
 			  delims_saved = 0;
 			}
-		      putc ('\n', stdout);
+		      xputchar ('\n');
 		    }
 		  continue;	/* Next read of files, or exit. */
 		}
@@ -275,9 +300,9 @@ paste_parallel (size_t nfiles, char **fnamptr)
 	      if (i + 1 != nfiles)
 		{
 		  if (chr != '\n' && chr != EOF)
-		    putc (chr, stdout);
+		    xputchar (chr);
 		  if (*delimptr != EMPTY_DELIM)
-		    putc (*delimptr, stdout);
+		    xputchar (*delimptr);
 		  if (++delimptr == delim_end)
 		    delimptr = delims;
 		}
@@ -286,7 +311,7 @@ paste_parallel (size_t nfiles, char **fnamptr)
 		  /* If the last line of the last file lacks a newline,
 		     print one anyhow.  POSIX requires this.  */
 		  char c = (chr == EOF ? '\n' : chr);
-		  putc (c, stdout);
+		  xputchar (c);
 		}
 	    }
 	}
@@ -345,24 +370,24 @@ paste_serial (size_t nfiles, char **fnamptr)
 	      if (charold == '\n')
 		{
 		  if (*delimptr != EMPTY_DELIM)
-		    putc (*delimptr, stdout);
+		    xputchar (*delimptr);
 
 		  if (++delimptr == delim_end)
 		    delimptr = delims;
 		}
 	      else
-		putc (charold, stdout);
+		xputchar (charold);
 
 	      charold = charnew;
 	    }
 	  saved_errno = errno;
 
 	  /* Hit EOF.  Process that last character. */
-	  putc (charold, stdout);
+	  xputchar (charold);
 	}
 
       if (charold != '\n')
-	putc ('\n', stdout);
+	xputchar ('\n');
 
       if (ferror (fileptr))
 	{
