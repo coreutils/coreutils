@@ -285,21 +285,24 @@ EOF1
 	  @$env == 1
 	    or die "$program_name: unexpected environment: @$env\n";
 	  $env = $env->[0];
+	  my $env_prefix = ($env ? "$env " : '');
 
 	  if ($via eq 'FILE')
 	    {
-	      $cmd = "$env \$xx $flags $file_args > $out 2> $err_output";
+	      $cmd = "$env_prefix\$xx $flags $file_args > $out 2> $err_output";
 	    }
 	  elsif ($via eq 'PIPE')
 	    {
 	      $via_msg = "|$val" if $val;
 	      $val ||= 'cat';
-	      $cmd = "$val $file_args | $env \$xx $flags > $out 2> $err_output";
+	      $cmd = "$val $file_args | $env_prefix\$xx $flags"
+		. " > $out 2> $err_output";
 	    }
 	  else
 	    {
 	      assert (@srcdir_rel_in_file == 1);
-	      $cmd = "$env \$xx $flags < $file_args > $out 2> $err_output";
+	      $cmd = "$env_prefix\$xx $flags"
+		. " < $file_args > $out 2> $err_output";
 	    }
 
 	  my $e = $env;
