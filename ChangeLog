@@ -1,5 +1,24 @@
 2003-04-04  Jim Meyering  <jim@meyering.net>
 
+	* src/Makefile.am (PERL): Remove unnecessary definition.
+
+	Because of inappropriate (but POSIX-mandated) behavior of rename,
+	`mv a b' would not remove `a' in some unusual cases.  Work around
+	this by unlinking `a' when necessary.
+
+	* src/copy.c (same_file_ok): Add an output parameter.
+	Set it in the offending case.
+	(copy_internal): When necessary, unlink SRC_PATH and inform caller.
+	Reported by Ed Avis.
+	* tests/mv/hard-4: New test for the above.
+	* tests/mv/Makefile.am (TESTS): Add hard-4.
+
+	Clean up rules for automatically generated sources:
+	* src/Makefile.am (dircolors.h, wheel-size.h, wheel.h, false.c):
+	Make each generated file be read-only.
+	Add each file name to BUILT_SOURCES separately.
+	(MAINTAINERCLEANFILES): Set to $(BUILT_SOURCES).
+
 	* Version 5.0.1.
 
 	Put LOCALEDIR macro definition in new file: localedir.h.
