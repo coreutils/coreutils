@@ -1,3 +1,10 @@
+2000-05-18  Jim Meyering  <meyering@lucent.com>
+
+	* hash.c (hash_rehash): Fix a nasty bug: copy the free entry list
+	back, too, since it may have been modified by allocate_entry.
+	(hash_delete): Rewrite to use neither the assignment operator
+	nor the comma operator in an if-expression.
+
 2000-05-15  Paul Eggert  <eggert@twinsun.com>
 
 	* lib/closeout.c:
