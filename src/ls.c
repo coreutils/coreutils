@@ -1059,8 +1059,9 @@ parse_ls_color (void)
   int ind_no;			/* Indicator number */
   int ccount;			/* Character count */
   int num;			/* Escape char numeral */
-  char label[3] = "??";		/* Indicator label */
+  char label[3];		/* Indicator label */
 
+  strcpy (label, "??");
   if ((p = getenv (whichvar = "LS_COLORS")) ||
       (p = getenv (whichvar = "LS_COLOURS")))
     {
