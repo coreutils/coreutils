@@ -5,12 +5,10 @@
 #  define __xstrtol xstrtoul
 #  define __strtol strtoul
 #  define __unsigned unsigned
-#  define __ZLONG_MAX ULONG_MAX
 # else
 #  define __xstrtol xstrtol
 #  define __strtol strtol
 #  define __unsigned /* empty */
-#  define __ZLONG_MAX LONG_MAX
 # endif
 
 # ifndef PARAMS
