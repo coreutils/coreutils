@@ -1540,9 +1540,14 @@ check-README:
 
 # Make sure we don't define any S_IS* macros in src/*.c files.
 # Not a big deal, but they're already defined via system.h.
+#
+# Also make sure we don't use st_blocks.  Use ST_NBLOCKS instead.
+# This is a bit of a kludge, since it prevents use of the string
+# even in comments, but for now it does the job with no false positives.
 .PHONY: check-misc
 check-misc:
 	grep '^# *define  *S_IS' $(SOURCES) && exit 1 || :
+	grep st_blocks $(SOURCES) && exit 1 || :
 # FIXME: handle *.sh;  and use $(all_programs), not $(SOURCES)
 ../AUTHORS: $(SOURCES)
 	rm -f $@-t

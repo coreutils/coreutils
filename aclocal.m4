@@ -825,7 +825,7 @@ WARNING: You don't seem to have perl5.003 or newer installed, or you lack
 ] )
 ])
 
-#serial 57   -*- autoconf -*-
+#serial 58   -*- autoconf -*-
 
 dnl Misc type-related macros for fileutils, sh-utils, textutils.
 
@@ -995,6 +995,7 @@ AC_DEFUN([jm_MACROS],
   AC_FUNC_OBSTACK
 
   AC_FUNC_STRTOD
+  AC_REQUIRE([UTILS_SYS_OPEN_MAX])
 
   # See if linking `seq' requires -lm.
   # It does on nearly every system.  The single exception (so far) is
@@ -1167,7 +1168,7 @@ AC_DEFUN([AC_ISC_POSIX],
   ]
 )
 
-#serial 13
+#serial 14
 
 dnl Initially derived from code in GNU grep.
 dnl Mostly written by Jim Meyering.
@@ -1222,6 +1223,16 @@ AC_DEFUN([jm_INCLUDED_REGEX],
 
 	    /* This should match, but doesn't for e.g. glibc-2.2.1.  */
 	    if (re_match (&regex, "an", 2, 0, &regs) != 2)
+	      exit (1);
+
+	    memset (&regex, 0, sizeof (regex));
+	    s = re_compile_pattern ("x", 1, &regex);
+	    if (s)
+	      exit (1);
+
+	    /* The version of regex.c in e.g. GNU libc-2.2.93 didn't
+	       work with a negative RANGE argument.  */
+	    if (re_search (&regex, "wxy", 3, 2, -2, &regs) != 1)
 	      exit (1);
 
 	    exit (0);
@@ -2453,13 +2464,17 @@ AC_DEFUN([AC_FUNC_GETCWD_NULL],
 	       [Define if getcwd (NULL, 0) allocates memory for result.])
    fi])
 
-#serial 2
+#serial 4
 
 dnl Find out how to get the file descriptor associated with an open DIR*.
 dnl From Jim Meyering
 
 AC_DEFUN([UTILS_FUNC_DIRFD],
 [
+  dnl Work around a bug of AC_EGREP_CPP in autoconf-2.57.
+  AC_REQUIRE([AC_PROG_CPP])
+  AC_REQUIRE([AC_PROG_EGREP])
+
   AC_HEADER_DIRENT
   dirfd_headers='
 #if HAVE_DIRENT_H
@@ -2516,7 +2531,7 @@ AC_DEFUN([UTILS_FUNC_DIRFD],
 	ac_cv_sys_dir_fd_member_name=$ac_expr
       ]
     )
-    if test $ac_cv_have_decl_dirfd = -1; then
+    if test $ac_cv_have_decl_dirfd = no; then
       AC_DEFINE_UNQUOTED(DIR_FD_MEMBER_NAME,
 	$ac_cv_sys_dir_fd_member_name,
 	[the name of the file descriptor member of DIR])
@@ -2558,6 +2573,10 @@ AC_DEFUN([AC_FUNC_ACL],
 
 #serial 1
 # Use the replacement ftw.c if the one in the C library is inadequate or buggy.
+# For now, we always use the code in lib/ because libc doesn't have the FTW_DCH
+# or FTW_DCHP that we need.  Arrange to use lib/ftw.h.  And since that
+# implementation uses tsearch.c/tdestroy, add tsearch.o to the list of
+# objects and arrange to use lib/search.h if necessary.
 # From Jim Meyering
 
 AC_DEFUN([AC_FUNC_FTW],
@@ -2571,10 +2590,12 @@ AC_DEFUN([AC_FUNC_FTW],
   # see if we'll also need the replacement tsearch.c.
   AC_CHECK_FUNC([tdestroy], , [need_tdestroy=1])
 
-  AC_CACHE_CHECK([for working GNU ftw], ac_cv_func_ftw_working,
+  AC_CACHE_CHECK([for ftw/FTW_CHDIR that informs callback of failed chdir],
+                 ac_cv_func_ftw_working,
   [
   # The following test would fail prior to glibc-2.3.2, because `depth'
-  # would be 2 rather than 4.
+  # would be 2 rather than 4.  Of course, now that we require FTW_DCH
+  # and FTW_DCHP, this test fails even with GNU libc's fixed ftw.
   mkdir -p conftest.dir/a/b/c
   AC_RUN_IFELSE([AC_LANG_SOURCE([[
 #include <string.h>
@@ -2598,6 +2619,10 @@ cb (const char *file, const struct stat *sb, int file_type, struct FTW *info)
 int
 main ()
 {
+  /* Require these symbols, too.  */
+  int d1 = FTW_DCH;
+  int d2 = FTW_DCHP;
+
   int err = nftw ("conftest.dir", cb, 30, FTW_PHYS | FTW_MOUNT | FTW_CHDIR);
   exit ((err == 0 && depth == 4) ? 0 : 1);
 }
@@ -3560,6 +3585,48 @@ AC_DEFUN([AM_FUNC_GETLINE],
   if test $am_cv_func_working_getline = no; then
     AC_LIBOBJ(getline)
   fi
+])
+
+#serial 1
+# Determine approximately how many files may be open simultaneously
+# in one process.  This is approximate, since while running this test,
+# the configure script already has a few files open.
+# From Jim Meyering
+
+AC_DEFUN([UTILS_SYS_OPEN_MAX],
+[
+  AC_CACHE_CHECK([determine how many files may be open simultaneously],
+                 utils_cv_sys_open_max,
+  [
+  AC_RUN_IFELSE([AC_LANG_SOURCE([[
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+    int
+    main ()
+    {
+      FILE *result = fopen ("conftest.omax", "w");
+      int i = 1;
+      /* Impose an arbitrary limit, in case some system has no
+	 effective limit on the number of simultaneously open files.  */
+      while (i < 30000)
+	{
+	  FILE *s = fopen ("conftest.op", "w");
+	  if (!s)
+	    break;
+	  ++i;
+	}
+      fprintf (result, "%d\n", i);
+      exit (fclose (result) == EOF);
+    }
+  ]])],
+       [utils_cv_sys_open_max=`cat conftest.omax`],
+       [utils_cv_sys_open_max='internal error in open-max.m4'],
+       [utils_cv_sys_open_max='cross compiling run-test in open-max.m4'])])
+
+  AC_DEFINE_UNQUOTED([UTILS_OPEN_MAX],
+    $utils_cv_sys_open_max,
+    [the maximum number of simultaneously open files per process])
 ])
 
 # codeset.m4 serial AM1 (gettext-0.10.40)

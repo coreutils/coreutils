@@ -1270,6 +1270,9 @@
    <sys/cpustats.h>. */
 #undef UMAX4_3
 
+/* the maximum number of simultaneously open files per process */
+#undef UTILS_OPEN_MAX
+
 /* Version number of package */
 #undef VERSION
 
