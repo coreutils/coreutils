@@ -38,8 +38,9 @@
 	In progress:
 	- du now accepts -P (--no-dereference)
 	- du -H now has the POSIX-required meaning (it's equivalent to -D;
-	     before, it was equivalent to --si)
-        - Use O(N) heap space (not O(N^2)) for a hierarchy of depth N.
+	    before, it was equivalent to --si)
+        - Change fts semantics so that du uses O(N) heap space
+	    (not O(N^2)) for a hierarchy of depth N.
 
 2003-09-28  Jim Meyering  <jim@meyering.net>
 
