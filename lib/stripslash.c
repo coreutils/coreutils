@@ -41,6 +41,6 @@ strip_trailing_slashes (char *path)
   int last;
 
   last = strlen (path) - 1;
-  while (last > 0 && ISSLASH (path[last]))
+  while (0 < last && ISSLASH (path[last]))
     path[last--] = '\0';
 }
