@@ -1,5 +1,5 @@
 /* save-cwd.c -- Save and restore current working directory.
-   Copyright (C) 1995, 1997, 1998, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1997, 1998, 2003, 2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -76,7 +76,10 @@ save_cwd (struct saved_cwd *cwd)
 #if HAVE_FCHDIR
       cwd->desc = open (".", O_RDONLY | O_DIRECTORY);
       if (cwd->desc < 0)
-	return 1;
+	{
+	  cwd->name = xgetcwd ();
+	  return cwd->name == NULL;
+	}
 
 # if __sun__ || sun
       /* On SunOS 4 and IRIX 5.3, fchdir returns EINVAL when auditing
