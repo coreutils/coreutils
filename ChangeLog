@@ -1,3 +1,15 @@
+2003-09-04  Paul Eggert  <eggert@twinsun.com>
+
+	Don't ignore -S if input is a pipe.  Bug report by Michael McFarland in
+	<http://mail.gnu.org/archive/html/bug-coreutils/2003-09/msg00008.html>.
+
+	* src/sort.c (sort_buffer_size): Omit SIZE_BOUND arg.  Compute the
+	size_bound ourselves. if an input file is a pipe and the user
+	specified a size, use that size instead of trying to guess the
+	pipe size.  This has the beneficial side effect of avoiding the
+	overhead of default_sort_size in that case.  All callers changed.
+	(sort): Remove static var size; now done by sort_buffer_size.
+
 2003-09-05  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.91.
