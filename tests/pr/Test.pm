@@ -355,6 +355,10 @@ my @tv = (
 # Make sure these fail.
 ['col-0', '-0', '', '', 1],
 ['col-inval', '-'.'9'x100, '', '', 1],
+
+# Before coreutils-5.3.1, --pages=1:-1 would be treated like
+# --pages=1:18446744073709551615.
+['neg-page', '--pages=1:-1', '', '', 1],
 );
 #']]);
 
