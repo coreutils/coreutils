@@ -2,6 +2,9 @@
 
 	* Version 5.0.1.
 
+	* src/touch.c (touch): Call close only if necessary.
+	From Bruno Haible.
+
 	* src/wc.c (usage): Correct wording: wc prints counts in the order
 	`newline, word, byte'.  Reported by Keith M. Briggs.
 	* man/wc.x: Fix it here, too.  And change `lines' to `newlines'.
