@@ -86,8 +86,7 @@ static struct option const longopts[] =
 };
 
 static void
-usage (status)
-     int status;
+usage (int status)
 {
   if (status != 0)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
@@ -124,8 +123,7 @@ Fields are skipped before chars. \n\
    return a pointer to the beginning of the line's field to be compared. */
 
 static char *
-find_field (line)
-     struct linebuffer *line;
+find_field (struct linebuffer *line)
 {
   register int count;
   register char *lp = line->buffer;
@@ -152,11 +150,7 @@ find_field (line)
    OLDLEN and NEWLEN are their lengths. */
 
 static int
-different (old, new, oldlen, newlen)
-     char *old;
-     char *new;
-     int oldlen;
-     int newlen;
+different (char *old, char *new, int oldlen, int newlen)
 {
   register int order;
 
@@ -179,10 +173,7 @@ different (old, new, oldlen, newlen)
    LINECOUNT + 1 is the number of times that the line occurred. */
 
 static void
-writeline (line, stream, linecount)
-     struct linebuffer *line;
-     FILE *stream;
-     int linecount;
+writeline (struct linebuffer *line, FILE *stream, int linecount)
 {
   if ((mode == output_unique && linecount != 0)
       || (mode == output_repeated && linecount == 0))
@@ -199,8 +190,7 @@ writeline (line, stream, linecount)
    If either is "-", use the standard I/O stream for it instead. */
 
 static void
-check_file (infile, outfile)
-     char *infile, *outfile;
+check_file (char *infile, char *outfile)
 {
   FILE *istream;
   FILE *ostream;
@@ -270,9 +260,7 @@ check_file (infile, outfile)
 }
 
 void
-main (argc, argv)
-     int argc;
-     char *argv[];
+main (int argc, char **argv)
 {
   int optc;
   char *infile = "-", *outfile = "-";

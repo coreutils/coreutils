@@ -65,8 +65,7 @@ static struct option const longopts[] =
 };
 
 static void
-usage (status)
-     int status;
+usage (int status)
 {
   if (status != 0)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
@@ -92,9 +91,7 @@ read standard input.\n\
 }
 
 static void
-write_counts (lines, words, chars, file)
-     unsigned long lines, words, chars;
-     char *file;
+write_counts (long unsigned int lines, long unsigned int words, long unsigned int chars, char *file)
 {
   if (print_lines)
     printf ("%7lu", lines);
@@ -116,9 +113,7 @@ write_counts (lines, words, chars, file)
 }
 
 static void
-wc (fd, file)
-     int fd;
-     char *file;
+wc (int fd, char *file)
 {
   char buf[BUFFER_SIZE + 1];
   register int bytes_read;
@@ -233,8 +228,7 @@ wc (fd, file)
 }
 
 static void
-wc_file (file)
-     char *file;
+wc_file (char *file)
 {
   if (!strcmp (file, "-"))
     {
@@ -260,9 +254,7 @@ wc_file (file)
 }
 
 void
-main (argc, argv)
-     int argc;
-     char **argv;
+main (int argc, char **argv)
 {
   int optc;
   int nfiles;
