@@ -1,6 +1,14 @@
-2003-10-03  Jim Meyering  <jim@meyering.net>
+2003-10-04  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.92.
+
+	Deprecate existing use of -H (aka --si).
+	* src/du.c (enum) [HUMAN_SI_OPTION]: New member.
+	[long_options]: Use HUMAN_SI_OPTION, not 'H'.
+	(main): Warn that the meaning of -H will soon change to be
+	POSIX compliant.
+
+2003-10-03  Jim Meyering  <jim@meyering.net>
 
 	* src/du.c: Accept --no-dereference (-P).
 
@@ -30,12 +38,6 @@
 	(main): Make `news_file' an array.
 	Use '...=s' => \@var for --news and --url-directory specs.
 	Before there were a couple of portability problems.
-
-2003-09-30  Jim Meyering  <jim@meyering.net>
-
-	In progress:
-	- du -H now has the POSIX-required meaning (it's equivalent to -D;
-	    before, it was equivalent to --si)
 
 2003-09-28  Jim Meyering  <jim@meyering.net>
 
