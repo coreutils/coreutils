@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fileutils 4.1.8\n"
 "Report-Msgid-Bugs-To: bug-coreutils@gnu.org\n"
-"POT-Creation-Date: 2004-01-23 16:57+0100\n"
+"POT-Creation-Date: 2004-02-07 17:02+0100\n"
 "PO-Revision-Date: 2002-05-07 09:03+0200\n"
 "Last-Translator: Emese Kovács <emese@gnome.hu>\n"
 "Language-Team: Hungarian <translation-team-hu@lists.sourceforge.net>\n"
@@ -155,7 +155,7 @@ msgstr "blokkméret"
 msgid "failed to return to initial working directory"
 msgstr ""
 
-#: lib/makepath.c:152 src/copy.c:1324 src/mkdir.c:171
+#: lib/makepath.c:152 src/copy.c:1325 src/mkdir.c:171
 #, c-format
 msgid "cannot create directory %s"
 msgstr "nem lehet a következõ könyvtárat létrehozni: %s"
@@ -175,7 +175,7 @@ msgstr "nem lehet %s tulajdonosát és vagy csoportját megváltoztatni"
 msgid "cannot chdir to directory %s"
 msgstr "nem lehet a következõ könyvtárba lépni: %s"
 
-#: lib/makepath.c:371 lib/makepath.c:386 lib/makepath.c:425 src/install.c:475
+#: lib/makepath.c:371 lib/makepath.c:386 lib/makepath.c:425 src/install.c:474
 #, c-format
 msgid "cannot change permissions of %s"
 msgstr "nem lehet %s jogosultságait megváltoztatni"
@@ -377,18 +377,18 @@ msgstr "Az összehasonlított karakterláncok: %s és %s."
 #: src/dircolors.c:100 src/dirname.c:41 src/du.c:163 src/echo.c:72
 #: src/env.c:114 src/expand.c:104 src/expr.c:98 src/factor.c:69 src/fmt.c:267
 #: src/fold.c:62 src/head.c:109 src/hostid.c:42 src/hostname.c:62 src/id.c:82
-#: src/install.c:589 src/join.c:154 src/kill.c:90 src/link.c:47 src/ln.c:341
-#: src/logname.c:44 src/ls.c:3907 src/md5sum.c:120 src/mkdir.c:57
-#: src/mkfifo.c:51 src/mknod.c:51 src/mv.c:302 src/nice.c:65 src/nl.c:172
+#: src/install.c:588 src/join.c:154 src/kill.c:90 src/link.c:47 src/ln.c:341
+#: src/logname.c:44 src/ls.c:3901 src/md5sum.c:120 src/mkdir.c:57
+#: src/mkfifo.c:51 src/mknod.c:51 src/mv.c:301 src/nice.c:65 src/nl.c:172
 #: src/nohup.c:49 src/od.c:282 src/paste.c:392 src/pathchk.c:136
 #: src/pinky.c:464 src/pr.c:2748 src/printenv.c:62 src/printf.c:91
 #: src/ptx.c:1870 src/pwd.c:41 src/readlink.c:63 src/rm.c:103 src/rmdir.c:143
 #: src/seq.c:78 src/setuidgid.c:46 src/shred.c:155 src/sleep.c:48
-#: src/sort.c:272 src/split.c:96 src/stat.c:691 src/stty.c:485 src/su.c:432
+#: src/sort.c:272 src/split.c:96 src/stat.c:697 src/stty.c:485 src/su.c:432
 #: src/sum.c:55 src/sync.c:40 src/tac.c:122 src/tail.c:234 src/tee.c:58
 #: src/test.c:971 src/touch.c:244 src/tr.c:316 src/tsort.c:92 src/tty.c:64
 #: src/uname.c:105 src/unexpand.c:373 src/uniq.c:130 src/unlink.c:47
-#: src/uptime.c:186 src/users.c:115 src/wc.c:131 src/who.c:616 src/whoami.c:49
+#: src/uptime.c:189 src/users.c:115 src/wc.c:131 src/who.c:616 src/whoami.c:49
 #: src/yes.c:42
 #, c-format
 msgid "Try `%s --help' for more information.\n"
@@ -414,18 +414,18 @@ msgstr ""
 #: src/dircolors.c:121 src/dirname.c:57 src/du.c:214 src/echo.c:104
 #: src/env.c:133 src/expand.c:129 src/expr.c:161 src/factor.c:89
 #: src/false.c:43 src/fmt.c:297 src/fold.c:85 src/head.c:144 src/hostid.c:55
-#: src/hostname.c:75 src/id.c:103 src/install.c:644 src/join.c:195
-#: src/kill.c:120 src/link.c:59 src/ln.c:398 src/logname.c:55 src/ls.c:4041
-#: src/md5sum.c:156 src/mkdir.c:76 src/mkfifo.c:68 src/mknod.c:82 src/mv.c:356
+#: src/hostname.c:75 src/id.c:103 src/install.c:643 src/join.c:195
+#: src/kill.c:120 src/link.c:59 src/ln.c:398 src/logname.c:55 src/ls.c:4035
+#: src/md5sum.c:156 src/mkdir.c:76 src/mkfifo.c:68 src/mknod.c:82 src/mv.c:355
 #: src/nice.c:79 src/nl.c:227 src/nohup.c:65 src/od.c:369 src/paste.c:416
 #: src/pathchk.c:148 src/pinky.c:491 src/pr.c:2860 src/printenv.c:75
 #: src/printf.c:140 src/ptx.c:1917 src/pwd.c:52 src/readlink.c:80 src/rm.c:141
-#: src/rmdir.c:163 src/seq.c:104 src/setuidgid.c:66 src/shred.c:219
-#: src/sleep.c:64 src/sort.c:343 src/split.c:129 src/stat.c:762 src/stty.c:699
+#: src/rmdir.c:163 src/seq.c:106 src/setuidgid.c:66 src/shred.c:219
+#: src/sleep.c:64 src/sort.c:343 src/split.c:129 src/stat.c:768 src/stty.c:699
 #: src/su.c:453 src/sum.c:75 src/sync.c:51 src/tac.c:145 src/tail.c:304
 #: src/tee.c:71 src/test.c:1050 src/touch.c:275 src/tr.c:389 src/true.c:43
 #: src/tsort.c:104 src/tty.c:76 src/uname.c:127 src/unexpand.c:397
-#: src/uniq.c:169 src/unlink.c:58 src/uptime.c:201 src/users.c:128
+#: src/uniq.c:169 src/unlink.c:58 src/uptime.c:204 src/users.c:128
 #: src/wc.c:153 src/who.c:657 src/whoami.c:61 src/yes.c:58
 #, fuzzy, c-format
 msgid ""
@@ -437,17 +437,17 @@ msgstr ""
 
 #: src/basename.c:114 src/chgrp.c:246 src/chmod.c:395 src/chown.c:264
 #: src/chroot.c:80 src/comm.c:280 src/csplit.c:1373 src/dirname.c:89
-#: src/expr.c:199 src/install.c:282 src/link.c:88 src/mkdir.c:125
+#: src/expr.c:199 src/install.c:281 src/link.c:88 src/mkdir.c:125
 #: src/mkfifo.c:114 src/mknod.c:138 src/nohup.c:99 src/pathchk.c:189
-#: src/readlink.c:128 src/rm.c:231 src/rmdir.c:208 src/seq.c:372
-#: src/setuidgid.c:99 src/sleep.c:140 src/stat.c:819 src/unlink.c:89
+#: src/readlink.c:128 src/rm.c:231 src/rmdir.c:208 src/seq.c:374
+#: src/setuidgid.c:99 src/sleep.c:140 src/stat.c:825 src/unlink.c:89
 msgid "too few arguments"
 msgstr "túl kevés argumentum"
 
 #: src/basename.c:115 src/dircolors.c:475 src/dirname.c:90 src/hostid.c:78
 #: src/hostname.c:122 src/link.c:94 src/logname.c:91 src/mknod.c:140
-#: src/readlink.c:136 src/seq.c:378 src/split.c:533 src/tr.c:1842
-#: src/uname.c:215 src/unlink.c:95 src/uptime.c:244 src/users.c:171
+#: src/readlink.c:136 src/seq.c:380 src/split.c:533 src/tr.c:1842
+#: src/uname.c:215 src/unlink.c:95 src/uptime.c:247 src/users.c:171
 #: src/who.c:805
 msgid "too many arguments"
 msgstr "túl sok argumentum"
@@ -925,7 +925,7 @@ msgstr "fstat %s sikertelen"
 msgid "skipping file %s, as it was replaced while being copied"
 msgstr "%s fájl kihagyása, mivel kicserélték másolás közben"
 
-#: src/copy.c:258 src/copy.c:886 src/copy.c:1070 src/copy.c:1160 src/ln.c:297
+#: src/copy.c:258 src/copy.c:887 src/copy.c:1071 src/copy.c:1161 src/ln.c:297
 #: src/remove.c:727 src/remove.c:781 src/remove.c:902 src/remove.c:1009
 #, c-format
 msgid "cannot remove %s"
@@ -966,190 +966,190 @@ msgstr "%s: %s felülírása %04lo mód figyelmen kívül hagyásával? "
 msgid "%s: overwrite %s? "
 msgstr "%s: felülírod %s-t? "
 
-#: src/copy.c:830 src/copy.c:868 src/df.c:492 src/stat.c:649
+#: src/copy.c:831 src/copy.c:869 src/df.c:492 src/stat.c:655
 #, c-format
 msgid "cannot stat %s"
 msgstr "stat %s sikertelen"
 
-#: src/copy.c:840
+#: src/copy.c:841
 #, c-format
 msgid "omitting directory %s"
 msgstr "%s könyvtár kihagyása"
 
-#: src/copy.c:854
+#: src/copy.c:855
 #, c-format
 msgid "warning: source file %s specified more than once"
 msgstr "vigyázat: %s forrásfájl többször is meg van adva"
 
-#: src/copy.c:899 src/ln.c:241
+#: src/copy.c:900 src/ln.c:241
 #, c-format
 msgid "%s and %s are the same file"
 msgstr "%s és %s ugyanaz a fájl"
 
-#: src/copy.c:909
+#: src/copy.c:910
 #, c-format
 msgid "cannot overwrite non-directory %s with directory %s"
 msgstr "%s nem-könyvtárat nem lehet %s könyvtárral felülírni"
 
-#: src/copy.c:926
+#: src/copy.c:927
 #, c-format
 msgid "will not overwrite just-created %s with %s"
 msgstr "az éppen létrehozott %s-t nem fogom felülírni ezzel: %s"
 
-#: src/copy.c:937
+#: src/copy.c:938
 #, c-format
 msgid "cannot overwrite directory %s with non-directory"
 msgstr "%s könyvtárat nem lehet nem-könyvtárral felülírni"
 
-#: src/copy.c:998
+#: src/copy.c:999
 #, c-format
 msgid "cannot overwrite directory %s"
 msgstr "nem lehet %s könyvtárat felülírni"
 
-#: src/copy.c:1007
+#: src/copy.c:1008
 #, c-format
 msgid "cannot move directory onto non-directory: %s -> %s"
 msgstr "a könyvtárat nem lehet nem-könyvtárba áthelyezni: %s -> %s"
 
-#: src/copy.c:1030
+#: src/copy.c:1031
 #, c-format
 msgid "backing up %s would destroy source;  %s not moved"
 msgstr ""
 "biztonsági mentés %s-rõl megsemmisítené a forrást:\n"
 "%s nem került áthelyezésre"
 
-#: src/copy.c:1031
+#: src/copy.c:1032
 #, c-format
 msgid "backing up %s would destroy source;  %s not copied"
 msgstr ""
 "biztonsági mentés %s-rõl megsemmisítené a forrást:\n"
 "%s nem került másolásra"
 
-#: src/copy.c:1049 src/ln.c:279
+#: src/copy.c:1050 src/ln.c:279
 #, c-format
 msgid "cannot backup %s"
 msgstr "%s biztonsági mentése sikertelen"
 
-#: src/copy.c:1085 src/ln.c:314
+#: src/copy.c:1086 src/ln.c:314
 #, c-format
 msgid " (backup: %s)"
 msgstr " (biztonsági mentés: %s)"
 
-#: src/copy.c:1135
+#: src/copy.c:1136
 #, c-format
 msgid "cannot copy a directory, %s, into itself, %s"
 msgstr "%s könyvtárat nem lehet saját magába (%s) másolni"
 
-#: src/copy.c:1142
+#: src/copy.c:1143
 #, c-format
 msgid "will not create hard link %s to directory %s"
 msgstr "%2$s könyvtárra mutató %1$s hard link nem hozható létre"
 
-#: src/copy.c:1168
+#: src/copy.c:1169
 #, c-format
 msgid "cannot create hard link %s to %s"
 msgstr "%2$s-re mutató %1$s hard linket nem lehet létrehozni"
 
-#: src/copy.c:1222
+#: src/copy.c:1223
 #, c-format
 msgid "cannot move %s to a subdirectory of itself, %s"
 msgstr "%s-t nem lehet egy saját alkönyvtárába (%s) áthelyezni"
 
-#: src/copy.c:1265
+#: src/copy.c:1266
 #, c-format
 msgid "cannot move %s to %s"
 msgstr "%s-t nem lehet ide áthelyezni: %s"
 
-#: src/copy.c:1277
+#: src/copy.c:1278
 #, c-format
 msgid "inter-device move failed: %s to %s; unable to remove target"
 msgstr ""
 "eszközközi áthelyezés sikertelen:\n"
 "%s --> %s; cél törlése sikertelen"
 
-#: src/copy.c:1305
+#: src/copy.c:1306
 #, c-format
 msgid "cannot copy cyclic symbolic link %s"
 msgstr "%s körkörös linket nem lehet másolni"
 
-#: src/copy.c:1382
+#: src/copy.c:1383
 #, c-format
 msgid "%s: can make relative symbolic links only in current directory"
 msgstr ""
 "%s: relatív szimbolikus linkeket csak az aktuális\n"
 "könyvtárban lehet létrehozni"
 
-#: src/copy.c:1389
+#: src/copy.c:1390
 #, c-format
 msgid "cannot create symbolic link %s to %s"
 msgstr "nem lehet létrehozni %2$s-re mutató %1$s szimbolikus linket"
 
-#: src/copy.c:1400
+#: src/copy.c:1401
 #, c-format
 msgid "cannot create link %s"
 msgstr "nem lehet a következõ linket létrehozni: %s"
 
-#: src/copy.c:1422 src/mkfifo.c:134
+#: src/copy.c:1423 src/mkfifo.c:134
 #, c-format
 msgid "cannot create fifo %s"
 msgstr "nem lehet a következõ fifot létrehozni: %s"
 
-#: src/copy.c:1433
+#: src/copy.c:1434
 #, c-format
 msgid "cannot create special file %s"
 msgstr "nem lehet létrehozni a következõ speciális fájlt: %s"
 
-#: src/copy.c:1445 src/ls.c:2560 src/stat.c:436
+#: src/copy.c:1446 src/ls.c:2554 src/stat.c:439
 #, c-format
 msgid "cannot read symbolic link %s"
 msgstr "nem lehet olvasni a következõ szimbolikus linket: %s"
 
-#: src/copy.c:1470
+#: src/copy.c:1471
 #, c-format
 msgid "cannot create symbolic link %s"
 msgstr "nem lehet létrehozni a következõ szimbolikus linket: %s"
 
-#: src/copy.c:1486 src/copy.c:1547 src/cp.c:330
+#: src/copy.c:1487 src/copy.c:1548 src/cp.c:330
 #, fuzzy, c-format
 msgid "failed to preserve ownership for %s"
 msgstr "%s tulajdonosának megtartása"
 
-#: src/copy.c:1501
+#: src/copy.c:1502
 #, c-format
 msgid "%s has unknown file type"
 msgstr "%s fájltípusa ismeretlen"
 
-#: src/copy.c:1534
+#: src/copy.c:1535
 #, c-format
 msgid "preserving times for %s"
 msgstr "%s összes idejének megtartása"
 
-#: src/copy.c:1559
+#: src/copy.c:1560
 #, fuzzy, c-format
 msgid "failed to lookup file %s"
 msgstr "%s összes idejének megtartása"
 
-#: src/copy.c:1564
+#: src/copy.c:1565
 #, fuzzy, c-format
 msgid "failed to preserve authorship for %s"
 msgstr "%s tulajdonosának megtartása"
 
-#: src/copy.c:1583
+#: src/copy.c:1584
 #, c-format
 msgid "setting permissions for %s"
 msgstr "%s jogosultságainak beállítása"
 
-#: src/copy.c:1605 src/ln.c:332
+#: src/copy.c:1606 src/ln.c:332
 #, c-format
 msgid "cannot un-backup %s"
 msgstr "%s biztonsági mentés visszaállítása sikertelen"
 
-#: src/copy.c:1609
+#: src/copy.c:1610
 #, c-format
 msgid "%s -> %s (unbackup)\n"
 msgstr "%s -> %s (biztonsági mentés visszaállítása)\n"
 
-#: src/cp.c:158 src/mv.c:306
+#: src/cp.c:158 src/mv.c:305
 #, c-format
 msgid ""
 "Usage: %s [OPTION]... SOURCE DEST\n"
@@ -1168,8 +1168,8 @@ msgstr "FORRÁST CÉLRA vagy több FORRÁST egy CÉLKÖNYVTÁRBA másol.\n"
 
 #: src/cp.c:168 src/csplit.c:1414 src/cut.c:190 src/df.c:733 src/du.c:172
 #: src/expand.c:117 src/fmt.c:277 src/fold.c:75 src/head.c:123
-#: src/install.c:605 src/kill.c:104 src/ln.c:360 src/ls.c:3917 src/mkdir.c:66
-#: src/mkfifo.c:60 src/mknod.c:61 src/mv.c:316 src/nl.c:185 src/paste.c:406
+#: src/install.c:604 src/kill.c:104 src/ln.c:360 src/ls.c:3911 src/mkdir.c:66
+#: src/mkfifo.c:60 src/mknod.c:61 src/mv.c:315 src/nl.c:185 src/paste.c:406
 #: src/pr.c:2761 src/ptx.c:1882 src/shred.c:165 src/sort.c:286 src/split.c:109
 #: src/tac.c:135 src/tail.c:248 src/touch.c:253 src/unexpand.c:386
 #: src/uniq.c:143
@@ -1323,7 +1323,7 @@ msgstr ""
 "Az érvényes értékek a következõk:\n"
 "\n"
 
-#: src/cp.c:239 src/install.c:638 src/ln.c:392 src/mv.c:350
+#: src/cp.c:239 src/install.c:637 src/ln.c:392 src/mv.c:349
 msgid ""
 "  none, off       never make backups (even if --backup is given)\n"
 "  numbered, t     make numbered backups\n"
@@ -1365,7 +1365,7 @@ msgstr "%s jogosultságainak visszaállítása sikertelen"
 msgid "cannot make directory %s"
 msgstr "nem lehet %s könyvtárat létrehozni"
 
-#: src/cp.c:482 src/ln.c:496 src/mv.c:455 src/shred.c:1601
+#: src/cp.c:482 src/ln.c:496 src/mv.c:454 src/shred.c:1601
 msgid "missing file argument"
 msgstr "hiányzó fájlargumentum"
 
@@ -1393,11 +1393,11 @@ msgstr "%s: a megadott cél nem könyvtár"
 msgid "copying multiple files, but last argument %s is not a directory"
 msgstr "több fájl másolása, de az utolsó argumentum (%s) nem könyvtár"
 
-#: src/cp.c:641
+#: src/cp.c:645
 msgid "when preserving paths, the destination must be a directory"
 msgstr "az útvonal megtartásakor a cél könyvtár kell legyen"
 
-#: src/cp.c:868 src/install.c:217 src/ln.c:443 src/mv.c:401
+#: src/cp.c:872 src/install.c:216 src/ln.c:443 src/mv.c:400
 #, c-format
 msgid ""
 "warning: --version-control (-V) is obsolete;  support for it\n"
@@ -1407,15 +1407,15 @@ msgstr ""
 "meg fog szünni a következõ verzióval.\n"
 "Használd a --backup=%s kapcsolót helyette."
 
-#: src/cp.c:962 src/ln.c:473
+#: src/cp.c:966 src/ln.c:473
 msgid "symbolic links are not supported on this system"
 msgstr "ez a rendszer nem támogatja a szimbolikus linkeket"
 
-#: src/cp.c:998
+#: src/cp.c:1002
 msgid "cannot make both hard and symbolic links"
 msgstr "nem lehet egyszerre hard linket és szimbolikus linket létrehozni"
 
-#: src/cp.c:1006 src/install.c:273 src/ln.c:539 src/mv.c:479
+#: src/cp.c:1010 src/install.c:272 src/ln.c:539 src/mv.c:478
 msgid "backup type"
 msgstr "biztonsági mentés típusa"
 
@@ -1588,7 +1588,7 @@ msgid ""
 msgstr ""
 
 #: src/cut.c:182 src/df.c:727 src/du.c:167 src/expand.c:108 src/fold.c:66
-#: src/head.c:113 src/ls.c:3911 src/nl.c:176 src/paste.c:396 src/pr.c:2752
+#: src/head.c:113 src/ls.c:3905 src/nl.c:176 src/paste.c:396 src/pr.c:2752
 #: src/sort.c:276 src/sum.c:59 src/tac.c:126 src/tail.c:238 src/tee.c:62
 #: src/unexpand.c:377 src/wc.c:135
 #, c-format
@@ -1870,6 +1870,11 @@ msgstr "nem lehet beállítani %s idõbélyegét"
 #, fuzzy
 msgid "cannot set date"
 msgstr "stat %s sikertelen"
+
+#: src/date.c:529
+#, fuzzy, c-format
+msgid "time %s is out of range"
+msgstr "a fájl offset túlmutat a fájlon"
 
 #: src/dd.c:287 src/tty.c:68 src/uname.c:109 src/whoami.c:53
 #, c-format
@@ -2166,7 +2171,7 @@ msgstr ""
 "  -x, --exclude-type=TÍPUS   a megadott fájlrendszereket nem listázza ki\n"
 "  -v                     (figyelmen kívül hagyva)\n"
 
-#: src/df.c:758 src/du.c:210 src/ls.c:4029
+#: src/df.c:758 src/du.c:210 src/ls.c:4023
 #, fuzzy
 msgid ""
 "\n"
@@ -2360,7 +2365,7 @@ msgstr ""
 "                           parancssorban megadott könyvtár alatt.\n"
 "                           A --max-depth=0 ugyanaz, mint a --summarize\n"
 
-#: src/du.c:524 src/ls.c:2230 src/wc.c:674
+#: src/du.c:524 src/ls.c:2224 src/wc.c:674
 msgid "total"
 msgstr "összesen"
 
@@ -2885,68 +2890,68 @@ msgstr "a csoportot nem lehet nullra változtatni"
 msgid " groups="
 msgstr ""
 
-#: src/install.c:267
+#: src/install.c:266
 msgid "the strip option may not be used when installing a directory"
 msgstr "könyvtár telepítésénél nem lehet használni a `strip' lehetõséget"
 
-#: src/install.c:290 src/mkdir.c:141
+#: src/install.c:289 src/mkdir.c:141
 #, c-format
 msgid "invalid mode %s"
 msgstr "érvénytelen mód: %s"
 
-#: src/install.c:305 src/install.c:369
+#: src/install.c:304 src/install.c:368
 #, c-format
 msgid "creating directory %s"
 msgstr "%s könyvtár létrehozása"
 
-#: src/install.c:330
+#: src/install.c:329
 #, c-format
 msgid "installing multiple files, but last argument, %s is not a directory"
 msgstr "több fájl telepítése, de az utolsó argumentum (%s) nem könyvtár"
 
-#: src/install.c:433
+#: src/install.c:432
 #, c-format
 msgid "%s is a directory"
 msgstr "%s könyvtár"
 
-#: src/install.c:469
+#: src/install.c:468
 #, fuzzy, c-format
 msgid "cannot change ownership of %s"
 msgstr "nem lehet %s jogosultságait megváltoztatni"
 
-#: src/install.c:493
+#: src/install.c:492
 #, c-format
 msgid "cannot obtain time stamps for %s"
 msgstr "nem lehet beolvasni %s idõbélyegét"
 
-#: src/install.c:503
+#: src/install.c:502
 #, c-format
 msgid "cannot set time stamps for %s"
 msgstr "nem lehet beállítani %s idõbélyegét"
 
-#: src/install.c:524
+#: src/install.c:523
 msgid "fork system call failed"
 msgstr "fork() rendszerhívás sikertelen"
 
-#: src/install.c:528
+#: src/install.c:527
 msgid "cannot run strip"
 msgstr "strip futtatása sikertelen"
 
-#: src/install.c:535
+#: src/install.c:534
 msgid "strip failed"
 msgstr "strip sikertelen"
 
-#: src/install.c:556
+#: src/install.c:555
 #, c-format
 msgid "invalid user %s"
 msgstr "érvénytelen felhasználó: %s"
 
-#: src/install.c:574
+#: src/install.c:573
 #, c-format
 msgid "invalid group %s"
 msgstr "érvénytelen csoport: %s"
 
-#: src/install.c:593
+#: src/install.c:592
 #, c-format
 msgid ""
 "Usage: %s [OPTION]... SOURCE DEST           (1st format)\n"
@@ -2957,7 +2962,7 @@ msgstr ""
 "  vagy:  %s [KAPCSOLÓ]... FORRÁS... KÖNYVTÁR    (2. alak)\n"
 "  vagy:  %s -d [KAPCSOLÓ]... KÖNYVTÁR...       (3. alak)\n"
 
-#: src/install.c:599
+#: src/install.c:598
 msgid ""
 "In the first two formats, copy SOURCE to DEST or multiple SOURCE(s) to\n"
 "the existing DIRECTORY, while setting permission modes and owner/group.\n"
@@ -2970,7 +2975,7 @@ msgstr ""
 "A harmadik alaknál létrehozza az adott KÖNYVTÁRAK minden elemét.\n"
 "\n"
 
-#: src/install.c:608
+#: src/install.c:607
 msgid ""
 "      --backup[=CONTROL] make a backup of each existing destination file\n"
 "  -b                  like --backup but does not accept an argument\n"
@@ -2984,7 +2989,7 @@ msgstr ""
 "  -d, --directory            minden argumentum könyvtár; az adott könyvtár\n"
 "                               minden elemét létrehozza\n"
 
-#: src/install.c:615
+#: src/install.c:614
 msgid ""
 "  -D                  create all leading components of DEST except the "
 "last,\n"
@@ -3004,7 +3009,7 @@ msgstr ""
 "  -m, --mode=MÓD            jogosultságot MÓDRA állítja, rwxr-xr-x helyett\n"
 "  -o, --owner=TULAJDONOS    tulajdonos beállítása (csak root)\n"
 
-#: src/install.c:622
+#: src/install.c:621
 msgid ""
 "  -p, --preserve-timestamps   apply access/modification times of SOURCE "
 "files\n"
@@ -3021,7 +3026,7 @@ msgstr ""
 "                            kiterjesztésének felülbírálása\n"
 "  -v, --verbose             minden létrehozott könyvtár nevét kiírja\n"
 
-#: src/install.c:631 src/ln.c:385 src/mv.c:343
+#: src/install.c:630 src/ln.c:385 src/mv.c:342
 msgid ""
 "\n"
 "The backup suffix is `~', unless set with --suffix or SIMPLE_BACKUP_SUFFIX.\n"
@@ -3358,90 +3363,90 @@ msgstr ""
 msgid "no login name"
 msgstr ""
 
-#: src/ls.c:654
+#: src/ls.c:648
 msgid "%b %e  %Y"
 msgstr "%b %e  %Y"
 
-#: src/ls.c:662
+#: src/ls.c:656
 msgid "%b %e %H:%M"
 msgstr "%b %e %H:%M"
 
-#: src/ls.c:1289
+#: src/ls.c:1283
 #, fuzzy, c-format
 msgid "ignoring invalid value of environment variable QUOTING_STYLE: %s"
 msgstr ""
 "a QUOTING_STYLE környezeti változóban megadott érvénytelen érték \n"
 "figyelmen kívül hagyása: %s"
 
-#: src/ls.c:1316
+#: src/ls.c:1310
 #, c-format
 msgid "ignoring invalid width in environment variable COLUMNS: %s"
 msgstr ""
 "a COLUMNS környezeti változóban megadott érvénytelen érték\n"
 "figyelmen kívül hagyása: %s"
 
-#: src/ls.c:1348
+#: src/ls.c:1342
 #, c-format
 msgid "ignoring invalid tab size in environment variable TABSIZE: %s"
 msgstr ""
 "a TABSIZE környezeti változóban megadott érvénytelen tab méret\n"
 "figyelmen kívül hagyása: %s"
 
-#: src/ls.c:1465
+#: src/ls.c:1459
 #, c-format
 msgid "invalid line width: %s"
 msgstr "érvénytelen sorhossz: %s"
 
-#: src/ls.c:1539
+#: src/ls.c:1533
 #, c-format
 msgid "invalid tab size: %s"
 msgstr "érvénytelen tabulátorméret: %s"
 
-#: src/ls.c:1707
+#: src/ls.c:1701
 #, c-format
 msgid "invalid time style format %s"
 msgstr "érvénytelen idõformátum stílus %s"
 
-#: src/ls.c:2043
+#: src/ls.c:2037
 #, c-format
 msgid "unrecognized prefix: %s"
 msgstr "ismeretlen elõtag: %s"
 
-#: src/ls.c:2066
+#: src/ls.c:2060
 msgid "unparsable value for LS_COLORS environment variable"
 msgstr "az LS_COLORS környezeti változó értéke nem értelemezhetõ"
 
-#: src/ls.c:2134
+#: src/ls.c:2128
 #, c-format
 msgid "cannot determine device and inode of %s"
 msgstr "%s eszközét és inode-ját nem lehet megállapítani"
 
-#: src/ls.c:2144
+#: src/ls.c:2138
 #, c-format
 msgid "not listing already-listed directory: %s"
 msgstr "a következõ, már korábban listázott, könyvtár kihagyása: %s"
 
-#: src/ls.c:2197 src/remove.c:938
+#: src/ls.c:2191 src/remove.c:938
 #, fuzzy, c-format
 msgid "reading directory %s"
 msgstr "%s könyvtár létrehozása"
 
-#: src/ls.c:2677
+#: src/ls.c:2671
 #, c-format
 msgid "cannot compare file names %s and %s"
 msgstr "%s és %s fájlnevek összehasonlítása sikertelen"
 
-#: src/ls.c:3019
+#: src/ls.c:3013
 #, fuzzy
 msgid "User name too long"
 msgstr "%s: a fájl túl nagy"
 
-#: src/ls.c:3040
+#: src/ls.c:3034
 #, fuzzy
 msgid "Group name too long"
 msgstr "%s: a fájl túl nagy"
 
-#: src/ls.c:3912
+#: src/ls.c:3906
 msgid ""
 "List information about the FILEs (the current directory by default).\n"
 "Sort entries alphabetically if none of -cftuSUX nor --sort.\n"
@@ -3452,7 +3457,7 @@ msgstr ""
 "kapcsolók valamelyike vagy a --sort.\n"
 "\n"
 
-#: src/ls.c:3920
+#: src/ls.c:3914
 #, fuzzy
 msgid ""
 "  -a, --all                  do not hide entries starting with .\n"
@@ -3465,7 +3470,7 @@ msgstr ""
 "  -b, --escape               oktális escape karaktereket jelenít meg \n"
 "                               a nem-grafikus karakterek helyett\n"
 
-#: src/ls.c:3926
+#: src/ls.c:3920
 msgid ""
 "      --block-size=SIZE      use SIZE-byte blocks\n"
 "  -B, --ignore-backups       do not list implied entries ending with ~\n"
@@ -3485,7 +3490,7 @@ msgstr ""
 "rendez\n"
 "                               egyébként: ctime szerint rendez\n"
 
-#: src/ls.c:3934
+#: src/ls.c:3928
 #, fuzzy
 msgid ""
 "  -C                         list entries by columns\n"
@@ -3504,7 +3509,7 @@ msgstr ""
 "  -d, --directory            könyvtár listázása a könyvtár tartalma helyett\n"
 "  -D, --dired                az Emacs dired módja által használt kimenet\n"
 
-#: src/ls.c:3942
+#: src/ls.c:3936
 msgid ""
 "  -f                         do not sort, enable -aU, disable -lst\n"
 "  -F, --classify             append indicator (one of */=@|) to entries\n"
@@ -3519,7 +3524,7 @@ msgstr ""
 "                               single-column -1, verbose -l, vertical -C\n"
 "      --full-time            mint -l --time-style=full-iso\n"
 
-#: src/ls.c:3949
+#: src/ls.c:3943
 #, fuzzy
 msgid ""
 "  -g                         like -l, but do not list owner\n"
@@ -3541,7 +3546,7 @@ msgstr ""
 "helyett\n"
 "  -H, --dereference-command-line  szimbolikus linkek követése parancssorban\n"
 
-#: src/ls.c:3960
+#: src/ls.c:3954
 msgid ""
 "      --indicator-style=WORD append indicator with style WORD to entry "
 "names:\n"
@@ -3560,7 +3565,7 @@ msgstr ""
 "                               bejegyzéseket\n"
 "  -k                         mint --block-size=1K\n"
 
-#: src/ls.c:3967
+#: src/ls.c:3961
 msgid ""
 "  -l                         use a long listing format\n"
 "  -L, --dereference          when showing file information for a symbolic\n"
@@ -3575,7 +3580,7 @@ msgstr ""
 "  -m                         a szélességet a bejegyzések vesszõvel\n"
 "                               elválasztott listájával tölti ki\n"
 
-#: src/ls.c:3974
+#: src/ls.c:3968
 msgid ""
 "  -n, --numeric-uid-gid      like -l, but list numeric UIDs and GIDs\n"
 "  -N, --literal              print raw entry names (don't treat e.g. "
@@ -3591,7 +3596,7 @@ msgstr ""
 "  -o                         mint -l, de tulajdonos adatai nélkül\n"
 "  -p, --file-type            jelet fûz a bejegyzéshez (*/=@ vagy |)\n"
 
-#: src/ls.c:3981
+#: src/ls.c:3975
 msgid ""
 "  -q, --hide-control-chars   print ? instead of non graphic characters\n"
 "      --show-control-chars   show non graphic characters as-is (default\n"
@@ -3612,7 +3617,7 @@ msgstr ""
 "                               literal, locale, shell, shell-always, c, "
 "escape\n"
 
-#: src/ls.c:3989
+#: src/ls.c:3983
 msgid ""
 "  -r, --reverse              reverse order while sorting\n"
 "  -R, --recursive            list subdirectories recursively\n"
@@ -3622,7 +3627,7 @@ msgstr ""
 "  -R, --recursive            könyvtárak rekurzív listázása\n"
 "  -s, --size                 kiírja a fájlok méretét blokkban\n"
 
-#: src/ls.c:3994
+#: src/ls.c:3988
 #, fuzzy
 msgid ""
 "  -S                         sort by file size\n"
@@ -3646,7 +3651,7 @@ msgstr ""
 "                               a megadott idõ alapján rendez, \n"
 "                               ha a --sort=time meg van adva\n"
 
-#: src/ls.c:4003
+#: src/ls.c:3997
 #, fuzzy
 msgid ""
 "      --time-style=STYLE     show times using style STYLE:\n"
@@ -3669,7 +3674,7 @@ msgstr ""
 "  -t                         módosítás dátuma alapján rendez\n"
 "  -T, --tabsize=OSZL         tabulátor minden OSZL-nál, 8 helyett\n"
 
-#: src/ls.c:4014
+#: src/ls.c:4008
 msgid ""
 "  -u                         with -lt: sort by, and show, access time\n"
 "                               with -l: show access time and sort by name\n"
@@ -3687,7 +3692,7 @@ msgstr ""
 "  -U                         nem rendez; bejegyzések könyvtári sorrendben\n"
 "  -v                         verzió alapján rendez\n"
 
-#: src/ls.c:4021
+#: src/ls.c:4015
 msgid ""
 "  -w, --width=COLS           assume screen width instead of current value\n"
 "  -x                         list entries by lines instead of by columns\n"
@@ -3701,7 +3706,7 @@ msgstr ""
 "  -X                         ábécé sorba rendez, kiterjesztés szerint\n"
 "  -1                         soronként egy fájlnevet ír ki\n"
 
-#: src/ls.c:4033
+#: src/ls.c:4027
 msgid ""
 "\n"
 "By default, color is not used to distinguish types of files.  That is\n"
@@ -3989,7 +3994,7 @@ msgstr "érvénytelen eszköz %s %s"
 msgid "cannot set permissions of %s"
 msgstr "nem lehet %s jogosultságait beállítani"
 
-#: src/mv.c:312
+#: src/mv.c:311
 msgid ""
 "Rename SOURCE to DEST, or move SOURCE(s) to DIRECTORY.\n"
 "\n"
@@ -3997,7 +4002,7 @@ msgstr ""
 "FORRÁST átnevezi CÉLRA vagy több FORRÁST egy CÉLKÖNYVTÁRBA helyez át.\n"
 "\n"
 
-#: src/mv.c:319
+#: src/mv.c:318
 #, fuzzy
 msgid ""
 "      --backup[=CONTROL]       make a backup of each existing destination "
@@ -4016,7 +4021,7 @@ msgstr ""
 "  -i, --interactive            felülírás elõtt kérdez\n"
 "                                 mint --reply=query\n"
 
-#: src/mv.c:327
+#: src/mv.c:326
 msgid ""
 "      --reply={yes,no,query}   specify how to handle the prompt about an\n"
 "                                 existing destination file\n"
@@ -4030,7 +4035,7 @@ msgstr ""
 "  -S, --suffix=KITERJESZTES    a biztonsági másolat szokásos\n"
 "                                 kiterjesztésének felülbírálása\n"
 
-#: src/mv.c:334
+#: src/mv.c:333
 msgid ""
 "      --target-directory=DIRECTORY  move all SOURCE arguments into "
 "DIRECTORY\n"
@@ -4046,12 +4051,12 @@ msgstr ""
 "                                 FORRÁS vagy ha a CÉL nem létezik\n"
 "  -v, --verbose                elmagyarázza, mi történik\n"
 
-#: src/mv.c:463
+#: src/mv.c:462
 #, c-format
 msgid "specified target, %s is not a directory"
 msgstr "a megadott cél (%s) nem könyvtár"
 
-#: src/mv.c:471
+#: src/mv.c:470
 msgid "when moving multiple files, last argument must be a directory"
 msgstr "több fájl áthelyezésénél az utolsó argumentum könyvtár kell legyen"
 
@@ -5238,24 +5243,26 @@ msgstr ""
 #, c-format
 msgid ""
 "\n"
-"If FIRST or INCREMENT is omitted, it defaults to 1.\n"
-"FIRST, INCREMENT, and LAST are interpreted as floating point values.\n"
-"INCREMENT should be positive if FIRST is smaller than LAST, and negative\n"
-"otherwise.  When given, the FORMAT argument must contain exactly one of\n"
+"If FIRST or INCREMENT is omitted, it defaults to 1.  That is, an\n"
+"omitted INCREMENT defaults to 1 even when LAST is smaller than FIRST.\n"
+" FIRST, INCREMENT, and LAST are interpreted as floating point values.\n"
+"INCREMENT is usually positive if FIRST is smaller than LAST, and\n"
+"INCREMENT is usually negative if FIRST is greater than LAST.\n"
+"When given, the FORMAT argument must contain exactly one of\n"
 "the printf-style, floating point output formats %e, %f, %g\n"
 msgstr ""
 
-#: src/seq.c:119
+#: src/seq.c:121
 #, fuzzy, c-format
 msgid "invalid floating point argument: %s"
 msgstr "érvénytelen idõformátum: %s"
 
-#: src/seq.c:384
+#: src/seq.c:386
 #, fuzzy, c-format
 msgid "invalid format string: `%s'"
 msgstr "érvénytelen módkarakterlánc: %s"
 
-#: src/seq.c:404
+#: src/seq.c:406
 #, fuzzy
 msgid "format string may not be specified when printing equal width strings"
 msgstr "könyvtár telepítésénél nem lehet használni a `strip' lehetõséget"
@@ -5793,22 +5800,17 @@ msgstr ""
 msgid "invalid number of lines: 0"
 msgstr "érvénytelen szám: %s"
 
-#: src/stat.c:336
-#, fuzzy
-msgid "*** invalid date/time ***"
-msgstr "érvénytelen mód: %s"
-
-#: src/stat.c:619
+#: src/stat.c:625
 #, fuzzy, c-format
 msgid "cannot read file system information for %s"
 msgstr "nem lehet a következõ fifot létrehozni: %s"
 
-#: src/stat.c:695
+#: src/stat.c:701
 #, fuzzy, c-format
 msgid "Usage: %s [OPTION] FILE...\n"
 msgstr "Használat: %s [KAPCSOLÓ]... FÁJL...\n"
 
-#: src/stat.c:696
+#: src/stat.c:702
 msgid ""
 "Display file or filesystem status.\n"
 "\n"
@@ -5818,7 +5820,7 @@ msgid ""
 "  -t, --terse           print the information in terse form\n"
 msgstr ""
 
-#: src/stat.c:707
+#: src/stat.c:713
 msgid ""
 "\n"
 "The valid format sequences for files (without --filesystem):\n"
@@ -5829,7 +5831,7 @@ msgid ""
 "  %b   Number of blocks allocated (see %B)\n"
 msgstr ""
 
-#: src/stat.c:715
+#: src/stat.c:721
 msgid ""
 "  %D   Device number in hex\n"
 "  %d   Device number in decimal\n"
@@ -5839,7 +5841,7 @@ msgid ""
 "  %g   Group ID of owner\n"
 msgstr ""
 
-#: src/stat.c:723
+#: src/stat.c:729
 msgid ""
 "  %h   Number of hard links\n"
 "  %i   Inode number\n"
@@ -5851,7 +5853,7 @@ msgid ""
 "  %t   Major device type in hex\n"
 msgstr ""
 
-#: src/stat.c:733
+#: src/stat.c:739
 msgid ""
 "  %U   User name of owner\n"
 "  %u   User ID of owner\n"
@@ -5864,7 +5866,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/stat.c:745
+#: src/stat.c:751
 msgid ""
 "Valid format sequences for file systems:\n"
 "\n"
@@ -5875,7 +5877,7 @@ msgid ""
 "  %f   Free blocks in file system\n"
 msgstr ""
 
-#: src/stat.c:754
+#: src/stat.c:760
 msgid ""
 "  %i   File System id in hex\n"
 "  %l   Maximum length of filenames\n"
@@ -5885,7 +5887,7 @@ msgid ""
 "  %t   Type in hex\n"
 msgstr ""
 
-#: src/stat.c:794
+#: src/stat.c:800
 #, fuzzy
 msgid "Warning: `-l' is deprecated; use `-L' instead"
 msgstr ""
@@ -6304,11 +6306,11 @@ msgstr ""
 msgid "ignoring all arguments"
 msgstr "minden argumentum figyelmen kívül hagyva"
 
-#: src/system.h:796
+#: src/system.h:787
 msgid "      --help     display this help and exit\n"
 msgstr "      --help     display this help and exit\n"
 
-#: src/system.h:798
+#: src/system.h:789
 msgid "      --version  output version information and exit\n"
 msgstr "      --version  output version information and exit\n"
 
@@ -7207,44 +7209,49 @@ msgstr "%s törlése sikertelen"
 msgid "couldn't get boot time"
 msgstr ""
 
-#: src/uptime.c:135
+#: src/uptime.c:136
 #, c-format
 msgid " %2d:%02d%s  up "
 msgstr ""
 
-#: src/uptime.c:139
+#: src/uptime.c:140
 msgid "am"
 msgstr ""
 
-#: src/uptime.c:139
+#: src/uptime.c:140
 msgid "pm"
 msgstr ""
 
-#: src/uptime.c:141
+#: src/uptime.c:142
+#, c-format
+msgid " ??:????  up "
+msgstr ""
+
+#: src/uptime.c:144
 #, c-format
 msgid "%d day"
 msgid_plural "%d days"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/uptime.c:143
+#: src/uptime.c:146
 #, fuzzy, c-format
 msgid "%d user"
 msgid_plural "%d users"
 msgstr[0] "érvénytelen felhasználó"
 msgstr[1] "érvénytelen felhasználó"
 
-#: src/uptime.c:156
+#: src/uptime.c:159
 #, c-format
 msgid ",  load average: %.2f"
 msgstr ""
 
-#: src/uptime.c:190 src/users.c:119
+#: src/uptime.c:193 src/users.c:119
 #, fuzzy, c-format
 msgid "Usage: %s [OPTION]... [ FILE ]\n"
 msgstr "Használat: %s [KAPCSOLÓ]... [FÁJL]\n"
 
-#: src/uptime.c:191
+#: src/uptime.c:194
 #, c-format
 msgid ""
 "Print the current time, the length of time the system has been up,\n"
@@ -7425,6 +7432,10 @@ msgid ""
 "Repeatedly output a line with all specified STRING(s), or `y'.\n"
 "\n"
 msgstr ""
+
+#, fuzzy
+#~ msgid "*** invalid date/time ***"
+#~ msgstr "érvénytelen mód: %s"
 
 #, fuzzy
 #~ msgid "Written by FIXME unknown."
