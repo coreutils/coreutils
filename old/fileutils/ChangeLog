@@ -1,11 +1,17 @@
+2000-12-09  Jim Meyering  <meyering@lucent.com>
+
+	* src/chown.c (change_file_owner): Restore special file permission
+	bits, since calling chown resets them on some systems.
+	Reported by Matt Perry.
+
 2000-12-08  Andreas Schwab  <schwab@suse.de>
+
+	* Version 4.0.34.
 
 	* tests/mv/mv-special-1: Don't make the success of the test depend
 	on the order in which directory entries are processed.
 
 2000-12-03  Jim Meyering  <meyering@lucent.com>
-
-	* Version 4.0.34.
 
 	* src/ls.c (gobble_file) [USE_ACL]: Set have_acl member unconditionally
 	to avoid uninitialized memory reference via FILE_HAS_ACL.
