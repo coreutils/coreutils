@@ -312,7 +312,7 @@ main (argc, argv)
 	{
 	  char line[1024];
 	  char filename[FILENAME_MAX];
-	  char binary;
+	  char type_flag;
 	  char md5num[32];
 	  int items;
 
@@ -321,11 +321,11 @@ main (argc, argv)
 	    break;
 
 	  /* FIXME: maybe accept the output of --string=STRING.  */
-	  items = sscanf (line, "%32c %c %s", md5num, &binary, filename);
+	  items = sscanf (line, "%32c %c %s", md5num, &type_flag, filename);
 
 	  if (items != 3
 	      || !hex_digits (md5num, 32)
-	      || (binary != 'b' && binary != 't'))
+	      || (type_flag != 'b' && type_flag != 't'))
 	    {
 	      if (verbose)
 		error (0, 0, _("invalid line in check file: %s"), line);
@@ -343,7 +343,7 @@ main (argc, argv)
 		fflush (stdout);
 
 	      ++n_tests;
-	      md5_file (filename, md5buffer, binary == 'b');
+	      md5_file (filename, md5buffer, type_flag == 'b');
 
 	      /* Convert any upper case hex digits to lower case.  */
 	      for (cnt = 0; cnt < 32; ++cnt)
