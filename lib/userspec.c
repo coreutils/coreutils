@@ -44,8 +44,6 @@
 
 #ifdef STDC_HEADERS
 #include <stdlib.h>
-#else
-char *malloc ();
 #endif
 
 #ifdef HAVE_UNISTD_H
@@ -189,7 +187,7 @@ parse_user_spec (spec_arg, uid, gid, username, groupname)
 	}
     }
 
-  if (g != NULL)
+  if (g != NULL && error_msg == NULL)
     {
       /* Explicit group.  */
       grp = getgrnam (g);
@@ -208,7 +206,7 @@ parse_user_spec (spec_arg, uid, gid, username, groupname)
 	{
 	  *groupname = strdup (g);
 	  if (*groupname == NULL)
-	    return tired;
+	    error_msg = tired;
 	}
     }
 
