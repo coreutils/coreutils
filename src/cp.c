@@ -542,7 +542,7 @@ do_copy (int n_files, char **file, const char *target_directory,
     {
       if (target_directory)
 	{
-	  error (0, 0, _("specified target, %s is not a directory"),
+	  error (0, 0, _("%s: specified target is not a directory"),
 		 quote (dest));
 	  usage (1);
 	}
