@@ -2,6 +2,13 @@
 
 	* Version 2.0d.
 
+	* Makefile.maint (my-distcheck): Depend on po-check, so I'll be warned
+	about any required changes at `make distcheck' time rather than at
+	`make alpha' time.
+
+	* po/POTFILES.in: Add these: lib/makepath.c, lib/rpmatch.c,
+	and lib/same.c
+
 2000-01-29  Jim Meyering  <meyering@lucent.com>
 
 	* configure.in: Remove lib-check for cposix now that we use
