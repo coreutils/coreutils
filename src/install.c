@@ -165,7 +165,6 @@ cp_option_init (struct cp_options *x)
   x->umask_kill = 0;
   x->update = 0;
   x->verbose = 0;
-  x->xstat = stat;
   x->dest_info = NULL;
   x->src_info = NULL;
 }
