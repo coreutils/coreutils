@@ -70,9 +70,10 @@
 /* Number of items to tail. */
 #define DEFAULT_NUMBER 10
 
-/* FIXME: use definition from stdio.h.  */
 /* Size of atomic reads. */
+#ifndef BUFSIZE
 #define BUFSIZE (512 * 8)
+#endif
 
 /* Number of bytes per item we are printing.
    If 0, tail in lines. */

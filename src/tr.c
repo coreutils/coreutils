@@ -439,14 +439,13 @@ is_char_class_member (char_class, c)
     }
 }
 
-/* Perform the first pass over each range-spec argument S,
-   converting all \c and \ddd escapes to their one-byte representations.
-   The conversion is done in-place, so S must point to writable
-   storage.  If an invalid quote sequence is found, an error message is
-   printed and the function returns non-zero.  Otherwise the length of
-   the resulting string is returned through LEN and the function returns 0.
-   The resulting array of characters may contain zero-bytes; however,
-   on input, S is assumed to be null-terminated, and hence
+/* Perform the first pass over each range-spec argument S, converting all
+   \c and \ddd escapes to their one-byte representations.  The conversion
+   is done in-place, so S must point to writable storage.  If an invalid
+   quote sequence is found print an error message and return non-zero.
+   Otherwise set *LEN to the length of the resulting string and return
+   zero.  The resulting array of characters may contain zero-bytes;
+   however, on input, S is assumed to be null-terminated, and hence
    cannot contain actual (non-escaped) zero bytes.  */
 
 static int
@@ -596,7 +595,7 @@ make_printable_char (c)
 
 static char *
 make_printable_str (s, len)
-     unsigned char *s;
+     const unsigned char *s;
      int len;
 {
   /* Worst case is that every character expands to a backslash
@@ -710,7 +709,7 @@ append_range (list, first, last)
 /* If CHAR_CLASS_STR is a valid character class string, append a
    newly allocated structure representing that character class to the end
    of the specification list LIST and return 0.  If CHAR_CLASS_STR is not
-   a valid string, give an error message and return non-zero.  */
+   a valid string, print an error message and return non-zero.  */
 
 static int
 append_char_class (list, char_class_str, len)
@@ -741,9 +740,9 @@ append_char_class (list, char_class_str, len)
 }
 
 /* Append a newly allocated structure representing a [c*n]
-   repeated character construct, to the specification list LIST.
+   repeated character construct to the specification list LIST.
    THE_CHAR is the single character to be repeated, and REPEAT_COUNT
-   is non-negative repeat count.  */
+   is a non-negative repeat count.  */
 
 static void
 append_repeated_char (list, the_char, repeat_count)
@@ -796,11 +795,11 @@ append_equiv_class (list, equiv_class_str, len)
   return 0;
 }
 
-/* Return a newly allocated copy of P[FIRST_IDX..LAST_IDX].  */
+/* Return a newly allocated copy of the substring P[FIRST_IDX..LAST_IDX].  */
 
 static unsigned char *
 substr (p, first_idx, last_idx)
-     unsigned char *p;
+     const unsigned char *p;
      int first_idx;
      int last_idx;
 {
@@ -822,7 +821,7 @@ substr (p, first_idx, last_idx)
 
 static int
 find_closing_delim (p, start_idx, p_len, pre_bracket_char)
-     unsigned char *p;
+     const unsigned char *p;
      int start_idx;
      int p_len;
      unsigned int pre_bracket_char;
@@ -844,7 +843,7 @@ find_closing_delim (p, start_idx, p_len, pre_bracket_char)
 
 static int
 non_neg_strtol (s, len, val)
-     unsigned char *s;
+     const unsigned char *s;
      int len;
      long int *val;
 {
@@ -888,7 +887,7 @@ non_neg_strtol (s, len, val)
 
 static int
 find_bracketed_repeat (p, start_idx, p_len, char_to_repeat, n)
-     unsigned char *p;
+     const unsigned char *p;
      int start_idx;
      int p_len;
      unsigned int *char_to_repeat;
@@ -904,7 +903,7 @@ find_bracketed_repeat (p, start_idx, p_len, char_to_repeat, n)
     {
       if (p[i] == ']')
 	{
-	  unsigned char *digit_str;
+	  const unsigned char *digit_str;
 	  int digit_str_len = i - start_idx - 2;
 
 	  *char_to_repeat = p[start_idx];
@@ -945,11 +944,11 @@ find_bracketed_repeat (p, start_idx, p_len, char_to_repeat, n)
 
 static int
 build_spec_list (unescaped_string, len, result)
-     unsigned char *unescaped_string;
+     const unsigned char *unescaped_string;
      int len;
      struct Spec_list *result;
 {
-  unsigned char *p;
+  const unsigned char *p;
   int i;
 
   p = unescaped_string;
@@ -1351,7 +1350,7 @@ parse_str (s, spec_list)
 
 static void
 string2_extend (s1, s2)
-     struct Spec_list *s1;
+     const struct Spec_list *s1;
      struct Spec_list *s2;
 {
   struct List_element *p;
@@ -1413,7 +1412,7 @@ string2_extend (s1, s2)
 
 static void
 validate (s1, s2)
-     struct Spec_list *s1;
+     const struct Spec_list *s1;
      struct Spec_list *s2;
 {
   get_spec_stats (s1, -1);
