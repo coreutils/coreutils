@@ -28,7 +28,7 @@
 #include "error.h"
 
 #if defined(__GNUC__) || defined(STDC_HEADERS)
-#include <float.h>
+# include <float.h>
 #endif
 
 #ifdef HAVE_LONG_DOUBLE
@@ -1851,7 +1851,7 @@ the maximum\nrepresentable value of type `long'"), optarg);
 	      usage (1);
 	    }
 	}
-      else
+      else if (n_files > 3)
 	{
 	  error (0, 0,
 	   _("in compatibility mode there may be no more than 3 arguments"));
