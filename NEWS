@@ -1,5 +1,8 @@
 [5.0.1]
-* FEATURE: tail FIXME
+* date's `-' (no-pad) format flag now affects the space-padded-by-default
+  conversion specifiers, %e, %k, %l
+* FEATURE: head now accepts --lines=-N (--bytes=-N) to print all but the
+  N lines (bytes) at the end of the file
 * sleep now works on AIX systems that lack support for clock_gettime
 * df and `readlink --canonicalize' no longer corrupt the heap on
   non-glibc, non-solaris systems
