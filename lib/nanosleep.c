@@ -1,5 +1,5 @@
 /* Provide a replacement for the POSIX nanosleep function.
-   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -43,7 +43,7 @@ extern int errno;
 # define SIGCONT SIGTERM
 #endif
 
-#include "nanosleep.h"
+#include "timespec.h"
 
 static int suspended;
 int first_call = 1;
