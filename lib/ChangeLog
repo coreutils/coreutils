@@ -1,3 +1,259 @@
+2003-09-09  Paul Eggert  <eggert@twinsun.com>
+
+	More K&R removal.
+
+	* getloadavg.c (getloadavg, main): Define via prototypes.
+
+	* getopt.h (struct option.name): Assume C89, and use 'const'.
+	(getopt, etopt_long, getopt_long_only, _getopt_internal)
+	[defined __GNU_LIBRARY__]: Assume C89, so we can always declare
+	with a prototype.
+	* getopt.c (const): Remove macro.
+	Include <string.h> unconditionally.
+	(my_index): Remove; all uses changed to strchr.
+	(strlen): Remove decl.
+	(exchange): Remove forward decl; no longer needed.
+	(exchange, _getopt_initialize, _getopt_internal, getopt, main):
+	Define with prototype.
+	* getopt1.c (const): Remove macro.
+	(getopt_long, getopt_long_only, main): Define with prototype.
+
+	* getugroups.c: Include <string.h> unconditionally.
+
+	* getusershell.c: Include <stdlib.h> unconditionally.
+	(getusershell, setusershell, endusershell, readname, main):
+	Define with prototypes.
+
+	* group-member.c: Include group-member.h first.
+	Include <stdlib.h> unconditionally.
+
+	* hard-locale.c: Include hard-locale.h first.
+	Include <stdlib.h>, <string.h> unconditionally.
+
+	* hash.c (free, malloc): Remove decls.
+	Include <stdlib.h> unconditionally.
+
+	* human.c: Include <stdlib.h>, <string.h> unconditionally.
+	(getenv): Do not declare.
+
+	* idcache.c: Include <string.h> unconditionally.
+
+	* long-options.c: Include long-options.h first, to test interface.
+	Include <stdlib.h> unconditionally.
+
+	* makepath.c: Include makepath.h first, to test interface.
+	Include <stdlib.h> and <string.h> unconditionally.
+
+	* linebuffer.c: Include <stdlib.h>.
+	(free): Remove decl.
+
+	* malloc.c: Include <stdlib.h>, for malloc; don't bother with stddef.h.
+	rpl_malloc returns void *, not char *.
+	* realloc.c (rpl_realloc): Likewise.  Also, define with a prototype.
+
+	* md5.h: Include <limits.h> unconditionally.
+	(UINT_MAX_32_BITS): Don't worry about non-__STDC__ case.
+	(__P): Remove; all uses removed.
+	* md5.c: Include "md5.h" first.
+	(md5_init_ctx, md5_read_ctx, md5_finish_ctx, md5_stream,
+	md5_buffer, md5_process_bytes, md5_process_block):
+	Define with prototypes.
+	* sha.h (__P): Remove all uses.  (It wasn't defined??)
+	* sha.c: Include "sha.h" first.
+	Include <stdlib.h>, <string.h> unconditionally.
+
+	* memchr.c (__ptr_t): Remove; all uses changed to void *.
+	* memcmp.c (__ptr_t): Likewise.
+	* memrchr.c (__ptr_t): Likewise.
+	* memchr.c, memcmp.c, memcoll.c, memrchr.c:
+	Include <string.h> unconditionally.
+	* memchr.c, memrchr.c: Include <limits.h> unconditionally.
+	* memchr.c: Include <stdlib.h> unconditionally.
+	* memchr.c (LONG_MAX): Remove.
+	* memrchr.c (LONG_MAX): Likewise.
+	* memchr.c (__memchr): Define via a prototype.
+	* memrchr.c (__memrchr): Likewise.
+	* memcmp.c (__P): Remove, and remove all uses.
+	(memcmp_bytes, memcmp_common_alignment, memcmp_not_common_alignment):
+	Remove forward decls; no longer needed.
+	* memcpy.c, memmove.c, memset.c: Include <stddef.h>.
+	Use types required by C89 in prototype.
+
+	* mkdir.c: Include <stdlib.h>, <string.h> unconditionally.
+	* savedir.c: Likewise.
+	* mkdir.c (free): Remove decl.
+	* rmdir.c (rmdir): Define with a prototype.
+	* savedir.c: Include savedir.h first, to test interface.
+
+	* mktime.c (STDC_HEADERS): Remove.
+	Include <stdlib.h>, <string.h> unconditionally.
+
+	* modechange.c: Include <stdlib.h> unconditionally.
+	(malloc): Remove decl.
+
+	* mountlist.c: Include <stdlib.h>, <string.h> unconditionally.
+	(free): Remove decl.
+
+	* obstack.h (PTR_INT_TYPE) [!defined __PTRDIFF_TYPE__]:
+	Define to ptrdiff_t, without bothering to check HAVE_STDDEF_H.
+	(This type really should be intptr_t, but that's a C99ism.)
+	(_obstack_memcpy): Remove: all uses changed to memcpy.
+	Include <string.h> unconditionally.
+	(struct obstack): Assume __STDC__ for types of members
+	chunkfun, freefun, extra_arg.
+	(_obstack_newchunk, _obstack_free, _obstack_begin, _obstack_begin_1,
+	_obstack_memory_used, obstack_alloc_failed_handler, obstack_init,
+	obstack_begin, obstack_specify_allocation,
+	obstack_specify_allocation_with_arg, obstack_chunkfun,
+	obstack_freefun, obstack_free) [! (defined __STDC__ && __STDC__)]:
+	Remove unprototyped decls and the macros that use them.
+	* obstack.c (POINTER): Remove.  All uses changed to void *.
+	(obstack_alloc_failed_handler, CALL_CHUNKFUN, CALL_FREEFUN,
+	_obstack_begin, _obstack_begin_1, _obstack_allocated_p)
+	(defined __STDC__ && __STDC__)]:
+	Remove nonprototyped code.
+	Include <stdlib.h> unconditionally.
+	(_obstack_begin, _obstack_begin_1, _obstack_newchunk,
+	_obstack_allocated_p, _obstack_free, obstack_free,
+	_obstack_memory_used, print_and_abort):
+	Define using prototypes.
+	(obstack_1grow, obstack_1grow_fast, obstack_alloc, obstack_base,
+	obstack_blank, obstack_blank_fast, obstack_copy, obstack_copy0,
+	obstack_finish, obstack_grow, obstack_grow0, obstack_make_room,
+	obstack_next_free, obstack_object_size, obstack_room) [0]:
+	Remove unused, unprototyped code.
+
+	* path-concat.c: Include <stdlib.h>, <string.h> unconditionally.
+
+	* physmem.c (physmem_total, physmem_available, main): Define
+	with prototypes.
+
+	* posixtm.c: Include <stdlib.h>, <string.h> unconditionally.
+	(main): Define with a prototype.
+
+	* posixver.c (getenv): Remove decl.
+
+	* putenv.c (malloc): Returns void *, not char *.
+	Include <string.h> unconditionally.
+	(strchr, memcpy, NULL): Do not define.
+
+	* readtokens.c: Include readtokens.h first, to test interface.
+	Include <stdlib.h>, <string.h> unconditionally.
+	(init_tokenbuffer): Define with a prototype.
+
+	* regex.c (PARAMS): Remove.  All uses removed.
+	All uses of _RE_ARGS removed, too.
+	Include <stddef.h>, <stdlib.h>, <string.h>, <limits.h>
+	unconditionally.
+	(bzero): Assume memset exists.
+	(memcmp, memcpy, NULL): Remove.
+	(SIGN_EXTEND_CHAR): Remove; all uses replaced by casts to signed
+	char, or assignments to local vars of type signed char.
+	(init_syntax_once, PREFIX(extract_number_and_incr),
+	PREFIX(print_partial_compiled_pattern),
+	PREFIX(print_compiled_pattern), PREFIX(print_double_string),
+	convert_mbs_to_wcs, print_fastmap, re_set_syntax,
+	PREFIX(regex_grow_registers), PREFIX(regex_compile),
+	PREFIX(store_op1), PREFIX(store_op2), PREFIX(insert_op1),
+	PREFIX(insert_op2), PREFIX(at_begline_loc_p),
+	PREFIX(at_endline_loc_p), group_in_compile_stack, insert_space,
+	wcs_compile_range, byte_compile_range, truncate_wchar,
+	PREFIX(re_compile_fastmap), re_compile_fastmap, re_set_registers,
+	re_search, re_search_2, PREFIX(re_search_2), re_match, re_match_2,
+	count_mbs_length, wcs_re_match_2_internal,
+	byte_re_match_2_internal, PREFIX(group_match_null_string_p),
+	PREFIX(alt_match_null_string_p),
+	PREFIX(common_op_match_null_string_p), PREFIX(bcmp_translate),
+	re_compile_pattern, re_comp, re_exec, regcomp, regexec, regerror,
+	regfree, PREFIX(extract_number)): Define with prototype.  Remove
+	now-unnecessary declaration, if any.
+	(byte_compile_range, PREFIX(regex_compile), re_comp, re_exec,
+	regcomp, regexec):
+	Remove now-unnecessary casts among pointer types.
+	* regex.h (_RE_ARGS): Remove.  All uses removed.
+
+	* rename.c: Include <stdlib.h>, <string.h> unconditionally.
+	(free): Remove decl.
+
+	* rpmatch.c: Include <stdlib.h> unconditionally.
+
+	* save-cwd.c: Include <stdlib.h> unconditionally.
+	* xgetcwd.c: Likewise.
+
+	* stat.c: Include <stdlib.h>, <string.h> unconditionally.
+	(free): Remove decl.
+
+	The following changes are not K&R related:
+
+	* group-member.h: Include <sys/types.h>, so that this file is
+	self-contained.
+	* makepath.h: Likewise.
+
+	* getusershell.c (readname, default_index, line_size, readname):
+	Use size_t, not int, for sizes.
+	(readname): If the size overflows, report an error instead of
+	looping forever.
+
+2003-09-09  Derek Robert Price  <derek@ximbiot.com>
+
+	* getndelim2.c: Assume stdlib.h per the C89 spec.
+
+2003-09-08  Paul Eggert  <eggert@twinsun.com>
+
+	Assume C89 or better; remove K&R cruft.
+	A few of these changes were first proposed by Derek Robert Price
+	in <http://mail.gnu.org/archive/html/bug-gnulib/2003-07/msg00105.html>.
+
+	* addext.c: Include <string.h> unconditionally.
+	* backupfile.c: Include <string.h>, <stdlib.h> unconditionally.
+	Don't declare getenv or malloc.
+
+	* alloca.c: Include <string.h>, <stdlib.h> unconditionally.
+	(POINTER_TYPE, pointer): Remove; all uses changed to void *.
+	(NULL): Remove.
+	(find_stack_direction, alloca): Use prototypes.
+
+	* atexit.c (atexit): Define using a prototype.
+
+	* basename.c, dirname.c, stripslash.c:
+	Include <string.h> unconditionally.
+
+	* bcopy.c: Include <stddef.h>.
+	(bcopy): Define with prototype, using 'const' and 'void' and 'size_t'.
+
+	* canon-host.c: Include <stdlib.h>, <string.h> unconditionally.
+
+	* error.h (error, error_at_line, error_print_progname)
+	[! (defined (__STDC__) && __STDC__)]: Remove decls.
+	* error.c: Include error.h first, to check interface.
+	Include <stdarg.h>, <stdlib.h>, <string.h> unconditionally.
+	(VA_START): Remove; all uses changeed to va_start.
+	(exit, strerror): Remove decls.
+	(error_print_progname): Prototype uncondionally.
+	Don't include <errno.h>; no longer needed.
+	(private_strerror): Remove.
+	(error_tail): Always define.
+	(error, error_at_line): Assume C89 or better; always use prototypes.
+
+	* euidaccess.c (main): Define with a prototype.
+
+	* exclude.c: Include <stdlib.h>, <string.h> unconditionally.
+
+	* exitfail.c: Include <stdlib.h> unconditionally.
+
+	* fnmatch_.h (__P): Remove.  All uses changed to assume prototypes.
+	* fnmatch.c: Include fnmatch.h first, to test interface.
+	Include <string.h>, <stddef.h>, <stdlib.h> unconditionally.
+	(getenv): Remove decl.
+	(fnmatch): Define using a prototype.
+	* fnmatch_loop.c (FCT): Remove forward decl; no longer needed.
+	(FCT): Define using a prototype.
+
+	* getdate.y: Include <stdlib.h>, <string.h> unconditionally.
+
+	* gethostname.c: Include <stddef.h>.
+	(gethostname): Define with prototype.  Length is size_t, not int.
+
 2003-09-08  Paul Eggert  <eggert@twinsun.com>
 
 	* utime.c [!HAVE_UTIMES_NULL]: Include <sys/stat.h>, <fcntl.h>.
