@@ -1,4 +1,4 @@
-/* Error-checking interface to strtod.
+/* Error-checking interface to strtod-like functions.
 
    Copyright (C) 1996, 1998, 2003 Free Software Foundation, Inc.
 
@@ -21,6 +21,7 @@
 #ifndef XSTRTOD_H
 # define XSTRTOD_H 1
 
-int xstrtod (const char *str, const char **ptr, double *result);
+int xstrtod (const char *str, const char **ptr, double *result,
+	     double (*convert) (char const *, char **));
 
 #endif /* not XSTRTOD_H */
