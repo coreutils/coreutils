@@ -62,7 +62,7 @@ stat.c: xstat.in
 # On systems with glibc-2.1 or newer, the file is redundant, therefore we
 # avoid installing it.
 
-all-local: charset.alias ref-add.sed ref-del.sed
+all-local: charset.alias ref-add.sed ref-del.sed lstat.c stat.c
 
 charset_alias = $(DESTDIR)$(libdir)/charset.alias
 charset_tmp = $(DESTDIR)$(libdir)/charset.tmp
