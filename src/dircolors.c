@@ -1,6 +1,6 @@
 /* dircolors - output commands to set the LS_COLOR environment variable
-   Copyright (C) 1994, 1995, 1997, 1998, 1999, 2000, 2001, 2002 H. Peter Anvin
-   Copyright (C) 1996-2000 Free Software Foundation, Inc.
+   Copyright (C) 1996-2003 Free Software Foundation, Inc.
+   Copyright (C) 1994, 1995, 1997, 1998, 1999, 2000 H. Peter Anvin
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -31,6 +31,7 @@
 #include "getline.h"
 #include "obstack.h"
 #include "quote.h"
+#include "xstrndup.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "dircolors"
@@ -121,15 +122,6 @@ For details on the format of these files, run `dircolors --print-database'.\n\
     }
 
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
-}
-
-static void *
-xstrndup (const char *s, size_t n)
-{
-  char *new = strndup (s, n);
-  if (new == NULL)
-    xalloc_die ();
-  return new;
 }
 
 /* If the SHELL environment variable is set to `csh' or `tcsh,'
