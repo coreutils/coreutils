@@ -1,12 +1,26 @@
-2003-04-08  Jim Meyering  <jim@meyering.net>
+2003-04-09  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.1.
 
+	* src/split.c (bytes_split): Use size_t temporary (rather than
+	uintmax_t original) in remaining computations.  From Paul Eggert.
+
+	Handle command line option arguments larger than 2^31.
+	This allows e.g., splitting into files of size 2GB and larger,
+	and running split --lines=N with N=2^31 or more.
+	But for --line-bytes=N, the restriction that N <= SIZE_MAX
+	remains (for now), due to the way it is implemented.
+
+	* src/split.c: Include "inttostr.h".
+	(bytes_split, lines_split, line_bytes_split, main):
+        Use uintmax_t, not size_t, for file sizes.
+        (main): Give a better diagnostic for option arguments == 0.
+	Use umaxtostr to print file sizes.
+
+2003-04-08  Jim Meyering  <jim@meyering.net>
+
 	* src/rm.c (usage): Mention that --directory (-d) works only
 	on some systems.  Suggestion from Samuel Tardieu.
-
-	* tests/misc/Makefile.am (TESTS): Add split-fail.
-	* tests/misc/split-fail: New file.
 
 	* tests/basename/basic: Run $PERL to see if it is available,
 	rather than testing its value.
@@ -19,7 +33,11 @@
 	* tests/seq/basic, tests/sha1sum/basic-1, tests/sha1sum/sample-vec:
 	* tests/sum/basic-1, tests/seq/basic: Likewise.
 
+	* tests/misc/Makefile.am (TESTS): Add split-fail.
+	* tests/misc/split-fail: New file.
+
 	* src/split.c: Rename local variables: nchars -> n_bytes.
+	(lines_split): Rename local, nlines -> n_lines.
 	(main): Rename local variable: s/accum/n_units/.
 	(main): Use STDIN_FILENO, not literal `0'.
 
