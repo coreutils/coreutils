@@ -1,5 +1,17 @@
 2004-09-08  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* coreutils.texi (Common options): Some programs don't reorder
+	options.
+	(tr invocation, echo invocation, printf invocation, test invocation,
+	expr invocation, basename invocation, chroot invocation,
+	nice invocation, nohup invocation, seq invocation):
+	This program doesn't reorder options.
+	(tr invocation): Mention --help, --version, --.
+	(echo invocation): Mention that -- isn't special.
+	(test invocation): Mention that the expression is optional,
+	and that test ! EXPR is like ! test EXPR.
+	(expr invocation): Mention --help, --version.
+
 	* coreutils.texi (sort invocation): Add remarks about sort -u
 	versus sort | uniq.  Prompted by a question from Andrew Noymer.
 
