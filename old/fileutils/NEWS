@@ -1,6 +1,7 @@
 Changes in release 3.15:
 * cp --preserve preserves owner and group of symlinks on Linux when run
   with EUID == 0
+[3.14a]:
 Changes in release 3.14:
 * ls --color highlights based on suffix rules only for regular files
 * touch --date=DATE accepts dates like those in an RCS log listing, e.g.,
