@@ -49,11 +49,6 @@
 #  define UCHAR_MAX 255
 # endif
 #endif
-#ifndef STDC_HEADERS
-char *malloc ();
-char *realloc ();
-void free ();
-#endif
 
 char *xstrdup ();
 
