@@ -28,7 +28,19 @@
 #endif
 #endif
 
-/* FIXME: include alloca junk.  */
+#ifdef __GNUC__
+#define alloca __builtin_alloca
+#else
+#ifdef HAVE_ALLOCA_H
+#include <alloca.h>
+#else
+#ifdef _AIX
+ #pragma alloca
+#else
+char *alloca ();
+#endif
+#endif
+#endif
 
 #include <stdio.h>
 #include <sys/types.h>
@@ -116,7 +128,6 @@ parse_user_spec (spec_arg, uid, gid, username_arg, groupname_arg)
   char *spec;			/* A copy we can write on.  */
   struct passwd *pwd;
   struct group *grp;
-  int spec_len;
   char *g, *u, *separator;
   char *groupname;
 
@@ -124,10 +135,7 @@ parse_user_spec (spec_arg, uid, gid, username_arg, groupname_arg)
   *username_arg = *groupname_arg = NULL;
   groupname = NULL;
 
-  /* FIXME: use this instead: V_STRDUP (spec, spec_arg); */
-  spec_len = strlen (spec_arg);
-  spec = (char *) alloca (strlen (spec_arg) + 1);
-  strcpy (spec, spec_arg);
+  V_STRDUP (spec, spec_arg);
 
   /* Find the separator if there is one.  */
   separator = index (spec, ':');
