@@ -1,3 +1,15 @@
+2000-04-15  Jim Meyering  <meyering@lucent.com>
+
+	Use `C' to denote so-called `contiguous' files, the same way
+	that tar does.
+	* filemode.c (S_ISCTG) [!S_ISCTG && S_IFCTG]: Define.
+	(ftypelet): Use S_ISCTG.
+	From Michael Deutschmann.
+
+2000-04-14  Jim Meyering  <meyering@lucent.com>
+
+	* strftime.c (my_strftime) [#ifdef strftime]: Declare strftime.
+
 2000-04-08  Jim Meyering  <meyering@lucent.com>
 
 	* Makefile.am (charset.alias): Use t-$@, not $@-t so the DOS 8.3
