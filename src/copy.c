@@ -709,13 +709,15 @@ copy_internal (const char *src_path, const char *dst_path,
       if (utime (dst_path, &utb))
 	{
 	  error (0, errno, _("preserving times for %s"), dst_path);
-	  return x->require_preserve;
+	  if (x->require_preserve)
+	    return 1;
 	}
 
       if (DO_CHOWN (chown, dst_path, src_sb.st_uid, src_sb.st_gid))
 	{
 	  error (0, errno, _("preserving ownership for %s"), dst_path);
-	  return x->require_preserve;
+	  if (x->require_preserve)
+	    return 1;
 	}
     }
 
@@ -725,7 +727,8 @@ copy_internal (const char *src_path, const char *dst_path,
       if (chmod (dst_path, src_mode & x->umask_kill))
 	{
 	  error (0, errno, _("preserving permissions for %s"), dst_path);
-	  return x->require_preserve;
+	  if (x->require_preserve)
+	    return 1;
 	}
     }
   else if (fix_mode)
@@ -756,8 +759,6 @@ valid_options (const struct cp_options *co)
 
   /* FIXME: make sure xstat and dereference are consistent.  */
   assert (co->xstat);
-
-  assert (co->require_preserve == 0 || co->require_preserve == 1);
 
   assert (co->sparse_mode != SPARSE_UNUSED);
   return 1;
