@@ -285,8 +285,8 @@ print_size (uintmax_t n_bytes, const char *string)
   fflush (stdout);
 }
 
-/* This function is called once for every file system object that nftw
-   encounters.  nftw does a depth-first traversal.  This function knows
+/* This function is called once for every file system object that fts
+   encounters.  fts does a depth-first traversal.  This function knows
    that and accumulates per-directory totals based on changes in
    the depth of the current entry.  */
 
