@@ -2,6 +2,8 @@
 
 	* Version 5.3.0.
 
+	* tests/misc/pwd: New test, for fix of 2004-04-19.
+
 	* src/copy.c: Remove declaration of euidaccess.
 	Instead, include "euidaccess.h".
 
