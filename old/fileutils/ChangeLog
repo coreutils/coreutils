@@ -1,13 +1,15 @@
-Fri Mar 26 19:03:37 1993  Jim Meyering  (meyering@comco.com)
-
-	* ls.c (decode_switches, print_long_format): New option: --full-time.
-	From K. Richard Pixley (rich@rtl.cygnus.com)
-
 Fri Mar 26 00:32:39 1993  Jim Meyering  (meyering@comco.com)
 
 	* df.c (add_omitted_fs_type, fs_to_omit): New functions adding
 	support for --exclude-type option.  From Kaveh R. Ghazi
 	<ghazi@caip.rutgers.edu>.
+
+	* ls.c (decode_switches, print_long_format): New option: --full-time.
+	From K. Richard Pixley (rich@rtl.cygnus.com)
+
+Thu Mar 25 21:02:36 1993  David J. MacKenzie  (djm@goldman.gnu.ai.mit.edu)
+
+	* dirname.c [rindex]: Don't redefine.
 
 Tue Mar 23 23:13:33 1993  Jim Meyering  (meyering@comco.com)
 
@@ -20,6 +22,26 @@ Tue Mar 23 23:13:33 1993  Jim Meyering  (meyering@comco.com)
 	perl -e 'print "a  a\n";'| dd of=/dev/null ibs=1 cbs=3 conv=unblock
 	With suggestions from Chris Weber <weber@bucknell.edu>,
 	Marlys.A.Nelson@uwrf.edu, and Albert-Lunde@nwu.edu.
+
+Fri Mar 05 00:02:53 1993  Jim Meyering  (meyering@comco.com)
+
+	* chmod.c: Add long-named options.
+
+Mon Feb 15 23:34:55 1993  Jim Meyering  (meyering@comco.com)
+
+	* rm.c (remove_file): Don't ask about overriding a mode if the
+	target is a symbolic link -- some systems (like SGI's Irix 4.0)
+	zero the permissions fields of symbolic links.
+	From Arne Henrik Juul (arnej@imf.unit.no).
+
+Fri Dec 11 16:46:50 1992  David J. MacKenzie  (djm@kropotkin.gnu.ai.mit.edu)
+
+	* rm.c (main): If -f is given, don't complain if no file args
+	are given.
+
+Tue Dec  8 21:09:16 1992  David J. MacKenzie  (djm@kropotkin.gnu.ai.mit.edu)
+
+	* posixtm.y: Include alloca.h if HAVE_ALLOCA_H, not if sparc.
 
 Mon Dec  7 20:09:59 1992  Jim Meyering  (meyering@idefix.comco.com)
 
