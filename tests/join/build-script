@@ -1,13 +1,16 @@
 #!/p/bin/perl5.000 -w
 
-$join = '/usr/bin/join';
 $join = 'join';
+$join = '/usr/bin/join';
+$join = './join';
 $test = 0;
 $| = 1;
 
 print ":\nerrors=0\n";
 $expected = '';
 $flags = '';
+$f1 = '';
+$f2 = '';
 
 while (<>)
   {
