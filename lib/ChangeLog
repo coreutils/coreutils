@@ -1,3 +1,18 @@
+2000-04-04  Jim Meyering  <meyering@lucent.com>
+
+	Be more DOS 8.3-friendly.
+	* ref-add.sin: Renamed from ref-add.sed.in.
+	* ref-del.sin: Renamed from ref-del.sed.in.
+	* Makefile.am: Reflect renaming.
+	Reported by Eli Zaretskii.
+
+	Use a temporary file name that won't clash with `charset.alias'
+	in the DOS 8.3 name space.
+	* Makefile.am (charset_tmp): Define.
+	(install-exec-local): Use $(charset_tmp) instead of $(charset_alias)-t.
+	(uninstall-local): Likewise.
+	Reported by Eli Zaretskii.
+
 2000-03-29  Paul Eggert  <eggert@twinsun.com>
 
 	* time/strftime.c (my_strftime): Make sure we call the system
