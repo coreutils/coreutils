@@ -1,6 +1,15 @@
-2004-06-17  Jim Meyering  <jim@meyering.net>
+2004-06-19  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
+
+	* src/system.h (case_GETOPT_VERSION_CHAR): Switch back to
+	using GNU_PACKAGE (from PACKAGE) once again.  This restores
+	`GNU' to the parenthesized package name in --version output.
+	Before, the first argument from AC_INIT, `GNU coreutils', would
+	be propagated to the PACKAGE variable.	Now, `GNU ' is trimmed.
+	Reported by Richard Stallman.
+
+2004-06-17  Jim Meyering  <jim@meyering.net>
 
 	* src/tr.c (to_uchar): Rename function from `uchar'.  The latter
 	would clash with a typedef in Tru64's <sys/types.h>.  From Albert Chin.
