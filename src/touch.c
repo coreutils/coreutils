@@ -334,7 +334,9 @@ main (int argc, char **argv)
       date_set++;
     }
 
-  if (!date_set && optind < argc && !STREQ (argv[optind - 1], "--"))
+  /* The obsolescent `MMDDhhmm[YY]' form is valid IFF there are
+     two or more non-option arguments.  */
+  if (!date_set && 2 <= argc - optind && !STREQ (argv[optind - 1], "--"))
     {
       newtime = posixtime (argv[optind], PDS_TRAILING_YEAR);
       if (newtime != (time_t) -1)
