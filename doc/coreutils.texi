@@ -4891,16 +4891,17 @@ List just the names of directories, as with other types of files, rather
 than listing their contents.
 @c The following sentence is the same as the one for -F.
 Do not follow symbolic links listed on the
-command line unless the @option{--dereference-command-line} (@option{-H})
+command line unless the @option{--dereference-command-line-symlink-to-dir} (@option{-H})
 or @option{--dereference} (@option{-L}) options are specified.
 
 @item -H
-@itemx --dereference-command-line
+@itemx --dereference-command-line-symlink-to-dir
 @opindex -H
-@opindex --dereference-command-line
+@opindex --dereference-command-line-symlink-to-dir
 @cindex symbolic links, dereferencing
-If a command line argument specifies a symbolic link, show information
-for the file the link references rather than for the link itself.
+If a command line argument specifies a symbolic link that refers to
+a directory, show information for that directory rather than for the
+link itself.
 
 @item -I PATTERN
 @itemx --ignore=PATTERN
@@ -5385,7 +5386,7 @@ indicators are @samp{/} for directories, @samp{@@} for symbolic links,
 @samp{|} for FIFOs, @samp{=} for sockets, and nothing for regular files.
 @c The following sentence is the same as the one for -d.
 Do not follow symbolic links listed on the
-command line unless the @option{--dereference-command-line} (@option{-H})
+command line unless the @option{--dereference-command-line-symlink-to-dir} (@option{-H})
 or @option{--dereference} (@option{-L}) options are specified.
 
 @item --indicator-style=@var{word}
