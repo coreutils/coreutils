@@ -1,6 +1,16 @@
-2005-04-04  Jim Meyering  <jim@meyering.net>
+2005-04-04  Dmitry V. Levin  <ldv@altlinux.org>
 
 	* Version 5.3.1.
+
+	* src/tee.c (tee): When closing files, do not close stdout,
+	leave this job to close_stdout() instead.
+	* configure.ac (AC_CONFIG_FILES): Add tests/tee/Makefile.
+	* tests/Makefile.am (SUBDIRS): Add tee.
+	* tests/tee/Makefile.am: New file.
+	* tests/tee/.cvsignore: Likewise.
+	* tests/tee/{basic,dash}: New tee tests.
+
+2005-04-04  Jim Meyering  <jim@meyering.net>
 
 	* src/echo.c (usage): Mention that some shells provide a
 	built-in function by the same name.
