@@ -57,39 +57,7 @@ struct hash_tuning
 
 typedef struct hash_tuning Hash_tuning;
 
-struct hash_table
-  {
-    /* The array of buckets starts at BUCKET and extends to BUCKET_LIMIT-1,
-       for a possibility of N_BUCKETS.  Among those, N_BUCKETS_USED buckets
-       are not empty, there are N_ENTRIES active entries in the table.  */
-    struct hash_entry *bucket;
-    struct hash_entry *bucket_limit;
-    unsigned n_buckets;
-    unsigned n_buckets_used;
-    unsigned n_entries;
-
-    /* Tuning arguments, kept in a physicaly separate structure.  */
-    const Hash_tuning *tuning;
-
-    /* Three functions are given to `hash_initialize', see the documentation
-       block for this function.  In a word, HASHER randomizes a user entry
-       into a number up from 0 up to some maximum minus 1; COMPARATOR returns
-       true if two user entries compare equally; and DATA_FREER is the cleanup
-       function for a user entry.  */
-    Hash_hasher hasher;
-    Hash_comparator comparator;
-    Hash_data_freer data_freer;
-
-    /* A linked list of freed struct hash_entry structs.  */
-    struct hash_entry *free_entry_list;
-
-# if USE_OBSTACK
-    /* Whenever obstacks are used, it is possible to allocate all overflowed
-       entries into a single stack, so they all can be freed in a single
-       operation.  It is not clear if the speedup is worth the trouble.  */
-    struct obstack entry_stack;
-# endif
-  };
+struct hash_table;
 
 typedef struct hash_table Hash_table;
 
