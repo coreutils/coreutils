@@ -146,7 +146,7 @@ struct ftw_data
 
 
 /* Internally we use the FTW_* constants used for `nftw'.  When invoked
-   as `ftw' map the flag to the subset of values used by `ftw'.  */
+   as `ftw', map each flag to the subset of values used by `ftw'.  */
 static const int nftw_arr[] =
 {
   FTW_F, FTW_D, FTW_DNR, FTW_NS, FTW_SL, FTW_DP, FTW_SLN
@@ -225,7 +225,7 @@ open_dir_stream (struct ftw_data *data, struct dir_data *dirp)
 		{
 		  char *newp;
 		  bufsize += MAX (1024, 2 * this_len);
-		  newp = realloc (buf, bufsize);
+		  newp = (char *) realloc (buf, bufsize);
 		  if (newp == NULL)
 		    {
 		      /* No more memory.  */
@@ -307,7 +307,7 @@ process_entry (struct ftw_data *data, struct dir_data *dir, const char *name,
       char *newp;
 
       data->dirbufsize *= 2;
-      newp = realloc (data->dirbuf, data->dirbufsize);
+      newp = (char *) realloc (data->dirbuf, data->dirbufsize);
       if (newp == NULL)
 	return -1;
       data->dirbuf = newp;
@@ -315,7 +315,7 @@ process_entry (struct ftw_data *data, struct dir_data *dir, const char *name,
 
   *((char *) __mempcpy (data->dirbuf + data->ftw.base, name, namlen)) = '\0';
 
-  if ( ! (data->flags & FTW_CHDIR))
+  if ((data->flags & FTW_CHDIR) == 0)
     name = data->dirbuf;
 
   if (((data->flags & FTW_PHYS)
@@ -370,15 +370,8 @@ process_entry (struct ftw_data *data, struct dir_data *dir, const char *name,
 			    result = -1;
 			}
 		      else
-			{
-			  /* Please note that we overwrite a slash.  */
-			  data->dirbuf[data->ftw.base - 1] = '\0';
-
-			  if (__chdir (data->dirbuf) < 0)
-			    result = -1;
-
-			  data->dirbuf[data->ftw.base - 1] = '/';
-			}
+			if (__chdir ("..") < 0)
+			  result = -1;
 		    }
 		}
 	    }
@@ -604,13 +597,17 @@ ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
   /* Get stat info for start directory.  */
   if (result == 0)
     {
+      const char *name = ((data.flags & FTW_CHDIR)
+			  ? data.dirbuf + data.ftw.base
+			  : data.dirbuf);
+
       if (((flags & FTW_PHYS)
-	   ? LXSTAT (_STAT_VER, data.dirbuf, &st)
-	   : XSTAT (_STAT_VER, data.dirbuf, &st)) < 0)
+	   ? LXSTAT (_STAT_VER, name, &st)
+	   : XSTAT (_STAT_VER, name, &st)) < 0)
 	{
 	  if (!(flags & FTW_PHYS)
 	      && errno == ENOENT
-	      && LXSTAT (_STAT_VER, dir, &st) == 0
+	      && LXSTAT (_STAT_VER, name, &st) == 0
 	      && S_ISLNK (st.st_mode))
 	    result = (*data.func) (data.dirbuf, &st, data.cvt_arr[FTW_SLN],
 				   &data.ftw);
