@@ -48,6 +48,13 @@
 #include <sys/types.h>
 #include "system.h"
 
+#ifndef isascii
+#define isascii(c) 1
+#endif
+
+#define ISDIGIT(c) (isascii (c) && isdigit (c))
+#define ISXDIGIT(c) (isascii (c) && isxdigit (c))
+
 #ifndef STDC_HEADERS
 double strtod ();
 long strtol ();
@@ -168,7 +175,7 @@ print_formatted (format, argc, argv)
 		field_width = 0;
 	    }
 	  else
-	    while (isdigit (*f))
+	    while (ISDIGIT (*f))
 	      {
 		++f;
 		++direc_length;
@@ -191,7 +198,7 @@ print_formatted (format, argc, argv)
 		    precision = 0;
 		}
 	      else
-		while (isdigit (*f))
+		while (ISDIGIT (*f))
 		  {
 		    ++f;
 		    ++direc_length;
@@ -245,7 +252,7 @@ print_esc (escstart)
   if (*p == 'x')
     {
       for (esc_length = 0, ++p;
-	   esc_length < 3 && isxdigit (*p);
+	   esc_length < 3 && ISXDIGIT (*p);
 	   ++esc_length, ++p)
 	esc_value = esc_value * 16 + hextobin (*p);
       if (esc_length == 0)
