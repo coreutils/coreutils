@@ -89,6 +89,7 @@ START-INFO-DIR-ENTRY
 * sleep: (coreutils)sleep invocation.           Delay for a specified time.
 * sort: (coreutils)sort invocation.             Sort text files.
 * split: (coreutils)split invocation.           Split into fixed-size pieces.
+* stat: (coreutils)stat invocation.             Report file or filesystem status.
 * stty: (coreutils)stty invocation.             Print/change terminal settings.
 * su: (coreutils)su invocation.                 Modify user and group id.
 * sum: (coreutils)sum invocation.               Print traditional checksum.
@@ -173,7 +174,7 @@ Free Documentation License''.
 * Basic operations::                   cp dd install mv rm shred
 * Special file types::                 ln mkdir rmdir mkfifo mknod
 * Changing file attributes::           chgrp chmod chown touch
-* Disk usage::                         df du sync
+* Disk usage::                         df du stat sync
 * Printing text::                      echo printf yes
 * Conditions::                         false true test expr
 * Redirection::                        tee
@@ -310,6 +311,7 @@ Disk usage
 
 * df invocation::               Report filesystem disk space usage
 * du invocation::               Estimate file space usage
+* stat invocation::             Report file or filesystem status
 * sync invocation::             Synchronize data on disk with memory
 
 Printing text
@@ -7593,6 +7595,7 @@ or some such command.)
 @menu
 * df invocation::               Report filesystem disk space usage.
 * du invocation::               Estimate file space usage.
+* stat invocation::		Report file or filesystem status.
 * sync invocation::             Synchronize memory and disk.
 @end menu
 
@@ -7960,6 +7963,114 @@ values for files that are NFS-mounted from HP-UX systems.  On HP-UX
 systems, it reports sizes that are twice the correct values for
 files that are NFS-mounted from BSD systems.  This is due to a flaw
 in HP-UX; it also affects the HP-UX @command{du} program.
+
+
+@node stat invocation
+@section @command{stat}: Report file or filesystem status
+
+@pindex stat
+@cindex file status
+@cindex filesystem status
+
+@command{stat} displays information about the specified file(s).  Synopsis:
+
+@example
+stat [@var{option}]@dots{} [@var{file}]@dots{}
+@end example
+
+With no option, @command{stat} reports all information about the given files.
+But it also can be used to report the information of the filesystems the
+given files are located on. If the files are links, stat can also give
+information about the files the links point to.
+
+
+@table @samp
+
+@item -f
+@itemx --filesystem
+@opindex -f
+@opindex --filesystem
+@cindex filesystems
+Report information about the filesystems where the given files are located
+instead of information about the files themselves.
+
+@item -l
+@itemx --link
+@opindex -l
+@opindex --link
+@cindex link
+With this option stat works normally for all type of files except for
+symbolic links. For symbolic links information about the files that are
+obtained by tracing the links is displayed.
+
+@item -t
+@itemx --terse
+@opindex -t
+@opindex --terse
+@cindex terse output
+Prints the information in terse form, suitable for parsing by other programs
+
+@item -s
+@itemx --secure
+@opindex -s
+@opindex --secure
+@cindex security output
+Displays security context on SE Linux.
+
+@item -c
+@itemx --format
+@opindex -c
+@opindex --format
+@cindex output format
+Allow user to specify the output format.
+
+Interpreted sequences for file stat are:
+@itemize @bullet
+@item %n - File name
+@item %N - Quoted File name with dereference if symbolic link
+@item %d - Device number in decimal
+@item %D - Device number in hex
+@item %i - Inode number
+@item %a - Access rights in octal
+@item %A - Access rights in human readable form
+@item %f - raw mode in hex
+@item %F - File type
+@item %h - Number of hard links
+@item %u - User Id of owner
+@item %U - User name of owner
+@item %g - Group Id of owner
+@item %G - Group name of owner
+@item %t - Major device type in hex
+@item %T - Minor device type in hex
+@item %s - Total size, in bytes
+@item %b - Number of blocks allocated
+@item %o - IO block size
+@item %x - Time of last access
+@item %X - Time of last access as seconds since Epoch
+@item %y - Time of last modification
+@item %Y - Time of last modification as seconds since Epoch
+@item %z - Time of last change
+@item %Z - Time of last change as seconds since Epoch
+@item %S - Security ID in SE-Linux
+@item %C - Security context in SE-Linux
+@end itemize
+
+  Interpreted sequences for filesystem stat are:
+@itemize @bullet
+@item %n - File name
+@item %i - File System id in hex
+@item %l - Maximum length of filenames
+@item %t - Type in hex
+@item %T - Type in human readable form
+@item %b - Total data blocks in file system
+@item %f - Free blocks in file system
+@item %a - Free blocks available to non-superuser
+@item %s - Optimal transfer block size
+@item %c - Total file nodes in file system
+@item %S - Security ID in SE-Linux
+@item %C - Security context in SE-Linux
+@end itemize
+@end table
 
 
 @node sync invocation
