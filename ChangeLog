@@ -2,6 +2,14 @@
 
 	* Version 5.3.0.
 
+	When chown or chgrp is modifying the referent of a symlink,
+	use the chown(2) function, if possible.
+	* src/chown-core.c (change_file_owner): Don't hard-code the
+	open/fchown/close kludge here.  Use `chown' instead.
+	The chown function works just fine on conforming systems.
+	Other systems now go through the new chown wrapper that
+	resorts to the old kludge.
+
 	* src/chown-core.c (change_file_owner): Add a comment.
 
 2004-04-27  Jim Meyering  <jim@meyering.net>
