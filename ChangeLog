@@ -1,3 +1,140 @@
+2004-01-21  Paul Eggert  <eggert@twinsun.com>
+
+	Exit status cleanup.
+
+	* src/basename.c (usage): Use EXIT_SUCCESS, not 0, for clarity.
+	* src/cat.c, src/chgrp.c, src/chmod.c, src/chown.c, src/chroot.c,
+	* src/cksum.c, src/comm.c, src/cp.c, src/csplit.c, src/cut.c,
+	* src/date.c, src/dd.c, src/df.c, src/dircolors.c, src/dirname.c,
+	* src/du.c, src/echo.c, src/env.c, src/expand.c, src/expr.c,
+	* src/factor.c, src/fmt.c, src/fold.c, src/head.c, src/hostid.c,
+	* src/hostname.c, src/id.c, src/install.c, src/join.c, src/kill.c,
+	* src/link.c, src/ln.c, src/logname.c, src/ls.c, src/md5sum.c,
+	* src/mkdir.c, src/mkfifo.c, src/mknod.c, src/mv.c, src/nice.c,
+	* src/nl.c, src/nohup.c, src/od.c, src/paste.c, src/pathchk.c,
+	* src/pinky.c, src/pr.c, src/printenv.c, src/printf.c, src/pwd.c,
+	* src/rm.c, src/rmdir.c, src/seq.c, src/setuidgid.c, src/shred.c,
+	* src/sleep.c, src/sort.c, src/split.c, src/stat.c, src/stty.c,
+	* src/su.c, src/sum.c, src/sync.c, src/tac.c, src/tail.c, src/tee.c,
+	* src/test.c, src/touch.c, src/tr.c, src/tsort.c, src/tty.c,
+	* src/uname.c, src/unexpand.c, src/uniq.c, src/unlink.c, src/uptime.c,
+	* src/users.c, src/wc.c, src/who.c, src/whoami.c, src/yes.c: Likewise.
+
+	* src/cat.c (usage): Don't bother normalizing exit status
+	since the arg is already the correct exit status now.
+	* src/cksum.c, src/comm.c, src/csplit.c, src/cut.c,
+	* src/dircolors.c, src/expand.c, src/fmt.c, src/fold.c, src/head.c,
+	* src/join.c, src/md5sum.c, src/nl.c, src/od.c, src/paste.c,
+	* src/pr.c, src/split.c, src/sum.c, src/tac.c, src/tail.c, src/tr.c,
+	* src/tsort.c, unexpand.c, src/src/uniq.c, src/src/wc.c: Likewise.
+
+	* src/chown.c (main): Removed unused local 'fail'.
+
+	* src/chroot.c (CHROOT_FOUND_BUT_CANNOT_INVOKE, CHROOT_FAILURE):
+	Remove.
+
+	* src/chroot.c (main): Initialize exit_failure to EXIT_FAIL.
+	* src/env.c, src/nice.c, src/su.c: Likewise.
+	* src/nohup.c (main): Likewise, to NOHUP_FAILURE.
+	* src/setuidgid.c (main): Likewise, to SETUIDGID_FAILURE.
+	* src/expr.c (main): Use initialize_exit_failure rather than
+	setting exit_failure directly; this optimizes away redundant
+	assignments.
+	* src/printenv.c, src/sort.c, src/test.c, src/tty.c: Likewise.
+	* src/system.h (initialize_exit_failure): New function.
+	Include exitfail.h here, since we refer to exit_failure.
+	All callers changed to not include exitfail.h.
+
+	* src/chroot.c (main): Exit with status 1 rather than 127
+	if chroot itself fails, as per documentation.
+
+	* src/chroot.c (main): Use EXIT_ENOENT and EXIT_CANNOT_INVOKE
+	rather than roll-your-own symbols or integers.
+	* src/env.c (main): Likewise.
+	* src/nohup.c (main): Likewise.
+	* src/su.c (run_shell): Likewise.
+
+	* src/cp.c (exit_status): Remove static var....
+	(main): Making it local here instead.  Use =, not |=, to set it.
+
+	* src/cut.c (FATAL_ERROR, main): Exit with status EXIT_FAILURE,
+	not 2, on errors.
+	* src/date.c (batch_convert, main): Likewise.
+	* src/dd.c (dd_copy): Likewise.
+	* src/pr.c (first_last_page, main, getoptarg): Likewise.
+	* src/tr.c (main): Likewise.
+	* src/date.c (main): Don't assume EXIT_FAILURE == 1, as
+	POSIX doesn't require it.
+	* src/dd.c (write_output, skip, dd_copy): Likewise.
+	* src/df.c (main): Likewise.
+	* src/id.c (main): Likewise.
+	* src/install.c (main): Likewise.
+	* src/ln.c (main): Likewise.
+	* src/ls.c (main): Likewise.
+	* src/mv.c (main): Likewise.
+	* src/shred.c (main): Likewise.
+
+	* src/env.c (main): Exit with status 1, not 2, on errors detected
+	by env proper.
+	* src/hostname.c (main): Likewise.
+	* src/nl.c (main): Likewise.
+	* src/stty.c (main): Likewise.
+
+	* src/expr.c (EXPR_FAILURE): Renamed from EXPR_ERROR, for
+	consistency with the other programs' naming conventions.
+	All uses changed.
+
+	* src/factor.c (main): Do not report a usage error simply
+	because stdin has bad numbers.
+
+	* src/id.c (problems): Now a boolean int, not a counter,
+	so that we don't have to worry about int overflow.  All uses changed.
+	* src/touch.c (err): Likewise.
+
+	* src/md5sum.c (main): Use int, not size_t, to store boolean int.
+
+	* src/mkfifo.c (main): Exit with status 1, not 4, if not implemented.
+	* src/mknod.c: Likewise.
+
+	* src/nice.c (main): Exit with status EXIT_FAIL, not EXIT_FAILURE,
+	on error; this is in case EXIT_FAILURE is unusual.
+	* src/su.c (main): Likewise.
+
+	* src/nohup.c (NOHUP_FOUND_BUT_CANNOT_INVOKE): Remove; all uses
+	changed to EXIT_CANNOT_INVOKE.
+
+	* src/printenv.c (PRINTENV_FAILURE): New constant.
+	(main): Exit with status PRINTENV_FAILURE, not EXIT_FAILURE, on
+	command-line syntax problems.
+
+	* src/rmdir.c (remove_parents): Don't set 'fail' to a negative number.
+	(main): Avoid integer overflow when seeing whether errors occurred.
+
+	* src/seq.c (print_numbers): Now returns void, not (zero) int.
+	All callers changed.
+	(main): Remove unused local variable 'errs'.  Always exit successfully
+	if we reach the end.
+
+	* src/setuidgid.c (SETUIDGID_FAILURE): Renamed from FAIL_STATUS,
+	for consistency with other programs here.  All uses changed.
+	(main): Use 'error' to exit rather than invoking 'exit' here.
+
+	* src/sort.c: Don't include <assert.h>.
+	(SORT_OUT_OF_ORDER,  SORT_FAILURE): Now enums, not macros.
+	(usage): Don't use 'assert'.
+	(main): Remove redundant assignment to exit_failure.
+
+	* src/system.h (EXIT_FAIL, EXIT_CANNOT_INVOKE, EXIT_ENOENT):
+	New enum values.
+	(initialize_exit_failure): New inline function.
+
+	* src/tty.c (TTY_FAILURE, TTY_WRITE_ERROR): New enum values;
+	substitute them for the corresponding integer constants.
+
+	* tests/help-version (expected_failure_status_date): Remove, as
+	'date' is now normal.
+	(expected_failure_status_nohup): New var.
+
 2004-01-21  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.1.2.
@@ -13,7 +150,7 @@
 
 2004-01-20  Diego Biurrun  <diego@biurrun.de>
 
-        * src/dircolors.hin: Add .mov to the list of media files.
+	* src/dircolors.hin: Add .mov to the list of media files.
 
 2004-01-19  Paul Eggert  <eggert@twinsun.com>
 
