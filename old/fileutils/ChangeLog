@@ -1,3 +1,22 @@
+Thu Nov 28 13:10:22 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	Tue Nov  5 14:51:56 1996  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* src/df.c (find_mount_point): Use save_cwd/restore_cwd.
+	"save-cwd.h": New include.
+
+	Wed Oct 30 00:21:16 1996  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* lib/fsusage.c (get_fs_usage): If DISK is 0 and we needed to use
+	it, return -1 with 0 in ERRNO.
+	* src/df.c (show_dev): Deal with null values for DISK and FSTYPE,
+	including interpreting special 0 errno return from get_fs_usage.
+	(show_point): Don't fail if we can't find a mount entry for POINT,
+	just call show_dev with 0 values and let it fail if necessary.
+	(main): Require a non-zero MOUNT_LIST only if showing all filesystems.
+	(find_mount_point): New function.
+	(xgetcwd): New declaration.
+
 Thu Nov 28 00:31:11 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* configure.in (AM_GNU_GETTEXT): Renamed from ud_GNU_GETTEXT
