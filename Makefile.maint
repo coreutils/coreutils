@@ -137,9 +137,12 @@ real_dir = fetish-ftp
 
 url_dir_list = $(foreach x,$(hosts),ftp://$($(x)_host)/$($(x)_url_dir))
 
-md5 = $(shell md5sum < $(my_distdir).tar.gz|sed 's/  -//')
-sha1 = $(shell sha1sum < $(my_distdir).tar.gz|sed 's/  -//')
+tgz-md5 = $(shell md5sum < $(my_distdir).tar.gz|sed 's/  -//')
+tgz-sha1 = $(shell sha1sum < $(my_distdir).tar.gz|sed 's/  -//')
+bz2-md5 = $(shell md5sum < $(my_distdir).tar.bz2|sed 's/  -//')
+bz2-sha1 = $(shell sha1sum < $(my_distdir).tar.bz2|sed 's/  -//')
 tgz-size = $(shell du --human $(my_distdir).tar.gz|sed 's/\([Mk]\).*/ \1B/')
+bz2-size = $(shell du --human $(my_distdir).tar.bz2|sed 's/\([Mk]\).*/ \1B/')
 xd-size = $(shell du --human $(xd-delta)|sed 's/\([Mk]\).*/ \1B/')
 
 rel-check:
@@ -154,7 +157,14 @@ rel-check:
 prev-tgz = $(PACKAGE)-$(PREV_VERSION).tar.gz
 xd-delta = $(PACKAGE)-$(PREV_VERSION)-$(VERSION).xdelta
 
-announcement: NEWS ChangeLog $(distdir).tar.gz
+GZIP = gzip
+BZIP2 = bzip2
+$(my_distdir).tar.bz2: $(my_distdir).tar.gz
+	$(GZIP) -dc $< > $(my_distdir).tar
+	rm -f $@
+	$(BZIP2) -9 $(my_distdir).tar
+
+announcement: NEWS ChangeLog $(distdir).tar.gz $(distdir).tar.bz2 $(xd-delta)
 	@( \
 	  echo Subject: $(my_distdir) released; \
 	  echo; \
@@ -162,6 +172,7 @@ announcement: NEWS ChangeLog $(distdir).tar.gz
 	  echo; \
 	  for url in $(url_dir_list); do \
 	    echo "  $$url/$(my_distdir).tar.gz   ($(tgz-size))"; \
+	    echo "  $$url/$(my_distdir).tar.bz2  ($(bz2-size))"; \
 	  done; \
 	  echo; \
 	  echo And here are xdelta-style diffs; \
@@ -170,13 +181,15 @@ announcement: NEWS ChangeLog $(distdir).tar.gz
 	    echo "  $$url/$(xd-delta)   ($(xd-size))"; \
 	  done; \
 	  echo; \
-	  echo "Here are the MD5 and SHA1 signatures for the .tar.gz file"; \
+	  echo "Here are the MD5 and SHA1 signatures for the compressed tar files:"; \
 	  echo; \
-	  echo "$(md5)  $(my_distdir).tar.gz"; \
-	  echo "$(sha1)  $(my_distdir).tar.gz"; \
+	  echo "$(tgz-md5)  $(my_distdir).tar.gz"; \
+	  echo "$(bz2-md5)  $(my_distdir).tar.bz2"; \
+	  echo "$(tgz-sha1)  $(my_distdir).tar.gz"; \
+	  echo "$(bz2-sha1)  $(my_distdir).tar.bz2"; \
 	  echo; \
 	  echo NEWS:; \
-	  sed -n "/$(THIS_VERSION_REGEXP)/,/^\[$(PREV_VERSION_REGEXP)/p" NEWS \
+	  sed -n "/$(THIS_VERSION_REGEXP)[]:]/,/$(PREV_VERSION_REGEXP)[]:]/p" NEWS \
 	    | grep -v '^\['; \
 	  echo; \
 	  echo ChangeLog entries:; \
@@ -247,15 +260,17 @@ check-copyright:
 	  || { echo 'out of date copyright in $<; update it' 1>&2; exit 1; }; \
 	fi
 
-alpha: static-check
+
+$(xd-delta): $(release-archive-dir)/$(prev-tgz) $(distdir).tar.gz
+	xdelta delta -9 $^ $@ || :
+
+alpha: static-check $(xd-delta)
 	$(MAKE) cvs-dist
 	$(MAKE) -s announcement > /tmp/announce-$(my_distdir)
 	ln $(distdir).tar.gz $(release-archive-dir)
 	chmod a-w $(distdir).tar.gz
-	cd $(release-archive-dir) \
-	  && xdelta delta -9 $(prev-tgz) $(distdir).tar.gz $(xd-delta) || :
-	ln $(release-archive-dir)/$(xd-delta) .
-	chmod a-w $(release-archive-dir)/$(xd-delta)
+	ln $(xd-delta) $(release-archive-dir)
+	chmod a-w $(xd-delta)
 	echo $(VERSION) > $(prev_version_file)
 	cvs ci -m. $(prev_version_file)
 	@$(emit-rsync-commands)
