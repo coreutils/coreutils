@@ -253,7 +253,7 @@ char **argv;
 
 	getdata(fdinp);		/* Read data from fdinp. */
 	if (fdinp != stdin)
-		fclose(fdinp);	/* Close input data file. */
+		FCLOSE(fdinp);	/* Close input data file. */
 	if (nknots == 0) {
 		error(NODATA, datafile);
 	}

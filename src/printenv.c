@@ -136,7 +136,7 @@ main (int argc, char **argv)
       exit_status = (matches != argc - optind);
     }
 
-  if (ferror (stdout) || fclose (stdout) == EOF)
+  if (FERROR (stdout) || fclose (stdout) == EOF)
     error (2, errno, _("standard output"));
 
   exit (exit_status);

@@ -202,7 +202,7 @@ print_entry (const STRUCT_UTMP *utmp_ent)
     }
 #endif
 
-  putchar ('\n');
+  PUTCHAR ('\n');
 }
 
 /* Print the username of each valid entry and the number of valid entries

@@ -180,31 +180,31 @@ print_esc_char (int c)
   switch (c)
     {
     case 'a':			/* Alert. */
-      putchar (7);
+      PUTCHAR (7);
       break;
     case 'b':			/* Backspace. */
-      putchar (8);
+      PUTCHAR (8);
       break;
     case 'c':			/* Cancel the rest of the output. */
       exit (0);
       break;
     case 'f':			/* Form feed. */
-      putchar (12);
+      PUTCHAR (12);
       break;
     case 'n':			/* New line. */
-      putchar (10);
+      PUTCHAR (10);
       break;
     case 'r':			/* Carriage return. */
-      putchar (13);
+      PUTCHAR (13);
       break;
     case 't':			/* Horizontal tab. */
-      putchar (9);
+      PUTCHAR (9);
       break;
     case 'v':			/* Vertical tab. */
-      putchar (11);
+      PUTCHAR (11);
       break;
     default:
-      putchar (c);
+      PUTCHAR (c);
       break;
     }
 }
@@ -229,7 +229,7 @@ print_esc (const char *escstart)
 	esc_value = esc_value * 16 + hextobin (*p);
       if (esc_length == 0)
 	error (1, 0, _("missing hexadecimal number in escape"));
-      putchar (esc_value);
+      PUTCHAR (esc_value);
     }
   else if (*p == '0')
     {
@@ -237,7 +237,7 @@ print_esc (const char *escstart)
 	   esc_length < 3 && isodigit (*p);
 	   ++esc_length, ++p)
 	esc_value = esc_value * 8 + octtobin (*p);
-      putchar (esc_value);
+      PUTCHAR (esc_value);
     }
   else if (strchr ("\"\\abcfnrtv", *p))
     print_esc_char (*p++);
@@ -255,7 +255,7 @@ print_esc_string (const char *str)
     if (*str == '\\')
       str += print_esc (str);
     else
-      putchar (*str);
+      PUTCHAR (*str);
 }
 
 /* Output a % directive.  START is the start of the directive,
@@ -382,7 +382,7 @@ print_formatted (const char *format, int argc, char **argv)
 	  field_width = precision = -1;
 	  if (*f == '%')
 	    {
-	      putchar ('%');
+	      PUTCHAR ('%');
 	      break;
 	    }
 	  if (*f == 'b')
@@ -468,7 +468,7 @@ print_formatted (const char *format, int argc, char **argv)
 	  break;
 
 	default:
-	  putchar (*f);
+	  PUTCHAR (*f);
 	}
     }
 

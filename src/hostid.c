@@ -73,7 +73,7 @@ main (int argc, char **argv)
   id = gethostid ();
   printf ("%lx\n", id);
 
-  if (fclose (stdout) == EOF)
+  if (FCLOSE (stdout) == EOF)
     error (EXIT_FAILURE, errno, _("write error"));
 
   exit (EXIT_SUCCESS);

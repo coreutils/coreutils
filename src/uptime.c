@@ -66,7 +66,7 @@ print_uptime (int n, const STRUCT_UTMP *this)
       res = sscanf (buf, "%lf", &upsecs);
       if (res == 1)
 	uptime = (time_t) upsecs;
-      fclose (fp);
+      FCLOSE (fp);
     }
 #endif /* HAVE_PROC_UPTIME */
   /* Loop through all the utmp entries we just read and count up the valid
@@ -122,7 +122,7 @@ print_uptime (int n, const STRUCT_UTMP *this)
 #endif
 
   if (loads == -1)
-    putchar ('\n');
+    PUTCHAR ('\n');
   else
     {
       if (loads > 0)
@@ -132,7 +132,7 @@ print_uptime (int n, const STRUCT_UTMP *this)
       if (loads > 2)
 	printf (", %.2f", avg[2]);
       if (loads > 0)
-	putchar ('\n');
+	PUTCHAR ('\n');
     }
 }
 

@@ -221,7 +221,7 @@ print_entry (const STRUCT_UTMP *utmp_ent)
     }
 #endif
 
-  putchar ('\n');
+  PUTCHAR ('\n');
 }
 
 /* Display a verbose line of information about UTMP_ENT. */
@@ -252,7 +252,7 @@ print_long_entry (const char name[])
       printf (" %s", pw->pw_gecos);
     }
 
-  putchar ('\n');
+  PUTCHAR ('\n');
 
   if (include_home_and_shell)
     {
@@ -260,7 +260,7 @@ print_long_entry (const char name[])
       printf ("%-29s", pw->pw_dir);
       printf (_("Shell: "));
       printf (" %s", pw->pw_shell);
-      putchar ('\n');
+      PUTCHAR ('\n');
     }
 
   if (include_project)
@@ -281,9 +281,9 @@ print_long_entry (const char name[])
 
 	  printf (_("Project: "));
 
-	  while ((bytes = fread (buf, 1, sizeof (buf), stream)) > 0)
-	    fwrite (buf, 1, bytes, stdout);
-	  fclose (stream);
+	  while ((bytes = FREAD (buf, 1, sizeof (buf), stream)) > 0)
+	    FWRITE (buf, 1, bytes, stdout);
+	  FCLOSE (stream);
 	}
 
       free (project);
@@ -307,15 +307,15 @@ print_long_entry (const char name[])
 
 	  printf (_("Plan:\n"));
 
-	  while ((bytes = fread (buf, 1, sizeof (buf), stream)) > 0)
-	    fwrite (buf, 1, bytes, stdout);
-	  fclose (stream);
+	  while ((bytes = FREAD (buf, 1, sizeof (buf), stream)) > 0)
+	    FWRITE (buf, 1, bytes, stdout);
+	  FCLOSE (stream);
 	}
 
       free (plan);
     }
 
-  putchar ('\n');
+  PUTCHAR ('\n');
 }
 
 /* Print the username of each valid entry and the number of valid entries
@@ -335,7 +335,7 @@ print_heading (void)
   if (include_where)
     printf (" %s", _("Where"));
 #endif
-  putchar ('\n');
+  PUTCHAR ('\n');
 }
 
 /* Display UTMP_BUF, which should have N entries. */

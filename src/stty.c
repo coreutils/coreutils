@@ -464,12 +464,12 @@ wrapf (const char *message,...)
   buflen = strlen (buf);
   if (current_col + (current_col > 0) + buflen >= max_col)
     {
-      putchar ('\n');
+      PUTCHAR ('\n');
       current_col = 0;
     }
   if (current_col > 0)
     {
-      putchar (' ');
+      PUTCHAR (' ');
       current_col++;
     }
   fputs (buf, stdout);
@@ -1447,7 +1447,7 @@ display_changed (struct termios *mode)
 #ifdef HAVE_C_LINE
   wrapf ("line = %d;", mode->c_line);
 #endif
-  putchar ('\n');
+  PUTCHAR ('\n');
   current_col = 0;
 
   empty_line = 1;
@@ -1478,7 +1478,7 @@ display_changed (struct termios *mode)
 	     (int) mode->c_cc[VTIME]);
     }
   else if (empty_line == 0)
-    putchar ('\n');
+    PUTCHAR ('\n');
   current_col = 0;
 
   empty_line = 1;
@@ -1490,7 +1490,7 @@ display_changed (struct termios *mode)
 	{
 	  if (empty_line == 0)
 	    {
-	      putchar ('\n');
+	      PUTCHAR ('\n');
 	      current_col = 0;
 	      empty_line = 1;
 	    }
@@ -1514,7 +1514,7 @@ display_changed (struct termios *mode)
 	}
     }
   if (empty_line == 0)
-    putchar ('\n');
+    PUTCHAR ('\n');
   current_col = 0;
 }
 
@@ -1533,7 +1533,7 @@ display_all (struct termios *mode, int fd, const char *device_name)
 #ifdef HAVE_C_LINE
   wrapf ("line = %d;", mode->c_line);
 #endif
-  putchar ('\n');
+  PUTCHAR ('\n');
   current_col = 0;
 
   for (i = 0; ! STREQ (control_info[i].name, "min"); ++i)
@@ -1558,7 +1558,7 @@ display_all (struct termios *mode, int fd, const char *device_name)
 #endif
     wrapf ("min = %d; time = %d;", mode->c_cc[VMIN], mode->c_cc[VTIME]);
   if (current_col != 0)
-    putchar ('\n');
+    PUTCHAR ('\n');
   current_col = 0;
 
   for (i = 0; mode_info[i].name != NULL; ++i)
@@ -1567,7 +1567,7 @@ display_all (struct termios *mode, int fd, const char *device_name)
 	continue;
       if (mode_info[i].type != prev_type)
 	{
-	  putchar ('\n');
+	  PUTCHAR ('\n');
 	  current_col = 0;
 	  prev_type = mode_info[i].type;
 	}
@@ -1579,7 +1579,7 @@ display_all (struct termios *mode, int fd, const char *device_name)
       else if (mode_info[i].flags & REV)
 	wrapf ("-%s", mode_info[i].name);
     }
-  putchar ('\n');
+  PUTCHAR ('\n');
   current_col = 0;
 }
 
@@ -1607,7 +1607,7 @@ display_recoverable (struct termios *mode)
 	  (unsigned long) mode->c_cflag, (unsigned long) mode->c_lflag);
   for (i = 0; i < NCCS; ++i)
     printf (":%x", (unsigned int) mode->c_cc[i]);
-  putchar ('\n');
+  PUTCHAR ('\n');
 }
 
 static int

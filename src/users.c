@@ -82,7 +82,7 @@ list_entries_users (int n, const STRUCT_UTMP *this)
       int c;
       fputs (u[i], stdout);
       c = (i < n_entries - 1 ? ' ' : '\n');
-      putchar (c);
+      PUTCHAR (c);
     }
 
   for (i = 0; i < n_entries; i++)
