@@ -33,6 +33,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   ls --width=N (for very large N) is no longer subject to an address
   arithmetic bug that could result in bounds violations.
 
+  ls --width=N (with -x or -C) no longer allocates more space
+  (potentially much more) than necessary for a given directory.
+
 * Major changes in release 5.0.91:
 
 ** New features
