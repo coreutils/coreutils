@@ -4,9 +4,6 @@
 # of the current directory.  If one is found, create a temporary directory
 # inside it.
 
-: ${DF=df}
-: ${MKDIR=mkdir}
-
 : ${CANDIDATE_TMP_DIRS=not_set}
 
 # Work around a bug in the way Ultrix4.3a's /bin/sh handles multi-word
@@ -18,15 +15,15 @@ other_partition_tmpdir=
 
 # WARNING: using sed like this to extract the mount point will fail
 # if the mount point name contains `% '.
-dot_mount_point=`$DF --no-sync -P . | sed -n '2s/.*%  *//p'`
+dot_mount_point=`df --no-sync -P . | sed -n '2s/.*%  *//p'`
 for d in $CANDIDATE_TMP_DIRS; do
-  d_mount_point=`$DF --no-sync -P $d | sed -n '2s/.*%  *//p'`
+  d_mount_point=`df --no-sync -P $d | sed -n '2s/.*%  *//p'`
 
   # Same partition?  Skip it.
   test x$d_mount_point = x$dot_mount_point && continue
 
   # See if we can create a directory in it.
-  if $MKDIR "$d/df-$$" > /dev/null 2>&1; then
+  if mkdir "$d/df-$$" > /dev/null 2>&1; then
     other_partition_tmpdir="$d/df-$$"
     break
   fi
