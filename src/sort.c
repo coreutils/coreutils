@@ -346,7 +346,7 @@ xtmpfopen (const char *file)
   FILE *fp;
   int fd;
 
-  fd = open (file, O_WRONLY | O_CREAT | O_TRUNC, 0600);
+  fd = open (file, O_WRONLY | O_CREAT | O_TRUNC | O_EXCL, 0600);
   if (fd < 0 || (fp = fdopen (fd, "w")) == NULL)
     {
       error (0, errno, "%s", file);
