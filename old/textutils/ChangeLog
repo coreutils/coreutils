@@ -1,5 +1,7 @@
 2000-12-03  Jim Meyering  <meyering@lucent.com>
 
+	* Version 2.0.9.
+
 	Make od print valid addresses for offsets of 2^32 and larger, and
 	allow byte offset (-j) and byte count (-N) to be 2^32 and larger.
 
@@ -120,8 +122,6 @@
 	"outfile" is now a pointer to const.
 
 2000-11-27  Jim Meyering  <meyering@lucent.com>
-
-	* Version 2.0.9.
 
 	* src/checksum.h: Don't include system.h here.
 	* src/md5.c: Include config.h, stdio.h, sys/types.h. and system.h here
