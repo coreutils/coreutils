@@ -61,7 +61,7 @@ char *xstrdup ();
 
 #define FLOATING_POINT  '.'
 #define FLOATING_COMMA  ','
-#define NEGATIVE_SIGN   '-'
+#define NEGATION_SIGN   '-'
 #define NUMERIC_ZERO    '0'
 
 #ifdef ENABLE_NLS
@@ -1132,7 +1132,7 @@ look_for_fraction (const char *s, const char *e)
     }
 
   /* skip blanks and signs */
-  while (blanks[UCHAR (*s)] || *s == NEGATIVE_SIGN)
+  while (blanks[UCHAR (*s)] || *s == NEGATION_SIGN)
     s++;
   /* groups = {}, n = 0 */
   for (p = s; p < e; p++)
@@ -1205,12 +1205,12 @@ numcompare (register const char *a, register const char *b)
     ++b;
 
   /* next character in a,b is non-blank */
-  if ((*a == NEGATIVE_SIGN || *b == NEGATIVE_SIGN) && *a != *b)
+  if ((*a == NEGATION_SIGN || *b == NEGATION_SIGN) && *a != *b)
     {
       /* a < 0, or b < 0, but not both */
-      if (*a == NEGATIVE_SIGN)
+      if (*a == NEGATION_SIGN)
 	ret_code = -1, ++a;	/* a looks < b */
-      else if (*b == NEGATIVE_SIGN)
+      else if (*b == NEGATION_SIGN)
 	ret_code = 1, ++b;	/* b looks < a */
       /* bypass zeroes, decimal points, and thousand sep in a & b */
       while (*a == NUMERIC_ZERO || (th_sep && *a == th_sep)
@@ -1237,7 +1237,7 @@ numcompare (register const char *a, register const char *b)
   else
     {
       /* either both numbers are signed, or both are not-signed */
-      if (*a == NEGATIVE_SIGN)
+      if (*a == NEGATION_SIGN)
 	{
 	  ++a;
 	  ++b;
@@ -1306,12 +1306,12 @@ numcompare (register const char *a, register const char *b)
   while (blanks[tmpb])
     tmpb = UCHAR (*++b);
 
-  if (tmpa == NEGATIVE_SIGN)
+  if (tmpa == NEGATION_SIGN)
     {
       do
 	tmpa = UCHAR (*++a);
       while (tmpa == NUMERIC_ZERO);
-      if (tmpb != NEGATIVE_SIGN)
+      if (tmpb != NEGATION_SIGN)
 	{
 	  if (tmpa == decimal_point)
 	    do
@@ -1360,7 +1360,7 @@ numcompare (register const char *a, register const char *b)
 
       return tmpb - tmpa;
     }
-  else if (tmpb == NEGATIVE_SIGN)
+  else if (tmpb == NEGATION_SIGN)
     {
       do
 	tmpb = UCHAR (*++b);
