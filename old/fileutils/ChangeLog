@@ -8,6 +8,8 @@ Sat Jun  1 12:44:51 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 	(decode_switches): Use STDOUT_FILENO instead of `1' in isatty test.
 	(usage): Update/add description of the --color option.
 
+	* ls.c: Declare pointer parameters const as appropriate.
+
 Tue May 28 18:39:49 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* dd.c (print_stats): Don't mark "%u %s" as a translatable string.
