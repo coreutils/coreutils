@@ -31,8 +31,14 @@
 #include <sys/types.h>
 
 #if defined (__GNU_LIBRARY__) || defined (HAVE_STDLIB_H)
+/* Some stdlib.h (e.g., Solaris 2.7) declare putenv with a non-const argument.
+   Since that would conflict with the declaration below, we rename putenv in
+   that incompatible prototype.  */
+# define putenv vendor_putenv_prototype
 # include <stdlib.h>
+# undef putenv
 #endif
+
 #if defined (__GNU_LIBRARY__) || defined (HAVE_STRING_H)
 # include <string.h>
 #endif
@@ -60,8 +66,7 @@ extern char **environ;
 
 /* Put STRING, which is of the form "NAME=VALUE", in the environment.  */
 int
-rpl_putenv (string)
-     const char *string;
+rpl_putenv (const char *string)
 {
   const char *const name_end = strchr (string, '=');
   register size_t size;
