@@ -72,6 +72,7 @@ libfetish_a_SOURCES = \
   sha.c sha.h \
   stdio-safer.h \
   stripslash.c \
+  strtoxmax.c \
   strverscmp.h \
   unicodeio.c unicodeio.h \
   unistd-safer.h \
@@ -87,6 +88,7 @@ libfetish_a_SOURCES = \
   xstrtoul.c \
   xstrtoimax.c \
   xstrtoumax.c \
+  xstrtoxmax.c \
   yesno.c
 
 libfetish_a_LIBADD = @LIBOBJS@ @ALLOCA@
