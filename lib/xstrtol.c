@@ -69,6 +69,18 @@ extern int errno;
 # define LONG_MAX TYPE_MAXIMUM (long int)
 #endif
 
+#if defined (STDC_HEADERS) || (!defined (isascii) && !defined (HAVE_ISASCII))
+# define IN_CTYPE_DOMAIN(c) 1
+#else
+# define IN_CTYPE_DOMAIN(c) isascii(c)
+#endif
+
+#ifdef isblank
+# define ISBLANK(c) (IN_CTYPE_DOMAIN (c) && isblank (c))
+#else
+# define ISBLANK(c) ((c) == ' ' || (c) == '\t')
+#endif
+
 #include "xstrtol.h"
 
 __unsigned long int __strtol ();
@@ -106,6 +118,18 @@ __xstrtol (const char *s, char **ptr, int strtol_base,
   assert (0 <= strtol_base && strtol_base <= 36);
 
   p = (ptr ? ptr : &t_ptr);
+
+#if STRING_TO_UNSIGNED
+  {
+    const char *q = s;
+    while (ISBLANK (*q))
+      {
+	++q;
+      }
+    if (*q == '-')
+      return LONGINT_INVALID;
+  }
+#endif
 
   errno = 0;
   tmp = __strtol (s, p, strtol_base);
