@@ -43,7 +43,7 @@ AC_DEFUN([jm_FUNC_CHOWN],
   ])
   if test $jm_cv_func_working_chown = no; then
     AC_LIBOBJ(chown)
-    AC_DEFINE_UNQUOTED(chown, rpl_chown,
+    AC_DEFINE(chown, rpl_chown,
       [Define to rpl_chown if the replacement function should be used.])
   fi
 ])

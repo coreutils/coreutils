@@ -25,8 +25,8 @@ exit(!(stat ("conftest.data", &s) == 0
 rm -f core core.* *.core])
 
     if test $ac_cv_func_utimes_null = yes; then
-      AC_DEFINE_UNQUOTED(HAVE_UTIMES_NULL, 1,
-			 [Define if utimes accepts a null argument])
+      AC_DEFINE(HAVE_UTIMES_NULL, 1,
+		[Define if utimes accepts a null argument])
     fi
   ]
 )

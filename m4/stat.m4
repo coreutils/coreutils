@@ -32,7 +32,7 @@ AC_DEFUN([jm_FUNC_STAT],
   ])
   if test $jm_cv_func_stat_empty_string_bug = yes; then
     AC_LIBOBJ(stat)
-    AC_DEFINE_UNQUOTED(HAVE_STAT_EMPTY_STRING_BUG, 1,
+    AC_DEFINE(HAVE_STAT_EMPTY_STRING_BUG, 1,
 [Define if stat has the bug that it succeeds when given the zero-length
    file name argument.  The stat from SunOS4.1.4 and the Hurd as of 1998-11-01)
    do this. ])

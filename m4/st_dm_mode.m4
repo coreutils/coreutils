@@ -10,8 +10,8 @@ AC_DEFUN([AC_STRUCT_ST_DM_MODE],
      ac_cv_struct_st_dm_mode=no)])
 
   if test $ac_cv_struct_st_dm_mode = yes; then
-    AC_DEFINE_UNQUOTED(HAVE_ST_DM_MODE, 1,
-		       [Define if struct stat has an st_dm_mode member. ])
+    AC_DEFINE(HAVE_ST_DM_MODE, 1,
+	      [Define if struct stat has an st_dm_mode member. ])
   fi
  ]
 )

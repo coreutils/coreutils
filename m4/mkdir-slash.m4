@@ -29,7 +29,7 @@ AC_DEFUN([UTILS_FUNC_MKDIR_TRAILING_SLASH],
 
   if test $utils_cv_func_mkdir_trailing_slash_bug = yes; then
     AC_LIBOBJ(mkdir)
-    AC_DEFINE_UNQUOTED(mkdir, rpl_mkdir,
+    AC_DEFINE(mkdir, rpl_mkdir,
       [Define to rpl_mkdir if the replacement function should be used.])
   fi
 ])

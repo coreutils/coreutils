@@ -123,7 +123,7 @@ AC_CACHE_CHECK([for working readdir], jm_cv_func_working_readdir,
   jm_cv_func_working_readdir=no)])
 
   if test $jm_cv_func_working_readdir = yes; then
-    AC_DEFINE_UNQUOTED(HAVE_WORKING_READDIR, 1,
+    AC_DEFINE(HAVE_WORKING_READDIR, 1,
 [Define if readdir is found to work properly in some unusual cases. ])
   fi
 ])

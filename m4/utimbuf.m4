@@ -33,7 +33,7 @@ AC_DEFUN([jm_CHECK_TYPE_STRUCT_UTIMBUF],
     ])
 
   if test $fu_cv_sys_struct_utimbuf = yes; then
-    AC_DEFINE_UNQUOTED(HAVE_STRUCT_UTIMBUF, 1,
+    AC_DEFINE(HAVE_STRUCT_UTIMBUF, 1,
 [Define if struct utimbuf is declared -- usually in <utime.h>.
    Some systems have utime.h but don't declare the struct anywhere. ])
   fi

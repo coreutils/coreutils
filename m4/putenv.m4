@@ -34,7 +34,7 @@ AC_DEFUN([jm_FUNC_PUTENV],
   ])
   if test $jm_cv_func_svid_putenv = no; then
     AC_LIBOBJ(putenv)
-    AC_DEFINE_UNQUOTED(putenv, rpl_putenv,
+    AC_DEFINE(putenv, rpl_putenv,
       [Define to rpl_putenv if the replacement function should be used.])
   fi
 ])

@@ -9,8 +9,8 @@ AC_DEFUN([jm_FUNC_MALLOC],
 [
  dnl xmalloc.c requires that this symbol be defined so it doesn't
  dnl mistakenly use a broken malloc -- as it might if this test were omitted.
- AC_DEFINE_UNQUOTED(HAVE_DONE_WORKING_MALLOC_CHECK, 1,
-                    [Define if the malloc check has been performed. ])
+ AC_DEFINE(HAVE_DONE_WORKING_MALLOC_CHECK, 1,
+           [Define if the malloc check has been performed. ])
 
  AC_CACHE_CHECK([for working malloc], jm_cv_func_working_malloc,
   [AC_TRY_RUN([
@@ -28,7 +28,7 @@ AC_DEFUN([jm_FUNC_MALLOC],
   ])
   if test $jm_cv_func_working_malloc = no; then
     AC_LIBOBJ(malloc)
-    AC_DEFINE_UNQUOTED(malloc, rpl_malloc,
+    AC_DEFINE(malloc, rpl_malloc,
       [Define to rpl_malloc if the replacement function should be used.])
   fi
 ])

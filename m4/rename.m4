@@ -33,7 +33,7 @@ AC_DEFUN([vb_FUNC_RENAME],
   ])
   if test $vb_cv_func_rename_trailing_slash_bug = yes; then
     AC_LIBOBJ(rename)
-    AC_DEFINE_UNQUOTED(RENAME_TRAILING_SLASH_BUG, 1,
+    AC_DEFINE(RENAME_TRAILING_SLASH_BUG, 1,
 [Define if rename does not work for source paths with a trailing slash,
    like the one from SunOS 4.1.1_U1.])
   fi

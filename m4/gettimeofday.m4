@@ -59,7 +59,7 @@ main ()
   ])
   if test $jm_cv_func_gettimeofday_clobber = yes; then
     AC_LIBOBJ(gettimeofday)
-    AC_DEFINE_UNQUOTED(gettimeofday, rpl_gettimeofday,
+    AC_DEFINE(gettimeofday, rpl_gettimeofday,
       [Define to rpl_gettimeofday if the replacement function should be used.])
     AC_DEFINE(GETTIMEOFDAY_CLOBBERS_LOCALTIME_BUFFER, 1,
       [Define if gettimeofday clobbers localtime's static buffer.])

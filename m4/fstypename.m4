@@ -25,8 +25,8 @@ AC_DEFUN([jm_FSTYPENAME],
     )
 
     if test $fu_cv_sys_f_fstypename_in_statfs = yes; then
-      AC_DEFINE_UNQUOTED(HAVE_F_FSTYPENAME_IN_STATFS, 1,
-			 [Define if struct statfs has the f_fstypename member.])
+      AC_DEFINE(HAVE_F_FSTYPENAME_IN_STATFS, 1,
+		[Define if struct statfs has the f_fstypename member.])
     fi
   ]
 )

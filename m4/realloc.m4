@@ -9,8 +9,8 @@ AC_DEFUN([jm_FUNC_REALLOC],
 [
  dnl xmalloc.c requires that this symbol be defined so it doesn't
  dnl mistakenly use a broken realloc -- as it might if this test were omitted.
- AC_DEFINE_UNQUOTED(HAVE_DONE_WORKING_REALLOC_CHECK, 1,
-                    [Define if the realloc check has been performed. ])
+ AC_DEFINE(HAVE_DONE_WORKING_REALLOC_CHECK, 1,
+           [Define if the realloc check has been performed. ])
 
  AC_CACHE_CHECK([for working realloc], jm_cv_func_working_realloc,
   [AC_TRY_RUN([
@@ -28,7 +28,7 @@ AC_DEFUN([jm_FUNC_REALLOC],
   ])
   if test $jm_cv_func_working_realloc = no; then
     AC_LIBOBJ(realloc)
-    AC_DEFINE_UNQUOTED(realloc, rpl_realloc,
+    AC_DEFINE(realloc, rpl_realloc,
       [Define to rpl_realloc if the replacement function should be used.])
   fi
 ])

@@ -59,7 +59,7 @@ if test $ac_cv_func_strerror_r = yes; then
     fi
   ])
   if test $ac_cv_func_strerror_r_works = yes; then
-    AC_DEFINE_UNQUOTED(HAVE_WORKING_STRERROR_R, 1,
+    AC_DEFINE(HAVE_WORKING_STRERROR_R, 1,
       [Define to 1 if `strerror_r' returns a string.])
   fi
 fi

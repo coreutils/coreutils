@@ -28,7 +28,7 @@ AC_DEFUN([jm_CHECK_TYPE_STRUCT_TIMESPEC],
     ])
 
   if test $fu_cv_sys_struct_timespec = yes; then
-    AC_DEFINE_UNQUOTED(HAVE_STRUCT_TIMESPEC, 1,
-		       [Define if struct timespec is declared in <time.h>. ])
+    AC_DEFINE(HAVE_STRUCT_TIMESPEC, 1,
+	      [Define if struct timespec is declared in <time.h>. ])
   fi
 ])
