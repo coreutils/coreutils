@@ -58,9 +58,21 @@ extern int errno;
 # include <sys/param.h>
 #endif
 
-#if defined MOUNTED_GETFSSTAT	/* __alpha running OSF_1 */
-# include <sys/mount.h>
-# include <sys/fs_types.h>
+#if defined MOUNTED_GETFSSTAT	/* OSF_1 and Darwin1.3.x */
+# if HAVE_SYS_UCRED_H
+#  include <sys/ucred.h> /* needed by powerpc-apple-darwin1.3.7 */
+# endif
+# if HAVE_SYS_MOUNT_H
+#  include <sys/mount.h>
+# endif
+# if HAVE_SYS_FS_TYPES_H
+#  include <sys/fs_types.h> /* needed by powerpc-apple-darwin1.3.7 */
+# endif
+# if HAVE_STRUCT_FSSTAT_F_FSTYPENAME
+#  define FS_TYPE(Ent) ((Ent).f_fstypename)
+# else
+#  define FS_TYPE(Ent) mnt_names[(Ent).f_type]
+# endif
 #endif /* MOUNTED_GETFSSTAT */
 
 #ifdef MOUNTED_GETMNTENT1	/* 4.3BSD, SunOS, HP-UX, Dynix, Irix.  */
@@ -549,7 +561,7 @@ read_filesystem_list (int need_fs_type)
 	me = (struct mount_entry *) xmalloc (sizeof (struct mount_entry));
 	me->me_devname = xstrdup (stats[counter].f_mntfromname);
 	me->me_mountdir = xstrdup (stats[counter].f_mntonname);
-	me->me_type = mnt_names[stats[counter].f_type];
+	me->me_type = xstrdup (FS_TYPE (stats[counter]));
 	me->me_dummy = ME_DUMMY (me->me_devname, me->me_type);
 	me->me_remote = ME_REMOTE (me->me_devname, me->me_type);
 	me->me_dev = (dev_t) -1;	/* Magic; means not known yet. */
