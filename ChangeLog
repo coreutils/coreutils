@@ -1,5 +1,8 @@
 2004-04-08  Jim Meyering  <jim@meyering.net>
 
+	* Makefile.maint (sc_dd_max_sym_length): New target.
+	(syntax-check-rules): Add it.
+
 	* src/md5sum.c (PROGRAM_NAME) [algorithm == ALG_SHA1]:
 	Correct spelling: s/shasum/sha1sum.  Reported by Jesse Kornblum.
 
