@@ -1,5 +1,5 @@
 /* sort - sort lines of text (with all kinds of options).
-   Copyright (C) 1988, 1991, 1992, 1993, 1994, 1995 Free Software Foundation
+   Copyright (C) 88, 91, 92, 93, 94, 95, 1996 Free Software Foundation
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
