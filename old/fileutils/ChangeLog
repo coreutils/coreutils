@@ -1,3 +1,9 @@
+2000-12-30  Jim Meyering  <meyering@lucent.com>
+
+	Avoid an unnecessary `stat' when using --dereference.
+	* src/copy.c (same_file_ok): Use stat only if lstat reported that
+	the file was a symbolic link.
+
 2000-12-29  Paul Eggert  <eggert@twinsun.com>
 
 	* doc/perm.texi: append-only directories -> restricted deletion flag,
