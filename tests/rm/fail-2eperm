@@ -33,7 +33,19 @@ fi
 
 fail=0
 
-setuidgid $NON_ROOT_USERNAME rm -rf a 2> out && fail=1
+# Try to ensure that $NON_ROOT_USERNAME can access
+# the required version of rm.
+rm_version=`setuidgid $NON_ROOT_USERNAME rm --version|sed -n '1s/.* //p'`
+case $rm_version in
+  $PACKAGE_VERSION) ;;
+  *) echo "$0: cannot access required version ($PACKAGE_VERSION) of rm" 1>&2
+     fail=1 ;;
+esac
+setuidgid $NON_ROOT_USERNAME rm -rf a 2> out-t && fail=1
+
+# On some systems, we get `Not owner'.  Convert it.
+sed 's/Not owner/Operation not permitted/' out-t > out
+
 cat <<\EOF > exp
 rm: cannot remove `a/b': Operation not permitted
 EOF
