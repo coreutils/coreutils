@@ -1,5 +1,6 @@
 /* cut - remove parts of lines of files
-   Copyright (C) 1984, 1997-2003 by David M. Ihnat
+   Copyright (C) 1997-2004 Free Software Foundation, Inc.
+   Copyright (C) 1984 David M. Ihnat
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -45,7 +46,7 @@
   do									\
     {									\
       error (0, 0, (Message));						\
-      usage (2);							\
+      usage (EXIT_FAILURE);						\
     }									\
   while (0)
 
@@ -173,7 +174,7 @@ static struct option const longopts[] =
 void
 usage (int status)
 {
-  if (status != 0)
+  if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
@@ -221,7 +222,7 @@ With no FILE, or when FILE is -, read standard input.\n\
 "), stdout);
       printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
-  exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
+  exit (status);
 }
 
 static inline void
@@ -794,7 +795,7 @@ main (int argc, char **argv)
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
 	default:
-	  usage (2);
+	  usage (EXIT_FAILURE);
 	}
     }
 
