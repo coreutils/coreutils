@@ -249,22 +249,68 @@ print_line (const char *user, const char state, const char *line,
 	    const char *time_str, const char *idle, const char *pid,
 	    const char *comment, const char *exitstr)
 {
-  printf ("%-8.8s", user ? user : "   .");
-  if (include_mesg)
-    printf (" %c", state);
-  printf (" %-12s", line);
-  printf (" %-12s", time_str);
+  static char mesg[3] = { ' ', 'x', '\0' };
+  char *buf;
+  char x_idle[1 + IDLESTR_LEN + 1];
+  char x_pid[1 + INT_STRLEN_BOUND (pid_t) + 1];
+  char *x_exitstr;
+  int err;
+
+  mesg[1] = state;
+
   if (include_idle && !short_output)
-    printf (" %-6s", idle);
+    sprintf (x_idle, " %-6s", idle);
+  else
+    *x_idle = '\0';
+
   if (!short_output)
-    printf (" %10s", pid);
-  /* FIXME: it's not really clear whether the following should be in
-     short_output.  A strict reading of SUSv2 would suggest not, but
-     I haven't seen any implementations that actually work that way... */
-  printf (" %-8s", comment);
-  if (include_exit && exitstr && *exitstr)
-    printf (" %-12s", exitstr);
-  putchar ('\n');
+    sprintf (x_pid, " %10s", pid);
+  else
+    *x_pid = '\0';
+
+  x_exitstr = xmalloc (include_exit ? 1 + MAX (12, strlen (exitstr)) + 1 : 1);
+  if (include_exit)
+    sprintf (x_exitstr, " %-12s", exitstr);
+  else
+    *x_exitstr = '\0';
+
+  err = asprintf (&buf,
+		  "%-8.8s"
+		  "%s"
+		  " %-12s"
+		  " %-12s"
+		  "%s"
+		  "%s"
+		  " %-8s"
+		  "%s"
+		  ,
+		  user ? user : "   .",
+		  include_mesg ? mesg : "",
+		  line,
+		  time_str,
+		  x_idle,
+		  x_pid,
+		  /* FIXME: it's not really clear whether the following
+		     field should be in the short_output.  A strict reading
+		     of SUSv2 would suggest not, but I haven't seen any
+		     implementations that actually work that way... */
+		  comment,
+		  x_exitstr
+		  );
+  if (err == -1)
+    xalloc_die ();
+
+  {
+    /* Remove any trailing spaces.  */
+    char *p = buf + strlen (buf);
+    while (*--p == ' ')
+      /* empty */;
+    *(p + 1) = '\0';
+  }
+
+  puts (buf);
+  free (buf);
+  free (x_exitstr);
 }
 
 /* Send properly parsed USER_PROCESS info to print_line */
