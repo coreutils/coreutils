@@ -2,6 +2,21 @@
 
 	* Version 4.5.8.
 
+	* src/du.c: New option: --apparent-size.
+	(enum) [APPARENT_SIZE_OPTION]: New member.
+	(long_options): Add it.
+	(usage): Describe it.
+	(main): Handle it.
+	['b']: Set apparent_size.
+	David Eisner reported that the behavior of --bytes had changed.
+	Paul Eggert proposed the use of a new option, --apparent-size.
+
+	* src/du.c (apparent_size): New global.
+	(print_only_size): Reflect the fact that we're printing byte counts,
+	not ST_NBLOCKSIZE-byte-block counts.
+	(print_size): Call print_only_size rather than duplicating its code.
+	(process_file): Accumulate byte counts, rather than block counts.
+
 	* src/du.c (process_file): Always reset size_to_propagate_to_parent
 	for --separate-dirs (-S).
 
