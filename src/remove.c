@@ -235,7 +235,7 @@ pop_dir (Dirstack_state *ds)
 
   /* Pop the length stack, too.  */
   assert (obstack_object_size (&ds->len_stack) >= sizeof (size_t));
-  obstack_blank (&ds->len_stack, (int) -(sizeof (size_t)));
+  obstack_blank (&ds->len_stack, -(int) sizeof (size_t));
 }
 
 /* Copy the SRC_LEN bytes of data beginning at SRC into the DST_LEN-byte
@@ -359,7 +359,7 @@ AD_stack_pop (Dirstack_state *ds)
   struct AD_ent *top = AD_stack_top (ds);
   if (top->unremovable)
     hash_free (top->unremovable);
-  obstack_blank (&ds->Active_dir, -sizeof (struct AD_ent));
+  obstack_blank (&ds->Active_dir, -(int) sizeof (struct AD_ent));
   pop_dir (ds);
 }
 
