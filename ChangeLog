@@ -8,6 +8,9 @@
 	xreadlink instead, it's safer.  Don't bother to read the link if
 	it's the wrong size.  Add a FIXME because this area is a bit murky
 	and undocumented.
+	* src/ls.c (get_link_name): Update use of xreadlink.
+	* src/readlink.c (main): Likewise.
+	* src/stat.c (print_stat): Likewise.
 
 2004-06-01  Jim Meyering  <jim@meyering.net>
 
