@@ -1,0 +1,40 @@
+#!/bin/sh
+# This test would fail on solaris2.7 with tail from pre-1.22k textutils.
+# The problem was that using the solaris2.7 setvbuf function to turn off
+# buffering doesn't flush stdout.
+
+# FIXME: actually, I couldn't find a way to write the test (without resorting
+# to use of expect) so that it would provoke the failure on solaris2.7.
+# To exercise the bug, cat's stdout seems to have to be directed
+# to a terminal.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  tail --version
+fi
+
+tmp=tail-flush.$$
+pwd=`pwd`
+trap "cd $pwd; rm -rf $tmp" 0 1 2 3 15
+
+test_failure=0
+mkdir $tmp || test_failure=1
+cd $tmp || test_failure=1
+
+if test $test_failure = 1; then
+  echo 'failure in testing framework'
+  exit 1
+fi
+
+echo fubar > in
+tail -f in | cat > out &
+pid=$!
+sleep 1
+echo out: `cat out`
+kill $pid
+echo out: `cat out`
+
+fail=0
+test "`cat out`" = fubar || fail=1
+
+exit $fail
