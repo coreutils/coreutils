@@ -40,6 +40,7 @@ libfetish_a_SOURCES = \
   getstr.c getstr.h \
   getugroups.c \
   group-member.h \
+  gtod.h \
   hard-locale.c hard-locale.h \
   human.c human.h \
   idcache.c \
