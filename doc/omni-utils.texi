@@ -6125,6 +6125,12 @@ not truncate or remove the output file.  This default is more suitable
 for devices, which typically cannot be truncated and should not be
 removed.
 
+Don't forget about the risk of backups.
+In large multiuser environments, there may be long-term file system
+backups that retain copies of files that are later shredded.  While
+it may be impossible to recover a shredded file from disk, it may be
+relatively trivial to do so from backup media.
+
 @example
 shred [@var{option}]@dots{} @var{file}[@dots{}]
 @end example
