@@ -1,3 +1,14 @@
+1999-07-21  Jim Meyering  <meyering@ascend.com>
+
+	* tests/stty/basic-1 (options): Avoid Solaris' broken /usr/ucb/tr by
+	removing offending use of tr altogether and removing hyphens with sed.
+	Reported by Kaveh Ghazi.
+
+1999-06-01  Volker Borchert  <bt@teknon.de>
+
+	* tests/Makefile.am: Make envvar-check depend on check-recursive rather
+	than on `check' so that its tests are performed before any real tests.
+
 1999-07-15  Jim Meyering  <meyering@ascend.com>
 
 	* src/false.sh: Always exit unsuccessfully, even with
