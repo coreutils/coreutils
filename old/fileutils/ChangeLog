@@ -1,5 +1,8 @@
 2002-07-20  Jim Meyering  <meyering@lucent.com>
 
+	* Upgrade to cvs automake -- required to work with 2.53b.
+	* configure.ac: Require automake-1.6a.
+
 	* Version 4.1.10.
 
 	* Upgrade to gettext-0.11.3.
