@@ -1,6 +1,6 @@
 2001-02-03  Jim Meyering  <meyering@lucent.com>
 
-	Improve the performance of `factor'.
+	Improve the performance of `factor' (more than 2x speed-up for large N).
 	* src/factor.c (wheel_tab): New global table.
 	(WHEEL_START, WHEEL_END): Define.
 	(factor): Remove the loop that special-cased `2'.
