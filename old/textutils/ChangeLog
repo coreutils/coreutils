@@ -15,6 +15,12 @@ Thu Jun 15 22:09:14 1995  Jim Meyering  (meyering@comco.com)
 	or using strings.
 	(hex_digits): Unprotoize.
 
+	* md5sum.c (main): Don't use a separate loop to convert to lower
+	case.  Suggested by Ulrich Drepper.
+	(CLOSE): New macro.
+	(md5_file): Use it.
+	From Ulrich Drepper.
+
 	* md5sum.c: Don't include values.h.
 	[__P]: Undefine it.
 
