@@ -1,5 +1,5 @@
 /* expand - convert tabs to spaces
-   Copyright (C) 89, 91, 95, 96, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 89, 91, 1995-1998, 1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -252,6 +252,10 @@ expand (void)
   fp = next_file ((FILE *) NULL);
   if (fp == NULL)
     return;
+
+  /* Binary I/O will preserve the original EOL style (DOS/Unix) of files.  */
+  SET_BINARY2 (fileno (fp), STDOUT_FILENO);
+
   for (;;)
     {
       c = getc (fp);
@@ -261,7 +265,10 @@ expand (void)
 	  if (fp == NULL)
 	    break;		/* No more files. */
 	  else
-	    continue;
+	    {
+	      SET_BINARY2 (fileno (fp), STDOUT_FILENO);
+	      continue;
+	    }
 	}
 
       if (c == '\n')
