@@ -451,7 +451,6 @@ count_entry (const char *ent, int top, dev_t last_dev, int depth)
       if (opt_one_file_system && !top && last_dev != dir_dev)
 	return 0;		/* Don't enter a new file system.  */
 
-
       /* If we're traversing more than one level, or if we're
 	 dereferencing symlinks and we're about to chdir through a
 	 symlink, remember the current directory so we can return to
