@@ -5,5 +5,4 @@ t*.in2
 t*.exp
 join-tests
 build-script
-Makefile.in
 Makefile
