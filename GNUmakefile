@@ -25,3 +25,8 @@ all:
 	@exit 1
 
 endif
+
+# Tell version 3.79 and up of GNU make to not build goals in this
+# directory in parallel.  This is necessary in case someone tries to
+# build multiple targets on one command line.
+.NOTPARALLEL:
