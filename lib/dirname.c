@@ -36,6 +36,12 @@ char *malloc ();
 
 #include "dirname.h"
 
+#ifndef ISSLASH
+# define ISSLASH(C) ((C) == '/')
+#endif
+
+#define BACKSLASH_IS_PATH_SEPARATOR ISSLASH ('\\')
+
 /* Return the leading directories part of PATH,
    allocated with malloc.  If out of memory, return 0.
    Assumes that trailing slashes have already been
@@ -49,6 +55,12 @@ dir_name (const char *path)
   int length;			/* Length of result, not including NUL.  */
 
   slash = strrchr (path, '/');
+  if (BACKSLASH_IS_PATH_SEPARATOR)
+    {
+      char *b = strrchr (path, '\\');
+      if (b && slash < b)
+	slash = b;
+    }
 
   /* Make sure there are no trailing slashes.  */
   assert (slash == NULL	   /* There are no slashes in PATH.  */
@@ -65,20 +77,25 @@ dir_name (const char *path)
   else
     {
       /* Remove any trailing slashes from the result.  */
-#ifdef __MSDOS__
-      const char *lim = ((path[0] >= 'A' && path[0] <= 'z' && path[1] == ':')
-			 ? path + 2 : path);
+      if (BACKSLASH_IS_PATH_SEPARATOR)
+	{
+	  const char *lim = ((path[0] >= 'A' && path[0] <= 'z'
+			      && path[1] == ':')
+			     ? path + 2 : path);
 
-      /* If canonicalized "d:/path", leave alone the root case "d:/".  */
-      while (slash > lim && *slash == '/')
-	--slash;
-#else
-      while (slash > path && *slash == '/')
-	--slash;
-#endif
+	  /* If canonicalized "d:/path", leave alone the root case "d:/".  */
+	  while (slash > lim && ISSLASH (*slash))
+	    --slash;
+	}
+      else
+	{
+	  while (slash > path && ISSLASH (*slash))
+	    --slash;
+	}
 
       length = slash - path + 1;
     }
+
   newpath = (char *) malloc (length + 1);
   if (newpath == 0)
     return 0;
