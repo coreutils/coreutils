@@ -89,7 +89,7 @@ l = @l@
 
 AUTOMAKE_OPTIONS = 1.2 gnits
 
-TESTS = sf-1
+TESTS = sf-1 misc
 EXTRA_DIST = $(TESTS)
 TESTS_ENVIRONMENT = LN=../../src/ln
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
