@@ -2,6 +2,25 @@
 
 	* Version 5.0.1.
 
+	* src/copy.c (struct F_triple) [name]: Remove const attribute.
+	(triple_free): Don't apply cast to argument of free.
+	(seen_file): Add cast here instead.
+
+	* src/cp-hash.c (struct Src_to_dest) [name]: Remove const attribute.
+	(src_to_dest_free): Don't apply cast to argument of free.
+
+	* src/sort.c (zaptemp): Don't apply cast to argument of free.
+	* src/pr.c (init_fps, init_store_cols): Likewise.
+	* src/join.c (delseq, freeline): Likewise.
+	* src/expr.c (OLD): Likewise.
+	* src/sort.c (sort): Likewise.
+
+	* src/tail.c: Include "quote.h".
+	Use quote in diagnostics.  Change many error format strings
+	from just `%s' to e.g., `error reading %s'.
+	(pipe_lines): Change type of parameter, n_lines, to uintmax_t.
+	Rewrite newline-counting loop to use memchr.
+
 	* src/head.c (elide_tail_lines_pipe): Use `if', not assert.
 	Now that assert is no longer used, don't include <assert.h>.
 
