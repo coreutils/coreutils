@@ -427,6 +427,7 @@ count_entry (const char *ent, int top, dev_t last_dev, int depth)
   if (S_ISDIR (stat_buf.st_mode))
     {
       unsigned pathlen;
+      unsigned prev_len;
       dev_t dir_dev;
       char *name_space;
       char *namep;
@@ -488,7 +489,9 @@ count_entry (const char *ent, int top, dev_t last_dev, int depth)
 
       /* Remember the current path.  */
 
-      str_concatc (path, "/");
+      prev_len = path->length;
+      if (prev_len && path->text[prev_len - 1] != '/')
+	str_concatc (path, "/");
       pathlen = path->length;
 
       for (namep = name_space; *namep; namep += strlen (namep) + 1)
@@ -504,7 +507,7 @@ count_entry (const char *ent, int top, dev_t last_dev, int depth)
       free (name_space);
       pop_dir (cwd, path->text);
 
-      str_trunc (path, pathlen - 1); /* Remove the "/" we added.  */
+      str_trunc (path, prev_len); /* Remove any "/" we added.  */
       if (depth <= max_depth || top)
 	print_size (size, path->length > 0 ? path->text : "/");
       return opt_separate_dirs ? 0 : size;
@@ -530,24 +533,8 @@ du_files (char **files)
 
   for (i = 0; files[i]; i++)
     {
-      char *arg;
-      int s;
-
-      arg = files[i];
-
-      /* Delete final slash in the argument, unless the slash is alone.  */
-      s = strlen (arg) - 1;
-      if (s != 0)
-	{
-	  if (arg[s] == '/')
-	    arg[s] = 0;
-
-	  str_copyc (path, arg);
-	}
-      else if (arg[0] == '/')
-	str_trunc (path, 0);	/* Null path for root directory.  */
-      else
-	str_copyc (path, arg);
+      char const *arg = files[i];
+      str_copyc (path, arg);
 
       if (!print_totals)
 	hash_clear (htab);
