@@ -77,20 +77,20 @@ enum
 
 static struct option const longopts[] =
 {
-  {"time", required_argument, 0, TIME_OPTION},
-  {"no-create", no_argument, 0, 'c'},
-  {"date", required_argument, 0, 'd'},
-  {"file", required_argument, 0, 'r'}, /* FIXME: phase out --file */
-  {"reference", required_argument, 0, 'r'},
+  {"time", required_argument, NULL, TIME_OPTION},
+  {"no-create", no_argument, NULL, 'c'},
+  {"date", required_argument, NULL, 'd'},
+  {"file", required_argument, NULL, 'r'}, /* FIXME: remove --file in 2006 */
+  {"reference", required_argument, NULL, 'r'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {0, 0, 0, 0}
+  {NULL, 0, NULL, 0}
 };
 
 /* Valid arguments to the `--time' option. */
 static char const* const time_args[] =
 {
-  "atime", "access", "use", "mtime", "modify", 0
+  "atime", "access", "use", "mtime", "modify", NULL
 };
 
 /* The bits in `change_times' that those arguments set. */
