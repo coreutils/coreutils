@@ -1,6 +1,6 @@
 /* Permuted index for GNU, with keywords in their context.
    Copyright (C) 1990, 1991, 1993, 1998-2003 Free Software Foundation, Inc.
-   François Pinard <pinard@iro.umontreal.ca>, 1988.
+   FranÃ§ois Pinard <pinard@iro.umontreal.ca>, 1988.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
-   François Pinard <pinard@iro.umontreal.ca> */
+   FranÃ§ois Pinard <pinard@iro.umontreal.ca> */
 
 #include <config.h>
 
@@ -32,7 +32,10 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "ptx"
 
-#define WRITTEN_BY _("Written by François Pinard.")
+/* Note to translator: Please translate "F. Pinard" to "FranÃ§ois
+   Pinard" if "Ã§" (c-with-cedilla) is available in the
+   translation's character set and encoding.  */
+#define WRITTEN_BY _("Written by F. Pinard.")
 
 /* Number of possible characters in a byte.  */
 #define CHAR_SET_SIZE 256
