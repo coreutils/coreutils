@@ -1,5 +1,6 @@
 /* Convert a `struct tm' to a time_t value.
-   Copyright (C) 1993-1999, 2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1993-1999, 2002, 2003, 2004, 2005 Free Software Foundation,
+   Inc.
    This file is part of the GNU C Library.
    Contributed by Paul Eggert (eggert@twinsun.com).
 
@@ -60,10 +61,25 @@
    ? (a) >> (b)		\
    : (a) / (1 << (b)) - ((a) % (1 << (b)) < 0))
 
-/* The extra casts work around common compiler bugs.  */
+/* The extra casts in the following macros work around compiler bugs,
+   e.g., in Cray C 5.0.3.0.  */
+
+/* True if the arithmetic type T is an integer type.  bool counts as
+   an integer.  */
+#define TYPE_IS_INTEGER(t) ((t) 1.5 == 1)
+
+/* True if negative values of the integer type T use twos complement
+   representation.  */
+#define TYPE_TWOS_COMPLEMENT(t) ((t) - (t) 1 == (t) ((t) ~ (t) 1 + (t) 1))
+
+/* True if the arithmetic type T is signed.  */
 #define TYPE_SIGNED(t) (! ((t) 0 < (t) -1))
-/* The outer cast is needed to work around a bug in Cray C 5.0.3.0.
-   It is necessary at least when t == time_t.  */
+
+/* The maximum and minimum values for the integer type T.  These
+   macros have undefined behavior if T is signed and has padding bits
+   (i.e., bits that do not contribute to the value), or if T uses
+   signed-magnitude representation.  If this is a problem for you,
+   please let us know how to fix it for your host.  */
 #define TYPE_MINIMUM(t) ((t) (TYPE_SIGNED (t) \
 			      ? ~ (t) 0 << (sizeof (t) * CHAR_BIT - 1) : (t) 0))
 #define TYPE_MAXIMUM(t) ((t) (~ (t) 0 - TYPE_MINIMUM (t)))
@@ -79,8 +95,8 @@
 /* Verify a requirement at compile-time (unlike assert, which is runtime).  */
 #define verify(name, assertion) struct name { char a[(assertion) ? 1 : -1]; }
 
-verify (time_t_is_integer, (time_t) 0.5 == 0);
-verify (twos_complement_arithmetic, -1 == ~1 + 1);
+verify (time_t_is_integer, TYPE_IS_INTEGER (time_t));
+verify (twos_complement_arithmetic, TYPE_TWOS_COMPLEMENT (int));
 /* The code also assumes that signed integer overflow silently wraps
    around, but this assumption can't be stated without causing a
    diagnostic on some hosts.  */
