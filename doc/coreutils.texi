@@ -11088,7 +11088,7 @@ Print only the group id.
 @itemx --groups
 @opindex -G
 @opindex --groups
-Print only the supplementary groups.
+Print only the group id and the supplementary groups.
 
 @item -n
 @itemx --name
