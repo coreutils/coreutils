@@ -121,10 +121,8 @@ text), and name for each FILE.\n"),
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
-/* FIXME: this format loses with filenames containing newline.  */
-
 static int
-split_3 (char *s, char **u, int *binary, char **w)
+split_3 (char *s, size_t s_len, char **u, int *binary, char **w)
 {
   size_t i;
 
@@ -136,13 +134,13 @@ split_3 (char *s, char **u, int *binary, char **w)
 
   /* The line has to be at least 35 characters long to contain correct
      message digest information.  */
-  if (strlen (&s[i]) >= 35)
+  if (s_len >= 32 + 2 + 1)
     {
       *u = &s[i];
 
       /* The first field has to be the 32-character hexadecimal
-	 representation of the message digest.  If it not immediately
-	 followed by a white space it's an error.  */
+	 representation of the message digest.  If it is not followed
+	 immediately by a white space it's an error.  */
       i += 32;
       if (!ISWHITE (s[i]))
 	return 1;
@@ -151,15 +149,20 @@ split_3 (char *s, char **u, int *binary, char **w)
 
       if (s[i] != ' ' && s[i] != '*')
 	return 1;
-      *binary = s[i++] == '*';
+      *binary = (s[i++] == '*');
 
       /* All characters between the type indicator and end of line are
 	 significant -- that includes leading and trailing white space.  */
       *w = &s[i];
 
-      /* So this line is valid as long as there is at least one character
-	 for the filename.  */
-      return (**w ? 0 : 1);
+      /* Translate each NUL byte in the file name to a NEWLINE.
+         But not the last.  */
+      for (/* empty */ ; i < s_len; ++i)
+	{
+	  if (s[i] == '\0')
+	    s[i] = '\n';
+	}
+      return 0;
     }
   return 1;
 }
@@ -274,7 +277,9 @@ md5_check (const char *checkfile_name, int binary)
       if (line[line_length - 1] == '\n')
 	line[--line_length] = '\0';
 
-      err = split_3 (line, &md5num, &type_flag, &filename);
+      /* FIXME: filename might contain NUL bytes.  Map then to NEWLINEs
+	 in split_3.  */
+      err = split_3 (line, line_length, &md5num, &type_flag, &filename);
       if (err || !hex_digits (md5num))
 	{
 	  if (warn)
@@ -507,15 +512,42 @@ main (int argc, char **argv)
 	{
 	  size_t i;
 	  int fail;
+	  char *file = argv[optind];
 
-	  fail = md5_file (argv[optind], binary, md5buffer);
+	  fail = md5_file (file, binary, md5buffer);
 	  err |= fail;
 	  if (!fail)
 	    {
+	      size_t filename_len;
+
+	      if (strchr (file, '\n'))
+		error (0, 0,
+		       _("\
+warning: filename contains a NEWLINE character `%s';  \
+you will not be able to verify this checksum using `md5sum --check'"),
+		       file);
+
 	      for (i = 0; i < 16; ++i)
 		printf ("%02x", md5buffer[i]);
 
-	      printf (" %c%s\n", binary ? '*' : ' ', argv[optind]);
+	      putchar (' ');
+	      if (binary)
+		putchar ('*');
+	      else
+		putchar (' ');
+
+	      /* Translate NEWLINE bytes to NUL bytes.
+	         But first record the length of the filename, FILE.  */
+	      filename_len = strlen (file);
+	      for (i = 0; i < strlen (file); ++i)
+		{
+		  if (file[i] == '\n')
+		    file[i] = '\0';
+		}
+	      /* Use fwrite, not printf, to output FILE --
+		 now it may contain NUL bytes.  */
+	      fwrite (file, sizeof (char), filename_len, stdout);
+	      putchar ('\n');
 	    }
 	}
     }
