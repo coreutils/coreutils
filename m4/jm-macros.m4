@@ -40,6 +40,7 @@ AC_DEFUN(jm_MACROS,
   AC_REQUIRE([jm_AC_PREREQ_XSTRTOUMAX])
   AC_REPLACE_FUNCS(strcasecmp strncasecmp)
   AC_REPLACE_FUNCS(dup2)
+  AC_REPLACE_FUNCS(memchr)
 
   # By default, argmatch should fail calling usage (1).
   AC_DEFINE(ARGMATCH_DIE, [usage (1)],
