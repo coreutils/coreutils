@@ -1,3 +1,10 @@
+2000-12-16  Jim Meyering  <meyering@lucent.com>
+
+	This bug had a serious impact on chown: `chown N:M FILE' (for integer
+	N and M) would have treated it like `chown N:N FILE'.
+
+	* userspec.c (parse_user_spec): Fix typo: s/u/g/.
+
 2000-12-08  Andreas Schwab  <schwab@suse.de>
 
 	* mbswidth.c (mbsnwidth): Don't loop endlessly when called with an
