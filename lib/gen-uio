@@ -5,6 +5,10 @@ cat <<\EOF || fail=1
 #ifndef UNLOCKED_IO_H
 # define UNLOCKED_IO_H 1
 
+# ifndef USE_UNLOCKED_IO
+#  define USE_UNLOCKED_IO 1
+# endif
+
 # if USE_UNLOCKED_IO
 
 /* These are wrappers for functions/macros from GNU libc.
