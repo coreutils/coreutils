@@ -1,3 +1,15 @@
+Tue Dec 27 07:07:53 1994  Jim Meyering  (meyering@comco.com)
+
+	* src/*.c: Include "error.h" rather than simply declaring
+	`void error ();'.
+	* src/Makefile.in (OBJECTS): Depend on ../lib/error.h.
+
+	* sync.c (main): Make error message accurate.
+
+	* dd.c (skip): Use safe_read instead of read.
+	(copy): Use full_write instead of write.
+	From Bruno Haible.
+
 Sat Dec 10 00:02:09 1994  Jim Meyering  (meyering@comco.com)
 
 	* safe-read.c (safe_read): Get this function from gcc's cccp.c.

@@ -7,6 +7,7 @@ Mon Dec 19 22:05:12 1994  Jim Meyering  (meyering@comco.com)
 
 	* src/*.c: Include "error.h" rather than simply declaring
 	`void error ();'.
+	* src/Makefile.in (OBJECTS): Depend on ../lib/error.h.
 
 	* lib/Makefile.in (DISTFILES): Remove safe-xstat.cin.
 	(distclean): Remove references to safe-l?stat.c.
@@ -27,7 +28,7 @@ Mon Dec 12 22:42:09 1994  Jim Meyering  (meyering@comco.com)
 
 Sun Dec  4 14:53:12 1994  Jim Meyering  (meyering@comco.com)
 
-	* dirname.c (main): Use strr?chr instead of r?index.
+	* dirname.c (main): Use strchr and strrchr instead of index and rindex.
 	* echo.c (main): Likewise.
 	* env.c (main): Likewise.
 	* pathchk.c (validate_path): Likewise.
