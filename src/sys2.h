@@ -141,7 +141,9 @@
 # define RETSIGTYPE void
 #endif
 
-#ifndef __GNUC__
+#if __GNUC__
+# define alloca __builtin_alloca
+#else
 # if HAVE_ALLOCA_H
 #  include <alloca.h>
 # else
