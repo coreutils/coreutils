@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1994, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1994, 1997, 1998, 2000 Free Software Foundation, Inc.
 
    NOTE: The canonical source of this file is maintained with the GNU C
    Library.  Bugs can be reported to bug-glibc@prep.ai.mit.edu.
@@ -17,13 +17,15 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
-#include <errno.h>
-
 #if HAVE_CONFIG_H
 # include <config.h>
 #endif
 
 #include <sys/types.h>
+
+/* Include errno.h *after* sys/types.h to work around header problems
+   on AIX 3.2.5.  */
+#include <errno.h>
 
 /* Don't include stdlib.h because some (e.g., Solaris 2.7) declare putenv
    with a non-const argument.  That would conflict with the declaration of
