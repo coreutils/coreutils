@@ -1,4 +1,8 @@
-# Makefile.in generated automatically by automake 0.27 from Makefile.am
+# Makefile.in generated automatically by automake 0.28 from Makefile.am
+
+# Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
+# This Makefile.in is free software; the Free Software Foundation
+# gives unlimited permission to copy, distribute and modify it.
 
 
 SHELL = /bin/sh
@@ -41,19 +45,25 @@ INFOS = fileutils.info*
 INFO_DEPS = fileutils.info
 DVIS = fileutils.dvi
 
-DIST_COMMON = mdate-sh texinfo.tex stamp-vti Makefile.in version.texi \
-Makefile.am
+DIST_COMMON = Makefile.am mdate-sh Makefile.in texinfo.tex stamp-vti \
+version.texi
 
 
 PACKAGE = @PACKAGE@
 VERSION = @VERSION@
 
-DISTFILES = $(SOURCES) $(HEADERS) $(TEXINFOS) $(INFOS) $(MANS) \
-	$(DIST_OTHER) $(DIST_COMMON) $(DATA)
-subdir = doc
-
+DISTFILES = $(DIST_COMMON) $(SOURCES) $(BUILT_SOURCES) $(HEADERS) \
+	$(TEXINFOS) $(INFOS) $(MANS) $(DIST_OTHER) $(DATA)
+DEP_DISTFILES = $(DIST_COMMON) $(SOURCES) $(BUILT_SOURCES) $(HEADERS) \
+	$(TEXINFOS) $(INFO_DEPS) $(MANS) $(DIST_OTHER) $(DATA)
 default: all
 
+
+$(srcdir)/Makefile.in: Makefile.am
+	cd $(top_srcdir) && automake $(subdir)/Makefile
+
+Makefile: ../config.status Makefile.in
+	cd .. && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= ./config.status
 
 version.texi: stamp-vti
 
@@ -70,7 +80,7 @@ stamp-vti: fileutils.texi $(top_srcdir)/configure.in
 	echo timestamp > $(srcdir)/stamp-vti
 
 mostlyclean-vti:
-	rm -f *.tmp
+	rm -f version.tmp
 
 clean-vti:
 
@@ -90,13 +100,8 @@ fileutils.info: fileutils.texi version.texi
 install-info: $(INFO_DEPS)
 	$(top_srcdir)/mkinstalldirs $(infodir)
 	for file in $(INFO_DEPS); do		\
-	  if test -f $$file; then		\
-	    d=.;				\
-	  else					\
-	    d=$(srcdir);			\
-	  fi;					\
-	  for ifile in `cd $$d && echo $${file}*`; do \
-	    $(INSTALL_DATA) $$d/$$ifile $(infodir)/$$ifile; \
+	  for ifile in $(srcdir)/$${file}*; do	\
+	    $(INSTALL_DATA) $(srcdir)/$$ifile $(infodir)/$$ifile; \
 	  done;					\
 	done
 
@@ -116,22 +121,17 @@ distclean-info:
 
 maintainer-clean-info:
 	rm -f $(INFOS)
-
-$(srcdir)/Makefile.in: Makefile.am
-	cd $(top_srcdir) && automake $(subdir)/Makefile
-
-Makefile: ../config.status Makefile.in
-	cd .. && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= ./config.status
 tags: TAGS
 TAGS:
 
 
-distdir = ../$(PACKAGE)-$(VERSION)/$(subdir)
-dist: $(DISTFILES)
+subdir = doc
+distdir = $(PACKAGE)-$(VERSION)/$(subdir)
+dist: $(DEP_DISTFILES)
 	@for file in $(DISTFILES); do		\
 	  test -f $(distdir)/$$file \
-	    || ln $(srcdir)/$$file $(distdir)/$$file \
-	    || cp -p $(srcdir)/$$file $(distdir)/$$file; \
+	  || ln $(srcdir)/$$file $(distdir)/$$file 2> /dev/null \
+	  || cp -p $(srcdir)/$$file $(distdir)/$$file; \
 	done
 all: info
 
@@ -166,6 +166,7 @@ distclean-generic:
 
 maintainer-clean-generic:
 	test -z "$(MAINTAINERCLEANFILES)" || rm -f $(MAINTAINERCLEANFILES)
+	test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
 mostlyclean:  mostlyclean-vti mostlyclean-info mostlyclean-generic
 
 clean:  clean-vti clean-info clean-generic mostlyclean 
@@ -177,7 +178,6 @@ maintainer-clean:  maintainer-clean-vti maintainer-clean-info \
 maintainer-clean-generic distclean 
 	@echo "This command is intended for maintainers to use;"
 	@echo "it deletes files that may require special tools to rebuild."
-	rm -f config.status
 
 .PHONY: default mostlyclean-vti distclean-vti clean-vti \
 maintainer-clean-vti install-info uninstall-info mostlyclean-info \

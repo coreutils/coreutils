@@ -1,4 +1,8 @@
-# Makefile.in generated automatically by automake 0.27 from Makefile.am
+# Makefile.in generated automatically by automake 0.28 from Makefile.am
+
+# Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
+# This Makefile.in is free software; the Free Software Foundation
+# gives unlimited permission to copy, distribute and modify it.
 
 
 SHELL = /bin/sh
@@ -46,6 +50,7 @@ HEADERS = argmatch.h backupfile.h error.h fnmatch.h fsusage.h getopt.h \
 group-member.h long-options.h makepath.h modechange.h mountlist.h \
 obstack.h pathmax.h save-cwd.h xstrtol.h xstrtoul.h
 
+BUILT_SOURCES = posixtm.c getdate.c
 CONFIG_HEADER = ../config.h
 
 fu_SOURCES = getdate.c posixtm.c argmatch.c backupfile.c basename.c \
@@ -54,7 +59,7 @@ full-write.c getopt.c getopt1.c getversion.c group-member.c idcache.c \
 isdir.c long-options.c makepath.c modechange.c obstack.c \
 safe-read.c save-cwd.c savedir.c stripslash.c userspec.c xgetcwd.c \
 xmalloc.c xstrdup.c xstrtol.c xstrtoul.c yesno.c
-LIBRARIES= $(noinst_LIBRARIES)
+LIBRARIES = $(noinst_LIBRARIES)
 
 noinst_LIBFILES = libfu.a
 
@@ -80,21 +85,33 @@ LIBFILES =  libfu.a
 
 AR = ar
 RANLIB = @RANLIB@
-DIST_COMMON = Makefile.in Makefile.am
+DIST_COMMON = Makefile.am Makefile.in
 
 
 PACKAGE = @PACKAGE@
 VERSION = @VERSION@
 
-DISTFILES = $(SOURCES) $(HEADERS) $(TEXINFOS) $(INFOS) $(MANS) \
-	$(DIST_OTHER) $(DIST_COMMON) $(DATA)
-subdir = lib
-
+DISTFILES = $(DIST_COMMON) $(SOURCES) $(BUILT_SOURCES) $(HEADERS) \
+	$(TEXINFOS) $(INFOS) $(MANS) $(DIST_OTHER) $(DATA)
+DEP_DISTFILES = $(DIST_COMMON) $(SOURCES) $(BUILT_SOURCES) $(HEADERS) \
+	$(TEXINFOS) $(INFO_DEPS) $(MANS) $(DIST_OTHER) $(DATA)
+DEP_FILES = .Pdechange.P .Png.Ppt.Pns.P .Psixtm.P argmatch.P \
+backupfile.P basename.P dirname.P er.Pr.P file.Pde.P fileb.Pcks.P \
+full-write.P g.Pup-member.P ge.Ppt.P ge.Ppt1.P getdate.P getvers.Pn.P \
+idcache.P isdir.P makepath.P obstack.P safe-read.P save-cwd.P savedir.P \
+stripslash.P userspec.P xgetcwd.P xmal.Pc.P xstr.Pl.P xstr.Pul.P \
+xstrdup.P yes.P.P
 SOURCES = $(fu_SOURCES)
 OBJECTS = $(fu_OBJECTS)
 
 default: all
 
+
+$(srcdir)/Makefile.in: Makefile.am
+	cd $(top_srcdir) && automake $(subdir)/Makefile
+
+Makefile: ../config.status Makefile.in
+	cd .. && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= ./config.status
 
 mostlyclean-noinstLIBRARIES:
 
@@ -124,13 +141,7 @@ libfu.a: $(fu_OBJECTS) $(fu_LIBADD)
 	$(AR) cru libfu.a $(fu_OBJECTS) $(fu_LIBADD)
 	$(RANLIB) libfu.a
 
-$(srcdir)/Makefile.in: Makefile.am
-	cd $(top_srcdir) && automake $(subdir)/Makefile
-
-Makefile: ../config.status Makefile.in
-	cd .. && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= ./config.status
-
-ID:
+ID:	$(HEADERS) $(SOURCES)
 	here=`pwd` && cd $(srcdir) && mkid -f $$here/ID $(SOURCES) $(HEADERS)
 
 tags: TAGS
@@ -147,12 +158,13 @@ distclean-tags:
 
 maintainer-clean-tags:
 
-distdir = ../$(PACKAGE)-$(VERSION)/$(subdir)
-dist: $(DISTFILES)
+subdir = lib
+distdir = $(PACKAGE)-$(VERSION)/$(subdir)
+dist: $(DEP_DISTFILES)
 	@for file in $(DISTFILES); do		\
 	  test -f $(distdir)/$$file \
-	    || ln $(srcdir)/$$file $(distdir)/$$file \
-	    || cp -p $(srcdir)/$$file $(distdir)/$$file; \
+	  || ln $(srcdir)/$$file $(distdir)/$$file 2> /dev/null \
+	  || cp -p $(srcdir)/$$file $(distdir)/$$file; \
 	done
 
 # This fragment is probably only useful for maintainers.  It relies on
@@ -160,8 +172,6 @@ dist: $(DISTFILES)
 # if `automake' is not passed the `--include-deps' flag.
 
 MKDEP = gcc -MM $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
-
-DEP_FILES = $(patsubst %.$(kr)o, $(srcdir)/.deps/%.P,$(OBJECTS))
 
 -include $(srcdir)/.deps/.P
 $(srcdir)/.deps/.P: $(BUILT_SOURCES)
@@ -175,7 +185,11 @@ $(srcdir)/.deps/%.P: $(srcdir)/%.c
 	@echo "mkdeps $< > $@"
 	@re=`echo 's,\<$(srcdir),,g' | sed 's/\./\\./g'`; \
 	  $(MKDEP) $< | sed $$re > $@-tmp
-	@mv $@-tmp $@
+	@if test -n "$o"; then			\
+	  sed 's/\.o:/$$o:/' $@-tmp > $@;	\
+	else					\
+	  mv $@-tmp $@;				\
+	fi
 
 # End of maintainer-only section
 all: $(LIBFILES)
@@ -188,7 +202,7 @@ check: all
 
 installcheck:
 
-install: 
+install: all
 	@:
 
 uninstall: 
@@ -208,6 +222,7 @@ distclean-generic:
 
 maintainer-clean-generic:
 	test -z "$(MAINTAINERCLEANFILES)" || rm -f $(MAINTAINERCLEANFILES)
+	test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
 mostlyclean:  mostlyclean-noinstLIBRARIES mostlyclean-compile \
 mostlyclean-tags mostlyclean-generic
 
@@ -223,7 +238,6 @@ maintainer-clean-compile maintainer-clean-tags maintainer-clean-generic \
 distclean 
 	@echo "This command is intended for maintainers to use;"
 	@echo "it deletes files that may require special tools to rebuild."
-	rm -f config.status
 
 .PHONY: default mostlyclean-noinstLIBRARIES distclean-noinstLIBRARIES \
 clean-noinstLIBRARIES maintainer-clean-noinstLIBRARIES \
