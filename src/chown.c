@@ -1,5 +1,5 @@
 /* chown -- change user and group ownership of files
-   Copyright (C) 89, 90, 91, 1995-2003 Free Software Foundation, Inc.
+   Copyright (C) 89, 90, 91, 1995-2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -86,7 +86,7 @@ static struct option const long_options[] =
 void
 usage (int status)
 {
-  if (status != 0)
+  if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
@@ -171,7 +171,7 @@ main (int argc, char **argv)
   int bit_flags = FTS_PHYSICAL;
 
   struct Chown_option chopt;
-  int fail = 0;
+  int fail;
   int optc;
 
   initialize_main (&argc, &argv);
