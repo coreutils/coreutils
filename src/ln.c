@@ -38,6 +38,10 @@
 
 #define AUTHORS N_ ("Mike Parker and David MacKenzie")
 
+#ifndef ENABLE_HARD_LINK_TO_SYMLINK_WARNING
+# define ENABLE_HARD_LINK_TO_SYMLINK_WARNING 0
+#endif
+
 /* For long options that have no equivalent short option, use a
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
@@ -162,7 +166,8 @@ do_link (const char *source, const char *dest)
 	  return 1;
 	}
 
-      if (S_ISLNK (source_stats.st_mode))
+      if (ENABLE_HARD_LINK_TO_SYMLINK_WARNING
+	  && S_ISLNK (source_stats.st_mode))
 	{
 	  error (0, 0, _("%s: warning: making a hard link to a symbolic link\
  is not portable"),
