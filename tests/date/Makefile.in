@@ -1,6 +1,6 @@
-# Makefile.in generated automatically by automake 1.3b from Makefile.am
+# Makefile.in generated automatically by automake 1.4a from Makefile.am
 
-# Copyright (C) 1994, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+# Copyright (C) 1994, 1995-8, 1999 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
 # with or without modifications, as long as this notice is preserved.
@@ -11,7 +11,7 @@
 # PARTICULAR PURPOSE.
 
 
-SHELL = /bin/sh
+SHELL = @SHELL@
 
 srcdir = @srcdir@
 top_srcdir = @top_srcdir@
@@ -46,7 +46,7 @@ AUTOMAKE = @AUTOMAKE@
 AUTOHEADER = @AUTOHEADER@
 
 INSTALL = @INSTALL@
-INSTALL_PROGRAM = @INSTALL_PROGRAM@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@ $(AM_INSTALL_PROGRAM_FLAGS)
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
 transform = @program_transform_name@
@@ -99,25 +99,11 @@ YACC = @YACC@
 l = @l@
 
 x = date
-explicit =
-maint_gen = 1.X 2.X 3.X 4.X 5.X 6.X 7.X 8.X 9.X leap-1.X U95-1.X U95-2.X \
-U95-3.X U92-1.X U92-2.X U92-3.X V92-1.X V92-2.X V92-3.X W92-1.X W92-2.X \
-W92-3.X millen-1.X rel-0.X rel-1a.X rel-1b.X rel-2a.X rel-2b.X rel-2c.X \
-rel-2d.X rel-2e.X rel-2f.X rel-2g.X rel-3a.X next-s.X next-m.X next-h.X \
-next-d.X next-w.X next-mo.X next-y.X utc-0.X utc-0a.X utc-1.I utc-1.X \
-utc-1a.I utc-1a.X date2sec-0.X date2sec-0a.X date2sec-1.X sec2date-0.X
-run_gen = 1.O 1.E 2.O 2.E 3.O 3.E 4.O 4.E 5.O 5.E 6.O 6.E 7.O 7.E 8.O 8.E 9.O \
-9.E leap-1.O leap-1.E U95-1.O U95-1.E U95-2.O U95-2.E U95-3.O U95-3.E U92-1.O \
-U92-1.E U92-2.O U92-2.E U92-3.O U92-3.E V92-1.O V92-1.E V92-2.O V92-2.E \
-V92-3.O V92-3.E W92-1.O W92-1.E W92-2.O W92-2.E W92-3.O W92-3.E millen-1.O \
-millen-1.E rel-0.O rel-0.E rel-1a.O rel-1a.E rel-1b.O rel-1b.E rel-2a.O \
-rel-2a.E rel-2b.O rel-2b.E rel-2c.O rel-2c.E rel-2d.O rel-2d.E rel-2e.O \
-rel-2e.E rel-2f.O rel-2f.E rel-2g.O rel-2g.E rel-3a.O rel-3a.E next-s.O \
-next-s.E next-m.O next-m.E next-h.O next-h.E next-d.O next-d.E next-w.O \
-next-w.E next-mo.O next-mo.E next-y.O next-y.E utc-0.O utc-0.E utc-0a.O \
-utc-0a.E utc-1.O utc-1.E utc-1a.O utc-1a.E date2sec-0.O date2sec-0.E \
-date2sec-0a.O date2sec-0a.E date2sec-1.O date2sec-1.E sec2date-0.O \
-sec2date-0.E
+explicit = 
+maint_gen = 1.X 2.X 3.X 4.X 5.X 6.X 7.X 8.X 9.X leap-1.X U95-1.X U95-2.X U95-3.X U92-1.X U92-2.X U92-3.X V92-1.X V92-2.X V92-3.X W92-1.X W92-2.X W92-3.X millen-1.X rel-0.X rel-1a.X rel-1b.X rel-2a.X rel-2b.X rel-2c.X rel-2d.X rel-2e.X rel-2f.X rel-2g.X rel-3a.X next-s.X next-m.X next-h.X next-d.X next-w.X next-mo.X next-y.X utc-0.X utc-0a.X utc-1.I utc-1.X utc-1a.I utc-1a.X date2sec-0.X date2sec-0a.X date2sec-1.X sec2date-0.X
+
+run_gen = 1.O 1.E 2.O 2.E 3.O 3.E 4.O 4.E 5.O 5.E 6.O 6.E 7.O 7.E 8.O 8.E 9.O 9.E leap-1.O leap-1.E U95-1.O U95-1.E U95-2.O U95-2.E U95-3.O U95-3.E U92-1.O U92-1.E U92-2.O U92-2.E U92-3.O U92-3.E V92-1.O V92-1.E V92-2.O V92-2.E V92-3.O V92-3.E W92-1.O W92-1.E W92-2.O W92-2.E W92-3.O W92-3.E millen-1.O millen-1.E rel-0.O rel-0.E rel-1a.O rel-1a.E rel-1b.O rel-1b.E rel-2a.O rel-2a.E rel-2b.O rel-2b.E rel-2c.O rel-2c.E rel-2d.O rel-2d.E rel-2e.O rel-2e.E rel-2f.O rel-2f.E rel-2g.O rel-2g.E rel-3a.O rel-3a.E next-s.O next-s.E next-m.O next-m.E next-h.O next-h.E next-d.O next-d.E next-w.O next-w.E next-mo.O next-mo.E next-y.O next-y.E utc-0.O utc-0.E utc-0a.O utc-0a.E utc-1.O utc-1.E utc-1a.O utc-1a.E date2sec-0.O date2sec-0.E date2sec-0a.O date2sec-0a.E date2sec-1.O date2sec-1.E sec2date-0.O sec2date-0.E
+
 
 EXTRA_DIST = Test.pm $x-tests $(explicit) $(maint_gen)
 noinst_SCRIPTS = $x-tests
@@ -141,12 +127,11 @@ DIST_COMMON =  Makefile.am Makefile.in
 
 DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
 
-TAR = tar
-GZIP = --best
-all: Makefile $(SCRIPTS)
-
+TAR = gtar
+GZIP_ENV = --best
+all: all-redirect
 .SUFFIXES:
-$(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4)
+$(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
 	cd $(top_srcdir) && $(AUTOMAKE) --gnits tests/date/Makefile
 
 Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status $(BUILT_SOURCES)
@@ -169,9 +154,13 @@ distdir: $(DISTFILES)
 	  && $(AUTOMAKE) --include-deps --build-dir=$$here --srcdir-name=$(top_srcdir) --output-dir=$$top_distdir --gnits tests/date/Makefile
 	@for file in $(DISTFILES); do \
 	  d=$(srcdir); \
-	  test -f $(distdir)/$$file \
-	  || ln $$d/$$file $(distdir)/$$file 2> /dev/null \
-	  || cp -p $$d/$$file $(distdir)/$$file; \
+	  if test -d $$d/$$file; then \
+	    cp -pr $$/$$file $(distdir)/$$file; \
+	  else \
+	    test -f $(distdir)/$$file \
+	    || ln $$d/$$file $(distdir)/$$file 2> /dev/null \
+	    || cp -p $$d/$$file $(distdir)/$$file || :; \
+	  fi; \
 	done
 check-TESTS: $(TESTS)
 	@failed=0; all=0; \
@@ -198,24 +187,30 @@ check-TESTS: $(TESTS)
 	echo "$$banner"; \
 	echo "$$dashes"; \
 	test "$$failed" -eq 0
-info:
-dvi:
-check: all
+info-am:
+info: info-am
+dvi-am:
+dvi: dvi-am
+check-am: all-am
 	$(MAKE) $(AM_MAKEFLAGS) check-TESTS
-installcheck:
-install-exec: 
-	@$(NORMAL_INSTALL)
+check: check-am
+installcheck-am:
+installcheck: installcheck-am
+install-exec-am:
+install-exec: install-exec-am
 
-install-data: 
-	@$(NORMAL_INSTALL)
+install-data-am:
+install-data: install-data-am
 
-install: install-exec install-data all
-	@:
-
-uninstall: 
-
+install-am: all-am
+	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
+install: install-am
+uninstall-am:
+uninstall: uninstall-am
+all-am: Makefile $(SCRIPTS)
+all-redirect: all-am
 install-strip:
-	$(MAKE) $(AM_MAKEFLAGS) INSTALL_PROGRAM='$(INSTALL_PROGRAM) -s' INSTALL_SCRIPT='$(INSTALL_PROGRAM)' install
+	$(MAKE) $(AM_MAKEFLAGS) AM_INSTALL_PROGRAM_FLAGS=-s install
 installdirs:
 
 
@@ -230,19 +225,28 @@ distclean-generic:
 
 maintainer-clean-generic:
 	-test -z "$(MAINTAINERCLEANFILES)" || rm -f $(MAINTAINERCLEANFILES)
-mostlyclean:  mostlyclean-generic
+mostlyclean-am:  mostlyclean-generic
 
-clean:  clean-generic mostlyclean
+mostlyclean: mostlyclean-am
 
-distclean:  distclean-generic clean
-	-rm -f config.status
+clean-am:  clean-generic mostlyclean-am
 
-maintainer-clean:  maintainer-clean-generic distclean
+clean: clean-am
+
+distclean-am:  distclean-generic clean-am
+
+distclean: distclean-am
+
+maintainer-clean-am:  maintainer-clean-generic distclean-am
 	@echo "This command is intended for maintainers to use;"
 	@echo "it deletes files that may require special tools to rebuild."
 
-.PHONY: tags distdir check-TESTS info dvi installcheck install-exec \
-install-data install uninstall all installdirs mostlyclean-generic \
+maintainer-clean: maintainer-clean-am
+
+.PHONY: tags distdir check-TESTS info-am info dvi-am dvi check check-am \
+installcheck-am installcheck install-exec-am install-exec \
+install-data-am install-data install-am install uninstall-am uninstall \
+all-redirect all-am all installdirs mostlyclean-generic \
 distclean-generic clean-generic maintainer-clean-generic clean \
 mostlyclean distclean maintainer-clean
 

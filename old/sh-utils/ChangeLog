@@ -1,3 +1,7 @@
+1999-01-29  Jim Meyering  <meyering@ascend.com>
+
+	* doc/Makefile.am (DISTCLEANFILES): Arrange to remove sh-utils.fl.
+
 1999-01-25  Jim Meyering  <meyering@ascend.com>
 
 	* src/date.c (usage): Remove static attribute.
