@@ -149,22 +149,22 @@ struct utimbuf
 };
 #endif
 
-#if defined(STDC_HEADERS) || defined(HAVE_STRING_H)
-#include <string.h>
-#ifndef index
-#define index strchr
-#endif
-#ifndef rindex
-#define rindex strrchr
-#endif
-#ifndef bcopy
-#define bcopy(from, to, len) memcpy ((to), (from), (len))
-#endif
-#ifndef bzero
-#define bzero(s, n) memset ((s), 0, (n))
-#endif
+#ifdef HAVE_STRING_H
+# include <string.h>
+# ifndef bcopy
+#  define bcopy(from, to, len) memcpy ((to), (from), (len))
+# endif
+# ifndef bzero
+#  define bzero(s, n) memset ((s), 0, (n))
+# endif
 #else
-#include <strings.h>
+# include <strings.h>
+# ifndef strrchr
+#  define strrchr rindex
+# endif
+# ifndef strchr
+#  define strchr index
+# endif
 #endif
 
 #include <errno.h>
@@ -267,15 +267,45 @@ extern int errno;
 #endif
 
 #ifdef __GNUC__
-#undef alloca
-#define alloca __builtin_alloca
+# undef alloca
+# define alloca __builtin_alloca
 #else
-#ifdef HAVE_ALLOCA_H
-#include <alloca.h>
-#else
-#ifndef _AIX
+# ifdef HAVE_ALLOCA_H
+#  include <alloca.h>
+# else
+#  ifndef _AIX
 /* AIX alloca decl has to be the first thing in the file, bletch! */
 char *alloca ();
+#  endif
+# endif
 #endif
+
+#include <ctype.h>
+
+#if defined (STDC_HEADERS) || (!defined (isascii) && !defined (HAVE_ISASCII))
+#define ISASCII(c) 1
+#else
+#define ISASCII(c) isascii(c)
 #endif
+
+#ifdef isblank
+#define ISBLANK(c) (ISASCII (c) && isblank (c))
+#else
+#define ISBLANK(c) ((c) == ' ' || (c) == '\t')
 #endif
+#ifdef isgraph
+#define ISGRAPH(c) (ISASCII (c) && isgraph (c))
+#else
+#define ISGRAPH(c) (ISASCII (c) && isprint (c) && !isspace (c))
+#endif
+
+#define ISPRINT(c) (ISASCII (c) && isprint (c))
+#define ISDIGIT(c) (ISASCII (c) && isdigit (c))
+#define ISALNUM(c) (ISASCII (c) && isalnum (c))
+#define ISALPHA(c) (ISASCII (c) && isalpha (c))
+#define ISCNTRL(c) (ISASCII (c) && iscntrl (c))
+#define ISLOWER(c) (ISASCII (c) && islower (c))
+#define ISPUNCT(c) (ISASCII (c) && ispunct (c))
+#define ISSPACE(c) (ISASCII (c) && isspace (c))
+#define ISUPPER(c) (ISASCII (c) && isupper (c))
+#define ISXDIGIT(c) (ISASCII (c) && isxdigit (c))
