@@ -1,6 +1,10 @@
-2002-10-12  Jim Meyering  <meyering@lucent.com>
+2002-10-13  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.5.3.
+
+	* src/Makefile.am (../AUTHORS): New target/rule.
+
+2002-10-12  Jim Meyering  <meyering@lucent.com>
 
 	* src/paste.c (paste_parallel): Declare local, `delims_saved', to be
 	of type size_t, since that's the way it's used and avoids a warning.
