@@ -11,7 +11,7 @@ use File::Compare qw(compare);
 $VERSION = '0.5';
 @EXPORT = qw (run_tests);
 
-my @Types = qw (OUT ERR EXIT);
+my @Types = qw (IN OUT ERR EXIT);
 my %Types = map {$_ => 1} @Types;
 
 my $count = 1;
@@ -74,40 +74,36 @@ sub run_tests ($$$$$)
       my $exit_status;
 
       my @args;
-      my $arg;
-      foreach $arg (@$t)
+      my $io_spec;
+      foreach $io_spec (@$t)
 	{
-	  if (!ref $arg)
+	  if (!ref $io_spec)
 	    {
-	      push @args, $arg;
+	      push @args, $io_spec;
 	      next;
 	    }
 
-	  my $type;
-	  my $fs;
-	  if (ref $arg eq 'HASH')
+	  die "$program_name: $test_name: invalid test spec\n"
+	    if ref $io_spec ne 'HASH';
+
+	  my $n = keys %$io_spec;
+	  die "$program_name: $test_name: spec has $n elements --"
+	    . " expected 1\n"
+	      if $n != 1;
+	  my ($type, $val) = each %$io_spec;
+	  die "$program_name: $test_name: invalid key `$type' in test spec\n"
+	      if ! $Types{$type};
+
+	  if ($type eq 'EXIT')
 	    {
-	      my $n = keys %$arg;
-	      die "$program_name: $test_name: output spec has $n element --"
-		. " expected 1\n"
-		  if $n != 1;
-	      ($type, $fs) = each %$arg;
-	      die "$program_name: $test_name: `$type': invalid in test spec\n"
-		if ! $Types{$type};
+	      # FIXME: make sure there's only one of these
+	      # FIXME: make sure $data is numeric
+	      $exit_status = $val;
+	      next;
 	    }
-	  elsif (ref $arg eq 'ARRAY')
-	    {
-	      my $n = @$arg;
-	      die "$program_name:: input file spec has $n element --"
-		. " expected 1\n"
-		  if $n != 1;
-	      $fs = $arg->[0];
-	      $type = 'IN';
-	    }
-	  else
-	    {
-	      die "$program_name: $test_name: invalid test spec\n";
-	    }
+
+	  my $file_spec = $val;
+	  my ($filename, $contents) = each %$file_spec;
 
 	  if ($type =~ /_FILE$/ || $type =~ /_DATA$/)
 	    {
@@ -144,8 +140,6 @@ sub run_tests ($$$$$)
 	    }
 	  elsif ($type eq 'EXIT_STATUS')
 	    {
-	      # FIXME: make sure there's only one of these
-	      # FIXME: make sure $data is numeric
 	      $exit_status = $data;
 	    }
 	  else
