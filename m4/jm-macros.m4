@@ -1,6 +1,25 @@
-#serial 74   -*- autoconf -*-
+#serial 75   -*- autoconf -*-
 
-dnl Misc type-related macros for fileutils, sh-utils, textutils.
+dnl Misc type-related macros for coreutils.
+
+# Copyright (C) 1998, 2000, 2001, 2002, 2003, 2004 Free Software
+# Foundation, Inc.
+
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2, or (at your option)
+# any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software Foundation,
+# Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
+# Written by Jim Meyering.
 
 AC_DEFUN([gl_MACROS],
 [
@@ -73,14 +92,14 @@ AC_DEFUN([gl_MACROS],
 
   # used by sleep and shred
   AC_REQUIRE([gl_CLOCK_TIME])
-  AC_CHECK_FUNCS(gettimeofday)
+  AC_CHECK_FUNCS_ONCE(gettimeofday)
   AC_FUNC_GETTIMEOFDAY_CLOBBER
   # used by shred
-  AC_CHECK_FUNCS(directio)
+  AC_CHECK_FUNCS_ONCE(directio)
 
   AC_REQUIRE([AC_FUNC_CLOSEDIR_VOID])
 
-  AC_CHECK_FUNCS( \
+  AC_CHECK_FUNCS_ONCE( \
     endgrent \
     endpwent \
     ftruncate \
@@ -165,7 +184,7 @@ AC_DEFUN([gl_MACROS],
 # See the definition of ac_includes_default in `configure'.
 AC_DEFUN([gl_CHECK_ALL_HEADERS],
 [
-  AC_CHECK_HEADERS( \
+  AC_CHECK_HEADERS_ONCE( \
     errno.h  \
     fcntl.h \
     float.h \
@@ -186,13 +205,11 @@ AC_DEFUN([gl_CHECK_ALL_HEADERS],
     sys/fstyp.h \
     sys/ioctl.h \
     sys/mntent.h \
-    sys/mount.h \
     sys/param.h \
     sys/resource.h \
     sys/socket.h \
     sys/statfs.h \
     sys/statvfs.h \
-    sys/sysctl.h \
     sys/systeminfo.h \
     sys/time.h \
     sys/timeb.h \
@@ -203,6 +220,11 @@ AC_DEFUN([gl_CHECK_ALL_HEADERS],
     unistd.h \
     utime.h \
   )
+  AC_CHECK_HEADERS(sys/mount.h sys/sysctl.h, [], [],
+    [AC_INCLUDES_DEFAULT
+     [#if HAVE_SYS_PARAM_H
+       #include <sys/param.h>
+      #endif]])
 ])
 
 # This macro must be invoked before any tests that run the compiler.
