@@ -1,3 +1,7 @@
+2000-12-05  Jim Meyering  <meyering@lucent.com>
+
+	* dirname.c (dir_name_r): Add `const' in a few local declarations.
+
 2000-12-04  Jim Meyering  <meyering@lucent.com>
 
 	* path-concat.c: [!HAVE_DECL_MALLOC]: Declare malloc.
