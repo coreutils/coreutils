@@ -39,6 +39,7 @@ sub test_vector
      ['w', '4294966464', {}, '2 2 2 2 2 2 3 3 3 2485513', 0],
      ['x', '4294966896', {}, '2 2 2 2 3 3 3 11 607 1489', 0],
      ['y', '4294966998', {}, '2 3 7 3917 26107', 0],
+     ['z', '-1', {}, '', 1],
      );
 
   my @tv;
@@ -47,7 +48,8 @@ sub test_vector
     {
       my ($test_name, $arg, $in, $exp, $ret) = @$t;
       # Append a newline to end of each expected string.
-      push (@tv, [$test_name, $arg, $in, "$arg: $exp\n", $ret]);
+      my $prefixed_result = ($ret == 0 ? "$arg: $exp\n" : $exp);
+      push (@tv, [$test_name, $arg, $in, $prefixed_result, $ret]);
     }
 
   return @tv;
