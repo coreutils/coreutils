@@ -21,6 +21,7 @@
 #include <getopt.h>
 #include <math.h>
 #include <stdio.h>
+#include <sys/types.h>
 
 #include "system.h"
 #include "error.h"
