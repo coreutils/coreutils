@@ -4,23 +4,20 @@
    internationalization features.)
    Copyright (C) 1993, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
 
-   NOTE: The canonical source of this file is maintained with the GNU C Library.
-   Bugs can be reported to bug-glibc@prep.ai.mit.edu.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-   This program is free software; you can redistribute it and/or modify it
-   under the terms of the GNU General Public License as published by the
-   Free Software Foundation; either version 2, or (at your option) any
-   later version.
-
-   This program is distributed in the hope that it will be useful,
+   The GNU C Library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,
-   USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 /* AIX requires this to be the first thing in the file. */
 #if defined _AIX && !defined REGEX_MALLOC
@@ -49,12 +46,11 @@
 # include <sys/types.h>
 #endif
 
-#define WIDE_CHAR_SUPPORT \
-  defined _LIBC || (HAVE_WCTYPE_H && HAVE_WCHAR_H && HAVE_BTOWC)
+#define WIDE_CHAR_SUPPORT (HAVE_WCTYPE_H && HAVE_WCHAR_H && HAVE_BTOWC)
 
 /* For platform which support the ISO C amendement 1 functionality we
    support user defined character classes.  */
-#if WIDE_CHAR_SUPPORT
+#if defined _LIBC || WIDE_CHAR_SUPPORT
 /* Solaris 2.5 has a bug: <wchar.h> must be included before <wctype.h>.  */
 # include <wchar.h>
 # include <wctype.h>
@@ -211,7 +207,7 @@ init_syntax_once ()
 #endif /* not emacs */
 
 /* Get the interface, including the syntax bits.  */
-#include "regex.h"
+#include <regex.h>
 
 /* isalpha etc. are used for the character classes.  */
 #include <ctype.h>
@@ -1722,7 +1718,7 @@ typedef struct
        } 								\
     }
 
-#if WIDE_CHAR_SUPPORT
+#if defined _LIBC || WIDE_CHAR_SUPPORT
 /* The GNU C library provides support for user-defined character classes
    and the functions from ISO C amendement 1.  */
 # ifdef CHARCLASS_NAME_MAX
@@ -2214,10 +2210,13 @@ regex_compile (pattern, size, syntax, bufp)
                     for (;;)
                       {
                         PATFETCH (c);
-                        if ((c == ':' && *p == ']') || p == pend
-                            || c1 == CHAR_CLASS_MAX_LENGTH)
+                        if ((c == ':' && *p == ']') || p == pend)
                           break;
-                        str[c1++] = c;
+			if (c1 < CHAR_CLASS_MAX_LENGTH)
+			  str[c1++] = c;
+			else
+			  /* This is in any case an invalid class name.  */
+			  str[0] = '\0';
                       }
                     str[c1] = '\0';
 
@@ -2226,7 +2225,7 @@ regex_compile (pattern, size, syntax, bufp)
                        the leading `:' and `[' (but set bits for them).  */
                     if (c == ':' && *p == ']')
                       {
-#if WIDE_CHAR_SUPPORT
+#if defined _LIBC || WIDE_CHAR_SUPPORT
                         boolean is_lower = STREQ (str, "lower");
                         boolean is_upper = STREQ (str, "upper");
 			wctype_t wt;
@@ -2247,10 +2246,10 @@ regex_compile (pattern, size, syntax, bufp)
 # ifdef _LIBC
 			    if (__iswctype (__btowc (ch), wt))
 			      SET_LIST_BIT (ch);
-#else
+# else
 			    if (iswctype (btowc (ch), wt))
 			      SET_LIST_BIT (ch);
-#endif
+# endif
 
 			    if (translate && (is_upper || is_lower)
 				&& (ISUPPER (ch) || ISLOWER (ch)))
@@ -5574,7 +5573,8 @@ re_exec (s)
        REG_EXTENDED bit in CFLAGS is set; otherwise, to
        RE_SYNTAX_POSIX_BASIC;
      `newline_anchor' to REG_NEWLINE being set in CFLAGS;
-     `fastmap' and `fastmap_accurate' to zero;
+     `fastmap' to an allocated space for the fastmap;
+     `fastmap_accurate' to zero;
      `re_nsub' to the number of subexpressions in PATTERN.
 
    PATTERN is the address of the pattern string.
@@ -5613,11 +5613,8 @@ regcomp (preg, pattern, cflags)
   preg->allocated = 0;
   preg->used = 0;
 
-  /* Don't bother to use a fastmap when searching.  This simplifies the
-     REG_NEWLINE case: if we used a fastmap, we'd have to put all the
-     characters after newlines into the fastmap.  This way, we just try
-     every character.  */
-  preg->fastmap = 0;
+  /* Try to allocate space for the fastmap.  */
+  preg->fastmap = (char *) malloc (1 << BYTEWIDTH);
 
   if (cflags & REG_ICASE)
     {
@@ -5656,6 +5653,19 @@ regcomp (preg, pattern, cflags)
   /* POSIX doesn't distinguish between an unmatched open-group and an
      unmatched close-group: both are REG_EPAREN.  */
   if (ret == REG_ERPAREN) ret = REG_EPAREN;
+
+  if (ret == REG_NOERROR && preg->fastmap)
+    {
+      /* Compute the fastmap now, since regexec cannot modify the pattern
+	 buffer.  */
+      if (re_compile_fastmap (preg) == -2)
+	{
+	  /* Some error occured while computing the fastmap, just forget
+	     about it.  */
+	  free (preg->fastmap);
+	  preg->fastmap = NULL;
+	}
+    }
 
   return (int) ret;
 }
@@ -5705,10 +5715,10 @@ regexec (preg, string, nmatch, pmatch, eflags)
   if (want_reg_info)
     {
       regs.num_regs = nmatch;
-      regs.start = TALLOC (nmatch, regoff_t);
-      regs.end = TALLOC (nmatch, regoff_t);
-      if (regs.start == NULL || regs.end == NULL)
+      regs.start = TALLOC (nmatch * 2, regoff_t);
+      if (regs.start == NULL)
         return (int) REG_NOMATCH;
+      regs.end = regs.start + nmatch;
     }
 
   /* Perform the searching operation.  */
@@ -5732,7 +5742,6 @@ regexec (preg, string, nmatch, pmatch, eflags)
 
       /* If we needed the temporary register info, free the space now.  */
       free (regs.start);
-      free (regs.end);
     }
 
   /* We want zero return to mean success, unlike `re_search'.  */
