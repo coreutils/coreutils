@@ -201,8 +201,8 @@ kB 1000, K 1024, MB 1000*1000, M 1024*1024, and so on for G, T, P, E, Z, Y.\n\
   exit (status);
 }
 
-static unsigned int
-entry_hash (void const *x, unsigned int table_size)
+static size_t
+entry_hash (void const *x, size_t table_size)
 {
   struct entry const *p = x;
 
