@@ -23,6 +23,7 @@
 #define _GNU_SOURCE
 
 #include <stdio.h>
+#define NDEBUG 1
 #include <assert.h>
 #include <errno.h>
 #include <sys/types.h>
@@ -407,48 +408,51 @@ is_char_class_member (char_class, c)
      enum Char_class char_class;
      unsigned int c;
 {
+  int result;
+
   switch (char_class)
     {
     case CC_ALNUM:
-      return ISALNUM (c);
+      result = ISALNUM (c);
       break;
     case CC_ALPHA:
-      return ISALPHA (c);
+      result = ISALPHA (c);
       break;
     case CC_BLANK:
-      return ISBLANK (c);
+      result = ISBLANK (c);
       break;
     case CC_CNTRL:
-      return ISCNTRL (c);
+      result = ISCNTRL (c);
       break;
     case CC_DIGIT:
-      return ISDIGIT (c);
+      result = ISDIGIT (c);
       break;
     case CC_GRAPH:
-      return ISGRAPH (c);
+      result = ISGRAPH (c);
       break;
     case CC_LOWER:
-      return ISLOWER (c);
+      result = ISLOWER (c);
       break;
     case CC_PRINT:
-      return ISPRINT (c);
+      result = ISPRINT (c);
       break;
     case CC_PUNCT:
-      return ISPUNCT (c);
+      result = ISPUNCT (c);
       break;
     case CC_SPACE:
-      return ISSPACE (c);
+      result = ISSPACE (c);
       break;
     case CC_UPPER:
-      return ISUPPER (c);
+      result = ISUPPER (c);
       break;
     case CC_XDIGIT:
-      return ISXDIGIT (c);
+      result = ISXDIGIT (c);
       break;
     default:
       abort ();
       break;
     }
+  return result;
 }
 
 /* Perform the first pass over each range-spec argument S, converting all
@@ -463,9 +467,9 @@ is_char_class_member (char_class, c)
 static int
 unquote (s, len)
      unsigned char *s;
-     int *len;
+     size_t *len;
 {
-  int i, j;
+  size_t i, j;
 
   j = 0;
   for (i = 0; s[i]; i++)
@@ -968,11 +972,11 @@ find_bracketed_repeat (p, start_idx, p_len, char_to_repeat, n)
 static int
 build_spec_list (unescaped_string, len, result)
      const unsigned char *unescaped_string;
-     int len;
+     size_t len;
      struct Spec_list *result;
 {
   const unsigned char *p;
-  int i;
+  size_t i;
 
   p = unescaped_string;
 
@@ -983,7 +987,7 @@ build_spec_list (unescaped_string, len, result)
      less are composed solely of normal characters.  Hence, the index of
      the outer for-loop runs only as far as LEN-2.  */
 
-  for (i = 0; i < len - 2;)
+  for (i = 0; i + 2 < len;)
     {
       switch (p[i])
 	{
