@@ -1475,7 +1475,7 @@ copy_internal (const char *src_path, const char *dst_path,
 #ifdef S_ISLNK
   if (S_ISLNK (src_type))
     {
-      char *src_link_val = xreadlink (src_path);
+      char *src_link_val = xreadlink (src_path, src_sb.st_size);
       if (src_link_val == NULL)
 	{
 	  error (0, errno, _("cannot read symbolic link %s"), quote (src_path));
@@ -1487,17 +1487,18 @@ copy_internal (const char *src_path, const char *dst_path,
       else
 	{
 	  int saved_errno = errno;
-	  int same_link = 0;
-	  if (x->update && !new_dst && S_ISLNK (dst_sb.st_mode))
+	  bool same_link = false;
+	  if (x->update && !new_dst && S_ISLNK (dst_sb.st_mode)
+	      && dst_sb.st_size == strlen (src_link_val))
 	    {
-	      /* See if the destination is already the desired symlink.  */
-	      size_t src_link_len = strlen (src_link_val);
-	      char *dest_link_val = alloca (src_link_len + 1);
-	      int dest_link_len = readlink (dst_path, dest_link_val,
-					    src_link_len + 1);
-	      if ((size_t) dest_link_len == src_link_len
-		  && strncmp (dest_link_val, src_link_val, src_link_len) == 0)
-		same_link = 1;
+	      /* See if the destination is already the desired symlink.
+		 FIXME: This behavior isn't documented, and seems wrong
+		 in some cases, e.g., if the destination symlink has the
+		 wrong ownership, permissions, or time stamps.  */
+	      char *dest_link_val = xreadlink (dst_path, dst_sb.st_size);
+	      if (STREQ (dest_link_val, src_link_val))
+		same_link = true;
+	      free (dest_link_val);
 	    }
 	  free (src_link_val);
 
