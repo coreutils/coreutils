@@ -30,6 +30,7 @@
 #include "error.h"
 #include "getline.h"
 #include "obstack.h"
+#include "quote.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "dircolors"
