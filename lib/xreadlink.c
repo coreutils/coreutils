@@ -58,7 +58,9 @@ xreadlink (char const *filename, size_t *link_length_arg)
       link_length = readlink (filename, buffer, buf_size);
       if (link_length < 0)
 	{
+	  int saved_errno = errno;
 	  free (buffer);
+	  errno = saved_errno;
 	  return NULL;
 	}
       if (link_length < buf_size)
