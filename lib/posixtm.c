@@ -1,5 +1,5 @@
 /* Parse dates for touch and date.
-   Copyright (C) 1989, 1990, 1991, 1998, 2000, 2001 Free Software Foundation Inc.
+   Copyright (C) 1989, 1990, 1991, 1998, 2000-2002 Free Software Foundation Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -46,10 +46,9 @@
    - Its arg may be any int or unsigned int; it need not be an unsigned char.
    - It's guaranteed to evaluate its argument exactly once.
    - It's typically faster.
-   Posix 1003.2-1992 section 2.5.2.1 page 50 lines 1556-1558 says that
-   only '0' through '9' are digits.  Prefer ISDIGIT to isdigit unless
-   it's important to use the locale's definition of `digit' even when the
-   host does not conform to Posix.  */
+   POSIX says that only '0' through '9' are digits.  Prefer ISDIGIT to
+   ISDIGIT_LOCALE unless it's important to use the locale's definition
+   of `digit' even when the host does not conform to POSIX.  */
 #define ISDIGIT(c) ((unsigned) (c) - '0' <= 9)
 
 /* The return value. */
@@ -64,7 +63,7 @@ time_t mktime ();
     8, 10, or 12 digits, followed by optional .ss
     (PDS_LEADING_YEAR | PDS_CENTURY | PDS_SECONDS)
 
-  touch mmddhhmm[YY] FILE... (obsolescent)
+  touch mmddhhmm[YY] FILE... (obsoleted by POSIX 1003.1-2001)
     8 or 10 digits
     (PDS_TRAILING_YEAR)
 
@@ -82,7 +81,8 @@ year (const int *digit_pair, size_t n, int allow_century)
     case 1:
       t.tm_year = *digit_pair;
       /* Deduce the century based on the year.
-	 See POSIX.2 section 4.63.3.  */
+	 POSIX requires that 00-68 be interpreted as 2000-2068,
+	 and that 69-99 be interpreted as 1969-1999.  */
       if (digit_pair[0] <= 68)
 	t.tm_year += 100;
       break;
