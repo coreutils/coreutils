@@ -94,6 +94,7 @@ struct cp_options
 
 int
 copy PARAMS ((const char *src_path, const char *dst_path,
-	      int nonexistent_dst, const struct cp_options *options));
+	      int nonexistent_dst, const struct cp_options *options,
+	      int *copy_into_self));
 
 #endif
