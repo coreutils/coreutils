@@ -1,3 +1,12 @@
+2000-07-05  Paul Eggert  <eggert@twinsun.com>
+	and Bruno Haible  <haible@clisp.cons.org>
+
+	* mbstate_t.m4 (AC_MBSTATE_T_OBJECT): Test for mbstate_t
+	only if the test for an object-type mbstate_t fails.  This
+	prevents us from mistakenly reporting that mbstate_t is a
+	system object type after we "#define mbstate_t int" to work
+	around its lack.
+
 2000-07-04  Jim Meyering  <meyering@lucent.com>
 
 	* fsusage.m4 (jm_FILE_SYSTEM_USAGE): Use plain old `echo' instead
