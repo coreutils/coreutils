@@ -16,7 +16,7 @@ pwd=`pwd`
 actual=actual-$$
 expected=expected-$$
 
-trap 'status=$?; cd $pwd; rm -rf $actual $expected && exit $status' 0
+trap 'status=$?; cd $pwd; rm -rf dir $actual $expected && exit $status' 0
 trap 'exit $?' 1 2 13 15
 
 exec 1> $actual
