@@ -59,6 +59,7 @@ host_alias = @host_alias@
 host_triplet = @host@
 AMTAR = @AMTAR@
 AWK = @AWK@
+BUILD_INCLUDED_LIBINTL = @BUILD_INCLUDED_LIBINTL@
 CATALOGS = @CATALOGS@
 CATOBJEXT = @CATOBJEXT@
 CC = @CC@
@@ -74,15 +75,13 @@ GLIBC21 = @GLIBC21@
 GMOFILES = @GMOFILES@
 GMSGFMT = @GMSGFMT@
 GNU_PACKAGE = @GNU_PACKAGE@
-GT_NO = @GT_NO@
-GT_YES = @GT_YES@
 HELP2MAN = @HELP2MAN@
-INCLUDE_LOCALE_H = @INCLUDE_LOCALE_H@
 INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
 INSTOBJEXT = @INSTOBJEXT@
-INTLDEPS = @INTLDEPS@
+INTLBISON = @INTLBISON@
 INTLLIBS = @INTLLIBS@
 INTLOBJS = @INTLOBJS@
+INTL_LIBTOOL_SUFFIX_PREFIX = @INTL_LIBTOOL_SUFFIX_PREFIX@
 KMEM_GROUP = @KMEM_GROUP@
 LIBICONV = @LIBICONV@
 LIBOBJS = @LIBOBJS@
@@ -112,7 +111,6 @@ YACC = @YACC@
 am__include = @am__include@
 am__quote = @am__quote@
 install_sh = @install_sh@
-l = @l@
 
 AUTOMAKE_OPTIONS = 1.4 gnits
 
@@ -130,7 +128,7 @@ DIST_COMMON = Makefile.am Makefile.in
 all: all-am
 
 .SUFFIXES:
-$(srcdir)/Makefile.in:  Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
+$(srcdir)/Makefile.in:  Makefile.am  $(top_srcdir)/configure.ac $(ACLOCAL_M4)
 	cd $(top_srcdir) && \
 	  $(AUTOMAKE) --gnits  tests/chgrp/Makefile
 Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
