@@ -1,6 +1,29 @@
-2004-07-04  Jim Meyering  <jim@meyering.net>
+2004-04-03  Dmitry V. Levin  <ldv@altlinux.org>
 
 	* Version 5.3.0.
+
+	Change "readlink -f" to be more compatible with prior implementations.
+	Add more canonicalize options, -e and -m.
+	Add comprehensive tests for all readlink modes.
+
+	* m4/canonicalize.m4 (AC_FUNC_CANONICALIZE_FILE_NAME):
+	Do not add canonicalize.c here.
+
+	* src/readlink.c (longopts): Add new options.
+	(usage): Document them.
+	(canonicalize_fname): New proxy function.
+	(main): Handle new options.
+	* doc/coreutils.texi (readlink invocation): Document new
+	"readlink -f" behaviour and new canonicalize options, -e and -m.
+
+	* configure.ac (AC_CONFIG_FILES): Add tests/readlink/Makefile.
+	* tests/Makefile.am (SUBDIRS): Add readlink.
+	* tests/readlink/Makefile.am: New file.
+	* tests/readlink/{rl-1,can-e,can-f,can-m}: New readlink tests.
+	* tests/misc/Makefile.am (TESTS): Remove basic readlink test.
+	* tests/misc/readlink: Remove file.
+
+2004-07-04  Jim Meyering  <jim@meyering.net>
 
 	* src/copy.c (copy_internal): Add a FIXME comment.
 

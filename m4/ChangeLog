@@ -1,3 +1,8 @@
+2004-04-03  Dmitry V. Levin  <ldv@altlinux.org>
+
+	* m4/canonicalize.m4 (AC_FUNC_CANONICALIZE_FILE_NAME):
+	Do not add canonicalize.c here.
+
 2004-07-02  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* path-concat.m4 (gl_PATH_CONCAT): Don't require gl_AC_DOS, the
