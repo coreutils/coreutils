@@ -9,6 +9,7 @@ dnl the same distribution terms as the rest of that program.
 AC_DEFUN([gl_SAVE_CWD],
 [
   AC_LIBSOURCES([save-cwd.c, save-cwd.h])
+  AC_LIBOBJ([save-cwd])
   dnl Prerequisites for lib/save-cwd.c.
   AC_CHECK_HEADERS_ONCE(fcntl.h unistd.h)
   AC_CHECK_FUNCS(fchdir)
