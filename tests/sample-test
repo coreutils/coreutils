@@ -8,6 +8,7 @@ fi
 
 # FIXME: . $srcdir/../envvar-check
 # FIXME: . $srcdir/../lang-default
+# FIXME: . $srcdir/../root-only
 
 pwd=`pwd`
 tmp=FIXME.$$
