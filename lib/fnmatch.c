@@ -35,6 +35,7 @@
 #include <ctype.h>
 #include <errno.h>
 #include <stddef.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -155,10 +156,6 @@ extern int fnmatch (const char *pattern, const char *string, int flags);
 
 /* Avoid depending on library functions or files
    whose names are inconsistent.  */
-
-# ifndef errno
-extern int errno;
-# endif
 
 /* Global variable.  */
 static int posixly_correct;
