@@ -93,9 +93,9 @@ HEADERS =  $(noinst_HEADERS)
 DIST_COMMON =  Makefile.am Makefile.in alloca.c basename.c error.c \
 error.h euidaccess.c fileblocks.c fnmatch.c fsusage.c ftruncate.c \
 getdate.c getline.c group_member.c interlock memcmp.c memcpy.c memset.c \
-mkdir.c mktime.c mountlist.c obstack.c obstack.h posixtm.c regex.c \
-regex.h rename.c rmdir.c rpmatch.c rx.c rx.h stpcpy.c strcasecmp.c \
-strdup.c strndup.c strstr.c strtol.c strtoul.c ylwrap
+mktime.c mountlist.c obstack.c obstack.h posixtm.c regex.c regex.h \
+rename.c rpmatch.c rx.c rx.h stpcpy.c strcasecmp.c strdup.c strndup.c \
+strstr.c strtol.c strtoul.c ylwrap
 
 
 PACKAGE = @PACKAGE@
@@ -113,15 +113,14 @@ DEP_FILES =  .deps/alloca.P .deps/argmatch.P .deps/backupfile.P \
 .deps/ftruncate.P .deps/full-write.P .deps/getdate.P .deps/getline.P \
 .deps/getopt.P .deps/getopt1.P .deps/getversion.P .deps/group_member.P \
 .deps/idcache.P .deps/isdir.P .deps/long-options.P .deps/makepath.P \
-.deps/memcmp.P .deps/memcpy.P .deps/memset.P .deps/mkdir.P \
-.deps/mktime.P .deps/modechange.P .deps/mountlist.P .deps/obstack.P \
+.deps/memcmp.P .deps/memcpy.P .deps/memset.P .deps/mktime.P \
+.deps/modechange.P .deps/mountlist.P .deps/obstack.P \
 .deps/path-concat.P .deps/posixtm.P .deps/regex.P .deps/rename.P \
-.deps/rmdir.P .deps/rpmatch.P .deps/rx.P .deps/safe-read.P \
-.deps/save-cwd.P .deps/savedir.P .deps/stpcpy.P .deps/strcasecmp.P \
-.deps/strdup.P .deps/stripslash.P .deps/strndup.P .deps/strstr.P \
-.deps/strtol.P .deps/strtoul.P .deps/userspec.P .deps/xgetcwd.P \
-.deps/xmalloc.P .deps/xstrdup.P .deps/xstrtol.P .deps/xstrtoul.P \
-.deps/yesno.P
+.deps/rpmatch.P .deps/rx.P .deps/safe-read.P .deps/save-cwd.P \
+.deps/savedir.P .deps/stpcpy.P .deps/strcasecmp.P .deps/strdup.P \
+.deps/stripslash.P .deps/strndup.P .deps/strstr.P .deps/strtol.P \
+.deps/strtoul.P .deps/userspec.P .deps/xgetcwd.P .deps/xmalloc.P \
+.deps/xstrdup.P .deps/xstrtol.P .deps/xstrtoul.P .deps/yesno.P
 SOURCES = $(fu_SOURCES)
 OBJECTS = $(fu_OBJECTS)
 
