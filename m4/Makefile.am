@@ -17,7 +17,6 @@ d-type.m4 \
 dirfd.m4 \
 dos.m4 \
 error.m4 \
-fnmatch.m4 \
 fpending.m4 \
 fstypename.m4 \
 fsusage.m4 \
@@ -25,12 +24,10 @@ ftruncate.m4 \
 getcwd.m4 \
 getgroups.m4 \
 getline.m4 \
-getloadavg.m4 \
 gettext.m4 \
 gettimeofday.m4 \
 glibc.m4 \
 glibc21.m4 \
-gnu-source.m4 \
 group-member.m4 \
 host-os.m4 \
 iconv.m4 \
@@ -53,7 +50,6 @@ longlong.m4 \
 ls-mntd-fs.m4 \
 lstat.m4 \
 mbrtowc.m4 \
-mbstate_t.m4 \
 mbswidth.m4 \
 memcmp.m4 \
 mkdir-slash.m4 \
