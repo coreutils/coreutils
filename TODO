@@ -67,3 +67,5 @@ Remove uses of PROTOTYPES
 
 tail: don't use xlseek; it *exits*.
   Instead, maybe use a macro and return nonzero.
+
+add mktemp?  Suggested by Nelson Beebe
