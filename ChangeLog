@@ -1,6 +1,10 @@
-2004-10-12  Jim Meyering  <jim@meyering.net>
+2004-10-13  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.0.
+
+	* tests/stty/row-col-1: Set LC_ALL=C.
+
+2004-10-12  Jim Meyering  <jim@meyering.net>
 
 	* src/dircolors.hin: Add .flac and .mpc as audio suffixes.
 	From Jesus Climent in http://bugs.debian.org/276149.
