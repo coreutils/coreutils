@@ -1,3 +1,7 @@
+2003-08-07  Jim Meyering  <jim@meyering.net>
+
+	* regex.h (RE_SYNTAX_POSIX_AWK): Remove SPACE in SPACE-TAB sequence.
+
 2003-08-05  Paul Eggert  <eggert@twinsun.com>
 
 	Merge getline from gnulib.
