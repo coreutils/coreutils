@@ -1,4 +1,4 @@
-#serial 9
+#serial 10
 
 dnl This macro is intended to be used solely in this file.
 dnl These are the prerequisite macros for GNU's strftime.c replacement.
@@ -35,7 +35,11 @@ AC_DEFUN(jm_FUNC_GNU_STRFTIME,
  AC_REQUIRE([AC_HEADER_STDC])dnl
  AC_CHECK_HEADERS(sys/time.h)
  AC_CACHE_CHECK([for working GNU strftime], jm_cv_func_working_gnu_strftime,
-  [AC_TRY_RUN(
+  [# Set TZ to GMT0 to make strftime give consistent results during the test.
+   ac_save_TZ="${TZ-GMT0}"
+   TZ=GMT0
+   export TZ
+   AC_TRY_RUN(
 [ /* Ulrich Drepper provided parts of the test program.  */
 #if STDC_HEADERS
 # include <stdlib.h>
@@ -75,10 +79,6 @@ main ()
   struct tm *tm;
   time_t t = 738367; /* Fri Jan  9 13:06:07 1970 */
   tm = gmtime (&t);
-
-  /* This is necessary to make strftime give consistent zone strings and
-     e.g., seconds since the epoch (%s).  */
-  putenv ("TZ=GMT0");
 
 #undef CMP
 #define CMP(Fmt, Expected) n_fail += compare ((Fmt), tm, (Expected))
@@ -138,6 +138,8 @@ main ()
              jm_cv_func_working_gnu_strftime=no,
 	     dnl When crosscompiling, assume strftime is missing or broken.
 	     jm_cv_func_working_gnu_strftime=no)
+   dnl If TZ wasn't set before, this sets it to GMT0.  No real harm done.
+   TZ="$ac_save_TZ"
   ])
   if test $jm_cv_func_working_gnu_strftime = no; then
     AC_SUBST(LIBOBJS)
