@@ -261,6 +261,8 @@ get_line (FILE *fp, struct line *line)
 
   if (! readlinebuffer (&line->buf, fp))
     {
+      if (ferror (fp))
+	error (EXIT_FAILURE, errno, _("read error"));
       free (line->buf.buffer);
       line->buf.buffer = NULL;
       return 0;
