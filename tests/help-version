@@ -49,12 +49,12 @@ for lang in C fr da; do
     test $i = install && i=ginstall
 
     # Make sure they exit successfully, under normal conditions.
-    ./$i --help >/dev/null || fail=1
+    ./$i --help    >/dev/null || fail=1
     ./$i --version >/dev/null || fail=1
 
     # Make sure they fail upon `disk full' error.
     if test -w /dev/full && test -c /dev/full; then
-      ./$i --help >/dev/full 2>/dev/null && fail=1
+      ./$i --help    >/dev/full 2>/dev/null && fail=1
       ./$i --version >/dev/full 2>/dev/null && fail=1
       status=$?
       eval "expected=\$expected_failure_status_$i"
@@ -63,6 +63,8 @@ for lang in C fr da; do
 	: # ok
       else
 	fail=1
+	echo "$i with --help and/or --version didn't fail with output" \
+	  "redirected to /dev/full" 1>&2
       fi
     fi
   done
@@ -89,6 +91,10 @@ chown_args=--version
 mkfifo_args=--version
 mknod_args=--version
 
+cmp_args="$tmp_in $tmp_in2"
+diff_args="$tmp_in $tmp_in2"
+sdiff_args="$tmp_in $tmp_in2"
+diff3_args="$tmp_in $tmp_in2 $tmp_in2"
 cp_args="$tmp_in $tmp_in2"
 ln_args="$tmp_in $tmp_in2"
 ginstall_args="$tmp_in $tmp_in2"
@@ -123,6 +129,7 @@ for i in $all_programs; do
 
   rm -rf $tmp_in $tmp_in2 $tmp_dir $tmp_out
   echo > $tmp_in
+  echo > $tmp_in2
   mkdir $tmp_dir
   # echo ================== $i
   eval "args=\$${i}_args"
