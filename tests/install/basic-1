@@ -3,6 +3,7 @@
 : ${MKDIR=mkdir}
 : ${RM=rm}
 : ${INSTALL=install}
+: ${LS=ls}
 
 dir=dir
 file=file
@@ -30,10 +31,11 @@ test -f $dir/$file || fail=1
 $INSTALL -s -c -m 555 ../../src/dd $dir || fail=1
 # Make sure the dest file has been created.
 test -f $dir/dd || fail=1
-# ...and that it is readable and executable but not writable.
-test -r $dir/dd || fail=1
-test -x $dir/dd || fail=1
-test -w $dir/dd && fail=1
+
+# ...and that the permissions are as requested.
+set X `$LS -l $dir/dd`
+shift
+test "$1" = -r-xr-xr-x || fail=1
 
 $RM -rf $dir $file
 
