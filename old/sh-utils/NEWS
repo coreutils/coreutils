@@ -1,5 +1,7 @@
 User visible changes in release 1.11
+* skeletal texinfo documentation (mainly just the `invoking' nodes)
 * `stty werase ^W' works.  Before, werase wasn't enabled for AIX-3.2.5.
+* su with no arguments works properly
 * nice accepts options like `--5' (this is interpreted like `-n -5')
 * `stty speed' and `stty size' no longer output a spurious newline
 User visible changes in release 1.10

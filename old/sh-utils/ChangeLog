@@ -1,9 +1,15 @@
 Sat Sep 17 15:48:10 1994  Jim Meyering  (meyering@comco.com)
 
+	* (doc): New subdirectory with texinfo documentation.
+	Thanks to Franc,ois Pinard and Karl Berry!
+	Note however that it contains mainly the information from the
+	`man' pages, so it is not good documentation.  But this way,
+	at least we don't have to maintain the troff man pages anymore.
+
 	* su.c: Test !HAVE_ENDGRENT and !HAVE_ENDPWENT rather than
 	_POSIX_SOURCE to determine whether endgrent and endpwent should
 	be defined away.
-	* configure.in (): Add endgrent and endpwent.
+	* configure.in (AC_CHECK_FUNCS): Add endgrent and endpwent.
 
 	* who.c: Test HAVE_SYS_PARAM_H rather than _POSIX_SOURCE
 	to determine whether <sys/param.h> should be included.
@@ -62,6 +68,10 @@ Sat Jul 30 07:52:27 1994  Jim Meyering  (meyering@comco.com)
 	diagnostics.
 
 Tue Jul 26 11:33:53 1994  Jim Meyering  (meyering@comco.com)
+
+	* su.c (main): Make copies of the password information we'll use
+	so that log_su (through getlogin) doesn't clobber the static data.
+	With suggestions from Francois Pinard.
 
 	* system.h: Remove `|| defined(_POSIX_VERSION)' from test that
 	decides whether to include <fcntl.h>.  From Francois Pinard.
