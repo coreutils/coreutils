@@ -44,7 +44,7 @@ usage (int status)
 	     program_name);
   else
     {
-      printf (_("Usage: %s [OPTION]...\n"), program_name);
+      printf (_("Usage: %s [OPTION]\n"), program_name);
       printf (_("\
 Print the name of the current user.\n\
 \n\
