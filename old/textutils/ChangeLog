@@ -21,10 +21,6 @@
 	(main): Initialize caught_signals.  On hosts with sigaction, block all
 	caught signals while handling one.  Remove duplicate code.
 
-	* m4/jm-macros.m4 (jm_MACROS): Use mkstemp replacement if the system
-	lacks mkstemp.  Compile our own tempname.c if we compile our own
-	mkstemp.c, as mkstemp relies on tempname.
-
 2001-02-22  Jim Meyering  <meyering@lucent.com>
 
 	* src/sort.c (keycompare): Move declarations of locals, lena and lenb,
