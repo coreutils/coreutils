@@ -1,5 +1,5 @@
 /* mv -- move or rename files
-   Copyright (C) 86, 89, 90, 91, 1995-1999 Free Software Foundation, Inc.
+   Copyright (C) 86, 89, 90, 91, 1995-2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -300,27 +300,7 @@ movefile (char *source, char *dest, int dest_is_dir,
      rename semantics are POSIX and susv2 compliant.  */
 
   if (remove_trailing_slashes)
-    {
-      strip_trailing_slashes_2 (source);
-    }
-  else
-    {
-      char *src_copy = xstrdup (source);
-      int src_has_trailing_slash = strip_trailing_slashes_2 (src_copy);
-      if (src_has_trailing_slash)
-	{
-	  /* See if lstat says the trailing-slash-free src_copy
-	     is a symbolic link.  */
-	  struct stat stat_buf;
-	  if (lstat (src_copy, &stat_buf) == 0 && S_ISLNK (stat_buf.st_mode)
-	      && stat (src_copy, &stat_buf) == 0 && S_ISDIR (stat_buf.st_mode))
-	    {
-	      error (0, 0, _("%s: warning: moving a symlink-to-directory\
- referenced with a\ntrailing slash may move the directory, not the symlink"),
-		     source);
-	    }
-	}
-    }
+    strip_trailing_slashes_2 (source);
 
   /* In addition to when DEST is a directory, if DEST has a trailing
      slash and neither SOURCE nor DEST is a directory, presume the target
