@@ -584,26 +584,26 @@ specify_sort_size (char const *s)
   /* A 'b' suffix means bytes; a '%' suffix means percent of memory.  */
   if (e == LONGINT_INVALID_SUFFIX_CHAR && ISDIGIT (suffix[-1]) && ! suffix[1])
     switch (suffix[0])
-    {
-    case 'b':
-      e = LONGINT_OK;
-      break;
-
-    case '%':
       {
-	double mem = physmem_total () * n / 100;
+      case 'b':
+	e = LONGINT_OK;
+	break;
 
-	/* Use "<", not "<=", to avoid problems with rounding.  */
-	if (mem < UINTMAX_MAX)
-	  {
-	    n = mem;
-	    e = LONGINT_OK;
-	  }
-	else
-	  e = LONGINT_OVERFLOW;
+      case '%':
+	{
+	  double mem = physmem_total () * n / 100;
+
+	  /* Use "<", not "<=", to avoid problems with rounding.  */
+	  if (mem < UINTMAX_MAX)
+	    {
+	      n = mem;
+	      e = LONGINT_OK;
+	    }
+	  else
+	    e = LONGINT_OVERFLOW;
+	}
+	break;
       }
-      break;
-    }
 
   if (e == LONGINT_OK)
     {
@@ -2331,7 +2331,7 @@ but lacks following character offset"));
   for (key = keylist; key; key = key->next)
     if (!key->ignore && !key->translate && !key->skipsblanks && !key->reverse
 	&& !key->skipeblanks && !key->month && !key->numeric
-        && !key->general_numeric)
+	&& !key->general_numeric)
       {
 	key->ignore = gkey.ignore;
 	key->translate = gkey.translate;
