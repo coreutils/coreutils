@@ -154,7 +154,7 @@ Change the group membership of each FILE to GROUP.\n\
 int
 main (int argc, char **argv)
 {
-  gid_t group;
+  gid_t gid;
   int errors = 0;
   int optc;
   struct Chown_option chopt;
@@ -215,16 +215,16 @@ main (int argc, char **argv)
 	error (1, errno, _("getting attributes of %s"), quote (reference_file));
 
       chopt.group_name = gid_to_name (ref_stats.st_gid);
-      group = ref_stats.st_gid;
+      gid = ref_stats.st_gid;
     }
   else
     {
       chopt.group_name = argv[optind++];
-      parse_group (chopt.group_name, &group);
+      parse_group (chopt.group_name, &gid);
     }
 
   for (; optind < argc; ++optind)
-    errors |= change_file_owner (1, argv[optind], (uid_t) -1, group,
+    errors |= change_file_owner (1, argv[optind], (uid_t) -1, gid,
 				 (uid_t) -1, (gid_t) -1, &chopt);
 
   chopt_free (&chopt);
