@@ -15,9 +15,10 @@ Thu Oct 31 17:48:24 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/sort.c (key_init): New function.
 	(main): Use key_init in the two places where it was open-coded.
+	This fixes a UMR of the general_numeric field.
 
 	* src/join.c (decode_field_spec): Always give FIELD_INDEX a value.
-	This avoids a spurious UMR from purify.
+	This avoids a spurious report UMR from purify.
 	(prjoin): Add an assertion.
 	(add_field): Update assertion.
 
