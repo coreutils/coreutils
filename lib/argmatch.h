@@ -1,18 +1,12 @@
-#ifndef ARGMATCH_H
-#define ARGMATCH_H 1
+/* argmatch.h -- declarations for matching arguments against option lists */
 
-#ifndef __P
-# if defined (__GNUC__) || (defined (__STDC__) && __STDC__)
-#  define __P(args) args
-# else
-#  define __P(args) ()
-# endif  /* GCC.  */
-#endif  /* Not __P.  */
+#if defined __STDC__ || __GNUC__
+# define __ARGMATCH_P(args) args
+#else
+# define __ARGMATCH_P(args) ()
+#endif
 
-int
-  argmatch __P ((const char *arg, const char *const *optlist));
+int argmatch __ARGMATCH_P ((const char *, const char * const *));
+void invalid_arg __ARGMATCH_P ((const char *, const char *, int));
 
-void
-  invalid_arg __P ((const char *kind, const char *value, int problem));
-
-#endif /* ARGMATCH_H */
+extern char const program_name[];
