@@ -1,3 +1,26 @@
+1999-05-14  Jim Meyering  <meyering@ascend.com>
+
+	* src/df.c (main): When asking for info on an explicit file name,
+	just warn rather than failing if the table of mounted filesystems
+	cannot be read.  Based on a patch from Mark Kettenis.
+
+	* lib/version-etc.c (version_etc): Put version info and author names
+	on the first two lines respectively rather than putting the three
+	lines of copyright info between them.
+
+	* src/touch.c (open_maybe_create): Handle Solaris' failure mode when
+	FILE is a directory.  Reported by Vin Shelton.
+
+	* lib/human.c: Include <string.h> or <strings.h> for strlen prototype.
+	* lib/getline.h [__GLIBC__ >= 2]: #if-out prototypes.
+	* src/remove.c (pop_dir): Cast length to `int' to avoid a warning on
+	64-bit systems.  From Ulrich Drepper.
+
+1999-05-12  Jim Meyering  <meyering@ascend.com>
+
+	* src/shred.c (main): Put `u' for -u in getopt_long's string argument.
+	Remove the `R'.
+
 1999-05-07  Jim Meyering  <meyering@ascend.com>
 
 	* Version 4.0h.
