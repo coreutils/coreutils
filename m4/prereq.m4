@@ -6,7 +6,18 @@ dnl directories of the fileutils, sh-utils, and textutils packages.
 AC_DEFUN(jm_PREREQ,
 [
   jm_PREREQ_ERROR
+  jm_PREREQ_QUOTEARG
   jm_PREREQ_REGEX
+])
+
+dnl FIXME: maybe put this in a separate file
+AC_DEFUN(jm_PREREQ_QUOTEARG,
+[
+  AC_CHECK_FUNCS(isascii mbrtowc)
+  AC_CHECK_HEADERS(limits.h stdlib.h string.h wchar.h)
+  AC_HEADER_STDC
+  AC_C_BACKSLASH_A
+  AM_C_PROTOTYPES
 ])
 
 dnl FIXME: maybe put this in a separate file
