@@ -19,9 +19,20 @@
 	* src/install.c (main): Likewise.
 	* src/mv.c (main): Likewise.
 	* src/pwd.c (main): Likewise.
+	* src/tty.c (main): Likewise.
+	* src/chroot.c (main): Likewise.
+	* src/hostname.c: Likewise.
+	* src/du.c (main): Likewise.
+	* src/expand.c (main): Likewise.
+	* src/sync.c (main): Handle argc == 0.
+	* src/expr.c (main): Likewise.
+	* src/printf.c (main): Likewise.
 	* src/ln.c (main): Test for `missing argument' before computing n_files.
 	* src/tail.c (main): Test for the case of no arguments before
 	computing n_files.
+
+	* src/kill.c (send_signals): Don't check command line arguments here.
+	(main): Check them here instead.  Handle argc < optind.
 
 	* src/logname.c (main): Use error, rather than fprintf, for the sake
 	of consistency.
