@@ -16,10 +16,15 @@ for args in  \
     '-Sa .' \
     '-Sa ../..' \
     '-Sa a' \
+    '-Sa /tmp /t' \
+    '-Sa /tmp' \
+    '/tmp /t' \
+    '-a /tmp /t' \
     '-a a' \
     '-ca .' \
     '-ca ..' \
     '-ca ../..' \
+    '-ca /tmp /t' \
     '-ca /tmp' \
     '-ca a' \
   ; do
