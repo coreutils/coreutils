@@ -1,6 +1,12 @@
-2002-12-03  Jim Meyering  <jim@meyering.net>
+2002-12-04  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.4.
+
+	* tests/ls/follow-slink: Make sure the symlink was created.
+	Richard Dawe reported that `ln -s link link' succeeds, but creates
+	no file on systems running some version of the DJGPP libc.
+
+2002-12-03  Jim Meyering  <jim@meyering.net>
 
 	* src/Makefile.am (AUTOMAKE_OPTIONS): Remove definition (to ansi2knr)
 	since this package no longer panders to K&R compilers.
