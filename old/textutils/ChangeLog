@@ -6,6 +6,9 @@ Sun May 28 14:48:58 1995  Jim Meyering  (meyering@comco.com)
 
 Sat May 27 00:35:47 1995  Jim Meyering  (meyering@comco.com)
 
+	* tail.c (main): Remove dcl of and statements that set now-unused
+	variable.
+
 	* system.h [!STDC_HEADERS && HAVE_MEMORY_H]: Include memory.h.
 	Without this, SunOS doesn't get type for memchr.
 	Reported by Kaveh Ghazi.
