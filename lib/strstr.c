@@ -1,4 +1,4 @@
-/* Copyright (C) 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1999 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 This program is free software; you can redistribute it and/or modify
@@ -23,6 +23,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
  * as much fun trying to understand it, as I had to write it :-).
  *
  * Stephen R. van den Berg, berg@pool.informatik.rwth-aachen.de	*/
+
+#if HAVE_CONFIG_H
+# include <config.h>
+#endif
 
 #include <string.h>
 #include <sys/types.h>
@@ -71,7 +75,7 @@ strstr (const char *phaystack, const char *pneedle)
 	      a = *++haystack;
 	      if (a == '\0')
 		goto ret0;
-shloop:	    }
+shloop:;    }
           while (a != b);
 
 jin:	  a = *++haystack;
