@@ -4,6 +4,9 @@ dnl From Paul Eggert
 dnl Check for a working mktime.
 dnl This is a preview of what should appear in the next public autoconf release.
 
+dnl Override any existing definition.
+undefine([AC_FUNC_MKTIME])
+
 AC_DEFUN(AC_FUNC_MKTIME,
 [AC_REQUIRE([AC_HEADER_TIME])dnl
 AC_CHECK_HEADERS(sys/time.h unistd.h)
