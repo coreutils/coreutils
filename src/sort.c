@@ -52,7 +52,7 @@ struct rlimit { size_t rlim_cur; };
 
 #define AUTHORS N_ ("Mike Haertel and Paul Eggert")
 
-#if defined ENABLE_NLS && HAVE_LANGINFO_H
+#if HAVE_LANGINFO_H
 # include <langinfo.h>
 #endif
 
@@ -91,7 +91,7 @@ double strtod ();
 #define NEGATION_SIGN   '-'
 #define NUMERIC_ZERO    '0'
 
-#ifdef ENABLE_NLS
+#if HAVE_SETLOCALE
 
 static char decimal_point;
 static int th_sep; /* if CHAR_MAX + 1, then there is no thousands separator */
@@ -194,15 +194,9 @@ static char fold_toupper[UCHAR_LIM];
 
 #define MONTHS_PER_YEAR 12
 
-#if defined ENABLE_NLS && HAVE_NL_LANGINFO
-# define MONTHTAB_CONST /* empty */
-#else
-# define MONTHTAB_CONST const
-#endif
-
 /* Table mapping month names to integers.
    Alphabetic order allows binary search. */
-static MONTHTAB_CONST struct month monthtab[] =
+static struct month monthtab[] =
 {
   {"APR", 4},
   {"AUG", 8},
@@ -536,7 +530,7 @@ zaptemp (const char *name)
       }
 }
 
-#if defined ENABLE_NLS && HAVE_NL_LANGINFO
+#if HAVE_NL_LANGINFO
 
 static int
 struct_month_cmp (const void *m1, const void *m2)
@@ -568,7 +562,7 @@ inittables (void)
 	fold_toupper[i] = i;
     }
 
-#if defined ENABLE_NLS && HAVE_NL_LANGINFO
+#if HAVE_NL_LANGINFO
   /* If we're not in the "C" locale, read different names for months.  */
   if (hard_LC_TIME)
     {
@@ -591,7 +585,7 @@ inittables (void)
       qsort ((void *) monthtab, MONTHS_PER_YEAR,
 	     sizeof (struct month), struct_month_cmp);
     }
-#endif /* NLS */
+#endif
 }
 
 /* Specify the amount of main memory to use when sorting.  */
@@ -1366,10 +1360,9 @@ keycompare (const struct line *a, const struct line *b)
 	}
       else if (key->month)
 	diff = getmonth (texta, lena) - getmonth (textb, lenb);
-#ifdef ENABLE_NLS
       /* Sorting like this may become slow, so in a simple locale the user
          can select a faster sort that is similar to ascii sort  */
-      else if (hard_LC_COLLATE)
+      else if (HAVE_SETLOCALE && hard_LC_COLLATE)
 	{
 	  if (ignore || translate)
 	    {
@@ -1407,7 +1400,6 @@ keycompare (const struct line *a, const struct line *b)
 	  else
 	    diff = xmemcoll (texta, lena, textb, lenb);
 	}
-#endif
       else if (ignore)
 	{
 #define CMP_WITH_IGNORE(A, B)						\
@@ -1527,10 +1519,8 @@ compare (register const struct line *a, register const struct line *b)
     diff = - NONZERO (blen);
   else if (blen == 0)
     diff = NONZERO (alen);
-#ifdef ENABLE_NLS
-  else if (hard_LC_COLLATE)
+  else if (HAVE_SETLOCALE && hard_LC_COLLATE)
     diff = xmemcoll (a->text, alen, b->text, blen);
-#endif
   else if (! (diff = memcmp (a->text, b->text, min (alen, blen))))
     diff = alen < blen ? -1 : alen != blen;
 
@@ -2187,13 +2177,12 @@ main (int argc, char **argv)
 
   atexit (cleanup);
 
-#ifdef ENABLE_NLS
-
   hard_LC_COLLATE = hard_locale (LC_COLLATE);
-# if HAVE_NL_LANGINFO
+#if HAVE_NL_LANGINFO
   hard_LC_TIME = hard_locale (LC_TIME);
-# endif
+#endif
 
+#if HAVE_SETLOCALE
   /* Let's get locale's representation of the decimal point */
   {
     struct lconv *lconvp = localeconv ();
@@ -2210,8 +2199,7 @@ main (int argc, char **argv)
     if (! th_sep || lconvp->thousands_sep[1])
       th_sep = CHAR_MAX + 1;
   }
-
-#endif /* NLS */
+#endif
 
   have_read_stdin = 0;
   inittables ();
