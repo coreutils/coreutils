@@ -2,6 +2,17 @@
 
 	* Version 4.5.4.
 
+	Specifying a printf conversion specifer as nl's separator string
+	could cause nl to segfault.
+	* src/nl.c (build_print_fmt): Don't include separator string
+	in the printf format; it might contain `%'.
+	Use a better bound on the length of the print_fmt buffer.
+	(print_lineno): Print the separator here instead.
+	Reported by Doug Coleman.
+
+	* tests/misc/nl: New file/tests, including a test for the above.
+	* tests/misc/Makefile.am (TESTS): Add nl.
+
 	* tests/misc/split-l: New test, to make sure `split --lines=N' works.
 	* tests/misc/Makefile.am (TESTS): Add split-l.
 
