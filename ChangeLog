@@ -2,6 +2,10 @@
 
 	* Version 4.5.3.
 
+	* Makefile.maint (signatures): Define.
+	(%.sig): New rule.
+	(announcement): Depend on $(signatures).
+
 	* Makefile.maint (announcement): Output all URLs for detached
 	signatures, not just the last one from the previous loop.
 
