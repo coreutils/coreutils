@@ -78,6 +78,9 @@ sub test_vector
     {
       my ($test_name, $flags, $in, $exp, $ret) = @$t;
 
+      $test_name =~ /^(obs|err-[134])/
+	and $Test::env{$test_name} = ['_POSIX2_VERSION=199209'];
+
       # If you run the minus* tests with a FILE arg they'd hang.
       if ($test_name =~ /^minus/)
 	{
