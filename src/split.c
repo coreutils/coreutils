@@ -1,5 +1,5 @@
 /* split.c -- split a file into pieces.
-   Copyright (C) 88, 91, 1995-2004 Free Software Foundation, Inc.
+   Copyright (C) 88, 91, 1995-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -481,15 +481,13 @@ main (int argc, char **argv)
 	  if (digits_optind != 0 && digits_optind != this_optind)
 	    n_units = 0;	/* More than one number given; ignore other. */
 	  digits_optind = this_optind;
-	  if (UINTMAX_MAX / 10 < n_units
-	      || n_units * 10 + c - '0' < n_units * 10)
+	  if (DECIMAL_DIGIT_ACCUMULATE (n_units, c - '0', UINTMAX_MAX))
 	    {
 	      char buffer[INT_BUFSIZE_BOUND (uintmax_t)];
 	      error (EXIT_FAILURE, 0,
 		     _("line count option -%s%c... is too large"),
 		     umaxtostr (n_units, buffer), c);
 	    }
-	  n_units = n_units * 10 + c - '0';
 	  break;
 
 	case 'd':
