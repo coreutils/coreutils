@@ -1,5 +1,41 @@
+1999-12-04  Jim Meyering  <meyering@ascend.com>
+
+	* tests/ls/time-1: List --full-time dates upon failure.
+
+1999-12-02  Andreas Schwab  <schwab@suse.de>
+
+	* src/ls.c (check_symlink_color): New variable.
+	(main): Set it if we need to check for dangling symlinks when
+	displaying colors.
+	(gobble_file): Check check_symlink_color instead of print_with_color.
+
+1999-11-30  Paul Eggert  <eggert@twinsun.com>
+
+	* src/ls.c (usage): Shorten help for --show-control-chars.
+
+1999-11-30  Jim Meyering  <meyering@ascend.com>
+
+	Give the right diagnostic when failing to create a file in an
+	unwritable directory.
+	* src/touch.c (touch): Record errno upon failed errno and use that
+	saved value if a subsequent fstat, stat or utime call fails.
+	Reported by Wichert Akkerman via Michael Stone.
+
+1999-11-29  Jim Meyering  <meyering@ascend.com>
+
+	* tests/mv/into-self-2: Adapt to reflect this change in behavior.
+	Make sure the VERSION_CONTROL envvar is not set.
+	Run diff if comparison fails.
+
+	* src/copy.c (copy_internal): Be consistent with intra-device behavior
+	and *do* allow `mv' to move a file onto a symlink to itself when that
+	symlink is on a separate partition.  With fileutils-4.0j, it would
+	fail with a diagnostic saying they were the same file.
+	Reported by Bruno Haible.
+
 1999-11-27  Jim Meyering  <meyering@ascend.com>
 
+	Clean up test scripts.
 	* tests/mv/setup: Don't set/use DF or MKDIR.  Use df and mkdir instead.
 	* tests/mv/mv-special-1: Likewise for these: LS MV MKDIR MKNOD RM TOUCH
 	* tests/mv/backup-is-src: Likewise for RM and MV.
