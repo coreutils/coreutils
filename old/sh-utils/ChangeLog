@@ -1,4 +1,23 @@
+	configure.in (AC_CHECK_FUNCS): Add getcwd.  From Kaveh Ghazi.
+
+	* safe-xstat.c.in, safe-xstat.h.in: Rename to safe-xstat.cin and
+	safe-xstat.hin so the names don't exceed 14-character limit.
+	Reported by Kaveh Ghazi.
+
+Mon Sep 26 19:49:40 1994  Jim Meyering  (meyering@comco.com)
+
+	* configure.in: Don't use $su_cv_sys_tiocgwinsz_in_termios_h
+	uninitialized.  From R. Bernstein <rocky@panix.com> and Kaveh Ghazi.
+	(NICE_PRIORITY): Fix typo that caused omission from PROGS of nice
+	and nohup on systems with nice but not setpriority.
+	From Andreas Schwab.
+
 Sat Sep 24 10:13:00 1994  Jim Meyering  (meyering@comco.com)
+
+	* Makefile.in (stamp-h.in): Create using echo, not date.
+	Using the latter could easily lead to rcs/cvs merge conflicts.
+	* configure.in (stamp-h): Ditto, though this is less important
+	because stamp-h isn't distributed.
 
 	* nice.c (main): Revamp option processing to detect options
 	like `--7' manually and pass the rest off to getopt_long.
