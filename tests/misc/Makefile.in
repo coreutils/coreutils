@@ -156,7 +156,7 @@ TESTS_ENVIRONMENT = \
   PROG=$$tst
 
 
-TESTS = printf split-a head-pos sort head-c csplit nice pathchk1
+TESTS = nl split-l printf split-a head-pos sort head-c csplit nice pathchk1
 subdir = tests/misc
 mkinstalldirs = $(SHELL) $(top_srcdir)/config/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
