@@ -135,6 +135,8 @@ hash_init (void)
   src_to_dest = hash_initialize (INITIAL_TABLE_SIZE, NULL,
 				 src_to_dest_hash,
 				 src_to_dest_compare, free);
+  if (src_to_dest == NULL)
+    xalloc_die ();
 }
 
 /* Reset the hash structure in the global variable `htab' to
