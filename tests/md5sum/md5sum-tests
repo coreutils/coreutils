@@ -248,7 +248,7 @@ else
 fi
 test -s 7.E || rm -f 7.E
 if test $errors = 0 ; then
-  $echo Passed all 7 tests. 1>&2
+  $echo Passed all 14 tests. 1>&2
 else
   $echo Failed $errors tests. 1>&2
 fi

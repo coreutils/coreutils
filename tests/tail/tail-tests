@@ -1710,7 +1710,7 @@ else
 fi
 test -s n-5b.E || rm -f n-5b.E
 if test $errors = 0 ; then
-  $echo Passed all 34 tests. 1>&2
+  $echo Passed all 100 tests. 1>&2
 else
   $echo Failed $errors tests. 1>&2
 fi

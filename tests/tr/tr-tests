@@ -1812,7 +1812,7 @@ else
 fi
 test -s ross-6.E || rm -f ross-6.E
 if test $errors = 0 ; then
-  $echo Passed all 53 tests. 1>&2
+  $echo Passed all 106 tests. 1>&2
 else
   $echo Failed $errors tests. 1>&2
 fi
