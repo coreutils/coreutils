@@ -1,3 +1,13 @@
+Fri Jan 31 21:13:13 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/*.c: Compare getopt_long return value against -1, not EOF.
+	Use NULL, not `(int *) 0' as last parameter in getopt_long call.
+
+Mon Jan 27 21:43:50 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/chroot.c (usage): Remove one space in message to make
+	colons line up.
+
 Sun Jan 26 12:51:05 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* Version 1.16.

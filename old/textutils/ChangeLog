@@ -1,3 +1,8 @@
+Fri Jan 31 19:53:54 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/*.c: Compare getopt_long return value against -1, not EOF.
+	Use NULL, not `(int *) 0' as last parameter in getopt_long call.
+
 Wed Jan 29 20:54:24 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* tests/tr-test/Test.pm: Do each test twice: get input via REDIR
