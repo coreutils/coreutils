@@ -1,3 +1,9 @@
+2000-10-22  Jim Meyering  <meyering@lucent.com>
+
+	* save-cwd.c (O_DIRECTORY): Define, if needed.
+	(save_cwd) [HAVE_FCHDIR]: Use O_DIRECTORY when opening ".".
+	Suggestion from Ulrich Drepper.
+
 2000-10-21  Jim Meyering  <meyering@lucent.com>
 
 	* dirname.c (memrchr): Declare if necessary.
