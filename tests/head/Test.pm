@@ -5,10 +5,23 @@ use strict;
 my @tv = (
 # test name, options, input, expected output, expected return code
 #
-['idem-1', '', "", "", 0],
-['idem-2', '', "a", "a", 0],
-['idem-3', '', "\n", "\n", 0],
-['idem-4', '', "a\n", "a\n", 0],
+['idem-0', '', "", "", 0],
+['idem-1', '', "a", "a", 0],
+['idem-2', '', "\n", "\n", 0],
+['idem-3', '', "a\n", "a\n", 0],
+
+['basic-0-10', '',
+ "1\n2\n3\n4\n5\n6\n7\n8\n9\na\n",
+ "1\n2\n3\n4\n5\n6\n7\n8\n9\na\n", 0],
+
+['basic-0-09', '',
+ "1\n2\n3\n4\n5\n6\n7\n8\n9\n",
+ "1\n2\n3\n4\n5\n6\n7\n8\n9\n", 0],
+
+['basic-0-11', '',
+ "1\n2\n3\n4\n5\n6\n7\n8\n9\na\nb\n",
+ "1\n2\n3\n4\n5\n6\n7\n8\n9\na\n", 0],
+
 
 );
 
