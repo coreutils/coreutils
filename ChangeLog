@@ -2,6 +2,10 @@
 
 	* Version 5.1.1.
 
+	* Update to gettext-0.13.1.
+
+	* .x-sc_space_tab: Add m4/po.m4 to the list of exceptions.
+
 	* Makefile.maint (%.sig): Use .sig suffix rather than .asc.
 
 	* Makefile.maint (po-check): Ensure that cvsu works before using it.
