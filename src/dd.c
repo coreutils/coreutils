@@ -1,5 +1,5 @@
 /* dd -- convert a file while copying it.
-   Copyright (C) 85, 90, 91, 1995-2002 Free Software Foundation, Inc.
+   Copyright (C) 85, 90, 91, 1995-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -307,8 +307,8 @@ Copy a file, converting and formatting according to the options.\n\
       fputs (_("\
 \n\
 BLOCKS and BYTES may be followed by the following multiplicative suffixes:\n\
-xM M, c 1, w 2, b 512, kB 1000, K 1024, MB 1,000,000, M 1,048,576,\n\
-GB 1,000,000,000, G 1,073,741,824, and so on for T, P, E, Z, Y.\n\
+xM M, c 1, w 2, b 512, kB 1000, K 1024, MB 1000*1000, M 1024*1024,\n\
+GB 1000*1000*1000, G 1024*1024*1024, and so on for T, P, E, Z, Y.\n\
 Each KEYWORD may be:\n\
 \n\
 "), stdout);
