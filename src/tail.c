@@ -54,14 +54,14 @@
 #include "system.h"
 #include "version.h"
 
-/* FIXME: uncomment before release.  */
-/* #define NDEBUG 1 */
+/* Disable assertions.  Some systems have broken assert macros.  */
+#define NDEBUG 1
 
 #define XWRITE(fd, buffer, n_bytes)					\
   do									\
     {									\
       assert ((fd) == 1);						\
-      assert ((n_bytes) > 0);						\
+      assert ((n_bytes) >= 0);						\
       if (fwrite ((buffer), 1, (n_bytes), stdout) == 0)			\
 	error (1, errno, "write error");				\
     }									\
