@@ -61,6 +61,7 @@ START-INFO-DIR-ENTRY
 * id: (coreutils)id invocation.                 Print real/effective uid/gid.
 * install: (coreutils)install invocation.       Copy and change attributes.
 * join: (coreutils)join invocation.             Join lines on a common field.
+* link: (coreutils)link invocation.             Make hard links between files.
 * ln: (coreutils)ln invocation.                 Make links between files.
 * logname: (coreutils)logname invocation.       Print current login name.
 * ls: (coreutils)ls invocation.                 List directory contents.
@@ -102,6 +103,7 @@ START-INFO-DIR-ENTRY
 * tty: (coreutils)tty invocation.               Print terminal name.
 * uname: (coreutils)uname invocation.           Print system information.
 * unexpand: (coreutils)unexpand invocation.     Convert spaces to tabs.
+* unlink: (coreutils)unlink invocation.         Remove files via unlink syscall.
 * uniq: (coreutils)uniq invocation.             Uniquify files.
 * users: (coreutils)users invocation.           Print current user names.
 * vdir: (coreutils)vdir invocation.             List directories verbosely.
@@ -280,37 +282,39 @@ Basic operations
 
 * cp invocation::               Copy files and directories
 * dd invocation::               Convert and copy a file
-* install invocation::               Copy files and set attributes
+* install invocation::          Copy files and set attributes
 * mv invocation::               Move (rename) files
 * rm invocation::               Remove files or directories
-* shred invocation::               Remove files more securely
+* shred invocation::            Remove files more securely
 
 Special file types
 
+* link invocation::             Make a hard link via the link syscall
 * ln invocation::               Make links between files
-* mkdir invocation::               Make directories
-* mkfifo invocation::               Make FIFOs (named pipes)
-* mknod invocation::               Make block or character special files
-* rmdir invocation::               Remove empty directories
+* mkdir invocation::            Make directories
+* mkfifo invocation::           Make FIFOs (named pipes)
+* mknod invocation::            Make block or character special files
+* rmdir invocation::            Remove empty directories
+* unlink invocation::           Remove files via unlink syscall
 
 Changing file attributes
 
-* chown invocation::               Change file owner and group
-* chgrp invocation::               Change group ownership
-* chmod invocation::               Change access permissions
-* touch invocation::               Change file timestamps
+* chown invocation::            Change file owner and group
+* chgrp invocation::            Change group ownership
+* chmod invocation::            Change access permissions
+* touch invocation::            Change file timestamps
 
 Disk usage
 
 * df invocation::               Report filesystem disk space usage
 * du invocation::               Estimate file space usage
-* sync invocation::               Synchronize data on disk with memory
+* sync invocation::             Synchronize data on disk with memory
 
 Printing text
 
-* echo invocation::               Print a line of text
-* printf invocation::             Format and print data
-* yes invocation::                Print a string until interrupted
+* echo invocation::             Print a line of text
+* printf invocation::           Format and print data
+* yes invocation::              Print a string until interrupted
 
 Conditions
 
@@ -6687,13 +6691,38 @@ Besides directories, other special file types include named pipes
 (FIFOs), symbolic links, sockets, and so-called @dfn{special files}.
 
 @menu
+* link invocation::             Make a hard link via the link syscall
 * ln invocation::               Make links between files.
 * mkdir invocation::            Make directories.
 * mkfifo invocation::           Make FIFOs (named pipes).
 * mknod invocation::            Make block or character special files.
 * rmdir invocation::            Remove empty directories.
+* unlink invocation::           Remove files via the unlink syscall
 @end menu
 
+
+@node link invocation
+@section @code{link}: Make a hard link via the link syscall
+
+@pindex link
+@cindex links, creating
+@cindex hard links, creating
+@cindex creating links (hard only)
+
+@code{link} creates a single hard link at a time.
+It is a minimalist interface to the system-provided
+@code{link} function.  @xref{Hard Links, , , libc,
+The GNU C Library Reference Manual}.
+Synopsis:
+
+@example
+link @var{filename} @var{linkname}
+@end example
+
+@var{filename} must specify an existing file, and @var{linkname}
+must specify a nonexistent entry in an existing directory.
+@code{link} simply calls @code{link (@var{filename}, @var{linkname})}
+to create the link.
 
 @node ln invocation
 @section @code{ln}: Make links between files
@@ -7061,6 +7090,31 @@ Give a diagnostic for each successful removal.
 @end table
 
 @xref{rm invocation}, for how to remove non-empty directories (recursively).
+
+@node unlink invocation
+@section @code{unlink}: Remove files via the unlink syscall
+
+@pindex unlink
+@cindex removing files or directories (via the unlink syscall)
+
+@code{unlink} deletes a single specified file name.
+It is a minimalist interface to the system-provided
+@code{unlink} function.  @xref{Deleting Files, , , libc,
+The GNU C Library Reference Manual}.  Synopsis:
+
+@example
+unlink @var{filename}
+@end example
+
+On some systems @code{unlink} can be used to delete the name of a
+directory.  On others, it can be used that way only by a privileged user.
+In the GNU system @code{unlink} can never delete the name of a directory.
+
+By default, @code{unlink} honors the @option{--help} and @option{--version}
+options.  That makes it a little harder to remove files named
+@code{--help} and @code{--version}, so when the environment variable
+@env{POSIXLY_CORRECT} is set, @code{unlink} treats such a command line
+arguments not as an option, but as an operand.
 
 
 @node Changing file attributes
