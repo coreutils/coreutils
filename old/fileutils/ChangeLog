@@ -1,5 +1,23 @@
 1999-11-07  Jim Meyering  <meyering@ascend.com>
 
+	* src/dircolors.hin: Add several more TERM types.
+	Add .bz2 suffix.
+	Add .png for real this time.
+	Change the image types colors to be visible in a black-on-white xterm.
+
+	* src/chgrp.c (xstat): New global.
+	(main): Define it.
+	(change_file_group): Use it.  Before this change, when running chgrp
+	on a symlink without --dereference (-h) and when the requested group
+	is the same as the group for the *symlink*, chgrp would do nothing.
+	Now it changes the group of the file referenced through the symlink.
+	Reported by Martin Mitchell.
+
+	* src/chmod.c: Use REFERENCE_FILE_OPTION instead of bare `CHAR_MAX + 1'.
+	* src/chown.c: Define and use REFERENCE_FILE_OPTION and
+	DEREFERENCE_OPTION in place of bare `CHAR_MAX + N'.
+	* src/chgrp.c: Likewise.
+
 	* tests/ln/misc: Add hard-link-to-symlink test.
 	Move framework_failure test to the end.
 	Fix a typo: s/||/&&/.
@@ -29,7 +47,7 @@
 
 	* src/ls.c (long_options): Correct typo (s/'F'/'p'/) so that `-p' is
 	accepted as the short form of --file-type, per the documentation.
-	From Michael Stone.
+	From James Sneeringer.
 
 	* src/ln.c (do_link): Fix typo (in which the function name `symlink'
 	was tested instead of the variable `symbolic_link') that could make
