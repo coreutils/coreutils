@@ -1024,7 +1024,7 @@ rm (size_t n_files, char const *const *file, struct rm_options const *x)
   for (i = 0; i < n_files; i++)
     {
       enum RM_status s = rm_1 (file[i], x, &cwd_state);
-      assert (VALID_STATUS (status));
+      assert (VALID_STATUS (s));
       UPDATE_STATUS (status, s);
     }
 
