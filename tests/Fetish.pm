@@ -12,7 +12,7 @@ use FileHandle;
 use File::Compare qw(compare);
 
 @ISA = qw(Exporter);
-($VERSION = '$Revision: 1.2 $ ') =~ tr/[0-9].//cd;
+($VERSION = '$Revision: 1.3 $ ') =~ tr/[0-9].//cd;
 @EXPORT = qw (run_tests);
 
 my @Types = qw (IN OUT ERR EXIT PRE POST);
@@ -73,7 +73,7 @@ sub _create_file ($$$$)
     }
   else
     {
-      $file = "$test_name-$$.$Global_count";
+      $file = "$test_name.$Global_count";
       ++$Global_count;
     }
 
@@ -238,8 +238,8 @@ sub run_tests ($$$$$)
       warn "$test_name...\n" if $verbose;
       &{$expect->{PRE}} if $expect->{PRE};
       my %tmp;
-      $tmp{OUT} = "$test_name-out";
-      $tmp{ERR} = "$test_name-err";
+      $tmp{OUT} = "$test_name.O";
+      $tmp{ERR} = "$test_name.E";
       push @junk_files, $tmp{OUT}, $tmp{ERR};
       my @cmd = ($prog, @args, "> $tmp{OUT}", "2> $tmp{ERR}");
       my $cmd_str = join ' ', @cmd;
