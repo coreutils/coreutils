@@ -813,6 +813,7 @@ ftw_startup (const char *dir, int is_nftw, NFTW_FUNC_T func, int descriptors,
 	  save_err = errno;
 	  result = -1;
 	}
+      free_cwd (&cwd);
 
       __set_errno (save_err);
     }
