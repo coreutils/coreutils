@@ -1,6 +1,17 @@
-2001-08-18  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.11.
+
+2001-06-20  Paul Eggert  <eggert@twinsun.com>
+
+	* src/expr.c (toarith): Don't accept plain "-" as a valid integer.
+
+2001-08-18  Jim Meyering  <meyering@lucent.com>
+
+	* tests/expr/basic: New test for the above.
+	* tests/expr/Makefile.am: New file.
+	* tests/expr: New directory.
+	* tests/Makefile.am (SUBDIRS): Add expr.
+	* configure.in (AC_OUTPUT): Add tests/expr/Makefile.
 
 2001-06-20  Paul Eggert  <eggert@twinsun.com>
 
