@@ -1,6 +1,11 @@
-2002-03-10  Jim Meyering  <meyering@lucent.com>
+2002-03-16  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.12.
+
+	* src/Makefile.am (datadir): Don't define.  Automake does it better.
+	Patch from Albert Chin-A-Young <china@thewrittenword.com>
+
+2002-03-10  Jim Meyering  <meyering@lucent.com>
 
 	* configure.ac (AM_INIT_AUTOMAKE): Specify the required version
 	of automake (1.6), and options (gnits dist-bzip2), rather than...
