@@ -1,6 +1,12 @@
-2003-03-06  Jim Meyering  <jim@meyering.net>
+2003-03-07  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.10.
+
+	* tests/du/basic: Add a test for the above fix.
+	Test the -S option using a hierarchy containing files, too,
+	not just directories.
+
+2003-03-06  Jim Meyering  <jim@meyering.net>
 
 	* tests/cp/same-file: Unset CDPATH.  Otherwise, having the
 	CDPATH shell variable set could cause this test to fail.
