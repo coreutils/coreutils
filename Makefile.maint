@@ -48,7 +48,7 @@ THIS_VERSION_REGEXP := $(shell echo $(VERSION)|sed 's/\./\\./g')
 PREV_VERSION := $(shell echo $(VERSION)|tr a-z Xa-y)
 PREV_VERSION_REGEXP := $(shell echo $(PREV_VERSION)|sed 's/\./\\./g')
 v = Version
-url = ftp://alpha.gnu.org/gnu/$(distdir).tar.gz
+url = ftp://alpha.gnu.org/gnu/fetish/$(distdir).tar.gz
 md5 = $(shell md5sum < $(distdir).tar.gz|sed 's/  -//')
 
 rel-check:
