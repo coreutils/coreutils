@@ -45,12 +45,14 @@
 #include <grp.h>
 #include <pwd.h>
 #include <getopt.h>
-#include "system.h"
-#include <fnmatch.h>
-
 #if HAVE_LIMITS_H
+/* limits.h must come before system.h because limits.h on some systems
+   undefs PATH_MAX, whereas system.h includes pathmax.h which sets
+   PATH_MAX.  */
 #include <limits.h>
 #endif
+#include "system.h"
+#include <fnmatch.h>
 
 #include "obstack.h"
 #include "ls.h"
