@@ -12,6 +12,7 @@ TESTS_ENVIRONMENT = \
   PROG=$$tst
 
 TESTS = \
+  close-stdout \
   pwd \
   date-sec \
   paste-no-nl \
