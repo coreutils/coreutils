@@ -1,3 +1,8 @@
+2003-08-07  Paul Eggert  <eggert@twinsun.com>
+
+        * coreutils.texi (split invocation):
+	Add -d or --numeric-suffixes option to 'split'.
+
 2003-07-31  Paul Eggert  <eggert@twinsun.com>
 
 	* getdate.texi (General date syntax): Add --rfc-2822 option to GNU date.
