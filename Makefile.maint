@@ -13,6 +13,7 @@ maintainer-check:
 
 # Tag before making distribution.  Also, don't make a distribution if
 # checks fail.  Also, make sure the NEWS file is up-to-date.
+# FIXME: use dist-hook/my-dist like distcheck-hook/my-distcheck.
 cvs-dist: maintainer-check
 	pkg=`echo "$(PACKAGE)" | tr a-z A-Z`; \
 	ver=`echo "$(VERSION)" | sed 's/\./_/g'`; \
@@ -27,7 +28,7 @@ cvs-dist: maintainer-check
 	$(MAKE) dist
 
 t=./=test
-my-distcheck: dist
+my-distcheck:
 	-rm -rf $(t)
 	mkdir $(t)
 	GZIP=$(GZIP) $(TAR) -C $(t) -zxf $(distdir).tar.gz
