@@ -104,7 +104,7 @@ get_fs_usage (path, disk, fsp)
   struct statfs fsd;
 
   if (statfs (path, &fsd, sizeof (struct statfs)) != 0)
-    return (-1);
+    return -1;
 #define CONVERT_BLOCKS(bnew, b) ADJUST_BLOCKS ((bnew), (b), fsd.f_fsize, 512)
 #endif /* STAT_STATFS3_OSF1 */
 
