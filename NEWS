@@ -7,7 +7,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   unlimited depth.  Before, they would fail to operate on any file they
   encountered with a relative name of length PATH_MAX (often 4096) or longer.
 
-  chmod accepts new options: --preserve-root, --no-preserve-root
+  chgrp, chmod, chown, and rm accept the new options:
+  --preserve-root, --no-preserve-root (default)
 
   chgrp and chown now accept POSIX-mandated -L, -H, and -P options
 
