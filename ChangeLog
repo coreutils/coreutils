@@ -1,3 +1,33 @@
+2004-06-02  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Fix bug reported by Buciuman Adrian in
+	<http://mail.gnu.org/archive/html/bug-coreutils/2003-08/msg00105.html>
+	where 'dd' created a file that was too large.  The bug was that dd
+	assumed that the input file offset does not advance after a failed
+	read; but POSIX says that the input file offset is undefined after
+	a failed read.
+
+	* src/dd.c (MAX_BLOCKSIZE): New macro.
+	(input_seekable, input_seek_errno, input_offset,
+	input_offset_overflow): New vars.
+	(scanargs): Reject block sizes greater than MAX_BLOCKSIZE.
+	(advance_input_offset): New function.
+	(skip_via_lseek): Set errno to zero when reporting our failure,
+	so that we don't report based on garbage errno.
+	(skip): If fdesc is standard input, advance the input offset.
+	Do not quit if reading, and if noerror was specified;
+	POSIX seems to require this.
+	If read fails on output file, report the earlier lseek failure
+	instead; this fixes a FIXME in dd_copy.
+	(advance_input_after_read_error): New function.
+	(dd_copy): Use it, instead of assuming that failed reads
+	do not advance the file pointer.  Advance input offset
+	after nonfailed reads.  Advance only a partial block if
+	the previous read (before the failed read) succeeded, and
+	do not generate an output block of zeros in this case.
+	(main): Determine initial input offset, seekability of input,
+	and error if it wasn't seekable.
+
 2004-06-02  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
