@@ -15,12 +15,7 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
-/* Options:
-   -m, --mode=mode	Set the mode of created fifo's to MODE, which is
-			symbolic as in chmod and uses the umask as a point of
-			departure.
-
-   David MacKenzie <djm@ai.mit.edu>  */
+/* David MacKenzie <djm@ai.mit.edu>  */
 
 #include <config.h>
 #include <stdio.h>
@@ -76,7 +71,7 @@ main (int argc, char **argv)
 {
   mode_t newmode;
   struct mode_change *change;
-  const char *symbolic_mode;
+  const char *specified_mode;
   int errors = 0;
   int optc;
 
@@ -87,7 +82,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  symbolic_mode = NULL;
+  specified_mode = NULL;
 
 #ifndef S_ISFIFO
   error (4, 0, _("fifo files not supported"));
@@ -99,7 +94,7 @@ main (int argc, char **argv)
 	case 0:
 	  break;
 	case 'm':
-	  symbolic_mode = optarg;
+	  specified_mode = optarg;
 	  break;
 	case_GETOPT_HELP_CHAR;
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
@@ -115,10 +110,10 @@ main (int argc, char **argv)
     }
 
   newmode = (S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
-  if (symbolic_mode)
+  if (specified_mode)
     {
       newmode &= ~ umask (0);
-      change = mode_compile (symbolic_mode, 0);
+      change = mode_compile (specified_mode, 0);
       if (change == MODE_INVALID)
 	error (1, 0, _("invalid mode"));
       else if (change == MODE_MEMORY_EXHAUSTED)
@@ -135,7 +130,7 @@ main (int argc, char **argv)
       /* If the containing directory happens to have a default ACL, chmod
 	 ensures the file mode permission bits are still set as desired.  */
 
-      if (fail == 0 && symbolic_mode)
+      if (fail == 0 && specified_mode)
  	{
  	  fail = chmod (argv[optind], newmode);
 	  if (fail)
