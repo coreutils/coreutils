@@ -1,6 +1,23 @@
-2004-06-09  Paul Eggert  <eggert@cs.ucla.edu>
+2004-06-15  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.0.
+
+	* NEWS: Remove more special cases for POSIXLY_CORRECT when POSIX
+	allows the GNU behavior.  "--" is now supported by chroot, hostid,
+	hosname, pwd, sync, yes.
+	* doc/coreutils.texi (yes invocation, false invocation,
+	true invocation): Document this.
+	* src/chroot.c (main): Handle "--".
+	* src/hostid.c (main): Likewise.
+	* src/hostname.c (main): Likewise.
+	* src/pwd.c (main): Likewise.
+	* src/sync.c (main): Likewise.
+	* src/yes.c (main): Likewise.
+	* src/true.c (main): Recognize --help and --version even if
+	POSIXLY_CORRECT is set.
+	* src/yes.c (main): Likewise.
+
+2004-06-09  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: Remove special cases for POSIXLY_CORRECT when POSIX allows
 	the GNU behavior.
