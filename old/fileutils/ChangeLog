@@ -1,3 +1,10 @@
+Tue Oct 29 06:49:16 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/ls.c (decode_switches): Make -A set really_all_files to zero
+	as well as setting all_files to 1.  With this change, ls -f -A prints
+	everything but . and .., unsorted.  Before, the -A was effectively
+	ignored.  From Karl Berry.
+
 Tue Oct 22 07:00:00 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/Makefile.am (dircolors.h): Depend on dcgen only in maintainer

@@ -7,6 +7,11 @@ Mon Oct 28 17:40:54 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 	* configure.in: Don't output confusing diagnostic: `checking for
 	shadow password routines'.  Suggestion from François Pinard.
 
+Thu Oct 24 13:50:46 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund\
+.de>
+
+        * src/tee.c (main): Ignore SIGPIPE.
+
 Wed Oct 23 23:42:43 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/stty.c: Guard inclusion of stdarg.h and definition of VA_START
