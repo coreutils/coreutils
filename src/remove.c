@@ -156,7 +156,7 @@ print_nth_dir (FILE *stream, unsigned int depth)
       sum += length[i];
     }
 
-  fwrite (dir_name, 1, sum, stream);
+  fwrite (dir_name, 1, sum - 1, stream);
 }
 
 static inline struct active_dir_ent *
@@ -816,21 +816,18 @@ rm (struct File_spec *fs, int user_specified_name, const struct rm_options *x)
 	 numbers are not that likely, this isn't worth detecting.  */
 
       new_ent = make_active_dir_ent (fs->inum, current_depth ());
-      if (hash_lookup (active_dir_map, new_ent))
+      old_ent = hash_lookup (active_dir_map, new_ent);
+      if (old_ent)
 	{
 	  error (0, 0, _("\
 WARNING: Circular directory structure.\n\
 This almost certainly means that you have a corrupted file system.\n\
 NOTIFY YOUR SYSTEM MANAGER.\n\
 The following two directories have the same inode number:\n"));
-	  /* FIXME: test this!!  */
-	  print_nth_dir (stderr, current_depth ());
-	  fputc ('\n', stderr);
 	  print_nth_dir (stderr, old_ent->depth);
 	  fputc ('\n', stderr);
+	  fprintf (stderr, "%s\n", full_filename (fs->filename));
 	  fflush (stderr);
-
-	  free (old_ent);
 
 	  if (x->interactive)
 	    {
