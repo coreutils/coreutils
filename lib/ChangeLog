@@ -1,3 +1,20 @@
+2000-12-29  Paul Eggert  <eggert@twinsun.com>
+
+	* lib/modechange.c: Do not assume that mode_t uses the
+	traditional octal encoding.  E.g. "chmod 1 FOO" should set
+	the other-execute bit of FOO even if S_IXOTH != 1.
+
+	(SUID, SGID, SVTX, RUSR, WUSR, XUSR, RGRP, WGRP, XGRP, ROTH,
+	WOTH, XOTH, ALLM): New macros.
+	(S_ISUID, S_ISGID, S_ISVTX, S_IRUSR, S_IWUSR, S_IXUSR,
+	 S_IRGRP, S_IWGRP, S_IXGRP, S_IROTH, S_IWOTH, S_IXOTH):
+	Use them.
+	(S_ISGID): Fix typo; it was defaulting to the same value as S_ISUID.
+	(S_IRWXU, S_IRWXG, S_IRWXO): Specify defaults in terms of the above.
+	(mode_compile):
+	No need to use uintmax_t; unsigned long is long enough.
+	Don't bother to get suffix since we don't use it.
+
 2000-12-24  Jim Meyering  <meyering@lucent.com>
 
 	* hash.c (is_prime): Return explicit boolean values.
