@@ -1,0 +1,37 @@
+#!/bin/sh
+# Exercise a bug that was fixed in 4.0s.
+# Before then, rm would fail occasionally, sometimes via
+# a failed assertion, others with a seg fault.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  rm --version
+fi
+
+pwd=`pwd`
+tmp=hash-$$
+trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
+trap 'exit $?' 1 2 13 15
+
+framework_failure=0
+mkdir $tmp || framework_failure=1
+cd $tmp
+
+# Create a hierarchy with 3*26 leaf directories, each at depth 153.
+y=`yes |tr '\012' / |head -c 300`
+for i in 1 2 3; do
+  for j in a b c d e f g h i j k l m n o p q r s t u v w x y z; do
+    mkdir -p t/$i/$j/$y || framework_failure=1
+  done
+done
+
+if test $framework_failure = 1; then
+  echo 'failure in testing framework'
+  exit 1
+fi
+
+fail=0
+
+rm -r t || fail=1
+
+exit $fail
