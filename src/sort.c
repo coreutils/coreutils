@@ -2429,7 +2429,7 @@ key_init (struct keyfield *key)
 /* strdup and return the result of setlocale, but guard against a NULL
    return value.  If setlocale returns NULL, strdup FAIL_VAL instead.  */
 
-#if !defined __GLIBC__ || __GLIBC__ < 2
+#if defined ENABLE_NLS && ( !defined __GLIBC__ || __GLIBC__ < 2 )
 static inline char *
 my_setlocale (const char *locale, const char *fail_val)
 {
