@@ -246,8 +246,7 @@ MKDEP = gcc -M $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
 
 -include .deps/.P
 .deps/.P: $(BUILT_SOURCES)
-	test -d .deps || mkdir .deps
-	echo > $@
+	test -d .deps || { mkdir .deps;echo > $@; }
 
 -include $(DEP_FILES)
 
