@@ -6580,6 +6580,17 @@ when an odd number of bytes are read---the last byte is simply copied
 @cindex read errors, ignoring
 Continue after read errors.
 
+@item nocreat
+@opindex nocreat
+@cindex creating output file, avoiding
+Do not create the output file; the output file must already exist.
+
+@item excl
+@opindex excl
+@cindex creating output file, requiring
+Fail if the output file already exists; @command{dd} must create the
+output file itself.
+
 @item notrunc
 @opindex notrunc
 @cindex truncating output file, avoiding
@@ -6590,7 +6601,85 @@ Do not truncate the output file.
 Pad every input block to size of @samp{ibs} with trailing zero bytes.
 When used with @samp{block} or @samp{unblock}, pad with spaces instead of
 zero bytes.
+
+@item fdatasync
+@opindex fdatasync
+@cindex synchronized data writes, before finishing
+Synchronize output data just before finishing.  This forces a physical
+write of output data.
+
+@item fsync
+@opindex fsync
+@cindex synchronized data and metadata writes, before finishing
+Synchronize output data and metadata just before finishing.  This
+forces a physical write of output data and metadata.
+
 @end table
+
+@item iflag=@var{flag}[,@var{flag}]@dots{}
+@opindex iflag
+Access the input file using the flags specified by the @var{flag}
+argument(s).  (No spaces around any comma(s).)
+
+@item oflag=@var{flag}[,@var{flag}]@dots{}
+@opindex oflag
+Access the output file using the flags specified by the @var{flag}
+argument(s).  (No spaces around any comma(s).)
+
+Flags:
+
+@table @samp
+
+@item append
+@opindex append
+@cindex appending to the output file
+Write in append mode, so that even if some other process is writing to
+this file, every @command{dd} write will append to the current
+contents of the file.  This flag makes sense only for output.
+
+@item direct
+@opindex direct
+@cindex direct I/O
+Use direct I/O for data, avoiding the buffer cache.
+
+@item dsync
+@opindex dsync
+@cindex synchronized data reads
+Use synchronized I/O for data.  For the output file, this forces a
+physical write of output data on each write.  For the input file,
+this flag can matter when reading from a remote file that has been
+written to synchronously by some other process.  Metadata (e.g.,
+last-access and last-modified time) is not necessarily synchronized.
+
+@item sync
+@opindex sync
+@cindex synchronized data and metadata I/O
+Use synchronized I/O for both data and metadata.
+
+@item nonblock
+@opindex nonblock
+@cindex nonblocking I/O
+Use non-blocking I/O.
+
+@item nofollow
+@opindex nofollow
+@cindex symbolic links, following
+Do not follow symbolic links.
+
+@item noctty
+@opindex noctty
+@cindex controlling terminal
+Do not assign the file to be a controlling terminal for @command{dd}.
+This has no effect when the file is not a terminal.
+
+@end table
+
+These flags are not supported on all systems, and @samp{dd} rejects
+attempts to use them when they are not supported.  When reading from
+standard input or writing to standard output, the @samp{nofollow} and
+@samp{noctty} flags should not be specified, and the other flags
+(e.g., @samp{nonblock}) can affect how other processes behave with the
+affected file descriptors, even after @command{dd} exits.
 
 @end table
 
