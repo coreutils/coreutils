@@ -129,7 +129,7 @@ announcement: NEWS ChangeLog $(distdir).tar.gz
 	  find . -name ChangeLog \
 	    | xargs cvs diff -up -r$(prev-cvs-tag) -rHEAD \
 	    | sed -n 's/^+//p' \
-	    | perl -ne 'm!^\+\+ (\./)?! or print,next;'	\
+	    | perl -ne 'm!^\+\+ (\./)?! or print,next;' \
 	      -e 'print "\n"."*"x70 ."\n"; s///; print; print "*"x70 ."\n"'; \
 	)
 
