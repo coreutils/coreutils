@@ -22,6 +22,11 @@
 #include <sys/types.h>
 #include <signal.h>
 
+#include <errno.h>
+#ifndef errno
+extern int errno;
+#endif
+
 #if HAVE_UNISTD_H
 # include <unistd.h>
 #endif
@@ -97,6 +102,8 @@ nanosleep (const struct timespec *requested_delay,
     }
 
   /* FIXME: Restore sig handler?  */
+
+  errno = EINTR;
 
   return suspended;
 }
