@@ -1,3 +1,9 @@
+Sun Oct 20 09:03:51 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* acinclude.m4 (AM_FUNC_GETLOADAVG): Use $srcdir (not $top_srcdir) in
+	#include $srcdir/lib/getloadavg.c.  The latter isn't defined at that
+	point in configure script.  From Eric Backus.
+
 Fri Oct 18 21:31:58 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* Makefile.am (cvs-dist): Uncomment cvs tag command.
@@ -30,7 +36,7 @@ Fri Oct 11 22:51:50 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 	* acinclude.m4 (AM_FUNC_GETLOADAVG): Like AC_FUNC_GETLOADAVG, but
 	with the following changes:
 	- include $top_srcdir/lib/getloadavg.c, not src/getloadavg.c.
-	From Eric Backus.
+	Reported by Eric Backus.
 	- Check for Solaris' libkstat.
 	- Define C_GETLOADAVG if we end up using getloadavg.c.
 	From Kaveh R. Ghazi.
