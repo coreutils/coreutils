@@ -1,3 +1,4 @@
+Tue Feb 27 23:13:46 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* src/Makefile.am: Adapt for automake-0.30.
 	(noinst_HEADERS): Rename from HEADERS.
