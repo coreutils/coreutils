@@ -31,7 +31,7 @@ fail=0
 # This must exit nonzero.
 chmod -R o=r d >/dev/null 2>out && fail=1
 cat <<\EOF > exp
-chmod: `d/no-x': Permission denied
+chmod: failed to get attributes of `d/no-x/y': Permission denied
 EOF
 
 cmp out exp || fail=1
