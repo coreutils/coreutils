@@ -34,6 +34,7 @@
 #include "human.h"
 #include "long-options.h"
 #include "safe-read.h"
+#include "xstrtol.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "dd"
@@ -473,101 +474,15 @@ parse_conversion (char *str)
    Assign nonzero to *INVALID if STR does not represent a number in
    this format. */
 
-/* FIXME: use xstrtou?[lq] */
-
 static uintmax_t
 parse_integer (char *str, int *invalid)
 {
-  register uintmax_t n = 0;
-  register char *p = str;
+  uintmax_t n;
+  enum strtol_error e = xstrtoumax (str, &str, 10, &n, "bcEGkMPTwYZ0");
 
-  while (ISDIGIT (*p))
+  if (e == LONGINT_INVALID_SUFFIX_CHAR && *str == 'x')
     {
-      uintmax_t n10 = n * 10;
-      int digit = *p - '0';
-      if (! (n10 / 10 == n && n10 <= n10 + digit))
-	{
-	  *invalid = 1;
-	  return 0;
-	}
-      n = n10 + digit;
-      p++;
-    }
-
-  for (;;)
-    {
-      uintmax_t multiplier;
-      int power = 0;
-
-#ifdef lint
-      /* Suppress `used before initialized' warning.  */
-      multiplier = 0;
-#endif
-
-      switch (*p++)
-	{
-	case '\0':
-	  return n;
-	case 'b':
-	  multiplier = 512;
-	  break;
-	case 'c':
-	  continue;
-	case 'E': /* Exa */
-	  power = 6;
-	  break;
-	case 'G': /* Giga */
-	  power = 3;
-	  break;
-	case 'k': /* kilo */
-	  power = 1;
-	  break;
-	case 'M': /* Mega */
-	  power = 2;
-	  break;
-	case 'P': /* Peta */
-	  power = 5;
-	  break;
-	case 'T': /* Tera */
-	  power = 4;
-	  break;
-	case 'w':
-	  multiplier = 2;
-	  break;
-	case 'x':
-	  multiplier = parse_integer (p, invalid);
-	  p = "";
-	  break;
-	case 'Y': /* Yotta */
-	  power = 8;
-	  break;
-	case 'Z': /* Zetta */
-	  power = 7;
-	  break;
-	default:
-	  {
-	    *invalid = 1;
-	    return 0;
-	  }
-	}
-
-      if (power)
-	{
-	  int base = 1024;
-
-	  switch (*p)
-	    {
-	    case 'B': p++; break;
-	    case 'D': p++; base = 1000; break;
-	    }
-
-	  for (multiplier = base;  --power;  multiplier *= base)
-	    if (multiplier * base / base != multiplier)
-	      {
-		*invalid = 1;
-		return 0;
-	      }
-	}
+      uintmax_t multiplier = parse_integer (str + 1, invalid);
 
       if (multiplier != 0 && n * multiplier / multiplier != n)
 	{
@@ -577,6 +492,13 @@ parse_integer (char *str, int *invalid)
 
       n *= multiplier;
     }
+  else if (e != LONGINT_OK)
+    {
+      *invalid = 1;
+      return 0;
+    }
+
+  return n;
 }
 
 static void
