@@ -2245,7 +2245,7 @@ but lacks following character offset"));
     {
       if (nfiles > 1)
 	error (SORT_FAILURE, 0,
-	       _("too many arguments;  with -c, there may be at most
+	       _("too many arguments;  with -c, there may be at most\
  one file argument"));
 
       /* POSIX requires that sort return 1 IFF invoked with -c and the
