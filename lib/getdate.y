@@ -321,6 +321,14 @@ date:
 	PC.year.value = -$3.value;
 	PC.year.digits = $3.digits;
       }
+  | tMONTH tSNUMBER tSNUMBER
+      {
+	/* e.g. JUN-17-1992.  */
+	PC.month = $1;
+	PC.day = -$2.value;
+	PC.year.value = -$3.value;
+	PC.year.digits = $3.digits;
+      }
   | tMONTH tUNUMBER
       {
 	PC.month = $1;
