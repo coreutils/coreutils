@@ -1,3 +1,19 @@
+2003-11-24  Paul Eggert  <eggert@twinsun.com>
+
+	Parse floating-point operands and options in the C locale.
+	POSIX requires this for printf, and we might as well be
+	consistent elsewhere (tail, sleep, seq).
+
+	* Makefile.am (libfetish_a_SOURCES): Add c-strtod.c, c-strtod.h.
+	* c-strtod.c, c-strtod.h: New files.
+	* xstrtod.h (xstrtod): Accept an extra arg, specifying the
+	conversion function.
+	* xstrtod.c (xstrtod): Likewise.  All callers changed to
+	include c-strtod.h and use c_strtod.  Don't include stdlib.h; no
+	longer needed.
+
+	* xnanosleep.c: Don't include xstrtod.h; it's not needed.
+
 2003-11-22  Jim Meyering  <jim@meyering.net>
 
 	* xmalloc.c (x2nrealloc_inline): Fix typos in comments: s/size/size_t/.
