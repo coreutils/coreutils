@@ -35,6 +35,7 @@
 #define _(msgid) gettext (msgid)
 
 #include "error.h"
+#include "exit.h"
 #include "quotearg.h"
 #include "quote.h"
 #include "unlocked-io.h"
@@ -44,10 +45,6 @@
    literal_quoting_style.  */
 #ifndef ARGMATCH_QUOTING_STYLE
 # define ARGMATCH_QUOTING_STYLE locale_quoting_style
-#endif
-
-#ifndef EXIT_FAILURE
-# define EXIT_FAILURE 1
 #endif
 
 /* Non failing version of argmatch call this function after failing. */
