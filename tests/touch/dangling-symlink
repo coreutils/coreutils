@@ -1,0 +1,19 @@
+#!/bin/sh
+# Make sure touch can create a file through a dangling symlink.
+# This was broken in the 4.0[e-i] test releases.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  touch --version
+fi
+
+fail=0
+ln -s touch-target t-symlink
+
+# This used to infloop.
+touch t-symlink || fail=1
+
+test -f touch-target || fail=1
+rm -f touch-target t-symlink
+
+exit $fail
