@@ -1,5 +1,5 @@
-# obstack.m4 serial 1
-dnl Copyright (C) 2002 Free Software Foundation, Inc.
+# obstack.m4 serial 2
+dnl Copyright (C) 2002, 2003 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
 dnl Public License, this file may be distributed as part of a program
@@ -8,9 +8,6 @@ dnl the same distribution terms as the rest of that program.
 
 AC_DEFUN([gl_OBSTACK],
 [
-  dnl Prerequisites of lib/obstack.h.
-  AC_CHECK_HEADERS_ONCE(stddef.h string.h)
-
   AC_FUNC_OBSTACK
   dnl Note: AC_FUNC_OBSTACK does AC_LIBSOURCES([obstack.h, obstack.c]).
   if test $ac_cv_func_obstack = no; then
@@ -19,6 +16,4 @@ AC_DEFUN([gl_OBSTACK],
 ])
 
 # Prerequisites of lib/obstack.c.
-AC_DEFUN([gl_PREREQ_OBSTACK], [
-  AC_CHECK_HEADERS_ONCE(stdlib.h)
-])
+AC_DEFUN([gl_PREREQ_OBSTACK], [:])
