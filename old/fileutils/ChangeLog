@@ -1,3 +1,18 @@
+1999-01-12  Jim Meyering  <meyering@ascend.com>
+
+	* configure.in (ALL_LINGUAS): Add Greek (el).
+	* po/el.po: New file.
+
+	* install-sh: New version from autoconf.
+	* missing: New version from automake.
+	* src/ansi2knr.c: Likewise.
+	* lib/getopt.c: New version from glibc.
+	* lib/getopt.h: Likewise.
+	* lib/getopt1.c: Likewise.
+	* lib/regex.c: Likewise.
+	* lib/regex.h: Likewise.
+	* lib/ylwrap: Remove unused file.
+
 1999-01-10  Jim Meyering  <meyering@ascend.com>
 
 	* Version 4.1-b3.
