@@ -969,10 +969,7 @@ main (int argc, char **argv)
 static int
 decode_switches (int argc, char **argv)
 {
-  register char const *p;
   int c;
-  int i;
-  long int tmp_long;
 
   /* Record whether there is an option specifying sort type.  */
   int sort_type_specified = 0;
@@ -1029,28 +1026,42 @@ decode_switches (int argc, char **argv)
   really_all_files = 0;
   ignore_patterns = 0;
 
-  /* FIXME: Shouldn't we complain on wrong values? */
-  if ((p = getenv ("QUOTING_STYLE"))
-      && 0 <= (i = ARGCASEMATCH (p, quoting_style_args, quoting_style_vals)))
-    set_quoting_style (NULL, quoting_style_vals[i]);
+  /* FIXME: put this in a function.  */
+  {
+    char const *q_style = getenv ("QUOTING_STYLE");
+    if (q_style)
+      {
+	int i = ARGCASEMATCH (q_style, quoting_style_args, quoting_style_vals);
+	if (0 <= i)
+	  set_quoting_style (NULL, quoting_style_vals[i]);
+	else
+	  error (0, 0,
+	 _("ignoring invalid string in environment variable QUOTING_STYLE: %s"),
+		 quotearg (q_style));
+      }
+  }
 
   human_block_size (getenv ("LS_BLOCK_SIZE"), 0, &output_block_size);
 
   line_length = 80;
-  if ((p = getenv ("COLUMNS")) && *p)
-    {
-      if (xstrtol (p, NULL, 0, &tmp_long, NULL) == LONGINT_OK
-	  && 0 < tmp_long && tmp_long <= INT_MAX)
-	{
-	  line_length = (int) tmp_long;
-	}
-      else
-	{
-	  error (0, 0,
+  {
+    char const *p = getenv ("COLUMNS");
+    if (p && *p)
+      {
+	long int tmp_long;
+	if (xstrtol (p, NULL, 0, &tmp_long, NULL) == LONGINT_OK
+	    && 0 < tmp_long && tmp_long <= INT_MAX)
+	  {
+	    line_length = (int) tmp_long;
+	  }
+	else
+	  {
+	    error (0, 0,
 	       _("ignoring invalid width in environment variable COLUMNS: %s"),
-		 quotearg (p));
-	}
-    }
+		   quotearg (p));
+	  }
+      }
+  }
 
 #ifdef TIOCGWINSZ
   {
@@ -1063,21 +1074,25 @@ decode_switches (int argc, char **argv)
 
   /* Using the TABSIZE environment variable is not POSIX-approved.
      Ignore it when POSIXLY_CORRECT is set.  */
-  tabsize = 8;
-  if (!getenv ("POSIXLY_CORRECT") && (p = getenv ("TABSIZE")))
-    {
-      if (xstrtol (p, NULL, 0, &tmp_long, NULL) == LONGINT_OK
-	  && 0 <= tmp_long && tmp_long <= INT_MAX)
-	{
-	  tabsize = (int) tmp_long;
-	}
-      else
-	{
-	  error (0, 0,
-	   _("ignoring invalid tab size in environment variable TABSIZE: %s"),
-		 quotearg (p));
-	}
-    }
+  {
+    char const *p;
+    tabsize = 8;
+    if (!getenv ("POSIXLY_CORRECT") && (p = getenv ("TABSIZE")))
+      {
+	long int tmp_long;
+	if (xstrtol (p, NULL, 0, &tmp_long, NULL) == LONGINT_OK
+	    && 0 <= tmp_long && tmp_long <= INT_MAX)
+	  {
+	    tabsize = (int) tmp_long;
+	  }
+	else
+	  {
+	    error (0, 0,
+	     _("ignoring invalid tab size in environment variable TABSIZE: %s"),
+		   quotearg (p));
+	  }
+      }
+  }
 
   while ((c = getopt_long (argc, argv,
 			   "abcdfghiklmnopqrstuvw:xABCDFGHI:LNQRST:UX1",
@@ -1194,12 +1209,15 @@ Use `--si' for the old meaning."));
 	  break;
 
 	case 'w':
-	  if (xstrtol (optarg, NULL, 0, &tmp_long, NULL) != LONGINT_OK
-	      || tmp_long <= 0 || tmp_long > INT_MAX)
-	    error (EXIT_FAILURE, 0, _("invalid line width: %s"),
-		   quotearg (optarg));
-	  line_length = (int) tmp_long;
-	  break;
+	  {
+	    long int tmp_long;
+	    if (xstrtol (optarg, NULL, 0, &tmp_long, NULL) != LONGINT_OK
+		|| tmp_long <= 0 || tmp_long > INT_MAX)
+	      error (EXIT_FAILURE, 0, _("invalid line width: %s"),
+		     quotearg (optarg));
+	    line_length = (int) tmp_long;
+	    break;
+	  }
 
 	case 'x':
 	  format = horizontal;
@@ -1257,12 +1275,15 @@ Use `--si' for the old meaning."));
 	  break;
 
 	case 'T':
-	  if (xstrtol (optarg, NULL, 0, &tmp_long, NULL) != LONGINT_OK
-	      || tmp_long < 0 || tmp_long > INT_MAX)
-	    error (EXIT_FAILURE, 0, _("invalid tab size: %s"),
-		   quotearg (optarg));
-	  tabsize = (int) tmp_long;
-	  break;
+	  {
+	    long int tmp_long;
+	    if (xstrtol (optarg, NULL, 0, &tmp_long, NULL) != LONGINT_OK
+		|| tmp_long < 0 || tmp_long > INT_MAX)
+	      error (EXIT_FAILURE, 0, _("invalid tab size: %s"),
+		     quotearg (optarg));
+	    tabsize = (int) tmp_long;
+	    break;
+	  }
 
 	case 'U':
 	  sort_type = sort_none;
@@ -1299,25 +1320,28 @@ Use `--si' for the old meaning."));
 	  break;
 
 	case COLOR_OPTION:
-	  if (optarg)
-	    i = XARGMATCH ("--color", optarg, color_args, color_types);
-	  else
-	    /* Using --color with no argument is equivalent to using
-	       --color=always.  */
-	    i = color_always;
+	  {
+	    int i;
+	    if (optarg)
+	      i = XARGMATCH ("--color", optarg, color_args, color_types);
+	    else
+	      /* Using --color with no argument is equivalent to using
+		 --color=always.  */
+	      i = color_always;
 
-	  print_with_color = (i == color_always
-			      || (i == color_if_tty
-				  && isatty (STDOUT_FILENO)));
+	    print_with_color = (i == color_always
+				|| (i == color_if_tty
+				    && isatty (STDOUT_FILENO)));
 
-	  if (print_with_color)
-	    {
-	      /* Don't use TAB characters in output.  Some terminal
-		 emulators can't handle the combination of tabs and
-		 color codes on the same line.  */
-	      tabsize = 0;
-	    }
-	  break;
+	    if (print_with_color)
+	      {
+		/* Don't use TAB characters in output.  Some terminal
+		   emulators can't handle the combination of tabs and
+		   color codes on the same line.  */
+		tabsize = 0;
+	      }
+	    break;
+	  }
 
 	case INDICATOR_STYLE_OPTION:
 	  indicator_style = XARGMATCH ("--indicator-style", optarg,
@@ -1353,8 +1377,11 @@ Use `--si' for the old meaning."));
   if (get_quoting_style (filename_quoting_options) == escape_quoting_style)
     set_char_quoting (filename_quoting_options, ' ', 1);
   if (indicator_style != none)
-    for (p = "*=@|" + (int) indicator_style - 1;  *p;  p++)
-      set_char_quoting (filename_quoting_options, *p, 1);
+    {
+      char const *p;
+      for (p = "*=@|" + (int) indicator_style - 1;  *p;  p++)
+	set_char_quoting (filename_quoting_options, *p, 1);
+    }
 
   dirname_quoting_options = clone_quoting_options (NULL);
   set_char_quoting (dirname_quoting_options, ':', 1);
