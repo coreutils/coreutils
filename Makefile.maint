@@ -64,9 +64,6 @@ local-checks-available = \
 
 local-check = $(filter-out $(local-checks-to-skip), $(local-checks-available))
 
-# Make sure C source files in src/ don't include xalloc.h directly,
-# since they all already include it via sys2.h.
-# It's not a big deal -- just aesthetics.
 .PHONY: $(syntax-check-rules)
 syntax-check-rules = \
   sc_cast_of_argument_to_free \
