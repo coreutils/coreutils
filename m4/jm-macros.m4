@@ -77,7 +77,11 @@ AC_DEFUN(jm_CHECK_ALL_TYPES,
   AC_TYPE_SIZE_T
   AC_TYPE_UID_T
   AC_CHECK_TYPE(ino_t, unsigned long)
-  AC_TYPE_SSIZE_T
+
+  dnl This relies on the fact that autoconf 2.14a's implementation of
+  dnl AC_CHECK_TYPE checks includes unistd.h.
+  AC_CHECK_TYPE(ssize_t, int)
+
   AC_REQUIRE([jm_AC_TYPE_UINTMAX_T])
   AC_REQUIRE([jm_AC_TYPE_UNSIGNED_LONG_LONG])
 ])
