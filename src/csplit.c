@@ -40,10 +40,6 @@
 
 #define AUTHORS N_ ("Stuart Kemp and David MacKenzie")
 
-#ifdef STDC_HEADERS
-# include <stdlib.h>
-#endif
-
 #ifndef TRUE
 # define FALSE 0
 # define TRUE 1
