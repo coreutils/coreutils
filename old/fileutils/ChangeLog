@@ -2,6 +2,21 @@
 
 	* Version 4.1.2.
 
+	copy.c shouldn't maintain static state.
+
+	* src/copy.c (dest_info): Remove declaration of file-scoped global.
+	(dest_info_init): Require a parameter.
+	Update all callers.
+	(seen_dest): Require a hash table parameter.  Update callers.
+	(record_dest): Likewise.
+
+	* src/copy.h: Include hash.h.
+	(struct cp_options) [dest_info]: New member.
+	* src/install.c (cp_option_init): Initialize new member.
+	* src/mv.c (cp_option_init): Likewise.
+	* src/cp.c (cp_option_init): Likewise.
+	(do_copy): Remove const attribute from declaration of parameter, x.
+
 2001-11-17  Jim Meyering  <meyering@lucent.com>
 
 	* tests/chmod/equals: New test for the just-fixed bug in
