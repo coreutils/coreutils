@@ -61,6 +61,7 @@ char *malloc ();
 #endif
 
 #if !defined (isascii) || defined (STDC_HEADERS)
+#undef isascii
 #define isascii(c) 1
 #endif
 
