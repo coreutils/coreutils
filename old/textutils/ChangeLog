@@ -1,3 +1,15 @@
+Sat Nov 18 12:04:30 1995  Jim Meyering  (meyering@comco.com)
+
+	Update for autoconf-2.5:
+	* src/Makefile.in (prefix, exec_prefix): Remove them.
+	(libdir): Use @libdir@.
+	(bindir): Use @bindir@.
+	* doc/Makefile.in (prefix): Remove it.
+	(infodir): Use @infodir@.
+	* man/Makefile.in (prefix, exec_prefix): Remove them.
+	(mandir): Use @mandir@.
+	(bindir): Remove it.
+
 Thu Nov 16 21:25:45 1995  Jim Meyering  (meyering@comco.com)
 
 	* Makefile.in (_all): New default target.  Depend on `all' to work
