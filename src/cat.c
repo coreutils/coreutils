@@ -93,7 +93,7 @@ usage (int status)
 Usage: %s [OPTION] [FILE]...\n\
 "),
 	      program_name);
-      printf (_("\
+      fputs (_("\
 Concatenate FILE(s), or standard input, to standard output.\n\
 \n\
   -A, --show-all           equivalent to -vET\n\
@@ -102,6 +102,8 @@ Concatenate FILE(s), or standard input, to standard output.\n\
   -E, --show-ends          display $ at end of each line\n\
   -n, --number             number all output lines\n\
   -s, --squeeze-blank      never more than one single blank line\n\
+"), stdout);
+      fputs (_("\
   -t                       equivalent to -vT\n\
   -T, --show-tabs          display TAB characters as ^I\n\
   -u                       (ignored)\n\
@@ -110,12 +112,12 @@ Concatenate FILE(s), or standard input, to standard output.\n\
       --version            output version information and exit\n\
 \n\
 With no FILE, or when FILE is -, read standard input.\n\
-"));
+"), stdout);
 #if O_BINARY
-      printf (_("\
+      fputs (_("\
 \n\
   -B, --binary             use binary writes to the console device.\n\n\
-"));
+"), stdout);
 #endif
       puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
     }
