@@ -26,7 +26,7 @@ stty --save > $saved_state || fail=1
 stty `cat $saved_state` || fail=1
 
 # Build a list of all boolean options stty accepts on this system.
-options=`stty -a|tail +2|tr ';' '\012'|sed '/ = /d;s/^ //'|tr -s ' -' '\012'`
+options=`stty -a|tail +2|tr ';' '\012'|sed '/ = /d;s/^ //'|tr -s ' -' '\012\012'`
 
 # Take them one at a time, with and without the leading `-'.
 for opt in $options; do
