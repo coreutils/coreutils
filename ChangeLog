@@ -1,3 +1,10 @@
+2003-11-05  Paul Eggert  <eggert@twinsun.com>
+
+	* man/Makefile.am (check-programs-vs-x):
+	Work even if $(programs) contains '$'.
+	Work even if 'missing=1' in environment.
+	Don't report an error simply because $(programs) outputs nothing.
+
 2003-11-05  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.1.0.
