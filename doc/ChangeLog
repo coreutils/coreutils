@@ -1,7 +1,7 @@
 2004-02-02  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (nice invocation): Add examples.
-	Prompted by suggestion from Dan Jacobson.
+	Prompted by a suggestion from Dan Jacobson.
 	(factor invocation): Add an example.
 	Update timing numbers for a more modern CPU.
 
