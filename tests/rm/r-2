@@ -13,7 +13,8 @@ fi
 tmp=$TMPDIR/t-rm.$$
 
 mkdir $tmp $tmp/a $tmp/a/b
-touch $tmp/a/f $tmp/a/b/g
+> $tmp/a/f
+> $tmp/a/b/g
 
 fail=0
 $RM --verbose -r $tmp/a > $tmp/$test.O || fail=1

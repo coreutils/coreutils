@@ -15,7 +15,9 @@ tmp=$RM_TMPDIR/t-rm.$$
 
 test_failure=0
 mkdir $tmp $tmp/a $tmp/b $tmp/c || test_failure=1
-touch $tmp/a/a $tmp/b/bb $tmp/c/cc || test_failure=1
+> $tmp/a/a || test_failure=1
+> $tmp/b/bb || test_failure=1
+> $tmp/c/cc || test_failure=1
 
 if test $test_failure = 1; then
   echo 'failure in testing framework'
