@@ -1,5 +1,7 @@
 User visible changes in release 1.9.2:
-* fix a minor problem in formatting of output from `stty -a'
+* stty works on Solaris-2.2
+* who output is better formatted on Solaris and other SysVr4 systems
+* fix a minor problem in formatting the output from `stty -a'
 * yes with arguments outputs newlines again
 * partial stty failures are reported
 

@@ -131,25 +131,26 @@
 #define CSTATUS Control ('t')
 #endif
 
-char *visible ();
-unsigned long baud_to_value ();
-int recover_mode ();
-int screen_columns ();
-int set_mode ();
-long integer_arg ();
-speed_t string_to_baud ();
-tcflag_t *mode_type_flag ();
-void display_all ();
-void display_changed ();
-void display_recoverable ();
-void display_settings ();
-void display_speed ();
-void display_window_size ();
+static char *visible ();
+static unsigned long baud_to_value ();
+static int recover_mode ();
+static int screen_columns ();
+static int set_mode ();
+static long integer_arg ();
+static speed_t string_to_baud ();
+static tcflag_t *mode_type_flag ();
+static void display_all ();
+static void display_changed ();
+static void display_recoverable ();
+static void display_settings ();
+static void display_speed ();
+static void display_window_size ();
+static void sane_mode ();
+static void set_control_char ();
+static void set_speed ();
+static void set_window_size ();
+
 void error ();
-void sane_mode ();
-void set_control_char ();
-void set_speed ();
-void set_window_size ();
 
 /* Which speeds to set.  */
 enum speed_setting
@@ -414,7 +415,7 @@ char *program_name;
    Print a space first unless MESSAGE will start a new line. */
 
 /* VARARGS */
-void
+static void
 #ifdef __STDC__
 wrapf (char *message, ...)
 #else
@@ -830,7 +831,7 @@ done:;
 
 /* Return 0 if not applied because not reversible; otherwise return 1. */
 
-int
+static int
 set_mode (info, reversed, mode)
      struct mode_info *info;
      int reversed;
@@ -1029,7 +1030,7 @@ set_mode (info, reversed, mode)
   return 1;
 }
 
-void
+static void
 set_control_char (info, arg, mode)
      struct control_info *info;
      char *arg;
@@ -1055,7 +1056,7 @@ set_control_char (info, arg, mode)
   mode->c_cc[info->offset] = value;
 }
 
-void
+static void
 set_speed (type, arg, mode)
      enum speed_setting type;
      char *arg;
@@ -1071,7 +1072,7 @@ set_speed (type, arg, mode)
 }
 
 #ifdef TIOCGWINSZ
-void
+static void
 set_window_size (rows, cols)
      int rows, cols;
 {
@@ -1087,7 +1088,7 @@ set_window_size (rows, cols)
     error (1, errno, "standard input");
 }
 
-void
+static void
 display_window_size (fancy)
      int fancy;
 {
@@ -1101,7 +1102,7 @@ display_window_size (fancy)
 }
 #endif
 
-int
+static int
 screen_columns ()
 {
 #ifdef TIOCGWINSZ
@@ -1117,7 +1118,7 @@ screen_columns ()
   return 80;
 }
 
-tcflag_t *
+static tcflag_t *
 mode_type_flag (type, mode)
      enum mode_type type;
      struct termios *mode;
@@ -1144,7 +1145,7 @@ mode_type_flag (type, mode)
     }
 }
 
-void
+static void
 display_settings (output_type, mode)
      enum output_type output_type;
      struct termios *mode;
@@ -1165,7 +1166,7 @@ display_settings (output_type, mode)
     }
 }
 
-void
+static void
 display_changed (mode)
      struct termios *mode;
 {
@@ -1237,7 +1238,7 @@ display_changed (mode)
   current_col = 0;
 }
 
-void
+static void
 display_all (mode)
      struct termios *mode;
 {
@@ -1286,7 +1287,7 @@ display_all (mode)
   current_col = 0;
 }
 
-void
+static void
 display_speed (mode, fancy)
      struct termios *mode;
      int fancy;
@@ -1302,7 +1303,7 @@ display_speed (mode, fancy)
     current_col = 0;
 }
 
-void
+static void
 display_recoverable (mode)
      struct termios *mode;
 {
@@ -1316,7 +1317,7 @@ display_recoverable (mode)
   putchar ('\n');
 }
 
-int
+static int
 recover_mode (arg, mode)
      char *arg;
      struct termios *mode;
@@ -1382,7 +1383,7 @@ struct speed_map speeds[] =
   {NULL, 0, 0}
 };
 
-speed_t
+static speed_t
 string_to_baud (arg)
      char *arg;
 {
@@ -1394,7 +1395,7 @@ string_to_baud (arg)
   return (speed_t) -1;
 }
 
-unsigned long
+static unsigned long
 baud_to_value (speed)
      speed_t speed;
 {
@@ -1406,7 +1407,7 @@ baud_to_value (speed)
   return 0;
 }
 
-void
+static void
 sane_mode (mode)
      struct termios *mode;
 {
@@ -1440,7 +1441,7 @@ sane_mode (mode)
 /* Return a string that is the printable representation of character CH.  */
 /* Adapted from `cat' by Torbjorn Granlund.  */
 
-char *
+static char *
 visible (ch)
      unsigned char ch;
 {
@@ -1493,7 +1494,7 @@ visible (ch)
    but allowing octal and hex numbers as in C.  */
 /* From `od' by Richard Stallman.  */
 
-long
+static long
 integer_arg (s)
      char *s;
 {

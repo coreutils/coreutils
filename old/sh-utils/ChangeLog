@@ -1,3 +1,27 @@
+Sat Nov 27 15:11:21 1993  Jim Meyering  (meyering@comco.com)
+
+	* nice.c (main): If an adjustment is specified, but no command is
+	given, give a diagnostic in addition to the usage message.
+	(isinteger): Accept a leading `+'.
+
+Fri Nov 26 18:49:42 1993  Jim Meyering  (meyering@comco.com)
+
+	* stty.c [GWINSZ_BROKEN]: Define TIOCGWINSZ to TCGETS for Solaris-2.2.
+	On that system, ioctl (0, TIOCGWINSZ, &win) always fails, but using
+	TCGETS works.  Reported by Francois Pinard.
+
+	* configure.in [GWINSZ_BROKEN]: New test to detect Solaris' inability
+	to get window size from ioctl using TIOCGWINSZ.
+	* acconfig.h [GWINSZ_BROKEN]: Add an #undef.
+
+Mon Nov 22 23:40:21 1993  Jim Meyering  (meyering@comco.com)
+
+	* who.c [defined (UTMPX_FILE)]: (undef and) define UTMP_FILE to
+	this value even if UTMP_FILE is already defined.  Because some
+	systems define both symbols.  From Arne H. Juul.
+	* [MESG_BIT]: Rename to S_IWGRP (from sys/stat.h>) and define only
+	if not already defined.
+
 Fri Nov 19 23:08:03 1993  Jim Meyering  (meyering@comco.com)
 
 	* who.c (print_entry): Produce reasonably formatted output even when

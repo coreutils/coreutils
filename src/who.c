@@ -67,7 +67,8 @@
 #define UTMP_FILE _PATH_UTMP
 #endif
 
-#if !defined (UTMP_FILE) && defined (UTMPX_FILE)	/* Solaris, SysVr4 */
+#if defined (UTMPX_FILE)	/* Solaris, SysVr4 */
+#undef  UTMP_FILE
 #define UTMP_FILE UTMPX_FILE
 #endif
 
@@ -79,8 +80,9 @@
 #define MAXHOSTNAMELEN 64
 #endif
 
-#define MESG_BIT 020		/* Group write bit. */
-
+#ifndef S_IWGRP
+#define S_IWGRP 020
+#endif
 
 char *xmalloc ();
 void error ();
@@ -288,7 +290,7 @@ print_entry (this)
   line[sizeof (this->ut_line)] = 0;
   if (stat (line, &stats) == 0)
     {
-      mesg = (stats.st_mode & MESG_BIT) ? '+' : '-';
+      mesg = (stats.st_mode & S_IWGRP) ? '+' : '-';
       last_change = stats.st_atime;
     }
   else
