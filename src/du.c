@@ -1,5 +1,5 @@
 /* du -- summarize disk usage
-   Copyright (C) 1988-1991, 1995-2004 Free Software Foundation, Inc.
+   Copyright (C) 1988-1991, 1995-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -336,7 +336,7 @@ process_file (FTS *fts, FTSENT *ent)
   bool skip;
 
   /* If necessary, set FTS_SKIP before returning.  */
-  skip = excluded_filename (exclude, ent->fts_name);
+  skip = excluded_filename (exclude, ent->fts_path);
   if (skip)
     fts_set (fts, ent, FTS_SKIP);
 
