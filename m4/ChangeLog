@@ -1,7 +1,7 @@
 2000-07-04  Jim Meyering  <meyering@lucent.com>
 
 	* fsusage.m4 (jm_FILE_SYSTEM_USAGE): Use plain old `echo' instead
-	of deprecated AC_CHECKING.
+	of the deprecated AC_CHECKING.
 
 2000-07-03  Jim Meyering  <meyering@lucent.com>
 
