@@ -650,11 +650,10 @@ apply_translations (void)
 #define MX(a) (bit_count (conversions_mask & (a)))
   if ((MX (C_ASCII | C_EBCDIC | C_IBM) > 1)
       || (MX (C_BLOCK | C_UNBLOCK) > 1)
-      || (MX (C_LCASE | C_UCASE) > 1)
-      || (MX (C_UNBLOCK | C_SYNC) > 1))
+      || (MX (C_LCASE | C_UCASE) > 1))
     {
       error (EXIT_FAILURE, 0, _("\
-only one conv in {ascii,ebcdic,ibm}, {lcase,ucase}, {block,unblock}, {unblock,sync}"));
+	only one conv in {ascii,ebcdic,ibm}, {lcase,ucase}, {block,unblock}"));
     }
 #undef MX
 
