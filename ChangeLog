@@ -1,11 +1,17 @@
+2003-06-20  Jim Meyering  <jim@meyering.net>
+
+	* Version 5.0.1.
+
+	* src/copy.c (copy_internal) [HAVE_STRUCT_STAT_ST_AUTHOR]:
+	Use `error_t' (rather than int) as type for local `err'.
+	From Alfred M. Szmidt.
+
 2003-06-19  Marcus Brinkmann  <marcus@gnu.org>
 
 	* src/copy.c (copy_internal) [HAVE_STRUCT_STAT_ST_AUTHOR]:
 	Fix author preservation code.
 
 2003-06-19  Jim Meyering  <jim@meyering.net>
-
-	* Version 5.0.1.
 
 	* src/ln.c (ENABLE_HARD_LINK_TO_SYMLINK_WARNING): Define to 0.
 	(do_link): Don't warn about hard link to symlink.
