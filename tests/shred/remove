@@ -23,7 +23,7 @@ if test $framework_failure = 1; then
   exit 1
 fi
 
-echo foo >> $tmp/file >/dev/null 2>&1 && {
+(echo foo >> $tmp/file) >/dev/null 2>&1 && {
   echo '********************************************'
   echo 'NOTICE: This test case cannot be run as root.'
   echo '********************************************'
