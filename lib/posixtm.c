@@ -25,15 +25,9 @@
 #include <stdbool.h>
 
 #include <stdio.h>
-#if HAVE_STDLIB_H
-# include <stdlib.h>
-#endif
+#include <stdlib.h>
 #include <sys/types.h>
-#if HAVE_STRING_H
-# include <string.h>
-#else
-# include <strings.h>
-#endif
+#include <string.h>
 
 #ifdef TM_IN_SYS_TIME
 # include <sys/time.h>
@@ -294,7 +288,7 @@ END-DATA
 # define MAX_BUFF_LEN 1024
 
 int
-main ()
+main (void)
 {
   char buff[MAX_BUFF_LEN + 1];
 
