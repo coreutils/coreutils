@@ -493,7 +493,7 @@ static CHAR_T const month_name[][10] =
 # define ns 0
 #endif
 
-#if ! HAVE_RUN_TZSET_TEST
+#if ! defined _LIBC && ! HAVE_RUN_TZSET_TEST
 /* Solaris 2.5.x and 2.6 tzset sometimes modify the storage returned
    by localtime.  On such systems, we must use the tzset and localtime
    wrappers to work around the bug.  */
