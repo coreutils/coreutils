@@ -118,9 +118,7 @@ char *alloca ();
 
 #ifndef emacs
 
-#ifdef SYNTAX_TABLE
-extern char *re_syntax_table;
-#else /* not SYNTAX_TABLE */
+#ifndef SYNTAX
 
 RX_DECL char re_syntax_table[CHAR_SET_SIZE];
 
@@ -153,7 +151,7 @@ init_syntax_once ()
 
    done = 1;
 }
-#endif /* not SYNTAX_TABLE */
+#endif /* not SYNTAX */
 #endif /* not emacs */
 
 /* Compile with `-DRX_DEBUG' and use the following flags.
@@ -4969,7 +4967,7 @@ rx_compile (pattern, size, syntax, rxb)
    */
   rxb->re_nsub = 0;
 
-#if !defined (emacs) && !defined (SYNTAX_TABLE)
+#if !defined (emacs) && !defined (SYNTAX)
   /* Initialize the syntax table.  */
    init_syntax_once ();
 #endif
@@ -6437,9 +6435,9 @@ RE_SEARCH_2_FN (rxb,
 {
   int answer;
   struct re_search_2_closure closure;
-  closure.string1 = string1;
+  closure.string1 = (__const__ unsigned char *) string1;
   closure.size1 = size1;
-  closure.string2 = string2;
+  closure.string2 = (__const__ unsigned char *) string2;
   closure.size2 = size2;
   answer = rx_search (rxb, startpos, range, stop, size1 + size2,
 		      re_search_2_get_burst,
