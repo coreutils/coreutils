@@ -246,9 +246,7 @@ typedef enum {false = 0, true = 1} bool;
 # define ST_BLKSIZE(statbuf) DEV_BSIZE
 # if defined _POSIX_SOURCE || !defined BSIZE /* fileblocks.c uses BSIZE.  */
 #  define ST_NBLOCKS(statbuf) \
-  (S_ISREG ((statbuf).st_mode) \
-   || S_ISDIR ((statbuf).st_mode) \
-   ? (statbuf).st_size / ST_NBLOCKSIZE + ((statbuf).st_size % ST_NBLOCKSIZE != 0) : 0)
+  ((statbuf).st_size / ST_NBLOCKSIZE + ((statbuf).st_size % ST_NBLOCKSIZE != 0))
 # else /* !_POSIX_SOURCE && BSIZE */
 #  define ST_NBLOCKS(statbuf) \
   (S_ISREG ((statbuf).st_mode) \
@@ -279,10 +277,7 @@ typedef enum {false = 0, true = 1} bool;
 #endif /* HAVE_STRUCT_STAT_ST_BLOCKS */
 
 #ifndef ST_NBLOCKS
-# define ST_NBLOCKS(statbuf) \
-  (S_ISREG ((statbuf).st_mode) \
-   || S_ISDIR ((statbuf).st_mode) \
-   ? (statbuf).st_blocks : 0)
+# define ST_NBLOCKS(statbuf) ((statbuf).st_blocks)
 #endif
 
 #ifndef ST_NBLOCKSIZE
