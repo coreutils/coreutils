@@ -110,6 +110,7 @@
 
 char *xmalloc ();
 void error ();
+int safe_read ();
 
 static RETSIGTYPE interrupt_handler ();
 static int bit_count ();
@@ -446,7 +447,11 @@ skip (fdesc, file, records, blocksize, buf)
     {
       while (records-- > 0)
 	{
-	  if (read (fdesc, buf, blocksize) < 0)
+	  if (read (fdesc, buf, blocksize) < 0
+#ifdef EINTR
+	      && errno != EINTR
+#endif
+	      )
 	    {
 	      error (0, errno, "%s", file);
 	      quit (1);
@@ -563,7 +568,7 @@ copy ()
       if ((conversions_mask & C_SYNC) && (conversions_mask & C_NOERROR))
 	bzero (ibuf, input_blocksize);
 
-      nread = read (input_fd, ibuf, input_blocksize);
+      nread = safe_read (input_fd, ibuf, input_blocksize);
 
       if (nread == 0)
 	break;			/* EOF.  */

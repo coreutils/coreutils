@@ -59,6 +59,8 @@ int argmatch ();
 time_t get_date ();
 time_t posixtime ();
 void error ();
+int safe_read ();
+int full_write ();
 void invalid_arg ();
 
 static int touch ();
@@ -365,9 +367,9 @@ utime_now (file, filesize)
 
   fd = open (file, O_RDWR, 0666);
   if (fd < 0
-      || read (fd, &c, sizeof (char)) < 0
+      || safe_read (fd, &c, sizeof (char)) < 0
       || lseek (fd, (off_t) 0, SEEK_SET) < 0
-      || write (fd, &c, sizeof (char)) < 0
+      || full_write (fd, &c, sizeof (char)) < 0
       || ftruncate (fd, filesize) < 0
       || close (fd) < 0)
     status = -1;

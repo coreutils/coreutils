@@ -105,6 +105,8 @@ char *basename ();
 char *stpcpy ();
 char *xmalloc ();
 void error ();
+int safe_read ();
+int full_write ();
 int make_path ();
 int isdir ();
 
@@ -374,8 +376,8 @@ copy_file (from, to, to_created)
       return 1;
     }
 
-  while ((bytes = read (fromfd, buffer, READ_SIZE)) > 0)
-    if (write (tofd, buffer, bytes) != bytes)
+  while ((bytes = safe_read (fromfd, buffer, READ_SIZE)) > 0)
+    if (full_write (tofd, buffer, bytes) < 0)
       {
 	error (0, errno, "%s", to);
 	goto copy_error;

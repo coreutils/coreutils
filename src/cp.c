@@ -56,6 +56,7 @@ char *dirname ();
 char *xstrdup ();
 enum backup_type get_version ();
 int eaccess_stat ();
+int full_write ();
 
 static int do_copy ();
 static int copy ();
@@ -1129,7 +1130,6 @@ copy_reg (src_path, dst_path)
   int dest_desc;
   int source_desc;
   int n_read;
-  int n_written;
   struct stat sb;
   char *cp;
   int *ip;
@@ -1197,6 +1197,10 @@ copy_reg (src_path, dst_path)
       n_read = read (source_desc, buf, buf_size);
       if (n_read < 0)
 	{
+#ifdef EINTR
+	  if (errno == EINTR)
+	    continue;
+#endif
 	  error (0, errno, "%s", src_path);
 	  return_val = -1;
 	  goto ret;
@@ -1243,8 +1247,7 @@ copy_reg (src_path, dst_path)
 	}
       if (ip == 0)
 	{
-	  n_written = write (dest_desc, buf, n_read);
-	  if (n_written < n_read)
+	  if (full_write (dest_desc, buf, n_read) < 0)
 	    {
 	      error (0, errno, "%s", dst_path);
 	      return_val = -1;
@@ -1262,12 +1265,12 @@ copy_reg (src_path, dst_path)
     {
 #ifdef HAVE_FTRUNCATE
       /* Write a null character and truncate it again.  */
-      if (write (dest_desc, "", 1) != 1
+      if (full_write (dest_desc, "", 1) < 0
 	  || ftruncate (dest_desc, n_read_total) < 0)
 #else
       /* Seek backwards one character and write a null.  */
       if (lseek (dest_desc, (off_t) -1, SEEK_CUR) < 0L
-	  || write (dest_desc, "", 1) != 1)
+	  || full_write (dest_desc, "", 1) < 0)
 #endif
 	{
 	  error (0, errno, "%s", dst_path);

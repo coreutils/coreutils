@@ -68,6 +68,8 @@ enum backup_type get_version ();
 int isdir ();
 int yesno ();
 void error ();
+int safe_read ();
+int full_write ();
 void strip_trailing_slashes ();
 int eaccess_stat ();
 char *stpcpy ();
@@ -393,25 +395,16 @@ copy_reg (source, dest)
       return 1;
     }
 
-  while ((len = read (ifd, buf, sizeof (buf))) > 0)
+  while ((len = safe_read (ifd, buf, sizeof (buf))) > 0)
     {
-      int wrote = 0;
-      char *bp = buf;
-
-      do
+      if (full_write (ofd, buf, len) < 0)
 	{
-	  wrote = write (ofd, bp, len);
-	  if (wrote < 0)
-	    {
-	      error (0, errno, "%s", dest);
-	      close (ifd);
-	      close (ofd);
-	      unlink (dest);
-	      return 1;
-	    }
-	  bp += wrote;
-	  len -= wrote;
-	} while (len > 0);
+	  error (0, errno, "%s", dest);
+	  close (ifd);
+	  close (ofd);
+	  unlink (dest);
+	  return 1;
+	}
     }
   if (len < 0)
     {
