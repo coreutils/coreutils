@@ -43,7 +43,7 @@
 
 int putenv ();
 
-static int show_date (const char *format, struct timespec when);
+static bool show_date (const char *format, struct timespec when);
 
 enum Time_spec
 {
@@ -76,8 +76,8 @@ char *program_name;
 /* If nonzero, display an ISO 8601 format date/time string */
 static int iso_8601_format = 0;
 
-/* If non-zero, display time in RFC-(2)822 format for mail or news. */
-static int rfc_format = 0;
+/* If true, display time in RFC-(2)822 format for mail or news. */
+static bool rfc_format = false;
 
 #define COMMON_SHORT_OPTIONS "Rd:f:r:s:u"
 
@@ -223,12 +223,12 @@ the following modifiers between `%' and a numeric directive.\n\
 /* Parse each line in INPUT_FILENAME as with --date and display each
    resulting time and date.  If the file cannot be opened, tell why
    then exit.  Issue a diagnostic for any lines that cannot be parsed.
-   If any line cannot be parsed, return nonzero;  otherwise return zero.  */
+   Return true if successful.  */
 
-static int
+static bool
 batch_convert (const char *input_filename, const char *format)
 {
-  int status;
+  bool ok;
   FILE *in_stream;
   char *line;
   size_t buflen;
@@ -250,7 +250,7 @@ batch_convert (const char *input_filename, const char *format)
 
   line = NULL;
   buflen = 0;
-  status = 0;
+  ok = true;
   while (1)
     {
       ssize_t line_length = getline (&line, &buflen, in_stream);
@@ -265,11 +265,11 @@ batch_convert (const char *input_filename, const char *format)
 	  if (line[line_length - 1] == '\n')
 	    line[line_length - 1] = '\0';
 	  error (0, 0, _("invalid date `%s'"), line);
-	  status = 1;
+	  ok = false;
 	}
       else
 	{
-	  status |= show_date (format, when);
+	  ok &= show_date (format, when);
 	}
     }
 
@@ -279,7 +279,7 @@ batch_convert (const char *input_filename, const char *format)
   if (line != NULL)
     free (line);
 
-  return status;
+  return ok;
 }
 
 int
@@ -289,13 +289,13 @@ main (int argc, char **argv)
   const char *datestr = NULL;
   const char *set_datestr = NULL;
   struct timespec when;
-  int set_date = 0;
+  bool set_date = false;
   char *format;
   char *batch_file = NULL;
   char *reference = NULL;
   struct stat refstats;
   int n_args;
-  int status;
+  bool ok;
   int option_specified_date;
   char const *short_options = (posix2_version () < 200112
 			       ? COMMON_SHORT_OPTIONS "I::"
@@ -331,11 +331,11 @@ main (int argc, char **argv)
 	reference = optarg;
 	break;
       case 'R':
-	rfc_format = 1;
+	rfc_format = true;
 	break;
       case 's':
 	set_datestr = optarg;
-	set_date = 1;
+	set_date = true;
 	break;
       case 'u':
 	/* POSIX says that `date -u' is equivalent to setting the TZ
@@ -401,14 +401,11 @@ argument must be a format string beginning with `+'."),
     datestr = set_datestr;
 
   if (batch_file != NULL)
-    {
-      status = batch_convert (batch_file,
-			      (n_args == 1 ? argv[optind] + 1 : NULL));
-    }
+    ok = batch_convert (batch_file, (n_args == 1 ? argv[optind] + 1 : NULL));
   else
     {
       bool valid_date = true;
-      status = 0;
+      ok = true;
 
       if (!option_specified_date && !set_date)
 	{
@@ -416,7 +413,7 @@ argument must be a format string beginning with `+'."),
 	    {
 	      /* Prepare to set system clock to the specified date/time
 		 given in the POSIX-format.  */
-	      set_date = 1;
+	      set_date = true;
 	      datestr = argv[optind];
 	      valid_date = posixtime (&when.tv_sec,
 				      datestr,
@@ -462,22 +459,22 @@ argument must be a format string beginning with `+'."),
 	  if (settime (&when) != 0)
 	    {
 	      error (0, errno, _("cannot set date"));
-	      status = 1;
+	      ok = false;
 	    }
 	}
 
-      status |= show_date (format, when);
+      ok &= show_date (format, when);
     }
 
-  exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
+  exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
 /* Display the date and/or time in WHEN according to the format specified
    in FORMAT, followed by a newline.  If FORMAT is NULL, use the
    standard output format (ctime style but with a timezone inserted).
-   Return zero if successful.  */
+   Return true if successful.  */
 
-static int
+static bool
 show_date (const char *format, struct timespec when)
 {
   struct tm *tm;
@@ -515,7 +512,7 @@ show_date (const char *format, struct timespec when)
   else if (*format == '\0')
     {
       printf ("\n");
-      return 0;
+      return true;
     }
 
   tm = localtime (&when.tv_sec);
@@ -527,12 +524,12 @@ show_date (const char *format, struct timespec when)
 	      ? imaxtostr (when.tv_sec, buf)
 	      : umaxtostr (when.tv_sec, buf)));
       puts (buf);
-      return 1;
+      return false;
     }
 
   while (1)
     {
-      int done;
+      bool done;
       out = x2nrealloc (out, &out_length, sizeof *out);
 
       /* Mark the first byte of the buffer so we can detect the case
@@ -556,5 +553,5 @@ show_date (const char *format, struct timespec when)
 
   printf ("%s\n", out);
   free (out);
-  return 0;
+  return true;
 }
