@@ -41,7 +41,6 @@ tac -r -s '.\|
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
-#include "closeout.h"
 
 #include <regex.h>
 

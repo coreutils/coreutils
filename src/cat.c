@@ -31,7 +31,6 @@
 # include <sys/ioctl.h>
 #endif
 #include "system.h"
-#include "closeout.h"
 #include "error.h"
 #include "full-write.h"
 #include "safe-read.h"

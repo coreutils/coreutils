@@ -28,7 +28,6 @@
 #include <sys/types.h>
 
 #include "system.h"
-#include "closeout.h"
 #include "dirname.h"
 #include "error.h"
 #include "full-read.h"

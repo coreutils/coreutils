@@ -32,7 +32,6 @@
 #include <signal.h>
 
 #include "system.h"
-#include "closeout.h"
 #include "argmatch.h"
 #include "error.h"
 #include "inttostr.h"

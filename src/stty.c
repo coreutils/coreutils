@@ -59,7 +59,6 @@
 #include "long-options.h"
 #include "error.h"
 #include "xstrtol.h"
-#include "closeout.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "stty"

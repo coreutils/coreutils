@@ -46,7 +46,6 @@
 #include "system.h"
 #include "error.h"
 #include "long-options.h"
-#include "closeout.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "pathchk"

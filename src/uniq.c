@@ -24,7 +24,6 @@
 #include <sys/types.h>
 
 #include "system.h"
-#include "closeout.h"
 #include "argmatch.h"
 #include "linebuffer.h"
 #include "error.h"

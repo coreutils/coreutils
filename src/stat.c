@@ -44,7 +44,6 @@
 
 #include "system.h"
 
-#include "closeout.h"
 #include "error.h"
 #include "filemode.h"
 #include "file-type.h"

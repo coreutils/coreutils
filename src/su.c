@@ -82,7 +82,6 @@
 #define getusershell _getusershell_sys_proto_
 
 #include "system.h"
-#include "closeout.h"
 #include "dirname.h"
 
 #undef getusershell

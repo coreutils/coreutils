@@ -33,7 +33,6 @@
 #include "long-options.h"
 #include "dirname.h"
 #include "error.h"
-#include "closeout.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "basename"

@@ -36,7 +36,6 @@
 #include <regex.h>
 #include "long-options.h"
 #include "error.h"
-#include "closeout.h"
 #include "exitfail.h"
 #include "inttostr.h"
 #include "quotearg.h"

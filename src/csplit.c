@@ -26,7 +26,6 @@
 #include <signal.h>
 
 #include "system.h"
-#include "closeout.h"
 
 #include <regex.h>
 

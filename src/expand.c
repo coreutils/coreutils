@@ -39,7 +39,6 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
-#include "closeout.h"
 #include "error.h"
 #include "posixver.h"
 #include "quote.h"

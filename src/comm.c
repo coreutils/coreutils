@@ -23,7 +23,6 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
-#include "closeout.h"
 #include "linebuffer.h"
 #include "error.h"
 #include "hard-locale.h"

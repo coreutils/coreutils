@@ -25,7 +25,6 @@
 #include <sys/types.h>
 #include <getopt.h>
 #include "system.h"
-#include "closeout.h"
 #include "error.h"
 #include "human.h"
 #include "safe-read.h"

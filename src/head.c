@@ -32,7 +32,6 @@
 
 #include "system.h"
 
-#include "closeout.h"
 #include "error.h"
 #include "full-write.h"
 #include "full-read.h"

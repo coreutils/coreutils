@@ -34,7 +34,6 @@
 #endif
 
 #include "system.h"
-#include "closeout.h"
 #include "error.h"
 #include "sig2str.h"
 

@@ -24,7 +24,6 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
-#include "closeout.h"
 #include "argmatch.h"
 #include "bumpalloc.h"
 #include "diacrit.h"

@@ -20,7 +20,6 @@
 #include <sys/types.h>
 #include "system.h"
 #include "version-etc.h"
-#include "closeout.h"
 
 #define PROGRAM_NAME "true"
 #define AUTHORS "Jim Meyering"

@@ -26,7 +26,6 @@
 #define NDEBUG 1
 
 #include "system.h"
-#include "closeout.h"
 #include "error.h"
 #include "inttostr.h"
 #include "long-options.h"

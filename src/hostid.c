@@ -22,7 +22,6 @@
 #include <sys/types.h>
 
 #include "system.h"
-#include "closeout.h"
 #include "long-options.h"
 #include "error.h"
 

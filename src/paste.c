@@ -41,7 +41,6 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
-#include "closeout.h"
 #include "error.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */

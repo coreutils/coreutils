@@ -963,7 +963,6 @@ posixtest (void)
 
 #if defined (TEST_STANDALONE)
 # include "long-options.h"
-# include "closeout.h"
 
 void
 usage (int status)

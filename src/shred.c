@@ -104,7 +104,6 @@
 
 #include "system.h"
 #include "xstrtol.h"
-#include "closeout.h"
 #include "error.h"
 #include "human.h"
 #include "inttostr.h"

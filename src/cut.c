@@ -30,7 +30,6 @@
 #include <sys/types.h>
 #include "system.h"
 
-#include "closeout.h"
 #include "error.h"
 #include "getdelim2.h"
 #include "hash.h"

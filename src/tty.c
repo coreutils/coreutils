@@ -28,7 +28,6 @@
 #include <sys/types.h>
 
 #include "system.h"
-#include "closeout.h"
 #include "exitfail.h"
 #include "error.h"
 

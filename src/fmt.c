@@ -27,7 +27,6 @@
 #define word unused_word_type
 
 #include "system.h"
-#include "closeout.h"
 #include "error.h"
 #include "quote.h"
 #include "xstrtol.h"

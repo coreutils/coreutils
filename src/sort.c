@@ -29,7 +29,6 @@
 #include <stdio.h>
 #include <assert.h>
 #include "system.h"
-#include "closeout.h"
 #include "error.h"
 #include "exitfail.h"
 #include "hard-locale.h"

@@ -25,7 +25,6 @@
 #include <getopt.h>
 
 #include "system.h"
-#include "closeout.h"
 #include "error.h"
 #include "safe-read.h"
 #include "xstrtol.h"

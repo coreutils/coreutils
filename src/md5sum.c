@@ -29,7 +29,6 @@
 #include "sha.h"
 #include "checksum.h"
 #include "getline.h"
-#include "closeout.h"
 #include "error.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */

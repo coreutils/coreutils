@@ -33,7 +33,6 @@
 #include <getopt.h>
 
 #include "system.h"
-#include "closeout.h"
 #include "error.h"
 #include "exitfail.h"
 #include "long-options.h"

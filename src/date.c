@@ -27,7 +27,6 @@
 
 #include "system.h"
 #include "argmatch.h"
-#include "closeout.h"
 #include "error.h"
 #include "exitfail.h"
 #include "getdate.h"

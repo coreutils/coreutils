@@ -117,7 +117,6 @@ main (void)
 #else /* !CRCTAB */
 
 # include <getopt.h>
-# include "closeout.h"
 # include "long-options.h"
 # include "error.h"
 # include "inttostr.h"

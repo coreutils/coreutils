@@ -25,7 +25,6 @@
 #include <getopt.h>
 
 #include "system.h"
-#include "closeout.h"
 #include "error.h"
 #include "hard-locale.h"
 #include "linebuffer.h"

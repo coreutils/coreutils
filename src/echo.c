@@ -19,7 +19,6 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include "system.h"
-#include "closeout.h"
 #include "long-options.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
