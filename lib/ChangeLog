@@ -1,5 +1,7 @@
 2003-10-16  Jim Meyering  <jim@meyering.net>
 
+	* xmalloc.c: Include <string.h>, for declarations of memset and memcpy.
+
 	* exclude.c: Update from gnulib.
 	* xgethostname.c: Include xgethostname.h.
 	* xgethostname.h: New file, from gnulib.
