@@ -42,7 +42,7 @@ enum { N_CHARS = UCHAR_MAX + 1 };
 static inline unsigned char uchar (char ch) { return ch; }
 
 /* An unsigned integer type big enough to hold a repeat count or an
-   unsigned character.  POSIX require support for repeat counts as
+   unsigned character.  POSIX requires support for repeat counts as
    high as 2**31 - 1.  Since repeat counts might need to expand to
    match the length of an argument string, we need at least size_t to
    avoid arbitrary internal limits.  It doesn't cost much to use
