@@ -99,9 +99,10 @@ Remove (unlink) the FILE(s).\n\
 \n\
 To remove a file whose name starts with a `-', for example `-foo',\n\
 use one of these commands:\n\
-  rm -- -foo\n\
-  rm ./-foo\n\
-"));
+  %s -- -foo\n\
+  %s ./-foo\n\
+"),
+	      program_name, program_name);
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
       close_stdout ();
     }
