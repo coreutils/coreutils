@@ -392,7 +392,7 @@ make_path (const char *argpath,
 	  *(p->dirname_end) = '\0';
 	  if (chmod (dirpath, parent_mode))
 	    {
-	      error (0, errno, "cannot change permissions of %s",
+	      error (0, errno, _("cannot change permissions of %s"),
 		     quote (dirpath));
 	      retval = 1;
 	    }
