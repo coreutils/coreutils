@@ -1,6 +1,16 @@
-2002-03-17  Jim Meyering  <meyering@lucent.com>
+2002-03-25  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.12.
+
+2002-02-26  Paul Eggert  <eggert@twinsun.com>
+
+	* src/test.c (age_of): Return -1 and 0 rather than 0 and 1.
+	Might as well keep it simple, and like bash.
+	(binary_operator): Fix bug with -nt and -ot, when one of the
+	files did not exist.  We want to be compatible with the ksh93
+	documentation, and with Bash.
+
+2002-03-17  Jim Meyering  <meyering@lucent.com>
 
 	* src/seq.c (usage): Mention that --format=FORMAT must be
 	a *floating-point* format, also in description of that option.
