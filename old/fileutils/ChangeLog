@@ -1,4 +1,11 @@
+2001-06-09  Jim Meyering  <meyering@lucent.com>
+
+	* configure.in (ALL_LINGUAS): Add Turkish (tr).
+
 2001-05-25  Jim Meyering  <meyering@lucent.com>
+
+	* src/ls.c (print_long_format): Don't truncate user names
+	or group names that are longer than 8 characters.
 
 	Add definitions that let me factor the wget rule while still letting
 	me accommodate the fact that these files reside in several different
