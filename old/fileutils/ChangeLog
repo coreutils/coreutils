@@ -33,7 +33,7 @@
 
 	* tests/rm/hash: Factor out the expensive-test-checking code, ...
 	* tests/expensive: ... into this new file.
-	* tests/mv/diag: Disable this test by default; it's expensive.
+	* tests/cp/perm: Disable this test by default; it's expensive.
 	Mark this as an expensive test.
 	* tests/Makefile.am (EXTRA_DIST): Add expensive.
 
