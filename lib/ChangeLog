@@ -12,6 +12,7 @@
 	* memcasecmp.c: Don't include <sys/types.h>.
 
 	From gnulib.
+	* alloca_.h: New file.
 	* Makefile.am (EXTRA_DIST): Add alloca_.h.
 	(all-local $(lib_OBJECTS)): Depend on $(ALLOCA_H).
 	(alloca.h): New rule.
