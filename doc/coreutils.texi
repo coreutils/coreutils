@@ -5524,11 +5524,6 @@ were specified before the @option{-f}).
 Reverse whatever the sorting method is---e.g., list files in reverse
 alphabetical order, youngest first, smallest first, or whatever.
 
-@itemx --sort=directory
-@opindex --sort
-@opindex directories@r{, sorting files by}
-Show directories first, then other files.
-
 @item -S
 @itemx --sort=size
 @opindex -S
