@@ -1,3 +1,14 @@
+2004-08-19  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* getopt.c, getopt1.c: Sync from gnulib.
+	* getopt_.h: Renamed from getopt.h (this syncs from gnulib).
+	* Makefile.am (libfetish_a_SOURCES): Remove getopt.c, getopt.h,
+	getopt1.c, getopt_int.h.
+	(BUILT_SOURCES, EXTRA_DIST, all-local, $(lib_OBJECTS), getopt.h,
+	MOSTLYCLEANFILES): Add current gnulib snippet for getopt.
+	* .cppi-disable: Add getopt_.h, getopt_int.h.
+	* .cvsignore: Add getopt.h.
+
 2004-08-18  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* userspec.c: Don't use <alloca.h>, so that we don't use alloca on

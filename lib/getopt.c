@@ -3,7 +3,7 @@
    "Keep this file name-space clean" means, talk to drepper@gnu.org
    before changing it!
    Copyright (C) 1987,88,89,90,91,92,93,94,95,96,98,99,2000,2001,2002,2003,2004
-	Free Software Foundation, Inc.
+   	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    This program is free software; you can redistribute it and/or modify
@@ -31,25 +31,6 @@
 #endif
 
 #include <stdio.h>
-
-/* Comment out all this code if we are using the GNU C Library, and are not
-   actually compiling the library itself.  This code is part of the GNU C
-   Library, but also included in many other GNU distributions.  Compiling
-   and linking in this code is a waste when using the GNU C library
-   (especially if it is a shared library).  Rather than having every GNU
-   program understand `configure --with-gnu-libc' and omit the object files,
-   it is simpler to just do this in the source for each such file.  */
-
-#define GETOPT_INTERFACE_VERSION 2
-#if !defined _LIBC && defined __GLIBC__ && __GLIBC__ >= 2
-# include <gnu-versions.h>
-# if _GNU_GETOPT_INTERFACE_VERSION == GETOPT_INTERFACE_VERSION
-#  define ELIDE_CODE
-# endif
-#endif
-
-#ifndef ELIDE_CODE
-
 
 /* This needs to come after some library #include
    to get __GNU_LIBRARY__ defined.  */
@@ -1181,7 +1162,6 @@ getopt (int argc, char *const *argv, const char *optstring)
 			   0);
 }
 
-#endif	/* Not ELIDE_CODE.  */
 
 #ifdef TEST
 

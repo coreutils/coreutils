@@ -4,6 +4,7 @@ alloca.h
 charset.alias
 getdate.c
 getdate.tab.c
+getopt.h
 fnmatch.h
 fts.h
 lstat.c
