@@ -1,3 +1,7 @@
+2000-07-23  Paul Eggert  <eggert@twinsun.com>
+
+	* mbswidth.m4 (jm_PREREQ_MBSWIDTH): Check for wcwidth declaration.
+
 2000-07-23  Jim Meyering  <meyering@lucent.com>
 
 	* check-decl.m4 (jm_CHECK_DECLS): Check for declarations of these, too:
