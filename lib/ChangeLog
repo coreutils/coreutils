@@ -1,5 +1,12 @@
 2003-03-18  Jim Meyering  <jim@meyering.net>
 
+	* mountlist.c (read_filesystem_list) [MOUNTED_VMOUNT]: Detect any
+	error from mntctl.
+	Use mntctl's return value to drive the entry-processing loop, since
+	we can't rely on the value of the vmt_length member in the last
+	entry.  On some systems doing so could result in an infinite loop.
+	Based in part on a patch from Mike Jetzer.
+
 	* exclude.c (excluded_filename): Define and use typedef to
 	avoid type mismatch in conditional expression.
 

@@ -4824,7 +4824,7 @@ AC_DEFUN([jm_FUNC_UNLINK_BUSY_TEXT],
   fi
 ])
 
-#serial 11
+#serial 12
 
 dnl From Jim Meyering.
 dnl
@@ -4890,6 +4890,23 @@ yes
     AC_DEFINE(MOUNTED_LISTMNTENT, 1,
       [Define if there is a function named listmntent that can be used to
    list all mounted filesystems. (UNICOS)])
+  fi
+fi
+
+if test -z "$ac_list_mounted_fs"; then
+  # AIX.
+  AC_MSG_CHECKING([for mntctl function and struct vmount])
+  AC_CACHE_VAL(fu_cv_sys_mounted_vmount,
+  [AC_TRY_CPP([#include <fshelp.h>],
+    fu_cv_sys_mounted_vmount=yes,
+    fu_cv_sys_mounted_vmount=no)])
+  AC_MSG_RESULT($fu_cv_sys_mounted_vmount)
+  if test $fu_cv_sys_mounted_vmount = yes; then
+    ac_list_mounted_fs=found
+    AC_DEFINE(MOUNTED_VMOUNT, 1,
+	[Define if there is a function named mntctl that can be used to read
+   the list of mounted filesystems, and there is a system header file
+   that declares `struct vmount.'  (AIX)])
   fi
 fi
 
@@ -4976,23 +4993,6 @@ if test -z "$ac_list_mounted_fs"; then
     AC_DEFINE(MOUNTED_GETFSSTAT, 1,
 	      [Define if there is a function named getfsstat for reading the
    list of mounted filesystems.  (DEC Alpha running OSF/1)])
-  fi
-fi
-
-if test -z "$ac_list_mounted_fs"; then
-  # AIX.
-  AC_MSG_CHECKING([for mntctl function and struct vmount])
-  AC_CACHE_VAL(fu_cv_sys_mounted_vmount,
-  [AC_TRY_CPP([#include <fshelp.h>],
-    fu_cv_sys_mounted_vmount=yes,
-    fu_cv_sys_mounted_vmount=no)])
-  AC_MSG_RESULT($fu_cv_sys_mounted_vmount)
-  if test $fu_cv_sys_mounted_vmount = yes; then
-    ac_list_mounted_fs=found
-    AC_DEFINE(MOUNTED_VMOUNT, 1,
-	[Define if there is a function named mntctl that can be used to read
-   the list of mounted filesystems, and there is a system header file
-   that declares `struct vmount.'  (AIX)])
   fi
 fi
 
