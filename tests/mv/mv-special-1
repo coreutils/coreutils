@@ -2,7 +2,7 @@
 
 if test "$VERBOSE" = yes; then
   set -x
-  FIXME --version
+  mv --version
 fi
 
 pwd=`pwd`
