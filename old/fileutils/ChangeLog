@@ -1,3 +1,27 @@
+1999-01-24  Jim Meyering  <meyering@ascend.com>
+
+	* src/shred.c (fdatasync): Remove function.  instead, ...
+	(fdatasync) [! HAVE_FDATASYNC]: Define to fsync.
+	From Colin Plumb.
+
+1999-01-23  Jim Meyering  <meyering@ascend.com>
+
+	* src/Makefile.am (bin_PROGRAMS): Add shred.
+	* src/shred.c: New file.
+	Portability tweaks.
+	Internationalize.
+	(wipename): Print the `FILE: deleted' and `FILE: deleting' messages
+	only when in verbose mode.
+	(fdatasync) [! HAVE_FDATASYNC]: New function.
+
+	* man/Makefile.am (man_MANS): Add shred.1.
+	* man/Makefile.summ (shred-summary): Define.
+	* man/shred.x: New file.
+
+	* src/shred.c: New file.  From Colin Plumb.
+	Include config.h, getopt.h, system.h and error.h.
+	Use #else/#if, not #elif.
+
 1998-11-05  Paul Eggert  <eggert@twinsun.com>
 
 	* lib/mktime.c (__mktime_internal): Adopt the traditional (and
