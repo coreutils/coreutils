@@ -1,4 +1,4 @@
-#serial 6
+#serial 7
 
 dnl Initially derived from code in GNU grep.
 dnl Mostly written by Jim Meyering.
@@ -16,8 +16,8 @@ AC_DEFUN(jm_INCLUDED_REGEX,
     # However, if the system regex support is good enough that it passes the
     # the following run test, then default to *not* using the included regex.c.
     # If cross compiling, assume the test would fail and use the included
-    # regex.c.  The failing regular expression is from `Spencer ere test #75'
-    # in grep-2.3.
+    # regex.c.  The first failing regular expression is from `Spencer ere
+    # test #75' in grep-2.3.
     AC_CACHE_CHECK([for working re_compile_pattern],
 		   jm_cv_func_working_re_compile_pattern,
       AC_TRY_RUN(
@@ -33,7 +33,13 @@ AC_DEFUN(jm_INCLUDED_REGEX,
 	       three right ones below.  Otherwise autoconf-2.14 chokes.  */
 	    s = re_compile_pattern ("a[[:]:]]b\n", 9, &regex);
 	    /* This should fail with _Invalid character class name_ error.  */
-	    exit (s ? 0 : 1);
+	    if (!s)
+	      exit (1);
+
+	    /* This should succeed, but doesn't for e.g. glibc-2.1.3.  */
+	    s = re_compile_pattern ("{1", 2, &regex);
+
+	    exit (s ? 1 : 0);
 	  }
 	],
 	       jm_cv_func_working_re_compile_pattern=yes,
