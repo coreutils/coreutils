@@ -1,6 +1,11 @@
-2002-02-12  Jim Meyering  <meyering@lucent.com>
+2002-02-16  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.21.
+
+	* tests/misc/split-a: New test for change of 2002-02-05.
+	* tests/misc/Makefile.am (TESTS): Add split-a.
+
+2002-02-12  Jim Meyering  <meyering@lucent.com>
 
 	* src/split.c (DEFAULT_SUFFIX_LENGTH): Define constant.
 	(suffix_length): Use it here.
