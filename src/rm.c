@@ -22,9 +22,9 @@
 
    In the `usual' case, RM saves no state for directories it is processing.
    When a removal fails (either due to an error or to an interactive `no'
-   reply), the failure is noted (see description of `ht' in remove_cwd_entries)
-   so that when/if the containing directory is reopened, RM doesn't try to
-   remove the entry again.
+   reply), the failure is noted (see description of `ht' in remove.c's
+   remove_cwd_entries function) so that when/if the containing directory
+   is reopened, RM doesn't try to remove the entry again.
 
    RM may delete arbitrarily deep hierarchies -- even ones in which file
    names (from root to leaf) are longer than the system-imposed maximum.
@@ -32,7 +32,7 @@
    removing the entries in that directory.
 
    RM detects directory cycles by maintaining a table of the currently
-   active directories.  See the description of active_dir_map below.
+   active directories.  See the description of active_dir_map in remove.c.
 
    RM is careful to avoid forming full file names whenever possible.
    A full file name is formed only when it is about to be used -- e.g.
