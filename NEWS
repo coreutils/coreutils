@@ -43,8 +43,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Fewer arbitrary limitations
 
-  cut requires significantly less memory for very large field numbers
-  or byte offsets.
+  cut requires far less memory when very large field numbers or
+  byte offsets are specified.
 
 
 * Major changes in release 5.0.1:
