@@ -1,5 +1,5 @@
 /* join - join lines of two files on a common field
-   Copyright (C) 91, 1995-2001 Free Software Foundation, Inc.
+   Copyright (C) 91, 1995-2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -330,7 +330,7 @@ keycmp (struct line *line1, struct line *line2)
   /* Start of field to compare in each file.  */
   const unsigned char *beg1, *beg2;
 
-  int len1, len2;		/* Length of fields to compare.  */
+  size_t len1, len2;		/* Length of fields to compare.  */
   int diff;
 
   if (join_field_1 < line1->nfields)
@@ -380,7 +380,7 @@ keycmp (struct line *line1, struct line *line2)
 
   if (diff)
     return diff;
-  return len1 - len2;
+  return len1 < len2 ? -1 : len1 != len2;
 }
 
 /* Print field N of LINE if it exists and is nonempty, otherwise
