@@ -28,6 +28,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include "system.h"
+#include "closeout.h"
 #include "long-options.h"
 #include "error.h"
 #include "hard-locale.h"
@@ -1854,6 +1855,9 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  close_stdout_set_status (SORT_FAILURE);
+  atexit (close_stdout);
+
 #ifdef ENABLE_NLS
 
   hard_LC_COLLATE = hard_locale (LC_COLLATE);
@@ -2123,6 +2127,7 @@ but lacks following character offset"));
 			else
 			  outfile = argv[++i];
 		      }
+		    close_stdout_set_file_name (outfile);
 		    goto outer;
 		  case 's':
 		    stable = 1;
@@ -2221,6 +2226,7 @@ but lacks following character offset"));
       struct stat outstat;
       if (stat (outfile, &outstat) == 0)
 	{
+	  /* FIXME: warn about this */
 	  /* The following code prevents a race condition when
 	     people use the brain dead shell programming idiom:
 		  cat file | sort -o file
@@ -2317,8 +2323,6 @@ but lacks following character offset"));
 
   if (have_read_stdin && fclose (stdin) == EOF)
     error (SORT_FAILURE, errno, "%s", outfile);
-  if (ferror (stdout) || fclose (stdout) == EOF)
-    error (SORT_FAILURE, errno, _("%s: write error"), outfile);
 
   exit (EXIT_SUCCESS);
 }
