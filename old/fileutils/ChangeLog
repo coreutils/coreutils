@@ -1,3 +1,13 @@
+2000-04-08  Jim Meyering  <meyering@lucent.com>
+
+	* src/cp.c (usage): Document that while the --backup option takes an
+	optional argument, the -b option accepts none.
+	(main): Use `backup type' in call to xget_version, not the
+	now-deprecated `--version-control'.
+	* src/install.c: Likewise.
+	* src/ln.c: Likewise.
+	* src/mv.c: Likewise.
+
 2000-03-12  Jim Meyering  <meyering@lucent.com>
 
 	Merge from textutils.
