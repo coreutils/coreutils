@@ -1,0 +1,30 @@
+#! /bin/sh
+
+: ${MKDIR=mkdir}
+: ${RM=rm}
+: ${INSTALL=install}
+
+dir=dir
+file=file
+
+framework_failure=0
+
+$RM -rf $dir $file || framework_failure=1
+$MKDIR -p $dir || framework_failure=1
+echo foo > $file || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo 'failure in testing framework'
+  exit 1
+fi
+
+fail=0
+$INSTALL $file $dir || fail=1
+# Make sure the source file still exists.
+test -f $file || fail=1
+# Make sure the dest file has been created.
+test -f $dir/$file || fail=1
+
+$RM -rf $dir $file
+
+exit $fail
