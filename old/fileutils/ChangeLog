@@ -1,3 +1,54 @@
+1999-03-26  Jim Meyering  <meyering@ascend.com>
+
+	* src/dd.c (PROGRAM_NAME, AUTHORS): Define
+	(long_options): Remove unused struct.
+	(scanargs): Remove useless loop.
+	(main): Use PROGRAM_NAME and AUTHORS in call to parse_long_options.
+	* src/mvdir.c: Likewise.
+	* src/sync.c (PROGRAM_NAME, AUTHORS): Define and use.
+
+1999-03-25  Jim Meyering  <meyering@ascend.com>
+
+	* lib/Makefile.am (libfu_a_SOURCES): Add version-etc.c.
+	(noinst_HEADERS): Add version-etc.h.
+
+	* lib/long-options.c (parse_long_options): Remove version-, copyright-,
+	and author-printing code.  Do it via version_etc.
+
+	* lib/version-etc.c: New file.
+	* lib/version-etc.h: Prototype for same.
+
+	* src/sys2.h (GETOPT_HELP_CHAR): Define.
+	(GETOPT_VERSION_CHAR): Define.
+	(GETOPT_HELP_OPTION_DECL): Define.
+	(GETOPT_VERSION_OPTION_DECL): Define.
+	(case_GETOPT_HELP_CHAR): Define.
+	(case_GETOPT_VERSION_CHAR): Define.
+
+	* src/chgrp.c: No longer include long-options.h.
+	Include version-etc.h instead.
+	(PROGRAM_NAME, AUTHORS): Define.
+	[long_options]: Add entries for --help and --version.
+	Remove parse_long_options call.
+	(main) [getopt switch]: Add a case for each of --help and --version.
+	* src/chgrp.c: Likewise.
+	* src/chmod.c: Likewise.
+	* src/cp.c: Likewise.
+	* src/df.c: Likewise.
+	* src/dircolors.c: Likewise.
+	* src/du.c: Likewise.
+	* src/install.c: Likewise.
+	* src/ln.c: Likewise.
+	* src/ls.c: Likewise.
+	* src/mkdir.c: Likewise.
+	* src/mkfifo.c: Likewise.
+	* src/mknod.c: Likewise.
+	* src/mv.c: Likewise.
+	* src/rm.c: Likewise.
+	* src/rmdir.c: Likewise.
+	* src/shred.c: Likewise.
+	* src/touch.c: Likewise.
+
 1999-03-24  Jim Meyering  <meyering@ascend.com>
 
 	* man/help2man: Import version 1.010.
@@ -8,10 +59,10 @@
 
 1999-03-19  Jim Meyering  <meyering@ascend.com>
 
-	* src/automake-wrap: Rewrite the automake-generated clean-binPROGRAMS
-	rule so that it removes rm even with a losing PATH on a losing system
-	(PATH with `.' before /bin on a system where you can't unlink a running
-	executable).
+	* src/automake-wrap: Rewrite the automake-generated rule for
+	clean-binPROGRAMS so that it removes rm even with a losing PATH on a
+	losing system (PATH with `.' before /bin on a system where you can't
+	unlink a running executable).  Reported by William Bader.
 
 	* configure.in: Use jm_WINSIZE_IN_PTEM.
 	* src/ls.c [WINSIZE_IN_PTEM]: Include sys/stream.h and sys/ptem.h.
