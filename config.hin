@@ -676,6 +676,9 @@
 /* Define to 1 if you have the <pwd.h> header file. */
 #undef HAVE_PWD_H
 
+/* Define to 1 if you have the `raise' function. */
+#undef HAVE_RAISE
+
 /* Define to 1 if your system has a working `realloc' function, and to 0
    otherwise. */
 #undef HAVE_REALLOC
