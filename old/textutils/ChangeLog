@@ -1,3 +1,21 @@
+1998-03-23  Jim Meyering  <meyering@eng.ascend.com>
+
+	* acconfig.h: Remove HAVE_INTTYPES_H, now that m4/inttypes_h.m4
+	automatically handles it.
+
+1998-03-19  Jim Meyering  <meyering@eng.ascend.com>
+
+	* src/system.h (SCHAR_MIN): Define.
+	(SHRT_MIN): Define.
+	od.c needs these when compiling with NCR's R2.0c C compiler.
+	(TYPE_MAXIMUM): Cast result to `(t)' so this macro works with
+	`unsigned char'.
+	From Greg Wooledge.
+
+1998-03-15  Jim Meyering  <meyering@eng.ascend.com>
+
+	* src/tail.c (tail_file): Merge largely-duplicated blocks of code.
+
 1998-03-03  Paul Eggert  <eggert@twinsun.com>
 
 	* src/sort.c (xtmpfopen): Open temporary file exclusively, to
