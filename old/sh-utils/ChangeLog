@@ -1,5 +1,7 @@
 1999-05-02  Jim Meyering  <meyering@ascend.com>
 
+	* Version 1.16h.
+
 	* src/hostname.c (main): Give a better diagnostic when we fail to
 	set the hostname.
 
