@@ -3,6 +3,8 @@ Tue Oct 12 00:53:26 1993  Jim Meyering  (meyering@comco.com)
 	* stime.c [HAVE_CONFIG_H, CONFIG_BROKETS]: Include <config.h>
 	or "config.h".
 
+	* src/Makefile.in [clean]: Also delete '['.
+
 Sun Oct 10 14:05:23 1993  Jim Meyering  meyering@comco.com
 
 	* false.sh, groups.sh, nohup.sh, true.sh: Add --help and --version.

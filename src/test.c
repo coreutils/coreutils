@@ -276,7 +276,7 @@ advance (f)
  * beyond - call when we're beyond the end of the argument list (an
  *	error condition)
  */
-static int
+static void
 beyond ()
 {
   test_syntax_error ("argument expected\n", (char *)NULL);
@@ -674,6 +674,9 @@ binary_operator ()
       pos += 3;
       return (TRUE == value);
     }
+
+  /* Not reached.  */
+  abort ();
 }
 
 static int
