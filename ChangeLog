@@ -1,5 +1,12 @@
 2004-04-08  Jim Meyering  <jim@meyering.net>
 
+	* Version 5.3.0.
+
+	* src/dd.c (dd_copy): Mark two diagnostics for translations.
+	(set_fd_flags): Undo part of today's change: it's a little
+	cleaner -- and more efficient in the common case -- to go
+	ahead and OR in the -1 when fcntl fails.
+
 	* Makefile.maint (sc_dd_max_sym_length): New target.
 	(syntax-check-rules): Add it.
 
