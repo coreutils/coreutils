@@ -739,33 +739,26 @@ swab_buffer (char *buf, size_t *nread)
 /* Return nonzero iff the file referenced by FDESC is of a type for
    which lseek's return value is known to be invalid on some systems.
    Otherwise, return zero.
-   For example, return nonzero if FDESC references a character device
-   (on any system) because the lseek on many Linux systems incorrectly
-   returns an offset implying it succeeds for tape devices, even though
+   For example, return nonzero if FDESC references a Linux tape device
+   because that lseek returns an offset implying it succeeds, even though
    the function fails to perform the requested operation.  In that case,
-   lseek should return nonzero and set errno.  */
+   lseek should return a negative number and set errno.  The offending
+   behavior has been confirmed with an Exabyte SCSI tape drive accessed
+   via /dev/nst0 on both Linux-2.2.17 and Linux-2.4.16.  */
 
+#ifdef __linux__
 static int
 buggy_lseek_support (int fdesc)
 {
-  /* We have to resort to this because on some systems, lseek doesn't work
-     on some special files but doesn't return an error, either.
-     In particular, the Linux tape drivers are a problem.
-     For example, when I did the following using dd-4.0y or earlier on a
-     Linux-2.2.17 system with an Exabyte SCSI tape drive:
-
-       dev=/dev/nst0
-       reset='mt -f $dev rewind; mt -f $dev fsf 1'
-       eval $reset; dd if=$dev bs=32k of=out1
-       eval $reset; dd if=$dev bs=32k of=out2 skip=1
-
-     the resulting files, out1 and out2, would compare equal.  */
-
   struct stat stats;
 
   return (fstat (fdesc, &stats) == 0
-	  && (S_ISCHR (stats.st_mode)));
+	  && (S_ISCHR (stats.st_mode))
+	  && major (stats.st_rdev) == 9);
 }
+#else
+# define buggy_lseek_support(Fd) 0
+#endif
 
 /* Throw away RECORDS blocks of BLOCKSIZE bytes on file descriptor FDESC,
    which is open with read permission for FILE.  Store up to BLOCKSIZE
