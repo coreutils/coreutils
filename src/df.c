@@ -81,8 +81,11 @@ static int posix_format;
 
 /* If nonzero, invoke the `sync' system call before getting any usage data.
    Using this option can make df very slow, especially with many or very
-   busy disks.  */
-static int require_sync;
+   busy disks.  Default to non-zero because the sync call does make a
+   difference on some systems -- SunOs4.1.3, for one.  I have been assured
+   that it is *not* necessary on Linux, so there should be a way to
+   configure this.  FIXME.  */
+static int require_sync = 1;
 
 /* Nonzero if errors have occurred. */
 static int exit_status;
@@ -132,7 +135,8 @@ static struct option const long_options[] =
   {"kilobytes", no_argument, &kilobyte_blocks, 1},
   {"portability", no_argument, &posix_format, 1},
   {"print-type", no_argument, &print_type, 1},
-  {"sync", no_argument, 0, 's'},
+  {"sync", no_argument, 0, 129},
+  {"no-sync", no_argument, 0, 130},
   {"type", required_argument, 0, 't'},
   {"exclude-type", required_argument, 0, 'x'},
   {"help", no_argument, &show_help, 1},
@@ -181,8 +185,11 @@ main (argc, argv)
 	case 'P':
 	  posix_format = 1;
 	  break;
-	case 's':
+	case 129:
 	  require_sync = 1;
+	  break;
+	case 130:
+	  require_sync = 0;
 	  break;
 	case 't':
 	  add_fs_type (optarg);
@@ -515,7 +522,8 @@ usage (status)
   -a, --all                 include filesystems having 0 blocks\n\
   -i, --inodes              list inode information instead of block usage\n\
   -k, --kilobytes           use 1024 blocks, not 512 despite POSIXLY_CORRECT\n\
-  -s, --sync                invoke sync system call before getting usage info\n\
+      --sync                invoke sync before getting usage info (default)\n\
+      --no-sync             do not invoke sync before getting usage info\n\
   -t, --type=TYPE           limit the listing to TYPE filesystems type\n\
   -x, --exclude-type=TYPE   limit the listing to not TYPE filesystems type\n\
   -v                        (ignored)\n\
