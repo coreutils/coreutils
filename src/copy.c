@@ -32,8 +32,9 @@
 #include "savedir.h"
 #include "copy.h"
 #include "cp-hash.h"
-#include "path-concat.h"
 #include "dirname.h"
+#include "path-concat.h"
+#include "same.h"
 
 #define DO_CHOWN(Chown, File, New_uid, New_gid)				\
   (Chown ((File), (x->myeuid == 0 ? (New_uid) : x->myeuid), (New_gid))	\
@@ -568,7 +569,9 @@ copy_internal (const char *src_path, const char *dst_path,
 		}
 	      else
 		{
-		  if (SAME_INODE (src_sb, dst_sb))
+		  if (SAME_INODE (src_sb, dst_sb)
+		      && (src_sb.st_nlink == 1
+			  || same_name (src_path, dst_path)))
 		    {
 		      error (0, 0, _("`%s' and `%s' are the same file"),
 			     src_path, dst_path);
