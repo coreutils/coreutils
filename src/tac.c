@@ -1,5 +1,5 @@
 /* tac - concatenate and print files in reverse
-   Copyright (C) 1988-1991, 1995-2001 Free Software Foundation, Inc.
+   Copyright (C) 1988-1991, 1995-2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -453,14 +453,12 @@ save_stdin (FILE **g_tmp, char **g_tempfile)
       if (bytes_read < 0)
 	error (EXIT_FAILURE, errno, _("stdin: read error"));
 
-      /* Don't bother checking for failure inside the loop -- check after.  */
-      fwrite (G_buffer, 1, bytes_read, tmp);
+      if (fwrite (G_buffer, 1, bytes_read, tmp) != bytes_read)
+	break;
     }
 
   if (ferror (tmp) || fflush (tmp) == EOF)
     error (EXIT_FAILURE, errno, "%s", tempfile);
-
-  rewind (tmp);
 
   SET_BINARY (fileno (tmp));
   *g_tmp = tmp;
