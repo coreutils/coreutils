@@ -1,6 +1,13 @@
-2002-01-19  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.20.
+
+2002-01-20  Paul Eggert  <eggert@twinsun.com>
+
+	* src/csplit.c: Don't include "xalloc.h", as system.h already
+	does that via sys2.h.
+	* src/sort.c: Likewise.
+
+2002-01-19  Jim Meyering  <meyering@lucent.com>
 
 	* configure.ac: Remove code that set LIBOBJS in support of ansi2knr.
 	The latest version of autoconf objected to it, and besides, I don't
