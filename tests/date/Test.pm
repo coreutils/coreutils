@@ -15,6 +15,15 @@ sub test_vector
   my $d0 = '1997-01-19';
   my $d1 = "$d0 $t0 +0";
 
+  my $ts = '08:17:49'; # next second
+  my $tm = '08:18:48'; # next minute
+  my $th = '09:17:48'; # next hour
+
+  my $dd = '1997-01-20'; # next day
+  my $dw = '1997-01-26'; # next week
+  my $dm = '1997-02-19'; # next month
+  my $dy = '1998-01-19'; # next month
+
   my $fmt = "'+%Y-%m-%d %T'";
 
   my @tvec =
@@ -65,6 +74,14 @@ sub test_vector
      ['rel-2g', "-d '$d1 4 seconds ago' $fmt", {}, "$d0 08:17:44", 0],
 
      ['rel-3a', "-d '$d1 4 seconds ago' $fmt", {}, "$d0 08:17:44", 0],
+
+     ['next-s', "-d '$d1 next second' '+%Y-%m-%d %T'", {}, "$d0 $ts", 0],
+     ['next-m', "-d '$d1 next minute' '+%Y-%m-%d %T'", {}, "$d0 $tm", 0],
+     ['next-h', "-d '$d1 next hour'   '+%Y-%m-%d %T'", {}, "$d0 $th", 0],
+     ['next-d', "-d '$d1 next day'    '+%Y-%m-%d %T'", {}, "$dd $t0", 0],
+     ['next-w', "-d '$d1 next week'   '+%Y-%m-%d %T'", {}, "$dw $t0", 0],
+     ['next-mo', "-d '$d1 next month' '+%Y-%m-%d %T'", {}, "$dm $t0", 0],
+     ['next-y', "-d '$d1 next year'   '+%Y-%m-%d %T'", {}, "$dy $t0", 0],
 
      # FIXME: add a lot more...
      );
