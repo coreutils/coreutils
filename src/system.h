@@ -818,6 +818,8 @@ ptr_align (void *ptr, size_t alignment)
 #define VERIFY_EXPR(assertion) \
   (void)((struct {char a[(assertion) ? 1 : -1]; } *) 0)
 
+/* Use the compile-time type-max. assertion only if the compiler provides
+   the __typeof__ operator.  */
 #if HAVE_TYPEOF
 # define VERIFY_W_TYPEOF(assertion) VERIFY_EXPR (assertion)
 #else
@@ -826,9 +828,9 @@ ptr_align (void *ptr, size_t alignment)
 
 /* If 10*Accum+Digit_val is larger than Type_max, then don't update Accum
    and return nonzero.  Otherwise, set Accum to that new value and
-   return zero.  When compiling with gcc, perform a compile-time check
-   to verify that the specified Type_max constant is the same as the
-   constant derived from the type of Accum.  */
+   return zero.  With a compiler that provides the __typeof__ operator,
+   perform a compile-time check to verify that the specified Type_max
+   constant is the same as the constant derived from the type of Accum.  */
 #define DECIMAL_DIGIT_ACCUMULATE(Accum, Digit_val, Type_max)		\
   (									\
    /* Ensure that Type_max is the maximum value of Accum.  */		\
