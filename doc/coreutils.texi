@@ -7522,6 +7522,18 @@ but you may be able to work around the compatibility problems by setting
 New scripts should avoid the use of @samp{.} because @sc{gnu} @command{chown}
 may fail if @var{owner} contains @samp{.} characters.
 
+Warning: The @command{chown} command may clear the set-user-ID or
+set-group-ID bits on some systems.  The @command{chown} command is
+dependent upon the policy and functionality of the underlying system
+which may make system-dependent file mode modifications outside the
+control of the @command{chown} command.  On some systems (e.g., Linux)
+the @command{chown} command clears the set-UID and set-GID bits because
+the underlying system @function{chown} function clears them.  On other
+systems (e.g., HP-UX and Solaris) the @command{chown} command does not
+affect those bits when operated as the superuser.  On systems which allow
+non-privileged use of chown those bits are always cleared by the system.
+When in doubt, check the underlying system behavior.
+
 The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
