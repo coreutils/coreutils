@@ -5,17 +5,15 @@ dnl
 dnl This is not pretty.  I've just taken the autoconf code and wrapped
 dnl it in an AC_DEFUN.
 dnl
-dnl CAUTION: This is very fragile.  It relies on several checks that
-dnl are still in fileutils' configure.in:
-dnl FIXME: add AC_REQUIRE uses to pull in all definitions required
-dnl for all uses of $ac_cv_func_* and $ac_cv_header_* variables below.
-dnl
 
 AC_PREREQ(2.14a)
 
 # jm_LIST_MOUNTED_FILESYSTEMS([ACTION-IF-FOUND[, ACTION-IF-NOT-FOUND]])
 AC_DEFUN(jm_LIST_MOUNTED_FILESYSTEMS,
   [
+AC_CHECK_FUNCS(listmntent getmntent getmntinfo)
+AC_CHECK_HEADERS(mntent.h)
+
 # Determine how to get the list of mounted filesystems.
 ac_list_mounted_fs=
 
