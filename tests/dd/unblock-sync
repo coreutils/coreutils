@@ -1,0 +1,39 @@
+#!/bin/sh
+# Ensure that dd conv=unblock,sync works.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  dd --version
+fi
+
+# . $srcdir/../envvar-check
+
+pwd=`pwd`
+t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
+trap 'status=$?; cd $pwd; chmod -R u+rwx $t0; rm -rf $t0 && exit $status' 0
+trap '(exit $?); exit $?' 1 2 13 15
+
+framework_failure=0
+mkdir -p $tmp || framework_failure=1
+cd $tmp || framework_failure=1
+printf 000100020003xx > in || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo "$0: failure in testing framework" 1>&2
+  (exit 1); exit 1
+fi
+
+fail=0
+
+dd cbs=4 ibs=4 conv=unblock,sync < in > out || fail=1
+cat <<\EOF > exp || fail=1
+0001
+0002
+0003
+xx
+EOF
+
+cmp out exp || fail=1
+test $fail = 1 && diff out exp 2> /dev/null
+
+(exit $fail); exit $fail
