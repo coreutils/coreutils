@@ -1,4 +1,12 @@
+2000-01-16  Jim Meyering  <meyering@lucent.com>
+
+	* configure.in: Remove AM_FUNC_ERROR_AT_LINE, jm_FUNC_STRFTIME,
+	AC_FUNC_VPRINTF, and AC_FUNC_ALLOCA.  Now they're in m4/.
+
 2000-01-15  Jim Meyering  <meyering@lucent.com>
+
+	* configure.in (AC_REPLACE_FUNCS): Remove these: memcpy memset stpcpy
+	strpbrk strtol strtoul.  Now that's in m4/.
 
 	unexpand could infloop
 	* src/unexpand.c (TAB_STOP_SENTINEL): Define.
