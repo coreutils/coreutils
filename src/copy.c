@@ -1,5 +1,5 @@
 /* copy.c -- core functions for copying files and directories
-   Copyright (C) 89, 90, 91, 1995-2003 Free Software Foundation.
+   Copyright (C) 89, 90, 91, 1995-2004 Free Software Foundation.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -1036,8 +1036,11 @@ copy_internal (const char *src_path, const char *dst_path,
 		  return 1;
 		}
 
-	      dst_backup = alloca (strlen (tmp_backup) + 1);
-	      strcpy (dst_backup, tmp_backup);
+	      /* Using alloca for a pathname that may be (in theory) arbitrarily
+		 long is not recommended.  In fact, even forming such a name
+		 should be discouraged.  Eventually, this code will be rewritten
+		 to use fts, so using alloca here will be less of a problem.  */
+	      ASSIGN_STRDUPA (dst_backup, tmp_backup);
 	      free (tmp_backup);
 	      if (rename (dst_path, dst_backup))
 		{
