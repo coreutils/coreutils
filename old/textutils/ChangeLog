@@ -1,5 +1,16 @@
 2000-03-12  Jim Meyering  <meyering@lucent.com>
 
+	Merge with fileutils.
+	* src/system.h "pathmax.h": Include.
+	<sys/time.h>: Include if appropriate.
+	<time.h>: Likewise.
+	<sys/mkdev.h>: Likewise.
+	<sys/sysmacros.h>: Likewise.
+	<utime.h>: Likewise.
+	(major, minor, makedev): Define if needed.
+	(struct utimbuf): Declare if missing.
+	(ST_BLKSIZE, ST_NBLOCKS, ST_NBLOCKSIZE): Define.
+
 	* src/cksum.c (usage): Correct --help output.
 	Prompted by a report from Gregory Leblanc.
 
