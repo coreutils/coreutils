@@ -1,3 +1,7 @@
+Mon Sep 30 23:35:46 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* acinclude.m4: Update definitions from gettext-0.24.
+
 Sun Sep 29 20:04:53 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* tests/sort-test/build-script.pl: Die if close fails.
