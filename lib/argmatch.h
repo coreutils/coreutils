@@ -53,17 +53,21 @@ int argcasematch
 # define ARGCASEMATCH(Arg, Arglist, Vallist) \
   argcasematch ((Arg), (Arglist), (const char *) (Vallist), sizeof (*(Vallist)))
 
-
+/* Function called when xargmatch failed.  Should not return.  By
+   default, set to a function calling the macro ARGMATCH_EXIT_FAILURE
+   which, by default is `exit (2)'.*/
+typedef void (*argmatch_exit_fn) PARAMS ((void));
+extern argmatch_exit_fn argmatch_exit_failure;
 
 /* Report on stderr why argmatch failed.  Report correct values. */
 
 void argmatch_invalid
-  PARAMS ((const char *kind, const char *value, int problem));
+  PARAMS ((const char *context, const char *value, int problem));
 
 /* Left for compatibility with the old name invalid_arg */
 
-# define invalid_arg(Kind, Value, Problem) \
-  argmatch_invalid ((Kind), (Value), (Problem))
+# define invalid_arg(Context, Value, Problem) \
+  argmatch_invalid ((Context), (Value), (Problem))
 
 
 
@@ -74,29 +78,32 @@ void argmatch_valid
 	   const char *vallist, size_t valsize));
 
 # define ARGMATCH_VALID(Arglist, Vallist) \
-  argmatch_valid (Arglist, (const char *) Vallist, sizeof (*Vallist))
+  argmatch_valid (Arglist, (const char *) Vallist, sizeof (*(Vallist)))
 
 
-/* Set *Result_ptr to the value in Vallist corresponding to the Arg
-   in Arglist.  If Arg doesn't match any string in Arglist, give a
-   diagnostic and (presumably) exit via the Die_stmt, leaving *Result_ptr
-   unmodified.  */
 
-# define XARGMATCH(Result_ptr, Kind, Arg, Arglist, Vallist, Die_stmt)	\
-  do 									\
-    {									\
-      int _i = ARGMATCH (Arg, Arglist, Vallist);			\
-      if (_i >= 0)							\
-	*(Result_ptr) = (Vallist) [_i];					\
-      else								\
-	{								\
-	  argmatch_invalid ((Kind), (Arg), _i);				\
-	  ARGMATCH_VALID (Arglist, Vallist);				\
-	  Die_stmt;							\
-	}								\
-    }									\
-  while (0)
+/* Same as argmatch, but upon failure, reports a explanation on the
+   failure, and exits using the function EXIT_FN. */
 
+int __xargmatch_internal
+  PARAMS ((const char *context,
+	   const char *arg, const char *const *arglist,
+	   const char *vallist, size_t valsize,
+	   int case_sensitive, argmatch_exit_fn exit_fn));
+
+/* Programmer friendly interface to __xargmatch_internal. */
+
+# define XARGMATCH(Context, Arg, Arglist, Vallist)			\
+  (Vallist [__xargmatch_internal ((Context), (Arg), (Arglist),	\
+                                  (const char *) (Vallist),	\
+				  sizeof (*(Vallist)),		\
+				  1, argmatch_exit_failure)])
+
+# define XARGCASEMATCH(Context, Arg, Arglist, Vallist)		\
+  (Vallist [__xargmatch_internal ((Context), (Arg), (Arglist),	\
+                                  (const char *) (Vallist),	\
+				  sizeof (*(Vallist)),		\
+				  0, argmatch_exit_failure)])
 
 /* Convert a value into a corresponding argument. */
 
