@@ -1,5 +1,5 @@
 /* nohup -- run a command immume to hangups, with output to a non-tty
-   Copyright (C) 2003 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -36,10 +36,7 @@
 /* Exit statuses.  */
 enum
   {
-    /* `nohup' found the specified command but failed to invoke it.  */
-    NOHUP_FOUND_BUT_CANNOT_INVOKE = 126,
-
-    /* `nohup' itself failed, or did not find the specified command.  */
+    /* `nohup' itself failed.  */
     NOHUP_FAILURE = 127
   };
 
@@ -48,7 +45,7 @@ char *program_name;
 void
 usage (int status)
 {
-  if (status != 0)
+  if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
@@ -83,6 +80,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  initialize_exit_failure (NOHUP_FAILURE);
   atexit (close_stdout);
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
@@ -173,9 +171,7 @@ main (int argc, char **argv)
     char **cmd = argv + 1;
 
     execvp (*cmd, cmd);
-    exit_status = (errno == ENOENT
-		   ? NOHUP_FAILURE
-		   : NOHUP_FOUND_BUT_CANNOT_INVOKE);
+    exit_status = (errno == ENOENT ? EXIT_ENOENT : EXIT_CANNOT_INVOKE);
     saved_errno = errno;
 
     /* The execve failed.  Output a diagnostic to stderr only if:
