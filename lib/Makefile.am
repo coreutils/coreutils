@@ -2,11 +2,11 @@
 
 AUTOMAKE_OPTIONS = ../src/ansi2knr
 
-noinst_LIBRARIES = libfu.a
+noinst_LIBRARIES = libfetish.a
 
 INCLUDES = -I.. -I$(srcdir) -I../intl
 
-libfu_a_SOURCES = getdate.y posixtm.c getopt.c getopt1.c \
+libfetish_a_SOURCES = getdate.y posixtm.c getopt.c getopt1.c \
 addext.c argmatch.c backupfile.c basename.c \
 closeout.c dirname.c exclude.c filemode.c \
 full-write.c human.c idcache.c \
@@ -15,8 +15,8 @@ quotearg.c safe-read.c same.c save-cwd.c savedir.c stripslash.c userspec.c \
 version-etc.c xgetcwd.c xmalloc.c xstrdup.c \
 xstrtol.c xstrtoul.c xstrtoumax.c yesno.c
 
-libfu_a_LIBADD = @LIBOBJS@ @ALLOCA@
-libfu_a_DEPENDENCIES = $(libfu_a_LIBADD)
+libfetish_a_LIBADD = @LIBOBJS@ @ALLOCA@
+libfetish_a_DEPENDENCIES = $(libfetish_a_LIBADD)
 
 noinst_HEADERS = argmatch.h backupfile.h closeout.h \
 dirname.h error.h exclude.h filemode.h fnmatch.h fsusage.h \
