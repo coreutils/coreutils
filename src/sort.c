@@ -1,5 +1,5 @@
 /* sort - sort lines of text (with all kinds of options).
-   Copyright (C) 88, 1991-2001 Free Software Foundation, Inc.
+   Copyright (C) 88, 1991-2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -327,16 +327,18 @@ Other options:\n\
 "), DEFAULT_TMPDIR);
       fputs (_("\
   -z, --zero-terminated     end lines with 0 byte, not newline\n\
+"), stdout);
+      if (POSIX2_VERSION < 200112)
+	fputs (_("\
   +POS1 [-POS2]             start a key at POS1, end it before POS2 (origin 0)\n\
-                              Warning: this option is obsolescent\n\
+                              Warning: this option is obsolete\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
 \n\
 POS is F[.C][OPTS], where F is the field number and C the character position\n\
-in the field, both counted from one with -k, from zero with the obsolescent\n\
-form.  OPTS is made up of one or more single-letter ordering options, which\n\
+in the field.  OPTS is one or more single-letter ordering options, which\n\
 override global ordering options for that key.  If no key is given, use the\n\
 entire line as the key.\n\
 \n\
@@ -2249,14 +2251,14 @@ main (int argc, char **argv)
   for (;;)
     {
       /* Parse an operand as a file after "--" was seen; or if
-         pedantic and a file was seen, unless -c was not seen and the
-         operand is "-o FILE" or "-oFILE".  POSIX 1003.1-200x d5
-         removes the exception for the -o options; when it becomes
-         official the code will need to be changed.  */
+         pedantic and a file was seen, unless the POSIX version
+         predates 1003.1-2001 and -c was not seen and the operand is
+         "-o FILE" or "-oFILE".  */
 
       if (c == -1
 	  || (posix_pedantic && nfiles != 0
-	      && ! (! checkonly
+	      && ! (POSIX2_VERSION < 200112
+		    && ! checkonly
 		    && optind != argc
 		    && argv[optind][0] == '-' && argv[optind][1] == 'o'
 		    && (argv[optind][2] || optind + 1 != argc)))
@@ -2272,14 +2274,11 @@ main (int argc, char **argv)
       else switch (c)
 	{
 	case 1:
-	  /* Treat +POS1 [-POS2] as a key if possible; but silently
-	     treat an operand as a file if it is not a valid +POS1.
-	     POSIX 1003.1-200x d5 does not allow support for +POS1, so
-	     when it becomes official this code will need to be
-	     changed.  */
 	  key = NULL;
-	  if (optarg[0] == '+')
+	  if (POSIX2_VERSION < 200112 && optarg[0] == '+')
 	    {
+	      /* Treat +POS1 [-POS2] as a key if possible; but silently
+		 treat an operand as a file if it is not a valid +POS1.  */
 	      key = new_key ();
 	      s = parse_field_count (optarg + 1, &key->sword, NULL);
 	      if (s && *s == '.')
