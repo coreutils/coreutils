@@ -234,7 +234,7 @@ copy_reg (const char *src_path, const char *dst_path,
      saved ones obtained via a previous call to stat.  */
   if (! SAME_INODE (*src_sb, src_open_sb))
     {
-      error (EXIT_FAILURE, 0,
+      error (0, 0,
 	     _("skipping file %s, as it was replaced while being copied"),
 	     quote (src_path));
       return_val = -1;
