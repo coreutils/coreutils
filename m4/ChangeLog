@@ -1,3 +1,8 @@
+2001-10-22  Paul Eggert  <eggert@twinsun.com>
+
+	* jm-winsz1.m4 (jm_WINSIZE_IN_PTEM): Do not define
+	WINSIZE_IN_PTEM if <termios.h> defines struct winsize.
+
 2001-11-10  Jim Meyering  <meyering@lucent.com>
 
 	* prereq.m4 (jm_PREREQ_PHYSMEM): New function.
