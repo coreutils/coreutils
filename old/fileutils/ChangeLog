@@ -1,4 +1,18 @@
+Fri Jul 19 23:28:36 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/cp.c (path_concat): Rewrite to return new parameter.
+	(do_copy): Update uses of path_concat to use new parameter.
+	Use that new pointer to compute correct offset for make_path_private.
+	Before, cp --recursive --parents SRC DEST failed when SRC was
+	an absolute file name.  E.g.,
+	  % cd /tmp; rm -rf d f; mkdir d; touch f; cp -PR /tmp/f d
+	  cp: tmp: No such file or directory
+	Reported by Horst von Brand vonbrand@sleipnir.valparaiso.cl.
+
 Thu Jul 18 21:58:51 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/install.c [_AIX]: Add #pragma alloca.
+	From Bernd Leibing <bernd.leibing@rz.uni-ulm.de>.
 
 	* src/chgrp.c (main): Initialize for internationalized message support:
 	call setlocale, bindtextdomain, and textdomain.  Reported by
