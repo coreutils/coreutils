@@ -63,4 +63,8 @@ st_blocks (size)
 
   return datablks + indrblks;
 }
+#else
+/* This declaration is solely to ensure that after preprocessing
+   this file is never empty.  */
+extern int textutils_fileblocks_unused;
 #endif
