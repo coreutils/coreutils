@@ -7671,6 +7671,9 @@ Recursively change ownership of directories and their contents.
 @end table
 
 @macro chownchgrpoptions
+
+@cindex symbolic links, controlling traversal of
+
 The following options modify how @command{chown} and @command{chgrp}
 traverse a hierarchy when the @option{--recursive} (@option{-R})
 option is also specified.
