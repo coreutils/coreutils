@@ -1,3 +1,19 @@
+2003-08-22  Lawrence Teo  <lcteo@uncc.edu>
+
+	* src/md5sum.c (split_3): Accept the BSD format for generic
+	message digest modes.  Currently works with BSD's MD5 and SHA1
+	formats since these are the two algorithms presently used in
+	coreutils.  Updated comments to reflect this change.
+	(bsd_split_3): Updated comments.
+
+	* tests/md5sum/basic-1: New test to make sure that
+	`md5sum --check' doesn't accept the BSD SHA1 format (adapted
+	from `check-bsd' test in tests/sha1sum/basic-1).
+
+	* tests/sha1sum/basic-1 (check-bsd2, check-bsd3): New tests for
+	--check exit status and BSD SHA1 format (adapted from tests
+	in tests/md5sum/basic-1).
+
 2003-08-30  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.91.
