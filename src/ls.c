@@ -150,7 +150,6 @@ static int compare_extension __P ((struct fileinfo *file1,
 static int rev_cmp_extension __P ((struct fileinfo *file2,
 			        struct fileinfo *file1));
 static int decode_switches __P ((int argc, char **argv));
-static void parse_ls_color __P ((void));
 static int file_interesting __P ((register struct dirent *next));
 static int gobble_file __P ((const char *name, int explicit_arg,
 			     const char *dirname));
@@ -170,8 +169,6 @@ static void print_long_format __P ((struct fileinfo *f));
 static void print_many_per_line __P ((void));
 static void print_name_with_quoting __P ((register char *p));
 static void print_type_indicator __P ((unsigned int mode));
-static void print_color_indicator __P ((unsigned int mode));
-static void put_indicator __P ((int n));
 static void print_with_commas __P ((void));
 static void queue_directory __P ((char *name, char *realname));
 static void sort_files __P ((void));
@@ -312,73 +309,12 @@ static int dired;
 
 enum indicator_style
   {
-    none,			/* default */
-    all,			/* -F */
-    not_programs		/* -p */
+    none,                      /* default */
+    all,                       /* -F */
+    not_programs               /* -p */
   };
 
 static enum indicator_style indicator_style;
-
-/* Nonzero means use colors to mark types.  Also define the different
-   colors as well as the stuff for the LS_COLORS environment variable.
-   The LS_COLORS variable is now in a termcap-like format.  -o or
-   --color-if-tty. */
-
-static int print_with_color;
-
-enum color_type
-  {
-    color_no,			/* 0: default or --color=no */
-    color_yes,			/* 1: -o or --color=yes */
-    color_if_tty		/* 2: --color=tty */
-  };
-
-/* Note that color_no and color_yes equals boolean values; they will
-   be assigned to print_with_color which is a boolean variable */
-
-#define MAXCOLORLEN  16		/* Max # of characters in a color sequence */
-
-enum indicator_no
-  {
-    C_LEFT, C_RIGHT, C_END, C_FILE, C_DIR, C_LINK, C_FIFO, C_SOCK,
-    C_BLK, C_CHR, C_EXEC
-  };
-
-const char *const indicator_name[] =
-{
-  "lc", "rc", "ec", "fi", "di", "ln", "pi", "so", "bd", "cd", "ex", NULL
-};
-
-struct indicator_type
-  {
-    int len;
-    char string[MAXCOLORLEN];
-  };
-
-#define LEN_STR_PAIR(s) sizeof (s) - 1, s
-
-static struct indicator_type color_indicator[] =
-{
-  {LEN_STR_PAIR ("\033[")},	/* lc: Left of color sequence */
-  {LEN_STR_PAIR ("m")},		/* rc: Right of color sequence */
-  {LEN_STR_PAIR ("\033[0m")},	/* ec: End color */
-  {LEN_STR_PAIR ("0")},		/* fi: File: default */
-  {LEN_STR_PAIR ("32")},	/* di: Directory: green */
-  {LEN_STR_PAIR ("36")},	/* ln: Symlink: cyan */
-  {LEN_STR_PAIR ("31")},	/* pi: Pipe: red */
-  {LEN_STR_PAIR ("33")},	/* so: Socket: yellow/brown */
-  {LEN_STR_PAIR ("44;37")},	/* bd: Block device: white on blue */
-  {LEN_STR_PAIR ("44;37")},	/* cd: Char device: white on blue */
-  {LEN_STR_PAIR ("35")},	/* ex: Executable: purple */
-};
-
-/* Nonzero means print using ISO 8859 characters.  The default is specified
-   here as well.  -8 enables, -7 disables.  */
-
-static int print_iso8859;
-#ifndef DEFAULT_ISO8859
-#define DEFAULT_ISO8859  1
-#endif
 
 /* Nonzero means mention the inode number of each file.  -i  */
 
@@ -500,9 +436,6 @@ static struct option const long_options[] =
   {"time", required_argument, 0, 11},
   {"help", no_argument, &show_help, 1},
   {"version", no_argument, &show_version, 1},
-  {"color", optional_argument, 0, 13},
-  {"7bit", no_argument, 0, '7'},
-  {"8bit", no_argument, 0, '8'},
   {0, 0, 0, 0}
 };
 
@@ -584,16 +517,6 @@ static enum time_type const time_types[] =
   time_atime, time_atime, time_atime, time_ctime, time_ctime
 };
 
-static char const *const color_args[] =
-{
-  /* Note: "no" is a prefix of "none" so we don't include it */
-  "yes", "force", "none", "tty", "if-tty"
-};
-
-static enum color_type const color_types[] =
-{
-  color_yes, color_yes, color_no, color_if_tty, color_if_tty
-};
 
 /* Write to standard output the string PREFIX followed by a space-separated
    list of the integers stored in OS all on one line.  */
@@ -648,7 +571,7 @@ main (int argc, char **argv)
   format_needs_stat = sort_type == sort_time || sort_type == sort_size
     || format == long_format
     || trace_links || trace_dirs || indicator_style != none
-    || print_block_size || print_inode || print_with_color;
+    || print_block_size || print_inode;
 
   if (dired && format == long_format)
     {
@@ -776,8 +699,6 @@ decode_switches (int argc, char **argv)
   really_all_files = 0;
   ignore_patterns = 0;
   quote_as_string = 0;
-  print_with_color = 0;
-  print_iso8859 = DEFAULT_ISO8859;
 
   p = getenv ("COLUMNS");
   line_length = p ? atoi (p) : 80;
@@ -804,7 +725,7 @@ decode_switches (int argc, char **argv)
     }
 
   while ((c = getopt_long (argc, argv,
-			   "abcdfgiklmnopqrstuw:xABCDFGI:LNQRST:UX178",
+			   "abcdfgiklmnopqrstuw:xABCDFGI:LNQRST:UX1",
 			   long_options, (int *) 0)) != EOF)
     {
       switch (c)
@@ -869,34 +790,6 @@ decode_switches (int argc, char **argv)
 	case 'o':  /* Just like -l, but don't display group info.  */
 	  format = long_format;
 	  inhibit_group = 1;
-	  break;
-
-	case 13: /* --color */
-	  if (optarg)
-	    {
-	      i = argmatch (optarg, color_args);
-	      if (i < 0)
-		{
-		  invalid_arg (_("colorization criterion"), optarg, i);
-		  usage (1);
-		}
-	      i = color_types[i];
-	    }
-	  else
-	    i = color_yes;	/* --color -> do colorize */
-
-	  if (i == color_if_tty)
-	    print_with_color = isatty (1) ? 1 : 0;
-	  else
-	    print_with_color = i;
-
-	  if (print_with_color)
-	    {
-	      /* Don't use TAB characters in output.  Some terminal
-		 emulators can't handle the combination of tabs and
-		 color codes on the same line.  */
-	      tabsize = line_length;
-	    }
 	  break;
 
 	case 'p':
@@ -1004,14 +897,6 @@ decode_switches (int argc, char **argv)
 	  format = one_per_line;
 	  break;
 
-	case '7':
-	  print_iso8859 = 0;
-	  break;
-
-	case '8':
-	  print_iso8859 = 1;
-	  break;
-
 	case 10:		/* --sort */
 	  i = argmatch (optarg, sort_args);
 	  if (i < 0)
@@ -1047,260 +932,9 @@ decode_switches (int argc, char **argv)
 	}
     }
 
-  if (print_with_color)
-    {
-      parse_ls_color ();
-    }
-
   return optind;
 }
-
-/* Parse the LS_COLORS/LS_COLOURS variable */
 
-static void
-parse_ls_color (void)
-{
-  register char *p;		/* Pointer to character being parsed */
-  char *whichvar;		/* LS_COLORS or LS_COLOURS? */
-  int state;			/* State of parser */
-  int ind_no;			/* Indicator number */
-  int ccount;			/* Character count */
-  int num;			/* Escape char numeral */
-  char label[3];		/* Indicator label */
-
-  strcpy (label, "??");
-  if ((p = getenv (whichvar = "LS_COLORS")) ||
-      (p = getenv (whichvar = "LS_COLOURS")))
-    {
-      state = 1;
-      while (state > 0)
-	{
-	  switch (state)
-	    {
-	    case 1:		/* First label character */
-	      if (*p)
-		{
-		  label[0] = *(p++);
-		  state = 2;
-		}
-	      else
-		state = 0;	/* Done */
-	      break;
-
-	    case 2:		/* Second label character */
-	      if (*p)
-		{
-		  label[1] = *(p++);
-		  state = 3;
-		}
-	      else
-		state = -1;	/* Error */
-	      break;
-
-	    case 3:		/* Should be equal sign */
-	      if (*(p++) != '=')
-		state = -1;	/* Error state */
-	      else
-		{
-		  ind_no = 0;
-		  state = -1;	/* In case we fail */
-		  while (indicator_name[ind_no] != NULL)
-		    {
-		      if (strcmp (label, indicator_name[ind_no]) == 0)
-			{
-			  state = 4;	/* We found it */
-			  ccount = 0;	/* Nothing stored yet */
-			  break;
-			}
-		      else
-			ind_no++;
-		    }
-		}
-	      break;
-
-	    case 4:		/* Character to store */
-	      switch (*p)
-		{
-		case ':':
-		  color_indicator[ind_no].len = ccount;
-		  state = 1;
-		  break;
-		case '\\':
-		  /* The escape sequence will always generate a character,
-		     so enter error state if the buffer is full */
-		  state = (ccount >= MAXCOLORLEN) ? -1 : 5;
-		  break;
-		case '^':
-		  /* Control character in the ^X notation */
-		  state = (ccount >= MAXCOLORLEN) ? -1 : 8;
-		  break;
-		case '\0':
-		  color_indicator[ind_no].len = ccount;
-		  state = 0;	/* Done */
-		  break;
-		default:
-		  if (ccount >= MAXCOLORLEN)
-		    state = -1;	/* Too long */
-		  else
-		    color_indicator[ind_no].string[ccount++] = *p;
-		}
-	      p++;
-	      break;
-
-	    case 5:		/* Escape character */
-	      num = -1;
-	      switch (*p)
-		{
-		case '0':
-		case '1':
-		case '2':
-		case '3':
-		case '4':
-		case '5':
-		case '6':
-		case '7':
-		  state = 6;	/* Octal numeral */
-		  num = *p - '0';
-		  break;
-		case 'x':
-		case 'X':
-		  state = 7;	/* Hex numeral */
-		  num = 0;
-		  break;
-		case 'a':	/* Bell */
-		  num = 7;
-		  break;
-		case 'b':	/* Backspace */
-		  num = '\b';
-		  break;
-		case 'e':	/* Escape */
-		  num = 27;
-		  break;
-		case 'f':	/* Formfeed */
-		  num = '\f';
-		  break;
-		case 'n':	/* Newline */
-		  num = '\n';
-		  break;
-		case 'r':	/* Return */
-		  num = '\r';
-		  break;
-		case 't':	/* Tab */
-		  num = '\t';
-		  break;
-		case 'v':	/* Vtab */
-		  num = '\v';
-		  break;
-		case '?':	/* Delete */
-		  num = 127;
-		  break;
-		case '\0':	/* End of string */
-		  state = -1;	/* Error */
-		  break;
-		default:	/* Escaped character */
-		  num = *p;
-		  break;
-		}
-	      if (state == 5)
-		{
-		  color_indicator[ind_no].string[ccount++] = num;
-		  state = 4;
-		}
-	      p++;
-	      break;
-
-	    case 6:		/* Octal numeral */
-	      switch (*p)
-		{
-		case ':':
-		case '\0':
-		  color_indicator[ind_no].string[ccount++] = num;
-		  color_indicator[ind_no].len = ccount;
-		  state = (*(p++) == ':') ? 1 : 0;
-		  p++;
-		  break;
-		case '0':
-		case '1':
-		case '2':
-		case '3':
-		case '4':
-		case '5':
-		case '6':
-		case '7':
-		  num = (num << 3) + (*(p++) - '0');
-		  break;
-		default:
-		  color_indicator[ind_no].string[ccount++] = num;
-		  state = 4;
-		  break;
-		}
-	      break;
-
-	    case 7:		/* Hex numeral */
-	      switch (*p)
-		{
-		case ':':
-		case '\0':
-		  color_indicator[ind_no].string[ccount++] = num;
-		  color_indicator[ind_no].len = ccount;
-		  state = (*(p++) == ':') ? 1 : 0;
-		  break;
-		case '0':
-		case '1':
-		case '2':
-		case '3':
-		case '4':
-		case '5':
-		case '6':
-		case '7':
-		case '8':
-		case '9':
-		  num = (num << 4) + (*(p++) - '0');
-		  break;
-		case 'A':
-		case 'B':
-		case 'C':
-		case 'D':
-		case 'E':
-		case 'F':
-		  num = (num << 4) + (*(p++) - 'A' + 10);
-		  break;
-		case 'a':
-		case 'b':
-		case 'c':
-		case 'd':
-		case 'e':
-		case 'f':
-		  num = (num << 4) + (*(p++) - 'a' + 10);
-		  break;
-		default:
-		  color_indicator[ind_no].string[ccount++] = num;
-		  state = 4;
-		  break;
-		}
-	      break;
-
-	    case 8:		/* ^ notation */
-	      state = 4;	/* Usually the next state */
-	      if (*p >= '@' && *p <= '~')
-		color_indicator[ind_no].string[ccount++] = *p & 037;
-	      else if (*p == '?')
-		color_indicator[ind_no].string[ccount++] = 127;
-	      else
-		state = -1;	/* Error */
-	      p++;
-	      break;
-	    }
-	}
-
-      if (state < 0)
-	{
-	  error (0, 0, _("bad %s variable\n"), whichvar);
-	  print_with_color = 0;
-	}
-    }
-}
-
 /* Request that the directory named `name' have its contents listed later.
    If `realname' is nonzero, it will be used instead of `name' when the
    directory name is printed.  This allows symbolic links to directories
@@ -1514,7 +1148,7 @@ gobble_file (const char *name, int explicit_arg, const char *dirname)
 	     they won't be traced and when no indicator is needed. */
 	  if (linkpath
 	      && ((explicit_arg && format != long_format)
-		  || indicator_style != none || print_with_color)
+		  || indicator_style != none)
 	      && stat (linkpath, &linkstats) == 0)
 	    {
 	      /* Symbolic links to directories that are mentioned on the
@@ -1987,11 +1621,7 @@ print_long_format (struct fileinfo *f)
   DIRED_INDENT ();
   FPUTS (bigbuf, stdout, p - bigbuf);
   PUSH_CURRENT_DIRED_POS (&dired_obstack);
-  if (print_with_color)
-    print_color_indicator (f->stat.st_mode);
   print_name_with_quoting (f->name);
-  if (print_with_color)
-    put_indicator (C_END);
   PUSH_CURRENT_DIRED_POS (&dired_obstack);
 
   if (f->filetype == symbolic_link)
@@ -1999,11 +1629,7 @@ print_long_format (struct fileinfo *f)
       if (f->linkname)
 	{
 	  FPUTS_LITERAL (" -> ", stdout);
-	  if (print_with_color)
-	    print_color_indicator (f->linkmode);
 	  print_name_with_quoting (f->linkname);
-	  if (print_with_color)
-	    put_indicator (C_END);
 	  if (indicator_style != none)
 	    print_type_indicator (f->linkmode);
 	}
@@ -2049,17 +1675,15 @@ quote_filename (register const char *p, size_t *quoted_length)
 	      break;
 
 	    default:
-	      /* FIXME: why not just use the ISPRINT macro here?  */
-	      if (!((c > 040 && c < 0177)
-		    || (print_iso8859 && c >= 0200 && c <= 0377)))
+	      /* FIXME: why not just use the ISGRAPH macro here?  */
+	      if (!(c > 040 && c < 0177))
 		found_quotable = 1;
 	      break;
 	    }
 	}
       else
 	{
-	  if (!((c >= 040 && c < 0177)
-		|| (print_iso8859 && c >= 0xA1 && c <= 0xFF))
+	  if (!(c >= 040 && c < 0177)
 	      && qmark_funny_chars)
 	    found_quotable = 1;
 	}
@@ -2124,8 +1748,7 @@ quote_filename (register const char *p, size_t *quoted_length)
 	      break;
 
 	    default:
-	      if ((c > 040 && c < 0177)
-		  || (print_iso8859 && c >= 0200 && c <= 0377))
+	      if (c > 040 && c < 0177)
 		SAVECHAR (c);
 	      else
 		{
@@ -2137,8 +1760,7 @@ quote_filename (register const char *p, size_t *quoted_length)
 	}
       else
 	{
-	  if ((c >= 040 && c < 0177)
-	      || (print_iso8859 && c >= 0200 && c <= 0377))
+	  if (c >= 040 && c < 0177)
 	    SAVECHAR (c);
 	  else if (!qmark_funny_chars)
 	    SAVECHAR (c);
@@ -2184,11 +1806,7 @@ print_file_name_and_frills (struct fileinfo *f)
 	    (unsigned) convert_blocks (ST_NBLOCKS (f->stat),
 				       kilobyte_blocks));
 
-  if (print_with_color)
-    print_color_indicator (f->stat.st_mode);
   print_name_with_quoting (f->name);
-  if (print_with_color)
-    put_indicator (C_END);
 
   if (indicator_style != none)
     print_type_indicator (f->stat.st_mode);
@@ -2218,62 +1836,6 @@ print_type_indicator (unsigned int mode)
   if (S_ISREG (mode) && indicator_style == all
       && (mode & (S_IEXEC | S_IXGRP | S_IXOTH)))
     PUTCHAR ('*');
-}
-
-static void
-print_color_indicator (unsigned int mode)
-{
-  int type = C_FILE;
-
-  if (S_ISDIR (mode))
-    type = C_DIR;
-
-#ifdef S_ISLNK
-  else if (S_ISLNK (mode))
-    type = C_LINK;
-#endif
-
-#ifdef S_ISFIFO
-  else if (S_ISFIFO (mode))
-    type = C_FIFO;
-#endif
-
-#ifdef S_ISSOCK
-  else if (S_ISSOCK (mode))
-    type = C_SOCK;
-#endif
-
-#ifdef S_ISBLK
-  else if (S_ISBLK (mode))
-    type = C_BLK;
-#endif
-
-#ifdef S_ISCHR
-  else if (S_ISCHR (mode))
-    type = C_CHR;
-#endif
-
-  if (type == C_FILE && (mode & (S_IEXEC | S_IEXEC >> 3 | S_IEXEC >> 6)))
-    type = C_EXEC;
-
-  put_indicator (C_LEFT);
-  put_indicator (type);
-  put_indicator (C_RIGHT);
-}
-
-/* Output a color indicator (which may contain nulls) */
-static void
-put_indicator (int n)
-{
-  register int i;
-  register char *p;
-
-  p = color_indicator[n].string;
-
-  for (i = color_indicator[n].len; i; i--)
-    {
-      putchar (*(p++));
-    }
 }
 
 static int
@@ -2316,8 +1878,7 @@ length_of_file_name_and_frills (struct fileinfo *f)
 	      break;
 
 	    default:
-	      if ((c >= 040 && c < 0177)
-		  || (print_iso8859 && c >= 0200 && c <= 0377))
+	      if (c >= 040 && c < 0177)
 		len += 1;
 	      else
 		len += 4;
@@ -2552,8 +2113,6 @@ Sort entries alphabetically if none of -cftuSUX nor --sort.\n\
   -b, --escape               print octal escapes for nongraphic characters\n\
   -C                         list entries by columns\n\
   -c                         sort by change time; with -l: show ctime\n\
-      --color                colorize entries according to type\n\
-      --color=WORD           yes, no, tty (if output is a terminal)\n\
   -D, --dired                generate output well suited to Emacs' dired mode\n\
   -d, --directory            list directory entries instead of contents\n\
   -F, --classify             append a character for typing each entry\n\
@@ -2594,8 +2153,6 @@ Sort entries alphabetically if none of -cftuSUX nor --sort.\n\
   -x                         list entries by lines instead of by columns\n\
   -X                         sort alphabetically by entry extension\n\
   -1                         list one file per line\n\
-  -7, --7bit                 allow only 7-bit ASCII characters to be printed\n\
-  -8, --8bit                 allow 8-bit ISO 8859 characters to be printed\n\
       --help                 display this help and exit\n\
       --version              output version information and exit"));
     }
