@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2003-10-06.08}
+\def\texinfoversion{2003-10-07.17}
 %
 % Copyright (C) 1985, 1986, 1988, 1990, 1991, 1992, 1993, 1994, 1995,
 % 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
@@ -159,11 +159,6 @@
 % Ignore a token.
 %
 \def\gobble#1{}
-
-% True if #1 is the empty string, i.e., called like `\ifempty{}'.
-%
-\def\ifempty#1{\ifemptyx #1\emptymarkA\emptymarkB}%
-\def\ifemptyx#1#2\emptymarkB{\ifx #1\emptymarkA}%
 
 % Hyphenation fixes.
 \hyphenation{ap-pen-dix}
@@ -1329,10 +1324,6 @@ where each line of input produces a line of output.}
   \setfont\textrm\rmshape{10}{\mainmagstep}
   \setfont\texttt\ttshape{10}{\mainmagstep}
 \fi
-% Instead of cmb10, you may want to use cmbx10.
-% cmbx10 is a prettier font on its own, but cmb10
-% looks better when embedded in a line with cmr10
-% (in Bob's opinion).
 \setfont\textbf\bfshape{10}{\mainmagstep}
 \setfont\textit\itshape{10}{\mainmagstep}
 \setfont\textsl\slshape{10}{\mainmagstep}
@@ -1343,7 +1334,7 @@ where each line of input produces a line of output.}
 \font\textsy=cmsy10 scaled \mainmagstep
 
 % A few fonts for @defun, etc.
-\setfont\defbf\bxshape{10}{\magstep1} %was 1314
+\setfont\defbf\bfshape{10}{\magstep1} %was 1314
 \setfont\deftt\ttshape{10}{\magstep1}
 \def\df{\let\tentt=\deftt \let\tenbf = \defbf \bf}
 
@@ -1514,7 +1505,7 @@ where each line of input produces a line of output.}
 
 % Fonts for short table of contents.
 \setfont\shortcontrm\rmshape{12}{1000}
-\setfont\shortcontbf\bxshape{12}{1000}
+\setfont\shortcontbf\bfshape{12}{1000}
 \setfont\shortcontsl\slshape{12}{1000}
 \setfont\shortconttt\ttshape{12}{1000}
 
@@ -5027,7 +5018,8 @@ width0pt\relax} \fi
   % How we'll output the type name.  Putting it in brackets helps
   % distinguish it from the body text that may end up on the next line
   % just below it.
-  \ifempty{#2}%
+  \def\temp{#2}%
+  \ifx\temp\empty
     \def\defnametype{}%
   \else
     \def\defnametype{[\rm #2]}%
