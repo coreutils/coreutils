@@ -1,3 +1,12 @@
+Sun Feb 25 22:19:52 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* src/Makefile.am (BUILT_SOURCES): Set to `who.c users.c'.
+	(MOSTLYCLEANFILES): Add who.c and users.c.
+	(who.c): New rule to create this file.  Concatenate definition of
+ 	WHO and contents of who-users.c.
+	(users.c): New rule to create this file.  Concatenate definition of
+ 	USERS and contents of who-users.c.
+
 Sat Feb 24 12:20:58 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* readtokens.c: Unprotoize.
