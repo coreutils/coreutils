@@ -2139,7 +2139,7 @@ print_long_format (const struct fileinfo *f)
   /* Use strftime rather than ctime, because the former can produce
      locale-dependent names for the weekday (%a) and month (%b).  */
 
-  while (! (s = strftime (p, buf + bufsize - p, fmt, localtime (&when))))
+  while (! (s = strftime (p, buf + bufsize - p - 1, fmt, localtime (&when))))
     {
       char *newbuf = (char *) alloca (bufsize *= 2);
       memcpy (newbuf, buf, p - buf);
