@@ -1,3 +1,7 @@
+2000-11-06  Jim Meyering  <meyering@lucent.com>
+
+	* man/help2man: Update from latest version: 1.23.
+
 2000-11-02  Won-kyu Park  <wkpark@chem.skku.ac.kr>
 
 	* src/df.c (print_header): Mark strings for translation.
