@@ -1,3 +1,13 @@
+2001-02-20  Jim Meyering  <meyering@lucent.com>
+
+	`ls -Fd symlink-to-directory' would print a trailing `/'
+	Now it prints a trailing `@'.
+
+	* src/ls.c (gobble_file): Don't clobber lstat stats of command line
+	arguments when using -d and -F (--directory and --classify) options.
+	Reported by John Covici.
+	* tests/ls-2/tests (slink-dir): New test, for the above.
+
 2001-02-18  Jim Meyering  <meyering@lucent.com>
 
 	* tests/rm/Makefile.am (TESTS): Add isatty.
