@@ -241,7 +241,8 @@ sha_process_bytes (const void *buffer, size_t len, struct sha_ctx *ctx)
 #define F4(B,C,D) (B ^ C ^ D)
 
 /* Process LEN bytes of BUFFER, accumulating context into CTX.
-   It is assumed that LEN % 64 == 0.  */
+   It is assumed that LEN % 64 == 0.
+   Most of this code comes from GnuPG's cipher/sha1.c.  */
 
 void
 sha_process_block (const void *buffer, size_t len, struct sha_ctx *ctx)
@@ -265,7 +266,7 @@ sha_process_block (const void *buffer, size_t len, struct sha_ctx *ctx)
 
 #define M(I) ( tm =   x[I&0x0f] ^ x[(I-14)&0x0f] \
 		    ^ x[(I-8)&0x0f] ^ x[(I-3)&0x0f] \
-	       , (x[I&0x0f] = (tm << 1) | (tm >> 31)) )
+	       , (x[I&0x0f] = rol(tm, 1)) )
 
 #define R(A,B,C,D,E,F,K,M)  do { E += rol( A, 5 )     \
 				      + F( B, C, D )  \
@@ -278,6 +279,7 @@ sha_process_block (const void *buffer, size_t len, struct sha_ctx *ctx)
     {
       md5_uint32 tm;
       int t;
+      /* FIXME: see sha1.c for a better implementation.  */
       for (t = 0; t < 16; t++)
 	{
 	  x[t] = NOTSWAP (*words);
