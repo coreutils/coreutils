@@ -20,6 +20,14 @@
 # include <config.h>
 #endif
 
+#include <stddef.h>
+
+#if defined _LIBC || HAVE_STRING_H
+# include <string.h>
+#endif
+
+#undef strpbrk
+
 /* Find the first occurrence in S of any character in ACCEPT.  */
 char *
 strpbrk (const char *s, const char *accept)
@@ -33,5 +41,5 @@ strpbrk (const char *s, const char *accept)
       ++s;
     }
 
-  return 0;
+  return NULL;
 }
