@@ -1,5 +1,7 @@
 2003-06-17  Jim Meyering  <jim@meyering.net>
 
+	* Version 5.0.1.
+
 	* src/system.h (initialize_main): Define.
 	Use it in every `main'.  Applied via this:
 	p='initialize_main (&argc, &argv);'
@@ -15,8 +17,6 @@
 	Include sys/param.h and sys/mount.h on ultrix.
 
 2003-06-16  Jim Meyering  <jim@meyering.net>
-
-	* Version 5.0.1.
 
 	* src/touch.c (O_NDELAY, O_NONBLOCK, O_NOCTTY, EISDIR): Remove
 	definitions.
