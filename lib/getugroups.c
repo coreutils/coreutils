@@ -1,5 +1,5 @@
 /* getugroups.c -- return a list of the groups a user is in
-   Copyright (C) 1990, 1991 Free Software Foundation.
+   Copyright (C) 1990, 1991, 1998 Free Software Foundation.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -59,16 +59,27 @@ getugroups (maxcount, grouplist, username)
     for (cp = grp->gr_mem; *cp; ++cp)
       if (!strcmp (username, *cp))
 	{
-	  if (maxcount != 0)
+	  int n;
+
+	  /* See if this group number is already on the list.  */
+	  for (n = 0; n < count; ++n)
+	    if (grouplist[n] == grp->gr_gid)
+	      break;
+
+	  /* If it's a new group number, then try to add it to the list.  */
+	  if (n == count)
 	    {
-	      if (count >= maxcount)
+	      if (maxcount != 0)
 		{
-		  endgrent ();
-		  return count;
+		  if (count >= maxcount)
+		    {
+		      endgrent ();
+		      return count;
+		    }
+		  grouplist[count] = grp->gr_gid;
 		}
-	      grouplist[count] = grp->gr_gid;
+	      count++;
 	    }
-	  count++;
 	}
   endgrent ();
   return count;
