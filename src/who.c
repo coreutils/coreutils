@@ -390,7 +390,7 @@ print_user (const STRUCT_UTMP *utmp_ent)
 	  if (hostlen < strlen (host) + strlen (display) + 4)
 	    {
 	      hostlen = strlen (host) + strlen (display) + 4;
-	      hoststr = (char *) realloc (hoststr, hostlen);
+	      hoststr = xrealloc (hoststr, hostlen);
 	    }
 	  sprintf (hoststr, "(%s:%s)", host, display);
 	}
@@ -399,7 +399,7 @@ print_user (const STRUCT_UTMP *utmp_ent)
 	  if (hostlen < strlen (host) + 3)
 	    {
 	      hostlen = strlen (host) + 3;
-	      hoststr = (char *) realloc (hoststr, hostlen);
+	      hoststr = xrealloc (hoststr, hostlen);
 	    }
 	  sprintf (hoststr, "(%s)", host);
 	}
@@ -409,7 +409,7 @@ print_user (const STRUCT_UTMP *utmp_ent)
       if (hostlen < 1)
 	{
 	  hostlen = 1;
-	  hoststr = (char *) realloc (hoststr, hostlen);
+	  hoststr = xrealloc (hoststr, hostlen);
 	}
       stpcpy (hoststr, "");
     }
