@@ -1,4 +1,8 @@
 Changes in release 3.13:
+* ls accepts new option --color[=WHEN] where WHEN is `always', `never',
+  or `auto'.  --color=never is the default.  --color is equivalent
+  to --color=always (documented only in --help message FIXME)
+* new program: dircolors (not yet documented FIXME)
 * ls allows 0 as argument to --tabsize (-T) option.  Using --tabsize=0
   inhibits the use of TAB characters for separating columns.
 * you can create a backup of FILE with cp --force --backup FILE FILE.  Before,
