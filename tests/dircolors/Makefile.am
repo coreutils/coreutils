@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in -*-Makefile-*-.
 
-EXTRA_DIST = $(TESTS) simple
+EXTRA_DIST = $(TESTS)
 
 TESTS_ENVIRONMENT = \
   top_srcdir=$(top_srcdir) \
@@ -9,4 +9,4 @@ TESTS_ENVIRONMENT = \
   PATH=../../src:$$PATH \
   PROG=dircolors
 
-TESTS = run-test
+TESTS = simple

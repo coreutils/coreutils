@@ -90,7 +90,7 @@ VERSION = @VERSION@
 YACC = @YACC@
 l = @l@
 
-EXTRA_DIST = $(TESTS) simple
+EXTRA_DIST = $(TESTS)
 
 TESTS_ENVIRONMENT = \
   top_srcdir=$(top_srcdir) \
@@ -99,7 +99,7 @@ TESTS_ENVIRONMENT = \
   PATH=../../src:$$PATH \
   PROG=dircolors
 
-TESTS = run-test
+TESTS = simple
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../../config.h
 CONFIG_CLEAN_FILES = 
