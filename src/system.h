@@ -617,8 +617,7 @@ enum
   _("\n" \
 "NOTE: your shell may have its own version of %s, which usually supersedes\n" \
 "the version described here.  Please refer to your shell's documentation\n" \
-"for details about the options it supports.\n" \
-"\n")
+"for details about the options it supports.\n")
 
 #define HELP_OPTION_DESCRIPTION \
   _("      --help     display this help and exit\n")
