@@ -150,6 +150,7 @@ void setusershell ();
 char *basename ();
 char *xmalloc ();
 char *xrealloc ();
+char *xstrdup ();
 void error ();
 
 static char *concat ();
@@ -205,6 +206,7 @@ main (argc, argv)
   char **additional_args = 0;
   char *shell = 0;
   struct passwd *pw;
+  struct passwd pw_copy;
 
   program_name = argv[0];
   fast_startup = 0;
@@ -268,6 +270,16 @@ main (argc, argv)
   if (pw == 0)
     error (1, 0, "user %s does not exist", new_user);
   endpwent ();
+
+  /* Make a copy of the password information and point pw at the local
+     copy instead.  Otherwise, some systems (e.g. Linux) would clobber
+     the static data through the getlogin call from log_su.  */
+  pw_copy = *pw;
+  pw = &pw_copy;
+  pw->pw_name = xstrdup (pw->pw_name);
+  pw->pw_dir = xstrdup (pw->pw_dir);
+  pw->pw_shell = xstrdup (pw->pw_shell);
+
   if (!correct_password (pw))
     {
 #ifdef SYSLOG_FAILURE
@@ -296,13 +308,21 @@ main (argc, argv)
       shell = 0;
     }
   if (shell == 0)
-    shell = pw->pw_shell;
-  shell = strcpy (xmalloc (strlen (shell) + 1), shell);
+    {
+      /* FIXME: Using malloc (through xstrdup) to allocate this space
+	 is a minor memory leak.  Consider using alloca instead.  */
+      shell = xstrdup (pw->pw_shell);
+    }
   modify_environment (pw, shell);
 
   change_identity (pw);
   if (simulate_login && chdir (pw->pw_dir))
     error (0, errno, "warning: cannot change directory to %s", pw->pw_dir);
+
+  free (pw->pw_name);
+  free (pw->pw_dir);
+  free (pw->pw_shell);
+
   run_shell (shell, command, additional_args);
 }
 
@@ -439,7 +459,7 @@ run_shell (shell, command, additional_args)
   if (additional_args)
     for (; *additional_args; ++additional_args)
       args[argno++] = *additional_args;
-  args[argno] = 0;
+  args[argno] = NULL;
   execv (shell, args);
   error (1, errno, "cannot run %s", shell);
 }
@@ -463,10 +483,10 @@ log_su (pw, successful)
   /* The utmp entry (via getlogin) is probably the best way to identify
      the user, especially if someone su's from a su-shell.  */
   old_user = getlogin ();
-  if (old_user == 0)
+  if (old_user == NULL)
     old_user = "";
   tty = ttyname (2);
-  if (tty == 0)
+  if (tty == NULL)
     tty = "";
   /* 4.2BSD openlog doesn't have the third parameter.  */
   openlog (basename (program_name), 0

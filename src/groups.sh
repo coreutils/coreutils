@@ -46,6 +46,6 @@ if [ $# -eq 0 ]; then
   id -Gn
 else
   for name in "$@"; do
-    echo $name : `id -Gn $name`
+    echo $name : `id -Gn -- $name`
   done
 fi
