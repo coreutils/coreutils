@@ -1,5 +1,6 @@
 2003-10-12  Paul Eggert  <eggert@twinsun.com>
 
+	* tests/du/no-x: Change wording of diagnostic to match latest du.c.
 	* tests/sort/sort-tests: Remove from CVS; assume that people
 	brave enough to check coreutils out from CVS can rebuild it.
 
