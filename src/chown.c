@@ -1,5 +1,5 @@
 /* chown -- change user and group ownership of files
-   Copyright (C) 89, 90, 91, 1995-2002 Free Software Foundation, Inc.
+   Copyright (C) 89, 90, 91, 1995-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -16,14 +16,14 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 /*
-              |     		      user
+              |		              user
               | unchanged                 explicit
  -------------|-------------------------+-------------------------|
- g unchanged  | ---                     | chown u 		  |
+ g unchanged  | ---                     | chown u		  |
  r            |-------------------------+-------------------------|
  o explicit   | chgrp g or chown .g     | chown u.g		  |
  u            |-------------------------+-------------------------|
- p from passwd| ---      	        | chown u.       	  |
+ p from passwd| ---			| chown u.		  |
               |-------------------------+-------------------------|
 
    Written by David MacKenzie <djm@gnu.ai.mit.edu>. */
