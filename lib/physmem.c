@@ -15,7 +15,7 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
-/* Written by Paul Eggert and Jim Meyering.  */
+/* Written by Paul Eggert.  */
 
 #if HAVE_CONFIG_H
 # include <config.h>
@@ -31,44 +31,8 @@
 # include <sys/pstat.h>
 #endif
 
-#if HAVE_SYSGET && HAVE_SYS_SYSGET_H && HAVE_SYS_SYSINFO_H
-# include <sys/types.h>
-# include <sys/sysget.h>
-# include <sys/sysinfo.h>
-
-# if defined SGT_COOKIE_INIT && defined SGT_NODE_INFO && defined SGT_READ
-#  define IRIX_SYSGET_TOTAL \
-    do { double t; if (irix_sysget (&t, NULL) == 0) return t; } while (0)
-#  define IRIX_SYSGET_AVAILABLE \
-    do { double f; if (irix_sysget (NULL, &f) == 0) return f; } while (0)
-
-/* If TOTAL is non-NULL, set *TOTAL to the number of bytes of physical memory.
-   If AVAIL is non-NULL, set *AVAIL to the number of bytes of available memory.
-   Return nonzero immediately if sysget fails.
-   Otherwise, set the requested value(s) and return zero.  */
-static int
-irix_sysget (double *total, double *avail)
-{
-  nodeinfo_t buf;
-  sgt_cookie_t cookie;
-
-  SGT_COOKIE_INIT (&cookie);
-  if (sysget (SGT_NODE_INFO, (char *) &buf, sizeof buf, SGT_READ, &cookie)
-      != sizeof buf)
-    return 1;
-
-  if (total)
-    *total = buf.totalmem;
-  if (avail)
-    *avail = buf.freemem;
-  return 0;
-}
-# endif
-#endif
-
-#ifndef IRIX_SYSGET_TOTAL
-# define IRIX_SYSGET_TOTAL
-# define IRIX_SYSGET_AVAILABLE
+#if HAVE_SYS_SYSMP_H
+# include <sys/sysmp.h>
 #endif
 
 /* Return the total amount of physical memory.  */
@@ -97,7 +61,18 @@ physmem_total (void)
   }
 #endif
 
-  IRIX_SYSGET_TOTAL;
+#if defined MP_SAGET && defined MPSA_RMINFO && defined _SC_PAGESIZE
+  { /* This works on irix6. */
+    struct rminfo realmem;
+    if (sysmp (MP_SAGET, MPSA_RMINFO, &realmem, sizeof realmem) == 0)
+      {
+	double pagesize = sysconf (_SC_PAGESIZE);
+	double pages = realmem.physmem;
+	if (0 <= pages && 0 <= pagesize)
+          return pages * pagesize;
+      }
+  }
+#endif
 
   /* Guess 64 MB.  It's probably an older host, so guess small.  */
   return 64 * 1024 * 1024;
@@ -131,7 +106,18 @@ physmem_available (void)
   }
 #endif
 
-  IRIX_SYSGET_AVAILABLE;
+#if defined MP_SAGET && defined MPSA_RMINFO && defined _SC_PAGESIZE
+  { /* This works on irix6. */
+    struct rminfo realmem;
+    if (sysmp (MP_SAGET, MPSA_RMINFO, &realmem, sizeof realmem) == 0)
+      {
+	double pagesize = sysconf (_SC_PAGESIZE);
+	double pages = realmem.availrmem;
+	if (0 <= pages && 0 <= pagesize)
+          return pages * pagesize;
+      }
+  }
+#endif
 
   /* Guess 25% of physical memory.  */
   return physmem_total () / 4;
