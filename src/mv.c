@@ -93,6 +93,9 @@ static int stdin_tty;
 /* This process's effective user ID.  */
 static uid_t myeuid;
 
+/* FIXME */
+static struct stat dest_stats, source_stats;
+
 /* If non-zero, display usage information and exit.  */
 static int show_help;
 
@@ -113,88 +116,6 @@ static struct option const long_options[] =
   {NULL, 0, NULL, 0}
 };
 
-void
-main (int argc, char **argv)
-{
-  int c;
-  int errors;
-  int make_backups = 0;
-  char *version;
-
-  version = getenv ("SIMPLE_BACKUP_SUFFIX");
-  if (version)
-    simple_backup_suffix = version;
-  version = getenv ("VERSION_CONTROL");
-  program_name = argv[0];
-  myeuid = geteuid ();
-  interactive = override_mode = verbose = update = 0;
-  errors = 0;
-
-  while ((c = getopt_long (argc, argv, "bfiuvS:V:", long_options, (int *) 0))
-	 != EOF)
-    {
-      switch (c)
-	{
-	case 0:
-	  break;
-	case 'b':
-	  make_backups = 1;
-	  break;
-	case 'f':
-	  interactive = 0;
-	  override_mode = 1;
-	  break;
-	case 'i':
-	  interactive = 1;
-	  override_mode = 0;
-	  break;
-	case 'u':
-	  update = 1;
-	  break;
-	case 'v':
-	  verbose = 1;
-	  break;
-	case 'S':
-	  simple_backup_suffix = optarg;
-	  break;
-	case 'V':
-	  version = optarg;
-	  break;
-	default:
-	  usage (1);
-	}
-    }
-
-  if (show_version)
-    {
-      printf ("mv - %s\n", version_string);
-      exit (0);
-    }
-
-  if (show_help)
-    usage (0);
-
-  if (argc < optind + 2)
-    {
-      error (0, 0, "missing file argument%s", argc == optind ? "s" : "");
-      usage (1);
-    }
-
-  if (make_backups)
-    backup_type = get_version (version);
-
-  stdin_tty = isatty (STDIN_FILENO);
-
-  if (argc > optind + 2 && !isdir (argv[argc - 1]))
-    error (1, 0, "when moving multiple files, last argument must be a directory");
-
-  /* Move each arg but the last onto the last. */
-  for (; optind < argc - 1; ++optind)
-    errors |= movefile (argv[optind], argv[argc - 1]);
-
-  exit (errors);
-}
-
 /* If PATH is an existing directory, return nonzero, else 0.  */
 
 static int
@@ -205,34 +126,109 @@ is_real_dir (char *path)
   return lstat (path, &stats) == 0 && S_ISDIR (stats.st_mode);
 }
 
-/* Move file SOURCE onto DEST.  Handles the case when DEST is a directory.
-   Return 0 if successful, 1 if an error occurred.  */
+/* Copy regular file SOURCE onto file DEST.
+   Return 1 if an error occurred, 0 if successful. */
 
 static int
-movefile (char *source, char *dest)
+copy_reg (char *source, char *dest)
 {
-  strip_trailing_slashes (source);
+  int ifd;
+  int ofd;
+  char buf[1024 * 8];
+  int len;			/* Number of bytes read into `buf'. */
 
-  if ((dest[strlen (dest) - 1] == '/' && !is_real_dir (source))
-      || isdir (dest))
+  if (!S_ISREG (source_stats.st_mode))
     {
-      /* Target is a directory; build full target filename. */
-      char *base;
-      char *new_dest;
-
-      base = basename (source);
-      /* Remove a (single) trailing slash if there is at least one.  */
-      if (dest[strlen (dest) - 1] == '/')
-        dest[strlen (dest) - 1] = '\0';
-      new_dest = (char *) alloca (strlen (dest) + 1 + strlen (base) + 1);
-      stpcpy (stpcpy (stpcpy (new_dest, dest), "/"), base);
-      return do_move (source, new_dest);
+      error (0, 0, "cannot move `%s' across filesystems: Not a regular file",
+	     source);
+      return 1;
     }
-  else
-    return do_move (source, dest);
-}
 
-static struct stat dest_stats, source_stats;
+  if (unlink (dest) && errno != ENOENT)
+    {
+      error (0, errno, "cannot remove `%s'", dest);
+      return 1;
+    }
+
+  ifd = open (source, O_RDONLY, 0);
+  if (ifd < 0)
+    {
+      error (0, errno, "%s", source);
+      return 1;
+    }
+  ofd = open (dest, O_WRONLY | O_CREAT | O_TRUNC, 0600);
+  if (ofd < 0)
+    {
+      error (0, errno, "%s", dest);
+      close (ifd);
+      return 1;
+    }
+
+  while ((len = safe_read (ifd, buf, sizeof (buf))) > 0)
+    {
+      if (full_write (ofd, buf, len) < 0)
+	{
+	  error (0, errno, "%s", dest);
+	  close (ifd);
+	  close (ofd);
+	  unlink (dest);
+	  return 1;
+	}
+    }
+  if (len < 0)
+    {
+      error (0, errno, "%s", source);
+      close (ifd);
+      close (ofd);
+      unlink (dest);
+      return 1;
+    }
+
+  if (close (ifd) < 0)
+    {
+      error (0, errno, "%s", source);
+      close (ofd);
+      return 1;
+    }
+  if (close (ofd) < 0)
+    {
+      error (0, errno, "%s", dest);
+      return 1;
+    }
+
+  /* chown turns off set[ug]id bits for non-root,
+     so do the chmod last.  */
+
+  /* Try to copy the old file's modtime and access time.  */
+  {
+    struct utimbuf tv;
+
+    tv.actime = source_stats.st_atime;
+    tv.modtime = source_stats.st_mtime;
+    if (utime (dest, &tv))
+      {
+	error (0, errno, "%s", dest);
+	return 1;
+      }
+  }
+
+  /* Try to preserve ownership.  For non-root it might fail, but that's ok.
+     But root probably wants to know, e.g. if NFS disallows it.  */
+  if (chown (dest, source_stats.st_uid, source_stats.st_gid)
+      && (errno != EPERM || myeuid == 0))
+    {
+      error (0, errno, "%s", dest);
+      return 1;
+    }
+
+  if (chmod (dest, source_stats.st_mode & 07777))
+    {
+      error (0, errno, "%s", dest);
+      return 1;
+    }
+
+  return 0;
+}
 
 /* Move SOURCE onto DEST.  Handles cross-filesystem moves.
    If DEST is a directory, SOURCE must be also.
@@ -346,108 +342,31 @@ do_move (char *source, char *dest)
   return 1;
 }
 
-/* Copy regular file SOURCE onto file DEST.
-   Return 1 if an error occurred, 0 if successful. */
+/* Move file SOURCE onto DEST.  Handles the case when DEST is a directory.
+   Return 0 if successful, 1 if an error occurred.  */
 
 static int
-copy_reg (char *source, char *dest)
+movefile (char *source, char *dest)
 {
-  int ifd;
-  int ofd;
-  char buf[1024 * 8];
-  int len;			/* Number of bytes read into `buf'. */
+  strip_trailing_slashes (source);
 
-  if (!S_ISREG (source_stats.st_mode))
+  if ((dest[strlen (dest) - 1] == '/' && !is_real_dir (source))
+      || isdir (dest))
     {
-      error (0, 0, "cannot move `%s' across filesystems: Not a regular file",
-	     source);
-      return 1;
-    }
+      /* Target is a directory; build full target filename. */
+      char *base;
+      char *new_dest;
 
-  if (unlink (dest) && errno != ENOENT)
-    {
-      error (0, errno, "cannot remove `%s'", dest);
-      return 1;
+      base = basename (source);
+      /* Remove a (single) trailing slash if there is at least one.  */
+      if (dest[strlen (dest) - 1] == '/')
+        dest[strlen (dest) - 1] = '\0';
+      new_dest = (char *) alloca (strlen (dest) + 1 + strlen (base) + 1);
+      stpcpy (stpcpy (stpcpy (new_dest, dest), "/"), base);
+      return do_move (source, new_dest);
     }
-
-  ifd = open (source, O_RDONLY, 0);
-  if (ifd < 0)
-    {
-      error (0, errno, "%s", source);
-      return 1;
-    }
-  ofd = open (dest, O_WRONLY | O_CREAT | O_TRUNC, 0600);
-  if (ofd < 0)
-    {
-      error (0, errno, "%s", dest);
-      close (ifd);
-      return 1;
-    }
-
-  while ((len = safe_read (ifd, buf, sizeof (buf))) > 0)
-    {
-      if (full_write (ofd, buf, len) < 0)
-	{
-	  error (0, errno, "%s", dest);
-	  close (ifd);
-	  close (ofd);
-	  unlink (dest);
-	  return 1;
-	}
-    }
-  if (len < 0)
-    {
-      error (0, errno, "%s", source);
-      close (ifd);
-      close (ofd);
-      unlink (dest);
-      return 1;
-    }
-
-  if (close (ifd) < 0)
-    {
-      error (0, errno, "%s", source);
-      close (ofd);
-      return 1;
-    }
-  if (close (ofd) < 0)
-    {
-      error (0, errno, "%s", dest);
-      return 1;
-    }
-
-  /* chown turns off set[ug]id bits for non-root,
-     so do the chmod last.  */
-
-  /* Try to copy the old file's modtime and access time.  */
-  {
-    struct utimbuf tv;
-
-    tv.actime = source_stats.st_atime;
-    tv.modtime = source_stats.st_mtime;
-    if (utime (dest, &tv))
-      {
-	error (0, errno, "%s", dest);
-	return 1;
-      }
-  }
-
-  /* Try to preserve ownership.  For non-root it might fail, but that's ok.
-     But root probably wants to know, e.g. if NFS disallows it.  */
-  if (chown (dest, source_stats.st_uid, source_stats.st_gid)
-      && (errno != EPERM || myeuid == 0))
-    {
-      error (0, errno, "%s", dest);
-      return 1;
-    }
-
-  if (chmod (dest, source_stats.st_mode & 07777))
-    {
-      error (0, errno, "%s", dest);
-      return 1;
-    }
-
-  return 0;
+  else
+    return do_move (source, dest);
 }
 
 static void
@@ -484,4 +403,86 @@ version control may be set with VERSION_CONTROL, values are:\n\
   never, simple   always make simple backups  \n");
     }
   exit (status);
+}
+
+void
+main (int argc, char **argv)
+{
+  int c;
+  int errors;
+  int make_backups = 0;
+  char *version;
+
+  version = getenv ("SIMPLE_BACKUP_SUFFIX");
+  if (version)
+    simple_backup_suffix = version;
+  version = getenv ("VERSION_CONTROL");
+  program_name = argv[0];
+  myeuid = geteuid ();
+  interactive = override_mode = verbose = update = 0;
+  errors = 0;
+
+  while ((c = getopt_long (argc, argv, "bfiuvS:V:", long_options, (int *) 0))
+	 != EOF)
+    {
+      switch (c)
+	{
+	case 0:
+	  break;
+	case 'b':
+	  make_backups = 1;
+	  break;
+	case 'f':
+	  interactive = 0;
+	  override_mode = 1;
+	  break;
+	case 'i':
+	  interactive = 1;
+	  override_mode = 0;
+	  break;
+	case 'u':
+	  update = 1;
+	  break;
+	case 'v':
+	  verbose = 1;
+	  break;
+	case 'S':
+	  simple_backup_suffix = optarg;
+	  break;
+	case 'V':
+	  version = optarg;
+	  break;
+	default:
+	  usage (1);
+	}
+    }
+
+  if (show_version)
+    {
+      printf ("mv - %s\n", version_string);
+      exit (0);
+    }
+
+  if (show_help)
+    usage (0);
+
+  if (argc < optind + 2)
+    {
+      error (0, 0, "missing file argument%s", argc == optind ? "s" : "");
+      usage (1);
+    }
+
+  if (make_backups)
+    backup_type = get_version (version);
+
+  stdin_tty = isatty (STDIN_FILENO);
+
+  if (argc > optind + 2 && !isdir (argv[argc - 1]))
+    error (1, 0, "when moving multiple files, last argument must be a directory");
+
+  /* Move each arg but the last onto the last. */
+  for (; optind < argc - 1; ++optind)
+    errors |= movefile (argv[optind], argv[argc - 1]);
+
+  exit (errors);
 }
