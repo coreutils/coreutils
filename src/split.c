@@ -73,9 +73,7 @@ static struct option const longopts[] =
 };
 
 static void
-usage (status, reason)
-     int status;
-     char *reason;
+usage (int status, char *reason)
 {
   if (reason != NULL)
     fprintf (stderr, "%s: %s\n", program_name, reason);
@@ -109,8 +107,7 @@ SIZE may have a multiplier suffix: b for 512, k for 1K, m for 1 Meg.\n\
 /* Return nonzero if the string STR is composed entirely of decimal digits.  */
 
 static int
-isdigits (str)
-     char *str;
+isdigits (char *str)
 {
   do
     {
@@ -128,9 +125,7 @@ isdigits (str)
    Return 0 if STR is valid, -1 if not. */
 
 static int
-convint (str, val)
-     char *str;
-     int *val;
+convint (char *str, int *val)
 {
   int multiplier = 1;
   int arglen = strlen (str);
@@ -163,7 +158,7 @@ convint (str, val)
    into the string `outfile' at the position pointed to by `outfile_mid'.  */
 
 static void
-next_file_name ()
+next_file_name (void)
 {
   int x;
   char *ne;
@@ -206,10 +201,7 @@ next_file_name ()
    Otherwise add to the same output file already in use.  */
 
 static void
-cwrite (new_file_flag, bp, bytes)
-     int new_file_flag;
-     char *bp;
-     int bytes;
+cwrite (int new_file_flag, char *bp, int bytes)
 {
   if (new_file_flag)
     {
@@ -230,9 +222,7 @@ cwrite (new_file_flag, bp, bytes)
    If this is less than NCHARS, do not call `stdread' again.  */
 
 static int
-stdread (buf, nchars)
-     char *buf;
-     int nchars;
+stdread (char *buf, int nchars)
 {
   int n_read;
   int to_be_read = nchars;
@@ -254,10 +244,7 @@ stdread (buf, nchars)
    Use buffer BUF, whose size is BUFSIZE.  */
 
 static void
-bytes_split (nchars, buf, bufsize)
-     int nchars;
-     char *buf;
-     int bufsize;
+bytes_split (int nchars, char *buf, int bufsize)
 {
   int n_read;
   int new_file_flag = 1;
@@ -301,10 +288,7 @@ bytes_split (nchars, buf, bufsize)
    Use buffer BUF, whose size is BUFSIZE.  */
 
 static void
-lines_split (nlines, buf, bufsize)
-     int nlines;
-     char *buf;
-     int bufsize;
+lines_split (int nlines, char *buf, int bufsize)
 {
   int n_read;
   char *bp, *bp_out, *eob;
@@ -350,8 +334,7 @@ lines_split (nlines, buf, bufsize)
    where lines longer than NCHARS bytes occur. */
 
 static void
-line_bytes_split (nchars)
-     int nchars;
+line_bytes_split (int nchars)
 {
   int n_read;
   char *bp;
@@ -398,9 +381,7 @@ line_bytes_split (nchars)
 }
 
 void
-main (argc, argv)
-     int argc;
-     char *argv[];
+main (int argc, char **argv)
 {
   struct stat stat_buf;
   int num;			/* numeric argument from command line */
