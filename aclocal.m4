@@ -1352,7 +1352,7 @@ AC_DEFUN([jm_INCLUDED_REGEX],
 # Prerequisites of lib/regex.c.
 AC_DEFUN([jm_PREREQ_REGEX],
 [
-  dnl FIXME: Maybe provide a btowc replacement someday: solaris-2.5.1 lacks it.
+  dnl FIXME: Maybe provide a btowc replacement someday: Solaris 2.5.1 lacks it.
   dnl FIXME: Check for wctype and iswctype, and and add -lw if necessary
   dnl to get them.
 
@@ -2831,7 +2831,7 @@ main ()
 
 dnl From Jim Meyering.
 dnl Determine whether lstat has the bug that it succeeds when given the
-dnl zero-length file name argument.  The lstat from SunOS4.1.4 and the Hurd
+dnl zero-length file name argument.  The lstat from SunOS 4.1.4 and the Hurd
 dnl (as of 1998-11-01) do this.
 dnl
 dnl If it does, then define HAVE_LSTAT_EMPTY_STRING_BUG and arrange to
@@ -3200,7 +3200,7 @@ AC_DEFUN([gl_PREREQ_MKTIME], [
 
 dnl From Jim Meyering.
 dnl Determine whether stat has the bug that it succeeds when given the
-dnl zero-length file name argument.  The stat from SunOS4.1.4 and the Hurd
+dnl zero-length file name argument.  The stat from SunOS 4.1.4 and the Hurd
 dnl (as of 1998-11-01) do this.
 dnl
 dnl If it does, then define HAVE_STAT_EMPTY_STRING_BUG and arrange to
@@ -3968,7 +3968,7 @@ AC_DEFUN([vb_FUNC_RENAME],
 
 #serial 1
 
-# On some systems (e.g., HPUX-10.20, SunOS4.1.4, solaris2.5.1), mkstemp has the
+# On some hosts (e.g., HP-UX 10.20, SunOS 4.1.4, Solaris 2.5.1), mkstemp has a
 # silly limit that it can create no more than 26 files from a given template.
 # Other systems lack mkstemp altogether.  On either type of system, arrange
 # to use the replacement function.
