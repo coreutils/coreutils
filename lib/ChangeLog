@@ -1,3 +1,9 @@
+2001-08-28  Paul Eggert  <eggert@twinsun.com>
+
+	* lib/xstrtol.h: Add copyright notice.
+	(_DECLARE_XSTRTOL): Improve quality of diagnostic for
+	LONGINT_INVALID_SUFFIX_CHAR.
+
 2001-08-30  Paul Eggert  <eggert@twinsun.com>
 
 	* quotearg.c: BSD/OS 4.1 wchar.h requires FILE and struct
