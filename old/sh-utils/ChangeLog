@@ -1,5 +1,7 @@
 1997-10-23  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* Makefile.am (aclocal-files): Also depend on m4/Makefile.am.
+
 	* src/system.h [!HAVE_DECLARATION_FREE]: Declare free.
 	[!HAVE_DECLARATION_MALLOC]: Declare malloc.
 	[!HAVE_DECLARATION_REALLOC]: Declare realloc.
