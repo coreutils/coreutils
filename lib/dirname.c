@@ -49,8 +49,10 @@ void *memrchr ();
 
 #define BACKSLASH_IS_PATH_SEPARATOR ISSLASH ('\\')
 
-/* Return the length of the directory part of PATH.
-   Set *RESULT to point to PATH or to `"."', as appropriate.  */
+/* Return the length of `dirname (PATH)' and set *RESULT
+   to point to PATH or to `"."', as appropriate.
+   Works properly even if there are trailing slashes
+   (by effectively ignoring them).  */
 size_t
 dir_name_r (const char *path, const char **result)
 {
