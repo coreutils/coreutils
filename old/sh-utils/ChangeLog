@@ -1,6 +1,19 @@
-2001-12-08  Jim Meyering  <meyering@lucent.com>
+2001-12-15  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.12.
+
+	* src/basename.c, src/chroot.c, src/date.c, src/dirname.c, src/echo.c,
+	* src/env.c, src/expr.c, src/factor.c, src/hostid.c, src/hostname.c,
+	* src/id.c, src/kill.c, src/logname.c, src/nice.c, src/pathchk.c,
+	* src/pinky.c, src/printenv.c, src/printf.c, src/pwd.c, src/seq.c,
+	* src/sleep.c, src/stty.c, src/su.c, src/tee.c, src/test.c, src/true.c,
+	* src/tty.c, src/uname.c, src/uptime.c, src/users.c, src/who.c,
+	* src/whoami.c, src/yes.c (usage): Use fputs, not printf.
+	Split --help output into smaller pieces.
+	Use new macros, HELP_OPTION_DESCRIPTION and VERSION_OPTION_DESCRIPTION
+	instead of hard-coding --help and --version descriptions.
+
+2001-12-08  Jim Meyering  <meyering@lucent.com>
 
 	* Makefile.cfg (wget_files): Remove ansi2knr.c, since it's
 	no longer available at that location.
