@@ -380,7 +380,63 @@ static void
 isaac_seed (struct isaac_state *s)
 {
   char *p = (char *) s->mm;
-#define MIXIN(o) (memcpy (p, (char *) &(o), sizeof (o)), p += sizeof (o))
+  char *lim = p + sizeof s->mm;
+#define MIXIN_BOUND(s) ((s) < lim - p ? (s) : lim - p)
+#define MIXIN(o) \
+    do \
+      { \
+	size_t s = MIXIN_BOUND (sizeof (o)); \
+        memcpy (p, (char *) &(o), s); \
+	p += s; \
+      } \
+    while (0)
+
+  /* Mix in bits of random information from the environment.
+     Mix the most random items first, in case lim - p is small
+     and we have to truncate.  */
+
+  {
+    int fd = open ("/dev/urandom", O_RDONLY);
+    if (fd >= 0)
+      {
+	size_t s = MIXIN_BOUND (32);
+	read (fd, p, s);
+	p += s;
+	close (fd);
+      }
+    else
+      {
+	fd = open ("/dev/random", O_RDONLY | O_NONBLOCK);
+	if (fd >= 0)
+	  {
+	    /* /dev/random is more precious, so use less */
+	    size_t s = MIXIN_BOUND (16);
+	    read (fd, p, s);
+	    p += s;
+	    close (fd);
+	  }
+      }
+  }
+
+#ifdef HAVE_GETHRTIME
+  {
+    hrtime_t t = gethrtime ();
+    MIXIN (t);
+  }
+#endif
+
+#ifdef HAVE_CLOCK_GETTIME
+  {
+    struct timespec t;
+    clock_gettime (CLOCK_REALTIME, &t);
+    MIXIN (t);
+  }
+#endif
+
+  {
+    time_t t = time ((time_t *) 0);
+    MIXIN (t);
+  }
 
   {
     pid_t t = getpid ();
@@ -397,38 +453,6 @@ isaac_seed (struct isaac_state *s)
   {
     gid_t t = getgid ();
     MIXIN (t);
-  }
-
-  {
-#ifdef HAVE_CLOCK_GETTIME		/* POSIX ns-resolution */
-    struct timespec t;
-    clock_gettime (CLOCK_REALTIME, &t);
-#else
-    time_t t = time ((time_t *) 0);
-#endif
-    MIXIN (t);
-  }
-
-  {
-    int r = 0;
-    int fd = open ("/dev/urandom", O_RDONLY);
-    if (fd >= 0)
-      {
-	r = read (fd, p, 32);
-	close (fd);
-      }
-    else
-      {
-	fd = open ("/dev/random", O_RDONLY | O_NONBLOCK);
-	if (fd >= 0)
-	  {
-	    /* /dev/random is more precious, so use less */
-	    r = read (fd, p, 16);
-	    close (fd);
-	  }
-      }
-    if (0 < r)
-      p += r;
   }
 
   isaac_init (s, s->mm, sizeof (s->mm));
