@@ -1,8 +1,14 @@
 2003-07-12  Jim Meyering  <jim@meyering.net>
 
-	* src/remove.c: Remove `#pragma alloca'
-
 	* Version 5.0.1.
+
+	* src/sys2.h: Remove alloca-related block.
+	* src/system.h: Include <alloca.h> here, instead.
+
+	It appears that the `#pragma alloca' included via "system.h" is
+	adequate, since join.c uses alloca, yet lacked an in-file #pragma.
+	* src/copy.c, src/cp.c, src/df.c, src/install.c, src/ln.c:
+	* src/ls.c, src/mv.c, src/remove.c: Remove `#pragma alloca'.
 
 	* src/chown-core.c (change_file_owner): Do not restore any special
 	permission bits (e.g., set-user-ID, set-group-ID) that are reset
