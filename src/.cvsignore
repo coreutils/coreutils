@@ -68,6 +68,7 @@ readlink
 rm
 rmdir
 seq
+setuidgid
 sha1sum
 shred
 sleep
