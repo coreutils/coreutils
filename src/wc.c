@@ -38,7 +38,7 @@
 #endif
 #if !defined iswspace && !HAVE_ISWSPACE
 # define iswspace(wc) \
-    ((wc) == (unsigned char) (wc) && ISSPACE ((unsigned char) (wc)))
+    ((wc) == to_uchar (wc) && ISSPACE (to_uchar (wc)))
 #endif
 
 /* Include this after wctype.h so that we `#undef' ISPRINT
@@ -88,17 +88,14 @@ static uintmax_t total_bytes;
 static uintmax_t max_line_length;
 
 /* Which counts to print. */
-static int print_lines, print_words, print_chars, print_bytes;
-static int print_linelength;
+static bool print_lines, print_words, print_chars, print_bytes;
+static bool print_linelength;
 
 /* The print width of each count.  */
 static int number_width;
 
-/* Nonzero if we have ever read the standard input. */
-static int have_read_stdin;
-
-/* The error code to return to the system. */
-static int exit_status;
+/* True if we have ever read the standard input. */
+static bool have_read_stdin;
 
 /* The result of calling fstat or stat on a file descriptor or file.  */
 struct fstatus
@@ -198,15 +195,17 @@ write_counts (uintmax_t lines,
   putchar ('\n');
 }
 
-/* FILE_X is the name of the file (or NULL for standard input) that is
-   open on descriptor FD.  */
-static void
+/* Count words.  FILE_X is the name of the file (or NULL for standard
+   input) that is open on descriptor FD.  *FSTATUS is its status.
+   Return true if successful.  */
+static bool
 wc (int fd, char const *file_x, struct fstatus *fstatus)
 {
+  bool ok = true;
   char buf[BUFFER_SIZE + 1];
   size_t bytes_read;
   uintmax_t lines, words, chars, bytes, linelength;
-  int count_bytes, count_chars, count_complicated;
+  bool count_bytes, count_chars, count_complicated;
   char const *file = file_x ? file_x : _("standard input");
 
   lines = words = chars = bytes = linelength = 0;
@@ -222,10 +221,10 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
   else
 #endif
     {
-      count_bytes = print_bytes + print_chars;
-      count_chars = 0;
+      count_bytes = print_bytes | print_chars;
+      count_chars = false;
     }
-  count_complicated = print_words + print_linelength;
+  count_complicated = print_words | print_linelength;
 
   /* We need binary input, since `wc' relies on `lseek' and byte counts.  */
   SET_BINARY (fd);
@@ -240,7 +239,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
      `(dd ibs=99k skip=1 count=0; ./wc -c) < /etc/group'
      should make wc report `0' bytes.  */
 
-  if (count_bytes && !count_chars && !print_lines && !count_complicated)
+  if (count_bytes & !count_chars & !print_lines & !count_complicated)
     {
       off_t current_pos, end_pos;
 
@@ -262,14 +261,14 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
 	      if (bytes_read == SAFE_READ_ERROR)
 		{
 		  error (0, errno, "%s", file);
-		  exit_status = 1;
+		  ok = false;
 		  break;
 		}
 	      bytes += bytes_read;
 	    }
 	}
     }
-  else if (!count_chars && !count_complicated)
+  else if (!count_chars & !count_complicated)
     {
       /* Use a separate loop when counting only lines or lines and bytes --
 	 but not chars or words.  */
@@ -280,7 +279,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
 	  if (bytes_read == SAFE_READ_ERROR)
 	    {
 	      error (0, errno, "%s", file);
-	      exit_status = 1;
+	      ok = false;
 	      break;
 	    }
 
@@ -296,7 +295,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
 # define SUPPORT_OLD_MBRTOWC 1
   else if (MB_CUR_MAX > 1)
     {
-      int in_word = 0;
+      bool in_word = false;
       uintmax_t linepos = 0;
       mbstate_t state;
       uintmax_t last_error_line = 0;
@@ -324,7 +323,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
 	  if (bytes_read == SAFE_READ_ERROR)
 	    {
 	      error (0, errno, "%s", file);
-	      exit_status = 1;
+	      ok = false;
 	      break;
 	    }
 
@@ -358,6 +357,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
 		      last_error_errno = errno;
 		      error (0, errno, "%s:%s", file,
 			     umaxtostr (last_error_line, line_number_buf));
+		      ok = false;
 		    }
 		  p++;
 		  bytes_read--;
@@ -391,11 +391,8 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
 		      /* Fall through. */
 		    case '\v':
 		    mb_word_separator:
-		      if (in_word)
-			{
-			  in_word = 0;
-			  words++;
-			}
+		      words += in_word;
+		      in_word = false;
 		      break;
 		    default:
 		      if (iswprint (wide_char))
@@ -405,7 +402,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
 			    linepos += width;
 			  if (iswspace (wide_char))
 			    goto mb_word_separator;
-			  in_word = 1;
+			  in_word = true;
 			}
 		      break;
 		    }
@@ -429,13 +426,12 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
 	}
       if (linepos > linelength)
 	linelength = linepos;
-      if (in_word)
-	words++;
+      words += in_word;
     }
 #endif
   else
     {
-      int in_word = 0;
+      bool in_word = false;
       uintmax_t linepos = 0;
 
       while ((bytes_read = safe_read (fd, buf, BUFFER_SIZE)) > 0)
@@ -444,7 +440,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
 	  if (bytes_read == SAFE_READ_ERROR)
 	    {
 	      error (0, errno, "%s", file);
-	      exit_status = 1;
+	      ok = false;
 	      break;
 	    }
 
@@ -470,19 +466,16 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
 		  /* Fall through. */
 		case '\v':
 		word_separator:
-		  if (in_word)
-		    {
-		      in_word = 0;
-		      words++;
-		    }
+		  words += in_word;
+		  in_word = false;
 		  break;
 		default:
-		  if (ISPRINT ((unsigned char) p[-1]))
+		  if (ISPRINT (to_uchar (p[-1])))
 		    {
 		      linepos++;
-		      if (ISSPACE ((unsigned char) p[-1]))
+		      if (ISSPACE (to_uchar (p[-1])))
 			goto word_separator;
-		      in_word = 1;
+		      in_word = true;
 		    }
 		  break;
 		}
@@ -491,8 +484,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
 	}
       if (linepos > linelength)
 	linelength = linepos;
-      if (in_word)
-	words++;
+      words += in_word;
     }
 
   if (count_chars < print_chars)
@@ -505,15 +497,17 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
   total_bytes += bytes;
   if (linelength > max_line_length)
     max_line_length = linelength;
+
+  return ok;
 }
 
-static void
+static bool
 wc_file (char const *file, struct fstatus *fstatus)
 {
   if (STREQ (file, "-"))
     {
-      have_read_stdin = 1;
-      wc (STDIN_FILENO, file, fstatus);
+      have_read_stdin = true;
+      return wc (STDIN_FILENO, file, fstatus);
     }
   else
     {
@@ -521,14 +515,17 @@ wc_file (char const *file, struct fstatus *fstatus)
       if (fd == -1)
 	{
 	  error (0, errno, "%s", file);
-	  exit_status = 1;
-	  return;
+	  return false;
 	}
-      wc (fd, file, fstatus);
-      if (close (fd))
+      else
 	{
-	  error (0, errno, "%s", file);
-	  exit_status = 1;
+	  bool ok = wc (fd, file, fstatus);
+	  if (close (fd) != 0)
+	    {
+	      error (0, errno, "%s", file);
+	      return false;
+	    }
+	  return ok;
 	}
     }
 }
@@ -598,6 +595,7 @@ compute_number_width (int nfiles, struct fstatus const *fstatus)
 int
 main (int argc, char **argv)
 {
+  bool ok;
   int optc;
   int nfiles;
   struct fstatus *fstatus;
@@ -610,8 +608,8 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  exit_status = 0;
-  print_lines = print_words = print_chars = print_bytes = print_linelength = 0;
+  print_lines = print_words = print_chars = print_bytes = false;
+  print_linelength = false;
   total_lines = total_words = total_chars = total_bytes = max_line_length = 0;
 
   while ((optc = getopt_long (argc, argv, "clLmw", longopts, NULL)) != -1)
@@ -621,23 +619,23 @@ main (int argc, char **argv)
 	break;
 
       case 'c':
-	print_bytes = 1;
+	print_bytes = true;
 	break;
 
       case 'm':
-	print_chars = 1;
+	print_chars = true;
 	break;
 
       case 'l':
-	print_lines = 1;
+	print_lines = true;
 	break;
 
       case 'w':
-	print_words = 1;
+	print_words = true;
 	break;
 
       case 'L':
-	print_linelength = 1;
+	print_linelength = true;
 	break;
 
       case_GETOPT_HELP_CHAR;
@@ -648,9 +646,9 @@ main (int argc, char **argv)
 	usage (EXIT_FAILURE);
       }
 
-  if (print_lines + print_words + print_chars + print_bytes + print_linelength
-      == 0)
-    print_lines = print_words = print_bytes = 1;
+  if (! (print_lines | print_words | print_chars | print_bytes
+	 | print_linelength))
+    print_lines = print_words = print_bytes = true;
 
   nfiles = argc - optind;
   nfiles += (nfiles == 0);
@@ -660,14 +658,16 @@ main (int argc, char **argv)
 
   if (! argv[optind])
     {
-      have_read_stdin = 1;
-      wc (STDIN_FILENO, NULL, &fstatus[0]);
+      have_read_stdin = true;
+      ok = wc (STDIN_FILENO, NULL, &fstatus[0]);
     }
   else
     {
       int i;
+
+      ok = true;
       for (i = 0; i < nfiles; i++)
-	wc_file (argv[optind + i], &fstatus[i]);
+	ok &= wc_file (argv[optind + i], &fstatus[i]);
 
       if (nfiles > 1)
 	write_counts (total_lines, total_words, total_chars, total_bytes,
@@ -679,5 +679,5 @@ main (int argc, char **argv)
   if (have_read_stdin && close (STDIN_FILENO) != 0)
     error (EXIT_FAILURE, errno, "-");
 
-  exit (exit_status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
+  exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
