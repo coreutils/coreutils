@@ -129,7 +129,7 @@ text), and name for each FILE.\n"),
 }
 
 static int
-split_3 (char *s, size_t s_len, char **u, int *binary, char **w)
+split_3 (char *s, size_t s_len, unsigned char **u, int *binary, char **w)
 {
   size_t i;
   int filename_has_newline = 0;
@@ -219,7 +219,7 @@ split_3 (char *s, size_t s_len, char **u, int *binary, char **w)
 }
 
 static int
-hex_digits (const char *s)
+hex_digits (unsigned char const *s)
 {
   while (*s)
     {
@@ -312,7 +312,7 @@ md5_check (const char *checkfile_name)
     {
       char *filename;
       int binary;
-      char *md5num;
+      unsigned char *md5num;
       int err;
       int line_length;
 
