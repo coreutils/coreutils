@@ -6,6 +6,8 @@
 	by using errno from the failed unlink, when a cross-device `mv'
 	fails, e.g., because the destination cannot be unlinked.
 	Prompted by a report from Karl Berry.
+	* tests/mv/part-fail: New test for the above.
+	* tests/mv/Makefile.am (TESTS): Add part-fail.
 
 2002-03-16  Jim Meyering  <meyering@lucent.com>
 
