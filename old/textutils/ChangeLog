@@ -1,3 +1,7 @@
+Fri Oct 18 00:08:04 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* tests/Makefile.am (SUBDIRS): Add join-test.
+
 Tue Oct 15 23:25:31 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/tr.c (get_next): Rewrite to treat lower/upper mapping as a
