@@ -1,5 +1,5 @@
 /* mountlist.c -- return a list of mounted filesystems
-   Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1992, 1997 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -97,6 +97,17 @@ void error ();
 /* So special that it's not worth putting this in autoconf.  */
 # undef MOUNTED_FREAD_FSTYP
 # define MOUNTED_GETMNTTBL
+#endif
+
+#ifdef HAVE_SYS_MNTENT_H
+/* This is to get MNTOPT_IGNORE on e.g. SVR4.  */
+# include <sys/mntent.h>
+#endif
+
+#if defined (MNTOPT_IGNORE) && defined (HAVE_HASMNTOPT)
+# define MNT_IGNORE(M) hasmntopt ((M), MNTOPT_IGNORE)
+#else
+# define MNT_IGNORE(M) 0
 #endif
 
 #ifdef MOUNTED_GETMNTENT1	/* 4.3BSD, SunOS, HP-UX, Dynix, Irix.  */
@@ -502,6 +513,10 @@ read_filesystem_list (need_fs_type, all_fs)
 
     while ((ret = getmntent (fp, &mnt)) == 0)
       {
+	/* Don't show automounted filesystems twice on e.g., Solaris.  */
+	if (!all_fs && MNT_IGNORE (&mnt))
+	  continue;
+
 	me = (struct mount_entry *) xmalloc (sizeof (struct mount_entry));
 	me->me_devname = xstrdup (mnt.mnt_special);
 	me->me_mountdir = xstrdup (mnt.mnt_mountp);
