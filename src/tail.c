@@ -1624,10 +1624,13 @@ main (int argc, char **argv)
 	--n_units;
     }
 
-  n_files = argc - optind;
-  file = argv + optind;
 
-  if (n_files == 0)
+  if (optind < argc)
+    {
+      n_files = argc - optind;
+      file = argv + optind;
+    }
+  else
     {
       static char *dummy_stdin = "-";
       n_files = 1;
