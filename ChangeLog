@@ -2,6 +2,16 @@
 
 	* Version 4.5.2.
 
+2002-09-06  Andreas Schwab  <schwab@suse.de>
+
+	`rmdir -p dir-specified-with-trailing-slash/' would fail.
+	* src/rmdir.c (remove_parents): Strip trailing slashes.
+
+2002-09-20  Jim Meyering  <meyering@lucent.com>
+
+	* tests/rmdir/t-slash: New file/test, for the above fix.
+	* tests/rmdir/Makefile.am (TESTS): Add t-slash.
+
 	* Makefile.maint (announcement): Arrange to gpg-sign the message.
 	Add a URL for each detached signature file.
 

@@ -1,4 +1,5 @@
 [4.5.2]
+* rmdir -p dir-with-trailing-slash/ no longer fails
 * printf now honors the `--' command line delimiter
 * od's 8-byte formats x8, o8, and u8 now work
 * tail now accepts fractional seconds for its --sleep-interval=S (-s) option
