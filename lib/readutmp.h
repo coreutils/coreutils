@@ -1,5 +1,5 @@
 /* Declarations for GNU's read utmp module.
-   Copyright (C) 1992-2000 Free Software Foundation, Inc.
+   Copyright (C) 1992-2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -69,6 +69,9 @@
 #   undef UT_USER
 #   define UT_USER(Utmp) ((Utmp)->ut_name)
 #  endif
+#  if defined HAVE_STRUCT_UTMPX_UT_TYPE
+#   define UT_TYPE(Utmp) ((Utmp)->ut_type)
+#  endif
 
 # else
 
@@ -78,6 +81,9 @@
 #  if HAVE_STRUCT_UTMP_UT_NAME
 #   undef UT_USER
 #   define UT_USER(Utmp) Utmp->ut_name
+#  endif
+#  if defined HAVE_STRUCT_UTMP_UT_TYPE
+#   define UT_TYPE(Utmp) ((Utmp)->ut_type)
 #  endif
 
 # endif
