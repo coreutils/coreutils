@@ -1,3 +1,18 @@
+Sun Jun 11 00:39:50 1995  Jim Meyering  (meyering@comco.com)
+
+	* md5sum.c: New file.  From Ulrich Drepper.
+	* md5-test.rfc: New file.
+	* man/Makefile.in: (MANFILES): Add md5sum.1.
+	* src/Makefile.in: (SOURCES): Add md5sum.c.
+	(OBJECTS): Add md5sum.o.
+	(PROGS): Add md5sum.
+	(check): Add basic checks for md5sum.
+	(md5sum): Add dependency and link rule.
+	(DISTFILES): Add md5-test.rfc.
+
+	* tr.c (look_up_char_class, append_char_class, append_equiv_class):
+	Use const attribute when appropriate.
+
 Sun May 28 14:48:58 1995  Jim Meyering  (meyering@comco.com)
 
 	* join.c: Overhauled to make -a1 and -a2 options work.
