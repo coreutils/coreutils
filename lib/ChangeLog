@@ -1,3 +1,10 @@
+2000-07-03  Paul Eggert  <eggert@twinsun.com>
+	and Bruno Haible  <haible@clisp.cons.org>
+
+	* lib/quotearg.c (mbrtowc):
+	Assign to *pwc, and return 1 only if result is nonzero.
+	(iswprint): Use ISPRINT when substituting our own mbrtowc.
+
 2000-07-02  Jim Meyering  <meyering@lucent.com>
 
 	* quotearg.c (mbstate_t): Don't define here.
