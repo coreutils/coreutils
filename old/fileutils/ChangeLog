@@ -1,6 +1,10 @@
-2002-02-02  Jim Meyering  <meyering@lucent.com>
+2002-02-10  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.6.
+
+	* configure.in (ALL_LINGUAS): Add Hungarian (hu).
+
+2002-02-02  Jim Meyering  <meyering@lucent.com>
 
 	* src/shred.c: (VERBOSE_UPDATE): Update every 5 seconds, not every 10.
 	(wipename): Quote file names only when necessary.
