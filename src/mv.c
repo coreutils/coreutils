@@ -393,6 +393,8 @@ Rename SOURCE to DEST, or move SOURCE(s) to DIRECTORY.\n\
       --help                   display this help and exit\n\
       --version                output version information and exit\n\
 \n\
+"));
+      printf (_("\
 The backup suffix is ~, unless set with SIMPLE_BACKUP_SUFFIX.  The\n\
 version control may be set with VERSION_CONTROL, values are:\n\
 \n\
