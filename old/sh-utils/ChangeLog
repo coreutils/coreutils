@@ -1,3 +1,8 @@
+1997-07-13  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* doc/Makefile.am (EXTRA_DIST): Remove explicit mention of texinfo.texi.
+	Now, automake includes it automatically.
+
 1997-07-12  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* po/Makefile.in.in (DISTFILES): Remove ChangeLog.
