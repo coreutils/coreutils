@@ -1,5 +1,7 @@
 2003-02-15  Jim Meyering  <jim@meyering.net>
 
+	* mmap-stack.m4: New file.
+
 	* jm-macros.m4: Require AC_SYS_MMAP_STACK.
 
 	Add Irix6 support to physmem.c.
