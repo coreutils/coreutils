@@ -1,4 +1,4 @@
-#serial 2
+#serial 3
 
 dnl From Jim Meyering.
 dnl
@@ -36,6 +36,6 @@ AC_DEFUN(jm_FUNC_PUTENV,
     AC_SUBST(LIBOBJS)
     LIBOBJS="$LIBOBJS putenv.$ac_objext"
     AC_DEFINE_UNQUOTED(putenv, rpl_putenv,
-      [Define to rpl_memcmp if the replacement function should be used.])
+      [Define to rpl_putenv if the replacement function should be used.])
   fi
 ])
