@@ -1,3 +1,7 @@
+2004-04-07  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi (stty invocation - Input): Document new iutf8 option.
+
 2004-04-04  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (stat invocation): Correct --format description.
