@@ -1,5 +1,5 @@
 /* chmod -- change permission modes of files
-   Copyright (C) 89, 90, 91, 95, 96, 1997 Free Software Foundation, Inc.
+   Copyright (C) 89, 90, 91, 95, 96, 97, 1998 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@
 
 #include "modechange.h"
 #include "system.h"
+#include "closeout.h"
 #include "error.h"
 #include "savedir.h"
 
@@ -32,6 +33,18 @@ enum Change_status
   CH_SUCCEEDED,
   CH_FAILED,
   CH_NO_CHANGE_REQUESTED
+};
+
+enum Verbosity
+{
+  /* Print a message for each file that is processed.  */
+  V_high,
+
+  /* Print a message for each file whose attributes we change.  */
+  V_changes_only,
+
+  /* Do not be verbose.  This is the default. */
+  V_off
 };
 
 void mode_string ();
@@ -50,15 +63,12 @@ static int recurse;
 /* If nonzero, force silence (no error messages). */
 static int force_silent;
 
-/* If nonzero, describe the modes we set. */
-static int verbose;
+/* Level of verbosity.  */
+static enum Verbosity verbosity = V_off;
 
 /* The argument to the --reference option.  Use the owner and group IDs
    of this file.  This file must exist.  */
 static char *reference_file;
-
-/* If nonzero, describe only modes that change. */
-static int changes_only;
 
 /* If nonzero, display usage information and exit.  */
 static int show_help;
@@ -148,7 +158,7 @@ change_file_mode (const char *file, const struct mode_change *changes,
     {
       int fail = chmod (file, (int) newmode);
 
-      if (verbose || (changes_only && !fail))
+      if (verbosity == V_high || (verbosity == V_changes_only && !fail))
 	describe_change (file, newmode, (fail ? CH_FAILED : CH_SUCCEEDED));
 
       if (fail)
@@ -158,7 +168,7 @@ change_file_mode (const char *file, const struct mode_change *changes,
 	  errors = 1;
 	}
     }
-  else if (verbose && changes_only == 0)
+  else if (verbosity == V_high)
     describe_change (file, newmode, CH_NO_CHANGE_REQUESTED);
 
   if (recurse && S_ISDIR (file_stats.st_mode))
@@ -247,6 +257,7 @@ Each MODE is one or more of the letters ugoa, one of the symbols +-= and\n\
 one or more of the letters rwxXstugo.\n\
 "));
       puts (_("\nReport bugs to <fileutils-bugs@gnu.org>."));
+      close_stdout ();
     }
   exit (status);
 }
@@ -268,7 +279,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  recurse = force_silent = verbose = changes_only = 0;
+  recurse = force_silent = 0;
 
   while (1)
     {
@@ -307,13 +318,13 @@ main (int argc, char **argv)
 	  recurse = 1;
 	  break;
 	case 'c':
-	  changes_only = 1;
+	  verbosity = V_changes_only;
 	  break;
 	case 'f':
 	  force_silent = 1;
 	  break;
 	case 'v':
-	  verbose = 1;
+	  verbosity = V_high;
 	  break;
 	default:
 	  usage (1);
@@ -323,6 +334,7 @@ main (int argc, char **argv)
   if (show_version)
     {
       printf ("chmod (%s) %s\n", GNU_PACKAGE, VERSION);
+      close_stdout ();
       exit (0);
     }
 
@@ -354,5 +366,7 @@ main (int argc, char **argv)
       errors |= change_file_mode (argv[optind], changes, 1);
     }
 
+  if (verbosity != V_off)
+    close_stdout ();
   exit (errors);
 }
