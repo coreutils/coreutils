@@ -44,7 +44,7 @@ extern int errno;
    Return zero upon success, write's (negative) error code otherwise.  */
 
 int
-safe_write (desc, ptr, len)
+full_write (desc, ptr, len)
      int desc;
      char *ptr;
      int len;
