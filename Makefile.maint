@@ -53,7 +53,7 @@ PREV_VERSION_REGEXP := $(shell echo $(PREV_VERSION)|sed 's/\./\\./g')
 v = Version
 
 a_host=alpha.gnu.org
-b_host=tug.org/pub
+b_host=tug.org
 c_host=ftp.enst.fr
 
 a_url_dir=gnu/fetish
