@@ -34,10 +34,6 @@ char *malloc ();
 #endif
 #include <assert.h>
 
-#ifndef ISSLASH
-# define ISSLASH(C) ((C) == '/')
-#endif
-
 #include "dirname.h"
 
 /* Return the leading directories part of PATH,
