@@ -52,7 +52,8 @@ sub spec_to_list ($$$)
   my $file_contents;
   foreach $file_contents (@content_string)
     {
-      my $gen_file = "t$test_name.$type$i";
+      my $suffix = (@content_string > 1 ? $i : '');
+      my $gen_file = "t$test_name.$type$suffix";
       push (@all_file, $gen_file);
       push (@gen_file, $gen_file);
       open (F, ">$gen_file") || die "$0: $gen_file: $!\n";
