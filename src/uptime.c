@@ -154,15 +154,16 @@ print_uptime (size_t n, const STRUCT_UTMP *this)
 }
 
 /* Display the system uptime and the number of users on the system,
-   according to utmp file FILENAME. */
+   according to utmp file FILENAME.  Use read_utmp OPTIONS to read the
+   utmp file.  */
 
 static void
-uptime (const char *filename)
+uptime (const char *filename, int options)
 {
   size_t n_users;
   STRUCT_UTMP *utmp_buf;
 
-  if (read_utmp (filename, &n_users, &utmp_buf) != 0)
+  if (read_utmp (filename, &n_users, &utmp_buf, options) != 0)
     error (EXIT_FAILURE, errno, "%s", filename);
 
   print_uptime (n_users, utmp_buf);
@@ -211,11 +212,11 @@ main (int argc, char **argv)
   switch (argc - optind)
     {
     case 0:			/* uptime */
-      uptime (UTMP_FILE);
+      uptime (UTMP_FILE, READ_UTMP_CHECK_PIDS);
       break;
 
     case 1:			/* uptime <utmp file> */
-      uptime (argv[optind]);
+      uptime (argv[optind], 0);
       break;
 
     default:			/* lose */
