@@ -3,6 +3,11 @@ package Test;
 require 5.002;
 use strict;
 
+# For each test...
+# Export LANG=C so that the locale-dependent strings match.
+# Export TZ=UTC so that zone-dependent strings match.
+$Test::default_env = ['LANG=C TZ=UTC'];
+
 sub test_vector
 {
 
@@ -22,18 +27,17 @@ sub test_vector
      ['9', "-d '$d1' +'%z_%Z'", {}, '+0000_GMT', 0],
      );
 
-  # For each test...
-  # Export LANG=C so that the locale-dependent strings match.
-  # Export TZ=GMT so that zone-dependent strings match.
   my @tv;
   my $t;
   foreach $t (@tvec)
     {
       my ($test_name, $flags, $in, $exp, $ret) = @$t;
-      $Test::env{$test_name} = 'LANG=C TZ=UTC';
       # Append a newline to end of each expected string.
       push (@tv, [$test_name, $flags, $in, "$exp\n", $ret]);
     }
+  # Verify that the test-script generation code properly handles
+  # per-test overrides.
+  $Test::env{2} = ['LANG=C TZ=GMT'];
 
   return @tv;
 }
