@@ -294,16 +294,26 @@ xrealloc (char *p, unsigned int n)
 }
 
 static FILE *
-xfopen (char *file, char *how)
+xfopen (const char *file, const char *how)
 {
-  FILE *fp = strcmp (file, "-") ? fopen (file, how) : stdin;
+  FILE *fp;
 
-  if (fp == 0)
+  if (strcmp (file, "-") == 0)
     {
-      error (0, errno, "%s", file);
-      cleanup ();
-      exit (2);
+      fp = stdin;
     }
+  else
+    {
+      int fd;
+      fd = open (file, O_WRONLY | O_CREAT | O_TRUNC, 0600);
+      if (fd < 0 || (fp = fdopen (fd, how)) == NULL)
+	{
+	  error (0, errno, "%s", file);
+	  cleanup ();
+	  exit (2);
+	}
+    }
+
   if (fp == stdin)
     have_read_stdin = 1;
   return fp;
