@@ -142,12 +142,6 @@ int wcwidth ();
 # define INODE_DIGITS 7
 #endif
 
-#ifdef S_ISLNK
-# define HAVE_SYMLINKS 1
-#else
-# define HAVE_SYMLINKS 0
-#endif
-
 /* Arrange to make lstat calls go through the wrapper function
    on systems with an lstat function that does not dereference symlinks
    that are specified with a trailing slash.  */
@@ -2445,7 +2439,7 @@ gobble_file (const char *name, enum filetype type, int explicit_arg,
   return blocks;
 }
 
-#if HAVE_SYMLINKS
+#ifdef S_ISLNK
 
 /* Put the name of the file that `filename' is a symbolic link to
    into the `linkname' field of `f'. */
