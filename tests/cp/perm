@@ -1,6 +1,8 @@
 #!/bin/sh
 # Make sure the permission-preserving code in copy.c (mv, cp, install) works.
 
+. $srcdir/../expensive
+
 if test "$VERBOSE" = yes; then
   set -x
   cp --version
