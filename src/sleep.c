@@ -111,8 +111,8 @@ apply_suffix (double *s, char suffix_char)
 
 /* Subtract the `struct timespec' values X and Y,
    storing the difference in DIFF.
-   Return 1 if the difference is negative, otherwise 0.
-   From the GNU libc manual.  */
+   Return 1 if the difference is positive, otherwise 0.
+   Derived from code in the GNU libc manual.  */
 
 static int
 timespec_subtract (struct timespec *diff,
@@ -138,8 +138,8 @@ timespec_subtract (struct timespec *diff,
   diff->tv_sec = x->tv_sec - y->tv_sec;
   diff->tv_nsec = x->tv_nsec - y->tv_nsec;
 
-  /* Return 1 if result is negative. */
-  return x->tv_sec < y->tv_sec;
+  /* Return 1 if result is positive. */
+  return y->tv_sec < x->tv_sec;
 }
 
 static void
@@ -247,13 +247,13 @@ main (int argc, char **argv)
     {
       struct timespec remaining;
       struct timespec ts_now;
-      int negative;
-      int interrupted = nanosleep (&ts_sleep, &remaining);
-      if (!interrupted)
+      int any_remaining;
+      int suspended = nanosleep (&ts_sleep, &remaining);
+      if (!suspended)
 	break;
       clock_get_realtime (&ts_now);
-      negative = timespec_subtract (&ts_sleep, &ts_stop, &ts_now);
-      if (negative)
+      any_remaining = timespec_subtract (&ts_sleep, &ts_stop, &ts_now);
+      if (! any_remaining)
 	break;
     }
 
