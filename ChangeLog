@@ -2,7 +2,20 @@
 
 	* Version 5.0.1.
 
+	* tests/misc/printf: Add tests for the printf fixes below.
+
 	* Makefile.cfg (cvs_files): Add $(srcdir)/config/depcomp to the list.
+
+2003-04-20  Paul Eggert  <eggert@twinsun.com>
+
+	Fix printf POSIX compatibility bug reported by Ben Harris in
+	<http://mail.gnu.org/archive/html/bug-coreutils/2003-04/msg00070.html>.
+	* doc/coreutils.texi (printf invocation): It's \NNN in the format,
+	\0NNN in the %b operand.
+	* src/printf.c (usage): Likewise.
+	(print_esc): New arg OCTAL0 to specify whether \0NNN or \NNN
+	is desired.  All uses changed.  Behave like Bash printf if %b
+	operand uses \NNN where the initial N is not 0.
 
 2003-04-17  Jim Meyering  <jim@meyering.net>
 
