@@ -24,6 +24,7 @@
   #pragma alloca
 #endif
 
+#undef	_GNU_SOURCE
 #define _GNU_SOURCE
 
 #ifdef HAVE_CONFIG_H
@@ -38,6 +39,12 @@
 # include <libintl.h>
 #else
 # define gettext(msgid) (msgid)
+#endif
+
+#ifndef gettext_noop
+/* This define is so xgettext can find the internationalizable
+   strings.  */
+#define gettext_noop(String) String
 #endif
 
 /* The `emacs' switch turns on certain matching commands
@@ -237,13 +244,11 @@ init_syntax_once ()
 #if HAVE_ALLOCA_H
 #include <alloca.h>
 #else /* not __GNUC__ or HAVE_ALLOCA_H */
+#if 0 /* It is a bad idea to declare alloca.  We always cast the result.  */
 #ifndef _AIX /* Already did AIX, up at the top.  */
-#if defined (__STDC__) && __STDC__
-void *alloca ();
-#else
 char *alloca ();
-#endif
 #endif /* not _AIX */
+#endif
 #endif /* not HAVE_ALLOCA_H */
 #endif /* not __GNUC__ */
 
@@ -927,23 +932,24 @@ re_set_syntax (syntax)
    but why not be nice?  */
 
 static const char *re_error_msgid[] =
-  { "Success",					/* REG_NOERROR */
-    "No match",					/* REG_NOMATCH */
-    "Invalid regular expression",		/* REG_BADPAT */
-    "Invalid collation character",		/* REG_ECOLLATE */
-    "Invalid character class name",		/* REG_ECTYPE */
-    "Trailing backslash",			/* REG_EESCAPE */
-    "Invalid back reference",			/* REG_ESUBREG */
-    "Unmatched [ or [^",			/* REG_EBRACK */
-    "Unmatched ( or \\(",			/* REG_EPAREN */
-    "Unmatched \\{",				/* REG_EBRACE */
-    "Invalid content of \\{\\}",		/* REG_BADBR */
-    "Invalid range end",			/* REG_ERANGE */
-    "Memory exhausted",				/* REG_ESPACE */
-    "Invalid preceding regular expression",	/* REG_BADRPT */
-    "Premature end of regular expression",	/* REG_EEND */
-    "Regular expression too big",		/* REG_ESIZE */
-    "Unmatched ) or \\)",			/* REG_ERPAREN */
+  {
+    gettext_noop ("Success"),	/* REG_NOERROR */
+    gettext_noop ("No match"),	/* REG_NOMATCH */
+    gettext_noop ("Invalid regular expression"), /* REG_BADPAT */
+    gettext_noop ("Invalid collation character"), /* REG_ECOLLATE */
+    gettext_noop ("Invalid character class name"), /* REG_ECTYPE */
+    gettext_noop ("Trailing backslash"), /* REG_EESCAPE */
+    gettext_noop ("Invalid back reference"), /* REG_ESUBREG */
+    gettext_noop ("Unmatched [ or [^"),	/* REG_EBRACK */
+    gettext_noop ("Unmatched ( or \\("), /* REG_EPAREN */
+    gettext_noop ("Unmatched \\{"), /* REG_EBRACE */
+    gettext_noop ("Invalid content of \\{\\}"), /* REG_BADBR */
+    gettext_noop ("Invalid range end"),	/* REG_ERANGE */
+    gettext_noop ("Memory exhausted"), /* REG_ESPACE */
+    gettext_noop ("Invalid preceding regular expression"), /* REG_BADRPT */
+    gettext_noop ("Premature end of regular expression"), /* REG_EEND */
+    gettext_noop ("Regular expression too big"), /* REG_ESIZE */
+    gettext_noop ("Unmatched ) or \\)"), /* REG_ERPAREN */
   };
 
 /* Avoiding alloca during matching, to placate r_alloc.  */
@@ -1001,7 +1007,7 @@ static const char *re_error_msgid[] =
    This is a variable only so users of regex can assign to it; we never
    change it ourselves.  */
 #if defined (MATCH_MAY_ALLOCATE)
-int re_max_failures = 200000;
+int re_max_failures = 20000;
 #else
 int re_max_failures = 2000;
 #endif
@@ -1157,7 +1163,7 @@ typedef struct
     /* Push the info, starting with the registers.  */			\
     DEBUG_PRINT1 ("\n");						\
 									\
-    if (!(RE_NO_POSIX_BACKTRACKING & bufp->syntax))			\
+    if (1)								\
       for (this_reg = lowest_active_reg; this_reg <= highest_active_reg; \
 	   this_reg++)							\
 	{								\
@@ -1218,7 +1224,7 @@ typedef struct
 
 /* We actually push this many items.  */
 #define NUM_FAILURE_ITEMS				\
-  (((RE_NO_POSIX_BACKTRACKING & bufp->syntax		\
+  (((0							\
      ? 0 : highest_active_reg - lowest_active_reg + 1)	\
     * NUM_REG_ITEMS)					\
    + NUM_NONREG_ITEMS)
@@ -1279,7 +1285,7 @@ typedef struct
   low_reg = (unsigned) POP_FAILURE_INT ();				\
   DEBUG_PRINT2 ("  Popping  low active reg: %d\n", low_reg);		\
 									\
-  if (!(RE_NO_POSIX_BACKTRACKING & bufp->syntax))			\
+  if (1)								\
     for (this_reg = high_reg; this_reg >= low_reg; this_reg--)		\
       {									\
 	DEBUG_PRINT2 ("    Popping reg: %d\n", this_reg);		\
@@ -2915,9 +2921,7 @@ re_compile_fastmap (bufp)
 
   /* This holds the pointer to the failure stack, when
      it is allocated relocatably.  */
-#ifdef REL_ALLOC
   fail_stack_elt_t *failure_stack_ptr;
-#endif
 
   /* Assume that each path through the pattern can be null until
      proven otherwise.  We set this false at the bottom of switch
@@ -3440,12 +3444,14 @@ static boolean alt_match_null_string_p (),
            : (d) == string2 - 1 ? *(end1 - 1) : *(d))			\
    == Sword)
 
+/* Disabled due to a compiler bug -- see comment at case wordbound */
+#if 0
 /* Test if the character before D and the one at D differ with respect
    to being word-constituent.  */
 #define AT_WORD_BOUNDARY(d)						\
   (AT_STRINGS_BEG (d) || AT_STRINGS_END (d)				\
    || WORDCHAR_P (d - 1) != WORDCHAR_P (d))
-
+#endif
 
 /* Free everything we malloc.  */
 #ifdef MATCH_MAY_ALLOCATE
@@ -3580,9 +3586,7 @@ re_match_2_internal (bufp, string1, size1, string2, size2, pos, regs, stop)
 
   /* This holds the pointer to the failure stack, when
      it is allocated relocatably.  */
-#ifdef REL_ALLOC
   fail_stack_elt_t *failure_stack_ptr;
-#endif
 
   /* We fill all the registers internally, independent of what we
      return, for use in backreferences.  The number here includes
@@ -4671,17 +4675,54 @@ re_match_2_internal (bufp, string1, size1, string2, size2, pos, regs, stop)
             break;
           }
 
-        case wordbound:
-          DEBUG_PRINT1 ("EXECUTING wordbound.\n");
-          if (AT_WORD_BOUNDARY (d))
+#if 0
+	/* The DEC Alpha C compiler 3.x generates incorrect code for the
+	   test  WORDCHAR_P (d - 1) != WORDCHAR_P (d)  in the expansion of
+	   AT_WORD_BOUNDARY, so this code is disabled.  Expanding the
+	   macro and introducing temporary variables works around the bug.  */
+
+	case wordbound:
+	  DEBUG_PRINT1 ("EXECUTING wordbound.\n");
+	  if (AT_WORD_BOUNDARY (d))
 	    break;
-          goto fail;
+	  goto fail;
 
 	case notwordbound:
-          DEBUG_PRINT1 ("EXECUTING notwordbound.\n");
+	  DEBUG_PRINT1 ("EXECUTING notwordbound.\n");
 	  if (AT_WORD_BOUNDARY (d))
 	    goto fail;
-          break;
+	  break;
+#else
+	case wordbound:
+	{
+	  boolean prevchar, thischar;
+
+	  DEBUG_PRINT1 ("EXECUTING wordbound.\n");
+	  if (AT_STRINGS_BEG (d) || AT_STRINGS_END (d))
+	    break;
+
+	  prevchar = WORDCHAR_P (d - 1);
+	  thischar = WORDCHAR_P (d);
+	  if (prevchar != thischar)
+	    break;
+	  goto fail;
+	}
+
+      case notwordbound:
+	{
+	  boolean prevchar, thischar;
+
+	  DEBUG_PRINT1 ("EXECUTING notwordbound.\n");
+	  if (AT_STRINGS_BEG (d) || AT_STRINGS_END (d))
+	    goto fail;
+
+	  prevchar = WORDCHAR_P (d - 1);
+	  thischar = WORDCHAR_P (d);
+	  if (prevchar != thischar)
+	    goto fail;
+	  break;
+	}
+#endif
 
 	case wordbeg:
           DEBUG_PRINT1 ("EXECUTING wordbeg.\n");
