@@ -1,5 +1,10 @@
 Wed Nov 29 21:50:53 1995  Jim Meyering  (meyering@comco.com)
 
+	* aclocal.m4 (jm_PROG_C_MKDEP): Remove, for now.
+	(jm_AUTODEPS): Likewise.
+	(jm_WITH_GNU_MAKE): Likewise.
+	* configure.in (jm_AUTODEPS): Remove.
+
 	* sort.c (begfield): Replace loop with equivalent if-else.
 	(limfield): Fix bug that made field specs like -k1.5 return a
 	pointer into LINE beyond the first field.
