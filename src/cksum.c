@@ -47,12 +47,17 @@
 
 #define AUTHORS "Q. Frank Xia"
 
+#include <stdio.h>
+#include "system.h"
+
+#if !defined UINT_FAST32_MAX && !defined uint_fast32_t
+# define uint_fast32_t unsigned int
+#endif
+
 #ifdef CRCTAB
 
-# include <stdio.h>
-
-# define BIT(x)	( (unsigned long)1 << (x) )
-# define SBIT	BIT(31)
+# define BIT(x)	((uint_fast32_t) 1 << (x))
+# define SBIT	BIT (31)
 
 /* The generating polynomial is
 
@@ -61,47 +66,48 @@
 
   The i bit in GEN is set if X^i is a summand of G(X) except X^32.  */
 
-# define GEN     (BIT(26)|BIT(23)|BIT(22)|BIT(16)|BIT(12)|BIT(11)|BIT(10)\
-                |BIT(8) |BIT(7) |BIT(5) |BIT(4) |BIT(2) |BIT(1) |BIT(0));
+# define GEN	(BIT (26) | BIT (23) | BIT (22) | BIT (16) | BIT (12) \
+		 | BIT (11) | BIT (10) | BIT (8) | BIT (7) | BIT (5) \
+		 | BIT (4) | BIT (2) | BIT (1) | BIT (0))
 
-static unsigned long r[8];
+static uint_fast32_t r[8];
 
 static void
-fill_r ()
+fill_r (void)
 {
   int i;
 
   r[0] = GEN;
   for (i = 1; i < 8; i++)
-    r[i] = (r[i - 1] & SBIT) ? (r[i - 1] << 1) ^ r[0] : r[i - 1] << 1;
+    r[i] = (r[i - 1] << 1) ^ ((r[i - 1] & SBIT) ? GEN : 0);
 }
 
-static unsigned long
-remainder (m)
-     int m;
+static uint_fast32_t
+remainder (int m)
 {
-  unsigned long rem = 0;
+  uint_fast32_t rem = 0;
   int i;
 
   for (i = 0; i < 8; i++)
     if (BIT (i) & m)
-      rem = rem ^ r[i];
+      rem ^= r[i];
 
   return rem & 0xFFFFFFFF;	/* Make it run on 64-bit machine.  */
 }
 
 int
-main ()
+main (void)
 {
   int i;
 
   fill_r ();
-  printf ("unsigned long crctab[256] = {\n  0x0");
+  printf ("static uint_fast32_t crctab[256] =\n{\n  0x0");
   for (i = 0; i < 51; i++)
     {
       printf (",\n  0x%08X, 0x%08X, 0x%08X, 0x%08X, 0x%08X",
-	remainder (i * 5 + 1), remainder (i * 5 + 2), remainder (i * 5 + 3),
-	      remainder (i * 5 + 4), remainder (i * 5 + 5));
+	      remainder (i * 5 + 1), remainder (i * 5 + 2),
+	      remainder (i * 5 + 3), remainder (i * 5 + 4),
+	      remainder (i * 5 + 5));
     }
   printf ("\n};\n");
   exit (EXIT_SUCCESS);
@@ -109,13 +115,12 @@ main ()
 
 #else /* !CRCTAB */
 
-# include <stdio.h>
 # include <getopt.h>
 # include <sys/types.h>
-# include "system.h"
 # include "closeout.h"
 # include "long-options.h"
 # include "error.h"
+# include "human.h"
 
 /* Number of bytes to read at once.  */
 # define BUFLEN (1 << 16)
@@ -128,7 +133,7 @@ static struct option const long_options[] =
   {0, 0, 0, 0}
 };
 
-static unsigned long const crctab[256] =
+static uint_fast32_t crctab[256] =
 {
   0x0,
   0x04C11DB7, 0x09823B6E, 0x0D4326D9, 0x130476DC, 0x17C56B6B,
@@ -196,10 +201,12 @@ static int
 cksum (const char *file, int print_name)
 {
   unsigned char buf[BUFLEN];
-  unsigned long crc = 0;
-  long length = 0;
-  long bytes_read;
+  uint_fast32_t crc = 0;
+  uintmax_t length = 0;
+  size_t bytes_read;
   register FILE *fp;
+  char hbuf[LONGEST_HUMAN_READABLE + 1];
+  char *hp;
 
   if (STREQ (file, "-"))
     {
@@ -223,9 +230,11 @@ cksum (const char *file, int print_name)
     {
       unsigned char *cp = buf;
 
+      if (length + bytes_read < length)
+	error (EXIT_FAILURE, 0, _("%s: file too long"), file);
       length += bytes_read;
       while (bytes_read--)
-	crc = (crc << 8) ^ crctab[((crc >> 24) ^ *(cp++)) & 0xFF];
+	crc = (crc << 8) ^ crctab[((crc >> 24) ^ *cp++) & 0xFF];
     }
 
   if (ferror (fp))
@@ -242,19 +251,20 @@ cksum (const char *file, int print_name)
       return -1;
     }
 
-  bytes_read = length;
-  while (bytes_read > 0)
-    {
-      crc = (crc << 8) ^ crctab[((crc >> 24) ^ bytes_read) & 0xFF];
-      bytes_read >>= 8;
-    }
+  hp = human_readable (length, hbuf, 1, 1);
+
+  for (; length; length >>= 8)
+    crc = (crc << 8) ^ crctab[((crc >> 24) ^ length) & 0xFF];
 
   crc = ~crc & 0xFFFFFFFF;
 
-  printf ("%lu %ld", crc, length);
   if (print_name)
-    printf (" %s", file);
-  putchar ('\n');
+    printf ("%u %s %s\n", (unsigned) crc, hp, file);
+  else
+    printf ("%u %s\n", (unsigned) crc, hp);
+
+  if (ferror (stdout))
+    error (EXIT_FAILURE, errno, "-: %s", _("write error"));
 
   return 0;
 }
@@ -313,16 +323,12 @@ main (int argc, char **argv)
 	}
     }
 
-  if (optind >= argc)
-    {
-      if (cksum ("-", 0) < 0)
-	errors = 1;
-    }
+  if (optind == argc)
+    errors |= cksum ("-", 0);
   else
     {
       for (i = optind; i < argc; i++)
-	if (cksum (argv[i], 1) < 0)
-	  errors = 1;
+	errors |= cksum (argv[i], 1);
     }
 
   if (have_read_stdin && fclose (stdin) == EOF)
