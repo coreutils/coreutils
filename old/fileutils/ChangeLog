@@ -1,3 +1,7 @@
+1999-03-22  Jim Meyering  <meyering@ascend.com>
+
+	* src/chmod.c (usage): Add one-liner.  Suggestion from Karl Berry.
+
 1999-03-19  Jim Meyering  <meyering@ascend.com>
 
 	* src/automake-wrap: Rewrite the automake-generated clean-binPROGRAMS
