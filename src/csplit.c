@@ -206,7 +206,7 @@ static boolean suppress_count;
 static boolean remove_files;
 
 /* If TRUE, remove all output files which have a zero length. */
-static boolean abandon_null_files;
+static boolean elide_empty_files;
 
 /* The compiled pattern arguments, which determine how to split
    the input file. */
@@ -227,7 +227,7 @@ static struct option const longopts[] =
   {"quiet", no_argument, NULL, 'q'},
   {"silent", no_argument, NULL, 's'},
   {"keep-files", no_argument, NULL, 'k'},
-  {"abandon-null-files", no_argument, NULL, 'z'},
+  {"elide-empty-files", no_argument, NULL, 'z'},
   {"prefix", required_argument, NULL, 'f'},
   {"suffix", required_argument, NULL, 'b'},
   {"help", no_argument, &show_help, 1},
@@ -1047,7 +1047,7 @@ close_output_file ()
 	  error (0, errno, "write error for `%s'", output_filename);
 	  cleanup ();
 	}
-      if (bytes_written == 0 && abandon_null_files)
+      if (bytes_written == 0 && elide_empty_files)
 	{
 	  if (unlink (output_filename))
 	    error (0, errno, "%s", output_filename);
@@ -1513,7 +1513,7 @@ main (argc, argv)
 	break;
 
       case 'z':
-	abandon_null_files = TRUE;
+	elide_empty_files = TRUE;
 	break;
 
       default:
@@ -1572,7 +1572,7 @@ Usage: %s [OPTION]... FILE PATTERN...\n\
   -k, --keep-files        do not remove output files on errors\n\
   -n, --digits=DIGITS     use specified number of digits instead of 2\n\
   -s, --quiet, --silent   do not print counts of output file sizes\n\
-  -z, --abandon-null-files   remove empty output files\n\
+  -z, --elide-empty-files   remove empty output files\n\
       --help              display this help and exit\n\
       --version           output version information and exit\n\
 \n\

@@ -59,7 +59,6 @@
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
-#include <signal.h>
 #include "system.h"
 #include "version.h"
 

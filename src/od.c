@@ -215,7 +215,7 @@ static unsigned long int flag_dump_strings;
 /* Non-zero if we should recognize the pre-POSIX non-option arguments
    that specified at most one file and optional arguments specifying
    offset and pseudo-start address.  */
-static int flag_compatibility;
+static int backward_compatibility;
 
 /* Non-zero if an old-style `pseudo-address' was specified.  */
 static long int flag_pseudo_start;
@@ -298,7 +298,7 @@ static struct option const long_options[] =
   {"output-duplicates", no_argument, NULL, 'v'},
 
   /* non-POSIX options.  */
-  {"compatible", no_argument, NULL, 'C'},
+  {"backward-compatible", no_argument, NULL, 'B'},
   {"strings", optional_argument, NULL, 's'},
   {"width", optional_argument, NULL, 'w'},
   {"help", no_argument, &show_help, 1},
@@ -323,7 +323,7 @@ Usage: %s [OPTION]... [FILE]...\n\
       printf ("\
 \n\
   -A, --address-radix RADIX   decide how file offsets are printed\n\
-  -C, --compatible            trigger older syntax\n\
+  -C, --backward-compatible   trigger older syntax\n\
   -N, --read-bytes BYTES      limit dump to BYTES input bytes per file\n\
   -j, --skip-bytes BYTES      skip BYTES input bytes first on each file\n\
   -s, --strings [BYTES]       output strings of at least BYTES graphic chars\n\
@@ -1732,7 +1732,7 @@ main (argc, argv)
   address_pad_len = 7;
   flag_dump_strings = 0;
 
-  while ((c = getopt_long (argc, argv, "abcCdfhilos::xw::A:j:N:t:v",
+  while ((c = getopt_long (argc, argv, "abBcdfhilos::xw::A:j:N:t:v",
 			   long_options, (int *) 0))
 	 != EOF)
     {
@@ -1809,8 +1809,8 @@ main (argc, argv)
 	  abbreviate_duplicate_blocks = 0;
 	  break;
 
-	case 'C':
-	  flag_compatibility = 1;
+	case 'B':
+	  backward_compatibility = 1;
 	  break;
 
 	  /* The next several cases map the old, pre-POSIX format
@@ -1874,12 +1874,13 @@ main (argc, argv)
 
   n_files = argc - optind;
 
-  /* If the --compatible option is used, there may be from 0 to 3
-     remaining command line arguments;  handle each case separately.
+  /* If the --backward-compatible option is used, there may be from
+     0 to 3 remaining command line arguments;  handle each case
+     separately.
 	od [file] [[+]offset[.][b] [[+]label[.][b]]]
      The offset and pseudo_start have the same syntax.  */
 
-  if (flag_compatibility)
+  if (backward_compatibility)
     {
       long int offset;
 

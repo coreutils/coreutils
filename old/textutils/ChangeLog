@@ -1,3 +1,18 @@
+Sun Oct 24 00:31:02 1993  Jim Meyering  (meyering@comco.com)
+
+	* join.c (main): Accept `-v 1' again.  First adding --version
+	long option had broken it, though -v1 still worked.  Call
+	parse_long_options instead of adding "help" and "version"
+	to join's longopt strct.
+	* Makefile.in [SOURCES, OBJECTS, DISTFILES]: Add long-options.c
+	and long-options.h.
+	* (join): Depend on and link with long-options.o.
+	* (join.o): Depend on long-options.h.
+
+	* od.c: Change --compatible (-C) to --backward-compatible (-B).
+
+	* csplit.c: Change --abandon-null-files to --elide-empty-files.
+
 Sat Oct 23 01:00:12 1993  Jim Meyering  (meyering@comco.com)
 
 	* tr.c (get_next, string2_extend): Add default: label to switch stmt.
@@ -19,7 +34,7 @@ Fri Oct 22 23:26:17 1993  Jim Meyering  (meyering@comco.com)
 	join.c, nl.c, od.c, paste.c, pr.c, sort.c, split.c, sum.c, tac.c,
 	tail.c, tr.c, unexpand.c, uniq.c, version.c, wc.c: Ditto.
 
-	* configure.in: Use AC_CONIG_HEADER.
+	* configure.in: Use AC_CONFIG_HEADER.
 	* Makefile.in [DIST]: Add config.h.in.
 
 	* Makefile.in: Convert so make may be run from subdirectories.

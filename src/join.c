@@ -36,6 +36,7 @@
 #include <getopt.h>
 #include "system.h"
 #include "version.h"
+#include "long-options.h"
 
 char *xmalloc ();
 char *xrealloc ();
@@ -117,8 +118,6 @@ static struct option const longopts[] =
   {"j", required_argument, NULL, 'j'},
   {"j1", required_argument, NULL, '1'},
   {"j2", required_argument, NULL, '2'},
-  {"help", no_argument, &show_help, 1},
-  {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -586,6 +585,9 @@ main (argc, argv)
   int optc, prev_optc = 0, nfiles, val;
 
   program_name = argv[0];
+
+  parse_long_options (argc, argv, usage);
+
   nfiles = 0;
   print_pairables = 1;
 
@@ -670,15 +672,6 @@ main (argc, argv)
 	}
       prev_optc = optc;
     }
-
-  if (show_version)
-    {
-      printf ("%s\n", version_string);
-      exit (0);
-    }
-
-  if (show_help)
-    usage (0);
 
   if (nfiles != 2)
     usage (1);
