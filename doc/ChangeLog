@@ -11,7 +11,6 @@
 	(More details about version sort): Note that strverscmp, and hence
 	`ls -v', does not use LC_COLLATE.  Reported by From: Andrey Borzenkov.
 
-
 2003-04-21  Jim Meyering  <jim@meyering.net>
 
 	Fix printf POSIX compatibility bug reported by Ben Harris in

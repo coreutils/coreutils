@@ -65,13 +65,11 @@ output to stderr.  Suggested here:
 
 m4: rename all macros that start with AC_ to start with another prefix
 
-document that `true --version' can fail, e.g., like this:
-  ./true --version >&-
-  ./true: write error: Bad file number
-  Reported by Paul Eggert
-
 resolve RH report on cp -a forwarded by Tim Waugh
 
 Martin Michlmayr's patch to provide ls with `--sort directory' option
 
 Remove uses of PROTOTYPES
+
+tail: don't use xlseek; it *exits*.
+  Instead, maybe use a macro and return nonzero.
