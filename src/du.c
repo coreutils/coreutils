@@ -42,11 +42,21 @@
 #include "xfts.h"
 #include "xstrtol.h"
 
+extern int fts_debug;
+
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "du"
 
 #define AUTHORS \
   "Torbjorn Granlund", "David MacKenzie, Paul Eggert", "Jim Meyering"
+
+#if DU_DEBUG
+# define FTS_CROSS_CHECK(Fts) fts_cross_check (Fts)
+# define DEBUG_OPT "d"
+#else
+# define FTS_CROSS_CHECK(Fts)
+# define DEBUG_OPT
+#endif
 
 /* Initial size of the hash table.  */
 #define INITIAL_TABLE_SIZE 103
@@ -489,6 +499,7 @@ du_files (char **files, int bit_flags)
 	    }
 	  break;
 	}
+      FTS_CROSS_CHECK (fts);
 
       /* This is a space optimization.  If we aren't printing totals,
 	 then it's ok to clear the duplicate-detection tables after
@@ -520,7 +531,7 @@ main (int argc, char **argv)
   int fail;
 
   /* Bit flags that control how fts works.  */
-  int bit_flags = FTS_PHYSICAL;
+  int bit_flags = FTS_PHYSICAL | FTS_TIGHT_CYCLE_CHECK;
 
   /* If nonzero, display only a total for each argument. */
   int opt_summarize_only = 0;
@@ -542,7 +553,7 @@ main (int argc, char **argv)
 				     &output_block_size);
 
   fail = 0;
-  while ((c = getopt_long (argc, argv, "abchHklmsxB:DLPSX:",
+  while ((c = getopt_long (argc, argv, DEBUG_OPT "abchHklmsxB:DLPSX:",
 			   long_options, NULL)) != -1)
     {
       long int tmp_long;
@@ -550,6 +561,12 @@ main (int argc, char **argv)
 	{
 	case 0:			/* Long option. */
 	  break;
+
+#if DU_DEBUG
+	case 'd':
+	  fts_debug = 1;
+	  break;
+#endif
 
 	case 'a':
 	  opt_all = 1;
