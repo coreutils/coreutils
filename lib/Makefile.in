@@ -36,7 +36,8 @@ error.c filemode.c fsusage.c full-write.c getopt.c getopt1.c \
 getversion.c group-member.c idcache.c isdir.c makepath.c \
 modechange.c mountlist.c obstack.c safe-read.c savedir.c \
 stripslash.c xgetcwd.c xmalloc.c xstrdup.c userspec.c yesno.c \
-fileblocks.c fnmatch.c ftruncate.c mkdir.c mktime.c rename.c rmdir.c stpcpy.c \
+fileblocks.c fnmatch.c ftruncate.c mkdir.c mktime.c rename.c rmdir.c \
+save-cwd.c stpcpy.c \
 strdup.c strstr.c strtol.c alloca.c long-options.c \
 memcmp.c memcpy.c memset.c xstrtol.c xstrtoul.c
 
@@ -44,13 +45,13 @@ OBJECTS = getdate.o posixtm.o \
 argmatch.o backupfile.o basename.o dirname.o \
 error.o filemode.o full-write.o getopt.o getopt1.o \
 getversion.o group-member.o idcache.o isdir.o long-options.o makepath.o \
-modechange.o obstack.o safe-read.o savedir.o \
+modechange.o obstack.o safe-read.o save-cwd.o savedir.o \
 stripslash.o xgetcwd.o xmalloc.o xstrdup.o userspec.o yesno.o \
 xstrtol.o xstrtoul.o @LIBOBJS@ @ALLOCA@
 
 DISTFILES = Makefile.in backupfile.h getopt.h long-options.h modechange.h \
 fnmatch.h fsusage.h group-member.h makepath.h mountlist.h obstack.h pathmax.h \
-getdate.c posixtm.c error.h xstrtol.h xstrtoul.h $(SOURCES)
+save-cwd.h getdate.c posixtm.c error.h xstrtol.h xstrtoul.h $(SOURCES)
 
 all: libfu.a
 
