@@ -2,6 +2,7 @@
 
 	* coreutils.texi (printf invocation): Fix formatting bugs.
 	From Paul Eggert.
+	(sort invocation): Describe sort's --stable (-s) option.
 
 2003-03-13  Jim Meyering  <jim@meyering.net>
 
