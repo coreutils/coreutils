@@ -1,6 +1,12 @@
-2003-01-20  Jim Meyering  <jim@meyering.net>
+2003-01-21  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.5.
+
+	* tests/cp/same-file: Don't assume that the file owner username
+	length is less than 9 in ls output: instead, omit that field
+	altogether.  Reported by, and suggested fix from, Ferdinand.
+
+2003-01-20  Jim Meyering  <jim@meyering.net>
 
 	* tests/date/Test.pm (wide-fmt): New test to demonstrate that large
 	format widths no longer smash strftime's stack and cause infloop.
