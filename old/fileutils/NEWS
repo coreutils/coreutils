@@ -2,6 +2,11 @@ Major changes in release 3.9:
 * ls and cp can handle mount points on more systems
 * cp, mkdir, and rmdir long option --path renamed to --parents;  --path
   will still work for a while
+* cp, ln, and mv convert `cp A B/' to cp A B/A when A is not a directory.
+  This change affects only the two-argument form of the commands.  It makes
+  such commands fail when the target has a trailing slash but is not a
+  directory or symlink to a directory and the source is not a directory.
+  They used to succeed, ignoring the implicitly contradictory trailing slash.
 
 Major changes in release 3.8:
 * install isn't as likely to produce spurious errors 

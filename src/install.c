@@ -91,6 +91,7 @@ int wait ();
 #define READ_SIZE (32 * 1024)
 
 char *basename ();
+char *stpcpy ();
 char *xmalloc ();
 void error ();
 int make_path ();
@@ -291,7 +292,7 @@ install_file_in_dir (from, to_dir)
 
   from_base = basename (from);
   to = xmalloc ((unsigned) (strlen (to_dir) + strlen (from_base) + 2));
-  sprintf (to, "%s/%s", to_dir, from_base);
+  stpcpy (stpcpy (stpcpy (to, to_dir), "/"), from_base);
   ret = install_file_in_file (from, to);
   free (to);
   return ret;

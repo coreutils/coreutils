@@ -1,4 +1,21 @@
-Wed Aug 25 21:40:00 EDT 1993
+Thu Aug 26 22:26:09 1993  Jim Meyering  (meyering@comco.com)
+
+	* ls.c (print_long_format, print_file_name_and_frills): Cast inode
+	number to unsigned long and print it with %lu to avoid warnings from
+	gcc -Wformat because the size and type of ino_t are system dependent.
+
+	* cp.c (do_copy): Plug a memory leak with --parents.
+
+	* ln.c (main): Like mv and cp, convert `ln x y/' to ln x y/x
+	when a is not a directory.
+	[PATH_BASENAME_CONCAT]: New macro.
+	(do_link): Use it here, too.
+
+	* ls.c (sort_files): Add `default: abort();' clause to switch stmts.
+
+	* cp.c (do_copy): Don't remove trailing slashes from source.
+
+Wed Aug 25 21:40:00 1993  Jim Meyering  (meyering@comco.com)
 
 	* cp.c: Add --parents as synonym for --path.  Change --path to
 	--parents in comments.  --path is deprecated.
@@ -16,13 +33,12 @@ Fri Aug 13 17:19:52 1993  Jim Meyering  (meyering@comco.com)
         (is_real_dir): New function.
         (movefile): In addition to when dest is a directory, if dest has
         a trailing `/' and source is not a directory, presume the target
-        is dest/`basename source`.  This converts `mv a b/' to `mv a b/a'
-	when a is not a directory -- so the command will fail when a is a
-	non-directory and (b doesn't exist or b isn't a directory or a
-	symlink to a directory).
+        is dest/`basename source`.  This converts `mv x y/' to `mv x y/x'
+	when x is not a directory.  This change means that the command
+	`mv any file/' will now fail rather than performing the move.
 
-	* ls.c (do_copy): Similarly, convert `cp a b/' to cp a b/a when
-	a is not a directory.
+	* cp.c (do_copy): Similarly, convert `cp x y/' to cp x y/x when
+	x is not a directory.
 
 Wed Aug  4 17:43:18 1993  Jim Meyering  (meyering@comco.com)
 

@@ -24,7 +24,7 @@ CC = @CC@
 AR = ar
 RANLIB = @RANLIB@
 DEFS = @DEFS@
-CFLAGS = -g
+CFLAGS = @CFLAGS@
 
 SOURCES = getdate.y posixtm.y \
 argmatch.c backupfile.c basename.c dirname.c eaccess.c \

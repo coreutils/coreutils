@@ -41,6 +41,7 @@ struct dir_attr
 };
 
 char *dirname ();
+char *xstrdup ();
 enum backup_type get_version ();
 int eaccess_stat ();
 
@@ -375,7 +376,7 @@ do_copy (argc, argv)
 	      ap = basename (arg);
 	      /* For `cp -R source/.. dest', don't copy into `dest/..'. */
 	      if (!strcmp (ap, ".."))
-		dst_path = dest;
+		dst_path = xstrdup (dest);
 	      else
 		{
 		  dst_path = xmalloc (strlen (dest) + strlen (ap) + 2);
@@ -400,6 +401,7 @@ do_copy (argc, argv)
 		}
 	    }
 
+	  free (dst_path);
 	  ++optind;
 	  if (optind == argc - 1)
 	    break;
@@ -408,7 +410,7 @@ do_copy (argc, argv)
     }
   else if (argc - optind == 2)
     {
-      char *dst_path;
+      char *new_dest;
       char *source;
       struct stat source_stats;
 
@@ -417,23 +419,32 @@ do_copy (argc, argv)
 
       source = argv[optind];
 
+      /* When the destination is specified with a trailing slash and the
+	 source exists but is not a directory, convert the user's command
+	 `cp source dest/' to `cp source dest/basename(source)'.  */
+
       if (dest[strlen (dest) - 1] == '/'
 	  && lstat (source, &source_stats) == 0
 	  && !S_ISDIR (source_stats.st_mode))
 	{
-	  char *base;
+	  char *source_base;
+	  char *tmp_source;
 
-	  strip_trailing_slashes (source);
-	  base = basename (source);
-	  dst_path = (char *) alloca (strlen (dest) + 1 + strlen (base) + 1);
-	  stpcpy (stpcpy (stpcpy (dst_path, dest), "/"), base);
+	  tmp_source = (char *) alloca (strlen (source) + 1);
+	  strcpy (tmp_source, source);
+	  strip_trailing_slashes (tmp_source);
+	  source_base = basename (tmp_source);
+
+	  new_dest = (char *) alloca (strlen (dest) + 1 +
+				      strlen (source_base) + 1);
+	  stpcpy (stpcpy (stpcpy (new_dest, dest), "/"), source_base);
 	}
       else
 	{
-	  dst_path = dest;
+	  new_dest = dest;
 	}
 
-      return copy (argv[optind], dst_path, new_dst, 0, (struct dir_list *) 0);
+      return copy (source, new_dest, new_dst, 0, (struct dir_list *) 0);
     }
   else
     usage ("when copying multiple files, last argument must be a directory");

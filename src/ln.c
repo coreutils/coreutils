@@ -33,12 +33,33 @@ int link ();			/* Some systems don't declare this anywhere. */
 int symlink ();
 #endif
 
+/* Construct a string NEW_DEST by concatenating DEST, a slash, and
+   basename(SOURCE) in alloca'd memory.  Don't modify DEST or SOURCE.  */
+
+#define PATH_BASENAME_CONCAT(new_dest, dest, source)			\
+    do									\
+      {									\
+	char *source_base;						\
+	char *tmp_source;						\
+									\
+	tmp_source = (char *) alloca (strlen ((source)) + 1);		\
+	strcpy (tmp_source, (source));					\
+	strip_trailing_slashes (tmp_source);				\
+	source_base = basename (tmp_source);				\
+									\
+	(new_dest) = (char *) alloca (strlen ((dest)) + 1		\
+				      + strlen (source_base) + 1);	\
+	stpcpy (stpcpy (stpcpy ((new_dest), (dest)), "/"), source_base);\
+      }									\
+    while (0)
+
 char *basename ();
 enum backup_type get_version ();
 int isdir ();
 int yesno ();
 void error ();
 void strip_trailing_slashes ();
+char *stpcpy ();
 
 static void usage ();
 static int do_link ();
@@ -174,7 +195,30 @@ main (argc, argv)
     errors = do_link (argv[optind], ".");
   else if (optind == argc - 2)
     {
-      errors = do_link (argv[optind], argv[optind + 1]);
+      struct stat source_stats;
+      char *source;
+      char *dest;
+      char *new_dest;
+
+      source = argv[optind];
+      dest = argv[optind + 1];
+
+      /* When the destination is specified with a trailing slash and the
+	 source exists but is not a directory, convert the user's command
+	 `ln source dest/' to `ln source dest/basename(source)'.  */
+
+      if (dest[strlen (dest) - 1] == '/'
+	  && lstat (source, &source_stats) == 0
+	  && !S_ISDIR (source_stats.st_mode))
+	{
+	  PATH_BASENAME_CONCAT (new_dest, dest, source);
+	}
+      else
+	{
+	  new_dest = dest;
+	}
+
+      errors = do_link (source, new_dest);
     }
   else
     {
@@ -215,17 +259,7 @@ do_link (source, dest)
     {
       /* Target is a directory; build the full filename. */
       char *new_dest;
-      char *source_base;
-      char *tmp_source;
-
-      tmp_source = (char *) alloca (strlen (source) + 1);
-      strcpy (tmp_source, source);
-      strip_trailing_slashes (tmp_source);
-
-      source_base = basename (tmp_source);
-      new_dest = (char *)
-	alloca (strlen (source_base) + 1 + strlen (dest) + 1);
-      sprintf (new_dest, "%s/%s", dest, source_base);
+      PATH_BASENAME_CONCAT (new_dest, dest, source);
       dest = new_dest;
     }
 

@@ -1218,6 +1218,8 @@ sort_files ()
 	case time_atime:
 	  func = sort_reverse ? rev_cmp_atime : compare_atime;
 	  break;
+	default:
+	  abort ();
 	}
       break;
     case sort_name:
@@ -1229,6 +1231,8 @@ sort_files ()
     case sort_size:
       func = sort_reverse ? rev_cmp_size : compare_size;
       break;
+    default:
+      abort ();
     }
 
   qsort (files, files_index, sizeof (struct file), func);
@@ -1435,11 +1439,12 @@ print_long_format (f)
     }
 
   if (print_inode)
-    printf ("%6u ", f->stat.st_ino);
+    printf ("%6lu ", (unsigned long) f->stat.st_ino);
 
   if (print_block_size)
     printf ("%*u ", block_size_size,
-	    convert_blocks (ST_NBLOCKS (f->stat), kilobyte_blocks));
+	    (unsigned) convert_blocks (ST_NBLOCKS (f->stat),
+					    kilobyte_blocks));
 
   /* The space between the mode and the number of links is the POSIX
      "optional alternate access method flag". */
@@ -1560,11 +1565,12 @@ print_file_name_and_frills (f)
      struct file *f;
 {
   if (print_inode)
-    printf ("%6u ", f->stat.st_ino);
+    printf ("%6lu ", (unsigned long) f->stat.st_ino);
 
   if (print_block_size)
     printf ("%*u ", block_size_size,
-	    convert_blocks (ST_NBLOCKS (f->stat), kilobyte_blocks));
+	    (unsigned) convert_blocks (ST_NBLOCKS (f->stat),
+					    kilobyte_blocks));
 
   print_name_with_quoting (f->name);
 
