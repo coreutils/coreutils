@@ -1,5 +1,7 @@
 2004-03-21  Jim Meyering  <jim@meyering.net>
 
+	* src/remove.c (ds_free): Plug a small leak.
+
 	* tests/Fetish.pm: Fix typo in comment.
 
 2004-03-07  Jim Meyering  <jim@meyering.net>
