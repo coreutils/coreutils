@@ -1,7 +1,7 @@
 #! /bin/sh
 # mkinstalldirs --- make directory hierarchy
 
-scriptversion=2003-11-08.23
+scriptversion=2004-02-15.20
 
 # Original author: Noah Friedman <friedman@prep.ai.mit.edu>
 # Created: 1993-05-16
@@ -66,9 +66,15 @@ case $# in
   0) exit 0 ;;
 esac
 
+# Solaris 8's mkdir -p isn't thread-safe.  If you mkdir -p a/b and
+# mkdir -p a/c at the same time, both will detect that a is missing,
+# one will create a, then the other will try to create a and die with
+# a "File exists" error.  This is a problem when calling mkinstalldirs
+# from a parallel make.  We use --version in the probe to restrict
+# ourselves to GNU mkdir, which is thread-safe.
 case $dirmode in
   '')
-    if mkdir -p -- . 2>/dev/null; then
+    if mkdir -p --version . >/dev/null 2>&1 && test ! -d ./--version; then
       echo "mkdir -p -- $*"
       exec mkdir -p -- "$@"
     else
@@ -77,16 +83,17 @@ case $dirmode in
       # directories to create, and then abort because `.' already
       # exists.
       test -d ./-p && rmdir ./-p
-      test -d ./-- && rmdir ./--
+      test -d ./--version && rmdir ./--version
     fi
     ;;
   *)
-    if mkdir -m "$dirmode" -p -- . 2>/dev/null; then
+    if mkdir -m "$dirmode" -p --version . >/dev/null 2>&1 &&
+       test ! -d ./--version; then
       echo "mkdir -m $dirmode -p -- $*"
       exec mkdir -m "$dirmode" -p -- "$@"
     else
       # Clean up after NextStep and OpenStep mkdir.
-      for d in ./-m ./-p ./-- "./$dirmode";
+      for d in ./-m ./-p ./--version "./$dirmode";
       do
         test -d $d && rmdir $d
       done
