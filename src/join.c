@@ -569,13 +569,13 @@ add_field_list (str)
 	      if (field == -1)
 		field = 0;
 	      field = field * 10 + *str - '0';
-	      uni_blank.nfields = max (uni_blank.nfields, field);
 	    }
 	}
       else
 	return 0;
     }
 
+  uni_blank.nfields = max (uni_blank.nfields, field);
   added += add_field (file, field);
   return added;
 }
