@@ -2,6 +2,8 @@
 
 	* Version 4.5.4.
 
+	* Use automake-1.7.2.  Regenerate dependent files.
+
 	* src/ls.c (gobble_file): Also stat the file if it's a
 	regular file and --indicator-style=classify (aka -F).
 	Thanks to Ed Santiago for opening my eyes.
