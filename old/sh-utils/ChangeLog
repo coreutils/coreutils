@@ -1,5 +1,7 @@
 1999-03-06  Jim Meyering  <meyering@ascend.com>
 
+	* man/Makefile.summ (pinky-summary): Define.
+
 	* src/date.c: Include long-options.h.
 	[long_options]: Remove the "help" and "version" entries.
 	Remove declarations of show_help and show_version.
