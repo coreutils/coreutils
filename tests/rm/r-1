@@ -34,7 +34,7 @@ $tmp/b
 EOF
 
     # FIXME: use cmp
-diff -u $tmp/$test.E $tmp/$test.O
+diff -u $tmp/$test.E $tmp/$test.O || fail=1
 
 #rm -rf $dir
 

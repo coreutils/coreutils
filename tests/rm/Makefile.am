@@ -1,5 +1,5 @@
 AUTOMAKE_OPTIONS = 1.1 gnits
 
-TESTS = r-1 r-2
+TESTS = r-1
 EXTRA_DIST = $(TESTS)
-TESTS_ENVIRONMENT = MKDIR=../../src/rm
+TESTS_ENVIRONMENT = RM=../../src/rm
