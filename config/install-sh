@@ -2,7 +2,7 @@
 # install - install a program, script, or datafile
 # This originally came from X11R5 (mit/util/scripts/install.sh).
 
-scriptversion=2003-01-11.16
+scriptversion=2003-01-17.15
 
 # Copyright 1991 by the Massachusetts Institute of Technology
 # (FSF changes in the public domain.)
@@ -148,7 +148,7 @@ else
   # Waiting for this to be detected by the "$instcmd $src $dsttmp" command
   # might cause directories to be created, which would be especially bad
   # if $src (and thus $dsttmp) contains '*'.
-  if test -f "$src" || test -d "$src"; then :; else
+  if test ! -f "$src" && test ! -d "$src"; then
     echo "$0: $src does not exist." >&2
     exit 1
   fi
@@ -159,7 +159,7 @@ else
   fi
 
   # If destination is a directory, append the input filename; won't work
-  # if double slashes aren't ignore.
+  # if double slashes aren't ignored.
   if test -d "$dst"; then
     dst=$dst/`basename "$src"`
   fi
