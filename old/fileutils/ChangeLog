@@ -1,4 +1,27 @@
+1999-11-06  Jim Meyering  <meyering@ascend.com>
+
+	* src/ls.c (long_options): Correct typo (s/'F'/'p'/) so that `-p' is
+	accepted as the short form of --file-type, per the documentation.
+	From Michael Stone.
+
+1999-11-05  Jim Meyering  <meyering@ascend.com>
+
+	* src/system.h: Use HAVE_STRUCT_STAT_ST_BLOCKS, not deprecated
+	HAVE_ST_BLOCKS.
+	* src/copy.c: Likewise.
+	* lib/fileblocks.c: Likewise.
+
+	* configure.in: Move some type/header/member tests into
+	m4/jm-macros.m4 (jm_CHECK_ALL_TYPES) so they are shared by all of
+	fileutils, textutils, and sh-utils.
+
 1999-11-02  Jim Meyering  <meyering@ascend.com>
+
+	* man/help2man: Import version 1.018.
+	* man/Makefile.maint ($(man_MANS)): Remove use of --name=... option.
+	* man/*.x: Include one-line summary in [NAME] section.
+	* man/Makefile.summ: Remove the one-line summaries.
+	Suggestion for clean-up from Akim Demaille.
 
 	* configure.in (ALL_LINGUAS): Add Galician (gl).
 
