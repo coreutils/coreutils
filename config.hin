@@ -1038,6 +1038,9 @@
 /* Define to 1 if you have the `table' function. */
 #undef HAVE_TABLE
 
+/* Define to 1 if you have the `tcgetpgrp' function. */
+#undef HAVE_TCGETPGRP
+
 /* Define to 1 if you have the <termios.h> header file. */
 #undef HAVE_TERMIOS_H
 
@@ -1090,9 +1093,6 @@
 
 /* FIXME */
 #undef HAVE_UT_HOST
-
-/* Define to 1 if you have the <values.h> header file. */
-#undef HAVE_VALUES_H
 
 /* Define to 1 if you have the `vasnprintf' function. */
 #undef HAVE_VASNPRINTF
