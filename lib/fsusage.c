@@ -1,5 +1,6 @@
 /* fsusage.c -- return space usage of mounted filesystems
-   Copyright (C) 1991, 1992, 1996, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1992, 1996, 1998, 1999, 2002 Free Software
+   Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -51,7 +52,7 @@ int statfs ();
 # include <sys/fs/s5param.h>
 #endif
 
-#if defined (HAVE_SYS_FILSYS_H) && !defined (_CRAY)
+#if defined HAVE_SYS_FILSYS_H && !defined _CRAY
 # include <sys/filsys.h>	/* SVR2 */
 #endif
 
@@ -219,7 +220,7 @@ get_fs_usage (const char *path, const char *disk, struct fs_usage *fsp)
   /* Empirically, the block counts on most SVR3 and SVR3-derived
      systems seem to always be in terms of 512-byte blocks,
      no matter what value f_bsize has.  */
-# if _AIX || defined(_CRAY)
+# if _AIX || defined _CRAY
    fsp->fsu_blocksize = PROPAGATE_ALL_ONES (fsd.f_bsize);
 # else
    fsp->fsu_blocksize = 512;
@@ -240,7 +241,7 @@ get_fs_usage (const char *path, const char *disk, struct fs_usage *fsp)
 
 #endif /* STAT_STATVFS */
 
-#if !defined(STAT_STATFS2_FS_DATA) && !defined(STAT_READ_FILSYS)
+#if !defined STAT_STATFS2_FS_DATA && !defined STAT_READ_FILSYS
 				/* !Ultrix && !SVR2 */
 
   fsp->fsu_blocks = PROPAGATE_ALL_ONES (fsd.f_blocks);
@@ -255,7 +256,7 @@ get_fs_usage (const char *path, const char *disk, struct fs_usage *fsp)
   return 0;
 }
 
-#if defined(_AIX) && defined(_I386)
+#if defined _AIX && defined _I386
 /* AIX PS/2 does not supply statfs.  */
 
 int
