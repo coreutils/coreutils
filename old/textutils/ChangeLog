@@ -1,3 +1,9 @@
+1998-02-16  Jim Meyering  <meyering@eng.ascend.com>
+
+        * configure.in (jm_FUNC_LSTAT): Use it.
+        (jm_FUNC_STAT): Use it.
+	* lib/Makefile.am (EXTRA_DIST): Add lstat.c and stat.c.
+
 1998-02-06  Jim Meyering  <meyering@eng.ascend.com>
 
 	* Version 1.22e.
