@@ -28,10 +28,6 @@
 #include "modechange.h"
 #include "quote.h"
 
-#ifndef S_IRWXUGO
-# define S_IRWXUGO (S_IRWXU | S_IRWXG | S_IRWXO)
-#endif
-
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "mkdir"
 
