@@ -36,6 +36,6 @@ EOF
 # Compare expected and actual output.
 cmp $tmp/$test.E $tmp/$test.O || fail=1
 
-rm -rf $dir
+rm -rf $tmp
 
 exit $fail
