@@ -12,28 +12,50 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software
-   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 /* Written by Jim Kingdon and David MacKenzie. */
 %{
+
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+/* The following block of alloca-related preprocessor directives is here
+   solely to allow compilation by non GNU-C compilers of the C parser
+   produced from this file by old versions of bison.  Newer versions of
+   bison include a block similar to this one in bison.simple.  */
+
 #ifdef __GNUC__
 #define alloca __builtin_alloca
 #else
-#ifdef sparc
+#ifdef HAVE_ALLOCA_H
 #include <alloca.h>
 #else
 #ifdef _AIX
  #pragma alloca
 #else
-char *alloca ();
+void *alloca ();
 #endif
 #endif
 #endif
 
 #include <stdio.h>
 #include <sys/types.h>
+
+#ifdef TM_IN_SYS_TIME
+#include <sys/time.h>
+#else
 #include <time.h>
+#endif
+
+/* Some old versions of bison generate parsers that use bcopy.
+   That loses on systems that don't provide the function, so we have
+   to redefine it here.  */
+#if !defined (HAVE_BCOPY) && defined (HAVE_MEMCPY) && !defined (bcopy)
+#define bcopy(from, to, len) memcpy ((to), (from), (len))
+#endif
 
 #define YYDEBUG 1
 
