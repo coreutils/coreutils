@@ -12,7 +12,7 @@ use FileHandle;
 use File::Compare qw(compare);
 
 @ISA = qw(Exporter);
-($VERSION = '$Revision: 1.13 $ ') =~ tr/[0-9].//cd;
+($VERSION = '$Revision: 1.14 $ ') =~ tr/[0-9].//cd;
 @EXPORT = qw (run_tests);
 
 my $debug = $ENV{DEBUG};
@@ -389,12 +389,12 @@ sub run_tests ($$$$$)
 	    and $fail = 1;
 	}
 
-    foreach my $pair (@post_compare)
-      {
-	my ($a, $b) = @$pair;
-	_compare_files $program_name, $test_name, undef, $a, $b
-	  and $fail = 1;
-      }
+      foreach my $pair (@post_compare)
+	{
+	  my ($a, $b) = @$pair;
+	  _compare_files $program_name, $test_name, undef, $a, $b
+	    and $fail = 1;
+	}
 
     cleanup:
       &{$expect->{POST}} if $expect->{POST};
