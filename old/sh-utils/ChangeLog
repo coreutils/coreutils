@@ -1,3 +1,18 @@
+1999-07-31  Jim Meyering  <meyering@ascend.com>
+
+	* man/Makefile.maint (helpful-men): Define.
+	* man/Makefile.summ ($(helpless-men)): New manual-generating rules to
+	accommodate the fact that false and true no longer accept --help.
+
+	* man/true.1in: New file.
+	* man/false.1in: New file.
+	* src/true.c: New file.
+	* src/false.c: New file.
+	* src/true.sh: Removed.
+	* src/false.sh: Removed.
+	* src/Makefile.am: (bin_PROGRAMS): Add true and false.
+	(bin_SCRIPTS): Remove true and false.
+
 1999-07-30  Jim Meyering  <meyering@ascend.com>
 
 	* configure.in (ALL_LINGUAS): Add Brazilian Portuguese (pt_BR).
