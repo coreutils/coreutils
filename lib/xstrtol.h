@@ -15,9 +15,9 @@
 
 #undef PARAMS
 #if defined (__STDC__) && __STDC__
-# define PARAMS(x) x
+# define PARAMS(Args) Args
 #else
-# define PARAMS(x) ()
+# define PARAMS(Args) ()
 #endif
 
 enum strtol_error
@@ -30,37 +30,37 @@ strtol_error
   __xstrtol PARAMS ((const char *s, char **ptr, int base,
 		     __unsigned long int *val, const char *valid_suffixes));
 
-#define _STRTOL_ERROR(exit_code, str, argument_type_string, err)	\
+#define _STRTOL_ERROR(Exit_code, Str, Argument_type_string, Err)	\
   do									\
     {									\
-      switch ((err))							\
+      switch ((Err))							\
 	{								\
 	case LONGINT_OK:						\
 	  abort ();							\
 									\
 	case LONGINT_INVALID:						\
-	  error ((exit_code), 0, "invalid %s `%s'",			\
-		 (argument_type_string), (str));			\
+	  error ((Exit_code), 0, "invalid %s `%s'",			\
+		 (Argument_type_string), (Str));			\
 	  break;							\
 									\
 	case LONGINT_INVALID_SUFFIX_CHAR:				\
-	  error ((exit_code), 0, "invalid character following %s `%s'",	\
-		 (argument_type_string), (str));			\
+	  error ((Exit_code), 0, "invalid character following %s `%s'",	\
+		 (Argument_type_string), (Str));			\
 	  break;							\
 									\
 	case LONGINT_OVERFLOW:						\
 	  /* FIXME: make this message dependent on STRING_TO_UNSIGNED */\
-	  error ((exit_code), 0, "%s `%s' larger than maximum long int",\
-		 (argument_type_string), (str));			\
+	  error ((Exit_code), 0, "%s `%s' larger than maximum long int",\
+		 (Argument_type_string), (Str));			\
 	  break;							\
 	}								\
     }									\
   while (0)
 
-#define STRTOL_FATAL_ERROR(str, argument_type_string, err)		\
-  _STRTOL_ERROR (2, str, argument_type_string, err)
+#define STRTOL_FATAL_ERROR(Str, Argument_type_string, Err)		\
+  _STRTOL_ERROR (2, Str, Argument_type_string, Err)
 
-#define STRTOL_FAIL_WARN(str, argument_type_string, err)		\
-  _STRTOL_ERROR (0, str, argument_type_string, err)
+#define STRTOL_FAIL_WARN(Str, Argument_type_string, Err)		\
+  _STRTOL_ERROR (0, Str, Argument_type_string, Err)
 
 #endif /* _xstrtol_h_ */
