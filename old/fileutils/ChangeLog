@@ -2,6 +2,15 @@
 
 	* Version 4.1.3.
 
+	* src/sys2.h (HELP_OPTION_DESCRIPTION): New macro.
+	(VERSION_OPTION_DESCRIPTION): New macro.
+	* src/chgrp.c, src/chmod.c, src/chown.c, src/cp.c, src/dd.c,
+	* src/df.c, src/dircolors.c, src/du.c, src/install.c, src/ln.c,
+	* src/ls.c, src/mkdir.c, src/mkfifo.c, src/mknod.c, src/mv.c, src/rm.c,
+	* src/rmdir.c, src/shred.c, src/stat.c, src/sync.c, src/touch.c (usage):
+	Use new macros, HELP_OPTION_DESCRIPTION and VERSION_OPTION_DESCRIPTION
+	instead of hard-coding --help and --version descriptions.
+
 	* POTFILES.in: Add src/sys2.h.
 
 	* src/touch.c (touch): Extend the change of 2001-09-15 to work on
