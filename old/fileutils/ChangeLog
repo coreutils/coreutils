@@ -26,6 +26,7 @@
 	now (after the changes of 2001-11-01) detecting whether a `pending*'
 	is the last would involve more work.  Reported by Andreas Schwab.
 	* tests/ls/recursive: New file.  Test for the above.
+	* tests/ls/Makefile.am (TESTS): Add recursive.
 
 	This change has no net effect.
 	* src/ls.c (main): Remove always-true conjunct and add a comment.
