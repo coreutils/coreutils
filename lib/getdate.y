@@ -242,7 +242,7 @@ day	: tDAY {
 	    yyDayOrdinal = 1;
 	    yyDayNumber = $1;
 	}
-	| tUNUMBER tDAY {
+	| tUNUMBER tDAY { /* FIXME */
 	    yyDayOrdinal = $1;
 	    yyDayNumber = $2;
 	}
@@ -279,6 +279,7 @@ date	: tUNUMBER '/' tUNUMBER {
 	    yyYear = $4;
 	}
 	| tUNUMBER tMONTH {
+	    /* FIXME: `date -d 'next october'' is interpreted as 2 october.  */
 	    yyMonth = $2;
 	    yyDay = $1;
 	}
@@ -314,10 +315,10 @@ relunit	: tUNUMBER tMINUTE_UNIT {
 	| tSEC_UNIT {
 	    yyRelSeconds++;
 	}
-	| tSNUMBER tMONTH_UNIT {
+	| tSNUMBER tMONTH_UNIT { /* FIXME */
 	    yyRelMonth += $1 * $2;
 	}
-	| tUNUMBER tMONTH_UNIT {
+	| tUNUMBER tMONTH_UNIT { /* FIXME */
 	    yyRelMonth += $1 * $2;
 	}
 	| tMONTH_UNIT {
