@@ -1,0 +1,1926 @@
+# Croatian translation of fileutils.
+# Copyright (C) 2002 Free Software Foundation, Inc.
+# Vlatko Kosturjak <kost@linux.hr>, 2002.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: fileutils 4.1\n"
+"POT-Creation-Date: 2001-04-29 13:38+0200\n"
+"PO-Revision-Date: 2002-06-16 02:13-01\n"
+"Last-Translator: Vlatko Kosturjak <kost@linux.hr>\n"
+"Language-Team: Croatian <lokalizacija@linux.hr>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n==1?0:1);\n"
+"X-Generator: TransDict server\n"
+
+#: lib/argmatch.c:159
+#, c-format
+msgid "invalid argument %s for `%s'"
+msgstr "neispravan argument %s za `%s'"
+
+#: lib/argmatch.c:160
+#, c-format
+msgid "ambiguous argument %s for `%s'"
+msgstr "dvosmislen argument %s za `%s'"
+
+#. We try to put synonyms on the same line.  The assumption is that
+#. synonyms follow each other
+#: lib/argmatch.c:178
+msgid "Valid arguments are:"
+msgstr "Valjani argumenti su:"
+
+#: lib/closeout.c:104 src/shred.c:317 src/shred.c:319
+msgid "write error"
+msgstr "greška prilikom zapisivanja"
+
+#: lib/error.c:117
+msgid "Unknown system error"
+msgstr "Nepoznata sistemska greška"
+
+#: lib/getopt.c:686
+#, c-format
+msgid "%s: option `%s' is ambiguous\n"
+msgstr "%s: opcija `%s' je nejednoznačna\n"
+
+#: lib/getopt.c:711
+#, c-format
+msgid "%s: option `--%s' doesn't allow an argument\n"
+msgstr "%s: opcija `--%s' ne dopušta argument\n"
+
+#: lib/getopt.c:716
+#, c-format
+msgid "%s: option `%c%s' doesn't allow an argument\n"
+msgstr "%s: opcija `%c%s' ne dopušta argument\n"
+
+#: lib/getopt.c:734 lib/getopt.c:907
+#, c-format
+msgid "%s: option `%s' requires an argument\n"
+msgstr "%s: opcija `%s' zahtijeva argument\n"
+
+#. --option
+#: lib/getopt.c:763
+#, c-format
+msgid "%s: unrecognized option `--%s'\n"
+msgstr "%s: neprepoznata opcija `--%s'\n"
+
+#. +option or -option
+#: lib/getopt.c:767
+#, c-format
+msgid "%s: unrecognized option `%c%s'\n"
+msgstr "%s: neprepoznata opcija `%c%s'\n"
+
+#. 1003.2 specifies the format of this message.
+#: lib/getopt.c:793
+#, c-format
+msgid "%s: illegal option -- %c\n"
+msgstr "%s: nedozvoljena opcija -- %c\n"
+
+#: lib/getopt.c:796
+#, c-format
+msgid "%s: invalid option -- %c\n"
+msgstr "%s: nedozvoljena opcija -- %c\n"
+
+#. 1003.2 specifies the format of this message.
+#: lib/getopt.c:826 lib/getopt.c:956
+#, c-format
+msgid "%s: option requires an argument -- %c\n"
+msgstr "%s: opcija zahtijeva argument -- %c\n"
+
+#: lib/getopt.c:873
+#, c-format
+msgid "%s: option `-W %s' is ambiguous\n"
+msgstr "%s: opcija `-W %s' je nejednoznačna\n"
+
+#: lib/getopt.c:891
+#, c-format
+msgid "%s: option `-W %s' doesn't allow an argument\n"
+msgstr "%s: opcija `-W %s' ne dopušta argument\n"
+
+#: lib/human.c:341
+msgid "block size"
+msgstr "veli~ina bloka"
+
+#. make_dir `succeeds' when DIR already exists.
+#. In that case, mkdir must fail, unless --parents (-p)
+#. was specified.
+#: lib/makepath.c:177 src/copy.c:897 src/mkdir.c:175
+#, c-format
+msgid "cannot create directory %s"
+msgstr "ne mogu napraviti direktorij %s"
+
+#: lib/makepath.c:183 lib/makepath.c:425 src/cp.c:403 src/cp.c:425
+#, c-format
+msgid "%s exists but is not a directory"
+msgstr "%s postoji ali nije direktorij"
+
+#: lib/makepath.c:321 lib/makepath.c:383 lib/makepath.c:444
+#, c-format
+msgid "cannot change owner and/or group of %s"
+msgstr "ne mogu promijeniti vlasnika i/ili grupu od %s"
+
+#: lib/makepath.c:343
+#, c-format
+msgid "cannot chdir to directory, %s"
+msgstr "ne mogu ući u direktorij, %s"
+
+#: lib/makepath.c:397 lib/makepath.c:450
+#, c-format
+msgid "cannot change permissions of %s"
+msgstr "ne mogu promijeniti dozvole od %s"
+
+#. If XALLOC_FAIL_FUNC is NULL, or does return, display this message
+#. before exiting when memory is exhausted.  Goes through gettext.
+#: lib/obstack.c:477 lib/xmalloc.c:66 src/shred.c:382 src/shred.c:393
+msgid "memory exhausted"
+msgstr "iscrpljeni memorijski resursi"
+
+#. Get translations for open and closing quotation marks.
+#.
+#. The message catalog should translate "`" to a left
+#. quotation mark suitable for the locale, and similarly for
+#. "'".  If the catalog has no translation,
+#. locale_quoting_style quotes `like this', and
+#. clocale_quoting_style quotes "like this".
+#.
+#. For example, an American English Unicode locale should
+#. translate "`" to U+201C (LEFT DOUBLE QUOTATION MARK), and
+#. should translate "'" to U+201D (RIGHT DOUBLE QUOTATION
+#. MARK).  A British English Unicode locale should instead
+#. translate these to U+2018 (LEFT SINGLE QUOTATION MARK) and
+#. U+2019 (RIGHT SINGLE QUOTATION MARK), respectively.
+#: lib/quotearg.c:259
+msgid "`"
+msgstr "`"
+
+#: lib/quotearg.c:260
+msgid "'"
+msgstr "'"
+
+#: lib/rpmatch.c:78
+msgid "^[yY]"
+msgstr "^[dDyY]"
+
+#: lib/rpmatch.c:81
+msgid "^[nN]"
+msgstr "^[nN]"
+
+#: lib/unicodeio.c:138
+#, c-format
+msgid "cannot output U+%04X: iconv function not usable"
+msgstr ""
+
+#: lib/unicodeio.c:149
+#, c-format
+msgid "U+%04X: character out of range"
+msgstr ""
+
+#: lib/unicodeio.c:181 lib/unicodeio.c:190
+#, c-format
+msgid "cannot convert U+%04X to local character set"
+msgstr ""
+
+#: lib/unicodeio.c:196
+#, c-format
+msgid "cannot output U+%04X: iconv function not available"
+msgstr ""
+
+#: lib/userspec.c:179
+msgid "invalid user"
+msgstr "neispravni korisnik"
+
+#: lib/userspec.c:180
+msgid "invalid group"
+msgstr "neispravna grupa"
+
+#: lib/userspec.c:182
+msgid "cannot get the login group of a numeric UID"
+msgstr ""
+
+#: lib/userspec.c:184
+msgid "cannot omit both user and group"
+msgstr ""
+
+#: lib/version-etc.c:38
+msgid "Copyright (C) 2001 Free Software Foundation, Inc."
+msgstr "Autorska prava (C) 2001. Free Software Foundation, Inc."
+
+#: lib/version-etc.c:60
+#, c-format
+msgid "Written by %s.\n"
+msgstr "Napisao %s. \n"
+
+#: lib/version-etc.c:66
+msgid ""
+"This is free software; see the source for copying conditions.  There is NO\n"
+"warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"
+msgstr ""
+"Ovo je slobodni softver; pogledajte kod kako biste doznali uvjete kopiranja.  NEMA\n"
+"garancije; čak ni tvrdnje o ISPLATIVOSTI ili POGODNOSTI ZA NEKU SVRHU.\n"
+
+#: src/chgrp.c:94
+msgid "cannot change to null group"
+msgstr ""
+
+#: src/chgrp.c:103
+#, c-format
+msgid "invalid group name %s"
+msgstr "nepravilno ime grupe %s"
+
+#: src/chgrp.c:107
+msgid "group number"
+msgstr "broj grupe"
+
+#: src/chgrp.c:110
+#, c-format
+msgid "invalid group number %s"
+msgstr "nepravilan broj grupe %s"
+
+#: src/chgrp.c:123 src/chmod.c:263 src/chown.c:97 src/cp.c:143 src/dd.c:288 src/df.c:742 src/dircolors.c:99 src/du.c:199 src/install.c:596 src/ln.c:335 src/ls.c:3248 src/mkdir.c:59 src/mkfifo.c:51 src/mknod.c:61 src/mv.c:325 src/rm.c:84 src/rmdir.c:142 src/shred.c:461 src/sync.c:40 src/touch.c:215
+#, c-format
+msgid "Try `%s --help' for more information.\n"
+msgstr "Pokušaj `%s --help' za više informacija.\n"
+
+#: src/chgrp.c:127
+#, c-format
+msgid ""
+"Usage: %s [OPTION]... GROUP FILE...\n"
+"  or:  %s [OPTION]... --reference=RFILE FILE...\n"
+msgstr ""
+
+#: src/chgrp.c:132
+msgid ""
+"Change the group membership of each FILE to GROUP.\n"
+"\n"
+"  -c, --changes          like verbose but report only when a change is made\n"
+"      --dereference      affect the referent of each symbolic link, rather\n"
+"                         than the symbolic link itself\n"
+"  -h, --no-dereference   affect symbolic links instead of any referenced file\n"
+"                         (available only on systems that can change the\n"
+"                         ownership of a symlink)\n"
+"  -f, --silent, --quiet  suppress most error messages\n"
+"      --reference=RFILE  use RFILE's group rather than the specified\n"
+"                         GROUP value\n"
+"  -R, --recursive        operate on files and directories recursively\n"
+"  -v, --verbose          output a diagnostic for every file processed\n"
+"      --help             display this help and exit\n"
+"      --version          output version information and exit\n"
+msgstr ""
+
+#: src/chgrp.c:149 src/chmod.c:287 src/chown.c:135 src/cp.c:215 src/dd.c:327 src/df.c:769 src/dircolors.c:118 src/du.c:230 src/install.c:640 src/ln.c:379 src/ls.c:3335 src/mkdir.c:73 src/mkfifo.c:63 src/mknod.c:79 src/mv.c:362 src/rm.c:111 src/rmdir.c:160 src/shred.c:505 src/sync.c:51 src/touch.c:240
+msgid ""
+"\n"
+"Report bugs to <bug-fileutils@gnu.org>."
+msgstr ""
+"\n"
+"Prijavite greška na <bug-fileutils@gnu.org>."
+
+#: src/chgrp.c:207 src/chmod.c:375 src/chown.c:207 src/install.c:289 src/mkdir.c:121 src/mkfifo.c:108 src/mknod.c:136 src/rm.c:180 src/rmdir.c:204
+msgid "too few arguments"
+msgstr ""
+
+#: src/chgrp.c:215 src/chmod.c:171 src/chmod.c:183 src/chmod.c:387 src/chown-core.c:238 src/chown-core.c:250 src/chown.c:216 src/cp.c:261 src/touch.c:156 src/touch.c:333
+#, c-format
+msgid "getting attributes of %s"
+msgstr ""
+
+#: src/chmod.c:106 src/chmod.c:115
+#, c-format
+msgid "getting new attributes of %s"
+msgstr ""
+
+#: src/chmod.c:138
+#, c-format
+msgid "mode of %s changed to %04lo (%s)\n"
+msgstr ""
+
+#: src/chmod.c:141
+#, c-format
+msgid "failed to change mode of %s to %04lo (%s)\n"
+msgstr ""
+
+#: src/chmod.c:144
+#, c-format
+msgid "mode of %s retained as %04lo (%s)\n"
+msgstr ""
+
+#: src/chmod.c:202
+#, c-format
+msgid "changing permissions of %s"
+msgstr ""
+
+#: src/chmod.c:267
+#, c-format
+msgid ""
+"Usage: %s [OPTION]... MODE[,MODE]... FILE...\n"
+"  or:  %s [OPTION]... OCTAL-MODE FILE...\n"
+"  or:  %s [OPTION]... --reference=RFILE FILE...\n"
+msgstr ""
+
+#: src/chmod.c:273
+msgid ""
+"Change the mode of each FILE to MODE.\n"
+"\n"
+"  -c, --changes           like verbose but report only when a change is made\n"
+"  -f, --silent, --quiet   suppress most error messages\n"
+"  -v, --verbose           output a diagnostic for every file processed\n"
+"      --reference=RFILE   use RFILE's mode instead of MODE values\n"
+"  -R, --recursive         change files and directories recursively\n"
+"      --help              display this help and exit\n"
+"      --version           output version information and exit\n"
+"\n"
+"Each MODE is one or more of the letters ugoa, one of the symbols +-= and\n"
+"one or more of the letters rwxXstugo.\n"
+msgstr ""
+
+#: src/chmod.c:343
+#, c-format
+msgid "invalid character %s in mode string %s"
+msgstr ""
+
+#: src/chmod.c:383
+#, c-format
+msgid "invalid mode string: %s"
+msgstr ""
+
+#: src/chown-core.c:117
+#, c-format
+msgid "neither symbolic link %s nor referent has been changed\n"
+msgstr ""
+
+#: src/chown-core.c:144
+#, c-format
+msgid "changed ownership of %s to %s\n"
+msgstr ""
+
+#: src/chown-core.c:145
+#, c-format
+msgid "changed group of %s to %s\n"
+msgstr ""
+
+#: src/chown-core.c:149
+#, c-format
+msgid "failed to change ownership of %s to %s\n"
+msgstr ""
+
+#: src/chown-core.c:150
+#, c-format
+msgid "failed to change group of %s to %s\n"
+msgstr ""
+
+#: src/chown-core.c:154
+#, c-format
+msgid "ownership of %s retained as %s\n"
+msgstr ""
+
+#: src/chown-core.c:155
+#, c-format
+msgid "group of %s retained as %s\n"
+msgstr ""
+
+#: src/chown-core.c:329
+#, c-format
+msgid "changing ownership of %s"
+msgstr ""
+
+#: src/chown-core.c:330
+#, c-format
+msgid "changing group of %s"
+msgstr ""
+
+#: src/chown-core.c:348
+#, c-format
+msgid "unable to restore permissions of %s"
+msgstr ""
+
+#: src/chown.c:101
+#, c-format
+msgid ""
+"Usage: %s [OPTION]... OWNER[:[GROUP]] FILE...\n"
+"  or:  %s [OPTION]... :GROUP FILE...\n"
+"  or:  %s [OPTION]... --reference=RFILE FILE...\n"
+msgstr ""
+
+#: src/chown.c:107
+msgid ""
+"Change the owner and/or group of each FILE to OWNER and/or GROUP.\n"
+"\n"
+"  -c, --changes          like verbose but report only when a change is made\n"
+"      --dereference      affect the referent of each symbolic link, rather\n"
+"                         than the symbolic link itself\n"
+"  -h, --no-dereference   affect symbolic links instead of any referenced file\n"
+"                         (available only on systems that can change the\n"
+"                         ownership of a symlink)\n"
+"      --from=CURRENT_OWNER:CURRENT_GROUP\n"
+"                         change the owner and/or group of each file only if\n"
+"                         its current owner and/or group match those specified\n"
+"                         here.  Either may be omitted, in which case a match\n"
+"                         is not required for the omitted attribute.\n"
+"  -f, --silent, --quiet  suppress most error messages\n"
+"      --reference=RFILE  use RFILE's owner and group rather than\n"
+"                         the specified OWNER:GROUP values\n"
+"  -R, --recursive        operate on files and directories recursively\n"
+"  -v, --verbose          output a diagnostic for every file processed\n"
+"      --help             display this help and exit\n"
+"      --version          output version information and exit\n"
+"\n"
+msgstr ""
+
+#: src/chown.c:130
+msgid ""
+"Owner is unchanged if missing.  Group is unchanged if missing, but changed\n"
+"to login group if implied by a `:'.  OWNER and GROUP may be numeric as well\n"
+"as symbolic.\n"
+msgstr ""
+
+#. This diagnostic is a bit vague because savedir can fail in
+#. several different ways.
+#: src/copy.c:136
+#, c-format
+msgid "cannot access %s"
+msgstr ""
+
+#: src/copy.c:205 src/copy.c:630 src/ln.c:237
+#, c-format
+msgid "%s and %s are the same file"
+msgstr ""
+
+#: src/copy.c:208
+#, c-format
+msgid "cannot open %s for reading"
+msgstr ""
+
+#: src/copy.c:227 src/copy.c:747 src/ln.c:291 src/mv.c:258 src/remove.c:842
+#, c-format
+msgid "cannot remove %s"
+msgstr ""
+
+#: src/copy.c:242
+#, c-format
+msgid "cannot create regular file %s"
+msgstr ""
+
+#: src/copy.c:251 src/copy.c:266 src/dd.c:1169
+#, c-format
+msgid "cannot fstat %s"
+msgstr ""
+
+#: src/copy.c:293 src/dd.c:786 src/dd.c:980
+#, c-format
+msgid "reading %s"
+msgstr ""
+
+#: src/copy.c:327
+#, c-format
+msgid "cannot lseek %s"
+msgstr ""
+
+#: src/copy.c:341 src/copy.c:365 src/dd.c:1024 src/dd.c:1085
+#, c-format
+msgid "writing %s"
+msgstr ""
+
+#: src/copy.c:373 src/copy.c:379
+#, c-format
+msgid "closing %s"
+msgstr ""
+
+#: src/copy.c:583 src/copy.c:612 src/remove.c:858
+#, c-format
+msgid "cannot stat %s"
+msgstr ""
+
+#: src/copy.c:602
+#, c-format
+msgid "omitting directory %s"
+msgstr ""
+
+#: src/copy.c:638
+#, c-format
+msgid "cannot overwrite non-directory %s with directory %s"
+msgstr ""
+
+#: src/copy.c:648
+#, c-format
+msgid "cannot overwrite directory %s with non-directory"
+msgstr ""
+
+#: src/copy.c:662
+#, c-format
+msgid "%s: overwrite %s, overriding mode %04lo? "
+msgstr ""
+
+#: src/copy.c:668
+#, c-format
+msgid "%s: overwrite %s? "
+msgstr ""
+
+#: src/copy.c:680
+#, c-format
+msgid "cannot overwrite directory %s"
+msgstr ""
+
+#: src/copy.c:689
+#, c-format
+msgid "cannot move directory onto non-directory: %s -> %s"
+msgstr ""
+
+#: src/copy.c:710
+#, c-format
+msgid "backing up %s would destroy source;  %s not moved"
+msgstr ""
+
+#: src/copy.c:711
+#, c-format
+msgid "backing up %s would destroy source;  %s not copied"
+msgstr ""
+
+#: src/copy.c:726 src/ln.c:273
+#, c-format
+msgid "cannot backup %s"
+msgstr ""
+
+#: src/copy.c:762 src/ln.c:308
+#, c-format
+msgid " (backup: %s)"
+msgstr ""
+
+#: src/copy.c:780
+#, c-format
+msgid "cannot copy a directory, %s, into itself, %s"
+msgstr ""
+
+#: src/copy.c:787
+#, c-format
+msgid "will not create hard link %s to directory %s"
+msgstr ""
+
+#: src/copy.c:796
+#, c-format
+msgid "cannot create hard link %s to %s"
+msgstr ""
+
+#. FIXME: this is a little fragile in that it relies on rename(2)
+#. failing with a specific errno value.  Expect problems on
+#. non-POSIX systems.
+#: src/copy.c:836
+#, c-format
+msgid "cannot move %s to a subdirectory of itself, %s"
+msgstr ""
+
+#. Use the value of errno from the failed rename.
+#: src/copy.c:858
+#, c-format
+msgid "cannot move %s to %s"
+msgstr "ne mogu pomaknuti %s u %s"
+
+#: src/copy.c:878
+#, c-format
+msgid "cannot copy cyclic symbolic link %s"
+msgstr ""
+
+#: src/copy.c:955
+#, c-format
+msgid "%s: can make relative symbolic links only in current directory"
+msgstr ""
+
+#: src/copy.c:962
+#, c-format
+msgid "cannot create symbolic link %s to %s"
+msgstr ""
+
+#: src/copy.c:974
+#, c-format
+msgid "cannot create link %s"
+msgstr ""
+
+#: src/copy.c:1000
+#, c-format
+msgid "cannot create fifo %s"
+msgstr ""
+
+#: src/copy.c:1014
+#, c-format
+msgid "cannot create special file %s"
+msgstr ""
+
+#: src/copy.c:1030
+#, c-format
+msgid "cannot read symbolic link %s"
+msgstr "ne mogu pročitati simbolični link %s"
+
+#: src/copy.c:1055
+#, c-format
+msgid "cannot create symbolic link %s"
+msgstr ""
+
+#: src/copy.c:1068 src/copy.c:1126 src/cp.c:296
+#, c-format
+msgid "preserving ownership for %s"
+msgstr ""
+
+#: src/copy.c:1084
+#, c-format
+msgid "%s has unknown file type"
+msgstr "%s je nepoznati tip datoteke"
+
+#: src/copy.c:1113 src/cp.c:283
+#, c-format
+msgid "preserving times for %s"
+msgstr ""
+
+#: src/copy.c:1144
+#, c-format
+msgid "setting permissions for %s"
+msgstr ""
+
+#: src/copy.c:1156 src/ln.c:326
+#, c-format
+msgid "cannot un-backup %s"
+msgstr ""
+
+#: src/copy.c:1160
+#, c-format
+msgid "%s -> %s (unbackup)\n"
+msgstr ""
+
+#: src/cp.c:147 src/mv.c:329
+#, c-format
+msgid ""
+"Usage: %s [OPTION]... SOURCE DEST\n"
+"  or:  %s [OPTION]... SOURCE... DIRECTORY\n"
+"  or:  %s [OPTION]... --target-directory=DIRECTORY SOURCE...\n"
+msgstr ""
+
+#: src/cp.c:153
+msgid ""
+"Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n"
+"\n"
+"  -a, --archive                same as -dpR\n"
+"      --backup[=CONTROL]       make a backup of each existing destination file\n"
+"  -b                           like --backup but does not accept an argument\n"
+"  -d, --no-dereference         never follow symbolic links\n"
+"  -f, --force                  if an existing destination file cannot be\n"
+"                                   opened, remove it and try again\n"
+"  -i, --interactive            prompt before overwrite\n"
+"  -H                           follow command-line symbolic links\n"
+"  -l, --link                   link files instead of copying\n"
+"  -L, --dereference            always follow symbolic links\n"
+"  -p, --preserve               preserve file attributes if possible\n"
+"      --parents                append source path to DIRECTORY\n"
+"  -P                           same as `--parents' for now; soon to change to\n"
+"                                 `--no-dereference' to conform to POSIX\n"
+"  -r                           copy recursively, non-directories as files\n"
+"                                 WARNING: use -R instead when you might copy\n"
+"                                 special files like FIFOs or /dev/zero\n"
+"      --remove-destination     remove each existing destination file before\n"
+"                                 attempting to open it (contrast with --force)\n"
+msgstr ""
+
+#: src/cp.c:176
+msgid ""
+"      --sparse=WHEN            control creation of sparse files\n"
+"  -R, --recursive              copy directories recursively\n"
+"      --strip-trailing-slashes remove any trailing slashes from each SOURCE\n"
+"                                 argument\n"
+"  -s, --symbolic-link          make symbolic links instead of copying\n"
+"  -S, --suffix=SUFFIX          override the usual backup suffix\n"
+"      --target-directory=DIRECTORY  move all SOURCE arguments into DIRECTORY\n"
+"  -u, --update                 copy only when the SOURCE file is newer\n"
+"                                 than the destination file or when the\n"
+"                                 destination file is missing\n"
+"  -v, --verbose                explain what is being done\n"
+"  -x, --one-file-system        stay on this file system\n"
+"      --help                   display this help and exit\n"
+"      --version                output version information and exit\n"
+"\n"
+"By default, sparse SOURCE files are detected by a crude heuristic and the\n"
+"corresponding DEST file is made sparse as well.  That is the behavior\n"
+"selected by --sparse=auto.  Specify --sparse=always to create a sparse DEST\n"
+"file whenever the SOURCE file contains a long enough sequence of zero bytes.\n"
+"Use --sparse=never to inhibit creation of sparse files.\n"
+"\n"
+msgstr ""
+
+#: src/cp.c:199 src/install.c:630 src/ln.c:369 src/mv.c:352
+msgid ""
+"The backup suffix is `~', unless set with --suffix or SIMPLE_BACKUP_SUFFIX.\n"
+"The version control method may be selected via the --backup option or through\n"
+"the VERSION_CONTROL environment variable.  Here are the values:\n"
+"\n"
+"  none, off       never make backups (even if --backup is given)\n"
+"  numbered, t     make numbered backups\n"
+"  existing, nil   numbered if numbered backups exist, simple otherwise\n"
+"  simple, never   always make simple backups\n"
+msgstr ""
+
+#: src/cp.c:209
+msgid ""
+"\n"
+"As a special case, cp makes a backup of SOURCE when the force and backup\n"
+"options are given and SOURCE and DEST are the same name for an existing,\n"
+"regular file.\n"
+msgstr ""
+
+#: src/cp.c:306
+#, c-format
+msgid "preserving permissions for %s"
+msgstr ""
+
+#: src/cp.c:391
+#, c-format
+msgid "cannot make directory %s"
+msgstr "ne mogu napraviti mapu %s"
+
+#: src/cp.c:450
+msgid "missing file arguments"
+msgstr ""
+
+#: src/cp.c:455
+msgid "missing destination file"
+msgstr ""
+
+#: src/cp.c:471 src/ln.c:161 src/ln.c:183 src/ln.c:210 src/ln.c:297
+#, c-format
+msgid "accessing %s"
+msgstr ""
+
+#: src/cp.c:494 src/mv.c:464
+#, c-format
+msgid "specified target, %s is not a directory"
+msgstr ""
+
+#: src/cp.c:502
+#, c-format
+msgid "copying multiple files, but last argument %s is not a directory"
+msgstr ""
+
+#: src/cp.c:601
+msgid "when preserving paths, the destination must be a directory"
+msgstr ""
+
+#: src/cp.c:747 src/install.c:224 src/ln.c:423 src/mv.c:406
+#, c-format
+msgid ""
+"warning: --version-control (-V) is obsolete;  support for it\n"
+"will be removed in some future release.  Use --backup=%s instead."
+msgstr ""
+
+#: src/cp.c:818 src/ln.c:452
+msgid "symbolic links are not supported on this system"
+msgstr ""
+
+#: src/cp.c:854
+msgid "cannot make both hard and symbolic links"
+msgstr ""
+
+#: src/cp.c:861
+msgid ""
+"Warning: the meaning of `-P' will change in the future to conform to POSIX.\n"
+"Use `--parents' for the old meaning, and `--no-dereference' for the new one."
+msgstr ""
+
+#: src/cp.c:870 src/install.c:280 src/ln.c:518 src/mv.c:480
+msgid "backup type"
+msgstr ""
+
+#: src/dircolors.c:103
+#, c-format
+msgid "Usage: %s [OPTION]... [FILE]\n"
+msgstr "Uporaba: %s [OPCIJA]... [DATOTEKA]\n"
+
+#: src/dircolors.c:104
+msgid ""
+"Output commands to set the LS_COLORS environment variable.\n"
+"\n"
+"Determine format of output:\n"
+"  -b, --sh, --bourne-shell    output Bourne shell code to set LS_COLORS\n"
+"  -c, --csh, --c-shell        output C shell code to set LS_COLORS\n"
+"  -p, --print-database        output defaults\n"
+"      --help                  display this help and exit\n"
+"      --version               output version information and exit\n"
+"\n"
+"If FILE is specified, read it to determine which colors to use for which\n"
+"file types and extensions.  Otherwise, a precompiled database is used.\n"
+"For details on the format of these files, run `dircolors --print-database'.\n"
+msgstr ""
+
+#: src/dircolors.c:297
+#, c-format
+msgid "%s:%lu: invalid line;  missing second token"
+msgstr ""
+
+#: src/dircolors.c:369
+#, c-format
+msgid "%s:%lu: unrecognized keyword %s"
+msgstr ""
+
+#: src/dircolors.c:370
+msgid "<internal>"
+msgstr "<interno>"
+
+#: src/dircolors.c:465
+msgid ""
+"the options to output dircolors' internal database and\n"
+"to select a shell syntax are mutually exclusive"
+msgstr ""
+
+#: src/dircolors.c:473
+msgid ""
+"no FILE arguments may be used with the option to output\n"
+"dircolors' internal database"
+msgstr ""
+
+#: src/dircolors.c:480 src/mknod.c:138
+msgid "too many arguments"
+msgstr "previše argumenata"
+
+#: src/dircolors.c:502
+msgid "no SHELL environment variable, and no shell type option given"
+msgstr ""
+
+#: src/dd.c:1143 src/dircolors.c:537
+msgid "standard input"
+msgstr "standardni ulaz"
+
+#: src/dd.c:292
+#, c-format
+msgid "Usage: %s [OPTION]...\n"
+msgstr "Uporaba: %s [OPCIJA]...\n"
+
+#: src/dd.c:293
+msgid ""
+"Copy a file, converting and formatting according to the options.\n"
+"\n"
+"  bs=BYTES        force ibs=BYTES and obs=BYTES\n"
+"  cbs=BYTES       convert BYTES bytes at a time\n"
+"  conv=KEYWORDS   convert the file as per the comma separated keyword list\n"
+"  count=BLOCKS    copy only BLOCKS input blocks\n"
+"  ibs=BYTES       read BYTES bytes at a time\n"
+"  if=FILE         read from FILE instead of stdin\n"
+"  obs=BYTES       write BYTES bytes at a time\n"
+"  of=FILE         write to FILE instead of stdout\n"
+"  seek=BLOCKS     skip BLOCKS obs-sized blocks at start of output\n"
+"  skip=BLOCKS     skip BLOCKS ibs-sized blocks at start of input\n"
+"      --help      display this help and exit\n"
+"      --version   output version information and exit\n"
+"\n"
+"BLOCKS and BYTES may be followed by the following multiplicative suffixes:\n"
+"xM M, c 1, w 2, b 512, kD 1000, k 1024, MD 1,000,000, M 1,048,576,\n"
+"GD 1,000,000,000, G 1,073,741,824, and so on for T, P, E, Z, Y.\n"
+"Each KEYWORD may be:\n"
+"\n"
+"  ascii     from EBCDIC to ASCII\n"
+"  ebcdic    from ASCII to EBCDIC\n"
+"  ibm       from ASCII to alternated EBCDIC\n"
+"  block     pad newline-terminated records with spaces to cbs-size\n"
+"  unblock   replace trailing spaces in cbs-size records with newline\n"
+"  lcase     change upper case to lower case\n"
+"  notrunc   do not truncate the output file\n"
+"  ucase     change lower case to upper case\n"
+"  swab      swap every pair of input bytes\n"
+"  noerror   continue after read errors\n"
+"  sync      pad every input block with NULs to ibs-size; when used\n"
+"              with block or unblock, pad with spaces rather than NULs\n"
+msgstr ""
+
+#: src/dd.c:358
+#, c-format
+msgid "%s+%s records in\n"
+msgstr "%s+%s zapisa u\n"
+
+#: src/dd.c:361
+#, c-format
+msgid "%s+%s records out\n"
+msgstr "%s+%s zapisa van\n"
+
+#: src/dd.c:369
+msgid "truncated record"
+msgstr ""
+
+#: src/dd.c:370
+msgid "truncated records"
+msgstr ""
+
+#: src/dd.c:379
+#, c-format
+msgid "closing input file %s"
+msgstr "zatvaram ulaznu datoteku %s"
+
+#: src/dd.c:381
+#, c-format
+msgid "closing output file %s"
+msgstr "zatvaram izlaznu datoteku %s"
+
+#: src/dd.c:465
+#, c-format
+msgid "writing to %s"
+msgstr "zapisujem u %s"
+
+#: src/dd.c:497
+#, c-format
+msgid "invalid conversion: %s"
+msgstr "neispravna konverzija: %s"
+
+#: src/dd.c:553
+#, c-format
+msgid "unrecognized option %s"
+msgstr "neprepoznata opcija %s"
+
+#: src/dd.c:600
+#, c-format
+msgid "unrecognized option %s=%s"
+msgstr "neprepoznata opcija %s=%s"
+
+#: src/dd.c:606
+#, c-format
+msgid "invalid number %s"
+msgstr "neispravan broj %s"
+
+#: src/dd.c:636
+msgid "only one conv in {ascii,ebcdic,ibm}, {lcase,ucase}, {block,unblock}, {unblock,sync}"
+msgstr ""
+
+#: src/dd.c:1140 src/dd.c:1158
+#, c-format
+msgid "opening %s"
+msgstr "otvaram %s"
+
+#: src/dd.c:1166
+msgid "file offset out of range"
+msgstr ""
+
+#: src/dd.c:1182
+#, c-format
+msgid "advancing past %s bytes in output file %s"
+msgstr ""
+
+#: src/dd.c:1191
+msgid "standard output"
+msgstr "standardni izlaz"
+
+#: src/df.c:152
+msgid "Filesystem "
+msgstr "Datotečni sustav"
+
+#: src/df.c:155
+msgid "   Type"
+msgstr "   Tip"
+
+#: src/df.c:160
+#, c-format
+msgid "    Inodes   IUsed   IFree IUse%%"
+msgstr ""
+
+#: src/df.c:162
+#, c-format
+msgid "    Size  Used Avail Use%%"
+msgstr ""
+
+#: src/df.c:164
+#, c-format
+msgid " %4d-blocks      Used Available Capacity"
+msgstr ""
+
+#: src/df.c:175
+#, c-format
+msgid " %4s-blocks      Used Available Use%%"
+msgstr ""
+
+#: src/df.c:178
+msgid " Mounted on\n"
+msgstr " Montiran na\n"
+
+#: src/df.c:746 src/du.c:203 src/ls.c:3252
+#, c-format
+msgid "Usage: %s [OPTION]... [FILE]...\n"
+msgstr "Uporaba: %s [OPCIJA]... [DATOTEKA]...\n"
+
+#: src/df.c:747
+msgid ""
+"Show information about the filesystem on which each FILE resides,\n"
+"or all filesystems by default.\n"
+"\n"
+"  -a, --all             include filesystems having 0 blocks\n"
+"      --block-size=SIZE use SIZE-byte blocks\n"
+"  -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\n"
+"  -H, --si              likewise, but use powers of 1000 not 1024\n"
+"  -i, --inodes          list inode information instead of block usage\n"
+"  -k, --kilobytes       like --block-size=1024\n"
+"  -l, --local           limit listing to local filesystems\n"
+"  -m, --megabytes       like --block-size=1048576\n"
+"      --no-sync         do not invoke sync before getting usage info (default)\n"
+"  -P, --portability     use the POSIX output format\n"
+"      --sync            invoke sync before getting usage info\n"
+"  -t, --type=TYPE       limit listing to filesystems of type TYPE\n"
+"  -T, --print-type      print filesystem type\n"
+"  -x, --exclude-type=TYPE   limit listing to filesystems not of type TYPE\n"
+"  -v                    (ignored)\n"
+"      --help            display this help and exit\n"
+"      --version         output version information and exit\n"
+msgstr ""
+
+#: src/df.c:878
+#, c-format
+msgid "file system type %s both selected and excluded"
+msgstr ""
+
+#. Couldn't read the table of mounted filesystems.
+#. Fail if df was invoked with no file name arguments;
+#. Otherwise, merely give a warning and proceed.
+#: src/df.c:922
+msgid "Warning: "
+msgstr "Upozorenje: "
+
+#: src/df.c:925
+#, c-format
+msgid "%scannot read table of mounted filesystems"
+msgstr ""
+
+#: src/du.c:204
+msgid ""
+"Summarize disk usage of each FILE, recursively for directories.\n"
+"\n"
+"  -a, --all             write counts for all files, not just directories\n"
+"      --block-size=SIZE use SIZE-byte blocks\n"
+"  -b, --bytes           print size in bytes\n"
+"  -c, --total           produce a grand total\n"
+"  -D, --dereference-args  dereference PATHs when symbolic link\n"
+"  -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\n"
+"  -H, --si              likewise, but use powers of 1000 not 1024\n"
+"  -k, --kilobytes       like --block-size=1024\n"
+"  -l, --count-links     count sizes many times if hard linked\n"
+"  -L, --dereference     dereference all symbolic links\n"
+"  -m, --megabytes       like --block-size=1048576\n"
+"  -S, --separate-dirs   do not include size of subdirectories\n"
+"  -s, --summarize       display only a total for each argument\n"
+"  -x, --one-file-system  skip directories on different filesystems\n"
+"  -X FILE, --exclude-from=FILE  Exclude files that match any pattern in FILE.\n"
+"      --exclude=PAT     Exclude files that match PAT.\n"
+"      --max-depth=N     print the total for a directory (or file, with --all)\n"
+"                          only if it is N or fewer levels below the command\n"
+"                          line argument;  --max-depth=0 is the same as\n"
+"                          --summarize\n"
+"      --help            display this help and exit\n"
+"      --version         output version information and exit\n"
+msgstr ""
+
+#: src/du.c:474
+#, c-format
+msgid "cannot change to `..' from directory %s"
+msgstr "ne mogu promijeniti u `..' iz mape %s"
+
+#: src/du.c:553 src/remove.c:708
+#, c-format
+msgid "cannot change to directory %s"
+msgstr "ne mogu promijeniti u mapu %s"
+
+#: src/du.c:643 src/ls.c:1809
+msgid "total"
+msgstr "ukupno"
+
+#: src/du.c:707
+#, c-format
+msgid "invalid maximum depth %s"
+msgstr "neispravna maksimalna dubina %s"
+
+#: src/du.c:765
+msgid "cannot both summarize and show all entries"
+msgstr ""
+
+#: src/du.c:772
+msgid "warning: summarizing is the same as using --max-depth=0"
+msgstr ""
+
+#: src/du.c:778
+#, c-format
+msgid "warning: summarizing conflicts with --max-depth=%d"
+msgstr ""
+
+#: src/install.c:274
+msgid "the strip option may not be used when installing a directory"
+msgstr ""
+
+#: src/install.c:297 src/mkdir.c:137
+#, c-format
+msgid "invalid mode %s"
+msgstr "neispravan mod %s"
+
+#: src/install.c:312 src/install.c:374
+#, c-format
+msgid "creating directory %s"
+msgstr "pravim mapu %s"
+
+#: src/install.c:337
+#, c-format
+msgid "installing multiple files, but last argument, %s is not a directory"
+msgstr ""
+
+#: src/install.c:438 src/remove.c:676
+#, c-format
+msgid "%s is a directory"
+msgstr "%s je mapa"
+
+#: src/install.c:498
+#, c-format
+msgid "cannot obtain time stamps for %s"
+msgstr ""
+
+#: src/install.c:510
+#, c-format
+msgid "cannot set time stamps for %s"
+msgstr ""
+
+#: src/install.c:531
+msgid "cannot fork"
+msgstr "ne mogu se forkati"
+
+#: src/install.c:535
+msgid "cannot run strip"
+msgstr ""
+
+#: src/install.c:542
+msgid "strip failed"
+msgstr ""
+
+#: src/install.c:563
+#, c-format
+msgid "invalid user %s"
+msgstr "neispravan korisnik %s"
+
+#: src/install.c:581
+#, c-format
+msgid "invalid group %s"
+msgstr "neispravna grupa %s"
+
+#: src/install.c:600
+#, c-format
+msgid ""
+"Usage: %s [OPTION]... SOURCE DEST           (1st format)\n"
+"  or:  %s [OPTION]... SOURCE... DIRECTORY   (2nd format)\n"
+"  or:  %s -d [OPTION]... DIRECTORY...       (3rd format)\n"
+msgstr ""
+
+#: src/install.c:606
+msgid ""
+"In the first two formats, copy SOURCE to DEST or multiple SOURCE(s) to\n"
+"the existing DIRECTORY, while setting permission modes and owner/group.\n"
+"In the third format, create all components of the given DIRECTORY(ies).\n"
+"\n"
+"      --backup[=CONTROL] make a backup of each existing destination file\n"
+"  -b                  like --backup but does not accept an argument\n"
+"  -c                  (ignored)\n"
+"  -d, --directory     treat all arguments as directory names; create all\n"
+"                        components of the specified directories\n"
+"  -D                  create all leading components of DEST except the last,\n"
+"                        then copy SOURCE to DEST;  useful in the 1st format\n"
+"  -g, --group=GROUP   set group ownership, instead of process' current group\n"
+"  -m, --mode=MODE     set permission mode (as in chmod), instead of rwxr-xr-x\n"
+"  -o, --owner=OWNER   set ownership (super-user only)\n"
+"  -p, --preserve-timestamps   apply access/modification times of SOURCE files\n"
+"                        to corresponding destination files\n"
+"  -s, --strip         strip symbol tables, only for 1st and 2nd formats\n"
+"  -S, --suffix=SUFFIX override the usual backup suffix\n"
+"  -v, --verbose       print the name of each directory as it is created\n"
+"      --help          display this help and exit\n"
+"      --version       output version information and exit\n"
+"\n"
+msgstr ""
+
+#: src/ln.c:167
+#, c-format
+msgid "%s: warning: making a hard link to a symbolic link is not portable"
+msgstr ""
+
+#: src/ln.c:174
+#, c-format
+msgid "%s: hard link not allowed for directory"
+msgstr ""
+
+#: src/ln.c:246
+#, c-format
+msgid "%s: cannot overwrite directory"
+msgstr "%s: ne mogu prepisati mapu"
+
+#: src/ln.c:251
+#, c-format
+msgid "%s: replace %s? "
+msgstr "%s: zamijeniti %s?"
+
+#: src/ln.c:257
+#, c-format
+msgid "%s: File exists"
+msgstr "%s: Datoteka postoji"
+
+#: src/ln.c:304
+#, c-format
+msgid "create symbolic link %s to %s"
+msgstr ""
+
+#: src/ln.c:305
+#, c-format
+msgid "create hard link %s to %s"
+msgstr ""
+
+#: src/ln.c:319
+#, c-format
+msgid "creating symbolic link %s to %s"
+msgstr ""
+
+#: src/ln.c:320
+#, c-format
+msgid "creating hard link %s to %s"
+msgstr ""
+
+#: src/ln.c:339
+#, c-format
+msgid ""
+"Usage: %s [OPTION]... TARGET [LINK_NAME]\n"
+"  or:  %s [OPTION]... TARGET... DIRECTORY\n"
+"  or:  %s [OPTION]... --target-directory=DIRECTORY TARGET...\n"
+msgstr ""
+
+#: src/ln.c:345
+msgid ""
+"Create a link to the specified TARGET with optional LINK_NAME.\n"
+"If LINK_NAME is omitted, a link with the same basename as the TARGET is\n"
+"created in the current directory.  When using the second form with more\n"
+"than one TARGET, the last argument must be a directory;  create links\n"
+"in DIRECTORY to each TARGET.  Create hard links by default, symbolic\n"
+"links with --symbolic.  When creating hard links, each TARGET must exist.\n"
+"\n"
+"      --backup[=CONTROL]      make a backup of each existing destination file\n"
+"  -b                          like --backup but does not accept an argument\n"
+"  -d, -F, --directory         hard link directories (super-user only)\n"
+"  -f, --force                 remove existing destination files\n"
+"  -n, --no-dereference        treat destination that is a symlink to a\n"
+"                                directory as if it were a normal file\n"
+"  -i, --interactive           prompt whether to remove destinations\n"
+"  -s, --symbolic              make symbolic links instead of hard links\n"
+"  -S, --suffix=SUFFIX         override the usual backup suffix\n"
+"      --target-directory=DIRECTORY  specify the DIRECTORY in which to create\n"
+"                                the links\n"
+"  -v, --verbose               print name of each file before linking\n"
+"      --help                  display this help and exit\n"
+"      --version               output version information and exit\n"
+"\n"
+msgstr ""
+
+#: src/ln.c:478 src/mv.c:456 src/shred.c:1848
+msgid "missing file argument"
+msgstr "nedostaje datotečni argument"
+
+#: src/ln.c:509
+#, c-format
+msgid "specified target directory, %s is not a directory"
+msgstr ""
+
+#: src/ln.c:530
+msgid "when making multiple links, last argument must be a directory"
+msgstr ""
+
+#: src/ls.c:1046
+#, c-format
+msgid "ignoring invalid width in environment variable COLUMNS: %s"
+msgstr ""
+
+#: src/ls.c:1073
+#, c-format
+msgid "ignoring invalid tab size in environment variable TABSIZE: %s"
+msgstr ""
+
+#: src/ls.c:1127
+msgid ""
+"Warning: the meaning of `-H' will change in the future to conform to POSIX.\n"
+"Use `--si' for the old meaning."
+msgstr ""
+
+#: src/ls.c:1193
+#, c-format
+msgid "invalid line width: %s"
+msgstr "neispravna dužina linije: %s"
+
+#: src/ls.c:1256
+#, c-format
+msgid "invalid tab size: %s"
+msgstr "neispravna veličina tabulatora: %s"
+
+#: src/ls.c:1374
+msgid "%a %b %d %H:%M:%S %Y"
+msgstr ""
+
+#: src/ls.c:1377
+msgid "%b %e  %Y"
+msgstr ""
+
+#: src/ls.c:1378
+msgid "%b %e %H:%M"
+msgstr ""
+
+#: src/ls.c:1678
+#, c-format
+msgid "unrecognized prefix: %s"
+msgstr ""
+
+#: src/ls.c:1701
+msgid "unparsable value for LS_COLORS environment variable"
+msgstr ""
+
+#: src/ls.c:3253
+msgid ""
+"List information about the FILEs (the current directory by default).\n"
+"Sort entries alphabetically if none of -cftuSUX nor --sort.\n"
+"\n"
+"  -a, --all                  do not hide entries starting with .\n"
+"  -A, --almost-all           do not list implied . and ..\n"
+"  -b, --escape               print octal escapes for nongraphic characters\n"
+"      --block-size=SIZE      use SIZE-byte blocks\n"
+"  -B, --ignore-backups       do not list implied entries ending with ~\n"
+"  -c                         with -lt: sort by, and show, ctime (time of last\n"
+"                               modification of file status information)\n"
+"                               with -l: show ctime and sort by name\n"
+"                               otherwise: sort by ctime\n"
+"  -C                         list entries by columns\n"
+"      --color[=WHEN]         control whether color is used to distinguish file\n"
+"                               types.  WHEN may be `never', `always', or `auto'\n"
+"  -d, --directory            list directory entries instead of contents\n"
+"  -D, --dired                generate output designed for Emacs' dired mode\n"
+"  -f                         do not sort, enable -aU, disable -lst\n"
+"  -F, --classify             append indicator (one of */=@|) to entries\n"
+"      --format=WORD          across -x, commas -m, horizontal -x, long -l,\n"
+"                               single-column -1, verbose -l, vertical -C\n"
+"      --full-time            list both full date and full time\n"
+msgstr ""
+
+#: src/ls.c:3277
+msgid ""
+"  -g                         (ignored)\n"
+"  -G, --no-group             inhibit display of group information\n"
+"  -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\n"
+"      --si                   likewise, but use powers of 1000 not 1024\n"
+"  -H                         same as `--si' for now; soon to change\n"
+"                               to conform to POSIX\n"
+"      --indicator-style=WORD append indicator with style WORD to entry names:\n"
+"                               none (default), classify (-F), file-type (-p)\n"
+"  -i, --inode                print index number of each file\n"
+"  -I, --ignore=PATTERN       do not list implied entries matching shell PATTERN\n"
+"  -k, --kilobytes            like --block-size=1024\n"
+"  -l                         use a long listing format\n"
+"  -L, --dereference          list entries pointed to by symbolic links\n"
+"  -m                         fill width with a comma separated list of entries\n"
+"  -n, --numeric-uid-gid      list numeric UIDs and GIDs instead of names\n"
+"  -N, --literal              print raw entry names (don't treat e.g. control\n"
+"                               characters specially)\n"
+"  -o                         use long listing format without group info\n"
+"  -p, --file-type            append indicator (one of /=@|) to entries\n"
+"  -q, --hide-control-chars   print ? instead of non graphic characters\n"
+"      --show-control-chars   show non graphic characters as-is (default\n"
+"                             unless program is `ls' and output is a terminal)\n"
+"  -Q, --quote-name           enclose entry names in double quotes\n"
+"      --quoting-style=WORD   use quoting style WORD for entry names:\n"
+"                               literal, locale, shell, shell-always, c, escape\n"
+"  -r, --reverse              reverse order while sorting\n"
+"  -R, --recursive            list subdirectories recursively\n"
+"  -s, --size                 print size of each file, in blocks\n"
+msgstr ""
+
+#: src/ls.c:3307
+msgid ""
+"  -S                         sort by file size\n"
+"      --sort=WORD            extension -X, none -U, size -S, time -t,\n"
+"                               version -v\n"
+"                             status -c, time -t, atime -u, access -u, use -u\n"
+"      --time=WORD            show time as WORD instead of modification time:\n"
+"                               atime, access, use, ctime or status; use\n"
+"                               specified time as sort key if --sort=time\n"
+"  -t                         sort by modification time\n"
+"  -T, --tabsize=COLS         assume tab stops at each COLS instead of 8\n"
+"  -u                         with -lt: sort by, and show, access time\n"
+"                               with -l: show access time and sort by name\n"
+"                               otherwise: sort by access time\n"
+"  -U                         do not sort; list entries in directory order\n"
+"  -v                         sort by version\n"
+"  -w, --width=COLS           assume screen width instead of current value\n"
+"  -x                         list entries by lines instead of by columns\n"
+"  -X                         sort alphabetically by entry extension\n"
+"  -1                         list one file per line\n"
+"      --help                 display this help and exit\n"
+"      --version              output version information and exit\n"
+"\n"
+"By default, color is not used to distinguish types of files.  That is\n"
+"equivalent to using --color=none.  Using the --color option without the\n"
+"optional WHEN argument is equivalent to using --color=always.  With\n"
+"--color=auto, color codes are output only if standard output is connected\n"
+"to a terminal (tty).\n"
+msgstr ""
+
+#: src/mkdir.c:63
+#, c-format
+msgid "Usage: %s [OPTION] DIRECTORY...\n"
+msgstr "Uporaba: %s [OPCIJA] MAPA...\n"
+
+#: src/mkdir.c:64
+msgid ""
+"Create the DIRECTORY(ies), if they do not already exist.\n"
+"\n"
+"  -m, --mode=MODE   set permission mode (as in chmod), not rwxrwxrwx - umask\n"
+"  -p, --parents     no error if existing, make parent directories as needed\n"
+"  -v, --verbose     print a message for each created directory\n"
+"      --help        display this help and exit\n"
+"      --version     output version information and exit\n"
+msgstr ""
+
+#. --verbose
+#: src/mkdir.c:110
+#, c-format
+msgid "created directory %s"
+msgstr "napravio mapu %s"
+
+#: src/mkdir.c:195
+#, c-format
+msgid "cannot set permissions of directory %s"
+msgstr "ne mogu postaviti dozvole za mapu %s"
+
+#: src/mkfifo.c:55
+#, c-format
+msgid "Usage: %s [OPTION] NAME...\n"
+msgstr "Uporaba: %s [OPCIJA] IME...\n"
+
+#: src/mkfifo.c:56
+msgid ""
+"Create named pipes (FIFOs) with the given NAMEs.\n"
+"\n"
+"  -m, --mode=MODE   set permission mode (as in chmod), not a=rw - umask\n"
+"      --help        display this help and exit\n"
+"      --version     output version information and exit\n"
+msgstr ""
+
+#: src/mkfifo.c:88 src/mknod.c:209
+msgid "fifo files not supported"
+msgstr "fifo datoteke nisu podržane"
+
+#: src/mkfifo.c:118 src/mknod.c:126
+msgid "invalid mode"
+msgstr "neispravan mod"
+
+#: src/mkfifo.c:128
+#, c-format
+msgid "cannot create fifo `%s'"
+msgstr "ne mogu napraviti fifo `%s'"
+
+#: src/mkfifo.c:137
+#, c-format
+msgid "cannot set permissions of fifo `%s'"
+msgstr "ne mogu postaviti dozvole od fifo '%s'"
+
+#: src/mknod.c:65
+#, c-format
+msgid "Usage: %s [OPTION]... NAME TYPE [MAJOR MINOR]\n"
+msgstr ""
+
+#: src/mknod.c:66
+msgid ""
+"Create the special file NAME of the given TYPE.\n"
+"\n"
+"  -m, --mode=MODE   set permission mode (as in chmod), not a=rw - umask\n"
+"      --help        display this help and exit\n"
+"      --version     output version information and exit\n"
+"\n"
+"MAJOR MINOR are forbidden for TYPE p, mandatory otherwise.  TYPE may be:\n"
+"\n"
+"  b      create a block (buffered) special file\n"
+"  c, u   create a character (unbuffered) special file\n"
+"  p      create a FIFO\n"
+msgstr ""
+
+#: src/mknod.c:140
+msgid "wrong number of arguments"
+msgstr "pogrešan broj argumenata"
+
+#: src/mknod.c:152
+msgid "block special files not supported"
+msgstr ""
+
+#: src/mknod.c:156
+msgid ""
+"when creating block special files, major and minor device\n"
+"numbers must be specified"
+msgstr ""
+
+#: src/mknod.c:164 src/mknod.c:193
+#, c-format
+msgid "invalid major device number %s"
+msgstr ""
+
+#: src/mknod.c:168 src/mknod.c:197
+#, c-format
+msgid "invalid minor device number %s"
+msgstr ""
+
+#: src/mknod.c:181
+msgid "character special files not supported"
+msgstr ""
+
+#: src/mknod.c:185
+msgid ""
+"when creating character special files, major and minor device\n"
+"numbers must be specified"
+msgstr ""
+
+#: src/mknod.c:213
+msgid "major and minor device numbers may not be specified for fifo files"
+msgstr ""
+
+#: src/mknod.c:233
+#, c-format
+msgid "cannot set permissions of `%s'"
+msgstr "ne mogu postaviti dozvole od '%s'"
+
+#: src/mv.c:335
+msgid ""
+"Rename SOURCE to DEST, or move SOURCE(s) to DIRECTORY.\n"
+"\n"
+"      --backup[=CONTROL]       make a backup of each existing destination file\n"
+"  -b                           like --backup but does not accept an argument\n"
+"  -f, --force                  never prompt before overwriting\n"
+"  -i, --interactive            prompt before overwrite\n"
+"      --strip-trailing-slashes  remove any trailing slashes from each SOURCE\n"
+"                                 argument\n"
+"  -S, --suffix=SUFFIX          override the usual backup suffix\n"
+"      --target-directory=DIRECTORY  move all SOURCE arguments into DIRECTORY\n"
+"  -u, --update                 move only older or brand new non-directories\n"
+"  -v, --verbose                explain what is being done\n"
+"      --help                   display this help and exit\n"
+"      --version                output version information and exit\n"
+"\n"
+msgstr ""
+
+#: src/mv.c:472
+msgid "when moving multiple files, last argument must be a directory"
+msgstr ""
+
+#: src/remove.c:482
+#, c-format
+msgid "cannot open directory %s"
+msgstr ""
+
+#: src/remove.c:590
+#, c-format
+msgid "closing directory %s"
+msgstr "zatvaram mapu %s"
+
+#: src/remove.c:625
+#, c-format
+msgid "%s: remove write-protected directory %s? "
+msgstr ""
+
+#: src/remove.c:626
+#, c-format
+msgid "%s: remove write-protected file %s? "
+msgstr ""
+
+#: src/remove.c:642
+#, c-format
+msgid "%s: remove directory %s? "
+msgstr "%s: ukloniti mapu %s?"
+
+#: src/remove.c:643
+#, c-format
+msgid "%s: remove %s? "
+msgstr "%s: ukloniti %s?"
+
+#: src/remove.c:650
+#, c-format
+msgid "removing %s\n"
+msgstr "uklanjam %s\n"
+
+#: src/remove.c:654
+#, c-format
+msgid "cannot unlink %s"
+msgstr ""
+
+#: src/remove.c:683
+#, c-format
+msgid "%s: directory %s is write protected; descend into it anyway? "
+msgstr ""
+
+#: src/remove.c:687
+#, c-format
+msgid "%s: descend into directory %s? "
+msgstr ""
+
+#: src/remove.c:698
+#, c-format
+msgid "removing all entries of directory %s\n"
+msgstr ""
+
+#: src/remove.c:725
+#, c-format
+msgid "cannot lstat `.' in %s"
+msgstr ""
+
+#: src/remove.c:731
+#, c-format
+msgid ""
+"ERROR: the directory %s initially had device/inode\n"
+"numbers %lu/%lu, but now (after a chdir into it), the numbers for `.'\n"
+"are %lu/%lu.  That means that while rm was running, the directory\n"
+"was replaced with either another directory or a link to another directory."
+msgstr ""
+
+#: src/remove.c:766
+#, c-format
+msgid "cannot change back to directory %s via `..'"
+msgstr ""
+
+#: src/remove.c:773
+#, c-format
+msgid "%s: remove directory %s%s? "
+msgstr "%s: ukloniti mapu %s%s?"
+
+#: src/remove.c:776
+msgid " (might be nonempty)"
+msgstr ""
+
+#: src/remove.c:784
+#, c-format
+msgid "removing the directory itself: %s\n"
+msgstr "ukloniti i samu mapu: %s\n"
+
+#: src/remove.c:799
+#, c-format
+msgid "cannot remove current directory %s"
+msgstr "ne mogu ukloniti trenutnu mapu %s"
+
+#: src/remove.c:804
+#, c-format
+msgid "cannot remove directory %s"
+msgstr "ne mogu ukloniti mapu %s"
+
+#: src/remove.c:832
+msgid "cannot remove `.' or `..'"
+msgstr "ne mogu ukloniti `.' ili `..'"
+
+#: src/remove.c:866
+msgid ""
+"WARNING: Circular directory structure.\n"
+"This almost certainly means that you have a corrupted file system.\n"
+"NOTIFY YOUR SYSTEM MANAGER.\n"
+"The following two directories have the same inode number:\n"
+msgstr ""
+
+#: src/remove.c:877
+msgid "continue? "
+msgstr ""
+
+#: src/rm.c:88 src/touch.c:219
+#, c-format
+msgid "Usage: %s [OPTION]... FILE...\n"
+msgstr "Uporaba: %s [OPCIJA]... DATOTEKA...\n"
+
+#: src/rm.c:89
+#, c-format
+msgid ""
+"Remove (unlink) the FILE(s).\n"
+"\n"
+"  -d, --directory       unlink directory, even if non-empty (super-user only)\n"
+"  -f, --force           ignore nonexistent files, never prompt\n"
+"  -i, --interactive     prompt before any removal\n"
+"  -r, -R, --recursive   remove the contents of directories recursively\n"
+"  -v, --verbose         explain what is being done\n"
+"      --help            display this help and exit\n"
+"      --version         output version information and exit\n"
+"\n"
+"To remove a file whose name starts with a `-', for example `-foo',\n"
+"use one of these commands:\n"
+"  %s -- -foo\n"
+"\n"
+"  %s ./-foo\n"
+"\n"
+"Note that if you use rm to remove a file, it is usually possible to recover\n"
+"the contents of that file.  If you want more assurance that the contents are\n"
+"truly unrecoverable, consider using shred.\n"
+msgstr ""
+
+#: src/rmdir.c:116 src/rmdir.c:219
+#, c-format
+msgid "removing directory, %s"
+msgstr "uklanjam mapu, %s"
+
+#: src/rmdir.c:146
+#, c-format
+msgid "Usage: %s [OPTION]... DIRECTORY...\n"
+msgstr "Uporaba: %s [OPCIJA]... MAPA...\n"
+
+#: src/rmdir.c:147
+msgid ""
+"Remove the DIRECTORY(ies), if they are empty.\n"
+"\n"
+"      --ignore-fail-on-non-empty\n"
+"                  ignore each failure that is solely because a directory\n"
+"                  is non-empty\n"
+"  -p, --parents   remove DIRECTORY, then try to remove each directory\n"
+"                  component of that path name.  E.g., `rmdir -p a/b/c' is\n"
+"                  similar to `rmdir a/b/c a/b a'.\n"
+"  -v, --verbose   output a diagnostic for every directory processed\n"
+"      --help      display this help and exit\n"
+"      --version   output version information and exit\n"
+msgstr ""
+
+#: src/shred.c:465
+#, c-format
+msgid "Usage: %s [OPTIONS] FILE [...]\n"
+msgstr ""
+
+#: src/shred.c:466
+#, c-format
+msgid ""
+"Overwrite the specified FILE(s) repeatedly, in order to make it harder\n"
+"for even very expensive hardware probing to recover the data.\n"
+"\n"
+"  -f, --force    change permissions to allow writing if necessary\n"
+"  -n, --iterations=N  Overwrite N times instead of the default (%d)\n"
+"  -s, --size=N   shred this many bytes (suffixes like k, M, G accepted)\n"
+"  -u, --remove   truncate and remove file after overwriting\n"
+"  -v, --verbose  show progress\n"
+"  -x, --exact    do not round file sizes up to the next full block\n"
+"  -z, --zero     add a final overwrite with zeros to hide shredding\n"
+"  -              shred standard output\n"
+"      --help     display this help and exit\n"
+"      --version  print version information and exit\n"
+"\n"
+"Delete FILE(s) if --remove (-u) is specified.  The default is not to remove\n"
+"the files because it is common to operate on device files like /dev/hda,\n"
+"and those files usually should not be removed.  When operating on regular\n"
+"files, most people use the --remove option.\n"
+"\n"
+"CAUTION: Note that shred relies on a very important assumption:\n"
+"that the filesystem overwrites data in place.  This is the traditional\n"
+"way to do things, but many modern filesystem designs do not satisfy this\n"
+"assumption.  The following are examples of filesystems on which shred is\n"
+"not effective:\n"
+"\n"
+"* log-structured or journaled filesystems, such as those supplied with\n"
+"  AIX and Solaris (and JFS, ReiserFS, XFS, etc.)\n"
+"\n"
+"* filesystems that write redundant data and carry on even if some writes\n"
+"  fail, such as RAID-based filesystems\n"
+"\n"
+"* filesystems that make snapshots, such as Network Appliance's NFS server\n"
+"\n"
+"* filesystems that cache in temporary locations, such as NFS\n"
+"  version 3 clients\n"
+"\n"
+"* compressed filesystems\n"
+msgstr ""
+
+#: src/shred.c:1078
+#, c-format
+msgid "%s: cannot rewind"
+msgstr ""
+
+#: src/shred.c:1102
+#, c-format
+msgid "%s: pass %lu/%lu (%s)..."
+msgstr ""
+
+#: src/shred.c:1140
+#, c-format
+msgid "%s: error writing at offset %s"
+msgstr ""
+
+#: src/shred.c:1171
+#, c-format
+msgid "%s: file too large"
+msgstr ""
+
+#: src/shred.c:1186
+#, c-format
+msgid "%s: pass %lu/%lu (%s)...%s/%s"
+msgstr ""
+
+#: src/shred.c:1191
+#, c-format
+msgid "%s: pass %lu/%lu (%s)...%s"
+msgstr ""
+
+#: src/shred.c:1446
+#, c-format
+msgid "%s: invalid file type"
+msgstr ""
+
+#: src/shred.c:1463
+#, c-format
+msgid "%s: file has negative size"
+msgstr ""
+
+#: src/shred.c:1515
+#, c-format
+msgid "%s: error truncating"
+msgstr ""
+
+#: src/shred.c:1536
+#, c-format
+msgid "%s: cannot shred append-only file descriptor"
+msgstr ""
+
+#: src/shred.c:1620
+#, c-format
+msgid "%s: removing"
+msgstr ""
+
+#.
+#. * People seem to understand this better than talking
+#. * about renaming oldname.  newname doesn't need
+#. * quoting because we picked it.
+#.
+#: src/shred.c:1659
+#, c-format
+msgid "%s: renamed to %s"
+msgstr ""
+
+#: src/shred.c:1685
+#, c-format
+msgid "%s: removed"
+msgstr ""
+
+#: src/shred.c:1750
+#, c-format
+msgid "%s: cannot remove"
+msgstr ""
+
+#: src/shred.c:1798
+#, c-format
+msgid "%s: invalid number of passes"
+msgstr ""
+
+#: src/shred.c:1815
+#, c-format
+msgid "%s: invalid file size"
+msgstr ""
+
+#: src/sync.c:44
+#, c-format
+msgid "Usage: %s [OPTION]\n"
+msgstr "Korištenje: %s [OPCIJA]\n"
+
+#: src/sync.c:45
+msgid ""
+"Force changed blocks to disk, update the super block.\n"
+"\n"
+"  --help      display this help and exit\n"
+"  --version   output version information and exit\n"
+msgstr ""
+
+#: src/sync.c:70
+msgid "ignoring all arguments"
+msgstr ""
+
+#: src/touch.c:154 src/touch.c:164 src/touch.c:202
+#, c-format
+msgid "creating %s"
+msgstr ""
+
+#: src/touch.c:204
+#, c-format
+msgid "setting times of %s"
+msgstr ""
+
+#: src/touch.c:220
+#, c-format
+msgid "  or:  %s [-acm] MMDDhhmm[YY] FILE... (obsolescent)\n"
+msgstr ""
+
+#: src/touch.c:222
+msgid ""
+"Update the access and modification times of each FILE to the current time.\n"
+"\n"
+"  -a                     change only the access time\n"
+"  -c, --no-create        do not create any files\n"
+"  -d, --date=STRING      parse STRING and use it instead of current time\n"
+"  -f                     (ignored)\n"
+"  -m                     change only the modification time\n"
+"  -r, --reference=FILE   use this file's times instead of current time\n"
+"  -t STAMP               use [[CC]YY]MMDDhhmm[.ss] instead of current time\n"
+"  --time=WORD            set time given by WORD: access atime use (same as -a)\n"
+"                           modify mtime (same as -m)\n"
+"      --help             display this help and exit\n"
+"      --version          output version information and exit\n"
+"\n"
+"Note that the three time-date formats recognized for the -d and -t options\n"
+"and for the obsolescent argument are all different.\n"
+msgstr ""
+
+#: src/touch.c:281 src/touch.c:302
+#, c-format
+msgid "invalid date format %s"
+msgstr ""
+
+#: src/touch.c:326
+msgid "cannot specify times from more than one source"
+msgstr ""
+
+#: src/touch.c:358
+msgid "file arguments missing"
+msgstr ""
