@@ -201,7 +201,8 @@ static int yyerror (parser_control *, char *);
 %token tAGO tDST
 
 %token <intval> tDAY tDAY_UNIT tDAYZONE tHOUR_UNIT tLOCAL_ZONE tMERIDIAN
-%token <intval> tMINUTE_UNIT tMONTH tMONTH_UNIT tSEC_UNIT tYEAR_UNIT tZONE
+%token <intval> tMINUTE_UNIT tMONTH tMONTH_UNIT tORDINAL
+%token <intval> tSEC_UNIT tYEAR_UNIT tZONE
 
 %token <textintval> tSNUMBER tUNUMBER
 %token <timespec> tSDECIMAL_NUMBER tUDECIMAL_NUMBER
@@ -317,6 +318,11 @@ day:
 	pc->day_ordinal = 1;
 	pc->day_number = $1;
       }
+  | tORDINAL tDAY
+      {
+	pc->day_ordinal = $1;
+	pc->day_number = $2;
+      }
   | tUNUMBER tDAY
       {
 	pc->day_ordinal = $1.value;
@@ -412,36 +418,48 @@ rel:
   ;
 
 relunit:
-    tUNUMBER tYEAR_UNIT
+    tORDINAL tYEAR_UNIT
+      { pc->rel_year += $1 * $2; }
+  | tUNUMBER tYEAR_UNIT
       { pc->rel_year += $1.value * $2; }
   | tSNUMBER tYEAR_UNIT
       { pc->rel_year += $1.value * $2; }
   | tYEAR_UNIT
       { pc->rel_year += $1; }
+  | tORDINAL tMONTH_UNIT
+      { pc->rel_month += $1 * $2; }
   | tUNUMBER tMONTH_UNIT
       { pc->rel_month += $1.value * $2; }
   | tSNUMBER tMONTH_UNIT
       { pc->rel_month += $1.value * $2; }
   | tMONTH_UNIT
       { pc->rel_month += $1; }
+  | tORDINAL tDAY_UNIT
+      { pc->rel_day += $1 * $2; }
   | tUNUMBER tDAY_UNIT
       { pc->rel_day += $1.value * $2; }
   | tSNUMBER tDAY_UNIT
       { pc->rel_day += $1.value * $2; }
   | tDAY_UNIT
       { pc->rel_day += $1; }
+  | tORDINAL tHOUR_UNIT
+      { pc->rel_hour += $1 * $2; }
   | tUNUMBER tHOUR_UNIT
       { pc->rel_hour += $1.value * $2; }
   | tSNUMBER tHOUR_UNIT
       { pc->rel_hour += $1.value * $2; }
   | tHOUR_UNIT
       { pc->rel_hour += $1; }
+  | tORDINAL tMINUTE_UNIT
+      { pc->rel_minutes += $1 * $2; }
   | tUNUMBER tMINUTE_UNIT
       { pc->rel_minutes += $1.value * $2; }
   | tSNUMBER tMINUTE_UNIT
       { pc->rel_minutes += $1.value * $2; }
   | tMINUTE_UNIT
       { pc->rel_minutes += $1; }
+  | tORDINAL tSEC_UNIT
+      { pc->rel_seconds += $1 * $2; }
   | tUNUMBER tSEC_UNIT
       { pc->rel_seconds += $1.value * $2; }
   | tSNUMBER tSEC_UNIT
@@ -579,21 +597,21 @@ static table const relative_time_table[] =
   { "YESTERDAY",tDAY_UNIT,	-1 },
   { "TODAY",	tDAY_UNIT,	 0 },
   { "NOW",	tDAY_UNIT,	 0 },
-  { "LAST",	tUNUMBER,	-1 },
-  { "THIS",	tUNUMBER,	 0 },
-  { "NEXT",	tUNUMBER,	 1 },
-  { "FIRST",	tUNUMBER,	 1 },
-/*{ "SECOND",	tUNUMBER,	 2 }, */
-  { "THIRD",	tUNUMBER,	 3 },
-  { "FOURTH",	tUNUMBER,	 4 },
-  { "FIFTH",	tUNUMBER,	 5 },
-  { "SIXTH",	tUNUMBER,	 6 },
-  { "SEVENTH",	tUNUMBER,	 7 },
-  { "EIGHTH",	tUNUMBER,	 8 },
-  { "NINTH",	tUNUMBER,	 9 },
-  { "TENTH",	tUNUMBER,	10 },
-  { "ELEVENTH",	tUNUMBER,	11 },
-  { "TWELFTH",	tUNUMBER,	12 },
+  { "LAST",	tORDINAL,	-1 },
+  { "THIS",	tORDINAL,	 0 },
+  { "NEXT",	tORDINAL,	 1 },
+  { "FIRST",	tORDINAL,	 1 },
+/*{ "SECOND",	tORDINAL,	 2 }, */
+  { "THIRD",	tORDINAL,	 3 },
+  { "FOURTH",	tORDINAL,	 4 },
+  { "FIFTH",	tORDINAL,	 5 },
+  { "SIXTH",	tORDINAL,	 6 },
+  { "SEVENTH",	tORDINAL,	 7 },
+  { "EIGHTH",	tORDINAL,	 8 },
+  { "NINTH",	tORDINAL,	 9 },
+  { "TENTH",	tORDINAL,	10 },
+  { "ELEVENTH",	tORDINAL,	11 },
+  { "TWELFTH",	tORDINAL,	12 },
   { "AGO",	tAGO,		 1 },
   { NULL, 0, 0 }
 };
