@@ -298,10 +298,10 @@ else
   esac
 fi
 test -s tobsx-2.err || rm -f tobsx-2.err
-$xx +2 < $srcdir/terr-1.in > terr-1.out 2> terr-1.err
+$xx +cl < $srcdir/terr-1.in > terr-1.out 2> terr-1.err
 code=$?
-if test $code != 0 ; then
-  $echo Test err-1 failed: ../../src/tail return code $code differs from expected value 0 1>&2
+if test $code != 1 ; then
+  $echo Test err-1 failed: ../../src/tail return code $code differs from expected value 1 1>&2
   errors=`expr $errors + 1`
 else
   cmp terr-1.out $srcdir/terr-1.exp
@@ -315,8 +315,110 @@ else
   esac
 fi
 test -s terr-1.err || rm -f terr-1.err
+$xx -cl < $srcdir/terr-2.in > terr-2.out 2> terr-2.err
+code=$?
+if test $code != 1 ; then
+  $echo Test err-2 failed: ../../src/tail return code $code differs from expected value 1 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp terr-2.out $srcdir/terr-2.exp
+  case $? in
+    0) if test "$VERBOSE" ; then $echo passed err-2; fi ;; # equal files
+    1) $echo Test err-2 failed: files terr-2.out and $srcdir/terr-2.exp differ 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo Test err-2 may have failed. 1>&2;
+       $echo The command "cmp terr-2.out $srcdir/terr-2.exp" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s terr-2.err || rm -f terr-2.err
+$xx -c99999999999999999999 < $srcdir/terr-3.in > terr-3.out 2> terr-3.err
+code=$?
+if test $code != 1 ; then
+  $echo Test err-3 failed: ../../src/tail return code $code differs from expected value 1 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp terr-3.out $srcdir/terr-3.exp
+  case $? in
+    0) if test "$VERBOSE" ; then $echo passed err-3; fi ;; # equal files
+    1) $echo Test err-3 failed: files terr-3.out and $srcdir/terr-3.exp differ 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo Test err-3 may have failed. 1>&2;
+       $echo The command "cmp terr-3.out $srcdir/terr-3.exp" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s terr-3.err || rm -f terr-3.err
+$xx -c < $srcdir/terr-4.in > terr-4.out 2> terr-4.err
+code=$?
+if test $code != 1 ; then
+  $echo Test err-4 failed: ../../src/tail return code $code differs from expected value 1 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp terr-4.out $srcdir/terr-4.exp
+  case $? in
+    0) if test "$VERBOSE" ; then $echo passed err-4; fi ;; # equal files
+    1) $echo Test err-4 failed: files terr-4.out and $srcdir/terr-4.exp differ 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo Test err-4 may have failed. 1>&2;
+       $echo The command "cmp terr-4.out $srcdir/terr-4.exp" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s terr-4.err || rm -f terr-4.err
+$xx - < $srcdir/tstdin-1.in > tstdin-1.out 2> tstdin-1.err
+code=$?
+if test $code != 0 ; then
+  $echo Test stdin-1 failed: ../../src/tail return code $code differs from expected value 0 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp tstdin-1.out $srcdir/tstdin-1.exp
+  case $? in
+    0) if test "$VERBOSE" ; then $echo passed stdin-1; fi ;; # equal files
+    1) $echo Test stdin-1 failed: files tstdin-1.out and $srcdir/tstdin-1.exp differ 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo Test stdin-1 may have failed. 1>&2;
+       $echo The command "cmp tstdin-1.out $srcdir/tstdin-1.exp" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s tstdin-1.err || rm -f tstdin-1.err
+$xx - < $srcdir/tstdin-2.in > tstdin-2.out 2> tstdin-2.err
+code=$?
+if test $code != 0 ; then
+  $echo Test stdin-2 failed: ../../src/tail return code $code differs from expected value 0 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp tstdin-2.out $srcdir/tstdin-2.exp
+  case $? in
+    0) if test "$VERBOSE" ; then $echo passed stdin-2; fi ;; # equal files
+    1) $echo Test stdin-2 failed: files tstdin-2.out and $srcdir/tstdin-2.exp differ 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo Test stdin-2 may have failed. 1>&2;
+       $echo The command "cmp tstdin-2.out $srcdir/tstdin-2.exp" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s tstdin-2.err || rm -f tstdin-2.err
+$xx -l 10 < $srcdir/tstdin-3.in > tstdin-3.out 2> tstdin-3.err
+code=$?
+if test $code != 0 ; then
+  $echo Test stdin-3 failed: ../../src/tail return code $code differs from expected value 0 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp tstdin-3.out $srcdir/tstdin-3.exp
+  case $? in
+    0) if test "$VERBOSE" ; then $echo passed stdin-3; fi ;; # equal files
+    1) $echo Test stdin-3 failed: files tstdin-3.out and $srcdir/tstdin-3.exp differ 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo Test stdin-3 may have failed. 1>&2;
+       $echo The command "cmp tstdin-3.out $srcdir/tstdin-3.exp" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s tstdin-3.err || rm -f tstdin-3.err
 if test $errors = 0 ; then
-  $echo Passed all 18 tests. 1>&2
+  $echo Passed all 24 tests. 1>&2
 else
   $echo Failed $errors tests. 1>&2
 fi

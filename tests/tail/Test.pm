@@ -31,7 +31,22 @@ my @tv = (
 # This is equivalent to +10l
 ['obsx-2', '+l', "x\n" . ("y\n" x 10) . 'z', "y\ny\nz", 0],
 
-['err-1', '+2', "x\ny\n", "y\n", 0],
+# This should get `tail: +cl: No such file or directory'
+['err-1', '+cl', '', '', 1],
+
+# This should get `tail: l: invalid number of bytes'
+['err-2', '-cl', '', '', 1],
+
+# Since the number is larger than 2^64, this should provoke
+# the diagnostic: `tail: 99999999999999999999: number of bytes is so large \
+# that it is not representable'
+['err-3', '-c99999999999999999999', '', '', 1],
+['err-4', '-c', '', '', 1],
+
+# Same as -l 10
+['stdin-1', '-', '', '', 0],
+['stdin-2', '-', "x\n" . ("y\n" x 10) . 'z', ("y\n" x 9) . 'z', 0],
+['stdin-3', '-l 10', "x\n" . ("y\n" x 10) . 'z', ("y\n" x 9) . 'z', 0],
 );
 
 sub test_vector
