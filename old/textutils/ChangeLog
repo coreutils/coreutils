@@ -1,3 +1,16 @@
+Sun Jul 14 16:53:50 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/unexpand.c (unexpand): Fix bug that contributed to endless loop
+	when invoking `echo '  ' |unexpand -t 1,2': use print_tab_index, not
+	tab_index in inner flush_pend: while loop.  From Keith Owens
+	<kaos@audio.apana.org.au>.
+	
+	* src/unexpand.c [HAVE_LIMITS_H]: Include limits.h for INT_MAX.
+	[!INT_MAX]: Define it.
+	(main): Append INT_MAX to command-line-specified tab list to
+	ensure termination in unexpand's inner loop.
+	Derived from a patch from Keith Owens.
+
 Thu Jul 11 22:04:36 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* Version 1.19.
