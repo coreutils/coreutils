@@ -1,6 +1,10 @@
-2005-02-21  Paul Eggert  <eggert@cs.ucla.edu>
+2005-02-28  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* NEWS: Mention that xnanosleep fixes sleep failure on linux-2.6.8.1.
+
+2005-02-21  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/Makefile.am (dd_LDADD, shred_LDADD): Add $(LIB_GETHRXTIME).
 	(nanosec_libs): Add $(LIB_XNANOSLEEP).  Needed for newer GNU/Linux
