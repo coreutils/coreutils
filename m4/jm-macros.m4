@@ -11,6 +11,10 @@ AC_DEFUN(jm_MACROS,
     [The concatenation of the strings `GNU ', and PACKAGE.])
   AC_SUBST(GNU_PACKAGE)
 
+  AC_SUBST(OPTIONAL_BIN_PROGS)
+  AC_SUBST(OPTIONAL_BIN_ZCRIPTS)
+  AC_SUBST(MAN)
+
   dnl This macro actually runs replacement code.  See isc-posix.m4.
   AC_REQUIRE([AC_ISC_POSIX])dnl
 
