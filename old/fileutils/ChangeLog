@@ -1,3 +1,19 @@
+1999-08-08  Jim Meyering  <meyering@ascend.com>
+
+	* lib/savedir.c (savedir): Change type of name_size parameter to off_t.
+	* lib/savedir.h (savedir): Update prototype.
+	* src/chmod.c (change_dir_mode): Remove cast of savedir arg.
+	* src/chown.c (change_dir_owner): Likewise.
+	* src/chgrp.c (change_dir_group): Likewise.
+	* src/copy.c (copy_dir): Likewise.
+	* src/du.c (count_entry): Likewise.
+	Suggestion from Bob Proulx.
+
+1999-08-07  Jim Meyering  <meyering@ascend.com>
+
+	* po/POTFILES.in: Add lots of lib/*.c files.
+	Remove src/cp-hash.c, since it doesn't use _().
+
 1999-08-04  Jim Meyering  <meyering@ascend.com>
 
 	* configure.in: Remove getline-testing code.  Now it's in m4/.
