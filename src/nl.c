@@ -333,7 +333,7 @@ proc_text (void)
 	      blank_lines = 0;
 	    }
 	  else
-	    printf (print_no_line_fmt);
+	    puts (print_no_line_fmt);
 	}
       else
 	print_lineno ();
@@ -342,15 +342,15 @@ proc_text (void)
       if (1 < line_buf.length)
 	print_lineno ();
       else
-	printf (print_no_line_fmt);
+	puts (print_no_line_fmt);
       break;
     case 'n':
-      printf (print_no_line_fmt);
+      puts (print_no_line_fmt);
       break;
     case 'p':
       if (re_search (current_regex, line_buf.buffer, line_buf.length - 1,
 		     0, line_buf.length - 1, (struct re_registers *) 0) < 0)
-	printf (print_no_line_fmt);
+	puts (print_no_line_fmt);
       else
 	print_lineno ();
       break;
