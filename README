@@ -68,9 +68,9 @@ reproduce whatever problem prompted it.
 
 If your patch adds a new feature, please try to get some sort of consensus
 that it is a worthwhile change.  One way to do that is to send mail to
-bug-gnu-utils@gnu.org (aka the gnu.utils.bug news group) including as
-much description and justification as you can.  Based on the feedback
-that generates, you may be able to convince us that it's worth adding.
+bug-coreutils@gnu.org including as much description and justification
+as you can.  Based on the feedback that generates, you may be able to
+convince us that it's worth adding.
 
 
 WARNING:  If you modify files like configure.in, m4/*.m4, aclocal.m4,
