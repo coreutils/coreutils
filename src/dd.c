@@ -31,6 +31,7 @@
 
 #include "system.h"
 #include "error.h"
+#include "getpagesize.h"
 #include "human.h"
 #include "long-options.h"
 #include "safe-read.h"
@@ -44,6 +45,8 @@
 #ifndef SIGINFO
 # define SIGINFO SIGUSR1
 #endif
+
+#define ROUND_UP_TO_MODULUS(X, M) (X + M - 1 - ((X + M - 1) % M))
 
 #define max(a, b) ((a) > (b) ? (a) : (b))
 #define output_char(c) \
@@ -844,16 +847,34 @@ static int
 dd_copy (void)
 {
   unsigned char *ibuf, *bufstart; /* Input buffer. */
+  unsigned char *real_buf;	  /* real buffer address before alignment */
   int nread;			/* Bytes read in the current block. */
   int exit_status = 0;
+  size_t page_size = getpagesize ();
 
   /* Leave at least one extra byte at the beginning and end of `ibuf'
      for conv=swab, but keep the buffer address even.  But some peculiar
      device drivers work only with word-aligned buffers, so leave an
      extra two bytes.  */
 
-  ibuf = (unsigned char *) xmalloc (input_blocksize + 2 * SWAB_ALIGN_OFFSET);
-  ibuf += SWAB_ALIGN_OFFSET;
+  /* Some devices require alignment on a sector or page boundary
+     (e.g. character disk devices).  Align the input buffer to a
+     page boundary to cover all bases.  Note that due to the swab
+     algorithm, we must have at least one byte in the page before
+     the input buffer;  thus we allocate 2 pages of slop in the
+     real buffer.  8k above the blocksize shouldn't bother anyone.  */
+
+
+  real_buf = (unsigned char *) xmalloc (input_blocksize
+					+ 2 * SWAB_ALIGN_OFFSET
+					+ 2 * page_size - 1);
+  ibuf = real_buf;
+  ibuf += SWAB_ALIGN_OFFSET;	/* allow space for swab */
+
+  /* FIXME: Rather than using uintmax_t here (uintmax_t is necessary on systems
+     where (sizeof void* > sizeof unsigned long), write a configure-time test
+     to determine the smallest unsigned integer type that can hold a pointer.  */
+  ibuf = (unsigned char *) ROUND_UP_TO_MODULUS ((uintmax_t) ibuf, page_size);
 
   if (conversions_mask & C_TWOBUFS)
     obuf = (unsigned char *) xmalloc (output_blocksize);
@@ -867,7 +888,7 @@ dd_copy (void)
     {
       /* FIXME: this loses for
 	 % ./dd if=dd seek=1 |:
-	 ./dd: a1 standard output: Bad file number
+	 ./dd: standard output: Bad file number
 	 0+0 records in
 	 0+0 records out
 	 */
@@ -1003,7 +1024,7 @@ dd_copy (void)
 	}
     }
 
-  free (ibuf - SWAB_ALIGN_OFFSET);
+  free (real_buf);
   if (obuf != ibuf)
     free (obuf);
 
