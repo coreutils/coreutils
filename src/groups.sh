@@ -1,6 +1,6 @@
 #!/bin/sh
 # groups -- print the groups a user is in
-# Copyright (C) 1991, 1997 Free Software Foundation, Inc.
+# Copyright (C) 1991, 1997, 2000 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -31,13 +31,14 @@ Same as id -Gn.  If no USERNAME, use current process.
 
 Report bugs to <sh-utils-bugs@gnu.org>."
 
+fail=0
 case $# in
   1 )
     case "z${1}" in
       z--help )
-	 echo "$usage"; exit 0 ;;
+	 echo "$usage" || fail=1; exit $fail;;
       z--version )
-	 echo "groups (@GNU_PACKAGE@) @VERSION@"; exit 0 ;;
+	 echo "groups (@GNU_PACKAGE@) @VERSION@" || fail=1; exit $fail;;
       * ) ;;
     esac
     ;;
@@ -48,7 +49,6 @@ if [ $# -eq 0 ]; then
   id -Gn
   fail=$?
 else
-  fail=0
   for name in "$@"; do
     groups=`id -Gn -- $name`
     status=$?

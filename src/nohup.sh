@@ -1,6 +1,6 @@
 #!/bin/sh
 # nohup -- run a command immume to hangups, with output to a non-tty
-# Copyright (C) 1991, 1997, 1999 Free Software Foundation, Inc.
+# Copyright (C) 1991, 1997, 1999, 2000 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -37,13 +37,14 @@ if [ $# -eq 0 ]; then
   exit 1
 fi
 
+fail=0
 case $# in
   1 )
     case "z${1}" in
       z--help )
-	 echo "$usage"; echo "$usage_help"; exit 0 ;;
+	 echo "$usage" || fail=1; echo "$usage_help" || fail=1; exit $fail;;
       z--version )
-	 echo "nohup (@GNU_PACKAGE@) @VERSION@"; exit 0 ;;
+	 echo "nohup (@GNU_PACKAGE@) @VERSION@" || fail=1; exit $fail;;
       * ) ;;
     esac
     ;;
