@@ -240,7 +240,8 @@ AC_DEFUN([jm_CHECK_ALL_TYPES],
   AC_REQUIRE([AC_TYPE_SIGNAL])
   AC_REQUIRE([AC_TYPE_SIZE_T])
   AC_REQUIRE([AC_TYPE_UID_T])
-  AC_CHECK_TYPE(ino_t, unsigned long)
+  AC_CHECK_TYPE(ino_t, unsigned long int)
+  AC_CHECK_TYPE(uintptr_t, size_t)
 
   gt_TYPE_SSIZE_T
 
