@@ -2,6 +2,7 @@
 
 	* tests/tsort/Makefile.am (TESTS_ENVIRONMENT): Add `pwd`/ prefix
 	to exported PATH value (though not strictly necessary, here).
+	* tests/md5sum/Makefile.am: Likewise.
 
 	Nits.
 	* lib/memcasecmp.c: Use `#if' instead of `#ifdef' for `HAVE_CONFIG_H'.
