@@ -276,7 +276,7 @@ dist_man_MANS = \
   who.1 whoami.1 yes.1
 
 man_aux = $(dist_man_MANS:.1=.x)
-EXTRA_DIST = $(man_aux)
+EXTRA_DIST = $(man_aux) help2man
 MAINTAINERCLEANFILES = $(man_MANS)
 
 # Depend on configure.ac to get version number changes.
@@ -602,7 +602,7 @@ yes.1:		$(common_dep)	$(srcdir)/yes.x		../src/yes.c
 	@echo "Updating man page $@";		\
 	mkdir $t;				\
 	(cd $t && $(LN_S) ../../src/$(mapped_name)$(EXEEXT) $*$(EXEEXT)); \
-	./help2man				\
+	$(PERL) -- $(srcdir)/help2man		\
 	    --info-page='$(PACKAGE) $*'		\
 	    --include=$(srcdir)/$*.x		\
 	    --output=$@ $t/$*$(EXEEXT)
