@@ -518,13 +518,26 @@ do_copy (int n_files, char **file, const char *target_directory,
 	  char *arg_in_concat = NULL;
 	  char *arg = file[i];
 
+	  /* Trailing slashes are meaningful (i.e., maybe worth preserving)
+	     only in the source file names.  */
 	  if (remove_trailing_slashes)
 	    strip_trailing_slashes (arg);
 
 	  if (flag_path)
 	    {
-	      /* Append all of `arg' to `dest'.  */
-	      dst_path = path_concat (dest, arg, &arg_in_concat);
+	      char *arg_no_trailing_slash;
+
+	      /* Use `arg' without trailing slashes in constructing destination
+		 file names.  Otherwise, we can end up trying to create a
+		 directory via `mkdir ("dst/foo/"...', which is not portable.
+		 It fails, due to the trailing slash, on at least
+		 NetBSD 1.[34] systems.  */
+	      ASSIGN_STRDUPA (arg_no_trailing_slash, arg);
+	      strip_trailing_slashes (arg_no_trailing_slash);
+
+	      /* Append all of `arg' (minus any trailing slash) to `dest'.  */
+	      dst_path = path_concat (dest, arg_no_trailing_slash,
+				      &arg_in_concat);
 	      if (dst_path == NULL)
 		xalloc_die ();
 
