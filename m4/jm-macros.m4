@@ -263,7 +263,6 @@ AC_DEFUN([jm_CHECK_ALL_TYPES],
 
   dnl Checks for typedefs, structures, and compiler characteristics.
   AC_REQUIRE([AC_C_BIGENDIAN])
-  AC_REQUIRE([AC_PROG_CC_STDC])
   AC_REQUIRE([AC_C_CONST])
   AC_REQUIRE([AC_C_VOLATILE])
   AC_REQUIRE([AC_C_INLINE])
