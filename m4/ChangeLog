@@ -11,7 +11,7 @@
 	directives with appropriate #if HAVE_*_H tests so that we can
 	detect getfsstat on Apple Darwin1.3.7 systems.
 	Reported by Nelson Beebe.
-	Also fix harmless typo in cache variable name: s/getsstat/getfsstat/.
+	Fix harmless typo in cache variable name: s/getsstat/getfsstat/.
 
 2001-09-28  Paul Eggert  <eggert@twinsun.com>
 
