@@ -2266,10 +2266,10 @@ common format.  It can contain month names, timezones, @samp{am} and
 @samp{pm}, @samp{yesterday}, @samp{ago}, etc.
 
 @item -u
-@itemx --uct
+@itemx --utc
 @itemx --universal
 @opindex -u
-@opindex --uct
+@opindex --utc
 @opindex --universal
 @cindex coordinated universal time
 @cindex Greenwich Mean Time

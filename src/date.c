@@ -16,21 +16,21 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
 /* Options:
-   -d DATESTR	Display the date DATESTR.
-   -s DATESTR	Set the date to DATESTR.
-   -u		Display or set the date in universal instead of local time.
-   +FORMAT	Specify custom date output format, described below.
-   MMDDhhmm[[CC]YY][.ss]	Set the date in the format described below.
+   -d DATESTR   Display the date DATESTR.
+   -s DATESTR   Set the date to DATESTR.
+   -u           Display or set the date in universal instead of local time.
+   +FORMAT      Specify custom date output format, described below.
+   MMDDhhmm[[CC]YY][.ss]        Set the date in the format described below.
 
    If one non-option argument is given, it is used as the date to which
    to set the system clock, and must have the format:
-   MM	month (01..12)
-   DD	day in month (01..31)
-   hh	hour (00..23)
-   mm	minute (00..59)
-   CC	first 2 digits of year (optional, defaults to current) (00..99)
-   YY	last 2 digits of year (optional, defaults to current) (00..99)
-   ss	second (00..61)
+   MM   month (01..12)
+   DD   day in month (01..31)
+   hh   hour (00..23)
+   mm   minute (00..59)
+   CC   first 2 digits of year (optional, defaults to current) (00..99)
+   YY   last 2 digits of year (optional, defaults to current) (00..99)
+   ss   second (00..61)
 
    If a non-option argument that starts with a `+' is specified, it
    is used to control the format in which the date is printed; it
@@ -49,6 +49,7 @@
 
 #include "version.h"
 #include "system.h"
+#include "getline.h"
 
 #ifdef TM_IN_SYS_TIME
 #include <sys/time.h>
@@ -80,9 +81,13 @@ static int show_help;
 /* If non-zero, print the version on standard output and exit.  */
 static int show_version;
 
+/* If non-zero, print or set Coordinated Universal Time.  */
+static int universal_time = 0;
+
 static struct option const long_options[] =
 {
   {"date", required_argument, NULL, 'd'},
+  {"file", required_argument, NULL, 'f'},
   {"help", no_argument, &show_help, 1},
   {"set", required_argument, NULL, 's'},
   {"uct", no_argument, NULL, 'u'},
@@ -92,7 +97,64 @@ static struct option const long_options[] =
   {NULL, 0, NULL, 0}
 };
 
-static int universal_time = 0;
+/* FIXME: comment */
+
+static int
+batch_convert (const char *input_filename, const char *format)
+{
+  int have_read_stdin;
+  int status;
+  FILE *in_stream;
+  char *line;
+  int line_length;
+  int buflen;
+  time_t when;
+
+  if (strcmp (input_filename, "-") == 0)
+    {
+      input_filename = "standard input";
+      in_stream = stdin;
+      have_read_stdin = 1;
+    }
+  else
+    {
+      in_stream = fopen (input_filename, "r");
+      if (in_stream == NULL)
+	{
+	  error (0, errno, "%s", input_filename);
+	}
+      have_read_stdin = 0;
+    }
+
+  line = NULL;
+  buflen = 0;
+
+  status = 0;
+  while (1)
+    {
+      line_length = getline (&line, &buflen, in_stream);
+      if (line_length < 0)
+	{
+	  /* FIXME: detect/handle error here.  */
+	  break;
+	}
+      when = get_date (line, NULL);
+      if (when == -1)
+	{
+	  error (0, 0, "invalid date `%s'", line);
+	  status = 1;
+	}
+      show_date (format, when);
+    }
+
+  if (have_read_stdin && fclose (stdin) == EOF)
+    error (2, errno, "standard input");
+
+  if (line != NULL)
+    free (line);
+
+  return status;
+}
 
 void
 main (argc, argv)
@@ -105,11 +167,13 @@ main (argc, argv)
   int set_date = 0;
   int print_date = 0;
   char *format;
+  char *batch_file = NULL;
   int n_args;
+  int status;
 
   program_name = argv[0];
 
-  while ((optc = getopt_long (argc, argv, "d:s:u", long_options, (int *) 0))
+  while ((optc = getopt_long (argc, argv, "d:f:s:u", long_options, (int *) 0))
 	 != EOF)
     switch (optc)
       {
@@ -118,6 +182,9 @@ main (argc, argv)
       case 'd':
 	datestr = optarg;
 	print_date = 1;
+	break;
+      case 'f':
+	batch_file = optarg;
 	break;
       case 's':
 	datestr = optarg;
@@ -154,55 +221,75 @@ main (argc, argv)
       usage (1);
     }
 
-  if ((set_date || print_date) && n_args == 1 && argv[optind][0] != '+')
+  if ((set_date || print_date || batch_file != NULL)
+      && n_args == 1 && argv[optind][0] != '+')
     {
       error (0, 0, "\
-when using the print or set time option, the sole\n\
+when using the print, set time, or batch options, any\n\
 non-option argument must be a format string beginning with `+'");
       usage (1);
     }
 
-  if (!print_date && !set_date)
+  if (batch_file != NULL)
     {
-      if (n_args == 1 && argv[optind][0] != '+')
+      if (set_date || print_date)
 	{
-	  /* Prepare to set system clock to the specified date/time given in
-	     the POSIX-format.  */
-	  set_date = 1;
-	  datestr = argv[optind];
-	  when = posixtime (datestr);
-	  format = NULL;
+	  error (0, 0, "\
+the print and set options may not be used when reading dates from a file");
+	  usage (1);
 	}
-      else
-	{
-	  /* Prepare to print the current date/time.  */
-	  print_date = 1;
-	  datestr = "undefined";
-	  time (&when);
-	  format = (n_args == 1 ? argv[optind] + 1 : NULL);
-	}
+      status = batch_convert (batch_file,
+			      (n_args == 1 ? argv[optind] : NULL));
     }
   else
     {
-      /* (print_date || set_date) */
-      when = get_date (datestr, NULL);
-      format = (n_args == 1 ? argv[optind] + 1 : NULL);
+      status = 0;
+
+      if (!print_date && !set_date)
+	{
+	  if (n_args == 1 && argv[optind][0] != '+')
+	    {
+	      /* Prepare to set system clock to the specified date/time
+		 given in the POSIX-format.  */
+	      set_date = 1;
+	      datestr = argv[optind];
+	      when = posixtime (datestr);
+	      format = NULL;
+	    }
+	  else
+	    {
+	      /* Prepare to print the current date/time.  */
+	      print_date = 1;
+	      datestr = "undefined";
+	      time (&when);
+	      format = (n_args == 1 ? argv[optind] + 1 : NULL);
+	    }
+	}
+      else
+	{
+	  /* (print_date || set_date) */
+	  when = get_date (datestr, NULL);
+	  format = (n_args == 1 ? argv[optind] + 1 : NULL);
+	}
+
+      if (when == -1)
+	error (1, 0, "invalid date `%s'", datestr);
+
+      if (set_date)
+	{
+	  /* Set the system clock to the specified date, then regardless of
+	     the success of that operation, format and print that date.  */
+	  if (stime (&when) == -1)
+	    error (0, errno, "cannot set date");
+	}
+
+      show_date (format, when);
     }
 
-  if (when == -1)
-    error (1, 0, "invalid date `%s'", datestr);
+  if (fclose (stdout) == EOF)
+    error (2, errno, "write error");
 
-  if (set_date)
-    {
-      /* Set the system clock to the specified date, then regardless of
-	 the success of that operation, format and print that date.  */
-      if (stime (&when) == -1)
-	error (0, errno, "cannot set date");
-    }
-
-  show_date (format, when);
-
-  exit (0);
+  exit (status);
 }
 
 /* Display the date and/or time in WHEN according to the format specified
@@ -223,8 +310,8 @@ show_date (format, when)
   if (format == NULL)
     {
       /* Print the date in the default format.  Vanilla ANSI C strftime
-	 doesn't support %e, but POSIX requires it.  If you don't use
-	 a GNU strftime, make sure yours supports %e.  */
+         doesn't support %e, but POSIX requires it.  If you don't use
+         a GNU strftime, make sure yours supports %e.  */
       format = (universal_time
 		? "%a %b %e %H:%M:%S UTC %Y"
 		: "%a %b %e %H:%M:%S %Z %Y");
