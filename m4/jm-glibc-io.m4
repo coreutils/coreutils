@@ -8,7 +8,6 @@ dnl
 AC_DEFUN(jm_FUNC_GLIBC_UNLOCKED_IO,
   [AC_CHECK_FUNCS(				\
     clearerr_unlocked				\
-    fclose_unlocked				\
     feof_unlocked				\
     ferror_unlocked				\
     fflush_unlocked				\
