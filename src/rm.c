@@ -188,7 +188,7 @@ static struct option const long_opts[] =
   {NULL, 0, NULL, 0}
 };
 
-static __inline unsigned int
+static inline unsigned int
 current_depth (void)
 {
   return obstack_object_size (&len_stack) / sizeof (size_t);
@@ -212,7 +212,7 @@ print_nth_dir (FILE *stream, unsigned int depth)
   fwrite (dir_name, 1, sum, stream);
 }
 
-static __inline struct active_dir_ent *
+static inline struct active_dir_ent *
 make_active_dir_ent (ino_t inum, unsigned int depth)
 {
   struct active_dir_ent *ent;
@@ -287,7 +287,7 @@ Remove (unlink) the FILE(s).\n\
   exit (status);
 }
 
-static __inline void
+static inline void
 push_dir (const char *dir_name)
 {
   size_t len;
@@ -307,7 +307,7 @@ push_dir (const char *dir_name)
   obstack_grow (&len_stack, &len, sizeof (len));
 }
 
-static __inline void
+static inline void
 pop_dir (void)
 {
   int n_lengths = obstack_object_size (&len_stack) / sizeof (size_t);
@@ -423,7 +423,7 @@ full_filename (const char *filename)
   return buf;
 }
 
-static __inline void
+static inline void
 fspec_init_file (struct File_spec *fs, const char *filename)
 {
   fs->filename = (char *) filename;
@@ -431,7 +431,7 @@ fspec_init_file (struct File_spec *fs, const char *filename)
   fs->have_filetype_mode = 0;
 }
 
-static __inline void
+static inline void
 fspec_init_dp (struct File_spec *fs, struct dirent *dp)
 {
   fs->filename = dp->d_name;
@@ -448,7 +448,7 @@ fspec_init_dp (struct File_spec *fs, struct dirent *dp)
 #endif
 }
 
-static __inline int
+static inline int
 fspec_get_full_mode (struct File_spec *fs, mode_t *full_mode)
 {
   struct stat stat_buf;
@@ -471,7 +471,7 @@ fspec_get_full_mode (struct File_spec *fs, mode_t *full_mode)
   return 0;
 }
 
-static __inline int
+static inline int
 fspec_get_filetype_mode (struct File_spec *fs, mode_t *filetype_mode)
 {
   int fail;
@@ -489,7 +489,7 @@ fspec_get_filetype_mode (struct File_spec *fs, mode_t *filetype_mode)
   return fail;
 }
 
-static __inline mode_t
+static inline mode_t
 fspec_filetype_mode (const struct File_spec *fs)
 {
   assert (fs->have_filetype_mode);
