@@ -58,7 +58,12 @@ case "$*" in
   cat >&2 << \EOF
 A basic test of touch -a has just failed, so the subsequent
 tests in this file will not be run.
+
+In the output below, the date of last modification for `a' should
+have been Jan 15 23:00:00 1998.
 EOF
+  #`
+  ls --full -l a
   framework_failure=1
   ;;
 esac
@@ -72,7 +77,11 @@ case "$*" in
   cat >&2 << \EOF
 A basic test of touch -m has just failed, so the subsequent
 tests in this file will not be run.
+
+In the output below, the date of last access for `a' should
+have been Jan 14 11:00:00 1998.
 EOF
+  ls --full -lu a
   framework_failure=1
   ;;
 esac
@@ -98,9 +107,14 @@ else
   # In spite of documentation, (e.g., stat(2)), neither link nor chmod
   # update a file's st_ctime on SunOS4.1.4.
   cat >&2 << \EOF
-failed ls ctime test -- this is expected at least for SunOS4.1.4
+failed ls ctime test -- this failure is expected at least for SunOS4.1.4
 and for tmpfs file systems on Solaris 5.5.1.
+
+In the output below, `c' should have had a ctime more recent than
+that of `a', but does not.
 EOF
+  #'
+  ls -ctl --full-time a c
   fail=1
 fi
 
