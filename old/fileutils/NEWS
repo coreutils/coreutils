@@ -1,5 +1,6 @@
 Changes in release 4.1:
 [4.0m]
+* fix df bug that made it print bogus values in the `Use%' column.
 * touch -d once again parses dates with `hh:mm ZONE' time zone info.
 [4.0l]
 * ls -l honors a trailing slash on a symlink argument, per POSIX.
