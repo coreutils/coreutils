@@ -61,6 +61,10 @@ extern char *program_name;
 # define ARGMATCH_DIE exit (EXIT_FAILURE)
 #endif
 
+#ifdef ARGMATCH_DIE_DECL
+ARGMATCH_DIE_DECL;
+#endif
+
 static void
 __argmatch_die (void)
 {
