@@ -87,7 +87,7 @@ void strip_trailing_slashes ();
     {							\
       /* We're done operating on basename_dir.		\
 	 Restore working directory.  */			\
-      if (saved_cwd)					\
+      if (do_chdir)					\
 	{						\
 	  int fail = restore_cwd (&cwd, NULL, NULL);	\
 	  free_cwd (&cwd);				\
@@ -159,10 +159,9 @@ make_path (argpath, mode, parent_mode, owner, group, preserve_existing,
 	struct ptr_list *next;
       };
       struct ptr_list *p, *leading_dirs = NULL;
-      int saved_cwd = 0;
+      int do_chdir;		/* Whether to chdir before each mkdir.  */
       struct saved_cwd cwd;
       char *basename_dir;
-      int first_subdir = 1;
       char *dirpath;
 
       /* Temporarily relax umask in case it's overly restrictive.  */
@@ -189,6 +188,16 @@ make_path (argpath, mode, parent_mode, owner, group, preserve_existing,
 	  re_protect = 0;
 	}
 
+      /* If we can record the current working directory, we may be able
+	 to do the chdir optimization.  */
+      do_chdir = !save_cwd (&cwd);
+
+      /* If we've saved the cwd and DIRPATH is an absolute pathname,
+	 we must chdir to `/' in order to enable the chdir optimization.
+         So if chdir ("/") fails, turn off the optimization.  */
+      if (do_chdir && *dirpath == '/' && chdir ("/") < 0)
+	do_chdir = 0;
+
       slash = dirpath;
 
       /* Skip over leading slashes.  */
@@ -204,16 +213,9 @@ make_path (argpath, mode, parent_mode, owner, group, preserve_existing,
 	  if (slash == NULL)
 	    break;
 
-	  if (first_subdir)
-	    {
-	      first_subdir = 0;
-	      saved_cwd = !save_cwd (&cwd);
-	    }
-
-	  /* If save_cwd could not record the current directory, then don't
-	     do the chdir optimization and resort to using full pathnames.  */
-
-	  if (!saved_cwd)
+	  /* If we're *not* doing chdir before each mkdir, then we have to refer
+	     to the target using the full (multi-component) directory name.  */
+	  if (!do_chdir)
 	    basename_dir = dirpath;
 
 	  *slash = '\0';
@@ -265,7 +267,7 @@ make_path (argpath, mode, parent_mode, owner, group, preserve_existing,
 	     then we can use chdir to change into each directory before
 	     creating an entry in that directory.  This avoids making
 	     stat and mkdir process O(n^2) file name components.  */
-	  if (saved_cwd && chdir (basename_dir) < 0)
+	  if (do_chdir && chdir (basename_dir) < 0)
 	    {
 	      error (0, errno, "cannot chdir to directory, %s", dirpath);
 	      CLEANUP;
@@ -280,7 +282,7 @@ make_path (argpath, mode, parent_mode, owner, group, preserve_existing,
 	    slash++;
 	}
 
-      if (!saved_cwd)
+      if (!do_chdir)
 	basename_dir = dirpath;
 
       /* We're done making leading directories.
