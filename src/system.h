@@ -107,6 +107,30 @@
 # define STDERR_FILENO 2
 #endif
 
+
+#if HAVE_LIMITS_H
+/* limits.h must come before pathmax.h because limits.h on some systems
+   undefs PATH_MAX, whereas pathmax.h sets PATH_MAX.  */
+# include <limits.h>
+#endif
+
+#ifndef CHAR_BIT
+#define CHAR_BIT 8
+#endif
+
+/* The extra casts work around common compiler bugs.  */
+#define TYPE_SIGNED(t) (! ((t) 0 < (t) -1))
+#define TYPE_MINIMUM(t) (TYPE_SIGNED (t) ? ~ (t) 0 << (sizeof (t) * CHAR_BIT - 1) : (t) 0)
+#define TYPE_MAXIMUM(t) (~ (t) 0 - TYPE_MINIMUM (t))
+
+#ifndef INT_MAX
+#define INT_MAX TYPE_MAXIMUM (int)
+#endif
+
+#ifndef UINT_MAX
+#define UINT_MAX TYPE_MAXIMUM (unsigned int)
+#endif
+
 #include "pathmax.h"
 
 /* FIXME: Don't use _POSIX_VERSION.  */
@@ -243,13 +267,13 @@ extern int errno;
 #endif /* !DEV_BSIZE */
 
 /* Extract or fake data from a `struct stat'.
-   ST_BLKSIZE: Optimal I/O blocksize for the file, in bytes.
-   ST_NBLOCKS: Number of 512-byte blocks in the file
-   (including indirect blocks). */
+   ST_BLKSIZE: Preferred I/O blocksize for the file, in bytes.
+   ST_NBLOCKS: Number of blocks in the file, including indirect blocks.
+   ST_NBLOCKSIZE: Size of blocks used when calculating ST_NBLOCKS.  */
 #ifndef HAVE_ST_BLOCKS
 # define ST_BLKSIZE(statbuf) DEV_BSIZE
 # if defined(_POSIX_SOURCE) || !defined(BSIZE) /* fileblocks.c uses BSIZE.  */
-#  define ST_NBLOCKS(statbuf) (((statbuf).st_size + 512 - 1) / 512)
+#  define ST_NBLOCKS(statbuf) ((statbuf).st_size / ST_NBLOCKSIZE + ((statbuf).st_size % ST_NBLOCKSIZE != 0))
 # else /* !_POSIX_SOURCE && BSIZE */
 #  define ST_NBLOCKS(statbuf) (st_blocks ((statbuf).st_size))
 # endif /* !_POSIX_SOURCE && BSIZE */
@@ -260,19 +284,25 @@ extern int errno;
 # if defined(hpux) || defined(__hpux__) || defined(__hpux)
 /* HP-UX counts st_blocks in 1024-byte units.
    This loses when mixing HP-UX and BSD filesystems with NFS.  */
-#  define ST_NBLOCKS(statbuf) ((statbuf).st_blocks * 2)
+#  define ST_NBLOCKSIZE 1024
 # else /* !hpux */
 #  if defined(_AIX) && defined(_I386)
 /* AIX PS/2 counts st_blocks in 4K units.  */
-#   define ST_NBLOCKS(statbuf) ((statbuf).st_blocks * 8)
+#   define ST_NBLOCKSIZE (4 * 1024)
 #  else /* not AIX PS/2 */
 #   if defined(_CRAY)
-#    define ST_NBLOCKS(statbuf) ((statbuf).st_blocks * ST_BLKSIZE(statbuf)/512)
-#   else /* not AIX PS/2 nor CRAY */
-#    define ST_NBLOCKS(statbuf) ((statbuf).st_blocks)
-#   endif /* not _CRAY */
+#    define ST_NBLOCKS(statbuf) ((statbuf).st_blocks * ST_BLKSIZE(statbuf)/ST_NBLOCKSIZE)
+#   endif /* _CRAY */
 #  endif /* not AIX PS/2 */
 # endif /* !hpux */
 #endif /* HAVE_ST_BLOCKS */
+
+#ifndef ST_NBLOCKS
+#define ST_NBLOCKS(statbuf) ((statbuf).st_blocks)
+#endif
+
+#ifndef ST_NBLOCKSIZE
+#define ST_NBLOCKSIZE 512
+#endif
 
 #include "sys2.h"
