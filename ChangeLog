@@ -1,6 +1,58 @@
-2003-12-30  Jim Meyering  <jim@meyering.net>
+2004-01-04  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.1.1.
+
+	* src/csplit.c (new_control_record): Use x2nrealloc
+	rather than xrealloc.
+
+	* src/cp.c (re_protect): Use ASSIGN_STRDUPA rather than
+	alloca and strcpy.
+	(make_path_private): Likewise.
+
+2004-01-03  Jim Meyering  <jim@meyering.net>
+
+	* src/paste.c (paste_parallel): Remove needless complexity of
+	using xrealloc in the loop;  just allocate the buffers up front.
+	Free the two temporary buffers.
+
+2004-01-02  Jim Meyering  <jim@meyering.net>
+
+	* src/chroot.c: Include "quote.h".
+	(CHROOT_FOUND_BUT_CANNOT_INVOKE, CHROOT_FAILURE): Define.
+	(main): Exit with status of 127, not 1, for too-few-args,
+	chroot failure, or chdir failure.
+	Give a better diagnostic upon execvp failure.
+
+	* src/du.c (usage): Mention that, with its current meaning,
+	-H is deprecated.
+
+	* src/tail.c (main): Warn about following stdin.
+	Fail when following by name but no names are specified.
+
+2003-12-30  Jim Meyering  <jim@meyering.net>
+
+	* src/fold.c (main): Use memcpy, not strcpy.
+
+	* src/copy.c (copy_internal): Use ASSIGN_STRDUPA rather than
+	alloca and strcpy.
+
+2003-12-28  Jim Meyering  <jim@meyering.net>
+
+	* src/unexpand.c (n_tabs_allocated): New global.
+	(add_tabstop): Use x2nrealloc rather than xrealloc.
+	* src/expand.c: Likewise.
+
+	* tests/misc/expand: New file.
+	* tests/misc/Makefile.am (TESTS): Add expand.
+
+	* src/sort.c (add_temp_dir): Use x2nrealloc rather than xrealloc.
+	(fillbuf): Use x2nrealloc rather than xrealloc.
+	(sort): Use xnmalloc rather than xmalloc.
+	(main): Likewise.
+
+2003-12-27  Jim Meyering  <jim@meyering.net>
+
+	* src/tee.c (tee): Use xnmalloc rather than xmalloc.
 
 2003-12-29  Paul Eggert  <eggert@twinsun.com>
 
@@ -56,7 +108,7 @@
 	(make_blank): Remove; wasn't needed.  Remove all calls.
 	(main): Don't set uni_blank.nfields; zero is fine.
 
-2003-12-27  Jim Meyering  <meyering@lucent.com>
+2003-12-27  Jim Meyering  <jim@meyering.net>
 
 	* src/join.c: Include "quote.h".
 	(min, max): Remove definitions.
@@ -68,7 +120,7 @@
 	(main): Accept join fields as large as SIZE_MAX.
 	(keycmp): Rename `min' to MIN and max to MAX.
 
-2003-12-26  Jim Meyering  <meyering@lucent.com>
+2003-12-26  Jim Meyering  <jim@meyering.net>
 
 	fold -s didn't work on e.g., alpha-based systems.
 	* src/fold.c (fold_file): Adjust types (int->size_t) so that using
@@ -394,7 +446,7 @@
 	* src/sort.c (inittables): Likewise.
 	(sort): Also Split a long line.
 
-2003-10-25  Jim Meyering  <meyering@lucent.com>
+2003-10-25  Jim Meyering  <jim@meyering.net>
 
 	* src/copy.c (triple_hash, triple_hash_no_name): Adjust to reflect
 	type changes (unsigned int -> size_t) in hash.c.
@@ -3528,12 +3580,12 @@
 
 	* src/Makefile.am (false.c): Make the generated file be read-only.
 
-2003-01-04  Jim Meyering  <meyering@lucent.com>
+2003-01-04  Jim Meyering  <jim@meyering.net>
 
 	* src/ls.c: Include "dev-ino.h".
 	[struct dev_ino]: Remove declaration.
 
-2003-01-02  Jim Meyering  <meyering@lucent.com>
+2003-01-02  Jim Meyering  <jim@meyering.net>
 
 	* src/cp.c (do_copy): Tweak diagnostic to be consistent with the one
 	from mv: s/missing file arguments/missing file argument/.
@@ -3542,7 +3594,7 @@
 
 	* tests/rm/isatty: Enable this test.
 
-2002-12-31  Jim Meyering  <meyering@lucent.com>
+2002-12-31  Jim Meyering  <jim@meyering.net>
 
 	* src/remove.c (AD_push_initial): Don't set status to RM_OK here.
 	(AD_push): Likewise.
@@ -3553,12 +3605,12 @@
 	* src/ls.c [struct dev_ino]: Remove definition.
 	Include "dev-ino.h" instead.
 
-2002-12-28  Jim Meyering  <meyering@lucent.com>
+2002-12-28  Jim Meyering  <jim@meyering.net>
 
 	* tests/du/Makefile.am (TESTS): Add no-deref.
 	* tests/du/no-deref: New script.
 
-2002-12-23  Jim Meyering  <meyering@lucent.com>
+2002-12-23  Jim Meyering  <jim@meyering.net>
 
 	* src/remove.c (remove_cwd_entries): Fix typo in comment.
 
