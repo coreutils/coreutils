@@ -1,6 +1,27 @@
-2002-06-07  Jim Meyering  <meyering@lucent.com>
+2002-06-15  Jim Meyering  <meyering@lucent.com>
+
+	* src/sys2.h (S_ISNAM): Add to list of S_IS* macros.
+	Rearrange #if directives for each S_IS macro.
+	From diffutils-2.8.2.
+
+2002-06-13  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.9.
+
+	* Makefile.maint (wget-update): `cd' to config first.
+	Warn when omitting a file ... FIXME
+
+2002-06-12  Jim Meyering  <meyering@lucent.com>
+
+	* src/mv.c (do_move): Give one diagnostic, not two, when unable to
+	unlink a destination file.  This bug was introduced in fileutils-3.16l.
+
+	FIXME$ /bin/mv /etc/passwd /tmp
+	/bin/mv: cannot unlink `/etc/passwd': Permission denied
+	/bin/mv: cannot remove `/etc/passwd': Permission denied
+	[Exit 1]
+
+2002-06-07  Jim Meyering  <meyering@lucent.com>
 
 	* tests/mv/part-fail: Also accept the permission-denied diagnostic
 	issued by some losing systems.  Reported by Volker Borchert.
