@@ -1,7 +1,26 @@
 2003-09-12  Paul Eggert  <eggert@twinsun.com>
 
+	* error.m4 (gl_ERROR): Don't check for vprintf.
+	Require AC_FUNC_STRERROR_R rather than invoking it.
+
+2003-09-12  Paul Eggert  <eggert@twinsun.com>
+
+	* check-decl.m4 (jm_CHECK_DECLS): Include <string.h>, <stdlib.h>
+	unconditionally.
+	* closeout.m4 (gl_CLOSEOUT): Don't check for stdlib.h.
+	* gettimeofday.m4 (AC_FUNC_GETTIMEOFDAY_CLOBBER):
+	Include <string.h>, <stdlib.h> unconditionally.
+	* lstat.m4 (gl_PREREQ_LSTAT): Don't check for stdlib.h, free.
+	* readdir.m4 (GL_FUNC_READDIR): Don't check for string.h.
+	* readutmp.m4 (gl_PREREQ_READUTMP): Don't check for standard C headers
+	or for string.h.
+	* strtoumax.m4 (gl_PREREQ_STRTOUMAX): Don't check for stdlb.h
+	or strtoul.
 	* extensions.m4 (gl_USE_SYSTEM_EXTENSIONS): Require AC_AIX
 	and AC_MINIX, too, so that their extensions are available.
+
+	* prereq.m4 (jm_PREREQ_ADDEXT): Remove.  All uses removed.
+	This macro has been superseded by gl_BACKUPFILE.
 
 2003-09-12  Jim Meyering  <jim@meyering.net>
 
