@@ -7698,7 +7698,7 @@ pipeline.
 where an unsuccessful command is needed.
 
 By default, @code{false} honors the @samp{--help} and @samp{--version}
-options.  However, that is contrary to @sc{POSIX}, so when the environment
+options.  However, that is contrary to @sc{posix}, so when the environment
 variable @env{POSIXLY_CORRECT} is set, @code{false} ignores @emph{all}
 command line arguments, including @samp{--help} and @samp{--version}.
 
@@ -7725,7 +7725,7 @@ you use @samp{true} in a script, you're probably using the built-in
 command, not the one documented here.
 
 By default, @code{true} honors the @samp{--help} and @samp{--version}
-options.  However, that is contrary to @sc{POSIX}, so when the environment
+options.  However, that is contrary to @sc{posix}, so when the environment
 variable @env{POSIXLY_CORRECT} is set, @code{true} ignores @emph{all}
 command line arguments, including @samp{--help} and @samp{--version}.
 
