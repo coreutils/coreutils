@@ -1,3 +1,7 @@
+2003-08-03  Jim Meyering  <jim@meyering.net>
+
+	* Version 5.0.91.
+
 2003-08-02  Paul Eggert  <eggert@twinsun.com>
 
 	* src/sort.c: Minor code cleanups, mostly to use more accurate
@@ -38,8 +42,6 @@
 	Rename local var "posix_pedantic" to "posixly_correct".
 
 2003-08-02  Jim Meyering  <jim@meyering.net>
-
-	* Version 5.0.91.
 
 	* src/nice.c [!NICE_PRIORITY]: Include <time.h> before <sys/resource.h>
 	to avoid compilation error on Ultrix. Reported by Christian Krackowizer.
