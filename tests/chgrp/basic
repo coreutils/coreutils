@@ -84,7 +84,11 @@ test "$VERBOSE" = yes && set +x
   chgrp '' f
   ls -c -t f g
 
-) 2>&1 | sed "s/\([ :]\)$g1$/\1G1/;s/\([ :]\)$g2$/\1G2/" > actual
+) 2>&1 | sed "
+  s/' to .*[^0-9:].*/' to SOMENAME/
+  s/\([ :]\)$g1$/\1G1/
+  s/\([ :]\)$g2$/\1G2/
+" > actual
 
 cat <<\EOF > expected
 changed group of `f' to G1
@@ -92,7 +96,7 @@ changed group of `f' to G2
 ownership of `f' retained
 changed group of `f' to G1
 group of `f' retained as G1
-changed group of `f' to G2
+changed group of `f' to SOMENAME
 changed group of `d/f3' to G2
 changed group of `d' to G2
 changed group of `d/f3' to G1
