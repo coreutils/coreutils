@@ -1,5 +1,5 @@
-/* Copyright (C) 1991, 1992, 1993, 1996, 1997, 1998, 1999, 2000, 2001,
-   2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1992,1993,1996,1997,1998,1999,2000,2001,2002,2003,2004
+	Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -74,7 +74,6 @@ char *alloca ();
 # include <shlib-compat.h>
 
 # define CONCAT(a,b) __CONCAT(a,b)
-# define mbsinit __mbsinit
 # define mbsrtowcs __mbsrtowcs
 # define fnmatch __fnmatch
 extern int fnmatch (const char *pattern, const char *string, int flags);
@@ -88,7 +87,7 @@ extern int fnmatch (const char *pattern, const char *string, int flags);
 #define NO_LEADING_PERIOD(flags) \
   ((flags & (FNM_FILE_NAME | FNM_PERIOD)) == (FNM_FILE_NAME | FNM_PERIOD))
 
-/* Comment out all this code if we are using the GNU C Library, are not
+/* Comment out all this code if we are using the GNU C Library, and are not
    actually compiling the library itself, and have not detected a bug
    in the library.  This code is part of the GNU C
    Library, but also included in many other GNU distributions.  Compiling
@@ -398,6 +397,7 @@ versioned_symbol (libc, __fnmatch, fnmatch, GLIBC_2_2_3);
 strong_alias (__fnmatch, __fnmatch_old)
 compat_symbol (libc, __fnmatch_old, fnmatch, GLIBC_2_0);
 #  endif
+libc_hidden_ver (__fnmatch, fnmatch)
 # endif
 
 #endif	/* _LIBC or not __GNU_LIBRARY__.  */
