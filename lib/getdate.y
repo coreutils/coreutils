@@ -616,7 +616,7 @@ Convert (Month, Day, Year, Hours, Minutes, Seconds, Meridian, DSTmode)
     Year += 1900;
   DaysInMonth[1] = Year % 4 == 0 && (Year % 100 != 0 || Year % 400 == 0)
     ? 29 : 28;
-  if (Year < EPOCH || Year > 1999
+  if (Year < EPOCH || Year > 2037
       || Month < 1 || Month > 12
       /* Lint fluff:  "conversion from long may lose accuracy" */
       || Day < 1 || Day > DaysInMonth[(int)--Month])
