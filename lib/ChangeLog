@@ -1,5 +1,8 @@
 2004-11-28  Jim Meyering  <jim@meyering.net>
 
+	* save-cwd.c: Include "chdir.h", so that if save_cwd/getcwd
+	saves a name longer than PATH_MAX, restore_cwd's chdir can use it.
+
 	* Makefile.am (libfetish_a_SOURCES): Add chdir.h and openat.h.
 
 	This is a robust version of chdir, in that it can handle directory
