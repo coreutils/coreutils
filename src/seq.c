@@ -15,7 +15,7 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
-/* Ulrich Drepper */
+/* Written by Ulrich Drepper.  */
 
 #include <config.h>
 #include <getopt.h>
@@ -31,19 +31,19 @@ static int check_format __P ((char *format_string));
 static char *get_width_format __P ((void));
 static int print_numbers __P ((char *format_str));
 
-/* If nonzero print all number with equal width. */
+/* If nonzero print all number with equal width.  */
 static int equal_width;
 
-/* The printf(3) format used for output. */
+/* The printf(3) format used for output.  */
 static char *format_str;
 
-/* The starting number. */
+/* The starting number.  */
 static double from;
 
-/* The name that this program was run with. */
+/* The name that this program was run with.  */
 char *program_name;
 
-/* The string used to separate two number. */
+/* The string used to separate two number.  */
 static char *separator;
 
 /* If nonzero, display usage information and exit.  */
@@ -52,10 +52,10 @@ static int show_help;
 /* If nonzero, print the version on standard output and exit.  */
 static int show_version;
 
-/* The increment. */
+/* The increment.  */
 static double step;
 
-/* The last number. */
+/* The last number.  */
 static double last;
 
 static struct option const long_options[] =
