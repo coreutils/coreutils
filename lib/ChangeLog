@@ -1,5 +1,10 @@
 2000-07-29  Jim Meyering  <meyering@lucent.com>
 
+	* diacrit.c (diacrit_diac): Use __MSDOS__ in favor of MSDOS.
+	* dirname.c (dir_name): Likewise.
+
+	* basename.c (base_name): Use ISSLASH rather than comparing against `/'.
+
 	* dirname.c (dir_name) [MSDOS]: Declare `lim' to be const.
 	(dir_name): Assert that there are no trailing slashes.
 
