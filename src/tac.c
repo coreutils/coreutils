@@ -40,7 +40,6 @@ tac -r -s '.\|
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
-#include <signal.h>
 #if WITH_REGEX
 # include <regex.h>
 #else
@@ -55,7 +54,7 @@ char *realloc ();
 #endif
 
 #ifndef DEFAULT_TMPDIR
-#define DEFAULT_TMPDIR "/tmp"
+# define DEFAULT_TMPDIR "/tmp"
 #endif
 
 /* The number of bytes per atomic read. */
@@ -455,7 +454,6 @@ save_stdin (FILE **g_tmp, char **g_tempfile)
 static int
 tac_stdin (void)
 {
-  /* Previous values of signal handlers. */
   int errors;
   struct stat stats;
 
