@@ -238,6 +238,28 @@ wc (fd, file)
 	    }
 	}
     }
+  else if (!print_words)
+    {
+      /* Use a separate loop when counting only lines or lines and bytes --
+	 but not words.  */
+      while ((bytes_read = safe_read (fd, buf, BUFFER_SIZE)) > 0)
+	{
+	  register char *p = buf;
+
+	  chars += bytes_read;
+	  do
+	    {
+	      if (*p++ == '\n')
+		lines++;
+	    }
+	  while (--bytes_read);
+	}
+      if (bytes_read < 0)
+	{
+	  error (0, errno, "%s", file);
+	  exit_status = 1;
+	}
+    }
   else
     {
       while ((bytes_read = safe_read (fd, buf, BUFFER_SIZE)) > 0)
