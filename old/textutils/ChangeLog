@@ -1,3 +1,35 @@
+2000-11-29  Paul Eggert  <eggert@twinsun.com>
+
+	Port GNU "sort" to hosts where sizes don't fit in "int",
+	e.g. 64-bit Solaris (sparc).
+
+	* src/sort.c ("human.h", "xstrtol.h"): Include.
+	(struct line): length member is now size_t, not int.
+	(struct lines): Likewise for used, alloc, limit members.
+	(struct buffer): Likewise for used, alloc, left, newline_free members.
+	(struct keyfield): Likewise for sword, schar, eword, echar members.
+	(sortalloc, mergealloc, linelength): Now size_t, not int.
+
+	(initbuf, fillbuf, initlines, begfield, limfield, findlines,
+	numcompare, getmonth, keycompare, compare, checkfp, mergefps,
+	sortlines, sort): Accept, return, and use size_t for sizes, not int.
+
+	(fillbuf, initlines, findlines, checkfp, sort): Check for overflow
+	when computing buffer sizes.
+
+	(begfield, limfield): Do not index past end of array.
+
+	(checkfp): Return a boolean, not a line number, as the line
+	number may not fit in int.  All callers changed.  Use
+	uintmax_t for line numbers, not int.
+
+	(sort): Don't allocate tmp until we need it (and know the right size).
+
+	(parse_field_count): New function.
+
+	(main): Use it to check for overflow in field counts.
+	"outfile" is now a pointer to const.
+
 2000-11-27  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.9.
