@@ -426,8 +426,10 @@ xfopen (const char *file, const char *how)
   return fp;
 }
 
+/* Close FP, whose name is FILE, and report any errors.  */
+
 static void
-xfclose (FILE *fp)
+xfclose (FILE *fp, char const *file)
 {
   if (fp == stdin)
     {
@@ -439,7 +441,7 @@ xfclose (FILE *fp)
     {
       if (fclose (fp) != 0)
 	{
-	  error (0, errno, _("error closing file"));
+	  error (0, errno, "%s", file);
 	  cleanup ();
 	  exit (SORT_FAILURE);
 	}
@@ -1560,7 +1562,7 @@ checkfp (FILE *fp, char *file_name)
 	}
     }
 
-  xfclose (fp);
+  xfclose (fp, file_name);
   free (buf.buf);
   if (temp.text)
     free (temp.text);
@@ -1599,7 +1601,7 @@ mergefps (FILE **fps, char **files, register int nfps,
       /* If a file is empty, eliminate it from future consideration. */
       while (i < nfps && !fillbuf (&buffer[i], fps[i], files[i]))
 	{
-	  xfclose (fps[i]);
+	  xfclose (fps[i], files[i]);
 	  zaptemp (files[i]);
 	  --nfps;
 	  for (j = i; j < nfps; ++j)
@@ -1688,7 +1690,7 @@ mergefps (FILE **fps, char **files, register int nfps,
 		if (ord[i] > ord[0])
 		  --ord[i];
 	      --nfps;
-	      xfclose (fps[ord[0]]);
+	      xfclose (fps[ord[0]], files[ord[0]]);
 	      zaptemp (files[ord[0]]);
 	      free (buffer[ord[0]].buf);
 	      for (i = ord[0]; i < nfps; ++i)
@@ -1810,14 +1812,14 @@ merge (char **files, int nfiles, FILE *ofp, const char *output_file)
 	    fps[j] = xfopen (files[i * NMERGE + j], "r");
 	  temp = create_temp_file (&tfp);
 	  mergefps (fps, &files[i * NMERGE], NMERGE, tfp, temp);
-	  xfclose (tfp);
+	  xfclose (tfp, temp);
 	  files[t++] = temp;
 	}
       for (j = 0; j < nfiles % NMERGE; ++j)
 	fps[j] = xfopen (files[i * NMERGE + j], "r");
       temp = create_temp_file (&tfp);
       mergefps (fps, &files[i * NMERGE], nfiles % NMERGE, tfp, temp);
-      xfclose (tfp);
+      xfclose (tfp, temp);
       files[t++] = temp;
       nfiles = t;
     }
@@ -1896,9 +1898,9 @@ sort (char **files, int nfiles, FILE *ofp, const char *output_file)
 	  while (linebase < line);
 
 	  if (tfp != ofp)
-	    xfclose (tfp);
+	    xfclose (tfp, temp_output);
 	}
-      xfclose (fp);
+      xfclose (fp, file);
     }
 
   free (buf.buf);
@@ -2471,8 +2473,8 @@ but lacks following character offset"));
 		  cleanup ();
 		  exit (SORT_FAILURE);
 		}
-	      xfclose (out_fp);
-	      xfclose (in_fp);
+	      xfclose (out_fp, tmp);
+	      xfclose (in_fp, files[i]);
 	      files[i] = tmp;
 	    }
 	  ofp = xfopen (outfile, "w");
