@@ -1,3 +1,12 @@
+2004-11-28  Jim Meyering  <jim@meyering.net>
+
+	* Makefile.am (libfetish_a_SOURCES): Add chdir.h and openat.h.
+
+	This is a robust version of chdir, in that it can handle directory
+	names longer than PATH_MAX.
+	* chdir.c, chdir.h: New file.
+	* openat.c, openat.h: New files.
+
 2004-11-25  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Fix problems reported by Scott S. Tinsley for HP-UX 11.11 using
