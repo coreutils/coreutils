@@ -1,3 +1,21 @@
+Sat May 20 06:44:14 1995  Jim Meyering  (meyering@comco.com)
+
+	* tr.c (look_up_char_class): Take a string length argument -- required
+	because the argument is a string that is *not* NUL-terminated.
+	Use strncmp, not strcmp and add string lengths comparison.
+	(append_char_class): Update caller.  Before this change,
+	tr '[:upper:]' '[:lower:]' read one uninitialized byte.
+	From Andreas Schwab.
+
+	* split.c (next_file_name): Move dcls of file-scope variables into
+	this function.  Don't rely on arithmetic being two's complement.
+
+	* paste.c [CLOSED, ENDLIST]: Don't cast constants to FILE pointers.
+	Instead, declare two FILE structs and use their addresses.
+
+	* csplit.c (record_line_starts): Remove set-but-not-used,
+	file-scope variable.
+
 Sat May 13 08:57:20 1995  Jim Meyering  (meyering@comco.com)
 
 	* all source files (usage): Include one- or two-line synopsis
@@ -211,32 +229,32 @@ Sun Dec 11 17:24:09 1994  Jim Meyering  (meyering@comco.com)
 
 Thu Nov 17 06:37:33 1994  Jim Meyering  (meyering@comco.com)
 
-        * tail.c (dump_remainder): Flush standard output just before
-        sleeping so that `tail -f' will output partial lines sooner.
-        This applies only when following the end of a single file.
-        From Leonard N. Zubkoff <lnz@dandelion.com>.
+	* tail.c (dump_remainder): Flush standard output just before
+	sleeping so that `tail -f' will output partial lines sooner.
+	This applies only when following the end of a single file.
+	From Leonard N. Zubkoff <lnz@dandelion.com>.
 
-        * tail.c (file_lines, pipe_lines, pipe_bytes, start_bytes,
-        start_lines, dump_remainder): Use STDOUT_FILENO instead of `1' in
-        XWRITE calls.
-        * tac.c (output): Use STDOUT_FILENO instead of `1' in xwrite call.
-        * system.h (STDIN_FILENO, STDOUT_FILENO, STDERR_FILENO): Define if
-        not already defined.
+	* tail.c (file_lines, pipe_lines, pipe_bytes, start_bytes,
+	start_lines, dump_remainder): Use STDOUT_FILENO instead of `1' in
+	XWRITE calls.
+	* tac.c (output): Use STDOUT_FILENO instead of `1' in xwrite call.
+	* system.h (STDIN_FILENO, STDOUT_FILENO, STDERR_FILENO): Define if
+	not already defined.
 
 Wed Nov 16 07:01:38 1994  Jim Meyering  (meyering@comco.com)
 
-        * tr.c: Include <getopt.h> instead of "getopt.h".
+	* tr.c: Include <getopt.h> instead of "getopt.h".
 
-        * sort.c (tempname): Merge two very similar sprintf stmts into one.
+	* sort.c (tempname): Merge two very similar sprintf stmts into one.
 
-        * tail.c: Use BUFSIZ instead of BUFSIZE.
+	* tail.c: Use BUFSIZ instead of BUFSIZE.
 
-        * cut.c: Declare DELIM to be `int' rather than unsigned char.
+	* cut.c: Declare DELIM to be `int' rather than unsigned char.
 
-        * fmt.c: Use index, not strchr -- per GNU Standards.
-        Reported by Kaveh Ghazi.
-        Always include <config.h>.
-        (main): Include program name in --version output.
+	* fmt.c: Use index, not strchr -- per GNU Standards.
+	Reported by Kaveh Ghazi.
+	Always include <config.h>.
+	(main): Include program name in --version output.
 
 Sun Nov 06 00:17:21 1994  Jim Meyering  (meyering@comco.com)
 
