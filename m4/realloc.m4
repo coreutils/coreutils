@@ -1,7 +1,7 @@
 #serial 1
 
 dnl From Jim Meyering.
-dnl Determine whether realloc accepts 0 as its first argument.
+dnl Determine whether realloc works when both arguments are 0.
 dnl If it doesn't, arrange to use the replacement function.
 dnl
 dnl If you use this macro in a package, you should
@@ -18,7 +18,7 @@ AC_DEFUN(jm_FUNC_REALLOC,
     int
     main ()
     {
-      exit (realloc (0, 1) ? 0 : 1);
+      exit (realloc (0, 0) ? 0 : 1);
     }
 	  ],
 	 jm_cv_func_working_realloc=yes,
