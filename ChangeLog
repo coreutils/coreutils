@@ -1,6 +1,13 @@
-2003-03-02  Jim Meyering  <jim@meyering.net>
+2003-03-03  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.9.
+
+	* src/remove.c (remove_cwd_entries) [!ROOT_CAN_UNLINK_DIRS]: Give an
+	accurate diagnostic when failing to remove a file owned by some other
+	user.  Reported by Ivo Timmermans via Michael Stone.
+	This fixes Debian bug# 178471.
+
+2003-03-02  Jim Meyering  <jim@meyering.net>
 
 	* src/copy.c (copy_internal) [un_backup]: When recovering from a
 	failure to create a hard link, do not remove the entry associating
