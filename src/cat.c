@@ -1,5 +1,5 @@
 /* cat -- concatenate files and print on the standard output.
-   Copyright (C) 88, 90, 91, 1995-2001 Free Software Foundation, Inc.
+   Copyright (C) 88, 90, 91, 1995-2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -152,7 +152,7 @@ next_line_num (void)
 static void
 simple_cat (
      /* Pointer to the buffer, used by reads and writes.  */
-     unsigned char *buf,
+     char *buf,
 
      /* Number of characters preferably read or written by each read and write
         call.  */
@@ -196,13 +196,13 @@ simple_cat (
 static void
 cat (
      /* Pointer to the beginning of the input buffer.  */
-     unsigned char *inbuf,
+     char *inbuf,
 
      /* Number of characters read in each read call.  */
      int insize,
 
      /* Pointer to the beginning of the output buffer.  */
-     unsigned char *outbuf,
+     char *outbuf,
 
      /* Number of characters written by each write call.  */
      int outsize,
@@ -219,14 +219,14 @@ cat (
   unsigned char ch;
 
   /* Pointer to the next character in the input buffer.  */
-  unsigned char *bpin;
+  char *bpin;
 
   /* Pointer to the first non-valid byte in the input buffer, i.e. the
      current end of the buffer.  */
-  unsigned char *eob;
+  char *eob;
 
   /* Pointer to the position where the next character shall be written.  */
-  unsigned char *bpout;
+  char *bpout;
 
   /* Number of characters read by the last read call.  */
   ssize_t n_read;
@@ -260,7 +260,7 @@ cat (
 
 	  if (bpout - outbuf >= outsize)
 	    {
-	      unsigned char *wp = outbuf;
+	      char *wp = outbuf;
 	      do
 		{
 		  if (full_write (STDOUT_FILENO, wp, outsize) != outsize)
@@ -314,7 +314,7 @@ cat (
 	      if (n_to_read == 0)
 #endif
 		{
-		  int n_write = bpout - outbuf;
+		  size_t n_write = bpout - outbuf;
 
 		  if (full_write (STDOUT_FILENO, outbuf, n_write) != n_write)
 		    error (EXIT_FAILURE, errno, _("write error"));
@@ -375,8 +375,7 @@ cat (
 		  if (numbers && numbers_at_empty_lines)
 		    {
 		      next_line_num ();
-		      bpout = (unsigned char *) stpcpy ((char *) bpout,
-							line_num_print);
+		      bpout = stpcpy (bpout, line_num_print);
 		    }
 		}
 
@@ -398,7 +397,7 @@ cat (
       if (newlines >= 0 && numbers)
 	{
 	  next_line_num ();
-	  bpout = (unsigned char *) stpcpy ((char *) bpout, line_num_print);
+	  bpout = stpcpy (bpout, line_num_print);
 	}
 
       /* Here CH cannot contain a newline character.  */
@@ -493,10 +492,10 @@ main (int argc, char **argv)
   int insize;
 
   /* Pointer to the input buffer.  */
-  unsigned char *inbuf;
+  char *inbuf;
 
   /* Pointer to the output buffer.  */
-  unsigned char *outbuf;
+  char *outbuf;
 
   int c;
 
@@ -788,13 +787,13 @@ main (int argc, char **argv)
       if (options == 0)
 	{
 	  insize = max (insize, outsize);
-	  inbuf = (unsigned char *) xmalloc (insize);
+	  inbuf = xmalloc (insize);
 
 	  simple_cat (inbuf, insize);
 	}
       else
 	{
-	  inbuf = (unsigned char *) xmalloc (insize + 1);
+	  inbuf = xmalloc (insize + 1);
 
 	  /* Why are (OUTSIZE - 1 + INSIZE * 4 + LINE_COUNTER_BUF_LEN)
 	     bytes allocated for the output buffer?
@@ -813,8 +812,7 @@ main (int argc, char **argv)
 	     A line number requires seldom more than LINE_COUNTER_BUF_LEN
 	     positions.  */
 
-	  outbuf = (unsigned char *) xmalloc (outsize - 1 + insize * 4
-					      + LINE_COUNTER_BUF_LEN);
+	  outbuf = xmalloc (outsize - 1 + insize * 4 + LINE_COUNTER_BUF_LEN);
 
 	  cat (inbuf, insize, outbuf, outsize, quote,
 	       output_tabs, numbers, numbers_at_empty_lines, mark_line_ends,
