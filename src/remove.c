@@ -695,7 +695,7 @@ remove_entry (Dirstack_state const *ds, char const *filename,
   if (is_dir == T_UNKNOWN)
     {
 # if HAVE_STRUCT_DIRENT_D_TYPE
-      if (dp)
+      if (dp && dp->d_type != DT_UNKNOWN)
 	is_dir = DT_IS_DIR (dp) ? T_YES : T_NO;
       else
 # endif
