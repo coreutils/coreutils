@@ -15,13 +15,17 @@ t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
 trap 'status=$?; cd $pwd; chmod -R u+rwx $t0; rm -rf $t0 && exit $status' 0
 trap '(exit $?); exit $?' 1 2 13 15
 
-# Find a username with UID != 0.
-non_root_username=`grep -v '[^:]*:[^:]*:0:' /etc/passwd| sed -n '1s/:.*//p'`
-test "x$non_root_username" = x && framework_failure=1
-
 framework_failure=0
 mkdir -p $tmp || framework_failure=1
 cd $tmp || framework_failure=1
+
+# Find a username with UID != 0, and a valid shell.
+non_root_username=
+names=`grep -v '[^:]*:[^:]*:0:' /etc/passwd| sed 's/:.*//'`
+for name in $names; do
+  su -c ':' $name && { non_root_username=$name; break; }
+done
+test "x$non_root_username" = x && framework_failure=1
 
 # The containing directory must be owned by the user who eventually runs rm.
 chown $non_root_username .
