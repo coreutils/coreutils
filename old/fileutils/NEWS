@@ -1,5 +1,7 @@
 Changes in release 3.17:
 [3.16y]
+* `install -D' now works
+* distribute maintainer Makefiles in man/
 [3.16x]
 * man pages are now automatically generated from a combination of --help
   output and the contents of new (though mostly empty), man/*.x files.
