@@ -55,10 +55,8 @@ void strip_trailing_slashes ();
 char *xmalloc ();
 char *xrealloc ();
 
-static int change_file_owner (char *file, uid_t user, gid_t group);
-static int change_dir_owner (char *dir, uid_t user, gid_t group, struct stat *statp);
-static void describe_change (char *file, int changed);
-static void usage (int status);
+static int change_dir_owner __P ((char *dir, uid_t user, gid_t group,
+				  struct stat *statp));
 
 /* The name the program was run with. */
 char *program_name;
@@ -99,71 +97,20 @@ static struct option const long_options[] =
   {0, 0, 0, 0}
 };
 
-void
-main (int argc, char **argv)
+/* Tell the user the user and group names to which ownership of FILE
+   has been given; if CHANGED is zero, FILE had those owners already. */
+
+static void
+describe_change (char *file, int changed)
 {
-  uid_t user = (uid_t) -1;	/* New uid; -1 if not to be changed. */
-  gid_t group = (uid_t) -1;	/* New gid; -1 if not to be changed. */
-  int errors = 0;
-  int optc;
-  char *e;
-
-  program_name = argv[0];
-  recurse = force_silent = verbose = changes_only = 0;
-
-  while ((optc = getopt_long (argc, argv, "Rcfv", long_options, (int *) 0))
-	 != EOF)
-    {
-      switch (optc)
-	{
-	case 0:
-	  break;
-	case 'R':
-	  recurse = 1;
-	  break;
-	case 'c':
-	  verbose = 1;
-	  changes_only = 1;
-	  break;
-	case 'f':
-	  force_silent = 1;
-	  break;
-	case 'v':
-	  verbose = 1;
-	  break;
-	default:
-	  usage (1);
-	}
-    }
-
-  if (show_version)
-    {
-      printf ("chown - %s\n", version_string);
-      exit (0);
-    }
-
-  if (show_help)
-    usage (0);
-
-  if (optind >= argc - 1)
-    {
-      error (0, 0, "too few arguments");
-      usage (1);
-    }
-
-  e = parse_user_spec (argv[optind], &user, &group, &username, &groupname);
-  if (e)
-    error (1, 0, "%s: %s", argv[optind], e);
-  if (username == NULL)
-    username = "";
-
-  for (++optind; optind < argc; ++optind)
-    {
-      strip_trailing_slashes (argv[optind]);
-      errors |= change_file_owner (argv[optind], user, group);
-    }
-
-  exit (errors);
+  if (changed)
+    printf ("owner of %s changed to ", file);
+  else
+    printf ("owner of %s retained as ", file);
+  if (groupname)
+    printf ("%s.%s\n", username, groupname);
+  else
+    printf ("%s\n", username);
 }
 
 /* Change the ownership of FILE to UID USER and GID GROUP.
@@ -258,22 +205,6 @@ change_dir_owner (char *dir, uid_t user, gid_t group, struct stat *statp)
   return errors;
 }
 
-/* Tell the user the user and group names to which ownership of FILE
-   has been given; if CHANGED is zero, FILE had those owners already. */
-
-static void
-describe_change (char *file, int changed)
-{
-  if (changed)
-    printf ("owner of %s changed to ", file);
-  else
-    printf ("owner of %s retained as ", file);
-  if (groupname)
-    printf ("%s.%s\n", username, groupname);
-  else
-    printf ("%s\n", username);
-}
-
 static void
 usage (int status)
 {
@@ -301,4 +232,71 @@ Owner is unchanged if missing.  Group is unchanged if missing, but changed\n\
 to login group if implied by a period.  A colon may replace the period.\n");
     }
   exit (status);
+}
+
+void
+main (int argc, char **argv)
+{
+  uid_t user = (uid_t) -1;	/* New uid; -1 if not to be changed. */
+  gid_t group = (uid_t) -1;	/* New gid; -1 if not to be changed. */
+  int errors = 0;
+  int optc;
+  char *e;
+
+  program_name = argv[0];
+  recurse = force_silent = verbose = changes_only = 0;
+
+  while ((optc = getopt_long (argc, argv, "Rcfv", long_options, (int *) 0))
+	 != EOF)
+    {
+      switch (optc)
+	{
+	case 0:
+	  break;
+	case 'R':
+	  recurse = 1;
+	  break;
+	case 'c':
+	  verbose = 1;
+	  changes_only = 1;
+	  break;
+	case 'f':
+	  force_silent = 1;
+	  break;
+	case 'v':
+	  verbose = 1;
+	  break;
+	default:
+	  usage (1);
+	}
+    }
+
+  if (show_version)
+    {
+      printf ("chown - %s\n", version_string);
+      exit (0);
+    }
+
+  if (show_help)
+    usage (0);
+
+  if (optind >= argc - 1)
+    {
+      error (0, 0, "too few arguments");
+      usage (1);
+    }
+
+  e = parse_user_spec (argv[optind], &user, &group, &username, &groupname);
+  if (e)
+    error (1, 0, "%s: %s", argv[optind], e);
+  if (username == NULL)
+    username = "";
+
+  for (++optind; optind < argc; ++optind)
+    {
+      strip_trailing_slashes (argv[optind]);
+      errors |= change_file_owner (argv[optind], user, group);
+    }
+
+  exit (errors);
 }
