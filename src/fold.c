@@ -28,6 +28,8 @@
 #include "posixver.h"
 #include "xstrtol.h"
 
+#define TAB_WIDTH 8
+
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "fold"
 
@@ -104,7 +106,7 @@ adjust_column (size_t column, char c)
       else if (c == '\r')
 	column = 0;
       else if (c == '\t')
-	column = column + 8 - column % 8;
+	column += TAB_WIDTH - column % TAB_WIDTH;
       else /* if (isprint (c)) */
 	column++;
     }
@@ -115,10 +117,10 @@ adjust_column (size_t column, char c)
 
 /* Fold file FILENAME, or standard input if FILENAME is "-",
    to stdout, with maximum line length WIDTH.
-   Return 0 if successful, 1 if an error occurs. */
+   Return true if successful.  */
 
-static int
-fold_file (char *filename, int width)
+static bool
+fold_file (char *filename, size_t width)
 {
   FILE *istream;
   register int c;
@@ -139,7 +141,7 @@ fold_file (char *filename, int width)
   if (istream == NULL)
     {
       error (0, errno, "%s", filename);
-      return 1;
+      return false;
     }
 
   while ((c = getc (istream)) != EOF)
@@ -224,24 +226,24 @@ fold_file (char *filename, int width)
       error (0, saved_errno, "%s", filename);
       if (!STREQ (filename, "-"))
 	fclose (istream);
-      return 1;
+      return false;
     }
   if (!STREQ (filename, "-") && fclose (istream) == EOF)
     {
       error (0, errno, "%s", filename);
-      return 1;
+      return false;
     }
 
-  return 0;
+  return true;
 }
 
 int
 main (int argc, char **argv)
 {
-  int width = 80;
+  size_t width = 80;
   int i;
   int optc;
-  int errs = 0;
+  bool ok;
 
   initialize_main (&argc, &argv);
   program_name = argv[0];
@@ -295,12 +297,12 @@ main (int argc, char **argv)
 
 	case 'w':		/* Line width. */
 	  {
-	    long int tmp_long;
-	    if (xstrtol (optarg, NULL, 10, &tmp_long, "") != LONGINT_OK
-		|| tmp_long <= 0 || tmp_long > INT_MAX)
+	    unsigned long int tmp_ulong;
+	    if (! (xstrtoul (optarg, NULL, 10, &tmp_ulong, "") == LONGINT_OK
+		   && 0 < tmp_ulong && tmp_ulong < SIZE_MAX - TAB_WIDTH))
 	      error (EXIT_FAILURE, 0,
 		     _("invalid number of columns: `%s'"), optarg);
-	    width = (int) tmp_long;
+	    width = tmp_ulong;
 	  }
 	  break;
 
@@ -314,13 +316,16 @@ main (int argc, char **argv)
     }
 
   if (argc == optind)
-    errs |= fold_file ("-", width);
+    ok = fold_file ("-", width);
   else
-    for (i = optind; i < argc; i++)
-      errs |= fold_file (argv[i], width);
+    {
+      ok = true;
+      for (i = optind; i < argc; i++)
+	ok &= fold_file (argv[i], width);
+    }
 
   if (have_read_stdin && fclose (stdin) == EOF)
     error (EXIT_FAILURE, errno, "-");
 
-  exit (errs == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
+  exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
