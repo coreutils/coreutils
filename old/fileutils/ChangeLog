@@ -2,6 +2,8 @@
 
 	* doc/fileutils.texi (cp invocation): Mention that there is an
 	application for cp's --sparse=never option.  From Martin Hippe.
+	(cp invocation): Describe how --backup and --force
+	can be useful together.
 
 2000-03-10  Alan Iwi <iwi@atm.ox.ac.uk>
 
