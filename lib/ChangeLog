@@ -1,5 +1,8 @@
 2003-03-19  Jim Meyering  <jim@meyering.net>
 
+	* exclude.h (PARAMS): Remove definition and uses.
+	* exclude.c: Remove uses of `PARAMS'.
+
 	* fnmatch_.h: Don't define __const.
 	(fnmatch): Use const, not __const in prototype.
 	From Paul Eggert.
