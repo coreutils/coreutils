@@ -435,17 +435,14 @@ tsort (const char *file)
   assert (n_strings >= 0);
   if (n_strings > 0)
     {
-      if (have_read_stdin)
-	fprintf (stderr, _("%s: input contains a loop:\n"), program_name);
-      else
-	fprintf (stderr, _("%s: %s: input contains a loop:\n"),
-		 program_name, file);
+      error (0, 0, _("%s: input contains a loop:\n"),
+	     (have_read_stdin ? "-" : file));
 
       /* Print out loop.  */
       walk_tree (root, detect_loop);
 
       /* Should not happen.  */
-      error (EXIT_FAILURE, 0, _("%s: could not find loop"));
+      error (EXIT_FAILURE, 0, _("could not find loop"));
     }
 }
 
