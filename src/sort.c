@@ -60,6 +60,9 @@ void free ();
 /* The kind of blanks for '-b' to skip in various options. */
 enum blanktype { bl_start, bl_end, bl_both };
 
+/* The character marking end of line. Default to \n. */
+int eolchar = '\n';
+
 /* Lines are held in core as counted strings. */
 struct line
 {
@@ -225,6 +228,7 @@ Write sorted concatenation of all FILE(s) to standard output.\n\
   -t SEP           use SEParator instead of non- to whitespace transition\n\
   -u               with -c, check for strict ordering\n\
   -u               with -m, only output the first of an equal sequence\n\
+  -z               end lines with 0 byte, not newline, for find -print0\n\
       --help       display this help and exit\n\
       --version    output version information and exit\n\
 \n\
@@ -476,7 +480,7 @@ fillbuf (struct buffer *buf, FILE *fp)
   memmove (buf->buf, buf->buf + buf->used - buf->left, buf->left);
   buf->used = buf->left;
 
-  while (!feof (fp) && (buf->used == 0 || !memchr (buf->buf, '\n', buf->used)))
+  while (!feof (fp) && (buf->used == 0 || !memchr (buf->buf, eolchar, buf->used)))
     {
       if (buf->used == buf->alloc)
 	{
@@ -493,14 +497,14 @@ fillbuf (struct buffer *buf, FILE *fp)
       buf->used += cc;
     }
 
-  if (feof (fp) && buf->used && buf->buf[buf->used - 1] != '\n')
+  if (feof (fp) && buf->used && buf->buf[buf->used - 1] != eolchar)
     {
       if (buf->used == buf->alloc)
 	{
 	  buf->alloc *= 2;
 	  buf->buf = xrealloc (buf->buf, buf->alloc);
 	}
-      buf->buf[buf->used++] = '\n';
+      buf->buf[buf->used++] = eolchar;
     }
 
   return buf->used;
@@ -648,7 +652,7 @@ findlines (struct buffer *buf, struct lines *lines)
 
   lines->used = 0;
 
-  while (beg < lim && (ptr = memchr (beg, '\n', lim - beg))
+  while (beg < lim && (ptr = memchr (beg, eolchar, lim - beg))
 	 && lines->used < lines->limit)
     {
       /* There are various places in the code that rely on a NUL
@@ -1304,7 +1308,7 @@ mergefps (FILE **fps, register int nfps, FILE *ofp)
 	  if (savedflag && compare (&saved, &lines[ord[0]].lines[cur[ord[0]]]))
 	    {
 	      xfwrite (saved.text, 1, saved.length, ofp);
-	      putc ('\n', ofp);
+	      putc (eolchar, ofp);
 	      savedflag = 0;
 	    }
 	  if (!savedflag)
@@ -1337,7 +1341,7 @@ mergefps (FILE **fps, register int nfps, FILE *ofp)
 	{
 	  xfwrite (lines[ord[0]].lines[cur[ord[0]]].text, 1,
 		   lines[ord[0]].lines[cur[ord[0]]].length, ofp);
-	  putc ('\n', ofp);
+	  putc (eolchar, ofp);
 	}
 
       /* Check if we need to read more lines into core. */
@@ -1390,7 +1394,7 @@ mergefps (FILE **fps, register int nfps, FILE *ofp)
   if (unique && savedflag)
     {
       xfwrite (saved.text, 1, saved.length, ofp);
-      putc ('\n', ofp);
+      putc (eolchar, ofp);
       free (saved.text);
     }
 }
@@ -1543,7 +1547,7 @@ sort (char **files, int nfiles, FILE *ofp)
 		|| compare (&lines.lines[i], &lines.lines[i - 1]))
 	      {
 		xfwrite (lines.lines[i].text, 1, lines.lines[i].length, tfp);
-		putc ('\n', tfp);
+		putc (eolchar, tfp);
 	      }
 	  if (tfp != ofp)
 	    xfclose (tfp);
@@ -1939,6 +1943,9 @@ but lacks following character offset"));
 		    /* break; */
 		  case 'u':
 		    unique = 1;
+		    break;
+		  case 'z':
+		    eolchar = 0;
 		    break;
 		  case 'y':
 		    /* Accept and ignore e.g. -y0 for compatibility with
