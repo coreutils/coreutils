@@ -1,8 +1,17 @@
 1999-01-01  Jim Meyering  <meyering@ascend.com>
 
+	* lib/xmalloc.c: Add comments.
+	(xcalloc, xmalloc, xrealloc): Remove prototypes.
+	(xcalloc): Remove `#ifdef NOT_USED' that used to hide this function.
+	* lib/xalloc.h: Add comments.
+	(PARAMS, XMALLOC, XCALLOC, XREALLOC): Define.
+	(xcalloc, xmalloc, xrealloc): Add prototypes here.
+	Based on changes from Akim Demaille.
+
 	* lib/quotearg.c (quotearg_buffer): Cast -1 to size_t before comparing.
 	(quotearg_n): Change type of 1st parameter from int to unsigned int.
 	(quotearg_n_options): Likewise.
+	* lib/quotearg.h (quoting_style_vals): New public array.
 	From Akim Demaille.
 	(quotearg_n_options): Declare `options' parameter to be `const'.
 
