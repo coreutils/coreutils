@@ -1,3 +1,9 @@
+2000-07-04  Jim Meyering  <meyering@lucent.com>
+
+	* quotearg.c: Make inclusion of <wchar.h> independent of whether
+	HAVE_MBRTOWC is set.  Required at least for irix-5.6, which
+	lacks mbrtowc.
+
 2000-07-03  Paul Eggert  <eggert@twinsun.com>
 	and Bruno Haible  <haible@clisp.cons.org>
 
