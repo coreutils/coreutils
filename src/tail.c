@@ -111,8 +111,9 @@ struct File_spec
   /* FIXME: describe */
   unsigned int n_consecutive_size_changes;
 
-  /* FIXME: describe */
-  int missing;
+  /* A file is tailable if it is a regular file or a fifo and it is
+     readable.  */
+  int tailable;
 
   /* The value of errno seen last time we checked this file.  */
   int errnum;
@@ -120,7 +121,7 @@ struct File_spec
 };
 
 /* FIXME: describe */
-static int allow_missing;
+static int reopen_inaccessible_files;
 
 /* If nonzero, interpret the numeric argument as the number of lines.
    Otherwise, interpret it as the number of bytes.  */
@@ -146,7 +147,7 @@ enum header_mode
 };
 
 /* When tailing a file by name, if there have been this many consecutive
-   stat calls for which the size has remained the same, then open/fstat
+   iterations for which the size has remained the same, then open/fstat
    the file to determine if that file name is still associated with the
    same device/inode-number pair as before.  This option is meaningful only
    when following by name.  --max-unchanged-stats=N  */
@@ -159,7 +160,7 @@ static unsigned long max_n_unchanged_stats_between_opens =
    After detecting this many consecutive size changes for a file, open/fstat
    the file to determine if that file name is still associated with the
    same device/inode-number pair as before.  This option is meaningful only
-   when following by name.  --max-n-consecutive-size-changes=N  */
+   when following by name.  --max-consecutive-size-changes=N  */
 #define DEFAULT_MAX_N_CONSECUTIVE_SIZE_CHANGES 200
 static unsigned long max_n_consecutive_size_changes_between_opens =
   DEFAULT_MAX_N_CONSECUTIVE_SIZE_CHANGES;
@@ -167,7 +168,10 @@ static unsigned long max_n_consecutive_size_changes_between_opens =
 /* The name this program was run with.  */
 char *program_name;
 
-/* The number of seconds to sleep between accesses.  */
+/* The number of seconds to sleep between iterations.
+   During one iteration, every file name or descriptor is checked to
+   see if it has changed.  */
+/* FIXME: allow fractional seconds */
 static unsigned int sleep_interval = 1;
 
 /* Nonzero if we have ever read standard input.  */
@@ -175,6 +179,8 @@ static int have_read_stdin;
 
 static struct option const long_options[] =
 {
+  /* --allow-missing is deprecated; use --retry instead
+     FIXME: remove it some day */
   {"allow-missing", no_argument, NULL, CHAR_MAX + 1},
   {"bytes", required_argument, NULL, 'c'},
   {"follow", optional_argument, NULL, 'f'},
@@ -182,6 +188,7 @@ static struct option const long_options[] =
   {"max-unchanged-stats", required_argument, NULL, CHAR_MAX + 2},
   {"max-consecutive-size-changes", required_argument, NULL, CHAR_MAX + 3},
   {"quiet", no_argument, NULL, 'q'},
+  {"retry", no_argument, NULL, CHAR_MAX + 1},
   {"silent", no_argument, NULL, 'q'},
   {"sleep-interval", required_argument, NULL, 's'},
   {"verbose", no_argument, NULL, 'v'},
@@ -203,16 +210,22 @@ Usage: %s [OPTION]... [FILE]...\n\
 "),
 	      program_name);
       printf (_("\
-Print last 10 lines of each FILE to standard output.\n\
+Print the last %d lines of each FILE to standard output.\n\
 With more than one FILE, precede each with a header giving the file name.\n\
 With no FILE, or when FILE is -, read standard input.\n\
 \n\
-      --allow-missing      FIXME\n\
+      --retry              keep trying to open a file even if it is\n\
+                             inaccessible when tail starts or if it becomes\n\
+                             inaccessible later -- useful only with -f\n\
   -c, --bytes=N            output the last N bytes\n\
-  -f, --follow[={name|descriptor}] output appended data as the file grows\n\
-  -n, --lines=N            output the last N lines, instead of last 10\n\
-      --max-unchanged-stats=N FIXME describe and mention default\n\
-      --max-consecutive-size-changes=N FIXME describe and mention default\n\
+  -f, --follow[={name|descriptor}] output appended data as the file grows;\n\
+                             -f, --follow, and --follow=descriptor are\n\
+                             equivalent\n\
+  -n, --lines=N            output the last N lines, instead of the last %d\n\
+      --max-unchanged-stats=N see the texinfo documentation\n\
+                             (the default is %d)\n\
+      --max-consecutive-size-changes=N see the texinfo documentation\n\
+                             (the default is %d)\n\
   -q, --quiet, --silent    never output headers giving file names\n\
   -s, --sleep-interval=S   with -f, sleep S seconds between iterations\n\
   -v, --verbose            always output headers giving file names\n\
@@ -226,11 +239,30 @@ b for 512, k for 1024, m for 1048576 (1 Meg).  A first OPTION of -VALUE\n\
 or +VALUE is treated like -n VALUE or -n +VALUE unless VALUE has one of\n\
 the [bkm] suffix multipliers, in which case it is treated like -c VALUE\n\
 or -c +VALUE.\n\
-FIXME: describe name vs descriptor\n\
-"));
+\n\
+With --follow (-f), tail defaults to following the file descriptor, which\n\
+means that even if a tail'ed file is renamed, tail will continue to track\n\
+its end.  This default behavior is not desirable when you really want to\n\
+track the actual name of the file, not the file descriptor (e.g., log\n\
+rotation).  Use --follow=name in that case.  That causes tail to track the\n\
+named file by reopening it periodically to see if it has been removed and\n\
+recreated by some other program.\n\
+\n\
+"),
+	      DEFAULT_N_LINES, DEFAULT_N_LINES,
+	      DEFAULT_MAX_N_UNCHANGED_STATS_BETWEEN_OPENS,
+	      DEFAULT_MAX_N_CONSECUTIVE_SIZE_CHANGES
+	      );
       puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
+}
+
+static int
+valid_file_spec (struct File_spec const *f)
+{
+  /* Exactly one of the following subexpressions must be true. */
+  return ((f->fd == -1) ^ (f->errnum == 0));
 }
 
 static char *
@@ -656,27 +688,36 @@ recheck (struct File_spec *f)
   int fd;
   int fail = 0;
   int is_stdin = (STREQ (f->name, "-"));
-  int was_missing = f->missing;
+  int was_tailable = f->tailable;
   int prev_errnum = f->errnum;
   int new_file;
+
+  assert (valid_file_spec (f));
 
   fd = (is_stdin ? STDIN_FILENO : open (f->name, O_RDONLY));
 
   /* If the open fails because the file doesn't exist,
-     then mark the file as missing.  */
-  f->missing = (allow_missing && fd == -1 && errno == ENOENT);
+     then mark the file as not tailable.  */
+  f->tailable = !(reopen_inaccessible_files && fd == -1);
 
   if (fd == -1 || fstat (fd, &new_stats) < 0)
     {
       fail = 1;
       f->errnum = errno;
-      if (f->missing)
+      if (!f->tailable)
 	{
-	  if (!was_missing)
-	    error (0, 0, "`%s' has been removed", pretty_name (f));
+	  if (was_tailable)
+	    {
+	      /* FIXME-maybe: detect the case in which the file first becomes
+		 unreadable (perms), and later becomes readable again and can
+		 be seen to be the same file (dev/ino).  Otherwise, tail prints
+		 the entire contents of the file when it becomes readable.  */
+	      error (0, f->errnum, _("`%s' has become inaccessible"),
+		     pretty_name (f));
+	    }
 	  else
 	    {
-	      /* say nothing... it's still missing */
+	      /* say nothing... it's still not tailable */
 	    }
 	}
       else if (prev_errnum != errno)
@@ -695,7 +736,9 @@ cannot follow end of non-regular file"),
 	     pretty_name (f));
     }
   else
-    f->errnum = 0;
+    {
+      f->errnum = 0;
+    }
 
   new_file = 0;
   if (fail)
@@ -707,8 +750,8 @@ cannot follow end of non-regular file"),
   else if (prev_errnum && prev_errnum != ENOENT)
     {
       new_file = 1;
-      if (f->fd != -1)
-	close_fd (f->fd, pretty_name (f)); /* close the old handle */
+      /* FIXME-now: is this close ever necessary?  */
+      close_fd (f->fd, pretty_name (f)); /* close the old handle */
       error (0, 0, _("`%s' has become accessible"), pretty_name (f));
     }
   else if (f->ino != new_stats.st_ino || f->dev != new_stats.st_dev)
@@ -731,12 +774,6 @@ cannot follow end of non-regular file"),
 		 _("`%s' has been replaced;  following end of new file"),
 		 pretty_name (f));
 	}
-    }
-  else if (f->missing)
-    {
-      new_file = 1;
-      error (0, 0, _("`%s' has reappeared"), pretty_name (f));
-      f->missing = 0;
     }
   else
     {
@@ -865,7 +902,7 @@ tail_forever (struct File_spec *f, int nfiles)
 				       COPY_TO_EOF);
 	}
 
-      if (n_live_files (f, nfiles) == 0 && ! allow_missing)
+      if (n_live_files (f, nfiles) == 0 && ! reopen_inaccessible_files)
 	{
 	  error (0, 0, _("no files remaining"));
 	  break;
@@ -1033,7 +1070,7 @@ tail_file (struct File_spec *f, off_t n_units)
       fd = open (f->name, O_RDONLY);
     }
 
-  f->missing = (allow_missing && fd == -1 && errno == ENOENT);
+  f->tailable = !(reopen_inaccessible_files && fd == -1);
 
   if (fd == -1)
     {
@@ -1304,7 +1341,7 @@ parse_options (int argc, char **argv,
 	  break;
 
 	case CHAR_MAX + 1:
-	  allow_missing = 1;
+	  reopen_inaccessible_files = 1;
 	  break;
 
 	case CHAR_MAX + 2:
@@ -1360,6 +1397,9 @@ parse_options (int argc, char **argv,
 	  usage (1);
 	}
     }
+
+  if (reopen_inaccessible_files && follow_mode != Follow_name)
+    error (0, 0, _("warning: --retry is useful only when following by name"));
 }
 
 int
