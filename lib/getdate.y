@@ -1014,7 +1014,7 @@ get_date (const char *p, const time_t *now)
       if (! gmt)
 	return -1;
       delta = pc.time_zone * 60 + difftm (gmt, &tm);
-      if ((Start - delta < Start) != (delta > 0))
+      if ((Start < Start - delta) != (delta < 0))
 	return -1;	/* time_t overflow */
       Start -= delta;
     }
