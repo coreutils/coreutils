@@ -10,10 +10,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: coreutils 5.1.1\n"
+"Project-Id-Version: coreutils 5.1.3\n"
 "Report-Msgid-Bugs-To: bug-coreutils@gnu.org\n"
-"POT-Creation-Date: 2004-02-07 17:02+0100\n"
-"PO-Revision-Date: 2004-01-17 22:30+0200\n"
+"POT-Creation-Date: 2004-02-18 18:49+0100\n"
+"PO-Revision-Date: 2004-02-09 14:30+0200\n"
 "Last-Translator: Rafa³ Maszkowski <rzm@icm.edu.pl>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -964,6 +964,7 @@ msgid "Usage: %s [OPTION]... LEFT_FILE RIGHT_FILE\n"
 msgstr "Sk³adnia: %s [OPCJA]... LEWY_PLIK PRAWY_PLIK\n"
 
 #: src/comm.c:76
+#, fuzzy
 msgid ""
 "Compare sorted files LEFT_FILE and RIGHT_FILE line by line.\n"
 "\n"
@@ -2060,9 +2061,9 @@ msgid "cannot set date"
 msgstr "ustawienie daty niemo¿liwe"
 
 #: src/date.c:529
-#, fuzzy, c-format
+#, c-format
 msgid "time %s is out of range"
-msgstr "pozycja w pliku spoza zakresu"
+msgstr "czas %s jest spoza zakresu"
 
 #: src/dd.c:287 src/tty.c:68 src/uname.c:109 src/whoami.c:53
 #, c-format
@@ -6028,7 +6029,7 @@ msgstr ""
 "  -w, --equal-width        wype³nienie zerami do równej szeroko¶ci\n"
 
 #: src/seq.c:96
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "\n"
 "If FIRST or INCREMENT is omitted, it defaults to 1.  That is, an\n"
@@ -6040,11 +6041,14 @@ msgid ""
 "the printf-style, floating point output formats %e, %f, %g\n"
 msgstr ""
 "\n"
-"Je¿eli PIERWSZA lub KROK s± pominiête, maj± warto¶æ 1.\n"
+"Je¿eli PIERWSZA lub KROK s± pominiête, maj± warto¶æ 1. Tzn. je¿eli KROK "
+"jest\n"
+"pominiêty, domy¶lnie ma warto¶æ 1, nawet je¿eli OSTATNIA jest mniejsza od\n"
+"PIERWSZEJ.\n"
 "PIERWSZA, KROK i OSTATNIA s± interpretowane jako liczby zmiennoprzecinkowe.\n"
 "KROK powinien byæ dodatni, je¶li PIERWSZA jest mniejsza od OSTATNIEJ lub\n"
 "ujemny w przeciwnym wypadku. Podany FORMAT musi zawieraæ dok³adnie jeden\n"
-"ze zmiennoprzecinkowych formatów wyj¶cia %e, %f lub %g.\n"
+"ze zmiennoprzecinkowych formatów wyj¶cia: %e, %f lub %g\n"
 
 #: src/seq.c:121
 #, c-format
@@ -6403,14 +6407,15 @@ msgstr ""
 "  -S, --buffer-size=ROZM    ROZMIAR g³ównego bufora pamiêci\n"
 
 #: src/sort.c:312
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "  -t, --field-separator=SEP use SEP instead of non-blank to blank "
 "transition\n"
-"  -T, --temporary-directory=DIR  use DIR for temporaries, not $TMPDIR or %s\n"
+"  -T, --temporary-directory=DIR  use DIR for temporaries, not $TMPDIR or %"
+"s;\n"
 "                              multiple options specify multiple directories\n"
-"  -u, --unique              with -c: check for strict ordering\n"
-"                              otherwise: output only the first of an equal "
+"  -u, --unique              with -c, check for strict ordering;\n"
+"                              without -c, output only the first of an equal "
 "run\n"
 msgstr ""
 "  -t, --field-separator=SEP  u¿ycie SEPARATORA zamiast przej¶cia\n"
@@ -8521,7 +8526,7 @@ msgstr "nie mo¿na usun±æ %s"
 # pola tabelki wymagaja poprawienia szerokosci -pk
 #: src/uptime.c:128
 msgid "couldn't get boot time"
-msgstr "uzyskanie czasu startu systemu niemo¿liwe"
+msgstr "sprawdzenie czasu startu systemu jest niemo¿liwe"
 
 #: src/uptime.c:136
 #, c-format
@@ -8539,7 +8544,7 @@ msgstr "pm"
 #: src/uptime.c:142
 #, c-format
 msgid " ??:????  up "
-msgstr ""
+msgstr " ??:????  up "
 
 #: src/uptime.c:144
 #, c-format
@@ -8796,6 +8801,3 @@ msgid ""
 msgstr ""
 "Powtarzanie na wyj¶ciu linii ze wszystkimi podanymi £AÑCUCH(AMI) albo `y'\n"
 "\n"
-
-#~ msgid "*** invalid date/time ***"
-#~ msgstr "*** b³êdna data/czas ***"

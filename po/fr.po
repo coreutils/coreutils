@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: GNU coreutils 5.1.1\n"
+"Project-Id-Version: GNU coreutils 5.1.3\n"
 "Report-Msgid-Bugs-To: bug-coreutils@gnu.org\n"
-"POT-Creation-Date: 2004-02-07 17:02+0100\n"
-"PO-Revision-Date: 2004-01-17 08:00-0500\n"
+"POT-Creation-Date: 2004-02-18 18:49+0100\n"
+"PO-Revision-Date: 2004-02-09 08:00-0500\n"
 "Last-Translator: Michel Robitaille <robitail@IRO.UMontreal.CA>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -976,6 +976,7 @@ msgid "Usage: %s [OPTION]... LEFT_FILE RIGHT_FILE\n"
 msgstr "Usage: %s [OPTION]... FICHIER_GAUCHE  FICHIER_DROIT\n"
 
 #: src/comm.c:76
+#, fuzzy
 msgid ""
 "Compare sorted files LEFT_FILE and RIGHT_FILE line by line.\n"
 "\n"
@@ -2103,9 +2104,9 @@ msgid "cannot set date"
 msgstr "ne peut initialiser la date."
 
 #: src/date.c:529
-#, fuzzy, c-format
+#, c-format
 msgid "time %s is out of range"
-msgstr "décalage dans le fichier est hors limites"
+msgstr "date %s est hors limites"
 
 #: src/dd.c:287 src/tty.c:68 src/uname.c:109 src/whoami.c:53
 #, c-format
@@ -6170,7 +6171,7 @@ msgstr ""
 "                           par des zéros de tête\n"
 
 #: src/seq.c:96
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "\n"
 "If FIRST or INCREMENT is omitted, it defaults to 1.  That is, an\n"
@@ -6182,12 +6183,14 @@ msgid ""
 "the printf-style, floating point output formats %e, %f, %g\n"
 msgstr ""
 "\n"
-"Si PREMIER ou PAS sont omis, ils prennent la valeur 1 par défaut.\n"
+"Si PREMIER ou PAS est omis, il prend la valeur 1 par défaut.\n"
+"La valeur PAS par défaut est 1 même lorsque DERNIER est plus petit que "
+"PREMIER.\n"
 "PREMIER, PAS, DERNIER sont valeurs interprétées en notation flottante.\n"
-"PAS doit être > 0 si PREMIER est plus petit que DERNIER  et\n"
-"négatif autrement.  Lorsque fourni, l'argument de FORMAT doit contenir\n"
-"exactement un format de style printf, \n"
-"et la notation flottante %e, %f, or %g.\n"
+"PAS est habituelement positif si PREMIER est plus petit que DERNIER  et\n"
+"PAS est habituelement négatif si PREMIER est plus grand que DERNIER.\n"
+"Lorsque fourni, l'argument de FORMAT doit contenir exactement un format\n"
+"de style printf en notation flottante %e, %f, or %g.\n"
 
 #: src/seq.c:121
 #, c-format
@@ -6562,14 +6565,15 @@ msgstr ""
 "principal\n"
 
 #: src/sort.c:312
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "  -t, --field-separator=SEP use SEP instead of non-blank to blank "
 "transition\n"
-"  -T, --temporary-directory=DIR  use DIR for temporaries, not $TMPDIR or %s\n"
+"  -T, --temporary-directory=DIR  use DIR for temporaries, not $TMPDIR or %"
+"s;\n"
 "                              multiple options specify multiple directories\n"
-"  -u, --unique              with -c: check for strict ordering\n"
-"                              otherwise: output only the first of an equal "
+"  -u, --unique              with -c, check for strict ordering;\n"
+"                              without -c, output only the first of an equal "
 "run\n"
 msgstr ""
 "  -t, --field-separator=SEP      utiliser le SÉParateur au lieu de non-blanc "
@@ -8776,7 +8780,7 @@ msgstr "pm"
 #: src/uptime.c:142
 #, c-format
 msgid " ??:????  up "
-msgstr ""
+msgstr " ??:????  monter"
 
 #: src/uptime.c:144
 #, c-format

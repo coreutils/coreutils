@@ -37,10 +37,10 @@
 #     bonic, excepte quan quede realment horrend o porte a confusió).
 msgid ""
 msgstr ""
-"Project-Id-Version: coreutils 5.1.1\n"
+"Project-Id-Version: coreutils 5.1.3\n"
 "Report-Msgid-Bugs-To: bug-coreutils@gnu.org\n"
-"POT-Creation-Date: 2004-02-07 17:02+0100\n"
-"PO-Revision-Date: 2004-01-19 10:19+0100\n"
+"POT-Creation-Date: 2004-02-18 18:49+0100\n"
+"PO-Revision-Date: 2004-02-11 12:35+0100\n"
 "Last-Translator: Ivan Vilata i Balaguer <ivan@selidor.net>\n"
 "Language-Team: Catalan <ca@dodds.net>\n"
 "MIME-Version: 1.0\n"
@@ -2257,9 +2257,9 @@ msgid "cannot set date"
 msgstr "no s'ha pogut establir la data"
 
 #: src/date.c:529
-#, fuzzy, c-format
+#, c-format
 msgid "time %s is out of range"
-msgstr "el desplaçament del fitxer està fora de rang"
+msgstr "la data %s està fora de rang"
 
 #: src/dd.c:287 src/tty.c:68 src/uname.c:109 src/whoami.c:53
 #, c-format
@@ -6532,7 +6532,7 @@ msgstr ""
 "  -w, --equal-width    Iguala l'amplària replenant amb zeros al davant.\n"
 
 #: src/seq.c:96
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "\n"
 "If FIRST or INCREMENT is omitted, it defaults to 1.  That is, an\n"
@@ -6544,14 +6544,16 @@ msgid ""
 "the printf-style, floating point output formats %e, %f, %g\n"
 msgstr ""
 "\n"
-"Si s'omet PRIMER o INCREMENT, es pren 1 per defecte.  PRIMER, INCREMENT i\n"
-"ÚLTIM s'interpreten com a valors reals en coma flotant.  INCREMENT ha de "
-"ser\n"
-"positiu si PRIMER és menor que ÚLTIM, i negatiu en altre cas.  Si s'indica "
-"un\n"
-"argument FORMAT, aquest ha de contenir exactament un dels formats de printf"
-"()\n"
-"d'eixida de flotants: «%e», «%f» o «%g».\n"
+"Si s'omet PRIMER o INCREMENT, es pren 1 per defecte.  És a dir, un "
+"INCREMENT\n"
+"omés pren un valor per defecte d'1, fins i tot quan ÚLTIM és menor que "
+"PRIMER.\n"
+"PRIMER, INCREMENT i ÚLTIM s'interpreten com a valors reals en coma flotant.\n"
+"INCREMENT sol ser positiu si PRIMER és menor que ÚLTIM, i sol ser negatiu "
+"si\n"
+"PRIMER és major que ÚLTIM.  Si s'indica un argument FORMAT, aquest ha de\n"
+"contenir exactament un dels formats de printf() d'eixida de flotants: «%e»,\n"
+"«%f» o «%g».\n"
 
 #: src/seq.c:121
 #, c-format
@@ -6933,14 +6935,15 @@ msgstr ""
 "                       Defineix el TAMANY de l'avantmemòria principal.\n"
 
 #: src/sort.c:312
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "  -t, --field-separator=SEP use SEP instead of non-blank to blank "
 "transition\n"
-"  -T, --temporary-directory=DIR  use DIR for temporaries, not $TMPDIR or %s\n"
+"  -T, --temporary-directory=DIR  use DIR for temporaries, not $TMPDIR or %"
+"s;\n"
 "                              multiple options specify multiple directories\n"
-"  -u, --unique              with -c: check for strict ordering\n"
-"                              otherwise: output only the first of an equal "
+"  -u, --unique              with -c, check for strict ordering;\n"
+"                              without -c, output only the first of an equal "
 "run\n"
 msgstr ""
 "  -t, --field-separator=SEP\n"
@@ -9198,7 +9201,7 @@ msgstr "pm"
 #: src/uptime.c:142
 #, c-format
 msgid " ??:????  up "
-msgstr ""
+msgstr " ??:????  en marxa "
 
 #: src/uptime.c:144
 #, c-format
@@ -9483,6 +9486,3 @@ msgid ""
 msgstr ""
 "Mostra repetidament una línia amb totes les cadenes indicades, o «y».\n"
 "\n"
-
-#~ msgid "*** invalid date/time ***"
-#~ msgstr "*** l'hora o data no és vàlida ***"

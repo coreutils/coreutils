@@ -1,13 +1,13 @@
 # Estonian translations for coreutils
 # Copyright (C) 2000 Free Software Foundation, Inc.
-# Toomas Soome <Toomas.Soome@microlink.ee>, 2003.
+# Toomas Soome <Toomas.Soome@microlink.ee>, 2004.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: coreutils 5.1.1\n"
+"Project-Id-Version: coreutils 5.1.3\n"
 "Report-Msgid-Bugs-To: bug-coreutils@gnu.org\n"
-"POT-Creation-Date: 2004-02-07 17:02+0100\n"
-"PO-Revision-Date: 2004-01-18 13:45+0200\n"
+"POT-Creation-Date: 2004-02-18 18:49+0100\n"
+"PO-Revision-Date: 2004-02-09 09:32+0200\n"
 "Last-Translator: Toomas Soome <Toomas.Soome@microlink.ee>\n"
 "Language-Team: Estonian <et@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -941,6 +941,7 @@ msgid "Usage: %s [OPTION]... LEFT_FILE RIGHT_FILE\n"
 msgstr "Kasutamine: %s [VÕTI]... VASAK_FAIL PAREM_FAIL\n"
 
 #: src/comm.c:76
+#, fuzzy
 msgid ""
 "Compare sorted files LEFT_FILE and RIGHT_FILE line by line.\n"
 "\n"
@@ -2008,9 +2009,9 @@ msgid "cannot set date"
 msgstr "kuupäeva ja kellaaega ei õnnestu seada"
 
 #: src/date.c:529
-#, fuzzy, c-format
+#, c-format
 msgid "time %s is out of range"
-msgstr "failiviit on piirkonnast väljas"
+msgstr "aeg %s on piirkonnast väljas"
 
 #: src/dd.c:287 src/tty.c:68 src/uname.c:109 src/whoami.c:53
 #, c-format
@@ -5839,7 +5840,7 @@ msgstr ""
 "  -w, --equal-width        kasuta võrdse laiusega välju, täida nullidega\n"
 
 #: src/seq.c:96
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "\n"
 "If FIRST or INCREMENT is omitted, it defaults to 1.  That is, an\n"
@@ -5851,11 +5852,13 @@ msgid ""
 "the printf-style, floating point output formats %e, %f, %g\n"
 msgstr ""
 "\n"
-"Kui ESIMENE või SAMM puudub, kasutatakse väärtust 1.\n"
+"Kui ESIMENE või SAMM puudub, kasutatakse väärtust 1. Puuduva SAMMU asemel\n"
+"kasutatakse väärtust 1 isegi kui VIIMANE on väiksem, kui ESIMENE.\n"
 "ESIMENE, SAMM, VIIMANE interpreteeritakse, kui murdarve.\n"
-"SAMM peab olema positiivne, kui ESIMENE on väiksem, kui VIIMANE ja\n"
-"muudel juhtudel negatiivne. Kui kasutatakse formaadi määramist, peab\n"
-"formaat olema üks printf stiilis ujukoma väljundformaadist %e, %f, %g\n"
+"SAMM on tavaliselt positiivne, kui ESIMENE on VIIMASEST väiksem ja\n"
+"negatiivne, kui VIIMANE on ESIMESEST väiksem. Kui kasutatakse formaadi\n"
+"määramist, peab formaat sisaldama täpselt ühte printf stiilis ujukoma\n"
+"väljundformaatidest %e, %f, %g\n"
 
 #: src/seq.c:121
 #, c-format
@@ -6200,14 +6203,15 @@ msgstr ""
 "  -S, --buffer-size=MAHT    määra mälupuhvri suurus\n"
 
 #: src/sort.c:312
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "  -t, --field-separator=SEP use SEP instead of non-blank to blank "
 "transition\n"
-"  -T, --temporary-directory=DIR  use DIR for temporaries, not $TMPDIR or %s\n"
+"  -T, --temporary-directory=DIR  use DIR for temporaries, not $TMPDIR or %"
+"s;\n"
 "                              multiple options specify multiple directories\n"
-"  -u, --unique              with -c: check for strict ordering\n"
-"                              otherwise: output only the first of an equal "
+"  -u, --unique              with -c, check for strict ordering;\n"
+"                              without -c, output only the first of an equal "
 "run\n"
 msgstr ""
 "  -t, --field-separator=ERA määra tühemiku asemele uus väljade eraldaja\n"
@@ -8302,7 +8306,7 @@ msgstr "pm"
 #: src/uptime.c:142
 #, c-format
 msgid " ??:????  up "
-msgstr ""
+msgstr " ??:????  püsti "
 
 #: src/uptime.c:144
 #, c-format
@@ -8552,6 +8556,3 @@ msgid ""
 msgstr ""
 "Väljasta korduvalt rida antud sõnedega või `y'.\n"
 "\n"
-
-#~ msgid "*** invalid date/time ***"
-#~ msgstr "*** vigane kuupäev ***"

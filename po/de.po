@@ -37,10 +37,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: GNU coreutils 5.1.2\n"
+"Project-Id-Version: GNU coreutils 5.1.3\n"
 "Report-Msgid-Bugs-To: bug-coreutils@gnu.org\n"
-"POT-Creation-Date: 2004-02-07 17:02+0100\n"
-"PO-Revision-Date: 2004-01-26 15:25 +0100\n"
+"POT-Creation-Date: 2004-02-18 18:49+0100\n"
+"PO-Revision-Date: 2004-02-09 10:45 +0100\n"
 "Last-Translator: Michael Piefel <piefel@informatik.hu-berlin.de>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -999,6 +999,7 @@ msgid "Usage: %s [OPTION]... LEFT_FILE RIGHT_FILE\n"
 msgstr "Aufruf: %s [OPTION]... LINKE_DATEI RECHTE_DATEI\n"
 
 #: src/comm.c:76
+#, fuzzy
 msgid ""
 "Compare sorted files LEFT_FILE and RIGHT_FILE line by line.\n"
 "\n"
@@ -2113,9 +2114,9 @@ msgid "cannot set date"
 msgstr "das Datum kann nicht gesetzt werden"
 
 #: src/date.c:529
-#, fuzzy, c-format
+#, c-format
 msgid "time %s is out of range"
-msgstr "Datei Verschiebung außerhalb der Reichweite"
+msgstr "Zeit %s außerhalb des zulässigen Bereichs"
 
 #: src/dd.c:287 src/tty.c:68 src/uname.c:109 src/whoami.c:53
 #, c-format
@@ -2299,11 +2300,11 @@ msgstr ""
 #: src/dd.c:1180 src/dd.c:1198
 #, c-format
 msgid "opening %s"
-msgstr "Öffnen von %s"
+msgstr "öffne %s"
 
 #: src/dd.c:1206
 msgid "file offset out of range"
-msgstr "Datei Verschiebung außerhalb der Reichweite"
+msgstr "Datei-Offset außerhalb des zulässigen Bereichs"
 
 #: src/dd.c:1224
 #, c-format
@@ -6129,7 +6130,7 @@ msgstr ""
 "  -w, --equal-width        gleiche Breite durch führende Nullen herstellen\n"
 
 #: src/seq.c:96
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "\n"
 "If FIRST or INCREMENT is omitted, it defaults to 1.  That is, an\n"
@@ -6141,11 +6142,15 @@ msgid ""
 "the printf-style, floating point output formats %e, %f, %g\n"
 msgstr ""
 "\n"
-"Wenn ERSTER oder LETZTER weggelassen werden, wird 1 angenommen.\n"
+"Wenn ERSTER oder PLUS weggelassen werden, wird 1 angenommen. Ein "
+"weggelassenes\n"
+"PLUS wird also als 1 interpretiert, selbst wenn LETZTER kleiner als ERSTER "
+"ist.\n"
 "ERSTER, PLUS und LETZTER werden als Fließkommazahlen interpretiert.\n"
-"PLUS sollte größer als Null sein, wenn ERSTER kleiner als LETZTER ist, und\n"
-"negativ, wenn umgekehrt.  Wenn ein FORMAT-Argument angegeben wurde, muss es\n"
-"genau eines der Fließkomma-Ausgabeformate %e, %f oder %g enthalten.\n"
+"PLUS ist normalerweise positiv, wenn ERSTER kleiner als LETZTER ist, und\n"
+"PLUS ist normalerweise negativ, wenn ERSTER größer als LETZTER ist.\n"
+"Wenn ein FORMAT-Argument angegeben wurde, muss es genau eines der\n"
+"printf-Fließkomma-Ausgabeformate %e, %f oder %g enthalten.\n"
 
 #: src/seq.c:121
 #, c-format
@@ -6517,14 +6522,15 @@ msgstr ""
 "  -S, --buffer-size=GRÖSSE  GRÖSSE für Hauptspeicherpuffer benutzen\n"
 
 #: src/sort.c:312
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "  -t, --field-separator=SEP use SEP instead of non-blank to blank "
 "transition\n"
-"  -T, --temporary-directory=DIR  use DIR for temporaries, not $TMPDIR or %s\n"
+"  -T, --temporary-directory=DIR  use DIR for temporaries, not $TMPDIR or %"
+"s;\n"
 "                              multiple options specify multiple directories\n"
-"  -u, --unique              with -c: check for strict ordering\n"
-"                              otherwise: output only the first of an equal "
+"  -u, --unique              with -c, check for strict ordering;\n"
+"                              without -c, output only the first of an equal "
 "run\n"
 msgstr ""
 "  -t, --field-separator=SEP  SEP benutzen statt Übergang von Nichtleerraum "
@@ -8705,7 +8711,7 @@ msgstr "pm"
 #: src/uptime.c:142
 #, c-format
 msgid " ??:????  up "
-msgstr ""
+msgstr " ??:????  an "
 
 #: src/uptime.c:144
 #, c-format

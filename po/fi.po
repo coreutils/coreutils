@@ -16,10 +16,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: coreutils 5.1.1\n"
+"Project-Id-Version: coreutils 5.1.3\n"
 "Report-Msgid-Bugs-To: bug-coreutils@gnu.org\n"
-"POT-Creation-Date: 2004-02-07 17:02+0100\n"
-"PO-Revision-Date: 2004-01-19 20:14+0200\n"
+"POT-Creation-Date: 2004-02-18 18:49+0100\n"
+"PO-Revision-Date: 2004-02-09 12:29+0200\n"
 "Last-Translator: Lauri Nurmi <lanurmi@iki.fi>\n"
 "Language-Team: Finnish <translation-team-fi@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -981,6 +981,7 @@ msgid "Usage: %s [OPTION]... LEFT_FILE RIGHT_FILE\n"
 msgstr "Käyttö: %s [VALITSIN]... VASEN_TIEDOSTO OIKEA_TIEDOSTO\n"
 
 #: src/comm.c:76
+#, fuzzy
 msgid ""
 "Compare sorted files LEFT_FILE and RIGHT_FILE line by line.\n"
 "\n"
@@ -2074,9 +2075,9 @@ msgid "cannot set date"
 msgstr "ajan asetus ei onnistu"
 
 #: src/date.c:529
-#, fuzzy, c-format
+#, c-format
 msgid "time %s is out of range"
-msgstr "tiedostosiirtymä on sallitun välin ulkopuolella"
+msgstr "aika %s on sallitun välin ulkopuolella"
 
 #: src/dd.c:287 src/tty.c:68 src/uname.c:109 src/whoami.c:53
 #, c-format
@@ -2290,12 +2291,14 @@ msgstr "  I-solmut   IKäyt   IJälj IKäy%%"
 msgid "    Size  Used Avail Use%%"
 msgstr "   Koko  Käyt Vapaa Käy%%"
 
-# "Käy%" on epäselvä, mutta tilaa ei ole yhtään enempää.
+# "Käy%" on epäselvä, mutta tilaa ei ole sarakkeessa yhtään enempää.
 #: src/df.c:160
 #, c-format
 msgid "     Size   Used  Avail Use%%"
 msgstr "     Koko   Käyt Vapaa Käy%%"
 
+# Vaikka "Käytetty" vaikuttaa väärältä suomennokselta Capacitylle,
+# juuri samaa se tarkoittaa. Vertaa "df":n ja "df -P":n tulostetta.
 #: src/df.c:163
 #, c-format
 msgid " %4s-blocks      Used Available Capacity"
@@ -6015,7 +6018,7 @@ msgstr ""
 "  -w, --equal-width        tasoita leveydet lisäämällä nollia lukujen eteen\n"
 
 #: src/seq.c:96
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "\n"
 "If FIRST or INCREMENT is omitted, it defaults to 1.  That is, an\n"
@@ -6028,8 +6031,11 @@ msgid ""
 msgstr ""
 "\n"
 "Jos ALKU tai LISÄYS jätetään antamatta, käytetään niille oletusarvoa 1.\n"
-"ALKU, LISÄYS JA LOPPU tulkitaan liukuluvuiksi. LISÄYS-luvun on oltava\n"
-"positiivinen jos ALKU on pienempi kuin LOPPU, muulloin negatiivinen.\n"
+"Antamatta jätetty LISÄYKsen oletusarvo on siis 1, vaikka LOPPU olisi "
+"pienempi\n"
+"kuin ALKU. ALKU, LISÄYS JA LOPPU tulkitaan liukuluvuiksi. LISÄYS on yleensä\n"
+"positiivinen, jos ALKU on pienempi kuin LOPPU, ja\n"
+"LISÄYS on yleensä negatiivinen, jos ALKU on suurempi kuin LOPPU.\n"
 "Kun MUOTO annetaan, sen on sisällettävä tasan yksi\n"
 "printf-tyylisistä liukulukuesityksistä %e, %f, %g\n"
 
@@ -6384,14 +6390,15 @@ msgstr ""
 "  -S, --buffer-size=KOKO    käytä KOKOa muistipuskurille\n"
 
 #: src/sort.c:312
-#, c-format
+#, fuzzy, c-format
 msgid ""
 "  -t, --field-separator=SEP use SEP instead of non-blank to blank "
 "transition\n"
-"  -T, --temporary-directory=DIR  use DIR for temporaries, not $TMPDIR or %s\n"
+"  -T, --temporary-directory=DIR  use DIR for temporaries, not $TMPDIR or %"
+"s;\n"
 "                              multiple options specify multiple directories\n"
-"  -u, --unique              with -c: check for strict ordering\n"
-"                              otherwise: output only the first of an equal "
+"  -u, --unique              with -c, check for strict ordering;\n"
+"                              without -c, output only the first of an equal "
 "run\n"
 msgstr ""
 "  -t, --field-separator=EROTIN käytä kenttäerottimena EROTINta, ei "
@@ -8527,7 +8534,7 @@ msgstr "pm"
 #: src/uptime.c:142
 #, c-format
 msgid " ??:????  up "
-msgstr ""
+msgstr " ??:????  käynnissä "
 
 #: src/uptime.c:144
 #, c-format
