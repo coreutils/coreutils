@@ -2445,13 +2445,19 @@ print_long_format (const struct fileinfo *f)
 
   if ((when_local = localtime (&when)))
     {
-      /* The file is recent if it is neither old nor in the future.
-	 POSIX says the cutoff is 6 months old;
-	 approximate this by 6*30 days.
-	 Allow a 1 hour slop factor for what is considered "the future",
-	 to allow for NFS server/client clock disagreement.  */
-      int recent = (current_time <= when + 6L * 30L * 24L * 60L * 60L
-		    && when - 60L * 60L <= current_time);
+      /* If the file appears to be in the future, update the current
+	 time, in case the file happens to have been modified since
+	 the last time we checked the clock.  */
+      time_t now = (current_time < when
+		    ? (current_time = time (NULL))
+		    : current_time);
+
+      /* Consider a time to be recent if it is within the past six
+	 months.  A Gregorian year has 365.2425 * 24 * 60 * 60 ==
+	 31556952 seconds on the average.  Write this value as an
+	 integer constant to avoid floating point hassles.  */
+      time_t six_months_ago = now - 31556952 / 2;
+      int recent = six_months_ago <= when && when <= now;
 
       char const *fmt = long_time_format[recent];
       *p = '\1';
