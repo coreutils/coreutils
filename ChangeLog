@@ -2,6 +2,9 @@
 
 	* Version 5.1.0.
 
+	* tests/misc/nohup: Double quote back-ticked expression,
+	in case it ends up having an unexpected value.
+
 	* tests/ls/no-arg: Use ls's -1 option in both runs.
 
 	* src/du.c (fts_debug): New global.
