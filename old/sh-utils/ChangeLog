@@ -1,3 +1,9 @@
+2000-01-28  Jim Meyering  <meyering@lucent.com>
+
+	* src/stty.c (wrapf): Emit a newline only if 0 < current_col.
+	(screen_columns): Use xstrtol, not atoi.
+	If get_win_size fails and $COLUMNS == 0, then return 80, not `0'.
+
 2000-01-23  Jim Meyering  <meyering@lucent.com>
 
 	* configure.in (OPTIONAL_BIN_PROGS, OPTIONAL_BIN_ZCRIPTS, MAN):
