@@ -47,7 +47,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "paste"
 
-#define AUTHORS "David M. Ihnat and David MacKenzie"
+#define AUTHORS N_ ("David M. Ihnat and David MacKenzie")
 
 /* Indicates that no delimiter should be added in the current position. */
 #define EMPTY_DELIM '\0'

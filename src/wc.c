@@ -71,7 +71,7 @@ extern int wcwidth ();
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "wc"
 
-#define AUTHORS "Paul Rubin and David MacKenzie"
+#define AUTHORS N_ ("Paul Rubin and David MacKenzie")
 
 /* Size of atomic reads. */
 #define BUFFER_SIZE (16 * 1024)

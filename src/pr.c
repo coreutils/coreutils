@@ -323,7 +323,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "pr"
 
-#define AUTHORS "Pete TerMaat and Roland Huebner"
+#define AUTHORS N_ ("Pete TerMaat and Roland Huebner")
 
 #ifndef TRUE
 # define TRUE	1
