@@ -125,7 +125,7 @@ announcement: NEWS ChangeLog $(distdir).tar.gz
 	    | grep -v '^\['; \
 	  echo; \
 	  echo ChangeLog entries:; \
-	  find . -name ChangeLog \
+	  find . -name ChangeLog -maxdepth 2 \
 	    | xargs cvs diff -up -r$(prev-cvs-tag) -rHEAD \
 	    | sed -n 's/^+//p' \
 	    | perl -ne 'm!^\+\+ (\./)?! or print,next;' \
