@@ -47,7 +47,6 @@
 #include "error.h"
 
 #ifdef _POSIX_VERSION
-# include <limits.h>
 # ifndef PATH_MAX
 #  define PATH_MAX_FOR(p) pathconf ((p), _PC_PATH_MAX)
 # endif /* not PATH_MAX */
