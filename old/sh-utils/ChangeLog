@@ -1,3 +1,8 @@
+2001-01-20  Jim Meyering  <meyering@lucent.com>
+
+	* configure.in: Remove jm_CHECK_ALL_TYPES.
+	Now it's invoked by jm_MACROS.
+
 2001-01-04  Jim Meyering  <meyering@lucent.com>
 
 	* src/date.c (main): Fail when --rfc-822 (-R) is specified along
