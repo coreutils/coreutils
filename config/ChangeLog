@@ -6,8 +6,8 @@
 	Change initializations like `variable=""' to `variable='.
 	(usage): New variable.
 	Use `test', not `['.
-	Use `test -n "$var"', not `[ x"$var" = x ]'.
-	Use `test -z "$var"', not `[ x"$var" != x ]'.
+	Use `test -z "$var"', not `[ x"$var" = x ]'.
+	Use `test -n "$var"', not `[ x"$var" != x ]'.
 	Alphabetize case entries.
 	Accept --help and --version options.
 	Remove unnecessary `else :' clauses.
