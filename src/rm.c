@@ -15,7 +15,7 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
-/* Written by Paul Rubin, David MacKenzie, and Richard Stallman. */
+/* Written by Paul Rubin, David MacKenzie, and Richard Stallman.  */
 
 #include <config.h>
 #include <stdio.h>
@@ -27,10 +27,10 @@
 #include "error.h"
 
 #ifdef D_INO_IN_DIRENT
-#define D_INO(dp) ((dp)->d_ino)
+# define D_INO(dp) ((dp)->d_ino)
 #else
-/* POSIX.1 doesn't have inodes, so fake them to avoid lots of ifdefs. */
-#define D_INO(dp) 1
+/* Some systems don't have inodes, so fake them to avoid lots of ifdefs.  */
+# define D_INO(dp) 1
 #endif
 
 char *basename ();
@@ -51,31 +51,31 @@ static void usage ();
 /* Name this program was run with.  */
 char *program_name;
 
-/* Path of file now being processed; extended as necessary. */
+/* Path of file now being processed; extended as necessary.  */
 static char *pathname;
 
 /* Number of bytes currently allocated for `pathname';
    made larger when necessary, but never smaller.  */
 static int pnsize;
 
-/* If nonzero, display the name of each file removed. */
+/* If nonzero, display the name of each file removed.  */
 static int verbose;
 
-/* If nonzero, ignore nonexistant files. */
+/* If nonzero, ignore nonexistant files.  */
 static int ignore_missing_files;
 
-/* If nonzero, recursively remove directories. */
+/* If nonzero, recursively remove directories.  */
 static int recursive;
 
-/* If nonzero, query the user about whether to remove each file. */
+/* If nonzero, query the user about whether to remove each file.  */
 static int interactive;
 
 /* If nonzero, remove directories with unlink instead of rmdir, and don't
    require a directory to be empty before trying to unlink it.
-   Only works for the super-user. */
+   Only works for the super-user.  */
 static int unlink_dirs;
 
-/* If nonzero, stdin is a tty. */
+/* If nonzero, stdin is a tty.  */
 static int stdin_tty;
 
 /* If non-zero, display usage information and exit.  */
@@ -114,7 +114,7 @@ main (argc, argv)
     {
       switch (c)
 	{
-	case 0:		/* Long option. */
+	case 0:		/* Long option.  */
 	  break;
 	case 'd':
 	  unlink_dirs = 1;
@@ -183,7 +183,7 @@ main (argc, argv)
 }
 
 /* Remove file or directory `pathname' after checking appropriate things.
-   Return 0 if `pathname' is removed, 1 if not. */
+   Return 0 if `pathname' is removed, 1 if not.  */
 
 static int
 rm ()
@@ -214,7 +214,7 @@ rm ()
 
 /* Query the user if appropriate, and if ok try to remove the
    non-directory `pathname', which STATP contains info about.
-   Return 0 if `pathname' is removed, 1 if not. */
+   Return 0 if `pathname' is removed, 1 if not.  */
 
 static int
 remove_file (statp)
@@ -258,7 +258,7 @@ remove_file (statp)
 /* If not in recursive mode, print an error message and return 1.
    Otherwise, query the user if appropriate, then try to recursively
    remove directory `pathname', which STATP contains info about.
-   Return 0 if `pathname' is removed, 1 if not. */
+   Return 0 if `pathname' is removed, 1 if not.  */
 
 static int
 remove_dir (statp)
@@ -317,7 +317,7 @@ remove_dir (statp)
 
 /* An element in a stack of pointers into `pathname'.
    `pathp' points to where in `pathname' the terminating '\0' goes
-   for this level's directory name. */
+   for this level's directory name.  */
 struct pathstack
 {
   struct pathstack *next;
@@ -327,7 +327,7 @@ struct pathstack
 
 /* Linked list of pathnames of directories in progress in recursive rm.
    The entries actually contain pointers into `pathname'.
-   `pathstack' is the current deepest level. */
+   `pathstack' is the current deepest level.  */
 static struct pathstack *pathstack = NULL;
 
 /* Read directory `pathname' and remove all of its entries,
@@ -336,7 +336,7 @@ static struct pathstack *pathstack = NULL;
    Return 0 for success, error count for failure.
    Upon return, `pathname' will have the same contents as before,
    but its address might be different; in that case, `pnsize' will
-   be larger, as well. */
+   be larger, as well.  */
 
 static int
 clear_directory (statp)
@@ -344,18 +344,18 @@ clear_directory (statp)
 {
   DIR *dirp;
   struct dirent *dp;
-  char *name_space;		/* Copy of directory's filenames. */
-  char *namep;			/* Current entry in `name_space'. */
-  unsigned name_size;		/* Bytes allocated for `name_space'. */
-  int name_length;		/* Length of filename in `namep' plus '\0'. */
-  int pathname_length;		/* Length of `pathname'. */
-  ino_t *inode_space;		/* Copy of directory's inodes. */
-  ino_t *inodep;		/* Current entry in `inode_space'. */
+  char *name_space;		/* Copy of directory's filenames.  */
+  char *namep;			/* Current entry in `name_space'.  */
+  unsigned name_size;		/* Bytes allocated for `name_space'.  */
+  int name_length;		/* Length of filename in `namep' plus '\0'.  */
+  int pathname_length;		/* Length of `pathname'.  */
+  ino_t *inode_space;		/* Copy of directory's inodes.  */
+  ino_t *inodep;		/* Current entry in `inode_space'.  */
   unsigned n_inodes_allocated;	/* There is space for this many inodes
-					  in `inode_space'. */
-  int err = 0;			/* Return status. */
-  struct pathstack pathframe;	/* New top of stack. */
-  struct pathstack *pp;		/* Temporary. */
+					  in `inode_space'.  */
+  int err = 0;			/* Return status.  */
+  struct pathstack pathframe;	/* New top of stack.  */
+  struct pathstack *pp;		/* Temporary.  */
 
   name_size = statp->st_size;
   name_space = (char *) xmalloc (name_size);
@@ -384,7 +384,7 @@ clear_directory (statp)
 
       while ((dp = readdir (dirp)) != NULL)
 	{
-	  /* Skip "." and ".." (some NFS filesystems' directories lack them). */
+	  /* Skip "." and "..".  */
 	  if (dp->d_name[0] != '.'
 	      || (dp->d_name[1] != '\0'
 		  && (dp->d_name[1] != '.' || dp->d_name[2] != '\0')))
@@ -431,43 +431,43 @@ clear_directory (statp)
 	{
 	  name_length = strlen (namep) + 1;
 
-	  /* Satisfy GNU requirement that filenames can be arbitrarily long. */
+	  /* Handle arbitrarily long filenames.  */
 	  if (pathname_length + 1 + name_length > pnsize)
 	    {
 	      char *new_pathname;
 
 	      pnsize = (pathname_length + 1 + name_length) * 2;
 	      new_pathname = xrealloc (pathname, pnsize);
-	      /* Update the all the pointers in the stack to use the new area. */
+	      /* Update all pointers in the stack to use the new area.  */
 	      for (pp = pathstack; pp != NULL; pp = pp->next)
 		pp->pathp += new_pathname - pathname;
 	      pathname = new_pathname;
 	    }
 
-	  /* Add a new frame to the top of the path stack. */
+	  /* Add a new frame to the top of the path stack.  */
 	  pathframe.pathp = pathname + pathname_length;
 	  pathframe.inum = *inodep;
 	  pathframe.next = pathstack;
 	  pathstack = &pathframe;
 
-	  /* Append '/' and the filename to current pathname, take care of the
-	     file (which could result in recursive calls), and take the filename
-	     back off. */
+	  /* Append '/' and the filename to current pathname, take care of
+	     the file (which could result in recursive calls), and take
+	     the filename back off.  */
 
 	  *pathstack->pathp = '/';
 	  strcpy (pathstack->pathp + 1, namep);
 
-	  /* If the i-number has already appeared, there's an error. */
+	  /* If the i-number has already appeared, there's an error.  */
 	  if (duplicate_entry (pathstack->next, pathstack->inum))
 	    err++;
 	  else if (rm ())
 	    err++;
 
 	  *pathstack->pathp = '\0';
-	  pathstack = pathstack->next;	/* Pop the stack. */
+	  pathstack = pathstack->next;	/* Pop the stack.  */
 	}
     }
-  /* Keep trying while there are still files to remove. */
+  /* Keep trying while there are still files to remove.  */
   while (namep > name_space && err == 0);
 
   free (name_space);
@@ -480,14 +480,14 @@ clear_directory (statp)
    if yes, return 1, and if no, exit.
    This assumes that no one tries to remove filesystem mount points;
    doing so could cause duplication of i-numbers that would not indicate
-   a corrupted file system. */
+   a corrupted file system.  */
 
 static int
 duplicate_entry (stack, inum)
      struct pathstack *stack;
      ino_t inum;
 {
-#ifndef _POSIX_SOURCE
+#ifdef D_INO_IN_DIRENT
   struct pathstack *p;
 
   for (p = stack; p != NULL; p = p->next)
@@ -501,9 +501,9 @@ NOTIFY YOUR SYSTEM MANAGER.\n\
 Cycle detected:\n\
 %s\n\
 is the same file as\n", program_name, pathname);
-	  *p->pathp = '\0';	/* Truncate pathname. */
+	  *p->pathp = '\0';	/* Truncate pathname.  */
 	  fprintf (stderr, "%s\n", pathname);
-	  *p->pathp = '/';	/* Put it back. */
+	  *p->pathp = '/';	/* Put it back.  */
 	  if (interactive)
 	    {
 	      fprintf (stderr, "%s: continue? ", program_name);
@@ -515,7 +515,7 @@ is the same file as\n", program_name, pathname);
 	    exit (1);
 	}
     }
-#endif
+#endif /* D_INO_IN_DIRENT */
   return 0;
 }
 
