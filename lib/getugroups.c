@@ -1,5 +1,5 @@
 /* getugroups.c -- return a list of the groups a user is in
-   Copyright (C) 1990, 1991, 1998, 1999, 2000 Free Software Foundation.
+   Copyright (C) 1990, 1991, 1998, 1999, 2000, 2003 Free Software Foundation.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -35,11 +35,7 @@
    You lose!  */
 struct group *getgrent ();
 
-#if defined(STDC_HEADERS) || defined(HAVE_STRING_H)
-# include <string.h>
-#else
-# include <strings.h>
-#endif
+#include <string.h>
 
 #define STREQ(s1, s2) ((strcmp (s1, s2) == 0))
 
