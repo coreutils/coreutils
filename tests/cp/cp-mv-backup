@@ -1,0 +1,19 @@
+#!/bin/sh
+
+umask 022
+
+rm -f out
+
+fail=0
+for initial_files in 'a' 'a b' 'a b b~' 'a b b.~1~' 'a b b~ b.~1~'; do
+  for opt in existing never nil none numbered off simple t; do
+    touch $initial_files
+    env -i -- cp --backup=$opt a b || fail=1
+    echo $initial_files $opt: `ls a b*` >> out
+    rm -f a b*
+  done
+done
+
+# rm -f out
+
+exit $fail
