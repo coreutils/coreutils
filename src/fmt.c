@@ -23,6 +23,10 @@
 #include <sys/types.h>
 #include <getopt.h>
 
+/* Redefine.  Otherwise, systems (Unicos for one) with headers that define
+   it to be a type get syntax errors for the variable declaration below.  */
+#define word unused_word_type
+
 #include "system.h"
 #include "version.h"
 #include "error.h"
