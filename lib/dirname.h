@@ -17,6 +17,8 @@
 #ifndef DIRNAME_H_
 # define DIRNAME_H_ 1
 
+# include <stddef.h>
+
 # ifndef PARAMS
 #  if defined PROTOTYPES || (defined __STDC__ && __STDC__)
 #   define PARAMS(Args) Args
