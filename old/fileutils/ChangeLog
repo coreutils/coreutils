@@ -1,3 +1,16 @@
+2000-04-27  Jim Meyering  <meyering@lucent.com>
+
+	* tests/mkdir/special-1: New test.
+	* tests/mkdir/Makefile.am (TESTS): Add special-1.
+
+2000-04-25  Paul Eggert  <eggert@twinsun.com>
+
+	* src/du.c (pop_dir): Remove through_symlink arg; use null cwd
+	for that purpose instead.
+	(count_entry): Also save the directory if we're saving more
+	than one level.
+	Fix file descriptor and memory leak when chdir fails.
+
 2000-04-26  Jim Meyering  <meyering@lucent.com>
 
 	* src/mkdir.c: Rename global: s/path_mode/create_parents/.
