@@ -1,5 +1,7 @@
 Sun Jun 29 17:19:30 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/dd.c (copy): Add FIXME comment.
+
 	* src/mv.c (copy_reg): New parameter, SOURCE_STATS.
 	(do_move): Update caller.
 
