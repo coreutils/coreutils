@@ -32,7 +32,7 @@
 #include "error.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
-#define PROGRAM_NAME (algorithm == ALG_MD5 ? "md5sum" : "shasum")
+#define PROGRAM_NAME (algorithm == ALG_MD5 ? "md5sum" : "sha1sum")
 
 #define AUTHORS "Ulrich Drepper", "Scott Miller"
 
