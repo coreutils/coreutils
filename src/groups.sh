@@ -46,12 +46,17 @@ esac
 
 if [ $# -eq 0 ]; then
   id -Gn
-  status=$?
+  fail=$?
 else
+  fail=0
   for name in "$@"; do
     groups=`id -Gn -- $name`
     status=$?
-    test $status = 0 && echo $name : $groups
+    if test $status = 0; then
+      echo $name : $groups
+    else
+      fail=$status
+    fi
   done
 fi
-exit $status
+exit $fail
