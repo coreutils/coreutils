@@ -17,7 +17,7 @@ AC_DEFUN(jm_CHECK_DECLS,
 #  include <strings.h>
 # endif
 #endif
-#if STDC_HEADERS
+#if HAVE_STDLIB_H
 # include <stdlib.h>
 #endif
 #if HAVE_UNISTD_H
