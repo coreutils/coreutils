@@ -1,3 +1,15 @@
+2000-01-09  Jim Meyering  <meyering@lucent.com>
+
+	* src/ln.c (do_link): Produce the same sort of one-line output for
+	`--backup --verbose' as cp, mv, install.  Before this, the backup
+	file name wasn't printed at all.
+
+	This affects cp, install, and mv.
+	* src/copy.c (copy_internal): When making backup files in verbose
+	mode, print the backup file name on the same line as the rest of the
+	information, e.g., `a -> b (backup: b.~13~)' rather than on a separate
+	line by itself.  Suggestion from Karl Berry.
+
 2000-01-08  Jim Meyering  <meyering@ascend.com>
 
 	* lib/error.c (error): Use __strerror_r's return value only if
