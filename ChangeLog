@@ -1,9 +1,25 @@
-2002-11-23  Jim Meyering  <jim@meyering.net>
+2002-11-24  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.4.
 
+	* src/du.c (du_files): Don't strip any trailing slash.
+	Rewrite so that `/' is no longer represented internally as
+	the empty string.
+	(count_entry): When appending a file name component,
+	account for the fact that the current path may end in `/'.
+	François Pinard reported that `du symlink-to-dir/' was not
+	equivalent to `du symlink-to-dir/.'.  Now it is.
+
+2002-11-23  Jim Meyering  <jim@meyering.net>
+
 	* src/tac.c (output): Declare some local variables to be of type size_t,
 	rather than `int' to avoid warnings from gcc.
+
+2002-11-21  Paul Eggert  <eggert@twinsun.com>
+
+	* src/ls.c (decode_switches): Use case-sensitive matching to
+	decode the QUOTING_STYLE environment variable.  This is more
+	consistent with the documentation, and with --quoting-style.
 
 2002-11-21  Martin Buck  <martin.buck@ascom.ch
 
