@@ -368,12 +368,12 @@ extern int obstack_exit_failure;
 
 # define obstack_object_size(OBSTACK)					\
   __extension__								\
-  ({ struct obstack *__o = (OBSTACK);					\
+  ({ struct obstack const *__o = (OBSTACK);				\
      (unsigned) (__o->next_free - __o->object_base); })
 
 # define obstack_room(OBSTACK)						\
   __extension__								\
-  ({ struct obstack *__o = (OBSTACK);					\
+  ({ struct obstack const *__o = (OBSTACK);				\
      (unsigned) (__o->chunk_limit - __o->next_free); })
 
 # define obstack_make_room(OBSTACK,length)				\
@@ -386,7 +386,7 @@ __extension__								\
 
 # define obstack_empty_p(OBSTACK)					\
   __extension__								\
-  ({ struct obstack *__o = (OBSTACK);					\
+  ({ struct obstack const *__o = (OBSTACK);				\
      (__o->chunk->prev == 0 && __o->next_free - __o->chunk->contents == 0); })
 
 # define obstack_grow(OBSTACK,where,length)				\
