@@ -2,6 +2,10 @@
 
 	* Version 4.5.7.
 
+	* tests/mv/part-symlink: Don't assume that the file owner username
+	length is less than 9 in ls output: instead, omit that field
+	altogether.  Reported by, and suggested fix from, Ferdinand.
+
 	* tests/du/restore-wd: New test for just-fixed bug in ftw.c.
 	* tests/du/Makefile.am (TESTS): Add restore-wd.
 
