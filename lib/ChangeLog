@@ -1,3 +1,7 @@
+2003-03-18  Jim Meyering  <jim@meyering.net>
+
+	* quote.c (quote_n): Fix typo in comment.
+
 2003-03-17  Jim Meyering  <jim@meyering.net>
 
 	* raise.c (raise): Rename from rpl_raise.
