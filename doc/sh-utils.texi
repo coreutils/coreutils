@@ -6,13 +6,11 @@
 
 @include version.texi
 
-@c Define new indices for commands, filenames, and options.
-@defcodeindex cm
+@c Define new indices for filenames and options.
 @defcodeindex fl
 @defcodeindex op
 
 @c Put everything in one index (arbitrarily chosen to be the concept index).
-@syncodeindex cm cp
 @syncodeindex fl cp
 @syncodeindex fn cp
 @syncodeindex ky cp
@@ -23,14 +21,13 @@
 @ifinfo
 @format
 START-INFO-DIR-ENTRY
-* Shell utilities: (sh-utils).
-                        GNU set of shell utilities.
+* Shell utilities: (sh-utils).	GNU shell utilities.
 * basename invocation: (sh-utils)basename invocation.
-                        Strip directory and suffix from a filename.
+                        Strip directory and suffix from a file name.
 * date invocation: (sh-utils)date invocation.
                         Print or set system date and time.
 * dirname invocation: (sh-utils)dirname invocation.
-                        Strip non-directory suffix from file name.
+                        Strip non-directory suffix from a file name.
 * echo invocation: (sh-utils)echo invocation.
                         Print a line of text.
 * env invocation: (sh-utils)env invocation.
@@ -86,7 +83,7 @@ END-INFO-DIR-ENTRY
 @end ifinfo
 
 @ifinfo
-This file documents the GNU set of shell utilities.
+This file documents the GNU shell utilities.
 
 Copyright (C) 1994 Free Software Foundation, Inc.
 
@@ -145,7 +142,10 @@ by the Foundation.
 @cindex shell utilities
 @cindex utilities for shell programming
 
-This manual documents version @value{VERSION} of the GNU shell utilities.
+This manual minimally documents version @value{VERSION} of the GNU shell
+utilities.  The @code{stty} section, in particular, needs substantial
+reorganization and additional explanatory text before it will be up to
+the standard of other GNU manuals.
 
 @cindex POSIX.2
 The GNU shell utilities are mostly compatible with the POSIX.2 standard.
@@ -156,10 +156,10 @@ The GNU shell utilities are mostly compatible with the POSIX.2 standard.
 * Conditions::                  false true test expr
 * Redirection::                 tee
 * File name manipulation::      dirname basename pathchk
-* Working context information::  pwd stty printenv tty
+* Working context information:: pwd stty printenv tty
 * User information::            id logname whoami groups users who
 * System context::              date uname hostname
-* Modified command invocation::  env nice nohup su
+* Modified command invocation:: env nice nohup su
 * Delaying::                    sleep
 * Index::                       General index.
 @end menu
@@ -228,8 +228,7 @@ echo [ @var{option} ]@dots{} [ @var{string} ]@dots{}
 @code{echo} writes each given @var{string} to standard output, with a
 space between each and a newline after the last one.
 
-The program accepts the following options.  Also see @ref{Common
-options}.
+The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 @item -n
@@ -300,7 +299,7 @@ An additional escape, @samp{\c}, causes @code{printf} to produce no
 further output.
 
 The only options are a lone @samp{--help} or
-@samp{--version}.  @xref{Common options}).
+@samp{--version}.  @xref{Common options}.
 
 
 @node yes invocation
@@ -314,7 +313,7 @@ followed by a newline, forever until it is killed.  If no arguments are
 given, it prints @samp{y} followed by a newline forever until killed.
 
 The only options are a lone @samp{--help} or
-@samp{--version}.  @xref{Common options}).
+@samp{--version}.  @xref{Common options}.
 
 
 @node Conditions
@@ -392,7 +391,7 @@ unadorned command name in a script or interactively may get you
 different functionality than that described here.
 
 Besides the options below, @code{test} accepts a lone @samp{--help} or
-@samp{--version}.  @xref{Common options}).  A single non-option argument
+@samp{--version}.  @xref{Common options}.  A single non-option argument
 is also allowed: @code{test} returns true if the argument is not null.
 
 @menu
@@ -701,7 +700,7 @@ Exit status:
 
 
 @node Relations for expr
-@subsection relations for @code{expr}
+@subsection Relations for @code{expr}
 
 @cindex connectives, logical
 @cindex logical connectives
@@ -709,23 +708,23 @@ Exit status:
 
 The usual logical connectives and relations, in order of precedence.
 
-@table @asis
+@table @samp
 
-@item @code{|}
+@item |
 @kindex |
 @cindex logical or operator
 @cindex or operator
 Yields its first argument if it is neither null nor 0, otherwise its
 second argument.
 
-@item @code{&}
+@item &
 @kindex &
 @cindex logical and operator
 @cindex and operator
 Yields its first argument if neither argument is null or 0, otherwise
 0.
 
-@item @code{<}, @code{<=}, @code{=}, @code{==}, @code{!=}, @code{>=}, @code{>}
+@item < <= = == != >= >
 @kindex <
 @kindex <=
 @kindex =
@@ -751,9 +750,9 @@ Numeric operators, in order of increasing precedence.  The connectives
 (previous section) have higher precedence, the string operators
 (following section) have lower.
 
-@table @asis
+@table @samp
 
-@item @code{+}, @code{-}
+@item + -
 @kindex +
 @kindex -
 @cindex addition
@@ -761,7 +760,7 @@ Numeric operators, in order of increasing precedence.  The connectives
 Addition and subtraction.  Both arguments are coerced to numbers;
 an error occurs if this cannot be done.
 
-@item @code{*}, @code{/}, @code{%}
+@item * / %
 @kindex *
 @kindex /
 @kindex %
@@ -808,24 +807,24 @@ expression operators.
 regular expression syntax.
 
 @item match @var{string} @var{regex}
-@cmindex match
+@findex match
 An alternative way to do pattern matching.  This is the same as
 @w{@samp{@var{string} : @var{regex}}}.
 
 @item substr @var{string} @var{position} @var{length}
-@cmindex substr
+@findex substr
 Returns the substring of @var{string} beginning at @var{position}
 with length at most @var{length}.  If either @var{position} or
 @var{length} is negative or non-numeric, returns the null string.
 
 @item index @var{string} @var{character-class}
-@cmindex index
+@findex index
 Returns the first position in @var{string} where the first character in
 @var{charset} was found.  If no character in @var{charset} is found in
 @var{string}, return 0.
 
 @item length @var{string}
-@cmindex length
+@findex length
 Returns the length of @var{string}.
 
 @end table
@@ -886,7 +885,7 @@ it's described here.
 @cindex read from stdin and write to stdout and files
 
 The @code{tee} command copies standard input to standard output and also
-to any files given as arguments.  This is useful when you not only want
+to any files given as arguments.  This is useful when you want not only
 to send some data down a pipe, but also to save a copy.
 
 Synopsis:
@@ -899,8 +898,7 @@ If a file being written to does not already exist, it is created.  If a
 file being written to already exists, the data it previously contained
 is overwritten unless the @code{-a} option is used.
 
-The program accepts the following options.  Also see @ref{Common
-options}.
+The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 @item -a
@@ -929,20 +927,20 @@ Ignore interrupt signals.
 This section describes commands that manipulate file names.
 
 @menu
-* basename invocation::         Strip directory and suffix from a filename.
-* dirname invocation::          Strip non-directory suffix from file name.
+* basename invocation::         Strip directory and suffix from a file name.
+* dirname invocation::          Strip non-directory suffix from a file name.
 * pathchk invocation::          Check file name portability.
 @end menu
 
 
 @node basename invocation
-@section @code{basename}: Strip directory and suffix from a filename
+@section @code{basename}: Strip directory and suffix from a file name
 
 @pindex basename
-@cindex strip directory and suffix from filenames
-@cindex directory, stripping from filenames
-@cindex suffix, stripping from filenames
-@cindex filenames, stripping directory and suffix
+@cindex strip directory and suffix from file names
+@cindex directory, stripping from file names
+@cindex suffix, stripping from file names
+@cindex file names, stripping directory and suffix
 @cindex leading directory components, stripping
 
 Synopsis:
@@ -957,11 +955,11 @@ to the end of @var{name}, it is removed from @var{name} as well.
 @code{basename} prints the result on standard output.
 
 The only options are @samp{--help} and @samp{--version}.  @xref{Common
-options}).
+options}.
 
 
 @node dirname invocation
-@section @code{dirname}: Strip non-directory suffix from file name
+@section @code{dirname}: Strip non-directory suffix from a file name
 
 @pindex dirname
 @cindex directory components, printing
@@ -979,7 +977,7 @@ of @var{name}.  If @var{name} is a single component,
 @code{dirname} prints @samp{.} (meaning the current directory).
 
 The only options are @samp{--help} and @samp{--version}.  @xref{Common
-options}).
+options}.
 
 
 @node pathchk invocation
@@ -1011,8 +1009,7 @@ existing directory name, is larger than its filesystem's maximum
 length for a file name component.
 @end enumerate
 
-The program accepts the following option.  Also see @ref{Common
-options}.
+The program accepts the following option.  Also see @ref{Common options}.
 
 @table @samp
 
@@ -1023,7 +1020,7 @@ options}.
 Instead of performing length checks on the underlying filesystem,
 test the length of each file name and its components against the
 POSIX.1 minimum limits for portability.  Also check that the file
-name contains no characters not in the portable filename character set.
+name contains no characters not in the portable file name character set.
 
 @end table
 
@@ -1074,7 +1071,7 @@ unadorned command name in a script or interactively may get you
 different functionality than that described here.
 
 The only options are a lone @samp{--help} or
-@samp{--version}.  @xref{Common options}).
+@samp{--version}.  @xref{Common options}.
 
 
 @node stty invocation
@@ -1101,8 +1098,7 @@ stty [ @var{setting} ]@dots{}
 stty [ @var{option} ]
 @end example
 
-The program accepts the following options.  Also see @ref{Common
-options}.
+The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 @item -a
@@ -1196,7 +1192,8 @@ Disable modem control signals.  May be negated.
 @opindex crtscts
 @cindex hardware flow control
 @cindex flow control, hardware
-Enable @code{RTS}/@code{CTS} handshaking.  Non-POSIX.  May be negated.
+@cindex RTS/CTS flow control
+Enable RTS/CTS flow control.  Non-POSIX.  May be negated.
 @end table
 
 
@@ -1253,8 +1250,9 @@ Translate carriage return to newline.  May be negated.
 @item ixon
 @opindex ixon
 @kindex C-s/C-q flow control
-@cindex @code{XON}/@code{XOFF} flow control
-Enable @code{XON}/@code{XOFF} flow control.  May be negated.
+@cindex XON/XOFF flow control
+Enable XON/XOFF flow control (that is, @key{CTRL-s}/@key{CTRL-Q}).  May
+be negated.
 
 @item ixoff
 @itemx tandem
@@ -1714,7 +1712,7 @@ environment.  Otherwise, it prints the value of each @var{variable} that
 is set, and nothing for those that are not set.
 
 The only options are a lone @samp{--help} or
-@samp{--version}.  @xref{Common options}).
+@samp{--version}.  @xref{Common options}.
 
 @cindex exit status of @code{printenv}
 Exit status:
@@ -1742,8 +1740,7 @@ Synopsis:
 tty [ @var{option} ]@dots{}
 @end example
 
-The program accepts the following option.  Also see @ref{Common
-options}.
+The program accepts the following option.  Also see @ref{Common options}.
 
 @table @samp
 
@@ -1811,8 +1808,8 @@ the real group ID, and supplemental group IDs.
 Each of these numeric values is preceded by an identifying string and
 followed by the corresponding user or group name in parentheses.
 
-The options cause @code{id} to print only part of the above
-information.  Also see @ref{Common options}.
+The options cause @code{id} to print only part of the above information.
+Also see @ref{Common options}.
 
 @table @samp
 @item -g
@@ -1867,7 +1864,7 @@ Print only the user ID.
 an error message and exits with a status of 1.
 
 The only options are @samp{--help} and @samp{--version}.  @xref{Common
-options}).
+options}.
 
 
 @node whoami invocation
@@ -1881,7 +1878,7 @@ options}).
 effective user id.  It is equivalent to the command @samp{id -un}.
 
 The only options are @samp{--help} and @samp{--version}.  @xref{Common
-options}).
+options}.
 
 
 @node groups invocation
@@ -1905,7 +1902,7 @@ groups [ @var{username} ]@dots{}
 The group lists are equivalent to the output of the command @samp{id -Gn}.
 
 The only options are @samp{--help} and @samp{--version}.  @xref{Common
-options}).
+options}.
 
 
 @node users invocation
@@ -1935,7 +1932,7 @@ the file @file{/etc/utmp}.  If a file argument is given, @code{users}
 uses that file instead.  A common choice is @file{/etc/wtmp}.
 
 The only options are @samp{--help} and @samp{--version}.  @xref{Common
-options}).
+options}.
 
 
 @node who invocation
@@ -1972,8 +1969,7 @@ for the user running it (determined from its standard input), preceded
 by the hostname.  Traditionally, the two arguments given are @samp{am
 i}, as in @samp{who am i}.
 
-The program accepts the following options.  Also see @ref{Common
-options}.
+The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 @item -m
@@ -2058,11 +2054,12 @@ information.
 @code{date} with no arguments prints the current time and date, in
 the format of the @samp{%c} directive (described below).
 
-Synopsis:
+Synopses:
 
 @example
-date [ @var{option} ]@dots{} [ +@var{format} ] @c
-[@var{MMDDhhmm}[[@var{CC}]@var{YY}][.@var{ss}] ]
+date [ @var{option} ]@dots{} [ +@var{format} ]
+date [ -u|--utc|--universal ] @c this avoids a newline in the output
+[ @var{MMDDhhmm}[[@var{CC}]@var{YY}][.@var{ss}] ]
 @end example
 
 @findex strftime @r{and @code{date}}
@@ -2077,9 +2074,10 @@ are printed unchanged.  The directives are described below.
 
 @cindex numeric field padding
 @cindex padding of numeric fields
+@cindex fields, padding numeric
 By default, @code{date} pads numeric fields with zeroes.
-GNU @code{date} recognizes the following nonstandard numeric modifiers
-between the @samp{%} and the directive.
+GNU @code{date} recognizes the following numeric modifiers
+between the @samp{%} and the directive.  These are GNU extensions.
 
 @table @samp
 @item -
@@ -2123,7 +2121,9 @@ time, 12-hour (hh:mm:ss [AP]M)
 @item %s
 @cindex epoch, seconds since
 @cindex seconds since the epoch
-seconds since 1970-01-01 00:00:00 UTC (a nonstandard extension)
+@cindex beginning of time
+seconds since the epoch, i.e., 1 January 1970 00:00:00 UTC (a
+GNU extension)
 @item %S
 second (00@dots{}61)
 @item %T
@@ -2203,14 +2203,17 @@ a horizontal tab
 
 @cindex setting the time
 @cindex time setting
+@cindex appropriate privileges
 
-If given an argument that does not start with @samp{+}, @code{date}
-sets the system clock to the time and date specified by that argument.
-The @samp{--date} and @samp{--set} options may not be used with
-such an argument.
-The @samp{--universal} option may be used with this date format to indicate
-that the specified time and date are relative to Coordinated Universal Time
-rather than to the local time zone.
+If given an argument that does not start with @samp{+}, @code{date} sets
+the system clock to the time and date specified by that argument (as
+described below).  You must have appropriate privileges to set the
+system clock.  The @samp{--date} and @samp{--set} options may not be
+used with such an argument.  The @samp{--universal} option may be used
+with such an argument to indicate that the specified time and date are
+relative to Coordinated Universal Time rather than to the local time
+zone.
+
 The argument must consist entirely of digits, which have the following
 meaning:
 
@@ -2231,9 +2234,7 @@ last two digits of year (optional)
 second (optional)
 @end table
 
-@comment FIXME: Mention that --set=STRING may also be used to set the clock.
-@comment FIXME: --set=STRING is a GNU extension.
-You must have appropriate privileges to set the system clock.
+The @samp{--set} option also sets the system clock; see the next section.
 
 
 @node Options for date
@@ -2242,8 +2243,7 @@ You must have appropriate privileges to set the system clock.
 @cindex @code{date} options
 @cindex options for @code{date}
 
-The program accepts the following options.  Also see @ref{Common
-options}.
+The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
@@ -2263,17 +2263,17 @@ current time and date.  @var{datestr} can be in almost any common format.
 @opindex --set
 Set the time and date to @var{datestr}, which can be in almost any
 common format.  It can contain month names, timezones, @samp{am} and
-@samp{pm}, etc.
+@samp{pm}, @samp{yesterday}, @samp{ago}, etc.
 
 @item -u
-@itemx --utc
+@itemx --uct
 @itemx --universal
 @opindex -u
-@opindex --utc
+@opindex --uct
 @opindex --universal
 @cindex coordinated universal time
 @cindex Greenwich Mean Time
-Print or set the time and date in Coordinated Universal Time instead of
+Print or set the time and date in Universal Coordinated Time instead of
 in local (wall clock) time.
 
 @end table
@@ -2317,16 +2317,16 @@ the month, the @samp{%d} expands to a zero-padded two-digit field,
 for example @samp{date -d 1-may '+%B %d'} will print @samp{May 01}.
 
 @item
-To print the same date but without the leading zero for one-digit days
-of month, you can use the nonstandard @code{-} modifier to suppress
+To print a date without the leading zero for one-digit days
+of the month, you can use the (GNU extension) @code{-} modifier to suppress
 the padding altogether.
 @example
-date -d 1-may '+%B %-d'
+date -d=1-may '+%B %-d'
 @end example
 
 @item
-To print the current date and time in the format required by some
-versions of @code{date} when setting the system clock:
+To print the current date and time in the format required by many
+non-GNU versions of @code{date} when setting the system clock:
 @example
 date +%m%d%H%M%Y.%s
 @end example
@@ -2349,9 +2349,7 @@ date --set='+2 minutes'
 
 @code{uname} prints information about the machine and operating system
 it is run on.  If no options are given, @code{uname} acts as if the
-@code{-s} option were given.  If multiple options are given or the
-@code{-a} option is given, the selected information is printed in
-the order @var{snrvm} with a space between items.
+@code{-s} option were given.
 
 Synopsis:
 
@@ -2359,10 +2357,31 @@ Synopsis:
 uname [ @var{option} ]@dots{}
 @end example
 
-The program accepts the following options.  Also see @ref{Common
-options}.
+If multiple options or @code{-a} are given, the selected information is
+printed in this order:
+
+@example
+@var{sysname} @var{nodename} @var{release} @var{osversion} @var{machine}
+@end example
+
+The @var{osversion}, at least, may well be multiple words.  For example:
+
+@example
+bash$ uname -a
+@result{} Linux hayley 1.0.4 #3 Thu May 12 18:06:34 1994 i486
+@end example
+
+
+The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
+
+@item -a
+@itemx --all
+@opindex -a
+@opindex --all
+Print all of the below information.
+
 @item -m
 @itemx --machine
 @opindex -m
@@ -2402,12 +2421,6 @@ Print the operating system name.
 @cindex version of operating system
 Print the operating system version.
 
-@item -a
-@itemx --all
-@opindex -a
-@opindex --all
-Print all of the above information.
-
 @end table
 
 
@@ -2418,6 +2431,7 @@ Print all of the above information.
 @cindex setting the hostname
 @cindex printing the hostname
 @cindex system name, printing
+@cindex appropriate privileges
 
 With no arguments, @code{hostname} prints the name of the current host
 system.  With one argument, it sets the current host name to the
@@ -2431,7 +2445,7 @@ hostname [ @var{name} ]
 @end example
 
 The only options are @samp{--help} and @samp{--version}.  @xref{Common
-options}).
+options}.
 
 
 @node Modified command invocation
@@ -2487,8 +2501,7 @@ If no command name is specified following the environment
 specifications, the resulting environment is printed.  This is like
 specifying a command name of @code{printenv}.
 
-The program accepts the following options.  Also see @ref{Common
-options}.
+The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
@@ -2517,6 +2530,7 @@ Start with an empty environment, ignoring the inherited environment.
 @cindex modifying scheduling priority
 @cindex scheduling priority, modifying
 @cindex priority, modifying
+@cindex appropriate privileges
 
 If no arguments are given, @code{nice} prints the current scheduling
 priority, which it inherited.  Otherwise, @code{nice} runs the given
@@ -2538,8 +2552,7 @@ Because most shells have a built-in command by the same name, using the
 unadorned command name in a script or interactively may get you
 different functionality than that described here.
 
-The program accepts the following option.  Also see @ref{Common
-options}.
+The program accepts the following option.  Also see @ref{Common options}.
 
 @table @samp
 @item -n @var{adjustment}
@@ -2562,7 +2575,7 @@ Add @var{adjustment} instead of 10 to the command's priority.
 @flindex nohup.out
 @code{nohup} runs the given @var{command} with hangup signals ignored,
 so that the command can continue running in the background after you log
-out. 
+out.  
 
 Synopsis:
 
@@ -2570,13 +2583,13 @@ Synopsis:
 nohup @var{command} [ @var{arg} ]@dots{}
 @end example
 
+@flindex nohup.out
 Also, the scheduling priority is increased by 5.  If standard output is a
 tty, it and standard error are redirected so that they are appended to
 the file @file{nohup.out}; if that cannot be written to, they are
 appended to the file @file{$HOME/nohup.out}.  If that cannot be written
 to, the command is not run.
 
-@flindex nohup.out
 If @code{nohup} creates either @file{nohup.out} or
 @file{$HOME/nohup.out}, it creates it with no ``group'' or ``other''
 access permissions.  It does not change the permissions if the output
@@ -2587,7 +2600,7 @@ background; you must do that explicitly, by ending the command line
 with an @samp{&}.
 
 The only options are @samp{--help} and @samp{--version}.  @xref{Common
-options}).
+options}.
 
 
 @node su invocation
@@ -2649,8 +2662,7 @@ This program does not support a ``wheel group'' that restricts who
 can @code{su} to super-user accounts, because that can help fascist
 system administrators hold unwarranted power over other users.
 
-The program accepts the following options.  Also see @ref{Common
-options}.
+The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 @item -c @var{command}
@@ -2764,7 +2776,7 @@ days
 @end table
 
 The only options are @samp{--help} and @samp{--version}.  @xref{Common
-options}).
+options}.
 
 
 @node Index
