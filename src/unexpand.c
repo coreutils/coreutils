@@ -482,10 +482,7 @@ main (int argc, char **argv)
       tab_size = 0;
     }
 
-  if (optind == argc)
-    file_list = stdin_argv;
-  else
-    file_list = &argv[optind];
+  file_list = (optind < argc ? &argv[optind] : stdin_argv);
 
   unexpand ();
 
