@@ -2,6 +2,9 @@
 
 	* Version 5.0.1.
 
+	* src/Makefile.am (localedir.h): Put the `2>&1' after the redirect
+	target, not before the `>'.
+
 	* src/remove.c (remove_dir): Give a diagnostic upon failed save_cwd,
 	now that that function no longer calls `error'.
 
