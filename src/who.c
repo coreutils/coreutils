@@ -31,7 +31,6 @@
 #include <sys/types.h>
 #include "system.h"
 
-#include "xalloc.h"
 #include "readutmp.h"
 #include "error.h"
 #include "closeout.h"
