@@ -55,9 +55,9 @@ extern int errno;
 # endif
 #endif
 
-#include <exclude.h>
-#include <fnmatch.h>
-#include <xalloc.h>
+#include "exclude.h"
+#include "fnmatch.h"
+#include "xalloc.h"
 
 #ifndef SIZE_MAX
 # define SIZE_MAX ((size_t) -1)
@@ -119,12 +119,15 @@ static int
 fnmatch_no_wildcards (char const *pattern, char const *f, int options)
 {
   if (! (options & FNM_CASEFOLD))
-    return (options & FNM_LEADING_DIR ? strcasecmp : strcmp) (pattern, f);
+    return ((options & FNM_LEADING_DIR)
+	    ? strcasecmp (pattern, f)
+	    : strcmp (pattern, f));
   else
     {
       size_t patlen = strlen (pattern);
-      int r = ((options & FNM_LEADING_DIR ? strncasecmp : strncmp)
-	       (pattern, f, patlen));
+      int r = ((options & FNM_LEADING_DIR)
+		? strncasecmp (pattern, f, patlen)
+		: strncmp (pattern, f, patlen));
       if (! r)
 	{
 	  r = f[patlen];
