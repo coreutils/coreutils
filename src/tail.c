@@ -615,9 +615,6 @@ dump_remainder (const char *pretty_filename, int fd)
   if (bytes_read == -1)
     error (EXIT_FAILURE, errno, "%s", pretty_filename);
 
-  if (forever)
-    fflush (stdout);
-
   return total;
 }
 
@@ -1394,7 +1391,10 @@ main (int argc, char **argv)
     exit_status |= tail_file (&F[i], n_units);
 
   if (forever)
-    tail_forever (F, n_files);
+    {
+      SETVBUF (stdout, NULL, _IONBF, 0);
+      tail_forever (F, n_files);
+    }
 
   if (have_read_stdin && close (0) < 0)
     error (EXIT_FAILURE, errno, "-");
