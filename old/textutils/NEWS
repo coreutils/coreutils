@@ -32,6 +32,7 @@ User-visible changes in release 1.14
 * tr 'a[b*512]' '[a*]' < /dev/null terminates
 * tr '[:*3][:digit:]' 'a-m' and tr 'a[=*2][=c=]' 'xyyz' no longer fail
 * special characters in tr's string1 and string2 may be escaped with backslash
+
 User-visible changes in release 1.13
 * md5sum: with --check, distinguish between open/read failure and bad checksum
 * md5sum: remove -h, -s, -v short options
@@ -44,6 +45,7 @@ User-visible changes in release 1.13
 * sort accepts -.1 +.2 options for compatibility
 * od works properly when dump limit is specified and is a multiple of
   bytes_per_block (set by --width, 16 by default).
+
 User-visible changes in release 1.12
 * sort no longer reports spurious errors on Ultrix systems
 * new program: md5sum
