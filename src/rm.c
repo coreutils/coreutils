@@ -573,17 +573,30 @@ remove_cwd_entries (void)
 	  enum RM_status tmp_status;
 	  struct dirent *dp;
 
+/* FILE should be skipped if it is `.' or `..', or if it is in
+   the table, HT, of entries we've already processed.  */
+#define SKIPPABLE(Ht, File) (DOT_OR_DOTDOT(File) \
+			     || (Ht && hash_query_in_table (Ht, File)))
+
 	  dp = readdir (dirp);
+	  if (dp == NULL)
+	    {
+	      /* Since we have probably modified the directory since it
+		 was opened, readdir returning NULL does not necessarily
+		 mean we have read the last entry.  Rewind it and check
+		 again.  This happens on SunOS4.1.4 with 254 or more files
+		 in a directory.  */
+	      rewinddir (dirp);
+	      while ((dp = readdir (dirp)) && SKIPPABLE (ht, dp->d_name))
+		{
+		  /* empty */
+		}
+	    }
+
 	  if (dp == NULL)
 	    break;
 
-	  /* Skip this entry if it's `.' or `..'.  */
-	  if (DOT_OR_DOTDOT (dp->d_name))
-	    continue;
-
-	  /* Skip this entry if it's in the table of ones we've already
-	     processed.  */
-	  if (ht && hash_query_in_table (ht, (dp)->d_name))
+	  if (SKIPPABLE (ht, dp->d_name))
 	    continue;
 
 	  fspec_init_dp (&fs, dp);
@@ -611,7 +624,7 @@ remove_cwd_entries (void)
 
 	      if (ht == NULL)
 		{
-		  ht = hash_initialize (HT_INITIAL_CAPACITY, free,
+		  ht = hash_initialize (HT_INITIAL_CAPACITY, NULL,
 					hash_pjw, hash_compare_strings);
 		  if (ht == NULL)
 		    error (1, 0, _("Memory exhausted"));
