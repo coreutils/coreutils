@@ -1,6 +1,13 @@
-2002-03-16  Jim Meyering  <meyering@lucent.com>
+2002-03-17  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.8.
+
+	* src/copy.c (copy_internal) [move_mode]: Give a better diagnostic,
+	by using errno from the failed unlink, when a cross-device `mv'
+	fails, e.g., because the destination cannot be unlinked.
+	Prompted by a report from Karl Berry.
+
+2002-03-16  Jim Meyering  <meyering@lucent.com>
 
 	* src/Makefile.am (datadir): Don't define.  Automake does it better.
 	Patch from Albert Chin-A-Young <china@thewrittenword.com>
