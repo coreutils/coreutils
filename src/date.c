@@ -191,7 +191,6 @@ the following modifiers between `%%' and a numeric directive.\n\
   `_' (underscore) pad the field with spaces\n\
 "));
       puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
-      close_stdout_status (2);
     }
   exit (status);
 }
@@ -319,6 +318,9 @@ main (int argc, char **argv)
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
+
+  close_stdout_set_status (2);
+  atexit (close_stdout);
 
   while ((optc = getopt_long (argc, argv, "d:f:I::r:Rs:u", long_options, NULL))
 	 != -1)
@@ -463,8 +465,6 @@ argument must be a format string beginning with `+'."),
 
       show_date (format, when);
     }
-
-  close_stdout_status (2);
 
   exit (status);
 }
