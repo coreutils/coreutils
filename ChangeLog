@@ -1,3 +1,12 @@
+2004-09-25  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/ls.c (gobble_file, print_long_format): Don't assume that
+	human-readable output has a byte count equal to its column width;
+	this isn't always true in locales where the radix character is not
+	'.' or ','.
+	(format_user_or_group): Revamp code to match the above fix;
+	this avoids the (very faint) possibility of integer overflow.
+	
 2004-09-24  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.0.
