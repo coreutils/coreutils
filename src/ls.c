@@ -513,7 +513,7 @@ dired_dump_obstack (prefix, os)
 
   fputs (prefix, stdout);
   n_pos = obstack_object_size (os) / sizeof (size_t);
-  pos = obstack_finish (os);
+  pos = (size_t *) obstack_finish (os);
   for (i = 0; i < n_pos; i++)
     printf (" %d", (int) pos[i]);
   fputs ("\n", stdout);
