@@ -1,4 +1,12 @@
+1997-09-01  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* tests/ln: New directory and test.
+	* tests/Makefile.am (SUBDIRS): Add ln.
+	* configure.in (AC_OUTPUT): Add tests/ln/Makefile.
+
 1997-08-31  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in (AC_REPLACE_FUNCS): Add lstat.
 
 	* src/chgrp.c (change_file_group): Call describe_change with a
 	3-state argument.
