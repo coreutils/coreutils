@@ -64,7 +64,7 @@ END-INFO-DIR-ENTRY
 @ifinfo
 This file documents the GNU shell utilities.
 
-Copyright (C) 1994, 95, 96 Free Software Foundation, Inc.
+Copyright (C) 1994, 1995, 1996, 2000 Free Software Foundation, Inc.
 
 Permission is granted to make and distribute verbatim copies of
 this manual provided the copyright notice and this permission notice
@@ -96,7 +96,7 @@ by the Foundation.
 
 @page
 @vskip 0pt plus 1filll
-Copyright @copyright{} 1994, 95, 96 Free Software Foundation, Inc.
+Copyright @copyright{} 1994, 1995, 1996, 2000 Free Software Foundation, Inc.
 
 Permission is granted to make and distribute verbatim copies of
 this manual provided the copyright notice and this permission notice
@@ -350,6 +350,7 @@ independent way. For example, a string containing the Euro currency symbol
 $ /usr/local/bin/printf '\u20AC 14.95'
 @end example
 
+@noindent
 will be output correctly in all locales supporting the Euro symbol
 (ISO-8859-15, UTF-8, and others). Similarly, a Chinese string
 
@@ -357,18 +358,19 @@ will be output correctly in all locales supporting the Euro symbol
 $ /usr/local/bin/printf '\u4e2d\u6587'
 @end example
 
-will be output correctly in all chinese locales (GB2312, BIG5, UTF-8, etc).
+@noindent
+will be output correctly in all Chinese locales (GB2312, BIG5, UTF-8, etc).
 
 Note that in these examples, the full pathname of @code{printf} has been
 given, to distinguish it from the GNU @code{bash} builtin function
 @code{printf}.
 
-For larger strings, you don't need to look up the hexadecimal code values of
-each character one by one. ASCII characters mixed with \u escape sequences
-is also known as the JAVA source file encoding. You can use GNU recode 3.5c
-(or newer) to convert strings to this encoding. Here is how to convert a
-piece of text into a shell script which will output this text in a locale-
-independent way:
+For larger strings, you don't need to look up the hexadecimal code
+values of each character one by one. ASCII characters mixed with \u
+escape sequences is also known as the JAVA source file encoding. You can
+use GNU recode 3.5c (or newer) to convert strings to this encoding. Here
+is how to convert a piece of text into a shell script which will output
+this text in a locale-independent way:
 
 @smallexample
 $ LC_CTYPE=zh_CN.big5 /usr/local/bin/printf \
@@ -2499,7 +2501,7 @@ time of @var{file}, instead of the current time and date.
 @itemx --set=@var{datestr}
 @opindex -s
 @opindex --set
-Set the time and date to @var{datestr},  See @samp{-d} above.
+Set the time and date to @var{datestr}.  See @samp{-d} above.
 
 @item -u
 @itemx --utc
@@ -2959,7 +2961,7 @@ nohup @var{command} [@var{arg}]@dots{}
 
 @flindex nohup.out
 @code{nohup} increases the scheduling priority of @var{command} by 5, so
-it has a slightly smaller change to run.  If standard output is a terminal,
+it has a slightly smaller chance to run.  If standard output is a terminal,
 it and standard error are redirected so that they are appended to the
 file @file{nohup.out}; if that cannot be written to, they are appended
 to the file @file{$HOME/nohup.out}.  If that cannot be written to, the
@@ -3338,11 +3340,11 @@ $ seq -s' ' 0 .1 .3
 0 0.1 0.2
 @end example
 
-But doesn't happen on most systems because @code{seq} is implemented using
-binary floating point arithmetic (via the C @code{double} type) -- which
-means some decimal numbers like @code{.1} cannot be represented exactly.
-That in turn means some nonintuitive conditions like @code{.1 * 3 > .3}
-will end up being true.
+But that doesn't happen on most systems because @code{seq} is
+implemented using binary floating point arithmetic (via the C
+@code{double} type) -- which means some decimal numbers like @code{.1}
+cannot be represented exactly.  That in turn means some nonintuitive
+conditions like @code{.1 * 3 > .3} will end up being true.
 
 To work around that in the above example, use a slightly larger number as
 the @var{last} value:
