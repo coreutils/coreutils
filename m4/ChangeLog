@@ -1,3 +1,8 @@
+2003-01-11  Jim Meyering  <jim@meyering.net>
+
+	* canonicalize.m4 (AC_FUNC_CANONICALIZE_FILE_NAME): New file and macro.
+	* jm-macros.m4: Require AC_FUNC_CANONICALIZE_FILE_NAME.
+
 2002-12-15  Jim Meyering  <jim@meyering.net>
 
 	* jm-glibc-io.m4n: Remove now-unused file.
