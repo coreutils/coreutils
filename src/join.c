@@ -288,7 +288,7 @@ initseq (struct seq *seq)
 {
   seq->count = 0;
   seq->alloc = 1;
-  seq->lines = xmalloc (seq->alloc * sizeof (struct line));
+  seq->lines = xmalloc (seq->alloc * sizeof *seq->lines);
 }
 
 /* Read a line from FP and add it to SEQ.  Return 0 if EOF, 1 otherwise.  */
@@ -609,7 +609,7 @@ add_field (int file, int field)
   assert (file == 0 || file == 1 || file == 2);
   assert (file == 0 ? field < 0 : field >= 0);
 
-  o = xmalloc (sizeof (struct outlist));
+  o = xmalloc (sizeof *o);
   o->file = file;
   o->field = field;
   o->next = NULL;
@@ -720,8 +720,7 @@ make_blank (struct line *blank, int count)
   blank->buf.size = blank->buf.length = count + 1;
   blank->buf.buffer = xmalloc (blank->buf.size);
   buffer = (unsigned char *) blank->buf.buffer;
-  blank->fields = fields =
-    xmalloc (sizeof (struct field) * count);
+  blank->fields = fields = xmalloc (count * sizeof *fields);
   for (i = 0; i < count; i++)
     {
       buffer[i] = '\t';
