@@ -1248,11 +1248,11 @@ parse_options (int argc, char **argv,
 
 	case 'f':
 	  forever = 1;
-	  follow_mode = (optarg == NULL
-			 ? DEFAULT_FOLLOW_MODE
-			 : XARGCASEMATCH ("--follow", optarg,
-					  follow_mode_string,
-					  follow_mode_map));
+	  if (optarg == NULL)
+	    follow_mode = DEFAULT_FOLLOW_MODE;
+	  else
+	    XARGMATCH (&follow_mode, "--follow", optarg,
+		       follow_mode_string, follow_mode_map, usage (1));
 	  break;
 
 	case CHAR_MAX + 1:
