@@ -8,8 +8,8 @@ EXTRA_DIST = chown.c mkdir.c rmdir.c getline.c mktime.c strftime.c getgroups.c
 INCLUDES = -I.. -I$(srcdir) -I../intl
 
 libfu_a_SOURCES = getdate.y posixtm.y getopt.c getopt1.c \
-argmatch.c backupfile.c dirname.c filemode.c \
-full-write.c getversion.c idcache.c \
+addext.c argmatch.c backupfile.c basename.c dirname.c filemode.c \
+full-write.c idcache.c \
 isdir.c long-options.c makepath.c modechange.c path-concat.c \
 safe-read.c save-cwd.c savedir.c stripslash.c userspec.c xgetcwd.c \
 xmalloc.c xstrdup.c xstrtol.c xstrtoul.c yesno.c
