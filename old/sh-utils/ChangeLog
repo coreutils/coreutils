@@ -1,5 +1,11 @@
 1997-07-04  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* configure.in (ALL_LINGUAS): Add Norwegian (no).
+
+	* tests/date/mk-script.pl (validate): Create test files in $(srcdir),
+	not in build dir.
+	* tests/Makefile.am.in ($x-tests): Create $x-tests in $(srcdir),
+	not in build dir.
 	* Makefile.am (aclocal-files): Look in source directory, not build dir.
 	From Andreas Schwab.
 
