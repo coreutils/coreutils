@@ -51,6 +51,6 @@ EOF
 
 diff -u out2 exp || fail=1
 
-$RM -f out out2 exp $a $a2 $other_partition_tmpdir
+$RM -fr out out2 exp $a $a2 $other_partition_tmpdir
 
 exit $fail
