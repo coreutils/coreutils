@@ -1,3 +1,15 @@
+2001-08-25  Jim Meyering  <meyering@lucent.com>
+
+	* Version 2.0.15.
+
+2001-08-24  Paul Eggert  <eggert@twinsun.com>
+
+	* src/uniq.c (find_field): Don't count trailing newline to be
+	part of the field.  This disagrees with POSIX.2, but it's
+	gotta be a bug in the standard.  An interpretations request
+	has been submitted to PASC.
+	Reported by Geoff Whale.
+
 2001-08-18  Jim Meyering  <meyering@lucent.com>
 
 	* Makefile.maint: Merge in changes from autoconf.
