@@ -1,3 +1,9 @@
+2001-04-08  Jim Meyering  <meyering@lucent.com>
+
+	* getdate.y (get_date): Set tm_isdst to -1 to ensure that it is
+	recomputed; that's necessary when the offset spans a DST transition.
+	Patch by David J. MacKenzie.  Reported by Hon-Yin Kok.
+
 2001-04-02  Jim Meyering  <meyering@lucent.com>
 
 	* regex.h, regex.c: Update from GNU libc.
