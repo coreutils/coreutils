@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GNU coreutils 5.2.0\n"
 "Report-Msgid-Bugs-To: bug-coreutils@gnu.org\n"
-"POT-Creation-Date: 2004-03-12 14:56+0100\n"
+"POT-Creation-Date: 2004-06-01 15:37+0200\n"
 "PO-Revision-Date: 2004-03-02 23:14+0100\n"
 "Last-Translator: Santiago Vila Doncel <sanvila@unex.es>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -34,9 +34,9 @@ msgstr "argumento %s ambiguo para %s"
 msgid "Valid arguments are:"
 msgstr "Los argumentos válidos son:"
 
-#: lib/closeout.c:88 src/cat.c:188 src/cat.c:271 src/cat.c:322 src/cksum.c:268
-#: src/head.c:304 src/head.c:354 src/head.c:774 src/head.c:819 src/od.c:1013
-#: src/tail.c:327 src/tail.c:1748 src/tr.c:1659 src/tr.c:1906 src/tr.c:2014
+#: lib/closeout.c:88 src/cat.c:189 src/cat.c:272 src/cat.c:323 src/cksum.c:268
+#: src/head.c:304 src/head.c:354 src/head.c:774 src/head.c:819 src/od.c:986
+#: src/tail.c:327 src/tail.c:1748 src/tr.c:1583 src/tr.c:1814 src/tr.c:1926
 msgid "write error"
 msgstr "error de escritura"
 
@@ -44,123 +44,128 @@ msgstr "error de escritura"
 msgid "Unknown system error"
 msgstr "Error del sistema desconocido"
 
-#: lib/file-type.c:42
+#: lib/file-type.c:43
 msgid "regular empty file"
 msgstr "fichero regular vacío"
 
-#: lib/file-type.c:42
+#: lib/file-type.c:43
 msgid "regular file"
 msgstr "fichero regular"
 
-#: lib/file-type.c:45
+#: lib/file-type.c:46
 msgid "directory"
 msgstr "directorio"
 
-#: lib/file-type.c:48
+#: lib/file-type.c:49
 msgid "block special file"
 msgstr "fichero especial de bloques"
 
-#: lib/file-type.c:51
+#: lib/file-type.c:52
 msgid "character special file"
 msgstr "fichero especial de caracteres"
 
-#: lib/file-type.c:54
+#: lib/file-type.c:55
 msgid "fifo"
 msgstr "`fifo'"
 
-#: lib/file-type.c:57
+#: lib/file-type.c:58
 msgid "symbolic link"
 msgstr "enlace simbólico"
 
-#: lib/file-type.c:60
+#: lib/file-type.c:61
 msgid "socket"
 msgstr "`socket'"
 
-#: lib/file-type.c:63
+#: lib/file-type.c:64
 msgid "message queue"
 msgstr "cola de mensajes"
 
-#: lib/file-type.c:66
+#: lib/file-type.c:67
 msgid "semaphore"
 msgstr "semáforo"
 
-#: lib/file-type.c:69
+#: lib/file-type.c:70
 msgid "shared memory object"
 msgstr "objeto de memoria compartida"
 
-#: lib/file-type.c:71
+#: lib/file-type.c:73
+#, fuzzy
+msgid "typed memory object"
+msgstr "objeto de memoria compartida"
+
+#: lib/file-type.c:75
 msgid "weird file"
 msgstr "fichero extraño"
 
-#: lib/getopt.c:629 lib/getopt.c:641
+#: lib/getopt.c:570 lib/getopt.c:589
 #, c-format
 msgid "%s: option `%s' is ambiguous\n"
 msgstr "%s: la opción `%s' es ambigua\n"
 
-#: lib/getopt.c:674 lib/getopt.c:678
+#: lib/getopt.c:622 lib/getopt.c:626
 #, c-format
 msgid "%s: option `--%s' doesn't allow an argument\n"
 msgstr "%s: la opción `--%s' no admite ningún argumento\n"
 
-#: lib/getopt.c:687 lib/getopt.c:692
+#: lib/getopt.c:635 lib/getopt.c:640
 #, c-format
 msgid "%s: option `%c%s' doesn't allow an argument\n"
 msgstr "%s: la opción `%c%s' no admite ningún argumento\n"
 
-#: lib/getopt.c:728 lib/getopt.c:741 lib/getopt.c:1030 lib/getopt.c:1043
+#: lib/getopt.c:686 lib/getopt.c:708 lib/getopt.c:1039 lib/getopt.c:1061
 #, c-format
 msgid "%s: option `%s' requires an argument\n"
 msgstr "%s: la opción `%s' requiere un argumento\n"
 
-#: lib/getopt.c:779 lib/getopt.c:782
+#: lib/getopt.c:746 lib/getopt.c:749
 #, c-format
 msgid "%s: unrecognized option `--%s'\n"
 msgstr "%s: opción no reconocida `--%s'\n"
 
-#: lib/getopt.c:790 lib/getopt.c:793
+#: lib/getopt.c:757 lib/getopt.c:760
 #, c-format
 msgid "%s: unrecognized option `%c%s'\n"
 msgstr "%s: opción no reconocida `%c%s'\n"
 
-#: lib/getopt.c:840 lib/getopt.c:843
+#: lib/getopt.c:815 lib/getopt.c:818
 #, c-format
 msgid "%s: illegal option -- %c\n"
 msgstr "%s: opción ilegal -- %c\n"
 
-#: lib/getopt.c:849 lib/getopt.c:852
+#: lib/getopt.c:824 lib/getopt.c:827
 #, c-format
 msgid "%s: invalid option -- %c\n"
 msgstr "%s: opción inválida -- %c\n"
 
-#: lib/getopt.c:899 lib/getopt.c:910 lib/getopt.c:1096 lib/getopt.c:1109
+#: lib/getopt.c:882 lib/getopt.c:901 lib/getopt.c:1114 lib/getopt.c:1135
 #, c-format
 msgid "%s: option requires an argument -- %c\n"
 msgstr "%s: la opción requiere un argumento -- %c\n"
 
-#: lib/getopt.c:962 lib/getopt.c:973
+#: lib/getopt.c:954 lib/getopt.c:973
 #, c-format
 msgid "%s: option `-W %s' is ambiguous\n"
 msgstr "%s: la opción `-W %s' es ambigua\n"
 
-#: lib/getopt.c:997 lib/getopt.c:1009
+#: lib/getopt.c:997 lib/getopt.c:1018
 #, c-format
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr "%s: la opción `-W %s' no admite ningún argumento\n"
 
-#: lib/human.c:481
+#: lib/human.c:483
 msgid "block size"
 msgstr "tamaño del bloque"
 
-#: lib/makepath.c:103 src/df.c:515 src/remove.c:395
+#: lib/makepath.c:103 src/df.c:515
 msgid "failed to return to initial working directory"
 msgstr "no se puede volver al directorio de trabajo inicial"
 
-#: lib/makepath.c:152 src/copy.c:1343 src/mkdir.c:171
+#: lib/makepath.c:152 src/copy.c:1360 src/mkdir.c:171
 #, c-format
 msgid "cannot create directory %s"
 msgstr "no se puede crear el directorio %s"
 
-#: lib/makepath.c:158 lib/makepath.c:400 src/cp.c:435 src/cp.c:457
+#: lib/makepath.c:158 lib/makepath.c:400 src/cp.c:436 src/cp.c:458
 #, c-format
 msgid "%s exists but is not a directory"
 msgstr "%s existe pero no es un directorio"
@@ -175,22 +180,22 @@ msgstr "no se puede cambiar el propietario y/o el grupo de %s"
 msgid "cannot chdir to directory %s"
 msgstr "no se puede cambiar al directorio %s"
 
-#: lib/makepath.c:371 lib/makepath.c:386 lib/makepath.c:425 src/install.c:474
+#: lib/makepath.c:371 lib/makepath.c:386 lib/makepath.c:425 src/install.c:479
 #, c-format
 msgid "cannot change permissions of %s"
 msgstr "no se pueden cambiar los permisos de %s"
 
-#: lib/obstack.c:406 lib/obstack.c:409 lib/xmalloc.c:53
+#: lib/obstack.c:417 lib/obstack.c:420 lib/xmalloc.c:45
 msgid "memory exhausted"
 msgstr "memoria agotada"
 
 # Vamos a probar con el símbolo de cita tradicional en español,
 # a ver qué tal queda la cosa.
-#: lib/quotearg.c:236
+#: lib/quotearg.c:238
 msgid "`"
 msgstr "«"
 
-#: lib/quotearg.c:237
+#: lib/quotearg.c:239
 msgid "'"
 msgstr "»"
 
@@ -255,19 +260,19 @@ msgstr "no se puede convertir U+%04X al conjunto de caracteres local: %s"
 # Eso sí, un día tendré que preguntar a los de GNU en qué se diferencia
 # "invalid" de "not allowed" de "not recognized" y todo eso... sv
 #
-#: lib/userspec.c:147
+#: lib/userspec.c:146
 msgid "invalid user"
 msgstr "usuario inválido"
 
-#: lib/userspec.c:148
+#: lib/userspec.c:147
 msgid "invalid group"
 msgstr "grupo inválido"
 
-#: lib/userspec.c:150
+#: lib/userspec.c:149
 msgid "cannot get the login group of a numeric UID"
 msgstr "no se puede obtener el grupo de login de un UID numérico"
 
-#: lib/userspec.c:152
+#: lib/userspec.c:151
 msgid "cannot omit both user and group"
 msgstr "no se puede omitir tanto el usuario como el grupo"
 
@@ -406,24 +411,24 @@ msgstr "Establezca LC_ALL='C' para solucionar este problema de forma temporal."
 msgid "The strings compared were %s and %s."
 msgstr "Las cadenas comparadas eran %s y %s."
 
-#: src/basename.c:49 src/cat.c:87 src/chgrp.c:115 src/chmod.c:266
-#: src/chown.c:90 src/chroot.c:41 src/cksum.c:277 src/comm.c:68 src/cp.c:154
-#: src/csplit.c:1401 src/cut.c:178 src/date.c:114 src/dd.c:283 src/df.c:723
-#: src/dircolors.c:100 src/dirname.c:41 src/du.c:163 src/echo.c:72
+#: src/basename.c:49 src/cat.c:88 src/chgrp.c:115 src/chmod.c:265
+#: src/chown.c:90 src/chroot.c:41 src/cksum.c:277 src/comm.c:68 src/cp.c:155
+#: src/csplit.c:1435 src/cut.c:178 src/date.c:117 src/dd.c:312 src/df.c:710
+#: src/dircolors.c:100 src/dirname.c:41 src/du.c:166 src/echo.c:60
 #: src/env.c:114 src/expand.c:104 src/expr.c:98 src/factor.c:69 src/fmt.c:267
-#: src/fold.c:62 src/head.c:109 src/hostid.c:42 src/hostname.c:62 src/id.c:82
-#: src/install.c:588 src/join.c:154 src/kill.c:90 src/link.c:47 src/ln.c:341
-#: src/logname.c:44 src/ls.c:3901 src/md5sum.c:120 src/mkdir.c:57
-#: src/mkfifo.c:51 src/mknod.c:51 src/mv.c:301 src/nice.c:65 src/nl.c:172
+#: src/fold.c:62 src/head.c:109 src/hostid.c:42 src/hostname.c:66 src/id.c:82
+#: src/install.c:593 src/join.c:154 src/kill.c:90 src/link.c:47 src/ln.c:341
+#: src/logname.c:44 src/ls.c:3983 src/md5sum.c:120 src/mkdir.c:57
+#: src/mkfifo.c:51 src/mknod.c:51 src/mv.c:307 src/nice.c:65 src/nl.c:172
 #: src/nohup.c:50 src/od.c:282 src/paste.c:392 src/pathchk.c:136
 #: src/pinky.c:464 src/pr.c:2748 src/printenv.c:62 src/printf.c:91
-#: src/ptx.c:1870 src/pwd.c:41 src/readlink.c:63 src/rm.c:103 src/rmdir.c:143
-#: src/seq.c:78 src/setuidgid.c:46 src/shred.c:155 src/sleep.c:48
-#: src/sort.c:272 src/split.c:96 src/stat.c:697 src/stty.c:485 src/su.c:432
+#: src/ptx.c:1862 src/pwd.c:61 src/readlink.c:63 src/rm.c:102 src/rmdir.c:143
+#: src/seq.c:78 src/setuidgid.c:46 src/shred.c:153 src/sleep.c:48
+#: src/sort.c:272 src/split.c:97 src/stat.c:696 src/stty.c:488 src/su.c:432
 #: src/sum.c:55 src/sync.c:40 src/tac.c:122 src/tail.c:234 src/tee.c:58
-#: src/test.c:971 src/touch.c:244 src/tr.c:316 src/tsort.c:92 src/tty.c:64
+#: src/test.c:971 src/touch.c:226 src/tr.c:305 src/tsort.c:92 src/tty.c:64
 #: src/uname.c:105 src/unexpand.c:373 src/uniq.c:130 src/unlink.c:47
-#: src/uptime.c:189 src/users.c:115 src/wc.c:131 src/who.c:616 src/whoami.c:49
+#: src/uptime.c:189 src/users.c:115 src/wc.c:131 src/who.c:617 src/whoami.c:49
 #: src/yes.c:42
 #, c-format
 msgid "Try `%s --help' for more information.\n"
@@ -450,25 +455,25 @@ msgstr ""
 "\n"
 
 # Véase la excelente película "A bug's life".
-#: src/basename.c:65 src/cat.c:123 src/chgrp.c:163 src/chmod.c:298
-#: src/chown.c:152 src/chroot.c:59 src/cksum.c:292 src/comm.c:93 src/cp.c:251
-#: src/csplit.c:1443 src/cut.c:223 src/date.c:216 src/dd.c:341 src/df.c:762
-#: src/dircolors.c:121 src/dirname.c:57 src/du.c:216 src/echo.c:104
+#: src/basename.c:65 src/cat.c:124 src/chgrp.c:163 src/chmod.c:297
+#: src/chown.c:152 src/chroot.c:59 src/cksum.c:292 src/comm.c:93 src/cp.c:252
+#: src/csplit.c:1477 src/cut.c:223 src/date.c:218 src/dd.c:393 src/df.c:749
+#: src/dircolors.c:121 src/dirname.c:57 src/du.c:224 src/echo.c:92
 #: src/env.c:133 src/expand.c:129 src/expr.c:161 src/factor.c:89
 #: src/false.c:43 src/fmt.c:297 src/fold.c:85 src/head.c:144 src/hostid.c:55
-#: src/hostname.c:75 src/id.c:103 src/install.c:643 src/join.c:195
-#: src/kill.c:120 src/link.c:59 src/ln.c:398 src/logname.c:55 src/ls.c:4035
-#: src/md5sum.c:156 src/mkdir.c:76 src/mkfifo.c:68 src/mknod.c:82 src/mv.c:355
-#: src/nice.c:79 src/nl.c:227 src/nohup.c:66 src/od.c:369 src/paste.c:416
+#: src/hostname.c:79 src/id.c:103 src/install.c:648 src/join.c:195
+#: src/kill.c:120 src/link.c:59 src/ln.c:398 src/logname.c:55 src/ls.c:4117
+#: src/md5sum.c:156 src/mkdir.c:76 src/mkfifo.c:68 src/mknod.c:82 src/mv.c:361
+#: src/nice.c:79 src/nl.c:228 src/nohup.c:66 src/od.c:369 src/paste.c:416
 #: src/pathchk.c:148 src/pinky.c:491 src/pr.c:2860 src/printenv.c:75
-#: src/printf.c:140 src/ptx.c:1917 src/pwd.c:52 src/readlink.c:80 src/rm.c:141
-#: src/rmdir.c:163 src/seq.c:106 src/setuidgid.c:66 src/shred.c:219
-#: src/sleep.c:64 src/sort.c:343 src/split.c:129 src/stat.c:768 src/stty.c:699
+#: src/printf.c:140 src/ptx.c:1909 src/pwd.c:72 src/readlink.c:80 src/rm.c:140
+#: src/rmdir.c:163 src/seq.c:106 src/setuidgid.c:66 src/shred.c:217
+#: src/sleep.c:64 src/sort.c:343 src/split.c:130 src/stat.c:767 src/stty.c:705
 #: src/su.c:453 src/sum.c:75 src/sync.c:51 src/tac.c:145 src/tail.c:304
-#: src/tee.c:71 src/test.c:1050 src/touch.c:275 src/tr.c:389 src/true.c:43
+#: src/tee.c:71 src/test.c:1050 src/touch.c:257 src/tr.c:378 src/true.c:43
 #: src/tsort.c:104 src/tty.c:76 src/uname.c:127 src/unexpand.c:397
 #: src/uniq.c:169 src/unlink.c:58 src/uptime.c:204 src/users.c:128
-#: src/wc.c:153 src/who.c:657 src/whoami.c:61 src/yes.c:58
+#: src/wc.c:153 src/who.c:658 src/whoami.c:61 src/yes.c:58
 #, c-format
 msgid ""
 "\n"
@@ -477,29 +482,29 @@ msgstr ""
 "\n"
 "Comunicar bichos a <%s>.\n"
 
-#: src/basename.c:114 src/chgrp.c:246 src/chmod.c:395 src/chown.c:264
-#: src/chroot.c:80 src/comm.c:288 src/csplit.c:1373 src/dirname.c:89
-#: src/expr.c:199 src/install.c:281 src/link.c:88 src/mkdir.c:125
+#: src/basename.c:114 src/chgrp.c:246 src/chmod.c:394 src/chown.c:264
+#: src/chroot.c:80 src/comm.c:288 src/csplit.c:1377 src/dirname.c:89
+#: src/expr.c:199 src/install.c:286 src/link.c:88 src/mkdir.c:125
 #: src/mkfifo.c:114 src/mknod.c:138 src/nohup.c:100 src/pathchk.c:189
-#: src/readlink.c:128 src/rm.c:231 src/rmdir.c:208 src/seq.c:374
-#: src/setuidgid.c:99 src/sleep.c:140 src/stat.c:825 src/unlink.c:89
+#: src/readlink.c:128 src/rm.c:234 src/rmdir.c:208 src/seq.c:374
+#: src/setuidgid.c:99 src/sleep.c:140 src/stat.c:824 src/unlink.c:89
 msgid "too few arguments"
 msgstr "número de argumentos insuficiente"
 
 #: src/basename.c:115 src/dircolors.c:475 src/dirname.c:90 src/hostid.c:78
-#: src/hostname.c:122 src/link.c:94 src/logname.c:91 src/mknod.c:140
-#: src/readlink.c:136 src/seq.c:380 src/split.c:533 src/tr.c:1842
+#: src/hostname.c:126 src/link.c:94 src/logname.c:91 src/mknod.c:140
+#: src/readlink.c:136 src/seq.c:380 src/split.c:535 src/tr.c:1749
 #: src/uname.c:215 src/unlink.c:95 src/uptime.c:247 src/users.c:171
-#: src/who.c:805
+#: src/who.c:806
 msgid "too many arguments"
 msgstr "demasiados argumentos"
 
-#: src/cat.c:91
+#: src/cat.c:92
 #, c-format
 msgid "Usage: %s [OPTION] [FILE]...\n"
 msgstr "Modo de empleo: %s [OPCIÓN] [FICHERO]...\n"
 
-#: src/cat.c:95
+#: src/cat.c:96
 msgid ""
 "Concatenate FILE(s), or standard input, to standard output.\n"
 "\n"
@@ -519,7 +524,7 @@ msgstr ""
 "  -n, --number             numera todas las líneas\n"
 "  -s, --squeeze-blank      nunca muestra más de una línea vacía,\n"
 
-#: src/cat.c:105
+#: src/cat.c:106
 msgid ""
 "  -t                       equivalent to -vT\n"
 "  -T, --show-tabs          display TAB characters as ^I\n"
@@ -531,7 +536,7 @@ msgstr ""
 "  -u                       (sin efecto)\n"
 "  -v, --show-nonprinting   utiliza la notación ^ y M-, salvo para LFD y TAB\n"
 
-#: src/cat.c:113 src/fmt.c:293 src/sum.c:71
+#: src/cat.c:114 src/fmt.c:293 src/sum.c:71
 msgid ""
 "\n"
 "With no FILE, or when FILE is -, read standard input.\n"
@@ -539,7 +544,7 @@ msgstr ""
 "\n"
 "Sin FICHERO, o cuando FICHERO es -, lee la entrada estándar.\n"
 
-#: src/cat.c:118
+#: src/cat.c:119
 msgid ""
 "\n"
 "  -B, --binary             use binary writes to the console device.\n"
@@ -556,25 +561,25 @@ msgstr ""
 # creo que es más "self-explanatory"
 # Sí, tienes razón em+
 # FIXME: Comunicar al autor. sv
-#: src/cat.c:310
+#: src/cat.c:311
 #, c-format
 msgid "cannot do ioctl on `%s'"
 msgstr "no se puede ejecutar la función `ioctl' sobre `%s'"
 
-#: src/cat.c:666 src/dd.c:1232 src/tee.c:181 src/yes.c:92
+#: src/cat.c:669 src/dd.c:1302 src/tee.c:155 src/yes.c:92
 msgid "standard output"
 msgstr "salida estándar"
 
-#: src/cat.c:797
+#: src/cat.c:800
 #, c-format
 msgid "%s: input file is output file"
 msgstr "%s: los ficheros de entrada y salida son el mismo"
 
-#: src/cat.c:855
+#: src/cat.c:865
 msgid "closing standard input"
 msgstr "cierre de la entrada estándar"
 
-#: src/cat.c:858
+#: src/cat.c:868
 msgid "closing standard output"
 msgstr "cierre de la salida estándar"
 
@@ -609,13 +614,15 @@ msgstr ""
 "       o bien:  %s [OPCIÓN]... --reference=FICHERO-R FICHERO...\n"
 
 #: src/chgrp.c:124
+#, fuzzy
 msgid ""
 "Change the group of each FILE to GROUP.\n"
 "With --reference, change the group of each FILE to that of RFILE.\n"
 "\n"
 "  -c, --changes          like verbose but report only when a change is made\n"
 "      --dereference      affect the referent of each symbolic link, rather\n"
-"                         than the symbolic link itself\n"
+"                         than the symbolic link itself (this is the "
+"default)\n"
 msgstr ""
 "Cambia el grupo de cada FICHERO a GRUPO.\n"
 "\n"
@@ -722,13 +729,14 @@ msgstr ""
 "  -P                     no atraviesa ningún enlace simbólico "
 "(predeterminado)\n"
 
-#: src/chgrp.c:254 src/chmod.c:408 src/chmod.c:416 src/chown.c:272
-#: src/chown.c:299 src/cp.c:296 src/rm.c:241 src/touch.c:164 src/touch.c:366
+#: src/chgrp.c:254 src/chmod.c:407 src/chmod.c:415 src/chown.c:272
+#: src/chown.c:299 src/cp.c:297 src/pwd.c:274 src/rm.c:244 src/touch.c:159
+#: src/touch.c:350
 #, c-format
 msgid "failed to get attributes of %s"
 msgstr "fallo al obtener los permisos de %s"
 
-#: src/chmod.c:112
+#: src/chmod.c:111
 #, c-format
 msgid "getting new attributes of %s"
 msgstr "obteniendo nuevos permisos de %s"
@@ -743,12 +751,12 @@ msgstr "obteniendo nuevos permisos de %s"
 #
 # Pensaré esto sincronizadamente con los otros. sv
 #
-#: src/chmod.c:134
+#: src/chmod.c:133
 #, c-format
 msgid "mode of %s changed to %04lo (%s)\n"
 msgstr "el modo de %s cambia a %04lo (%s)\n"
 
-#: src/chmod.c:137
+#: src/chmod.c:136
 #, c-format
 msgid "failed to change mode of %s to %04lo (%s)\n"
 msgstr "fallo al cambiar el modo de %s a %04lo (%s)\n"
@@ -756,37 +764,37 @@ msgstr "fallo al cambiar el modo de %s a %04lo (%s)\n"
 # al igual que con chgrp y por coherencia me parece más adecuado:
 # "ha permanecido"... uac
 #
-#: src/chmod.c:140
+#: src/chmod.c:139
 #, c-format
 msgid "mode of %s retained as %04lo (%s)\n"
 msgstr "el modo de %s permanece como %04lo (%s)\n"
 
-#: src/chmod.c:167 src/chown-core.c:189 src/copy.c:158 src/du.c:341
+#: src/chmod.c:166 src/chown-core.c:190 src/copy.c:160 src/du.c:349
 #, c-format
 msgid "cannot access %s"
 msgstr "no se puede acceder a %s"
 
 # FIXME: Me lo explique.
-#: src/chmod.c:171 src/chown-core.c:193 src/du.c:347
+#: src/chmod.c:170 src/chown-core.c:194 src/du.c:355
 #, c-format
 msgid "%s"
 msgstr "%s"
 
-#: src/chmod.c:175 src/chown-core.c:197 src/du.c:354
+#: src/chmod.c:174 src/chown-core.c:198 src/du.c:362
 #, c-format
 msgid "cannot read directory %s"
 msgstr "no se puede leer el directorio %s"
 
-#: src/chmod.c:211
+#: src/chmod.c:210
 #, c-format
 msgid "changing permissions of %s"
 msgstr "cambiando los permisos de %s"
 
-#: src/chmod.c:245 src/chown-core.c:327 src/du.c:504
+#: src/chmod.c:244 src/chown-core.c:341 src/du.c:515
 msgid "fts_read failed"
 msgstr "fts_read falló"
 
-#: src/chmod.c:270
+#: src/chmod.c:269
 #, c-format
 msgid ""
 "Usage: %s [OPTION]... MODE[,MODE]... FILE...\n"
@@ -797,7 +805,7 @@ msgstr ""
 "       o bien:  %s [OPCIÓN]... MODO-OCTAL FICHERO...\n"
 "       o bien:  %s [OPCIÓN]... --reference=FICHERO-R FICHERO...\n"
 
-#: src/chmod.c:276
+#: src/chmod.c:275
 msgid ""
 "Change the mode of each FILE to MODE.\n"
 "\n"
@@ -808,7 +816,7 @@ msgstr ""
 "\n"
 "  -c, --changes           como `verbose' pero sólo informa de los cambios\n"
 
-#: src/chmod.c:281
+#: src/chmod.c:280
 msgid ""
 "      --no-preserve-root  do not treat `/' specially (the default)\n"
 "      --preserve-root     fail to operate recursively on `/'\n"
@@ -816,7 +824,7 @@ msgstr ""
 "      --no-preserve-root  no trata `/' de forma especial (predeterminado)\n"
 "      --preserve-root     no opera recursivamente sobre `/'\n"
 
-#: src/chmod.c:285
+#: src/chmod.c:284
 msgid ""
 "  -f, --silent, --quiet   suppress most error messages\n"
 "  -v, --verbose           output a diagnostic for every file processed\n"
@@ -828,7 +836,7 @@ msgstr ""
 "      --reference=FICH_R  utiliza el modo de FICH_R en lugar del valor MODO\n"
 "  -R, --recursive         cambia ficheros y directorios recursivamente\n"
 
-#: src/chmod.c:293
+#: src/chmod.c:292
 msgid ""
 "\n"
 "Each MODE is one or more of the letters ugoa, one of the symbols +-= and\n"
@@ -838,37 +846,37 @@ msgstr ""
 "Cada MODO es una o más de las letras ugoa, uno de los símbolos +-= y\n"
 "una o más de las letras rwxXstugo.\n"
 
-#: src/chmod.c:357
+#: src/chmod.c:356
 #, c-format
 msgid "invalid character %s in mode string %s"
 msgstr "carácter %s inválido en la cadena de modo %s"
 
-#: src/chmod.c:404
+#: src/chmod.c:403
 #, c-format
 msgid "invalid mode string: %s"
 msgstr "cadena de modo inválida %s"
 
-#: src/chown-core.c:117
+#: src/chown-core.c:116
 #, c-format
 msgid "neither symbolic link %s nor referent has been changed\n"
 msgstr "ni el enlace simbólico %s ni su referente ha cambiado\n"
 
-#: src/chown-core.c:144
+#: src/chown-core.c:143
 #, c-format
 msgid "changed ownership of %s to %s\n"
 msgstr "cambiado el propietario de %s a %s\n"
 
-#: src/chown-core.c:145
+#: src/chown-core.c:144
 #, c-format
 msgid "changed group of %s to %s\n"
 msgstr "cambiado el grupo de %s a %s\n"
 
-#: src/chown-core.c:149
+#: src/chown-core.c:148
 #, c-format
 msgid "failed to change ownership of %s to %s\n"
 msgstr "fallo al cambiar el propietario de %s a %s\n"
 
-#: src/chown-core.c:150
+#: src/chown-core.c:149
 #, c-format
 msgid "failed to change group of %s to %s\n"
 msgstr "fallo al cambiar el grupo de %s a %s\n"
@@ -878,7 +886,7 @@ msgstr "fallo al cambiar el grupo de %s a %s\n"
 #
 # al igual que con el msgid anterior esta propuesta me parece mejor... uac
 # ¿Alguien más? :-) sv
-#: src/chown-core.c:154
+#: src/chown-core.c:153
 #, c-format
 msgid "ownership of %s retained as %s\n"
 msgstr "el propietario de %s permanece como %s\n"
@@ -888,17 +896,22 @@ msgstr "el propietario de %s permanece como %s\n"
 # Siguiendo con lo anterior, en este caso me parece que queda mucho más feo
 # en pasado que en presente (razón para dejarlos los dos en presente).
 # De todas formas, tendré que pensarlo un poco más despacio. sv
-#: src/chown-core.c:155
+#: src/chown-core.c:154
 #, c-format
 msgid "group of %s retained as %s\n"
 msgstr "el grupo de %s permanece como %s\n"
 
-#: src/chown-core.c:270
+#: src/chown-core.c:218
+#, fuzzy, c-format
+msgid "cannot dereference %s"
+msgstr "no se puede ejecutar %s"
+
+#: src/chown-core.c:284
 #, c-format
 msgid "changing ownership of %s"
 msgstr "cambiando el propietario de %s"
 
-#: src/chown-core.c:271
+#: src/chown-core.c:285
 #, c-format
 msgid "changing group of %s"
 msgstr "cambiando el grupo de %s"
@@ -933,6 +946,7 @@ msgstr ""
 # Vale. Aceptado. Es casi igual pero un poquito mejor. sv
 #
 #: src/chown.c:100
+#, fuzzy
 msgid ""
 "Change the owner and/or group of each FILE to OWNER and/or GROUP.\n"
 "With --reference, change the owner and group of each FILE to those of "
@@ -940,7 +954,8 @@ msgid ""
 "\n"
 "  -c, --changes          like verbose but report only when a change is made\n"
 "      --dereference      affect the referent of each symbolic link, rather\n"
-"                         than the symbolic link itself\n"
+"                         than the symbolic link itself (this is the "
+"default)\n"
 msgstr ""
 "Cambia el propietario y/o grupo de cada FICHERO a PROPIETARIO y/o GRUPO.\n"
 "Con --reference, cambia el propietario y el grupo de cada FICHERO a los\n"
@@ -1034,7 +1049,7 @@ msgstr "no se puede cambiar el directorio raíz a %s"
 msgid "cannot chdir to root directory"
 msgstr "no se puede cambiar al directorio raíz"
 
-#: src/chroot.c:110 src/nohup.c:192 src/setuidgid.c:126
+#: src/chroot.c:110 src/nohup.c:181 src/setuidgid.c:126
 #, c-format
 msgid "cannot run command %s"
 msgstr "no se puede ejecutar la orden %s"
@@ -1125,158 +1140,159 @@ msgstr ""
 "  -2              suprime las líneas que sólo están en el derecho\n"
 "  -3              suprime las líneas que aparecen en los dos\n"
 
-#: src/copy.c:222 src/fmt.c:435 src/head.c:866 src/tail.c:1268
+#: src/copy.c:225 src/du.c:744 src/fmt.c:435 src/head.c:866 src/tail.c:1268
 #, c-format
 msgid "cannot open %s for reading"
 msgstr "no se puede abrir %s para lectura"
 
-#: src/copy.c:228 src/copy.c:282 src/copy.c:302 src/dd.c:1209 src/tail.c:1098
+#: src/copy.c:231 src/copy.c:285 src/copy.c:305 src/dd.c:1331 src/tail.c:1098
 #: src/tail.c:1170
 #, c-format
 msgid "cannot fstat %s"
 msgstr "no se puede efectuar `fstat' sobre %s"
 
-#: src/copy.c:238
+#: src/copy.c:241
 #, c-format
 msgid "skipping file %s, as it was replaced while being copied"
 msgstr "saltando el fichero %s, ya que fue reemplazado mientras se copiaba"
 
-#: src/copy.c:258 src/copy.c:892 src/copy.c:1076 src/copy.c:1179 src/ln.c:297
-#: src/remove.c:727 src/remove.c:781 src/remove.c:902 src/remove.c:1009
+#: src/copy.c:261 src/copy.c:897 src/copy.c:1093 src/copy.c:1196 src/ln.c:297
+#: src/remove.c:732 src/remove.c:784 src/remove.c:905 src/remove.c:1029
+#: src/remove.c:1155
 #, c-format
 msgid "cannot remove %s"
 msgstr "no se puede borrar %s"
 
-#: src/copy.c:273
+#: src/copy.c:276
 #, c-format
 msgid "cannot create regular file %s"
 msgstr "no se puede crear el fichero regular %s"
 
-#: src/copy.c:329 src/dd.c:825 src/dd.c:1019
+#: src/copy.c:334 src/dd.c:902 src/dd.c:1112
 #, c-format
 msgid "reading %s"
 msgstr "leyendo %s"
 
-#: src/copy.c:363 src/head.c:437
+#: src/copy.c:368 src/head.c:437
 #, c-format
 msgid "cannot lseek %s"
 msgstr "no se puede efectuar `lseek' sobre %s"
 
-#: src/copy.c:378 src/copy.c:402 src/dd.c:1063 src/dd.c:1124
+#: src/copy.c:383 src/copy.c:407 src/dd.c:1156 src/dd.c:1217
 #, c-format
 msgid "writing %s"
 msgstr "escribiendo %s"
 
-#: src/copy.c:410 src/copy.c:416 src/head.c:874
+#: src/copy.c:415 src/copy.c:421 src/head.c:874
 #, c-format
 msgid "closing %s"
 msgstr "cerrando %s"
 
 # SIoNO
-#: src/copy.c:635
+#: src/copy.c:640
 #, c-format
 msgid "%s: overwrite %s, overriding mode %04lo? "
 msgstr "%s: ¿sobreescribir %s, sustituyendo el modo %04lo? (s/n) "
 
 # SIoNO
-#: src/copy.c:641
+#: src/copy.c:646
 #, c-format
 msgid "%s: overwrite %s? "
 msgstr "%s: ¿sobreescribir %s? (s/n) "
 
-#: src/copy.c:836 src/copy.c:874 src/df.c:492 src/stat.c:655
+#: src/copy.c:841 src/copy.c:879 src/df.c:492 src/stat.c:654
 #, c-format
 msgid "cannot stat %s"
 msgstr "no se puede efectuar `stat' sobre %s"
 
-#: src/copy.c:846
+#: src/copy.c:851
 #, c-format
 msgid "omitting directory %s"
 msgstr "se omite el directorio %s"
 
-#: src/copy.c:860
+#: src/copy.c:865
 #, c-format
 msgid "warning: source file %s specified more than once"
 msgstr "atención: se ha especificado el fichero origen %s más de una vez"
 
-#: src/copy.c:905 src/ln.c:241
+#: src/copy.c:910 src/ln.c:241
 #, c-format
 msgid "%s and %s are the same file"
 msgstr "%s y %s son el mismo fichero"
 
-#: src/copy.c:915
+#: src/copy.c:920
 #, c-format
 msgid "cannot overwrite non-directory %s with directory %s"
 msgstr "no se puede sobreescribir el no directorio %s con el directorio %s"
 
-#: src/copy.c:932
+#: src/copy.c:937
 #, c-format
 msgid "will not overwrite just-created %s with %s"
 msgstr "no se sobreescribirá el fichero %s recién creado con %s"
 
-#: src/copy.c:943
+#: src/copy.c:948
 #, c-format
 msgid "cannot overwrite directory %s with non-directory"
 msgstr "no se puede sobreescribir el directorio %s con un no directorio"
 
-#: src/copy.c:1004
+#: src/copy.c:1021
 #, c-format
 msgid "cannot overwrite directory %s"
 msgstr "no se puede sobreescribir el directorio %s"
 
-#: src/copy.c:1013
+#: src/copy.c:1030
 #, c-format
 msgid "cannot move directory onto non-directory: %s -> %s"
 msgstr "no se puede sobreescribir un directorio con un no directorio: %s -> %s"
 
 # Nota: Este backing up *no* es un gerundio.
-#: src/copy.c:1036
+#: src/copy.c:1053
 #, c-format
 msgid "backing up %s would destroy source;  %s not moved"
 msgstr "respaldar %s destruiría el original; %s no se mueve"
 
 # Nota: Este backing up *tampoco* es un gerundio.
-#: src/copy.c:1037
+#: src/copy.c:1054
 #, c-format
 msgid "backing up %s would destroy source;  %s not copied"
 msgstr "respaldar %s destruiría el original; %s no se copia"
 
-#: src/copy.c:1055 src/ln.c:279
+#: src/copy.c:1072 src/ln.c:279
 #, c-format
 msgid "cannot backup %s"
 msgstr "no se puede respaldar %s"
 
-#: src/copy.c:1091 src/ln.c:314
+#: src/copy.c:1108 src/ln.c:314
 #, c-format
 msgid " (backup: %s)"
 msgstr " (respaldo: %s)"
 
-#: src/copy.c:1154
+#: src/copy.c:1171
 #, c-format
 msgid "cannot copy a directory, %s, into itself, %s"
 msgstr "no se puede copiar un directorio, %s, dentro de sí mismo, %s"
 
-#: src/copy.c:1161
+#: src/copy.c:1178
 #, c-format
 msgid "will not create hard link %s to directory %s"
 msgstr "no se crea el enlace duro %s al directorio %s"
 
-#: src/copy.c:1187
+#: src/copy.c:1204
 #, c-format
 msgid "cannot create hard link %s to %s"
 msgstr "crea el enlace duro %s a %s"
 
-#: src/copy.c:1241
+#: src/copy.c:1258
 #, c-format
 msgid "cannot move %s to a subdirectory of itself, %s"
 msgstr "no se puede mover %s a un directorio de sí mismo, %s"
 
-#: src/copy.c:1284
+#: src/copy.c:1301
 #, c-format
 msgid "cannot move %s to %s"
 msgstr "no se puede mover %s a %s"
 
-#: src/copy.c:1296
+#: src/copy.c:1313
 #, c-format
 msgid "inter-device move failed: %s to %s; unable to remove target"
 msgstr ""
@@ -1289,24 +1305,24 @@ msgstr ""
 # mkdir aa
 # cp -d bb aa
 # ls -l aa
-#: src/copy.c:1324
+#: src/copy.c:1341
 #, c-format
 msgid "cannot copy cyclic symbolic link %s"
 msgstr "no se puede copiar el enlace simbólico cíclico %s"
 
-#: src/copy.c:1401
+#: src/copy.c:1418
 #, c-format
 msgid "%s: can make relative symbolic links only in current directory"
 msgstr ""
 "%s: solamente se pueden crear enlaces simbólicos relativos\n"
 "en el directorio actual"
 
-#: src/copy.c:1408
+#: src/copy.c:1425
 #, c-format
 msgid "cannot create symbolic link %s to %s"
 msgstr "no se puede crear el enlace simbólico %s a %s"
 
-#: src/copy.c:1419
+#: src/copy.c:1436
 #, c-format
 msgid "cannot create link %s"
 msgstr "no se puede crear el enlace %s"
@@ -1345,52 +1361,52 @@ msgstr "no se puede crear el enlace %s"
 # tu lado :) Déjalo como está :D ipg
 #
 # Gracias a los dos. sv
-#: src/copy.c:1441 src/mkfifo.c:134
+#: src/copy.c:1458 src/mkfifo.c:134
 #, c-format
 msgid "cannot create fifo %s"
 msgstr "no se puede crear el fichero `fifo' %s"
 
-#: src/copy.c:1452
+#: src/copy.c:1469
 #, c-format
 msgid "cannot create special file %s"
 msgstr "no se puede crear el fichero especial %s"
 
-#: src/copy.c:1464 src/ls.c:2554 src/stat.c:439
+#: src/copy.c:1481 src/ls.c:2647 src/stat.c:439
 #, c-format
 msgid "cannot read symbolic link %s"
 msgstr "no se puede leer el enlace simbólico %s"
 
-#: src/copy.c:1489
+#: src/copy.c:1507
 #, c-format
 msgid "cannot create symbolic link %s"
 msgstr "no se puede crear el enlace simbólico %s"
 
-#: src/copy.c:1505 src/copy.c:1566 src/cp.c:330
+#: src/copy.c:1523 src/copy.c:1584 src/cp.c:331
 #, c-format
 msgid "failed to preserve ownership for %s"
 msgstr "fallo al conservar el propietario de %s"
 
-#: src/copy.c:1520
+#: src/copy.c:1538
 #, c-format
 msgid "%s has unknown file type"
 msgstr "%s tiene un tipo de fichero desconocido"
 
-#: src/copy.c:1553
+#: src/copy.c:1571
 #, c-format
 msgid "preserving times for %s"
 msgstr "se conserva las fechas de %s"
 
-#: src/copy.c:1578
+#: src/copy.c:1596
 #, c-format
 msgid "failed to lookup file %s"
 msgstr "fallo al buscar el fichero %s"
 
-#: src/copy.c:1583
+#: src/copy.c:1601
 #, c-format
 msgid "failed to preserve authorship for %s"
 msgstr "fallo al conservar el autor de %s"
 
-#: src/copy.c:1602
+#: src/copy.c:1620
 #, c-format
 msgid "setting permissions for %s"
 msgstr "estableciendo los permisos de %s"
@@ -1398,17 +1414,17 @@ msgstr "estableciendo los permisos de %s"
 # Nota: Asegurarse de que significa eso.
 # Probablemente quiera decir que "no se puede recuperar `%s'" de la copia
 # de seguridad. tb
-#: src/copy.c:1624 src/ln.c:332
+#: src/copy.c:1642 src/ln.c:332
 #, c-format
 msgid "cannot un-backup %s"
 msgstr "no se puede restaurar %s"
 
-#: src/copy.c:1628
+#: src/copy.c:1646
 #, c-format
 msgid "%s -> %s (unbackup)\n"
 msgstr "%s -> %s (restauración)\n"
 
-#: src/cp.c:158 src/mv.c:305
+#: src/cp.c:159 src/mv.c:311
 #, c-format
 msgid ""
 "Usage: %s [OPTION]... SOURCE DEST\n"
@@ -1419,7 +1435,7 @@ msgstr ""
 "       o bien:  %s [OPCIÓN]... ORIGEN... DIRECTORIO\n"
 "       o bien:  %s [OPCIÓN]... --target-directory=DIRECTORIO ORIGEN...\n"
 
-#: src/cp.c:164
+#: src/cp.c:165
 msgid ""
 "Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n"
 "\n"
@@ -1427,12 +1443,12 @@ msgstr ""
 "Copia ORIGEN a DESTINO, o varios ORIGEN(es) a DIRECTORIO.\n"
 "\n"
 
-#: src/cp.c:168 src/csplit.c:1414 src/cut.c:190 src/df.c:733 src/du.c:172
+#: src/cp.c:169 src/csplit.c:1448 src/cut.c:190 src/df.c:720 src/du.c:178
 #: src/expand.c:117 src/fmt.c:277 src/fold.c:75 src/head.c:123
-#: src/install.c:604 src/kill.c:104 src/ln.c:360 src/ls.c:3911 src/mkdir.c:66
-#: src/mkfifo.c:60 src/mknod.c:61 src/mv.c:315 src/nl.c:185 src/paste.c:406
-#: src/pr.c:2761 src/ptx.c:1882 src/shred.c:165 src/sort.c:286 src/split.c:109
-#: src/tac.c:135 src/tail.c:248 src/touch.c:253 src/unexpand.c:386
+#: src/install.c:609 src/kill.c:104 src/ln.c:360 src/ls.c:3993 src/mkdir.c:66
+#: src/mkfifo.c:60 src/mknod.c:61 src/mv.c:321 src/nl.c:185 src/paste.c:406
+#: src/pr.c:2761 src/ptx.c:1874 src/shred.c:163 src/sort.c:286 src/split.c:110
+#: src/tac.c:135 src/tail.c:248 src/touch.c:235 src/unexpand.c:386
 #: src/uniq.c:143
 msgid ""
 "Mandatory arguments to long options are mandatory for short options too.\n"
@@ -1441,7 +1457,7 @@ msgstr ""
 "obligatorios\n"
 "para las opciones cortas.\n"
 
-#: src/cp.c:171
+#: src/cp.c:172
 msgid ""
 "  -a, --archive                same as -dpR\n"
 "      --backup[=CONTROL]       make a backup of each existing destination "
@@ -1464,7 +1480,7 @@ msgstr ""
 "  -d                           lo mismo que --no-dereference --"
 "preserve=link\n"
 
-#: src/cp.c:178
+#: src/cp.c:179
 msgid ""
 "      --no-dereference         never follow symbolic links\n"
 "  -f, --force                  if an existing destination file cannot be\n"
@@ -1479,7 +1495,7 @@ msgstr ""
 "  -H                            sigue los enlaces simbólicos de la línea\n"
 "                                de órdenes\n"
 
-#: src/cp.c:185
+#: src/cp.c:186
 msgid ""
 "  -l, --link                   link files instead of copying\n"
 "  -L, --dereference            always follow symbolic links\n"
@@ -1497,7 +1513,7 @@ msgstr ""
 "                                  (por omisión: mode,ownership,timestamps)\n"
 "                                  atributos adicionales: links, all\n"
 
-#: src/cp.c:193
+#: src/cp.c:194
 msgid ""
 "      --no-preserve=ATTR_LIST  don't preserve the specified attributes\n"
 "      --parents                append source path to DIRECTORY\n"
@@ -1507,7 +1523,7 @@ msgstr ""
 "      --parents                 añade el directorio de origen a DIRECTORIO\n"
 "  -P                            lo mismo que `--no-dereference'\n"
 
-#: src/cp.c:198
+#: src/cp.c:199
 msgid ""
 "  -R, -r, --recursive          copy directories recursively\n"
 "      --remove-destination     remove each existing destination file before\n"
@@ -1522,7 +1538,7 @@ msgstr ""
 "                                 de intentar abrirlo (compárese con --"
 "force).\n"
 
-#: src/cp.c:203
+#: src/cp.c:204
 msgid ""
 "      --reply={yes,no,query}   specify how to handle the prompt about an\n"
 "                                 existing destination file\n"
@@ -1537,7 +1553,7 @@ msgstr ""
 "      --strip-trailing-slashes  elimina todas las barras finales de cada\n"
 "                                  argumento ORIGEN\n"
 
-#: src/cp.c:210
+#: src/cp.c:211
 msgid ""
 "  -s, --symbolic-link          make symbolic links instead of copying\n"
 "  -S, --suffix=SUFFIX          override the usual backup suffix\n"
@@ -1550,7 +1566,7 @@ msgstr ""
 "      --target-directory=DIRECTORIO  mueve todos los argumentos ORIGEN al\n"
 "                                     directorio DIRECTORIO\n"
 
-#: src/cp.c:215
+#: src/cp.c:216
 msgid ""
 "  -u, --update                 copy only when the SOURCE file is newer\n"
 "                                 than the destination file or when the\n"
@@ -1605,7 +1621,7 @@ msgstr ""
 # La traducción me parece correcta y fiel.
 # Si de verdad te parece que está mal explicado, se lo digo al autor. sv
 #
-#: src/cp.c:224
+#: src/cp.c:225
 msgid ""
 "\n"
 "By default, sparse SOURCE files are detected by a crude heuristic and the\n"
@@ -1628,7 +1644,7 @@ msgstr ""
 "Utilice --sparse=never para inhibir la creación de ficheros `sparse'.\n"
 "\n"
 
-#: src/cp.c:233
+#: src/cp.c:234
 msgid ""
 "The backup suffix is `~', unless set with --suffix or SIMPLE_BACKUP_SUFFIX.\n"
 "The version control method may be selected via the --backup option or "
@@ -1643,7 +1659,7 @@ msgstr ""
 "Estos son los valores:\n"
 "\n"
 
-#: src/cp.c:239 src/install.c:637 src/ln.c:392 src/mv.c:349
+#: src/cp.c:240 src/install.c:642 src/ln.c:392 src/mv.c:355
 msgid ""
 "  none, off       never make backups (even if --backup is given)\n"
 "  numbered, t     make numbered backups\n"
@@ -1658,7 +1674,7 @@ msgstr ""
 "  simple, never   siempre crea copias de seguridad simples\n"
 
 # Revisar esto un poco. Especialmente la última línea.
-#: src/cp.c:245
+#: src/cp.c:246
 msgid ""
 "\n"
 "As a special case, cp makes a backup of SOURCE when the force and backup\n"
@@ -1672,45 +1688,45 @@ msgstr ""
 "para\n"
 "un nombre de fichero regular existente.\n"
 
-#: src/cp.c:316
+#: src/cp.c:317
 #, c-format
 msgid "failed to preserve times for %s"
 msgstr "fallo al conservar la fecha de %s"
 
-#: src/cp.c:340
+#: src/cp.c:341
 #, c-format
 msgid "failed to preserve permissions for %s"
 msgstr "fallo al conservar los permisos de %s"
 
-#: src/cp.c:423
+#: src/cp.c:424
 #, c-format
 msgid "cannot make directory %s"
 msgstr "no se puede crear el directorio %s"
 
-#: src/cp.c:482 src/ln.c:496 src/mv.c:454 src/shred.c:1601
+#: src/cp.c:483 src/ln.c:496 src/mv.c:460 src/shred.c:1645
 msgid "missing file argument"
 msgstr "falta un fichero como argumento"
 
-#: src/cp.c:487
+#: src/cp.c:488
 msgid "missing destination file"
 msgstr "falta el fichero de destino"
 
-#: src/cp.c:512 src/ln.c:165 src/ln.c:188 src/ln.c:215 src/ln.c:303
+#: src/cp.c:513 src/ln.c:165 src/ln.c:188 src/ln.c:215 src/ln.c:303
 #, c-format
 msgid "accessing %s"
 msgstr "accediendo a %s"
 
 #: src/cp.c:537
-#, c-format
-msgid "%s: specified destination directory does not exist"
+#, fuzzy, c-format
+msgid "%s: destination directory does not exist"
 msgstr "%s: el directorio objetivo especificado no existe"
 
-#: src/cp.c:539
+#: src/cp.c:540
 #, c-format
 msgid "%s: specified target is not a directory"
 msgstr "%s: el objetivo especificado no es un directorio"
 
-#: src/cp.c:542
+#: src/cp.c:544
 #, c-format
 msgid "copying multiple files, but last argument %s is not a directory"
 msgstr ""
@@ -1719,11 +1735,11 @@ msgstr ""
 
 # Nota: Mejor no traducir "path" y "directory" de la misma forma dentro
 # de la misma frase.
-#: src/cp.c:645
+#: src/cp.c:647
 msgid "when preserving paths, the destination must be a directory"
 msgstr "cuando se conservan rutas de acceso, el destino debe ser un directorio"
 
-#: src/cp.c:872 src/install.c:216 src/ln.c:443 src/mv.c:400
+#: src/cp.c:874 src/install.c:217 src/ln.c:443 src/mv.c:406
 #, c-format
 msgid ""
 "warning: --version-control (-V) is obsolete;  support for it\n"
@@ -1732,7 +1748,7 @@ msgstr ""
 "atención: --version-control (-V) está obsoleta;  su soporte será eliminado\n"
 "en alguna versión posterior.  Utilice --backup=%s en su lugar."
 
-#: src/cp.c:966 src/ln.c:473
+#: src/cp.c:968 src/ln.c:473
 msgid "symbolic links are not supported on this system"
 msgstr "este sistema no admite enlaces simbólicos"
 
@@ -1744,145 +1760,145 @@ msgstr "este sistema no admite enlaces simbólicos"
 #
 # ¿bibliografía?
 # (¿en qué libros os basáis?) sv+
-#: src/cp.c:1002
+#: src/cp.c:1004
 msgid "cannot make both hard and symbolic links"
 msgstr "no se puede crear un enlace que sea duro y simbólico al mismo tiempo"
 
-#: src/cp.c:1010 src/install.c:272 src/ln.c:539 src/mv.c:478
+#: src/cp.c:1012 src/install.c:277 src/ln.c:539 src/mv.c:484
 msgid "backup type"
 msgstr "tipo de respaldo"
 
-#: src/csplit.c:267 src/csplit.c:1390 src/join.c:276 src/tac-pipe.c:57
-#: src/tee.c:223 src/tr.c:1602 src/tr.c:1704 src/tr.c:1747
+#: src/csplit.c:275 src/csplit.c:1424 src/join.c:276 src/tac-pipe.c:57
+#: src/tee.c:197 src/tr.c:1607
 msgid "read error"
 msgstr "error de lectura"
 
-#: src/csplit.c:517
+#: src/csplit.c:525
 msgid "input disappeared"
 msgstr "la entrada dejó de existir"
 
-#: src/csplit.c:651 src/csplit.c:662
+#: src/csplit.c:659 src/csplit.c:670
 #, c-format
 msgid "%s: line number out of range"
 msgstr "%s: número de línea fuera de rango"
 
-#: src/csplit.c:689
+#: src/csplit.c:699
 #, c-format
 msgid "%s: `%s': line number out of range"
 msgstr "%s: `%s': número de línea fuera de rango"
 
 # ???
-#: src/csplit.c:692 src/csplit.c:740
+#: src/csplit.c:702 src/csplit.c:751
 #, c-format
 msgid " on repetition %s\n"
 msgstr " repetido %s\n"
 
-#: src/csplit.c:734
+#: src/csplit.c:745
 #, c-format
 msgid "%s: `%s': match not found"
 msgstr "%s: `%s': ocurrencia no encontrada"
 
-#: src/csplit.c:798 src/csplit.c:838 src/tac.c:261
+#: src/csplit.c:809 src/csplit.c:849 src/tac.c:261
 msgid "error in regular expression search"
 msgstr "error en la búsqueda de la expresión regular"
 
 # %s debe de ser un fichero, ¿no? si es así a mí me parece "más natural":
 # "en %s" e incluso quizás "sobre %s"... o quizás no... ahí queda eso
 # Lo cambio em+
-#: src/csplit.c:941
+#: src/csplit.c:969
 #, c-format
 msgid "write error for `%s'"
 msgstr "error al escribir `%s'"
 
-#: src/csplit.c:1007
+#: src/csplit.c:1045
 #, c-format
 msgid "%s: integer expected after delimiter"
 msgstr "%s: se esperaba un número entero después del delimitador"
 
-#: src/csplit.c:1023
+#: src/csplit.c:1061
 #, c-format
 msgid "%s: `}' is required in repeat count"
 msgstr "%s: se requiere un `}' después del número de repeticiones"
 
-#: src/csplit.c:1033
+#: src/csplit.c:1071
 #, c-format
 msgid "%s}: integer required between `{' and `}'"
 msgstr "%s}: entre `{' y `}' debe especificarse un número entero"
 
-#: src/csplit.c:1060
+#: src/csplit.c:1098
 #, c-format
 msgid "%s: closing delimiter `%c' missing"
 msgstr "%s: falta el delimitador de cierre `%c'"
 
-#: src/csplit.c:1076
+#: src/csplit.c:1114
 #, c-format
 msgid "%s: invalid regular expression: %s"
 msgstr "%s: la expresión regular no es válida: %s"
 
-#: src/csplit.c:1109
+#: src/csplit.c:1147
 #, c-format
 msgid "%s: invalid pattern"
 msgstr "%s: plantilla inválida"
 
-#: src/csplit.c:1112
+#: src/csplit.c:1150
 #, c-format
 msgid "%s: line number must be greater than zero"
 msgstr "%s: el número de línea debe ser mayor que cero"
 
-#: src/csplit.c:1118
+#: src/csplit.c:1156
 #, c-format
 msgid "line number `%s' is smaller than preceding line number, %s"
 msgstr "el número de línea `%s' es menor que el número de línea anterior, %s"
 
-#: src/csplit.c:1124
+#: src/csplit.c:1162
 #, c-format
 msgid "warning: line number `%s' is the same as preceding line number"
 msgstr "atención: el número de línea `%s' es el mismo que el anterior"
 
-#: src/csplit.c:1177
+#: src/csplit.c:1215
 msgid "invalid format width"
 msgstr "formato de ancho inválido"
 
-#: src/csplit.c:1198
+#: src/csplit.c:1236
 msgid "invalid format precision"
 msgstr "formato de precisión inválido"
 
-#: src/csplit.c:1219
+#: src/csplit.c:1257
 msgid "missing conversion specifier in suffix"
 msgstr "falta el especificador de conversión en el sufijo"
 
-#: src/csplit.c:1225
+#: src/csplit.c:1263
 #, c-format
 msgid "invalid conversion specifier in suffix: %c"
 msgstr "el especificador de conversión indicado en el sufijo no es válido: %c"
 
-#: src/csplit.c:1228
+#: src/csplit.c:1266
 #, c-format
 msgid "invalid conversion specifier in suffix: \\%.3o"
 msgstr ""
 "el especificador de conversión indicado en el sufijo no es válido: \\%.3o"
 
-#: src/csplit.c:1251
+#: src/csplit.c:1289
 #, c-format
 msgid "too many %% conversion specifications in suffix"
 msgstr "demasiados especificadores de conversión %% en el sufijo"
 
-#: src/csplit.c:1266
+#: src/csplit.c:1304
 #, c-format
 msgid "missing %% conversion specification in suffix"
 msgstr "falta el especificador de conversión %% en el sufijo"
 
-#: src/csplit.c:1350
+#: src/csplit.c:1354
 #, c-format
 msgid "%s: invalid number"
 msgstr "%s: número inválido"
 
-#: src/csplit.c:1405
+#: src/csplit.c:1439
 #, c-format
 msgid "Usage: %s [OPTION]... FILE PATTERN...\n"
 msgstr "Modo de empleo: %s [OPCIÓN]... FICHERO PLANTILLA...\n"
 
-#: src/csplit.c:1409
+#: src/csplit.c:1443
 msgid ""
 "Output pieces of FILE separated by PATTERN(s) to files `xx01', `xx02', ...,\n"
 "and output byte counts of each piece to standard output.\n"
@@ -1893,7 +1909,7 @@ msgstr ""
 "`xx01', `xx02' y muestra el tamaño de cada trozo en la salida estándar.\n"
 "\n"
 
-#: src/csplit.c:1417
+#: src/csplit.c:1451
 #, c-format
 msgid ""
 "  -b, --suffix-format=FORMAT use sprintf FORMAT instead of %02d\n"
@@ -1905,7 +1921,7 @@ msgstr ""
 "  -k, --keep-files            no borra los ficheros de salida si hay "
 "errores\n"
 
-#: src/csplit.c:1422
+#: src/csplit.c:1456
 msgid ""
 "  -n, --digits=DIGITS        use specified number of digits instead of 2\n"
 "  -s, --quiet, --silent      do not print counts of output file sizes\n"
@@ -1916,7 +1932,7 @@ msgstr ""
 "  -s, --quiet, --silent       no muestra el tamaño de los ficheros creados\n"
 "  -z, --elide-empty-files     borra los ficheros de salida vacíos\n"
 
-#: src/csplit.c:1429
+#: src/csplit.c:1463
 msgid ""
 "\n"
 "Read standard input if FILE is -.  Each PATTERN may be:\n"
@@ -1924,7 +1940,7 @@ msgstr ""
 "\n"
 "Lee la entrada estándar si FICHERO es `-'. Cada PLANTILLA puede ser:\n"
 
-#: src/csplit.c:1433
+#: src/csplit.c:1467
 msgid ""
 "\n"
 "  INTEGER            copy up to but not including specified line number\n"
@@ -1946,10 +1962,10 @@ msgstr ""
 "\n"
 "Un DESPLAZamiento de línea es un número entero precedido de `+' o de `-'.\n"
 
-#: src/cut.c:182 src/df.c:727 src/du.c:167 src/expand.c:108 src/fold.c:66
-#: src/head.c:113 src/ls.c:3905 src/nl.c:176 src/paste.c:396 src/pr.c:2752
-#: src/sort.c:276 src/sum.c:59 src/tac.c:126 src/tail.c:238 src/tee.c:62
-#: src/unexpand.c:377 src/wc.c:135
+#: src/cut.c:182 src/df.c:714 src/expand.c:108 src/fold.c:66 src/head.c:113
+#: src/ls.c:3987 src/nl.c:176 src/paste.c:396 src/pr.c:2752 src/sort.c:276
+#: src/sum.c:59 src/tac.c:126 src/tail.c:238 src/tee.c:62 src/unexpand.c:377
+#: src/wc.c:135
 #, c-format
 msgid "Usage: %s [OPTION]... [FILE]...\n"
 msgstr "Modo de empleo: %s [OPCIÓN]... [FICHERO]...\n"
@@ -2041,25 +2057,25 @@ msgstr "el desplazamiento de bytes %s es demasiado grande"
 msgid "field number %s is too large"
 msgstr "el número de campo %s es demasiado grande"
 
-#: src/cut.c:755 src/cut.c:763
+#: src/cut.c:756 src/cut.c:764
 msgid "only one type of list may be specified"
 msgstr "solamente se puede especificar un tipo de lista"
 
-#: src/cut.c:772
+#: src/cut.c:773
 msgid "the delimiter must be a single character"
 msgstr "el delimitador debe ser un sólo carácter"
 
-#: src/cut.c:803
+#: src/cut.c:804
 msgid "you must specify a list of bytes, characters, or fields"
 msgstr "se debe indicar una lista de bytes, caracteres o campos"
 
-#: src/cut.c:806
+#: src/cut.c:807
 msgid "an input delimiter may be specified only when operating on fields"
 msgstr ""
 "sólo se puede especificar un delimitador de entrada cuando se procesan campos"
 
 # FIXME: Comunicar al autor lo de los tabs. sv+
-#: src/cut.c:810
+#: src/cut.c:811
 msgid ""
 "suppressing non-delimited lines makes sense\n"
 "\tonly when operating on fields"
@@ -2067,17 +2083,17 @@ msgstr ""
 "suprimir las líneas no delimitadas solamente tiene sentido\n"
 "cuando se procesan campos"
 
-#: src/cut.c:826
+#: src/cut.c:827
 msgid "missing list of fields"
 msgstr "falta la lista de campos"
 
-#: src/cut.c:828
+#: src/cut.c:829
 msgid "missing list of positions"
 msgstr "falta la lista de posiciones"
 
 # Pongo AA en vez de YY. sv
 # Pongo SS de siglo en vez de CC. sv
-#: src/date.c:118
+#: src/date.c:121
 #, c-format
 msgid ""
 "Usage: %s [OPTION]... [+FORMAT]\n"
@@ -2088,17 +2104,18 @@ msgstr ""
 
 # UTC = Tiempo Universal Coordinado, antiguo GMT (Greenwich Mean Time,
 # Hora Media de Greenwich). gerardo
-#: src/date.c:123
+#: src/date.c:126
+#, fuzzy
 msgid ""
 "Display the current time in the given FORMAT, or set the system date.\n"
 "\n"
 "  -d, --date=STRING         display time described by STRING, not `now'\n"
 "  -f, --file=DATEFILE       like --date once for each line of DATEFILE\n"
-"  -ITIMESPEC, --iso-8601[=TIMESPEC]  output date/time in ISO 8601 format.\n"
-"                            TIMESPEC=`date' for date only,\n"
-"                            `hours', `minutes', or `seconds' for date and\n"
+"      --iso-8601[=TIMESPEC] output date/time in ISO 8601 format.\n"
+"                            TIMESPEC=`date' for date only (the default),\n"
+"                            `hours', `minutes', `seconds', or `ns' for date "
+"and\n"
 "                            time to the indicated precision.\n"
-"                            --iso-8601 without TIMESPEC defaults to `date'.\n"
 msgstr ""
 "Muestra la hora actual en el FORMATO dado, o establece la fecha del "
 "sistema.\n"
@@ -2115,7 +2132,7 @@ msgstr ""
 "indicada\n"
 "                            --iso-8601 sin E_TIEMPO significa usar `date'\n"
 
-#: src/date.c:134
+#: src/date.c:136
 msgid ""
 "  -r, --reference=FILE      display the last modification time of FILE\n"
 "  -R, --rfc-2822            output RFC-2822 compliant date string\n"
@@ -2130,7 +2147,7 @@ msgstr ""
 "  -u, --utc, --universal    muestra o establece el Tiempo Universal "
 "Coordinado\n"
 
-#: src/date.c:142
+#: src/date.c:144
 msgid ""
 "\n"
 "FORMAT controls the output.  The only valid option for the second form\n"
@@ -2146,7 +2163,7 @@ msgstr ""
 "  %%   un % literal\n"
 "  %a   el nombre local abreviado de la semana (Dom..Sáb)\n"
 
-#: src/date.c:150
+#: src/date.c:152
 msgid ""
 "  %A   locale's full weekday name, variable length (Sunday..Saturday)\n"
 "  %b   locale's abbreviated month name (Jan..Dec)\n"
@@ -2160,7 +2177,7 @@ msgstr ""
 "        (Enero..Diciembre)\n"
 "  %c   la fecha y hora local (Sab Nov 04 12:02:33 EST 1989)\n"
 
-#: src/date.c:156
+#: src/date.c:158
 msgid ""
 "  %C   century (year divided by 100 and truncated to an integer) [00-99]\n"
 "  %d   day of month (01..31)\n"
@@ -2172,7 +2189,7 @@ msgstr ""
 "  %D   la fecha (mm/dd/aa)\n"
 "  %e   el día del mes, completado con espacios ( 1..31)\n"
 
-#: src/date.c:162
+#: src/date.c:164
 msgid ""
 "  %F   same as %Y-%m-%d\n"
 "  %g   the 2-digit year corresponding to the %V week number\n"
@@ -2182,7 +2199,7 @@ msgstr ""
 "  %g   el año de 2 dígitos que corresponde a la semana %V\n"
 "  %G   el año de 4 dígitos que corresponde a la semana %V\n"
 
-#: src/date.c:167
+#: src/date.c:169
 msgid ""
 "  %h   same as %b\n"
 "  %H   hour (00..23)\n"
@@ -2194,7 +2211,7 @@ msgstr ""
 "  %I   la hora (01..12)\n"
 "  %j   el día del año (001..366)\n"
 
-#: src/date.c:173
+#: src/date.c:175
 msgid ""
 "  %k   hour ( 0..23)\n"
 "  %l   hour ( 1..12)\n"
@@ -2206,7 +2223,7 @@ msgstr ""
 "  %m   el mes (01..12)\n"
 "  %M   los minutos (00..59)\n"
 
-#: src/date.c:179
+#: src/date.c:181
 msgid ""
 "  %n   a newline\n"
 "  %N   nanoseconds (000000000..999999999)\n"
@@ -2224,7 +2241,7 @@ msgstr ""
 "  %R   la hora, en formato de 24 horas (hh:mm:ss [AP]M)\n"
 "  %s   los segundos desde `00:00:00 1970-01-01 UTC' (una extensión de GNU)\n"
 
-#: src/date.c:188
+#: src/date.c:190
 msgid ""
 "  %S   second (00..60); the 60 is necessary to accommodate a leap second\n"
 "  %t   a horizontal tab\n"
@@ -2238,7 +2255,7 @@ msgstr ""
 "  %u   día de la semana (1..7); 1 representa lunes\n"
 
 # ¿Es realmente correcta la W? Casi coincide con %V
-#: src/date.c:194
+#: src/date.c:196
 msgid ""
 "  %U   week number of year with Sunday as first day of week (00..53)\n"
 "  %V   week number of year with Monday as first day of week (01..53)\n"
@@ -2253,7 +2270,7 @@ msgstr ""
 "  %W   el número de la semana en el año con lunes como primer día de\n"
 "        la semana (00..53)\n"
 
-#: src/date.c:200
+#: src/date.c:202
 msgid ""
 "  %x   locale's date representation (mm/dd/yy)\n"
 "  %X   locale's time representation (%H:%M:%S)\n"
@@ -2265,7 +2282,7 @@ msgstr ""
 "  %y   los últimos dos dígitos del año (00..99)\n"
 "  %Y   el año (1970...)\n"
 
-#: src/date.c:206
+#: src/date.c:208
 msgid ""
 "  %z   RFC-2822 style numeric timezone (-0500) (a nonstandard extension)\n"
 "  %Z   time zone (e.g., EDT), or nothing if no time zone is determinable\n"
@@ -2287,34 +2304,34 @@ msgstr ""
 "  `-' (guión) no rellena el campo\n"
 "  `_' (subrayado) rellena el campo con espacios\n"
 
-#: src/date.c:238 src/dd.c:1183 src/dircolors.c:532 src/head.c:859
-#: src/md5sum.c:390 src/md5sum.c:732 src/od.c:958 src/od.c:2003 src/pr.c:1163
-#: src/pr.c:1370 src/pr.c:1492 src/stty.c:902 src/tac.c:483 src/tac.c:489
-#: src/tee.c:151 src/tr.c:2021 src/tsort.c:585 src/wc.c:210
+#: src/date.c:239 src/dd.c:1290 src/dircolors.c:532 src/head.c:859
+#: src/md5sum.c:390 src/md5sum.c:732 src/od.c:931 src/od.c:1976 src/pr.c:1163
+#: src/pr.c:1370 src/pr.c:1492 src/stty.c:908 src/tac.c:483 src/tac.c:489
+#: src/tee.c:125 src/tr.c:1932 src/tsort.c:583 src/wc.c:210
 msgid "standard input"
 msgstr "entrada estándar"
 
-#: src/date.c:269 src/date.c:461
+#: src/date.c:267 src/date.c:457
 #, c-format
 msgid "invalid date `%s'"
 msgstr "fecha inválida `%s'"
 
 # Cualquier cosa menos poner "fechas a imprimir".
-#: src/date.c:365
+#: src/date.c:363
 msgid "the options to specify dates for printing are mutually exclusive"
 msgstr "las opciones para especificar la fecha son mutuamente excluyentes"
 
-#: src/date.c:372
+#: src/date.c:370
 msgid "the options to print and set the time may not be used together"
 msgstr ""
 "las opciones para mostrar y establecer la hora no se pueden utilizar a la vez"
 
-#: src/date.c:378
+#: src/date.c:376
 #, c-format
 msgid "too many non-option arguments: %s%s"
 msgstr "demasiados argumentos que no son opciones: %s%s"
 
-#: src/date.c:386
+#: src/date.c:384
 #, c-format
 msgid ""
 "the argument `%s' lacks a leading `+';\n"
@@ -2325,7 +2342,7 @@ msgstr ""
 "cuando se utiliza una opción para especificar fecha(s), cualquier argumento\n"
 "que no sea una opción debe ser una cadena de formato que comience con `+'."
 
-#: src/date.c:398
+#: src/date.c:396
 msgid ""
 "a format string may not be specified when using the --rfc-2822 (-R) option"
 msgstr ""
@@ -2333,35 +2350,36 @@ msgstr ""
 "la opción --rfc-2822 (-R)"
 
 # Nota: Se refiere con toda probabilidad a una fecha o a una hora.
-#: src/date.c:434
+#: src/date.c:432
 msgid "undefined"
 msgstr "no definida"
 
-#: src/date.c:436 src/touch.c:423
+#: src/date.c:434 src/touch.c:404
 msgid "cannot get time of day"
 msgstr "no se puede obtener la hora del día"
 
-#: src/date.c:469
+#: src/date.c:465
 msgid "cannot set date"
 msgstr "no se puede establecer la fecha"
 
-#: src/date.c:529
+#: src/date.c:526
 #, c-format
 msgid "time %s is out of range"
 msgstr "la fecha %s está fuera de rango"
 
-#: src/dd.c:287 src/tty.c:68 src/uname.c:109 src/whoami.c:53
+#: src/dd.c:316 src/tty.c:68 src/uname.c:109 src/whoami.c:53
 #, c-format
 msgid "Usage: %s [OPTION]...\n"
 msgstr "Modo de empleo: %s [OPCIÓN]...\n"
 
-#: src/dd.c:288
+#: src/dd.c:317
+#, fuzzy
 msgid ""
 "Copy a file, converting and formatting according to the options.\n"
 "\n"
 "  bs=BYTES        force ibs=BYTES and obs=BYTES\n"
 "  cbs=BYTES       convert BYTES bytes at a time\n"
-"  conv=KEYWORDS   convert the file as per the comma separated keyword list\n"
+"  conv=CONVS      convert the file as per the comma separated symbol list\n"
 "  count=BLOCKS    copy only BLOCKS input blocks\n"
 "  ibs=BYTES       read BYTES bytes at a time\n"
 msgstr ""
@@ -2375,11 +2393,14 @@ msgstr ""
 "  count=BLOQUES   copia solamente BLOQUES bloques de entrada\n"
 "  ibs=BYTES       lee BYTES bytes cada vez\n"
 
-#: src/dd.c:297
+#: src/dd.c:326
+#, fuzzy
 msgid ""
 "  if=FILE         read from FILE instead of stdin\n"
+"  iflag=FLAGS     read as per the comma separated symbol list\n"
 "  obs=BYTES       write BYTES bytes at a time\n"
 "  of=FILE         write to FILE instead of stdout\n"
+"  oflag=FLAGS     write as per the comma separated symbol list\n"
 "  seek=BLOCKS     skip BLOCKS obs-sized blocks at start of output\n"
 "  skip=BLOCKS     skip BLOCKS ibs-sized blocks at start of input\n"
 msgstr ""
@@ -2391,13 +2412,15 @@ msgstr ""
 "  skip=BLOQUES    se salta BLOQUES bloques de tamaño ibs al comienzo de la\n"
 "                  entrada\n"
 
-#: src/dd.c:306
+#: src/dd.c:337
+#, fuzzy
 msgid ""
 "\n"
 "BLOCKS and BYTES may be followed by the following multiplicative suffixes:\n"
 "xM M, c 1, w 2, b 512, kB 1000, K 1024, MB 1000*1000, M 1024*1024,\n"
 "GB 1000*1000*1000, G 1024*1024*1024, and so on for T, P, E, Z, Y.\n"
-"Each KEYWORD may be:\n"
+"\n"
+"Each CONV symbol may be:\n"
 "\n"
 msgstr ""
 "\n"
@@ -2409,7 +2432,7 @@ msgstr ""
 "Cada PALABRA puede ser:\n"
 "\n"
 
-#: src/dd.c:314
+#: src/dd.c:346
 msgid ""
 "  ascii     from EBCDIC to ASCII\n"
 "  ebcdic    from ASCII to EBCDIC\n"
@@ -2429,14 +2452,19 @@ msgstr ""
 "            con un carácter de nueva línea\n"
 "  lcase     cambia las mayúsculas a minúsculas\n"
 
-#: src/dd.c:322
+#: src/dd.c:354
+#, fuzzy
 msgid ""
+"  nocreat   do not create the output file\n"
+"  excl      fail if the output file already exists\n"
 "  notrunc   do not truncate the output file\n"
 "  ucase     change lower case to upper case\n"
 "  swab      swap every pair of input bytes\n"
 "  noerror   continue after read errors\n"
 "  sync      pad every input block with NULs to ibs-size; when used\n"
 "              with block or unblock, pad with spaces rather than NULs\n"
+"  fdatasync physically write output file data before finishing\n"
+"  fsync     likewise, but also write metadata\n"
 msgstr ""
 "  notrunc   no trunca el fichero de salida\n"
 "  ucase     cambia las minúsculas a mayúsculas\n"
@@ -2446,7 +2474,35 @@ msgstr ""
 "              cuando se utiliza con block o unblock, rellena con espacios\n"
 "              en lugar de con NULos\n"
 
-#: src/dd.c:330
+#: src/dd.c:366
+msgid ""
+"\n"
+"Each FLAG symbol may be:\n"
+"\n"
+"  append    append mode (makes sense only for output)\n"
+msgstr ""
+
+#: src/dd.c:373
+msgid "  direct    use direct I/O for data\n"
+msgstr ""
+
+#: src/dd.c:375
+msgid "  dsync     use synchronized I/O for data\n"
+msgstr ""
+
+#: src/dd.c:377
+msgid "  sync      likewise, but also for metadata\n"
+msgstr ""
+
+#: src/dd.c:379
+msgid "  nonblock  use non-blocking I/O\n"
+msgstr ""
+
+#: src/dd.c:381
+msgid "  nofollow  do not follow symlinks\n"
+msgstr ""
+
+#: src/dd.c:382
 msgid ""
 "\n"
 "Note that sending a SIGUSR1 signal to a running `dd' process makes it\n"
@@ -2468,62 +2524,77 @@ msgstr ""
 "  10899206+0 registros leídos\n"
 "  10899206+0 registros escritos\n"
 
-#: src/dd.c:372
+#: src/dd.c:424
 #, c-format
 msgid "%s+%s records in\n"
 msgstr "%s+%s registros leídos\n"
 
-#: src/dd.c:374
+#: src/dd.c:426
 #, c-format
 msgid "%s+%s records out\n"
 msgstr "%s+%s registros escritos\n"
 
-#: src/dd.c:381
+#: src/dd.c:433
 msgid "truncated record"
 msgstr "registro truncado"
 
-#: src/dd.c:382
+#: src/dd.c:434
 msgid "truncated records"
 msgstr "registros truncados"
 
-#: src/dd.c:392
+#: src/dd.c:444
 #, c-format
 msgid "closing input file %s"
 msgstr "cerrando el fichero de entrada %s"
 
-#: src/dd.c:395
+#: src/dd.c:447
 #, c-format
 msgid "closing output file %s"
 msgstr "cerrando el fichero de salida %s"
 
-#: src/dd.c:479
+#: src/dd.c:531
 #, c-format
 msgid "writing to %s"
 msgstr "escribiendo en %s"
 
-#: src/dd.c:511
-#, c-format
-msgid "invalid conversion: %s"
-msgstr "conversión inválida: %s"
+#: src/dd.c:542
+#, fuzzy, c-format
+msgid "invalid input flag: %s"
+msgstr "ancho inválido: %s"
 
-#: src/dd.c:567
+#: src/dd.c:543
+#, fuzzy, c-format
+msgid "invalid output flag: %s"
+msgstr "nombre de grupo inválido %s"
+
+#: src/dd.c:633
 #, c-format
 msgid "unrecognized option %s"
 msgstr "opción no reconocida %s"
 
-#: src/dd.c:620
+#: src/dd.c:644
+#, c-format
+msgid "invalid conversion: %s"
+msgstr "conversión inválida: %s"
+
+#: src/dd.c:691
 #, c-format
 msgid "unrecognized option %s=%s"
 msgstr "opción no reconocida %s=%s"
 
-#: src/dd.c:626
+#: src/dd.c:697
 #, c-format
 msgid "invalid number %s"
 msgstr "número inválido %s"
 
+#: src/dd.c:717
+#, fuzzy
+msgid "cannot combine excl and nocreat"
+msgstr "no se puede combinar la señal con -l o -t"
+
 # Nota: El `conv' es el mismo que aparece más adelante como
 # "conv=KEYWORD", por lo tanto *no* se debe traducir.
-#: src/dd.c:655
+#: src/dd.c:732
 msgid "\tonly one conv in {ascii,ebcdic,ibm}, {lcase,ucase}, {block,unblock}"
 msgstr ""
 "        sólo una `conv' en {ascii,ebcdic,ibm}, {lcase,ucase}, {block,"
@@ -2531,7 +2602,7 @@ msgstr ""
 "{unblock,sync}"
 
 # Se admiten sugerencias.
-#: src/dd.c:790
+#: src/dd.c:867
 #, c-format
 msgid ""
 "warning: working around lseek kernel bug for file (%s)\n"
@@ -2541,18 +2612,33 @@ msgstr ""
 "relacionado con lseek para el fichero (%s) de mt_type=0x%0lx;\n"
 "consulte la lista de tipos en <sys/mtio.h>"
 
-#: src/dd.c:1180 src/dd.c:1198
+#: src/dd.c:1020
+#, fuzzy, c-format
+msgid "setting flags for %s"
+msgstr "estableciendo la fecha de %s"
+
+#: src/dd.c:1230
+#, c-format
+msgid "fdatasync failed for %s"
+msgstr ""
+
+#: src/dd.c:1240
+#, fuzzy, c-format
+msgid "fsync failed for %s"
+msgstr "No se puede abrir %s"
+
+#: src/dd.c:1297 src/dd.c:1320
 #, c-format
 msgid "opening %s"
 msgstr "abriendo %s"
 
 # No me acaba de sonar bien lo de fuera de rango.
 # Se admiten sugerencias. sv
-#: src/dd.c:1206
+#: src/dd.c:1328
 msgid "file offset out of range"
 msgstr "desplazamiento de fichero fuera de rango"
 
-#: src/dd.c:1224
+#: src/dd.c:1346
 #, c-format
 msgid "advancing past %s bytes in output file %s"
 msgstr "avanzando %s bytes pasados en el fichero de salida %s"
@@ -2598,7 +2684,7 @@ msgstr " Bloques de %-4s Usado    Dispon Uso%%"
 msgid " Mounted on\n"
 msgstr " Montado en\n"
 
-#: src/df.c:448 src/pwd.c:78 src/remove.c:980
+#: src/df.c:448
 msgid "cannot get current directory"
 msgstr "no se puede obtener el directorio actual"
 
@@ -2612,7 +2698,7 @@ msgstr "no se puede cambiar al directorio %s"
 msgid "cannot stat current directory (now %s)"
 msgstr "no se puede efectuar `stat' sobre el directorio actual (ahora %s)"
 
-#: src/df.c:728
+#: src/df.c:715
 msgid ""
 "Show information about the filesystem on which each FILE resides,\n"
 "or all filesystems by default.\n"
@@ -2623,7 +2709,7 @@ msgstr ""
 "o por omisión sobre todos los sistemas de ficheros.\n"
 "\n"
 
-#: src/df.c:736
+#: src/df.c:723
 msgid ""
 "  -a, --all             include filesystems having 0 blocks\n"
 "  -B, --block-size=SIZE use SIZE-byte blocks\n"
@@ -2637,7 +2723,7 @@ msgstr ""
 "2G)\n"
 "  -H, --si             análogo, pero utiliza potencias de 1000 y no de 1024\n"
 
-#: src/df.c:742
+#: src/df.c:729
 msgid ""
 "  -i, --inodes          list inode information instead of block usage\n"
 "  -k                    like --block-size=1K\n"
@@ -2653,7 +2739,7 @@ msgstr ""
 "      --no-sync         no llama a sync antes de obtener el modo de empleo\n"
 "                        (por defecto)\n"
 
-#: src/df.c:748
+#: src/df.c:735
 msgid ""
 "  -P, --portability     use the POSIX output format\n"
 "      --sync            invoke sync before getting usage info\n"
@@ -2672,7 +2758,7 @@ msgstr ""
 "                       no son del tipo TIPO\n"
 "  -v                   (no tiene efecto)\n"
 
-#: src/df.c:758 src/du.c:212 src/ls.c:4023
+#: src/df.c:745 src/du.c:220 src/ls.c:4105
 msgid ""
 "\n"
 "SIZE may be (or may be an integer optionally followed by) one of following:\n"
@@ -2683,16 +2769,16 @@ msgstr ""
 "de los siguientes: kB 1000, K 1024, MB 1000*1000, M 1024*1024, y así\n"
 "en adelante para G, T, P, E, Z, Y.\n"
 
-#: src/df.c:876
+#: src/df.c:863
 #, c-format
 msgid "file system type %s both selected and excluded"
 msgstr "el sistema de ficheros %s está simultánemente seleccionado y excluido"
 
-#: src/df.c:920
+#: src/df.c:907
 msgid "Warning: "
 msgstr "Atención: "
 
-#: src/df.c:923
+#: src/df.c:910
 #, c-format
 msgid "%scannot read table of mounted filesystems"
 msgstr "%sno se puede leer la tabla de sistemas de ficheros montados"
@@ -2790,6 +2876,15 @@ msgstr ""
 "/'s, el resultado es `.' (representando el directorio actual).\n"
 "\n"
 
+#: src/du.c:170
+#, fuzzy, c-format
+msgid ""
+"Usage: %s [OPTION]... [FILE]...\n"
+"  or:  %s [OPTION]... --files0-from=F\n"
+msgstr ""
+"Modo de empleo: %s [OPCIÓN]... GRUPO FICHERO...\n"
+"       o bien:  %s [OPCIÓN]... --reference=FICHERO-R FICHERO...\n"
+
 # La palabra "desreferencia" es horrenda. Dudo incluso de que exista.
 # ¿Sugerencias?
 # "Deja de referenciar", "Elimina referencia/s a" (Sólo es sugerencia) tb
@@ -2798,7 +2893,7 @@ msgstr ""
 # ¿Por qué no algo tan simple y comprensible como "no hace referencia a"? uac
 #
 # Lo pensaré despacito. sv
-#: src/du.c:168
+#: src/du.c:174
 msgid ""
 "Summarize disk usage of each FILE, recursively for directories.\n"
 "\n"
@@ -2807,7 +2902,7 @@ msgstr ""
 "directorios.\n"
 "\n"
 
-#: src/du.c:175
+#: src/du.c:181
 msgid ""
 "  -a, --all             write counts for all files, not just directories\n"
 "      --apparent-size   print apparent sizes, rather than disk usage; "
@@ -2838,11 +2933,14 @@ msgstr ""
 #
 # En esto no os ponéis de acuerdo.
 # Creo que lo acabaremos preguntando en "spanglish". sv+
-#: src/du.c:186
+#: src/du.c:192
 #, fuzzy
 msgid ""
+"      --files0-from=F   summarize disk usage of the NUL-terminated file\n"
+"                          names specified in file F\n"
 "  -H                    like --si, but also evokes a warning; will soon\n"
-"                        change to be equivalent to --dereference-args (-D)\n"
+"                          change to be equivalent to --dereference-args (-"
+"D)\n"
 "  -h, --human-readable  print sizes in human readable format (e.g., 1K 234M "
 "2G)\n"
 "      --si              like -h, but use powers of 1000 not 1024\n"
@@ -2858,7 +2956,7 @@ msgstr ""
 "  -l, --count-links     cuenta los tamaños varias veces si hay enlaces "
 "fuertes\n"
 
-#: src/du.c:194
+#: src/du.c:202
 msgid ""
 "  -L, --dereference     dereference all symbolic links\n"
 "  -P, --no-dereference  don't follow any symbolic links (this is the "
@@ -2875,7 +2973,7 @@ msgstr ""
 "  -S, --separate-dirs   no incluye el tamaño de los subdirectorios\n"
 "  -s, --summarize       muestra solamente un total para cada argumento\n"
 
-#: src/du.c:201
+#: src/du.c:209
 msgid ""
 "  -x, --one-file-system  skip directories on different filesystems\n"
 "  -X FILE, --exclude-from=FILE  Exclude files that match any pattern in "
@@ -2897,11 +2995,11 @@ msgstr ""
 "                        debajo del argumento de la línea de órdenes;\n"
 "                        --max-depth=0 es lo mismo que --summarize\n"
 
-#: src/du.c:526 src/ls.c:2224 src/wc.c:674
+#: src/du.c:532 src/ls.c:2317 src/wc.c:674
 msgid "total"
 msgstr "total"
 
-#: src/du.c:606
+#: src/du.c:614
 msgid ""
 "WARNING: use --si, not -H; the meaning of the -H option will soon\n"
 "change to be the same as that of --dereference-args (-D)"
@@ -2909,30 +3007,46 @@ msgstr ""
 "ATENCIÓN: Utilice --si, no -H; el significado de la opción -H cambiará\n"
 "pronto y será el mismo que el de --dereference-args (-D)"
 
-#: src/du.c:628
+#: src/du.c:636
 #, c-format
 msgid "invalid maximum depth %s"
 msgstr "profundidad máxima inválida %s"
 
-#: src/du.c:698
+#: src/du.c:710
 msgid "cannot both summarize and show all entries"
 msgstr "no se puede al mismo tiempo resumir y mostrar todas las entradas"
 
-#: src/du.c:705
+#: src/du.c:717
 msgid "warning: summarizing is the same as using --max-depth=0"
 msgstr "atención: resumir es lo mismo que usar --max-depth=0"
 
-#: src/du.c:711
+#: src/du.c:723
 #, c-format
 msgid "warning: summarizing conflicts with --max-depth=%d"
 msgstr "atención: resumir entra en conflicto con --max-depth=%d"
 
-#: src/echo.c:76
+#: src/du.c:739
+#, c-format
+msgid "%s: you may not specify command-line arguments with --files0-from"
+msgstr ""
+
+# Lo mismo de antes.
+#: src/du.c:750
+#, fuzzy, c-format
+msgid "cannot read file names from %s"
+msgstr "no se pueden comparar los nombres de fichero %s y %s"
+
+#: src/du.c:790 src/du.c:793
+#, fuzzy
+msgid "invalid zero-length file name"
+msgstr "%s: tipo de fichero inválido"
+
+#: src/echo.c:64
 #, c-format
 msgid "Usage: %s [OPTION]... [STRING]...\n"
 msgstr "Modo de empleo: %s [OPCIÓN]... [CADENA]...\n"
 
-#: src/echo.c:77
+#: src/echo.c:65
 msgid ""
 "Echo the STRING(s) to standard output.\n"
 "\n"
@@ -2951,12 +3065,13 @@ msgstr ""
 # alerta (BEL) -> pitido audible (BEL) em+
 # Vale que no es alerta, pero yo creo que debería ser campana. sv+
 #
-#: src/echo.c:87
+#: src/echo.c:75
+#, fuzzy
 msgid ""
 "\n"
-"Without -E, the following sequences are recognized and interpolated:\n"
+"If -e is in effect, the following sequences are recognized:\n"
 "\n"
-"  \\NNN   the character whose ASCII code is NNN (octal)\n"
+"  \\0NNN   the character whose ASCII code is NNN (octal)\n"
 "  \\\\     backslash\n"
 "  \\a     alert (BEL)\n"
 "  \\b     backspace\n"
@@ -2969,7 +3084,7 @@ msgstr ""
 "  \\a     campana (BEL)\n"
 "  \\b     retroceso\n"
 
-#: src/echo.c:96
+#: src/echo.c:84
 msgid ""
 "  \\c     suppress trailing newline\n"
 "  \\f     form feed\n"
@@ -3556,7 +3671,7 @@ msgstr ""
 # (Como el asno de Buridán)
 # ¿O tal vez porque nadie se ha atrevido jamás?
 # A mí me da miedo ser el primero. sv
-#: src/hostname.c:66
+#: src/hostname.c:70
 #, c-format
 msgid ""
 "Usage: %s [NAME]\n"
@@ -3569,17 +3684,17 @@ msgstr ""
 "Muestra o establece el nombre del `host' del sistema actual.\n"
 "\n"
 
-#: src/hostname.c:104
+#: src/hostname.c:108
 #, c-format
 msgid "cannot set hostname to `%s'"
 msgstr "no se puede establecer el nombre del `host' en `%s'"
 
-#: src/hostname.c:110
+#: src/hostname.c:114
 msgid "cannot set hostname; this system lacks the functionality"
 msgstr ""
 "no se puede cambiar el nombre de `host'; este sistema carece de esa capacidad"
 
-#: src/hostname.c:117
+#: src/hostname.c:121
 msgid "cannot determine hostname"
 msgstr "no se puede determinar el nombre del `host'"
 
@@ -3651,51 +3766,51 @@ msgstr "no se puede encontrar el nombre para el usuario con ID %u"
 msgid "cannot find name for group ID %u"
 msgstr "no se puede encontrar el nombre para el grupo con ID %u"
 
-#: src/id.c:273
+#: src/id.c:272
 msgid "cannot get supplemental group list"
 msgstr "no se puede obtener la lista de grupos suplementarios"
 
-#: src/id.c:385
+#: src/id.c:384
 msgid " groups="
 msgstr " grupos="
 
-#: src/install.c:266
+#: src/install.c:271
 msgid "the strip option may not be used when installing a directory"
 msgstr "la opción strip no se puede usar cuando se instala un directorio"
 
-#: src/install.c:289 src/mkdir.c:141
+#: src/install.c:294 src/mkdir.c:141
 #, c-format
 msgid "invalid mode %s"
 msgstr "modo inválido %s"
 
-#: src/install.c:304 src/install.c:368
+#: src/install.c:309 src/install.c:373
 #, c-format
 msgid "creating directory %s"
 msgstr "creando el directorio %s"
 
-#: src/install.c:329
+#: src/install.c:334
 #, c-format
 msgid "installing multiple files, but last argument, %s is not a directory"
 msgstr ""
 "se instalan varios ficheros, pero el último argumento %s\n"
 "no es un directorio"
 
-#: src/install.c:432
+#: src/install.c:437
 #, c-format
 msgid "%s is a directory"
 msgstr "%s es un directorio"
 
-#: src/install.c:468
+#: src/install.c:473
 #, c-format
 msgid "cannot change ownership of %s"
 msgstr "no se puede cambiar el propietario de %s"
 
-#: src/install.c:492
+#: src/install.c:497
 #, c-format
 msgid "cannot obtain time stamps for %s"
 msgstr "no se puede obtener la fecha de %s"
 
-#: src/install.c:502
+#: src/install.c:507
 #, c-format
 msgid "cannot set time stamps for %s"
 msgstr "no se puede establecer la fecha de %s"
@@ -3706,30 +3821,30 @@ msgstr "no se puede establecer la fecha de %s"
 # (Antes decía simplemente "cannot fork").
 # Gracias a este cambio, tanto el original como la traducción son claros
 # y precisos, pero sin llegar a ser verborreicos.
-#: src/install.c:523
+#: src/install.c:528
 msgid "fork system call failed"
 msgstr "falló la llamada al sistema `fork'"
 
-#: src/install.c:527
+#: src/install.c:532
 msgid "cannot run strip"
 msgstr "no se puede ejecutar strip"
 
-#: src/install.c:534
+#: src/install.c:539
 msgid "strip failed"
 msgstr "strip falló"
 
-#: src/install.c:555
+#: src/install.c:560
 #, c-format
 msgid "invalid user %s"
 msgstr "usuario inválido %s"
 
-#: src/install.c:573
+#: src/install.c:578
 #, c-format
 msgid "invalid group %s"
 msgstr "grupo inválido %s"
 
 # Aprovecho que en iso-8859-1 existen 1º y 1ª ...
-#: src/install.c:592
+#: src/install.c:597
 #, c-format
 msgid ""
 "Usage: %s [OPTION]... SOURCE DEST           (1st format)\n"
@@ -3740,7 +3855,7 @@ msgstr ""
 "       o bien:  %s [OPCIÓN]... ORIGEN... DIRECTORIO   (2ª forma)\n"
 "       o bien:  %s -d [OPCIÓN]... DIRECTORIO...       (3ª forma)\n"
 
-#: src/install.c:598
+#: src/install.c:603
 msgid ""
 "In the first two formats, copy SOURCE to DEST or multiple SOURCE(s) to\n"
 "the existing DIRECTORY, while setting permission modes and owner/group.\n"
@@ -3753,7 +3868,7 @@ msgstr ""
 "del/de los DIRECTORIO(s) dado(s).\n"
 "\n"
 
-#: src/install.c:607
+#: src/install.c:612
 msgid ""
 "      --backup[=CONTROL] make a backup of each existing destination file\n"
 "  -b                  like --backup but does not accept an argument\n"
@@ -3778,7 +3893,7 @@ msgstr ""
 #
 # Estoy con tb, creo que "indicado" explica mejor... uac
 # Lo pensaré. ¿Alguien más? sv
-#: src/install.c:614
+#: src/install.c:619
 msgid ""
 "  -D                  create all leading components of DEST except the "
 "last,\n"
@@ -3800,7 +3915,7 @@ msgstr ""
 "                          de rwxr-xr-x\n"
 "  -o, --owner=PROPIETARIO establece la propiedad (sólo superusuario)\n"
 
-#: src/install.c:621
+#: src/install.c:626
 msgid ""
 "  -p, --preserve-timestamps   apply access/modification times of SOURCE "
 "files\n"
@@ -3818,7 +3933,7 @@ msgstr ""
 "                          van creando\n"
 "  -S, --suffix=SUFIJO     reemplaza el sufijo de respaldo habitual\n"
 
-#: src/install.c:630 src/ln.c:385 src/mv.c:342
+#: src/install.c:635 src/ln.c:385 src/mv.c:348
 msgid ""
 "\n"
 "The backup suffix is `~', unless set with --suffix or SIMPLE_BACKUP_SUFFIX.\n"
@@ -4228,7 +4343,7 @@ msgid "when making multiple links, last argument must be a directory"
 msgstr ""
 "cuando se crean varios enlaces, el último argumento debe ser un directorio"
 
-#: src/logname.c:48 src/pwd.c:45 src/sync.c:44
+#: src/logname.c:48 src/pwd.c:65 src/sync.c:44
 #, c-format
 msgid "Usage: %s [OPTION]\n"
 msgstr "Modo de empleo: %s [OPCIÓN]\n"
@@ -4254,47 +4369,47 @@ msgstr ""
 msgid "no login name"
 msgstr "no hay ningún nombre de `login'"
 
-#: src/ls.c:648
+#: src/ls.c:655
 msgid "%b %e  %Y"
 msgstr "%b %e  %Y"
 
-#: src/ls.c:656
+#: src/ls.c:663
 msgid "%b %e %H:%M"
 msgstr "%b %e %H:%M"
 
-#: src/ls.c:1283
+#: src/ls.c:1376
 #, c-format
 msgid "ignoring invalid value of environment variable QUOTING_STYLE: %s"
 msgstr ""
 "se descarta el valor inválido de la variable de entorno QUOTING_STYLE: %s"
 
-#: src/ls.c:1310
+#: src/ls.c:1403
 #, c-format
 msgid "ignoring invalid width in environment variable COLUMNS: %s"
 msgstr "se descarta el ancho inválido de la variable de entorno COLUMNS: %s"
 
-#: src/ls.c:1342
+#: src/ls.c:1435
 #, c-format
 msgid "ignoring invalid tab size in environment variable TABSIZE: %s"
 msgstr ""
 "se descarta el tamaño de `tab' inválido de la variable de entorno TABSIZE: %s"
 
-#: src/ls.c:1459
+#: src/ls.c:1552 src/ptx.c:2053
 #, c-format
 msgid "invalid line width: %s"
 msgstr "ancho de línea inválido: %s"
 
-#: src/ls.c:1533
+#: src/ls.c:1626
 #, c-format
 msgid "invalid tab size: %s"
 msgstr "tamaño del `tab' inválido: %s"
 
-#: src/ls.c:1701
+#: src/ls.c:1794
 #, c-format
 msgid "invalid time style format %s"
 msgstr "formato de estilo de fecha inválido %s"
 
-#: src/ls.c:2037
+#: src/ls.c:2130
 #, c-format
 msgid "unrecognized prefix: %s"
 msgstr "prefijo no reconocido: %s"
@@ -4312,36 +4427,36 @@ msgstr "prefijo no reconocido: %s"
 # es ininteligible... (Si de verdad no fuera analizable, no daría
 # error, sino que produciría un "core dump" o algo así). sv
 #
-#: src/ls.c:2060
+#: src/ls.c:2153
 msgid "unparsable value for LS_COLORS environment variable"
 msgstr "valor ininteligible para la variable de entorno LS_COLORS"
 
-#: src/ls.c:2128
+#: src/ls.c:2221
 #, c-format
 msgid "cannot determine device and inode of %s"
 msgstr "no se puede determinar el dispositivo y el nodo-i de %s"
 
-#: src/ls.c:2138
+#: src/ls.c:2231
 #, c-format
 msgid "not listing already-listed directory: %s"
 msgstr "no se muestra el directorio ya mostrado: %s"
 
-#: src/ls.c:2191 src/remove.c:938
+#: src/ls.c:2284 src/pwd.c:234 src/remove.c:941
 #, c-format
 msgid "reading directory %s"
 msgstr "leyendo el directorio %s"
 
 # Lo mismo de antes.
-#: src/ls.c:2671
+#: src/ls.c:2764
 #, c-format
 msgid "cannot compare file names %s and %s"
 msgstr "no se pueden comparar los nombres de fichero %s y %s"
 
-#: src/ls.c:3013
+#: src/ls.c:3106
 msgid "User name too long"
 msgstr "Nombre de usuario demasiado largo"
 
-#: src/ls.c:3034
+#: src/ls.c:3127
 msgid "Group name too long"
 msgstr "Nombre de grupo demasiado largo"
 
@@ -4365,7 +4480,7 @@ msgstr "Nombre de grupo demasiado largo"
 # pero para lo que aquí se quiere decir le toca la segunda... ¿no? uac
 #
 # Eso es lo que me parece. Gracias. sv
-#: src/ls.c:3906
+#: src/ls.c:3988
 msgid ""
 "List information about the FILEs (the current directory by default).\n"
 "Sort entries alphabetically if none of -cftuSUX nor --sort.\n"
@@ -4377,7 +4492,7 @@ msgstr ""
 "opciones -cftuSUX ni --sort.\n"
 "\n"
 
-#: src/ls.c:3914
+#: src/ls.c:3996
 msgid ""
 "  -a, --all                  do not hide entries starting with .\n"
 "  -A, --almost-all           do not list implied . and ..\n"
@@ -4390,7 +4505,7 @@ msgstr ""
 "  -b, --escape               imprime escapes octales para los caracteres no\n"
 "                             gráficos\n"
 
-#: src/ls.c:3920
+#: src/ls.c:4002
 msgid ""
 "      --block-size=SIZE      use SIZE-byte blocks\n"
 "  -B, --ignore-backups       do not list implied entries ending with ~\n"
@@ -4408,7 +4523,7 @@ msgstr ""
 "                               con -l: muestra ctime y ordena por nombre\n"
 "                               en cualquier otro caso: ordena por ctime\n"
 
-#: src/ls.c:3928
+#: src/ls.c:4010
 msgid ""
 "  -C                         list entries by columns\n"
 "      --color[=WHEN]         control whether color is used to distinguish "
@@ -4431,7 +4546,7 @@ msgstr ""
 "  -D, --dired                genera el resultado para el modo `dired' de "
 "Emacs\n"
 
-#: src/ls.c:3936
+#: src/ls.c:4018
 msgid ""
 "  -f                         do not sort, enable -aU, disable -lst\n"
 "  -F, --classify             append indicator (one of */=@|) to entries\n"
@@ -4446,7 +4561,7 @@ msgstr ""
 "                               single-column -1, verbose -l, vertical -C\n"
 "      --full-time            como -l --time-style=full-iso\n"
 
-#: src/ls.c:3943
+#: src/ls.c:4025
 msgid ""
 "  -g                         like -l, but do not list owner\n"
 "  -G, --no-group             inhibit display of group information\n"
@@ -4473,7 +4588,7 @@ msgstr ""
 "                             sigue cada enlace simbólico en la línea de\n"
 "                             órdenes que apunte a un directorio\n"
 
-#: src/ls.c:3954
+#: src/ls.c:4036
 msgid ""
 "      --indicator-style=WORD append indicator with style WORD to entry "
 "names:\n"
@@ -4494,7 +4609,7 @@ msgstr ""
 "                             con PATRÓN de shell\n"
 "  -k                         como --block-size=1K\n"
 
-#: src/ls.c:3961
+#: src/ls.c:4043
 msgid ""
 "  -l                         use a long listing format\n"
 "  -L, --dereference          when showing file information for a symbolic\n"
@@ -4513,7 +4628,7 @@ msgstr ""
 "  -m                         rellena el ancho con una lista de entradas\n"
 "                             separadas por comas\n"
 
-#: src/ls.c:3968
+#: src/ls.c:4050
 msgid ""
 "  -n, --numeric-uid-gid      like -l, but list numeric UIDs and GIDs\n"
 "  -N, --literal              print raw entry names (don't treat e.g. "
@@ -4542,7 +4657,7 @@ msgstr ""
 # una línea más, y quedaría más feo. Si digo "sin el grupo", queda
 # claro que el grupo no sale. sv
 #
-#: src/ls.c:3975
+#: src/ls.c:4057
 msgid ""
 "  -q, --hide-control-chars   print ? instead of non graphic characters\n"
 "      --show-control-chars   show non graphic characters as-is (default\n"
@@ -4566,7 +4681,7 @@ msgstr ""
 "                               literal, locale, shell, shell-always, c, "
 "escape\n"
 
-#: src/ls.c:3983
+#: src/ls.c:4065
 msgid ""
 "  -r, --reverse              reverse order while sorting\n"
 "  -R, --recursive            list subdirectories recursively\n"
@@ -4579,7 +4694,7 @@ msgstr ""
 # Nota: ctime, extension, none, etc. son posibles "WORD"s,
 # por lo tanto, *no* deben traducirse, o de lo contrario el programa
 # no las reconocería.
-#: src/ls.c:3988
+#: src/ls.c:4070
 msgid ""
 "  -S                         sort by file size\n"
 "      --sort=WORD            extension -X, none -U, size -S, time -t,\n"
@@ -4603,7 +4718,7 @@ msgstr ""
 "ordenación\n"
 "                               si --sort=time\n"
 
-#: src/ls.c:3997
+#: src/ls.c:4079
 msgid ""
 "      --time-style=STYLE     show times using style STYLE:\n"
 "                               full-iso, long-iso, iso, locale, +FORMAT\n"
@@ -4631,7 +4746,7 @@ msgstr ""
 "  -T, --tabsize=COLS         establece los topes de tabulación a cada COLS\n"
 "                             en lugar de 8\n"
 
-#: src/ls.c:4008
+#: src/ls.c:4090
 msgid ""
 "  -u                         with -lt: sort by, and show, access time\n"
 "                               with -l: show access time and sort by name\n"
@@ -4649,7 +4764,7 @@ msgstr ""
 "                             directorio\n"
 "  -v                         ordena por versión\n"
 
-#: src/ls.c:4015
+#: src/ls.c:4097
 msgid ""
 "  -w, --width=COLS           assume screen width instead of current value\n"
 "  -x                         list entries by lines instead of by columns\n"
@@ -4664,7 +4779,7 @@ msgstr ""
 "                             entrada\n"
 "  -1                         muestra un fichero por cada línea\n"
 
-#: src/ls.c:4027
+#: src/ls.c:4109
 msgid ""
 "\n"
 "By default, color is not used to distinguish types of files.  That is\n"
@@ -4783,7 +4898,7 @@ msgstr "La suma no coincide"
 msgid "OK"
 msgstr "La suma coincide"
 
-#: src/md5sum.c:494 src/od.c:997
+#: src/md5sum.c:494 src/od.c:970
 #, c-format
 msgid "%s: read error"
 msgstr "%s: error de lectura"
@@ -5066,7 +5181,7 @@ msgstr "tipo de dispositivo inválido %s"
 msgid "cannot set permissions of %s"
 msgstr "no se pueden establecer los permisos de %s"
 
-#: src/mv.c:311
+#: src/mv.c:317
 msgid ""
 "Rename SOURCE to DEST, or move SOURCE(s) to DIRECTORY.\n"
 "\n"
@@ -5074,7 +5189,7 @@ msgstr ""
 "Renombra ORIGEN a DESTINO, o mueve ORIGEN(es) a DIRECTORIO.\n"
 "\n"
 
-#: src/mv.c:318
+#: src/mv.c:324
 msgid ""
 "      --backup[=CONTROL]       make a backup of each existing destination "
 "file\n"
@@ -5093,7 +5208,7 @@ msgstr ""
 "  -i, --interactive             pide confirmación antes de sobreescribir\n"
 "                                  (equivalente a --reply=query)\n"
 
-#: src/mv.c:326
+#: src/mv.c:332
 msgid ""
 "      --reply={yes,no,query}   specify how to handle the prompt about an\n"
 "                                 existing destination file\n"
@@ -5108,7 +5223,7 @@ msgstr ""
 "                                  argumento ORIGEN\n"
 "  -S, --suffix=SUFIJO           reemplaza el sufijo de respaldo habitual\n"
 
-#: src/mv.c:333
+#: src/mv.c:339
 msgid ""
 "      --target-directory=DIRECTORY  move all SOURCE arguments into "
 "DIRECTORY\n"
@@ -5127,12 +5242,12 @@ msgstr ""
 "  -v, --verbose                      da detalles de lo que va haciendo\n"
 
 # FIXME: Falta una coma en el original. sv
-#: src/mv.c:462
+#: src/mv.c:468
 #, c-format
 msgid "specified target, %s is not a directory"
 msgstr "el objetivo especificado, %s, no es un directorio"
 
-#: src/mv.c:470
+#: src/mv.c:476
 msgid "when moving multiple files, last argument must be a directory"
 msgstr "al mover varios ficheros, el último argumento debe ser un directorio"
 
@@ -5252,12 +5367,14 @@ msgstr ""
 "Utilícese \\\\ para obtener \\. ESTILO puede ser uno de lo siguientes:\n"
 
 #: src/nl.c:213
+#, fuzzy
 msgid ""
 "\n"
 "  a         number all lines\n"
 "  t         number only nonempty lines\n"
 "  n         number no lines\n"
-"  pREGEXP   number only lines that contain a match for REGEXP\n"
+"  pBRE      number only lines that contain a match for the basic regular\n"
+"              expression, BRE\n"
 "\n"
 "FORMAT is one of:\n"
 "\n"
@@ -5280,42 +5397,42 @@ msgstr ""
 "  rz       justificación a la derecha, con ceros a la izquierda\n"
 "\n"
 
-#: src/nl.c:491
+#: src/nl.c:492
 #, c-format
 msgid "invalid header numbering style: %s"
 msgstr "estilo de numeración de cabecera inválido: %s"
 
-#: src/nl.c:499
+#: src/nl.c:500
 #, c-format
 msgid "invalid body numbering style: %s"
 msgstr "estilo de numeración de cuerpo inválido: %s"
 
-#: src/nl.c:507
+#: src/nl.c:508
 #, c-format
 msgid "invalid footer numbering style: %s"
 msgstr "estilo de numeración de pie inválido: %s"
 
-#: src/nl.c:519
+#: src/nl.c:520
 #, c-format
 msgid "invalid starting line number: %s"
 msgstr "número de comienzo de línea inválido: %s"
 
-#: src/nl.c:535
+#: src/nl.c:536
 #, c-format
 msgid "invalid line number increment: %s"
 msgstr "incremento de línea inválido: %s"
 
-#: src/nl.c:554
+#: src/nl.c:555
 #, c-format
 msgid "invalid number of blank lines: %s"
 msgstr "número de líneas vacías inválido: %s"
 
-#: src/nl.c:573
+#: src/nl.c:574
 #, c-format
 msgid "invalid line number field width: %s"
 msgstr "ancho para el número de línea inválido: %s"
 
-#: src/nl.c:592
+#: src/nl.c:593
 #, c-format
 msgid "invalid line numbering format: %s"
 msgstr "formato de numeración de líneas inválido: %s"
@@ -5535,12 +5652,12 @@ msgstr ""
 "--string sin ningún número implica 3. --width sin ningún número implica 32.\n"
 "Por omisión, od usa `-A o -t d2 -w 16'.\n"
 
-#: src/od.c:721 src/od.c:843
+#: src/od.c:694 src/od.c:816
 #, c-format
 msgid "invalid type string `%s'"
 msgstr "tipo de cadena inválido `%s'"
 
-#: src/od.c:731
+#: src/od.c:704
 #, c-format
 msgid ""
 "invalid type string `%s';\n"
@@ -5549,7 +5666,7 @@ msgstr ""
 "tipo de cadena inválido `%s';\n"
 "este sistema no posee el tipo de entero de %lu bytes"
 
-#: src/od.c:853
+#: src/od.c:826
 #, c-format
 msgid ""
 "invalid type string `%s';\n"
@@ -5558,29 +5675,29 @@ msgstr ""
 "tipo de cadena inválido `%s';\n"
 "este sistema no dispone de un tipo de coma flotante de %lu bytes"
 
-#: src/od.c:916
+#: src/od.c:889
 #, c-format
 msgid "invalid character `%c' in type string `%s'"
 msgstr "carácter inválido `%c' en la cadena de tipo `%s'"
 
-#: src/od.c:1144
+#: src/od.c:1117
 msgid "cannot skip past end of combined input"
 msgstr ""
 "no se puede saltar a un punto que está más allá de la entrada combinada"
 
-#: src/od.c:1397
+#: src/od.c:1370
 msgid "old-style offset"
 msgstr "desplazamiento al estilo antiguo"
 
 # `set' -> [set] ... no deberíamos cambiar la terminología original, so pena
 # de hacernos la picha un lío ... (opino, vamos :) ipg
-#: src/od.c:1709
+#: src/od.c:1682
 #, c-format
 msgid "invalid output address radix `%c'; it must be one character from [doxn]"
 msgstr ""
 "la base de la dirección de salida no es válida `%c'; debe ser uno de [doxn]"
 
-#: src/od.c:1719
+#: src/od.c:1692
 msgid "skip argument"
 msgstr "pasando por alto este argumento"
 
@@ -5591,57 +5708,57 @@ msgstr "pasando por alto este argumento"
 # a ver si te acuerdas la próxima vez y "pegas" el trocito de código donde esté,
 # así podremos discutir sobre ello....
 # FIXME: Asegurarse de que significa eso. sv+
-#: src/od.c:1727
+#: src/od.c:1700
 msgid "limit argument"
 msgstr "limitando este argumento"
 
 # ¿longitud mínima de cadena? Es que si no, me suena a spanglish :) ipg
 # ok em+
-#: src/od.c:1737
+#: src/od.c:1710
 msgid "minimum string length"
 msgstr "longitud mínima de cadena"
 
-#: src/od.c:1742 src/od.c:1808
+#: src/od.c:1715 src/od.c:1781
 #, c-format
 msgid "%s is too large"
 msgstr "%s es demasiado grande"
 
-#: src/od.c:1806
+#: src/od.c:1779
 msgid "width specification"
 msgstr "especificación de ancho"
 
-#: src/od.c:1828
+#: src/od.c:1801
 msgid "no type may be specified when dumping strings"
 msgstr "no se puede especificar tipo cuando se vuelcan cadenas"
 
 # aunque con "operando no válido" se pueda llegar a la misma conclusión,
 # creo que lo que propongo es mucho más claro...
 # Creo que está bien así y de la otra forma, a mí me suena igual em+
-#: src/od.c:1876
+#: src/od.c:1849
 #, c-format
 msgid "invalid second operand in compatibility mode `%s'"
 msgstr "segundo operando inválido en el modo de compatibilidad `%s'"
 
-#: src/od.c:1897
+#: src/od.c:1870
 msgid "in compatibility mode, the last two arguments must be offsets"
 msgstr ""
 "en el modo de compatibilidad, los dos últimos argumentos deben ser\n"
 "desplazamientos"
 
-#: src/od.c:1904
+#: src/od.c:1877
 msgid "compatibility mode supports at most three arguments"
 msgstr "el modo de compatibilidad admite como mucho tres argumentos"
 
-#: src/od.c:1925
+#: src/od.c:1898
 msgid "skip-bytes + read-bytes is too large"
 msgstr "skip-bytes + read-bytes es demasiado grande"
 
-#: src/od.c:1977
+#: src/od.c:1950
 #, c-format
 msgid "warning: invalid width %lu; using %d instead"
 msgstr "atención: ancho %lu inválido; se usará %d en su lugar"
 
-#: src/od.c:1993
+#: src/od.c:1966
 #, c-format
 msgid "%d: fmt=\"%s\" width=%d\n"
 msgstr "%d: fmt=\"%s\" ancho=%d\n"
@@ -6315,16 +6432,16 @@ msgstr "atención: se descartan los argumentos que sobran, comenzando por `%s'"
 
 # FIXME: Un comentario del autor para el traductor no estaría de más.
 # Me imagino que este nombre es una excepción porque "ç" no existe en ASCII.
-#: src/ptx.c:38
+#: src/ptx.c:40
 msgid "F. Pinard"
 msgstr "François Pinard"
 
-#: src/ptx.c:407
+#: src/ptx.c:404
 #, c-format
 msgid "%s (for regexp `%s')"
 msgstr "%s (para la expresión regular `%s')"
 
-#: src/ptx.c:1874
+#: src/ptx.c:1866
 #, c-format
 msgid ""
 "Usage: %s [OPTION]... [INPUT]...   (without -G)\n"
@@ -6333,7 +6450,7 @@ msgstr ""
 "Modo de empleo: %s [OPCIÓN]... [ENTRADA]...   (sin -G)\n"
 "       o bien:  %s -G [OPCIÓN]... [ENTRADA [SALIDA]]\n"
 
-#: src/ptx.c:1878
+#: src/ptx.c:1870
 msgid ""
 "Output a permuted index, including context, of the words in the input "
 "files.\n"
@@ -6414,7 +6531,7 @@ msgstr ""
 # quiso indicar eso dando más información de la que tú das
 # en la traducción. sv
 # Emoción, intriga, dolor de barriga :) ipg
-#: src/ptx.c:1885
+#: src/ptx.c:1877
 msgid ""
 "  -A, --auto-reference           output automatically generated references\n"
 "  -C, --copyright                display Copyright and copying conditions\n"
@@ -6429,7 +6546,7 @@ msgstr ""
 "  -F, --flag-truncation=CADENA   usa CADENA para marcar las líneas "
 "truncadas\n"
 
-#: src/ptx.c:1891
+#: src/ptx.c:1883
 msgid ""
 "  -M, --macro-name=STRING        macro name to use instead of `xx'\n"
 "  -O, --format=roff              generate output as roff directives\n"
@@ -6449,7 +6566,7 @@ msgstr ""
 # Pues gap suele ser una especie de desplazamiento o desajuste,
 # lo traduciría aquí como separación em+
 # Gracias. ipg
-#: src/ptx.c:1898
+#: src/ptx.c:1890
 msgid ""
 "  -W, --word-regexp=REGEXP       use REGEXP to match each keyword\n"
 "  -b, --break-file=FILE          word break characters in this FILE\n"
@@ -6471,7 +6588,7 @@ msgstr ""
 "  -o, --only-file=ARCHIVO        lee la lista de palabras a mantener de\n"
 "                                 ARCHIVO\n"
 
-#: src/ptx.c:1906
+#: src/ptx.c:1898
 msgid ""
 "  -r, --references               first field of each line is a reference\n"
 "  -t, --typeset-mode               - not implemented -\n"
@@ -6484,7 +6601,7 @@ msgstr ""
 "  -w, --width=NÚMERO             anchura de la salida en columnas,\n"
 "                                 excluyendo referencias\n"
 
-#: src/ptx.c:1913
+#: src/ptx.c:1905
 msgid ""
 "\n"
 "With no FILE or if FILE is -, read Standard Input.  `-F /' by default.\n"
@@ -6493,7 +6610,7 @@ msgstr ""
 "Si no se especifica ARCHIVO o ARCHIVO es `-', lee de la entrada estándar.\n"
 "Se toma `-F /' por defecto.\n"
 
-#: src/ptx.c:1995
+#: src/ptx.c:1987
 msgid ""
 "This program is free software; you can redistribute it and/or modify\n"
 "it under the terms of the GNU General Public License as published by\n"
@@ -6507,7 +6624,7 @@ msgstr ""
 "en su versión 2, o (a su elección) cualquier versión posterior.\n"
 "\n"
 
-#: src/ptx.c:2002
+#: src/ptx.c:1994
 msgid ""
 "This program is distributed in the hope that it will be useful,\n"
 "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
@@ -6521,7 +6638,7 @@ msgstr ""
 "Licencia Pública General de GNU para más detalles.\n"
 "\n"
 
-#: src/ptx.c:2009
+#: src/ptx.c:2001
 msgid ""
 "You should have received a copy of the GNU General Public License\n"
 "along with this program; if not, write to the Free Software Foundation,\n"
@@ -6532,7 +6649,12 @@ msgstr ""
 "a la Free Software Foundation, Inc., 59 Temple Place - Suite 330,\n"
 "Boston, MA 02111-1307, EE.UU.\n"
 
-#: src/pwd.c:46
+#: src/ptx.c:2026
+#, fuzzy, c-format
+msgid "invalid gap width: %s"
+msgstr "ancho inválido: %s"
+
+#: src/pwd.c:66
 msgid ""
 "Print the full filename of the current working directory.\n"
 "\n"
@@ -6540,7 +6662,27 @@ msgstr ""
 "Muestra el nombre de fichero completo del directorio de trabajo actual.\n"
 "\n"
 
-#: src/pwd.c:74
+#: src/pwd.c:163 src/remove.c:819
+#, c-format
+msgid "cannot open directory %s"
+msgstr "no se puede abrir el directorio %s"
+
+#: src/pwd.c:168
+#, fuzzy, c-format
+msgid "failed to chdir to %s"
+msgstr "No se puede abrir %s"
+
+#: src/pwd.c:172 src/pwd.c:278
+#, fuzzy, c-format
+msgid "failed to stat %s"
+msgstr "No se puede abrir %s"
+
+#: src/pwd.c:240
+#, c-format
+msgid "couldn't find directory entry in %s with matching i-node"
+msgstr ""
+
+#: src/pwd.c:310
 msgid "ignoring non-option arguments"
 msgstr "los argumentos que no son opciones no serán tenidos en cuenta"
 
@@ -6573,47 +6715,48 @@ msgstr ""
 " -s, --silent            suprime la mayoría de los mensajes de error\n"
 " -v, --verbose           informa de los errores\n"
 
-#: src/remove.c:387
+#: src/remove.c:403
 #, c-format
 msgid "cannot chdir from %s to .."
 msgstr "no se puede cambiar de %s a .."
 
-#: src/remove.c:400 src/remove.c:481
+#: src/remove.c:409 src/remove.c:498
 #, c-format
 msgid "cannot lstat `.' in %s"
 msgstr "no se puede efectuar `lstat' sobre `.' en %s"
 
 # FIXME: ¿Por qué el original no dice inode, si es que es eso lo que quiere
 # decir?
-#: src/remove.c:407 src/remove.c:485
+#: src/remove.c:414 src/remove.c:502
 #, c-format
 msgid "%s changed dev/ino"
 msgstr "%s ha cambiado dev/nodo-i"
 
-#: src/remove.c:567 src/remove.c:712 src/remove.c:890 src/remove.c:996
+#: src/remove.c:572 src/remove.c:717 src/remove.c:892 src/remove.c:1019
 #, c-format
 msgid "cannot lstat %s"
 msgstr "no se puede efectuar `lstat' sobre %s"
 
-#: src/remove.c:574 src/remove.c:734 src/remove.c:751 src/remove.c:1082
+#: src/remove.c:579 src/remove.c:739 src/remove.c:756 src/remove.c:1005
+#: src/remove.c:1113
 #, c-format
 msgid "cannot remove directory %s"
 msgstr "no se puede borrar el directorio %s"
 
 # SIoNO
-#: src/remove.c:603
+#: src/remove.c:608
 #, c-format
 msgid "%s: descend into write-protected directory %s? "
 msgstr "%s: ¿descender al directorio protegido contra escritura %s? (s/n) "
 
 # SIoNO
-#: src/remove.c:604
+#: src/remove.c:609
 #, c-format
 msgid "%s: descend into directory %s? "
 msgstr "%s: ¿descender al directorio %s? (s/n) "
 
 # SIoNO
-#: src/remove.c:614
+#: src/remove.c:619
 #, c-format
 msgid "%s: remove write-protected %s %s? "
 msgstr "%s: ¿borrar el %s %s  protegido contra escritura? (s/n) "
@@ -6623,27 +6766,22 @@ msgstr "%s: ¿borrar el %s %s  protegido contra escritura? (s/n) "
 # ¿y el primero?
 #
 # SIoNO
-#: src/remove.c:615
+#: src/remove.c:620
 #, c-format
 msgid "%s: remove %s %s? "
 msgstr "%s: ¿borrar el %s %s? (s/n) "
 
-#: src/remove.c:639
+#: src/remove.c:644
 #, c-format
 msgid "removed %s\n"
 msgstr "%s borrado\n"
 
-#: src/remove.c:654 src/remove.c:1077
+#: src/remove.c:659 src/remove.c:1108
 #, c-format
 msgid "removed directory: %s\n"
 msgstr "directorio borrado: %s\n"
 
-#: src/remove.c:816
-#, c-format
-msgid "cannot open directory %s"
-msgstr "no se puede abrir el directorio %s"
-
-#: src/remove.c:905 src/remove.c:1014
+#: src/remove.c:908 src/remove.c:1034
 #, c-format
 msgid "cannot chdir from %s to %s"
 msgstr "no se puede cambiar del directorio %s al %s"
@@ -6656,7 +6794,7 @@ msgstr "no se puede cambiar del directorio %s al %s"
 # seguridad esto se debe a que tiene un sistema de ficheros corrupto".
 # Pero... tb
 # Lo pensaré. sv
-#: src/remove.c:913
+#: src/remove.c:916
 #, c-format
 msgid ""
 "WARNING: Circular directory structure.\n"
@@ -6671,11 +6809,16 @@ msgstr ""
 "El siguiente directorio es parte del ciclo:\n"
 "  %s\n"
 
-#: src/remove.c:1116
+#: src/remove.c:1147
 msgid "cannot remove `.' or `..'"
 msgstr "no se puede borrar `.' o `..'"
 
-#: src/rm.c:108 src/touch.c:248
+#: src/remove.c:1199
+#, fuzzy
+msgid "cannot restore current working directory"
+msgstr "no se puede obtener el directorio actual"
+
+#: src/rm.c:107 src/touch.c:230
 #, c-format
 msgid "Usage: %s [OPTION]... FILE...\n"
 msgstr "Modo de empleo: %s [OPCIÓN]... FICHERO...\n"
@@ -6688,7 +6831,7 @@ msgstr "Modo de empleo: %s [OPCIÓN]... FICHERO...\n"
 #
 # ¿Y en inglés sí te pega? sv
 #
-#: src/rm.c:109
+#: src/rm.c:108
 msgid ""
 "Remove (unlink) the FILE(s).\n"
 "\n"
@@ -6708,7 +6851,7 @@ msgstr ""
 "  -f, --force           descarta los ficheros que no existan, sin preguntar\n"
 "  -i, --interactive     pide confirmación antes de borrar\n"
 
-#: src/rm.c:118
+#: src/rm.c:117
 msgid ""
 "      --no-preserve-root do not treat `/' specially (the default)\n"
 "      --preserve-root   fail to operate recursively on `/'\n"
@@ -6722,7 +6865,7 @@ msgstr ""
 "recursivamente\n"
 "  -v, --verbose         explica lo que va haciendo\n"
 
-#: src/rm.c:126
+#: src/rm.c:125
 #, c-format
 msgid ""
 "\n"
@@ -6739,7 +6882,7 @@ msgstr ""
 "\n"
 "  %s ./-fu\n"
 
-#: src/rm.c:135
+#: src/rm.c:134
 msgid ""
 "\n"
 "Note that if you use rm to remove a file, it is usually possible to recover\n"
@@ -6901,12 +7044,12 @@ msgstr "no se puede establecer el ID del grupo a %ld"
 msgid "cannot set user-ID to %ld"
 msgstr "no se puede establecer el ID del usuario a %ld"
 
-#: src/shred.c:159
+#: src/shred.c:157
 #, c-format
 msgid "Usage: %s [OPTIONS] FILE [...]\n"
 msgstr "Modo de empleo: %s [OPCIONES] FICHERO [...]\n"
 
-#: src/shred.c:160
+#: src/shred.c:158
 msgid ""
 "Overwrite the specified FILE(s) repeatedly, in order to make it harder\n"
 "for even very expensive hardware probing to recover the data.\n"
@@ -6917,7 +7060,7 @@ msgstr ""
 "la recuperación de los datos incluso utilizando hardware muy costoso.\n"
 "\n"
 
-#: src/shred.c:168
+#: src/shred.c:166
 #, c-format
 msgid ""
 "  -f, --force    change permissions to allow writing if necessary\n"
@@ -6930,7 +7073,7 @@ msgstr ""
 "  -s, --size=N   efectúa el `shred' sobre este número de bytes\n"
 "                 (se permiten los sufijos K, M y G)\n"
 
-#: src/shred.c:173
+#: src/shred.c:171
 msgid ""
 "  -u, --remove   truncate and remove file after overwriting\n"
 "  -v, --verbose  show progress\n"
@@ -6949,7 +7092,7 @@ msgstr ""
 "                 acción de esta orden\n"
 "  -              efectúa shred en la salida estándar\n"
 
-#: src/shred.c:183
+#: src/shred.c:181
 msgid ""
 "\n"
 "Delete FILE(s) if --remove (-u) is specified.  The default is not to remove\n"
@@ -6969,7 +7112,7 @@ msgstr ""
 "opción --remove.\n"
 "\n"
 
-#: src/shred.c:191
+#: src/shred.c:189
 msgid ""
 "CAUTION: Note that shred relies on a very important assumption:\n"
 "that the filesystem overwrites data in place.  This is the traditional\n"
@@ -6987,7 +7130,7 @@ msgstr ""
 "de sistemas de ficheros en los que shred no es efectivo:\n"
 "\n"
 
-#: src/shred.c:199
+#: src/shred.c:197
 msgid ""
 "* log-structured or journaled filesystems, such as those supplied with\n"
 "  AIX and Solaris (and JFS, ReiserFS, XFS, Ext3, etc.)\n"
@@ -7009,7 +7152,7 @@ msgstr ""
 "  Network Appliance\n"
 "\n"
 
-#: src/shred.c:209
+#: src/shred.c:207
 msgid ""
 "* filesystems that cache in temporary locations, such as NFS\n"
 "  version 3 clients\n"
@@ -7030,82 +7173,117 @@ msgstr ""
 "un\n"
 "fichero al que se le haya hecho shred.\n"
 
-#: src/shred.c:807
+#: src/shred.c:793
+#, fuzzy, c-format
+msgid "%s: fdatasync failed"
+msgstr "%s: seek falló"
+
+#: src/shred.c:804
+#, fuzzy, c-format
+msgid "%s: fsync failed"
+msgstr "%s: seek falló"
+
+#: src/shred.c:846
 #, c-format
 msgid "%s: cannot rewind"
 msgstr "%s: no se puede rebobinar"
 
-#: src/shred.c:830
+#: src/shred.c:872
 #, c-format
 msgid "%s: pass %lu/%lu (%s)..."
 msgstr "%s: paso %lu/%lu (%s)..."
 
-#: src/shred.c:867
+#: src/shred.c:909
 #, c-format
 msgid "%s: error writing at offset %s"
 msgstr "%s: error al escribir en el desplazamiento %s"
 
-#: src/shred.c:896
+#: src/shred.c:928
+#, fuzzy, c-format
+msgid "%s: lseek failed"
+msgstr "%s: seek falló"
+
+#: src/shred.c:939
 #, c-format
 msgid "%s: file too large"
 msgstr "%s: fichero demasiado grande"
 
-#: src/shred.c:919
+#: src/shred.c:962
 #, c-format
 msgid "%s: pass %lu/%lu (%s)...%s"
 msgstr "%s: paso %lu/%lu (%s)...%s"
 
-#: src/shred.c:935
+#: src/shred.c:978
 #, c-format
 msgid "%s: pass %lu/%lu (%s)...%s/%s %d%%"
 msgstr "%s: paso %lu/%lu (%s)...%s/%s %d%%"
 
-#: src/shred.c:1194
+#: src/shred.c:1230
+#, fuzzy, c-format
+msgid "%s: fstat failed"
+msgstr "fallo en `stat'"
+
+#: src/shred.c:1241
 #, c-format
 msgid "%s: invalid file type"
 msgstr "%s: tipo de fichero inválido"
 
-#: src/shred.c:1211
+#: src/shred.c:1258
 #, c-format
 msgid "%s: file has negative size"
 msgstr "%s: el fichero tiene un tamaño negativo"
 
-#: src/shred.c:1264
+#: src/shred.c:1323
 #, c-format
 msgid "%s: error truncating"
 msgstr "%s: error al truncar"
 
-#: src/shred.c:1285
+#: src/shred.c:1339
+#, fuzzy, c-format
+msgid "%s: fcntl failed"
+msgstr "%s: seek falló"
+
+#: src/shred.c:1344
 #, c-format
 msgid "%s: cannot shred append-only file descriptor"
 msgstr "%s: no se puede efectuar shred un descriptor de fichero de sólo añadir"
 
-#: src/shred.c:1370
+#: src/shred.c:1421
 #, c-format
 msgid "%s: removing"
 msgstr "%s: borrando"
 
-#: src/shred.c:1411
+#: src/shred.c:1445
 #, c-format
 msgid "%s: renamed to %s"
 msgstr "%s: renombrado a %s"
 
-#: src/shred.c:1437
+#: src/shred.c:1467
+#, fuzzy, c-format
+msgid "%s: failed to remove"
+msgstr "%s: fichero demasiado grande"
+
+#: src/shred.c:1471
 #, c-format
 msgid "%s: removed"
 msgstr "%s: borrado"
 
-#: src/shred.c:1502
-#, c-format
-msgid "%s: cannot remove"
-msgstr "%s: no se puede borrar"
+#: src/shred.c:1478 src/shred.c:1543
+#, fuzzy, c-format
+msgid "%s: failed to close"
+msgstr "%s: fichero demasiado largo"
 
-#: src/shred.c:1551
+#: src/shred.c:1536
+#, fuzzy, c-format
+msgid "%s: failed to open for writing"
+msgstr "%s: fichero demasiado largo"
+
+#: src/shred.c:1595
 #, c-format
 msgid "%s: invalid number of passes"
 msgstr "%s: número inválido de pasos"
 
-#: src/shred.c:1568
+#: src/shred.c:1612
 #, c-format
 msgid "%s: invalid file size"
 msgstr "%s: tamaño de fichero inválido"
@@ -7288,7 +7466,7 @@ msgstr "no se puede crear un fichero temporal"
 msgid "open failed"
 msgstr "fallo al abrir"
 
-#: src/sort.c:484 src/sort.c:2570
+#: src/sort.c:484 src/sort.c:2531
 msgid "close failed"
 msgstr "error al cerrar"
 
@@ -7305,91 +7483,91 @@ msgstr "tamaño de la ordenación"
 msgid "stat failed"
 msgstr "fallo en `stat'"
 
-#: src/sort.c:988
+#: src/sort.c:978
 msgid "read failed"
 msgstr "fallo al leer"
 
-#: src/sort.c:1582
+#: src/sort.c:1560
 #, c-format
 msgid "%s: %s:%s: disorder: "
 msgstr "%s: %s:%s: fuera de secuencia: "
 
-#: src/sort.c:1586
+#: src/sort.c:1564
 msgid "standard error"
 msgstr "salida de error estándar"
 
-#: src/sort.c:2084
+#: src/sort.c:2060
 #, c-format
 msgid "%s: invalid field specification `%s'"
 msgstr "%s: especificación de campo inválida `%s'"
 
-#: src/sort.c:2111
+#: src/sort.c:2087
 #, c-format
 msgid "%s: count `%.*s' too large"
 msgstr "%s: contador `%.*s' demasiado grande"
 
-#: src/sort.c:2117
+#: src/sort.c:2093
 #, c-format
 msgid "%s: invalid count at start of `%s'"
 msgstr "%s: contador inválido al comienzo de `%s'"
 
-#: src/sort.c:2356
+#: src/sort.c:2317
 msgid "invalid number after `-'"
 msgstr "número inválido después de`-'"
 
-#: src/sort.c:2359 src/sort.c:2405 src/sort.c:2432
+#: src/sort.c:2320 src/sort.c:2366 src/sort.c:2393
 msgid "invalid number after `.'"
 msgstr "número inválido después de `.'"
 
 # No estoy muy seguro. Comprobar.
-#: src/sort.c:2362 src/sort.c:2441
+#: src/sort.c:2323 src/sort.c:2402
 msgid "stray character in field spec"
 msgstr "carácter extraño en el especificador de campo"
 
-#: src/sort.c:2396
+#: src/sort.c:2357
 msgid "invalid number at field start"
 msgstr "número inválido al comienzo del campo"
 
-#: src/sort.c:2400 src/sort.c:2428
+#: src/sort.c:2361 src/sort.c:2389
 msgid "field number is zero"
 msgstr "el número de campo es cero"
 
-#: src/sort.c:2409
+#: src/sort.c:2370
 msgid "character offset is zero"
 msgstr "el desplazamiento de caracteres es cero"
 
-#: src/sort.c:2424
+#: src/sort.c:2385
 msgid "invalid number after `,'"
 msgstr "número inválido después de `,'"
 
-#: src/sort.c:2451
+#: src/sort.c:2412
 msgid "multiple output files specified"
 msgstr "se han especificado varias ficheros de salida"
 
-#: src/sort.c:2467
+#: src/sort.c:2428
 msgid "empty tab"
 msgstr "tabulación vacía"
 
-#: src/sort.c:2478
+#: src/sort.c:2439
 #, c-format
 msgid "multi-character tab `%s'"
 msgstr "tab multicarácter `%s'"
 
-#: src/sort.c:2483
+#: src/sort.c:2444
 msgid "incompatible tabs"
 msgstr "tabulaciones incompatibles"
 
-#: src/sort.c:2553
+#: src/sort.c:2514
 #, c-format
 msgid "extra operand `%s' not allowed with -c"
 msgstr "el operando extra `%s' no está permitido con -c"
 
-#: src/split.c:100
+#: src/split.c:101
 #, c-format
 msgid "Usage: %s [OPTION] [INPUT [PREFIX]]\n"
 msgstr "Modo de empleo: %s [OPCIÓN] [FICHERO [PREFIJO]]\n"
 
-#: src/split.c:104
+#: src/split.c:105
 msgid ""
 "Output fixed-size pieces of INPUT to PREFIXaa, PREFIXab, ...; default\n"
 "PREFIX is `x'.  With no INPUT, or when INPUT is -, read standard input.\n"
@@ -7404,7 +7582,7 @@ msgstr ""
 
 # FIXME: ¿Ahora dos espacios es el estándar para mensajes de continuación?
 # (before each output file...)
-#: src/split.c:112
+#: src/split.c:113
 #, c-format
 msgid ""
 "  -a, --suffix-length=N   use suffixes of length N (default %d)\n"
@@ -7420,7 +7598,7 @@ msgstr ""
 "  -d, --numeric-suffixes  utiliza sufijos numéricos en vez de alfabéticos\n"
 "  -l, --lines=NÚMERO      pone NÚMERO de líneas en cada fichero de salida\n"
 
-#: src/split.c:119
+#: src/split.c:120
 msgid ""
 "      --verbose           print a diagnostic to standard error just\n"
 "                            before each output file is opened\n"
@@ -7428,7 +7606,7 @@ msgstr ""
 "      --verbose           muestra un diagnóstico en la salida de error\n"
 "                            estándar antes de que cada fichero sea abierto\n"
 
-#: src/split.c:125
+#: src/split.c:126
 msgid ""
 "\n"
 "SIZE may have a multiplier suffix: b for 512, k for 1K, m for 1 Meg.\n"
@@ -7437,59 +7615,59 @@ msgstr ""
 "TAMAÑO puede tener un factor indicado con el sufijo: b para 512, k para 1K,\n"
 "m para 1Meg\n"
 
-#: src/split.c:186
+#: src/split.c:187
 msgid "Output file suffixes exhausted"
 msgstr "Se han agotado los sufijos para los ficheros de salida"
 
-#: src/split.c:204
+#: src/split.c:205
 #, c-format
 msgid "creating file `%s'\n"
 msgstr "creando fichero `%s'\n"
 
-#: src/split.c:361
+#: src/split.c:362
 msgid "cannot split in more than one way"
 msgstr "no se puede trocear de varias formas distintas"
 
-#: src/split.c:413
+#: src/split.c:415
 #, c-format
 msgid "%s: invalid suffix length"
 msgstr "%s: longitud del sufijo inválida"
 
-#: src/split.c:427 src/split.c:451
+#: src/split.c:429 src/split.c:453
 #, c-format
 msgid "%s: invalid number of bytes"
 msgstr "%s: número de bytes inválido"
 
-#: src/split.c:439
+#: src/split.c:441
 #, c-format
 msgid "%s: invalid number of lines"
 msgstr "%s: número de líneas inválido"
 
-#: src/split.c:481
+#: src/split.c:483
 #, c-format
 msgid "line count option -%s%c... is too large"
 msgstr "opción de contador de líneas -%s%c... demasiado grande"
 
-#: src/split.c:504
+#: src/split.c:506
 #, c-format
 msgid "`-%s' option is obsolete; use `-l %s'"
 msgstr "la opción `-%s' está obsoleta; utilice `-l %s'"
 
-#: src/split.c:519
+#: src/split.c:521
 msgid "invalid number of lines: 0"
 msgstr "número de líneas inválido: 0"
 
-#: src/stat.c:625
+#: src/stat.c:624
 #, c-format
 msgid "cannot read file system information for %s"
 msgstr "no se puede leer la información del sistema de ficheros para %s"
 
-#: src/stat.c:701
+#: src/stat.c:700
 #, c-format
 msgid "Usage: %s [OPTION] FILE...\n"
 msgstr "Modo de empleo: %s [OPCIÓN] FICHERO...\n"
 
-#: src/stat.c:702
+#: src/stat.c:701
 msgid ""
 "Display file or filesystem status.\n"
 "\n"
@@ -7508,7 +7686,7 @@ msgstr ""
 "  -L, --dereference     sigue los enlaces\n"
 "  -t, --terse           muestra la información de manera escueta\n"
 
-#: src/stat.c:713
+#: src/stat.c:712
 msgid ""
 "\n"
 "The valid format sequences for files (without --filesystem):\n"
@@ -7526,7 +7704,7 @@ msgstr ""
 "  %B   El tamaño en bytes de cada bloque indicado por `%b'\n"
 "  %b   Número de bloques asignados (véase %B)\n"
 
-#: src/stat.c:721
+#: src/stat.c:720
 msgid ""
 "  %D   Device number in hex\n"
 "  %d   Device number in decimal\n"
@@ -7542,7 +7720,7 @@ msgstr ""
 "  %G   Nombre de grupo del propietario\n"
 "  %g   ID del grupo del propietario\n"
 
-#: src/stat.c:729
+#: src/stat.c:728
 msgid ""
 "  %h   Number of hard links\n"
 "  %i   Inode number\n"
@@ -7563,7 +7741,7 @@ msgstr ""
 "  %T   Tipo de dispositivo secundario en hexadecimal\n"
 "  %t   Tipo de dispositivo principal en hexadecimal\n"
 
-#: src/stat.c:739
+#: src/stat.c:738
 msgid ""
 "  %U   User name of owner\n"
 "  %u   User ID of owner\n"
@@ -7585,7 +7763,7 @@ msgstr ""
 "  %z   Fecha de último cambio\n"
 "\n"
 
-#: src/stat.c:751
+#: src/stat.c:750
 msgid ""
 "Valid format sequences for file systems:\n"
 "\n"
@@ -7603,7 +7781,7 @@ msgstr ""
 "  %d   Nodos de ficheros libres en el sistema de ficheros\n"
 "  %f   Bloques libres en el sistema de ficheros\n"
 
-#: src/stat.c:760
+#: src/stat.c:759
 msgid ""
 "  %i   File System id in hex\n"
 "  %l   Maximum length of filenames\n"
@@ -7619,11 +7797,11 @@ msgstr ""
 "  %T   Tipo de forma legible\n"
 "  %t   Tipo en hexadecimal\n"
 
-#: src/stat.c:800
+#: src/stat.c:799
 msgid "Warning: `-l' is deprecated; use `-L' instead"
 msgstr "atención: `-l' está obsoleto; utilice `-L' en su lugar"
 
-#: src/stty.c:489
+#: src/stty.c:492
 #, c-format
 msgid ""
 "Usage: %s [-F DEVICE] [--file=DEVICE] [SETTING]...\n"
@@ -7640,7 +7818,7 @@ msgstr ""
 # FIXME. Comunicar primero al autor. sv+
 # Sistema subyacente ?? , mejor dejar 'sistema' a secas em+
 # Depende, ¿qué ocurre con los compiladores cruzados?
-#: src/stty.c:495
+#: src/stty.c:498
 msgid ""
 "Print or change terminal characteristics.\n"
 "\n"
@@ -7657,7 +7835,7 @@ msgstr ""
 "  -F, --file=DISP abre y utiliza el DISPositivo especificado en lugar de la\n"
 "                  entrada estándar\n"
 
-#: src/stty.c:504
+#: src/stty.c:507
 msgid ""
 "\n"
 "Optional - before SETTING indicates negation.  An * marks non-POSIX\n"
@@ -7668,7 +7846,7 @@ msgstr ""
 "El sistema subyacente define qué valores están disponibles.\n"
 
 # Contexto del shell ? , ¿qué es eso? em+
-#: src/stty.c:509
+#: src/stty.c:512
 msgid ""
 "\n"
 "Special characters:\n"
@@ -7684,7 +7862,7 @@ msgstr ""
 "   eof CAR       el CARácter enviará un fin de línea (termina la entrada)\n"
 "   eol CAR       el CARácter terminará la línea\n"
 
-#: src/stty.c:516
+#: src/stty.c:519
 msgid ""
 " * eol2 CHAR     alternate CHAR for ending the line\n"
 "   erase CHAR    CHAR will erase the last character typed\n"
@@ -7696,7 +7874,7 @@ msgstr ""
 "   intr CAR      el CARácter enviará una señal de interrupción\n"
 "   kill CAR      el CARácter borrará la línea actual\n"
 
-#: src/stty.c:522
+#: src/stty.c:525
 msgid ""
 " * lnext CHAR    CHAR will enter the next character quoted\n"
 "   quit CHAR     CHAR will send a quit signal\n"
@@ -7709,7 +7887,7 @@ msgstr ""
 "   start CAR     el CARácter reiniciará la salida después de haberla "
 "detenido\n"
 
-#: src/stty.c:528
+#: src/stty.c:531
 msgid ""
 "   stop CHAR     CHAR will stop the output\n"
 "   susp CHAR     CHAR will send a terminal stop signal\n"
@@ -7722,7 +7900,7 @@ msgstr ""
 " * werase CAR    el CARácter borrará la última palabra tecleada\n"
 
 # FIXME: Falta un espacio ¿?
-#: src/stty.c:534
+#: src/stty.c:537
 msgid ""
 "\n"
 "Special settings:\n"
@@ -7736,7 +7914,7 @@ msgstr ""
 " * cols N        dice al núcleo que la terminal tiene N columnas\n"
 " * columns N     igual que cols N\n"
 
-#: src/stty.c:541
+#: src/stty.c:544
 msgid ""
 "   ispeed N      set the input speed to N\n"
 " * line N        use line discipline N\n"
@@ -7750,7 +7928,7 @@ msgstr ""
 "                 lectura completada\n"
 "   ospeed N      establece la velocidad de salida a N\n"
 
-#: src/stty.c:547
+#: src/stty.c:550
 msgid ""
 " * rows N        tell the kernel that the terminal has N rows\n"
 " * size          print the number of rows and columns according to the "
@@ -7765,7 +7943,7 @@ msgstr ""
 "   time N        con -icanon, establece el tiempo fuera de lectura en N\n"
 "                 décimas de segundo\n"
 
-#: src/stty.c:553
+#: src/stty.c:556
 msgid ""
 "\n"
 "Control settings:\n"
@@ -7783,7 +7961,7 @@ msgstr ""
 
 # ## en -cread -> permite que se reciba entrada
 # ## vale.
-#: src/stty.c:561
+#: src/stty.c:564
 msgid ""
 "   [-]cstopb     use two stop bits per character (one with `-')\n"
 "   [-]hup        send a hangup signal when the last process closes the tty\n"
@@ -7800,7 +7978,7 @@ msgstr ""
 "                   paridad en la entrada\n"
 "   [-]parodd     establece paridad impar (incluso con `-')\n"
 
-#: src/stty.c:568
+#: src/stty.c:571
 msgid ""
 "\n"
 "Input settings:\n"
@@ -7816,7 +7994,7 @@ msgstr ""
 "   [-]ignbrk     descarta los caracteres de `break'\n"
 "   [-]igncr      descarta los retornos de carro\n"
 
-#: src/stty.c:576
+#: src/stty.c:579
 msgid ""
 "   [-]ignpar     ignore characters with parity errors\n"
 " * [-]imaxbel    beep and do not flush a full input buffer on a character\n"
@@ -7832,7 +8010,11 @@ msgstr ""
 "   [-]inpck      permite la revisión de paridad de entrada\n"
 "   [-]istrip     borra el bit alto (8º) de los caracteres de entrada\n"
 
-#: src/stty.c:583
+#: src/stty.c:586
+msgid " * [-]iutf8      assume input characters are UTF-8 encoded\n"
+msgstr ""
+
+#: src/stty.c:589
 msgid ""
 " * [-]iuclc      translate uppercase characters to lowercase\n"
 " * [-]ixany      let any character restart output, not only start character\n"
@@ -7850,7 +8032,7 @@ msgstr ""
 "255-0)\n"
 "   [-]tandem     igual que [-]ixoff\n"
 
-#: src/stty.c:591
+#: src/stty.c:597
 msgid ""
 "\n"
 "Output settings:\n"
@@ -7866,7 +8048,7 @@ msgstr ""
 " * ffN           estilo de retardo de salto de página, N en [0..1]\n"
 " * nlN           estilo de retardo de nueva línea, N in [0..1]\n"
 
-#: src/stty.c:599
+#: src/stty.c:605
 msgid ""
 " * [-]ocrnl      translate carriage return to newline\n"
 " * [-]ofdel      use delete characters for fill instead of null characters\n"
@@ -7884,7 +8066,7 @@ msgstr ""
 " * [-]onlcr      traduce nueva línea a retorno de carro-nueva línea\n"
 " * [-]onlret     nueva línea realiza un retorno de carro\n"
 
-#: src/stty.c:607
+#: src/stty.c:613
 msgid ""
 " * [-]onocr      do not print carriage returns in the first column\n"
 "   [-]opost      postprocess output\n"
@@ -7903,7 +8085,7 @@ msgstr ""
 # lo del carácter de matar es un poco fuerte, ¿no? sv
 # echo = muestra, mejor que repite, aquí, creo. gerardo
 # perdería parte del significado. sv
-#: src/stty.c:615
+#: src/stty.c:621
 msgid ""
 "\n"
 "Local settings:\n"
@@ -7918,7 +8100,7 @@ msgstr ""
 " * crtkill       mata toda la línea obedeciendo los valores echoprt y echoe\n"
 " * -crtkill      mata toda la línea obedeciendo los valores echoctl y echok\n"
 
-#: src/stty.c:622
+#: src/stty.c:628
 msgid ""
 " * [-]ctlecho    echo control characters in hat notation (`^c')\n"
 "   [-]echo       echo input characters\n"
@@ -7932,7 +8114,7 @@ msgstr ""
 "   [-]echoe      igual que [-]crterase\n"
 "   [-]echok      repite una nueva línea después de un carácter de matar\n"
 
-#: src/stty.c:629
+#: src/stty.c:635
 msgid ""
 " * [-]echoke     same as [-]crtkill\n"
 "   [-]echonl     echo newline even if not echoing other characters\n"
@@ -7949,7 +8131,7 @@ msgstr ""
 "                 y rprnt\n"
 "   [-]iexten     permite caracteres especiales no-POSIX\n"
 
-#: src/stty.c:636
+#: src/stty.c:642
 msgid ""
 "   [-]isig       enable interrupt, quit, and suspend special characters\n"
 "   [-]noflsh     disable flushing after interrupt and quit special "
@@ -7967,7 +8149,7 @@ msgstr ""
 "                 la terminal\n"
 " * [-]xcase      con icanon, escapa con `\\' para caracteres en mayúscula\n"
 
-#: src/stty.c:643
+#: src/stty.c:649
 msgid ""
 "\n"
 "Combination settings:\n"
@@ -7981,7 +8163,7 @@ msgstr ""
 "   cbreak        igual que -icanon\n"
 "   -cbreak       igual que icanon\n"
 
-#: src/stty.c:650
+#: src/stty.c:656
 msgid ""
 "   cooked        same as brkint ignpar istrip icrnl ixon opost isig\n"
 "                 icanon, eof and eol characters to their default values\n"
@@ -7993,7 +8175,7 @@ msgstr ""
 "   -cooked       igual que raw\n"
 "   crt           igual que echoe echoctl echoke\n"
 
-#: src/stty.c:656
+#: src/stty.c:662
 msgid ""
 "   dec           same as echoe echoctl echoke -ixany intr ^c erase 0177\n"
 "                 kill ^u\n"
@@ -8007,7 +8189,7 @@ msgstr ""
 "   ek            caracteres erase y kill a sus valores por omisión\n"
 "   evenp         igual que parenb -parodd cs7\n"
 
-#: src/stty.c:663
+#: src/stty.c:669
 msgid ""
 "   -evenp        same as -parenb cs8\n"
 " * [-]lcase      same as xcase iuclc olcuc\n"
@@ -8023,7 +8205,7 @@ msgstr ""
 "   nl            igual que -icrnl -onlcr\n"
 "   -nl           igual que icrnl -inlcr -igncr onlcr -ocrnl -onlret\n"
 
-#: src/stty.c:671
+#: src/stty.c:677
 msgid ""
 "   oddp          same as parenb parodd cs7\n"
 "   -oddp         same as -parenb cs8\n"
@@ -8037,7 +8219,7 @@ msgstr ""
 "   pass8         igual que -parenb -istrip cs8\n"
 "   -pass8        igual que parenb istrip cs7\n"
 
-#: src/stty.c:678
+#: src/stty.c:684
 msgid ""
 "   raw           same as -ignbrk -brkint -ignpar -parmrk -inpck -istrip\n"
 "                 -inlcr -igncr -icrnl  -ixon  -ixoff  -iuclc  -ixany\n"
@@ -8049,9 +8231,10 @@ msgstr ""
 "                 -imaxbel -opost -isig -icanon -xcase min 1 time 0\n"
 "   -raw          igual que cooked\n"
 
-#: src/stty.c:684
+#: src/stty.c:690
+#, fuzzy
 msgid ""
-"   sane          same as cread -ignbrk brkint -inlcr -igncr icrnl\n"
+"   sane          same as cread -ignbrk brkint -inlcr -igncr icrnl -iutf8\n"
 "                 -ixoff -iuclc -ixany imaxbel opost -olcuc -ocrnl onlcr\n"
 "                 -onocr -onlret -ofill -ofdel nl0 cr0 tab0 bs0 vt0 ff0\n"
 "                 isig icanon iexten echo echoe echok -echonl -noflsh\n"
@@ -8065,7 +8248,7 @@ msgstr ""
 "                 -xcase -tostop -echoprt echoctl echoke, y todos los\n"
 "                 caracteres especiales a sus valores por omisión.\n"
 
-#: src/stty.c:692
+#: src/stty.c:698
 msgid ""
 "\n"
 "Handle the tty line connected to standard input.  Without arguments,\n"
@@ -8080,11 +8263,11 @@ msgstr ""
 "o codificado como en ^c, 0x37, 0177 ó 127; los valores especiales ^- o\n"
 "undef son utilizados para no permitir caracteres especiales.\n"
 
-#: src/stty.c:779
+#: src/stty.c:785
 msgid "only one device may be specified"
 msgstr "sólo se puede especificar un dispositivo"
 
-#: src/stty.c:874
+#: src/stty.c:880
 msgid ""
 "the options for verbose and stty-readable output styles are\n"
 "mutually exclusive"
@@ -8092,44 +8275,44 @@ msgstr ""
 "las opciones para estilos de salida explícitos y legibles para terminal son\n"
 "mutuamente excluyentes"
 
-#: src/stty.c:880
+#: src/stty.c:886
 msgid "when specifying an output style, modes may not be set"
 msgstr ""
 "cuando se especifica un estilo de salida, no se pueden establecer los modos"
 
-#: src/stty.c:896
+#: src/stty.c:902
 #, c-format
 msgid "%s: couldn't reset non-blocking mode"
 msgstr "%s: no se pudo reiniciar el modo `non-blocking'"
 
-#: src/stty.c:950 src/stty.c:1057
+#: src/stty.c:956 src/stty.c:1063
 #, c-format
 msgid "invalid argument `%s'"
 msgstr "argumento inválido `%s'"
 
-#: src/stty.c:961 src/stty.c:978 src/stty.c:990 src/stty.c:1003
-#: src/stty.c:1015 src/stty.c:1034
+#: src/stty.c:967 src/stty.c:984 src/stty.c:996 src/stty.c:1009
+#: src/stty.c:1021 src/stty.c:1040
 #, c-format
 msgid "missing argument to `%s'"
 msgstr "falta el argumento de `%s'"
 
-#: src/stty.c:1110
+#: src/stty.c:1116
 #, c-format
 msgid "%s: unable to perform all requested operations"
 msgstr "%s: no se pudieron realizar todas las operaciones solicitadas"
 
 # Me temo que new_mode no se puede traducir. sv
-#: src/stty.c:1115
+#: src/stty.c:1121
 #, c-format
 msgid "new_mode: mode\n"
 msgstr "new_mode: modo\n"
 
-#: src/stty.c:1455
+#: src/stty.c:1461
 #, c-format
 msgid "%s: no size information for this device"
 msgstr "%s: no hay información sobre tamaño para este dispositivo"
 
-#: src/stty.c:1937
+#: src/stty.c:1943
 #, c-format
 msgid "invalid integer argument `%s'"
 msgstr "argumento entero inválido `%s'"
@@ -8256,11 +8439,11 @@ msgstr "no se tendrá en cuenta ningún argumento"
 # dejarlo (daño no hace, eso sí es verdad) ipg
 #
 # Lo dejaremos para otra ocasión. Ya os avisaré. sv
-#: src/system.h:787
+#: src/system.h:617
 msgid "      --help     display this help and exit\n"
 msgstr "      --help     muestra esta ayuda y finaliza\n"
 
-#: src/system.h:789
+#: src/system.h:619
 msgid "      --version  output version information and exit\n"
 msgstr "      --version  informa de la versión y finaliza\n"
 
@@ -8881,22 +9064,22 @@ msgstr "falta un `]'\n"
 msgid "too many arguments\n"
 msgstr "demasiados argumentos\n"
 
-#: src/touch.c:121 src/touch.c:334
+#: src/touch.c:117 src/touch.c:316
 #, c-format
 msgid "invalid date format %s"
 msgstr "formato de fecha inválido %s"
 
-#: src/touch.c:159 src/touch.c:175
+#: src/touch.c:154 src/touch.c:170
 #, c-format
 msgid "creating %s"
 msgstr "creando %s"
 
-#: src/touch.c:226
+#: src/touch.c:208
 #, c-format
 msgid "cannot touch %s"
 msgstr "no se puede efectuar `touch' sobre %s"
 
-#: src/touch.c:232
+#: src/touch.c:214
 #, c-format
 msgid "setting times of %s"
 msgstr "estableciendo la fecha de %s"
@@ -8905,7 +9088,7 @@ msgstr "estableciendo la fecha de %s"
 # decidido llamar simplemente "fecha" a la "combinación de la fecha y la hora".
 # (o sea, "time stamp" -> fecha)
 # Por el contexto, no creo que haya confusión.
-#: src/touch.c:249
+#: src/touch.c:231
 msgid ""
 "Update the access and modification times of each FILE to the current time.\n"
 "\n"
@@ -8914,7 +9097,7 @@ msgstr ""
 "fecha actual.\n"
 "\n"
 
-#: src/touch.c:256
+#: src/touch.c:238
 msgid ""
 "  -a                     change only the access time\n"
 "  -c, --no-create        do not create any files\n"
@@ -8929,7 +9112,7 @@ msgstr ""
 "  -f                      (no tiene efecto)\n"
 "  -m                      cambia solamente la fecha de modificación\n"
 
-#: src/touch.c:263
+#: src/touch.c:245
 msgid ""
 "  -r, --reference=FILE   use this file's times instead of current time\n"
 "  -t STAMP               use [[CC]YY]MMDDhhmm[.ss] instead of current time\n"
@@ -8947,7 +9130,7 @@ msgstr ""
 "                            access atime use (lo mismo que -a)\n"
 "                            modify mtime (lo mismo que -m)\n"
 
-#: src/touch.c:271
+#: src/touch.c:253
 msgid ""
 "\n"
 "Note that the -d and -t options accept different time-date formats.\n"
@@ -8958,14 +9141,14 @@ msgstr ""
 
 # (em) Nota: Este mensaje sale, por ejemplo, al escribir
 # "touch logo -r . -t 10101010".
-#: src/touch.c:358
+#: src/touch.c:341
 msgid "cannot specify times from more than one source"
 msgstr "no se puede especificar la fecha de dos formas distintas"
 
-#: src/touch.c:397
-#, c-format
+#: src/touch.c:386
+#, fuzzy, c-format
 msgid ""
-"warning: `touch %s' is obsolete; use `touch -t %04d%02d%02d%02d%02d.%02d'"
+"warning: `touch %s' is obsolete; use `touch -t %04ld%02d%02d%02d%02d.%02d'"
 msgstr ""
 "atención `touch %s' está obsoleto, use `touch -t %04d%02d%02d%02d%02d.%02d'"
 
@@ -8978,16 +9161,16 @@ msgstr ""
 # Creo que exactamente esas dos posibilidades aparecen
 # en wdiff como "finalistas" :-) sv
 #
-#: src/touch.c:431
+#: src/touch.c:411
 msgid "file arguments missing"
 msgstr "faltan argumentos (ficheros)"
 
-#: src/tr.c:320
+#: src/tr.c:309
 #, c-format
 msgid "Usage: %s [OPTION]... SET1 [SET2]\n"
 msgstr "Modo de empleo: %s [OPCIÓN]... CONJUNTO1 [CONJUNTO2]\n"
 
-#: src/tr.c:324
+#: src/tr.c:313
 msgid ""
 "Translate, squeeze, and/or delete characters from standard input,\n"
 "writing to standard output.\n"
@@ -9011,7 +9194,7 @@ msgstr ""
 "                             aparición de dicho carácter\n"
 "  -t,  --truncate-set1     trunca CONJUNTO1 a la longitud de CONJUNTO2\n"
 
-#: src/tr.c:337
+#: src/tr.c:326
 msgid ""
 "\n"
 "SETs are specified as strings of characters.  Most represent themselves.\n"
@@ -9040,7 +9223,7 @@ msgstr ""
 "  \\r              retorno de carro\n"
 "  \\t              tabulación horizontal\n"
 
-#: src/tr.c:351
+#: src/tr.c:340
 msgid ""
 "  \\v              vertical tab\n"
 "  CHAR1-CHAR2     all characters from CHAR1 to CHAR2 in ascending order\n"
@@ -9066,7 +9249,7 @@ msgstr ""
 "  [:cntrl:]       todos los caracteres de control\n"
 "  [:digit:]       todos los dígitos\n"
 
-#: src/tr.c:362
+#: src/tr.c:351
 msgid ""
 "  [:graph:]       all printable characters, not including space\n"
 "  [:lower:]       all lower case letters\n"
@@ -9088,7 +9271,7 @@ msgstr ""
 
 # squeezing -> la compresión; lo has usado tú antes :) ipg
 # se me pasó em+
-#: src/tr.c:372
+#: src/tr.c:361
 msgid ""
 "\n"
 "Translation occurs if -d is not given and both SET1 and SET2 appear.\n"
@@ -9102,7 +9285,7 @@ msgstr ""
 "CONJUNTO2 se expande a la longitud de CONJUNTO1, repitiendo su último\n"
 "carácter tantas veces como sea necesario. "
 
-#: src/tr.c:378
+#: src/tr.c:367
 msgid ""
 "Excess characters\n"
 "of SET2 are ignored.  Only [:lower:] and [:upper:] are guaranteed to\n"
@@ -9115,7 +9298,7 @@ msgstr ""
 "CONJUNTO2 al traducir, sólo se pueden usar en parejas, para\n"
 "especificar conversión a mayúsculas. "
 
-#: src/tr.c:384
+#: src/tr.c:373
 msgid ""
 "-s uses SET1 if not\n"
 "translating nor deleting; else squeezing uses SET2 and occurs after\n"
@@ -9127,7 +9310,7 @@ msgstr ""
 
 # Me alegro de que te hayas comido el \t. Creo que lo mismo se puede hacer
 # en otro msgstr que hay mucho más atrás. sv
-#: src/tr.c:550
+#: src/tr.c:535
 #, c-format
 msgid ""
 "warning: the ambiguous octal escape \\%c%c%c is being\n"
@@ -9136,62 +9319,68 @@ msgstr ""
 "atención: la secuencia de escape octal ambigua \\%c%c%c\n"
 "se interpreta como la secuencia de 2 bytes \\0%c%c, `%c'"
 
-#: src/tr.c:559
+#: src/tr.c:544
 msgid "invalid backslash escape at end of string"
 msgstr "secuencia de escape inválida al final de la cadena"
 
-#: src/tr.c:565
+#: src/tr.c:550
 #, c-format
 msgid "invalid backslash escape `\\%c'"
 msgstr "secuencia de escape inválida `\\%c'"
 
-#: src/tr.c:718
+#: src/tr.c:703
 #, c-format
 msgid "range-endpoints of `%s-%s' are in reverse collating sequence order"
 msgstr "los extremos del rango en `%s-%s' están en orden inverso"
 
 # También necesito aquí ayuda em
 # Yo creo que queda bien. ipg
-#: src/tr.c:899
+#: src/tr.c:859
 #, c-format
 msgid "invalid repeat count `%s' in [c*n] construct"
 msgstr "número de repeticiones `%s' inválido en la especificación [c*n]"
 
-#: src/tr.c:992
+#: src/tr.c:940
 msgid "missing character class name `[::]'"
 msgstr "falta el nombre de la clase de caracteres `[::]'"
 
-#: src/tr.c:995
+#: src/tr.c:943
 msgid "missing equivalence class character `[==]'"
 msgstr "falta el carácter de clase de equivalencia `[==]'"
 
-#: src/tr.c:1018
+#: src/tr.c:958
 #, c-format
 msgid "invalid character class `%s'"
 msgstr "clase de carácter inválido `%s'"
 
-#: src/tr.c:1043
+#: src/tr.c:977
 #, c-format
 msgid "%s: equivalence class operand must be a single character"
 msgstr "%s: el operador de equivalencia de clase debe ser un sólo carácter"
 
-#: src/tr.c:1515
+# No estoy muy seguro. Comprobar.
+#: src/tr.c:1297
+#, fuzzy
+msgid "too many characters in set"
+msgstr "carácter extraño en el especificador de campo"
+
+#: src/tr.c:1445
 msgid "the [c*] repeat construct may not appear in string1"
 msgstr "el operador de repetición [c*] no puede aparecer en cadena1"
 
-#: src/tr.c:1525
+#: src/tr.c:1455
 msgid "only one [c*] repeat construct may appear in string2"
 msgstr "en cadena2 sólo puede aparecer un operador de repetición [c*]"
 
-#: src/tr.c:1533
+#: src/tr.c:1463
 msgid "[=c=] expressions may not appear in string2 when translating"
 msgstr "las expresiones [=c=] no pueden aparecer en cadena2 al traducir"
 
-#: src/tr.c:1546
+#: src/tr.c:1476
 msgid "when not truncating set1, string2 must be non-empty"
 msgstr "si no se está truncando conjunto1, cadena2 debe ser no vacía"
 
-#: src/tr.c:1555
+#: src/tr.c:1485
 msgid ""
 "when translating with complemented character classes,\n"
 "string2 must map all characters in the domain to one"
@@ -9200,7 +9389,7 @@ msgstr ""
 "coinciden),\n"
 "cadena2 debe hacer corresponder todos los caracteres del dominio a uno solo"
 
-#: src/tr.c:1562
+#: src/tr.c:1492
 msgid ""
 "when translating, the only character classes that may appear in\n"
 "string2 are `upper' and `lower'"
@@ -9208,35 +9397,35 @@ msgstr ""
 "cuando se traduce, las únicas clases de caracteres que pueden aparecer en\n"
 "cadena2 son 'upper' y 'lower'"
 
-#: src/tr.c:1571
+#: src/tr.c:1501
 msgid "the [c*] construct may appear in string2 only when translating"
 msgstr "las expresiones [c*] sólo pueden aparecer en cadena2 al traducir"
 
-#: src/tr.c:1847
+#: src/tr.c:1754
 msgid "two strings must be given when translating"
 msgstr "se deben proporcionar dos cadenas al traducir"
 
-#: src/tr.c:1850
+#: src/tr.c:1757
 msgid "two strings must be given when both deleting and squeezing repeats"
 msgstr ""
 "cuando se borra y se comprimen repeticiones se deben proporcionar dos cadenas"
 
-#: src/tr.c:1864
+#: src/tr.c:1771
 msgid "only one string may be given when deleting without squeezing repeats"
 msgstr ""
 "cuando se borra sin comprimir repeticiones sólo se puede especificar una "
 "cadena"
 
-#: src/tr.c:1870
+#: src/tr.c:1777
 msgid "at least one string must be given when squeezing repeats"
 msgstr ""
 "cuando se comprimen repeticiones se debe especificar al menos una cadena"
 
-#: src/tr.c:1961
+#: src/tr.c:1874
 msgid "misaligned [:upper:] and/or [:lower:] construct"
 msgstr "las construcciones [:upper:] y/o [:lower:] están desalinedas"
 
-#: src/tr.c:1984
+#: src/tr.c:1897
 msgid ""
 "invalid identity mapping;  when translating, any [:lower:] or [:upper:]\n"
 "construct in string1 must be aligned with a corresponding construct\n"
@@ -9279,17 +9468,17 @@ msgstr ""
 "estándar.\n"
 "\n"
 
-#: src/tsort.c:494
+#: src/tsort.c:492
 #, c-format
 msgid "%s: input contains an odd number of tokens"
 msgstr "%s: la entrada contiene un número impar de elementos"
 
-#: src/tsort.c:536
+#: src/tsort.c:534
 #, c-format
 msgid "%s: input contains a loop:"
 msgstr "%s: la entrada contiene un bucle:"
 
-#: src/tsort.c:578
+#: src/tsort.c:576
 msgid "only one argument may be specified"
 msgstr "sólo se puede especificar un argumento"
 
@@ -9639,36 +9828,36 @@ msgstr ""
 "  -L, --max-line-length  muestra la longitud de la línea más larga\n"
 "  -w, --words            muestra el número de palabras\n"
 
-#: src/who.c:221
+#: src/who.c:222
 msgid " old "
 msgstr " antiguo "
 
-#: src/who.c:431 src/who.c:434
+#: src/who.c:432 src/who.c:435
 msgid "id="
 msgstr "id="
 
-#: src/who.c:447 src/who.c:452
+#: src/who.c:448 src/who.c:453
 msgid "term="
 msgstr "term="
 
-#: src/who.c:449 src/who.c:453
+#: src/who.c:450 src/who.c:454
 msgid "exit="
 msgstr "salida="
 
-#: src/who.c:490
+#: src/who.c:491
 msgid "clock change"
 msgstr "cambio de reloj"
 
 # Se admiten sugerencias
-#: src/who.c:502 src/who.c:503
+#: src/who.c:503 src/who.c:504
 msgid "run-level"
 msgstr "`run-level'"
 
-#: src/who.c:506 src/who.c:507
+#: src/who.c:507 src/who.c:508
 msgid "last="
 msgstr "último="
 
-#: src/who.c:536
+#: src/who.c:537
 #, c-format
 msgid ""
 "\n"
@@ -9687,15 +9876,15 @@ msgstr ""
 # Quien mantiene esto actualmente (Jim Meyering) me ha hecho caso
 # otras veces (si miras el ChangeLog de fileutils podrás comprobarlo)
 # y es bastante comprensivo.
-#: src/who.c:542
+#: src/who.c:543
 msgid "NAME"
 msgstr "NOMBRE"
 
-#: src/who.c:542
+#: src/who.c:543
 msgid "LINE"
 msgstr "LÍNEA"
 
-#: src/who.c:542
+#: src/who.c:543
 msgid "TIME"
 msgstr "TIEMPO"
 
@@ -9708,23 +9897,23 @@ msgstr "TIEMPO"
 # en masculino (ya que en español, coinciden, que es lo que a muchos
 # les cuesta digerir).
 # De todas formas, ¿INACTIVO no es [TIEMPO] INACTIVO? sv
-#: src/who.c:542
+#: src/who.c:543
 msgid "IDLE"
 msgstr "INACTIVO"
 
-#: src/who.c:542
+#: src/who.c:543
 msgid "PID"
 msgstr "PID"
 
-#: src/who.c:543
+#: src/who.c:544
 msgid "COMMENT"
 msgstr "COMENTARIO"
 
-#: src/who.c:543
+#: src/who.c:544
 msgid "EXIT"
 msgstr "SALIDA"
 
-#: src/who.c:620
+#: src/who.c:621
 #, c-format
 msgid "Usage: %s [OPTION]... [ FILE | ARG1 ARG2 ]\n"
 msgstr "Modo de empleo: %s [OPCIÓN]... [ FICHERO | ARG1 ARG2 ]\n"
@@ -9745,7 +9934,7 @@ msgstr "Modo de empleo: %s [OPCIÓN]... [ FICHERO | ARG1 ARG2 ]\n"
 #
 # ¿Al haber un signo menos a su izquierda no tiene la "o" posibilidad de ser
 # confundida con un cero? sv
-#: src/who.c:621
+#: src/who.c:622
 msgid ""
 "\n"
 "  -a, --all         same as -b -d --login -p -r -t -T -u\n"
@@ -9759,7 +9948,7 @@ msgstr ""
 "  -d, --dead        muestra los procesos muertos\n"
 "  -H, --heading     muestra la línea de encabezados de columnas\n"
 
-#: src/who.c:628
+#: src/who.c:629
 msgid ""
 "  -i, --idle        add idle time as HOURS:MINUTES, . or old\n"
 "                    (deprecated, use -u)\n"
@@ -9770,7 +9959,7 @@ msgstr ""
 "  -l,  --login      muestra procesos de entrada en el sistema\n"
 "                    (equivalente al -l de SUS)\n"
 
-#: src/who.c:633
+#: src/who.c:634
 msgid ""
 "      --lookup      attempt to canonicalize hostnames via DNS\n"
 "  -m                only hostname and user associated with stdin\n"
@@ -9782,7 +9971,7 @@ msgstr ""
 "                    la entrada estándar\n"
 "  -p, --process     muestra los procesos activos lanzados por init\n"
 
-#: src/who.c:638
+#: src/who.c:639
 msgid ""
 "  -q, --count       all login names and number of users logged on\n"
 "  -r, --runlevel    print current runlevel\n"
@@ -9795,7 +9984,7 @@ msgstr ""
 "  -s, --short       muestra sólo el nombre, línea y tiempo (predeterminado)\n"
 "  -t, --time        muestra el último cambio en el reloj del sistema\n"
 
-#: src/who.c:644
+#: src/who.c:645
 msgid ""
 "  -T, -w, --mesg    add user's message status as +, - or ?\n"
 "  -u, --users       list users logged in\n"
@@ -9808,7 +9997,7 @@ msgstr ""
 "      --message     igual que -T\n"
 "      --writable    igual que -T\n"
 
-#: src/who.c:652
+#: src/who.c:653
 #, c-format
 msgid ""
 "\n"
@@ -9820,7 +10009,7 @@ msgstr ""
 "FICHERO es %s. Si se dan ARG1 y ARG2, se supone -m: habitualmente\n"
 "`am i' o `mom likes'.\n"
 
-#: src/who.c:755
+#: src/who.c:756
 msgid "Warning: -i will be removed in a future release;   use -u instead"
 msgstr ""
 "Atención: -i será eliminado en versiones futuras; utilice -u en su lugar"
@@ -9872,6 +10061,25 @@ msgstr ""
 "Muestra repetidamente una línea con todas las CADENA(s) especificadas, o "
 "`y'.\n"
 "\n"
+
+#~ msgid "%s: cannot remove"
+#~ msgstr "%s: no se puede borrar"
+
+#, fuzzy
+#~ msgid "%s+%s bytes in\n"
+#~ msgstr "%s+%s registros leídos\n"
+
+#, fuzzy
+#~ msgid "%s+%s bytes out\n"
+#~ msgstr "%s+%s registros escritos\n"
+
+#, fuzzy
+#~ msgid "unrecognized display= argument %s"
+#~ msgstr "prefijo no reconocido: %s"
+
+#, fuzzy
+#~ msgid "no files specified in %s"
+#~ msgstr "no se puede especificar FICHERO cuando se usa --string"
 
 #~ msgid "Usage: %s [OPTION]... LEFT_FILE RIGHT_FILE\n"
 #~ msgstr "Modo de empleo: %s [OPCIÓN]... FICHERO1 FICHERO2\n"
@@ -10386,9 +10594,6 @@ msgstr ""
 # un directorio, por favor que lo diga. sv
 #~ msgid "cannot find mount point for %s"
 #~ msgstr "no se puede encontrar el directorio para montar %s"
-
-#~ msgid "cannot execute %s"
-#~ msgstr "no se puede ejecutar %s"
 
 #~ msgid "cannot get processor type"
 #~ msgstr "no se puede obtener el tipo de procesador"
