@@ -1,6 +1,11 @@
-2004-06-08  Jim Meyering  <jim@meyering.net>
+2004-06-07  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.0.
+
+	* src/uname.c (main): Fix typo introduced on 2003-05-10 that
+	prevented a diagnostic of any operands.
+
+2004-06-08  Jim Meyering  <jim@meyering.net>
 
 	* src/shred.c (direct_mode): Turn it on/off with directio, too.
 
