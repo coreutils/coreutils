@@ -1,3 +1,8 @@
+1997-07-03  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* tests/date/Test.pm (test_vector): Remove bogus TZ=GMT environment
+	setting.
+
 Wed Jul  2 11:05:09 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/printf.c (STRTOX): Convert function header in macro definition
