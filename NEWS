@@ -6,7 +6,7 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New features
 
-  du accepts a new option --from0-file=FILE, where FILE contains a list of
+  du accepts a new option --files0-from=FILE, where FILE contains a list of
   NUL-separated file names.  This is useful for running du --summarize (-s)
   when the list of file names is so long that it may exceed a command line
   length limitation.  In such cases, using xargs is undesirable because
