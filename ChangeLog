@@ -1,6 +1,12 @@
-2004-12-14  Jim Meyering  <jim@meyering.net>
+2004-12-15  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
+
+	* src/Makefile.am (__LDADD): Define, so that building `[' on
+	Solaris still uses the -lgen library that it requires in order
+	to get a definition of eaccess.
+
+2004-12-14  Jim Meyering  <jim@meyering.net>
 
 	tac would exit immediately upon I/O or temp-file creation failure.
 	Now it continues on, processing any remaining command line arguments.
