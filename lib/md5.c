@@ -69,7 +69,7 @@ md5_read_ctx (ctx, resbuf)
 /* Compute MD5 message digest for bytes read from STREAM.  The
    resulting message digest number will be written into the 16 bytes
    beginning at RESBLOCK.  */
-void *
+int
 md5_stream (stream, resblock)
      FILE *stream;
      void *resblock;
@@ -104,6 +104,8 @@ md5_stream (stream, resblock)
 	  sum += n;
 	}
       while (sum < BLOCKSIZE && n != 0);
+      if (n == 0 && ferror (stream))
+        return 1;
 
       /* RFC 1321 specifies the possible length of the file up to 2^64 bits.
 	 Here we only compute the number of bytes.  Do a double word
@@ -135,13 +137,15 @@ md5_stream (stream, resblock)
 
   /* Put the 64-bit file length in *bits* at the end of the buffer.  */
   *(md5_uint32 *) &buffer[sum + pad] = SWAP (len[0] << 3);
-  *(md5_uint32 *) &buffer[sum + pad + 4] = SWAP ((len[1] << 3) | (len[0] >> 29));
+  *(md5_uint32 *) &buffer[sum + pad + 4] = SWAP ((len[1] << 3)
+						 | (len[0] >> 29));
 
   /* Process last bytes.  */
   md5_process_block (buffer, sum + pad + 8, &ctx);
 
   /* Construct result in desired memory.  */
-  return md5_read_ctx (&ctx, resblock);
+  md5_read_ctx (&ctx, resblock);
+  return 0;
 }
 
 /* Compute MD5 message digest for LEN bytes beginning at BUFFER.  The
