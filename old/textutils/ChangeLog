@@ -1,3 +1,41 @@
+2001-03-06  Paul Eggert  <eggert@twinsun.com>
+
+	* src/sort.c (sort): If all the input files are empty, create
+	an empty output file.
+	* tests/sort/Test.pm: Test for this.
+
+2001-03-13  Jim Meyering  <meyering@lucent.com>
+
+	* src/sort.c (merge): Move declarations of local variables into
+	the inner scope where they're used.
+	(sort): Likewise.
+
+2001-03-06  Paul Eggert  <eggert@sic.twinsun.com>
+
+	Avoid the need for a copy of the input file when the input and
+	output overlap, e.g. 'sort F -o F'.  With -m, though, a copy
+	is still needed sometimes.
+
+	* doc/textutils.texi: 'sort F -o F' no longer needs to copy F.
+
+	* src/sort.c: Do not include closeout.h.
+	(xfopen): Use stdout if *how != 'r'.
+	(mergefps): Remove FPS arg.
+	Open all input files, and close all files when done.
+	If OFP is null, open the output file (but after opening input files).
+	All callers changed.
+	(first_same_file): New function.
+	(sort, merge): Remove arg OFP; we now open the output file as needed.
+	All callers changed.
+	(merge): New arg MAX_MERGE.  All callers changed.
+	(sort):	For "sort F -o F", close the input before opening the output.
+	(main): Do not use close_stdout; 'sort' and 'merge' now close stdout.
+	(This also fixes a close-stdout-twice bug.)
+	Remove test for overlapping input and output files, as 'sort' no longer
+	needs to worry about overlap, and 'merge' checks for overlap itself.
+	Use first_same_file to inform 'merge' about how much to merge at
+	the top level, to avoid overlap.
+
 2001-03-12  Jim Meyering  <meyering@lucent.com>
 
 	`fmt --prefix=S' would not work properly for any string S containing
