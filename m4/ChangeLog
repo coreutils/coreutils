@@ -1,3 +1,9 @@
+1999-11-18  Paul Eggert  <eggert@twinsun.com>
+
+	* m4/largefile.m4 (AC_SYS_LARGEFILE_FLAGS): Work around a
+	problem with the QNX 4.25 shell, which doesn't propagate exit
+	status of failed commands inside shell assignments.
+
 1999-11-17  Jim Meyering  <meyering@ascend.com>
 
 	* gettext.m4: Use new AC_CONFIG_LINKS in place of AC_LINK_FILES.
