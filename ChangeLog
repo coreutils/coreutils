@@ -1,6 +1,11 @@
-2004-12-20  Paul Eggert  <eggert@cs.ucla.edu>
+2004-12-21  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
+
+	* tests/misc/split-fail: Avoid spurious failure on x86 solaris2.9
+	when using c89.
+
+2004-12-20  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/split.c (usage): Mention default size.  Suggested by Dan Jacobson.
 
