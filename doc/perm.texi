@@ -47,8 +47,8 @@ Files are given an owner and group when they are created.  Usually the
 owner is the current user and the group is the group of the directory
 the file is in, but this varies with the operating system, the
 filesystem the file is created on, and the way the file is created.  You
-can change the owner and group of a file by using the @code{chown} and
-@code{chgrp} commands.
+can change the owner and group of a file by using the @command{chown} and
+@command{chgrp} commands.
 
 In addition to the three sets of three permissions listed above, a
 file's permissions have three special components, which affect only
@@ -76,6 +76,38 @@ systems, prevent users from removing or renaming a file in a directory
 unless they own the file or the directory; this is called the
 @dfn{restricted deletion flag} for the directory.
 @end enumerate
+
+In addition to the permissions listed above, there may be file attributes
+specific to the filesystem, e.g: access control lists (ACLs), whether a
+file is compressed, whether a file can be modified (immutability), whether
+a file can be dumped.  These are usually set using programs
+specific to the filesystem.  For example:
+@c should probably say a lot more about ACLs... someday
+
+@table @asis
+@item ext2
+On GNU and Linux/GNU the file permissions (``attributes'') specific to
+the ext2 filesystem are set using @command{chattr}.
+
+@item FFS
+On FreeBSD the file permissions (``flags'') specific to the FFS
+filesystem are set using @command{chrflags}.
+@end table
+
+Although a file's permission ``bits'' allow an operation on that file,
+that operation may still fail, because:
+
+@itemize
+@item
+the filesystem-specific permissions do not permit it;
+
+@item
+the filesystem is mounted as read-only.
+@end itemize
+
+For example, if the immutable attribute is set on a file,
+it cannot be modified, regardless of the fact that you
+may have just run @code{chmod a+w FILE}.
 
 @node Symbolic Modes
 @section Symbolic Modes
