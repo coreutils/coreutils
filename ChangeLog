@@ -1,6 +1,15 @@
-2002-10-06  Jim Meyering  <meyering@lucent.com>
+2002-10-07  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.5.3.
+
+	* src/cat.c (simple_cat, cat): Adapt to new safe_read ABI.
+	* src/head.c (head_bytes, head_lines): Likewise.
+
+2002-10-06  Jim Meyering  <meyering@lucent.com>
+
+	* src/dd.c (scanargs): Ensure that specified block sizes (specified
+	via ibs=N, obs=N, and bs=N) are no larger than SSIZE_MAX.
+	(skip, dd_copy): Adapt to new safe_read ABI.
 
 	* Makefile.maint (signatures): Define.
 	(%.sig): New rule.
