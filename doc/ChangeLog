@@ -1,6 +1,17 @@
+2004-07-25  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (nice invocation): Document the "nice value", and
+	how it affects the scheduling priority.  (The old documentation
+	implied that the nice value equaled the scheduling priority, which
+	isn't accurate.)  Document that the range of nice values might
+	exceed -20..19.  Specify what happens when you give a nice value
+	that is out of range, or when you don't have permissions to lower
+	the nice value.  Bash doesn't have a builtin 'nice', so don't say
+	"most shells" have one.
+
 2004-04-03  Dmitry V. Levin  <ldv@altlinux.org>
 
-	* doc/coreutils.texi (readlink invocation): Document new
+	* coreutils.texi (readlink invocation): Document new
 	"readlink -f" behaviour and new canonicalize options, -e and -m.
 
 2004-07-02  Jim Meyering  <jim@meyering.net>
@@ -114,7 +125,7 @@
 
 2004-05-13  Paul Eggert  <eggert@cs.ucla.edu>
 
-	* doc/coreutils.texi (echo invocation): Document today's changes.
+	* coreutils.texi (echo invocation): Document today's changes.
 
 2004-05-17  Jim Meyering  <jim@meyering.net>
 
