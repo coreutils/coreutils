@@ -1,3 +1,25 @@
+Thu Apr 13 23:22:57 1995  Jim Meyering  (meyering@comco.com)
+
+	* head.c: Remove block of redundant comments describing options.
+	(usage): Remove reference to -l option.  It's not valid.
+
+	* od.c (write_block): Declare index I as unsigned int, not int.
+	(get_lcm): Likewise.
+	(dump_strings): Likewise.
+	(main): Likewise.
+	(dump): Cast BYTES_PER_BLOCK to off_t in MIN expression.
+	(dump_strings): Declare bufsize to be of type size_t, not int.
+
+	* split.c (next_file_name): Don't reuse X as an index.
+	Declare new variable I instead.
+
+Sat Mar 25 15:07:23 1995  Jim Meyering  (meyering@comco.com)
+
+	* csplit.c: Declare as `unsigned int' all variables that were
+	just `unsigned'.
+	(make_filename): Change type of arg to unsigned int.
+	(split_file): Change type of indices to unsigned int.
+
 Thu Mar 16 22:05:05 1995  Jim Meyering  (meyering@comco.com)
 
 	* od.c (main): Detect and fail when argument to -N is too large
