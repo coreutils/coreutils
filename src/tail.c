@@ -748,17 +748,15 @@ start_bytes (const char *pretty_filename, int fd, off_t n_bytes)
 static int
 start_lines (const char *pretty_filename, int fd, long int n_lines)
 {
-  char buffer[BUFSIZ];
-  size_t bytes_read = 0;
-  size_t bytes_to_skip = 0;
-
   if (n_lines == 0)
     return 0;
 
-  while (n_lines)
+  while (1)
     {
-      bytes_to_skip = 0;
-      bytes_read = safe_read (fd, buffer, BUFSIZ);
+      char buffer[BUFSIZ];
+      char *p = buffer;
+      size_t bytes_read = safe_read (fd, buffer, BUFSIZ);
+      char *buffer_end = buffer + bytes_read;
       if (bytes_read == 0) /* EOF */
 	return -1;
       if (bytes_read == SAFE_READ_ERROR) /* error */
@@ -767,18 +765,17 @@ start_lines (const char *pretty_filename, int fd, long int n_lines)
 	  return 1;
 	}
 
-      while (bytes_to_skip < bytes_read)
-	if (buffer[bytes_to_skip++] == '\n' && --n_lines == 0)
-	  break;
+      while ((p = memchr (p, '\n', buffer_end - p)))
+	{
+	  ++p;
+	  if (--n_lines == 0)
+	    {
+	      if (p < buffer_end)
+		xwrite (STDOUT_FILENO, p, buffer_end - p);
+	      return 0;
+	    }
+	}
     }
-
-  if (bytes_to_skip < bytes_read)
-    {
-      xwrite (STDOUT_FILENO, &buffer[bytes_to_skip],
-	      bytes_read - bytes_to_skip);
-    }
-
-  return 0;
 }
 
 /* FIXME: describe */
