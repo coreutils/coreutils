@@ -32,7 +32,7 @@
    \t = horizontal tab
    \v = vertical tab
    \0ooo = octal number (ooo is 0 to 3 digits)
-   \xhhh = hexadecimal number (hhh is 1 to 3 digits)
+   \xhh = hexadecimal number (hhh is 1 to 2 digits)
    \uhhhh = 16-bit Unicode character (hhhh is 4 digits)
    \Uhhhhhhhh = 32-bit Unicode character (hhhhhhhh is 8 digits)
 
@@ -126,7 +126,7 @@ FORMAT controls the output as in C printf.  Interpreted sequences are:\n\
   \\v      vertical tab\n\
 "), stdout);
       fputs (_("\
-  \\xNNN   byte with hexadecimal value NNN (1 to 3 digits)\n\
+  \\xNN    byte with hexadecimal value NN (1 to 2 digits)\n\
 \n\
   \\uNNNN  character with hexadecimal value NNNN (4 digits)\n\
   \\UNNNNNNNN  character with hexadecimal value NNNNNNNN (8 digits)\n\
