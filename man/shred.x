@@ -1,4 +1,4 @@
 [NAME]
-shred \- delete a file securely, first overwriting it to hide its contents
+shred \- overwrite a file to hide its contents, and optionally delete it
 [DESCRIPTION]
 .\" Add any additional description here
