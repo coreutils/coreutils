@@ -1,5 +1,9 @@
 2004-03-10  Jim Meyering  <jim@meyering.net>
 
+	* coreutils.texi (Sorting the output): Remove description of
+	ls's --sort=directory option.  ls doesn't accept that option, yet.
+	Reported by Arvind Autar.
+
 	* coreutils.texi (cp invocation): Improve description of
 	cp's --sparse=WHEN option.
 
