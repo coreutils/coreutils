@@ -1,4 +1,4 @@
-[0.1.0]
+[4.5.1]
 * uniq now obeys the LC_COLLATE locale, as per POSIX 1003.1-2001 TC1.
 
   This package is the union of the following:
