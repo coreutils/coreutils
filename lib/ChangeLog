@@ -1,3 +1,9 @@
+2004-12-06  Jim Meyering  <jim@meyering.net>
+
+	* Makefile.am (libfetish_a_SOURCES): Begin removing .c and .h file
+	names, as they are added to AC_LIBSOURCES directives in the
+	corresponding m4/*.m4 files.
+
 2004-12-05  Jim Meyering  <jim@meyering.net>
 
 	Currently, fpending.m4 punts (by defining PENDING_OUTPUT_N_BYTES
