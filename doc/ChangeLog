@@ -1,3 +1,8 @@
+2004-08-18  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (printf invocation): Clarify how "printf" is
+	supposed to work with extra arguments, missing arguments, etc.
+
 2004-08-10  Paul Eggert  <eggert@cs.ucla.edu>
 
 	POSIX-conformance fixes for "-" used as an operand.
