@@ -84,7 +84,7 @@ list_entries_users (int n)
     {
       int c;
       fputs (u[i], stdout);
-      c = (i < n_entries-1 ? ' ' : '\n');
+      c = (i < n_entries - 1 ? ' ' : '\n');
       putchar (c);
     }
 
