@@ -50,7 +50,7 @@ ln -s $t $t 2> /dev/null && fail=1
 rm $t
 
 # Make sure -sf fails when src and dest are the same
-touch $t && framework_failure=1
+touch $t || framework_failure=1
 ln -sf $t $t 2> /dev/null && fail=1
 rm $t
 
@@ -110,7 +110,7 @@ if test $link_follows_symlink = no; then
   ln -s /no-such-dir || fail=1
   ln no-such-dir hard-to-dangle > /dev/null 2>&1 || fail=1
 fi
-rm -rf a symlink hard-to-sym
+rm -rf a symlink hard-to-sym hard-to-dangle
 # ===================================================
 
 cd ..
