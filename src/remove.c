@@ -55,6 +55,12 @@
 # define ROOT_CAN_UNLINK_DIRS 1
 #endif
 
+#if HAVE_WORKING_READDIR
+# define IF_READDIR_NEEDS_REWINDDIR(Code) /* empty */
+#else
+# define IF_READDIR_NEEDS_REWINDDIR(Code) Code
+#endif
+
 enum Ternary
   {
     T_UNKNOWN = 2,
@@ -804,6 +810,7 @@ remove_cwd_entries (Dirstack_state *ds, char **subdir, struct stat *subdir_sb,
   DIR *dirp = opendir (".");
   struct AD_ent *top = AD_stack_top (ds);
   enum RM_status status = top->status;
+  IF_READDIR_NEEDS_REWINDDIR (int performed_unlink_or_rmdir = 0);
 
   assert (VALID_STATUS (status));
   *subdir = NULL;
@@ -839,6 +846,19 @@ remove_cwd_entries (Dirstack_state *ds, char **subdir, struct stat *subdir_sb,
 	      /* Arrange to give a diagnostic after exiting this loop.  */
 	      dirp = NULL;
 	    }
+	  else
+	    {
+#if ! HAVE_WORKING_READDIR
+	      /* On buggy systems, call rewinddir if we've called unlink
+		 or rmdir since the opendir or a previous rewinddir.  */
+	      if (performed_unlink_or_rmdir)
+		{
+		  rewinddir (dirp);
+		  performed_unlink_or_rmdir = 0;
+		  continue;
+		}
+#endif
+	    }
 	  break;
 	}
 
@@ -856,7 +876,9 @@ remove_cwd_entries (Dirstack_state *ds, char **subdir, struct stat *subdir_sb,
       switch (tmp_status)
 	{
 	case RM_OK:
-	  /* do nothing */
+	  /* On buggy systems, record the fact that we've just
+	     removed a directory entry.  */
+	  IF_READDIR_NEEDS_REWINDDIR (performed_unlink_or_rmdir = 1);
 	  break;
 
 	case RM_ERROR:
