@@ -814,7 +814,7 @@ substr (p, first_idx, last_idx)
      int last_idx;
 {
   int len = last_idx - first_idx + 1;
-  unsigned char *tmp = (unsigned char *) xmalloc (len);
+  unsigned char *tmp = (unsigned char *) xmalloc (len + 1);
 
   assert (first_idx <= last_idx);
   /* We must use bcopy or memcpy rather than strncpy
