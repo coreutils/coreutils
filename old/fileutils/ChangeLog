@@ -1,3 +1,22 @@
+1999-06-27  Paul Eggert  <eggert@twinsun.com>
+
+	Fix some incompatibilities between `df -P' and POSIX.2.
+
+	* lib/human.h (enum human_inexact_style): New enum.
+	(human_readable_inexact): New decl.
+
+	* lib/human.c (human_readable): New function.
+	(human_readable_inexact): Renamed from human_readable, with new arg
+	INEXACT_STYLE.  Add support for ceiling and floor.
+
+	* src/df.c (print_header): Conform to POSIX if posix_format).
+	(df_readable): Take ceiling if posix_format.
+	(ceil_percent): New function.
+	(show_dev): Take ceiling of percent if posix_format.
+	Align with POSIX-conforming header if posix_format.
+
+	* doc/fileutils.texi: Document these changes.
+
 1999-07-04  Paul Eggert  <eggert@twinsun.com>
 
 	* lib/xstrtol.c (__strtol): Remove decl; it doesn't work if __strtol
