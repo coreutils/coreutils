@@ -1,6 +1,12 @@
-2001-10-04  Jim Meyering  <meyering@lucent.com>
+2001-10-27  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.17.
+
+	Give an accurate diagnostic when `head --bytes=30M' fails.
+	* src/head.c (string_to_integer): Check explicitly for overflow,
+	and lump everything else together as `invalid'.
+
+2001-10-04  Jim Meyering  <meyering@lucent.com>
 
 	Rename --all-repeated argument `precede' to `prepend'.
 	* src/uniq.c (enum delimit_method): s/DM_PRECEDE/DM_PREPEND/
