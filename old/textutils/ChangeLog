@@ -1,7 +1,25 @@
+Sat Jan 28 07:07:23 1995  Jim Meyering  (meyering@comco.com)
+
 	* cat.c (cat): Use memmove rather than bcopy.
 	* csplit.c (load_buffer): Use memcpy rather than bcopy.
 	* fmt.c (isopen, isclose, isperiod): Use strchr, not index.
 	(flush_paragraph): Use memmove instead of bcopy.
+	* fold.c (fold_file): Use memmove instead of bcopy.
+	* od.c (decode_format_string): Use memmove instead of bcopy.
+	[EQUAL_BLOCKS]: Use memcmp, not bcmp.
+	(dump): Use memset, not bzero.
+	* sort.c (checkfp, mergefps): Use memcpy instead of bcopy.
+	(fillbuf): Use memmove instead of bcopy.
+	* split.c (main): Use memset, not bzero.
+	(line_bytes_split): Use memmove instead of bcopy.
+	* tac.c (tac): Use memmove instead of bcopy.
+	(output): Use memcpy instead of bcopy.
+	* tail.c (pipe_lines, pipe_bytes): Use memcpy instead of bcopy.
+	* tr.c (substr): Use memcpy instead of bcopy.
+	(card_of_complement, set_initialize): Use memset, not bzero.
+
+	* tr.c (substr): Don't allocate a byte for trailing NUL in result
+	since the result needn't be NUL-terminated.  Don't NUL terminate it.
 
 	* lib/Makefile.in (SOURCES): Add memmove.c
 
