@@ -33,24 +33,6 @@
 
 #define AUTHORS "Ulrich Drepper"
 
-/* The C type of value to be printed with format_str.  */
-enum Format_type
-{
-  FT_DOUBLE,
-  FT_INT
-};
-typedef enum Format_type Format_type;
-
-#define DO_printf(Format, Value)		\
-  do						\
-    {						\
-      if (format_type == FT_DOUBLE)		\
-	printf ((Format), (Value));		\
-      else					\
-	printf ((Format), (int) (Value));	\
-    }						\
-  while (0)
-
 /* If nonzero print all number with equal width.  */
 static int equal_width;
 
@@ -68,9 +50,6 @@ static char *terminator = "\n";
 /* The representation of the decimal point in the current locale.
    Always "." if the localeconv function is not supported.  */
 static char *decimal_point = ".";
-
-/* The C type of value to be printed with format_str.  */
-static Format_type format_type = FT_DOUBLE;
 
 /* The starting number.  */
 static double first;
@@ -117,8 +96,7 @@ If FIRST or INCREMENT is omitted, it defaults to 1.\n\
 FIRST, INCREMENT, and LAST are interpreted as floating point values.\n\
 INCREMENT should be positive if FIRST is smaller than LAST, and negative\n\
 otherwise.  When given, the FORMAT argument must contain exactly one of\n\
-the printf-style, floating point output formats %%e, %%f, %%g, or\n\
-integer output formats %%d, %%u, %%o, %%x, %%X.\n\
+the printf-style, floating point output formats %%e, %%f, %%g\n\
 "));
       puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
     }
@@ -137,58 +115,17 @@ scan_double_arg (const char *arg)
     {
       error (0, 0, _("invalid floating point argument: %s"), arg);
       usage (1);
-      /* NOTREACHED */
     }
 
   return ret_val;
-}
-
-/* Read an int value from the command line.
-   Return if the string is correct else signal error.  */
-
-static int
-scan_int_arg (const char *arg)
-{
-  long int ret_val;
-
-  if (xstrtol (arg, NULL, 10, &ret_val, "") != LONGINT_OK
-      || ret_val < INT_MIN || ret_val > INT_MAX)
-    {
-      error (0, 0, _("invalid integer argument: %s"), arg);
-      usage (1);
-      /* NOTREACHED */
-    }
-
-  return ret_val;
-}
-
-/* Read a double value from the command line.
-   Return if the string is correct else signal error.  */
-
-static double
-scan_arg (const char *arg)
-{
-  switch (format_type)
-    {
-    case FT_INT:
-      return (double) scan_int_arg (arg);
-    case FT_DOUBLE:
-      return scan_double_arg (arg);
-    default:
-      abort ();
-    }
 }
 
 /* Check whether the format string is valid for a single `double'
-   argument or a single `int' argument.  Return 0 if not, 1 if correct.
-   Set *INTCONV to non-zero if the conversion specifier is valid
-   for a single `int' argument, otherwise to zero.  */
+   argument.  Return 0 if not, 1 if correct. */
 
 static int
-check_format (const char *fmt, Format_type *format_type_ptr)
+valid_format (const char *fmt)
 {
-  *format_type_ptr = FT_DOUBLE;
-
   while (*fmt != '\0')
     {
       if (*fmt == '%')
@@ -212,9 +149,7 @@ check_format (const char *fmt, Format_type *format_type_ptr)
 	fmt += strspn (++fmt, "0123456789");
     }
 
-  if (*fmt == 'd' || *fmt == 'u' || *fmt == 'o' || *fmt == 'x' || *fmt == 'X')
-    *format_type_ptr = FT_INT;
-  else if (!(*fmt == 'e' || *fmt == 'f' || *fmt == 'g'))
+  if (!(*fmt == 'e' || *fmt == 'f' || *fmt == 'g'))
     return 0;
 
   fmt++;
@@ -248,10 +183,9 @@ print_numbers (const char *fmt)
 		 _("when the starting value is larger than the limit,\n\
 the increment must be negative"));
 	  usage (1);
-	  /* NOTREACHED */
 	}
 
-      DO_printf (fmt, first);
+      printf (fmt, first);
       for (i = 1; /* empty */; i++)
 	{
 	  double x = first + i * step;
@@ -260,7 +194,7 @@ the increment must be negative"));
 	    break;
 
 	  fputs (separator, stdout);
-	  DO_printf (fmt, x);
+	  printf (fmt, x);
 	}
     }
   else
@@ -273,10 +207,9 @@ the increment must be negative"));
 		 _("when the starting value is smaller than the limit,\n\
 the increment must be positive"));
 	  usage (1);
-	  /* NOTREACHED */
 	}
 
-      DO_printf (fmt, first);
+      printf (fmt, first);
       for (i = 1; /* empty */; i++)
 	{
 	  double x = first + i * step;
@@ -285,7 +218,7 @@ the increment must be positive"));
 	    break;
 
 	  fputs (separator, stdout);
-	  DO_printf (fmt, x);
+	  printf (fmt, x);
 	}
     }
   fputs (terminator, stdout);
@@ -393,7 +326,6 @@ main (int argc, char **argv)
   int errs;
   int optc;
   int step_is_set;
-  int format_ok;
 
   /* The printf(3) format used for output.  */
   char *format_str = NULL;
@@ -460,43 +392,40 @@ main (int argc, char **argv)
 
 	default:
 	  usage (1);
-	  /* NOTREACHED */
 	}
     }
 
-  /* Set format_type before calling scan_arg.  */
-  if (format_str != NULL)
-    format_ok = check_format (format_str, &format_type);
-  else
-    {
-      format_ok = 1;
-      format_type = FT_DOUBLE;
-    }
-
-  if (optind >= argc)
+  if (argc - optind < 1)
     {
       error (0, 0, _("too few arguments"));
       usage (1);
-      /* NOTREACHED */
     }
-  last = scan_arg (argv[optind++]);
+
+  if (3 < argc - optind)
+    {
+      error (0, 0, _("too many arguments"));
+      usage (1);
+    }
+
+  if (format_str && !valid_format (format_str))
+    {
+      error (0, 0, _("invalid format string: `%s'"), format_str);
+      usage (1);
+    }
+
+  last = scan_double_arg (argv[optind++]);
 
   if (optind < argc)
     {
       first = last;
-      last = scan_arg (argv[optind++]);
+      last = scan_double_arg (argv[optind++]);
 
       if (optind < argc)
 	{
 	  step = last;
 	  step_is_set = 1;
-	  last = scan_arg (argv[optind++]);
+	  last = scan_double_arg (argv[optind++]);
 
-	  if (optind < argc)
-	    {
-	      usage (1);
-	      /* NOTREACHED */
-	    }
 	}
     }
 
@@ -512,15 +441,7 @@ format string may not be specified when printing equal width strings"));
       step = first <= last ? 1.0 : -1.0;
     }
 
-  if (format_str != NULL)
-    {
-      if (!format_ok)
-	{
-	  error (0, 0, _("invalid format string: `%s'"), format_str);
-	  usage (1);
-	}
-    }
-  else
+  if (format_str == NULL)
     {
       if (equal_width)
 	format_str = get_width_format ();
@@ -531,5 +452,4 @@ format string may not be specified when printing equal width strings"));
   errs = print_numbers (format_str);
 
   exit (errs);
-  /* NOTREACHED */
 }
