@@ -1,3 +1,21 @@
+2004-07-12  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* c-strtod.c (STRTOD_L): New macro.
+	(C_STRTOD) [defined LC_ALL_MASK]: Use it, so that the
+	code is reentrant on platforms that have strtod_l.
+
+	* getloadavg.c: Include <errno.h>, <stdio.h>, <stdlib.h> even
+	if HAVE_GETLOADAVG is defined, so that the test program can work.
+	(errno): Remove declaration; not needed in C89 or later.
+	Include "c-strtod.h".
+	Do not include locale.h or define setlocale; no longer needed.
+	Include <limits.h>.
+	(INT_STRLEN_BOUND): New macro.
+	(getloadavg): Use it to compute buffer size.
+	Don't assume that buffer will be properly terminated by 'read'.
+	Use c_strtod instead of setlocale.
+	(main) [defined TEST]: Return int, not void.
+	
 2004-07-11  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Makefile.am (libfetish_a_SOURCES): Add c-strtold.c.

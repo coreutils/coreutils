@@ -1,3 +1,10 @@
+2004-07-12  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/uptime.c: Include c-strtod.h.
+	(print_uptime): Use c_strtod instead of setlocale and sscanf.
+	Use long int rather than int to count days (for 64-bit hosts),
+	and check for arithmetic overflow when converting double to time_t.
+
 2004-07-11  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/printf.c (vstrtold): Renamed from vstrtod.

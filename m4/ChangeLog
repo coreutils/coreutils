@@ -1,3 +1,7 @@
+2004-07-12  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* c-strtod.m4 (gl_C_STRTOD): Add gl_USE_SYSTEM_EXTENSIONS.
+
 2004-07-11  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* c-strtod.m4: New file.
