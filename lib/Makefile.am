@@ -11,7 +11,7 @@ libfetish_a_SOURCES = \
   canon-host.c closeout.c dirname.c exclude.c filemode.c diacrit.c \
   full-write.c getopt.c getopt1.c getugroups.c hard-locale.c hash.c \
   human.c idcache.c isdir.c linebuffer.c long-options.c makepath.c \
-  md5.c memcasecmp.c memcoll.c modechange.c obstack.c path-concat.c \
+  md5.c memcasecmp.c memcoll.c modechange.c path-concat.c \
   quotearg.c readtokens.c readutmp.c safe-read.c same.c save-cwd.c \
   savedir.c stripslash.c userspec.c version-etc.c xgetcwd.c xgethostname.c \
   xmalloc.c xstrdup.c xstrtod.c xstrtol.c xstrtoul.c xstrtoumax.c yesno.c
