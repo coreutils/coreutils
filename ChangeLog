@@ -1,3 +1,24 @@
+2004-06-22  Jim Meyering  <jim@meyering.net>
+
+	* src/test.c (usage): Correct description of `-t FD'.  The file
+	descriptor, FD, is no longer optional.  Reported by Ton Nijkes.
+
+2004-06-21  Paul Eggert  <eggert@cs.ucla.edu>
+
+	The 2004-06-19 fix for who and pinky was incomplete, as ctime
+	has undefined behavior if the year precedes -999 or follows 9999.
+	Since we have to stop using ctime anyway, we might as well use
+	strftime and fix the FIXME, and support internationalized dates.
+
+	* NEWS: Document the new behavior.
+	* src/who.c: Include "hard-locale.h".
+	(time_format, time_format_width): New vars.
+	(time_string, print_line): Use them.
+	(main): Set them.
+	(time_string): Use localtime + strftime instead of
+	ctime, to avoid problems with years before -999 or after 9999.
+	* src/pinky.c: Likewise.
+
 2004-06-21  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Fix bug: GNU 'ls' didn't count columns correctly if user or group
