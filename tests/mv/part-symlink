@@ -1,0 +1,132 @@
+#!/bin/sh
+# make sure cp and mv can handle many combinations of local and
+# other-partition regular/symlink'd files.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  mv --version
+  cp --version
+fi
+
+pwd=`pwd`
+tmp=part-sl.$$
+#trap 'status=$?; cd $pwd; rm -rf $tmp $other_partition_tmpdir && exit $status' 0
+trap '(exit $?); exit' 1 2 13 15
+
+. $srcdir/setup
+. $srcdir/../envvar-check
+
+if test -z "$other_partition_tmpdir"; then
+  (exit 77); exit
+fi
+
+framework_failure=0
+mkdir $tmp || framework_failure=1
+cd $tmp || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo 'failure in testing framework'
+  exit 1
+fi
+
+fail=0
+
+# Four cases:
+# local regular file w/symlink on another partition
+#   (loc_reg, rem_sl)
+#   (rem_sl, loc_reg)
+# local symlink to regular file on another partition
+#   (loc_sl, rem_reg)
+#   (rem_reg, loc_sl)
+
+# Exercise those four cases for each of
+# cp and mv, with lots of combinations of options.
+# For now, just --rem and without.
+
+actual=actual-$$
+expected=expected-$$
+
+exec 1> $actual
+
+# FIXME: This should be bigger: like more than 8k
+contents=XYZ
+
+for copy in cp mv; do
+  for args in \
+      'loc_reg rem_sl' \
+      'rem_sl loc_reg' \
+      'loc_sl rem_reg' \
+      'rem_reg loc_sl' \
+      ; do
+    for options in '' --rem; do
+      rm -rf dir $other_partition_tmpdir/reg || fail=1
+      rm -f $other_partition_tmpdir/reg || fail=1
+      rm -f $other_partition_tmpdir/rem_sl || fail=1
+      mkdir dir || fail=1
+      cd dir || fail=1
+      case "$args" in *loc_reg*) reg=reg ;; esac
+      case "$args" in *rem_reg*) reg=$other_partition_tmpdir/reg ;; esac
+      case "$args" in *loc_sl*) slink=slink ;; esac
+      case "$args" in *rem_sl*) slink=$other_partition_tmpdir/slink ;; esac
+
+      echo $contents > $reg || fail=1
+      ln -nsf $reg $slink || fail=1
+      args=`echo $args|sed "s,..._reg,$reg,"`
+      args=`echo $args|sed "s,..._sl,$slink,"`
+
+      (
+	(
+	  # echo 1>&2 cp $options $args
+	  $copy $options $args 2>.err
+	  echo $? $copy $options $args
+
+
+	  # Normalize the program name in the error output,
+	  # and put brackets around the output.
+	  test -s .err && echo "[`sed 's/^[^:][^:]*:/cp:/' .err`]"
+	  # Strip off all but the file names.
+	  ls="`ls -lG --ignore=.err . \
+	      | sed \
+		  -e '/^total /d' \
+		  -e 's/^...............................................//'`"
+	  ls2="`cd $other_partition_tmpdir && ls -lG --ignore=.err . \
+	      | sed \
+		  -e '/^total /d' \
+		  -e 's/^...............................................//'`"
+	  echo "($ls) ($ls2)"
+	  if test $copy = cp; then
+	    # Make sure the original is unchanged and that
+	    # the destination is a copy.
+	    for f in $args; do
+	      if test -f $f; then
+		case "`cat $f`" in
+		  "$contents") ;;
+		  *) echo cp FAILED;;
+		esac
+	      else
+		echo symlink-loop
+	      fi
+	    done
+	  fi
+	) | tr '\012' ' '
+	echo
+      ) | sed 's/  *$//'
+      cd ..
+    done
+    echo
+  done
+done
+
+test $fail = 1 &&
+  { (exit $?); exit; }
+
+cat <<\EOF > $expected
+
+EOF
+
+# Uncomment this if you see a failure and want to try to diagnose it.
+diff -u $expected $actual 1>&2
+
+cmp $expected $actual
+
+(exit $?); exit
