@@ -1,4 +1,13 @@
 User-visible changes in release 1.12
+* fmt properly formats paragraph that isn't terminated by a newline
+* tail -f flushes stdout before sleeping so that it will output partial
+  lines sooner
+* sort no longer ignores characters at the end of fields when otherwise
+  they would compare equal
+* sort properly interprets field offsets specified via the -k option
+* dd, od, and tail work on systems for which off_t is long long (e.g. BD4.4)
+* wc is a faster when not counting words
+* wc now works even when file pointer isn't at beginning of file
 * expand no longer seg faults with very long tab lists
 User-visible changes in release 1.11
 * fmt is built
