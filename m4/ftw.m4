@@ -1,4 +1,4 @@
-#serial 1
+#serial 2
 # Use the replacement ftw.c if the one in the C library is inadequate or buggy.
 # For now, we always use the code in lib/ because libc doesn't have the FTW_DCH
 # or FTW_DCHP that we need.  Arrange to use lib/ftw.h.  And since that
@@ -9,6 +9,7 @@
 AC_DEFUN([AC_FUNC_FTW],
 [
   # prerequisites
+  AC_REQUIRE([AC_HEADER_STAT])
   AC_REQUIRE([jm_FUNC_LSTAT])
   AC_REQUIRE([AC_HEADER_DIRENT])
   AC_CHECK_HEADERS(sys/param.h)
