@@ -9,7 +9,7 @@
 
 . $srcdir/setup
 
-if test -z $other_partition_tmpdir; then
+if test -z "$other_partition_tmpdir"; then
   exit 77
 fi
 
