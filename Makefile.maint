@@ -262,12 +262,12 @@ check-copyright:
 	  || { echo 'out of date copyright in $<; update it' 1>&2; exit 1; }; \
 	fi
 
-
 $(xd-delta): $(release-archive-dir)/$(prev-tgz) $(distdir).tar.gz
 	xdelta delta -9 $^ $@ || :
 
-alpha: local-check $(xd-delta)
+alpha: local-check
 	$(MAKE) cvs-dist
+	$(MAKE) $(xd-delta)
 	$(MAKE) -s announcement > /tmp/announce-$(my_distdir)
 	ln $(rel-files) $(release-archive-dir)
 	chmod a-w $(rel-files)
