@@ -5703,7 +5703,7 @@ combination of options is this tiny Bourne shell script:
 #!/bin/sh
 # Usage: backup FILE...
 # Create a @sc{gnu}-style backup of each listed FILE.
-for i in "$@"; do
+for i; do
   cp --backup --force "$i" "$i"
 done
 @end example
