@@ -44,9 +44,9 @@ Cambridge, MA 02139, USA.  */
 #else
 #define NULL 0
 extern int errno;
-#endif
 #ifndef HUGE_VAL
 #define HUGE_VAL HUGE
+#endif
 #endif
 
 /* Convert NPTR to a double.  If ENDPTR is not NULL, a pointer to the

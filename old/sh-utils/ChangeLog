@@ -1,3 +1,47 @@
+Wed Dec 22 00:53:51 1993  Jim Meyering  (meyering@comco.com)
+
+	* expr.c (toarith): Interpret the empty string as just that
+	rather than as the integer zero.
+	Before, `expr "" == 0' output 1.  Now it prints 0.
+
+	* configure.in (AC_HAVE_HEADERS): Check for float.h for strtod.c.
+
+	* configure.in (check for TIOCGWINSZ): Don't look in sys/ioctl.h
+	or sys/ptem.h if we've already found it in termios.h.  This
+	eliminates redefinition warnings from including both termios.h
+	and sys/ioctl.h on sytems running SunOS.  From Matthew Seaman
+	(matthew@dyson.ox.ac.uk).
+
+	* date.1: Document new %s format and old `-' and `_' numeric field
+	modifiers.
+
+	* memcmp.c: Use the latest version from GNU C library.
+
+Mon Dec 20 23:29:30 1993  Jim Meyering  (meyering@comco.com)
+
+	* configure.in [test for 8-bit clean memcmp]: Add a test to detect
+	losing memcmp from SunOS4.1.x.
+
+Sat Dec 18 01:12:24 1993  Jim Meyering  (meyering@comco.com)
+
+	* configure.in (AC_OUTPUT): Put `touch stamp-config' in second arg
+	so it goes in config.status.  This eliminates unnecessary second run
+	of configure.
+
+Fri Dec 10 01:06:28 1993  Jim Meyering  (meyering@comco.com)
+
+	* stty.c (screen_columns): Instead of dying just because Solaris'
+	`ioctl (0, TIOCGWINSZ' fails (strangely only for telnet sessions,
+	not rlogin sessions), ignore its errno == EINVAL and try to get
+	the number of columns another way.
+
+	* stty.c (set_window_size): If ioctl to get window size fails,
+	(as on telnet sessions to Solaris 2.[12] systems) try to set the
+	requested fields anyway, setting to zero any unspecified fields.
+	This is what Sun's /bin/stty appears to do.
+	* (display_window_size): Don't display anything for the number
+	of rows and columns if the ioctl call intended to get them fails.
+
 Tue Nov 30 23:58:54 1993  Jim Meyering  (meyering@comco.com)
 
 	* Version 1.9.2.

@@ -35,20 +35,6 @@
    solely to allow compilation by non GNU-C compilers of the C parser
    produced from this file by old versions of bison.  Newer versions of
    bison include a block similar to this one in bison.simple.  */
-   
-#ifdef __GNUC__
-#define alloca __builtin_alloca
-#else
-#ifdef HAVE_ALLOCA_H
-#include <alloca.h>
-#else
-#ifdef _AIX
- #pragma alloca
-#else
-void *alloca ();
-#endif
-#endif
-#endif
 
 #ifdef __GNUC__
 #undef alloca
@@ -382,25 +368,24 @@ number	: tUNUMBER {
 		yyYear = $1;
 	    else {
 		if($1>10000) {
-		    time_t date_part;
-
-		    date_part= $1/10000;
 		    yyHaveDate++;
-		    yyDay= (date_part)%100;
-		    yyMonth= (date_part/100)%100;
-		    yyYear = date_part/10000;
-		} 
-	        yyHaveTime++;
-		if ($1 < 100) {
-		    yyHour = $1;
-		    yyMinutes = 0;
+		    yyDay= ($1)%100;
+		    yyMonth= ($1/100)%100;
+		    yyYear = $1/10000;
 		}
 		else {
-		    yyHour = $1 / 100;
-		    yyMinutes = $1 % 100;
-		}
-		yySeconds = 0;
-		yyMeridian = MER24;
+		    yyHaveTime++;
+		    if ($1 < 100) {
+			yyHour = $1;
+			yyMinutes = 0;
+		    }
+		    else {
+		    	yyHour = $1 / 100;
+		    	yyMinutes = $1 % 100;
+		    }
+		    yySeconds = 0;
+		    yyMeridian = MER24;
+	        }
 	    }
 	}
 	;

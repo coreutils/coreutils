@@ -36,6 +36,7 @@
    Numeric modifiers (a nonstandard extension):
    -	do not pad the field
    _	pad the field with spaces
+   %s   time in seconds since 00:00:00, Jan 1, 1970
 
    Time fields:
    %H	hour (00..23)
