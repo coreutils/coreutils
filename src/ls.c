@@ -1,5 +1,5 @@
 /* `dir', `vdir' and `ls' directory listing programs for GNU.
-   Copyright (C) 85, 88, 90, 91, 1995-2002 Free Software Foundation, Inc.
+   Copyright (C) 85, 88, 90, 91, 1995-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -2328,7 +2328,13 @@ gobble_file (const char *name, enum filetype type, int explicit_arg,
 	      /* --indicator-style=classify (aka -F)
 		 requires that we stat each regular file
 		 to see if it's executable.  */
-	      || (type == normal && indicator_style == classify))))
+	      || (type == normal && (indicator_style == classify
+				     /* This is so that --color ends up
+					highlighting files with the executable
+					bit set even when options like -F are
+					not specified.  */
+				     || print_with_color)))))
+
     {
       /* `path' is the absolute pathname of this file. */
       int val;
