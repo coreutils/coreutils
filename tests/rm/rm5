@@ -41,7 +41,7 @@ fail=0
 rm -ir d < in > out 2>&1 || fail=1
 # The following loses with Tru64's sed, since that sed mistakenly
 # tacks a newline onto the end of the file.
-tr '?' '\012' < out |sed 's/^ //' > o2
+tr '?' '\n' < out |sed 's/^ //' > o2
 mv o2 out
 
 # Make sure it's been removed.
