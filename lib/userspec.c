@@ -183,7 +183,10 @@ parse_user_spec (const char *spec_arg, uid_t *uid, gid_t *gid,
 	      if (use_login_group)
 		error_msg = "cannot get the login group of a numeric UID";
 	      else
-		*uid = atoi (u);
+		{
+		  /* FIXME: don't use atoi!  */
+		  *uid = atoi (u);
+		}
 	    }
 	}
       else
@@ -223,7 +226,10 @@ parse_user_spec (const char *spec_arg, uid_t *uid, gid_t *gid,
 	  if (!is_number (g))
 	    error_msg = "invalid group";
 	  else
-	    *gid = atoi (g);
+	    {
+	      /* FIXME: don't use atoi!  */
+	      *gid = atoi (g);
+	    }
 	}
       else
 	*gid = grp->gr_gid;
