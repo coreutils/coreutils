@@ -244,7 +244,7 @@ AC_CHECK_DECLS([strsignal, strtoimax, sys_siglist, _sys_siglist])
 
 jm_LIB_CHECK
 
-AM_GNU_GETTEXT([external])
+AM_GNU_GETTEXT([external], [need-ngettext])
 
 AC_CONFIG_FILES(
   Makefile
