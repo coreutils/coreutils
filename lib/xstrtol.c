@@ -78,19 +78,19 @@ extern int errno;
 
 #include "xstrtol.h"
 
-#ifndef strtol
+#if !HAVE_DECL_STRTOL && !defined strtol
 long int strtol ();
 #endif
 
-#ifndef strtoul
+#if !HAVE_DECL_STRTOUL && !defined strtoul
 unsigned long int strtoul ();
 #endif
 
-#if !HAVE_DECL_STRTOIMAX
+#if !HAVE_DECL_STRTOIMAX && !defined strtoimax
 intmax_t strtoimax ();
 #endif
 
-#if !HAVE_DECL_STRTOUMAX
+#if !HAVE_DECL_STRTOUMAX && !defined strtoumax
 uintmax_t strtoumax ();
 #endif
 
