@@ -1,3 +1,7 @@
+1999-05-22  Jim Meyering  <meyering@ascend.com>
+
+	* Version 1.22m.
+
 1999-05-22  Paul Eggert  <eggert@twinsun.com>
 
 	* doc/textutils.texi: Document locale-specific changes to `sort',
@@ -66,10 +70,6 @@
 
 	* src/cat.c (main): When stdout is in binary mode, make sure all
 	input files are also read in binary mode.
-
-1999-05-17  Jim Meyering  <meyering@ascend.com>
-
-	* Version 1.22m.
 
 1999-05-16  Jim Meyering  <meyering@ascend.com>
 
