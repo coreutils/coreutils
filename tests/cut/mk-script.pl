@@ -204,59 +204,86 @@ sub wrap
       exit 0;
     }
 
-  print <<EOF;
+  print <<EOF1;
 #! /bin/sh
 # This script was generated automatically by build-script.
 case \$# in
-  0) xx='$xx';;
-  *) xx="\$1";;
+  0\) xx='$xx';;
+  *\) xx="\$1";;
 esac
 test "\$VERBOSE" && echo=echo || echo=:
 \$echo testing program: \$xx
 errors=0
 test "\$srcdir" || srcdir=.
 test "\$VERBOSE" && \$xx --version 2> /dev/null
-EOF
+EOF1
 
-validate ();
+  validate ();
 
-my $test_vector;
-foreach $test_vector (Test::test_vector ())
-{
-  my ($test_name, $flags, $in_spec, $exp_spec, $e_ret_code)
-    = @$test_vector;
-
-  my $in = spec_to_list ($in_spec, $test_name, $In);
-
-  my @srcdir_rel_in_file;
-  my $f;
-  foreach $f (@{$in->{EXPLICIT}}, @{$in->{MAINT_GEN}})
+  my $test_vector;
+  foreach $test_vector (Test::test_vector ())
     {
-      push (@srcdir_rel_in_file, "\$srcdir/$f");
-    }
+      my ($test_name, $flags, $in_spec, $exp_spec, $e_ret_code)
+	= @$test_vector;
 
-  my $exp = spec_to_list ($exp_spec, $test_name, $Exp);
-  my @all = (@{$exp->{EXPLICIT}}, @{$exp->{MAINT_GEN}});
-  assert (@all == 1);
-  my $exp_name = "\$srcdir/$all[0]";
-  my $out = "$test_name$Out";
-  my $err_output = "$test_name$Err";
+      my $in = spec_to_list ($in_spec, $test_name, $In);
 
-  my $redirect_stdin = ((@srcdir_rel_in_file == 1
-			 && defined $Test::input_via_stdin
-			 && $Test::input_via_stdin)
-			? '< ' : '');
-  my $z = $Test::common_option_prefix if defined $Test::common_option_prefix;
-  $z ||= '';
-  my $env = $Test::env{$test_name} || $Test::default_env || [''];
-  my $cmd = "\$xx $z$flags $redirect_stdin" . join (' ', @srcdir_rel_in_file)
-    . " > $out 2> $err_output";
-  my $e;
-  foreach $e (@$env)
-    {
-      my $t_name = ($e ? "$test_name($e)" : $test_name);
-      my $e_cmd = ($e ? "$e " : '');
-      print <<EOF;
+      my @srcdir_rel_in_file;
+      my $f;
+      foreach $f (@{$in->{EXPLICIT}}, @{$in->{MAINT_GEN}})
+	{
+	  push (@srcdir_rel_in_file, "\$srcdir/$f");
+	}
+
+      my $exp = spec_to_list ($exp_spec, $test_name, $Exp);
+      my @all = (@{$exp->{EXPLICIT}}, @{$exp->{MAINT_GEN}});
+      assert (@all == 1);
+      my $exp_name = "\$srcdir/$all[0]";
+      my $out = "$test_name$Out";
+      my $err_output = "$test_name$Err";
+
+      my %valid_via = map {$_ => 1} qw (REDIR FILE PIPE);
+      my %via_msg_string = (REDIR => '<', FILE => 'F', PIPE => '|');
+      die "use" if 0&& $Test::input_via{$test_name} && $Test::input_via_default;
+      die "use" if 0 && $Test::env{$test_name} && $Test::env_default;
+
+      my $vias = $Test::input_via{$test_name} || $Test::input_via_default
+	|| {FILE => 0};
+
+      my $n_vias = keys %$vias;
+      my ($via, $val);
+      while (($via, $val) = each %$vias)
+	{
+	  my $cmd;
+	  my $via_msg = ($n_vias == 1 ? '' : $via_msg_string{$via});
+	  my $file_args = join (' ', @srcdir_rel_in_file);
+
+	  if ($via eq 'FILE')
+	    {
+	      $cmd = "\$xx $flags $file_args > $out 2> $err_output";
+	    }
+	  elsif ($via eq 'PIPE')
+	    {
+	      $via_msg = "|$val" if $val;
+	      $val ||= 'cat';
+	      $cmd = "$val $file_args | \$xx $flags > $out 2> $err_output";
+	    }
+	  else
+	    {
+	      assert (@srcdir_rel_in_file == 1);
+	      $cmd = "\$xx $flags < $file_args > $out 2> $err_output";
+	    }
+
+	  my $env = $Test::env{$test_name} || $Test::env_default || [''];
+	  my $e;
+	  foreach $e (@$env)
+	    {
+	      my $sep = ($via_msg && $e ? ':' : '');
+	      my $msg = "$e$sep$via_msg";
+	      $msg = "($msg)" if $msg;
+	      my $t_name = "$test_name$msg";
+	      my $e_cmd = ($e ? "$e " : '');
+	      print <<EOF;
 $e_cmd$cmd
 code=\$?
 if test \$code != $e_ret_code ; then
@@ -275,10 +302,11 @@ else
 fi
 test -s $err_output || rm -f $err_output
 EOF
+	    }
+	}
     }
-  }
-my $n_tests = Test::test_vector ();
-print <<EOF2 ;
+  my $n_tests = Test::test_vector ();
+  print <<EOF3 ;
 if test \$errors = 0 ; then
   \$echo Passed all $n_tests tests. 1>&2
 else
@@ -286,5 +314,5 @@ else
 fi
 test \$errors = 0 || errors=1
 exit \$errors
-EOF2
+EOF3
 }
