@@ -1,8 +1,9 @@
 2004-12-02  Paul Eggert  <eggert@cs.ucla.edu>
 
-	* openat.m4 (gl_FUNC_OPENAT): Require
-	gl_USE_SYSTEM_EXTENSIONS, since Solaris requires __EXTENSIONS__
-	to be defined when compiling pedantically.
+	* openat.m4: Add copyright notice.
+	(gl_FUNC_OPENAT): Require gl_USE_SYSTEM_EXTENSIONS, since Solaris
+	requires __EXTENSIONS__ to be defined when compiling pedantically,
+	if you want AT_FDCWD.
 
 2004-12-01  Paul Eggert  <eggert@cs.ucla.edu>
 
