@@ -2,6 +2,11 @@ Sat Nov 11 15:46:02 1995  Jim Meyering  (meyering@comco.com)
 
 	* Version 1.13c.
 
+	* od.c (skip): Cast fseek's offset argument to `long'.
+	Erik Bennett <bennett@cvo.oneworld.com> reported that this is
+	necessary on BSDI systems.  And if offset doesn't fit in a long,
+	then try using lseek instead.
+
 	* sort.c (xmalloc): Declare static.
 	(xrealloc): Likewise.
 
