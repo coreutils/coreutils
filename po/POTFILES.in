@@ -11,6 +11,7 @@ lib/human.c
 lib/makepath.c
 lib/obstack.c
 lib/quotearg.c
+lib/root-dev-ino.h
 lib/rpmatch.c
 lib/unicodeio.c
 lib/userspec.c
