@@ -545,7 +545,7 @@ unquote (const unsigned char *s, struct E_string *es)
 			}
 		      else if (!posix_pedantic)
 			{
-			  /* Any octal number larger than 0377 won't
+			  /* A 3-digit octal number larger than \377 won't
 			     fit in 8 bits.  So we stop when adding the
 			     next digit would put us over the limit and
 			     give a warning about the ambiguity.  POSIX
