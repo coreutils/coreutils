@@ -199,8 +199,9 @@ do_link (const char *source, const char *dest)
        && S_ISDIR (dest_stats.st_mode))
 #ifdef S_ISLNK
       || (dereference_dest_dir_symlinks
-	  && (S_ISLNK (dest_stats.st_mode)
-	  && isdir (dest)))
+	  && (lstat_status == 0
+	      && S_ISLNK (dest_stats.st_mode)
+	      && isdir (dest)))
 #endif
      )
     {
