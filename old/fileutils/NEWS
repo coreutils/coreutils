@@ -1,4 +1,8 @@
 [4.1.1]
+* remove portability limitations (e.g., PATH_MAX on the Hurd, fixes for
+    64-bit systems)
+* mv now prompts before overwriting an existing, unwritable destination file
+    when stdin is a tty, unless --force (-f) is specified, as per POSIX.
 * cp now ensures that the set-user-ID and set-group-ID bits are cleared for
     the destination file when when copying and not preserving permissions.
 * `ln -f --backup k k' gives a clearer diagnostic
