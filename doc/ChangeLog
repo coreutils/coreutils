@@ -1,3 +1,8 @@
+2003-03-13  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi (shred invocation): Mention that --exact
+	is now the default for non-regular files.
+
 2003-03-02  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (Exit status): New section.
