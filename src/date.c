@@ -477,12 +477,14 @@ show_date (const char *format, time_t when)
   char *out = NULL;
   size_t out_length = 0;
   /* ISO 8601 formats, in local and UTC.  See below regarding %z */
-  char *iso_format_string[5][2]={
+  static char *iso_format_string[5][2] =
+  {
     {"", ""},
     {"%Y-%m-%d", "%Y-%m-%d"},
     {"%Y-%m-%dT%H%z", "%Y-%m-%dT%HZ"},
     {"%Y-%m-%dT%H:%M%z", "%Y-%m-%dT%H:%MZ"},
-    {"%Y-%m-%dT%H:%M:%S%z", "%Y-%m-%dT%H:%M:%SZ"}};
+    {"%Y-%m-%dT%H:%M:%S%z", "%Y-%m-%dT%H:%M:%SZ"}
+  };
 
   tm = localtime (&when);
 
