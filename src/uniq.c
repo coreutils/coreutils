@@ -96,7 +96,7 @@ static char const *const delimit_method_string[] =
 
 static enum delimit_method const delimit_method_map[] =
 {
-  delimit_none, delimit_all, delimit_minimum,
+  delimit_none, delimit_all, delimit_minimum
 };
 
 /* Select whether/how to delimit groups of duplicate lines.  */
