@@ -2967,12 +2967,13 @@ Sort entries alphabetically if none of -cftuSUX nor --sort.\n\
 
       printf (_("\
   -S                         sort by file size\n\
-      --sort=WORD            ctime -c, extension -X, none -U, size -S,\n\
+      --sort=WORD            extension -X, none -U, size -S, time -t,\n\
                                version -v\n\
                              status -c, time -t, atime -u, access -u, use -u\n\
       --time=WORD            show time as WORD instead of modification time:\n\
-                             atime, access, use, ctime or status\n\
-  -t                         sort by modification time; with -l: show mtime\n\
+                               atime, access, use, ctime or status; use\n\
+                               specified time as sort key if --sort=time\n\
+  -t                         sort by modification time\n\
   -T, --tabsize=COLS         assume tab stops at each COLS instead of 8\n\
   -u                         sort by last access time; with -l: show atime\n\
   -U                         do not sort; list entries in directory order\n\
