@@ -140,7 +140,7 @@ extern int __tz_compute __P ((time_t timer, const struct tm *tm));
 # if ! HAVE_LOCALTIME_R
 #  if ! HAVE_TM_GMTOFF
 /* Approximate gmtime_r as best we can in its absence.  */
-#  define gmtime_r my_gmtime_r
+#   define gmtime_r my_gmtime_r
 static struct tm *gmtime_r __P ((const time_t *, struct tm *));
 static struct tm *
 gmtime_r (t, tp)
@@ -211,7 +211,7 @@ static const char zeroes[16] = "0000000000000000";
 # define memset_zero(P, Len) (memset ((P), '0', (Len)), (P) += (Len))
 #endif
 
-#define	add(n, f)							      \
+#define add(n, f)							      \
   do									      \
     {									      \
       int _n = (n);							      \
@@ -234,7 +234,7 @@ static const char zeroes[16] = "0000000000000000";
       i += _incr;							      \
     } while (0)
 
-#define	cpy(n, s) \
+#define cpy(n, s) \
     add ((n),								      \
 	 if (to_lowcase)						      \
 	   memcpy_lowcase (p, (s), _n);					      \
