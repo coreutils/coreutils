@@ -448,7 +448,7 @@ copy_internal (const char *src_path, const char *dst_path,
 		      && S_ISLNK (src_sb.st_mode)
 		      && !S_ISLNK (dst_sb.st_mode)))
 	      && !x->dereference
-	      && (S_ISLNK (dst_sb.st_mode) || S_ISLNK (src_sb.st_mode)))
+	      && (S_ISLNK (dst_sb.st_mode) ^ S_ISLNK (src_sb.st_mode)))
 	    {
 	      struct stat dst2_sb;
 	      struct stat src2_sb;
@@ -848,8 +848,28 @@ copy_internal (const char *src_path, const char *dst_path,
 
       if (symlink (link_val, dst_path))
 	{
-	  error (0, errno, _("cannot create symbolic link `%s'"), dst_path);
-	  goto un_backup;
+	  int saved_errno = errno;
+	  int same_link = 0;
+	  if (x->update && !new_dst && S_ISLNK (dst_sb.st_mode))
+	    {
+	      /* See if the destination is already the desired symlink.  */
+	      char *dest_link_name = (char *) alloca (PATH_MAX + 2);
+	      int dest_link_len = readlink (dst_path, dest_link_name,
+					    PATH_MAX + 1);
+	      if (dest_link_len > 0)
+		{
+		  dest_link_name[dest_link_len] = '\0';
+		  if (STREQ (dest_link_name, link_val))
+		    same_link = 1;
+		}
+	    }
+
+	  if (! same_link)
+	    {
+	      error (0, saved_errno, _("cannot create symbolic link `%s'"),
+		     dst_path);
+	      goto un_backup;
+	    }
 	}
 
       if (x->preserve_owner_and_group)
