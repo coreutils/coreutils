@@ -116,7 +116,7 @@ xalloc.h xstrtol.h xstrtoul.h
 
 BUILT_SOURCES = getdate.c lstat.c stat.c
 
-EXTRA_DIST = xstat.in strcasecmp.cin
+EXTRA_DIST = xstat.in
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../config.h
 CONFIG_CLEAN_FILES = 
