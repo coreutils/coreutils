@@ -400,7 +400,7 @@ set_fields (const char *fieldstr)
 	}
       else if (ISDIGIT (*fieldstr))
 	{
-	  unsigned int prev;
+	  unsigned int new_v;
 	  /* Record beginning of digit string, in case we have to
 	     complain about it.  */
 	  static char const *num_start;
@@ -409,9 +409,8 @@ set_fields (const char *fieldstr)
 	  in_digits = true;
 
 	  /* Detect overflow.  */
-	  prev = value;
-	  value = 10 * value + *fieldstr - '0';
-	  if (value < prev)
+	  new_v = 10 * value + *fieldstr - '0';
+	  if (UINT_MAX / 10 < value || new_v < value * 10)
 	    {
 	      /* In case the user specified -c4294967296-22,
 		 complain only about the first number.  */
@@ -427,6 +426,8 @@ set_fields (const char *fieldstr)
 	      free (bad_num);
 	      exit (EXIT_FAILURE);
 	    }
+	  value = new_v;
+
 	  fieldstr++;
 	}
       else
