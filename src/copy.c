@@ -44,6 +44,10 @@
       or if the target system doesn't support file ownership.  */	\
    && ((errno != EPERM && errno != EINVAL) || x->myeuid == 0))
 
+#define SAME_OWNER(A, B) ((A).st_uid == (B).st_uid)
+#define SAME_GROUP(A, B) ((A).st_gid == (B).st_gid)
+#define SAME_OWNER_AND_GROUP(A, B) (SAME_OWNER (A, B) && SAME_GROUP (A, B))
+
 struct dir_list
 {
   struct dir_list *parent;
@@ -1078,7 +1082,9 @@ copy_internal (const char *src_path, const char *dst_path,
 	}
     }
 
-  if (x->preserve_owner_and_group)
+  /* Avoid calling chown if we know it's not necessary.  */
+  if (x->preserve_owner_and_group
+      && (new_dst || !SAME_OWNER_AND_GROUP (src_sb, dst_sb)))
     {
       if (DO_CHOWN (chown, dst_path, src_sb.st_uid, src_sb.st_gid))
 	{
