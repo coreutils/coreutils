@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993, 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993, 1995, 1997, 1998 Free Software Foundation, Inc.
    Contributed by Torbjorn Granlund (tege@sics.se).
 
    NOTE: The canonical source of this file is maintained with the GNU C Library.
@@ -325,7 +325,7 @@ memcmp_not_common_alignment (srcp1, srcp2, len)
 }
 
 int
-memcmp (s1, s2, len)
+rpl_memcmp (s1, s2, len)
      const __ptr_t s1;
      const __ptr_t s2;
      size_t len;
