@@ -93,9 +93,7 @@
 # undef SYSLOG_NON_ROOT
 #endif
 
-#ifdef _POSIX_VERSION
-# include <limits.h>
-#else /* not _POSIX_VERSION */
+#ifndef _POSIX_VERSION
 struct passwd *getpwuid ();
 struct group *getgrgid ();
 uid_t getuid ();
