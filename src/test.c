@@ -28,6 +28,9 @@
 #include <stdio.h>
 #include <sys/types.h>
 
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "test"
+
 #define TEST_STANDALONE 1
 
 #if !defined (TEST_STANDALONE)
@@ -79,7 +82,7 @@ extern uid_t geteuid ();
 #endif /* R_OK */
 
 /* This name is used solely when printing --version information.  */
-#define COMMAND_NAME "test"
+#define PROGRAM_NAME "test"
 
 /* The following few defines control the truth and false output of each stage.
    TRUE and FALSE are what we use to compute the final output value.
@@ -1091,7 +1094,7 @@ main (int margc, char **margv)
     {
       /* Don't recognize --help or --version if POSIXLY_CORRECT is set.  */
       if (getenv ("POSIXLY_CORRECT") == NULL)
-	parse_long_options (argc, argv, COMMAND_NAME, GNU_PACKAGE, VERSION,
+	parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
 			    AUTHORS, usage);
 
       --margc;
@@ -1109,7 +1112,7 @@ main (int margc, char **margv)
   if (pos >= argc)
     test_exit (SHELL_BOOLEAN (FALSE));
 
-  parse_long_options (argc, argv, COMMAND_NAME, GNU_PACKAGE, VERSION,
+  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
 		      AUTHORS, usage);
   value = posixtest ();
 
