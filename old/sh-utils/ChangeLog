@@ -1,5 +1,10 @@
 1999-02-07  Jim Meyering  <meyering@ascend.com>
 
+	* Makefile.maint (my-distcheck): Don't depend on dist, now that this
+	is hooked up to the distcheck rule.
+	* Makefile.am (distcheck-hook): New target and rule -- link to shared
+	rule, my-distcheck, in Makefile.maint.
+
 	* configure.in (jm_FUNC_GETGROUPS): Move the test into a new file,
 	group-member.m4, and just use this new macro.
 

@@ -1,5 +1,10 @@
 1999-02-07  Jim Meyering  <meyering@ascend.com>
 
+	* Makefile.maint (my-distcheck): Don't depend on dist, now that this
+	is hooked up to the distcheck rule.
+	* Makefile.am (distcheck-hook): New target and rule -- link to shared
+	rule, my-distcheck, in Makefile.maint.
+
 	* doc/fileutils.texi (shred invocation): New section.  From Colin Plumb.
 
 	* configure.in (jm_FUNC_GETGROUPS): Move the test into a new file,
