@@ -30,7 +30,12 @@ stty --save > $saved_state || fail=1
 stty `cat $saved_state` || fail=1
 
 # This would segfault prior to sh-utils-2.0j.
-stty erase -
+stty erase - || fail=1
+
+# These would improperly ignore invalid options through coreutils 5.2.1.
+stty -F 2>/dev/null && fail=1
+stty -raw -F no/such/file 2>/dev/null && fail=1
+stty -raw -a 2>/dev/null && fail=1
 
 # Build a list of all boolean options stty accepts on this system.
 options=`stty -a|tail -n +2|tr ';' '\n'|sed '/ = /d;s/^ //;s/-//g'`
