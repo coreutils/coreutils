@@ -1,3 +1,7 @@
+Wed Oct  9 07:26:40 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/Makefile.am (tu_DEPENDENCIES): Depend on $(tu_LIBADD).
+
 Tue Oct  8 21:32:17 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/error.c: Include error.h to align with libit --
