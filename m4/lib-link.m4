@@ -1,4 +1,4 @@
-# lib-link.m4 serial 1 (gettext-0.11)
+# lib-link.m4 serial 2 (gettext-0.11.2)
 dnl Copyright (C) 2001-2002 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
@@ -432,6 +432,33 @@ AC_DEFUN([AC_LIB_LINKFLAGS_BODY],
                           fi
                         fi
                       fi
+                    fi
+                    ;;
+                  -R*)
+                    dir=`echo "X$dep" | sed -e 's/^X-R//'`
+                    dnl Potentially add DIR to rpathdirs.
+                    dnl The rpathdirs will be appended to $LIBNAME at the end.
+                    haveit=
+                    for x in $rpathdirs; do
+                      if test "X$x" = "X$dir"; then
+                        haveit=yes
+                        break
+                      fi
+                    done
+                    if test -z "$haveit"; then
+                      rpathdirs="$rpathdirs $dir"
+                    fi
+                    dnl Potentially add DIR to ltrpathdirs.
+                    dnl The ltrpathdirs will be appended to $LTLIBNAME at the end.
+                    haveit=
+                    for x in $ltrpathdirs; do
+                      if test "X$x" = "X$dir"; then
+                        haveit=yes
+                        break
+                      fi
+                    done
+                    if test -z "$haveit"; then
+                      ltrpathdirs="$ltrpathdirs $dir"
                     fi
                     ;;
                   -l*)
