@@ -145,11 +145,14 @@ writable-files:
 WGET = wget
 ftp-gnu = ftp://ftp.gnu.org/gnu
 
+automake_repo=:pserver:anoncvs@anoncvs.cygnus.com:/cvs/automake
 .PHONY: wget-update
 wget-update:
 	$(WGET) $(ftp-gnu)/texinfo/texinfo.tex -O $(srcdir)/doc/texinfo.tex
 	$(WGET) $(ftp-gnu)/config/config.guess -O $(srcdir)/config.guess
 	$(WGET) $(ftp-gnu)/config/config.sub -O $(srcdir)/config.sub
+	cvs -d $(automake_repo) co -p automake/depcomp > depcomp
+
 
 alpha: writable-files po-check
 	$(MAKE) cvs-dist
