@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{1999-01-29}%
+\def\texinfoversion{1999-02-02}%
 %
 % Copyright (C) 1985, 86, 88, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99
 % Free Software Foundation, Inc.
@@ -30,29 +30,33 @@
 % Please try the latest version of texinfo.tex before submitting bug
 % reports; you can get the latest version from:
 %   ftp://ftp.gnu.org/pub/gnu/texinfo.tex
-%   /home/gd/gnu/doc/texinfo.tex on the GNU machines.
 %   (and all GNU mirrors, see http://www.gnu.org/order/ftp.html)
 %   ftp://tug.org/tex/texinfo.tex
 %   ftp://ctan.org/macros/texinfo/texinfo.tex
 %   (and all CTAN mirrors, finger ctan@ctan.org for a list).
-% The texinfo.tex in the texinfo distribution itself could well be out
+%   /home/gd/gnu/doc/texinfo.tex on the GNU machines.
+% The texinfo.tex in any given Texinfo distribution could well be out
 % of date, so if that's what you're using, please check.
+% There is a small home page for Texinfo at http://texinfo.org/.
 %
-% Send bug reports to bug-texinfo@gnu.org.
-% Please include a precise test case in each bug report,
-% including a complete document with which we can reproduce the problem.
+% Send bug reports to bug-texinfo@gnu.org.  Please include including a
+% complete document in each bug report with which we can reproduce the
+% problem.  Patches are, of course, greatly appreciated.
 %
 % To process a Texinfo manual with TeX, it's most reliable to use the
-% texi2dvi shell script that comes with the distribution.  For simple
-% manuals, however, you can get away with:
+% texi2dvi shell script that comes with the distribution.  For a simple
+% manual foo.texi, however, you can get away with this:
 %   tex foo.texi
 %   texindex foo.??
 %   tex foo.texi
 %   tex foo.texi
-%   dvips foo.dvi -o # or whatever, to process the dvi file.
+%   dvips foo.dvi -o # or whatever, to process the dvi file; this makes foo.ps.
 % The extra runs of TeX get the cross-reference information correct.
 % Sometimes one run after texindex suffices, and sometimes you need more
 % than two; texi2dvi does it as many times as necessary.
+%
+% It is possible to adapt texinfo.tex for other languages.  You can get
+% the existing language-specific files from ftp://ftp.gnu.org/gnu/texinfo/.
 
 \message{Loading texinfo [version \texinfoversion]:}
 
@@ -114,7 +118,7 @@
 \ifx\putwordMFeb\undefined \gdef\putwordMFeb{February}\fi
 \ifx\putwordMMar\undefined \gdef\putwordMMar{March}\fi
 \ifx\putwordMApr\undefined \gdef\putwordMApr{April}\fi
-\ifx\putwordMMai\undefined \gdef\putwordMMai{May}\fi
+\ifx\putwordMMay\undefined \gdef\putwordMMay{May}\fi
 \ifx\putwordMJun\undefined \gdef\putwordMJun{June}\fi
 \ifx\putwordMJul\undefined \gdef\putwordMJul{July}\fi
 \ifx\putwordMAug\undefined \gdef\putwordMAug{August}\fi
@@ -5257,9 +5261,40 @@ width0pt\relax} \fi
 }
 
 
-\message{paper sizes,}
-% And other related parameters.
+\message{localization,}
 
+% @documentlanguage is usually given very early, just after
+% @setfilename.  If done too late, it may not override everything
+% properly.  Single argument is the language abbreviation.
+% It would be nice if we could set up a hyphenation file here.
+%
+\def\documentlanguage{\parsearg\dodocumentlanguage}
+\def\dodocumentlanguage#1{%
+  \tex % read txi-??.tex file in plain TeX.
+  % Read the file if it exists.
+  \openin 1 txi-#1.tex
+  \ifeof1
+    \errhelp = \nolanghelp
+    \errmessage{Cannot read language file txi-#1.tex}%
+    \let\temp = \relax
+  \else
+    \def\temp{\input txi-#1.tex }%
+  \fi
+  \temp
+  \endgroup
+}
+\newhelp\nolanghelp{The given language definition file cannot be found or
+is empty.  Maybe you need to install it?  In the current directory
+should work if nowhere else does.}
+
+
+% @documentencoding should change something in TeX eventually, most
+% likely, but for now just recognize it.
+\let\documentencoding = \comment
+
+
+% Page size parameters.
+%
 \newdimen\defaultparindent \defaultparindent = 15pt
 
 \chapheadingskip = 15pt plus 4pt minus 2pt
