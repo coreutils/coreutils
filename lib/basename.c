@@ -4,14 +4,12 @@
 # include <config.h>
 #endif
 
-#include <backupfile.h>
-
 #ifndef FILESYSTEM_PREFIX_LEN
-#define FILESYSTEM_PREFIX_LEN(f) 0
+# define FILESYSTEM_PREFIX_LEN(f) 0
 #endif
 
 #ifndef ISSLASH
-#define ISSLASH(c) ((c) == '/')
+# define ISSLASH(c) ((c) == '/')
 #endif
 
 /* In general, we can't use the builtin `basename' function if available,
