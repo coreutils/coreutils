@@ -46,7 +46,7 @@ struct dir_attr
 int stat ();
 int lstat ();
 
-char *dirname (char *);
+char *dirname ();
 char *xstrdup ();
 enum backup_type get_version ();
 int euidaccess ();
