@@ -1201,7 +1201,7 @@ do_wipefd (int fd, char const *qname, struct isaac_state *s,
     }
 
   /* Allocate pass array */
-  passarray = xmalloc (flags->n_iterations * sizeof (int));
+  passarray = xnmalloc (flags->n_iterations, sizeof *passarray);
 
   size = flags->size;
   if (size == -1)
