@@ -1,3 +1,12 @@
+2003-11-24  Paul Eggert  <eggert@twinsun.com>
+
+	Parse floating-point operands and options in the C locale.
+	POSIX requires this for printf, and we might as well be
+	consistent elsewhere (tail, sleep, seq).
+
+	* coreutils.texi (tail invocation, printf invocation,
+	sleep invocation, seq invocation): Document this.
+
 2003-11-24  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (Traversing symlinks, Treating / specially):
