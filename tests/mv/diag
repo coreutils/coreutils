@@ -1,8 +1,6 @@
 #!/bin/sh
 # make sure we get proper diagnostics: e.g., with --target-dir=d but no args
 
-. $srcdir/../expensive
-
 if test "$VERBOSE" = yes; then
   set -x
   mv --version
