@@ -1,4 +1,4 @@
-# serial 2
+# serial 3
 
 # Define some macros required for proper operation of code in lib/*.c
 # on MSDOS/Windows systems.
@@ -28,7 +28,7 @@ else
 
     AH_VERBATIM(ISSLASH,
     [#if FILESYSTEM_BACKSLASH_IS_FILE_NAME_SEPARATOR
-# define ISSLASH(C) ((C) == '/' || (C) == '\\\\')
+# define ISSLASH(C) ((C) == '/' || (C) == '\\')
 #else
 # define ISSLASH(C) ((C) == '/')
 #endif])
