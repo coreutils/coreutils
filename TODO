@@ -3,44 +3,15 @@ fix AUTHORS
 
 restore djgpp, eventually
 
-put old ChangeLog files somewhere...
-Add them to EXTRA_DIST
-
 Move things so there are no symlinks from repository to
 any directory other than common
 
 Make bug-reporting address bug-coreutils@gnu.org work.
 grep 'bug-.*utils' src/*.c
 
-merge .po files
-
 ******************8
 LINGUAS:
   sort -u ../[fst]u/po/LINGUAS > po/LINGUAS
-all=$(sort -u ../[fst]u/po/LINGUAS)
-d=../fu/po
-for i in $(cd $d && echo *.po); do
-  msgmerge $d/$i po/coreutils.pot --output=po/$i
-done
-
-for i in $all; do
-  args=$(echo ../[fst]u/po/$i.po)
-  echo $i... :$args:
-  case "$args" in
-    *' '*)
-      echo merging
-      msgcomm ../[fst]u/po/$i.po > po/$i.po
-      msgcomm --less-than=2 ../[fst]u/po/$i.po >> po/$i.po
-      ;;
-    *)
-      echo copying
-      cat ../[fst]u/po/$i.po > po/$i.po
-      ;;
-  esac
-done
-
-=====================
-Sat 2002-08-03 15:57:50 +0200
 
 go cu
 cd po
