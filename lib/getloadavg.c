@@ -111,10 +111,11 @@ extern int errno;
 # include <locale.h>
 #endif
 #ifndef HAVE_SETLOCALE
-# define setlocale(Category, Locale) /* empty */
+# define setlocale(Category, Locale) ((char *) NULL)
 #endif
 
 #include "cloexec.h"
+#include "xalloc.h"
 
 #ifndef HAVE_GETLOADAVG
 
@@ -594,6 +595,7 @@ getloadavg (double loadavg[], int nelem)
   char ldavgbuf[40];
   double load_ave[3];
   int fd, count;
+  char *old_locale;
 
   fd = open (LINUX_LDAV_FILE, O_RDONLY);
   if (fd == -1)
@@ -604,10 +606,12 @@ getloadavg (double loadavg[], int nelem)
     return -1;
 
   /* The following sscanf must use the C locale.  */
+  old_locale = xstrdup (setlocale (LC_NUMERIC, NULL));
   setlocale (LC_NUMERIC, "C");
   count = sscanf (ldavgbuf, "%lf %lf %lf",
 		  &load_ave[0], &load_ave[1], &load_ave[2]);
-  setlocale (LC_NUMERIC, "");
+  setlocale (LC_NUMERIC, old_locale);
+  free (old_locale);
   if (count < 1)
     return -1;
 
