@@ -807,8 +807,7 @@ DIST_SOURCES = basename.c cat.c $(chgrp_SOURCES) chmod.c \
 	$(vdir_SOURCES) wc.c who.c whoami.c yes.c
 HEADERS = $(noinst_HEADERS)
 
-DIST_COMMON = $(noinst_HEADERS) Makefile.am Makefile.in ansi2knr.1 \
-	ansi2knr.c
+DIST_COMMON = $(noinst_HEADERS) Makefile.am Makefile.in
 SOURCES = basename.c cat.c $(chgrp_SOURCES) chmod.c $(chown_SOURCES) chroot.c cksum.c comm.c $(cp_SOURCES) csplit.c cut.c date.c dd.c df.c $(dir_SOURCES) dircolors.c dirname.c du.c echo.c env.c expand.c expr.c factor.c false.c fmt.c fold.c $(ginstall_SOURCES) head.c hostid.c hostname.c id.c join.c kill.c link.c ln.c logname.c $(ls_SOURCES) $(md5sum_SOURCES) mkdir.c mkfifo.c mknod.c $(mv_SOURCES) nice.c nl.c od.c paste.c pathchk.c pinky.c pr.c printenv.c printf.c ptx.c pwd.c readlink.c $(rm_SOURCES) rmdir.c seq.c $(sha1sum_SOURCES) shred.c sleep.c sort.c split.c stat.c stty.c su.c sum.c sync.c tac.c tail.c tee.c test.c touch.c tr.c true.c tsort.c tty.c uname.c unexpand.c uniq.c unlink.c uptime.c users.c $(vdir_SOURCES) wc.c who.c whoami.c yes.c
 
 all: $(BUILT_SOURCES)

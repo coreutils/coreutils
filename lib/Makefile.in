@@ -151,8 +151,6 @@ sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 
-AUTOMAKE_OPTIONS = ../src/ansi2knr
-
 noinst_LIBRARIES = libfetish.a
 
 INCLUDES = -I.. -I$(srcdir)
@@ -285,36 +283,32 @@ CONFIG_CLEAN_FILES =
 LIBRARIES = $(noinst_LIBRARIES)
 
 libfetish_a_AR = $(AR) cru
-am_libfetish_a_OBJECTS = acl$U.$(OBJEXT) getdate$U.$(OBJEXT) \
-	posixtm$U.$(OBJEXT) posixver$U.$(OBJEXT) strftime$U.$(OBJEXT) \
-	getopt$U.$(OBJEXT) getopt1$U.$(OBJEXT) hash$U.$(OBJEXT) \
-	hash-pjw$U.$(OBJEXT) addext$U.$(OBJEXT) argmatch$U.$(OBJEXT) \
-	backupfile$U.$(OBJEXT) basename$U.$(OBJEXT) \
-	canon-host$U.$(OBJEXT) c-stack$U.$(OBJEXT) closeout$U.$(OBJEXT) \
-	cycle-check$U.$(OBJEXT) diacrit$U.$(OBJEXT) dirname$U.$(OBJEXT) \
-	dup-safer$U.$(OBJEXT) exclude$U.$(OBJEXT) exitfail$U.$(OBJEXT) \
-	filemode$U.$(OBJEXT) file-type$U.$(OBJEXT) \
-	fopen-safer$U.$(OBJEXT) full-read$U.$(OBJEXT) \
-	full-write$U.$(OBJEXT) getstr$U.$(OBJEXT) gettime$U.$(OBJEXT) \
-	getugroups$U.$(OBJEXT) hard-locale$U.$(OBJEXT) \
-	human$U.$(OBJEXT) idcache$U.$(OBJEXT) isdir$U.$(OBJEXT) \
-	imaxtostr$U.$(OBJEXT) linebuffer$U.$(OBJEXT) \
-	localcharset$U.$(OBJEXT) long-options$U.$(OBJEXT) \
-	makepath$U.$(OBJEXT) mbswidth$U.$(OBJEXT) md5$U.$(OBJEXT) \
-	memcasecmp$U.$(OBJEXT) memcoll$U.$(OBJEXT) \
-	modechange$U.$(OBJEXT) offtostr$U.$(OBJEXT) \
-	path-concat$U.$(OBJEXT) physmem$U.$(OBJEXT) quote$U.$(OBJEXT) \
-	quotearg$U.$(OBJEXT) readtokens$U.$(OBJEXT) \
-	safe-read$U.$(OBJEXT) safe-write$U.$(OBJEXT) same$U.$(OBJEXT) \
-	save-cwd$U.$(OBJEXT) savedir$U.$(OBJEXT) settime$U.$(OBJEXT) \
-	sha$U.$(OBJEXT) stripslash$U.$(OBJEXT) umaxtostr$U.$(OBJEXT) \
-	unicodeio$U.$(OBJEXT) userspec$U.$(OBJEXT) \
-	version-etc$U.$(OBJEXT) xgetcwd$U.$(OBJEXT) \
-	xgethostname$U.$(OBJEXT) xmalloc$U.$(OBJEXT) \
-	xmemcoll$U.$(OBJEXT) xnanosleep$U.$(OBJEXT) \
-	xreadlink$U.$(OBJEXT) xstrdup$U.$(OBJEXT) xstrtod$U.$(OBJEXT) \
-	xstrtol$U.$(OBJEXT) xstrtoul$U.$(OBJEXT) xstrtoimax$U.$(OBJEXT) \
-	xstrtoumax$U.$(OBJEXT) yesno$U.$(OBJEXT)
+am_libfetish_a_OBJECTS = acl.$(OBJEXT) getdate.$(OBJEXT) \
+	posixtm.$(OBJEXT) posixver.$(OBJEXT) strftime.$(OBJEXT) \
+	getopt.$(OBJEXT) getopt1.$(OBJEXT) hash.$(OBJEXT) \
+	hash-pjw.$(OBJEXT) addext.$(OBJEXT) argmatch.$(OBJEXT) \
+	backupfile.$(OBJEXT) basename.$(OBJEXT) canon-host.$(OBJEXT) \
+	c-stack.$(OBJEXT) closeout.$(OBJEXT) cycle-check.$(OBJEXT) \
+	diacrit.$(OBJEXT) dirname.$(OBJEXT) dup-safer.$(OBJEXT) \
+	exclude.$(OBJEXT) exitfail.$(OBJEXT) filemode.$(OBJEXT) \
+	file-type.$(OBJEXT) fopen-safer.$(OBJEXT) full-read.$(OBJEXT) \
+	full-write.$(OBJEXT) getstr.$(OBJEXT) gettime.$(OBJEXT) \
+	getugroups.$(OBJEXT) hard-locale.$(OBJEXT) human.$(OBJEXT) \
+	idcache.$(OBJEXT) isdir.$(OBJEXT) imaxtostr.$(OBJEXT) \
+	linebuffer.$(OBJEXT) localcharset.$(OBJEXT) \
+	long-options.$(OBJEXT) makepath.$(OBJEXT) mbswidth.$(OBJEXT) \
+	md5.$(OBJEXT) memcasecmp.$(OBJEXT) memcoll.$(OBJEXT) \
+	modechange.$(OBJEXT) offtostr.$(OBJEXT) path-concat.$(OBJEXT) \
+	physmem.$(OBJEXT) quote.$(OBJEXT) quotearg.$(OBJEXT) \
+	readtokens.$(OBJEXT) safe-read.$(OBJEXT) safe-write.$(OBJEXT) \
+	same.$(OBJEXT) save-cwd.$(OBJEXT) savedir.$(OBJEXT) \
+	settime.$(OBJEXT) sha.$(OBJEXT) stripslash.$(OBJEXT) \
+	umaxtostr.$(OBJEXT) unicodeio.$(OBJEXT) userspec.$(OBJEXT) \
+	version-etc.$(OBJEXT) xgetcwd.$(OBJEXT) xgethostname.$(OBJEXT) \
+	xmalloc.$(OBJEXT) xmemcoll.$(OBJEXT) xnanosleep.$(OBJEXT) \
+	xreadlink.$(OBJEXT) xstrdup.$(OBJEXT) xstrtod.$(OBJEXT) \
+	xstrtol.$(OBJEXT) xstrtoul.$(OBJEXT) xstrtoimax.$(OBJEXT) \
+	xstrtoumax.$(OBJEXT) yesno.$(OBJEXT)
 libfetish_a_OBJECTS = $(am_libfetish_a_OBJECTS)
 
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
@@ -355,60 +349,45 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	$(DEPDIR)/strtoul.Po $(DEPDIR)/strtoull.Po \
 @AMDEP_TRUE@	$(DEPDIR)/strtoumax.Po $(DEPDIR)/strverscmp.Po \
 @AMDEP_TRUE@	$(DEPDIR)/tempname.Po $(DEPDIR)/tsearch.Po \
-@AMDEP_TRUE@	$(DEPDIR)/utime.Po ./$(DEPDIR)/acl$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/addext$U.Po ./$(DEPDIR)/argmatch$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/backupfile$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/basename$U.Po ./$(DEPDIR)/c-stack$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/canon-host$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/closeout$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/cycle-check$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/diacrit$U.Po ./$(DEPDIR)/dirname$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/dup-safer$U.Po ./$(DEPDIR)/exclude$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/exitfail$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/file-type$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/filemode$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/fopen-safer$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/full-read$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/full-write$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/getdate$U.Po ./$(DEPDIR)/getopt$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/getopt1$U.Po ./$(DEPDIR)/getstr$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/gettime$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/getugroups$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/hard-locale$U.Po ./$(DEPDIR)/hash$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/hash-pjw$U.Po ./$(DEPDIR)/human$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/idcache$U.Po ./$(DEPDIR)/imaxtostr$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/isdir$U.Po ./$(DEPDIR)/linebuffer$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/localcharset$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/long-options$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/makepath$U.Po ./$(DEPDIR)/mbswidth$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/md5$U.Po ./$(DEPDIR)/memcasecmp$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/memcoll$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/modechange$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/offtostr$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/path-concat$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/physmem$U.Po ./$(DEPDIR)/posixtm$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/posixver$U.Po ./$(DEPDIR)/quote$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/quotearg$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/readtokens$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/safe-read$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/safe-write$U.Po ./$(DEPDIR)/same$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/save-cwd$U.Po ./$(DEPDIR)/savedir$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/settime$U.Po ./$(DEPDIR)/sha$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/strftime$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/stripslash$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/umaxtostr$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/unicodeio$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/userspec$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/version-etc$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/xgetcwd$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/xgethostname$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/xmalloc$U.Po ./$(DEPDIR)/xmemcoll$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/xnanosleep$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/xreadlink$U.Po ./$(DEPDIR)/xstrdup$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/xstrtod$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/xstrtoimax$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/xstrtol$U.Po ./$(DEPDIR)/xstrtoul$U.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/xstrtoumax$U.Po ./$(DEPDIR)/yesno$U.Po
+@AMDEP_TRUE@	$(DEPDIR)/utime.Po ./$(DEPDIR)/acl.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/addext.Po ./$(DEPDIR)/argmatch.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/backupfile.Po ./$(DEPDIR)/basename.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/c-stack.Po ./$(DEPDIR)/canon-host.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/closeout.Po ./$(DEPDIR)/cycle-check.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/diacrit.Po ./$(DEPDIR)/dirname.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/dup-safer.Po ./$(DEPDIR)/exclude.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/exitfail.Po ./$(DEPDIR)/file-type.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/filemode.Po ./$(DEPDIR)/fopen-safer.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/full-read.Po ./$(DEPDIR)/full-write.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/getdate.Po ./$(DEPDIR)/getopt.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/getopt1.Po ./$(DEPDIR)/getstr.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/gettime.Po ./$(DEPDIR)/getugroups.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/hard-locale.Po ./$(DEPDIR)/hash-pjw.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/hash.Po ./$(DEPDIR)/human.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/idcache.Po ./$(DEPDIR)/imaxtostr.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/isdir.Po ./$(DEPDIR)/linebuffer.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/localcharset.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/long-options.Po ./$(DEPDIR)/makepath.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/mbswidth.Po ./$(DEPDIR)/md5.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/memcasecmp.Po ./$(DEPDIR)/memcoll.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/modechange.Po ./$(DEPDIR)/offtostr.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/path-concat.Po ./$(DEPDIR)/physmem.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/posixtm.Po ./$(DEPDIR)/posixver.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/quote.Po ./$(DEPDIR)/quotearg.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/readtokens.Po ./$(DEPDIR)/safe-read.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/safe-write.Po ./$(DEPDIR)/same.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/save-cwd.Po ./$(DEPDIR)/savedir.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/settime.Po ./$(DEPDIR)/sha.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/strftime.Po ./$(DEPDIR)/stripslash.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/umaxtostr.Po ./$(DEPDIR)/unicodeio.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/userspec.Po ./$(DEPDIR)/version-etc.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/xgetcwd.Po ./$(DEPDIR)/xgethostname.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/xmalloc.Po ./$(DEPDIR)/xmemcoll.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/xnanosleep.Po ./$(DEPDIR)/xreadlink.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/xstrdup.Po ./$(DEPDIR)/xstrtod.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/xstrtoimax.Po ./$(DEPDIR)/xstrtol.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/xstrtoul.Po ./$(DEPDIR)/xstrtoumax.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/yesno.Po
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
@@ -456,13 +435,6 @@ mostlyclean-compile:
 
 distclean-compile:
 	-rm -f *.tab.c
-
-ANSI2KNR = ../src/ansi2knr
-../src/ansi2knr:
-	cd ../src && $(MAKE) $(AM_MAKEFLAGS) ansi2knr
-
-mostlyclean-kr:
-	-test "$U" = "" || rm -f *_.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/__fpending.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/alloca.Po@am__quote@
@@ -535,81 +507,81 @@ mostlyclean-kr:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/tempname.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/tsearch.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/utime.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/acl$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/addext$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/argmatch$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/backupfile$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/basename$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/c-stack$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/canon-host$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/closeout$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cycle-check$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/diacrit$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dirname$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dup-safer$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/exclude$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/exitfail$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/file-type$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/filemode$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fopen-safer$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/full-read$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/full-write$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/getdate$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/getopt$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/getopt1$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/getstr$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gettime$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/getugroups$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hard-locale$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hash$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hash-pjw$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/human$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/idcache$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imaxtostr$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/isdir$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/linebuffer$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/localcharset$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/long-options$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/makepath$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mbswidth$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/md5$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/memcasecmp$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/memcoll$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/modechange$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/offtostr$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/path-concat$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/physmem$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/posixtm$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/posixver$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/quote$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/quotearg$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/readtokens$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/safe-read$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/safe-write$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/same$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/save-cwd$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/savedir$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/settime$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sha$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/strftime$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stripslash$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/umaxtostr$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/unicodeio$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/userspec$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/version-etc$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xgetcwd$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xgethostname$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xmalloc$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xmemcoll$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xnanosleep$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xreadlink$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xstrdup$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xstrtod$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xstrtoimax$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xstrtol$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xstrtoul$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xstrtoumax$U.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/yesno$U.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/acl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/addext.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/argmatch.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/backupfile.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/basename.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/c-stack.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/canon-host.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/closeout.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cycle-check.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/diacrit.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dirname.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dup-safer.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/exclude.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/exitfail.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/file-type.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/filemode.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fopen-safer.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/full-read.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/full-write.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/getdate.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/getopt.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/getopt1.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/getstr.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gettime.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/getugroups.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hard-locale.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hash-pjw.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/hash.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/human.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/idcache.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/imaxtostr.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/isdir.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/linebuffer.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/localcharset.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/long-options.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/makepath.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mbswidth.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/md5.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/memcasecmp.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/memcoll.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/modechange.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/offtostr.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/path-concat.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/physmem.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/posixtm.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/posixver.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/quote.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/quotearg.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/readtokens.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/safe-read.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/safe-write.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/same.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/save-cwd.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/savedir.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/settime.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sha.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/strftime.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stripslash.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/umaxtostr.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/unicodeio.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/userspec.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/version-etc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xgetcwd.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xgethostname.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xmalloc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xmemcoll.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xnanosleep.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xreadlink.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xstrdup.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xstrtod.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xstrtoimax.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xstrtol.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xstrtoul.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xstrtoumax.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/yesno.Po@am__quote@
 
 distclean-depend:
 	-rm -rf $(DEPDIR) ./$(DEPDIR)
@@ -635,347 +607,6 @@ distclean-depend:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(COMPILE) -c `if test -f '$<'; then $(CYGPATH_W) '$<'; else $(CYGPATH_W) '$(srcdir)/$<'; fi`
-__fpending_.c: __fpending.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/__fpending.c; then echo $(srcdir)/__fpending.c; else echo __fpending.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-acl_.c: acl.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/acl.c; then echo $(srcdir)/acl.c; else echo acl.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-addext_.c: addext.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/addext.c; then echo $(srcdir)/addext.c; else echo addext.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-alloca_.c: alloca.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/alloca.c; then echo $(srcdir)/alloca.c; else echo alloca.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-argmatch_.c: argmatch.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/argmatch.c; then echo $(srcdir)/argmatch.c; else echo argmatch.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-atexit_.c: atexit.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/atexit.c; then echo $(srcdir)/atexit.c; else echo atexit.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-backupfile_.c: backupfile.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/backupfile.c; then echo $(srcdir)/backupfile.c; else echo backupfile.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-basename_.c: basename.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/basename.c; then echo $(srcdir)/basename.c; else echo basename.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-c-stack_.c: c-stack.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/c-stack.c; then echo $(srcdir)/c-stack.c; else echo c-stack.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-canon-host_.c: canon-host.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/canon-host.c; then echo $(srcdir)/canon-host.c; else echo canon-host.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-canonicalize_.c: canonicalize.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/canonicalize.c; then echo $(srcdir)/canonicalize.c; else echo canonicalize.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-chown_.c: chown.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/chown.c; then echo $(srcdir)/chown.c; else echo chown.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-closeout_.c: closeout.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/closeout.c; then echo $(srcdir)/closeout.c; else echo closeout.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-cycle-check_.c: cycle-check.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/cycle-check.c; then echo $(srcdir)/cycle-check.c; else echo cycle-check.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-diacrit_.c: diacrit.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/diacrit.c; then echo $(srcdir)/diacrit.c; else echo diacrit.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-dirfd_.c: dirfd.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/dirfd.c; then echo $(srcdir)/dirfd.c; else echo dirfd.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-dirname_.c: dirname.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/dirname.c; then echo $(srcdir)/dirname.c; else echo dirname.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-dup-safer_.c: dup-safer.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/dup-safer.c; then echo $(srcdir)/dup-safer.c; else echo dup-safer.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-dup2_.c: dup2.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/dup2.c; then echo $(srcdir)/dup2.c; else echo dup2.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-error_.c: error.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/error.c; then echo $(srcdir)/error.c; else echo error.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-euidaccess_.c: euidaccess.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/euidaccess.c; then echo $(srcdir)/euidaccess.c; else echo euidaccess.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-exclude_.c: exclude.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/exclude.c; then echo $(srcdir)/exclude.c; else echo exclude.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-exitfail_.c: exitfail.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/exitfail.c; then echo $(srcdir)/exitfail.c; else echo exitfail.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-fchown-stub_.c: fchown-stub.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/fchown-stub.c; then echo $(srcdir)/fchown-stub.c; else echo fchown-stub.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-file-type_.c: file-type.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/file-type.c; then echo $(srcdir)/file-type.c; else echo file-type.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-fileblocks_.c: fileblocks.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/fileblocks.c; then echo $(srcdir)/fileblocks.c; else echo fileblocks.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-filemode_.c: filemode.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/filemode.c; then echo $(srcdir)/filemode.c; else echo filemode.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-fnmatch_.c: fnmatch.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/fnmatch.c; then echo $(srcdir)/fnmatch.c; else echo fnmatch.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-fopen-safer_.c: fopen-safer.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/fopen-safer.c; then echo $(srcdir)/fopen-safer.c; else echo fopen-safer.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-fsusage_.c: fsusage.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/fsusage.c; then echo $(srcdir)/fsusage.c; else echo fsusage.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-ftruncate_.c: ftruncate.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/ftruncate.c; then echo $(srcdir)/ftruncate.c; else echo ftruncate.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-ftw_.c: ftw.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/ftw.c; then echo $(srcdir)/ftw.c; else echo ftw.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-full-read_.c: full-read.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/full-read.c; then echo $(srcdir)/full-read.c; else echo full-read.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-full-write_.c: full-write.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/full-write.c; then echo $(srcdir)/full-write.c; else echo full-write.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-getcwd_.c: getcwd.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/getcwd.c; then echo $(srcdir)/getcwd.c; else echo getcwd.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-getdate_.c: getdate.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/getdate.c; then echo $(srcdir)/getdate.c; else echo getdate.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-getgroups_.c: getgroups.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/getgroups.c; then echo $(srcdir)/getgroups.c; else echo getgroups.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-gethostname_.c: gethostname.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/gethostname.c; then echo $(srcdir)/gethostname.c; else echo gethostname.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-getline_.c: getline.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/getline.c; then echo $(srcdir)/getline.c; else echo getline.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-getloadavg_.c: getloadavg.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/getloadavg.c; then echo $(srcdir)/getloadavg.c; else echo getloadavg.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-getopt_.c: getopt.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/getopt.c; then echo $(srcdir)/getopt.c; else echo getopt.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-getopt1_.c: getopt1.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/getopt1.c; then echo $(srcdir)/getopt1.c; else echo getopt1.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-getpass_.c: getpass.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/getpass.c; then echo $(srcdir)/getpass.c; else echo getpass.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-getstr_.c: getstr.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/getstr.c; then echo $(srcdir)/getstr.c; else echo getstr.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-gettime_.c: gettime.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/gettime.c; then echo $(srcdir)/gettime.c; else echo gettime.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-gettimeofday_.c: gettimeofday.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/gettimeofday.c; then echo $(srcdir)/gettimeofday.c; else echo gettimeofday.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-getugroups_.c: getugroups.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/getugroups.c; then echo $(srcdir)/getugroups.c; else echo getugroups.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-getusershell_.c: getusershell.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/getusershell.c; then echo $(srcdir)/getusershell.c; else echo getusershell.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-group-member_.c: group-member.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/group-member.c; then echo $(srcdir)/group-member.c; else echo group-member.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-hard-locale_.c: hard-locale.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/hard-locale.c; then echo $(srcdir)/hard-locale.c; else echo hard-locale.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-hash_.c: hash.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/hash.c; then echo $(srcdir)/hash.c; else echo hash.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-hash-pjw_.c: hash-pjw.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/hash-pjw.c; then echo $(srcdir)/hash-pjw.c; else echo hash-pjw.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-human_.c: human.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/human.c; then echo $(srcdir)/human.c; else echo human.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-idcache_.c: idcache.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/idcache.c; then echo $(srcdir)/idcache.c; else echo idcache.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-imaxtostr_.c: imaxtostr.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/imaxtostr.c; then echo $(srcdir)/imaxtostr.c; else echo imaxtostr.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-isdir_.c: isdir.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/isdir.c; then echo $(srcdir)/isdir.c; else echo isdir.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-lchown_.c: lchown.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/lchown.c; then echo $(srcdir)/lchown.c; else echo lchown.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-linebuffer_.c: linebuffer.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/linebuffer.c; then echo $(srcdir)/linebuffer.c; else echo linebuffer.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-localcharset_.c: localcharset.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/localcharset.c; then echo $(srcdir)/localcharset.c; else echo localcharset.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-long-options_.c: long-options.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/long-options.c; then echo $(srcdir)/long-options.c; else echo long-options.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-lstat_.c: lstat.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/lstat.c; then echo $(srcdir)/lstat.c; else echo lstat.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-lstat-stub_.c: lstat-stub.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/lstat-stub.c; then echo $(srcdir)/lstat-stub.c; else echo lstat-stub.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-makepath_.c: makepath.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/makepath.c; then echo $(srcdir)/makepath.c; else echo makepath.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-malloc_.c: malloc.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/malloc.c; then echo $(srcdir)/malloc.c; else echo malloc.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-mbswidth_.c: mbswidth.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/mbswidth.c; then echo $(srcdir)/mbswidth.c; else echo mbswidth.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-md5_.c: md5.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/md5.c; then echo $(srcdir)/md5.c; else echo md5.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-memcasecmp_.c: memcasecmp.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/memcasecmp.c; then echo $(srcdir)/memcasecmp.c; else echo memcasecmp.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-memchr_.c: memchr.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/memchr.c; then echo $(srcdir)/memchr.c; else echo memchr.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-memcmp_.c: memcmp.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/memcmp.c; then echo $(srcdir)/memcmp.c; else echo memcmp.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-memcoll_.c: memcoll.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/memcoll.c; then echo $(srcdir)/memcoll.c; else echo memcoll.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-memcpy_.c: memcpy.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/memcpy.c; then echo $(srcdir)/memcpy.c; else echo memcpy.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-memmove_.c: memmove.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/memmove.c; then echo $(srcdir)/memmove.c; else echo memmove.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-memrchr_.c: memrchr.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/memrchr.c; then echo $(srcdir)/memrchr.c; else echo memrchr.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-memset_.c: memset.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/memset.c; then echo $(srcdir)/memset.c; else echo memset.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-mkdir_.c: mkdir.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/mkdir.c; then echo $(srcdir)/mkdir.c; else echo mkdir.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-mkstemp_.c: mkstemp.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/mkstemp.c; then echo $(srcdir)/mkstemp.c; else echo mkstemp.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-mktime_.c: mktime.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/mktime.c; then echo $(srcdir)/mktime.c; else echo mktime.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-modechange_.c: modechange.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/modechange.c; then echo $(srcdir)/modechange.c; else echo modechange.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-mountlist_.c: mountlist.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/mountlist.c; then echo $(srcdir)/mountlist.c; else echo mountlist.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-nanosleep_.c: nanosleep.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/nanosleep.c; then echo $(srcdir)/nanosleep.c; else echo nanosleep.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-obstack_.c: obstack.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/obstack.c; then echo $(srcdir)/obstack.c; else echo obstack.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-offtostr_.c: offtostr.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/offtostr.c; then echo $(srcdir)/offtostr.c; else echo offtostr.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-path-concat_.c: path-concat.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/path-concat.c; then echo $(srcdir)/path-concat.c; else echo path-concat.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-physmem_.c: physmem.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/physmem.c; then echo $(srcdir)/physmem.c; else echo physmem.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-posixtm_.c: posixtm.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/posixtm.c; then echo $(srcdir)/posixtm.c; else echo posixtm.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-posixver_.c: posixver.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/posixver.c; then echo $(srcdir)/posixver.c; else echo posixver.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-putenv_.c: putenv.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/putenv.c; then echo $(srcdir)/putenv.c; else echo putenv.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-quote_.c: quote.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/quote.c; then echo $(srcdir)/quote.c; else echo quote.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-quotearg_.c: quotearg.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/quotearg.c; then echo $(srcdir)/quotearg.c; else echo quotearg.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-raise_.c: raise.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/raise.c; then echo $(srcdir)/raise.c; else echo raise.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-readlink-stub_.c: readlink-stub.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/readlink-stub.c; then echo $(srcdir)/readlink-stub.c; else echo readlink-stub.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-readtokens_.c: readtokens.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/readtokens.c; then echo $(srcdir)/readtokens.c; else echo readtokens.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-readutmp_.c: readutmp.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/readutmp.c; then echo $(srcdir)/readutmp.c; else echo readutmp.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-realloc_.c: realloc.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/realloc.c; then echo $(srcdir)/realloc.c; else echo realloc.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-regex_.c: regex.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/regex.c; then echo $(srcdir)/regex.c; else echo regex.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-rename_.c: rename.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/rename.c; then echo $(srcdir)/rename.c; else echo rename.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-rmdir_.c: rmdir.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/rmdir.c; then echo $(srcdir)/rmdir.c; else echo rmdir.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-rpmatch_.c: rpmatch.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/rpmatch.c; then echo $(srcdir)/rpmatch.c; else echo rpmatch.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-safe-read_.c: safe-read.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/safe-read.c; then echo $(srcdir)/safe-read.c; else echo safe-read.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-safe-write_.c: safe-write.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/safe-write.c; then echo $(srcdir)/safe-write.c; else echo safe-write.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-same_.c: same.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/same.c; then echo $(srcdir)/same.c; else echo same.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-save-cwd_.c: save-cwd.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/save-cwd.c; then echo $(srcdir)/save-cwd.c; else echo save-cwd.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-savedir_.c: savedir.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/savedir.c; then echo $(srcdir)/savedir.c; else echo savedir.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-settime_.c: settime.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/settime.c; then echo $(srcdir)/settime.c; else echo settime.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-sha_.c: sha.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/sha.c; then echo $(srcdir)/sha.c; else echo sha.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-sig2str_.c: sig2str.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/sig2str.c; then echo $(srcdir)/sig2str.c; else echo sig2str.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-stat_.c: stat.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/stat.c; then echo $(srcdir)/stat.c; else echo stat.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-stpcpy_.c: stpcpy.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/stpcpy.c; then echo $(srcdir)/stpcpy.c; else echo stpcpy.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-strcasecmp_.c: strcasecmp.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/strcasecmp.c; then echo $(srcdir)/strcasecmp.c; else echo strcasecmp.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-strcspn_.c: strcspn.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/strcspn.c; then echo $(srcdir)/strcspn.c; else echo strcspn.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-strdup_.c: strdup.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/strdup.c; then echo $(srcdir)/strdup.c; else echo strdup.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-strftime_.c: strftime.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/strftime.c; then echo $(srcdir)/strftime.c; else echo strftime.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-stripslash_.c: stripslash.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/stripslash.c; then echo $(srcdir)/stripslash.c; else echo stripslash.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-strncasecmp_.c: strncasecmp.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/strncasecmp.c; then echo $(srcdir)/strncasecmp.c; else echo strncasecmp.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-strndup_.c: strndup.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/strndup.c; then echo $(srcdir)/strndup.c; else echo strndup.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-strnlen_.c: strnlen.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/strnlen.c; then echo $(srcdir)/strnlen.c; else echo strnlen.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-strpbrk_.c: strpbrk.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/strpbrk.c; then echo $(srcdir)/strpbrk.c; else echo strpbrk.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-strstr_.c: strstr.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/strstr.c; then echo $(srcdir)/strstr.c; else echo strstr.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-strtod_.c: strtod.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/strtod.c; then echo $(srcdir)/strtod.c; else echo strtod.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-strtoimax_.c: strtoimax.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/strtoimax.c; then echo $(srcdir)/strtoimax.c; else echo strtoimax.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-strtol_.c: strtol.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/strtol.c; then echo $(srcdir)/strtol.c; else echo strtol.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-strtoll_.c: strtoll.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/strtoll.c; then echo $(srcdir)/strtoll.c; else echo strtoll.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-strtoul_.c: strtoul.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/strtoul.c; then echo $(srcdir)/strtoul.c; else echo strtoul.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-strtoull_.c: strtoull.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/strtoull.c; then echo $(srcdir)/strtoull.c; else echo strtoull.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-strtoumax_.c: strtoumax.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/strtoumax.c; then echo $(srcdir)/strtoumax.c; else echo strtoumax.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-strverscmp_.c: strverscmp.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/strverscmp.c; then echo $(srcdir)/strverscmp.c; else echo strverscmp.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-tempname_.c: tempname.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/tempname.c; then echo $(srcdir)/tempname.c; else echo tempname.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-tsearch_.c: tsearch.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/tsearch.c; then echo $(srcdir)/tsearch.c; else echo tsearch.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-umaxtostr_.c: umaxtostr.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/umaxtostr.c; then echo $(srcdir)/umaxtostr.c; else echo umaxtostr.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-unicodeio_.c: unicodeio.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/unicodeio.c; then echo $(srcdir)/unicodeio.c; else echo unicodeio.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-userspec_.c: userspec.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/userspec.c; then echo $(srcdir)/userspec.c; else echo userspec.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-utime_.c: utime.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/utime.c; then echo $(srcdir)/utime.c; else echo utime.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-version-etc_.c: version-etc.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/version-etc.c; then echo $(srcdir)/version-etc.c; else echo version-etc.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-xgetcwd_.c: xgetcwd.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/xgetcwd.c; then echo $(srcdir)/xgetcwd.c; else echo xgetcwd.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-xgethostname_.c: xgethostname.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/xgethostname.c; then echo $(srcdir)/xgethostname.c; else echo xgethostname.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-xmalloc_.c: xmalloc.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/xmalloc.c; then echo $(srcdir)/xmalloc.c; else echo xmalloc.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-xmemcoll_.c: xmemcoll.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/xmemcoll.c; then echo $(srcdir)/xmemcoll.c; else echo xmemcoll.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-xnanosleep_.c: xnanosleep.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/xnanosleep.c; then echo $(srcdir)/xnanosleep.c; else echo xnanosleep.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-xreadlink_.c: xreadlink.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/xreadlink.c; then echo $(srcdir)/xreadlink.c; else echo xreadlink.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-xstrdup_.c: xstrdup.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/xstrdup.c; then echo $(srcdir)/xstrdup.c; else echo xstrdup.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-xstrtod_.c: xstrtod.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/xstrtod.c; then echo $(srcdir)/xstrtod.c; else echo xstrtod.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-xstrtoimax_.c: xstrtoimax.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/xstrtoimax.c; then echo $(srcdir)/xstrtoimax.c; else echo xstrtoimax.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-xstrtol_.c: xstrtol.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/xstrtol.c; then echo $(srcdir)/xstrtol.c; else echo xstrtol.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-xstrtoul_.c: xstrtoul.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/xstrtoul.c; then echo $(srcdir)/xstrtoul.c; else echo xstrtoul.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-xstrtoumax_.c: xstrtoumax.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/xstrtoumax.c; then echo $(srcdir)/xstrtoumax.c; else echo xstrtoumax.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-yesno_.c: yesno.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/yesno.c; then echo $(srcdir)/yesno.c; else echo yesno.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > $@ || rm -f $@
-__fpending_.$(OBJEXT) acl_.$(OBJEXT) addext_.$(OBJEXT) \
-alloca_.$(OBJEXT) argmatch_.$(OBJEXT) atexit_.$(OBJEXT) \
-backupfile_.$(OBJEXT) basename_.$(OBJEXT) c-stack_.$(OBJEXT) \
-canon-host_.$(OBJEXT) canonicalize_.$(OBJEXT) chown_.$(OBJEXT) \
-closeout_.$(OBJEXT) cycle-check_.$(OBJEXT) diacrit_.$(OBJEXT) \
-dirfd_.$(OBJEXT) dirname_.$(OBJEXT) dup-safer_.$(OBJEXT) \
-dup2_.$(OBJEXT) error_.$(OBJEXT) euidaccess_.$(OBJEXT) \
-exclude_.$(OBJEXT) exitfail_.$(OBJEXT) fchown-stub_.$(OBJEXT) \
-file-type_.$(OBJEXT) fileblocks_.$(OBJEXT) filemode_.$(OBJEXT) \
-fnmatch_.$(OBJEXT) fopen-safer_.$(OBJEXT) fsusage_.$(OBJEXT) \
-ftruncate_.$(OBJEXT) ftw_.$(OBJEXT) full-read_.$(OBJEXT) \
-full-write_.$(OBJEXT) getcwd_.$(OBJEXT) getdate_.$(OBJEXT) \
-getgroups_.$(OBJEXT) gethostname_.$(OBJEXT) getline_.$(OBJEXT) \
-getloadavg_.$(OBJEXT) getopt_.$(OBJEXT) getopt1_.$(OBJEXT) \
-getpass_.$(OBJEXT) getstr_.$(OBJEXT) gettime_.$(OBJEXT) \
-gettimeofday_.$(OBJEXT) getugroups_.$(OBJEXT) getusershell_.$(OBJEXT) \
-group-member_.$(OBJEXT) hard-locale_.$(OBJEXT) hash_.$(OBJEXT) \
-hash-pjw_.$(OBJEXT) human_.$(OBJEXT) idcache_.$(OBJEXT) \
-imaxtostr_.$(OBJEXT) isdir_.$(OBJEXT) lchown_.$(OBJEXT) \
-linebuffer_.$(OBJEXT) localcharset_.$(OBJEXT) long-options_.$(OBJEXT) \
-lstat_.$(OBJEXT) lstat-stub_.$(OBJEXT) makepath_.$(OBJEXT) \
-malloc_.$(OBJEXT) mbswidth_.$(OBJEXT) md5_.$(OBJEXT) \
-memcasecmp_.$(OBJEXT) memchr_.$(OBJEXT) memcmp_.$(OBJEXT) \
-memcoll_.$(OBJEXT) memcpy_.$(OBJEXT) memmove_.$(OBJEXT) \
-memrchr_.$(OBJEXT) memset_.$(OBJEXT) mkdir_.$(OBJEXT) \
-mkstemp_.$(OBJEXT) mktime_.$(OBJEXT) modechange_.$(OBJEXT) \
-mountlist_.$(OBJEXT) nanosleep_.$(OBJEXT) obstack_.$(OBJEXT) \
-offtostr_.$(OBJEXT) path-concat_.$(OBJEXT) physmem_.$(OBJEXT) \
-posixtm_.$(OBJEXT) posixver_.$(OBJEXT) putenv_.$(OBJEXT) \
-quote_.$(OBJEXT) quotearg_.$(OBJEXT) raise_.$(OBJEXT) \
-readlink-stub_.$(OBJEXT) readtokens_.$(OBJEXT) readutmp_.$(OBJEXT) \
-realloc_.$(OBJEXT) regex_.$(OBJEXT) rename_.$(OBJEXT) rmdir_.$(OBJEXT) \
-rpmatch_.$(OBJEXT) safe-read_.$(OBJEXT) safe-write_.$(OBJEXT) \
-same_.$(OBJEXT) save-cwd_.$(OBJEXT) savedir_.$(OBJEXT) \
-settime_.$(OBJEXT) sha_.$(OBJEXT) sig2str_.$(OBJEXT) stat_.$(OBJEXT) \
-stpcpy_.$(OBJEXT) strcasecmp_.$(OBJEXT) strcspn_.$(OBJEXT) \
-strdup_.$(OBJEXT) strftime_.$(OBJEXT) stripslash_.$(OBJEXT) \
-strncasecmp_.$(OBJEXT) strndup_.$(OBJEXT) strnlen_.$(OBJEXT) \
-strpbrk_.$(OBJEXT) strstr_.$(OBJEXT) strtod_.$(OBJEXT) \
-strtoimax_.$(OBJEXT) strtol_.$(OBJEXT) strtoll_.$(OBJEXT) \
-strtoul_.$(OBJEXT) strtoull_.$(OBJEXT) strtoumax_.$(OBJEXT) \
-strverscmp_.$(OBJEXT) tempname_.$(OBJEXT) tsearch_.$(OBJEXT) \
-umaxtostr_.$(OBJEXT) unicodeio_.$(OBJEXT) userspec_.$(OBJEXT) \
-utime_.$(OBJEXT) version-etc_.$(OBJEXT) xgetcwd_.$(OBJEXT) \
-xgethostname_.$(OBJEXT) xmalloc_.$(OBJEXT) xmemcoll_.$(OBJEXT) \
-xnanosleep_.$(OBJEXT) xreadlink_.$(OBJEXT) xstrdup_.$(OBJEXT) \
-xstrtod_.$(OBJEXT) xstrtoimax_.$(OBJEXT) xstrtol_.$(OBJEXT) \
-xstrtoul_.$(OBJEXT) xstrtoumax_.$(OBJEXT) yesno_.$(OBJEXT) : \
-$(ANSI2KNR)
 
 .y.c:
 	$(YACCCOMPILE) `test -f '$<' || echo '$(srcdir)/'`$<
@@ -1152,7 +783,7 @@ maintainer-clean-am: distclean-am maintainer-clean-generic
 
 mostlyclean: mostlyclean-am
 
-mostlyclean-am: mostlyclean-compile mostlyclean-generic mostlyclean-kr
+mostlyclean-am: mostlyclean-compile mostlyclean-generic
 
 pdf: pdf-am
 
@@ -1172,9 +803,9 @@ uninstall-am: uninstall-info-am uninstall-local
 	install-exec-am install-exec-local install-info install-info-am \
 	install-man install-strip installcheck installcheck-am \
 	installdirs maintainer-clean maintainer-clean-generic \
-	mostlyclean mostlyclean-compile mostlyclean-generic \
-	mostlyclean-kr pdf pdf-am ps ps-am tags uninstall uninstall-am \
-	uninstall-info-am uninstall-local
+	mostlyclean mostlyclean-compile mostlyclean-generic pdf pdf-am \
+	ps ps-am tags uninstall uninstall-am uninstall-info-am \
+	uninstall-local
 
 
 # The following is needed in order to install a simple file in $(libdir)
