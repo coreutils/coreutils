@@ -1,5 +1,5 @@
 /* nl -- number lines of files
-   Copyright (C) 89, 92, 1995-2003 Free Software Foundation, Inc.
+   Copyright (C) 89, 92, 1995-2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -168,7 +168,7 @@ static struct option const longopts[] =
 void
 usage (int status)
 {
-  if (status != 0)
+  if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
@@ -226,7 +226,7 @@ FORMAT is one of:\n\
 "), stdout);
       printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
-  exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
+  exit (status);
 }
 
 /* Build the printf format string, based on `lineno_format'. */
@@ -606,7 +606,7 @@ main (int argc, char **argv)
     }
 
   if (fail)
-    usage (2);
+    usage (EXIT_FAILURE);
 
   /* Initialize the section delimiters.  */
   len = strlen (section_del);
