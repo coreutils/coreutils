@@ -100,7 +100,7 @@ get_fs_usage (path, disk, fsp)
 
   if (statfs (path, &fsd, sizeof (struct statfs)) != 0)
     return (-1);
-#define convert_blocks(b) adjust_blocks ((b),fsd.f_fsize, 512)
+#define convert_blocks(b) adjust_blocks ((b), fsd.f_fsize, 512)
 #endif /* STAT_STATFS3_OSF1 */
 
 #ifdef STAT_STATFS2_FS_DATA	/* Ultrix.  */
@@ -133,7 +133,8 @@ get_fs_usage (path, disk, fsp)
       return -1;
     }
   close (fd);
-#define convert_blocks(b) adjust_blocks ((b), (fsd.s_type == Fs2b ? 1024 : 512), 512)
+#define convert_blocks(b) \
+    adjust_blocks ((b), (fsd.s_type == Fs2b ? 1024 : 512), 512)
   fsp->fsu_blocks = convert_blocks (fsd.s_fsize);
   fsp->fsu_bfree = convert_blocks (fsd.s_tfree);
   fsp->fsu_bavail = convert_blocks (fsd.s_tfree);
