@@ -3321,7 +3321,7 @@ Sort numerically: the number begins each line; specifically, it consists
 of optional blanks, an optional @samp{-} sign, and zero or more
 digits possibly separated by thousands separators, optionally followed
 by a decimal-point character and zero or more digits.  A string of
-zero digits is interpreted as @samp{0}.  The @env{LC_NUMERIC}
+no digits is interpreted as @samp{0}.  The @env{LC_NUMERIC}
 locale specifies the decimal-point character and thousands separator.
 
 Numeric sort uses what might be considered an unconventional method to
