@@ -1,31 +1,37 @@
-#!/usr/bin/perl -w
+#!/p/bin/perl -w
+require 5.002;
+use strict;
 
-$xx = './tr';
+my $xx = './tr';
 $| = 1;
 
 print "#! /bin/sh\nxx='$xx'\necho testing with $xx=\$xx\nerrors=0\n";
 print "$xx --version 2> /dev/null\n";
-$expected = '';
-$s1 = '';
-$input = '';
-$flags = '';
-$s2 = '';
+my $expected = '';
+my $s1 = '';
+my $input = '';
+my $flags = '';
+my $s2 = '';
+my %seen;
 
 while (<>)
   {
     next if (/^\s*#/);
 
     chop;
-    $prog = '($test_name, $input,$flags,$s1,$s2,$expected,$e_ret_code) = ' . $_ . ';';
+    my $test_name;
+    my $e_ret_code;
+    my $prog =
+     '($test_name, $input,$flags,$s1,$s2,$expected,$e_ret_code) = ' . $_ . ';';
     eval $prog;
     if (defined ($seen{$test_name}))
       {
 	die "$0: $.: duplicate test name \`$test_name'\n";
       }
     $seen{$test_name} = 1;
-    $in = "t$test_name.in";
-    $exp_name = 't' . $test_name . '.exp';
-    $out = "t$test_name.out";
+    my $in = "t$test_name.in";
+    my $exp_name = 't' . $test_name . '.exp';
+    my $out = "t$test_name.out";
 
     open(IN, ">$in") || die "Couldn't open $in for writing.\n";
     print IN $input;
@@ -34,9 +40,9 @@ while (<>)
 	|| die "Couldn't open $exp_name for writing.\n";
     print EXP $expected;
     close(EXP);
-    $arg2 = ($s2 ? " '$s2'" : '');
-    $err_output = "t$test_name.err";
-    $cmd = "\$xx $flags \'$s1\'$arg2 < $in > $out 2> $err_output";
+    my $arg2 = ($s2 ? " '$s2'" : '');
+    my $err_output = "t$test_name.err";
+    my $cmd = "\$xx $flags \'$s1\'$arg2 < $in > $out 2> $err_output";
     print <<EOF ;
 $cmd
 code=\$?
