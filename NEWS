@@ -3,6 +3,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  mv could mistakenly fail to preserve hard links when moving two
+  or more arguments between partitions.
+
   `cp --sparse=always F /dev/hdx' no longer tries to use lseek to create
   holes in the destination.
 
