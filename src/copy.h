@@ -50,12 +50,13 @@ struct cp_options
   int one_file_system;
 
   /* If nonzero, attempt to give the copies the original files' permissions,
-     ownership, and timestamps. */
+     owner, group, and timestamps. */
   int preserve;
 
   /* If nonzero and any of the above (for preserve) file attributes cannot
-     be applied to a destination file, treat it as a failure.  E.g.  cp -p
-     requires this be nonzero, mv requires it be zero.  */
+     be applied to a destination file, treat it as a failure and return
+     nonzero immediately.  E.g. cp -p requires this be nonzero, mv requires
+     it be zero.  */
   int require_preserve;
 
   /* If nonzero, copy directories recursively and copy special files
