@@ -101,8 +101,7 @@ struct quoting_options
 
   /* Quote the characters indicated by this bit vector even if the
      quoting style would not normally require them to be quoted.  */
-  int quote_these_too[((UCHAR_MAX + 1) / INT_BITS
-		       + ((UCHAR_MAX + 1) % INT_BITS != 0))];
+  int quote_these_too[(UCHAR_MAX / INT_BITS) + 1];
 };
 
 /* Names of quoting styles.  */
