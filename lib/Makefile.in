@@ -228,14 +228,14 @@ $(DEPDIR)/xmalloc$U.Po $(DEPDIR)/xstrdup$U.Po $(DEPDIR)/xstrtod$U.Po \
 $(DEPDIR)/xstrtol$U.Po $(DEPDIR)/xstrtoul$U.Po \
 $(DEPDIR)/xstrtoumax$U.Po $(DEPDIR)/yesno$U.Po
 DIST_COMMON =  $(noinst_HEADERS) ChangeLog Makefile.am Makefile.in TODO \
-alloca.c chown.c depcomp dup2.c error.c error.h euidaccess.c \
-fileblocks.c fnmatch.c fsusage.c ftruncate.c getdate.c getgroups.c \
-gethostname.c getline.c getloadavg.c getusershell.c group-member.c \
-lchown.c malloc.c memchr.c memcmp.c memcpy.c memmove.c memset.c mkdir.c \
-mktime.c mountlist.c nanosleep.c obstack.c obstack.h putenv.c realloc.c \
-regex.c rmdir.c rpmatch.c stime.c stpcpy.c strcasecmp.c strcspn.c \
-strdup.c strftime.c strncasecmp.c strndup.c strpbrk.c strstr.c strtod.c \
-strtol.c strtoul.c strtoull.c strtoumax.c strverscmp.c utime.c
+alloca.c chown.c dup2.c error.c error.h euidaccess.c fileblocks.c \
+fnmatch.c fsusage.c ftruncate.c getdate.c getgroups.c gethostname.c \
+getline.c getloadavg.c getusershell.c group-member.c lchown.c malloc.c \
+memchr.c memcmp.c memcpy.c memmove.c memset.c mkdir.c mktime.c \
+mountlist.c nanosleep.c obstack.c obstack.h putenv.c realloc.c regex.c \
+rmdir.c rpmatch.c stime.c stpcpy.c strcasecmp.c strcspn.c strdup.c \
+strftime.c strncasecmp.c strndup.c strpbrk.c strstr.c strtod.c strtol.c \
+strtoul.c strtoull.c strtoumax.c strverscmp.c utime.c
 
 
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
