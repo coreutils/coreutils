@@ -1,3 +1,9 @@
+Mon Mar 11 16:07:08 CST 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* sort.c (write_bytes): Renamed from xfwrite.
+	Remove SIZE parameter.  It was always 1. Update all callers.
+	Rename NELEM parameter to N_BYTES and change its type to size_t.
+
 Sat Mar  9 13:30:12 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* cat.c cksum.c comm.c csplit.c cut.c expand.c fmt.c
