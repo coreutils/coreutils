@@ -84,6 +84,13 @@
 #include "strverscmp.h"
 #include "xstrtol.h"
 
+/* Use access control lists only under all the following conditions.
+   Some systems (OSF4, Irix5, Irix6) have the acl function, but not
+   sys/acl.h or don't define the GETACLCNT macro.  */
+#if HAVE_SYS_ACL_H && HAVE_ACL && defined GETACLCNT
+# define USE_ACL 1
+#endif
+
 #define PROGRAM_NAME (ls_mode == LS_LS ? "ls" \
 		      : (ls_mode == LS_MULTI_COL \
 			 ? "dir" : "vdir"))
@@ -164,14 +171,14 @@ struct fileinfo
 
     enum filetype filetype;
 
-#if HAVE_ACL
+#if USE_ACL
     /* For long listings, nonzero if the file has an access control list,
        otherwise zero.  */
     int have_acl;
 #endif
   };
 
-#if HAVE_ACL
+#if USE_ACL
 # define FILE_HAS_ACL(F) ((F)->have_acl)
 #else
 # define FILE_HAS_ACL(F) 0
@@ -1745,7 +1752,7 @@ gobble_file (const char *name, int explicit_arg, const char *dirname)
       else
 	{
 	  val = lstat (path, &files[files_index].stat);
-#if HAVE_ACL
+#if USE_ACL
 	  files[files_index].have_acl = (acl (path, GETACLCNT, 0, NULL) > 4);
 #endif
 	}
