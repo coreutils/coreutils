@@ -1,6 +1,10 @@
-2000-10-22  Jim Meyering  <meyering@lucent.com>
+2000-10-23  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.8.
+
+	* Makefile.am (EXTRA_DIST): Add .prev-version.
+
+2000-10-22  Jim Meyering  <meyering@lucent.com>
 
 	* tests/Makefile.am (SUBDIRS): Add sha1sum.
 	* tests/sha1sum/basic-1: New file.
