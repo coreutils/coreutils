@@ -3,6 +3,7 @@
 	* Version 2.0.15.
 
 	* src/fmt.c (main): Correct the diagnostic for invalid argument to -w.
+	(main): Diagnose an invalid, old-style width option.
 
 2001-08-27  Jim Meyering  <meyering@lucent.com>
 
