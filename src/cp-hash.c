@@ -17,8 +17,20 @@
 
    Written by Torbjorn Granlund, Sweden (tege@sics.se). */
 
+#ifdef HAVE_CONFIG_H
+#if defined (CONFIG_BROKETS)
+/* We use <config.h> instead of "config.h" so that a compilation
+   using -I. -I$srcdir will use ./config.h rather than $srcdir/config.h
+   (which it would do because it found this file in $srcdir).  */
+#include <config.h>
+#else
+#include "config.h"
+#endif
+#endif
+
 #include <stdio.h>
 #include "cp.h"
+#include "safe-stat.h"
 
 char *hash_insert ();
 char *hash_insert2 ();
@@ -35,7 +47,7 @@ remember_created (path)
 {
   struct stat sb;
 
-  if (stat (path, &sb) < 0)
+  if (SAFE_STAT (path, &sb) < 0)
     {
       error (0, errno, "%s", path);
       return 1;
