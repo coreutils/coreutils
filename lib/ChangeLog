@@ -1,5 +1,13 @@
 2000-06-17  Bruno Haible  <haible@clisp.cons.org>
 
+	* xgetcwd.c (xgetcwd): If the required pathname length is smaller
+	than 1024, return a memory chunk of least possible size, instead
+	of size PATH_MAX + 2. In the loop, increment the size proportionally.
+	Use free/xmalloc instead of xrealloc to avoid copying for very long
+	paths.
+
+2000-06-17  Bruno Haible  <haible@clisp.cons.org>
+
 	* canon-host.c (canon_host): Use malloc and memcpy to copy an
 	address, not strdup.  Include <stdlib.h> and don't declare free().
 
