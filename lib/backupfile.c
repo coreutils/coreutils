@@ -97,6 +97,14 @@ char *malloc ();
 # define REAL_DIR_ENTRY(dp) 1
 #endif
 
+/* The following test is to work around the gross typo in
+   systems like Sony NEWS-OS Release 4.0C, whereby EXIT_FAILURE
+   is defined to 0, not 1.  */
+#if !EXIT_FAILURE
+# undef EXIT_FAILURE
+# define EXIT_FAILURE 1
+#endif
+
 /* The extension added to file names to produce a simple (as opposed
    to numbered) backup file name. */
 const char *simple_backup_suffix = "~";
@@ -212,7 +220,7 @@ version_number (const char *base, const char *backup, size_t base_length)
 }
 #endif /* HAVE_DIR */
 
-static const char * const backup_args[] =
+static const char *const backup_args[] =
 {
   "never", "simple", "nil", "existing", "t", "numbered", 0
 };
@@ -236,7 +244,7 @@ get_version (const char *version)
   if (i < 0)
     {
       invalid_arg ("version control type", version, i);
-      exit (2);
+      exit (EXIT_FAILURE);
     }
   return backup_types[i];
 }
