@@ -1,5 +1,8 @@
+2001-08-24  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.12.
+
+	* src/pinky.c (usage): Clarify description of -l.  From Clark Morgan.
 
 2001-06-21  Paul Eggert  <eggert@twinsun.com>
 
