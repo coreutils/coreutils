@@ -1,3 +1,13 @@
+2000-07-30  Jim Meyering  <meyering@lucent.com>
+
+	* makepath.c (make_path): Quote the other instance, too.
+
+	* quotearg.c (N_STATIC_SLOTVECS): Define.
+	(STATIC_BUF_SIZE): Define.
+	(quotearg_n_options): Use only statically allocated storage when
+	N < N_STATIC_SLOTVECS and the length of the quoted result is smaller
+	than STATIC_BUF_SIZE.
+
 2000-07-29  Jim Meyering  <meyering@lucent.com>
 
 	* diacrit.c (diacrit_diac): Use __MSDOS__ in favor of MSDOS.
