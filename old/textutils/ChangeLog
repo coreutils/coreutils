@@ -1,9 +1,15 @@
 Mon Aug  7 23:27:54 1995  Jim Meyering  (meyering@comco.com)
 
+	* sort.c (mergefps) [lint]: Initialize SAVEALLOC to avoid spurious
+	compiler warning.  From Ulrich Drepper.
+
+	* pr.c (read_line) [lint]: Initialize CHARS to avoid spurious
+	compiler warning.  From Ulrich Drepper.
+
 	* Makefile.in (DISTFILES): Don't distribute unneeded COPYING.LIB.
 	From Franc,ois.
 
-Mon Aug  7 00:02:59 1995
+Mon Aug  7 00:02:59 1995  Jim Meyering  (meyering@comco.com)
 
 	* system.h (_): Define macro -- as empty for now.
 	* src/*.c: Annotate localizable strings with _(...).  From Franc,ois.
