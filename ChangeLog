@@ -1,3 +1,22 @@
+2003-06-30  Paul Eggert  <eggert@twinsun.com>
+
+	Add support for a "[" that conforms to the GNU coding standards,
+	i.e., that does not depend on its name.
+	* src/lbracket.c: New file.
+	* README: Add "[".
+	* man/Makefile.am (programs): Ignore "[", since it doesn't have
+	a separate man page.
+	* src/Makefile.am (bin_PROGRAMS): Add "[".
+	(__SOURCES): New var.
+	* src/test.c (LBRACKET): Define to 0 if not defined.
+	(main): Use LBRACKET rather than argv[0].
+
+	* src/test.c (one_argument): Do not check for -t if POSIXLY_CORRECT.
+
+	* src/test.c (main): Do not recognize --help or --version if
+	POSIXLY_CORRECT, when invoked as "test".  Handle "[ ]" correctly.
+	Do not bother testing that margv[margc] is non-null.
+
 2003-07-04  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.1.
