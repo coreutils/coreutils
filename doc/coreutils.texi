@@ -271,7 +271,6 @@ Operating on characters
 * Character sets::              Specifying sets of characters.
 * Translating::                 Changing one set of characters to another.
 * Squeezing::                   Squeezing repeats and deleting.
-* Warnings in tr::              Warning messages.
 
 Directory listing
 
@@ -4689,7 +4688,6 @@ the input contains encoding errors.
 * Character sets::              Specifying sets of characters.
 * Translating::                 Changing one set of characters to another.
 * Squeezing::                   Squeezing repeats and deleting.
-* Warnings in tr::              Warning messages.
 @end menu
 
 
