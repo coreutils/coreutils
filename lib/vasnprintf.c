@@ -295,7 +295,7 @@ VASNPRINTF (CHAR_T *resultbuf, size_t *lengthp, const CHAR_T *format, va_list ar
 			  do
 			    {
 			      size_t w_tmp = width * 10 + (*digitp++ - '0');
-			      if (SIZE_MAX / 10 <= width || w_tmp < width)
+			      if (SIZE_MAX / 10 < width || w_tmp < width)
 				goto out_of_memory;
 			      width = w_tmp;
 			    }
