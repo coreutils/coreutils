@@ -18,11 +18,14 @@ AC_AIX
 AC_MINIX
 
 AC_CHECK_FUNCS(uname,
-	OPTIONAL_BIN_PROGS="$OPTIONAL_BIN_PROGS uname" MAN="$MAN uname.1")
+	OPTIONAL_BIN_PROGS="$OPTIONAL_BIN_PROGS uname\$(EXEEXT)"
+	MAN="$MAN uname.1")
 AC_CHECK_FUNCS(chroot,
-	OPTIONAL_BIN_PROGS="$OPTIONAL_BIN_PROGS chroot" MAN="$MAN chroot.1")
+	OPTIONAL_BIN_PROGS="$OPTIONAL_BIN_PROGS chroot\$(EXEEXT)"
+	MAN="$MAN chroot.1")
 AC_CHECK_FUNCS(gethostid,
-	OPTIONAL_BIN_PROGS="$OPTIONAL_BIN_PROGS hostid" MAN="$MAN hostid.1")
+	OPTIONAL_BIN_PROGS="$OPTIONAL_BIN_PROGS hostid\$(EXEEXT)"
+	MAN="$MAN hostid.1")
 
 jm_MACROS
 
@@ -122,7 +125,7 @@ AC_CACHE_VAL(utils_cv_func_setpriority,
   [utils_cv_func_setpriority=no])])
 AC_MSG_RESULT($utils_cv_func_setpriority)
 if test $utils_cv_func_setpriority = yes; then
-  OPTIONAL_BIN_PROGS="$OPTIONAL_BIN_PROGS nice"
+  OPTIONAL_BIN_PROGS="$OPTIONAL_BIN_PROGS nice\$(EXEEXT)"
   OPTIONAL_BIN_ZCRIPTS="$OPTIONAL_BIN_ZCRIPTS nohup"
   MAN="$MAN nice.1 nohup.1"
 else
@@ -134,7 +137,7 @@ else
   AC_MSG_RESULT($utils_cv_func_nice)
   if test $utils_cv_func_nice = yes; then
     AC_DEFINE(NICE_PRIORITY, 1, [FIXME])
-    OPTIONAL_BIN_PROGS="$OPTIONAL_BIN_PROGS nice"
+    OPTIONAL_BIN_PROGS="$OPTIONAL_BIN_PROGS nice\$(EXEEXT)"
     OPTIONAL_BIN_ZCRIPTS="$OPTIONAL_BIN_ZCRIPTS nohup"
     MAN="$MAN nice.1 nohup.1"
   fi
@@ -144,7 +147,9 @@ AC_DEFUN(jm_DUMMY_1,
 [
   AC_REQUIRE([jm_PREREQ_READUTMP])
   if test $ac_cv_header_utmp_h = yes || test $ac_cv_header_utmpx_h = yes; then
-    OPTIONAL_BIN_PROGS="$OPTIONAL_BIN_PROGS pinky users who"
+    OPTIONAL_BIN_PROGS="$OPTIONAL_BIN_PROGS pinky\$(EXEEXT)"
+    OPTIONAL_BIN_PROGS="$OPTIONAL_BIN_PROGS users\$(EXEEXT)"
+    OPTIONAL_BIN_PROGS="$OPTIONAL_BIN_PROGS who\$(EXEEXT)"
     MAN="$MAN pinky.1 users.1 who.1"
   fi
 ])
@@ -177,13 +182,14 @@ if test -z "$have_ut_host"; then
 fi
 
 GNULIB_BOOT_TIME(
-  [OPTIONAL_BIN_PROGS="$OPTIONAL_BIN_PROGS uptime" MAN="$MAN uptime.1"])
+  [OPTIONAL_BIN_PROGS="$OPTIONAL_BIN_PROGS uptime\$(EXEEXT)"
+  MAN="$MAN uptime.1"])
 
 AC_SYS_POSIX_TERMIOS()
 jm_HEADER_TIOCGWINSZ_NEEDS_SYS_IOCTL
 
 if test $ac_cv_sys_posix_termios = yes; then
-  OPTIONAL_BIN_PROGS="$OPTIONAL_BIN_PROGS stty" MAN="$MAN stty.1"
+  OPTIONAL_BIN_PROGS="$OPTIONAL_BIN_PROGS stty\$(EXEEXT)" MAN="$MAN stty.1"
 
   AC_MSG_CHECKING(whether termios.h needs _XOPEN_SOURCE)
   AC_CACHE_VAL(su_cv_sys_termios_needs_xopen_source,
