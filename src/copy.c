@@ -371,7 +371,7 @@ copy_internal (const char *src_path, const char *dst_path,
   char *earlier_file;
   char *dst_backup = NULL;
   int fix_mode = 0;
-  int force = x->force;
+  int rename_errno;
 
   if (move_mode && rename_succeeded)
     *rename_succeeded = 0;
@@ -427,7 +427,15 @@ copy_internal (const char *src_path, const char *dst_path,
 	  if (!same
 
 	      /* If we'll remove DST_PATH first, then this doesn't matter.  */
-	      && ! force
+	      && ! x->force
+
+	      /* Allow them to be the same (and don't set `same') if we're
+		 in move mode and the target is a symlink.  That is ok, since
+		 we remove any existing destination file before opening it --
+		 via `rename' if they're on the same file system,
+		 via `unlink(DST_PATH)' otherwise.  */
+	      && !(move_mode
+		   && S_ISLNK (dst_sb.st_mode))
 
 	      /* If we're making a backup, we'll detect the problem case in
 		 copy_reg because SRC_PATH will no longer exist.  Allowing
@@ -447,32 +455,7 @@ copy_internal (const char *src_path, const char *dst_path,
 		  && stat (src_path, &src2_sb) == 0
 		  && SAME_INODE (src2_sb, dst2_sb))
 		{
-		  /* Be careful in move mode when the target is a symlink
-		     to the source.    */
-		  if (move_mode
-		      && S_ISLNK (dst_sb.st_mode))
-		    {
-		      if (src_sb.st_dev != dst_sb.st_dev)
-			{
-			  /* This happens when the target is a symlink that
-			     resides on a file system different from the one
-			     on which the source resides.  Tell the copying
-			     code (below) that it must unlink the destination
-			     before opening it.  Otherwise, we'd end up
-			     destroying SRC when opening it via the symlink.  */
-			  force = 1;
-			}
-		      else
-			{
-			  /* Don't set `same'.
-			     Since they're on the same partition, rename
-			     will end up removing the destination symlink.  */
-			}
-		    }
-		  else
-		    {
-		      same = 1;
-		    }
+		  same = 1;
 		}
 	    }
 #endif
@@ -483,7 +466,7 @@ copy_internal (const char *src_path, const char *dst_path,
 		return 0;
 
 	      if (x->backup_type == none
-		  && (!force || same_name (src_path, dst_path)))
+		  && (!x->force || same_name (src_path, dst_path)))
 		{
 		  error (0, 0, _("`%s' and `%s' are the same file"),
 			 src_path, dst_path);
@@ -505,7 +488,7 @@ copy_internal (const char *src_path, const char *dst_path,
 		return 0;
 	    }
 
-	  if (!S_ISDIR (src_type) && !force && x->interactive)
+	  if (!S_ISDIR (src_type) && !x->force && x->interactive)
 	    {
 	      if (euidaccess (dst_path, W_OK) != 0)
 		{
@@ -573,7 +556,7 @@ copy_internal (const char *src_path, const char *dst_path,
 		}
 	      new_dst = 1;
 	    }
-	  else if (force)
+	  else if (x->force)
 	    {
 	      if (S_ISDIR (dst_sb.st_mode))
 		{
@@ -675,6 +658,20 @@ copy_internal (const char *src_path, const char *dst_path,
 
       /* Ignore other types of failure (e.g. EXDEV), since the following
 	 code will try to perform a copy, then remove.  */
+
+      /* Save this value of errno to use in case the unlink fails.  */
+      rename_errno = errno;
+
+      /* The rename attempt has failed.  Remove any existing destination
+	 file so that a cross-device `mv' acts as if it were really using
+	 the rename syscall.  */
+      if (unlink (dst_path) && errno != ENOENT)
+	{
+	  /* Use the value of errno from the failed rename.  */
+	  error (0, rename_errno, _("cannot move `%s' to `%s'"),
+		 src_path, dst_path);
+	  return 1;
+	}
     }
 
   if (S_ISDIR (src_type))
