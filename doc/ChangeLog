@@ -1,3 +1,12 @@
+2005-04-05  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* doc/coreutils.texi (cat invocation, chown invocation)
+	(chgrp invocation, basename invocation, dirname invocation):
+	Add examples, which are copies of the examples newly added
+	to the usage messages.
+	(ln invocation): Use same format as other examples above,
+	for consistency.
+
 2005-03-26  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi: Clarify NUL vs null byte vs null character.
