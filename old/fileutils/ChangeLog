@@ -1,3 +1,13 @@
+Sun Sep 29 22:00:44 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/cp-aux.c (usage): Take only one argument -- like all the other
+	usage functions.
+
+	* src/cp.c (do_copy): Give better error message when copying multiple
+	files and the last one is not a directory.  From Karl Berry.
+	Call error (0, 0, ... then usage (1) -- instead of calling usage
+	with two arguments.
+
 Sat Sep 28 13:16:29 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/getversion.c (backup_types): Declare const.
