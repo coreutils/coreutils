@@ -97,72 +97,72 @@
 #ifndef CSUSP
 # define CSUSP Control ('z')
 #endif
-#if defined(VEOL2) && !defined(CEOL2)
+#if defined VEOL2 && !defined CEOL2
 # define CEOL2 _POSIX_VDISABLE
 #endif
 /* Some platforms have VSWTC, others VSWTCH.  In both cases, this control
    character is initialized by CSWTCH, if present.  */
-#if defined(VSWTC) && !defined(VSWTCH)
+#if defined VSWTC && !defined VSWTCH
 # define VSWTCH VSWTC
 #endif
 /* ISC renamed swtch to susp for termios, but we'll accept either name.  */
-#if defined(VSUSP) && !defined(VSWTCH)
+#if defined VSUSP && !defined VSWTCH
 # define VSWTCH VSUSP
-# if defined(CSUSP) && !defined(CSWTCH)
+# if defined CSUSP && !defined CSWTCH
 #  define CSWTCH CSUSP
 # endif
 #endif
-#if defined(VSWTCH) && !defined(CSWTCH)
+#if defined VSWTCH && !defined CSWTCH
 # define CSWTCH _POSIX_VDISABLE
 #endif
 
 /* SunOS 5.3 loses (^Z doesn't work) if `swtch' is the same as `susp'.
    So the default is to disable `swtch.'  */
-#if defined (__sparc__) && defined (__svr4__)
+#if defined __sparc__ && defined __svr4__
 # undef CSWTCH
 # define CSWTCH _POSIX_VDISABLE
 #endif
 
-#if defined(VWERSE) && !defined (VWERASE)	/* AIX-3.2.5 */
+#if defined VWERSE && !defined VWERASE	/* AIX-3.2.5 */
 # define VWERASE VWERSE
 #endif
-#if defined(VDSUSP) && !defined (CDSUSP)
+#if defined VDSUSP && !defined CDSUSP
 # define CDSUSP Control ('y')
 #endif
-#if !defined(VREPRINT) && defined(VRPRNT)	/* Irix 4.0.5 */
+#if !defined VREPRINT && defined VRPRNT /* Irix 4.0.5 */
 # define VREPRINT VRPRNT
 #endif
-#if defined(VREPRINT) && !defined(CRPRNT)
+#if defined VREPRINT && !defined CRPRNT
 # define CRPRNT Control ('r')
 #endif
-#if defined(CREPRINT) && !defined(CRPRNT)
+#if defined CREPRINT && !defined CRPRNT
 # define CRPRNT Control ('r')
 #endif
-#if defined(VWERASE) && !defined(CWERASE)
+#if defined VWERASE && !defined CWERASE
 # define CWERASE Control ('w')
 #endif
-#if defined(VLNEXT) && !defined(CLNEXT)
+#if defined VLNEXT && !defined CLNEXT
 # define CLNEXT Control ('v')
 #endif
-#if defined(VDISCARD) && !defined(VFLUSHO)
+#if defined VDISCARD && !defined VFLUSHO
 # define VFLUSHO VDISCARD
 #endif
-#if defined(VFLUSH) && !defined(VFLUSHO)	/* Ultrix 4.2 */
+#if defined VFLUSH && !defined VFLUSHO	/* Ultrix 4.2 */
 # define VFLUSHO VFLUSH
 #endif
-#if defined(CTLECH) && !defined(ECHOCTL)	/* Ultrix 4.3 */
+#if defined CTLECH && !defined ECHOCTL	/* Ultrix 4.3 */
 # define ECHOCTL CTLECH
 #endif
-#if defined(TCTLECH) && !defined(ECHOCTL)	/* Ultrix 4.2 */
+#if defined TCTLECH && !defined ECHOCTL	/* Ultrix 4.2 */
 # define ECHOCTL TCTLECH
 #endif
-#if defined(CRTKIL) && !defined(ECHOKE)		/* Ultrix 4.2 and 4.3 */
+#if defined CRTKIL && !defined ECHOKE	/* Ultrix 4.2 and 4.3 */
 # define ECHOKE CRTKIL
 #endif
-#if defined(VFLUSHO) && !defined(CFLUSHO)
+#if defined VFLUSHO && !defined CFLUSHO
 # define CFLUSHO Control ('o')
 #endif
-#if defined(VSTATUS) && !defined(CSTATUS)
+#if defined VSTATUS && !defined CSTATUS
 # define CSTATUS Control ('t')
 #endif
 
@@ -341,10 +341,10 @@ static struct mode_info mode_info[] =
 #ifdef IXANY
   {"decctlq", combination, REV | OMIT, 0, 0},
 #endif
-#if defined (TABDLY) || defined (OXTABS)
+#if defined TABDLY || defined OXTABS
   {"tabs", combination, REV | OMIT, 0, 0},
 #endif
-#if defined(XCASE) && defined(IUCLC) && defined(OLCUC)
+#if defined XCASE && defined IUCLC && defined OLCUC
   {"lcase", combination, REV | OMIT, 0, 0},
   {"LCASE", combination, REV | OMIT, 0, 0},
 #endif
@@ -1219,7 +1219,7 @@ set_mode (struct mode_info *info, bool reversed, struct termios *mode)
 	}
 # endif
 #endif
-#if defined(XCASE) && defined(IUCLC) && defined(OLCUC)
+#if defined XCASE && defined IUCLC && defined OLCUC
       else if (STREQ (info->name, "lcase")
 	       || STREQ (info->name, "LCASE"))
 	{
