@@ -75,36 +75,42 @@ bkm_scale (x, scale_factor)
      __unsigned long int *x;
      int scale_factor;
 {
-  /* The cast to `__unsigned long int' before the cast to double is
-     required to work around a bug in SunOS's /bin/cc.  */
-  if (*x > (double) ((__unsigned long int) __ZLONG_MAX) / scale_factor)
-    {
+  __unsigned long int product = *x * scale_factor;
+  if (*x != product / scale_factor)
+    return 1;
+  *x = product;
+  return 0;
+}
+
+static int
+bkm_scale_by_power (x, base, power)
+     __unsigned long int *x;
+     int base;
+     int power;
+{
+  while (power--)
+    if (bkm_scale (x, base))
       return 1;
-    }
-  *x *= scale_factor;
+
   return 0;
 }
 
 /* FIXME: comment.  */
 
 strtol_error
-__xstrtol (s, ptr, base, val, valid_suffixes)
-     const char *s;
-     char **ptr;
-     int base;
-     __unsigned long int *val;
-     const char *valid_suffixes;
+__xstrtol (const char *s, char **ptr, int strtol_base,
+	   __unsigned long int *val, const char *valid_suffixes)
 {
   char *t_ptr;
   char **p;
   __unsigned long int tmp;
 
-  assert (0 <= base && base <= 36);
+  assert (0 <= strtol_base && strtol_base <= 36);
 
   p = (ptr ? ptr : &t_ptr);
 
   errno = 0;
-  tmp = __strtol (s, p, base);
+  tmp = __strtol (s, p, strtol_base);
   if (errno != 0)
     return LONGINT_OVERFLOW;
   if (*p == s)
@@ -121,44 +127,92 @@ __xstrtol (s, ptr, base, val, valid_suffixes)
 
   if (**p != '\0')
     {
+      int base = 1024;
+      int suffixes = 1;
+      int overflow;
+
       if (!strchr (valid_suffixes, **p))
 	return LONGINT_INVALID_SUFFIX_CHAR;
+
+      if (strchr (valid_suffixes, '0'))
+	{
+	  /* The ``valid suffix'' '0' is a special flag meaning that
+	     an optional second suffix is allowed, which can change
+	     the base, e.g. "100MD" for 100 megabytes decimal.  */
+
+	  switch (p[0][1])
+	    {
+	    case 'B':
+	      suffixes++;
+	      break;
+
+	    case 'D':
+	      base = 1000;
+	      suffixes++;
+	      break;
+	    }
+	}
 
       switch (**p)
 	{
 	case 'b':
-	  if (bkm_scale (&tmp, 512))
-	    return LONGINT_OVERFLOW;
-	  ++(*p);
-	  break;
-
-	case 'c':
-	  ++(*p);
+	  overflow = bkm_scale (&tmp, 512);
 	  break;
 
 	case 'B':
-	case 'k':
-	  if (bkm_scale (&tmp, 1024))
-	    return LONGINT_OVERFLOW;
-	  ++(*p);
+	  overflow = bkm_scale (&tmp, 1024);
 	  break;
 
-	case 'm':
-	  if (bkm_scale (&tmp, 1024 * 1024))
-	    return LONGINT_OVERFLOW;
-	  ++(*p);
+	case 'c':
+	  overflow = 0;
+	  break;
+
+	case 'E': /* Exa */
+	  overflow = bkm_scale_by_power (&tmp, base, 6);
+	  break;
+
+	case 'G': /* Giga */
+	  overflow = bkm_scale_by_power (&tmp, base, 3);
+	  break;
+
+	case 'k': /* kilo */
+	  overflow = bkm_scale_by_power (&tmp, base, 1);
+	  break;
+
+	case 'M': /* Mega */
+	case 'm': /* 'm' is undocumented; for backward compatibility only */
+	  overflow = bkm_scale_by_power (&tmp, base, 2);
+	  break;
+
+	case 'P': /* Peta */
+	  overflow = bkm_scale_by_power (&tmp, base, 5);
+	  break;
+
+	case 'T': /* Tera */
+	  overflow = bkm_scale_by_power (&tmp, base, 4);
 	  break;
 
 	case 'w':
-	  if (bkm_scale (&tmp, 2))
-	    return LONGINT_OVERFLOW;
-	  ++(*p);
+	  overflow = bkm_scale (&tmp, 2);
+	  break;
+
+	case 'Y': /* Yotta */
+	  overflow = bkm_scale_by_power (&tmp, base, 8);
+	  break;
+
+	case 'Z': /* Zetta */
+	  overflow = bkm_scale_by_power (&tmp, base, 7);
 	  break;
 
 	default:
 	  return LONGINT_INVALID_SUFFIX_CHAR;
 	  break;
 	}
+
+      if (overflow)
+	return LONGINT_OVERFLOW;
+
+      (*p) += suffixes;
     }
 
   *val = tmp;
