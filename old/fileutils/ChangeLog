@@ -1,3 +1,28 @@
+Wed May  5 00:21:12 1993  Jim Meyering (meyering@comco.com)
+
+	* configure.in: Add AC_TIME_WITH_SYS_TIME.
+	* getdate.y: Use it (this is a version local to fileutils).
+
+Tue May  4 20:25:41 1993  Jim Meyering (meyering@comco.com)
+
+	* du.c (count_entry): Give an error and exit if chdir ("..") fails.
+	From Bruce Evans <bde@runx.oz.AU>.
+
+	* eaccess (eaccess_stat): Cast NGROUPS_MAX to appropriate types.
+	From Bruce Evans <bde@runx.oz.AU>.
+
+Mon May  3 22:09:24 1993  Jim Meyering (meyering@comco.com)
+
+	* configure.in: Add AC_GETGROUPS_T.
+	* eaccess.c: Don't define GETGROUPS_T.  Now configure does it.
+
+Sun May  2 09:18:53 1993  Jim Meyering (meyering@comco.com)
+
+	* configure.in: Check for libypsec.a on Dolphin M88K machines.
+	This can result in significant speedup for programs that access
+	YP information.  From Kjetil Wiekhorst J{\o}rgensen
+	<jorgens@pvv.unit.no>.
+
 Fri Apr 30 02:21:48 1993  Jim Meyering (meyering@comco.com)
 
 	* ls.c (main): Make `-f' work like on standard Unix ls, instead

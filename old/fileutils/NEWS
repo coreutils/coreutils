@@ -1,5 +1,6 @@
 Major changes in release 3.6:
 * GNU ls -f works like Unix ls -f
+* mktime replacement works
 
 Major changes in release 3.5:
 * adds support for DEC Alpha under OSF/1
@@ -10,7 +11,7 @@ Major changes in release 3.5:
 * chmod accepts long-named options
 * dd conv=unblock doesn't hang
 * new df option --exclude=fstype
-* new ls option --long-time
+* new ls option --full-time
 
 Major changes in release 3.4:
 * cp -p and mv preserve setuid and setgid bits
