@@ -2,6 +2,8 @@
 
 	* Version 4.0.37.
 
+	* configure, aclocal.m4, etc.: Regenerate using autoconf-2.49c.
+
 	* src/ls.c (gobble_file): Add a FIXME comment.
 
 	* TODO: Add a few items.
