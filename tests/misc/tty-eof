@@ -22,7 +22,9 @@ $@ and (warn "$ME: this script requires Perl's Expect package\n"), exit 77;
 
 {
   my $fail = 0;
-  foreach my $cmd (qw(md5sum sha1sum cksum cat))
+  foreach my $cmd (qw( cat cksum dd expand fmt fold head md5sum nl od
+		       paste pr ptx sha1sum sort sum tac tee tail tsort
+		       unexpand uniq wc ))
     {
       my $exp = new Expect;
       $exp->log_user(0);
@@ -33,10 +35,16 @@ $@ and (warn "$ME: this script requires Perl's Expect package\n"), exit 77;
       $exp->expect (0, '-re', "^foo\\r?\$");
       my $found = $exp->expect (1, '-re', "^.+\$");
       # $found and warn "F: $found: " . $exp->exp_match () . "\n";
-      $exp->expect(0, 'eof');
-      # defined $exp->exitstatus and warn "E: " . $exp->exitstatus . "\n";
-      defined $found && defined $exp->exitstatus && $exp->exitstatus == 0
+      $exp->expect(1, 'eof');
+      defined $found
+	or (warn "$ME: $cmd didn't produce expected output\n"),
+	  $fail=1, next;
+      defined defined $exp->exitstatus
 	or (warn "$ME: $cmd didn't exit after ^D from standard input\n"),
+	  $fail=1, next;
+      my $s = $exp->exitstatus;
+      $s == 0
+	or (warn "$ME: $cmd exited with status $s (expected 0)\n"),
 	  $fail=1;
       $exp->hard_close();
     }
