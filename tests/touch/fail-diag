@@ -22,7 +22,7 @@ cd $tmp || framework_failure=1
 d1=/no-$$
 dir=/$d1/such-dir
 # Ensure that $d1 doesn't already exist.
-ld -d $d1 2> /dev/null && framework_failure=1
+ls -d $d1 2> /dev/null && framework_failure=1
 
 if test $framework_failure = 1; then
   echo 'failure in testing framework' 1>&2
