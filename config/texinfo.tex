@@ -3,10 +3,10 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2002-06-04.06}
+\def\texinfoversion{2002-09-27.13}
 %
-% Copyright (C) 1985, 86, 88, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99,
-%               2000, 01, 02 Free Software Foundation, Inc.
+% Copyright (C) 1985, 1986, 1988, 1990, 1991, 1992, 1993, 1994, 1995,
+% 1996, 1997, 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
 %
 % This texinfo.tex file is free software; you can redistribute it and/or
 % modify it under the terms of the GNU General Public License as
@@ -36,12 +36,11 @@
 %     (and all CTAN mirrors, see http://www.ctan.org),
 %   and /home/gd/gnu/doc/texinfo.tex on the GNU machines.
 % 
+% The GNU Texinfo home page is http://www.gnu.org/software/texinfo.
+% 
 % The texinfo.tex in any given Texinfo distribution could well be out
 % of date, so if that's what you're using, please check.
 % 
-% Texinfo has a small home page at http://texinfo.org/ and also
-% http://www.gnu.org/software/texinfo.
-%
 % Send bug reports to bug-texinfo@gnu.org.  Please include including a
 % complete document in each bug report with which we can reproduce the
 % problem.  Patches are, of course, greatly appreciated.
@@ -995,32 +994,28 @@ where each line of input produces a line of output.}
       \edef\myrbrace{\iffalse{\else\string}\fi}\let\}=\myrbrace
       %
       \def\chapentry ##1##2##3{}
-      \let\appendixentry = \chapentry
-      \def\unnumbchapentry ##1##2{}
       \def\secentry ##1##2##3##4{\advancenumber{chap##2}}
-      \def\unnumbsecentry ##1##2##3{\advancenumber{chap##2}}
       \def\subsecentry ##1##2##3##4##5{\advancenumber{sec##2.##3}}
-      \def\unnumbsubsecentry ##1##2##3##4{\advancenumber{sec##2.##3}}
       \def\subsubsecentry ##1##2##3##4##5##6{\advancenumber{subsec##2.##3.##4}}
-      \def\unnumbsubsubsecentry ##1##2##3##4##5{\advancenumber{subsec##2.##3.##4}}
+      \let\appendixentry = \chapentry
+      \let\unnumbchapentry = \chapentry
+      \let\unnumbsecentry = \secentry
+      \let\unnumbsubsecentry = \subsecentry
+      \let\unnumbsubsubsecentry = \subsubsecentry
       \input \jobname.toc
       \def\chapentry ##1##2##3{%
         \pdfoutline goto name{\pdfmkpgn{##3}}count-\expnumber{chap##2}{##1}}
-      \let\appendixentry = \chapentry
-      \def\unnumbchapentry ##1##2{%
-        \pdfoutline goto name{\pdfmkpgn{##2}}{##1}}
       \def\secentry ##1##2##3##4{%
         \pdfoutline goto name{\pdfmkpgn{##4}}count-\expnumber{sec##2.##3}{##1}}
-      \def\unnumbsecentry ##1##2##3{%
-        \pdfoutline goto name{\pdfmkpgn{##3}}{##1}}
       \def\subsecentry ##1##2##3##4##5{%
         \pdfoutline goto name{\pdfmkpgn{##5}}count-\expnumber{subsec##2.##3.##4}{##1}}
-      \def\unnumbsubsecentry ##1##2##3##4{%
-        \pdfoutline goto name{\pdfmkpgn{##4}}{##1}}
       \def\subsubsecentry ##1##2##3##4##5##6{%
         \pdfoutline goto name{\pdfmkpgn{##6}}{##1}}
-      \def\unnumbsubsubsecentry ##1##2##3##4##5{%
-        \pdfoutline goto name{\pdfmkpgn{##5}}{##1}}
+      \let\appendixentry = \chapentry
+      \let\unnumbchapentry = \chapentry
+      \let\unnumbsecentry = \secentry
+      \let\unnumbsubsecentry = \subsecentry
+      \let\unnumbsubsubsecentry = \subsubsecentry
       \input \jobname.toc
     \endgroup\fi
   }}
@@ -1170,7 +1165,7 @@ where each line of input produces a line of output.}
 \newcount\mainmagstep
 \ifx\bigger\relax
   % not really supported.
-  \let\mainmagstep=\magstep1
+  \mainmagstep=\magstep1
   \setfont\textrm\rmshape{12}{1000}
   \setfont\texttt\ttshape{12}{1000}
 \else
@@ -3597,7 +3592,7 @@ width0pt\relax} \fi
 \unnumbchapmacro {#1}%
 \gdef\thischapter{#1}\gdef\thissection{#1}%
 \toks0 = {#1}%
-\edef\temp{\noexpand\writetocentry{\realbackslash unnumbchapentry{\the\toks0}}}%
+\edef\temp{\noexpand\writetocentry{\realbackslash unnumbchapentry{\the\toks0}{\the\chapno}}}%
 \temp
 \unnumbnoderef
 \global\let\section = \unnumberedsec
@@ -3639,7 +3634,7 @@ width0pt\relax} \fi
 \plainsecheading {#1}\gdef\thissection{#1}%
 \toks0 = {#1}%
 \edef\temp{\noexpand\writetocentry{\realbackslash unnumbsecentry%
-  {\the\toks0}{\the\chapno}}}%
+  {\the\toks0}{\the\chapno}{\the\secno}}}%
 \temp
 \unnumbnoderef
 \nobreak
@@ -3678,7 +3673,7 @@ width0pt\relax} \fi
 \plainsubsecheading {#1}\gdef\thissection{#1}%
 \toks0 = {#1}%
 \edef\temp{\noexpand\writetocentry{\realbackslash unnumbsubsecentry%
-  {\the\toks0}{\the\chapno}{\the\secno}}}%
+  {\the\toks0}{\the\chapno}{\the\secno}{\the\subsecno}}}%
 \temp
 \unnumbnoderef
 \nobreak
@@ -3719,7 +3714,7 @@ width0pt\relax} \fi
 \plainsubsubsecheading {#1}\gdef\thissection{#1}%
 \toks0 = {#1}%
 \edef\temp{\noexpand\writetocentry{\realbackslash unnumbsubsubsecentry%
-  {\the\toks0}{\the\chapno}{\the\secno}{\the\subsecno}}}%
+  {\the\toks0}{\the\chapno}{\the\secno}{\the\subsecno}{\the\subsubsecno}}}%
 \temp
 \unnumbnoderef
 \nobreak
@@ -4012,11 +4007,11 @@ width0pt\relax} \fi
       \hyphenpenalty = 10000
       \advance\baselineskip by 1pt % Open it up a little.
       \def\secentry ##1##2##3##4{}
-      \def\unnumbsecentry ##1##2##3{}
       \def\subsecentry ##1##2##3##4##5{}
-      \def\unnumbsubsecentry ##1##2##3##4{}
       \def\subsubsecentry ##1##2##3##4##5##6{}
-      \def\unnumbsubsubsecentry ##1##2##3##4##5{}
+      \let\unnumbsecentry = \secentry
+      \let\unnumbsubsecentry = \subsecentry
+      \let\unnumbsubsubsecentry = \subsubsecentry
       \openin 1 \jobname.toc
       \ifeof 1 \else
         \closein 1
@@ -4073,21 +4068,21 @@ width0pt\relax} \fi
 }
 
 % Unnumbered chapters.
-\def\unnumbchapentry#1#2{\dochapentry{#1}{#2}}
-\def\shortunnumberedentry#1#2{\tocentry{#1}{\doshortpageno\bgroup#2\egroup}}
+\def\unnumbchapentry#1#2#3{\dochapentry{#1}{#3}}
+\def\shortunnumberedentry#1#2#3{\tocentry{#1}{\doshortpageno\bgroup#3\egroup}}
 
 % Sections.
 \def\secentry#1#2#3#4{\dosecentry{#2.#3\labelspace#1}{#4}}
-\def\unnumbsecentry#1#2#3{\dosecentry{#1}{#3}}
+\def\unnumbsecentry#1#2#3#4{\dosecentry{#1}{#4}}
 
 % Subsections.
 \def\subsecentry#1#2#3#4#5{\dosubsecentry{#2.#3.#4\labelspace#1}{#5}}
-\def\unnumbsubsecentry#1#2#3#4{\dosubsecentry{#1}{#4}}
+\def\unnumbsubsecentry#1#2#3#4#5{\dosubsecentry{#1}{#5}}
 
 % And subsubsections.
 \def\subsubsecentry#1#2#3#4#5#6{%
   \dosubsubsecentry{#2.#3.#4.#5\labelspace#1}{#6}}
-\def\unnumbsubsubsecentry#1#2#3#4#5{\dosubsubsecentry{#1}{#5}}
+\def\unnumbsubsubsecentry#1#2#3#4#5#6{\dosubsubsecentry{#1}{#6}}
 
 % This parameter controls the indentation of the various levels.
 \newdimen\tocindent \tocindent = 3pc
