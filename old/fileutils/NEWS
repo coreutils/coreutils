@@ -1,4 +1,5 @@
-Changes in release 4.01:
+Changes in release 4.1.0:
+[4.0.43]
 [4.0.42]
 * Using ls's short-named `-H' option evokes the warning that the
    meaning of `-H' will soon change.  Use `--si' instead.
