@@ -397,27 +397,26 @@ enum format
 
 static enum format format;
 
-/* `full-iso' uses full ISO-style dates and times.  `iso' uses shorter
-   ISO-style time stamps.  `locale' uses locale-dependent time stamps.
-   `posix-iso' uses traditional POSIX-locale-style dates where
-   POSIX requires it, ISO-style dates otherwise.  */
+/* `full-iso' uses full ISO-style dates and times.  `long-iso' uses longer
+   ISO-style time stamps, though shorter than `full-iso'.  `iso' uses shorter
+   ISO-style time stamps.  `locale' uses locale-dependent time stamps.  */
 enum time_style
   {
     full_iso_time_style,	/* --time-style=full-iso */
+    long_iso_time_style,	/* --time-style=long-iso */
     iso_time_style,		/* --time-style=iso */
-    locale_time_style,		/* --time-style=locale */
-    posix_iso_time_style	/* --time-style=posix-iso (default) */
+    locale_time_style		/* --time-style=locale */
   };
 
 static char const *const time_style_args[] =
 {
-  "full-iso", "iso", "locale", "posix-iso", 0
+  "full-iso", "long-iso", "iso", "locale", 0
 };
 
 static enum time_style const time_style_types[] =
 {
-  full_iso_time_style, iso_time_style,
-  locale_time_style, posix_iso_time_style, 0
+  full_iso_time_style, long_iso_time_style, iso_time_style,
+  locale_time_style, 0
 };
 
 /* Type of time to print or sort by.  Controlled by -c and -u.  */
@@ -1609,12 +1608,23 @@ decode_switches (int argc, char **argv)
 
   if (format == long_format)
     {
-      if (! time_style_option)
-	time_style_option = getenv ("TIME_STYLE");
+      char *style = time_style_option;
+      static char const posix_prefix[] = "posix-";
 
-      if (time_style_option && *time_style_option == '+')
+      if (! style)
+	if (! (style = getenv ("TIME_STYLE")))
+	  style = "posix-long-iso";
+
+      while (strncmp (style, posix_prefix, sizeof posix_prefix - 1) == 0)
 	{
-	  char *p0 = time_style_option + 1;
+	  if (! hard_locale (LC_TIME))
+	    return optind;
+	  style += sizeof posix_prefix - 1;
+	}
+
+      if (*style == '+')
+	{
+	  char *p0 = style + 1;
 	  char *p1 = strchr (p0, '\n');
 	  if (! p1)
 	    p1 = p0;
@@ -1629,21 +1639,19 @@ decode_switches (int argc, char **argv)
 	  long_time_format[1] = p1;
 	}
       else
-	switch (time_style_option
-		? XARGMATCH ("time style", time_style_option,
-			     time_style_args,
-			     time_style_types)
-		: posix_iso_time_style)
+	switch (XARGMATCH ("time style", style,
+			   time_style_args,
+			   time_style_types))
 	  {
 	  case full_iso_time_style:
 	    long_time_format[0] = long_time_format[1] =
 	      "%Y-%m-%d %H:%M:%S.%N %z";
 	    break;
 
-	  case posix_iso_time_style:
-	    if (! hard_locale (LC_TIME))
-	      break;
-	    /* Fall through.  */
+	  case long_iso_time_style:
+	    long_time_format[0] = long_time_format[1] = "%Y-%m-%d %H:%M";
+	    break;
+
 	  case iso_time_style:
 	    long_time_format[0] = "%Y-%m-%d ";
 	    long_time_format[1] = "%m-%d %H:%M";
@@ -3679,11 +3687,13 @@ Mandatory arguments to long options are mandatory for short options too.\n\
                                specified time as sort key if --sort=time\n\
 "), stdout);
       fputs (_("\
-      --time-style=WORD      show times using style WORD:\n\
-                               full-iso, iso, locale, posix-iso, +FORMAT\n\
+      --time-style=STYLE     show times using style STYLE:\n\
+                               full-iso, long-iso, iso, locale, +FORMAT\n\
                              FORMAT is interpreted like `date'; if FORMAT is\n\
                              FORMAT1<newline>FORMAT2, FORMAT1 applies to\n\
-                             non-recent files and FORMAT2 to recent files\n\
+                             non-recent files and FORMAT2 to recent files;\n\
+                             if STYLE is prefixed with `posix-', STYLE\n\
+                             takes effect only outside the POSIX locale\n\
   -t                         sort by modification time\n\
   -T, --tabsize=COLS         assume tab stops at each COLS instead of 8\n\
 "), stdout);
