@@ -49,7 +49,6 @@ tac -r -s '.\|
 #endif
 
 #include "error.h"
-#include "safe-read.h"
 
 #ifndef DEFAULT_TMPDIR
 # define DEFAULT_TMPDIR "/tmp"
@@ -87,7 +86,7 @@ static int match_length;
 static char *G_buffer;
 
 /* The number of bytes to read at once into `buffer'. */
-static unsigned read_size;
+static size_t read_size;
 
 /* The size of `buffer'.  This is read_size * 2 + sentinel_length + 2.
    The extra 2 bytes allow `past_end' to have a value beyond the
@@ -188,7 +187,7 @@ tac_stream (FILE *in, const char *file)
   char *past_end;
 
   /* Length of the record growing in `G_buffer'. */
-  unsigned saved_record_size;
+  size_t saved_record_size;
 
   /* Offset in the file of the next read. */
   off_t file_pos;
@@ -200,6 +199,7 @@ tac_stream (FILE *in, const char *file)
   char *separator1 = separator + 1; /* Speed optimization, non-regexp. */
   int match_length1 = match_length - 1; /* Speed optimization, non-regexp. */
   struct re_registers regs;
+  size_t x;
 
   /* Find the size of the input file. */
   file_pos = lseek (fileno (in), (off_t) 0, SEEK_END);
@@ -218,8 +218,10 @@ tac_stream (FILE *in, const char *file)
   /* `file_pos' now points to the start of the last (probably partial) block
      in the input file. */
 
-  lseek (fileno (in), file_pos, SEEK_SET);
-  if (safe_read (fileno (in), G_buffer, saved_record_size) != saved_record_size)
+  if (lseek (fileno (in), file_pos, SEEK_SET) < 0)
+    error (0, errno, "%s: seek failed", file);
+
+  if (fread (G_buffer, 1, saved_record_size, in) != saved_record_size)
     {
       error (0, errno, "%s", file);
       return 1;
@@ -317,7 +319,7 @@ tac_stream (FILE *in, const char *file)
 	  else
 	    match_start = past_end;
 
-	  if (safe_read (fileno (in), G_buffer, read_size) != read_size)
+	  if (fread (G_buffer, 1, read_size, in) != read_size)
 	    {
 	      error (0, errno, "%s", file);
 	      return 1;
@@ -380,7 +382,7 @@ save_stdin (FILE **g_tmp, char **g_tempfile)
   static char *tempdir;
   static char *tempfile;
   FILE *tmp;
-  int bytes_read;
+  size_t bytes_read;
   int fd;
 
   if (template == NULL)
@@ -393,25 +395,24 @@ save_stdin (FILE **g_tmp, char **g_tempfile)
   sprintf (template, "%s/tacXXXXXX", tempdir);
   tempfile = mktemp (template);
 
-  fd = open (tempfile, O_WRONLY | O_CREAT | O_TRUNC | O_EXCL, 0600);
-  if (fd == -1 || (tmp = fdopen (fd, "rw")) == NULL)
-    error (EXIT_FAILURE, errno, "%s", tempfile);
-  tmp = fdopen (fd, "rw");
-  if (tmp == NULL)
+  fd = open (tempfile, O_RDWR | O_CREAT | O_TRUNC | O_EXCL, 0600);
+  if (fd == -1 || (tmp = fdopen (fd, "w+")) == NULL)
     error (EXIT_FAILURE, errno, "%s", tempfile);
   unlink (tempfile);
 
-  while ((bytes_read = safe_read (0, G_buffer, read_size)) > 0)
-    fwrite (G_buffer, 1, bytes_read, tmp);
+  while ((bytes_read = fread (G_buffer, 1, read_size, stdin)) > 0
+	 && fwrite (G_buffer, 1, bytes_read, tmp) > 0)
+    {
+      /* empty */
+    }
+
+  if (ferror (stdin))
+    error (EXIT_FAILURE, errno, _("stdin: read error"));
 
   if (ferror (tmp) || fflush (tmp) == EOF)
     error (EXIT_FAILURE, errno, "%s", tempfile);
 
-  if (fseek (tmp, (long int) 0, SEEK_SET))
-    error (EXIT_FAILURE, errno, "%s", tempfile);
-
-  if (bytes_read == -1)
-    error (EXIT_FAILURE, errno, _("read error"));
+  rewind (tmp);
 
   *g_tmp = tmp;
   *g_tempfile = tempfile;
@@ -537,12 +538,14 @@ tac_stdin_to_mem (void)
 	  /* FIXME */
 	  abort ();
 	}
-      bytes_read = safe_read (STDIN_FILENO, buf + n_bytes, bufsiz - n_bytes);
+      bytes_read = fread (buf + n_bytes, 1, bufsiz - n_bytes, stdin);
       if (bytes_read == 0)
-	break;
+	{
+	  if (ferror (stdin))
+	    error (1, errno, _("stdin: read error"));
+	  break;
+	}
       n_bytes += bytes_read;
-      if (bytes_read < 0)
-	error (1, errno, _("read error"));
 
       bufsiz += delta;
     }
@@ -634,7 +637,7 @@ main (int argc, char **argv)
   if (optind == argc)
     {
       have_read_stdin = 1;
-      errors = tac_stdin_to_mem ();
+      errors = tac_stdin ();
     }
   else
     {
@@ -643,7 +646,7 @@ main (int argc, char **argv)
 	  if (STREQ (argv[optind], "-"))
 	    {
 	      have_read_stdin = 1;
-	      errors |= tac_stdin_to_mem ();
+	      errors |= tac_stdin ();
 	    }
 	  else
 	    {
