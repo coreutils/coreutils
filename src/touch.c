@@ -175,6 +175,10 @@ touch (char *file)
     {
       struct utimbuf utb;
 
+      /* There's currently no interface to set file timestamps with
+	 better than 1-second resolution, so discard any fractional
+	 part of the source timestamp.  */
+
       if (use_ref)
 	{
 	  utb.actime = ref_stats.st_atime;
