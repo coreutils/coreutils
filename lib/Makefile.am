@@ -112,7 +112,7 @@ libfetish_a_SOURCES = \
   unicodeio.c unicodeio.h \
   unistd-safer.h \
   unlocked-io.h \
-  userspec.c \
+  userspec.c userspec.h \
   utimens.c utimens.h \
   version-etc.c version-etc.h \
   xalloc.h \
