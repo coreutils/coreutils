@@ -4,10 +4,10 @@
 	#defines strtoimax.  Also treat the other strto* functions
 	like strtoimax.
 
-	* m4/xstrtoimax.m4 (jm_AC_PREREQ_XSTRTOIMAX):
+	* xstrtoimax.m4 (jm_AC_PREREQ_XSTRTOIMAX):
 	Check for strtoul and strtoumax,
 	as those declarations are made even in the signed case.
-	* m4/xstrtoumax.m4 (jm_AC_PREREQ_XSTRTOUMAX):
+	* xstrtoumax.m4 (jm_AC_PREREQ_XSTRTOUMAX):
 	Likewise, for strtol and strtoimax.
 
 2001-09-24  Jim Meyering  <meyering@lucent.com>
