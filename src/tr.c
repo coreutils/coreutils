@@ -899,7 +899,7 @@ find_bracketed_repeat (const struct E_string *es, size_t start_idx,
 	    if (xstrtoul (digit_str, &d_end, base, &tmp_ulong, NULL)
 		  != LONGINT_OK
 		|| BEGIN_STATE < tmp_ulong
-		|| d_end - digit_str != digit_str_len)
+		|| digit_str + digit_str_len != d_end)
 	      {
 		char *tmp = make_printable_str (es->s + start_idx + 2,
 						i - start_idx - 2);
