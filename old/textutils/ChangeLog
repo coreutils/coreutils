@@ -1,3 +1,13 @@
+Sun Dec  6 22:34:52 1992  Jim Meyering  (meyering@idefix.comco.com)
+
+	* csplit, cut.c, expand.c, fold.c, head.c, join.c, od.c, pr.c,
+	sort.c, split.c, tail.c, tr.c, unexpand.c, uniq.c:  Remove inclusion
+	of <ctype.h> and definitions of is* ctype macros to system.h.
+	Change a few more uses of is* ctype macros to (protected) upper
+	case versions.
+
+	* system.h: Add isascii-protected ctype IS* macros.
+
 Wed Dec  2 12:28:10 1992  Jim Meyering  (meyering@idefix.comco.com)
 
 	* all files using getopt.h: Convert static declarations of
