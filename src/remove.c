@@ -826,7 +826,9 @@ was moved to a different position in the file system hierarchy."),
    things.  Return RM_OK if it is removed, and RM_ERROR or RM_USER_DECLINED
    if not.  If USER_SPECIFIED_NAME is non-zero, then the name part of FS may
    be `.', `..', or may contain slashes.  Otherwise, it must be a simple file
-   name (and hence must specify a file in the current directory).  */
+   name (and hence must specify a file in the current directory).
+   CWD_DEV_INO must store the device and inode numbers of the
+   current working directory.  */
 
 enum RM_status
 rm (struct File_spec *fs, int user_specified_name,
