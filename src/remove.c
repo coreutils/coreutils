@@ -312,11 +312,21 @@ full_filename_ (DS const *ds, const char *filename)
 	}
     }
 
-  /* Copy directory part, including trailing slash, and then
-     append the filename part, including a trailing zero byte.  */
-  memcpy (mempcpy (buf, dir_name, dir_len), filename, filename_len + 1);
-
-  assert (strlen (buf) + 1 == n_bytes_needed);
+  if (filename_len == 1 && *filename == '.' && dir_len)
+    {
+      /* FILENAME is just `.' and dir_len is nonzero.
+	 Copy the directory part, omitting the trailing slash,
+	 and append a trailing zero byte.  */
+      char *p = mempcpy (buf, dir_name, dir_len - 1);
+      *p = 0;
+    }
+  else
+    {
+      /* Copy the directory part, including trailing slash, and then
+	 append the filename part, including a trailing zero byte.  */
+      memcpy (mempcpy (buf, dir_name, dir_len), filename, filename_len + 1);
+      assert (strlen (buf) + 1 == n_bytes_needed);
+    }
 
   return buf;
 }
