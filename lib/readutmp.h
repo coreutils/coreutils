@@ -22,7 +22,7 @@
 #ifndef __READUTMP_H__
 # define __READUTMP_H__
 
-# include <sys/types.h>
+# include <stddef.h>
 
 /* AIX 4.3.3 has both utmp.h and utmpx.h, but only struct utmp
    has the ut_exit member.  */
@@ -137,23 +137,9 @@
     (HAVE_STRUCT_UTMP_UT_PID \
      || HAVE_STRUCT_UTMPX_UT_PID)
 
-# define HAVE_STRUCT_XTMP_UT_TYPE \
-    (HAVE_STRUCT_UTMP_UT_TYPE \
-     || HAVE_STRUCT_UTMPX_UT_TYPE)
-
 typedef struct UTMP_STRUCT_NAME STRUCT_UTMP;
 
 enum { UT_USER_SIZE = sizeof UT_USER ((STRUCT_UTMP *) 0) };
-
-# include <time.h>
-# ifdef HAVE_SYS_PARAM_H
-#  include <sys/param.h>
-# endif
-
-# include <errno.h>
-# ifndef errno
-extern int errno;
-# endif
 
 # if !defined (UTMP_FILE) && defined (_PATH_UTMP)
 #  define UTMP_FILE _PATH_UTMP
@@ -180,6 +166,31 @@ extern int errno;
 # ifndef WTMP_FILE
 #  define WTMP_FILE "/etc/wtmp"
 # endif
+
+# if HAVE_STRUCT_UTMP_UT_TYPE || HAVE_STRUCT_UTMPX_UT_TYPE
+#  define UT_TYPE_EQ(U, V) ((U)->ut_type == (V))
+#  define UT_TYPE_NOT_DEFINED 0
+# else
+#  define UT_TYPE_EQ(U, V) 0
+#  define UT_TYPE_NOT_DEFINED 1
+# endif
+
+# ifdef BOOT_TIME
+#  define UT_TYPE_BOOT_TIME(U) UT_TYPE_EQ (U, BOOT_TIME)
+# else
+#  define UT_TYPE_BOOT_TIME(U) 0
+# endif
+
+# ifdef USER_PROCESS
+#  define UT_TYPE_USER_PROCESS(U) UT_TYPE_EQ (U, USER_PROCESS)
+# else
+#  define UT_TYPE_USER_PROCESS(U) 0
+# endif
+
+# define IS_USER_PROCESS(U)					\
+   (UT_USER (U)[0]						\
+    && (UT_TYPE_USER_PROCESS (U)				\
+        || (UT_TYPE_NOT_DEFINED && UT_TIME_MEMBER (U) != 0)))
 
 char *extract_trimmed_name (const STRUCT_UTMP *ut);
 int read_utmp (const char *filename, size_t *n_entries, STRUCT_UTMP **utmp_buf);
