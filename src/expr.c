@@ -62,7 +62,7 @@ struct valinfo
   TYPE type;			/* Which kind. */
   union
   {				/* The value itself. */
-    int i;
+    intmax_t i;
     char *s;
   } u;
 };
@@ -78,22 +78,10 @@ static char **args;
 /* The name this program was run with. */
 char *program_name;
 
-static VALUE *docolon PARAMS ((VALUE *sv, VALUE *pv));
 static VALUE *eval PARAMS ((void));
-static VALUE *int_value PARAMS ((int i));
-static VALUE *str_value PARAMS ((char *s));
-static int isstring PARAMS ((VALUE *v));
-static int nextarg PARAMS ((char *str));
 static int nomoreargs PARAMS ((void));
 static int null PARAMS ((VALUE *v));
-static int toarith PARAMS ((VALUE *v));
-static void freev PARAMS ((VALUE *v));
 static void printv PARAMS ((VALUE *v));
-static void tostring PARAMS ((VALUE *v));
-
-#ifdef EVAL_TRACE
-static void trace ();
-#endif
 
 void
 usage (int status)
@@ -197,7 +185,7 @@ main (int argc, char **argv)
 /* Return a VALUE for I.  */
 
 static VALUE *
-int_value (int i)
+int_value (intmax_t i)
 {
   VALUE *v;
 
@@ -230,22 +218,46 @@ freev (VALUE *v)
   OLD (v);
 }
 
+/* Store a printable representation of I somewhere into BUF, and
+   return a pointer to the stored representation.  */
+
+static char *
+inttostr (intmax_t i, char buf[INT_STRLEN_BOUND (intmax_t) + 1])
+{
+  uintmax_t ui = i;
+  char *p = buf + INT_STRLEN_BOUND (intmax_t);
+  *p = '\0';
+  if (i < 0)
+    ui = -ui;
+  do
+    *--p = '0' + ui % 10;
+  while ((ui /= 10) != 0);
+  if (i < 0)
+    *--p = '-';
+  return p;
+}
+
 /* Print VALUE V.  */
 
 static void
 printv (VALUE *v)
 {
+  char *p;
+  char buf[INT_STRLEN_BOUND (intmax_t) + 1];
+
   switch (v->type)
     {
     case integer:
-      printf ("%d\n", v->u.i);
+      p = inttostr (v->u.i, buf);
       break;
     case string:
-      printf ("%s\n", v->u.s);
+      p = v->u.s;
       break;
     default:
       abort ();
     }
+
+  puts (p);
 }
 
 /* Return nonzero if V is a null-string or zero-number.  */
@@ -277,14 +289,12 @@ isstring (VALUE *v)
 static void
 tostring (VALUE *v)
 {
-  char *temp;
+  char buf[INT_STRLEN_BOUND (intmax_t) + 1];
 
   switch (v->type)
     {
     case integer:
-      temp = xmalloc (4 * (sizeof (int) / sizeof (char)));
-      sprintf (temp, "%d", v->u.i);
-      v->u.s = temp;
+      v->u.s = xstrdup (inttostr (v->u.i, buf));
       v->type = string;
       break;
     case string:
@@ -299,7 +309,7 @@ tostring (VALUE *v)
 static int
 toarith (VALUE *v)
 {
-  int i;
+  intmax_t i;
   int neg;
   char *cp;
 
@@ -378,8 +388,8 @@ int name (l, r) VALUE *l; VALUE *r;		\
 /* The arithmetic operator handling functions.  */
 
 #define arithf(name, op)			\
-static						\
-int name (l, r) VALUE *l; VALUE *r;		\
+static intmax_t					\
+name (l, r) VALUE *l; VALUE *r;			\
 {						\
   if (!toarith (l) || !toarith (r))		\
     error (2, 0, _("non-numeric argument"));	\
@@ -387,12 +397,13 @@ int name (l, r) VALUE *l; VALUE *r;		\
 }
 
 #define arithdivf(name, op)			\
-int name (l, r) VALUE *l; VALUE *r;		\
+static intmax_t					\
+name (l, r) VALUE *l; VALUE *r;			\
 {						\
   if (!toarith (l) || !toarith (r))		\
     error (2, 0, _("non-numeric argument"));	\
   if (r->u.i == 0)				\
-    error (2, 0, _("division by zero"));		\
+    error (2, 0, _("division by zero"));	\
   return l->u.i op r->u.i;			\
 }
 
@@ -432,7 +443,8 @@ docolon (VALUE *sv, VALUE *pv)
   const char *errmsg;
   struct re_pattern_buffer re_buffer;
   struct re_registers re_regs;
-  int len;
+  size_t len;
+  int matchlen;
 
   tostring (sv);
   tostring (pv);
@@ -449,6 +461,8 @@ of the basic regular expression is not portable; it is being ignored"),
   memset (&re_buffer, 0, sizeof (re_buffer));
   memset (&re_regs, 0, sizeof (re_regs));
   re_buffer.allocated = 2 * len;
+  if (re_buffer.allocated < len)
+    xalloc_die ();
   re_buffer.buffer = (unsigned char *) xmalloc (re_buffer.allocated);
   re_buffer.translate = 0;
   re_syntax_options = RE_SYNTAX_POSIX_BASIC;
@@ -456,8 +470,8 @@ of the basic regular expression is not portable; it is being ignored"),
   if (errmsg)
     error (2, 0, "%s", errmsg);
 
-  len = re_match (&re_buffer, sv->u.s, strlen (sv->u.s), 0, &re_regs);
-  if (len >= 0)
+  matchlen = re_match (&re_buffer, sv->u.s, strlen (sv->u.s), 0, &re_regs);
+  if (0 <= matchlen)
     {
       /* Were \(...\) used? */
       if (re_buffer.re_nsub > 0)/* was (re_regs.start[1] >= 0) */
@@ -466,7 +480,7 @@ of the basic regular expression is not portable; it is being ignored"),
 	  v = str_value (sv->u.s + re_regs.start[1]);
 	}
       else
-	v = int_value (len);
+	v = int_value (matchlen);
     }
   else
     {
@@ -557,7 +571,7 @@ eval6 (void)
       tostring (l);
       tostring (r);
       v = int_value (strcspn (l->u.s, r->u.s) + 1);
-      if (v->u.i == (int) strlen (l->u.s) + 1)
+      if (v->u.i == strlen (l->u.s) + 1)
 	v->u.i = 0;
       freev (l);
       freev (r);
@@ -571,7 +585,7 @@ eval6 (void)
       i2 = eval6 ();
       tostring (l);
       if (!toarith (i1) || !toarith (i2)
-	  || i1->u.i > (int) strlen (l->u.s)
+	  || strlen (l->u.s) < i1->u.i
 	  || i1->u.i <= 0 || i2->u.i <= 0)
 	v = str_value ("");
       else
@@ -628,8 +642,8 @@ eval4 (void)
 {
   VALUE *l;
   VALUE *r;
-  int (*fxn) ();
-  int val;
+  intmax_t (*fxn) ();
+  intmax_t val;
 
 #ifdef EVAL_TRACE
   trace ("eval4");
@@ -661,8 +675,8 @@ eval3 (void)
 {
   VALUE *l;
   VALUE *r;
-  int (*fxn) ();
-  int val;
+  intmax_t (*fxn) ();
+  intmax_t val;
 
 #ifdef EVAL_TRACE
   trace ("eval3");
