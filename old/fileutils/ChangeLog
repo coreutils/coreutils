@@ -1,3 +1,24 @@
+1999-05-05  Jim Meyering  <meyering@ascend.com>
+
+	* src/ls.c (USE_ACL): Define this only #if
+	(HAVE_SYS_ACL_H && HAVE_ACL && defined GETACLCNT).
+	Use `USE_ACL' in place of `HAVE_ACL' everywhere else.  From Kaveh Ghazi.
+
+1999-05-04  Jim Meyering  <meyering@ascend.com>
+
+	* lib/makepath.c: Include makepath.h libintl.h, not after it.
+	Otherwise, we'd get the wrong definition of PARAMS from libintl.h.
+	(The method of defining PARAMS in libintl.h doesn't check PROTOTYPES,
+	which is necessary on Irix4 since cc doesn't define __STDC__.)
+	From Kaveh Ghazi.
+
+1999-04-30  Jim Meyering  <meyering@ascend.com>
+
+	* Makefile.maint: Define several tag-related make variables.
+	(cvs-dist): Use the make variables instead of shell ones.
+	(announcement): Automatically generate diffs for all ChangeLog files,
+	not just the top level one.
+
 1999-04-30  Paul Eggert  <eggert@twinsun.com>
 
 	* lib/dup2.c: New file.
