@@ -2,6 +2,11 @@
 
 	* Version 4.0.33.
 
+	* src/du.c (count_entry): Don't omit the size of a directory entry
+	merely because we couldn't `chdir' into it.  That would give subtly
+	different results in some cases.  Reported by Mattias Wadenstein
+	via Michael Stone.
+
 	* src/ls.c: Revert change of 2000-11-11.  It inadvertently change
 	the output format of `ls -l --full-time'.
 
