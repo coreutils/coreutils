@@ -1,6 +1,8 @@
-2001-09-01  Jim Meyering  <meyering@lucent.com>
+2001-09-02  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.1.
+
+2001-09-01  Jim Meyering  <meyering@lucent.com>
 
 	* src/df.c (show_point): Use canonicalize_file_name, if possible.
 	[HAVE_RESOLVEPATH], [!HAVE_RESOLVEPATH]: Use malloc, not alloca,
@@ -89,7 +91,7 @@
 	* src/ls.c: Include gtod.h.
 	(main): `Call' GETTIMEOFDAY_INIT.
 	(print_long_format): Add a comment about gettimeofday.
-	Reported by Bernhard Baehr.
+	Report and diagnosis from Bernhard Baehr.
 
 	* src/shred.c: Include gtod.h.
 	(main): `Call' GETTIMEOFDAY_INIT, just in case the code ever changes
