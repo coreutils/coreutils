@@ -555,8 +555,9 @@ context that requires a file name.
 
 @cindex backup options
 
-Some @sc{gnu} programs (at least @command{cp}, @code{install}, @code{ln}, and
-@command{mv}) optionally make backups of files before writing new versions.
+Some @sc{gnu} programs (at least @command{cp}, @command{install},
+@command{ln}, and @command{mv}) optionally make backups of files
+before writing new versions.
 These options control the details of these backups.  The options are also
 briefly mentioned in the descriptions of the particular programs.
 
@@ -635,8 +636,8 @@ It has been replaced with @w{@kbd{--backup}}.
 
 @cindex block size
 
-Some @sc{gnu} programs (at least @command{df}, @code{du}, and
-@code{ls}) display sizes in ``blocks''.  You can adjust the block size
+Some @sc{gnu} programs (at least @command{df}, @command{du}, and
+@command{ls}) display sizes in ``blocks''.  You can adjust the block size
 and method of display to make sizes easier to read.  The block size
 used for display is independent of any filesystem block size.
 Fractional block counts are rounded up to the nearest integer.
@@ -797,8 +798,9 @@ equivalent to @option{--block-size=si}.
 
 @cindex target directory
 
-Some @sc{gnu} programs (at least @command{cp}, @code{install}, @code{ln}, and
-@command{mv}) allow you to specify the target directory via this option:
+Some @sc{gnu} programs (at least @command{cp}, @command{install},
+@command{ln}, and @command{mv}) allow you to specify the target directory
+via this option:
 
 @table @samp
 
@@ -811,7 +813,7 @@ Specify the destination @var{directory}.
 The interface for most programs is that after processing options and a
 finite (possibly zero) number of fixed-position arguments, the remaining
 argument list is either expected to be empty, or is a list of items
-(usually files) that will all be handled identically.  The @code{xargs}
+(usually files) that will all be handled identically.  The @command{xargs}
 program is designed to work well with this convention.
 
 The commands in the @command{mv}-family are unusual in that they take
@@ -825,16 +827,16 @@ shell command, but that requires more human labor and brain power than
 it should.)
 
 The @w{@kbd{--target-directory}} option allows the @command{cp},
-@command{install}, @code{ln}, and @code{mv} programs to be used conveniently
-with @code{xargs}.  For example, you can move the files from the
-current directory to a sibling directory, @code{d} like this:
+@command{install}, @command{ln}, and @command{mv} programs to be used
+conveniently with @command{xargs}.  For example, you can move the files
+from the current directory to a sibling directory, @code{d} like this:
 (However, this doesn't move files whose names begin with @samp{.}.)
 
 @smallexample
 ls |xargs mv --target-directory=../d
 @end smallexample
 
-If you use the @sc{gnu} @code{find} program, you can move @emph{all}
+If you use the @sc{gnu} @command{find} program, you can move @emph{all}
 files with this command:
 @example
 find . -mindepth 1 -maxdepth 1 \
@@ -844,7 +846,7 @@ find . -mindepth 1 -maxdepth 1 \
 But that will fail if there are no files in the current directory
 or if any file has a name containing a newline character.
 The following example removes those limitations and requires both
-@sc{gnu} @code{find} and @sc{gnu} @code{xargs}:
+@sc{gnu} @command{find} and @sc{gnu} @command{xargs}:
 @example
 find . -mindepth 1 -maxdepth 1 -print0 \
   | xargs --null --no-run-if-empty \
@@ -858,7 +860,7 @@ find . -mindepth 1 -maxdepth 1 -print0 \
 
 @cindex trailing slashes
 
-Some @sc{gnu} programs (at least @command{cp} and @code{mv}) allow you to
+Some @sc{gnu} programs (at least @command{cp} and @command{mv}) allow you to
 remove any trailing slashes from each @var{source} argument before
 operating on it.  The @w{@kbd{--strip-trailing-slashes}} option enables
 this behavior.
@@ -2213,7 +2215,7 @@ When following by name or by descriptor, you may specify the process ID,
 after that process terminates, tail will also terminate.  This will
 work properly only if the writer and the tailing process are running on
 the same machine.  For example, to save the output of a build in a file
-and to watch the file grow, if you invoke @code{make} and @command{tail}
+and to watch the file grow, if you invoke @command{make} and @command{tail}
 like this then the tail process will stop when your build completes.
 Without this option, you would have had to kill the @code{tail -f}
 process yourself.
@@ -2491,7 +2493,7 @@ contents of files.
 
 
 @node wc invocation
-@section @code{wc}: Print byte, word, and line counts
+@section @command{wc}: Print byte, word, and line counts
 
 @pindex wc
 @cindex byte count
@@ -2499,7 +2501,7 @@ contents of files.
 @cindex word count
 @cindex line count
 
-@code{wc} counts the number of bytes, characters, whitespace-separated
+@command{wc} counts the number of bytes, characters, whitespace-separated
 words, and newlines in each given @var{file}, or standard input if none
 are given or for a @var{file} of @samp{-}.  Synopsis:
 
@@ -2509,18 +2511,18 @@ wc [@var{option}]@dots{} [@var{file}]@dots{}
 
 @cindex total counts
 @vindex POSIXLY_CORRECT
-@code{wc} prints one line of counts for each file, and if the file was
+@command{wc} prints one line of counts for each file, and if the file was
 given as an argument, it prints the file name following the counts.  If
-more than one @var{file} is given, @code{wc} prints a final line
+more than one @var{file} is given, @command{wc} prints a final line
 containing the cumulative counts, with the file name @file{total}.  The
 counts are printed in this order: newlines, words, characters, bytes.
 By default, each count is output right-justified in a 7-byte field with
 one space between fields so that the numbers and file names line up nicely
 in columns.  However, @acronym{POSIX} requires that there be exactly one space
-separating columns.  You can make @code{wc} use the @acronym{POSIX}-mandated
+separating columns.  You can make @command{wc} use the @acronym{POSIX}-mandated
 output format by setting the @env{POSIXLY_CORRECT} environment variable.
 
-By default, @code{wc} prints three counts: the newline, words, and byte
+By default, @command{wc} prints three counts: the newline, words, and byte
 counts.  Options can specify that only certain counts be printed.
 Options do not undo others previously given, so
 
@@ -2531,7 +2533,7 @@ wc --bytes --words
 @noindent
 prints both the byte counts and the word counts.
 
-With the @code{--max-line-length} option, @code{wc} prints the length
+With the @code{--max-line-length} option, @command{wc} prints the length
 of the longest line per file, and if there is more than one file it
 prints the maximum (not the sum) of those lengths.
 
@@ -2617,7 +2619,7 @@ Compute checksums using an algorithm compatible with System V
 
 @end table
 
-@command{sum} is provided for compatibility; the @code{cksum} program (see
+@command{sum} is provided for compatibility; the @command{cksum} program (see
 next section) is preferable in new applications.
 
 
@@ -3512,8 +3514,8 @@ options}.
 @section @command{tsort}: Background
 
 @command{tsort} exists because very early versions of the Unix linker processed
-an archive file exactly once, and in order.  As @code{ld} read each object in
-the archive, it decided whether it was needed in the program based on
+an archive file exactly once, and in order.  As @command{ld} read each object
+in the archive, it decided whether it was needed in the program based on
 whether it defined any symbols which were undefined at that point in
 the link.
 
@@ -3526,16 +3528,16 @@ reference to @code{read}.
 
 The way to address this problem was to first generate a set of
 dependencies of one object file on another.  This was done by a shell
-script called @code{lorder}.  The GNU tools don't provide a version of
+script called @command{lorder}.  The GNU tools don't provide a version of
 lorder, as far as I know, but you can still find it in BSD
 distributions.
 
-Then you ran @command{tsort} over the @code{lorder} output, and you used the
+Then you ran @command{tsort} over the @command{lorder} output, and you used the
 resulting sort to define the order in which you added objects to the archive.
 
 This whole procedure has been obsolete since about 1980, because
 Unix archives now contain a symbol table (traditionally built by
-@code{ranlib}, now generally built by @code{ar} itself), and the Unix
+@command{ranlib}, now generally built by @command{ar} itself), and the Unix
 linker uses the symbol table to effectively make multiple passes over
 an archive file.
 
@@ -3874,12 +3876,12 @@ the corresponding characters by @command{ptx} itself.
 @itemx --macro-name=@var{string}
 
 Select another @var{string} to be used instead of @samp{xx}, while
-generating output suitable for @code{nroff}, @code{troff} or @TeX{}.
+generating output suitable for @command{nroff}, @command{troff} or @TeX{}.
 
 @item -O
 @itemx --format=roff
 
-Choose an output format suitable for @code{nroff} or @code{troff}
+Choose an output format suitable for @command{nroff} or @command{troff}
 processing.  Each output line will look like:
 
 @smallexample
@@ -3894,7 +3896,7 @@ extensions are disabled.  Option @option{-M} can be used to change
 In this output format, each non-graphical character, like newline and
 tab, is merely changed to exactly one space, with no special attempt to
 compress consecutive spaces.  Each quote character: @kbd{"} is doubled
-so it will be correctly processed by @code{nroff} or @code{troff}.
+so it will be correctly processed by @command{nroff} or @command{troff}.
 
 @item -T
 @itemx --format=tex
@@ -3955,7 +3957,7 @@ practice which @sc{gnu} avoids as far as possible.  So, for using @command{ptx}
 portably between @sc{gnu} and System V, you should always use it with a
 single input file, and always expect the result on standard output.  You
 might also want to automatically configure in a @option{-G} option to
-@command{ptx} calls in products using @code{ptx}, if the configurator finds
+@command{ptx} calls in products using @command{ptx}, if the configurator finds
 that the installed @command{ptx} accepts @option{-G}.
 
 @item
@@ -3966,9 +3968,9 @@ this enumeration.  Moreover, some options have a slightly different
 meaning when @sc{gnu} extensions are enabled, as explained below.
 
 @item
-By default, concordance output is not formatted for @code{troff} or
-@code{nroff}.  It is rather formatted for a dumb terminal.  @code{troff}
-or @code{nroff} output may still be selected through option @option{-O}.
+By default, concordance output is not formatted for @command{troff} or
+@command{nroff}.  It is rather formatted for a dumb terminal.  @command{troff}
+or @command{nroff} output may still be selected through option @option{-O}.
 
 @item
 Unless @option{-R} option is used, the maximum reference width is
@@ -4536,10 +4538,10 @@ BSD @command{tr} pads @var{set2} to the length of @var{set1} by repeating
 the last character of @var{set2} as many times as necessary.  System V
 @command{tr} truncates @var{set1} to the length of @var{set2}.
 
-By default, @sc{gnu} @command{tr} handles this case like BSD @code{tr}.  When
-the @option{--truncate-set1} (@option{-t}) option is given, @sc{gnu} @command{tr}
-handles this case like the System V @command{tr} instead.  This option is
-ignored for operations other than translation.
+By default, @sc{gnu} @command{tr} handles this case like BSD @command{tr}.
+When the @option{--truncate-set1} (@option{-t}) option is given,
+@sc{gnu} @command{tr} handles this case like the System V @command{tr}
+instead.  This option is ignored for operations other than translation.
 
 Acting like System V @command{tr} in this case breaks the relatively common
 BSD idiom:
@@ -4803,7 +4805,7 @@ ones, to tabs.
 @node Directory listing
 @chapter Directory listing
 
-This chapter describes the @command{ls} command and its variants @code{dir}
+This chapter describes the @command{ls} command and its variants @command{dir}
 and @command{vdir}, which list information about files.
 
 @menu
@@ -5366,7 +5368,7 @@ output is not a terminal.
 @opindex vertical @r{sorted files in columns}
 List files in columns, sorted vertically.  This is the default for
 @command{ls} if standard output is a terminal.  It is always the default
-for the @command{dir} and @code{d} programs.
+for the @command{dir} and @command{d} programs.
 @sc{gnu} @command{ls} uses variable width columns to display as many files as
 possible in the fewest lines.
 
@@ -5389,8 +5391,8 @@ may be omitted, or one of:
 @end itemize
 Specifying @option{--color} and no @var{when} is equivalent to
 @option{--color=always}.
-Piping a colorized listing through a pager like @code{more} or
-@code{less} usually produces unreadable results.  However, using
+Piping a colorized listing through a pager like @command{more} or
+@command{less} usually produces unreadable results.  However, using
 @code{more -f} does seem to work.
 
 @item -F
@@ -5690,7 +5692,7 @@ This is the default unless the output is a terminal and the program is
 @pindex dir
 @cindex directory listing, brief
 
-@command{dir} (also installed as @code{d}) is equivalent to @code{ls -C
+@command{dir} (also installed as @command{d}) is equivalent to @code{ls -C
 -b}; that is, by default files are listed in columns, sorted vertically,
 and special characters are represented by backslash escape sequences.
 
@@ -5703,19 +5705,19 @@ and special characters are represented by backslash escape sequences.
 @pindex vdir
 @cindex directory listing, verbose
 
-@command{vdir} (also installed as @code{v}) is equivalent to @code{ls -l
+@command{vdir} (also installed as @command{v}) is equivalent to @code{ls -l
 -b}; that is, by default files are listed in long format and special
 characters are represented by backslash escape sequences.
 
 @node dircolors invocation
-@section @command{dircolors}: Color setup for @code{ls}
+@section @command{dircolors}: Color setup for @command{ls}
 
 @pindex dircolors
 @cindex color setup
 @cindex setup for color
 
 @command{dircolors} outputs a sequence of shell commands to set up the
-terminal for color output from @command{ls} (and @code{dir}, etc.).
+terminal for color output from @command{ls} (and @command{dir}, etc.).
 Typical usage:
 
 @example
@@ -5744,7 +5746,7 @@ The program accepts the following options.  Also see @ref{Common options}.
 @opindex --sh
 @opindex --bourne-shell
 @cindex Bourne shell syntax for color setup
-@cindex @code{sh} syntax for color setup
+@cindex @command{sh} syntax for color setup
 Output Bourne shell commands.  This is the default if the @env{SHELL}
 environment variable is set and does not end with @samp{csh} or
 @samp{tcsh}.
@@ -5756,9 +5758,9 @@ environment variable is set and does not end with @samp{csh} or
 @opindex --csh
 @opindex --c-shell
 @cindex C shell syntax for color setup
-@cindex @code{csh} syntax for color setup
+@cindex @command{csh} syntax for color setup
 Output C shell commands.  This is the default if @code{SHELL} ends with
-@code{csh} or @code{tcsh}.
+@command{csh} or @command{tcsh}.
 
 @item -p
 @itemx --print-database
@@ -6071,7 +6073,7 @@ earlier), but the output file is on another type of filesystem.
 
 @item never
 Never make the output file sparse.
-This is useful in creating a file for use with the @code{mkswap} command,
+This is useful in creating a file for use with the @command{mkswap} command,
 since such a file must not have any holes.
 @end table
 
@@ -6306,7 +6308,7 @@ to the destination @var{directory}.  In the last, each @var{directory}
 (and any missing parent directories) is created.
 
 @cindex Makefiles, installing programs in
-@command{install} is similar to @code{cp}, but allows you to control the
+@command{install} is similar to @command{cp}, but allows you to control the
 attributes of destination files.  It is typically used in Makefiles to
 copy programs into their destination directories.  It refuses to copy
 files onto themselves.
@@ -7496,7 +7498,7 @@ without an option like this, @code{root} might run
 find / -owner OLDUSER -print0 | xargs -0 chown NEWUSER
 @end smallexample
 
-But that is dangerous because the interval between when the @code{find}
+But that is dangerous because the interval between when the @command{find}
 tests the existing file's owner and when the @command{chown} is actually run
 may be quite large.
 One way to narrow the gap would be to invoke chown for each file
@@ -7832,7 +7834,7 @@ the argument is interpreted as a date in the current year.
 No disk can hold an infinite amount of data.  These commands report on
 how much disk storage is in use or available.  (This has nothing much to
 do with how much @emph{main memory}, i.e., RAM, a program is using when
-it runs; for that, you want @code{ps} or @code{pstat} or @code{swap}
+it runs; for that, you want @command{ps} or @command{pstat} or @command{swap}
 or some such command.)
 
 @menu
@@ -9161,7 +9163,7 @@ This section describes commands that manipulate file names.
 
 
 @node basename invocation
-@section @code{basename}: Strip directory and suffix from a file name
+@section @command{basename}: Strip directory and suffix from a file name
 
 @pindex basename
 @cindex strip directory and suffix from file names
@@ -9170,7 +9172,7 @@ This section describes commands that manipulate file names.
 @cindex file names, stripping directory and suffix
 @cindex leading directory components, stripping
 
-@code{basename} removes any leading directory components from
+@command{basename} removes any leading directory components from
 @var{name}.  Synopsis:
 
 @example
@@ -9178,7 +9180,7 @@ basename @var{name} [@var{suffix}]
 @end example
 
 If @var{suffix} is specified and is identical to the end of @var{name},
-it is removed from @var{name} as well.  @code{basename} prints the
+it is removed from @var{name} as well.  @command{basename} prints the
 result on standard output.
 
 The only options are @option{--help} and @option{--version}.  @xref{Common
@@ -10979,7 +10981,7 @@ directory structure, i.e., @file{/}.  @command{chroot} changes the root to
 the directory @var{newroot} (which must exist) and then runs
 @var{command} with optional @var{args}.  If @var{command} is not
 specified, the default is the value of the @env{SHELL} environment
-variable or @code{/bin/sh} if not set, invoked with the @option{-i} option.
+variable or @command{/bin/sh} if not set, invoked with the @option{-i} option.
 
 The only options are @option{--help} and @option{--version}.  @xref{Common
 options}.
@@ -11005,7 +11007,7 @@ total 1023
 -rwxr-xr-x    1 0        0         1041745 Aug 16 11:17 ls
 @end example
 
-If you want to use a dynamically linked executable, say @code{bash},
+If you want to use a dynamically linked executable, say @command{bash},
 then first run @samp{ldd bash} to see what shared objects it needs.
 Then, in addition to copying the actual binary, also copy the listed
 files to the required positions under your intended new root directory.
@@ -11233,7 +11235,7 @@ a @code{-c} option instead of starting an interactive shell.
 @cindex file name pattern expansion, disabled
 @cindex globbing, disabled
 Pass the @code{-f} option to the shell.  This probably only makes sense
-if the shell run is @code{csh} or @code{tcsh}, for which the @code{-f}
+if the shell run is @command{csh} or @command{tcsh}, for which the @code{-f}
 option prevents reading the startup file (@file{.cshrc}).  With
 Bourne-like shells, the @code{-f} option disables file name pattern
 expansion (globbing), which is not likely to be useful.
@@ -11477,7 +11479,7 @@ also support at least eight real-time signals called @samp{RTMIN},
 @cindex delaying commands
 @cindex commands for delaying
 
-@c Perhaps @code{wait} or other commands should be described here also?
+@c Perhaps @command{wait} or other commands should be described here also?
 
 @menu
 * sleep invocation::            Delay for a specified time.
