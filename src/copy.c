@@ -491,7 +491,7 @@ copy_internal (const char *src_path, const char *dst_path,
 		  return 1;
 		}
 
-	      if (x->update && src_sb.st_mtime <= dst_sb.st_mtime)
+	      if (x->update && MTIME_CMP (src_sb, dst_sb) <= 0)
 		return 0;
 	    }
 
@@ -817,6 +817,10 @@ copy_internal (const char *src_path, const char *dst_path,
   if (x->preserve_timestamps)
     {
       struct utimbuf utb;
+
+      /* There's currently no interface to set file timestamps with
+	 better than 1-second resolution, so discard any fractional
+	 part of the source timestamp.  */
 
       utb.actime = src_sb.st_atime;
       utb.modtime = src_sb.st_mtime;
