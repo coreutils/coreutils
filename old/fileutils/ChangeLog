@@ -1,5 +1,7 @@
 2002-06-21  Jim Meyering  <meyering@lucent.com>
 
+	* Version 4.1.9.
+
 	* src/stat.c: Include sys/statvfs.h.
 	[!HAVE_SYS_STATVFS_H && !HAVE_SYS_VFS_H]: Include sys/param.h
 	and sys/mount.h, to get decl of struct statfs on NetBSD 1.5.2.
@@ -14,8 +16,6 @@
 	some are available in both, but with different types.
 	(do_statfs) [DEFAULT_FORMAT_TERSE]: Factor out.
 	[DEFAULT_FORMAT_VERBOSE]: Likewise.
-
-	* Version 4.1.9.
 
 	* src/copy.c: Change all `preserving ...' diagnostics to
 	`failed to preserve ...' to make the failure clearer.
