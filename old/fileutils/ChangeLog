@@ -1,3 +1,8 @@
+1999-03-27  Jim Meyering  <meyering@ascend.com>
+
+	* src/install.c (strip): Use pid_t, not int.
+	From John Bley.
+
 1999-03-26  Jim Meyering  <meyering@ascend.com>
 
 	* src/dd.c (PROGRAM_NAME, AUTHORS): Define
