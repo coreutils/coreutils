@@ -2,7 +2,7 @@
 
 /* Modified to run with the GNU shell by bfox. */
 
-/* Copyright (C) 1987-2003 Free Software Foundation, Inc.
+/* Copyright (C) 1987-2004 Free Software Foundation, Inc.
 
    This file is part of GNU Bash, the Bourne Again SHell.
 
@@ -42,7 +42,6 @@
 
 #include "system.h"
 #include "error.h"
-#include "exitfail.h"
 #include "euidaccess.h"
 
 #ifndef _POSIX_VERSION
@@ -968,7 +967,7 @@ posixtest (int nargs)
 void
 usage (int status)
 {
-  if (status != 0)
+  if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
@@ -1085,7 +1084,7 @@ main (int margc, char **margv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  exit_failure = TEST_FAILURE;
+  initialize_exit_failure (TEST_FAILURE);
   atexit (close_stdout);
 #endif /* TEST_STANDALONE */
 
