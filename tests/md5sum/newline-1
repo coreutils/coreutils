@@ -37,10 +37,11 @@ use strict;
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
 
 my $degenerate = "d41d8cd98f00b204e9800998ecf8427e";
+my $t = '--text';
 
 my @Tests =
     (
-     ['newline', {IN=> {"a\nb"=> ''}}, {OUT=>"\\$degenerate  a\\nb\n"}],
+     ['newline', $t, {IN=> {"a\nb"=> ''}}, {OUT=>"\\$degenerate  a\\nb\n"}],
     );
 
 my $save_temps = $ENV{DEBUG};

@@ -38,6 +38,13 @@ my @Tests =
 				{OUT=>"\\$degenerate  .\\\\foo\n"}],
     );
 
+# Insert the `--text' argument for each test.
+my $t;
+foreach $t (@Tests)
+  {
+    splice @$t, 1, 0, '--text';
+  }
+
 my $save_temps = $ENV{DEBUG};
 my $verbose = $ENV{VERBOSE};
 
