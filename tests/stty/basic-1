@@ -24,7 +24,8 @@ REV_cbreak=1 REV_decctlq=1 REV_tabs=1 REV_lcase=1 REV_LCASE=1
 
 saved_state=.saved-state
 $STTY --save > $saved_state || exit 1
-trap "status=$?; $STTY `cat $saved_state`; exit $status" 0 1 2 3 15
+trap "status=$?; $STTY `cat $saved_state`; rm -f $saved_state; exit $status" \
+  0 1 2 3 15
 $STTY `cat $saved_state` || exit 1
 
 # Build a list of all boolean options stty accepts on this system.
