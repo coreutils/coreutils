@@ -1,3 +1,9 @@
+2003-12-02  Jim Meyering  <jim@meyering.net>
+
+	* md5.h (rol) [__GNUC__ && __i386__]: Don't use `asm' code.  These
+	days, gcc-3.x does better all by itself.  Patch from Dean Gaudet:
+	http://mail.gnu.org/archive/html/bug-coreutils/2003-11/msg00144.html
+
 2003-11-29  Jim Meyering  <jim@meyering.net>
 
 	* c-strtod.c (c_strtod): Save and restore original LC_NUMERIC setting,
