@@ -1,6 +1,6 @@
 Changes in release 4.1:
 [4.0r]
-* install -d may now be used to set special bits
+* install --directory (-d) may now be used to set special bits
     e.g., `install -m a=rwx,o+t -d DIR' now honors the `o+t' part
 * cp, mv, ln, install: document that while the --backup option takes an
   optional argument, the -b option accepts none
