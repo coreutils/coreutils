@@ -1,3 +1,8 @@
+2004-03-30  Paul Eggert  <eggert@twinsun.com>
+
+	* Makefile.am (libfetish_a_SOURCES): Add allocsa.c, allocsa.h,
+	and strdup.h.
+
 2004-03-30  Jim Meyering  <jim@meyering.net>
 
 	* getloadavg.c: Merge changes from emacs (via gnulib).
