@@ -23,18 +23,6 @@
 #include <grp.h>
 #include <getopt.h>
 
-#if HAVE_LIMITS_H
-# include <limits.h>
-#endif
-
-#ifndef UINT_MAX
-# define UINT_MAX ((unsigned int) ~(unsigned int) 0)
-#endif
-
-#ifndef INT_MAX
-# define INT_MAX ((int) (UINT_MAX >> 1))
-#endif
-
 #include "system.h"
 #include "xstrtoul.h"
 #include "error.h"
@@ -255,7 +243,7 @@ change_dir_group (const char *dir, int group, const struct stat *statp)
   int errors = 0;
 
   errno = 0;
-  name_space = savedir (dir, statp->st_size);
+  name_space = savedir (dir, (unsigned int) statp->st_size);
   if (name_space == NULL)
     {
       if (errno)
