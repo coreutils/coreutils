@@ -1,5 +1,11 @@
+1999-01-24  Jim Meyering  <meyering@ascend.com>
 
 	* Version 1.22h.
+
+	* src/tac.c (DONT_UNLINK_WHILE_OPEN) [__MSDOS__ || _WIN32]: Define.
+
+	* lib/quotearg.c (quotearg_n_options): Revert type of parameter `n'
+	(and hence that of the local `n1', too) to `int' at Paul's request.
 
 1999-01-18  Akim Demaille  <demaille@inf.enst.fr>
 
