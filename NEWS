@@ -1,9 +1,23 @@
 GNU coreutils NEWS                                    -*- outline -*-
 * Major changes in release 5.1.1 (2003-12-24):
 
+** Configuration option
+
+  You can select the default level of POSIX conformance at configure-time,
+  e.g., by ./configure DEFAULT_POSIX2_VERSION=199209
+
 ** Bug fixes
 
   fold -s works once again on systems with differing sizes for int and size_t
+
+** New features
+
+  join: The obsolete options "-j1 FIELD", "-j2 FIELD", and
+  "-o LIST1 LIST2..." are no longer supported on POSIX 1003.1-2001 systems.
+  Portable scripts should use "-1 FIELD", "-2 FIELD", and
+  "-o LIST1,LIST2..." respectively.  If join was compiled on a
+  POSIX 1003.1-2001 system, you may enable the old behavior
+  by setting _POSIX2_VERSION=199209 in your environment.
 
 
 * Major changes in release 5.1.0 (2003-12-21):
