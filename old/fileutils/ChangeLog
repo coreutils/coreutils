@@ -1,3 +1,10 @@
+Mon Apr  5 11:31:17 CDT 1993
+
+	* Version 3.4.5.
+
+	* chgrp.c, chmod.c, chown.c, install.c, ls.c, mkfifo.c, mknod.c,
+	touch.c: Add `case 0: break;' for long-only options help and version.
+
 Sun Apr  4 09:38:00 1993  Jim Meyering  (meyering@comco.com)
 
 	* Version 3.4.4.
