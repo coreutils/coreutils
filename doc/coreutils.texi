@@ -3403,11 +3403,76 @@ e
 f
 @end example
 
-@code{tsort} will detect cycles in the input and writes the first cycle
+Consider a more realistic example.
+You have a large set of functions all in one file, and they may all be
+declared static except one.  Currently that one (say @code{main}) is the
+first function defined in the file, and the ones it calls directly follow
+it, followed by those they call, etc.  Let's say that you are determined
+to take advantage of prototypes, so you have to choose between declaring
+all of those functions (which means duplicating a lot of information from
+the definitions) and rearranging the functions so that as many as possible
+are defined before they are used.  One way to automate the latter process
+is to get a list for each function of the functions it calls directly.
+Many programs can generate such lists.  They describe a call graph.
+Consider the following list, in which a given line indicates that the
+function on the left calls the one on the right directly.
+
+@example
+main parse_options
+main tail_file
+main tail_forever
+tail_file pretty_name
+tail_file write_header
+tail_file tail
+tail_forever recheck
+tail_forever pretty_name
+tail_forever write_header
+tail_forever dump_remainder
+tail tail_lines
+tail tail_bytes
+tail_lines start_lines
+tail_lines dump_remainder
+tail_lines file_lines
+tail_lines pipe_lines
+tail_bytes xlseek
+tail_bytes start_bytes
+tail_bytes dump_remainder
+tail_bytes pipe_bytes
+file_lines dump_remainder
+recheck pretty_name
+@end example
+
+then you can use @code{tsort} to produce an ordering of those
+functions that satisfies your requirement.
+
+@example
+example$ tsort call-graph | tac
+dump_remainder
+start_lines
+file_lines
+pipe_lines
+xlseek
+start_bytes
+pipe_bytes
+tail_lines
+tail_bytes
+pretty_name
+write_header
+tail
+recheck
+parse_options
+tail_file
+tail_forever
+main
+@end example
+
+@code{tsort} detects any cycles in the input and writes the first cycle
 encountered to standard error.
 
 Note that for a given partial ordering, generally there is no unique
-total ordering.
+total ordering.  In the context of the call graph above, the function
+@code{parse_options} may be placed anywhere in the list as long as it
+precedes @code{main}.
 
 The only options are @option{--help} and @option{--version}.  @xref{Common
 options}.
