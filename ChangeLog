@@ -2,12 +2,23 @@
 
 	* Version 5.0.92.
 
+	FIXME: update coreutils.texi
+
+	New options: --preserve-root and --no-preserve-root.
+	* src/chmod.c (change_file_mode): Honor new option.
+	(change_file_mode): Strip trailing slashes on directory
+	argument passed to change_dir_mode.
+	(get_root_dev_ino): New function.
+	(main): Initialize global, root_dev_ino.
+
 	* src/copy.c (copy_internal): Don't #ifdef-out simple uses of
 	S_ISLNK or S_ISSOCK.  The S_IS* macros are guaranteed to be defined
 	via system.h.
 	* src/chmod.c (change_file_mode): Likewise.
 
 2003-10-08  Jim Meyering  <jim@meyering.net>
+
+	* Version 5.0.92.
 
 	* src/csplit.c (main): Remove obsolete FIXME.
 
