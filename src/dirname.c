@@ -66,7 +66,7 @@ output `.' (meaning the current directory).\n\
 int
 main (int argc, char **argv)
 {
-  const char *result;
+  char *result;
   size_t len;
 
   program_name = argv[0];
