@@ -1,3 +1,18 @@
+2004-01-19  Paul Eggert  <eggert@twinsun.com>
+
+	* coreutils.texi (Exit status): Document that ordinary failure
+	might not exit with status 1 on unusual platforms.
+	Mention chroot, env, nice, and su as having unusual exit
+	status patterns.  Don't bother to mention true and false
+	since their exit status patterns are actually normal.
+	(sort invocation, su invocation): Mention its unusual exit
+	status pattern.
+	(chroot invocation): Simplify description of exit status 1.
+	Remove duplicate description of status 127.
+	(env invocation): Use consistent tenses; simplifiy description
+	of status 1.
+	(nice invocation): Likewise.
+
 2003-12-15  Paul Eggert  <eggert@twinsun.com>
 
 	* coreutils.texi (touch invocation): touch -r and -d can now
