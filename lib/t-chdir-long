@@ -2,6 +2,7 @@
 # Exercise chdir-long's sample main program.
 # FIXME: add traps and choose top level names so that
 # temporary directories are easier to remove.
+# FIXME: don't clobber a.out
 
 gcc -DTEST_CHDIR=1 -DHAVE_CONFIG_H -I.. -g -O -W -Wall chdir-long.c libfetish.a
 
@@ -56,3 +57,5 @@ for t in . /t /tmp /var/tmp; do
       && rm -f diff in out
   done
 done
+
+rm -f a.out
