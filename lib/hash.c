@@ -36,14 +36,14 @@ typedef enum {false = 0, true = 1} bool;
 #include <assert.h>
 
 #ifndef HAVE_DECL_FREE
-'this configure-time declaration test was not run'
+"this configure-time declaration test was not run"
 #endif
 #if !HAVE_DECL_FREE
 void free ();
 #endif
 
 #ifndef HAVE_DECL_MALLOC
-'this configure-time declaration test was not run'
+"this configure-time declaration test was not run"
 #endif
 #if !HAVE_DECL_MALLOC
 char *malloc ();

@@ -44,7 +44,7 @@
 #endif
 
 #ifndef HAVE_DECL_GETENV
-'this configure-time declaration test was not run'
+"this configure-time declaration test was not run"
 #endif
 #if !HAVE_DECL_GETENV
 char *getenv ();

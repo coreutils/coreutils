@@ -50,7 +50,7 @@ extern int errno;
 #define STREQ(a, b) (strcmp ((a), (b)) == 0)
 
 #ifndef HAVE_DECL_FREE
-'this configure-time declaration test was not run'
+"this configure-time declaration test was not run"
 #endif
 #if !HAVE_DECL_FREE
 void free ();
