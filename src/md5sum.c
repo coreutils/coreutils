@@ -230,7 +230,9 @@ hex_digits (const char *s)
   return 1;
 }
 
-/* FIXME: allow newline in filename by encoding it. */
+/* An interface to md5_stream.  Operate on FILENAME (it may be "-") and
+   put the result in *MD5_RESULT.  Return non-zero upon failure, zero
+   to indicate success.  */
 
 static int
 md5_file (const char *filename, int binary, unsigned char *md5_result)
@@ -425,9 +427,10 @@ md5_check (const char *checkfile_name, int binary)
 	  if (n_mismatched_checksums > 0)
 	    {
 	      error (0, 0,
-		   _("WARNING: %d of %d computed checksum%s did NOT match"),
+		   _("WARNING: %d of %d computed %s did NOT match"),
 		     n_mismatched_checksums, n_computed_checkums,
-		     (n_computed_checkums == 1 ? "" : "s"));
+		     (n_computed_checkums == 1
+		      ? _("checksum") : _("checksums")));
 	    }
 	}
     }
