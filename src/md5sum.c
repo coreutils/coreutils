@@ -102,19 +102,21 @@ Print or check MD5 checksums.\n\
 With no FILE, or when FILE is -, read standard input.\n\
 \n\
   -h, --help              display this help and exit\n\
-  -q, --quiet             don't show anything, status code shows success\n\
+  -q, --quiet             don't output anything, status code shows success\n\
   -v, --verbose           verbose output level\n\
   -V, --version           output version information and exit\n\
 \n\
-  -b, --binary            read files in binary mode (default)\n\
-  -t, --text              read files in text mode\n\
+  -b, --binary            read files in binary mode\n\
+  -t, --text              read files in text mode (default)\n\
 \n\
   -c, --check             check MD5 sums against given list\n\
   -s, --string=STRING     compute checksum for STRING\n\
 \n\
 The sums are computed as described in RFC 1321.  When checking, the input\n\
 should be a former output of this program.  The default mode is to print\n\
-a line with checksum, type, and name for each FILE.\n"),
+a line with checksum, a character indicating type (`*' for binary, ` ' for\n\
+text), and name for each FILE.  The --quiet and --verbose options are\n\
+meaningful only when verifying checksums.\n"),
 	    program_name, program_name, program_name);
 
   exit (status);
@@ -449,9 +451,16 @@ main (argc, argv)
       usage (EXIT_FAILURE);
     }
 
+  if ((quiet || verbose) && do_check == 0)
+    {
+      error (0, 0,
+	     _("the --quiet and --verbose options are meaningful only\n\
+when verifying checksums"));
+      usage (EXIT_FAILURE);
+    }
+
   if (n_strings > 0)
     {
-      /* --quiet does not make much sense with --string.  */
       if (optind < argc)
 	{
 	  error (0, 0, _("no files may be specified when using --string"));
@@ -465,13 +474,11 @@ main (argc, argv)
 	  for (cnt = 0; cnt < 16; ++cnt)
 	    printf ("%02x", md5buffer[cnt]);
 
-	  printf (" b \"%s\"\n", string[i]);
+	  printf ("  \"%s\"\n", string[i]);
 	}
     }
   else if (do_check == 0)
     {
-      /* --quiet does no make much sense without --check.  So print the
-	 result even if --quiet is given.  */
       if (optind == argc)
 	argv[argc++] = "-";
 
