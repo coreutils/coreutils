@@ -231,7 +231,6 @@ struct E_string
 
 
 char *xmalloc ();
-char *stpcpy ();
 int safe_read ();
 
 /* The name by which this program was run.  */
