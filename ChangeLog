@@ -1,3 +1,14 @@
+2004-08-10  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* NEWS: Document "sort -o -" and "tee -" POSIX-conformance fixes.
+	* src/shred.c (usage): "-" is an operand, not an option.
+	* src/sort.c (die, xfopen, mergefps, first_same_file, merge):
+	A null file arg means standard output.
+	(main): "-o -" means to write to a file named "-",
+	not to standard output.
+	* src/tee.c (usage): "tee -" writes to standard output, not
+	to a file named "-".
+
 2004-08-10  Dmitry V. Levin  <ldv@altlinux.org>
 
 	* src/install.c (change_timestamps): Fix int->bool conversion
