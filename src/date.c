@@ -341,7 +341,8 @@ main (int argc, char **argv)
 
   if (n_args > 1)
     {
-      error (0, 0, _("too many non-option arguments"));
+      error (0, 0, _("too many non-option arguments: %s%s"),
+	     argv[optind + 1], n_args == 2 ? "" : " ...");
       usage (1);
     }
 
