@@ -16,7 +16,7 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 /* Written by Paul Rubin, David MacKenzie, and Richard Stallman.
-   Reworked to use chdir and hash tables by Jim Meyering.  */
+   Reworked to use chdir and avoid recursion by Jim Meyering.  */
 
 /* Implementation overview:
 
@@ -185,35 +185,15 @@ main (int argc, char **argv)
 	}
     }
 
-  remove_init ();
-
   {
-    struct stat cwd_sb;
-    struct dev_ino cwd_dev_ino;
+    size_t n_files = argc - optind;
+    char const *const *file = (char const *const *) argv + optind;
 
-    /* FIXME: this lstat is not always necessary -- e.g., if there are no
-       directories, or if all directories arguments are specified via
-       absolute names.  */
-    if (lstat (".", &cwd_sb))
-      error (EXIT_FAILURE, errno, _("cannot lstat `.'"));
-
-    cwd_dev_ino.st_dev = cwd_sb.st_dev;
-    cwd_dev_ino.st_ino = cwd_sb.st_ino;
-
-    for (; optind < argc; optind++)
-      {
-	struct File_spec fs;
-	enum RM_status status;
-
-	fspec_init_file (&fs, argv[optind]);
-	status = rm (&fs, 1, &x, &cwd_dev_ino);
-	assert (VALID_STATUS (status));
-	if (status == RM_ERROR)
-	  fail = 1;
-      }
+    enum RM_status status = rm (n_files, file, &x);
+    assert (VALID_STATUS (status));
+    if (status == RM_ERROR)
+      fail = 1;
   }
-
-  remove_fini ();
 
   exit (fail);
 }
