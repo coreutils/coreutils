@@ -6,6 +6,13 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New features
 
+  du accepts a new option --from0-file=FILE, where FILE contains a list of
+  NUL-separated file names.  This is useful for running du --summarize (-s)
+  when the list of file names is so long that it may exceed a command line
+  length limitation.  In such cases, using xargs is undesirable because
+  it splits the list into pieces and makes du give a total for each sublist
+  rather than for the entire list.
+
   `date -d' and `touch -d' now accept integer counts of seconds since
   1970 when prefixed by `@'.  For example, `@321' represents
   1970-01-01 00:05:21 UTC.
