@@ -38,7 +38,7 @@
 #include "human.h"
 #include "quote.h"
 #include "quotearg.h"
-#include "readtokens.h"
+#include "readtokens0.h"
 #include "same.h"
 #include "xfts.h"
 #include "xstrtol.h"
@@ -745,9 +745,9 @@ main (int argc, char **argv)
     {
       FILE *istream;
       size_t i;
-      size_t *filename_lengths;
-      size_t n_files;
       bool valid = true;
+      bool read_fail;
+      struct Tokens tok;
 
       /* When using --files0-from=F, you may not specify any files
 	 on the command-line.  */
@@ -761,45 +761,35 @@ main (int argc, char **argv)
 	error (EXIT_FAILURE, errno, _("cannot open %s for reading"),
 	       quote (files_from));
 
-      {
-	/* If we can easily determine the size of the input file,
-	   estimate the number of file names it contains.  */
-	struct stat st;
-	size_t projected_n_filenames
-	  = ((fstat (fileno (istream), &st) == 0
-	      && S_ISREG (st.st_mode)
-	      && 0 < st.st_size)
-	     ? st.st_size / (EXPECTED_BYTES_PER_FILE_NAME + 1)
-	     : DEFAULT_PROJECTED_N_FILES);
+      readtokens0_init (&tok);
+      read_fail = readtokens0 (istream, &tok);
 
-	n_files = readtokens (istream, projected_n_filenames,
-			    "", 1, &files, &filename_lengths);
-      }
-
-      if (n_files == (size_t) -1)
-	error (EXIT_FAILURE, errno, _("cannot read file names from %s"),
+      if (read_fail)
+	error (EXIT_FAILURE, 0, _("cannot read file names from %s"),
 	       quote (files_from));
 
-      if (n_files == 0)
+      if (tok.n_tok == 0)
 	error (EXIT_FAILURE, 0, _("no files specified in %s"),
 	       quote (files_from));
 
       /* Fail if any name has length zero.  */
-      for (i = 0; i < n_files; i++)
+      for (i = 0; i < tok.n_tok; i++)
 	{
-	  if (filename_lengths[i] == 0)
+	  if (tok.tok_len[i] == 0)
 	    {
 	      /* Using the standard `filename:line-number:' prefix here is
 		 not totally appropriate, since NUL is the separator, not NL,
 		 but it might be better than nothing.  */
-	      error (0, 0, _("%s:%lu: invalid zero-length file name specified"),
-		     quotearg_colon (files_from), (unsigned long) i);
+	      error (0, 0, _("%s:%lu: invalid zero-length file name"),
+		     quotearg_colon (files_from), (unsigned long) i + 1);
 	      valid = false;
 	    }
 	}
-      free (filename_lengths);
+
       if (! valid)
 	exit (EXIT_FAILURE);
+
+      files = tok.tok;
     }
   else
     {
