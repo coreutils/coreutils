@@ -2,6 +2,9 @@
 
 	* Version 5.3.0.
 
+	* src/remove.c (struct dirstack_state) [current_arg_jumpbuf]:
+	Improve the comment.
+
 	Clean up scoping etc. so that some make `distcheck' tests pass.
 	* src/csplit.c (xalloc_die): Declare to be static.
 	* src/chown-core.c (chown_files): Declare as `extern'.
