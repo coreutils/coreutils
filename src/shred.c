@@ -235,46 +235,23 @@ to be recovered later.\n\
  * --------------------------------------------------------------------
  */
 
-#if defined __STDC__ && __STDC__
-# define UINT_MAX_32_BITS 4294967295U
-#else
-# define UINT_MAX_32_BITS 0xFFFFFFFF
-#endif
-
-#if ULONG_MAX == UINT_MAX_32_BITS
-typedef unsigned long word32;
-#else
-# if UINT_MAX == UINT_MAX_32_BITS
-typedef unsigned word32;
-# else
-#  if USHRT_MAX == UINT_MAX_32_BITS
-typedef unsigned short word32;
-#  else
-#   if UCHAR_MAX == UINT_MAX_32_BITS
-typedef unsigned char word32;
-#   else
-     "No 32-bit type available!"
-#   endif
-#  endif
-# endif
-#endif
-
 /* Size of the state tables to use.  (You may change ISAAC_LOG) */
 #define ISAAC_LOG 8
 #define ISAAC_WORDS (1 << ISAAC_LOG)
-#define ISAAC_BYTES (ISAAC_WORDS * sizeof (word32))
+#define ISAAC_BYTES (ISAAC_WORDS * sizeof (uint32_t))
 
 /* RNG state variables */
 struct isaac_state
   {
-    word32 mm[ISAAC_WORDS];	/* Main state array */
-    word32 iv[8];		/* Seeding initial vector */
-    word32 a, b, c;		/* Extra index variables */
+    uint32_t mm[ISAAC_WORDS];	/* Main state array */
+    uint32_t iv[8];		/* Seeding initial vector */
+    uint32_t a, b, c;		/* Extra index variables */
   };
 
 /* This index operation is more efficient on many processors */
 #define ind(mm, x) \
-  (* (word32 *) ((char *) (mm) + ((x) & (ISAAC_WORDS - 1) * sizeof (word32))))
+  (* (uint32_t *) ((char *) (mm) \
+	           + ((x) & (ISAAC_WORDS - 1) * sizeof (uint32_t))))
 
 /*
  * The central step.  This uses two temporaries, x and y.  mm is the
@@ -294,11 +271,11 @@ struct isaac_state
  * Refill the entire R array, and update S.
  */
 static void
-isaac_refill (struct isaac_state *s, word32 r[/* ISAAC_WORDS */])
+isaac_refill (struct isaac_state *s, uint32_t r[/* ISAAC_WORDS */])
 {
-  register word32 a, b;		/* Caches of a and b */
-  register word32 x, y;		/* Temps needed by isaac_step macro */
-  register word32 *m = s->mm;	/* Pointer into state array */
+  register uint32_t a, b;		/* Caches of a and b */
+  register uint32_t x, y;		/* Temps needed by isaac_step macro */
+  register uint32_t *m = s->mm;	/* Pointer into state array */
 
   a = s->a;
   b = s->b + (++s->c);
@@ -342,17 +319,17 @@ isaac_refill (struct isaac_state *s, word32 r[/* ISAAC_WORDS */])
 
 /* The basic ISAAC initialization pass.  */
 static void
-isaac_mix (struct isaac_state *s, word32 const seed[/* ISAAC_WORDS */])
+isaac_mix (struct isaac_state *s, uint32_t const seed[/* ISAAC_WORDS */])
 {
   int i;
-  word32 a = s->iv[0];
-  word32 b = s->iv[1];
-  word32 c = s->iv[2];
-  word32 d = s->iv[3];
-  word32 e = s->iv[4];
-  word32 f = s->iv[5];
-  word32 g = s->iv[6];
-  word32 h = s->iv[7];
+  uint32_t a = s->iv[0];
+  uint32_t b = s->iv[1];
+  uint32_t c = s->iv[2];
+  uint32_t d = s->iv[3];
+  uint32_t e = s->iv[4];
+  uint32_t f = s->iv[5];
+  uint32_t g = s->iv[6];
+  uint32_t h = s->iv[7];
 
   for (i = 0; i < ISAAC_WORDS; i += 8)
     {
@@ -398,9 +375,9 @@ isaac_mix (struct isaac_state *s, word32 const seed[/* ISAAC_WORDS */])
  * it is identical.
  */
 static void
-isaac_init (struct isaac_state *s, word32 const *seed, size_t seedsize)
+isaac_init (struct isaac_state *s, uint32_t const *seed, size_t seedsize)
 {
-  static word32 const iv[8] =
+  static uint32_t const iv[8] =
   {
     0x1367df5a, 0x95d90059, 0xc3163e4b, 0x0f421ad8,
     0xd92a4a78, 0xa51a3c49, 0xc4efea1b, 0x30609119};
@@ -447,7 +424,7 @@ isaac_init (struct isaac_state *s, word32 const *seed, size_t seedsize)
 static void
 isaac_seed_start (struct isaac_state *s)
 {
-  static word32 const iv[8] =
+  static uint32_t const iv[8] =
     {
       0x1367df5a, 0x95d90059, 0xc3163e4b, 0x0f421ad8,
       0xd92a4a78, 0xa51a3c49, 0xc4efea1b, 0x30609119
@@ -503,7 +480,7 @@ isaac_seed_data (struct isaac_state *s, void const *buf, size_t size)
   p = (unsigned char *) s->mm + s->c;
   for (i = 0; i < size; i++)
     p[i] ^= ((unsigned char const *) buf)[i];
-  s->c = (word32) size;
+  s->c = size;
 }
 
 
@@ -556,7 +533,7 @@ isaac_seed_machdep (struct isaac_state *s)
   else
     {
 # if __i386__
-      word32 t[2];
+      uint32_t t[2];
       __asm__ __volatile__ ("rdtsc" : "=a" (t[0]), "=d" (t[1]));
 # endif
 # if __alpha__
@@ -566,12 +543,12 @@ isaac_seed_machdep (struct isaac_state *s)
 # if _ARCH_PPC
       /* Code not used because this instruction is available only on first-
 	 generation PPCs and evokes a SIGBUS on some Linux 2.4 kernels.  */
-      word32 t;
+      uint32_t t;
       __asm__ __volatile__ ("mfspr %0,22" : "=r" (t));
 # endif
 # if __mips
       /* Code not used because this is not accessible from userland */
-      word32 t;
+      uint32_t t;
       __asm__ __volatile__ ("mfc0\t%0,$9" : "=r" (t));
 # endif
 # if __sparc__
@@ -658,7 +635,7 @@ isaac_seed (struct isaac_state *s)
 /* Single-word RNG built on top of ISAAC */
 struct irand_state
 {
-  word32 r[ISAAC_WORDS];
+  uint32_t r[ISAAC_WORDS];
   unsigned numleft;
   struct isaac_state *s;
 };
@@ -675,7 +652,7 @@ irand_init (struct irand_state *r, struct isaac_state *s)
  * only a small number of values, we choose the final ones which are
  * marginally better mixed than the initial ones.
  */
-static word32
+static uint32_t
 irand32 (struct irand_state *r)
 {
   if (!r->numleft)
@@ -697,11 +674,11 @@ irand32 (struct irand_state *r)
  * than 2^32 % n are disallowed, and if the RNG produces one, we ask
  * for a new value.
  */
-static word32
-irand_mod (struct irand_state *r, word32 n)
+static uint32_t
+irand_mod (struct irand_state *r, uint32_t n)
 {
-  word32 x;
-  word32 lim;
+  uint32_t x;
+  uint32_t lim;
 
   if (!++n)
     return irand32 (r);
@@ -747,7 +724,7 @@ fillpattern (int type, unsigned char *r, size_t size)
  * SIZE is rounded UP to a multiple of ISAAC_BYTES.
  */
 static void
-fillrand (struct isaac_state *s, word32 *r, size_t size_max, size_t size)
+fillrand (struct isaac_state *s, uint32_t *r, size_t size_max, size_t size)
 {
   size = (size + ISAAC_BYTES - 1) / ISAAC_BYTES;
   assert (size <= size_max);
@@ -856,7 +833,7 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
   size_t lim;			/* Amount of data to try writing */
   size_t soff;			/* Offset into buffer for next write */
   ssize_t ssize;		/* Return value from write */
-  word32 *r;			/* Fill pattern.  */
+  uint32_t *r;			/* Fill pattern.  */
   size_t rsize = 3 * MAX (ISAAC_WORDS, 1024) * sizeof *r; /* Fill size.  */
   size_t ralign = lcm (getpagesize (), sizeof *r); /* Fill alignment.  */
   char pass_string[PASS_NAME_SIZE];	/* Name of current pass */
@@ -1632,7 +1609,7 @@ main (int argc, char **argv)
 	  {
 	    uintmax_t tmp;
 	    if (xstrtoumax (optarg, NULL, 10, &tmp, NULL) != LONGINT_OK
-		|| (word32) tmp != tmp
+		|| (uint32_t) tmp != tmp
 		|| ((size_t) (tmp * sizeof (int)) / sizeof (int) != tmp))
 	      {
 		error (EXIT_FAILURE, 0, _("%s: invalid number of passes"),
