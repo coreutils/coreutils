@@ -19,7 +19,14 @@
 /* written by Jim Meyering */
 
 #include <config.h>
+
+/* Disable the definition of chown to rpl_chown (from config.h) in this
+   file.  Otherwise, we'd get conflicting prototypes for rpl_chown on
+   most systems.  */
+#undef chown
+
 #include <sys/types.h>
+#include <sys/stat.h>
 #ifdef HAVE_UNISTD_H
 # include <unistd.h>
 #endif
@@ -27,10 +34,10 @@
 /* FIXME: describe.  */
 
 int
-chown (file, gid, uid)
+rpl_chown (file, uid, gid)
      const char *file;
-     gid_t git;
-     uid_t uit;
+     uid_t uid;
+     gid_t gid;
 {
   if (gid == (gid_t) -1 || uid == (uid_t) -1)
     {
@@ -47,7 +54,5 @@ chown (file, gid, uid)
 	uid = file_stats.st_uid;
     }
 
-#undef chown
-
-  return chown (file, gid, uid);
+  return chown (file, uid, gid);
 }
