@@ -12,7 +12,7 @@ use FileHandle;
 use File::Compare qw(compare);
 
 @ISA = qw(Exporter);
-($VERSION = '$Revision: 1.11 $ ') =~ tr/[0-9].//cd;
+($VERSION = '$Revision: 1.12 $ ') =~ tr/[0-9].//cd;
 @EXPORT = qw (run_tests);
 
 my $debug = $ENV{DEBUG};
@@ -168,7 +168,9 @@ sub _at_replace ($$)
   foreach my $eo (qw (AUX OUT ERR))
     {
       my $f = $map->{$eo};
-      $f and $s =~ s/\@$eo\@/$f/g;
+      $f
+	and $s =~ /\@$eo\@/
+	  and $s =~ s/\@$eo\@/$f/g;
     }
   return $s;
 }
