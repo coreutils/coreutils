@@ -10043,14 +10043,16 @@ If multiple options or @code{-a} are given, the selected information is
 printed in this order:
 
 @example
-@var{sysname} @var{nodename} @var{release} @var{osversion} @var{machine}
+@var{kernel-name} @var{nodename} @var{kernel-release} @var{kernel-version} @var{machine} @var{processor} @var{hardware-platform} @var{operating-system}
 @end example
 
-The @var{osversion}, at least, may well be multiple words.  For example:
+The information may contain internal spaces, so such output cannot be
+parsed reliably.  In the following example, @var{release} is
+@samp{2.2.18ss.e820-bda652a #4 SMP Tue Jun 5 11:24:08 PDT 2001}:
 
 @example
 uname -a
-@result{} Linux hayley 1.0.4 #3 Thu May 12 18:06:34 1994 i486
+@result{} Linux dum 2.2.18ss.e820-bda652a #4 SMP Tue Jun 5 11:24:08 PDT 2001 i686 unknown unknown GNU/Linux
 @end example
 
 
@@ -10064,13 +10066,24 @@ The program accepts the following options.  Also see @ref{Common options}.
 @opindex --all
 Print all of the below information.
 
+@item -i
+@itemx --hardware-platform
+@opindex -i
+@opindex --hardware-platform
+@cindex implementation, hardware
+@cindex hardware platform
+@cindex platform, hardware
+Print the hardware platform name
+(sometimes called the hardware implementation).
+
 @item -m
 @itemx --machine
 @opindex -m
 @opindex --machine
 @cindex machine type
+@cindex hardware class
 @cindex hardware type
-Print the machine (hardware) type.
+Print the machine hardware name (sometimes called the hardware class).
 
 @item -n
 @itemx --nodename
@@ -10079,36 +10092,46 @@ Print the machine (hardware) type.
 @cindex hostname
 @cindex node name
 @cindex network node name
-Print the machine's network node hostname.
+Print the network node hostname.
 
 @item -p
 @itemx --processor
 @opindex -p
 @opindex --processor
 @cindex host processor type
-Print the machine's processor type
+Print the processor type (sometimes called the instruction set
+architecture or ISA).
+
+@item -o
+@itemx --operating-system
+@opindex -o
+@opindex --operating-system
+@cindex operating system name
+Print the name of the operating system.
 
 @item -r
-@itemx --release
+@itemx --kernel-release
 @opindex -r
-@opindex --release
-@cindex operating system release
-@cindex release of operating system
-Print the operating system release.
+@opindex --kernel-release
+@cindex kernel release
+@cindex release of kernel
+Print the kernel release.
 
 @item -s
-@itemx --sysname
+@itemx --kernel-name
 @opindex -s
-@opindex --sysname
-@cindex operating system name
-@cindex name of operating system
-Print the operating system name.
+@opindex --kernel-name
+@cindex kernel name
+@cindex name of kernel
+Print the kernel name.
 
 @item -v
+@itemx --kernel-version
 @opindex -v
-@cindex operating system version
-@cindex version of operating system
-Print the operating system version.
+@opindex --kernel-version
+@cindex kernel version
+@cindex version of kernel
+Print the kernel version.
 
 @end table
 
