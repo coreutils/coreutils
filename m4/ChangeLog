@@ -1,3 +1,10 @@
+1998-08-15  Jim Meyering  <meyering@ascend.com>
+
+	* ssize_t.m4 (jm_TYPE_SSIZE_T): Remove file.
+	* check-type.m4: New file.  Replacement for AC_CHECK_TYPE.
+	* jm-macros.m4: Use the new AC_CHECK_TYPE(ssize_t, int)
+	instead of jm_TYPE_SSIZE_T.
+
 1998-08-12  Jim Meyering  <meyering@ascend.com>
 
 	* st_dm_mode.m4: New file.  From Johan Danielsson.
