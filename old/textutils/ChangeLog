@@ -1,6 +1,7 @@
 2000-12-03  Jim Meyering  <meyering@lucent.com>
 
-	Make od print valid addresses for offsets of 2^32 and larger.
+	Make od print valid addresses for offsets of 2^32 and larger, and
+	allow byte offset (-j) and byte count (-N) to be 2^32 and larger.
 
 	* src/od.c (MAX_ADDRESS_LENGTH): Don't hard-code as a literal.
 	Rather, define in terms of the type, off_t.
