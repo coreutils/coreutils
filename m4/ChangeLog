@@ -1,3 +1,8 @@
+2000-01-19  Jim Meyering  <meyering@lucent.com>
+
+	* c-bs-a.m4: Remove uses of changequote altogether.
+	Thanks to Akim for explaining.
+
 2000-01-16  Jim Meyering  <meyering@lucent.com>
 
 	* c-bs-a.m4: Use `changequote(<<,>>)', rather than `changequote(, )'
