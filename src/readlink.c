@@ -19,9 +19,6 @@
 
 #include <config.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <limits.h>
 #include <getopt.h>
 #include <sys/types.h>
 
