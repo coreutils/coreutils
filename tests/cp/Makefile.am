@@ -7,4 +7,5 @@ TESTS = \
   perm cp-HL special-bits
 EXTRA_DIST = $(TESTS)
 TESTS_ENVIRONMENT = \
+  MAKE=$(MAKE) \
   PATH=`pwd`/../../src:$$PATH
