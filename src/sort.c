@@ -1146,18 +1146,6 @@ nls_set_fraction (register unsigned char ch)
    where the grouping rule is 3;3... we take a look at group 1, and find
    out that |{1234}| > larger of the two first grouping rules, then
    the separator has to be a decimal point...
-
-   FIXME: change descriptions go in ChangeLog
-Changes:
-
-14/10/1997... ÖEH
-   Change the table of groups to be able to handle arbitrary
-   number of groups.  This is done by starting to allocate a minimum
-   buffer of NLS_MAX_GRUPS size.  If this turns out to be insufficient
-   to realloc space for new buffer in steps of NLS_MAX_GROUPS.  The
-   memory allocated and size, are statically allocated so they will
-   remain the same through every call.
-
    */
 
 static void
