@@ -1,5 +1,5 @@
 /* Convert string representation of a number into an uintmax_t value.
-   Copyright 1999 Free Software Foundation, Inc.
+   Copyright 2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -37,18 +37,41 @@
 # endif
 #endif
 
-#ifndef HAVE_DECL_STRTOUL
+#ifdef STRTOUXMAX_UNSIGNED
+# ifndef HAVE_DECL_STRTOUL
 "this configure-time declaration test was not run"
-#endif
-#if !HAVE_DECL_STRTOUL
+# endif
+# if !HAVE_DECL_STRTOUL
 unsigned long strtoul PARAMS ((char const *, char **, int));
+# endif
+# ifndef HAVE_DECL_STRTOULL
+"this configure-time declaration test was not run"
+# endif
+# if !HAVE_DECL_STRTOULL && HAVE_UNSIGNED_LONG_LONG
+unsigned long long strtoull PARAMS ((char const *, char **, int));
+# endif
+
+#else
+
+# ifndef HAVE_DECL_STRTOL
+"this configure-time declaration test was not run"
+# endif
+# if !HAVE_DECL_STRTOL
+long strtol PARAMS ((char const *, char **, int));
+# endif
+# ifndef HAVE_DECL_STRTOLL
+"this configure-time declaration test was not run"
+# endif
+# if !HAVE_DECL_STRTOLL && HAVE_UNSIGNED_LONG_LONG
+long long strtoll PARAMS ((char const *, char **, int));
+# endif
 #endif
 
-#ifndef HAVE_DECL_STRTOULL
-"this configure-time declaration test was not run"
-#endif
-#if !HAVE_DECL_STRTOULL && HAVE_UNSIGNED_LONG_LONG
-unsigned long long strtoull PARAMS ((char const *, char **, int));
+#ifndef STRTOUXMAX_UNSIGNED
+# define strtoumax strtoimax
+# define uintmax_t intmax_t
+# define strtoull strtoll
+# define strtoul strtol
 #endif
 
 uintmax_t
@@ -73,9 +96,9 @@ int
 main ()
 {
   char *p, *endptr;
-  printf ("sizeof uintmax_t: %d\n", sizeof (uintmax_t));
-  printf ("sizeof strtoull(): %d\n", sizeof strtoull(p, &endptr, 10));
-  printf ("sizeof strtoul(): %d\n", sizeof strtoul(p, &endptr, 10));
+  printf ("sizeof xintmax_t: %d\n", sizeof (uintmax_t));
+  printf ("sizeof strtoxll(): %d\n", sizeof strtoull(p, &endptr, 10));
+  printf ("sizeof strtoxl(): %d\n", sizeof strtoul(p, &endptr, 10));
   exit (0);
 }
 #endif
