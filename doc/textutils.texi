@@ -1144,7 +1144,7 @@ only reverse files that are at most as large as its buffer, which is
 typically 32k.  A more reliable and versatile way to reverse files is
 the GNU @code{tac} command.
 
-@code{head} accepts two option formats: the new one, in which numbers
+@code{tail} accepts two option formats: the new one, in which numbers
 are arguments to the options (@samp{-n 1}), and the old one, in which
 the number precedes any option letters (@samp{-1} or @samp{+1}).
 
