@@ -46,9 +46,6 @@
 struct rlimit { size_t rlim_cur; };
 # define getrlimit(Resource, Rlp) (-1)
 #endif
-#ifndef RLIMIT_AS
-# define RLIMIT_AS RLIMIT_DATA
-#endif
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "sort"
@@ -665,11 +662,22 @@ default_sort_size (void)
     size = mem;
   if (getrlimit (RLIMIT_DATA, &rlimit) == 0 && rlimit.rlim_cur < size)
     size = rlimit.rlim_cur;
+#ifdef RLIMIT_AS
   if (getrlimit (RLIMIT_AS, &rlimit) == 0 && rlimit.rlim_cur < size)
     size = rlimit.rlim_cur;
+#endif
 
-  /* Use half of SIZE, but no less than the minimum.  */
-  return MAX (size / 2, MIN_SORT_SIZE);
+  /* Leave a large safety margin for the above limits, as failure can
+     occur when they are exceeded.  */
+  size /= 2;
+
+#ifdef RLIMIT_RSS
+  if (getrlimit (RLIMIT_RSS, &rlimit) == 0 && rlimit.rlim_cur < size)
+    size = rlimit.rlim_cur;
+#endif
+
+  /* Use no less than the minimum.  */
+  return MAX (size, MIN_SORT_SIZE);
 }
 
 /* Return the sort buffer size to use with the input files identified
