@@ -1,5 +1,5 @@
 /* paste - merge lines of files
-   Copyright (C) 1997-2004 Free Software Foundation, Inc.
+   Copyright (C) 1997-2005 Free Software Foundation, Inc.
    Copyright (C) 1984 David M. Ihnat
 
    This program is free software; you can redistribute it and/or modify
@@ -70,11 +70,11 @@ static char const *delim_end;
 
 static struct option const longopts[] =
 {
-  {"serial", no_argument, 0, 's'},
-  {"delimiters", required_argument, 0, 'd'},
+  {"serial", no_argument, NULL, 's'},
+  {"delimiters", required_argument, NULL, 'd'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
-  {0, 0, 0, 0}
+  {NULL, 0, NULL, 0}
 };
 
 /* Set globals delims and delim_end.  Copy STRPTR to DELIMS, converting
