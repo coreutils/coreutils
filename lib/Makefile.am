@@ -114,8 +114,8 @@ lstat.c: xstat.in
 	  -e 's/@xstat@/lstat/g' \
 	  -e '/_LSTAT_ONLY@/d' \
 	  -e '/@BEGIN_STAT_ONLY@/,/@END_STAT_ONLY@/d' \
-	  $(srcdir)/xstat.in > $@-t
-	mv $@-t $@
+	  $(srcdir)/xstat.in > t-$@
+	mv t-$@ $@
 
 stat.c: xstat.in
 	sed \
@@ -123,8 +123,8 @@ stat.c: xstat.in
 	  -e 's/@xstat@/stat/g' \
 	  -e '/_STAT_ONLY@/d' \
 	  -e '/@BEGIN_LSTAT_ONLY@/,/@END_LSTAT_ONLY@/d' \
-	  $(srcdir)/xstat.in > $@-t
-	mv $@-t $@
+	  $(srcdir)/xstat.in > t-$@
+	mv t-$@ $@
 
 # The following is needed in order to install a simple file in $(libdir)
 # which is shared with other installed packages. We use a list of referencing
@@ -169,8 +169,8 @@ charset.alias: config.charset
 
 SUFFIXES = .sed .sin
 .sin.sed:
-	sed -e '/^#/d' -e 's/@''PACKAGE''@/@PACKAGE@/g' $< > $@-t
-	mv $@-t $@
+	sed -e '/^#/d' -e 's/@''PACKAGE''@/@PACKAGE@/g' $< > t-$@
+	mv t-$@ $@
 
 CLEANFILES = charset.alias ref-add.sed ref-del.sed
 
