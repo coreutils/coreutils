@@ -1,3 +1,17 @@
+2000-03-04  Jim Meyering  <meyering@lucent.com>
+
+	* unicodeio.c (<errno.h>): Include it.
+	(errno): Declare if not defined.
+
+	* localcharset.c: Add Bruno's comment justifying use of volatile.
+
+	* config.charset: New version, incorporating remarks from a linux
+	i18n mailing list.  From Bruno Haible.
+
+2000-03-02  Jim Meyering  <meyering@lucent.com>
+
+	* Makefile.am (EXTRA_DIST): Add config.charset.
+
 2000-03-01  Jim Meyering  <meyering@lucent.com>
 
 	* localcharset.c: Guard some #includes with `#if HAVE_...'.
