@@ -1,6 +1,12 @@
-2004-12-04  Jim Meyering  <jim@meyering.net>
+2004-12-05  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
+
+	* tests/tail/Test.pm (test_vector): Avoid test failure when
+	_POSIX2_VERSION=199209 is in the environment, or when building on
+	e.g., OpenBSD 3.2.
+
+2004-12-04  Jim Meyering  <jim@meyering.net>
 
 	* NEWS: Mention cut's new --complement option.
 
