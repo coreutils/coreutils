@@ -1,3 +1,4 @@
+## Process this file with automake to produce Makefile.in
 noinst_LIBRARIES = fu
 
 EXTRA_DIST = alloca.c euidaccess.c fnmatch.c fsusage.c ftruncate.c \
