@@ -12,3 +12,4 @@ safe-stat.c
 safe-stat.h
 stat.c
 unlocked-io.h
+fts_.h
