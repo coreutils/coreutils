@@ -1,3 +1,8 @@
+2002-12-14  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi (mknod invocation): Specify how major and minor
+	mode numbers are interpreted.
+
 2002-11-13  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (Examples of expr): Remove bogus `^'s.
