@@ -1,4 +1,4 @@
-#serial 10
+#serial 11
 
 # A replacement for autoconf's macro by the same name.  This version
 # accepts an optional argument specifying the name of the $srcdir-relative
