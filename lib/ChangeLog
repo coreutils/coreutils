@@ -1,5 +1,10 @@
 2004-11-16  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* xgetcwd.c: Include <limits.h>, for PATH_MAX.
+	(xgetcwd): Set errno correctly when failing.
+	Work around Solaris 9 bug: getcwd sets errno==ERANGE even though
+	the failure is actually due to a PATH_MAX problem.
+
 	Further getopt changes to make it more likely that glibc will
 	buy the changes back.
 	* getopt.c (POSIXLY_CORRECT): New constant.
