@@ -1306,9 +1306,8 @@ get_format_width (char **format_ptr)
   int ch_save;
 
   start = *format_ptr;
-  for (; **format_ptr; (*format_ptr)++)
-    if (!ISDIGIT (**format_ptr))
-      break;
+  for (; ISDIGIT (**format_ptr); (*format_ptr)++)
+    continue;
 
   ch_save = **format_ptr;
   **format_ptr = '\0';
@@ -1344,9 +1343,8 @@ get_format_prec (char **format_ptr)
     }
 
   start = *format_ptr;
-  for (; **format_ptr; (*format_ptr)++)
-    if (!ISDIGIT (**format_ptr))
-      break;
+  for (; ISDIGIT (**format_ptr); (*format_ptr)++)
+    continue;
 
   /* ANSI 4.9.6.1 says that if the precision is negative, it's as good as
      not there. */
