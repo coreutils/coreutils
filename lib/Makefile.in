@@ -87,13 +87,17 @@ INTLOBJS = @INTLOBJS@
 KMEM_GROUP = @KMEM_GROUP@
 LIBOBJS = @LIBOBJS@
 MAKEINFO = @MAKEINFO@
+MAN = @MAN@
 MKINSTALLDIRS = @MKINSTALLDIRS@
 MSGFMT = @MSGFMT@
 NEED_SETGID = @NEED_SETGID@
+OPTIONAL_BIN_PROGS = @OPTIONAL_BIN_PROGS@
+OPTIONAL_BIN_ZCRIPTS = @OPTIONAL_BIN_ZCRIPTS@
 PACKAGE = @PACKAGE@
 PERL = @PERL@
 POFILES = @POFILES@
 POSUB = @POSUB@
+POW_LIBM = @POW_LIBM@
 RANLIB = @RANLIB@
 U = @U@
 USE_INCLUDED_LIBINTL = @USE_INCLUDED_LIBINTL@
@@ -115,7 +119,7 @@ libfetish_a_SOURCES = \
   canon-host.c closeout.c dirname.c exclude.c filemode.c diacrit.c \
   full-write.c getopt.c getopt1.c getugroups.c hard-locale.c hash.c \
   human.c idcache.c isdir.c linebuffer.c long-options.c makepath.c \
-  md5.c memcasecmp.c memcoll.c modechange.c obstack.c path-concat.c \
+  md5.c memcasecmp.c memcoll.c modechange.c path-concat.c \
   quotearg.c readtokens.c readutmp.c safe-read.c same.c save-cwd.c \
   savedir.c stripslash.c userspec.c version-etc.c xgetcwd.c xgethostname.c \
   xmalloc.c xstrdup.c xstrtod.c xstrtol.c xstrtoul.c xstrtoumax.c yesno.c
@@ -159,11 +163,10 @@ dirname$U.o exclude$U.o filemode$U.o diacrit$U.o full-write$U.o \
 getopt$U.o getopt1$U.o getugroups$U.o hard-locale$U.o hash$U.o \
 human$U.o idcache$U.o isdir$U.o linebuffer$U.o long-options$U.o \
 makepath$U.o md5$U.o memcasecmp$U.o memcoll$U.o modechange$U.o \
-obstack$U.o path-concat$U.o quotearg$U.o readtokens$U.o readutmp$U.o \
-safe-read$U.o same$U.o save-cwd$U.o savedir$U.o stripslash$U.o \
-userspec$U.o version-etc$U.o xgetcwd$U.o xgethostname$U.o xmalloc$U.o \
-xstrdup$U.o xstrtod$U.o xstrtol$U.o xstrtoul$U.o xstrtoumax$U.o \
-yesno$U.o
+path-concat$U.o quotearg$U.o readtokens$U.o readutmp$U.o safe-read$U.o \
+same$U.o save-cwd$U.o savedir$U.o stripslash$U.o userspec$U.o \
+version-etc$U.o xgetcwd$U.o xgethostname$U.o xmalloc$U.o xstrdup$U.o \
+xstrtod$U.o xstrtol$U.o xstrtoul$U.o xstrtoumax$U.o yesno$U.o
 libfetish_a_OBJECTS =  $(am_libfetish_a_OBJECTS)
 AR = ar
 COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -173,15 +176,15 @@ LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 DIST_SOURCES =  $(libfetish_a_SOURCES)
 HEADERS =  $(noinst_HEADERS)
 
-DIST_COMMON =  $(noinst_HEADERS) Makefile.am Makefile.in TODO alloca.c \
-chown.c dup2.c error.c error.h euidaccess.c fileblocks.c fnmatch.c \
-fsusage.c ftruncate.c getdate.c getgroups.c gethostname.c getline.c \
-getloadavg.c getusershell.c group-member.c lchown.c malloc.c memchr.c \
-memcmp.c memcpy.c memmove.c memset.c mkdir.c mktime.c mountlist.c \
-nanosleep.c obstack.c obstack.h putenv.c realloc.c regex.c rmdir.c \
-rpmatch.c stime.c stpcpy.c strcasecmp.c strcspn.c strdup.c strftime.c \
-strncasecmp.c strndup.c strpbrk.c strstr.c strtol.c strtoul.c \
-strtoull.c strtoumax.c strverscmp.c utime.c
+DIST_COMMON =  $(noinst_HEADERS) ChangeLog Makefile.am Makefile.in TODO \
+alloca.c chown.c dup2.c error.c error.h euidaccess.c fileblocks.c \
+fnmatch.c fsusage.c ftruncate.c getdate.c getgroups.c gethostname.c \
+getline.c getloadavg.c getusershell.c group-member.c lchown.c malloc.c \
+memchr.c memcmp.c memcpy.c memmove.c memset.c mkdir.c mktime.c \
+mountlist.c nanosleep.c obstack.c obstack.h putenv.c realloc.c regex.c \
+rmdir.c rpmatch.c stime.c stpcpy.c strcasecmp.c strcspn.c strdup.c \
+strftime.c strncasecmp.c strndup.c strpbrk.c strstr.c strtod.c strtol.c \
+strtoul.c strtoull.c strtoumax.c strverscmp.c utime.c
 
 
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -207,23 +210,22 @@ $(DEPDIR)/md5$U.Po $(DEPDIR)/memcasecmp$U.Po $(DEPDIR)/memchr.Po \
 $(DEPDIR)/memcmp.Po $(DEPDIR)/memcoll$U.Po $(DEPDIR)/memcpy.Po \
 $(DEPDIR)/memmove.Po $(DEPDIR)/memset.Po $(DEPDIR)/mkdir.Po \
 $(DEPDIR)/mktime.Po $(DEPDIR)/modechange$U.Po $(DEPDIR)/mountlist.Po \
-$(DEPDIR)/nanosleep.Po $(DEPDIR)/obstack$U.Po $(DEPDIR)/obstack.Po \
-$(DEPDIR)/path-concat$U.Po $(DEPDIR)/posixtm$U.Po $(DEPDIR)/putenv.Po \
-$(DEPDIR)/quotearg$U.Po $(DEPDIR)/readtokens$U.Po \
-$(DEPDIR)/readutmp$U.Po $(DEPDIR)/realloc.Po $(DEPDIR)/regex.Po \
-$(DEPDIR)/rmdir.Po $(DEPDIR)/rpmatch.Po $(DEPDIR)/safe-read$U.Po \
-$(DEPDIR)/same$U.Po $(DEPDIR)/save-cwd$U.Po $(DEPDIR)/savedir$U.Po \
-$(DEPDIR)/stat.Po $(DEPDIR)/stime.Po $(DEPDIR)/stpcpy.Po \
-$(DEPDIR)/strcasecmp.Po $(DEPDIR)/strcspn.Po $(DEPDIR)/strdup.Po \
-$(DEPDIR)/strftime.Po $(DEPDIR)/stripslash$U.Po \
+$(DEPDIR)/nanosleep.Po $(DEPDIR)/obstack.Po $(DEPDIR)/path-concat$U.Po \
+$(DEPDIR)/posixtm$U.Po $(DEPDIR)/putenv.Po $(DEPDIR)/quotearg$U.Po \
+$(DEPDIR)/readtokens$U.Po $(DEPDIR)/readutmp$U.Po $(DEPDIR)/realloc.Po \
+$(DEPDIR)/regex.Po $(DEPDIR)/rmdir.Po $(DEPDIR)/rpmatch.Po \
+$(DEPDIR)/safe-read$U.Po $(DEPDIR)/same$U.Po $(DEPDIR)/save-cwd$U.Po \
+$(DEPDIR)/savedir$U.Po $(DEPDIR)/stat.Po $(DEPDIR)/stime.Po \
+$(DEPDIR)/stpcpy.Po $(DEPDIR)/strcasecmp.Po $(DEPDIR)/strcspn.Po \
+$(DEPDIR)/strdup.Po $(DEPDIR)/strftime.Po $(DEPDIR)/stripslash$U.Po \
 $(DEPDIR)/strncasecmp.Po $(DEPDIR)/strndup.Po $(DEPDIR)/strpbrk.Po \
-$(DEPDIR)/strstr.Po $(DEPDIR)/strtol.Po $(DEPDIR)/strtoul.Po \
-$(DEPDIR)/strtoull.Po $(DEPDIR)/strtoumax.Po $(DEPDIR)/strverscmp.Po \
-$(DEPDIR)/userspec$U.Po $(DEPDIR)/utime.Po $(DEPDIR)/version-etc$U.Po \
-$(DEPDIR)/xgetcwd$U.Po $(DEPDIR)/xgethostname$U.Po \
-$(DEPDIR)/xmalloc$U.Po $(DEPDIR)/xstrdup$U.Po $(DEPDIR)/xstrtod$U.Po \
-$(DEPDIR)/xstrtol$U.Po $(DEPDIR)/xstrtoul$U.Po \
-$(DEPDIR)/xstrtoumax$U.Po $(DEPDIR)/yesno$U.Po
+$(DEPDIR)/strstr.Po $(DEPDIR)/strtod.Po $(DEPDIR)/strtol.Po \
+$(DEPDIR)/strtoul.Po $(DEPDIR)/strtoull.Po $(DEPDIR)/strtoumax.Po \
+$(DEPDIR)/strverscmp.Po $(DEPDIR)/userspec$U.Po $(DEPDIR)/utime.Po \
+$(DEPDIR)/version-etc$U.Po $(DEPDIR)/xgetcwd$U.Po \
+$(DEPDIR)/xgethostname$U.Po $(DEPDIR)/xmalloc$U.Po \
+$(DEPDIR)/xstrdup$U.Po $(DEPDIR)/xstrtod$U.Po $(DEPDIR)/xstrtol$U.Po \
+$(DEPDIR)/xstrtoul$U.Po $(DEPDIR)/xstrtoumax$U.Po $(DEPDIR)/yesno$U.Po
 SOURCES = $(libfetish_a_SOURCES)
 OBJECTS = $(am_libfetish_a_OBJECTS)
 
@@ -438,6 +440,8 @@ strpbrk_.c: strpbrk.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/strpbrk.c; then echo $(srcdir)/strpbrk.c; else echo strpbrk.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > strpbrk_.c
 strstr_.c: strstr.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/strstr.c; then echo $(srcdir)/strstr.c; else echo strstr.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > strstr_.c
+strtod_.c: strtod.c $(ANSI2KNR)
+	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/strtod.c; then echo $(srcdir)/strtod.c; else echo strtod.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > strtod_.c
 strtol_.c: strtol.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/strtol.c; then echo $(srcdir)/strtol.c; else echo strtol.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > strtol_.c
 strtoul_.c: strtoul.c $(ANSI2KNR)
@@ -486,10 +490,10 @@ posixtm_.o putenv_.o quotearg_.o readtokens_.o readutmp_.o realloc_.o \
 regex_.o rmdir_.o rpmatch_.o safe-read_.o same_.o save-cwd_.o \
 savedir_.o stat_.o stime_.o stpcpy_.o strcasecmp_.o strcspn_.o \
 strdup_.o strftime_.o stripslash_.o strncasecmp_.o strndup_.o \
-strpbrk_.o strstr_.o strtol_.o strtoul_.o strtoull_.o strtoumax_.o \
-strverscmp_.o userspec_.o utime_.o version-etc_.o xgetcwd_.o \
-xgethostname_.o xmalloc_.o xstrdup_.o xstrtod_.o xstrtol_.o xstrtoul_.o \
-xstrtoumax_.o yesno_.o : $(ANSI2KNR)
+strpbrk_.o strstr_.o strtod_.o strtol_.o strtoul_.o strtoull_.o \
+strtoumax_.o strverscmp_.o userspec_.o utime_.o version-etc_.o \
+xgetcwd_.o xgethostname_.o xmalloc_.o xstrdup_.o xstrtod_.o xstrtol_.o \
+xstrtoul_.o xstrtoumax_.o yesno_.o : $(ANSI2KNR)
 .y.c:
 	$(YACC) $(AM_YFLAGS) $(YFLAGS) $< && mv y.tab.c $*.c
 	if test -f y.tab.h; then \
@@ -598,7 +602,6 @@ distdir: $(DISTFILES)
 @AMDEP@include $(DEPDIR)/modechange$U.Po
 @AMDEP@include $(DEPDIR)/mountlist.Po
 @AMDEP@include $(DEPDIR)/nanosleep.Po
-@AMDEP@include $(DEPDIR)/obstack$U.Po
 @AMDEP@include $(DEPDIR)/obstack.Po
 @AMDEP@include $(DEPDIR)/path-concat$U.Po
 @AMDEP@include $(DEPDIR)/posixtm$U.Po
@@ -626,6 +629,7 @@ distdir: $(DISTFILES)
 @AMDEP@include $(DEPDIR)/strndup.Po
 @AMDEP@include $(DEPDIR)/strpbrk.Po
 @AMDEP@include $(DEPDIR)/strstr.Po
+@AMDEP@include $(DEPDIR)/strtod.Po
 @AMDEP@include $(DEPDIR)/strtol.Po
 @AMDEP@include $(DEPDIR)/strtoul.Po
 @AMDEP@include $(DEPDIR)/strtoull.Po
