@@ -62,6 +62,7 @@ printenv
 printf
 ptx
 pwd
+readlink
 rm
 rmdir
 seq
