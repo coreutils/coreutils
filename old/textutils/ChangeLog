@@ -3,6 +3,11 @@
 
 2001-08-24  Paul Eggert  <eggert@twinsun.com>
 
+	* src/uniq.c (main): Don't report an error when given the
+	valid options `+3 -d'.
+
+2001-08-24  Paul Eggert  <eggert@twinsun.com>
+
 	* src/uniq.c (different): Don't assume that lengths can fit
 	into size_t.  Tune code for the common case where the line
 	lengths differ: we avoid comparing them entirely in that case.
