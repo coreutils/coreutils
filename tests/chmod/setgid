@@ -1,0 +1,56 @@
+#!/bin/sh
+# Make sure GNU chmod works the same way as those of Solaris, HPUX, AIX
+# wrt directories with the setgid bit set.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  chmod --version
+fi
+
+. $srcdir/../envvar-check
+. $srcdir/../lang-default
+
+pwd=`pwd`
+tmp=FIXME.$$
+trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
+trap '(exit $?); exit' 1 2 13 15
+
+framework_failure=0
+
+# Record absolute path of srcdir and cd back to current dir.
+cd $srcdir || framework_failure=1
+abs_srcdir=`pwd`
+cd $pwd || framework_failure=1
+
+mkdir $tmp || framework_failure=1
+cd $tmp || framework_failure=1
+
+. $abs_srcdir/../setgid-check
+
+if test $framework_failure = 1; then
+  echo 'failure in testing framework' 1>&2
+  (exit 1); exit
+fi
+
+fail=0
+
+umask 0
+mkdir d
+chmod g+s d
+chmod 755 d
+
+# To be compatible with chmod from other vendors,
+# GNU chmod must not reset a directory's setgid bit.
+# The latest POSIX draft (d5) allows either behavior.  It says:
+#
+#   For regular files, for each bit set in the octal number
+#   corresponding to the set-user-ID-on-execution or the
+#   set-group-ID-on-execution, bits shown in the following table shall
+#   be set; if these bits are not set in the octal number, they are
+#   cleared. For other file types, it is implementation-defined whether
+#   or not requests to set or clear the set-user-ID-on-execution or
+#   set-group-ID-on-execution bits are honored.
+
+p=`ls -ld d|sed 's/ .*//'`; case $p in drwxr-sr-x);; *) fail=1;; esac
+
+(exit $fail); exit
