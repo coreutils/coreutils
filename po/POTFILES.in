@@ -10,7 +10,6 @@ lib/file-type.c
 lib/getopt.c
 lib/human.c
 lib/makepath.c
-lib/mmap-stack.h
 lib/obstack.c
 lib/quotearg.c
 lib/rpmatch.c
