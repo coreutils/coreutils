@@ -1,5 +1,13 @@
 1997-10-14  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/sort.c: Use STREQ in place of most uses of strcmp.
+	(NLS_STRCMP): Define.
+	(getmonth): Remove ifdef and use NLS_STRCMP instead.
+	Use HAVE_ALLOCA, not _HAVE_ALLOCA.
+	(zaptemp): Make parameter `const'.
+
+	* tests/sort-test/Test.pm: Add tests to exercise fraccompare.
+
 	* src/sort.c (CHARS_IN_ABM): Remove definition
 	(inittables): Remove assumption that all abbreviated month names have
 	length 3.
