@@ -1,3 +1,10 @@
+User-visible changes in release 3.10:
+* New program: sync.
+* Fix bug in cp that made the commands `ln -s . s; cp -rd s r' incorrectly
+  create `r' as a symlink instead of as a regular file.
+* du's -S and -c options now work when used together.
+  Before, the grand total was always reported to be zero.
+
 Major changes in release 3.9:
 * --help gives a one-line description of each option and shows the
   correspondence between short and long-named options.

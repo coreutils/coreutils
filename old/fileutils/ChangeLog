@@ -1,3 +1,149 @@
+Thu Jun 30 10:28:32 1994  Jim Meyering  (meyering@comco.com)
+
+	* ls.c (longdiff) [SIZEOF_INT == 2]: Choose which version of this
+	macro to use based on SIZEOF_INT rather than obsolete INT_16_BITS.
+	[INODE_DIGITS]: New macro.
+	(print_long_format): Use it.
+	(print_file_name_and_frills): Ditto.
+	(length_of_file_name_and_frills): Ditto.
+	(print_long_format): Add a couple casts to unsigned types.
+
+	* ls.c: Change type name from `struct file' to `struct fileinfo'.
+	David J. Mackenzie reported a name conflict on HPUX with the former.
+
+	* dd.c (copy): Allocate an extra byte so I/O buffer begins on an
+	even address.  This because the ITOS 3000WS running SEIUX 3.1
+	(a descendant of MIPS RISC/OS 4.x) has SCSI device drivers that
+	require the I/O buffer begin on an even address.  From
+	Tilman Schmidt <tilman@gb1.sema.de>.
+
+Mon Jun 20 23:45:34 1994  Jim Meyering  (meyering@comco.com)
+
+	* configure.in: Use AC_PROGRAM_PATH to get values for LN, MV, RM.
+	(AC_HAVE_FUNCS): Add getgroups.
+	(AC_OUTPUT): Remove touch command.
+
+	* eaccess.c (in_group): Remove static function.  Use group_member
+	instead.
+	(eaccess_stat, eaccess): Change calling sequence to take filename.
+	Save UID and GID and use access if they are the same as effective IDs.
+	(main) [TEST]: Test driver.
+	* cp.c (copy): Update callers.
+	* mv.c (do_move): Ditto.
+	* rm.c (remove_file): Ditto.
+
+	* cp.c (copy): With --preserve (-p) for non-root users, don't even
+	try to preserve file ownership in chown call.  Otherwise, on systems
+	with the mis-feature allowing non-root users to change file ownership,
+	the subsequent chmod would fail.
+
+	* userspec.c (parse_user_spec): Rewrite.  Be careful to free all
+	allocated memory upon error.
+	(main) [TEST]: Test driver.
+
+	* src/Makefile.in (uninstall): Delete $(LIBPROGS) one at a time
+	instead of like `rm -f $(libdir)/$(LIBPROGS)'.  The old way loses
+	when LIBPROGS is empty and $(libdir) is a non-directory, and would
+	lose if LIBPROGS could ever have more than one word.
+	* (RM, LN, MV, INSTALL): Use values determined by ./configure instead
+	of the newly built binaries so people can build with a cross
+	compiler and still run `make (un)install.'
+
+	* chgrp.c (change_file_group): Give a better error message when
+	failing because the invoking user does not belong to the requested
+	group.  This affects systems on which chown sets errno to EPERM
+	for both `inaccessible file' and `user not a member of the specified
+	group' errors.  Before, `chgrp bin file-I-own' would give the
+	misleading and incorrect diagnostic `chgrp: file-I-own: Not owner'.
+	Now it reports `you are not a member of group `bin''.
+	Thomas A Peterson (tap@src.honeywell.com) reported this weakness.
+
+	* long-options.c: Move from src/ to lib/.
+	* long-options.h: Ditto.
+	* src/Makefile.in: Remove references to long-options.[ch].
+	* lib/Makefile.in (SOURCES, OBJECTS): Add long-options.[co].
+
+Sat Jun 18 15:45:34 1994  Jim Meyering  (meyering@comco.com)
+
+	* du.c (count_entry): Print "/" instead of zero-length string.
+	From Kjetil Torgrim Homme <kjetilho@ifi.uio.no>.
+
+Sun May 29 13:43:50 1994  Jim Meyering  (meyering@comco.com)
+
+	* group-member.c: New file.
+	* lib/Makefile.in (SOURCES, OBJECTS): Add group-member.[co].
+
+	* sync.c: New file.
+	* Makefile.in (PROGS): Add sync.
+	(SOURCES): Add sync.c
+	* src/Makefile.in: Add rules and dependencies for sync.
+
+	* configure.in: Use AC_SET_MAKE and AC_PROG_INSTALL.
+	If AC_FUNC_CHECK doesn't find getgroups, add -lbsd if possible.
+	This was reported by Tilman Schmidt <ts@gb1.sema.de>
+	to be necessary on an ITOS 3000WS running SEIUX 3.1.
+
+	* Makefile.in: Edit MAKE assignments into @SET_MAKE@.
+	(Makefile): Remove dependencies on */Makefile.in.
+	Change the rule so running config.status creates only Makefile.
+	(stamp-config): Have config.status generate only config.h.
+
+	* {lib,man,src}/Makefile.in (Makefile): Add single dependency on
+	Makefile.in and rule to make config.status create only Makefile.
+
+	* system.h: Move from lib to src.
+	* src/Makefile.in (DISTFILES): Add system.h.
+	* lib/Makefile.in (DISTFILES): Remove system.h.
+
+Mon Apr 18 19:54:24 1994  Jim Meyering  (meyering@comco.com)
+
+	* documentation: Change uses of `pathname' and `path' as per
+	GNU standards.
+
+Fri Apr 15 20:41:15 1994  Jim Meyering  (meyering@comco.com)
+
+	* mv.c (main): Give a reason for failure when given fewer than
+	two non-option arguments, rather than just the pointer to --help.
+	* ln.c (main): Ditto, but for no non-option arguments.
+
+	* configure.in: Update for autoconf-1.8.
+	Use AC_CHECKING instead of echo.
+	Use AC_SIZEOF_TYPE instead of obsolete AC_INT_16_BITS.
+
+Wed Apr 13 11:18:19 1994  Jim Meyering  (meyering@comco.com)
+
+	* cp.c (copy_reg): Correct off-by-DEV_BSIZE error in test for
+	whether a file has holes.  From Michael Bushnell <mib@gnu.ai.mit.edu>.
+
+Wed Mar 30 08:53:21 1994  Jim Meyering  (meyering@comco.com)
+
+	* configure.in: Use AC_SET_MAKE.
+	* Makefile.in: Edit MAKE assignments into @SET_MAKE@.
+
+Mon Mar 14 11:01:09 1994  Jim Meyering  (meyering@comco.com)
+
+	* fsusage.c (adjust_blocks): Return -1 when FROMSIZE is non-positive.
+	Suggestion from Andries.Brouwer@cwi.nl.  He reported that df failed
+	with divide by zero when trying to process an entry for an nfs file
+	system mounted over a SLIP line after the SLIP connection had been
+	broken.
+	[convert_blocks]: Rename macro to CONVERT_BLOCKS.
+
+Sat Jan 29 13:24:07 1994  Jim Meyering  (meyering@comco.com)
+
+	* du.c (main): Call du_files (with ".") when there are no
+	non-option arguments rather than treating that as a special case.
+	(du_files): Ignore return value from count_entry.
+	(count_entry): Accumulate file sizes into new global sum used for
+	the -c option;  the return value is unchanged and is still used
+	by recursive calls.  Now, using -S and -c together works.
+	Add parentheses to clarify precedence.
+
+Fri Jan 28 11:02:21 1994  Jim Meyering  (meyering@comco.com)
+
+	* configure.in: Don't set LDFLAGS since linking now uses both
+	LDFLAGS and CFLAGS.
+
 Thu Jan 13 17:27:38 1994  Jim Meyering  (meyering@comco.com)
 
 	* src/Makefile.in: Change all link commands to use both $(CFLAGS)
