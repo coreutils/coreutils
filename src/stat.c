@@ -74,6 +74,7 @@
 #include "filemode.h"
 #include "fs.h"
 #include "getopt.h"
+#include "quote.h"
 #include "quotearg.h"
 #include "xreadlink.h"
 
@@ -461,8 +462,6 @@ print_statfs (char *pformat, char m, char const *filename,
 static void
 print_stat (char *pformat, char m, char const *filename, void const *data)
 {
-  char linkname[256];
-  int i;
   struct stat *statbuf = (struct stat *) data;
   struct passwd *pw_ent;
   struct group *gw_ent;
@@ -477,24 +476,21 @@ print_stat (char *pformat, char m, char const *filename, void const *data)
       strcat (pformat, "s");
       if ((statbuf->st_mode & S_IFMT) == S_IFLNK)
 	{
-	  if ((i = readlink (filename, linkname, 256)) == -1)
+	  char *linkname = xreadlink (filename);
+	  if (linkname == NULL)
 	    {
-	      perror (filename);
+	      error (0, errno, _("cannot read symbolic link %s"),
+		     quote (filename));
 	      return;
 	    }
-	  linkname[(i >= 256) ? 255 : i] = '\0';
 	  /*printf("\"%s\" -> \"%s\"", filename, linkname); */
-	  printf ("\"");
-	  printf (pformat, filename);
-	  printf ("\" -> \"");
-	  printf (pformat, linkname);
-	  printf ("\"");
+	  printf (pformat, quote (filename));
+	  printf (" -> ");
+	  printf (pformat, quote (linkname));
 	}
       else
 	{
-	  printf ("\"");
-	  printf (pformat, filename);
-	  printf ("\"");
+	  printf (pformat, quote (filename));
 	}
       break;
     case 'd':
@@ -600,53 +596,42 @@ print_it (char const *masterformat, char const *filename,
 	  void (*print_func) (char *, char, char const *, void const *),
 	  void const *data)
 {
-  char *m, *b, *format;
-  char pformat[65];
+  char *b;
 
   /* create a working copy of the format string */
-  format = strdup (masterformat);
-  if (!format)
-    {
-      perror (filename);
-      return;
-    }
+  char *format = xstrdup (masterformat);
+
+  char *dest = xmalloc (strlen (format) + 1);
+
 
   b = format;
   while (b)
     {
-      if ((m = strchr (b, (int) '%')) != NULL)
+      char *p = strchr (b, '%');
+      if (p != NULL)
 	{
-	  strcpy (pformat, "%");
-	  *m++ = '\0';
+	  char *d;
+	  size_t len;
+	  *p++ = '\0';
 	  fputs (b, stdout);
 
-	  /* copy all format specifiers to our format string */
-	  while (isdigit (*m) || strchr ("#0-+. I", *m))
-	    {
-	      char copy[2] = "a";
+	  len = strspn (p, "#-+.I 0123456789");
+	  dest[0] = '%';
+	  d = stpncpy (dest + 1, p, len);
+	  *d = 0;
+	  p += len;
 
-	      *copy = *m;
-	      /* make sure the format specifier is not too long */
-	      if (strlen (pformat) > 63)
-		fprintf (stderr,
-			 "Warning: Format specifier too long, truncating: %s\n",
-			 pformat);
-	      else
-		strcat (pformat, copy);
-	      m++;
-	    }
-
-	  switch (*m)
+	  switch (*p)
 	    {
 	    case '\0':
 	    case '%':
 	      fputs ("%", stdout);
 	      break;
 	    default:
-	      print_func (pformat, *m, filename, data);
+	      print_func (dest, *p, filename, data);
 	      break;
 	    }
-	  b = m + 1;
+	  b = p + 1;
 	}
       else
 	{
@@ -655,7 +640,8 @@ print_it (char const *masterformat, char const *filename,
 	}
     }
   free (format);
-  printf ("\n");
+  free (dest);
+  fputc ('\n', stdout);
 }
 
 /* stat the filesystem and print what we find */
@@ -667,27 +653,19 @@ do_statfs (char const *filename, int terse, char const *format)
 
   if (i == -1)
     {
-      perror (filename);
+      error (0, errno, _("cannot read file system information for %s"),
+	     quote (filename));
       return;
     }
 
   if (format == NULL)
     {
-      if (terse)
-	{
-#define DEFAULT_FORMAT_TERSE "%n %i %l %t %b %f %a %s %c %d"
-#define DEFAULT_FORMAT_VERBOSE						\
-  "  File: \"%n\"\n"							\
-  "    ID: %-8i Namelen: %-7l Type: %T\n"				\
-  "Blocks: Total: %-10b Free: %-10f Available: %-10a Size: %s\n"	\
-  "Inodes: Total: %-10c Free: %-10d"
-
-	  format = DEFAULT_FORMAT_TERSE;
-	}
-      else
-	{
-	  format = DEFAULT_FORMAT_VERBOSE;
-	}
+      format = (terse
+		? "%n %i %l %t %b %f %a %s %c %d"
+		: "  File: \"%n\"\n"
+		"    ID: %-8i Namelen: %-7l Type: %T\n"
+		"Blocks: Total: %-10b Free: %-10f Available: %-10a Size: %s\n"
+		"Inodes: Total: %-10c Free: %-10d");
     }
 
   print_it (format, filename, print_statfs, &statfsbuf);
@@ -705,7 +683,7 @@ do_stat (char const *filename, int follow_links, int terse,
 
   if (i == -1)
     {
-      perror (filename);
+      error (0, errno, _("cannot stat %s"), quote (filename));
       return;
     }
 
