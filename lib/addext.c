@@ -1,5 +1,7 @@
 /* addext.c -- add an extension to a file name
-   Copyright 1990, 1997, 1998, 1999, 2001, 2002 Free Software Foundation, Inc.
+
+   Copyright (C) 1990, 1997, 1998, 1999, 2001, 2003 Free Software
+   Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -29,9 +31,7 @@
 # define HAVE_LONG_FILE_NAMES 0
 #endif
 
-#if HAVE_LIMITS_H
-# include <limits.h>
-#endif
+#include <limits.h>
 #ifndef _POSIX_NAME_MAX
 # define _POSIX_NAME_MAX 14
 #endif
@@ -83,7 +83,11 @@ addext (char *filename, char const *ext, int e)
 	  *s = c;
 	}
       if (0 <= name_max || errno == 0)
-	slen_max = name_max == (long) (size_t) name_max ? name_max : -1;
+	{
+	  long size = slen_max = name_max;
+	  if (name_max != size)
+	    slen_max = -1;
+	}
     }
 #endif
 
