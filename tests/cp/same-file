@@ -4,6 +4,11 @@
 
 : ${CP=cp}
 
+if test "$VERBOSE" = yes; then
+  set -x
+  $CP --version
+fi
+
 LANGUAGE=C; export LANGUAGE
 LANG=C; export LANG
 
