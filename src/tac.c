@@ -146,7 +146,7 @@ With no FILE, or when FILE is -, read standard input.\n\
 }
 
 static RETSIGTYPE
-cleanup (void)
+cleanup (int signum)
 {
   unlink (tempfile);
   exit (1);
@@ -163,7 +163,7 @@ xmalloc (unsigned int n)
   if (p == 0)
     {
       error (0, 0, _("virtual memory exhausted"));
-      cleanup ();
+      cleanup (0);
     }
   return p;
 }
@@ -177,7 +177,7 @@ xrealloc (char *p, unsigned int n)
   if (p == 0)
     {
       error (0, 0, _("virtual memory exhausted"));
-      cleanup ();
+      cleanup (0);
     }
   return p;
 }
@@ -188,7 +188,7 @@ xwrite (int desc, const char *buffer, int size)
   if (full_write (desc, buffer, size) < 0)
     {
       error (0, errno, _("write error"));
-      cleanup ();
+      cleanup (0);
     }
 }
 
@@ -295,7 +295,7 @@ tac (int fd, const char *file)
 	  else if (ret == -2)
 	    {
 	      error (0, 0, _("error in regular expression search"));
-	      cleanup ();
+	      cleanup (0);
 	    }
 	  else
 	    {
@@ -439,23 +439,23 @@ save_stdin (void)
   if (fd == -1)
     {
       error (0, errno, "%s", tempfile);
-      cleanup ();
+      cleanup (0);
     }
   while ((bytes_read = safe_read (0, buffer, read_size)) > 0)
     if (full_write (fd, buffer, bytes_read) < 0)
       {
 	error (0, errno, "%s", tempfile);
-	cleanup ();
+	cleanup (0);
       }
   if (close (fd) < 0)
     {
       error (0, errno, "%s", tempfile);
-      cleanup ();
+      cleanup (0);
     }
   if (bytes_read == -1)
     {
       error (0, errno, _("read error"));
-      cleanup ();
+      cleanup (0);
     }
 }
 
