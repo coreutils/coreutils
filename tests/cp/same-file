@@ -70,7 +70,8 @@ for args in 'foo symlink' 'symlink foo' 'foo foo' 'sl1 sl2' 'foo hardlink'; do
 	# and put brackets around the output.
 	test -s _err && echo "[`sed 's/^[^:][^:]*:/cp:/' _err`]"
 	# Strip off all but the file names.
-	ls="`ls -lgG --ignore=_err . \
+	# Omit the variable-width owner and group names.
+	ls="`ls -gG --ignore=_err . \
 	    | sed \
 	        -e '/^total /d' \
 		-e 's/^......................................//'`"
