@@ -9,4 +9,6 @@ TESTS_ENVIRONMENT = \
   PATH="`pwd`/../../src$(PATH_SEPARATOR)$$PATH" \
   PROG=tail
 
-TESTS = big-4gb proc-ksyms start-middle assert assert-2
+TESTS = \
+  tail-n0f \
+  big-4gb proc-ksyms start-middle assert assert-2
