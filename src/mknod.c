@@ -186,8 +186,10 @@ numbers must be specified"));
 	  error (1, 0, _("invalid minor device number %s"), quote (s_minor));
 
 	device = makedev (i_major, i_minor);
+#ifdef NODEV
 	if (device == NODEV)
 	  error (1, 0, _("invalid device %s %s"), s_major, s_minor);
+#endif
 
 	if (mknod (argv[optind], newmode | node_type, device) != 0)
 	  error (1, errno, "%s", quote (argv[optind]));
