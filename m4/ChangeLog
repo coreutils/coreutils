@@ -1,5 +1,6 @@
 2004-12-06  Jim Meyering  <jim@meyering.net>
 
+	* chdir-long.m4 (gl_FUNC_CHDIR_LONG): Use AC_LIBSOURCES.
 	* openat.m4 (gl_FUNC_OPENAT): Use AC_LIBSOURCES.
 	(gl_PREREQ_GETCWD): Use AC_REQUIRE.
 
