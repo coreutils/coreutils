@@ -1,5 +1,5 @@
 /* install - copy files and set attributes
-   Copyright (C) 89, 90, 91, 1995-2002 Free Software Foundation, Inc.
+   Copyright (C) 89, 90, 91, 1995-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -279,7 +279,7 @@ main (int argc, char **argv)
   n_files = argc - optind;
   file = argv + optind;
 
-  if (n_files == 0 || (n_files == 1 && !dir_arg))
+  if (argc <= optind || (n_files == 1 && !dir_arg))
     {
       error (0, 0, _("too few arguments"));
       usage (EXIT_FAILURE);
