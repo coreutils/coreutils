@@ -19,8 +19,9 @@
 #include <sys/types.h>
 #include "system.h"
 
-long argdecode ();
 void error ();
+
+static long argdecode ();
 
 /* The name by which this program was run. */
 char *program_name;
@@ -49,7 +50,7 @@ main (argc, argv)
   exit (0);
 }
 
-long
+static long
 argdecode (s)
      char *s;
 {

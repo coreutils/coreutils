@@ -133,6 +133,8 @@ static int term ();
 static int and ();
 static int or ();
 
+static int group_member ();
+
 static void
 test_syntax_error (format, arg)
      char *format, *arg;
@@ -165,7 +167,6 @@ eaccess (path, mode)
      char *path;
      int mode;
 {
-  extern int group_member ();
   struct stat st;
   static int euid = -1;
 
@@ -206,7 +207,7 @@ static int default_group_array_size = 0;
 #endif /* HAVE_GETGROUPS */
 
 /* Return non-zero if GID is one that we have in our groups list. */
-int
+static int
 group_member (gid)
      gid_t gid;
 {

@@ -59,16 +59,17 @@ unsigned long strtoul ();
 #define octtobin(c) ((c) - '0')
 
 char *xmalloc ();
-double xstrtod ();
-int print_esc ();
-int print_formatted ();
-long xstrtol ();
-unsigned long xstrtoul ();
 void error ();
-void print_direc ();
-void print_esc_char ();
-void print_esc_string ();
-void verify ();
+
+static double xstrtod ();
+static int print_esc ();
+static int print_formatted ();
+static long xstrtol ();
+static unsigned long xstrtoul ();
+static void print_direc ();
+static void print_esc_char ();
+static void print_esc_string ();
+static void verify ();
 
 /* The name this program was run with. */
 char *program_name;
@@ -112,7 +113,7 @@ main (argc, argv)
    arguments to any `%' directives.
    Return the number of elements of ARGV used.  */
 
-int
+static int
 print_formatted (format, argc, argv)
      char *format;
      int argc;
@@ -232,7 +233,7 @@ print_formatted (format, argc, argv)
    Return the number of characters in the escape sequence
    besides the backslash. */
 
-int
+static int
 print_esc (escstart)
      char *escstart;
 {
@@ -268,7 +269,7 @@ print_esc (escstart)
 
 /* Output a single-character \ escape.  */
 
-void
+static void
 print_esc_char (c)
      char c;
 {
@@ -306,7 +307,7 @@ print_esc_char (c)
 
 /* Print string STR, evaluating \ escapes. */
 
-void
+static void
 print_esc_string (str)
      char *str;
 {
@@ -322,7 +323,7 @@ print_esc_string (str)
    If FIELD_WIDTH or PRECISION is non-negative, they are args for
    '*' values in those fields. */
 
-void
+static void
 print_direc (start, length, field_width, precision, argument)
      char *start;
      int length;
@@ -422,7 +423,7 @@ print_direc (start, length, field_width, precision, argument)
   free (p);
 }
 
-unsigned long
+static unsigned long
 xstrtoul (s)
      char *s;
 {
@@ -435,7 +436,7 @@ xstrtoul (s)
   return val;
 }
 
-long
+static long
 xstrtol (s)
      char *s;
 {
@@ -448,7 +449,7 @@ xstrtol (s)
   return val;
 }
 
-double
+static double
 xstrtod (s)
      char *s;
 {
@@ -461,7 +462,7 @@ xstrtod (s)
   return val;
 }
 
-void
+static void
 verify (s, end)
      char *s, *end;
 {

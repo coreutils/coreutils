@@ -35,8 +35,9 @@
 #include "system.h"
 
 void error ();
-void print_element ();
-void usage ();
+
+static void print_element ();
+static void usage ();
 
 /* Values that are bitwise or'd into `toprint'. */
 /* Operating system name. */
@@ -60,7 +61,7 @@ static unsigned char toprint;
 /* The name this program was run with, for error messages. */
 char *program_name;
 
-static struct option long_options[] =
+static struct option const long_options[] =
 {
   {"sysname", 0, NULL, 's'},
   {"nodename", 0, NULL, 'n'},
@@ -133,7 +134,7 @@ main (argc, argv)
    print ELEMENT; then print a space unless it is the last element to
    be printed, in which case print a newline. */
 
-void
+static void
 print_element (mask, element)
      unsigned char mask;
      char *element;
@@ -145,7 +146,7 @@ print_element (mask, element)
     }
 }
 
-void
+static void
 usage ()
 {
   fprintf (stderr, "\

@@ -84,14 +84,15 @@
 
 int putenv ();
 void error ();
-void usage ();
+
+static void usage ();
 
 extern char **environ;
 
 /* The name by which this program was run. */
 char *program_name;
 
-static struct option longopts[] =
+static struct option const longopts[] =
 {
   {"ignore-environment", 0, NULL, 'i'},
   {"unset", 1, NULL, 'u'},
@@ -157,7 +158,7 @@ main (argc, argv, envp)
   error (errno == ENOENT ? 127 : 126, errno, "%s", argv[optind]);
 }
 
-void
+static void
 usage ()
 {
   fprintf (stderr, "\

@@ -58,11 +58,12 @@ gid_t getegid ();
 char *xmalloc ();
 int getugroups ();
 void error ();
-void print_user ();
-void print_group ();
-void print_group_list ();
-void print_full_info ();
-void usage ();
+
+static void print_user ();
+static void print_group ();
+static void print_group_list ();
+static void print_full_info ();
+static void usage ();
 
 /* The name this program was run with. */
 char *program_name;
@@ -89,7 +90,7 @@ static gid_t rgid, egid;
 /* The number of errors encountered so far. */
 static int problems = 0;
 
-static struct option longopts[] =
+static struct option const longopts[] =
 {
   {"group", 0, NULL, 'g'},
   {"name", 0, NULL, 'n'},
@@ -173,7 +174,7 @@ main (argc, argv)
 
 /* Print the name or value of user ID UID. */
 
-void
+static void
 print_user (uid)
      int uid;
 {
@@ -194,7 +195,7 @@ print_user (uid)
 
 /* Print the name or value of group ID GID. */
 
-void
+static void
 print_group (gid)
      int gid;
 {
@@ -215,7 +216,7 @@ print_group (gid)
 
 /* Print all of the distinct groups the user is in . */
 
-void
+static void
 print_group_list (username)
      char *username;
 {
@@ -258,7 +259,7 @@ print_group_list (username)
 
 /* Print all of the info about the user's user and group IDs. */
 
-void
+static void
 print_full_info (username)
      char *username;
 {
@@ -336,7 +337,7 @@ print_full_info (username)
 #endif
 }
 
-void
+static void
 usage ()
 {
   fprintf (stderr, "\

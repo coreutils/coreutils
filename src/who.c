@@ -56,19 +56,21 @@
 
 #define MESG_BIT 020		/* Group write bit. */
 
-char *ttyname ();
 
 char *idle_string ();
 char *xmalloc ();
-struct utmp *search_entries ();
 void error ();
-void list_entries ();
-void print_entry ();
-void print_heading ();
-void scan_entries ();
-void usage ();
-void who ();
-void who_am_i ();
+
+
+static char *ttyname ();
+static struct utmp *search_entries ();
+static void list_entries ();
+static void print_entry ();
+static void print_heading ();
+static void scan_entries ();
+static void usage ();
+static void who ();
+static void who_am_i ();
 
 /* The name this program was run with. */
 char *program_name;
@@ -90,7 +92,7 @@ static int include_heading;
    or a `?' if their tty cannot be statted. */
 static int include_mesg;
 
-static struct option longopts[] =
+static struct option const longopts[] =
 {
   {"count", 0, NULL, 'q'},
   {"idle", 0, NULL, 'u'},
@@ -180,7 +182,7 @@ static struct utmp *utmp_contents;
 
 /* Display a list of who is on the system, according to utmp file FILENAME. */
 
-void
+static void
 who (filename)
      char *filename;
 {
@@ -196,7 +198,7 @@ who (filename)
 /* Read the utmp file FILENAME into UTMP_CONTENTS and return the
    number of entries it contains. */
 
-int
+static int
 read_utmp (filename)
      char *filename;
 {
@@ -228,7 +230,7 @@ read_utmp (filename)
 
 /* Display a line of information about entry THIS. */
 
-void
+static void
 print_entry (this)
      struct utmp *this;
 {
@@ -277,7 +279,7 @@ print_entry (this)
 /* Print the username of each valid entry and the number of valid entries
    in `utmp_contents', which should have N elements. */
 
-void
+static void
 list_entries (n)
      int n;
 {
@@ -300,7 +302,7 @@ list_entries (n)
   printf ("\n# users=%u\n", entries);
 }
 
-void
+static void
 print_heading ()
 {
   struct utmp *ut;
@@ -317,7 +319,7 @@ print_heading ()
 
 /* Display `utmp_contents', which should have N entries. */
 
-void
+static void
 scan_entries (n)
      int n;
 {
@@ -343,7 +345,7 @@ scan_entries (n)
    Return the first matching entry found, or NULL if there
    is no matching entry. */
 
-struct utmp *
+static struct utmp *
 search_entries (n, line)
      int n;
      char *line;
@@ -366,7 +368,7 @@ search_entries (n, line)
 /* Display the entry in utmp file FILENAME for this tty on standard input,
    or nothing if there is no entry for it. */
 
-void
+static void
 who_am_i (filename)
      char *filename;
 {
@@ -399,7 +401,7 @@ who_am_i (filename)
 /* Return a string representing the time between WHEN and the time
    that this function is first run. */
 
-char *
+static char *
 idle_string (when)
      time_t when;
 {
@@ -423,7 +425,7 @@ idle_string (when)
   return " old ";
 }
 
-void
+static void
 usage ()
 {
   fprintf (stderr, "\

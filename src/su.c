@@ -77,7 +77,7 @@
 
 #ifdef HAVE_SYSLOG_H
 #include <syslog.h>
-void log_su ();
+static void log_su ();
 #else
 #ifdef SYSLOG_SUCCESS
 #undef SYSLOG_SUCCESS
@@ -134,18 +134,19 @@ void endusershell ();
 void setusershell ();
 
 char *basename ();
-char *concat ();
 char *xmalloc ();
 char *xrealloc ();
-int correct_password ();
-int elements ();
-int restricted_shell ();
-void change_identity ();
 void error ();
-void modify_environment ();
-void run_shell ();
-void usage ();
-void xputenv ();
+
+static char *concat ();
+static int correct_password ();
+static int elements ();
+static int restricted_shell ();
+static void change_identity ();
+static void modify_environment ();
+static void run_shell ();
+static void usage ();
+static void xputenv ();
 
 extern char **environ;
 
@@ -161,7 +162,7 @@ static int simulate_login;
 /* If nonzero, change some environment vars to indicate the user su'd to.  */
 static int change_environment;
 
-static struct option longopts[] =
+static struct option const longopts[] =
 {
   {"command", 1, 0, 'c'},
   {"fast", 0, &fast_startup, 1},
@@ -272,7 +273,7 @@ main (argc, argv)
    0 if not.  Return 1 without asking for a password if run by UID 0
    or if PW has an empty password.  */
 
-int
+static int
 correct_password (pw)
      struct passwd *pw;
 {
@@ -300,7 +301,7 @@ correct_password (pw)
 /* Update `environ' for the new shell based on PW, with SHELL being
    the value for the SHELL environment variable.  */
 
-void
+static void
 modify_environment (pw, shell)
      struct passwd *pw;
      char *shell;
@@ -342,7 +343,7 @@ modify_environment (pw, shell)
 
 /* Become the user and group(s) specified by PW.  */
 
-void
+static void
 change_identity (pw)
      struct passwd *pw;
 {
@@ -363,7 +364,7 @@ change_identity (pw)
    If ADDITIONAL_ARGS is nonzero, pass it to the shell as more
    arguments.  */
 
-void
+static void
 run_shell (shell, command, additional_args)
      char *shell;
      char *command;
@@ -404,7 +405,7 @@ run_shell (shell, command, additional_args)
 /* Log the fact that someone has run su to the user given by PW;
    if SUCCESSFUL is nonzero, they gave the correct password, etc.  */
 
-void
+static void
 log_su (pw, successful)
      struct passwd *pw;
      int successful;
@@ -448,14 +449,14 @@ log_su (pw, successful)
 /* Return 1 if SHELL is a restricted shell (one not returned by
    getusershell), else 0, meaning it is a standard shell.  */
 
-int
+static int
 restricted_shell (shell)
      char *shell;
 {
   char *line;
 
   setusershell ();
-  while (line = getusershell ())
+  while ((line = getusershell ()) != NULL)
     {
       if (*line != '#' && strcmp (line, shell) == 0)
 	{
@@ -469,7 +470,7 @@ restricted_shell (shell)
 
 /* Return the number of elements in ARR, a null-terminated array.  */
 
-int
+static int
 elements (arr)
      char **arr;
 {
@@ -482,7 +483,7 @@ elements (arr)
 
 /* Add VAL to the environment, checking for out of memory errors.  */
 
-void
+static void
 xputenv (val)
      char *val;
 {
@@ -493,7 +494,7 @@ xputenv (val)
 /* Return a newly-allocated string whose contents concatenate
    those of S1, S2, S3.  */
 
-char *
+static char *
 concat (s1, s2, s3)
      char *s1, *s2, *s3;
 {
@@ -508,7 +509,7 @@ concat (s1, s2, s3)
   return result;
 }
 
-void
+static void
 usage ()
 {
   fprintf (stderr, "\

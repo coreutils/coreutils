@@ -26,14 +26,15 @@
 #endif
 #include "system.h"
 
-int isinteger ();
 void error ();
-void usage ();
+
+static int isinteger ();
+static void usage ();
 
 /* The name this program was run with. */
 char *program_name;
 
-static struct option longopts[] =
+static struct option const longopts[] =
 {
   {"adjustment", 1, NULL, 'n'},
   {NULL, 0, NULL, 0}
@@ -122,7 +123,7 @@ main (argc, argv)
 /* Return nonzero if S represents a (possibly signed) decimal integer,
    zero if not. */
 
-int
+static int
 isinteger (s)
      char *s;
 {
@@ -139,7 +140,7 @@ isinteger (s)
   return 1;
 }
 
-void
+static void
 usage ()
 {
   fprintf (stderr, "\

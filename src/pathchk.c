@@ -88,14 +88,15 @@
 #endif
 
 char *xstrdup();
-int validate_path ();
 void error ();
-void usage ();
+
+static int validate_path ();
+static void usage ();
 
 /* The name this program was run with. */
 char *program_name;
 
-static struct option longopts[] =
+static struct option const longopts[] =
 {
   {"portability", 0, NULL, 'p'},
   {NULL, 0, NULL, 0}
@@ -136,7 +137,7 @@ main (argc, argv)
 /* Each element is nonzero if the corresponding ASCII character is
    in the POSIX portable character set, and zero if it is not.
    In addition, the entry for `/' is nonzero to simplify checking. */
-static char portable_chars[] =
+static char const portable_chars[] =
 {
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /* 0-15 */
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /* 16-31 */
@@ -158,14 +159,14 @@ static char portable_chars[] =
 
 /* If PATH contains only portable characters, return 1, else 0.  */
 
-int
+static int
 portable_chars_only (path)
      char *path;
 {
   char *p;
 
   for (p = path; *p; ++p)
-    if (portable_chars[*p] == 0)
+    if (portable_chars[(unsigned char)*p] == 0)
       {
 	error (0, 0, "path `%s' contains nonportable character `%c'",
 	       path, *p);
@@ -177,7 +178,7 @@ portable_chars_only (path)
 /* Return 1 if PATH is a usable leading directory, 0 if not,
    2 if it doesn't exist.  */
 
-int
+static int
 dir_ok (path)
      char *path;
 {
@@ -222,7 +223,7 @@ dir_ok (path)
 
    Return 0 if all of these tests are successful, 1 if any fail. */
 
-int
+static int
 validate_path (path, portability)
      char *path;
      int portability;
@@ -322,7 +323,7 @@ validate_path (path, portability)
   return 0;
 }
 
-void
+static void
 usage ()
 {
   fprintf (stderr, "\

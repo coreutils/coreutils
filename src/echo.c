@@ -126,7 +126,7 @@ just_echo:
 	      register char *s = argv[0];
 	      register int c;
 
-	      while (c = *s++)
+	      while ((c = *s++))
 		{
 		  if (c == '\\' && *s)
 		    {

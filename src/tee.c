@@ -24,9 +24,10 @@
 #include "system.h"
 
 char *xmalloc ();
-int tee ();
 void error ();
 void xwrite ();
+
+static int tee ();
 
 /* If nonzero, append to output files rather than truncating them. */
 static int append;
@@ -37,7 +38,7 @@ static int ignore_interrupts;
 /* The name that this program was run with. */
 char *program_name;
 
-static struct option long_options[] =
+static struct option const long_options[] =
 {
   {"append", 0, NULL, 'a'},
   {"ignore-interrupts", 0, NULL, 'i'},
@@ -101,7 +102,7 @@ Usage: %s [-ai] [--append] [--ignore-interrupts] [file...]\n",
    and into the standard output.
    Return 0 if successful, 1 if any errors occur. */
 
-int
+static int
 tee (nfiles, files)
      int nfiles;
      char **files;

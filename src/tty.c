@@ -26,7 +26,7 @@
 #include <sys/types.h>
 #include "system.h"
 
-void usage ();
+static void usage ();
 
 /* The name under which this program was run. */
 char *program_name;
@@ -34,7 +34,7 @@ char *program_name;
 /* If nonzero, return an exit status but produce no output. */
 static int silent;
 
-static struct option longopts[] =
+static struct option const longopts[] =
 {
   {"silent", 0, NULL, 's'},
   {"quiet", 0, NULL, 's'},
@@ -79,7 +79,7 @@ main (argc, argv)
   exit (tty == NULL);
 }
 
-void
+static void
 usage ()
 {
   fprintf (stderr, "\

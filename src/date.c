@@ -66,8 +66,9 @@ char *xrealloc ();
 time_t get_date ();
 time_t posixtime ();
 void error ();
-void show_date ();
-void usage ();
+
+static void show_date ();
+static void usage ();
 
 /* putenv string to use Universal Coordinated Time.
    POSIX.2 says it should be "TZ=UCT0" or "TZ=GMT0". */
@@ -147,7 +148,7 @@ main (argc, argv)
    in FORMAT, followed by a newline.  If FORMAT is NULL, use the
    standard output format (ctime style but with a timezone inserted). */
 
-void
+static void
 show_date (format, when)
      char *format;
      time_t when;
@@ -180,7 +181,7 @@ show_date (format, when)
   free (out);
 }
 
-void
+static void
 usage ()
 {
   fprintf (stderr, "\

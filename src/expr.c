@@ -67,23 +67,27 @@ static char **args;
 /* The name this program was run with. */
 char *program_name;
 
-VALUE *docolon ();
-VALUE *eval ();
-VALUE *int_value ();
-VALUE *str_value ();
+void error ();
 char *xstrdup ();
 char *strstr ();
 char *xmalloc ();
-int isstring ();
-int nextarg ();
-int nomoreargs ();
-int null ();
-int toarith ();
-void error ();
-void freev ();
-void printv ();
-void tostring ();
-void trace ();
+
+static VALUE *docolon ();
+static VALUE *eval ();
+static VALUE *int_value ();
+static VALUE *str_value ();
+static int isstring ();
+static int nextarg ();
+static int nomoreargs ();
+static int null ();
+static int toarith ();
+static void freev ();
+static void printv ();
+static void tostring ();
+
+#ifdef EVAL_TRACE
+static void trace ();
+#endif
 
 void
 main (argc, argv)
@@ -111,7 +115,7 @@ main (argc, argv)
 
 /* Return a VALUE for I.  */
 
-VALUE *
+static VALUE *
 int_value (i)
      int i;
 {
@@ -125,7 +129,7 @@ int_value (i)
 
 /* Return a VALUE for S.  */
 
-VALUE *
+static VALUE *
 str_value (s)
      char *s;
 {
@@ -139,7 +143,7 @@ str_value (s)
 
 /* Free VALUE V, including structure components.  */
 
-void
+static void
 freev (v)
      VALUE *v;
 {
@@ -150,7 +154,7 @@ freev (v)
 
 /* Print VALUE V.  */
 
-void
+static void
 printv (v)
      VALUE *v;
 {
@@ -167,7 +171,7 @@ printv (v)
 
 /* Return nonzero if V is a null-string or zero-number.  */
 
-int
+static int
 null (v)
      VALUE *v;
 {
@@ -182,7 +186,7 @@ null (v)
 
 /* Return nonzero if V is a string value.  */
 
-int
+static int
 isstring (v)
      VALUE *v;
 {
@@ -191,7 +195,7 @@ isstring (v)
 
 /* Coerce V to a string value (can't fail).  */
 
-void
+static void
 tostring (v)
      VALUE *v;
 {
@@ -212,7 +216,7 @@ tostring (v)
 
 /* Coerce V to an integer value.  Return 1 on success, 0 on failure.  */
 
-int
+static int
 toarith (v)
      VALUE *v;
 {
@@ -247,7 +251,7 @@ toarith (v)
 /* Return nonzero if the next token matches STR exactly.
    STR must not be NULL.  */
 
-int
+static int
 nextarg (str)
      char *str;
 {
@@ -258,7 +262,7 @@ nextarg (str)
 
 /* Return nonzero if there no more tokens.  */
 
-int
+static int
 nomoreargs ()
 {
   return *args == 0;
@@ -267,6 +271,7 @@ nomoreargs ()
 /* The comparison operator handling functions.  */
 
 #define cmpf(name, rel)				\
+static						\
 int name (l, r) VALUE *l; VALUE *r;		\
 {						\
   if (isstring (l) || isstring (r))		\
@@ -278,7 +283,6 @@ int name (l, r) VALUE *l; VALUE *r;		\
  else						\
    return l->u.i rel r->u.i;			\
 }
-
 cmpf (less_than, <)
 cmpf (less_equal, <=)
 cmpf (equal, ==)
@@ -291,6 +295,7 @@ cmpf (greater_than, >)
 /* The arithmetic operator handling functions.  */
 
 #define arithf(name, op)			\
+static						\
 int name (l, r) VALUE *l; VALUE *r;		\
 {						\
   if (!toarith (l) || !toarith (r))		\
@@ -309,7 +314,7 @@ arithf (mod, %)
 #ifdef EVAL_TRACE
 /* Print evaluation trace and args remaining.  */
 
-void
+static void
 trace (fxn)
      char *fxn;
 {
@@ -326,7 +331,7 @@ trace (fxn)
    SV is the VALUE for the lhs (the string),
    PV is the VALUE for the rhs (the pattern).  */
 
-VALUE *
+static VALUE *
 docolon (sv, pv)
      VALUE *sv;
      VALUE *pv;
@@ -374,7 +379,7 @@ docolon (sv, pv)
 
 /* Handle bare operands and ( expr ) syntax.  */
 
-VALUE *
+static VALUE *
 eval7 ()
 {
   VALUE *v;
@@ -401,7 +406,7 @@ eval7 ()
 
 /* Handle match, substr, index, and length keywords.  */
 
-VALUE *
+static VALUE *
 eval6 ()
 {
   VALUE *l;
@@ -476,7 +481,7 @@ eval6 ()
 /* Handle : operator (pattern matching).
    Calls docolon to do the real work.  */
 
-VALUE *
+static VALUE *
 eval5 ()
 {
   VALUE *l;
@@ -505,7 +510,7 @@ eval5 ()
 
 /* Handle *, /, % operators.  */
 
-VALUE *
+static VALUE *
 eval4 ()
 {
   VALUE *l;
@@ -538,7 +543,7 @@ eval4 ()
 
 /* Handle +, - operators.  */
 
-VALUE *
+static VALUE *
 eval3 ()
 {
   VALUE *l;
@@ -569,7 +574,7 @@ eval3 ()
 
 /* Handle comparisons.  */
 
-VALUE *
+static VALUE *
 eval2 ()
 {
   VALUE *l;
@@ -610,7 +615,7 @@ eval2 ()
 
 /* Handle &.  */
 
-VALUE *
+static VALUE *
 eval1 ()
 {
   VALUE *l;
@@ -642,7 +647,7 @@ eval1 ()
 
 /* Handle |.  */
 
-VALUE *
+static VALUE *
 eval ()
 {
   VALUE *l;

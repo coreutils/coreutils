@@ -30,8 +30,9 @@
 #include "system.h"
 
 char *basename ();
-void remove_suffix ();
 void strip_trailing_slashes ();
+
+static void remove_suffix ();
 
 void
 main (argc, argv)
@@ -61,7 +62,7 @@ main (argc, argv)
 /* Remove SUFFIX from the end of NAME if it is there, unless NAME
    consists entirely of SUFFIX. */
 
-void
+static void
 remove_suffix (name, suffix)
      register char *name, *suffix;
 {
