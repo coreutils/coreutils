@@ -133,7 +133,7 @@ AC_DEFUN(jm_MACROS,
   if test $am_cv_func_working_getline != yes; then
     AC_CHECK_FUNCS(getdelim)
   fi
-
+  AM_FUNC_OBSTACK
 ])
 
 AC_DEFUN(jm_CHECK_ALL_TYPES,
