@@ -1,4 +1,4 @@
-#serial 7
+#serial 8
 
 # On some hosts (e.g., HP-UX 10.20, SunOS 4.1.4, Solaris 2.5.1), mkstemp has a
 # silly limit that it can create no more than 26 files from a given template.
@@ -16,15 +16,15 @@ AC_DEFUN([gl_FUNC_MKSTEMP],
       gl_cv_func_mkstemp_limitations,
       [
         mkdir conftest.mkstemp
-        ( cd conftest.mkstemp
-	  AC_TRY_RUN([
+	AC_TRY_RUN([
 #           include <stdlib.h>
+#           include <unistd.h>
 	    int main ()
 	    {
 	      int i;
 	      for (i = 0; i < 70; i++)
 		{
-		  char template[] = "coXXXXXX.tmp";
+		  char template[] = "conftest.mkstemp/coXXXXXX.tmp";
 		  int fd = mkstemp (template);
 		  if (fd == -1)
 		    exit (1);
@@ -37,7 +37,6 @@ AC_DEFUN([gl_FUNC_MKSTEMP],
 	  gl_cv_func_mkstemp_limitations=yes,
 	  gl_cv_func_mkstemp_limitations=yes
 	  )
-	)
         rm -rf conftest.mkstemp
       ]
     )
