@@ -1,6 +1,45 @@
-2003-02-01  Jim Meyering  <jim@meyering.net>
+2003-02-02  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.5.
+
+2003-01-31  Richard Dawe  <rich@phekda.freeserve.co.uk>
+
+	* tests/basename/Makefile.am: Use @PATH_SEPARATOR@ instead of
+	hard-coding the path-separator.  Also double-quote the new PATH,
+	to avoid problems when the path-separator is a semi-colon or when
+	`pwd` contains e.g. a space.
+	* tests/chgrp/Makefile.am: Likewise.
+	* tests/chmod/Makefile.am: Likewise.
+	* tests/chown/Makefile.am: Likewise.
+	* tests/cp/Makefile.am: Likewise.
+	* tests/dd/Makefile.am: Likewise.
+	* tests/dircolors/Makefile.am: Likewise.
+	* tests/du/Makefile.am: Likewise.
+	* tests/expr/Makefile.am: Likewise.
+	* tests/factor/Makefile.am: Likewise.
+	* tests/fmt/Makefile.am: Likewise.
+	* tests/install/Makefile.am: Likewise.
+	* tests/ln/Makefile.am: Likewise.
+	* tests/ls/Makefile.am: Likewise.
+	* tests/ls-2/Makefile.am: Likewise.
+	* tests/md5sum/Makefile.am: Likewise.
+	* tests/misc/Makefile.am: Likewise.
+	* tests/mkdir/Makefile.am: Likewise.
+	* tests/mv/Makefile.am: Likewise.
+	* tests/od/Makefile.am: Likewise.
+	* tests/rm/Makefile.am: Likewise.
+	* tests/rmdir/Makefile.am: Likewise.
+	* tests/seq/Makefile.am: Likewise.
+	* tests/sha1sum/Makefile.am: Likewise.
+	* tests/shred/Makefile.am: Likewise.
+	* tests/stty/Makefile.am: Likewise.
+	* tests/sum/Makefile.am: Likewise.
+	* tests/tail-2/Makefile.am: Likewise.
+	* tests/touch/Makefile.am: Likewise.
+	* tests/tsort/Makefile.am: Likewise.
+	* tests/unexpand/Makefile.am: Likewise.
+
+2003-02-01  Jim Meyering  <jim@meyering.net>
 
 	* src/du.c (MAX_N_DESCRIPTORS): Define.
 
