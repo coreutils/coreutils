@@ -19,16 +19,24 @@ framework_failure=0
 mkdir -p $tmp || framework_failure=1
 cd $tmp || framework_failure=1
 
-# Find a username with UID != 0, and a valid shell.
-non_root_username=
-names=`grep -v '[^:]*:[^:]*:0:' /etc/passwd| sed 's/:.*//'`
-for name in $names; do
-  su -c ':' $name && { non_root_username=$name; break; }
-done
-test "x$non_root_username" = x && framework_failure=1
+: ${NON_ROOT_USERNAME=nobody}
+
+# Ensure that the supplied username is valid and with UID != 0.
+setuidgid $NON_ROOT_USERNAME id -u > id || \
+  {
+    echo "$0: Skipping this test.  To enable it, set the envvar" 1>&2
+    echo "$0: NON_ROOT_USERNAME to a non-root user name." 1>&2
+    (exit 77); exit 77
+  }
+test `cat id` = 0 && \
+  {
+    echo "$0: The specified NON_ROOT_USERNAME ($NON_ROOT_USERNAME)" 1>&2
+    echo "$0: is invalid because its UID is 0." 1>&2
+    (exit 1); exit 1
+  }
 
 # The containing directory must be owned by the user who eventually runs rm.
-chown $non_root_username .
+chown $NON_ROOT_USERNAME .
 
 mkdir a || framework_failure=1
 chmod 1777 a || framework_failure=1
@@ -41,7 +49,7 @@ fi
 
 fail=0
 
-su -c 'rm -rf a' $non_root_username 2> out && fail=1
+setuidgid $NON_ROOT_USERNAME rm -rf a 2> out && fail=1
 cat <<\EOF > exp
 rm: cannot remove `a/b': Operation not permitted
 EOF
