@@ -1,3 +1,31 @@
+1998-07-25  Jim Meyering  <meyering@ascend.com>
+
+	* Version 3.16s.
+
+	* src/remove.c (same_file): New function.
+	(remove_dir): Use it to give a better diagnostic when rmdir fails
+	because it can't remove the current directory.
+
+	* src/df.c (long_options): Changes table entries not to use this form:
+	{"all", no_argument, &show_all_fs, 1},
+	but rather this form:
+	{"all", no_argument, NULL, 'a'},
+	Using the latter, all the option handling in one place: the getopt loop.
+
+	* lib/mountlist.c (read_filesystem_list) [MOUNTED_GETMNTINFO]:
+	Use fsp_to_string.
+	(fsp_to_string): Don't xmalloc return value (yet).
+	(xatoi): Ansideclify.
+	(fstype_to_string): Ansideclify.
+	* lib/mountlist.h: Define and use PARAMS macro.
+
+	* lib/utime.c: New file.
+	* src/touch.c (utime_now): Moved into m4/utimes.m4.
+	(touch) [!HAVE_UTIME_NULL]: Remove #ifdef and use of utime_now
+	in if-block.
+
+	* configure.in (jm_FUNC_UTIME): Use this, not AC_FUNC_UTIME.
+
 1998-07-22  Paul Eggert  <eggert@twinsun.com>
 
 	* lib/human.c (human_readable): amt -> damt, to fix typo when
@@ -6,6 +34,22 @@
 
 	* lib/xstrtol.c: Include <stdio.h> if NDEBUG is not defined;
 	needed on SunOS 4.
+
+1998-07-21  Paul Eggert  <eggert@twinsun.com>
+
+	Add df -l or --local option.
+	* doc/fileutils.texi: Document it.
+	* lib/mountlist.h (REMOTE_FS_TYPE): New macro.
+	* lib/mountlist.c (read_filesystem_list):
+	If all_fs is negative, omit non-local filesytems.
+
+	* src/df.c (show_dev): Omit local devices if show_all_fs is negative.
+	(show_all_fs): If negative, omit non-local filesystems.
+	All uses of (all_fs != 0) changed to (all_fs > 0).
+	(long_options, usage, main): Add -l or --local option.
+	(main): When asking for df of an explicit file name, get all
+	the mount points, so that we're more likely to find it when
+	we look it up.
 
 1998-07-18  Jim Meyering  <meyering@ascend.com>
 
