@@ -267,7 +267,7 @@ TESTS = \
 EXTRA_DIST = $(TESTS)
 TESTS_ENVIRONMENT = \
   MAKE=$(MAKE) \
-  PATH="`pwd`/../../src/vg$(PATH_SEPARATOR)$$PATH"
+  PATH="`pwd`/../../src$(PATH_SEPARATOR)$$PATH"
 
 all: all-am
 

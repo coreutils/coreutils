@@ -274,7 +274,7 @@ TESTS = \
 EXTRA_DIST = $(TESTS) setup vfat
 TESTS_ENVIRONMENT = \
   PERL="$(PERL)" \
-  PATH="`pwd`/../../src/vg$(PATH_SEPARATOR)$$PATH" \
+  PATH="`pwd`/../../src$(PATH_SEPARATOR)$$PATH" \
   PROG=mv
 
 all: all-am
