@@ -217,6 +217,7 @@ wc (fd, file)
   if (print_chars && !print_words && !print_lines)
     {
       off_t current_pos, end_pos;
+      struct stat stats;
 
       if (fstat (fd, &stats) == 0 && S_ISREG (stats.st_mode)
 	  && (current_pos = lseek (fd, (off_t) 0, SEEK_CUR)) != -1
