@@ -1,3 +1,8 @@
+1999-04-30  Jim Meyering  <meyering@ascend.com>
+
+	* src/sort.c (usage): Document the differences between the
+	obsolescent, +POS1[-POS2] form, and the POSIX -k option.
+
 1999-04-24  Jim Meyering  <meyering@ascend.com>
 
 	* configure.in: Use AC_CANONICAL_HOST.
