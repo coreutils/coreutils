@@ -1,5 +1,5 @@
 /* closeout.c - close standard output
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -42,7 +42,23 @@ extern int errno;
 #include "closeout.h"
 #include "error.h"
 
-/* Close standard output, exiting with status STATUS on failure.  */
+/* Close standard output, exiting with status STATUS on failure.
+   If a program writes *anything* to stdout, that program should close
+   stdout and make sure that the close succeeds.  Otherwise, suppose that
+   you go to the extreme of checking the return status of every function
+   that does an explicit write to stdout.  The last printf can succeed in
+   writing to the internal stream buffer, and yet the fclose(stdout) could
+   still fail (due e.g., to a disk full error) when it tries to write
+   out that buffered data.  Thus, you would be left with an incomplete
+   output file and the offending program would exit successfully.
+
+   Besides, it's wasteful to check the return value from every call
+   that writes to stdout -- just let the internal stream state record
+   the failure.  That's what the ferror test is checking below.
+
+   It's important to detect such failures and exit nonzero because many
+   tools (most notably `make' and other build-management systems) depend
+   on being able to detect failure in other tools via their exit status.  */
 void
 close_stdout_status (int status)
 {
