@@ -179,15 +179,17 @@ if test $ac_fsusage_space = no; then
 fi
 
 if test $ac_fsusage_space = no; then
-# SVR2
-AC_TRY_CPP([#include <sys/filsys.h>],
-  AC_DEFINE(STAT_READ_FILSYS, 1,
-[  Define if there is no specific function for reading filesystems usage
-   information and you have the <sys/filsys.h> header file.  (SVR2)])
-  ac_fsusage_space=yes)
+  # SVR2
+  AC_TRY_CPP([#include <sys/filsys.h>
+    ],
+    AC_DEFINE(STAT_READ_FILSYS, 1,
+      [Define if there is no specific function for reading filesystems usage
+       information and you have the <sys/filsys.h> header file.  (SVR2)])
+    ac_fsusage_space=yes)
 fi
 
-dnl FIXME: this should use AS_IF.
+dnl FIXME: this should use AS_IF instead:
+dnl AS_IF([test $ac_fsusage_space = found], [$1], [$2])
 if test $ac_fsusage_space = yes; then
 $1
 else
