@@ -1,3 +1,14 @@
+Sat May 18 13:29:46 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* expr.c (main): Don't recognize --help, --h, --he, --version,
+	--v, etc. if the POSIXLY_CORRECT environment variable is set.
+	* echo.c (main): Likewise.
+	* printf.c (main): Likewise.
+	* test.c (main): Likewise.
+
+	* expr.c (docolon) [RE_SYNTAX_POSIX_BASIC]: Revert my misguided
+	change of Mar 1.
+
 Tue May  7 22:10:20 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* configure.in: Require autoconf-2.10.
