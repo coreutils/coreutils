@@ -45,6 +45,8 @@ char *getwd ();
 # define getcwd(Buf, Max) getwd (Buf)
 #endif
 
+#include "xalloc.h"
+
 /* Return the current directory, newly allocated, arbitrarily long.
    Return NULL and set errno on error. */
 
@@ -52,7 +54,10 @@ char *
 xgetcwd ()
 {
 #if HAVE_GETCWD_NULL
-  return getcwd (NULL, 0);
+  char *cwd = getcwd (NULL, 0);
+  if (! cwd && errno == ENOMEM)
+    xalloc_die ();
+  return cwd;
 #else
 
   /* The initial buffer size for the working directory.  A power of 2
@@ -65,12 +70,9 @@ xgetcwd ()
 
   while (1)
     {
-      char *cwd;
+      char *buf = xmalloc (buf_size);
+      char *cwd = getcwd (buf, buf_size);
       int saved_errno;
-      char *buf = malloc (buf_size);
-      if (! buf)
-	return NULL;
-      cwd = getcwd (buf, buf_size);
       if (cwd)
 	return cwd;
       saved_errno = errno;
@@ -79,10 +81,7 @@ xgetcwd ()
 	return NULL;
       buf_size *= 2;
       if (buf_size == 0)
-	{
-	  errno = ENOMEM;
-	  return NULL;
-	}
+	xalloc_die ();
     }
 #endif
 }
