@@ -1,0 +1,24 @@
+#!/bin/sh
+# Make sure touch works on fifos without hanging.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  touch --version
+fi
+
+framework_failure=0
+
+rm -rf fifo
+mkfifo fifo || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo 'failure in testing framework'
+  exit 1
+fi
+
+fail=0
+
+touch fifo || fail=1
+rm -rf fifo
+
+exit $fail
