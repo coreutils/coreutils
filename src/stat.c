@@ -1,4 +1,4 @@
-/* stat.c -- display file or filesystem status
+/* stat.c -- display file or file system status
    Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation.
 
    This program is free software; you can redistribute it and/or modify
@@ -93,8 +93,9 @@
 static struct option const long_options[] = {
   {"link", no_argument, 0, 'l'}, /* deprecated.  FIXME: remove in 2003 */
   {"dereference", no_argument, 0, 'L'},
+  {"file-system", no_argument, 0, 'f'},
+  {"filesystem", no_argument, 0, 'f'}, /* obsolete and undocumented alias */
   {"format", required_argument, 0, 'c'},
-  {"filesystem", no_argument, 0, 'f'},
   {"terse", no_argument, 0, 't'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
@@ -612,7 +613,7 @@ print_it (char const *masterformat, char const *filename,
   free (dest);
 }
 
-/* stat the filesystem and print what we find */
+/* Stat the file system and print what we find.  */
 static void
 do_statfs (char const *filename, int terse, char const *format)
 {
@@ -699,9 +700,9 @@ usage (int status)
     {
       printf (_("Usage: %s [OPTION] FILE...\n"), program_name);
       fputs (_("\
-Display file or filesystem status.\n\
+Display file or file system status.\n\
 \n\
-  -f, --filesystem      display filesystem status instead of file status\n\
+  -f, --file-system     display file system status instead of file status\n\
   -c  --format=FORMAT   use the specified FORMAT instead of the default\n\
   -L, --dereference     follow links\n\
   -t, --terse           print the information in terse form\n\
@@ -710,7 +711,7 @@ Display file or filesystem status.\n\
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
 
       fputs (_("\n\
-The valid format sequences for files (without --filesystem):\n\
+The valid format sequences for files (without --file-system):\n\
 \n\
   %A   Access rights in human readable form\n\
   %a   Access rights in octal\n\
