@@ -1,3 +1,12 @@
+2001-09-22  Jim Meyering  <meyering@lucent.com>
+
+	* lcmessage.m4: Sync with gettext -- this changes only comments.
+	* progtest.m4: Likewise
+	* isc-posix.m4: Decrement serial number to sync with gettext.
+	* glibc21.m4: Likewise.
+
+	* libintl.m4: Remove.  No longer used.
+
 2001-09-20  Jim Meyering  <meyering@lucent.com>
 
 	* xstrtoimax.m4 (jm_AC_PREREQ_XSTRTOIMAX): Check for declaration of
