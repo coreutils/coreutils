@@ -2,6 +2,9 @@
 
 	* Version 3.16o.
 
+	* configure.in: Use my replacement AC_ISC_POSIX rather than
+	open-coding it.
+
 	* src/copy.c (copy_internal): Plug a small leak.
 
 1998-05-10  Jim Meyering  <meyering@ascend.com>
