@@ -23,6 +23,8 @@
 #include <sys/types.h>
 
 #include "system.h"
+#include "dev-ino.h"
+#include "dirname.h"
 #include "error.h"
 #include "filemode.h"
 #include "modechange.h"
@@ -71,20 +73,28 @@ static enum Verbosity verbosity = V_off;
    of this file.  This file must exist.  */
 static char *reference_file;
 
+/* Pointer to the device and inode numbers of `/', when --recursive.
+   Otherwise NULL.  */
+static struct dev_ino *root_dev_ino;
+
 /* For long options that have no equivalent short option, use a
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
 {
-  REFERENCE_FILE_OPTION = CHAR_MAX + 1
+  NO_PRESERVE_ROOT = CHAR_MAX + 1,
+  PRESERVE_ROOT,
+  REFERENCE_FILE_OPTION
 };
 
 static struct option const long_options[] =
 {
   {"recursive", no_argument, 0, 'R'},
   {"changes", no_argument, 0, 'c'},
-  {"silent", no_argument, 0, 'f'},
+  {"preserve-root", no_argument, 0, PRESERVE_ROOT},
+  {"no-preserve-root", no_argument, 0, NO_PRESERVE_ROOT},
   {"quiet", no_argument, 0, 'f'},
   {"reference", required_argument, 0, REFERENCE_FILE_OPTION},
+  {"silent", no_argument, 0, 'f'},
   {"verbose", no_argument, 0, 'v'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
@@ -158,6 +168,19 @@ change_file_mode (const char *file, const struct mode_change *changes,
       return 1;
     }
 
+  if (root_dev_ino && SAME_INODE (file_stats, *root_dev_ino))
+    {
+      if (STREQ (file, "/"))
+	error (0, 0, _("it is dangerous to operate recursively on %s"),
+	       quote (file));
+      else
+	error (0, 0,
+	       _("it is dangerous to operate recursively on %s (same as %s)"),
+	       quote_n (0, file), quote_n (1, "/"));
+      error (0, 0, _("use --no-preserve-root to override this failsafe"));
+      return 1;
+    }
+
   if (S_ISLNK (file_stats.st_mode))
     return 0;
 
@@ -180,7 +203,12 @@ change_file_mode (const char *file, const struct mode_change *changes,
     }
 
   if (recurse && S_ISDIR (file_stats.st_mode))
-    errors |= change_dir_mode (file, changes);
+    {
+      char *f;
+      ASSIGN_STRDUPA (f, file);
+      strip_trailing_slashes (f);
+      errors |= change_dir_mode (f, changes);
+    }
   return errors;
 }
 
@@ -247,6 +275,8 @@ Usage: %s [OPTION]... MODE[,MODE]... FILE...\n\
 Change the mode of each FILE to MODE.\n\
 \n\
   -c, --changes           like verbose but report only when a change is made\n\
+      --preserve-root     fail to operate recursively on `/'\n\
+      --no-preserve-root  do not treat `/' specially (the default)\n\
   -f, --silent, --quiet   suppress most error messages\n\
   -v, --verbose           output a diagnostic for every file processed\n\
       --reference=RFILE   use RFILE's mode instead of MODE values\n\
@@ -264,6 +294,20 @@ one or more of the letters rwxXstugo.\n\
   exit (status);
 }
 
+/* Call lstat to get the device and inode numbers for `/'.
+   Upon failure, return NULL.  Otherwise, set the members of
+   *ROOT_D_I accordingly and return ROOT_D_I.  */
+static struct dev_ino *
+get_root_dev_ino (struct dev_ino *root_d_i)
+{
+  struct stat statbuf;
+  if (lstat ("/", &statbuf))
+    return NULL;
+  root_d_i->st_ino = statbuf.st_ino;
+  root_d_i->st_dev = statbuf.st_dev;
+  return root_d_i;
+}
+
 /* Parse the ASCII mode given on the command line into a linked list
    of `struct mode_change' and apply that to each file argument. */
 
@@ -274,6 +318,7 @@ main (int argc, char **argv)
   int errors = 0;
   int modeind = 0;		/* Index of the mode argument in `argv'. */
   int thisind;
+  bool preserve_root = false;
   int c;
 
   initialize_main (&argc, &argv);
@@ -316,10 +361,17 @@ main (int argc, char **argv)
 	    {
 	      static char char_string[2] = {0, 0};
 	      char_string[0] = c;
-	      error (EXIT_FAILURE, 0, _("invalid character %s in mode string %s"),
+	      error (EXIT_FAILURE, 0,
+		     _("invalid character %s in mode string %s"),
 		     quote_n (0, char_string), quote_n (1, argv[thisind]));
 	    }
 	  modeind = thisind;
+	  break;
+	case NO_PRESERVE_ROOT:
+	  preserve_root = false;
+	  break;
+	case PRESERVE_ROOT:
+	  preserve_root = true;
 	  break;
 	case REFERENCE_FILE_OPTION:
 	  reference_file = optarg;
@@ -363,6 +415,19 @@ main (int argc, char **argv)
   else if (changes == MODE_BAD_REFERENCE)
     error (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
 	   quote (reference_file));
+
+  if (recurse && preserve_root)
+    {
+      static struct dev_ino dev_ino_buf;
+      root_dev_ino = get_root_dev_ino (&dev_ino_buf);
+      if (root_dev_ino == NULL)
+	error (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
+	       quote ("/"));
+    }
+  else
+    {
+      root_dev_ino = NULL;
+    }
 
   for (; optind < argc; ++optind)
     errors |= change_file_mode (argv[optind], changes, 1);
