@@ -1,7 +1,7 @@
 Sun Jun 29 07:18:25 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/putenv.c (rpl_putenv): Renamed from putenv.
-	[putenv]: Remove definition and subsequent #undef hack to avoid
+	[putenv]: Remove definition and subsequent #undef hack that avoided
 	conflicts with system prototypes.  That didn't let the definition of
 	putenv to rpl_putenv from config.h get through.
 	Suggestion from Marcus Daniels.
