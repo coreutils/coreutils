@@ -27,96 +27,29 @@
  * SUCH DAMAGE.
  */
 
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
-
 #if defined(LIBC_SCCS) && !defined(lint)
 static char sccsid[] = "@(#)fts.c	8.6 (Berkeley) 8/14/94";
 #endif /* LIBC_SCCS and not lint */
 
-#if HAVE_SYS_PARAM_H || defined _LIBC
-# include <sys/param.h>
-#endif
-#ifdef _LIBC
-# include <include/sys/stat.h>
-#else
-# include <sys/stat.h>
-#endif
+#include <sys/param.h>
+#include <include/sys/stat.h>
 #include <fcntl.h>
+#include <dirent.h>
 #include <errno.h>
-#include <fts_.h>
-#include <search.h>
+#include <fts.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
-#if defined _LIBC
-# include <dirent.h>
-# define NAMLEN(dirent) _D_EXACT_NAMLEN (dirent)
-#else
-# if HAVE_DIRENT_H
-#  include <dirent.h>
-#  define NAMLEN(dirent) strlen ((dirent)->d_name)
-# else
-#  define dirent direct
-#  define NAMLEN(dirent) (dirent)->d_namlen
-#  if HAVE_SYS_NDIR_H
-#   include <sys/ndir.h>
-#  endif
-#  if HAVE_SYS_DIR_H
-#   include <sys/dir.h>
-#  endif
-#  if HAVE_NDIR_H
-#   include <ndir.h>
-#  endif
-# endif
-#endif
-
-#ifndef _LIBC
-# undef __close
-# define __close close
-# undef __closedir
-# define __closedir closedir
-# undef __fchdir
-# define __fchdir fchdir
-# undef __open
-# define __open open
-# undef __opendir
-# define __opendir opendir
-# undef __readdir
-# define __readdir readdir
-# undef __tdestroy
-# define __tdestroy tdestroy
-# undef __tfind
-# define __tfind tfind
-# undef __tsearch
-# define __tsearch tsearch
-# undef internal_function
-# define internal_function /* empty */
-#endif
-
-/* Arrange to make lstat calls go through the wrapper function
-   on systems with an lstat function that does not dereference symlinks
-   that are specified with a trailing slash.  */
-#if ! _LIBC && ! LSTAT_FOLLOWS_SLASHED_SYMLINK
-int rpl_lstat (const char *, struct stat *);
-# undef lstat
-# define lstat(Name, Stat_buf) rpl_lstat(Name, Stat_buf)
-#endif
-
-#ifndef __set_errno
-# define __set_errno(Val) errno = (Val)
-#endif
 
 /* Largest alignment size needed, minus one.
    Usually long double is the worst case.  */
 #ifndef ALIGNBYTES
-# define ALIGNBYTES	(__alignof__ (long double) - 1)
+#define ALIGNBYTES	(__alignof__ (long double) - 1)
 #endif
 /* Align P to that size.  */
 #ifndef ALIGN
-# define ALIGN(p)	(((unsigned long int) (p) + ALIGNBYTES) & ~ALIGNBYTES)
+#define	ALIGN(p)	(((unsigned long int) (p) + ALIGNBYTES) & ~ALIGNBYTES)
 #endif
 
 
@@ -133,23 +66,23 @@ static int      fts_safe_changedir __P((FTS *, FTSENT *, int, const char *))
      internal_function;
 
 #ifndef MAX
-# define MAX(a, b)	({ __typeof__ (a) _a = (a); \
+#define MAX(a, b)	({ __typeof__ (a) _a = (a); \
 			   __typeof__ (b) _b = (b); \
 			   _a > _b ? _a : _b; })
 #endif
 
-#define ISDOT(a)	(a[0] == '.' && (!a[1] || (a[1] == '.' && !a[2])))
+#define	ISDOT(a)	(a[0] == '.' && (!a[1] || (a[1] == '.' && !a[2])))
 
 #define CLR(opt)	(sp->fts_options &= ~(opt))
-#define ISSET(opt)	(sp->fts_options & (opt))
-#define SET(opt)	(sp->fts_options |= (opt))
+#define	ISSET(opt)	(sp->fts_options & (opt))
+#define	SET(opt)	(sp->fts_options |= (opt))
 
-#define FCHDIR(sp, fd)	(!ISSET(FTS_NOCHDIR) && __fchdir(fd))
+#define	FCHDIR(sp, fd)	(!ISSET(FTS_NOCHDIR) && __fchdir(fd))
 
 /* fts_build flags */
-#define BCHILD		1		/* fts_children */
-#define BNAMES		2		/* fts_children, names only */
-#define BREAD		3		/* fts_read */
+#define	BCHILD		1		/* fts_children */
+#define	BNAMES		2		/* fts_children, names only */
+#define	BREAD		3		/* fts_read */
 
 FTS *
 fts_open(argv, options, compar)
@@ -185,7 +118,7 @@ fts_open(argv, options, compar)
 	 * to hold the user's paths.
 	 */
 #ifndef MAXPATHLEN
-# define MAXPATHLEN 1024
+#define MAXPATHLEN 1024
 #endif
 	if (fts_palloc(sp, MAX(fts_maxarglen(argv), MAXPATHLEN)))
 		goto mem1;
@@ -203,8 +136,7 @@ fts_open(argv, options, compar)
 			goto mem3;
 		}
 
-		if ((p = fts_alloc(sp, *argv, len)) == NULL)
-			goto mem3;
+		p = fts_alloc(sp, *argv, len);
 		p->fts_level = FTS_ROOTLEVEL;
 		p->fts_parent = parent;
 		p->fts_accpath = p->fts_name;
@@ -243,8 +175,6 @@ fts_open(argv, options, compar)
 		goto mem3;
 	sp->fts_cur->fts_link = root;
 	sp->fts_cur->fts_info = FTS_INIT;
-
-	sp->fts_dir_info = NULL;
 
 	/*
 	 * If using chdir(2), grab a file descriptor pointing to dot to ensure
@@ -335,9 +265,6 @@ fts_close(sp)
 		}
 	}
 
-	/* Free all of the directory fingerprint info.  */
-	__tdestroy (sp->fts_dir_info, free);
-
 	/* Free up the stream pointer. */
 	free(sp);
 	return (0);
@@ -347,7 +274,7 @@ fts_close(sp)
  * Special case of "/" at the end of the path so that slashes aren't
  * appended which would cause paths to be written as "....//foo".
  */
-#define NAPPEND(p)							\
+#define	NAPPEND(p)							\
 	(p->fts_path[p->fts_pathlen - 1] == '/'				\
 	    ? p->fts_pathlen - 1 : p->fts_pathlen)
 
@@ -442,10 +369,6 @@ fts_read(sp)
 		} else if ((sp->fts_child = fts_build(sp, BREAD)) == NULL) {
 			if (ISSET(FTS_STOP))
 				return (NULL);
-			/* If fts_safe_changedir failed because it was not able
-			   to fchdir into a subdirectory, tell the caller.  */
-			if (p->fts_errno)
-				p->fts_info = FTS_ERR;
 			return (p);
 		}
 		p = sp->fts_child;
@@ -766,11 +689,11 @@ fts_build(sp, type)
 		if (!ISSET(FTS_SEEDOT) && ISDOT(dp->d_name))
 			continue;
 
-		if ((p = fts_alloc(sp, dp->d_name, (int)NAMLEN (dp))) == NULL)
+		if ((p = fts_alloc(sp, dp->d_name, (int)_D_EXACT_NAMLEN (dp))) == NULL)
 			goto mem1;
-		if (NAMLEN (dp) >= maxlen) {/* include space for NUL */
+		if (_D_EXACT_NAMLEN (dp) >= maxlen) {/* include space for NUL */
 			oldaddr = sp->fts_path;
-			if (fts_palloc(sp, NAMLEN (dp) + len + 1)) {
+			if (fts_palloc(sp, _D_EXACT_NAMLEN (dp) + len + 1)) {
 				/*
 				 * No more memory for path or structures.  Save
 				 * errno, free up the current structure and the
@@ -795,7 +718,7 @@ mem1:				saved_errno = errno;
 			maxlen = sp->fts_pathlen - len;
 		}
 
-		if (len + NAMLEN (dp) >= 999999999 /* FIXME SIZE_MAX */) {
+		if (len + _D_EXACT_NAMLEN (dp) >= USHRT_MAX) {
 			/*
 			 * In an FTSENT, fts_pathlen is a u_short so it is
 			 * possible to wraparound here.  If we do, free up
@@ -812,7 +735,7 @@ mem1:				saved_errno = errno;
 		}
 		p->fts_level = level;
 		p->fts_parent = sp->fts_cur;
-		p->fts_pathlen = len + NAMLEN (dp);
+		p->fts_pathlen = len + _D_EXACT_NAMLEN (dp);
 
 #if defined FTS_WHITEOUT && 0
 		if (dp->d_type == DT_WHT)
@@ -827,7 +750,7 @@ mem1:				saved_errno = errno;
 				p->fts_info = FTS_NSOK;
 			p->fts_accpath = cur->fts_accpath;
 		} else if (nlinks == 0
-#if defined DT_DIR && defined _DIRENT_HAVE_D_TYPE /* FIXME */
+#if defined DT_DIR && defined _DIRENT_HAVE_D_TYPE
 			   || (nostat &&
 			       dp->d_type != DT_DIR && dp->d_type != DT_UNKNOWN)
 #endif
@@ -910,52 +833,6 @@ mem1:				saved_errno = errno;
 	return (head);
 }
 
-struct known_object
-{
-  dev_t dev;
-  ino_t ino;
-  FTSENT *fts_ent;
-};
-
-static int
-object_compare (const void *p1, const void *p2)
-{
-  /* We don't need a sophisticated and useful comparison.  We are only
-     interested in equality.  However, we must be careful not to
-     accidentally compare `holes' in the structure.  */
-  const struct known_object *kp1 = p1, *kp2 = p2;
-  int cmp1;
-  cmp1 = (kp1->ino > kp2->ino) - (kp1->ino < kp2->ino);
-  if (cmp1 != 0)
-    return cmp1;
-  return (kp1->dev > kp2->dev) - (kp1->dev < kp2->dev);
-}
-
-
-static inline int
-add_object (FTS *fts, FTSENT *data, struct stat *st)
-{
-  struct known_object *newp = malloc (sizeof (struct known_object));
-  if (newp == NULL)
-    return -1;
-  newp->dev = st->st_dev;
-  newp->ino = st->st_ino;
-  newp->fts_ent = data;
-  return __tsearch (newp, &fts->fts_dir_info, object_compare) ? 0 : -1;
-}
-
-
-static inline FTSENT *
-find_object (FTS *fts, struct stat *st)
-{
-  struct known_object obj;
-  struct known_object const *t;
-  obj.dev = st->st_dev;
-  obj.ino = st->st_ino;
-  t = __tfind (&obj, &fts->fts_dir_info, object_compare);
-  return t ? t->fts_ent : NULL;
-}
-
 static u_short
 internal_function
 fts_stat(sp, p, follow)
@@ -963,6 +840,9 @@ fts_stat(sp, p, follow)
 	register FTSENT *p;
 	int follow;
 {
+	register FTSENT *t;
+	register dev_t dev;
+	register ino_t ino;
 	struct stat *sbp, sb;
 	int saved_errno;
 
@@ -1002,7 +882,6 @@ err:		memset(sbp, 0, sizeof(struct stat));
 	}
 
 	if (S_ISDIR(sbp->st_mode)) {
-		register FTSENT *t;
 		/*
 		 * Set the device/inode.  Used to find cycles and check for
 		 * crossing mount points.  Also remember the link count, used
@@ -1010,29 +889,25 @@ err:		memset(sbp, 0, sizeof(struct stat));
 		 * understood that these fields are only referenced if fts_info
 		 * is set to FTS_D.
 		 */
-		p->fts_dev = sbp->st_dev;
-		p->fts_ino = sbp->st_ino;
+		dev = p->fts_dev = sbp->st_dev;
+		ino = p->fts_ino = sbp->st_ino;
 		p->fts_nlink = sbp->st_nlink;
 
 		if (ISDOT(p->fts_name))
 			return (FTS_DOT);
 
 		/*
-		  FIXME
 		 * Cycle detection is done by brute force when the directory
 		 * is first encountered.  If the tree gets deep enough or the
 		 * number of symbolic links to directories is high enough,
 		 * something faster might be worthwhile.
 		 */
-		if ((t = find_object (sp, sbp))) {
-			p->fts_cycle = t;
-			return (FTS_DC);
-		}
-
-		/* Remember the object, ignoring any failure.  If we're running
-		   out of memory, detecting cycles isn't a high priority.  */
-		add_object (sp, p, sbp);
-
+		for (t = p->fts_parent;
+		    t->fts_level >= FTS_ROOTLEVEL; t = t->fts_parent)
+			if (ino == t->fts_ino && dev == t->fts_dev) {
+				p->fts_cycle = t;
+				return (FTS_DC);
+			}
 		return (FTS_D);
 	}
 	if (S_ISLNK(sbp->st_mode))
@@ -1154,7 +1029,7 @@ fts_palloc(sp, more)
 	 * a signed int but in an FTSENT it is an unsigned short.
 	 * We limit fts_pathlen to USHRT_MAX to be safe in both cases.
 	 */
-	if (sp->fts_pathlen < 0 || sp->fts_pathlen >= INT_MAX) {
+	if (sp->fts_pathlen < 0 || sp->fts_pathlen >= USHRT_MAX) {
 		if (sp->fts_path) {
 			free(sp->fts_path);
 			sp->fts_path = NULL;
@@ -1186,7 +1061,7 @@ fts_padjust(sp, head)
 	FTSENT *p;
 	char *addr = sp->fts_path;
 
-#define ADJUST(p) do {							\
+#define	ADJUST(p) do {							\
 	if ((p)->fts_accpath != (p)->fts_name) {			\
 		(p)->fts_accpath =					\
 		    (char *)addr + ((p)->fts_accpath - (p)->fts_path);	\
@@ -1231,14 +1106,14 @@ fts_safe_changedir(sp, p, fd, path)
 	const char *path;
 {
 	int ret, oerrno, newfd;
-	struct stat sb;
+	struct stat64 sb;
 
 	newfd = fd;
 	if (ISSET(FTS_NOCHDIR))
 		return (0);
 	if (fd < 0 && (newfd = __open(path, O_RDONLY, 0)) < 0)
 		return (-1);
-	if (fstat(newfd, &sb)) {
+	if (__fxstat64(_STAT_VER, newfd, &sb)) {
 		ret = -1;
 		goto bail;
 	}
