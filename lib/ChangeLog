@@ -1,5 +1,7 @@
 2002-11-21  Jim Meyering  <jim@meyering.net>
 
+	* strcspn.c: Update from gnulib.
+
 	* sig2str.c (str2signum): Use unsigned, not size_t, for type of index.
 
 	* quotearg.c: Use `"'s when including quotearg.h and xalloc.h,
