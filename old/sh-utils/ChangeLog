@@ -1,6 +1,25 @@
-2002-02-16  Jim Meyering  <meyering@lucent.com>
+2002-02-24  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.12.
+
+	* src/nice.c: Include posixver.h.
+	* src/date.c: Likewise.
+
+2002-02-17  Jim Meyering  <meyering@lucent.com>
+
+	* ABOUT-NLS, intl/*: Update to Gettext 0.11.
+	* INSTALL: Update to Autoconf 2.52h.
+
+	* src/Makefile.am (datadir): Use `share' in place of @DATADIRNAME@,
+	per Gettext-0.11.
+	(LDADD): Use @LIBINTL@ instead of @INTLLIBS@, per Gettext-0.11.
+
+	* configure.ac (AC_CONFIG_AUX_DIR): New macro invocation.
+	(ALL_LINGUAS): Remove: now in po/LINGUAS as per Gettext 0.11.
+
+	* config: New subdirectory, containing the following files from .:
+	config.guess, config.sub, depcomp, missing, install-sh, mkinstalldirs.
+	Move the following files here from doc: texinfo.tex, mdate-sh.
 
 2002-02-15  Paul Eggert  <eggert@twinsun.com>
 
