@@ -314,7 +314,7 @@ option should be a former output of this program.  The default mode is to\n\
 produce a list with the checksum informations.  A file name - denotes stdin.\n"),
 	    program_name);
 
-  exit (status); 
+  exit (status);
 }
 #endif
 
@@ -488,7 +488,7 @@ md5_buffer (buffer, len, resblock)
 #define FF(b, c, d) (work.d ^ (work.b & (work.c ^ work.d)))
 #define FG(b, c, d) FF (d, b, c)
 #define FH(b, c, d) (work.b ^ work.c ^ work.d)
-#define FI(b, c, d) (work.c ^ (work.b | ~work.d)) 
+#define FI(b, c, d) (work.c ^ (work.b | ~work.d))
 
 /* Process the next LEN bytes following BUFFER and use the context given
    in CTX.  It is assumed that
