@@ -45,14 +45,16 @@ usage (int status)
 	     program_name);
   else
     {
-      printf (_("Usage: %s\n"), program_name);
       printf (_("\
+Usage: %s\n\
+  or:  %s OPTION\n\
 Print the numeric identifier (in hexadecimal) for the current host.\n\
 \n\
       --help       display this help and exit\n\
       --version    output version information and exit\n\
 \n\
-"));
+"),
+	      program_name, program_name);
       puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
     }
   exit (status);
