@@ -734,28 +734,57 @@ swab_buffer (char *buf, size_t *nread)
   return ++bufstart;
 }
 
-/* Return nonzero iff the file referenced by FDESC is of a type for
-   which lseek's return value is known to be invalid on some systems.
-   Otherwise, return zero.
-   For example, return nonzero if FDESC references a Linux tape device
-   because that lseek returns an offset implying it succeeds, even though
-   the function fails to perform the requested operation.  In that case,
-   lseek should return a negative number and set errno.  The offending
-   behavior has been confirmed with an Exabyte SCSI tape drive accessed
-   via /dev/nst0 on both Linux-2.2.17 and Linux-2.4.16.  */
+/* This is a wrapper for lseek.  It detects and warns about a kernel
+   bug that makes lseek a no-op for tape devices, even though the kernel
+   lseek return value suggests that the function succeeded.
+
+   The parameters are the same as those of the lseek function, but
+   with the addition of FILENAME, the name of the file associated with
+   descriptor FDESC.  The file name is used solely in the warning that's
+   printed when the bug is detected.  Return the same value that lseek
+   would have returned, but when the lseek bug is detected, return -1
+   to indicate that lseek failed.
+
+   The offending behavior has been confirmed with an Exabyte SCSI tape
+   drive accessed via /dev/nst0 on both Linux-2.2.17 and Linux-2.4.16.  */
 
 #ifdef __linux__
-static int
-buggy_lseek_support (int fdesc)
-{
-  struct stat stats;
 
-  return (fstat (fdesc, &stats) == 0
-	  && (S_ISCHR (stats.st_mode))
-	  && major (stats.st_rdev) == 9);
+# include <sys/mtio.h>
+
+# define MT_SAME_POSITION(P, Q) \
+   ((P).mt_resid == (Q).mt_resid \
+    && (P).mt_fileno == (Q).mt_fileno \
+    && (P).mt_blkno == (Q).mt_blkno)
+
+static off_t
+skip_via_lseek (char const *filename, int fdesc, off_t offset, int whence)
+{
+  struct mtget s1;
+  struct mtget s2;
+  off_t new_position;
+  int got_original_tape_position;
+
+  got_original_tape_position = (ioctl (fdesc, MTIOCGET, &s1) == 0);
+  /* known bad device type */
+  /* && s.mt_type == MT_ISSCSI2 */
+
+  new_position = lseek (fdesc, offset, whence);
+  if (0 <= new_position
+      && got_original_tape_position
+      && ioctl (fdesc, MTIOCGET, &s2) == 0
+      && MT_SAME_POSITION (s1, s2))
+    {
+      error (0, 0, _("warning: working around lseek kernel bug for file (%s)\n\
+  of mt_type=0x%0lx -- see <sys/mtio.h> for the list of types"),
+	     filename, s2.mt_type);
+      new_position = -1;
+    }
+
+  return new_position;
 }
 #else
-# define buggy_lseek_support(Fd) 0
+# define skip_via_lseek(Filename, Fd, Offset, Whence) lseek (Fd, Offset, Whence)
 #endif
 
 /* Throw away RECORDS blocks of BLOCKSIZE bytes on file descriptor FDESC,
@@ -769,13 +798,10 @@ skip (int fdesc, char *file, uintmax_t records, size_t blocksize, char *buf)
   off_t offset = records * blocksize;
 
   /* Try lseek and if an error indicates it was an inappropriate
-     operation, fall back on using read.  Some broken versions of
-     lseek may return zero, so count that as an error too as a valid
-     zero return is not possible here.  */
+     operation, fall back on using read.  */
 
   if (offset / blocksize != records
-      || buggy_lseek_support (fdesc)
-      || lseek (fdesc, offset, SEEK_CUR) <= 0)
+      || skip_via_lseek (file, fdesc, offset, SEEK_CUR) < 0)
     {
       while (records--)
 	{
