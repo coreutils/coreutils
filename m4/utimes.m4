@@ -6,7 +6,7 @@ AC_DEFUN(jm_FUNC_UTIMES_NULL,
 [AC_CACHE_CHECK(whether utimes accepts a null argument, ac_cv_func_utimes_null,
 [rm -f conftestdata; > conftestdata
 AC_TRY_RUN([
-/* In case stat has been redefined to rpl_stat, undef it here.  */
+/* In case stat has been defined to rpl_stat, undef it here.  */
 #undef stat
 #include <sys/types.h>
 #include <sys/stat.h>
