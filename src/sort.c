@@ -311,10 +311,10 @@ Other options:\n\
 "), stdout);
       printf (_("\
   -t, --field-separator=SEP use SEP instead of non-blank to blank transition\n\
-  -T, --temporary-directory=DIR  use DIR for temporaries, not $TMPDIR or %s\n\
+  -T, --temporary-directory=DIR  use DIR for temporaries, not $TMPDIR or %s;\n\
                               multiple options specify multiple directories\n\
-  -u, --unique              with -c: check for strict ordering\n\
-                              otherwise: output only the first of an equal run\n\
+  -u, --unique              with -c, check for strict ordering;\n\
+                              without -c, output only the first of an equal run\n\
 "), DEFAULT_TMPDIR);
       fputs (_("\
   -z, --zero-terminated     end lines with 0 byte, not newline\n\
