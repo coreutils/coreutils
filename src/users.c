@@ -1,5 +1,5 @@
 /* GNU's users.
-   Copyright (C) 92, 93, 94, 95, 96, 1997 Free Software Foundation, Inc.
+   Copyright (C) 92, 93, 94, 95, 96, 1997, 1998 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -20,9 +20,9 @@
 #include <config.h>
 #include <getopt.h>
 
-#include "system.h"
 #include "error.h"
 #include "readutmp.h"
+#include "system.h"
 
 /* The name this program was run with. */
 char *program_name;
@@ -82,7 +82,7 @@ list_entries_users (int n, const STRUCT_UTMP *this)
       int c;
       fputs (u[i], stdout);
       c = (i < n_entries - 1 ? ' ' : '\n');
-      PUTCHAR (c);
+      putchar (c);
     }
 
   for (i = 0; i < n_entries; i++)

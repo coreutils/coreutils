@@ -1,5 +1,5 @@
 /* GNU's who.
-   Copyright (C) 92, 93, 94, 95, 96, 1997 Free Software Foundation, Inc.
+   Copyright (C) 92, 93, 94, 95, 96, 1997, 1998 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -27,9 +27,9 @@
 #include <config.h>
 #include <getopt.h>
 
-#include "system.h"
 #include "error.h"
 #include "readutmp.h"
+#include "system.h"
 
 #ifndef MAXHOSTNAMELEN
 # define MAXHOSTNAMELEN 64
@@ -202,7 +202,7 @@ print_entry (const STRUCT_UTMP *utmp_ent)
     }
 #endif
 
-  PUTCHAR ('\n');
+  putchar ('\n');
 }
 
 /* Print the username of each valid entry and the number of valid entries

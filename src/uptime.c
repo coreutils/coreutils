@@ -1,5 +1,5 @@
 /* GNU's uptime.
-   Copyright (C) 92, 93, 94, 95, 96, 1997 Free Software Foundation, Inc.
+   Copyright (C) 92, 93, 94, 95, 96, 1997, 1998 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -20,9 +20,9 @@
 #include <config.h>
 #include <getopt.h>
 
-#include "system.h"
 #include "error.h"
 #include "readutmp.h"
+#include "system.h"
 
 /* The name this program was run with. */
 char *program_name;
@@ -66,7 +66,7 @@ print_uptime (int n, const STRUCT_UTMP *this)
       res = sscanf (buf, "%lf", &upsecs);
       if (res == 1)
 	uptime = (time_t) upsecs;
-      FCLOSE (fp);
+      fclose (fp);
     }
 #endif /* HAVE_PROC_UPTIME */
   /* Loop through all the utmp entries we just read and count up the valid
@@ -122,7 +122,7 @@ print_uptime (int n, const STRUCT_UTMP *this)
 #endif
 
   if (loads == -1)
-    PUTCHAR ('\n');
+    putchar ('\n');
   else
     {
       if (loads > 0)
@@ -132,7 +132,7 @@ print_uptime (int n, const STRUCT_UTMP *this)
       if (loads > 2)
 	printf (", %.2f", avg[2]);
       if (loads > 0)
-	PUTCHAR ('\n');
+	putchar ('\n');
     }
 }
 
