@@ -68,21 +68,26 @@ int statfs ();
 int statvfs ();
 #endif
 
-/* Return the number of TOSIZE-byte blocks used by
-   BLOCKS FROMSIZE-byte blocks, rounding away from zero.  */
+/* Set B_NEW to the number of TOSIZE-byte blocks used by B FROMSIZE-byte
+   blocks, rounding away from zero.  TOSIZE must be positive.  Return -1
+   from invoking function if FROMSIZE is not positive.  */
 
-static long
-adjust_blocks (blocks, fromsize, tosize)
-     long blocks;
-     int fromsize, tosize;
-{
-  if (fromsize == tosize)	/* E.g., from 512 to 512.  */
-    return blocks;
-  else if (fromsize > tosize)	/* E.g., from 2048 to 512.  */
-    return blocks * (fromsize / tosize);
-  else				/* E.g., from 256 to 512.  */
-    return (blocks + (blocks < 0 ? -1 : 1)) / (tosize / fromsize);
-}
+#define ADJUST_BLOCKS(b_new, b, fromsize, tosize)			\
+  do									\
+    {									\
+      if ((tosize) <= 0)						\
+	abort ();							\
+      if ((fromsize) <= 0)						\
+	return -1;							\
+									\
+      if ((fromsize) == (tosize))	/* E.g., from 512 to 512.  */	\
+	(b_new) = (b);							\
+      else if ((fromsize) > (tosize))	/* E.g., from 2048 to 512.  */	\
+	(b_new) = (b) * ((fromsize) / (tosize));			\
+      else				/* E.g., from 256 to 512.  */	\
+	(b_new) = ((b) + ((b) < 0 ? -1 : 1)) / ((tosize) / (fromsize));	\
+    }									\
+  while (0)
 
 /* Fill in the fields of FSP with information about space usage for
    the filesystem on which PATH resides.
@@ -100,7 +105,7 @@ get_fs_usage (path, disk, fsp)
 
   if (statfs (path, &fsd, sizeof (struct statfs)) != 0)
     return (-1);
-#define convert_blocks(b) adjust_blocks ((b), fsd.f_fsize, 512)
+#define CONVERT_BLOCKS(bnew, b) ADJUST_BLOCKS ((bnew), (b), fsd.f_fsize, 512)
 #endif /* STAT_STATFS3_OSF1 */
 
 #ifdef STAT_STATFS2_FS_DATA	/* Ultrix.  */
@@ -108,10 +113,10 @@ get_fs_usage (path, disk, fsp)
 
   if (statfs (path, &fsd) != 1)
     return -1;
-#define convert_blocks(b) adjust_blocks ((b), 1024, 512)
-  fsp->fsu_blocks = convert_blocks (fsd.fd_req.btot);
-  fsp->fsu_bfree = convert_blocks (fsd.fd_req.bfree);
-  fsp->fsu_bavail = convert_blocks (fsd.fd_req.bfreen);
+#define CONVERT_BLOCKS(bnew, b) ADJUST_BLOCKS ((bnew), (b), 1024, 512)
+  CONVERT_BLOCKS (fsp->fsu_blocks, fsd.fd_req.btot);
+  CONVERT_BLOCKS (fsp->fsu_bfree, fsd.fd_req.bfree);
+  CONVERT_BLOCKS (fsp->fsu_bavail, fsd.fd_req.bfreen);
   fsp->fsu_files = fsd.fd_req.gtot;
   fsp->fsu_ffree = fsd.fd_req.gfree;
 #endif
@@ -133,11 +138,11 @@ get_fs_usage (path, disk, fsp)
       return -1;
     }
   close (fd);
-#define convert_blocks(b) \
-    adjust_blocks ((b), (fsd.s_type == Fs2b ? 1024 : 512), 512)
-  fsp->fsu_blocks = convert_blocks (fsd.s_fsize);
-  fsp->fsu_bfree = convert_blocks (fsd.s_tfree);
-  fsp->fsu_bavail = convert_blocks (fsd.s_tfree);
+#define CONVERT_BLOCKS(bnew, b) \
+    ADJUST_BLOCKS ((bnew), (b), (fsd.s_type == Fs2b ? 1024 : 512), 512)
+  CONVERT_BLOCKS (fsp->fsu_blocks, fsd.s_fsize);
+  CONVERT_BLOCKS (fsp->fsu_bfree, fsd.s_tfree);
+  CONVERT_BLOCKS (fsp->fsu_bavail, fsd.s_tfree);
   fsp->fsu_files = (fsd.s_isize - 2) * INOPB * (fsd.s_type == Fs2b ? 2 : 1);
   fsp->fsu_ffree = fsd.s_tinode;
 #endif
@@ -147,7 +152,7 @@ get_fs_usage (path, disk, fsp)
 
   if (statfs (path, &fsd) < 0)
     return -1;
-#define convert_blocks(b) adjust_blocks ((b), fsd.f_bsize, 512)
+#define CONVERT_BLOCKS(bnew, b) ADJUST_BLOCKS ((bnew), (b), fsd.f_bsize, 512)
 #endif
 
 #ifdef STAT_STATFS2_FSIZE	/* 4.4BSD.  */
@@ -155,7 +160,7 @@ get_fs_usage (path, disk, fsp)
 
   if (statfs (path, &fsd) < 0)
     return -1;
-#define convert_blocks(b) adjust_blocks ((b), fsd.f_fsize, 512)
+#define CONVERT_BLOCKS(bnew, b) ADJUST_BLOCKS ((bnew), (b), fsd.f_fsize, 512)
 #endif
 
 #ifdef STAT_STATFS4		/* SVR3, Dynix, Irix.  */
@@ -166,7 +171,13 @@ get_fs_usage (path, disk, fsp)
   /* Empirically, the block counts on most SVR3 and SVR3-derived
      systems seem to always be in terms of 512-byte blocks,
      no matter what value f_bsize has.  */
-#define convert_blocks(b) (b)
+#define CONVERT_BLOCKS(bnew, b)						\
+  do									\
+    {									\
+      (bnew) = (b);							\
+    }									\
+  while (0)
+
 #ifndef _SEQUENT_		/* _SEQUENT_ is DYNIX/ptx.  */
 #ifndef DOLPHIN			/* DOLPHIN 3.8.alfa/7.18 has f_bavail */
 #define f_bavail f_bfree
@@ -180,14 +191,14 @@ get_fs_usage (path, disk, fsp)
   if (statvfs (path, &fsd) < 0)
     return -1;
   /* f_frsize isn't guaranteed to be supported.  */
-#define convert_blocks(b) \
-  adjust_blocks ((b), fsd.f_frsize ? fsd.f_frsize : fsd.f_bsize, 512)
+#define CONVERT_BLOCKS(bnew, b) \
+  ADJUST_BLOCKS ((bnew), (b), fsd.f_frsize ? fsd.f_frsize : fsd.f_bsize, 512)
 #endif
 
 #if !defined(STAT_STATFS2_FS_DATA) && !defined(STAT_READ) /* !Ultrix && !SVR2.  */
-  fsp->fsu_blocks = convert_blocks (fsd.f_blocks);
-  fsp->fsu_bfree = convert_blocks (fsd.f_bfree);
-  fsp->fsu_bavail = convert_blocks (fsd.f_bavail);
+  CONVERT_BLOCKS (fsp->fsu_blocks, fsd.f_blocks);
+  CONVERT_BLOCKS (fsp->fsu_bfree, fsd.f_bfree);
+  CONVERT_BLOCKS (fsp->fsu_bavail, fsd.f_bavail);
   fsp->fsu_files = fsd.f_files;
   fsp->fsu_ffree = fsd.f_ffree;
 #endif
