@@ -1047,7 +1047,7 @@ EXPRESSION is true or false and sets exit status.  It is one of:\n\
 "));
       printf (_("\
 \n\
-Beware that parentheses need to be escaped by backslashes for shells.\n\
+Beware that parentheses need to be escaped (e.g., by backslashes) for shells.\n\
 INTEGER may also be -l STRING, which evaluates to the length of STRING.\n\
 "));
     }
