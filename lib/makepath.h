@@ -1,7 +1,7 @@
 /* makepath.c -- Ensure that a directory path exists.
 
-   Copyright (C) 1994, 1995, 1996, 1997, 2000, 2003 Free Software
-   Foundation, Inc.
+   Copyright (C) 1994, 1995, 1996, 1997, 2000, 2003, 2004 Free
+   Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -19,17 +19,18 @@
 
 /* Written by David MacKenzie <djm@gnu.ai.mit.edu> and Jim Meyering.  */
 
+#include <stdbool.h>
 #include <sys/types.h>
 
-int make_path (const char *_argpath,
-	       int _mode,
-	       int _parent_mode,
-	       uid_t _owner,
-	       gid_t _group,
-	       int _preserve_existing,
-	       const char *_verbose_fmt_string);
+bool make_path (const char *argpath,
+		mode_t mode,
+		mode_t parent_mode,
+		uid_t owner,
+		gid_t group,
+		bool preserve_existing,
+		const char *verbose_fmt_string);
 
-int make_dir (const char *dir,
-	      const char *dirpath,
-	      mode_t mode,
-	      int *created_dir_p);
+bool make_dir (const char *dir,
+	       const char *dirpath,
+	       mode_t mode,
+	       bool *created_dir_p);
