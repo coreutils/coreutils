@@ -154,18 +154,18 @@ else
   esac
 fi
 test -s 8.E || rm -f 8.E
-LANG=C TZ=GMT $xx -d '1997-01-19 08:17:48 +0' +'%z_%Z'  > 9.O 2> 9.E
+LANG=C TZ=UTC $xx -d '1997-01-19 08:17:48 +0' +'%z_%Z'  > 9.O 2> 9.E
 code=$?
 if test $code != 0 ; then
-  $echo "Test 9(LANG=C TZ=GMT) failed: ../../src/date return code $code differs from expected value 0" 1>&2
+  $echo "Test 9(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
   cmp 9.O $srcdir/9.X
   case $? in
-    0) if test "$VERBOSE" ; then $echo "passed 9(LANG=C TZ=GMT)"; fi ;;
-    1) $echo "Test 9(LANG=C TZ=GMT) failed: files 9.O and $srcdir/9.X differ" 1>&2;
+    0) if test "$VERBOSE" ; then $echo "passed 9(LANG=C TZ=UTC)"; fi ;;
+    1) $echo "Test 9(LANG=C TZ=UTC) failed: files 9.O and $srcdir/9.X differ" 1>&2;
        errors=`expr $errors + 1` ;;
-    2) $echo "Test 9(LANG=C TZ=GMT) may have failed." 1>&2;
+    2) $echo "Test 9(LANG=C TZ=UTC) may have failed." 1>&2;
        $echo The command "cmp 9.O $srcdir/9.X" failed. 1>&2 ;
        errors=`expr $errors + 1` ;;
   esac
