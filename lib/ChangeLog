@@ -14,6 +14,8 @@
 	(check): Depend on it.
 	(noinst_PROGRAMS): Define.
 	(LDADD): Define.
+	* Makefile.am (unit-test): Depend on t-fpending.
+	Make the target .PHONY.
 
 2004-12-02  Paul Eggert  <eggert@cs.ucla.edu>
 
