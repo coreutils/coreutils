@@ -495,17 +495,16 @@ cvs-update:
 	done;								\
 	test "$$fail" && exit 1
 
-define emit-upload-commands
-	echo =====================================
-	echo =====================================
-	echo "$(srcdir)/gnupload $(GNUPLOADFLAGS) \\"
-	echo "    --to fetish.sf.net:fetish-ftp \\"
-	echo "    --to $(gnu_rel_host):coreutils \\"
-	echo "  $(rel-files)"
-	echo '# send the /tmp/announcement e-mail'
-	echo =====================================
-	echo =====================================
-endef
+emit_upload_commands:
+	@echo =====================================
+	@echo =====================================
+	@echo "$(srcdir)/gnupload $(GNUPLOADFLAGS) \\"
+	@echo "    --to fetish.sf.net:fetish-ftp \\"
+	@echo "    --to $(gnu_rel_host):coreutils \\"
+	@echo "  $(rel-files)"
+	@echo '# send the /tmp/announcement e-mail'
+	@echo =====================================
+	@echo =====================================
 
 $(xd-delta): $(release_archive_dir)/$(prev-tgz) $(distdir).tar.gz
 	xdelta delta -9 $^ $@ || :
@@ -519,4 +518,4 @@ alpha beta major: news-date-check $(local-check)
 	chmod a-w $(rel-files)
 	echo $(VERSION) > $(prev_version_file)
 	$(CVS) ci -m. $(prev_version_file)
-	@$(emit-upload-commands)
+	$(MAKE) -s emit_upload_commands RELEASE_TYPE=$@
