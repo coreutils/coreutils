@@ -1,3 +1,20 @@
+2000-12-01  Paul Eggert  <eggert@twinsun.com>
+
+	* doc/fileutils.texi: Remove B suffix.  Document how to have
+	the desired effect without it.
+
+	* src/dd.c: Undo most of the changes since 2000-11-24, since we've
+	documented a standard way to do it.
+	(skip_bytes, seek_bytes): Remove.
+	(usage): Remove B suffix.
+	(scanargs, skip, dd_copy, main): Remove support for B suffix.
+
+2000-11-28  Jim Meyering  <meyering@lucent.com>
+
+	* src/mkdir.c (main): Remove any trailing slash unconditionally.
+	Reported by Volker Borchert.
+	* tests/mkdir/t-slash: Add a test for this.
+
 2000-11-27  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.0.33.
