@@ -1,3 +1,35 @@
+Sat Jan  6 05:13:40 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* basename.c, date.c, dirname.c, echo.c, env.c, expr.c, factor.c,
+	hostname.c, id.c, logname.c, nice.c, pathchk.c, printenv.c,
+	printf.c, pwd.c, seq.c, sleep.c, tee.c, test.c, tty.c, uname.c,
+	whoami.c, yes.c: Protoize and __P-protect forward dcls.
+
+	* who-users.c: New file.  Renamed from who.c.
+	* who.c: Define WHO and include who-users.c.
+	* uses.c: Define USERS and include who-users.c.
+
+	* id.c Remove no-longer-used NGROUPS_MAX cpp macros.
+	(print_group_list) [HAVE_GETGROUPS]: Reorganize to use
+	getgroups (0, NULL) to compute number of groups at run time
+	rather than relying on NGROUPS_MAX at compile time.
+	(print_full_info) [HAVE_GETGROUPS]: Likewise.
+	Suggestion from Roland McGrath.
+
+	* su.c: Remove NGROUPS_MAX junk.  It wasn't being used.
+
+Wed Jan  3 19:03:26 1996  Paul Eggert  <eggert@twinsun.com>
+
+	* configure.in (LOCALTIME_CACHE): Define if tzset exists and
+	if localtime caches TZ.  Check for tzset.
+	* acconfig.h (LOCALTIME_CACHE): New macro.
+	* date.c (putenv): Declare.
+	(universal_time): Remove.
+	(main): If -u is given, set TZ to "UTC0"; this causes date to use
+	UTC uniformly and fixes bugs in the handling of date -u +'%s %Z'.
+	(show_date): Just use localtime and a single format, since TZ will
+	be set properly if -u is given.
+
 Fri Dec 22 21:34:55 1995  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* configure.in: Touch stamp-h only if config.h is remade.
