@@ -6,11 +6,21 @@
    fun:_dl_catch_error
    fun:_dl_open
 }
+
 {
-   libc_dl_catch_error
+   libc_dl_catch_error__map_object
    Memcheck:Addr1
    obj:/lib/ld-2.3.2.so
    fun:_dl_map_object
+   obj:/lib/libc-2.3.2.so
+   fun:_dl_catch_error
+}
+{
+   libc_dl_catch_error__map_versions
+   <insert a suppression name here>
+   Memcheck:Addr1
+   obj:/lib/ld-2.3.2.so
+   fun:_dl_check_map_versions
    obj:/lib/libc-2.3.2.so
    fun:_dl_catch_error
 }
