@@ -1,5 +1,5 @@
 /* csplit - split a file into sections determined by context lines
-   Copyright (C) 91, 1995-2004 Free Software Foundation, Inc.
+   Copyright (C) 91, 1995-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -1115,7 +1115,7 @@ extract_regexp (int argnum, bool ignore, char *str)
   p->re_compiled.allocated = len * 2;
   p->re_compiled.buffer = xmalloc (p->re_compiled.allocated);
   p->re_compiled.fastmap = xmalloc (1 << CHAR_BIT);
-  p->re_compiled.translate = 0;
+  p->re_compiled.translate = NULL;
   err = re_compile_pattern (p->regexpr, len, &p->re_compiled);
   if (err)
     {
