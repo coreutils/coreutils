@@ -1,3 +1,8 @@
+Wed Mar 27 23:33:36 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* cksum.c (cksum): Use format "%lu %ld" (instead of "%10lu %8ld")
+	to be POSIX compliant.  From Stephen Gildea <gildea@x.org>.
+
 Sun Mar 24 08:47:40 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* join.c (main): Use EXIT_FAILURE, not 2, as exit code in error call.
