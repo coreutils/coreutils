@@ -3,7 +3,8 @@ Wed Apr  3 06:12:23 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 	* cp.c (copy_reg): Use `ST_NBLOCKS (sb) * 512', not `sb.st_blocks *
 	DEV_BSIZE.'  From H.J. Lu (hjl@lucon.org).
 
-	* mvdir.c: Include save-cwd.h.
+	* mvdir.c: Protoize.
+	Include save-cwd.h.
 	(fullpath): Rewrite to use save_cwd, xgetcwd, and restore_cwd
 	rather than explicit chdir/getcwd calls.
 
