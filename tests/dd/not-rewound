@@ -23,7 +23,7 @@ fi
 fail=0
 
 echo abc > in
-(dd skip=1 count=1 bs=1; dd skip=1 bs=1) < in > out || fail=1
+(dd skip=1 count=1 bs=1; dd skip=1 bs=1) < in > out 2> /dev/null || fail=1
 case `cat out` in
   b) ;;
   *) fail=1 ;;
