@@ -44,7 +44,6 @@ libfetish_a_SOURCES = \
   basename.c \
   bumpalloc.h \
   canon-host.c \
-  c-stack.c c-stack.h \
   canonicalize.h \
   closeout.c closeout.h \
   cycle-check.c cycle-check.h \
