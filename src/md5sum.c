@@ -69,6 +69,12 @@
 /* Hook for i18n.  */
 #define _(str) str
 
+/* FIXME: comment. */
+static int verbose = 0;
+
+/* FIXME: comment. */
+static int quiet = 0;
+
 /* The name this program was run with.  */
 char *program_name;
 
@@ -121,8 +127,7 @@ a line with checksum, type, and name for each FILE.\n"),
   exit (status);
 }
 
-/* FIXME: new format doesn't work with filenames containing blanks.  */
-/* FIXME: neither format works with filenames containing newline.  */
+/* FIXME: this format loses with filenames containing newline.  */
 
 static int
 split_3 (s, u, binary, w)
@@ -228,6 +233,116 @@ md5_file (filename, binary)
   return 0;
 }
 
+static int
+md5_check (checkfile_name)
+     const char *checkfile_name;
+{
+  FILE *checkfile_stream;
+  int n_tests = 0;
+  int n_tests_failed = 0;
+  unsigned char md5buffer[16];
+
+  if (strcmp (checkfile_name, "-") == 0)
+    {
+      checkfile_name = "standard input";
+      checkfile_stream = stdin;
+    }
+  else
+    {
+      checkfile_stream = fopen (checkfile_name, "r");
+      if (checkfile_stream == NULL)
+	if (quiet)
+	  exit (EXIT_FAILURE);
+	else
+	  error (EXIT_FAILURE, errno, "%s", checkfile_name);
+    }
+
+  do
+    {
+      char line[1024];
+      char *filename;
+      int type_flag;
+      char *md5num;
+      int err;
+
+      /* FIXME: Use getline, not fgets.  */
+      if (fgets (line, 1024, checkfile_stream) == NULL)
+	break;
+
+      /* Ignore comment lines, which begin with a '#' character.  */
+      if (line[0] == '#')
+	continue;
+
+      /* Remove any trailing newline.  */
+      if (line[strlen (line) - 1] == '\n')
+	line[strlen (line) - 1] = '\0';
+
+      err = split_3 (line, &md5num, &type_flag, &filename);
+      if (err || !hex_digits (md5num))
+	{
+	  /* FIXME: report file name and line number.  */
+	  if (verbose)
+	    error (0, 0, _("invalid line in check file: %s"), line);
+	}
+      else
+	{
+	  static const char bin2hex[] = { '0', '1', '2', '3',
+					  '4', '5', '6', '7',
+					  '8', '9', 'a', 'b',
+					  'c', 'd', 'e', 'f' };
+	  size_t cnt;
+	  FILE *fp;
+
+	  if (strcmp (filename, "-") == 0)
+	    fp = stdin;
+	  else
+	    {
+	      fp = fopen (filename, OPENOPTS);
+	      if (fp == NULL)
+		/* The text of this sometimes message completes the
+		   message given above.  */
+		error (EXIT_FAILURE, errno, "%s", filename);
+	    }
+
+	  ++n_tests;
+	  md5_stream (fp, md5buffer);
+
+	  if (fp != stdin && fclose (fp) == EOF)
+	    error (EXIT_FAILURE, errno, "%s", filename);
+
+	  /* Compare generated binary number with text representation
+	     in check file.  Ignore case of hex digits.  */
+	  for (cnt = 0; cnt < 16; ++cnt)
+	    if (TOLOWER (md5num[2 * cnt]) != bin2hex[md5buffer[cnt] >> 4]
+		|| TOLOWER (md5num[2 * cnt + 1])
+		   != (bin2hex[md5buffer[cnt] & 0xf]))
+	      break;
+
+	  if (cnt != 16)
+	    ++n_tests_failed;
+	  if (!quiet)
+	    {
+	      printf ("%s: %s\n", filename,
+		      (cnt == 16 ? _("OK") : _("FAILED")));
+	      fflush (stdout);
+	    }
+	}
+    }
+  while (!feof (checkfile_stream));
+
+  if (fclose (checkfile_stream) == EOF)
+    error (EXIT_FAILURE, errno, "%s", checkfile_name);
+
+  if (!quiet)
+    printf (n_tests == 1 ? (n_tests_failed ? _("Test failed\n")
+					   : _("Test passed\n"))
+			 : _("%d out of %d tests failed\n"),
+	    n_tests_failed, n_tests);
+
+  /* FIXME: warn if no tests are found?  */
+  return (n_tests_failed == 0 ? 0 : 1);
+}
+
 int
 main (argc, argv)
      int argc;
@@ -238,9 +353,7 @@ main (argc, argv)
   int do_check = 0;
   int do_help = 0;
   int do_version = 0;
-  int verbose = 0;
   int opt;
-  int quiet = 0;
   char **string = NULL;
   char n_strings = 0;
   size_t i;
@@ -341,11 +454,6 @@ main (argc, argv)
     }
   else
     {
-      FILE *checkfile_stream;
-      char *checkfile_name;
-      int n_tests = 0;
-      int n_tests_failed = 0;
-
       if (optind + 1 < argc)
 	{
 	  error (0, 0,
@@ -353,110 +461,7 @@ main (argc, argv)
 	  usage (EXIT_FAILURE);
 	}
 
-      if (optind == argc || strcmp (argv[optind], "-") == 0)
-	{
-	  checkfile_name = "-";
-	  checkfile_stream = stdin;
-	}
-      else
-	{
-	  checkfile_name = argv[optind];
-	  checkfile_stream = fopen (checkfile_name, "r");
-	  if (checkfile_stream == NULL)
-	    if (quiet)
-	      exit (EXIT_FAILURE);
-	    else
-	      error (EXIT_FAILURE, errno, "%s", checkfile_name);
-	}
-
-      do
-	{
-	  char line[1024];
-	  char *filename;
-	  int type_flag;
-	  char *md5num;
-	  int err;
-
-	  /* FIXME: Use getline, not fgets.  */
-	  if (fgets (line, 1024, checkfile_stream) == NULL)
-	    break;
-
-	  /* Ignore comment lines, which begin with a '#' character.  */
-	  if (line[0] == '#')
-	    continue;
-
-	  /* Remove any trailing newline.  */
-	  if (line[strlen (line) - 1] == '\n')
-	    line[strlen (line) - 1] = '\0';
-
-	  /* FIXME: maybe accept the output of --string=STRING.  */
-	  err = split_3 (line, &md5num, &type_flag, &filename);
-
-	  if (err || !hex_digits (md5num))
-	    {
-	      /* FIXME: report file name and line number.  */
-	      if (verbose)
-		error (0, 0, _("invalid line in check file: %s"), line);
-	    }
-	  else
-	    {
-	      static const char bin2hex[] = { '0', '1', '2', '3',
-					      '4', '5', '6', '7',
-					      '8', '9', 'a', 'b',
-					      'c', 'd', 'e', 'f' };
-	      size_t cnt;
-	      FILE *fp;
-
-	      if (!quiet)
-		{
-		  printf ("%s: ", filename);
-		  if (verbose)
-		    fflush (stdout);
-		}
-
-	      if (strcmp (filename, "-") == 0)
-		fp = stdin;
-	      else
-		{
-		  fp = fopen (filename, OPENOPTS);
-		  if (fp == NULL)
-		    /* The text of this sometimes message completes the
-		       message given above.  */
-		    error (EXIT_FAILURE, errno, quiet ? "%s: " : "", filename);
-		}
-
-	      ++n_tests;
-	      md5_stream (fp, md5buffer);
-
-	      if (fp != stdin && fclose (fp) == EOF)
-		error (EXIT_FAILURE, errno, "%s", filename);
-
-	      /* Compare generated binary number with text representation
-		 in check file.  Ignore case of hex digits.  */
-	      for (cnt = 0; cnt < 16; ++cnt)
-		if (TOLOWER (md5num[2 * cnt]) != bin2hex[md5buffer[cnt] >> 4]
-		    || TOLOWER (md5num[2 * cnt + 1])
-		       != (bin2hex[md5buffer[cnt] & 0xf]))
-		  break;
-
-	      if (cnt != 16)
-		++n_tests_failed;
-	      if (!quiet)
-		puts (cnt == 16 ? _("OK") : _("FAILED"));
-	    }
-	}
-      while (!feof (checkfile_stream));
-
-      if (fclose (checkfile_stream) == EOF)
-	error (EXIT_FAILURE, errno, "%s", checkfile_name);
-
-      if (!quiet)
-	printf (n_tests == 1 ? (n_tests_failed ? _("Test failed\n")
-				               : _("Test passed\n"))
-                             : _("%d out of %d tests failed\n"),
-		n_tests_failed, n_tests);
-
-      exit (n_tests_failed == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
+      err = md5_check (optind == argc ? "-" : argv[optind]);
     }
 
   if (fclose (stdout) == EOF)
