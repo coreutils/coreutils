@@ -1,6 +1,6 @@
 # Assume AM_GNU_GETTEXT([external]) and Autoconf 2.54 or later, for coreutils.
 
-# serial 1
+# serial 2
 
 dnl Copyright (C) 2003 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
@@ -17,8 +17,6 @@ dnl Insert empty macros to pacify Automake.
 
 AC_DEFUN([AM_LC_MESSAGES])
 AC_DEFUN([AM_MKINSTALLDIRS])
-AC_DEFUN([AM_NLS])
-AC_DEFUN([AM_PO_SUBDIRS])
 AC_DEFUN([gt_INTDIV0])
 
 dnl A simpler substitute for gt_INTTYPES_PRI that assumes Autoconf 2.54
