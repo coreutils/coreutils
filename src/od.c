@@ -981,7 +981,13 @@ skip (off_t n_skip)
 	    }
 	  else
 	    {
-	      if (fseek (in_stream, n_skip, SEEK_SET) == 0)
+	      /* fseek may work on some streams for which lseek doesn't.
+		 But fseek's offset argument is restricted to the range
+		 of type `long'.  So if N_SKIP is too large or if fseek
+		 fails, try lseek.  */
+	      if ((n_skip <= LONG_MAX
+		   && fseek (in_stream, (long) n_skip, SEEK_SET) == 0)
+		  || lseek (fileno (in_stream), n_skip, SEEK_SET) >= 0)
 		{
 		  n_skip = 0;
 		  break;
@@ -989,7 +995,8 @@ skip (off_t n_skip)
 	    }
 	}
 
-      /* fseek didn't work or wasn't attempted; do it the slow way.  */
+      /* Seek didn't work or wasn't attempted;  position the file pointer
+	 by reading.  */
 
       for (j = n_skip / BUFSIZ; j >= 0; j--)
 	{
