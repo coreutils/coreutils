@@ -1,3 +1,8 @@
+2000-12-30  Paul Eggert  <eggert@twinsun.com>
+
+	* src/ls.c (gobble_file): If not using long format, don't
+	invoke acl; it's not needed.
+
 2000-12-30  Jim Meyering  <meyering@lucent.com>
 
 	Avoid an unnecessary `stat' when using --dereference.
