@@ -150,14 +150,13 @@ static uintmax_t tot_size = 0;
 enum
 {
   EXCLUDE_OPTION = CHAR_MAX + 1,
-  BLOCK_SIZE_OPTION,
   MAX_DEPTH_OPTION
 };
 
 static struct option const long_options[] =
 {
   {"all", no_argument, NULL, 'a'},
-  {"block-size", required_argument, 0, BLOCK_SIZE_OPTION},
+  {"block-size", required_argument, 0, 'B'},
   {"bytes", no_argument, NULL, 'b'},
   {"count-links", no_argument, NULL, 'l'},
   {"dereference", no_argument, NULL, 'L'},
@@ -166,9 +165,9 @@ static struct option const long_options[] =
   {"exclude-from", required_argument, 0, 'X'},
   {"human-readable", no_argument, NULL, 'h'},
   {"si", no_argument, 0, 'H'},
-  {"kilobytes", no_argument, NULL, 'k'},
+  {"kilobytes", no_argument, NULL, 'k'}, /* long form is obsolescent */
   {"max-depth", required_argument, NULL, MAX_DEPTH_OPTION},
-  {"megabytes", no_argument, NULL, 'm'},
+  {"megabytes", no_argument, NULL, 'm'}, /* obsolescent */
   {"one-file-system", no_argument, NULL, 'x'},
   {"separate-dirs", no_argument, NULL, 'S'},
   {"summarize", no_argument, NULL, 's'},
@@ -196,7 +195,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
   -a, --all             write counts for all files, not just directories\n\
-      --block-size=SIZE use SIZE-byte blocks\n\
+  -B, --block-size=SIZE use SIZE-byte blocks\n\
   -b, --bytes           print size in bytes\n\
   -c, --total           produce a grand total\n\
   -D, --dereference-args  dereference PATHs when symbolic link\n\
@@ -204,12 +203,11 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (_("\
   -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\n\
   -H, --si              likewise, but use powers of 1000 not 1024\n\
-  -k, --kilobytes       like --block-size=1024\n\
+  -k                    like --block-size=1K\n\
   -l, --count-links     count sizes many times if hard linked\n\
 "), stdout);
       fputs (_("\
   -L, --dereference     dereference all symbolic links\n\
-  -m, --megabytes       like --block-size=1048576\n\
   -S, --separate-dirs   do not include size of subdirectories\n\
   -s, --summarize       display only a total for each argument\n\
 "), stdout);
@@ -224,6 +222,10 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      fputs (_("\n\
+SIZE may be (or may be an integer optionally followed by) one of following:\n\
+kB 1000, K 1024, MB 1,000,000, M 1,048,576, and so on for G, T, P, E, Z, Y.\n\
+"), stdout);
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
     }
   exit (status);
@@ -580,7 +582,7 @@ main (int argc, char **argv)
 
   human_block_size (getenv ("DU_BLOCK_SIZE"), 0, &output_block_size);
 
-  while ((c = getopt_long (argc, argv, "abchHklmsxDLSX:", long_options, NULL))
+  while ((c = getopt_long (argc, argv, "abchHklmsxB:DLSX:", long_options, NULL))
 	 != -1)
     {
       long int tmp_long;
@@ -622,7 +624,7 @@ main (int argc, char **argv)
 	  max_depth = (int) tmp_long;
  	  break;
 
-	case 'm':
+	case 'm': /* obsolescent */
 	  output_block_size = 1024 * 1024;
 	  break;
 
@@ -636,6 +638,10 @@ main (int argc, char **argv)
 
 	case 'x':
 	  opt_one_file_system = 1;
+	  break;
+
+	case 'B':
+	  human_block_size (optarg, 1, &output_block_size);
 	  break;
 
 	case 'D':
@@ -658,10 +664,6 @@ main (int argc, char **argv)
 
 	case EXCLUDE_OPTION:
 	  add_exclude (exclude, optarg, EXCLUDE_WILDCARDS);
-	  break;
-
-	case BLOCK_SIZE_OPTION:
-	  human_block_size (optarg, 1, &output_block_size);
 	  break;
 
 	case_GETOPT_HELP_CHAR;
