@@ -1,3 +1,20 @@
+1999-04-18  Jim Meyering  <meyering@ascend.com>
+
+	* configure.in (AC_CHECK_FUNCS): Remove strtoull, strtoumax, and
+	strtouq, now that they're checked in m4/xstrtoumax.m4.
+
+1999-04-18  Paul Eggert  <eggert@twinsun.com>
+
+	* doc/fileutils.texi, src/shred.c (main, longopts):
+	Use -u instead of -R for --remove, so that we can preserve
+	future compatibility with rm.
+
+1999-04-18  Jim Meyering  <meyering@ascend.com>
+
+	* src/shred.c [!HAVE_CONFIG_H] (ST_BLKSIZE): Define to 65536.
+	(do_wipefd): Use ST_BLKSIZE instead of referring to the st_blksize
+	member directly.
+
 1999-04-18  Paul Eggert  <eggert@twinsun.com>
 
 	Fix shred to do the right thing with off_t longer than long.
