@@ -310,8 +310,8 @@ Copy a file, converting and formatting according to the options.\n\
       fputs (_("\
 \n\
 BLOCKS and BYTES may be followed by the following multiplicative suffixes:\n\
-xM M, c 1, w 2, b 512, kD 1000, k 1024, MD 1,000,000, M 1,048,576,\n\
-GD 1,000,000,000, G 1,073,741,824, and so on for T, P, E, Z, Y.\n\
+xM M, c 1, w 2, b 512, kB 1000, K 1024, MB 1,000,000, M 1,048,576,\n\
+GB 1,000,000,000, G 1,073,741,824, and so on for T, P, E, Z, Y.\n\
 Each KEYWORD may be:\n\
 \n\
 "), stdout);
@@ -518,7 +518,7 @@ parse_integer (const char *str, int *invalid)
 {
   uintmax_t n;
   char *suffix;
-  enum strtol_error e = xstrtoumax (str, &suffix, 10, &n, "bcEGkMPTwYZ0");
+  enum strtol_error e = xstrtoumax (str, &suffix, 10, &n, "bcEGkKMPTwYZ0");
 
   if (e == LONGINT_INVALID_SUFFIX_CHAR && *suffix == 'x')
     {
