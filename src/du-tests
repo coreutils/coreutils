@@ -1,0 +1,25 @@
+#!/bin/bash
+test -x "$DU1" || { echo DU1 envvar not set; exit 1; }
+test -x "$DU2" || { echo DU2 envvar not set; exit 1; }
+# Expects $DU1 and $DU2 to be the binaries to compare.
+d1=$(mktemp -d)
+cp -a $DU1 $d1/du
+d2=$(mktemp -d)
+cp -a $DU2 $d2/du
+
+for args in  \
+    '-Sa .' \
+    '-Sa ../..' \
+    '-Sa a' \
+    '-a a' \
+    '-ca .' \
+    '-ca ..' \
+    '-ca ../..' \
+    '-ca /tmp' \
+    '-ca a' \
+  ; do
+  echo Args: $args ======================
+  diff -u --label=$DU1 --label=$DU2 \
+    <(PATH=$d1 du $args 2>&1) <(PATH=$d2 du $args 2>&1)
+done
+rm -rf $d1 $d2
