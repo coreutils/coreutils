@@ -1,3 +1,14 @@
+Thu Jan  4 20:32:52 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* src/Makefile.am (DIST_OTHER): Include md5-test.rfc so make check
+	works again.  Reported by François Pinard and Kaveh Ghazi.
+
+	* rx.c [SYNTAX]: Rename from SYNTAX_TABLE.
+	[SYNTAX_TABLE]: Remove extern dcl or re_syntax_table.
+	(RE_SEARCH_2_FN): Cast string1 and string2 to avoid pointer type
+	mismatch errors from e.g. SunOS's /bin/cc.
+	Reported by Kaveh Ghazi.
+
 Wed Jan  3 23:34:39 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* configure.in (VERSION): Set variable directly rather than from
