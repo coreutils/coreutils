@@ -43,7 +43,7 @@ static int show_version;
 static struct option const longopts[] =
 {
   {"mode", required_argument, NULL, 'm'},
-  {"parents", no_argument, &path_mode, 1},
+  {"parents", no_argument, NULL, 'p'},
   {"help", no_argument, &show_help, 1},
   {"verbose", no_argument, NULL, 2},
   {"version", no_argument, &show_version, 1},
