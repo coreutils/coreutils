@@ -2532,17 +2532,17 @@ wc [@var{option}]@dots{} [@var{file}]@dots{}
 @end example
 
 @cindex total counts
-@vindex POSIXLY_CORRECT
 @command{wc} prints one line of counts for each file, and if the file was
 given as an argument, it prints the file name following the counts.  If
 more than one @var{file} is given, @command{wc} prints a final line
 containing the cumulative counts, with the file name @file{total}.  The
 counts are printed in this order: newlines, words, characters, bytes.
-By default, each count is output right-justified in a 7-byte field with
-one space between fields so that the numbers and file names line up nicely
-in columns.  However, @acronym{POSIX} requires that there be exactly one space
-separating columns.  You can make @command{wc} use the @acronym{POSIX}-mandated
-output format by setting the @env{POSIXLY_CORRECT} environment variable.
+Each count is printed right-justified in a field with at least one
+space between fields so that the numbers and file names normally line
+up nicely in columns.  The width of the count fields varies depending
+on the inputs, so you should not depend on a particular field width.
+However, as a @acronym{GNU} extension, if only one count is printed,
+it is guaranteed to be printed without leading spaces.
 
 By default, @command{wc} prints three counts: the newline, words, and byte
 counts.  Options can specify that only certain counts be printed.
