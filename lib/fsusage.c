@@ -37,7 +37,7 @@ int statfs ();
 #include <sys/vfs.h>
 #endif
 
-#ifdef HAVE_SYS_FILSYS_H
+#if defined(HAVE_SYS_FILSYS_H) && !defined(_CRAY)
 #include <sys/filsys.h>		/* SVR2.  */
 #endif
 
