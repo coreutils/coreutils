@@ -9,6 +9,7 @@
 AC_DEFUN([gl_FUNC_CHDIR_LONG],
 [
   AC_LIBSOURCES([chdir-long.c, chdir-long.h])
+  AC_LIBOBJ([chdir-long])
   gl_PREREQ_CHDIR_LONG
 ])
 
