@@ -159,7 +159,7 @@ EXTRA_SCRIPTS = nohup
 bin_SCRIPTS = groups @OPTIONAL_BIN_ZCRIPTS@
 bin_PROGRAMS = chgrp chown chmod cp dd dircolors du \
   ginstall link ln dir vdir ls mkdir \
-  mkfifo mknod mv rm rmdir shred stat sync touch unlink \
+  mkfifo mknod mv readlink rm rmdir shred stat sync touch unlink \
   cat cksum comm csplit cut expand fmt fold head join md5sum \
   nl od paste pr ptx sha1sum sort split sum tac tail tr tsort unexpand uniq wc \
   basename date dirname echo env expr factor false \
@@ -292,12 +292,12 @@ bin_PROGRAMS = chgrp$(EXEEXT) chown$(EXEEXT) chmod$(EXEEXT) cp$(EXEEXT) \
 	dd$(EXEEXT) dircolors$(EXEEXT) du$(EXEEXT) ginstall$(EXEEXT) \
 	link$(EXEEXT) ln$(EXEEXT) dir$(EXEEXT) vdir$(EXEEXT) \
 	ls$(EXEEXT) mkdir$(EXEEXT) mkfifo$(EXEEXT) mknod$(EXEEXT) \
-	mv$(EXEEXT) rm$(EXEEXT) rmdir$(EXEEXT) shred$(EXEEXT) \
-	stat$(EXEEXT) sync$(EXEEXT) touch$(EXEEXT) unlink$(EXEEXT) \
-	cat$(EXEEXT) cksum$(EXEEXT) comm$(EXEEXT) csplit$(EXEEXT) \
-	cut$(EXEEXT) expand$(EXEEXT) fmt$(EXEEXT) fold$(EXEEXT) \
-	head$(EXEEXT) join$(EXEEXT) md5sum$(EXEEXT) nl$(EXEEXT) \
-	od$(EXEEXT) paste$(EXEEXT) pr$(EXEEXT) ptx$(EXEEXT) \
+	mv$(EXEEXT) readlink$(EXEEXT) rm$(EXEEXT) rmdir$(EXEEXT) \
+	shred$(EXEEXT) stat$(EXEEXT) sync$(EXEEXT) touch$(EXEEXT) \
+	unlink$(EXEEXT) cat$(EXEEXT) cksum$(EXEEXT) comm$(EXEEXT) \
+	csplit$(EXEEXT) cut$(EXEEXT) expand$(EXEEXT) fmt$(EXEEXT) \
+	fold$(EXEEXT) head$(EXEEXT) join$(EXEEXT) md5sum$(EXEEXT) \
+	nl$(EXEEXT) od$(EXEEXT) paste$(EXEEXT) pr$(EXEEXT) ptx$(EXEEXT) \
 	sha1sum$(EXEEXT) sort$(EXEEXT) split$(EXEEXT) sum$(EXEEXT) \
 	tac$(EXEEXT) tail$(EXEEXT) tr$(EXEEXT) tsort$(EXEEXT) \
 	unexpand$(EXEEXT) uniq$(EXEEXT) wc$(EXEEXT) basename$(EXEEXT) \
@@ -571,6 +571,11 @@ pwd_OBJECTS = pwd.$(OBJEXT)
 pwd_LDADD = $(LDADD)
 pwd_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
 pwd_LDFLAGS =
+readlink_SOURCES = readlink.c
+readlink_OBJECTS = readlink.$(OBJEXT)
+readlink_LDADD = $(LDADD)
+readlink_DEPENDENCIES = ../lib/libfetish.a ../lib/libfetish.a
+readlink_LDFLAGS =
 am_rm_OBJECTS = rm.$(OBJEXT) remove.$(OBJEXT)
 rm_OBJECTS = $(am_rm_OBJECTS)
 rm_LDADD = $(LDADD)
@@ -763,23 +768,24 @@ am__depfiles_maybe = depfiles
 @AMDEP_TRUE@	./$(DEPDIR)/pathchk.Po ./$(DEPDIR)/pinky.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/pr.Po ./$(DEPDIR)/printenv.Po \
 @AMDEP_TRUE@	./$(DEPDIR)/printf.Po ./$(DEPDIR)/ptx.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/pwd.Po ./$(DEPDIR)/remove.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/rm.Po ./$(DEPDIR)/rmdir.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/seq.Po ./$(DEPDIR)/sha1sum.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/shred.Po ./$(DEPDIR)/sleep.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/sort.Po ./$(DEPDIR)/split.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/stat.Po ./$(DEPDIR)/stty.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/su.Po ./$(DEPDIR)/sum.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/sync.Po ./$(DEPDIR)/tac.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/tail.Po ./$(DEPDIR)/tee.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/test.Po ./$(DEPDIR)/touch.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/tr.Po ./$(DEPDIR)/true.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/tsort.Po ./$(DEPDIR)/tty.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/uname.Po ./$(DEPDIR)/unexpand.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/uniq.Po ./$(DEPDIR)/unlink.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/uptime.Po ./$(DEPDIR)/users.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/wc.Po ./$(DEPDIR)/who.Po \
-@AMDEP_TRUE@	./$(DEPDIR)/whoami.Po ./$(DEPDIR)/yes.Po
+@AMDEP_TRUE@	./$(DEPDIR)/pwd.Po ./$(DEPDIR)/readlink.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/remove.Po ./$(DEPDIR)/rm.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/rmdir.Po ./$(DEPDIR)/seq.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/sha1sum.Po ./$(DEPDIR)/shred.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/sleep.Po ./$(DEPDIR)/sort.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/split.Po ./$(DEPDIR)/stat.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/stty.Po ./$(DEPDIR)/su.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/sum.Po ./$(DEPDIR)/sync.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/tac.Po ./$(DEPDIR)/tail.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/tee.Po ./$(DEPDIR)/test.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/touch.Po ./$(DEPDIR)/tr.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/true.Po ./$(DEPDIR)/tsort.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/tty.Po ./$(DEPDIR)/uname.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/unexpand.Po ./$(DEPDIR)/uniq.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/unlink.Po ./$(DEPDIR)/uptime.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/users.Po ./$(DEPDIR)/wc.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/who.Po ./$(DEPDIR)/whoami.Po \
+@AMDEP_TRUE@	./$(DEPDIR)/yes.Po
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
@@ -792,16 +798,16 @@ DIST_SOURCES = basename.c cat.c $(chgrp_SOURCES) chmod.c \
 	kill.c link.c ln.c logname.c $(ls_SOURCES) $(md5sum_SOURCES) \
 	mkdir.c mkfifo.c mknod.c $(mv_SOURCES) nice.c nl.c od.c paste.c \
 	pathchk.c pinky.c pr.c printenv.c printf.c ptx.c pwd.c \
-	$(rm_SOURCES) rmdir.c seq.c $(sha1sum_SOURCES) shred.c sleep.c \
-	sort.c split.c stat.c stty.c su.c sum.c sync.c tac.c tail.c \
-	tee.c test.c touch.c tr.c true.c tsort.c tty.c uname.c \
-	unexpand.c uniq.c unlink.c uptime.c users.c $(vdir_SOURCES) \
-	wc.c who.c whoami.c yes.c
+	readlink.c $(rm_SOURCES) rmdir.c seq.c $(sha1sum_SOURCES) \
+	shred.c sleep.c sort.c split.c stat.c stty.c su.c sum.c sync.c \
+	tac.c tail.c tee.c test.c touch.c tr.c true.c tsort.c tty.c \
+	uname.c unexpand.c uniq.c unlink.c uptime.c users.c \
+	$(vdir_SOURCES) wc.c who.c whoami.c yes.c
 HEADERS = $(noinst_HEADERS)
 
 DIST_COMMON = $(noinst_HEADERS) Makefile.am Makefile.in ansi2knr.1 \
 	ansi2knr.c
-SOURCES = basename.c cat.c $(chgrp_SOURCES) chmod.c $(chown_SOURCES) chroot.c cksum.c comm.c $(cp_SOURCES) csplit.c cut.c date.c dd.c df.c $(dir_SOURCES) dircolors.c dirname.c du.c echo.c env.c expand.c expr.c factor.c false.c fmt.c fold.c $(ginstall_SOURCES) head.c hostid.c hostname.c id.c join.c kill.c link.c ln.c logname.c $(ls_SOURCES) $(md5sum_SOURCES) mkdir.c mkfifo.c mknod.c $(mv_SOURCES) nice.c nl.c od.c paste.c pathchk.c pinky.c pr.c printenv.c printf.c ptx.c pwd.c $(rm_SOURCES) rmdir.c seq.c $(sha1sum_SOURCES) shred.c sleep.c sort.c split.c stat.c stty.c su.c sum.c sync.c tac.c tail.c tee.c test.c touch.c tr.c true.c tsort.c tty.c uname.c unexpand.c uniq.c unlink.c uptime.c users.c $(vdir_SOURCES) wc.c who.c whoami.c yes.c
+SOURCES = basename.c cat.c $(chgrp_SOURCES) chmod.c $(chown_SOURCES) chroot.c cksum.c comm.c $(cp_SOURCES) csplit.c cut.c date.c dd.c df.c $(dir_SOURCES) dircolors.c dirname.c du.c echo.c env.c expand.c expr.c factor.c false.c fmt.c fold.c $(ginstall_SOURCES) head.c hostid.c hostname.c id.c join.c kill.c link.c ln.c logname.c $(ls_SOURCES) $(md5sum_SOURCES) mkdir.c mkfifo.c mknod.c $(mv_SOURCES) nice.c nl.c od.c paste.c pathchk.c pinky.c pr.c printenv.c printf.c ptx.c pwd.c readlink.c $(rm_SOURCES) rmdir.c seq.c $(sha1sum_SOURCES) shred.c sleep.c sort.c split.c stat.c stty.c su.c sum.c sync.c tac.c tail.c tee.c test.c touch.c tr.c true.c tsort.c tty.c uname.c unexpand.c uniq.c unlink.c uptime.c users.c $(vdir_SOURCES) wc.c who.c whoami.c yes.c
 
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -1011,6 +1017,9 @@ ptx$(EXEEXT): $(ptx_OBJECTS) $(ptx_DEPENDENCIES)
 pwd$(EXEEXT): $(pwd_OBJECTS) $(pwd_DEPENDENCIES) 
 	@rm -f pwd$(EXEEXT)
 	$(LINK) $(pwd_LDFLAGS) $(pwd_OBJECTS) $(pwd_LDADD) $(LIBS)
+readlink$(EXEEXT): $(readlink_OBJECTS) $(readlink_DEPENDENCIES) 
+	@rm -f readlink$(EXEEXT)
+	$(LINK) $(readlink_LDFLAGS) $(readlink_OBJECTS) $(readlink_LDADD) $(LIBS)
 rm$(EXEEXT): $(rm_OBJECTS) $(rm_DEPENDENCIES) 
 	@rm -f rm$(EXEEXT)
 	$(LINK) $(rm_LDFLAGS) $(rm_OBJECTS) $(rm_LDADD) $(LIBS)
@@ -1210,6 +1219,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/printf.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ptx.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pwd.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/readlink.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/remove.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rm.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rmdir.Po@am__quote@
@@ -1508,15 +1518,17 @@ wheel.h: wheel-gen.pl Makefile.am
 	mv $@-t $@
 
 false.c: true.c
+	rm -f $@
 	sed \
 	  -e s/true/false/g \
 	  -e s/success/failure/g \
 	  -e 's/^  exit (EXIT_SUCCESS/  exit (EXIT_FAILURE/g' \
 	  $(srcdir)/true.c > $@-t
+	chmod a-w $@-t
 	mv $@-t $@
 # Ensure that the list of programs in README matches the list
 # of programs we can build.
-check: check-README
+check: check-README check-misc
 .PHONY: check-README
 check-README:
 	rm -rf $(pr) $(pm)
@@ -1525,6 +1537,12 @@ check-README:
 	sed -n '/^The programs .* are:/,/^[a-zA-Z]/p' $(top_srcdir)/README \
 	  | sed -n '/^   */s///p' | tr -s ' ' '\n' > $(pr)
 	diff $(pm) $(pr) && rm -rf $(pr) $(pm)
+
+# Make sure we don't define any S_IS* macros in src/*.c files.
+# Not a big deal, but they're already defined via system.h.
+.PHONY: check-misc
+check-misc:
+	grep '^# *define  *S_IS' $(SOURCES) && exit 1 || :
 # FIXME: handle *.sh;  and use $(all_programs), not $(SOURCES)
 ../AUTHORS: $(SOURCES)
 	rm -f $@-t

@@ -111,9 +111,6 @@
 /* Define to 1 if you have the `bzero' function. */
 #undef HAVE_BZERO
 
-/* Define to 1 if you have the `canonicalize_file_name' function. */
-#undef HAVE_CANONICALIZE_FILE_NAME
-
 /* Define to 1 if you have the `chroot' function. */
 #undef HAVE_CHROOT
 

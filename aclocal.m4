@@ -825,7 +825,7 @@ WARNING: You don't seem to have perl5.003 or newer installed, or you lack
 ] )
 ])
 
-#serial 55   -*- autoconf -*-
+#serial 57   -*- autoconf -*-
 
 dnl Misc type-related macros for fileutils, sh-utils, textutils.
 
@@ -863,6 +863,7 @@ AC_DEFUN([jm_MACROS],
 
   AC_REQUIRE([UTILS_FUNC_DIRFD])
   AC_REQUIRE([AC_FUNC_ACL])
+  AC_REQUIRE([AC_FUNC_FTW])
   AC_REQUIRE([jm_FUNC_LCHOWN])
   AC_REQUIRE([fetish_FUNC_RMDIR_NOTEMPTY])
   AC_REQUIRE([jm_FUNC_CHOWN])
@@ -958,7 +959,6 @@ AC_DEFUN([jm_MACROS],
 
   AC_CHECK_FUNCS( \
     bcopy \
-    canonicalize_file_name \
     endgrent \
     endpwent \
     fchdir \
@@ -978,7 +978,6 @@ AC_DEFUN([jm_MACROS],
     mempcpy \
     mkfifo \
     realpath \
-    resolvepath \
     sethostname \
     strchr \
     strerror \
@@ -1030,6 +1029,7 @@ AC_DEFUN([jm_MACROS],
     AC_LIBOBJ(mountlist)
   fi
   AC_REQUIRE([jm_AC_DOS])
+  AC_REQUIRE([AC_FUNC_CANONICALIZE_FILE_NAME])
 
 ])
 
@@ -1167,7 +1167,7 @@ AC_DEFUN([AC_ISC_POSIX],
   ]
 )
 
-#serial 12
+#serial 13
 
 dnl Initially derived from code in GNU grep.
 dnl Mostly written by Jim Meyering.
@@ -1191,6 +1191,7 @@ AC_DEFUN([jm_INCLUDED_REGEX],
 		   jm_cv_func_working_re_compile_pattern,
       AC_TRY_RUN(
 [#include <stdio.h>
+#include <string.h>
 #include <regex.h>
 	  int
 	  main ()
@@ -1199,12 +1200,14 @@ AC_DEFUN([jm_INCLUDED_REGEX],
 	    const char *s;
 	    struct re_registers regs;
 	    re_set_syntax (RE_SYNTAX_POSIX_EGREP);
+	    memset (&regex, 0, sizeof (regex));
 	    [s = re_compile_pattern ("a[[:@:>@:]]b\n", 9, &regex);]
 	    /* This should fail with _Invalid character class name_ error.  */
 	    if (!s)
 	      exit (1);
 
 	    /* This should succeed, but doesn't for e.g. glibc-2.1.3.  */
+	    memset (&regex, 0, sizeof (regex));
 	    s = re_compile_pattern ("{1", 2, &regex);
 
 	    if (s)
@@ -1212,6 +1215,7 @@ AC_DEFUN([jm_INCLUDED_REGEX],
 
 	    /* The following example is derived from a problem report
                against gawk from Jorge Stolfi <stolfi@ic.unicamp.br>.  */
+	    memset (&regex, 0, sizeof (regex));
 	    s = re_compile_pattern ("[[anù]]*n", 7, &regex);
 	    if (s)
 	      exit (1);
@@ -2551,6 +2555,61 @@ AC_DEFUN([UTILS_FUNC_DIRFD],
 AC_DEFUN([AC_FUNC_ACL],
   [AC_CHECK_HEADERS(sys/acl.h)
    AC_CHECK_FUNCS(acl)])
+
+#serial 1
+# Use replacement ftw.c if the one in the C library is inadequate or buggy.
+# From Jim Meyering
+
+AC_DEFUN([AC_FUNC_FTW],
+[
+  # prerequisites
+  AC_REQUIRE([AC_HEADER_DIRENT])
+  AC_CHECK_HEADERS(sys/param.h)
+  AC_CHECK_DECLS([stpcpy])
+  AC_CHECK_FUNC([tdestroy], , [need_tdestroy=1])
+  AC_CACHE_CHECK([for working GNU ftw], ac_cv_func_ftw_working,
+  [
+
+  # The following test would fail prior to glibc-2.3.2, because `depth'
+  # would be 2 rather than 4.
+  mkdir -p conftest.dir/a/b/c
+  AC_RUN_IFELSE([AC_LANG_SOURCE([], [[
+#include <string.h>
+#include <stdlib.h>
+#include <ftw.h>
+
+static char *_f[] = { "conftest.dir", "conftest.dir/a",
+		      "conftest.dir/a/b", "conftest.dir/a/b/c" };
+static char **p = _f;
+static int depth;
+
+static int
+cb (const char *file, const struct stat *sb, int file_type, struct FTW *info)
+{
+  if (strcmp (file, *p++) != 0)
+    exit (1);
+  ++depth;
+  return 0;
+}
+
+int
+main ()
+{
+  int err = nftw ("conftest.dir", cb, 30, FTW_PHYS | FTW_MOUNT | FTW_CHDIR);
+  exit ((err == 0 && depth == 4) ? 0 : 1);
+}
+]])],
+               [ac_cv_func_ftw_working=yes],
+               [ac_cv_func_ftw_working=no],
+               [ac_cv_func_ftw_working=no])])
+  if test $ac_cv_func_ftw_working = no; then
+    AC_LIBOBJ([ftw])
+    # Add tsearch.o IFF we have to use the replacement ftw.c.
+    if test -n "$need_tdestroy"; then
+      AC_LIBOBJ([tsearch])
+    fi
+  fi
+])# AC_FUNC_FTW
 
 #serial 2
 
@@ -5045,6 +5104,20 @@ neither MSDOS nor Windows
       $ac_fs_backslash_is_file_name_separator,
       [Define if the backslash character may also serve as a file name
        component separator.])
+  ])
+
+#serial 1
+AC_DEFUN([AC_FUNC_CANONICALIZE_FILE_NAME],
+  [
+    AC_REQUIRE([AC_HEADER_STDC])
+    AC_CHECK_HEADERS(string.h sys/param.h stddef.h)
+    AC_CHECK_FUNCS(resolvepath)
+    AC_REQUIRE([AC_HEADER_STAT])
+
+    # This would simply be AC_REPLACE_FUNC([canonicalize_file_name])
+    # if the function name weren't so long.  Besides, I would rather
+    # not have underscores in file names.
+    AC_CHECK_FUNC([canonicalize_file_name], , [AC_LIBOBJ(canonicalize)])
   ])
 
 #serial 5
