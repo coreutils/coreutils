@@ -1,3 +1,7 @@
+2002-12-01  Jim Meyering  <jim@meyering.net>
+
+	* strtoll.c: Update from gnulib (trivial changes).
+
 2002-11-28  Jim Meyering  <jim@meyering.net>
 
 	* mktime.c: Merge from gnulib/libc, for a slightly uglier solution.
