@@ -1,6 +1,6 @@
 /* exclude.c -- exclude file names
 
-   Copyright (C) 1992, 1993, 1994, 1997, 1999, 2000, 2001, 2002, 2003 Free
+   Copyright (C) 1992, 1993, 1994, 1997, 1999, 2000, 2001, 2002 Free
    Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -173,11 +173,9 @@ excluded_filename (struct exclude const *ex, char const *f)
 	  int options = exclude[i].options;
 	  if (excluded == !! (options & EXCLUDE_INCLUDE))
 	    {
-	      typedef int (*fnmatch_t)
-		PARAMS ((char const *, char const *, int));
-	      fnmatch_t matcher =
+	      int (*matcher) PARAMS ((char const *, char const *, int)) =
 		(options & EXCLUDE_WILDCARDS
-		 ? (fnmatch_t) fnmatch
+		 ? fnmatch
 		 : fnmatch_no_wildcards);
 	      bool matched = ((*matcher) (pattern, f, options) == 0);
 	      char const *p;
