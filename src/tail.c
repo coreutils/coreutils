@@ -747,7 +747,7 @@ start_bytes (const char *pretty_filename, int fd, off_t n_bytes)
 
 /* Skip N_LINES lines at the start of file or pipe FD, and print
    any extra characters that were read beyond that.
-   Return 1 on error, 0 if ok.  */
+   Return 1 on error, 0 if ok, -1 if EOF.  */
 
 static int
 start_lines (const char *pretty_filename, int fd, long int n_lines)
@@ -763,16 +763,24 @@ start_lines (const char *pretty_filename, int fd, long int n_lines)
 	if (buffer[bytes_to_skip++] == '\n' && --n_lines == 0)
 	  break;
     }
+
+  /* EOF */
+  if (bytes_read == 0)
+    return -1;
+
+  /* error */
   if (bytes_read == -1)
     {
       error (0, errno, "%s", pretty_filename);
       return 1;
     }
-  else if (bytes_to_skip < bytes_read)
+
+  if (bytes_to_skip < bytes_read)
     {
       xwrite (STDOUT_FILENO, &buffer[bytes_to_skip],
 	      bytes_read - bytes_to_skip);
     }
+
   return 0;
 }
 
@@ -1130,7 +1138,10 @@ tail_lines (const char *pretty_filename, int fd, long int n_lines)
 
   if (from_start)
     {
-      if (start_lines (pretty_filename, fd, n_lines))
+      int t;
+      if ((t = start_lines (pretty_filename, fd, n_lines)) < 0)
+	return 0;
+      if (t)
 	return 1;
       dump_remainder (pretty_filename, fd, COPY_TO_EOF);
     }
