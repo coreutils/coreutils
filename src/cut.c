@@ -317,7 +317,7 @@ static int
 print_kth (k)
      int k;
 {
-  return ((eol_range_start > 0 && eol_range_start <= k)
+  return ((0 < eol_range_start && eol_range_start <= k)
 	  || (k <= max_range_endpoint && printable_field[k]));
 }
 
