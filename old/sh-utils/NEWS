@@ -1,4 +1,6 @@
 Changes in release 1.17
+* the groups script now exits non-zero and doesn't print anything more
+  when `id' fails
  [1.16c]
 * date -u -d DATE now prints the correct date
 * don't remove already-installed su unless it is possible to install the
