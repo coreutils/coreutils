@@ -1,4 +1,4 @@
-#serial 13
+#serial 14
 
 dnl From Jim Meyering.
 dnl
@@ -11,13 +11,19 @@ AC_DEFUN([jm_LIST_MOUNTED_FILESYSTEMS],
   [
 AC_CHECK_FUNCS(listmntent getmntinfo)
 AC_CHECK_HEADERS_ONCE(sys/param.h)
-AC_CHECK_HEADERS(mntent.h sys/ucred.h sys/mount.h sys/fs_types.h)
+
+# We must include grp.h before ucred.h on OSF V4.0, since ucred.h uses
+# NGROUPS (as the array dimension for a struct member) without a definition.
+AC_CHECK_HEADERS(sys/ucred.h, [], [], [#include <grp.h>])
+
+AC_CHECK_HEADERS(mntent.h sys/mount.h sys/fs_types.h)
     getfsstat_includes="\
 $ac_includes_default
 #if HAVE_SYS_PARAM_H
 # include <sys/param.h> /* needed by powerpc-apple-darwin1.3.7 */
 #endif
 #if HAVE_SYS_UCRED_H
+# include <grp.h> /* needed for definition of NGROUPS */
 # include <sys/ucred.h> /* needed by powerpc-apple-darwin1.3.7 */
 #endif
 #if HAVE_SYS_MOUNT_H
