@@ -1,3 +1,10 @@
+2004-07-11  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/printf.c (vstrtold): Renamed from vstrtod.
+	Now returns long double.  All uses changed.
+	(print_direc): Use "L" length modifier when printing floating point
+	numbers, since we're now printing long double.
+	
 2004-07-06  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.0.

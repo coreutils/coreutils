@@ -1,3 +1,12 @@
+2004-07-11  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* Makefile.am (libfetish_a_SOURCES): Add c-strtold.c.
+	* c-strtold.c: New file.
+	* c-strtod.c: Include <config.h> first.
+	(C_STRTOD, DOUBLE, STRTOD): New macros.
+	(c_strtod): Use them.
+	* c-strtod.h (c_strtold): New decl.
+
 2004-07-07  Jim Meyering  <jim@meyering.net>
 
 	Don't infloop when MAXSYMLINKS is not defined.
