@@ -1,0 +1,42 @@
+#!/bin/sh
+
+: ${RM=rm}
+test=i-1
+
+if test "$VERBOSE" = yes; then
+  set -x
+  $RM --version
+fi
+
+# Don't require use of TMPDIR.
+: ${RM_TMPDIR=.}
+
+tmp=$RM_TMPDIR/t-rm.$$
+
+test_failure=0
+touch $tmp/a || test_failure=1
+
+if test $test_failure = 1; then
+  echo 'failure in testing framework'
+  exit 1
+fi
+
+cat <<EOF > $tmp/$test.Iy
+y
+EOF
+cat <<EOF > $tmp/$test.In
+n
+EOF
+
+fail=0
+$RM -i $tmp/a < $tmp/$test.In > /dev/null || fail=1
+# The file should not have been removed.
+test -f $tmp/a || fail=1
+
+$RM -i $tmp/a < $tmp/$test.In > /dev/null || fail=1
+# The file should have been removed this time.
+test -f $tmp/a && fail=1
+
+rm -rf $tmp
+
+exit $fail
