@@ -58,6 +58,7 @@
 	Now, in the absence of --force (-f), if stdin is a tty and an
 	existing destination is not writable mv will prompt before
 	overwriting the destination file.
+	Reported by Vin Shelton.
 
 	* src/copy.c (overwrite_prompt): New function.
 	(copy_internal): Separate the mv-specific and non-move_mode code
@@ -124,10 +125,13 @@
 
 2001-08-06  Jim Meyering  <meyering@lucent.com>
 
+	Fix the bug whereby `mv -uf source dest' would delete source,
+	even though it's older than dest.
+
 	* src/mv.c (usage): Correct the description of --update.
 	* src/copy.c (copy_internal): Set *rename_succeeded, so that
 	the caller (mv) doesn't remove the source file.
-	Reported by FIXME?
+	Reported by Phelippe Neveu.
 
 	* tests/mv/update: New test for the above.
 	* tests/mv/Makefile.am (TESTS): Add update.
@@ -146,9 +150,6 @@
 
 	* tests/root-only: Remove *all* write access, not just that
 	of the owner.
-
-	* src/copy.c (copy_internal): FIXME
-	Reported by Vin Shelton.
 
 	* tests/mv/i-3: New test for the above fix.
 	* tests/mv/Makefile.am (TESTS): Add i-3.
