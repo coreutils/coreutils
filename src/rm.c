@@ -533,6 +533,8 @@ remove_cwd_entries (void)
 
   enum RM_status status = RM_OK;
 
+  obstack_init (&entry_name_pool);
+
   if (dirp)
     {
       if (CLOSEDIR (dirp))
@@ -567,8 +569,6 @@ remove_cwd_entries (void)
 	  enum RM_status tmp_status;
 	  struct dirent *dp;
 
-	  obstack_init (&entry_name_pool);
-
 /* FILE should be skipped if it is `.' or `..', or if it is in
    the table, HT, of entries we've already processed.  */
 #define SKIPPABLE(Ht, File) (DOT_OR_DOTDOT(File) \
@@ -593,8 +593,7 @@ remove_cwd_entries (void)
 
 	  dp = readdir (dirp);
 
-/* FIXME: add autoconf test to detect this.  */
-#ifndef HAVE_WORKING_READDIR
+#if ! HAVE_WORKING_READDIR
 	  if (dp == NULL)
 	    {
 	      /* Since we have probably modified the directory since it
