@@ -489,9 +489,9 @@ copy_internal (const char *src_path, const char *dst_path,
 		return 0;
 	    }
 
-	  if (!S_ISDIR (src_type) && !x->force && x->interactive)
+	  if (!S_ISDIR (src_type) && x->interactive)
 	    {
-	      if (euidaccess (dst_path, W_OK) != 0)
+	      if (euidaccess (dst_path, W_OK) != 0 && x->force)
 		{
 		  fprintf (stderr,
 			   _("%s: overwrite `%s', overriding mode %04lo? "),
