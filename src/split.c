@@ -1,5 +1,5 @@
 /* split.c -- split a file into pieces.
-   Copyright (C) 88, 91, 1995-2001 Free Software Foundation, Inc.
+   Copyright (C) 88, 91, 1995-2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -65,6 +65,12 @@ static int output_desc;
    output file is opened. */
 static int verbose;
 
+static char const shortopts[] = "vb:l:C:"
+#if POSIX2_VERSION < 200112
+"0123456789"
+#endif
+;
+
 static struct option const longopts[] =
 {
   {"bytes", required_argument, NULL, 'b'},
@@ -100,7 +106,12 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -b, --bytes=SIZE        put SIZE bytes per output file\n\
   -C, --line-bytes=SIZE   put at most SIZE bytes of lines per output file\n\
   -l, --lines=NUMBER      put NUMBER lines per output file\n\
-  -NUMBER                 same as -l NUMBER\n\
+"), stdout);
+      if (POSIX2_VERSION < 200112)
+	fputs (_("\
+  -NUMBER                 (obsolete) same as -l NUMBER\n\
+"), stdout);
+      fputs (_("\
       --verbose           print a diagnostic to standard error just\n\
                             before each output file is opened\n\
 "), stdout);
@@ -368,8 +379,8 @@ main (int argc, char **argv)
       int this_optind = optind ? optind : 1;
       long int tmp_long;
 
-      c = getopt_long (argc, argv, "0123456789vb:l:C:", longopts, (int *) 0);
-      if (c == EOF)
+      c = getopt_long (argc, argv, shortopts, longopts, NULL);
+      if (c == -1)
 	break;
 
       switch (c)
@@ -426,6 +437,7 @@ main (int argc, char **argv)
 	  accum = (int) tmp_long;
 	  break;
 
+#if POSIX2_VERSION < 200112
 	case '0':
 	case '1':
 	case '2':
@@ -447,6 +459,7 @@ main (int argc, char **argv)
 	  split_type = type_digits;
 	  accum = accum * 10 + c - '0';
 	  break;
+#endif
 
 	case 2:
 	  verbose = 1;
@@ -460,6 +473,11 @@ main (int argc, char **argv)
 	  usage (EXIT_FAILURE);
 	}
     }
+
+  if (OBSOLETE_OPTION_WARNINGS
+      && digits_optind && ! getenv ("POSIXLY_CORRECT"))
+    error (0, 0, _("warning: `split -%d' is obsolete; use `split -l %d'"),
+	   accum, accum);
 
   /* Handle default case.  */
   if (split_type == type_undef)
