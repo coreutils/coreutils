@@ -29,6 +29,9 @@
 extern int errno;
 #endif
 
+#if HAVE_LIMITS_H
+# include <limits.h>
+#endif
 #if HAVE_SYS_TYPES_H
 # include <sys/types.h>
 #endif
@@ -37,6 +40,13 @@ extern int errno;
 #endif
 #if HAVE_UNISTD_H
 # include <unistd.h>
+#endif
+
+#ifndef SIZE_MAX
+# define SIZE_MAX ((size_t) -1)
+#endif
+#ifndef SSIZE_MAX
+# define SSIZE_MAX ((ssize_t) (SIZE_MAX / 2))
 #endif
 
 #include "xalloc.h"
@@ -49,18 +59,17 @@ extern int errno;
    give a diagnostic and exit.  */
 
 char *
-xreadlink (char const *filename, size_t *link_length_arg)
+xreadlink (char const *filename)
 {
   /* The initial buffer size for the link value.  A power of 2
      detects arithmetic overflow earlier, but is not required.  */
   size_t buf_size = 128;
-  char *buffer = NULL;
 
   while (1)
     {
-      int link_length;
-      buffer = (char *) xrealloc (buffer, buf_size);
-      link_length = readlink (filename, buffer, buf_size);
+      char *buffer = xmalloc (buf_size);
+      ssize_t link_length = readlink (filename, buffer, buf_size);
+
       if (link_length < 0)
 	{
 	  int saved_errno = errno;
@@ -68,14 +77,16 @@ xreadlink (char const *filename, size_t *link_length_arg)
 	  errno = saved_errno;
 	  return NULL;
 	}
+
       if (link_length < buf_size)
 	{
-	  *link_length_arg = link_length;
 	  buffer[link_length] = 0;
 	  return buffer;
 	}
+
+      free (buffer);
       buf_size *= 2;
-      if (buf_size == 0)
+      if (SSIZE_MAX < buf_size || (SIZE_MAX / 2 < SSIZE_MAX && buf_size == 0))
 	xalloc_die ();
     }
 }
