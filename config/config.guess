@@ -3,7 +3,7 @@
 #   Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
 #   2000, 2001, 2002, 2003 Free Software Foundation, Inc.
 
-timestamp='2004-02-16'
+timestamp='2004-03-12'
 
 # This file is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by
@@ -255,9 +255,14 @@ case "${UNAME_MACHINE}:${UNAME_SYSTEM}:${UNAME_RELEASE}:${UNAME_VERSION}" in
 	echo ${UNAME_MACHINE}-unknown-mirbsd${UNAME_RELEASE}
 	exit 0 ;;
     alpha:OSF1:*:*)
-	if test $UNAME_RELEASE = "V4.0"; then
+	case $UNAME_RELEASE in
+	*4.0)
 		UNAME_RELEASE=`/usr/sbin/sizer -v | awk '{print $3}'`
-	fi
+		;;
+	*5.*)
+	        UNAME_RELEASE=`/usr/sbin/sizer -v | awk '{print $4}'`
+		;;
+	esac
 	# According to Compaq, /usr/sbin/psrinfo has been available on
 	# OSF/1 and Tru64 systems produced since 1995.  I hope that
 	# covers most systems running today.  This code pipes the CPU
@@ -295,11 +300,12 @@ case "${UNAME_MACHINE}:${UNAME_SYSTEM}:${UNAME_RELEASE}:${UNAME_VERSION}" in
 	    "EV7.9 (21364A)")
 		UNAME_MACHINE="alphaev79" ;;
 	esac
+	# A Pn.n version is a patched version.
 	# A Vn.n version is a released version.
 	# A Tn.n version is a released field test version.
 	# A Xn.n version is an unreleased experimental baselevel.
 	# 1.2 uses "1.2" for uname -r.
-	echo ${UNAME_MACHINE}-dec-osf`echo ${UNAME_RELEASE} | sed -e 's/^[VTX]//' | tr 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' 'abcdefghijklmnopqrstuvwxyz'`
+	echo ${UNAME_MACHINE}-dec-osf`echo ${UNAME_RELEASE} | sed -e 's/^[PVTX]//' | tr 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' 'abcdefghijklmnopqrstuvwxyz'`
 	exit 0 ;;
     Alpha*:OpenVMS:*:*)
 	echo alpha-hp-vms
@@ -845,6 +851,9 @@ EOF
 	echo cris-axis-linux-gnu
 	exit 0 ;;
     ia64:Linux:*:*)
+	echo ${UNAME_MACHINE}-unknown-linux-gnu
+	exit 0 ;;
+    m32r*:Linux:*:*)
 	echo ${UNAME_MACHINE}-unknown-linux-gnu
 	exit 0 ;;
     m68*:Linux:*:*)
