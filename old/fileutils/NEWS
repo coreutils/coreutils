@@ -1,5 +1,8 @@
 Changes in release 4.1:
 [4.0s]
+* cp can now remove unwritable files in interactive mode: contrary to how mv
+   works, cp's --interactive (-i) option does *not* cancel the effect of the
+   --force (-f) option.
 * rm no longer segfaults on certain very deep hierarchies
 * IMPORTANT SECURITY FIX: a running `rm -r' may no longer be subverted to
   remove unintended directories
