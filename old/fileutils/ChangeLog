@@ -1,3 +1,8 @@
+2000-05-15  Jim Meyering  <meyering@lucent.com>
+
+	* tests/ls/time-1: Set LC_ALL to `C' to avoid failure when the
+	current locale is not C (POSIX).  From Matthew Clarke.
+
 2000-05-13  Jim Meyering  <meyering@lucent.com>
 
 	* src/help-version: New test.
