@@ -18,6 +18,7 @@ mkdir $tmp || framework_failure=1
 cd $tmp || framework_failure=1
 echo abc > foo || framework_failure=1
 ln -s foo slink || framework_failure=1
+ln -s no-such-file no-file || framework_failure=1
 
 if test $framework_failure = 1; then
   echo '$0: failure in testing framework' 1>&2
@@ -25,6 +26,9 @@ if test $framework_failure = 1; then
 fi
 
 fail=0
+
+# This must fail.
+cp -r no-file junk 2>/dev/null && fail=1
 
 cp -r slink bar || fail=1
 set x `ls -l bar`; shift; mode=$1
