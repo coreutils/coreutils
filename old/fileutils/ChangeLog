@@ -1,6 +1,22 @@
-2002-02-20  Jim Meyering  <meyering@lucent.com>
+2002-02-26  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.6.
+
+2002-02-25  Paul Eggert  <eggert@twinsun.com>
+
+	Add ACL support to 'ls' for HP-UX and Unixware, and try to
+	establish a framework for adding it for other hosts.
+	This builds on a suggestion of Andreas Gruenbacher.
+
+	* lib/Makefile.am (libfetish_a_SOURCES): Add acl.h, acl.c.
+	* lib/acl.h, lib/acl.c, m4/acl.m4: New files.
+	* m4/jm-macros.m4 (jm_MACROS): Require AC_FUNC_ACL.
+	Do not check for acl or sys/acl.h, as AC_FUNC_ACL does that now.
+	* src/ls.c: Include "acl.h" rather than <sys/acl.h>.
+	(USE_ACL): Remove; replaced by HAVE_ACL everywhere.
+	(gobble_file): Use file_has_acl rather than doing it ourselves.
+
+2002-02-20  Jim Meyering  <meyering@lucent.com>
 
 	* src/touch.c: Include posixver.h.
 	(usage): Document only the intersection of the old and new behaviors,
