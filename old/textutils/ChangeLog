@@ -2,6 +2,14 @@
 
 	* Version 2.0.20.
 
+2002-01-22  Paul Eggert  <eggert@twinsun.com>
+
+	* src/od.c (skip): Remove redundant check for overflow.
+	fseeko's seek argument is already known to be in range,
+	since it is less than the file size.
+
+2002-01-22  Jim Meyering  <meyering@lucent.com>
+
 	* po/POTFILES.in: Add lib/xmemcoll.c.
 
 2002-01-22  Paul Eggert  <eggert@twinsun.com>
