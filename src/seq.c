@@ -147,7 +147,10 @@ valid_format (const char *fmt)
       fmt += strspn (fmt, "0123456789");
 
       if (*fmt == '.')
-	fmt += strspn (++fmt, "0123456789");
+	{
+	  ++fmt;
+	  fmt += strspn (fmt, "0123456789");
+	}
     }
 
   if (!(*fmt == 'e' || *fmt == 'f' || *fmt == 'g'))
