@@ -48,17 +48,17 @@ struct group *getgrgid ();
 #endif
 
 int lstat ();
-
-char *parse_user_spec ();
 char *savedir ();
+char *parse_user_spec ();
 char *xmalloc ();
 char *xrealloc ();
-int change_file_owner ();
-int change_dir_owner ();
-int isnumber ();
-void describe_change ();
 void error ();
-void usage ();
+int isnumber ();
+
+static int change_file_owner ();
+static int change_dir_owner ();
+static void describe_change ();
+static void usage ();
 
 /* The name the program was run with. */
 char *program_name;
@@ -81,7 +81,7 @@ static char *username;
 /* The name of the group to which ownership of the files is being given. */
 static char *groupname;
 
-static struct option long_options[] =
+static struct option const long_options[] =
 {
   {"recursive", 0, 0, 'R'},
   {"changes", 0, 0, 'c'},
@@ -147,7 +147,7 @@ main (argc, argv)
    If it is a directory and -R is given, recurse.
    Return 0 if successful, 1 if errors occurred. */
 
-int
+static int
 change_file_owner (file, user, group)
      char *file;
      uid_t user;
@@ -191,7 +191,7 @@ change_file_owner (file, user, group)
    STATP points to the results of lstat on DIR.
    Return 0 if successful, 1 if errors occurred. */
 
-int
+static int
 change_dir_owner (dir, user, group, statp)
      char *dir;
      uid_t user;
@@ -245,7 +245,7 @@ change_dir_owner (dir, user, group, statp)
 /* Tell the user the user and group names to which ownership of FILE
    has been given; if CHANGED is zero, FILE had those owners already. */
 
-void
+static void
 describe_change (file, changed)
      char *file;
      int changed;
@@ -260,7 +260,7 @@ describe_change (file, changed)
     printf ("%s\n", username);
 }
 
-void
+static void
 usage ()
 {
   fprintf (stderr, "\

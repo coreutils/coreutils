@@ -92,23 +92,24 @@
 #define C_TWOBUFS 04000
 
 char *xmalloc ();
-RETSIGTYPE interrupt_handler ();
-int bit_count ();
-int parse_integer ();
-void apply_translations ();
-void copy ();
-void copy_simple ();
-void copy_with_block ();
-void copy_with_unblock ();
 void error ();
-void parse_conversion ();
-void print_stats ();
-void translate_charset ();
-void quit ();
-void scanargs ();
-void skip ();
-void usage ();
-void write_output ();
+
+static RETSIGTYPE interrupt_handler ();
+static int bit_count ();
+static int parse_integer ();
+static void apply_translations ();
+static void copy ();
+static void copy_simple ();
+static void copy_with_block ();
+static void copy_with_unblock ();
+static void parse_conversion ();
+static void print_stats ();
+static void translate_charset ();
+static void quit ();
+static void scanargs ();
+static void skip ();
+static void usage ();
+static void write_output ();
 
 /* The name this program was run with. */
 char *program_name;
@@ -194,7 +195,7 @@ static struct conversion conversions[] =
 /* Translation table formed by applying successive transformations. */
 static unsigned char trans_table[256];
 
-static unsigned char ascii_to_ebcdic[] =
+static unsigned char const ascii_to_ebcdic[] =
 {
   0, 01, 02, 03, 067, 055, 056, 057,
   026, 05, 045, 013, 014, 015, 016, 017,
@@ -230,7 +231,7 @@ static unsigned char ascii_to_ebcdic[] =
   0356, 0357, 0372, 0373, 0374, 0375, 0376, 0377
 };
 
-static unsigned char ascii_to_ibm[] =
+static unsigned char const ascii_to_ibm[] =
 {
   0, 01, 02, 03, 067, 055, 056, 057,
   026, 05, 045, 013, 014, 015, 016, 017,
@@ -266,7 +267,7 @@ static unsigned char ascii_to_ibm[] =
   0356, 0357, 0372, 0373, 0374, 0375, 0376, 0377
 };
 
-static unsigned char ebcdic_to_ascii[] =
+static unsigned char const ebcdic_to_ascii[] =
 {
   0, 01, 02, 03, 0234, 011, 0206, 0177,
   0227, 0215, 0216, 013, 014, 015, 016, 017,
@@ -374,7 +375,7 @@ main (argc, argv)
    which is open with read permission for FILE.  Store up to BLOCKSIZE
    bytes of the data at a time in BUF, if necessary. */
 
-void
+static void
 skip (fdesc, file, records, blocksize, buf)
      int fdesc;
      char *file;
@@ -419,7 +420,7 @@ skip (fdesc, file, records, blocksize, buf)
 /* Apply the character-set translations specified by the user
    to the NREAD bytes in BUF.  */
 
-void
+static void
 translate_buffer (buf, nread)
      unsigned char *buf;
      int nread;
@@ -442,7 +443,7 @@ static unsigned char saved_char;
    previous call.  If NREAD is odd, save the last char for the
    next call.   Return the new start of the BUF buffer.  */
 
-unsigned char *
+static unsigned char *
 swab_buffer (buf, nread)
      unsigned char *buf;
      int *nread;
@@ -488,7 +489,7 @@ static int col = 0;
 
 /* The main loop.  */
 
-void
+static void
 copy ()
 {
   unsigned char *ibuf, *bufstart; /* Input buffer. */
@@ -646,7 +647,7 @@ copy ()
 
 /* Copy NREAD bytes of BUF, with no conversions.  */
 
-void
+static void
 copy_simple (buf, nread)
      unsigned char *buf;
      int nread;
@@ -675,7 +676,7 @@ copy_simple (buf, nread)
    (pad newline-terminated records to `conversion_blocksize',
    replacing the newline with trailing spaces).  */
 
-void
+static void
 copy_with_block (buf, nread)
      unsigned char *buf;
      int nread;
@@ -706,7 +707,7 @@ copy_with_block (buf, nread)
    (replace trailing spaces in `conversion_blocksize'-sized records
    with a newline).  */
 
-void
+static void
 copy_with_unblock (buf, nread)
      unsigned char *buf;
      int nread;
@@ -743,7 +744,7 @@ copy_with_unblock (buf, nread)
 
 /* Write, then empty, the output buffer `obuf'. */
 
-void
+static void
 write_output ()
 {
   int nwritten = write (output_fd, obuf, output_blocksize);
@@ -759,7 +760,7 @@ write_output ()
   oc = 0;
 }
 
-void
+static void
 scanargs (argc, argv)
      int argc;
      char **argv;
@@ -830,7 +831,7 @@ scanargs (argc, argv)
    optionally multiplied by various values.
    Return -1 if STR does not represent a number in this format. */
 
-int
+static int
 parse_integer (str)
      char *str;
 {
@@ -871,7 +872,7 @@ loop:
 
 /* Interpret one "conv=..." option. */
 
-void
+static void
 parse_conversion (str)
      char *str;
 {
@@ -900,7 +901,7 @@ parse_conversion (str)
 
 /* Fix up translation table. */
 
-void
+static void
 apply_translations ()
 {
   int i;
@@ -948,7 +949,7 @@ only one conv in {ascii,ebcdic,ibm}, {lcase,ucase}, {block,unblock}, {unblock,sy
     }
 }
 
-void
+static void
 translate_charset (new_trans)
      unsigned char *new_trans;
 {
@@ -961,7 +962,7 @@ translate_charset (new_trans)
 
 /* Return the number of 1 bits in `i'. */
 
-int
+static int
 bit_count (i)
      register unsigned int i;
 {
@@ -972,7 +973,7 @@ bit_count (i)
   return set_bits;
 }
 
-void
+static void
 print_stats ()
 {
   fprintf (stderr, "%u+%u records in\n", r_full, r_partial);
@@ -982,7 +983,7 @@ print_stats ()
 	     r_truncate == 1 ? "" : "s");
 }
 
-void
+static void
 quit (code)
      int code;
 {
@@ -995,13 +996,13 @@ quit (code)
   exit (code);
 }
 
-RETSIGTYPE
+static RETSIGTYPE
 interrupt_handler ()
 {
   quit (1);
 }
 
-void
+static void
 usage (string, arg0, arg1)
      char *string, *arg0, *arg1;
 {

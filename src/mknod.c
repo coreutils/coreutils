@@ -34,12 +34,13 @@
 #include "modechange.h"
 
 void error ();
-void usage ();
+
+static void usage ();
 
 /* The name this program was run with. */
 char *program_name;
 
-static struct option longopts[] =
+static struct option const longopts[] =
 {
   {"mode", 1, NULL, 'm'},
   {NULL, 0, NULL, 0}
@@ -132,7 +133,7 @@ main (argc, argv)
   exit (0);
 }
 
-void
+static void
 usage ()
 {
   fprintf (stderr, "\

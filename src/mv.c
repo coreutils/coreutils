@@ -52,15 +52,16 @@ uid_t geteuid ();
 
 char *basename ();
 enum backup_type get_version ();
-int copy_reg ();
-int do_move ();
-int eaccess_stat ();
 int isdir ();
-int movefile ();
 int yesno ();
 void error ();
 void strip_trailing_slashes ();
-void usage ();
+int eaccess_stat ();
+
+static int copy_reg ();
+static int do_move ();
+static int movefile ();
+static void usage ();
 
 /* The name this program was run with. */
 char *program_name;
@@ -85,7 +86,7 @@ static int stdin_tty;
 /* This process's effective user ID.  */
 static uid_t myeuid;
 
-static struct option long_options[] =
+static struct option const long_options[] =
 {
   {"backup", 0, NULL, 'b'},
   {"force", 0, NULL, 'f'},
@@ -171,7 +172,7 @@ main (argc, argv)
 /* Move file SOURCE onto DEST.  Handles the case when DEST is a directory.
    Return 0 if successful, 1 if an error occurred.  */
 
-int
+static int
 movefile (source, dest)
      char *source;
      char *dest;
@@ -199,7 +200,7 @@ static struct stat dest_stats, source_stats;
    If DEST is a directory, SOURCE must be also.
    Return 0 if successful, 1 if an error occurred.  */
 
-int
+static int
 do_move (source, dest)
      char *source;
      char *dest;
@@ -311,7 +312,7 @@ do_move (source, dest)
 /* Copy regular file SOURCE onto file DEST.
    Return 1 if an error occurred, 0 if successful. */
 
-int
+static int
 copy_reg (source, dest)
      char *source, *dest;
 {
@@ -422,7 +423,7 @@ copy_reg (source, dest)
   return 0;
 }
 
-void
+static void
 usage ()
 {
   fprintf (stderr, "\

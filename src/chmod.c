@@ -34,12 +34,13 @@ int lstat ();
 char *savedir ();
 char *xmalloc ();
 char *xrealloc ();
-int change_file_mode ();
-int change_dir_mode ();
-void describe_change ();
 void error ();
 void mode_string ();
-void usage ();
+
+static int change_file_mode ();
+static int change_dir_mode ();
+static void describe_change ();
+static void usage ();
 
 /* The name the program was run with. */
 char *program_name;
@@ -140,7 +141,7 @@ main (argc, argv)
 /* Change the mode of FILE according to the list of operations CHANGES.
    Return 0 if successful, 1 if errors occurred. */
 
-int
+static int
 change_file_mode (file, changes)
      char *file;
      struct mode_change *changes;
@@ -186,7 +187,7 @@ change_file_mode (file, changes)
    STATP points to the results of lstat on DIR.
    Return 0 if successful, 1 if errors occurred. */
 
-int
+static int
 change_dir_mode (dir, changes, statp)
      char *dir;
      struct mode_change *changes;
@@ -239,7 +240,7 @@ change_dir_mode (dir, changes, statp)
 /* Tell the user the mode MODE that file FILE has been set to;
    if CHANGED is zero, FILE had that mode already. */
 
-void
+static void
 describe_change (file, mode, changed)
      char *file;
      unsigned short mode;
@@ -257,7 +258,7 @@ describe_change (file, mode, changed)
 	    file, mode & 07777, &perms[1]);
 }
 
-void
+static void
 usage ()
 {
   fprintf (stderr, "\

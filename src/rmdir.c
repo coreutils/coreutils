@@ -27,10 +27,11 @@
 #include <sys/types.h>
 #include "system.h"
 
-void remove_parents ();
 void error ();
 void strip_trailing_slashes ();
-void usage ();
+
+static void remove_parents ();
+static void usage ();
 
 /* If nonzero, remove empty parent directories. */
 static int empty_paths;
@@ -38,7 +39,7 @@ static int empty_paths;
 /* The name this program was run with. */
 char *program_name;
 
-static struct option longopts[] =
+static struct option const longopts[] =
 {
   {"path", 0, &empty_paths, 1},
   {NULL, 0, NULL, 0}
@@ -92,7 +93,7 @@ main (argc, argv)
 /* Remove any empty parent directories of `path'.
    Replaces '/' characters in `path' with NULs. */
 
-void
+static void
 remove_parents (path)
      char *path;
 {
@@ -112,7 +113,7 @@ remove_parents (path)
   while (rmdir (path) == 0);
 }
 
-void
+static void
 usage ()
 {
   fprintf (stderr, "Usage: %s [-p] [--path] dir...\n",

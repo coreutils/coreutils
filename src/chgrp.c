@@ -37,13 +37,14 @@ int lstat ();
 char *savedir ();
 char *xmalloc ();
 char *xrealloc ();
-int change_file_group ();
-int change_dir_group ();
-int isnumber ();
-void describe_change ();
 void error ();
-void parse_group ();
-void usage ();
+
+static int change_file_group ();
+static int change_dir_group ();
+static int isnumber ();
+static void describe_change ();
+static void parse_group ();
+static void usage ();
 
 /* The name the program was run with. */
 char *program_name;
@@ -63,7 +64,7 @@ static int changes_only;
 /* The name of the group to which ownership of the files is being given. */
 static char *groupname;
 
-static struct option long_options[] =
+static struct option const long_options[] =
 {
   {"recursive", 0, 0, 'R'},
   {"changes", 0, 0, 'c'},
@@ -121,7 +122,7 @@ main (argc, argv)
 
 /* Set *G according to NAME. */
 
-void
+static void
 parse_group (name, g)
      char *name;
      int *g;
@@ -148,7 +149,7 @@ parse_group (name, g)
    If it is a directory and -R is given, recurse.
    Return 0 if successful, 1 if errors occurred. */
 
-int
+static int
 change_file_group (file, group)
      char *file;
      int group;
@@ -187,7 +188,7 @@ change_file_group (file, group)
    STATP points to the results of lstat on DIR.
    Return 0 if successful, 1 if errors occurred. */
 
-int
+static int
 change_dir_group (dir, group, statp)
      char *dir;
      int group;
@@ -240,7 +241,7 @@ change_dir_group (dir, group, statp)
 /* Tell the user the group name to which ownership of FILE
    has been given; if CHANGED is zero, FILE was that group already. */
 
-void
+static void
 describe_change (file, changed)
      char *file;
      int changed;
@@ -254,7 +255,7 @@ describe_change (file, changed)
 /* Return nonzero if STR represents an unsigned decimal integer,
    otherwise return 0. */
 
-int
+static int
 isnumber (str)
      char *str;
 {
@@ -264,7 +265,7 @@ isnumber (str)
   return 1;
 }
 
-void
+static void
 usage ()
 {
   fprintf (stderr, "\

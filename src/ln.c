@@ -34,11 +34,12 @@ int symlink ();
 
 char *basename ();
 enum backup_type get_version ();
-int do_link ();
 int isdir ();
 int yesno ();
 void error ();
-void usage ();
+
+static void usage ();
+static int do_link ();
 
 /* A pointer to the function used to make links.  This will point to either
    `link' or `symlink'. */
@@ -62,7 +63,7 @@ static int hard_dir_link;
 /* The name by which the program was run, for error messages.  */
 char *program_name;
 
-static struct option long_options[] = 
+static struct option const long_options[] = 
 {
   {"backup", 0, NULL, 'b'},
   {"directory", 0, &hard_dir_link, 1},
@@ -173,7 +174,7 @@ main (argc, argv)
    If DEST is a directory, put the link to SOURCE in that directory.
    Return 1 if there is an error, otherwise 0.  */
 
-int
+static int
 do_link (source, dest)
      char *source;
      char *dest;
@@ -277,7 +278,7 @@ do_link (source, dest)
   return 1;
 }
 
-void
+static void
 usage ()
 {
   fprintf (stderr, "\

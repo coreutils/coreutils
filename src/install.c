@@ -84,18 +84,18 @@ int wait ();
 
 char *basename ();
 char *xmalloc ();
-int change_attributes ();
-int copy_file ();
-int install_dir ();
-int install_file_in_dir ();
-int install_file_in_file ();
-int isdir ();
-int make_path ();
-int isnumber ();
 void error ();
-void get_ids ();
-void strip ();
-void usage ();
+int make_path ();
+int isdir ();
+
+static int change_attributes ();
+static int copy_file ();
+static int install_file_in_dir ();
+static int install_file_in_file ();
+static int isnumber ();
+static void get_ids ();
+static void strip ();
+static void usage ();
 
 /* The name this program was run with, for error messages. */
 char *program_name;
@@ -124,7 +124,7 @@ static int strip_files;
 /* If nonzero, install a directory instead of a regular file. */
 static int dir_arg;
 
-static struct option long_options[] =
+static struct option const long_options[] =
 {
   {"strip", 0, NULL, 's'},
   {"directory", 0, NULL, 'd'},
@@ -231,7 +231,7 @@ main (argc, argv)
    attributes.
    Return 0 if successful, 1 if an error occurs. */
 
-int
+static int
 install_file_in_file (from, to)
      char *from;
      char *to;
@@ -247,7 +247,7 @@ install_file_in_file (from, to)
    and give the copy the appropriate attributes.
    Return 0 if successful, 1 if not. */
 
-int
+static int
 install_file_in_dir (from, to_dir)
      char *from;
      char *to_dir;
@@ -270,7 +270,7 @@ static char buffer[READ_SIZE];
 /* Copy file FROM onto file TO, creating TO if necessary.
    Return 0 if the copy is successful, 1 if not. */
 
-int
+static int
 copy_file (from, to)
      char *from;
      char *to;
@@ -357,7 +357,7 @@ copy_file (from, to)
 /* Set the attributes of file or directory PATH.
    Return 0 if successful, 1 if not. */
 
-int
+static int
 change_attributes (path)
      char *path;
 {
@@ -401,7 +401,7 @@ change_attributes (path)
    magic numbers vary so much from system to system that making
    it portable would be very difficult.  Not worth the effort. */
 
-void
+static void
 strip (path)
      char *path;
 {
@@ -427,7 +427,7 @@ strip (path)
 
 /* Initialize the user and group ownership of the files to install. */
 
-void
+static void
 get_ids ()
 {
   struct passwd *pw;
@@ -469,7 +469,7 @@ get_ids ()
 /* Return nonzero if STR is an ASCII representation of a nonzero
    decimal integer, zero if not. */
 
-int
+static int
 isnumber (str)
      char *str;
 {
@@ -481,7 +481,7 @@ isnumber (str)
   return 1;
 }
 
-void
+static void
 usage ()
 {
    fprintf (stderr, "\

@@ -43,7 +43,11 @@ char *dirname ();
 enum backup_type get_version ();
 int eaccess_stat ();
 
+static int do_copy ();
+static int copy ();
+static int copy_dir ();
 static int make_path ();
+static int copy_reg ();
 static int re_protect ();
 
 /* Initial number of entries in each hash table entry's table of inodes.  */
@@ -113,7 +117,7 @@ static int umask_kill;
 /* This process's effective user ID.  */
 static uid_t myeuid;
 
-static struct option long_opts[] =
+static struct option const long_opts[] =
 {
   {"archive", 0, NULL, 'a'},
   {"backup", 0, NULL, 'b'},
@@ -275,7 +279,7 @@ main (argc, argv)
 /* Scan the arguments, and copy each by calling copy.
    Return 0 if successful, 1 if any errors occur. */
 
-int
+static int
 do_copy (argc, argv)
      int argc;
      char *argv[];
@@ -995,7 +999,7 @@ re_protect (const_dst_path, src_offset, attr_list)
    recursion.   SRC_SB and ANCESTORS describe SRC_PATH_IN.
    Return 0 if successful, -1 if an error occurs. */
 
-int
+static int
 copy_dir (src_path_in, dst_path_in, new_dst, src_sb, ancestors)
      char *src_path_in;
      char *dst_path_in;
@@ -1053,7 +1057,7 @@ copy_dir (src_path_in, dst_path_in, new_dst, src_sb, ancestors)
    (Holes are read as zeroes by the `read' system call.)
    Return 0 if successful, -1 if an error occurred. */
 
-int
+static int
 copy_reg (src_path, dst_path)
      char *src_path;
      char *dst_path;

@@ -69,47 +69,48 @@ void mode_string ();
 char *xstrdup ();
 char *getgroup ();
 char *getuser ();
-char *make_link_path ();
 char *xmalloc ();
 char *xrealloc ();
 int argmatch ();
-int compare_atime ();
-int rev_cmp_atime ();
-int compare_ctime ();
-int rev_cmp_ctime ();
-int compare_mtime ();
-int rev_cmp_mtime ();
-int compare_size ();
-int rev_cmp_size ();
-int compare_name ();
-int rev_cmp_name ();
-int compare_extension ();
-int rev_cmp_extension ();
-int decode_switches ();
-int file_interesting ();
-int gobble_file ();
-int is_not_dot_or_dotdot ();
-int length_of_file_name_and_frills ();
-void add_ignore_pattern ();
-void attach ();
-void clear_files ();
 void error ();
-void extract_dirs_from_files ();
-void get_link_name ();
-void indent ();
 void invalid_arg ();
-void print_current_files ();
-void print_dir ();
-void print_file_name_and_frills ();
-void print_horizontal ();
-void print_long_format ();
-void print_many_per_line ();
-void print_name_with_quoting ();
-void print_type_indicator ();
-void print_with_commas ();
-void queue_directory ();
-void sort_files ();
-void usage ();
+
+static char *make_link_path ();
+static int compare_atime ();
+static int rev_cmp_atime ();
+static int compare_ctime ();
+static int rev_cmp_ctime ();
+static int compare_mtime ();
+static int rev_cmp_mtime ();
+static int compare_size ();
+static int rev_cmp_size ();
+static int compare_name ();
+static int rev_cmp_name ();
+static int compare_extension ();
+static int rev_cmp_extension ();
+static int decode_switches ();
+static int file_interesting ();
+static int gobble_file ();
+static int is_not_dot_or_dotdot ();
+static int length_of_file_name_and_frills ();
+static void add_ignore_pattern ();
+static void attach ();
+static void clear_files ();
+static void extract_dirs_from_files ();
+static void get_link_name ();
+static void indent ();
+static void print_current_files ();
+static void print_dir ();
+static void print_file_name_and_frills ();
+static void print_horizontal ();
+static void print_long_format ();
+static void print_many_per_line ();
+static void print_name_with_quoting ();
+static void print_type_indicator ();
+static void print_with_commas ();
+static void queue_directory ();
+static void sort_files ();
+static void usage ();
 
 enum filetype
 {
@@ -419,7 +420,7 @@ main (argc, argv)
   exit (exit_status);
 }
 
-static struct option long_options[] =
+static struct option const long_options[] =
 {
   {"all", 0, 0, 'a'},
   {"escape", 0, 0, 'b'},
@@ -447,34 +448,34 @@ static struct option long_options[] =
   {0, 0, 0, 0}
 };
 
-static char *format_args[] =
+static char const* const format_args[] =
 {
   "verbose", "long", "commas", "horizontal", "across",
   "vertical", "single-column", 0
 };
 
-static enum format formats[] =
+static enum format const formats[] =
 {
   long_format, long_format, with_commas, horizontal, horizontal,
   many_per_line, one_per_line
 };
 
-static char *sort_args[] =
+static char const* const sort_args[] =
 {
   "none", "time", "size", "extension", 0
 };
 
-static enum sort_type sort_types[] =
+static enum sort_type const sort_types[] =
 {
   sort_none, sort_time, sort_size, sort_extension
 };
 
-static char *time_args[] =
+static char const* const time_args[] =
 {
   "atime", "access", "use", "ctime", "status", 0
 };
 
-static enum time_type time_types[] =
+static enum time_type const time_types[] =
 {
   time_atime, time_atime, time_atime, time_ctime, time_ctime
 };
@@ -482,7 +483,7 @@ static enum time_type time_types[] =
 /* Set all the option flags according to the switches specified.
    Return the index of the first non-option argument.  */
 
-int
+static int
 decode_switches (argc, argv)
      int argc;
      char **argv;
@@ -739,7 +740,7 @@ decode_switches (argc, argv)
    to be treated as regular directories but still be listed under their
    real names. */
 
-void
+static void
 queue_directory (name, realname)
      char *name;
      char *realname;
@@ -760,7 +761,7 @@ queue_directory (name, realname)
    If `realname' is nonzero, print its name instead of `name';
    this is used for symbolic links to directories. */
 
-void
+static void
 print_dir (name, realname)
      char *name;
      char *realname;
@@ -824,7 +825,7 @@ print_dir (name, realname)
 /* Add `pattern' to the list of patterns for which files that match are
    not listed.  */
 
-void
+static void
 add_ignore_pattern (pattern)
      char *pattern;
 {
@@ -839,7 +840,7 @@ add_ignore_pattern (pattern)
 
 /* Return nonzero if the file in `next' should be listed. */
 
-int
+static int
 file_interesting (next)
      register struct direct *next;
 {
@@ -863,7 +864,7 @@ file_interesting (next)
 
 /* Empty the table of files. */
 
-void
+static void
 clear_files ()
 {
   register int i;
@@ -883,7 +884,7 @@ clear_files ()
    Verify that the file exists, and print an error message if it does not.
    Return the number of blocks that the file occupies.  */
 
-int
+static int
 gobble_file (name, explicit_arg, dirname)
      char *name;
      int explicit_arg;
@@ -1008,7 +1009,7 @@ gobble_file (name, explicit_arg, dirname)
 /* Put the name of the file that `filename' is a symbolic link to
    into the `linkname' field of `f'. */
 
-void
+static void
 get_link_name (filename, f)
      char *filename;
      struct file *f;
@@ -1046,7 +1047,7 @@ get_link_name (filename, f)
    prepended; otherwise, return a copy of `linkname'.
    If `linkname' is zero, return zero. */
 
-char *
+static char *
 make_link_path (path, linkname)
      char *path;
      char *linkname;
@@ -1081,7 +1082,7 @@ make_link_path (path, linkname)
    `recursive' is nonzero if we should not treat `.' and `..' as dirs.
    This is desirable when processing directories recursively.  */
 
-void
+static void
 extract_dirs_from_files (dirname, recursive)
      char *dirname;
      int recursive;
@@ -1124,7 +1125,7 @@ extract_dirs_from_files (dirname, recursive)
 /* Return non-zero if `name' doesn't end in `.' or `..'
    This is so we don't try to recurse on `././././. ...' */
 
-int
+static int
 is_not_dot_or_dotdot (name)
      char *name;
 {
@@ -1144,7 +1145,7 @@ is_not_dot_or_dotdot (name)
 
 /* Sort the files now in the table.  */
 
-void
+static void
 sort_files ()
 {
   int (*func) ();
@@ -1183,70 +1184,70 @@ sort_files ()
 
 /* Comparison routines for sorting the files. */
 
-int
+static int
 compare_ctime (file1, file2)
      struct file *file1, *file2;
 {
   return longdiff (file2->stat.st_ctime, file1->stat.st_ctime);
 }
 
-int
+static int
 rev_cmp_ctime (file2, file1)
      struct file *file1, *file2;
 {
   return longdiff (file2->stat.st_ctime, file1->stat.st_ctime);
 }
 
-int
+static int
 compare_mtime (file1, file2)
      struct file *file1, *file2;
 {
   return longdiff (file2->stat.st_mtime, file1->stat.st_mtime);
 }
 
-int
+static int
 rev_cmp_mtime (file2, file1)
      struct file *file1, *file2;
 {
   return longdiff (file2->stat.st_mtime, file1->stat.st_mtime);
 }
 
-int
+static int
 compare_atime (file1, file2)
      struct file *file1, *file2;
 {
   return longdiff (file2->stat.st_atime, file1->stat.st_atime);
 }
 
-int
+static int
 rev_cmp_atime (file2, file1)
      struct file *file1, *file2;
 {
   return longdiff (file2->stat.st_atime, file1->stat.st_atime);
 }
 
-int
+static int
 compare_size (file1, file2)
      struct file *file1, *file2;
 {
   return longdiff (file2->stat.st_size, file1->stat.st_size);
 }
 
-int
+static int
 rev_cmp_size (file2, file1)
      struct file *file1, *file2;
 {
   return longdiff (file2->stat.st_size, file1->stat.st_size);
 }
 
-int
+static int
 compare_name (file1, file2)
      struct file *file1, *file2;
 {
   return strcmp (file1->name, file2->name);
 }
 
-int
+static int
 rev_cmp_name (file2, file1)
      struct file *file1, *file2;
 {
@@ -1256,7 +1257,7 @@ rev_cmp_name (file2, file1)
 /* Compare file extensions.  Files with no extension are `smallest'.
    If extensions are the same, compare by filenames instead. */
 
-int
+static int
 compare_extension (file1, file2)
      struct file *file1, *file2;
 {
@@ -1277,7 +1278,7 @@ compare_extension (file1, file2)
   return cmp;
 }
 
-int
+static int
 rev_cmp_extension (file2, file1)
      struct file *file1, *file2;
 {
@@ -1300,7 +1301,7 @@ rev_cmp_extension (file2, file1)
 
 /* List all the files now in the table.  */
 
-void
+static void
 print_current_files ()
 {
   register int i;
@@ -1337,7 +1338,7 @@ print_current_files ()
     }
 }
 
-void
+static void
 print_long_format (f)
      struct file *f;
 {
@@ -1420,7 +1421,7 @@ print_long_format (f)
     print_type_indicator (f->stat.st_mode);
 }
 
-void
+static void
 print_name_with_quoting (p)
      register char *p;
 {
@@ -1493,7 +1494,7 @@ print_name_with_quoting (p)
    Also print file size, inode number, and filetype indicator character,
    as requested by switches.  */
 
-void
+static void
 print_file_name_and_frills (f)
      struct file *f;
 {
@@ -1510,7 +1511,7 @@ print_file_name_and_frills (f)
     print_type_indicator (f->stat.st_mode);
 }
 
-void
+static void
 print_type_indicator (mode)
      unsigned int mode;
 {
@@ -1537,7 +1538,7 @@ print_type_indicator (mode)
     putchar ('*');
 }
 
-int
+static int
 length_of_file_name_and_frills (f)
      struct file *f;
 {
@@ -1615,7 +1616,7 @@ length_of_file_name_and_frills (f)
   return len;
 }
 
-void
+static void
 print_many_per_line ()
 {
   int filesno;			/* Index into files. */
@@ -1669,7 +1670,7 @@ print_many_per_line ()
     }
 }
 
-void
+static void
 print_horizontal ()
 {
   int filesno;
@@ -1720,7 +1721,7 @@ print_horizontal ()
   putchar ('\n');
 }
 
-void
+static void
 print_with_commas ()
 {
   int filesno;
@@ -1754,7 +1755,7 @@ print_with_commas ()
 
 /* Assuming cursor is at position FROM, indent up to position TO.  */
 
-void
+static void
 indent (from, to)
      int from, to;
 {
@@ -1775,7 +1776,7 @@ indent (from, to)
 
 /* Put DIRNAME/NAME into DEST, handling `.' and `/' properly. */
 
-void
+static void
 attach (dest, dirname, name)
      char *dest, *dirname, *name;
 {
@@ -1795,7 +1796,7 @@ attach (dest, dirname, name)
   *dest = 0;
 }
 
-void
+static void
 usage ()
 {
   fprintf (stderr, "\

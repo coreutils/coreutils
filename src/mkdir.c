@@ -35,7 +35,8 @@
 
 int make_path ();
 void error ();
-void usage ();
+
+static void usage ();
 
 /* If nonzero, ensure that a path exists.  */
 static int path_mode;
@@ -43,7 +44,7 @@ static int path_mode;
 /* The name this program was run with. */
 char *program_name;
 
-static struct option longopts[] =
+static struct option const longopts[] =
 {
   {"mode", 1, NULL, 'm'},
   {"path", 0, &path_mode, 1},
@@ -110,7 +111,7 @@ main (argc, argv)
   exit (errors);
 }
 
-void
+static void
 usage ()
 {
   fprintf (stderr, "\

@@ -39,16 +39,17 @@
 char *strstr ();
 char *xmalloc ();
 char *xstrdup ();
-int fs_to_list ();
-void add_fs_type ();
 void error ();
-void print_header ();
-void show_entry ();
-void show_all_entries ();
-void show_dev ();
-void show_disk ();
-void show_point ();
-void usage ();
+
+static int fs_to_list ();
+static void add_fs_type ();
+static void print_header ();
+static void show_entry ();
+static void show_all_entries ();
+static void show_dev ();
+static void show_disk ();
+static void show_point ();
+static void usage ();
 
 /* If nonzero, show inode information. */
 static int inode_format;
@@ -93,7 +94,7 @@ static struct fs_select *fs_list;
 /* Linked list of mounted filesystems. */
 static struct mount_entry *mount_list;
 
-static struct option long_options[] =
+static struct option const long_options[] =
 {
   {"all", 0, &show_all_fs, 1},
   {"inodes", 0, &inode_format, 1},
@@ -183,7 +184,7 @@ main (argc, argv)
   exit (exit_status);
 }
 
-void
+static void
 print_header ()
 {
   if (inode_format)
@@ -197,7 +198,7 @@ print_header ()
 /* Show all mounted filesystems, except perhaps those that are of
    an unselected type or are empty. */
 
-void
+static void
 show_all_entries ()
 {
   struct mount_entry *me;
@@ -209,7 +210,7 @@ show_all_entries ()
 /* Determine what kind of node PATH is and show the disk usage
    for it.  STATP is the results of `stat' on PATH.  */
 
-void
+static void
 show_entry (path, statp)
      char *path;
      struct stat *statp;
@@ -223,7 +224,7 @@ show_entry (path, statp)
 /* Identify the directory, if any, that device
    DISK is mounted on, and show its disk usage.  */
 
-void
+static void
 show_disk (disk)
      char *disk;
 {
@@ -243,7 +244,7 @@ show_disk (disk)
    and show its disk usage.
    STATP is the results of `stat' on POINT.  */
 
-void
+static void
 show_point (point, statp)
      char *point;
      struct stat *statp;
@@ -280,7 +281,7 @@ show_point (point, statp)
    filesystem on DISK.
    If FSTYPE is non-NULL, it is the type of the filesystem on DISK. */
 
-void
+static void
 show_dev (disk, mount_point, fstype)
      char *disk;
      char *mount_point;
@@ -358,7 +359,7 @@ show_dev (disk, mount_point, fstype)
 
 /* Add FSTYPE to the list of filesystem types to display. */
 
-void
+static void
 add_fs_type (fstype)
      char *fstype;
 {
@@ -373,7 +374,7 @@ add_fs_type (fstype)
 /* If FSTYPE is a type of filesystem that should be listed,
    return nonzero, else zero. */
 
-int
+static int
 fs_to_list (fstype)
      char *fstype;
 {
@@ -387,7 +388,7 @@ fs_to_list (fstype)
   return 0;
 }
 
-void
+static void
 usage ()
 {
   fprintf (stderr, "\

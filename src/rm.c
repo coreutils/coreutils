@@ -34,16 +34,17 @@ char *basename ();
 char *stpcpy ();
 char *xmalloc ();
 char *xrealloc ();
-int clear_directory ();
-int duplicate_entry ();
 int eaccess_stat ();
-int remove_dir ();
-int remove_file ();
-int rm ();
 int yesno ();
 void error ();
 void strip_trailing_slashes ();
-void usage ();
+
+static int clear_directory ();
+static int duplicate_entry ();
+static int remove_dir ();
+static int remove_file ();
+static int rm ();
+static void usage ();
 
 /* Path of file now being processed; extended as necessary. */
 static char *pathname;
@@ -75,7 +76,7 @@ static int unlink_dirs;
 /* If nonzero, stdin is a tty. */
 static int stdin_tty;
 
-static struct option long_opts[] =
+static struct option const long_opts[] =
 {
   {"directory", 0, &unlink_dirs, 1},
   {"force", 0, NULL, 'f'},
@@ -157,7 +158,7 @@ main (argc, argv)
 /* Remove file or directory `pathname' after checking appropriate things.
    Return 0 if `pathname' is removed, 1 if not. */
 
-int
+static int
 rm ()
 {
   struct stat path_stats;
@@ -188,7 +189,7 @@ rm ()
    non-directory `pathname', which STATP contains info about.
    Return 0 if `pathname' is removed, 1 if not. */
 
-int
+static int
 remove_file (statp)
      struct stat *statp;
 {
@@ -228,7 +229,7 @@ remove_file (statp)
    remove directory `pathname', which STATP contains info about.
    Return 0 if `pathname' is removed, 1 if not. */
 
-int
+static int
 remove_dir (statp)
      struct stat *statp;
 {
@@ -305,7 +306,7 @@ static struct pathstack *pathstack = NULL;
    but its address might be different; in that case, `pnsize' will
    be larger, as well. */
 
-int
+static int
 clear_directory (statp)
      struct stat *statp;
 {
@@ -447,7 +448,7 @@ clear_directory (statp)
    doing so could cause duplication of i-numbers that would not indicate
    a corrupted file system. */
 
-int
+static int
 duplicate_entry (stack, inum)
      struct pathstack *stack;
      ino_t inum;
@@ -484,7 +485,7 @@ is the same file as\n", program_name, pathname);
   return 0;
 }
 
-void
+static void
 usage ()
 {
   fprintf (stderr, "\

@@ -46,14 +46,15 @@ time_t time ();
 #endif
 
 int argmatch ();
-int touch ();
 time_t get_date ();
 time_t posixtime ();
 void error ();
 void invalid_arg ();
-void usage ();
+
+static int touch ();
+static void usage ();
 #ifndef HAVE_UTIME_NULL
-int utime_now ();
+static int utime_now ();
 #endif
 
 /* Bitmasks for `change_times'. */
@@ -92,7 +93,7 @@ static struct stat ref_stats;
 /* The name by which this program was run. */
 char *program_name;
 
-static struct option longopts[] =
+static struct option const longopts[] =
 {
   {"time", 1, 0, 130},
   {"no-create", 0, 0, 'c'},
@@ -102,13 +103,13 @@ static struct option longopts[] =
 };
 
 /* Valid arguments to the `--time' option. */
-static char *time_args[] =
+static char const* const time_args[] =
 {
   "atime", "access", "use", "mtime", "modify", 0
 };
 
 /* The bits in `change_times' that those arguments set. */
-static int time_masks[] =
+static int const time_masks[] =
 {
   CH_ATIME, CH_ATIME, CH_ATIME, CH_MTIME, CH_MTIME
 };
@@ -231,7 +232,7 @@ main (argc, argv)
 /* Update the time of file FILE according to the options given.
    Return 0 if successful, 1 if an error occurs. */
 
-int
+static int
 touch (file)
      char *file;
 {
@@ -323,7 +324,7 @@ touch (file)
    make sure empty files are not lengthened to 1 byte.
    Return 0 if successful, -1 if not. */
 
-int
+static int
 utime_now (file, filesize)
      char *file;
      off_t filesize;
@@ -344,7 +345,7 @@ utime_now (file, filesize)
 }
 #endif
 
-void
+static void
 usage ()
 {
   fprintf (stderr, "\

@@ -91,17 +91,18 @@ char *savedir ();
 char *xgetcwd ();
 char *xmalloc ();
 char *xrealloc ();
-int hash_insert ();
-int hash_insert2 ();
-long count_entry ();
-void du_files ();
 void error ();
-void hash_init ();
-void hash_reset ();
-void str_concatc ();
-void str_copyc ();
-void str_init ();
-void str_trunc ();
+
+static int hash_insert ();
+static int hash_insert2 ();
+static long count_entry ();
+static void du_files ();
+static void hash_init ();
+static void hash_reset ();
+static void str_concatc ();
+static void str_copyc ();
+static void str_init ();
+static void str_trunc ();
 
 /* Name under which this program was invoked.  */
 char *program_name;
@@ -154,7 +155,7 @@ static int (*xstat) ();
 
 static int exit_status;
 
-static struct option long_options[] =
+static struct option const long_options[] =
 {
   {"all", 0, &opt_all, 1},
   {"bytes", 0, NULL, 'b'},
@@ -169,7 +170,7 @@ static struct option long_options[] =
   {NULL, 0, NULL, 0}
 };
 
-void
+static void
 usage (reason)
      char *reason;
 {
@@ -278,7 +279,7 @@ main (argc, argv)
 /* Recursively print the sizes of the directories (and, if selected, files)
    named in FILES, the last entry of which is NULL.  */
 
-void
+static void
 du_files (files)
      char **files;
 {
@@ -347,7 +348,7 @@ du_files (files)
    TOP is one for external calls, zero for recursive calls.
    LAST_DEV is the device that the parent directory of ENT is on.  */
 
-long
+static long
 count_entry (ent, top, last_dev)
      char *ent;
      int top;
@@ -454,7 +455,7 @@ count_entry (ent, top, last_dev)
    inserted, and MODULUS and ENTRY_TAB_SIZE in the global `htab' will be
    doubled.)  */
 
-void
+static void
 hash_init (modulus, entry_tab_size)
      unsigned modulus;
      unsigned entry_tab_size;
@@ -477,7 +478,7 @@ hash_init (modulus, entry_tab_size)
 /* Reset the hash structure in the global variable `htab' to
    contain no entries.  */
 
-void
+static void
 hash_reset ()
 {
   int i;
@@ -495,7 +496,7 @@ hash_reset ()
    was not found already.  Return zero if the item was inserted and non-zero
    if it wasn't.  */
 
-int
+static int
 hash_insert (ino, dev)
      ino_t ino;
      dev_t dev;
@@ -564,7 +565,7 @@ hash_insert (ino, dev)
    already present.  Return zero if inserted and non-zero if it
    already existed.  */
 
-int
+static int
 hash_insert2 (htab, ino, dev)
      struct htab *htab;
      ino_t ino;
@@ -604,7 +605,7 @@ hash_insert2 (htab, ino, dev)
 
 /* Initialize the struct string S1 for holding SIZE characters.  */
 
-void
+static void
 str_init (s1, size)
      string *s1;
      unsigned size;
@@ -632,7 +633,7 @@ ensure_space (s, size)
 
 /* Assign the null-terminated C-string CSTR to S1.  */
 
-void
+static void
 str_copyc (s1, cstr)
      string s1;
      char *cstr;
@@ -643,7 +644,7 @@ str_copyc (s1, cstr)
   s1->length = l;
 }
 
-void
+static void
 str_concatc (s1, cstr)
      string s1;
      char *cstr;
@@ -659,7 +660,7 @@ str_concatc (s1, cstr)
 
 /* Truncate the string S1 to have length LENGTH.  */
 
-void
+static void
 str_trunc (s1, length)
      string s1;
      unsigned length;
