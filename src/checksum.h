@@ -1,6 +1,7 @@
 #include <config.h>
 
 #include <sys/types.h>
+#include <stdio.h>
 #include "system.h"
 
 /* For long options that have no equivalent short option, use a
