@@ -1,5 +1,9 @@
 2001-08-30  Paul Eggert  <eggert@twinsun.com>
 
+	* hash.c: Remove '2001' from copyright notice.
+
+2001-08-30  Paul Eggert  <eggert@twinsun.com>
+
 	* full-write.h: New file.
 	* Makefile.am (libfetish_a_SOURCES): Add full-write.h.
 	* full-write.c: Correct credits, as cccp.c no longer
