@@ -1,3 +1,10 @@
+2003-01-21  Jim Meyering  <jim@meyering.net>
+
+	* tsearch.c: New file, from GNU libc.
+	[! weak_alias]: Define __-prefixed names to publicized ones.
+	[! defined _LIBC]: Define-away weak_alias and internal_function.
+	[defined weak_alias]: Guard each use of weak_alias.
+
 2003-01-20  Jim Meyering  <jim@meyering.net>
 
 	* canonicalize.c: Include "path-concat.h".
