@@ -2591,7 +2591,7 @@ To convert a date string to the number of seconds since the epoch
 the @samp{%s} format.  That can be useful in sorting and/or graphing
 and/or comparing data by date.  The following command outputs the
 number of the seconds since the epoch for the time one second later
-than the epoch, but in time zone five hours later (Cambridge, Massachusetts),
+than the epoch, but in a time zone five hours later (Cambridge, Massachusetts),
 thus a total of five hours and one second after the epoch:
 
 @example
