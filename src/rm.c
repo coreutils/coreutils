@@ -50,7 +50,6 @@
 #include <assert.h>
 
 #include "system.h"
-#include "dirname.h"
 #include "error.h"
 #include "remove.h"
 #include "save-cwd.h"
@@ -188,9 +187,6 @@ main (int argc, char **argv)
       struct File_spec fs;
       enum RM_status status;
 
-      /* Stripping slashes is harmless for rmdir;
-	 if the arg is not a directory, it will fail with ENOTDIR.  */
-      strip_trailing_slashes (argv[optind]);
       fspec_init_file (&fs, argv[optind]);
       status = rm (&fs, 1, &x);
       assert (VALID_STATUS (status));
