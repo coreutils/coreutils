@@ -1,3 +1,20 @@
+1998-02-22  Jim Meyering  <meyering@eng.ascend.com>
+
+	* tests/Makefile.am (EXTRA_DIST): Add mk-script.
+	* tests/Makefile.am.in (EXTRA_DIST): Remove mk-script.pl.
+	(mk_script): Set to ../mk-script.
+	(x-tests): Use `$(PERL) -w -- $(mk_script)', not ./mk-script.
+	Remove @MAINT@ cruft.
+	(Makefile.am): Likewise.
+	Remove @MAINT@ cruft.  Now `missing' will explain the failure
+	when people don't have Perl yet modify a file whose rebuilding
+	would lead to the use of Perl.
+
+	* src/Makefile.am (pinky_LDADD): Explicitly add @GETHOSTBYNAME_LIB@.
+	(who_LDADD): Likewise.
+	(pinky_DEPENDENCIES): Set to $(LDADD)
+	(who_DEPENDENCIES): Likewise.
+
 1998-02-20  Jim Meyering  <meyering@eng.ascend.com>
 
 	* lib/getdate.h: Removed.  Could cause confusion with an
