@@ -180,8 +180,8 @@ specifies Coordinated Universal Time.  Interpreted sequences are:\n\
       fputs (_("\
   %n   a newline\n\
   %N   nanoseconds (000000000..999999999)\n\
-  %p   locale's upper case AM or PM indicator\n\
-  %P   locale's lower case am or pm indicator\n\
+  %p   locale's upper case AM or PM indicator (blank in many locales)\n\
+  %P   locale's lower case am or pm indicator (blank in many locales)\n\
   %r   time, 12-hour (hh:mm:ss [AP]M)\n\
   %R   time, 24-hour (hh:mm)\n\
   %s   seconds since `00:00:00 1970-01-01 UTC' (a GNU extension)\n\
