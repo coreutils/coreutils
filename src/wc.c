@@ -26,11 +26,6 @@
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
-#include "system.h"
-#include "closeout.h"
-#include "error.h"
-#include "human.h"
-#include "safe-read.h"
 
 /* Get mbstate_t, mbrtowc(), wcwidth().  */
 #if HAVE_WCHAR_H
@@ -44,6 +39,16 @@
 #if !defined iswprint && !HAVE_ISWPRINT
 # define iswprint(wc) 1
 #endif
+
+/* Include this after wctype.h so that we `#undef' ISPRINT
+   (from Solaris's euc.h, from widec.h, from wctype.h) before
+   redefining and using it. */
+#include "system.h"
+
+#include "closeout.h"
+#include "error.h"
+#include "human.h"
+#include "safe-read.h"
 
 /* Some systems, like BeOS, have multibyte encodings but lack mbstate_t.  */
 #if HAVE_MBRTOWC && defined mbstate_t
