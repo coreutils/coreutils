@@ -1,4 +1,5 @@
 User visible changes in release 1.9.3
+* stty works around SunOS 4.x kernel bug that made `stty rows 0 cols 0' fail.
 * who and tee no longer fail gratuitously when continued after an
   interrupted read or write system call.
 * date accepts new format: %s time in seconds since 00:00:00 1/1/1971

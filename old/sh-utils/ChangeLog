@@ -1,3 +1,25 @@
+Mon Jan 24 12:57:18 1994  Jim Meyering  (meyering@comco.com)
+
+	* stty.c (set_window_size): Work around SunOS 4.x kernel bug that
+	makes `stty rows 34 cols 80;stty rows 0;stty cols 0' incorrectly
+	set rows to 80 and columns to 0.  Sun's stty has this problem, too.
+	The kernel bug is fixed in Solaris 2.  Mostly from Alexander Dupuy
+	<dupuy@cs.columbia.edu>.
+
+Thu Jan 13 17:27:38 1994  Jim Meyering  (meyering@comco.com)
+
+	* src/Makefile.in: Change all link commands to use both $(CFLAGS)
+	and $(LDFLAGS).
+
+Mon Jan 10 01:20:38 1994  Jim Meyering  (meyering@comco.com)
+
+	* man/Makefile.in (manprefix): Use binprefix as the default.
+
+Thu Jan 06 18:19:06 1994  Jim Meyering  (meyering@comco.com)
+
+	* who.c (print_entry): Prepend `/dev/' only if ut_line is not
+	already an absolute filename.  Just to be safe.
+
 Fri Dec 31 00:22:59 1993  Jim Meyering  (meyering@comco.com)
 
 	* date.c (usage): Reorder listing of % formats in `sort -f' order.
