@@ -1,5 +1,9 @@
 2002-11-21  Jim Meyering  <jim@meyering.net>
 
+	* quotearg.c: Use `"'s when including quotearg.h and xalloc.h,
+	not the `<...>' notation.
+	Include <errno.h> and declare errno if necessary.
+
 	* README: Update from gnulib.
 
 2002-11-20  Paul Eggert  <eggert@twinsun.com>
