@@ -21,6 +21,7 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
+#include "version.h"
 
 #ifdef _POSIX_SOURCE
 /* POSIX.1 doesn't have inodes, so fake them to avoid lots of ifdefs. */
@@ -46,15 +47,15 @@ static int remove_file ();
 static int rm ();
 static void usage ();
 
+/* Name this program was run with.  */
+char *program_name;
+
 /* Path of file now being processed; extended as necessary. */
 static char *pathname;
 
 /* Number of bytes currently allocated for `pathname';
    made larger when necessary, but never smaller.  */
 static int pnsize;
-
-/* Name this program was run with.  */
-char *program_name;
 
 /* If nonzero, display the name of each file removed. */
 static int verbose;
@@ -76,6 +77,12 @@ static int unlink_dirs;
 /* If nonzero, stdin is a tty. */
 static int stdin_tty;
 
+/* If non-zero, display usage information and exit.  */
+static int flag_help;
+
+/* If non-zero, print the version on standard error.  */
+static int flag_version;
+
 static struct option const long_opts[] =
 {
   {"directory", no_argument, &unlink_dirs, 1},
@@ -83,6 +90,8 @@ static struct option const long_opts[] =
   {"interactive", no_argument, NULL, 'i'},
   {"recursive", no_argument, &recursive, 1},
   {"verbose", no_argument, &verbose, 1},
+  {"help", no_argument, &flag_help, 1},
+  {"version", no_argument, &flag_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -128,6 +137,12 @@ main (argc, argv)
 	  usage ();
 	}
     }
+
+  if (flag_version)
+    fprintf (stderr, "%s\n", version_string);
+
+  if (flag_help)
+    usage ();
 
   if (optind == argc)
     {

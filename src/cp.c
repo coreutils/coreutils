@@ -24,6 +24,7 @@
 #include <getopt.h>
 #include "cp.h"
 #include "backupfile.h"
+#include "version.h"
 
 #ifndef _POSIX_VERSION
 uid_t geteuid ();
@@ -56,12 +57,12 @@ static int re_protect ();
 /* Initial number of entries in the inode hash table.  */
 #define INITIAL_ENTRY_TAB_SIZE 70
 
+/* The invocation name of this program.  */
+char *program_name;
+
 /* A pointer to either lstat or stat, depending on
    whether dereferencing of symlinks is done.  */
 static int (*xstat) ();
-
-/* The invocation name of this program.  */
-char *program_name;
 
 /* If nonzero, copy all files except directories and, if not dereferencing
    them, symbolic links, as if they were regular files. */
@@ -117,6 +118,12 @@ static int umask_kill;
 /* This process's effective user ID.  */
 static uid_t myeuid;
 
+/* If non-zero, display usage information and exit.  */
+static int flag_help;
+
+/* If non-zero, print the version on standard error.  */
+static int flag_version;
+
 static struct option const long_opts[] =
 {
   {"archive", no_argument, NULL, 'a'},
@@ -134,6 +141,8 @@ static struct option const long_opts[] =
   {"update", no_argument, &flag_update, 1},
   {"verbose", no_argument, &flag_verbose, 1},
   {"version-control", required_argument, NULL, 'V'},
+  {"help", no_argument, &flag_help, 1},
+  {"version", no_argument, &flag_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -251,6 +260,12 @@ main (argc, argv)
 
   if (flag_hard_link && flag_symbolic_link)
     usage ("cannot make both hard and symbolic links");
+
+  if (flag_version)
+    fprintf (stderr, "%s\n", version_string);
+
+  if (flag_help)
+    usage (NULL);
 
   if (make_backups)
     backup_type = get_version (version);

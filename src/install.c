@@ -59,9 +59,11 @@
 #include <pwd.h>
 #include <grp.h>
 #include "system.h"
+#include "version.h"
 #include "modechange.h"
 
 #if !defined (isascii) || defined (STDC_HEADERS)
+#undef isascii
 #define isascii(c) 1
 #endif
 
@@ -130,6 +132,12 @@ static int strip_files;
 /* If nonzero, install a directory instead of a regular file. */
 static int dir_arg;
 
+/* If non-zero, display usage information and exit.  */
+static int flag_help;
+
+/* If non-zero, print the version on standard error.  */
+static int flag_version;
+
 static struct option const long_options[] =
 {
   {"strip", no_argument, NULL, 's'},
@@ -137,6 +145,8 @@ static struct option const long_options[] =
   {"group", required_argument, NULL, 'g'},
   {"mode", required_argument, NULL, 'm'},
   {"owner", required_argument, NULL, 'o'},
+  {"help", no_argument, &flag_help, 1},
+  {"version", no_argument, &flag_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -188,6 +198,12 @@ main (argc, argv)
   if ((dir_arg && strip_files)
       || (optind == argc)
       || (optind == argc - 1 && !dir_arg))
+    usage ();
+
+  if (flag_version)
+    fprintf (stderr, "%s\n", version_string);
+
+  if (flag_help)
     usage ();
 
   if (symbolic_mode)

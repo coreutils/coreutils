@@ -32,6 +32,7 @@
 #include <sys/types.h>
 #include "system.h"
 #include "modechange.h"
+#include "version.h"
 
 void error ();
 
@@ -40,9 +41,17 @@ static void usage ();
 /* The name this program was run with. */
 char *program_name;
 
+/* If non-zero, display usage information and exit.  */
+static int flag_help;
+
+/* If non-zero, print the version on standard error.  */
+static int flag_version;
+
 static struct option const longopts[] =
 {
   {"mode", required_argument, NULL, 'm'},
+  {"help", no_argument, &flag_help, 1},
+  {"version", no_argument, &flag_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -70,6 +79,12 @@ main (argc, argv)
 	  usage ();
 	}
     }
+
+  if (flag_version)
+    fprintf (stderr, "%s\n", version_string);
+
+  if (flag_help)
+    usage ();
 
   newmode = 0666 & ~umask (0);
   if (symbolic_mode)

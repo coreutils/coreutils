@@ -57,6 +57,7 @@
 #include <ctype.h>
 
 #if !defined (isascii) || defined (STDC_HEADERS)
+#undef isascii
 #define isascii(c) 1
 #endif
 
@@ -307,7 +308,10 @@ static unsigned char const ebcdic_to_ascii[] =
   070, 071, 0372, 0373, 0374, 0375, 0376, 0377
 };
 
+/* If non-zero, display usage information and exit.  */
 static int flag_help;
+
+/* If non-zero, print the version on standard error.  */
 static int flag_version;
 
 static struct option const long_options[] =
@@ -337,7 +341,7 @@ main (argc, argv)
   scanargs (argc, argv);
 
   if (flag_version)
-    fprintf (stderr, "%s", version_string);
+    fprintf (stderr, "%s\n", version_string);
 
   if (flag_help)
     usage ("", NULL, NULL);

@@ -35,6 +35,7 @@
 #include <grp.h>
 #include <getopt.h>
 #include "system.h"
+#include "version.h"
 
 #ifndef _POSIX_VERSION
 struct passwd *getpwnam ();
@@ -81,6 +82,12 @@ static char *username;
 /* The name of the group to which ownership of the files is being given. */
 static char *groupname;
 
+/* If non-zero, display usage information and exit.  */
+static int flag_help;
+
+/* If non-zero, print the version on standard error.  */
+static int flag_version;
+
 static struct option const long_options[] =
 {
   {"recursive", no_argument, 0, 'R'},
@@ -88,6 +95,8 @@ static struct option const long_options[] =
   {"silent", no_argument, 0, 'f'},
   {"quiet", no_argument, 0, 'f'},
   {"verbose", no_argument, 0, 'v'},
+  {"help", no_argument, &flag_help, 1},
+  {"version", no_argument, &flag_version, 1},
   {0, 0, 0, 0}
 };
 
@@ -129,6 +138,12 @@ main (argc, argv)
     }
 
   if (optind >= argc - 1)
+    usage ();
+
+  if (flag_version)
+    fprintf (stderr, "%s\n", version_string);
+
+  if (flag_help)
     usage ();
 
   e = parse_user_spec (argv[optind], &user, &group, &username, &groupname);

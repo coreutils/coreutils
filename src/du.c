@@ -43,6 +43,7 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
+#include "version.h"
 
 int lstat ();
 int stat ();
@@ -152,8 +153,13 @@ static struct stat stat_buf;
 static int (*xstat) ();
 
 /* The exit status to use if we don't get any fatal errors. */
-
 static int exit_status;
+
+/* If non-zero, display usage information and exit.  */
+static int flag_help;
+
+/* If non-zero, print the version on standard error.  */
+static int flag_version;
 
 static struct option const long_options[] =
 {
@@ -167,6 +173,8 @@ static struct option const long_options[] =
   {"separate-dirs", no_argument, &opt_separate_dirs, 1},
   {"summarize", no_argument, &opt_summarize_only, 1},
   {"total", no_argument, &opt_combined_arguments, 1},
+  {"help", no_argument, &flag_help, 1},
+  {"version", no_argument, &flag_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -252,6 +260,12 @@ main (argc, argv)
 
   if (opt_all && opt_summarize_only)
     usage ("cannot both summarize and show all entries");
+
+  if (flag_version)
+    fprintf (stderr, "%s\n", version_string);
+
+  if (flag_help)
+    usage ("");
 
   /* Initialize the hash structure for inode numbers.  */
   hash_init (INITIAL_HASH_MODULE, INITIAL_ENTRY_TAB_SIZE);

@@ -37,6 +37,7 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
+#include "version.h"
 
 #ifdef STDC_HEADERS
 #include <time.h>
@@ -60,6 +61,9 @@ static int utime_now ();
 /* Bitmasks for `change_times'. */
 #define CH_ATIME 1
 #define CH_MTIME 2
+
+/* The name by which this program was run. */
+char *program_name;
 
 /* Which timestamps to change. */
 static int change_times;
@@ -90,8 +94,11 @@ static char *ref_file;
 /* Info about the reference file. */
 static struct stat ref_stats;
 
-/* The name by which this program was run. */
-char *program_name;
+/* If non-zero, display usage information and exit.  */
+static int flag_help;
+
+/* If non-zero, print the version on standard error.  */
+static int flag_version;
 
 static struct option const longopts[] =
 {
@@ -99,6 +106,8 @@ static struct option const longopts[] =
   {"no-create", no_argument, 0, 'c'},
   {"date", required_argument, 0, 'd'},
   {"file", required_argument, 0, 'r'},
+  {"help", no_argument, &flag_help, 1},
+  {"version", no_argument, &flag_version, 1},
   {0, 0, 0, 0}
 };
 
@@ -182,6 +191,12 @@ main (argc, argv)
 	  usage ();
 	}
     }
+
+  if (flag_version)
+    fprintf (stderr, "%s\n", version_string);
+
+  if (flag_help)
+    usage ();
 
   if (change_times == 0)
     change_times = CH_ATIME | CH_MTIME;

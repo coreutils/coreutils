@@ -32,22 +32,31 @@
 #include <sys/types.h>
 #include "system.h"
 #include "modechange.h"
+#include "version.h"
 
 int make_path ();
 void error ();
 
 static void usage ();
 
+/* The name this program was run with. */
+char *program_name;
+
 /* If nonzero, ensure that a path exists.  */
 static int path_mode;
 
-/* The name this program was run with. */
-char *program_name;
+/* If non-zero, display usage information and exit.  */
+static int flag_help;
+
+/* If non-zero, print the version on standard error.  */
+static int flag_version;
 
 static struct option const longopts[] =
 {
   {"mode", required_argument, NULL, 'm'},
   {"path", no_argument, &path_mode, 1},
+  {"help", no_argument, &flag_help, 1},
+  {"version", no_argument, &flag_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -84,7 +93,13 @@ main (argc, argv)
 
   if (optind == argc)
     usage ();
-  
+
+  if (flag_version)
+    fprintf (stderr, "%s\n", version_string);
+
+  if (flag_help)
+    usage ();
+
   newmode = 0777 & ~umask (0);
   parent_mode = newmode | 0300;	/* u+wx */
   if (symbolic_mode)

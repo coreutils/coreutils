@@ -26,6 +26,7 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include "system.h"
+#include "version.h"
 
 void error ();
 void strip_trailing_slashes ();
@@ -33,15 +34,23 @@ void strip_trailing_slashes ();
 static void remove_parents ();
 static void usage ();
 
+/* The name this program was run with. */
+char *program_name;
+
 /* If nonzero, remove empty parent directories. */
 static int empty_paths;
 
-/* The name this program was run with. */
-char *program_name;
+/* If non-zero, display usage information and exit.  */
+static int flag_help;
+
+/* If non-zero, print the version on standard error.  */
+static int flag_version;
 
 static struct option const longopts[] =
 {
   {"path", no_argument, &empty_paths, 1},
+  {"help", no_argument, &flag_help, 1},
+  {"version", no_argument, &flag_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -72,7 +81,13 @@ main (argc, argv)
 
   if (optind == argc)
     usage ();
-  
+
+  if (flag_version)
+    fprintf (stderr, "%s\n", version_string);
+
+  if (flag_help)
+    usage ();
+
   for (; optind < argc; ++optind)
     {
       /* Stripping slashes is harmless for rmdir;

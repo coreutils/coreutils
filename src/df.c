@@ -37,6 +37,7 @@
 #include "mountlist.h"
 #include "fsusage.h"
 #include "system.h"
+#include "version.h"
 
 char *strstr ();
 char *xmalloc ();
@@ -55,6 +56,9 @@ static void show_disk ();
 static void show_point ();
 static void usage ();
 
+/* Name this program was run with. */
+char *program_name;
+
 /* If nonzero, show inode information. */
 static int inode_format;
 
@@ -70,9 +74,6 @@ static int posix_format;
 
 /* Nonzero if errors have occurred. */
 static int exit_status;
-
-/* Name this program was run with. */
-char *program_name;
 
 /* A filesystem type to display. */
 
@@ -103,6 +104,12 @@ static struct fs_type_list *fs_exclude_list;
 /* Linked list of mounted filesystems. */
 static struct mount_entry *mount_list;
 
+/* If non-zero, display usage information and exit.  */
+static int flag_help;
+
+/* If non-zero, print the version on standard error.  */
+static int flag_version;
+
 static struct option const long_options[] =
 {
   {"all", no_argument, &show_all_fs, 1},
@@ -111,6 +118,8 @@ static struct option const long_options[] =
   {"portability", no_argument, &posix_format, 1},
   {"type", required_argument, 0, 't'},
   {"exclude-type", required_argument, 0, 'x'},
+  {"help", no_argument, &flag_help, 1},
+  {"version", no_argument, &flag_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -162,6 +171,12 @@ main (argc, argv)
 	  usage ();
 	}
     }
+
+  if (flag_version)
+    fprintf (stderr, "%s\n", version_string);
+
+  if (flag_help)
+    usage ();
 
   if (optind != argc)
     {

@@ -25,6 +25,7 @@
 #include <getopt.h>
 #include "system.h"
 #include "backupfile.h"
+#include "version.h"
 
 int link ();			/* Some systems don't declare this anywhere. */
 
@@ -40,6 +41,9 @@ void error ();
 
 static void usage ();
 static int do_link ();
+
+/* The name by which the program was run, for error messages.  */
+char *program_name;
 
 /* A pointer to the function used to make links.  This will point to either
    `link' or `symlink'. */
@@ -60,8 +64,11 @@ static int verbose;
 /* If nonzero, allow the superuser to make hard links to directories. */
 static int hard_dir_link;
 
-/* The name by which the program was run, for error messages.  */
-char *program_name;
+/* If non-zero, display usage information and exit.  */
+static int flag_help;
+
+/* If non-zero, print the version on standard error.  */
+static int flag_version;
 
 static struct option const long_options[] = 
 {
@@ -73,6 +80,8 @@ static struct option const long_options[] =
   {"symbolic", no_argument, &symbolic_link, 1},
   {"verbose", no_argument, &verbose, 1},
   {"version-control", required_argument, NULL, 'V'},
+  {"help", no_argument, &flag_help, 1},
+  {"version", no_argument, &flag_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -140,6 +149,12 @@ main (argc, argv)
 	}
     }
   if (optind == argc)
+    usage ();
+
+  if (flag_version)
+    fprintf (stderr, "%s\n", version_string);
+
+  if (flag_help)
     usage ();
 
   if (make_backups)

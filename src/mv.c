@@ -45,6 +45,7 @@
 #include <sys/types.h>
 #include "system.h"
 #include "backupfile.h"
+#include "version.h"
 
 #ifndef _POSIX_VERSION
 uid_t geteuid ();
@@ -86,6 +87,12 @@ static int stdin_tty;
 /* This process's effective user ID.  */
 static uid_t myeuid;
 
+/* If non-zero, display usage information and exit.  */
+static int flag_help;
+
+/* If non-zero, print the version on standard error.  */
+static int flag_version;
+
 static struct option const long_options[] =
 {
   {"backup", no_argument, NULL, 'b'},
@@ -95,6 +102,8 @@ static struct option const long_options[] =
   {"update", no_argument, &update, 1},
   {"verbose", no_argument, &verbose, 1},
   {"version-control", required_argument, NULL, 'V'},
+  {"help", no_argument, &flag_help, 1},
+  {"version", no_argument, &flag_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -152,6 +161,12 @@ main (argc, argv)
 	}
     }
   if (argc < optind + 2)
+    usage ();
+
+  if (flag_version)
+    fprintf (stderr, "%s\n", version_string);
+
+  if (flag_help)
     usage ();
 
   if (make_backups)

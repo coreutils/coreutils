@@ -28,6 +28,7 @@
 #include <sys/types.h>
 #include "modechange.h"
 #include "system.h"
+#include "version.h"
 
 int lstat ();
 
@@ -57,6 +58,12 @@ static int verbose;
 /* If nonzero, describe only modes that change. */
 static int changes_only;
 
+/* If non-zero, display usage information and exit.  */
+static int flag_help;
+
+/* If non-zero, print the version on standard error.  */
+static int flag_version;
+
 static struct option const long_options[] =
 {
   {"recursive", no_argument, 0, 'R'},
@@ -64,6 +71,8 @@ static struct option const long_options[] =
   {"silent", no_argument, 0, 'f'},
   {"quiet", no_argument, 0, 'f'},
   {"verbose", no_argument, 0, 'v'},
+  {"help", no_argument, &flag_help, 1},
+  {"version", no_argument, &flag_version, 1},
   {0, 0, 0, 0}
 };
 
@@ -134,6 +143,12 @@ main (argc, argv)
   if (modeind == 0)
     modeind = optind++;
   if (optind >= argc)
+    usage ();
+
+  if (flag_version)
+    fprintf (stderr, "%s\n", version_string);
+
+  if (flag_help)
     usage ();
 
   changes = mode_compile (argv[modeind],
