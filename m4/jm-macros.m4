@@ -1,4 +1,4 @@
-#serial 15
+#serial 16
 
 dnl Misc type-related macros for fileutils, sh-utils, textutils.
 
@@ -198,11 +198,8 @@ AC_DEFUN(jm_CHECK_ALL_TYPES,
   # Emit this code into config.h.in.
   # The ifndef is to avoid redefinition warnings.
   AH_VERBATIM([_GNU_SOURCE], [#ifndef _GNU_SOURCE
-# undef _GNU_SOURCE
+# define _GNU_SOURCE
 #endif])
-
-  # Enable GNU extensions.
-  AC_DEFINE([_GNU_SOURCE])
 
   dnl This test must come as early as possible after the compiler configuration
   dnl tests, because the choice of the file model can (in principle) affect
