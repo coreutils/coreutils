@@ -363,7 +363,6 @@ is_char_class_member (char_class, c)
       break;
     case CC_NO_CLASS:
       abort ();
-      return 0;
       break;
     }
 }
