@@ -15,11 +15,17 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
-#if defined(USG) || defined(STDC_HEADERS)
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#if defined(STDC_HEADERS) || defined(HAVE_STRING_H)
 #include <string.h>
-#define rindex strrchr
 #else
 #include <strings.h>
+#ifndef strrchr
+#define strrchr rindex
+#endif
 #endif
 
 /* Return NAME with any leading path stripped off.  */
@@ -30,6 +36,6 @@ basename (name)
 {
   char *base;
 
-  base = rindex (name, '/');
+  base = strrchr (name, '/');
   return base ? base + 1 : name;
 }
