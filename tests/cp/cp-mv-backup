@@ -92,7 +92,7 @@ EOF
 sed 's/: x/:/' $expected-tmp |cat $expected-tmp - > $expected
 
 # Uncomment this if you see a failure and want to try to diagnose it.
-diff -u $expected $actual 1>&2
+#diff -u $expected $actual 1>&2
 
 cmp $expected $actual || fail=1
 
