@@ -1603,10 +1603,23 @@ For each such line, @code{md5sum} reads the named file and computes its
 MD5 checksum.  Then, if the computed message digest does not match the
 one on the line with the filename, the file is noted as having
 failed the test.  Otherwise, the file passes the test.
+By default, for each valid line, one line is written to standard
+output indicating whether the named file passed the test.
+Use the @samp{--status} option to inhibit that output.
+If any listed file cannot be opened or read, if any valid line has
+a MD5 checksum inconsistent with the associated file, or if no valid
+line is found, exit with a non-zero status.  Otherwise, exit successfully.
 
-@item -s
+@itemx --status
+@opindex --status
+@cindex verifying MD5 checksums
+When verifying checksums, don't generate any output.
+If all listed files are readable and are consistent with the associated
+MD5 checksums, exit successfully.  Otherwise exit with a status code
+indicating there was a failure.  Failures to open or read a file still
+evoke diagnostics to standard error.
+
 @itemx --string=@var{string}
-@opindex -s
 @opindex --string
 Compute the message digest for @var{string}, instead of for a file.  The
 result is the same as for a file that contains exactly @var{string}.
@@ -1619,11 +1632,14 @@ result is the same as for a file that contains exactly @var{string}.
 Treat all input files as text files.  This is the reverse of
 @samp{--binary}.
 
-@item -v
-@itemx --verbose
-@opindex -v
-@opindex --verbose
-Print progress information.
+@item -w
+@itemx --warn
+@opindex -w
+@opindex --warn
+@cindex verifying MD5 checksums
+When verifying checksums, warn about improperly formated MD5 checksum lines.
+This option is useful only if all but a few lines in the checked input
+are valid.
 
 @end table
 
@@ -2021,6 +2037,9 @@ The input files must be sorted before @code{comm} can be used.
 With no options, @code{comm} produces three column output.  Column one
 contains lines unique to @var{file1}, column two contains lines unique
 to @var{file2}, and column three contains lines common to both files.
+Columns are separated by @key{TAB}.
+@c FIXME: when there's an option to supply an alternative separator
+@c string, append `by default' to the above sentence.
 
 @opindex -1
 @opindex -2
