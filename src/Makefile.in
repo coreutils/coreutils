@@ -170,10 +170,11 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/afs.m4 \
 	$(top_srcdir)/m4/utimes.m4 $(top_srcdir)/m4/vasnprintf.m4 \
 	$(top_srcdir)/m4/vasprintf.m4 $(top_srcdir)/m4/wchar_t.m4 \
 	$(top_srcdir)/m4/wint_t.m4 $(top_srcdir)/m4/xalloc.m4 \
-	$(top_srcdir)/m4/xgetcwd.m4 $(top_srcdir)/m4/xreadlink.m4 \
-	$(top_srcdir)/m4/xstrtod.m4 $(top_srcdir)/m4/xstrtoimax.m4 \
-	$(top_srcdir)/m4/xstrtol.m4 $(top_srcdir)/m4/xstrtoumax.m4 \
-	$(top_srcdir)/m4/yesno.m4 $(top_srcdir)/configure.ac
+	$(top_srcdir)/m4/xgetcwd.m4 $(top_srcdir)/m4/xnanosleep.m4 \
+	$(top_srcdir)/m4/xreadlink.m4 $(top_srcdir)/m4/xstrtod.m4 \
+	$(top_srcdir)/m4/xstrtoimax.m4 $(top_srcdir)/m4/xstrtol.m4 \
+	$(top_srcdir)/m4/xstrtoumax.m4 $(top_srcdir)/m4/yesno.m4 \
+	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(SHELL) $(top_srcdir)/config/mkinstalldirs
@@ -248,7 +249,8 @@ date_OBJECTS = date.$(OBJEXT)
 date_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1)
 dd_SOURCES = dd.c
 dd_OBJECTS = dd.$(OBJEXT)
-dd_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1)
+dd_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1)
 df_SOURCES = df.c
 df_OBJECTS = df.$(OBJEXT)
 df_LDADD = $(LDADD)
@@ -471,11 +473,13 @@ sha1sum_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
 	../lib/libfetish.a
 shred_SOURCES = shred.c
 shred_OBJECTS = shred.$(OBJEXT)
-shred_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1)
+shred_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1)
 sleep_SOURCES = sleep.c
 sleep_OBJECTS = sleep.$(OBJEXT)
 am__DEPENDENCIES_3 = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1)
 sleep_DEPENDENCIES = $(am__DEPENDENCIES_3)
 sort_SOURCES = sort.c
 sort_OBJECTS = sort.$(OBJEXT)
@@ -694,7 +698,9 @@ LIB_CLOCK_GETTIME = @LIB_CLOCK_GETTIME@
 LIB_CRYPT = @LIB_CRYPT@
 LIB_EACCESS = @LIB_EACCESS@
 LIB_FDATASYNC = @LIB_FDATASYNC@
+LIB_GETHRXTIME = @LIB_GETHRXTIME@
 LIB_NANOSLEEP = @LIB_NANOSLEEP@
+LIB_XNANOSLEEP = @LIB_XNANOSLEEP@
 LN_S = @LN_S@
 LTLIBICONV = @LTLIBICONV@
 LTLIBINTL = @LTLIBINTL@
@@ -797,10 +803,10 @@ test_LDADD = $(LDADD) $(LIB_EACCESS)
 __LDADD = $(LDADD) $(LIB_EACCESS)
 
 # for clock_gettime and fdatasync
-dd_LDADD = $(LDADD) $(LIB_FDATASYNC)
+dd_LDADD = $(LDADD) $(LIB_GETHRXTIME) $(LIB_FDATASYNC)
 dir_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME)
 ls_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME)
-shred_LDADD = $(LDADD) $(LIB_FDATASYNC)
+shred_LDADD = $(LDADD) $(LIB_GETHRXTIME) $(LIB_FDATASYNC)
 vdir_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME)
 sort_LDADD = $(LDADD) $(POW_LIB)
 
@@ -821,7 +827,7 @@ seq_LDADD = $(LDADD) $(SEQ_LIBM)
 # If necessary, add -lm to resolve the `pow' reference in lib/strtod.c
 # or for the fesetround reference in programs using nanosec.c.
 nanosec_libs = \
-  $(LDADD) $(FESETROUND_LIBM) $(POW_LIB) $(LIB_NANOSLEEP)
+  $(LDADD) $(FESETROUND_LIBM) $(POW_LIB) $(LIB_XNANOSLEEP) $(LIB_NANOSLEEP)
 
 sleep_LDADD = $(nanosec_libs)
 tail_LDADD = $(nanosec_libs)
