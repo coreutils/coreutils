@@ -1,9 +1,14 @@
 ## Process this file with automake to produce Makefile.in -*-Makefile-*-.
 
+# Sort in traditional ASCII order, regardless of the current locale;
+# otherwise we may get into trouble with distinct strings that the
+# current locale considers to be equal.
+ASSORT = LC_ALL=C sort
+
 all_programs =								\
   echo 'spy:;@echo $$(all_programs)'					\
     | MAKEFLAGS= $(MAKE) -s -C ../src -f Makefile -f - spy		\
-    | fmt -1 | sort -u
+    | fmt -1 | $(ASSORT) -u
 
 TESTS = help-version
 TESTS_ENVIRONMENT = \
