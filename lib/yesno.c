@@ -19,12 +19,37 @@
 #include <config.h>
 #endif
 
+#include <ctype.h>
+#ifdef HAVE_STDLIB_H
+# include <stdlib.h>
+#endif
 #include <stdio.h>
 
 /* Read one line from standard input
    and return nonzero if that line begins with y or Y,
    otherwise return 0. */
 
+#ifdef HAVE_RPMATCH
+int
+yesno ()
+{
+  /* We make some assumptions here:
+     a) leading white space in the response are not vital
+     b) the first 128 characters of the answer are enough (the rest can
+	be ignored)
+     I cannot think for a situation where this is not ok.  --drepper@gnu  */
+  char buf[128];
+  int len = 0;
+  int c;
+
+  while ((c = getchar ()) != EOF && c != '\n')
+    if ((len > 0 && len < 127) || (len == 0 && !isspace (c)))
+      buf[len++] = c;
+  buf[len] = '\0';
+
+  return rpmatch (buf) == 1;
+}
+#else
 int
 yesno ()
 {
@@ -39,3 +64,4 @@ yesno ()
 
   return rv;
 }
+#endif
