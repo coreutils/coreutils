@@ -1,6 +1,12 @@
-2003-03-22  Jim Meyering  <jim@meyering.net>
+2003-03-23  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.12.
+
+	* README: Describe problem with 64-bit mode on HPUX 11.x,
+	with patch for /usr/include/inttypes.h.
+	* TODO: Plan to add an autoconf test to work around the bug.
+
+2003-03-22  Jim Meyering  <jim@meyering.net>
 
 	* src/stat.c: Don't include <sys/sysmacros.h>.
 	That is already done via system.h.  Otherwise, the multiple
