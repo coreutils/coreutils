@@ -1,5 +1,5 @@
 /* join - join lines of two files on a common field
-   Copyright (C) 91, 1995-2002 Free Software Foundation, Inc.
+   Copyright (C) 91, 1995-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -150,7 +150,8 @@ For each pair of input lines with identical join fields, write a line to\n\
 standard output.  The default join field is the first, delimited\n\
 by whitespace.  When FILE1 or FILE2 (not both) is -, read standard input.\n\
 \n\
-  -a SIDE           print unpairable lines coming from file SIDE\n\
+  -a FILENUM        print unpairable lines coming from file FILENUM, where\n\
+                      FILENUM is 1 or 2, corresponding to FILE1 or FILE2\n\
   -e EMPTY          replace missing input fields with EMPTY\n\
 "), stdout);
       fputs (_("\
@@ -162,7 +163,7 @@ by whitespace.  When FILE1 or FILE2 (not both) is -, read standard input.\n\
   -t CHAR           use CHAR as input and output field separator\n\
 "), stdout);
       fputs (_("\
-  -v SIDE           like -a SIDE, but suppress joined output lines\n\
+  -v FILENUM        like -a FILENUM, but suppress joined output lines\n\
   -1 FIELD          join on this FIELD of file 1\n\
   -2 FIELD          join on this FIELD of file 2\n\
 "), stdout);
@@ -173,7 +174,7 @@ by whitespace.  When FILE1 or FILE2 (not both) is -, read standard input.\n\
 Unless -t CHAR is given, leading blanks separate fields and are ignored,\n\
 else fields are separated by CHAR.  Any FIELD is a field number counted\n\
 from 1.  FORMAT is one or more comma or blank separated specifications,\n\
-each being `SIDE.FIELD' or `0'.  Default FORMAT outputs the join field,\n\
+each being `FILENUM.FIELD' or `0'.  Default FORMAT outputs the join field,\n\
 the remaining fields from FILE1, the remaining fields from FILE2, all\n\
 separated by CHAR.\n\
 "), stdout);
