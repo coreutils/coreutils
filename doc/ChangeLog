@@ -1,3 +1,12 @@
+2003-02-07  Richard Dawe  <rich@phekda.freeserve.co.uk>
+
+	* coreutils.texi: Use @command instead of @code for program names.
+
+	* perm.texi (Mode Structure): Mention filesystem-specific
+	permissions and that mounting a filesystem as read-only may
+	override actual file permissions.  Use @command instead
+	of @code for program names.
+
 2003-02-06  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi: Adjust alignment and mention `file, text, shell'
