@@ -1,6 +1,29 @@
-2002-08-26  Jim Meyering  <meyering@lucent.com>
+2002-08-29  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.5.1.
+
+	* src/remove.c (remove_cwd_entries): Use closedir (not CLOSEDIR)
+	when ignoring any return value.
+
+	* src/remove.c (remove_cwd_entries): Detect and diagnose readdir
+	failures.  On some systems (at least EMC Celerra and Solaris5.8),
+	this appears to be necessary.
+	* src/ls.c (print_dir): Likewise.
+	(print_dir): Rename local variable: reading -> dirp.
+	Reported by Mike Coleman.
+
+2002-08-28  Jim Meyering  <meyering@lucent.com>
+
+	* src/remove.c (remove_cwd_entries): Use CLOSEDIR, not closedir.
+	Give a diagnostic and fail if closedir fails.
+
+2002-08-26  Jim Meyering  <meyering@lucent.com>
+
+	* chgrp.c, chmod.c, chown.c, chroot.c, cp.c, date.c, dd.c, du.c,
+	* hostname.c, id.c, install.c, ln.c, mkdir.c, mkfifo.c, mknod.c,
+	* nice.c, pinky.c, printf.c, pwd.c, shred.c, sleep.c, stty.c,
+	* su.c, tac-pipe.c, tail.c, tee.c, touch.c, uname.c, uptime.c,
+	* users.c, who.c: Change `error (1, ...' to `error (EXIT_FAILURE, ...'.
 
 	* Makefile.am (THANKS-to-translators): New rule.
 	(EXTRA_DIST): Add both THANKS-to-translators and THANKStt.in.
