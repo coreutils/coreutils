@@ -248,6 +248,7 @@ dc_parse_stream (FILE *fp, const char *filename, char **result)
     {
       int line_length;
       char *keywd, *arg;
+      int unrecognized;
 
       ++line_number;
 
@@ -274,6 +275,7 @@ dc_parse_stream (FILE *fp, const char *filename, char **result)
       if (keywd == NULL)
 	continue;
 
+      unrecognized = 0;
       if (strcasecmp (keywd, "TERM") == 0)
 	{
 	  if (strcmp (arg, term) == 0)
@@ -326,13 +328,23 @@ dc_parse_stream (FILE *fp, const char *filename, char **result)
 		    }
 		  else
 		    {
-		      error (0, 0, _("%s:%lu: unrecognized keyword %s"),
-			     filename, (long unsigned) line_number, keywd);
-		      err = 1;
+		      unrecognized = 1;
 		    }
 		}
 	    }
+	  else
+	    {
+	      unrecognized = 1;
+	    }
 	}
+
+      if (unrecognized)
+	{
+	  error (0, 0, _("%s:%lu: unrecognized keyword `%s'"),
+		 filename, (long unsigned) line_number, keywd);
+	  err = 1;
+	}
+
       free (keywd);
       if (arg)
 	free (arg);
