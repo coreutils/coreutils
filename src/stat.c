@@ -65,6 +65,7 @@
 # endif
 # if STAT_STATVFS
 #  define STATFS statvfs
+#  define STATFS_FRSIZE(S) ((S)->f_frsize)
 # endif
 #else
 # define STRUCT_STATVFS struct statfs
@@ -76,6 +77,7 @@
 
 #ifndef STATFS
 # define STATFS statfs
+# define STATFS_FRSIZE(S) 0
 #endif
 
 #ifndef SB_F_NAMEMAX
@@ -347,6 +349,15 @@ print_statfs (char *pformat, char m, char const *filename,
       strcat (pformat, "lu");
       printf (pformat, (unsigned long int) (statfsbuf->f_bsize));
       break;
+    case 'S':
+      {
+	unsigned long int frsize = STATFS_FRSIZE (statfsbuf);
+	if (! frsize)
+	  frsize = statfsbuf->f_bsize;
+	strcat (pformat, "lu");
+	printf (pformat, frsize);
+      }
+      break;
     case 'c':
       strcat (pformat, PRIdMAX);
       printf (pformat, (intmax_t) (statfsbuf->f_files));
@@ -577,11 +588,12 @@ do_statfs (char const *filename, bool terse, char const *format)
   if (format == NULL)
     {
       format = (terse
-		? "%n %i %l %t %b %f %a %s %c %d\n"
+		? "%n %i %l %t %s %S %b %f %a %c %d\n"
 		: "  File: \"%n\"\n"
 		"    ID: %-8i Namelen: %-7l Type: %T\n"
-		"Blocks: Total: %-10b Free: %-10f Available: %-10a Size: %s\n"
-		"Inodes: Total: %-10c Free: %-10d\n");
+		"Block size: %-10s Fundamental block size: %S\n"
+		"Blocks: Total: %-10b Free: %-10f Available: %a\n"
+		"Inodes: Total: %-10c Free: %d\n");
     }
 
   print_it (format, filename, print_statfs, &statfsbuf);
@@ -707,7 +719,8 @@ Valid format sequences for file systems:\n\
   %i   File System ID in hex\n\
   %l   Maximum length of filenames\n\
   %n   File name\n\
-  %s   Fundamental block size\n\
+  %s   Block size (for faster transfers)\n\
+  %S   Fundamental block size (for block counts)\n\
   %t   Type in hex\n\
   %T   Type in human readable form\n\
 "), stdout);
