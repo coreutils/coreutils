@@ -1,10 +1,11 @@
 2003-04-08  Jim Meyering  <jim@meyering.net>
 
+	* Version 5.0.1.
+
 	* src/split.c: Rename local variables: nchars -> n_bytes.
+	(main): Rename local variable: s/accum/n_units/.
 
 2003-04-07  Jim Meyering  <jim@meyering.net>
-
-	* Version 5.0.1.
 
 	* src/stat.c: Add #include directives for Ultrix 4.4.
 	Based on a suggested change from Bert Deknuydt.
