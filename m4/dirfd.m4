@@ -33,17 +33,17 @@ AC_DEFUN([UTILS_FUNC_DIRFD],
 	      [how to get the file descriptor associated with an open DIR*],
 		   ac_cv_sys_dir_fd_member_name,
       [
-        dirfd_save_DEFS=$DEFS
+        dirfd_save_CFLAGS=$CFLAGS
 	for ac_expr in d_fd dd_fd; do
 
-	  DEFS="$DEFS -DDIR_FD_MEMBER_NAME=$ac_expr"
+	  CFLAGS="$CFLAGS -DDIR_FD_MEMBER_NAME=$ac_expr"
 	  AC_TRY_COMPILE(
 	    [$dirfd_headers
 	    ],
 	    [DIR *dir_p = opendir("."); (void) dir_p->DIR_FD_MEMBER_NAME;],
 	    dir_fd_found=yes
 	  )
-	  DEFS=$dirfd_save_DEFS
+	  CFLAGS=$dirfd_save_CFLAGS
 	  test "$dir_fd_found" = yes && break
 	done
 	test "$dir_fd_found" = yes || ac_expr=-1
