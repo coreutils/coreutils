@@ -119,8 +119,6 @@ stat.c: xstat.in
 	  $(srcdir)/xstat.in > $@-t
 	mv $@-t $@
 
-Makefile: $(BUILT_SOURCES)
-
 # The following is needed in order to install a simple file in $(libdir)
 # which is shared with other installed packages. We use a list of referencing
 # packages so that "make uninstall" will remove the file if and only if it
