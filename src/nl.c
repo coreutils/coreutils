@@ -97,19 +97,19 @@ static char *section_del = DEFAULT_SECTION_DELIMITERS;
 static char *header_del = NULL;
 
 /* Header section delimiter length.  */
-static int header_del_len;
+static size_t header_del_len;
 
 /* Body delimiter string.  */
 static char *body_del = NULL;
 
 /* Body section delimiter length.  */
-static int body_del_len;
+static size_t body_del_len;
 
 /* Footer delimiter string.  */
 static char *footer_del = NULL;
 
 /* Footer section delimiter length.  */
-static int footer_del_len;
+static size_t footer_del_len;
 
 /* Input buffer.  */
 static struct linebuffer line_buf;
@@ -325,7 +325,7 @@ proc_text (void)
     case 'a':
       if (blank_join > 1)
 	{
-	  if (line_buf.length || ++blank_lines == blank_join)
+	  if (1 < line_buf.length || ++blank_lines == blank_join)
 	    {
 	      print_lineno ();
 	      blank_lines = 0;
@@ -337,7 +337,7 @@ proc_text (void)
 	print_lineno ();
       break;
     case 't':
-      if (line_buf.length)
+      if (1 < line_buf.length)
 	print_lineno ();
       else
 	printf (print_no_line_fmt);
@@ -346,15 +346,14 @@ proc_text (void)
       printf (print_no_line_fmt);
       break;
     case 'p':
-      if (re_search (current_regex, line_buf.buffer, line_buf.length,
-		     0, line_buf.length, (struct re_registers *) 0) < 0)
+      if (re_search (current_regex, line_buf.buffer, line_buf.length - 1,
+		     0, line_buf.length - 1, (struct re_registers *) 0) < 0)
 	printf (print_no_line_fmt);
       else
 	print_lineno ();
       break;
     }
   fwrite (line_buf.buffer, sizeof (char), line_buf.length, stdout);
-  putchar ('\n');
 }
 
 /* Return the type of line in `line_buf'. */
@@ -362,15 +361,17 @@ proc_text (void)
 static enum section
 check_section (void)
 {
-  if (line_buf.length < 2 || memcmp (line_buf.buffer, section_del, 2))
+  size_t len = line_buf.length - 1;
+  
+  if (len < 2 || memcmp (line_buf.buffer, section_del, 2))
     return Text;
-  if (line_buf.length == header_del_len
+  if (len == header_del_len
       && !memcmp (line_buf.buffer, header_del, header_del_len))
     return Header;
-  if (line_buf.length == body_del_len
+  if (len == body_del_len
       && !memcmp (line_buf.buffer, body_del, body_del_len))
     return Body;
-  if (line_buf.length == footer_del_len
+  if (len == footer_del_len
       && !memcmp (line_buf.buffer, footer_del, footer_del_len))
     return Footer;
   return Text;
@@ -445,6 +446,7 @@ int
 main (int argc, char **argv)
 {
   int c, exit_status = 0;
+  size_t len;
 
   program_name = argv[0];
   setlocale (LC_ALL, "");
@@ -561,17 +563,17 @@ main (int argc, char **argv)
     }
 
   /* Initialize the section delimiters.  */
-  c = strlen (section_del);
+  len = strlen (section_del);
 
-  header_del_len = c * 3;
+  header_del_len = len * 3;
   header_del = xmalloc (header_del_len + 1);
   strcat (strcat (strcpy (header_del, section_del), section_del), section_del);
 
-  body_del_len = c * 2;
+  body_del_len = len * 2;
   body_del = xmalloc (body_del_len + 1);
   strcat (strcpy (body_del, section_del), section_del);
 
-  footer_del_len = c;
+  footer_del_len = len;
   footer_del = xmalloc (footer_del_len + 1);
   strcpy (footer_del, section_del);
 
@@ -579,10 +581,10 @@ main (int argc, char **argv)
   initbuffer (&line_buf);
 
   /* Initialize the printf format for unnumbered lines. */
-  c = strlen (separator_str);
-  print_no_line_fmt = xmalloc (lineno_width + c + 1);
-  memset (print_no_line_fmt, ' ', lineno_width + c);
-  print_no_line_fmt[lineno_width + c] = '\0';
+  len = strlen (separator_str);
+  print_no_line_fmt = xmalloc (lineno_width + len + 1);
+  memset (print_no_line_fmt, ' ', lineno_width + len);
+  print_no_line_fmt[lineno_width + len] = '\0';
 
   line_no = starting_line_number;
   current_type = body_type;
