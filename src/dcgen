@@ -1,12 +1,11 @@
-#!/p/bin/perl -w
+#!/usr/bin/perl -w
 # -*- perl -*-
-# @configure_input@
 
 eval 'exec /p/bin/perl -S $0 ${1+"$@"}'
     if 0;
 
 # dcgen -- generate C declarations of arrays of lines and line lengths
-# Copyright (C) 1996 Free Software Foundation, Inc.
+# Copyright (C) 1996, 1998 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
