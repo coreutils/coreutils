@@ -32,8 +32,8 @@ while (<>)
 	|| die "Couldn't open $exp_name for writing.\n";
     print EXP $expected;
     close(EXP);
-    $arg2 = ($s2 ? "'$s2'" : '');
-    $cmd = "$tr $flags \'$s1\' $arg2 < $in > $out";
+    $arg2 = ($s2 ? " '$s2'" : '');
+    $cmd = "$tr $flags \'$s1\'$arg2 < $in > $out";
     print <<EOF ;
 $cmd 2> /dev/null
 code=\$?
