@@ -1,3 +1,10 @@
+1998-07-28  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* tests/cut/Test.pm: Avoid broken pipe for 'y' and 'z' tests.
+
+	* src/sort.c (NEGATION_SIGN): Renamed from NEGATIVE_SIGN to avoid
+	clash with <langinfo.h>.  All uses changed.
+
 1998-07-26  Jim Meyering  <meyering@ascend.com>
 
 	* intl/localealias.c (read_alias_file): Avoid mixing `char*' and
