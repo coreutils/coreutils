@@ -1,5 +1,5 @@
 /* basename.c -- return the last element in a path
-   Copyright (C) 1990, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1990, 1998, 1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -29,16 +29,28 @@
 
 /* In general, we can't use the builtin `basename' function if available,
    since it has different meanings in different environments.
-   In some environments the builtin `basename' modifies its argument.  */
+   In some environments the builtin `basename' modifies its argument.
+   If NAME is all slashes, be sure to return `/'.
+   FIXME: what if NAME is the empty string?  */
 
 char *
 base_name (char const *name)
 {
   char const *base = name += FILESYSTEM_PREFIX_LEN (name);
+  int all_slashes = 1;
+  char const *p;
 
-  for (; *name; name++)
-    if (ISSLASH (*name))
-      base = name + 1;
+  for (p = name; *p; p++)
+    {
+      if (ISSLASH (*p))
+	base = p + 1;
+      else
+	all_slashes = 0;
+    }
+
+  /* If NAME is all slashes, arrange to return `/'.  */
+  if (*base == '\0' && ISSLASH (*name) && all_slashes)
+    --base;
 
   return (char *) base;
 }
