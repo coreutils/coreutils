@@ -163,7 +163,12 @@ touch (const char *file)
 	  if (open_errno)
 	    error (0, open_errno, _("creating %s"), quote (file));
 	  else
-	    error (0, errno, _("failed to get attributes of %s"), quote (file));
+	    {
+	      if (no_create && errno == ENOENT)
+		return 0;
+	      error (0, errno, _("failed to get attributes of %s"),
+		     quote (file));
+	    }
 	  close (fd);
 	  return 1;
 	}
@@ -211,7 +216,11 @@ touch (const char *file)
       if (open_errno)
 	error (0, open_errno, _("creating %s"), quote (file));
       else
-	error (0, errno, _("setting times of %s"), quote (file));
+	{
+	  if (no_create && errno == ENOENT)
+	    return 0;
+	  error (0, errno, _("setting times of %s"), quote (file));
+	}
       return 1;
     }
 
