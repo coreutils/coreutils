@@ -47,19 +47,19 @@
 /* Name this program was run with. */
 char *program_name;
 
-/* If nonzero, show inode information. */
-static int inode_format;
+/* If true, show inode information. */
+static bool inode_format;
 
-/* If nonzero, show even file systems with zero size or
+/* If true, show even file systems with zero size or
    uninteresting types. */
-static int show_all_fs;
+static bool show_all_fs;
 
-/* If nonzero, show only local file systems.  */
-static int show_local_fs;
+/* If true, show only local file systems.  */
+static bool show_local_fs;
 
-/* If nonzero, output data for each file system corresponding to a
+/* If true, output data for each file system corresponding to a
    command line argument -- even if it's a dummy (automounter) entry.  */
-static int show_listed_fs;
+static bool show_listed_fs;
 
 /* Human-readable options for output.  */
 static int human_output_opts;
@@ -67,16 +67,16 @@ static int human_output_opts;
 /* The units to use when printing sizes.  */
 static uintmax_t output_block_size;
 
-/* If nonzero, use the POSIX output format.  */
-static int posix_format;
+/* If true, use the POSIX output format.  */
+static bool posix_format;
 
-/* If nonzero, invoke the `sync' system call before getting any usage data.
+/* If true, invoke the `sync' system call before getting any usage data.
    Using this option can make df very slow, especially with many or very
    busy disks.  Note that this may make a difference on some systems --
-   SunOs4.1.3, for one.  It is *not* necessary on Linux.  */
-static int require_sync = 0;
+   SunOS 4.1.3, for one.  It is *not* necessary on Linux.  */
+static bool require_sync;
 
-/* Nonzero if errors have occurred. */
+/* Desired exit status.  */
 static int exit_status;
 
 /* A file system type to display. */
@@ -108,8 +108,8 @@ static struct fs_type_list *fs_exclude_list;
 /* Linked list of mounted file systems. */
 static struct mount_entry *mount_list;
 
-/* If nonzero, print file system type as well.  */
-static int print_type;
+/* If true, print file system type as well.  */
+static bool print_type;
 
 /* For long options that have no equivalent short option, use a
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
@@ -198,36 +198,34 @@ print_header (void)
   printf (_(" Mounted on\n"));
 }
 
-/* If FSTYPE is a type of file system that should be listed,
-   return nonzero, else zero. */
+/* Is FSTYPE a type of file system that should be listed?  */
 
-static int
+static bool
 selected_fstype (const char *fstype)
 {
   const struct fs_type_list *fsp;
 
   if (fs_select_list == NULL || fstype == NULL)
-    return 1;
+    return true;
   for (fsp = fs_select_list; fsp; fsp = fsp->fs_next)
     if (STREQ (fstype, fsp->fs_name))
-      return 1;
-  return 0;
+      return true;
+  return false;
 }
 
-/* If FSTYPE is a type of file system that should be omitted,
-   return nonzero, else zero. */
+/* Is FSTYPE a type of file system that should be omitted?  */
 
-static int
+static bool
 excluded_fstype (const char *fstype)
 {
   const struct fs_type_list *fsp;
 
   if (fs_exclude_list == NULL || fstype == NULL)
-    return 0;
+    return false;
   for (fsp = fs_exclude_list; fsp; fsp = fsp->fs_next)
     if (STREQ (fstype, fsp->fs_name))
-      return 1;
-  return 0;
+      return true;
+  return false;
 }
 
 /* Like human_readable (N, BUF, human_output_opts, INPUT_UNITS, OUTPUT_UNITS),
@@ -238,10 +236,10 @@ excluded_fstype (const char *fstype)
       expressed in two's complement.  */
 
 static char const *
-df_readable (int negative, uintmax_t n, char *buf,
+df_readable (bool negative, uintmax_t n, char *buf,
 	     uintmax_t input_units, uintmax_t output_units)
 {
-  if (n == -1)
+  if (n == UINTMAX_MAX)
     return "-";
   else
     {
@@ -263,7 +261,7 @@ df_readable (int negative, uintmax_t n, char *buf,
 
 static void
 show_dev (const char *disk, const char *mount_point, const char *fstype,
-	  int me_dummy, int me_remote)
+	  bool me_dummy, bool me_remote)
 {
   struct fs_usage fsu;
   const char *stat_file;
@@ -274,16 +272,16 @@ show_dev (const char *disk, const char *mount_point, const char *fstype,
   uintmax_t output_units;
   uintmax_t total;
   uintmax_t available;
-  int negate_available;
+  bool negate_available;
   uintmax_t available_to_root;
   uintmax_t used;
-  int negate_used;
+  bool negate_used;
   double pct = -1;
 
-  if (me_remote && show_local_fs)
+  if (me_remote & show_local_fs)
     return;
 
-  if (me_dummy && show_all_fs == 0 && !show_listed_fs)
+  if (me_dummy & !show_all_fs & !show_listed_fs)
     return;
 
   if (!selected_fstype (fstype) || excluded_fstype (fstype))
@@ -298,7 +296,7 @@ show_dev (const char *disk, const char *mount_point, const char *fstype,
   if (get_fs_usage (stat_file, disk, &fsu))
     {
       error (0, errno, "%s", quote (stat_file));
-      exit_status = 1;
+      exit_status = EXIT_FAILURE;
       return;
     }
 
@@ -314,10 +312,10 @@ show_dev (const char *disk, const char *mount_point, const char *fstype,
      but that does not suffice for type iso9660 */
   if (print_type)
     {
-      int disk_name_len = (int) strlen (disk);
-      int fstype_len = (int) strlen (fstype);
-      if (disk_name_len + fstype_len + 2 < 20)
-	printf ("%s%*s  ", disk, 18 - disk_name_len, fstype);
+      size_t disk_name_len = strlen (disk);
+      size_t fstype_len = strlen (fstype);
+      if (disk_name_len + fstype_len < 18)
+	printf ("%s%*s  ", disk, 18 - (int) disk_name_len, fstype);
       else if (!posix_format)
 	printf ("%s\n%18s  ", disk, fstype);
       else
@@ -325,7 +323,7 @@ show_dev (const char *disk, const char *mount_point, const char *fstype,
     }
   else
     {
-      if ((int) strlen (disk) > 20 && !posix_format)
+      if (strlen (disk) > 20 && !posix_format)
 	printf ("%s\n%20s", disk, "");
       else
 	printf ("%-20s", disk);
@@ -338,7 +336,7 @@ show_dev (const char *disk, const char *mount_point, const char *fstype,
       input_units = output_units = 1;
       total = fsu.fsu_files;
       available = fsu.fsu_ffree;
-      negate_available = 0;
+      negate_available = false;
       available_to_root = available;
     }
   else
@@ -358,26 +356,26 @@ show_dev (const char *disk, const char *mount_point, const char *fstype,
     }
 
   used = -1;
-  negate_used = 0;
-  if (total != -1 && available_to_root != -1)
+  negate_used = false;
+  if (total != UINTMAX_MAX && available_to_root != UINTMAX_MAX)
     {
       used = total - available_to_root;
       if (total < available_to_root)
 	{
-	  negate_used = 1;
+	  negate_used = true;
 	  used = - used;
 	}
     }
 
   printf (" %*s %*s %*s ",
-	  width, df_readable (0, total,
+	  width, df_readable (false, total,
 			      buf[0], input_units, output_units),
 	  width, df_readable (negate_used, used,
 			      buf[1], input_units, output_units),
 	  width, df_readable (negate_available, available,
 			      buf[2], input_units, output_units));
 
-  if (used == -1 || available == -1)
+  if (used == UINTMAX_MAX || available == UINTMAX_MAX)
     ;
   else if (!negate_used
 	   && used <= TYPE_MAXIMUM (uintmax_t) / 100
@@ -400,9 +398,8 @@ show_dev (const char *disk, const char *mount_point, const char *fstype,
       double nonroot_total = u + a;
       if (nonroot_total)
 	{
-	  double ipct;
-	  pct = u * 100 / nonroot_total;
-	  ipct = (long) pct;
+	  long int lipct = pct = u * 100 / nonroot_total;
+	  double ipct = lipct;
 
 	  /* Like `pct = ceil (dpct);', but avoid ceil so that
 	     the math library needn't be linked.  */
@@ -443,7 +440,7 @@ find_mount_point (const char *file, const struct stat *file_stat)
   struct stat last_stat;
   char *mp = 0;			/* The malloced mount point path.  */
 
-  if (save_cwd (&cwd))
+  if (save_cwd (&cwd) != 0)
     {
       error (0, errno, _("cannot get current directory"));
       return NULL;
@@ -510,7 +507,7 @@ done:
   /* Restore the original cwd.  */
   {
     int save_errno = errno;
-    if (restore_cwd (&cwd))
+    if (restore_cwd (&cwd) != 0)
       error (EXIT_FAILURE, errno,
 	     _("failed to return to initial working directory"));
     free_cwd (&cwd);
@@ -572,10 +569,10 @@ show_point (const char *point, const struct stat *statp)
   if (! best_match)
     {
       char *resolved = canonicalize_file_name (point);
-      ssize_t resolved_len = resolved ? strlen (resolved) : -1;
 
-      if (1 <= resolved_len && resolved[0] == '/')
+      if (resolved && resolved[0] == '/')
 	{
+	  size_t resolved_len = strlen (resolved);
 	  size_t best_match_len = 0;
 
 	  for (me = mount_list; me; me = me->me_next)
@@ -613,7 +610,7 @@ show_point (const char *point, const struct stat *statp)
 	    else
 	      {
 		error (0, errno, "%s", quote (me->me_mountdir));
-		exit_status = 1;
+		exit_status = EXIT_FAILURE;
 		/* So we won't try and fail repeatedly. */
 		me->me_dev = (dev_t) -2;
 	      }
@@ -645,7 +642,7 @@ show_point (const char *point, const struct stat *statp)
       char *mp = find_mount_point (point, statp);
       if (mp)
 	{
-	  show_dev (0, mp, 0, 0, 0);
+	  show_dev (0, mp, 0, false, false);
 	  free (mp);
 	}
     }
@@ -768,16 +765,16 @@ main (int argc, char **argv)
 
   fs_select_list = NULL;
   fs_exclude_list = NULL;
-  inode_format = 0;
-  show_all_fs = 0;
-  show_listed_fs = 0;
+  inode_format = false;
+  show_all_fs = false;
+  show_listed_fs = false;
 
   human_output_opts = human_options (getenv ("DF_BLOCK_SIZE"), false,
 				     &output_block_size);
 
-  print_type = 0;
-  posix_format = 0;
-  exit_status = 0;
+  print_type = false;
+  posix_format = false;
+  exit_status = EXIT_SUCCESS;
 
   while ((c = getopt_long (argc, argv, "aB:iF:hHklmPTt:vx:", long_options, NULL))
 	 != -1)
@@ -787,13 +784,13 @@ main (int argc, char **argv)
 	case 0:			/* Long option. */
 	  break;
 	case 'a':
-	  show_all_fs = 1;
+	  show_all_fs = true;
 	  break;
 	case 'B':
 	  human_output_opts = human_options (optarg, true, &output_block_size);
 	  break;
 	case 'i':
-	  inode_format = 1;
+	  inode_format = true;
 	  break;
 	case 'h':
 	  human_output_opts = human_autoscale | human_SI | human_base_1024;
@@ -808,23 +805,23 @@ main (int argc, char **argv)
 	  output_block_size = 1024;
 	  break;
 	case 'l':
-	  show_local_fs = 1;
+	  show_local_fs = true;
 	  break;
 	case 'm': /* obsolescent */
 	  human_output_opts = 0;
 	  output_block_size = 1024 * 1024;
 	  break;
 	case 'T':
-	  print_type = 1;
+	  print_type = true;
 	  break;
 	case 'P':
-	  posix_format = 1;
+	  posix_format = true;
 	  break;
 	case SYNC_OPTION:
-	  require_sync = 1;
+	  require_sync = true;
 	  break;
 	case NO_SYNC_OPTION:
-	  require_sync = 0;
+	  require_sync = false;
 	  break;
 
 	case 'F':
@@ -850,7 +847,7 @@ main (int argc, char **argv)
 
   /* Fail if the same file system type was both selected and excluded.  */
   {
-    int match = 0;
+    bool match = false;
     struct fs_type_list *fs_incl;
     for (fs_incl = fs_select_list; fs_incl; fs_incl = fs_incl->fs_next)
       {
@@ -862,7 +859,7 @@ main (int argc, char **argv)
 		error (0, 0,
 		       _("file system type %s both selected and excluded"),
 		       quote (fs_incl->fs_name));
-		match = 1;
+		match = true;
 		break;
 	      }
 	  }
@@ -883,7 +880,7 @@ main (int argc, char **argv)
 	  if (stat (argv[i], &stats[i - optind]))
 	    {
 	      error (0, errno, "%s", quote (argv[i]));
-	      exit_status = 1;
+	      exit_status = EXIT_FAILURE;
 	      argv[i] = NULL;
 	    }
 	  else
@@ -918,7 +915,7 @@ main (int argc, char **argv)
       int i;
 
       /* Display explicitly requested empty file systems. */
-      show_listed_fs = 1;
+      show_listed_fs = true;
 
       if (n_valid_args > 0)
 	print_header ();
@@ -933,5 +930,5 @@ main (int argc, char **argv)
       show_all_entries ();
     }
 
-  exit (exit_status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
+  exit (exit_status);
 }
