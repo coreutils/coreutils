@@ -203,8 +203,8 @@ if test -z "$ac_list_mounted_fs"; then
   AC_CHECK_FUNCS(next_dev fs_stat_dev)
   AC_CHECK_HEADERS(fs_info.h)
   AC_MSG_CHECKING([for BEOS mounted file system support functions])
-  if test $ac_cv_header_fs_info_h = yes
-      && test $ac_cv_func_next_dev = yes
+  if test $ac_cv_header_fs_info_h = yes \
+      && test $ac_cv_func_next_dev = yes \
 	&& test $ac_cv_func_fs_stat_dev = yes; then
     fu_result=yes
   else
