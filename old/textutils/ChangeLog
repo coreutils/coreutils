@@ -1,5 +1,8 @@
 1997-07-13  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* doc/Makefile.am (EXTRA_DIST): Remove explicit mention of texinfo.texi.
+	Now, automake includes it automatically.
+
 	* src/head.c: Include xstrtoul.h.
 	Remove global variable, unit_size.
 	(atou): Remove now-unused function.
