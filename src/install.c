@@ -61,6 +61,7 @@
 
 #include "system.h"
 #include "version.h"
+#include "backupfile.h"
 #include "modechange.h"
 #include "makepath.h"
 #include "error.h"
@@ -98,6 +99,7 @@ char *xmalloc ();
 int safe_read ();
 int full_write ();
 int isdir ();
+enum backup_type get_version ();
 
 static int change_attributes __P ((char *path, int no_need_to_chown));
 static int copy_file __P ((char *from, char *to, int *to_created));
@@ -147,6 +149,8 @@ static struct option const long_options[] =
   {"group", required_argument, NULL, 'g'},
   {"mode", required_argument, NULL, 'm'},
   {"owner", required_argument, NULL, 'o'},
+  {"backup", no_argument, NULL, 'b'},
+  {"version-control", required_argument, NULL, 'V'},
   {"help", no_argument, &show_help, 1},
   {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
@@ -158,6 +162,8 @@ main (int argc, char **argv)
   int optc;
   int errors = 0;
   char *symbolic_mode = NULL;
+  int make_backups = 0;
+  char *version;
 
   program_name = argv[0];
   owner_name = NULL;
@@ -167,12 +173,20 @@ main (int argc, char **argv)
   dir_arg = 0;
   umask (0);
 
-  while ((optc = getopt_long (argc, argv, "csdg:m:o:", long_options,
+   version = getenv ("SIMPLE_BACKUP_SUFFIX");
+   if (version)
+      simple_backup_suffix = version;
+   version = getenv ("VERSION_CONTROL");
+
+  while ((optc = getopt_long (argc, argv, "bcsdg:m:o:V:S:", long_options,
 			      (int *) 0)) != EOF)
     {
       switch (optc)
 	{
 	case 0:
+	  break;
+	case 'b':
+	  make_backups = 1;
 	  break;
 	case 'c':
 	  break;
@@ -190,6 +204,9 @@ main (int argc, char **argv)
 	  break;
 	case 'o':
 	  owner_name = optarg;
+	  break;
+        case 'V':
+	  version = optarg;
 	  break;
 	default:
 	  usage (1);
@@ -209,6 +226,9 @@ main (int argc, char **argv)
   if (dir_arg && strip_files)
     error (1, 0,
 	   _("the strip option may not be used when installing a directory"));
+
+  if (make_backups)
+    backup_type = get_version (version);
 
   if (optind == argc || (optind == argc - 1 && !dir_arg))
     {
@@ -339,6 +359,28 @@ copy_file (char *from, char *to, int *to_created)
 	  error (0, 0, _("`%s' and `%s' are the same file"), from, to);
 	  return 1;
 	}
+
+      /* The destination file exists.  Try to back it up if required.  */
+      if (backup_type != none)
+        {
+	  char *tmp_backup = find_backup_file_name (to);
+	  char *dst_backup;
+
+	  if (tmp_backup == NULL)
+	    error (1, 0, "virtual memory exhausted");
+	  dst_backup = (char *) alloca (strlen (tmp_backup) + 1);
+	  strcpy (dst_backup, tmp_backup);
+	  free (tmp_backup);
+	  if (rename (to, dst_backup))
+	    {
+	      if (errno != ENOENT)
+		{
+		  error (0, errno, "cannot backup `%s'", to);
+		  return 1;
+		}
+	    }
+	}
+
       /* If unlink fails, try to proceed anyway.  */
       if (unlink (to))
 	target_created = 0;
@@ -546,6 +588,9 @@ format, make all components of the given DIRECTORY(ies).\n\
   -m, --mode=MODE     set permission mode (as in chmod), instead of rw-r--r--\n\
   -o, --owner=OWNER   set ownership (super-user only)\n\
   -s, --strip         strip symbol tables, only for 1st and 2nd formats\n\
+  -b, --backup        make backup before removal\n\
+  -S, --suffix=SUFFIX override the usual backup suffix\n\
+  -V, --version-control=WORD   override the usual version control\n\
       --help          display this help and exit\n\
       --version       output version information and exit\n"));
     }
