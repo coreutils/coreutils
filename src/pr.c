@@ -469,7 +469,9 @@ main (argc, argv)
   program_name = argv[0];
 
   n_files = 0;
-  file_names = (char **) xmalloc ((argc - 1) * sizeof (char *));
+  file_names = (argc > 1
+		? (char **) xmalloc ((argc - 1) * sizeof (char *))
+		: NULL);
 
   while (1)
     {
