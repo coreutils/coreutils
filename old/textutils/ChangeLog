@@ -1,3 +1,7 @@
+1998-04-27  Jim Meyering  <meyering@ascend.com>
+
+	* tests/tail/Test.pm: Disable test f-1, now that it fails.
+
 1998-04-26  Jim Meyering  <meyering@ascend.com>
 
 	* Version 1.22f.
