@@ -1,3 +1,8 @@
+Wed Oct 23 22:02:24 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/md5.c: Update from GNU libc.
+	* lib/md5.h: Update from GNU libc.
+
 Mon Oct 21 16:48:12 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/tr.c (validate): Remove TAB from diagnostic, for consistency.
