@@ -157,21 +157,22 @@ posix_time_parse (const char *s, unsigned int syntax_bits)
   if (*p < 1 || *p > 12)
     return 1;
   t.tm_mon = *p - 1;
-
   ++p; --len;
+
   if (*p < 1 || *p > 31)
     return 1;
   t.tm_mday = *p;
-
   ++p; --len;
+
   if (*p < 0 || *p > 23)
     return 1;
   t.tm_hour = *p;
-
   ++p; --len;
+
   if (*p < 0 || *p > 59)
     return 1;
   t.tm_min = *p;
+  ++p; --len;
 
   /* Handle any trailing year.  */
   if (syntax_bits & PDS_TRAILING_YEAR)
@@ -223,3 +224,50 @@ posixtm (const char *s, unsigned int syntax_bits)
     return NULL;
   return &t;
 }
+
+#ifdef TEST_POSIXTIME
+/*
+    Test mainly with syntax_bits == 13
+    (aka: (PDS_LEADING_YEAR | PDS_CENTURY | PDS_SECONDS))
+
+BEGIN-DATA
+1112131415      13 1323807300 Tue Dec 13 14:15:00 2011
+1112131415.16   13 1323807316 Tue Dec 13 14:15:16 2011
+201112131415.16 13 1323807316 Tue Dec 13 14:15:16 2011
+191112131415.16 13 -1 ***
+203712131415.16 13 2144348116 Sun Dec 13 14:15:16 2037
+3712131415.16   13 2144348116 Sun Dec 13 14:15:16 2037
+6812131415.16   13 -1 ***
+6912131415.16   13 -1 ***
+7012131415.16   13 29967316 Sun Dec 13 14:15:16 1970
+12131415.16     13 913580116 Sun Dec 13 14:15:16 1998
+
+1213141599       2 945116100 Mon Dec 13 14:15:00 1999
+1213141500       2 976738500 Wed Dec 13 14:15:00 2000
+END-DATA
+
+*/
+
+# define MAX_BUFF_LEN 1024
+
+int
+main ()
+{
+  char buff[MAX_BUFF_LEN + 1];
+
+  buff[MAX_BUFF_LEN] = 0;
+  while (fgets (buff, MAX_BUFF_LEN, stdin) && buff[0])
+    {
+      char time_str[MAX_BUFF_LEN];
+      unsigned int syntax_bits;
+      time_t t;
+      char *result;
+      sscanf (buff, "%s %u", time_str, &syntax_bits);
+      t = posixtime (time_str, syntax_bits);
+      result = (t == (time_t) -1 ? "***" : ctime (&t));
+      printf ("%d %s\n", (int) t, result);
+    }
+  exit (0);
+
+}
+#endif
