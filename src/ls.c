@@ -264,7 +264,7 @@ static void extract_dirs_from_files (const char *dirname,
 				     int ignore_dot_and_dot_dot);
 static void get_link_name (const char *filename, struct fileinfo *f);
 static void indent (size_t from, size_t to);
-static void init_column_info (void);
+static size_t calculate_columns (bool by_columns);
 static void print_current_files (void);
 static void print_dir (const char *name, const char *realname);
 static void print_file_name_and_frills (const struct fileinfo *f);
@@ -1654,6 +1654,8 @@ decode_switches (int argc, char **argv)
 	}
     }
 
+  max_idx = MAX (1, line_length / MIN_COLUMN_WIDTH);
+
   filename_quoting_options = clone_quoting_options (NULL);
   if (get_quoting_style (filename_quoting_options) == escape_quoting_style)
     set_char_quoting (filename_quoting_options, ' ', 1);
@@ -2799,12 +2801,10 @@ print_current_files (void)
       break;
 
     case many_per_line:
-      init_column_info ();
       print_many_per_line ();
       break;
 
     case horizontal:
-      init_column_info ();
       print_horizontal ();
       break;
 
@@ -3482,75 +3482,29 @@ length_of_file_name_and_frills (const struct fileinfo *f)
   return len;
 }
 
-/* FIXME: the first  40+ lines of this function are nearly identical
-   to those in the print_horizontal function.  Fix that.  */
 static void
 print_many_per_line (void)
 {
-  struct column_info *line_fmt;
-  size_t filesno;		/* Index into files. */
   size_t row;			/* Current row. */
-  size_t max_name_length;	/* Length of longest file name + frills. */
-  size_t name_length;		/* Length of each file name + frills. */
-  size_t pos;			/* Current character column. */
-  size_t cols;			/* Number of files across. */
-  size_t rows;			/* Maximum number of files down. */
-  size_t max_cols;
-
-  /* Normally the maximum number of columns is determined by the
-     screen width.  But if few files are available this might limit it
-     as well.  */
-  max_cols = max_idx > files_index ? files_index : max_idx;
-
-  /* Compute the maximum number of possible columns.  */
-  for (filesno = 0; filesno < files_index; ++filesno)
-    {
-      size_t i;
-
-      name_length = length_of_file_name_and_frills (files + filesno);
-
-      for (i = 0; i < max_cols; ++i)
-	{
-	  if (column_info[i].valid_len)
-	    {
-	      size_t idx = filesno / ((files_index + i) / (i + 1));
-	      size_t real_length = name_length + (idx == i ? 0 : 2);
-
-	      if (real_length > column_info[i].col_arr[idx])
-		{
-		  column_info[i].line_len += (real_length
-					   - column_info[i].col_arr[idx]);
-		  column_info[i].col_arr[idx] = real_length;
-		  column_info[i].valid_len = column_info[i].line_len < line_length;
-		}
-	    }
-	}
-    }
-
-  /* Find maximum allowed columns.  */
-  for (cols = max_cols; cols > 1; --cols)
-    {
-      if (column_info[cols - 1].valid_len)
-	break;
-    }
-
-  line_fmt = &column_info[cols - 1];
+  size_t cols = calculate_columns (true);
+  struct column_info const *line_fmt = &column_info[cols - 1];
 
   /* Calculate the number of rows that will be in each column except possibly
      for a short column on the right. */
-  rows = files_index / cols + (files_index % cols != 0);
+  size_t rows = files_index / cols + (files_index % cols != 0);
 
   for (row = 0; row < rows; row++)
     {
       size_t col = 0;
-      filesno = row;
-      pos = 0;
+      size_t filesno = row;
+      size_t pos = 0;
+
       /* Print the next row.  */
       while (1)
 	{
+	  size_t name_length = length_of_file_name_and_frills (files + filesno);
+	  size_t max_name_length = line_fmt->col_arr[col++];
 	  print_file_name_and_frills (files + filesno);
-	  name_length = length_of_file_name_and_frills (files + filesno);
-	  max_name_length = line_fmt->col_arr[col++];
 
 	  filesno += rows;
 	  if (filesno >= files_index)
@@ -3566,60 +3520,15 @@ print_many_per_line (void)
 static void
 print_horizontal (void)
 {
-  struct column_info *line_fmt;
   size_t filesno;
-  size_t max_name_length;
-  size_t name_length;
-  size_t cols;
-  size_t pos;
-  size_t max_cols;
-
-  /* Normally the maximum number of columns is determined by the
-     screen width.  But if few files are available this might limit it
-     as well.  */
-  max_cols = max_idx > files_index ? files_index : max_idx;
-
-  /* Compute the maximum file name length.  */
-  max_name_length = 0;
-  for (filesno = 0; filesno < files_index; ++filesno)
-    {
-      size_t i;
-
-      name_length = length_of_file_name_and_frills (files + filesno);
-
-      for (i = 0; i < max_cols; ++i)
-	{
-	  if (column_info[i].valid_len)
-	    {
-	      size_t idx = filesno % (i + 1);
-	      size_t real_length = name_length + (idx == i ? 0 : 2);
-
-	      if (real_length > column_info[i].col_arr[idx])
-		{
-		  column_info[i].line_len += (real_length
-					   - column_info[i].col_arr[idx]);
-		  column_info[i].col_arr[idx] = real_length;
-		  column_info[i].valid_len = column_info[i].line_len < line_length;
-		}
-	    }
-	}
-    }
-
-  /* Find maximum allowed columns.  */
-  for (cols = max_cols; cols > 1; --cols)
-    {
-      if (column_info[cols - 1].valid_len)
-	break;
-    }
-
-  line_fmt = &column_info[cols - 1];
-
-  pos = 0;
+  size_t pos = 0;
+  size_t cols = calculate_columns (false);
+  struct column_info const *line_fmt = &column_info[cols - 1];
+  size_t name_length = length_of_file_name_and_frills (files);
+  size_t max_name_length = line_fmt->col_arr[0];
 
   /* Print first entry.  */
   print_file_name_and_frills (files);
-  name_length = length_of_file_name_and_frills (files);
-  max_name_length = line_fmt->col_arr[0];
 
   /* Now the rest.  */
   for (filesno = 1; filesno < files_index; ++filesno)
@@ -3722,38 +3631,126 @@ attach (char *dest, const char *dirname, const char *name)
   *dest = 0;
 }
 
-/* FIXME: this code allocates allocates O(N^2) space when ls is invoked
-   with `--width=N' and -x or -C.  Either fix that or limit N.  */
+/* Allocate enough column info suitable for the current number of
+   files and display columns, and initialize the info to represent the
+   narrowest possible columns.  */
+
 static void
 init_column_info (void)
 {
   size_t i;
-  int allocate = 0;
+  size_t max_cols = MIN (max_idx, files_index);
 
-  max_idx = line_length / MIN_COLUMN_WIDTH;
-  if (max_idx == 0)
-    max_idx = 1;
+  /* Currently allocated columns in column_info.  */
+  static size_t column_info_alloc;
 
-  if (column_info == NULL)
+  if (column_info_alloc < max_cols)
     {
-      column_info = xnmalloc (max_idx, sizeof *column_info);
-      allocate = 1;
+      size_t new_column_info_alloc;
+      size_t *p;
+
+      if (max_cols < max_idx / 2)
+	{
+	  /* The number of columns is far less than the display width
+	     allows.  Grow the allocation, but only so that it's
+	     double the current requirements.  If the display is
+	     extremely wide, this avoids allocating a lot of memory
+	     that is never needed.  */
+	  column_info = xnrealloc (column_info, max_cols,
+				   2 * sizeof *column_info);
+	  new_column_info_alloc = 2 * max_cols;
+	}
+      else
+	{
+	  column_info = xnrealloc (column_info, max_idx, sizeof *column_info);
+	  new_column_info_alloc = max_idx;
+	}
+
+      /* Allocate the new size_t objects by computing the triangle
+	 formula n * (n + 1) / 2, except that we don't need to
+	 allocate the part of the triangle that we've already
+	 allocated.  Check for address arithmetic overflow.  */
+      {
+	size_t column_info_growth = new_column_info_alloc - column_info_alloc;
+	size_t s = column_info_alloc + 1 + new_column_info_alloc;
+	size_t t = s * column_info_growth;
+	if (s < new_column_info_alloc || t / column_info_growth != s)
+	  xalloc_die ();
+	p = xnmalloc (t / 2, sizeof *p);
+      }
+
+      /* Grow the triangle by parceling out the cells just allocated.  */
+      for (i = column_info_alloc; i < new_column_info_alloc; i++)
+	{
+	  column_info[i].col_arr = p;
+	  p += i + 1;
+	}
+
+      column_info_alloc = new_column_info_alloc;
     }
 
-  for (i = 0; i < max_idx; ++i)
+  for (i = 0; i < max_cols; ++i)
     {
       size_t j;
 
       column_info[i].valid_len = true;
       column_info[i].line_len = (i + 1) * MIN_COLUMN_WIDTH;
-
-      if (allocate)
-	column_info[i].col_arr = xnmalloc (i + 1,
-					   sizeof column_info[i].col_arr[0]);
-
       for (j = 0; j <= i; ++j)
 	column_info[i].col_arr[j] = MIN_COLUMN_WIDTH;
     }
+}
+
+/* Calculate the number of columns needed to represent the current set
+   of files in the current display width.  */
+
+static size_t
+calculate_columns (bool by_columns)
+{
+  size_t filesno;		/* Index into files. */
+  size_t cols;			/* Number of files across. */
+
+  /* Normally the maximum number of columns is determined by the
+     screen width.  But if few files are available this might limit it
+     as well.  */
+  size_t max_cols = MIN (max_idx, files_index);
+
+  init_column_info ();
+
+  /* Compute the maximum number of possible columns.  */
+  for (filesno = 0; filesno < files_index; ++filesno)
+    {
+      size_t name_length = length_of_file_name_and_frills (files + filesno);
+      size_t i;
+
+      for (i = 0; i < max_cols; ++i)
+	{
+	  if (column_info[i].valid_len)
+	    {
+	      size_t idx = (by_columns
+			    ? filesno / ((files_index + i) / (i + 1))
+			    : filesno % (i + 1));
+	      size_t real_length = name_length + (idx == i ? 0 : 2);
+
+	      if (column_info[i].col_arr[idx] < real_length)
+		{
+		  column_info[i].line_len += (real_length
+					      - column_info[i].col_arr[idx]);
+		  column_info[i].col_arr[idx] = real_length;
+		  column_info[i].valid_len = (column_info[i].line_len
+					      < line_length);
+		}
+	    }
+	}
+    }
+
+  /* Find maximum allowed columns.  */
+  for (cols = max_cols; 1 < cols; --cols)
+    {
+      if (column_info[cols - 1].valid_len)
+	break;
+    }
+
+  return cols;
 }
 
 void
