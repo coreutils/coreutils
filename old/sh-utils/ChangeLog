@@ -1,3 +1,19 @@
+1997-09-19  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/getusershell.c (IN_CTYPE_DOMAIN): Define.
+	(ISSPACE): Define.
+	(readname): Use ISSPACE, not isspace.
+	* lib/strtod.c (IN_CTYPE_DOMAIN): Define.
+	(ISSPACE): Define.
+	(ISDIGIT): Define.
+	(TOLOWER): Define.
+	Use upper-case versions of ctype macros.
+	* lib/strtol.c (IN_CTYPE_DOMAIN): Define.
+	(ISSPACE): Guard with IN_CTYPE_DOMAIN.
+	(ISDIGIT): Guard with IN_CTYPE_DOMAIN.
+	(TOUPPER): Guard with IN_CTYPE_DOMAIN.
+	From Bruno Haible.
+
 1997-09-17  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/yes.c (main): Call parse_long_options only if POSIXLY_CORRECT
