@@ -83,7 +83,7 @@ SUFFIXES = .sh
 	chmod +x $@-t
 	mv $@-t $@
 
-all-local: su
+all-local: su$(EXEEXT)
 
 installed_su = $(DESTDIR)$(bindir)/`echo su|sed '$(transform)'`
 
@@ -98,10 +98,10 @@ INSTALL_SU = \
   echo " chmod $(setuid_root_mode) $(installed_su)"; \
   chmod $(setuid_root_mode) $(installed_su)
 
-install-root: su
+install-root: su$(EXEEXT)
 	@$(INSTALL_SU)
 
-install-exec-local: su
+install-exec-local: su$(EXEEXT)
 	@TMPFILE=$(DESTDIR)$(bindir)/.su-$$$$; \
 	rm -f $$TMPFILE; \
 	echo > $$TMPFILE; \
