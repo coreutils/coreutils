@@ -1,13 +1,59 @@
+2003-09-22  Jim Meyering  <jim@meyering.net>
+
+	* Version 5.0.92.
+
+2003-09-16  Paul Eggert  <eggert@twinsun.com>
+
+	Don't assume ferror sets errno.  Bug reported by Bruno Haible.
+
+	* lib/getndelim2.c, lib/linebuffer.c, lib/readutmp.c: Sync with
+	gnulib.
+
+	* src/comm.c (compare_files): Save errno after input error,
+	to report proper errno value.
+	* src/fold.c (fold_file): Likewise.
+	* src/od.c (check_and_close, skip, read_char, read_block): Likewise.
+	* src/paste.c (paste_serial): Likewise.
+	* src/unexpand.c (unexpand): Likewise.
+
+	* src/csplit.c (close_output_file): Don't report bogus errno value
+	after ferror discovers an output error.  We don't know the proper
+	errno value, since it might have been caused by any of a whole
+	bunch of calls, and it might have been trashed in the meantime.
+	Fixing this problem will require much more extensive changes;
+	in the meantime just say "write error".
+	* src/od.c (check_and_close, dump, dump_strings): Likewise.
+	* src/uniq.c (check_file): Likewise.
+
+	* src/join.c (get_line): Report error right away if I/O fails,
+	so that the proper errno value is used.
+	* src/tac.c (tac_seekable, tac_file, save_stdin): Likewise.
+	* src/tee.c (tee): Likewise.
+	* src/uniq.c (check_file): Likewise.
+
+	* src/od.c (skip): If a read fails, don't retry it later, so
+	that we report the proper errno.
+
+	* src/tac.c (tac_mem): Don't return a value; nobody uses it.
+
+	* src/tee.c (tee): Once a write failure has occurred, don't bother
+	writing anything more to that stream.
+
+	* src/uniq.c (check_file): Check for ferror (stdout) even if
+	ostream == stdout.
+
+	* src/yes.c (UNROLL): Remove.
+	(main): Exit immediately when write failure is detected.
+	Simplify code by assigning to argv when argc == 1.
+
 2003-09-21  Paul Eggert  <eggert@twinsun.com>
 
 	* src/ptx.c: Switch encoding from Latin-1 to UTF-8.
-        (WRITTEN_BY): Change "Franc,ois" (actually using
-        c-with-cedilla in Latin-1) to "F.", so that it's ASCII, as
-        xgettext requires.
+	(WRITTEN_BY): Change "Franc,ois" (actually using
+	c-with-cedilla in Latin-1) to "F.", so that it's ASCII, as
+	xgettext requires.
 
 2003-09-19  Jim Meyering  <jim@meyering.net>
-
-	* Version 5.0.92.
 
 	`du -D symlink-to-dir' would mistakenly omit the slash in
 	lines like this: 24	symlink-to-dir/subdir
