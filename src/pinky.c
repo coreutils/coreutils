@@ -26,6 +26,7 @@
 #include "system.h"
 
 #include "error.h"
+#include "hard-locale.h"
 #include "inttostr.h"
 #include "readutmp.h"
 
@@ -76,6 +77,11 @@ static int do_short_format = 1;
 #ifdef HAVE_UT_HOST
 static int include_where = 1;
 #endif
+
+/* The strftime format to use for login times, and its expected
+   output width.  */
+static char const *time_format;
+static int time_format_width;
 
 static struct option const longopts[] =
 {
@@ -161,31 +167,28 @@ idle_string (time_t when)
   return (const char *) idle_hhmm;
 }
 
-/* Return a standard time string, "mon dd hh:mm"
-   FIXME: handle localization */
+/* Return a time string.  */
 static const char *
 time_string (const STRUCT_UTMP *utmp_ent)
 {
+  static char buf[INT_STRLEN_BOUND (intmax_t) + sizeof "-%m-%d %H:%M"];
+
   /* Don't take the address of UT_TIME_MEMBER directly.
      Ulrich Drepper wrote:
      ``... GNU libc (and perhaps other libcs as well) have extended
      utmp file formats which do not use a simple time_t ut_time field.
      In glibc, ut_time is a macro which selects for backward compatibility
      the tv_sec member of a struct timeval value.''  */
-  time_t tm = UT_TIME_MEMBER (utmp_ent);
+  time_t t = UT_TIME_MEMBER (utmp_ent);
+  struct tm *tmp = localtime (&t);
 
-  char *ptr = ctime (&tm);
-  if (ptr)
+  if (tmp)
     {
-      ptr += 4;
-      ptr[12] = '\0';
+      strftime (buf, sizeof buf, time_format, tmp);
+      return buf;
     }
   else
-    {
-      static char buf[INT_BUFSIZE_BOUND (intmax_t)];
-      ptr = (TYPE_SIGNED (time_t) ? imaxtostr (tm, buf) : umaxtostr (tm, buf));
-    }
-  return ptr;
+    return TYPE_SIGNED (time_t) ? imaxtostr (t, buf) : umaxtostr (t, buf);
 }
 
 /* Display a line of information about UTMP_ENT. */
@@ -408,7 +411,7 @@ print_heading (void)
   printf (" %-9s", _(" TTY"));
   if (include_idle)
     printf (" %-6s", _("Idle"));
-  printf (" %-12s", _("When"));
+  printf (" %-*s", time_format_width, _("When"));
 #ifdef HAVE_UT_HOST
   if (include_where)
     printf (" %s", _("Where"));
@@ -422,6 +425,17 @@ static void
 scan_entries (int n, const STRUCT_UTMP *utmp_buf,
 	      const int argc_names, char *const argv_names[])
 {
+  if (hard_locale (LC_TIME))
+    {
+      time_format = "%Y-%m-%d %H:%M";
+      time_format_width = 4 + 1 + 2 + 1 + 2 + 1 + 2 + 1 + 2;
+    }
+  else
+    {
+      time_format = "%b %e %H:%M";
+      time_format_width = 3 + 1 + 2 + 1 + 2 + 1 + 2;
+    }
+
   if (include_heading)
     print_heading ();
 
