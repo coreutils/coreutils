@@ -239,6 +239,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   echo -e '\xHH' now outputs a byte whose hexadecimal value is HH,
   for compatibility with bash.
 
+  ls now exits with status 1 on minor problems, 2 if serious trouble.
+
   ls has a new --hide=PATTERN option that behaves like
   --ignore=PATTERN, except that it is overridden by -a or -A.
   This can be useful for aliases, e.g., if lh is an alias for
