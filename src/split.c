@@ -190,11 +190,11 @@ next_file_name (void)
 }
 
 /* Write BYTES bytes at BP to an output file.
-   If NEW_FILE_FLAG is nonzero, open the next output file.
+   If NEW_FILE_FLAG is true, open the next output file.
    Otherwise add to the same output file already in use.  */
 
 static void
-cwrite (int new_file_flag, const char *bp, size_t bytes)
+cwrite (bool new_file_flag, const char *bp, size_t bytes)
 {
   if (new_file_flag)
     {
@@ -220,7 +220,7 @@ static void
 bytes_split (uintmax_t n_bytes, char *buf, size_t bufsize)
 {
   size_t n_read;
-  int new_file_flag = 1;
+  bool new_file_flag = true;
   size_t to_read;
   uintmax_t to_write = n_bytes;
   char *bp_out;
@@ -240,7 +240,7 @@ bytes_split (uintmax_t n_bytes, char *buf, size_t bufsize)
 		{
 		  cwrite (new_file_flag, bp_out, to_read);
 		  to_write -= to_read;
-		  new_file_flag = 0;
+		  new_file_flag = false;
 		}
 	      break;
 	    }
@@ -250,7 +250,7 @@ bytes_split (uintmax_t n_bytes, char *buf, size_t bufsize)
 	      cwrite (new_file_flag, bp_out, w);
 	      bp_out += w;
 	      to_read -= w;
-	      new_file_flag = 1;
+	      new_file_flag = true;
 	      to_write = n_bytes;
 	    }
 	}
@@ -266,7 +266,7 @@ lines_split (uintmax_t n_lines, char *buf, size_t bufsize)
 {
   size_t n_read;
   char *bp, *bp_out, *eob;
-  int new_file_flag = 1;
+  bool new_file_flag = true;
   uintmax_t n = 0;
 
   do
@@ -286,7 +286,7 @@ lines_split (uintmax_t n_lines, char *buf, size_t bufsize)
 		{
 		  size_t len = eob - bp_out;
 		  cwrite (new_file_flag, bp_out, len);
-		  new_file_flag = 0;
+		  new_file_flag = false;
 		}
 	      break;
 	    }
@@ -296,7 +296,7 @@ lines_split (uintmax_t n_lines, char *buf, size_t bufsize)
 	    {
 	      cwrite (new_file_flag, bp_out, bp - bp_out);
 	      bp_out = bp;
-	      new_file_flag = 1;
+	      new_file_flag = true;
 	      n = 0;
 	    }
 	}
@@ -315,7 +315,7 @@ line_bytes_split (size_t n_bytes)
 {
   size_t n_read;
   char *bp;
-  int eof = 0;
+  bool eof = false;
   size_t n_buffered = 0;
   char *buf = xmalloc (n_bytes);
 
@@ -329,7 +329,7 @@ line_bytes_split (size_t n_bytes)
 
       n_buffered += n_read;
       if (n_buffered != n_bytes)
-	eof = 1;
+	eof = true;
 
       /* Find where to end this chunk.  */
       bp = buf + n_buffered;
@@ -344,7 +344,7 @@ line_bytes_split (size_t n_bytes)
 	bp = buf + n_buffered;
 
       /* Output the chars as one output file.  */
-      cwrite (1, buf, bp - buf);
+      cwrite (true, buf, bp - buf);
 
       /* Discard the chars we just output; move rest of chunk
 	 down to be the start of the next chunk.  Source and
