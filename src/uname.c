@@ -1,6 +1,6 @@
 /* uname -- print system information
 
-   Copyright 1989, 1992, 1993, 1996, 1997, 1999, 2000, 2001 Free
+   Copyright 1989, 1992, 1993, 1996, 1997, 1999, 2000, 2001, 2002 Free
    Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -25,7 +25,7 @@
 #include <sys/utsname.h>
 #include <getopt.h>
 
-#if defined (HAVE_SYSINFO) && defined (HAVE_SYS_SYSTEMINFO_H)
+#if HAVE_SYSINFO && HAVE_SYS_SYSTEMINFO_H
 # include <sys/systeminfo.h>
 #endif
 
@@ -224,7 +224,7 @@ main (int argc, char **argv)
   if (toprint & PRINT_PROCESSOR)
     {
       char const *element = "unknown";
-#if defined (HAVE_SYSINFO) && defined (SI_ARCHITECTURE)
+#if HAVE_SYSINFO && defined SI_ARCHITECTURE
       char processor[257];
       if (0 <= sysinfo (SI_ARCHITECTURE, processor, sizeof processor))
 	element = processor;
@@ -235,7 +235,7 @@ main (int argc, char **argv)
   if (toprint & PRINT_HARDWARE_PLATFORM)
     {
       char const *element = "unknown";
-#if defined (HAVE_SYSINFO) && defined (SI_PLATFORM)
+#if HAVE_SYSINFO && defined SI_PLATFORM
       char hardware_platform[257];
       if (0 <= sysinfo (SI_PLATFORM,
 			hardware_platform, sizeof hardware_platform))
