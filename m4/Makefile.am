@@ -61,6 +61,7 @@ lstat.m4 \
 mbrtowc.m4 \
 mbswidth.m4 \
 memcmp.m4 \
+memcoll.m4 \
 mkdir-slash.m4 \
 mkstemp.m4 \
 mktime.m4 \
