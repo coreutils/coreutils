@@ -6,3 +6,5 @@ safe-lstat.c
 safe-lstat.h
 getdate.tab.c
 .deps
+stat.c
+lstat.c
