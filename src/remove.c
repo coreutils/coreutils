@@ -32,6 +32,7 @@
 #include "cycle-check.h"
 #include "dirname.h"
 #include "error.h"
+#include "euidaccess.h"
 #include "file-type.h"
 #include "hash.h"
 #include "hash-pjw.h"
@@ -118,7 +119,6 @@ struct AD_ent
   } u;
 };
 
-int euidaccess ();
 int yesno ();
 
 extern char *program_name;
