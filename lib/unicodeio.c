@@ -1,6 +1,6 @@
 /* Unicode character output to streams with locale dependent encoding.
 
-   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 2000-2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify it
    under the terms of the GNU Library General Public License as published
@@ -18,6 +18,9 @@
    USA.  */
 
 /* Written by Bruno Haible <haible@clisp.cons.org>.  */
+
+/* Note: This file requires the locale_charset() function.  See in
+   libiconv-1.7/libcharset/INTEGRATE for how to obtain it.  */
 
 #ifdef HAVE_CONFIG_H
 # include <config.h>
@@ -47,11 +50,13 @@ extern int errno;
 
 #if ENABLE_NLS
 # include <libintl.h>
-# define _(Text) gettext (Text)
 #else
-# define _(Text) Text
+# define gettext(Text) Text
 #endif
+#define _(Text) gettext (Text)
+#define N_(Text) Text
 
+/* Specification.  */
 #include "unicodeio.h"
 
 /* When we pass a Unicode character to iconv(), we must pass it in a
@@ -105,10 +110,19 @@ utf8_wctomb (unsigned char *r, unsigned int wc)
 /* Luckily, the encoding's name is platform independent.  */
 #define UTF8_NAME "UTF-8"
 
-/* Outputs the Unicode character CODE to the output stream STREAM.
+/* Converts the Unicode character CODE to its multibyte representation
+   in the current locale and calls the SUCCESS callback on the resulting
+   byte sequence.  If an error occurs, invokes the FAILURE callback instead,
+   passing it CODE and an English error string.
+   Returns whatever the callback returned.
    Assumes that the locale doesn't change between two calls.  */
-void
-print_unicode_char (FILE *stream, unsigned int code)
+long
+unicode_to_mb (unsigned int code,
+	       long (*success) PARAMS ((const char *buf, size_t buflen,
+					void *callback_arg)),
+	       long (*failure) PARAMS ((unsigned int code, const char *msg,
+					void *callback_arg)),
+	       void *callback_arg)
 {
   static int initialized;
   static int is_utf8;
@@ -130,31 +144,32 @@ print_unicode_char (FILE *stream, unsigned int code)
 	{
 	  utf8_to_local = iconv_open (charset, UTF8_NAME);
 	  if (utf8_to_local == (iconv_t)(-1))
-	    {
-	      /* For an unknown encoding, assume ASCII.  */
-	      utf8_to_local = iconv_open ("ASCII", UTF8_NAME);
-	      if (utf8_to_local == (iconv_t)(-1))
-		error (1, 0,
-		       _("cannot output U+%04X: iconv function not usable"),
-		       code);
-	    }
+	    /* For an unknown encoding, assume ASCII.  */
+	    utf8_to_local = iconv_open ("ASCII", UTF8_NAME);
 	}
 #endif
       initialized = 1;
     }
 
+  /* Test whether the utf8_to_local converter is available at all.  */
+  if (!is_utf8)
+    {
+#if HAVE_ICONV
+      if (utf8_to_local == (iconv_t)(-1))
+	return failure (code, N_("iconv function not usable"), callback_arg);
+#else
+      return failure (code, N_("iconv function not available"), callback_arg);
+#endif
+    }
+
   /* Convert the character to UTF-8.  */
   count = utf8_wctomb ((unsigned char *) inbuf, code);
   if (count < 0)
-    error (1, 0, _("U+%04X: character out of range"), code);
+    return failure (code, N_("character out of range"), callback_arg);
 
-  if (is_utf8)
-    {
-      fwrite (inbuf, 1, count, stream);
-    }
-  else
-    {
 #if HAVE_ICONV
+  if (!is_utf8)
+    {
       char outbuf[25];
       const char *inptr;
       size_t inbytesleft;
@@ -177,8 +192,7 @@ print_unicode_char (FILE *stream, unsigned int code)
 	  || (res > 0 && code != 0 && outptr - outbuf == 1 && *outbuf == '\0')
 # endif
          )
-	error (1, res == (size_t)(-1) ? errno : 0,
-	       _("cannot convert U+%04X to local character set"), code);
+	return failure (code, NULL, callback_arg);
 
       /* Avoid glibc-2.1 bug and Solaris 2.7 bug.  */
 # if defined _LIBICONV_VERSION \
@@ -187,14 +201,63 @@ print_unicode_char (FILE *stream, unsigned int code)
       /* Get back to the initial shift state.  */
       res = iconv (utf8_to_local, NULL, NULL, &outptr, &outbytesleft);
       if (res == (size_t)(-1))
-	error (1, errno, _("cannot convert U+%04X to local character set"),
-	       code);
+	return failure (code, NULL, callback_arg);
 # endif
 
-      fwrite (outbuf, 1, outptr - outbuf, stream);
-#else
-      error (1, 0, _("cannot output U+%04X: iconv function not available"),
-	     code);
-#endif
+      return success (outbuf, outptr - outbuf, callback_arg);
     }
+#endif
+
+  /* At this point, is_utf8 is true, so no conversion is needed.  */
+  return success (inbuf, count, callback_arg);
+}
+
+/* Simple success callback that outputs the converted string.
+   The STREAM is passed as callback_arg.  */
+long
+fwrite_success_callback (const char *buf, size_t buflen, void *callback_arg)
+{
+  FILE *stream = (FILE *) callback_arg;
+
+  fwrite (buf, 1, buflen, stream);
+  return 0;
+}
+
+/* Simple failure callback that displays an error and exits.  */
+static long
+exit_failure_callback (unsigned int code, const char *msg, void *callback_arg)
+{
+  if (msg == NULL)
+    error (1, 0, _("cannot convert U+%04X to local character set"), code);
+  else
+    error (1, 0, _("cannot convert U+%04X to local character set: %s"), code,
+	   gettext (msg));
+  return -1;
+}
+
+/* Simple failure callback that displays a fallback representation in plain
+   ASCII, using the same notation as ISO C99 strings.  */
+static long
+fallback_failure_callback (unsigned int code, const char *msg, void *callback_arg)
+{
+  FILE *stream = (FILE *) callback_arg;
+
+  if (code < 0x10000)
+    fprintf (stream, "\\u%04X", code);
+  else
+    fprintf (stream, "\\U%08X", code);
+  return -1;
+}
+
+/* Outputs the Unicode character CODE to the output stream STREAM.
+   Upon failure, exit if exit_on_error is true, otherwise output a fallback
+   notation.  */
+void
+print_unicode_char (FILE *stream, unsigned int code, int exit_on_error)
+{
+  unicode_to_mb (code, fwrite_success_callback,
+		 exit_on_error
+		 ? exit_failure_callback
+		 : fallback_failure_callback,
+		 stream);
 }
