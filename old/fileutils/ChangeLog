@@ -1,3 +1,16 @@
+1997-12-29  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/rm.c (remove_cwd_entries): Plug a gross leak -- don't call
+	obstack_init inside the loop.
+
+	* src/du.c (usage): Replace TABs with spaces in --help message.
+	From Santiago Vila.
+
+	* lib/argmatch.c (invalid_arg): Use a single fprintf and whole
+	format statements to ease translation.
+	From Santiago Vila.
+	Convert from K&R to ANSI function dcls.
+
 1997-12-28  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/group-member.c: Use ANSI syntax, not K&R.
