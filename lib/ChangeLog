@@ -1,5 +1,8 @@
 2003-02-21  Jim Meyering  <jim@meyering.net>
 
+	Merge in some changes from GNU libc.
+	* md5.h (md5_uintptr): Define.
+
 	* ftw.c: Include <sys/types.h> before <dirent.h>.
 	This is required for Apple Darwin 6.3 (MacOS 10.2.3).
 	Patch by Nelson Beebe.
