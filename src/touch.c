@@ -1,5 +1,5 @@
 /* touch -- change modification and access times of files
-   Copyright (C) 87, 89, 90, 91, 95, 96, 97, 1998 Free Software Foundation, Inc.
+   Copyright (C) 87, 1989-1991, 1995-1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -285,8 +285,12 @@ main (int argc, char **argv)
 	  break;
 
 	case CHAR_MAX + 1:	/* --time */
-	  change_times |= XARGCASEMATCH ("--time", optarg, 
-					 time_args, time_masks);
+	  {
+	    int mask;
+	    XARGMATCH (&mask, "--time", optarg, time_args, time_masks,
+		       usage (1));
+	    change_times |= mask;
+	  }
 	  break;
 
 	default:

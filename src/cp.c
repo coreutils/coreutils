@@ -1,5 +1,5 @@
 /* cp.c  -- file copying (main routines)
-   Copyright (C) 89, 90, 91, 95, 96, 97, 1998 Free Software Foundation.
+   Copyright (C) 89, 90, 91, 95, 96, 97, 1998, 1999 Free Software Foundation.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -655,8 +655,8 @@ main (int argc, char **argv)
 	  break;
 
 	case CHAR_MAX + 1:
-	  x.sparse_mode = XARGMATCH ("--sparse", optarg,
-					 sparse_type_string, sparse_type);
+	  XARGMATCH (&x.sparse_mode, "--sparse", optarg,
+		     sparse_type_string, sparse_type, usage (1));
 	  break;
 
 	case 'a':		/* Like -dpR. */

@@ -1,5 +1,5 @@
 /* `dir', `vdir' and `ls' directory listing programs for GNU.
-   Copyright (C) 85, 88, 90, 91, 95, 96, 97, 1998 Free Software Foundation, Inc.
+   Copyright (C) 85, 88, 90, 91, 95, 96, 97, 1998, 1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -77,6 +77,9 @@
 
 #define obstack_chunk_alloc malloc
 #define obstack_chunk_free free
+
+#define MY_XARGMATCH(Result_ptr, Msg, Arg, Arg_list, Val_list) \
+	  XARGMATCH (Result_ptr, Msg, Arg, Arg_list, Val_list, usage (1))
 
 /* Return an int indicating the result of comparing two integers.
    Subtracting doesn't always work, due to overflow.  */
@@ -1099,22 +1102,20 @@ decode_switches (int argc, char **argv)
 	  break;
 
 	case 10:		/* --sort */
-	  sort_type = XARGMATCH ("--sort", optarg, sort_args, sort_types);
+	  MY_XARGMATCH (&sort_type, "--sort", optarg, sort_args, sort_types);
 	  break;
 
 	case 11:		/* --time */
-	  time_type = XARGMATCH ("--time", optarg, time_args, time_types);
+	  MY_XARGMATCH (&time_type, "--time", optarg, time_args, time_types);
 	  break;
 
 	case 12:		/* --format */
-	  format = XARGMATCH ("--format", optarg,
-				  format_args, format_types);
+	  MY_XARGMATCH (&format, "--format", optarg, format_args, format_types);
 	  break;
 
 	case 13:		/* --color */
 	  if (optarg)
-	    i = XARGMATCH ("--color", optarg,
-			       color_args, color_types);
+	    MY_XARGMATCH (&i, "--color", optarg, color_args, color_types);
 	  else
 	    /* Using --color with no argument is equivalent to using
 	       --color=always.  */
@@ -1134,16 +1135,19 @@ decode_switches (int argc, char **argv)
 	  break;
 
 	case 14:		/* --indicator-style */
-	  indicator_style = XARGMATCH ("--indicator-style", optarg,
-					   indicator_style_args,
-					   indicator_style_types);
+	  MY_XARGMATCH (&indicator_style, "--indicator-style", optarg,
+			indicator_style_args,
+			indicator_style_types);
 	  break;
 
 	case 15:		/* --quoting-style */
-	  set_quoting_style (NULL,
-			     XARGMATCH ("--quoting-style", optarg,
-					    quoting_style_args,
-					    quoting_style_vals));
+	  {
+	    enum quoting_style qs;
+	    MY_XARGMATCH (&qs, "--quoting-style", optarg,
+			  quoting_style_args,
+			  quoting_style_vals);
+	    set_quoting_style (NULL, qs);
+	  }
 	  break;
 
 	case 16:
