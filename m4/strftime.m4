@@ -16,7 +16,8 @@ AC_DEFUN(_jm_STRFTIME_PREREQS,
  AC_CHECK_FUNCS(mblen mbrlen)
 
  AC_CHECK_MEMBER(struct tm.tm_gmtoff,
-                 [AC_DEFINE(HAVE_TM_GMTOFF)],
+                 [AC_DEFINE(HAVE_TM_GMTOFF, 1,
+                            [Define if struct tm has the tm_gmtoff member.])],
                  ,
                  dnl FIXME: having to put the closing square bracket on the
                  dnl FIXME: next line is a gross kludge to work around an
