@@ -1,5 +1,10 @@
+2002-01-19  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.6.
+
+	* configure.ac: Remove code that set LIBOBJS in support of ansi2knr.
+	The latest version of autoconf objected to it, and besides, I don't
+	care too much about K&R support these days.
 
 2002-01-14  Paul Eggert  <eggert@twinsun.com>
 
