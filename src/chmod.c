@@ -27,6 +27,7 @@
 #include "closeout.h"
 #include "error.h"
 #include "savedir.h"
+#include "filemode.h"
 
 enum Change_status
 {
@@ -47,7 +48,6 @@ enum Verbosity
   V_off
 };
 
-void mode_string ();
 void strip_trailing_slashes ();
 
 static int change_dir_mode PARAMS ((const char *dir,

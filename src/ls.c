@@ -72,6 +72,7 @@
 #include "xstrtol.h"
 #include "strverscmp.h"
 #include "quotearg.h"
+#include "filemode.h"
 
 #define obstack_chunk_alloc malloc
 #define obstack_chunk_free free
@@ -131,8 +132,6 @@ struct bin_str
 #ifndef STDC_HEADERS
 time_t time ();
 #endif
-
-void mode_string ();
 
 char *getgroup ();
 char *getuser ();
@@ -2183,6 +2182,7 @@ print_long_format (const struct fileinfo *f)
   char *user_name;
 
 #if HAVE_ST_DM_MODE
+  /* Cray DMF: look at the file's migrated, not real, status */
   mode_string (f->stat.st_dm_mode, modebuf);
 #else
   mode_string (f->stat.st_mode, modebuf);
