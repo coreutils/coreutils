@@ -50,7 +50,7 @@
 /* this may need some heading.... applies to Debian linux          */
 /* for reading the structur of _NL_ITEM... to get abreviated month */
 /* names                                                           */
-#include <langinfo.h>
+# include <langinfo.h>
 #endif   /* NLS */
 
 #ifdef HAVE_LIMITS_H
@@ -107,12 +107,12 @@ static int nls_month_found = 1;        /* Look for month notations in text? */
 /* locale character map, otherwise ensure normal behaviour        */
 #ifdef ENABLE_NLS
 
-#define NLS_KEY_LIMIT            30        /* Keys have limited length */
-#define NLS_NUM_MONTHS           12        /* 12 months in a year      */
-#define NLS_MAX_GROUPS            8        /* Maximum number of groups */
+# define NLS_KEY_LIMIT            30        /* Keys have limited length */
+# define NLS_NUM_MONTHS           12        /* 12 months in a year      */
+# define NLS_MAX_GROUPS            8        /* Maximum number of groups */
 
 /* A string with one character, to enforce char collation         */
-#define NLS_ONE_CHARACTER_STRING " "
+# define NLS_ONE_CHARACTER_STRING " "
 
 /* Two buffers, specificly used to get a one-one map of the table */
 /* used under inittables.                                         */
@@ -124,12 +124,12 @@ unsigned char nls_locale_map[UCHAR_LIM];
 
 /* A definition to map each character through the above translation */
 /* table, during sort.                                              */
-#define NLS_MAP(c)  UCHAR(c)
+# define NLS_MAP(c)  UCHAR(c)
 
 #else
 
 /* No NLS the character value itself, represents the sorting order */
-#define NLS_MAP(c)  UCHAR(c)
+# define NLS_MAP(c)  UCHAR(c)
 #endif
 
 /* The kind of blanks for '-b' to skip in various options. */
