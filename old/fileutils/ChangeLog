@@ -1,5 +1,10 @@
 Tue Dec 10 00:14:24 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/install.c [_POSIX_VERSION]: Don't declare wait.  That
+	declaration conflicted with one in a system header file on
+	i386-pc-isc3.0, now that I've removed the AC_ISC_POSIX macro
+	and _POSIX_VERSION is no longer defined.
+
 	* configure.in (AC_ISC_POSIX): Remove kludgy macro.
 	Use this test instead:
 	(LIBS): Add -lcposix if it contains strerror.
