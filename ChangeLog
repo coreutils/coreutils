@@ -1,5 +1,17 @@
 2003-03-08  Jim Meyering  <jim@meyering.net>
 
+	* tests/du/Makefile.am (TESTS): Add hard-link.
+
+	`du -S' didn't work
+	* src/du.c: Revert most of the `reorganization' change of 2003-02-20,
+	and make the two-array approach work.
+
+	* tests/du/basic: Correct/add tests for the above fix.
+	Set LC_ALL, etc, now that we use sort.
+	Check the block/size of a small file, too.
+	Correct expected results for simple dir1/dir2/file case.
+	Add another test of du -S.
+
 	* Version 4.5.10.
 
 2003-03-07  John David Anglin  <dave.anglin@nrc-cnrc.gc.ca>
@@ -20,10 +32,6 @@
 	This reverts the two changes of 2003-02-21.
 	* src/du.c: Remove everything associated with mmap-stack.c.
 	This reverts the change of 2003-02-19.
-
-	* tests/du/basic: Add a test for the above fix.
-	Test the -S option using a hierarchy containing files, too,
-	not just directories.
 
 2003-03-06  Jim Meyering  <jim@meyering.net>
 
