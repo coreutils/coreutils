@@ -1,6 +1,12 @@
-2001-10-11  Jim Meyering  <meyering@lucent.com>
+2001-10-12  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.1.
+
+	* tests/ls/Makefile.am (TESTS): Add infloop.
+	(XFAIL_TESTS): Mark it as a test that we expect to fail (temporarily).
+	* tests/ls/infloop: New file.
+
+2001-10-11  Jim Meyering  <meyering@lucent.com>
 
 	* src/mknod.c (main): Tell what's wrong with `mknod c zero 1 5' rather
 	than saying just `Try `./mknod --help' for more information.'.
