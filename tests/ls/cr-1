@@ -40,10 +40,10 @@ fi
 
 fail=0
 
-set `$LS -c a b c`
+set `$LS -t a b c`
 test "$*" = 'a b c' && : || fail=1
 
-set `$LS -rc a b c`
+set `$LS -rt a b c`
 test "$*" = 'c b a' && : || fail=1
 
 cd ..
