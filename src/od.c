@@ -1359,7 +1359,7 @@ parse_old_offset (const char *s)
     radix = 10;
   else
     {
-      if (strlen (s) >= 2 && s[0] == '0' && s[1] == 'x')
+      if (strlen (s) >= 2 && s[0] == '0' && (s[1] == 'x' || s[1] == 'X'))
 	radix = 16;
       else
 	radix = 8;
@@ -1781,11 +1781,10 @@ main (argc, argv)
 
   n_files = argc - optind;
 
-  /* If the --compatible option was used, there may be from 0 to 3
-     remaining command line arguments:
-       [file] [offset [pseudo_start]]
-     The offset and pseudo_start have the same syntax
-     FIXME: elaborate */
+  /* If the --compatible option is used, there may be from 0 to 3
+     remaining command line arguments;  handle each case separately.
+	od [file] [[+]offset[.][b] [[+]label[.][b]]]
+     The offset and pseudo_start have the same syntax.  */
 
   if (flag_compatibility)
     {
