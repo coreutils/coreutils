@@ -23,6 +23,18 @@ if test $framework_failure = 1; then
   (exit 1); exit 1
 fi
 
+# If this file system doesn't support sparse files,
+# don't try to create a file that'd end up consuming 8GB.
+# This happens on Darwin6.5 with a file system of type `hfs'.
+dd bs=1 seek=64K of=t < /dev/null 2> /dev/null
+set x `du -sk t`
+if test "$2" = 64; then
+  echo "$0: skipping this test, since this file system doesn't support" 1>&2
+  echo "$0: sparse files and this test requires a file with an apparent" 1>&2
+  echo "$0: size of 8GB" 1>&2
+  (exit 77); exit 77
+fi
+
 dd bs=1 seek=8G of=big < /dev/null 2> /dev/null
 if test $? != 0; then
   echo "$0: cannot create a file large enough for this test; possibly" 1>&2
