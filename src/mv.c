@@ -66,6 +66,13 @@
 /* Initial number of entries in the inode hash table.  */
 #define INITIAL_ENTRY_TAB_SIZE 70
 
+/* For long options that have no equivalent short option, use a
+   non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
+enum
+{
+  TARGET_DIRECTORY_OPTION = CHAR_MAX + 1,
+};
+
 int euidaccess ();
 int full_write ();
 int isdir ();
@@ -75,15 +82,13 @@ int yesno ();
 /* The name this program was run with. */
 char *program_name;
 
-/* If nonzero, stdin is a tty. */
-static int stdin_tty;
-
 static struct option const long_options[] =
 {
   {"backup", no_argument, NULL, 'b'},
   {"force", no_argument, NULL, 'f'},
   {"interactive", no_argument, NULL, 'i'},
   {"suffix", required_argument, NULL, 'S'},
+  {"target-directory", required_argument, NULL, TARGET_DIRECTORY_OPTION},
   {"update", no_argument, NULL, 'u'},
   {"verbose", no_argument, NULL, 'v'},
   {"version-control", required_argument, NULL, 'V'},
@@ -277,7 +282,8 @@ strip_trailing_slashes_2 (char *path)
    Return 0 if successful, non-zero if an error occurred.  */
 
 static int
-movefile (char *source, char *dest, int dest_is_dir, const struct cp_options *x)
+movefile (char *source, char *dest, int dest_is_dir,
+	  const struct cp_options *x)
 {
   int dest_had_trailing_slash = strip_trailing_slashes_2 (dest);
   int fail;
@@ -336,6 +342,7 @@ Rename SOURCE to DEST, or move SOURCE(s) to DIRECTORY.\n\
   -f, --force                  remove existing destinations, never prompt\n\
   -i, --interactive            prompt before overwrite\n\
   -S, --suffix=SUFFIX          override the usual backup suffix\n\
+      --target-directory=DIR   move all SOURCE arguments into directory DIR\n\
   -u, --update                 move only older or brand new non-directories\n\
   -v, --verbose                explain what is being done\n\
   -V, --version-control=WORD   override the usual version control\n\
@@ -367,6 +374,10 @@ main (int argc, char **argv)
   int dest_is_dir;
   const char *version;
   struct cp_options x;
+  char *target_directory = NULL;
+  int target_directory_specified;
+  unsigned int n_files;
+  char **file;
 
   program_name = argv[0];
   setlocale (LC_ALL, "");
@@ -401,6 +412,9 @@ main (int argc, char **argv)
 	  x.interactive = 1;
 	  x.force = 0;
 	  break;
+	case TARGET_DIRECTORY_OPTION:
+	  target_directory = optarg;
+	  break;
 	case 'u':
 	  x.update = 1;
 	  break;
@@ -420,28 +434,58 @@ main (int argc, char **argv)
 	}
     }
 
-  if (argc < optind + 2)
+  n_files = argc - optind;
+  file = argv + optind;
+
+  target_directory_specified = (target_directory != NULL);
+  if (!target_directory)
+    target_directory = file[n_files - 1];
+
+  dest_is_dir = isdir (target_directory);
+
+  if (target_directory_specified)
     {
-      error (0, 0, "%s", (argc == optind
-			  ? _("missing file arguments")
-			  : _("missing file argument")));
-      usage (1);
+      if (!dest_is_dir)
+	{
+	  error (0, 0, _("specified target directory, `%s' is not a directory"),
+		 target_directory);
+	  usage (1);
+	}
+
+      if (n_files == 0)
+	{
+	  error (0, 0, "%s", _("missing file argument"));
+	  usage (1);
+	}
+    }
+  else
+    {
+      if (n_files < 2)
+	{
+	  error (0, 0, "%s", (n_files == 0
+			      ? _("missing file arguments")
+			      : _("missing file argument")));
+	  usage (1);
+	}
+
+      if (n_files > 2 && !dest_is_dir)
+	error (1, 0,
+	   _("when moving multiple files, last argument must be a directory"));
     }
 
   x.backup_type = (make_backups
 		   ? xget_version (_("--version-control"), version)
 		   : none);
 
-  stdin_tty = isatty (STDIN_FILENO);
-  dest_is_dir = isdir (argv[argc - 1]);
-
-  if (argc > optind + 2 && !dest_is_dir)
-    error (1, 0,
-	   _("when moving multiple files, last argument must be a directory"));
-
-  /* Move each arg but the last onto the last. */
-  for (; optind < argc - 1; ++optind)
-    errors |= movefile (argv[optind], argv[argc - 1], dest_is_dir, &x);
+  /* Move each arg but the last into the target_directory.  */
+  {
+    unsigned int last_file_idx = (target_directory_specified
+				  ? n_files - 1
+				  : n_files - 2);
+    unsigned int i;
+    for (i = 0; i <= last_file_idx; ++i)
+      errors |= movefile (file[i], target_directory, dest_is_dir, &x);
+  }
 
   if (x.verbose)
     close_stdout ();
