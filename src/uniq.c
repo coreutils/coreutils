@@ -28,10 +28,9 @@
 #include "system.h"
 #include "linebuffer.h"
 #include "version.h"
+#include "error.h"
 
 #define min(x, y) ((x) < (y) ? (x) : (y))
-
-void error ();
 
 static char *find_field ();
 static int different ();

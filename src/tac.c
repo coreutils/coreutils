@@ -44,6 +44,7 @@ tac -r -s '.\|
 #include <regex.h>
 #include "system.h"
 #include "version.h"
+#include "error.h"
 
 #ifndef STDC_HEADERS
 char *malloc ();
@@ -68,7 +69,6 @@ static void output ();
 static void save_stdin ();
 static void xwrite ();
 
-void error ();
 int full_write ();
 int safe_read ();
 

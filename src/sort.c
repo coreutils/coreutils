@@ -31,6 +31,7 @@
 #include "version.h"
 #include "long-options.h"
 #include "safe-stat.h"
+#include "error.h"
 
 #ifdef _POSIX_VERSION
 #include <limits.h>
@@ -45,7 +46,6 @@ char *realloc ();
 void free ();
 #endif
 
-void error ();
 static void usage ();
 
 #define min(a, b) ((a) < (b) ? (a) : (b))

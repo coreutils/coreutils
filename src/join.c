@@ -28,10 +28,10 @@
 #include "system.h"
 #include "version.h"
 #include "long-options.h"
+#include "error.h"
 
 char *xmalloc ();
 char *xrealloc ();
-void error ();
 static void usage ();
 
 #define min(A, B) ((A) < (B) ? (A) : (B))

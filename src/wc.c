@@ -25,11 +25,11 @@
 #include <sys/types.h>
 #include "system.h"
 #include "version.h"
+#include "error.h"
 
 /* Size of atomic reads. */
 #define BUFFER_SIZE (16 * 1024)
 
-void error ();
 int safe_read ();
 
 static void wc ();

@@ -30,6 +30,7 @@
 
 #include "system.h"
 #include "version.h"
+#include "error.h"
 
 #ifndef ULONG_MAX
 #define ULONG_MAX ((unsigned long) ~(unsigned long) 0)
@@ -196,7 +197,6 @@ struct Spec_list
 
 char *xmalloc ();
 char *stpcpy ();
-void error ();
 int safe_read ();
 
 /* The name by which this program was run.  */

@@ -26,11 +26,11 @@
 #include <getopt.h>
 #include "system.h"
 #include "version.h"
+#include "error.h"
 
 static int bsd_sum_file ();
 static int sysv_sum_file ();
 
-void error ();
 int safe_read ();
 
 /* The name this program was run with. */

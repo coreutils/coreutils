@@ -40,6 +40,7 @@
 #include <sys/types.h>
 #include "system.h"
 #include "version.h"
+#include "error.h"
 
 /* Number of lines/chars/blocks to head. */
 #define DEFAULT_NUMBER 10
@@ -60,7 +61,6 @@ enum header_mode
   multiple_files, always, never
 };
 
-void error ();
 int safe_read ();
 
 static int head ();

@@ -45,8 +45,8 @@
 #include <sys/types.h>
 #include "system.h"
 #include "version.h"
+#include "error.h"
 
-void error ();
 char *xmalloc ();
 char *xrealloc ();
 

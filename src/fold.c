@@ -27,10 +27,10 @@
 #include <sys/types.h>
 #include "system.h"
 #include "version.h"
+#include "error.h"
 
 char *xrealloc ();
 char *xmalloc ();
-void error ();
 
 /* The name this program was run with. */
 char *program_name;

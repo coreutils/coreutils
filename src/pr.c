@@ -102,10 +102,10 @@
 #include <time.h>
 #include "system.h"
 #include "version.h"
+#include "error.h"
 
 char *xmalloc ();
 char *xrealloc ();
-void error ();
 
 static int char_to_clump ();
 static int read_line ();

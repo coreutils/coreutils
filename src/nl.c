@@ -27,6 +27,7 @@
 #include "linebuffer.h"
 #include "system.h"
 #include "version.h"
+#include "error.h"
 
 #ifndef TRUE
 #define TRUE   1
@@ -53,7 +54,6 @@ enum section
 
 char *xmalloc ();
 char *xrealloc ();
-void error ();
 
 static enum section check_section ();
 static int build_type_arg ();
