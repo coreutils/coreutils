@@ -68,21 +68,31 @@
    an integer.  */
 #define TYPE_IS_INTEGER(t) ((t) 1.5 == 1)
 
-/* True if negative values of the integer type T use twos complement
-   representation.  */
-#define TYPE_TWOS_COMPLEMENT(t) ((t) - (t) 1 == (t) ((t) ~ (t) 1 + (t) 1))
+/* True if negative values of the signed integer type T use twos
+   complement, ones complement, or signed magnitude representation,
+   respectively.  Much GNU code assumes twos complement, but some
+   people like to be portable to all possible C hosts.  */
+#define TYPE_TWOS_COMPLEMENT(t) ((t) ~ (t) 0 == (t) -1)
+#define TYPE_ONES_COMPLEMENT(t) ((t) ~ (t) 0 == 0)
+#define TYPE_SIGNED_MAGNITUDE(t) ((t) ~ (t) 0 < (t) -1)
 
 /* True if the arithmetic type T is signed.  */
 #define TYPE_SIGNED(t) (! ((t) 0 < (t) -1))
 
 /* The maximum and minimum values for the integer type T.  These
-   macros have undefined behavior if T is signed and has padding bits
-   (i.e., bits that do not contribute to the value), or if T uses
-   signed-magnitude representation.  If this is a problem for you,
-   please let us know how to fix it for your host.  */
-#define TYPE_MINIMUM(t) ((t) (TYPE_SIGNED (t) \
-			      ? ~ (t) 0 << (sizeof (t) * CHAR_BIT - 1) : (t) 0))
-#define TYPE_MAXIMUM(t) ((t) (~ (t) 0 - TYPE_MINIMUM (t)))
+   macros have undefined behavior if T is signed and has padding bits.
+   If this is a problem for you, please let us know how to fix it for
+   your host.  */
+#define TYPE_MINIMUM(t) \
+  ((t) (! TYPE_SIGNED (t) \
+	? (t) 0 \
+	: TYPE_SIGNED_MAGNITUDE (t) \
+	? ~ (t) 0 \
+	: ~ (t) 0 << (sizeof (t) * CHAR_BIT - 1)))
+#define TYPE_MAXIMUM(t) \
+  ((t) (! TYPE_SIGNED (t) \
+	? (t) -1 \
+	: ~ (~ (t) 0 << (sizeof (t) * CHAR_BIT - 1))))
 
 #ifndef TIME_T_MIN
 # define TIME_T_MIN TYPE_MINIMUM (time_t)

@@ -1,3 +1,10 @@
+2005-03-14  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* mktime.c (TYPE_TWOS_COMPLEMENT, TYPE_ONES_COMPLEMENT,
+	TYPE_SIGNED_MAGNITUDE, TYPE_MINIMUM, TYPE_MAXIMUM): Sync from
+	intprops.h.
+	* strtol.c: Likewise.
+
 2005-03-14  Jim Meyering  <jim@meyering.net>
 
 	* strftime.c (my_strftime) [HAVE_STRFTIME && ! (_NL_CURRENT
