@@ -1,5 +1,17 @@
 2004-07-30  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* src/sort.c (UCHAR): Remove; all uses changed to to_uchar.
+	(IS_THOUSANDS_SEP): Use bool when appropriate.
+	(numcompare, main): Use char, not int, when the value is always a char.
+	(numcompare): Remove "register"; compilers are smart enough these days.
+	* src/system.h (errno, CHAR_BIT): Remove decls;
+	no longer needed now we assume C89 or better.
+	Include <inttypes.h> before <stdint.h>, as it's the Autoconf-recommended pattern.
+	(to_uchar): New inline function, moved here from tr.c.
+	Use full names for int types, e.g. "long int" rather than "long".
+	* src/tr.c (to_uchar): Remove; now in system.h.
+	(is_char_class_member): Use bool when appropriate.
+
 	* src/mkdir.c (create_parents, main): Use bool when appropriate.
 	(main): Use EXIT_SUCCESS/EXIT_FAILURE instead of 0/1.
 
