@@ -1,5 +1,6 @@
 Changes in release 2.1
 [2.0.17]
+* tail no longer gets a segfault on Linux's /proc/ksyms.
 * sum -s produces the proper 16-bit checksum for large files
     (this fixes a bug that was introduced in 2.0f)
 [2.0.16]
