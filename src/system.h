@@ -25,7 +25,7 @@ you must include <sys/types.h> before including this file
 
 #include <sys/stat.h>
 
-#if !defined(HAVE_MKFIFO)
+#if !defined HAVE_MKFIFO
 # define mkfifo(path, mode) (mknod ((path), (mode) | S_IFIFO, 0))
 #endif
 
@@ -152,7 +152,7 @@ typedef enum {false = 0, true = 1} bool;
 # include <sys/file.h>
 #endif
 
-#if !defined (SEEK_SET)
+#if !defined SEEK_SET
 # define SEEK_SET 0
 # define SEEK_CUR 1
 # define SEEK_END 2
@@ -244,7 +244,7 @@ typedef enum {false = 0, true = 1} bool;
    ST_NBLOCKSIZE: Size of blocks used when calculating ST_NBLOCKS.  */
 #ifndef HAVE_STRUCT_STAT_ST_BLOCKS
 # define ST_BLKSIZE(statbuf) DEV_BSIZE
-# if defined(_POSIX_SOURCE) || !defined(BSIZE) /* fileblocks.c uses BSIZE.  */
+# if defined _POSIX_SOURCE || !defined BSIZE /* fileblocks.c uses BSIZE.  */
 #  define ST_NBLOCKS(statbuf) \
   (S_ISREG ((statbuf).st_mode) \
    || S_ISDIR ((statbuf).st_mode) \
@@ -259,16 +259,16 @@ typedef enum {false = 0, true = 1} bool;
 /* Some systems, like Sequents, return st_blksize of 0 on pipes. */
 # define ST_BLKSIZE(statbuf) ((statbuf).st_blksize > 0 \
 			       ? (statbuf).st_blksize : DEV_BSIZE)
-# if defined(hpux) || defined(__hpux__) || defined(__hpux)
+# if defined hpux || defined __hpux__ || defined __hpux
 /* HP-UX counts st_blocks in 1024-byte units.
    This loses when mixing HP-UX and BSD filesystems with NFS.  */
 #  define ST_NBLOCKSIZE 1024
 # else /* !hpux */
-#  if defined(_AIX) && defined(_I386)
+#  if defined _AIX && defined _I386
 /* AIX PS/2 counts st_blocks in 4K units.  */
 #   define ST_NBLOCKSIZE (4 * 1024)
 #  else /* not AIX PS/2 */
-#   if defined(_CRAY)
+#   if defined _CRAY
 #    define ST_NBLOCKS(statbuf) \
   (S_ISREG ((statbuf).st_mode) \
    || S_ISDIR ((statbuf).st_mode) \
