@@ -1,4 +1,6 @@
 [4.5.2]
+* `tail -c N' now works with N >= 4GB on files of size >= 4GB
+* `mkdir -p' can now create very deep (e.g. 40,000-component) directories
 * rmdir -p dir-with-trailing-slash/ no longer fails
 * printf now honors the `--' command line delimiter
 * od's 8-byte formats x8, o8, and u8 now work
