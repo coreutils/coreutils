@@ -1,4 +1,6 @@
 Changes in release 1.13
+ [1.12s]
+* lots of little bug fixes -- see ChangeLog
  [1.12r]
 * uname --processor (-p) works on systems that have sysinfo and define
   SI_ARCHITECTURE.
