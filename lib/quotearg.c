@@ -66,13 +66,7 @@
 # include <wchar.h>
 #endif
 
-#if HAVE_MBRTOWC
-size_t mbrtowc ();
-# ifdef mbstate_t
-#  define mbrtowc(pwc, s, n, ps) (mbrtowc) (pwc, s, n, 0)
-#  define mbsinit(ps) 1
-# endif
-#else
+#if !HAVE_MBRTOWC
 /* Disable multibyte processing entirely.  Since MB_CUR_MAX is 1, the
    other macros are defined only for documentation and to satisfy C
    syntax.  */
