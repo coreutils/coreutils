@@ -337,3 +337,5 @@ char *alloca ();
 # define textdomain(Domain) /* empty */
 # define _(Text) Text
 #endif
+
+#define STREQ(a,b) (strcmp((a), (b)) == 0)
