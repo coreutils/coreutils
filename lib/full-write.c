@@ -20,6 +20,11 @@
 # include <config.h>
 #endif
 
+#include <errno.h>
+#ifndef errno
+extern int errno;
+#endif
+
 #ifdef FULL_READ
 # include "full-read.h"
 # include "safe-read.h"
@@ -32,11 +37,6 @@
 # include "safe-write.h"
 # define safe_rw safe_write
 # define full_rw full_write
-#endif
-
-#include <errno.h>
-#ifndef errno
-extern int errno;
 #endif
 
 #ifdef FULL_READ
