@@ -1,3 +1,12 @@
+2000-11-17  Jim Meyering  <meyering@lucent.com>
+
+	* Makefile.am (.NOTPARALLEL): New target.  To prevent unwanted
+	parallelism.  Suggestion from Ulrich Drepper.
+	* po/Makefile.in.in (Makefile): Likewise.
+
+	* Makefile.maint (sha1): Define.
+	(announcement): Include SHA1 digest of .tar.gz file.
+
 2000-11-14  Jim Meyering  <meyering@lucent.com>
 
 	* tests/mkdir/perm: Add an `echo' so that the input to the sed command
