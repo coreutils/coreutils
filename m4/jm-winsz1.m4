@@ -1,5 +1,5 @@
-dnl From Jim Meyering.
-#serial 4
+#serial 5
+dnl From Jim Meyering and Paul Eggert.
 AC_DEFUN([jm_HEADER_TIOCGWINSZ_IN_TERMIOS_H],
 [AC_REQUIRE([AM_SYS_POSIX_TERMIOS])
  AC_CACHE_CHECK([whether use of TIOCGWINSZ requires termios.h],
@@ -19,8 +19,21 @@ AC_DEFUN([jm_HEADER_TIOCGWINSZ_IN_TERMIOS_H],
 ])
 
 AC_DEFUN([jm_WINSIZE_IN_PTEM],
-  [AC_CHECK_HEADER([sys/ptem.h],
-		   AC_DEFINE(WINSIZE_IN_PTEM, 1,
-      [Define if your system defines `struct winsize' in sys/ptem.h.]))
-  ]
-)
+  [AC_REQUIRE([AM_SYS_POSIX_TERMIOS])
+   AC_CACHE_CHECK([whether use of struct winsize requires sys/ptem.h],
+     jm_cv_sys_struct_winsize_needs_sys_ptem_h,
+     [jm_cv_sys_struct_winsize_needs_sys_ptem_h=yes
+      if test $am_cv_sys_posix_termios = yes; then
+	AC_TRY_COMPILE([#include <termios.h>]
+	  [struct winsize x;],
+          [jm_cv_sys_struct_winsize_needs_sys_ptem_h=no])
+      fi
+      if test $jm_cv_sys_struct_winsize_needs_sys_ptem_h = yes; then
+	AC_TRY_COMPILE([#include <sys/ptem.h>],
+	  [struct winsize x;],
+	  [], [jm_cv_sys_struct_winsize_needs_sys_ptem_h=no])
+      fi])
+   if test $jm_cv_sys_struct_winsize_needs_sys_ptem_h = yes; then
+     AC_DEFINE([WINSIZE_IN_PTEM], 1,
+       [Define if sys/ptem.h is required for struct winsize.])
+   fi])
