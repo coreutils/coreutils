@@ -9,6 +9,10 @@ fi
 
 . $srcdir/../lang-default
 
+# Unset CDPATH.  Otherwise, output from the `cd dir' command
+# can make this test fail.
+(unset CDPATH) >/dev/null 2>&1 && unset CDPATH
+
 VERSION_CONTROL=numbered; export VERSION_CONTROL
 
 pwd=`pwd`
