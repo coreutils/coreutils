@@ -690,7 +690,7 @@ main (argc, argv)
 	  break;
 
 	case 1:		/* Non-option argument. */
-	  if (prev_optc == 'o')
+	  if (prev_optc == 'o' && optind <= argc - 2)
 	    {
 	      /* Might be continuation of args to -o. */
 	      if (add_field_list (optarg) > 0)
@@ -698,7 +698,10 @@ main (argc, argv)
 	    }
 
 	  if (nfiles > 1)
-	    usage (1);
+	    {
+	      error (0, 0, "too many non-option arguments");
+	      usage (1);
+	    }
 	  names[nfiles++] = optarg;
 	  break;
 
@@ -713,7 +716,10 @@ main (argc, argv)
   make_blank (&uni_blank, uni_blank.nfields);
 
   if (nfiles != 2)
-    usage (1);
+    {
+      error (0, 0, "too few non-option arguments");
+      usage (1);
+    }
 
   fp1 = strcmp (names[0], "-") ? fopen (names[0], "r") : stdin;
   if (!fp1)
@@ -753,20 +759,23 @@ by whitespace.  When FILE1 or FILE2 (not both) is -, read standard input.\n\
 \n\
   -a SIDE          print unpairable lines coming from file SIDE\n\
   -e EMPTY         replace missing input fields with EMPTY\n\
-  -j FIELD         join on this FIELD for both files\n\
-  -[j]SIDE FIELD   join on this FIELD for file SIDE\n\
+  -j FIELD         (Obsolescent) equivalent to `-1 FIELD -2 FIELD'\n\
+  -j1 FIELD        (Obsolescent) equivalent to `-1 FIELD'\n\
+  -j2 FIELD        (Obsolescent) equivalent to `-2 FIELD'\n\
+  -1 FIELD         join on this FIELD of file 1\n\
+  -2 FIELD         join on this FIELD of file 2\n\
   -o FORMAT        obey FORMAT while constructing output line\n\
   -t CHAR          use CHAR as input and output field separator\n\
   -v SIDE          like -a SIDE, but suppress joined output lines\n\
   --help           display this help and exit\n\
   --version        output version information and exit\n\
 \n\
-SIDE is 1 for FILE1 or 2 for FILE2.  Unless -t CHAR is given, leading blanks\n\
-separate fields and are ignored, else fields are separated by CHAR.\n\
-Any FIELD is a field number counted from 1.  FORMAT is one or more\n\
-comma or blank separated specifications, each being `SIDE.FIELD'.\n\
-Default FORMAT outputs the join field, the remaining fields from\n\
-FILE1, the remaining fields from FILE2, all separated by CHAR.\n\
+Unless -t CHAR is given, leading blanks separate fields and are ignored,\n\
+else fields are separated by CHAR.  Any FIELD is a field number counted\n\
+from 1.  FORMAT is one or more comma or blank separated specifications,\n\
+each being `SIDE.FIELD' or `0'.  Default FORMAT outputs the join field,\n\
+the remaining fields from FILE1, the remaining fields from FILE2, all\n\
+separated by CHAR.\n\
 "));
     }
   exit (status);
