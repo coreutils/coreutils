@@ -77,19 +77,6 @@
 #include "quotearg.h"
 #include "xreadlink.h"
 
-#ifdef FLASK_LINUX
-# include <selinux/fs_secure.h>
-# include <linux/flask/security.h>
-# include <selinux/flask_util.h>	/* for is_flask_enabled() */
-# define SECURITY_ID_T security_id_t
-#else
-# define SECURITY_ID_T int
-# define is_flask_enabled() 0
-# define stat_secure(a,b,c) stat(a,b)
-# define lstat_secure(a,b,c) lstat(a,b)
-# define statfs_secure(a,b,c) statfs(a,b)
-#endif
-
 #define NAMEMAX_FORMAT PRIuMAX
 
 #if HAVE_STRUCT_STATVFS_F_BASETYPE
@@ -125,7 +112,6 @@ static struct option const long_options[] = {
   {"dereference", no_argument, 0, 'L'},
   {"format", required_argument, 0, 'c'},
   {"filesystem", no_argument, 0, 'f'},
-  {"secure", no_argument, 0, 's'},
   {"terse", no_argument, 0, 't'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
@@ -401,14 +387,9 @@ print_human_time (time_t const *t)
 /* print statfs info */
 static void
 print_statfs (char *pformat, char m, char const *filename,
-	      void const *data, SECURITY_ID_T sid)
+	      void const *data)
 {
   STRUCT_STATVFS const *statfsbuf = data;
-#ifdef FLASK_LINUX
-  char sbuf[256];
-  int rv;
-  unsigned int sbuflen = sizeof (sbuf);
-#endif
 
   switch (m)
     {
@@ -469,27 +450,6 @@ print_statfs (char *pformat, char m, char const *filename,
       printf (pformat, (intmax_t) (statfsbuf->f_ffree));
       break;
 
-    case 'S':
-#ifdef FLASK_LINUX
-      strcat (pformat, "d");
-      printf (pformat, sid);
-#else
-      fputc ('*', stdout);
-#endif
-      break;
-
-    case 'C':
-#ifdef FLASK_LINUX
-      rv = security_sid_to_context (sid, (security_context_t *) &sbuf,
-				    &sbuflen);
-      if (rv < 0)
-	sprintf (sbuf, "<error finding security context %d>", sid);
-      fputs (sbuf, stdout);
-#else
-      fputc ('*', stdout);
-#endif
-      break;
-
     default:
       strcat (pformat, "c");
       printf (pformat, m);
@@ -499,19 +459,13 @@ print_statfs (char *pformat, char m, char const *filename,
 
 /* print stat info */
 static void
-print_stat (char *pformat, char m, char const *filename,
-	    void const *data, SECURITY_ID_T sid)
+print_stat (char *pformat, char m, char const *filename, void const *data)
 {
   char linkname[256];
   int i;
   struct stat *statbuf = (struct stat *) data;
   struct passwd *pw_ent;
   struct group *gw_ent;
-#ifdef FLASK_LINUX
-  char sbuf[256];
-  int rv;
-  unsigned int sbuflen = sizeof (sbuf);
-#endif
 
   switch (m)
     {
@@ -573,27 +527,6 @@ print_stat (char *pformat, char m, char const *filename,
       strcat (pformat, "d");
       printf (pformat, (int) statbuf->st_nlink);
       break;
-    case 'S':
-#ifdef FLASK_LINUX
-      strcat (pformat, "d");
-      printf (pformat, sid);
-#else
-      fputc ('*', stdout);
-#endif
-      break;
-
-    case 'C':
-#ifdef FLASK_LINUX
-      rv = security_sid_to_context (sid, (security_context_t *) &sbuf,
-				    &sbuflen);
-      if (rv < 0)
-	sprintf (sbuf, "<error finding security context %d>", sid);
-      fputs (sbuf, stdout);
-#else
-      fputc ('*', stdout);
-#endif
-      break;
-
     case 'u':
       strcat (pformat, "d");
       printf (pformat, statbuf->st_uid);
@@ -664,9 +597,8 @@ print_stat (char *pformat, char m, char const *filename,
 
 static void
 print_it (char const *masterformat, char const *filename,
-	  void (*print_func) (char *, char, char const *,
-			      void const *, SECURITY_ID_T),
-	  void const *data, SECURITY_ID_T sid)
+	  void (*print_func) (char *, char, char const *, void const *),
+	  void const *data)
 {
   char *m, *b, *format;
   char pformat[65];
@@ -711,7 +643,7 @@ print_it (char const *masterformat, char const *filename,
 	      fputs ("%", stdout);
 	      break;
 	    default:
-	      print_func (pformat, *m, filename, data, sid);
+	      print_func (pformat, *m, filename, data);
 	      break;
 	    }
 	  b = m + 1;
@@ -728,16 +660,10 @@ print_it (char const *masterformat, char const *filename,
 
 /* stat the filesystem and print what we find */
 static void
-do_statfs (char const *filename, int terse, int secure, char const *format)
+do_statfs (char const *filename, int terse, char const *format)
 {
   STRUCT_STATVFS statfsbuf;
-  SECURITY_ID_T sid = -1;
-  int i;
-
-  if (secure)
-    i = statfs_secure (filename, &statfsbuf, &sid);
-  else
-    i = statfs (filename, &statfsbuf);
+  int i = statfs (filename, &statfsbuf);
 
   if (i == -1)
     {
@@ -756,39 +682,26 @@ do_statfs (char const *filename, int terse, int secure, char const *format)
   "Blocks: Total: %-10b Free: %-10f Available: %-10a Size: %s\n"	\
   "Inodes: Total: %-10c Free: %-10d"
 
-	  if (secure)
-	    format = DEFAULT_FORMAT_TERSE " %S %C";
-	  else
-	    format = DEFAULT_FORMAT_TERSE;
+	  format = DEFAULT_FORMAT_TERSE;
 	}
       else
 	{
-	  if (secure)
-	    format = DEFAULT_FORMAT_VERBOSE "   SID: %-14S  S_Context: %C\n";
-	  else
-	    format = DEFAULT_FORMAT_VERBOSE;
+	  format = DEFAULT_FORMAT_VERBOSE;
 	}
     }
 
-  print_it (format, filename, print_statfs, &statfsbuf, sid);
+  print_it (format, filename, print_statfs, &statfsbuf);
 }
 
 /* stat the file and print what we find */
 static void
-do_stat (char const *filename, int follow_links, int terse, int secure,
+do_stat (char const *filename, int follow_links, int terse,
 	 char const *format)
 {
   struct stat statbuf;
-  int i;
-  SECURITY_ID_T sid = -1;
-
-  if (secure)
-    i = ((follow_links == 1)
-	 ? stat_secure (filename, &statbuf, &sid)
-	 : lstat_secure (filename, &statbuf, &sid));
-  else
-    i = ((follow_links == 1)
-	 ? stat (filename, &statbuf) : lstat (filename, &statbuf));
+  int i = ((follow_links == 1)
+	   ? stat (filename, &statbuf)
+	   : lstat (filename, &statbuf));
 
   if (i == -1)
     {
@@ -800,10 +713,7 @@ do_stat (char const *filename, int follow_links, int terse, int secure,
     {
       if (terse != 0)
 	{
-	  if (secure)
-	    format = "%n %s %b %f %u %g %D %i %h %t %T %X %Y %Z %o %S %C";
-	  else
-	    format = "%n %s %b %f %u %g %D %i %h %t %T %X %Y %Z %o";
+	  format = "%n %s %b %f %u %g %D %i %h %t %T %X %Y %Z %o";
 	}
       else
 	{
@@ -811,45 +721,26 @@ do_stat (char const *filename, int follow_links, int terse, int secure,
 	  i = statbuf.st_mode & S_IFMT;
 	  if (i == S_IFCHR || i == S_IFBLK)
 	    {
-	      if (secure)
-		format =
-		  "  File: %N\n"
-		  "  Size: %-10s\tBlocks: %-10b IO Block: %-6o %F\n"
-		  "Device: %Dh/%dd\tInode: %-10i  Links: %-5h"
-		  " Device type: %t,%T\n"
-		  "Access: (%04a/%10.10A)  Uid: (%5u/%8U)   Gid: (%5g/%8G)\n"
-		  "   SID: %-14S  S_Context: %C\n"
-		  "Access: %x\n" "Modify: %y\n" "Change: %z\n";
-	      else
-		format =
-		  "  File: %N\n"
-		  "  Size: %-10s\tBlocks: %-10b IO Block: %-6o %F\n"
-		  "Device: %Dh/%dd\tInode: %-10i  Links: %-5h"
-		  " Device type: %t,%T\n"
-		  "Access: (%04a/%10.10A)  Uid: (%5u/%8U)   Gid: (%5g/%8G)\n"
-		  "Access: %x\n" "Modify: %y\n" "Change: %z\n";
+	      format =
+		"  File: %N\n"
+		"  Size: %-10s\tBlocks: %-10b IO Block: %-6o %F\n"
+		"Device: %Dh/%dd\tInode: %-10i  Links: %-5h"
+		" Device type: %t,%T\n"
+		"Access: (%04a/%10.10A)  Uid: (%5u/%8U)   Gid: (%5g/%8G)\n"
+		"Access: %x\n" "Modify: %y\n" "Change: %z\n";
 	    }
 	  else
 	    {
-	      if (secure)
-		format =
-		  "  File: %N\n"
-		  "  Size: %-10s\tBlocks: %-10b IO Block: %-6o %F\n"
-		  "Device: %Dh/%dd\tInode: %-10i  Links: %-5h\n"
-		  "Access: (%04a/%10.10A)  Uid: (%5u/%8U)   Gid: (%5g/%8G)\n"
-		  "   SID: %-14S  S_Context: %C\n"
-		  "Access: %x\n" "Modify: %y\n" "Change: %z\n";
-	      else
-		format =
-		  "  File: %N\n"
-		  "  Size: %-10s\tBlocks: %-10b IO Block: %-6o %F\n"
-		  "Device: %Dh/%dd\tInode: %-10i  Links: %-5h\n"
-		  "Access: (%04a/%10.10A)  Uid: (%5u/%8U)   Gid: (%5g/%8G)\n"
-		  "Access: %x\n" "Modify: %y\n" "Change: %z\n";
+	      format =
+		"  File: %N\n"
+		"  Size: %-10s\tBlocks: %-10b IO Block: %-6o %F\n"
+		"Device: %Dh/%dd\tInode: %-10i  Links: %-5h\n"
+		"Access: (%04a/%10.10A)  Uid: (%5u/%8U)   Gid: (%5g/%8G)\n"
+		"Access: %x\n" "Modify: %y\n" "Change: %z\n";
 	    }
 	}
     }
-  print_it (format, filename, print_stat, &statbuf, sid);
+  print_it (format, filename, print_stat, &statbuf);
 }
 
 void
@@ -867,7 +758,6 @@ Display file or filesystem status.\n\
   -f, --filesystem      display filesystem status instead of file status\n\
   -c  --format=FORMAT   use the specified FORMAT instead of the default\n\
   -l, --dereference     follow links\n\
-  -s, --secure          display any security context (SE Linux)\n\
   -t, --terse           print the information in terse form\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
@@ -879,7 +769,6 @@ The valid format sequences for files (without --filesystem):\n\
   %A - Access rights in human readable form\n\
   %a - Access rights in octal\n\
   %b - Number of blocks allocated\n\
-  %C - Security context in SE-Linux\n\
 "), stdout);
       fputs (_("\
   %D - Device number in hex\n\
@@ -895,7 +784,6 @@ The valid format sequences for files (without --filesystem):\n\
   %N - Quoted File name with dereference if symbolic link\n\
   %n - File name\n\
   %o - IO block size\n\
-  %S - Security ID in SE-Linux\n\
   %s - Total size, in bytes\n\
   %T - Minor device type in hex\n\
   %t - Major device type in hex\n\
@@ -917,7 +805,6 @@ Valid format sequences for file systems:\n\
 \n\
   %a - Free blocks available to non-superuser\n\
   %b - Total data blocks in file system\n\
-  %C - Security context in SE-Linux\n\
   %c - Total file nodes in file system\n\
   %d - Free file nodes in file system\n\
   %f - Free blocks in file system\n\
@@ -926,7 +813,6 @@ Valid format sequences for file systems:\n\
   %i - File System id in hex\n\
   %l - Maximum length of filenames\n\
   %n - File name\n\
-  %S - Security ID in SE-Linux\n\
   %s - Optimal transfer block size\n\
   %T - Type in human readable form\n\
   %t - Type in hex\n\
@@ -944,7 +830,6 @@ main (int argc, char *argv[])
   int follow_links = 0;
   int fs = 0;
   int terse = 0;
-  int secure = 0;
   char *format = NULL;
 
   program_name = argv[0];
@@ -954,7 +839,7 @@ main (int argc, char *argv[])
 
   atexit (close_stdout);
 
-  while ((c = getopt_long (argc, argv, "c:fLlst", long_options, NULL)) != -1)
+  while ((c = getopt_long (argc, argv, "c:fLlt", long_options, NULL)) != -1)
     {
       switch (c)
 	{
@@ -967,9 +852,6 @@ main (int argc, char *argv[])
 	  break;
 	case 'f':
 	  fs = 1;
-	  break;
-	case 's':
-	  secure = 1;
 	  break;
 	case 't':
 	  terse = 1;
@@ -990,15 +872,12 @@ main (int argc, char *argv[])
       usage (EXIT_FAILURE);
     }
 
-  if (!is_flask_enabled ())
-    secure = 0;
-
   for (i = optind; i < argc; i++)
     {
       if (fs == 0)
-	do_stat (argv[i], follow_links, terse, secure, format);
+	do_stat (argv[i], follow_links, terse, format);
       else
-	do_statfs (argv[i], terse, secure, format);
+	do_statfs (argv[i], terse, format);
     }
 
   exit (EXIT_SUCCESS);
