@@ -27,19 +27,18 @@
 #endif
 
 #include "system.h"
-#include "error.h"
 #include "backupfile.h"
-#include "savedir.h"
 #include "copy.h"
 #include "cp-hash.h"
+#include "dirname.h"
+#include "error.h"
+#include "full-write.h"
 #include "hash.h"
 #include "hash-pjw.h"
-#include "same.h"
-#include "dirname.h"
-#include "full-write.h"
 #include "path-concat.h"
 #include "quote.h"
 #include "same.h"
+#include "savedir.h"
 #include "utimens.h"
 #include "xreadlink.h"
 
