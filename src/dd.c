@@ -46,7 +46,9 @@
 # define SIGINFO SIGUSR1
 #endif
 
-#define ROUND_UP_TO_MODULUS(X, M) (X + M - 1 - ((X + M - 1) % M))
+#define ROUND_UP_OFFSET(X, M) ((M) - 1 - (((X) + (M) - 1) % (M)))
+#define PTR_ALIGN(Ptr, M) ((Ptr) \
+			   + ROUND_UP_OFFSET ((char *)(Ptr) - (char *)0, (M)))
 
 #define max(a, b) ((a) > (b) ? (a) : (b))
 #define output_char(c) \
@@ -864,22 +866,24 @@ dd_copy (void)
      the input buffer;  thus we allocate 2 pages of slop in the
      real buffer.  8k above the blocksize shouldn't bother anyone.  */
 
-
   real_buf = (unsigned char *) xmalloc (input_blocksize
 					+ 2 * SWAB_ALIGN_OFFSET
 					+ 2 * page_size - 1);
   ibuf = real_buf;
   ibuf += SWAB_ALIGN_OFFSET;	/* allow space for swab */
 
-  /* FIXME: Rather than using uintmax_t here (uintmax_t is necessary on systems
-     where (sizeof void* > sizeof unsigned long), write a configure-time test
-     to determine the smallest unsigned integer type that can hold a pointer.  */
-  ibuf = (unsigned char *) ROUND_UP_TO_MODULUS ((uintmax_t) ibuf, page_size);
+  ibuf = PTR_ALIGN (ibuf, page_size);
 
   if (conversions_mask & C_TWOBUFS)
-    obuf = (unsigned char *) xmalloc (output_blocksize);
+    {
+      /* Page-align the output buffer, too.  */
+      obuf = (unsigned char *) xmalloc (output_blocksize + page_size - 1);
+      obuf = PTR_ALIGN (obuf, page_size);
+    }
   else
-    obuf = ibuf;
+    {
+      obuf = ibuf;
+    }
 
   if (skip_records != 0)
     skip (STDIN_FILENO, input_file, skip_records, input_blocksize, ibuf);
