@@ -90,9 +90,7 @@ typedef struct
 } *string, stringstruct;
 
 char *savedir ();
-#ifndef HAVE_FCHDIR
 char *xgetcwd ();
-#endif
 char *xmalloc ();
 char *xrealloc ();
 void error ();
@@ -316,9 +314,8 @@ du_files (files)
 {
 #ifdef HAVE_FCHDIR
   int wd_desc;
-#else
-  char *wd;
 #endif
+  char *wd = NULL;
   ino_t initial_ino;		/* Initial directory's inode. */
   dev_t initial_dev;		/* Initial directory's device. */
   int i;			/* Index in FILES. */
@@ -327,11 +324,21 @@ du_files (files)
   wd_desc = open (".", O_RDONLY);
   if (wd_desc < 0)
     error (1, errno, "cannot open current directory");
-#else
-  wd = xgetcwd ();
-  if (wd == NULL)
-    error (1, errno, "cannot get current directory");
+
+  /* On SunOS, fchdir returns EINVAL if accounting is enabled,
+     so we have to fall back to chdir.  */
+  if (fchdir (wd_desc) && errno == EINVAL)
+    {
+      close (wd_desc);
+      wd_desc = -1;
+    }
+  if (wd_desc == -1)
 #endif
+  {
+    wd = xgetcwd ();
+    if (wd == NULL)
+      error (1, errno, "cannot get current directory");
+  }
 
   /* Remember the inode and device number of the current directory.  */
   if (SAFE_STAT (".", &stat_buf))
@@ -368,14 +375,19 @@ du_files (files)
       /* chdir if `count_entry' has changed the working directory.  */
       if (SAFE_STAT (".", &stat_buf))
 	error (1, errno, ".");
-      if ((stat_buf.st_ino != initial_ino || stat_buf.st_dev != initial_dev)
+      if (stat_buf.st_ino != initial_ino || stat_buf.st_dev != initial_dev)
+	{
 #ifdef HAVE_FCHDIR
-	  && fchdir (wd_desc) < 0)
-	error (1, errno, "cannot return to original directory");
-#else
-	  && chdir (wd) < 0)
-	error (1, errno, "cannot change to directory %s", wd);
+	  if (wd_desc >= 0)
+	    {
+	      if (fchdir (wd_desc) < 0)
+		error (1, errno, "cannot return to starting directory");
+	    }
+	  else
 #endif
+	  if (chdir (wd) < 0)
+	    error (1, errno, "%s", wd);
+	}
     }
 
   if (opt_combined_arguments)
@@ -385,9 +397,8 @@ du_files (files)
       fflush (stdout);
     }
 
-#ifndef HAVE_FCHDIR
-  free (wd);
-#endif
+  if (wd != NULL)
+    free (wd);
 }
 
 /* Print (if appropriate) and return the size
