@@ -2594,7 +2594,7 @@ The types of pattern arguments are:
 @item @var{n}
 Create an output file containing the input up to but not including line
 @var{n} (a positive integer).  If followed by a repeat count, also
-create an output file containing the next @var{line} lines of the input
+create an output file containing the next @var{n} lines of the input
 file once for each repeat.
 
 @item /@var{regexp}/[@var{offset}]
