@@ -1,6 +1,17 @@
-2002-09-06  Jim Meyering  <meyering@lucent.com>
+2002-09-12  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.5.2.
+
+	* src/tail.c: Include xnanosleep.h and xstrtod.h.
+	Move declaration of global variable, sleep_interval, to ...
+	(main): ...here.
+	(usage): Update description of --sleep-interval option.
+	(tail_forever): New parameter, sleep_interval.  Update caller.
+	Use xnanosleep, rather than sleep.
+	(parse_options): New parameter, sleep_interval.  Update caller.
+	Use xstrtod, now that we accept floating point values.
+
+2002-09-06  Jim Meyering  <meyering@lucent.com>
 
 	* src/remove.c (prompt): Change comment to give a better note to
 	translators.  From Michael Piefel.
