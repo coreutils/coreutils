@@ -25,7 +25,7 @@
 
 /* Define-away any (possibly conflicting) prototype of putenv.
    Many systems omit the `const' attribute on the argument.
-   Define-away only if it's not already defined (e.g. to rpl_putenv).  */
+   But don't define-away if it's already defined (e.g. to rpl_putenv).  */
 #ifndef putenv
 # define putenv _sys_putenv
 #endif
@@ -40,9 +40,7 @@
 # include <unistd.h>
 #endif
 
-#ifndef putenv
-# undef putenv
-#endif
+#define _sys_putenv putenv
 
 #if !defined (__GNU_LIBRARY__) && !defined (HAVE_STRCHR)
 # define strchr index
