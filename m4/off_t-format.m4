@@ -10,15 +10,15 @@ AC_DEFUN(jm_SYS_OFF_T_PRINTF_FORMAT,
      for i in '' L ll q; do
        jm_OFF_T_FORMAT="$i"
        export jm_OFF_T_FORMAT
-     AC_TRY_RUN([
-#    include <sys/types.h>
-#    include <stdio.h>
-#    if HAVE_STDLIB_H
-#     include <stdlib.h>
-#    endif
-#    if HAVE_STRING_H
-#     include <string.h>
-#    endif
+       AC_TRY_RUN([
+#      include <sys/types.h>
+#      include <stdio.h>
+#      if HAVE_STDLIB_H
+#       include <stdlib.h>
+#      endif
+#      if HAVE_STRING_H
+#       include <string.h>
+#      endif
        int
        main()
        {
