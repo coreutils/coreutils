@@ -1,6 +1,10 @@
-2002-03-02  Jim Meyering  <meyering@lucent.com>
+2002-03-05  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.12.
+
+	* Makefile.am (EXTRA_DIST): Add config/config.rpath.
+
+2002-03-02  Jim Meyering  <meyering@lucent.com>
 
 	* tests/nice: Export _POSIX2_VERSION=199209, so we can continue
 	to exercise the now-obsolete options.
