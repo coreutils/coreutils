@@ -1651,8 +1651,9 @@ init_store_cols (void)
 
   if (buff != NULL)
     free (buff);
-  buff_allocated = use_col_separator ? 2 * chars_if_truncate
-    : chars_if_truncate;	/* Tune this. */
+  buff_allocated = (use_col_separator
+		    ? 2 * chars_if_truncate
+		    : chars_if_truncate);	/* Tune this. */
   buff = (char *) xmalloc (buff_allocated);
 }
 
