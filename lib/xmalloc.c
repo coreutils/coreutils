@@ -63,7 +63,7 @@ void (*xalloc_fail_func) PARAMS ((void)) = 0;
 
 /* If XALLOC_FAIL_FUNC is NULL, or does return, display this message
    before exiting when memory is exhausted.  Goes through gettext. */
-char *const xalloc_msg_memory_exhausted = N_("Memory exhausted");
+char *const xalloc_msg_memory_exhausted = N_("virtual memory exhausted");
 
 void
 xalloc_die (void)
