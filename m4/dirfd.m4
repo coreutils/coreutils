@@ -3,7 +3,7 @@
 dnl Find out how to get the file descriptor associated with an open DIR*.
 dnl From Jim Meyering
 
-AC_DEFUN([UTILS_FUNC_DIRFD],
+AC_DEFUN([gl_FUNC_DIRFD],
 [
   dnl Work around a bug of AC_EGREP_CPP in autoconf-2.57.
   AC_REQUIRE([AC_PROG_CPP])
