@@ -61,7 +61,7 @@ Same as id -un.\n\
   exit (status);
 }
 
-void
+int
 main (int argc, char **argv)
 {
   register struct passwd *pw;

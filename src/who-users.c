@@ -644,7 +644,7 @@ If FILE not given, uses /etc/utmp.  /etc/wtmp as FILE is common.\n\
 }
 #endif /* USERS || UPTIME */
 
-void
+int
 main (int argc, char **argv)
 {
   int optc, longind;
