@@ -33,7 +33,6 @@ AC_DEFUN(jm_FUNC_GNU_STRFTIME,
  AC_REQUIRE([AC_C_CONST])dnl
  AC_REQUIRE([AC_HEADER_STDC])dnl
  AC_CHECK_HEADERS(sys/time.h)
- AC_LIBOBJ(strftime)
  AC_DEFINE([my_strftime], [nstrftime],
    [Define to the name of the strftime replacement function.])
 ])
@@ -41,5 +40,4 @@ AC_DEFUN(jm_FUNC_GNU_STRFTIME,
 AC_DEFUN(jm_FUNC_STRFTIME,
 [
   _jm_STRFTIME_PREREQS
-  AC_REPLACE_FUNCS(strftime)
 ])
