@@ -103,16 +103,8 @@ extern int errno;
 /* Include this before libintl.h so we get our definition of PARAMS. */
 #include "makepath.h"
 
-#if HAVE_LOCALE_H
-# include <locale.h>
-#endif
-
-#if ENABLE_NLS
-# include <libintl.h>
-# define _(Text) gettext (Text)
-#else
-# define _(Text) Text
-#endif
+#include "gettext.h"
+#define _(msgid) gettext (msgid)
 
 #include "save-cwd.h"
 #include "dirname.h"
