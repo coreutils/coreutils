@@ -22,7 +22,7 @@
 #include <ctype.h>
 
 /* states: S_N: normal, S_I: comparing integral part, S_F: comparing
-           Fractionnal parts, S_Z: idem but with leading Zeroes only */
+           Fractional parts, S_Z: idem but with leading Zeroes only */
 #define S_N    0x0
 #define S_I    0x4
 #define S_F    0x8
