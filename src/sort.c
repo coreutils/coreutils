@@ -32,7 +32,7 @@
 #include "long-options.h"
 #include "error.h"
 #include "hard-locale.h"
-#include "human.h"
+#include "inttostr.h"
 #include "physmem.h"
 #include "posixver.h"
 #include "stdio-safer.h"
@@ -1566,13 +1566,13 @@ checkfp (FILE *fp, char *file_name)
 	{
 	found_disorder:
 	  {
-	    char hr_buf[LONGEST_HUMAN_READABLE + 1];
 	    struct line const *disorder_line = line - 1;
 	    uintmax_t disorder_line_number =
 	      buffer_linelim (&buf) - disorder_line + line_number;
+	    char hr_buf[INT_BUFSIZE_BOUND (uintmax_t)];
 	    fprintf (stderr, _("%s: %s:%s: disorder: "),
 		     program_name, file_name,
-		     human_readable (disorder_line_number, hr_buf, 1, 1));
+		     umaxtostr (disorder_line_number, hr_buf));
 	    write_bytes (disorder_line->text, disorder_line->length, stderr,
 			 _("standard error"));
 	    disordered = 1;
