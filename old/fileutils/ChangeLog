@@ -5,6 +5,12 @@ Mon Oct  7 23:31:10 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 	(fu_SOURCES): Likewise.
 	(fu_DEPENDENCIES): Depend on fu_LIBADD.
 
+	* src/chown.c (usage): Improve usage message.
+	* src/cp-aux.c (usage): Likewise.
+	* src/ls.c (usage): Likewise.
+	* src/install.c (strip): Improve diagnostic.
+	From Ulisses Alonso.
+
 	* src/Makefile.am (noinst_HEADERS): Add dircolors.h.
 	(dircolors.h): Always depend on dcgen.
 
