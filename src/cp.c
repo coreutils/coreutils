@@ -834,7 +834,7 @@ make_path (const_dirpath, src_offset, mode, verbose_fmt_string,
       slash = src;
       while (*slash == '/')
 	slash++;
-      while (slash = index (slash, '/'))
+      while ((slash = index (slash, '/')))
 	{
 	  /* Add this directory to the list of directories whose modes need
 	     fixing later. */

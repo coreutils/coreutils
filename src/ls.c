@@ -783,7 +783,7 @@ print_dir (name, realname)
 
   clear_files ();
 
-  while (next = readdir (reading))
+  while ((next = readdir (reading)) != NULL)
     if (file_interesting (next))
       total_blocks += gobble_file (next->d_name, 0, name);
 
@@ -1429,7 +1429,7 @@ print_name_with_quoting (p)
   if (quote_as_string)
     putchar ('"');
 
-  while (c = *p++)
+  while ((c = *p++))
     {
       if (quote_funny_chars)
 	{
@@ -1554,7 +1554,7 @@ length_of_file_name_and_frills (f)
   if (quote_as_string)
     len += 2;
 
-  while (c = *p++)
+  while ((c = *p++))
     {
       if (quote_funny_chars)
 	{
