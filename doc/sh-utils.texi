@@ -719,7 +719,7 @@ Exit status:
 @menu
 * Relations for expr::          | & < <= = == != >= >
 * Numeric expressions::         + - * / %
-* String expressions::          : match substr index length
+* String expressions::          <colon> match substr index length
 * Examples of expr::            Examples.
 @end menu
 
