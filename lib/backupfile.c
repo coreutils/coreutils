@@ -16,9 +16,9 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 /* David MacKenzie <djm@gnu.ai.mit.edu>.
-   Some algorithms adapted from GNU Emacs. */
+   Some algorithms adapted from GNU Emacs.  */
 
-#ifdef HAVE_CONFIG_H
+#if HAVE_CONFIG_H
 # include <config.h>
 #endif
 
@@ -26,77 +26,68 @@
 #include <ctype.h>
 #include <sys/types.h>
 #include "backupfile.h"
-#ifdef HAVE_STRING_H
+#if HAVE_STRING_H
 # include <string.h>
 #else
 # include <strings.h>
 #endif
 
-#ifdef HAVE_DIRENT_H
+#if HAVE_DIRENT_H
 # include <dirent.h>
-# define NLENGTH(direct) (strlen((direct)->d_name))
-#else /* not HAVE_DIRENT_H */
+# define NLENGTH(Direct) (strlen((Direct)->d_name))
+#else
 # define dirent direct
-# define NLENGTH(direct) ((direct)->d_namlen)
-# ifdef HAVE_SYS_NDIR_H
+# define NLENGTH(Direct) ((Direct)->d_namlen)
+# if HAVE_SYS_NDIR_H
 #  include <sys/ndir.h>
-# endif /* HAVE_SYS_NDIR_H */
-# ifdef HAVE_SYS_DIR_H
+# endif
+# if HAVE_SYS_DIR_H
 #  include <sys/dir.h>
-# endif /* HAVE_SYS_DIR_H */
-# ifdef HAVE_NDIR_H
+# endif
+# if HAVE_NDIR_H
 #  include <ndir.h>
-# endif /* HAVE_NDIR_H */
-#endif /* HAVE_DIRENT_H */
+# endif
+#endif
 
-#ifdef CLOSEDIR_VOID
-/* Fake a return value. */
+#if CLOSEDIR_VOID
+/* Fake a return value.  */
 # define CLOSEDIR(d) (closedir (d), 0)
 #else
 # define CLOSEDIR(d) closedir (d)
 #endif
 
-#ifdef STDC_HEADERS
+#if STDC_HEADERS
 # include <stdlib.h>
 #else
 char *malloc ();
 #endif
 
 #if defined (STDC_HEADERS) || (!defined (isascii) && !defined (HAVE_ISASCII))
-# define IN_CTYPE_DOMAIN(c) 1
+# define IN_CTYPE_DOMAIN(Char) 1
 #else
-# define IN_CTYPE_DOMAIN(c) isascii(c)
+# define IN_CTYPE_DOMAIN(Char) isascii(Char)
 #endif
 
-#define ISDIGIT_LOCALE(c) (IN_CTYPE_DOMAIN (c) && isdigit (c))
+#define ISDIGIT(Char) (IN_CTYPE_DOMAIN ((unsigned char) (Char)) \
+		       && isdigit ((unsigned char) (Char)))
 
-/* ISDIGIT differs from ISDIGIT_LOCALE, as follows:
-   - Its arg may be any int or unsigned int; it need not be an unsigned char.
-   - It's guaranteed to evaluate its argument exactly once.
-   - It's typically faster.
-   Posix 1003.2-1992 section 2.5.2.1 page 50 lines 1556-1558 says that
-   only '0' through '9' are digits.  Prefer ISDIGIT to ISDIGIT_LOCALE unless
-   it's important to use the locale's definition of `digit' even when the
-   host does not conform to Posix.  */
-#define ISDIGIT(c) ((unsigned) (c) - '0' <= 9)
-
-#if defined (HAVE_UNISTD_H)
-#include <unistd.h>
+#if HAVE_UNISTD_H
+# include <unistd.h>
 #endif
 
-#if defined (_POSIX_VERSION)
+#ifdef _POSIX_VERSION
 /* POSIX does not require that the d_ino field be present, and some
-   systems do not provide it. */
-# define REAL_DIR_ENTRY(dp) 1
+   systems do not provide it.  */
+# define REAL_DIR_ENTRY(Dp) 1
 #else
-# define REAL_DIR_ENTRY(dp) ((dp)->d_ino != 0)
+# define REAL_DIR_ENTRY(Dp) ((Dp)->d_ino != 0)
 #endif
 
-/* Which type of backup file names are generated. */
+/* Which type of backup file names are generated.  */
 enum backup_type backup_type = none;
 
 /* The extension added to file names to produce a simple (as opposed
-   to numbered) backup file name. */
+   to numbered) backup file name.  */
 char *simple_backup_suffix = "~";
 
 char *basename ();
@@ -110,7 +101,7 @@ static int version_number ();
 /* Return the name of the new backup file for file FILE,
    allocated with malloc.  Return 0 if out of memory.
    FILE must not end with a '/' unless it is the root directory.
-   Do not call this function if backup_type == none. */
+   Do not call this function if backup_type == none.  */
 
 char *
 find_backup_file_name (file)
@@ -142,7 +133,7 @@ find_backup_file_name (file)
 /* Return the number of the highest-numbered backup file for file
    FILE in directory DIR.  If there are no numbered backups
    of FILE in DIR, or an error occurs reading DIR, return 0.
-   FILE should already have ".~" appended to it. */
+   FILE should already have ".~" appended to it.  */
 
 static int
 max_backup_version (file, dir)
@@ -177,7 +168,7 @@ max_backup_version (file, dir)
 }
 
 /* Return a string, allocated with malloc, containing
-   "FILE.~VERSION~".  Return 0 if out of memory. */
+   "FILE.~VERSION~".  Return 0 if out of memory.  */
 
 static char *
 make_version_name (file, version)
@@ -195,7 +186,7 @@ make_version_name (file, version)
 
 /* If BACKUP is a numbered backup of BASE, return its version number;
    otherwise return 0.  BASE_LENGTH is the length of BASE.
-   BASE should already have ".~" appended to it. */
+   BASE should already have ".~" appended to it.  */
 
 static int
 version_number (base, backup, base_length)
@@ -218,7 +209,7 @@ version_number (base, backup, base_length)
 }
 
 /* Return the newly-allocated concatenation of STR1 and STR2.
-   If out of memory, return 0. */
+   If out of memory, return 0.  */
 
 static char *
 concat (str1, str2)

@@ -369,5 +369,3 @@ memcmp (s1, s2, len)
 #undef bcmp
 weak_alias (memcmp, bcmp)
 #endif
-
-

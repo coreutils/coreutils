@@ -15,20 +15,20 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
-/* When to make backup files. */
+/* When to make backup files.  */
 enum backup_type
 {
-  /* Never make backups. */
+  /* Never make backups.  */
   none,
 
-  /* Make simple backups of every file. */
+  /* Make simple backups of every file.  */
   simple,
 
   /* Make numbered backups of files that already have numbered backups,
-     and simple backups of the others. */
+     and simple backups of the others.  */
   numbered_existing,
 
-  /* Make numbered backups of every file. */
+  /* Make numbered backups of every file.  */
   numbered
 };
 
