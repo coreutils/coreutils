@@ -1,3 +1,28 @@
+Fri Apr 12 22:03:13 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* date.c (usage): Document %e and %z.  Reported by Karl Berry.
+
+Wed Apr 10 21:26:30 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* configure.in: Add test for boot_time.
+	From Kaveh Ghazi.
+
+	* lib/Makefile.am (EXTRA_DIST): Add getloadavg.c.
+
+	* src/Makefile.am (EXTRA_PROGRAMS): Add uptime.
+	(BUILT_SOURCES): Add uptime.c.
+	(MOSTLYCLEANFILES): Add uptime.c.
+	(uptime.c): Add rule to build it from who-users.c.
+
+	* who-users.c: Reindent.
+	(UT_TIME_MEMBER): New macro.
+	(print_uptime): Use it instead of #ifdef HAVE_UTMPX_H #else.
+	(print_entry): Likewise.
+
+Tue Apr  9 23:57:19 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* who-users.c (print_uptime) [UPTIME]: New function.  From Kaveh Ghazi.
+
 Sun Apr  7 11:58:13 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* seq.c (print_numbers): Rearrange loops to get it right.
