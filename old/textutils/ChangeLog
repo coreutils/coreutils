@@ -1,15 +1,11 @@
 2001-11-04  Jim Meyering  <meyering@lucent.com>
 
+	* Version 2.0.17.
+
 	* uniq.c, unexpand.c, tail.c, tac.c, split.c, sort.c, pr.c, paste.c:
 	* od.c, nl.c, head.c, fold.c, expand.c, cut.c, csplit.c (usage):
 	Say that ``Mandatory arguments to long options are mandatory for
 	short options too.''
-
-	* ptx.c (usage): Add one-line description.
-
-2001-11-04  Jim Meyering  <meyering@lucent.com>
-
-	* Version 2.0.17.
 
 	* src/ptx.c (usage): Add one-line description.
 
