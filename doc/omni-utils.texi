@@ -4540,7 +4540,13 @@ arguments, by default @code{ls} lists just the file name.  If no
 non-option argument is specified, @code{ls} operates on the current
 directory, acting as if it had been invoked with a single argument of @samp{.}.
 
-By default, the output is sorted alphabetically.  If standard output is
+@vindex LC_COLLATE
+By default, the output is sorted alphabetically, according to the locale
+settings in effect. @footnote{If you have arranged to use a non-@sc{posix}
+locale (e.g., by setting @env{LC_ALL} to @samp{en_US}), then @code{ls} may
+produce output that is sorted differently than you're accustomed to.
+In that case, set the @env{LC_COLLATE} environment variable to @samp{C}.}
+If standard output is
 a terminal, the output is in columns (sorted vertically) and control
 characters are output as question marks; otherwise, the output is listed
 one per line and control characters are output as-is.
