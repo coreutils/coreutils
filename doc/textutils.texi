@@ -2639,7 +2639,7 @@ Here, the @samp{$} is the usual shell prompt, at which I typed @code{who}.
 There are three people logged in, and I am logged in twice.  On traditional
 Unix systems, user names are never more than eight characters long.  This
 little bit of trivia will be useful later.  The output of @code{who} is nice,
-but the data is not all that particularly exciting.
+but the data is not all that exciting.
 
 @node The @code{cut} command
 @unnumberedsec The @code{cut} command
