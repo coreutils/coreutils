@@ -1,5 +1,8 @@
 2000-02-27  Jim Meyering  <meyering@lucent.com>
 
+	* strtoumax.c: Fix typo in decl of strtoul: s/long long/long/.
+	Guard declaration of strtoull also with `&& HAVE_UNSIGNED_LONG_LONG'.
+
 	* backupfile.c: Guard inclusion of stdlib.h with `#if HAVE_STDLIB_H',
 	not `#if STDC_HEADERS'.
 	Declare malloc if needed.
