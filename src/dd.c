@@ -734,7 +734,7 @@ buggy_lseek_support (int fdesc)
      on some special files but doesn't return an error, either.
      In particular, the Linux tape drivers are a problem.
      For example, when I did the following using dd-4.0y or earlier on a
-     Linux-2.2.17 system with a Exabyte SCSI tape drive:
+     Linux-2.2.17 system with an Exabyte SCSI tape drive:
 
        dev=/dev/nst0
        reset='mt -f $dev rewind; mt -f $dev fsf 1'
