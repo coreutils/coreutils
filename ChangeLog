@@ -2,6 +2,13 @@
 
 	* Version 4.5.11.
 
+	* src/seq.c (valid_format): Also accept ` ' and `'' as valid
+	format flag characters.
+	Do not require that a field width be specified.
+	Do not fail when given a field width of `0'.
+	Reported by Dan Jacobson.
+	* tests/seq/basic: Add new tests for the above-fixed bug.
+
 	* src/Makefile.am (all-local): Append $(EXEEXT) to use of `su'
 	(install-root): Likewise.
 	(install-exec-local): Likewise.
