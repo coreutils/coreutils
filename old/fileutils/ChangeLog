@@ -1,3 +1,13 @@
+2000-05-18  Jim Meyering  <meyering@lucent.com>
+
+	* tests/rm/Makefile.am (TESTS): Add hash.
+	* tests/rm/hash: New test for the fix in lib/hash.c.
+
+2000-05-17  Jim Meyering  <meyering@lucent.com>
+
+	* src/remove.c (remove_dir): FIXME
+	Reported by Morten Welinder.
+
 2000-05-15  Jim Meyering  <meyering@lucent.com>
 
 	* src/ln.c (do_link): Use complete strings in diagnostics so they
