@@ -60,32 +60,36 @@ test "$VERBOSE" = yes && set +x
 
   # This should not change the group of f.
   chgrp -h -c $g2 symlink 2> /dev/null
-  chgrp -c $g2 f
+  chown --from=:$g1 -c :$g2 f
 
   # This *should* change the group of f.
   # Though note that the diagnostic is misleading in that
   # it says the `group of `symlink'' has been changed.
-  chgrp --dereference -c $g1 symlink
+  chgrp -c $g1 symlink
+  chown --from=:$g1 -c :$g2 f
 
-) 2>&1 | sed "s/ $g1$/ G1/;s/ $g2$/ G2/" > actual
+) 2>&1 | sed "s/\([ :]\)$g1$/\1G1/;s/\([ :]\)$g2$/\1G2/" > actual
 
 cat <<\EOF > expected
 changed group of `f' to G1
 changed group of `f' to G2
+changed group of `f' to G2
 changed group of `f' to G1
-group of `f' retained as G1
+changed group of `f' to G1
 changed group of `f' to G2
-changed group of `d' to G2
 changed group of `d/f3' to G2
-changed group of `d' to G1
-changed group of `d/f3' to G1
 changed group of `d' to G2
+changed group of `d/f3' to G1
+changed group of `d' to G1
 changed group of `d/f3' to G2
-changed group of `d' to G1
-changed group of `d/f3' to G1
 changed group of `d' to G2
-changed group of `f' to G2
+changed group of `d/f3' to G1
+changed group of `d' to G1
+changed group of `d' to G2
+changed group of `symlink' to G2
+changed ownership of `f' to :G2
 changed group of `symlink' to G1
+changed ownership of `f' to :G2
 EOF
 
 cmp expected actual \
