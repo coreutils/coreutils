@@ -6335,7 +6335,7 @@ assumption.  Exceptions include:
 
 @item
 Log-structured or journaled filesystems, such as those supplied with
-AIX and Solaris.
+AIX and Solaris, and JFS, ReiserFS, XFS, Ext3, etc.
 
 @item
 Filesystems that write redundant data and carry on even if some writes
@@ -6475,7 +6475,7 @@ Bourne-compatible shell) the command @samp{shred - 1<>file} instead.
 @end table
 
 You might use the following command to erase all trace of the
-file system you'd created on the floppy disk in your first drive.
+filesystem you'd created on the floppy disk in your first drive.
 That command takes about 20 minutes to erase a ``1.44MB'' (actually
 1440 KiB) floppy.
 
