@@ -1,0 +1,123 @@
+#! /p/bin/perl -w
+# Print n pairs of floating point values.
+# Each value is in the range [0,1).
+# Usage: rand n
+
+# Use only the basename from the path to this executable in error messages.
+($program_name = $0) =~ s|.*/||;
+
+require 'newgetopt.pl';
+$MAXINT = 0x7fffffff;
+
+undef $opt_help;
+undef $opt_verbose;
+undef $opt_integer;
+&usage if (&NGetOpt(('seed=i', 'range=s', 'help', 'items-per-line=i',
+		     'format=s', 'integer', 'verbose')) == 0);
+
+&usage if (defined ($opt_help));
+
+&usage if (scalar (@ARGV) != 1 || $ARGV[0] !~ /^[0-9]+$/);
+$n = $ARGV[0];
+
+if (!defined ($opt_seed))
+  {
+    $opt_seed = time;
+    print STDERR "seed= $opt_seed\n" if (defined ($opt_verbose));
+  }
+
+srand ($opt_seed);
+
+# FIXME: make sure this number is positive.
+$opt_items_per_line = 1 if (!defined ($opt_items_per_line));
+
+if (defined ($opt_integer))
+  {
+    $opt_format = "%d" if (!defined ($opt_format));
+    if (defined ($opt_range))
+      {
+	# FIXME: allow FP endpoints even though --integer specified?
+	if ($opt_range =~ /^([0-9]+),([0-9]+)$/)
+	  {
+	    $lo = $1;
+	    $hi = $2;
+	  }
+	else
+	  {
+	    print STDERR ("bad argument `$opt_range' to --range option\n");
+	    exit 2;
+	  }
+      }
+    else
+      {
+	$lo = 0;
+	$hi = $MAXINT;
+      }
+
+    # Increase by one because we'll have to truncate to get integers.
+    $hi += 1;
+  }
+else
+  {
+    $opt_format = "%.15g" if (!defined ($opt_format));
+    if (defined ($opt_range))
+      {
+	if ($opt_range =~ /^(-?[0-9.]+),(-?[0-9.]+)$/)
+	  {
+	    $lo = $1;
+	    $hi = $2;
+	  }
+	else
+	  {
+	    print STDERR ("bad argument `$opt_range' to --range option\n");
+	    exit 2;
+	  }
+      }
+    else
+      {
+	$lo = 0.0;
+	$hi = 1.0;
+      }
+  }
+
+# FIXME: warn if lo > hi.
+
+$range = $hi - $lo;
+
+if ($opt_items_per_line == 1)
+  {
+    for ($i=0; $i < $n; $i++)
+      {
+	printf $opt_format, $lo + rand($range);
+	print "\n";
+      }
+  }
+else
+  {
+    $separator = ' ';
+    for ($i=0; $i < $n; $i++)
+      {
+	for ($j=0; $j < $opt_items_per_line; $j++)
+	  {
+	    printf $opt_format, $lo + rand($range);
+	    print $j == $opt_items_per_line - 1 ? "\n" : $separator;
+	  }
+      }
+  }
+
+exit 0;
+
+sub usage
+{
+  print STDERR <<EOF;
+Usage: $program_name [OPTIONS] n
+    --help
+    --seed=n
+    --integer
+    --items-per-line=n
+    --range=i,j e.g. 3,9  or 1.5,33.9
+    --format='%3d'
+    --verbose (report the seed if it gets default value)
+EOF
+  exit 2;
+}

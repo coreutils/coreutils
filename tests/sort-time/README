@@ -1,0 +1,12 @@
+determine whether it's worthwhile to add a --line-length=N option to sort.
+Add the option and perform this test:
+
+Test method:
+==============
+for n in 80 200 400 800 3000; do
+  sort a file with $n-char lines using the default of N=30
+  sort the same file with --line-length=$n
+  compare run times
+done
+
+do this on at least SunOS, Linux, Solaris
