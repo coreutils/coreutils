@@ -123,6 +123,7 @@ static struct option const long_opts[] =
 {
   {"archive", no_argument, NULL, 'a'},
   {"backup", optional_argument, NULL, 'b'},
+  {"dereference", no_argument, NULL, 'L'},
   {"force", no_argument, NULL, 'f'},
   {"sparse", required_argument, NULL, SPARSE_OPTION},
   {"interactive", no_argument, NULL, 'i'},
@@ -168,7 +169,12 @@ Copy SOURCE to DEST, or multiple SOURCE(s) to DIRECTORY.\n\
   -d, --no-dereference         preserve links\n\
   -f, --force                  remove existing destinations, never prompt\n\
   -i, --interactive            prompt before overwrite\n\
+  -H                           follow symbolic links that are explicitly\n\
+                                 specified in the command line, but do not\n\
+                                 follow symlinks that are found via recursive\n\
+                                 traversal\n\
   -l, --link                   link files instead of copying\n\
+  -L, --dereference            always follow symbolic links\n\
   -p, --preserve               preserve file attributes if possible\n\
       --parents                append source path to DIRECTORY\n\
   -P                           same as `--parents' for now; soon to change to\n\
@@ -651,7 +657,7 @@ static void
 cp_option_init (struct cp_options *x)
 {
   x->copy_as_regular = 1;
-  x->dereference = 1;
+  x->dereference = DEREF_UNDEFINED;
   x->force = 0;
   x->failed_unlink_is_fatal = 1;
   x->hard_link = 0;
@@ -705,7 +711,7 @@ main (int argc, char **argv)
      we'll actually use backup_suffix_string.  */
   backup_suffix_string = getenv ("SIMPLE_BACKUP_SUFFIX");
 
-  while ((c = getopt_long (argc, argv, "abdfilprsuvxPRS:V:", long_opts, NULL))
+  while ((c = getopt_long (argc, argv, "abdfHilLprsuvxPRS:V:", long_opts, NULL))
 	 != -1)
     {
       switch (c)
@@ -719,7 +725,7 @@ main (int argc, char **argv)
 	  break;
 
 	case 'a':		/* Like -dpR. */
-	  x.dereference = 0;
+	  x.dereference = DEREF_NEVER;
 	  x.preserve_owner_and_group = 1;
 	  x.preserve_chmod_bits = 1;
 	  x.preserve_timestamps = 1;
@@ -742,11 +748,15 @@ main (int argc, char **argv)
 	  break;
 
 	case 'd':
-	  x.dereference = 0;
+	  x.dereference = DEREF_NEVER;
 	  break;
 
 	case 'f':
 	  x.force = 1;
+	  break;
+
+	case 'H':
+	  x.dereference = DEREF_COMMAND_LINE_ARGUMENTS;
 	  break;
 
 	case 'i':
@@ -755,6 +765,10 @@ main (int argc, char **argv)
 
 	case 'l':
 	  x.hard_link = 1;
+	  break;
+
+	case 'L':
+	  x.dereference = DEREF_ALWAYS;
 	  break;
 
 	case 'p':
@@ -778,7 +792,6 @@ main (int argc, char **argv)
 
 	case 'R':
 	  x.recursive = 1;
-	  x.dereference = 0;
 	  x.copy_as_regular = 0;
 	  break;
 
@@ -849,13 +862,27 @@ Use `--parents' for the old meaning, and `--no-dereference' for the new."));
   if (x.preserve_chmod_bits == 1)
     x.umask_kill = ~ (mode_t) 0;
 
+  if (x.dereference == DEREF_UNDEFINED)
+    {
+      if (x.recursive)
+	/* This is compatible with FreeBSD.  */
+	x.dereference = DEREF_NEVER;
+      else
+	x.dereference = DEREF_ALWAYS;
+    }
+
   /* The key difference between -d (--no-dereference) and not is the version
      of `stat' to call.  */
 
-  if (x.dereference)
-    x.xstat = stat;
-  else
+  if (x.dereference == DEREF_NEVER)
     x.xstat = lstat;
+  else
+    {
+      /* For DEREF_COMMAND_LINE_ARGUMENTS, x.xstat must be stat for
+	 each command line argument, but must later be `lstat' for
+	 any symlinks that are found via recursive traversal.  */
+      x.xstat = stat;
+    }
 
   /* Allocate space for remembering copied and created files.  */
 
