@@ -2,7 +2,11 @@
 
 	* Version 4.1.1.
 
-	* src/ls.c (dev_ino_pop): Cast 2nd arg of obstack_blank to `int'
+	* src/ls.c: Rename global: s/trace_dirs/recursive/.
+	(extract_dirs_from_files): Rename parameter:
+	s/recursive/ignore_dot_and_dot_dot/.
+
+	* src/ls.c: (dev_ino_pop): Cast 2nd arg of obstack_blank to `int'
 	before negating to avoid warning from gcc on systems with 64-bit size_t.
 
 	* src/ls.c: Use XMALLOC and XREALLOC in a several places.  It's cleaner.
