@@ -12,7 +12,7 @@
 2002-11-30  Dmitry V. Levin  <ldv@altlinux.org>
 
 	* src/shred.c: Remove declaration of xstrdup.
-	Instead, include "xalloc.h".
+	We already get it via xalloc.h which is included via system.h.
 
 2002-08-27  Dmitry V. Levin  <ldv@altlinux.org>
 
