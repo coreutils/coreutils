@@ -135,21 +135,26 @@ mapped_name = `echo $*|sed 's/install/ginstall/; s/test/[/'`
 
 check-local: check-x-vs-1 check-programs-vs-x
 
+# Sort in traditional ASCII order, regardless of the current locale;
+# otherwise we may get into trouble with distinct strings that the
+# current locale considers to be equal.
+ASSORT = LC_ALL=C sort
+
 # Ensure that for each .x file in this directory, there is a
 # corresponding .1 file in the definition of $(dist_man_MANS) above.
 .PHONY: check-x-vs-1
 check-x-vs-1:
 	PATH=../src$(PATH_SEPARATOR)$$PATH; export PATH;		\
 	t=ls-files.$$$$;						\
-	(cd $(srcdir) && ls -1 *.x) | sed 's/\.x$$//' | sort > $$t;	\
-	echo $(dist_man_MANS) | fmt -w1 | sed 's/\.1$$//' | sort -u	\
+	(cd $(srcdir) && ls -1 *.x) | sed 's/\.x$$//' | $(ASSORT) > $$t;\
+	echo $(dist_man_MANS) | fmt -w1 | sed 's/\.1$$//' | $(ASSORT)	\
 	  | diff - $$t || { rm $$t; exit 1; };				\
 	rm $$t
 
 programs =								\
   echo 'spy:;@echo $$(all_programs)'					\
     | MAKEFLAGS= $(MAKE) -s -C $(srcdir)/../src -f Makefile -f - spy	\
-    | fmt -1 | sort -u | grep -v '\['
+    | fmt -1 | $(ASSORT) -u | grep -v '\['
 
 .PHONY: check-programs-vs-x
 check-programs-vs-x:
