@@ -118,7 +118,7 @@ l = @l@
 
 AUTOMAKE_OPTIONS = 1.4 gnits
 
-TESTS = equal-x c-option
+TESTS = equal-x c-option setgid
 EXTRA_DIST = $(TESTS)
 TESTS_ENVIRONMENT = \
   PATH=`pwd`/../../src:$$PATH
