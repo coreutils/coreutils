@@ -1,3 +1,13 @@
+Sun Dec  1 13:07:39 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/getdate.y (date): Interpret the date, L/M/N, as YYYY/MM/DD
+	if L >= 1000, otherwise as MM/DD/YY.  With this change,
+	date --date=DATE accepts dates like those in an RCS log listing.
+
+Sat Nov 30 22:08:00 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/strftime.c: Update from GNU libc.
+
 Fri Nov 29 22:16:40 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/uname.c (main) [HAVE_SYSINFO && SI_ARCHITECTURE]: Support
