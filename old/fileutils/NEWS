@@ -1,5 +1,7 @@
 Changes in release 4.01:
 [4.0.32]
+* touch now interprets a lone numeric argument of 8 or 10 digits as a file name,
+  rather than as a date/time in the obsolescent `MMDDhhmm[YY]' format.
 * mkdir no longer sets the permissions of the final directory component
   if it already exists (this bug, too, was introduced recently)
 [4.0.31]
