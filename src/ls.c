@@ -2644,7 +2644,11 @@ print_long_format (const struct fileinfo *f)
 	 are actually positive values that have wrapped around.  */
       if (sizeof f->stat.st_size < sizeof size)
 	size += ((uintmax_t) (f->stat.st_size < 0)
-		 << (sizeof f->stat.st_size * CHAR_BIT));
+		 << (sizeof f->stat.st_size * CHAR_BIT
+		     /* This final term has no effect other than to suppress
+		        a warning about the shift count being larger than the
+			width of the type.  */
+		     * (sizeof f->stat.st_size < sizeof size)));
 
       sprintf (p, "%8s ",
 	       human_readable (size, hbuf, 1,
