@@ -116,28 +116,32 @@ char *alloca ();
 
 #define STREQ(a,b) (strcmp((a), (b)) == 0)
 
-#ifndef HAVE_DECLARATION_FREE
+#ifndef HAVE_DECL_FREE
 void free ();
 #endif
 
-#ifndef HAVE_DECLARATION_MALLOC
+#ifndef HAVE_DECL_MALLOC
 char *malloc ();
 #endif
 
-#ifndef HAVE_DECLARATION_REALLOC
+#ifndef HAVE_DECL_REALLOC
 char *realloc ();
 #endif
 
-#ifndef HAVE_DECLARATION_STPCPY
+#ifndef HAVE_DECL_STPCPY
 char *stpcpy ();
 #endif
 
-#ifndef HAVE_DECLARATION_STRSTR
+#ifndef HAVE_DECL_STRSTR
 char *strstr ();
 #endif
 
-#ifndef HAVE_DECLARATION_GETENV
+#ifndef HAVE_DECL_GETENV
 char *getenv ();
+#endif
+
+#ifndef HAVE_DECL_LSEEK
+off_t lseek ();
 #endif
 
 #include "xalloc.h"
