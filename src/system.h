@@ -124,7 +124,27 @@
    It is necessary at least when t == time_t.  */
 #define TYPE_MINIMUM(t) ((t) (TYPE_SIGNED (t) \
 			      ? ~ (t) 0 << (sizeof (t) * CHAR_BIT - 1) : (t) 0))
-#define TYPE_MAXIMUM(t) (~ (t) 0 - TYPE_MINIMUM (t))
+#define TYPE_MAXIMUM(t) ((t) (~ (t) 0 - TYPE_MINIMUM (t)))
+
+#ifndef SCHAR_MIN
+# define SCHAR_MIN TYPE_MINIMUM (char)
+#endif
+
+#ifndef SCHAR_MAX
+# define SCHAR_MAX TYPE_MAXIMUM (char)
+#endif
+
+#ifndef UCHAR_MAX
+# define UCHAR_MAX TYPE_MAXIMUM (unsigned char)
+#endif
+
+#ifndef SHRT_MIN
+# define SHRT_MIN TYPE_MINIMUM (short int)
+#endif
+
+#ifndef SHRT_MAX
+# define SHRT_MAX TYPE_MAXIMUM (short int)
+#endif
 
 #ifndef INT_MAX
 # define INT_MAX TYPE_MAXIMUM (int)
@@ -132,6 +152,14 @@
 
 #ifndef UINT_MAX
 # define UINT_MAX TYPE_MAXIMUM (unsigned int)
+#endif
+
+#ifndef LONG_MAX
+# define LONG_MAX TYPE_MAXIMUM (long)
+#endif
+
+#ifndef ULONG_MAX
+# define ULONG_MAX TYPE_MAXIMUM (unsigned long)
 #endif
 
 #include "pathmax.h"
