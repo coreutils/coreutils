@@ -82,7 +82,10 @@ realclean: distclean
 
 distdir = ../`cat ../distname`/$(subdir)
 dist: $(DISTFILES)
-	ln $(DISTFILES) $(distdir)
+	for file in $(DISTFILES); do \
+	  ln $$file $(distdir) \
+	    || { echo copying $$file instead; cp -p $$file $(distdir);}; \
+	done
 
 subdir = doc
 Makefile: ../config.status Makefile.in
