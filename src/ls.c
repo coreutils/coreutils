@@ -62,6 +62,7 @@
 #include "ls.h"
 #include "error.h"
 #include "argmatch.h"
+#include "xstrtol.h"
 
 #define obstack_chunk_alloc xmalloc
 #define obstack_chunk_free free
@@ -645,6 +646,7 @@ decode_switches (int argc, char **argv)
   register char *p;
   int c;
   int i;
+  long int tmp_long;
 
   qmark_funny_chars = 0;
   quote_funny_chars = 0;
@@ -701,7 +703,18 @@ decode_switches (int argc, char **argv)
   quote_as_string = 0;
 
   p = getenv ("COLUMNS");
-  line_length = p ? atoi (p) : 80;
+  if (xstrtol (p, NULL, 0, &tmp_long, NULL) == LONGINT_OK
+      && 0 < tmp_long && tmp_long <= INT_MAX)
+    {
+      line_length = (int) tmp_long;
+    }
+  else
+    {
+      error (0, 0,
+	     _("ignoring invalid width in enironment variable COLUMNS: %s"),
+	     p);
+      line_length = 80;
+    }
 
 #ifdef TIOCGWINSZ
   {
@@ -714,13 +727,17 @@ decode_switches (int argc, char **argv)
 
   /* FIXME: reference TABSIZE iff !posix_pedantic.  */
   p = getenv ("TABSIZE");
-  /* FIXME: use strtol here!  */
-  tabsize = p ? atoi (p) : 8;
-  if (tabsize < 1)
+
+  if (xstrtol (p, NULL, 0, &tmp_long, NULL) == LONGINT_OK
+      && 0 < tmp_long && tmp_long <= INT_MAX)
+    {
+      tabsize = (int) tmp_long;
+    }
+  else
     {
       error (0, 0,
 	     _("ignoring invalid tab size in enironment variable TABSIZE: %s"),
-	     optarg);
+	     p);
       tabsize = 8;
     }
 
@@ -1527,10 +1544,10 @@ print_long_format (struct fileinfo *f)
   char modebuf[20];
   char timebuf[40];
 
-  /* 7 fields that may (worst case be 64-bit integral values) require 20 bytes,
-     10 character mode field,
-     24 characters for the time,
-     9 spaces following each of these fields,
+  /* 7 fields that may (worst case: 64-bit integral values) require 20 bytes,
+     1 10-character mode string,
+     1 24-character time string,
+     9 spaces, one following each of these fields,
      and 1 trailing NUL byte.  */
   char bigbuf[7 * 20 + 10 + 24 + 9 + 1];
   char *p;
