@@ -96,11 +96,11 @@ static struct mount_entry *mount_list;
 
 static struct option const long_options[] =
 {
-  {"all", 0, &show_all_fs, 1},
-  {"inodes", 0, &inode_format, 1},
-  {"kilobytes", 0, &kilobyte_blocks, 1},
-  {"portability", 0, &posix_format, 1},
-  {"type", 1, 0, 't'},
+  {"all", no_argument, &show_all_fs, 1},
+  {"inodes", no_argument, &inode_format, 1},
+  {"kilobytes", no_argument, &kilobyte_blocks, 1},
+  {"portability", no_argument, &posix_format, 1},
+  {"type", required_argument, 0, 't'},
   {NULL, 0, NULL, 0}
 };
 

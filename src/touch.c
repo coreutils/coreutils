@@ -95,10 +95,10 @@ char *program_name;
 
 static struct option const longopts[] =
 {
-  {"time", 1, 0, 130},
-  {"no-create", 0, 0, 'c'},
-  {"date", 1, 0, 'd'},
-  {"file", 1, 0, 'r'},
+  {"time", required_argument, 0, 130},
+  {"no-create", no_argument, 0, 'c'},
+  {"date", required_argument, 0, 'd'},
+  {"file", required_argument, 0, 'r'},
   {0, 0, 0, 0}
 };
 

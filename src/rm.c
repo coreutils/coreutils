@@ -78,11 +78,11 @@ static int stdin_tty;
 
 static struct option const long_opts[] =
 {
-  {"directory", 0, &unlink_dirs, 1},
-  {"force", 0, NULL, 'f'},
-  {"interactive", 0, NULL, 'i'},
-  {"recursive", 0, &recursive, 1},
-  {"verbose", 0, &verbose, 1},
+  {"directory", no_argument, &unlink_dirs, 1},
+  {"force", no_argument, NULL, 'f'},
+  {"interactive", no_argument, NULL, 'i'},
+  {"recursive", no_argument, &recursive, 1},
+  {"verbose", no_argument, &verbose, 1},
   {NULL, 0, NULL, 0}
 };
 

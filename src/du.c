@@ -157,16 +157,16 @@ static int exit_status;
 
 static struct option const long_options[] =
 {
-  {"all", 0, &opt_all, 1},
-  {"bytes", 0, NULL, 'b'},
-  {"count-links", 0, &opt_count_all, 1},
-  {"dereference", 0, NULL, 'L'},
-  {"dereference-args", 0, &opt_dereference_arguments, 1},
-  {"kilobytes", 0, NULL, 'k'},
-  {"one-file-system", 0, &opt_one_file_system, 1},
-  {"separate-dirs", 0, &opt_separate_dirs, 1},
-  {"summarize", 0, &opt_summarize_only, 1},
-  {"total", 0, &opt_combined_arguments, 1},
+  {"all", no_argument, &opt_all, 1},
+  {"bytes", no_argument, NULL, 'b'},
+  {"count-links", no_argument, &opt_count_all, 1},
+  {"dereference", no_argument, NULL, 'L'},
+  {"dereference-args", no_argument, &opt_dereference_arguments, 1},
+  {"kilobytes", no_argument, NULL, 'k'},
+  {"one-file-system", no_argument, &opt_one_file_system, 1},
+  {"separate-dirs", no_argument, &opt_separate_dirs, 1},
+  {"summarize", no_argument, &opt_summarize_only, 1},
+  {"total", no_argument, &opt_combined_arguments, 1},
   {NULL, 0, NULL, 0}
 };
 

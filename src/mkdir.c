@@ -46,8 +46,8 @@ char *program_name;
 
 static struct option const longopts[] =
 {
-  {"mode", 1, NULL, 'm'},
-  {"path", 0, &path_mode, 1},
+  {"mode", required_argument, NULL, 'm'},
+  {"path", no_argument, &path_mode, 1},
   {NULL, 0, NULL, 0}
 };
 

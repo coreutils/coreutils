@@ -65,14 +65,14 @@ char *program_name;
 
 static struct option const long_options[] = 
 {
-  {"backup", 0, NULL, 'b'},
-  {"directory", 0, &hard_dir_link, 1},
-  {"force", 0, NULL, 'f'},
-  {"interactive", 0, NULL, 'i'},
-  {"suffix", 1, NULL, 'S'},
-  {"symbolic", 0, &symbolic_link, 1},
-  {"verbose", 0, &verbose, 1},
-  {"version-control", 1, NULL, 'V'},
+  {"backup", no_argument, NULL, 'b'},
+  {"directory", no_argument, &hard_dir_link, 1},
+  {"force", no_argument, NULL, 'f'},
+  {"interactive", no_argument, NULL, 'i'},
+  {"suffix", required_argument, NULL, 'S'},
+  {"symbolic", no_argument, &symbolic_link, 1},
+  {"verbose", no_argument, &verbose, 1},
+  {"version-control", required_argument, NULL, 'V'},
   {NULL, 0, NULL, 0}
 };
 

@@ -126,11 +126,11 @@ static int dir_arg;
 
 static struct option const long_options[] =
 {
-  {"strip", 0, NULL, 's'},
-  {"directory", 0, NULL, 'd'},
-  {"group", 1, NULL, 'g'},
-  {"mode", 1, NULL, 'm'},
-  {"owner", 1, NULL, 'o'},
+  {"strip", no_argument, NULL, 's'},
+  {"directory", no_argument, NULL, 'd'},
+  {"group", required_argument, NULL, 'g'},
+  {"mode", required_argument, NULL, 'm'},
+  {"owner", required_argument, NULL, 'o'},
   {NULL, 0, NULL, 0}
 };
 

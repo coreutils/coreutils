@@ -66,11 +66,11 @@ static char *groupname;
 
 static struct option const long_options[] =
 {
-  {"recursive", 0, 0, 'R'},
-  {"changes", 0, 0, 'c'},
-  {"silent", 0, 0, 'f'},
-  {"quiet", 0, 0, 'f'},
-  {"verbose", 0, 0, 'v'},
+  {"recursive", no_argument, 0, 'R'},
+  {"changes", no_argument, 0, 'c'},
+  {"silent", no_argument, 0, 'f'},
+  {"quiet", no_argument, 0, 'f'},
+  {"verbose", no_argument, 0, 'v'},
   {0, 0, 0, 0}
 };
 

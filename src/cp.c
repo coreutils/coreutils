@@ -119,21 +119,21 @@ static uid_t myeuid;
 
 static struct option const long_opts[] =
 {
-  {"archive", 0, NULL, 'a'},
-  {"backup", 0, NULL, 'b'},
-  {"force", 0, NULL, 'f'},
-  {"interactive", 0, NULL, 'i'},
-  {"link", 0, NULL, 'l'},
-  {"no-dereference", 0, &flag_dereference, 0},
-  {"one-file-system", 0, &flag_one_file_system, 1},
-  {"path", 0, &flag_path, 1},
-  {"preserve", 0, &flag_preserve, 1},
-  {"recursive", 0, NULL, 'R'},
-  {"suffix", 1, NULL, 'S'},
-  {"symbolic-link", 0, NULL, 's'},
-  {"update", 0, &flag_update, 1},
-  {"verbose", 0, &flag_verbose, 1},
-  {"version-control", 1, NULL, 'V'},
+  {"archive", no_argument, NULL, 'a'},
+  {"backup", no_argument, NULL, 'b'},
+  {"force", no_argument, NULL, 'f'},
+  {"interactive", no_argument, NULL, 'i'},
+  {"link", no_argument, NULL, 'l'},
+  {"no-dereference", no_argument, &flag_dereference, 0},
+  {"one-file-system", no_argument, &flag_one_file_system, 1},
+  {"path", no_argument, &flag_path, 1},
+  {"preserve", no_argument, &flag_preserve, 1},
+  {"recursive", no_argument, NULL, 'R'},
+  {"suffix", required_argument, NULL, 'S'},
+  {"symbolic-link", no_argument, NULL, 's'},
+  {"update", no_argument, &flag_update, 1},
+  {"verbose", no_argument, &flag_verbose, 1},
+  {"version-control", required_argument, NULL, 'V'},
   {NULL, 0, NULL, 0}
 };
 
