@@ -1,3 +1,21 @@
+1997-09-21  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/od.c [struct tspec] (hexl_mode_trailer): Rename from `trailer.'
+	(dump_hexl_mode_trailer): Rename from dump_string_trailer.
+	Use fputs and putchar instead of trivial or %-less printfs.
+	(decode_one_format): Parenthesize each field_width assignment in an
+	argument list to make the side effect a little more apparent.
+	(write_block): Use fputs and putchar instead of trivial or %-less
+	printfs.
+	(dump_strings): Cast string_min to off_t to avoid long-standing warning.
+
+	* src/od.c: Implement new `z' (hexl-mode) modifier.
+	[struct tspec] (trailer): New field.
+	(field_width): Likewise.
+	(dump_string_trailer): New function.
+	(decode_one_format): Save each field_width in the tspec.
+	Patch from John Kodis.
+
 1997-09-14  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/od.c (main) [--traditional]: Don't give diagnostic about there
@@ -1854,7 +1872,7 @@ Thu Sep 28 23:16:05 1995  Jim Meyering  (meyering@comco.com)
 	* Makefile.in (DISTFILES): Remove README.alpha for major release.
 
 	* od.c (decode_one_format): Remove spurious semicolon.
-	From John Kodis (kodis@daacdev1.stx.com).
+	From John Kodis.
 
 Tue Sep 26 23:05:01 1995  Jim Meyering  (meyering@comco.com)
 

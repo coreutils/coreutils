@@ -1,4 +1,15 @@
 Changes in release 1.23
+* od supports a new trailing `z' character in a type specification:
+    $ od -tx1z .
+    0000000 be ef c6 0f fd f9 d7 e0 ec cb f3 c6 00 db e8 00  >................<
+    0000020 00 00 d2 00 00 00 00 00 00 00 00 00 00 00 00 00  >................<
+    0000040 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  >................<
+    *
+    0000600 00 00 00 00 00 00 00 00 00 00 00 00 00 00 35 cc  >..............5.<
+    0000620 05 63 76 74 2e 6f 00 00 29 ac 08 70 72 6f 6a 65  >.cvt.o..)..proje<
+    0000640 63 74 73 00 00 00 18 9a 05 63 76 74 2e 63 00 00  >cts......cvt.c..<
+    0000660 18 d9 03 52 43 53 00 00 18 c0 05 78 2e 64 61 74  >...RCS.....x.dat<
+
 [1.22a]
 * sort -c reports both the number and the contents of the first out-of-order
   line, in addition to the file name.
