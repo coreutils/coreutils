@@ -29,11 +29,12 @@
 #include <stdio.h>
 #include <assert.h>
 #include "system.h"
-#include "long-options.h"
+#include "closeout.h"
 #include "error.h"
 #include "exitfail.h"
 #include "hard-locale.h"
 #include "inttostr.h"
+#include "long-options.h"
 #include "physmem.h"
 #include "posixver.h"
 #include "stdio-safer.h"
@@ -2181,6 +2182,9 @@ main (int argc, char **argv)
   textdomain (PACKAGE);
 
   atexit (cleanup);
+
+  atexit (close_stdout);
+  close_stdout_set_status (SORT_FAILURE);
 
   hard_LC_COLLATE = hard_locale (LC_COLLATE);
 #if HAVE_NL_LANGINFO
