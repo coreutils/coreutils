@@ -529,8 +529,12 @@ count_entry (const char *ent, int top, dev_t last_dev, int depth)
       /* If we're traversing more than one level, or if we're
 	 dereferencing symlinks and we're about to chdir through a
 	 symlink, remember the current directory so we can return to
-	 it later.  In other cases, chdir ("..") works fine.  */
+	 it later.  In other cases, chdir ("..") works fine.
+	 Treat `.' and `..' like multi-level paths, since `chdir ("..")'
+	 wont't restore the current working directory after a `chdir'
+	 to one of those.  */
       if (strchr (ent, '/')
+	  || DOT_OR_DOTDOT (ent)
 	  || (xstat == stat
 	      && lstat (ent, &e_buf) == 0
 	      && S_ISLNK (e_buf.st_mode)))
