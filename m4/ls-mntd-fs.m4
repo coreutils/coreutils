@@ -180,8 +180,6 @@ if test -z "$ac_list_mounted_fs"; then
   fi
 fi
 
-# FIXME: add a test for netbsd-1.1 here
-
 if test -z "$ac_list_mounted_fs"; then
   # Ultrix
   AC_MSG_CHECKING([for getmnt function])
@@ -202,13 +200,18 @@ fi
 
 if test -z "$ac_list_mounted_fs"; then
   # BeOS
-  AC_MSG_CHECKING([for next_dev function])
-  AC_CACHE_VAL(fu_cv_sys_mounted_next_dev,
-    [AC_TRY_CPP([#include <fs_info.h>],
-       fu_cv_sys_mounted_next_dev=yes,
-       fu_cv_sys_mounted_next_dev=no)])
-  AC_MSG_RESULT($fu_cv_sys_mounted_next_dev)
-  if test $fu_cv_sys_mounted_next_dev = yes; then
+  AC_CHECK_FUNCS(next_dev fs_stat_dev)
+  AC_CHECK_HEADERS(fs_info.h)
+  AC_MSG_CHECKING([for BEOS mounted file system support functions])
+  if test $ac_cv_header_fs_info_h = yes
+      && test $ac_cv_func_next_dev = yes
+	&& test $ac_cv_func_fs_stat_dev = yes; then
+    fu_result=yes
+  else
+    fu_result=no
+  fi
+  AC_MSG_RESULT($fu_result)
+  if test $fu_result = yes; then
     ac_list_mounted_fs=found
     AC_DEFINE(MOUNTED_NEXT_DEV, 1,
       [Define if there are functions named next_dev and fs_stat_dev for
