@@ -191,7 +191,6 @@ my_strftime_gmtime_r (t, tp)
   *tp = *l;
   return tp;
 }
-# endif /* ! HAVE_TM_GMTOFF */
 
 static struct tm *my_strftime_localtime_r __P ((const time_t *, struct tm *));
 static struct tm *
@@ -205,6 +204,7 @@ my_strftime_localtime_r (t, tp)
   *tp = *l;
   return tp;
 }
+# endif /* ! HAVE_TM_GMTOFF */
 #endif /* ! defined _LIBC */
 
 
