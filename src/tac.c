@@ -183,7 +183,7 @@ xrealloc (char *p, unsigned int n)
 }
 
 static void
-xwrite (int desc, char *buffer, int size)
+xwrite (int desc, const char *buffer, int size)
 {
   if (full_write (desc, buffer, size) < 0)
     {
@@ -196,7 +196,7 @@ xwrite (int desc, char *buffer, int size)
    If START is NULL, just flush the buffer. */
 
 static void
-output (char *start, char *past_end)
+output (const char *start, const char *past_end)
 {
   static char buffer[WRITESIZE];
   static int bytes_in_buffer = 0;
@@ -229,7 +229,7 @@ output (char *start, char *past_end)
    Return 0 if ok, 1 if an error occurs. */
 
 static int
-tac (int fd, char *file)
+tac (int fd, const char *file)
 {
   /* Pointer to the location in `buffer' where the search for
      the next separator will begin. */
@@ -396,7 +396,7 @@ tac (int fd, char *file)
    Return 0 if ok, 1 if an error occurs. */
 
 static int
-tac_file (char *file)
+tac_file (const char *file)
 {
   int fd, errors;
 
