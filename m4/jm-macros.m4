@@ -1,4 +1,4 @@
-#serial 35   -*- autoconf -*-
+#serial 36   -*- autoconf -*-
 
 dnl Misc type-related macros for fileutils, sh-utils, textutils.
 
@@ -124,7 +124,6 @@ AC_DEFUN(jm_MACROS,
     endpwent \
     fchdir \
     fdatasync \
-    fseeko \
     ftime \
     ftruncate \
     getcwd \
