@@ -1589,22 +1589,34 @@ wipename (char *oldname, char const *qoldname, struct Options const *flags)
       do
 	{
 	  struct stat st;
-	  if (lstat (newname, &st) < 0 && rename (oldname, newname) == 0)
+	  if (lstat (newname, &st) < 0)
 	    {
-	      if (dir_fd < 0
-		  || (fdatasync (dir_fd) < 0 && fsync (dir_fd) < 0))
-		sync ();	/* Force directory out */
-	      if (flags->verbose)
+	      if (rename (oldname, newname) == 0)
 		{
-		  /*
-		   * People seem to understand this better than talking
-		   * about renaming oldname.  newname doesn't need
-		   * quoting because we picked it.
-		   */
-		  error (0, 0, _("%s: renamed to `%s'"), qoldname, newname);
+		  if (dir_fd < 0
+		      || (fdatasync (dir_fd) < 0 && fsync (dir_fd) < 0))
+		    sync ();	/* Force directory out */
+		  if (flags->verbose)
+		    {
+		      /*
+		       * People seem to understand this better than talking
+		       * about renaming oldname.  newname doesn't need
+		       * quoting because we picked it.
+		       */
+		      error (0, 0, _("%s: renamed to `%s'"), qoldname, newname);
+		    }
+		  memcpy (oldname + (base - newname), base, len + 1);
+		  break;
 		}
-	      memcpy (oldname + (base - newname), base, len + 1);
-	      break;
+	      else
+		{
+		  /* The rename failed: give up on this length.  */
+		  break;
+		}
+	    }
+	  else
+	    {
+	      /* newname exists, so increment BASE so we use another */
 	    }
 	}
       while (!incname (base, len));
