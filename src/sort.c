@@ -1642,7 +1642,7 @@ mergefps (char **files, register int nfiles,
     {
       fps[i] = xfopen (files[i], "r");
       initbuf (&buffer[i], sizeof (struct line),
-	       MAX (merge_buffer_size, sort_size));
+	       MAX (merge_buffer_size, sort_size / nfiles));
       /* If a file is empty, eliminate it from future consideration. */
       while (i < nfiles && !fillbuf (&buffer[i], fps[i], files[i]))
 	{
