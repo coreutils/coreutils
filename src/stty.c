@@ -52,13 +52,8 @@
 # include <sys/pty.h>
 #endif
 #include <getopt.h>
-#if PROTOTYPES
-# include <stdarg.h>
-# define VA_START(args, lastarg) va_start(args, lastarg)
-#else
-# include <varargs.h>
-# define VA_START(args, lastarg) va_start(args)
-#endif
+#include <stdarg.h>
+#define VA_START(args, lastarg) va_start(args, lastarg)
 
 #include "system.h"
 #include "long-options.h"
@@ -459,13 +454,7 @@ static void wrapf (const char *message, ...)
 
 /* VARARGS */
 static void
-#if PROTOTYPES
 wrapf (const char *message,...)
-#else
- wrapf (message, va_alist)
-     const char *message;
-     va_dcl
-#endif
 {
   va_list args;
   char buf[1024];		/* Plenty long for our needs. */
