@@ -1,3 +1,9 @@
+2001-05-22  Jim Meyering  <meyering@lucent.com>
+
+	* strftime.m4 (_jm_STRFTIME_PREREQS): Don't use AC_LIBOBJ(strftime),
+	now that we use the package-supplied version unconditionally.
+	(jm_FUNC_STRFTIME): Don't replace strftime, for the same reason.
+
 2001-05-21  Jim Meyering  <meyering@lucent.com>
 
 	* regex.m4: Change a couple backticks to single quotes to avoid shell
