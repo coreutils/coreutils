@@ -1,3 +1,12 @@
+2000-10-18  Paul Eggert  <eggert@twinsun.com>
+
+	* src/date.c (universal_time): Remove; it's just a temptation to
+	do the wrong thing.
+	(main): The -u option now just sets TZ; it doesn't do anything else.
+	(show_date): Do not do anything special if -u is set.
+	This affects the behavior of the -I and -R options.
+	* doc/sh-utils.texi: Document the above.
+
 2000-10-18  Jim Meyering  <meyering@lucent.com>
 
 	* doc/sh-utils.texi (Examples of date): Fix a typo.
