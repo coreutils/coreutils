@@ -53,9 +53,9 @@ int argcasematch
 # define ARGCASEMATCH(Arg, Arglist, Vallist) \
   argcasematch ((Arg), (Arglist), (const char *) (Vallist), sizeof (*(Vallist)))
 
-/* Function called when xargmatch failed.  Should not return.  By
+/* Function called when xargmatch fails.  Should not return.  By
    default, set to a function calling the macro ARGMATCH_EXIT_FAILURE
-   which, by default is `exit (2)'.*/
+   which, by default is `exit (2)'.  */
 typedef void (*argmatch_exit_fn) PARAMS ((void));
 extern argmatch_exit_fn argmatch_die;
 
