@@ -26,7 +26,7 @@
 
 	Prompt once again for `mv -i A B' when A and B are hard links
 	to the same file.  This fixes a bug introduced by my 2003-04-04
-	(coreutils-5.0.1) change.
+	(coreutils-5.0.1) change.  Reported by Thomas Wolff via Eric Blake.
 	* src/copy.c (abandon_move): New function, factored out of
 	copy_internal, now that this code is being used from two places.
 	(copy_internal): Perform the same interactive-related test for
