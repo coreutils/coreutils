@@ -1,3 +1,8 @@
+Thu Nov 28 00:31:18 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in (AM_GNU_GETTEXT): Renamed from ud_GNU_GETTEXT
+	for gettext-0.10.25.
+
 Tue Nov 26 23:05:14 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/sort.c (fraccompare): Add explicit `int' in `register' dcls,

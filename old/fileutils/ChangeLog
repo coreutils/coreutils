@@ -1,3 +1,8 @@
+Thu Nov 28 00:31:11 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in (AM_GNU_GETTEXT): Renamed from ud_GNU_GETTEXT
+	for gettext-0.10.25.
+
 Tue Nov 26 23:24:13 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* acinclude.m4: Update with macros from gettext-0.10.25.
