@@ -1,5 +1,7 @@
 2003-08-11  Jim Meyering  <jim@meyering.net>
 
+	* Version 5.0.91.
+
 	fold -s -wN would infloop for N < 8 with TABs in the input.
 	E.g., this would not terminate: printf 'a\tb' | fold -w2 -s
 	* src/fold.c (fold_file): Move contents of `else'-block
@@ -26,8 +28,6 @@
 	* src/touch.c (newtime, touch, main): Likewise.
 
 2003-08-09  Jim Meyering  <jim@meyering.net>
-
-	* Version 5.0.91.
 
 	* Makefile.maint (sc_sun_os_names): New rule based on a regexp
 	from Paul Eggert.
