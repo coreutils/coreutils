@@ -1,3 +1,14 @@
+1999-07-04  Jim Meyering  <meyering@ascend.com>
+
+	* lib/xstrtol.c [!defined strtoumax]: Declare strtoumax.
+
+1999-07-04  Paul Eggert  <eggert@twinsun.com>
+
+	* lib/xstrtol.c (__strtol): Remove decl; it doesn't work if __strtol
+	expands to a macro, which occurs in HP-UX 10.20 with strtoumax.
+	(strtol, strtoul): New decls (for pre-ANSI hosts), to replace
+	the above decl.
+
 1999-06-27  Paul Eggert  <eggert@twinsun.com>
 
 	Fix some incompatibilities between `df -P' and POSIX.2.
@@ -16,13 +27,6 @@
 	Align with POSIX-conforming header if posix_format.
 
 	* doc/fileutils.texi: Document these changes.
-
-1999-07-04  Paul Eggert  <eggert@twinsun.com>
-
-	* lib/xstrtol.c (__strtol): Remove decl; it doesn't work if __strtol
-	expands to a macro, which occurs in HP-UX 10.20 with strtoumax.
-	(strtol, strtoul): New decls (for pre-ANSI hosts), to replace
-	the above decl.
 
 1999-05-27  Volker Borchert  <bt@teknon.de>
 
