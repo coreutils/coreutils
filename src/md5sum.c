@@ -215,7 +215,7 @@ split_3 (char *s, size_t s_len,
     ++i;
 
   /* Check for BSD-style checksum line. */
-  if (strncmp (s + i, "MD5 (", 5) == 0)
+  if (algorithm == ALG_MD5 && strncmp (s + i, "MD5 (", 5) == 0)
     {
       *binary = 0;
       return bsd_split_3 (s + i + 5, s_len - i - 5, hex_digest, file_name);
