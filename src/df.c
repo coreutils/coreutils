@@ -19,10 +19,6 @@
    --human-readable and --megabyte options added by lm@sgi.com.
    --si and large file support added by eggert@twinsun.com.  */
 
-#ifdef _AIX
- #pragma alloca
-#endif
-
 #include <config.h>
 #include <stdio.h>
 #include <sys/types.h>

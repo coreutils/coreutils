@@ -17,10 +17,6 @@
 
 /* Written by Mike Parker and David MacKenzie. */
 
-#ifdef _AIX
- #pragma alloca
-#endif
-
 #include <config.h>
 #include <stdio.h>
 #include <sys/types.h>

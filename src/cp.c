@@ -17,10 +17,6 @@
 
    Written by Torbjorn Granlund, David MacKenzie, and Jim Meyering. */
 
-#ifdef _AIX
- #pragma alloca
-#endif
-
 #include <config.h>
 #include <stdio.h>
 #include <sys/types.h>

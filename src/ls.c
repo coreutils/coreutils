@@ -36,10 +36,6 @@
    Flaherty <dennisf@denix.elk.miles.com> based on original patches by
    Greg Lee <lee@uhunix.uhcc.hawaii.edu>.  */
 
-#ifdef _AIX
- #pragma alloca
-#endif
-
 #include <config.h>
 #include <sys/types.h>
 

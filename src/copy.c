@@ -17,10 +17,6 @@
 
 /* Extracted from cp.c and librarified by Jim Meyering.  */
 
-#ifdef _AIX
- #pragma alloca
-#endif
-
 #include <config.h>
 #include <stdio.h>
 #include <assert.h>
