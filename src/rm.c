@@ -49,6 +49,7 @@
 #include <assert.h>
 
 #include "system.h"
+#include "dirname.h"
 #include "error.h"
 #include "remove.h"
 #include "save-cwd.h"
@@ -96,6 +97,7 @@ usage (int status)
 	     program_name);
   else
     {
+      char *base = base_name (program_name);
       printf (_("Usage: %s [OPTION]... FILE...\n"), program_name);
       fputs (_("\
 Remove (unlink) the FILE(s).\n\
@@ -118,7 +120,7 @@ use one of these commands:\n\
 \n\
   %s ./-foo\n\
 "),
-	      program_name, program_name);
+	      base, base);
       fputs (_("\
 \n\
 Note that if you use rm to remove a file, it is usually possible to recover\n\
