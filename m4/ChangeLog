@@ -1,3 +1,9 @@
+2000-06-17  Bruno Haible  <haible@clisp.cons.org>
+
+	* check-decl.m4 (_jm_DECL_HEADERS): Check for utmp.h as well.
+	* prereq.m4 (jm_PREREQ_READUTMP): Likewise. If either <utmp.h> or
+	<utmpx.h> exists, put readutmp.o into LIBOBJS.
+
 2000-06-25  Jim Meyering  <meyering@lucent.com>
 
 	* mbstate_t.m4: Include stdio.h before wchar.h to work around
