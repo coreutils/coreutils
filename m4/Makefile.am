@@ -5,6 +5,7 @@ EXTRA_DIST = README Makefile.am.in \
 afs.m4 \
 assert.m4 \
 bison.m4 \
+c-bs-a.m4 \
 check-decl.m4 \
 chown.m4 \
 d-ino.m4 \
