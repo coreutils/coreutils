@@ -1,3 +1,7 @@
+2000-03-18  Jim Meyering  <meyering@lucent.com>
+
+	* src/uptime.c (print_uptime): Use `buf' only if fgets succeeds.
+
 2000-03-12  Jim Meyering  <meyering@lucent.com>
 
 	Merge from textutils.
@@ -10,7 +14,13 @@
 	* tests/date/Test.pm: Set the default TZ value to UTC0, not UTC.
 	The latter didn't have any effect on alphaev56-dec-osf4.0f.
 
-	* src/chroot.c (usage): FIXME
+	chroot accepts new option: --no-chdir
+	* src/chroot.c (<getopt.h>): Include it.
+	(INHIBIT_CHDIR): Define.
+	(longopts): Declare and define.
+	(usage): Describe new option.
+	(main): Use getopt_long.
+	Don't call `chdir ("/")' if --no-chdir was specified.
 
 	Final merge with fileutils.
 	* src/system.h: Use standard `#if TIME_WITH_SYS_TIME...' block
