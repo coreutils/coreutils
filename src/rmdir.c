@@ -33,9 +33,6 @@
 
 void strip_trailing_slashes ();
 
-static void remove_parents (char *path);
-static void usage (int status);
-
 /* The name this program was run with. */
 char *program_name;
 
@@ -56,6 +53,47 @@ static struct option const longopts[] =
   {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
+
+/* Remove any empty parent directories of `path'.
+   Replaces '/' characters in `path' with NULs. */
+
+static void
+remove_parents (char *path)
+{
+  char *slash;
+
+  do
+    {
+      slash = strrchr (path, '/');
+      if (slash == NULL)
+	break;
+      /* Remove any characters after the slash, skipping any extra
+	 slashes in a row. */
+      while (slash > path && *slash == '/')
+	--slash;
+      slash[1] = 0;
+    }
+  while (rmdir (path) == 0);
+}
+
+static void
+usage (int status)
+{
+  if (status != 0)
+    fprintf (stderr, "Try `%s --help' for more information.\n",
+	     program_name);
+  else
+    {
+      printf ("Usage: %s [OPTION]... DIRECTORY...\n", program_name);
+      printf ("\
+Remove the DIRECTORY(ies), if they are empty.\n\
+\n\
+  -p, --parents   remove explicit parent directories if being emptied\n\
+      --help      display this help and exit\n\
+      --version   output version information and exit\n");
+    }
+  exit (status);
+}
 
 void
 main (int argc, char **argv)
@@ -110,45 +148,4 @@ main (int argc, char **argv)
     }
 
   exit (errors);
-}
-
-/* Remove any empty parent directories of `path'.
-   Replaces '/' characters in `path' with NULs. */
-
-static void
-remove_parents (char *path)
-{
-  char *slash;
-
-  do
-    {
-      slash = strrchr (path, '/');
-      if (slash == NULL)
-	break;
-      /* Remove any characters after the slash, skipping any extra
-	 slashes in a row. */
-      while (slash > path && *slash == '/')
-	--slash;
-      slash[1] = 0;
-    }
-  while (rmdir (path) == 0);
-}
-
-static void
-usage (int status)
-{
-  if (status != 0)
-    fprintf (stderr, "Try `%s --help' for more information.\n",
-	     program_name);
-  else
-    {
-      printf ("Usage: %s [OPTION]... DIRECTORY...\n", program_name);
-      printf ("\
-Remove the DIRECTORY(ies), if they are empty.\n\
-\n\
-  -p, --parents   remove explicit parent directories if being emptied\n\
-      --help      display this help and exit\n\
-      --version   output version information and exit\n");
-    }
-  exit (status);
 }
