@@ -30,7 +30,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "tee"
 
-#define AUTHORS "Mike Parker, Richard M. Stallman, and David MacKenzie"
+#define AUTHORS N_ ("Mike Parker, Richard M. Stallman, and David MacKenzie")
 
 int full_write ();
 

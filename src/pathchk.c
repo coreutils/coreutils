@@ -56,7 +56,7 @@ extern int errno;
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "pathchk"
 
-#define AUTHORS "David MacKenzie and Jim Meyering"
+#define AUTHORS N_ ("David MacKenzie and Jim Meyering")
 
 #if HAVE_PATHCONF
 # ifndef PATH_MAX

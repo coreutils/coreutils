@@ -33,7 +33,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "id"
 
-#define AUTHORS "Arnold Robbins and David MacKenzie"
+#define AUTHORS N_ ("Arnold Robbins and David MacKenzie")
 
 #ifndef _POSIX_VERSION
 struct passwd *getpwuid ();

@@ -50,7 +50,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "sleep"
 
-#define AUTHORS "Jim Meyering and Paul Eggert"
+#define AUTHORS N_ ("Jim Meyering and Paul Eggert")
 
 /* The name by which this program was run. */
 char *program_name;

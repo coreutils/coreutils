@@ -90,7 +90,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "env"
 
-#define AUTHORS "Richard Mlynarik and David MacKenzie"
+#define AUTHORS N_ ("Richard Mlynarik and David MacKenzie")
 
 int putenv ();
 

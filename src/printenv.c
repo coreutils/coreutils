@@ -40,7 +40,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "printenv"
 
-#define AUTHORS "David MacKenzie and Richard Mlynarik"
+#define AUTHORS N_ ("David MacKenzie and Richard Mlynarik")
 
 /* The name this program was run with. */
 char *program_name;

@@ -32,7 +32,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "uptime"
 
-#define AUTHORS "Joseph Arceneaux, David MacKenzie, and Kaveh Ghazi"
+#define AUTHORS N_ ("Joseph Arceneaux, David MacKenzie, and Kaveh Ghazi")
 
 int getloadavg ();
 

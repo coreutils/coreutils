@@ -32,7 +32,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "users"
 
-#define AUTHORS "Joseph Arceneaux and David MacKenzie"
+#define AUTHORS N_ ("Joseph Arceneaux and David MacKenzie")
 
 /* The name this program was run with. */
 char *program_name;

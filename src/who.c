@@ -38,7 +38,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "who"
 
-#define AUTHORS "Joseph Arceneaux, David MacKenzie, and Michael Stone"
+#define AUTHORS N_ ("Joseph Arceneaux, David MacKenzie, and Michael Stone")
 
 #ifndef MAXHOSTNAMELEN
 # define MAXHOSTNAMELEN 64

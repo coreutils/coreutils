@@ -1056,7 +1056,7 @@ INTEGER may also be -l STRING, which evaluates to the length of STRING.\n\
 # define main test_command
 #endif
 
-#define AUTHORS "FIXME: ksb and mjb"
+#define AUTHORS N_ ("FIXME: ksb and mjb")
 
 /*
  * [:
