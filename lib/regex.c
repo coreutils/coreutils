@@ -297,6 +297,7 @@ init_syntax_once ()
 
 /* Integer type for pointers.  */
 # if !defined _LIBC
+#define uintptr_t private_uintptr_t
 typedef unsigned long int uintptr_t;
 # endif
 
