@@ -43,10 +43,14 @@ static int canonicalize;
 static int no_newline;
   /* If nonzero, report error messages. */
 static int verbose;
+  /* In canonicalize mode, use this method. */
+canonicalize_mode_t can_mode = CAN_ALL_BUT_LAST;
 
 static struct option const longopts[] =
 {
   {"canonicalize", no_argument, 0, 'f'},
+  {"canonicalize-existing", no_argument, 0, 'e'},
+  {"canonicalize-missing", no_argument, 0, 'm'},
   {"no-newline", no_argument, 0, 'n'},
   {"quiet", no_argument, 0, 'q'},
   {"silent", no_argument, 0, 's'},
@@ -68,18 +72,31 @@ usage (int status)
       fputs (_("Display value of a symbolic link on standard output.\n\n"),
 	     stdout);
       fputs (_("\
-  -f, --canonicalize      canonicalize by following every symlink in every\n\
-                          component of the given path recursively\n\
-  -n, --no-newline        do not output the trailing newline\n\
+  -f, --canonicalize            canonicalize by following every symlink in\n\
+                                every component of the given path recursively;\n\
+                                all but the last path component must exist\n\
+  -e, --canonicalize-existing   canonicalize by following every symlink in\n\
+                                every component of the given path recursively,\n\
+                                all path components must exist\n\
+  -m, --canonicalize-missing    canonicalize by following every symlink in\n\
+                                every component of the given path recursively,\n\
+                                without requirements on components existence\n\
+  -n, --no-newline              do not output the trailing newline\n\
   -q, --quiet,\n\
-  -s, --silent            suppress most error messages\n\
-  -v, --verbose           report error messages\n\
+  -s, --silent                  suppress most error messages\n\
+  -v, --verbose                 report error messages\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
   exit (status);
+}
+
+static char *
+canonicalize_fname (const char *fname)
+{
+  return canonicalize_filename_mode (fname, can_mode);
 }
 
 int
@@ -97,14 +114,23 @@ main (int argc, char *const argv[])
 
   atexit (close_stdout);
 
-  while ((optc = getopt_long (argc, argv, "fnqsv", longopts, NULL)) != -1)
+  while ((optc = getopt_long (argc, argv, "efmnqsv", longopts, NULL)) != -1)
     {
       switch (optc)
 	{
 	case 0:
 	  break;
+	case 'e':
+	  canonicalize = 1;
+	  can_mode = CAN_EXISTING;
+	  break;
 	case 'f':
 	  canonicalize = 1;
+	  can_mode = CAN_ALL_BUT_LAST;
+	  break;
+	case 'm':
+	  canonicalize = 1;
+	  can_mode = CAN_MISSING;
 	  break;
 	case 'n':
 	  no_newline = 1;
@@ -138,7 +164,7 @@ main (int argc, char *const argv[])
     }
 
   value = (canonicalize
-	   ? canonicalize_file_name (fname)
+	   ? canonicalize_fname (fname)
 	   : xreadlink (fname, 1024));
   if (value)
     {
