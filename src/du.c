@@ -767,6 +767,7 @@ main (int argc, char **argv)
 	struct stat st;
 	size_t projected_n_filenames
 	  = ((fstat (fileno (istream), &st) == 0
+	      && S_ISREG (st.st_mode)
 	      && 0 < st.st_size)
 	     ? st.st_size / (EXPECTED_BYTES_PER_FILE_NAME + 1)
 	     : DEFAULT_PROJECTED_N_FILES);
@@ -780,7 +781,7 @@ main (int argc, char **argv)
 	       quote (files_from));
 
       if (n_files == 0)
-	error (EXIT_FAILURE, errno, _("no files specified in %s"),
+	error (EXIT_FAILURE, 0, _("no files specified in %s"),
 	       quote (files_from));
 
       /* Fail if any name has length zero.  */
