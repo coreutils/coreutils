@@ -1,3 +1,7 @@
+Wed Sep  4 23:39:51 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in (ALL_LINGUAS): Add dutch (nl).
+
 Mon Sep  2 10:52:55 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/*.c (usage): Tell where to report bugs.
