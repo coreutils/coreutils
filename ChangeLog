@@ -1,6 +1,18 @@
-2004-11-20  Paul Eggert  <eggert@cs.ucla.edu>
+2004-11-23  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.0.
+
+	Minor performance improvements and cleanups for "touch".
+	* src/touch.c (posix_date): Remove; not needed as a static var.
+	All uses rewritten.
+	(touch): Use new futimens function to operate more efficiently
+	in some cases.  Don't stat/fstat existing file when
+	(!amtime_now && change_times == (CH_ATIME | CH_MTIME)); the
+	old time stamps aren't needed in that case.
+	(main): change_times is int, not bool.  Simplify test for
+	change_times.
+
+2004-11-20  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/install.c (usage): Avoid usage that runs afoul of Docbook
 	translation.  Problem reported by Eric S. Raymond.
