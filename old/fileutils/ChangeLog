@@ -1,6 +1,23 @@
-2002-03-02  Jim Meyering  <meyering@lucent.com>
+2002-03-03  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.6.
+
+2002-03-03  Paul Eggert  <eggert@twinsun.com>
+
+	Make cp -r equivalent to cp -R.  Add a new cp option --copy-contents
+	for people who want to emulate the traditional (and rarely desirable)
+	cp -r behavior.
+
+	* src/cp.c (COPY_CONTENTS_OPTION): New enum value.
+	(long_opts): Add --copy-contents.
+	(usage): Describe new behavior.  Sort options.
+	(main): Implement new behavior.  Remove diagnostics for -a and -r;
+	no longer needed.
+	* src/copy.c (copy_internal): Remove -r warning; no longer needed.
+
+	* NEWS: Document this.
+
+2002-03-02  Jim Meyering  <meyering@lucent.com>
 
 	* src/copy.c (copy_internal): For each symlink copied by cp -r,
 	issue a warning that `cp -r' is not portable.
