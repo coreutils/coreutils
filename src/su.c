@@ -1,5 +1,5 @@
 /* su for GNU.  Run a shell with substitute user and group IDs.
-   Copyright (C) 1992-2001 Free Software Foundation, Inc.
+   Copyright (C) 1992-2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -125,11 +125,7 @@
 #ifdef _PATH_DEFPATH
 # define DEFAULT_LOGIN_PATH _PATH_DEFPATH
 #else
-# ifndef __MSDOS__
-#  define DEFAULT_LOGIN_PATH ":/usr/ucb:/bin:/usr/bin"
-# else
-#  define DEFAULT_LOGIN_PATH "c:/dos;c:/windows;c:/"
-# endif
+# define DEFAULT_LOGIN_PATH ":/usr/ucb:/bin:/usr/bin"
 #endif
 
 /* The default PATH for simulated logins to superuser accounts.  */
@@ -140,11 +136,7 @@
 #endif
 
 /* The shell to run if none is given in the user's passwd entry.  */
-#ifdef __MSDOS__
-# define DEFAULT_SHELL "command.com"
-#else
-# define DEFAULT_SHELL "/bin/sh"
-#endif
+#define DEFAULT_SHELL "/bin/sh"
 
 /* The user to become if none is specified.  */
 #define DEFAULT_USER "root"
@@ -290,10 +282,6 @@ correct_password (const struct passwd *pw)
     correct = sp->sp_pwdp;
   else
 #endif
-#if SINGLEUSER
-    /* Assume that the password is always correct. */
-    return 1;
-#else
     correct = pw->pw_passwd;
 
   if (getuid () == 0 || correct == 0 || correct[0] == '\0')
@@ -308,7 +296,6 @@ correct_password (const struct passwd *pw)
   encrypted = crypt (unencrypted, correct);
   memset (unencrypted, 0, strlen (unencrypted));
   return strcmp (encrypted, correct) == 0;
-#endif
 }
 
 /* Update `environ' for the new shell based on PW, with SHELL being
@@ -372,7 +359,6 @@ change_identity (const struct passwd *pw)
 
 /* Run SHELL, or DEFAULT_SHELL if SHELL is empty.
    If COMMAND is nonzero, pass it to the shell with the -c option.
-   In case of MSDOS shells, pass it with the /c option.
    If ADDITIONAL_ARGS is nonzero, pass it to the shell as more
    arguments.  */
 
@@ -404,21 +390,8 @@ run_shell (const char *shell, const char *command, char **additional_args)
     args[argno++] = "-f";
   if (command)
     {
-#ifdef HAVE__IS_DOS_SHELL
-      if (_is_dos_shell (shell))
-	{
-	  args[argno++] = "/c";
-	  args[argno++] = command;
-	}
-      else
-	{
-	  args[argno++] = "-c";
-	  args[argno++] = command;
-	}
-#else
       args[argno++] = "-c";
       args[argno++] = command;
-#endif
     }
   if (additional_args)
     for (; *additional_args; ++additional_args)
@@ -437,14 +410,6 @@ restricted_shell (const char *shell)
 {
   char *line;
 
-#if HAVE__FIXPATH
-  /* Convert all slashes to forward style, make sure the
-     letter case in both SHELL and LINE is consistent.  */
-  char shellbuf[PATH_MAX];
-
-  _fixpath (shell, shellbuf);
-  shell = shellbuf;
-#endif
   setusershell ();
   while ((line = getusershell ()) != NULL)
     {
@@ -491,11 +456,7 @@ int
 main (int argc, char **argv)
 {
   int optc;
-#if SINGLEUSER
-  char *new_user = getlogin ();
-#else
   const char *new_user = DEFAULT_USER;
-#endif
   char *command = 0;
   char **additional_args = 0;
   char *shell = 0;
@@ -558,28 +519,9 @@ main (int argc, char **argv)
   if (optind < argc)
     additional_args = argv + optind;
 
-#if SINGLEUSER
-  pw = getpwnam (getlogin());
-#else
   pw = getpwnam (new_user);
-#endif
   if (pw == 0)
-#if HAVE___DOSEXEC_FIND_ON_PATH
-    {
-      /* On MSDOS, allow them to become anyone.  */
-      extern char * __dosexec_find_on_path (const char *, char **, char *);
-      char found_at[PATH_MAX];
-
-      pw = (struct passwd *)alloca (sizeof (struct passwd));
-      pw->pw_name = new_user;
-      pw->pw_dir = "c:/";
-      pw->pw_shell = __dosexec_find_on_path ("command.com", environ, found_at);
-      pw->pw_uid = getuid ();
-      pw->pw_gid = getgid ();
-    }
-#else
     error (1, 0, _("user %s does not exist"), new_user);
-#endif
   endpwent ();
 
   /* Make sure pw->pw_shell is non-NULL.  It may be NULL when NEW_USER
@@ -613,13 +555,6 @@ main (int argc, char **argv)
 
   if (shell == 0 && change_environment == 0)
     shell = getenv ("SHELL");
-
-#ifdef __MSDOS__
-  /* $SHELL is not guaranteed to be defined on MSDOS.  */
-  if (shell == 0 && change_environment == 0)
-    shell = getenv ("COMSPEC");
-#endif
-
   if (shell != 0 && getuid () && restricted_shell (pw->pw_shell))
     {
       /* The user being su'd to has a nonstandard shell, and so is
