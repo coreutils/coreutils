@@ -5638,9 +5638,14 @@ to corresponding destination directories.
 
 By default, @command{cp} follows symbolic links only when not copying
 recursively.  This default can be overridden with the
-@option{--no-dereference} (@option{-d}), @option{--dereference}
-(@option{-L}), and @option{-H} options.  If more than one of these
-options is specified, the last one silently overrides the others.
+@option{--archive} (@option{-a}), @option{-d}, @option{--dereference}
+(@option{-L}), @option{--no-dereference} (@option{-P}), and
+@option{-H} options.  If more than one of these options is specified,
+the last one silently overrides the others.
+
+By default, @command{cp} copies the contents of special files only
+when not copying recursively.  This default can be overridden with the
+@option{--copy-contents} option.
 
 @cindex self-backups
 @cindex backups, making only
@@ -5660,9 +5665,9 @@ The program accepts the following options.  Also see @ref{Common options}.
 @opindex --archive
 Preserve as much as possible of the structure and attributes of the
 original files in the copy (but do not attempt to preserve internal
-directory structure;  i.e., @samp{ls -U} may list the entries in a copied
+directory structure; i.e., @samp{ls -U} may list the entries in a copied
 directory in a different order).
-Equivalent to @option{-dpR}.
+Equivalent to @option{-dpPR}.
 
 @item -b
 @itemx @w{@kbd{--backup}[=@var{method}]}
@@ -5685,6 +5690,23 @@ for i in "$@"; do
   cp --backup --force "$i" "$i"
 done
 @end example
+
+@item --copy-contents
+@cindex directories, copying recursively
+@cindex copying directories recursively
+@cindex recursively copying directories
+@cindex non-directories, copying as special files
+If copying recursively, copy the contents of any special files (e.g.,
+FIFOs and device files) as if they were regular files.  This means
+trying to read the data in each source file and writing it to the
+destination.  It is usually a mistake to use this option, as it
+normally has undesirable effects on special files like FIFOs and the
+ones typically found in the @file{/dev} directory.  In most cases,
+@code{cp -R --copy-contents} will hang indefinitely trying to read
+from FIFOs and special files like @file{/dev/console}, and it will
+fill up your destination disk if you use it to copy @file{/dev/zero}.
+This option has no effect unless copying recursively, and it does not
+affect the copying of symbolic links.
 
 @item -d
 @opindex -d
@@ -5797,27 +5819,6 @@ cp --parents a/b/c existing_dir
 copies the file @file{a/b/c} to @file{existing_dir/a/b/c}, creating
 any missing intermediate directories.
 
-@item -r
-@cindex directories, copying recursively
-@cindex copying directories recursively
-@cindex recursively copying directories
-@cindex non-directories, copying as special files
-Copy directories recursively, copying any non-directories and special
-files (e.g., FIFOs and device files) as if they were regular files.
-This means trying to read the data in each source file and writing it to
-the destination.  However, contrary to most other implementations,
-GNU @code{cp -r} preserves symbolic links.  It is usually a mistake to
-apply @code{cp -r} to special files like FIFOs and the ones typically
-found in the @file{/dev} directory.  In most cases, @code{cp -r}
-will hang indefinitely trying to read from FIFOs and special files
-like @file{/dev/console}, and it will fill up your destination disk
-if you use it to copy @file{/dev/zero}.
-Use the @option{--recursive} (@option{-R}) option instead if you want
-to copy special files, preserving their special nature
-rather than reading from them to copy their contents.
-It is not portable to use @code{cp -r} to preserve symbolic links.
-On most non-GNU systems, @code{cp -r} does @emph{not} preserve symbolic links.
-
 @itemx @w{@kbd{--reply}[=@var{how}]}
 @opindex --reply
 @cindex interactivity
@@ -5830,11 +5831,27 @@ Specify @option{--reply=query} to make @code{cp} prompt the user
 about each existing destination file.
 
 @item -R
+@itemx -r
 @itemx --recursive
 @opindex -R
+@opindex -r
 @opindex --recursive
-Copy directories recursively, preserving non-directories (contrast with
-@option{-r} just above).
+@cindex directories, copying recursively
+@cindex copying directories recursively
+@cindex recursively copying directories
+@cindex non-directories, copying as special files
+Copy directories recursively.  Symbolic links are not followed by
+default; see the @option{--archive} (@option{-a}), @option{-d},
+@option{--dereference} (@option{-L}), @option{--no-dereference}
+(@option{-P}), and @option{-H} options.  Special files are copied by
+creating a destination file of the same type as the source; see the
+@option{--copy-contents} option.  It is not portable to use
+@option{-r} to copy symbolic links or special files.  On some
+non-@sc{gnu} systems, @option{-r} implies the equivalent of
+@option{-L} and @option{--copy-contents} for historical reasons.
+Also, it is not portable to use @option{-R} to copy symbolic links
+unless you also specify @option{-P}, as @sc{posix} allows
+implementations that dereference symbolic links by default.
 
 @item --remove-destination
 @opindex --remove-destination
