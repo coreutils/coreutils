@@ -30,20 +30,11 @@
 #include <stdio.h>
 #include <ctype.h>
 
-/* The code at the top of get_date which figures out the offset of the
-   current time zone checks various CPP symbols to see if special
-   tricks are need, but defaults to using the gettimeofday system call.
-   Include <sys/time.h> if that will be used.  */
-
 #if	defined (vms)
-
 #include <types.h>
 #include <time.h>
-
 #else
-
 #include <sys/types.h>
-
 #ifdef TIME_WITH_SYS_TIME
 #include <sys/time.h>
 #include <time.h>
@@ -62,12 +53,12 @@
 #if defined (HAVE_SYS_TIMEB_H)
 #include <sys/timeb.h>
 #else
-/*
-** We use the obsolete `struct timeb' as part of our interface!
-** Since the system doesn't have it, we define it here;
-** our callers must do likewise.
-*/
-struct timeb {
+
+/* get_date uses the obsolete `struct timeb' in its interface!  FIXME.
+   Since some systems don't have it, we define it here;
+   callers must do likewise.  */
+struct timeb
+  {
     time_t		time;		/* Seconds since the epoch	*/
     unsigned short	millitm;	/* Field not used		*/
     short		timezone;	/* Minutes west of GMT		*/
