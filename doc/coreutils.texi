@@ -118,7 +118,7 @@ END-INFO-DIR-ENTRY
 @ifinfo
 This file documents the GNU command line utilities.
 
-Copyright (C) 1994, 95, 96, 2001 Free Software Foundation, Inc.
+Copyright (C) 1994, 1995, 1996, 2000, 2001 Free Software Foundation, Inc.
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.1 or
@@ -137,7 +137,8 @@ Free Documentation License''.
 
 @page
 @vskip 0pt plus 1filll
-Copyright @copyright{} 1994, 95, 96, 2000 Free Software Foundation, Inc.
+Copyright @copyright{} 1994, 1995, 1996, 2000, 2001 Free Software
+Foundation, Inc.
 
 Permission is granted to copy, distribute and/or modify this document
 under the terms of the GNU Free Documentation License, Version 1.1 or
@@ -673,63 +674,101 @@ future.
 
 A block size specification can be a positive integer specifying the number
 of bytes per block, or it can be @code{human-readable} or @code{si} to
-select a human-readable format.
-
+select a human-readable format.  Integers may be followed by suffixes
+that are upward compatible with the
+@uref{http://www.bipm.fr/enus/3_SI/si-prefixes.html, SI prefixes}
+for decimal multiples and with the
+@uref{http://physics.nist.gov/cuu/Units/binary.html, IEC 60027-2
+prefixes for binary multiples}.
 
 With human-readable formats, output sizes are followed by a size letter
 such as @samp{M} for megabytes.  @code{BLOCK_SIZE=human-readable} uses
 powers of 1024; @samp{M} stands for 1,048,576 bytes.
-@code{BLOCK_SIZE=si} is similar, but uses powers of 1000; @samp{M} stands
-for 1,000,000 bytes.  (SI, the International System of Units, defines
-these power-of-1000 prefixes.)
+@code{BLOCK_SIZE=si} is similar, but uses powers of 1000 and appends
+@samp{B}; @samp{MB} stands for 1,000,000 bytes.
 
-An integer block size can be followed by a size letter to specify a
-multiple of that size.  When this notation is used, the size letters
-normally stand for powers of 1024, and can be followed by an optional
-@samp{B} for ``byte''; but if followed by @samp{D} (for ``decimal
-byte''), they stand for powers of 1000.  For example,
-@code{BLOCK_SIZE=4MB} is equivalent to @code{BLOCK_SIZE=4194304}, and
-@code{BLOCK_SIZE=4MD} is equivalent to @code{BLOCK_SIZE=4000000}.
+An integer block size can be followed by a suffix to specify a
+multiple of that size; in this case an omitted integer is understood
+to be 1.  A bare size letter, or one followed by @samp{iB}, specifies
+a multiple using powers of 1024.  A size letter followed by @samp{B}
+specifies powers of 1000 instead.  For example, @samp{M} and
+@samp{MiB} are equivalent to @samp{1048576}, whereas @samp{MB} is
+equivalent to @samp{1000000}.
 
-The following size letters are defined.  Large sizes like @code{1Y}
+The following suffixes are defined.  Large sizes like @code{1Y}
 may be rejected by your computer due to limitations of its arithmetic.
 
 @table @samp
+@item kB
+@cindex kilobyte, definition of
+kilobyte: @math{10^3 = 1000}.
 @item k
-kilo: @math{2^10 = 1024} for @code{human-readable},
-or @math{10^3 = 1000} for @code{si}.
+@itemx K
+@itemx KiB
+@cindex kibibyte, definition of
+kibibyte: @math{2^10 = 1024}.  @samp{K} is special: the SI prefix is
+@samp{k} and the IEC 60027-2 prefix is @samp{Ki}, but tradition and
+@sc{posix} use @samp{k} to mean @samp{KiB}.
+@item MB
+@cindex megabyte, definition of
+megabyte: @math{10^6 = 1,000,000}.
 @item M
-Mega: @math{2^20 = 1,048,576}
-or @math{10^6 = 1,000,000}.
+@itemx MiB
+@cindex mebibyte, definition of
+mebibyte: @math{2^20 = 1,048,576}.
+@item GB
+@cindex gigabyte, definition of
+gigabyte: @math{10^9 = 1,000,000,000}.
 @item G
-Giga: @math{2^30 = 1,073,741,824}
-or @math{10^9 = 1,000,000,000}.
+@itemx GiB
+@cindex gibibyte, definition of
+gibibyte: @math{2^30 = 1,073,741,824}.
+@item TB
+@cindex terabyte, definition of
+terabyte:  @math{10^12 = 1,000,000,000,000}.
 @item T
-Tera: @math{2^40 = 1,099,511,627,776}
-or @math{10^12 = 1,000,000,000,000}.
+@itemx TiB
+@cindex tebibyte, definition of
+tebibyte: @math{2^40 = 1,099,511,627,776}.
+@item PB
+@cindex petabyte, definition of
+petabyte: @math{10^15 = 1,000,000,000,000,000}.
 @item P
-Peta: @math{2^50 = 1,125,899,906,842,624}
-or @math{10^15 = 1,000,000,000,000,000}.
+@itemx PiB
+@cindex pebibyte, definition of
+pebibyte: @math{2^50 = 1,125,899,906,842,624}.
+@item EB
+@cindex exabyte, definition of
+exabyte: @math{10^18 = 1,000,000,000,000,000,000}.
 @item E
-Exa: @math{2^60 = 1,152,921,504,606,846,976}@*
-or @math{10^18 = 1,000,000,000,000,000,000}.
+@itemx EiB
+@cindex exbibyte, definition of
+exbibyte: @math{2^60 = 1,152,921,504,606,846,976}.
+@item ZB
+@cindex zettabyte, definition of
+zettabyte: @math{10^21 = 1,000,000,000,000,000,000,000}
 @item Z
-Zetta: @math{2^70 = 1,180,591,620,717,411,303,424}@*
-or @math{10^21 = 1,000,000,000,000,000,000,000}.
+@itemx ZiB
+@math{2^70 = 1,180,591,620,717,411,303,424}.
+(@samp{Zi} is a GNU extension to IEC 60027-2.)
+@item YB
+@cindex yottabyte, definition of
+yottabyte: @math{10^24 = 1,000,000,000,000,000,000,000,000}.
 @item Y
-Yotta: @math{2^80 = 1,208,925,819,614,629,174,706,176}@*
-or @math{10^24 = 1,000,000,000,000,000,000,000,000}.
+@itemx YiB
+@math{2^80 = 1,208,925,819,614,629,174,706,176}.
+(@samp{Yi} is a GNU extension to IEC 60027-2.)
 @end table
 
 @opindex -k
-@opindex --kilobytes
 @opindex -h
+@opindex --block-size
 @opindex --human-readable
 @opindex --si
 
 Block size defaults can be overridden by an explicit
-@option{--block-size=@var{size}} option.  The @option{-k} or
-@option{--kilobytes} option is equivalent to @option{--block-size=1k}, which
+@option{--block-size=@var{size}} option.  The @option{-k}
+option is equivalent to @option{--block-size=1K}, which
 is the default unless the @env{POSIXLY_CORRECT} environment variable is
 set.  The @option{-h} or @option{--human-readable} option is equivalent to
 @option{--block-size=human-readable}.  The @option{--si} option is
@@ -2909,9 +2948,9 @@ specify @option{-o @var{output-file}} before any input files.
 @opindex --buffer-size
 @cindex size for main memory sorting
 Use a main-memory sort buffer of the given @var{size}.  By default,
-@var{size} is in units of 1,024 bytes.  Appending @samp{%} causes
+@var{size} is in units of 1024 bytes.  Appending @samp{%} causes
 @var{size} to be interpreted as a percentage of physical memory.
-Appending @samp{k} multiplies @var{size} by 1,024 (the default),
+Appending @samp{K} multiplies @var{size} by 1024 (the default),
 @samp{M} by 1,048,576, @samp{G} by 1,073,741,824, and so on for
 @samp{T}, @samp{P}, @samp{E}, @samp{Z}, and @samp{Y}.  Appending
 @samp{b} causes @var{size} to be interpreted as a byte count, with no
@@ -4782,7 +4821,7 @@ provide this option for compatibility.)
 @opindex -h
 @opindex --human-readable
 @cindex human-readable output
-Append a size letter such as @samp{M} for megabytes to each size.
+Append a size letter to each size, such as @samp{M} for mebibytes.
 Powers of 1024 are used, not 1000; @samp{M} stands for 1,048,576 bytes.
 Use the @option{--si} option if you prefer powers of 1000.
 
@@ -4881,9 +4920,8 @@ it also affects the HP-UX @code{ls} program.
 @itemx --si
 @opindex --si
 @cindex SI output
-Append a size letter such as @samp{M} for megabytes to each size.  (SI
-is the International System of Units, which defines these letters as
-prefixes.)  Powers of 1000 are used, not 1024; @samp{M} stands for
+Append an SI-style abbreviation to each size, such as @samp{MB} for
+megabytes.  Powers of 1000 are used, not 1024; @samp{MB} stands for
 1,000,000 bytes.  Use the @option{-h} or @option{--human-readable} option if
 you prefer powers of 1024.
 
@@ -5102,11 +5140,10 @@ Append @samp{*} for executable regular files, otherwise behave as for
 @end table
 
 @item -k
-@itemx --kilobytes
 @opindex -k
-@opindex --kilobytes
 Print file sizes in 1024-byte blocks, overriding the default block
 size (@pxref{Block size}).
+This option is equivalent to @option{--block-size=1K}.
 
 @item -m
 @itemx --format=commas
@@ -5755,8 +5792,8 @@ standard block size suffixes like @samp{k}=1024 (@pxref{Block size}).
 
 Use different @command{dd} invocations to use different block sizes for
 skipping and I/O.  For example, the following shell commands copy data
-in 512 kB blocks between a disk and a tape, but do not save or restore a
-4 kB label at the start of the disk:
+in 512 KiB blocks between a disk and a tape, but do not save or restore a
+4 KiB label at the start of the disk:
 
 @example
 disk=/dev/rdsk/c0t1d0s2
@@ -6372,7 +6409,7 @@ time to waste.
 @cindex size of file to shred
 Shred the first @var{BYTES} bytes of the file. The default is to shred
 the whole file.  @var{BYTES} can be followed by a size specification like
-@samp{k}, @samp{M}, or @samp{G} to specify a multiple. @xref{Block size}.
+@samp{K}, @samp{M}, or @samp{G} to specify a multiple. @xref{Block size}.
 
 @item -u
 @itemx --remove
@@ -6439,7 +6476,8 @@ Bourne-compatible shell) the command @samp{shred - 1<>file} instead.
 
 You might use the following command to erase all trace of the
 file system you'd created on the floppy disk in your first drive.
-That command takes about 20 minutes to erase a 1.44MB floppy.
+That command takes about 20 minutes to erase a ``1.44MB'' (actually
+1440 KiB) floppy.
 
 @example
 shred --verbose /dev/fd0
@@ -7360,12 +7398,20 @@ pseudo-filesystems, such as automounter entries.  Also, filesystems of
 type ``ignore'' or ``auto'', supported by some operating systems, are
 only included if this option is specified.
 
+@item -B @var{size}
+@itemx --block-size=@var{size}
+@opindex -B
+@opindex --block-size
+@cindex filesystem sizes
+Scale sizes by @var{size} before printing them (@pxref{Block size}).
+For example, @option{-BG} prints sizes in units of 1,073,741,824 bytes.
+
 @item -h
 @itemx --human-readable
 @opindex -h
 @opindex --human-readable
 @cindex human-readable output
-Append a size letter such as @samp{M} for megabytes to each size.
+Append a size letter to each size, such as @samp{M} for mebibytes.
 Powers of 1024 are used, not 1000; @samp{M} stands for 1,048,576 bytes.
 Use the @option{-H} or @option{--si} option if you prefer powers of 1000.
 
@@ -7374,9 +7420,8 @@ Use the @option{-H} or @option{--si} option if you prefer powers of 1000.
 @opindex -H
 @opindex --si
 @cindex SI output
-Append a size letter such as @samp{M} for megabytes to each size.  (SI
-is the International System of Units, which defines these letters as
-prefixes.)  Powers of 1000 are used, not 1024; @samp{M} stands for
+Append an SI-style abbreviation to each size, such as @samp{MB} for
+megabytes.  Powers of 1000 are used, not 1024; @samp{MB} stands for
 1,000,000 bytes.  Use the @option{-h} or @option{--human-readable} option if
 you prefer powers of 1024.
 
@@ -7390,12 +7435,11 @@ for index node) contains information about a file such as its owner,
 permissions, timestamps, and location on the disk.
 
 @item -k
-@itemx --kilobytes
 @opindex -k
-@opindex --kilobytes
-@cindex kilobytes for filesystem sizes
+@cindex kibibytes for filesystem sizes
 Print sizes in 1024-byte blocks, overriding the default block size
 (@pxref{Block size}).
+This option is equivalent to @option{--block-size=1K}.
 
 @item -l
 @itemx --local
@@ -7404,13 +7448,6 @@ Print sizes in 1024-byte blocks, overriding the default block size
 @cindex filesystem types, limiting output to certain
 Limit the listing to local filesystems.  By default, remote filesystems
 are also listed.
-
-@item -m
-@itemx --megabytes
-@opindex -m
-@opindex --megabytes
-@cindex megabytes for filesystem sizes
-Print sizes in megabyte (that is, 1,048,576-byte) blocks.
 
 @item --no-sync
 @opindex --no-sync
@@ -7556,6 +7593,14 @@ Show counts for all files, not just directories.
 @opindex --bytes
 Print sizes in bytes, overriding the default block size (@pxref{Block size}).
 
+@item -B @var{size}
+@itemx --block-size=@var{size}
+@opindex -B
+@opindex --block-size
+@cindex file sizes
+Scale sizes by @var{size} before printing them (@pxref{Block size}).
+For example, @option{-BG} prints sizes in units of 1,073,741,824 bytes.
+
 @item -c
 @itemx --total
 @opindex -c
@@ -7579,7 +7624,7 @@ are often symbolic links.
 @opindex -h
 @opindex --human-readable
 @cindex human-readable output
-Append a size letter such as @samp{M} for megabytes to each size.
+Append a size letter to each size, such as @samp{M} for mebibytes.
 Powers of 1024 are used, not 1000; @samp{M} stands for 1,048,576 bytes.
 Use the @option{-H} or @option{--si} option if you prefer powers of 1000.
 
@@ -7588,18 +7633,17 @@ Use the @option{-H} or @option{--si} option if you prefer powers of 1000.
 @opindex -H
 @opindex --si
 @cindex SI output
-Append a size letter such as @samp{M} for megabytes to each size.  (SI
-is the International System of Units, which defines these letters as
-prefixes.)  Powers of 1000 are used, not 1024; @samp{M} stands for
+Append an SI-style abbreviation to each size, such as @samp{MB} for
+megabytes.  Powers of 1000 are used, not 1024; @samp{MB} stands for
 1,000,000 bytes.  Use the @option{-h} or @option{--human-readable} option if
 you prefer powers of 1024.
 
 @item -k
-@itemx --kilobytes
 @opindex -k
-@opindex --kilobytes
+@cindex kibibytes for file sizes
 Print sizes in 1024-byte blocks, overriding the default block size
 (@pxref{Block size}).
+This option is equivalent to @option{--block-size=1K}.
 
 @item -l
 @itemx --count-links
@@ -7624,13 +7668,6 @@ the link).
 Show the total for each directory (and file if --all) that is at
 most MAX_DEPTH levels down from the root of the hierarchy.  The root
 is at level 0, so @code{du --max-depth=0} is equivalent to @code{du -s}.
-
-@item -m
-@itemx --megabytes
-@opindex -m
-@opindex --megabytes
-@cindex megabytes for filesystem sizes
-Print sizes in megabyte (that is, 1,048,576-byte) blocks.
 
 @item -s
 @itemx --summarize
