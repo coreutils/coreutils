@@ -2912,7 +2912,7 @@ Sort entries alphabetically if none of -cftuSUX nor --sort.\n\
       --show-control-chars   show non graphic characters as-is (default)\n\
   -Q, --quote-name           enclose entry names in double quotes\n\
       --quoting-style=WORD   use quoting style WORD for entry names:\n\
-                               literal, shell, shell-always, c, escape\n\
+                               literal, locale, shell, shell-always, c, escape\n\
   -r, --reverse              reverse order while sorting\n\
   -R, --recursive            list subdirectories recursively\n\
   -s, --size                 print size of each file, in blocks\n"));
