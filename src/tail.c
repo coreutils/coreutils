@@ -132,11 +132,24 @@ enum header_mode
   multiple_files, always, never
 };
 
-/* FIXME: describe -- add option */
-static unsigned long max_n_unchanged_stats_between_opens = 5;
+/* When tailing a file by name, if there have been this many consecutive
+   stat calls for which the size has remained the same, then open/fstat
+   the file to determine if that file name is still associated with the
+   same device/inode-number pair as before.  This option is meaningful only
+   when following by name.  --max-unchanged-stats=N  */
+#define DEFAULT_MAX_N_UNCHANGED_STATS_BETWEEN_OPENS 5
+static unsigned long max_n_unchanged_stats_between_opens =
+  DEFAULT_MAX_N_UNCHANGED_STATS_BETWEEN_OPENS;
 
-/* FIXME: describe -- add option */
-static unsigned long max_n_consecutive_size_changes = 200;
+/* This variable is used to ensure that a file that is unlinked or moved
+   aside, yet always growing will be recognized as having been renamed.
+   After detecting this many consecutive size changes for a file, open/fstat
+   the file to determine if that file name is still associated with the
+   same device/inode-number pair as before.  This option is meaningful only
+   when following by name.  --max-n-consecutive-size-changes=N  */
+#define DEFAULT_MAX_N_CONSECUTIVE_SIZE_CHANGES 200
+static unsigned long max_n_consecutive_size_changes =
+  DEFAULT_MAX_N_CONSECUTIVE_SIZE_CHANGES;
 
 /* The name this program was run with.  */
 char *program_name;
@@ -159,6 +172,8 @@ static struct option const long_options[] =
   {"bytes", required_argument, NULL, 'c'},
   {"follow", optional_argument, NULL, 'f'},
   {"lines", required_argument, NULL, 'n'},
+  {"max-unchanged-stats", required_argument, NULL, CHAR_MAX + 2},
+  {"max-consecutive-size-changes", required_argument, NULL, CHAR_MAX + 3},
   {"quiet", no_argument, NULL, 'q'},
   {"silent", no_argument, NULL, 'q'},
   {"sleep-interval", required_argument, NULL, 's'},
@@ -189,6 +204,8 @@ With no FILE, or when FILE is -, read standard input.\n\
   -c, --bytes=N            output the last N bytes\n\
   -f, --follow[={name|descriptor}] output appended data as the file grows\n\
   -n, --lines=N            output the last N lines, instead of last 10\n\
+      --max-unchanged-stats=N FIXME describe and mention default\n\
+      --max-consecutive-size-changes=N FIXME describe and mention default\n\
   -q, --quiet, --silent    never output headers giving file names\n\
   -s, --sleep-interval=S   with -f, sleep S seconds between iterations\n\
   -v, --verbose            always output headers giving file names\n\
@@ -782,7 +799,7 @@ tail_forever (struct File_spec *f, int nfiles)
 	  ++f[i].n_consecutive_size_changes;
 
 	  /* Ensure that a file that's unlinked or moved aside, yet always
-	     growing will be recognized has having been renamed.  */
+	     growing will be recognized as having been renamed.  */
 	  if (follow_mode == Follow_name
 	      && (f[i].n_consecutive_size_changes
 		  > max_n_consecutive_size_changes))
@@ -1142,7 +1159,7 @@ parse_obsolescent_option (int argc, const char *const *argv,
       strtol_error s_err;
       unsigned long int tmp_ulong;
       char *end;
-      s_err = xstrtoul (n_string, &end, 0, &tmp_ulong, NULL);
+      s_err = xstrtoul (n_string, &end, 10, &tmp_ulong, NULL);
       if (s_err == LONGINT_OK && tmp_ulong <= OFF_T_MAX)
 	*n_units = (off_t) tmp_ulong;
       else
@@ -1227,7 +1244,7 @@ parse_options (int argc, char **argv,
 	  {
 	    strtol_error s_err;
 	    unsigned long int tmp_ulong;
-	    s_err = xstrtoul (optarg, NULL, 0, &tmp_ulong, "bkm");
+	    s_err = xstrtoul (optarg, NULL, 10, &tmp_ulong, "bkm");
 	    if (s_err == LONGINT_INVALID)
 	      {
 		error (EXIT_FAILURE, 0, "%s: %s", optarg,
@@ -1259,6 +1276,28 @@ parse_options (int argc, char **argv,
 	  allow_missing = 1;
 	  break;
 
+	case CHAR_MAX + 2:
+	  /* --max-unchanged-stats=N */
+	  if (xstrtoul (optarg, NULL, 10,
+			&max_n_unchanged_stats_between_opens, "") != LONGINT_OK)
+	    {
+	      error (EXIT_FAILURE, 0,
+	       _("%s: invalid maximum number of unchanged stats between opens"),
+		     optarg);
+	    }
+	  break;
+
+	case CHAR_MAX + 3:
+  	  /* --max-consecutive-size-changes=N */
+	  if (xstrtoul (optarg, NULL, 10, &max_n_consecutive_size_changes, "")
+	      != LONGINT_OK)
+	    {
+	      error (EXIT_FAILURE, 0,
+		   _("%s: invalid maximum number of consecutive size changes"),
+		     optarg);
+	    }
+	  break;
+
 	case 'q':
 	  *header_mode = never;
 	  break;
@@ -1267,7 +1306,7 @@ parse_options (int argc, char **argv,
 	  {
 	    strtol_error s_err;
 	    unsigned long int tmp_ulong;
-	    s_err = xstrtoul (optarg, NULL, 0, &tmp_ulong, "");
+	    s_err = xstrtoul (optarg, NULL, 10, &tmp_ulong, "");
 	    if (s_err != LONGINT_OK || tmp_ulong > UINT_MAX)
 	      {
 		error (EXIT_FAILURE, 0,
