@@ -366,15 +366,21 @@ pipeline.
 @section @code{false}: Do nothing, unsuccessfully
 
 @pindex false
-
-@cindex exit status of @code{true}
+@cindex do nothing, unsuccessfully
 @cindex failure exit status
+@cindex exit status of @code{false}
+
 @code{false} does nothing except return an exit status of 1, meaning
 @dfn{failure}.  It can be used as a place holder in shell scripts
 where an unsuccessful command is needed.
 
-Any arguments are ignored, except for a lone @samp{--help} or
-@samp{--version} (@pxref{Common options}).
+@code{false} ignores @emph{all} command line arguments, even @samp{--help}
+and @samp{--version}, since to do otherwise would change expected
+behavior that some programmers may be relying on.
+
+This version of @code{false} is implemented as a C program, and is thus
+more secure and faster than a shell script implementation, and may safely
+be used as a dummy shell for the purpose of disabling accounts.
 
 
 @node true invocation
@@ -384,15 +390,20 @@ Any arguments are ignored, except for a lone @samp{--help} or
 @cindex do nothing, successfully
 @cindex no-op
 @cindex successful exit
-
 @cindex exit status of @code{true}
+
 @code{true} does nothing except return an exit status of 0, meaning
 @dfn{success}.  It can be used as a place holder in shell scripts
 where a successful command is needed, although the shell built-in
-command @code{:} (colon) may be faster.
+command @code{:} (colon) does the same thing faster.
 
-Any arguments are ignored, except for a lone @samp{--help} or
-@samp{--version} (@pxref{Common options}).
+@code{true} ignores @emph{all} command line arguments, even @samp{--help}
+and @samp{--version}, since to do otherwise would change expected
+behavior that some programmers may be relying on.
+
+This version of @code{true} is implemented as a C program, and is thus
+more secure and faster than a shell script implementation, and may safely
+be used as a dummy shell for the purpose of disabling accounts.
 
 
 @node test invocation
