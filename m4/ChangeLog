@@ -1,5 +1,8 @@
 1998-05-19  Jim Meyering  <meyering@ascend.com>
 
+	* jm-macros.m4: Add jm_FUNC_LCHOWN.
+	* lchown.m4: New file.
+
 	* Makefile.am.in: New file.
 	* Makefile.am (Makefile.am): Depend on Makefile.am.in.
 
