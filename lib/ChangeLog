@@ -1,3 +1,12 @@
+2003-05-20  Derek Price  <derek@ximbiot.com>
+
+	* stat.c [LSTAT]: Compile/use slash_aware_lstat only if it is necessary.
+
+2003-06-10  Jim Meyering  <jim@meyering.net>
+
+	* getdate.y: Also accept dates of the form May-23-2003.
+	Suggestion from Karl Berry.
+
 2003-06-09  Jim Meyering  <jim@meyering.net>
 
 	* gettimeofday.c: Also undefine gmtime.
