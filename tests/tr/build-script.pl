@@ -10,7 +10,7 @@ use Test;
 
 $| = 1;
 
-my $xx = '../../src/tr';
+my $xx = $ARGV[0];
 
 print <<EOF;
 #! /bin/sh
@@ -20,7 +20,7 @@ case \$# in
   *) xx="\$1";;
 esac
 test "\$VERBOSE" && echo=echo || echo=:
-\$echo testing with $xx=\$xx
+\$echo testing program: \$xx
 errors=0
 test "\$srcdir" || srcdir=.
 test "\$VERBOSE" && \$xx --version 2> /dev/null
