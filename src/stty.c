@@ -1076,11 +1076,19 @@ set_window_size (rows, cols)
   struct winsize win;
 
   if (ioctl (0, TIOCGWINSZ, (char *) &win))
-    error (1, errno, "standard input");
-  if (rows >= 0)
-    win.ws_row = rows;
-  if (cols >= 0)
-    win.ws_col = cols;
+    {
+      if (errno != EINVAL)
+	error (1, errno, "standard input");
+      win.ws_row = (rows >= 0 ? rows : 0);
+      win.ws_col = (cols >= 0 ? cols : 0);
+    }
+  else
+    {
+      if (rows >= 0)
+	win.ws_row = rows;
+      if (cols >= 0)
+	win.ws_col = cols;
+    }
   if (ioctl (0, TIOCSWINSZ, (char *) &win))
     error (1, errno, "standard input");
 }
@@ -1092,10 +1100,17 @@ display_window_size (fancy)
   struct winsize win;
 
   if (ioctl (0, TIOCGWINSZ, (char *) &win))
-    error (1, errno, "standard input");
-  wrapf (fancy ? "rows %d; columns %d;" : "%d %d\n", win.ws_row, win.ws_col);
-  if (!fancy)
-    current_col = 0;
+    {
+      if (errno != EINVAL)
+	error (1, errno, "standard input");
+    }
+  else
+    {
+      wrapf (fancy ? "rows %d; columns %d;" : "%d %d\n",
+	     win.ws_row, win.ws_col);
+      if (!fancy)
+	current_col = 0;
+    }
 }
 #endif
 
@@ -1106,8 +1121,13 @@ screen_columns ()
   struct winsize win;
 
   if (ioctl (0, TIOCGWINSZ, (char *) &win))
-    error (1, errno, "standard input");
-  if (win.ws_col > 0)
+    {
+      /* With Solaris 2.[123], this ioctl fails and errno is set to
+	 EINVAL for telnet (but not rlogin) sessions.  */
+      if (errno != EINVAL)
+	error (1, errno, "standard input");
+    }
+  else if (win.ws_col > 0)
     return win.ws_col;
 #endif
   if (getenv ("COLUMNS"))
