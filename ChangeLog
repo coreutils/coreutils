@@ -1,3 +1,9 @@
+2004-02-25  Paul Eggert  <eggert@twinsun.com>
+
+	* NEWS: New environment var BLOCKSIZE.
+	* lib/human.c (humblock): Support BLOCKSIZE as well as BLOCK_SIZE.
+	* tests/envvar-check: Test for it.  Factor the code to simplify it.
+
 2004-03-23  Paul Eggert  <eggert@twinsun.com>
 
 	* NEWS: Shorten the du --files0-from announcement, and say
