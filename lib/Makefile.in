@@ -163,8 +163,8 @@ DIST_COMMON =  $(noinst_HEADERS) Makefile.am Makefile.in TODO alloca.c \
 chown.c dup2.c error.c error.h euidaccess.c fileblocks.c fnmatch.c \
 fsusage.c ftruncate.c getdate.c getgroups.c getline.c group-member.c \
 lchown.c lstat.c malloc.c memchr.c memcmp.c memcpy.c memmove.c memset.c \
-mkdir.c mktime.c mountlist.c obstack.c obstack.h realloc.c regex.c \
-rmdir.c rpmatch.c stat.c stpcpy.c strcasecmp.c strdup.c strftime.c \
+mkdir.c mountlist.c obstack.c obstack.h realloc.c regex.c rmdir.c \
+rpmatch.c stat.c stpcpy.c strcasecmp.c strdup.c strftime.c \
 strncasecmp.c strndup.c strstr.c strtol.c strtoul.c strtoull.c \
 strtoumax.c strverscmp.c utime.c
 
@@ -187,8 +187,8 @@ $(DEPDIR)/isdir$U.Po $(DEPDIR)/lchown.Po $(DEPDIR)/long-options$U.Po \
 $(DEPDIR)/lstat.Po $(DEPDIR)/makepath$U.Po $(DEPDIR)/malloc.Po \
 $(DEPDIR)/memchr.Po $(DEPDIR)/memcmp.Po $(DEPDIR)/memcpy.Po \
 $(DEPDIR)/memmove.Po $(DEPDIR)/memset.Po $(DEPDIR)/mkdir.Po \
-$(DEPDIR)/mktime.Po $(DEPDIR)/modechange$U.Po $(DEPDIR)/mountlist.Po \
-$(DEPDIR)/obstack.Po $(DEPDIR)/path-concat$U.Po $(DEPDIR)/posixtm$U.Po \
+$(DEPDIR)/modechange$U.Po $(DEPDIR)/mountlist.Po $(DEPDIR)/obstack.Po \
+$(DEPDIR)/path-concat$U.Po $(DEPDIR)/posixtm$U.Po \
 $(DEPDIR)/quotearg$U.Po $(DEPDIR)/realloc.Po $(DEPDIR)/regex.Po \
 $(DEPDIR)/rmdir.Po $(DEPDIR)/rpmatch.Po $(DEPDIR)/safe-read$U.Po \
 $(DEPDIR)/same$U.Po $(DEPDIR)/save-cwd$U.Po $(DEPDIR)/savedir$U.Po \
@@ -369,8 +369,6 @@ memset_.c: memset.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/memset.c; then echo $(srcdir)/memset.c; else echo memset.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > memset_.c
 mkdir_.c: mkdir.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/mkdir.c; then echo $(srcdir)/mkdir.c; else echo mkdir.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > mkdir_.c
-mktime_.c: mktime.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/mktime.c; then echo $(srcdir)/mktime.c; else echo mktime.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > mktime_.c
 modechange_.c: modechange.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/modechange.c; then echo $(srcdir)/modechange.c; else echo modechange.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > modechange_.c
 mountlist_.c: mountlist.c $(ANSI2KNR)
@@ -453,14 +451,14 @@ fileblocks_.o filemode_.o fnmatch_.o fsusage_.o ftruncate_.o \
 full-write_.o getdate_.o getgroups_.o getline_.o getopt_.o getopt1_.o \
 group-member_.o hash_.o human_.o idcache_.o isdir_.o lchown_.o \
 long-options_.o lstat_.o makepath_.o malloc_.o memchr_.o memcmp_.o \
-memcpy_.o memmove_.o memset_.o mkdir_.o mktime_.o modechange_.o \
-mountlist_.o obstack_.o path-concat_.o posixtm_.o quotearg_.o \
-realloc_.o regex_.o rmdir_.o rpmatch_.o safe-read_.o same_.o \
-save-cwd_.o savedir_.o stat_.o stpcpy_.o strcasecmp_.o strdup_.o \
-strftime_.o stripslash_.o strncasecmp_.o strndup_.o strstr_.o strtol_.o \
-strtoul_.o strtoull_.o strtoumax_.o strverscmp_.o userspec_.o utime_.o \
-version-etc_.o xgetcwd_.o xmalloc_.o xstrdup_.o xstrtol_.o xstrtoul_.o \
-xstrtoumax_.o yesno_.o : $(ANSI2KNR)
+memcpy_.o memmove_.o memset_.o mkdir_.o modechange_.o mountlist_.o \
+obstack_.o path-concat_.o posixtm_.o quotearg_.o realloc_.o regex_.o \
+rmdir_.o rpmatch_.o safe-read_.o same_.o save-cwd_.o savedir_.o stat_.o \
+stpcpy_.o strcasecmp_.o strdup_.o strftime_.o stripslash_.o \
+strncasecmp_.o strndup_.o strstr_.o strtol_.o strtoul_.o strtoull_.o \
+strtoumax_.o strverscmp_.o userspec_.o utime_.o version-etc_.o \
+xgetcwd_.o xmalloc_.o xstrdup_.o xstrtol_.o xstrtoul_.o xstrtoumax_.o \
+yesno_.o : $(ANSI2KNR)
 .y.c:
 	$(YACC) $(AM_YFLAGS) $(YFLAGS) $< && mv y.tab.c $*.c
 	if test -f y.tab.h; then \
@@ -553,7 +551,6 @@ distdir: $(DISTFILES)
 @AMDEP@include $(DEPDIR)/memmove.Po
 @AMDEP@include $(DEPDIR)/memset.Po
 @AMDEP@include $(DEPDIR)/mkdir.Po
-@AMDEP@include $(DEPDIR)/mktime.Po
 @AMDEP@include $(DEPDIR)/modechange$U.Po
 @AMDEP@include $(DEPDIR)/mountlist.Po
 @AMDEP@include $(DEPDIR)/obstack.Po
