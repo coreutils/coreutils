@@ -2,7 +2,7 @@
 
 ##m4-files-begin
 EXTRA_DIST = \
-  README jm-glibc-io.m4 jm-glibc-io.m4n Makefile.am.in \
+  README Makefile.am.in \
 acl.m4 \
 afs.m4 \
 assert.m4 \
@@ -83,7 +83,7 @@ Makefile.am: Makefile.am.in
 	rm -f $@ $@t
 	sed -n '1,/^##m4-files-begin/p' $< > $@t
 	(((echo EXTRA_DIST =; \
-	   echo "  README jm-glibc-io.m4 jm-glibc-io.m4n Makefile.am.in" \
+	   echo "  README Makefile.am.in" \
 	  ) | tr '\012' @); \
 	  (echo *.m4|tr ' ' @) ) \
 	  |sed 's/@$$/%/;s/@/ \\@/g' |tr @% '\012\012' \
