@@ -1,3 +1,14 @@
+2004-03-31  Jim Meyering  <jim@meyering.net>
+
+	* prereq.m4: Require AC_FUNC_MALLOC, not jm_FUNC_MALLOC.
+	Require AC_FUNC_REALLOC, not jm_FUNC_REALLOC.
+	* xalloc.m4: Likewise.
+
+	* realloc.m4: Remove file, since now it does no more than
+	AC_REQUIRE([AC_FUNC_REALLOC]), and that can be done via
+	the `configure.ac' section of module/realloc.
+	* malloc.m4: Likewise, but for AC_FUNC_MALLOC.
+
 2004-02-29  Paul Eggert  <eggert@twinsun.com>
 
 	* clock_time.m4 (gl_CLOCK_TIME): Require AC_GNU_SOURCE.
