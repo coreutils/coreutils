@@ -1,5 +1,5 @@
 /* mkdir -- make directories
-   Copyright (C) 90, 1995-1999 Free Software Foundation, Inc.
+   Copyright (C) 90, 1995-2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -40,7 +40,7 @@
 char *program_name;
 
 /* If nonzero, ensure that all parents of the specified directory exist.  */
-static int path_mode;
+static int create_parents;
 
 static struct option const longopts[] =
 {
@@ -91,7 +91,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  path_mode = 0;
+  create_parents = 0;
 
   while ((optc = getopt_long (argc, argv, "pm:", longopts, NULL)) != -1)
     {
@@ -100,7 +100,7 @@ main (int argc, char **argv)
 	case 0:			/* Long option. */
 	  break;
 	case 'p':
-	  path_mode = 1;
+	  create_parents = 1;
 	  break;
 	case 'm':
 	  symbolic_mode = optarg;
@@ -136,7 +136,7 @@ main (int argc, char **argv)
   for (; optind < argc; ++optind)
     {
       int fail = 0;
-      if (path_mode)
+      if (create_parents)
 	{
 	  fail = make_path (argv[optind], newmode, parent_mode,
 			    -1, -1, 1, verbose_fmt_string);
@@ -148,18 +148,17 @@ main (int argc, char **argv)
 	    error (0, errno, _("cannot create directory `%s'"), argv[optind]);
 	  else if (verbose_fmt_string)
 	    error (0, 0, verbose_fmt_string, argv[optind]);
-	}
 
-      /* FIXME: move this functionality into make_path. */
-      /* mkdir(2) is required to honor only the file permission bits.
-	 In particular, it needn't do anything about `special' bits,
-	 so if any were set in newmode, apply them with chmod.  */
-      if (fail == 0 && (newmode & ~S_IRWXUGO))
-	{
-	  fail = chmod (argv[optind], newmode);
-	  if (fail)
-	    error (0, errno, _("cannot set permissions of directory `%s'"),
-		   argv[optind]);
+	  /* mkdir(2) is required to honor only the file permission bits.
+	     In particular, it needn't do anything about `special' bits,
+	     so if any were set in newmode, apply them with chmod.  */
+	  if (fail == 0 && (newmode & ~S_IRWXUGO))
+	    {
+	      fail = chmod (argv[optind], newmode);
+	      if (fail)
+		error (0, errno, _("cannot set permissions of directory `%s'"),
+		       argv[optind]);
+	    }
 	}
 
       errors |= fail;
