@@ -18,6 +18,10 @@
    Written by Torbjorn Granlund, Sweden (tege@sics.se). */
 
 #include <config.h>
+
+#if HAVE_INTTYPES_H
+# include <inttypes.h>
+#endif
 #include <stdio.h>
 #include <sys/types.h>
 #include "system.h"
@@ -121,7 +125,10 @@ static char *
 hash_insert2 (struct htab *ht, ino_t ino, dev_t dev, const char *node)
 {
   struct entry **hp, *ep2, *ep;
-  hp = &ht->hash[ino % ht->modulus];
+
+  /* The cast to uintmax_t prevents negative remainders if ino is negative.  */
+  hp = &ht->hash[(uintmax_t) ino % ht->modulus];
+
   ep2 = *hp;
 
   /* Collision?  */
