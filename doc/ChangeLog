@@ -1,3 +1,8 @@
+2002-01-24  Jim Meyering  <meyering@lucent.com>
+
+	* coreutils.texi (START-INFO-DIR-ENTRY): Remove a few entries
+	and clean up a few others based on suggestions from Bob Proulx.
+
 2002-02-14  Paul Eggert  <eggert@twinsun.com>
 
 	Add support for POSIX 1003.1-2001, which requires removal for
