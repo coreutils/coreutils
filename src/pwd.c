@@ -66,6 +66,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  atexit (close_stdout);
+
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
 		      AUTHORS, usage);
 
@@ -76,8 +78,6 @@ main (int argc, char **argv)
   if (wd == NULL)
     error (1, errno, _("cannot get current directory"));
   printf ("%s\n", wd);
-
-  close_stdout ();
 
   exit (0);
 }

@@ -339,6 +339,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  atexit (close_stdout);
+
   equal_width = 0;
   separator = "\n";
   first = 1.0;
@@ -454,8 +456,6 @@ format string may not be specified when printing equal width strings"));
     }
 
   errs = print_numbers (format_str);
-
-  close_stdout ();
 
   exit (errs);
 }
