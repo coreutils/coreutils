@@ -1,5 +1,7 @@
 2001-12-17  Jim Meyering  <meyering@lucent.com>
 
+	* Version 4.1.5.
+
 	* Makefile.maint (real_dir): Remove unused variable.
 	(url_dir_list): Don't set define it here, but...
 	* Makefile.cfg (url_dir_list): ...define it here instead.
