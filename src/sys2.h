@@ -52,6 +52,34 @@
 # define S_ISDOOR(m) (((m) & S_IFMT) == S_IFDOOR)
 #endif
 
+/* If any of the following S_* macros are undefined, define them here
+   so each use doesn't have to be guarded with e.g., #ifdef S_ISLNK.  */
+#ifndef S_ISLNK
+# define S_ISLNK(Mode) 0
+#endif
+
+#ifndef S_ISFIFO
+# define S_ISFIFO(Mode) 0
+#endif
+
+#ifndef S_ISSOCK
+# define S_ISSOCK(Mode) 0
+#endif
+
+#ifndef S_ISCHR
+# define S_ISCHR(Mode) 0
+#endif
+
+#ifndef S_ISBLK
+# define S_ISBLK(Mode) 0
+#endif
+
+#ifndef S_ISDOOR
+# define S_ISDOOR(Mode) 0
+#endif
+
+/* If any of the following are undefined,
+   define them to their de facto standard values.  */
 #if !S_ISUID
 # define S_ISUID 04000
 #endif
