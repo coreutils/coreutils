@@ -1,3 +1,8 @@
+2003-07-31  Paul Eggert  <eggert@twinsun.com>
+
+	* getdate.texi (Relative items in date strings): Warn about
+	fuzz in relative units.
+
 2003-07-29  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (tail invocation): Restore two end-of-sentence words
