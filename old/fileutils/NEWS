@@ -1,6 +1,7 @@
 User-visible changes in release 3.13:
-* install honors these options just as cp, ln, and mv do: --backup (-b)
-  --suffix=SUFFIX (-S SUFFIX), --version-control=WORD (-V WORD)
+* df and du have new options --human-readable (-h) and --megabytes (-m).
+* install now honors --backup (-b), --suffix=SUFFIX (-S SUFFIX), and
+  --version-control=WORD (-V WORD) options just as cp, ln, and mv do.
 * ln --verbose output is less prone to misinterpretation
 * ls -o works like -lG;  for compatibility with other versions of ls
 * cp has a new option to control creation of sparse files
