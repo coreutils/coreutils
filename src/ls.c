@@ -2610,7 +2610,7 @@ print_long_format (const struct fileinfo *f)
     {
       char *user_name = (numeric_ids ? NULL : getuser (f->stat.st_uid));
       if (user_name)
-	sprintf (p, "%-8.8s ", user_name);
+	sprintf (p, "%-8s ", user_name);
       else
 	sprintf (p, "%-8lu ", (unsigned long) f->stat.st_uid);
       p += strlen (p);
@@ -2620,7 +2620,7 @@ print_long_format (const struct fileinfo *f)
     {
       char *group_name = (numeric_ids ? NULL : getgroup (f->stat.st_gid));
       if (group_name)
-	sprintf (p, "%-8.8s ", group_name);
+	sprintf (p, "%-8s ", group_name);
       else
 	sprintf (p, "%-8lu ", (unsigned long) f->stat.st_gid);
       p += strlen (p);
