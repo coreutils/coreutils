@@ -421,7 +421,7 @@ do_copy (argc, argv)
    devices and inodes of parent directories of SRC_PATH.
    Return 0 if successful, 1 if an error occurs. */
 
-int
+static int
 copy (src_path, dst_path, new_dst, device, ancestors)
      char *src_path;
      char *dst_path;
