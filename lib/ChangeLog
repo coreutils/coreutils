@@ -1,3 +1,15 @@
+2000-06-21  Jim Meyering  <meyering@lucent.com>
+
+	* Makefile.am (libfetish_a_SOURCES): Add getstr.c.
+	(noinst_HEADERS): Add getstr.h.
+
+	* getline.c (getstr): Move into a separate file.
+	* getstr.c (getstr): New file, extracted from getline.c, with
+	the following changes: new parameter, delim2; both delim[12]
+	parameters have type `int', not `char'.  The latter would lose
+	with 8-bit delimiters.
+	* getstr.h: New file.
+
 2000-06-19  Jim Meyering  <meyering@lucent.com>
 
 	* getloadavg.c [HAVE_NLIST_H] (NLIST_STRUCT): Define.
