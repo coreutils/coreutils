@@ -1,7 +1,7 @@
 2003-01-23  Jim Meyering  <jim@meyering.net>
 
 	* dirfd.m4 (UTILS_FUNC_DIRFD): Correct typo: s/-1/no/ that kept this
-	from working on at least Irix and OSF1/Tru64.
+	from working on systems without dirfd (at least Irix and OSF1/Tru64).
 
 	Merge in change by Bruno Haible from gnulib.
 	* dirfd.m4 (UTILS_FUNC_DIRFD): Invoke some AC_EGREP_CPP requirements.
