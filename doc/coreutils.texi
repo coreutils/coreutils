@@ -9553,9 +9553,15 @@ numbers, i.e., if they are hard links to each other.
 
 @cindex string tests
 
-These options test string characteristics.  Strings are not quoted for
-@command{test}, though you may need to quote them to protect characters
-with special meaning to the shell, e.g., spaces.
+These options test string characteristics.  You may need to quote
+@var{string} arguments for the shell.  For example:
+
+@example
+test -n "$V"
+@end example
+
+The quotes here prevent the wrong arguments from being passed to
+@command{test} if @samp{$V} is empty or contains special characters.
 
 @table @samp
 
