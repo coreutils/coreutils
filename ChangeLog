@@ -1,6 +1,12 @@
-2004-05-17  Paul Eggert  <eggert@cs.ucla.edu>
+2004-05-20  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
+
+	* src/shred.c: Use translatable diagnostics, e.g.
+	change "%s: remove" to _("%s: failed to remove") and
+	change "%s: close"  to _("%s: failed to close").
+
+2004-05-17  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/shred.c (names): Bring back lower-case letters, "_", and
 	".".  But continue to omit +, =, %, @, #, as they're either
