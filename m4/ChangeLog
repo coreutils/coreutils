@@ -1,3 +1,8 @@
+2005-02-11  Jim Meyering  <jim@meyering.net>
+
+	* inttostr.m4 (gl_INTTOSTR): Use AC_LIBSOURCES to list the
+	required source files.
+
 2005-02-09  Jim Meyering  <jim@meyering.net>
 
 	* getcwd.m4 (gl_FUNC_GETCWD_NULL): Use AC_LIBSOURCES to list the

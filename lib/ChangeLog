@@ -1,3 +1,11 @@
+2005-02-11  Jim Meyering  <jim@meyering.net>
+
+	Remove names of files that are now mentioned in AC_LIBSOURCES
+	and AC_LIBOBJ uses in inttostr.m4.
+	* Makefile.am (libfetish_a_SOURCES): Remove imaxtostr.c,
+	offtostr.c, and umaxtostr.c.
+	(EXTRA_DIST): Remove inttostr.c and inttostr.h.
+
 2005-02-08  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am (libfetish_a_SOURCES): Remove memcasecmp.c
