@@ -1,5 +1,5 @@
 /* unexpand - convert spaces to tabs
-   Copyright (C) 89, 91, 1995-2001 Free Software Foundation, Inc.
+   Copyright (C) 89, 91, 1995-2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -103,6 +103,12 @@ enum
 {
   CONVERT_FIRST_ONLY_OPTION = CHAR_MAX + 1
 };
+
+static char const shortopts[] = "at:"
+#if POSIX2_VERSION < 200112
+",0123456789"
+#endif
+;
 
 static struct option const longopts[] =
 {
@@ -391,9 +397,10 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
      fputs (HELP_OPTION_DESCRIPTION, stdout);
      fputs (VERSION_OPTION_DESCRIPTION, stdout);
-     fputs (_("\
+     if (POSIX2_VERSION < 200112)
+       fputs (_("\
 \n\
-Instead of -t NUMBER or -t LIST, -NUMBER or -LIST may be used.\n\
+(obsolete) Instead of -t NUMBER or -t LIST, -NUMBER or -LIST may be used.\n\
 "), stdout);
       puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
     }
@@ -410,6 +417,8 @@ main (int argc, char **argv)
      so that only leading white space will be considered.  */
   int convert_first_only = 0;
 
+  bool obsolete_tablist = false;
+
   program_name = argv[0];
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
@@ -423,14 +432,14 @@ main (int argc, char **argv)
   tab_list = NULL;
   first_free_tab = 0;
 
-  while ((c = getopt_long (argc, argv, "at:,0123456789", longopts, NULL)) != -1)
+  while ((c = getopt_long (argc, argv, shortopts, longopts, NULL)) != -1)
     {
       switch (c)
 	{
 	case 0:
 	  break;
 
-	case '?':
+	default:
 	  usage (1);
 	case 'a':
 	  convert_entire_line = 1;
@@ -442,19 +451,38 @@ main (int argc, char **argv)
 	case CONVERT_FIRST_ONLY_OPTION:
 	  convert_first_only = 1;
 	  break;
+	case_GETOPT_HELP_CHAR;
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+
+#if POSIX2_VERSION < 200112
 	case ',':
 	  add_tabstop (tabval);
 	  tabval = -1;
+	  obsolete_tablist = true;
 	  break;
-	case_GETOPT_HELP_CHAR;
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
-	default:
+	case '0':
+	case '1':
+	case '2':
+	case '3':
+	case '4':
+	case '5':
+	case '6':
+	case '7':
+	case '8':
+	case '9':
 	  if (tabval == -1)
 	    tabval = 0;
 	  tabval = tabval * 10 + c - '0';
+	  obsolete_tablist = true;
 	  break;
+#endif
 	}
     }
+
+  if (OBSOLETE_OPTION_WARNINGS && obsolete_tablist)
+    error (0, 0,
+	   _("warning: `unexpand -TABLIST' is obsolete; use\
+  `unexpand --first-only -t TABLIST'"));
 
   if (convert_first_only)
     convert_entire_line = 0;
