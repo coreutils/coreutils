@@ -4,6 +4,10 @@
 	s/minimum/separate/.
 	* tests/uniq/Test.pm: Reflect the above renamings.
 
+2001-05-12  Bruno Haible  <haible@clisp.cons.org>
+
+	* src/tail.c (parse_obsolescent_option): Accept a b suffix.
+
 2001-05-19  Jim Meyering  <meyering@lucent.com>
 
 	msgmerge-0.10.37 complains about some `invalid multibyte sequences.'
