@@ -1,6 +1,13 @@
-2002-04-15  Jim Meyering  <meyering@lucent.com>
+2002-04-25  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.22.
+
+	* configure.ac (AM_GNU_GETTEXT): Add external arg.
+	(AC_CONFIG_FILES): Remove intl/Makefile.
+	* Makefile.am (SUBDIRS): Remove intl.
+	* src/Makefile.am (INCLUDES): Remove -I../intl.
+
+2002-04-15  Jim Meyering  <meyering@lucent.com>
 
 	* src/tr.c (usage): Give a verbose description of --squeeze-repeats,
 	including the mention of SET1.  Reported by Dan Jacobson.
