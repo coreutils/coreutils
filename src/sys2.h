@@ -559,6 +559,10 @@ enum
 # define INT_MAX TYPE_MAXIMUM (int)
 #endif
 
+#ifndef INT_MIN
+# define INT_MIN TYPE_MINIMUM (int)
+#endif
+
 #ifndef UINT_MAX
 # define UINT_MAX TYPE_MAXIMUM (unsigned int)
 #endif
