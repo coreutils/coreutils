@@ -1,3 +1,14 @@
+Mon Dec  2 20:30:20 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/system.h [!S_IXUGO] (S_IXUGO): Define it.
+
+	* src/ls.c (print_color_indicator): Check the file's suffix only
+	if it's a regular file.
+	Reported by Santiago Vila Doncel.
+	(print_type_indicator): Use S_IXUGO instead of writing out
+	(S_IEXEC | S_IXGRP | S_IXOTH).
+	(length_of_file_name_and_frills): Likewise.
+
 Sun Dec  1 13:07:39 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/getdate.y (date): Interpret the date, L/M/N, as YYYY/MM/DD
