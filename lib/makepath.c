@@ -96,6 +96,9 @@ extern int errno;
 
 #define WX_USR (S_IWUSR | S_IXUSR)
 
+/* Include this before libintl.h so we get our definition of PARAMS. */
+#include "makepath.h"
+
 #if HAVE_LOCALE_H
 # include <locale.h>
 #endif
@@ -113,7 +116,6 @@ typedef int gid_t;
 #endif
 
 #include "save-cwd.h"
-#include "makepath.h"
 #include "error.h"
 
 void strip_trailing_slashes ();
