@@ -440,7 +440,8 @@ Date input formats
 * Day of week items:             Day of week items
 * Relative items in date strings:  Relative items in date strings
 * Pure numbers in date strings:  Pure numbers in date strings
-* Authors of getdate:            Authors of getdate
+* Seconds since the Epoch:       Seconds since the Epoch
+* Authors of get_date:           Authors of get_date
 
 Opening the software toolbox
 
@@ -8133,12 +8134,18 @@ Change the access time only.
 Do not create files that do not exist.
 
 @item -d
-@itemx --date=time
+@itemx --date=@var{time}
 @opindex -d
 @opindex --date
 @opindex time
 Use @var{time} instead of the current time.  It can contain month names,
-time zones, @samp{am} and @samp{pm}, etc.  @xref{Date input formats}.
+time zones, @samp{am} and @samp{pm}, @samp{yesterday}, etc.  For
+example, @option{--date="2004-02-27 14:19:13.489392193 +0530"}
+specifies the instant of time that is 489,392,193 nanoseconds after
+February 27, 2004 at 2:19:13 PM in a time zone that is 5 hours and 30
+minutes east of @acronym{UTC}.  @xref{Date input formats}.
+File systems that do not support high-resolution time stamps
+silently ignore any excess precision here.
 
 @item -f
 @opindex -f
@@ -10832,8 +10839,11 @@ date [-u|--utc|--universal] @c this avoids a newline in the output
 [ MMDDhhmm[[CC]YY][.ss] ]
 @end example
 
+@vindex LC_TIME
 Invoking @command{date} with no @var{format} argument is equivalent to invoking
-@samp{date '+%a %b %e %H:%M:%S %Z %Y'}.
+it with a default format that depends on the @env{LC_TIME} locale category.
+In the default C locale, this format is @samp{'+%a %b %e %H:%M:%S %Z %Y'},
+so the output looks like @samp{Fri Feb 27 13:47:51 PST 2004}.
 
 @findex strftime @r{and @command{date}}
 @cindex time formats
@@ -10841,7 +10851,7 @@ Invoking @command{date} with no @var{format} argument is equivalent to invoking
 If given an argument that starts with a @samp{+}, @command{date} prints the
 current time and date (or the time and date specified by the
 @option{--date} option, see below) in the format defined by that argument,
-which is the same as in the @code{strftime} function.  Except for
+which is similar to that of the @code{strftime} function.  Except for
 directives, which start with @samp{%}, characters in the format string
 are printed unchanged.  The directives are described below.
 
@@ -11099,7 +11109,11 @@ The program accepts the following options.  Also see @ref{Common options}.
 Display the time and date specified in @var{datestr} instead of the
 current time and date.  @var{datestr} can be in almost any common
 format.  It can contain month names, time zones, @samp{am} and @samp{pm},
-@samp{yesterday}, @samp{ago}, @samp{next}, etc.  @xref{Date input formats}.
+@samp{yesterday}, etc.  For example, @option{--date="2004-02-27
+14:19:13.489392193 +0530"} specifies the instant of time that is
+489,392,193 nanoseconds after February 27, 2004 at 2:19:13 PM in a
+time zone that is 5 hours and 30 minutes east of @acronym{UTC}.
+@xref{Date input formats}.
 
 @item -f @var{datefile}
 @itemx --file=@var{datefile}
@@ -11131,6 +11145,9 @@ Append the hours and minutes.
 
 @item seconds
 Append the hours, minutes, and seconds.
+
+@item ns
+Append the hours, minutes, seconds, and nanoseconds.
 @end table
 
 If showing any time terms, then include the time zone using the format
