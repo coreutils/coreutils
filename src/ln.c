@@ -36,12 +36,6 @@ int link ();			/* Some systems don't declare this anywhere. */
 int symlink ();
 #endif
 
-#ifdef S_ISLNK
-# define LINK_TYPE symbolic_link ? _("symbolic link") : _("hard link")
-#else
-# define LINK_TYPE ""
-#endif
-
 /* Construct a string NEW_DEST by concatenating DEST, a slash, and
    basename(SOURCE) in alloca'd memory.  Don't modify DEST or SOURCE.  */
 
@@ -79,6 +73,10 @@ static int (*linkfunc) ();
 
 /* If nonzero, make symbolic links; otherwise, make hard links.  */
 static int symbolic_link;
+
+/* A string describing type of link to make.  For use in verbose
+   diagnostics and in error messages.  */
+static const char *link_type_string;
 
 /* If nonzero, ask the user before removing existing files.  */
 static int interactive;
@@ -289,15 +287,14 @@ do_link (const char *source, const char *dest)
     }
 
   if (verbose)
-    printf (_("create %s %s to %s\n"), LINK_TYPE,
-	    dest, source);
+    printf (_("create %s %s to %s\n"), link_type_string, dest, source);
 
   if ((*linkfunc) (source, dest) == 0)
     {
       return 0;
     }
 
-  error (0, errno, _("cannot create %s `%s' to `%s'"), LINK_TYPE,
+  error (0, errno, _("cannot create %s `%s' to `%s'"), link_type_string,
 	 dest, source);
 
   if (dest_backup)
@@ -368,7 +365,6 @@ main (int argc, char **argv)
     simple_backup_suffix = version;
   version = getenv ("VERSION_CONTROL");
 
-  linkfunc = link;
   symbolic_link = remove_existing_files = interactive = verbose
     = hard_dir_link = 0;
   errors = 0;
@@ -441,7 +437,17 @@ main (int argc, char **argv)
 
 #ifdef S_ISLNK
   if (symbolic_link)
-    linkfunc = symlink;
+    {
+      linkfunc = symlink;
+      link_type_string = _("symbolic link");
+    }
+  else
+    {
+      linkfunc = link;
+      link_type_string = _("hard link");
+    }
+#else
+  link_type_string = _("link");
 #endif
 
   if (optind == argc - 1)
