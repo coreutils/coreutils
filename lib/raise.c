@@ -32,5 +32,5 @@
 int
 rpl_raise (int sig)
 {
-  kill (getpid (), sig);
+  return kill (getpid (), sig);
 }
