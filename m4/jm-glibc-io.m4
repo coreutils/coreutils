@@ -9,10 +9,11 @@ dnl
 AC_DEFUN(jm_FUNC_GLIBC_UNLOCKED_IO,
   [
     # Kludge (not executed) to make autoheader do the right thing.
-    test a = b &&
+    if test a = b; then
       AC_CHECK_DECLS([clearerr_unlocked, feof_unlocked, ferror_unlocked,
 	fflush_unlocked, fputc_unlocked, fread_unlocked, fwrite_unlocked,
 	getc_unlocked, getchar_unlocked, putc_unlocked, putchar_unlocked])
+    fi
 
     io_functions='clearerr_unlocked feof_unlocked ferror_unlocked
     fflush_unlocked fputc_unlocked fread_unlocked fwrite_unlocked
