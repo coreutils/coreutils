@@ -445,7 +445,6 @@ main (int argc, char **argv)
 {
   unsigned char md5buffer[16];
   int do_check = 0;
-  int do_version = 0;
   int opt;
   char **string = NULL;
   size_t n_strings = 0;
@@ -462,7 +461,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "md5sum", PACKAGE_VERSION, usage);
+  parse_long_options (argc, argv, "md5sum", GNU_PACKAGE, VERSION, usage);
 
   while ((opt = getopt_long (argc, argv, "bctw", long_options, NULL))
 	 != EOF)
@@ -502,12 +501,6 @@ main (int argc, char **argv)
       default:
 	usage (EXIT_FAILURE);
       }
-
-  if (do_version)
-    {
-      printf ("md5sum (%s) %s\n", GNU_PACKAGE, VERSION);
-      exit (EXIT_SUCCESS);
-    }
 
   if (file_type_specified && do_check)
     {
