@@ -50,6 +50,10 @@
 #include "backupfile.h"
 #include "error.h"
 
+#ifdef HAVE_LCHOWN
+# define chown(PATH, OWNER, GROUP) lchown(PATH, OWNER, GROUP)
+#endif
+
 #ifndef _POSIX_VERSION
 uid_t geteuid ();
 #endif
