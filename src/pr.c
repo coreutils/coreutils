@@ -2013,8 +2013,7 @@ store_char (int c)
   if (buff_current >= buff_allocated)
     {
       /* May be too generous. */
-      buff_allocated = 2 * buff_allocated;
-      buff = xrealloc (buff, buff_allocated * sizeof (char));
+      buff = x2nrealloc (buff, &buff_allocated, sizeof *buff);
     }
   buff[buff_current++] = (char) c;
 }
