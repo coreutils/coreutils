@@ -93,10 +93,10 @@ static char *ref_file;
 static struct stat ref_stats;
 
 /* If non-zero, display usage information and exit.  */
-static int flag_help;
+static int show_help;
 
 /* If non-zero, print the version on standard error.  */
-static int flag_version;
+static int show_version;
 
 static struct option const longopts[] =
 {
@@ -104,8 +104,8 @@ static struct option const longopts[] =
   {"no-create", no_argument, 0, 'c'},
   {"date", required_argument, 0, 'd'},
   {"file", required_argument, 0, 'r'},
-  {"help", no_argument, &flag_help, 1},
-  {"version", no_argument, &flag_version, 1},
+  {"help", no_argument, &show_help, 1},
+  {"version", no_argument, &show_version, 1},
   {0, 0, 0, 0}
 };
 
@@ -193,13 +193,13 @@ main (argc, argv)
 	}
     }
 
-  if (flag_version)
+  if (show_version)
     {
       fprintf (stderr, "%s\n", version_string);
       exit (0);
     }
 
-  if (flag_help)
+  if (show_help)
     usage ();
 
   if (change_times == 0)

@@ -359,10 +359,10 @@ static int format_needs_stat;
 static int exit_status;
 
 /* If non-zero, display usage information and exit.  */
-static int flag_help;
+static int show_help;
 
 /* If non-zero, print the version on standard error.  */
-static int flag_version;
+static int show_version;
 
 static struct option const long_options[] =
 {
@@ -391,8 +391,8 @@ static struct option const long_options[] =
   {"sort", required_argument, 0, 10},
   {"tabsize", required_argument, 0, 'T'},
   {"time", required_argument, 0, 11},
-  {"help", no_argument, &flag_help, 1},
-  {"version", no_argument, &flag_version, 1},
+  {"help", no_argument, &show_help, 1},
+  {"version", no_argument, &show_version, 1},
   {0, 0, 0, 0}
 };
 
@@ -446,13 +446,13 @@ main (argc, argv)
   program_name = argv[0];
   i = decode_switches (argc, argv);
 
-  if (flag_version)
+  if (show_version)
     {
       fprintf (stderr, "%s\n", version_string);
       exit (0);
     }
 
-  if (flag_help)
+  if (show_help)
     usage ();
 
   format_needs_stat = sort_type == sort_time || sort_type == sort_size
@@ -1076,31 +1076,21 @@ get_link_name (filename, f)
      char *filename;
      struct file *f;
 {
-  register char *linkbuf;
-#ifdef _AIX
-  register int bufsiz = PATH_MAX; /* st_size is wrong. */
-#else
-  register int bufsiz = f->stat.st_size;
-#endif
+  char linkbuf[PATH_MAX + 1];
   register int linksize;
 
-  linkbuf = (char *) xmalloc (bufsiz + 1);
   /* Some automounters give incorrect st_size for mount points.
      I can't think of a good workaround for it, though.  */
-  linksize = readlink (filename, linkbuf, bufsiz);
+  linksize = readlink (filename, linkbuf, sizeof (linkbuf));
   if (linksize < 0)
     {
       error (0, errno, "%s", filename);
       exit_status = 1;
-      free (linkbuf);
     }
   else
     {
-#ifdef _AIX
-      linkbuf = (char *) xrealloc (linkbuf, linksize + 1);
-#endif
       linkbuf[linksize] = '\0';
-      f->linkname = linkbuf;
+      f->linkname = xstrdup (linkbuf);
     }
 }
 

@@ -1,3 +1,31 @@
+Wed Aug  4 17:43:18 1993  Jim Meyering  (meyering@comco.com)
+
+        * ls.c (get_link_name): Don't ever use the stat field st_size as a
+	buffer size.  Too many systems don't set it properly for mount points.
+        Instead, use a fixed-length buffer.  From Michael Joosten
+        <joost@ori.CAdlab.DE>.
+
+Mon Jul 19 17:39:01 1993  Jim Meyering  (meyering@comco.com)
+
+	* backupfile.c (concat): Temporary STR1_LENGTH should have type `int'
+	instead of `char.'
+
+Fri Jul 16 22:00:16 1993  David J. MacKenzie  (djm@goldman.gnu.ai.mit.edu)
+
+	* dd.c (print_stats): Change message from "truncated blocks"
+	to "truncated records" for final POSIX.2 spec. 
+
+Fri Jun 25 17:18:15 1993  Jim Meyering  (meyering@comco.com)
+
+	* mkdir.c, rmdir.c: Change --path long option to --parents to avoid
+	confusion with search-path semantics of --path as an option to other
+	programs.  --path will still work, but is no longer documented.
+
+Tue Jun  8 00:46:26 1993  Jim Meyering  (meyering@comco.com)
+
+	* dd.c (parse_integer): Also accept `c' multiplier for consistency
+	with find's -size option.
+
 Thu May 27 00:03:51 1993  Jim Meyering  (meyering@comco.com)
 
 	* Version 3.8.
@@ -15,7 +43,7 @@ Wed May 26 00:57:46 1993  Jim Meyering  (meyering@comco.com)
 	the executable built from ls.o should act like ls, dir, or vdir.
 	* ls.c (decode_switches): Use the variable instead of #ifdefs.
 	This is modelled after the approach used in GNU binutils 2.x for
-	ar and ranlib.  Here we avoid two rudundant compilations.
+	ar and ranlib.  Here we avoid two redundant compilations.
 
 	* install.c (change_attributes, copy_file, install_file_in_file):
 	Don't call chown if we can efficiently determine that doing so is

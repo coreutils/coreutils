@@ -83,10 +83,10 @@ static char *username;
 static char *groupname;
 
 /* If non-zero, display usage information and exit.  */
-static int flag_help;
+static int show_help;
 
 /* If non-zero, print the version on standard error.  */
-static int flag_version;
+static int show_version;
 
 static struct option const long_options[] =
 {
@@ -95,8 +95,8 @@ static struct option const long_options[] =
   {"silent", no_argument, 0, 'f'},
   {"quiet", no_argument, 0, 'f'},
   {"verbose", no_argument, 0, 'v'},
-  {"help", no_argument, &flag_help, 1},
-  {"version", no_argument, &flag_version, 1},
+  {"help", no_argument, &show_help, 1},
+  {"version", no_argument, &show_version, 1},
   {0, 0, 0, 0}
 };
 
@@ -139,13 +139,13 @@ main (argc, argv)
 	}
     }
 
-  if (flag_version)
+  if (show_version)
     {
       fprintf (stderr, "%s\n", version_string);
       exit (0);
     }
 
-  if (flag_help)
+  if (show_help)
     usage ();
 
   if (optind >= argc - 1)

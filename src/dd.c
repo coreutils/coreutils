@@ -20,7 +20,7 @@
 /* Options:
 
    Numbers can be followed by a multiplier:
-   b=512, k=1024, w=2, xm=number m
+   b=512, c=1, k=1024, w=2, xm=number m
 
    if=FILE			Read from FILE instead of stdin.
    of=FILE			Write to FILE instead of stdout; don't
@@ -309,15 +309,15 @@ static unsigned char const ebcdic_to_ascii[] =
 };
 
 /* If non-zero, display usage information and exit.  */
-static int flag_help;
+static int show_help;
 
 /* If non-zero, print the version on standard error.  */
-static int flag_version;
+static int show_version;
 
 static struct option const long_options[] =
 {
-  {"help", no_argument, &flag_help, 1},
-  {"version", no_argument, &flag_version, 1},
+  {"help", no_argument, &show_help, 1},
+  {"version", no_argument, &show_version, 1},
   {0, 0, 0, 0}
 };
 
@@ -340,13 +340,13 @@ main (argc, argv)
   /* Decode arguments. */
   scanargs (argc, argv);
 
-  if (flag_version)
+  if (show_version)
     {
       fprintf (stderr, "%s\n", version_string);
       exit (0);
     }
 
-  if (flag_help)
+  if (show_help)
     usage ();
 
   apply_translations ();
@@ -905,6 +905,8 @@ loop:
     case 'b':
       n *= 512;
       goto loop;
+    case 'c':
+      goto loop;
     case 'k':
       n *= 1024;
       goto loop;
@@ -1032,7 +1034,7 @@ print_stats ()
   fprintf (stderr, "%u+%u records in\n", r_full, r_partial);
   fprintf (stderr, "%u+%u records out\n", w_full, w_partial);
   if (r_truncate > 0)
-    fprintf (stderr, "%u truncated block%s\n", r_truncate,
+    fprintf (stderr, "%u truncated record%s\n", r_truncate,
 	     r_truncate == 1 ? "" : "s");
 }
 
@@ -1064,7 +1066,7 @@ Usage: %s [if=file] [of=file] [ibs=bytes] [obs=bytes] [bs=bytes] [cbs=bytes]\n\
        [conv={ascii,ebcdic,ibm,block,unblock,lcase,ucase,swab,noerror,notrunc,\n\
        sync}] [--help] [--version]\n\
 Numbers can be followed by a multiplier:\n\
-b=512, k=1024, w=2, xm=number m\n",
+b=512, c=1, k=1024, w=2, xm=number m\n",
 	   program_name);
   exit (1);
 }

@@ -78,10 +78,10 @@ static int unlink_dirs;
 static int stdin_tty;
 
 /* If non-zero, display usage information and exit.  */
-static int flag_help;
+static int show_help;
 
 /* If non-zero, print the version on standard error.  */
-static int flag_version;
+static int show_version;
 
 static struct option const long_opts[] =
 {
@@ -90,8 +90,8 @@ static struct option const long_opts[] =
   {"interactive", no_argument, NULL, 'i'},
   {"recursive", no_argument, &recursive, 1},
   {"verbose", no_argument, &verbose, 1},
-  {"help", no_argument, &flag_help, 1},
-  {"version", no_argument, &flag_version, 1},
+  {"help", no_argument, &show_help, 1},
+  {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -138,13 +138,13 @@ main (argc, argv)
 	}
     }
 
-  if (flag_version)
+  if (show_version)
     {
       fprintf (stderr, "%s\n", version_string);
       exit (0);
     }
 
-  if (flag_help)
+  if (show_help)
     usage ();
 
   if (optind == argc)

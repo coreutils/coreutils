@@ -110,10 +110,10 @@ static struct fs_type_list *fs_exclude_list;
 static struct mount_entry *mount_list;
 
 /* If non-zero, display usage information and exit.  */
-static int flag_help;
+static int show_help;
 
 /* If non-zero, print the version on standard error.  */
-static int flag_version;
+static int show_version;
 
 static struct option const long_options[] =
 {
@@ -123,8 +123,8 @@ static struct option const long_options[] =
   {"portability", no_argument, &posix_format, 1},
   {"type", required_argument, 0, 't'},
   {"exclude-type", required_argument, 0, 'x'},
-  {"help", no_argument, &flag_help, 1},
-  {"version", no_argument, &flag_version, 1},
+  {"help", no_argument, &show_help, 1},
+  {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -178,13 +178,13 @@ main (argc, argv)
 	}
     }
 
-  if (flag_version)
+  if (show_version)
     {
       fprintf (stderr, "%s\n", version_string);
       exit (0);
     }
 
-  if (flag_help)
+  if (show_help)
     usage ();
 
   if (optind != argc)

@@ -16,7 +16,7 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
 /* Options:
-   -p, --path		Remove any parent dirs that are explicitly mentioned
+   -p, --parent		Remove any parent dirs that are explicitly mentioned
 			in an argument, if they become empty after the
 			argument file is removed.
 
@@ -41,16 +41,17 @@ char *program_name;
 static int empty_paths;
 
 /* If non-zero, display usage information and exit.  */
-static int flag_help;
+static int show_help;
 
 /* If non-zero, print the version on standard error.  */
-static int flag_version;
+static int show_version;
 
 static struct option const longopts[] =
 {
   {"path", no_argument, &empty_paths, 1},
-  {"help", no_argument, &flag_help, 1},
-  {"version", no_argument, &flag_version, 1},
+  {"parents", no_argument, &empty_paths, 1},
+  {"help", no_argument, &show_help, 1},
+  {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -79,13 +80,13 @@ main (argc, argv)
 	}
     }
 
-  if (flag_version)
+  if (show_version)
     {
       fprintf (stderr, "%s\n", version_string);
       exit (0);
     }
 
-  if (flag_help)
+  if (show_help)
     usage ();
 
   if (optind == argc)
@@ -134,7 +135,7 @@ remove_parents (path)
 static void
 usage ()
 {
-  fprintf (stderr, "Usage: %s [-p] [--path] [--help] [--version] dir...\n",
+  fprintf (stderr, "Usage: %s [-p] [--parents] [--help] [--version] dir...\n",
 	   program_name);
   exit (1);
 }

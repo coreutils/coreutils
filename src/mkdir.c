@@ -16,7 +16,7 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
 /* Options:
-   -p, --path		Ensure that the given path(s) exist:
+   -p, --parent		Ensure that the given path(s) exist:
 			Make any missing parent directories for each argument.
 			Parent dirs default to umask modified by `u+wx'.
 			Do not consider an argument directory that already
@@ -42,21 +42,22 @@ static void usage ();
 /* The name this program was run with. */
 char *program_name;
 
-/* If nonzero, ensure that a path exists.  */
+/* If nonzero, ensure that all parents of the specified directory exist.  */
 static int path_mode;
 
 /* If non-zero, display usage information and exit.  */
-static int flag_help;
+static int show_help;
 
 /* If non-zero, print the version on standard error.  */
-static int flag_version;
+static int show_version;
 
 static struct option const longopts[] =
 {
   {"mode", required_argument, NULL, 'm'},
   {"path", no_argument, &path_mode, 1},
-  {"help", no_argument, &flag_help, 1},
-  {"version", no_argument, &flag_version, 1},
+  {"parents", no_argument, &path_mode, 1},
+  {"help", no_argument, &show_help, 1},
+  {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -91,13 +92,13 @@ main (argc, argv)
 	}
     }
 
-  if (flag_version)
+  if (show_version)
     {
       fprintf (stderr, "%s\n", version_string);
       exit (0);
     }
 
-  if (flag_help)
+  if (show_help)
     usage ();
 
   if (optind == argc)
@@ -133,8 +134,8 @@ static void
 usage ()
 {
   fprintf (stderr, "\
-Usage: %s [-p] [-m mode] [--path] [--mode=mode] [--help] [--version] dir...\n",
-	   program_name);
+Usage: %s [-p] [-m mode] [--parents] [--mode=mode]\n\
+       [--help] [--version] dir...\n", program_name);
   exit (1);
 }
 

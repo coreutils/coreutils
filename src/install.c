@@ -133,10 +133,10 @@ static int strip_files;
 static int dir_arg;
 
 /* If non-zero, display usage information and exit.  */
-static int flag_help;
+static int show_help;
 
 /* If non-zero, print the version on standard error.  */
-static int flag_version;
+static int show_version;
 
 static struct option const long_options[] =
 {
@@ -145,8 +145,8 @@ static struct option const long_options[] =
   {"group", required_argument, NULL, 'g'},
   {"mode", required_argument, NULL, 'm'},
   {"owner", required_argument, NULL, 'o'},
-  {"help", no_argument, &flag_help, 1},
-  {"version", no_argument, &flag_version, 1},
+  {"help", no_argument, &show_help, 1},
+  {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -196,13 +196,13 @@ main (argc, argv)
 	}
     }
 
-  if (flag_version)
+  if (show_version)
     {
       fprintf (stderr, "%s\n", version_string);
       exit (0);
     }
 
-  if (flag_help)
+  if (show_help)
     usage ();
 
   /* Check for invalid combinations of arguments. */
