@@ -519,6 +519,7 @@ enum Dereference_symlink
     DEREF_UNDEFINED = 1,
     DEREF_NEVER,
     DEREF_COMMAND_LINE_ARGUMENTS,	/* -H */
+    DEREF_COMMAND_LINE_SYMLINK_TO_DIR,	/* the default, in certain cases */
     DEREF_ALWAYS			/* -L */
   };
 
@@ -690,6 +691,7 @@ enum
   AUTHOR_OPTION = CHAR_MAX + 1,
   BLOCK_SIZE_OPTION,
   COLOR_OPTION,
+  DEREFERENCE_COMMAND_LINE_SYMLINK_TO_DIR_OPTION,
   FORMAT_OPTION,
   FULL_TIME_OPTION,
   INDICATOR_STYLE_OPTION,
@@ -723,6 +725,8 @@ static struct option const long_options[] =
   {"file-type", no_argument, 0, 'p'},
   {"si", no_argument, 0, SI_OPTION},
   {"dereference-command-line", no_argument, 0, 'H'},
+  {"dereference-command-line-symlink-to-dir", no_argument, 0,
+   DEREFERENCE_COMMAND_LINE_SYMLINK_TO_DIR_OPTION},
   {"ignore", required_argument, 0, 'I'},
   {"indicator-style", required_argument, 0, INDICATOR_STYLE_OPTION},
   {"dereference", no_argument, 0, 'L'},
@@ -1100,7 +1104,7 @@ main (int argc, char **argv)
 		    || indicator_style == classify
 		    || format == long_format)
 		   ? DEREF_NEVER
-		   : DEREF_COMMAND_LINE_ARGUMENTS);
+		   : DEREF_COMMAND_LINE_SYMLINK_TO_DIR);
 
   /* When using -R, initialize a data structure we'll use to
      detect any directory cycles.  */
@@ -1514,6 +1518,10 @@ decode_switches (int argc, char **argv)
 
 	case 'H':
 	  dereference = DEREF_COMMAND_LINE_ARGUMENTS;
+	  break;
+
+	case DEREFERENCE_COMMAND_LINE_SYMLINK_TO_DIR_OPTION:
+	  dereference = DEREF_COMMAND_LINE_SYMLINK_TO_DIR;
 	  break;
 
 	case 'I':
@@ -2354,18 +2362,26 @@ gobble_file (const char *name, enum filetype type, int explicit_arg,
 	  break;
 
 	case DEREF_COMMAND_LINE_ARGUMENTS:
+	case DEREF_COMMAND_LINE_SYMLINK_TO_DIR:
 	  if (explicit_arg)
 	    {
+	      int need_lstat;
 	      err = stat (path, &files[files_index].stat);
-	      if (! (err < 0 && errno == ENOENT))
+
+	      if (dereference == DEREF_COMMAND_LINE_ARGUMENTS)
 		break;
 
-	      /* stat failed because of ENOENT, maybe indicating a
-		 dangling symlink.  Fall through so that we call lstat
-		 instead.  */
-	    }
+	      need_lstat = (err < 0
+			    ? errno == ENOENT
+			    : ! S_ISDIR (files[files_index].stat.st_mode));
+	      if (!need_lstat)
+		break;
 
-	  /* fall through. */
+	      /* stat failed because of ENOENT, maybe indicating a dangling
+		 symlink.  Or stat succeeded, PATH does not refer to a
+		 directory, and --dereference-command-line-symlink-to-dir is
+		 in effect.  Fall through so that we call lstat instead.  */
+	    }
 
 	default: /* DEREF_NEVER */
 	  err = lstat (path, &files[files_index].stat);
@@ -3748,7 +3764,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -C                         list entries by columns\n\
       --color[=WHEN]         control whether color is used to distinguish file\n\
                                types.  WHEN may be `never', `always', or `auto'\n\
-  -d, --directory            list directory entries instead of contents\n\
+  -d, --directory            list directory entries instead of contents,\n\
+                               and do not dereference symbolic links\n\
   -D, --dired                generate output designed for Emacs' dired mode\n\
 "), stdout);
       fputs (_("\
@@ -3763,7 +3780,11 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -G, --no-group             inhibit display of group information\n\
   -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\n\
       --si                   likewise, but use powers of 1000 not 1024\n\
-  -H, --dereference-command-line  follow symbolic links on the command line\n\
+  -H, --dereference-command-line\n\
+                             follow symbolic links listed on the command line\n\
+      --dereference-command-line-symlink-to-dir\n\
+                             follow each command line symbolic link\n\
+                               that points to a directory\n\
 "), stdout);
       fputs (_("\
       --indicator-style=WORD append indicator with style WORD to entry names:\n\
