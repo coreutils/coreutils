@@ -1,0 +1,43 @@
+#!/bin/sh
+# Demonstrate using a combination of --reference and --date to
+# set the time of a file back by an arbitrary amount.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  touch --version
+fi
+
+. $srcdir/../envvar-check
+
+pwd=`pwd`
+t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
+trap 'status=$?; cd $pwd; chmod -R u+rwx $t0; rm -rf $t0 && exit $status' 0
+trap '(exit $?); exit $?' 1 2 13 15
+
+framework_failure=0
+mkdir -p $tmp || framework_failure=1
+cd $tmp || framework_failure=1
+touch --date='2004-01-16 05:26:38 +0' f || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo "$0: failure in testing framework" 1>&2
+  (exit 1); exit 1
+fi
+
+fail=0
+
+# Set times back by 30 minutes.
+touch --ref f --date='-30 min' f || fail=1
+
+TZ=utc command ls -og --time-style=+%Y-%m-%dT%H:%M:%S f > out.1 || fail
+sed 's/ f$//;s/.* //' out.1 > out
+rm -f out.1
+
+cat <<\EOF > exp || fail=1
+2004-01-16T04:56:38
+EOF
+
+cmp out exp || fail=1
+test $fail = 1 && diff out exp 2> /dev/null
+
+(exit $fail); exit $fail
