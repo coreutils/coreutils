@@ -26,6 +26,13 @@
 #include "system.h"
 #include "error.h"
 
+enum Change_status
+{
+  CH_SUCCEEDED,
+  CH_FAILED,
+  CH_NO_CHANGE_REQUESTED
+};
+
 void mode_string ();
 char *savedir ();
 void strip_trailing_slashes ();
@@ -78,18 +85,29 @@ static struct option const long_options[] =
    if CHANGED is zero, FILE had that mode already. */
 
 static void
-describe_change (const char *file, short unsigned int mode, int changed)
+describe_change (const char *file, short unsigned int mode,
+		 enum Change_status changed)
 {
   char perms[11];		/* "-rwxrwxrwx" ls-style modes. */
+  const char *fmt;
 
   mode_string (mode, perms);
   perms[10] = '\0';		/* `mode_string' does not null terminate. */
-  if (changed)
-    printf (_("mode of %s changed to %04o (%s)\n"),
-	    file, mode & 07777, &perms[1]);
-  else
-    printf (_("mode of %s retained as %04o (%s)\n"),
-	    file, mode & 07777, &perms[1]);
+  switch (changed)
+    {
+    case CH_SUCCEEDED:
+      fmt = _("mode of %s changed to %04o (%s)\n");
+      break;
+    case CH_FAILED:
+      fmt = _("failed to change mode of %s to %04o (%s)\n");
+      break;
+    case CH_NO_CHANGE_REQUESTED:
+      fmt = _("mode of %s retained as %04o (%s)\n");
+      break;
+    default:
+      abort ();
+    }
+  printf (fmt, file, mode & 07777, &perms[1]);
 }
 
 /* Change the mode of FILE according to the list of operations CHANGES.
@@ -130,14 +148,12 @@ change_file_mode (const char *file, const struct mode_change *changes,
 
   if (newmode != (file_stats.st_mode & 07777))
     {
-      if (verbose)
-	describe_change (file, newmode, 1);
-      if (chmod (file, (int) newmode) == 0)
-	{
-	  if (changes_only)
-	    describe_change (file, newmode, 1);
-	}
-      else
+      int fail = chmod (file, (int) newmode);
+
+      if (verbose || (changes_only && !fail))
+	describe_change (file, newmode, (fail ? CH_FAILED : CH_SUCCEEDED));
+
+      if (fail)
 	{
 	  if (force_silent == 0)
 	    error (0, errno, "%s", file);
@@ -145,7 +161,7 @@ change_file_mode (const char *file, const struct mode_change *changes,
 	}
     }
   else if (verbose && changes_only == 0)
-    describe_change (file, newmode, 0);
+    describe_change (file, newmode, CH_NO_CHANGE_REQUESTED);
 
   if (recurse && S_ISDIR (file_stats.st_mode))
     errors |= change_dir_mode (file, changes, &file_stats);
