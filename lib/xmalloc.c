@@ -23,6 +23,7 @@
 
 #include "xalloc.h"
 
+#include <stdbool.h>
 #include <stdlib.h>
 
 #include "gettext.h"
@@ -30,10 +31,11 @@
 #define N_(msgid) msgid
 
 #include "error.h"
-#include "exit.h"
 #include "exitfail.h"
 
-/* The following tests require AC_PREREQ(2.54).  */
+#ifndef SIZE_MAX
+# define SIZE_MAX ((size_t) -1)
+#endif
 
 #ifndef HAVE_MALLOC
 "you must run the autoconf test for a GNU libc compatible malloc"
@@ -45,6 +47,15 @@
 
 /* If non NULL, call this function when memory is exhausted. */
 void (*xalloc_fail_func) (void) = 0;
+
+/* Return true if array of N objects, each of size S, cannot exist due
+   to arithmetic overflow.  S must be nonzero.  */
+
+static inline bool
+array_size_overflow (size_t n, size_t s)
+{
+  return SIZE_MAX / s < n;
+}
 
 /* If XALLOC_FAIL_FUNC is NULL, or does return, display this message
    before exiting when memory is exhausted.  Goes through gettext. */
@@ -58,8 +69,20 @@ xalloc_die (void)
   error (exit_failure, 0, "%s", _(xalloc_msg_memory_exhausted));
   /* The `noreturn' cannot be given to error, since it may return if
      its first argument is 0.  To help compilers understand the
-     xalloc_die does terminate, call exit. */
-  exit (EXIT_FAILURE);
+     xalloc_die does terminate, call abort.  */
+  abort ();
+}
+
+/* Allocate an array of N objects, each with S bytes of memory,
+   dynamically, with error checking.  S must be nonzero.  */
+
+inline void *
+xnmalloc (size_t n, size_t s)
+{
+  void *p;
+  if (array_size_overflow (n, s) || ! (p = malloc (n * s)))
+    xalloc_die ();
+  return p;
 }
 
 /* Allocate N bytes of memory dynamically, with error checking.  */
@@ -67,10 +90,16 @@ xalloc_die (void)
 void *
 xmalloc (size_t n)
 {
-  void *p;
+  return xnmalloc (n, 1);
+}
 
-  p = malloc (n);
-  if (p == 0)
+/* Change the size of an allocated block of memory P to an array of N
+   objects each of S bytes, with error checking.  S must be nonzero.  */
+
+inline void *
+xnrealloc (void *p, size_t n, size_t s)
+{
+  if (array_size_overflow (n, s) || ! (p = realloc (p, n * s)))
     xalloc_die ();
   return p;
 }
@@ -81,21 +110,39 @@ xmalloc (size_t n)
 void *
 xrealloc (void *p, size_t n)
 {
-  p = realloc (p, n);
-  if (p == 0)
-    xalloc_die ();
-  return p;
+  return xnrealloc (p, n, 1);
 }
 
-/* Allocate memory for N elements of S bytes, with error checking.  */
+/* Allocate S bytes of zeroed memory dynamically, with error checking.
+   There's no need for xnzalloc (N, S), since it would be equivalent
+   to xcalloc (N, S).  */
+
+void *
+xzalloc (size_t s)
+{
+  return memset (xmalloc (s), 0, s);
+}
+
+/* Allocate zeroed memory for N elements of S bytes, with error
+   checking.  S must be nonzero.  */
 
 void *
 xcalloc (size_t n, size_t s)
 {
   void *p;
-
-  p = calloc (n, s);
-  if (p == 0)
+  /* Test for overflow, since some calloc implementations don't have
+     proper overflow checks.  */
+  if (array_size_overflow (n, s) || ! (p = calloc (n, s)))
     xalloc_die ();
   return p;
+}
+
+/* Clone an object P of size S, with error checking.  There's no need
+   for xnclone (P, N, S), since xclone (P, N * S) works without any
+   need for an arithmetic overflow check.  */
+
+void *
+xclone (void const *p, size_t s)
+{
+  return memcpy (xmalloc (s), p, s);
 }
