@@ -2,6 +2,12 @@
 
 	* Version 2.0.13.
 
+	* tests/nice: Move this file...
+	* tests/misc/nice: ...to here.
+	* tests/Makefile.am (TESTS): Remove nice.
+	* tests/misc/Makefile.am (TESTS): Add nice.
+	* configure.ac (AC_CONFIG_FILES): Add tests/misc/Makefile.
+
 	* src/pathchk.c (validate_path): Compare the result of the function --
 	not its (constant) address -- against zero.
 	Patch from Tim J. Robbins <tjr@FreeBSD.ORG>
