@@ -2,6 +2,9 @@
 
 	* Version 4.1.1.
 
+	* man/Makefile.am (*.1): Depend on *source* files, not binaries.
+	(.x.1): Add code to work around ginstall vs. install exception.
+
 	* man/Makefile.am (dist_man_MANS): Use dist_man_MANS, not man_MANS.
 
 2001-09-15  Jim Meyering  <meyering@lucent.com>
