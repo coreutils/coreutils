@@ -5293,6 +5293,11 @@ were specified before the @option{-f}).
 Reverse whatever the sorting method is---e.g., list files in reverse
 alphabetical order, youngest first, smallest first, or whatever.
 
+@itemx --sort=directory
+@opindex --sort
+@opindex directories@r{, sorting files by}
+Show directories first, then other files.
+
 @item -S
 @itemx --sort=size
 @opindex -S
@@ -7289,14 +7294,14 @@ of departure.  @xref{File permissions}.
 
 @command{readlink} outputs the value of the given symbolic link.
 If @command{readlink} is invoked with an argument other than the pathname
-of a symbolic link, it exits with a non-zero exit code.
+of a symbolic link, it produces no output and exits with a nonzero exit code.
 
 @item Canonicalize mode
 
 @command{readlink} outputs the absolute name of the given file which contains
 no `.', `..' components nor any repeated path separators (`/') or symlinks.
-In any of the path components is missing or unavailable,
-it exits with a non-zero exit code.
+In any path component is missing or unavailable,
+it produces no output and exits with a nonzero exit code.
 
 @end table
 
