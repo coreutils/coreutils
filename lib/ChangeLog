@@ -1,5 +1,9 @@
 2003-02-06  Jim Meyering  <jim@meyering.net>
 
+	Support for pruning.
+	* ftw_.h (FTW_DPRE) [enum]: New member and definition.
+	(struct FTW) [skip]: New member.
+
 	* search_.h (__restrict): Define to `restrict' or to nothing.
 
 	* fsusage.c: Remove declaration of statfs.
