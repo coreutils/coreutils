@@ -1,8 +1,10 @@
 [4.5.10]
 Planned changes:
+  ftw: use save-cwd.c, not getcwd
   Andreas' suggestion re cp --no-preserve
   Rich's stub patches
   shred non-regular should imply --exact (do not round up)
+* du no longer lists hard-linked files more than once
 * du no longer dumps core due to `infinite' recursion via nftw's
   use of the buggy replacement function in getcwd.c
 * portability patches for a few vendor compilers
