@@ -262,25 +262,26 @@ CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 depcomp = $(SHELL) $(top_srcdir)/depcomp
-@AMDEP_TRUE@DEP_FILES = $(DEPDIR)/__fpending.Po $(DEPDIR)/addext$U.Po \
-@AMDEP_TRUE@	$(DEPDIR)/alloca.Po $(DEPDIR)/argmatch$U.Po \
-@AMDEP_TRUE@	$(DEPDIR)/atexit.Po $(DEPDIR)/backupfile$U.Po \
-@AMDEP_TRUE@	$(DEPDIR)/basename$U.Po $(DEPDIR)/canon-host$U.Po \
-@AMDEP_TRUE@	$(DEPDIR)/chown.Po $(DEPDIR)/closeout$U.Po \
-@AMDEP_TRUE@	$(DEPDIR)/diacrit$U.Po $(DEPDIR)/dirfd.Po \
-@AMDEP_TRUE@	$(DEPDIR)/dirname$U.Po $(DEPDIR)/dup-safer$U.Po \
-@AMDEP_TRUE@	$(DEPDIR)/dup2.Po $(DEPDIR)/error.Po \
-@AMDEP_TRUE@	$(DEPDIR)/euidaccess.Po $(DEPDIR)/exclude$U.Po \
-@AMDEP_TRUE@	$(DEPDIR)/fileblocks.Po $(DEPDIR)/filemode$U.Po \
-@AMDEP_TRUE@	$(DEPDIR)/fnmatch.Po $(DEPDIR)/fopen-safer$U.Po \
-@AMDEP_TRUE@	$(DEPDIR)/fsusage.Po $(DEPDIR)/ftruncate.Po \
-@AMDEP_TRUE@	$(DEPDIR)/full-write$U.Po $(DEPDIR)/getdate$U.Po \
-@AMDEP_TRUE@	$(DEPDIR)/getgroups.Po $(DEPDIR)/gethostname.Po \
-@AMDEP_TRUE@	$(DEPDIR)/getline.Po $(DEPDIR)/getloadavg.Po \
-@AMDEP_TRUE@	$(DEPDIR)/getopt$U.Po $(DEPDIR)/getopt1$U.Po \
-@AMDEP_TRUE@	$(DEPDIR)/getpass.Po $(DEPDIR)/getstr$U.Po \
-@AMDEP_TRUE@	$(DEPDIR)/gettimeofday.Po $(DEPDIR)/getugroups$U.Po \
-@AMDEP_TRUE@	$(DEPDIR)/getusershell.Po $(DEPDIR)/group-member.Po \
+@AMDEP_TRUE@DEP_FILES = $(DEPDIR)/[strnlen].Po $(DEPDIR)/__fpending.Po \
+@AMDEP_TRUE@	$(DEPDIR)/addext$U.Po $(DEPDIR)/alloca.Po \
+@AMDEP_TRUE@	$(DEPDIR)/argmatch$U.Po $(DEPDIR)/atexit.Po \
+@AMDEP_TRUE@	$(DEPDIR)/backupfile$U.Po $(DEPDIR)/basename$U.Po \
+@AMDEP_TRUE@	$(DEPDIR)/canon-host$U.Po $(DEPDIR)/chown.Po \
+@AMDEP_TRUE@	$(DEPDIR)/closeout$U.Po $(DEPDIR)/diacrit$U.Po \
+@AMDEP_TRUE@	$(DEPDIR)/dirfd.Po $(DEPDIR)/dirname$U.Po \
+@AMDEP_TRUE@	$(DEPDIR)/dup-safer$U.Po $(DEPDIR)/dup2.Po \
+@AMDEP_TRUE@	$(DEPDIR)/error.Po $(DEPDIR)/euidaccess.Po \
+@AMDEP_TRUE@	$(DEPDIR)/exclude$U.Po $(DEPDIR)/fileblocks.Po \
+@AMDEP_TRUE@	$(DEPDIR)/filemode$U.Po $(DEPDIR)/fnmatch.Po \
+@AMDEP_TRUE@	$(DEPDIR)/fopen-safer$U.Po $(DEPDIR)/fsusage.Po \
+@AMDEP_TRUE@	$(DEPDIR)/ftruncate.Po $(DEPDIR)/full-write$U.Po \
+@AMDEP_TRUE@	$(DEPDIR)/getdate$U.Po $(DEPDIR)/getgroups.Po \
+@AMDEP_TRUE@	$(DEPDIR)/gethostname.Po $(DEPDIR)/getline.Po \
+@AMDEP_TRUE@	$(DEPDIR)/getloadavg.Po $(DEPDIR)/getopt$U.Po \
+@AMDEP_TRUE@	$(DEPDIR)/getopt1$U.Po $(DEPDIR)/getpass.Po \
+@AMDEP_TRUE@	$(DEPDIR)/getstr$U.Po $(DEPDIR)/gettimeofday.Po \
+@AMDEP_TRUE@	$(DEPDIR)/getugroups$U.Po $(DEPDIR)/getusershell.Po \
+@AMDEP_TRUE@	$(DEPDIR)/group-member.Po \
 @AMDEP_TRUE@	$(DEPDIR)/hard-locale$U.Po $(DEPDIR)/hash$U.Po \
 @AMDEP_TRUE@	$(DEPDIR)/hash-pjw$U.Po $(DEPDIR)/human$U.Po \
 @AMDEP_TRUE@	$(DEPDIR)/idcache$U.Po $(DEPDIR)/isdir$U.Po \
@@ -377,6 +378,7 @@ ANSI2KNR = ../src/ansi2knr
 mostlyclean-kr:
 	-test "$U" = "" || rm -f *_.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/[strnlen].Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/__fpending.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/addext$U.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/alloca.Po@am__quote@
