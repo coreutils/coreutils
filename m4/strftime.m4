@@ -102,6 +102,7 @@ main ()
   CMP ("%^c", "FRI JAN  9 13:06:07 1970");
   CMP ("%d", "09");
   CMP ("%e", " 9");		/* POSIX.2 */
+  CMP ("%f", "5");		/* POSIX.2 */
   CMP ("%g", "70");		/* GNU */
   CMP ("%h", "Jan");		/* POSIX.2 */
   CMP ("%^h", "JAN");
