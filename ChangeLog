@@ -1,3 +1,11 @@
+2004-01-22  Jim Meyering  <jim@meyering.net>
+
+	* man/help2man: Fix it so using --info-page='coreutils PROG' works.
+	* man/Makefile.am (.x.1): Invoke our own (tweaked) copy of help2man.
+	Use --info-page='coreutils PROG' option.
+	Now, readlink.1 refers the user to `info coreutils readlink'
+	rather than to `info readlink'.  Reported by Matt Swift.
+
 2004-01-21  Paul Eggert  <eggert@twinsun.com>
 
 	Exit status cleanup.
