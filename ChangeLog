@@ -1,6 +1,12 @@
-2002-11-10  Jim Meyering  <jim@meyering.net>
+2002-11-11  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.4.
+
+	* src/stat.c (usage): Transform --help output via s/ - /   /,
+	so that help2man produces properly formatted man pages.
+	Reported by Herbert Xu as Debian bug #168400.
+
+2002-11-10  Jim Meyering  <jim@meyering.net>
 
 	* src/ls.c (sighandler): Handle SIGTSTP specially.
 	Based on suggestions from Solar Designer and Dmitry V. Levin.
