@@ -1,3 +1,8 @@
+Fri Jun 23 23:04 1995  Jim Meyering  (meyering@comco.com)
+
+	* configure.in: (AC_REPLACE_FUNCS): Add memcpy and memset.
+	Add checks for floor, modf, and rint -- all used by seq.c.
+
 Mon Jun 12 00:26:54 1995  Jim Meyering  (meyering@comco.com)
 
 	* getdate.y (Convert): Use 2037 as threshold, not 1999.
@@ -186,7 +191,7 @@ Wed Oct 26 23:40:07 1994  Jim Meyering  (meyering@comco.com)
 Sun Oct 23 23:36:26 1994  Jim Meyering  (meyering@comco.com)
 
 	* safe-xstat.hin: Don't use a statement expression here.
-	Use an inline function instead.  
+	Use an inline function instead.
 	* safe-xstat.cin: Don't duplicate the definition of safe_l?stat here.
 	Get the definition from safe-xstat.hin.
 
@@ -662,7 +667,7 @@ Sun Feb 13 13:34:25 1994  Jim Meyering  (meyering@comco.com)
 	`basename file-dist -dist' and `basename -- file.c .c' produced
 	incorrect results.  Now, even `basename -file-dist -dist' works
 	and the command `basename -- file.c .c' fails for the right
-	reason: the `--' is not a special (to getopt) token for these 
+	reason: the `--' is not a special (to getopt) token for these
 	commands.  It is interpreted as the filename, so there are too
 	many arguments to basename.  Rick Sladkey <jrs@world.std.com>
 	reported the problem with basename.
@@ -1354,7 +1359,7 @@ Sat Dec  7 00:32:02 1991  David J. MacKenzie  (djm at wookumz.gnu.ai.mit.edu)
 
 	* env, id, nice, pathchk, stty, tee, tty, uname: Change usage
 	messages and documentation to list long-named options starting
-	with `--' rather than `+'. 
+	with `--' rather than `+'.
 
 	* env.c (main), nice.c (main): Simplify test for which exit
 	status to use if exec fails.
@@ -1554,7 +1559,7 @@ Mon Jul 15 11:34:22 1991  David J. MacKenzie  (djm at wookumz.gnu.ai.mit.edu)
 	_POSIX_NAME_MAX need to be defined.
 	[POSIX]: If no PATH_MAX or NAME_MAX and pathconf for the path
 	returns -1 (some systems do this if the path does not exist),
-	use pathconf for "/". 
+	use pathconf for "/".
 
 Sun Jul 14 21:17:22 1991  David J. MacKenzie  (djm at geech.gnu.ai.mit.edu)
 
@@ -1620,7 +1625,7 @@ Thu Jul 11 12:46:11 1991  David J. MacKenzie  (djm at geech.gnu.ai.mit.edu)
 	* id.c: Add long options.
 
 	* pathchk.c [POSIX]: Use pathconf if necessary to get NAME_MAX
-	and PATH_MAX. 
+	and PATH_MAX.
 
 	* nice.c: Use exit status required for nohup by POSIX.2
 	(nohup execs nice).
@@ -1717,7 +1722,7 @@ Sat Aug  4 21:19:25 1990  David J. MacKenzie  (djm at pogo.ai.mit.edu)
 Wed Jul  4 04:32:51 1990  David J. MacKenzie  (djm at apple-gunkies)
 
 	* tee.c: Use error instead of perror_with_name and
-	out_of_memory. 
+	out_of_memory.
 
 Wed Jun 20 02:39:49 1990  David J. MacKenzie  (djm at albert.ai.mit.edu)
 
@@ -1827,7 +1832,7 @@ Sat Dec 16 15:15:50 1989  David J. MacKenzie  (djm at hobbes.ai.mit.edu)
 	(main): Print a clearer usage message.
 	Use a simpler method for removing suffix, if given.
 	(fatal): Function no longer used; removed.
-	
+
 	* sleep.c: (main): Rename `time' to `seconds'.  Print usage
 	message if given no args.
 	Exit with status 0 instead of falling off end.
