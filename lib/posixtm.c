@@ -1,5 +1,5 @@
 /* Parse dates for touch and date.
-   Copyright (C) 1989, 1990, 1991, 1998, 2000-2002 Free Software Foundation Inc.
+   Copyright (C) 1989, 1990, 1991, 1998, 2000-2003 Free Software Foundation Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -22,11 +22,7 @@
 # include <config.h>
 #endif
 
-#if HAVE_STDBOOL_H
-# include <stdbool.h>
-#else
-typedef enum {false = 0, true = 1} bool;
-#endif
+#include <stdbool.h>
 
 #include <stdio.h>
 #if HAVE_STDLIB_H
