@@ -64,6 +64,11 @@ my @tv = (
 
 ['empty-f2', '-f2',	"",			"",			0],
 
+['o-delim', '-d: -f2,3 --out=_', "a:b:c\n",	"b_c\n",		0],
+['nul-idelim', "-d '' -f2,3 --out=_", "a\0b\0c\n", "b_c\n",		0],
+['nul-odelim', "-d: -f2,3 --out=", "a:b:c\n",	"b\0c\n",		0],
+['multichar-od', "-d: -f2,3 --out=_._", "a:b:c\n", "b_._c\n",		0],
+
 );
 
 sub test_vector
