@@ -54,15 +54,15 @@ static void print_full_info (const char *username);
 /* The name this program was run with. */
 char *program_name;
 
-/* If nonzero, output user/group name instead of ID number. -n */
-static int use_name = 0;
+/* If true, output user/group name instead of ID number. -n */
+static bool use_name = false;
 
 /* The real and effective IDs of the user to print. */
 static uid_t ruid, euid;
 static gid_t rgid, egid;
 
-/* Nonzero if errors have been encountered.  */
-static int problems = 0;
+/* True unless errors have been encountered.  */
+static bool ok = true;
 
 static struct option const longopts[] =
 {
@@ -111,14 +111,14 @@ main (int argc, char **argv)
 {
   int optc;
 
-  /* If nonzero, output the list of all group IDs. -G */
-  int just_group_list = 0;
-  /* If nonzero, output only the group ID(s). -g */
-  int just_group = 0;
-  /* If nonzero, output real UID/GID instead of default effective UID/GID. -r */
-  int use_real = 0;
-  /* If nonzero, output only the user ID(s). -u */
-  int just_user = 0;
+  /* If true, output the list of all group IDs. -G */
+  bool just_group_list = false;
+  /* If true, output only the group ID(s). -g */
+  bool just_group = false;
+  /* If true, output real UID/GID instead of default effective UID/GID. -r */
+  bool use_real = false;
+  /* If true, output only the user ID(s). -u */
+  bool just_user = false;
 
   initialize_main (&argc, &argv);
   program_name = argv[0];
@@ -138,19 +138,19 @@ main (int argc, char **argv)
 	  /* Ignore -a, for compatibility with SVR4.  */
 	  break;
 	case 'g':
-	  just_group = 1;
+	  just_group = true;
 	  break;
 	case 'n':
-	  use_name = 1;
+	  use_name = true;
 	  break;
 	case 'r':
-	  use_real = 1;
+	  use_real = true;
 	  break;
 	case 'u':
-	  just_user = 1;
+	  just_user = true;
 	  break;
 	case 'G':
-	  just_group_list = 1;
+	  just_group_list = true;
 	  break;
 	case_GETOPT_HELP_CHAR;
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
@@ -162,7 +162,7 @@ main (int argc, char **argv)
   if (just_user + just_group + just_group_list > 1)
     error (EXIT_FAILURE, 0, _("cannot print only user and only group"));
 
-  if (just_user + just_group + just_group_list == 0 && (use_real || use_name))
+  if (just_user + just_group + just_group_list == 0 && (use_real | use_name))
     error (EXIT_FAILURE, 0,
 	   _("cannot print only names or real IDs in default format"));
 
@@ -198,7 +198,7 @@ main (int argc, char **argv)
     print_full_info (argv[optind]);
   putchar ('\n');
 
-  exit (problems == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
+  exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
 /* Print the name or value of user ID UID. */
@@ -214,12 +214,12 @@ print_user (uid_t uid)
       if (pwd == NULL)
 	{
 	  error (0, 0, _("cannot find name for user ID %u"), uid);
-	  problems = 1;
+	  ok = false;
 	}
     }
 
   if (pwd == NULL)
-    printf ("%u", (unsigned) uid);
+    printf ("%lu", (unsigned long int) uid);
   else
     printf ("%s", pwd->pw_name);
 }
@@ -237,12 +237,12 @@ print_group (gid_t gid)
       if (grp == NULL)
 	{
 	  error (0, 0, _("cannot find name for group ID %u"), gid);
-	  problems = 1;
+	  ok = false;
 	}
     }
 
   if (grp == NULL)
-    printf ("%u", (unsigned) gid);
+    printf ("%lu", (unsigned long int) gid);
   else
     printf ("%s", grp->gr_name);
 }
@@ -251,38 +251,42 @@ print_group (gid_t gid)
 
 /* FIXME: document */
 
-static int
+static bool
 xgetgroups (const char *username, gid_t gid, int *n_groups,
 	    GETGROUPS_T **groups)
 {
   int max_n_groups;
   int ng;
-  GETGROUPS_T *g;
-  int fail = 0;
+  GETGROUPS_T *g = NULL;
 
-  if (username == 0)
+  if (!username)
     max_n_groups = getgroups (0, NULL);
   else
     max_n_groups = getugroups (0, NULL, username, gid);
 
-  g = xnmalloc (max_n_groups, sizeof *g);
-  if (username == 0)
-    ng = getgroups (max_n_groups, g);
+  if (max_n_groups < 0)
+    ng = -1;
   else
-    ng = getugroups (max_n_groups, g, username, gid);
-
+    {
+      g = xnmalloc (max_n_groups, sizeof *g);
+      if (!username)
+	ng = getgroups (max_n_groups, g);
+      else
+	ng = getugroups (max_n_groups, g, username, gid);
+    }
+      
   if (ng < 0)
     {
       error (0, errno, _("cannot get supplemental group list"));
-      ++fail;
-      free (groups);
+      free (g);
+      return false;
     }
-  if (!fail)
+  else
     {
       *n_groups = ng;
       *groups = g;
+      return true;
     }
-  return fail;
 }
 
 #endif /* HAVE_GETGROUPS */
@@ -296,7 +300,7 @@ print_group_list (const char *username)
 
   pwd = getpwuid (ruid);
   if (pwd == NULL)
-    problems = 1;
+    ok = false;
 
   print_group (rgid);
   if (egid != rgid)
@@ -311,10 +315,10 @@ print_group_list (const char *username)
     GETGROUPS_T *groups;
     register int i;
 
-    if (xgetgroups (username, (pwd ? pwd->pw_gid : (gid_t) -1),
-		    &n_groups, &groups))
+    if (! xgetgroups (username, (pwd ? pwd->pw_gid : (gid_t) -1),
+		      &n_groups, &groups))
       {
-	problems = 1;
+	ok = false;
 	return;
       }
 
@@ -337,36 +341,36 @@ print_full_info (const char *username)
   struct passwd *pwd;
   struct group *grp;
 
-  printf ("uid=%u", (unsigned) ruid);
+  printf ("uid=%lu", (unsigned long int) ruid);
   pwd = getpwuid (ruid);
   if (pwd == NULL)
-    problems = 1;
+    ok = false;
   else
     printf ("(%s)", pwd->pw_name);
 
-  printf (" gid=%u", (unsigned) rgid);
+  printf (" gid=%lu", (unsigned long int) rgid);
   grp = getgrgid (rgid);
   if (grp == NULL)
-    problems = 1;
+    ok = false;
   else
     printf ("(%s)", grp->gr_name);
 
   if (euid != ruid)
     {
-      printf (" euid=%u", (unsigned) euid);
+      printf (" euid=%lu", (unsigned long int) euid);
       pwd = getpwuid (euid);
       if (pwd == NULL)
-	problems = 1;
+	ok = false;
       else
 	printf ("(%s)", pwd->pw_name);
     }
 
   if (egid != rgid)
     {
-      printf (" egid=%u", (unsigned) egid);
+      printf (" egid=%lu", (unsigned long int) egid);
       grp = getgrgid (egid);
       if (grp == NULL)
-	problems = 1;
+	ok = false;
       else
 	printf ("(%s)", grp->gr_name);
     }
@@ -377,10 +381,10 @@ print_full_info (const char *username)
     GETGROUPS_T *groups;
     register int i;
 
-    if (xgetgroups (username, (pwd ? pwd->pw_gid : (gid_t) -1),
-		    &n_groups, &groups))
+    if (! xgetgroups (username, (pwd ? pwd->pw_gid : (gid_t) -1),
+		      &n_groups, &groups))
       {
-	problems = 1;
+	ok = false;
 	return;
       }
 
@@ -390,10 +394,10 @@ print_full_info (const char *username)
       {
 	if (i > 0)
 	  putchar (',');
-	printf ("%u", (unsigned) groups[i]);
+	printf ("%lu", (unsigned long int) groups[i]);
 	grp = getgrgid (groups[i]);
 	if (grp == NULL)
-	  problems = 1;
+	  ok = false;
 	else
 	  printf ("(%s)", grp->gr_name);
       }
