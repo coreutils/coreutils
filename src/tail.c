@@ -787,7 +787,7 @@ tail_file (const char *filename, off_t n_units, int filenum)
 	  else if (!S_ISREG (stats.st_mode))
 	    {
 	      error (0, 0,
-		     _("standard input: cannot follow end of non-regular file"));
+		   _("standard input: cannot follow end of non-regular file"));
 	      errors = 1;
 	    }
 	  if (errors)
@@ -993,10 +993,12 @@ option instead."), argv[1]);
 	      return 1;
 	    }
 
+#if DISABLED  /* FIXME: enable or remove this warning.  */
 	  error (0, 0, _("\
 Warning: it is not portable to use two or more file arguments with\n\
 tail's obsolescent option syntax (%s).  Use the equivalent -n or -c\n\
 option instead."), argv[1]);
+#endif
 	}
 
       /* Set globals.  */
