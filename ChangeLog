@@ -1,5 +1,9 @@
 2004-08-09  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* src/shred.c (wipename): Work even if the directory is writeable
+	and not readable.  Prefer write access, since this should work
+	better with fdatasync.
+
 	* src/csplit.c (xalloc_die): New function.
 	(main): Remove now-obsolete initialization of xalloc_fail_func.
 
