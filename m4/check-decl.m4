@@ -1,4 +1,4 @@
-#serial 18
+#serial 19
 
 dnl This is just a wrapper function to encapsulate this kludge.
 dnl Putting it in a separate file like this helps share it between
@@ -9,19 +9,9 @@ AC_DEFUN([jm_CHECK_DECLS],
   AC_REQUIRE([AC_HEADER_TIME])
   headers='
 #include <stdio.h>
-#if HAVE_STRING_H
-# if !STDC_HEADERS && HAVE_MEMORY_H
-#  include <memory.h>
-# endif
-# include <string.h>
-#else
-# if HAVE_STRINGS_H
-#  include <strings.h>
-# endif
-#endif
-#if HAVE_STDLIB_H
-# include <stdlib.h>
-#endif
+#include <string.h>
+#include <stdlib.h>
+
 #if HAVE_UNISTD_H
 # include <unistd.h>
 #endif
