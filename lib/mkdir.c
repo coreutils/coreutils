@@ -34,6 +34,16 @@ extern int errno;
 # define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
 #endif
 
+#ifndef S_IRWXU
+# define S_IRWXU 0700
+#endif
+#ifndef S_IRWXG
+# define S_IRWXG 0070
+#endif
+#ifndef S_IRWXO
+# define S_IRWXO 0007
+#endif
+
 /* mkdir adapted from GNU tar.  */
 
 /* Make directory DPATH, with permission mode DMODE.
@@ -48,9 +58,10 @@ extern int errno;
    subroutine didn't return EEXIST.  It does now.  */
 
 int
-mkdir (const char *dpath, int dmode)
+mkdir (const char *dpath, mode_t dmode)
 {
   pid_t cpid;
+  mode_t mode;
   int status;
   struct stat statbuf;
 
@@ -75,8 +86,9 @@ mkdir (const char *dpath, int dmode)
 	 process is going away anyway, we zap its umask.
 	 This won't suffice to set SUID, SGID, etc. on this
 	 directory, so the parent process calls chmod afterward.  */
-      status = umask (0);	/* Get current umask.  */
-      umask (status | (0777 & ~dmode));	/* Set for mkdir.  */
+      mode = umask (0);	/* Get current umask.  */
+      /* Set for mkdir.  */
+      umask (mode | ((S_IRWXU | S_IRWXG | S_IRWXO) & ~dmode));
       execl ("/bin/mkdir", "mkdir", dpath, (char *) 0);
       _exit (1);
 
