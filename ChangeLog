@@ -1,6 +1,17 @@
-2002-09-28  Jim Meyering  <meyering@lucent.com>
+2002-09-29  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.5.2.
+
+	In move mode, always first try to rename.  Before, upon failure to
+	rename a directory, this code would never attempt to rename any
+	other file in that directory, but would thenceforth always copy.
+	On some systems (NetApp version ??), renaming a directory may fail
+	with EXDEV, yet renaming files within that directory to a newly-
+	created destination directory succeeds.
+	* src/copy.c (copy_internal): Remove local, move_mode;
+	use x->move_mode instead.  Based on a patch from Tom Haynes.
+
+2002-09-28  Jim Meyering  <meyering@lucent.com>
 
 	* src/split.c (FAIL_ONLY_ONE_WAY): New macro.
 	Factor out some duplication.
