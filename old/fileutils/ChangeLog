@@ -1,3 +1,26 @@
+Sun Apr 18 02:35:36 1993  Jim Meyering (meyering@comco.com)
+
+	* configure.in: Check for gettimeofday.
+	Check for `struct tm'.
+	Change MVDIR definition so it works with new AC_DEFINE.
+
+	* system.h: Remove last vestiges of USG;  instead, use specific
+	test for TM_IN_SYS_TIME to determine whether to include time.h
+	or sys/time.h.
+
+	* src/Makefile.in (install): Rewrite the test for whether to install
+	mvdir so that it doesn't cause gratuitous failures with broken shells.
+	Split long rule so the pieces fit in 80-column lines. 
+
+Thu Apr 15 23:44:01 1993  Jim Meyering (meyering@comco.com)
+
+	* lib/Makefile.in (posixtm.c): Add dependency on getdate.c to enforce
+	sequential invocations of YACC.
+	* (posixtm.c, getdate.c): Remove use of `bison -o' and associated
+	conditional rename commands -- not needed since the parser generators
+	won't be run in parallel;  now bison (when used) is always invoked
+	with -y.
+
 Tue Apr 13 09:18:18 1993  Jim Meyering (meyering@comco.com)
 
 	* configure.in: Find a parser generator.
@@ -41,14 +64,10 @@ Wed Apr  7 23:54:48 1993  Jim Meyering (meyering@comco.com)
 
 Mon Apr  5 20:14:17 1993  Jim Meyering  (meyering@comco.com)
 
-	* Version 3.4.5.
-
 	* chgrp.c, chmod.c, chown.c, install.c, ls.c, mkfifo.c, mknod.c,
 	touch.c: Add `case 0: break;' for long-only options help and version.
 
 Sun Apr  4 09:38:00 1993  Jim Meyering  (meyering@comco.com)
-
-	* Version 3.4.4.
 
 	* src/*.c (usage): Mention --help and --version.
 	(main): Handle flag_help and flag_version before checking for

@@ -74,18 +74,20 @@ libfu.a: $(OBJECTS)
 	$(AR) cr $@ $(OBJECTS)
 	-$(RANLIB) $@
 
-# Since this directory contains two parsers, using bison without -y
-# is the only way to reliably do a parallel make.
+# Since this directory contains two parsers, we have to be careful to avoid
+# running two $(YACC)s during parallel makes.  See below.
 getdate.c: getdate.y
 	@echo expect 9 shift/reduce conflicts
-	-bison -o getdate.c $(srcdir)/getdate.y || $(YACC) $(srcdir)/getdate.y
-	test ! -f y.tab.c || mv y.tab.c getdate.c
+	$(YACC) $(srcdir)/getdate.y
+	mv y.tab.c getdate.c
 
 # Make the rename atomic, in case sed is interrupted and later rerun.
-posixtm.c: posixtm.y
-	-bison -o posixtm.tab.c $(srcdir)/posixtm.y \
-	    || $(YACC) $(srcdir)/posixtm.y
-	test ! -f y.tab.c || mv y.tab.c posixtm.tab.c
+# The artificial dependency on getdate.c keeps the two parsers from being
+# built in parallel.  Enforcing this little bit of sequentiality lets
+# everyone (even those without bison) still run mostly parallel builds.
+posixtm.c: posixtm.y getdate.c
+	$(YACC) $(srcdir)/posixtm.y
+	mv y.tab.c posixtm.tab.c
 	sed -e 's/yy/zz/g' posixtm.tab.c > tposixtm.c
 	mv tposixtm.c posixtm.c
 	rm -f posixtm.tab.c
