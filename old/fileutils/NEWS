@@ -1,4 +1,5 @@
 User-visible changes in release 3.13:
+* cp --backup a~ a fails instead of silently destroying the source file
 * df and du have new options --human-readable (-h) and --megabytes (-m).
 * install now honors --backup (-b), --suffix=SUFFIX (-S SUFFIX), and
   --version-control=WORD (-V WORD) options just as cp, ln, and mv do.
