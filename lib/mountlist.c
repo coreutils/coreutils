@@ -287,8 +287,7 @@ fstype_to_string (t)
    are automounter (dummy) entries.  */
 
 struct mount_entry *
-read_filesystem_list (need_fs_type, all_fs)
-     int need_fs_type, all_fs;
+read_filesystem_list (int need_fs_type, int all_fs)
 {
   struct mount_entry *mount_list;
   struct mount_entry *me;
@@ -651,10 +650,13 @@ read_filesystem_list (need_fs_type, all_fs)
   {
     int saved_errno = errno;
     *mtail = NULL;
-    
+
     while (mount_list)
       {
 	me = mount_list->me_next;
+	free (mount_list->me_devname);
+	free (mount_list->me_mountdir);
+	/* FIXME: me_type is not always malloced.  */
 	free (mount_list);
 	mount_list = me;
       }
