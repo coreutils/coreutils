@@ -2,6 +2,8 @@
 
 	* Version 4.5.2.
 
+	* Use automake-1.6f.  Regenerate dependent files.
+
 	* src/Makefile.am (PERL): Remove duplicate definition.
 
 	* tests/fmt/Makefile.am (TESTS): Add long-line.
