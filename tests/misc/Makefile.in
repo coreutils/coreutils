@@ -160,6 +160,7 @@ TESTS_ENVIRONMENT = \
 
 
 TESTS = \
+  readlink \
   split-fail \
   false \
   tty-eof \
