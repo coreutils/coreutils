@@ -6,7 +6,7 @@ use Getopt::Long;
 use Digest::MD5;
 use Digest::SHA1;
 
-(my $VERSION = '$Revision: 1.8 $ ') =~ tr/[0-9].//cd;
+(my $VERSION = '$Revision: 1.9 $ ') =~ tr/[0-9].//cd;
 (my $ME = $0) =~ s|.*/||;
 
 END
@@ -212,6 +212,9 @@ EOF
 	    }
 	  else
 	    {
+	      # Be careful that this regexp cannot match version numbers
+	      # in NEWS items -- they might well say `introduced in 4.5.5',
+	      # and we don't want that to match.
 	      $line =~ /^[^ *].*\Q$prev_version\E/o
 		and last;
 	      print $line;
