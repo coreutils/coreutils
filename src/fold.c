@@ -237,7 +237,7 @@ fold_file (filename, width)
 		  putchar ('\n');
 		  /* Move the remainder to the beginning of the next line.
 		     The areas being copied here might overlap. */
-		  bcopy (line_out + logical_end, line_out,
+		  memmove (line_out, line_out + logical_end,
 			 offset_out - logical_end);
 		  offset_out -= logical_end;
 		  for (column = i = 0; i < offset_out; i++)
