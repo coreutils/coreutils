@@ -1,4 +1,4 @@
-AUTOMAKE_OPTIONS = gnits 1.1k
+## Process this file with automake to produce Makefile.in
 
 # Generate this list with
 # find . -type f -name '*.m4' -printf '%f\n'|sort |fmt |tr '\012' @ \
