@@ -28,29 +28,29 @@
 START-INFO-DIR-ENTRY
 * Text utilities: (textutils).  	GNU text utilities.
 * cat: (textutils)cat invocation.		Concatenate and write files.
-* tac: (textutils)tac invocation.		Reverse files.
-* nl: (textutils)nl invocation.			Number lines and write files.
-* od: (textutils)od invocation.			Dump files in octal, etc.
+* cksum: (textutils)cksum invocation.		Print POSIX CRC checksum.
+* comm: (textutils)comm invocation.		Compare sorted files by line.
+* csplit: (textutils)csplit invocation.		Split by context.
+* cut: (textutils)cut invocation.		Print selected parts of lines.
+* expand: (textutils)expand invocation.		Convert tabs to spaces.
 * fmt: (textutils)fmt invocation.		Reformat paragraph text.
-* pr: (textutils)pr invocation.			Paginate or columnate files.
 * fold: (textutils)fold invocation.		Wrap long input lines.
 * head: (textutils)head invocation.		Output the first part of files.
-* tail: (textutils)tail invocation.		Output the last part of files.
-* split: (textutils)split invocation.		Split into fixed-size pieces.
-* csplit: (textutils)csplit invocation.		Split by context.
-* wc: (textutils)wc invocation.			Byte, word, and line counts.
-* sum: (textutils)sum invocation.		Print traditional checksum.
-* cksum: (textutils)cksum invocation.		Print POSIX CRC checksum.
-* md5sum: (textutils)md5sum invocation.         Print RFC1321 MD5 digest.
-* sort: (textutils)sort invocation.		Sort text files.
-* uniq: (textutils)uniq invocation.		Uniqify files.
-* comm: (textutils)comm invocation.		Compare sorted files by line.
-* cut: (textutils)cut invocation.		Print selected parts of lines.
-* paste: (textutils)paste invocation.		Merge lines of files.
 * join: (textutils)join invocation.		Join lines on a common field.
+* md5sum: (textutils)md5sum invocation.		Print or check message-digests.
+* nl: (textutils)nl invocation.			Number lines and write files.
+* od: (textutils)od invocation.			Dump files in octal, etc.
+* paste: (textutils)paste invocation.		Merge lines of files.
+* pr: (textutils)pr invocation.			Paginate or columnate files.
+* sort: (textutils)sort invocation.		Sort text files.
+* split: (textutils)split invocation.		Split into fixed-size pieces.
+* sum: (textutils)sum invocation.		Print traditional checksum.
+* tac: (textutils)tac invocation.		Reverse files.
+* tail: (textutils)tail invocation.		Output the last part of files.
 * tr: (textutils)tr invocation.			Translate characters.
-* expand: (textutils)expand invocation.		Convert tabs to spaces.
 * unexpand: (textutils)unexpand invocation.	Convert spaces to tabs.
+* uniq: (textutils)uniq invocation.		Uniqify files.
+* wc: (textutils)wc invocation.			Byte, word, and line counts.
 END-INFO-DIR-ENTRY
 @end format
 @end ifinfo
@@ -58,7 +58,7 @@ END-INFO-DIR-ENTRY
 @ifinfo
 This file documents the GNU text utilities.
 
-Copyright (C) 1994 Free Software Foundation, Inc.
+Copyright (C) 1994, 95 Free Software Foundation, Inc.
 
 Permission is granted to make and distribute verbatim copies of
 this manual provided the copyright notice and this permission notice
@@ -90,7 +90,7 @@ by the Foundation.
 
 @page
 @vskip 0pt plus 1filll
-Copyright @copyright{} 1994 Free Software Foundation, Inc.
+Copyright @copyright{} 1994, 95 Free Software Foundation, Inc.
 
 Permission is granted to make and distribute verbatim copies of
 this manual provided the copyright notice and this permission notice
@@ -119,17 +119,17 @@ This manual minimally documents version @value{VERSION} of the GNU text
 utilities.  
 
 @menu
-* Introduction::                Caveats, overview, and authors.
-* Common options::              Common options.
-* Output of entire files::      cat tac nl od
-* Formatting file contents::    fmt pr fold
-* Output of parts of files::    head tail split csplit
-* Summarizing files::           wc sum cksum md5sum
-* Operating on sorted files::   sort uniq comm
+* Introduction::                       Caveats, overview, and authors.
+* Common options::                     Common options.
+* Output of entire files::             cat tac nl od
+* Formatting file contents::           fmt pr fold
+* Output of parts of files::           head tail split csplit
+* Summarizing files::                  wc sum cksum md5sum
+* Operating on sorted files::          sort uniq comm
 * Operating on fields within a line::  cut paste join
-* Operating on characters::     tr expand unexpand
-* Opening the software toolbox::  The software tools philosophy.
-* Index::                       General index.
+* Operating on characters::            tr expand unexpand
+* Opening the software toolbox::       The software tools philosophy.
+* Index::                              General index.
 @end menu
 @end ifinfo
 
@@ -304,7 +304,7 @@ tac [@var{option}]@dots{} [@var{file}]@dots{}
 @end example
 
 @dfn{Records} are separated by instances of a string (newline by
-default)).  By default, this separator string is attached to the end of
+default).  By default, this separator string is attached to the end of
 the record that it follows in the file.
 
 The program accepts the following options.  Also see @ref{Common options}.
@@ -755,7 +755,7 @@ fmt [@var{option}]@dots{} [@var{file}]@dots{}
 @end example
 
 @code{fmt} reads from the specified @var{file} arguments (or standard
-input if none), and writes to standard output.
+input if none are given), and writes to standard output.
 
 By default, blank lines, spaces between words, and indentation are
 preserved in the output; successive input lines with different
@@ -1319,7 +1319,7 @@ exausted.
 The output files' names consist of a prefix (@samp{xx} by default)
 followed by a suffix.  By default, the suffix is an ascending sequence
 of two-digit decimal numbers from @samp{00} and up to @samp{99}.  In any
-case, concatenating the output files in sorted order by file name
+case, concatenating the output files in sorted order by filename
 produces the original input file.
 
 By default, if @code{csplit} encounters an error or receives a hangup,
@@ -1403,7 +1403,7 @@ contents of files.
 * wc invocation::               Print byte, word, and line counts.
 * sum invocation::              Print checksum and block counts.
 * cksum invocation::            Print CRC checksum and byte counts.
-* md5sum invocation::           Print RFC1321 MD5 message digest.
+* md5sum invocation::		Print or check message-digests.
 @end menu
 
 
@@ -1522,78 +1522,55 @@ next section) is preferable in new applications.
 
 @pindex cksum
 @cindex cyclic redundancy check
+@cindex CRC checksum
 
 @code{cksum} computes a cyclic redundancy check (CRC) checksum for each
 given @var{file}, or standard input if none are given or for a
 @var{file} of @samp{-}.  Synopsis:
 
-Synopsis:
-
 @example
 cksum [@var{option}]@dots{} [@var{file}]@dots{}
 @end example
 
-@code{cksum} prints the CRC for each file along with the number of bytes
-in the file, and the file name unless no arguments were given.
+@code{cksum} prints the CRC checksum for each file along with the number
+of bytes in the file, and the filename unless no arguments were given.
 
 @code{cksum} is typically used to ensure that files have been
 transferred by unreliable means (e.g., netnews) have not been corrupted,
 by comparing the @code{cksum} output for the received files with the
-@code{cksum} output for the original files (usually given in the
+@code{cksum} output for the original files (typically given in the
 distribution).
 
 The CRC algorithm is specified by the POSIX.2 standard.  It is not
-compatible with the BSD or System V @code{sum} programs; it is more
-robust.
+compatible with the BSD or System V @code{sum} algorithms (see the
+previous section); it is more robust.
+
+The only options are @samp{--help} and @samp{--version}.  @xref{Common
+options}.
 
 
 @node md5sum invocation
-@section @code{md5sum}: Print RFC1321 MD5 message digest.
+@section @code{md5sum}: Print or check message-digests
 
 @pindex md5sum
-@cindex MD5
-@cindex message digest
-@cindex fingerprint
-@cindex RFC1321
+@cindex 128-bit checksum
+@cindex checksum, 128-bit
+@cindex fingerprint, 128-bit
+@cindex message-digest, 128-bit
 
-@noindent
-RFC1321 says about the message digest produced by @code{md5sum}
-
-@quotation
-it is conjectured that it is computationally infeasible to produce two
-messages having the same message digest, or to produce any message
-having a given prespecified target message digest.
-@end quotation
-
-Therefor the message digest produced by @code{md5sum} is a much more
-reliable test for a change in a file.
-
-By default @code{md5sum} computes for each @var{file} the message digest
-and prints it.  If the file name is @samp{-} standard input is read.
-When signaled @code{md5sum} also can compare the values in an exiting
-message digest catalog with newly computed values, telling about
-differences.
-
-Synopsis:
+@code{md5sum} computes a 128-bit checksum (or @dfn{fingerprint} or
+@dfn{message-digest} for each given @var{file}, or standard input if
+none are given or for a @var{file} of @samp{-}.  It can also check if the
+checksum has changed. Synopsis:
 
 @example
 md5sum [@var{option}]@dots{} [@var{file}]@dots{}
 @end example
 
-When computing message digests @code{md5sum} writes for each input file in
-line with the message digest, a binary/text flag, and the file name.  The
-binary/text flag is nt important on UN*X systems.  But ``strange''
-systems (as MSDOG) have different representations for text files in
-memory and on the disk.  To get the same results for these files on an
-UN*X machine the text is converted on the fly while reading.
+For each @var{file}, @samp{md5sum} outputs the MD5 checksum, a flag
+indicating a binary or text input file, and the filename.
 
-If checking against an existing message digest catalog is requested
-the catalog file should be the output of a former run of @code{md5sum}.
-Any lines not in the correct format will be ignored.  If all three
-fields are correctly read the message digest for the specified file will
-be computed in compared with the digest given in the catalog file.  Any
-differences will be signaled.
-
+The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
@@ -1601,43 +1578,38 @@ differences will be signaled.
 @itemx --binary
 @opindex -b
 @opindex --binary
-Treat all files as binary files.  I.e. even on systems which make
-differences between the text and binary file representation the files
-are read just as they are store on the disk.  The is the default value.
-To toggle the behaviour use the @samp{--text} option.
+@cindex binary input files
+Treat input files as binary.  This makes no difference on Unix systems,
+but other systems have different internal and external character
+representations, notably to mark end-of-line.
 
-@item -c @var{file}
+@item -c
 @itemx --check=@var{file}
-@opindex -c
-@opindex --check
-Check for the files given in @var{file} whether the message digest is
-different to the one given in @var{file}.  The format of file is
+@var{file} is taken as the output of a former run of @samp{md5sum}: each
+line consists of an MD5 checksum, a binary/text flag, and a filename.
+The file will be opened (with each possible relative path) and the its
+message-digest computed.  If this computed message digest is not the
+same as that given in the line, the file will be marked as failed.
 
-@example
-<32 character hexadecimal message digest> <binary flag> <filename>
-@end example
-
-
-@item -s[@var{string}]
-@itemx --string=[@var{string}]
+@item -s
+@itemx --string=@var{string}
 @opindex -s
 @opindex --string
-Instead of computing the messages digest for a file do it for the given
-@var{string}.  Note that the string is an @emph{optional} argument.
+Compute the message digest for @var{string}, instead of for a file.  The
+result is the same as for a file with contains exactly @var{string}.
 
 @item -t
 @itemx --text
 @opindex -t
-@opindex --test
-Treat all input files as text files.  As explained above this makes it
-possible to get the same message digest for a text file on all systems.
-
+@opindex --text
+@cindex text input files
+Treat all input files as text files.  This is the reverse of
+@samp{--binary}.
 @item -v
 @itemx --verbose
 @opindex -v
 @opindex --verbose
-Print more information while processing.
-
+Print progress information.
 
 @end table
 
@@ -2602,6 +2574,7 @@ Robbins.
 * Putting the tools together::  
 @end menu
 
+
 @node Toolbox introduction
 @unnumberedsec Toolbox introduction
 
@@ -2924,7 +2897,7 @@ $ comm f1 f2
         55555
 @end example
 
-A single dash as a file name tells @code{comm} to read standard input
+The single dash as a filename tells @code{comm} to read standard input
 instead of a regular file.
 
 Now we're ready to build a fancy pipeline.  The first application is a word
