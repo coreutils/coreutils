@@ -109,6 +109,28 @@ sub spec_to_list ($$$)
   return \%h;
 }
 
+sub wrap
+{
+  my ($preferred_line_len, @tok) = @_;
+  assert ($preferred_line_len > 0);
+  my @lines;
+  my $line = '';
+  my $word;
+  foreach $word (@tok)
+    {
+      if ($line && length ($line) + 1 + length ($word) > $preferred_line_len)
+	{
+	  push (@lines, $line);
+	  $line = $word;
+	  next;
+	}
+      my $sp = ($line ? ' ' : '');
+      $line .= "$sp$word";
+    }
+  push (@lines, $line);
+  return @lines;
+}
+
 # ~~~~~~~ main ~~~~~~~~
 {
   $| = 1;
@@ -120,7 +142,6 @@ sub spec_to_list ($$$)
   if ($xx eq '--list')
     {
       validate ();
-      # FIXME !!!!!!!!!!!!!!!!!!!!!!!!!!!!
       # Output three lists of files:
       # EXPLICIT -- file names specified in Test.pm
       # MAINT_GEN -- maintainer-generated files
@@ -145,9 +166,10 @@ sub spec_to_list ($$$)
 	  push (@maint, @{$e->{MAINT_GEN}});
 	}
 
-      print 'explicit: ', join (' ', @exp), "\n";
-      print 'maint-gen: ', join (' ', @maint), "\n";
-      print 'run-gen: ', join (' ', @run), "\n";
+      my $len = 78;
+      print join (" \\\n", wrap ($len, 'explicit =', @exp)), "\n";
+      print join (" \\\n", wrap ($len, 'maint-gen =', @maint)), "\n";
+      print join (" \\\n", wrap ($len, 'run-gen =', @run)), "\n";
 
       exit 0;
     }
