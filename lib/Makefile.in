@@ -123,8 +123,8 @@ libfu_a_DEPENDENCIES = $(libfu_a_LIBADD)
 noinst_HEADERS = argmatch.h backupfile.h closeout.h \
 dirname.h error.h exclude.h filemode.h fnmatch.h fsusage.h \
 getdate.h getline.h getopt.h getpagesize.h \
-group-member.h human.h lchown.h long-options.h \
-makepath.h modechange.h mountlist.h hash.h path-concat.h pathmax.h \
+group-member.h hash.h human.h lchown.h long-options.h \
+makepath.h modechange.h mountlist.h nanosleep.h path-concat.h pathmax.h \
 posixtm.h quotearg.h regex.h safe-read.h same.h save-cwd.h \
 savedir.h strverscmp.h \
 version-etc.h xalloc.h xstrtol.h
@@ -576,7 +576,7 @@ maintainer-clean-depend:
 @AMDEP@CCDEPMODE = @CCDEPMODE@
 
 .c.o:
-@AMDEP@	source='$<' object='$@' @AMDEPBACKSLASH@
+@AMDEP@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
 @AMDEP@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 	$(COMPILE) -c -o $@ $<
