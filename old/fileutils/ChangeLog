@@ -1,3 +1,14 @@
+1998-02-20  Jim Meyering  <meyering@eng.ascend.com>
+
+	* src/touch.c: Include get-date.h.
+	Remove get_date decl.
+
+	* lib/getdate.h: Removed.  Could cause confusion with an
+	automake-generated `.y.h' rule.
+	* lib/get-date.h: Renamed from getdate.h.
+	* lib/getdate.y: s/getdate.h/get-date.h/
+	* lib/Makefile.am (noinst_HEADERS): s/getdate.h/get-date.h/
+
 1998-02-19  Jim Meyering  <meyering@eng.ascend.com>
 
 	* Version 3.16m.
