@@ -1,4 +1,25 @@
+Mon Apr 29 22:07:41 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* POTFILES.in: Add chgrp.c.  From François Pinard.
+	Add dircolors.c.
+
+	* ls.c (parse_ls_color, usage): Remove support for alternate spellings:
+	--colours and LS_COLOURS.
+
 Sun Apr 28 16:32:38 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* ls.c (parse_ls_color): Use strcpy to initialize 3-character array.
+	Automatic aggregate initialization isn't portable.
+	Remove all ^L's.
+	(get_funky_string): Declare static and move to precede single
+	caller: parse_ls_color.
+	Make some globals `static' and/or `const'.
+	(LEN_STR_PAIR): New macro.
+	(color_indicator): Use it in this declaration.
+	(parse_ls_color): Use error, not fprintf.
+	(decode_switches): Add a comment.
+	(print_name_with_quoting): Add braces around inner if-else
+	statement to clarify.
 
 	* configure.in: Add a comment that fp_C_PROTOTYPES must precede
 	AC_C_INLINE.  Otherwise, some systems lose because the value
