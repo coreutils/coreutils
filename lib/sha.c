@@ -1,8 +1,23 @@
-/* sha.c - Functions to compute the SHA1 hash (message-digest) of files
-   or blocks of memory.  Complies to the NIST specification FIPS-180-1.
+/* sha.c - Functions to compute SHA1 message digest of files or
+   memory blocks according to the NIST specification FIPS-180-1.
 
-   Copyright (C) 2000, 2001, 2003 Scott G. Miller
+   Copyright (C) 2000, 2001, 2003 Free Software Foundation, Inc.
 
+   This program is free software; you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by the
+   Free Software Foundation; either version 2, or (at your option) any
+   later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+
+/* Written by Scott G. Miller
    Credits:
       Robert Klep <robert@ilse.nl>  -- Expansion function fix
 */
