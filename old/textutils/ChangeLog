@@ -1,6 +1,8 @@
 1999-08-04  Jim Meyering  <meyering@ascend.com>
 
-	* configure.in: Remove getline-testing code.  Now it's in m4/.
+	* configure.in: Remove inadequate getline-testing code.  md5sum would
+	segfault on HPUX because of the getline function in their C library.
+	Use the AM_FUNC_GETLINE test in m4/ instead.
 
 1999-08-03  Jim Meyering  <meyering@ascend.com>
 
