@@ -1,10 +1,11 @@
 ## Process this file with automake to produce Makefile.in -*-Makefile-*-.
 AUTOMAKE_OPTIONS = 1.3 gnits
 
-TESTS = mv-special-1 into-self backup-is-src
+TESTS = mv-special-1 into-self into-self-2 backup-is-src
 EXTRA_DIST = $(TESTS) setup
 TESTS_ENVIRONMENT = \
   DF=../../src/df \
+  LN=../../src/ln \
   LS=../../src/ls \
   MKDIR=../../src/mkdir \
   MKNOD=../../src/mknod \
