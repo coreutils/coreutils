@@ -18,14 +18,35 @@
 /* written by Jim Meyering */
 
 #include <config.h>
-
+#include <stdio.h>
 #include <sys/types.h>
+#include <signal.h>
 
 #include <time.h>
 /* FIXME: is including both like this kosher?  */
 #include <sys/time.h>
 
 static interrupted;
+
+/* Handle SIGCONT. */
+
+static void
+sighandler (int sig)
+{
+#ifdef SA_INTERRUPT
+  struct sigaction sigact;
+
+  sigact.sa_handler = SIG_DFL;
+  sigemptyset (&sigact.sa_mask);
+  sigact.sa_flags = 0;
+  sigaction (sig, &sigact, NULL);
+#else
+  signal (sig, SIG_DFL);
+#endif
+
+  suspended = 1;
+  kill (getpid (), sig);
+}
 
 /* Sleep for USEC microseconds. */
 
@@ -42,10 +63,25 @@ int
 nanosleep (const struct timespec *requested_delay,
 	   struct timespec *remaining_delay)
 {
+#ifdef SA_INTERRUPT
+  struct sigaction oldact, newact;
+#endif
+
   interrupted = 0;
 
   /* set up sig handler -- but maybe only do this the first time?  */
-  /* FIXME */
+#ifdef SA_INTERRUPT
+  newact.sa_handler = sighandler;
+  sigemptyset (&newact.sa_mask);
+  newact.sa_flags = 0;
+
+  sigaction (SIGCONT, NULL, &oldact);
+  if (oldact.sa_handler != SIG_IGN)
+    sigaction (SIGCONT, &newact, NULL);
+#else
+  if (signal (SIGCONT, SIG_IGN) != SIG_IGN)
+    signal (SIGCONT, sighandler);
+#endif
 
   usleep (requested_delay);
 
