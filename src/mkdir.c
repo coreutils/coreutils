@@ -89,7 +89,7 @@ main (int argc, char **argv)
 
   path_mode = 0;
 
-  while ((optc = getopt_long (argc, argv, "pm:", longopts, (int *) 0)) != EOF)
+  while ((optc = getopt_long (argc, argv, "pm:", longopts, NULL)) != -1)
     {
       switch (optc)
 	{

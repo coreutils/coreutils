@@ -866,7 +866,7 @@ decode_switches (int argc, char **argv)
 
   while ((c = getopt_long (argc, argv,
 			   "abcdfgiklmnopqrstuw:xABCDFGI:LNQRST:UX1",
-			   long_options, (int *) 0)) != EOF)
+			   long_options, NULL)) != -1)
     {
       switch (c)
 	{

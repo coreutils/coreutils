@@ -431,8 +431,7 @@ main (int argc, char **argv)
   interactive = override_mode = verbose = update = 0;
   errors = 0;
 
-  while ((c = getopt_long (argc, argv, "bfiuvS:V:", long_options, (int *) 0))
-	 != EOF)
+  while ((c = getopt_long (argc, argv, "bfiuvS:V:", long_options, NULL)) != -1)
     {
       switch (c)
 	{

@@ -250,7 +250,7 @@ main (int argc, char **argv)
   umask_kill = 0777777 ^ umask (0);
 
   while ((c = getopt_long (argc, argv, "abdfilprsuvxPRS:V:", long_opts,
-			   (int *) 0)) != EOF)
+			   NULL)) != -1)
     {
       switch (c)
 	{

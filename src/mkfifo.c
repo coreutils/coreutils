@@ -90,7 +90,7 @@ main (int argc, char **argv)
 #ifndef S_ISFIFO
   error (4, 0, _("fifo files not supported"));
 #else
-  while ((optc = getopt_long (argc, argv, "m:", longopts, (int *) 0)) != EOF)
+  while ((optc = getopt_long (argc, argv, "m:", longopts, NULL)) != -1)
     {
       switch (optc)
 	{

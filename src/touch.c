@@ -279,8 +279,7 @@ main (int argc, char **argv)
   change_times = no_create = use_ref = posix_date = flexible_date = 0;
   newtime = (time_t) -1;
 
-  while ((c = getopt_long (argc, argv, "acd:fmr:t:", longopts, (int *) 0))
-	 != EOF)
+  while ((c = getopt_long (argc, argv, "acd:fmr:t:", longopts, NULL)) != -1)
     {
       switch (c)
 	{

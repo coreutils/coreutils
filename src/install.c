@@ -204,7 +204,7 @@ main (int argc, char **argv)
    version = getenv ("VERSION_CONTROL");
 
   while ((optc = getopt_long (argc, argv, "bcsdg:m:o:V:S:", long_options,
-			      (int *) 0)) != EOF)
+			      NULL)) != -1)
     {
       switch (optc)
 	{

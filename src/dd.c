@@ -809,7 +809,7 @@ scanargs (int argc, char **argv)
   int i, n;
   int c;
 
-  while ((c = getopt_long (argc, argv, "", long_options, (int *) 0)) != EOF)
+  while ((c = getopt_long (argc, argv, "", long_options, NULL)) != -1)
     {
       switch (c)
 	{

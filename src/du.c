@@ -268,9 +268,8 @@ main (int argc, char **argv)
   else
     output_size = size_kilobytes;
 
-  while ((c = getopt_long (argc, argv, "abchklmsxDLS", long_options,
-			   (int *) 0))
-	 != EOF)
+  while ((c = getopt_long (argc, argv, "abchklmsxDLS", long_options, NULL))
+	 != -1)
     {
       switch (c)
 	{

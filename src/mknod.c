@@ -99,7 +99,7 @@ main (int argc, char **argv)
 
   symbolic_mode = NULL;
 
-  while ((optc = getopt_long (argc, argv, "m:", longopts, (int *) 0)) != EOF)
+  while ((optc = getopt_long (argc, argv, "m:", longopts, NULL)) != -1)
     {
       switch (optc)
 	{

@@ -424,8 +424,7 @@ main (int argc, char **argv)
 
   parse_long_options (argc, argv, "dircolors", GNU_PACKAGE, VERSION, usage);
 
-  while ((optc = getopt_long (argc, argv, "bcp", long_options, NULL))
-	 != EOF)
+  while ((optc = getopt_long (argc, argv, "bcp", long_options, NULL)) != -1)
     switch (optc)
       {
       case 'b':	/* Bourne shell syntax.  */

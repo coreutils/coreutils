@@ -611,7 +611,7 @@ main (int argc, char **argv)
   exit_status = 0;
 
   while ((i = getopt_long (argc, argv, "aiF:hkmPTt:vx:", long_options, NULL))
-	 != EOF)
+	 != -1)
     {
       switch (i)
 	{

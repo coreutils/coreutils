@@ -126,7 +126,7 @@ main (int argc, char **argv)
   pnsize = 256;
   pathname = xmalloc (pnsize);
 
-  while ((c = getopt_long (argc, argv, "dfirvR", long_opts, (int *) 0)) != EOF)
+  while ((c = getopt_long (argc, argv, "dfirvR", long_opts, NULL)) != -1)
     {
       switch (c)
 	{
