@@ -1,7 +1,17 @@
+2004-03-02  Dmitry V. Levin  <ldv@altlinux.org>
+
+	* cloexec.c: New file.
+	The set_cloexec_flag implementation imported from GNU C Library
+	Reference Manual.
+	* cloexec.h: New file.
+	* getloadavg.c: Include "cloexec.h".
+	(getloadavg): Use set_cloexec_flag instead of manual fcntl call.
+	* Makefile.am (libfetish_a_SOURCES): Add cloexec.c, cloexec.h.
+
 2004-02-23  Paul Eggert  <eggert@twinsun.com>
 
 	* userspec.c: Don't include "posixver.h".
-	(parse_user_spec): Fall back on USER.GROUP parsing regardless
+	(parse_user_spec): Fall back on USER.GROUP parsing, regardless
 	of POSIX version, as POSIX 1003.1-2001 allows that behavior as a
 	compatible extension.  Simplify code by removing a boolean int
 	that was always nonzero if a string was nonnull.
