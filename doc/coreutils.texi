@@ -11380,17 +11380,18 @@ If multiple options or @option{-a} are given, the selected information is
 printed in this order:
 
 @example
-@var{kernel-name} @var{nodename} @var{kernel-release} @var{kernel-version} @var{machine} @var{processor} @var{hardware-platform} @var{operating-system}
+@var{kernel-name} @var{nodename} @var{kernel-release} @var{kernel-version}
+@var{machine} @var{processor} @var{hardware-platform} @var{operating-system}
 @end example
 
 The information may contain internal spaces, so such output cannot be
 parsed reliably.  In the following example, @var{release} is
 @samp{2.2.18ss.e820-bda652a #4 SMP Tue Jun 5 11:24:08 PDT 2001}:
 
-@example
+@smallexample
 uname -a
-@result{} Linux dum 2.2.18ss.e820-bda652a #4 SMP Tue Jun 5 11:24:08 PDT 2001 i686 unknown unknown GNU/Linux
-@end example
+@result{} Linux dum 2.2.18 #4 SMP Tue Jun 5 11:24:08 PDT 2001 i686 unknown unknown GNU/Linux
+@end smallexample
 
 
 The program accepts the following options.  Also see @ref{Common options}.
