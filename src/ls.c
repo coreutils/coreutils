@@ -1899,9 +1899,10 @@ gobble_file (const char *name, enum filetype type, int explicit_arg,
 	}
 
 #if USE_ACL
-      files[files_index].have_acl =
-	(! S_ISLNK (files[files_index].stat.st_mode)
-	 && 4 < acl (path, GETACLCNT, 0, NULL));
+      if (format == long_format)
+	files[files_index].have_acl =
+	  (! S_ISLNK (files[files_index].stat.st_mode)
+	   && 4 < acl (path, GETACLCNT, 0, NULL));
 #endif
 
       if (S_ISLNK (files[files_index].stat.st_mode)
