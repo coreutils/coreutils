@@ -1,5 +1,8 @@
 2001-05-13  Jim Meyering  <meyering@lucent.com>
 
+	* src/remove.c (dir_name, dir_len): Define to different names
+	to avoid shadowing warnings due to new declarations from dirname.h.
+
 	* tests/Fetish.pm (run_tests): Fail if any test name is longer
 	than 12 bytes.
 
