@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{1999-02-09}%
+\def\texinfoversion{1999-02-14.16}%
 %
 % Copyright (C) 1985, 86, 88, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99
 % Free Software Foundation, Inc.
@@ -735,8 +735,26 @@ where each line of input produces a line of output.}
 
 \let\c=\comment
 
-% @paragraphindent  is defined for the Info formatting commands only.
-\let\paragraphindent=\comment
+% @paragraphindent NCHARS
+% We'll use ems for NCHARS, close enough.
+% We cannot implement @paragraphindent asis, though.
+% 
+\def\asisword{asis} % no translation, these are keywords
+\def\noneword{none}
+%
+\def\paragraphindent{\parsearg\doparagraphindent}
+\def\doparagraphindent#1{%
+  \def\temp{#1}%
+  \ifx\temp\asisword
+  \else
+    \ifx\temp\noneword
+      \defaultparindent = 0pt
+    \else
+      \defaultparindent = #1em
+    \fi
+  \fi
+  \parindent = \defaultparindent
+}
 
 % @asis just yields its argument.  Used with @table, for example.
 %
@@ -4794,7 +4812,7 @@ width0pt\relax} \fi
 
 
 % @alias.
-\def\alias#1=#2{\let#1=#2}
+\def\alias#1=#2{\gdef#1{#2}}
 
 
 \message{cross references,}
@@ -5602,6 +5620,6 @@ should work if nowhere else does.}
 @c eval: (add-hook 'write-file-hooks 'time-stamp)
 @c page-delimiter: "^\\\\message"
 @c time-stamp-start: "def\\\\texinfoversion{"
-@c time-stamp-format: "%:y-%02m-%02d"
+@c time-stamp-format: "%:y-%02m-%02d.%H"
 @c time-stamp-end: "}"
 @c End:
