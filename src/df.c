@@ -753,7 +753,15 @@ main (int argc, char **argv)
 			   || show_local_fs));
 
   if (mount_list == NULL)
-    error (1, errno, _("cannot read table of mounted filesystems"));
+    {
+      /* Couldn't read the table of mounted filesystems.
+	 Fail if df was invoked with no file name arguments;
+	 Otherwise, merely give a warning and proceed.  */
+      const char *warning = (optind == argc ? "" : _("Warning: "));
+      int status = (optind == argc ? 1 : 0);
+      error (status, errno,
+	     _("%scannot read table of mounted filesystems"), warning);
+    }
 
   if (require_sync)
     sync ();
