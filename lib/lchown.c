@@ -26,6 +26,16 @@
 extern int errno;
 #endif
 
+/* Some systems don't have ENOSYS.  */
+#ifndef ENOSYS
+# ifdef ENOTSUP
+#  define ENOSYS ENOTSUP
+# else
+/* Some systems don't have ENOTSUP either.  */
+#  define ENOSYS ENOMSG
+# endif
+#endif
+
 /* Work just like chown, except when FILE is a symbolic link.
    In that case, set errno to ENOSYS and return -1.  */
 
