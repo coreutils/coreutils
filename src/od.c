@@ -1024,7 +1024,7 @@ skip (n_skip)
 	  if (n_skip >= file_stats.st_size)
 	    {
 	      n_skip -= file_stats.st_size;
-	      if (in_stream != stdin && fclose (in_stream))
+	      if (in_stream != stdin && fclose (in_stream) == EOF)
 		{
 		  error (0, errno, "%s", input_filename);
 		  err = 1;
