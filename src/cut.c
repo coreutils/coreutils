@@ -188,8 +188,7 @@ static struct option const longopts[] =
 };
 
 static void
-usage (status)
-     int status;
+usage (int status)
 {
   if (status != 0)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
@@ -243,11 +242,7 @@ With no FILE, or when FILE is -, read standard input.\n\
    including the null terminator), or -1 on error or EOF.  */
 
 static int
-getstr (lineptr, n, stream, terminator)
-     char **lineptr;
-     int *n;
-     FILE *stream;
-     char terminator;
+getstr (char **lineptr, int *n, FILE *stream, char terminator)
 {
   int nchars_avail;		/* Allocated but unused chars in *LINEPTR.  */
   char *read_pos;		/* Where we're reading into *LINEPTR. */
@@ -314,8 +309,7 @@ getstr (lineptr, n, stream, terminator)
 }
 
 static int
-print_kth (k)
-     int k;
+print_kth (int k)
 {
   return ((0 < eol_range_start && eol_range_start <= k)
 	  || (k <= max_range_endpoint && printable_field[k]));
@@ -338,8 +332,7 @@ print_kth (k)
    one bit per field index instead of a whole `int' per index.  */
 
 static int
-set_fields (fieldstr)
-     const char *fieldstr;
+set_fields (const char *fieldstr)
 {
   int initial = 1;		/* Value of first number in a range.  */
   int dash_found = 0;		/* Nonzero if a '-' is found in this field.  */
@@ -492,8 +485,7 @@ set_fields (fieldstr)
 /* Read from stream STREAM, printing to standard output any selected bytes.  */
 
 static void
-cut_bytes (stream)
-     FILE *stream;
+cut_bytes (FILE *stream)
 {
   int byte_idx;			/* Number of chars in the line so far. */
 
@@ -529,8 +521,7 @@ cut_bytes (stream)
 /* Read from stream STREAM, printing to standard output any selected fields.  */
 
 static void
-cut_fields (stream)
-     FILE *stream;
+cut_fields (FILE *stream)
 {
   int c;
   int field_idx;
@@ -632,8 +623,7 @@ cut_fields (stream)
 }
 
 static void
-cut_stream (stream)
-     FILE *stream;
+cut_stream (FILE *stream)
 {
   if (operating_mode == byte_mode)
     cut_bytes (stream);
@@ -645,8 +635,7 @@ cut_stream (stream)
    Return 0 if successful, 1 if not. */
 
 static int
-cut_file (file)
-     char *file;
+cut_file (char *file)
 {
   FILE *stream;
 
@@ -683,9 +672,7 @@ cut_file (file)
 }
 
 void
-main (argc, argv)
-     int argc;
-     char **argv;
+main (int argc, char **argv)
 {
   int optc, exit_status = 0;
 

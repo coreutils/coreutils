@@ -195,9 +195,7 @@ static int have_read_stdin;
    Return 0 if successful, -1 if an error occurs. */
 
 static int
-cksum (file, print_name)
-     char *file;
-     int print_name;
+cksum (char *file, int print_name)
 {
   unsigned char buf[BUFLEN];
   unsigned long crc = 0;
@@ -261,8 +259,7 @@ cksum (file, print_name)
 }
 
 static void
-usage (status)
-     int status;
+usage (int status)
 {
   if (status != 0)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
@@ -284,9 +281,7 @@ Print CRC checksum and byte counts of each FILE.\n\
 }
 
 void
-main (argc, argv)
-     int argc;
-     char **argv;
+main (int argc, char **argv)
 {
   int i, c;
   int errors = 0;
