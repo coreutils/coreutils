@@ -1,5 +1,8 @@
 1997-09-01  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* lib/Makefile.am (EXTRA_DIST): Remove mvdir.c and rmdir.c.
+	Add lstat.c and stat.c.
+
 	* src/ls.c [!STDC_HEADERS]: Declare malloc.
 
 	* m4/Makefile.am (EXTRA_DIST): Add stat.m4.
