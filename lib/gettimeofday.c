@@ -60,6 +60,8 @@ int
 rpl_gettimeofday (struct timeval *tv, struct timezone *tz)
 {
   struct tm save;
+  int result;
+
   if (! localtime_buffer_addr)
     abort ();
 
