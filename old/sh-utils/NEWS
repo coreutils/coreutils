@@ -1,4 +1,6 @@
 Changes in release 2.1
+ [2.0b]
+* Regenerate lib/Makefile.in so that nanosleep.c is distributed.
  [2.0a]
 * sleep accepts floating point arguments on command line
 * sleep's clock continues counting down when sleep is suspended
