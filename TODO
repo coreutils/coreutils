@@ -14,3 +14,4 @@ requires some flavor of expect.
 
 doc/coreutils.texi:
   Address this comment: FIXME: mv's behavior in this case is system-dependent
+  Better still: fix the code so it's *not* system-dependent.
