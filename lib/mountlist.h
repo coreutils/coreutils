@@ -17,6 +17,8 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
+#include <stdbool.h>
+
 /* A mount table entry. */
 struct mount_entry
 {
@@ -30,7 +32,7 @@ struct mount_entry
   struct mount_entry *me_next;
 };
 
-struct mount_entry *read_file_system_list (int need_fs_type);
+struct mount_entry *read_file_system_list (bool need_fs_type);
 
 #ifndef ME_DUMMY
 # define ME_DUMMY(Fs_name, Fs_type) \
