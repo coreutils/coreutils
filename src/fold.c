@@ -42,9 +42,6 @@
 #include "xstrtol.h"
 #include "error.h"
 
-char *xrealloc ();
-char *xmalloc ();
-
 /* The name this program was run with. */
 char *program_name;
 

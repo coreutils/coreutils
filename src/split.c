@@ -43,7 +43,6 @@
 #include "error.h"
 #include "xstrtol.h"
 
-char *xmalloc ();
 int full_write ();
 int safe_read ();
 

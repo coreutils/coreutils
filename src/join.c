@@ -54,9 +54,6 @@
 
 #define join system_join
 
-char *xmalloc ();
-char *xrealloc ();
-
 /* Undefine, to avoid warning about redefinition on some systems.  */
 #undef min
 #undef max

@@ -119,7 +119,6 @@ enum header_mode
   multiple_files, always, never
 };
 
-char *xmalloc ();
 int safe_read ();
 
 /* The name this program was run with.  */

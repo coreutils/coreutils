@@ -70,9 +70,6 @@ enum section
   Header, Body, Footer, Text
 };
 
-char *xmalloc ();
-char *xrealloc ();
-
 /* The name this program was run with. */
 char *program_name;
 

@@ -59,10 +59,7 @@ tac -r -s '.\|
 #define WRITESIZE 8192
 
 char *mktemp ();
-
 int safe_read ();
-char *xmalloc ();
-char *xrealloc ();
 
 /* The name this program was run with. */
 char *program_name;

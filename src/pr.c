@@ -182,9 +182,6 @@
 # include <limits.h>
 #endif
 
-char *xmalloc ();
-char *xrealloc ();
-
 #ifndef UINT_MAX
 # define UINT_MAX ((unsigned int) ~(unsigned int) 0)
 #endif

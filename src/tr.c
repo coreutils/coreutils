@@ -229,7 +229,6 @@ struct E_string
    and is not escaped itself.  */
 #define ES_MATCH(ES, I, C) ((ES)->s[(I)] == (C) && !(ES)->escaped[(I)])
 
-char *xmalloc ();
 int safe_read ();
 
 /* The name by which this program was run.  */
