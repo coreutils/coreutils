@@ -419,7 +419,7 @@ xfopen (const char *file, const char *how)
 {
   FILE *fp;
 
-  if (strcmp (file, "-") == 0)
+  if (STREQ (file, "-"))
     {
       fp = stdin;
     }
@@ -510,12 +510,12 @@ tempname (void)
    remove it if it is found on the list. */
 
 static void
-zaptemp (char *name)
+zaptemp (const char *name)
 {
   struct tempnode *node, *temp;
 
   for (node = &temphead; node->next; node = node->next)
-    if (!strcmp (name, node->next->name))
+    if (STREQ (name, node->next->name))
       break;
   if (node->next)
     {
@@ -611,7 +611,7 @@ inittables (void)
 
 	  nls_months_collide[nls_monthtab[i].val] = 0;
 	  for (j = 0; j < NLS_NUM_MONTHS; ++j)
-	    if (strcmp (nls_monthtab[i].name, us_monthtab[i].name) == 0)
+	    if (STREQ (nls_monthtab[i].name, us_monthtab[i].name))
 	      {
 		/* There are indeed some month names in English which
 		   collide with the NLS name.  */
@@ -1508,7 +1508,7 @@ getmonth (const char *s, int len)
       else
 	lo = (lo + hi) / 2;
     }
-  result = !strcmp (month, monthtab[lo].name) ? monthtab[lo].val : 0;
+  result = (STREQ (month, monthtab[lo].name) ? monthtab[lo].val : 0);
 
 #ifndef HAVE_ALLOCA
   free (month);
@@ -2840,7 +2840,7 @@ but lacks following character offset"));
       exit (check (files, nfiles) == 0 ? 0 : 1);
     }
 
-  if (strcmp (outfile, "-"))
+  if (!STREQ (outfile, "-"))
     {
       struct stat outstat;
       if (stat (outfile, &outstat) == 0)
@@ -2860,10 +2860,10 @@ but lacks following character offset"));
 	      FILE *fp;
 	      int cc;
 
-	      if (S_ISREG (outstat.st_mode) && strcmp (outfile, files[i]))
+	      if (S_ISREG (outstat.st_mode) && !STREQ (outfile, files[i]))
 		{
 		  struct stat instat;
-		  if ((strcmp (files[i], "-")
+		  if ((!STREQ (files[i], "-")
 		       ? stat (files[i], &instat)
 		       : fstat (STDIN_FILENO, &instat)) != 0)
 		    {
