@@ -74,16 +74,12 @@ enum countmode
    times they occurred in the input. */
 static enum countmode countmode;
 
-enum output_mode
-{
-  output_repeated,		/* -d Only lines that are repeated. */
-  output_all_repeated,		/* -D All lines that are repeated. */
-  output_unique,		/* -u Only lines that are not repeated. */
-  output_all			/* Default.  Print first copy of each line. */
-};
-
-/* Which lines to output. */
-static enum output_mode mode;
+/* Which lines to output: unique lines, the first of a group of
+   repeated lines, and the second and subsequented of a group of
+   repeated lines.  */
+static bool output_unique;
+static bool output_first_repeated;
+static bool output_later_repeated;
 
 /* If nonzero, ignore case when comparing.  */
 static int ignore_case;
@@ -240,15 +236,17 @@ different (char *old, char *new, size_t oldlen, size_t newlen)
 
 /* Output the line in linebuffer LINE to stream STREAM
    provided that the switches say it should be output.
+   MATCH is true if the line matches the previous line.
    If requested, print the number of times it occurred, as well;
    LINECOUNT + 1 is the number of times that the line occurred. */
 
 static void
-writeline (const struct linebuffer *line, FILE *stream, int linecount)
+writeline (struct linebuffer const *line, FILE *stream,
+	   bool match, int linecount)
 {
-  if ((mode == output_unique && linecount != 0)
-      || (mode == output_repeated && linecount == 0)
-      || (mode == output_all_repeated && linecount == 0))
+  if (! (linecount == 0 ? output_unique
+	 : !match ? output_first_repeated
+	 : output_later_repeated))
     return;
 
   if (countmode == count_occurrences)
@@ -295,7 +293,7 @@ check_file (const char *infile, const char *outfile)
      this optimization lets uniq output each different line right away,
      without waiting to see if the next one is different.  */
 
-  if (mode == output_all && countmode == count_none)
+  if (output_unique && output_first_repeated && countmode == count_none)
     {
       char *prevfield IF_LINT (= NULL);
       size_t prevlen IF_LINT (= 0);
@@ -334,7 +332,7 @@ check_file (const char *infile, const char *outfile)
 
       while (!feof (istream))
 	{
-	  int match;
+	  bool match;
 	  char *thisfield;
 	  size_t thislen;
 	  if (readline (thisline, istream) == 0)
@@ -346,7 +344,7 @@ check_file (const char *infile, const char *outfile)
 	  if (match)
 	    ++match_count;
 
-          if (mode == output_all_repeated && delimit_groups != DM_NONE)
+          if (delimit_groups != DM_NONE)
 	    {
 	      if (!match)
 		{
@@ -362,9 +360,9 @@ check_file (const char *infile, const char *outfile)
 		}
 	    }
 
-	  if (!match || mode == output_all_repeated)
+	  if (!match || output_later_repeated)
 	    {
-	      writeline (prevline, ostream, match_count);
+	      writeline (prevline, ostream, match, match_count);
 	      SWAP_LINES (prevline, thisline);
 	      prevfield = thisfield;
 	      prevlen = thislen;
@@ -373,7 +371,7 @@ check_file (const char *infile, const char *outfile)
 	    }
 	}
 
-      writeline (prevline, ostream, match_count);
+      writeline (prevline, ostream, false, match_count);
     }
 
  closefiles:
@@ -410,7 +408,8 @@ main (int argc, char **argv)
   skip_chars = 0;
   skip_fields = 0;
   check_chars = SIZE_MAX;
-  mode = output_all;
+  output_unique = output_first_repeated = true;
+  output_later_repeated = false;
   countmode = count_none;
   delimit_groups = DM_NONE;
 
@@ -480,11 +479,12 @@ main (int argc, char **argv)
 	  break;
 
 	case 'd':
-	  mode = output_repeated;
+	  output_unique = false;
 	  break;
 
 	case 'D':
-	  mode = output_all_repeated;
+	  output_unique = false;
+	  output_later_repeated = true;
 	  if (optarg == NULL)
 	    delimit_groups = DM_NONE;
 	  else
@@ -508,7 +508,7 @@ main (int argc, char **argv)
 	  break;
 
 	case 'u':
-	  mode = output_unique;
+	  output_first_repeated = false;
 	  break;
 
 	case 'w':
@@ -532,7 +532,7 @@ main (int argc, char **argv)
       usage (EXIT_FAILURE);
     }
 
-  if (countmode == count_occurrences && mode == output_all_repeated)
+  if (countmode == count_occurrences && output_later_repeated)
     {
       error (0, 0,
 	   _("printing all duplicated lines and repeat counts is meaningless"));
