@@ -1,4 +1,4 @@
-#serial 19
+#serial 20
 
 dnl Initially derived from code in GNU grep.
 dnl Mostly written by Jim Meyering.
@@ -113,7 +113,7 @@ AC_DEFUN([jm_PREREQ_REGEX],
   AC_REQUIRE([gl_C_RESTRICT])
   AC_REQUIRE([AC_FUNC_ALLOCA])
   AC_REQUIRE([AC_HEADER_STDC])
-  AC_CHECK_HEADERS_ONCE(limits.h string.h wchar.h wctype.h)
+  AC_CHECK_HEADERS_ONCE(wchar.h wctype.h)
   AC_CHECK_FUNCS_ONCE(isascii mempcpy)
   AC_CHECK_FUNCS(btowc)
 ])
