@@ -36,25 +36,9 @@
 # include <locale.h>
 #endif
 
-#if HAVE_STDLIB_H
-# include <stdlib.h>
-#endif
-#ifndef HAVE_DECL_GETENV
-"this configure-time declaration test was not run"
-#endif
-#if !HAVE_DECL_GETENV
-char *getenv ();
-#endif
-
-#if HAVE_STRING_H
-# include <string.h>
-#endif
-
-#if HAVE_STRINGS_H
-# include <strings.h>
-#endif
-
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "gettext.h"
 #define _(msgid) gettext (msgid)
