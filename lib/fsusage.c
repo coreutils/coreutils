@@ -90,7 +90,8 @@ adjust_blocks (blocks, fromsize, tosize)
 
 int
 get_fs_usage (path, disk, fsp)
-     char *path, *disk;
+     const char *path;
+     const char *disk;
      struct fs_usage *fsp;
 {
 #if defined (STAT_STATFS3_OSF1)
