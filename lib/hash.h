@@ -5,14 +5,6 @@
 #  include <config.h>
 # endif
 
-# ifndef PARAMS
-#  if defined (__GNUC__) || __STDC__
-#   define PARAMS(args) args
-#  else
-#   define PARAMS(args) ()
-#  endif
-# endif
-
 # include <stdio.h>
 # include <assert.h>
 
@@ -26,6 +18,14 @@ void free ();
 
 # ifndef HAVE_DECL_MALLOC
 char *malloc ();
+# endif
+
+# ifndef PARAMS
+#  if defined PROTOTYPES || (defined __STDC__ && __STDC__)
+#   define PARAMS(Args) Args
+#  else
+#   define PARAMS(Args) ()
+#  endif
 # endif
 
 # define USE_OBSTACK

@@ -1,5 +1,5 @@
 /* fsusage.h -- declarations for filesystem space usage info
-   Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1992, 1997 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -16,6 +16,10 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 /* Space usage statistics for a filesystem.  Blocks are 512-byte. */
+
+#if !defined FSUSAGE_H_
+# define FSUSAGE_H_
+
 struct fs_usage
 {
   int fsu_blocksize;		/* Size of a block.  */
@@ -26,13 +30,15 @@ struct fs_usage
   uintmax_t fsu_ffree;		/* Free file nodes. */
 };
 
-#ifndef __P
-#if defined (__GNUC__) || (defined (__STDC__) && __STDC__)
-#define __P(args) args
-#else
-#define __P(args) ()
-#endif  /* GCC.  */
-#endif  /* Not __P.  */
+# ifndef PARAMS
+#  if defined PROTOTYPES || (defined __STDC__ && __STDC__)
+#   define PARAMS(Args) Args
+#  else
+#   define PARAMS(Args) ()
+#  endif
+# endif
 
-int get_fs_usage __P ((const char *path, const char *disk,
-		       struct fs_usage *fsp));
+int get_fs_usage PARAMS ((const char *path, const char *disk,
+			  struct fs_usage *fsp));
+
+#endif

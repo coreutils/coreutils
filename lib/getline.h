@@ -1,4 +1,4 @@
-/*  Copyright (C) 1995 Free Software Foundation, Inc.
+/*  Copyright (C) 1995, 1997 Free Software Foundation, Inc.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,10 +20,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 # include <stdio.h>
 
 # ifndef PARAMS
-#  if defined (__GNUC__) || __STDC__
-#   define PARAMS(args) args
+#  if defined PROTOTYPES || (defined __STDC__ && __STDC__)
+#   define PARAMS(Args) Args
 #  else
-#   define PARAMS(args) ()
+#   define PARAMS(Args) ()
 #  endif
 # endif
 

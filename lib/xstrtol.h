@@ -13,26 +13,27 @@
 #  define __ZLONG_MAX LONG_MAX
 # endif
 
-# undef PARAMS
-# if defined (__STDC__) && __STDC__
-#  define PARAMS(Args) Args
-# else
-#  define PARAMS(Args) ()
+# ifndef PARAMS
+#  if defined PROTOTYPES || (defined __STDC__ && __STDC__)
+#   define PARAMS(Args) Args
+#  else
+#   define PARAMS(Args) ()
+#  endif
 # endif
 
-#ifndef _STRTOL_ERROR
+# ifndef _STRTOL_ERROR
 enum strtol_error
   {
     LONGINT_OK, LONGINT_INVALID, LONGINT_INVALID_SUFFIX_CHAR, LONGINT_OVERFLOW
   };
 typedef enum strtol_error strtol_error;
-#endif
+# endif
 
 strtol_error
   __xstrtol PARAMS ((const char *s, char **ptr, int base,
 		     __unsigned long int *val, const char *valid_suffixes));
 
-#undef _STRTOL_ERROR
+# undef _STRTOL_ERROR
 # define _STRTOL_ERROR(Exit_code, Str, Argument_type_string, Err)	\
   do									\
     {									\

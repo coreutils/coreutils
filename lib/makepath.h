@@ -1,15 +1,16 @@
-# undef __P
-#if __STDC__
-# define __P(Args) Args
-#else
-# define __P(Args) ()
+#ifndef PARAMS
+# if defined PROTOTYPES || (defined __STDC__ && __STDC__)
+#  define PARAMS(Args) Args
+# else
+#  define PARAMS(Args) ()
+# endif
 #endif
 
 int
-make_path __P ((const char *_argpath,
-		int _mode,
-		int _parent_mode,
-		uid_t _owner,
-		gid_t _group,
-		int _preserve_existing,
-		const char *_verbose_fmt_string));
+make_path PARAMS ((const char *_argpath,
+		   int _mode,
+		   int _parent_mode,
+		   uid_t _owner,
+		   gid_t _group,
+		   int _preserve_existing,
+		   const char *_verbose_fmt_string));

@@ -1,8 +1,9 @@
-#undef PARAMS
-#if defined (__STDC__) && __STDC__
-# define PARAMS(Args) Args
-#else
-# define PARAMS(Args) ()
+#ifndef PARAMS
+# if defined PROTOTYPES || (defined __STDC__ && __STDC__)
+#  define PARAMS(Args) Args
+# else
+#  define PARAMS(Args) ()
+# endif
 #endif
 
 /* Exit value when the requested amount of memory is not available.

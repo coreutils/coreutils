@@ -17,14 +17,17 @@
 
 /* Masks for the `flags' field in a `struct mode_change'. */
 
+#if ! defined MODECHANGE_H_
+# define MODECHANGE_H_
+
 /* Affect the execute bits only if at least one execute bit is set already,
    or if the file is a directory. */
-#define MODE_X_IF_ANY_X 01
+# define MODE_X_IF_ANY_X 01
 
 /* If set, copy some existing permissions for u, g, or o onto the other two.
    Which of u, g, or o is copied is determined by which bits are set in the
    `value' field. */
-#define MODE_COPY_EXISTING 02
+# define MODE_COPY_EXISTING 02
 
 struct mode_change
 {
@@ -36,25 +39,27 @@ struct mode_change
 };
 
 /* Masks for mode_compile argument. */
-#define MODE_MASK_EQUALS 1
-#define MODE_MASK_PLUS 2
-#define MODE_MASK_MINUS 4
-#define MODE_MASK_ALL (MODE_MASK_EQUALS | MODE_MASK_PLUS | MODE_MASK_MINUS)
+# define MODE_MASK_EQUALS 1
+# define MODE_MASK_PLUS 2
+# define MODE_MASK_MINUS 4
+# define MODE_MASK_ALL (MODE_MASK_EQUALS | MODE_MASK_PLUS | MODE_MASK_MINUS)
 
 /* Error return values for mode_compile. */
-#define MODE_INVALID (struct mode_change *) 0
-#define MODE_MEMORY_EXHAUSTED (struct mode_change *) 1
-#define MODE_BAD_REFERENCE (struct mode_change *) 2
+# define MODE_INVALID (struct mode_change *) 0
+# define MODE_MEMORY_EXHAUSTED (struct mode_change *) 1
+# define MODE_BAD_REFERENCE (struct mode_change *) 2
 
-#ifndef __P
-# if defined (__GNUC__) || (defined (__STDC__) && __STDC__)
-#  define __P(Args) Args
-# else
-#  define __P(Args) ()
+# ifndef PARAMS
+#  if defined PROTOTYPES || (defined __STDC__ && __STDC__)
+#   define PARAMS(Args) Args
+#  else
+#   define PARAMS(Args) ()
+#  endif
 # endif
-#endif
 
-struct mode_change *mode_compile __P ((const char *, unsigned));
-struct mode_change *mode_create_from_ref __P ((const char *));
-unsigned short mode_adjust __P ((unsigned, const struct mode_change *));
-void mode_free __P ((struct mode_change *));
+struct mode_change *mode_compile PARAMS ((const char *, unsigned));
+struct mode_change *mode_create_from_ref PARAMS ((const char *));
+unsigned short mode_adjust PARAMS ((unsigned, const struct mode_change *));
+void mode_free PARAMS ((struct mode_change *));
+
+#endif

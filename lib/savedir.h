@@ -1,9 +1,15 @@
-#undef __P
-#if defined (__STDC__) && __STDC__
-# define __P(x) x
-#else
-# define __P(x) ()
-#endif
+#if !defined SAVEDIR_H_
+# define SAVEDIR_H_
+
+# ifndef PARAMS
+#  if defined PROTOTYPES || (defined __STDC__ && __STDC__)
+#   define PARAMS(Args) Args
+#  else
+#   define PARAMS(Args) ()
+#  endif
+# endif
 
 char *
-savedir __P((const char *dir, unsigned int name_size));
+savedir PARAMS ((const char *dir, unsigned int name_size));
+
+#endif

@@ -8,10 +8,10 @@
 # endif
 
 # ifndef PARAMS
-#  if defined (__GNUC__) || __STDC__
-#   define PARAMS(args) args
+#  if defined PROTOTYPES || (defined __STDC__ && __STDC__)
+#   define PARAMS(Args) Args
 #  else
-#   define PARAMS(args) ()
+#   define PARAMS(Args) ()
 #  endif
 # endif
 

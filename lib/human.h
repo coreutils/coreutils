@@ -7,14 +7,14 @@
 # define LONGEST_HUMAN_READABLE ((sizeof (uintmax_t) + sizeof (int)) \
 				 * CHAR_BIT / 3)
 
-# ifndef __P
-#  if defined (__GNUC__) || (defined (__STDC__) && __STDC__)
-#   define __P(args) args
+# ifndef PARAMS
+#  if defined PROTOTYPES || (defined __STDC__ && __STDC__)
+#   define PARAMS(Args) Args
 #  else
-#   define __P(args) ()
-#  endif  /* GCC.  */
-# endif  /* Not __P.  */
+#   define PARAMS(Args) ()
+#  endif
+# endif
 
-char *human_readable __P ((uintmax_t, char *, int, int, int));
+char *human_readable PARAMS ((uintmax_t, char *, int, int, int));
 
 #endif /* HUMAN_H_ */
