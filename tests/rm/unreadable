@@ -1,0 +1,45 @@
+#!/bin/sh
+
+: ${PERL=perl}
+: ${srcdir=.}
+
+case "$PERL" in
+  *'missing perl')
+  echo 1>&2 "$0: configure didn't find a usable version of Perl, so can't run this test"
+  exit 77
+  ;;
+esac
+
+exec $PERL -w -I$srcdir/.. -MFetish -- - << \EOF
+require 5.003;
+use strict;
+
+(my $program_name = $0) =~ s|.*/||;
+
+# Turn off localisation of executable's ouput.
+@ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
+
+my $d = "dir-$$";
+my $mkdir = {PRE => sub {mkdir $d,0100 or die "$d: $!\n"}};
+my $prog = $ENV{PROG} || die "$0: \$PROG not specified in environment\n";
+
+my @Tests =
+    (
+     # test-name options input expected-output
+     #
+     ['unreadable-1', '-rf', $d,
+      {EXIT => 1}, {ERR => "$prog: $d/.: Permission denied\n"}, $mkdir],
+     ['unreadable-2', '-rf', $d,
+      {EXIT => 1},
+      {ERR => "$prog: $d/.: Permission denied\n" .
+       "$prog: cannot remove directory `$d': File exists\n"},
+      {PRE => sub { (mkdir $d,0700 and mkdir "$d/x",0700 and chmod 0100,$d)
+                    or die "$d: $!\n"}} ],
+    );
+
+my $save_temps = $ENV{SAVE_TEMPS};
+my $verbose = $ENV{VERBOSE};
+
+my $fail = run_tests ($program_name, $prog, \@Tests, $save_temps, $verbose);
+exit $fail;
+EOF
