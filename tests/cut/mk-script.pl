@@ -312,7 +312,7 @@ if test \$code != $e_ret_code ; then
   \$echo "Test $t_name failed: $xx return code \$code differs from expected value $e_ret_code" 1>&2
   errors=`expr \$errors + 1`
 else
-  cmp $out $exp_name
+  cmp $out $exp_name > /dev/null 2>&1
   case \$? in
     0) if test "\$VERBOSE" ; then \$echo "passed $t_name"; fi ;;
     1) \$echo "Test $t_name failed: files $out and $exp_name differ" 1>&2;
