@@ -112,7 +112,7 @@ Determine format of output:\n\
   -b, --sh, --bourne-shell    output Bourne shell code to set LS_COLOR\n\
   -c, --csh, --c-shell        output C shell code to set LS_COLOR\n\
   -p, --print-data-base       output defaults\n\
-  -h, --help                  display this help and exit\n\
+      --help                  display this help and exit\n\
       --version               output version information and exit\n\
 "));
     }
