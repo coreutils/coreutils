@@ -5,4 +5,3 @@ t*.exp
 t*.err
 build-script
 Makefile
-Makefile.in
