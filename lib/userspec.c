@@ -57,6 +57,8 @@ char *alloca ();
 # include <unistd.h>
 #endif
 
+#include "xalloc.h"
+
 #if ENABLE_NLS
 # include <libintl.h>
 # define _(Text) gettext (Text)
@@ -137,7 +139,6 @@ const char *
 parse_user_spec (const char *spec_arg, uid_t *uid, gid_t *gid,
 		 char **username_arg, char **groupname_arg)
 {
-  static const char *E_no_memory = N_("virtual memory exhausted");
   static const char *E_invalid_user = N_("invalid user");
   static const char *E_invalid_group = N_("invalid group");
   static const char *E_bad_spec =
@@ -210,13 +211,13 @@ parse_user_spec (const char *spec_arg, uid_t *uid, gid_t *gid,
 	{
 
 	  if (!is_number (u))
-	    error_msg = _(E_invalid_user);
+	    error_msg = E_invalid_user;
 	  else
 	    {
 	      int use_login_group;
 	      use_login_group = (separator != NULL && g == NULL);
 	      if (use_login_group)
-		error_msg = _(E_bad_spec);
+		error_msg = E_bad_spec;
 	      else
 		{
 		  /* FIXME: don't use atoi!  */
@@ -259,7 +260,7 @@ parse_user_spec (const char *spec_arg, uid_t *uid, gid_t *gid,
       if (grp == NULL)
 	{
 	  if (!is_number (g))
-	    error_msg = _(E_invalid_group);
+	    error_msg = E_invalid_group;
 	  else
 	    {
 	      /* FIXME: don't use atoi!  */
@@ -280,7 +281,7 @@ parse_user_spec (const char *spec_arg, uid_t *uid, gid_t *gid,
 	{
 	  *username_arg = strdup (u);
 	  if (*username_arg == NULL)
-	    error_msg = _(E_no_memory);
+	    error_msg = xalloc_msg_memory_exhausted;
 	}
 
       if (groupname != NULL && error_msg == NULL)
@@ -293,7 +294,7 @@ parse_user_spec (const char *spec_arg, uid_t *uid, gid_t *gid,
 		  free (*username_arg);
 		  *username_arg = NULL;
 		}
-	      error_msg = _(E_no_memory);
+	      error_msg = xalloc_msg_memory_exhausted;
 	    }
 	}
     }
@@ -306,7 +307,7 @@ parse_user_spec (const char *spec_arg, uid_t *uid, gid_t *gid,
       goto retry;
     }
 
-  return error_msg;
+  return _(error_msg);
 }
 
 #ifdef TEST
