@@ -1,3 +1,11 @@
+2003-05-02  Jim Meyering  <jim@meyering.net>
+
+	* readdir.m4 (GL_FUNC_READDIR): Revive dead file.  Change name to
+	have GL_ (not jm_) prefix.  Adjust cache variables similarly.
+	Create 500 rather than just 300 files, to exercise bug on
+	Darwin6.5, too.
+	* jm-macros.m4 (jm_MACROS): Require GL_FUNC_READDIR.
+
 2003-04-25  Jim Meyering  <jim@meyering.net>
 
 	* getcwd-path-max.m4 (GL_FUNC_GETCWD_PATH_MAX): If PATH_MAX
