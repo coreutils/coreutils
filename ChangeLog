@@ -2,6 +2,12 @@
 
 	* Version 5.1.0.
 
+	* src/ls.c (format_user): Increment dired_pos via two statements,
+	`dired_pos += width; dired_pos++;' rather than one,
+	`dired_pos += width + 1;' since the latter could conceivably overflow.
+	(format_group): Likewise.
+	From Paul Eggert.
+
 	* configure.ac: Require automake-1.8.
 
 2003-12-12  Jim Meyering  <jim@meyering.net>
