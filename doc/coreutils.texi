@@ -24,11 +24,9 @@
 @format
 START-INFO-DIR-ENTRY
 * @sc{gnu} Utilities: (coreutils).              @sc{gnu} Utilities.
-* Common options:                                Common options.
-* File permissions:                              Access modes.
-* Date input formats:                            Specifying date strings.
-* Opening the software toolbox:                  The software tools philosophy.
-* GNU Free Documentation License:                The license for this documentation.
+* Common options: (coreutils)Common options.    Common options.
+* File permissions: (coreutils)File permission. Access modes.
+* Date input formats: (coreutils)Date input formats.
 
 * basename: (coreutils)basename invocation.     Strip directory and suffix.
 * cat: (coreutils)cat invocation.               Concatenate and write files.
@@ -449,7 +447,7 @@ GNU Free Documentation License
 @node Introduction
 @chapter Introduction
 
-This manual is incomplete: No attempt is made to explain basic concepts
+This manual is incomplete: Little attempt is made to explain basic concepts
 in a way suitable for novices.  Thus, if you are interested, please get
 involved in improving this manual.  The entire @sc{gnu} community will
 benefit.
