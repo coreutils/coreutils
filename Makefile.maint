@@ -111,8 +111,8 @@ sc_cast_of_x_alloc_return_value:
 
 sc_space_tab:
 	@( cvsu --list ) > /dev/null 2>&1 || : &&			\
-	  grep '[ ]	' $$(cvsu --list				\
-	    | grep -vE 'configure|config\.(guess|sub)') &&		\
+	  grep '[ ]	'						\
+	     $$(cvsu --list | grep -vEf .x-$@ ) &&			\
 	  { echo '$(ME): found SPACE-TAB sequence; remove the SPACE'	\
 		1>&2; exit 1; } || :
 
