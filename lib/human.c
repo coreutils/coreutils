@@ -35,6 +35,7 @@
 
 #include <argmatch.h>
 #include <error.h>
+#include <intprops.h>
 #include <xstrtol.h>
 
 #ifndef SIZE_MAX
@@ -99,10 +100,8 @@ group_number (char *number, size_t numberlen,
   size_t i = numberlen;
 
   /* The maximum possible value for NUMBERLEN is the number of digits
-     in the square of the largest uintmax_t, so double the size of
-     uintmax_t before converting to a bound.  302 / 1000 is ceil
-     (log10 (2.0)).  Add 1 for integer division truncation.  */
-  char buf[2 * sizeof (uintmax_t) * CHAR_BIT * 302 / 1000 + 1];
+     in the square of the largest uintmax_t, so double the size needed.  */
+  char buf[2 * INT_STRLEN_BOUND (uintmax_t) + 1];
 
   memcpy (buf, number, numberlen);
   d = number + numberlen;
