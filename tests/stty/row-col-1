@@ -12,7 +12,7 @@ COLUMNS=80
 export COLUMNS
 
 # Make sure there's a tty on stdin.
-. $srcdir/input-tty
+. $srcdir/../input-tty
 
 # Versions of GNU stty from shellutils-1.9.2c and earlier failed
 # tests #2 and #4 when run on SunOS 4.1.3.
