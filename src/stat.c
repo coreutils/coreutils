@@ -333,7 +333,7 @@ human_time (time_t t, int t_ns)
 		       (INT_STRLEN_BOUND (int) /* YYYY */
 			+ 1 /* because YYYY might equal INT_MAX + 1900 */
 			+ sizeof "-MM-DD HH:MM:SS.NNNNNNNNN +ZZZZ"))];
-  struct tm const *tm = localtime (t);
+  struct tm const *tm = localtime (&t);
   if (tm == NULL)
     return (TYPE_SIGNED (time_t)
 	    ? imaxtostr (t, str)
