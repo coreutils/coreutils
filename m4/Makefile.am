@@ -80,6 +80,8 @@ stat.m4 \
 stdbool.m4 \
 strftime.m4 \
 timespec.m4 \
+tm_gmtoff.m4 \
+tzset.m4 \
 unlink-busy.m4 \
 uptime.m4 \
 utimbuf.m4 \
