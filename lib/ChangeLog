@@ -1,3 +1,13 @@
+2000-09-09  Jim Meyering  <meyering@lucent.com>
+
+	Don't use atoi.
+	* userspec.c: Include sys/param.h and limits.h.
+	Include xstrtol.h.
+	(CHAR_BIT, TYPE_SIGNED, TYPE_MINIMUM, TYPE_MAXIMUM): Define.
+	(UID_T_MAX, GID_T_MAX, MAXUID, MAXGID): Define.
+	(parse_user_spec): Use xstrtoul, not atoi when converting numeric
+	UID, GID.  Check range.
+
 2000-09-06  Jim Meyering  <meyering@lucent.com>
 
 	* getopt.c (_getopt_internal): Update from glibc.
