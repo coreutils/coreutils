@@ -31,9 +31,9 @@ chown 0:1 f
 # Make sure the owner and group are 0 and 1 respectively.
 set _ `ls -n f`; shift; test "$3:$4" = 0:1 || fail=1
 
-chown --from=0:1 2:3 f || fail=1
+chown --from=0:1 2:010 f || fail=1
 
-# And now they should be 2 and 3 respectively.
-set _ `ls -n f`; shift; test "$3:$4" = 2:3 || fail=1
+# And now they should be 2 and 10 respectively.
+set _ `ls -n f`; shift; test "$3:$4" = 2:10 || fail=1
 
 (exit $fail); exit $fail
