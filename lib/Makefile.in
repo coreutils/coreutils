@@ -57,6 +57,8 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
+AMTAR = @AMTAR@
+AMTARFLAGS = @AMTARFLAGS@
 CATALOGS = @CATALOGS@
 CATOBJEXT = @CATOBJEXT@
 CC = @CC@
@@ -132,18 +134,20 @@ CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 ANSI2KNR = ../src/ansi2knr
-libfu_a_OBJECTS =  getdate$U.o posixtm$U.o getopt$U.o getopt1$U.o \
+am_libfu_a_OBJECTS =  getdate$U.o posixtm$U.o getopt$U.o getopt1$U.o \
 addext$U.o argmatch$U.o backupfile$U.o basename$U.o closeout$U.o \
 dirname$U.o exclude$U.o filemode$U.o full-write$U.o human$U.o \
 idcache$U.o isdir$U.o long-options$U.o makepath$U.o modechange$U.o \
 hash$U.o path-concat$U.o quotearg$U.o safe-read$U.o save-cwd$U.o \
 savedir$U.o stripslash$U.o userspec$U.o version-etc$U.o xgetcwd$U.o \
 xmalloc$U.o xstrdup$U.o xstrtol$U.o xstrtoul$U.o yesno$U.o
+libfu_a_OBJECTS =  $(am_libfu_a_OBJECTS)
 AR = ar
 CFLAGS = @CFLAGS@
 COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
 LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+DIST_SOURCES =  $(libfu_a_SOURCES)
 HEADERS =  $(noinst_HEADERS)
 
 DIST_COMMON =  $(noinst_HEADERS) Makefile.am Makefile.in TODO alloca.c \
@@ -156,7 +160,7 @@ strncasecmp.c strndup.c strstr.c strtol.c strtoul.c strverscmp.c \
 utime.c
 
 
-DISTFILES = $(DIST_COMMON) $(SOURCES) $(TEXINFOS) $(EXTRA_DIST)
+DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 
 GZIP_ENV = --best
 DEP_FILES =  .deps/addext.P .deps/alloca.P .deps/argmatch.P \
@@ -178,11 +182,11 @@ DEP_FILES =  .deps/addext.P .deps/alloca.P .deps/argmatch.P \
 .deps/utime.P .deps/version-etc.P .deps/xgetcwd.P .deps/xmalloc.P \
 .deps/xstrdup.P .deps/xstrtol.P .deps/xstrtoul.P .deps/yesno.P
 SOURCES = $(libfu_a_SOURCES)
-OBJECTS = $(libfu_a_OBJECTS)
+OBJECTS = $(am_libfu_a_OBJECTS)
 
 all: all-redirect
 .SUFFIXES:
-.SUFFIXES: .S .c .o .s .y
+.SUFFIXES: .c .o .y
 $(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
 	cd $(top_srcdir) && $(AUTOMAKE) --gnits lib/Makefile
 
@@ -199,12 +203,6 @@ clean-noinstLIBRARIES:
 distclean-noinstLIBRARIES:
 
 maintainer-clean-noinstLIBRARIES:
-
-.s.o:
-	$(COMPILE) -c $<
-
-.S.o:
-	$(COMPILE) -c $<
 
 mostlyclean-compile:
 	-rm -f *.o core *.core
@@ -230,11 +228,48 @@ clean-kr:
 distclean-kr:
 
 maintainer-clean-kr:
+getdate$U.o:
+posixtm$U.o:
+getopt$U.o:
+getopt1$U.o:
+addext$U.o:
+argmatch$U.o:
+backupfile$U.o:
+basename$U.o:
+closeout$U.o:
+dirname$U.o:
+exclude$U.o:
+filemode$U.o:
+full-write$U.o:
+human$U.o:
+idcache$U.o:
+isdir$U.o:
+long-options$U.o:
+makepath$U.o:
+modechange$U.o:
+hash$U.o:
+path-concat$U.o:
+quotearg$U.o:
+safe-read$U.o:
+save-cwd$U.o:
+savedir$U.o:
+stripslash$U.o:
+userspec$U.o:
+version-etc$U.o:
+xgetcwd$U.o:
+xmalloc$U.o:
+xstrdup$U.o:
+xstrtol$U.o:
+xstrtoul$U.o:
+yesno$U.o:
 
 libfu.a: $(libfu_a_OBJECTS) $(libfu_a_DEPENDENCIES)
 	-rm -f libfu.a
 	$(AR) cru libfu.a $(libfu_a_OBJECTS) $(libfu_a_LIBADD)
 	$(RANLIB) libfu.a
+getdate.o:
+lstat.o:
+stat.o:
 addext_.c: addext.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/addext.c; then echo $(srcdir)/addext.c; else echo addext.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > addext_.c
 alloca_.c: alloca.c $(ANSI2KNR)
@@ -397,7 +432,6 @@ $(ANSI2KNR)
 	if test -f y.tab.h; then \
 	if cmp -s y.tab.h $*.h; then rm -f y.tab.h; else mv y.tab.h $*.h; fi; \
 	else :; fi
-getdate..h: getdate.c
 
 
 tags: TAGS
@@ -465,22 +499,22 @@ maintainer-clean-depend:
 
 %.o: %.c
 	@echo '$(COMPILE) -c $<'; \
-	$(COMPILE) -Wp,-MD,.deps/$(*F).pp -c $<
-	@-cp .deps/$(*F).pp .deps/$(*F).P; \
-	tr ' ' '\012' < .deps/$(*F).pp \
+	$(COMPILE) -Wp,-MD,.deps/$(*D)/$(*F).pp -c $<
+	@-cp .deps/$(*D)/$(*F).pp .deps/$(*D)/$(*F).P; \
+	tr ' ' '\012' < .deps/$(*D)/$(*F).pp \
 	  | sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
-	    >> .deps/$(*F).P; \
-	rm .deps/$(*F).pp
+	    >> .deps/$(*D)/$(*F).P; \
+	rm .deps/$(*D)/$(*F).pp
 
 %.lo: %.c
 	@echo '$(LTCOMPILE) -c $<'; \
-	$(LTCOMPILE) -Wp,-MD,.deps/$(*F).pp -c $<
+	$(LTCOMPILE) -Wp,-MD,.deps/$(*D)/$(*F).pp -c $<
 	@-sed -e 's/^\([^:]*\)\.o[ 	]*:/\1.lo \1.o :/' \
-	  < .deps/$(*F).pp > .deps/$(*F).P; \
-	tr ' ' '\012' < .deps/$(*F).pp \
+	  < .deps/$(*D)/$(*F).pp > .deps/$(*D)/$(*F).P; \
+	tr ' ' '\012' < .deps/$(*D)/$(*F).pp \
 	  | sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
-	    >> .deps/$(*F).P; \
-	rm -f .deps/$(*F).pp
+	    >> .deps/$(*D)/$(*F).P; \
+	rm -f .deps/$(*D)/$(*F).pp
 info-am:
 info: info-am
 dvi-am:
@@ -516,7 +550,7 @@ distclean-generic:
 	-rm -f config.cache config.log stamp-h stamp-h[0-9]*
 
 maintainer-clean-generic:
-	-test -z "getdate..hgetdate.c$(BUILT_SOURCES)" || rm -f getdate..h getdate.c $(BUILT_SOURCES)
+	-test -z "getdate.c$(BUILT_SOURCES)" || rm -f getdate.c $(BUILT_SOURCES)
 mostlyclean-am:  mostlyclean-noinstLIBRARIES mostlyclean-compile \
 		mostlyclean-kr mostlyclean-tags mostlyclean-depend \
 		mostlyclean-generic
