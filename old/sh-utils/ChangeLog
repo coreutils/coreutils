@@ -1,5 +1,7 @@
 2002-08-05  Jim Meyering  <meyering@lucent.com>
 
+	* Version 2.0.15.
+
 	* configure.ac: Change $am_cv_sys_posix_termios to
 	$ac_cv_sys_posix_termios.  From Andreas Schwab.
 
