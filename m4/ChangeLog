@@ -5,8 +5,8 @@
 
 2000-02-08  Akim Demaille  <akim@epita.fr>
 
-	* largefile.m4 (AC_SYS_LARGEFILE_FLAGS): Quote square brackets with `[' and `]'
-	and remove uses of `changequote'.
+	* largefile.m4 (AC_SYS_LARGEFILE_FLAGS): Quote square brackets with
+	`[' and `]' and remove uses of `changequote'.
 	(AC_SYS_LARGEFILE_MACRO_VALUE): Likewise.
 	(AC_SYS_LARGEFILE): Likewise.
 	* gettext.m4 (AM_GNU_GETTEXT): Likewise.
