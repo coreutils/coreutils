@@ -2169,6 +2169,11 @@ Columns are separated by @key{TAB}.
 The options @samp{-1}, @samp{-2}, and @samp{-3} suppress printing of
 the corresponding columns.  Also see @ref{Common options}.
 
+Unlike some other comparison utilities, @code{comm} has an exit
+status that does not depend on the result of the comparison.
+Upon normal completion @code{comm} produces an exit code of zero.
+If there is an error it exits with nonzero status.
+
 
 @node Operating on fields within a line
 @chapter Operating on fields within a line
