@@ -310,7 +310,7 @@ copy_reg (const char *src_path, const char *dst_path,
 
   /* Make a buffer with space for a sentinel at the end.  */
 
-  buf = (char *) alloca (buf_size + sizeof (int));
+  buf = alloca (buf_size + sizeof (int));
 
   for (;;)
     {
@@ -1036,7 +1036,7 @@ copy_internal (const char *src_path, const char *dst_path,
 		  return 1;
 		}
 
-	      dst_backup = (char *) alloca (strlen (tmp_backup) + 1);
+	      dst_backup = alloca (strlen (tmp_backup) + 1);
 	      strcpy (dst_backup, tmp_backup);
 	      free (tmp_backup);
 	      if (rename (dst_path, dst_backup))
@@ -1306,7 +1306,7 @@ copy_internal (const char *src_path, const char *dst_path,
 
       /* Insert the current directory in the list of parents.  */
 
-      dir = (struct dir_list *) alloca (sizeof (struct dir_list));
+      dir = alloca (sizeof (struct dir_list));
       dir->parent = ancestors;
       dir->ino = src_sb.st_ino;
       dir->dev = src_sb.st_dev;
@@ -1459,7 +1459,7 @@ copy_internal (const char *src_path, const char *dst_path,
 	    {
 	      /* See if the destination is already the desired symlink.  */
 	      size_t src_link_len = strlen (src_link_val);
-	      char *dest_link_val = (char *) alloca (src_link_len + 1);
+	      char *dest_link_val = alloca (src_link_len + 1);
 	      int dest_link_len = readlink (dst_path, dest_link_val,
 					    src_link_len + 1);
 	      if ((size_t) dest_link_len == src_link_len
