@@ -1,3 +1,4 @@
+Things to do to hash.c:
 
 Always use curly braces around statements in if/else/while/do/etc.
 that span more than a line -- even around multiline simple statements
