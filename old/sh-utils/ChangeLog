@@ -1,3 +1,14 @@
+Mon Oct 10 21:44:42 1994  Jim Meyering  (meyering@comco.com)
+
+	* id.c (print_group_list, print_full_info): Use more precise
+	feature tests.  Rather than assuming that a definition for
+	NGROUPS_MAX implies the existence of the getgroups function,
+	test for HAVE_GETGROUPS explicitly.
+	* su.c (log_su): Likewise.  Similarly, check HAVE_INITGROUPS.
+	Both from Kaveh Ghazi.  He reported that a Pyramid 9820 OSx 5.0d
+	(Dual universe SVR3/BSD4.2) system had NGROUPS_MAX and syslog.h
+	but not getgroups, initgroups or the syslog functions.
+
 Fri Oct 07 19:42:35 1994  Jim Meyering  (meyering@comco.com)
 
 	* doc/Makefile.in (sh-utils.dvi): Depend on version.texi.
@@ -6,6 +17,8 @@ Fri Oct 07 19:42:35 1994  Jim Meyering  (meyering@comco.com)
 
 	* configure.in: Test for crypt in -lcrypt for NetBSD.
 	Reported by Greg Hudson (ghudson@mit.edu).
+
+	* system.h: Don't define lstat.  safe-l?stat.h does that now.
 
 Thu Oct 06 21:14:07 1994  Jim Meyering  (meyering@comco.com)
 

@@ -125,7 +125,7 @@ This manual minimally documents version @value{VERSION} of the GNU shell
 utilities.  See the introduction for caveats.
 
 @menu
-* Introduction::		Caveats, overview, and author.
+* Introduction::		Caveats, overview, and authors.
 * Common options::              Common options.
 * Printing text::               echo printf yes
 * Conditions::                  false true test expr
