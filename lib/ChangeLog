@@ -1,3 +1,9 @@
+2002-01-22  Jim Meyering  <meyering@lucent.com>
+
+	* Makefile.am (Makefile): Don't depend on $(BUILT_SOURCES).
+	Otherwise, some versions of automake would omit the rule that makes
+	Makefile from Makefile.in.
+
 2001-01-21  Paul Eggert  <eggert@twinsun.com>
 
 	* xmemcoll.h, xmemcoll.c: New files.
