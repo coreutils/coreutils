@@ -37,7 +37,7 @@ LANG=C
 export LANG
 
 # This mv command should exit nonzero.
-$MV -b -V simple $a2 $a > out 2>&1 && fail=1
+$MV --b=simple $a2 $a > out 2>&1 && fail=1
 
 sed \
    -e "s,$MV:,XXX:," \
