@@ -87,8 +87,10 @@ char *xstrdup ();
 
 #ifdef ENABLE_NLS
 # define NLS_MEMCMP(S1, S2, Len) strncoll (S1, S2, Len)
+# define NLS_STRCMP(S1, S2) strcoll (S1, S2)
 #else
 # define NLS_MEMCMP(S1, S2, Len) memcmp (S1, S2, Len)
+# define NLS_STRCMP(S1, S2) strcmp (S1, S2)
 #endif
 
 #ifdef ENABLE_NLS
@@ -1487,7 +1489,7 @@ getmonth (const char *s, int len)
   if (len == 0)
     return 0;
 
-#ifdef _HAVE_ALLOCA
+#ifdef HAVE_ALLOCA
   month = (char *) alloca (len + 1);
 #else
   month = (char *) malloc (len + 1);
@@ -1501,18 +1503,14 @@ getmonth (const char *s, int len)
 
   while (hi - lo > 1)
     {
-#ifdef ENABLE_NLS
-      if (strcoll (month, monthtab[(lo + hi) / 2].name) < 0)
-#else
-      if (strcmp (month, monthtab[(lo + hi) / 2].name) < 0)
-#endif
+      if (NLS_STRCMP (month, monthtab[(lo + hi) / 2].name) < 0)
 	hi = (lo + hi) / 2;
       else
 	lo = (lo + hi) / 2;
     }
   result = !strcmp (month, monthtab[lo].name) ? monthtab[lo].val : 0;
 
-#ifndef _HAVE_ALLOCA
+#ifndef HAVE_ALLOCA
   free (month);
 #endif
 
