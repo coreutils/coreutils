@@ -329,6 +329,9 @@ process_file (const char *file, const struct stat *sb, int file_type,
      directory at the specified level.  */
   static uintmax_t *sum_subdir;
 
+  /* Always define info->skip before returning.  */
+  info->skip = excluded_filename (exclude, file + info->base);
+
   switch (file_type)
     {
     case FTW_NS:
@@ -360,9 +363,14 @@ process_file (const char *file, const struct stat *sb, int file_type,
       break;
     }
 
+  /* If this is the first (pre-order) encounter with a directory,
+     return right away.  */
+  if (file_type == FTW_DPRE)
+    return 0;
+
   /* If the file is being excluded or if it has already been counted
      via a hard link, then don't let it contribute to the sums.  */
-  if ((info->skip = excluded_filename (exclude, file + info->base))
+  if (info->skip
       || (!opt_count_all
 	  && 1 < sb->st_nlink
 	  && hash_ins (sb->st_ino, sb->st_dev)))
@@ -376,11 +384,6 @@ process_file (const char *file, const struct stat *sb, int file_type,
     {
       s = size = ST_NBLOCKS (*sb);
     }
-
-  /* If this is the first (pre-order) encounter with a directory,
-     return right away.  */
-  if (file_type == FTW_DPRE)
-    return 0;
 
   if (first_call)
     {
