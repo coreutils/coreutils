@@ -8,6 +8,7 @@
 	Update to latest tools.  Suggestions from Paul Eggert.
 	* stdbool.m4: New file, from diffutils-2.8.2.
 	* gnu-source.m4: Update from diffutils-2.8.2.
+	* fnmatch.m4: Likewise.
 	* prereq.m4: Change each use of AC_CHECK_HEADERS(stdbool.h)
 	to AC_HEADER_STDBOOL
 
