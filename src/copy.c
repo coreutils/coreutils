@@ -504,8 +504,8 @@ same_file_ok (const char *src_path, const struct stat *src_sb,
     }
 
   /* It's ok to remove a destination symlink.  But that works only when we
-     unlink before opening the destination and when they're on the same
-     partition.  */
+     unlink before opening the destination and when the source and destination
+     files are on the same partition.  */
   if (x->unlink_dest_before_opening
       && S_ISLNK (dst_sb_link->st_mode))
     return dst_sb_link->st_dev == src_sb_link->st_dev;
