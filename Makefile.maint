@@ -154,7 +154,7 @@ sc_changelog:
 # with the strings from the two affected variables.
 dd_c = $(srcdir)/src/dd.c
 sc_dd_max_sym_length:
-	len=$$( (sed -n '/conversions\[\] =$$/,/^};/p' $(dd_c);	\
+	@len=$$( (sed -n '/conversions\[\] =$$/,/^};/p' $(dd_c);\
 		 sed -n '/flags\[\] =$$/,/^};/p' $(dd_c) )	\
 		|sed -n '/"/s/^[^"]*"\([^"]*\)".*/\1/p'		\
               | wc --max-line-length);				\
@@ -173,6 +173,7 @@ header_regexp = \
   |errno\
   |exitfail\
   |fcntl\
+  |file-type\
   |inttypes\
   |limits\
   |locale\
@@ -190,12 +191,12 @@ h_re := $(shell echo '$(header_regexp)'|tr -d ' ')
 # Files in src/ should not include directly any of
 # the headers already included via system.h.
 # Get list of candidates with this:
-# grep -h include src/sys*.h|sed 's/.*include //'|sort -
+# grep -h include src/system.h|sed 's/.*include //'|sort -
 sc_system_h_headers:
-	@if test -f $(srcdir)/src/sys2.h; then				\
+	@if test -f $(srcdir)/src/system.h; then			\
 	  ( cvsu --list ) > /dev/null 2>&1 || : &&			\
 	  grep -E '^# *include ["<]($(h_re))\.h[">]'			\
-	      $$(cvsu --list src | grep -Ev 'sys(2|tem)\.h$$')		\
+	      $$(cvsu --list src | grep -Ev 'system\.h$$')		\
 	    && { echo '$(ME): the above are already included via system.h'\
 		  1>&2; exit 1; } || :; \
 	fi
