@@ -1,6 +1,11 @@
-2001-09-07  Jim Meyering  <meyering@lucent.com>
+2001-09-09  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.12.
+
+2001-09-09  Jim Meyering  <meyering@lucent.com>
+
+	* src/test.c (binary_operator): Correct typo in diagnostic.
+	From Jochen Hein.
 
 2001-09-03  Paul Eggert  <eggert@twinsun.com>
 
