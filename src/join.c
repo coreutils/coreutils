@@ -54,6 +54,12 @@ char *alloca ();
 # define INT_MAX ((int) (UINT_MAX >> 1))
 #endif
 
+#if _LIBC || STDC_HEADERS
+# define TOLOWER(c) tolower (c)
+#else
+# define TOLOWER(c) (ISUPPER (c) ? tolower (c) : (c))
+#endif
+
 #include "system.h"
 #include "version.h"
 #include "long-options.h"
@@ -141,6 +147,7 @@ static char tab;
    a character that is a short option.  */
 static struct option const longopts[] =
 {
+  {"ignore-case", no_argument, NULL, 'i'},
   {"j", required_argument, NULL, 'j'},
   {"j1", required_argument, NULL, '1'},
   {"j2", required_argument, NULL, '2'},
@@ -149,6 +156,9 @@ static struct option const longopts[] =
 
 /* Used to print non-joining lines */
 static struct line uni_blank;
+
+/* If nonzero, ignore case when comparing join fields.  */
+static int ignore_case;
 
 static void
 usage (int status)
@@ -169,6 +179,7 @@ by whitespace.  When FILE1 or FILE2 (not both) is -, read standard input.\n\
 \n\
   -a SIDE          print unpairable lines coming from file SIDE\n\
   -e EMPTY         replace missing input fields with EMPTY\n\
+  -i, --ignore-case ignore differences in case when comparing fields\n\
   -j FIELD         (Obsolescent) equivalent to `-1 FIELD -2 FIELD'\n\
   -j1 FIELD        (Obsolescent) equivalent to `-1 FIELD'\n\
   -j2 FIELD        (Obsolescent) equivalent to `-2 FIELD'\n\
@@ -189,6 +200,24 @@ separated by CHAR.\n\
 "));
     }
   exit (status);
+}
+
+/* Like memcmp, but ignore differences in case.  */
+
+static int
+memcasecmp (const void *vs1, const void *vs2, size_t n)
+{
+  int i;
+  unsigned char *s1 = (unsigned char *) vs1;
+  unsigned char *s2 = (unsigned char *) vs2;
+  for (i = 0; i < n; i++)
+    {
+      unsigned char u1 = *s1++;
+      unsigned char u2 = *s2++;
+      if (TOLOWER (u1) != TOLOWER (u2))
+        return TOLOWER (u1) - TOLOWER (u2);
+    }
+  return 0;
 }
 
 static void
@@ -373,7 +402,15 @@ keycmp (struct line *line1, struct line *line2)
     return len2 == 0 ? 0 : -1;
   if (len2 == 0)
     return 1;
-  diff = memcmp (beg1, beg2, min (len1, len2));
+
+  /* Use an if-statement here rather than a function variable to
+     avoid portability hassles of getting a non-conflicting declaration
+     of memcmp.  */
+  if (ignore_case)
+    diff = memcasecmp (beg1, beg2, min (len1, len2));
+  else
+    diff = memcmp (beg1, beg2, min (len1, len2));
+
   if (diff)
     return diff;
   return len1 - len2;
@@ -740,7 +777,7 @@ main (int argc, char **argv)
   nfiles = 0;
   print_pairables = 1;
 
-  while ((optc = getopt_long_only (argc, argv, "-a:e:1:2:o:t:v:", longopts,
+  while ((optc = getopt_long_only (argc, argv, "-a:e:i1:2:o:t:v:", longopts,
 				   (int *) 0)) != EOF)
     {
       long int val;
@@ -766,6 +803,10 @@ main (int argc, char **argv)
 
 	case 'e':
 	  empty_filler = optarg;
+	  break;
+
+	case 'i':
+	  ignore_case = 1;
 	  break;
 
 	case '1':
