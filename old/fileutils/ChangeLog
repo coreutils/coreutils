@@ -1,3 +1,12 @@
+1998-01-23  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/mktime.c (__mktime_internal): Work around bug in Irix4.0.5's
+	C compiler.  From Kaveh Ghazi.
+	(TYPE_MINIMUM): Define.
+	(TYPE_MAXIMUM): Define.
+	(TIME_T_MIN): Use TYPE_MINIMUM.
+	(TIME_T_MAX): Use TYPE_MAXIMUM.
+
 1998-01-22  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/dd.c: Reorder functions to obviate forward dcls.
