@@ -49,6 +49,11 @@ my @Tests =
      # test `ls -R .' ............................................
      ['R-dot', '--ignore="[a-ce-zA-Z]*" -R .',  {OUT => ".:\nd\n\n\./d:\n"},
       $mkdir, $rmdir],
+
+     # FIXME: change the trailing `/' to be a `@'.
+     ['slink-dir', '-Fd d', {OUT => "d/\n"},
+	 {PRE => sub {symlink '/', 'd' or die "d: $!\n"}},
+	 {POST => sub {unlink 'd' or die "d: $!\n"}} ],
     );
 
 my $save_temps = $ENV{SAVE_TEMPS};
