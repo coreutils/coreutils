@@ -1,5 +1,5 @@
 /* df - summarize free disk space
-   Copyright (C) 91, 1995-1999 Free Software Foundation, Inc.
+   Copyright (C) 91, 1995-2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -19,6 +19,10 @@
    --human-readable and --megabyte options added by lm@sgi.com.
    --si and large file support added by eggert@twinsun.com.  */
 
+#ifdef _AIX
+ #pragma alloca
+#endif
+
 #include <config.h>
 #if HAVE_INTTYPES_H
 # include <inttypes.h>
@@ -34,6 +38,7 @@
 #include "fsusage.h"
 #include "human.h"
 #include "mountlist.h"
+#include "path-concat.h"
 #include "save-cwd.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -494,6 +499,7 @@ show_point (const char *point, const struct stat *statp)
   struct stat disk_stats;
   struct mount_entry *me;
   struct mount_entry *matching_dummy = NULL;
+  char *needs_freeing = NULL;
 
   /* If POINT is an absolute path name, see if we can find the
      mount point without performing any extra stat calls at all.  */
@@ -503,12 +509,103 @@ show_point (const char *point, const struct stat *statp)
 	{
 	  if (STREQ (me->me_mountdir, point))
 	    {
-	      show_dev (me->me_devname, me->me_mountdir, me->me_type,
-			me->me_dummy, me->me_remote);
-	      return;
+	      /* Prefer non-dummy entries.  */
+	      if (! me->me_dummy)
+		goto show_me;
+	      matching_dummy = me;
 	    }
 	}
+
+      if (matching_dummy)
+	goto show_matching_dummy;
     }
+
+#if HAVE_REALPATH || HAVE_RESOLVEPATH
+  /* Calculate the real absolute path for POINT, and use that to find
+     the mount point.  This avoids statting unavailable mount points,
+     which can hang df.  */
+  {
+    char const *abspoint = point;
+    char *resolved;
+    ssize_t resolved_len;
+    struct mount_entry *best_match = NULL;
+
+# if HAVE_RESOLVEPATH
+    /* All known hosts with resolvepath (e.g. Solaris 7) don't turn
+       relative names into absolute ones, so prepend the working
+       directory if the path is not absolute.  */
+
+    if (*point != '/')
+      {
+	static char const *wd;
+
+	if (! wd)
+	  {
+	    struct stat pwd_stats;
+	    struct stat dot_stats;
+
+	    /* Use PWD if it is correct; this is usually cheaper than
+               xgetcwd.  */
+	    wd = getenv ("PWD");
+	    if (! (wd
+		   && stat (wd, &pwd_stats) == 0
+		   && stat (".", &dot_stats) == 0
+		   && SAME_INODE (pwd_stats, dot_stats)))
+	      wd = xgetcwd ();
+	  }
+
+	if (wd)
+	  {
+	    needs_freeing = path_concat (wd, point, NULL);
+	    if (needs_freeing)
+	      abspoint = needs_freeing;
+	  }
+      }
+# endif
+
+# if HAVE_RESOLVEPATH
+    {
+      size_t resolved_size = strlen (abspoint);
+      do
+	{
+	  resolved_size = 2 * resolved_size + 1;
+	  resolved = alloca (resolved_size);
+	  resolved_len = resolvepath (abspoint, resolved, resolved_size);
+	}
+      while (resolved_len == resolved_size);
+    }
+# else
+    resolved = alloca (PATH_MAX + 1);
+    resolved = realpath (abspoint, resolved);
+    resolved_len = resolved ? strlen (resolved) : -1;
+# endif
+
+    if (1 <= resolved_len && resolved[0] == '/')
+      {
+	size_t best_match_len = 0;
+
+	for (me = mount_list; me; me = me->me_next)
+	  if (! me->me_dummy)
+	    {
+	      size_t len = strlen (me->me_mountdir);
+	      if (best_match_len < len && len <= resolved_len
+		  && (len == 1 /* root file system */
+		      || ((len == resolved_len || resolved[len] == '/')
+			  && strncmp (me->me_mountdir, resolved, len) == 0)))
+		{
+		  best_match = me;
+		  best_match_len = len;
+		}
+	    }
+      }
+
+    if (best_match)
+      {
+	me = best_match;
+	goto show_me;
+      }
+  }
+#endif
 
   for (me = mount_list; me; me = me->me_next)
     {
@@ -528,29 +625,22 @@ show_point (const char *point, const struct stat *statp)
       if (statp->st_dev == me->me_dev)
 	{
 	  /* Skip bogus mtab entries.  */
-	  if (stat (me->me_mountdir, &disk_stats) != 0 ||
-	      disk_stats.st_dev != me->me_dev)
-	    continue;
-
-	  /* Prefer non-dummy entries.  */
-	  if (me->me_dummy)
+	  if (stat (me->me_mountdir, &disk_stats) != 0
+	      || disk_stats.st_dev != me->me_dev)
 	    {
-	      matching_dummy = me;
+	      me->me_dev = (dev_t) -2;
 	      continue;
 	    }
 
-	  show_dev (me->me_devname, me->me_mountdir, me->me_type,
-		    me->me_dummy, me->me_remote);
-	  return;
+	  /* Prefer non-dummy entries.  */
+	  if (! me->me_dummy)
+	    goto show_me;
+	  matching_dummy = me;
 	}
     }
 
   if (matching_dummy)
-    {
-      show_dev (matching_dummy->me_devname, matching_dummy->me_mountdir,
-		matching_dummy->me_type, 1, matching_dummy->me_remote);
-      return;
-    }
+    goto show_matching_dummy;
 
   /* We couldn't find the mount entry corresponding to POINT.  Go ahead and
      print as much info as we can; methods that require the device to be
@@ -566,6 +656,17 @@ show_point (const char *point, const struct stat *statp)
     else
       error (0, errno, "%s", point);
   }
+
+  goto free_then_return;
+
+ show_matching_dummy:
+  me = matching_dummy;
+ show_me:
+  show_dev (me->me_devname, me->me_mountdir, me->me_type, me->me_dummy,
+	    me->me_remote);
+ free_then_return:
+  if (needs_freeing)
+    free (needs_freeing);
 }
 
 /* Determine what kind of node PATH is and show the disk usage
