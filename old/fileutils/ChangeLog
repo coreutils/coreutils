@@ -1,3 +1,9 @@
+2001-09-16  Jim Meyering  <meyering@lucent.com>
+
+	* Version 4.1.1.
+
+	* man/Makefile.am (dist_man_MANS): Use dist_man_MANS, not man_MANS.
+
 2001-09-15  Jim Meyering  <meyering@lucent.com>
 
 	Convert to a more conventional (e.g., like autoconf) Makefile.am.
@@ -32,8 +38,6 @@
 
 	* src/copy.h (enum Interactive): Remove members, I_OFF and I_ON.
 	Instead, add I_ALWAYS_YES, I_ALWAYS_NO, and I_ASK_USER.
-
-	* Version 4.1.1.
 
 	* tests/mv/i-2: Clean up: use priv-check rather than open-coding it.
 
