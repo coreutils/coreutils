@@ -26,5 +26,6 @@ fi
 
 fail=0
 
+FIXME
 
 (exit $fail); exit
