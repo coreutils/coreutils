@@ -1,3 +1,7 @@
+2004-09-24  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (chmod invocation): Warn about "chmod -w file".
+
 2004-09-23  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (tail invocation): Fix bugs in the description of
