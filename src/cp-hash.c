@@ -52,8 +52,8 @@ static Hash_table *src_to_dest;
 /* Initial size of the above hash table.  */
 #define INITIAL_TABLE_SIZE 103
 
-static unsigned int
-src_to_dest_hash (void const *x, unsigned int table_size)
+static size_t
+src_to_dest_hash (void const *x, size_t table_size)
 {
   struct Src_to_dest const *p = x;
 
