@@ -132,7 +132,8 @@ get_charset_aliases ()
 	}
 
       charset_aliases = cp;
-      free (file_name);
+      if (file_name != NULL)
+	free (file_name);
     }
 
   return cp;
