@@ -6,6 +6,9 @@ if test "$VERBOSE" = yes; then
   mv --version
 fi
 
+# Make sure we get English translations.
+. $srcdir/../lang-default
+
 pwd=`pwd`
 tmp=diag-$$
 trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
@@ -23,9 +26,6 @@ if test $framework_failure = 1; then
   echo 'failure in testing framework'
   exit 1
 fi
-
-# Make sure we get English translations.
-. $srcdir/../lang-default
 
 # These mv commands should all exit nonzero.
 
