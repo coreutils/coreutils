@@ -1,3 +1,8 @@
+Fri Mar 21 23:56:41 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* Makefile.am (AUTOMAKE_OPTIONS): Require automake-1.1l.
+	(aclocal.m4): Use aclocal's new -I option.
+
 Thu Mar 13 21:46:04 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/tr.c (main): Make sure c1 is not -1 before using it as an
