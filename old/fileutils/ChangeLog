@@ -1,3 +1,8 @@
+2001-04-02  Jim Meyering  <meyering@lucent.com>
+
+	* tests/mv/setup: Skip nonexistent directories so we don't get
+	diagnostics from df about e.g., `/usr/tmp not found'.
+
 2001-03-24  Jim Meyering  <meyering@lucent.com>
 
 	* configure.in: Don't require autoconf version here -- it's done in m4/.
