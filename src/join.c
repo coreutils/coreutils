@@ -389,7 +389,7 @@ keycmp (struct line *line1, struct line *line2)
 static void
 prfield (int n, struct line *line)
 {
-  int len;
+  size_t len;
 
   if (n < line->nfields)
     {
