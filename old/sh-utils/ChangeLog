@@ -1,3 +1,9 @@
+2000-07-06  Jim Meyering  <meyering@lucent.com>
+
+	* src/help-version: Punt on `groups' test, since all it does
+	is run `id -Gn', and groups fails if GNU id is not installed.
+	Reported by Christian Krackowizer.
+
 2000-07-05  Bruno Haible  <haible@clisp.cons.org>
 
 	* tests/nice: Avoid syntax error in "test" when `nice` generates
