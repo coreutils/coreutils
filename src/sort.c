@@ -23,6 +23,7 @@
 
 #include <config.h>
 
+#include <getopt.h>
 #include <sys/types.h>
 #include <signal.h>
 #include <stdio.h>
@@ -291,29 +292,36 @@ Usage: %s [OPTION]... [FILE]...\n\
       printf (_("\
 Write sorted concatenation of all FILE(s) to standard output.\n\
 \n\
-  -b               ignore leading blanks in sort fields or keys\n\
-  -c               check if given files already sorted, do not sort\n\
-  -d               consider only blanks and alphanumeric characters in keys\n\
-  -f               fold lower case to upper case characters in keys\n\
-  -g               compare according to general numerical value, imply -b\n\
-  -i               consider only printable characters in keys\n\
-  -k POS1[,POS2]   start a key at POS1, end it *at* POS2 (origin 1)\n\
-  -m               merge already sorted files, do not sort\n\
-  -M               compare (unknown) < `JAN' < ... < `DEC', imply -b\n\
-  -n               compare according to string numerical value, imply -b\n\
-  -o FILE          write result on FILE instead of standard output\n\
-  -r               reverse the result of comparisons\n\
-  -s               stabilize sort by disabling last resort comparison\n\
-  -S SIZE          use SIZE for main memory sorting\n\
-  -t SEP           use SEParator instead of non- to whitespace transition\n\
-  -T DIRECTORY     use DIRECTORY for temporary files, not $TMPDIR or %s\n\
-                     multiple -T options specify multiple directories\n\
-  -u               with -c, check for strict ordering;\n\
-                   with -m, only output the first of an equal sequence\n\
-  -z               end lines with 0 byte, not newline, for find -print0\n\
-  +POS1 [-POS2]    start a key at POS1, end it *before* POS2 (origin 0)\n\
-                     Warning: this option is obsolescent and support for it\n\
-                     will be withdrawn.  Use -k instead.\n\
+Ordering options:\n\
+\n\
+  -b, --ignore-leading-blanks ignore leading blanks\n\
+  -d, --dictionary-order      consider only blanks and alphanumeric characters\n\
+  -f, --ignore-case           fold lower case to upper case characters\n\
+  -g, --general-numeric-sort  compare according to general numerical value\n\
+  -i, --ignore-nonprinting    consider only printable characters\n\
+  -M, --month-sort            compare (unknown) < `JAN' < ... < `DEC'\n\
+  -n, --numeric-sort          compare according to string numerical value\n\
+  -r, --reverse               reverse the result of comparisons\n\
+\n\
+")
+	      );
+      printf (_("\
+Other options:\n\
+\n\
+  -c, --check               check whether input is sorted; do not sort\n\
+  -k, --key=POS1[,POS2]     start a key at POS1, end it at POS 2 (origin 1)\n\
+  -m, --merge               merge already sorted files; do not sort\n\
+  -o, --output=FILE         write result to FILE instead of standard output\n\
+  -s, --stable              stabilize sort by disabling last-resort comparison\n\
+  -S, --buffer-size=SIZE    use SIZE for main memory buffer\n\
+  -t, --field-separator=SEP use SEP instead of non- to whitespace transition\n\
+  -T, --temporary-directory=DIR  use DIR for temporaries, not $TMPDIR or %s\n\
+                              multiple options specify multiple directories\n\
+  -u, --unique              with -c: check for strict ordering\n\
+                              otherwise: output only the first of an equal run\n\
+  -z, --zero-terminated     end lines with 0 byte, not newline\n\
+  +POS1 [-POS2]             start a key at POS1, end it before POS2 (origin 0)\n\
+                              Warning: this option is obsolescent\n\
       --help       display this help and exit\n\
       --version    output version information and exit\n\
 \n\
@@ -322,9 +330,9 @@ Write sorted concatenation of all FILE(s) to standard output.\n\
       printf (_("\
 POS is F[.C][OPTS], where F is the field number and C the character position\n\
 in the field, both counted from one with -k, from zero with the obsolescent\n\
-form.  OPTS is made up of one or more of Mbdfinr; this effectively disables\n\
-global -Mbdfinr settings for that key.  If no key is given, use the entire\n\
-line as the key.\n\
+form.  OPTS is made up of one or more single-letter ordering options, which\n\
+override global ordering options for that key.  If no key is given, use the\n\
+entire line as the key.\n\
 \n\
 SIZE may be followed by the following multiplicative suffixes:\n\
 %% 1%% of memory, b 1, k 1024 (default), and so on for M, G, T, P, E, Z, Y.\n\
@@ -344,6 +352,31 @@ Set LC_ALL=C to get the traditional sort order that uses native byte values.\n\
   assert (status == 0 || status == SORT_FAILURE);
   exit (status);
 }
+
+static struct option const long_options[] =
+{
+  {"ignore-leading-blanks", no_argument, NULL, 'b'},
+  {"check", no_argument, NULL, 'c'},
+  {"dictionary-order", no_argument, NULL, 'd'},
+  {"ignore-case", no_argument, NULL, 'f'},
+  {"general-numeric-sort", no_argument, NULL, 'g'},
+  {"ignore-nonprinting", no_argument, NULL, 'i'},
+  {"key", required_argument, NULL, 'k'},
+  {"merge", no_argument, NULL, 'm'},
+  {"month-sort", no_argument, NULL, 'M'},
+  {"numeric-sort", no_argument, NULL, 'n'},
+  {"output", required_argument, NULL, 'o'},
+  {"reverse", no_argument, NULL, 'r'},
+  {"stable", no_argument, NULL, 's'},
+  {"buffer-size", required_argument, NULL, 'S'},
+  {"field-separator", required_argument, NULL, 't'},
+  {"temporary-directory", required_argument, NULL, 'T'},
+  {"unique", no_argument, NULL, 'u'},
+  {"zero-terminated", no_argument, NULL, 'z'},
+  {GETOPT_HELP_OPTION_DECL},
+  {GETOPT_VERSION_OPTION_DECL},
+  {0, 0, 0, 0},
+};
 
 /* The set of signals that are caught.  */
 static sigset_t caught_signals;
@@ -1975,21 +2008,26 @@ insertkey (struct keyfield *key)
   key->next = NULL;
 }
 
+/* Report a bad field specification SPEC, with extra info MSGID.  */
+
+static void badfieldspec PARAMS ((char const *, char const *))
+     ATTRIBUTE_NORETURN;
 static void
-badfieldspec (const char *s)
+badfieldspec (char const *spec, char const *msgid)
 {
-  error (SORT_FAILURE, 0, _("invalid field specification `%s'"), s);
+  error (SORT_FAILURE, 0, _("%s: invalid field specification `%s'"),
+	 _(msgid), spec);
+  abort ();
 }
 
 /* Parse the leading integer in STRING and store the resulting value
    (which must fit into size_t) into *VAL.  Return the address of the
-   suffix after the integer.  */
+   suffix after the integer.  If MSGID is NULL, return NULL after
+   failure; otherwise, report MSGID and exit on failure.  */
+
 static char const *
-parse_field_count (char const *string, size_t *val)
+parse_field_count (char const *string, size_t *val, char const *msgid)
 {
-  /* '@' can't possibly be a valid suffix; return &invalid_suffix so that
-     the caller will eventually invoke badfieldspec.  */
-  static char const invalid_suffix = '@';
   char *suffix;
   uintmax_t n;
 
@@ -2002,13 +2040,16 @@ parse_field_count (char const *string, size_t *val)
 	break;
       /* Fall through.  */
     case LONGINT_OVERFLOW:
-      error (0, 0, _("count `%.*s' too large"),
-	     (int) (suffix - string), string);
-      return &invalid_suffix;
+      if (msgid)
+	error (SORT_FAILURE, 0, _("%s: count `%.*s' too large"),
+	       _(msgid), (int) (suffix - string), string);
+      return NULL;
 
     case LONGINT_INVALID:
-      error (0, 0, _("invalid count at start of `%s'"), string);
-      return &invalid_suffix;
+      if (msgid)
+	error (SORT_FAILURE, 0, _("%s: invalid count at start of `%s'"),
+	       _(msgid), string);
+      return NULL;
     }
 
   return suffix;
@@ -2089,20 +2130,24 @@ set_ordering (register const char *s, struct keyfield *key,
   return (char *) s;
 }
 
-static void
-key_init (struct keyfield *key)
+static struct keyfield *
+new_key (void)
 {
-  memset (key, 0, sizeof (*key));
+  struct keyfield *key = (struct keyfield *) xcalloc (1, sizeof *key);
   key->eword = -1;
+  return key;
 }
 
 int
 main (int argc, char **argv)
 {
-  struct keyfield *key = NULL, gkey;
+  struct keyfield *key;
+  struct keyfield gkey;
   char const *s;
   int i;
+  int c = 0;
   int checkonly = 0, mergeonly = 0, nfiles = 0;
+  int posix_pedantic = (getenv ("POSIXLY_CORRECT") != NULL);
   char *minus = "-", **files;
   char const *outfile = minus;
   static int const sigs[] = { SIGHUP, SIGINT, SIGPIPE, SIGTERM };
@@ -2143,9 +2188,6 @@ main (int argc, char **argv)
 
 #endif /* NLS */
 
-  parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE, VERSION,
-		      AUTHORS, usage);
-
   have_read_stdin = 0;
   inittables ();
 
@@ -2183,236 +2225,198 @@ main (int argc, char **argv)
 
   files = (char **) xmalloc (sizeof (char *) * argc);
 
-  for (i = 1; i < argc; ++i)
+  for (;;)
     {
-      if (argv[i][0] == '+')
+      /* Parse an operand as a file after "--" was seen; or if
+         pedantic and a file was seen, unless -c was not seen and the
+         operand is "-o FILE" or "-oFILE".  POSIX 1003.1-200x d5
+         removes the exception for the -o options; when it becomes
+         official the code will need to be changed.  */
+
+      if (c == -1
+	  || (posix_pedantic && nfiles != 0
+	      && ! (! checkonly
+		    && optind != argc
+		    && argv[optind][0] == '-' && argv[optind][1] == 'o'
+		    && (argv[optind][2] || optind + 1 != argc)))
+	  || ((c = getopt_long (argc, argv,
+				"-bcdfgik:mMno:rsS:t:T:uy::z",
+				long_options, NULL))
+	      == -1))
 	{
-	  if (key)
-	    insertkey (key);
-	  key = (struct keyfield *) xmalloc (sizeof (struct keyfield));
-	  key_init (key);
-	  s = argv[i] + 1;
-	  if (! (ISDIGIT (*s) || (*s == '.' && ISDIGIT (s[1]))))
-	    badfieldspec (argv[i]);
-	  s = parse_field_count (s, &key->sword);
+	  if (optind == argc)
+	    break;
+	  files[nfiles++] = argv[optind++];
+	}
+      else switch (c)
+	{
+	case 1:
+	  /* Treat +POS1 [-POS2] as a key if possible; but silently
+	     treat an operand as a file if it is not a valid +POS1.
+	     POSIX 1003.1-200x d5 does not allow support for +POS1, so
+	     when it becomes official this code will need to be
+	     changed.  */
+	  key = NULL;
+	  if (optarg[0] == '+')
+	    {
+	      key = new_key ();
+	      s = parse_field_count (optarg + 1, &key->sword, NULL);
+	      if (s && *s == '.')
+		s = parse_field_count (s + 1, &key->schar, NULL);
+	      if (! (key->sword | key->schar))
+		key->sword = -1;
+	      if (! s || *set_ordering (s, key, bl_start))
+		{
+		  free (key);
+		  key = NULL;
+		}
+	      else
+		{
+		  if (optind != argc && argv[optind][0] == '-'
+		      && ISDIGIT (argv[optind][1]))
+		    {
+		      char const *optarg1 = argv[optind++];
+		      s = parse_field_count (optarg1 + 1, &key->eword,
+					     N_("invalid number after `-'"));
+		      if (*s == '.')
+			s = parse_field_count (s + 1, &key->echar,
+					       N_("invalid number after `.'"));
+		      if (*set_ordering (s, key, bl_end))
+			badfieldspec (optarg1,
+				      N_("stray character in field spec"));
+		    }
+		  insertkey (key);
+		}
+	    }
+	  if (! key)
+	    files[nfiles++] = optarg;
+	  break;
+
+	case 'b':
+	case 'd':
+	case 'f':
+	case 'g':
+	case 'i':
+	case 'M':
+	case 'n':
+	case 'r':
+	  {
+	    char str[2];
+	    str[0] = c;
+	    str[1] = '\0';
+	    set_ordering (str, &gkey, bl_both);
+	  }
+	  break;
+
+	case 'c':
+	  checkonly = 1;
+	  break;
+
+	case 'k':
+	  key = new_key ();
+
+	  /* Get POS1. */
+	  s = parse_field_count (optarg, &key->sword,
+				 N_("invalid number at field start"));
+	  if (! key->sword--)
+	    {
+	      /* Provoke with `sort -k0' */
+	      badfieldspec (optarg, N_("field number is zero"));
+	    }
 	  if (*s == '.')
-	    s = parse_field_count (s + 1, &key->schar);
+	    {
+	      s = parse_field_count (s + 1, &key->schar,
+				     N_("invalid number after `.'"));
+	      if (! key->schar--)
+		{
+		  /* Provoke with `sort -k1.0' */
+		  badfieldspec (optarg, N_("character offset is zero"));
+		}
+	    }
 	  if (! (key->sword | key->schar))
 	    key->sword = -1;
 	  s = set_ordering (s, key, bl_start);
-	  if (*s)
-	    badfieldspec (argv[i]);
-	}
-      else if (argv[i][0] == '-' && argv[i][1])
-	{
-	  s = argv[i] + 1;
-	  if (ISDIGIT (*s) || (*s == '.' && ISDIGIT (s[1])))
+	  if (*s != ',')
 	    {
-	      if (!key)
-		{
-		  /* Provoke with `sort -9'.  */
-		  error (0, 0, _("when using the old-style +POS and -POS \
-key specifiers,\nthe +POS specifier must come first"));
-		  usage (SORT_FAILURE);
-		}
-	      s = parse_field_count (s, &key->eword);
-	      if (*s == '.')
-		s = parse_field_count (s + 1, &key->echar);
-	      s = set_ordering (s, key, bl_end);
-	      if (*s)
-		badfieldspec (argv[i]);
-	      insertkey (key);
-	      key = NULL;
+	      key->eword = -1;
+	      key->echar = 0;
 	    }
 	  else
-	    while (*s)
-	      {
-		s = set_ordering (s, &gkey, bl_both);
-		switch (*s)
-		  {
-		  case '\0':
-		    break;
-		  case 'c':
-		    checkonly = 1;
-		    break;
-		  case 'k':
-		    if (s[1])
-		      ++s;
-		    else
-		      {
-			if (i == argc - 1)
-			  error (SORT_FAILURE, 0,
-				 _("option `-k' requires an argument"));
-			else
-			  s = argv[++i];
-		      }
-		    if (key)
-		      insertkey (key);
-		    key = (struct keyfield *)
-		      xmalloc (sizeof (struct keyfield));
-		    key_init (key);
-		    /* Get POS1. */
-		    if (!ISDIGIT (*s))
-		      badfieldspec (argv[i]);
-		    s = parse_field_count (s, &key->sword);
-		    if (! key->sword--)
-		      {
-			/* Provoke with `sort -k0' */
-			error (0, 0, _("the starting field number argument \
-to the `-k' option must be positive"));
-			badfieldspec (argv[i]);
-		      }
-		    if (*s == '.')
-		      {
-			if (!ISDIGIT (s[1]))
-			  {
-			    /* Provoke with `sort -k1.' */
-			    error (0, 0, _("starting field spec has `.' but \
-lacks following character offset"));
-			    badfieldspec (argv[i]);
-			  }
-			s = parse_field_count (s + 1, &key->schar);
-			if (! key->schar--)
-			  {
-			    /* Provoke with `sort -k1.0' */
-			    error (0, 0, _("starting field character offset \
-argument to the `-k' option must be positive"));
-			    badfieldspec (argv[i]);
-			  }
-		      }
-		    if (! (key->sword | key->schar))
-		      key->sword = -1;
-		    s = set_ordering (s, key, bl_start);
-		    if (*s == 0)
-		      {
-			key->eword = -1;
-			key->echar = 0;
-		      }
-		    else if (*s != ',')
-		      badfieldspec (argv[i]);
-		    else if (*s == ',')
-		      {
-			/* Skip over comma.  */
-			++s;
-			if (*s == 0)
-			  {
-			    /* Provoke with `sort -k1,' */
-			    error (0, 0, _("field specification has `,' but \
-lacks following field spec"));
-			    badfieldspec (argv[i]);
-			  }
-			/* Get POS2. */
-			s = parse_field_count (s, &key->eword);
-			if (! key->eword--)
-			  {
-			    /* Provoke with `sort -k1,0' */
-			    error (0, 0, _("ending field number argument \
-to the `-k' option must be positive"));
-			    badfieldspec (argv[i]);
-			  }
-			if (*s == '.')
-			  {
-			    if (!ISDIGIT (s[1]))
-			      {
-				/* Provoke with `sort -k1,1.' */
-				error (0, 0, _("ending field spec has `.' \
-but lacks following character offset"));
-				badfieldspec (argv[i]);
-			      }
-			    s = parse_field_count (s + 1, &key->echar);
-			  }
-			else
-			  {
-			    /* `-k 2,3' is equivalent to `+1 -3'.  */
-			    key->eword++;
-			  }
-			s = set_ordering (s, key, bl_end);
-			if (*s)
-			  badfieldspec (argv[i]);
-		      }
-		    insertkey (key);
-		    key = NULL;
-		    goto outer;
-		  case 'm':
-		    mergeonly = 1;
-		    break;
-		  case 'o':
-		    if (s[1])
-		      outfile = s + 1;
-		    else
-		      {
-			if (i == argc - 1)
-			  error (SORT_FAILURE, 0,
-				 _("option `-o' requires an argument"));
-			else
-			  outfile = argv[++i];
-		      }
-		    goto outer;
-		  case 's':
-		    stable = 1;
-		    break;
-		  case 'S':
-		    if (s[1])
-		      specify_sort_size (++s);
-		    else if (i < argc - 1)
-		      specify_sort_size (argv[++i]);
-		    else
-		      error (SORT_FAILURE, 0,
-			     _("option `-S' requires an argument"));
-		    goto outer;
-		  case 't':
-		    if (s[1])
-		      tab = *++s;
-		    else if (i < argc - 1)
-		      {
-			tab = *argv[++i];
-			goto outer;
-		      }
-		    else
-		      error (SORT_FAILURE, 0,
-			     _("option `-t' requires an argument"));
-		    break;
-		  case 'T':
-		    if (s[1])
-		      add_temp_dir (++s);
-		    else
-		      {
-			if (i < argc - 1)
-			  add_temp_dir (argv[++i]);
-			else
-			  error (SORT_FAILURE, 0,
-				 _("option `-T' requires an argument"));
-		      }
-		    goto outer;
-		    /* break; */
-		  case 'u':
-		    unique = 1;
-		    break;
-		  case 'z':
-		    eolchar = 0;
-		    break;
-		  case 'y':
-		    /* Accept and ignore e.g. -y0 for compatibility with
-		       Solaris 2.  */
-		    goto outer;
-		  default:
-		    fprintf (stderr, _("%s: unrecognized option `-%c'\n"),
-			     argv[0], *s);
-		    usage (SORT_FAILURE);
-		  }
-		if (*s)
-		  ++s;
-	      }
-	}
-      else			/* Not an option. */
-	{
-	  files[nfiles++] = argv[i];
-	}
-    outer:;
-    }
+	    {
+	      /* Get POS2. */
+	      s = parse_field_count (s + 1, &key->eword,
+				     N_("invalid number after `,'"));
+	      if (! key->eword--)
+		{
+		  /* Provoke with `sort -k1,0' */
+		  badfieldspec (optarg, N_("field number is zero"));
+		}
+	      if (*s == '.')
+		s = parse_field_count (s + 1, &key->echar,
+				       N_("invalid number after `.'"));
+	      else
+		{
+		  /* `-k 2,3' is equivalent to `+1 -3'.  */
+		  key->eword++;
+		}
+	      s = set_ordering (s, key, bl_end);
+	    }
+	  if (*s)
+	    badfieldspec (optarg, N_("stray character in field spec"));
+	  insertkey (key);
+	  break;
 
-  if (key)
-    insertkey (key);
+	case 'm':
+	  mergeonly = 1;
+	  break;
+
+	case 'o':
+	  outfile = optarg;
+	  break;
+
+	case 's':
+	  stable = 1;
+	  break;
+
+	case 'S':
+	  specify_sort_size (optarg);
+	  break;
+
+	case 't':
+	  tab = optarg[0];
+	  if (tab && optarg[1])
+	    {
+	      /* Provoke with `sort -txx'.  */
+	      error (SORT_FAILURE, 0, _("multi-character tab `%s'"), optarg);
+	    }
+	  break;
+
+	case 'T':
+	  add_temp_dir (optarg);
+	  break;
+
+	case 'u':
+	  unique = 1;
+	  break;
+
+	case 'y':
+	  /* Accept and ignore e.g. -y0 for compatibility with Solaris
+	     2.x through Solaris 7.  -y is marked as obsolete starting
+	     with Solaris 8.  */
+	  break;
+
+	case 'z':
+	  eolchar = 0;
+	  break;
+
+	case_GETOPT_HELP_CHAR;
+
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+
+	default:
+	  usage (SORT_FAILURE);
+	}
+    }
 
   /* Inheritance of global options to individual keys. */
   for (key = keylist; key; key = key->next)
@@ -2451,9 +2455,8 @@ but lacks following character offset"));
   if (checkonly)
     {
       if (nfiles > 1)
-	error (SORT_FAILURE, 0,
-	       _("too many arguments;  with -c, there may be at most\
- one file argument"));
+	error (SORT_FAILURE, 0, _("extra operand `%s' not allowed with -c"),
+	       files[1]);
 
       /* POSIX requires that sort return 1 IFF invoked with -c and the
 	 input is not properly sorted.  */
