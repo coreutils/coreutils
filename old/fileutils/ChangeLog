@@ -1,5 +1,7 @@
 2001-04-22  Jim Meyering  <meyering@lucent.com>
 
+	* Version 4.0.45.
+
 	* tests/ls/no-arg: New file.
 	* tests/ls/Makefile.am (TESTS): Add no-arg.
 	* src/ls.c (main): Fix off-by-one error introduced with last change.
