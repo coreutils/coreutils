@@ -59,11 +59,12 @@
 # include <string.h>
 #endif
 
-#if HAVE_MBRTOWC && 1 < MB_LEN_MAX
+#if HAVE_WCHAR_H
+# include <wchar.h>
+#endif
+
+#if HAVE_MBRTOWC
 size_t mbrtowc ();
-# if HAVE_WCHAR_H
-#  include <wchar.h>
-# endif
 # ifdef mbstate_t
 #  define mbrtowc(pwc, s, n, ps) (mbrtowc) (pwc, s, n, 0)
 #  define mbsinit(ps) 1
