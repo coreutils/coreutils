@@ -37,6 +37,16 @@
 #include "path-concat.h"
 #include "quote.h"
 
+#define ASSIGN_BASENAME_STRDUPA(Dest, File_name)	\
+  do							\
+    {							\
+      char *tmp_abns_;					\
+      ASSIGN_STRDUPA (tmp_abns_, (File_name));		\
+      strip_trailing_slashes (tmp_abns_);		\
+      Dest = base_name (tmp_abns_);			\
+    }							\
+  while (0)
+
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "cp"
 
@@ -498,7 +508,6 @@ do_copy (int n_files, char **file, const char *target_directory,
 
       for (i = 0; i < n_files; i++)
 	{
-	  char *ap;
 	  char *dst_path;
 	  int parent_exists = 1; /* True if dir_name (dst_path) exists. */
 	  struct dir_attr *attr_list;
@@ -528,13 +537,14 @@ do_copy (int n_files, char **file, const char *target_directory,
 	    }
   	  else
   	    {
+	      char *arg_base;
 	      /* Append the last component of `arg' to `dest'.  */
 
-	      ap = base_name (arg);
+	      ASSIGN_BASENAME_STRDUPA (arg_base, arg);
 	      /* For `cp -R source/.. dest', don't copy into `dest/..'. */
-	      dst_path = (STREQ (ap, "..")
+	      dst_path = (STREQ (arg_base, "..")
 			  ? xstrdup (dest)
-			  : path_concat (dest, ap, NULL));
+			  : path_concat (dest, arg_base, NULL));
 	    }
 
 	  if (!parent_exists)
@@ -614,14 +624,8 @@ do_copy (int n_files, char **file, const char *target_directory,
 	  && !S_ISDIR (source_stats.st_mode))
 	{
 	  char *source_base;
-	  char *tmp_source;
 
-	  tmp_source = (char *) alloca (strlen (source) + 1);
-	  strcpy (tmp_source, source);
-	  if (remove_trailing_slashes)
-	    strip_trailing_slashes (tmp_source);
-	  source_base = base_name (tmp_source);
-
+	  ASSIGN_BASENAME_STRDUPA (source_base, source);
 	  new_dest = (char *) alloca (strlen (dest)
 				      + strlen (source_base) + 1);
 	  stpcpy (stpcpy (new_dest, dest), source_base);
