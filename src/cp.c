@@ -31,6 +31,7 @@
 #include "cp.h"
 #include "backupfile.h"
 #include "argmatch.h"
+#include "path-concat.h"
 
 #ifndef _POSIX_VERSION
 uid_t geteuid ();
@@ -373,38 +374,6 @@ main (int argc, char **argv)
   exit (exit_status);
 }
 
-/* Concatenate two pathname components, DIR and BASE, in newly-allocated
-   storage and return the result.  Be careful that in the result they are
-   separated by a slash.  That is, if DIR ends with a slash and BASE
-   begins with one, elide one slash at the end of DIR.  If DIR doesn't end
-   with a slash and BASE doesn't begin with one, insert a slash between
-   them in the concatenation.  Otherwise, simply concatenate DIR and BASE.
-   In any case, if BASE_IN_RESULT is non-NULL, set *BASE_IN_RESULT to point
-   to the copy of BASE in the returned concatenation.  */
-
-static char *
-path_concat (const char *dir, const char *base, char **base_in_result)
-{
-  char *p;
-  char *p_concat;
-
-  assert (strlen (dir) > 0);
-  p_concat = xmalloc (strlen (dir) + strlen (base) + 2);
-  p = stpcpy (p_concat, dir);
-
-  if (*(p - 1) == '/' && *base == '/')
-    --p;
-  else if (*(p - 1) != '/' && *base != '/')
-    p = stpcpy (p, "/");
-
-  if (base_in_result)
-    *base_in_result = p;
-
-  stpcpy (p, base);
-
-  return p_concat;
-}
-
 /* Scan the arguments, and copy each by calling copy.
    Return 0 if successful, 1 if any errors occur. */
 
@@ -467,6 +436,8 @@ do_copy (int argc, char **argv)
 	    {
 	      /* Append all of `arg' to `dest'.  */
 	      dst_path = path_concat (dest, arg, &arg_in_concat);
+	      if (dst_path == NULL)
+		error (1, 0, _("virtual memory exhausted"));
 
 	      /* For --parents, we have to make sure that the directory
 	         dirname (dst_path) exists.  We may have to create a few
@@ -535,12 +506,12 @@ do_copy (int argc, char **argv)
 	  && backup_type != none
 	  && STREQ (source, dest)
 	  && !new_dst && S_ISREG (sb.st_mode))
-	 {
-	   backup_type = none;
-	   new_dest = find_backup_file_name (dest);
-	   if (new_dest == NULL)
-	     error (1, 0, _("virtual memory exhausted"));
-	 }
+	{
+	  backup_type = none;
+	  new_dest = find_backup_file_name (dest);
+	  if (new_dest == NULL)
+	    error (1, 0, _("virtual memory exhausted"));
+	}
 
       /* When the destination is specified with a trailing slash and the
 	 source exists but is not a directory, convert the user's command
