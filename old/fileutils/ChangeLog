@@ -1,3 +1,62 @@
+1999-04-26  Paul Eggert  <eggert@twinsun.com>
+
+	* lib/filemode.c (setst, ftypelet, mode_string):
+	* lib/mkdir.c (mkdir):
+	* lib/makepath.c (make_path):
+	* lib/modechange.c (make_node_op_equals, mode_compile,
+	  mode_create_from_ref, mode_adjust):
+	* lib/modechange.h (mode_adjust):
+	* src/chmod.c (describe_change, change_file_mode):
+	* src/copy.c (copy_reg, copy_internal):
+	* src/copy.h (struct cp_options.umask_kill):
+	* src/cp.c (do_copy, cp_option_init, main):
+	* src/dd.c (main):
+	* src/install.c (mode, cp_option_init, DIR_MODE):
+	* src/mkdir.c (main):
+	* src/mkfifo.c (main):
+	* src/mknod.c (main):
+	* src/mv.c (cp_option_init):
+	* src/touch.c (open_maybe_create):
+	Use proper mode_t types and macros.
+	Don't assume the traditional Unix values for mode bits.
+
+	* lib/filemode.c (S_IRGRP, S_IWGRP, S_IXGRP, S_IROTH, S_IWOTH,
+	S_IXOTH): Define if not defined.
+	(rwx): Remove.
+	* lib/mkdir.c (S_IRWXU, S_IRWXG, S_IRWXO): Define if not defined.
+	* lib/makepath.c (S_ISUID, S_ISGID, S_ISVTX, S_IRUSR, S_IRWXU):
+	Define if not defined.
+	* src/system.h (S_ISUID, S_ISGID, S_ISVTX, S_IRWXU, S_IRWXG, S_IRWXO):
+	Define if not defined.
+	(CHMOD_MODE_BITS): New macro.
+	* src/install.c (isodigit): Remove unused macro.
+
+	* src/mkfifo.c, src/mknod.c (usage):
+	Use symbolic mode as default, not octal.
+
+	* lib/utime.c (utime_null):
+	Don't pass 0666 to open; it's not needed and isn't
+	guaranteed to be portable.
+
+	* lib/filemode.h: <config.h>, <sys/types.h>: Include for mode_t.
+	(mode_string): Now takes mode_t.
+
+	* lib/modechange.h: Include <config.h>, <sys/types.h> for mode_t.
+	(struct mode_change): Members affected and value are now mode_t instead
+	of unsigned short.
+
+	* doc/fileutils.texi, doc/perm.texi:
+	Don't assume traditional Unix mode numbering.
+
+	* lib/modechange.c: modechange.h now includes sys/types.h.
+	Include xstrtol.h.
+	(isodigit, oatoi): Remove.
+	(S_ISUID, S_ISGID, S_ISVTX, S_IRUSR, S_IWUSR, S_IXUSR, S_IRGRP,
+	S_IWGRP, S_IXGRP, S_IROTH, S_IWOTH, S_IXOTH, S_IRWXU, S_IRWXG,
+	S_IRWXO): Define if not defined.
+	(CHMOD_MODE_BITS): New macro.
+	(mode_compile): Convert from octal with xstrtoul, not our own routine.
+
 1999-04-24  Jim Meyering  <meyering@ascend.com>
 
 	* Version 4.0g.
