@@ -34,6 +34,10 @@
 #include <sys/utsname.h>
 #include <getopt.h>
 
+#if defined (HAVE_SYSINFO) && defined (HAVE_SYS_SYSTEMINFO_H)
+# include <sys/systeminfo.h>
+#endif
+
 #include "system.h"
 #include "error.h"
 
@@ -56,6 +60,9 @@ static void usage __P ((int status));
 /* Machine hardware name. */
 #define PRINT_MACHINE 16
 
+ /* Host processor type. */
+# define PRINT_PROCESSOR 32
+
 /* Mask indicating which elements of the name to print. */
 static unsigned char toprint;
 
@@ -75,6 +82,7 @@ static struct option const long_options[] =
   {"nodename", no_argument, NULL, 'n'},
   {"release", no_argument, NULL, 'r'},
   {"sysname", no_argument, NULL, 's'},
+  {"processor", no_argument, NULL, 'p'},
   {"version", no_argument, &show_version, 1},
   {"all", no_argument, NULL, 'a'},
   {NULL, 0, NULL, 0}
@@ -85,6 +93,7 @@ main (int argc, char **argv)
 {
   struct utsname name;
   int c;
+  char processor[256];
 
   program_name = argv[0];
   setlocale (LC_ALL, "");
@@ -93,7 +102,7 @@ main (int argc, char **argv)
 
   toprint = 0;
 
-  while ((c = getopt_long (argc, argv, "snrvma", long_options, (int *) 0))
+  while ((c = getopt_long (argc, argv, "snrvpma", long_options, (int *) 0))
 	 != EOF)
     {
       switch (c)
@@ -121,9 +130,13 @@ main (int argc, char **argv)
 	  toprint |= PRINT_MACHINE;
 	  break;
 
+	case 'p':
+	  toprint |= PRINT_PROCESSOR;
+	  break;
+
 	case 'a':
-	  toprint = PRINT_SYSNAME | PRINT_NODENAME | PRINT_RELEASE |
-	    PRINT_VERSION | PRINT_MACHINE;
+	  toprint = (PRINT_SYSNAME | PRINT_NODENAME | PRINT_RELEASE |
+		     PRINT_PROCESSOR | PRINT_VERSION | PRINT_MACHINE);
 	  break;
 
 	default:
@@ -149,11 +162,19 @@ main (int argc, char **argv)
   if (uname (&name) == -1)
     error (1, errno, _("cannot get system name"));
 
+#if defined (HAVE_SYSINFO) && defined (SI_ARCHITECTURE)
+  if (sysinfo (SI_ARCHITECTURE, processor, sizeof (processor)) == -1)
+    error (1, errno, _("cannot get processor type"));
+#else
+  strcpy (processor, "unknown");
+#endif
+
   print_element (PRINT_SYSNAME, name.sysname);
   print_element (PRINT_NODENAME, name.nodename);
   print_element (PRINT_RELEASE, name.release);
   print_element (PRINT_VERSION, name.version);
   print_element (PRINT_MACHINE, name.machine);
+  print_element (PRINT_PROCESSOR, processor);
 
   exit (0);
 }
@@ -189,6 +210,7 @@ Print certain system information.  With no OPTION, same as -s.\n\
   -n, --nodename   print the machine's network node hostname\n\
   -r, --release    print the operating system release\n\
   -s, --sysname    print the operating system name\n\
+  -p, --processor  print the host processor type\n\
   -v               print the operating system version\n\
       --help       display this help and exit\n\
       --version    output version information and exit\n"));
