@@ -8,11 +8,11 @@ case $1 in
   *) echo "Usage: $0 require-root|require-non-root" 1>&2; exit 1;;
 esac
 
-root_check_temp=root-check.$$
-touch $root_check_temp || framework_failure=1
-chmod a-w $root_check_temp || framework_failure=1
+priv_check_temp=priv-check.$$
+touch $priv_check_temp || framework_failure=1
+chmod a-w $priv_check_temp || framework_failure=1
 
-(echo foo >> $root_check_temp) >/dev/null 2>&1 || {
+(echo foo >> $priv_check_temp) >/dev/null 2>&1 || {
   cat <<EOF
 ***************************
 NOTICE:
@@ -20,8 +20,8 @@ $0: This test is being skipped, since it works only
 when run $who.
 ***************************
 EOF
-  rm -f $root_check_temp
+  rm -f $priv_check_temp
   (exit 77); exit
 }
 
-rm -f $root_check_temp
+rm -f $priv_check_temp
