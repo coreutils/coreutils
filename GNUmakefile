@@ -4,6 +4,10 @@
 # It is necessary if you want to build targets usually of interest
 # only to the maintainer.
 
+# Systems where /bin/sh is not the default shell need this.  The $(shell)
+# command below won't work with e.g. stock DOS/Windows shells.
+SHELL = /bin/sh
+
 have-Makefile := $(shell test -f Makefile && echo yes)
 
 # If the user runs GNU make but has not yet run ./configure,
