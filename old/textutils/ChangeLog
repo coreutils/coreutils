@@ -1,5 +1,7 @@
 Sat Sep  7 12:25:42 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/system.h: Add comments justifying IS* versions of ctype.h macros.
+
 	* src/fmt.c (check_punctuation): Use ISPUNCT instead of ispunct.
 	(get_line): Use ISSPACE instead of isspace.  From Bruno Haible.
 
