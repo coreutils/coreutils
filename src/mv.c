@@ -83,6 +83,7 @@ int yesno ();
 /* The name this program was run with. */
 char *program_name;
 
+/* Remove any trailing slashes from each SOURCE argument.  */
 static int remove_trailing_slashes;
 
 static struct option const long_options[] =
