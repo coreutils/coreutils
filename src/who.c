@@ -82,7 +82,7 @@
 # define UT_PID(U) ((U)->ut_pid)
 # define PIDSTR_DECL_AND_INIT(Var, Utmp_ent) \
   char Var[INT_STRLEN_BOUND (Utmp_ent->ut_pid) + 1]; \
-  sprintf (Var, "%d", Utmp_ent->ut_pid)
+  sprintf (Var, "%d", (int) (Utmp_ent->ut_pid))
 #else
 # define UT_PID(U) 0
 # define PIDSTR_DECL_AND_INIT(Var, Utmp_ent) \
