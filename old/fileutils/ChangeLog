@@ -1,3 +1,9 @@
+Sun Aug 25 22:43:15 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* acinclude.m4 (AM_FUNC_MKTIME): New macro.
+	* configure.in (AM_FUNC_MKTIME): Use it.
+	(AC_REPLACE_FUNCS): Remove mktime.
+
 Wed Aug 21 23:17:04 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/Makefile.am (EXTRA_DIST): Remove ansi2knr.1 and ansi2knr.c.
