@@ -1,7 +1,7 @@
 /* exclude.c -- exclude file names
 
-   Copyright 1992, 1993, 1994, 1997, 1999, 2000, 2001 Free Software
-   Foundation, Inc.
+   Copyright (C) 1992, 1993, 1994, 1997, 1999, 2000, 2001, 2002 Free
+   Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -67,9 +67,17 @@ extern int errno;
 /* Verify a requirement at compile-time (unlike assert, which is runtime).  */
 #define verify(name, assertion) struct name { char a[(assertion) ? 1 : -1]; }
 
+/* Non-GNU systems lack these options, so we don't need to check them.  */
+#ifndef FNM_CASEFOLD
+# define FNM_CASEFOLD 0
+#endif
+#ifndef FNM_LEADING_DIR
+# define FNM_LEADING_DIR 0
+#endif
+
 verify (EXCLUDE_macros_do_not_collide_with_FNM_macros,
 	(((EXCLUDE_ANCHORED | EXCLUDE_INCLUDE | EXCLUDE_WILDCARDS)
-	  & (FNM_FILE_NAME | FNM_NOESCAPE | FNM_PERIOD | FNM_LEADING_DIR
+	  & (FNM_PATHNAME | FNM_NOESCAPE | FNM_PERIOD | FNM_LEADING_DIR
 	     | FNM_CASEFOLD))
 	 == 0));
 
