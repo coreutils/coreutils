@@ -1,3 +1,8 @@
+2004-04-07  Paul Eggert  <eggert@twinsun.com>
+
+	* jm-macros.m4 (jm_MACROS): Check for fdatasync within
+	-lrt and -lposix4, so that it can be used in Solaris 2.5.1 and later.
+
 2004-03-30  Paul Eggert  <eggert@twinsun.com>
 
 	* c-stack.m4, getline.m4, getndelim2.m4, mbswidth.m4, po.m4,
