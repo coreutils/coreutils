@@ -178,7 +178,7 @@ static long int pseudo_offset;
 
 /* Function to format an address and optionally an additional parenthesized
    pseudo-address; it returns the formatted string.  */
-static const char *(*format_address) PARAMS ((long unsigned int));
+static const char *(*format_address) PARAMS ((off_t));
 
 /* The number of input bytes to skip before formatting and writing.  */
 static off_t n_bytes_to_skip = 0;
@@ -516,7 +516,7 @@ dump_hexl_mode_trailer (long unsigned int n_bytes, const char *block)
 
 static void
 print_named_ascii (long unsigned int n_bytes, const char *block,
-		   const char *unused_fmt_string)
+		   const char *unused_fmt_string ATTRIBUTE_UNUSED)
 {
   int i;
   for (i = n_bytes; i > 0; i--)
@@ -543,7 +543,7 @@ print_named_ascii (long unsigned int n_bytes, const char *block,
 
 static void
 print_ascii (long unsigned int n_bytes, const char *block,
-	     const char *unused_fmt_string)
+	     const char *unused_fmt_string ATTRIBUTE_UNUSED)
 {
   int i;
   for (i = n_bytes; i > 0; i--)
@@ -1052,13 +1052,13 @@ skip (off_t n_skip)
 }
 
 static const char *
-format_address_none (long unsigned int address)
+format_address_none (off_t address ATTRIBUTE_UNUSED)
 {
   return "";
 }
 
 static const char *
-format_address_std (long unsigned int address)
+format_address_std (off_t address)
 {
   const char *address_string;
 
@@ -1068,7 +1068,7 @@ format_address_std (long unsigned int address)
 }
 
 static const char *
-format_address_label (long unsigned int address)
+format_address_label (off_t address)
 {
   const char *address_string;
   assert (output_address_fmt_string != NULL);
@@ -1091,7 +1091,7 @@ format_address_label (long unsigned int address)
    only when it has not been padded to length BYTES_PER_BLOCK.  */
 
 static void
-write_block (long unsigned int current_offset, long unsigned int n_bytes,
+write_block (off_t current_offset, long unsigned int n_bytes,
 	     const char *prev_block, const char *curr_block)
 {
   static int first = 1;
@@ -1582,6 +1582,26 @@ dump_strings (void)
   return err;
 }
 
+/* There must be exactly one %s format specifier in FORMAT_TEMPLATE.
+   Return the just-malloc'd result of using sprintf to insert
+   OFF_T_PRINTF_FORMAT_STRING into FORMAT_TEMPLATE.
+   Technically, the caller should free this memory, but IMHO it's not
+   worth it in this case.  */
+static char *
+expand_address_fmt (char const *format_template)
+{
+  size_t len = strlen (format_template);
+  char *fmt = xmalloc (len + 1);
+  /* Ensure that the literal we're inserting is no longer than the two-byte
+     string `%s' it's replacing.  There's also the %%, so technically we don't
+     even need the `+ 1' above.  */
+  assert (OFF_T_PRINTF_FORMAT_STRING[0] == 0
+	  || OFF_T_PRINTF_FORMAT_STRING[1] == 0
+	  || OFF_T_PRINTF_FORMAT_STRING[2] == 0);
+  sprintf (fmt, format_template, OFF_T_PRINTF_FORMAT_STRING);
+  return fmt;
+}
+
 int
 main (int argc, char **argv)
 {
@@ -1633,7 +1653,7 @@ main (int argc, char **argv)
   n_specs_allocated = 5;
   spec = (struct tspec *) xmalloc (n_specs_allocated * sizeof (struct tspec));
 
-  output_address_fmt_string = "%07o";
+  output_address_fmt_string = expand_address_fmt ("%%07%so");
   format_address = format_address_std;
   address_pad_len = 7;
   flag_dump_strings = 0;
@@ -1653,17 +1673,17 @@ main (int argc, char **argv)
 	  switch (optarg[0])
 	    {
 	    case 'd':
-	      output_address_fmt_string = "%07d";
+	      output_address_fmt_string = expand_address_fmt ("%%07%sd");
 	      format_address = format_address_std;
 	      address_pad_len = 7;
 	      break;
 	    case 'o':
-	      output_address_fmt_string = "%07o";
+	      output_address_fmt_string = expand_address_fmt ("%%07%so");
 	      format_address = format_address_std;
 	      address_pad_len = 7;
 	      break;
 	    case 'x':
-	      output_address_fmt_string = "%06x";
+	      output_address_fmt_string = expand_address_fmt ("%%06%sx");
 	      format_address = format_address_std;
 	      address_pad_len = 6;
 	      break;
@@ -1867,7 +1887,7 @@ the maximum\nrepresentable value of type `long'"), optarg);
 
 	  if (output_address_fmt_string == NULL)
 	    {
-	      output_address_fmt_string = "(%07o)";
+	      output_address_fmt_string = expand_address_fmt ("(%%07%so)");
 	      format_address = format_address_std;
 	    }
 	  else
