@@ -2,6 +2,8 @@
 
 	* Version 5.1.1.
 
+	* Use automake-1.8.2.  Regenerate dependent files.
+
 	* Update to gettext-0.13.1.
 	* configure.ac: Use gettext-0.13.1.
 	* .x-sc_space_tab: Add m4/po.m4 to the list of exceptions.
