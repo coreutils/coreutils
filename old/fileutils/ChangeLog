@@ -2,6 +2,10 @@
 
 	* Version 4.0.34.
 
+	* src/Makefile.am (noinst_HEADERS): Add chown-core.h.
+	(chown_SOURCES): Define.
+	(chgrp_SOURCES): Define.
+
 	* src/chgrp.c: Include "chown-core.h".
 	[enum Change_status, enum Verbosity]: Remove declarations.
 	Remove decls of globals that are now part of struct Chown_option.
