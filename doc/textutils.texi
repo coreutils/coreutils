@@ -1839,6 +1839,16 @@ consists of the line between @var{pos1} and @var{pos2} (or the end of
 the line, if @var{pos2} is omitted), inclusive.  Fields and character
 positions are numbered starting with 1.  See below.
 
+@item -z
+@opindex -z
+@cindex sort zero-terminated lines
+Treat the input as a set of lines, each terminated by a zero byte (@sc{ASCII}
+@sc{NUL} (Null) character) instead of a @sc{ASCII} @sc{LF} (Line Feed.)
+This option can be useful in conjunction with @samp{perl -0} or
+@samp{find -print0} and @samp{xargs -0} which do the same in order to
+reliably handle arbitrary pathnames (even those which contain Line Feed
+characters.)
+
 @item +@var{pos1}[-@var{pos2}]
 The obsolete, traditional option for specifying a sort field.  The field
 consists of the line between @var{pos1} and up to but @emph{not including}
@@ -1939,6 +1949,16 @@ An alternative is to use the global numeric modifier @samp{-n}.
 @example
 sort -t : -n -k 5b,5 -k 3,3 /etc/passwd
 @end example
+
+@item
+Generate a tags file in case insensitive sorted order.
+@example
+find src -type f -print0 | sort -t / -z -f | xargs -0 etags --append
+@end example
+
+The use of @samp{-print0}, @samp{-z}, and @samp{-0} in this case mean
+that pathnames that contain Line Feed characters will not get broken up
+by the sort operation.
 
 Finally, to ignore both leading and trailing white space, you
 could have applied the @samp{b} modifier to the field-end specifier
