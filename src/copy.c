@@ -628,6 +628,14 @@ copy_internal (const char *src_path, const char *dst_path,
 	      return 1;
 	    }
 
+	  if (S_ISDIR (src_type) && !S_ISDIR (dst_sb.st_mode))
+	    {
+	      error (0, 0,
+		     _("cannot overwrite non-directory %s with directory %s"),
+		     quote_n (0, dst_path), quote_n (1, src_path));
+	      return 1;
+	    }
+
 	  if (!S_ISDIR (src_type))
 	    {
 	      if (S_ISDIR (dst_sb.st_mode))
