@@ -15,8 +15,8 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
-/* Usage: df [-aikP] [-t fstype] [--all] [--inodes] [--type fstype]
-   [--kilobytes] [--portability] [path...]
+/* Usage: df [-aikP] [-t fstype] [-x fstype] [--all] [--inodes]
+   [--type fstype] [--exclude-type fstype] [--kilobytes] [--portability] [path...]
 
    Options:
    -a, --all		List all filesystems, even zero-size ones.
@@ -24,7 +24,9 @@
    -k, --kilobytes	Print sizes in 1K blocks instead of 512-byte blocks.
    -P, --portability	Use the POSIX output format (one line per filesystem).
    -t, --type fstype	Limit the listing to filesystems of type `fstype'.
-			Multiple -t options can be given.
+   -x, --exclude-type fstype
+			Limit the listing to filesystems not of type `fstype'.
+			Multiple -t and/or -x options can be given.
 			By default, all filesystem types are listed.
 
    Written by David MacKenzie <djm@gnu.ai.mit.edu> */
@@ -41,7 +43,9 @@ char *xmalloc ();
 char *xstrdup ();
 void error ();
 
-static int fs_to_list ();
+static int selected_fstype ();
+static int excluded_fstype ();
+static void add_excluded_fs_type ();
 static void add_fs_type ();
 static void print_header ();
 static void show_entry ();
@@ -72,14 +76,14 @@ char *program_name;
 
 /* A filesystem type to display. */
 
-struct fs_select
+struct fs_type_list
 {
   char *fs_name;
-  struct fs_select *fs_next;
+  struct fs_type_list *fs_next;
 };
 
 /* Linked list of filesystem types to display.
-   If `fs_list' is NULL, list all types.
+   If `fs_select_list' is NULL, list all types.
    This table is generated dynamically from command-line options,
    rather than hardcoding into the program what it thinks are the
    valid filesystem types; let the user specify any filesystem type
@@ -87,9 +91,14 @@ struct fs_select
    will be shown.
 
    Some filesystem types:
-   4.2 4.3 ufs nfs swap ignore io vm */
+   4.2 4.3 ufs nfs swap ignore io vm efs dbg */
 
-static struct fs_select *fs_list;
+static struct fs_type_list *fs_select_list;
+
+/* Linked list of filesystem types to omit.
+   If the list is empty, don't exclude any types.  */
+
+static struct fs_type_list *fs_exclude_list;
 
 /* Linked list of mounted filesystems. */
 static struct mount_entry *mount_list;
@@ -101,6 +110,7 @@ static struct option const long_options[] =
   {"kilobytes", no_argument, &kilobyte_blocks, 1},
   {"portability", no_argument, &posix_format, 1},
   {"type", required_argument, 0, 't'},
+  {"exclude-type", required_argument, 0, 'x'},
   {NULL, 0, NULL, 0}
 };
 
@@ -113,14 +123,15 @@ main (argc, argv)
   struct stat *stats;
 
   program_name = argv[0];
-  fs_list = NULL;
+  fs_select_list = NULL;
+  fs_exclude_list = NULL;
   inode_format = 0;
   show_all_fs = 0;
   kilobyte_blocks = getenv ("POSIXLY_CORRECT") == 0;
   posix_format = 0;
   exit_status = 0;
 
-  while ((i = getopt_long (argc, argv, "aikPt:v", long_options, (int *) 0))
+  while ((i = getopt_long (argc, argv, "aikPt:vx:", long_options, (int *) 0))
 	 != EOF)
     {
       switch (i)
@@ -143,6 +154,9 @@ main (argc, argv)
 	  add_fs_type (optarg);
 	  break;
 	case 'v':		/* For SysV compatibility. */
+	  break;
+	case 'x':
+	  add_excluded_fs_type (optarg);
 	  break;
 	default:
 	  usage ();
@@ -167,7 +181,10 @@ main (argc, argv)
 	  }
     }
 
-  mount_list = read_filesystem_list (fs_list != NULL, show_all_fs);
+  mount_list =
+    read_filesystem_list ((fs_select_list != NULL || fs_exclude_list != NULL),
+			  show_all_fs);
+
   if (mount_list == NULL)
     error (1, errno, "cannot read table of mounted filesystems");
 
@@ -294,7 +311,7 @@ show_dev (disk, mount_point, fstype)
   long inodes_percent_used;
   char *stat_file;
 
-  if (!fs_to_list (fstype))
+  if (!selected_fstype (fstype) || excluded_fstype (fstype))
     return;
 
   /* If MOUNT_POINT is NULL, then the filesystem is not mounted, and this
@@ -363,37 +380,70 @@ static void
 add_fs_type (fstype)
      char *fstype;
 {
-  struct fs_select *fsp;
+  struct fs_type_list *fsp;
 
-  fsp = (struct fs_select *) xmalloc (sizeof (struct fs_select));
+  fsp = (struct fs_type_list *) xmalloc (sizeof (struct fs_type_list));
   fsp->fs_name = fstype;
-  fsp->fs_next = fs_list;
-  fs_list = fsp;
+  fsp->fs_next = fs_select_list;
+  fs_select_list = fsp;
+}
+
+/* Add FSTYPE to the list of filesystem types to be omitted. */
+
+static void
+add_excluded_fs_type (fstype)
+     char *fstype;
+{
+  struct fs_type_list *fsp;
+
+  fsp = (struct fs_type_list *) xmalloc (sizeof (struct fs_type_list));
+  fsp->fs_name = fstype;
+  fsp->fs_next = fs_exclude_list;
+  fs_exclude_list = fsp;
 }
 
 /* If FSTYPE is a type of filesystem that should be listed,
    return nonzero, else zero. */
 
 static int
-fs_to_list (fstype)
+selected_fstype (fstype)
      char *fstype;
 {
-  struct fs_select *fsp;
+  struct fs_type_list *fsp;
 
-  if (fs_list == NULL || fstype == NULL)
+  if (fs_select_list == NULL || fstype == NULL)
     return 1;
-  for (fsp = fs_list; fsp; fsp = fsp->fs_next)
+  for (fsp = fs_select_list; fsp; fsp = fsp->fs_next)
     if (!strcmp (fstype, fsp->fs_name))
       return 1;
   return 0;
 }
 
+
+/* If FSTYPE is a type of filesystem that should be omitted,
+   return nonzero, else zero. */
+
+static int
+excluded_fstype (fstype)
+     char *fstype;
+{
+  struct fs_type_list *fsp;
+
+  if (fs_exclude_list == NULL || fstype == NULL)
+    return 0;
+  for (fsp = fs_exclude_list; fsp; fsp = fsp->fs_next)
+    if (!strcmp (fstype, fsp->fs_name))
+      return 1;
+  return 0;
+}
+
 static void
 usage ()
 {
   fprintf (stderr, "\
-Usage: %s [-aikPv] [-t fstype] [--all] [--inodes] [--type fstype]\n\
-       [--kilobytes] [--portability] [path...]\n",
+Usage: %s [-aikPv] [-t fstype] [-x fstype] [--all] [--inodes]\n\
+\t[--type fstype] [--exclude-type fstype] [--kilobytes] [--portability]\n\
+\t[path...]\n",
 	   program_name);
   exit (1);
 }
