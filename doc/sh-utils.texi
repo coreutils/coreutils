@@ -2198,14 +2198,16 @@ information.
 @cindex time, printing or setting
 @cindex printing the current time
 
-@code{date} with no arguments prints the current time and date, in the
-format of the @samp{%c} directive (described below).  Synopses:
+Synopses:
 
 @example
 date [@var{option}]@dots{} [+@var{format}]
 date [-u|--utc|--universal] @c this avoids a newline in the output
 [ MMDDhhmm[[CC]YY][.ss] ]
 @end example
+
+Invoking @code{date} with no arguments is equivalent to invoking
+@samp{date '+%a %b %e %H:%M:%S %Z %Y'}.
 
 @findex strftime @r{and @code{date}}
 @cindex time formats
