@@ -1,6 +1,22 @@
-2002-09-15  Jim Meyering  <meyering@lucent.com>
+2002-09-18  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.5.2.
+
+	`od -t x8' used the wrong (`l'-prefixed) printf format.
+	Likewise for the o8 and u8 formats.
+	* src/od.c (ISPEC_TO_FORMAT): Define macro.
+	(decode_one_format): Use PRIdMAX, PRIoMAX, etc. for LONG_LONG.
+	Reported by Arun Sharma.
+
+2002-09-17  Jim Meyering  <meyering@lucent.com>
+
+	* src/sys2.h (PRIdMAX, PRIoMAX, PRIuMAX, PRIxMAX): Define if necessary.
+	From gettext's intl/loadmsgcat.c.
+
+	* tests/od/x8: New file/test, for the above fix.
+	* tests/od/Makefile.am (TESTS): Add x8.
+
+2002-09-15  Jim Meyering  <meyering@lucent.com>
 
 	* Use autoconf-2.54.  Regenerate dependent files.
 
