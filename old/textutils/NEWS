@@ -1,5 +1,6 @@
 Changes in release 1.23
 [1.22g]
+* uniq accepts new option: --all-repeated (-D).
 * Windows/DOS portability fixes
 * new program: tsort
 * tail has several new options: FIXME
