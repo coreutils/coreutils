@@ -1,6 +1,9 @@
 Changes in release 3.17:
 [4.0-b3]
-* mktime works around problems with Digital Unix 4.0A and 4.0D.
+* mktime.c works around problems with Digital Unix 4.0A and 4.0D.
+* mktime.c handles dates in the spring-forward gap the same way other
+  implementations do
+* install accepts long option --suffix=SUFFIX
 [4.0-b2]
 * man/Makefile.maint framework tweaks
 * add test for `mv -i' bug
