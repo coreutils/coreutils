@@ -3640,7 +3640,7 @@ no options always outputs a file that is suitable input to @command{comm}.
 
 @cindex differing lines
 @cindex common lines
-With no options, @command{comm} produces three column output.  Column one
+With no options, @command{comm} produces three-column output.  Column one
 contains lines unique to @var{file1}, column two contains lines unique
 to @var{file2}, and column three contains lines common to both files.
 Columns are separated by a single TAB character.
