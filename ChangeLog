@@ -2,6 +2,9 @@
 
 	* Version 5.0.91.
 
+	* src/remove.c (D_INO, ENABLE_CYCLE_CHECK) [D_INO_IN_DIRENT]:
+	Don't define.  These symbols are no longer used.
+
 	* tests/misc/tty-eof: Write ^D as \cD.
 	Complete the change of 2003-08-02.
 
