@@ -436,8 +436,6 @@ uid_t getuid ();
     setvbuf (Stream, Buffer, Type, Size)
 #endif
 
-char *base_name PARAMS ((char const *));
-
 /* Factor out some of the common --help and --version processing code.  */
 
 /* These enum values cannot possibly conflict with the option values
