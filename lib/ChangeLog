@@ -1,5 +1,8 @@
 2000-06-29  Jim Meyering  <meyering@lucent.com>
 
+	* same.c: Include <string.h> or <strings.h>, as appropriate,
+	for declaration of strcmp.
+
 	* long-options.c: Include <stdlib.h>, for declaration of exit.
 
 	* mountlist.c (fsp_to_string) [HAVE_F_FSTYPENAME_IN_STATFS]:
