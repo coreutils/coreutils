@@ -1,5 +1,7 @@
 2002-07-18  Jim Meyering  <meyering@lucent.com>
 
+	* Version 4.1.10.
+
 	* src/dircolors.hin: Add the following to the list of colorizable
 	TERM names: dtterm xterm-color Eterm.
 	New archive suffix: .jar
@@ -8,8 +10,6 @@
 	From Michael Stone.
 
 2002-07-16  Jim Meyering  <meyering@lucent.com>
-
-	* Version 4.1.10.
 
 	* src/stat.c (print_it): Use memcpy and a little pointer arithmetic,
 	rather than stpncpy.
