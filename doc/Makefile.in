@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 0.30 from Makefile.am
+# Makefile.in generated automatically by automake 0.31 from Makefile.am
 
 # Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
@@ -50,16 +50,16 @@ DVIS = fileutils.dvi
 TEXINFOS = fileutils.texi
 
 DIST_COMMON = Makefile.am Makefile.in mdate-sh stamp-vti texinfo.tex \
-    version.texi
+version.texi
 
 
 PACKAGE = @PACKAGE@
 VERSION = @VERSION@
 
 DISTFILES = $(DIST_COMMON) $(SOURCES) $(BUILT_SOURCES) $(HEADERS) \
-	$(TEXINFOS) $(INFOS) $(MANS) $(DIST_OTHER) $(DATA)
+	$(TEXINFOS) $(INFOS) $(MANS) $(EXTRA_DIST) $(DATA)
 DEP_DISTFILES = $(DIST_COMMON) $(SOURCES) $(BUILT_SOURCES) $(HEADERS) \
-	$(TEXINFOS) $(INFO_DEPS) $(MANS) $(DIST_OTHER) $(DATA)
+	$(TEXINFOS) $(INFO_DEPS) $(MANS) $(EXTRA_DIST) $(DATA)
 default: all
 
 
@@ -158,6 +158,8 @@ uninstall: uninstall-info
 
 all: $(INFO_DEPS) Makefile
 
+install-strip:
+	$(MAKE) INSTALL_PROGRAM='$(INSTALL_PROGRAM) -s' install
 installdirs:
 	$(top_srcdir)/mkinstalldirs  $(infodir)
 
@@ -188,12 +190,11 @@ maintainer-clean:  maintainer-clean-vti maintainer-clean-info \
 	@echo "it deletes files that may require special tools to rebuild."
 
 .PHONY: default mostlyclean-vti distclean-vti clean-vti \
-    maintainer-clean-vti install-info uninstall-info mostlyclean-info \
-    distclean-info clean-info maintainer-clean-info tags dist info dvi \
-    check installcheck install-exec install-data install uninstall all \
-    installdirs mostlyclean-generic distclean-generic clean-generic \
-    maintainer-clean-generic clean mostlyclean distclean \
-    maintainer-clean
+maintainer-clean-vti install-info uninstall-info mostlyclean-info \
+distclean-info clean-info maintainer-clean-info tags dist info dvi \
+check installcheck install-exec install-data install uninstall all \
+installdirs mostlyclean-generic distclean-generic clean-generic \
+maintainer-clean-generic clean mostlyclean distclean maintainer-clean
 
 .SUFFIXES:
 .SUFFIXES: .texi .info .dvi
