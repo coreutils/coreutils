@@ -1624,7 +1624,7 @@ valid_options (const struct cp_options *co)
   assert (VALID_BACKUP_TYPE (co->backup_type));
 
   /* FIXME: for some reason this assertion always fails,
-     at least on Solaris2.5.1.  Just disable it for now.  */
+     at least on Solaris 2.5.1.  Just disable it for now.  */
   /* assert (co->xstat == lstat || co->xstat == stat); */
 
   /* Make sure xstat and dereference are consistent.  */
