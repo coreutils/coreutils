@@ -2,6 +2,9 @@
 
 	* Version 4.1.1.
 
+	* src/touch.c (touch): Extend last change to work on systems
+	for which errno is set to EINVAL.
+
 	* src/ls.c: Declare some local variables to be `const', where
 	appropriate.
 	(usage): Improve the description of --dereference (-L).
