@@ -19,6 +19,7 @@ TERM con80x30
 TERM con80x43
 TERM con80x50
 TERM con80x60
+TERM cygwin
 TERM dtterm
 TERM putty
 TERM xterm
