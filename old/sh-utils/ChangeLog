@@ -1,3 +1,12 @@
+2000-05-29  Jim Meyering  <meyering@lucent.com>
+
+	* src/help-version: Use `WARNING', not just `Warning' in the
+	broken-/bin/sh diagnostic, to be consistent with other such warnings.
+
+2000-05-21  Jim Meyering  <meyering@lucent.com>
+
+	* tests/nice: Disable test on djgpp.
+
 2000-05-15  Jim Meyering  <meyering@lucent.com>
 
 	* tests/date/Test.pm (test_vector): Skip the %c test on SunOS4 systems.
