@@ -1,5 +1,5 @@
 /* error.c -- error handler for noninteractive utilities
-   Copyright (C) 1990, 1991, 1992 Free Software Foundation, Inc.
+   Copyright (C) 1990, 91, 92, 93, 94 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -15,40 +15,48 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
-/* Written by David MacKenzie.  */
+/* Written by David MacKenzie <djm@gnu.ai.mit.edu>.  */
+
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 
 #include <stdio.h>
 
-#ifdef HAVE_VPRINTF
+#if HAVE_VPRINTF || HAVE_DOPRNT
+# if __STDC__
+#  include <stdarg.h>
+#  define VA_START(args, lastarg) va_start(args, lastarg)
+# else
+#  include <varargs.h>
+#  define VA_START(args, lastarg) va_start(args)
+# endif
+#else
+# define va_alist a1, a2, a3, a4, a5, a6, a7, a8
+# define va_dcl char *a1, *a2, *a3, *a4, *a5, *a6, *a7, *a8;
+#endif
 
-#if __STDC__
-#include <stdarg.h>
-#define VA_START(args, lastarg) va_start(args, lastarg)
-#else /* !__STDC__ */
-#include <varargs.h>
-#define VA_START(args, lastarg) va_start(args)
-#endif /* !__STDC__ */
-
-#else /* !HAVE_VPRINTF */
-
-#ifdef HAVE_DOPRNT
-#define va_alist args
-#define va_dcl int args;
-#else /* !HAVE_DOPRNT */
-#define va_alist a1, a2, a3, a4, a5, a6, a7, a8
-#define va_dcl char *a1, *a2, *a3, *a4, *a5, *a6, *a7, *a8;
-#endif /* !HAVE_DOPRNT */
-
-#endif /* !HAVE_VPRINTF */
-
-#ifdef STDC_HEADERS
-#include <stdlib.h>
-#include <string.h>
-#else /* !STDC_HEADERS */
+#if STDC_HEADERS
+# include <stdlib.h>
+# include <string.h>
+#else
 void exit ();
-#endif /* !STDC_HEADERS */
+#endif
 
-#ifndef HAVE_STRERROR
+/* If NULL, error will flush stdout, then print on stderr the program
+   name, a colon and a space.  Otherwise, error will call this
+   function without parameters instead.  */
+void (*error_print_progname) () = NULL;
+
+/* The calling program should define program_name and set it to the
+   name of the executing program.  */
+extern char *program_name;
+
+#if HAVE_STRERROR
+# ifndef strerror		/* On some systems, sterror is a macro */
+char *strerror ();
+# endif
+#else
 static char *
 private_strerror (errnum)
      int errnum;
@@ -61,41 +69,49 @@ private_strerror (errnum)
   return "Unknown system error";
 }
 #define strerror private_strerror
-#endif /* !HAVE_STRERROR */
+#endif
 
 /* Print the program name and error message MESSAGE, which is a printf-style
    format string with optional args.
    If ERRNUM is nonzero, print its corresponding system error message.
    Exit with status STATUS if it is nonzero.  */
 /* VARARGS */
+
 void
-#if defined (HAVE_VPRINTF) && __STDC__
-error (int status, int errnum, char *message, ...)
-#else /* !HAVE_VPRINTF or !__STDC__ */
+#if defined(VA_START) && __STDC__
+error (int status, int errnum, const char *message, ...)
+#else
 error (status, errnum, message, va_alist)
      int status;
      int errnum;
      char *message;
      va_dcl
-#endif /* !HAVE_VPRINTF or !__STDC__ */
+#endif
 {
-  extern char *program_name;
-#ifdef HAVE_VPRINTF
+#ifdef VA_START
   va_list args;
-#endif /* HAVE_VPRINTF */
+#endif
 
-  fprintf (stderr, "%s: ", program_name);
-#ifdef HAVE_VPRINTF
+  if (error_print_progname)
+    (*error_print_progname) ();
+  else
+    {
+      fflush (stdout);
+      fprintf (stderr, "%s: ", program_name);
+    }
+
+#ifdef VA_START
   VA_START (args, message);
+# if HAVE_VPRINTF
   vfprintf (stderr, message, args);
+# else
+  _doprnt (message, args, stderr);
+# endif
   va_end (args);
-#else /* !HAVE_VPRINTF */
-#ifdef HAVE_DOPRNT
-  _doprnt (message, &args, stderr);
-#else /* !HAVE_DOPRNT */
+#else
   fprintf (stderr, message, a1, a2, a3, a4, a5, a6, a7, a8);
-#endif /* !HAVE_DOPRNT */
-#endif /* !HAVE_VPRINTF */
+#endif
+
   if (errnum)
     fprintf (stderr, ": %s", strerror (errnum));
   putc ('\n', stderr);
