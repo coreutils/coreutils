@@ -1,3 +1,9 @@
+Major changes in release 1.6:
+* with the --version option programs print the version and exit immediately
+* --compatible makes `tail -0f' work like `tail +1f' for compatibility
+    with BSD tail.
+* pr -2a really terminates
+
 Major changes in release 1.5:
 * sort is 8-bit clean
 * sort's -n and -M options no longer imply -b

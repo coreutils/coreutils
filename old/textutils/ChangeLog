@@ -1,3 +1,38 @@
+Wed May 19 19:12:18 1993  Karl Berry  (karl@owl.hq.ileaf.com)
+
+        * sort.c (main): fflush before exit, so a closed stdout doesn't lose.
+
+Tue May 18 23:49:26 1993  Jim Meyering (meyering@comco.com)
+
+	* mkinstalldirs: New file.
+	* Makefile.in (installdirs): Use it.
+
+Fri May 14 23:45:52 1993  Jim Meyering (meyering@comco.com)
+
+	* all source: With --version, print version and exit immediately.
+
+Thu May 13 01:03:16 1993  Jim Meyering (meyering@comco.com)
+
+	* Makefile.in (installdirs): New rules for creating installation
+	directories. (install): depend on it.
+
+	* tail.c (main): Remove --compatible since `+1f' may be used
+	to get the BSD `-0f' behavior portably.
+
+	* fold.c (main): Turn -N arguments, where N is a digit, into -wN.
+	From Ian Lance Taylor (ian@cygnus.com).
+
+Mon May 10 22:33:44 1993  Jim Meyering  (meyering@comco.com)
+
+	* tail.c (main): New option -C, --compatible to make `tail -0f'
+	work like `tail +1f' for compatibility with BSD tail.
+
+Thu May  6 23:28:56 1993  Jim Meyering  (meyering@comco.com)
+
+	* pr.c (print_page): Decrement cols_ready_to_print even when
+	lines_to_print == 0.  The command `echo |pr -2ta' *still* didn't
+	terminate.  Add parentheses for clarity.
+
 Mon May  3 23:57:47 1993  Jim Meyering  (meyering@comco.com)
 
 	* Version 1.5.

@@ -4784,6 +4784,7 @@ regcomp (preg, pattern, cflags)
   /* regex_compile will allocate the space for the compiled pattern.  */
   preg->buffer = 0;
   preg->allocated = 0;
+  preg->used = 0;
   
   /* Don't bother to use a fastmap when searching.  This simplifies the
      REG_NEWLINE case: if we used a fastmap, we'd have to put all the

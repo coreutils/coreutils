@@ -441,6 +441,24 @@ static struct option const long_options[] =
   {0, 0, 0, 0}
 };
 
+/* Return the number of columns that have either an open file or
+   stored lines. */
+
+static int
+crtp ()
+{
+  COLUMN *q;
+  int i;
+  int n;
+
+  n = 0;
+  for (q = column_vector, i = 0; i < columns; ++q, ++i)
+    if (q->status == OPEN ||
+	(storing_columns && q->lines_stored > 0 && q->lines_to_print > 0))
+      ++n;
+  return n;
+}
+
 void
 main (argc, argv)
      int argc;
@@ -448,27 +466,62 @@ main (argc, argv)
 {
   int c;
   int accum = 0;
+  int n_files;
+  char **file_names;
 
   program_name = argv[0];
 
-  while ((c = getopt_long (argc, argv,
-			   "0123456789abcde::fFh:i::l:mn::o:rs::tvw:",
-			   long_options, (int *) 0)) != EOF)
+  n_files = 0;
+  file_names = (char **) xmalloc ((argc - 1) * sizeof (char *));
+
+  while (1)
     {
-      if (ISDIGIT (c))
+      c = getopt_long (argc, argv,
+		       "-0123456789abcde::fFh:i::l:mn::o:rs::tvw:",
+		       long_options, (int *) 0);
+      if (c == 1)              /* Non-option argument. */
 	{
-	  accum = accum * 10 + c - '0';
-	  continue;
+	  char *s;
+	  s = optarg;
+	  if (*s == '+')
+	    {
+	      ++s;
+	      if (!ISDIGIT (*s))
+		{
+		  error (0, 0, "`+' requires a numeric argument");
+		  usage ();
+		}
+	      /* FIXME: use strtol */
+	      first_page_number = atoi (s);
+	    }
+	  else
+	    {
+	      file_names[n_files++] = optarg;
+	    }
 	}
       else
 	{
-	  if (accum > 0)
+	  if (ISDIGIT (c))
 	    {
-	      columns = accum;
-	      explicit_columns = TRUE;
+	      accum = accum * 10 + c - '0';
+	      continue;
 	    }
-	  accum = 0;
+	  else
+	    {
+	      if (accum > 0)
+		{
+		  columns = accum;
+		  explicit_columns = TRUE;
+		  accum = 0;
+		}
+	    }
 	}
+
+      if (c == 1)
+	continue;
+
+      if (c == EOF)
+	break;
 
       switch (c)
 	{
@@ -561,7 +614,10 @@ main (argc, argv)
     }
 
   if (flag_version)
-    fprintf (stderr, "%s\n", version_string);
+    {
+      fprintf (stderr, "%s\n", version_string);
+      exit (0);
+    }
 
   if (flag_help)
     usage ();
@@ -574,20 +630,12 @@ main (argc, argv)
     error (1, 0,
   "Cannot specify both printing across and printing in parallel.");
 
-  if (optind >= 2 && strcmp (argv[optind - 1], "--") == 0)
+  for ( ; optind < argc; optind++)
     {
-      /* We've seen `--', so interpret all remaining arguments as
-	 filenames. */
-    }
-  else
-    {
-      for ( ; optind < argc && argv[optind][0] == '+'; optind++)
-	{
-	  first_page_number = atoi (&argv[optind][1]);
-	}
+      file_names[n_files++] = argv[optind];
     }
 
-  if (optind >= argc)
+  if (n_files == 0)
     {
       /* No file arguments specified;  read from standard input.  */
       print_files (0, (char **) 0);
@@ -595,11 +643,12 @@ main (argc, argv)
   else
     {
       if (parallel_files)
-	print_files (argc - optind, &argv[optind]);
+	print_files (n_files, file_names);
       else
 	{
-	  for ( ; optind < argc; optind++)
-	    print_files (1, &argv[optind]);
+	  int i;
+	  for (i=0; i<n_files; i++)
+	    print_files (1, &file_names[i]);
 	}
     }
 
@@ -926,8 +975,6 @@ close_file (p)
 	  q->status = CLOSED;
 	  if (q->lines_stored == 0)
 	    {
-	      if (cols_ready_to_print > 0 && !print_across_flag)
-		--cols_ready_to_print;
 	      q->lines_to_print = 0;
 	    }
 	}
@@ -1078,24 +1125,18 @@ init_page ()
   int j;
   COLUMN *p;
 
-  cols_ready_to_print = 0;
-
   if (storing_columns)
     {
       store_columns ();
       for (j = columns - 1, p = column_vector; j; --j, ++p)
 	{
 	  p->lines_to_print = p->lines_stored;
-	  if (p->lines_to_print != 0)
-	    ++cols_ready_to_print;
 	}
 
       /* Last column. */
       if (balance_columns)
 	{
 	  p->lines_to_print = p->lines_stored;
-	  if (p->lines_to_print != 0)
-	    ++cols_ready_to_print;
 	}
       /* Since we're not balancing columns, we don't need to store
          the rightmost column.   Read it straight from the file. */
@@ -1104,7 +1145,6 @@ init_page ()
 	  if (p->status == OPEN)
 	    {
 	      p->lines_to_print = lines_per_body;
-	      ++cols_ready_to_print;
 	    }
 	  else
 	    p->lines_to_print = 0;
@@ -1115,7 +1155,6 @@ init_page ()
       if (p->status == OPEN)
 	{
 	  p->lines_to_print = lines_per_body;
-	  ++cols_ready_to_print;
 	}
       else
 	p->lines_to_print = 0;
@@ -1150,7 +1189,7 @@ print_page ()
 
   init_page ();
 
-  if (cols_ready_to_print == 0)
+  if (crtp () == 0)
     return FALSE;
 
   if (extremities)
@@ -1164,7 +1203,7 @@ print_page ()
   if (double_space)
     lines_left_on_page *= 2;
 
-  while (lines_left_on_page > 0 && cols_ready_to_print > 0)
+  while (lines_left_on_page > 0 && crtp () > 0)
     {
       output_position = 0;
       spaces_not_printed = 0;
@@ -1188,8 +1227,7 @@ print_page ()
 	      --p->lines_to_print;
 	      if (p->lines_to_print <= 0)
 		{
-		  --cols_ready_to_print;
-		  if (cols_ready_to_print <= 0)
+		  if (crtp () <= 0)
 		    break;
 		}
 	    }

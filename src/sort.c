@@ -1747,6 +1747,14 @@ main (argc, argv)
     sort (files, nfiles, ofp);
   cleanup ();
 
+  /* If we wait for the implicit flush on exit, and the parent process
+     has closed stdout (e.g., exec >&- in a shell), then the output file
+     winds up empty.  I don't understand why.  This is under SunOS,
+     Solaris, Ultrix, and Irix.  This premature fflush makes the output
+     reappear. --karl@cs.umb.edu  */
+  if (fflush (ofp) < 0)
+    error (1, errno, "fflush", outfile);
+
   if (have_read_stdin && fclose (stdin) == EOF)
     error (1, errno, "-");
   if (ferror (stdout) || fclose (stdout) == EOF)

@@ -27,6 +27,7 @@
 #include "version.h"
 
 char *xrealloc ();
+char *xmalloc ();
 void error ();
 
 /* The name this program was run with. */
@@ -83,6 +84,21 @@ main (argc, argv)
   program_name = argv[0];
   break_spaces = count_bytes = have_read_stdin = 0;
 
+  /* Turn any numeric options into -w options.  */
+  for (i = 1; i < argc; i++)
+    {
+      if (argv[i][0] == '-' && ISDIGIT (argv[i][1]))
+	{
+	  char *s;
+
+	  s = xmalloc (strlen (argv[i]) + 2);
+	  s[0] = '-';
+	  s[1] = 'w';
+	  strcpy (s + 2, argv[i] + 1);
+	  argv[i] = s;
+	}
+    }
+
   while ((optc = getopt_long (argc, argv, "bsw:", longopts, (int *) 0))
 	 != EOF)
     {
@@ -111,7 +127,10 @@ main (argc, argv)
     }
 
   if (flag_version)
-    fprintf (stderr, "%s\n", version_string);
+    {
+      fprintf (stderr, "%s\n", version_string);
+      exit (0);
+    }
 
   if (flag_help)
     usage ();
