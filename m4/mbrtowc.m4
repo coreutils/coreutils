@@ -1,4 +1,4 @@
-#serial 2
+#serial 3
 
 dnl From Paul Eggert
 
@@ -7,7 +7,7 @@ AC_DEFUN(jm_FUNC_MBRTOWC,
   AC_CACHE_CHECK([whether mbrtowc and mbstate_t are properly declared],
     jm_cv_func_mbrtowc,
     [AC_TRY_LINK(
-       [@%:@include <wchar.h>],
+       [#include <wchar.h>],
        [mbstate_t state; return ! (sizeof state && mbrtowc);],
        jm_cv_func_mbrtowc=yes,
        jm_cv_func_mbrtowc=no)])
