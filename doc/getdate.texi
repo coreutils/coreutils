@@ -1,10 +1,3 @@
-@ifinfo
-@set Francois Franc,ois
-@end ifinfo
-@tex
-@set Francois Fran\noexpand\ptexc cois
-@end tex
-
 @node Date input formats
 @chapter Date input formats
 
@@ -77,7 +70,7 @@ many flavors of items:
 @item time zone items
 @item day of the week items
 @item relative items
-@item pure numbers.  
+@item pure numbers.
 @end itemize
 
 @noindent We describe each of these item types in turn, below.
@@ -113,7 +106,7 @@ zeros on numbers are ignored.
 
 @cindex calendar date item
 
-A @dfn{calendar date item} specifies a day of the year.  It is 
+A @dfn{calendar date item} specifies a day of the year.  It is
 specified differently, depending on whether the month is specified
 numerically or literally.  All these strings specify the same calendar date:
 
@@ -503,6 +496,6 @@ and others.
 
 @cindex Pinard, F.
 @cindex Berry, K.
-This chapter was originally produced by @value{Francois} Pinard
+This chapter was originally produced by Fran@,{c}ois Pinard
 (@samp{pinard@@iro.umontreal.ca}) from the @file{getdate.y} source code,
 and then edited by K.@: Berry (@samp{kb@@cs.umb.edu}).

@@ -18,12 +18,7 @@
 @syncodeindex pg cp
 @syncodeindex vr cp
 
-@ifinfo
-@set Francois Franc,ois
-@end ifinfo
-@tex
-@set Francois Fran\noexpand\ptexc cois
-@end tex
+@set Francois Fran@,{c}ois
 
 @ifinfo
 @format
@@ -184,7 +179,7 @@ sometimes difficult to infer. @xref{Bugs, , , gcc, GNU CC}.
 @cindex Meyering, Jim
 @c Sorry, but the @value trick doesn't work with TeX in indexing
 @c commands, and I don't want to fix it right now. --karl.
-@cindex Pinard, Francois
+@cindex Pinard, @value{Francois}
 @cindex Berry, Karl
 @cindex Stallman, Richard
 This manual is based on the Unix man pages in the distribution, which
