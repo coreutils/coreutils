@@ -308,7 +308,9 @@ movefile (char *source, char *dest, int dest_is_dir, const struct cp_options *x)
       if (new_dest == NULL)
 	error (1, 0, _("virtual memory exhausted"));
       fail = do_move (source, new_dest, x);
-      free (new_dest);
+
+      /* Do not free new_dest.  It may have been squirelled away by
+	 the remember_copied function.  */
     }
   else
     {
