@@ -143,6 +143,9 @@ main (int argc, char **argv)
   signal (SIGPIPE, SIG_IGN);
 #endif
 
+  /* FIXME: warn if tee is given no file arguments.
+     In that case it's just a slow imitation of `cat.'  */
+
   errs = tee (argc - optind, (const char **) &argv[optind]);
   if (close (0) != 0)
     error (1, errno, _("standard input"));
@@ -159,17 +162,13 @@ main (int argc, char **argv)
 static int
 tee (int nfiles, const char **files)
 {
-  int *descriptors;
+  FILE **descriptors;
   char buffer[BUFSIZ];
-  register int bytes_read, i, ret = 0, mode;
+  int bytes_read, i;
+  int ret = 0;
+  const char *mode_string = (append ? "a" : "w");
 
-  descriptors = (int *) xmalloc ((nfiles + 1) * sizeof (int));
-
-  mode = O_WRONLY | O_CREAT;
-  if (append)
-    mode |= O_APPEND;
-  else
-    mode |= O_TRUNC;
+  descriptors = (FILE **) xmalloc ((nfiles + 1) * sizeof (descriptors[0]));
 
   /* Move all the names `up' one in the argv array to make room for
      the entry for standard output.  This writes into argv[argc].  */
@@ -178,16 +177,21 @@ tee (int nfiles, const char **files)
 
   /* In the array of NFILES + 1 descriptors, make
      the first one correspond to standard output.   */
-  descriptors[0] = 1;
+  descriptors[0] = stdout;
   files[0] = _("standard output");
+  SETVBUF (stdout, NULL, _IONBF, 0);
 
   for (i = 1; i <= nfiles; i++)
     {
-      descriptors[i] = open (files[i], mode, 0666);
-      if (descriptors[i] == -1)
+      descriptors[i] = fopen (files[i], mode_string);
+      if (descriptors[i] == NULL)
 	{
 	  error (0, errno, "%s", files[i]);
 	  ret = 1;
+	}
+      else
+	{
+	  SETVBUF (descriptors[i], NULL, _IONBF, 0);
 	}
     }
 
@@ -205,16 +209,8 @@ tee (int nfiles, const char **files)
 	 Standard output is the first one.  */
       for (i = 0; i <= nfiles; i++)
 	{
-	  if (descriptors[i] != -1
-	      && full_write (descriptors[i], buffer, bytes_read) < 0)
-	    {
-	      error (0, errno, "%s", files[i]);
-	      /* Don't close stdout.  That's done in main.  */
-	      if (descriptors[i] != 1)
-		close (descriptors[i]);
-	      descriptors[i] = -1;
-	      ret = 1;
-	    }
+	  if (descriptors[i] != NULL)
+	    fwrite (buffer, bytes_read, 1, descriptors[i]);
 	}
     }
 
@@ -226,7 +222,8 @@ tee (int nfiles, const char **files)
 
   /* Close the files, but not standard output.  */
   for (i = 1; i <= nfiles; i++)
-    if (descriptors[i] != -1 && close (descriptors[i]) != 0)
+    if (descriptors[i] != NULL
+	&& (ferror (descriptors[i]) || fclose (descriptors[i]) == EOF))
       {
 	error (0, errno, "%s", files[i]);
 	ret = 1;
