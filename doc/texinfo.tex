@@ -34,7 +34,7 @@
 
 % This automatically updates the version number based on RCS.
 \def\deftexinfoversion$#1: #2 ${\def\texinfoversion{#2}}
-\deftexinfoversion$Revision: 1.8 $
+\deftexinfoversion$Revision: 1.9 $
 \message{Loading texinfo package [Version \texinfoversion]:}
 
 % If in a .fmt file, print the version number
@@ -66,7 +66,10 @@
 % since \penalty is valid in vertical mode, we'd end up putting the
 % penalty on the vertical list instead of in the new paragraph.
 {\catcode`@ = 11
- \gdef\tie{\leavevmode\penalty\@M\ }
+ % Avoid using \@M directly, because that causes trouble
+ % if the definition is written into an index file.
+ \global\let\tiepenalty = \@M
+ \gdef\tie{\lvvmode\penalty\tiepenalty\ }
 }
 \let\~ = \tie                  % And make it available as @~.
 
@@ -1104,11 +1107,10 @@ where each line of input produces a line of output.}
 \def\restorehyphenation{\hyphenchar\font = `- }
 
 \def\t#1{%
-  {\tt \nohyphenation \rawbackslash \frenchspacing #1}%
+  {\tt \rawbackslash \frenchspacing #1}%
   \null
 }
-\let\ttfont = \t
-%\def\samp #1{`{\tt \rawbackslash \frenchspacing #1}'\null}
+\let\ttfont=\t
 \def\samp #1{`\tclose{#1}'\null}
 \def\key #1{{\tt \nohyphenation \uppercase{#1}}\null}
 \def\ctrl #1{{\tt \rawbackslash \hat}#1}
@@ -1157,6 +1159,7 @@ where each line of input produces a line of output.}
 % ever called.  -- mycroft
 \global\def\indexbreaks{\catcode`\-=\active \let-\realdash \catcode`\_=\active \let_\realunder}
 }
+
 \def\realdash{-}
 \def\realunder{_}
 \def\codedash{-\discretionary{}{}{}}
@@ -1544,7 +1547,7 @@ July\or August\or September\or October\or November\or December\fi
 \def\tablez #1#2#3#4#5#6{%
 \aboveenvbreak %
 \begingroup %
-\def\Edescription{\Etable}% Neccessary kludge.
+\def\Edescription{\Etable}% Necessary kludge.
 \let\itemindex=#1%
 \ifnum 0#3>0 \advance \leftskip by #3\mil \fi %
 \ifnum 0#4>0 \tableindent=#4\mil \fi %
@@ -1988,7 +1991,14 @@ July\or August\or September\or October\or November\or December\fi
 \def\kbd##1{\realbackslash kbd {##1}}%
 \def\dfn##1{\realbackslash dfn {##1}}%
 \def\emph##1{\realbackslash emph {##1}}%
+\unsepspaces
 }
+
+% If an index command is used in an @example environment, any spaces
+% therein should become regular spaces in the raw index file, not the
+% expansion of \tie (\\leavevmode \penalty \@M \ ).
+{\obeyspaces
+ \gdef\unsepspaces{\obeyspaces\let =\space}}
 
 % \indexnofonts no-ops all font-change commands.
 % This is used when outputting the strings to sort the index by.
@@ -2240,7 +2250,7 @@ July\or August\or September\or October\or November\or December\fi
   %
   % Insert the text of the index entry.  TeX will do line-breaking on it.
   #1%
-  % The following is kluged to not output a line of dots in the index if
+  % The following is kludged to not output a line of dots in the index if
   % there are no page numbers.  The next person who breaks this will be
   % cursed by a Unix daemon.
   \def\tempa{{\rm }}%
@@ -2578,7 +2588,7 @@ July\or August\or September\or October\or November\or December\fi
 \penalty 10000 %
 }}
 
-\outer\def\appenixsection{\parsearg\appendixsecyyy}
+\outer\def\appendixsection{\parsearg\appendixsecyyy}
 \outer\def\appendixsec{\parsearg\appendixsecyyy}
 \def\appendixsecyyy #1{\apphead1{#1}} % normally calls appendixsectionzzz
 \def\appendixsectionzzz #1{\seccheck{appendixsection}%
@@ -3010,9 +3020,10 @@ July\or August\or September\or October\or November\or December\fi
 % can't do that in the \entry macro, since index entries might consist
 % of hyphenated-identifiers-that-do-not-fit-on-a-line-and-nothing-else.)
 %
+% \turnoffactive is for the sake of @" used for umlauts.
 \def\tocentry#1#2{\begingroup
   \hyphenpenalty = 10000
-  \entry{#1}{#2}%
+  \entry{\turnoffactive #1}{\turnoffactive #2}%
 \endgroup}
 
 % Space between chapter (or whatever) number and the title.
@@ -3836,7 +3847,10 @@ July\or August\or September\or October\or November\or December\fi
   \setbox0=\hbox{\printednodename}%
   \ifdim \wd0 = 0pt
     % No printed node name was explicitly given.
-    \ifx\SETxref-automatic-section-title\relax %
+    \ifx\SETxref-automatic-section-title\thisisundefined
+      % Use the node name inside the square brackets.
+      \def\printednodename{\ignorespaces #1}%
+    \else
       % Use the actual chapter/section title appear inside
       % the square brackets.  Use the real section title if we have it.
       \ifdim \wd1>0pt%
@@ -3845,16 +3859,12 @@ July\or August\or September\or October\or November\or December\fi
       \else
         \ifhavexrefs
           % We know the real title if we have the xref values.
-          \def\printednodename{\refx{#1-title}}%
+          \def\printednodename{\refx{#1-title}{}}%
         \else
           % Otherwise just copy the Info node name.
           \def\printednodename{\ignorespaces #1}%
         \fi%
       \fi
-      \def\printednodename{#1-title}%
-    \else
-      % Use the node name inside the square brackets.
-      \def\printednodename{\ignorespaces #1}%
     \fi
   \fi
   %
