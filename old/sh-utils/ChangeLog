@@ -1,6 +1,9 @@
-2000-07-02  Jim Meyering  <meyering@lucent.com>
+2000-07-04  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0j.
+
+	* tests/date/Test.pm (test_vector): Disable test #2 for all systems,
+	even though it fails only on SunOS4.
 
 2000-07-01  Jim Meyering  <meyering@lucent.com>
 
