@@ -2,7 +2,7 @@
 
 dnl Misc lib-related macros for fileutils, sh-utils, textutils.
 
-AC_DEFUN(jm_MACROS,
+AC_DEFUN(jm_LIB_CHECK,
 [
 
   # Check for libypsec.a on Dolphin M88K machines.
