@@ -1,5 +1,9 @@
 1998-01-03  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/df.c (show_dev): Treat `fsu.fsu_bavail == (unsigned long) -1'
+	just like `fsu.fsu_blocks == 0' as an indicator that usage information
+	is invalid.  This happens with Solaris-5.5.1 CD-ROM partitions.
+
 	* lib/save-cwd.h: Guard PARAMS-enabling definition with
 	`defined PROTOTYPES || (defined __STDC__ && __STDC__)' to avoid
 	problems with Irix4's cc.  From Kaveh Ghazi.
