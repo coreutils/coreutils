@@ -1,5 +1,17 @@
 2002-07-02  Jim Meyering  <meyering@lucent.com>
 
+	* Version 2.0.13.
+
+	* src/basename.c, src/chroot.c, src/date.c, src/dirname.c (usage):
+	Use the PACKAGE_BUGREPORT e-mail address, rather than hard-coding it.
+	* src/echo.c, src/env.c, src/expr.c, src/factor.c: Likewise.
+	* src/hostname.c, src/id.c, src/kill.c, src/logname.c: Likewise.
+	* src/nice.c, src/pathchk.c, src/pinky.c, src/printenv.c: Likewise.
+	* src/printf.c, src/pwd.c, src/seq.c, src/sleep.c, src/stty.c: Likewise.
+	* src/su.c, src/tee.c, src/test.c, src/true.c, src/tty.c: Likewise.
+	* src/uname.c, src/uptime.c, src/users.c, src/who.c: Likewise.
+	* src/whoami.c, src/yes.c: Likewise.
+
 	* src/Makefile.am (.sh): Also substitute @PACKAGE_BUGREPORT@.
 	* src/groups.sh (usage): Use @PACKAGE_BUGREPORT@, rather than
 	hard-coding a deprecated address.
@@ -9,8 +21,6 @@
 	empty in many locales.  From matthew arnison.
 
 2002-06-22  Jim Meyering  <meyering@lucent.com>
-
-	* Version 2.0.13.
 
 	* configure.ac: Invoke AC_GNU_SOURCE very early.
 
