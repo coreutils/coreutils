@@ -18,7 +18,7 @@ test $? = 0 || {
 
 # Make sure it gives valid output.
 case $my_uid in
-  *[^0-9]*)
+  *[!0-9]*)
     echo "$0: invalid output (\`$my_uid') from \`id -u'" 1>&2
     (exit 1); exit
     ;;
