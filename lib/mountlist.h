@@ -1,5 +1,5 @@
 /* mountlist.h -- declarations for list of mounted filesystems
-   Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1992, 1998 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -25,11 +25,16 @@ struct mount_entry
   struct mount_entry *me_next;
 };
 
-#if __STDC__
-struct mount_entry *read_filesystem_list (int need_fs_type, int all_fs);
-#else
-struct mount_entry *read_filesystem_list ();
+#ifndef PARAMS
+# if defined PROTOTYPES || (defined __STDC__ && __STDC__)
+#  define PARAMS(Args) Args
+# else
+#  define PARAMS(Args) ()
+# endif
 #endif
+
+struct mount_entry *read_filesystem_list PARAMS ((int need_fs_type,
+						  int all_fs));
 
 /* In most environments, by default, a filesystem type is remote if it
    begins with "nfs".  This allows variants like "nfs3".  */
