@@ -550,25 +550,31 @@ main (int argc, char **argv)
   else
     {
       struct stat source_stats;
-      char *new_dest;
       char const *source = file[0];
       char *dest = file[1];
       size_t destlen = strlen (dest);
+      char *new_dest = dest;
 
       /* When the destination is specified with a trailing slash and the
 	 source exists but is not a directory, convert the user's command
-	 `ln source dest/' to `ln source dest/basename(source)'.  */
+	 `ln source dest/' to `ln source dest/basename(source)'.
+         However, skip this step if dest/basename(source) is a directory.  */
 
       if (destlen != 0
 	  && dest[destlen - 1] == '/'
 	  && lstat (source, &source_stats) == 0
 	  && !S_ISDIR (source_stats.st_mode))
 	{
-	  PATH_BASENAME_CONCAT (new_dest, dest, source);
-	}
-      else
-	{
-	  new_dest = dest;
+	  struct stat dest_stats;
+	  char *dest_plus_source_basename;
+
+	  PATH_BASENAME_CONCAT (dest_plus_source_basename, dest, source);
+
+	  if (! ((((dereference_dest_dir_symlinks ? stat : lstat)
+		   (dest_plus_source_basename, &dest_stats))
+		  == 0)
+		 && S_ISDIR (dest_stats.st_mode)))
+	    new_dest = dest_plus_source_basename;
 	}
 
       errors = do_link (source, new_dest);
