@@ -1562,10 +1562,16 @@ copy_internal (const char *src_path, const char *dst_path,
   /* Preserve the st_author field.  */
   {
     file_t file = file_name_lookup (dst_path, 0, 0);
-    if (file_chauthor (file, src_sb.st_author))
-      error (0, errno, _("failed to preserve authorship for %s"),
-	     quote (dst_path));
-    mach_port_deallocate (mach_task_self (), file);
+    if (file == MACH_PORT_NULL)
+      error (0, errno, _("failed to lookup file %s"), quote (dst_path));
+    else
+      {
+	int err = file_chauthor (file, src_sb.st_author);
+	if (err)
+	  error (0, err, _("failed to preserve authorship for %s"),
+		 quote (dst_path));
+	mach_port_deallocate (mach_task_self (), file);
+      }
   }
 #endif
 
