@@ -86,10 +86,13 @@ path_concat (const char *dir, const char *base, char **base_in_result)
 
   p = mempcpy (p_concat, dir, dir_len);
 
-  if (ISSLASH (*(p - 1)) && ISSLASH(*base))
-    --p;
-  else if (!ISSLASH (*(p - 1)) && !ISSLASH(*base))
-    *p++ = DIRECTORY_SEPARATOR;
+  if (dir_len > 0)
+    {
+      if (ISSLASH (*(p - 1)) && ISSLASH(*base))
+	--p;
+      else if (!ISSLASH (*(p - 1)) && !ISSLASH(*base))
+	*p++ = DIRECTORY_SEPARATOR;
+    }
 
   if (base_in_result)
     *base_in_result = p;
