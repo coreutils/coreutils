@@ -1,6 +1,12 @@
-2004-11-18  Jim Meyering  <jim@meyering.net>
+2004-11-19  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
+
+	* src/uniq.c (check_file): Don't check stdout for errors here.
+
+	* src/pwd.c (find_dir_entry): Update comment to match reality.
+
+2004-11-18  Jim Meyering  <jim@meyering.net>
 
 	* src/pwd.c (robust_getcwd): Correct the comment: this function
 	constructs the directory name.  The caller prints it.
