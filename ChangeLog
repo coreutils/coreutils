@@ -1,6 +1,37 @@
-2004-05-20  Paul Eggert  <eggert@cs.ucla.edu>
+2004-06-09  Jim Meyering  <jim@meyering.net>
+
+	* src/chmod.c (mode_changed): Return false, not 0, now that the
+	function returns `bool'.
+
+2004-06-08  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.0.
+
+	Adjust chmod and chown to be similar if -c or -v are given.  In
+	particular, a no-op chown is no longer reported as a change; this
+	reverts to previous behavior.  Also, fix both commands so that -v
+	report failures even if the failure is not due to the chmod or
+	chown syscalls.
+
+	* src/chmod.c (CH_NOT_APPLIED): New constant.
+	(describe_change): Handle it.
+	(process_file): Use it, if a symlink wasn't changed.
+	(mode_changed): Return bool, not int.  Accept new argument
+	NEW_MODE; all callers changed.  This lets us avoid statting the
+	file unless the new mode has unusual bits.
+	(process_file): Return -1 on error.  With -v, report all errors
+	verbosely, not just some.
+
+	* src/chown-core.c (change_file_owner): Return -1 on error, not
+	1 sometimes and -1 on others.  Our caller ORs together our results,
+	and (-1 | 1) == 0 on ones-complement hosts.
+	With -v report all errors verbosely, not just some.
+	Fix bug when chopt->root_dev_ino && !chopt->affect_symlink_referent:
+	file_stats wasn't set properly in that case.
+
+	* tests/chgrp/basic: Adjust to above changes.
+
+2004-05-20  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* tests/chgrp/basic: Test that chgrp -h does not fail on
 	symlinks, even on hosts where that's not supported.
