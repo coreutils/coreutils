@@ -5090,15 +5090,15 @@ The program accepts the following options.  Also see @ref{Common options}.
 @itemx --tabs=@var{tab1}[,@var{tab2}]@dots{}
 @opindex -t
 @opindex --tabs
-@cindex tabstops, setting
+@cindex tab stops, setting
 If only one tab stop is given, set the tabs @var{tab1} spaces apart
 (default is 8).  Otherwise, set the tabs at columns @var{tab1},
 @var{tab2}, @dots{} (numbered from 0), and replace any tabs beyond the
-last tabstop given with single spaces.  Tabstops can be separated by
+last tab stop given with single spaces.  Tab stops can be separated by
 blanks as well as by commas.
 
 On older systems, @command{expand} supports an obsolete option
-@option{-@var{tab1}[,@var{tab2}]@dots{}}, where tabstops must be
+@option{-@var{tab1}[,@var{tab2}]@dots{}}, where tab stops must be
 separated by commas.  @acronym{POSIX} 1003.1-2001 (@pxref{Standards
 conformance}) does not allow this; use @option{-t
 @var{tab1}[,@var{tab2}]@dots{}} instead.
@@ -5123,16 +5123,17 @@ characters) on each line to spaces.
 
 @command{unexpand} writes the contents of each given @var{file}, or
 standard input if none are given or for a @var{file} of @samp{-}, to
-standard output, with strings of two or more space or tab characters
-converted to as many tabs as possible followed by as many spaces as are
-needed.  Synopsis:
+standard output, converting blanks at the beginning of each line into
+as many tab characters as needed.  In the default @acronym{POSIX}
+locale, a @dfn{blank} is a space or a tab; other locales may specify
+additional blank characters.  Synopsis:
 
 @example
 unexpand [@var{option}]@dots{} [@var{file}]@dots{}
 @end example
 
-By default, @command{unexpand} converts only initial spaces and tabs (those
-that precede all non space or tab characters) on each line.  It
+By default, @command{unexpand} converts only initial blanks (those
+that precede all non-blank characters) on each line.  It
 preserves backspace characters in the output; they decrement the column
 count for tab calculations.  By default, tabs are set at every 8th
 column.
@@ -5145,14 +5146,14 @@ The program accepts the following options.  Also see @ref{Common options}.
 @itemx --tabs=@var{tab1}[,@var{tab2}]@dots{}
 @opindex -t
 @opindex --tabs
-If only one tab stop is given, set the tabs @var{tab1} spaces apart
+If only one tab stop is given, set the tabs @var{tab1} columns apart
 instead of the default 8.  Otherwise, set the tabs at columns
-@var{tab1}, @var{tab2}, @dots{} (numbered from 0), and leave spaces and
-tabs beyond the tabstops given unchanged.  Tabstops can be separated by
+@var{tab1}, @var{tab2}, @dots{} (numbered from 0), and leave blanks
+beyond the tab stops given unchanged.  Tab stops can be separated by
 blanks as well as by commas.  This option implies the @option{-a} option.
 
 On older systems, @command{unexpand} supports an obsolete option
-@option{-@var{tab1}[,@var{tab2}]@dots{}}, where tabstops must be
+@option{-@var{tab1}[,@var{tab2}]@dots{}}, where tab stops must be
 separated by commas.  (Unlike @option{-t}, this obsolete option does
 not imply @option{-a}.)  @acronym{POSIX} 1003.1-2001 (@pxref{Standards
 conformance}) does not allow this; use @option{--first-only -t
@@ -5162,8 +5163,8 @@ conformance}) does not allow this; use @option{--first-only -t
 @itemx --all
 @opindex -a
 @opindex --all
-Convert all strings of two or more spaces or tabs, not just initial
-ones, to tabs.
+Also convert all sequences of two or more blanks just before a tab stop.
+even if they occur after non-blank characters in a line.
 
 @end table
 
@@ -5832,7 +5833,7 @@ List the files in columns, sorted horizontally.
 @itemx --tabsize=@var{cols}
 @opindex -T
 @opindex --tabsize
-Assume that each tabstop is @var{cols} columns wide.  The default is 8.
+Assume that each tab stop is @var{cols} columns wide.  The default is 8.
 @command{ls} uses tabs where possible in the output, for efficiency.  If
 @var{cols} is zero, do not use tabs at all.
 
