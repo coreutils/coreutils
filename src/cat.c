@@ -302,7 +302,7 @@ main (argc, argv)
 	     may grow by a factor of 4 (by the prepending of M-^).  If all
 	     characters do, and no newlines appear in this block of input, we
 	     will have at most (OUTSIZE - 1 + INSIZE) bytes in the buffer.  If
-	     the last character in the preceeding block of input was a
+	     the last character in the preceding block of input was a
 	     newline, a line number may be written (according to the given
 	     options) as the first thing in the output buffer. (Done after the
 	     new input is read, but before processing of the input begins.)  A
@@ -424,7 +424,7 @@ cat (inbuf, insize, outbuf, outsize, quote,
   /* Number of characters read by the last read call.  */
   int n_read;
 
-  /* Determines how many consequtive newlines there have been in the
+  /* Determines how many consecutive newlines there have been in the
      input.  0 newlines makes NEWLINES -1, 1 newline makes NEWLINES 1,
      etc.  Initially 0 to indicate that we are at the beginning of a
      new line.  The "state" of the procedure is determined by
