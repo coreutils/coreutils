@@ -1,3 +1,12 @@
+1997-09-13  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/rm.c: Finish rewrite to use chdir and hash tables.
+
+1997-09-11  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/install.c: Add new option: --verbose (-v).
+	From Andreas Schwab.
+
 1997-09-01  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/Makefile.am (EXTRA_DIST): Remove mvdir.c and rmdir.c.
