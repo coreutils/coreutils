@@ -1,4 +1,4 @@
-#serial 1
+#serial 2
 
 dnl From Jim Meyering.
 dnl Determine whether chown accepts arguments of -1 for uid and gid.
