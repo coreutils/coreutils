@@ -2693,7 +2693,9 @@ static int rev_str_extension (V a, V b) { return compstr_extension (b, a); }
 static void
 sort_files (void)
 {
-  int (*func) (V, V);
+  /* `func' must be `volatile', so it can't be
+     clobbered by a `longjmp' into this function.  */
+  volatile int (*func) (V, V);
 
   switch (sort_type)
     {
