@@ -143,12 +143,6 @@ int rpl_lstat (const char *, struct stat *);
 # define DT_INIT(Val) /* empty */
 #endif
 
-#ifdef ST_MTIM_NSEC
-# define TIMESPEC_NS(timespec) ((timespec).ST_MTIM_NSEC)
-#else
-# define TIMESPEC_NS(timespec) 0
-#endif
-
 #if ! HAVE_STRUCT_STAT_ST_AUTHOR
 # define st_author st_uid
 #endif
