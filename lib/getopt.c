@@ -52,7 +52,7 @@
    program understand `configure --with-gnu-libc' and omit the object files,
    it is simpler to just do this in the source for each such file.  */
 
-#define GETOPT_INTERFACE_VERSION 1
+#define GETOPT_INTERFACE_VERSION 2
 #if !defined (_LIBC) && defined (__GLIBC__) && __GLIBC__ >= 2
 #include <gnu-versions.h>
 #if _GNU_GETOPT_INTERFACE_VERSION == GETOPT_INTERFACE_VERSION
@@ -88,7 +88,7 @@
 #ifndef _
 /* This is for other GNU distributions with internationalized messages.
    When compiling libc, the _ macro is predefined.  */
-#if defined (HAVE_LIBINTL_H) || defined (ENABLE_NLS)
+#ifdef HAVE_LIBINTL_H
 # include <libintl.h>
 # define _(msgid)	gettext (msgid)
 #else
@@ -126,7 +126,7 @@ char *optarg = NULL;
 
    On entry to `getopt', zero means this is the first call; initialize.
 
-   When `getopt' returns EOF, this is the index of the first of the
+   When `getopt' returns -1, this is the index of the first of the
    non-option elements that the caller should itself scan.
 
    Otherwise, `optind' communicates from one call to the next
@@ -188,7 +188,7 @@ int optopt = '?';
 
    The special argument `--' forces an end of option-scanning regardless
    of the value of `ordering'.  In the case of RETURN_IN_ORDER, only
-   `--' can cause `getopt' to return EOF with `optind' != ARGC.  */
+   `--' can cause `getopt' to return -1 with `optind' != ARGC.  */
 
 static enum
 {
@@ -417,7 +417,7 @@ _getopt_initialize (argc, argv, optstring)
    updating `optind' and `nextchar' so that the next call to `getopt' can
    resume the scan with the following option character or ARGV-element.
 
-   If there are no more option characters, `getopt' returns `EOF'.
+   If there are no more option characters, `getopt' returns -1.
    Then `optind' is the index in ARGV of the first ARGV-element
    that is not an option.  (The ARGV-elements have been permuted
    so that those that are not options now come last.)
@@ -546,7 +546,7 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 	     that we previously skipped, so the caller will digest them.  */
 	  if (first_nonopt != last_nonopt)
 	    optind = first_nonopt;
-	  return EOF;
+	  return -1;
 	}
 
       /* If we have come to a non-option and did not permute it,
@@ -555,7 +555,7 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
       if (NONOPTION_P)
 	{
 	  if (ordering == REQUIRE_ORDER)
-	    return EOF;
+	    return -1;
 	  optarg = argv[optind++];
 	  return 1;
 	}
@@ -646,16 +646,16 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 	      else
 		{
 		  if (opterr)
-		    if (argv[optind - 1][1] == '-')
-		      /* --option */
-		      fprintf (stderr,
-			_("%s: option `--%s' doesn't allow an argument\n"),
-			       argv[0], pfound->name);
-		    else
-		      /* +option or -option */
-		      fprintf (stderr,
-			_("%s: option `%c%s' doesn't allow an argument\n"),
-			       argv[0], argv[optind - 1][0], pfound->name);
+		   if (argv[optind - 1][1] == '-')
+		    /* --option */
+		    fprintf (stderr,
+		     _("%s: option `--%s' doesn't allow an argument\n"),
+		     argv[0], pfound->name);
+		   else
+		    /* +option or -option */
+		    fprintf (stderr,
+		     _("%s: option `%c%s' doesn't allow an argument\n"),
+		     argv[0], argv[optind - 1][0], pfound->name);
 
 		  nextchar += strlen (nextchar);
 
@@ -671,8 +671,8 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 		{
 		  if (opterr)
 		    fprintf (stderr,
-			     _("%s: option `%s' requires an argument\n"),
-			     argv[0], argv[optind - 1]);
+			   _("%s: option `%s' requires an argument\n"),
+			   argv[0], argv[optind - 1]);
 		  nextchar += strlen (nextchar);
 		  optopt = pfound->val;
 		  return optstring[0] == ':' ? ':' : '?';
@@ -763,8 +763,7 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 	    if (opterr)
 	      {
 		/* 1003.2 specifies the format of this message.  */
-		fprintf (stderr,
-			 _("%s: option requires an argument -- %c\n"),
+		fprintf (stderr, _("%s: option requires an argument -- %c\n"),
 			 argv[0], c);
 	      }
 	    optopt = c;
@@ -829,8 +828,8 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 		else
 		  {
 		    if (opterr)
-		      fprintf (stderr,
-			_("%s: option `-W %s' doesn't allow an argument\n"),
+		      fprintf (stderr, _("\
+%s: option `-W %s' doesn't allow an argument\n"),
 			       argv[0], pfound->name);
 
 		    nextchar += strlen (nextchar);
@@ -861,8 +860,8 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 	      }
 	    return pfound->val;
 	  }
-	nextchar = NULL;
-	return 'W';	/* Let the application handle it.   */
+	  nextchar = NULL;
+	  return 'W';	/* Let the application handle it.   */
       }
     if (temp[1] == ':')
       {
@@ -894,8 +893,8 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
 		  {
 		    /* 1003.2 specifies the format of this message.  */
 		    fprintf (stderr,
-			     _("%s: option requires an argument -- %c\n"),
-			     argv[0], c);
+			   _("%s: option requires an argument -- %c\n"),
+			   argv[0], c);
 		  }
 		optopt = c;
 		if (optstring[0] == ':')
@@ -946,7 +945,7 @@ main (argc, argv)
       int this_option_optind = optind ? optind : 1;
 
       c = getopt (argc, argv, "abc:d:0123456789");
-      if (c == EOF)
+      if (c == -1)
 	break;
 
       switch (c)
