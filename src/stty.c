@@ -58,7 +58,7 @@
 #endif
 
 #include "system.h"
-#include "version.h"
+#include "long-options.h"
 
 #if defined(GWINSZ_BROKEN)	/* Such as for SCO UNIX 3.2.2. */
 #undef TIOCGWINSZ
@@ -397,18 +397,10 @@ static int max_col;
 /* Current position, to know when to wrap. */
 static int current_col;
 
-/* If non-zero, display usage information and exit.  */
-static int show_help;
-
-/* If non-zero, print the version on standard output and exit.  */
-static int show_version;
-
 static struct option longopts[] =
 {
   {"all", no_argument, NULL, 'a'},
-  {"help", no_argument, &show_help, 1},
   {"save", no_argument, NULL, 'g'},
-  {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -468,7 +460,7 @@ usage (status)
       --help      display this help and exit\n\
       --version   output version information and exit\n\
 \n\
-Optionnal - before SETTING indicates negation.  An * marks non-POSIX\n\
+Optional - before SETTING indicates negation.  An * marks non-POSIX\n\
 settings.  The underlying system defines which settings are available.\n\
 ");
       printf ("\
@@ -633,14 +625,25 @@ main (argc, argv)
      char **argv;
 {
   struct termios mode;
-  enum output_type output_type = changed;
+  enum output_type output_type;
   int optc;
   int require_set_attr;
   int speed_was_set;
+  int verbose_output;
+  int recoverable_output;
 
   program_name = argv[0];
-  opterr = 0;
 
+  parse_long_options (argc, argv, usage);
+
+  /* Assume we'll be setting modes rather than displaying them.
+     But if either of -a or -g is specified, set this to zero.  */
+
+  output_type = changed;
+  verbose_output = 0;
+  recoverable_output = 0;
+
+  opterr = 0;
   while ((optc = getopt_long (argc, argv, "ag", longopts, (int *) 0)) != EOF)
     {
       switch (optc)
@@ -649,28 +652,29 @@ main (argc, argv)
 	  break;
 
 	case 'a':
+	  verbose_output = 1;
 	  output_type = all;
 	  break;
 
 	case 'g':
+	  recoverable_output = 1;
 	  output_type = recoverable;
 	  break;
 
 	default:
-	  goto done;
+	  break;
 	}
     }
 
-done:;
+  /* Specifying both -a and -g gets an error.  */
+  if (verbose_output && recoverable_output)
+    error (2, 0,
+	   "the options for verbose and stty-readable output styles are\n\
+\tmutually exclusive");
 
-  if (show_version)
-    {
-      printf ("%s\n", version_string);
-      exit (0);
-    }
-
-  if (show_help)
-    usage (0);
+  /* Specifying any other arguments with -a or -g gets an error.  */
+  if (argc > 2 && (verbose_output || recoverable_output))
+    error (2, 0, "when specifying an output style, modes may not be set");
 
   /* Initialize to all zeroes so there is no risk memcmp will report a
      spurious difference in uninitialized portion of the structure.  */
@@ -678,22 +682,17 @@ done:;
   if (tcgetattr (0, &mode))
     error (1, errno, "standard input");
 
+  if (verbose_output || recoverable_output || argc == 1)
+    {
   max_col = screen_columns ();
   current_col = 0;
-
-  if (optind == argc)
-    {
-      if (optc == '?')
-	{
-	  error (0, 0, "invalid argument `%s'", argv[--optind]);
-	  usage (1);
-	}
       display_settings (output_type, &mode);
       exit (0);
     }
 
   speed_was_set = 0;
   require_set_attr = 0;
+  optind = 1;
   while (optind < argc)
     {
       int match_found = 0;
