@@ -3476,6 +3476,8 @@ length_of_file_name_and_frills (const struct fileinfo *f)
   return len;
 }
 
+/* FIXME: the first  40+ lines of this function are nearly identical
+   to those in the print_horizontal function.  Fix that.  */
 static void
 print_many_per_line (void)
 {
