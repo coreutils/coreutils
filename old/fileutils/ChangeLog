@@ -2,15 +2,41 @@
 
 	* Version 4.1.1.
 
+	Convert du.c to use the functions in lib/hash.c, not private,
+	slightly-modified copies of those that used to be in cp-hash.c.
+
+	* src/du.c (struct entry) [coll_link]: Remove member.
+	(struct htab): Remove.
+	(hash_reset, hash_init, hash_insert2, hash_insert): Remove functions.
+
+	* src/du.c: Include hash.h and same.h.
+	(htab): Change type of global to `struct hash';
+	(entry_hash, entry_compare, hash_ins): New functions.
+	(count_entry): Use hash_ins instead of hash_insert.
+
+2001-10-06  Jim Meyering  <meyering@lucent.com>
+
+	Rewrite cp-hash.c to use the functions in lib/hash.c.
+
+	* src/cp-hash.c (hash_init): Die if hash_initialize fails.
+
 	* src/cp-hash.c: Rewrite to use the functions in lib/hash.c.
 	* src/cp-hash.h: Update prototype for hash_init.
 	* src/mv.c (do_move): Reflect that hash_init now takes no arguments.
 	* src/install.c (main): Likewise.
 	* src/cp.c (main): Likewise.
 
+2001-10-06  Jim Meyering  <meyering@lucent.com>
+
 	* src/copy.c (record_dest): Avoid a small leak.
-	(copy_internal): Call remember_copied only for if the source file
-	has 1 < st_nlink, or if it's a directory.
+
+2001-10-06  Jim Meyering  <meyering@lucent.com>
+
+	This decreases the memory footprint a little, when copying
+	hierarchies containing many files.
+
+	* src/copy.c (copy_internal): Call remember_copied only if
+	the source file has 1 < st_nlink, or if it's a directory.
 	Now that EARLIER_FILE is set conditionally, initialize it to NULL.
 
 	* tests/mv/childproof: Redirect stderr on one test.
