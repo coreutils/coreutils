@@ -3,12 +3,11 @@
 : ${PERL=perl}
 : ${srcdir=.}
 
-case "$PERL" in
-  *'missing perl')
-  echo 1>&2 "$0: configure didn't find a usable version of Perl, so can't run this test"
+$PERL -e 1 > /dev/null 2>&1 || {
+  echo 1>&2 "$0: configure didn't find a usable version of Perl," \
+    "so can't run this test"
   exit 77
-  ;;
-esac
+}
 
 exec $PERL -w -I$srcdir/.. -MFetish -- - <<\EOF
 require 5.003;

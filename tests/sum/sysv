@@ -6,12 +6,11 @@ if test "$VERBOSE" = yes; then
   sum --version
 fi
 
-case "$PERL" in
-  *'missing perl')
-  echo 1>&2 "$0: configure didn't find a usable version of Perl, so can't run this test"
+$PERL -e 1 > /dev/null 2>&1 || {
+  echo 1>&2 "$0: configure didn't find a usable version of Perl," \
+    "so can't run this test"
   exit 77
-  ;;
-esac
+}
 
 # Avoid a problem when run in a UTF-8 locale.
 # Otherwise, Perl would try to (and fail to) interpret
