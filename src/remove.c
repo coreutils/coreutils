@@ -45,14 +45,6 @@
 #define obstack_chunk_alloc malloc
 #define obstack_chunk_free free
 
-#ifndef PARAMS
-# if defined (__GNUC__) || __STDC__
-#  define PARAMS(args) args
-# else
-#  define PARAMS(args) ()
-# endif
-#endif
-
 /* FIXME: if possible, use autoconf...  */
 #ifdef __GLIBC__
 # define ROOT_CAN_UNLINK_DIRS 0
