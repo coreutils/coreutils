@@ -4574,7 +4574,7 @@ command line.
 @opindex --directory
 List just the names of directories, as with other types of files, rather
 than listing their contents.
- 
+
 @item -H
 @itemx --dereference-command-line
 @opindex -H
@@ -7058,7 +7058,7 @@ Do not create files that do not exist.
 @opindex --date
 @opindex time
 Use @var{time} instead of the current time.  It can contain month names,
-timezones, @samp{am} and @samp{pm}, etc.  @xref{Date input formats}.
+time zones, @samp{am} and @samp{pm}, etc.  @xref{Date input formats}.
 
 @item -f
 @opindex -f
@@ -9550,7 +9550,7 @@ RFC-822 style numeric time zone (e.g., -0600 or +0100), or nothing if no
 time zone is determinable.  This value reflects the @emph{current} time
 zone.  It isn't changed by the @samp{--date} option.
 @item %Z
-time zone (e.g., EDT), or nothing if no timezone is
+time zone (e.g., EDT), or nothing if no time zone is
 determinable.
 Note that this value reflects the @emph{current} time zone.
 It isn't changed by the @samp{--date} option.
@@ -9727,7 +9727,7 @@ The program accepts the following options.  Also see @ref{Common options}.
 @opindex last @var{day}
 Display the time and date specified in @var{datestr} instead of the
 current time and date.  @var{datestr} can be in almost any common
-format.  It can contain month names, timezones, @samp{am} and @samp{pm},
+format.  It can contain month names, time zones, @samp{am} and @samp{pm},
 @samp{yesterday}, @samp{ago}, @samp{next}, etc.  @xref{Date input formats}.
 
 @item -f @var{datefile}
