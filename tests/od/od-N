@@ -6,11 +6,6 @@ if test "$VERBOSE" = yes; then
   od --version
 fi
 
-# FIXME: . $srcdir/../envvar-check
-# FIXME: . $srcdir/../lang-default
-# FIXME: PRIV_CHECK_ARG=require-root . $srcdir/../priv-check
-# FIXME: PRIV_CHECK_ARG=require-non-root . $srcdir/../priv-check
-
 pwd=`pwd`
 tmp=od-N.$$
 trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
