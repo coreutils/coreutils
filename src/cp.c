@@ -253,7 +253,7 @@ main (int argc, char **argv)
 	    if (i < 0)
 	      {
 		invalid_arg (_("sparse type"), optarg, i);
-		usage (2, NULL);
+		usage (1);
 	      }
 	    flag_sparse = sparse_type[i];
 	  }
@@ -335,7 +335,7 @@ main (int argc, char **argv)
 	  break;
 
 	default:
-	  usage (2, (char *) 0);
+	  usage (1);
 	}
     }
 
@@ -346,10 +346,13 @@ main (int argc, char **argv)
     }
 
   if (show_help)
-    usage (0, NULL);
+    usage (0);
 
   if (flag_hard_link && flag_symbolic_link)
-    usage (2, _("cannot make both hard and symbolic links"));
+    {
+      error (0, 0, _("cannot make both hard and symbolic links"));
+      usage (1);
+    }
 
   if (make_backups)
     backup_type = get_version (version);
@@ -386,9 +389,15 @@ do_copy (int argc, char **argv)
   int ret = 0;
 
   if (optind >= argc)
-    usage (2, _("missing file arguments"));
+    {
+      error (0, 0, _("missing file arguments"));
+      usage (1);
+    }
   if (optind >= argc - 1)
-    usage (2, _("missing destination file"));
+    {
+      error (0, 0, _("missing destination file"));
+      usage (1);
+    }
 
   dest = argv[argc - 1];
 
@@ -491,8 +500,11 @@ do_copy (int argc, char **argv)
       struct stat source_stats;
 
       if (flag_path)
-	usage (2,
+	{
+	  error (0, 0,
 	       _("when preserving paths, last argument must be a directory"));
+	  usage (1);
+	}
 
       source = argv[optind];
 
@@ -549,8 +561,13 @@ do_copy (int argc, char **argv)
       return copy (source, new_dest, new_dst, 0, (struct dir_list *) 0);
     }
   else
-    usage (2,
-	 _("when copying multiple files, last argument must be a directory"));
+    {
+      error (0, 0,
+	     _("copying multiple files, but last argument (%s) \
+is not a directory"),
+	     dest);
+      usage (1);
+    }
 }
 
 /* Copy the file SRC_PATH to the file DST_PATH.  The files may be of
