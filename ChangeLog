@@ -1,6 +1,11 @@
-2003-06-18  Jim Meyering  <jim@meyering.net>
+2003-06-19  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.1.
+
+	* src/ln.c (ENABLE_HARD_LINK_TO_SYMLINK_WARNING): Define to 0.
+	(do_link): Don't warn about hard link to symlink.
+
+2003-06-18  Jim Meyering  <jim@meyering.net>
 
 	* src/cut.c: Include "getdelim2.h", not "getstr.h".
 	Reflect renaming: getstr -> getdelim2.
