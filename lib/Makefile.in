@@ -346,15 +346,15 @@ libfetish_a_SOURCES = acl.h acl.c getdate.h getdate.y posixtm.c \
 	exclude.h exit.h exitfail.c exitfail.h fcntl-safer.h \
 	filemode.c filemode.h file-type.c file-type.h fopen-safer.c \
 	fsusage.h fts.c fts_.h full-read.c full-read.h full-write.c \
-	full-write.h getline.h getpagesize.h gettime.c gettext.h \
-	getugroups.c group-member.h hard-locale.c hard-locale.h \
-	human.c human.h idcache.c imaxtostr.c lchown.h linebuffer.c \
-	linebuffer.h localcharset.c localcharset.h long-options.c \
-	long-options.h makepath.c makepath.h mbswidth.c mbswidth.h \
-	md5.c md5.h memcasecmp.c memcasecmp.h memcoll.c memcoll.h \
-	modechange.c modechange.h mountlist.h offtostr.c open-safer.c \
-	path-concat.c path-concat.h pathmax.h physmem.c physmem.h \
-	quote.c quote.h quotearg.c quotearg.h readtokens0.c \
+	full-write.h getline.h getpagesize.h getpass.h gettime.c \
+	gettext.h getugroups.c group-member.h hard-locale.c \
+	hard-locale.h human.c human.h idcache.c imaxtostr.c lchown.h \
+	linebuffer.c linebuffer.h localcharset.c localcharset.h \
+	long-options.c long-options.h makepath.c makepath.h mbswidth.c \
+	mbswidth.h md5.c md5.h memcasecmp.c memcasecmp.h memcoll.c \
+	memcoll.h modechange.c modechange.h mountlist.h offtostr.c \
+	open-safer.c path-concat.c path-concat.h pathmax.h physmem.c \
+	physmem.h quote.c quote.h quotearg.c quotearg.h readtokens0.c \
 	readtokens0.h readtokens.c readtokens.h readutmp.h regex.h \
 	root-dev-ino.c root-dev-ino.h safe-read.c safe-read.h \
 	safe-write.c safe-write.h same.c same.h save-cwd.c save-cwd.h \

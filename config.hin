@@ -229,6 +229,10 @@
    don't. */
 #undef HAVE_DECL_GETLOGIN
 
+/* Define to 1 if you have the declaration of `getpass', and to 0 if you
+   don't. */
+#undef HAVE_DECL_GETPASS
+
 /* Define to 1 if you have the declaration of `getpwuid', and to 0 if you
    don't. */
 #undef HAVE_DECL_GETPWUID
