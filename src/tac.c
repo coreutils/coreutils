@@ -45,6 +45,7 @@ tac -r -s '.\|
 #include <regex.h>
 
 #include "error.h"
+#include "quote.h"
 #include "safe-read.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -76,6 +77,9 @@ char *program_name;
 
 /* The string that separates the records of the file. */
 static char *separator;
+
+/* True if we have ever read standard input.  */
+static bool have_read_stdin = false;
 
 /* If true, print `separator' along with the record preceding it
    in the file; otherwise with the record following it. */
@@ -368,27 +372,56 @@ tac_seekable (int input_fd, const char *file)
     }
 }
 
-/* Print FILE in reverse.
+/* Temporary prototype -- I'm about to reorder functions.  */
+static bool tac_nonseekable (int input_fd, const char *file);
+
+/* Print FILE in reverse, copying it to a temporary
+   file first if it is not seekable.
    Return true if successful.  */
 
 static bool
-tac_file (const char *file)
+tac_file (const char *filename)
 {
   bool ok;
-  FILE *in;
+  off_t file_size;
+  int fd;
 
-  in = fopen (file, "r");
-  if (in == NULL)
+  if (STREQ (filename, "-"))
     {
-      error (0, errno, "%s", file);
-      return false;
+      have_read_stdin = true;
+      fd = STDIN_FILENO;
+      filename = _("standard input");
     }
-  SET_BINARY (fileno (in));
-  ok = tac_seekable (fileno (in), file);
-  if (fclose (in) != 0)
+  else
     {
-      error (0, errno, "%s", file);
-      return false;
+      fd = open (filename, O_RDONLY);
+      if (fd < 0)
+	{
+	  error (0, errno, _("cannot open %s for reading"), quote (filename));
+	  return false;
+	}
+    }
+
+  /* We need binary I/O, since `tac' relies
+     on `lseek' and byte counts.
+
+     Binary output will leave the lines' ends (NL or
+     CR/LF) intact when the output is a disk file.
+     Writing a file with CR/LF pairs at end of lines in
+     text mode has no visible effect on console output,
+     since two CRs in a row are just like one CR.  */
+  SET_BINARY2 (fd, STDOUT_FILENO);
+
+  file_size = lseek (fd, (off_t) 0, SEEK_END);
+
+  ok = (0 <= file_size
+	? tac_seekable (fd, filename)
+	: tac_nonseekable (fd, filename));
+
+  if (fd != STDIN_FILENO && close (fd) == -1)
+    {
+      error (0, errno, _("closing %s"), quote (filename));
+      ok = false;
     }
   return ok;
 }
@@ -418,10 +451,13 @@ record_tempfile (const char *fn, FILE *fp)
 
 #endif
 
-/* Make a copy of the standard input in `FIXME'. */
+/* Copy from file descriptor INPUT_FD (corresponding to the named FILE) to
+   a temporary file, and set *G_TMP and *G_TEMPFILE to the resulting stream
+   and file name.  Exit upon any failure.  */
+/* FIXME: don't exit upon failure!!!  */
 
 static void
-save_stdin (FILE **g_tmp, char **g_tempfile)
+copy_to_temp (FILE **g_tmp, char **g_tempfile, int input_fd, char const *file)
 {
   static char *template = NULL;
   static char *tempdir;
@@ -454,11 +490,11 @@ save_stdin (FILE **g_tmp, char **g_tempfile)
 
   while (1)
     {
-      size_t bytes_read = safe_read (STDIN_FILENO, G_buffer, read_size);
+      size_t bytes_read = safe_read (input_fd, G_buffer, read_size);
       if (bytes_read == 0)
 	break;
       if (bytes_read == SAFE_READ_ERROR)
-	error (EXIT_FAILURE, errno, _("stdin: read error"));
+	error (EXIT_FAILURE, errno, _("%s: read error"), file);
 
       if (fwrite (G_buffer, 1, bytes_read, tmp) != bytes_read)
 	error (EXIT_FAILURE, errno, "%s", tempfile);
@@ -472,36 +508,16 @@ save_stdin (FILE **g_tmp, char **g_tempfile)
   *g_tempfile = tempfile;
 }
 
-/* Print the standard input in reverse, saving it to temporary
-   file first if it is a pipe.
+/* Copy INPUT_FD to a temporary, then tac that file.
    Return true if successful.  */
 
 static bool
-tac_stdin (void)
+tac_nonseekable (int input_fd, const char *file)
 {
-  struct stat stats;
-
-  /* No tempfile is needed for "tac < file".
-     Use fstat instead of checking for errno == ESPIPE because
-     lseek doesn't work on some special files but doesn't return an
-     error, either. */
-  if (fstat (STDIN_FILENO, &stats))
-    {
-      error (0, errno, _("standard input"));
-      return false;
-    }
-
-  if (S_ISREG (stats.st_mode))
-    {
-      return tac_seekable (STDIN_FILENO, _("standard input"));
-    }
-  else
-    {
-      FILE *tmp_stream;
-      char *tmp_file;
-      save_stdin (&tmp_stream, &tmp_file);
-      return tac_seekable (fileno (tmp_stream), tmp_file);
-    }
+  FILE *tmp_stream;
+  char *tmp_file;
+  copy_to_temp (&tmp_stream, &tmp_file, input_fd, file);
+  return tac_seekable (fileno (tmp_stream), tmp_file);
 }
 
 #if 0
@@ -601,8 +617,12 @@ main (int argc, char **argv)
   const char *error_message;	/* Return value from re_compile_pattern. */
   int optc;
   bool ok;
-  bool have_read_stdin = false;
   size_t half_buffer_size;
+
+  /* Initializer for file_list if no file-arguments
+     were specified on the command line.  */
+  static char const *const default_file_list[] = {"-", NULL};
+  char const *const *file;
 
   initialize_main (&argc, &argv);
   program_name = argv[0];
@@ -674,37 +694,16 @@ main (int argc, char **argv)
       ++G_buffer;
     }
 
-  if (optind == argc)
-    {
-      have_read_stdin = true;
-      /* We need binary I/O, since `tac' relies
-	 on `lseek' and byte counts.  */
-      SET_BINARY2 (STDIN_FILENO, STDOUT_FILENO);
-      ok = tac_stdin ();
-    }
-  else
-    {
-      ok = true;
-      for (; optind < argc; ++optind)
-	{
-	  if (STREQ (argv[optind], "-"))
-	    {
-	      have_read_stdin = true;
-	      SET_BINARY2 (STDIN_FILENO, STDOUT_FILENO);
-	      ok &= tac_stdin ();
-	    }
-	  else
-	    {
-	      /* Binary output will leave the lines' ends (NL or
-		 CR/LF) intact when the output is a disk file.
-		 Writing a file with CR/LF pairs at end of lines in
-		 text mode has no visible effect on console output,
-		 since two CRs in a row are just like one CR.  */
-	      SET_BINARY (STDOUT_FILENO);
-	      ok &= tac_file (argv[optind]);
-	    }
-	}
-    }
+  file = (optind < argc
+	  ? (char const *const *) &argv[optind]
+	  : default_file_list);
+
+  {
+    size_t i;
+    ok = true;
+    for (i = 0; file[i]; ++i)
+      ok &= tac_file (file[i]);
+  }
 
   /* Flush the output buffer. */
   output ((char *) NULL, (char *) NULL);
