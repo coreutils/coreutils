@@ -9,4 +9,4 @@ TESTS_ENVIRONMENT = \
   PATH=`pwd`/../../src:$$PATH \
   PROG=dd
 
-TESTS = misc not-rewound skip-seek
+TESTS = misc not-rewound skip-seek skip-seek2
