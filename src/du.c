@@ -53,6 +53,7 @@
 #include "system.h"
 #include "save-cwd.h"
 #include "error.h"
+#include "xstrtol.h"
 
 #undef	convert_blocks
 #define	convert_blocks(b, size) (size == size_kilobytes ? ((b) + 1) / 2 : \
@@ -112,7 +113,8 @@ char *xrealloc ();
 
 static int hash_insert __P ((ino_t ino, dev_t dev));
 static int hash_insert2 __P ((struct htab *_htab, ino_t ino, dev_t dev));
-static long count_entry __P ((char *ent, int top, dev_t last_dev));
+static long count_entry __P ((const char *ent, int top, dev_t last_dev,
+			      int max_depth));
 static void du_files __P ((char **files));
 static void hash_init __P ((unsigned int modulus,
 			    unsigned int entry_tab_size));
@@ -145,6 +147,12 @@ static int opt_separate_dirs = 0;
 
 /* If nonzero, dereference symlinks that are command line arguments. */
 static int opt_dereference_arguments = 0;
+
+/* Show the total for each directory that is at most MAX_DEPTH levels
+   down from the root of the hierarchy.  The root is at level 0, so
+   `du --max-depth=0' is equivalent to `du -s.'  `du --max-depth=1' is
+   like `du -s *' but includes directories whose names begin with `.'.  */
+static int max_depth = INT_MAX;
 
 enum output_size
 {
@@ -194,6 +202,7 @@ static struct option const long_options[] =
   {"dereference-args", no_argument, &opt_dereference_arguments, 1},
   {"human-readable", no_argument, NULL, 'h'},
   {"kilobytes", no_argument, NULL, 'k'},
+  {"max-depth", required_argument, NULL, 13},
   {"megabytes", no_argument, NULL, 'm'},
   {"one-file-system", no_argument, &opt_one_file_system, 1},
   {"separate-dirs", no_argument, &opt_separate_dirs, 1},
@@ -232,6 +241,8 @@ Summarize disk usage of each FILE, recursively for directories.\n\
   -S, --separate-dirs   do not include size of subdirectories\n\
   -s, --summarize       display only a total for each argument\n\
   -x, --one-file-system  skip directories on different filesystems\n\
+      --max-depth=N     FIXME how deep to recurse before not showing the size,\n\
+                          --depth=0 is equal to -s aka --summarize.\n\
       --help            display this help and exit\n\
       --version         output version information and exit\n\
 "));
@@ -271,6 +282,7 @@ main (int argc, char **argv)
   while ((c = getopt_long (argc, argv, "abchklmsxDLS", long_options, NULL))
 	 != -1)
     {
+      long int tmp_long;
       switch (c)
 	{
 	case 0:			/* Long option. */
@@ -298,6 +310,14 @@ main (int argc, char **argv)
 	  output_size = size_kilobytes;
 	  opt_human_readable = 0;
 	  break;
+
+	case 13:		/* --max-depth=N */
+	  if (xstrtol (optarg, NULL, 0, &tmp_long, NULL) != LONGINT_OK
+	      || tmp_long < 0 || tmp_long > INT_MAX)
+	    error (1, 0, _("invalid maximum depth `%s'"), optarg);
+
+	  max_depth = (int) tmp_long;
+ 	  break;
 
 	case 'm':
 	  output_size = size_megabytes;
@@ -455,7 +475,7 @@ du_files (char **files)
       if (!opt_combined_arguments)
 	hash_reset ();
 
-      count_entry (arg, 1, 0);
+      count_entry (arg, 1, 0, max_depth);
 
       /* chdir if `count_entry' has changed the working directory.  */
       if (stat (".", &stat_buf))
@@ -490,9 +510,10 @@ du_files (char **files)
    (in units determined by `output_size') of file or directory ENT.
    TOP is one for external calls, zero for recursive calls.
    LAST_DEV is the device that the parent directory of ENT is on.  */
+/* FIXME: describe DEPTH */
 
 static long
-count_entry (char *ent, int top, dev_t last_dev)
+count_entry (const char *ent, int top, dev_t last_dev, int depth)
 {
   long size;
 
@@ -585,7 +606,7 @@ count_entry (char *ent, int top, dev_t last_dev)
 	{
 	  str_concatc (path, namep);
 
-	  size += count_entry (namep, 0, dir_dev);
+	  size += count_entry (namep, 0, dir_dev, depth - 1);
 
 	  str_trunc (path, pathlen);
 	  namep += strlen (namep) + 1;
@@ -601,7 +622,7 @@ count_entry (char *ent, int top, dev_t last_dev)
 	       _("cannot change to `..' from directory %s"), path->text);
 
       str_trunc (path, pathlen - 1); /* Remove the "/" we added.  */
-      if (!opt_summarize_only || top)
+      if ((!opt_summarize_only && depth >= 0) || top)
 	{
 	  if (opt_human_readable)
 	    {
