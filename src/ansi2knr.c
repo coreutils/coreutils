@@ -1,27 +1,34 @@
-/* Copyright (C) 1989, 1991, 1993, 1994 Aladdin Enterprises. All rights reserved. */
+/* Copyright (C) 1989, 1991, 1993, 1994, 1995 Aladdin Enterprises. All rights reserved. */
 
 /* ansi2knr.c */
-/* Convert ANSI function declarations to K&R syntax */
+/* Convert ANSI C function definitions to K&R ("traditional C") syntax */
 
 /*
-ansi2knr is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY.  No author or distributor accepts responsibility
-to anyone for the consequences of using it or for whether it serves any
-particular purpose or works at all, unless he says so in writing.  Refer
-to the GNU General Public License for full details.
+ansi2knr is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY.  No author or distributor accepts responsibility to anyone for the
+consequences of using it or for whether it serves any particular purpose or
+works at all, unless he says so in writing.  Refer to the GNU General Public
+License (the "GPL") for full details.
 
-Everyone is granted permission to copy, modify and redistribute
-ansi2knr, but only under the conditions described in the GNU
-General Public License.  A copy of this license is supposed to have been
-given to you along with ansi2knr so you can know your rights and
-responsibilities.  It should be in a file named COPYLEFT.  Among other
-things, the copyright notice and this notice must be preserved on all
-copies.
+Everyone is granted permission to copy, modify and redistribute ansi2knr,
+but only under the conditions described in the GPL.  A copy of this license
+is supposed to have been given to you along with ansi2knr so you can know
+your rights and responsibilities.  It should be in a file named COPYLEFT.
+Among other things, the copyright notice and this notice must be preserved
+on all copies.
+
+We explicitly state here what we believe is already implied by the GPL: if
+the ansi2knr program is distributed as a separate set of sources and a
+separate executable file which are aggregated on a storage medium together
+with another program, this in itself does not bring the other program under
+the GPL, nor does the mere fact that such a program or the procedures for
+constructing it invoke the ansi2knr executable bring any other part of the
+program under the GPL.
 */
 
 /*
  * Usage:
-	ansi2knr [--varargs] input_file [output_file]
+	ansi2knr input_file [output_file]
  * If no output_file is supplied, output goes to stdout.
  * There are no error messages.
  *
@@ -30,23 +37,29 @@ copies.
  * with a right parenthesis as the last character on the line.
  * It will recognize a multi-line header provided that the last character
  * of the last line of the header is a right parenthesis,
- * and no intervening line ends with a left brace or a semicolon.
+ * and no intervening line ends with a left or right brace or a semicolon.
  * These algorithms ignore whitespace and comments, except that
  * the function name must be the first thing on the line.
  * The following constructs will confuse it:
  *	- Any other construct that starts at the left margin and
  *	    follows the above syntax (such as a macro or function call).
  *	- Macros that tinker with the syntax of the function header.
- *
- * If the --varargs switch is supplied, ansi2knr will attempt to
- * convert a ... argument to va_alist and va_dcl.  If this switch is not
- * supplied, ansi2knr will simply drop any such arguments.
  */
 
 /*
  * The original and principal author of ansi2knr is L. Peter Deutsch
  * <ghost@aladdin.com>.  Other authors are noted in the change history
  * that follows (in reverse chronological order):
+	lpd 95-06-22 removed #ifndefs whose sole purpose was to define
+		undefined preprocessor symbols as 0; changed all #ifdefs
+		for configuration symbols to #ifs
+	lpd 95-04-05 changed copyright notice to make it clear that
+		including ansi2knr in a program does not bring the entire
+		program under the GPL
+	lpd 94-12-18 added conditionals for systems where ctype macros
+		don't handle 8-bit characters properly, suggested by
+		Francois Pinard <pinard@iro.umontreal.ca>;
+		removed --varargs switch (this is now the default)
 	lpd 94-10-10 removed CONFIG_BROKETS conditional
 	lpd 94-07-16 added some conditionals to help GNU `configure',
 		suggested by Francois Pinard <pinard@iro.umontreal.ca>;
@@ -59,14 +72,14 @@ copies.
 /* Most of the conditionals here are to make ansi2knr work with */
 /* the GNU configure machinery. */
 
-#ifdef HAVE_CONFIG_H
+#if HAVE_CONFIG_H
 # include <config.h>
 #endif
 
 #include <stdio.h>
 #include <ctype.h>
 
-#ifdef HAVE_CONFIG_H
+#if HAVE_CONFIG_H
 
 /*
    For properly autoconfiguring ansi2knr, use AC_CONFIG_HEADER(config.h).
@@ -90,7 +103,7 @@ copies.
 
 #endif /* not HAVE_CONFIG_H */
 
-#ifdef STDC_HEADERS
+#if STDC_HEADERS
 # include <stdlib.h>
 #else
 /*
@@ -101,9 +114,28 @@ char *malloc();
 void free();
 #endif
 
+/*
+ * The ctype macros don't always handle 8-bit characters correctly.
+ * Compensate for this here.
+ */
+#ifdef isascii
+#  undef HAVE_ISASCII		/* just in case */
+#  define HAVE_ISASCII 1
+#else
+#endif
+#if STDC_HEADERS || !HAVE_ISASCII
+#  define is_ascii(c) 1
+#else
+#  define is_ascii(c) isascii(c)
+#endif
+
+#define is_space(c) (is_ascii(c) && isspace(c))
+#define is_alpha(c) (is_ascii(c) && isalpha(c))
+#define is_alnum(c) (is_ascii(c) && isalnum(c))
+
 /* Scanning macros */
-#define isidchar(ch) (isalnum(ch) || (ch) == '_')
-#define isidfirstchar(ch) (isalpha(ch) || (ch) == '_')
+#define isidchar(ch) (is_alnum(ch) || (ch) == '_')
+#define isidfirstchar(ch) (is_alpha(ch) || (ch) == '_')
 
 /* Forward references */
 char *skipspace();
@@ -120,7 +152,16 @@ main(argc, argv)
 #define bufsize 5000			/* arbitrary size */
 	char *buf;
 	char *line;
-	int convert_varargs = 0;
+	/*
+	 * In previous versions, ansi2knr recognized a --varargs switch.
+	 * If this switch was supplied, ansi2knr would attempt to convert
+	 * a ... argument to va_alist and va_dcl; if this switch was not
+	 * supplied, ansi2knr would simply drop any such arguments.
+	 * Now, ansi2knr always does this conversion, and we only
+	 * check for this switch for backward compatibility.
+	 */
+	int convert_varargs = 1;
+
 	if ( argc > 1 && argv[1][0] == '-' )
 	  {	if ( !strcmp(argv[1], "--varargs") )
 		  {	convert_varargs = 1;
@@ -135,7 +176,7 @@ main(argc, argv)
 	switch ( argc )
 	   {
 	default:
-		printf("Usage: ansi2knr [--varargs] input_file [output_file]\n");
+		printf("Usage: ansi2knr input_file [output_file]\n");
 		exit(0);
 	case 2:
 		out = stdout;
@@ -188,7 +229,7 @@ skipspace(p, dir)
     register char *p;
     register int dir;			/* 1 for forward, -1 for backward */
 {	for ( ; ; )
-	   {	while ( isspace(*p) ) p += dir;
+	   {	while ( is_space(*p) ) p += dir;
 		if ( !(*p == '/' && p[dir] == '*') ) break;
 		p += dir;  p += dir;
 		while ( !(*p == '*' && p[dir] == '/') )
@@ -241,6 +282,7 @@ test1(buf)
 	case ';': contin = 0 /*2*/; break;
 	case ')': contin = 1; break;
 	case '{': return 0;		/* not a function */
+	case '}': return 0;		/* not a function */
 	default: contin = -1;
 	   }
 	while ( isidchar(*p) ) p++;
