@@ -466,6 +466,7 @@ pipe_lines (const char *pretty_filename, int fd, long int n_lines)
   int i;			/* Index into buffers.  */
   int total_lines = 0;		/* Total number of newlines in all buffers.  */
   int errors = 0;
+  int nbytes;			/* Size of most recent read */
 
   first = last = (LBUFFER *) xmalloc (sizeof (LBUFFER));
   first->nbytes = first->nlines = 0;
@@ -473,7 +474,7 @@ pipe_lines (const char *pretty_filename, int fd, long int n_lines)
   tmp = (LBUFFER *) xmalloc (sizeof (LBUFFER));
 
   /* Input is always read into a fresh buffer.  */
-  while ((tmp->nbytes = safe_read (fd, tmp->buffer, BUFSIZ)) > 0)
+  while ((nbytes = tmp->nbytes = safe_read (fd, tmp->buffer, BUFSIZ)) > 0)
     {
       tmp->nlines = 0;
       tmp->next = NULL;
@@ -511,15 +512,19 @@ pipe_lines (const char *pretty_filename, int fd, long int n_lines)
 	    tmp = (LBUFFER *) xmalloc (sizeof (LBUFFER));
 	}
     }
-  if (tmp->nbytes == -1)
+
+  free ((char *) tmp);
+
+  if (nbytes < 0)
     {
       error (0, errno, "%s", pretty_filename);
       errors = 1;
-      free ((char *) tmp);
       goto free_lbuffers;
     }
 
-  free ((char *) tmp);
+  /* If the file is empty, then bail out.  */
+  if (nbytes + last->nbytes == 0)
+    goto free_lbuffers;
 
   /* This prevents a core dump when the pipe contains no newlines.  */
   if (n_lines == 0)
