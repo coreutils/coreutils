@@ -2,6 +2,10 @@
 
 	* Version 5.0.1.
 
+	* src/cat.c (cat): Remove `#ifndef ENOSYS', now that it's
+	guaranteed to be defined.
+	* src/system.h (ENOSYS, ENOTSUP): Define to -1 if not defined.
+
 	* README: Mention the CVS repository.
 	Encourage addition of test cases.
 
