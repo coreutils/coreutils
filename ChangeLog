@@ -1,6 +1,11 @@
-2004-06-23  Jim Meyering  <jim@meyering.net>
+2004-06-23  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.0.
+
+	* src/ln.c (do_link): Remove unnecessary call to lstat.
+	(main): Avoid subscript error when the destination is "".
+
+2004-06-23  Jim Meyering  <jim@meyering.net>
 
 	* tests/*: Replace all occurrences of `(exit N); exit' with
 	`(exit N); exit N'.  Otherwise, those many tests could exit with
