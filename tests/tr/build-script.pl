@@ -1,8 +1,13 @@
 #! @PERL@ -w
+# -*- perl -*-
+# @configure_input@
+
 require 5.002;
 use strict;
 
 $| = 1;
+
+my $xx = '../../src/tr';
 
 print <<EOF;
 #! /bin/sh
@@ -11,7 +16,7 @@ case \$# in
   0) xx='$xx';;
   *) xx="\$1";;
 esac
-echo=echo
+echo=:
 \$echo testing with $xx=\$xx
 errors=0
 test "\$srcdir" || srcdir=.
