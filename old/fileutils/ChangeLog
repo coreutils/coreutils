@@ -1,3 +1,10 @@
+Thu Apr  1 18:05:48 1993  Jim Meyering  (meyering@comco.com)
+
+	* install.c, chgrp.c, dd.c [isascii]: Undefine before redefining.
+	* ls.c: Move some dcls before first function.
+	* all programs: Add --help and --version options.
+	* version.c: Remove `Version: ' and newlines from version string.
+
 Wed Mar 31 22:03:28 1993  Jim Meyering  (meyering@comco.com)
 
 	* configure.in [MVDIR]: Don't quote right hand side.
