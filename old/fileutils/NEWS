@@ -1,4 +1,5 @@
 Changes in release 3.13:
+* ln -f FILE FILE fails with a diagnostic rather than silently removing FILE
 * when building on systems that have getopt_long (like Linux), the system-
   provided function will be used -- so executables may be a little smaller
 * chgrp, chown, cp -p, and mv all modify owner and/or group on systems

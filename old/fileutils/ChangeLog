@@ -1,3 +1,18 @@
+Wed Apr 24 21:33:43 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* ln.c (do_link): Remove duplicate `if (lstat(...' block.
+
+	* ln.c (do_link): With --force, don't remove DEST when it's
+	the same as SOURCE.  Before, `ln -f FILE FILE' would remove FILE.
+	Reported by Bruno Haible.
+
+	* mkdir.c (main): Use verbose_fmt_string, not string literal in
+	call to make_path for --parents.  Reported by Ulrich Drepper.
+
+	* doc/mdate-sh: Get year as last rather than 6th field in output
+	of date.  Otherwise, people with 2-word TZ (like `MET DST') lost.
+	From Andreas Schwab.
+
 Tue Apr 23 22:05:35 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* src/*.c, src/*.h: Update Copyright years to include 1996.
