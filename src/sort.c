@@ -2514,7 +2514,7 @@ main (int argc, char **argv)
     temp_file_prefix = DEFAULT_TMPDIR;
 
   /* Change the way xmalloc and xrealloc fail.  */
-  xmalloc_exit_failure = SORT_FAILURE;
+  xalloc_exit_failure = SORT_FAILURE;
   xalloc_fail_func = cleanup;
 
 #ifdef SA_INTERRUPT
