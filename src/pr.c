@@ -323,7 +323,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "pr"
 
-#define AUTHORS N_ ("Pete TerMaat and Roland Huebner")
+#define WRITTEN_BY _("Written by Pete TerMaat and Roland Huebner.")
 
 #ifndef TRUE
 # define TRUE	1
@@ -1066,7 +1066,7 @@ main (int argc, char **argv)
 	    break;
 	  }
 	case_GETOPT_HELP_CHAR;
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, WRITTEN_BY);
 	default:
 	  usage (2);
 	  break;

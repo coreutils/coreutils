@@ -71,7 +71,7 @@ extern int wcwidth ();
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "wc"
 
-#define AUTHORS N_ ("Paul Rubin and David MacKenzie")
+#define WRITTEN_BY _("Written by Paul Rubin and David MacKenzie.")
 
 /* Size of atomic reads. */
 #define BUFFER_SIZE (16 * 1024)
@@ -642,7 +642,7 @@ main (int argc, char **argv)
 
       case_GETOPT_HELP_CHAR;
 
-      case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+      case_GETOPT_VERSION_CHAR (PROGRAM_NAME, WRITTEN_BY);
 
       default:
 	usage (EXIT_FAILURE);

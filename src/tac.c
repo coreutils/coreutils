@@ -50,7 +50,7 @@ tac -r -s '.\|
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "tac"
 
-#define AUTHORS N_ ("Jay Lepreau and David MacKenzie")
+#define WRITTEN_BY _("Written by Jay Lepreau and David MacKenzie.")
 
 #if defined __MSDOS__ || defined _WIN32
 /* Define this to non-zero on systems for which the regular mechanism
@@ -638,7 +638,7 @@ main (int argc, char **argv)
 	    error (EXIT_FAILURE, 0, _("separator cannot be empty"));
 	  break;
 	case_GETOPT_HELP_CHAR;
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, WRITTEN_BY);
 	default:
 	  usage (EXIT_FAILURE);
 	}

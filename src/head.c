@@ -44,7 +44,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "head"
 
-#define AUTHORS N_("David MacKenzie and Jim Meyering")
+#define WRITTEN_BY _("Written by David MacKenzie and Jim Meyering.")
 
 /* Number of lines/chars/blocks to head. */
 #define DEFAULT_NUMBER 10
@@ -1059,7 +1059,7 @@ main (int argc, char **argv)
 
 	case_GETOPT_HELP_CHAR;
 
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, WRITTEN_BY);
 
 	default:
 	  usage (EXIT_FAILURE);

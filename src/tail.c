@@ -45,8 +45,8 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "tail"
 
-#define AUTHORS \
-  N_ ("Paul Rubin, David MacKenzie, Ian Lance Taylor, and Jim Meyering")
+#define WRITTEN_BY \
+  _("Written by Paul Rubin, David MacKenzie, Ian Lance Taylor, and Jim Meyering.")
 
 #ifndef ENOSYS
   /* Some systems don't have ENOSYS -- this should be a big enough
@@ -1623,7 +1623,7 @@ parse_options (int argc, char **argv,
 
 	case_GETOPT_HELP_CHAR;
 
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, WRITTEN_BY);
 
 	default:
 	  usage (EXIT_FAILURE);

@@ -41,8 +41,8 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "df"
 
-#define AUTHORS \
-  N_ ("Torbjorn Granlund, David MacKenzie, and Paul Eggert")
+#define WRITTEN_BY \
+  _("Written by Torbjorn Granlund, David MacKenzie, and Paul Eggert.")
 
 /* Name this program was run with. */
 char *program_name;
@@ -854,7 +854,7 @@ main (int argc, char **argv)
 	  break;
 
 	case_GETOPT_HELP_CHAR;
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, WRITTEN_BY);
 
 	default:
 	  usage (EXIT_FAILURE);

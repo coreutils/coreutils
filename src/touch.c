@@ -36,8 +36,8 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "touch"
 
-#define AUTHORS \
-N_ ("Paul Rubin, Arnold Robbins, Jim Kingdon, David MacKenzie, and Randy Smith")
+#define WRITTEN_BY \
+_("Written by Paul Rubin, Arnold Robbins, Jim Kingdon, David MacKenzie, and Randy Smith.")
 
 #ifndef STDC_HEADERS
 time_t time ();
@@ -336,7 +336,7 @@ main (int argc, char **argv)
 
 	case_GETOPT_HELP_CHAR;
 
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, WRITTEN_BY);
 
 	default:
 	  usage (EXIT_FAILURE);

@@ -30,7 +30,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "yes"
 
-#define AUTHORS "David MacKenzie"
+#define WRITTEN_BY _("Written by David MacKenzie.")
 
 /* How many iterations between ferror checks.  */
 #define UNROLL 10000
@@ -77,7 +77,7 @@ main (int argc, char **argv)
   /* Don't recognize --help or --version if POSIXLY_CORRECT is set.  */
   if (getenv ("POSIXLY_CORRECT") == NULL)
     parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-			AUTHORS, usage);
+			WRITTEN_BY, usage);
 
   if (argc == 1)
     {

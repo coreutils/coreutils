@@ -59,7 +59,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "printf"
 
-#define AUTHORS "David MacKenzie"
+#define WRITTEN_BY _("Written by David MacKenzie.")
 
 #ifndef STDC_HEADERS
 double strtod ();
@@ -566,7 +566,7 @@ main (int argc, char **argv)
   posixly_correct = (getenv ("POSIXLY_CORRECT") != NULL);
   if (!posixly_correct)
     parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-			AUTHORS, usage);
+			WRITTEN_BY, usage);
 
   /* The above handles --help and --version.
      Since there is no other invocation of getopt, handle `--' here.  */

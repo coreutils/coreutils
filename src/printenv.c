@@ -40,7 +40,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "printenv"
 
-#define AUTHORS N_ ("David MacKenzie and Richard Mlynarik")
+#define WRITTEN_BY _("Written by David MacKenzie and Richard Mlynarik.")
 
 /* The name this program was run with. */
 char *program_name;
@@ -94,7 +94,7 @@ main (int argc, char **argv)
   atexit (close_stdout);
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      AUTHORS, usage);
+		      WRITTEN_BY, usage);
 
   while ((c = getopt_long (argc, argv, "", long_options, NULL)) != -1)
     {

@@ -29,7 +29,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "tee"
 
-#define AUTHORS N_ ("Mike Parker, Richard M. Stallman, and David MacKenzie")
+#define WRITTEN_BY _("Written by Mike Parker, Richard M. Stallman, and David MacKenzie.")
 
 static int tee (int nfiles, const char **files);
 
@@ -107,7 +107,7 @@ main (int argc, char **argv)
 
 	case_GETOPT_HELP_CHAR;
 
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, WRITTEN_BY);
 
 	default:
 	  usage (EXIT_FAILURE);

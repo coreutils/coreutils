@@ -28,7 +28,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "hostid"
 
-#define AUTHORS "Jim Meyering"
+#define WRITTEN_BY _("Written by Jim Meyering.")
 
 /* The name this program was run with, for error messages. */
 char *program_name;
@@ -69,7 +69,7 @@ main (int argc, char **argv)
   atexit (close_stdout);
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      AUTHORS, usage);
+		      WRITTEN_BY, usage);
 
   if (argc > 1)
     {

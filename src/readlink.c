@@ -32,7 +32,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "readlink"
 
-#define AUTHORS "Dmitry V. Levin"
+#define WRITTEN_BY _("Written by Dmitry V. Levin.")
 
 /* Name this program was run with.  */
 char *program_name;
@@ -117,7 +117,7 @@ main (int argc, char *const argv[])
 	  verbose = 1;
 	  break;
 	case_GETOPT_HELP_CHAR;
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, WRITTEN_BY);
 	default:
 	  usage (EXIT_FAILURE);
 	}

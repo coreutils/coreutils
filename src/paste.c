@@ -46,7 +46,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "paste"
 
-#define AUTHORS N_ ("David M. Ihnat and David MacKenzie")
+#define WRITTEN_BY _("Written by David M. Ihnat and David MacKenzie.")
 
 /* Indicates that no delimiter should be added in the current position. */
 #define EMPTY_DELIM '\0'
@@ -468,7 +468,7 @@ main (int argc, char **argv)
 
 	case_GETOPT_HELP_CHAR;
 
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, WRITTEN_BY);
 
 	default:
 	  usage (EXIT_FAILURE);

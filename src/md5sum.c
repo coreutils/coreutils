@@ -34,7 +34,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME (algorithm == ALG_MD5 ? "md5sum" : "shasum")
 
-#define AUTHORS N_ ("Ulrich Drepper and Scott Miller")
+#define WRITTEN_BY _("Written by Ulrich Drepper and Scott Miller.")
 
 /* Most systems do not distinguish between external and internal
    text representations.  */
@@ -602,7 +602,7 @@ main (int argc, char **argv)
 	warn = 1;
 	break;
       case_GETOPT_HELP_CHAR;
-      case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+      case_GETOPT_VERSION_CHAR (PROGRAM_NAME, WRITTEN_BY);
       default:
 	usage (EXIT_FAILURE);
       }

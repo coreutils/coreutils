@@ -32,7 +32,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "ln"
 
-#define AUTHORS N_ ("Mike Parker and David MacKenzie")
+#define WRITTEN_BY _("Written by Mike Parker and David MacKenzie.")
 
 #ifndef ENABLE_HARD_LINK_TO_SYMLINK_WARNING
 # define ENABLE_HARD_LINK_TO_SYMLINK_WARNING 0
@@ -476,7 +476,7 @@ main (int argc, char **argv)
 	  backup_suffix_string = optarg;
 	  break;
 	case_GETOPT_HELP_CHAR;
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, WRITTEN_BY);
 	default:
 	  usage (EXIT_FAILURE);
 	  break;

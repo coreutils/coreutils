@@ -33,7 +33,7 @@
 
 /* I wrote this program from scratch, based on the description of
    D.J. Bernstein's program: http://cr.yp.to/daemontools/setuidgid.html.  */
-#define AUTHORS "Jim Meyering"
+#define WRITTEN_BY _("Written by Jim Meyering.")
 
 #define FAIL_STATUS 111
 
@@ -83,7 +83,7 @@ main (int argc, char **argv)
   atexit (close_stdout);
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      AUTHORS, usage);
+		      WRITTEN_BY, usage);
 
   /* The above handles --help and --version.
      Since there is no other invocation of getopt, handle `--' here.  */

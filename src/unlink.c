@@ -35,7 +35,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "unlink"
 
-#define AUTHORS "Michael Stone"
+#define WRITTEN_BY _("Written by Michael Stone.")
 
 /* Name this program was run with.  */
 char *program_name;
@@ -74,7 +74,7 @@ main (int argc, char **argv)
   /* Don't recognize --help or --version if POSIXLY_CORRECT is set.  */
   if (getenv ("POSIXLY_CORRECT") == NULL)
     parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-			AUTHORS, usage);
+			WRITTEN_BY, usage);
 
   /* The above handles --help and --version.
      Since there is no other invocation of getopt, handle `--' here.  */

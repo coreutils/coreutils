@@ -29,7 +29,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "dirname"
 
-#define AUTHORS N_ ("David MacKenzie and Jim Meyering")
+#define WRITTEN_BY _("Written by David MacKenzie and Jim Meyering.")
 
 /* The name this program was run with. */
 char *program_name;
@@ -75,7 +75,7 @@ main (int argc, char **argv)
   atexit (close_stdout);
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      AUTHORS, usage);
+		      WRITTEN_BY, usage);
   /* The above handles --help and --version.
      Since there is no other invocation of getopt, handle `--' here.  */
   if (argc > 1 && STREQ (argv[1], "--"))

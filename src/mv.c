@@ -37,7 +37,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "mv"
 
-#define AUTHORS N_ ("Mike Parker, David MacKenzie, and Jim Meyering")
+#define WRITTEN_BY _("Written by Mike Parker, David MacKenzie, and Jim Meyering.")
 
 /* Initial number of entries in each hash table entry's table of inodes.  */
 #define INITIAL_HASH_MODULE 100
@@ -436,7 +436,7 @@ main (int argc, char **argv)
 	  backup_suffix_string = optarg;
 	  break;
 	case_GETOPT_HELP_CHAR;
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, WRITTEN_BY);
 	default:
 	  usage (EXIT_FAILURE);
 	}

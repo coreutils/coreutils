@@ -31,7 +31,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "users"
 
-#define AUTHORS N_ ("Joseph Arceneaux and David MacKenzie")
+#define WRITTEN_BY _("Written by Joseph Arceneaux and David MacKenzie.")
 
 /* The name this program was run with. */
 char *program_name;
@@ -141,7 +141,7 @@ main (int argc, char **argv)
   atexit (close_stdout);
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      AUTHORS, usage);
+		      WRITTEN_BY, usage);
 
   while ((optc = getopt_long (argc, argv, "", longopts, &longind)) != -1)
     {

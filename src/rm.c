@@ -57,8 +57,8 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "rm"
 
-#define AUTHORS \
-  N_ ("Paul Rubin, David MacKenzie, Richard Stallman, and Jim Meyering")
+#define WRITTEN_BY \
+  _("Written by Paul Rubin, David MacKenzie, Richard Stallman, and Jim Meyering.")
 
 /* Name this program was run with.  */
 char *program_name;
@@ -188,7 +188,7 @@ main (int argc, char **argv)
 	  x.verbose = 1;
 	  break;
 	case_GETOPT_HELP_CHAR;
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, WRITTEN_BY);
 	default:
 	  usage (EXIT_FAILURE);
 	}

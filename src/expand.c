@@ -47,7 +47,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "expand"
 
-#define AUTHORS "David MacKenzie"
+#define WRITTEN_BY _("Written by David MacKenzie.")
 
 /* The number of bytes added at a time to the amount of memory
    allocated for the output line. */
@@ -399,7 +399,7 @@ main (int argc, char **argv)
 	  obsolete_tablist = true;
 	  break;
 	case_GETOPT_HELP_CHAR;
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, WRITTEN_BY);
 	default:
 	  if (tabval == -1)
 	    tabval = 0;

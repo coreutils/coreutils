@@ -32,7 +32,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "ptx"
 
-#define AUTHORS "François Pinard"
+#define WRITTEN_BY _("Written by François Pinard.")
 
 /* Number of possible characters in a byte.  */
 #define CHAR_SET_SIZE 256
@@ -2084,7 +2084,7 @@ Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n"),
 				     format_args, format_vals);
 	case_GETOPT_HELP_CHAR;
 
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, WRITTEN_BY);
 	}
     }
 

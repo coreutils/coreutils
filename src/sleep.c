@@ -30,7 +30,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "sleep"
 
-#define AUTHORS N_ ("Jim Meyering and Paul Eggert")
+#define WRITTEN_BY _("Written by Jim Meyering and Paul Eggert.")
 
 /* The name by which this program was run. */
 char *program_name;
@@ -120,7 +120,7 @@ main (int argc, char **argv)
   atexit (close_stdout);
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
-		      AUTHORS, usage);
+		      WRITTEN_BY, usage);
 
   while ((c = getopt_long (argc, argv, "", long_options, NULL)) != -1)
     {

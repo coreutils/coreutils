@@ -89,7 +89,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "env"
 
-#define AUTHORS N_ ("Richard Mlynarik and David MacKenzie")
+#define WRITTEN_BY _("Written by Richard Mlynarik and David MacKenzie.")
 
 int putenv ();
 
@@ -161,7 +161,7 @@ main (register int argc, register char **argv, char **envp)
 	case 'u':
 	  break;
 	case_GETOPT_HELP_CHAR;
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, WRITTEN_BY);
 	default:
 	  usage (2);
 	}
