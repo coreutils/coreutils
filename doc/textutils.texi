@@ -1904,11 +1904,8 @@ appended to it, in which case the global ordering options are not used
 for that particular field.  The @samp{-b} option may be independently
 attached to either or both of the @samp{+@var{pos}} and
 @samp{-@var{pos}} parts of a field specification, and if it is inherited
-from the global options it will be attached to both.  If a @samp{-n} or
-@samp{-M} option is used, thus implying a @samp{-b} option, the
-@samp{-b} option is taken to apply to both the @samp{+@var{pos}} and the
-@samp{-@var{pos}} parts of a key specification.  Keys may span multiple
-fields.
+from the global options it will be attached to both.
+Keys may span multiple fields.
 
 Here are some examples to illustrate various combinations of options.
 In them, the @sc{POSIX} @samp{-k} option is used to specify sort keys rather
