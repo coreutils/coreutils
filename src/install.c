@@ -607,7 +607,7 @@ get_ids (void)
       endpwent ();
     }
   else
-    owner_id = getuid ();
+    owner_id = (uid_t) -1;
 
   if (group_name)
     {
@@ -625,7 +625,7 @@ get_ids (void)
       endgrent ();
     }
   else
-    group_id = getgid ();
+    group_id = (gid_t) -1;
 }
 
 static void
