@@ -30,13 +30,11 @@
 #include "system.h"
 #include "argmatch.h"
 #include "backupfile.h"
-#include "closeout.h"
 #include "copy.h"
 #include "cp-hash.h"
 #include "error.h"
 #include "dirname.h"
 #include "path-concat.h"
-#include "version-etc.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "cp"

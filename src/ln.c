@@ -28,10 +28,8 @@
 
 #include "system.h"
 #include "backupfile.h"
-#include "closeout.h"
 #include "dirname.h"
 #include "error.h"
-#include "version-etc.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "ln"

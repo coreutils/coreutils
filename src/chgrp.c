@@ -24,11 +24,9 @@
 #include <getopt.h>
 
 #include "system.h"
-#include "closeout.h"
 #include "error.h"
 #include "group-member.h"
 #include "savedir.h"
-#include "version-etc.h"
 #include "xstrtoul.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */

@@ -52,13 +52,11 @@
 #include <assert.h>
 
 #include "system.h"
-#include "closeout.h"
 #include "error.h"
 #include "exclude.h"
 #include "human.h"
 #include "save-cwd.h"
 #include "savedir.h"
-#include "version-etc.h"
 #include "xstrtol.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */

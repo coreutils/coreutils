@@ -50,11 +50,9 @@
 #include <assert.h>
 
 #include "system.h"
-#include "closeout.h"
 #include "error.h"
 #include "remove.h"
 #include "save-cwd.h"
-#include "version-etc.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "rm"

@@ -29,14 +29,12 @@
 #include <assert.h>
 
 #include "system.h"
-#include "closeout.h"
 #include "dirname.h"
 #include "error.h"
 #include "fsusage.h"
 #include "human.h"
 #include "mountlist.h"
 #include "save-cwd.h"
-#include "version-etc.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "df"

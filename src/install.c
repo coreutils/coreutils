@@ -73,7 +73,6 @@
 
 #include "system.h"
 #include "backupfile.h"
-#include "closeout.h"
 #include "error.h"
 #include "cp-hash.h"
 #include "copy.h"
@@ -81,7 +80,6 @@
 #include "makepath.h"
 #include "modechange.h"
 #include "path-concat.h"
-#include "version-etc.h"
 #include "xstrtol.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */

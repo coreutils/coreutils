@@ -25,12 +25,10 @@
 
 #include "system.h"
 #include "argmatch.h"
-#include "closeout.h"
 #include "error.h"
 #include "getdate.h"
 #include "posixtm.h"
 #include "safe-read.h"
-#include "version-etc.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "touch"

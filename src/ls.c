@@ -69,7 +69,6 @@
 #include <fnmatch.h>
 
 #include "argmatch.h"
-#include "closeout.h"
 #include "error.h"
 #include "human.h"
 #include "filemode.h"
@@ -78,7 +77,6 @@
 #include "path-concat.h"
 #include "quotearg.h"
 #include "strverscmp.h"
-#include "version-etc.h"
 #include "xstrtol.h"
 
 #define PROGRAM_NAME (ls_mode == LS_LS ? "ls" \

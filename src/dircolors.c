@@ -26,12 +26,10 @@
 #include <stdio.h>
 
 #include "system.h"
-#include "closeout.h"
 #include "dircolors.h"
 #include "error.h"
 #include "getline.h"
 #include "obstack.h"
-#include "version-etc.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "dircolors"
