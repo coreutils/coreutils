@@ -1,3 +1,10 @@
+2005-02-03  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* memrchr.h: New file.
+	* chdir-long.c: Include it.
+	* memrchr.c [!defined _LIBC]: Include it rather than <string.h>.
+	Don't bother including stddef.h.
+
 2005-02-01  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* mountlist.h (MOUNTLIST_H_): New macro, to protect against double
