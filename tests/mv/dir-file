@@ -21,8 +21,10 @@ if test $framework_failure = 1; then
   exit 1
 fi
 
+fail=0
+
 # These should both fail, but until fileutils-4.0q only the second one did.
-mv dir file && fail=1
-mv file dir && fail=1
+mv dir file > /dev/null 2>&1 && fail=1
+mv file dir > /dev/null 2>&1 && fail=1
 
 exit $fail
