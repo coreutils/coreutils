@@ -15,13 +15,7 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
-/* Options:
-   -R	Recursively change modes of directory contents.
-   -c	Verbosely describe only files whose modes actually change.
-   -f	Do not print error messages about files.
-   -v	Verbosely describe changed modes.
-
-   David MacKenzie <djm@gnu.ai.mit.edu> */
+/* Written by David MacKenzie <djm@gnu.ai.mit.edu> */
 
 #include <config.h>
 #include <stdio.h>
@@ -54,6 +48,10 @@ static int force_silent;
 /* If nonzero, describe the modes we set. */
 static int verbose;
 
+/* The argument to the --reference option.  Use the owner and group IDs
+   of this file.  This file must exist.  */
+static char *reference_file;
+
 /* If nonzero, describe only modes that change. */
 static int changes_only;
 
@@ -69,6 +67,7 @@ static struct option const long_options[] =
   {"changes", no_argument, 0, 'c'},
   {"silent", no_argument, 0, 'f'},
   {"quiet", no_argument, 0, 'f'},
+  {"reference", required_argument, 0, 12},
   {"verbose", no_argument, 0, 'v'},
   {"help", no_argument, &show_help, 1},
   {"version", no_argument, &show_version, 1},
@@ -217,13 +216,15 @@ usage (int status)
       printf (_("\
 Usage: %s [OPTION]... MODE[,MODE]... FILE...\n\
   or:  %s [OPTION]... OCTAL_MODE FILE...\n\
+  or:  %s [OPTION]... --reference=RFILE FILE...\n\
 "),
-	      program_name, program_name);
+	      program_name, program_name, program_name);
       printf (_("\
 \n\
   -c, --changes           like verbose but report only when a change is made\n\
   -f, --silent, --quiet   suppress most error messages\n\
   -v, --verbose           output a diagnostic for every file processed\n\
+      --reference=RFILE   use RFILE's mode instead of MODE values\n\
   -R, --recursive         change files and directories recursively\n\
       --help              display this help and exit\n\
       --version           output version information and exit\n\
@@ -259,9 +260,8 @@ main (int argc, char **argv)
     {
       thisind = optind ? optind : 1;
 
-      c = getopt_long (argc, argv, "RcfvrwxXstugoa,+-=", long_options,
-		       (int *) 0);
-      if (c == EOF)
+      c = getopt_long (argc, argv, "RcfvrwxXstugoa,+-=", long_options, NULL);
+      if (c == -1)
 	break;
 
       switch (c)
@@ -285,6 +285,9 @@ main (int argc, char **argv)
 	  if (modeind != 0 && modeind != thisind)
 	    error (1, 0, _("invalid mode"));
 	  modeind = thisind;
+	  break;
+	case 12:
+	  reference_file = optarg;
 	  break;
 	case 'R':
 	  recurse = 1;
@@ -312,7 +315,7 @@ main (int argc, char **argv)
   if (show_help)
     usage (0);
 
-  if (modeind == 0)
+  if (modeind == 0 && reference_file == NULL)
     modeind = optind++;
 
   if (optind >= argc)
@@ -321,12 +324,15 @@ main (int argc, char **argv)
       usage (1);
     }
 
-  changes = mode_compile (argv[modeind],
-			  MODE_MASK_EQUALS | MODE_MASK_PLUS | MODE_MASK_MINUS);
+  changes = (reference_file ? mode_create_from_ref (reference_file)
+	     : mode_compile (argv[modeind], MODE_MASK_ALL));
+
   if (changes == MODE_INVALID)
     error (1, 0, _("invalid mode"));
   else if (changes == MODE_MEMORY_EXHAUSTED)
     error (1, 0, _("virtual memory exhausted"));
+  else if (changes == MODE_BAD_REFERENCE)
+    error (1, errno, "%s", reference_file);
 
   for (; optind < argc; ++optind)
     {
