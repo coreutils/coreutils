@@ -93,7 +93,7 @@ int yesno ();
 char *program_name;
 
 /* FIXME: document */
-enum backup_type backup_type;
+static enum backup_type backup_type;
 
 /* A pointer to the function used to make links.  This will point to either
    `link' or `symlink'. */
