@@ -1,6 +1,16 @@
-2002-12-15  Jim Meyering  <jim@meyering.net>
+2002-12-20  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.5.
+
+	* src/touch.c (touch): Change the wording of a diagnostic so
+	that it makes sense both when the file exists and when it doesn't.
+	Suggestion from Michael Stone.
+
+2002-12-18  Jim Meyering  <jim@meyering.net>
+
+	* src/stty.c (valid_options): Declare to be static.
+
+2002-12-15  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.cfg: Remove rules related to generating m4/jm-glibc-io.m4.
 
