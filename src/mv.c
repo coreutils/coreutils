@@ -195,7 +195,7 @@ do_move (const char *source, const char *dest, const struct cp_options *x)
 	     copied-into-self directory, DEST (`b/b' in the example),
 	     and failing.  */
 
-	  dir_to_remove = dest;
+	  dir_to_remove = NULL;
 	  error (0, 0,
 		 _("cannot move `%s' to a subdirectory of itself, `%s'"),
 		 source, dest);
