@@ -33,6 +33,7 @@
 #include "system.h"
 #include "error.h"
 #include "full-write.h"
+#include "getpagesize.h"
 #include "safe-read.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -504,6 +505,8 @@ main (int argc, char **argv)
   /* Optimal size of i/o operations of input.  */
   size_t insize;
 
+  size_t page_size = getpagesize ();
+
   /* Pointer to the input buffer.  */
   char *inbuf;
 
@@ -806,15 +809,16 @@ main (int argc, char **argv)
       if (options == 0)
 	{
 	  insize = max (insize, outsize);
-	  inbuf = xmalloc (insize);
+	  inbuf = xmalloc (insize + page_size - 1);
 
-	  simple_cat (inbuf, insize);
+	  simple_cat (ptr_align (inbuf, page_size), insize);
 	}
       else
 	{
-	  inbuf = xmalloc (insize + 1);
+	  inbuf = xmalloc (insize + 1 + page_size - 1);
 
-	  /* Why are (OUTSIZE - 1 + INSIZE * 4 + LINE_COUNTER_BUF_LEN)
+	  /* Why are
+	     (OUTSIZE - 1 + INSIZE * 4 + LINE_COUNTER_BUF_LEN + PAGE_SIZE - 1)
 	     bytes allocated for the output buffer?
 
 	     A test whether output needs to be written is done when the input
@@ -829,11 +833,17 @@ main (int argc, char **argv)
 	     options) as the first thing in the output buffer. (Done after the
 	     new input is read, but before processing of the input begins.)
 	     A line number requires seldom more than LINE_COUNTER_BUF_LEN
-	     positions.  */
+	     positions.
 
-	  outbuf = xmalloc (outsize - 1 + insize * 4 + LINE_COUNTER_BUF_LEN);
+	     Align the output buffer to a page size boundary, for efficency on
+	     some paging implementations, so add PAGE_SIZE - 1 bytes to the
+	     request to make room for the alignment.  */
 
-	  cat (inbuf, insize, outbuf, outsize, quote,
+	  outbuf = xmalloc (outsize - 1 + insize * 4 + LINE_COUNTER_BUF_LEN
+			    + page_size - 1);
+
+	  cat (ptr_align (inbuf, page_size), insize,
+	       ptr_align (outbuf, page_size), outsize, quote,
 	       output_tabs, numbers, numbers_at_empty_lines, mark_line_ends,
 	       squeeze_empty_lines);
 
