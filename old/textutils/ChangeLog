@@ -1,5 +1,7 @@
 Fri Oct 18 00:08:04 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* configure.in (AC_OUTPUT): Add tests/join-test/Makefile.
+
 	* tests/Makefile.am (SUBDIRS): Add join-test.
 
 Tue Oct 15 23:25:31 1996  Jim Meyering  <meyering@na-net.ornl.gov>
