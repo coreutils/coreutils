@@ -1,3 +1,11 @@
+Tue May  7 22:10:20 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* configure.in: Require autoconf-2.10.
+
+Mon May  6 22:40:54 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* lib/strftime.c: Update from GNU libc.
+
 Sat May  4 20:54:32 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* system.h [IN_CTYPE_DOMAIN]: Rename from ISASCII.
