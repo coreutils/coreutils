@@ -1,4 +1,13 @@
 [4.1.1]
+* cp's -P option now means the same as --no-dereference, per POSIX.
+    Use --parents to get the old meaning.
+* When copying with the -H and -L options, cp can preserve logical
+    links between source files with --preserve=links
+* cp accepts new options:
+    --preserve[={mode,ownership,timestamps,links,all}]
+    --no-preserve={mode,ownership,timestamps,links,all}
+* cp's -p and --preserve options remain unchanged and are equivalent
+    to `--preserve=mode,ownership,timestamps'
 * mv and cp accept a new option: --reply={yes,no,query};  provides a consistent
     mechanism to control whether one is prompted about certain existing
     destination files.  Note that cp's and mv's -f options don't have the
