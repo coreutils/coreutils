@@ -15,7 +15,9 @@ Wed Jul  3 17:41:15 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/chgrp.c [!MAXUID]: Define after inclusion of system.h to avoid
 	warning about redefinition on SunOS4, Solaris2.4 and SGI-irix5.3.
-	From Kaveh Ghazi.
+	From Kaveh Ghazi.  Also, Santiago Vila Doncel reported that defining
+	MAXUID before including system.h caused a compilation failure on some
+	ConvexOS system.
 
 Tue Jul  2 22:56:03 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
@@ -35,7 +37,7 @@ Mon Jul  1 23:47:29 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 Sun Jun 30 16:41:45 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/install.c (usage): Fix typo, 3nd->3rd, in usage message.
-	From Santiago Vila <sanvila@unex.es>.
+	From Santiago Vila Doncel.
 
 Sat Jun 29 00:33:31 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
