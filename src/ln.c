@@ -48,7 +48,7 @@ int symlink ();
 #define PATH_BASENAME_CONCAT(new_dest, dest, source)			\
     do									\
       {									\
-	char *source_base;						\
+	const char *source_base;					\
 	char *tmp_source;						\
 									\
 	tmp_source = (char *) alloca (strlen ((source)) + 1);		\
@@ -377,7 +377,7 @@ main (int argc, char **argv)
   int c;
   int errors;
   int make_backups = 0;
-  char *version;
+  const char *version;
 
   program_name = argv[0];
   setlocale (LC_ALL, "");
@@ -474,7 +474,7 @@ main (int argc, char **argv)
   else if (optind == argc - 2)
     {
       struct stat source_stats;
-      char *source;
+      const char *source;
       char *dest;
       char *new_dest;
 
