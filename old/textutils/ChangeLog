@@ -1,3 +1,9 @@
+2001-08-04  Jim Meyering  <meyering@lucent.com>
+
+	* Makefile.am (EXTRA_DIST): Add Makefile.cfg.
+
+	* man/Makefile.am (EXTRA_DIST): Remove duplicate definition.
+
 2001-07-08  Jim Meyering  <meyering@lucent.com>
 
 	* src/tail.c (usage): Reformat so help2man generates a properly
