@@ -1,4 +1,7 @@
 Changes in release 1.23
+[1.22f]
+* sort bug whereby using key-local `d' option would cause following key specs
+  to be ignored when any two keys (in the `d'-modified test) compared equal.
 [1.22e]
 * remove maintainer mode
 [1.22d]
