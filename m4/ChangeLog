@@ -8,6 +8,7 @@
 
 	* const.m4: Remove file, since the fix made it into the experimental
 	version of autoconf.
+	* mktime.m4: Likewise.
 
 	* check-type.m4: Remove file, now that the latest version of
 	AC_CHECK_TYPE takes a third arg to specify additional #includes.
