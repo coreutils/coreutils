@@ -88,6 +88,7 @@ INTLDEPS = @INTLDEPS@
 INTLLIBS = @INTLLIBS@
 INTLOBJS = @INTLOBJS@
 KMEM_GROUP = @KMEM_GROUP@
+LIBICONV = @LIBICONV@
 LIBOBJS = @LIBOBJS@
 LIB_CRYPT = @LIB_CRYPT@
 MAKEINFO = @MAKEINFO@
@@ -698,7 +699,7 @@ install-data: install-data-am
 install-am: all-am
 	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
 install: install-am
-uninstall-am:
+uninstall-am: uninstall-local
 uninstall: uninstall-am
 all-am: Makefile $(LIBRARIES) $(HEADERS) all-local
 all-redirect: all-am
@@ -755,10 +756,10 @@ maintainer-clean-tags distdir mostlyclean-depend distclean-depend \
 clean-depend maintainer-clean-depend info-am info dvi-am dvi check \
 check-am installcheck-am installcheck install-exec-local \
 install-exec-am install-exec install-data-am install-data install-am \
-install uninstall-am uninstall all-local all-redirect all-am all \
-install-strip installdirs mostlyclean-generic distclean-generic \
-clean-generic maintainer-clean-generic clean mostlyclean distclean \
-maintainer-clean
+install uninstall-local uninstall-am uninstall all-local all-redirect \
+all-am all install-strip installdirs mostlyclean-generic \
+distclean-generic clean-generic maintainer-clean-generic clean \
+mostlyclean distclean maintainer-clean
 
 lstat.c: xstat.in
 	sed \
@@ -783,11 +784,12 @@ stat.c: xstat.in
 all-local: charset.alias
 
 install-exec-local: all-local
+	$(mkinstalldirs) $(DESTDIR)$(libdir)
 	$(INSTALL_DATA) charset.alias $(libdir)/charset.alias
 
 # Probably not a good idea. Other packages need $(libdir)/charset.alias too.
-#uninstall-local:
-#	-rm -f $(libdir)/charset.alias
+uninstall-local:
+	-rm -f $(libdir)/charset.alias
 
 charset.alias: config.charset
 	$(SHELL) $(srcdir)/config.charset '@host@' > $@-t
