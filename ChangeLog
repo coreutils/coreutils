@@ -1,5 +1,14 @@
 2004-09-03  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* src/stat.c (HAVE_STRUCT_STATXFS_F_TYPE): Fix typo that prevented
+	it from ever being nonzero.  Reported by Pozsar Balazs in:
+	http://lists.gnu.org/archive/html/bug-coreutils/2004-08/msg00189.html
+	(human_fstype): Add ramfs, squashfs, sysfs.
+	Reported by Pozsar Balazs in:
+	http://lists.gnu.org/archive/html/bug-coreutils/2004-08/msg00188.html
+	(human_fstype): Return char const *, not char *.
+	Simplify internals a bit, and avoid casts.
+
 	* src/dd.c (usage): "alternated EBCDIC" -> "alternate EBCDIC".
 	(bit_count): Remove.  All uses changed to....
 	(multiple_bits_set): New function.
