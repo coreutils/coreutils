@@ -1,3 +1,14 @@
+1999-03-19  Jim Meyering  <meyering@ascend.com>
+
+	* src/automake-wrap: Rewrite the automake-generated clean-binPROGRAMS
+	rule so that it removes rm even with a losing PATH on a losing system
+	(PATH with `.' before /bin on a system where you can't unlink a running
+	executable).
+
+	* configure.in: Use jm_WINSIZE_IN_PTEM.
+	* src/ls.c [WINSIZE_IN_PTEM]: Include sys/stream.h and sys/ptem.h.
+	Required by SCO ODT 2.0 systems.  Reported by William Bader.
+
 1999-03-18  Jim Meyering  <meyering@ascend.com>
 
 	* src/remove.c (remove_cwd_entries): Reflect changes in hash_insert.
