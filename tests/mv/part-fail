@@ -41,7 +41,21 @@ cat <<EOF > exp
 mv: inter-device move failed: \`k' to \`$other_partition_tmpdir/k'; unable to remove target: Permission denied
 EOF
 
-cmp out exp || fail=1
+# On some (less-compliant) systems, we get EPERM in this case.
+# Accept either diagnostic.
+cat <<EOF > exp2
+mv: cannot move \`k' to \`$other_partition_tmpdir/k': Permission denied
+EOF
+
+if cmp out exp >/dev/null 2>&1; then
+  :
+else
+  if cmp out exp2; then
+    :
+  else
+    fail=1
+  fi
+fi
 test $fail = 1 && diff out exp 2> /dev/null
 
 (exit $fail); exit
