@@ -91,6 +91,14 @@ extern char *tzname[];
 # endif
 #endif
 
+#ifdef _LIBC
+# define MEMPCPY(d, s, n) __mempcpy (d, s, n)
+#else
+# ifndef HAVE_MEMPCPY
+#  define MEMPCPY(d, s, n) ((void *) ((char *) memcpy (d, s, n) + (n)))
+# endif
+#endif
+
 #ifndef __P
 # if defined (__GNUC__) || (defined (__STDC__) && __STDC__)
 #  define __P(args) args
@@ -176,7 +184,7 @@ localtime_r (t, tp)
   return tp;
 }
 # endif /* ! HAVE_LOCALTIME_R */
-#endif /* ! defined (_LIBC) */
+#endif /* ! defined _LIBC */
 
 
 #if !defined memset && !defined HAVE_MEMSET && !defined _LIBC
@@ -196,8 +204,7 @@ static const char zeroes[16] = /* "0000000000000000" */
     do									      \
       {									      \
 	int _this = _len > 16 ? 16 : _len;				      \
-	memcpy ((P), spaces, _this);					      \
-	(P) += _this;							      \
+	(P) = MEMPCPY ((P), spaces, _this);				      \
 	_len -= _this;							      \
       }									      \
     while (_len > 0);							      \
@@ -210,8 +217,7 @@ static const char zeroes[16] = /* "0000000000000000" */
     do									      \
       {									      \
 	int _this = _len > 16 ? 16 : _len;				      \
-	memcpy ((P), zeroes, _this);					      \
-	(P) += _this;							      \
+	(P) = MEMPCPY ((P), zeroes, _this);				      \
 	_len -= _this;							      \
       }									      \
     while (_len > 0);							      \
@@ -277,7 +283,7 @@ memcpy_lowcase (dest, src, len)
      size_t len;
 {
   while (len-- > 0)
-    dest[len] = TOLOWER (src[len]);
+    dest[len] = TOLOWER ((unsigned char) src[len]);
   return dest;
 }
 
@@ -290,7 +296,7 @@ memcpy_uppcase (dest, src, len)
      size_t len;
 {
   while (len-- > 0)
-    dest[len] = TOUPPER (src[len]);
+    dest[len] = TOUPPER ((unsigned char) src[len]);
   return dest;
 }
 
@@ -350,7 +356,7 @@ iso_week_days (yday, wday)
 }
 
 
-#ifndef _NL_CURRENT
+#if !(defined _NL_CURRENT || HAVE_STRFTIME)
 static char const weekday_name[][10] =
   {
     "Sunday", "Monday", "Tuesday", "Wednesday",
@@ -364,13 +370,27 @@ static char const month_name[][10] =
 #endif
 
 
+#ifdef emacs
+# define my_strftime emacs_strftime
+ /* Emacs 20.2 uses `-Dstrftime=emacs_strftime' when compiling,
+    because that's how strftime used to be configured.
+    Undo this, since it gets in the way of accessing the underlying strftime,
+    which is needed for things like %Ec in Solaris.
+    The following two lines can be removed once Emacs stops compiling with
+    `-Dstrftime=emacs_strftime'.  */
+# undef strftime
+size_t strftime __P ((char *, size_t, const char *, const struct tm *));
+#else
+# define my_strftime strftime
+#endif
+
 #if !defined _LIBC && HAVE_TZNAME && HAVE_TZSET
   /* Solaris 2.5 tzset sometimes modifies the storage returned by localtime.
      Work around this bug by copying *tp before it might be munged.  */
   size_t _strftime_copytm __P ((char *, size_t, const char *,
 			        const struct tm *));
   size_t
-  strftime (s, maxsize, format, tp)
+  my_strftime (s, maxsize, format, tp)
       char *s;
       size_t maxsize;
       const char *format;
@@ -380,10 +400,8 @@ static char const month_name[][10] =
     tmcopy = *tp;
     return _strftime_copytm (s, maxsize, format, &tmcopy);
   }
-# ifdef strftime
-#  undef strftime
-# endif
-# define strftime(S, Maxsize, Format, Tp) \
+# undef my_strftime
+# define my_strftime(S, Maxsize, Format, Tp) \
   _strftime_copytm (S, Maxsize, Format, Tp)
 #endif
 
@@ -395,7 +413,7 @@ static char const month_name[][10] =
    anywhere, so to determine how many characters would be
    written, use NULL for S and (size_t) UINT_MAX for MAXSIZE.  */
 size_t
-strftime (s, maxsize, format, tp)
+my_strftime (s, maxsize, format, tp)
       char *s;
       size_t maxsize;
       const char *format;
@@ -413,6 +431,7 @@ strftime (s, maxsize, format, tp)
   size_t am_len = strlen (a_month);
   size_t ap_len = strlen (ampm);
 #else
+# if !HAVE_STRFTIME
   const char *const f_wkday = weekday_name[tp->tm_wday];
   const char *const f_month = month_name[tp->tm_mon];
   const char *const a_wkday = f_wkday;
@@ -421,9 +440,12 @@ strftime (s, maxsize, format, tp)
   size_t aw_len = 3;
   size_t am_len = 3;
   size_t ap_len = 2;
+# endif
 #endif
+#if defined _NL_CURRENT || !HAVE_STRFTIME
   size_t wkday_len = strlen (f_wkday);
   size_t month_len = strlen (f_month);
+#endif
   const char *zone;
   size_t zonelen;
   size_t i = 0;
@@ -477,6 +499,7 @@ strftime (s, maxsize, format, tp)
       int to_lowcase = 0;
       int to_uppcase = 0;
       int change_case = 0;
+      int format_char;
 
 #if DO_MULTIBYTE
 
@@ -605,7 +628,8 @@ strftime (s, maxsize, format, tp)
 	}
 
       /* Now do the specified format.  */
-      switch (*f)
+      format_char = *f;
+      switch (format_char)
 	{
 #define DO_NUMBER(d, v) \
 	  digits = width == -1 ? d : width;				      \
@@ -628,8 +652,12 @@ strftime (s, maxsize, format, tp)
 	      to_uppcase = 1;
 	      to_lowcase = 0;
 	    }
+#if defined _NL_CURRENT || !HAVE_STRFTIME
 	  cpy (aw_len, a_wkday);
 	  break;
+#else
+	  goto underlying_strftime;
+#endif
 
 	case 'A':
 	  if (modifier != 0)
@@ -639,15 +667,23 @@ strftime (s, maxsize, format, tp)
 	      to_uppcase = 1;
 	      to_lowcase = 0;
 	    }
+#if defined _NL_CURRENT || !HAVE_STRFTIME
 	  cpy (wkday_len, f_wkday);
 	  break;
+#else
+	  goto underlying_strftime;
+#endif
 
 	case 'b':
 	case 'h':		/* POSIX.2 extension.  */
 	  if (modifier != 0)
 	    goto bad_format;
+#if defined _NL_CURRENT || !HAVE_STRFTIME
 	  cpy (am_len, a_month);
 	  break;
+#else
+	  goto underlying_strftime;
+#endif
 
 	case 'B':
 	  if (modifier != 0)
@@ -657,8 +693,12 @@ strftime (s, maxsize, format, tp)
 	      to_uppcase = 1;
 	      to_lowcase = 0;
 	    }
+#if defined _NL_CURRENT || !HAVE_STRFTIME
 	  cpy (month_len, f_month);
 	  break;
+#else
+	  goto underlying_strftime;
+#endif
 
 	case 'c':
 	  if (modifier == 'O')
@@ -668,32 +708,58 @@ strftime (s, maxsize, format, tp)
 		 && *(subfmt = _NL_CURRENT (LC_TIME, ERA_D_T_FMT)) != '\0'))
 	    subfmt = _NL_CURRENT (LC_TIME, D_T_FMT);
 #else
+# if HAVE_STRFTIME
+	  goto underlying_strftime;
+# else
 	  subfmt = "%a %b %e %H:%M:%S %Y";
+# endif
 #endif
 
 	subformat:
 	  {
 	    char *old_start = p;
-	    size_t len = strftime (NULL, maxsize - i, subfmt, tp);
+	    size_t len = my_strftime (NULL, maxsize - i, subfmt, tp);
 	    if (len == 0 && *subfmt)
 	      return 0;
-	    add (len, strftime (p, maxsize - i, subfmt, tp));
+	    add (len, my_strftime (p, maxsize - i, subfmt, tp));
 
 	    if (to_uppcase)
 	      while (old_start < p)
 		{
-		  *old_start = TOUPPER (*old_start);
+		  *old_start = TOUPPER ((unsigned char) *old_start);
 		  ++old_start;
 		}
 	  }
 	  break;
 
+#if HAVE_STRFTIME && ! (defined _NL_CURRENT && HAVE_STRUCT_ERA_ENTRY)
+	underlying_strftime:
+	  {
+	    /* The relevant information is available only via the
+	       underlying strftime implementation, so use that.  */
+	    char ufmt[4];
+	    char *u = ufmt;
+	    char ubuf[1024]; /* enough for any single format in practice */
+	    size_t len;
+	    *u++ = '%';
+	    if (modifier != 0)
+	      *u++ = modifier;
+	    *u++ = format_char;
+	    *u = '\0';
+	    len = strftime (ubuf, sizeof ubuf, ufmt, tp);
+	    if (len == 0)
+	      return 0;
+	    cpy (len, ubuf);
+	  }
+	  break;
+#endif
+
 	case 'C':		/* POSIX.2 extension.  */
 	  if (modifier == 'O')
 	    goto bad_format;
-#if HAVE_STRUCT_ERA_ENTRY
 	  if (modifier == 'E')
 	    {
+#if HAVE_STRUCT_ERA_ENTRY
 	      struct era_entry *era = _nl_get_era_entry (tp);
 	      if (era)
 		{
@@ -701,8 +767,13 @@ strftime (s, maxsize, format, tp)
 		  cpy (len, era->name_fmt);
 		  break;
 		}
-	    }
+#else
+# if HAVE_STRFTIME
+	      goto underlying_strftime;
+# endif
 #endif
+	    }
+
 	  {
 	    int year = tp->tm_year + TM_YEAR_BASE;
 	    DO_NUMBER (1, year / 100 - (year % 100 < 0));
@@ -716,8 +787,13 @@ strftime (s, maxsize, format, tp)
 		 && *(subfmt = _NL_CURRENT (LC_TIME, ERA_D_FMT)) != '\0'))
 	    subfmt = _NL_CURRENT (LC_TIME, D_FMT);
 	  goto subformat;
-#endif
+#else
+# if HAVE_STRFTIME
+	  goto underlying_strftime;
+# else
 	  /* Fall through.  */
+# endif
+#endif
 	case 'D':		/* POSIX.2 extension.  */
 	  if (modifier != 0)
 	    goto bad_format;
@@ -747,9 +823,9 @@ strftime (s, maxsize, format, tp)
 	do_number:
 	  /* Format the number according to the MODIFIER flag.  */
 
-#ifdef _NL_CURRENT
 	  if (modifier == 'O' && 0 <= number_value)
 	    {
+#ifdef _NL_CURRENT
 	      /* Get the locale specific alternate representation of
 		 the number NUMBER_VALUE.  If none exist NULL is returned.  */
 	      const char *cp = _nl_get_alt_digit (number_value);
@@ -763,8 +839,12 @@ strftime (s, maxsize, format, tp)
 		      break;
 		    }
 		}
-	    }
+#else
+# if HAVE_STRFTIME
+	      goto underlying_strftime;
+# endif
 #endif
+	    }
 	  {
 	    unsigned int u = number_value;
 
@@ -805,6 +885,11 @@ strftime (s, maxsize, format, tp)
 	  cpy (buf + sizeof (buf) - bufp, bufp);
 	  break;
 
+	case 'F':
+	  if (modifier != 0)
+	    goto bad_format;
+	  subfmt = "%Y-%m-%d";
+	  goto subformat;
 
 	case 'H':
 	  if (modifier == 'E')
@@ -854,6 +939,9 @@ strftime (s, maxsize, format, tp)
 
 	case 'P':
 	  to_lowcase = 1;
+#if !defined _NL_CURRENT && HAVE_STRFTIME
+	  format_char = 'p';
+#endif
 	  /* FALLTHROUGH */
 
 	case 'p':
@@ -862,8 +950,12 @@ strftime (s, maxsize, format, tp)
 	      to_uppcase = 0;
 	      to_lowcase = 1;
 	    }
+#if defined _NL_CURRENT || !HAVE_STRFTIME
 	  cpy (ap_len, ampm);
 	  break;
+#else
+	  goto underlying_strftime;
+#endif
 
 	case 'R':		/* GNU extension.  */
 	  subfmt = "%H:%M";
@@ -929,8 +1021,13 @@ strftime (s, maxsize, format, tp)
 		 && *(subfmt = _NL_CURRENT (LC_TIME, ERA_T_FMT)) != '\0'))
 	    subfmt = _NL_CURRENT (LC_TIME, T_FMT);
 	  goto subformat;
-#endif
+#else
+# if HAVE_STRFTIME
+	  goto underlying_strftime;
+# else
 	  /* Fall through.  */
+# endif
+#endif
 	case 'T':		/* POSIX.2 extension.  */
 	  subfmt = "%H:%M:%S";
 	  goto subformat;
@@ -939,6 +1036,7 @@ strftime (s, maxsize, format, tp)
 	  add (1, *p = '\t');
 	  break;
 
+	case 'f':
 	case 'u':		/* POSIX.2 extension.  */
 	  DO_NUMBER (1, (tp->tm_wday - 1 + 7) % 7 + 1);
 
@@ -1002,26 +1100,30 @@ strftime (s, maxsize, format, tp)
 	  DO_NUMBER (1, tp->tm_wday);
 
 	case 'Y':
-#if HAVE_STRUCT_ERA_ENTRY
 	  if (modifier == 'E')
 	    {
+#if HAVE_STRUCT_ERA_ENTRY
 	      struct era_entry *era = _nl_get_era_entry (tp);
 	      if (era)
 		{
 		  subfmt = strchr (era->name_fmt, '\0') + 1;
 		  goto subformat;
 		}
-	    }
+#else
+# if HAVE_STRFTIME
+	      goto underlying_strftime;
+# endif
 #endif
+	    }
 	  if (modifier == 'O')
 	    goto bad_format;
 	  else
 	    DO_NUMBER (1, tp->tm_year + TM_YEAR_BASE);
 
 	case 'y':
-#if HAVE_STRUCT_ERA_ENTRY
 	  if (modifier == 'E')
 	    {
+#if HAVE_STRUCT_ERA_ENTRY
 	      struct era_entry *era = _nl_get_era_entry (tp);
 	      if (era)
 		{
@@ -1029,8 +1131,12 @@ strftime (s, maxsize, format, tp)
 		  DO_NUMBER (1, (era->offset
 				 + (era->direction == '-' ? -delta : delta)));
 		}
-	    }
+#else
+# if HAVE_STRFTIME
+	      goto underlying_strftime;
+# endif
 #endif
+	    }
 	  DO_NUMBER (2, (tp->tm_year % 100 + 100) % 100);
 
 	case 'Z':
