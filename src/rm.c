@@ -51,7 +51,9 @@
 #include "system.h"
 #include "dirname.h"
 #include "error.h"
+#include "quote.h"
 #include "remove.h"
+#include "root-dev-ino.h"
 #include "save-cwd.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -67,7 +69,9 @@ char *program_name;
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
 {
-  PRESUME_INPUT_TTY_OPTION = CHAR_MAX + 1
+  NO_PRESERVE_ROOT = CHAR_MAX + 1,
+  PRESERVE_ROOT,
+  PRESUME_INPUT_TTY_OPTION
 };
 
 static struct option const long_opts[] =
@@ -75,6 +79,9 @@ static struct option const long_opts[] =
   {"directory", no_argument, NULL, 'd'},
   {"force", no_argument, NULL, 'f'},
   {"interactive", no_argument, NULL, 'i'},
+
+  {"no-preserve-root", no_argument, 0, NO_PRESERVE_ROOT},
+  {"preserve-root", no_argument, 0, PRESERVE_ROOT},
 
   /* This is solely for testing.  Do not document.  */
   /* It is relatively difficult to ensure that there is a tty on stdin.
@@ -107,6 +114,10 @@ Remove (unlink) the FILE(s).\n\
                            supports `unlink' for nonempty directories)\n\
   -f, --force           ignore nonexistent files, never prompt\n\
   -i, --interactive     prompt before any removal\n\
+"), stdout);
+      fputs (_("\
+      --no-preserve-root do not treat `/' specially (the default)\n\
+      --preserve-root   fail to operate recursively on `/'\n\
   -r, -R, --recursive   remove the contents of directories recursively\n\
   -v, --verbose         explain what is being done\n\
 "), stdout);
@@ -139,6 +150,7 @@ rm_option_init (struct rm_options *x)
   x->ignore_missing_files = 0;
   x->interactive = 0;
   x->recursive = 0;
+  x->root_dev_ino = NULL;
   x->stdin_tty = isatty (STDIN_FILENO);
   x->verbose = 0;
 }
@@ -146,6 +158,7 @@ rm_option_init (struct rm_options *x)
 int
 main (int argc, char **argv)
 {
+  bool preserve_root = false;
   struct rm_options x;
   int fail = 0;
   int c;
@@ -166,27 +179,42 @@ main (int argc, char **argv)
 	{
 	case 0:		/* Long option.  */
 	  break;
+
 	case 'd':
 	  x.unlink_dirs = 1;
 	  break;
+
 	case 'f':
 	  x.interactive = 0;
 	  x.ignore_missing_files = 1;
 	  break;
+
 	case 'i':
 	  x.interactive = 1;
 	  x.ignore_missing_files = 0;
 	  break;
+
 	case 'r':
 	case 'R':
 	  x.recursive = 1;
 	  break;
+
+	case NO_PRESERVE_ROOT:
+	  preserve_root = false;
+	  break;
+
+	case PRESERVE_ROOT:
+	  preserve_root = true;
+	  break;
+
 	case PRESUME_INPUT_TTY_OPTION:
 	  x.stdin_tty = 1;
 	  break;
+
 	case 'v':
 	  x.verbose = 1;
 	  break;
+
 	case_GETOPT_HELP_CHAR;
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 	default:
@@ -203,6 +231,15 @@ main (int argc, char **argv)
 	  error (0, 0, _("too few arguments"));
 	  usage (EXIT_FAILURE);
 	}
+    }
+
+  if (x.recursive && preserve_root)
+    {
+      static struct dev_ino dev_ino_buf;
+      x.root_dev_ino = get_root_dev_ino (&dev_ino_buf);
+      if (x.root_dev_ino == NULL)
+	error (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
+	       quote ("/"));
     }
 
   {
