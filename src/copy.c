@@ -512,9 +512,17 @@ same_file_ok (const char *src_path, const struct stat *src_sb,
 
   if (x->xstat == lstat)
     {
-      if (stat (dst_path, &tmp_dst_sb)
-	  || stat (src_path, &tmp_src_sb)
-	  || ! SAME_INODE (tmp_src_sb, tmp_dst_sb))
+      if ( ! S_ISLNK (src_sb_link->st_mode))
+	tmp_src_sb = *src_sb_link;
+      else if (stat (src_path, &tmp_src_sb))
+	return 1;
+
+      if ( ! S_ISLNK (dst_sb_link->st_mode))
+	tmp_dst_sb = *dst_sb_link;
+      else if (stat (dst_path, &tmp_dst_sb))
+	return 1;
+
+      if ( ! SAME_INODE (tmp_src_sb, tmp_dst_sb))
 	return 1;
 
       /* FIXME: shouldn't this be testing whether we're making symlinks?  */
