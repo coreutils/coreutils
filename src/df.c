@@ -120,20 +120,19 @@ static int print_type;
 enum
 {
   SYNC_OPTION = CHAR_MAX + 1,
-  NO_SYNC_OPTION,
-  BLOCK_SIZE_OPTION
+  NO_SYNC_OPTION
 };
 
 static struct option const long_options[] =
 {
   {"all", no_argument, NULL, 'a'},
-  {"block-size", required_argument, NULL, BLOCK_SIZE_OPTION},
+  {"block-size", required_argument, NULL, 'B'},
   {"inodes", no_argument, NULL, 'i'},
   {"human-readable", no_argument, NULL, 'h'},
   {"si", no_argument, NULL, 'H'},
-  {"kilobytes", no_argument, NULL, 'k'},
+  {"kilobytes", no_argument, NULL, 'k'}, /* long form is obsolescent */
   {"local", no_argument, NULL, 'l'},
-  {"megabytes", no_argument, NULL, 'm'},
+  {"megabytes", no_argument, NULL, 'm'}, /* obsolescent */
   {"portability", no_argument, NULL, 'P'},
   {"print-type", no_argument, NULL, 'T'},
   {"sync", no_argument, NULL, SYNC_OPTION},
@@ -158,7 +157,12 @@ print_header (void)
   if (inode_format)
     printf (_("    Inodes   IUsed   IFree IUse%%"));
   else if (output_block_size < 0)
-    printf (_("    Size  Used Avail Use%%"));
+    {
+      if (output_block_size == -1000)
+	printf (_("     Size   Used  Avail Use%%"));
+      else
+	printf (_("    Size  Used Avail Use%%"));
+    }
   else if (posix_format)
     printf (_(" %4d-blocks      Used Available Capacity"), output_block_size);
   else
@@ -166,7 +170,7 @@ print_header (void)
       char buf[LONGEST_HUMAN_READABLE + 1];
       char *p = human_readable (output_block_size, buf, 1, -1024);
 
-      /* Replace e.g. "1.0k" by "1k".  */
+      /* Replace e.g. "1.0K" by "1K".  */
       size_t plen = strlen (p);
       if (3 <= plen && strncmp (p + plen - 3, ".0", 2) == 0)
 	strcpy (p + plen - 3, p + plen - 1);
@@ -322,7 +326,7 @@ show_dev (const char *disk, const char *mount_point, const char *fstype,
     }
   else
     {
-      width = output_block_size < 0 ? 5 : 9;
+      width = output_block_size < 0 ? 5 + (output_block_size == -1000) : 9;
       use_width = posix_format ? 8 : 4;
       input_units = fsu.fsu_blocksize;
       output_units = output_block_size;
@@ -762,15 +766,14 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
   -a, --all             include filesystems having 0 blocks\n\
-      --block-size=SIZE use SIZE-byte blocks\n\
+  -B, --block-size=SIZE use SIZE-byte blocks\n\
   -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\n\
   -H, --si              likewise, but use powers of 1000 not 1024\n\
 "), stdout);
       fputs (_("\
   -i, --inodes          list inode information instead of block usage\n\
-  -k, --kilobytes       like --block-size=1024\n\
+  -k                    like --block-size=1K\n\
   -l, --local           limit listing to local filesystems\n\
-  -m, --megabytes       like --block-size=1048576\n\
       --no-sync         do not invoke sync before getting usage info (default)\n\
 "), stdout);
       fputs (_("\
@@ -783,6 +786,10 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      fputs (_("\n\
+SIZE may be (or may be an integer optionally followed by) one of following:\n\
+kB 1000, K 1024, MB 1,000,000, M 1,048,576, and so on for G, T, P, E, Z, Y.\n\
+"), stdout);
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
     }
   exit (status);
@@ -814,7 +821,7 @@ main (int argc, char **argv)
   posix_format = 0;
   exit_status = 0;
 
-  while ((c = getopt_long (argc, argv, "aiF:hHklmPTt:vx:", long_options, NULL))
+  while ((c = getopt_long (argc, argv, "aB:iF:hHklmPTt:vx:", long_options, NULL))
 	 != -1)
     {
       switch (c)
@@ -823,6 +830,9 @@ main (int argc, char **argv)
 	  break;
 	case 'a':
 	  show_all_fs = 1;
+	  break;
+	case 'B':
+	  human_block_size (optarg, 1, &output_block_size);
 	  break;
 	case 'i':
 	  inode_format = 1;
@@ -839,7 +849,7 @@ main (int argc, char **argv)
 	case 'l':
 	  show_local_fs = 1;
 	  break;
-	case 'm':
+	case 'm': /* obsolescent */
 	  output_block_size = 1024 * 1024;
 	  break;
 	case 'T':
@@ -853,10 +863,6 @@ main (int argc, char **argv)
 	  break;
 	case NO_SYNC_OPTION:
 	  require_sync = 0;
-	  break;
-
-	case BLOCK_SIZE_OPTION:
-	  human_block_size (optarg, 1, &output_block_size);
 	  break;
 
 	case 'F':
