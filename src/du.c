@@ -736,7 +736,6 @@ main (int argc, char **argv)
   if (files_from)
     {
       FILE *istream;
-      size_t i;
 
       /* When using --files0-from=F, you may not specify any files
 	 on the command-line.  */
