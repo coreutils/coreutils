@@ -1,6 +1,6 @@
 # getcwd.m4 - check for working getcwd that is compatible with glibc
 
-# Copyright (C) 2001, 2003, 2004 Free Software Foundation, Inc.
+# Copyright (C) 2001, 2003, 2004, 2005 Free Software Foundation, Inc.
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
 # with or without modifications, as long as this notice is preserved.
@@ -9,6 +9,8 @@
 
 AC_DEFUN([gl_FUNC_GETCWD_NULL],
   [
+   AC_LIBSOURCES([getcwd.c, getcwd.h])
+
    AC_CHECK_HEADERS_ONCE(unistd.h)
    AC_CACHE_CHECK([whether getcwd (NULL, 0) allocates memory for result],
      [gl_cv_func_getcwd_null],
