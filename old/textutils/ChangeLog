@@ -1,3 +1,8 @@
+2000-11-11  Jim Meyering  <meyering@lucent.com>
+
+	* doc/textutils.texi: More minor rewording and grammar correction.
+	From Brian Youmans.
+
 2000-11-06  Paul Eggert  <eggert@twinsun.com>
 
 	* src/od.c (skip): st_size is not defined for directories.
