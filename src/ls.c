@@ -957,6 +957,7 @@ decode_switches (int argc, char **argv)
 	  break;
 
 	case 'A':
+	  really_all_files = 0;
 	  all_files = 1;
 	  break;
 
