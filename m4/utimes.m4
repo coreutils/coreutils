@@ -1,11 +1,14 @@
-#serial 1
+#serial 2
 
 dnl Shamelessly cloned from acspecific.m4's AC_FUNC_UTIME_NULL.
 
 AC_DEFUN(jm_FUNC_UTIMES_NULL,
 [AC_CACHE_CHECK(whether utimes accepts a null argument, ac_cv_func_utimes_null,
 [rm -f conftestdata; > conftestdata
-AC_TRY_RUN([#include <sys/types.h>
+AC_TRY_RUN([
+/* In case stat has been redefined to rpl_stat, undef it here.  */
+#undef stat
+#include <sys/types.h>
 #include <sys/stat.h>
 main() {
 struct stat s, t;
