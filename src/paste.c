@@ -1,5 +1,6 @@
 /* paste - merge lines of files
-   Copyright (C) 1984, 1997-2003 by David M. Ihnat
+   Copyright (C) 1997-2004 Free Software Foundation, Inc.
+   Copyright (C) 1984 David M. Ihnat
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -387,7 +388,7 @@ paste_serial (size_t nfiles, char **fnamptr)
 void
 usage (int status)
 {
-  if (status != 0)
+  if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
@@ -414,7 +415,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       /* FIXME: add a couple of examples.  */
       printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
-  exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
+  exit (status);
 }
 
 int
