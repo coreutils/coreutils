@@ -1,3 +1,17 @@
+1999-08-01  Jim Meyering  <meyering@ascend.com>
+
+	* configure.in (AM_C_PROTOTYPES): Move test to precede a few
+	header tests -- merely on principle.
+
+1999-08-01  Paul Eggert  <eggert@twinsun.com>
+
+	* configure.in (AC_SYS_LARGEFILE): Renamed from AC_LFS.
+
+1999-07-16  Paul Eggert  <eggert@twinsun.com>
+
+	* lib/quotearg.c (quotearg_buffer):
+	Don't quote spaces if C quoting style.
+
 1999-07-31  Jim Meyering  <meyering@ascend.com>
 
 	* src/tail.c (tail_forever): Don't call kill if pid is 0.
