@@ -2,6 +2,25 @@
 
 	* Version 4.0.36.
 
+2001-01-03  Paul Eggert  <eggert@twinsun.com>
+
+	Use the more precise algorithm of GNU "make" to decide whether
+	a file is in the future, by looking at high-resolution time
+	stamps if available.
+
+	* src/ls.c:
+	(TIMESPEC_NS): New macro.
+	(current_time): Initialize to the minimum value.
+	(current_time_ns): New var.
+	(main): Do not bother to initialize current_time;
+	it's no longer needed.
+	(get_current_time): New function.
+	(print_long_format): Use it when a file appears to be in the future.
+	Get the nanoseconds of the file's time stamp, if available,
+	and use that to decide whether the file appears	to be in the future.
+
+	* src/Makefile.am (dir_LDADD, ls_LDADD, vdir_LDADD): New macros.
+
 2001-01-02  Paul Eggert  <eggert@twinsun.com>
 
 	* src/ls.c (long_time_expected_width, print_long_format): Fix
