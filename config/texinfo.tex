@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2002-03-26.07}
+\def\texinfoversion{2002-03-26.08}
 %
 % Copyright (C) 1985, 86, 88, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99,
 %               2000, 01, 02 Free Software Foundation, Inc.
@@ -2413,15 +2413,13 @@ width0pt\relax} \fi
   \let\item = \relax
 }
 
-% Ignore @ignore ... @end ignore.
+% Ignore @ignore, @ifhtml, @ifinfo, @ifplaintext, @ifnottex, @html, @menu,
+% @direntry, and @documentdescription.
 %
 \def\ignore{\doignore{ignore}}
-
-% Also ignore @ifinfo, @ifhtml, @ifnottex, @html, @menu,
-% @documentdescription, and @direntry text.
-%
-\def\ifinfo{\doignore{ifinfo}}
 \def\ifhtml{\doignore{ifhtml}}
+\def\ifinfo{\doignore{ifinfo}}
+\def\ifplaintext{\doignore{ifplaintext}}
 \def\ifnottex{\doignore{ifnottex}}
 \def\html{\doignore{html}}
 \def\menu{\doignore{menu}}
@@ -2659,19 +2657,21 @@ width0pt\relax} \fi
 \def\ifclearfail{\nestedignore{ifclear}}
 \defineunmatchedend{ifclear}
 
-% @iftex, @ifnothtml, @ifnotinfo always succeed; we read the text
-% following, through the first @end iftex (etc.).  Make `@end iftex'
-% (etc.) valid only after an @iftex.
+% @iftex, @ifnothtml, @ifnotinfo, @ifnotplaintext always succeed; we
+% read the text following, through the first @end iftex (etc.).  Make
+% `@end iftex' (etc.) valid only after an @iftex.
 %
 \def\iftex{\conditionalsucceed{iftex}}
 \def\ifnothtml{\conditionalsucceed{ifnothtml}}
 \def\ifnotinfo{\conditionalsucceed{ifnotinfo}}
+\def\ifnotplaintext{\conditionalsucceed{ifnotplaintext}}
 \defineunmatchedend{iftex}
 \defineunmatchedend{ifnothtml}
 \defineunmatchedend{ifnotinfo}
+\defineunmatchedend{ifnotplaintext}
 
-% We can't just want to start a group at @iftex (for example) and end it
-% at @end iftex, since then @set commands inside the conditional have no
+% We can't just want to start a group at @iftex (etc.) and end it at
+% @end iftex, since then @set commands inside the conditional have no
 % effect (they'd get reverted at the end of the group).  So we must
 % define \Eiftex to redefine itself to be its previous value.  (We can't
 % just define it to fail again with an ``unmatched end'' error, since
