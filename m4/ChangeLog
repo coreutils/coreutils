@@ -1,6 +1,9 @@
 2004-10-04  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Sync from gnulib.
+
+	* xalloc.m4 (gl_PREREQ_XSTRDUP): Remove.  All uses removed.
+
 	* unlocked-io.m4: Add copyright notice.
 	(gl_FUNC_GLIBC_UNLOCKED_IO): Define USE_UNLOCKED_IO.
 

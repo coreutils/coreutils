@@ -1,6 +1,14 @@
 2004-10-04  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Sync from gnulib.
+
+	* xalloc.h (xmemdup): Renamed from xclone.
+	* xmalloc.c (xmemdup): Likewise.
+	* xalloc.h (CCLONE, CLONE, NEW, XCALLOC, XMALLOC, XREALLOC,
+	XFREE): Remove these long-obsolescent macros.
+	* xmalloc.c (xstrdup): Implementation moved here from xstrdup.c
+	* xstrdup.c: Remove.
+
 	* argmatch.c, closeout.c, error.c, exclude.c, getdate.y,
 	getndelim2.c, getpass.c, getusershell.c, linebuffer.c,
 	md5.c, mountlist.c, posixtm.c, readtokens.c, readutmp.c,

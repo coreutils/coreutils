@@ -53,8 +53,8 @@ void *xrealloc (void *p, size_t s);
 void *xnrealloc (void *p, size_t n, size_t s);
 void *x2realloc (void *p, size_t *pn);
 void *x2nrealloc (void *p, size_t *pn, size_t s);
-void *xclone (void const *p, size_t s);
-char *xstrdup (const char *str);
+void *xmemdup (void const *p, size_t s);
+char *xstrdup (char const *str);
 
 /* Return 1 if an array of N objects, each of size S, cannot exist due
    to size arithmetic overflow.  S must be positive and N must be
@@ -70,17 +70,6 @@ char *xstrdup (const char *str);
    branch when S is known to be 1.  */
 # define xalloc_oversized(n, s) \
     ((size_t) (sizeof (ptrdiff_t) <= sizeof (size_t) ? -1 : -2) / (s) < (n))
-
-/* These macros are deprecated; they will go away soon, and are retained
-   temporarily only to ease conversion to the functions described above.  */
-# define CCLONE(p, n) xclone (p, (n) * sizeof *(p))
-# define CLONE(p) xclone (p, sizeof *(p))
-# define NEW(type, var) type *var = xmalloc (sizeof (type))
-# define XCALLOC(type, n) xcalloc (n, sizeof (type))
-# define XMALLOC(type, n) xnmalloc (n, sizeof (type))
-# define XREALLOC(p, type, n) xnrealloc (p, n, sizeof (type))
-# define XFREE(p) free (p)
-
 
 # ifdef __cplusplus
 }

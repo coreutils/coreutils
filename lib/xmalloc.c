@@ -211,11 +211,19 @@ xcalloc (size_t n, size_t s)
 }
 
 /* Clone an object P of size S, with error checking.  There's no need
-   for xnclone (P, N, S), since xclone (P, N * S) works without any
+   for xnmemdup (P, N, S), since xmemdup (P, N * S) works without any
    need for an arithmetic overflow check.  */
 
 void *
-xclone (void const *p, size_t s)
+xmemdup (void const *p, size_t s)
 {
   return memcpy (xmalloc (s), p, s);
+}
+
+/* Clone STRING.  */
+
+char *
+xstrdup (char const *string)
+{
+  return xmemdup (string, strlen (string) + 1);
 }

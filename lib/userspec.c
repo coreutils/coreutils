@@ -154,7 +154,7 @@ parse_with_separator (char const *spec, char const *separator,
       size_t ulen = separator - spec;
       if (ulen != 0)
 	{
-	  u = xclone (spec, ulen + 1);
+	  u = xmemdup (spec, ulen + 1);
 	  u[ulen] = '\0';
 	}
     }

@@ -130,7 +130,6 @@ libfetish_a_SOURCES = \
   xmemcoll.c xmemcoll.h \
   xnanosleep.c xnanosleep.h \
   xreadlink.c xreadlink.h \
-  xstrdup.c  \
   xstrndup.c xstrndup.h \
   xstrtod.c xstrtod.h \
   xstrtoimax.c \
