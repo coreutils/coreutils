@@ -372,7 +372,7 @@ isaac_seed (struct isaac_state *s)
   s->mm[1] = getppid ();
 
   {
-#ifdef CLOCK_REALTIME		/* POSIX ns-resolution */
+#ifdef HAVE_CLOCK_GETTIME		/* POSIX ns-resolution */
     struct timespec ts;
     clock_gettime (CLOCK_REALTIME, &ts);
     s->mm[2] = ts.tv_sec;
@@ -1153,7 +1153,7 @@ wipename (char *oldname, struct Options const *flags)
   char *base;			/* Pointer to filename component, after directories. */
   unsigned len;
   int err;
-  int dirfd;			/* Try to open directory to sync *it* */
+  int dir_fd;			/* Try to open directory to sync *it* */
 
   if (flags->verbose)
     pfstatus (_("%s: deleting"), oldname);
@@ -1181,12 +1181,12 @@ wipename (char *oldname, struct Options const *flags)
   if (base)
     {
       *base = '\0';
-      dirfd = open (newname, O_RDONLY);
+      dir_fd = open (newname, O_RDONLY);
       *base = '/';
     }
   else
     {
-      dirfd = open (".", O_RDONLY);
+      dir_fd = open (".", O_RDONLY);
     }
   base = base ? base + 1 : newname;
   len = strlen (base);
@@ -1200,7 +1200,7 @@ wipename (char *oldname, struct Options const *flags)
 	  if (access (newname, F_OK) < 0
 	      && !rename (oldname, newname))
 	    {
-	      if (dirfd < 0 || fdatasync (dirfd) < 0)
+	      if (dir_fd < 0 || fdatasync (dir_fd) < 0)
 		sync ();	/* Force directory out */
 	      if (origname)
 		{
@@ -1221,9 +1221,9 @@ wipename (char *oldname, struct Options const *flags)
     }
   free (newname);
   err = remove (oldname);
-  if (dirfd < 0 || fdatasync (dirfd) < 0)
+  if (dir_fd < 0 || fdatasync (dir_fd) < 0)
     sync ();
-  close (dirfd);
+  close (dir_fd);
   if (origname)
     {
       if (!err && flags->verbose)
