@@ -3228,6 +3228,10 @@ The input need not be sorted, but duplicate input lines are detected
 only if they are adjacent.  If you want to discard non-adjacent
 duplicate lines, perhaps you want to use @code{sort -u}.
 
+@vindex LC_COLLATE
+Comparisons use the character collating sequence specified by the
+@env{LC_COLLATE} locale category.
+
 If no @var{output} file is specified, @command{uniq} writes to standard
 output.
 
