@@ -1,5 +1,5 @@
 /* Case-insensitive buffer comparator.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -15,9 +15,9 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
-/* Jim Meyering (meyering@na-net.ornl.gov) */
+/* Written by Jim Meyering.  */
 
-#ifdef HAVE_CONFIG_H
+#if HAVE_CONFIG_H
 # include <config.h>
 #endif
 
@@ -25,16 +25,16 @@
 #include <ctype.h>
 
 #if defined (STDC_HEADERS) || (!defined (isascii) && !defined (HAVE_ISASCII))
-# define IN_CTYPE_DOMAIN(c) 1
+# define IN_CTYPE_DOMAIN(Char) 1
 #else
-# define IN_CTYPE_DOMAIN(c) isascii(c)
+# define IN_CTYPE_DOMAIN(Char) isascii(Char)
 #endif
-#define ISLOWER(c) (IN_CTYPE_DOMAIN (c) && islower (c))
+#define ISLOWER(Char) (IN_CTYPE_DOMAIN (Char) && islower (Char))
 
 #if _LIBC || STDC_HEADERS
-# define TOUPPER(c) toupper (c)
+# define TOUPPER(Char) toupper (Char)
 #else
-# define TOUPPER(c) (ISLOWER (c) ? toupper (c) : (c))
+# define TOUPPER(Char) (ISLOWER (Char) ? toupper (Char) : (Char))
 #endif
 
 #include "memcasecmp.h"
@@ -44,14 +44,11 @@
    join -i works with sort -f.  */
 
 int
-memcasecmp (vs1, vs2, n)
-     const void *vs1;
-     const void *vs2;
-     size_t n;
+memcasecmp (const void *vs1, const void *vs2, size_t n)
 {
   unsigned int i;
-  unsigned char *s1 = (unsigned char *) vs1;
-  unsigned char *s2 = (unsigned char *) vs2;
+  unsigned char const *s1 = (unsigned char const *) vs1;
+  unsigned char const *s2 = (unsigned char const *) vs2;
   for (i = 0; i < n; i++)
     {
       unsigned char u1 = *s1++;
