@@ -512,7 +512,7 @@ count_entry (const char *ent, int top, dev_t last_dev, int depth)
 	}
 
       errno = 0;
-      name_space = savedir (".", (unsigned int) stat_buf.st_size);
+      name_space = savedir (".", stat_buf.st_size);
       if (name_space == NULL)
 	{
 	  if (errno)
