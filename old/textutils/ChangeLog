@@ -1,3 +1,8 @@
+Sat Dec 21 20:32:58 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* tests/join-test/Makefile.am: Add @MAINT@-protected rule for
+	verifying that Makefile.am is consistent with Test.pm.
+
 Fri Dec 20 00:08:36 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* tests/join-test/Makefile.am (MAINTAINERCLEANFILES): Use $(in1)
