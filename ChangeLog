@@ -2,6 +2,10 @@
 
 	* Version 5.3.0.
 
+	* src/ptx.c: Make over 40 global extern variables `static'.
+	(syntax_table, re_syntax_table): Remove declarations of two unused
+	variables (they were exposed by the above change).
+
 	* src/du.c (G_fail, opt_nul_terminate_output): Declare `static'.
 	* src/ln.c (backup_type): Likewise.
 
