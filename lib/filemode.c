@@ -16,11 +16,7 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
 #ifdef HAVE_CONFIG_H
-#if defined (emacs) || defined (CONFIG_BROKETS)
 #include <config.h>
-#else
-#include "config.h"
-#endif
 #endif
 
 #include <sys/types.h>

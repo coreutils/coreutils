@@ -1,5 +1,5 @@
 /* `rm' file deletion utility for GNU.
-   Copyright (C) 1988, 1990, 1991 Free Software Foundation, Inc.
+   Copyright (C) 1988, 1990, 1991, 1994 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -270,7 +270,7 @@ remove_dir (statp)
     }
 
   if (!ignore_missing_files && (interactive || stdin_tty)
-      && eaccess_stat (statp, W_OK))
+      && eaccess_stat (statp, W_OK, pathname))
     {
       fprintf (stderr,
 	       "%s: descend directory `%s', overriding mode %04o? ",
