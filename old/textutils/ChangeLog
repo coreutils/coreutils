@@ -1,3 +1,13 @@
+Fri Nov  1 21:33:16 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/sort.c [!ENABLE_ASSERTIONS]: Guard NDEBUG definition.
+	(checkfp): Fix off-by-one error that resulted in writing one byte
+	beyond the end of a malloc'd buffer.  It caused `sort -c' to segfault
+	on Linux systems having a relatively recent libc.  Before, running
+	the command, perl -e "print 'x' x 30, \"\n\";"|sort -c
+	would provoke the memory overrun (though not necessarily the failure).
+	Add an assertion.
+
 Thu Oct 31 17:48:24 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/sort.c (key_init): New function.
