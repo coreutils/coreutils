@@ -288,8 +288,7 @@ main (int argc, char *argv[])
       if (p != NULL && *p != '\0')
 	{
 	  /* Note: deliberate leak.  It's not worth freeing this.  */
-	  input_file = xmalloc (strlen (p) + 1
-				+ strlen (USER_FILE) + 1);
+	  input_file = xmalloc (strlen (p) + 1 + strlen (USER_FILE) + 1);
 	  stpcpy (stpcpy (stpcpy (input_file, p), "/"), USER_FILE);
 	  fp = fopen (input_file, "r");
 	}
