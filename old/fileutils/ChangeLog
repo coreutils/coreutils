@@ -1,3 +1,7 @@
+Mon Jul 15 23:42:57 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* Many files: Update FSF address.
+
 Sun Jul 14 07:53:45 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/du.c (usage): Sort option descriptions in dictionary order.

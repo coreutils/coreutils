@@ -1,4 +1,13 @@
+Tue Jul 16 00:06:33 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/strftime.c (strftime): Use `(void)0' as second arg to add macro.
+	Omitting that second arg made some HPUX C compiler report an error.
+	From Kaveh R. Ghazi.
+
 Mon Jul 15 23:42:57 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/who-users.c (print_uptime): Reverse `days' and `day' in
+	uptime message.  From Kaveh R. Ghazi.
 
 	* Many files: Update FSF address.
 
