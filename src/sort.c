@@ -318,6 +318,8 @@ Write sorted concatenation of all FILE(s) to standard output.\n\
       --help       display this help and exit\n\
       --version    output version information and exit\n\
 \n\
+"), DEFAULT_TMPDIR);
+      printf (_("\
 POS is F[.C][OPTS], where F is the field number and C the character position\n\
 in the field, both counted from one with -k, from zero with the obsolescent\n\
 form.  OPTS is made up of one or more of Mbdfinr, this effectively disables\n\
