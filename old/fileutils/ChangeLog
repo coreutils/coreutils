@@ -1,6 +1,12 @@
-2002-07-09  Jim Meyering  <meyering@lucent.com>
+2002-07-10  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.10.
+
+	* man/du.x: Add a description of --exclude=PATTERN.
+	* src/du.c (usage) [--exclude]: Use PATTERN rather than PAT.
+	From Martin Michlmayr.
+
+2002-07-09  Jim Meyering  <meyering@lucent.com>
 
 	I added stat.x, but didn't update the definition of dist_man_MANS.
 	* man/Makefile.am (dist_man_MANS): Add stat.1.
