@@ -1,5 +1,16 @@
 1997-12-13  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* Version 3.16g.
+
+	* tests/Makefile.am (check-local): New target.
+
+	* tests/.posix-warn: New file.
+
+	* src/dd.c (usage): Mention that `notrunc' is a conv= option.
+	Change --help output to tell the truth: that for of=FILE,
+	FILE *is* truncated.  Reported by Miles Bader.
+	Remove incomplete, usage-like comment at top of file.
+
 	* src/mv.c (do_move): If rename fails for any reason (not just when
 	errno == EXDEV), then revert to trying copy-then-unlink.  This is
 	necessary to allow moving files within certain types of Linux NFS
