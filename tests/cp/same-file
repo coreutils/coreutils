@@ -92,7 +92,7 @@ for args in 'foo symlink' 'symlink foo' 'foo foo' 'sl1 sl2' 'foo hardlink'; do
 	    echo symlink-loop
 	  fi
 	done
-      ) | tr '\012' ' '
+      ) | tr '\n' ' '
       echo
     ) | sed 's/  *$//'
     cd ..

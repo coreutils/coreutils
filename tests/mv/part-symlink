@@ -97,9 +97,9 @@ for copy in cp mv; do
 	  # remove any site-dependent part of other-partition file name,
 	  # and put brackets around the output.
 	  test -s .err && {
-	    echo '[' | tr -d '\012'
+	    echo '[' | tr -d '\n'
 	    sed 's/^[^:][^:]*\(..\):/\1:/;s,'$other_partition_tmpdir/,, .err
-	    echo ']' | tr -d '\012'
+	    echo ']' | tr -d '\n'
 	    }
 	  # Strip off all but the file names.
 	  # Remove any site-dependent part of each file name.
@@ -146,7 +146,7 @@ for copy in cp mv; do
 	      fi
 	    done
 	  fi
-	) | tr '\012' ' '
+	) | tr '\n' ' '
 	echo
       ) | sed 's/  *$//'
       cd ..
