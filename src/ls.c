@@ -3053,7 +3053,6 @@ format_user_or_group (char const *name, unsigned long int id, int width)
 
   if (name)
     {
-      size_t namelen = strlen (name);
       int width_gap = width - mbswidth (name, 0);
       int pad = MAX (0, width_gap);
       fputs (name, stdout);
