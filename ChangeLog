@@ -2,6 +2,7 @@
 
 	* src/dd.c (set_fd_flags): Don't OR in -1 when fcntl fails.
 	Rename parameter, flags, to avoid shadowing global.
+	(LONGEST_SYMBOL): Tweak comment.
 
 2004-04-07  Paul Eggert  <eggert@twinsun.com>
 
