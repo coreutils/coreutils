@@ -1,0 +1,37 @@
+#!/bin/sh
+# Moving a directory specified with a trailing slash from one partition to
+# another, and giving it a different name at the destination would cause mv
+# to get a failed assertion.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  mv --version
+fi
+
+pwd=`pwd`
+tmp=part-ren.$$
+trap 'status=$?; cd $pwd; exec 1>&2; rm -rf $tmp $other_partition_tmpdir && exit $status' 0
+trap '(exit $?); exit' 1 2 13 15
+
+. $srcdir/setup
+. $srcdir/../envvar-check
+
+if test -z "$other_partition_tmpdir"; then
+  (exit 77); exit
+fi
+
+framework_failure=0
+mkdir $tmp || framework_failure=1
+cd $tmp || framework_failure=1
+mkdir foo || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo 'failure in testing framework'
+  exit 1
+fi
+
+fail=0
+
+mv foo/ $other_partition_tmpdir/bar || fail=1
+
+(exit $fail); exit
