@@ -1001,8 +1001,7 @@ main (int argc, char **argv)
       dired_dump_obstack ("//DIRED//", &dired_obstack);
       dired_dump_obstack ("//SUBDIRED//", &subdired_obstack);
       printf ("//DIRED-OPTIONS// --quoting-style=%s\n",
-	      ARGMATCH_TO_ARGUMENT (filename_quoting_options,
-				    quoting_style_args, quoting_style_vals));
+	      quoting_style_args[get_quoting_style (filename_quoting_options)]);
     }
 
   /* Restore default color before exiting */
