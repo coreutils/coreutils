@@ -24,7 +24,7 @@ if test $code != 0 ; then
   $echo "Test 1(|) failed: ../../src/md5sum return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 1.O $srcdir/1.X
+  cmp 1.O $srcdir/1.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 1(|)"; fi ;;
     1) $echo "Test 1(|) failed: files 1.O and $srcdir/1.X differ" 1>&2;
@@ -41,7 +41,7 @@ if test $code != 0 ; then
   $echo "Test 1(<) failed: ../../src/md5sum return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 1.O $srcdir/1.X
+  cmp 1.O $srcdir/1.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 1(<)"; fi ;;
     1) $echo "Test 1(<) failed: files 1.O and $srcdir/1.X differ" 1>&2;
@@ -58,7 +58,7 @@ if test $code != 0 ; then
   $echo "Test 2(|) failed: ../../src/md5sum return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 2.O $srcdir/2.X
+  cmp 2.O $srcdir/2.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 2(|)"; fi ;;
     1) $echo "Test 2(|) failed: files 2.O and $srcdir/2.X differ" 1>&2;
@@ -75,7 +75,7 @@ if test $code != 0 ; then
   $echo "Test 2(<) failed: ../../src/md5sum return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 2.O $srcdir/2.X
+  cmp 2.O $srcdir/2.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 2(<)"; fi ;;
     1) $echo "Test 2(<) failed: files 2.O and $srcdir/2.X differ" 1>&2;
@@ -92,7 +92,7 @@ if test $code != 0 ; then
   $echo "Test 3(|) failed: ../../src/md5sum return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 3.O $srcdir/3.X
+  cmp 3.O $srcdir/3.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 3(|)"; fi ;;
     1) $echo "Test 3(|) failed: files 3.O and $srcdir/3.X differ" 1>&2;
@@ -109,7 +109,7 @@ if test $code != 0 ; then
   $echo "Test 3(<) failed: ../../src/md5sum return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 3.O $srcdir/3.X
+  cmp 3.O $srcdir/3.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 3(<)"; fi ;;
     1) $echo "Test 3(<) failed: files 3.O and $srcdir/3.X differ" 1>&2;
@@ -126,7 +126,7 @@ if test $code != 0 ; then
   $echo "Test 4(|) failed: ../../src/md5sum return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 4.O $srcdir/4.X
+  cmp 4.O $srcdir/4.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 4(|)"; fi ;;
     1) $echo "Test 4(|) failed: files 4.O and $srcdir/4.X differ" 1>&2;
@@ -143,7 +143,7 @@ if test $code != 0 ; then
   $echo "Test 4(<) failed: ../../src/md5sum return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 4.O $srcdir/4.X
+  cmp 4.O $srcdir/4.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 4(<)"; fi ;;
     1) $echo "Test 4(<) failed: files 4.O and $srcdir/4.X differ" 1>&2;
@@ -160,7 +160,7 @@ if test $code != 0 ; then
   $echo "Test 5(|) failed: ../../src/md5sum return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 5.O $srcdir/5.X
+  cmp 5.O $srcdir/5.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 5(|)"; fi ;;
     1) $echo "Test 5(|) failed: files 5.O and $srcdir/5.X differ" 1>&2;
@@ -177,7 +177,7 @@ if test $code != 0 ; then
   $echo "Test 5(<) failed: ../../src/md5sum return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 5.O $srcdir/5.X
+  cmp 5.O $srcdir/5.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 5(<)"; fi ;;
     1) $echo "Test 5(<) failed: files 5.O and $srcdir/5.X differ" 1>&2;
@@ -194,7 +194,7 @@ if test $code != 0 ; then
   $echo "Test 6(|) failed: ../../src/md5sum return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 6.O $srcdir/6.X
+  cmp 6.O $srcdir/6.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 6(|)"; fi ;;
     1) $echo "Test 6(|) failed: files 6.O and $srcdir/6.X differ" 1>&2;
@@ -211,7 +211,7 @@ if test $code != 0 ; then
   $echo "Test 6(<) failed: ../../src/md5sum return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 6.O $srcdir/6.X
+  cmp 6.O $srcdir/6.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 6(<)"; fi ;;
     1) $echo "Test 6(<) failed: files 6.O and $srcdir/6.X differ" 1>&2;
@@ -228,7 +228,7 @@ if test $code != 0 ; then
   $echo "Test 7(|) failed: ../../src/md5sum return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 7.O $srcdir/7.X
+  cmp 7.O $srcdir/7.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 7(|)"; fi ;;
     1) $echo "Test 7(|) failed: files 7.O and $srcdir/7.X differ" 1>&2;
@@ -245,7 +245,7 @@ if test $code != 0 ; then
   $echo "Test 7(<) failed: ../../src/md5sum return code $code differs from expected value 0" 1>&2
   errors=`expr $errors + 1`
 else
-  cmp 7.O $srcdir/7.X
+  cmp 7.O $srcdir/7.X > /dev/null 2>&1
   case $? in
     0) if test "$VERBOSE" ; then $echo "passed 7(<)"; fi ;;
     1) $echo "Test 7(<) failed: files 7.O and $srcdir/7.X differ" 1>&2;
