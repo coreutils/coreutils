@@ -1,3 +1,8 @@
+Changes in release 3.14:
+* when possible, cp -p preserves owner/group even on symlinks in case
+  they're in a directory that has the sticky-bit set.
+* cp --recursive --parents SRC DEST works when SRC is an absolute file name.
+
 Changes in release 3.13:
 * ls properly determines window size on SunOS and Solaris systems
 * ls accepts new option --color[=WHEN] where WHEN is `always', `never',
