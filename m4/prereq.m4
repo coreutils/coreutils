@@ -21,6 +21,7 @@ AC_DEFUN([jm_PREREQ],
   jm_PREREQ_QUOTEARG
   jm_PREREQ_READUTMP
   jm_PREREQ_REGEX
+  jm_PREREQ_STAT
   jm_PREREQ_STRNLEN
   jm_PREREQ_TEMPNAME # called by mkstemp
   jm_PREREQ_XGETCWD
@@ -161,6 +162,25 @@ AC_DEFUN([jm_PREREQ_REGEX],
   AC_CHECK_HEADERS(alloca.h libintl.h wctype.h wchar.h)
   AC_HEADER_STDC
   AC_FUNC_ALLOCA
+])
+
+AC_DEFUN([jm_PREREQ_STAT],
+[
+  AC_CHECK_HEADERS(sys/sysmacros.h sys/statvfs.h sys/vfs.h inttypes.h)
+  AC_CHECK_FUNCS(statvfs)
+  jm_AC_TYPE_LONG_LONG
+  statfs_includes="\
+$ac_includes_default
+#include <sys/vfs.h>
+"
+  statvfs_includes="\
+$ac_includes_default
+#include <sys/statvfs.h>
+"
+  AC_CHECK_MEMBERS([struct statfs.f_basetype],,,[$statfs_includes])
+  AC_CHECK_MEMBERS([struct statvfs.f_basetype],,,[$statvfs_includes])
+  AC_CHECK_MEMBERS([struct statfs.f_type],,,[$statfs_includes])
+  AC_CHECK_MEMBERS([struct statvfs.f_type],,,[$statvfs_includes])
 ])
 
 AC_DEFUN([jm_PREREQ_STRNLEN],
