@@ -200,11 +200,9 @@ do_link (const char *source, const char *dest)
       && source_stats.st_ino == dest_stats.st_ino
       /* The following detects whether removing DEST will also remove
  	 SOURCE.  If the file has only one link then both are surely
- 	 the same link.  Otherwise we check whether they point to the
- 	 same names in the same directory.  The latter is meaningless
- 	 when making a symbolic link.  */
-      && (source_stats.st_nlink == 1
- 	  || (!symlink && same_name (source, dest))))
+ 	 the same link.  Otherwise check whether they point to the same
+	 name in the same directory.  */
+      && (source_stats.st_nlink == 1 || same_name (source, dest)))
     {
       error (0, 0, _("`%s' and `%s' are the same file"), source, dest);
       return 1;
