@@ -539,8 +539,8 @@ quotearg_n_options (int n, char const *arg,
       size_t size;
       char *val;
     };
-  static struct slotvec const slotvec0 = {sizeof slot0, slot0};
-  static struct slotvec *slotvec = (struct slotvec *) &slotvec0;
+  static struct slotvec slotvec0 = {sizeof slot0, slot0};
+  static struct slotvec *slotvec = &slotvec0;
 
   if (nslots <= n)
     {
