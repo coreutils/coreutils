@@ -60,6 +60,9 @@ static char *outfile_mid;
 /* Length of OUTFILE's suffix.  */
 static size_t suffix_length = DEFAULT_SUFFIX_LENGTH;
 
+/* Alphabet of characters to use in suffix.  */
+static char const *suffix_alphabet = "abcdefghijklmnopqrstuvwxyz";
+
 /* Name of input file.  May be "-".  */
 static char *infile;
 
@@ -79,6 +82,7 @@ static struct option const longopts[] =
   {"lines", required_argument, NULL, 'l'},
   {"line-bytes", required_argument, NULL, 'C'},
   {"suffix-length", required_argument, NULL, 'a'},
+  {"numeric-suffixes", no_argument, NULL, 'd'},
   {"verbose", no_argument, &verbose, 1},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
@@ -109,6 +113,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -a, --suffix-length=N   use suffixes of length N (default %d)\n\
   -b, --bytes=SIZE        put SIZE bytes per output file\n\
   -C, --line-bytes=SIZE   put at most SIZE bytes of lines per output file\n\
+  -d, --numeric-suffixes  use numeric suffixes instead of alphabetic\n\
   -l, --lines=NUMBER      put NUMBER lines per output file\n\
 "), DEFAULT_SUFFIX_LENGTH);
       fputs (_("\
@@ -132,6 +137,9 @@ SIZE may have a multiplier suffix: b for 512, k for 1K, m for 1 Meg.\n\
 static void
 next_file_name (void)
 {
+  /* Index in suffix_alphabet of each character in the suffix.  */
+  static size_t *sufindex;
+
   if (! outfile)
     {
       /* Allocate and initialize the first file name.  */
@@ -143,8 +151,9 @@ next_file_name (void)
       outfile = xmalloc (outfile_length + 1);
       outfile_mid = outfile + outbase_length;
       memcpy (outfile, outbase, outbase_length);
-      memset (outfile_mid, 'a', suffix_length);
+      memset (outfile_mid, suffix_alphabet[0], suffix_length);
       outfile[outfile_length] = 0;
+      sufindex = xcalloc (suffix_length, sizeof (size_t));
 
 #if ! _POSIX_NO_TRUNC && HAVE_PATHCONF && defined _PC_NAME_MAX
       /* POSIX requires that if the output file name is too long for
@@ -164,10 +173,16 @@ next_file_name (void)
     {
       /* Increment the suffix in place, if possible.  */
 
-      char *p;
-      for (p = outfile_mid + suffix_length; outfile_mid < p; *--p = 'a')
-	if (p[-1]++ != 'z')
-	  return;
+      size_t i = suffix_length;
+      while (i-- != 0)
+	{
+	  sufindex[i]++;
+	  outfile_mid[i] = suffix_alphabet[sufindex[i]];
+	  if (outfile_mid[i])
+	    return;
+	  sufindex[i] = 0;
+	  outfile_mid[i] = suffix_alphabet[sufindex[i]];
+	}
       error (EXIT_FAILURE, 0, _("Output file suffixes exhausted"));
     }
 }
@@ -380,7 +395,7 @@ main (int argc, char **argv)
       /* This is the argv-index of the option we will read next.  */
       int this_optind = optind ? optind : 1;
 
-      c = getopt_long (argc, argv, "0123456789C:a:b:l:", longopts, NULL);
+      c = getopt_long (argc, argv, "0123456789C:a:b:dl:", longopts, NULL);
       if (c == -1)
 	break;
 
@@ -393,7 +408,7 @@ main (int argc, char **argv)
 	  {
 	    unsigned long tmp;
 	    if (xstrtoul (optarg, NULL, 10, &tmp, "") != LONGINT_OK
-		|| tmp == 0 || SIZE_MAX < tmp)
+		|| SIZE_MAX / sizeof (size_t) < tmp)
 	      {
 		error (0, 0, _("%s: invalid suffix length"), optarg);
 		usage (EXIT_FAILURE);
@@ -467,6 +482,10 @@ main (int argc, char **argv)
 		     umaxtostr (n_units, buffer), c);
 	    }
 	  n_units = n_units * 10 + c - '0';
+	  break;
+
+	case 'd':
+	  suffix_alphabet = "0123456789";
 	  break;
 
 	case_GETOPT_HELP_CHAR;
