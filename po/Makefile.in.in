@@ -176,7 +176,6 @@ uninstall:
 	  rm -f $(DESTDIR)$(gnulocaledir)/$$lang/LC_MESSAGES/$(PACKAGE)$(INSTOBJEXT); \
 	  rm -f $(DESTDIR)$(gnulocaledir)/$$lang/LC_MESSAGES/$(PACKAGE)$(INSTOBJEXT).m; \
 	done
-	rm -f $(DESTDIR)$(gettextsrcdir)/po-Makefile.in.in
 
 check: all
 
@@ -202,8 +201,7 @@ distdir = ../$(PACKAGE)-$(VERSION)/$(subdir)
 dist distdir: update-po $(DISTFILES)
 	dists="$(DISTFILES)"; \
 	for file in $$dists; do \
-	  ln $(srcdir)/$$file $(distdir) 2> /dev/null \
-	    || cp -p $(srcdir)/$$file $(distdir); \
+	  cp -p $(srcdir)/$$file $(distdir); \
 	done
 
 update-po: Makefile
@@ -246,3 +244,7 @@ Makefile: Makefile.in.in ../config.status POTFILES
 # Tell versions [3.59,3.63) of GNU make not to export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
+
+# Tell version 3.79 and up of GNU make to not build goals in this
+# directory in parallel.
+.NOTPARALLEL:
