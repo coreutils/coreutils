@@ -1,6 +1,29 @@
-2005-03-01  Paul Eggert  <eggert@cs.ucla.edu>
+2005-03-06  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* src/cksum.c: Remove `register' keyword.
+	* src/cut.c: Likewise.
+	* src/dd.c: Likewise.
+	* src/env.c: Likewise.
+	* src/factor.c: Likewise.
+	* src/fmt.c: Likewise.
+	* src/fold.c: Likewise.
+	* src/id.c: Likewise.
+	* src/logname.c: Likewise.
+	* src/ls.c: Likewise.
+	* src/pr.c: Likewise.
+	* src/printf.c: Likewise.
+	* src/shred.c: Likewise.
+	* src/sort.c: Likewise.
+	* src/sum.c: Likewise.
+	* src/test.c: Likewise.
+	* src/tsort.c: Likewise.
+	* src/uniq.c: Likewise.
+	* src/wc.c: Likewise.
+	* src/whoami.c: Likewise.
+
+2005-03-01  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/Makefile.am (nanosec_libs): Remove $(LIB_XANOSLEEP); no
 	longer needed.
