@@ -54,8 +54,6 @@
 #include "xnanosleep.h"
 #include "xstrtod.h"
 
-static int initialized = 0;
-
 /* Subtract the `struct timespec' values X and Y,
    storing the difference in DIFF.
    Return 1 if the difference is positive, otherwise 0.
