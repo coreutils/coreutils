@@ -16,6 +16,11 @@ mkdir $tmp || framework_failure=1
 cd $tmp || framework_failure=1
 ln -s link link || framework_failure=1
 
+# Make sure the symlink was created.
+# `ln -s link link' succeeds, but creates no file on
+# systems running some version of the DJGPP libc.
+ls link || framework_failure=1
+
 if test $framework_failure = 1; then
   echo 'failure in testing framework'
   (exit 1); exit
