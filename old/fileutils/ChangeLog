@@ -3,6 +3,7 @@
 	* Version 3.16z.
 
 	* Makefile.maint (alpha): New target.
+	(my-distcheck): Tweak.
 
 	* lib/backupfile.h: Protect against multiple inclusion.
 	From Akim Demaille.
