@@ -580,8 +580,8 @@ static struct option const long_options[] =
   {"help", no_argument, &show_help, 1},
   {"version", no_argument, &show_version, 1},
   {"test", no_argument, &test_suite, 1},
-  {"pages", required_argument, NULL, 128},
-  {"columns", required_argument, NULL, 129},
+  {"pages", required_argument, NULL, CHAR_MAX + 1},
+  {"columns", required_argument, NULL, CHAR_MAX + 2},
   {"across", no_argument, NULL, 'a'},
   {"show-control-chars", no_argument, NULL, 'c'},
   {"double-space", no_argument, NULL, 'd'},
@@ -743,11 +743,11 @@ main (int argc, char **argv)
 	case 0:		/* getopt long option */
 	  break;
 
-	case 128:	/* --pages=FIRST_PAGE[:LAST_PAGE] */
+	case CHAR_MAX + 1:	/* --pages=FIRST_PAGE[:LAST_PAGE] */
 	  first_last_page (optarg);
 	  break;
 
-	case 129:	/* --columns=COLUMN */
+	case CHAR_MAX + 2:	/* --columns=COLUMN */
 	  {
 	    long int tmp_long;
 	    if (xstrtol (optarg, NULL, 10, &tmp_long, "") != LONGINT_OK

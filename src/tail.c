@@ -132,11 +132,11 @@ static int show_version;
 
 static struct option const long_options[] =
 {
-  {"allow-missing", required_argument, NULL, 11},
+  {"allow-missing", required_argument, NULL, CHAR_MAX + 1},
   {"bytes", required_argument, NULL, 'c'},
   {"follow", no_argument, NULL, 'f'},
-  {"follow-descriptor", no_argument, NULL, 12},
-  {"follow-name", no_argument, NULL, 13},
+  {"follow-descriptor", no_argument, NULL, CHAR_MAX + 2},
+  {"follow-name", no_argument, NULL, CHAR_MAX + 3},
   {"lines", required_argument, NULL, 'n'},
   {"quiet", no_argument, NULL, 'q'},
   {"silent", no_argument, NULL, 'q'},
@@ -1168,15 +1168,15 @@ parse_options (int argc, char **argv,
 	  forever = 1;
 	  break;
 
-	case 11:
+	case CHAR_MAX + 1:
 	  allow_missing = 1;
 	  break;
 
-	case 12:
+	case CHAR_MAX + 2:
 	  follow_mode = follow_descriptor;
 	  break;
 
-	case 13:
+	case CHAR_MAX + 3:
 	  follow_mode = follow_name;
 	  break;
 
