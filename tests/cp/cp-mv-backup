@@ -9,6 +9,9 @@ fi
 LANGUAGE=C; export LANGUAGE
 LANG=C; export LANG
 
+# Ensure that ls sorts the same way for everyone.
+LC_ALL=C; export LC_ALL
+
 . $srcdir/../envvar-check
 
 umask 022
