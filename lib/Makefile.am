@@ -6,26 +6,28 @@ noinst_LIBRARIES = libfetish.a
 
 INCLUDES = -I.. -I$(srcdir) -I../intl
 
-libfetish_a_SOURCES = getdate.y posixtm.c \
-addext.c argmatch.c backupfile.c basename.c \
-closeout.c dirname.c exclude.c filemode.c \
-full-write.c getopt.c getopt1.c human.c idcache.c \
-isdir.c long-options.c makepath.c modechange.c hash.c path-concat.c \
-quotearg.c safe-read.c same.c save-cwd.c savedir.c stripslash.c userspec.c \
-version-etc.c xgetcwd.c xmalloc.c xstrdup.c \
-xstrtol.c xstrtoul.c xstrtoumax.c yesno.c
+libfetish_a_SOURCES = \
+  getdate.y posixtm.c addext.c argmatch.c backupfile.c basename.c \
+  canon-host.c closeout.c dirname.c exclude.c filemode.c diacrit.c \
+  full-write.c getopt.c getopt1.c getugroups.c hard-locale.c hash.c \
+  human.c idcache.c isdir.c linebuffer.c long-options.c makepath.c \
+  md5.c memcasecmp.c memcoll.c modechange.c obstack.c path-concat.c \
+  quotearg.c readtokens.c readutmp.c safe-read.c same.c save-cwd.c \
+  savedir.c stripslash.c userspec.c version-etc.c xgetcwd.c xgethostname.c \
+  xmalloc.c xstrdup.c xstrtod.c xstrtol.c xstrtoul.c xstrtoumax.c yesno.c
 
 libfetish_a_LIBADD = @LIBOBJS@ @ALLOCA@
 libfetish_a_DEPENDENCIES = $(libfetish_a_LIBADD)
 
-noinst_HEADERS = argmatch.h backupfile.h closeout.h \
-dirname.h error.h exclude.h filemode.h fnmatch.h fsusage.h \
-getdate.h getline.h getopt.h getpagesize.h \
-group-member.h hash.h human.h lchown.h long-options.h \
-makepath.h modechange.h mountlist.h nanosleep.h path-concat.h pathmax.h \
-posixtm.h quotearg.h regex.h safe-read.h same.h save-cwd.h \
-savedir.h strverscmp.h \
-version-etc.h xalloc.h xstrtol.h
+noinst_HEADERS = \
+  argmatch.h backupfile.h bumpalloc.h closeout.h diacrit.h dirname.h error.h \
+  exclude.h filemode.h fnmatch.h fsusage.h getdate.h getline.h getopt.h \
+  getpagesize.h group-member.h hard-locale.h hash.h human.h lchown.h \
+  linebuffer.h long-options.h md5.h memcasecmp.h memcoll.h \
+  makepath.h modechange.h mountlist.h nanosleep.h obstack.h \
+  path-concat.h pathmax.h posixtm.h quotearg.h readtokens.h \
+  readutmp.h regex.h safe-read.h same.h save-cwd.h savedir.h \
+  strverscmp.h version-etc.h xalloc.h xstrtod.h xstrtol.h
 
 BUILT_SOURCES = getdate.c lstat.c stat.c
 MAINTAINERCLEANFILES = $(BUILT_SOURCES)
