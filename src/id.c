@@ -369,7 +369,7 @@ Usage: %s [OPTION]... [USERNAME]\n\
 	   program_name);
 
   if (status != 0)
-    fprintf (stderr, "\nTry `%s --help' for more information.\n",
+    fprintf (stderr, "Try `%s --help' for more information.\n",
 	     program_name);
   else
 

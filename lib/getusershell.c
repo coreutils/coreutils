@@ -43,6 +43,8 @@ char *malloc ();
 char *realloc ();
 #endif
 
+char *xstrdup ();
+
 static int readname ();
 
 /* List of shells to use if the shells file is missing. */
@@ -65,6 +67,8 @@ static char *line = NULL;
 static int line_size = 0;
 
 /* Return an entry from the shells file, ignoring comment lines.
+   If the file doesn't exist, use the list in DEFAULT_SHELLS (above).
+   In any case, the returned string is in memory allocated through malloc.
    Return NULL if there are no more entries.  */
 
 char *
@@ -74,7 +78,7 @@ getusershell ()
     {
       if (default_shells[default_index])
 	/* Not at the end of the list yet.  */
-	return default_shells[default_index++];
+	return xstrdup (default_shells[default_index++]);
       return NULL;
     }
 
@@ -85,7 +89,7 @@ getusershell ()
 	{
 	  /* No shells file.  Use the default list.  */
 	  default_index = 1;
-	  return default_shells[0];
+	  return xstrdup (default_shells[0]);
 	}
     }
 

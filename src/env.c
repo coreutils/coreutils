@@ -201,7 +201,7 @@ Usage: %s [OPTION]... [-] [NAME=VALUE]... [COMMAND [ARG]...]\n\
 	   program_name);
 
   if (status != 0)
-    fprintf (stderr, "\nTry `%s --help' for more information.\n",
+    fprintf (stderr, "Try `%s --help' for more information.\n",
 	     program_name);
   else
 
@@ -209,8 +209,8 @@ Usage: %s [OPTION]... [-] [NAME=VALUE]... [COMMAND [ARG]...]\n\
 \n\
   -u, --unset NAME           remove variable from the environment\n\
   -i, --ignore-environment   start with an empty environment\n\
-  --help                     display this help and exit\n\
-  --version                  output version information and exit\n\
+      --help                 display this help and exit\n\
+      --version              output version information and exit\n\
 \n\
 A mere - implies -i.  If no COMMAND, print the resulting environment.\n\
 ");

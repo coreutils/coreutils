@@ -1,3 +1,16 @@
+Sun Oct 24 14:10:23 1993  Jim Meyering  (meyering@comco.com)
+
+	* long-options.c: Save and restore optind, too.
+	* long-options.h: New file.
+	* long-options.c, echo.c, expr.c, printf.c, test.c, yes.c:
+	Include it instead of duplicating dcls.
+	* src/Makefile.in: Add dependencies for it.
+
+Tue Oct 19 00:26:27 1993  Jim Meyering  (meyering@comco.com)
+
+	* expr.c [!__STDC__]: Don't define away `const'.  configure alone
+	decides whether to do that.  From Francois Pinard.
+
 Sat Oct 16 22:32:54 1993  Jim Meyering  (meyering@comco.com)
 
 	* whoami.c (main): Cast printf arg UID so it matches the type

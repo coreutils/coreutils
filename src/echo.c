@@ -31,6 +31,7 @@ Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 #include <stdio.h>
 #include <sys/types.h>
 #include "system.h"
+#include "long-options.h"
 
 /* echo [-neE] [arg ...]
 Output the ARGs.  If -n is specified, the trailing newline is
@@ -71,8 +72,6 @@ on System V systems with the -E option.
 /* The name this program was run with. */
 char *program_name;
 
-void parse_long_options ();
-
 static void
 usage (status)
      int status;
@@ -83,7 +82,7 @@ Usage: %s [OPTION]... [STRING]...\n\
 	   program_name);
 
   if (status != 0)
-    fprintf (stderr, "\nTry `%s --help' for more information.\n",
+    fprintf (stderr, "Try `%s --help' for more information.\n",
 	     program_name);
   else
 

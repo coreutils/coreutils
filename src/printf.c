@@ -61,6 +61,7 @@
 
 #include "system.h"
 #include "version.h"
+#include "long-option.h"
 
 #if !defined (isascii) || defined (STDC_HEADERS)
 #undef isascii
@@ -82,7 +83,6 @@ unsigned long strtoul ();
 
 char *xmalloc ();
 void error ();
-void parse_long_options ();
 
 static double xstrtod ();
 static int print_esc ();
@@ -111,7 +111,7 @@ Usage: %s FORMAT [ARGUMENT]...\n\
 	   program_name, program_name);
 
   if (status != 0)
-    fprintf (stderr, "\nTry `%s --help' for more information.\n",
+    fprintf (stderr, "Try `%s --help' for more information.\n",
 	     program_name);
   else
 

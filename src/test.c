@@ -1008,7 +1008,7 @@ posixtest ()
 }
 
 #if defined (TEST_STANDALONE)
-void parse_long_options ();
+#include "long-option.h"
 
 static void
 usage (status)
@@ -1022,7 +1022,7 @@ Usage: %s EXPRESSION\n\
 	   program_name, program_name);
 
   if (status != 0)
-    fprintf (stderr, "\nTry `%s --help' for more information.\n",
+    fprintf (stderr, "Try `%s --help' for more information.\n",
 	     program_name);
   else
     {

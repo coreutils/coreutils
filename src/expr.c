@@ -46,6 +46,7 @@
 
 #include "system.h"
 #include "version.h"
+#include "long-option.h"
 
 #if !defined (isascii) || defined (STDC_HEADERS)
 #undef isascii
@@ -53,10 +54,6 @@
 #endif
 
 #define ISDIGIT(c) (isascii (c) && isdigit (c))
-
-#if !__STDC__
-#define const
-#endif
 
 #define NEW(type) ((type *) xmalloc (sizeof (type)))
 #define OLD(x) free ((char *) x)
@@ -91,7 +88,6 @@ void error ();
 char *xstrdup ();
 char *strstr ();
 char *xmalloc ();
-void parse_long_options ();
 
 static VALUE *docolon ();
 static VALUE *eval ();
@@ -121,7 +117,7 @@ Usage: %s EXPRESSION\n\
 	   program_name, program_name);
 
   if (status != 0)
-    fprintf (stderr, "\nTry `%s --help' for more information.\n",
+    fprintf (stderr, "Try `%s --help' for more information.\n",
 	     program_name);
   else
     {
@@ -155,7 +151,12 @@ separates increasing precedence groups.  EXPRESSION may be:\n\
 \n\
   STRING : REGEXP   anchored pattern match of REGEXP in STRING\n\
 \n\
-  ( EXPRESSION )    value of EXPRESSION\n\
+  match STRING REGEXP        same as STRING : REGEXP\n\
+  substr STRING POS LENGTH   substring of STRING, POS counted from 1\n\
+  index STRING CHARS         index in STRING where any CHARS is found, or 0\n\
+  length STRING              length of STRING\n\
+\n\
+  ( EXPRESSION )             value of EXPRESSION\n\
 ");
       printf ("\
 \n\
