@@ -3,13 +3,9 @@
 	* src/head.c (head): Call write_header here.
 	(head_file): ... not here.
 
-2000-08-06  Bruno Haible  <haible@clisp.cons.org>
-
 	* src/cat.c (closeout_func): Remove variable.
 	(close_stdout_wrapper): Remove unused function.
 	(main): Remove assignment to closeout_func.
-
-2000-08-06  Bruno Haible  <haible@clisp.cons.org>
 
 	* src/fold.c (fold_file): Remove ferror(stdout) check, already done
 	in close_stdout.
