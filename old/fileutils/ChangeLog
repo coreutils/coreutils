@@ -1,3 +1,8 @@
+2001-05-13  Paul Eggert  <eggert@sic.twinsun.com>
+
+	* src/mknod.c (main): Check for NODEV device only if NODEV is defined.
+	* src/system.h (NODEV): Remove, undoing previous change.
+
 2001-05-13  Jim Meyering  <meyering@lucent.com>
 
 	* src/remove.c (dir_name, dir_len): Define to different names
@@ -5,7 +10,6 @@
 
 	* tests/Fetish.pm (run_tests): Fail if any test name is longer
 	than 12 bytes.
-
 	* tests/ls-2/tests: Shorten test names so the length of a
 	resulting file name doesn't exceed 14.
 
