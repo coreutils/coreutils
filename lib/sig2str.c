@@ -31,9 +31,6 @@
 #if HAVE_SYS_WAIT_H
 # include <sys/wait.h>
 #endif
-#ifndef WTERMSIG
-# define WTERMSIG(s) ((s) & 0x7F)
-#endif
 
 #include "sig2str.h"
 
@@ -224,7 +221,7 @@ static struct numname { int num; char const name[8]; } numname_table[] =
 #endif
 
     /* Older AIX versions.  */
-#ifdef SIGALRM1 
+#ifdef SIGALRM1
     NUMNAME (ALRM1),	/* unknown; taken from Bash 2.05 */
 #endif
 #ifdef SIGKAP
