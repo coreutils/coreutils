@@ -452,13 +452,12 @@ tac_stdin (void)
   return errors;
 }
 
-/* BUF_END_PLUS_ONE points one byte past the end of the buffer
-   to be searched.  */
+/* BUF_END points one byte past the end of the buffer to be searched.  */
 
 static void *
-memrchr (const char *buf_start, const char *buf_end_plus_one, int c)
+memrchr (const char *buf_start, const char *buf_end, int c)
 {
-  const char *p = buf_end_plus_one;
+  const char *p = buf_end;
   while (buf_start <= --p)
     {
       if (*(const unsigned char *) p == c)
