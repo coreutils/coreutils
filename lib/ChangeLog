@@ -1,11 +1,3 @@
-2002-11-21  Jim Meyering  <jim@meyering.net>
-
-	Merge in changes from the coreutils.
-
-	* mountlist.h (ME_DUMMY): Don't count entries of type `auto' as dummy
-	ones.  At least on GNU/Linux systems, `auto' means something else.
-	From Michael Stone.
-
 2002-11-19  Jim Meyering  <jim@meyering.net>
 
 	* quotearg.c (quotearg_buffer_restyled): If mbrtowc returns
