@@ -714,15 +714,8 @@ remove_dir (struct File_spec *fs, int need_save_cwd,
     if (!SAME_INODE (sb, *fs))
       {
 	error (EXIT_FAILURE, 0,
-	       _("ERROR: the directory %s initially had device/inode\n\
-numbers %lu/%lu, but now (after a chdir into it), the numbers for `.'\n\
-are %lu/%lu.  That means that while rm was running, the directory\n\
-was replaced with either another directory or a link to another directory."),
-	       quote (full_filename (dir_name)),
-	       (unsigned long)(fs->st_dev),
-	       (unsigned long)(fs->st_ino),
-	       (unsigned long)(sb.st_dev),
-	       (unsigned long)(sb.st_ino));
+	       _("directory %s was replaced before being removed"),
+	       quote (full_filename (dir_name)));
       }
 
     tmp_cwd_dev_ino.st_dev = sb.st_dev;
@@ -767,16 +760,8 @@ was replaced with either another directory or a link to another directory."),
       if (!SAME_INODE (sb, *cwd_dev_ino))
 	{
 	  error (EXIT_FAILURE, 0,
-	       _("ERROR: the directory %s initially had device/inode\n\
-numbers %lu/%lu, but now (after changing into at least one subdirectory\n\
-and changing back via `..'), the numbers for `.' are %lu/%lu.\n\
-That means that while rm was running, a partially-removed subdirectory\n\
-was moved to a different position in the file system hierarchy."),
-		 quote (full_filename (".")),
-		 (unsigned long)(cwd_dev_ino->st_dev),
-		 (unsigned long)(cwd_dev_ino->st_ino),
-		 (unsigned long)(sb.st_dev),
-		 (unsigned long)(sb.st_ino));
+		 _("subdirectory of %s was moved while being removed"),
+		 quote (full_filename (".")));
 	}
     }
 
