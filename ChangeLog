@@ -2,6 +2,10 @@
 
 	* Version 5.1.2.
 
+	* man/Makefile.am (.x.1): Prefix help2man invocation with `$(PERL) --'
+	so it works on systems with Perl installed somewhere other than in
+	/usr/bin.
+
 	* src/paste.c (paste_parallel): Declare local, chr, to be of type
 	`int', not `char', since it must hold EOF.  This bug would make
 	paste infloop on some systems.  Reported by Nelson H. F. Beebe
