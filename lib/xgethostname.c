@@ -1,6 +1,6 @@
 /* xgethostname.c -- return current hostname with unlimited length
 
-   Copyright (C) 1992, 1996, 2000, 2001, 2003, 2004 Free Software
+   Copyright (C) 1992, 1996, 2000, 2001, 2003, 2004, 2005 Free Software
    Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -69,7 +69,9 @@ xgethostname (void)
 	  if (! hostname[size_1 - 1])
 	    break;
 	}
-      else if (errno != 0 && errno != ENAMETOOLONG && errno != EINVAL)
+      else if (errno != 0 && errno != ENAMETOOLONG && errno != EINVAL
+	       /* OSX/Darwin does this when the buffer is not large enough */
+	       && errno != ENOMEM)
 	{
 	  int saved_errno = errno;
 	  free (hostname);
