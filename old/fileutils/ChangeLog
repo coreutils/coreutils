@@ -1,10 +1,23 @@
-2001-12-10  Jim Meyering  <meyering@lucent.com>
+2001-12-11  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.4.
+
+	Include the word `fail' in some diagnostics to make it clearer
+	that they indicate a failure.
+	* src/chgrp.c (main): s/getting attributes/failed to get attributes/.
+	* src/chmod.c (change_file_mode, main): Likewise.
+	* src/chown-core.c (change_file_owner): Likewise.
+	* src/chown.c (main): Likewise.
+	* src/cp.c (re_protect): Likewise.
+	* src/touch.c (touch, main):Likewise.
+	Suggestion from Karl Berry.
+
+2001-12-10  Jim Meyering  <meyering@lucent.com>
 
 	* src/dd.c (buggy_lseek_support): Remove function.
 	(skip_via_lseek) [__linux__]: New function.
 	(skip): Use skip_via_lseek, not buggy_lseek_support.
+	Based on an outline from Paul Eggert.
 
 2001-12-09  Jim Meyering  <meyering@lucent.com>
 
