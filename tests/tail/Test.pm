@@ -40,15 +40,21 @@ my @tv = (
 # This should get `tail: l: invalid number of bytes'
 ['err-2', '-cl', '', '', 1],
 
+# This should get `tail: z: invalid suffix character in obsolescent option'
+['err-3', '+2cz', '', '', 1],
+
+# This should get `tail: X: invalid suffix character in obsolescent option'
+['err-4', '-2cX', '', '', 1],
+
 # Since the number is larger than 2^64, this should provoke
 # the diagnostic: `tail: 99999999999999999999: number of bytes is so large \
 # that it is not representable' on all systems... probably, for now, maybe.
-['err-3', '-c99999999999999999999', '', '', 1],
-['err-4', '-c', '', '', 1],
+['err-5', '-c99999999999999999999', '', '', 1],
+['err-6', '-c', '', '', 1],
 
 # Same as -n 10
-['stdin-1', '-', '', '', 0],
-['stdin-2', '-', "x\n" . ("y\n" x 10) . 'z', ("y\n" x 9) . 'z', 0],
+['minus-1', '-', '', '', 0],
+['minus-2', '-', "x\n" . ("y\n" x 10) . 'z', ("y\n" x 9) . 'z', 0],
 
 ['n-1', '-n 10', "x\n" . ("y\n" x 10) . 'z', ("y\n" x 9) . 'z', 0],
 ['n-2', '-n -10', "x\n" . ("y\n" x 10) . 'z', ("y\n" x 9) . 'z', 0],
