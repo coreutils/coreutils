@@ -1,5 +1,5 @@
 /* xgetcwd.c -- return current directory with unlimited length
-   Copyright (C) 1992, 1996, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1992, 1996, 2000, 2001 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -47,6 +47,9 @@ extern void free ();
 char *
 xgetcwd ()
 {
+#if defined __GLIBC__ && __GLIBC__ >= 2
+  return getcwd (NULL, 0);
+#else
   char *ret;
   unsigned path_max;
   char buf[1024];
@@ -58,7 +61,7 @@ xgetcwd ()
   if (errno != ERANGE)
     return NULL;
 
-  path_max = (unsigned) PATH_MAX;
+  path_max = 1300;
   path_max += 2;		/* The getcwd docs say to do this. */
 
   for (;;)
@@ -82,4 +85,5 @@ xgetcwd ()
       path_max += path_max / 16;
       path_max += 32;
     }
+#endif
 }
