@@ -170,8 +170,7 @@ static int my_line_only;
 /* for long options with no corresponding short option, use enum */
 enum
 {
-  LOOKUP_OPTION = CHAR_MAX + 1,
-  LOGIN_OPTION
+  LOOKUP_OPTION = CHAR_MAX + 1
 };
 
 static struct option const longopts[] = {
@@ -181,7 +180,7 @@ static struct option const longopts[] = {
   {"dead", no_argument, NULL, 'd'},
   {"heading", no_argument, NULL, 'H'},
   {"idle", no_argument, NULL, 'i'},
-  {"login", no_argument, NULL, LOGIN_OPTION},
+  {"login", no_argument, NULL, 'l'},
   {"lookup", no_argument, NULL, LOOKUP_OPTION},
   {"message", no_argument, NULL, 'T'},
   {"mesg", no_argument, NULL, 'T'},
@@ -627,12 +626,10 @@ usage (int status)
       fputs (_("\
   -i, --idle        add idle time as HOURS:MINUTES, . or old\n\
                     (deprecated, use -u)\n\
-      --login       print system login processes\n\
-                    (equivalent to SUS -l)\n\
+  -l, --login       print system login processes\n\
 "), stdout);
       fputs (_("\
-  -l, --lookup      attempt to canonicalize hostnames via DNS\n\
-                    (-l is deprecated, use --lookup)\n\
+      --lookup      attempt to canonicalize hostnames via DNS\n\
   -m                only hostname and user associated with stdin\n\
   -p, --process     print active processes spawned by init\n\
 "), stdout);
@@ -712,8 +709,7 @@ main (int argc, char **argv)
 	  include_heading = 1;
 	  break;
 
-	  /* FIXME: This should be -l in a future version */
-	case LOGIN_OPTION:
+	case 'l':
 	  need_login = 1;
 	  include_idle = 1;
 	  assumptions = 0;
@@ -763,10 +759,6 @@ main (int argc, char **argv)
 	  assumptions = 0;
 	  break;
 
-	case 'l':
-	  error (0, 0,
-		 _("Warning: the meaning of '-l' will change in a future\
- release to conform to POSIX"));
 	case LOOKUP_OPTION:
 	  do_lookup = 1;
 	  break;
