@@ -3143,8 +3143,8 @@ The program accepts the following options.  Also see @ref{Common options}.
 @opindex --format=@var{format}
 @cindex formatting of numbers in @code{seq}
 Print all numbers using @var{format}; default @samp{%g}.
-@var{format} must contain exactly one of the standarding float output
-formats @samp{%e}, @samp{%f}, or @samp{%g}.
+@var{format} must contain exactly one of the standarding floating point
+output formats @samp{%e}, @samp{%f}, or @samp{%g}.
 
 @item -s @var{string}
 @itemx --separator=@var{string}
@@ -3159,6 +3159,14 @@ Print all numbers with the same width, by padding with leading zeroes.
 
 @end table
 
+Note: The @var{format} string can only produce decimal numbers. If you
+want decimal numbers without exponent and without decimal point to be
+output, use the format @samp{%1.f}. If you want hexadecimal or octal
+output, use the command
+@code{printf @var{format}'\n' `seq -f %1.f @var{first} @var{step} @var{last}`}
+or the command
+@code{seq -f %1.f @var{first} @var{step} @var{last} | xargs -n 1000 printf @var{format}'\n'}
+with @samp{%x} or @samp{%o} as @var{format} string.
 
 @node Index
 @unnumbered Index
