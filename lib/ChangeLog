@@ -1,3 +1,20 @@
+2001-08-03  Paul Eggert  <eggert@twinsun.com>
+
+	The following changes are from gettext 0.10.39 as maintained by
+	Bruno Haible.
+
+	* mbswidth.h (MBSW_REJECT_UNPRINTABLE, MBSW_REJECT_INVALID):
+	Renamed from MBSW_ACCEPT_UNPRINTABLE and MBSW_ACCEPT_INVALID
+	with inverted sense.  All uses changed.
+
+	* mbswidth.c: Don't include <limits.h>.
+	Include <stdlib.h> and <string.h> unconditionally.
+	(iswcntrl, mbsinit, ISCNTRL): New macros.
+	(mbsnwidth): Use K&R style function declarations.
+	Don't bother checking for MB_LEN_MAX == 1, since the compiler
+	can optimize it when MB_CUR_MAX == 1.
+	The width of control characters is zero, not 1.
+
 2001-07-15  Jim Meyering  <meyering@lucent.com>
 
 	* Makefile.am (EXTRA_DIST): Add unlocked-io.hin.
