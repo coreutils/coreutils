@@ -537,7 +537,6 @@ remove_cwd_entries (void)
      due either to an error or to an interactive `no' response.  */
   struct HT *ht = NULL;
 
-  struct dirent *dp;
   enum RM_status status = RM_OK;
 
   if (dirp)
@@ -553,7 +552,9 @@ remove_cwd_entries (void)
 
   do
     {
+      /* FIXME: why do this?  */
       errno = 0;
+
       dirp = opendir (".");
       if (dirp == NULL)
 	{
@@ -565,11 +566,16 @@ remove_cwd_entries (void)
 	  break;
 	}
 
-      while ((dp = readdir (dirp)) != NULL)
+      while (1)
 	{
 	  char *entry_name;
 	  struct File_spec fs;
 	  enum RM_status tmp_status;
+	  struct dirent *dp;
+
+	  dp = readdir (dirp);
+	  if (dp == NULL)
+	    break;
 
 	  /* Skip this entry if it's `.' or `..'.  */
 	  if (DOT_OR_DOTDOT (dp->d_name))
