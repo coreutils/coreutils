@@ -32,7 +32,7 @@
 #include <stdio.h>
 #include <sys/types.h>
 
-#if defined (HAVE_LIMITS_H) || defined (_LIBC)
+#if HAVE_LIMITS_H || _LIBC
 # include <limits.h>
 #endif
 
@@ -60,9 +60,11 @@
 # ifdef MSDOS
 #  define TEXT1TO1 "rb"
 #  define TEXTCNVT "r"
-# elif defined VMS
-#  define TEXT1TO1 "rb", "ctx=stm"
-#  define TEXTCNVT "r", "ctx=stm"
+# else
+#  if defined VMS
+#   define TEXT1TO1 "rb", "ctx=stm"
+#   define TEXTCNVT "r", "ctx=stm"
+#  endif
 # endif
 # define FILETYPE FILE *
 # define STDINFILE stdin
@@ -166,15 +168,72 @@ static void process_buffer __P ((const void *buffer, size_t len,
 
 #ifndef USE_AS_LIBRARY
 
+/* FIXME: but this won't work with filenames containing blanks.  */
+/* FIXME: This is provisory.  Use strtok.  */
+
 static int
-hex_digits (const char *md5num, size_t len)
+split_3 (char *s, char **u, char **v, char **w)
 {
   size_t i;
+  char *p[3];
 
-  for (i = 0; i < len; ++i)
+#define ISWHITE(c) ((c) == ' ' || (c) == '\t')
+
+  i = 0;
+  while (s[i] && ISWHITE (s[i]))
+    ++i;
+  if (s[i])
     {
-      if (!ISXDIGIT (md5num[i]))
+      p[0] = &s[i];
+      while (s[i] && !ISWHITE (s[i]))
+	++i;
+      if (s[i])
+	s[i++] = '\0';
+      while (s[i] && ISWHITE (s[i]))
+	++i;
+      if (s[i])
+	{
+	  p[1] = &s[i];
+	  while (s[i] && !ISWHITE (s[i]))
+	    ++i;
+	  if (s[i])
+	    s[i++] = '\0';
+	  while (s[i] && ISWHITE (s[i]))
+	    ++i;
+	  if (s[i])
+	    {
+	      p[2] = &s[i];
+	      /* Skip past the third token.  */
+	      while (s[i] && !ISWHITE (s[i]))
+		++i;
+	      if (s[i])
+		s[i++] = '\0';
+	      /* Allow trailing white space.  */
+	      while (s[i] && ISWHITE (s[i]))
+		++i;
+	      if (!s[i])
+	        {
+		  *u = p[0];
+		  *v = p[1];
+		  *w = p[2];
+		  return 0;
+		}
+	    }
+	}
+    }
+  return 1;
+}
+
+/* FIXME: use strcspn.  */
+
+static int
+hex_digits (const char *s)
+{
+  while (*s)
+    {
+      if (!ISXDIGIT (*s))
         return 0;
+      ++s;
     }
   return 1;
 }
@@ -315,21 +374,27 @@ main (argc, argv)
       do
 	{
 	  char line[1024];
-	  char filename[FILENAME_MAX];
-	  char type_flag;
-	  char md5num[32];
-	  int items;
+	  char *filename;
+	  char *type_flag;
+	  char *md5num;
+	  int err;
 
-	  /* FIXME: It may be better to use getline here.  */
+	  /* FIXME: Use getline, not fgets.  */
 	  if (fgets (line, 1024, cfp) == NULL)
 	    break;
 
-	  /* FIXME: maybe accept the output of --string=STRING.  */
-	  items = sscanf (line, "%32c %c %s", md5num, &type_flag, filename);
+	  /* Remove any trailing newline.  */
+	  if (line[strlen (line) - 1] == '\n')
+	    line[strlen (line) - 1] = '\0';
 
-	  if (items != 3
-	      || !hex_digits (md5num, 32)
-	      || (type_flag != 'b' && type_flag != 't'))
+	  /* FIXME: maybe accept the output of --string=STRING.  */
+	  err = split_3 (line, &md5num, &type_flag, &filename);
+
+	  if (err
+	      || strlen (md5num) != 32
+	      || !hex_digits (md5num)
+	      || strlen (type_flag) != 1
+	      || (*type_flag != 'b' && *type_flag != 't'))
 	    {
 	      if (verbose)
 		error (0, 0, _("invalid line in check file: %s"), line);
@@ -347,7 +412,7 @@ main (argc, argv)
 		fflush (stdout);
 
 	      ++n_tests;
-	      md5_file (filename, md5buffer, type_flag == 'b');
+	      md5_file (filename, md5buffer, *type_flag == 'b');
 
 	      /* Compare generated binary number with text representation
 		 in check file.  Ignore case of hex digits.  */
