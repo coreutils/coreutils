@@ -4,21 +4,17 @@
 **  at the University of North Carolina at Chapel Hill.  Later tweaked by
 **  a couple of people on Usenet.  Completely overhauled by Rich $alz
 **  <rsalz@bbn.com> and Jim Berets <jberets@bbn.com> in August, 1990;
-**  send any email to Rich.
 **
-**  This grammar has 10 shift/reduce conflicts.
+**  This grammar has 13 shift/reduce conflicts.
 **
 **  This code is in the public domain and has no copyright.
 */
-/* SUPPRESS 287 on yaccpar_sccsid *//* Unused static variable */
-/* SUPPRESS 288 on yyerrlab *//* Label unused */
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
-
-#ifdef FORCE_ALLOCA_H
-#include <alloca.h>
-#endif
+# include <config.h>
+# ifdef FORCE_ALLOCA_H
+#  include <alloca.h>
+# endif
 #endif
 
 /* Since the code of getdate.y is not included in the Emacs executable
@@ -28,7 +24,7 @@
    problems if we try to write to a static variable, which I don't
    think this code needs to do.  */
 #ifdef emacs
-#undef static
+# undef static
 #endif
 
 #include <stdio.h>
@@ -55,22 +51,7 @@
    host does not conform to Posix.  */
 #define ISDIGIT(c) ((unsigned) (c) - '0' <= 9)
 
-#if	defined (vms)
-#include <types.h>
-#include <time.h>
-#else
-#include <sys/types.h>
-#ifdef TIME_WITH_SYS_TIME
-#include <sys/time.h>
-#include <time.h>
-#else
-#ifdef HAVE_SYS_TIME_H
-#include <sys/time.h>
-#else
-#include <time.h>
-#endif
-#endif
-#endif	/* defined (vms) */
+#include "getdate.h"
 
 #if defined (STDC_HEADERS) || defined (USG)
 #include <string.h>
@@ -166,7 +147,7 @@ typedef enum _MERIDIAN {
 **  yacc had the %union construct.)  Maybe someday; right now we only use
 **  the %union very rarely.
 */
-static char	*yyInput;
+static const char	*yyInput;
 static int	yyDayOrdinal;
 static int	yyDayNumber;
 static int	yyHaveDate;
@@ -880,11 +861,11 @@ difftm (a, b)
 
 time_t
 get_date (p, now)
-    char		*p;
-    time_t		*now;
+    const char *p;
+    const time_t *now;
 {
-  struct tm		tm, tm0, *tmp;
-  time_t		Start;
+  struct tm tm, tm0, *tmp;
+  time_t Start;
 
   yyInput = p;
   Start = now ? *now : time ((time_t *) NULL);
@@ -953,7 +934,7 @@ get_date (p, now)
       }
       Start = mktime (&tm);
     }
-    
+
     if (Start == (time_t) -1)
       return Start;
   }
