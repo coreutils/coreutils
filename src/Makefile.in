@@ -818,7 +818,7 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 bin_SCRIPTS = groups
 noinst_HEADERS = \
-  system.h sys2.h checksum.h copy.h cp-hash.h ls.h dircolors.h remove.h \
+  system.h checksum.h copy.h cp-hash.h ls.h dircolors.h remove.h \
   chown-core.h fs.h \
   wheel.h wheel-size.h
 
