@@ -21,11 +21,6 @@
 
 #include <config.h>
 
-/* Disable the definition of stat to rpl_stat (from config.h) in this
-   file.  Otherwise, we'd get conflicting prototypes for rpl_stat on
-   most systems.  */
-#undef stat
-
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <errno.h>
@@ -42,9 +37,7 @@ extern int errno;
    has this bug.  */
 
 int
-rpl_stat (file, sbuf)
-     const char *file;
-     struct stat *sbuf;
+rpl_stat (const char *file, struct stat *sbuf)
 {
   if (file && *file == 0)
     {
