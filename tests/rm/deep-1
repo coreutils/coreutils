@@ -40,8 +40,6 @@ echo "creating a hierarchy 400 deep in $tmp..." |tr -d '\012'
 $MKDIR -p $deep || fail=1
 echo done
 
-find $tmp > k
-
 # Make sure the deep dir was created.
 test -d $deep || fail=1
 
