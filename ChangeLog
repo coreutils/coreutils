@@ -2,7 +2,7 @@
 
 	* Version 5.3.1.
 
-	* src/uname.c: Indent cpp directives.
+	* src/uname.c: Indent cpp directives to reflect nesting.
 
 2005-03-28  Jim Meyering  <jim@meyering.net>
 
