@@ -51,6 +51,7 @@
 #include "version.h"
 #include "long-options.h"
 #include "error.h"
+#include "xstrtol.h"
 
 #if defined(GWINSZ_BROKEN)	/* Such as for SCO UNIX 3.2.2. */
 # undef TIOCGWINSZ
@@ -1647,7 +1648,6 @@ visible (unsigned int ch)
   return (const char *) buf;
 }
 
-/* FIXME: use xstrtol, but verify that result is not negative.  */
 /* Parse string S as an integer, using decimal radix by default,
    but allowing octal and hex numbers as in C.  */
 /* From `od' by Richard Stallman.  */
@@ -1656,39 +1656,7 @@ static long
 integer_arg (char *s)
 {
   long value;
-  int radix = 10;
-  char *p = s;
-  int c;
-
-  if (*p != '0')
-    radix = 10;
-  else if (*++p == 'x')
-    {
-      radix = 16;
-      p++;
-    }
-  else
-    radix = 8;
-
-  value = 0;
-  while (((c = *p++) >= '0' && c <= '9')
-	 || (radix == 16 && (c & ~40) >= 'A' && (c & ~40) <= 'Z'))
-    {
-      value *= radix;
-      if (c >= '0' && c <= '9')
-	value += c - '0';
-      else
-	value += (c & ~40) - 'A';
-    }
-
-  if (c == 'b')
-    value *= 512;
-  else if (c == 'B')
-    value *= 1024;
-  else
-    p--;
-
-  if (*p)
+  if (xstrtol (s, NULL, 0, &value, "bB") != LONGINT_OK)
     {
       error (0, 0, _("invalid integer argument `%s'"), s);
       usage (1);
