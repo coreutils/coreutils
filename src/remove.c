@@ -146,6 +146,16 @@ struct dirstack_state
 };
 typedef struct dirstack_state Dirstack_state;
 
+struct cwd_state
+{
+  /* The value of errno after a failed save_cwd or restore_cwd.  */
+  int saved_errno;
+
+  /* Information (open file descriptor or absolute directory name)
+     required in order to restore the initial working directory.  */
+  struct saved_cwd saved_cwd;
+};
+
 static Dirstack_state *
 ds_init ()
 {
@@ -361,15 +371,18 @@ AD_stack_pop (Dirstack_state *ds)
 /* chdir `up' one level.
    Whenever using chdir '..', verify that the post-chdir
    dev/ino numbers for `.' match the saved ones.
-   Return the name (in malloc'd storage) of the
-   directory (usually now empty) from which we're coming.  */
-static char *
-AD_pop_and_chdir (Dirstack_state *ds)
+   Set *PREV_DIR to the name (in malloc'd storage) of the
+   directory (usually now empty) from which we're coming.
+   Return nonzero upon failure of restore_cwd.  Otherwise, return 0. */
+static int
+AD_pop_and_chdir (Dirstack_state *ds, char **prev_dir)
 {
-  /* Get the name of the current directory from the top of the stack.  */
-  char *dir = top_dir (ds);
   enum RM_status old_status = AD_stack_top(ds)->status;
   struct AD_ent *top;
+
+  /* Get the name of the current (but soon to be `previous') directory
+     from the top of the stack.  */
+  *prev_dir = top_dir (ds);
 
   AD_stack_pop (ds);
   top = AD_stack_top (ds);
@@ -384,7 +397,7 @@ AD_pop_and_chdir (Dirstack_state *ds)
       struct stat sb;
 
       /* We can give a better diagnostic here, since the target is relative. */
-      if (chdir (".."))
+      if (chdir ("..") != 0)
 	{
 	  error (EXIT_FAILURE, errno,
 		 _("cannot chdir from %s to .."),
@@ -402,12 +415,14 @@ AD_pop_and_chdir (Dirstack_state *ds)
     }
   else
     {
-      if (restore_cwd (&top->u.saved_cwd))
-	error (EXIT_FAILURE, errno,
-	       _("failed to return to initial working directory"));
+      if (restore_cwd (&top->u.saved_cwd) != 0)
+	{
+	  /* failed to return to initial working directory */
+	  return 1;
+	}
     }
 
-  return dir;
+  return 0;
 }
 
 /* Initialize *HT if it is NULL.
@@ -947,10 +962,11 @@ The following directory is part of the cycle:\n  %s\n"),
     return to the same directory from which we came, if necessary.
     Return 1 for success, 0 if some file cannot be removed or if
     a chdir fails.
-    If the working directory cannot be restored, exit immediately.  */
+    If the initial working directory cannot be saved or restored,
+    record the offending errno value in (*CWD_STATE)->saved_errno.  */
 
 static enum RM_status
-remove_dir (Dirstack_state *ds, char const *dir, struct saved_cwd **cwd_state,
+remove_dir (Dirstack_state *ds, char const *dir, struct cwd_state **cwd_state,
 	    struct rm_options const *x)
 {
   enum RM_status status;
@@ -963,13 +979,32 @@ remove_dir (Dirstack_state *ds, char const *dir, struct saved_cwd **cwd_state,
   if (*cwd_state == NULL)
     {
       *cwd_state = xmalloc (sizeof **cwd_state);
-      if (save_cwd (*cwd_state))
+
+      if (save_cwd (&(*cwd_state)->saved_cwd) != 0)
 	{
-	  error (0, errno, _("cannot get current directory"));
-	  return RM_ERROR;
+	  (*cwd_state)->saved_errno = errno;
+	  assert (errno != 0);
+
+	  /* Pretend we started from ".".  That is fine as long as there
+	     is no requirement to return to the original working directory.  */
+	  (*cwd_state)->saved_cwd.name = xstrdup (".");
 	}
-      AD_push_initial (ds, *cwd_state);
+      else
+	(*cwd_state)->saved_errno = 0;
+
+      AD_push_initial (ds, &(*cwd_state)->saved_cwd);
       AD_INIT_OTHER_MEMBERS ();
+    }
+
+  /* If we've failed to record and/or restore the initial working directory,
+     and we're now trying to access a `.'-relative file name, then give a
+     diagnostic, record the failure, and proceed with any subsequent
+     command-line arguments.  */
+  if ((*cwd_state)->saved_errno && IS_RELATIVE_FILE_NAME (dir))
+    {
+      error (0, (*cwd_state)->saved_errno, _("cannot remove directory %s"),
+	     quote (full_filename (dir)));
+      longjmp (ds->current_arg_jumpbuf, 1);
     }
 
   /* There is a race condition in that an attacker could replace the nonempty
@@ -1036,7 +1071,18 @@ remove_dir (Dirstack_state *ds, char const *dir, struct saved_cwd **cwd_state,
       /* Execution reaches this point when we've removed the last
 	 removable entry from the current directory.  */
       {
-	char *d = AD_pop_and_chdir (ds);
+	/* This is the name of the directory that we have just
+	   returned from, after nominally removing all of its contents.  */
+	char *empty_dir;
+
+	if (AD_pop_and_chdir (ds, &empty_dir) != 0)
+	  (*cwd_state)->saved_errno = errno;
+
+	/* Note: the above may have failed due to restore_cwd failure.
+	   That failure may be harmless if x->require_restore_cwd is false,
+	   but we do have to remember that fact, including the errno value,
+	   so we can give an accurate diagnostic when reporting the failure
+	   to remove a subsequent relative-named command-line argument.  */
 
 	/* Try to remove D only if remove_cwd_entries succeeded.  */
 	if (tmp_status == RM_OK)
@@ -1047,32 +1093,32 @@ remove_dir (Dirstack_state *ds, char const *dir, struct saved_cwd **cwd_state,
 	       But that's no big deal since we're interactive.  */
 	    Ternary is_dir;
 	    Ternary is_empty;
-	    enum RM_status s = prompt (ds, d, x, PA_REMOVE_DIR,
+	    enum RM_status s = prompt (ds, empty_dir, x, PA_REMOVE_DIR,
 				       &is_dir, &is_empty);
 
 	    if (s != RM_OK)
 	      {
-		free (d);
+		free (empty_dir);
 		return s;
 	      }
 
-	    if (rmdir (d) == 0)
+	    if (rmdir (empty_dir) == 0)
 	      {
 		if (x->verbose)
 		  printf (_("removed directory: %s\n"),
-			  quote (full_filename (d)));
+			  quote (full_filename (empty_dir)));
 	      }
 	    else
 	      {
 		error (0, errno, _("cannot remove directory %s"),
-		       quote (full_filename (d)));
-		AD_mark_as_unremovable (ds, d);
+		       quote (full_filename (empty_dir)));
+		AD_mark_as_unremovable (ds, empty_dir);
 		status = RM_ERROR;
 		UPDATE_STATUS (AD_stack_top(ds)->status, status);
 	      }
 	  }
 
-	free (d);
+	free (empty_dir);
 
 	if (AD_stack_height (ds) == 1)
 	  break;
@@ -1091,7 +1137,7 @@ remove_dir (Dirstack_state *ds, char const *dir, struct saved_cwd **cwd_state,
 
 static enum RM_status
 rm_1 (Dirstack_state *ds, char const *filename,
-      struct rm_options const *x, struct saved_cwd **cwd_state)
+      struct rm_options const *x, struct cwd_state **cwd_state)
 {
   char *base = base_name (filename);
   enum RM_status status;
@@ -1099,6 +1145,14 @@ rm_1 (Dirstack_state *ds, char const *filename,
   if (DOT_OR_DOTDOT (base))
     {
       error (0, 0, _("cannot remove `.' or `..'"));
+      return RM_ERROR;
+    }
+
+  if (*cwd_state && (*cwd_state)->saved_errno
+      && IS_RELATIVE_FILE_NAME (filename))
+    {
+      error (0, (*cwd_state)->saved_errno,
+	     _("cannot remove %s"), quote (filename));
       return RM_ERROR;
     }
 
@@ -1114,7 +1168,7 @@ rm_1 (Dirstack_state *ds, char const *filename,
 extern enum RM_status
 rm (size_t n_files, char const *const *file, struct rm_options const *x)
 {
-  struct saved_cwd *cwd_state = NULL;
+  struct cwd_state *cwd_state = NULL;
   Dirstack_state *ds;
 
   /* Put the following two variables in static storage, so they can't
@@ -1137,6 +1191,13 @@ rm (size_t n_files, char const *const *file, struct rm_options const *x)
 	s = rm_1 (ds, file[i], x, &cwd_state);
       assert (VALID_STATUS (s));
       UPDATE_STATUS (status, s);
+    }
+
+  if (x->require_restore_cwd && cwd_state && cwd_state->saved_errno != 0)
+    {
+      error (0, cwd_state->saved_errno,
+	     _("cannot restore current working directory"));
+      status = RM_ERROR;
     }
 
   ds_free (ds);
