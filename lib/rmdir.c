@@ -1,5 +1,6 @@
 /* BSD compatible remove directory function for System V
-   Copyright (C) 1988, 1990 Free Software Foundation, Inc.
+
+   Copyright (C) 1988, 1990, 1999, 2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -41,8 +42,7 @@ extern int errno;
    Return 0 if successful, -1 if not.  */
 
 int
-rmdir (dpath)
-     char *dpath;
+rmdir (char const *dpath)
 {
   pid_t cpid;
   int status;
