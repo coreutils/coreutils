@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by the
@@ -38,26 +38,67 @@ struct utimbuf
 };
 #endif
 
-/* Set the access and modification time stamps of FILE to be
-   TIMESPEC[0] and TIMESPEC[1], respectively.  */
+#if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 8) || __STRICT_ANSI__
+# define __attribute__(x)
+#endif
+
+#ifndef ATTRIBUTE_UNUSED
+# define ATTRIBUTE_UNUSED __attribute__ ((__unused__))
+#endif
+
+/* Set the access and modification time stamps of FD (a.k.a. FILE) to be
+   TIMESPEC[0] and TIMESPEC[1], respectively.
+   FD must be either negative -- in which case it is ignored --
+   or a file descriptor that is open on FILE.
+   If TIMESPEC is null, set the time stamps to the current time.  */
 
 int
-utimens (char const *file, struct timespec const timespec[2])
+futimens (int fd ATTRIBUTE_UNUSED,
+	  char const *file, struct timespec const timespec[2])
 {
   /* There's currently no interface to set file timestamps with
      nanosecond resolution, so do the best we can, discarding any
      fractional part of the timestamp.  */
 #if HAVE_WORKING_UTIMES
   struct timeval timeval[2];
-  timeval[0].tv_sec = timespec[0].tv_sec;
-  timeval[0].tv_usec = timespec[0].tv_nsec / 1000;
-  timeval[1].tv_sec = timespec[1].tv_sec;
-  timeval[1].tv_usec = timespec[1].tv_nsec / 1000;
-  return utimes (file, timeval);
+  struct timeval const *t;
+  if (timespec)
+    {
+      timeval[0].tv_sec = timespec[0].tv_sec;
+      timeval[0].tv_usec = timespec[0].tv_nsec / 1000;
+      timeval[1].tv_sec = timespec[1].tv_sec;
+      timeval[1].tv_usec = timespec[1].tv_nsec / 1000;
+      t = timeval;
+    }
+  else
+    t = NULL;
+# if HAVE_FUTIMES
+  if (0 <= fd)
+    return futimes (fd, t);
+# endif
+  return utimes (file, t);
+
 #else
+
   struct utimbuf utimbuf;
-  utimbuf.actime = timespec[0].tv_sec;
-  utimbuf.modtime = timespec[1].tv_sec;
-  return utime (file, &utimbuf);
+  struct utimbuf const *t;
+  if (timespec)
+    {
+      utimbuf.actime = timespec[0].tv_sec;
+      utimbuf.modtime = timespec[1].tv_sec;
+      t = &utimbuf;
+    }
+  else
+    t = NULL;
+  return utime (file, t);
+
 #endif
+}
+
+/* Set the access and modification time stamps of FILE to be
+   TIMESPEC[0] and TIMESPEC[1], respectively.  */
+int
+utimens (char const *file, struct timespec const timespec[2])
+{
+  return futimens (-1, file, timespec);
 }
