@@ -14,7 +14,9 @@
 	Declare column and pending to be `unsigned'.
 	Increment pending and column counters only if column is smaller
 	than TAB_STOP_SENTINEL.
+	* tests/Makefile.am (SUBDIRS): Add unexpand.
 	* tests/unexpand/basic-1: New tests for the above-fixed bug.
+	* configure.in (AC_OUTPUT): Add tests/unexpand/Makefile.
 	Reported by John Kodis.
 
 2000-01-12  Paul Eggert  <eggert@twinsun.com>
