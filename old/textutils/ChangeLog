@@ -1,5 +1,7 @@
 2000-01-08  Jim Meyering  <meyering@ascend.com>
 
+	* Version 2.0b.
+
 	More nits.
 	* src/cut.c (OUTPUT_DELIMITER_OPTION): Define this and use it
 	instead of `CHAR_MAX + n'.
