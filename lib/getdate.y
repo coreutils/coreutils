@@ -44,6 +44,7 @@
 #define ISALPHA(c) (IN_CTYPE_DOMAIN (c) && isalpha (c))
 #define ISUPPER(c) (IN_CTYPE_DOMAIN (c) && isupper (c))
 #define ISDIGIT_LOCALE(c) (IN_CTYPE_DOMAIN (c) && isdigit (c))
+
 /* ISDIGIT differs from ISDIGIT_LOCALE, as follows:
    - Its arg may be any int or unsigned int; it need not be an unsigned char.
    - It's guaranteed to evaluate its argument exactly once.
