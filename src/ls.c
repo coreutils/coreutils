@@ -1005,18 +1005,28 @@ restore_default_color (void)
 }
 
 static void
-restore_default_color_handler (int signum)
+sighandler (int sig)
 {
-  restore_default_color ();
-  _exit (128 + signum);
-}
+#ifndef SA_NOCLDSTOP
+  signal (sig, SIG_IGN);
+#endif
 
-static void
-sigtstp_handler (int signum)
-{
-  signal (SIGTSTP, sigtstp_handler);
   restore_default_color ();
-  raise (SIGSTOP);
+
+#ifdef SA_NOCLDSTOP
+  {
+    struct sigaction sigact;
+
+    sigact.sa_handler = SIG_DFL;
+    sigemptyset (&sigact.sa_mask);
+    sigact.sa_flags = 0;
+    sigaction (sig, &sigact, NULL);
+  }
+#else
+  signal (sig, SIG_DFL);
+#endif
+
+  raise (sig);
 }
 
 int
@@ -1057,10 +1067,36 @@ main (int argc, char **argv)
 	      && format == long_format))
 	check_symlink_color = 1;
 
-      signal (SIGINT, restore_default_color_handler);
-      signal (SIGTERM, restore_default_color_handler);
-      signal (SIGQUIT, restore_default_color_handler);
-      signal (SIGTSTP, sigtstp_handler);
+      {
+	unsigned j;
+	static int const sigs[] = { SIGHUP, SIGINT, SIGPIPE,
+				    SIGQUIT, SIGTERM, SIGTSTP };
+	unsigned nsigs = sizeof sigs / sizeof *sigs;
+#ifdef SA_NOCLDSTOP
+	struct sigaction oldact, newact;
+	sigset_t caught_signals;
+
+	sigemptyset (&caught_signals);
+	for (j = 0; j < nsigs; j++)
+	  sigaddset (&caught_signals, sigs[j]);
+	newact.sa_handler = sighandler;
+	newact.sa_mask = caught_signals;
+	newact.sa_flags = 0;
+#endif
+
+	for (j = 0; j < nsigs; j++)
+	  {
+	    int sig = sigs[j];
+#ifdef SA_NOCLDSTOP
+	    sigaction (sig, NULL, &oldact);
+	    if (oldact.sa_handler != SIG_IGN)
+	      sigaction (sig, &newact, NULL);
+#else
+	    if (signal (sig, SIG_IGN) != SIG_IGN)
+	      signal (sig, sighandler);
+#endif
+	  }
+      }
     }
 
   if (dereference == DEREF_UNDEFINED)
