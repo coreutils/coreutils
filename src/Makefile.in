@@ -265,8 +265,19 @@ BUILT_SOURCES = dircolors.h false.c wheel.h wheel-size.h
 # Tell automake to exempt it from that installcheck test.
 AM_INSTALLCHECK_STD_OPTIONS_EXEMPT = false
 
+all_programs = \
+    $(bin_PROGRAMS) \
+  $(EXTRA_PROGRAMS) \
+    $(bin_SCRIPTS) \
+  $(EXTRA_SCRIPTS)
+
+
 pm = progs-makefile
 pr = progs-readme
+
+sed_filter = s/^ *//;s/N_ (//;s/^"//;s/")*$$//
+s1 = '/^\#define AUTHORS \([^\\]\)/{;s//\1/;$(sed_filter);p;q;}'
+s2 = '/^\#define AUTHORS \\\\/{;n;$(sed_filter);p;q;}'
 subdir = src
 mkinstalldirs = $(SHELL) $(top_srcdir)/config/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
@@ -1723,11 +1734,28 @@ check: check-README
 .PHONY: check-README
 check-README:
 	rm -rf $(pr) $(pm)
-	echo $(EXTRA_PROGRAMS) $(EXTRA_SCRIPTS) $(bin_SCRIPTS) $(bin_PROGRAMS) \
+	echo $(all_programs) \
 	  | tr -s ' ' '\n' | sort -u > $(pm)
 	sed -n '/^The programs .* are:/,/^[a-zA-Z]/p' $(top_srcdir)/README \
 	  | sed -n '/^   */s///p' | tr -s ' ' '\n' > $(pr)
 	diff $(pm) $(pr) && rm -rf $(pr) $(pm)
+# FIXME: handle *.sh
+../AUTHORS: $(SOURCES)
+	(						\
+	  set -e;					\
+	  echo "Here are the names of the programs in this package,";	\
+	  echo "each followed by the name(s) of its author(s).";	\
+	  echo;						\
+	  for i in $(SOURCES); do			\
+	    a=`sed -n $(s1) $$i`;			\
+	    test "$$a" && :				\
+	      || a=`sed -n $(s2) $$i`;			\
+	    if test "$$a"; then				\
+	      prog=`echo $$i|sed 's/\.c$$//'`;		\
+	      echo "$$prog: $$a";			\
+	    fi;						\
+	  done | sort -u ) > $@-t
+	mv $@-t $@
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
