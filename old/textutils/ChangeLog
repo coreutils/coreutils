@@ -1,5 +1,9 @@
+Sat Feb  3 16:20:40 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+	
+	* Version 1.14.
+	
 Wed Jan 31 23:26:13 1996  Jim Meyering  (meyering@na-net.ornl.gov)
-
+	
 	* tail.c (dump_remainder): Flush stdout when tailing-forever on
 	multiple files.  From Carlos Canau <Carlos.Canau@relay.puug.pt>.
 
