@@ -1,10 +1,10 @@
 2001-12-09  Jim Meyering  <meyering@lucent.com>
 
-	* modechange.c (mode_compile): Add cast to avoid warning about
+	* modechange.c (mode_compile): Add cast to avoid pedantic warning about
 	`signed and unsigned type in conditional expression'.
 	* posixtm.c (posix_time_parse): Likewise.
 
-	* xreadlink.c (xreadlink): Add cast to avoid a warning.
+	* xreadlink.c (xreadlink): Add cast to avoid a pedantic warning.
 
 	* readtokens.c (readtoken): Declare an index to be of type unsigned
 	to avoid a pedantic warning.
