@@ -696,11 +696,11 @@ copy_internal (const char *src_path, const char *dst_path,
 
 	  if (x->verbose)
 	    printf ("%s -> %s\n", src_path, dst_path);
-
-	  /* Are we crossing a file system boundary?  */
-	  if (x->one_file_system && device != 0 && device != src_sb.st_dev)
-	    return 0;
 	}
+
+      /* Are we crossing a file system boundary?  */
+      if (x->one_file_system && device != 0 && device != src_sb.st_dev)
+	return 0;
 
       /* Copy the contents of the directory.  */
 
