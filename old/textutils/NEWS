@@ -1,4 +1,5 @@
 User-visible changes in release 1.14
+* sort -i and sort -d properly order strings containing ignored characters
 * nl: rename misleading --first-page=N option to --starting-line-number=N.
 * sort diagnoses invalid arguments to -k, then fails
 * sort -n properly orders invalid integers with respect to valid integers
