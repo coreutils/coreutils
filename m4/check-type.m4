@@ -1,7 +1,8 @@
-#serial 1
+#serial 2
 
 dnl Just like AC_CHECK_TYPE from autoconf-2.12, but also checks in unistd.h
 dnl on systems that have it.  Fujitsu UXP/V needs this for ssize_t.
+dnl Now, also uses the three-argument form of AC_DEFINE.
 
 undefine([AC_CHECK_TYPE])
 dnl AC_CHECK_TYPE(TYPE, DEFAULT)
@@ -23,6 +24,7 @@ changequote([,]), [#include <sys/types.h>
 #endif], ac_cv_type_$1=yes, ac_cv_type_$1=no)])dnl
 AC_MSG_RESULT($ac_cv_type_$1)
 if test $ac_cv_type_$1 = no; then
-  AC_DEFINE($1, $2)
+  AC_DEFINE($1, $2,
+    [  Define to \`$2' if certain system header files doesn't define it.])
 fi
 ])
