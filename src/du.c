@@ -154,7 +154,7 @@ static struct stat stat_buf;
 
 /* A pointer to either lstat or stat, depending on whether
    dereferencing of all symbolic links is to be done. */
-static int __P ((*xstat) ());
+static int (*xstat) ();
 
 /* The exit status to use if we don't get any fatal errors. */
 static int exit_status;
