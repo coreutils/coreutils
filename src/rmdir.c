@@ -86,11 +86,12 @@ remove_parents (char *path)
       while (slash > path && *slash == '/')
 	--slash;
       slash[1] = 0;
-      fail = rmdir (path);
 
-      /* Give a diagnostic for each successful removal if --verbose.  */
-      if (verbose && !fail)
-	error (0, errno, _("removed directory, %s"), path);
+      /* Give a diagnostic for each attempted removal if --verbose.  */
+      if (verbose)
+	error (0, errno, _("removing directory, %s"), path);
+
+      fail = rmdir (path);
 
       if (fail)
 	{
@@ -189,11 +190,12 @@ main (int argc, char **argv)
       /* Stripping slashes is harmless for rmdir;
 	 if the arg is not a directory, it will fail with ENOTDIR.  */
       strip_trailing_slashes (dir);
-      fail = rmdir (dir);
 
-      /* Give a diagnostic for each successful removal if --verbose.  */
-      if (verbose && !fail)
-	error (0, errno, _("removed directory, %s"), dir);
+      /* Give a diagnostic for each attempted removal if --verbose.  */
+      if (verbose)
+	error (0, errno, _("removing directory, %s"), dir);
+
+      fail = rmdir (dir);
 
       if (fail)
 	{
