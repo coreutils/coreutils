@@ -126,7 +126,7 @@ static int input_flags = 0;
 static int output_flags = 0;
 
 /* If nonzero, filter characters through the translation table.  */
-static int translation_needed = 0;
+static bool translation_needed = false;
 
 /* Number of partial blocks written. */
 static uintmax_t w_partial = 0;
@@ -421,7 +421,7 @@ translate_charset (char const *new_trans)
 
   for (i = 0; i < 256; i++)
     trans_table[i] = new_trans[trans_table[i]];
-  translation_needed = 1;
+  translation_needed = true;
 }
 
 /* Return the number of 1 bits in `i'. */
@@ -602,11 +602,10 @@ parse_symbols (char *str, struct symbol_value const *table,
 
 /* Return the value of STR, interpreted as a non-negative decimal integer,
    optionally multiplied by various values.
-   Assign nonzero to *INVALID if STR does not represent a number in
-   this format. */
+   Set *INVALID if STR does not represent a number in this format.  */
 
 static uintmax_t
-parse_integer (const char *str, int *invalid)
+parse_integer (const char *str, bool *invalid)
 {
   uintmax_t n;
   char *suffix;
@@ -618,7 +617,7 @@ parse_integer (const char *str, int *invalid)
 
       if (multiplier != 0 && n * multiplier / multiplier != n)
 	{
-	  *invalid = 1;
+	  *invalid = true;
 	  return 0;
 	}
 
@@ -626,7 +625,7 @@ parse_integer (const char *str, int *invalid)
     }
   else if (e != LONGINT_OK)
     {
-      *invalid = 1;
+      *invalid = true;
       return 0;
     }
 
@@ -667,7 +666,7 @@ scanargs (int argc, char **argv)
 	output_flags |= parse_symbols (val, flags, oflag_error_msgid);
       else
 	{
-	  int invalid = 0;
+	  bool invalid = false;
 	  uintmax_t n = parse_integer (val, &invalid);
 
 	  if (STREQ (name, "ibs"))
@@ -755,14 +754,14 @@ apply_translations (void)
       for (i = 0; i < 256; i++)
 	if (ISLOWER (trans_table[i]))
 	  trans_table[i] = TOUPPER (trans_table[i]);
-      translation_needed = 1;
+      translation_needed = true;
     }
   else if (conversions_mask & C_LCASE)
     {
       for (i = 0; i < 256; i++)
 	if (ISUPPER (trans_table[i]))
 	  trans_table[i] = TOLOWER (trans_table[i]);
-      translation_needed = 1;
+      translation_needed = true;
     }
 
   if (conversions_mask & C_EBCDIC)
@@ -789,12 +788,12 @@ translate_buffer (char *buf, size_t nread)
   size_t i;
 
   for (i = nread, cp = buf; i; i--, cp++)
-    *cp = trans_table[(unsigned char) *cp];
+    *cp = trans_table[to_uchar (*cp)];
 }
 
-/* If nonnzero, the last char from the previous call to `swab_buffer'
+/* If true, the last char from the previous call to `swab_buffer'
    is saved in `saved_char'.  */
-static int char_is_saved = 0;
+static bool char_is_saved = false;
 
 /* Odd char from previous call.  */
 static char saved_char;
@@ -808,21 +807,21 @@ swab_buffer (char *buf, size_t *nread)
 {
   char *bufstart = buf;
   register char *cp;
-  register int i;
+  size_t i;
 
   /* Is a char left from last time?  */
   if (char_is_saved)
     {
       *--bufstart = saved_char;
       (*nread)++;
-      char_is_saved = 0;
+      char_is_saved = false;
     }
 
   if (*nread & 1)
     {
       /* An odd number of chars are in the buffer.  */
       saved_char = bufstart[--*nread];
-      char_is_saved = 1;
+      char_is_saved = true;
     }
 
   /* Do the byte-swapping by moving every second character two
@@ -875,14 +874,11 @@ skip_via_lseek (char const *filename, int fdesc, off_t offset, int whence)
 {
   struct mtget s1;
   struct mtget s2;
-  off_t new_position;
-  int got_original_tape_position;
-
-  got_original_tape_position = (ioctl (fdesc, MTIOCGET, &s1) == 0);
+  bool got_original_tape_position = (ioctl (fdesc, MTIOCGET, &s1) == 0);
   /* known bad device type */
   /* && s.mt_type == MT_ISSCSI2 */
 
-  new_position = lseek (fdesc, offset, whence);
+  off_t new_position = lseek (fdesc, offset, whence);
   if (0 <= new_position
       && got_original_tape_position
       && ioctl (fdesc, MTIOCGET, &s2) == 0
@@ -1004,16 +1000,13 @@ advance_input_after_read_error (size_t nbytes)
 /* Copy NREAD bytes of BUF, with no conversions.  */
 
 static void
-copy_simple (char const *buf, int nread)
+copy_simple (char const *buf, size_t nread)
 {
-  int nfree;			/* Number of unused bytes in `obuf'.  */
   const char *start = buf;	/* First uncopied char in BUF.  */
 
   do
     {
-      nfree = output_blocksize - oc;
-      if (nfree > nread)
-	nfree = nread;
+      size_t nfree = MIN (nread, output_blocksize - oc);
 
       memcpy (obuf + oc, start, nfree);
 
@@ -1023,7 +1016,7 @@ copy_simple (char const *buf, int nread)
       if (oc >= output_blocksize)
 	write_output ();
     }
-  while (nread > 0);
+  while (nread != 0);
 }
 
 /* Copy NREAD bytes of BUF, doing conv=block
@@ -1067,7 +1060,7 @@ copy_with_unblock (char const *buf, size_t nread)
 {
   size_t i;
   char c;
-  static int pending_spaces = 0;
+  static size_t pending_spaces = 0;
 
   for (i = 0; i < nread; i++)
     {
