@@ -38,6 +38,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   du no longer segfaults when a subdirectory of an operand
   directory is removed while du is traversing that subdirectory.
+  Since the bug was in the underlying fts.c module, it also affected
+  chown, chmod, and chgrp.
 
   echo now conforms to POSIX better.  It supports the \0ooo syntax for
   octal escapes, and \c now terminates printing immediately.  If
