@@ -103,6 +103,9 @@ usage (int status)
     {
       printf (_("Usage: %s [OPTION]... [FILE]\n"), program_name);
       printf (_("\
+      printf (_("\
+Output commands to set the LS_COLOR environment variable.\n\
+\n\
   -h, --help                  display this help and exit\n\
       --version               output version information and exit\n\
 Determine format of output:\n\
