@@ -1,5 +1,8 @@
 1999-01-17  Jim Meyering  <meyering@ascend.com>
 
+	* Version 1.22h.
+
+	* Makefile.am (SUBDIRS): Add djgpp.
 	* configure.in (AC_OUTPUT): Add djgpp/Makefile.
 	* djgpp/: New directory.
 
