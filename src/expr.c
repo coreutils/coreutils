@@ -456,7 +456,7 @@ of the basic regular expression is not portable; it is being ignored"),
   else
     {
       /* Match failed -- return the right kind of null.  */
-      if (strstr (pv->u.s, "\\("))
+      if (re_buffer.re_nsub > 0)
 	v = str_value ("");
       else
 	v = int_value (0);
