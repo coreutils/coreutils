@@ -49,38 +49,10 @@
 
 /* When reporting a failing argument, make sure to show invisible
    characters hidden using the quoting style
-   ARGMATCH_QUOTING_STYLE. literal_quoting_style is not good.*/
+   ARGMATCH_QUOTING_STYLE. literal_quoting_style is not good.  */
 
 #ifndef ARGMATCH_QUOTING_STYLE
 # define ARGMATCH_QUOTING_STYLE c_quoting_style
-#endif
-
-#if !HAVE_STRNCASECMP
-# include <ctype.h>
-/* Compare no more than N characters of S1 and S2,
-   ignoring case, returning less than, equal to or
-   greater than zero if S1 is lexicographically less
-   than, equal to or greater than S2.  */
-int
-strncasecmp (const char *s1, const char *s2, size_t n)
-{
-  register const unsigned char *p1 = (const unsigned char *) s1;
-  register const unsigned char *p2 = (const unsigned char *) s2;
-  unsigned char c1, c2;
-
-  if (p1 == p2 || n == 0)
-    return 0;
-
-  do
-    {
-      c1 = tolower (*p1++);
-      c2 = tolower (*p2++);
-      if (c1 == '\0' || c1 != c2)
-        return c1 - c2;
-    } while (--n > 0);
-
-  return c1 - c2;
-}
 #endif
 
 extern char *program_name;
@@ -100,7 +72,7 @@ extern char *program_name;
 static int
 __argmatch_internal (const char *arg, const char *const *arglist,
 		     const char *vallist, size_t valsize,
-		     int sensitive)
+		     int case_sensitive)
 {
   int i;			/* Temporary index in ARGLIST.  */
   size_t arglen;		/* Length of ARG.  */
@@ -112,8 +84,9 @@ __argmatch_internal (const char *arg, const char *const *arglist,
   /* Test all elements for either exact match or abbreviated matches.  */
   for (i = 0; arglist[i]; i++)
     {
-      if (sensitive ? !strncmp (arglist[i], arg, arglen)
-	            : !strncasecmp (arglist[i], arg, arglen))
+      if (case_sensitive
+	  ? !strncmp (arglist[i], arg, arglen)
+	  : !strncasecmp (arglist[i], arg, arglen))
 	{
 	  if (strlen (arglist[i]) == arglen)
 	    /* Exact match found.  */
@@ -122,13 +95,17 @@ __argmatch_internal (const char *arg, const char *const *arglist,
 	    /* First nonexact match found.  */
 	    matchind = i;
 	  else
-	    /* Second nonexact match found.  */
-	    if (vallist == NULL
-		|| memcmp (vallist + valsize * matchind,
-			   vallist + valsize * i, valsize))
-	      /* There is a real ambiguity, or we could not
-                 desambiguise. */
-	      ambiguous = 1;
+	    {
+	      /* Second nonexact match found.  */
+	      if (vallist == NULL
+		  || memcmp (vallist + valsize * matchind,
+			     vallist + valsize * i, valsize))
+		{
+		  /* There is a real ambiguity, or we could not
+		     disambiguate. */
+		  ambiguous = 1;
+		}
+	    }
 	}
     }
   if (ambiguous)
@@ -171,7 +148,7 @@ argmatch_invalid (const char *kind, const char *value, int problem)
   /* There is an error */
   fprintf (stderr, "%s: ", program_name);
   if (problem == -1)
-    fprintf (stderr,  _("invalid argument %s for `%s'"),
+    fprintf (stderr, _("invalid argument %s for `%s'"),
 	     quotearg (value), kind);
   else				/* Assume -2.  */
     fprintf (stderr, _("ambiguous argument %s for `%s'"),
@@ -190,12 +167,12 @@ argmatch_valid (const char *const *arglist,
 		const char *vallist, size_t valsize)
 {
   int i;
-  const char * last_val = NULL;
+  const char *last_val = NULL;
 
   /* We try to put synonyms on the same line.  The assumption is that
      synonyms follow each other */
   fprintf (stderr, _("Valid arguments are:"));
-  for (i = 0 ; arglist[i] ; i++)
+  for (i = 0; arglist[i]; i++)
     if ((i == 0)
 	|| memcmp (last_val, vallist + valsize * i, valsize))
       {
@@ -220,11 +197,11 @@ int
 __xargmatch_internal (const char *kind, const char *arg,
 		      const char *const *arglist,
 		      const char *vallist, size_t valsize,
-		      int sensitive)
+		      int case_sensitive)
 {
   int i;
 
-  i = __argmatch_internal (arg, arglist, vallist, valsize, sensitive);
+  i = __argmatch_internal (arg, arglist, vallist, valsize, case_sensitive);
   if (i >= 0)
     {
       /* Success */
@@ -243,15 +220,15 @@ __xargmatch_internal (const char *kind, const char *arg,
 /* Look for VALUE in VALLIST, an array of objects of size VALSIZE and
    return the first corresponding argument in ARGLIST */
 const char *
-argmatch_to_argument (char * value,
+argmatch_to_argument (char *value,
 		      const char *const *arglist,
 		      const char *vallist, size_t valsize)
 {
   int i;
 
-  for (i = 0 ; arglist [i] ; i++)
+  for (i = 0; arglist[i]; i++)
     if (!memcmp (value, vallist + valsize * i, valsize))
-      return arglist [i];
+      return arglist[i];
   return NULL;
 }
 
@@ -259,8 +236,8 @@ argmatch_to_argument (char * value,
 /*
  * Based on "getversion.c" by David MacKenzie <djm@gnu.ai.mit.edu>
  */
-char * program_name;
-extern const char * getenv ();
+char *rogram_name;
+extern const char *getenv ();
 
 /* When to make backup files.  */
 enum backup_type
@@ -299,12 +276,12 @@ static const enum backup_type backup_vals[] =
 };
 
 int
-main (int argc, const char *const * argv)
+main (int argc, const char *const *argv)
 {
-  const char * cp;
+  const char *cp;
   enum backup_type backup_type = none;
 
-  program_name = (char *) argv [0];
+  program_name = (char *) argv[0];
 
   if (argc > 2)
     {
@@ -317,7 +294,7 @@ main (int argc, const char *const * argv)
 				 backup_args, backup_vals);
 
   if (argc == 2)
-    backup_type = XARGCASEMATCH (program_name, argv [1],
+    backup_type = XARGCASEMATCH (program_name, argv[1],
 				 backup_args, backup_vals);
 
   printf ("The version control is `%s'\n",
