@@ -21,6 +21,7 @@
 # include <config.h>
 #endif
 
+#include <stdbool.h>
 #include <stdio.h>
 #ifdef HAVE_UNISTD_H
 # include <unistd.h>
@@ -42,6 +43,11 @@ extern int errno;
 # include <strings.h>
 #endif
 
+#include <limits.h>
+#ifndef _POSIX_NAME_MAX
+# define _POSIX_NAME_MAX 14
+#endif
+
 #include "same.h"
 #include "dirname.h"
 #include "error.h"
@@ -53,6 +59,8 @@ extern int errno;
 #if !HAVE_DECL_FREE
 void free ();
 #endif
+
+#define MIN(a, b) ((a) < (b) ? (a) : (b))
 
 #define SAME_INODE(Stat_buf_1, Stat_buf_2) \
   ((Stat_buf_1).st_ino == (Stat_buf_2).st_ino \
@@ -69,9 +77,24 @@ same_name (const char *source, const char *dest)
   char const *dest_basename = base_name (dest);
   size_t source_baselen = base_len (source_basename);
   size_t dest_baselen = base_len (dest_basename);
+  bool identical_basenames =
+    (source_baselen == dest_baselen
+     && memcmp (source_basename, dest_basename, dest_baselen) == 0);
+  bool compare_dirs = identical_basenames;
+  bool same = false;
 
-  if (source_baselen == dest_baselen
-      && memcmp (source_basename, dest_basename, dest_baselen) == 0)
+#if ! _POSIX_NO_TRUNC && HAVE_PATHCONF && defined _PC_NAME_MAX
+  /* This implementation silently truncates pathname components.  If
+     the base names might be truncated, check whether the truncated
+     base names are the same, while checking the directories.  */
+  size_t slen_max = HAVE_LONG_FILE_NAMES ? 255 : _POSIX_NAME_MAX;
+  size_t min_baselen = MIN (source_baselen, dest_baselen);
+  if (slen_max <= min_baselen
+      && memcmp (source_basename, dest_basename, slen_max) == 0)
+    compare_dirs = true;
+#endif
+
+  if (compare_dirs)
     {
       struct stat source_dir_stats;
       struct stat dest_dir_stats;
@@ -93,12 +116,30 @@ same_name (const char *source, const char *dest)
 	  error (1, errno, "%s", dest_dirname);
 	}
 
+      same = SAME_INODE (source_dir_stats, dest_dir_stats);
+
+#if ! _POSIX_NO_TRUNC && HAVE_PATHCONF && defined _PC_NAME_MAX
+      if (same && ! identical_basenames)
+	{
+	  long name_max = (errno = 0, pathconf (source_dirname, _PC_NAME_MAX));
+	  if (name_max < 0)
+	    {
+	      if (errno)
+		{
+		  /* Shouldn't happen.  */
+		  error (1, errno, "%s", source_dirname);
+		}
+	      same = false;
+	    }
+	  else
+	    same = (name_max <= min_baselen
+		    && memcmp (source_basename, dest_basename, name_max) == 0);
+	}
+#endif
+
       free (source_dirname);
       free (dest_dirname);
-
-      if (SAME_INODE (source_dir_stats, dest_dir_stats))
-	return 1;
     }
 
-  return 0;
+  return same;
 }
