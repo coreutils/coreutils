@@ -1,19 +1,36 @@
 GNU coreutils NEWS                                    -*- outline -*-
 * Major changes in release 5.0.90:
 
+** New features
+
+  wc count field widths now are heuristically adjusted depending on the input
+  size, if known.  If only one count is printed, it is guaranteed to
+  be printed without leading spaces.
+
+  Previously, wc did not align the count fields if POSIXLY_CORRECT was set,
+  but POSIX did not actually require this undesirable behavior, so it
+  has been removed.
+
 ** Bug fixes
-- `sort --version' and `sort --help' fail, as they should
+
+  `sort --version' and `sort --help' fail, as they should
   when their output is redirected to /dev/full.
-- `su --version > /dev/full' now fails, as it should.
-- uniq -c now uses a SPACE, not a TAB between the count and the
+
+  `su --version > /dev/full' now fails, as it should.
+
+  uniq -c now uses a SPACE, not a TAB between the count and the
   corresponding line, as required by POSIX.
-- kill no longer tries to operate on argv[0] (introduced in 5.0.1)
+
+  kill no longer tries to operate on argv[0] (introduced in 5.0.1)
   Why wasn't this noticed?  Although many tests use kill, none of
   them made an effort to avoid using the shell's built-in kill.
-- [ invoked with no arguments no longer evokes a segfault
-- expr now exits with status 2 if the expression is syntactically valid,
+
+  `[' invoked with no arguments no longer evokes a segfault
+
+  expr now exits with status 2 if the expression is syntactically valid,
   and with status 3 if an error occurred.  POSIX requires this.
-- expr now reports trouble if string comparison fails due to a collation error.
+
+  expr now reports trouble if string comparison fails due to a collation error.
 
 
 * Major changes in release 5.0.1:
