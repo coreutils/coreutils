@@ -142,6 +142,7 @@ struct tspec
     enum size_spec size;
     void (*print_function) ();
     char *fmt_string;
+    int  trailer, field_width;
   };
 
 /* The name this program was run with.  */
@@ -364,9 +365,10 @@ for sizeof(double) or L for sizeof(long double).\n\
 \n\
 RADIX is d for decimal, o for octal, x for hexadecimal or n for none.\n\
 BYTES is hexadecimal with 0x or 0X prefix, it is multiplied by 512\n\
-with b suffix, by 1024 with k and by 1048576 with m.  -s without a\n\
-number implies 3.  -w without a number implies 32.  By default, od\n\
-uses -A o -t d2 -w 16.\n\
+with b suffix, by 1024 with k and by 1048576 with m.  Adding a z suffix to\n\
+any type adds a display of printable characters to the end of each line\n\
+of output.  -s without a number implies 3.  -w without a number implies 32.\n\
+By default, od uses -A o -t d2 -w 16.\n\
 "));
       puts (_("\nReport bugs to <textutils-bugs@gnu.ai.mit.edu>."));
     }
@@ -411,7 +413,7 @@ print_s_char (long unsigned int n_bytes, const char *block,
       if (tmp > SCHAR_MAX)
 	tmp -= SCHAR_MAX - SCHAR_MIN + 1;
       assert (tmp <= SCHAR_MAX);
-      printf (fmt_string, tmp, (i == 1 ? '\n' : ' '));
+      printf (fmt_string, tmp);
       block += sizeof (unsigned char);
     }
 }
@@ -424,7 +426,7 @@ print_char (long unsigned int n_bytes, const char *block,
   for (i = n_bytes; i > 0; i--)
     {
       unsigned int tmp = *(const unsigned char *) block;
-      printf (fmt_string, tmp, (i == 1 ? '\n' : ' '));
+      printf (fmt_string, tmp);
       block += sizeof (unsigned char);
     }
 }
@@ -440,10 +442,11 @@ print_s_short (long unsigned int n_bytes, const char *block,
       if (tmp > SHRT_MAX)
 	tmp -= SHRT_MAX - SHRT_MIN + 1;
       assert (tmp <= SHRT_MAX);
-      printf (fmt_string, tmp, (i == 1 ? '\n' : ' '));
+      printf (fmt_string, tmp);
       block += sizeof (unsigned short);
     }
 }
+
 static void
 print_short (long unsigned int n_bytes, const char *block,
 	     const char *fmt_string)
@@ -452,7 +455,7 @@ print_short (long unsigned int n_bytes, const char *block,
   for (i = n_bytes / sizeof (unsigned short); i > 0; i--)
     {
       unsigned int tmp = *(const unsigned short *) block;
-      printf (fmt_string, tmp, (i == 1 ? '\n' : ' '));
+      printf (fmt_string, tmp);
       block += sizeof (unsigned short);
     }
 }
@@ -465,7 +468,7 @@ print_int (long unsigned int n_bytes, const char *block,
   for (i = n_bytes / sizeof (unsigned int); i > 0; i--)
     {
       unsigned int tmp = *(const unsigned int *) block;
-      printf (fmt_string, tmp, (i == 1 ? '\n' : ' '));
+      printf (fmt_string, tmp);
       block += sizeof (unsigned int);
     }
 }
@@ -478,7 +481,7 @@ print_long (long unsigned int n_bytes, const char *block,
   for (i = n_bytes / sizeof (unsigned long); i > 0; i--)
     {
       unsigned long tmp = *(const unsigned long *) block;
-      printf (fmt_string, tmp, (i == 1 ? '\n' : ' '));
+      printf (fmt_string, tmp);
       block += sizeof (unsigned long);
     }
 }
@@ -491,7 +494,7 @@ print_float (long unsigned int n_bytes, const char *block,
   for (i = n_bytes / sizeof (float); i > 0; i--)
     {
       float tmp = *(const float *) block;
-      printf (fmt_string, tmp, (i == 1 ? '\n' : ' '));
+      printf (fmt_string, tmp);
       block += sizeof (float);
     }
 }
@@ -504,7 +507,7 @@ print_double (long unsigned int n_bytes, const char *block,
   for (i = n_bytes / sizeof (double); i > 0; i--)
     {
       double tmp = *(const double *) block;
-      printf (fmt_string, tmp, (i == 1 ? '\n' : ' '));
+      printf (fmt_string, tmp);
       block += sizeof (double);
     }
 }
@@ -518,12 +521,26 @@ print_long_double (long unsigned int n_bytes, const char *block,
   for (i = n_bytes / sizeof (LONG_DOUBLE); i > 0; i--)
     {
       LONG_DOUBLE tmp = *(const LONG_DOUBLE *) block;
-      printf (fmt_string, tmp, (i == 1 ? '\n' : ' '));
+      printf (fmt_string, tmp);
       block += sizeof (LONG_DOUBLE);
     }
 }
 
 #endif
+
+static void
+dump_string_trailer(long unsigned int n_bytes, const char *block)
+{
+  int i;
+  printf("  >");
+  for (i = n_bytes; i > 0; i--)
+    {
+      unsigned int c = *(const unsigned char *) block;
+      printf ("%c", ISPRINT(c) ? c : '.');
+      block += sizeof (unsigned char);
+    }
+  printf("<");
+}
 
 static void
 print_named_ascii (long unsigned int n_bytes, const char *block,
@@ -547,7 +564,7 @@ print_named_ascii (long unsigned int n_bytes, const char *block,
 	  s = buf;
 	}
 
-      printf ("%3s%c", s, (i == 1 ? '\n' : ' '));
+      printf (" %3s", s);
       block += sizeof (unsigned char);
     }
 }
@@ -602,7 +619,7 @@ print_ascii (long unsigned int n_bytes, const char *block,
 	  s = (const char *) buf;
 	}
 
-      printf ("%3s%c", s, (i == 1 ? '\n' : ' '));
+      printf (" %3s", s);
       block += sizeof (unsigned char);
     }
 }
@@ -660,7 +677,7 @@ decode_one_format (const char *s_orig, const char *s, const char **next,
   char *fmt_string;
   void (*print_function) ();
   const char *p;
-  unsigned int c;
+  unsigned int c, field_width=0;
 
   assert (tspec != NULL);
 
@@ -728,29 +745,29 @@ this system doesn't provide a %lu-byte integral type"), s_orig, size);
 	{
 	case 'd':
 	  fmt = SIGNED_DECIMAL;
-	  sprintf (fmt_string, "%%%u%sd%%c",
-		   bytes_to_signed_dec_digits[size],
+	  sprintf (fmt_string, " %%%u%sd",
+		   field_width = bytes_to_signed_dec_digits[size],
 		   (size_spec == LONG ? "l" : ""));
 	  break;
 
 	case 'o':
 	  fmt = OCTAL;
-	  sprintf (fmt_string, "%%0%u%so%%c",
-		   bytes_to_oct_digits[size],
+	  sprintf (fmt_string, " %%0%u%so",
+		   field_width = bytes_to_oct_digits[size],
 		   (size_spec == LONG ? "l" : ""));
 	  break;
 
 	case 'u':
 	  fmt = UNSIGNED_DECIMAL;
-	  sprintf (fmt_string, "%%%u%su%%c",
-		   bytes_to_unsigned_dec_digits[size],
+	  sprintf (fmt_string, " %%%u%su",
+		   field_width = bytes_to_unsigned_dec_digits[size],
 		   (size_spec == LONG ? "l" : ""));
 	  break;
 
 	case 'x':
 	  fmt = HEXADECIMAL;
-	  sprintf (fmt_string, "%%0%u%sx%%c",
-		   bytes_to_hex_digits[size],
+	  sprintf (fmt_string, " %%0%u%sx",
+		   field_width = bytes_to_hex_digits[size],
 		   (size_spec == LONG ? "l" : ""));
 	  break;
 
@@ -838,27 +855,27 @@ this system doesn't provide a %lu-byte floating point type"), s_orig, size);
 	case FLOAT_SINGLE:
 	  print_function = print_float;
 	  /* Don't use %#e; not all systems support it.  */
-	  pre_fmt_string = "%%%d.%de%%c";
+	  pre_fmt_string = " %%%d.%de";
 	  fmt_string = xmalloc (strlen (pre_fmt_string));
 	  sprintf (fmt_string, pre_fmt_string,
-		   FLT_DIG + 8, FLT_DIG);
+		   field_width = FLT_DIG + 8, FLT_DIG);
 	  break;
 
 	case FLOAT_DOUBLE:
 	  print_function = print_double;
-	  pre_fmt_string = "%%%d.%de%%c";
+	  pre_fmt_string = " %%%d.%de";
 	  fmt_string = xmalloc (strlen (pre_fmt_string));
 	  sprintf (fmt_string, pre_fmt_string,
-		   DBL_DIG + 8, DBL_DIG);
+		   field_width = DBL_DIG + 8, DBL_DIG);
 	  break;
 
 #ifdef HAVE_LONG_DOUBLE
 	case FLOAT_LONG_DOUBLE:
 	  print_function = print_long_double;
-	  pre_fmt_string = "%%%d.%dLe%%c";
+	  pre_fmt_string = " %%%d.%dLe";
 	  fmt_string = xmalloc (strlen (pre_fmt_string));
 	  sprintf (fmt_string, pre_fmt_string,
-		   LDBL_DIG + 8, LDBL_DIG);
+		   field_width = LDBL_DIG + 8, LDBL_DIG);
 	  break;
 #endif
 
@@ -873,6 +890,7 @@ this system doesn't provide a %lu-byte floating point type"), s_orig, size);
       size_spec = CHAR;
       fmt_string = NULL;
       print_function = print_named_ascii;
+      field_width = 3;
       break;
 
     case 'c':
@@ -881,6 +899,7 @@ this system doesn't provide a %lu-byte floating point type"), s_orig, size);
       size_spec = CHAR;
       fmt_string = NULL;
       print_function = print_ascii;
+      field_width = 3;
       break;
 
     default:
@@ -893,6 +912,11 @@ this system doesn't provide a %lu-byte floating point type"), s_orig, size);
   tspec->fmt = fmt;
   tspec->print_function = print_function;
   tspec->fmt_string = fmt_string;
+
+  tspec->field_width = field_width;
+  tspec->trailer = (*s == 'z');
+  if (tspec->trailer)
+      s++;
 
   if (next != NULL)
     *next = s;
@@ -1123,10 +1147,20 @@ write_block (long unsigned int current_offset, long unsigned int n_bytes,
       prev_pair_equal = 0;
       for (i = 0; i < n_specs; i++)
 	{
-	  printf ("%s ", (i == 0
+	  printf ("%s",  (i == 0
 			  ? format_address (current_offset)
 			  : address_pad));
 	  (*spec[i].print_function) (n_bytes, curr_block, spec[i].fmt_string);
+	  if (spec[i].trailer)
+	    {
+	      /* space-pad out to full line width, then dump the trailer */
+	      int datum_width = width_bytes[spec[i].size];
+	      int blank_fields = (bytes_per_block - n_bytes) / datum_width;
+	      int field_width = spec[i].field_width + 1;
+	      printf("%*s", blank_fields * field_width, "");
+	      dump_string_trailer(n_bytes, curr_block);
+	    }
+	  printf("\n");
 	}
     }
   first = 0;
