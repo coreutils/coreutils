@@ -96,8 +96,8 @@ struct cp_options
 
   /* If nonzero, attempt to give the copies the original files' permissions,
      owner, group, and timestamps. */
-  int preserve_owner_and_group;
-  int preserve_chmod_bits;
+  int preserve_ownership;
+  int preserve_mode;
   int preserve_timestamps;
 
   /* If nonzero and any of the above (for preserve) file attributes cannot
