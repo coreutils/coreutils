@@ -127,6 +127,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   tac can now handle regular, nonseekable files like Linux's
   /proc/modules.  Before, it would produce no output for such a file.
 
+  tac would exit immediately upon I/O or temp-file creation failure.
+  Now it continues on, processing any remaining command line arguments.
+
   "tail -f" no longer mishandles pipes and fifos.  With no operands,
   tail now ignores -f if standard input is a pipe, as POSIX requires.
   When conforming to POSIX 1003.2-1992, tail now supports the SUSv2 b
