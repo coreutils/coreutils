@@ -1,3 +1,17 @@
+1999-10-16  Jim Meyering  <meyering@ascend.com>
+
+	* tests/cp/backup-is-src: Remove use of cp's now-deprecated -V option.
+	Use --b=simple instead of -b -V simple.
+
+	* src/cp.c: Convert --backup to take an optional argument.
+	Deprecate --version-control (-V) in comments.
+	(usage): Remove mention of --version-control.
+	(main): Make -V warn then fall through into --backup case.
+	[--backup case]: Handle optional arg.
+
+	* tests/cp/Makefile.am (TESTS): Add cp-mv-backup.
+	* tests/cp/cp-mv-backup: New file.
+
 1999-10-11  Jim Meyering  <meyering@ascend.com>
 
 	* lib/getopt.c: Merge changes from latest glibc.
