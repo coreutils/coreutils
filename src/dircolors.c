@@ -306,7 +306,7 @@ main (int argc, char *argv[])
 	  input_file = xmalloc (strlen (SHAREDIR) + 1
 				+ strlen (USER_FILE) + 1);
 	  stpcpy (stpcpy (stpcpy (input_file, SHAREDIR), "/"),
-		  USER_FILE);
+		  SYSTEM_FILE);
 	  fp = fopen (input_file, "r");
 	}
     }
