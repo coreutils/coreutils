@@ -1,5 +1,11 @@
 Mon Oct 23 23:17:04 1995  Jim Meyering  (meyering@comco.com)
 
+	* aclocal.m4 (jm_WITH_AUTODEPS): New directive.
+	* configure.in: Use it.
+
+	* lib/Makefile.in (INCLUDE, COMPILE): New variables.
+	(.c.o): Rewrite to be more like src/Makefile.in.
+
 	* src/Makefile.in (distclean): Remove .deps.
 	Include @top_srcdir@/mkdep-Makefile.
 
