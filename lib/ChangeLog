@@ -1,3 +1,9 @@
+2003-03-09  Paul Eggert  <eggert@twinsun.com>
+
+	* argmatch.c (EXIT_FAILURE): Define if the system doesn't.
+	Reported by Bruce Becker; see:
+	http://mail.gnu.org/archive/html/bug-bison/2003-03/msg00017.html
+
 2003-03-09  Jim Meyering  <jim@meyering.net>
 
 	* ftw.c: Include "save-cwd.h".
