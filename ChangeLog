@@ -1,3 +1,10 @@
+2004-07-27  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/copy.c (copy_internal): find_backup_file_name no longer
+	returns NULL, so don't bother to check for this.
+	* src/cp.c (do_copy): Likewise.
+	* src/ln.c (do_link): Likewise.
+
 2004-07-25  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/nice.c (GET_NICE_VALUE): Renamed from GET_PRIORITY.
