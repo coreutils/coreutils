@@ -149,32 +149,6 @@ int wcwidth ();
 # define HAVE_SYMLINKS 0
 #endif
 
-/* If any of the S_* macros are undefined, define them here so each
-   use doesn't have to be guarded with e.g., #ifdef S_ISLNK.  */
-#ifndef S_ISLNK
-# define S_ISLNK(Mode) 0
-#endif
-
-#ifndef S_ISFIFO
-# define S_ISFIFO(Mode) 0
-#endif
-
-#ifndef S_ISSOCK
-# define S_ISSOCK(Mode) 0
-#endif
-
-#ifndef S_ISCHR
-# define S_ISCHR(Mode) 0
-#endif
-
-#ifndef S_ISBLK
-# define S_ISBLK(Mode) 0
-#endif
-
-#ifndef S_ISDOOR
-# define S_ISDOOR(Mode) 0
-#endif
-
 /* Arrange to make lstat calls go through the wrapper function
    on systems with an lstat function that does not dereference symlinks
    that are specified with a trailing slash.  */
