@@ -1,3 +1,26 @@
+1999-01-10  Jim Meyering  <meyering@ascend.com>
+
+	* src/copy.c (copy_internal): Handle two more values of errno from
+	failed rename of a directory into a subdirectory of itself.
+	Thanks to Volker Borchert for testing many types and combinations
+	of systems.
+
+	* lib/argmatch.c (ARGMATCH_QUOTING_STYLE): Change from c_quoting_style
+	to escape_quoting_style.
+	(argmatch_invalid): Now that the quoted quantity is no longer double
+	quoted, remove the code that removed leading and trailing double quotes.
+
+	* src/ls.c (decode_switches): Now that escape_quoting_style no longer
+	escapes the SPACE character, arrange for SPACEs to be quoted here.
+	* lib/quotearg.c (quotearg_buffer): Change escape_quoting_style so that
+	it no longer escapes ` '.
+	Suggestion from Paul Eggert.
+
+1999-01-05  Jim Meyering  <meyering@ascend.com>
+
+	* configure.in (space): Add `for' in message of statvfs check.
+	From Ulrich Drepper.
+
 1999-01-04  Jim Meyering  <meyering@ascend.com>
 
 	* Version 4.1-b2.
