@@ -234,7 +234,7 @@ batch_convert (const char *input_filename, const char *format)
   size_t buflen;
   struct timespec when;
 
-  if (strcmp (input_filename, "-") == 0)
+  if (STREQ (input_filename, "-"))
     {
       input_filename = _("standard input");
       in_stream = stdin;
