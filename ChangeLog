@@ -2,6 +2,8 @@
 
 	* Version 5.3.0.
 
+	* src/sort.c (zaptemp): Mark new diagnostic for translation.
+
 	* tests/misc/close-stdout: New file.  Test today's closeout.c change.
 	* tests/misc/Makefile.am (TESTS): Add close-stdout.
 
