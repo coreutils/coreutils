@@ -1,3 +1,7 @@
+Wed May 10 22:26:35 1995  Jim Meyering  (meyering@comco.com)
+
+	* Version 1.11.1
+
 Sun May  7 13:35:49 1995  Jim Meyering  (meyering@comco.com)
 
 	* all Makefile.in (maintainer-clean): Renamed from realclean
@@ -15,7 +19,7 @@ Thu May  4 23:15:58 1995  Jim Meyering  (meyering@comco.com)
 	[DEFAULT_TMPDIR]: Use this instead.
 	* tac.c (save_stdin): Likewise.
 
-	* (set_ordering): Properly parse arguments like `+x.yn'.
+	* sort.c (set_ordering): Properly parse arguments like `+x.yn'.
 	Reported by John Salmon (johns@mullet.anu.edu.au).
 	Patch from Mike Haertel.
 

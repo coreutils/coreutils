@@ -5,7 +5,7 @@ User-visible changes in release 1.12
   lines sooner
 * sort properly orders fields where one field is a proper prefix of the other
 * sort properly interprets field offsets specified via the -k option
-* dd, od, and tail work on systems for which off_t is long long (e.g. BD4.4)
+* dd, od, and tail work on systems for which off_t is long long (e.g. BSD4.4)
 * wc is faster when not counting words
 * wc now works even when file pointer isn't at beginning of file
 * expand no longer seg faults with very long tab lists
