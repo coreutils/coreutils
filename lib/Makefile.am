@@ -63,9 +63,9 @@ libfetish_a_SOURCES = \
   ftw_.h \
   full-read.c full-read.h \
   full-write.c full-write.h \
+  getdelim2.c getdelim2.h \
   getline.h \
   getpagesize.h \
-  getstr.c getstr.h \
   gettime.c \
   gettext.h \
   getugroups.c \
