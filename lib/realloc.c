@@ -22,19 +22,14 @@
 #endif
 #undef realloc
 
-#include <stddef.h>
-
-char *malloc ();
-char *realloc ();
+#include <stdlib.h>
 
 /* Change the size of an allocated block of memory P to N bytes,
    with error checking.  If N is zero, change it to 1.  If P is NULL,
    use malloc.  */
 
-char *
-rpl_realloc (p, n)
-     char *p;
-     size_t n;
+void *
+rpl_realloc (void *p, size_t n)
 {
   if (n == 0)
     n = 1;
