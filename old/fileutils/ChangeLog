@@ -1,5 +1,8 @@
 1998-04-04  Jim Meyering  <meyering@eng.ascend.com>
 
+	* GNUmakefile: Add conditionals so that running `make' in an
+	unconfigured source directory will get a reasonable diagnostic.
+
 	* Makefile.am (ACLOCAL_AMFLAGS): Define this, so automake/aclocal
 	know about the m4/ subdirectory.
 	* Makefile.maint (aclocal-files): Remove now-unnecessary (with
