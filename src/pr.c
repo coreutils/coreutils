@@ -861,55 +861,38 @@ main (int argc, char **argv)
 		? (char **) xmalloc ((argc - 1) * sizeof (char *))
 		: NULL);
 
-  while (1)
+  while ((c = getopt_long (argc, argv,
+			   "-0123456789abcde::fFh:i::Jl:mn::N:o:rs::S::tTvw:W:",
+			   long_options, NULL))
+	 != -1)
     {
-      c = getopt_long (argc, argv,
-		       "-0123456789abcde::fFh:i::Jl:mn::N:o:rs::S::tTvw:W:",
-		       long_options, NULL);
-      if (c == 1)		/* Non-option argument. */
+      if (ISDIGIT (c))
 	{
-	  char *s;
-	  s = optarg;
-	  if (*s == '+')
-	    {
-	      /* long option --page dominates old `+FIRST_PAGE ...' */
-	      if (first_page_number > 0  || last_page_number > 0)
-		continue;
-	      ++s;
-	      first_last_page (s);
-	    }
-	  else
-	    {
-	      file_names[n_files++] = optarg;
-	    }
-	}
-      else
-	{
-	  if (ISDIGIT (c))
-	    {
-	      accum = accum * 10 + c - '0';
-	      continue;
-	    }
-	  else
-	    {
-	      if (accum > 0)
-		{
-		  columns = accum;
-		  explicit_columns = TRUE;
-		  accum = 0;
-		}
-	    }
+	  accum = accum * 10 + c - '0';
+	  continue;
 	}
 
-      if (c == 1)
-	continue;
-
-      if (c == EOF)
-	break;
+      if (accum > 0)
+	{
+	  columns = accum;
+	  explicit_columns = TRUE;
+	  accum = 0;
+	}
 
       switch (c)
 	{
 	case 0:			/* getopt long option */
+	  break;
+
+	case 1:			/* Non-option argument. */
+	  if (*optarg == '+')
+	    {
+	      /* long option --page dominates old `+FIRST_PAGE ...' */
+	      if (first_page_number <= 0 && last_page_number <= 0)
+		first_last_page (optarg);
+	    }
+	  else
+	    file_names[n_files++] = optarg;
 	  break;
 
 	case PAGES_OPTION:	/* --pages=FIRST_PAGE[:LAST_PAGE] */
