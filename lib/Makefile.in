@@ -424,11 +424,11 @@ distdir: $(DISTFILES)
 MKDEP = $(CC) -M $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
 
 DEPS_MAGIC := $(shell mkdir .deps > /dev/null 2>&1 || :)
-
--include $(DEP_FILES)
 -include .deps/.P
 .deps/.P: $(BUILT_SOURCES)
 	echo > $@
+
+-include $(DEP_FILES)
 
 mostlyclean-depend:
 
