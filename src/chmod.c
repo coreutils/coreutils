@@ -39,6 +39,7 @@
 
 enum Change_status
 {
+  CH_NOT_APPLIED,
   CH_SUCCEEDED,
   CH_FAILED,
   CH_NO_CHANGE_REQUESTED
@@ -100,19 +101,30 @@ static struct option const long_options[] =
   {0, 0, 0, 0}
 };
 
-static int
-mode_changed (const char *file, mode_t old_mode)
-{
-  struct stat new_stats;
+/* Return true if the chmodable permission bits of FILE changed.
+   The old mode was OLD_MODE, but it was changed to NEW_MODE.  */
 
-  if (stat (file, &new_stats))
+static bool
+mode_changed (char const *file, mode_t old_mode, mode_t new_mode)
+{
+  if (new_mode & (S_ISUID | S_ISGID | S_ISVTX))
     {
-      if (force_silent == 0)
-	error (0, errno, _("getting new attributes of %s"), quote (file));
-      return 0;
+      /* The new mode contains unusual bits that the call to chmod may
+	 have silently cleared.  Check whether they actually changed.  */
+
+      struct stat new_stats;
+
+      if (stat (file, &new_stats) != 0)
+	{
+	  if (!force_silent)
+	    error (0, errno, _("getting new attributes of %s"), quote (file));
+	  return 0;
+	}
+
+      new_mode = new_stats.st_mode;
     }
 
-  return old_mode != new_stats.st_mode;
+  return ((old_mode ^ new_mode) & CHMOD_MODE_BITS) != 0;
 }
 
 /* Tell the user how/if the MODE of FILE has been changed.
@@ -124,6 +136,13 @@ describe_change (const char *file, mode_t mode,
 {
   char perms[11];		/* "-rwxrwxrwx" ls-style modes. */
   const char *fmt;
+
+  if (changed == CH_NOT_APPLIED)
+    {
+      printf (_("neither symbolic link %s nor referent has been changed\n"),
+	      quote (file));
+      return;
+    }
 
   mode_string (mode, perms);
   perms[10] = '\0';		/* `mode_string' does not null terminate. */
@@ -146,70 +165,85 @@ describe_change (const char *file, mode_t mode,
 }
 
 /* Change the mode of FILE according to the list of operations CHANGES.
-   Return 0 if successful, 1 if errors occurred.  This function is called
+   Return 0 if successful, -1 if errors occurred.  This function is called
    once for every file system object that fts encounters.  */
 
 static int
 process_file (FTS *fts, FTSENT *ent, const struct mode_change *changes)
 {
-  const char *file_full_name = ent->fts_path;
-  const char *file = ent->fts_accpath;
-  const struct stat *sb = ent->fts_statp;
-  mode_t newmode;
+  char const *file_full_name = ent->fts_path;
+  char const *file = ent->fts_accpath;
+  const struct stat *file_stats = ent->fts_statp;
+  mode_t new_mode IF_LINT (= 0);
   int errors = 0;
-  int fail;
-  int saved_errno;
+  bool do_chmod;
+  bool symlink_changed = true;
 
   switch (ent->fts_info)
     {
+    case FTS_DP:
+      return 0;
+
     case FTS_NS:
       error (0, ent->fts_errno, _("cannot access %s"), quote (file_full_name));
-      return 1;
+      errors = -1;
+      break;
 
     case FTS_ERR:
       error (0, ent->fts_errno, _("%s"), quote (file_full_name));
-      return 1;
+      errors = -1;
+      break;
 
     case FTS_DNR:
       error (0, ent->fts_errno, _("cannot read directory %s"),
 	     quote (file_full_name));
-      return 1;
+      errors = -1;
+      break;
 
     default:
       break;
     }
 
-  /* If this is the second (post-order) encounter with a directory,
-     then return right away.  */
-  if (ent->fts_info == FTS_DP)
-    return 0;
+  do_chmod = !errors;
 
-  if (ROOT_DEV_INO_CHECK (root_dev_ino, sb))
+  if (do_chmod && ROOT_DEV_INO_CHECK (root_dev_ino, file_stats))
     {
       ROOT_DEV_INO_WARN (file_full_name);
-      return 1;
+      errors = -1;
+      do_chmod = false;
     }
 
-  if (S_ISLNK (sb->st_mode))
-    return 0;
-
-  newmode = mode_adjust (sb->st_mode, changes);
-
-  fail = chmod (file, newmode);
-  saved_errno = errno;
-
-  if (verbosity == V_high
-      || (verbosity == V_changes_only
-	  && !fail && mode_changed (file, sb->st_mode)))
-    describe_change (file_full_name, newmode,
-		     (fail ? CH_FAILED : CH_SUCCEEDED));
-
-  if (fail)
+  if (do_chmod)
     {
-      if (force_silent == 0)
-	error (0, saved_errno, _("changing permissions of %s"),
-	       quote (file_full_name));
-      errors = 1;
+      new_mode = mode_adjust (file_stats->st_mode, changes);
+
+      if (S_ISLNK (file_stats->st_mode))
+	symlink_changed = false;
+      else
+	{
+	  errors = chmod (file, new_mode);
+
+	  if (errors && !force_silent)
+	    error (0, errno, _("changing permissions of %s"),
+		   quote (file_full_name));
+	}
+    }
+
+  if (verbosity != V_off)
+    {
+      bool changed =
+	(!errors && symlink_changed
+	 && mode_changed (file, file_stats->st_mode, new_mode));
+
+      if (changed || verbosity == V_high)
+	{
+	  enum Change_status ch_status =
+	    (errors ? CH_FAILED
+	     : !symlink_changed ? CH_NOT_APPLIED
+	     : !changed ? CH_NO_CHANGE_REQUESTED
+	     : CH_SUCCEEDED);
+	  describe_change (file_full_name, new_mode, ch_status);
+	}
     }
 
   if ( ! recurse)
