@@ -2,6 +2,22 @@
 
 	* Version 5.0.90.
 
+2003-07-27  Paul Eggert  <eggert@twinsun.com>
+
+	This change was inspired by a similar proposal by Stepan Kasal.
+	* src/sort.c (mergelines, sortlines_temp): New functions.
+	(sortlines): Use them, to reduce the number of times that
+	we need to copy 'struct line' values.  This improved CPU
+	performance by about 30% on one 18 MB test.
+	(sort): Don't invoke sortlines unless we have 2 or more lines.
+
+2003-07-26  Stepan Kasal  <kasal@ucw.cz>
+
+	* src/sort.c (sort): Don't require two `struct line's per text line,
+	the new sort algorithm requires just 1.5.
+
+2003-07-27  Jim Meyering  <jim@meyering.net>
+
 	* src/pathchk.c (validate_path): Use %lu, not %ld.
 	From Paul Eggert.
 	* src/cut.c (is_printable_field): Simplify bit arithmetic.
