@@ -2,6 +2,9 @@
 
 	* Version 4.1.7.
 
+	* Makefile.maint (GZIP, BZIP2): Remove definitions.
+	($(my_distdir).tar.bz2): Remove rule.  Now, it's built by `make dist'.
+
 	* configure.ac (AM_INIT_AUTOMAKE): Specify the required version
 	of automake (1.6), and options (gnits dist-bzip2), rather than...
 	* Makefile.am (AUTOMAKE_OPTIONS): ...here.  Remove definition.
