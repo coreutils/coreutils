@@ -1,6 +1,35 @@
-2002-02-24  Jim Meyering  <meyering@lucent.com>
+2002-03-02  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.12.
+
+	* Makefile.maint (strftime-check): Add `N'.
+
+2002-02-27  Paul Eggert  <eggert@twinsun.com>
+
+	* doc/coreutils.texi (Time directives): Add %N for nanoseconds.
+	This documents the recent change to 'ls'.  But for this to
+	be accurate we also have to update 'date', as follows:
+
+	* src/Makefile.am (date_LDADD): New macro.
+
+	* src/date.c: Include timespec.h.
+	(strftime, time, stime): Remove declarations; no longer needed.
+	(usage): Document %N.
+	(main): Use gettime rather than time to get the time of day,
+	so that we can get fractional times.
+	Similarly for settime and stime, so that we can set fractional times
+	(though this currently is not available to the user since we don't
+	parse fractional times; add FIXMES for that).
+	Check for gettime failures; e.g. this can occur if it
+	is past 2038 and we are a 32-bit app running on a 64-bit OS.
+	Get fractional part of file time stamps.
+	Do not falsely report failures just because time_t happens to be -1
+	(e.g. a file time stamp 1 second before the epoch).
+	(show_date): 2nd arg is now struct timespec, not time_t.
+	All uses changed.  Use nstrftime rather than strftime, so that
+	we can format fractional seconds.
+
+2002-02-24  Jim Meyering  <meyering@lucent.com>
 
 	* src/nice.c: Include posixver.h.
 	* src/date.c: Likewise.
