@@ -121,7 +121,8 @@ size_t nstrftime PARAMS ((char *, size_t, char const *,
 #define AUTHORS "Michael Meskes"
 
 static struct option const long_options[] = {
-  {"link", no_argument, 0, 'l'},
+  {"link", no_argument, 0, 'l'}, /* deprecated.  FIXME: remove in 2003 */
+  {"dereference", no_argument, 0, 'L'},
   {"format", required_argument, 0, 'c'},
   {"filesystem", no_argument, 0, 'f'},
   {"secure", no_argument, 0, 's'},
@@ -863,11 +864,11 @@ usage (int status)
       fputs (_("\
 Display file or filesystem status.\n\
 \n\
-  -f, --filesystem	display filesystem status instead of file status\n\
-  -c  --format=FORMAT   FIXME\n\
-  -l, --link		follow links\n\
-  -s, --secure	        FIXME\n\
-  -t, --terse		print the information in terse form\n\
+  -f, --filesystem      display filesystem status instead of file status\n\
+  -c  --format=FORMAT   use the specified FORMAT instead of the default\n\
+  -l, --dereference     follow links\n\
+  -s, --secure          display any security context (SE Linux)\n\
+  -t, --terse           print the information in terse form\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
@@ -953,14 +954,15 @@ main (int argc, char *argv[])
 
   atexit (close_stdout);
 
-  while ((c = getopt_long (argc, argv, "c:flst", long_options, NULL)) != -1)
+  while ((c = getopt_long (argc, argv, "c:fLlst", long_options, NULL)) != -1)
     {
       switch (c)
 	{
 	case 'c':
 	  format = optarg;
 	  break;
-	case 'l':
+	case 'l': /* deprecated */
+	case 'L':
 	  follow_links = 1;
 	  break;
 	case 'f':
