@@ -4022,7 +4022,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (_("\
   -a, --all                  do not ignore entries starting with .\n\
   -A, --almost-all           do not list implied . and ..\n\
-      --author               print the author of each file\n\
+      --author               with -l, print the author of each file\n\
   -b, --escape               print octal escapes for nongraphic characters\n\
 "), stdout);
       fputs (_("\
@@ -4057,7 +4057,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
                              follow symbolic links listed on the command line\n\
       --dereference-command-line-symlink-to-dir\n\
                              follow each command line symbolic link\n\
-                               that points to a directory\n\
+                             that points to a directory\n\
       --hide=PATTERN         do not list implied entries matching shell PATTERN\n\
                                (overridden by -a or -A)\n\
 "), stdout);
@@ -4098,15 +4098,15 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (_("\
   -S                         sort by file size\n\
       --sort=WORD            extension -X, none -U, size -S, time -t,\n\
-                               version -v\n\
-                             status -c, time -t, atime -u, access -u, use -u\n\
+                             version -v, status -c, time -t, atime -u,\n\
+                             access -u, use -u\n\
       --time=WORD            show time as WORD instead of modification time:\n\
-                               atime, access, use, ctime or status; use\n\
-                               specified time as sort key if --sort=time\n\
+                             atime, access, use, ctime or status; use\n\
+                             specified time as sort key if --sort=time\n\
 "), stdout);
       fputs (_("\
       --time-style=STYLE     show times using style STYLE:\n\
-                               full-iso, long-iso, iso, locale, +FORMAT\n\
+                             full-iso, long-iso, iso, locale, +FORMAT.\n\
                              FORMAT is interpreted like `date'; if FORMAT is\n\
                              FORMAT1<newline>FORMAT2, FORMAT1 applies to\n\
                              non-recent files and FORMAT2 to recent files;\n\
