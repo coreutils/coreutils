@@ -1,5 +1,5 @@
 #!/bin/sh
-# `tail /proc/ksyms' would segfault on Linux.
+# Prior to textutils-2.0.17, `tail /proc/ksyms' would segfault on Linux.
 
 if test "$VERBOSE" = yes; then
   set -x
