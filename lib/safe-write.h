@@ -17,7 +17,9 @@
 
 #include <stddef.h>
 
+#define SAFE_WRITE_ERROR ((size_t) -1)
+
 /* Write up to COUNT bytes at BUF to descriptor FD, retrying if interrupted.
-   Return the actual number of bytes written, zero for EOF, or (size_t) -1
-   for an error.  */
+   Return the actual number of bytes written, zero for EOF, or SAFE_WRITE_ERROR
+   upon error.  */
 extern size_t safe_write (int fd, const void *buf, size_t count);
