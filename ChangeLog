@@ -2,6 +2,20 @@
 
 	* Version 5.0.1.
 
+	Giving nl an invalid STYLE argument (in --header-numbering=STYLE (-h),
+	--body-numbering=STYLE (-b), or --footer-numbering=STYLE (-f)) or
+	FORMAT (--number-format=FORMAT (-n)) would not give a useful diagnostic.
+	* src/nl.c (main): Fix those problems and remove literal quote marks
+	(e.g., "`%s'") from format string; instead use "%s" in each format
+	string and `quote (optarg)' as the corresponding argument.
+	Also, diagnose all invalid command line options before failing.
+
+	* src/nl.c (proc_text): Fix a bug introduced on 2001-11-10,
+	for textutils-2.0.17, that would make nl output extra newlines
+	in some cases.  It was reported at http://bugs.debian.org/177256.
+	This bug was introduced for TEXTUTILS-2_0_17 on 2001-11-10.
+	* tests/misc/nl: Add test for the above-fixed bug.
+
 	* tests/misc/readlink: New file.  Test the --canonicalize option.
 	* tests/misc/Makefile.am (TESTS): Add readlink.
 
