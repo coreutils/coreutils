@@ -100,17 +100,17 @@ static struct month
 
 /* Initial buffer size for in core sorting.  Will not grow unless a
    line longer than this is seen. */
-static int sortalloc = 4 * 1024 * 1024;
+static int sortalloc = 512 * 1024;
 
 /* Initial buffer size for in core merge buffers.  Bear in mind that
    up to NMERGE * mergealloc bytes may be allocated for merge buffers. */
-static int mergealloc =  64 * 1024;
+static int mergealloc =  16 * 1024;
 
 /* Guess of average line length. */
 static int linelength = 30;
 
 /* Maximum number of elements for the array(s) of struct line's, in bytes.  */
-#define LINEALLOC (1024 * 1024)
+#define LINEALLOC (256 * 1024)
 
 /* Prefix for temporary file names. */
 static char *temp_file_prefix;
