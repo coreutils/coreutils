@@ -1,3 +1,7 @@
+Mon Jul 15 23:42:57 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* Many files: Update FSF address.
+
 Sun Jul 14 20:05:34 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/who-users.c (print_uptime): Use 0, not undefined errno in
