@@ -22,6 +22,11 @@ AC_DEFUN(jm_MACROS,
     sys/acl.h \
     sys/wait.h sys/ioctl.h sys/fs/s5param.h termios.h values.h)
 
+  AC_CHECK_HEADERS(fcntl.h fenv.h float.h limits.h netdb.h \
+		   stdlib.h string.h sys/param.h \
+		   sys/socket.h sys/systeminfo.h sys/time.h sys/timeb.h \
+		   syslog.h unistd.h paths.h termios.h)
+
   jm_INCLUDED_REGEX([lib/regex.c])
 
   AC_REQUIRE([jm_BISON])
