@@ -1,3 +1,11 @@
+2003-06-02  Jim Meyering  <jim@meyering.net>
+
+	* src/system.h: Always include <string.h>, since we assume C89.
+	Include <limits.h> without checking for HAVE_LIMITS_H.
+
+	* src/test.c [!TEST_STANDALONE]: Remove #if-0'd block.
+	(STREQ, S_IXUGO): Remove redundant (in system.h) definitions.
+
 2003-06-01  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.1.
