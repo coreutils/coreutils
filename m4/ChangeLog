@@ -1,5 +1,12 @@
 2003-08-08  Paul Eggert  <eggert@twinsun.com>
 
+	Use new gnulib 'extensions' module.
+	* extensions.m4, unlocked-io.m4: New files, from gnulib.
+	* gnu-source.m4, jm-glibc-io.m4: Remove.
+	* timespec.m4: Merge from gnulib.
+
+2003-08-08  Paul Eggert  <eggert@twinsun.com>
+
 	* jm-macros.m4 (jm_MACROS): Replace jm_INCLUDED_REGEX([lib/regex.c])
 	with gl_REGEX.
 	Replace jm_FUNC_MKTIME with gl_FUNC_MKTIME.
