@@ -5,18 +5,19 @@
 suffix=.b
 tmp=b1.$$
 tmp_backup="$tmp$suffix"
-rm -f $tmp
+temp_files="$tmp $tmp_backup"
+rm -f $temp_files
 
-set -e
-echo test > $tmp || exit 1
+fail=0
+echo test > $tmp || fail=1
 
 $CP --force --backup --version-control=simple --suffix=$suffix $tmp $tmp \
-  || exit 1
+  || fail=1
 
-test $? = 0 || exit 1
-
-test -f $tmp || exit 1
-test -f $tmp_backup || exit 1
+test -f $tmp || fail=1
+test -f $tmp_backup || fail=1
 cmp $tmp $tmp_backup > /dev/null
 
-exit 0
+rm -f $temp_files
+
+exit $fail
