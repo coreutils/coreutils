@@ -1,6 +1,10 @@
-2003-01-18  Jim Meyering  <jim@meyering.net>
+2003-01-19  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.5.
+
+	* src/readlink.c: Include "canonicalize.h".
+
+2003-01-18  Jim Meyering  <jim@meyering.net>
 
 	* src/ls.c (Dereference_symlink) [DEREF_COMMAND_LINE_SYMLINK_TO_DIR]:
 	New member.
