@@ -1,4 +1,4 @@
-#serial 2
+#serial 3
 
 # autoconf tests required for use of xstrtoumax.c
 
@@ -28,6 +28,7 @@ AC_DEFUN(jm_AC_PREREQ_XSTRTOUMAX,
   dnl so we need the replacement strtoull only if strtoumax does not exist.
   case "$ac_cv_type_unsigned_long_long,$jm_cv_func_strtoumax_macro,$ac_cv_func_strtoumax" in
     yes,no,no)
+      AC_REPLACE_FUNCS(strtoul)
       AC_REPLACE_FUNCS(strtoull)
       ;;
   esac
