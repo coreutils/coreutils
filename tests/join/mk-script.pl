@@ -29,14 +29,34 @@ sub validate
     }
 }
 
+# Given a spec for the input file(s) or expected output file of a single
+# test, create a file for any string.  A file is created for each literal
+# string -- not for named files.  Whether a perl `string' is treated as
+# a string to be put in a file for a test or the name of an existing file
+# depends on how many references have to be traversed to get from
+# the top level variable to the actual string literal.
+# If $SPEC is a literal Perl string (not a reference), then treat $SPEC
+# as the contents of a file.
+# If $SPEC is an array reference, consider each element of the array.
+# If the element is a string reference, treat the string as the name of
+# an existing file.  Otherwise, the element must be a string and is treated
+# just like a scalar $SPEC.  When a file is created, its name is derived
+# from the name TEST_NAME of the corresponding test and the TYPE of file.
+# E.g., the inputs for test `3a' would be named t3a.in1 and  t3a.in2, and
+# the expected output for test `7c' would be named t7c.exp.
+#
+# Also, return two lists of file names:
+# - maintainer-generated files -- names of files created by this function
+# - files named explicitly in Test.pm
+
 sub spec_to_list ($$$)
 {
   my ($spec, $test_name, $type) = @_;
 
   assert ($type eq 'in' || $type eq 'exp');
 
-  my @all_file;
-  my @gen_file;
+  my @explicit_file;
+  my @maint_gen_file;
   my @content_string;
   if (ref $spec)
     {
@@ -55,7 +75,7 @@ sub spec_to_list ($$$)
 	      assert (ref $file_spec eq 'SCALAR');
 	      my $existing_file = $$file_spec;
 	      # FIXME: make sure $existing_file exists somewhere.
-	      push (@all_file, $existing_file);
+	      push (@explicit_file, $existing_file);
 	    }
 	  else
 	    {
@@ -73,19 +93,17 @@ sub spec_to_list ($$$)
   foreach $file_contents (@content_string)
     {
       my $suffix = (@content_string > 1 ? $i : '');
-      my $gen_file = "t$test_name.$type$suffix";
-      push (@all_file, $gen_file);
-      push (@gen_file, $gen_file);
-      open (F, ">$gen_file") || die "$0: $gen_file: $!\n";
+      my $maint_gen_file = "t$test_name.$type$suffix";
+      push (@maint_gen_file, $maint_gen_file);
+      open (F, ">$maint_gen_file") || die "$0: $maint_gen_file: $!\n";
       print F $file_contents;
-      close (F) || die "$0: $gen_file: $!\n";
+      close (F) || die "$0: $maint_gen_file: $!\n";
       ++$i;
     }
 
-  # GEN_FILES is currently unused.  FIXME
   my %h = (
-    ALL_FILES => \@all_file,
-    GEN_FILES => \@gen_file
+    EXPLICIT => \@explicit_file,
+    MAINT_GEN => \@maint_gen_file
   );
 
   return \%h;
@@ -129,26 +147,31 @@ my $test_vector;
 foreach $test_vector (@Test::t)
 {
   my ($test_name, $flags, $in_spec, $exp_spec, $e_ret_code)
-	= @{$test_vector};
+    = @{$test_vector};
 
-    my $in = spec_to_list ($in_spec, $test_name, 'in');
+  my $in = spec_to_list ($in_spec, $test_name, 'in');
 
-    my @srcdir_rel_in_file;
-    my $f;
-    foreach $f (@{ $in->{ALL_FILES} })
-      {
-	push (@srcdir_rel_in_file, "\$srcdir/$f")
-      }
+  my @srcdir_rel_in_file;
+  my $f;
+  foreach $f (@{$in->{EXPLICIT}}, @{$in->{MAINT_GEN}})
+    {
+      push (@srcdir_rel_in_file, "\$srcdir/$f");
+    }
 
-    my $Exp = spec_to_list ($exp_spec, $test_name, 'exp');
-    assert (@{ $Exp->{ALL_FILES} } == 1);
-    my $exp_name = "\$srcdir/$Exp->{ALL_FILES}->[0]";
-    my $out = "t$test_name.out";
-    my $err_output = "t$test_name.err";
+  my $exp = spec_to_list ($exp_spec, $test_name, 'exp');
+  my @all = (@{$exp->{EXPLICIT}}, @{$exp->{MAINT_GEN}});
+  assert (@all == 1);
+  my $exp_name = "\$srcdir/$all[0]";
+  my $out = "t$test_name.out";
+  my $err_output = "t$test_name.err";
 
-    my $cmd = "\$xx $flags " . join (' ', @srcdir_rel_in_file)
-      . " > $out 2> $err_output";
-    print <<EOF ;
+  my $redirect_stdin = ((@srcdir_rel_in_file == 1
+			 && defined $Test::input_via_stdin
+			 && $Test::input_via_stdin)
+			? '< ' : '');
+  my $cmd = "\$xx $flags $redirect_stdin" . join (' ', @srcdir_rel_in_file)
+    . " > $out 2> $err_output";
+  print <<EOF;
 $cmd
 code=\$?
 if test \$code != $e_ret_code ; then
