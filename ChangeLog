@@ -1,6 +1,8 @@
-2004-04-21  Jim Meyering  <jim@meyering.net>
+2004-04-23  Jim Meyering  <jim@meyering.net>
 
-	* Version 5.3.0.
+	Avoid segfault on systems for which SIZE_MAX != (size_t) -1.
+	* src/ls.c (quote_name): Use SIZE_MAX, not -1, in calls
+	of quotearg_buffer.  Patch by Mikulas Patocka.
 
 2004-04-18  Paul Eggert  <eggert@twinsun.com>
 
