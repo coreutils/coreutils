@@ -67,6 +67,7 @@ GETLOADAVG_LIBS = @GETLOADAVG_LIBS@
 GLIBC21 = @GLIBC21@
 GMSGFMT = @GMSGFMT@
 GNU_PACKAGE = @GNU_PACKAGE@
+HAVE__BOOL = @HAVE__BOOL@
 HELP2MAN = @HELP2MAN@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
@@ -110,6 +111,7 @@ SEQ_LIBM = @SEQ_LIBM@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 SQRT_LIBM = @SQRT_LIBM@
+STDBOOL_H = @STDBOOL_H@
 STRIP = @STRIP@
 U = @U@
 USE_NLS = @USE_NLS@
@@ -263,10 +265,11 @@ libfetish_a_DEPENDENCIES = $(libfetish_a_LIBADD)
 
 BUILT_SOURCES = getdate.c
 MAINTAINERCLEANFILES = $(BUILT_SOURCES)
+MOSTLYCLEANFILES = stdbool.h
 
 EXTRA_DIST = config.charset ref-add.sin ref-del.sin \
-  fnmatch_loop.c inttostr.c inttostr.h
-
+  fnmatch_loop.c inttostr.c inttostr.h\
+stdbool.hin
 
 charset_alias = $(DESTDIR)$(libdir)/charset.alias
 charset_tmp = $(DESTDIR)$(libdir)/charset.tmp
@@ -736,6 +739,7 @@ install-strip:
 	  `test -z '$(STRIP)' || \
 	    echo "INSTALL_PROGRAM_ENV=STRIPPROG='$(STRIP)'"` install
 mostlyclean-generic:
+	-test -z "$(MOSTLYCLEANFILES)" || rm -f $(MOSTLYCLEANFILES)
 
 clean-generic:
 	-test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
@@ -844,6 +848,12 @@ uninstall-local: all-local
 
 charset.alias: config.charset
 	$(SHELL) $(srcdir)/config.charset '@host@' > t-$@
+	mv t-$@ $@
+
+# Create stdbool.h on systems that lack a working one.
+all-local $(lib_OBJECTS): $(STDBOOL_H)
+stdbool.h: stdbool.hin
+	sed -e 's/@''HAVE__BOOL''@/$(HAVE__BOOL)/g' $(srcdir)/stdbool.hin > t-$@
 	mv t-$@ $@
 .sin.sed:
 	sed -e '/^#/d' -e 's/@''PACKAGE''@/$(PACKAGE)/g' $< > t-$@

@@ -1089,6 +1089,9 @@
 /* Define if readdir is found to work properly in some unusual cases. */
 #undef HAVE_WORKING_READDIR
 
+/* Define to 1 if the system has the type `_Bool'. */
+#undef HAVE__BOOL
+
 /* Define to 1 if you have the external variable, _system_configuration with a
    member named physmem. */
 #undef HAVE__SYSTEM_CONFIGURATION
