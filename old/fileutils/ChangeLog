@@ -1,5 +1,11 @@
 1999-05-14  Jim Meyering  <meyering@ascend.com>
 
+	* tests/Makefile.am (envvar-check): Renamed from check-local.
+	(check): Depend on envvar-check so the envvar check is performed
+	before all other tests.  Reported by Volker Borchert.
+	* tests/.env-warn: Use `%%' place-holder that Makefile.am rule expects,
+	so CDPATH is mentioned in the message.  Reported by Volker Borchert.
+
 	* src/df.c (main): When asking for info on an explicit file name,
 	just warn rather than failing if the table of mounted filesystems
 	cannot be read.  Based on a patch from Mark Kettenis.
