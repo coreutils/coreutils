@@ -255,7 +255,7 @@ typedef enum {false = 0, true = 1} bool;
 # endif /* !_POSIX_SOURCE && BSIZE */
 #else /* HAVE_STRUCT_STAT_ST_BLOCKS */
 /* Some systems, like Sequents, return st_blksize of 0 on pipes.
-   Also, when running `cat large-file | rsh hp-ux-system', cat would
+   Also, when running `rsh hpux11-system cat any-file', cat would
    determine that the output stream had an st_blksize of 2147421096.
    So here we arbitrarily limit the `optimal' block size to 4MB.
    If anyone knows of a system for which the legitimate value for
