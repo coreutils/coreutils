@@ -107,6 +107,15 @@
 # define __secure_getenv getenv
 #endif
 
+/* Use the widest available unsigned type if uint64_t is not
+   available.  The algorithm below extracts a number less than 62**6
+   (approximately 2**35.725) from uint64_t, so ancient hosts where
+   uintmax_t is only 32 bits lose about 3.725 bits of randomness,
+   which is better than not having mkstemp at all.  */
+#if !defined UINT64_MAX && !defined uint64_t
+# define uint64_t uintmax_t
+#endif
+
 /* Return nonzero if DIR is an existent directory.  */
 static int
 direxists (const char *dir)
