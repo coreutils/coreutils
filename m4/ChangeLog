@@ -1,3 +1,8 @@
+2001-08-03  Jim Meyering  <meyering@lucent.com>
+
+	* mbrtowc.m4 (jm_FUNC_MBRTOWC): Use `#include', not `@%:@include',
+	as it was in the original.  Reported by Paul Eggert.
+
 2001-07-16  Jim Meyering  <meyering@lucent.com>
 
 	* gettimeofday.m4: New file.
