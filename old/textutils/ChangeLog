@@ -1,5 +1,7 @@
 1999-01-01  Jim Meyering  <meyering@ascend.com>
 
+	* src/tail.c (parse_options): Use XARGCASEMATCH in place of argmatch.
+
 	* man/Makefile.am (man_MANS): Add tsort.1.
 	* man/tsort.x: New (essentially empty) file.
 
