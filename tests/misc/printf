@@ -38,9 +38,14 @@ rm -f out exp
 # Until coreutils-4.5.10, this would elicit a segfault.
 $prog '1 %*sy\n' -3 x >  out || fail=1
 
+# Until coreutils 5.2.2, this would succeed.
+if POSIXLY_CORRECT=1 $prog '2 \x' >/dev/null 2>&1; then
+  fail=1
+else
+  echo '2 failed, as expected' >> out
+fi
+
 # Until coreutils-4.5.12, these would fail.
-POSIXLY_CORRECT=1 \
-$prog '2 \x'          >> out || fail=1; echo >> out
 $prog '3 \x40\n'      >> out || fail=1
 POSIXLY_CORRECT=1 \
 $prog '4 \x40\n'      >> out || fail=1
@@ -60,9 +65,9 @@ $prog '8 %b %b %b %b\n' '\1y' '\01y' '\001y' '\0001y'|tr '\1' = >> out
 
 cat <<\EOF > exp
 1 x  y
-2 \x
+2 failed, as expected
 3 @
-4 \x40
+4 @
 5 +234
 6 !
 7 =y =y =y *2y
