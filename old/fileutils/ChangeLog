@@ -1,5 +1,23 @@
 1997-07-06  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* lib/modechange.h (mode_create_from_ref): Add prototype.
+	(MODE_MASK_ALL): New define.
+	(MODE_BAD_REFERENCE): New define.
+	* lib/modechange.c (mode_create_from_ref): New function.
+	* lib/strverscmp.c: New file.
+	* lib/strverscmp.h: New file.
+	* lib/Makefile.am (noinst_HEADERS): Add strverscmp.h.
+
+	* configure.in (AC_REPLACE_FUNCS): Add strverscmp.
+
+	1997-05-30 Jean-François Bignolles <bignolle@ecoledoc.ibp.fr>
+	* src/ls.c: Add new option: --sort=version (-v).
+	* src/chgrp.c: Add new option: --reference=FILE.
+	* src/chown.c: Add new option: --reference=FILE.
+	* src/chmod.c: Add new option: --reference=FILE.
+
+1997-07-06  Jim Meyering  <meyering@na-net.ornl.gov>
+
 	* lib/idcache.c (getuser): Return NULL (rather than stringified uid)
 	upon lookup failure.
 	(getgroup): Likewise.
