@@ -11921,6 +11921,19 @@ $ mysql -e 'select * from home' test
 @print{} +------+------+------+------+---------------------+
 @end example
 
+But beware of assumptions.
+The above invocation of @command{ls} assumes that the owner
+and group names are no longer than eight bytes each,
+and that no file has size larger than 99999999 bytes.
+Otherwise, the byte offset of @samp{57} would need to be larger.
+To avoid such problems, suppress output of the owner and group
+names with the @option{-g} and @option{-G} options respectively,
+and add the @option{-h} option to ensure that the representation
+of the size of the file does not exceed the allotted space.
+Finally, note that the width of even the date/time field may change,
+depending on the current locale.  To avoid that, use an option
+like @option{--time-style='+%Y-%m-%d %H:%M:%S'}.
+
 @node The sort command
 @unnumberedsec The @command{sort} Command
 
