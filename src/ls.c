@@ -1036,7 +1036,7 @@ decode_switches (int argc, char **argv)
 	  set_quoting_style (NULL, quoting_style_vals[i]);
 	else
 	  error (0, 0,
-	 _("ignoring invalid string in environment variable QUOTING_STYLE: %s"),
+	 _("ignoring invalid value of environment variable QUOTING_STYLE: %s"),
 		 quotearg (q_style));
       }
   }
