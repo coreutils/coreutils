@@ -17,11 +17,12 @@ Mon Oct 23 23:17:04 1995  Jim Meyering  (meyering@comco.com)
 
 	* lib/Makefile.in (INCLUDE, COMPILE): New variables.
 	(.c.o): Rewrite to be more like src/Makefile.in.
-
+	
 	* src/Makefile.in (distclean): Remove .deps.
 	Include @top_srcdir@/mkdep-Makefile.
 
 	* mkdep.Makefile: New file.
+	* Makefile.in (DISTFILES): Add mkdep-Makefile.
 	* doc/Makefile.in (mostlyclean): Also remove *.info.
 
 Thu Oct 19 17:38:28 1995  Jim Meyering  (meyering@comco.com)
