@@ -1,3 +1,12 @@
+Mon Oct  7 18:46:28 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/Makefile.am (EXTRA_DIST): Remove alloca.c, error.c, and mktime.
+	(su_SOURCES): Remove memcmp.c.
+	Automake automatically includes at least these, now.
+	From François Pinard.
+
+	* lib/Makefile.am (su_SOURCES): Remove getline.c.
+
 Sat Oct  5 11:38:23 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/Makefile.am (su_SOURCES): Remove gethostname.c --
