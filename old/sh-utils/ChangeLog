@@ -1,5 +1,12 @@
 Sun Oct 13 07:34:15 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* configure.in: Don't save and restore LIBS around AM_FUNC_GETLOADAVG.
+	* acinclude.m4 (AM_FUNC_GETLOADAVG): Don't modify LIBS in this macro
+	(by saving and restoring initial value).  Instead, arrange for
+	substitution of @GETLOADAVG_LIBS@.
+	* src/Makefile.am (uptime_LDADD): Add @GETLOADAVG_LIBS@,
+	not @UPTIME_LIBS@.
+
 	* configure.in (ALL_LINGUAS): Add swedish (sv).
 
 Fri Oct 11 22:51:50 1996  Jim Meyering  <meyering@na-net.ornl.gov>
