@@ -3205,7 +3205,7 @@ the products of large primes.  Factoring the product of the two largest 32-bit
 prime numbers takes over 10 minutes of CPU time on a 400MHz Pentium II.
 
 @example
-$ p=`echo '4294967279 4294967291*p'|dc`
+$ p=`echo '4294967279 * 4294967291'|bc`
 $ factor $p
 18446743979220271189: 4294967279 4294967291
 @end example
