@@ -1,12 +1,11 @@
 #!/bin/sh
 
-: ${RM=rm}
 test=r-2
 
 : ${TMPDIR=.}
 
 if test "$VERBOSE" = yes; then
-  $RM --version
+  rm --version
   set -x
 fi
 
@@ -34,7 +33,7 @@ EOF
 # Note that both the expected output (above) and the actual output lines
 # are sorted, because directory entries may be processed in arbitrary order.
 fail=0
-$RM --verbose -r $tmp/a | sort > $tmp/$test.O || fail=1
+rm --verbose -r $tmp/a | sort > $tmp/$test.O || fail=1
 
 if test -d $tmp/a; then
   fail=1
