@@ -5490,8 +5490,10 @@ backslash sequences like those used in C.
 
 @item -N
 @itemx --literal
+@itemx --quoting-style=literal
 @opindex -N
 @opindex --literal
+@opindex --quoting-style
 Do not quote file names.
 
 @item -q
@@ -5518,7 +5520,8 @@ Use style @var{word} to quote output names.  The @var{word} should
 be one of the following:
 @table @samp
 @item literal
-Output names as-is.
+Output names as-is; this is the same as the @option{-N} or
+@option{--literal} option.
 @item shell
 Quote names for the shell if they contain shell metacharacters or would
 cause ambiguous output.
