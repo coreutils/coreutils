@@ -43,7 +43,10 @@
 #include <config.h>
 #include <sys/types.h>
 
-#include <termios.h>
+#ifdef HAVE_TERMIOS_H
+# include <termios.h>
+#endif
+
 #ifdef GWINSZ_IN_SYS_IOCTL
 # include <sys/ioctl.h>
 #endif
