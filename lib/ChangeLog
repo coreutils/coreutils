@@ -1,3 +1,7 @@
+2000-07-24  Jim Meyering  <meyering@lucent.com>
+
+	* mbswidth.c: Remove useless #else.  From Bruno Haible.
+
 2000-07-23  Paul Eggert  <eggert@twinsun.com>
 
 	* mbswidth.c (_XOPEN_SOURCE):
