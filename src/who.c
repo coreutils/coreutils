@@ -31,6 +31,7 @@
 #include "error.h"
 #include "readutmp.h"
 #include "system.h"
+#include "closeout.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "who"
@@ -391,6 +392,8 @@ main (int argc, char **argv)
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
+
+  atexit (close_stdout);
 
   while ((optc = getopt_long (argc, argv, "ilmqsuwHT", longopts, &longind))
 	 != -1)

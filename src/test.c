@@ -2,7 +2,7 @@
 
 /* Modified to run with the GNU shell by bfox. */
 
-/* Copyright (C) 1987-1999 Free Software Foundation, Inc.
+/* Copyright (C) 1987-2000 Free Software Foundation, Inc.
 
    This file is part of GNU Bash, the Bourne Again SHell.
 
@@ -973,6 +973,7 @@ posixtest (void)
 
 #if defined (TEST_STANDALONE)
 # include "long-options.h"
+# include "closeout.h"
 
 void
 usage (int status)
@@ -1080,6 +1081,8 @@ main (int margc, char **margv)
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
+
+  atexit (close_stdout);
 #endif /* TEST_STANDALONE */
 
   argv = margv;
