@@ -235,15 +235,8 @@ copy_reg (const char *src_path, const char *dst_path,
   if (! SAME_INODE (*src_sb, src_open_sb))
     {
       error (EXIT_FAILURE, 0,
-	     _("ERROR: the source file %s initially had device/inode\n\
-numbers %lu/%lu, but now (after opening it), the numbers\n\
-are %lu/%lu.  That means that while this program was running,\n\
-the file was replaced with another one.  Skipping this file."),
-	     quote (src_path),
-	     (unsigned long)(src_sb->st_dev),
-	     (unsigned long)(src_sb->st_ino),
-	     (unsigned long)(src_open_sb.st_dev),
-	     (unsigned long)(src_open_sb.st_ino));
+	     _("skipping file %s, as it was replaced while being copied"),
+	     quote (src_path));
       return_val = -1;
       goto close_src_desc;
     }
