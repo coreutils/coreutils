@@ -3,6 +3,7 @@
 	* ftw.c (ftw_startup): Rename local-shadowing local to pacify gcc.
 	Also work on systems that have `struct direct', using autoconf's
 	AC_HEADER_DIRENT.
+	Tweak comments.
 
 	* ftw.h, ftw.c: New files, from glibc/io.
 
