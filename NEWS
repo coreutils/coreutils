@@ -4,6 +4,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  chgrp and chown no longer affect symbolic links by default.
+  Now, they operate on whatever a symbolic points to, instead.
+  To get the old behavior, use --no-dereference (-h).
+
   rm no longer required read access to the current directory.
 
   For some types of errors (e.g., read-only file system, I/O error)
