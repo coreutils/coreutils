@@ -1,9 +1,12 @@
 2003-10-16  Jim Meyering  <jim@meyering.net>
 
+	* Version 5.1.0.
+
 	* src/chgrp.c (main): Simply assign to bit_flags.
 	Don't bother with bit arithmetic.
-
-	* Version 5.1.0.
+	* src/chown.c (main): Likewise.
+	Rename a couple of local variables.
+	Remove unnecessary casts.
 
 	* src/tail.c (start_bytes): Rename local, remainder, to avoid
 	gcc's warning about shadowing a global.
