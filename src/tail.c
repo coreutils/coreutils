@@ -201,7 +201,11 @@ enum
 {
   RETRY_OPTION = CHAR_MAX + 1,
   MAX_UNCHANGED_STATS_OPTION,
+
+  /* FIXME: remove this in 2001, unless someone can show a good
+     reason to keep it.  */
   MAX_CONSECUTIVE_SIZE_CHANGES_OPTION,
+
   PID_OPTION,
   LONG_FOLLOW_OPTION,
 };
@@ -215,6 +219,8 @@ static struct option const long_options[] =
   {"follow", optional_argument, NULL, LONG_FOLLOW_OPTION},
   {"lines", required_argument, NULL, 'n'},
   {"max-unchanged-stats", required_argument, NULL, MAX_UNCHANGED_STATS_OPTION},
+  {"max-consecutive-size-changes", required_argument, NULL,
+   MAX_CONSECUTIVE_SIZE_CHANGES_OPTION},
   {"pid", required_argument, NULL, PID_OPTION},
   {"quiet", no_argument, NULL, 'q'},
   {"retry", no_argument, NULL, RETRY_OPTION},
@@ -1413,6 +1419,18 @@ parse_options (int argc, char **argv,
 	    {
 	      error (EXIT_FAILURE, 0,
 	       _("%s: invalid maximum number of unchanged stats between opens"),
+		     optarg);
+	    }
+	  break;
+
+	case MAX_CONSECUTIVE_SIZE_CHANGES_OPTION:
+  	  /* --max-consecutive-size-changes=N */
+	  if (xstrtoul (optarg, NULL, 10,
+			&max_n_consecutive_size_changes_between_opens, "")
+	      != LONGINT_OK)
+	    {
+	      error (EXIT_FAILURE, 0,
+		   _("%s: invalid maximum number of consecutive size changes"),
 		     optarg);
 	    }
 	  break;
