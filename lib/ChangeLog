@@ -1,3 +1,8 @@
+2002-06-14  Jim Meyering  <meyering@lucent.com>
+
+	* file-type.h: Use the version from diffutils-2.8.2.
+	* file-type.c: Likewise.
+
 2002-05-27  Jim Meyering  <meyering@lucent.com>
 
 	Fix a problem seen only on nonconforming systems whereby ls.c's
