@@ -3,6 +3,9 @@
 	* src/help-version: Remove file.  Move it to ...
 	* tests/help-version: ...here
 	* tests/Makefile.am (TESTS): Set to help-version.
+	* src/Makefile.am (EXTRA_DIST): Remove help-version.
+	(TESTS): Remove definition.
+	(TESTS_ENVIRONMENT): Remove definition.
 
 2000-07-28  Paul Eggert  <eggert@twinsun.com>
 
