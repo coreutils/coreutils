@@ -50,8 +50,10 @@ struct timespec
 };
 # endif
 
+# if ! HAVE_DECL_NANOSLEEP
 int
 nanosleep PARAMS ((const struct timespec *requested_delay,
 		   struct timespec *remaining_delay));
+# endif
 
 #endif
