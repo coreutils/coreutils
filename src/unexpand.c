@@ -1,5 +1,5 @@
 /* unexpand - convert blanks to tabs
-   Copyright (C) 89, 91, 1995-2004 Free Software Foundation, Inc.
+   Copyright (C) 89, 91, 1995-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -149,8 +149,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 static void
 add_tab_stop (uintmax_t tabval)
 {
-  uintmax_t column_width =
-    tabval - (first_free_tab ? tab_list[first_free_tab - 1] : 0);
+  uintmax_t prev_column = first_free_tab ? tab_list[first_free_tab - 1] : 0;
+  uintmax_t column_width = prev_column <= tabval ? tabval - prev_column : 0;
 
   if (first_free_tab == n_tabs_allocated)
     tab_list = x2nrealloc (tab_list, &n_tabs_allocated, sizeof *tab_list);
