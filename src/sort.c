@@ -1,5 +1,5 @@
 /* sort - sort lines of text (with all kinds of options).
-   Copyright (C) 88, 1991-2003 Free Software Foundation, Inc.
+   Copyright (C) 88, 1991-2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -27,10 +27,8 @@
 #include <sys/types.h>
 #include <signal.h>
 #include <stdio.h>
-#include <assert.h>
 #include "system.h"
 #include "error.h"
-#include "exitfail.h"
 #include "hard-locale.h"
 #include "inttostr.h"
 #include "long-options.h"
@@ -73,13 +71,17 @@ double strtod ();
 # define DEFAULT_TMPDIR "/tmp"
 #endif
 
-/* Use this as exit status in case of error, not EXIT_FAILURE.  This
-   is necessary because EXIT_FAILURE is usually 1 and POSIX requires
-   that sort exit with status 1 IFF invoked with -c and the input is
-   not properly sorted.  Any other irregular exit must exit with a
-   status code greater than 1.  */
-#define SORT_FAILURE 2
-#define SORT_OUT_OF_ORDER 1
+/* Exit statuses.  */
+enum
+  {
+    /* POSIX says to exit with status 1 if invoked with -c and the
+       input is not properly sorted.  */
+    SORT_OUT_OF_ORDER = 1,
+
+    /* POSIX says any other irregular exit must exit with a status
+       code greater than 1.  */
+    SORT_FAILURE = 2
+  };
 
 #define C_DECIMAL_POINT '.'
 #define NEGATION_SIGN   '-'
@@ -266,7 +268,7 @@ static void sortlines_temp (struct line *, size_t, struct line *);
 void
 usage (int status)
 {
-  if (status != 0)
+  if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
@@ -340,10 +342,7 @@ native byte values.\n\
 "), stdout );
       printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
-  /* Don't use EXIT_FAILURE here in case it is defined to be 1.
-     POSIX requires that sort return 1 IFF invoked with -c and
-     the input is not properly sorted.  */
-  assert (status == 0 || status == SORT_FAILURE);
+
   exit (status);
 }
 
@@ -2240,7 +2239,7 @@ main (int argc, char **argv)
 
   atexit (cleanup);
 
-  exit_failure = SORT_FAILURE;
+  initialize_exit_failure (SORT_FAILURE);
   atexit (close_stdout);
 
   hard_LC_COLLATE = hard_locale (LC_COLLATE);
@@ -2269,9 +2268,6 @@ main (int argc, char **argv)
 
   have_read_stdin = false;
   inittables ();
-
-  /* Change the way library functions fail.  */
-  exit_failure = SORT_FAILURE;
 
 #ifdef SA_NOCLDSTOP
   {
