@@ -1,4 +1,4 @@
-/* Work around bug on some systems where realloc (NULL, n) fails.
+/* Work around bug on some systems where realloc (NULL, 0) fails.
    Copyright (C) 1997 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
