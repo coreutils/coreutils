@@ -1990,11 +1990,12 @@ sort (char **files, int nfiles, char const *output_file)
       char const *file = *files;
       FILE *fp = xfopen (file, "r");
       FILE *tfp;
+      size_t bytes_per_line = 2 * sizeof (struct line) - sizeof (struct line) / 2;
 
       if (! buf.alloc)
-	initbuf (&buf, 2 * sizeof (struct line),
+	initbuf (&buf, bytes_per_line,
 		 sort_buffer_size (&fp, 1, files, nfiles,
-				   2 * sizeof (struct line), size));
+				   bytes_per_line, size));
       buf.eof = 0;
       files++;
       nfiles--;
@@ -2005,9 +2006,8 @@ sort (char **files, int nfiles, char const *output_file)
 	  struct line *linebase;
 
 	  if (buf.eof && nfiles
-	      && (2 * sizeof (struct line) + 1
-		  < (buf.alloc - buf.used
-		     - 2 * sizeof (struct line) * buf.nlines)))
+	      && (bytes_per_line + 1
+		  < (buf.alloc - buf.used - bytes_per_line * buf.nlines)))
 	    {
 	      /* End of file, but there is more input and buffer room.
 		 Concatenate the next input file; this is faster in
