@@ -50,7 +50,8 @@ extern int errno;
 int
 mkdir (const char *dpath, int dmode)
 {
-  int cpid, status;
+  pid_t cpid;
+  int status;
   struct stat statbuf;
 
   if (stat (dpath, &statbuf) == 0)
@@ -84,7 +85,7 @@ mkdir (const char *dpath, int dmode)
       while (wait (&status) != cpid)
 	/* Do nothing.  */ ;
 
-      if (status & 0xFFFF)
+      if (status)
 	{
 	  /* /bin/mkdir failed.  */
 	  errno = EIO;
