@@ -673,8 +673,21 @@ record_dest (char const *dest, struct stat const *dest_stats)
       ent->st_dev = stats.st_dev;
     }
 
-  if (! hash_insert (dest_info, ent))
-    xalloc_die ();
+  {
+    struct Dest_info *ent_from_table = hash_insert (dest_info, ent);
+    if (ent_from_table == NULL)
+      {
+	/* Insertion failed due to lack of memory.  */
+	xalloc_die ();
+      }
+
+    if (ent_from_table == ent)
+      {
+	/* There was alread a matching entry in the table, so ENT was
+	   not inserted.  Free it.  */
+	free (ent);
+      }
+  }
 }
 
 /* Copy the file SRC_PATH to the file DST_PATH.  The files may be of
@@ -703,7 +716,7 @@ copy_internal (const char *src_path, const char *dst_path,
   struct stat dst_sb;
   mode_t src_mode;
   mode_t src_type;
-  char *earlier_file;
+  char *earlier_file = NULL;
   char *dst_backup = NULL;
   int backup_succeeded = 0;
   int rename_errno;
@@ -729,6 +742,8 @@ copy_internal (const char *src_path, const char *dst_path,
       return 1;
     }
 
+  src_type = src_sb.st_mode;
+
   /* We wouldn't insert a node unless nlink > 1, except that we need to
      find created files so as to not copy infinitely if a directory is
      copied into itself.  */
@@ -737,10 +752,10 @@ copy_internal (const char *src_path, const char *dst_path,
      so that if we encounter a matching dev/ino pair in the source tree
      we can arrange to create a hard link between the corresponding names
      in the destination tree.  */
-  earlier_file = remember_copied (dst_path, src_sb.st_ino, src_sb.st_dev);
+  if (1 < src_sb.st_nlink || S_ISDIR (src_type))
+    earlier_file = remember_copied (dst_path, src_sb.st_ino, src_sb.st_dev);
 
   src_mode = src_sb.st_mode;
-  src_type = src_sb.st_mode;
 
   if (S_ISDIR (src_type) && !x->recursive)
     {
