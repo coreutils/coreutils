@@ -69,9 +69,9 @@ AC_DEFUN([AM_GNU_GETTEXT],
   define(gt_libtool_suffix_prefix, ifelse([$1], [use-libtool], [l], []))
 
   AC_REQUIRE([AM_PO_SUBDIRS])dnl
-  ifelse(gt_included_intl, yes, [
-    AC_REQUIRE([AM_INTL_SUBDIR])dnl
-  ])
+#  ifelse(gt_included_intl, yes, [
+#    AC_REQUIRE([AM_INTL_SUBDIR])dnl
+#  ])
 
   dnl Prerequisites of AC_LIB_LINKFLAGS_BODY.
   AC_REQUIRE([AC_LIB_PREPARE_PREFIX])
@@ -344,123 +344,123 @@ return (int) gettext ("")]ifelse([$2], [need-ngettext], [ + (int) ngettext ("", 
 dnl Checks for all prerequisites of the intl subdirectory,
 dnl except for INTL_LIBTOOL_SUFFIX_PREFIX (and possibly LIBTOOL), INTLOBJS,
 dnl            USE_INCLUDED_LIBINTL, BUILD_INCLUDED_LIBINTL.
-AC_DEFUN([AM_INTL_SUBDIR],
-[
-  AC_REQUIRE([AC_PROG_INSTALL])dnl
-  AC_REQUIRE([AM_MKINSTALLDIRS])dnl
-  AC_REQUIRE([AC_PROG_CC])dnl
-  AC_REQUIRE([AC_CANONICAL_HOST])dnl
-  AC_REQUIRE([AC_PROG_RANLIB])dnl
-  AC_REQUIRE([AC_ISC_POSIX])dnl
-  AC_REQUIRE([AC_HEADER_STDC])dnl
-  AC_REQUIRE([AC_C_CONST])dnl
-  AC_REQUIRE([bh_C_SIGNED])dnl
-  AC_REQUIRE([AC_C_INLINE])dnl
-  AC_REQUIRE([AC_TYPE_OFF_T])dnl
-  AC_REQUIRE([AC_TYPE_SIZE_T])dnl
-  AC_REQUIRE([gl_AC_TYPE_LONG_LONG])dnl
-  AC_REQUIRE([gt_TYPE_LONGDOUBLE])dnl
-  AC_REQUIRE([gt_TYPE_WCHAR_T])dnl
-  AC_REQUIRE([gt_TYPE_WINT_T])dnl
-  AC_REQUIRE([gl_AC_HEADER_INTTYPES_H])
-  AC_REQUIRE([gl_AC_HEADER_STDINT_H])
-  AC_REQUIRE([gt_TYPE_INTMAX_T])
-  AC_REQUIRE([gt_PRINTF_POSIX])
-  AC_REQUIRE([AC_FUNC_ALLOCA])dnl
-  AC_REQUIRE([AC_FUNC_MMAP])dnl
-  AC_REQUIRE([gl_GLIBC21])dnl
-  AC_REQUIRE([gt_INTDIV0])dnl
-  AC_REQUIRE([gl_AC_TYPE_UINTMAX_T])dnl
-  AC_REQUIRE([gt_HEADER_INTTYPES_H])dnl
-  AC_REQUIRE([gt_INTTYPES_PRI])dnl
-  AC_REQUIRE([gl_XSIZE])dnl
-
-  AC_CHECK_TYPE([ptrdiff_t], ,
-    [AC_DEFINE([ptrdiff_t], [long],
-       [Define as the type of the result of subtracting two pointers, if the system doesn't define it.])
-    ])
-  AC_CHECK_HEADERS([argz.h limits.h locale.h nl_types.h malloc.h stddef.h \
-stdlib.h string.h unistd.h sys/param.h])
-  AC_CHECK_FUNCS([asprintf fwprintf getcwd getegid geteuid getgid getuid \
-mempcpy munmap putenv setenv setlocale snprintf stpcpy strcasecmp strdup \
-strtoul tsearch wcslen __argz_count __argz_stringify __argz_next \
-__fsetlocking])
-
-  dnl Use the _snprintf function only if it is declared (because on NetBSD it
-  dnl is defined as a weak alias of snprintf; we prefer to use the latter).
-  gt_CHECK_DECL(_snprintf, [#include <stdio.h>])
-  gt_CHECK_DECL(_snwprintf, [#include <stdio.h>])
-
-  dnl Use the *_unlocked functions only if they are declared.
-  dnl (because some of them were defined without being declared in Solaris
-  dnl 2.5.1 but were removed in Solaris 2.6, whereas we want binaries built
-  dnl on Solaris 2.5.1 to run on Solaris 2.6).
-  dnl Don't use AC_CHECK_DECLS because it isn't supported in autoconf-2.13.
-  gt_CHECK_DECL(feof_unlocked, [#include <stdio.h>])
-  gt_CHECK_DECL(fgets_unlocked, [#include <stdio.h>])
-  gt_CHECK_DECL(getc_unlocked, [#include <stdio.h>])
-
-  case $gt_cv_func_printf_posix in
-    *yes) HAVE_POSIX_PRINTF=1 ;;
-    *) HAVE_POSIX_PRINTF=0 ;;
-  esac
-  AC_SUBST([HAVE_POSIX_PRINTF])
-  if test "$ac_cv_func_asprintf" = yes; then
-    HAVE_ASPRINTF=1
-  else
-    HAVE_ASPRINTF=0
-  fi
-  AC_SUBST([HAVE_ASPRINTF])
-  if test "$ac_cv_func_snprintf" = yes; then
-    HAVE_SNPRINTF=1
-  else
-    HAVE_SNPRINTF=0
-  fi
-  AC_SUBST([HAVE_SNPRINTF])
-  if test "$ac_cv_func_wprintf" = yes; then
-    HAVE_WPRINTF=1
-  else
-    HAVE_WPRINTF=0
-  fi
-  AC_SUBST([HAVE_WPRINTF])
-
-  AM_ICONV
-  AM_LANGINFO_CODESET
-  if test $ac_cv_header_locale_h = yes; then
-    AM_LC_MESSAGES
-  fi
-
-  dnl intl/plural.c is generated from intl/plural.y. It requires bison,
-  dnl because plural.y uses bison specific features. It requires at least
-  dnl bison-1.26 because earlier versions generate a plural.c that doesn't
-  dnl compile.
-  dnl bison is only needed for the maintainer (who touches plural.y). But in
-  dnl order to avoid separate Makefiles or --enable-maintainer-mode, we put
-  dnl the rule in general Makefile. Now, some people carelessly touch the
-  dnl files or have a broken "make" program, hence the plural.c rule will
-  dnl sometimes fire. To avoid an error, defines BISON to ":" if it is not
-  dnl present or too old.
-  AC_CHECK_PROGS([INTLBISON], [bison])
-  if test -z "$INTLBISON"; then
-    ac_verc_fail=yes
-  else
-    dnl Found it, now check the version.
-    AC_MSG_CHECKING([version of bison])
-changequote(<<,>>)dnl
-    ac_prog_version=`$INTLBISON --version 2>&1 | sed -n 's/^.*GNU Bison.* \([0-9]*\.[0-9.]*\).*$/\1/p'`
-    case $ac_prog_version in
-      '') ac_prog_version="v. ?.??, bad"; ac_verc_fail=yes;;
-      1.2[6-9]* | 1.[3-9][0-9]* | [2-9].*)
-changequote([,])dnl
-         ac_prog_version="$ac_prog_version, ok"; ac_verc_fail=no;;
-      *) ac_prog_version="$ac_prog_version, bad"; ac_verc_fail=yes;;
-    esac
-    AC_MSG_RESULT([$ac_prog_version])
-  fi
-  if test $ac_verc_fail = yes; then
-    INTLBISON=:
-  fi
-])
+#AC_DEFUN([AM_INTL_SUBDIR],
+#[
+#  AC_REQUIRE([AC_PROG_INSTALL])dnl
+#  AC_REQUIRE([AM_MKINSTALLDIRS])dnl
+#  AC_REQUIRE([AC_PROG_CC])dnl
+#  AC_REQUIRE([AC_CANONICAL_HOST])dnl
+#  AC_REQUIRE([AC_PROG_RANLIB])dnl
+#  AC_REQUIRE([AC_ISC_POSIX])dnl
+#  AC_REQUIRE([AC_HEADER_STDC])dnl
+#  AC_REQUIRE([AC_C_CONST])dnl
+#  AC_REQUIRE([bh_C_SIGNED])dnl
+#  AC_REQUIRE([AC_C_INLINE])dnl
+#  AC_REQUIRE([AC_TYPE_OFF_T])dnl
+#  AC_REQUIRE([AC_TYPE_SIZE_T])dnl
+#  AC_REQUIRE([gl_AC_TYPE_LONG_LONG])dnl
+#  AC_REQUIRE([gt_TYPE_LONGDOUBLE])dnl
+#  AC_REQUIRE([gt_TYPE_WCHAR_T])dnl
+#  AC_REQUIRE([gt_TYPE_WINT_T])dnl
+#  AC_REQUIRE([gl_AC_HEADER_INTTYPES_H])
+#  AC_REQUIRE([gl_AC_HEADER_STDINT_H])
+#  AC_REQUIRE([gt_TYPE_INTMAX_T])
+#  AC_REQUIRE([gt_PRINTF_POSIX])
+#  AC_REQUIRE([AC_FUNC_ALLOCA])dnl
+#  AC_REQUIRE([AC_FUNC_MMAP])dnl
+#  AC_REQUIRE([gl_GLIBC21])dnl
+#  AC_REQUIRE([gt_INTDIV0])dnl
+#  AC_REQUIRE([gl_AC_TYPE_UINTMAX_T])dnl
+#  AC_REQUIRE([gt_HEADER_INTTYPES_H])dnl
+#  AC_REQUIRE([gt_INTTYPES_PRI])dnl
+#  AC_REQUIRE([gl_XSIZE])dnl
+#
+#  AC_CHECK_TYPE([ptrdiff_t], ,
+#    [AC_DEFINE([ptrdiff_t], [long],
+#       [Define as the type of the result of subtracting two pointers, if the system doesn't define it.])
+#    ])
+#  AC_CHECK_HEADERS([argz.h limits.h locale.h nl_types.h malloc.h stddef.h \
+#stdlib.h string.h unistd.h sys/param.h])
+#  AC_CHECK_FUNCS([asprintf fwprintf getcwd getegid geteuid getgid getuid \
+#mempcpy munmap putenv setenv setlocale snprintf stpcpy strcasecmp strdup \
+#strtoul tsearch wcslen __argz_count __argz_stringify __argz_next \
+#__fsetlocking])
+#
+#  dnl Use the _snprintf function only if it is declared (because on NetBSD it
+#  dnl is defined as a weak alias of snprintf; we prefer to use the latter).
+#  gt_CHECK_DECL(_snprintf, [#include <stdio.h>])
+#  gt_CHECK_DECL(_snwprintf, [#include <stdio.h>])
+#
+#  dnl Use the *_unlocked functions only if they are declared.
+#  dnl (because some of them were defined without being declared in Solaris
+#  dnl 2.5.1 but were removed in Solaris 2.6, whereas we want binaries built
+#  dnl on Solaris 2.5.1 to run on Solaris 2.6).
+#  dnl Don't use AC_CHECK_DECLS because it isn't supported in autoconf-2.13.
+#  gt_CHECK_DECL(feof_unlocked, [#include <stdio.h>])
+#  gt_CHECK_DECL(fgets_unlocked, [#include <stdio.h>])
+#  gt_CHECK_DECL(getc_unlocked, [#include <stdio.h>])
+#
+#  case $gt_cv_func_printf_posix in
+#    *yes) HAVE_POSIX_PRINTF=1 ;;
+#    *) HAVE_POSIX_PRINTF=0 ;;
+#  esac
+#  AC_SUBST([HAVE_POSIX_PRINTF])
+#  if test "$ac_cv_func_asprintf" = yes; then
+#    HAVE_ASPRINTF=1
+#  else
+#    HAVE_ASPRINTF=0
+#  fi
+#  AC_SUBST([HAVE_ASPRINTF])
+#  if test "$ac_cv_func_snprintf" = yes; then
+#    HAVE_SNPRINTF=1
+#  else
+#    HAVE_SNPRINTF=0
+#  fi
+#  AC_SUBST([HAVE_SNPRINTF])
+#  if test "$ac_cv_func_wprintf" = yes; then
+#    HAVE_WPRINTF=1
+#  else
+#    HAVE_WPRINTF=0
+#  fi
+#  AC_SUBST([HAVE_WPRINTF])
+#
+#  AM_ICONV
+#  AM_LANGINFO_CODESET
+#  if test $ac_cv_header_locale_h = yes; then
+#    AM_LC_MESSAGES
+#  fi
+#
+#  dnl intl/plural.c is generated from intl/plural.y. It requires bison,
+#  dnl because plural.y uses bison specific features. It requires at least
+#  dnl bison-1.26 because earlier versions generate a plural.c that doesn't
+#  dnl compile.
+#  dnl bison is only needed for the maintainer (who touches plural.y). But in
+#  dnl order to avoid separate Makefiles or --enable-maintainer-mode, we put
+#  dnl the rule in general Makefile. Now, some people carelessly touch the
+#  dnl files or have a broken "make" program, hence the plural.c rule will
+#  dnl sometimes fire. To avoid an error, defines BISON to ":" if it is not
+#  dnl present or too old.
+#  AC_CHECK_PROGS([INTLBISON], [bison])
+#  if test -z "$INTLBISON"; then
+#    ac_verc_fail=yes
+#  else
+#    dnl Found it, now check the version.
+#    AC_MSG_CHECKING([version of bison])
+#changequote(<<,>>)dnl
+#    ac_prog_version=`$INTLBISON --version 2>&1 | sed -n 's/^.*GNU Bison.* \([0-9]*\.[0-9.]*\).*$/\1/p'`
+#    case $ac_prog_version in
+#      '') ac_prog_version="v. ?.??, bad"; ac_verc_fail=yes;;
+#      1.2[6-9]* | 1.[3-9][0-9]* | [2-9].*)
+#changequote([,])dnl
+#         ac_prog_version="$ac_prog_version, ok"; ac_verc_fail=no;;
+#      *) ac_prog_version="$ac_prog_version, bad"; ac_verc_fail=yes;;
+#    esac
+#    AC_MSG_RESULT([$ac_prog_version])
+#  fi
+#  if test $ac_verc_fail = yes; then
+#    INTLBISON=:
+#  fi
+#])
 
 
 dnl gt_CHECK_DECL(FUNC, INCLUDES)
