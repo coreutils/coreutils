@@ -63,17 +63,18 @@
 #include "system.h"
 #include <fnmatch.h>
 
-#include "obstack.h"
-#include "ls.h"
+#include "argmatch.h"
 #include "closeout.h"
 #include "error.h"
 #include "human.h"
-#include "argmatch.h"
-#include "xstrtol.h"
-#include "strverscmp.h"
-#include "quotearg.h"
 #include "filemode.h"
+#include "long-options.h"
+#include "ls.h"
+#include "obstack.h"
 #include "path-concat.h"
+#include "quotearg.h"
+#include "strverscmp.h"
+#include "xstrtol.h"
 
 #define obstack_chunk_alloc malloc
 #define obstack_chunk_free free
@@ -528,12 +529,6 @@ static int format_needs_stat;
 
 static int exit_status;
 
-/* If nonzero, display usage information and exit.  */
-static int show_help;
-
-/* If nonzero, print the version on standard output and exit.  */
-static int show_version;
-
 static struct option const long_options[] =
 {
   {"all", no_argument, 0, 'a'},
@@ -567,8 +562,6 @@ static struct option const long_options[] =
   {"sort", required_argument, 0, 10},
   {"tabsize", required_argument, 0, 'T'},
   {"time", required_argument, 0, 11},
-  {"help", no_argument, &show_help, 1},
-  {"version", no_argument, &show_version, 1},
   {"color", optional_argument, 0, 13},
   {"block-size", required_argument, 0, 17},
   {NULL, 0, NULL, 0}
@@ -720,6 +713,13 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+#define PROGRAM_NAME (ls_mode == LS_LS ? "ls" \
+		      : (ls_mode == LS_MULTI_COL \
+			 ? "dir" : "vdir"))
+
+  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
+		      "Richard Stallman and David MacKenzie", usage);
+
   exit_status = 0;
   dir_defaulted = 1;
   print_dir_name = 1;
@@ -727,19 +727,6 @@ main (int argc, char **argv)
   current_time = time ((time_t *) 0);
 
   i = decode_switches (argc, argv);
-
-  if (show_version)
-    {
-      printf ("%s (%s) %s\n",
-	      (ls_mode == LS_LS ? "ls"
-	       : (ls_mode == LS_MULTI_COL ? "dir" : "vdir")),
-	      GNU_PACKAGE, VERSION);
-      close_stdout ();
-      exit (EXIT_SUCCESS);
-    }
-
-  if (show_help)
-    usage (EXIT_SUCCESS);
 
   if (print_with_color)
     {

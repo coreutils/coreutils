@@ -63,9 +63,10 @@
 #include <stdarg.h>		/* Used by pferror */
 
 #include "system.h"
-#include "xstrtoul.h"
 #include "closeout.h"
 #include "error.h"
+#include "long-options.h"
+#include "xstrtoul.h"
 
 #define DEFAULT_PASSES 25	/* Default */
 
@@ -84,12 +85,6 @@ struct Options
   int zero_fill;
 };
 
-/* If nonzero, display usage information and exit.  */
-static int show_help;
-
-/* If nonzero, print the version on standard output and exit.  */
-static int show_version;
-
 static struct option const long_opts[] =
 {
   {"device", no_argument, NULL, 'd'},
@@ -99,8 +94,6 @@ static struct option const long_opts[] =
   {"preserve", no_argument, NULL, 'p'},
   {"verbose", no_argument, NULL, 'v'},
   {"zero", required_argument, NULL, 'z'},
-  {"help", no_argument, &show_help, 1},
-  {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -1290,6 +1283,9 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  parse_long_options (argc, argv, "shred", GNU_PACKAGE, VERSION,
+		      "Colin Plumb", usage);
+
   isaac_seed (&s);
 
   memset (&flags, 0, sizeof flags);
@@ -1346,16 +1342,6 @@ main (int argc, char **argv)
 	  usage (1);
 	}
     }
-
-  if (show_version)
-    {
-      printf ("shred (%s) %s\n", GNU_PACKAGE, VERSION);
-      close_stdout ();
-      exit (0);
-    }
-
-  if (show_help)
-    usage (0);
 
   file = argv + optind;
   n_files = argc - optind;

@@ -30,6 +30,7 @@
 #include "long-options.h"
 #include "closeout.h"
 #include "error.h"
+#include "long-options.h"
 #include "obstack.h"
 #include "dircolors.h"
 
@@ -82,9 +83,7 @@ static struct option const long_options[] =
     {"sh", no_argument, NULL, 'b'},
     {"csh", no_argument, NULL, 'c'},
     {"c-shell", no_argument, NULL, 'c'},
-    {"help", no_argument, NULL, 'h'},
     {"print-database", no_argument, NULL, 'p'},
-    {"version", no_argument, NULL, 'v'},
     {NULL, 0, NULL, 0}
   };
 
@@ -428,7 +427,8 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  parse_long_options (argc, argv, "dircolors", GNU_PACKAGE, VERSION, usage);
+  parse_long_options (argc, argv, "dircolors", GNU_PACKAGE, VERSION,
+		      "H. Peter Anvin", usage);
 
   while ((optc = getopt_long (argc, argv, "bcp", long_options, NULL)) != -1)
     switch (optc)

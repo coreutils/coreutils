@@ -48,13 +48,14 @@
 #include <assert.h>
 
 #include "system.h"
-#include "path-concat.h"
 #include "backupfile.h"
 #include "closeout.h"
-#include "cp-hash.h"
 #include "copy.h"
-#include "remove.h"
+#include "cp-hash.h"
 #include "error.h"
+#include "long-options.h"
+#include "path-concat.h"
+#include "remove.h"
 
 /* Initial number of entries in each hash table entry's table of inodes.  */
 #define INITIAL_HASH_MODULE 100
@@ -74,12 +75,6 @@ char *program_name;
 /* If nonzero, stdin is a tty. */
 static int stdin_tty;
 
-/* If nonzero, display usage information and exit.  */
-static int show_help;
-
-/* If nonzero, print the version on standard output and exit.  */
-static int show_version;
-
 static struct option const long_options[] =
 {
   {"backup", no_argument, NULL, 'b'},
@@ -89,8 +84,6 @@ static struct option const long_options[] =
   {"update", no_argument, NULL, 'u'},
   {"verbose", no_argument, NULL, 'v'},
   {"version-control", required_argument, NULL, 'V'},
-  {"help", no_argument, &show_help, 1},
-  {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -375,6 +368,9 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  parse_long_options (argc, argv, "mv", GNU_PACKAGE, VERSION,
+		      "Mike Parker, David MacKenzie, and Jim Meyering", usage);
+
   cp_option_init (&x);
 
   /* FIXME: consider not calling getenv for SIMPLE_BACKUP_SUFFIX unless
@@ -419,16 +415,6 @@ main (int argc, char **argv)
 	  usage (1);
 	}
     }
-
-  if (show_version)
-    {
-      printf ("mv (%s) %s\n", GNU_PACKAGE, VERSION);
-      close_stdout ();
-      exit (0);
-    }
-
-  if (show_help)
-    usage (0);
 
   if (argc < optind + 2)
     {

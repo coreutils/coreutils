@@ -49,22 +49,17 @@
 #include <sys/types.h>
 #include <assert.h>
 
-#include "save-cwd.h"
 #include "system.h"
 #include "closeout.h"
 #include "error.h"
+#include "long-options.h"
 #include "remove.h"
+#include "save-cwd.h"
 
 void strip_trailing_slashes ();
 
 /* Name this program was run with.  */
 char *program_name;
-
-/* If nonzero, display usage information and exit.  */
-static int show_help;
-
-/* If nonzero, print the version on standard output and exit.  */
-static int show_version;
 
 static struct option const long_opts[] =
 {
@@ -73,8 +68,6 @@ static struct option const long_opts[] =
   {"interactive", no_argument, NULL, 'i'},
   {"recursive", no_argument, NULL, 'r'},
   {"verbose", no_argument, NULL, 'v'},
-  {"help", no_argument, &show_help, 1},
-  {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -127,6 +120,10 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  parse_long_options (argc, argv, "rm", GNU_PACKAGE, VERSION,
+	    "Paul Rubin, David MacKenzie, Richard Stallman, and Jim Meyering",
+		      usage);
+
   rm_option_init (&x);
 
   while ((c = getopt_long (argc, argv, "dfirvR", long_opts, NULL)) != -1)
@@ -157,16 +154,6 @@ main (int argc, char **argv)
 	  usage (1);
 	}
     }
-
-  if (show_version)
-    {
-      printf ("rm (%s) %s\n", GNU_PACKAGE, VERSION);
-      close_stdout ();
-      exit (0);
-    }
-
-  if (show_help)
-    usage (0);
 
   if (optind == argc)
     {

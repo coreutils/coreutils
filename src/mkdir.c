@@ -23,10 +23,11 @@
 #include <sys/types.h>
 
 #include "system.h"
-#include "modechange.h"
-#include "makepath.h"
 #include "closeout.h"
 #include "error.h"
+#include "long-options.h"
+#include "makepath.h"
+#include "modechange.h"
 
 /* The name this program was run with. */
 char *program_name;
@@ -34,19 +35,11 @@ char *program_name;
 /* If nonzero, ensure that all parents of the specified directory exist.  */
 static int path_mode;
 
-/* If nonzero, display usage information and exit.  */
-static int show_help;
-
-/* If nonzero, print the version on standard output and exit.  */
-static int show_version;
-
 static struct option const longopts[] =
 {
   {"mode", required_argument, NULL, 'm'},
   {"parents", no_argument, NULL, 'p'},
-  {"help", no_argument, &show_help, 1},
   {"verbose", no_argument, NULL, 2},
-  {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -89,6 +82,9 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  parse_long_options (argc, argv, "mkdir", GNU_PACKAGE, VERSION,
+		      "David MacKenzie", usage);
+
   path_mode = 0;
 
   while ((optc = getopt_long (argc, argv, "pm:", longopts, NULL)) != -1)
@@ -110,16 +106,6 @@ main (int argc, char **argv)
 	  usage (1);
 	}
     }
-
-  if (show_version)
-    {
-      printf ("mkdir (%s) %s\n", GNU_PACKAGE, VERSION);
-      close_stdout ();
-      exit (0);
-    }
-
-  if (show_help)
-    usage (0);
 
   if (optind == argc)
     {

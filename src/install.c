@@ -73,15 +73,16 @@
 
 #include "system.h"
 #include "backupfile.h"
-#include "modechange.h"
-#include "makepath.h"
 #include "closeout.h"
 #include "error.h"
-#include "xstrtol.h"
-#include "path-concat.h"
 #include "cp-hash.h"
 #include "copy.h"
 #include "dirname.h"
+#include "long-options.h"
+#include "makepath.h"
+#include "modechange.h"
+#include "path-concat.h"
+#include "xstrtol.h"
 
 #if HAVE_SYS_WAIT_H
 # include <sys/wait.h>
@@ -165,12 +166,6 @@ static int strip_files;
 /* If nonzero, install a directory instead of a regular file. */
 static int dir_arg;
 
-/* If nonzero, display usage information and exit.  */
-static int show_help;
-
-/* If nonzero, print the version on standard output and exit.  */
-static int show_version;
-
 static struct option const long_options[] =
 {
   {"strip", no_argument, NULL, 's'},
@@ -183,8 +178,6 @@ static struct option const long_options[] =
   {"suffix", required_argument, NULL, 'S'},
   {"version-control", required_argument, NULL, 'V'},
   {"verbose", no_argument, NULL, 'v'},
-  {"help", no_argument, &show_help, 1},
-  {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -241,6 +234,9 @@ main (int argc, char **argv)
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
+
+  parse_long_options (argc, argv, "install", GNU_PACKAGE, VERSION,
+		      "David MacKenzie", usage);
 
   cp_option_init (&x);
 
@@ -303,16 +299,6 @@ main (int argc, char **argv)
 	  usage (1);
 	}
     }
-
-  if (show_version)
-    {
-      printf ("install (%s) %s\n", GNU_PACKAGE, VERSION);
-      close_stdout ();
-      exit (0);
-    }
-
-  if (show_help)
-    usage (0);
 
   /* Check for invalid combinations of arguments. */
   if (dir_arg && strip_files)

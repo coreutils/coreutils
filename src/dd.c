@@ -29,10 +29,11 @@
 #include <signal.h>
 #include <getopt.h>
 
-#include "human.h"
 #include "system.h"
 #include "closeout.h"
 #include "error.h"
+#include "human.h"
+#include "long-options.h"
 #include "safe-read.h"
 
 #ifndef SIGINFO
@@ -266,16 +267,8 @@ static unsigned char const ebcdic_to_ascii[] =
   070, 071, 0372, 0373, 0374, 0375, 0376, 0377
 };
 
-/* If nonzero, display usage information and exit.  */
-static int show_help;
-
-/* If nonzero, print the version on standard output and exit.  */
-static int show_version;
-
 static struct option const long_options[] =
 {
-  {"help", no_argument, &show_help, 1},
-  {"version", no_argument, &show_version, 1},
   {0, 0, 0, 0}
 };
 
@@ -1111,22 +1104,15 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  parse_long_options (argc, argv, "dd", GNU_PACKAGE, VERSION,
+		      "Paul Rubin, David MacKenzie, and Stuart Kemp", usage);
+
   /* Initialize translation table to identity translation. */
   for (i = 0; i < 256; i++)
     trans_table[i] = i;
 
   /* Decode arguments. */
   scanargs (argc, argv);
-
-  if (show_version)
-    {
-      printf ("dd (%s) %s\n", GNU_PACKAGE, VERSION);
-      close_stdout ();
-      exit (0);
-    }
-
-  if (show_help)
-    usage (0);
 
   apply_translations ();
 

@@ -24,12 +24,13 @@
 #include <sys/types.h>
 
 #include "system.h"
+#include "argmatch.h"
 #include "closeout.h"
 #include "error.h"
-#include "argmatch.h"
 #include "getdate.h"
-#include "safe-read.h"
+#include "long-options.h"
 #include "posixtm.h"
+#include "safe-read.h"
 
 #ifndef STDC_HEADERS
 time_t time ();
@@ -73,12 +74,6 @@ static char *ref_file;
 /* Info about the reference file. */
 static struct stat ref_stats;
 
-/* If nonzero, display usage information and exit.  */
-static int show_help;
-
-/* If nonzero, print the version on standard output and exit.  */
-static int show_version;
-
 static struct option const longopts[] =
 {
   {"time", required_argument, 0, CHAR_MAX + 1},
@@ -86,8 +81,6 @@ static struct option const longopts[] =
   {"date", required_argument, 0, 'd'},
   {"file", required_argument, 0, 'r'},
   {"reference", required_argument, 0, 'r'},
-  {"help", no_argument, &show_help, 1},
-  {"version", no_argument, &show_version, 1},
   {0, 0, 0, 0}
 };
 
@@ -237,6 +230,10 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  parse_long_options (argc, argv, "touch", GNU_PACKAGE, VERSION,
+    "Paul Rubin, Arnold Robbins, Jim Kingdon, David MacKenzie, and Randy Smith",
+		      usage);
+
   change_times = no_create = use_ref = posix_date = flexible_date = 0;
   newtime = (time_t) -1;
 
@@ -293,16 +290,6 @@ main (int argc, char **argv)
 	  usage (1);
 	}
     }
-
-  if (show_version)
-    {
-      printf ("touch (%s) %s\n", GNU_PACKAGE, VERSION);
-      close_stdout ();
-      exit (0);
-    }
-
-  if (show_help)
-    usage (0);
 
   if (change_times == 0)
     change_times = CH_ATIME | CH_MTIME;

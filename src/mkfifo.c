@@ -28,24 +28,17 @@
 #include <sys/types.h>
 
 #include "system.h"
-#include "modechange.h"
 #include "closeout.h"
 #include "error.h"
+#include "long-options.h"
+#include "modechange.h"
 
 /* The name this program was run with. */
 char *program_name;
 
-/* If nonzero, display usage information and exit.  */
-static int show_help;
-
-/* If nonzero, print the version on standard output and exit.  */
-static int show_version;
-
 static struct option const longopts[] =
 {
   {"mode", required_argument, NULL, 'm'},
-  {"help", no_argument, &show_help, 1},
-  {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -87,6 +80,9 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  parse_long_options (argc, argv, "mkfifo", GNU_PACKAGE, VERSION,
+		      "David MacKenzie", usage);
+
   symbolic_mode = NULL;
 
 #ifndef S_ISFIFO
@@ -105,16 +101,6 @@ main (int argc, char **argv)
 	  usage (1);
 	}
     }
-
-  if (show_version)
-    {
-      printf ("mkfifo (%s) %s\n", GNU_PACKAGE, VERSION);
-      close_stdout ();
-      exit (0);
-    }
-
-  if (show_help)
-    usage (0);
 
   if (optind == argc)
     {

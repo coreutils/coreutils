@@ -29,8 +29,9 @@
 #include "system.h"
 #include "backupfile.h"
 #include "closeout.h"
-#include "error.h"
 #include "dirname.h"
+#include "error.h"
+#include "long-options.h"
 
 int link ();			/* Some systems don't declare this anywhere. */
 
@@ -97,12 +98,6 @@ static int hard_dir_link;
    symlink-to-dir before creating the new link.  */
 static int dereference_dest_dir_symlinks = 1;
 
-/* If nonzero, display usage information and exit.  */
-static int show_help;
-
-/* If nonzero, print the version on standard output and exit.  */
-static int show_version;
-
 static struct option const long_options[] =
 {
   {"backup", no_argument, NULL, 'b'},
@@ -114,8 +109,6 @@ static struct option const long_options[] =
   {"symbolic", no_argument, NULL, 's'},
   {"verbose", no_argument, NULL, 'v'},
   {"version-control", required_argument, NULL, 'V'},
-  {"help", no_argument, &show_help, 1},
-  {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -386,6 +379,9 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  parse_long_options (argc, argv, "ln", GNU_PACKAGE, VERSION,
+		      "Mike Parker and David MacKenzie", usage);
+
   /* FIXME: consider not calling getenv for SIMPLE_BACKUP_SUFFIX unless
      we'll actually use simple_backup_suffix.  */
   version = getenv ("SIMPLE_BACKUP_SUFFIX");
@@ -443,16 +439,6 @@ main (int argc, char **argv)
 	  break;
 	}
     }
-
-  if (show_version)
-    {
-      printf ("ln (%s) %s\n", GNU_PACKAGE, VERSION);
-      close_stdout ();
-      exit (0);
-    }
-
-  if (show_help)
-    usage (0);
 
   if (optind == argc)
     {

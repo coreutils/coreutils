@@ -24,11 +24,12 @@
 #include <getopt.h>
 
 #include "system.h"
-#include "xstrtoul.h"
 #include "closeout.h"
 #include "error.h"
-#include "savedir.h"
 #include "group-member.h"
+#include "long-options.h"
+#include "savedir.h"
+#include "xstrtoul.h"
 
 /* MAXUID may come from limits.h *or* sys/params.h (via system.h) above. */
 #ifndef MAXUID
@@ -97,12 +98,6 @@ static const char *groupname;
    This file must exist.  */
 static char *reference_file;
 
-/* If nonzero, display usage information and exit.  */
-static int show_help;
-
-/* If nonzero, print the version on standard output and exit.  */
-static int show_version;
-
 static struct option const long_options[] =
 {
   {"recursive", no_argument, 0, 'R'},
@@ -112,8 +107,6 @@ static struct option const long_options[] =
   {"quiet", no_argument, 0, 'f'},
   {"reference", required_argument, 0, CHAR_MAX + 1},
   {"verbose", no_argument, 0, 'v'},
-  {"help", no_argument, &show_help, 1},
-  {"version", no_argument, &show_version, 1},
   {0, 0, 0, 0}
 };
 
@@ -335,6 +328,9 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  parse_long_options (argc, argv, "chgrp", GNU_PACKAGE, VERSION,
+		      "David MacKenzie", usage);
+
   recurse = force_silent = 0;
 
   while ((optc = getopt_long (argc, argv, "Rcfhv", long_options, NULL)) != -1)
@@ -365,16 +361,6 @@ main (int argc, char **argv)
 	  usage (1);
 	}
     }
-
-  if (show_version)
-    {
-      printf ("chgrp (%s) %s\n", GNU_PACKAGE, VERSION);
-      close_stdout ();
-      exit (0);
-    }
-
-  if (show_help)
-    usage (0);
 
   if (argc - optind + (reference_file ? 1 : 0) <= 1)
     {

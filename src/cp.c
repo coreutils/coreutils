@@ -28,14 +28,15 @@
 #include <getopt.h>
 
 #include "system.h"
-#include "backupfile.h"
 #include "argmatch.h"
-#include "path-concat.h"
+#include "backupfile.h"
 #include "closeout.h"
-#include "cp-hash.h"
 #include "copy.h"
+#include "cp-hash.h"
 #include "error.h"
 #include "dirname.h"
+#include "long-options.h"
+#include "path-concat.h"
 
 #ifndef _POSIX_VERSION
 uid_t geteuid ();
@@ -83,12 +84,6 @@ static enum Sparse_type const sparse_type[] =
 /* The error code to return to the system. */
 static int exit_status = 0;
 
-/* If nonzero, display usage information and exit.  */
-static int show_help;
-
-/* If nonzero, print the version on standard output and exit.  */
-static int show_version;
-
 static struct option const long_opts[] =
 {
   {"archive", no_argument, NULL, 'a'},
@@ -108,8 +103,6 @@ static struct option const long_opts[] =
   {"update", no_argument, NULL, 'u'},
   {"verbose", no_argument, NULL, 'v'},
   {"version-control", required_argument, NULL, 'V'},
-  {"help", no_argument, &show_help, 1},
-  {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -638,6 +631,10 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  parse_long_options (argc, argv, "cp", GNU_PACKAGE, VERSION,
+		      "Torbjorn Granlund, David MacKenzie, and Jim Meyering",
+		      usage);
+
   cp_option_init (&x);
 
   /* FIXME: consider not calling getenv for SIMPLE_BACKUP_SUFFIX unless
@@ -745,16 +742,6 @@ main (int argc, char **argv)
 	  usage (1);
 	}
     }
-
-  if (show_version)
-    {
-      printf ("cp (%s) %s\n", GNU_PACKAGE, VERSION);
-      close_stdout ();
-      exit (0);
-    }
-
-  if (show_help)
-    usage (0);
 
   if (x.hard_link && x.symbolic_link)
     {

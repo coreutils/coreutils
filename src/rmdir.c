@@ -30,6 +30,7 @@
 #include "system.h"
 #include "closeout.h"
 #include "error.h"
+#include "long-options.h"
 
 #ifndef EEXIST
 # define EEXIST 0
@@ -54,12 +55,6 @@ static int ignore_fail_on_non_empty;
 /* If nonzero, output a diagnostic for every directory processed.  */
 static int verbose;
 
-/* If nonzero, display usage information and exit.  */
-static int show_help;
-
-/* If nonzero, print the version on standard output and exit.  */
-static int show_version;
-
 static struct option const longopts[] =
 {
   /* Don't name this `--force' because it's not close enough in meaning
@@ -69,8 +64,6 @@ static struct option const longopts[] =
   {"path", no_argument, NULL, 'p'},
   {"parents", no_argument, NULL, 'p'},
   {"verbose", no_argument, NULL, 14},
-  {"help", no_argument, &show_help, 1},
-  {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -152,6 +145,9 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  parse_long_options (argc, argv, "rmdir", GNU_PACKAGE, VERSION,
+		      "David MacKenzie", usage);
+
   empty_paths = 0;
 
   while ((optc = getopt_long (argc, argv, "p", longopts, NULL)) != -1)
@@ -173,16 +169,6 @@ main (int argc, char **argv)
 	  usage (1);
 	}
     }
-
-  if (show_version)
-    {
-      printf ("rmdir (%s) %s\n", GNU_PACKAGE, VERSION);
-      close_stdout ();
-      exit (0);
-    }
-
-  if (show_help)
-    usage (0);
 
   if (optind == argc)
     {

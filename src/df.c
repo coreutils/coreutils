@@ -28,14 +28,15 @@
 #include <getopt.h>
 #include <assert.h>
 
-#include "mountlist.h"
-#include "fsusage.h"
 #include "system.h"
-#include "save-cwd.h"
 #include "closeout.h"
-#include "error.h"
-#include "human.h"
 #include "dirname.h"
+#include "error.h"
+#include "fsusage.h"
+#include "human.h"
+#include "long-options.h"
+#include "mountlist.h"
+#include "save-cwd.h"
 
 void strip_trailing_slashes ();
 char *xstrdup ();
@@ -103,12 +104,6 @@ static struct fs_type_list *fs_exclude_list;
 /* Linked list of mounted filesystems. */
 static struct mount_entry *mount_list;
 
-/* If nonzero, display usage information and exit.  */
-static int show_help;
-
-/* If nonzero, print the version on standard output and exit.  */
-static int show_version;
-
 /* If nonzero, print filesystem type as well.  */
 static int print_type;
 
@@ -128,8 +123,6 @@ static struct option const long_options[] =
   {"no-sync", no_argument, NULL, CHAR_MAX + 2},
   {"type", required_argument, NULL, 't'},
   {"exclude-type", required_argument, NULL, 'x'},
-  {"help", no_argument, &show_help, 1},
-  {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
 
@@ -622,6 +615,10 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  parse_long_options (argc, argv, "df", GNU_PACKAGE, VERSION,
+	    "Torbjorn Granlund, David MacKenzie, Larry McVoy, and Paul Eggert",
+		      usage);
+
   fs_select_list = NULL;
   fs_exclude_list = NULL;
   inode_format = 0;
@@ -695,16 +692,6 @@ main (int argc, char **argv)
 	  usage (1);
 	}
     }
-
-  if (show_version)
-    {
-      printf ("df (%s) %s\n", GNU_PACKAGE, VERSION);
-      close_stdout ();
-      exit (0);
-    }
-
-  if (show_help)
-    usage (0);
 
   /* Fail if the same file system type was both selected and excluded.  */
   {

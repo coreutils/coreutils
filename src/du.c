@@ -51,14 +51,15 @@
 #include <sys/types.h>
 #include <assert.h>
 
-#include "exclude.h"
 #include "system.h"
-#include "save-cwd.h"
 #include "closeout.h"
 #include "error.h"
+#include "exclude.h"
 #include "human.h"
-#include "xstrtol.h"
+#include "long-options.h"
+#include "save-cwd.h"
 #include "savedir.h"
+#include "xstrtol.h"
 
 /* Initial number of entries in each hash table entry's table of inodes.  */
 #define INITIAL_HASH_MODULE 100
@@ -163,12 +164,6 @@ static int (*xstat) ();
 /* The exit status to use if we don't get any fatal errors. */
 static int exit_status;
 
-/* If nonzero, display usage information and exit.  */
-static int show_help;
-
-/* If nonzero, print the version on standard output and exit.  */
-static int show_version;
-
 /* File name patterns to exclude.  */
 static struct exclude *exclude;
 
@@ -194,18 +189,12 @@ static struct option const long_options[] =
   {"separate-dirs", no_argument, NULL, 'S'},
   {"summarize", no_argument, NULL, 's'},
   {"total", no_argument, NULL, 'c'},
-  {"help", no_argument, &show_help, 1},
-  {"version", no_argument, &show_version, 1},
   {NULL, 0, NULL, 0}
 };
 
 void
-usage (int status, char *reason)
+usage (int status)
 {
-  if (reason != NULL)
-    fprintf (status == 0 ? stdout : stderr, "%s: %s\n",
-	     program_name, reason);
-
   if (status != 0)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
@@ -261,6 +250,10 @@ main (int argc, char **argv)
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
+
+  parse_long_options (argc, argv, "du", GNU_PACKAGE, VERSION,
+	    "Torbjorn Granlund, David MacKenzie, Larry McVoy, and Paul Eggert",
+		      usage);
 
   exclude = new_exclude ();
   xstat = lstat;
@@ -351,22 +344,15 @@ main (int argc, char **argv)
 	  break;
 
 	default:
-	  usage (1, (char *) 0);
+	  usage (1);
 	}
     }
 
-  if (show_version)
-    {
-      printf ("du (%s) %s\n", GNU_PACKAGE, VERSION);
-      close_stdout ();
-      exit (0);
-    }
-
-  if (show_help)
-    usage (0, NULL);
-
   if (opt_all && opt_summarize_only)
-    usage (1, _("cannot both summarize and show all entries"));
+    {
+      error (0, 0, _("cannot both summarize and show all entries"));
+      usage (1);
+    }
 
   if (opt_summarize_only && max_depth_specified && max_depth == 0)
     {
@@ -379,7 +365,7 @@ main (int argc, char **argv)
       error (0, 0,
 	     _("warning: summarizing conflicts with --max-depth=%d"),
 	       max_depth);
-      usage (1, NULL);
+      usage (1);
     }
 
   if (opt_summarize_only)
