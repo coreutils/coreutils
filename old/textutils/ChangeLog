@@ -1,5 +1,8 @@
 1999-11-22  Jim Meyering  <meyering@ascend.com>
 
+	* lib/Makefile.am (DISTCLEANFILES): Put $(BUILT_SOURCES) here rather
+	than in $(MAINTAINERCLEANFILES).
+
 	* src/tail.c (recheck): Handle a race condition (including <dev,inode>
 	reuse) that would lead to a failed assertion.
 	Reported by Ken Pizzini.
