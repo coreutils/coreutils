@@ -23,6 +23,18 @@
 #include <sys/types.h>
 #include <getopt.h>
 
+#if HAVE_LIMITS_H
+# include <limits.h>
+#endif
+
+#ifndef UINT_MAX
+# define UINT_MAX ((unsigned int) ~(unsigned int) 0)
+#endif
+
+#ifndef INT_MAX
+# define INT_MAX ((int) (UINT_MAX >> 1))
+#endif
+
 /* Redefine.  Otherwise, systems (Unicos for one) with headers that define
    it to be a type get syntax errors for the variable declaration below.  */
 #define word unused_word_type
@@ -30,6 +42,7 @@
 #include "system.h"
 #include "version.h"
 #include "error.h"
+#include "xstrtol.h"
 
 /* The following parameters represent the program's idea of what is
    "best".  Adjust to taste, subject to the caveats given.  */
@@ -362,8 +375,14 @@ main (register int argc, register char **argv)
 	break;
 
       case 'w':
-	/* FIXME: use strtol.  */
-	max_width = atoi (optarg);
+	{
+	  long int tmp_long;
+	  if (xstrtol (optarg, NULL, 10, &tmp_long, NULL) != LONGINT_OK
+	      || tmp_long <= 0 || tmp_long > INT_MAX)
+	    error (1, 0, _("invalid line number increment: `%s'"),
+		   optarg);
+	  max_width = (int) tmp_long;
+	}
 	break;
 
       case 'p':
