@@ -1,4 +1,4 @@
-#serial 5
+#serial 6
 
 dnl From Jim Meyering.
 dnl Determine whether stat has the bug that it succeeds when given the
@@ -31,8 +31,7 @@ AC_DEFUN(jm_FUNC_STAT,
 	 jm_cv_func_stat_empty_string_bug=yes)
   ])
   if test $jm_cv_func_stat_empty_string_bug = yes; then
-    AC_SUBST(LIBOBJS)
-    LIBOBJS="$LIBOBJS stat.$ac_objext"
+    AC_LIBOBJ([stat])
     AC_DEFINE_UNQUOTED(HAVE_STAT_EMPTY_STRING_BUG, 1,
 [Define if stat has the bug that it succeeds when given the zero-length
    file name argument.  The stat from SunOS4.1.4 and the Hurd as of 1998-11-01)

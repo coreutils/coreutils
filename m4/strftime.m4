@@ -1,4 +1,4 @@
-#serial 14
+#serial 15
 
 dnl This macro is intended to be used solely in this file.
 dnl These are the prerequisite macros for GNU's strftime.c replacement.
@@ -146,8 +146,7 @@ main ()
 	     jm_cv_func_working_gnu_strftime=no)
   ])
   if test $jm_cv_func_working_gnu_strftime = no; then
-    AC_SUBST(LIBOBJS)
-    LIBOBJS="$LIBOBJS strftime.$ac_objext"
+    AC_LIBOBJ([strftime])
     AC_DEFINE_UNQUOTED(strftime, gnu_strftime,
       [Define to gnu_strftime if the replacement function should be used.])
   fi

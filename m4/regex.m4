@@ -1,4 +1,4 @@
-#serial 7
+#serial 8
 
 dnl Initially derived from code in GNU grep.
 dnl Mostly written by Jim Meyering.
@@ -62,8 +62,7 @@ AC_DEFUN(jm_INCLUDED_REGEX,
 		    jm_with_regex=$withval,
 		    jm_with_regex=$ac_use_included_regex)
 	if test "$jm_with_regex" = yes; then
-	  AC_SUBST(LIBOBJS)
-	  LIBOBJS="$LIBOBJS regex.$ac_objext"
+	  AC_LIBOBJ([regex])
 	fi
       ],
     )

@@ -1,4 +1,4 @@
-#serial 22
+#serial 23
 
 dnl Misc type-related macros for fileutils, sh-utils, textutils.
 
@@ -198,8 +198,8 @@ AC_DEFUN(jm_MACROS,
   jm_FILE_SYSTEM_USAGE([space=yes], [space=no])
   if test $list_mounted_fs = yes && test $space = yes; then
     DF_PROG="df"
-    LIBOBJS="$LIBOBJS fsusage.$ac_objext"
-    LIBOBJS="$LIBOBJS mountlist.$ac_objext"
+    AC_LIBOBJ([fsusage])
+    AC_LIBOBJ([mountlist])
   fi
 
 ])

@@ -1,4 +1,4 @@
-#serial 4
+#serial 5
 
 dnl A replacement for autoconf's AC_FUNC_MEMCMP that detects
 dnl the losing memcmp on some x86 Next systems.
@@ -36,8 +36,7 @@ main ()
    jm_cv_func_memcmp_working=no,
    jm_cv_func_memcmp_working=no)])
 test $jm_cv_func_memcmp_working = no \
-  && LIBOBJS="$LIBOBJS memcmp.$ac_objext"
-AC_SUBST(LIBOBJS)dnl
+  && AC_LIBOBJ([memcmp])
 ])
 
 AC_DEFUN(jm_FUNC_MEMCMP,

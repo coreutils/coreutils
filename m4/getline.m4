@@ -1,4 +1,4 @@
-#serial 3
+#serial 4
 
 dnl See if there's a working, system-supplied version of the getline function.
 dnl We can't just do AC_REPLACE_FUNCS(getline) because some systems
@@ -39,7 +39,6 @@ AC_DEFUN(AM_FUNC_GETLINE,
   fi
 
   if test $am_cv_func_working_getline = no; then
-    LIBOBJS="$LIBOBJS getline.$ac_objext"
-    AC_SUBST(LIBOBJS)dnl
+    AC_LIBOBJ([getline])
   fi
 ])

@@ -1,4 +1,4 @@
-#serial 3
+#serial 4
 
 dnl From Jim Meyering.
 dnl
@@ -38,8 +38,7 @@ AC_DEFUN(jm_FUNC_GETGROUPS,
 	       jm_cv_func_working_getgroups=no)
     ])
     if test $jm_cv_func_working_getgroups = no; then
-      AC_SUBST(LIBOBJS)
-      LIBOBJS="$LIBOBJS getgroups.$ac_objext"
+      AC_LIBOBJ([getgroups])
       AC_DEFINE_UNQUOTED(getgroups, rpl_getgroups,
 	[Define as rpl_getgroups if getgroups doesn't work right.])
     fi

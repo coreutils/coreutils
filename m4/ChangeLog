@@ -1,3 +1,8 @@
+2000-07-02  Jim Meyering  <meyering@lucent.com>
+
+	* chown.m4: Replace each use of AC_SUBST(LIBOBJS)/LIBOBJS=... with
+	AC_LIBOBJ([function_name]).
+
 2000-07-01  Jim Meyering  <meyering@lucent.com>
 
 	* ls-mntd-fs.m4: Remove a `FIXME' comment and fix the associated

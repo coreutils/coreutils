@@ -1,4 +1,4 @@
-#serial 1
+#serial 2
 
 # See if we need to emulate a missing ftruncate function using fcntl.
 
@@ -21,7 +21,7 @@ AC_DEFUN(jm_FUNC_FTRUNCATE,
       fu_cv_sys_ftruncate_emulation=no)])
     AC_MSG_RESULT($fu_cv_sys_ftruncate_emulation)
     if test $fu_cv_sys_ftruncate_emulation = yes; then
-      LIBOBJS="$LIBOBJS ftruncate.$ac_objext"
+      AC_LIBOBJ([ftruncate])
     fi
   fi
 ])

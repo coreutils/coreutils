@@ -1,4 +1,4 @@
-#serial 3
+#serial 4
 
 dnl From Jim Meyering.
 dnl Determine whether malloc accepts 0 as its argument.
@@ -27,8 +27,7 @@ AC_DEFUN(jm_FUNC_MALLOC,
 	 jm_cv_func_working_malloc=no)
   ])
   if test $jm_cv_func_working_malloc = no; then
-    AC_SUBST(LIBOBJS)
-    LIBOBJS="$LIBOBJS malloc.$ac_objext"
+    AC_LIBOBJ([malloc])
     AC_DEFINE_UNQUOTED(malloc, rpl_malloc,
       [Define to rpl_malloc if the replacement function should be used.])
   fi

@@ -1,4 +1,4 @@
-#serial 4
+#serial 5
 
 dnl From Jim Meyering.
 dnl Determine whether chown accepts arguments of -1 for uid and gid.
@@ -42,8 +42,7 @@ AC_DEFUN(jm_FUNC_CHOWN,
 	     jm_cv_func_working_chown=no)
   ])
   if test $jm_cv_func_working_chown = no; then
-    AC_SUBST(LIBOBJS)
-    LIBOBJS="$LIBOBJS chown.$ac_objext"
+    AC_LIBOBJ([chown])
     AC_DEFINE_UNQUOTED(chown, rpl_chown,
       [Define to rpl_chown if the replacement function should be used.])
   fi
