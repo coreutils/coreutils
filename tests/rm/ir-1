@@ -51,6 +51,6 @@ case `echo $tmp/*` in
   *) fail=1 ;;
 esac
 
-rm -rf $tmp
+rm -rf $tmp $test.I
 
 exit $fail
