@@ -180,9 +180,7 @@ hash_compare_strings (void const *x, void const *y)
 static inline void
 push_dir (Dirstack_state *ds, const char *dir_name)
 {
-  size_t len;
-
-  len = strlen (dir_name);
+  size_t len = strlen (dir_name);
 
   /* Append the string onto the stack.  */
   obstack_grow (&ds->dir_stack, dir_name, len);
