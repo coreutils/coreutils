@@ -86,6 +86,10 @@ long int strtol ();
 unsigned long int strtoul ();
 #endif
 
+#ifndef strtoumax
+uintmax_t strtoumax ();
+#endif
+
 static int
 bkm_scale (__strtol_t *x, int scale_factor)
 {
