@@ -34,6 +34,7 @@
 #include "cp-hash.h"
 #include "dirname.h"
 #include "path-concat.h"
+#include "quote.h"
 #include "same.h"
 
 #define DO_CHOWN(Chown, File, New_uid, New_gid)				\
@@ -117,7 +118,9 @@ copy_dir (const char *src_path_in, const char *dst_path_in, int new_dst,
   name_space = savedir (src_path_in, src_sb->st_size);
   if (name_space == NULL)
     {
-      error (0, errno, "%s", src_path_in);
+      /* This diagnostic is a bit vague because savedir can fail in
+         several different ways.  */
+      error (0, errno, _("cannot access %s"), quote (src_path_in));
       return -1;
     }
 
@@ -179,21 +182,21 @@ copy_reg (const char *src_path, const char *dst_path,
 	 existed to start with, but copy_internal renamed DST_PATH
 	 with the backup suffix, thus also renaming SRC_PATH.  */
       if (errno == ENOENT)
-	error (0, 0, _("`%s' and `%s' are the same file"),
-	       src_path, dst_path);
+	error (0, 0, _("%s and %s are the same file"),
+	       quote_n (0, src_path), quote_n (1, dst_path));
       else
-	error (0, errno, _("cannot open `%s' for reading"), src_path);
+	error (0, errno, _("cannot open %s for reading"), quote (src_path));
 
       return -1;
     }
 
-  /* Create the new regular file with small permissions initially,
-     to not create a security hole.  */
+  /* Create the new regular file with restrictive permissions (u=rw)
+     initially.  */
 
   dest_desc = open (dst_path, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
   if (dest_desc < 0)
     {
-      error (0, errno, _("cannot create regular file `%s'"), dst_path);
+      error (0, errno, _("cannot create regular file %s"), quote (dst_path));
       return_val = -1;
       goto ret2;
     }
@@ -202,7 +205,7 @@ copy_reg (const char *src_path, const char *dst_path,
 
   if (fstat (dest_desc, &sb))
     {
-      error (0, errno, "%s", dst_path);
+      error (0, errno, _("cannot fstat %s"), quote (dst_path));
       return_val = -1;
       goto ret;
     }
@@ -217,7 +220,7 @@ copy_reg (const char *src_path, const char *dst_path,
 
       if (fstat (source_desc, &sb))
 	{
-	  error (0, errno, "%s", src_path);
+	  error (0, errno, _("cannot fstat %s"), quote (src_path));
 	  return_val = -1;
 	  goto ret;
 	}
@@ -244,7 +247,7 @@ copy_reg (const char *src_path, const char *dst_path,
 	  if (errno == EINTR)
 	    continue;
 #endif
-	  error (0, errno, "%s", src_path);
+	  error (0, errno, _("reading %s"), quote (src_path));
 	  return_val = -1;
 	  goto ret;
 	}
@@ -278,7 +281,7 @@ copy_reg (const char *src_path, const char *dst_path,
 	      /* Make a hole.  */
 	      if (lseek (dest_desc, (off_t) n_read, SEEK_CUR) < 0L)
 		{
-		  error (0, errno, "%s", dst_path);
+		  error (0, errno, _("cannot lseek %s"), quote (dst_path));
 		  return_val = -1;
 		  goto ret;
 		}
@@ -292,7 +295,7 @@ copy_reg (const char *src_path, const char *dst_path,
 	{
 	  if (full_write (dest_desc, buf, n_read) < 0)
 	    {
-	      error (0, errno, "%s", dst_path);
+	      error (0, errno, _("writing %s"), quote (dst_path));
 	      return_val = -1;
 	      goto ret;
 	    }
@@ -316,7 +319,7 @@ copy_reg (const char *src_path, const char *dst_path,
 	  || full_write (dest_desc, "", 1) < 0)
 #endif
 	{
-	  error (0, errno, "%s", dst_path);
+	  error (0, errno, _("writing %s"), quote (dst_path));
 	  return_val = -1;
 	}
     }
@@ -324,13 +327,13 @@ copy_reg (const char *src_path, const char *dst_path,
 ret:
   if (close (dest_desc) < 0)
     {
-      error (0, errno, "%s", dst_path);
+      error (0, errno, _("closing %s"), quote (dst_path));
       return_val = -1;
     }
 ret2:
   if (close (source_desc) < 0)
     {
-      error (0, errno, "%s", src_path);
+      error (0, errno, _("closing %s"), quote (src_path));
       return_val = -1;
     }
 
@@ -375,7 +378,7 @@ copy_internal (const char *src_path, const char *dst_path,
   *copy_into_self = 0;
   if ((*(x->xstat)) (src_path, &src_sb))
     {
-      error (0, errno, "%s", src_path);
+      error (0, errno, _("cannot stat %s"), quote (src_path));
       return 1;
     }
 
@@ -390,7 +393,7 @@ copy_internal (const char *src_path, const char *dst_path,
 
   if (S_ISDIR (src_type) && !x->recursive)
     {
-      error (0, 0, _("%s: omitting directory"), src_path);
+      error (0, 0, _("omitting directory %s"), quote (src_path));
       return 1;
     }
 
@@ -400,7 +403,7 @@ copy_internal (const char *src_path, const char *dst_path,
 	{
 	  if (errno != ENOENT)
 	    {
-	      error (0, errno, "%s", dst_path);
+	      error (0, errno, _("cannot stat %s"), quote (dst_path));
 	      return 1;
 	    }
 	  else
@@ -464,8 +467,8 @@ copy_internal (const char *src_path, const char *dst_path,
 	      if (x->backup_type == none
 		  && (!x->force || same_name (src_path, dst_path)))
 		{
-		  error (0, 0, _("`%s' and `%s' are the same file"),
-			 src_path, dst_path);
+		  error (0, 0, _("%s and %s are the same file"),
+			 quote_n (0, src_path), quote_n (1, dst_path));
 		  return 1;
 		}
 	    }
@@ -475,8 +478,8 @@ copy_internal (const char *src_path, const char *dst_path,
 	      if (S_ISDIR (dst_sb.st_mode))
 		{
 		  error (0, 0,
-		       _("%s: cannot overwrite directory with non-directory"),
-			 dst_path);
+		       _("cannot overwrite directory %s with non-directory"),
+			 quote (dst_path));
 		  return 1;
 		}
 
@@ -489,14 +492,14 @@ copy_internal (const char *src_path, const char *dst_path,
 	      if (euidaccess (dst_path, W_OK) != 0 && x->force)
 		{
 		  fprintf (stderr,
-			   _("%s: overwrite `%s', overriding mode %04lo? "),
-			   program_name, dst_path,
+			   _("%s: overwrite %s, overriding mode %04lo? "),
+			   program_name, quote (dst_path),
 			   (unsigned long) (dst_sb.st_mode & CHMOD_MODE_BITS));
 		}
 	      else
 		{
-		  fprintf (stderr, _("%s: overwrite `%s'? "),
-			   program_name, dst_path);
+		  fprintf (stderr, _("%s: overwrite %s? "),
+			   program_name, quote (dst_path));
 		}
 	      if (!yesno ())
 		return (move_mode ? 1 : 0);
@@ -507,7 +510,8 @@ copy_internal (const char *src_path, const char *dst_path,
 	      /* In move_mode, DEST may not be an existing directory.  */
 	      if (S_ISDIR (dst_sb.st_mode))
 		{
-		  error (0, 0, _("%s: cannot overwrite directory"), dst_path);
+		  error (0, 0, _("cannot overwrite directory %s"),
+			 quote (dst_path));
 		  return 1;
 		}
 
@@ -536,9 +540,11 @@ copy_internal (const char *src_path, const char *dst_path,
 		{
 		  const char *fmt;
 		  fmt = (move_mode
-		 ? _("backing up `%s' would destroy source;  `%s' not moved")
-		 : _("backing up `%s' would destroy source;  `%s' not copied"));
-		  error (0, 0, fmt, dst_path, src_path);
+		 ? _("backing up %s would destroy source;  %s not moved")
+		 : _("backing up %s would destroy source;  %s not copied"));
+		  error (0, 0, fmt,
+			 quote_n (0, dst_path),
+			 quote_n (1, src_path));
 		  free (tmp_backup);
 		  return 1;
 		}
@@ -550,7 +556,7 @@ copy_internal (const char *src_path, const char *dst_path,
 		{
 		  if (errno != ENOENT)
 		    {
-		      error (0, errno, _("cannot backup `%s'"), dst_path);
+		      error (0, errno, _("cannot backup %s"), quote (dst_path));
 		      return 1;
 		    }
 		  else
@@ -573,7 +579,9 @@ copy_internal (const char *src_path, const char *dst_path,
 		    {
 		      if (chmod (dst_path, S_IRWXU))
 			{
-			  error (0, errno, "%s", dst_path);
+			  error (0, errno,
+				 _("cannot change permissions for %s"),
+				 quote (dst_path));
 			  return 1;
 			}
 		      else
@@ -584,8 +592,8 @@ copy_internal (const char *src_path, const char *dst_path,
 		{
 		  if (unlink (dst_path) && errno != ENOENT)
 		    {
-		      error (0, errno, _("cannot remove old link to `%s'"),
-			     dst_path);
+		      error (0, errno, _("cannot remove old link to %s"),
+			     quote (dst_path));
 		      if (x->failed_unlink_is_fatal)
 			return 1;
 		    }
@@ -603,6 +611,7 @@ copy_internal (const char *src_path, const char *dst_path,
      sure we'll create a directory. */
   if (x->verbose && !S_ISDIR (src_type))
     {
+      /* FIXME: do we really want to add quotes here?  */
       printf ("%s -> %s", src_path, dst_path);
       if (backup_succeeded)
 	printf (_(" (backup: %s)"), dst_backup);
@@ -619,14 +628,15 @@ copy_internal (const char *src_path, const char *dst_path,
 	 directories).  */
       if (S_ISDIR (src_type))
 	{
-	  error (0, 0, _("won't create hard link `%s' to directory `%s'"),
-		 dst_path, earlier_file);
+	  error (0, 0, _("won't create hard link %s to directory %s"),
+		 quote_n (0, dst_path), quote_n (1, earlier_file));
 	  goto un_backup;
 	}
 
       if (link (earlier_file, dst_path))
 	{
-	  error (0, errno, "%s", dst_path);
+	  error (0, errno, _("cannot create hard link %s to %s"),
+		 quote_n (0, dst_path), quote_n (1, earlier_file));
 	  goto un_backup;
 	}
 
@@ -681,8 +691,8 @@ copy_internal (const char *src_path, const char *dst_path,
       if (unlink (dst_path) && errno != ENOENT)
 	{
 	  /* Use the value of errno from the failed rename.  */
-	  error (0, rename_errno, _("cannot move `%s' to `%s'"),
-		 src_path, dst_path);
+	  error (0, rename_errno, _("cannot move %s to %s"),
+		 quote_n (0, src_path), quote_n (1, dst_path));
 	  return 1;
 	}
     }
@@ -699,7 +709,8 @@ copy_internal (const char *src_path, const char *dst_path,
 
       if (is_ancestor (&src_sb, ancestors))
 	{
-	  error (0, 0, _("%s: cannot copy cyclic symbolic link"), src_path);
+	  error (0, 0, _("cannot copy cyclic symbolic link %s"),
+		 quote (src_path));
 	  goto un_backup;
 	}
 
@@ -717,7 +728,8 @@ copy_internal (const char *src_path, const char *dst_path,
 
 	  if (mkdir (dst_path, (src_mode & x->umask_kill) | S_IRWXU))
 	    {
-	      error (0, errno, _("cannot create directory `%s'"), dst_path);
+	      error (0, errno, _("cannot create directory %s"),
+		     quote (dst_path));
 	      goto un_backup;
 	    }
 
@@ -775,13 +787,14 @@ copy_internal (const char *src_path, const char *dst_path,
 	    {
 	      error (0, 0,
 	   _("%s: can make relative symbolic links only in current directory"),
-		     dst_path);
+		     quote (dst_path));
 	      goto un_backup;
 	    }
 	}
       if (symlink (src_path, dst_path))
 	{
-	  error (0, errno, "%s", dst_path);
+	  error (0, errno, _("cannot create symbolic link %s to %s"),
+		 quote_n (0, dst_path), quote_n (1, src_path));
 	  goto un_backup;
 	}
 
@@ -792,7 +805,7 @@ copy_internal (const char *src_path, const char *dst_path,
     {
       if (link (src_path, dst_path))
 	{
-	  error (0, errno, _("cannot create link `%s'"), dst_path);
+	  error (0, errno, _("cannot create link %s"), quote (dst_path));
 	  goto un_backup;
 	}
       return 0;
@@ -813,7 +826,7 @@ copy_internal (const char *src_path, const char *dst_path,
     {
       if (mkfifo (dst_path, new_nondir_mode (x, src_mode)))
 	{
-	  error (0, errno, _("cannot create fifo `%s'"), dst_path);
+	  error (0, errno, _("cannot create fifo %s"), quote (dst_path));
 	  goto un_backup;
 	}
     }
@@ -827,7 +840,8 @@ copy_internal (const char *src_path, const char *dst_path,
     {
       if (mknod (dst_path, new_nondir_mode (x, src_mode), src_sb.st_rdev))
 	{
-	  error (0, errno, _("cannot create special file `%s'"), dst_path);
+	  error (0, errno, _("cannot create special file %s"),
+		 quote (dst_path));
 	  goto un_backup;
 	}
     }
@@ -842,7 +856,7 @@ copy_internal (const char *src_path, const char *dst_path,
       link_size = readlink (src_path, link_val, PATH_MAX + 1);
       if (link_size < 0)
 	{
-	  error (0, errno, _("cannot read symbolic link `%s'"), src_path);
+	  error (0, errno, _("cannot read symbolic link %s"), quote (src_path));
 	  goto un_backup;
 	}
       link_val[link_size] = '\0';
@@ -867,8 +881,8 @@ copy_internal (const char *src_path, const char *dst_path,
 
 	  if (! same_link)
 	    {
-	      error (0, saved_errno, _("cannot create symbolic link `%s'"),
-		     dst_path);
+	      error (0, saved_errno, _("cannot create symbolic link %s"),
+		     quote (dst_path));
 	      goto un_backup;
 	    }
 	}
@@ -896,7 +910,7 @@ copy_internal (const char *src_path, const char *dst_path,
   else
 #endif
     {
-      error (0, 0, _("%s: unknown file type"), src_path);
+      error (0, 0, _("%s has unknown file type"), quote (src_path));
       goto un_backup;
     }
 
@@ -925,7 +939,7 @@ copy_internal (const char *src_path, const char *dst_path,
 
       if (utime (dst_path, &utb))
 	{
-	  error (0, errno, _("preserving times for %s"), dst_path);
+	  error (0, errno, _("preserving times for %s"), quote (dst_path));
 	  if (x->require_preserve)
 	    return 1;
 	}
@@ -935,7 +949,7 @@ copy_internal (const char *src_path, const char *dst_path,
     {
       if (DO_CHOWN (chown, dst_path, src_sb.st_uid, src_sb.st_gid))
 	{
-	  error (0, errno, _("preserving ownership for %s"), dst_path);
+	  error (0, errno, _("preserving ownership for %s"), quote (dst_path));
 	  if (x->require_preserve)
 	    return 1;
 	}
@@ -946,7 +960,7 @@ copy_internal (const char *src_path, const char *dst_path,
       /* This is so install's -m MODE option works.  */
       if (chmod (dst_path, x->mode))
 	{
-	  error (0, errno, _("setting permissions for %s"), dst_path);
+	  error (0, errno, _("setting permissions for %s"), quote (dst_path));
 	  return 1;
 	}
     }
@@ -961,7 +975,8 @@ copy_internal (const char *src_path, const char *dst_path,
 
       if (chmod (dst_path, dst_mode))
 	{
-	  error (0, errno, _("preserving permissions for %s"), dst_path);
+	  error (0, errno, _("preserving permissions for %s"),
+		 quote (dst_path));
 	  if (x->require_preserve)
 	    return 1;
 	}
@@ -971,7 +986,7 @@ copy_internal (const char *src_path, const char *dst_path,
       /* Reset the temporarily changed mode.  */
       if (chmod (dst_path, dst_sb.st_mode))
 	{
-	  error (0, errno, _("restoring permissions of %s"), dst_path);
+	  error (0, errno, _("restoring permissions of %s"), quote (dst_path));
 	  return 1;
 	}
     }
@@ -982,7 +997,7 @@ un_backup:
   if (dst_backup)
     {
       if (rename (dst_backup, dst_path))
-	error (0, errno, _("cannot un-backup `%s'"), dst_path);
+	error (0, errno, _("cannot un-backup %s"), quote (dst_path));
       else
 	{
 	  if (x->verbose)
