@@ -1080,6 +1080,7 @@ Usage: %s [OPTION]...\n\
 
   if (status == 0)
     printf ("\
+\n\
   bs=BYTES        force ibs=BYTES and obs=BYTES\n\
   cbs=BYTES       convert BYTES bytes at a time\n\
   conv=KEYWORDS   convert the file as per the comma separated keyword list\n\

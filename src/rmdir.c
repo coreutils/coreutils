@@ -154,6 +154,7 @@ Usage: %s [OPTION]... DIRECTORY...\n\
 
   if (status == 0)
     printf ("\
+\n\
   -p, --parents   remove explicit parent directories if being emptied\n\
       --help      display this help and exit\n\
       --version   output version information and exit\n");

@@ -206,6 +206,7 @@ Usage: %s [OPTION]... [PATH]...\n\
 
   if (status == 0)
     printf ("\
+\n\
   -a, --all                write counts for all files, not just directories\n\
   -b, --bytes              print size in bytes\n\
   -c, --total              produce a grand total\n\

@@ -314,6 +314,7 @@ Usage: %s [OPTION]... GROUP FILE...\n\
 
   if (status == 0)
     printf ("\
+\n\
   -c, --changes           like verbose but report only when a change is made\n\
   -f, --silent, --quiet   suppress most error messages\n\
   -v, --verbose           output a diagnostic for every file processed\n\

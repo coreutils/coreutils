@@ -303,6 +303,7 @@ Usage: %s [OPTION]... OWNER[.[GROUP]] FILE...\n\
 
   if (status == 0)
     printf ("\
+\n\
   -c, --changes           be verbose whenever change occurs\n\
   -f, --silent, --quiet   suppress most error messages\n\
   -v, --verbose           explain what is being done\n\

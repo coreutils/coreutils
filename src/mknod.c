@@ -175,6 +175,7 @@ Usage: %s [OPTION]... PATH TYPE [MAJOR MINOR]\n\
 
   if (status == 0)
     printf ("\
+\n\
   -m, --mode MODE   set permission mode (as in chmod), not 0666 - umask\n\
       --help        display this help and exit\n\
       --version     output version information and exit\n\

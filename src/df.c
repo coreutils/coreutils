@@ -484,6 +484,7 @@ Usage: %s [OPTION] [PATH]...\n\
 
   if (status == 0)
     printf ("\
+\n\
   -a, --all                 include filesystems having 0 blocks\n\
   -i, --inodes              list inode information instead of block usage\n\
   -k, --kilobytes           use 1024 blocks, not 512 despite POSIXLY_CORRECT\n\

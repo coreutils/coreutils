@@ -537,6 +537,7 @@ Usage: %s [OPTION]... PATH...\n\
 
   if (status == 0)
     printf ("\
+\n\
   -d, --directory       unlink directory, even if non-empty (super-user only)\n\
   -f, --force           ignore nonexistent files, never prompt\n\
   -i, --interactive     prompt before any removal\n\

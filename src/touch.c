@@ -386,6 +386,7 @@ Usage: %s [OPTION]... FILE...\n\
 
   if (status == 0)
     printf ("\
+\n\
   -a                     change only the access time\n\
   -c                     do not create any files\n\
   -d, --date STRING      parse STRING and use it instead of current time\n\

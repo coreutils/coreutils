@@ -480,6 +480,7 @@ Usage: %s [OPTION]... SOURCE DEST\n\
 
   if (status == 0)
     printf ("\
+\n\
   -b, --backup                 make backup before removal\n\
   -f, --force                  remove existing destinations, never prompt\n\
   -i, --interactive            prompt before overwrite\n\

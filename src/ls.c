@@ -1888,6 +1888,7 @@ Usage: %s [OPTION]... [PATH]...\n\
   if (status == 0)
     {
       printf ("\
+\n\
   -a, --all                  do not hide entries starting with .\n\
   -b, --escape               print octal escapes for nongraphic characters\n\
   -c                         sort by change time; with -l: show ctime\n\
