@@ -1,3 +1,10 @@
+Thu Jul 18 21:58:51 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/chgrp.c (main): Initialize for internationalized message support:
+	call setlocale, bindtextdomain, and textdomain.  Reported by
+	Michel Robitaille <robitail@IRO.UMontreal.CA>.
+
+
 Wed Jul 17 22:37:40 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* configure.in (ALL_LINGUAS): Add polish (pl).
