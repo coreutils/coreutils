@@ -150,7 +150,8 @@ static size_t	 fts_maxarglen __P((char * const *)) internal_function;
 static void	 fts_padjust __P((FTS *, FTSENT *)) internal_function;
 static bool	 fts_palloc __P((FTS *, size_t)) internal_function;
 static FTSENT	*fts_sort __P((FTS *, FTSENT *, size_t)) internal_function;
-static u_short	 fts_stat __P((FTS *, FTSENT *, bool)) internal_function;
+static unsigned short int fts_stat __P((FTS *, FTSENT *, bool))
+     internal_function;
 static int      fts_safe_changedir __P((FTS *, FTSENT *, int, const char *))
      internal_function;
 
@@ -334,7 +335,7 @@ fts_open(argv, options, compar)
 	}
 
 	/* Allocate/initialize the stream */
-	if ((sp = malloc((u_int)sizeof(FTS))) == NULL)
+	if ((sp = malloc(sizeof(FTS))) == NULL)
 		return (NULL);
 	memset(sp, 0, sizeof(FTS));
 	sp->fts_compar = (int (*) __P((const void *, const void *))) compar;
@@ -539,7 +540,7 @@ fts_read(sp)
 	register FTS *sp;
 {
 	register FTSENT *p, *tmp;
-	register u_short instr;
+	register unsigned short int instr;
 	register char *t;
 	int saved_errno;
 
@@ -1175,7 +1176,7 @@ fts_cross_check (FTS const *sp)
 }
 #endif
 
-static u_short
+static unsigned short int
 internal_function
 fts_stat(FTS *sp, register FTSENT *p, bool follow)
 {
