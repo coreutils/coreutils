@@ -32,8 +32,10 @@
 #include "long-options.h"
 #include "error.h"
 #include "hard-locale.h"
+#include "human.h"
 #include "memcoll.h"
 #include "xalloc.h"
+#include "xstrtol.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "sort"
@@ -109,7 +111,7 @@ int eolchar = '\n';
 struct line
 {
   char *text;			/* Text of the line. */
-  int length;			/* Length including final newline. */
+  size_t length;		/* Length including final newline. */
   char *keybeg;			/* Start of first key. */
   char *keylim;			/* Limit of first key. */
 };
@@ -118,29 +120,29 @@ struct line
 struct lines
 {
   struct line *lines;		/* Dynamically allocated array of lines. */
-  int used;			/* Number of slots used. */
-  int alloc;			/* Number of slots allocated. */
-  int limit;			/* Max number of slots to allocate.  */
+  size_t used;			/* Number of slots used. */
+  size_t alloc;			/* Number of slots allocated. */
+  size_t limit;			/* Max number of slots to allocate.  */
 };
 
 /* Input buffers. */
 struct buffer
 {
   char *buf;			/* Dynamically allocated buffer. */
-  int used;			/* Number of bytes used. */
-  int alloc;			/* Number of bytes allocated. */
-  int left;			/* Number of bytes left from previous reads. */
-  int newline_free;		/* Number of left bytes that are known
+  size_t used;			/* Number of bytes used. */
+  size_t alloc;			/* Number of bytes allocated. */
+  size_t left;			/* Number of bytes left from previous reads. */
+  size_t newline_free;		/* Number of left bytes that are known
                                    to be newline-free.  */
 };
 
 struct keyfield
 {
-  int sword;			/* Zero-origin 'word' to start at. */
-  int schar;			/* Additional characters to skip. */
+  size_t sword;			/* Zero-origin 'word' to start at. */
+  size_t schar;			/* Additional characters to skip. */
   int skipsblanks;		/* Skip leading white space at start. */
-  int eword;			/* Zero-origin first word after field. */
-  int echar;			/* Additional characters in field. */
+  size_t eword;			/* Zero-origin first word after field. */
+  size_t echar;			/* Additional characters in field. */
   int skipeblanks;		/* Skip trailing white space at finish. */
   int *ignore;			/* Boolean array of characters to ignore. */
   char *translate;		/* Translation applied to characters. */
@@ -214,14 +216,14 @@ static MONTHTAB_CONST struct month monthtab[] =
 /* Initial buffer size for in-core sorting.  The buffer will grow only
    if a line longer than this is seen. */
 #define SORTALLOC (8 * 1024 * 1024)
-static int const sortalloc = SORTALLOC;
+static size_t const sortalloc = SORTALLOC;
 
 /* Initial buffer size for in core merge buffers.  Bear in mind that
    up to NMERGE * mergealloc bytes may be allocated for merge buffers. */
-static int const mergealloc = SORTALLOC / NMERGE / 2;
+static size_t const mergealloc = SORTALLOC / NMERGE / 2;
 
 /* Guess of average line length. */
-static int const linelength = 30;
+static size_t const linelength = 30;
 
 /* Maximum number of elements for the array(s) of struct line's, in bytes.  */
 #define LINEALLOC (SORTALLOC / 2)
@@ -557,7 +559,7 @@ inittables (void)
 /* Initialize BUF, allocating ALLOC bytes initially. */
 
 static void
-initbuf (struct buffer *buf, int alloc)
+initbuf (struct buffer *buf, size_t alloc)
 {
   buf->alloc = alloc;
   buf->buf = xmalloc (buf->alloc);
@@ -569,7 +571,7 @@ initbuf (struct buffer *buf, int alloc)
    file wasn't terminated by a newline, supply one.  Return a count
    of bytes buffered. */
 
-static int
+static size_t
 fillbuf (struct buffer *buf, FILE *fp)
 {
   if (buf->used != buf->left)
@@ -580,10 +582,12 @@ fillbuf (struct buffer *buf, FILE *fp)
 
   while (!feof (fp))
     {
-      int cc;
+      size_t cc;
       if (buf->used == buf->alloc)
 	{
 	  buf->alloc *= 2;
+	  if (buf->alloc < buf->used)
+	    xalloc_die ();
 	  buf->buf = xrealloc (buf->buf, buf->alloc);
 	}
       cc = fread (buf->buf + buf->used, 1, buf->alloc - buf->used, fp);
@@ -608,6 +612,8 @@ fillbuf (struct buffer *buf, FILE *fp)
 	  if (buf->newline_free != buf->used)
 	    return buf->used;
 	  buf->alloc *= 2;
+	  if (buf->alloc < buf->used)
+	    xalloc_die ();
 	  buf->buf = xrealloc (buf->buf, buf->alloc);
 	}
       buf->buf[buf->used++] = eolchar;
@@ -621,9 +627,11 @@ fillbuf (struct buffer *buf, FILE *fp)
    for, ever.  */
 
 static void
-initlines (struct lines *lines, int alloc, int limit)
+initlines (struct lines *lines, size_t alloc, size_t limit)
 {
   lines->alloc = alloc;
+  if (SIZE_T_MAX / sizeof (struct line) < alloc)
+    xalloc_die ();
   lines->lines = (struct line *) xmalloc (lines->alloc * sizeof (struct line));
   lines->used = 0;
   lines->limit = limit;
@@ -636,7 +644,8 @@ static char *
 begfield (const struct line *line, const struct keyfield *key)
 {
   register char *ptr = line->text, *lim = ptr + line->length - 1;
-  register int sword = key->sword, schar = key->schar;
+  register size_t sword = key->sword;
+  register size_t schar = key->schar;
 
   if (tab)
     while (ptr < lim && sword--)
@@ -659,7 +668,7 @@ begfield (const struct line *line, const struct keyfield *key)
     while (ptr < lim && blanks[UCHAR (*ptr)])
       ++ptr;
 
-  if (ptr + schar <= lim)
+  if (schar < lim - ptr)
     ptr += schar;
   else
     ptr = lim;
@@ -674,7 +683,7 @@ static char *
 limfield (const struct line *line, const struct keyfield *key)
 {
   register char *ptr = line->text, *lim = ptr + line->length - 1;
-  register int eword = key->eword, echar = key->echar;
+  register size_t eword = key->eword, echar = key->echar;
 
   /* Note: from the POSIX spec:
      The leading field separator itself is included in
@@ -692,7 +701,7 @@ limfield (const struct line *line, const struct keyfield *key)
       {
 	while (ptr < lim && *ptr != tab)
 	  ++ptr;
-	if (ptr < lim && (eword || echar > 0))
+	if (ptr < lim && (eword | echar))
 	  ++ptr;
       }
   else
@@ -761,7 +770,7 @@ limfield (const struct line *line, const struct keyfield *key)
       ++ptr;
 
   /* Advance PTR by ECHAR (if possible), but no further than LIM.  */
-  if (ptr + echar <= lim)
+  if (echar < lim - ptr)
     ptr += echar;
   else
     ptr = lim;
@@ -796,6 +805,8 @@ findlines (struct buffer *buf, struct lines *lines)
       if (lines->used == lines->alloc)
 	{
 	  lines->alloc *= 2;
+	  if (SIZE_T_MAX / sizeof (struct line) < lines->alloc)
+	    xalloc_die ();
 	  lines->lines = (struct line *)
 	    xrealloc ((char *) lines->lines,
 		      lines->alloc * sizeof (struct line));
@@ -808,9 +819,9 @@ findlines (struct buffer *buf, struct lines *lines)
       if (key)
 	{
 	  /* Precompute the position of the first key for efficiency. */
-	  line->keylim = 0 <= key->eword ? limfield (line, key) : ptr;
+	  line->keylim = (key->eword == -1 ? ptr : limfield (line, key));
 
-	  if (key->sword >= 0)
+	  if (key->sword != -1)
 	    line->keybeg = begfield (line, key);
 	  else
 	    {
@@ -902,7 +913,8 @@ fraccompare (register const char *a, register const char *b)
 static int
 numcompare (register const char *a, register const char *b)
 {
-  register int tmpa, tmpb, loga, logb, tmp;
+  register int tmpa, tmpb, tmp;
+  register size_t loga, logb;
 
   tmpa = *a;
   tmpb = *b;
@@ -965,8 +977,8 @@ numcompare (register const char *a, register const char *b)
 	  tmpb = *++b;
 	while (IS_THOUSANDS_SEP (tmpb));
 
-      if (logb - loga != 0)
-	return logb - loga;
+      if (loga != logb)
+	return loga < logb ? 1 : -1;
 
       if (!loga)
 	return 0;
@@ -1027,8 +1039,8 @@ numcompare (register const char *a, register const char *b)
 	  tmpb = *++b;
 	while (IS_THOUSANDS_SEP (tmpb));
 
-      if (loga - logb != 0)
-	return loga - logb;
+      if (loga != logb)
+	return loga < logb ? -1 : 1;
 
       if (!loga)
 	return 0;
@@ -1070,10 +1082,11 @@ general_numcompare (const char *sa, const char *sb)
    Return 0 if the name in S is not recognized.  */
 
 static int
-getmonth (const char *s, int len)
+getmonth (const char *s, size_t len)
 {
   char *month;
-  register int i, lo = 0, hi = MONTHS_PER_YEAR, result;
+  register size_t i;
+  register int lo = 0, hi = MONTHS_PER_YEAR, result;
 
   while (len > 0 && blanks[UCHAR (*s)])
     {
@@ -1123,7 +1136,8 @@ keycompare (const struct line *a, const struct line *b)
   register char *lima = a->keylim;
   register char *limb = b->keylim;
 
-  int diff, lena, lenb;
+  int diff;
+  size_t lena, lenb;
 
   for (;;)
     {
@@ -1131,11 +1145,8 @@ keycompare (const struct line *a, const struct line *b)
       register int *ignore = key->ignore;
 
       /* Find the lengths. */
-      lena = lima - texta, lenb = limb - textb;
-      if (lena < 0)
-	lena = 0;
-      if (lenb < 0)
-	lenb = 0;
+      lena = lima <= texta ? 0 : lima - texta;
+      lenb = limb <= textb ? 0 : limb - textb;
 
       if (key->skipeblanks)
 	{
@@ -1168,7 +1179,7 @@ keycompare (const struct line *a, const struct line *b)
 	    {
 	      char *copy_a = (char *) alloca (lena + 1 + lenb + 1);
 	      char *copy_b = copy_a + lena + 1;
-	      int new_len_a, new_len_b, i;
+	      size_t new_len_a, new_len_b, i;
 
 	      /* Ignore and/or translate chars before comparing.  */
 	      for (new_len_a = new_len_b = i = 0; i < max (lena, lenb); i++)
@@ -1194,7 +1205,7 @@ keycompare (const struct line *a, const struct line *b)
 	      diff = memcoll (copy_a, new_len_a, copy_b, new_len_b);
 	    }
 	  else if (lena == 0)
-	    diff = -lenb;
+	    diff = - (lenb != 0);
 	  else if (lenb == 0)
 	    goto greater;
 	  else
@@ -1232,7 +1243,7 @@ keycompare (const struct line *a, const struct line *b)
 	    CMP_WITH_IGNORE (UCHAR (*texta), UCHAR (*textb));
 	}
       else if (lena == 0)
-	diff = -lenb;
+	diff = - (lenb != 0);
       else if (lenb == 0)
 	goto greater;
       else
@@ -1253,7 +1264,7 @@ keycompare (const struct line *a, const struct line *b)
 	      if (diff)
 		goto not_equal;
 	    }
-	  diff = lena - lenb;
+	  diff = lena < lenb ? -1 : lena != lenb;
 	}
 
       if (diff)
@@ -1264,12 +1275,12 @@ keycompare (const struct line *a, const struct line *b)
 	break;
 
       /* Find the beginning and limit of the next field.  */
-      if (key->eword >= 0)
+      if (key->eword != -1)
 	lima = limfield (a, key), limb = limfield (b, key);
       else
 	lima = a->text + a->length - 1, limb = b->text + b->length - 1;
 
-      if (key->sword >= 0)
+      if (key->sword != -1)
 	texta = begfield (a, key), textb = begfield (b, key);
       else
 	{
@@ -1298,7 +1309,8 @@ keycompare (const struct line *a, const struct line *b)
 static int
 compare (register const struct line *a, register const struct line *b)
 {
-  int diff, alen, blen;
+  int diff;
+  size_t alen, blen;
 
   /* First try to compare on the specified keys (if any).
      The only two cases with no key at all are unadorned sort,
@@ -1316,23 +1328,23 @@ compare (register const struct line *a, register const struct line *b)
   alen = a->length - 1, blen = b->length - 1;
 
   if (alen == 0)
-    diff = - blen;
+    diff = - (blen != 0);
   else if (blen == 0)
-    diff = alen;
+    diff = alen != 0;
 #ifdef ENABLE_NLS
   else if (hard_LC_COLLATE)
     diff = memcoll (a->text, alen, b->text, blen);
 #endif
   else if (! (diff = memcmp (a->text, b->text, min (alen, blen))))
-    diff = alen - blen;
+    diff = alen < blen ? -1 : alen != blen;
 
   return reverse ? -diff : diff;
 }
 
 /* Check that the lines read from the given FP come in order.  Print a
    diagnostic (FILE_NAME, line number, contents of line) to stderr and return
-   the line number of the first out-of-order line (counting from 1) if they
-   are not in order.  Otherwise, print no diagnostic and return zero.  */
+   one if they are not in order.  Otherwise, print no diagnostic
+   and return zero.  */
 
 static int
 checkfp (FILE *fp, const char *file_name)
@@ -1340,11 +1352,11 @@ checkfp (FILE *fp, const char *file_name)
   struct buffer buf;		/* Input buffer. */
   struct lines lines;		/* Lines scanned from the buffer. */
   struct line temp;		/* Copy of previous line. */
-  int cc;			/* Character count. */
-  int alloc;
-  int line_number = 1;
+  size_t cc;			/* Character count. */
+  size_t alloc;
+  uintmax_t line_number = 1;
   struct line *disorder_line IF_LINT (= NULL);
-  int disorder_line_number = 0;
+  uintmax_t disorder_line_number = 0;
   struct keyfield *key = keylist;
 
   initbuf (&buf, mergealloc);
@@ -1363,16 +1375,16 @@ checkfp (FILE *fp, const char *file_name)
     {
       struct line *prev_line;	/* Pointer to previous line. */
       int cmp;			/* Result of calling compare. */
-      int i;
+      size_t i;
 
       /* Compare each line in the buffer with its successor. */
-      for (i = 0; i < lines.used - 1; ++i)
+      for (i = 1; i < lines.used; ++i)
 	{
-	  cmp = compare (&lines.lines[i], &lines.lines[i + 1]);
+	  cmp = compare (&lines.lines[i - 1], &lines.lines[i]);
 	  if ((unique && cmp >= 0) || (cmp > 0))
 	    {
-	      disorder_line = &lines.lines[i + 1];
-	      disorder_line_number = line_number + i + 1;
+	      disorder_line = &lines.lines[i];
+	      disorder_line_number = line_number + i;
 	      goto finish;
 	    }
 	}
@@ -1383,8 +1395,14 @@ checkfp (FILE *fp, const char *file_name)
       prev_line = lines.lines + (lines.used - 1);
       if (alloc < prev_line->length)
 	{
-	  while ((alloc *= 2) < prev_line->length)
-	    continue;
+	  do
+	    {
+	      if (alloc * 2 < alloc)
+		xalloc_die ();
+	      alloc *= 2;
+	    }
+	  while (alloc < prev_line->length);
+
 	  temp.text = xrealloc (temp.text, alloc);
 	}
       memcpy (temp.text, prev_line->text, prev_line->length);
@@ -1416,8 +1434,9 @@ finish:
 
   if (disorder_line_number)
     {
-      fprintf (stderr, _("%s: %s:%d: disorder: "), program_name, file_name,
-	       disorder_line_number);
+      char buf[LONGEST_HUMAN_READABLE + 1];
+      fprintf (stderr, _("%s: %s:%s: disorder: "), program_name, file_name,
+	       human_readable (disorder_line_number, buf, 1, 1));
       write_bytes (disorder_line->text, disorder_line->length, stderr,
 		   _("standard error"));
     }
@@ -1425,7 +1444,7 @@ finish:
   free (buf.buf);
   free ((char *) lines.lines);
   free (temp.text);
-  return disorder_line_number;
+  return disorder_line_number != 0;
 }
 
 /* Merge lines from FPS onto OFP.  NFPS cannot be greater than NMERGE.
@@ -1439,8 +1458,8 @@ mergefps (FILE **fps, register int nfps, FILE *ofp, const char *output_file)
   struct line saved;		/* Saved line storage for unique check. */
   struct line const *savedline IF_LINT (= NULL);
 				/* &saved if there is a saved line. */
-  int savealloc IF_LINT (= 0);	/* Size allocated for the saved line. */
-  int cur[NMERGE];		/* Current line in each line table. */
+  size_t savealloc IF_LINT (= 0); /* Size allocated for the saved line. */
+  size_t cur[NMERGE];		/* Current line in each line table. */
   int ord[NMERGE];		/* Table representing a permutation of fps,
 				   such that lines[ord[0]].lines[cur[ord[0]]]
 				   is the smallest line and will be next
@@ -1585,10 +1604,10 @@ mergefps (FILE **fps, register int nfps, FILE *ofp, const char *output_file)
 /* Sort the array LINES with NLINES members, using TEMP for temporary space. */
 
 static void
-sortlines (struct line *lines, int nlines, struct line *temp)
+sortlines (struct line *lines, size_t nlines, struct line *temp)
 {
   register struct line *lo, *hi, *t;
-  register int nlo, nhi;
+  register size_t nlo, nhi;
 
   if (nlines == 2)
     {
@@ -1638,10 +1657,7 @@ check (char **files, int nfiles)
   for (i = 0; i < nfiles; ++i)
     {
       fp = xfopen (files[i], "r");
-      if (checkfp (fp, files[i]))
-	{
-	  ++disorders;
-	}
+      disorders += checkfp (fp, files[i]);
     }
   return disorders;
 }
@@ -1694,8 +1710,8 @@ sort (char **files, int nfiles, FILE *ofp, const char *output_file)
 {
   struct buffer buf;
   struct lines lines;
-  struct line *tmp;
-  int i, ntmp;
+  struct line *tmp = NULL;
+  size_t ntmp = 0;
   FILE *fp, *tfp;
   struct tempnode *node;
   int n_temp_files = 0;
@@ -1704,8 +1720,6 @@ sort (char **files, int nfiles, FILE *ofp, const char *output_file)
   initbuf (&buf, sortalloc);
   initlines (&lines, sortalloc / linelength + 1,
 	     LINEALLOC / sizeof (struct line));
-  ntmp = lines.alloc;
-  tmp = (struct line *) xmalloc (ntmp * sizeof (struct line));
 
   while (nfiles--)
     {
@@ -1714,6 +1728,8 @@ sort (char **files, int nfiles, FILE *ofp, const char *output_file)
       fp = xfopen (*files++, "r");
       while (fillbuf (&buf, fp))
 	{
+	  size_t i;
+
 	  if (nfiles && buf.used != buf.alloc && feof (fp))
 	    {
 	      /* End of file, but there is more input and buffer room.
@@ -1726,8 +1742,13 @@ sort (char **files, int nfiles, FILE *ofp, const char *output_file)
 	  findlines (&buf, &lines);
 	  if (ntmp < lines.used)
 	    {
-	      while ((ntmp *= 2) < lines.used)
-		continue;
+	      if (ntmp == 0)
+		ntmp = lines.used;
+	      else
+		while ((ntmp *= 2) < lines.used)
+		  continue;
+	      if (SIZE_T_MAX / sizeof (struct line) < ntmp)
+		xalloc_die ();
 	      tmp = (struct line *)
 		xrealloc ((char *) tmp, ntmp * sizeof (struct line));
 	    }
@@ -1759,8 +1780,8 @@ sort (char **files, int nfiles, FILE *ofp, const char *output_file)
 
   if (n_temp_files)
     {
+      int i = n_temp_files;
       tempfiles = (char **) xmalloc (n_temp_files * sizeof (char *));
-      i = n_temp_files;
       for (node = temphead.next; i > 0; node = node->next)
 	tempfiles[--i] = node->name;
       merge (tempfiles, n_temp_files, ofp, output_file);
@@ -1785,6 +1806,39 @@ static void
 badfieldspec (const char *s)
 {
   error (SORT_FAILURE, 0, _("invalid field specification `%s'"), s);
+}
+
+/* Parse the leading integer in STRING and store the resulting value
+   (which must fit into size_t) into *VAL.  Return the address of the
+   suffix after the integer.  */
+static char const *
+parse_field_count (char const *string, size_t *val)
+{
+  /* '@' can't possibly be a valid suffix; return &bad_suffix so that
+     the caller will eventually invoke badfieldspec.  */
+  static char const invalid_suffix = '@';
+  char *suffix;
+  uintmax_t n;
+
+  switch (xstrtoumax (string, &suffix, 10, &n, ""))
+    {
+    case LONGINT_OK:
+    case LONGINT_INVALID_SUFFIX_CHAR:
+      *val = n;
+      if (*val == n)
+	break;
+      /* Fall through.  */
+    case LONGINT_OVERFLOW:
+      error (0, 0, _("count `%.*s' too large"),
+	     (int) (suffix - string), string);
+      return &invalid_suffix;
+
+    case LONGINT_INVALID:
+      error (0, 0, _("invalid count at start of `%s'"), string);
+      return &invalid_suffix;
+    }
+
+  return suffix;
 }
 
 /* Handle interrupts and hangups. */
@@ -1865,10 +1919,11 @@ int
 main (int argc, char **argv)
 {
   struct keyfield *key = NULL, gkey;
-  char *s;
-  int i, t, t2;
+  char const *s;
+  int i;
   int checkonly = 0, mergeonly = 0, nfiles = 0;
-  char *minus = "-", *outfile = minus, **files, *tmp;
+  char *minus = "-", **files, *tmp;
+  char const *outfile = minus;
   FILE *ofp;
 #ifdef SA_NOCLDSTOP
   struct sigaction oldact, newact;
@@ -1966,18 +2021,10 @@ main (int argc, char **argv)
 	  s = argv[i] + 1;
 	  if (! (ISDIGIT (*s) || (*s == '.' && ISDIGIT (s[1]))))
 	    badfieldspec (argv[i]);
-	  for (t = 0; ISDIGIT (*s); ++s)
-	    t = 10 * t + *s - '0';
-	  t2 = 0;
+	  s = parse_field_count (s, &key->sword);
 	  if (*s == '.')
-	    for (++s; ISDIGIT (*s); ++s)
-	      t2 = 10 * t2 + *s - '0';
-	  if (t2 || t)
-	    {
-	      key->sword = t;
-	      key->schar = t2;
-	    }
-	  else
+	    s = parse_field_count (s + 1, &key->schar);
+	  if (! (key->sword | key->schar))
 	    key->sword = -1;
 	  s = set_ordering (s, key, bl_start);
 	  if (*s)
@@ -1995,14 +2042,9 @@ main (int argc, char **argv)
 key specifiers,\nthe +POS specifier must come first"));
 		  usage (SORT_FAILURE);
 		}
-	      for (t = 0; ISDIGIT (*s); ++s)
-		t = t * 10 + *s - '0';
-	      t2 = 0;
+	      s = parse_field_count (s, &key->eword);
 	      if (*s == '.')
-		for (++s; ISDIGIT (*s); ++s)
-		  t2 = t2 * 10 + *s - '0';
-	      key->eword = t;
-	      key->echar = t2;
+		s = parse_field_count (s + 1, &key->echar);
 	      s = set_ordering (s, key, bl_end);
 	      if (*s)
 		badfieldspec (argv[i]);
@@ -2039,17 +2081,14 @@ key specifiers,\nthe +POS specifier must come first"));
 		    /* Get POS1. */
 		    if (!ISDIGIT (*s))
 		      badfieldspec (argv[i]);
-		    for (t = 0; ISDIGIT (*s); ++s)
-		      t = 10 * t + *s - '0';
-		    if (t == 0)
+		    s = parse_field_count (s, &key->sword);
+		    if (! key->sword--)
 		      {
 			/* Provoke with `sort -k0' */
 			error (0, 0, _("the starting field number argument \
 to the `-k' option must be positive"));
 			badfieldspec (argv[i]);
 		      }
-		    --t;
-		    t2 = 0;
 		    if (*s == '.')
 		      {
 			if (!ISDIGIT (s[1]))
@@ -2059,23 +2098,16 @@ to the `-k' option must be positive"));
 lacks following character offset"));
 			    badfieldspec (argv[i]);
 			  }
-			for (++s; ISDIGIT (*s); ++s)
-			  t2 = 10 * t2 + *s - '0';
-			if (t2 == 0)
+			s = parse_field_count (s + 1, &key->schar);
+			if (! key->schar--)
 			  {
 			    /* Provoke with `sort -k1.0' */
 			    error (0, 0, _("starting field character offset \
 argument to the `-k' option\nmust be positive"));
 			    badfieldspec (argv[i]);
 			  }
-			--t2;
 		      }
-		    if (t2 || t)
-		      {
-			key->sword = t;
-			key->schar = t2;
-		      }
-		    else
+		    if (! (key->sword | key->schar))
 		      key->sword = -1;
 		    s = set_ordering (s, key, bl_start);
 		    if (*s == 0)
@@ -2097,17 +2129,14 @@ lacks following field spec"));
 			    badfieldspec (argv[i]);
 			  }
 			/* Get POS2. */
-			for (t = 0; ISDIGIT (*s); ++s)
-			  t = t * 10 + *s - '0';
-			if (t == 0)
+			s = parse_field_count (s, &key->eword);
+			if (! key->eword--)
 			  {
 			    /* Provoke with `sort -k1,0' */
 			    error (0, 0, _("ending field number argument \
 to the `-k' option must be positive"));
 			    badfieldspec (argv[i]);
 			  }
-			--t;
-			t2 = 0;
 			if (*s == '.')
 			  {
 			    if (!ISDIGIT (s[1]))
@@ -2117,16 +2146,13 @@ to the `-k' option must be positive"));
 but lacks following character offset"));
 				badfieldspec (argv[i]);
 			      }
-			    for (++s; ISDIGIT (*s); ++s)
-			      t2 = t2 * 10 + *s - '0';
+			    s = parse_field_count (s + 1, &key->echar);
 			  }
 			else
 			  {
 			    /* `-k 2,3' is equivalent to `+1 -3'.  */
-			    ++t;
+			    key->eword++;
 			  }
-			key->eword = t;
-			key->echar = t2;
 			s = set_ordering (s, key, bl_end);
 			if (*s)
 			  badfieldspec (argv[i]);
