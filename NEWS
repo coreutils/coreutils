@@ -27,6 +27,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   expr now detects integer overflow when evaluating large integers,
   rather than silently wrapping around.
 
+  ls now refuses to generate time stamps containing more than 1000 bytes, to
+  foil remote denial-of-service attacks (e.g., --time-style='+%1000000000Y').
+
   test now detects integer overflow when evaluating large integers,
   rather than silently wrapping around.
 
