@@ -92,15 +92,26 @@ static uintmax_t max_line_length;
 static int print_lines, print_words, print_chars, print_bytes;
 static int print_linelength;
 
+/* The print width of each count.  */
+static int number_width;
+
 /* Nonzero if we have ever read the standard input. */
 static int have_read_stdin;
 
 /* The error code to return to the system. */
 static int exit_status;
 
-/* If nonzero, do not line up columns but instead separate numbers by
-   a single space as specified in Single Unix Specification and POSIX. */
-static int posixly_correct;
+/* The result of calling fstat or stat on a file descriptor or file.  */
+struct fstatus
+{
+  /* If positive, fstat or stat has not been called yet.  Otherwise,
+     this is the value returned from fstat or stat.  */
+  int failed;
+
+  /* If FAILED is zero, this is the file's status.  */
+  struct stat st;
+};
+
 
 static struct option const longopts[] =
 {
@@ -153,42 +164,41 @@ write_counts (uintmax_t lines,
 	      uintmax_t linelength,
 	      const char *file)
 {
+  static char const format_sp_int[] = " %*s";
+  char const *format_int = format_sp_int + 1;
   char buf[INT_BUFSIZE_BOUND (uintmax_t)];
-  char const *space = "";
-  char const *format_int = (posixly_correct ? "%s" : "%7s");
-  char const *format_sp_int = (posixly_correct ? "%s%s" : "%s%7s");
 
   if (print_lines)
     {
-      printf (format_int, umaxtostr (lines, buf));
-      space = " ";
+      printf (format_int, number_width, umaxtostr (lines, buf));
+      format_int = format_sp_int;
     }
   if (print_words)
     {
-      printf (format_sp_int, space, umaxtostr (words, buf));
-      space = " ";
+      printf (format_int, number_width, umaxtostr (words, buf));
+      format_int = format_sp_int;
     }
   if (print_chars)
     {
-      printf (format_sp_int, space, umaxtostr (chars, buf));
-      space = " ";
+      printf (format_int, number_width, umaxtostr (chars, buf));
+      format_int = format_sp_int;
     }
   if (print_bytes)
     {
-      printf (format_sp_int, space, umaxtostr (bytes, buf));
-      space = " ";
+      printf (format_int, number_width, umaxtostr (bytes, buf));
+      format_int = format_sp_int;
     }
   if (print_linelength)
     {
-      printf (format_sp_int, space, umaxtostr (linelength, buf));
+      printf (format_int, number_width, umaxtostr (linelength, buf));
     }
-  if (*file)
+  if (file)
     printf (" %s", file);
   putchar ('\n');
 }
 
 static void
-wc (int fd, const char *file)
+wc (int fd, char const *file, struct fstatus *fstatus)
 {
   char buf[BUFFER_SIZE + 1];
   size_t bytes_read;
@@ -229,16 +239,17 @@ wc (int fd, const char *file)
   if (count_bytes && !count_chars && !print_lines && !count_complicated)
     {
       off_t current_pos, end_pos;
-      struct stat stats;
 
-      if (fstat (fd, &stats) == 0 && S_ISREG (stats.st_mode)
+      if (0 < fstatus->failed)
+	fstatus->failed = fstat (fd, &fstatus->st);
+
+      if (! fstatus->failed && S_ISREG (fstatus->st.st_mode)
 	  && (current_pos = lseek (fd, (off_t) 0, SEEK_CUR)) != -1
 	  && (end_pos = lseek (fd, (off_t) 0, SEEK_END)) != -1)
 	{
-	  off_t diff;
 	  /* Be careful here.  The current position may actually be
 	     beyond the end of the file.  As in the example above.  */
-	  bytes = (diff = end_pos - current_pos) < 0 ? 0 : diff;
+	  bytes = end_pos < current_pos ? 0 : end_pos - current_pos;
 	}
       else
 	{
@@ -246,7 +257,7 @@ wc (int fd, const char *file)
 	    {
 	      if (bytes_read == SAFE_READ_ERROR)
 		{
-		  error (0, errno, "%s", file);
+		  error (0, errno, "%s", file ? file : _("standard input"));
 		  exit_status = 1;
 		  break;
 		}
@@ -264,7 +275,7 @@ wc (int fd, const char *file)
 
 	  if (bytes_read == SAFE_READ_ERROR)
 	    {
-	      error (0, errno, "%s", file);
+	      error (0, errno, "%s", file ? file : _("standard input"));
 	      exit_status = 1;
 	      break;
 	    }
@@ -493,12 +504,12 @@ wc (int fd, const char *file)
 }
 
 static void
-wc_file (const char *file)
+wc_file (char const *file, struct fstatus *fstatus)
 {
   if (STREQ (file, "-"))
     {
       have_read_stdin = 1;
-      wc (0, file);
+      wc (STDIN_FILENO, file, fstatus);
     }
   else
     {
@@ -509,7 +520,7 @@ wc_file (const char *file)
 	  exit_status = 1;
 	  return;
 	}
-      wc (fd, file);
+      wc (fd, file, fstatus);
       if (close (fd))
 	{
 	  error (0, errno, "%s", file);
@@ -518,11 +529,74 @@ wc_file (const char *file)
     }
 }
 
+/* Return the file status for the NFILES files addressed by FILE.
+   Optimize the case where only one number is printed, for just one
+   file; in that case we can use a print width of 1, so we don't need
+   to stat the file.  */
+
+static struct fstatus *
+get_input_fstatus (int nfiles, char * const *file)
+{
+  struct fstatus *fstatus = xmalloc (nfiles * sizeof *fstatus);
+
+  if (nfiles == 1
+      && ((print_lines + print_words + print_chars
+	   + print_bytes + print_linelength)
+	  == 1))
+    fstatus[0].failed = 1;
+  else
+    {
+      int i;
+
+      for (i = 0; i < nfiles; i++)
+	fstatus[i].failed = (file[i] && strcmp (file[i], "-") != 0
+			     ? stat (file[i], &fstatus[i].st)
+			     : fstat (STDIN_FILENO, &fstatus[i].st));
+    }
+
+  return fstatus;
+}
+
+/* Return a print width suitable for the NFILES files whose status is
+   recorded in FSTATUS.  Optimize the same special case that
+   get_input_fstatus optimizes.  */
+
+static int
+compute_number_width (int nfiles, struct fstatus const *fstatus)
+{
+  int width = 1;
+
+  if (fstatus[0].failed <= 0)
+    {
+      int minimum_width = 1;
+      uintmax_t regular_total = 0;
+      int i;
+
+      for (i = 0; i < nfiles; i++)
+	if (! fstatus[i].failed)
+	  {
+	    if (S_ISREG (fstatus[i].st.st_mode))
+	      regular_total += fstatus[i].st.st_size;
+	    else
+	      minimum_width = 7;
+	  }
+
+      for (; 10 <= regular_total; regular_total /= 10)
+	width++;
+      if (width < minimum_width)
+	width = minimum_width;
+    }
+
+  return width;
+}
+
+
 int
 main (int argc, char **argv)
 {
   int optc;
   int nfiles;
+  struct fstatus *fstatus;
 
   initialize_main (&argc, &argv);
   program_name = argv[0];
@@ -533,7 +607,6 @@ main (int argc, char **argv)
   atexit (close_stdout);
 
   exit_status = 0;
-  posixly_correct = (getenv ("POSIXLY_CORRECT") != NULL);
   print_lines = print_words = print_chars = print_bytes = print_linelength = 0;
   total_lines = total_words = total_chars = total_bytes = max_line_length = 0;
 
@@ -576,16 +649,21 @@ main (int argc, char **argv)
     print_lines = print_words = print_bytes = 1;
 
   nfiles = argc - optind;
+  nfiles += (nfiles == 0);
 
-  if (nfiles == 0)
+  fstatus = get_input_fstatus (nfiles, argv + optind);
+  number_width = compute_number_width (nfiles, fstatus);
+
+  if (! argv[optind])
     {
       have_read_stdin = 1;
-      wc (0, "");
+      wc (STDIN_FILENO, NULL, &fstatus[0]);
     }
   else
     {
-      for (; optind < argc; ++optind)
-	wc_file (argv[optind]);
+      int i;
+      for (i = 0; i < nfiles; i++)
+	wc_file (argv[optind + i], &fstatus[i]);
 
       if (nfiles > 1)
 	write_counts (total_lines, total_words, total_chars, total_bytes,
