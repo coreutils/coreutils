@@ -1,6 +1,7 @@
 2004-05-21  Jim Meyering  <jim@meyering.net>
 
 	* tests/rm/inaccessible: New test for the above fix.
+	* tests/rm/Makefile.am (TESTS): Add inaccessible.
 
 2004-05-20  Jim Meyering  <jim@meyering.net>
 
