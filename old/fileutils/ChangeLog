@@ -1,4 +1,7 @@
 2000-01-02  Jim Meyering  <meyering@ascend.com>
+
+	* src/mv.c: New option: --strip-trailing-slashes.
+
 	1999-11-18  Paul Eggert  <eggert@twinsun.com>
 
 	* lib/strftime.c (my_strftime): Some old compilers object to
