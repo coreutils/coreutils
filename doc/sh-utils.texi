@@ -320,12 +320,59 @@ the @var{format} string.
 and @samp{\xhhh} as a hexadecimal number (if @var{hhh} is 1 to 3 hex
 digits) specifying a character to print.
 
+@kindex \uhhhh
+@kindex \Uhhhhhhhh
+@code{printf} interprets two character syntaxes introduced in ISO C 99:
+@samp{\u} for 16-bit Unicode characters, specified as 4 hex digits
+@var{hhhh}, and @samp{\U} for 32-bit Unicode characters, specified as 8 hex
+digits @var{hhhhhhhh}. @code{printf} outputs the Unicode characters
+according to the LC_CTYPE part of the current locale, i.e. depending
+on the values of the environment variables @code{LC_ALL}, @code{LC_CTYPE},
+@code{LANG}.
+
+The processing of @samp{\u} and @samp{\U} requires a full-featured
+@code{iconv} facility. It is activated on systems with glibc 2.2 (or newer),
+or when @code{libiconv} is installed prior to the sh-utils. Otherwise the
+use of @samp{\u} and @samp{\U} will give an error message.
+
 @kindex \c
 An additional escape, @samp{\c}, causes @code{printf} to produce no
 further output.
 
 The only options are a lone @samp{--help} or
 @samp{--version}.  @xref{Common options}.
+
+The Unicode character syntaxes are useful for writing strings in a locale
+independent way. For example, a string containing the Euro currency symbol
+
+@example
+$ /usr/local/bin/printf '\u20AC 14.95'
+@end example
+
+will be output correctly in all locales supporting the Euro symbol
+(ISO-8859-15, UTF-8, and others). Similarly, a Chinese string
+
+@example
+$ /usr/local/bin/printf '\u4e2d\u6587'
+@end example
+
+will be output correctly in all chinese locales (GB2312, BIG5, UTF-8, etc).
+
+Note that in these examples, the full pathname of @code{printf} has been
+given, to distinguish it from the GNU bash builtin function @code{printf}.
+
+For larger strings, you don't need to look up the hexadecimal code values of
+each character one by one. ASCII characters mixed with \u escape sequences
+is also known as the JAVA source file encoding. You can use GNU recode 3.5c
+(or newer) to convert strings to this encoding. Here is how to convert a
+piece of text into a shell script which will output this text in a locale
+independent way:
+
+@example
+$ LC_CTYPE=zh_CN.big5 /usr/local/bin/printf '\u4e2d\u6587\n' > sample.txt
+$ recode BIG5..JAVA < sample.txt | \
+  sed -e "s|^|/usr/local/bin/printf '|" -e "s|$|\\\\n'|" > sample.sh
+@end example
 
 
 @node yes invocation
