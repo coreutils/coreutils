@@ -2,6 +2,11 @@
 
 	* Version 2.0.12.
 
+	Avoid warnings from gcc.
+	* src/who.c (PIDSTR_DECL_AND_INIT): Cast ut_pid value to int.
+	(make_id_equals_comment): Cast sizeof expression (used as field
+	width argument) to `int'.
+
 	* configure, config.hin, Makefile.in, etc.: Regenerate using
 	autoconf-2.53a.
 
