@@ -26,7 +26,8 @@ fi
 # If this file system doesn't support sparse files,
 # don't try to create a file that'd end up consuming 8GB.
 # This happens on Darwin6.5 with a file system of type `hfs'.
-dd bs=1 seek=64K of=t < /dev/null 2> /dev/null
+# NTFS requires 128K before a hole appears in a sparse file.
+dd bs=1 seek=128K of=t < /dev/null 2> /dev/null
 set x `du -sk t`
 if test "$2" = 64; then
   echo "$0: skipping this test, since this file system doesn't support" 1>&2
