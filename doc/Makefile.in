@@ -131,7 +131,7 @@ mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 DIST_SOURCES =
-INFO_DEPS = omni-utils.info
+INFO_DEPS = coreutils.info
 DVIS = coreutils.dvi
 TEXINFOS = coreutils.texi
 DIST_COMMON = ChangeLog Makefile.am Makefile.in mdate-sh stamp-vti \
@@ -168,7 +168,7 @@ mostlyclean-vti:
 maintainer-clean-vti:
 	-rm -f $(srcdir)/stamp-vti $(srcdir)/version.texi
 
-omni-utils.info: coreutils.texi $(srcdir)/version.texi
+coreutils.info: coreutils.texi $(srcdir)/version.texi
 coreutils.dvi: coreutils.texi $(srcdir)/version.texi
 
 .texi.info:
