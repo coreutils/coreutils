@@ -1,3 +1,7 @@
+1998-11-14  Jim Meyering  <meyering@ascend.com>
+
+	* Version 4.0.
+
 1998-11-10  Jim Meyering  <meyering@ascend.com>
 
 	* configure.in (ALL_LINGUAS): Add greek (el).
