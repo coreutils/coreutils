@@ -1,5 +1,9 @@
 2000-12-17  Jim Meyering  <meyering@lucent.com>
 
+	* doc/texinfo.tex: Update from master repository.
+	* config.sub: Likewise.
+	* config.guess: Likewise.
+
 	* djgpp: New directory.
 	* Makefile.am (SUBDIRS): Add djgpp.
 	* configure.in (AC_OUTPUT): Add djgpp/Makefile.
