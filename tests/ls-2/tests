@@ -32,6 +32,12 @@ my $rmdir2 = {POST => sub {rmdir 'd/e' or die "d/e: $!\n";
 my $slink_d = {PRE => sub {symlink '/', 'd' or die "d: $!\n";
                            $ENV{LS_COLORS}='ln=01;36:di=01;34:or=40;31;01'
                            }};
+my $exe_in_subdir =
+  {PRE => sub { mkdir 'j', 0700 or die "creating j: $!\n";
+		open FH, '>j/d' or die "creating j/d: $!\n";
+                chmod 0555, 'j/d' or die "making j/d executable: $!\n";
+                $ENV{LS_COLORS}='ex=01;32'
+                }};
 my $unlink_d = {POST => sub {unlink 'd' or die "d: $!\n"}};
 
 my $q_bell = {IN => {"q\a" => ''}};
@@ -74,6 +80,15 @@ my @Tests =
      ['sl-dF-color', '-dF --color=always d',
 				 {OUT => "\e[0m\e[01;36md\e[0m\@\n\e[m"},
 				  $slink_d, $unlink_d],
+
+     # Test for a bug that was introduced in coreutils-4.5.4; fixed in 4.5.5.
+     # To demonstrate it, the file in question (with executable bit set)
+     # must not be a command line argument.
+     ['color-exe', '--color=always j',
+				 {OUT => "\e[0m\e[01;32md\e[0m\n\e[m"},
+				  $exe_in_subdir,
+				 {POST => sub {unlink 'j/d' or die "j/d: $!\n";
+                                               rmdir 'j' or die "j: $!\n" }}],
 
      # From Stéphane Chazelas.
      ['no-a-isdir-b', 'no-dir d',
