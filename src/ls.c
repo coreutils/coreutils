@@ -2356,7 +2356,7 @@ quote_filename (register FILE *out, register const char *p)
 		}
 
 	      break;
-	  }
+	    }
 	}
 
       /* Shell quoting is needed.  */
