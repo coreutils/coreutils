@@ -39,7 +39,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: coreutils 4.5.10\n"
-"POT-Creation-Date: 2003-03-27 10:07+0100\n"
+"POT-Creation-Date: 2003-03-31 10:45+0200\n"
 "PO-Revision-Date: 2003-03-17 23:15+0100\n"
 "Last-Translator: Ivan Vilata i Balaguer <ivan@selidor.net>\n"
 "Language-Team: Catalan <ca@dodds.net>\n"
@@ -886,7 +886,7 @@ msgstr "es salta el fitxer %s, que va ser reemplaçat en ser copiat"
 
 # Els 6 usen quote().  ivb
 #: src/copy.c:262 src/copy.c:1034 src/copy.c:1124 src/ln.c:291
-#: src/remove.c:726 src/remove.c:780 src/remove.c:892 src/remove.c:996
+#: src/remove.c:727 src/remove.c:781 src/remove.c:893 src/remove.c:997
 #, c-format
 msgid "cannot remove %s"
 msgstr "no s'ha pogut eliminar %s"
@@ -3856,7 +3856,7 @@ msgstr "no es llista el directori ja llistat: %s"
 
 # Els 2 usen quote().  ivb
 # Indica condició d'error.  ivb
-#: src/ls.c:2208 src/remove.c:928
+#: src/ls.c:2208 src/remove.c:929
 #, c-format
 msgid "reading directory %s"
 msgstr "en llegir el directori %s"
@@ -5929,71 +5929,71 @@ msgid "%s changed dev/ino"
 msgstr "%s ha canviat de dispositiu o node-i"
 
 # Els 4 usen quote().  ivb
-#: src/remove.c:573 src/remove.c:711 src/remove.c:880 src/remove.c:983
+#: src/remove.c:574 src/remove.c:712 src/remove.c:881 src/remove.c:984
 #, c-format
 msgid "cannot lstat %s"
 msgstr "ha fallat lstat() sobre %s"
 
 # Usa quote(9.  ivb
-#: src/remove.c:602
+#: src/remove.c:603
 #, c-format
 msgid "%s: descend into write-protected directory %s? "
 msgstr "%s: voleu descendir al directori protegit contra escriptura %s? "
 
 # Usa quote().  ivb
-#: src/remove.c:603
+#: src/remove.c:604
 #, c-format
 msgid "%s: descend into directory %s? "
 msgstr "%s: voleu descendir al directori %s? "
 
 # FIXME: Language-dependent.  ivb
 # Usa quote() en els 2 args.  ivb
-#: src/remove.c:613
+#: src/remove.c:614
 #, c-format
 msgid "%s: remove write-protected %s %s? "
 msgstr "%s: voleu eliminar el %s protegit contra escriptura %s? "
 
 # FIXME: Language-dependent.  ivb
 # Usa quote() en els 2 args.  ivb
-#: src/remove.c:614
+#: src/remove.c:615
 #, c-format
 msgid "%s: remove %s %s? "
 msgstr "%s: voleu eliminar el %s %s? "
 
 # Usa quote().  ivb
 # Missatge informatiu.  ivb
-#: src/remove.c:638
+#: src/remove.c:639
 #, c-format
 msgid "removed %s\n"
 msgstr "s'ha eliminat %s\n"
 
 # Els 2 usen quote().  ivb
 # Missatge informatiu.  ivb
-#: src/remove.c:653 src/remove.c:1058
+#: src/remove.c:654 src/remove.c:1059
 #, c-format
 msgid "removed directory: %s\n"
 msgstr "s'ha eliminat el directori: %s\n"
 
 # Els 2 usen quote().  ivb
-#: src/remove.c:733 src/remove.c:750 src/remove.c:1063
+#: src/remove.c:734 src/remove.c:751 src/remove.c:1064
 #, c-format
 msgid "cannot remove directory %s"
 msgstr "no s'ha pogut eliminar el directori %s"
 
 # Usa quote().  ivb
-#: src/remove.c:814
+#: src/remove.c:815
 #, c-format
 msgid "cannot open directory %s"
 msgstr "no s'ha pogut obrir el directori %s"
 
 # Els 2 usen quote() en els 2 args.  ivb
-#: src/remove.c:895 src/remove.c:1001
+#: src/remove.c:896 src/remove.c:1002
 #, c-format
 msgid "cannot chdir from %s to %s"
 msgstr "no s'ha pogut canviar del directori %s a %s"
 
 # Usa quote().  ivb
-#: src/remove.c:903
+#: src/remove.c:904
 #, c-format
 msgid ""
 "WARNING: Circular directory structure.\n"
@@ -6008,7 +6008,7 @@ msgstr ""
 "\tEl següent directori és part del cicle:\n"
 "\t  %s\n"
 
-#: src/remove.c:1097
+#: src/remove.c:1098
 msgid "cannot remove `.' or `..'"
 msgstr "no es pot eliminar «.» ni «..»"
 

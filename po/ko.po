@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GNU textutils 2.0.22\n"
-"POT-Creation-Date: 2003-03-27 10:07+0100\n"
+"POT-Creation-Date: 2003-03-31 10:45+0200\n"
 "PO-Revision-Date: 2002-07-22 20:02+0900\n"
 "Last-Translator: Changwoo Ryu <cwryu@debian.org>\n"
 "Language-Team: Korean <translation-team-ko@lists.sourceforge.net>\n"
@@ -757,7 +757,7 @@ msgid "skipping file %s, as it was replaced while being copied"
 msgstr ""
 
 #: src/copy.c:262 src/copy.c:1034 src/copy.c:1124 src/ln.c:291
-#: src/remove.c:726 src/remove.c:780 src/remove.c:892 src/remove.c:996
+#: src/remove.c:727 src/remove.c:781 src/remove.c:893 src/remove.c:997
 #, fuzzy, c-format
 msgid "cannot remove %s"
 msgstr "%s 디렉토리를 만들 수 없습니다"
@@ -3194,7 +3194,7 @@ msgstr "%s에 대한 파일 포인터를 재위치할 수 없습니다"
 msgid "not listing already-listed directory: %s"
 msgstr "%s 디렉토리를 만들 수 없습니다"
 
-#: src/ls.c:2208 src/remove.c:928
+#: src/ls.c:2208 src/remove.c:929
 #, fuzzy, c-format
 msgid "reading directory %s"
 msgstr "%s 디렉토리를 만들 수 없습니다"
@@ -4952,57 +4952,57 @@ msgstr "`%s'에서 `.'에 대해 lstat콜을 할 수 없습니다"
 msgid "%s changed dev/ino"
 msgstr ""
 
-#: src/remove.c:573 src/remove.c:711 src/remove.c:880 src/remove.c:983
+#: src/remove.c:574 src/remove.c:712 src/remove.c:881 src/remove.c:984
 #, fuzzy, c-format
 msgid "cannot lstat %s"
 msgstr "`%s'의 정보(stat)를 얻을 수 없습니다"
 
-#: src/remove.c:602
+#: src/remove.c:603
 #, fuzzy, c-format
 msgid "%s: descend into write-protected directory %s? "
 msgstr "%s 디렉토리를 만들 수 없습니다"
 
-#: src/remove.c:603
+#: src/remove.c:604
 #, fuzzy, c-format
 msgid "%s: descend into directory %s? "
 msgstr "%s 디렉토리로 chdir할 수 없습니다"
 
-#: src/remove.c:613
+#: src/remove.c:614
 #, fuzzy, c-format
 msgid "%s: remove write-protected %s %s? "
 msgstr "%s: 쓰기 보호된 `%s'파일을 지울까요? "
 
-#: src/remove.c:614
+#: src/remove.c:615
 #, fuzzy, c-format
 msgid "%s: remove %s %s? "
 msgstr "%s: `%s'를 지울까요? "
 
-#: src/remove.c:638
+#: src/remove.c:639
 #, fuzzy, c-format
 msgid "removed %s\n"
 msgstr "%s를 지웁니다\n"
 
-#: src/remove.c:653 src/remove.c:1058
+#: src/remove.c:654 src/remove.c:1059
 #, fuzzy, c-format
 msgid "removed directory: %s\n"
 msgstr "%s 디렉토리를 만들 수 없습니다"
 
-#: src/remove.c:733 src/remove.c:750 src/remove.c:1063
+#: src/remove.c:734 src/remove.c:751 src/remove.c:1064
 #, fuzzy, c-format
 msgid "cannot remove directory %s"
 msgstr "%s 디렉토리를 만들 수 없습니다"
 
-#: src/remove.c:814
+#: src/remove.c:815
 #, fuzzy, c-format
 msgid "cannot open directory %s"
 msgstr "%s 디렉토리를 만들 수 없습니다"
 
-#: src/remove.c:895 src/remove.c:1001
+#: src/remove.c:896 src/remove.c:1002
 #, fuzzy, c-format
 msgid "cannot chdir from %s to %s"
 msgstr "%s 디렉토리로 chdir할 수 없습니다"
 
-#: src/remove.c:903
+#: src/remove.c:904
 #, fuzzy, c-format
 msgid ""
 "WARNING: Circular directory structure.\n"
@@ -5016,7 +5016,7 @@ msgstr ""
 "**시스템 관리자에게 알리십시오**\n"
 "다음 두 디렉토리가 같은 inode 번호를 가졌습니다:\n"
 
-#: src/remove.c:1097
+#: src/remove.c:1098
 msgid "cannot remove `.' or `..'"
 msgstr "`.'나 `..'를 지울 수 없습니다"
 

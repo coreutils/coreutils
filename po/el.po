@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: textutils 2.1\n"
-"POT-Creation-Date: 2003-03-27 10:07+0100\n"
+"POT-Creation-Date: 2003-03-31 10:45+0200\n"
 "PO-Revision-Date: 2002-08-11 11:25+0100\n"
 "Last-Translator: Simos Xenitellis <simos@hellug.gr>\n"
 "Language-Team: Greek <nls@tux.hellug.gr>\n"
@@ -878,7 +878,7 @@ msgstr ""
 
 #
 #: src/copy.c:262 src/copy.c:1034 src/copy.c:1124 src/ln.c:291
-#: src/remove.c:726 src/remove.c:780 src/remove.c:892 src/remove.c:996
+#: src/remove.c:727 src/remove.c:781 src/remove.c:893 src/remove.c:997
 #, fuzzy, c-format
 msgid "cannot remove %s"
 msgstr "αδύνατη η αλλαγή δικαιωμάτων στο %s"
@@ -3614,7 +3614,7 @@ msgid "not listing already-listed directory: %s"
 msgstr "αδύνατη η δημιουργία καταλόγου `%s'"
 
 #
-#: src/ls.c:2208 src/remove.c:928
+#: src/ls.c:2208 src/remove.c:929
 #, fuzzy, c-format
 msgid "reading directory %s"
 msgstr "αδύνατη η δημιουργία καταλόγου `%s'"
@@ -5342,63 +5342,63 @@ msgid "%s changed dev/ino"
 msgstr ""
 
 #
-#: src/remove.c:573 src/remove.c:711 src/remove.c:880 src/remove.c:983
+#: src/remove.c:574 src/remove.c:712 src/remove.c:881 src/remove.c:984
 #, fuzzy, c-format
 msgid "cannot lstat %s"
 msgstr "αδύνατη η αλλαγή δικαιωμάτων στο %s"
 
 #
-#: src/remove.c:602
+#: src/remove.c:603
 #, fuzzy, c-format
 msgid "%s: descend into write-protected directory %s? "
 msgstr "αδύνατη η δημιουργία καταλόγου `%s'"
 
 #
-#: src/remove.c:603
+#: src/remove.c:604
 #, fuzzy, c-format
 msgid "%s: descend into directory %s? "
 msgstr "αδύνατη η αλλαγή στο κατάλογο %s"
 
-#: src/remove.c:613
+#: src/remove.c:614
 #, fuzzy, c-format
 msgid "%s: remove write-protected %s %s? "
 msgstr "%s: διαγραφή προστατευμένου από εγγραφή καταλόγου `%s'; "
 
-#: src/remove.c:614
+#: src/remove.c:615
 #, fuzzy, c-format
 msgid "%s: remove %s %s? "
 msgstr "%s: διαγραφή του `%s'; "
 
-#: src/remove.c:638
+#: src/remove.c:639
 #, fuzzy, c-format
 msgid "removed %s\n"
 msgstr "διαγραφή καταλόγου %s\n"
 
 #
-#: src/remove.c:653 src/remove.c:1058
+#: src/remove.c:654 src/remove.c:1059
 #, fuzzy, c-format
 msgid "removed directory: %s\n"
 msgstr "αδύνατη η δημιουργία καταλόγου `%s'"
 
 #
-#: src/remove.c:733 src/remove.c:750 src/remove.c:1063
+#: src/remove.c:734 src/remove.c:751 src/remove.c:1064
 #, fuzzy, c-format
 msgid "cannot remove directory %s"
 msgstr "αδύνατη η δημιουργία καταλόγου `%s'"
 
 #
-#: src/remove.c:814
+#: src/remove.c:815
 #, fuzzy, c-format
 msgid "cannot open directory %s"
 msgstr "αδύνατη η δημιουργία καταλόγου `%s'"
 
 #
-#: src/remove.c:895 src/remove.c:1001
+#: src/remove.c:896 src/remove.c:1002
 #, fuzzy, c-format
 msgid "cannot chdir from %s to %s"
 msgstr "αδύνατη η αλλαγή στο κατάλογο %s"
 
-#: src/remove.c:903
+#: src/remove.c:904
 #, fuzzy, c-format
 msgid ""
 "WARNING: Circular directory structure.\n"
@@ -5412,7 +5412,7 @@ msgstr ""
 "ΓΝΩΣΤΟΠΟΙΗΣΤΕ ΤΟ ΣΤΟ ΔΙΑΧΕΙΡΙΣΤΗ ΣΥΣΤΗΜΑΤΟΣ.\n"
 "Οι παρακάτω δύο κατάλογοι έχουν την ίδια τιμή i-κόμβου:\n"
 
-#: src/remove.c:1097
+#: src/remove.c:1098
 msgid "cannot remove `.' or `..'"
 msgstr "δεν είναι δυνατό να διαγραφούν τα `.' ή `..'"
 

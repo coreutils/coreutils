@@ -10,7 +10,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: coreutils 4.5.11\n"
-"POT-Creation-Date: 2003-03-27 10:07+0100\n"
+"POT-Creation-Date: 2003-03-31 10:45+0200\n"
 "PO-Revision-Date: 2003-03-19 22:30+0100\n"
 "Last-Translator: Rafa³ Maszkowski <rzm@icm.edu.pl>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
@@ -805,7 +805,7 @@ msgid "skipping file %s, as it was replaced while being copied"
 msgstr "plik %s zosta³ ominiêty, bo zosta³ zmieniony w trakcie kopiowania"
 
 #: src/copy.c:262 src/copy.c:1034 src/copy.c:1124 src/ln.c:291
-#: src/remove.c:726 src/remove.c:780 src/remove.c:892 src/remove.c:996
+#: src/remove.c:727 src/remove.c:781 src/remove.c:893 src/remove.c:997
 #, c-format
 msgid "cannot remove %s"
 msgstr "nie mo¿na usun±æ %s"
@@ -3534,7 +3534,7 @@ msgstr "nie mo¿na ustaliæ urz±dzenia i i-wêz³a %s"
 msgid "not listing already-listed directory: %s"
 msgstr "nie bêdzie wylistowany katalog %s ju¿ wylistowany poprzednio"
 
-#: src/ls.c:2208 src/remove.c:928
+#: src/ls.c:2208 src/remove.c:929
 #, c-format
 msgid "reading directory %s"
 msgstr "czytanie katalogu %s"
@@ -5477,57 +5477,57 @@ msgstr "nie mo¿na wykonaæ lstat `.' w %s"
 msgid "%s changed dev/ino"
 msgstr "%s zmieni³ urz±dzenie/i-wêze³"
 
-#: src/remove.c:573 src/remove.c:711 src/remove.c:880 src/remove.c:983
+#: src/remove.c:574 src/remove.c:712 src/remove.c:881 src/remove.c:984
 #, c-format
 msgid "cannot lstat %s"
 msgstr "nie mo¿na wykonaæ lstat na %s"
 
-#: src/remove.c:602
+#: src/remove.c:603
 #, c-format
 msgid "%s: descend into write-protected directory %s? "
 msgstr "%s: wej¶æ w katalog %s, zabezpieczony przez zapisem? "
 
-#: src/remove.c:603
+#: src/remove.c:604
 #, c-format
 msgid "%s: descend into directory %s? "
 msgstr "%s: przej¶æ do katalogu %s? "
 
-#: src/remove.c:613
+#: src/remove.c:614
 #, c-format
 msgid "%s: remove write-protected %s %s? "
 msgstr "%s: usun±æ zabezpieczony przez zapisem %s %s? "
 
-#: src/remove.c:614
+#: src/remove.c:615
 #, c-format
 msgid "%s: remove %s %s? "
 msgstr "%s: usun±æ %s %s? "
 
-#: src/remove.c:638
+#: src/remove.c:639
 #, c-format
 msgid "removed %s\n"
 msgstr "usuniêty %s\n"
 
-#: src/remove.c:653 src/remove.c:1058
+#: src/remove.c:654 src/remove.c:1059
 #, c-format
 msgid "removed directory: %s\n"
 msgstr "usuniêty katalog %s\n"
 
-#: src/remove.c:733 src/remove.c:750 src/remove.c:1063
+#: src/remove.c:734 src/remove.c:751 src/remove.c:1064
 #, c-format
 msgid "cannot remove directory %s"
 msgstr "nie mo¿na usun±æ katalogu %s"
 
-#: src/remove.c:814
+#: src/remove.c:815
 #, c-format
 msgid "cannot open directory %s"
 msgstr "nie mo¿na otworzyæ katalogu %s"
 
-#: src/remove.c:895 src/remove.c:1001
+#: src/remove.c:896 src/remove.c:1002
 #, c-format
 msgid "cannot chdir from %s to %s"
 msgstr "nie mo¿na przej¶æ z %s do %s"
 
-#: src/remove.c:903
+#: src/remove.c:904
 #, c-format
 msgid ""
 "WARNING: Circular directory structure.\n"
@@ -5542,7 +5542,7 @@ msgstr ""
 "Nastêpuj±cy katalog jest czê¶ci± cyklu:\n"
 "  %s\n"
 
-#: src/remove.c:1097
+#: src/remove.c:1098
 msgid "cannot remove `.' or `..'"
 msgstr "nie mo¿na usun±æ `.' lub `..'"
 

@@ -38,7 +38,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GNU coreutils 4.5.8\n"
-"POT-Creation-Date: 2003-03-27 10:07+0100\n"
+"POT-Creation-Date: 2003-03-31 10:45+0200\n"
 "PO-Revision-Date: 2003-02-24 10:51:09+0100\n"
 "Last-Translator: Michael Piefel <piefel@informatik.hu-berlin.de>\n"
 "Language-Team: German <de@li.org>\n"
@@ -846,7 +846,7 @@ msgid "skipping file %s, as it was replaced while being copied"
 msgstr "überspringe Datei %s, da sie während des Kopierens ersetzt wurde"
 
 #: src/copy.c:262 src/copy.c:1034 src/copy.c:1124 src/ln.c:291
-#: src/remove.c:726 src/remove.c:780 src/remove.c:892 src/remove.c:996
+#: src/remove.c:727 src/remove.c:781 src/remove.c:893 src/remove.c:997
 #, c-format
 msgid "cannot remove %s"
 msgstr "Entfernen von %s nicht möglich"
@@ -3631,7 +3631,7 @@ msgstr "kann Gerät und INode von %s nicht bestimmen"
 msgid "not listing already-listed directory: %s"
 msgstr "zeige schon angezeigtes Verzeichnis nicht an: %s"
 
-#: src/ls.c:2208 src/remove.c:928
+#: src/ls.c:2208 src/remove.c:929
 #, c-format
 msgid "reading directory %s"
 msgstr "lese Verzeichnis %s"
@@ -5589,57 +5589,57 @@ msgstr "lstat von ».« in %s nicht möglich"
 msgid "%s changed dev/ino"
 msgstr "%s geändertes Gerät/Inode"
 
-#: src/remove.c:573 src/remove.c:711 src/remove.c:880 src/remove.c:983
+#: src/remove.c:574 src/remove.c:712 src/remove.c:881 src/remove.c:984
 #, c-format
 msgid "cannot lstat %s"
 msgstr "Aufruf von lstat für %s nicht möglich"
 
-#: src/remove.c:602
+#: src/remove.c:603
 #, c-format
 msgid "%s: descend into write-protected directory %s? "
 msgstr "%s: in schreibgeschütztes Verzeichnis %s absteigen? "
 
-#: src/remove.c:603
+#: src/remove.c:604
 #, c-format
 msgid "%s: descend into directory %s? "
 msgstr "%s: in Verzeichnis %s absteigen? "
 
-#: src/remove.c:613
+#: src/remove.c:614
 #, c-format
 msgid "%s: remove write-protected %s %s? "
 msgstr "%s: %s (schreibgeschützt) %s entfernen? "
 
-#: src/remove.c:614
+#: src/remove.c:615
 #, c-format
 msgid "%s: remove %s %s? "
 msgstr "%s: %s %s entfernen? "
 
-#: src/remove.c:638
+#: src/remove.c:639
 #, c-format
 msgid "removed %s\n"
 msgstr "%s entfernt\n"
 
-#: src/remove.c:653 src/remove.c:1058
+#: src/remove.c:654 src/remove.c:1059
 #, c-format
 msgid "removed directory: %s\n"
 msgstr "Verzeichnis wurde entfernt: %s\n"
 
-#: src/remove.c:733 src/remove.c:750 src/remove.c:1063
+#: src/remove.c:734 src/remove.c:751 src/remove.c:1064
 #, c-format
 msgid "cannot remove directory %s"
 msgstr "Entfernen von Verzeichnis %s nicht möglich"
 
-#: src/remove.c:814
+#: src/remove.c:815
 #, c-format
 msgid "cannot open directory %s"
 msgstr "Öffnen von Verzeichnis %s nicht möglich"
 
-#: src/remove.c:895 src/remove.c:1001
+#: src/remove.c:896 src/remove.c:1002
 #, c-format
 msgid "cannot chdir from %s to %s"
 msgstr "kann nicht aus Verzeichnis %s in %s wechseln"
 
-#: src/remove.c:903
+#: src/remove.c:904
 #, c-format
 msgid ""
 "WARNING: Circular directory structure.\n"
@@ -5654,7 +5654,7 @@ msgstr ""
 "Das folgende Verzeichnis ist Teil des Zyklus:\n"
 "  %s\n"
 
-#: src/remove.c:1097
+#: src/remove.c:1098
 msgid "cannot remove `.' or `..'"
 msgstr "Weder ».« noch »..« kann gelöscht werden"
 
