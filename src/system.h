@@ -152,6 +152,35 @@ extern int errno;
 # define R_OK 4
 #endif
 
+/* For systems that distinguish between text and binary I/O.
+   O_BINARY is usually declared in fcntl.h  */
+#if !defined O_BINARY && defined _O_BINARY
+  /* For MSC-compatible compilers.  */
+# define O_BINARY _O_BINARY
+# define O_TEXT _O_TEXT
+#endif
+#if O_BINARY
+# ifndef __DJGPP__
+#  define setmode _setmode
+#  define fileno(_fp) _fileno (_fp)
+# endif /* not DJGPP */
+# define SET_BINARY(_f) do {if (!isatty(_f)) setmode (_f, O_BINARY);} while (0)
+# define SET_BINARY2(_f1, _f2)		\
+  do {					\
+    if (!isatty (_f1))			\
+      {					\
+        setmode (_f1, O_BINARY);	\
+	if (!isatty (_f2))		\
+	  setmode (_f2, O_BINARY);	\
+      }					\
+  } while(0)
+#else
+# define SET_BINARY(f) (void)0
+# define SET_BINARY2(f1,f2) (void)0
+# define O_BINARY 0
+# define O_TEXT 0
+#endif /* O_BINARY */
+
 #if HAVE_DIRENT_H
 # include <dirent.h>
 # define NLENGTH(direct) (strlen((direct)->d_name))
@@ -178,13 +207,15 @@ extern int errno;
 
 /* Get or fake the disk device blocksize.
    Usually defined by sys/param.h (if at all).  */
+#if !defined DEV_BSIZE && defined BSIZE
+# define DEV_BSIZE BSIZE
+#endif
+#if !defined DEV_BSIZE && defined BBSIZE /* SGI */
+# define DEV_BSIZE BBSIZE
+#endif
 #ifndef DEV_BSIZE
-# ifdef BSIZE
-#  define DEV_BSIZE BSIZE
-# else /* !BSIZE */
-#  define DEV_BSIZE 4096
-# endif /* !BSIZE */
-#endif /* !DEV_BSIZE */
+# define DEV_BSIZE 4096
+#endif
 
 /* Extract or fake data from a `struct stat'.
    ST_BLKSIZE: Preferred I/O blocksize for the file, in bytes.
