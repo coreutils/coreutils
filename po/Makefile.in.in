@@ -35,6 +35,7 @@ subdir = po
 
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
+MKINSTALLDIRS = @MKINSTALLDIRS@
 
 CC = @CC@
 GENCAT = @GENCAT@
@@ -120,8 +121,12 @@ stamp-cat-id: $(PACKAGE).pot
 install: install-exec install-data
 install-exec:
 install-data: all
-	$(top_srcdir)/mkinstalldirs $(datadir)
-	catalogs='$(CATALOGS)'; \
+	if test -r $(MKINSTALLDIRS); then \
+	  $(MKINSTALLDIRS) $(datadir); \
+	else \
+	  $(top-srcdir)/mkinstalldirs $(datadir); \
+	fi
+	@catalogs='$(CATALOGS)'; \
 	for cat in $$catalogs; do \
 	  case "$$cat" in \
 	    *.gmo) destdir=$(gnulocaledir);; \
@@ -129,29 +134,43 @@ install-data: all
 	  esac; \
 	  lang=`echo $$cat | sed 's/$(CATOBJEXT)$$//'`; \
 	  dir=$$destdir/$$lang/LC_MESSAGES; \
-	  $(top_srcdir)/mkinstalldirs $$dir; \
+	  if test -r $(MKINSTALLDIRS); then \
+	    $(MKINSTALLDIRS) $$dir; \
+	  else \
+	    $(top-srcdir)/mkinstalldirs $$dir; \
+	  fi; \
 	  if test -r $$cat; then \
 	    $(INSTALL_DATA) $$cat $$dir/$(PACKAGE)$(INSTOBJEXT); \
+	    echo "installing $$cat as $$dir/$(PACKAGE)$(INSTOBJEXT)"; \
 	  else \
 	    $(INSTALL_DATA) $(srcdir)/$$cat $$dir/$(PACKAGE)$(INSTOBJEXT); \
+	    echo "installing $(srcdir)/$$cat as" \
+		 "$$dir/$(PACKAGE)$(INSTOBJEXT)"; \
 	  fi; \
 	  if test -r $$cat.m; then \
 	    $(INSTALL_DATA) $$cat.m $$dir/$(PACKAGE)$(INSTOBJEXT).m; \
+	    echo "installing $$cat.m as $$dir/$(PACKAGE)$(INSTOBJEXT).m"; \
 	  else \
 	    if test -r $(srcdir)/$$cat.m ; then \
 	      $(INSTALL_DATA) $(srcdir)/$$cat.m \
 		$$dir/$(PACKAGE)$(INSTOBJEXT).m; \
+	      echo "installing $(srcdir)/$$cat as" \
+		   "$$dir/$(PACKAGE)$(INSTOBJEXT).m"; \
 	    else \
 	      true; \
 	    fi; \
 	  fi; \
 	done
 	if test "$(PACKAGE)" = "gettext"; then \
-	  $(top_srcdir)/mkinstalldirs $(gettextsrcdir); \
+	  if test -r $(MKINSTALLDIRS); then \
+	    $(MKINSTALLDIRS) $(gettextsrcdir); \
+	  else \
+	    $(top_srcdir)/mkinstalldirs $(gettextsrcdir); \
+	  fi; \
 	  cd $(srcdir) && \
 	    $(INSTALL_DATA) Makefile.in.in $(gettextsrcdir)/Makefile.in.in; \
 	else \
-	  true; \
+	  : ; \
 	fi
 
 # Define this as empty until I found a useful application.
