@@ -1,3 +1,36 @@
+Sun May 25 09:21:01 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/copy.c (copy_internal): When preserving symlinks
+	(--no-dereference) and the destination file is a symlink,
+	use stat (not xstat) to see if it points back to the source.
+	Reported by James <james@albion.glarp.com>.
+
+	* src/du.c: Remove global variable opt_human_readable.
+	(enum Output_units): Rename from output_size.
+	Rename size_* to Unit_*.
+	Add Unit_variable to correspond to --human-readable.
+	(convert_blocks): Remove now-unused definition.
+	(human_readable): Rename paramater n_bytes to n_blocks.
+	Adjust conversions to reflect fact that input is now number of
+	512-byte blocks, not bytes.
+	(print_size): New function.
+	(du_files): Use print_size instead of open coding it.
+	(count_entry): Always count in units of 512-byte blocks to delay.
+	This lets du accumulate totals corresponding to a terabyte before
+	overflowing 32-bit long int.
+	Use print_size instead of open coding it.
+
+	Tue Feb  4 11:58:49 1997  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* src/du.c (convert_blocks): Remove now-unnecessary #undef.
+	(du_files): Pass output_size unchanged to convert_blocks.  No need
+	to test output_size for size_bytes, convert_blocks handles that
+	correctly.
+	(count_entry): Likewise.
+
+	* src/system.h (convert_blocks): Remove definition.
+	* src/ls.c (convert_blocks): Add definition.
+
 Sun May 25 09:11:17 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/du.c [AIX]: Remove unused #pragma alloca.
