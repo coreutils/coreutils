@@ -1,3 +1,11 @@
+2004-12-19  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* alloca_.h: Conditionalize on _GNULIB_ALLOCA_H, not _ALLOCA_H.
+	Remove now-obsolete comment about AIX.
+	* getdate.y: Include <alloca.h> only if HAVE_ALLOCA.
+	(YYSTACK_USE_ALLOCA): Define to 0 if !HAVE_ALLOCA.
+	(YYMAXDEPTH): New macro.
+
 2004-12-11  Jim Meyering  <jim@meyering.net>
 
 	* chdir-long.c: Fail via #error if PATH_MAX is not defined, since
