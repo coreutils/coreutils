@@ -1,5 +1,9 @@
 2000-09-05  Jim Meyering  <meyering@lucent.com>
 
+	* tests/cp/same-file: Remove the `cp -dl sl1 sl2' case,
+	since it's no longer portable (hard link to a symlink).
+	Likewise for the `cp -bdl symlink foo' case.
+
 	* config.guess: Update from master repository.
 
 2000-09-04  Jim Meyering  <meyering@lucent.com>
