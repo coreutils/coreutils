@@ -1,3 +1,7 @@
+1998-08-01  Jim Meyering  <meyering@ascend.com>
+
+	* configure.in (ALL_LINGUAS): Add slovak (sk) and norwegian (no).
+
 1998-07-28  Paul Eggert  <eggert@twinsun.com>
 
 	* lib/mountlist.c (read_filesystem_list): Remove all_fs
