@@ -6,6 +6,8 @@ if test "$VERBOSE" = yes; then
   chgrp --version
 fi
 
+. $srcdir/../group-names
+
 pwd=`pwd`
 tmp=slink.$$
 trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
@@ -19,17 +21,6 @@ if test $framework_failure = 1; then
   echo 'failure in testing framework' 1>&2
   (exit 1); exit
 fi
-
-groups=`id -nG 2>/dev/null`
-case "$groups" in
-  *' '*) ;;
-  *) cat <<EOF 1>&2
-$0: this test requires that you be a member of more than one group,
-but running \`id -nG' either failed or found just one.
-EOF
-     (exit 77); exit
-     ;;
-esac
 
 set _ $groups; shift
 g1=$1
