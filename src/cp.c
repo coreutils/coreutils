@@ -59,8 +59,8 @@ uid_t geteuid ();
    need to be fixed after copying. */
 struct dir_attr
 {
-  int is_new_dir;
-  int slash_offset;
+  bool is_new_dir;
+  size_t slash_offset;
   struct dir_attr *next;
 };
 
@@ -87,12 +87,12 @@ enum
 /* The invocation name of this program.  */
 char *program_name;
 
-/* If nonzero, the command "cp x/e_file e_dir" uses "e_dir/x/e_file"
+/* If true, the command "cp x/e_file e_dir" uses "e_dir/x/e_file"
    as its destination instead of the usual "e_dir/e_file." */
-static int flag_path = 0;
+static bool flag_path = false;
 
 /* Remove any trailing slashes from each SOURCE argument.  */
-static int remove_trailing_slashes;
+static bool remove_trailing_slashes;
 
 static char const *const sparse_type_string[] =
 {
@@ -271,12 +271,12 @@ regular file.\n\
    the corresponding source directories regardless of whether they
    existed before the `cp' command was given.
 
-   Return 0 if the parent of CONST_DST_PATH and any intermediate
+   Return true if the parent of CONST_DST_PATH and any intermediate
    directories specified by ATTR_LIST have the proper permissions
-   when done, otherwise 1. */
+   when done.  */
 
-static int
-re_protect (const char *const_dst_path, int src_offset,
+static bool
+re_protect (const char *const_dst_path, size_t src_offset,
 	    struct dir_attr *attr_list, const struct cp_options *x)
 {
   struct dir_attr *p;
@@ -297,7 +297,7 @@ re_protect (const char *const_dst_path, int src_offset,
 	{
 	  error (0, errno, _("failed to get attributes of %s"),
 		 quote (src_path));
-	  return 1;
+	  return false;
 	}
 
       /* Adjust the times (and if possible, ownership) for the copy.
@@ -317,7 +317,7 @@ re_protect (const char *const_dst_path, int src_offset,
 	    {
 	      error (0, errno, _("failed to preserve times for %s"),
 		     quote (dst_path));
-	      return 1;
+	      return false;
 	    }
 	}
 
@@ -331,23 +331,23 @@ re_protect (const char *const_dst_path, int src_offset,
 	    {
 	      error (0, errno, _("failed to preserve ownership for %s"),
 		     quote (dst_path));
-	      return 1;
+	      return false;
 	    }
 	}
 
-      if (x->preserve_mode || p->is_new_dir)
+      if (x->preserve_mode | p->is_new_dir)
 	{
 	  if (chmod (dst_path, src_sb.st_mode & x->umask_kill))
 	    {
 	      error (0, errno, _("failed to preserve permissions for %s"),
 		     quote (dst_path));
-	      return 1;
+	      return false;
 	    }
 	}
 
       dst_path[p->slash_offset] = '/';
     }
-  return 0;
+  return true;
 }
 
 /* Ensure that the parent directory of CONST_DIRPATH exists, for
@@ -363,17 +363,17 @@ re_protect (const char *const_dst_path, int src_offset,
    source and destination directories.
    Creates a linked list of attributes of intermediate directories,
    *ATTR_LIST, for re_protect to use after calling copy.
-   Sets *NEW_DST to 1 if this function creates parent of CONST_DIRPATH.
+   Sets *NEW_DST if this function creates parent of CONST_DIRPATH.
 
-   Return 0 if parent of CONST_DIRPATH exists as a directory with the proper
-   permissions when done, otherwise 1. */
+   Return true if parent of CONST_DIRPATH exists as a directory with the proper
+   permissions when done.  */
 
 /* FIXME: find a way to synch this function with the one in lib/makepath.c. */
 
-static int
-make_path_private (const char *const_dirpath, size_t src_offset, int mode,
+static bool
+make_path_private (const char *const_dirpath, size_t src_offset, mode_t mode,
 		   const char *verbose_fmt_string, struct dir_attr **attr_list,
-		   int *new_dst, int (*xstat)())
+		   bool *new_dst, int (*xstat)())
 {
   struct stat stats;
   char *dirpath;		/* A copy of CONST_DIRPATH we can change. */
@@ -418,13 +418,13 @@ make_path_private (const char *const_dirpath, size_t src_offset, int mode,
 		 for example, in the command `cp --parents ../a/../b/c e_dir',
 		 make_path_private creates only e_dir/../a if ./b already
 		 exists. */
-	      *new_dst = 1;
-	      new->is_new_dir = 1;
+	      *new_dst = true;
+	      new->is_new_dir = true;
 	      if (mkdir (dirpath, mode))
 		{
 		  error (0, errno, _("cannot make directory %s"),
 			 quote (dirpath));
-		  return 1;
+		  return false;
 		}
 	      else
 		{
@@ -436,12 +436,12 @@ make_path_private (const char *const_dirpath, size_t src_offset, int mode,
 	    {
 	      error (0, 0, _("%s exists but is not a directory"),
 		     quote (dirpath));
-	      return 1;
+	      return false;
 	    }
 	  else
 	    {
-	      new->is_new_dir = 0;
-	      *new_dst = 0;
+	      new->is_new_dir = false;
+	      *new_dst = false;
 	    }
 	  *slash++ = '/';
 
@@ -457,50 +457,53 @@ make_path_private (const char *const_dirpath, size_t src_offset, int mode,
   else if (!S_ISDIR (stats.st_mode))
     {
       error (0, 0, _("%s exists but is not a directory"), quote (dst_dirname));
-      return 1;
+      return false;
     }
   else
     {
-      *new_dst = 0;
+      *new_dst = false;
     }
-  return 0;
+  return true;
 }
 
-/* FILE is the last operand of this command.  Return -1 if FILE is a
-   directory, 0 if not, ENOENT if FILE does not exist.
-   But report an error there is a problem accessing FILE,
+/* FILE is the last operand of this command.
+   Return true if FILE is a directory.
+   But report an error and exit if there is a problem accessing FILE,
    or if FILE does not exist but would have to refer to an existing
    directory if it referred to anything at all.
 
-   Store the file's status into *ST, and store the resulting
-   error number into *ERRP.  */
+   If the file exists, store the file's status into *ST.
+   Otherwise, set *NEW_DST.  */
 
-static int
-target_directory_operand (char const *file, struct stat *st, int *errp)
+static bool
+target_directory_operand (char const *file, struct stat *st, bool *new_dst)
 {
   char const *b = base_name (file);
   size_t blen = strlen (b);
   bool looks_like_a_dir = (blen == 0 || ISSLASH (b[blen - 1]));
   int err = (stat (file, st) == 0 ? 0 : errno);
   bool is_a_dir = !err && S_ISDIR (st->st_mode);
-  if (err && err != ENOENT)
-    error (EXIT_FAILURE, err, _("accessing %s"), quote (file));
+  if (err)
+    {
+      if (err != ENOENT)
+	error (EXIT_FAILURE, err, _("accessing %s"), quote (file));
+      *new_dst = true;
+    }
   if (is_a_dir < looks_like_a_dir)
     error (EXIT_FAILURE, err, _("target %s is not a directory"), quote (file));
-  *errp = err;
   return is_a_dir;
 }
 
 /* Scan the arguments, and copy each by calling copy.
-   Return 0 if successful, 1 if any errors occur. */
+   Return true if successful.  */
 
-static int
+static bool
 do_copy (int n_files, char **file, const char *target_directory,
 	 bool no_target_directory, struct cp_options *x)
 {
   struct stat sb;
-  int new_dst = 0;
-  int ret = 0;
+  bool new_dst = false;
+  bool ok = true;
 
   if (n_files <= !target_directory)
     {
@@ -557,7 +560,7 @@ do_copy (int n_files, char **file, const char *target_directory,
       for (i = 0; i < n_files; i++)
 	{
 	  char *dst_path;
-	  int parent_exists = 1; /* True if dir_name (dst_path) exists. */
+	  bool parent_exists = true;  /* True if dir_name (dst_path) exists. */
 	  struct dir_attr *attr_list;
 	  char *arg_in_concat = NULL;
 	  char *arg = file[i];
@@ -586,13 +589,13 @@ do_copy (int n_files, char **file, const char *target_directory,
 	      /* For --parents, we have to make sure that the directory
 	         dir_name (dst_path) exists.  We may have to create a few
 	         leading directories. */
-	      parent_exists = !make_path_private (dst_path,
-						  arg_in_concat - dst_path,
-						  S_IRWXU,
-						  (x->verbose
-						   ? "%s -> %s\n" : NULL),
-						  &attr_list, &new_dst,
-						  xstat);
+	      parent_exists = make_path_private (dst_path,
+						 arg_in_concat - dst_path,
+						 S_IRWXU,
+						 (x->verbose
+						  ? "%s -> %s\n" : NULL),
+						 &attr_list, &new_dst,
+						 xstat);
 	    }
 	  else
 	    {
@@ -609,30 +612,27 @@ do_copy (int n_files, char **file, const char *target_directory,
 	  if (!parent_exists)
 	    {
 	      /* make_path_private failed, so don't even attempt the copy. */
-	      ret = 1;
+	      ok = false;
 	    }
 	  else
 	    {
-	      int copy_into_self;
-	      ret |= copy (arg, dst_path, new_dst, x, &copy_into_self, NULL);
+	      bool copy_into_self;
+	      ok &= copy (arg, dst_path, new_dst, x, &copy_into_self, NULL);
 
 	      if (flag_path)
-		{
-		  ret |= re_protect (dst_path, arg_in_concat - dst_path,
-				     attr_list, x);
-		}
+		ok &= re_protect (dst_path, arg_in_concat - dst_path,
+				  attr_list, x);
 	    }
 
 	  free (dst_path);
 	}
-      return ret;
     }
   else /* !target_directory */
     {
       char const *new_dest;
       char const *source = file[0];
       char const *dest = file[1];
-      int unused;
+      bool unused;
 
       if (flag_path)
 	{
@@ -669,39 +669,39 @@ do_copy (int n_files, char **file, const char *target_directory,
 	  new_dest = dest;
 	}
 
-      return copy (source, new_dest, 0, x, &unused, NULL);
+      ok = copy (source, new_dest, 0, x, &unused, NULL);
     }
 
-  /* unreachable */
+  return ok;
 }
 
 static void
 cp_option_init (struct cp_options *x)
 {
-  x->copy_as_regular = 1;
+  x->copy_as_regular = true;
   x->dereference = DEREF_UNDEFINED;
-  x->unlink_dest_before_opening = 0;
-  x->unlink_dest_after_failed_open = 0;
-  x->hard_link = 0;
+  x->unlink_dest_before_opening = false;
+  x->unlink_dest_after_failed_open = false;
+  x->hard_link = false;
   x->interactive = I_UNSPECIFIED;
   x->myeuid = geteuid ();
-  x->move_mode = 0;
-  x->one_file_system = 0;
+  x->move_mode = false;
+  x->one_file_system = false;
 
-  x->preserve_ownership = 0;
-  x->preserve_links = 0;
-  x->preserve_mode = 0;
-  x->preserve_timestamps = 0;
+  x->preserve_ownership = false;
+  x->preserve_links = false;
+  x->preserve_mode = false;
+  x->preserve_timestamps = false;
 
-  x->require_preserve = 0;
-  x->recursive = 0;
+  x->require_preserve = false;
+  x->recursive = false;
   x->sparse_mode = SPARSE_AUTO;
-  x->symbolic_link = 0;
-  x->set_mode = 0;
+  x->symbolic_link = false;
+  x->set_mode = false;
   x->mode = 0;
 
   /* Not used.  */
-  x->stdin_tty = 0;
+  x->stdin_tty = false;
 
   /* Find out the current file creation mask, to knock the right bits
      when using chmod.  The creation mask is set to be liberal, so
@@ -709,8 +709,8 @@ cp_option_init (struct cp_options *x)
      have been allowed with the mask this process was started with.  */
   x->umask_kill = ~ umask (0);
 
-  x->update = 0;
-  x->verbose = 0;
+  x->update = false;
+  x->verbose = false;
   x->dest_info = NULL;
   x->src_info = NULL;
 }
@@ -718,7 +718,7 @@ cp_option_init (struct cp_options *x)
 /* Given a string, ARG, containing a comma-separated list of arguments
    to the --preserve option, set the appropriate fields of X to ON_OFF.  */
 static void
-decode_preserve_arg (char const *arg, struct cp_options *x, int on_off)
+decode_preserve_arg (char const *arg, struct cp_options *x, bool on_off)
 {
   enum File_attribute
     {
@@ -794,12 +794,12 @@ int
 main (int argc, char **argv)
 {
   int c;
-  int exit_status;
-  int make_backups = 0;
+  bool ok;
+  bool make_backups = false;
   char *backup_suffix_string;
   char *version_control_string = NULL;
   struct cp_options x;
-  int copy_contents = 0;
+  bool copy_contents = false;
   char *target_directory = NULL;
   bool no_target_directory = false;
 
@@ -833,12 +833,12 @@ main (int argc, char **argv)
 
 	case 'a':		/* Like -dpPR. */
 	  x.dereference = DEREF_NEVER;
-	  x.preserve_links = 1;
-	  x.preserve_ownership = 1;
-	  x.preserve_mode = 1;
-	  x.preserve_timestamps = 1;
-	  x.require_preserve = 1;
-	  x.recursive = 1;
+	  x.preserve_links = true;
+	  x.preserve_ownership = true;
+	  x.preserve_mode = true;
+	  x.preserve_timestamps = true;
+	  x.require_preserve = true;
+	  x.recursive = true;
 	  break;
 
 	case 'V':  /* FIXME: this is deprecated.  Remove it in 2001.  */
@@ -849,22 +849,22 @@ main (int argc, char **argv)
 	  /* Fall through.  */
 
 	case 'b':
-	  make_backups = 1;
+	  make_backups = true;
 	  if (optarg)
 	    version_control_string = optarg;
 	  break;
 
 	case COPY_CONTENTS_OPTION:
-	  copy_contents = 1;
+	  copy_contents = true;
 	  break;
 
 	case 'd':
-	  x.preserve_links = 1;
+	  x.preserve_links = true;
 	  x.dereference = DEREF_NEVER;
 	  break;
 
 	case 'f':
-	  x.unlink_dest_after_failed_open = 1;
+	  x.unlink_dest_after_failed_open = true;
 	  break;
 
 	case 'H':
@@ -876,7 +876,7 @@ main (int argc, char **argv)
 	  break;
 
 	case 'l':
-	  x.hard_link = 1;
+	  x.hard_link = true;
 	  break;
 
 	case 'L':
@@ -888,7 +888,7 @@ main (int argc, char **argv)
 	  break;
 
 	case NO_PRESERVE_ATTRIBUTES_OPTION:
-	  decode_preserve_arg (optarg, &x, 0);
+	  decode_preserve_arg (optarg, &x, false);
 	  break;
 
 	case PRESERVE_ATTRIBUTES_OPTION:
@@ -898,25 +898,25 @@ main (int argc, char **argv)
 	    }
 	  else
 	    {
-	      decode_preserve_arg (optarg, &x, 1);
-	      x.require_preserve = 1;
+	      decode_preserve_arg (optarg, &x, true);
+	      x.require_preserve = true;
 	      break;
 	    }
 
 	case 'p':
-	  x.preserve_ownership = 1;
-	  x.preserve_mode = 1;
-	  x.preserve_timestamps = 1;
-	  x.require_preserve = 1;
+	  x.preserve_ownership = true;
+	  x.preserve_mode = true;
+	  x.preserve_timestamps = true;
+	  x.require_preserve = true;
 	  break;
 
 	case PARENTS_OPTION:
-	  flag_path = 1;
+	  flag_path = true;
 	  break;
 
 	case 'r':
 	case 'R':
-	  x.recursive = 1;
+	  x.recursive = true;
 	  break;
 
 	case REPLY_OPTION:
@@ -925,16 +925,16 @@ main (int argc, char **argv)
 	  break;
 
 	case UNLINK_DEST_BEFORE_OPENING:
-	  x.unlink_dest_before_opening = 1;
+	  x.unlink_dest_before_opening = true;
 	  break;
 
 	case STRIP_TRAILING_SLASHES_OPTION:
-	  remove_trailing_slashes = 1;
+	  remove_trailing_slashes = true;
 	  break;
 
 	case 's':
 #ifdef S_ISLNK
-	  x.symbolic_link = 1;
+	  x.symbolic_link = true;
 #else
 	  error (EXIT_FAILURE, 0,
 		 _("symbolic links are not supported on this system"));
@@ -962,19 +962,19 @@ main (int argc, char **argv)
 	  break;
 
 	case 'u':
-	  x.update = 1;
+	  x.update = true;
 	  break;
 
 	case 'v':
-	  x.verbose = 1;
+	  x.verbose = true;
 	  break;
 
 	case 'x':
-	  x.one_file_system = 1;
+	  x.one_file_system = true;
 	  break;
 
 	case 'S':
-	  make_backups = 1;
+	  make_backups = true;
 	  backup_suffix_string = optarg;
 	  break;
 
@@ -987,7 +987,7 @@ main (int argc, char **argv)
 	}
     }
 
-  if (x.hard_link && x.symbolic_link)
+  if (x.hard_link & x.symbolic_link)
     {
       error (0, 0, _("cannot make both hard and symbolic links"));
       usage (EXIT_FAILURE);
@@ -1001,7 +1001,7 @@ main (int argc, char **argv)
 				   version_control_string)
 		   : none);
 
-  if (x.preserve_mode == 1)
+  if (x.preserve_mode)
     x.umask_kill = ~ (mode_t) 0;
 
   if (x.dereference == DEREF_UNDEFINED)
@@ -1021,17 +1021,17 @@ main (int argc, char **argv)
 
   /* If --force (-f) was specified and we're in link-creation mode,
      first remove any existing destination file.  */
-  if (x.unlink_dest_after_failed_open && (x.hard_link || x.symbolic_link))
-    x.unlink_dest_before_opening = 1;
+  if (x.unlink_dest_after_failed_open & (x.hard_link | x.symbolic_link))
+    x.unlink_dest_before_opening = true;
 
   /* Allocate space for remembering copied and created files.  */
 
   hash_init ();
 
-  exit_status = do_copy (argc - optind, argv + optind,
-			 target_directory, no_target_directory, &x);
+  ok = do_copy (argc - optind, argv + optind,
+		target_directory, no_target_directory, &x);
 
   forget_all ();
 
-  exit (exit_status);
+  exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
