@@ -15,6 +15,10 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include <stdio.h>
 #include <sys/types.h>
 #include "mountlist.h"
@@ -24,7 +28,7 @@
 #else
 void free ();
 #endif
-#if defined(USG) || defined(STDC_HEADERS)
+#if defined(STDC_HEADERS) || defined(HAVE_STRING_H)
 #include <string.h>
 #else
 #include <strings.h>
@@ -35,6 +39,15 @@ char *xmalloc ();
 char *xrealloc ();
 char *xstrdup ();
 void error ();
+
+#ifdef HAVE_SYS_PARAM_H
+#include <sys/param.h>
+#endif
+
+#if defined (MOUNTED_GETFSSTAT)	/* __alpha running OSF_1 */
+#  include <sys/mount.h>
+#  include <sys/fs_types.h>
+#endif /* MOUNTED_GETFSSTAT */
 
 #ifdef MOUNTED_GETMNTENT1	/* 4.3BSD, SunOS, HP-UX, Dynix, Irix.  */
 #include <mntent.h>
@@ -53,7 +66,6 @@ void error ();
 #endif
 
 #ifdef MOUNTED_GETMNT		/* Ultrix.  */
-#include <sys/param.h>
 #include <sys/mount.h>
 #include <sys/fs_types.h>
 #endif
@@ -77,6 +89,12 @@ void error ();
 #include <sys/vfs.h>
 #endif
 
+#ifdef DOLPHIN
+/* So special that it's not worth putting this in autoconf.  */
+#undef MOUNTED_FREAD_FSTYP
+#define MOUNTED_GETMNTTBL
+#endif
+
 #ifdef MOUNTED_GETMNTENT1	/* 4.3BSD, SunOS, HP-UX, Dynix, Irix.  */
 /* Return the value of the hexadecimal number represented by CP.
    No prefix (like '0x') or suffix (like 'h') is expected to be
@@ -87,7 +105,7 @@ xatoi (cp)
      char *cp;
 {
   int val;
-  
+
   val = 0;
   while (*cp)
     {
@@ -105,7 +123,7 @@ xatoi (cp)
 }
 #endif /* MOUNTED_GETMNTENT1.  */
 
-#ifdef MOUNTED_GETMNTINFO	/* 4.4BSD.  */
+#if defined (MOUNTED_GETMNTINFO) && !defined (__NetBSD__)
 static char *
 fstype_to_string (t)
      short t;
@@ -116,8 +134,10 @@ fstype_to_string (t)
       return "ufs";
     case MOUNT_NFS:
       return "nfs";
+#ifdef MOUNT_PC
     case MOUNT_PC:
       return "pc";
+#endif
 #ifdef MOUNT_MFS
     case MOUNT_MFS:
       return "mfs";
@@ -231,7 +251,11 @@ read_filesystem_list (need_fs_type, all_fs)
 	me = (struct mount_entry *) xmalloc (sizeof (struct mount_entry));
 	me->me_devname = xstrdup (fsp->f_mntfromname);
 	me->me_mountdir = xstrdup (fsp->f_mntonname);
+#ifdef __NetBSD__
+	me->me_type = xstrdup (fsp->f_fstypename);
+#else
 	me->me_type = fstype_to_string (fsp->f_type);
+#endif
 	me->me_dev = -1;	/* Magic; means not known yet. */
 	me->me_next = NULL;
 
@@ -267,6 +291,43 @@ read_filesystem_list (need_fs_type, all_fs)
       return NULL;
   }
 #endif /* MOUNTED_GETMNT. */
+
+#if defined (MOUNTED_GETFSSTAT)	/* __alpha running OSF_1 */
+  {
+    int numsys, counter, bufsize;
+    struct statfs *stats;
+
+    numsys = getfsstat ((struct statfs *)0, 0L, MNT_WAIT);
+    if (numsys < 0)
+      return (NULL);
+
+    bufsize = (1 + numsys) * sizeof (struct statfs);
+    stats = (struct statfs *)xmalloc (bufsize);
+    numsys = getfsstat (stats, bufsize, MNT_WAIT);
+
+    if (numsys < 0)
+      {
+	free (stats);
+	return (NULL);
+      }
+
+    for (counter = 0; counter < numsys; counter++)
+      {
+	me = (struct mount_entry *) xmalloc (sizeof (struct mount_entry));
+	me->me_devname = xstrdup (stats[counter].f_mntfromname);
+	me->me_mountdir = xstrdup (stats[counter].f_mntonname);
+	me->me_type = mnt_names[stats[counter].f_type];
+	me->me_dev = -1;	/* Magic; means not known yet. */
+	me->me_next = NULL;
+
+	/* Add to the linked list. */
+	mtail->me_next = me;
+	mtail = me;
+      }
+
+    free (stats);
+  }
+#endif /* MOUNTED_GETFSSTAT */
 
 #if defined (MOUNTED_FREAD) || defined (MOUNTED_FREAD_FSTYP) /* SVR[23].  */
   {
@@ -313,6 +374,26 @@ read_filesystem_list (need_fs_type, all_fs)
       return NULL;
   }
 #endif /* MOUNTED_FREAD || MOUNTED_FREAD_FSTYP.  */
+
+#ifdef MOUNTED_GETMNTTBL	/* DolphinOS goes it's own way */
+  {
+    struct mntent **mnttbl=getmnttbl(),**ent;
+    for (ent=mnttbl;*ent;ent++)
+      {
+	me = (struct mount_entry *) xmalloc (sizeof (struct mount_entry));
+	me->me_devname = xstrdup ( (*ent)->mt_resource);
+	me->me_mountdir = xstrdup( (*ent)->mt_directory);
+	me->me_type =  xstrdup ((*ent)->mt_fstype);
+	me->me_dev = -1;	/* Magic; means not known yet. */
+	me->me_next = NULL;
+
+	/* Add to the linked list. */
+	mtail->me_next = me;
+	mtail = me;
+      }
+    endmnttbl();
+  }
+#endif
 
 #ifdef MOUNTED_GETMNTENT2	/* SVR4.  */
   {
@@ -378,7 +459,7 @@ read_filesystem_list (need_fs_type, all_fs)
 	  }
 	else
 	  {
-	    me->me_devname = xstrdup (thisent + 
+	    me->me_devname = xstrdup (thisent +
 				      vmp->vmt_data[VMT_OBJECT].vmt_off);
 	  }
 	me->me_mountdir = xstrdup (thisent + vmp->vmt_data[VMT_STUB].vmt_off);
