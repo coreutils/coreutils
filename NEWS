@@ -32,6 +32,8 @@ GNU coreutils NEWS                                    -*- outline -*-
     recursively-encountered symbolic link cannot be updated because
     the file system does not support it.
 
+  chmod now accepts multiple mode-like options, e.g., "chmod -r -w f".
+
   cut's --output-delimiter=D option works with abutting byte ranges.
 
   echo now conforms to POSIX better.  It supports the \0ooo syntax for
