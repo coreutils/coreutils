@@ -1,5 +1,11 @@
 Thu May 30 00:07:48 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* sort.c (limfield): #ifdef-out a block of code that makes
+	GNU sort incompatible with Unix sort when a key-end spec refers
+	to the N'th character in a field that has fewer than N characters.
+	The POSIX spec doesn't appear to specify behavior for this case.
+	From Karl Heuer.
+
 	* po/Makefile.in.in (stamp-cat-id): Avoid using temp filename
 	longer than 14 characters.
 	(mostlyclean): Likewise.
@@ -12,7 +18,7 @@ Thu May 30 00:07:48 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 	It is required when using native NLS, e.g. on Solaris.
 	From Marcus Daniels.
 
-	* src/od.c (decode_one_format): Use %lu (not %d) printf format
+	* od.c (decode_one_format): Use %lu (not %d) printf format
 	corresponding to unsigned long, SIZE.
 
 	* Version 1.15.
