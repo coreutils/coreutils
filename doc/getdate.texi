@@ -259,10 +259,13 @@ which uses @samp{12m} for noon and @samp{12pm} for midnight.)
 The time may alternatively be followed by a time zone correction,
 expressed as @samp{@var{s}@var{hh}@var{mm}}, where @var{s} is @samp{+}
 or @samp{-}, @var{hh} is a number of zone hours and @var{mm} is a number
-of zone minutes.  When a time zone correction is given this way, it
+of zone minutes.  You can also separate @var{hh} from @var{mm} with a colon.
+When a time zone correction is given this way, it
 forces interpretation of the time relative to
 Coordinated Universal Time (@sc{utc}), overriding any previous
-specification for the time zone or the local time zone.  The @var{minute}
+specification for the time zone or the local time zone.  For example,
+@samp{+0530} and @samp{+05:30} both stand for the time zone 5.5 hours
+ahead of @sc{utc} (e.g., India).  The @var{minute}
 part of the time of day may not be elided when a time zone correction
 is used.  This is the best way to specify a time zone correction by
 fractional parts of an hour.
@@ -283,6 +286,10 @@ Time.  Any included periods are ignored.  By following a
 non-daylight-saving time zone by the string @samp{DST} in a separate
 word (that is, separated by some white space), the corresponding
 daylight saving time zone may be specified.
+Alternatively, a non-daylight-saving time zone can be followed by a
+time zone correction, to add the two values.  This is normally done
+only for @samp{UTC}; for example, @samp{UTC+05:30} is equivalent to
+@samp{+05:30}.
 
 Time zone items other than @samp{UTC} and @samp{Z}
 are obsolescent and are not recommended, because they
