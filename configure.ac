@@ -117,7 +117,7 @@ else
   fi
 fi
 
-AC_DEFUN(jm_DUMMY_1,
+AC_DEFUN([jm_DUMMY_1],
 [
   AC_REQUIRE([gl_READUTMP])
   if test $ac_cv_header_utmp_h = yes || test $ac_cv_header_utmpx_h = yes; then
