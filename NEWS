@@ -29,7 +29,7 @@ GNU coreutils NEWS                                    -*- outline -*-
 
     Do not optimize away the chown() system call when the file's owner
     and group already have the desired value.  This optimization was
-    incorrect, as it failed to updated the last-changed time and reset
+    incorrect, as it failed to update the last-changed time and reset
     special permission bits, as POSIX requires.
 
     Do not report an error if the owner or group of a
