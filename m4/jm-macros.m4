@@ -47,6 +47,8 @@ AC_DEFUN(jm_MACROS,
   AC_REPLACE_FUNCS(strcasecmp strncasecmp)
   AC_REPLACE_FUNCS(dup2)
   AC_REPLACE_FUNCS(gethostbyname gethostbyaddr)
+  AC_REPLACE_FUNCS(stime strcspn stpcpy strstr strtol strtoul)
+
   dnl used by e.g. intl/*domain.c and lib/canon-host.c
   AC_REPLACE_FUNCS(strdup)
 
