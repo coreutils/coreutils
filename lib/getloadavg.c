@@ -43,6 +43,7 @@
    DGUX
    eunice			UNIX emulator under VMS.
    hpux
+   MSDOS			No-op for MSDOS.
    NeXT
    sgi
    sequent			Sequent Dynix 3.x.x (BSD)
@@ -51,6 +52,7 @@
    UMAX
    UMAX4_3
    VMS
+   WIN32			No-op for Windows95/NT.
    __linux__			Linux: assumes /proc filesystem mounted.
    				Support from Michael K. Johnson.
    __NetBSD__			NetBSD: assumes /kern filesystem mounted.
@@ -139,7 +141,7 @@ extern int errno;
 #define decstation
 #endif
 
-#if (defined(sun) || defined(__sun)) && defined(SVR4)
+#if (defined(sun) && defined(SVR4)) || defined (SOLARIS2)
 #define SUNOS_5
 #endif
 
@@ -168,7 +170,7 @@ extern int errno;
 #define LOAD_AVE_TYPE long
 #endif
 
-#if defined(sun) || defined(__sun)
+#ifdef sun
 #define LOAD_AVE_TYPE long
 #endif
 
@@ -284,7 +286,7 @@ extern int errno;
 #define NLIST_STRUCT
 #endif
 
-#if defined(sun) || defined(__sun)
+#ifdef sun
 #define NLIST_STRUCT
 #endif
 
@@ -389,6 +391,7 @@ extern int errno;
 #ifdef SUNOS_5
 #include <fcntl.h>
 #include <kvm.h>
+#include <kstat.h>
 #endif
 
 #ifndef KERNEL_FILE
@@ -513,6 +516,50 @@ getloadavg (loadavg, nelem)
   errno = 0;
   elem = -1;
 #endif
+
+#if !defined (LDAV_DONE) && defined (SUNOS_5)
+/* Use libkstat because we don't have to be root.  */
+#define LDAV_DONE
+  kstat_ctl_t *kc;
+  kstat_t *ksp;
+  kstat_named_t *kn;
+
+  kc = kstat_open ();
+  if (kc == 0) return -1;
+  ksp = kstat_lookup (kc, "unix", 0, "system_misc");
+  if (ksp == 0 ) return -1;
+  if (kstat_read (kc, ksp, 0) == -1) return -1;
+  
+
+  kn = kstat_data_lookup (ksp, "avenrun_1min");
+  if (kn == 0)
+    {
+      /* Return -1 if no load average information is available.  */
+      nelem = 0;
+      elem = -1;
+    }
+
+  if (nelem >= 1)
+    loadavg[elem++] = (double) kn->value.ul/FSCALE;
+
+  if (nelem >= 2)
+    {
+      kn = kstat_data_lookup (ksp, "avenrun_5min");
+      if (kn != 0)
+	{
+	  loadavg[elem++] = (double) kn->value.ul/FSCALE;
+
+	  if (nelem >= 3)
+	    {
+	      kn = kstat_data_lookup (ksp, "avenrun_15min");
+	      if (kn != 0)
+		loadavg[elem++] = (double) kn->value.ul/FSCALE;
+	    }
+	}
+    }
+
+  kstat_close (kc);
+#endif /* SUNOS_5 */
 
 #if !defined (LDAV_DONE) && defined (__linux__)
 #define LDAV_DONE
@@ -733,11 +780,11 @@ getloadavg (loadavg, nelem)
        : (load_ave.tl_avenrun.l[0] / (double) load_ave.tl_lscale));
 #endif	/* OSF_MIPS */
 
-#if !defined (LDAV_DONE) && defined(MSDOS)
+#if !defined (LDAV_DONE) && (defined (MSDOS) || defined (WIN32))
 #define LDAV_DONE
 
   /* A faithful emulation is going to have to be saved for a rainy day.  */
-  for ( ; elem < nelem; elem++) 
+  for ( ; elem < nelem; elem++)
     {
       loadavg[elem] = 0.0;
     }
@@ -866,7 +913,7 @@ getloadavg (loadavg, nelem)
       /* We pass 0 for the kernel, corefile, and swapfile names
 	 to use the currently running kernel.  */
       kd = kvm_open (0, 0, 0, O_RDONLY, 0);
-      if (kd != 0) 
+      if (kd != 0)
 	{
 	  /* nlist the currently running kernel.  */
 	  kvm_nlist (kd, nl);
