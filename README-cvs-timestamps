@@ -25,5 +25,5 @@ test -d m4 \
   && find m4 -name '*.m4' -print0	|xargs -r0 touch -d "$t2"
 find . -type f -name '*.po' -print0	|xargs -r0 touch -d "$t2"
 find . -type f -name '*.info' -print0	|xargs -r0 touch -d "$t2"
-touch -d "$t3" aclocal.m4 configure config.hin $bison_src
+touch -d "$t3" aclocal.m4 configure config.hin $bison_gen
 find . -name Makefile.in -print0	|xargs -0 touch -d "$t4"
