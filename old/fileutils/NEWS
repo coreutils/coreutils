@@ -39,6 +39,7 @@ Changes in release 3.13:
 * du works on SunOS 4 systems even when accounting is enabled
 * many programs that convert strings to integers now use strtol or strtoul
   and detect overflow
+
 User-visible changes in release 3.12:
 * None.
 User-visible changes in release 3.11:
