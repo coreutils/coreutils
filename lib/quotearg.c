@@ -25,10 +25,12 @@
 # include <stddef.h>  /* For the definition of size_t on windows w/MSVC.  */
 #endif
 #include <sys/types.h>
-#include <quotearg.h>
-#include <xalloc.h>
 
 #include <ctype.h>
+#include <errno.h>
+#ifndef errno
+extern int errno;
+#endif
 
 #if ENABLE_NLS
 # include <libintl.h>
@@ -96,6 +98,9 @@
 #  define iswprint(wc) 1
 # endif
 #endif
+
+#include "quotearg.h"
+#include "xalloc.h"
 
 #define INT_BITS (sizeof (int) * CHAR_BIT)
 
