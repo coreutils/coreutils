@@ -1,3 +1,10 @@
+1998-06-29  Paul Eggert  <eggert@twinsun.com>
+
+	* lib/mountlist.c (read_filesystem_list):
+	Plug file descriptor leak on failure.
+	Report failure if lock file can't be opened for some reason
+	other than nonexistence.
+
 1998-06-29  Jim Meyering  <meyering@ascend.com>
 
 	* Version 3.16q.
