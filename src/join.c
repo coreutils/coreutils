@@ -36,6 +36,9 @@ char *xmalloc ();
 char *xrealloc ();
 static void usage ();
 
+/* Undefine, to avoid warning about redefinition on some systems.  */
+#undef min
+#undef max
 #define min(A, B) ((A) < (B) ? (A) : (B))
 #define max(A, B) ((A) > (B) ? (A) : (B))
 

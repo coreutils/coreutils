@@ -27,6 +27,8 @@
 #include "version.h"
 #include "error.h"
 
+/* Undefine, to avoid warning about redefinition on some systems.  */
+#undef min
 #define min(x, y) ((x) < (y) ? (x) : (y))
 
 /* The name this program was run with. */

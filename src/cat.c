@@ -34,6 +34,8 @@
 #include "version.h"
 #include "error.h"
 
+/* Undefine, to avoid warning about redefinition on some systems.  */
+#undef max
 #define max(h,i) ((h) > (i) ? (h) : (i))
 
 char *stpcpy ();

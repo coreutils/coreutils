@@ -47,7 +47,10 @@ void free ();
 
 static void usage ();
 
+/* Undefine, to avoid warning about redefinition on some systems.  */
+#undef min
 #define min(a, b) ((a) < (b) ? (a) : (b))
+
 #define UCHAR_LIM (UCHAR_MAX + 1)
 #define UCHAR(c) ((unsigned char) (c))
 
