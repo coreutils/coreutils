@@ -471,9 +471,9 @@ main (int argc, char **argv)
 
   if (argc < optind + 2)
     {
-      error (0, 0, _("%s"), (argc == optind
-			     ? _("missing file arguments")
-			     : _("missing file argument")));
+      error (0, 0, "%s", (argc == optind
+			  ? _("missing file arguments")
+			  : _("missing file argument")));
       usage (1);
     }
 
