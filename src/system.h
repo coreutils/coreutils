@@ -827,17 +827,15 @@ ptr_align (void *ptr, size_t alignment)
 #endif
 
 /* If 10*Accum+Digit_val is larger than Type_max, then don't update Accum
-   and return nonzero.  Otherwise, set Accum to that new value and
-   return zero.  With a compiler that provides the __typeof__ operator,
-   perform a compile-time check to verify that the specified Type_max
-   value is the same as the constant derived from the type of Accum.  */
+   and return zero to indicate it would overflow.  Otherwise, set Accum to
+   that new value and return nonzero.  With a compiler that provides the
+   __typeof__ operator, perform a compile-time check to verify that the
+   specified Type_max value is the same as the constant derived from the
+   type of Accum.  */
 #define DECIMAL_DIGIT_ACCUMULATE(Accum, Digit_val, Type_max)		\
   (									\
    /* Ensure that Type_max is the maximum value of Accum.  */		\
    VERIFY_W_TYPEOF (TYPE_MAXIMUM (__typeof__ (Accum)) == (Type_max)),	\
-   /* If the result would overflow, return 1.				\
-      Otherwise update Accum and return 0.  */				\
    ((Type_max) / 10 < Accum || Accum * 10 + (Digit_val) < Accum		\
-    ? 1									\
-    : ((Accum = Accum * 10 + (Digit_val)), 0))				\
+	       ? 0 : ((Accum = Accum * 10 + (Digit_val)), 1))		\
   )
