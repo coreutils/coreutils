@@ -1,0 +1,298 @@
+# Makefile.in generated automatically by automake 1.1l from Makefile.am
+
+# Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
+# This Makefile.in is free software; the Free Software Foundation
+# gives unlimited permission to copy, distribute and modify it.
+
+
+SHELL = /bin/sh
+
+srcdir = @srcdir@
+top_srcdir = @top_srcdir@
+VPATH = @srcdir@
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+
+bindir = @bindir@
+sbindir = @sbindir@
+libexecdir = @libexecdir@
+datadir = @datadir@
+sysconfdir = @sysconfdir@
+sharedstatedir = @sharedstatedir@
+localstatedir = @localstatedir@
+libdir = @libdir@
+infodir = @infodir@
+mandir = @mandir@
+includedir = @includedir@
+oldincludedir = /usr/include
+
+pkgdatadir = $(datadir)/@PACKAGE@
+pkglibdir = $(libdir)/@PACKAGE@
+pkgincludedir = $(includedir)/@PACKAGE@
+
+top_builddir = ../..
+
+INSTALL = @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@
+INSTALL_DATA = @INSTALL_DATA@
+INSTALL_SCRIPT = @INSTALL_SCRIPT@
+transform = @program_transform_name@
+RANLIB = @RANLIB@
+GENCAT = @GENCAT@
+GMSGFMT = @GMSGFMT@
+CC = @CC@
+
+x = pr
+explicit = 0Ft 0F 0Fnt 0F 0Ft 3-0F 0Ft 3f-0F 0Ft a3-0F 0Ft a3f-0F 0Fnt a3f-0F \
+0Ft 3a3f-0F 0Ft b3-0F 0Ft b3f-0F 0Fnt b3f-0F 0Ft 3b3f-0F 0FFt 0FF 0FnFnt 0FF \
+0FFt a3f-0FF 0FFnt a3f-0FF 0FFt b3f-0FF 0FFnt b3f-0FF 0FnFt b3f-0FF 0FnFnt \
+b3f-0FF 0FFt 3b3f-0FF 0FFnt 3b3f-0FF FFn FF FnFn FF FFn 3-FF FFn 3f-FF FFn \
+a3f-FF FFtn a3f-FF FFn b3f-FF FFtn b3f-FF FnFn b3f-FF tFFn b3f-FF tFnFt \
+b3f-FF FFn 3b3f-FF FFtn 3b3f-FF FFn l24-FF FFtn l24-FF FnFn l24-FF tFFn \
+l24-FF tFnFt l24-FF tFFt l24-FF FFn a2l17-FF FFtn a2l17-FF FnFn a2l17-FF tFFn \
+a2l17-FF tFnFt a2l17-FF tFFt a2l17-FF FFn a2l15-FF FFtn a2l15-FF FnFn \
+a2l15-FF tFFn a2l15-FF tFnFt a2l15-FF FFn b2l17-FF FFtn b2l17-FF FnFn \
+b2l17-FF tFFn b2l17-FF tFnFt b2l17-FF tFFt b2l17-FF FFn b2l15-FF FFtn \
+b2l15-FF FnFn b2l15-FF tFFn b2l15-FF tFnFt b2l15-FF FFn 4l24-FF FFtn 4l24-FF \
+FnFn 4l24-FF tFFn 4l24-FF tFnFt 4l24-FF tFFt 4l24-FF tFFt 4-7l24-FF FFn \
+3a2l17-FF FFtn 3a2l17-FF FnFn 3a2l17-FF tFFn 3a2l17-FF tFnFt 3a2l17-FF tFFt \
+3a2l17-FF FFn 3b2l17-FF FFtn 3b2l17-FF FnFn 3b2l17-FF tFFn 3b2l17-FF tFnFt \
+3b2l17-FF tFFt 3b2l17-FF tn l24-t tn l17f-t tn 3l24-t tn 3l17f-t tn 3-5l17f-t \
+tn a3l15-t tn a3l8f-t tn 3a3l15-t tn 3a3l8f-t tn b3l15-t tn b3l8f-t tn \
+3b3l15-t tn 3b3l8f-t tn tn ml24-t tn tn ml17f-t tn tn 3ml24-t tn tn 3ml17f-t \
+0Ft 0Ft ml17f-0F 0Ft 0Fnt ml17f-0F tn 0Ft ml17f-t-0F tFFn tFnFt ml24-FF tFFn \
+FFn ml24-FF tn FFn ml24-t-FF FFn tn ml20-FF-t FFn FnFn 3ml24-FF tFFn FFn \
+3ml24-FF tn FFn 3ml24-t-FF tn t-t tn t-t tFFt-bl t-bl 0FnFnt t-0FF FFn t-FF \
+FnFn t-FF FFn t-FF 0FnFnt ta3-0FF FFn ta3-FF FnFn ta3-FF 0FnFnt tb3-0FF FFn \
+tb3-FF FnFn tb3-FF tn T-t tn T-t tFFt-bl T-bl 0FnFnt T-0FF FFn T-FF FnFn T-FF \
+FFn T-FF 0FnFnt Ta3-0FF FFn Ta3-FF FnFn Ta3-FF 0FnFnt Tb3-0FF FFn Tb3-FF FnFn \
+Tb3-FF tFFt-bl nl17f-bl tFFt-bl nN15l17f-bl tFFt-bl n+2l17f-bl tFFt-bl \
+n+3l17f-bl tFFt-bl nN1+3l17f-bl 0FFt n+2l17f-0FF 0FFnt n+2l17f-0FF 0FnFt \
+n+2l17f-0FF 0FnFnt n+2l17f-0FF 0FFt n+2-5l17f-0FF 0FFt n+3l17f-0FF 0FFnt \
+n+3l17f-0FF 0FnFt n+3l17f-0FF 0FnFnt n+3l17f-0FF FFn n+7l24-FF FFtn n+7l24-FF \
+FnFn n+7l24-FF FnFn n+3-7l24-FF tFFn n+8l20-FF tFnFt n+8l20-FF tFFt n+8l20-FF \
+0FFt n+5a3l6f-0FF 0FFnt n+5a3l6f-0FF 0FnFt n+5a3l6f-0FF 0FnFnt n+5a3l6f-0FF \
+FFn n+6a2l17-FF FFtn n+6a2l17-FF FnFn n+6a2l17-FF tFFn n+6a2l17-FF tFnFt \
+n+6a2l17-FF tFFt n+6a2l17-FF tFFt n+4-8a2l17-FF 0FFt n+4b2l10f-0FF 0FFnt \
+n+4b2l10f-0FF 0FnFt n+4b2l10f-0FF 0FnFnt n+4b2l10f-0FF FFn n+6b3l6f-FF FFtn \
+n+6b3l6f-FF FnFn n+6b3l6f-FF tFFn n+6b3l6f-FF tFnFt n+6b3l6f-FF tFFt \
+n+6b3l6f-FF FnFn n+5-8b3l10f-FF tFFt-bl FnFn n+3ml13f-bl-FF tFFt-bl tn \
+n+3ml17f-bl-tn tn tFFt-bl n+3ml17f-tn-bl 0FnFnt w72j-0FF tFFt-lm w48l17f-lm \
+tFFt-lm w26l17f-lm tFFt-lm w25l17f-lm tFFt-lm w20l17f-lm tFFt-lm loli \
+ml17f-lm-lo tFFt-lm loli w35ml17f-lm-lo tFFt-lm loli jml17f-lm-lo tFFt-lm \
+loli w35jml17f-lm-lo tFFt-lm tFFt-lm loli njml17f-lm-lm-lo tFFt-lm loli \
+tFFt-lm njml17f-lm-lo-lm tFFt-lm a3l17f-lm tFFt-lm w35a3l17f-lm tFFt-lm \
+ja3l17f-lm tFFt-lm w35ja3l17f-lm tFFt-lm b3l17f-lm tFFt-lm w35b3l17f-lm \
+tFFt-lm jb3l17f-lm tFFt-lm w35jb3l17f-lm tFFt-bl FnFn nsml13-bl-FF tFFt-bl \
+FnFn nsml17-bl-FF tn tn FnFn nsml13-t-t-FF tn tn FnFn nsml17-t-t-FF tn tn \
+FnFn FnFn nsml13-t-t-FF-FF tn tn FnFn FnFn nsml17-t-t-FF-FF tn o3a3l17f-tn tn \
+o3a3sl17f-tn tn o3a3snl17f-tn tn o3b3l17f-tn tn o3b3sl17f-tn tn o3b3snl17f-tn \
+tFFt-bl tn o3ml17f-bl-tn tFFt-bl tn o3msl17f-bl-tn tFFt-bl tn o3msnl17f-bl-tn \
+tFFt-lm loli o3jml17f-lm-lo
+maint_gen =
+run_gen = t1a.out t1a.err t1b.out t1b.err t1c.out t1c.err t1d.out t1d.err \
+t1e.out t1e.err t1f.out t1f.err t1g.out t1g.err t1h.out t1h.err t1i.out \
+t1i.err t1j.out t1j.err t1k.out t1k.err t1l.out t1l.err t2a.out t2a.err \
+t2b.out t2b.err t2c.out t2c.err t2d.out t2d.err t2e.out t2e.err t2f.out \
+t2f.err t2g.out t2g.err t2h.out t2h.err t2i.out t2i.err t2j.out t2j.err \
+t3a.out t3a.err t3b.out t3b.err t3c.out t3c.err t3d.out t3d.err t3e.out \
+t3e.err t3f.out t3f.err t3g.out t3g.err t3h.out t3h.err t3i.out t3i.err \
+t3j.out t3j.err t3k.out t3k.err t3l.out t3l.err t3m.out t3m.err t3la.out \
+t3la.err t3lb.out t3lb.err t3lc.out t3lc.err t3ld.out t3ld.err t3le.out \
+t3le.err t3lf.out t3lf.err t3aa.out t3aa.err t3ab.out t3ab.err t3ac.out \
+t3ac.err t3ad.out t3ad.err t3ae.out t3ae.err t3af.out t3af.err t3ag.out \
+t3ag.err t3ah.out t3ah.err t3ai.out t3ai.err t3aj.out t3aj.err t3ak.out \
+t3ak.err t3ba.out t3ba.err t3bb.out t3bb.err t3bc.out t3bc.err t3bd.out \
+t3bd.err t3be.out t3be.err t3bf.out t3bf.err t3bg.out t3bg.err t3bh.out \
+t3bh.err t3bi.out t3bi.err t3bj.out t3bj.err t3bk.out t3bk.err t3Pa.out \
+t3Pa.err t3Pb.out t3Pb.err t3Pc.out t3Pc.err t3Pd.out t3Pd.err t3Pe.out \
+t3Pe.err t3Pf.out t3Pf.err t3Pg.out t3Pg.err t3Paa.out t3Paa.err t3Pab.out \
+t3Pab.err t3Pac.out t3Pac.err t3Pad.out t3Pad.err t3Pae.out t3Pae.err \
+t3Paf.out t3Paf.err t3Pba.out t3Pba.err t3Pbb.out t3Pbb.err t3Pbc.out \
+t3Pbc.err t3Pbd.out t3Pbd.err t3Pbe.out t3Pbe.err t3Pbf.out t3Pbf.err t4a.out \
+t4a.err t4b.out t4b.err t4c.out t4c.err t4d.out t4d.err t4e.out t4e.err \
+t4f.out t4f.err t4g.out t4g.err t4h.out t4h.err t4i.out t4i.err t4j.out \
+t4j.err t4k.out t4k.err t4l.out t4l.err t4m.out t4m.err t5a.out t5a.err \
+t5b.out t5b.err t5c.out t5c.err t5d.out t5d.err t5e.out t5e.err t5f.out \
+t5f.err t5g.out t5g.err t5ma.out t5ma.err t5mb.out t5mb.err t5mc.out t5mc.err \
+t5md.out t5md.err t5Pma.out t5Pma.err t5Pmb.out t5Pmb.err t5Pmc.out t5Pmc.err \
+t6a.out t6a.err t6b.out t6b.err t6c.out t6c.err t6d.out t6d.err t6e.out \
+t6e.err t6f.out t6f.err t6g.out t6g.err t6aa.out t6aa.err t6ab.out t6ab.err \
+t6ac.out t6ac.err t6ba.out t6ba.err t6bb.out t6bb.err t6bc.out t6bc.err \
+t7a.out t7a.err t7b.out t7b.err t7c.out t7c.err t7d.out t7d.err t7e.out \
+t7e.err t7f.out t7f.err t7g.out t7g.err t7aa.out t7aa.err t7ab.out t7ab.err \
+t7ac.out t7ac.err t7ba.out t7ba.err t7bb.out t7bb.err t7bc.out t7bc.err \
+t9a.out t9a.err t9b.out t9b.err t9Pa.out t9Pa.err t9Pb.out t9Pb.err t9Pc.out \
+t9Pc.err t9Pe.out t9Pe.err t9Pf.out t9Pf.err t9Pg.out t9Pg.err t9Ph.out \
+t9Ph.err t9Pi.out t9Pi.err t9Pj.out t9Pj.err t9Pk.out t9Pk.err t9Pl.out \
+t9Pl.err t9Pm.out t9Pm.err t9Pn.out t9Pn.err t9Po.out t9Po.err t9Pp.out \
+t9Pp.err t9Pq.out t9Pq.err t9Pr.out t9Pr.err t9Ps.out t9Ps.err t9Pt.out \
+t9Pt.err t9Paa.out t9Paa.err t9Pab.out t9Pab.err t9Pac.out t9Pac.err \
+t9Pad.out t9Pad.err t9Pae.out t9Pae.err t9Paf.out t9Paf.err t9Pag.out \
+t9Pag.err t9Pah.out t9Pah.err t9Pai.out t9Pai.err t9Paj.out t9Paj.err \
+t9Pak.out t9Pak.err t9Pba.out t9Pba.err t9Pbb.out t9Pbb.err t9Pbc.out \
+t9Pbc.err t9Pbd.out t9Pbd.err t9Pbe.out t9Pbe.err t9Pbf.out t9Pbf.err \
+t9Pbg.out t9Pbg.err t9Pbh.out t9Pbh.err t9Pbi.out t9Pbi.err t9Pbj.out \
+t9Pbj.err t9Pbk.out t9Pbk.err t9Pma.out t9Pma.err t9Pmb.out t9Pmb.err \
+t9Pmc.out t9Pmc.err t10a.out t10a.err t10b.out t10b.err t10c.out t10c.err \
+t10d.out t10d.err t10e.out t10e.err t10ma.out t10ma.err t10mb.out t10mb.err \
+t10mc.out t10mc.err t10md.out t10md.err t10me.out t10me.err t10mf.out \
+t10mf.err t10aa.out t10aa.err t10ab.out t10ab.err t10ac.out t10ac.err \
+t10ad.out t10ad.err t10ba.out t10ba.err t10bb.out t10bb.err t10bc.out \
+t10bc.err t10bd.out t10bd.err t11a.out t11a.err t11b.out t11b.err t11e.out \
+t11e.err t11f.out t11f.err t11g.out t11g.err t11h.out t11h.err t12aa.out \
+t12aa.err t12ab.out t12ab.err t12ac.out t12ac.err t12ba.out t12ba.err \
+t12bb.out t12bb.err t12bc.out t12bc.err t12ma.out t12ma.err t12mb.out \
+t12mb.err t12mc.out t12mc.err t12md.out t12md.err
+
+EXTRA_DIST = mk-script.pl Test.pm $x-tests $(explicit) $(maint_gen)
+noinst_SCRIPTS = $x-tests
+
+PERL = @PERL@
+editpl = sed -e 's,@''PERL''@,$(PERL),g' -e 's,@''srcdir''@,@srcdir@,g'
+
+TESTS = $x-tests
+
+SUFFIXES = .pl
+
+MAINTAINERCLEANFILES = $x-tests $(maint_gen)
+CLEANFILES = $(run_gen)
+mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
+CONFIG_HEADER = ../../config.h
+CONFIG_CLEAN_FILES = 
+SCRIPTS =  $(noinst_SCRIPTS)
+
+DIST_COMMON =  Makefile.am Makefile.in
+
+
+PACKAGE = @PACKAGE@
+VERSION = @VERSION@
+
+DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) \
+	$(TEXINFOS) $(MANS) $(EXTRA_DIST)
+
+TAR = tar
+default: all
+
+.SUFFIXES:
+.SUFFIXES: .pl
+$(srcdir)/Makefile.in: @MAINT@ Makefile.am $(top_srcdir)/configure.in $(ACLOCAL) 
+	cd $(top_srcdir) && automake --gnu tests/pr-test/Makefile
+
+Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status $(BUILT_SOURCES)
+	cd $(top_builddir) \
+	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status
+
+tags: TAGS
+TAGS:
+
+
+distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
+
+subdir = tests/pr-test
+distdir: $(DISTFILES)
+	@for file in $(DISTFILES); do \
+	  d=$(srcdir); \
+	  test -f $(distdir)/$$file \
+	  || ln $$d/$$file $(distdir)/$$file 2> /dev/null \
+	  || cp -p $$d/$$file $(distdir)/$$file; \
+	done
+check-TESTS: $(TESTS)
+	@failed=0; all=0; \
+	srcdir=$(srcdir); export srcdir; \
+	for tst in $(TESTS); do \
+	  all=`expr $$all + 1`; \
+	  if test -f $$tst; then dir=.; \
+	  else dir="$(srcdir)"; fi; \
+	  if $(TESTS_ENVIRONMENT) $$dir/$$tst; then \
+	    echo "PASS: $$tst"; \
+	  else \
+	    failed=`expr $$failed + 1`; \
+	    echo "FAIL: $$tst"; \
+	  fi; \
+	done; \
+	if test "$$failed" -eq 0; then \
+	  echo "========================"; \
+	  echo "All $$all tests passed"; \
+	  echo "========================"; \
+	else \
+	  echo "$$failed of $$all tests failed"; \
+	fi
+info:
+dvi:
+check: all
+	$(MAKE) check-TESTS
+installcheck:
+install-exec: 
+	$(NORMAL_INSTALL)
+
+install-data: 
+	$(NORMAL_INSTALL)
+
+install: install-exec install-data all
+	@:
+
+uninstall: 
+
+all: $(SCRIPTS) Makefile
+
+install-strip:
+	$(MAKE) INSTALL_PROGRAM='$(INSTALL_PROGRAM) -s' install
+installdirs:
+
+
+mostlyclean-generic:
+	test -z "$(MOSTLYCLEANFILES)" || rm -f $(MOSTLYCLEANFILES)
+
+clean-generic:
+	test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
+
+distclean-generic:
+	rm -f Makefile $(DISTCLEANFILES)
+	rm -f config.cache config.log stamp-h
+	test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
+
+maintainer-clean-generic:
+	test -z "$(MAINTAINERCLEANFILES)" || rm -f $(MAINTAINERCLEANFILES)
+	test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
+mostlyclean:  mostlyclean-generic
+
+clean:  clean-generic mostlyclean
+
+distclean:  distclean-generic clean
+	rm -f config.status
+
+maintainer-clean:  maintainer-clean-generic distclean
+	@echo "This command is intended for maintainers to use;"
+	@echo "it deletes files that may require special tools to rebuild."
+
+.PHONY: default tags distdir check-TESTS info dvi installcheck \
+install-exec install-data install uninstall all installdirs \
+mostlyclean-generic distclean-generic clean-generic \
+maintainer-clean-generic clean mostlyclean distclean maintainer-clean
+
+
+$x-tests: @MAINT@mk-script Test.pm
+	./mk-script ../../src/$x > $@.n
+	mv $@.n $@
+	chmod 755 $@
+
+.pl:
+	rm -f $@ $@.tmp
+	$(editpl) $< > $@.tmp
+	chmod +x-w $@.tmp
+	mv $@.tmp $@
+
+@MAINT@rebuild-check: Test.pm mk-script
+@MAINT@	rb=rb-check; rm -f $rb; \
+@MAINT@	m_template=../Makefile.am.in; \
+@MAINT@	sed -n '1,/^##test-files-begin/p' $$m_template > $$rb; \
+@MAINT@	tool=`echo $(subdir)|sed 's/^tests.//;s/-test//'`; \
+@MAINT@	echo "x = $$tool" >> $$rb; \
+@MAINT@	./mk-script --list >> $$rb; \
+@MAINT@	sed -n '/^##test-files-end/,$$p' $$m_template >> $$rb; \
+@MAINT@	diff -u Makefile.am $$rb && echo ok || echo no
+
+# Tell versions [3.59,3.63) of GNU make to not export all variables.
+# Otherwise a system limit (for SysV at least) may be exceeded.
+.NOEXPORT:
