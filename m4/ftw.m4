@@ -11,11 +11,10 @@ AC_DEFUN([AC_FUNC_FTW],
   AC_CHECK_FUNC([tdestroy], , [need_tdestroy=1])
   AC_CACHE_CHECK([for working GNU ftw], ac_cv_func_ftw_working,
   [
-
   # The following test would fail prior to glibc-2.3.2, because `depth'
   # would be 2 rather than 4.
   mkdir -p conftest.dir/a/b/c
-  AC_RUN_IFELSE([AC_LANG_SOURCE([], [[
+  AC_RUN_IFELSE([AC_LANG_SOURCE([[
 #include <string.h>
 #include <stdlib.h>
 #include <ftw.h>
