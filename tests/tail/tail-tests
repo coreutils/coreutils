@@ -1,5 +1,5 @@
 #! /bin/sh
-# This script was generated automatically by build-script.
+# This script was generated automatically by mk-script.
 case $# in
   0) xx='../../src/tail';;
   *) xx="$1";;
