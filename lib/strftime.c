@@ -120,7 +120,7 @@ extern char *tzname[];
    ? (a) >> (b)		\
    : (a) / (1 << (b)) - ((a) % (1 << (b)) < 0))
 
-/* Bound on length of the string representing an integer value or type T.
+/* Bound on length of the string representing an integer type or expression T.
    Subtract 1 for the sign bit if t is signed; log10 (2.0) < 146/485;
    add 1 for integer division truncation; add 1 more for a minus sign
    if needed.  */
