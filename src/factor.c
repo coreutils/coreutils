@@ -51,7 +51,7 @@
    http://www.utm.edu/research/primes/glossary/WheelFactorization.html  */
 
 #include "wheel-size.h"  /* For the definition of WHEEL_SIZE.  */
-static const unsigned int wheel_tab[] =
+static const unsigned char wheel_tab[] =
   {
 #include "wheel.h"
   };
@@ -93,12 +93,12 @@ Print the prime factors of each NUMBER.\n\
 
 /* FIXME: comment */
 
-static int
-factor (uintmax_t n0, int max_n_factors, uintmax_t *factors)
+static size_t
+factor (uintmax_t n0, size_t max_n_factors, uintmax_t *factors)
 {
   register uintmax_t n = n0, d, q;
-  int n_factors = 0;
-  unsigned int const *w = wheel_tab;
+  size_t n_factors = 0;
+  unsigned char const *w = wheel_tab;
 
   if (n < 1)
     return n_factors;
@@ -139,13 +139,13 @@ factor (uintmax_t n0, int max_n_factors, uintmax_t *factors)
 
 /* FIXME: comment */
 
-static int
+static bool
 print_factors (const char *s)
 {
   uintmax_t factors[MAX_N_FACTORS];
   uintmax_t n;
-  int n_factors;
-  int i;
+  size_t n_factors;
+  size_t i;
   char buf[INT_BUFSIZE_BOUND (uintmax_t)];
   strtol_error err;
 
@@ -155,20 +155,20 @@ print_factors (const char *s)
 	error (0, 0, _("`%s' is too large"), s);
       else
 	error (0, 0, _("`%s' is not a valid positive integer"), s);
-      return 1;
+      return false;
     }
   n_factors = factor (n, MAX_N_FACTORS, factors);
   printf ("%s:", umaxtostr (n, buf));
   for (i = 0; i < n_factors; i++)
     printf (" %s", umaxtostr (factors[i], buf));
   putchar ('\n');
-  return 0;
+  return true;
 }
 
-static int
+static bool
 do_stdin (void)
 {
-  int fail = 0;
+  bool ok = true;
   token_buffer tokenbuffer;
 
   init_tokenbuffer (&tokenbuffer);
@@ -179,17 +179,17 @@ do_stdin (void)
 				       &tokenbuffer);
       if (token_length == (size_t) -1)
 	break;
-      fail |= print_factors (tokenbuffer.buffer);
+      ok &= print_factors (tokenbuffer.buffer);
     }
   free (tokenbuffer.buffer);
 
-  return fail;
+  return ok;
 }
 
 int
 main (int argc, char **argv)
 {
-  int fail;
+  bool ok;
 
   initialize_main (&argc, &argv);
   program_name = argv[0];
@@ -209,17 +209,16 @@ main (int argc, char **argv)
       ++argv;
     }
 
-  fail = 0;
   if (argc == 1)
-    fail = do_stdin ();
+    ok = do_stdin ();
   else
     {
       int i;
       for (i = 1; i < argc; i++)
-	fail |= print_factors (argv[i]);
-      if (fail)
-	usage (EXIT_FAILURE);
+	if (! print_factors (argv[i]))
+	  usage (EXIT_FAILURE);
+      ok = true;
     }
 
-  exit (fail ? EXIT_FAILURE : EXIT_SUCCESS);
+  exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
