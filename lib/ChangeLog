@@ -4,12 +4,12 @@
 
 2000-12-18  Paul Eggert  <eggert@twinsun.com>
 
-	* lib/physmem.h, lib/physmem.c: New files.
+	* physmem.h, physmem.c: New files.
 
-	* lib/Makefile.am (libfetish_a_SOURCES): Add physmem.c.
+	* Makefile.am (libfetish_a_SOURCES): Add physmem.c.
 	(noinst_HEADERS): Add physmem.h.
 
-	* lib/xstrtol.c (__xstrtol): Add undocumented suffixes 'g' and
+	* xstrtol.c (__xstrtol): Add undocumented suffixes 'g' and
 	't' for compatibility with Solaris 8 sort.
 
 2000-12-18  Bruno Haible  <haible@clisp.cons.org>
