@@ -44,7 +44,9 @@ esac
 setuidgid $NON_ROOT_USERNAME rm -rf a 2> out-t && fail=1
 
 # On some systems, we get `Not owner'.  Convert it.
-sed 's/Not owner/Operation not permitted/' out-t > out
+# On other systems (HPUX), we get `Permission denied'.  Convert it, too.
+onp='Operation not permitted'
+sed "s/Not owner/$onp/;s/Permission denied/$onp/" out-t > out
 
 cat <<\EOF > exp
 rm: cannot remove `a/b': Operation not permitted
