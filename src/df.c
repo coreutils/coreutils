@@ -196,22 +196,31 @@ excluded_fstype (const char *fstype)
 }
 
 /* Like human_readable, except return "-" if the argument is -1,
+   return the negative of N if NEGATIVE is 1,
    and take ceiling of fractions if posix_format.  */
-static char *
-df_readable (uintmax_t n, char *buf,
+static char const *
+df_readable (int negative, uintmax_t n, char *buf,
 	     int from_block_size, int t_output_block_size)
 {
-  return (n == -1 ? "-"
-	  : human_readable_inexact (n, buf, from_block_size,
-				    t_output_block_size,
-				    (posix_format
-				     ? human_ceiling
-				     : human_round_to_even)));
+  if (n == -1)
+    return "-";
+  else
+    {
+      char *p = human_readable_inexact (negative ? - n : n,
+					buf + negative, from_block_size,
+					t_output_block_size,
+					(posix_format
+					 ? human_ceiling
+					 : human_round_to_even));
+      if (negative)
+	*--p = '-';
+      return p;
+    }
 }
 
 /* Return the ceiling of N * 100 / D.  Avoid the ceil function, so that
    we needn't link the math library.  */
-static int
+static double
 ceil_percent (uintmax_t n, uintmax_t d)
 {
   if (n <= (uintmax_t) -1 / 100)
@@ -227,8 +236,10 @@ ceil_percent (uintmax_t n, uintmax_t d)
 	 practice it is quite rare to overflow uintmax_t, so this is
 	 good enough for now.  */
       double pct = n * 100.0 / d;
-      int r = pct;
-      return r + (r != pct);
+      double ipct = (int) pct;
+      if (ipct - 1 < pct && pct <= ipct + 1)
+	pct = ipct + (ipct < pct);
+      return pct;
     }
 }
 
@@ -246,6 +257,18 @@ show_dev (const char *disk, const char *mount_point, const char *fstype,
 {
   struct fs_usage fsu;
   const char *stat_file;
+  char buf[3][LONGEST_HUMAN_READABLE + 2];
+  int width;
+  int use_width;
+  int input_units;
+  int output_units;
+  uintmax_t total;
+  uintmax_t available;
+  int negate_available;
+  uintmax_t available_to_root;
+  uintmax_t used;
+  int negate_used;
+  uintmax_t nonroot_total;
 
   if (me_remote && show_local_fs)
     return;
@@ -300,91 +323,56 @@ show_dev (const char *disk, const char *mount_point, const char *fstype,
 
   if (inode_format)
     {
-      char buf[3][LONGEST_HUMAN_READABLE + 1];
-      double inodes_percent_used;
-      uintmax_t inodes_used;
-      int inode_units = output_block_size < 0 ? output_block_size : 1;
-
-      if (fsu.fsu_files == -1 || fsu.fsu_files < fsu.fsu_ffree)
-	{
-	  inodes_used = -1;
-	  inodes_percent_used = -1;
-	}
-      else
-	{
-	  inodes_used = fsu.fsu_files - fsu.fsu_ffree;
-	  inodes_percent_used =
-	    (fsu.fsu_files == 0 ? 0
-	     : inodes_used * 100.0 / fsu.fsu_files);
-	}
-
-      printf (" %7s %7s %7s ",
-	      df_readable (fsu.fsu_files, buf[0], 1, inode_units),
-	      df_readable (inodes_used, buf[1], 1, inode_units),
-	      df_readable (fsu.fsu_ffree, buf[2], 1, inode_units));
-
-      if (inodes_percent_used < 0)
-	printf ("   - ");
-      else
-	printf ("%4.0f%%", inodes_percent_used);
+      width = 7;
+      use_width = 5;
+      input_units = 1;
+      output_units = output_block_size < 0 ? output_block_size : 1;
+      total = fsu.fsu_files;
+      available = fsu.fsu_ffree;
+      negate_available = 0;
+      available_to_root = available;
     }
   else
     {
-      int w = output_block_size < 0 ? 5 : 9;
-      char buf[2][LONGEST_HUMAN_READABLE + 1];
-      char availbuf[LONGEST_HUMAN_READABLE + 2];
-      char *avail;
-      double blocks_percent_used;
-      uintmax_t blocks_used;
-
-      if (fsu.fsu_blocks == -1 || fsu.fsu_blocks < fsu.fsu_bfree)
-	{
-	  blocks_used = -1;
-	  blocks_percent_used = -1;
-	}
-      else
-	{
-	  uintmax_t blocks_avail;
-
-	  blocks_used = fsu.fsu_blocks - fsu.fsu_bfree;
-	  blocks_avail = blocks_used + fsu.fsu_bavail;
-	  blocks_percent_used =
-	    ((fsu.fsu_bavail == -1
-	      || blocks_avail == 0
-	      || (fsu.fsu_bavail_top_bit_set
-	          ? blocks_used < - fsu.fsu_bavail
-	          : fsu.fsu_bfree < fsu.fsu_bavail))
-	     ? -1
-	     : posix_format
-	     ? ceil_percent (blocks_used, blocks_avail)
-	     : blocks_used * 100.0 / blocks_avail);
-	}
-
-      avail = df_readable ((fsu.fsu_bavail_top_bit_set
-			    ? - fsu.fsu_bavail
-			    : fsu.fsu_bavail),
-			   availbuf + 1, fsu.fsu_blocksize,
-			   output_block_size);
-
-      if (fsu.fsu_bavail_top_bit_set)
-	*--avail = '-';
-
-      printf (" %*s %*s %*s ",
-	      w, df_readable (fsu.fsu_blocks, buf[0], fsu.fsu_blocksize,
-			      output_block_size),
-	      w, df_readable (blocks_used, buf[1], fsu.fsu_blocksize,
-			      output_block_size),
-	      w, avail);
-
-      {
-	int use_width = posix_format ? 8 : 4;
-
-	if (blocks_percent_used < 0)
-	  printf ("%*s", use_width, "- ");
-	else
-	  printf ("%*.0f%%", use_width - 1, blocks_percent_used);
-      }
+      width = output_block_size < 0 ? 5 : 9;
+      use_width = posix_format ? 8 : 4;
+      input_units = fsu.fsu_blocksize;
+      output_units = output_block_size;
+      total = fsu.fsu_blocks;
+      available = fsu.fsu_bavail;
+      negate_available = fsu.fsu_bavail_top_bit_set;
+      available_to_root = fsu.fsu_bfree;
     }
+
+  used = -1;
+  negate_used = 0;
+  if (total != -1 && available_to_root != -1)
+    {
+      used = total - available_to_root;
+      if (total < available_to_root)
+	{
+	  negate_used = 1;
+	  used = - used;
+	}
+    }
+
+  printf (" %*s %*s %*s ",
+	  width, df_readable (0, total,
+			      buf[0], input_units, output_units),
+	  width, df_readable (negate_used, used,
+			      buf[1], input_units, output_units),
+	  width, df_readable (negate_available, available,
+			      buf[2], input_units, output_units));
+
+  if (used == -1 || available == -1
+      || ! (nonroot_total = ((negate_used ? - used : used)
+			     + (negate_available ? - available : available))))
+    printf ("%*s", use_width, "- ");
+  else
+    printf ("%*.0f%%", use_width - 1,
+	    (posix_format
+	     ? ceil_percent (used, nonroot_total)
+	     : used * 100.0 / nonroot_total));
 
   if (mount_point)
     {
