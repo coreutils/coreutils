@@ -17,27 +17,7 @@
 
 /* Written by Jim Meyering.  */
 
-/* AIX requires this to be the first thing in the file.  */
 #include <config.h>
-
-#ifdef __GNUC__
-#define alloca __builtin_alloca
-#else /* not __GNUC__ */
-#if HAVE_ALLOCA_H
-#include <alloca.h>
-#else /* not HAVE_ALLOCA_H */
-#ifdef _AIX
- #pragma alloca
-#else /* not _AIX */
-#ifdef _WIN32
-#include <malloc.h>
-#include <io.h>
-#else
-char *alloca ();
-#endif /* not _WIN32 */
-#endif /* not _AIX */
-#endif /* not HAVE_ALLOCA_H */
-#endif /* not __GNUC__ */
 
 #include <stdio.h>
 #include <assert.h>
