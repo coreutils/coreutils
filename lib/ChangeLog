@@ -1,3 +1,10 @@
+2005-01-21  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Sync from gnulib.
+	* error.c [!_LIBC && !ENABLE_NLS]: Do not include "gettext.h";
+	not needed.  This removes a dependency on the gettext module.
+	[defined _LIBC]: Do not include <libintl.h>; not needed.
+
 2005-01-20  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* save-cwd.c (save_cwd): Remove code to support the case

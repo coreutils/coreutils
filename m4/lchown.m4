@@ -1,4 +1,9 @@
-#serial 5
+#serial 6
+
+dnl Copyright (C) 1998, 2001, 2003, 2004 Free Software Foundation, Inc.
+dnl This file is free software; the Free Software Foundation
+dnl gives unlimited permission to copy and/or distribute it,
+dnl with or without modifications, as long as this notice is preserved.
 
 dnl From Jim Meyering.
 dnl Provide lchown on systems that lack it.

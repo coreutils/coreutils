@@ -1,5 +1,5 @@
 /* Error handler for noninteractive utilities
-   Copyright (C) 1990-1998, 2000-2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1990-1998, 2000-2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    This program is free software; you can redistribute it and/or modify
@@ -29,9 +29,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef _LIBC
-# include <libintl.h>
-#else
+#if !_LIBC && ENABLE_NLS
 # include "gettext.h"
 #endif
 
