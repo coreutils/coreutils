@@ -2,19 +2,19 @@
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Library General Public License as
-   published by the Free Software Foundation; either version 2 of the
-   License, or (at your option) any later version.
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
 
    The GNU C Library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
+   Lesser General Public License for more details.
 
-   You should have received a copy of the GNU Library General Public
-   License along with the GNU C Library; see the file COPYING.LIB.  If not,
-   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-   Boston, MA 02111-1307, USA.  */
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
 
 #if HAVE_CONFIG_H
 # include <config.h>
@@ -31,6 +31,9 @@
 #include <stdio.h>
 #ifndef P_tmpdir
 # define P_tmpdir "/tmp"
+#endif
+#ifndef TMP_MAX
+# define TMP_MAX 238328
 #endif
 #ifndef __GT_FILE
 # define __GT_FILE	0
@@ -111,6 +114,25 @@ char *getenv ();
 # endif
 #endif
 
+#ifdef _LIBC
+# include <hp-timing.h>
+# if HP_TIMING_AVAIL
+#  define RANDOM_BITS(Var) \
+  if (__builtin_expect (value == UINT64_C (0), 0))			      \
+    {									      \
+      /* If this is the first time this function is used initialize	      \
+	 the variable we accumulate the value in to some somewhat	      \
+	 random value.  If we'd not do this programs at startup time	      \
+	 might have a reduced set of possible names, at least on slow	      \
+	 machines.  */							      \
+      struct timeval tv;						      \
+      __gettimeofday (&tv, NULL);					      \
+      value = ((uint64_t) tv.tv_usec << 16) ^ tv.tv_sec;		      \
+    }									      \
+  HP_TIMING_NOW (Var)
+# endif
+#endif
+
 /* Use the widest available unsigned type if uint64_t is not
    available.  The algorithm below extracts a number less than 62**6
    (approximately 2**35.725) from uint64_t, so ancient hosts where
@@ -119,11 +141,6 @@ char *getenv ();
 #if !defined UINT64_MAX && !defined uint64_t
 # define uint64_t uintmax_t
 #endif
-
-/* The total number of temporary file names that can exist for a given
-   template is 62**6.  On ancient hosts where uint64_t is really 32
-   bits, TEMPORARIES evaluates to 965660736, which is good enough.  */
-#define TEMPORARIES ((uint64_t) 62 * 62 * 62 * 62 * 62 * 62)
 
 /* Return nonzero if DIR is an existent directory.  */
 static int
@@ -221,10 +238,22 @@ __gen_tempname (char *tmpl, int kind)
   char *XXXXXX;
   static uint64_t value;
   uint64_t random_time_bits;
-  uint64_t count;
+  unsigned int count;
   int fd = -1;
   int save_errno = errno;
   struct_stat64 st;
+
+  /* A lower bound on the number of temporary files to attempt to
+     generate.  The maximum total number of temporary file names that
+     can exist for a given template is 62**6.  It should never be
+     necessary to try all these combinations.  Instead if a reasonable
+     number of names is tried (we define reasonable as 62**3) fail to
+     give the system administrator the chance to remove the problems.  */
+  unsigned int attempts_min = 62 * 62 * 62;
+
+  /* The number of times to attempt to generate a temporary file.  To
+     conform to POSIX, this must be no smaller than TMP_MAX.  */
+  unsigned int attempts = attempts_min < TMP_MAX ? TMP_MAX : attempts_min;
 
   len = strlen (tmpl);
   if (len < 6 || strcmp (&tmpl[len - 6], "XXXXXX"))
@@ -237,18 +266,22 @@ __gen_tempname (char *tmpl, int kind)
   XXXXXX = &tmpl[len - 6];
 
   /* Get some more or less random data.  */
-#if HAVE_GETTIMEOFDAY || _LIBC
+#ifdef RANDOM_BITS
+  RANDOM_BITS (random_time_bits);
+#else
+# if HAVE_GETTIMEOFDAY || _LIBC
   {
     struct timeval tv;
     __gettimeofday (&tv, NULL);
     random_time_bits = ((uint64_t) tv.tv_usec << 16) ^ tv.tv_sec;
   }
-#else
+# else
   random_time_bits = time (NULL);
+# endif
 #endif
   value += random_time_bits ^ __getpid ();
 
-  for (count = 0; count < TEMPORARIES; value += 7777, ++count)
+  for (count = 0; count < attempts; value += 7777, ++count)
     {
       uint64_t v = value;
 
