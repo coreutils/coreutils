@@ -1,3 +1,17 @@
+2001-07-02  Jim Meyering  <meyering@lucent.com>
+
+	The following changes were prompted by suggestions from Bruno Haible.
+
+	* jm-glibc-io.m4n: New file, the template from which jm-glibc-io.m4
+	is now generated.
+	* Makefile.am.in (Makefile.am): Include jm-glibc-io.m4n in emitted
+	definition of EXTRA_DIST.
+	(Makefile.am): Emit the dependency, `all-local: jm-glibc-io.m4' to
+	ensure that the generated file is created/updated whenever the list
+	of $(unlocked_functions) is changed.
+	(jm-glibc-io.m4): New rule.
+	(unlocked-io.h): New rule -- currently unused.
+
 2001-06-24  Jim Meyering  <meyering@lucent.com>
 
 	* regex.m4 (jm_INCLUDED_REGEX): Use a quadrigraph to represent an
