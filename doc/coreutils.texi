@@ -2293,7 +2293,7 @@ Always print file name headers.
 On older systems, @command{head} supports an obsolete option
 @option{-@var{count}@var{options}}, which is recognized only if it is
 specified first.  @var{count} is a decimal number optionally followed
-by a size letter (@samp{b}, @samp{k}, @samp{m}) as in @code{-c}, or
+by a size letter (@samp{b}, @samp{k}, @samp{m}) as in @option{-c}, or
 @samp{l} to mean count by lines, or other option letters (@samp{cqv}).
 @acronym{POSIX} 1003.1-2001 (@pxref{Standards conformance}) does not allow
 this; use @option{-c @var{count}} or @option{-n @var{count}} instead.
@@ -2327,7 +2327,7 @@ before the output for each @var{file}.
 @sc{gnu} @command{tail} can output any amount of data (some other versions of
 @command{tail} cannot).  It also has no @option{-r} option (print in
 reverse), since reversing a file is really a different job from printing
-the end of a file; BSD @command{tail} (which is the one with @code{-r}) can
+the end of a file; BSD @command{tail} (which is the one with @option{-r}) can
 only reverse files that are at most as large as its buffer, which is
 typically 32 KiB.  A more reliable and versatile way to reverse files is
 the @sc{gnu} @command{tac} command.
@@ -2470,7 +2470,7 @@ Always print file name headers.
 On older systems, @command{tail} supports an obsolete option
 @option{-@var{count}@var{options}}, which is recognized only if it is
 specified first.  @var{count} is a decimal number optionally followed
-by a size letter (@samp{b}, @samp{k}, @samp{m}) as in @code{-c}, or
+by a size letter (@samp{b}, @samp{k}, @samp{m}) as in @option{-c}, or
 @samp{l} to mean count by lines, or other option letters
 (@samp{cfqv}).  Some older @command{tail} implementations also support
 an obsolete option @option{+@var{count}} with the same meaning as
@@ -2751,7 +2751,7 @@ wc --bytes --words
 @noindent
 prints both the byte counts and the word counts.
 
-With the @code{--max-line-length} option, @command{wc} prints the length
+With the @option{--max-line-length} option, @command{wc} prints the length
 of the longest line per file, and if there is more than one file it
 prints the maximum (not the sum) of those lengths.
 
@@ -5277,7 +5277,7 @@ byte position of the beginning and end of each file name in the output.
 This makes it easy for Emacs to find the names, even when they contain
 unusual characters such as space or newline, without fancy searching.
 
-If directories are being listed recursively (@code{-R}), output a similar
+If directories are being listed recursively (@option{-R}), output a similar
 line with offsets for each subdirectory name:
 @example
 //SUBDIRED// @var{beg1} @var{end1} @dots{}
@@ -7622,7 +7622,7 @@ In the GNU system @code{unlink} can never delete the name of a directory.
 
 By default, @command{unlink} honors the @option{--help} and @option{--version}
 options.  That makes it a little harder to remove files named
-@code{--help} and @code{--version}, so when the environment variable
+@option{--help} and @option{--version}, so when the environment variable
 @env{POSIXLY_CORRECT} is set, @command{unlink} treats such a command line
 arguments not as an option, but as an operand.
 
@@ -9538,7 +9538,7 @@ tee [@var{option}]@dots{} [@var{file}]@dots{}
 
 If a file being written to does not already exist, it is created.  If a
 file being written to already exists, the data it previously contained
-is overwritten unless the @code{-a} option is used.
+is overwritten unless the @option{-a} option is used.
 
 The program accepts the following options.  Also see @ref{Common options}.
 
@@ -10183,7 +10183,7 @@ Same as:
 
 @item cbreak
 @opindex cbreak
-Same as @code{-icanon}.  May be negated.  If negated, same as
+Same as @option{-icanon}.  May be negated.  If negated, same as
 @code{icanon}.
 
 @item pass8
@@ -10194,12 +10194,12 @@ same as @code{parenb istrip cs7}.
 
 @item litout
 @opindex litout
-Same as @code{-parenb -istrip -opost cs8}.  May be negated.
+Same as @option{-parenb -istrip -opost cs8}.  May be negated.
 If negated, same as @code{parenb istrip opost cs7}.
 
 @item decctlq
 @opindex decctlq
-Same as @code{-ixany}.  Non-@acronym{POSIX}.  May be negated.
+Same as @option{-ixany}.  Non-@acronym{POSIX}.  May be negated.
 
 @item tabs
 @opindex tabs
@@ -10317,12 +10317,12 @@ character.  Non-@acronym{POSIX}.
 @item min @var{n}
 @opindex min
 Set the minimum number of characters that will satisfy a read until
-the time value has expired, when @code{-icanon} is set.
+the time value has expired, when @option{-icanon} is set.
 
 @item time @var{n}
 @opindex time
 Set the number of tenths of a second before reads time out if the minimum
-number of characters have not been read, when @code{-icanon} is set.
+number of characters have not been read, when @option{-icanon} is set.
 
 @item ispeed @var{n}
 @opindex ispeed
@@ -10368,7 +10368,7 @@ Set the input and output speeds to @var{n}.  @var{n} can be one
 of: 0 50 75 110 134 134.5 150 200 300 600 1200 1800 2400 4800 9600
 19200 38400 @code{exta} @code{extb}.  @code{exta} is the same as
 19200; @code{extb} is the same as 38400.  0 hangs up the line if
-@code{-clocal} is set.
+@option{-clocal} is set.
 @end table
 
 
@@ -10504,14 +10504,14 @@ Print only the supplementary groups.
 @opindex -n
 @opindex --name
 Print the user or group name instead of the ID number.  Requires
-@code{-u}, @code{-g}, or @code{-G}.
+@option{-u}, @option{-g}, or @option{-G}.
 
 @item -r
 @itemx --real
 @opindex -r
 @opindex --real
 Print the real, instead of effective, user or group id.  Requires
-@code{-u}, @code{-g}, or @code{-G}.
+@option{-u}, @option{-g}, or @option{-G}.
 
 @item -u
 @itemx --user
@@ -10797,7 +10797,7 @@ Invoking @command{date} with no @var{format} argument is equivalent to invoking
 @cindex formatting times
 If given an argument that starts with a @samp{+}, @command{date} prints the
 current time and date (or the time and date specified by the
-@code{--date} option, see below) in the format defined by that argument,
+@option{--date} option, see below) in the format defined by that argument,
 which is the same as in the @code{strftime} function.  Except for
 directives, which start with @samp{%}, characters in the format string
 are printed unchanged.  The directives are described below.
@@ -11299,13 +11299,13 @@ date -u -d '1970-01-01 946684800 seconds' +"%Y-%m-%d %T %z"
 
 @command{uname} prints information about the machine and operating system
 it is run on.  If no options are given, @command{uname} acts as if the
-@code{-s} option were given. Synopsis:
+@option{-s} option were given. Synopsis:
 
 @example
 uname [@var{option}]@dots{}
 @end example
 
-If multiple options or @code{-a} are given, the selected information is
+If multiple options or @option{-a} are given, the selected information is
 printed in this order:
 
 @example
@@ -11764,7 +11764,7 @@ shell.
 
 @cindex @option{-su}
 GNU @command{su} does not treat @file{/bin/sh} or any other shells specially
-(e.g., by setting @code{argv[0]} to @option{-su}, passing @code{-c} only
+(e.g., by setting @code{argv[0]} to @option{-su}, passing @option{-c} only
 to certain shells, etc.).
 
 @findex syslog
@@ -11781,7 +11781,7 @@ The program accepts the following options.  Also see @ref{Common options}.
 @opindex -c
 @opindex --command
 Pass @var{command}, a single command line to run, to the shell with
-a @code{-c} option instead of starting an interactive shell.
+a @option{-c} option instead of starting an interactive shell.
 
 @item -f
 @itemx --fast
@@ -11790,10 +11790,10 @@ a @code{-c} option instead of starting an interactive shell.
 @flindex .cshrc
 @cindex file name pattern expansion, disabled
 @cindex globbing, disabled
-Pass the @code{-f} option to the shell.  This probably only makes sense
-if the shell run is @command{csh} or @command{tcsh}, for which the @code{-f}
+Pass the @option{-f} option to the shell.  This probably only makes sense
+if the shell run is @command{csh} or @command{tcsh}, for which the @option{-f}
 option prevents reading the startup file (@file{.cshrc}).  With
-Bourne-like shells, the @code{-f} option disables file name pattern
+Bourne-like shells, the @option{-f} option disables file name pattern
 expansion (globbing), which is not likely to be useful.
 
 @item -
@@ -11830,7 +11830,7 @@ entry, unless the user running @command{su} is not the superuser and
 @var{user}'s shell is restricted.  A @dfn{restricted shell} is one that
 is not listed in the file @file{/etc/shells}, or in a compiled-in list
 if that file does not exist.  Parts of what this option does can be
-overridden by @code{--login} and @code{--shell}.
+overridden by @option{--login} and @option{--shell}.
 
 @item -s @var{shell}
 @itemx --shell=@var{shell}
@@ -12155,12 +12155,18 @@ $ factor `echo '2^64-1'|bc`
 @command{seq} prints a sequence of numbers to standard output.  Synopses:
 
 @example
-seq [@var{option}]@dots{} [@var{first} [@var{increment}]] @var{last}
+seq [@var{option}]@dots{} @var{last}
+seq [@var{option}]@dots{} @var{first} @var{last}
+seq [@var{option}]@dots{} @var{first} @var{increment} @var{last}
 @end example
 
 @command{seq} prints the numbers from @var{first} to @var{last} by
-@var{increment}.  By default, @var{first} and @var{increment} are both 1,
-and each number is printed on its own line.  Any floating-point number
+@var{increment}.  By default, each number is printed on a separate line.
+When @var{increment} is not specified, it defaults to @samp{1},
+even when @var{first} is larger than @var{last}.
+@var{first} also defaults to @samp{1}.  So @code{seq 1} prints
+@samp{1}, but @code{seq 0} and @code{seq 10 5} produce no output.
+Floating-point numbers
 may be specified (using a period before any fractional digits).
 
 The program accepts the following options.  Also see @ref{Common options}.
@@ -12262,7 +12268,7 @@ But that doesn't happen on most systems because @command{seq} is
 implemented using binary floating point arithmetic (via the C
 @code{double} type) -- which means some decimal numbers like @code{.1}
 cannot be represented exactly.  That in turn means some nonintuitive
-conditions like @code{.1 * 3 > .3} will end up being true.
+conditions like @w{@code{.1 * 3 > .3}} will end up being true.
 
 To work around that in the above example, use a slightly larger number as
 the @var{last} value:
