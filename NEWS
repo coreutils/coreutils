@@ -1,4 +1,5 @@
 [4.5.5]
+* readlink: new program
 * cut: new feature: when used to select ranges of byte offsets (as opposed
   to ranges of fields) and when --output-delimiter=STRING is specified,
   output STRING between ranges of selected bytes.
