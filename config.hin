@@ -115,6 +115,9 @@
    includes <alloca.h> only if HAVE_ALLOCA_H is defined. */
 #undef HAVE_ALLOCA_H
 
+/* Define if you have an arithmetic hrtime_t type. */
+#undef HAVE_ARITHMETIC_HRTIME_T
+
 /* Define to 1 if you have the <arpa/inet.h> header file. */
 #undef HAVE_ARPA_INET_H
 
@@ -238,6 +241,10 @@
 /* Define to 1 if you have the declaration of `getgrgid', and to 0 if you
    don't. */
 #undef HAVE_DECL_GETGRGID
+
+/* Define to 1 if you have the declaration of `gethrtime', and to 0 if you
+   don't. */
+#undef HAVE_DECL_GETHRTIME
 
 /* Define to 1 if you have the declaration of `getlogin', and to 0 if you
    don't. */
@@ -465,9 +472,6 @@
 /* Define to 1 if you have the `gethostname' function. */
 #undef HAVE_GETHOSTNAME
 
-/* Define to 1 if you have the `gethrtime' function. */
-#undef HAVE_GETHRTIME
-
 /* Define to 1 if you have the `getloadavg' function. */
 #undef HAVE_GETLOADAVG
 
@@ -636,6 +640,9 @@
 /* Define to 1 if you have the `memset' function. */
 #undef HAVE_MEMSET
 
+/* Define to 1 if you have the `microuptime' function. */
+#undef HAVE_MICROUPTIME
+
 /* Define to 1 if you have the `mkfifo' function. */
 #undef HAVE_MKFIFO
 
@@ -650,6 +657,12 @@
 
 /* Define to 1 if you have the `modf' function. */
 #undef HAVE_MODF
+
+/* Define to 1 if you have the `nanotime' function. */
+#undef HAVE_NANOTIME
+
+/* Define to 1 if you have the `nanouptime' function. */
+#undef HAVE_NANOUPTIME
 
 /* Define to 1 if you have the <ndir.h> header file, and it defines `DIR'. */
 #undef HAVE_NDIR_H
