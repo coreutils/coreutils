@@ -1,3 +1,9 @@
+Sat Oct 12 00:05:11 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* configure.in (AC_REPLACE_FUNCS): Add strpbrk and strtol.
+
+	* lib/Makefile.am (EXTRA_DIST): Remove.
+
 Thu Oct 10 23:41:36 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/md5.c (md5_stream): Apply fix from Ralph Loader
