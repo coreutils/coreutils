@@ -1,4 +1,4 @@
-#serial 1
+#serial 2
 
 dnl From Jim Meyering.
 dnl Find a new-enough version of Perl.
@@ -24,7 +24,7 @@ AC_DEFUN(jm_PERL,
   for perl in $candidate_perl_names; do
     # Run test in a subshell; some versions of sh will print an error if
     # an executable is not found, even if stderr is redirected.
-    if ( $perl -e 'require 5.003' ) > /dev/null 2>&1; then
+    if ( $perl -e 'require 5.003; use File::Compare' ) > /dev/null 2>&1; then
       PERL=$perl
       found=yes
       break
@@ -33,7 +33,9 @@ AC_DEFUN(jm_PERL,
 
   AC_MSG_RESULT($found)
   test $found = no && AC_MSG_WARN([
-*** You don't seem to have perl5.003 or newer installed.
-*** Because of that, you may be unable to regenerate certain files
-*** if you modify the sources from which they are derived.] )
+*** You don't seem to have perl5.003 or newer installed, or you lack
+*** a usable version of the Perl File::Compare module.  As a result,
+*** you may be unable to run a few tests or to regenerate certain
+*** files if you modify the sources from which they are derived.
+] )
 ])
