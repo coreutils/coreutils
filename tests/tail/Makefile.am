@@ -8,17 +8,17 @@ tobs-c3.exp tobs-c4.in tobs-c4.exp tobs-c5.in tobs-c5.exp tobs-l1.in \
 tobs-l1.exp tobs-l2.in tobs-l2.exp tobs-l3.in tobs-l3.exp tobs-l4.in \
 tobs-l4.exp tobs-l5.in tobs-l5.exp tobs-1.in tobs-1.exp tobs-2.in tobs-2.exp \
 tobs-3.in tobs-3.exp tobs-4.in tobs-4.exp tobs-5.in tobs-5.exp tobsx-1.in \
-tobsx-1.exp tobsx-2.in tobsx-2.exp terr-1.in terr-1.exp terr-2.in terr-2.exp \
-terr-3.in terr-3.exp terr-4.in terr-4.exp tstdin-1.in tstdin-1.exp \
-tstdin-2.in tstdin-2.exp tstdin-3.in tstdin-3.exp
+tobsx-1.exp tobsx-2.in tobsx-2.exp tobs-l.in tobs-l.exp terr-1.in terr-1.exp \
+terr-2.in terr-2.exp terr-3.in terr-3.exp terr-4.in terr-4.exp tstdin-1.in \
+tstdin-1.exp tstdin-2.in tstdin-2.exp
 run_gen = tobs-c1.out tobs-c1.err tobs-c2.out tobs-c2.err tobs-c3.out \
 tobs-c3.err tobs-c4.out tobs-c4.err tobs-c5.out tobs-c5.err tobs-l1.out \
 tobs-l1.err tobs-l2.out tobs-l2.err tobs-l3.out tobs-l3.err tobs-l4.out \
 tobs-l4.err tobs-l5.out tobs-l5.err tobs-1.out tobs-1.err tobs-2.out \
 tobs-2.err tobs-3.out tobs-3.err tobs-4.out tobs-4.err tobs-5.out tobs-5.err \
-tobsx-1.out tobsx-1.err tobsx-2.out tobsx-2.err terr-1.out terr-1.err \
-terr-2.out terr-2.err terr-3.out terr-3.err terr-4.out terr-4.err \
-tstdin-1.out tstdin-1.err tstdin-2.out tstdin-2.err tstdin-3.out tstdin-3.err
+tobsx-1.out tobsx-1.err tobsx-2.out tobsx-2.err tobs-l.out tobs-l.err \
+terr-1.out terr-1.err terr-2.out terr-2.err terr-3.out terr-3.err terr-4.out \
+terr-4.err tstdin-1.out tstdin-1.err tstdin-2.out tstdin-2.err
 ##test-files-end
 
 EXTRA_DIST = mk-script.pl Test.pm $x-tests $(explicit) $(maint_gen)
