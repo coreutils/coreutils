@@ -44,11 +44,11 @@ midnight, 1 January 1970 UCT.
 
 @menu
 * General date syntax::            Common rules.
-* Calendar date item::             19 Dec 1994.
-* Time of day item::               9:20pm.
-* Time zone item::                 EST, DST, BST, UTC, ...
-* Day of week item::               Monday and others.
-* Relative item in date strings::  next tuesday, 2 years ago.
+* Calendar date items::             19 Dec 1994.
+* Time of day items::               9:20pm.
+* Time zone items::                 EST, DST, BST, UTC, ...
+* Day of week items::               Monday and others.
+* Relative items in date strings::  next tuesday, 2 years ago.
 * Pure numbers in date strings::   19931219, 1440.
 * Authors of getdate::             Bellovin, Salz, Berets, et al.
 @end menu
@@ -103,8 +103,8 @@ nested.  Hyphens not followed by a digit are currently ignored.  Leading
 zeros on numbers are ignored.
 
 
-@node Calendar date item
-@section Calendar date item
+@node Calendar date items
+@section Calendar date items
 
 @cindex calendar date item
 
@@ -113,13 +113,14 @@ specified differently, depending on whether the month is specified
 numerically or literally.  All these strings specify the same calendar date:
 
 @example
-1972-09-24      # ISO 8601.
-72-9-24         # Assume 19xx for 69 through 99, 20xx for 00 through 68.
-72-09-24        # Leading zeros are ignored.
-9/24/72         # Common U.S. writing.
+1972-09-24     # ISO 8601.
+72-9-24        # Assume 19xx for 69 through 99,
+               # 20xx for 00 through 68.
+72-09-24       # Leading zeros are ignored.
+9/24/72        # Common U.S. writing.
 24 September 1972
-24 Sept 72      # September has a special abbreviation.
-24 Sep 72       # Three-letter abbreviations always allowed.
+24 Sept 72     # September has a special abbreviation.
+24 Sep 72      # Three-letter abbreviations always allowed.
 Sep 24, 1972
 24-sep-72
 24sep72
@@ -173,8 +174,8 @@ Or, omitting the year:
 @end example
 
 
-@node Time of day item
-@section Time of day item
+@node Time of day items
+@section Time of day items
 
 @cindex time of day item
 
@@ -223,8 +224,8 @@ Either @samp{am}/@samp{pm} or a time zone correction may be specified,
 but not both.
 
 
-@node Time zone item
-@section Time zone item
+@node Time zone items
+@section Time zone items
 
 @cindex time zone item
 
@@ -343,8 +344,8 @@ may be specified.
 @end table
 
 
-@node Day of week item
-@section Day of week item
+@node Day of week items
+@section Day of week items
 
 @cindex day of week item
 
@@ -423,12 +424,12 @@ one day in the past (equivalent to @samp{day ago}).
 The strings @samp{now} or @samp{today} are relative items corresponding
 to zero-valued time displacement, these strings come from the fact
 a zero-valued time displacement represents the current time when not
-otherwise change by previous items.  They may be used to stress other
+otherwise changed by previous items.  They may be used to stress other
 items, like in @samp{12:00 today}.  The string @samp{this} also has
 the meaning of a zero-valued time displacement, but is preferred in
 date strings like @samp{this thursday}.
 
-When a relative item makes the resulting date to cross the boundary
+When a relative item causes the resulting date to cross the boundary
 between DST and non-DST (or vice-versa), the hour is adjusted according
 to the local time.
 
@@ -438,7 +439,7 @@ to the local time.
 
 @cindex pure numbers in date strings
 
-The precise intepretation of a pure decimal number is dependent of
+The precise intepretation of a pure decimal number depends
 the context in the date string.
 
 If the decimal number is of the form @var{yyyy}@var{mm}@var{dd} and no
