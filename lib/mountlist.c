@@ -1,5 +1,5 @@
 /* mountlist.c -- return a list of mounted filesystems
-   Copyright (C) 1991, 1992, 1997-2003 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1992, 1997-2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -53,6 +53,8 @@ extern int errno;
 
 #if defined MOUNTED_GETFSSTAT	/* OSF_1 and Darwin1.3.x */
 # if HAVE_SYS_UCRED_H
+#  include <grp.h> /* needed on OSF V4.0 for definition of NGROUPS,
+		      NGROUPS is used as an array dimension in ucred.h */
 #  include <sys/ucred.h> /* needed by powerpc-apple-darwin1.3.7 */
 # endif
 # if HAVE_SYS_MOUNT_H
