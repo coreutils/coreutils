@@ -137,6 +137,8 @@ change_file_mode (const char *file, const struct mode_change *changes,
   struct stat file_stats;
   mode_t newmode;
   int errors = 0;
+  int fail;
+  int saved_errno;
 
   if (lstat (file, &file_stats))
     {
@@ -161,24 +163,19 @@ change_file_mode (const char *file, const struct mode_change *changes,
 
   newmode = mode_adjust (file_stats.st_mode, changes);
 
-  if (newmode != (file_stats.st_mode & CHMOD_MODE_BITS))
+  fail = chmod (file, newmode);
+  saved_errno = errno;
+
+  if (verbosity == V_high || (verbosity == V_changes_only && !fail))
+    describe_change (file, newmode, (fail ? CH_FAILED : CH_SUCCEEDED));
+
+  if (fail)
     {
-      int fail = chmod (file, newmode);
-      int saved_errno = errno;
-
-      if (verbosity == V_high || (verbosity == V_changes_only && !fail))
-	describe_change (file, newmode, (fail ? CH_FAILED : CH_SUCCEEDED));
-
-      if (fail)
-	{
-	  if (force_silent == 0)
-	    error (0, saved_errno, _("changing permissions of %s"),
-		   quote (file));
-	  errors = 1;
-	}
+      if (force_silent == 0)
+	error (0, saved_errno, _("changing permissions of %s"),
+	       quote (file));
+      errors = 1;
     }
-  else if (verbosity == V_high)
-    describe_change (file, newmode, CH_NO_CHANGE_REQUESTED);
 
   if (recurse && S_ISDIR (file_stats.st_mode))
     errors |= change_dir_mode (file, changes, &file_stats);
