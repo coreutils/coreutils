@@ -1,3 +1,8 @@
+2003-10-12  Paul Eggert  <eggert@twinsun.com>
+
+	* tests/sort/sort-tests: Remove from CVS; assume that people
+	brave enough to check coreutils out from CVS can rebuild it.
+
 2003-10-12  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.0.92.
