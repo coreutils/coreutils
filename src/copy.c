@@ -633,7 +633,7 @@ copy_internal (const char *src_path, const char *dst_path,
 #ifdef HAVE_LCHOWN
 	  if (DO_CHOWN (lchown, dst_path, src_sb.st_uid, src_sb.st_gid))
 	    {
-	      error (0, errno, "%s", dst_path);
+	      error (0, errno, _("preserving ownership for %s"), dst_path);
 	      goto un_backup;
 	    }
 #else
@@ -642,7 +642,7 @@ copy_internal (const char *src_path, const char *dst_path,
 	    {
 	      if (DO_CHOWN (chown, dst_path, src_sb.st_uid, src_sb.st_gid))
 		{
-		  error (0, errno, "%s", dst_path);
+		  error (0, errno, _("preserving ownership for %s"), dst_path);
 		  goto un_backup;
 		}
 	    }
@@ -682,13 +682,13 @@ copy_internal (const char *src_path, const char *dst_path,
 
       if (utime (dst_path, &utb))
 	{
-	  error (0, errno, "%s", dst_path);
+	  error (0, errno, _("preserving times for %s"), dst_path);
 	  return 1;
 	}
 
       if (DO_CHOWN (chown, dst_path, src_sb.st_uid, src_sb.st_gid))
 	{
-	  error (0, errno, "%s", dst_path);
+	  error (0, errno, _("preserving ownership for %s"), dst_path);
 	  return 1;
 	}
     }
@@ -698,7 +698,7 @@ copy_internal (const char *src_path, const char *dst_path,
     {
       if (chmod (dst_path, src_mode & x->umask_kill))
 	{
-	  error (0, errno, "%s", dst_path);
+	  error (0, errno, _("preserving permissions for %s"), dst_path);
 	  return 1;
 	}
     }
@@ -707,7 +707,7 @@ copy_internal (const char *src_path, const char *dst_path,
       /* Reset the temporarily changed mode.  */
       if (chmod (dst_path, dst_sb.st_mode))
 	{
-	  error (0, errno, "%s", dst_path);
+	  error (0, errno, _("restoring permissions of %s"), dst_path);
 	  return 1;
 	}
     }
