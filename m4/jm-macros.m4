@@ -24,6 +24,7 @@ AC_DEFUN(jm_MACROS,
     fcntl.h \
     fenv.h \
     float.h \
+    langinfo.h \
     limits.h \
     memory.h \
     mntent.h \
