@@ -20,3 +20,6 @@ cp --no-preserve=X should not attempt to preserve attribute X
 printf: support %b -- consider adapting builtins/printf.def from bash
 
 copy.c: Address the FIXME-maybe comment in copy_internal.
+And once that's done, add an exclusion so that `cp --link'
+no longer incurs the overhead of saving src. dev/ino and dest. filename
+in the hash table.
