@@ -1,5 +1,8 @@
 2004-03-21  Jim Meyering  <jim@meyering.net>
 
+	* readtokens0.c, readtokens0.h: New files.
+	* Makefile.am (libfetish_a_SOURCES): Add readtokens0.c and readtokens0.h
+
 	* readtokens.c (readtoken): Don't leak 64 bytes when reading
 	an empty input stream.
 
