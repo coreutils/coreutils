@@ -1,4 +1,6 @@
 Changes in release 2.1
+[2.0.9]
+* fix a compilation failure on some Solaris systems with wc.c
 [2.0.8]
 * od now supports 8-byte integers, assuming they're printable with e.g., %lld
 * new program: sha1sum

@@ -1,3 +1,7 @@
+2000-11-14  Jim Meyering  <meyering@lucent.com>
+
+	* Version 2.0.9.
+
 2000-11-13  Paul Eggert  <eggert@twinsun.com>
 
 	* src/sys2.h (ST_TIME_CMP_NS): Fix typo: ST_MTIM_NSEC should
