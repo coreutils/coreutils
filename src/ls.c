@@ -2352,7 +2352,7 @@ print_type_indicator (unsigned int mode)
 #endif
 
   if (S_ISREG (mode) && indicator_style == all
-      && (mode & (S_IEXEC | S_IXGRP | S_IXOTH)))
+      && (mode & S_IXUGO))
     PUTCHAR ('*');
 }
 
@@ -2372,49 +2372,52 @@ print_color_indicator (const char *name, unsigned int mode, int linkok)
     }
   else
     {
-      /* Test if is is a recognized extension.  */
-
-      len = strlen (name);
-      name += len;		/* Pointer to final \0.  */
-      for (ext = col_ext_list; ext != NULL; ext = ext->next)
-	if (ext->ext.len <= len
-	    && strncmp (name - ext->ext.len, ext->ext.string,
-			ext->ext.len) == 0)
-	  break;
-
-      if (ext == NULL)
-	{
-	  if (S_ISDIR (mode))
-	    type = C_DIR;
+      if (S_ISDIR (mode))
+	type = C_DIR;
 
 #ifdef S_ISLNK
-	  else if (S_ISLNK (mode))
-	    type = ((!linkok && color_indicator[C_ORPHAN].string)
-		    ? C_ORPHAN : C_LINK);
+      else if (S_ISLNK (mode))
+	type = ((!linkok && color_indicator[C_ORPHAN].string)
+		? C_ORPHAN : C_LINK);
 #endif
 
 #ifdef S_ISFIFO
-	  else if (S_ISFIFO (mode))
-	    type = C_FIFO;
+      else if (S_ISFIFO (mode))
+	type = C_FIFO;
 #endif
 
 #ifdef S_ISSOCK
-	  else if (S_ISSOCK (mode))
-	    type = C_SOCK;
+      else if (S_ISSOCK (mode))
+	type = C_SOCK;
 #endif
 
 #ifdef S_ISBLK
-	  else if (S_ISBLK (mode))
-	    type = C_BLK;
+      else if (S_ISBLK (mode))
+	type = C_BLK;
 #endif
 
 #ifdef S_ISCHR
-	  else if (S_ISCHR (mode))
-	    type = C_CHR;
+      else if (S_ISCHR (mode))
+	type = C_CHR;
 #endif
 
-	  if (type == C_FILE && (mode & (S_IEXEC|S_IEXEC>>3|S_IEXEC>>6)) != 0)
-	    type = C_EXEC;
+      if (type == C_FILE && (mode & S_IXUGO) != 0)
+	type = C_EXEC;
+
+      /* Check the file's suffix only if still classified as C_FILE.  */
+      if (type == C_FILE)
+	{
+	  /* Test if NAME has a recognized suffix.  */
+
+	  len = strlen (name);
+	  name += len;		/* Pointer to final \0.  */
+	  for (ext = col_ext_list; ext != NULL; ext = ext->next)
+	    {
+	      if (ext->ext.len <= len
+		  && strncmp (name - ext->ext.len, ext->ext.string,
+			      ext->ext.len) == 0)
+		break;
+	    }
 	}
     }
 
@@ -2493,7 +2496,7 @@ length_of_file_name_and_frills (const struct fileinfo *f)
       if (S_ISREG (filetype))
 	{
 	  if (indicator_style == all
-	      && (f->stat.st_mode & (S_IEXEC | S_IEXEC >> 3 | S_IEXEC >> 6)))
+	      && (f->stat.st_mode & S_IXUGO))
 	    len += 1;
 	}
       else if (S_ISDIR (filetype)
