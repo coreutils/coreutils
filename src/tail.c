@@ -545,6 +545,12 @@ output:
       sleep (1);
       goto output;
     }
+  else
+    {
+      if (forever_multiple)
+	fflush (stdout);
+    }
+
   return total;
 }
 
