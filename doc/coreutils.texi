@@ -2737,6 +2737,7 @@ These commands work with (or produce) sorted files.
 * comm invocation::             Compare two sorted files line by line.
 * ptx invocation::              Produce a permuted index of file contents.
 * tsort invocation::            Topological sort.
+* tsort background::            Where tsort came from.
 @end menu
 
 
@@ -3368,7 +3369,8 @@ If there is an error it exits with nonzero status.
 
 @code{tsort} performs a topological sort on the given @var{file}, or
 standard input if no input file is given or for a @var{file} of
-@samp{-}.  Synopsis:
+@samp{-}.  For more details and some history, see @ref{tsort background}.
+Synopsis:
 
 @example
 tsort [@var{option}] [@var{file}]
@@ -3410,6 +3412,40 @@ total ordering.
 The only options are @option{--help} and @option{--version}.  @xref{Common
 options}.
 
+@node tsort background
+@section @code{tsort}: Background
+
+@code{tsort} exists because very early versions of the Unix linker processed
+an archive file exactly once, and in order.  As @code{ld} read each object in
+the archive, it decided whether it was needed in the program based on
+whether it defined any symbols which were undefined at that point in
+the link.
+
+This meant that dependencies within the archive had to be handled
+specially.  For example, @code{scanf} probably calls @code{read}.  That means
+that in a single pass through an archive, it was important for @code{scanf.o}
+to appear before read.o, because otherwise a program which calls
+@code{scanf} but not @code{read} might end up with an unexpected unresolved
+reference to @code{read}.
+
+The way to address this problem was to first generate a set of
+dependencies of one object file on another.  This was done by a shell
+script called @code{lorder}.  The GNU tools don't provide a version of
+lorder, as far as I know, but you can still find it in BSD
+distributions.
+
+Then you ran @code{tsort} over the @code{lorder} output, and you used the
+resulting sort to define the order in which you added objects to the archive.
+
+This whole procedure has been obsolete since about 1980, because
+Unix archives now contain a symbol table (traditionally built by
+@code{ranlib}, now generally built by @code{ar} itself), and the Unix
+linker uses the symbol table to effectively make multiple passes over
+an archive file.
+
+Anyhow, that's where tsort came from.  To solve an old problem with
+the way the linker handled archive files, which has since been solved
+in different ways.
 
 @node ptx invocation
 @section @code{ptx}: Produce permuted indexes
