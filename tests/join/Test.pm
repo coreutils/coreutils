@@ -2,6 +2,13 @@ package Test;
 require 5.002;
 use strict;
 
+my $delim = chr 0247;
+sub t_subst ($)
+{
+  (my $s = $_[0]) =~ s/:/$delim/g;
+  return $s;
+}
+
 my @tv = (
 # test name
 #     flags       file-1 file-2    expected output   expected return code
@@ -104,6 +111,11 @@ my @tv = (
 # the first input file sorted) is not portable, so this test would
 # fail on e.g. Linux systems, because the input to join isn't sorted.
 # ['lc-collate', '', ["a 1a\nB 1B\n", "B 2B\n"], "B 1B 2B\n", 0],
+
+# Based on a report from Antonio Rendas.  Fixed in 2.0.9.
+['8-bit-t', t_subst "-t:",
+ [t_subst "a:1\nb:1\n", t_subst "a:2:\nb:2:\n"],
+ t_subst "a:1:2:\nb:1:2:\n", 0],
 
 );
 
