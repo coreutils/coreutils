@@ -1,5 +1,6 @@
-/* Provide a replacement for the POSIX getcwd function.
-   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,97,98,99,2004 Free Software Foundation,
+   Inc.
+   This file is part of the GNU C Library.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -11,59 +12,372 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
+   You should have received a copy of the GNU General Public License along
+   with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
-/* written by Jim Meyering */
+#ifdef	HAVE_CONFIG_H
+# include "config.h"
+#endif
 
-#include <config.h>
+#if !_LIBC
+# include "getcwd.h"
+#endif
+
+#include <errno.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <stdbool.h>
+#include <stddef.h>
+
+#if HAVE_FCNTL_H
+# include <fcntl.h> /* For AT_FDCWD on Solaris 9.  */
+#endif
+
+#ifndef __set_errno
+# define __set_errno(val) (errno = (val))
+#endif
+
+#if HAVE_DIRENT_H || _LIBC
+# include <dirent.h>
+# ifndef _D_EXACT_NAMLEN
+#  define _D_EXACT_NAMLEN(d) strlen ((d)->d_name)
+# endif
+#else
+# define dirent direct
+# if HAVE_SYS_NDIR_H
+#  include <sys/ndir.h>
+# endif
+# if HAVE_SYS_DIR_H
+#  include <sys/dir.h>
+# endif
+# if HAVE_NDIR_H
+#  include <ndir.h>
+# endif
+#endif
+#ifndef _D_EXACT_NAMLEN
+# define _D_EXACT_NAMLEN(d) ((d)->d_namlen)
+#endif
+#ifndef _D_ALLOC_NAMLEN
+# define _D_ALLOC_NAMLEN(d) (_D_EXACT_NAMLEN (d) + 1)
+#endif
+
+#if HAVE_UNISTD_H || _LIBC
+# include <unistd.h>
+#endif
 
 #include <stdlib.h>
 #include <string.h>
-#include <errno.h>
-#include <sys/types.h>
 
-#include "pathmax.h"
-#include "same.h"
+#if _LIBC
+# ifndef mempcpy
+#  define mempcpy __mempcpy
+# endif
+#else
+# include "mempcpy.h"
+#endif
 
-/* Guess high, because that makes the test below more conservative.
-   But this is a kludge, because we should really use
-   pathconf (".", _PC_NAME_MAX).  But it's probably not worth the cost.  */
-#define KLUDGE_POSIX_NAME_MAX 255
+#include <limits.h>
 
-#define MAX_SAFE_LEN (PATH_MAX - 1 - KLUDGE_POSIX_NAME_MAX - 1)
+#ifndef MAX
+# define MAX(a, b) ((a) < (b) ? (b) : (a))
+#endif
+#ifndef MIN
+# define MIN(a, b) ((a) < (b) ? (a) : (b))
+#endif
 
-/* Undefine getcwd here, as near the use as possible, in case any
-   of the files included above define it to rpl_getcwd.  */
-#undef getcwd
+#ifndef PATH_MAX
+# ifdef	MAXPATHLEN
+#  define PATH_MAX MAXPATHLEN
+# else
+#  define PATH_MAX 1024
+# endif
+#endif
 
-/* Any declaration of getcwd from headers included above has
-   been changed to a declaration of rpl_getcwd.  Declare it here.  */
-extern char *getcwd (char *buf, size_t size);
+#if D_INO_IN_DIRENT
+# define MATCHING_INO(dp, ino) ((dp)->d_ino == (ino))
+#else
+# define MATCHING_INO(dp, ino) true
+#endif
 
-/* This is a wrapper for getcwd.
-   Some implementations (at least GNU libc 2.3.1 + linux-2.4.20) return
-   non-NULL for a working directory name longer than PATH_MAX, yet the
-   returned string is a strict prefix of the desired directory name.
-   Upon such a failure, free the offending string, set errno to
-   ENAMETOOLONG, and return NULL.
-
-   I've heard that this is a Linux kernel bug, and that it has
-   been fixed between 2.4.21-pre3 and 2.4.21-pre4.  */
+#if !_LIBC
+# define __getcwd getcwd
+# define __lstat lstat
+# define __closedir closedir
+# define __opendir opendir
+# define __readdir readdir
+#endif
+
+/* Get the pathname of the current working directory, and put it in SIZE
+   bytes of BUF.  Returns NULL if the directory couldn't be determined or
+   SIZE was too small.  If successful, returns BUF.  In GNU, if BUF is
+   NULL, an array is allocated with `malloc'; the array is SIZE bytes long,
+   unless SIZE == 0, in which case it is as big as necessary.  */
 
 char *
-rpl_getcwd (char *buf, size_t size)
+__getcwd (char *buf, size_t size)
 {
-  char *cwd = getcwd (buf, size);
+  /* Lengths of big file name components and entire file names, and a
+     deep level of file name nesting.  These numbers are not upper
+     bounds; they are merely large values suitable for initial
+     allocations, designed to be large enough for most real-world
+     uses.  */
+  enum
+    {
+      BIG_FILE_NAME_COMPONENT_LENGTH = 255,
+      BIG_FILE_NAME_LENGTH = MIN (4095, PATH_MAX - 1),
+      DEEP_NESTING = 100
+    };
 
-  if (cwd == NULL)
-    return NULL;
+#ifdef AT_FDCWD
+  int fd = AT_FDCWD;
+  bool fd_needs_closing = false;
+#else
+  char dots[DEEP_NESTING * sizeof ".." + BIG_FILE_NAME_COMPONENT_LENGTH + 1];
+  char *dotlist = dots;
+  size_t dotsize = sizeof dots;
+  size_t dotlen = 0;
+#endif
+  DIR *dirstream = NULL;
+  dev_t rootdev, thisdev;
+  ino_t rootino, thisino;
+  char *path;
+  register char *pathp;
+  struct stat st;
+  int prev_errno = errno;
+  size_t allocated = size;
 
-  if (strlen (cwd) <= MAX_SAFE_LEN || same_name (cwd, "."))
-    return cwd;
+  if (size == 0)
+    {
+      if (buf != NULL)
+	{
+	  __set_errno (EINVAL);
+	  return NULL;
+	}
 
-  free (cwd);
-  errno = ENAMETOOLONG;
+      allocated = BIG_FILE_NAME_LENGTH + 1;
+    }
+
+  if (buf != NULL)
+    path = buf;
+  else
+    {
+      path = malloc (allocated);
+      if (path == NULL)
+	return NULL;
+    }
+
+  pathp = path + allocated;
+  *--pathp = '\0';
+
+  if (__lstat (".", &st) < 0)
+    goto lose;
+  thisdev = st.st_dev;
+  thisino = st.st_ino;
+
+  if (__lstat ("/", &st) < 0)
+    goto lose;
+  rootdev = st.st_dev;
+  rootino = st.st_ino;
+
+  while (!(thisdev == rootdev && thisino == rootino))
+    {
+      struct dirent *d;
+      dev_t dotdev;
+      ino_t dotino;
+      bool mount_point;
+      int parent_status;
+
+      /* Look at the parent directory.  */
+#ifdef AT_FDCWD
+      fd = openat (fd, "..", O_RDONLY);
+      if (fd < 0)
+	goto lose;
+      fd_needs_closing = true;
+      parent_status = fstat (fd, &st);
+#else
+      dotlist[dotlen++] = '.';
+      dotlist[dotlen++] = '.';
+      dotlist[dotlen] = '\0';
+      parent_status = __lstat (dotlist, &st);
+#endif
+      if (parent_status != 0)
+	goto lose;
+
+      if (dirstream && __closedir (dirstream) != 0)
+	{
+	  dirstream = NULL;
+	  goto lose;
+	}
+
+      /* Figure out if this directory is a mount point.  */
+      dotdev = st.st_dev;
+      dotino = st.st_ino;
+      mount_point = dotdev != thisdev;
+
+      /* Search for the last directory.  */
+#ifdef AT_FDCWD
+      dirstream = fdopendir (fd);
+      if (dirstream == NULL)
+	goto lose;
+      fd_needs_closing = false;
+#else
+      dirstream = __opendir (dotlist);
+      if (dirstream == NULL)
+	goto lose;
+      dotlist[dotlen++] = '/';
+#endif
+      /* Clear errno to distinguish EOF from error if readdir returns
+	 NULL.  */
+      __set_errno (0);
+      while ((d = __readdir (dirstream)) != NULL)
+	{
+	  if (d->d_name[0] == '.' &&
+	      (d->d_name[1] == '\0' ||
+	       (d->d_name[1] == '.' && d->d_name[2] == '\0')))
+	    continue;
+	  if (MATCHING_INO (d, thisino) || mount_point)
+	    {
+	      int entry_status;
+#ifdef AT_FDCWD
+	      entry_status = fstatat (fd, d->d_name, &st, AT_SYMLINK_NOFOLLOW);
+#else
+	      /* Compute size needed for this file name, or for the file
+		 name ".." in the same directory, whichever is larger.
+	         Room for ".." might be needed the next time through
+		 the outer loop.  */
+	      size_t name_alloc = _D_ALLOC_NAMLEN (d);
+	      size_t filesize = dotlen + MAX (sizeof "..", name_alloc);
+
+	      if (filesize < dotlen)
+		goto memory_exhausted;
+
+	      if (dotsize < filesize)
+		{
+		  /* My, what a deep directory tree you have, Grandma.  */
+		  size_t newsize = MAX (filesize, dotsize * 2);
+		  size_t i;
+		  if (newsize < dotsize)
+		    goto memory_exhausted;
+		  if (dotlist != dots)
+		    free (dotlist);
+		  dotlist = malloc (newsize);
+		  if (dotlist == NULL)
+		    goto lose;
+		  dotsize = newsize;
+
+		  i = 0;
+		  do
+		    {
+		      dotlist[i++] = '.';
+		      dotlist[i++] = '.';
+		      dotlist[i++] = '/';
+		    }
+		  while (i < dotlen);
+		}
+
+	      strcpy (dotlist + dotlen, d->d_name);
+	      entry_status = __lstat (dotlist, &st);
+#endif
+	      /* We don't fail here if we cannot stat() a directory entry.
+		 This can happen when (network) filesystems fail.  If this
+		 entry is in fact the one we are looking for we will find
+		 out soon as we reach the end of the directory without
+		 having found anything.  */
+	      if (entry_status == 0 && S_ISDIR (st.st_mode)
+		  && st.st_dev == thisdev && st.st_ino == thisino)
+		break;
+	    }
+	}
+      if (d == NULL)
+	{
+	  if (errno == 0)
+	    /* EOF on dirstream, which means that the current directory
+	       has been removed.  */
+	    __set_errno (ENOENT);
+	  goto lose;
+	}
+      else
+	{
+	  size_t pathroom = pathp - path;
+	  size_t namlen = _D_EXACT_NAMLEN (d);
+
+	  if (pathroom <= namlen)
+	    {
+	      if (size != 0)
+		{
+		  __set_errno (ERANGE);
+		  goto lose;
+		}
+	      else
+		{
+		  char *tmp;
+		  size_t oldsize = allocated;
+
+		  allocated += MAX (allocated, namlen);
+		  if (allocated < oldsize
+		      || ! (tmp = realloc (path, allocated)))
+		    goto memory_exhausted;
+
+		  /* Move current contents up to the end of the buffer.
+		     This is guaranteed to be non-overlapping.  */
+		  pathp = memcpy (tmp + allocated - (oldsize - pathroom),
+				  tmp + pathroom,
+				  oldsize - pathroom);
+		  path = tmp;
+		}
+	    }
+	  pathp -= namlen;
+	  memcpy (pathp, d->d_name, namlen);
+	  *--pathp = '/';
+	}
+
+      thisdev = dotdev;
+      thisino = dotino;
+    }
+
+  if (dirstream && __closedir (dirstream) != 0)
+    {
+      dirstream = NULL;
+      goto lose;
+    }
+
+  if (pathp == &path[allocated - 1])
+    *--pathp = '/';
+
+#ifndef AT_FDCWD
+  if (dotlist != dots)
+    free (dotlist);
+#endif
+
+  memmove (path, pathp, path + allocated - pathp);
+
+  /* Restore errno on successful return.  */
+  __set_errno (prev_errno);
+
+  return path;
+
+ memory_exhausted:
+  __set_errno (ENOMEM);
+ lose:
+  {
+    int save = errno;
+    if (dirstream)
+      __closedir (dirstream);
+#ifdef AT_FDCWD
+    if (fd_needs_closing)
+      close (fd);
+#else
+    if (dotlist != dots)
+      free (dotlist);
+#endif
+    if (buf == NULL)
+      free (path);
+    __set_errno (save);
+  }
   return NULL;
 }
+
+#ifdef weak_alias
+weak_alias (__getcwd, getcwd)
+#endif
