@@ -1,3 +1,8 @@
+Sun Jun 30 16:41:45 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/install.c (usage): Fix typo, 3nd->3rd, in usage message.
+	From Santiago Vila <sanvila@unex.es>.
+
 Sat Jun 29 00:33:31 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* configure.in (PACKAGE_VERSION): Add `GNU ' prefix so we see
