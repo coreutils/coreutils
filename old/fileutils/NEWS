@@ -1,5 +1,8 @@
 Changes in release 3.17:
 [3.16o]
+* install now shares core copying code with mv and cp
+* mv (between distinct filesystems) now uses more of the core copying code
+* fixed a bug or two in mv
 * df once again displays negative numbers when that's what's returned
   by get_fs_usage
 [3.16n]
