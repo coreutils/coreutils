@@ -1,3 +1,27 @@
+1998-01-04  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/chgrp.c: Use a single enumerated type, Verbosity, instead of
+	the two booleans, verbose and changes_only.  This fixes a bug whereby
+	--change had the same effect as --verbose.
+	* src/chmod.c: Likewise.
+	* src/chown.c: Likewise.
+	Reported by Paul Eggert.
+
+1998-01-04  Paul Eggert  <eggert@twinsun.com>
+
+	Check for write errors more carefully.
+
+	* lib/Makefile.am (libfu_a_SOURCES): Add closeout.c.
+	(noinst_HEADERS): Add closeout.h.
+	* lib/closeout.c, lib/closeout.h: New files.
+	* lib/long-options.c (parse_long_options),
+	src/chgrp.c, src/chmod.c, src/chown.c, src/cp.c, src/dd.c,
+	src/df.c, src/dircolors.c, src/du.c, src/install.c, src/ln.c,
+	src/ls.c, src/mkdir.c, src/mkfifo.c, src/mknod.c, src/mv.c,
+	src/mvdir.c, src/rm.c, src/rmdir.c, src/sync.c, src/touch.c
+	(main, usage): Check for write error to stdout before exiting.
+	Include "closeout.h".
+
 1998-01-03  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/df.c (show_dev): Treat `fsu.fsu_bavail == (unsigned long) -1'
