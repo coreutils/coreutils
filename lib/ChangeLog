@@ -1,5 +1,11 @@
 2003-03-19  Jim Meyering  <jim@meyering.net>
 
+	DJGPP doesn't have S_ISLNK, so provide a replacement.
+	* ftw.c (S_IFMT): Define, if necessary.
+	[STAT_MACROS_BROKEN]: Undefine S_ISLNK.
+	(S_ISLNK): Define, if necessary.
+	Based on a patch from Rich Dawe.
+
 	* exclude.h (PARAMS): Remove definition and uses.
 	* exclude.c: Remove uses of `PARAMS'.
 
