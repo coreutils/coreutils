@@ -6,7 +6,7 @@
 	able to avoid emitting trailing spaces.  Reported by Dan Jacobson.
 
 	* tests/misc/head-elide-tail: Add tests of head's new --lines=-N
-	option, and perform the 1600 invocations of head IFF the envvar
+	option, and perform the +1600 invocations of head IFF the envvar
 	RUN_EXPENSIVE_TESTS is set.
 
 2003-07-03  Jim Meyering  <jim@meyering.net>
