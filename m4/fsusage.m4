@@ -1,7 +1,12 @@
 #serial 1
 
 # From fileutils/configure.in
-# Determine how a program can obtain filesystems usage information.
+
+# Try to determine how a program can obtain filesystem usage information.
+# If successful, define the appropriate symbol (see fsusage.c) and
+# execute ACTION-IF-FOUND.  Otherwise, execute ACTION-IF-NOT-FOUND.
+#
+# jm_FILE_SYSTEM_USAGE([ACTION-IF-FOUND[, ACTION-IF-NOT-FOUND]])
 
 AC_DEFUN(jm_FILE_SYSTEM_USAGE,
 [
@@ -181,5 +186,7 @@ AC_TRY_CPP([#include <sys/filsys.h>],
    information and you have the <sys/filsys.h> header file.  (SVR2)])
   ac_fsusage_space=yes)
 fi
+
+AC_SHELL_IFELSE([test $ac_fsusage_space = yes], [$1], [$2])dnl
 
 ])
