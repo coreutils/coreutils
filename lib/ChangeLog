@@ -1,3 +1,8 @@
+2000-11-10  Jim Meyering  <meyering@lucent.com>
+
+	* obstack.h: Update from GNU libc.
+	* obstack.c: Likewise.
+
 2000-11-09  Paul Eggert  <eggert@twinsun.com>
 
 	* lib/unicodeio.c (ENOTSUP): Define to EINVAL if not defined.
