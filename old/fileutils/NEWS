@@ -1,4 +1,8 @@
 [4.1.1]
+* mv and cp accept a new option: --reply={yes,no,query};  provides a consistent
+    mechanism to control whether one is prompted about certain existing
+    destination files.  Note that cp's and mv's -f options don't have the
+    same meaning: cp's -f option no longer merely turns off `-i'.
 * remove portability limitations (e.g., PATH_MAX on the Hurd, fixes for
     64-bit systems)
 * mv now prompts before overwriting an existing, unwritable destination file
