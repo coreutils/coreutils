@@ -1,9 +1,8 @@
 2004-06-20  Jim Meyering  <jim@meyering.net>
 
-	* Makefile.am (libfetish_a_SOURCES): Add yesno.h.
-
-	* yesno.c: Include "yesno.h".
 	* yesno.h: New file.
+	* yesno.c: Include "yesno.h".
+	* Makefile.am (libfetish_a_SOURCES): Add yesno.h.
 
 2004-06-19  Jim Meyering  <jim@meyering.net>
 
