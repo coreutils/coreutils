@@ -2,6 +2,8 @@
 
 	* Version 5.1.1.
 
+	* src/tail.c (main): Warn about following stdin only when it's a tty.
+
 	* configure.ac: Use gl_DEFAULT_POSIX2_VERSION.
 
 2004-01-10  Jim Meyering  <jim@meyering.net>
@@ -57,7 +59,7 @@
 	* src/du.c (usage): Mention that, with its current meaning,
 	-H is deprecated.
 
-	* src/tail.c (main): Warn about following stdin.
+	* src/tail.c (main): Warn about following stdin when it's a tty.
 	Fail when following by name but no names are specified.
 
 2003-12-30  Jim Meyering  <jim@meyering.net>
