@@ -1,3 +1,19 @@
+1998-05-27  Jim Meyering  <meyering@ascend.com>
+
+	* tests/ls/Makefile.am (TESTS): s/cr-1/rt-1/
+	* tests/ls/rt-1: Rename from cr-1.
+
+998-05-26  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* tests/ls/cr-1: Don't use the ctime for testing, it is impossible
+	to set it reliably.
+
+1998-05-25  Jim Meyering  <meyering@ascend.com>
+
+	* configure.in (_GNU_SOURCE): AC_DEFINE it here.
+	* acconfig.h (_GNU_SOURCE): Remove definition from @TOP@ section.
+	[!_GNU_SOURCE]: Add #undef instead.
+
 1998-05-24  Jim Meyering  <meyering@ascend.com>
 
 	* Version 3.16o.
