@@ -28,9 +28,6 @@
 #include "version.h"
 #include "error.h"
 
-static int bsd_sum_file ();
-static int sysv_sum_file ();
-
 int safe_read ();
 
 /* The name this program was run with. */
@@ -81,64 +78,6 @@ With no FILE, or when FILE is -, read standard input.\n\
 "));
     }
   exit (status);
-}
-
-void
-main (argc, argv)
-     int argc;
-     char **argv;
-{
-  int errors = 0;
-  int optc;
-  int files_given;
-  int (*sum_func) () = bsd_sum_file;
-
-  program_name = argv[0];
-  have_read_stdin = 0;
-
-  while ((optc = getopt_long (argc, argv, "rs", longopts, (int *) 0)) != -1)
-    {
-      switch (optc)
-	{
-	case 0:
-	  break;
-
-	case 'r':		/* For SysV compatibility. */
-	  sum_func = bsd_sum_file;
-	  break;
-
-	case 's':
-	  sum_func = sysv_sum_file;
-	  break;
-
-	default:
-	  usage (1);
-	}
-    }
-
-  if (show_version)
-    {
-      printf ("sum - %s\n", version_string);
-      exit (0);
-    }
-
-  if (show_help)
-    usage (0);
-
-  files_given = argc - optind;
-  if (files_given == 0)
-    {
-      if ((*sum_func) ("-", files_given) < 0)
-	errors = 1;
-    }
-  else
-    for (; optind < argc; optind++)
-      if ((*sum_func) (argv[optind], files_given) < 0)
-	errors = 1;
-
-  if (have_read_stdin && fclose (stdin) == EOF)
-    error (1, errno, "-");
-  exit (errors);
 }
 
 /* Calculate and print the rotated checksum and the size in 1K blocks
@@ -265,3 +204,62 @@ sysv_sum_file (file, print_name)
 
   return 0;
 }
+
+void
+main (argc, argv)
+     int argc;
+     char **argv;
+{
+  int errors = 0;
+  int optc;
+  int files_given;
+  int (*sum_func) () = bsd_sum_file;
+
+  program_name = argv[0];
+  have_read_stdin = 0;
+
+  while ((optc = getopt_long (argc, argv, "rs", longopts, (int *) 0)) != -1)
+    {
+      switch (optc)
+	{
+	case 0:
+	  break;
+
+	case 'r':		/* For SysV compatibility. */
+	  sum_func = bsd_sum_file;
+	  break;
+
+	case 's':
+	  sum_func = sysv_sum_file;
+	  break;
+
+	default:
+	  usage (1);
+	}
+    }
+
+  if (show_version)
+    {
+      printf ("sum - %s\n", version_string);
+      exit (0);
+    }
+
+  if (show_help)
+    usage (0);
+
+  files_given = argc - optind;
+  if (files_given == 0)
+    {
+      if ((*sum_func) ("-", files_given) < 0)
+	errors = 1;
+    }
+  else
+    for (; optind < argc; optind++)
+      if ((*sum_func) (argv[optind], files_given) < 0)
+	errors = 1;
+
+  if (have_read_stdin && fclose (stdin) == EOF)
+    error (1, errno, "-");
+  exit (errors);
+}
+
