@@ -1,3 +1,18 @@
+Thu Dec 02 23:53:03 1993  Jim Meyering  (meyering@comco.com)
+
+	* configure.in (AC_HAVE_FUNCS): Add isascii.
+	* system.h [!defined (isascii) || defined (STDC_HEADERS)]: This failed
+	on AIX PS/2 1.3 systems because isascii is a function and it is used
+	in definitions (with the necessary side effect of assigning to a
+	global variable) of the is* macros.  Also test HAVE_ISASCII and
+	redefine ISASCII(c) instead of isascii.
+	Reported by Minh Tran-Le (tranle@intellicorp.com).
+
+Fri Nov 19 22:41:48 1993  Jim Meyering  (meyering@comco.com)
+
+	 * configure.in: Don't run the test for 8-bit clean memset if we
+	 already know we'll be using our replacement.
+
 Fri Nov 12 00:44:49 1993  Jim Meyering  (meyering@comco.com)
 
 	* Version 1.9.1.
