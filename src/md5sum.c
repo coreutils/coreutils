@@ -1,5 +1,4 @@
-/* Compute MD5 checksum of files or strings according to the definition
-   of MD5 in RFC 1321 from April 1992.
+/* Compute MD5 or SHA1 checksum of files or strings
    Copyright (C) 1995-2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -24,16 +23,19 @@
 #include <stdio.h>
 #include <sys/types.h>
 
-#include "md5.h"
-#include "getline.h"
 #include "system.h"
+
+#include "md5.h"
+#include "sha.h"
+#include "checksum.h"
+#include "getline.h"
 #include "closeout.h"
 #include "error.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
-#define PROGRAM_NAME "md5sum"
+#define PROGRAM_NAME (algorithm == ALG_MD5 ? "md5sum" : "shasum")
 
-#define AUTHORS "Ulrich Drepper"
+#define AUTHORS "Ulrich Drepper and Scott Miller"
 
 /* Most systems do not distinguish between external and internal
    text representations.  */
@@ -58,23 +60,43 @@
 # endif
 #endif
 
-/* The minimum length of a valid digest line in a file produced
-   by `md5sum FILE' and read by `md5sum --check'.  This length does
+
+#define DIGEST_TYPE_STRING(Alg) ((Alg) == ALG_MD5 ? "MD5" : "SHA1")
+#define DIGEST_STREAM(Alg) ((Alg) == ALG_MD5 ? md5_stream : sha_stream)
+
+#define DIGEST_BITS(Alg) ((Alg) == ALG_MD5 ? 128 : 160)
+#define DIGEST_HEX_BYTES(Alg) (DIGEST_BITS (Alg) / 4)
+#define DIGEST_BIN_BYTES(Alg) (DIGEST_BITS (Alg) / 8)
+
+#define MAX_DIGEST_BIN_BYTES MAX (DIGEST_BIN_BYTES (ALG_MD5), \
+				  DIGEST_BIN_BYTES (ALG_SHA1))
+
+/* The minimum length of a valid digest line.  This length does
    not include any newline character at the end of a line.  */
-#define MIN_DIGEST_LINE_LENGTH (32 /* message digest length */ \
-				+ 2 /* blank and binary indicator */ \
-				+ 1 /* minimum filename length */ )
+#define MIN_DIGEST_LINE_LENGTH(Alg) \
+  (DIGEST_HEX_BYTES (Alg) /* length of hexadecimal message digest */ \
+   + 2 /* blank and binary indicator */ \
+   + 1 /* minimum filename length */ )
 
 /* Nonzero if any of the files read were the standard input. */
 static int have_read_stdin;
+
+/* The minimum length of a valid checksum line for the selected algorithm.  */
+static int min_digest_line_length;
+
+/* Set to the length of a digest hex string for the selected algorithm.  */
+static size_t digest_hex_bytes;
 
 /* With --check, don't generate any output.
    The exit code indicates success or failure.  */
 static int status_only = 0;
 
 /* With --check, print a message to standard error warning about each
-   improperly formatted MD5 checksum line.  */
+   improperly formatted checksum line.  */
 static int warn = 0;
+
+/* Declared and set via one of the wrapper .c files.  */
+/* int algorithm = ALG_UNSPECIFIED; */
 
 /* The name this program was run with.  */
 char *program_name;
@@ -103,25 +125,30 @@ usage (int status)
       printf (_("\
 Usage: %s [OPTION] [FILE]...\n\
   or:  %s [OPTION] --check [FILE]\n\
-Print or check MD5 checksums.\n\
+Print or check %s (%d-bit) checksums.\n\
 With no FILE, or when FILE is -, read standard input.\n\
 \n\
   -b, --binary            read files in binary mode (default on DOS/Windows)\n\
-  -c, --check             check MD5 sums against given list\n\
+  -c, --check             check %s sums against given list\n\
   -t, --text              read files in text mode (default)\n\
 \n\
 The following two options are useful only when verifying checksums:\n\
       --status            don't output anything, status code shows success\n\
-  -w, --warn              warn about improperly formated MD5 checksum lines\n\
+  -w, --warn              warn about improperly formated checksum lines\n\
 \n\
       --help              display this help and exit\n\
       --version           output version information and exit\n\
 \n\
-The sums are computed as described in RFC 1321.  When checking, the input\n\
+The sums are computed as described in %s.  When checking, the input\n\
 should be a former output of this program.  The default mode is to print\n\
 a line with checksum, a character indicating type (`*' for binary, ` ' for\n\
 text), and name for each FILE.\n"),
-	      program_name, program_name);
+	      program_name, program_name,
+	      DIGEST_TYPE_STRING (algorithm),
+	      DIGEST_BITS (algorithm),
+	      DIGEST_TYPE_STRING (algorithm),
+	      (algorithm == ALG_MD5 ? "RFC 1321" : "FIPS-180-1")
+	      );
       puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
     }
 
@@ -140,11 +167,11 @@ split_3 (char *s, size_t s_len, unsigned char **u, int *binary, char **w)
   while (ISWHITE (s[i]))
     ++i;
 
-  /* The line must have at least 35 (36 if the first is a backslash)
-     more characters to contain correct message digest information.
-     Ignore this line if it is too short.  */
-  if (!(s_len - i >= MIN_DIGEST_LINE_LENGTH
-	|| (s[i] == '\\' && s_len - i >= 1 + MIN_DIGEST_LINE_LENGTH)))
+  /* The line must have at least `min_digest_line_length - 1' (or one more, if
+     the first is a backslash) more characters to contain correct message digest
+     information.  Ignore this line if it is too short.  */
+  if (!(s_len - i >= min_digest_line_length
+	|| (s[i] == '\\' && s_len - i >= 1 + min_digest_line_length)))
     return 1;
 
   if (s[i] == '\\')
@@ -154,10 +181,10 @@ split_3 (char *s, size_t s_len, unsigned char **u, int *binary, char **w)
     }
   *u = (unsigned char *) &s[i];
 
-  /* The first field has to be the 32-character hexadecimal
+  /* The first field has to be the n-character hexadecimal
      representation of the message digest.  If it is not followed
      immediately by a white space it's an error.  */
-  i += 32;
+  i += digest_hex_bytes;
   if (!ISWHITE (s[i]))
     return 1;
 
@@ -230,12 +257,13 @@ hex_digits (unsigned char const *s)
   return 1;
 }
 
-/* An interface to md5_stream.  Operate on FILENAME (it may be "-") and
-   put the result in *MD5_RESULT.  Return non-zero upon failure, zero
-   to indicate success.  */
+/* An interface to the function, DIGEST_STREAM, (either md5_stream or sha_stream).
+   Operate on FILENAME (it may be "-") and put the result in *BIN_RESULT.
+   Return non-zero upon failure, zero to indicate success.  */
 
 static int
-md5_file (const char *filename, int binary, unsigned char *md5_result)
+digest_file (const char *filename, int binary, unsigned char *bin_result,
+	   int (*digest_stream)(FILE *, void *))
 {
   FILE *fp;
   int err;
@@ -265,7 +293,7 @@ md5_file (const char *filename, int binary, unsigned char *md5_result)
 	}
     }
 
-  err = md5_stream (fp, md5_result);
+  err = (*digest_stream) (fp, bin_result);
   if (err)
     {
       error (0, errno, "%s", filename);
@@ -284,13 +312,13 @@ md5_file (const char *filename, int binary, unsigned char *md5_result)
 }
 
 static int
-md5_check (const char *checkfile_name)
+digest_check (const char *checkfile_name, int (*digest_stream)(FILE *, void *))
 {
   FILE *checkfile_stream;
   int n_properly_formated_lines = 0;
   int n_mismatched_checksums = 0;
   int n_open_or_read_failures = 0;
-  unsigned char md5buffer[16];
+  unsigned char bin_buffer[MAX_DIGEST_BIN_BYTES];
   size_t line_number;
   char *line;
   size_t line_chars_allocated;
@@ -318,7 +346,7 @@ md5_check (const char *checkfile_name)
     {
       char *filename;
       int binary;
-      unsigned char *md5num;
+      unsigned char *hex_digest;
       int err;
       int line_length;
 
@@ -336,14 +364,15 @@ md5_check (const char *checkfile_name)
       if (line[line_length - 1] == '\n')
 	line[--line_length] = '\0';
 
-      err = split_3 (line, line_length, &md5num, &binary, &filename);
-      if (err || !hex_digits (md5num))
+      err = split_3 (line, line_length, &hex_digest, &binary, &filename);
+      if (err || !hex_digits (hex_digest))
 	{
 	  if (warn)
 	    {
 	      error (0, 0,
-		     _("%s: %lu: improperly formatted MD5 checksum line"),
-		     checkfile_name, (unsigned long) line_number);
+		     _("%s: %lu: improperly formatted %s checksum line"),
+		     checkfile_name, (unsigned long) line_number,
+		     DIGEST_TYPE_STRING (algorithm));
 	    }
 	}
       else
@@ -356,7 +385,7 @@ md5_check (const char *checkfile_name)
 
 	  ++n_properly_formated_lines;
 
-	  fail = md5_file (filename, binary, md5buffer);
+	  fail = digest_file (filename, binary, bin_buffer, digest_stream);
 
 	  if (fail)
 	    {
@@ -369,23 +398,24 @@ md5_check (const char *checkfile_name)
 	    }
 	  else
 	    {
+	      size_t digest_bin_bytes = digest_hex_bytes / 2;
 	      size_t cnt;
 	      /* Compare generated binary number with text representation
 		 in check file.  Ignore case of hex digits.  */
-	      for (cnt = 0; cnt < 16; ++cnt)
+	      for (cnt = 0; cnt < digest_bin_bytes; ++cnt)
 		{
-		  if (TOLOWER (md5num[2 * cnt]) != bin2hex[md5buffer[cnt] >> 4]
-		      || (TOLOWER (md5num[2 * cnt + 1])
-			  != (bin2hex[md5buffer[cnt] & 0xf])))
+		  if (TOLOWER (hex_digest[2 * cnt]) != bin2hex[bin_buffer[cnt] >> 4]
+		      || (TOLOWER (hex_digest[2 * cnt + 1])
+			  != (bin2hex[bin_buffer[cnt] & 0xf])))
 		    break;
 		}
-	      if (cnt != 16)
+	      if (cnt != digest_bin_bytes)
 		++n_mismatched_checksums;
 
 	      if (!status_only)
 		{
 		  printf ("%s: %s\n", filename,
-			  (cnt != 16 ? _("FAILED") : _("OK")));
+			  (cnt != digest_bin_bytes ? _("FAILED") : _("OK")));
 		  fflush (stdout);
 		}
 	    }
@@ -411,8 +441,8 @@ md5_check (const char *checkfile_name)
   if (n_properly_formated_lines == 0)
     {
       /* Warn if no tests are found.  */
-      error (0, 0, _("%s: no properly formatted MD5 checksum lines found"),
-	     checkfile_name);
+      error (0, 0, _("%s: no properly formatted %s checksum lines found"),
+	     checkfile_name, DIGEST_TYPE_STRING (algorithm));
     }
   else
     {
@@ -448,7 +478,7 @@ md5_check (const char *checkfile_name)
 int
 main (int argc, char **argv)
 {
-  unsigned char md5buffer[16];
+  unsigned char bin_buffer[MAX_DIGEST_BIN_BYTES];
   int do_check = 0;
   int opt;
   char **string = NULL;
@@ -513,6 +543,9 @@ main (int argc, char **argv)
 	usage (EXIT_FAILURE);
       }
 
+  min_digest_line_length = MIN_DIGEST_LINE_LENGTH (algorithm);
+  digest_hex_bytes = DIGEST_HEX_BYTES (algorithm);
+
   if (file_type_specified && do_check)
     {
       error (0, 0, _("the --binary and --text options are meaningless when \
@@ -553,10 +586,13 @@ verifying checksums"));
       for (i = 0; i < n_strings; ++i)
 	{
 	  size_t cnt;
-	  md5_buffer (string[i], strlen (string[i]), md5buffer);
+	  if (algorithm == ALG_MD5)
+	    md5_buffer (string[i], strlen (string[i]), bin_buffer);
+	  else
+	    sha_buffer (string[i], strlen (string[i]), bin_buffer);
 
-	  for (cnt = 0; cnt < 16; ++cnt)
-	    printf ("%02x", md5buffer[cnt]);
+	  for (cnt = 0; cnt < (digest_hex_bytes / 2); ++cnt)
+	    printf ("%02x", bin_buffer[cnt]);
 
 	  printf ("  \"%s\"\n", string[i]);
 	}
@@ -570,7 +606,8 @@ verifying checksums"));
 	  usage (EXIT_FAILURE);
 	}
 
-      err = md5_check ((optind == argc) ? "-" : argv[optind]);
+      err = digest_check ((optind == argc) ? "-" : argv[optind],
+			  DIGEST_STREAM (algorithm));
     }
   else
     {
@@ -582,7 +619,8 @@ verifying checksums"));
 	  int fail;
 	  char *file = argv[optind];
 
-	  fail = md5_file (file, binary, md5buffer);
+	  fail = digest_file (file, binary, bin_buffer,
+			      DIGEST_STREAM (algorithm));
 	  err |= fail;
 	  if (!fail)
 	    {
@@ -593,8 +631,8 @@ verifying checksums"));
 	      if (strchr (file, '\n') || strchr (file, '\\'))
 		putchar ('\\');
 
-	      for (i = 0; i < 16; ++i)
-		printf ("%02x", md5buffer[i]);
+	      for (i = 0; i < (digest_hex_bytes / 2); ++i)
+		printf ("%02x", bin_buffer[i]);
 
 	      putchar (' ');
 	      if (binary)
