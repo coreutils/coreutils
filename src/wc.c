@@ -125,18 +125,20 @@ usage (int status)
 Usage: %s [OPTION]... [FILE]...\n\
 "),
 	      program_name);
-      printf (_("\
+      fputs (_("\
 Print newline, word, and byte counts for each FILE, and a total line if\n\
 more than one FILE is specified.  With no FILE, or when FILE is -,\n\
 read standard input.\n\
   -c, --bytes            print the byte counts\n\
   -m, --chars            print the character counts\n\
   -l, --lines            print the newline counts\n\
+"), stdout);
+      fputs (_("\
   -L, --max-line-length  print the length of the longest line\n\
   -w, --words            print the word counts\n\
       --help             display this help and exit\n\
       --version          output version information and exit\n\
-"));
+"), stdout);
       puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
