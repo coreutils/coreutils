@@ -1,5 +1,5 @@
 /* closeout.c - close standard output
-   Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -19,13 +19,6 @@
 # include <config.h>
 #endif
 
-#if ENABLE_NLS
-# include <libintl.h>
-# define _(Text) gettext (Text)
-#else
-# define _(Text) Text
-#endif
-
 #if HAVE_STDLIB_H
 # include <stdlib.h>
 #endif
@@ -39,6 +32,9 @@
 #ifndef errno
 extern int errno;
 #endif
+
+#include "gettext.h"
+#define _(msgid) gettext (msgid)
 
 #include "closeout.h"
 #include "error.h"
