@@ -1,5 +1,7 @@
 Changes in release 3.17:
 [3.16a]
+* chgrp, chmod, and chown no longer give contradictory output when --verbose
+  is used and an operation fails
 * install accepts new option, --preserver-timestamps
 * du --megabytes --total now shows total in megabytes
 * touch -d DATE now works on Unicos

@@ -1,5 +1,21 @@
 1997-08-31  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/chgrp.c (change_file_group): Call describe_change with a
+	3-state argument.
+	(describe_change): Report whether the operation was successful,
+	a failure, or that the request was a no-op.
+	Before, running `chgrp --verb bin /' as non-root reported
+	  group of / changed to bin
+	  chgrp: you are not a member of group `bin': Not owner
+
+	* src/chown.c (change_file_owner): Call describe_change with a
+	3-state argument.
+	(describe_change): Report whether the operation was successful,
+	a failure, or that the request was a no-op.
+	Before, running `chown --verb bin /' as non-root reported
+	  owner of / changed to bin
+	  chown: /: Not owner
+
 	* configure.in (jm_FUNC_LSTAT): Use it.
 
 	* acconfig.h (lstat): Add #undef.
@@ -55,7 +71,6 @@
 	  mode of / changed to 0355 (-wxr-xr-x)
 	  chmod: /: Not owner
 	Reported by Philippe Schnoebelen <phs@hobbes.fing.edu.uy>
-	FIXME: do the same for chgrp and chown
 
 1997-07-28  Jim Meyering  <meyering@na-net.ornl.gov>
 
