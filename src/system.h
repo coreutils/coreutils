@@ -819,7 +819,7 @@ ptr_align (void *ptr, size_t alignment)
   (void)((struct {char a[(assertion) ? 1 : -1]; } *) 0)
 
 #ifdef __GNUC__
-# define VERIFY_GCC_EXPR(assertion) VERIFY_EXPR (expression)
+# define VERIFY_GCC_EXPR(assertion) VERIFY_EXPR (assertion)
 #else
 # define VERIFY_GCC_EXPR(assertion) (void)0
 #endif
