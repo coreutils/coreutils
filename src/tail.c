@@ -1615,8 +1615,8 @@ main (int argc, char **argv)
   }
 
   /* To start printing with item N_UNITS from the start of the file, skip
-     N_UNITS - 1 items.  `tail +0' is actually meaningless, but for Unix
-     compatibility it's treated the same as `tail +1'.  */
+     N_UNITS - 1 items.  `tail -n +0' is actually meaningless, but for Unix
+     compatibility it's treated the same as `tail -n +1'.  */
   if (from_start)
     {
       if (n_units)
