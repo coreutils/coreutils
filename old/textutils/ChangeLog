@@ -1,3 +1,8 @@
+1997-10-26  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* lib/memcasecmp.c: Convert to upper case before comparing.
+	This makes join -i work with sort -f.
+
 1997-10-25  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/memcmp.c (rpl_memcmp): Rename from memcmp.
