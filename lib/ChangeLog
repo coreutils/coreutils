@@ -4,6 +4,7 @@
 
 2002-11-19  Jim Meyering  <jim@meyering.net>
 
+	Be careful not to clobber errno.
 	* quotearg.c (quotearg_buffer_restyled): If mbrtowc returns
 	`(size_t) -1' (at which point it would also set errno to EILSEQ),
 	then restore errno to its previous value.
