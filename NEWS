@@ -182,6 +182,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   copying or moving multiple times to the same destination in a file
   system with a coarse time stamp resolution.
 
+  cut accepts a new option, --complement, to complement the set of
+  selected bytes, characters, or fields.
+
   dd now also prints the number of bytes transferred, the time, and the
   transfer rate.  The new "status=noxfer" operand suppresses this change.
 
