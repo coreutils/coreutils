@@ -3,6 +3,9 @@
 	* src/sys2.h (SETVBUF): Define new macro.
 	* src/tail.c (dump_remainder): Don't fflush stdout here.
 	(main) [if forever]: Make stdout unbuffered, instead.
+	Akim Demaille pointed out that when running `echo x>a; tail -f a>>a' ,
+	the file `a' didn't grow longer than two lines.  Now it grows
+	without bound.
 
 1999-03-07  Jim Meyering  <meyering@ascend.com>
 
