@@ -1,5 +1,10 @@
 Fri Aug  2 21:45:06 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/nice.c (main): Set minus_flag to zero in two places.
+	Otherwise, `nice --1 -3' would mistakenly do the equivalent of
+	`nice --3'.  Thanks to Eric Backus <ericb@lsid.hp.com> for the
+	test cases.
+
 	* configure.in (check for /proc/uptime): New check.
 	* acconfig.h (SAVE_PROC_UPTIME): #undef it.  Reorder so symbols
 	are sorted again.
