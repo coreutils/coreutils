@@ -51,6 +51,8 @@ AC_DEFUN(jm_MACROS,
 	    [Define to the declaration of the xargmatch failure function.])
 
   dnl Used to define SETVBUF in sys2.h.
+  dnl This evokes the following warning from autoconf:
+  dnl ...: warning: AC_TRY_RUN called without default to allow cross compiling
   AC_FUNC_SETVBUF_REVERSED
 
 ])
