@@ -206,7 +206,7 @@ do_move (const char *source, const char *dest, const struct cp_options *x)
       else if (rename_succeeded)
 	{
 	  /* No need to remove anything.  SOURCE was successfully
-	     renamed to DEST.  */
+	     renamed to DEST.  Or the user declined to rename a file.  */
 	  dir_to_remove = NULL;
 	}
       else
