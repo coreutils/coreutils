@@ -2,6 +2,19 @@
 
 	* Version 4.1.2.
 
+	* tests/mv/dup-source: New test for the above.
+	* tests/mv/Makefile.am (TESTS): Add dup-source.
+
+	* src/copy.c (seen_file): Change type of `stats' parameter to pointer.
+	(copy_internal): Update caller.
+
+	* src/copy.c (struct F_triple): Rename from dest_info.
+	(seen_file): Rename from seen_dest.  Rename parameters accordingly.
+	(record_file): Rename from record_dest.  Rename parameters accordingly.
+	(triple_hash): Rename from dest_info_hash.
+	(triple_compare): Rename from dest_info_compare.
+	(triple_free): Rename from dest_info_free.
+
 	* src/mknod.c (main): Add a literal format string to suppress
 	a warning from gcc's -Wformat-security.
 
