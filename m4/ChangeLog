@@ -5,6 +5,13 @@
 
 2000-01-16  Jim Meyering  <meyering@lucent.com>
 
+	* jm-macros.m4: Require jm_FUNC_GROUP_MEMBER, jm_FUNC_PUTENV,
+	AM_FUNC_ERROR_AT_LINE, jm_FUNC_GNU_STRFTIME, jm_FUNC_MKTIME,
+	jm_FUNC_GETGROUPS AC_FUNC_VPRINTF, AC_FUNC_ALLOCA,
+	AM_FUNC_GETLOADAVG, and jm_SYS_PROC_UPTIME.
+
+2000-01-16  Jim Meyering  <meyering@lucent.com>
+
 	* c-bs-a.m4: Use `changequote(<<,>>)', rather than `changequote(, )'
 	because the latter didn't work.
 
