@@ -613,10 +613,9 @@ prompt (char const *filename, struct rm_options const *x,
 	else
 	  {
 	    /* TRANSLATORS: You may find it more convenient to translate
-	       the equivalent of _("%1$s: %3$s is write-protected and is
-	       of type `%2$s'.  Remove it? ").  This is more verbose than
-	       the original but it should avoid grammatical problems with
-	       the output of file_type.  */
+	       the equivalent of _("%s: remove %s (write-protected) %s? ").
+	       It should avoid grammatical problems with the output
+	       of file_type.  */
 	    fprintf (stderr,
 		     (write_protected
 		      ? _("%s: remove write-protected %s %s? ")
