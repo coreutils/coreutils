@@ -518,9 +518,6 @@
 /* Define to 1 if you have the <locale.h> header file. */
 #undef HAVE_LOCALE_H
 
-/* Define to 1 if you have the `localtime_r' function. */
-#undef HAVE_LOCALTIME_R
-
 /* Define if you have the 'long double' type. */
 #undef HAVE_LONG_DOUBLE
 

@@ -933,7 +933,7 @@ AC_DEFUN([jm_MACROS],
   AC_REQUIRE([AC_ISC_POSIX])dnl
 
   jm_CHECK_ALL_TYPES
-  jm_INCLUDED_REGEX([lib/regex.c])
+  gl_REGEX
 
   AC_REQUIRE([UTILS_HOST_OS])
   AC_REQUIRE([UTILS_FUNC_MKDIR_TRAILING_SLASH])
@@ -952,7 +952,7 @@ AC_DEFUN([jm_MACROS],
   AC_REQUIRE([jm_FUNC_LCHOWN])
   AC_REQUIRE([fetish_FUNC_RMDIR_NOTEMPTY])
   AC_REQUIRE([jm_FUNC_CHOWN])
-  AC_REQUIRE([jm_FUNC_MKTIME])
+  AC_REQUIRE([gl_FUNC_MKTIME])
   AC_REQUIRE([jm_FUNC_LSTAT])
   AC_REQUIRE([AC_FUNC_LSTAT_FOLLOWS_SLASHED_SYMLINK])
   AC_REQUIRE([jm_FUNC_STAT])
@@ -963,7 +963,6 @@ AC_DEFUN([jm_MACROS],
   AC_REQUIRE([jm_FUNC_MEMCMP])
   AC_REQUIRE([gl_MEMCOLL])
   AC_REQUIRE([jm_FUNC_GLIBC_UNLOCKED_IO])
-  AC_REQUIRE([AC_FUNC_FNMATCH_GNU])
   AC_REQUIRE([jm_FUNC_GROUP_MEMBER])
   AC_REQUIRE([jm_FUNC_PUTENV])
   AC_REQUIRE([jm_AFS])
@@ -972,7 +971,6 @@ AC_DEFUN([jm_MACROS],
   AC_REQUIRE([jm_AC_FUNC_LINK_FOLLOWS_SYMLINK])
   AC_REQUIRE([gl_FUNC_FNMATCH_GNU])
   AC_REQUIRE([jm_FUNC_GNU_STRFTIME])
-  AC_REQUIRE([jm_FUNC_MKTIME])
   AC_REQUIRE([jm_FUNC_FPENDING])
 
   # This is for od and stat, and any other program that
@@ -982,9 +980,10 @@ AC_DEFUN([jm_MACROS],
   AC_REQUIRE([jm_FUNC_GETGROUPS])
 
   AC_REQUIRE([AC_FUNC_FSEEKO])
-  AC_REQUIRE([AC_FUNC_VPRINTF])
   AC_REQUIRE([AC_FUNC_ALLOCA])
   AC_REQUIRE([gl_FUNC_ALLOCA])
+
+  AC_REQUIRE([gl_ERROR])
 
   AC_CONFIG_LIBOBJ_DIR([lib])
   AC_FUNC_GETLOADAVG
@@ -1269,7 +1268,7 @@ AC_DEFUN([AC_ISC_POSIX],
   ]
 )
 
-#serial 17
+#serial 18
 
 dnl Initially derived from code in GNU grep.
 dnl Mostly written by Jim Meyering.
@@ -1323,7 +1322,7 @@ AC_DEFUN([jm_INCLUDED_REGEX],
 	    /* The following example is derived from a problem report
                against gawk from Jorge Stolfi <stolfi@ic.unicamp.br>.  */
 	    memset (&regex, 0, sizeof (regex));
-	    s = re_compile_pattern ("[[an\371]]*n", 7, &regex);
+	    s = re_compile_pattern ("[[an\201]]*n", 7, &regex);
 	    if (s)
 	      exit (1);
 
@@ -3003,23 +3002,6 @@ AC_DEFUN([jm_FUNC_CHOWN],
     AC_DEFINE(chown, rpl_chown,
       [Define to rpl_chown if the replacement function should be used.])
   fi
-])
-
-#serial 8
-
-dnl From Jim Meyering.
-dnl A wrapper around AC_FUNC_MKTIME.
-
-AC_DEFUN([jm_FUNC_MKTIME],
-[AC_REQUIRE([AC_FUNC_MKTIME])dnl
-
- dnl mktime.c uses localtime_r if it exists.  Check for it.
- AC_CHECK_FUNCS(localtime_r)
-
- if test $ac_cv_func_working_mktime = no; then
-   AC_DEFINE(mktime, rpl_mktime,
-    [Define to rpl_mktime if the replacement function should be used.])
- fi
 ])
 
 # mktime.m4 serial 2

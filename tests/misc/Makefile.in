@@ -163,7 +163,6 @@ TESTS_ENVIRONMENT = \
 
 
 TESTS = \
-  cut-tty-eof \
   nohup \
   readlink \
   head-elide-tail \
