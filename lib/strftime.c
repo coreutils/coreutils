@@ -813,7 +813,7 @@ strftime (s, maxsize, format, tp)
 	  DO_NUMBER (2, (tp->tm_year % 100 + 100) % 100);
 
 	case 'Z':
-	  cpy(zonelen, zone);
+	  cpy (zonelen, zone);
 	  break;
 
 	case 'z':		/* GNU extension.  */
