@@ -36,6 +36,7 @@
 #include "long-options.h"
 #include "nanosleep.h"
 #include "xstrtod.h"
+#include "closeout.h"
 
 #if HAVE_FENV_H
 # include <fenv.h>
@@ -80,6 +81,7 @@ point number.\n\
 "),
 	      program_name, program_name);
       puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
+      close_stdout ();
     }
   exit (status);
 }
