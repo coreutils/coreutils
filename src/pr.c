@@ -1076,6 +1076,7 @@ init_fps (int number_of_files, char **av)
 	  if (open_file (*av, p) == 0)
 	    return 1;
 	  init_header (*av, fileno (p->fp));
+	  p->lines_stored = 0;
 	}
       else
 	{
@@ -1086,6 +1087,7 @@ init_fps (int number_of_files, char **av)
 	  p->full_page_printed = FALSE;
 	  ++total_files;
 	  init_header ("", -1);
+	  p->lines_stored = 0;
 	}
 
       firstname = p->name;
@@ -1096,6 +1098,7 @@ init_fps (int number_of_files, char **av)
 	  p->fp = firstfp;
 	  p->status = OPEN;
 	  p->full_page_printed = FALSE;
+	  p->lines_stored = 0;
 	}
     }
   files_ready_to_read = total_files;
@@ -1641,6 +1644,7 @@ init_store_cols (void)
 
   if (line_vector != NULL)
     free ((int *) line_vector);
+  /* FIXME: here's where it was allocated.  */
   line_vector = (int *) xmalloc ((total_lines + 1) * sizeof (int *));
 
   if (end_vector != NULL)
@@ -2232,6 +2236,17 @@ print_stored (COLUMN *p)
 
   int line = p->current_line++;
   register char *first = &buff[line_vector[line]];
+  /* FIXME
+     UMR: Uninitialized memory read:
+     * This is occurring while in:
+     print_stored   [pr.c:2239]
+     * Reading 4 bytes from 0x5148c in the heap.
+     * Address 0x5148c is 4 bytes into a malloc'd block at 0x51488 of 676 bytes
+     * This block was allocated from:
+     malloc         [rtlib.o]
+     xmalloc        [xmalloc.c:94]
+     init_store_cols [pr.c:1648]
+     */
   register char *last = &buff[line_vector[line + 1]];
 
   pad_vertically = TRUE;
