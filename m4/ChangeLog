@@ -1,3 +1,8 @@
+1998-10-11  Jim Meyering  <meyering@ascend.com>
+
+	* mktime.m4 (jm_AM_FUNC_MKTIME): New file and macro.
+	* jm-mktime.m4: Require jm_AM_FUNC_MKTIME, not AM_FUNC_MKTIME.
+
 1998-09-27  Jim Meyering  <meyering@ascend.com>
 
 	* jm-macros.m4 (jm_MACROS): Require jm_FUNC_FNMATCH.
