@@ -220,3 +220,7 @@ off_t lseek ();
 #define SAME_INODE(Stat_buf_1, Stat_buf_2) \
   ((Stat_buf_1).st_ino == (Stat_buf_2).st_ino \
    && (Stat_buf_1).st_dev == (Stat_buf_2).st_dev)
+
+#define DOT_OR_DOTDOT(Basename) \
+  (Basename[0] == '.' && (Basename[1] == '\0' \
+			  || (Basename[1] == '.' && Basename[2] == '\0')))
