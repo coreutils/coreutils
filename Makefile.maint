@@ -99,6 +99,10 @@ rel-check:
 	echo "$(md5)  -" > $$md5_tmp; \
 	md5sum -c $$md5_tmp < $$tarz
 
+release-archive-dir = ../release
+prev-tgz = $(PACKAGE)-$(PREV_VERSION).tar.gz
+xd-delta = $(PACKAGE)-$(PREV_VERSION)-$(VERSION).xdelta
+
 announcement: NEWS ChangeLog $(distdir).tar.gz
 	@( \
 	  echo Subject: $(distdir) released; \
@@ -107,6 +111,12 @@ announcement: NEWS ChangeLog $(distdir).tar.gz
 	  echo; \
 	  for url in $(url_dir_list); do \
 	    echo "  $$url/$(distdir).tar.gz"; \
+	  done; \
+	  echo; \
+	  echo And here are xdelta-style diffs; \
+	  echo; \
+	  for url in $(url_dir_list); do \
+	    echo "  $$url/$(xd-delta)"; \
 	  done; \
 	  echo; \
 	  echo "$(md5)  $(distdir).tar.gz"; \
@@ -122,10 +132,6 @@ announcement: NEWS ChangeLog $(distdir).tar.gz
 	    | perl -ne 'm!^\+\+ (\./)?! or print,next;'	\
 	      -e 'print "\n"."*"x70 ."\n"; s///; print; print "*"x70 ."\n"'; \
 	)
-
-release-archive-dir = ../release
-prev-tgz = $(PACKAGE)-$(PREV_VERSION).tar.gz
-xd-delta = $(PACKAGE)-$(PREV_VERSION)-$(VERSION).xdelta
 
 alpha:
 	$(MAKE) po-check
