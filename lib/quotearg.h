@@ -1,5 +1,5 @@
 /* quotearg.h - quote arguments for output
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -33,8 +33,9 @@ enum quoting_style
 # define DEFAULT_QUOTING_STYLE literal_quoting_style
 #endif
 
-/* Names of quoting styles.  */
+/* Names of quoting styles and their corresponding values.  */
 extern char const *const quoting_style_args[];
+extern enum quoting_style const quoting_style_vals[];
 
 struct quoting_options;
 
@@ -87,9 +88,9 @@ size_t quotearg_buffer PARAMS ((char *buffer, size_t buffersize,
    The returned value points to static storage that can be
    reused by the next call to this function with the same value of N.
    N must be nonnegative.  */
-char *quotearg_n PARAMS ((int n, char const *arg));
+char *quotearg_n PARAMS ((unsigned int n, char const *arg));
 
-/* Equivalent to quotearg_n (ARG, 0).  */
+/* Equivalent to quotearg_n (0, ARG).  */
 char *quotearg PARAMS ((char const *arg));
 
 /* Like quotearg (ARG), except also quote any instances of CH.  */
