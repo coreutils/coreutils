@@ -1,3 +1,11 @@
+2000-07-18  Bruno Haible  <haible@clisp.cons.org>
+
+	* mbswidth.h (mbswidth): Add a flags argument.
+	(mbswidth): New declaration.
+	(MBSW_ACCEPT_INVALID, MBSW_ACCEPT_UNPRINTABLE): New macros.
+	* mbswidth.c (mbswidth): Add a flags argument.
+	(mbsnwidth): New function.
+
 2000-07-24  Jim Meyering  <meyering@lucent.com>
 
 	* mbswidth.c: Remove useless #else.  From Bruno Haible.
