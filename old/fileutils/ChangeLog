@@ -1,3 +1,11 @@
+1997-11-09  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* m4/jm-mktime.m4 (jm_FUNC_MKTIME): Check for localtime_r.
+	* m4/strftime.m4 (jm_STRFTIME_PREREQS): Check for localtime_r.
+	(jm_FUNC_GNU_STRFTIME): Use new macro.
+	(jm_FUNC_STRFTIME): New macro.  Likewise.
+	Reported by Noel Cragg.
+
 1997-11-08  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* m4/getline.m4: Fix typo in comment.
