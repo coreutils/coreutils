@@ -64,7 +64,6 @@ test -f b/g && fail=1
 test -f c/f || fail=1
 test -f c/g || fail=1
 
-mkdir aa
 touch a/f b/f b/g
 mv a/f b/f b/g c
 test -f a/f && fail=1  # a/f should have been moved
