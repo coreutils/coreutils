@@ -54,18 +54,26 @@
 # include <wchar.h>
 #endif
 
+#include <stddef.h>
+
 #ifndef ELIDE_CODE
 
 
 /* Determine default alignment.  */
-struct fooalign {char x; double d;};
-# define DEFAULT_ALIGNMENT  \
-  ((PTR_INT_TYPE) ((char *) &((struct fooalign *) 0)->d - (char *) 0))
+union fooround
+{
+  long int i;
+  long double d;
+  void *p;
+};
 /* If malloc were really smart, it would round addresses to DEFAULT_ALIGNMENT.
    But in fact it might be less smart and round addresses to as much as
    DEFAULT_ROUNDING.  So we prepare for it to do that.  */
-union fooround {long x; double d;};
-# define DEFAULT_ROUNDING (sizeof (union fooround))
+enum
+  {
+    DEFAULT_ALIGNMENT = offsetof (struct { char c; union fooround u; }, u),
+    DEFAULT_ROUNDING = sizeof (union fooround)
+  };
 
 /* When we copy a long block of data, this is the unit to do it with.
    On some machines, copying successive ints does not work;
@@ -93,11 +101,6 @@ int obstack_exit_failure = EXIT_FAILURE;
 #  include "exitfail.h"
 #  define obstack_exit_failure exit_failure
 # endif
-
-/* The non-GNU-C macros copy the obstack into this global variable
-   to avoid multiple evaluation.  */
-
-struct obstack *_obstack;
 
 /* Define a macro that either calls functions with the traditional malloc/free
    calling interface, or calls functions with the mmalloc/mfree interface
@@ -136,7 +139,7 @@ _obstack_begin (struct obstack *h,
   register struct _obstack_chunk *chunk; /* points to new chunk */
 
   if (alignment == 0)
-    alignment = (int) DEFAULT_ALIGNMENT;
+    alignment = DEFAULT_ALIGNMENT;
   if (size == 0)
     /* Default size is what GNU malloc can fit in a 4096-byte block.  */
     {
@@ -182,7 +185,7 @@ _obstack_begin_1 (struct obstack *h, int size, int alignment,
   register struct _obstack_chunk *chunk; /* points to new chunk */
 
   if (alignment == 0)
-    alignment = (int) DEFAULT_ALIGNMENT;
+    alignment = DEFAULT_ALIGNMENT;
   if (size == 0)
     /* Default size is what GNU malloc can fit in a 4096-byte block.  */
     {
@@ -252,8 +255,7 @@ _obstack_newchunk (struct obstack *h, int length)
 
   /* Compute an aligned object_base in the new chunk */
   object_base =
-    __INT_TO_PTR ((__PTR_TO_INT (new_chunk->contents) + h->alignment_mask)
-		  & ~ (h->alignment_mask));
+    __PTR_ALIGN ((char *) new_chunk, new_chunk->contents, h->alignment_mask);
 
   /* Move the existing object to the new chunk.
      Word at a time is fast and is safe if the object
