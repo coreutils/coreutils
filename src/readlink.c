@@ -37,14 +37,14 @@
 /* Name this program was run with.  */
 char *program_name;
 
-  /* If nonzero, canonicalize file name. */
-static int canonicalize;
-  /* If nonzero, do not output the trailing newline. */
-static int no_newline;
-  /* If nonzero, report error messages. */
-static int verbose;
-  /* In canonicalize mode, use this method. */
-canonicalize_mode_t can_mode = CAN_ALL_BUT_LAST;
+/* If true, do not output the trailing newline.  */
+static bool no_newline;
+
+/* If true, report error messages.  */
+static bool verbose;
+
+/* If not -1, use this method to canonicalize.  */
+int can_mode = -1;
 
 static struct option const longopts[] =
 {
@@ -121,26 +121,23 @@ main (int argc, char *const argv[])
 	case 0:
 	  break;
 	case 'e':
-	  canonicalize = 1;
 	  can_mode = CAN_EXISTING;
 	  break;
 	case 'f':
-	  canonicalize = 1;
 	  can_mode = CAN_ALL_BUT_LAST;
 	  break;
 	case 'm':
-	  canonicalize = 1;
 	  can_mode = CAN_MISSING;
 	  break;
 	case 'n':
-	  no_newline = 1;
+	  no_newline = true;
 	  break;
 	case 'q':
 	case 's':
-	  verbose = 0;
+	  verbose = false;
 	  break;
 	case 'v':
-	  verbose = 1;
+	  verbose = true;
 	  break;
 	case_GETOPT_HELP_CHAR;
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
@@ -163,7 +160,7 @@ main (int argc, char *const argv[])
       usage (EXIT_FAILURE);
     }
 
-  value = (canonicalize
+  value = (can_mode != -1
 	   ? canonicalize_fname (fname)
 	   : xreadlink (fname, 1024));
   if (value)
