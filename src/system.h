@@ -52,11 +52,9 @@ you must include <sys/types.h> before including this file
 #endif
 
 
-#if HAVE_LIMITS_H
 /* limits.h must come before pathmax.h because limits.h on some systems
    undefs PATH_MAX, whereas pathmax.h sets PATH_MAX.  */
-# include <limits.h>
-#endif
+#include <limits.h>
 
 #include "pathmax.h"
 #include "localedir.h"
@@ -109,14 +107,7 @@ struct utimbuf
 /* Don't use bcopy!  Use memmove if source and destination may overlap,
    memcpy otherwise.  */
 
-#if HAVE_STRING_H
-# if !STDC_HEADERS && HAVE_MEMORY_H
-#  include <memory.h>
-# endif
-# include <string.h>
-#else
-# include <strings.h>
-#endif
+#include <string.h>
 #if ! HAVE_DECL_MEMRCHR
 void *memrchr (const void *, int, size_t);
 #endif
