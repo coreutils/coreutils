@@ -1,11 +1,16 @@
+2003-11-19  Jim Meyering  <jim@meyering.net>
+
+	* Version 5.1.0.
+
+	* src/join.c (usage): Mention that FILE1 and FILE2 must be sorted
+	on the join fields.  Suggestion from Bruce Robertson.
+
 2003-11-18  Jim Meyering  <jim@meyering.net>
 
 	`od -c -w9999999' could segfault
 	* src/od.c (dump): Use xnmalloc/free, not alloca.
 
 2003-11-16  Jim Meyering  <jim@meyering.net>
-
-	* Version 5.1.0.
 
 	* Use autoconf-2.59.  Regenerate dependent files.
 
