@@ -206,6 +206,8 @@ my @tv = (
 # From Will Edgington.
 ["o-no-file1", '-o no-such-file no-such-file', {}, '', 2],
 
+["create-empty", '-o no/such/file /dev/null', {}, '', 2],
+
 # From Paul Eggert.  This was fixed in textutils-1.22k.
 ["neg-nls", '-n', "-1\n-9\n", "-9\n-1\n", 0],
 
