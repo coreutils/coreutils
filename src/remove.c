@@ -148,7 +148,7 @@ print_nth_dir (FILE *stream, unsigned int depth)
   unsigned int sum = 0;
   unsigned int i;
 
-  assert (0 <= depth && depth < current_depth ());
+  assert (depth < current_depth ());
 
   for (i = 0; i <= depth; i++)
     {
