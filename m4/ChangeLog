@@ -5,6 +5,13 @@
 	SunOS4.1.x needs it for the declaration of `FILE'.
 	Patch by Volker Borchert.
 
+	* ls-mntd-fs.m4 (jm_LIST_MOUNTED_FILESYSTEMS)
+	Check for these headers: sys/param.h sys/ucred.h sys/mount.h
+	sys/fs_types.h, and make the link-test for getfsstat guard #include
+	directives with appropriate #if HAVE_*_H tests so that we can
+	detect getfsstat on Apple Darwin1.3.7 systems.
+	Reported by Nelson Beebe.
+
 2001-09-28  Paul Eggert  <eggert@twinsun.com>
 
 	Fix bug reported by Petter Reinholdtsen for HP-UX 10.20, which
