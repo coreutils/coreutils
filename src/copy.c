@@ -43,7 +43,8 @@ int yesno ();
 static int copy_internal PARAMS ((const char *src_path, const char *dst_path,
 				  int new_dst, dev_t device,
 				  struct dir_list *ancestors,
-				  const struct cp_options *x));
+				  const struct cp_options *x,
+				  int *copy_into_self));
 
 /* The invocation name of this program.  */
 extern char *program_name;
@@ -64,17 +65,17 @@ is_ancestor (const struct stat *sb, const struct dir_list *ancestors)
    copy the contents to DST_PATH_IN.  NEW_DST is nonzero if
    DST_PATH_IN is a directory that was created previously in the
    recursion.   SRC_SB and ANCESTORS describe SRC_PATH_IN.
+   Set *COPY_INTO_SELF to nonzero if SRC_PATH_IN is a parent of
+   (or the same as) DST_PATH_IN;  otherwise, set it to zero.
    Return 0 if successful, -1 if an error occurs. */
 
 static int
 copy_dir (const char *src_path_in, const char *dst_path_in, int new_dst,
 	  const struct stat *src_sb, struct dir_list *ancestors,
-	  const struct cp_options *x)
+	  const struct cp_options *x, int *copy_into_self)
 {
   char *name_space;
   char *namep;
-  char *src_path;
-  char *dst_path;
   int ret = 0;
 
   errno = 0;
@@ -93,13 +94,16 @@ copy_dir (const char *src_path_in, const char *dst_path_in, int new_dst,
   namep = name_space;
   while (*namep != '\0')
     {
-      src_path = path_concat (src_path_in, namep, NULL);
-      dst_path = path_concat (dst_path_in, namep, NULL);
+      int local_copy_into_self;
+      char *src_path = path_concat (src_path_in, namep, NULL);
+      char *dst_path = path_concat (dst_path_in, namep, NULL);
+
       if (dst_path == NULL || src_path == NULL)
 	error (1, 0, _("virtual memory exhausted"));
 
       ret |= copy_internal (src_path, dst_path, new_dst, src_sb->st_dev,
-			    ancestors, x);
+			    ancestors, x, &local_copy_into_self);
+      *copy_into_self |= local_copy_into_self;
 
       /* Free the memory for `src_path'.  The memory for `dst_path'
 	 cannot be deallocated, since it is used to create multiple
@@ -301,12 +305,14 @@ ret2:
    number of the parent directory, or 0 if the parent of this file is
    not known.  ANCESTORS points to a linked, null terminated list of
    devices and inodes of parent directories of SRC_PATH.
+   Set *COPY_INTO_SELF to nonzero if SRC_PATH is a parent of (or the
+   same as) DST_PATH;  otherwise, set it to zero.
    Return 0 if successful, 1 if an error occurs. */
 
 static int
 copy_internal (const char *src_path, const char *dst_path,
 	       int new_dst, dev_t device, struct dir_list *ancestors,
-	       const struct cp_options *x)
+	       const struct cp_options *x, int *copy_into_self)
 {
   struct stat src_sb;
   struct stat dst_sb;
@@ -316,6 +322,7 @@ copy_internal (const char *src_path, const char *dst_path,
   char *dst_backup = NULL;
   int fix_mode = 0;
 
+  *copy_into_self = 0;
   if ((*(x->xstat)) (src_path, &src_sb))
     {
       error (0, errno, "%s", src_path);
@@ -335,7 +342,10 @@ copy_internal (const char *src_path, const char *dst_path,
   /* Did we just create this file?  */
 
   if (earlier_file == &new_file)
-    return 0;
+    {
+      *copy_into_self = 1;
+      return 0;
+    }
 
   src_mode = src_sb.st_mode;
   src_type = src_sb.st_mode;
@@ -552,7 +562,8 @@ copy_internal (const char *src_path, const char *dst_path,
 
       /* Copy the contents of the directory.  */
 
-      if (copy_dir (src_path, dst_path, new_dst, &src_sb, dir, x))
+      if (copy_dir (src_path, dst_path, new_dst, &src_sb, dir, x,
+		    copy_into_self))
 	return 1;
     }
 #ifdef S_ISLNK
@@ -771,12 +782,16 @@ valid_options (const struct cp_options *co)
    is known not to exist (e.g., because its parent directory was just
    created);  NONEXISTENT_DST should be zero if DST_PATH might already
    exist.  OPTIONS is ... FIXME-describe
+   Set *COPY_INTO_SELF to nonzero if SRC_PATH is a parent of (or the
+   same as) DST_PATH;  otherwise, set it to zero.
    Return 0 if successful, 1 if an error occurs. */
 
 int
 copy (const char *src_path, const char *dst_path,
-      int nonexistent_dst, const struct cp_options *options)
+      int nonexistent_dst, const struct cp_options *options,
+      int *copy_into_self)
 {
   assert (valid_options (options));
-  return copy_internal (src_path, dst_path, nonexistent_dst, 0, NULL, options);
+  return copy_internal (src_path, dst_path, nonexistent_dst, 0, NULL,
+			options, copy_into_self);
 }
