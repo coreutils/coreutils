@@ -193,7 +193,7 @@ alloca (size)
 	{
 	  register header *np = hp->h.next;
 
-	  free ((pointer) hp);	/* Collect garbage.  */
+	  free (hp);		/* Collect garbage.  */
 
 	  hp = np;		/* -> next header.  */
 	}
