@@ -1,3 +1,7 @@
+2000-01-16  Jim Meyering  <meyering@lucent.com>
+
+	* prereq.m4: Use new AC_C_PROTOTYPES instead of AM_C_PROTOTYPES.
+
 2000-01-15  Jim Meyering  <meyering@lucent.com>
 
 	* jm-macros.m4 (AC_REPLACE_FUNCS): Add gethostname and getusershell.
