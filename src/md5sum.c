@@ -82,12 +82,6 @@
 # define __P(args) ()
 #endif
 
-#ifdef __GNUC__
-# define INLINE __inline
-#else
-# define INLINE /* empty */
-#endif
-
 /* The following contortions are an attempt to use the C preprocessor
    to determine an unsigned integral type that is 32 bits wide.  An
    alternative approach is to use autoconf's AC_CHECK_SIZEOF macro, but
@@ -163,8 +157,8 @@ char *xmalloc ();
 
 /* Prototypes for local functions.  */
 static void usage __P ((int status));
-static INLINE void init __P ((struct md5_ctx *ctx));
-static INLINE void *result __P ((const struct md5_ctx *ctx, void *resbuf));
+static inline void init __P ((struct md5_ctx *ctx));
+static inline void *result __P ((const struct md5_ctx *ctx, void *resbuf));
 void *md5_file __P ((const char *filename, void *resblock, int binary));
 void *md5_buffer __P ((const char *buffer, size_t len, void *resblock));
 static void process_buffer __P ((const void *buffer, size_t len,
@@ -471,7 +465,7 @@ produce a list with the checksum informations.  A file name - denotes stdin.\n")
 
 /* Initialize structure containing state of computation.
    (RFC 1321, 3.3: Step 3)  */
-static INLINE void
+static inline void
 init (ctx)
      struct md5_ctx *ctx;
 {
@@ -483,7 +477,7 @@ init (ctx)
 
 /* Put result from CTX in first 16 bytes following RESBUF.  The result must
    be in little endian byte order.  */
-static INLINE void *
+static inline void *
 result (ctx, resbuf)
      const struct md5_ctx *ctx;
      void *resbuf;
