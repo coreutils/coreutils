@@ -2,6 +2,7 @@ error.h
 fnmatch.h
 getopt.h
 getopt.c
+getopt1.c
 md5.h
 obstack.h
 regex.h
