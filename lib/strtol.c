@@ -1,31 +1,43 @@
 /* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2, or (at your option)
+   any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software
+   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 
 #include <ctype.h>
 #include <errno.h>
+#ifndef errno
+extern int errno;
+#endif
 
 #if HAVE_LIMITS_H
 #include <limits.h>
 #endif
+
 #ifndef ULONG_MAX
-#define	LONG_MAX (~(1 << (sizeof (long) * 8 - 1)))
-#define LONG_MIN (-LONG_MAX-1)
 #define ULONG_MAX ((unsigned long) ~(unsigned long) 0)
+#endif
+
+#ifndef LONG_MAX
+#define	LONG_MAX (~(1 << (sizeof (long) * 8 - 1)))
+#endif
+
+#ifndef LONG_MIN
+#define LONG_MIN (-LONG_MAX - 1)
 #endif
 
 #if STDC_HEADERS
@@ -33,11 +45,6 @@ Cambridge, MA 02139, USA.  */
 #include <stdlib.h>
 #else
 #define NULL 0
-extern int errno;
-#endif
-
-#if !__STDC__
-#define const
 #endif
 
 #ifndef	UNSIGNED
@@ -156,7 +163,7 @@ strtol (nptr, endptr, base)
   /* Check for a value that is within the range of
      `unsigned long int', but outside the range of `long int'.  */
   if (i > (negative ?
-	   - (unsigned long int) LONG_MIN : (unsigned long int) LONG_MAX))
+	   -(unsigned long int) LONG_MIN : (unsigned long int) LONG_MAX))
     overflow = 1;
 #endif
 
@@ -171,7 +178,7 @@ strtol (nptr, endptr, base)
     }
 
   /* Return the result of the appropriate sign.  */
-  return (negative ? - i : i);
+  return (negative ? -i : i);
 
 noconv:;
   /* There was no number to convert.  */
