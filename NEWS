@@ -117,6 +117,15 @@ GNU coreutils NEWS                                    -*- outline -*-
   echo -e '\xHH' now outputs a byte whose hexadecimal value is HH,
   for compatibility with bash.
 
+  In the following cases POSIX allows the default GNU behavior,
+  so when POSIXLY_CORRECT is set:
+
+    printf and unlink support --help and --option.
+    ls supports TABSIZE.
+    pr no longer depends on LC_TIME for the date format in non-POSIX locales.
+    printf supports \u, \U, \x.
+    tail supports two or more files when using the obsolete option syntax.
+
 
 * Major changes in release 5.2.1 (2004-03-12) [stable]
 
