@@ -1,4 +1,4 @@
-/* mktime: convert a `struct tm' to a time_t value  zzzzzz
+/* mktime: convert a `struct tm' to a time_t value
    Copyright (C) 1993-1997, 1998 Free Software Foundation, Inc.
    Contributed by Paul Eggert (eggert@twinsun.com).
 
@@ -28,14 +28,8 @@
 # include <config.h>
 #endif
 
-/* Some systems need this in order to declare localtime_r properly.  */
-#ifndef __EXTENSIONS__
-# define __EXTENSIONS__ 1
-#endif
-
 #ifdef _LIBC
 # define HAVE_LIMITS_H 1
-# define HAVE_LOCALTIME_R 1
 # define STDC_HEADERS 1
 #endif
 
@@ -48,11 +42,6 @@
 
 #include <sys/types.h>		/* Some systems define `time_t' here.  */
 #include <time.h>
-
-/* Provide a declaration of localtime_r on systems that lack it.  */
-#if ! defined HAVE_DECL_LOCALTIME_R
-extern struct tm* localtime_r ();
-#endif
 
 #if HAVE_LIMITS_H
 # include <limits.h>
@@ -130,35 +119,23 @@ time_t __mktime_internal __P ((struct tm *,
 
 
 #ifdef _LIBC
-# define localtime_r __localtime_r
+# define my_mktime_localtime_r __localtime_r
 #else
-# if HAVE_LOCALTIME_R == defined localtime_r
-/* Provide our own substitute for a missing or possibly broken localtime_r.  */
+/* If we're a mktime substitute in a GNU program, then prefer
+   localtime to localtime_r, since many localtime_r implementations
+   are buggy.  */
 static struct tm *my_mktime_localtime_r __P ((const time_t *, struct tm *));
 static struct tm *
 my_mktime_localtime_r (t, tp)
      const time_t *t;
      struct tm *tp;
 {
-#  ifdef localtime_r
-  /* Digital Unix 4.0A and 4.0D have a macro localtime_r with the
-     standard meaning, along with an unwanted, nonstandard function
-     localtime_r.  The placeholder function my_mktime_localtime_r
-     invokes the macro; use that instead of the system's bogus
-     localtime_r.  */
-  return localtime_r (t, tp);
-#   undef localtime_r
-#  else /* ! defined (localtime_r) */
-  /* Approximate localtime_r as best we can in its absence.  */
   struct tm *l = localtime (t);
   if (! l)
     return 0;
   *tp = *l;
   return tp;
-#  endif /* ! defined localtime_r */
 }
-#  define localtime_r my_mktime_localtime_r
-# endif /* HAVE_LOCALTIME_R == defined localtime_r */
 #endif /* ! _LIBC */
 
 
@@ -213,7 +190,7 @@ mktime (tp)
   __tzset ();
 #endif
 
-  return __mktime_internal (tp, localtime_r, &localtime_offset);
+  return __mktime_internal (tp, my_mktime_localtime_r, &localtime_offset);
 }
 
 /* Use CONVERT to convert *T to a broken down time in *TP.
@@ -559,6 +536,6 @@ main (argc, argv)
 
 /*
 Local Variables:
-compile-command: "gcc -DDEBUG -D__EXTENSIONS__ -DHAVE_LIMITS_H -DHAVE_LOCALTIME_R -DSTDC_HEADERS -Wall -W -O -g mktime.c -o mktime"
+compile-command: "gcc -DDEBUG -DHAVE_LIMITS_H -DSTDC_HEADERS -Wall -W -O -g mktime.c -o mktime"
 End:
 */
