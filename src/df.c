@@ -867,27 +867,28 @@ main (int argc, char **argv)
       exit (EXIT_FAILURE);
   }
 
-  {
-    int i;
+  if (optind < argc)
+    {
+      int i;
 
-    /* stat all the given entries to make sure they get automounted,
-       if necessary, before reading the filesystem table.  */
-    stats = (struct stat *)
-      xmalloc ((argc - optind) * sizeof (struct stat));
-    for (i = optind; i < argc; ++i)
-      {
-	if (stat (argv[i], &stats[i - optind]))
-	  {
-	    error (0, errno, "%s", quote (argv[i]));
-	    exit_status = 1;
-	    argv[i] = NULL;
-	  }
-	else
-	  {
-	    ++n_valid_args;
-	  }
-      }
-  }
+      /* stat all the given entries to make sure they get automounted,
+	 if necessary, before reading the filesystem table.  */
+      stats = (struct stat *)
+	xmalloc ((argc - optind) * sizeof (struct stat));
+      for (i = optind; i < argc; ++i)
+	{
+	  if (stat (argv[i], &stats[i - optind]))
+	    {
+	      error (0, errno, "%s", quote (argv[i]));
+	      exit_status = 1;
+	      argv[i] = NULL;
+	    }
+	  else
+	    {
+	      ++n_valid_args;
+	    }
+	}
+    }
 
   mount_list =
     read_filesystem_list ((fs_select_list != NULL
@@ -900,8 +901,8 @@ main (int argc, char **argv)
       /* Couldn't read the table of mounted filesystems.
 	 Fail if df was invoked with no file name arguments;
 	 Otherwise, merely give a warning and proceed.  */
-      const char *warning = (optind == argc ? "" : _("Warning: "));
-      int status = (optind == argc ? 1 : 0);
+      const char *warning = (optind < argc ? _("Warning: ") : "");
+      int status = (optind < argc ? 0 : 1);
       error (status, errno,
 	     _("%scannot read table of mounted filesystems"), warning);
     }
@@ -909,12 +910,7 @@ main (int argc, char **argv)
   if (require_sync)
     sync ();
 
-  if (optind == argc)
-    {
-      print_header ();
-      show_all_entries ();
-    }
-  else
+  if (optind < argc)
     {
       int i;
 
@@ -927,6 +923,11 @@ main (int argc, char **argv)
       for (i = optind; i < argc; ++i)
 	if (argv[i])
 	  show_entry (argv[i], &stats[i - optind]);
+    }
+  else
+    {
+      print_header ();
+      show_all_entries ();
     }
 
   exit (exit_status);
