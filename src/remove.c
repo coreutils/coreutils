@@ -976,7 +976,10 @@ remove_dir (Dirstack_state *ds, char const *dir, struct saved_cwd **cwd_state,
     {
       *cwd_state = XMALLOC (struct saved_cwd, 1);
       if (save_cwd (*cwd_state))
-	return RM_ERROR;
+	{
+	  error (0, errno, _("cannot get current directory"));
+	  return RM_ERROR;
+	}
       AD_push_initial (ds, *cwd_state);
       AD_INIT_OTHER_MEMBERS ();
     }
