@@ -17,52 +17,52 @@
 
 /* Written by David MacKenzie <djm@gnu.ai.mit.edu> and Jim Meyering.  */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
+#if HAVE_CONFIG_H
+# include <config.h>
 #endif
 
-#ifdef __GNUC__
-#define alloca __builtin_alloca
+#if __GNUC__
+# define alloca __builtin_alloca
 #else
-#ifdef HAVE_ALLOCA_H
-#include <alloca.h>
-#else
-#ifdef _AIX
+# if HAVE_ALLOCA_H
+#  include <alloca.h>
+# else
+#  ifdef _AIX
  #pragma alloca
-#else
+#  else
 char *alloca ();
-#endif
-#endif
+#  endif
+# endif
 #endif
 
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
+#if HAVE_UNISTD_H
+# include <unistd.h>
 #endif
 
-#ifdef STAT_MACROS_BROKEN
-#undef S_ISDIR
+#if STAT_MACROS_BROKEN
+# undef S_ISDIR
 #endif /* STAT_MACROS_BROKEN.  */
 
 #if !defined(S_ISDIR) && defined(S_IFDIR)
-#define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
+# define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
 #endif
 
-#ifdef STDC_HEADERS
-#include <stdlib.h>
+#if STDC_HEADERS
+# include <stdlib.h>
 #endif
 
-#ifdef HAVE_ERRNO_H
-#include <errno.h>
+#if HAVE_ERRNO_H
+# include <errno.h>
 #endif
 
 #ifndef errno
 extern int errno;
 #endif
 
-#ifdef HAVE_STRING_H
+#if HAVE_STRING_H
 # include <string.h>
 #else
 # include <strings.h>
