@@ -217,6 +217,14 @@ make_path (const char *argpath,
 	  if (!do_chdir)
 	    basename_dir = dirpath;
 
+	  /* The mkdir and stat calls below appear to be reversed.
+	     They are not.  It is important to call mkdir first and then to
+	     call stat (to distinguish the three cases) only if mkdir fails.
+	     The alternative to this approach is to `stat' each directory,
+	     then to call mkdir if it doesn't exist.  But if some other process
+	     were to create the directory between the stat & mkdir, the mkdir
+	     would fail with EEXIST.  */
+
 	  *slash = '\0';
 	  if (mkdir (basename_dir, tmp_mode))
 	    {
