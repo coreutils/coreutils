@@ -573,11 +573,12 @@ set_mode (info, reversed, mode)
 	{
 	  if (reversed)
 	    {
-	      mode->c_iflag = mode->c_iflag | ICRNL & ~INLCR & ~IGNCR;
-	      mode->c_oflag = mode->c_oflag
+	      mode->c_iflag = (mode->c_iflag | ICRNL) & ~INLCR & ~IGNCR;
+	      mode->c_oflag = (mode->c_oflag
 #ifdef ONLCR
 		| ONLCR
 #endif
+			      )
 #ifdef OCRNL
 		  & ~OCRNL
 #endif
