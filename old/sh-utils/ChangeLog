@@ -5,6 +5,10 @@ Tue Apr 23 22:05:35 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 	* lib/Makefile.am (su_SOURCES): Remove getopt.c and getopt1.c.
 	(EXTRA_DIST): Add getopt.c and getopt1.c
 
+	* whoami.c (main): Declare to return int, not void.
+	* who-users.c (main): Likewise.
+	* yes.c (main): Likewise.
+
 Sun Apr 21 08:04:51 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 
 	* date.c (usage): Describe new %V format.  From Karl Berry.
