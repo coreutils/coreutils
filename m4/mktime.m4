@@ -26,6 +26,10 @@ changequote(<<, >>)dnl
 # endif
 #endif
 
+#if HAVE_UNISTD_H
+# include <unistd.h>
+#endif
+
 #if !HAVE_ALARM
 # define alarm(X) /* empty */
 #endif
