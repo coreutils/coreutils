@@ -1,5 +1,5 @@
 /* head -- output first part of file(s)
-   Copyright (C) 89, 90, 91, 1995-2001 Free Software Foundation, Inc.
+   Copyright (C) 89, 90, 91, 1995-2002 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -55,6 +55,9 @@ enum header_mode
   multiple_files, always, never
 };
 
+/* Options corresponding to header_mode values.  */
+static char const header_mode_option[][4] = { "", " -v", " -q" };
+
 /* The name this program was run with. */
 char *program_name;
 
@@ -107,8 +110,12 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (_("\
 \n\
 SIZE may have a multiplier suffix: b for 512, k for 1K, m for 1 Meg.\n\
-If -VALUE is used as first OPTION, read -c VALUE when one of\n\
-multipliers bkm follows concatenated, else read -n VALUE.\n\
+"), stdout);
+      if (POSIX2_VERSION < 200112)
+	fputs (_("\
+\n\
+(obsolete)  If -VALUE is used as first OPTION, same as -c VALUE when one of\n\
+multipliers bkm follows concatenated, else same as -n VALUE.\n\
 "), stdout);
       puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
     }
@@ -257,7 +264,6 @@ main (int argc, char **argv)
 {
   enum header_mode header_mode = multiple_files;
   int exit_status = 0;
-  char *n_string;
   int c;
 
   /* Number of items to print. */
@@ -278,27 +284,26 @@ main (int argc, char **argv)
 
   print_headers = 0;
 
-  if (argc > 1 && argv[1][0] == '-' && ISDIGIT (argv[1][1]))
+  if (POSIX2_VERSION < 200112
+      && 1 < argc && argv[1][0] == '-' && ISDIGIT (argv[1][1]))
     {
+      char *a = argv[1];
+      char *n_string = ++a;
       char *end_n_string;
       char multiplier_char = 0;
 
-      n_string = &argv[1][1];
-
       /* Old option syntax; a dash, one or more digits, and one or
 	 more option letters.  Move past the number. */
-      for (++argv[1]; ISDIGIT (*argv[1]); ++argv[1])
-	{
-	  /* empty */
-	}
+      do ++a;
+      while (ISDIGIT (*a));
 
       /* Pointer to the byte after the last digit.  */
-      end_n_string = argv[1];
+      end_n_string = a;
 
       /* Parse any appended option letters. */
-      while (*argv[1])
+      for (; *a; a++)
 	{
-	  switch (*argv[1])
+	  switch (*a)
 	    {
 	    case 'c':
 	      count_lines = 0;
@@ -309,7 +314,7 @@ main (int argc, char **argv)
 	    case 'k':
 	    case 'm':
 	      count_lines = 0;
-	      multiplier_char = *argv[1];
+	      multiplier_char = *a;
 	      break;
 
 	    case 'l':
@@ -325,11 +330,18 @@ main (int argc, char **argv)
 	      break;
 
 	    default:
-	      error (0, 0, _("unrecognized option `-%c'"), *argv[1]);
+	      error (0, 0, _("unrecognized option `-%c'"), *a);
 	      usage (1);
 	    }
-	  ++argv[1];
 	}
+
+      if (OBSOLETE_OPTION_WARNINGS && ! getenv ("POSIXLY_CORRECT"))
+	error (0, 0,
+	       _("warning: `head -%s' is obsolete; use `head -%c %.*s%.*s%s'"),
+	       n_string, count_lines ? 'n' : 'c',
+	       (int) (end_n_string - n_string), n_string,
+	       multiplier_char != 0, &multiplier_char,
+	       header_mode_option[header_mode]);
 
       /* Append the multiplier character (if any) onto the end of
 	 the digit string.  Then add NUL byte if necessary.  */
