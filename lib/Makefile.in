@@ -205,7 +205,7 @@ libfetish_a_SOURCES = \
 libfetish_a_LIBADD = @LIBOBJS@ @ALLOCA@
 libfetish_a_DEPENDENCIES = $(libfetish_a_LIBADD)
 
-BUILT_SOURCES = getdate.c lstat.c stat.c unlocked-io.h
+BUILT_SOURCES = unlocked-io.h getdate.c lstat.c stat.c
 MAINTAINERCLEANFILES = $(BUILT_SOURCES)
 DISTCLEANFILES = lstat.c stat.c unlocked-io.h
 
