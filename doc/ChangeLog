@@ -2,8 +2,12 @@
 
 	* coreutils.texi (The cut command): Give an example of using cut -c
 	with an output delimiter.  From Jan Nieuwenhuizen.
-	(The cut command): Extend the new example a little.
+
+	* coreutils.texi (The cut command): Extend the new example a little.
 	(Formatting file timestamps): Fix typo: s/%M:S/%M:%S/.
+
+	* coreutils.texi: Change each use of `Core-utils' to `Coreutils'.
+	From Karl Berry.
 
 2003-01-19  Jim Meyering  <jim@meyering.net>
 
