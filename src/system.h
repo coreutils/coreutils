@@ -117,6 +117,14 @@ void *memrchr (const void *, int, size_t);
 extern int errno;
 #endif
 
+/* Some systems don't define ENOSYS.  */
+#ifndef ENOSYS
+# define ENOSYS (-1)
+#endif
+#ifndef ENOTSUP
+# define ENOTSUP (-1)
+#endif
+
 #include <stdbool.h>
 
 #if HAVE_STDLIB_H
