@@ -51,6 +51,12 @@
 # define OFF_T_MAX TYPE_MAXIMUM (off_t)
 #endif
 
+#ifndef ENOSYS
+  /* Some systems don't have ENOSYS -- this should be a big enough
+     value that no valid errno value will match it.  */
+# define ENOSYS 99999
+#endif
+
 /* Number of items to tail.  */
 #define DEFAULT_N_LINES 10
 
@@ -1435,6 +1441,11 @@ parse_options (int argc, char **argv,
   if (pid && !forever)
     error (0, 0,
 	   _("warning: PID ignored; --pid=PID is useful only when following"));
+  else if (pid && kill (pid, 0) != 0 && errno == ENOSYS)
+    {
+      error (0, 0, _("warning: --pid=PID is not supported on this system"));
+      pid = 0;
+    }
 }
 
 int
