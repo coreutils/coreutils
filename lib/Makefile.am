@@ -46,7 +46,6 @@ libfetish_a_SOURCES = \
   c-strtod.c c-strtod.h c-strtold.c \
   canon-host.c \
   canonicalize.c canonicalize.h \
-  chdir-long.c chdir-long.h \
   cloexec.c cloexec.h \
   closeout.c closeout.h \
   cycle-check.c cycle-check.h \
@@ -79,7 +78,6 @@ libfetish_a_SOURCES = \
   human.c human.h \
   idcache.c \
   imaxtostr.c \
-  lchown.h \
   linebuffer.c linebuffer.h \
   localcharset.c localcharset.h \
   long-options.c long-options.h \
@@ -88,11 +86,9 @@ libfetish_a_SOURCES = \
   md5.c md5.h \
   memcasecmp.c memcasecmp.h \
   memcoll.c memcoll.h \
-  mempcpy.h \
   modechange.c modechange.h \
   mountlist.h \
   offtostr.c \
-  openat.h \
   open-safer.c \
   path-concat.c path-concat.h \
   pathmax.h \
@@ -107,7 +103,6 @@ libfetish_a_SOURCES = \
   safe-read.c safe-read.h \
   safe-write.c safe-write.h \
   same.c same.h \
-  save-cwd.c save-cwd.h \
   savedir.c savedir.h \
   setenv.h \
   settime.c \
