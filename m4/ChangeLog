@@ -1,3 +1,8 @@
+2000-12-02  Jim Meyering  <meyering@lucent.com>
+
+	* off_t-format.m4 (OFF_T_PRINTF_FORMAT_STRING): New file/macro.
+	* jm-macros.m4 (jm_MACROS): require it.
+
 2000-11-30  Jim Meyering  <meyering@lucent.com>
 
 	* jm-macros.m4 (jm_MACROS): Check for stdint.h.

@@ -50,5 +50,5 @@ AC_DEFUN(jm_SYS_OFF_T_PRINTF_FORMAT,
 
   AC_DEFINE_UNQUOTED(OFF_T_PRINTF_FORMAT_STRING,
 		     "$jm_cv_sys_off_t_printf_format",
-		     [printf format string for type off_t, without the `%']);
+		     [printf format string for type off_t, without the `%'])
 ])
