@@ -30,6 +30,10 @@ extern int errno;
 
 #include "error.h"
 
+#ifndef ENAMETOOLONG
+# define ENAMETOOLONG 9999
+#endif
+
 #ifndef EXIT_FAILURE
 # define EXIT_FAILURE 1
 #endif
@@ -47,7 +51,6 @@ xgethostname ()
 {
   char *hostname;
   size_t size;
-  int err;
 
   size = INITIAL_HOSTNAME_LENGTH;
   /* Use size + 1 here rather than size to work around the bug
@@ -57,17 +60,14 @@ xgethostname ()
   while (1)
     {
       int k = size - 1;
+      int err;
 
       errno = 0;
       hostname[k] = '\0';
       err = gethostname (hostname, size);
       if (err >= 0 && hostname[k] == '\0')
 	break;
-#ifdef ENAMETOOLONG
       else if (err < 0 && errno != ENAMETOOLONG && errno != 0)
-#else
-      else if (err < 0 && errno != 0)
-#endif
 	error (EXIT_FAILURE, errno, "gethostname");
       size *= 2;
       hostname = xrealloc (hostname, size + 1);
