@@ -1,3 +1,7 @@
+Sat Mar 22 20:29:10 1997  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* missing: New file -- from the automake-1.1m distribution.
+
 Fri Mar 21 23:56:41 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* Makefile.am (AUTOMAKE_OPTIONS): Require automake-1.1l.

@@ -3,6 +3,8 @@ Sat Mar 22 00:03:02 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 	* Makefile.am (AUTOMAKE_OPTIONS): Require automake-1.1l.
 	(aclocal.m4): Use aclocal's new -I option.
 
+	* missing: New file -- from the automake-1.1m distribution.
+
 Thu Mar 20 21:10:44 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* m4/ccstdc.m4: Remove file.
