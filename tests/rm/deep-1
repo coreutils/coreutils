@@ -28,6 +28,10 @@ tmp=$RM_TMPDIR/t-rm.$$
 
 k20=/k/k/k/k/k/k/k/k/k/k/k/k/k/k/k/k/k/k/k/k
 k200=$k20$k20$k20$k20$k20$k20$k20$k20$k20$k20
+
+# Be careful not to exceed max file name length (usu 512?).
+# Doing so wouldn't affect GNU mkdir or GNU rm, but any tool that
+# operates on the full pathname (like `test') would choke.
 k_deep=$k200$k200
 
 # Create a directory in $tmp with lots of `k' components.
@@ -41,7 +45,7 @@ test -d $deep || fail=1
 
 $RM -r $tmp || fail=1
 
-# Make sure it was deleted.
-test -d $deep && fail=1
+# Make sure all of $tmp was deleted.
+test -d $tmp && fail=1
 
 exit $fail
