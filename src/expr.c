@@ -75,8 +75,6 @@ static char **args;
 /* The name this program was run with. */
 char *program_name;
 
-char *xstrdup ();
-
 static VALUE *docolon PARAMS ((VALUE *sv, VALUE *pv));
 static VALUE *eval PARAMS ((void));
 static VALUE *int_value PARAMS ((int i));
