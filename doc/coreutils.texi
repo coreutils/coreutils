@@ -4392,21 +4392,17 @@ With this option, the lines of the input files must be ordered in the same way.
 Use @samp{sort -f} to produce this ordering.
 
 @item -1 @var{field}
-@itemx -j1 @var{field}
 @opindex -1
-@opindex -j1
 Join on field @var{field} (a positive integer) of file 1.
 
 @item -2 @var{field}
-@itemx -j2 @var{field}
 @opindex -2
-@opindex -j2
 Join on field @var{field} (a positive integer) of file 2.
 
 @item -j @var{field}
 Equivalent to @option{-1 @var{field} -2 @var{field}}.
 
-@item -o @var{field-list}@dots{}
+@item -o @var{field-list}
 Construct each output line according to the format in @var{field-list}.
 Each element in @var{field-list} is either the single character @samp{0} or
 has the form @var{m.n} where the file number, @var{m}, is @samp{1} or
@@ -4423,14 +4419,13 @@ To give @command{join} that functionality, @acronym{POSIX} invented the @samp{0}
 field specification notation.
 
 The elements in @var{field-list}
-are separated by commas or blanks.  Multiple @var{field-list}
-arguments can be given after a single @option{-o} option; the values
-of all lists given with @option{-o} are concatenated together.
+are separated by commas or blanks.
 All output lines -- including those printed because of any -a or -v
 option -- are subject to the specified @var{field-list}.
 
 @item -t @var{char}
 Use character @var{char} as the input and output field separator.
+Treat as significant each occurrence of @var{char} in the input file.
 
 @item -v @var{file-number}
 Print a line for each unpairable line in file @var{file-number}
