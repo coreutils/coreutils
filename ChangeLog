@@ -1,6 +1,26 @@
-2004-11-03  Jim Meyering  <jim@meyering.net>
+2004-11-03  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.0.
+
+	* src/stty.c: Include "vasprintf.h" since we use vasprintf now.
+
+	* src/Makefile.am (check-AUTHORS): Don't assume \? works in a sed
+	expression; it's not portable.  Problem reported by Albert Chin.
+	Don't invoke a program more than once.
+	* src/groups.sh (version): New variable, containing author info,
+	for benefit of AUTHORS check.  Use it when acting on --version option.
+	* AUTHORS: Remove duplicate lines.  Remove bogus "chroot:"
+	in groups line.
+	
+	* src/system.h: Don't #define and #undef getopt around <stdlib.h>,
+	as this breaks the new regime that does "#define getopt rpl_getopt".
+	Problem reported by Albert Chin for Solaris 9 with Sun cc in:
+	http://lists.gnu.org/archive/html/bug-gnulib/2004-11/msg00019.html
+	I suppose this may cause problems on ancient hosts with
+	incompatible getopt declarations, but we'll cross that bridge if
+	the problem gets reported to us by someone who can test the fix.
+
+2004-11-03  Jim Meyering  <jim@meyering.net>
 
 	* src/tac.c: quote(...) file names in diagnostics.
 
