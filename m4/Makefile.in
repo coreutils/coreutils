@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 1.2h from Makefile.am
+# Makefile.in generated automatically by automake 1.3 from Makefile.am
 
 # Copyright (C) 1994, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
@@ -67,45 +67,32 @@ CC = @CC@
 CPP = @CPP@
 DATADIRNAME = @DATADIRNAME@
 GENCAT = @GENCAT@
-GETHOSTBYNAME_LIB = @GETHOSTBYNAME_LIB@
-GETLOADAVG_LIBS = @GETLOADAVG_LIBS@
 GMOFILES = @GMOFILES@
 GMSGFMT = @GMSGFMT@
-GNU_PACKAGE = @GNU_PACKAGE@
 GT_NO = @GT_NO@
 GT_YES = @GT_YES@
 INSTOBJEXT = @INSTOBJEXT@
 INTLDEPS = @INTLDEPS@
 INTLLIBS = @INTLLIBS@
 INTLOBJS = @INTLOBJS@
-KMEM_GROUP = @KMEM_GROUP@
 LIBOBJS = @LIBOBJS@
-LIB_CRYPT = @LIB_CRYPT@
-MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
-MAN = @MAN@
 MKINSTALLDIRS = @MKINSTALLDIRS@
 MSGFMT = @MSGFMT@
-NEED_SETGID = @NEED_SETGID@
-OPTIONAL_BIN_PROGS = @OPTIONAL_BIN_PROGS@
-OPTIONAL_BIN_ZCRIPTS = @OPTIONAL_BIN_ZCRIPTS@
 PACKAGE = @PACKAGE@
 PERL = @PERL@
 POFILES = @POFILES@
 POSUB = @POSUB@
 POW_LIBM = @POW_LIBM@
 RANLIB = @RANLIB@
-SEQ_LIBM = @SEQ_LIBM@
-SQRT_LIBM = @SQRT_LIBM@
 U = @U@
 USE_INCLUDED_LIBINTL = @USE_INCLUDED_LIBINTL@
 USE_NLS = @USE_NLS@
 VERSION = @VERSION@
-YACC = @YACC@
 l = @l@
 
 EXTRA_DIST = README \
-check-decl.m4 chown.m4 const.m4 d-ino.m4 d-type.m4 decl.m4 error.m4 \
+assert.m4 check-decl.m4 chown.m4 const.m4 d-ino.m4 d-type.m4 decl.m4 error.m4 \
 getgroups.m4 getline.m4 getloadavg.m4 inttypes_h.m4 jm-mktime.m4 jm-winsz1.m4 \
 jm-winsz2.m4 lfs.m4 lstat.m4 malloc.m4 memcmp.m4 perl.m4 prereq.m4 putenv.m4 \
 readdir.m4 realloc.m4 stat.m4 strftime.m4 uintmax_t.m4 uptime.m4 \
