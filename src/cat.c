@@ -1,5 +1,5 @@
 /* cat -- concatenate files and print on the standard output.
-   Copyright (C) 88, 90, 91, 95, 96, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 88, 90, 91, 1995-1998, 1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -102,6 +102,12 @@ Concatenate FILE(s), or standard input, to standard output.\n\
 \n\
 With no FILE, or when FILE is -, read standard input.\n\
 "));
+#if O_BINARY
+      printf (_("\
+\n\
+  -B, --binary             use binary writes to the console device.\n\n\
+"));
+#endif
       puts (_("\nReport bugs to <bug-textutils@gnu.org>."));
     }
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
@@ -495,6 +501,11 @@ main (int argc, char **argv)
   int mark_line_ends = 0;
   int quote = 0;
   int output_tabs = 1;
+#if O_BINARY
+  int binary_files  = 0;
+  int binary_output = 0;
+#endif
+  int file_open_mode = O_RDONLY;
 
 /* If nonzero, call cat, otherwise call simple_cat to do the actual work. */
   int options = 0;
@@ -514,6 +525,9 @@ main (int argc, char **argv)
     {"show-ends", no_argument, NULL, 'E'},
     {"show-tabs", no_argument, NULL, 'T'},
     {"show-all", no_argument, NULL, 'A'},
+#if O_BINARY
+    {"binary", no_argument, NULL, 'B'},
+#endif
     {"help", no_argument, &show_help, 1},
     {"version", no_argument, &show_version, 1},
     {NULL, 0, NULL, 0}
@@ -526,7 +540,13 @@ main (int argc, char **argv)
 
   /* Parse command line options.  */
 
-  while ((c = getopt_long (argc, argv, "benstuvAET", long_options, NULL)) != -1)
+  while ((c = getopt_long (argc, argv,
+#if O_BINARY
+			   "benstuvABET"
+#else
+			   "benstuvAET"
+#endif
+			   , long_options, NULL)) != -1)
     {
       switch (c)
 	{
@@ -576,6 +596,13 @@ main (int argc, char **argv)
 	  mark_line_ends = 1;
 	  output_tabs = 0;
 	  break;
+
+#if O_BINARY
+	case 'B':
+	  ++options;
+	  binary_files = 1;
+	  break;
+#endif
 
 	case 'E':
 	  ++options;
@@ -629,6 +656,39 @@ main (int argc, char **argv)
 #endif
     }
 
+#if O_BINARY
+  /* We always read and write in BINARY mode, since this is the
+     best way to copy the files verbatim.  Exceptions are when
+     they request line numbering, squeezing of empty lines or
+     marking lines' ends: then we use text I/O, because otherwise
+     -b, -s and -E would surprise users on DOS/Windows where a line
+     with only CR-LF is an empty line.  (Besides, if they ask for
+     one of these options, they don't care much about the original
+     file contents anyway).  */
+  if ((!isatty (output_desc)
+       && !(numbers || squeeze_empty_lines || mark_line_ends))
+      || binary_files)
+    {
+      /* Switch stdout to BINARY mode.  */
+      binary_output = 1;
+      SET_BINARY (output_desc);
+    }
+  else if (quote)
+    {
+      /* If they want to see the non-printables, let's show them
+	 those CR characters as well, so make the input binary.
+	 But keep console output in text mode, so that LF causes
+	 both CR and LF on output, and the output is readable.  */
+      file_open_mode |= O_BINARY;
+      SET_BINARY (0);
+
+      /* Setting stdin to binary switches the console device to
+	 raw I/O, which also affects stdout to console.  Undo that.  */
+      if (isatty (output_desc))
+	setmode (output_desc, O_TEXT);
+    }
+#endif
+
   /* Check if any of the input files are the same as the output file.  */
 
   /* Main loop.  */
@@ -645,10 +705,37 @@ main (int argc, char **argv)
 	{
 	  have_read_stdin = 1;
 	  input_desc = 0;
+
+#if O_BINARY
+	  /* Switch stdin to BINARY mode if needed.  */
+	  if (binary_output)
+	    {
+	      int tty_in = isatty (input_desc);
+
+	      /* If stdin is a terminal device, and it is the ONLY
+		 input file (i.e. we didn't write anything to the
+		 output yet), switch the output back to TEXT mode.
+		 This is so "cat > xyzzy" creates a DOS-style text
+		 file, like people expect.  */
+	      if (tty_in && optind <= argc)
+		setmode (output_desc, O_TEXT);
+	      else
+		{
+		  SET_BINARY (input_desc);
+# ifdef __DJGPP__
+		  /* This is DJGPP-specific.  By default, switching console
+		     to binary mode disables SIGINT.  But we want terminal
+		     reads to be interruptible.  */
+		  if (tty_in)
+		    __djgpp_set_ctrl_c (1);
+# endif
+		}
+	    }
+#endif
 	}
       else
 	{
-	  input_desc = open (infile, O_RDONLY);
+	  input_desc = open (infile, file_open_mode);
 	  if (input_desc < 0)
 	    {
 	      error (0, errno, "%s", infile);
