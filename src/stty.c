@@ -430,7 +430,7 @@ static void
 #ifdef __STDC__
 wrapf (const char *message,...)
 #else
-wrapf (message, va_alist)
+ wrapf (message, va_alist)
      const char *message;
      va_dcl
 #endif
