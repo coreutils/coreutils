@@ -1,0 +1,22 @@
+#!/bin/sh
+# Try to create a symlink with backup where the destination file exists
+# and the backup file name is a hard link to the destination file.
+# Based on a problem report from Jamie Lokier.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  ln --version
+fi
+
+framework_failure=0
+touch a b || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo 'failure in testing framework'
+  exit 1
+fi
+
+ln b b~ || fail=1
+ln -V simple -f -b a b || fail=1
+
+exit $fail
