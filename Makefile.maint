@@ -71,6 +71,7 @@ local-check = $(filter-out $(local-checks-to-skip), $(local-checks-available))
 syntax-check-rules = \
   sc_cast_of_argument_to_free \
   sc_cast_of_x_alloc_return_value \
+  sc_cast_of_alloca_return_value \
   sc_changelog \
   sc_error_exit_success \
   sc_space_tab \
@@ -107,9 +108,15 @@ sc_cast_of_argument_to_free:
 
 sc_cast_of_x_alloc_return_value:
 	@grep -E --exclude=$(srcdir)/lib/regex.c			\
-	    '\*\) *(alloca|x(m|c|re)alloc)\>'				\
+	    '\*\) *x(m|c|re)alloc\>'				\
 	    $(srcdir)/{lib,src}/*.[chy] &&				\
 	  { echo '$(ME): don'\''t cast x*alloc return value' 1>&2;	\
+	    exit 1; } || :
+
+sc_cast_of_alloca_return_value:
+	@grep -E '\*\) *alloca\>'					\
+	    $(srcdir)/src/*.[chy] &&					\
+	  { echo '$(ME): don'\''t cast alloca return value' 1>&2;	\
 	    exit 1; } || :
 
 sc_space_tab:
