@@ -82,7 +82,7 @@ add_line (str *line)
   if (line_num >= linebuf_size)
     {
       linebuf_size += NUMLINES;
-      line_buffer = (str *) xrealloc (line_buffer, linebuf_size * sizeof (str *));
+      line_buffer = xrealloc (line_buffer, linebuf_size * sizeof (str *));
     }
   line_buffer[line_num] = *line;
   line_num++;
@@ -147,7 +147,7 @@ readline (FILE *fp, char **ret)
   int i;
 
   if (buffer == (char *) 0)
-    buffer = (char *) xmalloc (LINESIZE);
+    buffer = xmalloc (LINESIZE);
 
   while (1)
     {
@@ -233,7 +233,7 @@ int
 main (int argc, char **argv)
 {
   int err;
-  line_buffer = (str *) xmalloc (NUMLINES * sizeof (str *));
+  line_buffer = xmalloc (NUMLINES * sizeof (str *));
   linebuf_size = NUMLINES;
 
   err = 0;
