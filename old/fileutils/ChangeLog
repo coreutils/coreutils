@@ -1,3 +1,10 @@
+1999-04-04  Jim Meyering  <meyering@ascend.com>
+
+	* src/ls.c (print_long_format): Add a space between %s and %3u.  This
+	assures that even when modebuf has the trailing `+' and there are more
+	than 99 hard links to a file, the permissions string and the link count
+	will be separated.
+
 1999-04-03  Jim Meyering  <meyering@ascend.com>
 
 	* src/shred.c (dopass): add curly braces to avoid warning about
