@@ -5,6 +5,9 @@ Mon Apr 29 22:23:40 1996  Jim Meyering  (meyering@na-net.ornl.gov)
 	* basename.c (main): Separate messages about `too few' and `too many'
 	arguments to ease translation.
 	* dirname.c (main): Likewise.
+	* date.c (usage): Change TAB in message to spaces.  Doing that seems
+	to have worked around a problem with something in gettext that was
+	producing a truncated usage message for date's usage.
 	From François Pinard.
 
 Sun Apr 28 17:10:03 1996  Jim Meyering  (meyering@na-net.ornl.gov)
