@@ -1,4 +1,4 @@
-# exclude.m4 serial 2
+# exclude.m4 serial 3
 dnl Copyright (C) 2002, 2003 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
@@ -11,6 +11,5 @@ AC_DEFUN([gl_EXCLUDE],
   dnl Prerequisites of lib/exclude.c.
   AC_REQUIRE([AC_C_INLINE])
   AC_REQUIRE([AC_HEADER_STDC])
-  AC_CHECK_HEADERS_ONCE(stdlib.h string.h strings.h)
   AC_CHECK_FUNCS_ONCE(isascii)
 ])
