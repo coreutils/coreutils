@@ -1,3 +1,7 @@
+2000-10-29  Jim Meyering  <meyering@lucent.com>
+
+	* xstat.in: Fix grammar in comment.
+
 2000-10-28  Jim Meyering  <meyering@lucent.com>
 
 	* memchr.c: Update from libc.
