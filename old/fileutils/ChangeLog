@@ -1,5 +1,11 @@
 1997-07-28  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* configure.in (AC_OUTPUT): Remove tests/ls/Makefile.
+	Add tests/cp/Makefile and tests/mkdir/Makefile.
+
+	* lib/modechange.c (mode_create_from_ref): Don't use umask.
+	Don't use MODE_X_IF_ANY_X.
+
 	* src/install.c (main): New option --preserve-timestamps (-p).
 	(install_file_in_file): Preserve timestamps if requested.
 	(change_timestamps): New function.
