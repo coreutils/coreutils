@@ -256,7 +256,7 @@ announcement: NEWS ChangeLog $(rel-files)
 	  echo "$(xdelta-sha1)  $(xd-delta)"; \
 	  echo; \
 	  echo NEWS:; \
-	  sed -n "$(news-r1),(news-r2)p" NEWS \
+	  sed -n "$(news-r1),$(news-r2)p" NEWS \
 	    | grep -v '^\['; \
 	  echo; \
 	  echo ChangeLog entries:; \
