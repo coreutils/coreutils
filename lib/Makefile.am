@@ -183,7 +183,7 @@ unlocked-io.h: $(srcdir)/unlocked-io.hin Makefile.am
 	  echo "#   define $$f(S) $${f}_unlocked (S)"	;		\
 	  echo '#  endif'				;		\
 	done > $$tmp;							\
-	sed '/^@replace_this@\$$/r '$$tmp $(srcdir)/unlocked-io.hin	\
+	sed '/^@replace_this@$$/r '$$tmp $(srcdir)/unlocked-io.hin	\
 	  | sed '/^@replace_this@$$/d'					\
 	  > $@t;							\
 	rm -f $$tmp;							\
