@@ -1,3 +1,12 @@
+1997-09-17  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/hostid.c: New file.
+	* src/Makefile.am (EXTRA_PROGRAMS): Add hostid.
+	* configure.in (OPTIONAL_BIN_PROGS): Check for gethostid,
+	and if found add hostid to the list.
+	* man/hostid.1: New file.
+	* man/Makefile.am (man_MANS): Add hostid.1.
+
 1997-08-31  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/who.c (main): New option --lookup (-l).
