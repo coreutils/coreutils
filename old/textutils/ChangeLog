@@ -5,9 +5,11 @@
 1999-07-11  Jim Meyering  <meyering@ascend.com>
 
 	* src/tail.c (recheck): Use assert instead of unnecessary close_fd.
-	Remove a couple unnecessary FIXME comments.
+	Remove a couple of unnecessary FIXME comments.
 
 1999-07-10  Jim Meyering  <meyering@ascend.com>
+
+	* doc/textutils.texi: Document new tail options.
 
 	* src/tail.c (struct File_spec) [tailable]: Rename from `missing' and
 	document.  Change all uses and locals like was_missing to was_tailable.
