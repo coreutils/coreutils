@@ -4,6 +4,7 @@ Wed Dec 18 07:47:29 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 	outside the quoted test program.  Quote the test program with <<, >>.
 	Reported by Andreas Schwab.
 	(AM_FUNC_GETLOADAVG): Likewise.
+	(jm_FUNC_GNU_STRFTIME): Add tests for new, upcasing ^ modifier
 
 Tue Dec 17 18:54:32 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
