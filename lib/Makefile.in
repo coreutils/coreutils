@@ -58,6 +58,7 @@ all: libfu.a
 .c.o:
 	$(CC) -c $(CPPFLAGS) $(DEFS) -I. -I.. -I$(srcdir) $(CFLAGS) $<
 
+subdir = lib
 Makefile: ../config.status Makefile.in
 	cd ..; CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= ./config.status
 
@@ -96,8 +97,8 @@ libfu.a: $(OBJECTS)
 	$(AR) cr $@ $(OBJECTS)
 	-$(RANLIB) $@
 
-extract_stat = sed -e 's/@l@//g' -e 's/@L@//g'
-extract_lstat = sed -e 's/@l@/l/g' -e 's/@L@/L/g'
+extract_stat = sed 's/@l@//g; s/@L@//g; /@LSTAT_ONLY@/d'
+extract_lstat = sed 's/@l@/l/g; s/@L@/L/g; s/	*@LSTAT_ONLY@//'
 
 safe-lstat.c: safe-xstat.cin
 	$(extract_lstat) $(srcdir)/safe-xstat.cin > $@-t
@@ -116,7 +117,7 @@ safe-stat.h: safe-xstat.hin
 	mv $@-t $@
 
 safe-stat.o: safe-stat.h
-safe-lstat.o: safe-lstat.h
+safe-lstat.o: safe-lstat.h safe-stat.h
 
 # Since this directory contains two parsers, we have to be careful to avoid
 # running two $(YACC)s during parallel makes.  See below.

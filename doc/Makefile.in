@@ -83,6 +83,7 @@ distdir = ../`cat ../distname`/$(subdir)
 dist: $(DISTFILES)
 	ln $(DISTFILES) $(distdir)
 
+subdir = doc
 Makefile: ../config.status Makefile.in
 	cd ..; CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= ./config.status
 
