@@ -5,10 +5,12 @@ charset.alias
 getdate.c
 getdate.tab.c
 fnmatch.h
+fts.h
 lstat.c
 poll.h
 ref-add.sed
 ref-del.sed
+search.h
 stat.c
 stdbool.h
 sysexit.h
