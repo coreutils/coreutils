@@ -1,21 +1,25 @@
 /* euidaccess -- check if effective user id can access file
-   Copyright (C) 1990, 1991 Free Software Foundation, Inc.
+   Copyright (C) 1990, 1991, 1995 Free Software Foundation, Inc.
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
+This file is part of the GNU C Library.
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+The GNU C Library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Library General Public License as
+published by the Free Software Foundation; either version 2 of the
+License, or (at your option) any later version.
 
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software
-   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  */
+The GNU C Library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Library General Public License for more details.
 
-/* Written by David MacKenzie and Torbjorn Granlund. */
+You should have received a copy of the GNU Library General Public
+License along with the GNU C Library; see the file COPYING.LIB.  If
+not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+Cambridge, MA 02139, USA.  */
+
+/* Written by David MacKenzie and Torbjorn Granlund.
+   Adapted for GNU C library by Roland McGrath.  */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -36,7 +40,7 @@
 #endif
 #endif /* S_IEXEC */
 
-#ifdef HAVE_UNISTD_H
+#if defined (HAVE_UNISTD_H) || defined (_LIBC)
 #include <unistd.h>
 #endif
 
@@ -74,6 +78,13 @@ extern int errno;
 #define R_OK 4
 #endif
 
+
+#ifdef _LIBC
+
+#define group_member __group_member
+
+#else
+
 /* The user's real user id. */
 static uid_t uid;
 
@@ -86,67 +97,17 @@ static uid_t euid;
 /* The user's effective group id. */
 static gid_t egid;
 
-int group_member ();
-
 /* Nonzero if UID, GID, EUID, and EGID have valid values. */
 static int have_ids = 0;
 
-/* Like euidaccess, except that a pointer to a filled-in stat structure
-   describing the file is provided instead of a filename.
-   Because this function is almost guaranteed to fail on systems that
-   use ACLs, a third argument *PATH may be used.  If it is non-NULL,
-   it is assumed to be the name of the file corresponding to STATP.
-   Then, if the user is not running set-uid or set-gid, use access
-   instead of attempting a manual and non-portable comparison.  */
-
-static int
-eaccess_stat (statp, mode, path)
-     const struct stat *statp;
-     int mode;
-     const char *path;
-{
-  int granted;
-
-  mode &= (X_OK | W_OK | R_OK);	/* Clear any bogus bits. */
-
-  if (mode == F_OK)
-    return 0;			/* The file exists. */
-
-  if (have_ids == 0)
-    {
-      have_ids = 1;
-      uid = getuid ();
-      gid = getgid ();
-      euid = geteuid ();
-      egid = getegid ();
-    }
-
-  if (path && uid == euid && gid == egid)
-    {
-      return access (path, mode);
-    }
-
-  /* The super-user can read and write any file, and execute any file
-     that anyone can execute. */
-  if (euid == 0 && ((mode & X_OK) == 0
-		    || (statp->st_mode & (S_IXUSR | S_IXGRP | S_IXOTH))))
-    return 0;
-
-  if (euid == statp->st_uid)
-    granted = (unsigned) (statp->st_mode & (mode << 6)) >> 6;
-  else if (egid == statp->st_gid
 #ifdef HAVE_GETGROUPS
-	   || group_member (statp->st_gid)
+int group_member ();
+#else
+#define group_member(gid)	0
 #endif
-	   )
-    granted = (unsigned) (statp->st_mode & (mode << 3)) >> 3;
-  else
-    granted = (statp->st_mode & mode);
-  if (granted == mode)
-    return 0;
-  errno = EACCESS;
-  return -1;
-}
+
+#endif
+
 
 /* Return 0 if the user has permission of type MODE on file PATH;
    otherwise, return -1 and set `errno' to EACCESS.
@@ -160,7 +121,12 @@ euidaccess (path, mode)
      int mode;
 {
   struct stat stats;
+  int granted;
 
+#ifdef	_LIBC
+  uid_t uid = getuid (), euid = geteuid ();
+  gid_t gid = getgid (), egid = getegid ();
+#else
   if (have_ids == 0)
     {
       have_ids = 1;
@@ -169,45 +135,37 @@ euidaccess (path, mode)
       euid = geteuid ();
       egid = getegid ();
     }
+#endif
 
   if (uid == euid && gid == egid)
-    {
-      return access (path, mode);
-    }
+    /* If we are not set-uid or set-gid, access does the same.  */
+    return access (path, mode);
 
   if (stat (path, &stats))
     return -1;
 
-  return eaccess_stat (&stats, mode, path);
-}
-
-#ifdef TEST
-#include <stdio.h>
-#include <errno.h>
-
-void error ();
-
-char *program_name;
-
-int
-main (argc, argv)
-     int argc;
-     char **argv;
-{
-  char *file;
-  int mode;
-  int err;
-
-  program_name = argv[0];
-  if (argc < 3)
-    abort ();
-  file = argv[1];
-  mode = atoi (argv[2]);
-
-  err = euidaccess (file, mode);
-  printf ("%d\n", err);
-  if (err != 0)
-    error (0, errno, "%s", file);
-  exit (0);
-}
+  mode &= (X_OK | W_OK | R_OK);	/* Clear any bogus bits. */
+#if R_OK != S_IROTH || W_OK != S_IWOTH || X_OK != S_IXOTH
+  ?error Oops, portability assumptions incorrect.
 #endif
+
+  if (mode == F_OK)
+    return 0;			/* The file exists. */
+
+  /* The super-user can read and write any file, and execute any file
+     that anyone can execute. */
+  if (euid == 0 && ((mode & X_OK) == 0
+		    || (stats.st_mode & (S_IXUSR | S_IXGRP | S_IXOTH))))
+    return 0;
+
+  if (euid == stats.st_uid)
+    granted = (unsigned) (stats.st_mode & (mode << 6)) >> 6;
+  else if (egid == stats.st_gid || group_member (stats.st_gid))
+    granted = (unsigned) (stats.st_mode & (mode << 3)) >> 3;
+  else
+    granted = (stats.st_mode & mode);
+  if (granted == mode)
+    return 0;
+  errno = EACCESS;
+  return -1;
+}
