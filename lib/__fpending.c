@@ -21,6 +21,8 @@
 # include <config.h>
 #endif
 
+#include <stdlib.h>
+
 #include "__fpending.h"
 
 /* Return the number of pending (aka buffered, unflushed)
@@ -28,5 +30,8 @@
 size_t
 __fpending (FILE *fp)
 {
-  return PENDING_OUTPUT_N_BYTES;
+  ptrdiff_t n = PENDING_OUTPUT_N_BYTES;
+  if (n < 0)
+    abort ();
+  return n;
 }
