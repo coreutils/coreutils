@@ -197,12 +197,30 @@ int rpl_lstat PARAMS((const char *, struct stat *));
 # define lstat(Name, Stat_buf) rpl_lstat(Name, Stat_buf)
 #endif
 
+#if defined _DIRENT_HAVE_D_TYPE || defined DTTOIF
+# define HAVE_STRUCT_DIRENT_D_TYPE 1
+#else
+# define HAVE_STRUCT_DIRENT_D_TYPE 0
+#endif
+
 enum filetype
   {
+#if HAVE_STRUCT_DIRENT_D_TYPE
+    unknown = DT_UNKNOWN,
+    fifo = DT_FIFO,
+    chardev = DT_CHR,
+    directory = DT_DIR,
+    blockdev = DT_BLK,
+    normal = DT_REG,
+    symbolic_link = DT_LNK,
+    sock = DT_SOCK,
+    arg_directory = 100
+#else
     symbolic_link,
     directory,
     arg_directory,		/* Directory given as command line arg. */
     normal			/* All others. */
+#endif
   };
 
 struct fileinfo
@@ -290,8 +308,8 @@ static int rev_cmp_version PARAMS ((const struct fileinfo *file2,
 				    const struct fileinfo *file1));
 static int decode_switches PARAMS ((int argc, char **argv));
 static int file_interesting PARAMS ((const struct dirent *next));
-static uintmax_t gobble_file PARAMS ((const char *name, int explicit_arg,
-				      const char *dirname));
+static uintmax_t gobble_file PARAMS ((const char *name, enum filetype type,
+				      int explicit_arg, const char *dirname));
 static void print_color_indicator PARAMS ((const char *name, unsigned int mode,
 					   int linkok));
 static void put_indicator PARAMS ((const struct bin_str *ind));
@@ -629,6 +647,11 @@ static int line_length;
 
 static int format_needs_stat;
 
+/* Similar to `format_needs_stat', but set if only the file type is
+   needed.  */
+
+static int format_needs_type;
+
 /* The exit status to use if we don't get any fatal errors. */
 
 static int exit_status;
@@ -845,8 +868,9 @@ main (int argc, char **argv)
 
   format_needs_stat = sort_type == sort_time || sort_type == sort_size
     || format == long_format
-    || trace_links || trace_dirs || indicator_style != none
-    || print_block_size || print_inode || print_with_color;
+    || trace_links || trace_dirs || print_block_size || print_inode;
+  format_needs_type = (format_needs_stat == 0
+		       && (print_with_color || indicator_style != none));
 
   if (dired && format == long_format)
     {
@@ -864,13 +888,13 @@ main (int argc, char **argv)
     dir_defaulted = 0;
   for (; i < argc; i++)
     {
-      gobble_file (argv[i], 1, "");
+      gobble_file (argv[i], unknown, 1, "");
     }
 
   if (dir_defaulted)
     {
       if (immediate_dirs)
-	gobble_file (".", 1, "");
+	gobble_file (".", unknown, 1, "");
       else
 	queue_directory (".", 0);
     }
@@ -1701,7 +1725,17 @@ print_dir (const char *name, const char *realname)
 
   while ((next = readdir (reading)) != NULL)
     if (file_interesting (next))
-      total_blocks += gobble_file (next->d_name, 0, name);
+      {
+	enum filetype type = unknown;
+
+#if HAVE_STRUCT_DIRENT_D_TYPE
+	if (next->d_type == DT_DIR || next->d_type == DT_CHR
+	    || next->d_type == DT_BLK || next->d_type == DT_SOCK
+	    || next->d_type == DT_FIFO)
+	  type = next->d_type;
+#endif
+	total_blocks += gobble_file (next->d_name, type, 0, name);
+      }
 
   if (CLOSEDIR (reading))
     {
@@ -1812,7 +1846,8 @@ clear_files (void)
    Return the number of blocks that the file occupies.  */
 
 static uintmax_t
-gobble_file (const char *name, int explicit_arg, const char *dirname)
+gobble_file (const char *name, enum filetype type, int explicit_arg,
+	     const char *dirname)
 {
   register uintmax_t blocks;
   register int val;
@@ -1829,7 +1864,8 @@ gobble_file (const char *name, int explicit_arg, const char *dirname)
   files[files_index].linkmode = 0;
   files[files_index].linkok = 0;
 
-  if (explicit_arg || format_needs_stat)
+  if (explicit_arg || format_needs_stat
+      || (format_needs_type && type == unknown))
     {
       /* `path' is the absolute pathname of this file. */
 
@@ -1937,7 +1973,13 @@ gobble_file (const char *name, int explicit_arg, const char *dirname)
       }
     }
   else
-    blocks = 0;
+    {
+      files[files_index].filetype = type;
+#if HAVE_STRUCT_DIRENT_D_TYPE
+      files[files_index].stat.st_mode = DTTOIF (type);
+#endif
+      blocks = 0;
+    }
 
   files[files_index].name = xstrdup (name);
   files_index++;
