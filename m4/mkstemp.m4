@@ -1,9 +1,9 @@
 #serial 1
 
-# On some systems (e.g., HPUX-10.20), mkstemp has the silly limit that it
-# can create no more than 26 files from a given template.  Other systems
-# lack mkstemp altogether.  On either type of system, arrange to use the
-# replacement function.
+# On some systems (e.g., HPUX-10.20, SunOS4.1.4, solaris2.5.1), mkstemp has the
+# silly limit that it can create no more than 26 files from a given template.
+# Other systems lack mkstemp altogether.  On either type of system, arrange
+# to use the replacement function.
 AC_DEFUN([UTILS_FUNC_MKSTEMP],
 [dnl
   AC_REPLACE_FUNCS(mkstemp)
