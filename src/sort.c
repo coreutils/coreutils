@@ -1,5 +1,5 @@
 /* sort - sort lines of text (with all kinds of options).
-   Copyright (C) 88, 1991-2004 Free Software Foundation, Inc.
+   Copyright (C) 1988, 1991-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -1778,18 +1778,31 @@ mergefps (char **files, size_t ntemps, size_t nfiles,
 	}
 
       /* The new line just read in may be larger than other lines
-	 already in core; push it back in the queue until we encounter
-	 a line larger than it. */
-      for (i = 1; i < nfiles; ++i)
-	{
-	  int cmp = compare (cur[ord[0]], cur[ord[i]]);
-	  if (cmp < 0 || (cmp == 0 && ord[0] < ord[i]))
-	    break;
-	}
-      t = ord[0];
-      for (j = 1; j < i; ++j)
-	ord[j - 1] = ord[j];
-      ord[i - 1] = t;
+	 already in main memory; push it back in the queue until we
+	 encounter a line larger than it.  Optimize for the common
+	 case where the new line is smallest.  */
+      {
+	size_t lo = 1;
+	size_t hi = nfiles;
+	size_t probe = lo;
+	size_t ord0 = ord[0];
+	size_t count_of_smaller_lines;
+
+	while (lo < hi)
+	  {
+	    int cmp = compare (cur[ord0], cur[ord[probe]]);
+	    if (cmp < 0 || (cmp == 0 && ord0 < ord[probe]))
+	      hi = probe;
+	    else
+	      lo = probe + 1;
+	    probe = (lo + hi) / 2;
+	  }
+
+	count_of_smaller_lines = lo - 1;
+	for (j = 0; j < count_of_smaller_lines; j++)
+	  ord[j] = ord[j + 1];
+	ord[count_of_smaller_lines] = ord0;
+      }
     }
 
   if (unique && savedline)
