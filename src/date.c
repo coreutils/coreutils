@@ -82,7 +82,6 @@ batch_convert (input_filename, format)
      const char *input_filename;
      const char *format;
 {
-  int have_read_stdin;
   int status;
   FILE *in_stream;
   char *line;
@@ -94,7 +93,6 @@ batch_convert (input_filename, format)
     {
       input_filename = _("standard input");
       in_stream = stdin;
-      have_read_stdin = 1;
     }
   else
     {
@@ -103,7 +101,6 @@ batch_convert (input_filename, format)
 	{
 	  error (0, errno, "%s", input_filename);
 	}
-      have_read_stdin = 0;
     }
 
   line = NULL;
@@ -132,8 +129,8 @@ batch_convert (input_filename, format)
 	}
     }
 
-  if (have_read_stdin && fclose (stdin) == EOF)
-    error (2, errno, _("standard input"));
+  if (fclose (in_stream) == EOF)
+    error (2, errno, input_filename);
 
   if (line != NULL)
     free (line);
