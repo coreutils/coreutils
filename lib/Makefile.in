@@ -190,15 +190,15 @@ am_libfetish_a_OBJECTS = acl.$(OBJEXT) getdate.$(OBJEXT) \
 	quotearg.$(OBJEXT) readtokens0.$(OBJEXT) readtokens.$(OBJEXT) \
 	root-dev-ino.$(OBJEXT) safe-read.$(OBJEXT) \
 	safe-write.$(OBJEXT) same.$(OBJEXT) save-cwd.$(OBJEXT) \
-	savedir.$(OBJEXT) settime.$(OBJEXT) sha1.$(OBJEXT) \
-	stripslash.$(OBJEXT) time_r.$(OBJEXT) umaxtostr.$(OBJEXT) \
-	unicodeio.$(OBJEXT) userspec.$(OBJEXT) utimecmp.$(OBJEXT) \
-	utimens.$(OBJEXT) version-etc.$(OBJEXT) xalloc-die.$(OBJEXT) \
-	xfts.$(OBJEXT) xgetcwd.$(OBJEXT) xgethostname.$(OBJEXT) \
-	xmalloc.$(OBJEXT) xmemcoll.$(OBJEXT) xnanosleep.$(OBJEXT) \
-	xreadlink.$(OBJEXT) xstrndup.$(OBJEXT) xstrtod.$(OBJEXT) \
-	xstrtoimax.$(OBJEXT) xstrtol.$(OBJEXT) xstrtoul.$(OBJEXT) \
-	xstrtoumax.$(OBJEXT) yesno.$(OBJEXT)
+	savedir.$(OBJEXT) setenv.$(OBJEXT) settime.$(OBJEXT) \
+	sha1.$(OBJEXT) stripslash.$(OBJEXT) time_r.$(OBJEXT) \
+	umaxtostr.$(OBJEXT) unicodeio.$(OBJEXT) userspec.$(OBJEXT) \
+	utimecmp.$(OBJEXT) utimens.$(OBJEXT) version-etc.$(OBJEXT) \
+	xalloc-die.$(OBJEXT) xfts.$(OBJEXT) xgetcwd.$(OBJEXT) \
+	xgethostname.$(OBJEXT) xmalloc.$(OBJEXT) xmemcoll.$(OBJEXT) \
+	xnanosleep.$(OBJEXT) xreadlink.$(OBJEXT) xstrndup.$(OBJEXT) \
+	xstrtod.$(OBJEXT) xstrtoimax.$(OBJEXT) xstrtol.$(OBJEXT) \
+	xstrtoul.$(OBJEXT) xstrtoumax.$(OBJEXT) yesno.$(OBJEXT)
 libfetish_a_OBJECTS = $(am_libfetish_a_OBJECTS)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
@@ -361,13 +361,13 @@ libfetish_a_SOURCES = acl.h acl.c getdate.h getdate.y posixtm.c \
 	readtokens0.h readtokens.c readtokens.h readutmp.h regex.h \
 	root-dev-ino.c root-dev-ino.h safe-read.c safe-read.h \
 	safe-write.c safe-write.h same.c same.h save-cwd.c save-cwd.h \
-	savedir.c savedir.h settime.c sha1.c sha1.h sig2str.h \
-	stat-macros.h stdio-safer.h stripslash.c strdup.h strndup.h \
-	strverscmp.h time_r.c time_r.h timespec.h umaxtostr.c \
-	unicodeio.c unicodeio.h unistd-safer.h unlocked-io.h \
-	userspec.c userspec.h utimecmp.c utimecmp.h utimens.c \
-	utimens.h version-etc.c version-etc.h xalloc.h xalloc-die.c \
-	xfts.c xfts.h xgetcwd.c xgetcwd.h xgethostname.c \
+	savedir.c savedir.h setenv.c setenv.h settime.c sha1.c sha1.h \
+	sig2str.h stat-macros.h stdio-safer.h stripslash.c strdup.h \
+	strndup.h strverscmp.h time_r.c time_r.h timespec.h \
+	umaxtostr.c unicodeio.c unicodeio.h unistd-safer.h \
+	unlocked-io.h userspec.c userspec.h utimecmp.c utimecmp.h \
+	utimens.c utimens.h version-etc.c version-etc.h xalloc.h \
+	xalloc-die.c xfts.c xfts.h xgetcwd.c xgetcwd.h xgethostname.c \
 	xgethostname.h xmalloc.c xmemcoll.c xmemcoll.h xnanosleep.c \
 	xnanosleep.h xreadlink.c xreadlink.h xstrndup.c xstrndup.h \
 	xstrtod.c xstrtod.h xstrtoimax.c xstrtol.c xstrtol.h \
@@ -572,6 +572,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/same.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/save-cwd.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/savedir.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/setenv.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/settime.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sha1.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/strftime.Po@am__quote@
