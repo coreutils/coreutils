@@ -1,0 +1,51 @@
+#!/bin/sh
+
+: ${PERL=perl}
+: ${srcdir=.}
+
+case "$PERL" in
+  *'missing perl')
+  echo 1>&2 "$0: configure didn't find a usable version of Perl, so can't run this test"
+  exit 77
+  ;;
+esac
+
+SCRIPT_NAME=$0
+export SCRIPT_NAME
+
+exec $PERL -w -I$srcdir/.. -MFetish -- - <<\EOF
+require 5.003;
+use strict;
+
+(my $program_name = $0) =~ s|.*/||;
+
+# Turn off localisation of executable's ouput.
+@ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
+my $out = 'out-j';
+my $script_name = $ENV{SCRIPT_NAME};
+
+my @Tests =
+    (
+     ['1', (qw (bs=1 skip=1 seek=2 conv=notrunc count=3), "of=$out", '<'),
+     {PRE => sub {my $ignore=`echo zyxwvutsrqponmlkji > $out`}},
+     {IN=> '0123456789abcdef'},
+     {OUT=> ''},
+     {ERR=> "3+0 records in\n3+0 records out\n"},
+     {POST=> sub { my $expected = "exp-$$";
+		   my $t=`echo zy123utsrqponmlkji > $expected`;
+                   compare_files ($script_name, undef, undef, $out, $expected)
+		     and die "the file `$out' does not have the expected"
+		       . " contents\n  (should be same as `$expected')\n";
+		   unlink $out;
+		   unlink $expected;
+		 }},
+     ],
+    );
+
+my $save_temps = $ENV{DEBUG};
+my $verbose = $ENV{VERBOSE};
+
+my $prog = $ENV{PROG} || die "$0: \$PROG not specified in environment\n";
+my $fail = run_tests ($program_name, $prog, \@Tests, $save_temps, $verbose);
+exit $fail;
+EOF
