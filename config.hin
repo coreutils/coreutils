@@ -397,6 +397,12 @@
 /* Define to 1 if you have the `endpwent' function. */
 #undef HAVE_ENDPWENT
 
+/* Define if you have the declaration of environ. */
+#undef HAVE_ENVIRON_DECL
+
+/* Define if you have the declaration of errno. */
+#undef HAVE_ERRNO_DECL
+
 /* Define to 1 if you have the <errno.h> header file. */
 #undef HAVE_ERRNO_H
 
@@ -727,6 +733,12 @@
 
 /* Define to 1 if you have run the test for working tzset. */
 #undef HAVE_RUN_TZSET_TEST
+
+/* Define to 1 if you have the <search.h> header file. */
+#undef HAVE_SEARCH_H
+
+/* Define to 1 if you have the `setenv' function. */
+#undef HAVE_SETENV
 
 /* Define to 1 if you have the `sethostname' function. */
 #undef HAVE_SETHOSTNAME
@@ -1103,6 +1115,9 @@
    `HAVE_STRUCT_TM_TM_ZONE' instead. */
 #undef HAVE_TM_ZONE
 
+/* Define to 1 if you have the `tsearch' function. */
+#undef HAVE_TSEARCH
+
 /* Define to 1 if you don't have `tm_zone' but do have the external array
    `tzname'. */
 #undef HAVE_TZNAME
@@ -1118,6 +1133,9 @@
 
 /* Define to 1 if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H
+
+/* Define to 1 if you have the `unsetenv' function. */
+#undef HAVE_UNSETENV
 
 /* Define if you have the 'unsigned long long' type. */
 #undef HAVE_UNSIGNED_LONG_LONG
@@ -1426,6 +1444,9 @@
 /* Version number of package */
 #undef VERSION
 
+/* Define if unsetenv() returns void, not int. */
+#undef VOID_UNSETENV
+
 /* Define if sys/ptem.h is required for struct winsize. */
 #undef WINSIZE_IN_PTEM
 
@@ -1463,6 +1484,11 @@
 
 /* Define to 1 if you need to in order for `stat' and other things to work. */
 #undef _POSIX_SOURCE
+
+/* Define for Solaris 2.5.1 so uint32_t typedef from <sys/synch.h>,
+   <pthread.h>, or <semaphore.h> is not used. If the typedef was allowed, the
+   #define below would cause a syntax error. */
+#undef _UINT32_T
 
 /* Enable extensions on Solaris.  */
 #ifndef __EXTENSIONS__

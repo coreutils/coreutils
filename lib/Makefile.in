@@ -53,11 +53,11 @@ DIST_COMMON = README $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	mktime.c mountlist.c nanosleep.c obstack.c obstack.h \
 	printf-args.c printf-parse.c putenv.c raise.c readlink.c \
 	readutmp.c realloc.c regex.c rename.c rmdir.c rpmatch.c \
-	sig2str.c stat.c stpcpy.c strcasecmp.c strcspn.c strdup.c \
-	strncasecmp.c strndup.c strnlen.c strpbrk.c strstr.c strtod.c \
-	strtoimax.c strtol.c strtoll.c strtoul.c strtoull.c \
-	strtoumax.c strverscmp.c tempname.c utime.c vasnprintf.c \
-	vasprintf.c
+	setenv.c sig2str.c stat.c stpcpy.c strcasecmp.c strcspn.c \
+	strdup.c strncasecmp.c strndup.c strnlen.c strpbrk.c strstr.c \
+	strtod.c strtoimax.c strtol.c strtoll.c strtoul.c strtoull.c \
+	strtoumax.c strverscmp.c tempname.c unsetenv.c utime.c \
+	vasnprintf.c vasprintf.c
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/afs.m4 \
 	$(top_srcdir)/m4/alloca.m4 $(top_srcdir)/m4/allocsa.m4 \
@@ -128,25 +128,26 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/afs.m4 \
 	$(top_srcdir)/m4/rpmatch.m4 $(top_srcdir)/m4/safe-read.m4 \
 	$(top_srcdir)/m4/safe-write.m4 $(top_srcdir)/m4/same.m4 \
 	$(top_srcdir)/m4/save-cwd.m4 $(top_srcdir)/m4/savedir.m4 \
-	$(top_srcdir)/m4/settime.m4 $(top_srcdir)/m4/sha1.m4 \
-	$(top_srcdir)/m4/sig2str.m4 $(top_srcdir)/m4/signed.m4 \
-	$(top_srcdir)/m4/ssize_t.m4 $(top_srcdir)/m4/st_dm_mode.m4 \
-	$(top_srcdir)/m4/st_mtim.m4 $(top_srcdir)/m4/stat-prog.m4 \
-	$(top_srcdir)/m4/stat.m4 $(top_srcdir)/m4/stdbool.m4 \
-	$(top_srcdir)/m4/stdint_h.m4 $(top_srcdir)/m4/stdio-safer.m4 \
-	$(top_srcdir)/m4/stpcpy.m4 $(top_srcdir)/m4/strcase.m4 \
-	$(top_srcdir)/m4/strcspn.m4 $(top_srcdir)/m4/strdup.m4 \
-	$(top_srcdir)/m4/strftime.m4 $(top_srcdir)/m4/strndup.m4 \
-	$(top_srcdir)/m4/strnlen.m4 $(top_srcdir)/m4/strpbrk.m4 \
-	$(top_srcdir)/m4/strstr.m4 $(top_srcdir)/m4/strtod.m4 \
-	$(top_srcdir)/m4/strtoimax.m4 $(top_srcdir)/m4/strtol.m4 \
-	$(top_srcdir)/m4/strtoll.m4 $(top_srcdir)/m4/strtoul.m4 \
-	$(top_srcdir)/m4/strtoull.m4 $(top_srcdir)/m4/strtoumax.m4 \
-	$(top_srcdir)/m4/strverscmp.m4 $(top_srcdir)/m4/timespec.m4 \
-	$(top_srcdir)/m4/tm_gmtoff.m4 $(top_srcdir)/m4/tzset.m4 \
-	$(top_srcdir)/m4/uint32_t.m4 $(top_srcdir)/m4/uintmax_t.m4 \
-	$(top_srcdir)/m4/uintptr_t.m4 $(top_srcdir)/m4/ulonglong.m4 \
-	$(top_srcdir)/m4/unicodeio.m4 $(top_srcdir)/m4/unistd-safer.m4 \
+	$(top_srcdir)/m4/setenv.m4 $(top_srcdir)/m4/settime.m4 \
+	$(top_srcdir)/m4/sha1.m4 $(top_srcdir)/m4/sig2str.m4 \
+	$(top_srcdir)/m4/signed.m4 $(top_srcdir)/m4/ssize_t.m4 \
+	$(top_srcdir)/m4/st_dm_mode.m4 $(top_srcdir)/m4/st_mtim.m4 \
+	$(top_srcdir)/m4/stat-prog.m4 $(top_srcdir)/m4/stat.m4 \
+	$(top_srcdir)/m4/stdbool.m4 $(top_srcdir)/m4/stdint_h.m4 \
+	$(top_srcdir)/m4/stdio-safer.m4 $(top_srcdir)/m4/stpcpy.m4 \
+	$(top_srcdir)/m4/strcase.m4 $(top_srcdir)/m4/strcspn.m4 \
+	$(top_srcdir)/m4/strdup.m4 $(top_srcdir)/m4/strftime.m4 \
+	$(top_srcdir)/m4/strndup.m4 $(top_srcdir)/m4/strnlen.m4 \
+	$(top_srcdir)/m4/strpbrk.m4 $(top_srcdir)/m4/strstr.m4 \
+	$(top_srcdir)/m4/strtod.m4 $(top_srcdir)/m4/strtoimax.m4 \
+	$(top_srcdir)/m4/strtol.m4 $(top_srcdir)/m4/strtoll.m4 \
+	$(top_srcdir)/m4/strtoul.m4 $(top_srcdir)/m4/strtoull.m4 \
+	$(top_srcdir)/m4/strtoumax.m4 $(top_srcdir)/m4/strverscmp.m4 \
+	$(top_srcdir)/m4/timespec.m4 $(top_srcdir)/m4/tm_gmtoff.m4 \
+	$(top_srcdir)/m4/tzset.m4 $(top_srcdir)/m4/uint32_t.m4 \
+	$(top_srcdir)/m4/uintmax_t.m4 $(top_srcdir)/m4/uintptr_t.m4 \
+	$(top_srcdir)/m4/ulonglong.m4 $(top_srcdir)/m4/unicodeio.m4 \
+	$(top_srcdir)/m4/unistd-safer.m4 \
 	$(top_srcdir)/m4/unlink-busy.m4 \
 	$(top_srcdir)/m4/unlocked-io.m4 $(top_srcdir)/m4/uptime.m4 \
 	$(top_srcdir)/m4/userspec.m4 $(top_srcdir)/m4/utimbuf.m4 \
@@ -190,15 +191,15 @@ am_libfetish_a_OBJECTS = acl.$(OBJEXT) getdate.$(OBJEXT) \
 	quotearg.$(OBJEXT) readtokens0.$(OBJEXT) readtokens.$(OBJEXT) \
 	root-dev-ino.$(OBJEXT) safe-read.$(OBJEXT) \
 	safe-write.$(OBJEXT) same.$(OBJEXT) save-cwd.$(OBJEXT) \
-	savedir.$(OBJEXT) setenv.$(OBJEXT) settime.$(OBJEXT) \
-	sha1.$(OBJEXT) stripslash.$(OBJEXT) time_r.$(OBJEXT) \
-	umaxtostr.$(OBJEXT) unicodeio.$(OBJEXT) userspec.$(OBJEXT) \
-	utimecmp.$(OBJEXT) utimens.$(OBJEXT) version-etc.$(OBJEXT) \
-	xalloc-die.$(OBJEXT) xfts.$(OBJEXT) xgetcwd.$(OBJEXT) \
-	xgethostname.$(OBJEXT) xmalloc.$(OBJEXT) xmemcoll.$(OBJEXT) \
-	xnanosleep.$(OBJEXT) xreadlink.$(OBJEXT) xstrndup.$(OBJEXT) \
-	xstrtod.$(OBJEXT) xstrtoimax.$(OBJEXT) xstrtol.$(OBJEXT) \
-	xstrtoul.$(OBJEXT) xstrtoumax.$(OBJEXT) yesno.$(OBJEXT)
+	savedir.$(OBJEXT) settime.$(OBJEXT) sha1.$(OBJEXT) \
+	stripslash.$(OBJEXT) time_r.$(OBJEXT) umaxtostr.$(OBJEXT) \
+	unicodeio.$(OBJEXT) userspec.$(OBJEXT) utimecmp.$(OBJEXT) \
+	utimens.$(OBJEXT) version-etc.$(OBJEXT) xalloc-die.$(OBJEXT) \
+	xfts.$(OBJEXT) xgetcwd.$(OBJEXT) xgethostname.$(OBJEXT) \
+	xmalloc.$(OBJEXT) xmemcoll.$(OBJEXT) xnanosleep.$(OBJEXT) \
+	xreadlink.$(OBJEXT) xstrndup.$(OBJEXT) xstrtod.$(OBJEXT) \
+	xstrtoimax.$(OBJEXT) xstrtol.$(OBJEXT) xstrtoul.$(OBJEXT) \
+	xstrtoumax.$(OBJEXT) yesno.$(OBJEXT)
 libfetish_a_OBJECTS = $(am_libfetish_a_OBJECTS)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
@@ -361,13 +362,13 @@ libfetish_a_SOURCES = acl.h acl.c getdate.h getdate.y posixtm.c \
 	readtokens0.h readtokens.c readtokens.h readutmp.h regex.h \
 	root-dev-ino.c root-dev-ino.h safe-read.c safe-read.h \
 	safe-write.c safe-write.h same.c same.h save-cwd.c save-cwd.h \
-	savedir.c savedir.h setenv.c setenv.h settime.c sha1.c sha1.h \
-	sig2str.h stat-macros.h stdio-safer.h stripslash.c strdup.h \
-	strndup.h strverscmp.h time_r.c time_r.h timespec.h \
-	umaxtostr.c unicodeio.c unicodeio.h unistd-safer.h \
-	unlocked-io.h userspec.c userspec.h utimecmp.c utimecmp.h \
-	utimens.c utimens.h version-etc.c version-etc.h xalloc.h \
-	xalloc-die.c xfts.c xfts.h xgetcwd.c xgetcwd.h xgethostname.c \
+	savedir.c savedir.h setenv.h settime.c sha1.c sha1.h sig2str.h \
+	stat-macros.h stdio-safer.h stripslash.c strdup.h strndup.h \
+	strverscmp.h time_r.c time_r.h timespec.h umaxtostr.c \
+	unicodeio.c unicodeio.h unistd-safer.h unlocked-io.h \
+	userspec.c userspec.h utimecmp.c utimecmp.h utimens.c \
+	utimens.h version-etc.c version-etc.h xalloc.h xalloc-die.c \
+	xfts.c xfts.h xgetcwd.c xgetcwd.h xgethostname.c \
 	xgethostname.h xmalloc.c xmemcoll.c xmemcoll.h xnanosleep.c \
 	xnanosleep.h xreadlink.c xreadlink.h xstrndup.c xstrndup.h \
 	xstrtod.c xstrtod.h xstrtoimax.c xstrtol.c xstrtol.h \
@@ -492,6 +493,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/rename.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/rmdir.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/rpmatch.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/setenv.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/sig2str.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/stat.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/stpcpy.Po@am__quote@
@@ -512,6 +514,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/strtoumax.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/strverscmp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/tempname.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/unsetenv.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/utime.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/vasnprintf.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/vasprintf.Po@am__quote@
@@ -572,7 +575,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/same.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/save-cwd.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/savedir.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/setenv.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/settime.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sha1.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/strftime.Po@am__quote@
