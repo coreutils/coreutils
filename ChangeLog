@@ -2,6 +2,9 @@
 
 	* Version 5.3.0.
 
+	* README: List the precise HP-UX version numbers that are affected.
+	Suggestion from Bob Proulx.
+
 	* Makefile.maint (sc_changelog): Specify find's `-maxdepth 2'
 	predicate before `-name ChangeLog' to avoid a harmless warning
 	from find-4.2.10.
