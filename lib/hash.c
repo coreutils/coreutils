@@ -1,7 +1,7 @@
 /* hash - hashing table processing.
 
-   Copyright (C) 1998, 1999, 2000, 2001, 2002, 2003 Free Software
-   Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000, 2001, 2002, 2003, 2004 Free
+   Software Foundation, Inc.
 
    Written by Jim Meyering, 1992.
 
@@ -400,9 +400,10 @@ hash_string (const char *string, size_t n_buckets)
   ((Byte) + ROTATE_LEFT (Value, 7))
 
   size_t value = 0;
+  unsigned char ch;
 
-  for (; *string; string++)
-    value = HASH_ONE_CHAR (value, (unsigned char) *string);
+  for (; (ch = *string); string++)
+    value = HASH_ONE_CHAR (value, ch);
   return value % n_buckets;
 
 # undef ROTATE_LEFT
@@ -420,9 +421,10 @@ size_t
 hash_string (const char *string, size_t n_buckets)
 {
   size_t value = 0;
+  unsigned char ch;
 
-  while (*string)
-    value = (value * 31 + (unsigned char) *string++) % n_buckets;
+  for (; (ch = *string); string++)
+    value = (value * 31 + ch) % n_buckets;
   return value;
 }
 
