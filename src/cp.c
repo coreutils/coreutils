@@ -770,7 +770,7 @@ decode_preserve_arg (char const *arg, struct cp_options *x, int on_off)
       PRESERVE_OWNERSHIP, PRESERVE_LINK, PRESERVE_ALL
     };
 
-  /* Valid arguments to the `--reply' option. */
+  /* Valid arguments to the `--preserve' option. */
   static char const* const preserve_args[] =
     {
       "mode", "timestamps",
