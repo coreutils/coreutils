@@ -2,6 +2,11 @@
 
 	* Version 4.5.5.
 
+	* tests/touch/not-owner: New test, mostly extracted from fail-diag.
+	* tests/touch/fail-diag: Remove the test for non-owner diagnostic.
+	Now, this tests only the nonexistent-directory diagnostic.
+	Suggestion from Michael Stone.
+
 	* tests/touch/fail-diag: Fix typo: s/ld/ls/.
 
 2003-01-04  Jim Meyering  <jim@meyering.net>
