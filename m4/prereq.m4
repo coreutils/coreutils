@@ -229,6 +229,7 @@ AC_DEFUN([jm_PREREQ_TEMPNAME],
   AC_CHECK_HEADERS(fcntl.h sys/time.h stdint.h unistd.h)
   AC_CHECK_FUNCS(__secure_getenv gettimeofday)
   AC_CHECK_DECLS([getenv])
+  AC_REQUIRE([jm_AC_TYPE_UINTMAX_T])
 ])
 
 AC_DEFUN([jm_PREREQ_XGETCWD],
