@@ -1,5 +1,9 @@
 2000-09-09  Jim Meyering  <meyering@lucent.com>
 
+	* src/date.c (usage): Make the second `Usage' line more precise
+	(also making it match the texinfo documentation).
+	From Karl Eichwalder.
+
 	* doc/sh-utils.texi (Setting the time): Correct the capitalization of
 	`HHMM' in the info-rendering of the texinfo documentation.
 	Reported by Karl Eichwalder.
