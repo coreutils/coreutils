@@ -51,7 +51,7 @@ Usage: $this_program [OPTION]... EXECUTABLE
      --help              print this help, then exit
      --version           print $this_program program version number, then exit
 
-EXECUTABLE should accept `--help' and `version' options.
+EXECUTABLE should accept `--help' and `--version' options.
 EOT
 
 my $section = 1;
