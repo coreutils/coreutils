@@ -98,6 +98,7 @@ remove_parents (char *path)
   char *slash;
   int fail = 0;
 
+  strip_trailing_slashes (path);
   while (1)
     {
       slash = strrchr (path, '/');
