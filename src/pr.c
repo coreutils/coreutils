@@ -72,6 +72,23 @@
    An overflow of the line length (without margin) over the input value
    PAGE_WIDTH may occur.
 
+   The interference of the POSIX-compliant small letter options -w and -s:
+   (`interference' means `setting a _separator_ with -s switches off the
+   column sturctur and the default - not generally - page_width,
+   acts on -w option')
+       options:       text form  / separator:     equivalent new capital
+       -w l   -s[x]                               letter options:
+    --------------------------------------------------------------------
+    1.  --     --     columns    / space          --
+                      trunc. to page_width = 72
+    2.  --    -s[:]   full lines / TAB[:]         -J    -S["<TAB>"|:]
+                      no truncation
+    3.  -w l   --     columns    / space          -W l
+                      trunc. to page_width = l
+    4.  -w l  -s[:]   columns    / no sep.[:]     -W l  -S[:]
+                      trunc. to page_width = l
+    --------------------------------------------------------------------
+
 
    Options:
 
@@ -1637,7 +1654,7 @@ init_header (char *filename, int desc)
   char *header_text;
   struct tm *tmptr;
   struct stat st;
-  char *datim = "- Date/Time --";
+  char *datim = "-- Date/Time -- ";
 
   if (filename == NULL)
     f = "";
@@ -1647,7 +1664,7 @@ init_header (char *filename, int desc)
   header = (char *) xmalloc (chars_per_line + 1);
 
   if (!standard_header && *custom_header == '\0')
-    sprintf (header, "%s", " ");	/* blank line header */
+    *header = '\0';			/* blank line header */
   else
     {
 #define T_BUF_FMT "%Y-%m-%d %H:%M"	/* date/time short format */
