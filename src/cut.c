@@ -95,14 +95,15 @@ static unsigned int max_range_endpoint;
    to end of line. */
 static unsigned int eol_range_start;
 
-/* In byte mode, which bytes to output.
+/* This is a bit vector.
+   In byte mode, which bytes to output.
    In field mode, which DELIM-separated fields to output.
    Both bytes and fields are numbered starting with 1,
-   so the zeroth element of this array is unused.
+   so the zeroth bit of this array is unused.
    A field or byte K has been selected if
-   (K <= MAX_RANGE_ENDPOINT and PRINTABLE_FIELD[K])
+   (K <= MAX_RANGE_ENDPOINT and is_printable_field(K))
     || (EOL_RANGE_START > 0 && K >= EOL_RANGE_START).  */
-static int *printable_field;
+static unsigned char *printable_field;
 
 enum operating_mode
   {
@@ -224,6 +225,20 @@ With no FILE, or when FILE is -, read standard input.\n\
   exit (status == 0 ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
+static inline void
+mark_printable_field (unsigned int i)
+{
+  size_t n = i / CHAR_BIT;
+  printable_field[n] |= (1 << (i % CHAR_BIT));
+}
+
+static inline bool
+is_printable_field (unsigned int i)
+{
+  size_t n = i / CHAR_BIT;
+  return (printable_field[n] & (1 << (i % CHAR_BIT))) ? true : false;
+}
+
 unsigned int
 hash_int (const void *x, unsigned int tablesize)
 {
@@ -258,7 +273,7 @@ print_kth (unsigned int k, int *range_start)
       return 1;
     }
 
-  if (k <= max_range_endpoint && printable_field[k])
+  if (k <= max_range_endpoint && is_printable_field (k))
     {
       if (range_start)
 	*range_start = is_range_start_index (k);
@@ -277,12 +292,15 @@ print_kth (unsigned int k, int *range_start)
    through end of line.  Return nonzero if FIELDSTR contains at least
    one field specification, zero otherwise.  */
 
-/* FIXME-someday:  What if the user wants to cut out the 1,000,000-th field
-   of some huge input file?  This function shouldn't have to allocate a table
-   of a million ints just so we can test every field < 10^6 with an array
-   dereference.  Instead, consider using a dynamic hash table.  It would be
-   simpler and nearly as good a solution to use a 32K x 4-byte table with
-   one bit per field index instead of a whole `int' per index.  */
+/* FIXME-someday:  What if the user wants to cut out the 1,000,000-th
+   field of some huge input file?  This function shouldn't have to
+   allocate a table of a million bits just so we can test every
+   field < 10^6 with an array dereference.  Instead, consider using
+   an adaptive approach: if the range of selected fields is too large,
+   but only a few fields/byte-offsets are actually selected, use a
+   hash table.  If the range of selected fields is too large, and
+   too many are selected, then resort to using the range-pairs (the
+   `rp' array) directly.  */
 
 static int
 set_fields (const char *fieldstr)
@@ -445,7 +463,8 @@ set_fields (const char *fieldstr)
      the field numbers corresponding to all finite ranges
      (i.e. `2-6' or `-4', but not `5-') in FIELDSTR.  */
 
-  printable_field = xcalloc ((max_range_endpoint + 1) * sizeof (int), 1);
+  printable_field = xcalloc (((max_range_endpoint / CHAR_BIT + 1)
+			      * sizeof (*printable_field)), 1);
 
   /* Set the array entries corresponding to integers in the ranges of RP.  */
   for (i = 0; i < n_rp; i++)
@@ -453,7 +472,7 @@ set_fields (const char *fieldstr)
       unsigned int j;
       for (j = rp[i].lo; j <= rp[i].hi; j++)
 	{
-	  printable_field[j] = 1;
+	  mark_printable_field (j);
 	}
     }
 
@@ -465,7 +484,8 @@ set_fields (const char *fieldstr)
 	  unsigned int j = rp[i].lo;
 	  for (j = rp[i].lo; j <= rp[i].hi; j++)
 	    {
-	      if (0 < j && printable_field[j] && !printable_field[j - 1])
+	      if (0 < j && is_printable_field (j)
+		  && !is_printable_field (j - 1))
 		{
 		  /* Record the fact that `j' is a range-start index.  */
 		  void *ent_from_table = hash_insert (range_start_ht,
