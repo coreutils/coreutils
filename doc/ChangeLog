@@ -1,3 +1,11 @@
+2004-11-27  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (du invocation): Use if=/dev/null rather
+	than :|.  Problem reported by Dan Jacobson.
+	Use "seek=2GiB" rather than the wordier "seek=`echo '2^31'|bc`".
+	Say "KiB" not the (inaccurate) "kilobytes".
+	Similarly for "GiB" and "gigabytes".
+
 2004-11-16  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi: Changes inspired by Debian coreutils 5.2.1-2.
