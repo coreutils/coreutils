@@ -1,5 +1,7 @@
 Changes in release 3.17:
 [3.16a]
+* mkdir -p is a lot faster when creating very deep directories on some systems
+* rm -r is a lot faster on some systems when removing deep hierarchies
 * chgrp, chmod, and chown no longer give contradictory output when --verbose
   is used and an operation fails
 * install accepts new option, --preserver-timestamps
