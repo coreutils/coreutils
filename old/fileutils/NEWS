@@ -93,7 +93,7 @@ Changes in release 4.1:
 * ls is much more efficient on systems (e.g., linux-2.4.*) that store file
     type information in directory entries.
 * shred now automatically determines the size of each block device argument
-* ls's date/time format strings are now local dependent
+* ls's date/time format strings are now locale dependent
 * mkdir, mknod, mkfifo, and chmod work better in conjunction with ACLs
 * `cp --parents dir1/ dir2' no longer gets a failed assertion
 * shred now determines the size of block devices like /dev/fd0
