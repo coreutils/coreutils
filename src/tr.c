@@ -144,7 +144,7 @@ struct List_element
 	struct			/* unnamed */
 	  {
 	    unsigned int the_repeated_char;
-	    long repeat_count;
+	    size_t repeat_count;
 	  }
 	repeated_char;
       }
@@ -175,12 +175,17 @@ struct Spec_list
     /* Used to save state between calls to get_next().  */
     unsigned int state;
 
-    /* Length, in the sense that length('a-z[:digit:]123abc')
+    /* Length, in the sense that length ('a-z[:digit:]123abc')
        is 42 ( = 26 + 10 + 6).  */
-    int length;
+    size_t length;
 
     /* The number of [c*] and [c*0] constructs that appear in this spec.  */
     int n_indefinite_repeats;
+
+    /* If n_indefinite_repeats is non-zero, this points to the List_element
+       corresponding to the last [c*] or [c*0] construct encountered in
+       this spec.  Otherwise it is undefined.  */
+    struct List_element *indefinite_repeat_element;
 
     /* Non-zero if this spec contains at least one equivalence
        class construct e.g. [=c=].  */
@@ -562,7 +567,7 @@ unquote (s, len)
 static enum Char_class
 look_up_char_class (class_str, len)
      const unsigned char *class_str;
-     int len;
+     size_t len;
 {
   unsigned int i;
 
@@ -605,13 +610,13 @@ make_printable_char (c)
 static char *
 make_printable_str (s, len)
      const unsigned char *s;
-     int len;
+     size_t len;
 {
   /* Worst case is that every character expands to a backslash
      followed by a 3-character octal escape sequence.  */
   char *printable_buf = xmalloc (4 * len + 1);
   char *p = printable_buf;
-  int i;
+  size_t i;
 
   for (i = 0; i < len; i++)
     {
@@ -687,8 +692,8 @@ append_normal_char (list, c)
 static int
 append_range (list, first, last)
      struct Spec_list *list;
-     unsigned int first;
-     unsigned int last;
+     size_t first;
+     size_t last;
 {
   struct List_element *new;
 
@@ -724,7 +729,7 @@ static int
 append_char_class (list, char_class_str, len)
      struct Spec_list *list;
      const unsigned char *char_class_str;
-     int len;
+     size_t len;
 {
   enum Char_class char_class;
   struct List_element *new;
@@ -757,7 +762,7 @@ static void
 append_repeated_char (list, the_char, repeat_count)
      struct Spec_list *list;
      unsigned int the_char;
-     long int repeat_count;
+     size_t repeat_count;
 {
   struct List_element *new;
 
@@ -781,7 +786,7 @@ static int
 append_equiv_class (list, equiv_class_str, len)
      struct Spec_list *list;
      const unsigned char *equiv_class_str;
-     int len;
+     size_t len;
 {
   struct List_element *new;
 
@@ -806,16 +811,20 @@ append_equiv_class (list, equiv_class_str, len)
 
 /* Return a newly allocated copy of the substring P[FIRST_IDX..LAST_IDX].
    The returned string has length LAST_IDX - FIRST_IDX + 1, may contain
-   NUL bytes, and is not NUL-terminated.  */
+   NUL bytes, and is *not* NUL-terminated.  */
 
 static unsigned char *
 substr (p, first_idx, last_idx)
      const unsigned char *p;
-     int first_idx;
-     int last_idx;
+     size_t first_idx;
+     size_t last_idx;
 {
-  int len = last_idx - first_idx + 1;
-  unsigned char *tmp = (unsigned char *) xmalloc (len);
+  size_t len;
+  unsigned char *tmp;
+
+  assert (first_idx <= last_idx);
+  len = last_idx - first_idx + 1;
+  tmp = (unsigned char *) xmalloc (len);
 
   assert (first_idx <= last_idx);
   /* Use memcpy rather than strncpy because `p' may contain zero-bytes.  */
@@ -831,11 +840,11 @@ substr (p, first_idx, last_idx)
 static int
 find_closing_delim (p, start_idx, p_len, pre_bracket_char)
      const unsigned char *p;
-     int start_idx;
-     int p_len;
+     size_t start_idx;
+     size_t p_len;
      unsigned int pre_bracket_char;
 {
-  int i;
+  size_t i;
 
   for (i = start_idx; i < p_len - 1; i++)
     if (p[i] == pre_bracket_char && p[i + 1] == ']')
@@ -853,11 +862,11 @@ find_closing_delim (p, start_idx, p_len, pre_bracket_char)
 static int
 non_neg_strtol (s, len, val)
      const unsigned char *s;
-     int len;
-     long int *val;
+     size_t len;
+     size_t *val;
 {
-  int i;
-  long sum = 0;
+  size_t i;
+  unsigned long sum = 0;
   unsigned int base;
 
   if (len <= 0)
@@ -902,12 +911,12 @@ non_neg_strtol (s, len, val)
 static int
 find_bracketed_repeat (p, start_idx, p_len, char_to_repeat, n)
      const unsigned char *p;
-     int start_idx;
-     int p_len;
+     size_t start_idx;
+     size_t p_len;
      unsigned int *char_to_repeat;
-     long int *n;
+     size_t *n;
 {
-  int i;
+  size_t i;
 
   assert (start_idx + 1 < p_len);
   if (p[start_idx + 1] != '*')
@@ -918,7 +927,7 @@ find_bracketed_repeat (p, start_idx, p_len, char_to_repeat, n)
       if (p[i] == ']')
 	{
 	  const unsigned char *digit_str;
-	  int digit_str_len = i - start_idx - 2;
+	  size_t digit_str_len = i - start_idx - 2;
 
 	  *char_to_repeat = p[start_idx];
 	  if (digit_str_len == 0)
@@ -986,7 +995,7 @@ build_spec_list (unescaped_string, len, result)
 	      int closing_delim_idx;
 	      int closing_bracket_idx;
 	      unsigned int char_to_repeat;
-	      long repeat_count;
+	      size_t repeat_count;
 	    case ':':
 	    case '=':
 	      closing_delim_idx = find_closing_delim (p, i + 2, len, p[i + 1]);
@@ -1170,7 +1179,6 @@ get_next (s, class)
 
     case RE_REPEATED_CHAR:
       /* Here, a repeat count of n == 0 means don't repeat at all.  */
-      assert (p->u.repeated_char.repeat_count >= 0);
       if (p->u.repeated_char.repeat_count == 0)
 	{
 	  s->tail = p->next;
@@ -1241,12 +1249,10 @@ card_of_complement (s)
    be 26 and S (representing string2) would be converted to 'A[\n*24]Z'.  */
 
 static void
-get_spec_stats (s, len_s1)
+get_spec_stats (s)
      struct Spec_list *s;
-     int len_s1;
 {
   struct List_element *p;
-  struct List_element *indefinite_repeat_element = NULL;
   int len = 0;
 
   s->n_indefinite_repeats = 0;
@@ -1295,7 +1301,7 @@ get_spec_stats (s, len_s1)
 	    len += p->u.repeated_char.repeat_count;
 	  else if (p->u.repeated_char.repeat_count == 0)
 	    {
-	      indefinite_repeat_element = p;
+	      s->indefinite_repeat_element = p;
 	      ++(s->n_indefinite_repeats);
 	    }
 	  break;
@@ -1306,16 +1312,30 @@ get_spec_stats (s, len_s1)
 	}
     }
 
-  if (len_s1 >= len && s->n_indefinite_repeats == 1)
+  s->length = len;
+}
+
+static void
+get_s1_spec_stats (s1)
+     struct Spec_list *s1;
+{
+  get_spec_stats (s1);
+  if (complement)
+    s1->length = card_of_complement (s1);
+}
+
+static void
+get_s2_spec_stats (s2, len_s1)
+     struct Spec_list *s2;
+     size_t len_s1;
+{
+  get_spec_stats (s2);
+  if (len_s1 >= s2->length && s2->n_indefinite_repeats == 1)
     {
-      indefinite_repeat_element->u.repeated_char.repeat_count = len_s1 - len;
-      len = len_s1;
+      s2->indefinite_repeat_element->u.repeated_char.repeat_count =
+	len_s1 - s2->length;
+      s2->length = len_s1;
     }
-  if (complement && len_s1 < 0)
-    s->length = card_of_complement (s);
-  else
-    s->length = len;
-  return;
 }
 
 static void
@@ -1338,7 +1358,7 @@ parse_str (s, spec_list)
      unsigned char *s;
      struct Spec_list *spec_list;
 {
-  int len;
+  size_t len;
 
   if (unquote (s, &len))
     return 1;
@@ -1413,7 +1433,6 @@ string2_extend (s1, s2)
 
   append_repeated_char (s2, char_to_repeat, s1->length - s2->length);
   s2->length = s1->length;
-  return;
 }
 
 /* Die with an error message if S1 and S2 describe strings that
@@ -1429,7 +1448,7 @@ validate (s1, s2)
      const struct Spec_list *s1;
      struct Spec_list *s2;
 {
-  get_spec_stats (s1, -1);
+  get_s1_spec_stats (s1);
   if (s1->n_indefinite_repeats > 0)
     {
       error (1, 0, "the [c*] repeat construct may not appear in string1");
@@ -1447,7 +1466,7 @@ and complementing");
 
   if (s2)
     {
-      get_spec_stats (s2, s1->length);
+      get_s2_spec_stats (s2, s1->length);
       if (s2->has_restricted_char_class)
 	{
 	  error (1, 0,
