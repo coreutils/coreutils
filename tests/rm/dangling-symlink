@@ -24,6 +24,19 @@ fi
 
 fail=0
 
-rm dangle < /dev/null > /dev/null 2>&1 || fail=1
+# Skip this test if there is no /dev/stdin file.
+ls /dev/stdin >/dev/null 2>&1 \
+  || { (exit 77); exit; }
+
+rm dangle < /dev/stdin &
+pid=$!
+
+# The buggy rm (fileutils-4.1.9) would hang here, waiting for input.
+sleep 1
+
+# The file must no longer exist.
+ls -l dangle > /dev/null 2>&1 && fail=1
+
+kill $pid > /dev/null 2>&1
 
 (exit $fail); exit
