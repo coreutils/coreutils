@@ -627,6 +627,8 @@ ToSeconds(Hours, Minutes, Seconds, Meridian)
 	if (Hours < 1 || Hours > 12)
 	    return -1;
 	return ((Hours + 12) * 60L + Minutes) * 60L + Seconds;
+    default:
+	abort ();
     }
     /* NOTREACHED */
 }

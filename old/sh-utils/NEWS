@@ -2,9 +2,10 @@ Major changes in release 1.9:
 * su fails gracefully when getpass is unable to open /dev/tty.
 * printenv and tty detect and report write errors
 * fix bug in stty
-* stty supports accepts the new options status and flush on systems that
-  provide them
-* fix bugs in expr
+* stty accepts the new options status and flush on systems that provide them
+* `expr 1 / 0' gives an error message rather than trying to divide by zero
+* expr's `substr' doesn't overrun malloc'd buffer
+* expr recognizes the string `0' as zero
 * better support for Linux, Dec Alpha, and SGI Irix
 * all programs (even true and false) accept --version and --help options
 * uname's --version option is no longer equivalent to its -v option
