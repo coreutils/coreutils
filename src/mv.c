@@ -65,7 +65,6 @@ int isdir ();
 int yesno ();
 int safe_read ();
 int full_write ();
-void strip_trailing_slashes ();
 int euidaccess ();
 
 /* The name this program was run with. */
@@ -90,9 +89,6 @@ static int stdin_tty;
 
 /* This process's effective user ID.  */
 static uid_t myeuid;
-
-/* FIXME */
-static struct stat dest_stats, source_stats;
 
 /* If nonzero, display usage information and exit.  */
 static int show_help;
@@ -124,18 +120,19 @@ is_real_dir (const char *path)
   return lstat (path, &stats) == 0 && S_ISDIR (stats.st_mode);
 }
 
-/* Copy regular file SOURCE onto file DEST.
+/* Copy regular file SOURCE onto file DEST.  SOURCE_STATS must be
+   the result of calling lstat on SOURCE.
    Return 1 if an error occurred, 0 if successful. */
 
 static int
-copy_reg (const char *source, const char *dest)
+copy_reg (const char *source, const char *dest, const struct stat *source_stats)
 {
   int ifd;
   int ofd;
   char buf[1024 * 8];
   int len;			/* Number of bytes read into `buf'. */
 
-  if (!S_ISREG (source_stats.st_mode))
+  if (!S_ISREG (source_stats->st_mode))
     {
       error (0, 0,
 	     _("cannot move `%s' across filesystems: Not a regular file"),
@@ -202,8 +199,8 @@ copy_reg (const char *source, const char *dest)
   {
     struct utimbuf tv;
 
-    tv.actime = source_stats.st_atime;
-    tv.modtime = source_stats.st_mtime;
+    tv.actime = source_stats->st_atime;
+    tv.modtime = source_stats->st_mtime;
     if (utime (dest, &tv))
       {
 	error (0, errno, "%s", dest);
@@ -213,14 +210,14 @@ copy_reg (const char *source, const char *dest)
 
   /* Try to preserve ownership.  For non-root it might fail, but that's ok.
      But root probably wants to know, e.g. if NFS disallows it.  */
-  if (chown (dest, source_stats.st_uid, source_stats.st_gid)
+  if (chown (dest, source_stats->st_uid, source_stats->st_gid)
       && (errno != EPERM || myeuid == 0))
     {
       error (0, errno, "%s", dest);
       return 1;
     }
 
-  if (chmod (dest, source_stats.st_mode & 07777))
+  if (chmod (dest, source_stats->st_mode & 07777))
     {
       error (0, errno, "%s", dest);
       return 1;
@@ -230,13 +227,15 @@ copy_reg (const char *source, const char *dest)
 }
 
 /* Move SOURCE onto DEST.  Handles cross-filesystem moves.
-   If DEST is a directory, SOURCE must be also.
+   If SOURCE is a directory, DEST must not exist.
    Return 0 if successful, 1 if an error occurred.  */
 
 static int
 do_move (const char *source, const char *dest)
 {
   char *dest_backup = NULL;
+  struct stat source_stats;
+  struct stat dest_stats;
 
   if (lstat (source, &source_stats) != 0)
     {
@@ -246,6 +245,7 @@ do_move (const char *source, const char *dest)
 
   if (lstat (dest, &dest_stats) == 0)
     {
+
       if (source_stats.st_dev == dest_stats.st_dev
 	  && source_stats.st_ino == dest_stats.st_ino)
 	{
@@ -321,7 +321,7 @@ do_move (const char *source, const char *dest)
 
   /* rename failed on cross-filesystem link.  Copy the file instead. */
 
-  if (copy_reg (source, dest))
+  if (copy_reg (source, dest, &source_stats))
     goto un_backup;
 
   if (unlink (source))
@@ -341,32 +341,59 @@ do_move (const char *source, const char *dest)
   return 1;
 }
 
+static int
+strip_trailing_slashes_2 (char *path)
+{
+  char *end_p = path + strlen (path) - 1;
+  char *slash = end_p;
+
+  while (slash > path && *slash == '/')
+    *slash-- = '\0';
+
+  return slash < end_p;
+}
+
 /* Move file SOURCE onto DEST.  Handles the case when DEST is a directory.
+   DEST_IS_DIR must be nonzero when DEST is a directory or a symlink to a
+   directory and zero otherwise.
    Return 0 if successful, 1 if an error occurred.  */
 
 static int
-movefile (const char *source, const char *dest)
+movefile (char *source, char *dest, int dest_is_dir)
 {
-  strip_trailing_slashes (source);
+  int dest_had_trailing_slash = strip_trailing_slashes_2 (dest);
+  int fail;
 
-  if ((dest[strlen (dest) - 1] == '/' && !is_real_dir (source))
-      || isdir (dest))
+  /* In addition to when DEST is a directory, if DEST has a trailing
+     slash and neither SOURCE nor DEST is a directory, presume the target
+     is DEST/`basename source`.  This converts `mv x y/' to `mv x y/x'.
+     This change means that the command `mv any file/' will now fail
+     rather than performing the move.  The case when SOURCE is a
+     directory and DEST is not is properly diagnosed by do_move.  */
+
+  if (dest_is_dir || (dest_had_trailing_slash && !is_real_dir (source)))
     {
-      /* Target is a directory; build full target filename. */
-      char *base;
+      /* DEST is a directory; build full target filename. */
+      char *src_basename;
       char *new_dest;
-      int fail;
 
-      base = base_name (source);
-      new_dest = path_concat (dest, base, NULL);
+      /* Remove trailing slashes before taking base_name.
+	 Otherwise, base_name ("a/") returns "".  */
+      strip_trailing_slashes_2 (source);
+
+      src_basename = base_name (source);
+      new_dest = path_concat (dest, src_basename, NULL);
       if (new_dest == NULL)
 	error (1, 0, _("virtual memory exhausted"));
       fail = do_move (source, new_dest);
       free (new_dest);
-      return fail;
     }
   else
-    return do_move (source, dest);
+    {
+      fail = do_move (source, dest);
+    }
+
+  return fail;
 }
 
 static void
@@ -415,6 +442,7 @@ main (int argc, char **argv)
   int c;
   int errors;
   int make_backups = 0;
+  int dest_is_dir;
   char *version;
 
   program_name = argv[0];
@@ -486,14 +514,15 @@ main (int argc, char **argv)
     backup_type = get_version (version);
 
   stdin_tty = isatty (STDIN_FILENO);
+  dest_is_dir = isdir (argv[argc - 1]);
 
-  if (argc > optind + 2 && !isdir (argv[argc - 1]))
+  if (argc > optind + 2 && !dest_is_dir)
     error (1, 0,
 	   _("when moving multiple files, last argument must be a directory"));
 
   /* Move each arg but the last onto the last. */
   for (; optind < argc - 1; ++optind)
-    errors |= movefile (argv[optind], argv[argc - 1]);
+    errors |= movefile (argv[optind], argv[argc - 1], dest_is_dir);
 
   exit (errors);
 }
