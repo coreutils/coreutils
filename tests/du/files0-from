@@ -37,12 +37,10 @@ my @Tests =
      . "No such file or directory\n"}],
 
    # empty input
-   ['empty', '--files0-from=-', {EXIT=>1},
-    {ERR => "du: no files specified in `-'\n"}],
+   ['empty', '--files0-from=-'],
 
    # empty input, from non-regular file
-   ['empty-nonreg', '--files0-from=/dev/null', {EXIT=>1},
-    {ERR => "du: no files specified in `/dev/null'\n"}],
+   ['empty-nonreg', '--files0-from=/dev/null'],
 
    # one NUL
    ['nul-1', '--files0-from=-', '<', {IN=>"\0"}, {EXIT=>1},
