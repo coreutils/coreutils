@@ -1,3 +1,9 @@
+Mon Jun 12 00:26:54 1995  Jim Meyering  (meyering@comco.com)
+
+	* getdate.y (Convert): Use 2037 as threshold, not 1999.
+	Otherwise years after 1999 are treated as invalid.
+	From Andreas Schwab.
+
 Sat May 27 00:35:47 1995  Jim Meyering  (meyering@comco.com)
 
 	* system.h [!STDC_HEADERS && HAVE_MEMORY_H]: Include memory.h.
