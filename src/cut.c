@@ -1,5 +1,5 @@
 /* cut - remove parts of lines of files
-   Copyright (C) 1984, 1997, 1998, 1999, 2000, 2001 by David M. Ihnat
+   Copyright (C) 1984, 1997, 1998, 1999, 2000, 2001, 2002 by David M. Ihnat
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -451,6 +451,7 @@ cut_fields (FILE *stream)
       if (field_idx == 1 && buffer_first_field)
 	{
 	  int len;
+	  size_t n_bytes;
 
 	  len = getstr (&field_1_buffer, &field_1_bufsize, stream,
 			delim, '\n', 0);
@@ -461,12 +462,13 @@ cut_fields (FILE *stream)
 	      xalloc_die ();
 	    }
 
-	  assert (len != 0);
+	  n_bytes = len;
+	  assert (n_bytes != 0);
 
 	  /* If the first field extends to the end of line (it is not
 	     delimited) and we are printing all non-delimited lines,
 	     print this one.  */
-	  if ((unsigned char) field_1_buffer[len - 1] != delim)
+	  if ((unsigned char) field_1_buffer[n_bytes - 1] != delim)
 	    {
 	      if (suppress_non_delimited)
 		{
@@ -474,9 +476,9 @@ cut_fields (FILE *stream)
 		}
 	      else
 		{
-		  fwrite (field_1_buffer, sizeof (char), len, stdout);
+		  fwrite (field_1_buffer, sizeof (char), n_bytes, stdout);
 		  /* Make sure the output line is newline terminated.  */
-		  if (field_1_buffer[len - 1] != '\n')
+		  if (field_1_buffer[n_bytes - 1] != '\n')
 		    putchar ('\n');
 		}
 	      continue;
@@ -484,7 +486,7 @@ cut_fields (FILE *stream)
 	  if (print_kth (1))
 	    {
 	      /* Print the field, but not the trailing delimiter.  */
-	      fwrite (field_1_buffer, sizeof (char), len - 1, stdout);
+	      fwrite (field_1_buffer, sizeof (char), n_bytes - 1, stdout);
 	      found_any_selected_field = 1;
 	    }
 	  ++field_idx;
