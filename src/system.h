@@ -345,7 +345,9 @@ char *alloca ();
 # include <libintl.h>
 # define _(Text) gettext (Text)
 #else
+# undef bindtextdomain
 # define bindtextdomain(Domain, Directory) /* empty */
+# undef textdomain
 # define textdomain(Domain) /* empty */
 # define _(Text) Text
 #endif
