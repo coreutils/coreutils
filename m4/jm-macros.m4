@@ -1,10 +1,10 @@
-#serial 39   -*- autoconf -*-
+#serial 40   -*- autoconf -*-
 
 dnl Misc type-related macros for fileutils, sh-utils, textutils.
 
 AC_DEFUN([jm_MACROS],
 [
-  AC_PREREQ(2.52)
+  AC_PREREQ(2.52f)
 
   GNU_PACKAGE="GNU $PACKAGE"
   AC_DEFINE_UNQUOTED(GNU_PACKAGE, "$GNU_PACKAGE",
@@ -56,7 +56,7 @@ AC_DEFUN([jm_MACROS],
   AC_REQUIRE([jm_AC_PREREQ_XSTRTOUMAX])
   AC_REQUIRE([jm_AC_PREREQ_XSTRTOIMAX])
   AC_REQUIRE([jm_AC_FUNC_LINK_FOLLOWS_SYMLINK])
-  AC_REQUIRE([AM_FUNC_ERROR_AT_LINE])
+  AC_REQUIRE([AC_FUNC_ERROR_AT_LINE])
   AC_REQUIRE([jm_FUNC_GNU_STRFTIME])
   AC_REQUIRE([jm_FUNC_MKTIME])
   AC_REQUIRE([jm_FUNC_FPENDING])
@@ -158,9 +158,9 @@ AC_DEFUN([jm_MACROS],
   if test $am_cv_func_working_getline != yes; then
     AC_CHECK_FUNCS(getdelim)
   fi
-  AM_FUNC_OBSTACK
+  AC_FUNC_OBSTACK
 
-  AM_FUNC_STRTOD
+  AC_FUNC_STRTOD
   AC_SUBST(POW_LIBM)
   test $am_cv_func_strtod_needs_libm = yes && POW_LIBM=-lm
 
