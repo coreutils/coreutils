@@ -488,11 +488,9 @@ show_date (const char *format, time_t when)
       return;
     }
 
-  if (rfc_format)
-    setlocale (LC_TIME, "C");
-
-  do
+  while (1)
     {
+      int done;
       out_length += 200;
       out = (char *) xrealloc (out, out_length);
 
@@ -501,8 +499,18 @@ show_date (const char *format, time_t when)
 	 would not terminate when date was invoked like this
 	 `LANG=de date +%p' on a system with good language support.  */
       out[0] = '\1';
+
+      if (rfc_format)
+	setlocale (LC_ALL, "C");
+
+      done = (strftime (out, out_length, format, tm) || out[0] == '\0');
+
+      if (rfc_format)
+	setlocale (LC_ALL, "");
+
+      if (done)
+	break;
     }
-  while (strftime (out, out_length, format, tm) == 0 && out[0] != '\0');
 
   printf ("%s\n", out);
   free (out);
