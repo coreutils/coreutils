@@ -1039,42 +1039,64 @@ keycompare (const struct line *a, const struct line *b)
 	  continue;
 	}
       else if (ignore && translate)
-	while (texta < lima && textb < limb)
-	  {
-	    while (texta < lima && ignore[UCHAR (*texta)])
-	      ++texta;
-	    while (textb < limb && ignore[UCHAR (*textb)])
-	      ++textb;
-	    if (texta < lima && textb < limb &&
-		translate[UCHAR (*texta++)] != translate[UCHAR (*textb++)])
-	      {
-		diff = translate[UCHAR (*--texta)] - translate[UCHAR (*--textb)];
-		break;
-	      }
-	    else if (texta == lima && textb < limb) diff = -1;
-	    else if (texta < lima && textb == limb) diff = 1;
-	  }
+
+#define CMP_WITH_IGNORE(A, B)						\
+  do									\
+    {									\
+	  while (texta < lima && textb < limb)				\
+	    {								\
+	      while (texta < lima && ignore[UCHAR (*texta)])		\
+		++texta;						\
+	      while (textb < limb && ignore[UCHAR (*textb)])		\
+		++textb;						\
+	      if (texta < lima && textb < limb)				\
+		{							\
+		  if ((A) != (B))					\
+		    {							\
+		      diff = (A) - (B);					\
+		      break;						\
+		    }							\
+		  ++texta;						\
+		  ++textb;						\
+		}							\
+									\
+	      if (texta == lima && textb < limb && !ignore[UCHAR (*textb)]) \
+		diff = -1;						\
+	      else if (texta < lima && textb == limb			\
+		       && !ignore[UCHAR (*texta)])			\
+		diff = 1;						\
+	    }								\
+									\
+	  if (diff == 0)						\
+	    {								\
+	      while (texta < lima && ignore[UCHAR (*texta)])		\
+		++texta;						\
+	      while (textb < limb && ignore[UCHAR (*textb)])		\
+		++textb;						\
+									\
+	      if (texta == lima && textb < limb)			\
+		diff = -1;						\
+	      else if (texta < lima && textb == limb)			\
+		diff = 1;						\
+	    }								\
+	  /* Relative lengths are meaningless if characters were ignored.  \
+	     Handling this case here avoids what might be an invalid length  \
+	     comparison below.  */					\
+	  if (diff == 0 && texta == lima && textb == limb)		\
+	    return 0;							\
+    }									\
+  while (0)
+
+	CMP_WITH_IGNORE (translate[UCHAR (*texta)], translate[UCHAR (*textb)]);
       else if (ignore)
-	while (texta < lima && textb < limb)
-	  {
-	    while (texta < lima && ignore[UCHAR (*texta)])
-	      ++texta;
-	    while (textb < limb && ignore[UCHAR (*textb)])
-	      ++textb;
-	    if (texta < lima && textb < limb && *texta++ != *textb++)
-	      {
-		diff = *--texta - *--textb;
-		break;
-	      }
-	    else if (texta == lima && textb < limb) diff = -1;
-	    else if (texta < lima && textb == limb) diff = 1;
-	  }
+	CMP_WITH_IGNORE (*texta, *textb);
       else if (translate)
 	while (texta < lima && textb < limb)
 	  {
 	    if (translate[UCHAR (*texta++)] != translate[UCHAR (*textb++)])
 	      {
-		diff = translate[UCHAR (*--texta)] - translate[UCHAR (*--textb)];
+		diff = (translate[UCHAR (*--texta)]
+			- translate[UCHAR (*--textb)]);
 		break;
 	      }
 	  }
