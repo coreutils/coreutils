@@ -1,3 +1,9 @@
+Thu Nov 18 00:03:24 1993  Jim Meyering  (meyering@comco.com)
+
+	* configure.in [STAT_STATFS2_FSIZE]: Fix test (that had obsolete
+	and now-broken use of AC_HEADER_EGREP) so that this flag is set
+	for NetBSD 0.9.
+
 Mon Oct 25 20:27:00 1993  Jim Meyering  (meyering@comco.com)
 
 	* cp-aux.c, df.c, install.c, ln.c, ls.c, mkdir.c, mkfifo.c,

@@ -189,7 +189,7 @@ main (argc, argv)
   if (make_backups)
     backup_type = get_version (version);
 
-  stdin_tty = isatty (0);
+  stdin_tty = isatty (STDIN_FILENO);
 
   if (argc > optind + 2 && !isdir (argv[argc - 1]))
     error (1, 0, "when moving multiple files, last argument must be a directory");

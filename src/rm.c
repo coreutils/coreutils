@@ -166,7 +166,7 @@ main (argc, argv)
 	usage (1);
     }
 
-  stdin_tty = isatty (0);
+  stdin_tty = isatty (STDIN_FILENO);
 
   for (; optind < argc; optind++)
     {

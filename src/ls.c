@@ -1480,7 +1480,7 @@ print_long_format (f)
     printf ("%3u, %3u ", (unsigned) major (f->stat.st_rdev),
 	    (unsigned) minor (f->stat.st_rdev));
   else
-    printf ("%8lu ", f->stat.st_size);
+    printf ("%8lu ", (unsigned long) f->stat.st_size);
 
   printf ("%s ", full_time ? timebuf : timebuf + 4);
 
