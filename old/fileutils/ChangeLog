@@ -1,5 +1,32 @@
 2001-09-28  Jim Meyering  <meyering@lucent.com>
 
+	* Version 4.1.1.
+
+	* src/cp.c (do_copy): Call dest_info_init if necessary.
+	* src/install.c (main): Likewise.
+	* src/mv.c (main): Likewise.
+	* src/copy.h (dest_info_init): Declare.
+	* src/copy.c: Include "hash.h" and "same.h".
+	(struct Dest_info): Define.
+	(dest_info): Declare global.
+	(DEST_INFO_INITIAL_CAPACITY): Define.
+	(hash_pjw): New function.
+	(dest_info_hash): Likewise.
+	(dest_info_compare): Likewise.
+	(dest_info_init): Likewise.
+	(seen_dest): Likewise.
+	(record_dest): Likewise.
+	(copy_internal): If the destination exists, fail if it's in the set
+	of files that have already been created as part of this mv or cp.
+	(copy_internal) [move_mode]: Record the destination dev/ino/filename.
+	(copy_internal) [!move_mode, regular file]: Likewise.
+
+	Accept new option: --reply={yes,no,query}
+	* src/cp.c: (enum) [REPLY_OPTION]: Define.
+	(usage): Describe new option.
+	Split long usage string into smaller pieces.
+	(main): Handle new option.
+
 	* missing: Update from master.
 	* config.guess: Likewise.
 	* config.sub: Likewise.
@@ -8,8 +35,6 @@
 	rather than the two-`.' config.h.in.
 
 2001-09-26  Jim Meyering  <meyering@lucent.com>
-
-	* Version 4.1.1.
 
 	* man/Makefile.am (common_dep): s/configure.in/configure.ac/.
 
