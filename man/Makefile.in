@@ -506,13 +506,14 @@ check-x-vs-1:
 
 .PHONY: check-programs-vs-x
 check-programs-vs-x:
-	test "$(programs)" && : || exit 1
-	for p in `$(programs)`; do			\
+	status=0;					\
+	for p in dummy `$(programs)`; do		\
+	  test $$p = dummy && continue;			\
 	  test $$p = ginstall && p=install || : ;	\
 	  test -f $(srcdir)/$$p.x			\
-	    || { echo missing $$p.x 1>&2; missing=1; };	\
+	    || { echo missing $$p.x 1>&2; status=1; };	\
 	done;						\
-	test "$$missing" = 1 && exit 1 || :
+	exit $$status
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
