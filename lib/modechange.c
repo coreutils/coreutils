@@ -50,50 +50,65 @@ char *malloc ();
 # define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
 #endif
 
+/* The traditional octal values corresponding to each mode bit.  */
+#define SUID 04000
+#define SGID 02000
+#define SVTX 01000
+#define RUSR 00400
+#define WUSR 00200
+#define XUSR 00100
+#define RGRP 00040
+#define WGRP 00020
+#define XGRP 00010
+#define ROTH 00004
+#define WOTH 00002
+#define XOTH 00001
+#define ALLM 07777 /* all octal mode bits */
+
 #ifndef S_ISUID
-# define S_ISUID 04000
+# define S_ISUID SUID
 #endif
 #ifndef S_ISGID
-# define S_ISGID 04000
+# define S_ISGID SGID
 #endif
 #ifndef S_ISVTX
-# define S_ISVTX 01000
+# define S_ISVTX SVTX
 #endif
 #ifndef S_IRUSR
-# define S_IRUSR 0400
+# define S_IRUSR RUSR
 #endif
 #ifndef S_IWUSR
-# define S_IWUSR 0200
+# define S_IWUSR WUSR
 #endif
 #ifndef S_IXUSR
-# define S_IXUSR 0100
+# define S_IXUSR XUSR
 #endif
 #ifndef S_IRGRP
-# define S_IRGRP 0040
+# define S_IRGRP RGRP
 #endif
 #ifndef S_IWGRP
-# define S_IWGRP 0020
+# define S_IWGRP WGRP
 #endif
 #ifndef S_IXGRP
-# define S_IXGRP 0010
+# define S_IXGRP XGRP
 #endif
 #ifndef S_IROTH
-# define S_IROTH 0004
+# define S_IROTH ROTH
 #endif
 #ifndef S_IWOTH
-# define S_IWOTH 0002
+# define S_IWOTH WOTH
 #endif
 #ifndef S_IXOTH
-# define S_IXOTH 0001
+# define S_IXOTH XOTH
 #endif
 #ifndef S_IRWXU
-# define S_IRWXU 0700
+# define S_IRWXU (S_IRUSR | S_IWUSR | S_IXUSR)
 #endif
 #ifndef S_IRWXG
-# define S_IRWXG 0070
+# define S_IRWXG (S_IRGRP | S_IWGRP | S_IXGRP)
 #endif
 #ifndef S_IRWXO
-# define S_IRWXO 0007
+# define S_IRWXO (S_IROTH | S_IWOTH | S_IXOTH)
 #endif
 
 /* All the mode bits that can be affected by chmod.  */
@@ -157,8 +172,7 @@ mode_compile (const char *mode_string, unsigned int masked_ops)
 {
   struct mode_change *head;	/* First element of the linked list. */
   struct mode_change *tail;	/* An element of the linked list. */
-  uintmax_t mode_value;		/* The mode value, if octal.  */
-  char *string_end;		/* Pointer to end of parsed value.  */
+  unsigned long octal_value;	/* The mode value, if octal.  */
   mode_t umask_value;		/* The umask value (surprise). */
 
   head = NULL;
@@ -166,12 +180,34 @@ mode_compile (const char *mode_string, unsigned int masked_ops)
   tail = NULL;
 #endif
 
-  if (xstrtoumax (mode_string, &string_end, 8, &mode_value, "") == LONGINT_OK)
+  if (xstrtoul (mode_string, NULL, 8, &octal_value, "") == LONGINT_OK)
     {
       struct mode_change *p;
-      if (mode_value != (mode_value & CHMOD_MODE_BITS))
+      mode_t mode;
+      if (octal_value != (octal_value & ALLM))
 	return MODE_INVALID;
-      p = make_node_op_equals ((mode_t) mode_value);
+
+      /* Help the compiler optimize the usual case where mode_t uses
+	 the traditional octal representation.  */
+      mode = ((S_ISUID == SUID && S_ISGID == SGID && S_ISVTX == SVTX
+	       && S_IRUSR == RUSR && S_IWUSR == WUSR && S_IXUSR == XUSR
+	       && S_IRGRP == RGRP && S_IWGRP == WGRP && S_IXGRP == XGRP
+	       && S_IROTH == ROTH && S_IWOTH == WOTH && S_IXOTH == XOTH)
+	      ? octal_value
+	      : ((octal_value & SUID ? S_ISUID : 0)
+		 | (octal_value & SGID ? S_ISGID : 0)
+		 | (octal_value & SVTX ? S_ISVTX : 0)
+		 | (octal_value & RUSR ? S_IRUSR : 0)
+		 | (octal_value & WUSR ? S_IWUSR : 0)
+		 | (octal_value & XUSR ? S_IXUSR : 0)
+		 | (octal_value & RGRP ? S_IRGRP : 0)
+		 | (octal_value & WGRP ? S_IWGRP : 0)
+		 | (octal_value & XGRP ? S_IXGRP : 0)
+		 | (octal_value & ROTH ? S_IROTH : 0)
+		 | (octal_value & WOTH ? S_IWOTH : 0)
+		 | (octal_value & XOTH ? S_IXOTH : 0)));
+
+      p = make_node_op_equals (mode);
       if (p == NULL)
 	return MODE_MEMORY_EXHAUSTED;
       mode_append_entry (&head, &tail, p);
