@@ -503,6 +503,21 @@ show_point (const char *point, const struct stat *statp)
   struct mount_entry *me;
   struct mount_entry *matching_dummy = NULL;
 
+  /* If POINT is an absolute path name, see if we can find the
+     mount point without performing any extra stat calls at all.  */
+  if (*point == '/')
+    {
+      for (me = mount_list; me; me = me->me_next)
+	{
+	  if (STREQ (me->me_mountdir, point))
+	    {
+	      show_dev (me->me_devname, me->me_mountdir, me->me_type,
+			me->me_dummy, me->me_remote);
+	      return;
+	    }
+	}
+    }
+
   for (me = mount_list; me; me = me->me_next)
     {
       if (me->me_dev == (dev_t) -1)
@@ -653,7 +668,7 @@ int
 main (int argc, char **argv)
 {
   int c;
-  struct stat *stats;
+  struct stat *stats IF_LINT (= 0);
 
   program_name = argv[0];
   setlocale (LC_ALL, "");
@@ -741,17 +756,17 @@ main (int argc, char **argv)
   /* Fail if the same file system type was both selected and excluded.  */
   {
     int match = 0;
-    struct fs_type_list *i;
-    for (i = fs_select_list; i; i = i->fs_next)
+    struct fs_type_list *fs_incl;
+    for (fs_incl = fs_select_list; fs_incl; fs_incl = fs_incl->fs_next)
       {
-	struct fs_type_list *j;
-	for (j = fs_exclude_list; j; j = j->fs_next)
+	struct fs_type_list *fs_excl;
+	for (fs_excl = fs_exclude_list; fs_excl; fs_excl = fs_excl->fs_next)
 	  {
-	    if (STREQ (i->fs_name, j->fs_name))
+	    if (STREQ (fs_incl->fs_name, fs_excl->fs_name))
 	      {
 		error (0, 0,
 		       _("file system type `%s' both selected and excluded"),
-		       i->fs_name);
+		       fs_incl->fs_name);
 		match = 1;
 		break;
 	      }
@@ -761,29 +776,21 @@ main (int argc, char **argv)
       exit (1);
   }
 
-  if (optind == argc)
-    {
-#ifdef lint
-      /* Suppress `used before initialized' warning.  */
-      stats = NULL;
-#endif
-    }
-  else
-    {
-      int i;
+  {
+    int i;
 
-      /* stat all the given entries to make sure they get automounted,
-	 if necessary, before reading the filesystem table.  */
-      stats = (struct stat *)
-	xmalloc ((argc - optind) * sizeof (struct stat));
-      for (i = optind; i < argc; ++i)
-	if (stat (argv[i], &stats[i - optind]))
-	  {
-	    error (0, errno, "%s", argv[i]);
-	    exit_status = 1;
-	    argv[i] = NULL;
-	  }
-    }
+    /* stat all the given entries to make sure they get automounted,
+       if necessary, before reading the filesystem table.  */
+    stats = (struct stat *)
+      xmalloc ((argc - optind) * sizeof (struct stat));
+    for (i = optind; i < argc; ++i)
+      if (stat (argv[i], &stats[i - optind]))
+	{
+	  error (0, errno, "%s", argv[i]);
+	  exit_status = 1;
+	  argv[i] = NULL;
+	}
+  }
 
   mount_list =
     read_filesystem_list ((fs_select_list != NULL
