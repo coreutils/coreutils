@@ -9,6 +9,7 @@
 
 	* src/printf.c (print_esc): A hexadecimal escape sequence has
 	at most two hex. digits, not three.  Reported by Padraig Brady.
+	(usage): Update description.
 	* tests/misc/printf-hex: New file/test, for the above fix.
 
 2002-10-07  Paul Eggert  <eggert@twinsun.com>
