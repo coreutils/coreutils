@@ -4,19 +4,19 @@
 # Fix valgrind sources to know about syscall 252, for exit_group
 
 # Convert Makefile.am files:
-#  find tests -name Makefile.am \
-#    | xargs grep -wl PATH|xargs perl -pi -e 's,src:\$\$PATH,src/vg:\$\$PATH,'
+#  find tests -name Makefile.am | xargs grep -wl PATH|xargs perl -pi -e \
+#    's,src(\$\(PATH_SEPARATOR\)\$\$PATH),src/vg$1,'
 
 # Create src/vg:
 
 coreutils=$(echo 'spy:;@echo $(all_programs)' | (cd src; make -f Makefile -f - spy | tr -s '\n ' '  '))
 mkdir src/vg
 pwd=`pwd`
-up=`dirname $pwd`
-path='export PATH='$up':${PATH#*:}'
+srcdir=$pwd/src
+path='export PATH='$srcdir':${PATH#*:}'
 pre='#!/bin/sh\n'"$path"'\n'
 n=9
-vg='exec /p/bin/valgrind --quiet --num-callers='$n
+vg='exec /usr/bin/valgrind --quiet --num-callers='$n
 cat <<EOF > src/vg/gen
 for i in $coreutils; do
   printf "$pre$vg \$i"' "\$@"\n' > \$i
