@@ -1,3 +1,15 @@
+2002-02-02  Paul Eggert  <eggert@twinsun.com>
+	    Bruno Haible  <bruno@clisp.org>
+
+	* unicodeio.h (print_unicode_char): Add exit_on_error argument.
+	(fwrite_success_callback): New declaration.
+	* unicodeio.c (unicode_to_mb): New function, extracted from
+	print_unicode_char. Call failure callback instead of error.
+	(fwrite_success_callback): New function.
+	(exit_failure_callback): New function.
+	(fallback_failure_callback): New function.
+	(print_unicode_char): Call unicode_to_mb.
+
 2002-01-26  Jim Meyering  <meyering@lucent.com>
 
 	* Makefile.am (getdate$U.o): Depend on unlocked-io.h.
