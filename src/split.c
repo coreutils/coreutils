@@ -200,12 +200,12 @@ cwrite (int new_file_flag, const char *bp, size_t bytes)
    Use buffer BUF, whose size is BUFSIZE.  */
 
 static void
-bytes_split (size_t nchars, char *buf, size_t bufsize)
+bytes_split (size_t n_bytes, char *buf, size_t bufsize)
 {
   size_t n_read;
   int new_file_flag = 1;
   size_t to_read;
-  size_t to_write = nchars;
+  size_t to_write = n_bytes;
   char *bp_out;
 
   do
@@ -232,7 +232,7 @@ bytes_split (size_t nchars, char *buf, size_t bufsize)
 	  bp_out += to_write;
 	  to_read -= to_write;
 	  new_file_flag = 1;
-	  to_write = nchars;
+	  to_write = n_bytes;
 	}
     }
   while (n_read == bufsize);
@@ -289,29 +289,29 @@ lines_split (size_t nlines, char *buf, size_t bufsize)
    where lines longer than NCHARS bytes occur. */
 
 static void
-line_bytes_split (size_t nchars)
+line_bytes_split (size_t n_bytes)
 {
   size_t n_read;
   char *bp;
   int eof = 0;
   size_t n_buffered = 0;
-  char *buf = (char *) xmalloc (nchars);
+  char *buf = (char *) xmalloc (n_bytes);
 
   do
     {
       /* Fill up the full buffer size from the input file.  */
 
-      n_read = full_read (input_desc, buf + n_buffered, nchars - n_buffered);
+      n_read = full_read (input_desc, buf + n_buffered, n_bytes - n_buffered);
       if (n_read == SAFE_READ_ERROR)
 	error (EXIT_FAILURE, errno, "%s", infile);
 
       n_buffered += n_read;
-      if (n_buffered != nchars)
+      if (n_buffered != n_bytes)
 	eof = 1;
 
       /* Find where to end this chunk.  */
       bp = buf + n_buffered;
-      if (n_buffered == nchars)
+      if (n_buffered == n_bytes)
 	{
 	  while (bp > buf && bp[-1] != '\n')
 	    bp--;
