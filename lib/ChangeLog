@@ -1,6 +1,8 @@
 2003-06-07  Jim Meyering  <jim@meyering.net>
 
 	Update from gnulib.
+	* tempname.c: Include <stddef.h> unconditionally.
+	Include <inttypes.h> as an alternative to <stdint.h>.
 	* strtoimax.c: Include <stdint.h> as an alternative to <inttypes.h>.
 	* xstrtol.h: Likewise.
 	* xstrtoimax.c: Likewise.
