@@ -1,3 +1,8 @@
+2001-07-01  Jim Meyering  <meyering@lucent.com>
+
+	* src/sort.c (usage): Suggest setting LC_COLLATE=C, rather
+	than LC_ALL=C.
+
 2001-06-10  Jim Meyering  <meyering@lucent.com>
 
 	* tests/sort/Test.pm: Add a test based on a report from Herbert Xu.
