@@ -1,3 +1,10 @@
+2000-03-29  Paul Eggert  <eggert@twinsun.com>
+
+	* src/date.c: Include <langinfo.h> if it exists.
+	(DATE_FMT_LANGINFO): New macro.
+	(show_date): Use it to get the locale-specific default format for
+	"date" if it exists.
+
 2000-03-19  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0g.
