@@ -1,3 +1,56 @@
+2004-07-02  Jim Meyering  <jim@meyering.net>
+
+	* Makefile.am (check-texinfo): Disallow `filename' in .texi files.
+	(check-texinfo): Fail if a @footnote directive follows non-punctuation.
+
+2004-06-30  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi: Put the right amount of space at sentence ends.
+	Make sure "i.e." and "e.g." are followed by commas (the GNU style).
+	Put blank lines before and after every @example, prefer the
+	previous line to end in ":" (when not a sentence end, for consistency),
+	and prepend @noindent to the following line when appropriate.
+	In examples, use "--" arguments when needed to prevent undesired
+	interpretation of operands as options.
+	Use "file name" rather than "filename", as per the GNU coding standards.
+	Remove unwanted spaces before @footnote.
+	Use "---" when appropriate, instead of " -- ".
+	Use "name" (or something like that) rather than "path" or "pathname",
+	since the GNU coding standards don't allow "path".
+	Use @acronym, @command, @minus{}, @samp in a few places,
+	where appropriate.
+	(Target directory): Clarify description of example.
+	(fmt invocation): Give issue number for reference, and reword
+	for clarity.
+	(sort invocation): Note that xargs without -0 also mishandles
+	file names containing some special characters other than newline.
+	(Translating): Mention that \012 is not universally portable.
+	Use '\0' rather than '\000'.
+	(Squeezing): bourne -> Bourne.
+	Fix unportable usage of '\n' by replacing it with '[\n*]'.
+	(More details about version sort): Remove unnecessary indent
+	in examples.
+	(dd invocation): Use 'kill -s USR1', not 'kill -USR1', as POSIX
+	indicates that the former is more portable (the latter is an XSI
+	extension).
+	(shred invocation): Use @uref rather than @url, and use a more-typical
+	style for the date.
+	(kill invocation): Clarify usage; for example, "kill -s TERM -1"
+	isn't allowed.
+	(seq invocation): Reword to avoid implying that printf necessarily
+	fails for numbers outside the 32-bit range.  Prefer separating
+	options from their operands.
+	(Opening the software toolbox): Give an online reference to
+	Robbins's article, and give a date.  Don't imply that the
+	current documentation is unchanged from his article.
+	(Putting the tools together): Rework examples so that they don't
+	assume the C locale; nowadays many users now operate outside the C
+	locale by default.  While we're at it, don't assume ASCII either.
+	Indent example to match actual output from GNU uniq.  Remove some
+	unnecessary and confusing brackets from 'tr' operands.  "Software
+	Tools in Pascal" is back in print, according to Amazon anyway.
+	Add references to Kernighan's online copies of examples.
+
 2004-06-30  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi, perm.texi: Standardize on "file system" rather
