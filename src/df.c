@@ -762,6 +762,7 @@ main (int argc, char **argv)
 {
   int c;
   struct stat *stats IF_LINT (= 0);
+  int n_valid_args = 0;
 
   program_name = argv[0];
   setlocale (LC_ALL, "");
@@ -877,12 +878,18 @@ main (int argc, char **argv)
     stats = (struct stat *)
       xmalloc ((argc - optind) * sizeof (struct stat));
     for (i = optind; i < argc; ++i)
-      if (stat (argv[i], &stats[i - optind]))
-	{
-	  error (0, errno, "%s", argv[i]);
-	  exit_status = 1;
-	  argv[i] = NULL;
-	}
+      {
+	if (stat (argv[i], &stats[i - optind]))
+	  {
+	    error (0, errno, "%s", argv[i]);
+	    exit_status = 1;
+	    argv[i] = NULL;
+	  }
+	else
+	  {
+	    ++n_valid_args;
+	  }
+      }
   }
 
   mount_list =
@@ -917,7 +924,9 @@ main (int argc, char **argv)
       /* Display explicitly requested empty filesystems. */
       show_listed_fs = 1;
 
-      print_header ();
+      if (n_valid_args > 0)
+	print_header ();
+
       for (i = optind; i < argc; ++i)
 	if (argv[i])
 	  show_entry (argv[i], &stats[i - optind]);
