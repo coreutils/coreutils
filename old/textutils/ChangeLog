@@ -6,7 +6,8 @@ Sun Nov 24 21:02:15 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* src/sort.c (set_ordering): Revert 1994-05-04 change to this function
 	so that blanks are not unconditionally ignored when computing start
-	and end positions for numeric keys.  Reported by Markus Demleitner.
+	and end positions for numeric keys with explicit character offsets.
+	Reported by Markus Demleitner.
 
 Sat Nov 23 16:07:08 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 

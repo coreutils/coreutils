@@ -1,5 +1,7 @@
 Changes in release 1.20
  Changes in test release 1.19r
+* sort no longer improperly ignores blanks in determining starting and ending
+  positions for keys with explicit character offsets
 * fix bug in csplit with regexp and negative offset that led to infinite loop
  Changes in test release 1.19q
 * fix bug in sort -c that sometimes resulted in a segfault
