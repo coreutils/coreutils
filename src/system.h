@@ -809,3 +809,27 @@ ptr_align (void *ptr, size_t alignment)
   char *p1 = p0 + alignment - 1;
   return p1 - (size_t) p1 % alignment;
 }
+
+/* Verify a requirement at compile-time (unlike assert, which is runtime).  */
+#define VERIFY(name, assertion) struct name { char a[(assertion) ? 1 : -1]; }
+
+/* Like the above, but use an expression rather than a struct declaration.
+   This macro may be used in some contexts where the other may not.  */
+#define VERIFY_EXPR(assertion) \
+  (void)((struct {char a[(assertion) ? 1 : -1]; } *) 0)
+
+/* If 10*Accum+Digit_val is larger than Type_max, then don't update Accum
+   and return nonzero.  Otherwise, set Accum to that new value and
+   return zero.  When compiling with gcc, perform a compile-time check
+   to verify that the specified Type_max constant is the same as the
+   constant derived from the type of Accum.  */
+#define DECIMAL_DIGIT_ACCUMULATE(Accum, Digit_val, Type_max)		\
+  (									\
+   /* Ensure that Type_max is the maximum value of Accum.  */		\
+   VERIFY_EXPR (TYPE_MAXIMUM (__typeof__ (Accum)) == (Type_max)),	\
+   /* If the result would overflow, return 1.				\
+      Otherwise update Accum and return 0.  */				\
+   ((Type_max) / 10 < Accum || Accum * 10 + (Digit_val) < Accum		\
+    ? 1									\
+    : ((Accum = Accum * 10 + (Digit_val)), 0))				\
+  )
