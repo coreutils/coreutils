@@ -2,6 +2,8 @@
 
 	* Version 4.5.2.
 
+	* tests/du/slink: New test for system.h change of 2002-08-31.
+
 	In move mode, always first try to rename.  Before, upon failure to
 	rename a directory, this code would never attempt to rename any
 	other file in that directory, but would thenceforth always copy.
