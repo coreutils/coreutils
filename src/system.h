@@ -405,3 +405,17 @@ char *strstr ();
 #endif
 
 #include "xalloc.h"
+
+#ifndef HAVE_MEMPCPY
+# if defined (__GNUC__)
+/* Use an inline function with GNU C so we don't get the warning that
+   `value computed is not used'.  */
+static __inline__ void*
+mempcpy (void *d, const void *s, size_t n)
+{
+  return (char *) memcpy (d, s, n) + n;
+}
+# else
+#  define mempcpy(D, S, N) ((void *) ((char *) memcpy (D, S, N) + (N)))
+# endif
+#endif
