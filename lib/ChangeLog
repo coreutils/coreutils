@@ -1,6 +1,9 @@
 2003-06-06  Jim Meyering  <jim@meyering.net>
 
 	* backupfile.c: Update from gnulib.
+	* userspec.c: Likewise.
+	* xreadlink.c: Likewise.
+	* xstrtol.c: Likewise.
 
 	* md5.c: Include <string.h> and <stdlib.h> unconditionally.
 	(memcpy): Remove definition.
