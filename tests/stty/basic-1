@@ -24,9 +24,13 @@ REV_oddp=1 REV_nl=1 REV_cooked=1 REV_raw=1 REV_pass8=1 REV_litout=1
 REV_cbreak=1 REV_decctlq=1 REV_tabs=1 REV_lcase=1 REV_LCASE=1
 
 fail=0
+
 saved_state=.saved-state
 stty --save > $saved_state || fail=1
 stty `cat $saved_state` || fail=1
+
+# This would segfault prior to sh-utils-2.0j.
+stty erase -
 
 # Build a list of all boolean options stty accepts on this system.
 options=`stty -a|tail +2|tr ';' '\012'|sed '/ = /d;s/^ //;s/-//g'`
