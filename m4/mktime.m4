@@ -1,4 +1,4 @@
-#serial 1000
+#serial 1001
 
 dnl Just like mktime.m4 from automake-1.3b, but with an additional test.
 dnl Renamed to have jm_ prefix and to use jm_ prefix on cache variable names.
@@ -132,6 +132,7 @@ main ()
   time_t t, delta;
   int i, j;
 
+  spring_forward_gap ();
   for (time_t_max = 1; 0 < time_t_max; time_t_max *= 2)
     continue;
   time_t_max--;
@@ -151,7 +152,6 @@ main ()
       bigtime_test (j - 1);
     }
   irix_6_4_bug ();
-  spring_forward_gap ();
   exit (0);
 }
 	      >>,
