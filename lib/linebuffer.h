@@ -24,20 +24,21 @@ struct linebuffer
   char *buffer;
 };
 
-#undef __P
+#undef PARAMS
 #if defined (__STDC__) && __STDC__
-#define	__P(x) x
+# define PARAMS(x) x
 #else
-#define	__P(x) ()
+# define PARAMS(x) ()
 #endif
 
 /* Initialize linebuffer LINEBUFFER for use. */
-void initbuffer __P ((struct linebuffer *linebuffer));
+void initbuffer PARAMS ((struct linebuffer *linebuffer));
 
 /* Read an arbitrarily long line of text from STREAM into LINEBUFFER.
    Remove any newline.  Does not null terminate.
    Return LINEBUFFER, except at end of file return 0.  */
-struct linebuffer *readline __P ((struct linebuffer *linebuffer, FILE *stream));
+struct linebuffer *readline PARAMS ((struct linebuffer *linebuffer,
+				     FILE *stream));
 
 /* Free linebuffer LINEBUFFER and its data, all allocated with malloc. */
-void freebuffer __P ((struct linebuffer *));
+void freebuffer PARAMS ((struct linebuffer *));

@@ -1,9 +1,9 @@
-#undef __P
+#undef PARAMS
 #if defined (__STDC__) && __STDC__
-# define __P(args) args
+# define PARAMS(args) args
 #else
-# define __P(args) ()
+# define PARAMS(args) ()
 #endif
 
 int
-  memcasecmp __P((const void *vs1, const void *vs2, size_t n));
+  memcasecmp PARAMS ((const void *vs1, const void *vs2, size_t n));

@@ -13,11 +13,11 @@
 # define __ZLONG_MAX LONG_MAX
 #endif
 
-#undef __P
+#undef PARAMS
 #if defined (__STDC__) && __STDC__
-#define	__P(x) x
+# define PARAMS(x) x
 #else
-#define	__P(x) ()
+# define PARAMS(x) ()
 #endif
 
 enum strtol_error
@@ -27,8 +27,8 @@ enum strtol_error
 typedef enum strtol_error strtol_error;
 
 strtol_error
-  __xstrtol __P ((const char *s, char **ptr, int base,
-		  __unsigned long int *val, const char *valid_suffixes));
+  __xstrtol PARAMS ((const char *s, char **ptr, int base,
+		     __unsigned long int *val, const char *valid_suffixes));
 
 #define _STRTOL_ERROR(exit_code, str, argument_type_string, err)	\
   do									\

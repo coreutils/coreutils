@@ -340,16 +340,16 @@ noconv:
 
 /* External user entry point.  */
 
-#undef __P
+#undef PARAMS
 #if defined (__STDC__) && __STDC__
-# define __P(args) args
+# define PARAMS(args) args
 #else
-# define __P(args) ()
+# define PARAMS(args) ()
 #endif
 
 /* Prototype.  */
-INT strtol __P ((const STRING_TYPE *nptr, STRING_TYPE **endptr,
-			    int base));
+INT strtol PARAMS ((const STRING_TYPE *nptr, STRING_TYPE **endptr,
+		    int base));
 
 
 INT
