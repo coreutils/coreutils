@@ -23,6 +23,8 @@
 #include <locale.h>
 #include <stdlib.h>
 
+#include "xalloc.h"
+
 double
 c_strtod (char const *nptr, char **endptr)
 {
