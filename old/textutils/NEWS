@@ -1,5 +1,7 @@
 Changes in release 1.23
 [1.22a]
+* sort -c reports both the number and the contents of the first out-of-order
+  line, in addition to the file name.
 * `head -c 4096m' is no longer treated just like `head -c 0'
   now it gets a diagnostic about 4096m being too large.
 * pr: For compatibility (also more POSIX compliant): Include default
