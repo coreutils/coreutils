@@ -248,8 +248,8 @@ static int linelength = 30;
 /* Maximum number of elements for the array(s) of struct line's, in bytes.  */
 #define LINEALLOC (256 * 1024)
 
-/* Prefix for temporary file names. */
-static char *temp_file_prefix;
+/* Directory in which any temporary files are to be created. */
+static char *temp_dir;
 
 /* Flag to reverse the order of all comparisons. */
 static int reverse;
@@ -434,9 +434,9 @@ static char *
 tempname (void)
 {
   static unsigned int seq;
-  int len = strlen (temp_file_prefix);
+  int len = strlen (temp_dir);
   char *name = xmalloc (len + 1 + sizeof ("sort") - 1 + 5 + 5 + 1);
-  int long_file_names = PATH_MAX_IN_DIR (temp_file_prefix) > 12;
+  int long_file_names = PATH_MAX_IN_DIR (temp_dir) > 12;
   struct tempnode *node;
 
   node = (struct tempnode *) xmalloc (sizeof (struct tempnode));
@@ -446,13 +446,13 @@ tempname (void)
   if (long_file_names)
     sprintf (name,
 	     "%s%ssort%5.5d%5.5d",
-	     temp_file_prefix,
-	     (len && temp_file_prefix[len - 1] != '/') ? "/" : "",
+	     temp_dir,
+	     (len && temp_dir[len - 1] != '/') ? "/" : "",
 	     (unsigned int) getpid () & 0xffff, seq);
   else
     sprintf (name, "%s%ss%5.5d%2.2d.%3.3d",
-	     temp_file_prefix,
-	     (len && temp_file_prefix[len - 1] != '/') ? "/" : "",
+	     temp_dir,
+	     (len && temp_dir[len - 1] != '/') ? "/" : "",
 	     (unsigned int) getpid () & 0xffff, seq / 1000, seq % 1000);
 
   /* Make sure that SEQ's value fits in 5 digits.  */
@@ -2536,9 +2536,9 @@ main (int argc, char **argv)
   have_read_stdin = 0;
   inittables ();
 
-  temp_file_prefix = getenv ("TMPDIR");
-  if (temp_file_prefix == NULL)
-    temp_file_prefix = DEFAULT_TMPDIR;
+  temp_dir = getenv ("TMPDIR");
+  if (temp_dir == NULL)
+    temp_dir = DEFAULT_TMPDIR;
 
   /* Change the way xmalloc and xrealloc fail.  */
   xalloc_exit_failure = SORT_FAILURE;
@@ -2791,11 +2791,11 @@ but lacks following character offset"));
 		    break;
 		  case 'T':
 		    if (s[1])
-		      temp_file_prefix = ++s;
+		      temp_dir = ++s;
 		    else
 		      {
 			if (i < argc - 1)
-			  temp_file_prefix = argv[++i];
+			  temp_dir = argv[++i];
 			else
 			  error (SORT_FAILURE, 0,
 				 _("option `-T' requires an argument"));
