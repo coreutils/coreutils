@@ -54,38 +54,25 @@ xgetcwd ()
 #if defined __GLIBC__ && __GLIBC__ >= 2
   return getcwd (NULL, 0);
 #else
-  char *ret;
-  size_t path_max;
-  char buf[1024];
+  size_t buf_size = 128;  /* must be a power of 2 */
+  char *buf = NULL;
 
-  errno = 0;
-  ret = getcwd (buf, sizeof (buf));
-  if (ret != NULL)
-    return xstrdup (buf);
-  if (errno != ERANGE)
-    return NULL;
-
-  path_max = 1 << 10;
-
-  for (;;)
+  while (1)
     {
-      char *cwd = (char *) xmalloc (path_max);
-      int save_errno;
+      char *ret;
+      buf = (char *) xrealloc (buf, buf_size);
 
-      errno = 0;
-      ret = getcwd (cwd, path_max);
-      if (ret != NULL)
-	return ret;
-      save_errno = errno;
-      free (cwd);
-      if (save_errno != ERANGE)
+      cwd = getcwd (buf, buf_size);
+      if (cwd != NULL)
+	return cwd;
+      if (errno != ERANGE)
 	{
-	  errno = save_errno;
+	  free (buf);
 	  return NULL;
 	}
 
-      path_max *= 2;
-      if (path_max == 0)
+      buf_size *= 2;
+      if (buf_size == 0)
 	xalloc_die ();
     }
 #endif
