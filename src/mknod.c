@@ -65,7 +65,7 @@ usage (int status)
       printf (_("\
 Create the special file NAME of the given TYPE.\n\
 \n\
-  -m, --mode=MODE   set permission mode (as in chmod), not 0666 - umask\n\
+  -m, --mode=MODE   set permission mode (as in chmod), not a=rw - umask\n\
       --help        display this help and exit\n\
       --version     output version information and exit\n\
 \n\
@@ -84,7 +84,7 @@ MAJOR MINOR are forbidden for TYPE p, mandatory otherwise.  TYPE may be:\n\
 int
 main (int argc, char **argv)
 {
-  unsigned short newmode;
+  mode_t newmode;
   struct mode_change *change;
   const char *symbolic_mode;
   int optc;
@@ -115,7 +115,8 @@ main (int argc, char **argv)
 	}
     }
 
-  newmode = 0666 & ~umask (0);
+  newmode = ((S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH)
+	     & ~ umask (0));
   if (symbolic_mode)
     {
       change = mode_compile (symbolic_mode, 0);
