@@ -876,7 +876,7 @@ results in a new page. Page counting with and without
 @samp{+@var{first_page}} is identical. By default, it starts with the
 first page of input file (not first page printed). Page numbering may be
 altered by @samp{-N} option.
-			  
+
 @item -@var{column}
 @opindex -@var{column}
 @cindex down columns
@@ -918,7 +918,7 @@ is 8).
 Use a form feed instead of newlines to separate output pages. Default
 page length of 66 lines is not altered. But the number of lines of text
 per page changes from 56 to 63 lines.
-							 
+
 
 @item -h @var{HEADER}
 @opindex -h
@@ -941,7 +941,7 @@ is 8).
 @opindex -j
 Merge lines of full length. Used together with the column options
 @samp{-@var{column}}, @samp{-a -@var{column}} or @samp{-m}. Turns off
-@samp{-w} line truncation; no column alignment used; may be used with 
+@samp{-w} line truncation; no column alignment used; may be used with
 @samp{-s[@var{separator}]}.
 
 
@@ -1322,7 +1322,7 @@ less than @var{bytes} bytes of the line are left, then continue
 normally.  @var{bytes} has the same format as for the @samp{--bytes}
 option.
 
-@itemx --verbose=@var{bytes}
+@itemx --verbose
 @opindex --verbose
 Write a diagnostic to standard error just before each output file is opened.
 
