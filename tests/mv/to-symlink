@@ -37,6 +37,9 @@ fi
 # before copying.
 mv $file $rem_symlink || fail=1
 
+# Make sure $file is gone.
+test -f $file && fail=1
+
 # Make sure $rem_file is unmodified.
 test `cat $rem_file` = remote || fail=1
 
