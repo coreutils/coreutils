@@ -1,0 +1,49 @@
+#!/bin/sh
+# This is just for the record.
+# This test is not run.
+
+exit 0
+
+cat <<\EOF
+
+Prior to 5.0.91, ...
+
+The problem:
+  On a VFAT file system with coreutils-5.0.90, `mv FOO foo' removes the
+  sole copy of the file named by both the source and destination arguments.
+
+Demonstrate the problem, as root:
+
+cd /tmp                                    \
+  && dd if=/dev/zero of=1 bs=8192 count=50 \
+  && mkdir mnt && mkfs -t vfat 1           \
+  && mount -oloop 1 mnt && cd mnt          \
+  && printf something important > foo      \
+  && mv foo FOO
+test -f FOO && echo PASS-1 || echo FAIL-1
+ln foo bar
+mv foo FOO
+test -f FOO && echo PASS-2 || echo FAIL-2
+
+And in case you actually do the above, you can do this to clean up:
+
+  cd /tmp && umount /tmp/mnt && rm -r 1 mnt
+
+Hey!  Can't create hard links on vfat.
+The above `ln' evokes an `operation not permitted' failure.
+
+This demonstrates the same thing with file system type `umsdos'
+No hard links:
+
+cd /tmp                                    \
+  && dd if=/dev/zero of=1 bs=8192 count=50 \
+  && mkdir mnt && mkfs -t msdos 1          \
+  && mount -t umsdos -oloop 1 mnt && cd mnt \
+  && printf something important > foo      \
+  && mv foo FOO
+test -f FOO && echo PASS-1 || echo FAIL-1
+ln foo bar
+mv foo FOO
+test -f FOO && echo PASS-2 || echo FAIL-2
+
+EOF
