@@ -20,7 +20,6 @@
 
 #include <config.h>
 #include <stdio.h>
-#include <math.h>
 #include <sys/types.h>
 
 #include <assert.h>
@@ -86,9 +85,8 @@ Print factors of each NUMBER; read standard input with no arguments.\n\
 static int
 factor (long unsigned int n0, int max_n_factors, long unsigned int *factors)
 {
-  register unsigned long n = n0, d;
+  register unsigned long n = n0, d, q;
   int n_factors = 0;
-  unsigned int sqrt_n;
 
   if (n < 1)
     return n_factors;
@@ -107,16 +105,22 @@ factor (long unsigned int n0, int max_n_factors, long unsigned int *factors)
       (3) n is composite but has no factors less than d.
      If (1) or (2) obviously the right thing happens.
      If (3), then since n is composite it is >= d^2. */
-  sqrt_n = (unsigned int) sqrt ((double) n);
-  for (d = 3; d <= sqrt_n; d += 2)
+
+  d = 3;
+  do
     {
-      while (n % d == 0)
+      q = n / d;
+      while (n == q * d)
 	{
 	  assert (n_factors < max_n_factors);
 	  factors[n_factors++] = d;
-	  n /= d;
+	  n = q;
+	  q = n / d;
 	}
+      d += 2;
     }
+  while (d <= q);
+
   if (n != 1 || n0 == 1)
     {
       assert (n_factors < max_n_factors);
