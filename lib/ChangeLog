@@ -1,6 +1,8 @@
 2003-08-09  Jim Meyering  <jim@meyering.net>
 
-	* Makefile.am: Use the e.g., `$(FNMATCH_H)' notation for AC_REPLACED
+	* fatal.c, fatal.h: Remove unused files.
+
+	* Makefile.am: Use the e.g., `$(FNMATCH_H)' notation for AC_SUBST'd
 	variable names, rather than @FNMATCH_H@.
 	Likewise for $(ALLOCA_H).
 	(fnmatch.h): Use `$@' in the commands, in place of the three copies
