@@ -1,5 +1,5 @@
 /* uniq -- remove duplicate lines from a sorted file
-   Copyright (C) 86, 91, 1995-1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 86, 91, 1995-2001, Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -121,7 +121,7 @@ standard input), writing to OUTPUT (or standard output).\n\
   -u, --unique          only print unique lines\n\
   -w, --check-chars=N   compare no more than N characters in lines\n\
   -N                    same as -f N\n\
-  +N                    same as -s N\n\
+  +N                    same as -s N (obsolescent; will be withdrawn)\n\
       --help            display this help and exit\n\
       --version         output version information and exit\n\
 \n\
