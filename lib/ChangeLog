@@ -1,3 +1,9 @@
+2001-09-01  Jim Meyering  <meyering@lucent.com>
+
+	* exclude.c: Use `""', not `<>' to #include non-system header files.
+	(fnmatch_no_wildcards): Rewrite not to use function names, strcasecmp
+	and strncasecmp as r-values.  Unixware didn't have declarations.
+
 2001-08-31  Jim Meyering  <meyering@lucent.com>
 
 	* xgetcwd.c (xgetcwd): Reorganize to avoid some duplication.
