@@ -2,6 +2,13 @@
 
 	* Version 5.0.90.
 
+	* tests/priv-check: Use `id -u' to see if we're running as root,
+	rather than trying go write to an write-protected file.
+	When running as root, ensure $NON_ROOT_USERNAME is valid.
+	When running as root with `require-non-root', ensure that `.'
+	is writable by $NON_ROOT_USERNAME, then reinvoke $0 set-user-ID
+	to $NON_ROOT_USERNAME.  If `.' is not writable, then skip the test.
+
 	* src/printenv.c: Include "exitfail.h".
 	(main): Set exit_failure rather than calling close_stdout_set_status.
 	* src/date.c: Likewise.
