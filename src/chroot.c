@@ -31,23 +31,13 @@
 
 #define AUTHORS "Roland McGrath"
 
-/* Exit statuses.  */
-enum
-  {
-    /* found the specified command but failed to invoke it.  */
-    CHROOT_FOUND_BUT_CANNOT_INVOKE = 126,
-
-    /* `chroot' itself failed, or did not find the specified command.  */
-    CHROOT_FAILURE = 127
-  };
-
 /* The name this program was run with, for error messages. */
 char *program_name;
 
 void
 usage (int status)
 {
-  if (status != 0)
+  if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_name);
   else
@@ -80,6 +70,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  initialize_exit_failure (EXIT_FAIL);
   atexit (close_stdout);
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
@@ -87,15 +78,14 @@ main (int argc, char **argv)
   if (argc <= 1)
     {
       error (0, 0, _("too few arguments"));
-      usage (CHROOT_FAILURE);
+      usage (EXIT_FAIL);
     }
 
   if (chroot (argv[1]))
-    error (CHROOT_FAILURE, errno,
-	   _("cannot change root directory to %s"), argv[1]);
+    error (EXIT_FAIL, errno, _("cannot change root directory to %s"), argv[1]);
 
   if (chdir ("/"))
-    error (CHROOT_FAILURE, errno, _("cannot chdir to root directory"));
+    error (EXIT_FAIL, errno, _("cannot chdir to root directory"));
 
   if (argc == 2)
     {
@@ -116,9 +106,7 @@ main (int argc, char **argv)
   execvp (argv[0], argv);
 
   {
-    int exit_status = (errno == ENOENT
-		       ? CHROOT_FAILURE
-		       : CHROOT_FOUND_BUT_CANNOT_INVOKE);
+    int exit_status = (errno == ENOENT ? EXIT_ENOENT : EXIT_CANNOT_INVOKE);
     error (0, errno, _("cannot run command %s"), quote (argv[0]));
     exit (exit_status);
   }
