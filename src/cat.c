@@ -347,7 +347,8 @@ cat (
 		  if (numbers && numbers_at_empty_lines)
 		    {
 		      next_line_num ();
-		      bpout = (unsigned char *) stpcpy (bpout, line_num_print);
+		      bpout = (unsigned char *) stpcpy ((char *) bpout,
+							line_num_print);
 		    }
 		}
 
@@ -369,7 +370,7 @@ cat (
       if (newlines >= 0 && numbers)
 	{
 	  next_line_num ();
-	  bpout = (unsigned char *) stpcpy (bpout, line_num_print);
+	  bpout = (unsigned char *) stpcpy ((char *) bpout, line_num_print);
 	}
 
       /* Here CH cannot contain a newline character.  */
