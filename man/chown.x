@@ -19,4 +19,4 @@ in this case,
 .B chown
 performs the same function as
 .BR chgrp .
-.Sh OPTIONS
+.SH OPTIONS
