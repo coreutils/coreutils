@@ -1,9 +1,26 @@
+1999-01-17  Jim Meyering  <meyering@ascend.com>
+
+	* configure.in (AC_OUTPUT): Add djgpp/Makefile.
+	* djgpp/: New directory.
+
+	* man/Makefile.maint ($(man_MANS)): Don't remove the target (the
+	man page) until after we've created its replacement.
+
+1999-01-16  Eli Zaretskii  <eliz@is.elta.co.il>
+
+	* GNUmakefile: Add SHELL = /bin/sh.
+	* man/GNUmakefile: Likewise.
+
 1999-01-16  Jim Meyering  <meyering@ascend.com>
+
+	* acconfig.h: Remove @BOTTOM@ section.
+	Instead, add the define and decl via m4/jm-macros.m4.
 
 	* lib/argmatch.h (XARGMATCH): Define to return a value once again.
 	(XARGCASEMATCH): Likewise.
 
-	* lib/argmatch.c (ARGMATCH_DIE): Provide default.
+	* lib/argmatch.c (EXIT_FAILURE): Define.
+	(ARGMATCH_DIE): Provide default.
 	(__xargmatch_internal): New function.
 	s/rogram_name/program_name.
 	From Akim Demaille.
@@ -20,7 +37,8 @@
 1999-01-14  Akim Demaille  <demaille@inf.enst.fr>
 
 	* acconfig.h: Add a @BOTTOM@ section.
-	(@BOTTOM@): Define ARGMATCH_DIE.  Declare usage ().
+	(ARGMATCH_DIE) [@BOTTOM@]: Define to usage(1).
+	Declare usage.
 	* src/*.c: Don't prototype usage as static.
 
 1999-01-10  Jim Meyering  <meyering@ascend.com>
