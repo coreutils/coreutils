@@ -27,7 +27,9 @@ for len in $symlink_name_lengths; do
   # Ignore failures.
   ln -fs $name $len > /dev/null 2>&1
 done
-du -a $symlink_name_lengths > out || fail=1
+
+# Redirect errors (e.g. missing file) to /dev/null.
+du -a $symlink_name_lengths > out 2> /dev/null || fail=1
 
 # Require that at least one of these symlinks has a non-zero size.
 grep '^[1-9]' out > /dev/null || fail=1
