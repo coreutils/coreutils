@@ -154,7 +154,7 @@ else
   esac
 fi
 test -s 8.E || rm -f 8.E
-LANG=C TZ=UTC $xx -d '1997-01-19 08:17:48 +0' +'%z_%Z'  > 9.O 2> 9.E
+LANG=C TZ=UTC $xx -d '1997-01-19 08:17:48 +0' +'%z'  > 9.O 2> 9.E
 code=$?
 if test $code != 0 ; then
   $echo "Test 9(LANG=C TZ=UTC) failed: ../../src/date return code $code differs from expected value 0" 1>&2
