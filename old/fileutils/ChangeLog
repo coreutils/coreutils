@@ -1,12 +1,12 @@
 1998-01-06  Jim Meyering  <meyering@na-net.ornl.gov>
 
-	* lib/getdate.y: Add %expect directive.
-	Move inclusion of getdate.h and dependent extern declarations down
-	so getdate.h's prototype follows the sometimes-enabled definition
-	of `const' to nothing.  Otherwise, the prototype wouldn't match
-	the definition because of the defined-away `const'.
-	(get_date): ANSI-fy definition.
+	* lib/getdate.y: Move inclusion of getdate.h and dependent extern
+	declarations down so getdate.h's prototype follows the sometimes-
+	enabled definition of `const' to nothing.  Otherwise, the prototype
+	wouldn't match the definition because of the defined-away `const'.
 	From Kaveh Ghazi.
+	(get_date): ANSI-fy definition.
+	Add %expect directive.
 
 1998-01-05  Paul Eggert  <eggert@twinsun.com>
 
