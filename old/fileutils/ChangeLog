@@ -2,6 +2,21 @@
 
 	* Version 4.1.1.
 
+	* src/ls.c (struct pending) [st_ino, st_dev]: Remove members.
+	(queue_directory): Remove just-added 3rd parameter
+	and associated code, and update callers.
+	(print_dir): Get dev/inode pair via `fstat (dirfd (reading), ...',
+	and call visit_dir to detect cycles here.
+	Push the dev/inode pair onto the new stack.
+	(dev_ino_obstack): New global.
+	(DEV_INO_PUSH): New macro.
+	(dev_ino_pop): New function.
+	(ASSERT_MATCHING_DEV_INO): New macro.
+	(visit_dir): Take two parameters (dev,ino), not one `pending'.
+	(main): Initialized the dev_ino_obstack.
+	Don't call visit_dir here.
+	Get the dev/ino pair from the new stack, not from the pending entry.
+
 	Make ls -R detect directory cycles.
 	Add loop detection without incurring an additional stat call per
 	directory processed.  To detect loops efficiently (i.e., time: +O(1)
@@ -16,7 +31,7 @@
 	is closed, I must either save the dev/ino someplace (pending seemed
 	logical) or recompute them via stat.
 
-	A subsequent change will convert to using a stack of dev/ino pairs
+	The following change will convert to using a stack of dev/ino pairs
 	instead, pushing an entry when doing the opendir (use fstat on
 	dirfd (reading)), and popping (when encountering a marker) to get
 	the dev/ino pair to be removed from the hash table.
