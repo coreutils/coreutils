@@ -1,6 +1,22 @@
-2003-02-28  Jim Meyering  <jim@meyering.net>
+2003-03-02  Jim Meyering  <jim@meyering.net>
 
 	* Version 4.5.9.
+
+	* src/copy.c (copy_internal) [un_backup]: When recovering from a
+	failure to create a hard link, do not remove the entry associating
+	the source dev/ino with the destination file name.
+	* tests/mv/Makefile.am (TESTS): Add hard-3.
+	* tests/mv/hard-3: New test, for the above-fixed bug.
+	Inspired by a report from Iida Yosiaki.
+
+2003-03-01  Jim Meyering  <jim@meyering.net>
+
+	* src/df.c (print_header): Don't embed spaces in a separate `Type'
+	header string.  Instead, put `Filesystem' and `Type' headers in the
+	same string, so translators can use horizontal space as needed.
+	Reported by Jean Charles Delepine.
+
+2003-02-28  Jim Meyering  <jim@meyering.net>
 
 	* src/copy.c (copy_internal): When link fails because of an
 	existing destination file, unlink that file and try again.
