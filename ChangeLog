@@ -5,13 +5,8 @@
 	Avoid a race condition in `tail -f' described by Ken Raeburn in
 	http://mail.gnu.org/archive/html/bug-textutils/2003-05/msg00007.html
 	* src/tail.c (file_lines): Add new parameter, *read_pos, and set it.
-	(pipe_lines): Likewise.
-	(pipe_bytes): Likewise.
-	(start_bytes): Likewise.
-	(start_lines): Likewise.
-	(tail_bytes): Likewise.
-	(tail_lines): Likewise.
-	(tail): Likewise.
+	(pipe_lines, pipe_bytes, start_bytes, start_lines): Likewise.
+	(tail_bytes, tail_lines, tail): Likewise.
 	(tail_file): Use the new `read_pos' value as the size,
 	rather than stats.st_size from the fstat call.
 
