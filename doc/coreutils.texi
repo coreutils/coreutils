@@ -3973,7 +3973,7 @@ join [@var{option}]@dots{} @var{file1} @var{file2}
 
 @vindex LC_COLLATE
 Either @var{file1} or @var{file2} (but not both) can be @samp{-},
-meaning standard input.  @var{file1} and @var{file2} should be already
+meaning standard input.  @var{file1} and @var{file2} should be
 sorted on the join fields.
 
 Normally, the sort order is that of the
