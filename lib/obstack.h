@@ -297,17 +297,17 @@ extern int obstack_exit_failure;
 
 # define obstack_init(h)					\
   _obstack_begin ((h), 0, 0,					\
-		  (void *(*) (long)) obstack_chunk_alloc, 	\
+		  (void *(*) (long)) obstack_chunk_alloc,	\
 		  (void (*) (void *)) obstack_chunk_free)
 
 # define obstack_begin(h, size)					\
   _obstack_begin ((h), (size), 0,				\
-		  (void *(*) (long)) obstack_chunk_alloc, 	\
+		  (void *(*) (long)) obstack_chunk_alloc,	\
 		  (void (*) (void *)) obstack_chunk_free)
 
 # define obstack_specify_allocation(h, size, alignment, chunkfun, freefun) \
   _obstack_begin ((h), (size), (alignment),				   \
-		  (void *(*) (long)) (chunkfun), 			   \
+		  (void *(*) (long)) (chunkfun),			   \
 		  (void (*) (void *)) (freefun))
 
 # define obstack_specify_allocation_with_arg(h, size, alignment, chunkfun, freefun, arg) \
@@ -325,7 +325,7 @@ extern int obstack_exit_failure;
 
 # define obstack_init(h)						\
   _obstack_begin ((h), 0, 0,						\
-		  (void *(*) ()) obstack_chunk_alloc, 			\
+		  (void *(*) ()) obstack_chunk_alloc,			\
 		  (void (*) ()) obstack_chunk_free)
 
 # define obstack_begin(h, size)						\
@@ -335,12 +335,12 @@ extern int obstack_exit_failure;
 
 # define obstack_specify_allocation(h, size, alignment, chunkfun, freefun) \
   _obstack_begin ((h), (size), (alignment),				   \
-		  (void *(*) ()) (chunkfun), 				   \
+		  (void *(*) ()) (chunkfun),				   \
 		  (void (*) ()) (freefun))
 
 # define obstack_specify_allocation_with_arg(h, size, alignment, chunkfun, freefun, arg) \
   _obstack_begin_1 ((h), (size), (alignment),				\
-		    (void *(*) ()) (chunkfun), 				\
+		    (void *(*) ()) (chunkfun),				\
 		    (void (*) ()) (freefun), (arg))
 
 # define obstack_chunkfun(h, newchunkfun) \
@@ -477,7 +477,7 @@ __extension__								\
 
 /* The local variable is named __o1 to avoid a name conflict
    when obstack_blank is called.  */
-# define obstack_finish(OBSTACK)  					\
+# define obstack_finish(OBSTACK)					\
 __extension__								\
 ({ struct obstack *__o1 = (OBSTACK);					\
    void *value;								\
@@ -574,7 +574,7 @@ __extension__								\
 # define obstack_copy0(h,where,length)					\
  (obstack_grow0 ((h), (where), (length)), obstack_finish ((h)))
 
-# define obstack_finish(h)  						\
+# define obstack_finish(h)						\
 ( ((h)->next_free == (h)->object_base					\
    ? (((h)->maybe_empty_object = 1), 0)					\
    : 0),								\
