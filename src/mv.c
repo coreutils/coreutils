@@ -451,7 +451,7 @@ main (int argc, char **argv)
     {
       if (!dest_is_dir)
 	{
-	  error (0, 0, _("specified target directory, `%s' is not a directory"),
+	  error (0, 0, _("specified target, `%s' is not a directory"),
 		 target_directory);
 	  usage (1);
 	}
@@ -473,8 +473,11 @@ main (int argc, char **argv)
 	}
 
       if (n_files > 2 && !dest_is_dir)
-	error (1, 0,
+	{
+	  error (0, 0,
 	   _("when moving multiple files, last argument must be a directory"));
+	  usage (1);
+	}
     }
 
   x.backup_type = (make_backups
