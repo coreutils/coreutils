@@ -26,7 +26,7 @@
 #include <ctype.h>
 
 /* states: S_N: normal, S_I: comparing integral part, S_F: comparing
-           Fractional parts, S_Z: idem but with leading Zeroes only */
+           fractional parts, S_Z: idem but with leading Zeroes only */
 #define S_N    0x0
 #define S_I    0x4
 #define S_F    0x8
@@ -35,6 +35,7 @@
 /* result_type: CMP: return diff; LEN: compare using len_diff/diff */
 #define CMP    2
 #define LEN    3
+
 
 /* ISDIGIT differs from isdigit, as follows:
    - Its arg may be any int or unsigned int; it need not be an unsigned char.
@@ -46,13 +47,20 @@
    host does not conform to Posix.  */
 #define ISDIGIT(c) ((unsigned) (c) - '0' <= 9)
 
+#undef __strverscmp
+#undef strverscmp
+
+#ifndef weak_alias
+# define __strverscmp strverscmp
+#endif
+
 /* Compare S1 and S2 as strings holding indices/version numbers,
    returning less than, equal to or greater than zero if S1 is less than,
    equal to or greater than S2 (for more info, see the texinfo doc).
 */
 
 int
-strverscmp (const char *s1, const char *s2)
+__strverscmp (const char *s1, const char *s2)
 {
   const unsigned char *p1 = (const unsigned char *) s1;
   const unsigned char *p2 = (const unsigned char *) s2;
@@ -120,3 +128,6 @@ strverscmp (const char *s1, const char *s2)
       return state;
     }
 }
+#ifdef weak_alias
+weak_alias (__strverscmp, strverscmp)
+#endif
