@@ -88,6 +88,10 @@ static char *username;
 /* The name of the group to which ownership of the files is being given. */
 static char *groupname;
 
+/* The argument to the --reference option.  Use the owner and group IDs
+   of this file.  This file must exist.  */
+static char *reference_file;
+
 /* If nonzero, display usage information and exit.  */
 static int show_help;
 
@@ -101,6 +105,7 @@ static struct option const long_options[] =
   {"no-dereference", no_argument, 0, 'h'},
   {"quiet", no_argument, 0, 'f'},
   {"silent", no_argument, 0, 'f'},
+  {"reference", required_argument, 0, 12},
   {"verbose", no_argument, 0, 'v'},
   {"help", no_argument, &show_help, 1},
   {"version", no_argument, &show_version, 1},
@@ -233,9 +238,10 @@ usage (int status)
     {
       printf (_("\
 Usage: %s [OPTION]... OWNER[.[GROUP]] FILE...\n\
-  or:  %s [OPTION]... .[GROUP] FILE...\n\
+  or:  %s [OPTION]... .GROUP FILE...\n\
+  or:  %s [OPTION]... --reference=RFILE FILE...\n\
 "),
-	      program_name, program_name);
+	      program_name, program_name, program_name);
       printf (_("\
 Change the owner and/or group of each FILE to OWNER and/or GROUP.\n\
 \n\
@@ -244,6 +250,8 @@ Change the owner and/or group of each FILE to OWNER and/or GROUP.\n\
                          (available only on systems that can change the\n\
                          ownership of a symlink)\n\
   -f, --silent, --quiet  suppress most error messages\n\
+      --reference=RFILE  use the owner and group of RFILE instead of using\n\
+                         explicit OWNER.GROUP values\n\
   -R, --recursive        operate on files and directories recursively\n\
   -v, --verbose          explain what is being done\n\
       --help             display this help and exit\n\
@@ -279,6 +287,9 @@ main (int argc, char **argv)
 	{
 	case 0:
 	  break;
+	case 12:
+	  reference_file = optarg;
+	  break;
 	case 'R':
 	  recurse = 1;
 	  break;
@@ -309,7 +320,7 @@ main (int argc, char **argv)
   if (show_help)
     usage (0);
 
-  if (optind >= argc - 1)
+  if (argc - optind + (reference_file ? 1 : 0) <= 1)
     {
       error (0, 0, _("too few arguments"));
       usage (1);
@@ -322,13 +333,28 @@ main (int argc, char **argv)
     }
 #endif
 
-  e = parse_user_spec (argv[optind], &user, &group, &username, &groupname);
-  if (e)
-    error (1, 0, "%s: %s", argv[optind], e);
-  if (username == NULL)
-    username = "";
+  if (reference_file)
+    {
+      struct stat ref_stats;
 
-  for (++optind; optind < argc; ++optind)
+      if (stat (reference_file, &ref_stats))
+        error (1, errno, "%s", reference_file);
+
+      user  = ref_stats.st_uid;
+      group = ref_stats.st_gid;
+    }
+  else
+    {
+      e = parse_user_spec (argv[optind], &user, &group, &username, &groupname);
+      if (e)
+        error (1, 0, "%s: %s", argv[optind], e);
+      if (username == NULL)
+        username = "";
+
+      optind++;
+    }
+
+  for (; optind < argc; ++optind)
     {
       strip_trailing_slashes (argv[optind]);
       errors |= change_file_owner (argv[optind], user, group);

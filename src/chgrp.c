@@ -88,6 +88,10 @@ static int changes_only;
 /* The name of the group to which ownership of the files is being given. */
 static const char *groupname;
 
+/* The argument to the --reference option.  Use the group ID of this file.
+   This file must exist.  */
+static char *reference_file;
+
 /* If nonzero, display usage information and exit.  */
 static int show_help;
 
@@ -101,6 +105,7 @@ static struct option const long_options[] =
   {"no-dereference", no_argument, 0, 'h'},
   {"silent", no_argument, 0, 'f'},
   {"quiet", no_argument, 0, 'f'},
+  {"reference", required_argument, 0, 12},
   {"verbose", no_argument, 0, 'v'},
   {"help", no_argument, &show_help, 1},
   {"version", no_argument, &show_version, 1},
@@ -277,18 +282,23 @@ usage (int status)
 	     program_name);
   else
     {
-      printf (_("Usage: %s [OPTION]... GROUP FILE...\n"), program_name);
+      printf (_("\
+Usage: %s [OPTION]... GROUP FILE...\n\
+  or:  %s [OPTION]... --reference=RFILE FILE...\n\
+"),
+	program_name, program_name);
       printf (_("\
 Change the group membership of each FILE to GROUP.\n\
 \n\
-  -c, --changes           like verbose but report only when a change is made\n\
-  -h, --no-dereference    affect symbolic links instead of any referenced file\n\
-                          (available only on systems with lchown system call)\n\
-  -f, --silent, --quiet   suppress most error messages\n\
-  -R, --recursive         change files and directories recursively\n\
-  -v, --verbose           output a diagnostic for every file processed\n\
-      --help              display this help and exit\n\
-      --version           output version information and exit\n\
+  -c, --changes          like verbose but report only when a change is made\n\
+  -h, --no-dereference   affect symbolic links instead of any referenced file\n\
+                         (available only on systems with lchown system call)\n\
+  -f, --silent, --quiet  suppress most error messages\n\
+      --reference=RFILE  use RFILE's group instead of using a GROUP value\n\
+  -R, --recursive        change files and directories recursively\n\
+  -v, --verbose          output a diagnostic for every file processed\n\
+      --help             display this help and exit\n\
+      --version          output version information and exit\n\
 "));
       puts (_("\nReport bugs to <fileutils-bugs@gnu.ai.mit.edu>."));
     }
@@ -314,6 +324,9 @@ main (int argc, char **argv)
       switch (optc)
 	{
 	case 0:
+	  break;
+	case 12:
+	  reference_file = optarg;
 	  break;
 	case 'R':
 	  recurse = 1;
@@ -345,7 +358,7 @@ main (int argc, char **argv)
   if (show_help)
     usage (0);
 
-  if (argc - optind <= 1)
+  if (argc - optind + (reference_file ? 1 : 0) <= 1)
     {
       error (0, 0, _("too few arguments"));
       usage (1);
@@ -358,7 +371,16 @@ main (int argc, char **argv)
     }
 #endif
 
-  parse_group (argv[optind++], &group);
+  if (reference_file)
+    {
+      struct stat ref_stats;
+      if (stat (reference_file, &ref_stats))
+        error (1, errno, "%s", reference_file);
+
+      group = ref_stats.st_gid;
+    }
+  else
+    parse_group (argv[optind++], &group);
 
   for (; optind < argc; ++optind)
     errors |= change_file_group (argv[optind], group);
