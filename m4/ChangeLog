@@ -1,5 +1,9 @@
 1999-01-30  Jim Meyering  <meyering@ascend.com>
 
+	* jm-mktime.m4: Make this a wrapper around the official AM_FUNC_MKTIME
+	rather than my private copy, now that the official one is up to date.
+	* mktime.m4: Remove file.
+
 	* getloadavg.m4: Use 3-arg form of AC_DEFINE.
 	* uptime.m4: Likewise.
 	* uintmax_t.m4: Likewise.
