@@ -19,26 +19,6 @@
    a fixed size buffer and therefore can only deliver a limited number
    of lines.
 
-   Options:
-   -b			Tail by N 512-byte blocks.
-   -c, --bytes=N[bkm]	Tail by N bytes
-			[or 512-byte blocks, kilobytes, or megabytes].
-   -f, --follow		Loop forever trying to read more characters at the
-			end of the file, on the assumption that the file
-			is growing.  Ignored if reading from a pipe.
-   -n, --lines=N	Tail by N lines.
-   -q, --quiet, --silent	Never print filename headers.
-   -v, --verbose		Always print filename headers.
-
-   If a number (N) starts with a `+', begin printing with the Nth item
-   from the start of each file, instead of from the end.
-
-   Reads from standard input if no files are given or when a filename of
-   ``-'' is encountered.
-   By default, filename headers are printed only more than one file
-   is given.
-   By default, prints the last 10 lines (tail -n 10).
-
    Original version by Paul Rubin <phr@ocf.berkeley.edu>.
    Extensions by David MacKenzie <djm@gnu.ai.mit.edu>.
    tail -f for multiple files by Ian Lance Taylor <ian@airs.com>.  */
