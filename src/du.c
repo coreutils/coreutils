@@ -530,8 +530,8 @@ count_entry (const char *ent, int top, dev_t last_dev, int depth)
       if (opt_one_file_system && !top && last_dev != dir_dev)
 	return 0;		/* Don't enter a new file system.  */
 
-#ifndef S_ISDIR
-# define S_ISDIR(s) 0
+#ifndef S_ISLNK
+# define S_ISLNK(s) 0
 #endif
       /* If we're dereferencing symlinks and we're about to chdir through
 	 a symlink, remember the current directory so we can return to it
