@@ -1,6 +1,30 @@
-2002-02-11  Jim Meyering  <meyering@lucent.com>
+2002-02-12  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.21.
+
+	* src/split.c (DEFAULT_SUFFIX_LENGTH): Define constant.
+	(suffix_length): Use it here.
+	(usage): Use it here.
+
+2002-02-05  Paul Eggert  <eggert@twinsun.com>
+
+	Change 'split' to conform to POSIX.  It now accepts an -a or
+	--suffix-length option, and refuses to generate more files
+	than there are suffixes.
+
+	* NEWS, doc/coreutils.texi: Document this.
+	* src/split.c: Include "dirname.h".
+	(outbase): Now a global var.
+	(outfile_end): Remove.
+	(suffix_length): New var.
+	(shortopts, longopts, main): Add -a or --suffix-length.
+	(next_file_name): Implement -a.  Do not extend the suffix length.
+	Check for file names that are too long.
+	(main): Move outfile initialization to next_file_name.
+
+	* src/split.c (shortopts): Remove -v (a typo).
+
+2002-02-11  Jim Meyering  <meyering@lucent.com>
 
 	* tests/misc/head-pos: New file/test for the change of 2002-02-08.
 	* tests/misc/Makefile.am (TESTS): Add head-pos.
