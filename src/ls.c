@@ -202,7 +202,7 @@ struct fileinfo
 struct bin_str
   {
     int len;			/* Number of bytes */
-    char *string;		/* Pointer to the same */
+    const char *string;		/* Pointer to the same */
   };
 
 #ifndef STDC_HEADERS
@@ -2605,7 +2605,7 @@ static void
 put_indicator (const struct bin_str *ind)
 {
   register int i;
-  register char *p;
+  register const char *p;
 
   p = ind->string;
 
