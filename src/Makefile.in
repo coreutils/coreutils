@@ -1594,9 +1594,10 @@ uninstall-local:
 	  rm -f $(installed_su); \
 	else :; fi
 localedir.h:
-	@rm -f $@
-	echo '#define LOCALEDIR "$(localedir)"' >$@
-	@chmod a-w $@
+	@rm -f $@ $@-t
+	echo '#define LOCALEDIR "$(localedir)"' >$@-t
+	@chmod a-w $@-t
+	mv $@-t $@
 dircolors.h: dcgen dircolors.hin
 	@rm -f $@ $@-t
 	$(PERL) -w -- $(srcdir)/dcgen $(srcdir)/dircolors.hin > $@-t
