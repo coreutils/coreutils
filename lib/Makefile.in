@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 1.4k from Makefile.am.
+# Makefile.in generated automatically by automake 1.5 from Makefile.am.
 
 # Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001
 # Free Software Foundation, Inc.
@@ -142,7 +142,7 @@ libfetish_a_SOURCES = \
   fnmatch.h \
   fopen-safer.c \
   fsusage.h \
-  full-write.c \
+  full-write.c full-write.h \
   getline.h \
   getpagesize.h \
   getstr.c getstr.h \
@@ -180,7 +180,6 @@ libfetish_a_SOURCES = \
   sha.c sha.h \
   stdio-safer.h \
   stripslash.c \
-  strtoxmax.c \
   strverscmp.h \
   unicodeio.c unicodeio.h \
   unistd-safer.h \
@@ -250,11 +249,11 @@ am_libfetish_a_OBJECTS = getdate$U.$(OBJEXT) posixtm$U.$(OBJEXT) \
 	quotearg$U.$(OBJEXT) readtokens$U.$(OBJEXT) \
 	safe-read$U.$(OBJEXT) same$U.$(OBJEXT) save-cwd$U.$(OBJEXT) \
 	savedir$U.$(OBJEXT) sha$U.$(OBJEXT) stripslash$U.$(OBJEXT) \
-	strtoxmax$U.$(OBJEXT) unicodeio$U.$(OBJEXT) \
-	userspec$U.$(OBJEXT) version-etc$U.$(OBJEXT) \
-	xgetcwd$U.$(OBJEXT) xgethostname$U.$(OBJEXT) \
-	xmalloc$U.$(OBJEXT) xstrdup$U.$(OBJEXT) xstrtod$U.$(OBJEXT) \
-	xstrtol$U.$(OBJEXT) xstrtoul$U.$(OBJEXT) xstrtoimax$U.$(OBJEXT) \
+	unicodeio$U.$(OBJEXT) userspec$U.$(OBJEXT) \
+	version-etc$U.$(OBJEXT) xgetcwd$U.$(OBJEXT) \
+	xgethostname$U.$(OBJEXT) xmalloc$U.$(OBJEXT) \
+	xstrdup$U.$(OBJEXT) xstrtod$U.$(OBJEXT) xstrtol$U.$(OBJEXT) \
+	xstrtoul$U.$(OBJEXT) xstrtoimax$U.$(OBJEXT) \
 	xstrtoumax$U.$(OBJEXT) yesno$U.$(OBJEXT)
 libfetish_a_OBJECTS = $(am_libfetish_a_OBJECTS)
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
@@ -315,15 +314,14 @@ depcomp = $(SHELL) $(top_srcdir)/depcomp
 @AMDEP_TRUE@	$(DEPDIR)/strtoimax.Po $(DEPDIR)/strtol.Po \
 @AMDEP_TRUE@	$(DEPDIR)/strtoll.Po $(DEPDIR)/strtoul.Po \
 @AMDEP_TRUE@	$(DEPDIR)/strtoull.Po $(DEPDIR)/strtoumax.Po \
-@AMDEP_TRUE@	$(DEPDIR)/strtoxmax$U.Po $(DEPDIR)/strverscmp.Po \
-@AMDEP_TRUE@	$(DEPDIR)/tempname.Po $(DEPDIR)/unicodeio$U.Po \
-@AMDEP_TRUE@	$(DEPDIR)/userspec$U.Po $(DEPDIR)/utime.Po \
-@AMDEP_TRUE@	$(DEPDIR)/version-etc$U.Po $(DEPDIR)/xgetcwd$U.Po \
-@AMDEP_TRUE@	$(DEPDIR)/xgethostname$U.Po $(DEPDIR)/xmalloc$U.Po \
-@AMDEP_TRUE@	$(DEPDIR)/xstrdup$U.Po $(DEPDIR)/xstrtod$U.Po \
-@AMDEP_TRUE@	$(DEPDIR)/xstrtoimax$U.Po $(DEPDIR)/xstrtol$U.Po \
-@AMDEP_TRUE@	$(DEPDIR)/xstrtoul$U.Po $(DEPDIR)/xstrtoumax$U.Po \
-@AMDEP_TRUE@	$(DEPDIR)/yesno$U.Po
+@AMDEP_TRUE@	$(DEPDIR)/strverscmp.Po $(DEPDIR)/tempname.Po \
+@AMDEP_TRUE@	$(DEPDIR)/unicodeio$U.Po $(DEPDIR)/userspec$U.Po \
+@AMDEP_TRUE@	$(DEPDIR)/utime.Po $(DEPDIR)/version-etc$U.Po \
+@AMDEP_TRUE@	$(DEPDIR)/xgetcwd$U.Po $(DEPDIR)/xgethostname$U.Po \
+@AMDEP_TRUE@	$(DEPDIR)/xmalloc$U.Po $(DEPDIR)/xstrdup$U.Po \
+@AMDEP_TRUE@	$(DEPDIR)/xstrtod$U.Po $(DEPDIR)/xstrtoimax$U.Po \
+@AMDEP_TRUE@	$(DEPDIR)/xstrtol$U.Po $(DEPDIR)/xstrtoul$U.Po \
+@AMDEP_TRUE@	$(DEPDIR)/xstrtoumax$U.Po $(DEPDIR)/yesno$U.Po
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
@@ -349,10 +347,10 @@ all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
 .SUFFIXES:
-.SUFFIXES: .sed .sin .c .h .o .obj .y
+.SUFFIXES: .sed .sin .c .o .obj .y
 $(srcdir)/Makefile.in:  Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
 	cd $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu  lib/Makefile
+	  $(AUTOMAKE) --gnits  lib/Makefile
 Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
 	cd $(top_builddir) && \
 	  CONFIG_HEADERS= CONFIG_LINKS= \
@@ -483,7 +481,6 @@ mostlyclean-kr:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/strtoul.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/strtoull.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/strtoumax.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/strtoxmax$U.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/strverscmp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/tempname.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/unicodeio$U.Po@am__quote@
@@ -722,8 +719,6 @@ strtoull_.c: strtoull.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/strtoull.c; then echo $(srcdir)/strtoull.c; else echo strtoull.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > strtoull_.c || rm -f strtoull_.c
 strtoumax_.c: strtoumax.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/strtoumax.c; then echo $(srcdir)/strtoumax.c; else echo strtoumax.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > strtoumax_.c || rm -f strtoumax_.c
-strtoxmax_.c: strtoxmax.c $(ANSI2KNR)
-	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/strtoxmax.c; then echo $(srcdir)/strtoxmax.c; else echo strtoxmax.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > strtoxmax_.c || rm -f strtoxmax_.c
 strverscmp_.c: strverscmp.c $(ANSI2KNR)
 	$(CPP) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) `if test -f $(srcdir)/strverscmp.c; then echo $(srcdir)/strverscmp.c; else echo strverscmp.c; fi` | sed 's/^# \([0-9]\)/#line \1/' | $(ANSI2KNR) > strverscmp_.c || rm -f strverscmp_.c
 tempname_.c: tempname.c $(ANSI2KNR)
@@ -789,13 +784,12 @@ stripslash_.$(OBJEXT) strncasecmp_.$(OBJEXT) strndup_.$(OBJEXT) \
 strnlen_.$(OBJEXT) strpbrk_.$(OBJEXT) strstr_.$(OBJEXT) \
 strtod_.$(OBJEXT) strtoimax_.$(OBJEXT) strtol_.$(OBJEXT) \
 strtoll_.$(OBJEXT) strtoul_.$(OBJEXT) strtoull_.$(OBJEXT) \
-strtoumax_.$(OBJEXT) strtoxmax_.$(OBJEXT) strverscmp_.$(OBJEXT) \
-tempname_.$(OBJEXT) unicodeio_.$(OBJEXT) userspec_.$(OBJEXT) \
-utime_.$(OBJEXT) version-etc_.$(OBJEXT) xgetcwd_.$(OBJEXT) \
-xgethostname_.$(OBJEXT) xmalloc_.$(OBJEXT) xstrdup_.$(OBJEXT) \
-xstrtod_.$(OBJEXT) xstrtoimax_.$(OBJEXT) xstrtol_.$(OBJEXT) \
-xstrtoul_.$(OBJEXT) xstrtoumax_.$(OBJEXT) yesno_.$(OBJEXT) : \
-$(ANSI2KNR)
+strtoumax_.$(OBJEXT) strverscmp_.$(OBJEXT) tempname_.$(OBJEXT) \
+unicodeio_.$(OBJEXT) userspec_.$(OBJEXT) utime_.$(OBJEXT) \
+version-etc_.$(OBJEXT) xgetcwd_.$(OBJEXT) xgethostname_.$(OBJEXT) \
+xmalloc_.$(OBJEXT) xstrdup_.$(OBJEXT) xstrtod_.$(OBJEXT) \
+xstrtoimax_.$(OBJEXT) xstrtol_.$(OBJEXT) xstrtoul_.$(OBJEXT) \
+xstrtoumax_.$(OBJEXT) yesno_.$(OBJEXT) : $(ANSI2KNR)
 
 .y.c:
 	$(YACCCOMPILE) $< && mv y.tab.c $@
@@ -806,8 +800,6 @@ $(ANSI2KNR)
 	    mv y.tab.h $*.h; \
 	  fi; \
 	fi
-.y.h:
-	@:
 uninstall-info-am:
 
 tags: TAGS
