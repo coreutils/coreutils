@@ -1,5 +1,16 @@
 2002-06-21  Jim Meyering  <meyering@lucent.com>
 
+	* c-bs-a.m4: Add comment, from diffutils-2.8.2.
+	* mbrtowc.m4: Likewise.
+
+	* mbstate_t.m4: Update from diffutils-2.8.2.
+	* mbswidth.m4: Reflect name change:
+	s/AC_MBSTATE_T/AC_TYPE_MBSTATE_T.
+	* prereq.m4 (jm_PREREQ_QUOTEARG): Likewise.
+
+	* lib-link.m4: Update from gettext-0.11.2.
+	* gettext.m4: Likewise.
+
 	* jm-macros.m4 (jm_CHECK_ALL_HEADERS): Check for hurd.h.
 	From Alfred M. Szmidt.
 
