@@ -1,5 +1,5 @@
 /* hostname - set or print the name of current host system
-   Copyright (C) 1994-1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1994-1997, 1999, 2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@
 #include <sys/types.h>
 
 #include "system.h"
+#include "closeout.h"
 #include "long-options.h"
 #include "error.h"
 
@@ -113,6 +114,7 @@ main (int argc, char **argv)
       if (hostname == NULL)
 	error (1, errno, _("cannot determine hostname"));
       printf ("%s\n", hostname);
+      close_stdout ();
     }
   else
     {
