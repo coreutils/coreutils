@@ -1,3 +1,13 @@
+2000-11-17  Akim Demaille  <akim@epita.fr>
+
+	* lib/obstack.h: Formatting changes.
+	(obstack_grow, obstack_grow0): Don't cast WHERE at all: that would
+	prevent type checking.
+	(obstack_ptr_grow, obstack_ptr_grow_fast): When assigning, don't
+	cast the value to (void *): assigning a `foo *' to a `void *'
+	variable is valid.
+	(obstack_int_grow, obstack_int_grow_fast): Don't cast AINT to int.
+
 2000-11-17  Jim Meyering  <meyering@lucent.com>
 
 	* strstr.c: Update from GNU libc.
