@@ -50,7 +50,12 @@ spring_forward_gap ()
 {
   /* glibc (up to about 1998-10-07) failed this test) */
   struct tm tm;
-  putenv ("TZ=America/Vancouver");
+
+  /* Use the portable POSIX.1 specification "TZ=PST8PDT,M4.1.0,M10.5.0"
+     instead of "TZ=America/Vancouver" in order to detect the bug even
+     on systems that don't support the Olson extension, or don't have the
+     full zoneinfo tables installed.  */
+  putenv ("TZ=PST8PDT,M4.1.0,M10.5.0");
   tm.tm_year = 98;
   tm.tm_mon = 3;
   tm.tm_mday = 5;
