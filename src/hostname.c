@@ -84,7 +84,7 @@ main (argc, argv)
     }
 #else
   if (argc == 2)
-    error (1, 0, "cannot set hostname; this system lacks the system call");
+    error (1, 0, "cannot set hostname; this system lacks the functionality");
 #endif
 
   if (argc == 1)
