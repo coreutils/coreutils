@@ -44,8 +44,6 @@
 # define GET_PRIORITY() getpriority (PRIO_PROCESS, 0)
 #endif
 
-static int isinteger PARAMS ((char *s));
-
 /* The name this program was run with. */
 char *program_name;
 
@@ -76,6 +74,25 @@ by default.  Range goes from -20 (highest priority) to 19 (lowest).\n\
       puts (_("\nReport bugs to <bug-sh-utils@gnu.org>."));
     }
   exit (status);
+}
+
+/* Return nonzero if S represents a (possibly signed) decimal integer,
+   zero if not. */
+
+static int
+isinteger (const char *s)
+{
+  if (*s == '-' || *s == '+')
+    ++s;
+  if (*s == 0)
+    return 0;
+  while (*s)
+    {
+      if (!ISDIGIT (*s))
+	return 0;
+      ++s;
+    }
+  return 1;
 }
 
 int
@@ -198,23 +215,4 @@ main (int argc, char **argv)
     error (0, errno, "%s", argv[i]);
     exit (exit_status);
   }
-}
-
-/* Return nonzero if S represents a (possibly signed) decimal integer,
-   zero if not. */
-
-static int
-isinteger (char *s)
-{
-  if (*s == '-' || *s == '+')
-    ++s;
-  if (*s == 0)
-    return 0;
-  while (*s)
-    {
-      if (!ISDIGIT (*s))
-	return 0;
-      ++s;
-    }
-  return 1;
 }
