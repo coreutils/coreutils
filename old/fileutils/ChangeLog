@@ -1,3 +1,13 @@
+1997-07-03  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/mv.c (apply_attributes): New function.
+	(copy_reg): Use apply_attributes instead of open-coding the pieces.
+	Now, failure to preserve file attributes does not cause mv to change
+	its exit status, and such failures elicit warning diagnostics.  This
+	behavior is required by POSIX.  Before, failure to preserve ownership
+	due to insufficient access was diagnosed only for root.
+	Prompted by a report from Bengt Martensson.
+
 Tue Jul  1 06:42:17 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/makepath.c (make_path): Reorder stat-then-mkdir-if-missing
