@@ -1,3 +1,8 @@
+1999-08-17  Paul Eggert  <eggert@twinsun.com>
+
+	* m4/largefile.m4 (AC_SYS_LARGEFILE): Fix typo: missing comma
+	in value for _FILE_OFFSET_BITS, which broke ports to HP-UX 10.20.
+
 1999-08-05  Jim Meyering  <meyering@ascend.com>
 
 	* getline.m4: Rename test file from conftestdata to conftest.data
