@@ -30,6 +30,7 @@
 #include "same.h"
 #include "backupfile.h"
 #include "error.h"
+#include "quote.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "ln"
@@ -157,7 +158,7 @@ do_link (const char *source, const char *dest)
     {
       if (STAT_LIKE_LINK (source, &source_stats) != 0)
 	{
-	  error (0, errno, "%s", source);
+	  error (0, errno, _("accessing %s"), quote (source));
 	  return 1;
 	}
 
@@ -165,12 +166,13 @@ do_link (const char *source, const char *dest)
 	{
 	  error (0, 0, _("%s: warning: making a hard link to a symbolic link\
  is not portable"),
-		 source);
+		 quote (source));
 	}
 
       if (!hard_dir_link && S_ISDIR (source_stats.st_mode))
 	{
-	  error (0, 0, _("%s: hard link not allowed for directory"), source);
+	  error (0, 0, _("%s: hard link not allowed for directory"),
+		 quote (source));
 	  return 1;
 	}
     }
@@ -178,7 +180,7 @@ do_link (const char *source, const char *dest)
   lstat_status = lstat (dest, &dest_stats);
   if (lstat_status != 0 && errno != ENOENT)
     {
-      error (0, errno, "%s", dest);
+      error (0, errno, _("accessing %s"), quote (dest));
       return 1;
     }
 
@@ -205,7 +207,7 @@ do_link (const char *source, const char *dest)
       lstat_status = lstat (dest, &dest_stats);
       if (lstat_status != 0 && errno != ENOENT)
 	{
-	  error (0, errno, "%s", dest);
+	  error (0, errno, _("accessing %s"), quote (dest));
 	  return 1;
 	}
     }
@@ -232,7 +234,8 @@ do_link (const char *source, const char *dest)
 	 name in the same directory.  */
       && (source_stats.st_nlink == 1 || same_name (source, dest)))
     {
-      error (0, 0, _("`%s' and `%s' are the same file"), source, dest);
+      error (0, 0, _("%s and %s are the same file"),
+	     quote_n (0, source), quote_n (1, dest));
       return 1;
     }
 
@@ -240,18 +243,18 @@ do_link (const char *source, const char *dest)
     {
       if (S_ISDIR (dest_stats.st_mode))
 	{
-	  error (0, 0, _("%s: cannot overwrite directory"), dest);
+	  error (0, 0, _("%s: cannot overwrite directory"), quote (dest));
 	  return 1;
 	}
       if (interactive)
 	{
-	  fprintf (stderr, _("%s: replace `%s'? "), program_name, dest);
+	  fprintf (stderr, _("%s: replace %s? "), program_name, quote (dest));
 	  if (!yesno ())
 	    return 0;
 	}
       else if (!remove_existing_files && backup_type == none)
 	{
-	  error (0, 0, _("%s: File exists"), dest);
+	  error (0, 0, _("%s: File exists"), quote (dest));
 	  return 1;
 	}
 
@@ -267,7 +270,7 @@ do_link (const char *source, const char *dest)
 	    {
 	      if (errno != ENOENT)
 		{
-		  error (0, errno, _("cannot backup `%s'"), dest);
+		  error (0, errno, _("cannot backup %s"), quote (dest));
 		  return 1;
 		}
 	      else
@@ -285,24 +288,24 @@ do_link (const char *source, const char *dest)
 	 DEST in that case, the subsequent LINKFUNC call would fail.  */
       if (unlink (dest) && errno != ENOENT)
 	{
-	  error (0, errno, _("cannot remove `%s'"), dest);
+	  error (0, errno, _("cannot remove %s"), quote (dest));
 	  return 1;
 	}
     }
   else if (errno != ENOENT)
     {
-      error (0, errno, "%s", dest);
+      error (0, errno, _("accessing %s"), quote (dest));
       return 1;
     }
 
   if (verbose)
     {
       printf ((symbolic_link
-	       ? _("create symbolic link `%s' to `%s'")
-	       : _("create hard link `%s' to `%s'")),
-	      dest, source);
+	       ? _("create symbolic link %s to %s")
+	       : _("create hard link %s to %s")),
+	      quote_n (0, dest), quote_n (1, source));
       if (backup_succeeded)
-	printf (_(" (backup: %s)"), dest_backup);
+	printf (_(" (backup: %s)"), quote (dest_backup));
       putchar ('\n');
     }
 
@@ -313,14 +316,14 @@ do_link (const char *source, const char *dest)
 
   error (0, errno,
 	 (symbolic_link
-	  ? _("create symbolic link `%s' to `%s'")
-	  : _("create hard link `%s' to `%s'")),
-	 dest, source);
+	  ? _("create symbolic link %s to %s")
+	  : _("create hard link %s to %s")),
+	 quote_n (0, dest), quote_n (1, source));
 
   if (dest_backup)
     {
       if (rename (dest_backup, dest))
-	error (0, errno, _("cannot un-backup `%s'"), dest);
+	error (0, errno, _("cannot un-backup %s"), quote (dest));
     }
   return 1;
 }
@@ -503,8 +506,8 @@ main (int argc, char **argv)
 
   if (target_directory_specified && !dest_is_dir)
     {
-      error (0, 0, _("specified target directory, `%s' is not a directory"),
-	     target_directory);
+      error (0, 0, _("specified target directory, %s is not a directory"),
+	     quote (target_directory));
       usage (1);
     }
 
