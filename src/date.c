@@ -517,6 +517,9 @@ show_date (const char *format, time_t when)
       return;
     }
 
+  if (rfc_format)
+    setlocale (LC_ALL, "C");
+
   do
     {
       out_length += 200;
