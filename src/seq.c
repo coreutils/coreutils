@@ -51,11 +51,6 @@ typedef enum Format_type Format_type;
     }						\
   while (0)
 
-static double scan_arg PARAMS ((const char *arg));
-static int check_format PARAMS ((const char *format_string, Format_type *format_type));
-static char *get_width_format PARAMS ((void));
-static int print_numbers PARAMS ((const char *format_str));
-
 /* If nonzero print all number with equal width.  */
 static int equal_width;
 
@@ -129,6 +124,268 @@ integer output formats %%d, %%u, %%o, %%x, %%X.\n\
     }
   exit (status);
 }
+
+/* Read a double value from the command line.
+   Return if the string is correct else signal error.  */
+
+static double
+scan_double_arg (const char *arg)
+{
+  double ret_val;
+
+  if (xstrtod (arg, NULL, &ret_val))
+    {
+      error (0, 0, _("invalid floating point argument: %s"), arg);
+      usage (1);
+      /* NOTREACHED */
+    }
+
+  return ret_val;
+}
+
+/* Read an int value from the command line.
+   Return if the string is correct else signal error.  */
+
+static int
+scan_int_arg (const char *arg)
+{
+  long int ret_val;
+
+  if (xstrtol (arg, NULL, 10, &ret_val, "") != LONGINT_OK
+      || ret_val < INT_MIN || ret_val > INT_MAX)
+    {
+      error (0, 0, _("invalid integer argument: %s"), arg);
+      usage (1);
+      /* NOTREACHED */
+    }
+
+  return ret_val;
+}
+
+/* Read a double value from the command line.
+   Return if the string is correct else signal error.  */
+
+static double
+scan_arg (const char *arg)
+{
+  switch (format_type)
+    {
+    case FT_INT:
+      return (double) scan_int_arg (arg);
+    case FT_DOUBLE:
+      return scan_double_arg (arg);
+    default:
+      abort ();
+    }
+}
+
+/* Check whether the format string is valid for a single `double'
+   argument or a single `int' argument.  Return 0 if not, 1 if correct.
+   Set *INTCONV to non-zero if the conversion specifier is valid
+   for a single `int' argument, otherwise to zero.  */
+
+static int
+check_format (const char *fmt, Format_type *format_type_ptr)
+{
+  *format_type_ptr = FT_DOUBLE;
+
+  while (*fmt != '\0')
+    {
+      if (*fmt == '%')
+	{
+	  fmt++;
+	  if (*fmt != '%')
+	    break;
+	}
+
+      fmt++;
+    }
+  if (*fmt == '\0')
+    return 0;
+
+  fmt += strspn (fmt, "-+#0");
+  if (ISDIGIT (*fmt))
+    {
+      fmt += strspn (fmt, "0123456789");
+
+      if (*fmt == '.')
+	fmt += strspn (++fmt, "0123456789");
+    }
+
+  if (*fmt == 'd' || *fmt == 'u' || *fmt == 'o' || *fmt == 'x' || *fmt == 'X')
+    *format_type_ptr = FT_INT;
+  else if (!(*fmt == 'e' || *fmt == 'f' || *fmt == 'g'))
+    return 0;
+
+  fmt++;
+  while (*fmt != '\0')
+    {
+      if (*fmt == '%')
+	{
+	  fmt++;
+	  if (*fmt != '%')
+	    return 0;
+	}
+
+      fmt++;
+    }
+
+  return 1;
+}
+
+/* Actually print the sequence of numbers in the specified range, with the
+   given or default stepping and format.  */
+static int
+print_numbers (const char *fmt)
+{
+  if (first > last)
+    {
+      int i;
+
+      if (step >= 0)
+	{
+	  error (0, 0,
+		 _("when the starting value is larger than the limit,\n\
+the increment must be negative"));
+	  usage (1);
+	  /* NOTREACHED */
+	}
+
+      DO_printf (fmt, first);
+      for (i = 1; /* empty */; i++)
+	{
+	  double x = first + i * step;
+
+	  if (x < last)
+	    break;
+
+	  fputs (separator, stdout);
+	  DO_printf (fmt, x);
+	}
+    }
+  else
+    {
+      int i;
+
+      if (step <= 0)
+	{
+	  error (0, 0,
+		 _("when the starting value is smaller than the limit,\n\
+the increment must be positive"));
+	  usage (1);
+	  /* NOTREACHED */
+	}
+
+      DO_printf (fmt, first);
+      for (i = 1; /* empty */; i++)
+	{
+	  double x = first + i * step;
+
+	  if (x > last)
+	    break;
+
+	  fputs (separator, stdout);
+	  DO_printf (fmt, x);
+	}
+    }
+  fputs (terminator, stdout);
+
+  return 0;
+}
+
+#if defined (HAVE_RINT) && defined (HAVE_MODF) && defined (HAVE_FLOOR)
+
+/* Return a printf-style format string with which all selected numbers
+   will format to strings of the same width.  */
+
+static char *
+get_width_format ()
+{
+  static char buffer[256];
+  int full_width;
+  int frac_width;
+  int width1, width2;
+  double max_val;
+  double min_val;
+  double temp;
+
+  if (first > last)
+    {
+      min_val = first - step * floor ((first - last) / step);
+      max_val = first;
+    }
+  else
+    {
+      min_val = first;
+      max_val = first + step * floor ((last - first) / step);
+    }
+
+  sprintf (buffer, "%g", rint (max_val));
+  if (buffer[strspn (buffer, "0123456789")] != '\0')
+    return "%g";
+  width1 = strlen (buffer);
+
+  if (min_val < 0.0)
+    {
+      sprintf (buffer, "%g", rint (min_val));
+      if (buffer[strspn (buffer, "-0123456789")] != '\0')
+	return "%g";
+      width2 = strlen (buffer);
+
+      width1 = width1 > width2 ? width1 : width2;
+    }
+  full_width = width1;
+
+  sprintf (buffer, "%g", 1.0 + modf (fabs (min_val), &temp));
+  width1 = strlen (buffer);
+  if (width1 == 1)
+    width1 = 0;
+  else
+    {
+      if (buffer[0] != '1'
+	  /* FIXME: assumes that decimal_point is a single character
+	     string.  */
+	  || buffer[1] != decimal_point[0]
+	  || buffer[2 + strspn (&buffer[2], "0123456789")] != '\0')
+	return "%g";
+      width1 -= 2;
+    }
+
+  sprintf (buffer, "%g", 1.0 + modf (fabs (step), &temp));
+  width2 = strlen (buffer);
+  if (width2 == 1)
+    width2 = 0;
+  else
+    {
+      if (buffer[0] != '1'
+	  /* FIXME: assumes that decimal_point is a single character
+	     string.  */
+	  || buffer[1] != decimal_point[0]
+	  || buffer[2 + strspn (&buffer[2], "0123456789")] != '\0')
+	return "%g";
+      width2 -= 2;
+    }
+  frac_width = width1 > width2 ? width1 : width2;
+
+  if (frac_width)
+    sprintf (buffer, "%%0%d.%df", full_width + 1 + frac_width, frac_width);
+  else
+    sprintf (buffer, "%%0%dg", full_width);
+
+  return buffer;
+}
+
+#else	/* one of the math functions rint, modf, floor is missing.  */
+
+static char *
+get_width_format (void)
+{
+  /* We cannot compute the needed information to determine the correct
+     answer.  So we simply return a value that works for all cases.  */
+  return "%g";
+}
+
+#endif
 
 int
 main (int argc, char **argv)
@@ -275,266 +532,4 @@ format string may not be specified when printing equal width strings"));
 
   exit (errs);
   /* NOTREACHED */
-}
-
-/* Read a double value from the command line.
-   Return if the string is correct else signal error.  */
-
-static double
-scan_double_arg (const char *arg)
-{
-  double ret_val;
-
-  if (xstrtod (arg, NULL, &ret_val))
-    {
-      error (0, 0, _("invalid floating point argument: %s"), arg);
-      usage (1);
-      /* NOTREACHED */
-    }
-
-  return ret_val;
-}
-
-/* Read an int value from the command line.
-   Return if the string is correct else signal error.  */
-
-static int
-scan_int_arg (const char *arg)
-{
-  long int ret_val;
-
-  if (xstrtol (arg, NULL, 10, &ret_val, "") != LONGINT_OK
-      || ret_val < INT_MIN || ret_val > INT_MAX)
-    {
-      error (0, 0, _("invalid integer argument: %s"), arg);
-      usage (1);
-      /* NOTREACHED */
-    }
-
-  return ret_val;
-}
-
-/* Read a double value from the command line.
-   Return if the string is correct else signal error.  */
-
-static double
-scan_arg (const char *arg)
-{
-  switch (format_type)
-    {
-    case FT_INT:
-      return (double) scan_int_arg (arg);
-    case FT_DOUBLE:
-      return scan_double_arg (arg);
-    default:
-      abort ();
-    }
-}
-
-/* Check whether the format string is valid for a single `double'
-   argument or a single `int' argument.  Return 0 if not, 1 if correct.
-   Set *INTCONV to non-zero if the conversion specifier is valid
-   for a single `int' argument, otherwise to zero.  */
-
-static int
-check_format (const char *fmt, Format_type *format_type_ptr)
-{
-  *format_type_ptr = FT_DOUBLE;
-
-  while (*fmt != '\0')
-    {
-      if (*fmt == '%')
-	{
-	  fmt++;
-	  if (*fmt != '%')
-	    break;
-	}
-
-      fmt++;
-    }
-  if (*fmt == '\0')
-    return 0;
-
-  fmt += strspn (fmt, "-+#0");
-  if (ISDIGIT (*fmt))
-    {
-      fmt += strspn (fmt, "0123456789");
-
-      if (*fmt == '.')
-	fmt += strspn (++fmt, "0123456789");
-    }
-
-  if (*fmt == 'd' || *fmt == 'u' || *fmt == 'o' || *fmt == 'x' || *fmt == 'X')
-    *format_type_ptr = FT_INT;
-  else if (!(*fmt == 'e' || *fmt == 'f' || *fmt == 'g'))
-    return 0;
-
-  fmt++;
-  while (*fmt != '\0')
-    {
-      if (*fmt == '%')
-	{
-	  fmt++;
-	  if (*fmt != '%')
-	    return 0;
-	}
-
-      fmt++;
-    }
-
-  return 1;
-}
-
-#if defined (HAVE_RINT) && defined (HAVE_MODF) && defined (HAVE_FLOOR)
-
-/* Return a printf-style format string with which all selected numbers
-   will format to strings of the same width.  */
-
-static char *
-get_width_format ()
-{
-  static char buffer[256];
-  int full_width;
-  int frac_width;
-  int width1, width2;
-  double max_val;
-  double min_val;
-  double temp;
-
-  if (first > last)
-    {
-      min_val = first - step * floor ((first - last) / step);
-      max_val = first;
-    }
-  else
-    {
-      min_val = first;
-      max_val = first + step * floor ((last - first) / step);
-    }
-
-  sprintf (buffer, "%g", rint (max_val));
-  if (buffer[strspn (buffer, "0123456789")] != '\0')
-    return "%g";
-  width1 = strlen (buffer);
-
-  if (min_val < 0.0)
-    {
-      sprintf (buffer, "%g", rint (min_val));
-      if (buffer[strspn (buffer, "-0123456789")] != '\0')
-	return "%g";
-      width2 = strlen (buffer);
-
-      width1 = width1 > width2 ? width1 : width2;
-    }
-  full_width = width1;
-
-  sprintf (buffer, "%g", 1.0 + modf (fabs (min_val), &temp));
-  width1 = strlen (buffer);
-  if (width1 == 1)
-    width1 = 0;
-  else
-    {
-      if (buffer[0] != '1'
-	  /* FIXME: assumes that decimal_point is a single character
-	     string.  */
-	  || buffer[1] != decimal_point[0]
-	  || buffer[2 + strspn (&buffer[2], "0123456789")] != '\0')
-	return "%g";
-      width1 -= 2;
-    }
-
-  sprintf (buffer, "%g", 1.0 + modf (fabs (step), &temp));
-  width2 = strlen (buffer);
-  if (width2 == 1)
-    width2 = 0;
-  else
-    {
-      if (buffer[0] != '1'
-	  /* FIXME: assumes that decimal_point is a single character
-	     string.  */
-	  || buffer[1] != decimal_point[0]
-	  || buffer[2 + strspn (&buffer[2], "0123456789")] != '\0')
-	return "%g";
-      width2 -= 2;
-    }
-  frac_width = width1 > width2 ? width1 : width2;
-
-  if (frac_width)
-    sprintf (buffer, "%%0%d.%df", full_width + 1 + frac_width, frac_width);
-  else
-    sprintf (buffer, "%%0%dg", full_width);
-
-  return buffer;
-}
-
-#else	/* one of the math functions rint, modf, floor is missing.  */
-
-static char *
-get_width_format (void)
-{
-  /* We cannot compute the needed information to determine the correct
-     answer.  So we simply return a value that works for all cases.  */
-  return "%g";
-}
-
-#endif
-
-/* Actually print the sequence of numbers in the specified range, with the
-   given or default stepping and format.  */
-static int
-print_numbers (const char *fmt)
-{
-  if (first > last)
-    {
-      int i;
-
-      if (step >= 0)
-	{
-	  error (0, 0,
-		 _("when the starting value is larger than the limit,\n\
-the increment must be negative"));
-	  usage (1);
-	  /* NOTREACHED */
-	}
-
-      DO_printf (fmt, first);
-      for (i = 1; /* empty */; i++)
-	{
-	  double x = first + i * step;
-
-	  if (x < last)
-	    break;
-
-	  fputs (separator, stdout);
-	  DO_printf (fmt, x);
-	}
-    }
-  else
-    {
-      int i;
-
-      if (step <= 0)
-	{
-	  error (0, 0,
-		 _("when the starting value is smaller than the limit,\n\
-the increment must be positive"));
-	  usage (1);
-	  /* NOTREACHED */
-	}
-
-      DO_printf (fmt, first);
-      for (i = 1; /* empty */; i++)
-	{
-	  double x = first + i * step;
-
-	  if (x > last)
-	    break;
-
-	  fputs (separator, stdout);
-	  DO_printf (fmt, x);
-	}
-    }
-  fputs (terminator, stdout);
-
-  return 0;
 }
