@@ -1,4 +1,4 @@
-#serial 15
+#serial 16
 
 dnl This is just a wrapper function to encapsulate this kludge.
 dnl Putting it in a separate file like this helps share it between
@@ -55,6 +55,7 @@ AC_DEFUN(jm_CHECK_DECLS,
     lseek,
     malloc,
     memchr,
+    memrchr,
     nanosleep,
     realloc,
     stpcpy,
