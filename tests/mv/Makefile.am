@@ -4,6 +4,7 @@ TESTS = mv-special-1
 EXTRA_DIST = $(TESTS) setup
 TESTS_ENVIRONMENT = \
   DF=../../src/df \
+  LS=../../src/ls \
   MKDIR=../../src/mkdir \
   MKNOD=../../src/mknod \
   MV=../../src/mv \
