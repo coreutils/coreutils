@@ -56,6 +56,7 @@
 /* BeOS <sys/socket.h> already #defines false 0, true 1.  We use the same
    definitions below, but temporarily we have to #undef them.  */
 #ifdef __BEOS__
+# include <OS.h> /* defines bool but not _Bool */
 # undef false
 # undef true
 #endif
@@ -69,7 +70,7 @@
    (see ISO C 99 6.7.2.2.(4)); however, '_Bool' must promote to 'int'
    (see ISO C 99 6.3.1.1.(2)).  So we add a negative value to the
    enum; this ensures that '_Bool' promotes to 'int'.  */
-#ifndef __cplusplus
+#if !(defined __cplusplus || defined __BEOS__)
 # if !@HAVE__BOOL@
 #  if defined __SUNPRO_C && (__SUNPRO_C < 0x550 || __STDC__ == 1)
     /* Avoid stupid "warning: _Bool is a keyword in ISO C99".  */
