@@ -19,6 +19,8 @@
 
 #include <config.h>
 
+#include <stdio.h>
+
 #include <sys/stat.h>
 #if defined(STDC_HEADERS) || defined(HAVE_STRING_H)
 # include <string.h>
