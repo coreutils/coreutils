@@ -1,6 +1,10 @@
-2001-09-25  Jim Meyering  <meyering@lucent.com>
+2001-09-26  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.12.
+
+	* configure.ac: Renamed from configure.in.
+
+2001-09-25  Jim Meyering  <meyering@lucent.com>
 
 	* src/Makefile.am:
 	(factor_DEPENDENCIES, printf_DEPENDENCIES seq_DEPENDENCIES):
