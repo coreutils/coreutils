@@ -15,17 +15,7 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
-/* Usage: mknod [-m mode] [--mode=mode] path {bcu} major minor
-		make a block or character device node
-          mknod [-m mode] [--mode=mode] path p
-		make a FIFO (named pipe)
-
-   Options:
-   -m, --mode=mode	Set the mode of created nodes to MODE, which is
-			symbolic as in chmod and uses the umask as a point of
-			departure.
-
-   David MacKenzie <djm@ai.mit.edu>  */
+/* Written by David MacKenzie <djm@ai.mit.edu>  */
 
 #include <config.h>
 #include <stdio.h>
@@ -62,7 +52,8 @@ usage (int status)
 	     program_name);
   else
     {
-      printf (_("Usage: %s [OPTION]... NAME TYPE [MAJOR MINOR]\n"), program_name);
+      printf (_("Usage: %s [OPTION]... NAME TYPE [MAJOR MINOR]\n"),
+	      program_name);
       fputs (_("\
 Create the special file NAME of the given TYPE.\n\
 \n\
@@ -77,7 +68,12 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
 \n\
-MAJOR MINOR are forbidden for TYPE p, mandatory otherwise.  TYPE may be:\n\
+Both MAJOR and MINOR must be specified when TYPE is b, c, or u, and they\n\
+must be omitted when TYPE is p.  If MAJOR or MINOR begins with 0x or 0X,\n\
+it is interpreted as hexadecimal; otherwise, if it begins with 0, as octal;\n\
+otherwise, as decimal.  TYPE may be:\n\
+"), stdout);
+      fputs (_("\
 \n\
   b      create a block (buffered) special file\n\
   c, u   create a character (unbuffered) special file\n\
