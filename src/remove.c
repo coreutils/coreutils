@@ -574,7 +574,11 @@ prompt (char const *filename, struct rm_options const *x,
 
       /* Using permissions doesn't make sense for symlinks.  */
       if (S_ISLNK (sbuf.st_mode))
-	write_protected = 0;
+	{
+	  if ( ! x->interactive)
+	    return RM_OK;
+	  write_protected = 0;
+	}
 
       /* Issue the prompt.  */
       {
