@@ -38,6 +38,17 @@
 #include "xalloc.h"
 #include "xstrtol.h"
 
+#if HAVE_SYS_RESOURCE_H
+# include <sys/resource.h>
+#endif
+#ifndef RLIMIT_DATA
+struct rlimit { size_t rlim_cur; };
+# define getrlimit(Resource, Rlp) (-1)
+#endif
+#ifndef RLIMIT_AS
+# define RLIMIT_AS RLIMIT_DATA
+#endif
+
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "sort"
 
@@ -120,24 +131,20 @@ struct line
   char *keylim;			/* Limit of first key. */
 };
 
-/* Arrays of lines. */
-struct lines
-{
-  struct line *lines;		/* Dynamically allocated array of lines. */
-  size_t used;			/* Number of slots used. */
-  size_t alloc;			/* Number of slots allocated. */
-  size_t limit;			/* Max number of slots to allocate.  */
-};
-
 /* Input buffers. */
 struct buffer
 {
-  char *buf;			/* Dynamically allocated buffer. */
-  size_t used;			/* Number of bytes used. */
+  char *buf;			/* Dynamically allocated buffer,
+				   partitioned into 3 regions:
+				   - input data;
+				   - unused area;
+				   - an array of lines, in reverse order.  */
+  size_t used;			/* Number of bytes used for input data.  */
+  size_t nlines;		/* Number of lines in the line array.  */
   size_t alloc;			/* Number of bytes allocated. */
   size_t left;			/* Number of bytes left from previous reads. */
-  size_t newline_free;		/* Number of left bytes that are known
-                                   to be newline-free.  */
+  size_t line_bytes;		/* Number of bytes to reserve for each line. */
+  int eof;			/* An EOF has been read.  */
 };
 
 struct keyfield
@@ -217,18 +224,14 @@ static MONTHTAB_CONST struct month monthtab[] =
 /* During the merge phase, the number of files to merge at once. */
 #define NMERGE 16
 
-/* Minimum text buffer size.  */
-#define SORTALLOC_MIN (4 * NMERGE * sizeof (struct line))
+/* The approximate maximum number of bytes of main memory to use.  */
+static size_t sort_size;
 
-/* Minimum text buffer size if the user does not specify a size.  */
-#define SORTALLOC_DEFAULT_MIN max (SORTALLOC_MIN, 1024 * 1024)
+/* Minimum sort size; the code might not work with smaller sizes.  */
+#define MIN_SORT_SIZE (NMERGE * (2 + sizeof (struct line)))
 
-/* Initial text buffer size for main-memory sorting.  The buffer will
-   grow only if a line longer than this is seen.  */
-static size_t sortalloc;
-
-/* Guess of average line length. */
-static size_t const linelength = 30;
+/* The guessed size for non-regular files.  */
+#define INPUT_FILE_SIZE_GUESS (1024 * 1024)
 
 /* Array of directory names in which any temporary files are to be created. */
 static char const **temp_dirs;
@@ -607,14 +610,10 @@ specify_sort_size (char const *s)
 
   if (e == LONGINT_OK)
     {
-      /* Normally a buffer is allocated with sortalloc bytes, and a
-	 line table with at most sortalloc / 2 bytes.  So adjust the
-	 size so that size * 1.5 is about n.  */
-      sortalloc = (n / 3) * 2;
-      if (sortalloc == (n / 3) * 2)
+      sort_size = n;
+      if (sort_size == n)
 	{
-	  if (sortalloc < SORTALLOC_MIN)
-	    sortalloc = SORTALLOC_MIN;
+	  sort_size = MAX (sort_size, MIN_SORT_SIZE);
 	  return;
 	}
 
@@ -624,100 +623,108 @@ specify_sort_size (char const *s)
   STRTOL_FATAL_ERROR (s, _("sort size"), e);
 }
 
-/* Set the sort size to the default.  */
-static void
+/* Return the default sort size.  */
+static size_t
 default_sort_size (void)
 {
-  /* Set sortalloc to 50% of available memory, unless it overflows.  */
-  double mem = physmem_available ();
-  sortalloc = min (mem, SIZE_MAX);
-  sortalloc >>= 1;
+  /* Let MEM be available memory or 1/8 of total memory, whichever
+     is greater.  */
+  double avail = physmem_available ();
+  double total = physmem_total ();
+  double mem = MAX (avail, total / 8);
+  struct rlimit rlimit;
 
-  if (sortalloc < SORTALLOC_DEFAULT_MIN)
-    sortalloc = SORTALLOC_DEFAULT_MIN;
+  /* Let SIZE be MEM, but no more than the maximum object size or
+     system resource limits.  Avoid the MIN macro here, as it is not
+     quite right when only one argument is floating point.  Don't
+     bother to check for values like RLIM_INFINITY since in practice
+     they are not much less than SIZE_MAX.  */
+  size_t size = SIZE_MAX;
+  if (mem < size)
+    size = mem;
+  if (getrlimit (RLIMIT_DATA, &rlimit) == 0 && rlimit.rlim_cur < size)
+    size = rlimit.rlim_cur;
+  if (getrlimit (RLIMIT_AS, &rlimit) == 0 && rlimit.rlim_cur < size)
+    size = rlimit.rlim_cur;
+
+  /* Use half of SIZE, but no less than the minimum.  */
+  return MAX (size / 2, MIN_SORT_SIZE);
 }
 
-/* Initialize BUF, allocating ALLOC bytes initially. */
-
-static void
-initbuf (struct buffer *buf, size_t alloc)
-{
-  buf->alloc = alloc;
-  buf->buf = xmalloc (buf->alloc);
-  buf->used = buf->left = buf->newline_free = 0;
-}
-
-/* Fill BUF reading from FP, moving buf->left bytes from the end
-   of buf->buf to the beginning first.  If EOF is reached and the
-   file wasn't terminated by a newline, supply one.  Return a count
-   of bytes buffered. */
+/* Return the sort buffer size to use with the input files identified
+   by FPS and FILES, which are alternate paths to the same files.
+   NFILES gives the number of input files; NFPS may be less.  Assume
+   that each input line requires LINE_BYTES extra bytes' worth of line
+   information.  Return at most SIZE_BOUND.  */
 
 static size_t
-fillbuf (struct buffer *buf, FILE *fp)
+sort_buffer_size (FILE *const *fps, int nfps,
+		  char *const *files, int nfiles,
+		  size_t line_bytes, size_t size_bound)
 {
-  if (buf->used != buf->left)
-    {
-      memmove (buf->buf, buf->buf + buf->used - buf->left, buf->left);
-      buf->used = buf->left;
-    }
+  /* In the worst case, each input byte is a newline.  */
+  size_t worst_case_per_input_byte = line_bytes + 1;
 
-  while (!feof (fp))
+  /* Keep enough room for one extra input line and an extra byte.
+     This extra room might be needed when preparing to read EOF.  */
+  size_t size = worst_case_per_input_byte + 1;
+
+  int i;
+
+  for (i = 0; i < nfiles; i++)
     {
-      size_t cc;
-      if (buf->used == buf->alloc)
+      struct stat st;
+      off_t file_size;
+      size_t worst_case;
+
+      if ((i < nfps ? fstat (fileno (fps[i]), &st)
+	   : strcmp (files[i], "-") == 0 ? fstat (STDIN_FILENO, &st)
+	   : stat (files[i], &st))
+	  != 0)
 	{
-	  buf->alloc *= 2;
-	  if (buf->alloc < buf->used)
-	    xalloc_die ();
-	  buf->buf = xrealloc (buf->buf, buf->alloc);
-	}
-      cc = fread (buf->buf + buf->used, 1, buf->alloc - buf->used, fp);
-      if (ferror (fp))
-	{
-	  error (0, errno, _("read error"));
+	  error (0, errno, "%s", files[i]);
 	  cleanup ();
 	  exit (SORT_FAILURE);
 	}
-      buf->used += cc;
-      if (memchr (buf->buf + buf->used - cc, eolchar, cc))
-	break;
+
+      file_size = S_ISREG (st.st_mode) ? st.st_size : INPUT_FILE_SIZE_GUESS;
+
+      /* Add the amount of memory needed to represent the worst case
+	 where the input consists entirely of newlines followed by a
+	 single non-newline.  Check for overflow.  */
+      worst_case = file_size * worst_case_per_input_byte + 1;
+      if (file_size != worst_case / worst_case_per_input_byte
+	  || size_bound - size <= worst_case)
+	return size_bound;
+      size += worst_case;
     }
 
-  if (feof (fp) && buf->used && buf->buf[buf->used - 1] != eolchar)
-    {
-      if (buf->used == buf->alloc)
-	{
-	  /* If the buffer isn't parsed yet, don't increase the buffer
-	     size to append a newline, as this won't be needed unless
-	     the buffer turns out to be newline-free.  */
-	  if (buf->newline_free != buf->used)
-	    return buf->used;
-	  buf->alloc *= 2;
-	  if (buf->alloc < buf->used)
-	    xalloc_die ();
-	  buf->buf = xrealloc (buf->buf, buf->alloc);
-	}
-      buf->buf[buf->used++] = eolchar;
-    }
-
-  return buf->used;
+  return size;
 }
 
-/* Initialize LINES, allocating space for ALLOC lines initially.
-   LIMIT is the maximum possible number of lines to allocate space
-   for, ever.  */
+/* Initialize BUF.  Reserve LINE_BYTES bytes for each line; LINE_BYTES
+   must be at least sizeof (struct line).  Allocate ALLOC bytes
+   initially.  */
 
 static void
-initlines (struct lines *lines, size_t alloc, size_t limit)
+initbuf (struct buffer *buf, size_t line_bytes, size_t alloc)
 {
-  if (limit < alloc)
-    alloc = limit;
-  lines->alloc = alloc;
-  if (SIZE_MAX / sizeof (struct line) < alloc)
-    xalloc_die ();
-  lines->lines = (struct line *) xmalloc (lines->alloc * sizeof (struct line));
-  lines->used = 0;
-  lines->limit = limit;
+  /* Ensure that the line array is properly aligned.  */
+  alloc += sizeof (struct line) - alloc % sizeof (struct line);
+
+  buf->line_bytes = line_bytes;
+  buf->alloc = alloc;
+  buf->buf = xmalloc (buf->alloc);
+  buf->used = buf->left = buf->nlines = 0;
+  buf->eof = 0;
+}
+
+/* Return one past the limit of the line array.  */
+
+static inline struct line *
+buffer_linelim (struct buffer const *buf)
+{
+  return (struct line *) (buf->buf + buf->alloc);
 }
 
 /* Return a pointer to the first character of the field specified
@@ -870,58 +877,119 @@ trim_trailing_blanks (const char *a_start, char **a_end)
     --(*a_end);
 }
 
-/* Find the lines in BUF, storing pointers and lengths in LINES.  */
+/* Fill BUF reading from FP, moving buf->left bytes from the end
+   of buf->buf to the beginning first.  If EOF is reached and the
+   file wasn't terminated by a newline, supply one.  Set up BUF's line
+   table too.  FILE is the name of the file corresponding to FP.
+   Return nonzero if some input was read.  */
 
-static void
-findlines (struct buffer *buf, struct lines *lines)
+static int
+fillbuf (struct buffer *buf, register FILE *fp, char const *file)
 {
-  register char *beg = buf->buf, *lim = buf->buf + buf->used, *ptr;
-  struct keyfield *key = keylist;
+  struct keyfield const *key = keylist;
+  char eol = eolchar;
+  size_t line_bytes = buf->line_bytes;
 
-  lines->used = 0;
+  if (buf->eof)
+    return 0;
 
-  while (beg < lim && (ptr = memchr (beg, eolchar, lim - beg))
-	 && lines->used < lines->limit)
+  if (buf->used != buf->left)
     {
-      struct line *line;
-
-      if (lines->used == lines->alloc)
-	{
-	  lines->alloc = min (2 * lines->alloc, lines->limit);
-	  if (SIZE_MAX / sizeof (struct line) < lines->alloc)
-	    xalloc_die ();
-	  lines->lines = (struct line *)
-	    xrealloc ((char *) lines->lines,
-		      lines->alloc * sizeof (struct line));
-	}
-
-      line = &lines->lines[lines->used];
-      line->text = beg;
-      line->length = ptr + 1 - beg;
-
-      if (key)
-	{
-	  /* Precompute the position of the first key for efficiency. */
-	  line->keylim = (key->eword == -1 ? ptr : limfield (line, key));
-
-	  if (key->sword != -1)
-	    line->keybeg = begfield (line, key);
-	  else
-	    {
-	      if (key->skipsblanks)
-		while (blanks[UCHAR (*beg)])
-		  ++beg;
-	      line->keybeg = beg;
-	    }
-	  if (key->skipeblanks)
-	    trim_trailing_blanks (line->keybeg, &line->keylim);
-	}
-
-      ++lines->used;
-      beg = ptr + 1;
+      memmove (buf->buf, buf->buf + buf->used - buf->left, buf->left);
+      buf->used = buf->left;
+      buf->nlines = 0;
     }
 
-  buf->newline_free = buf->left = lim - beg;
+  for (;;)
+    {
+      char *ptr = buf->buf + buf->used;
+      struct line *linelim = buffer_linelim (buf);
+      struct line *line = linelim - buf->nlines;
+      size_t avail = (char *) linelim - buf->nlines * line_bytes - ptr;
+      char *line_start = buf->nlines ? line->text + line->length : buf->buf;
+
+      while (line_bytes + 1 < avail)
+	{
+	  /* Read as many bytes as possible, but do not read so many
+	     bytes that there might not be enough room for the
+	     corresponding line array.  The worst case is when the
+	     rest of the input file consists entirely of newlines,
+	     except that the last byte is not a newline.  */
+	  size_t readsize = (avail - 1) / (line_bytes + 1);
+	  size_t bytes_read = fread (ptr, 1, readsize, fp);
+	  char *ptrlim = ptr + bytes_read;
+	  char *p;
+	  avail -= bytes_read;
+
+	  if (bytes_read != readsize)
+	    {
+	      if (ferror (fp))
+		{
+		  error (0, errno, "%s", file);
+		  cleanup ();
+		  exit (SORT_FAILURE);
+		}
+	      if (feof (fp))
+		{
+		  buf->eof = 1;
+		  if (buf->buf == ptrlim)
+		    return 0;
+		  if (ptrlim[-1] != eol)
+		    *ptrlim++ = eol;
+		}
+	    }
+
+	  /* Find and record each line in the just-read input.  */
+	  while ((p = memchr (ptr, eol, ptrlim - ptr)))
+	    {
+	      ptr = p + 1;
+	      line--;
+	      line->text = line_start;
+	      line->length = ptr - line_start;
+	      avail -= line_bytes;
+
+	      if (key)
+		{
+		  /* Precompute the position of the first key for
+                     efficiency. */
+		  line->keylim = key->eword == -1 ? p : limfield (line, key);
+
+		  if (key->sword != -1)
+		    line->keybeg = begfield (line, key);
+		  else
+		    {
+		      if (key->skipsblanks)
+			while (blanks[UCHAR (*line_start)])
+			  line_start++;
+		      line->keybeg = line_start;
+		    }
+		  if (key->skipeblanks)
+		    trim_trailing_blanks (line->keybeg, &line->keylim);
+		}
+
+	      line_start = ptr;
+	    }
+
+	  ptr = ptrlim;
+	  if (buf->eof)
+	    break;
+	}
+
+      buf->used = ptr - buf->buf;
+      buf->nlines = buffer_linelim (buf) - line;
+      if (buf->nlines != 0)
+	{
+	  buf->left = ptr - line_start;
+	  return 1;
+	}
+
+      /* The current input line is too long to fit in the buffer.
+	 Double the buffer size and try again.  */
+      if (2 * buf->alloc < buf->alloc)
+	xalloc_die ();
+      buf->alloc *= 2;
+      buf->buf = xrealloc (buf->buf, buf->alloc);
+    }
 }
 
 /* Compare strings A and B containing decimal fractions < 1.  Each string
@@ -1430,156 +1498,133 @@ compare (register const struct line *a, register const struct line *b)
    and return zero.  */
 
 static int
-checkfp (FILE *fp, const char *file_name)
+checkfp (FILE *fp, char *file_name)
 {
   struct buffer buf;		/* Input buffer. */
-  struct lines lines;		/* Lines scanned from the buffer. */
   struct line temp;		/* Copy of previous line. */
-  size_t cc;			/* Character count. */
-  size_t alloc;
-  uintmax_t line_number = 1;
-  struct line *disorder_line IF_LINT (= NULL);
-  uintmax_t disorder_line_number = 0;
+  size_t alloc = 0;
+  uintmax_t line_number = 0;
   struct keyfield *key = keylist;
-  size_t mergealloc = sortalloc / (2 * NMERGE);
+  int nonunique = 1 - unique;
+  int disordered = 0;
 
-  initbuf (&buf, mergealloc);
-  initlines (&lines, mergealloc / linelength + 1,
-	     sortalloc / (4 * NMERGE * sizeof (struct line)));
-  alloc = linelength;
-  temp.text = xmalloc (alloc);
+  initbuf (&buf, sizeof (struct line),
+	   sort_buffer_size (&fp, 1, &file_name, 1,
+			     sizeof (struct line), sort_size));
+  temp.text = NULL;
 
-  cc = fillbuf (&buf, fp);
-  if (cc == 0)
-    goto finish;
-
-  findlines (&buf, &lines);
-
-  while (1)
+  while (fillbuf (&buf, fp, file_name))
     {
-      struct line *prev_line;	/* Pointer to previous line. */
-      int cmp;			/* Result of calling compare. */
-      size_t i;
+      struct line const *line = buffer_linelim (&buf);
+      struct line const *linebase = line - buf.nlines;
 
-      /* Compare each line in the buffer with its successor. */
-      for (i = 1; i < lines.used; ++i)
+      /* Make sure the line saved from the old buffer contents is
+	 less than or equal to the first line of the new buffer. */
+      if (alloc && nonunique <= compare (&temp, line - 1))
 	{
-	  cmp = compare (&lines.lines[i - 1], &lines.lines[i]);
-	  if ((unique && cmp >= 0) || (cmp > 0))
-	    {
-	      disorder_line = &lines.lines[i];
-	      disorder_line_number = line_number + i;
-	      goto finish;
-	    }
+	found_disorder:
+	  {
+	    char hr_buf[LONGEST_HUMAN_READABLE + 1];
+	    struct line const *disorder_line = line - 1;
+	    uintmax_t disorder_line_number =
+	      buffer_linelim (&buf) - disorder_line + line_number;
+	    fprintf (stderr, _("%s: %s:%s: disorder: "),
+		     program_name, file_name,
+		     human_readable (disorder_line_number, hr_buf, 1, 1));
+	    write_bytes (disorder_line->text, disorder_line->length, stderr,
+			 _("standard error"));
+	    disordered = 1;
+	    break;
+	  }
 	}
 
-      line_number += lines.used;
+      /* Compare each line in the buffer with its successor.  */
+      while (linebase < --line)
+	if (nonunique <= compare (line, line - 1))
+	  goto found_disorder;
 
-      /* Save the last line of the buffer and refill the buffer. */
-      prev_line = lines.lines + (lines.used - 1);
-      if (alloc < prev_line->length)
+      line_number += buf.nlines;
+
+      /* Save the last line of the buffer.  */
+      if (alloc < line->length)
 	{
 	  do
 	    {
-	      if (alloc * 2 < alloc)
-		xalloc_die ();
 	      alloc *= 2;
+	      if (! alloc)
+		{
+		  alloc = line->length;
+		  break;
+		}
 	    }
-	  while (alloc < prev_line->length);
+	  while (alloc < line->length);
 
 	  temp.text = xrealloc (temp.text, alloc);
 	}
-      memcpy (temp.text, prev_line->text, prev_line->length);
-      temp.length = prev_line->length;
+      memcpy (temp.text, line->text, line->length);
+      temp.length = line->length;
       if (key)
 	{
-	  temp.keybeg = temp.text + (prev_line->keybeg - prev_line->text);
-	  temp.keylim = temp.text + (prev_line->keylim - prev_line->text);
-	}
-
-      cc = fillbuf (&buf, fp);
-      if (cc == 0)
-        break;
-
-      findlines (&buf, &lines);
-      /* Make sure the line saved from the old buffer contents is
-	 less than or equal to the first line of the new buffer. */
-      cmp = compare (&temp, &lines.lines[0]);
-      if ((unique && cmp >= 0) || (cmp > 0))
-	{
-	  disorder_line = &lines.lines[0];
-	  disorder_line_number = line_number;
-	  break;
+	  temp.keybeg = temp.text + (line->keybeg - line->text);
+	  temp.keylim = temp.text + (line->keylim - line->text);
 	}
     }
 
-finish:
   xfclose (fp);
-
-  if (disorder_line_number)
-    {
-      char hr_buf[LONGEST_HUMAN_READABLE + 1];
-      fprintf (stderr, _("%s: %s:%s: disorder: "), program_name, file_name,
-	       human_readable (disorder_line_number, hr_buf, 1, 1));
-      write_bytes (disorder_line->text, disorder_line->length, stderr,
-		   _("standard error"));
-    }
-
   free (buf.buf);
-  free ((char *) lines.lines);
-  free (temp.text);
-  return NONZERO (disorder_line_number);
+  if (temp.text)
+    free (temp.text);
+  return disordered;
 }
 
 /* Merge lines from FPS onto OFP.  NFPS cannot be greater than NMERGE.
-   Close FPS before returning. */
+   Close FPS before returning.  NAMES and OUTPUT_NAME give the names
+   of the files.  */
 
 static void
-mergefps (FILE **fps, register int nfps, FILE *ofp, const char *output_file)
+mergefps (FILE **fps, char **files, register int nfps,
+	  FILE *ofp, const char *output_file)
 {
   struct buffer buffer[NMERGE];	/* Input buffers for each file. */
-  struct lines lines[NMERGE];	/* Line tables for each buffer. */
   struct line saved;		/* Saved line storage for unique check. */
-  struct line const *savedline IF_LINT (= NULL);
+  struct line const *savedline = NULL;
 				/* &saved if there is a saved line. */
-  size_t mergealloc = sortalloc / (2 * NMERGE);
-  size_t savealloc IF_LINT (= 0); /* Size allocated for the saved line. */
-  size_t cur[NMERGE];		/* Current line in each line table. */
+  size_t savealloc = 0;		/* Size allocated for the saved line. */
+  struct line const *cur[NMERGE]; /* Current line in each line table. */
+  struct line const *base[NMERGE]; /* Base of each line table.  */
   int ord[NMERGE];		/* Table representing a permutation of fps,
-				   such that lines[ord[0]].lines[cur[ord[0]]]
-				   is the smallest line and will be next
-				   output. */
+				   such that cur[ord[0]] is the smallest line
+				   and will be next output. */
   register int i, j, t;
   struct keyfield *key = keylist;
-
-  /* Allocate space for a saved line if necessary. */
-  if (unique)
-    {
-      savedline = NULL;
-      savealloc = linelength;
-      saved.text = xmalloc (savealloc);
-    }
+  saved.text = NULL;
 
   /* Read initial lines from each input file. */
   for (i = 0; i < nfps; ++i)
     {
-      initbuf (&buffer[i], mergealloc);
+      size_t mergealloc = sort_buffer_size (&fps[i], 1, &files[i], 1,
+					    sizeof (struct line),
+					    sort_size / nfps);
+      initbuf (&buffer[i], sizeof (struct line), mergealloc);
       /* If a file is empty, eliminate it from future consideration. */
-      while (i < nfps && !fillbuf (&buffer[i], fps[i]))
+      while (i < nfps && !fillbuf (&buffer[i], fps[i], files[i]))
 	{
 	  xfclose (fps[i]);
+	  zaptemp (files[i]);
 	  --nfps;
 	  for (j = i; j < nfps; ++j)
-	    fps[j] = fps[j + 1];
+	    {
+	      fps[j] = fps[j + 1];
+	      files[j] = files[j + 1];
+	    }
 	}
       if (i == nfps)
 	free (buffer[i].buf);
       else
 	{
-	  initlines (&lines[i], mergealloc / linelength + 1,
-		     sortalloc / (4 * NMERGE * sizeof (struct line)));
-	  findlines (&buffer[i], &lines[i]);
-	  cur[i] = 0;
+	  struct line const *linelim = buffer_linelim (&buffer[i]);
+	  cur[i] = linelim - 1;
+	  base[i] = linelim - buffer[i].nlines;
 	}
     }
 
@@ -1589,14 +1634,13 @@ mergefps (FILE **fps, register int nfps, FILE *ofp, const char *output_file)
   for (i = 0; i < nfps; ++i)
     ord[i] = i;
   for (i = 1; i < nfps; ++i)
-    if (compare (&lines[ord[i - 1]].lines[cur[ord[i - 1]]],
-		 &lines[ord[i]].lines[cur[ord[i]]]) > 0)
+    if (0 < compare (cur[ord[i - 1]], cur[ord[i]]))
       t = ord[i - 1], ord[i - 1] = ord[i], ord[i] = t, i = 0;
 
   /* Repeatedly output the smallest line until no input remains. */
   while (nfps)
     {
-      struct line const *smallest = &lines[ord[0]].lines[cur[ord[0]]];
+      struct line const *smallest = cur[ord[0]];
 
       /* If uniquified output is turned on, output only the first of
 	 an identical series of lines. */
@@ -1612,8 +1656,14 @@ mergefps (FILE **fps, register int nfps, FILE *ofp, const char *output_file)
 	      savedline = &saved;
 	      if (savealloc < smallest->length)
 		{
-		  while ((savealloc *= 2) < smallest->length)
-		    continue;
+		  do
+		    if (! savealloc)
+		      {
+			savealloc = smallest->length;
+			break;
+		      }
+		  while ((savealloc *= 2) < smallest->length);
+
 		  saved.text = xrealloc (saved.text, savealloc);
 		}
 	      saved.length = smallest->length;
@@ -1631,12 +1681,15 @@ mergefps (FILE **fps, register int nfps, FILE *ofp, const char *output_file)
 	write_bytes (smallest->text, smallest->length, ofp, output_file);
 
       /* Check if we need to read more lines into core. */
-      if (++cur[ord[0]] == lines[ord[0]].used)
+      if (base[ord[0]] < smallest)
+	cur[ord[0]] = smallest - 1;
+      else
 	{
-	  if (fillbuf (&buffer[ord[0]], fps[ord[0]]))
+	  if (fillbuf (&buffer[ord[0]], fps[ord[0]], files[ord[0]]))
 	    {
-	      findlines (&buffer[ord[0]], &lines[ord[0]]);
-	      cur[ord[0]] = 0;
+	      struct line const *linelim = buffer_linelim (&buffer[ord[0]]);
+	      cur[ord[0]] = linelim - 1;
+	      base[ord[0]] = linelim - buffer[ord[0]].nlines;
 	    }
 	  else
 	    {
@@ -1646,14 +1699,15 @@ mergefps (FILE **fps, register int nfps, FILE *ofp, const char *output_file)
 		  --ord[i];
 	      --nfps;
 	      xfclose (fps[ord[0]]);
+	      zaptemp (files[ord[0]]);
 	      free (buffer[ord[0]].buf);
-	      free ((char *) lines[ord[0]].lines);
 	      for (i = ord[0]; i < nfps; ++i)
 		{
 		  fps[i] = fps[i + 1];
+		  files[i] = files[i + 1];
 		  buffer[i] = buffer[i + 1];
-		  lines[i] = lines[i + 1];
 		  cur[i] = cur[i + 1];
+		  base[i] = base[i + 1];
 		}
 	      for (i = 0; i < nfps; ++i)
 		ord[i] = ord[i + 1];
@@ -1666,8 +1720,7 @@ mergefps (FILE **fps, register int nfps, FILE *ofp, const char *output_file)
 	 a line larger than it. */
       for (i = 1; i < nfps; ++i)
 	{
-	  t = compare (&lines[ord[0]].lines[cur[ord[0]]],
-		       &lines[ord[i]].lines[cur[ord[i]]]);
+	  t = compare (cur[ord[0]], cur[ord[i]]);
 	  if (!t)
 	    t = ord[0] - ord[i];
 	  if (t < 0)
@@ -1686,7 +1739,9 @@ mergefps (FILE **fps, register int nfps, FILE *ofp, const char *output_file)
     }
 }
 
-/* Sort the array LINES with NLINES members, using TEMP for temporary space. */
+/* Sort the array LINES with NLINES members, using TEMP for temporary space.
+   The input and output arrays are in reverse order, and LINES and
+   TEMP point just past the end of their respective arrays.  */
 
 static void
 sortlines (struct line *lines, size_t nlines, struct line *temp)
@@ -1696,11 +1751,11 @@ sortlines (struct line *lines, size_t nlines, struct line *temp)
 
   if (nlines == 2)
     {
-      if (compare (&lines[0], &lines[1]) > 0)
+      if (0 < compare (&lines[-1], &lines[-2]))
 	{
-	  *temp = lines[0];
-	  lines[0] = lines[1];
-	  lines[1] = *temp;
+	  struct line tmp = lines[-1];
+	  lines[-1] = lines[-2];
+	  lines[-2] = tmp;
 	}
       return;
     }
@@ -1708,7 +1763,7 @@ sortlines (struct line *lines, size_t nlines, struct line *temp)
   nlo = nlines / 2;
   lo = lines;
   nhi = nlines - nlo;
-  hi = lines + nlo;
+  hi = lines - nlo;
 
   if (nlo > 1)
     sortlines (lo, nlo, temp);
@@ -1719,15 +1774,15 @@ sortlines (struct line *lines, size_t nlines, struct line *temp)
   t = temp;
 
   while (nlo && nhi)
-    if (compare (lo, hi) <= 0)
-      *t++ = *lo++, --nlo;
+    if (compare (lo - 1, hi - 1) <= 0)
+      *--t = *--lo, --nlo;
     else
-      *t++ = *hi++, --nhi;
+      *--t = *--hi, --nhi;
   while (nlo--)
-    *t++ = *lo++;
+    *--t = *--lo;
 
   for (lo = lines, nlo = nlines - nhi, t = temp; nlo; --nlo)
-    *lo++ = *t++;
+    *--lo = *--t;
 }
 
 /* Check that each of the NFILES FILES is ordered.
@@ -1764,28 +1819,22 @@ merge (char **files, int nfiles, FILE *ofp, const char *output_file)
 	  for (j = 0; j < NMERGE; ++j)
 	    fps[j] = xfopen (files[i * NMERGE + j], "r");
 	  tfp = xtmpfopen (temp = tempname ());
-	  mergefps (fps, NMERGE, tfp, temp);
+	  mergefps (fps, &files[i * NMERGE], NMERGE, tfp, temp);
 	  xfclose (tfp);
-	  for (j = 0; j < NMERGE; ++j)
-	    zaptemp (files[i * NMERGE + j]);
 	  files[t++] = temp;
 	}
       for (j = 0; j < nfiles % NMERGE; ++j)
 	fps[j] = xfopen (files[i * NMERGE + j], "r");
       tfp = xtmpfopen (temp = tempname ());
-      mergefps (fps, nfiles % NMERGE, tfp, temp);
+      mergefps (fps, &files[i * NMERGE], nfiles % NMERGE, tfp, temp);
       xfclose (tfp);
-      for (j = 0; j < nfiles % NMERGE; ++j)
-	zaptemp (files[i * NMERGE + j]);
       files[t++] = temp;
       nfiles = t;
     }
 
   for (i = 0; i < nfiles; ++i)
     fps[i] = xfopen (files[i], "r");
-  mergefps (fps, i, ofp, output_file);
-  for (i = 0; i < nfiles; ++i)
-    zaptemp (files[i]);
+  mergefps (fps, files, nfiles, ofp, output_file);
 }
 
 /* Sort NFILES FILES onto OFP. */
@@ -1794,28 +1843,36 @@ static void
 sort (char **files, int nfiles, FILE *ofp, const char *output_file)
 {
   struct buffer buf;
-  struct lines lines;
-  struct line *tmp = NULL;
-  size_t ntmp = 0;
-  FILE *fp, *tfp;
+  FILE *tfp;
   struct tempnode *node;
   int n_temp_files = 0;
   char **tempfiles;
 
-  initbuf (&buf, sortalloc);
-  initlines (&lines, sortalloc / linelength + 1,
-	     sortalloc / (2 * sizeof (struct line)));
+  buf.alloc = 0;
 
-  while (nfiles--)
+  while (nfiles)
     {
-      const char *temp_output;
+      char const *temp_output;
+      char const *file = *files;
+      FILE *fp = xfopen (file, "r");
 
-      fp = xfopen (*files++, "r");
-      while (fillbuf (&buf, fp))
+      if (! buf.alloc)
+	initbuf (&buf, 2 * sizeof (struct line),
+		 sort_buffer_size (&fp, 1, files, nfiles,
+				   2 * sizeof (struct line), sort_size));
+      buf.eof = 0;
+      files++;
+      nfiles--;
+
+      while (fillbuf (&buf, fp, file))
 	{
-	  size_t i;
+	  struct line *line;
+	  struct line *linebase;
 
-	  if (nfiles && buf.used != buf.alloc && feof (fp))
+	  if (buf.eof && nfiles
+	      && (2 * sizeof (struct line) + 1
+		  < (buf.alloc - buf.used
+		     - 2 * sizeof (struct line) * buf.nlines)))
 	    {
 	      /* End of file, but there is more input and buffer room.
 		 Concatenate the next input file; this is faster in
@@ -1824,21 +1881,10 @@ sort (char **files, int nfiles, FILE *ofp, const char *output_file)
 	      break;
 	    }
 
-	  findlines (&buf, &lines);
-	  if (ntmp < lines.used)
-	    {
-	      if (ntmp == 0)
-		ntmp = lines.used;
-	      else
-		while ((ntmp *= 2) < lines.used)
-		  continue;
-	      if (SIZE_MAX / sizeof (struct line) < ntmp)
-		xalloc_die ();
-	      tmp = (struct line *)
-		xrealloc ((char *) tmp, ntmp * sizeof (struct line));
-	    }
-	  sortlines (lines.lines, lines.used, tmp);
-	  if (feof (fp) && !nfiles && !n_temp_files && !buf.left)
+	  line = buffer_linelim (&buf);
+	  linebase = line - buf.nlines;
+	  sortlines (line, buf.nlines, linebase);
+	  if (buf.eof && !nfiles && !n_temp_files && !buf.left)
 	    {
 	      tfp = ofp;
 	      temp_output = output_file;
@@ -1848,11 +1894,17 @@ sort (char **files, int nfiles, FILE *ofp, const char *output_file)
 	      ++n_temp_files;
 	      tfp = xtmpfopen (temp_output = tempname ());
 	    }
-	  for (i = 0; i < lines.used; ++i)
-	    if (!unique || i == 0
-		|| compare (&lines.lines[i], &lines.lines[i - 1]))
-	      write_bytes (lines.lines[i].text, lines.lines[i].length, tfp,
-			   temp_output);
+
+	  do
+	    {
+	      line--;
+	      write_bytes (line->text, line->length, tfp, temp_output);
+	      if (unique)
+		while (linebase < line && compare (line, line - 1) == 0)
+		  line--;
+	    }
+	  while (linebase < line);
+
 	  if (tfp != ofp)
 	    xfclose (tfp);
 	}
@@ -1860,8 +1912,6 @@ sort (char **files, int nfiles, FILE *ofp, const char *output_file)
     }
 
   free (buf.buf);
-  free ((char *) lines.lines);
-  free ((char *) tmp);
 
   if (n_temp_files)
     {
@@ -2361,8 +2411,8 @@ but lacks following character offset"));
       files = &minus;
     }
 
-  if (sortalloc == 0)
-    default_sort_size ();
+  if (sort_size == 0)
+    sort_size = default_sort_size ();
 
   if (checkonly)
     {
