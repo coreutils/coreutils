@@ -286,20 +286,20 @@ save_to_hold_area (start, num)
   hold_count = num;
 }
 
-/* Read up to MAX chars from the input stream into DEST.
+/* Read up to MAX_N_BYTES chars from the input stream into DEST.
    Return the number of chars read. */
 
 static int
-read_input (dest, max)
+read_input (dest, max_n_bytes)
      char *dest;
-     unsigned int max;
+     unsigned int max_n_bytes;
 {
   int bytes_read;
 
-  if (max == 0)
+  if (max_n_bytes == 0)
     return 0;
 
-  bytes_read = safe_read (input_desc, dest, max);
+  bytes_read = safe_read (input_desc, dest, max_n_bytes);
 
   if (bytes_read == 0)
     have_read_eof = TRUE;
