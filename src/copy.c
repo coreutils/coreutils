@@ -570,6 +570,7 @@ copy_internal (const char *src_path, const char *dst_path,
   int rename_errno;
   int delayed_fail;
   int copied_as_regular = 0;
+  int ran_chown = 0;
 
   if (move_mode && rename_succeeded)
     *rename_succeeded = 0;
@@ -1086,6 +1087,7 @@ copy_internal (const char *src_path, const char *dst_path,
   if (x->preserve_owner_and_group
       && (new_dst || !SAME_OWNER_AND_GROUP (src_sb, dst_sb)))
     {
+      ran_chown = 1;
       if (DO_CHOWN (chown, dst_path, src_sb.st_uid, src_sb.st_gid))
 	{
 	  error (0, errno, _("preserving ownership for %s"), quote (dst_path));
@@ -1094,9 +1096,11 @@ copy_internal (const char *src_path, const char *dst_path,
 	}
     }
 
-  /* Permissions of newly-created regular files were set upon `open'
-     in copy_reg.  */
-  if (new_dst && copied_as_regular)
+  /* Permissions of newly-created regular files were set upon `open' in
+     copy_reg.  But don't return early if there were any special bits and
+     we had to run chown, because the chown must have reset those bits.  */
+  if ((new_dst && copied_as_regular)
+      && !(ran_chown && (src_mode & ~S_IRWXUGO)))
     return delayed_fail;
 
   if ((x->preserve_chmod_bits || new_dst)
