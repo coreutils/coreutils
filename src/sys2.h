@@ -404,10 +404,10 @@ enum
     usage (EXIT_SUCCESS);			\
     break;
 
-#define EMIT_HELP_DESCRIPTION(Stream) \
-  fputs (_("      --help     display this help and exit\n"), Stream)
-#define EMIT_VERSION_DESCRIPTION(Stream) \
-  fputs (_("      --version  output version information and exit\n"), Stream)
+#define HELP_OPTION_DESCRIPTION \
+  _("      --help     display this help and exit\n")
+#define VERSION_OPTION_DESCRIPTION \
+  _("      --version  output version information and exit\n")
 
 #include "closeout.h"
 #include "version-etc.h"
