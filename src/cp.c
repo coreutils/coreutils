@@ -1182,8 +1182,7 @@ copy_reg (src_path, dst_path)
       /* If the file has fewer blocks than would normally
 	 be needed for a file of its size, then
 	 at least one of the blocks in the file is a hole. */
-      if (S_ISREG (sb.st_mode) &&
-	  sb.st_size - (sb.st_blocks * DEV_BSIZE) >= DEV_BSIZE)
+      if (S_ISREG (sb.st_mode) && sb.st_size > sb.st_blocks * DEV_BSIZE)
 	make_holes = 1;
     }
 #endif
