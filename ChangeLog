@@ -1,3 +1,15 @@
+2004-04-29  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/df.c (show_disk, show_point): If several filesystems are
+	mounted on the same mount point, prefer the last one, not the first.
+	Problem reported by Christian Jones in
+	<http://mail.gnu.org/archive/html/bug-coreutils/2004-04/msg00200.html>.
+	(show_disk): Remove unused statp arg.  Return bool, not int.
+	(show_point): Rewrite to avoid gotos.  Use the same algorithm
+	for lofs and dummies for each pass through the mount table,
+	rather than subtly different algorithms (which are probably
+	inadvertent).
+
 2004-05-03  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am (EXTRA_DIST): Add m4/ChangeLog, now that we no longer
