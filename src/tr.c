@@ -26,7 +26,8 @@
 #include <assert.h>
 #include <errno.h>
 #include <sys/types.h>
-#include "getopt.h"
+#include <getopt.h>
+
 #include "system.h"
 #include "version.h"
 
