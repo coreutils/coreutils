@@ -23,6 +23,7 @@
 #include <sys/types.h>
 
 #include "system.h"
+#include "dirname.h"
 #include "error.h"
 #include "makepath.h"
 #include "modechange.h"
@@ -120,6 +121,12 @@ main (int argc, char **argv)
     }
 
   newmode = S_IRWXUGO;
+  {
+    mode_t umask_value = umask (0);
+    umask (umask_value);		/* Restore the old value. */
+    parent_mode = (newmode & (~ umask_value)) | S_IWUSR | S_IXUSR;
+  }
+
   if (specified_mode)
     {
       struct mode_change *change = mode_compile (specified_mode, 0);
@@ -130,17 +137,19 @@ main (int argc, char **argv)
 	xalloc_die ();
       newmode = mode_adjust (newmode, change);
     }
-  parent_mode = S_IWUSR | S_IXUSR | newmode;
 
   for (; optind < argc; ++optind)
     {
       int fail = 0;
       if (create_parents)
 	{
-	  fail = make_path (argv[optind], newmode, parent_mode,
+	  const char *parents = dir_name (argv[optind]);
+	  fail = make_path (parents, parent_mode, parent_mode,
 			    -1, -1, 1, verbose_fmt_string);
+	  free (dir_name);
 	}
-      else
+
+      if (fail == 0)
 	{
 	  fail = mkdir (argv[optind], newmode);
 	  if (fail)
