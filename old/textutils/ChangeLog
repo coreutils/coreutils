@@ -1,5 +1,7 @@
 1999-08-06  Jim Meyering  <meyering@ascend.com>
 
+	* Version 2.0.
+
 	* src/sort.c: Include file name in `write error' diagnostics.
 	(write_bytes): Add output_file parameter and use it.  Update callers.
 	(mergefps): Likewise.
