@@ -134,12 +134,16 @@ same_name (const char *source, const char *dest)
     error (1, 0, _("virtual memory exhausted"));
 
   if (stat (source_dirname, &source_dir_stats))
-    /* Shouldn't happen.  */
-    error (1, errno, "%s", source_dirname);
+    {
+      /* Shouldn't happen.  */
+      error (1, errno, "%s", source_dirname);
+    }
 
   if (stat (dest_dirname, &dest_dir_stats))
-    /* Shouldn't happen.  */
-    error (1, errno, "%s", dest_dirname);
+    {
+      /* Shouldn't happen.  */
+      error (1, errno, "%s", dest_dirname);
+    }
 
   free (source_dirname);
   free (dest_dirname);
@@ -181,11 +185,37 @@ do_link (const char *source, const char *dest)
     }
 
   lstat_status = lstat (dest, &dest_stats);
-
   if (lstat_status != 0 && errno != ENOENT)
     {
       error (0, errno, "%s", dest);
       return 1;
+    }
+
+  /* If the destination is a directory or (it is a symlink to a directory
+     and the user has not specified --no-dereference), then form the
+     actual destination name by appending base_name (source) to the
+     specified destination directory.  */
+  if ((lstat_status == 0
+       && S_ISDIR (dest_stats.st_mode))
+#ifdef S_ISLNK
+      || (dereference_dest_dir_symlinks
+	  && (S_ISLNK (dest_stats.st_mode)
+	  && isdir (dest)))
+#endif
+     )
+    {
+      /* Target is a directory; build the full filename. */
+      char *new_dest;
+      PATH_BASENAME_CONCAT (new_dest, dest, source);
+      dest = new_dest;
+
+      /* Get stats for new DEST.  */
+      lstat_status = lstat (dest, &dest_stats);
+      if (lstat_status != 0 && errno != ENOENT)
+	{
+	  error (0, errno, "%s", dest);
+	  return 1;
+	}
     }
 
   /* If --force (-f) has been specified without --backup, then before
@@ -212,28 +242,6 @@ do_link (const char *source, const char *dest)
     {
       error (0, 0, _("`%s' and `%s' are the same file"), source, dest);
       return 1;
-    }
-
-  /* If the destination is a directory or (it is a symlink to a directory
-     and the user has not specified --no-dereference), then form the
-     actual destination name by appending base_name (source) to the
-     specified destination directory.  */
-  if ((lstat_status == 0
-       && S_ISDIR (dest_stats.st_mode))
-#ifdef S_ISLNK
-      || (dereference_dest_dir_symlinks
-	  && (S_ISLNK (dest_stats.st_mode)
-	  && isdir (dest)))
-#endif
-     )
-    {
-      /* Target is a directory; build the full filename. */
-      char *new_dest;
-      PATH_BASENAME_CONCAT (new_dest, dest, source);
-      dest = new_dest;
-      /* Set this to nonzero to force another call to lstat
-	 with the new destination.  */
-      lstat_status = 1;
     }
 
   if (lstat_status == 0 || lstat (dest, &dest_stats) == 0)
