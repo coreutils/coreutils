@@ -125,6 +125,7 @@ Print the file name of the terminal connected to standard input.\n\
       --help              display this help and exit\n\
       --version           output version information and exit\n\
 "));
+      puts (_("\nReport bugs to bug-gnu-utils@gnu.ai.mit.edu"));
     }
   exit (status);
 }

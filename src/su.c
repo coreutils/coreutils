@@ -430,6 +430,7 @@ Change the effective user id and group id to that of USER.\n\
 \n\
 A mere - implies -l.   If USER not given, assume root.\n\
 "));
+      puts (_("\nReport bugs to bug-gnu-utils@gnu.ai.mit.edu"));
     }
   exit (status);
 }

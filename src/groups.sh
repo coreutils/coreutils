@@ -27,7 +27,9 @@ usage="Usage: $0 [OPTION]... [USERNAME]...
   --help      display this help and exit
   --version   output version information and exit
 
-Same as id -Gn.  If no USERNAME, use current process."
+Same as id -Gn.  If no USERNAME, use current process.
+
+Report bugs to bug-gnu-utils@gnu.ai.mit.edu"
 
 case $# in
   1 )

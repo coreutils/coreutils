@@ -1035,6 +1035,7 @@ EXPRESSION is true or false and sets exit status.  It is one of:\n\
 Beware that parentheses need to be escaped (e.g., by backslashes) for shells.\n\
 INTEGER may also be -l STRING, which evaluates to the length of STRING.\n\
 "));
+      puts (_("\nReport bugs to bug-gnu-utils@gnu.ai.mit.edu"));
     }
   exit (status);
 }

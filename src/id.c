@@ -381,6 +381,7 @@ Print information for USERNAME, or the current user.\n\
 \n\
 Without any OPTION, print some useful set of identified information.\n\
 "));
+      puts (_("\nReport bugs to bug-gnu-utils@gnu.ai.mit.edu"));
     }
   exit (status);
 }

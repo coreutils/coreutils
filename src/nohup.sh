@@ -31,7 +31,9 @@ Try \`$0 --help' for more information."
 usage_help="Run COMMAND, ignoring hangup signals.
 
   --help      display this help and exit
-  --version   output version information and exit"
+  --version   output version information and exit
+
+Report bugs to bug-gnu-utils@gnu.ai.mit.edu"
 
 if [ $# -eq 0 ]; then
   echo >&2 "$usage"

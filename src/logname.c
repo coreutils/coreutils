@@ -53,6 +53,7 @@ Print the name of the current user.\n\
   --help      display this help and exit\n\
   --version   output version information and exit\n\
 "));
+      puts (_("\nReport bugs to bug-gnu-utils@gnu.ai.mit.edu"));
     }
   exit (status);
 }

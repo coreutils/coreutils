@@ -72,6 +72,7 @@ Copy standard input to each FILE, and also to standard output.\n\
       --help                display this help and exit\n\
       --version             output version information and exit\n\
 "));
+      puts (_("\nReport bugs to bug-gnu-utils@gnu.ai.mit.edu"));
     }
   exit (status);
 }
