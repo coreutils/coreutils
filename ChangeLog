@@ -2,6 +2,9 @@
 
 	* Version 5.3.0.
 
+	* tests/help-version: Punt on the uptime test, since it fails when
+	it can't get boot time, and I don't want that to stop `make check'.
+
 	* src/du.c (process_file): Evaluate exclusion rules against
 	the entire file name, not just the last component.
 	Reported by Robert Lindgren.
