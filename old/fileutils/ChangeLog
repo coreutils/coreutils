@@ -1,3 +1,9 @@
+2002-04-07  Jim Meyering  <meyering@lucent.com>
+
+	* tests/cp/fail-perm: Add VERBOSE=yes support.
+	* tests/mv/mv-special-1: Fix typo in VERBOSE=yes handling.
+	Reported by Richard Dawe.
+
 2002-03-30  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.8.
