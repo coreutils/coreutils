@@ -3,6 +3,7 @@
 	* quotearg.c (ISASCII): Add #undef and move definition to follow
 	inclusion of wctype.h to work around solaris2.6 namespace pollution.
 	(ISPRINT): Likewise.
+	Reported by Tom Tromey.
 
 2000-01-30  Jim Meyering  <meyering@lucent.com>
 
