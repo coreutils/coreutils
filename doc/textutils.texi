@@ -2264,6 +2264,16 @@ into fields @w{@samp{ foo}} and @w{@samp{ bar}}.  The field separator is
 not considered to be part of either the field preceding or the field
 following.
 
+@item -T @var{tempdir}
+@opindex -T
+@cindex temporary directory
+Use directory @var{tempdir} to store temporary files, overriding the
+@env{TMPDIR} environment variable.  If this option is given more than
+once, temporary files are stored in all the directories given.  If you
+have a large sort or merge that is I/O-bound, you can often improve
+performance by using this option to specify directories on different
+disks and controllers.
+
 @item -u
 @opindex -u
 @cindex uniquifying output
