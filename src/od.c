@@ -1040,8 +1040,7 @@ decode_format_string (const char *s)
 
       if (n_specs >= n_specs_allocated)
 	{
-	  n_specs_allocated = 1 + (3 * n_specs_allocated) / 2;
-	  spec = xrealloc (spec, (n_specs_allocated * sizeof (struct tspec)));
+	  spec = x2nrealloc (spec, &n_specs_allocated, sizeof (struct tspec));
 	}
 
       memcpy ((char *) &spec[n_specs], (char *) &tspec,
@@ -1543,8 +1542,7 @@ dump_strings (void)
 	{
 	  if (i == bufsize)
 	    {
-	      bufsize = 1 + 3 * bufsize / 2;
-	      buf = xrealloc (buf, bufsize);
+	      buf = x2nrealloc (buf, &bufsize, sizeof *buf);
 	    }
 	  err |= read_char (&c);
 	  address++;
@@ -1666,8 +1664,8 @@ main (int argc, char **argv)
   fp_type_size[sizeof (double)] = FLOAT_DOUBLE;
 
   n_specs = 0;
-  n_specs_allocated = 5;
-  spec = xmalloc (n_specs_allocated * sizeof *spec);
+  n_specs_allocated = 0;
+  spec = NULL;
 
   format_address = format_address_std;
   address_base = 8;
