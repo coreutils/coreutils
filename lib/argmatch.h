@@ -47,7 +47,7 @@ int argcasematch
   PARAMS ((const char *arg, const char *const *arglist,
 	   const char *vallist, size_t valsize));
 
-# define ARGMATCH(Arg, ARGLIST, Vallist) \
+# define ARGMATCH(Arg, Arglist, Vallist) \
   argmatch (Arg, Arglist, (const char *) Vallist, sizeof (*Vallist))
 
 # define ARGCASEMATCH(Arg, Arglist, Vallist) \
