@@ -8,7 +8,7 @@ User visible changes in release 1.13
 * expr's match operator has been corrected to use basic regular expressions
 * New programs: chroot, factor, seq.
 * date accepts new option: --rfc-822 (-R)
-* date accepts new format: %z
+* date accepts new format, %z, for RFC-822 style numeric timezone (-0500)
 * date: fix bugs in the handling of date -u +'%s %Z'.
 * date accepts new option --reference=FILE (-r FILE) analogous to the
   like-named touch option.
