@@ -4,6 +4,12 @@
 
 2001-01-03  Paul Eggert  <eggert@twinsun.com>
 
+	* NEWS: Document the planned --full-time change.
+	* doc/fileutils.texi: Likewise.
+	* NEWS: Document that time stamps depend on LC_TIME, not LC_MESSAGES.
+
+2001-01-03  Paul Eggert  <eggert@twinsun.com>
+
 	Use the more precise algorithm of GNU "make" to decide whether
 	a file is in the future, by looking at high-resolution time
 	stamps if available.
