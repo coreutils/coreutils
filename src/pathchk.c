@@ -274,6 +274,11 @@ validate_path (path, portability)
   if (*path == '\0')
     return 0;
 
+#ifdef lint
+  /* Suppress `used before initialized' warning.  */
+  exists = 0;
+#endif
+
   /* Figure out the parent of the first element in PATH.  */
   parent = xstrdup (*path == '/' ? "/" : ".");
 

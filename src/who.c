@@ -97,7 +97,7 @@
 char *xmalloc ();
 void error ();
 char *ttyname ();
-char *gethostname ();
+int gethostname ();
 
 static int read_utmp ();
 #ifdef WHO
