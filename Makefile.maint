@@ -168,7 +168,7 @@ wget-update:
 	    && $(move-if-change) $$f.t $$f;				\
 	done
 	f=ansi2knr.c;							\
-	  $(WGET) ftp://ftp.cs.wisc.edu/ghost/$$f -O $(srcdir)/src/$$f.f \
+	  $(WGET) ftp://ftp.cs.wisc.edu/ghost/$$f -O $(srcdir)/src/$$f.t \
 	    && $(move-if-change) $$f.t $$f
 	for f in depcomp missing; do					\
 	  echo checking out $$f...;					\
