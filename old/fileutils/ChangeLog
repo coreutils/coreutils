@@ -1,3 +1,9 @@
+2000-02-26  Jim Meyering  <meyering@lucent.com>
+
+	* tests/rm/r-2: Don't make the success of the test depend on the
+	order in which directory entries are processed.
+	Reported by Andreas Schwab.
+
 2000-02-12  Jim Meyering  <meyering@lucent.com>
 
 	* po/POTFILES.in: Add lib/userspec.c.
