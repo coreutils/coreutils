@@ -1,6 +1,18 @@
-2004-06-19  Paul Eggert  <eggert@cs.ucla.edu>
+2004-06-20  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.0.
+
+	* src/ln.c: Remove declaration of yesno.
+	Instead, include yesno.h.
+	* src/copy.c: Likewise.
+
+	* src/remove.c: Remove declaration of yesno.
+	Instead, include yesno.h.
+	(top_dir): Remove now-unnecessary cast of obstack_base.
+	(pop_dir): Likewise.
+	(full_filename_): Likewise.
+
+2004-06-19  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Don't dump core if ctime returns NULL; this is possible on
 	hosts with 64-bit time_t and 32-bit int.
