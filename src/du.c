@@ -665,12 +665,12 @@ main (int argc, char **argv)
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
 	default:
-	  usage (EXIT_FAILURE);
+	  fail = 1;
 	}
     }
 
   if (fail)
-    exit (EXIT_FAILURE);
+    usage (EXIT_FAILURE);
 
   if (opt_all && opt_summarize_only)
     {
