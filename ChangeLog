@@ -1,5 +1,7 @@
 2004-06-02  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* Version 5.3.0.
+
 	Fix bug reported by Buciuman Adrian in
 	<http://mail.gnu.org/archive/html/bug-coreutils/2003-08/msg00105.html>
 	where 'dd' created a file that was too large.  The bug was that dd
@@ -29,8 +31,6 @@
 	and error if it wasn't seekable.
 
 2004-06-02  Jim Meyering  <jim@meyering.net>
-
-	* Version 5.3.0.
 
 	rm (without -f) could hang unnecessarily when attempting to
 	remove a symlink to a file on an off-line NFS-mounted partition.
