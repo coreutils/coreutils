@@ -1,4 +1,60 @@
+Tue Nov 24 08:42:30 1992  Jim Meyering  (meyering@idefix.comco.com)
+
+	* od.c (print_ascii, dump_strings): Check for isascii before isprint.
+	(dump_strings): Free malloc'd buffer before returning.
+	(skip): Return non-zero if an error occurred, zero otherwise.
+	Exit only if asked to skip beyond end of combined input.
+	(check_and_close): New function.
+	(skip, read_block, read_char): Call check_and_close when done
+	processing the file associated with in_stream.
+	(skip, read_block, read_char): Set have_read_stdin.
+	(main): Close stdin (if it was ever read) and check for errors
+	just before exiting.
+	(write_block, dump_strings, dump): Don't test return value from
+	functions that operate on streams.  Rely on later ferror tests.
+
+Thu Nov 19 14:33:40 1992  David J. MacKenzie  (djm@goldman.gnu.ai.mit.edu)
+
+	* tail.c (tail_forever, sigusr1, kill_kids): New functions to
+	do -f on multiple files.
+	(main): Call tail_forever.
+	From Ian Lance Taylor.
+
+Tue Nov 10 14:29:11 1992  David J. MacKenzie  (djm@goldman.gnu.ai.mit.edu)
+
+	* cut.c (cut_fields): Add cast.
+
+	* od.c (decode_one_format): Remove '#' from pre_fmt_string;
+	many systems don't support it.
+	Conditionalize long double support on __STDC__, not __GNUC__.
+	From Ian Lance Taylor.
+
+Mon Nov  9 00:24:41 1992  Jim Meyering  (meyering@idefix.comco.com)
+
+	* sort.c (numcompare, keycompare): Add parentheses suggested
+	by gcc -Wall.  Put braces around individual monthtab initializers.
+
+	* cksum.c: Declare error.  Make checksum table `const.'
+
+	* pr.c: Remove comment and dcl of unused variable, `print_a_number'.
+
+	* split.c (main): Add `default: abort();' to enumeration switch.
+
+	* All files: Make all functions and extern variables static.
+	Make all longopts arrays const as well as static.
+	Make a couple statically initialized aggregates `const.'
+
+Sun Nov  8 19:46:59 1992  David J. MacKenzie  (djm@goldman.gnu.ai.mit.edu)
+
+	* od.c (main): Make old-style format options accumulate.
+	From Jim Meyering.
+
 Sat Nov  7 00:26:14 1992  David J. MacKenzie  (djm@goldman.gnu.ai.mit.edu)
+
+	* tr.c (look_up_char_class): Add cast.
+
+	* nl.c (build_type_arg), csplit.c (extract_regexp), tac.c (main):
+	Add `const' to variable receiving value from re_compile_pattern.
 
 	* wc.c (wc): If doing only -c, use st_size for regular files.
 
