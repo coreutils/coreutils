@@ -26,19 +26,13 @@ my $script_name = $ENV{SCRIPT_NAME};
 
 my @Tests =
     (
-     ['1', (qw (bs=1 skip=1 seek=2 conv=notrunc count=3), "of=$out", '<'),
-     {PRE => sub {my $ignore=`echo zyxwvutsrqponmlkji > $out`}},
-     {IN=> '0123456789abcdef'},
-     {OUT=> ''},
-     {ERR=> "3+0 records in\n3+0 records out\n"},
-     {POST=> sub { my $expected = "exp-$$";
-		   my $t=`echo zy123utsrqponmlkji > $expected`;
-                   compare_files ($script_name, undef, undef, $out, $expected)
-		     and die "the file `$out' does not have the expected"
-		       . " contents\n  (should be same as `$expected')\n";
-		   unlink $out;
-		   unlink $expected;
-		 }},
+     [
+      '1', qw (bs=1 skip=1 seek=2 conv=notrunc count=3 of=@AUX@ < ),
+      {IN=> '0123456789abcdef'},
+      {AUX=> 'zyxwvutsrqponmlkji'},
+      {OUT=> ''},
+      {ERR=> "3+0 records in\n3+0 records out\n"},
+      {CMP=> ['zy123utsrqponmlkji', {'@AUX@'=> undef}]},
      ],
     );
 
