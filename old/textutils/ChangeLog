@@ -1,6 +1,11 @@
-2002-04-12  Jim Meyering  <meyering@lucent.com>
+2002-04-15  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.22.
+
+	* src/tr.c (usage): Give a verbose description of --squeeze-repeats,
+	including the mention of SET1.  Reported by Dan Jacobson.
+
+2002-04-12  Jim Meyering  <meyering@lucent.com>
 
 	* src/Makefile.am (LDADD): List ../lib/libfetish.a both before
 	and after @LIBINTL@.  Thanks to Paul Eggert for the fix and to
