@@ -149,7 +149,7 @@ main (int argc, char **argv)
 	  || s < 0
 	  /* S must fit in a time_t.  */
 	  || s > TIME_T_MAX
-	  /* No extra chars after the number and an optional s,m,h,d char. */
+	  /* No extra chars after the number and an optional s,m,h,d char.  */
 	  || (*p && *(p+1))
 	  /* Check any suffix char and update S based on the suffix.  */
 	  || apply_suffix (&s, *p)
