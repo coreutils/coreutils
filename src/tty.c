@@ -46,8 +46,8 @@ enum
 /* The name under which this program was run. */
 char *program_name;
 
-/* If nonzero, return an exit status but produce no output. */
-static int silent;
+/* If true, return an exit status but produce no output. */
+static bool silent;
 
 static struct option const longopts[] =
 {
@@ -94,7 +94,7 @@ main (int argc, char **argv)
   initialize_exit_failure (TTY_WRITE_ERROR);
   atexit (close_stdout);
 
-  silent = 0;
+  silent = false;
 
   while ((optc = getopt_long (argc, argv, "s", longopts, NULL)) != -1)
     {
@@ -104,7 +104,7 @@ main (int argc, char **argv)
 	  break;
 
 	case 's':
-	  silent = 1;
+	  silent = true;
 	  break;
 
 	case_GETOPT_HELP_CHAR;
@@ -119,7 +119,7 @@ main (int argc, char **argv)
   if (optind < argc)
     error (0, 0, _("extra operand %s"), quote (argv[optind]));
 
-  tty = ttyname (0);
+  tty = ttyname (STDIN_FILENO);
   if (!silent)
     {
       if (tty)
@@ -128,5 +128,5 @@ main (int argc, char **argv)
 	puts (_("not a tty"));
     }
 
-  exit (isatty (0) ? EXIT_SUCCESS : EXIT_FAIL);
+  exit (isatty (STDIN_FILENO) ? EXIT_SUCCESS : EXIT_FAIL);
 }
