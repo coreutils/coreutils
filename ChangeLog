@@ -1,6 +1,13 @@
-2004-01-04  Jim Meyering  <jim@meyering.net>
+2004-01-08  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.1.1.
+
+	* tests/Makefile.am (TESTS_ENVIRONMENT): Remove `/vg' (prerelease test
+	remnant) from PATH component.  That would cause tests in this directory
+	not to run the just-built binaries, but rather whatever happened
+	to be in one's PATH.  Reported by Christian Krackowizer.
+
+2004-01-04  Jim Meyering  <jim@meyering.net>
 
 	* src/csplit.c (new_control_record): Use x2nrealloc
 	rather than xrealloc.
