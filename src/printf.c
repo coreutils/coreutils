@@ -79,8 +79,7 @@ static int exit_status;
 static int posixly_correct;
 
 /* This message appears in N_() here rather than just in _() below because
-   the sole use would have been in a #define, and xgettext doesn't look for
-   strings in cpp directives.  */
+   the sole use would have been in a #define.  */
 static char *const cfcc_msg =
  N_("warning: %s: character(s) following character constant have been ignored");
 
