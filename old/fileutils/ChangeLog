@@ -1,3 +1,8 @@
+2001-03-23  Jim Meyering  <meyering@lucent.com>
+
+	* missing: Handle shell built-ins (only `:' and `cd' for now) to work
+	around brain damage in Ultrix's /bin/sh.
+
 2001-03-18  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.0.42.
