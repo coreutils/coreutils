@@ -1,3 +1,12 @@
+2004-05-25  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* lib/xreadlink.c: Include xreadlink.h first, to catch .h file
+	dependency problems.
+	(xreadlink): Accept new arg SIZE, for efficiency.
+	All decls and uses changed.
+	* lib/xreadlink.h: Include <stddef.h>, for size_t.
+	* canonicalize.c (canonicalize_file_name): Update use of xreadlink.
+
 2004-06-01  Jim Meyering  <jim@meyering.net>
 
 	* xmalloc.c: Update from gnulib.
