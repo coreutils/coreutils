@@ -1,3 +1,8 @@
+2003-06-18  Jim Meyering  <jim@meyering.net>
+
+	* src/comm.c, src/join.c, src/nl.c, src/uniq.c: Reflect renaming:
+	readline -> readlinebuffer.
+
 2003-06-09  John David Anglin  <dave.anglin@nrc-cnrc.gc.ca>
 
 	* src/readlink.c: Include <sys/types.h> before system.h (because
