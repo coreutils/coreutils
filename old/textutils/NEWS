@@ -2,7 +2,7 @@ Changes in release 1.20
 * update configuration system to use automake's aclocal program
 * configure performs sanity check on CC and CFLAGS to avoid a misleading
   failure that suggested cross-compiling was the cause
-* distribute test suites for tr, sort, ... FIXME
+* distribute test suites for tr, sort (more will be integrated soon)
 * unexpand no longer gets in endless loop
 * when verifying checksums, md5sum uses the binary mode flag from the
   input stream rather than the one from the command line
