@@ -702,8 +702,26 @@ else
   esac
 fi
 test -s 8-bit-t.E || rm -f 8-bit-t.E
+$xx -j x  > invalid-j.O 2> invalid-j.E
+code=$?
+if test $code != 1; then
+  $echo "Test invalid-j failed: $xx return code $code differs from expected value 1" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp invalid-j.O $srcdir/invalid-j.X > /dev/null 2>&1
+  case $? in
+    0) if test "$VERBOSE"; then $echo "passed invalid-j"; fi;;
+    1) $echo "Test invalid-j failed: files invalid-j.O and $srcdir/invalid-j.X differ" 1>&2
+       (diff -c invalid-j.O $srcdir/invalid-j.X) 2> /dev/null
+       errors=`expr $errors + 1`;;
+    2) $echo "Test invalid-j may have failed." 1>&2
+       $echo The command "cmp invalid-j.O $srcdir/invalid-j.X" failed. 1>&2
+       errors=`expr $errors + 1`;;
+  esac
+fi
+test -s invalid-j.E || rm -f invalid-j.E
 if test $errors = 0; then
-  $echo Passed all 38 tests. 1>&2
+  $echo Passed all 39 tests. 1>&2
 else
   $echo Failed $errors tests. 1>&2
 fi
