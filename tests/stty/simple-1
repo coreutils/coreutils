@@ -1,0 +1,16 @@
+#! /bin/sh
+# Make sure stty can parse most of its options.
+
+: ${STTY=stty}
+
+if test "$VERBOSE" = yes; then
+  set -x
+  $RM --version
+fi
+
+saved_state=.saved-state
+$STTY --save > $saved_state || exit 1
+trap "status=$?; echo here; $STTY `cat $saved_state`; exit $status" 0 1 2 3 15
+$STTY `cat $saved_state` || exit 1
+
+exit 0
