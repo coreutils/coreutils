@@ -1,6 +1,6 @@
 2000-10-17  Jim Meyering  <meyering@lucent.com>
 
-	* quote.h [PARAMS]: Define and use.
+	* quote.h (PARAMS): Define and use.
 	Reported by Akim Demaille.
 
 	* getopt.c: Update from libc.
