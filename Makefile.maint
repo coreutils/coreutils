@@ -43,6 +43,10 @@ my_distdir = $(PACKAGE)-$(VERSION)
 # Used for diffs and xdeltas.
 release_archive_dir ?= ../release
 
+# Prevent programs like 'sort' from considering distinct strings to be equal.
+# Doing it here saves us from having to set LC_ALL elsewhere in this file.
+export LC_ALL = C
+
 
 
 ## --------------- ##
