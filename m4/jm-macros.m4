@@ -1,4 +1,4 @@
-#serial 71   -*- autoconf -*-
+#serial 72   -*- autoconf -*-
 
 dnl Misc type-related macros for fileutils, sh-utils, textutils.
 
@@ -75,6 +75,8 @@ AC_DEFUN([gl_MACROS],
   AC_REQUIRE([gl_CLOCK_TIME])
   AC_CHECK_FUNCS(gettimeofday)
   AC_FUNC_GETTIMEOFDAY_CLOBBER
+  # used by shred
+  AC_CHECK_FUNCS(directio)
 
   AC_REQUIRE([AC_FUNC_CLOSEDIR_VOID])
 
