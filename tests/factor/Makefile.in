@@ -43,13 +43,10 @@ GENCAT = @GENCAT@
 GMSGFMT = @GMSGFMT@
 CC = @CC@
 
-x = date
+x = factor
 explicit =
-maint_gen = t1.exp t2.exp t3.exp t4.exp t5.exp t6.exp t7.exp t8.exp t9.exp \
-tleap-1.exp
-run_gen = t1.out t1.err t2.out t2.err t3.out t3.err t4.out t4.err t5.out \
-t5.err t6.out t6.err t7.out t7.err t8.out t8.err t9.out t9.err tleap-1.out \
-tleap-1.err
+maint_gen = t1.exp t2.exp t3.exp t4.exp
+run_gen = t1.out t1.err t2.out t2.err t3.out t3.err t4.out t4.err
 
 EXTRA_DIST = mk-script.pl Test.pm $x-tests $(explicit) $(maint_gen)
 noinst_SCRIPTS = $x-tests
@@ -83,7 +80,7 @@ default: all
 .SUFFIXES:
 .SUFFIXES: .pl
 $(srcdir)/Makefile.in: @MAINT@ Makefile.am $(top_srcdir)/configure.in $(ACLOCAL) 
-	cd $(top_srcdir) && automake --gnu tests/date/Makefile
+	cd $(top_srcdir) && automake --gnu tests/factor/Makefile
 
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status $(BUILT_SOURCES)
 	cd $(top_builddir) \
@@ -95,7 +92,7 @@ TAGS:
 
 distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
 
-subdir = tests/date
+subdir = tests/factor
 distdir: $(DISTFILES)
 	@for file in $(DISTFILES); do \
 	  d=$(srcdir); \

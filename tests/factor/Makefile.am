@@ -1,13 +1,10 @@
 ## Process this file with automake to produce Makefile.in.
 
 ##test-files-begin
-x = date
+x = factor
 explicit =
-maint_gen = t1.exp t2.exp t3.exp t4.exp t5.exp t6.exp t7.exp t8.exp t9.exp \
-tleap-1.exp
-run_gen = t1.out t1.err t2.out t2.err t3.out t3.err t4.out t4.err t5.out \
-t5.err t6.out t6.err t7.out t7.err t8.out t8.err t9.out t9.err tleap-1.out \
-tleap-1.err
+maint_gen = t1.exp t2.exp t3.exp t4.exp
+run_gen = t1.out t1.err t2.out t2.err t3.out t3.err t4.out t4.err
 ##test-files-end
 
 EXTRA_DIST = mk-script.pl Test.pm $x-tests $(explicit) $(maint_gen)

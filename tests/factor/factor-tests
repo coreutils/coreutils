@@ -1,0 +1,86 @@
+#! /bin/sh
+# This script was generated automatically by build-script.
+case $# in
+  0) xx='../../src/factor';;
+  *) xx="$1";;
+esac
+test "$VERBOSE" && echo=echo || echo=:
+$echo testing program: $xx
+errors=0
+test "$srcdir" || srcdir=.
+test "$VERBOSE" && $xx --version 2> /dev/null
+$xx 9  > t1.out 2> t1.err
+code=$?
+if test $code != 0 ; then
+  $echo "Test 1 failed: ../../src/factor return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp t1.out $srcdir/t1.exp
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed 1"; fi ;;
+    1) $echo "Test 1 failed: files t1.out and $srcdir/t1.exp differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test 1 may have failed." 1>&2;
+       $echo The command "cmp t1.out $srcdir/t1.exp" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s t1.err || rm -f t1.err
+$xx 4294967291  > t2.out 2> t2.err
+code=$?
+if test $code != 0 ; then
+  $echo "Test 2 failed: ../../src/factor return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp t2.out $srcdir/t2.exp
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed 2"; fi ;;
+    1) $echo "Test 2 failed: files t2.out and $srcdir/t2.exp differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test 2 may have failed." 1>&2;
+       $echo The command "cmp t2.out $srcdir/t2.exp" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s t2.err || rm -f t2.err
+$xx 4294967292  > t3.out 2> t3.err
+code=$?
+if test $code != 0 ; then
+  $echo "Test 3 failed: ../../src/factor return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp t3.out $srcdir/t3.exp
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed 3"; fi ;;
+    1) $echo "Test 3 failed: files t3.out and $srcdir/t3.exp differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test 3 may have failed." 1>&2;
+       $echo The command "cmp t3.out $srcdir/t3.exp" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s t3.err || rm -f t3.err
+$xx 4294967293  > t4.out 2> t4.err
+code=$?
+if test $code != 0 ; then
+  $echo "Test 4 failed: ../../src/factor return code $code differs from expected value 0" 1>&2
+  errors=`expr $errors + 1`
+else
+  cmp t4.out $srcdir/t4.exp
+  case $? in
+    0) if test "$VERBOSE" ; then $echo "passed 4"; fi ;;
+    1) $echo "Test 4 failed: files t4.out and $srcdir/t4.exp differ" 1>&2;
+       errors=`expr $errors + 1` ;;
+    2) $echo "Test 4 may have failed." 1>&2;
+       $echo The command "cmp t4.out $srcdir/t4.exp" failed. 1>&2 ;
+       errors=`expr $errors + 1` ;;
+  esac
+fi
+test -s t4.err || rm -f t4.err
+if test $errors = 0 ; then
+  $echo Passed all 4 tests. 1>&2
+else
+  $echo Failed $errors tests. 1>&2
+fi
+test $errors = 0 || errors=1
+exit $errors
