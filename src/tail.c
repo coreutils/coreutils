@@ -55,6 +55,7 @@
 #include "system.h"
 #include "version.h"
 #include "xstrtol.h"
+#include "error.h"
 
 /* Disable assertions.  Some systems have broken assert macros.  */
 #define NDEBUG 1
@@ -106,7 +107,6 @@ enum header_mode
 };
 
 char *xmalloc ();
-void error ();
 int safe_read ();
 
 static int file_lines ();
@@ -249,13 +249,11 @@ main (argc, argv)
 	  if (*optarg == '+')
 	    {
 	      from_start = 1;
-	      ++optarg;
 	    }
-	  else if (*optarg == '-')
-	    ++optarg;
 
-	  /* FIXME: make sure tmp_long can't be negative.  */
 	  s_err = xstrtol (optarg, NULL, 0, &tmp_long, 1);
+	  if (tmp_long < 0)
+	    tmp_long = -tmp_long;
 	  n_units = tmp_long;
 	  if (s_err != LONGINT_OK)
 	    {
@@ -401,7 +399,8 @@ tail_file (filename, n_units, filenum)
 		}
 	      else if (!S_ISREG (stats.st_mode))
 		{
-		  error (0, 0, "%s: cannot follow end of non-regular file");
+		  error (0, 0, "%s: cannot follow end of non-regular file",
+			 filename);
 		  errors = 1;
 		}
 	      if (errors)
