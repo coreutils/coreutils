@@ -511,6 +511,9 @@ main (int argc, char **argv)
       usage (1);
     }
 
+  if (backup_suffix_string)
+    simple_backup_suffix = xstrdup (backup_suffix_string);
+
   backup_type = (make_backups
 		 ? xget_version (_("backup type"), version_control_string)
 		 : none);
