@@ -126,7 +126,7 @@
 #define CHMOD_MODE_BITS \
   (S_ISUID | S_ISGID | S_ISVTX | S_IRWXU | S_IRWXG | S_IRWXO)
 
-#if ST_MTIM_NSEC
+#ifdef ST_MTIM_NSEC
 # define ST_TIME_CMP_NS(a, b, ns) ((a).ns < (b).ns ? -1 : (a).ns > (b).ns)
 #else
 # define ST_TIME_CMP_NS(a, b, ns) 0
