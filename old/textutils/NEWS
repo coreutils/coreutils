@@ -1,4 +1,10 @@
+Major changes in release 1.9.1:
+* cut no longer ignores the last line of input when that line lacks a
+  trailing newline character
+
 Major changes in release 1.9:
+* `echo a:b:c: | cut -d: -f3-' prints `c:' and
+  `echo a:b | cut -d: -f1' prints `a'.
 * the command `printf '\t\n' |fold -w n' now terminates.
   Before, it wouldn't stop for n less than 8.
 * sort accepts and ignores -y[string] options for compatibilty with Solaris.

@@ -1,3 +1,25 @@
+Fri Nov 12 00:44:49 1993  Jim Meyering  (meyering@comco.com)
+
+	* Version 1.9.1.
+
+	* tac.c (usage): Fix typo in long usage.
+	* sort.c (usage): Likewise.
+	From Philippe.Schnoebelen@imag.fr.
+
+	* cut.c [FATAL_ERROR]: New macro.
+	(main): Call both error and usage (2) through FATAL_ERROR in
+	many places.  Before, only `error (2...' was called.
+	(invalid_list): Removed.  This function is subsumed by FATAL_ERROR.
+
+	* cut.c (cut_fields): Properly handle input lacking a terminating
+	newline.  Before, the command  `printf "a\tb" |cut -f 1' generated
+	no output.
+
+Tue Nov 09 17:26:25 1993  Jim Meyering  (meyering@comco.com)
+
+	od.c (usage): Change --backward-compatible to --traditional in
+	the long usage message.
+
 Sun Nov 07 00:50:05 1993  Jim Meyering  (meyering@comco.com)
 
 	* Version 1.9.
