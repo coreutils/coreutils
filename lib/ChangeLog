@@ -1,3 +1,16 @@
+2001-09-04  Paul Eggert  <eggert@twinsun.com>
+
+	* xreadlink.c (xreadlink): Omit size_t* arg.  All uses changed.
+	Use ssize_t, not int, to store result of readlink.
+	Check for ssize_t overflow as well as size_t overflow,
+	as POSIX says the result of readlink is implementation-defined
+	when ssize_t overflows.
+	Remove unnecessary cast to char*.
+	Use free+malloc instead of realloc, as the storage doesn't need
+	to be preserved and it's clearer and can be more efficient that way.
+	(SIZE_MAX, SSIZE_MAX): New macros, if <limits.h> doesn't declare.
+	* xreadlink.h (xreadlink): Update prototype.
+
 2001-09-03  Paul Eggert  <eggert@twinsun.com>
 
 	* exclude.c (fnmatch_no_wildcards): Fix confusion between
