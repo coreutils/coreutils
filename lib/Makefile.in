@@ -40,7 +40,7 @@ transform = @program_transform_name@
 
 noinst_LIBRARIES = fu
 
-EXTRA_DIST = group-member.c
+EXTRA_DIST = mkdir.c rmdir.c
 
 INCLUDES = -I.. -I$(srcdir) -I../intl
 
