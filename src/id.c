@@ -261,7 +261,7 @@ xgetgroups (const char *username, gid_t gid, int *n_groups,
   else
     max_n_groups = getugroups (0, NULL, username, gid);
 
-  g = xnmalloc (max_n_groups, sizeof (GETGROUPS_T));
+  g = xnmalloc (max_n_groups, sizeof *g);
   if (username == 0)
     ng = getgroups (max_n_groups, g);
   else
