@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2003-04-21.17}
+\def\texinfoversion{2003-04-28.10}
 %
 % Copyright (C) 1985, 1986, 1988, 1990, 1991, 1992, 1993, 1994, 1995,
 % 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
@@ -1484,7 +1484,8 @@ where each line of input produces a line of output.}
 
 % \smartitalic{ARG} outputs arg in italics, followed by an italic correction
 % unless the following character is such as not to need one.
-\def\smartitalicx{\ifx\next,\else\ifx\next-\else\ifx\next.\else\/\fi\fi\fi}
+\def\smartitalicx{\ifx\next,\else\ifx\next-\else\ifx\next.\else
+                    \ptexslash\fi\fi\fi}
 \def\smartslanted#1{{\ifusingtt\ttsl\sl #1}\futurelet\next\smartitalicx}
 \def\smartitalic#1{{\ifusingtt\ttsl\it #1}\futurelet\next\smartitalicx}
 
@@ -3389,6 +3390,7 @@ width0pt\relax} \fi
   %
   \smallfonts \rm
   \tolerance = 9500
+  \everypar = {}% don't want the \kern\-parindent from indentation suppression.
   \indexbreaks
   %
   % See if the index file exists and is nonempty.
@@ -6206,7 +6208,7 @@ width0pt\relax} \fi
   % In case the footnote comes at the end of a sentence, preserve the
   % extra spacing after we do the footnote number.
   \let\@sf\empty
-  \ifhmode\edef\@sf{\spacefactor\the\spacefactor}\/\fi
+  \ifhmode\edef\@sf{\spacefactor\the\spacefactor}\ptexslash\fi
   %
   % Remove inadvertent blank space before typesetting the footnote number.
   \unskip
