@@ -162,75 +162,86 @@ off_t lseek ();
    are more efficient but not thread-safe.  That they're not thread-safe
    is fine since all these applications are single threaded.  */
 
-#ifdef HAVE_FCLOSE_UNLOCKED
-# define FCLOSE(S) fclose_unlocked (S)
-#else
-# define FCLOSE(S) fclose (S)
-#endif
-
-#ifdef HAVE_FFLUSH_UNLOCKED
-# define FFLUSH(S) fflush_unlocked (S)
-#else
-# define FFLUSH(S) fflush (S)
-#endif
-
-#ifdef HAVE_GETC_UNLOCKED
-# define GETC(S) getc_unlocked (S)
-#else
-# define GETC(S) getc (S)
-#endif
-
-#ifdef HAVE_GETCHAR_UNLOCKED
-# define GETCHAR(S) getchar_unlocked (S)
-#else
-# define GETCHAR(S) getchar (S)
-#endif
-
-#ifdef HAVE_PUTCHAR_UNLOCKED
-# define PUTCHAR(C) putchar_unlocked (C)
-#else
-# define PUTCHAR(C) putchar (C)
-#endif
-
-#ifdef HAVE_PUTC_UNLOCKED
-# define PUTC(C, S) putc_unlocked (C, S)
-#else
-# define PUTC(C, S) putc (C, S)
-#endif
-
-#ifdef HAVE_FPUTC_UNLOCKED
-# define FPUTC(C, S) fputc_unlocked (C, S)
-#else
-# define FPUTC(C, S) fputc (C, S)
-#endif
-
-#ifdef HAVE_FREAD_UNLOCKED
-# define FREAD(P, Z, N, S) fread_unlocked (P, Z, N, S)
-#else
-# define FREAD(P, Z, N, S) fread (P, Z, N, S)
-#endif
-
-#ifdef HAVE_FWRITE_UNLOCKED
-# define FWRITE(P, Z, N, S) fwrite_unlocked (P, Z, N, S)
-#else
-# define FWRITE(P, Z, N, S) fwrite (P, Z, N, S)
-#endif
-
+#undef CLEARERR
 #ifdef HAVE_CLEARERR_UNLOCKED
 # define CLEARERR(S) clearerr_unlocked (S)
 #else
 # define CLEARERR(S) clearerr (S)
 #endif
 
+#undef FCLOSE
+#ifdef HAVE_FCLOSE_UNLOCKED
+# define FCLOSE(S) fclose_unlocked (S)
+#else
+# define FCLOSE(S) fclose (S)
+#endif
+
+#undef FEOF
 #ifdef HAVE_FEOF_UNLOCKED
 # define FEOF(S) feof_unlocked (S)
 #else
 # define FEOF(S) feof (S)
 #endif
 
+#undef FERROR
 #ifdef HAVE_FERROR_UNLOCKED
 # define FERROR(S) ferror_unlocked (S)
 #else
 # define FERROR(S) ferror (S)
 #endif
 
+#undef FFLUSH
+#ifdef HAVE_FFLUSH_UNLOCKED
+# define FFLUSH(S) fflush_unlocked (S)
+#else
+# define FFLUSH(S) fflush (S)
+#endif
+
+#undef FPUTC
+#ifdef HAVE_FPUTC_UNLOCKED
+# define FPUTC(C, S) fputc_unlocked (C, S)
+#else
+# define FPUTC(C, S) fputc (C, S)
+#endif
+
+#undef FREAD
+#ifdef HAVE_FREAD_UNLOCKED
+# define FREAD(P, Z, N, S) fread_unlocked (P, Z, N, S)
+#else
+# define FREAD(P, Z, N, S) fread (P, Z, N, S)
+#endif
+
+#undef FWRITE
+#ifdef HAVE_FWRITE_UNLOCKED
+# define FWRITE(P, Z, N, S) fwrite_unlocked (P, Z, N, S)
+#else
+# define FWRITE(P, Z, N, S) fwrite (P, Z, N, S)
+#endif
+
+#undef GETC
+#ifdef HAVE_GETC_UNLOCKED
+# define GETC(S) getc_unlocked (S)
+#else
+# define GETC(S) getc (S)
+#endif
+
+#undef GETCHAR
+#ifdef HAVE_GETCHAR_UNLOCKED
+# define GETCHAR(S) getchar_unlocked (S)
+#else
+# define GETCHAR(S) getchar (S)
+#endif
+
+#undef PUTC
+#ifdef HAVE_PUTC_UNLOCKED
+# define PUTC(C, S) putc_unlocked (C, S)
+#else
+# define PUTC(C, S) putc (C, S)
+#endif
+
+#undef PUTCHAR
+#ifdef HAVE_PUTCHAR_UNLOCKED
+# define PUTCHAR(C) putchar_unlocked (C)
+#else
+# define PUTCHAR(C) putchar (C)
+#endif
