@@ -1,4 +1,8 @@
 Changes in release 4.1:
+[4.0k]
+* touch would fail with the misleading diagnostic `no such file' when asked
+  to create a file in an unwritable directory.  Now it says something like
+  `permission denied' or `read-only file system'.
 [4.0j]
 * mkdir may now be used to set special bits  e.g., `mkdir -m o+t dir' works
 * touch can now change the time(s) of a file you own even if you don't have
