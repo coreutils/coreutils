@@ -1,6 +1,17 @@
-2002-05-03  Jim Meyering  <meyering@lucent.com>
+2002-05-24  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.13.
+
+	* src/pathchk.c (validate_path): Compare the result of the function --
+	not its (constant) address -- against zero.
+	Patch from Tim J. Robbins <tjr@FreeBSD.ORG>
+	* tests/misc/pathchk1: New test for the above.
+	* tests/misc: New directory.
+
+2002-05-03  Jim Meyering  <meyering@lucent.com>
+
+	* src/uptime.c (print_uptime): Use ngettext for day/days and user/users.
+	Suggestion from Karl Eichwalder.
 
 	* src/kill.c (usage): Add a little to the description of --list.
 	Uncapitalize first word and remove period at end of each one line
