@@ -17,8 +17,6 @@ ls: add --format=FORMAT option that controls how each line is printed.
 cp --no-preserve=X should not attempt to preserve attribute X
   reported by Andreas Schwab
 
-printf: support %b -- consider adapting builtins/printf.def from bash
-
 copy.c: Address the FIXME-maybe comment in copy_internal.
 And once that's done, add an exclusion so that `cp --link'
 no longer incurs the overhead of saving src. dev/ino and dest. filename
@@ -35,8 +33,6 @@ See if we can be consistent about where --verbose sends its output:
     shred mkdir split
   readlink is different
 
-coreutils.texi: Add an entry for sort's --stable option.
-
 Write an autoconf test to work around build failure in HPUX's 64-bit mode.
 See notes in README -- and remove them once there's a work-around.
 
@@ -48,3 +44,9 @@ as thousands separator in e.g. 1,000,000.  Instead, do this:
 
 Integrate use of sendfile, suggested here:
   http://mail.gnu.org/archive/html/bug-fileutils/2003-03/msg00030.html
+
+Should printf '\0123' print "\n3"?
+  per report from TAKAI Kousuke on Mar 27
+  http://mail.gnu.org/archive/html/bug-coreutils/2003-03/index.html
+
+printf: consider adapting builtins/printf.def from bash
