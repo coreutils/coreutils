@@ -916,6 +916,7 @@ main (int argc, char **argv)
 		       optarg);
 	      }
 	    columns = tmp_long;
+	    explicit_columns = true;
 	    break;
 	  }
 
