@@ -1,11 +1,6 @@
 #! /bin/sh
 # Demonstrate how mv fails when it tries to move a directory into itself.
 
-: ${MV=mv}
-: ${MKDIR=mkdir}
-: ${RM=rm}
-: ${TOUCH=touch}
-
 if test "$VERBOSE" = yes; then
   set -x
   mv --version
