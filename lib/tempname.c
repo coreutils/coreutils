@@ -106,13 +106,6 @@
 
 #if ! (HAVE___SECURE_GETENV || _LIBC)
 # define __secure_getenv getenv
-
-# ifndef HAVE_DECL_GETENV
-"this configure-time declaration test was not run"
-# endif
-# if !HAVE_DECL_GETENV
-char *getenv ();
-# endif
 #endif
 
 #ifdef _LIBC
