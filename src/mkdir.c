@@ -142,12 +142,6 @@ main (int argc, char **argv)
     {
       int fail = 0;
 
-      /* Remove any trailing slashes.  Not removing them would lead to calling
-	 `mkdir ("dir/", mode)' for e.g., the commands `mkdir dir/' and
-	 `mkdir -p dir/', and such a call fails on NetBSD systems when `dir'
-	 doesn't already exist.  */
-      strip_trailing_slashes (argv[optind]);
-
       if (create_parents)
 	{
 	  char *parents = dir_name (argv[optind]);
