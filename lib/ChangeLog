@@ -1,5 +1,9 @@
 2003-07-09  Jim Meyering  <jim@meyering.net>
 
+	* mktime.c: Update from gnulib.
+	FIXME: but still need to adjust m4/mktime.c so that this fixed
+	version is used when needed.
+
 	Fix the bug that would make `du /' omit the `/' on the last line.
 	E.g., `du --exclude '[^/]*' -x /' would print only "4\t\n" for me.
 	* ftw.c (ftw_dir): Don't clobber the leading `/'.
