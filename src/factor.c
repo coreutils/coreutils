@@ -45,6 +45,41 @@
    than 2^128, this constant (and the algorithm :-) will have to change.  */
 #define MAX_N_FACTORS 128
 
+/* The trial divisor increment wheel.  Use it to skip over divisors that
+   are composites of 2, 3, 5, 7, or 11.  The part from WHEEL_START up to
+   WHEEL_END is reused periodically, while the "lead in" is used to test
+   for those primes and to jump onto the wheel.  For more information, see
+   http://www.utm.edu/research/primes/glossary/WheelFactorization.html  */
+
+static const unsigned int wheel_tab[] = {
+  /* lead in: */  1, 2, 2, 4, 2,  /* and the periodic tail: */
+   4, 2, 4, 6, 2, 6, 4, 2, 4, 6, 6, 2, 6, 4, 2, 6, 4, 6, 8, 4,
+   2, 4, 2, 4,14, 4, 6, 2,10, 2, 6, 6, 4, 2, 4, 6, 2,10, 2, 4,
+   2,12,10, 2, 4, 2, 4, 6, 2, 6, 4, 6, 6, 6, 2, 6, 4, 2, 6, 4,
+   6, 8, 4, 2, 4, 6, 8, 6,10, 2, 4, 6, 2, 6, 6, 4, 2, 4, 6, 2,
+   6, 4, 2, 6,10, 2,10, 2, 4, 2, 4, 6, 8, 4, 2, 4,12, 2, 6, 4,
+   2, 6, 4, 6,12, 2, 4, 2, 4, 8, 6, 4, 6, 2, 4, 6, 2, 6,10, 2,
+   4, 6, 2, 6, 4, 2, 4, 2,10, 2,10, 2, 4, 6, 6, 2, 6, 6, 4, 6,
+   6, 2, 6, 4, 2, 6, 4, 6, 8, 4, 2, 6, 4, 8, 6, 4, 6, 2, 4, 6,
+   8, 6, 4, 2,10, 2, 6, 4, 2, 4, 2,10, 2,10, 2, 4, 2, 4, 8, 6,
+   4, 2, 4, 6, 6, 2, 6, 4, 8, 4, 6, 8, 4, 2, 4, 2, 4, 8, 6, 4,
+   6, 6, 6, 2, 6, 6, 4, 2, 4, 6, 2, 6, 4, 2, 4, 2,10, 2,10, 2,
+   6, 4, 6, 2, 6, 4, 2, 4, 6, 6, 8, 4, 2, 6,10, 8, 4, 2, 4, 2,
+   4, 8,10, 6, 2, 4, 8, 6, 6, 4, 2, 4, 6, 2, 6, 4, 6, 2,10, 2,
+  10, 2, 4, 2, 4, 6, 2, 6, 4, 2, 4, 6, 6, 2, 6, 6, 6, 4, 6, 8,
+   4, 2, 4, 2, 4, 8, 6, 4, 8, 4, 6, 2, 6, 6, 4, 2, 4, 6, 8, 4,
+   2, 4, 2,10, 2,10, 2, 4, 2, 4, 6, 2,10, 2, 4, 6, 8, 6, 4, 2,
+   6, 4, 6, 8, 4, 6, 2, 4, 8, 6, 4, 6, 2, 4, 6, 2, 6, 6, 4, 6,
+   6, 2, 6, 6, 4, 2,10, 2,10, 2, 4, 2, 4, 6, 2, 6, 4, 2,10, 6,
+   2, 6, 4, 2, 6, 4, 6, 8, 4, 2, 4, 2,12, 6, 4, 6, 2, 4, 6, 2,
+  12, 4, 2, 4, 8, 6, 4, 2, 4, 2,10, 2,10, 6, 2, 4, 6, 2, 6, 4,
+   2, 4, 6, 6, 2, 6, 4, 2,10, 6, 8, 6, 4, 2, 4, 8, 6, 4, 6, 2,
+   4, 6, 2, 6, 6, 6, 4, 6, 2, 6, 4, 2, 4, 2,10,12, 2, 4, 2,10,
+   2, 6, 4, 2, 4, 6, 6, 2,10, 2, 6, 4,14, 4, 2, 4, 2, 4, 8, 6,
+   4, 6, 2, 4, 6, 2, 6, 6, 4, 2, 4, 6, 2, 6, 4, 2, 4,12, 2,12};
+#define WHEEL_START (wheel_tab + 5)
+#define WHEEL_END (wheel_tab + (sizeof wheel_tab / sizeof wheel_tab[0]))
+
 /* The name this program was run with. */
 char *program_name;
 
@@ -82,16 +117,10 @@ factor (uintmax_t n0, int max_n_factors, uintmax_t *factors)
 {
   register uintmax_t n = n0, d, q;
   int n_factors = 0;
+  unsigned int const *w = wheel_tab;
 
   if (n < 1)
     return n_factors;
-
-  while (n % 2 == 0)
-    {
-      assert (n_factors < max_n_factors);
-      factors[n_factors++] = 2;
-      n /= 2;
-    }
 
   /* The exit condition in the following loop is correct because
      any time it is tested one of these 3 conditions holds:
@@ -101,7 +130,7 @@ factor (uintmax_t n0, int max_n_factors, uintmax_t *factors)
      If (1) or (2) obviously the right thing happens.
      If (3), then since n is composite it is >= d^2. */
 
-  d = 3;
+  d = 2;
   do
     {
       q = n / d;
@@ -112,7 +141,9 @@ factor (uintmax_t n0, int max_n_factors, uintmax_t *factors)
 	  n = q;
 	  q = n / d;
 	}
-      d += 2;
+      d += *(w++);
+      if (w == WHEEL_END)
+	w = WHEEL_START;
     }
   while (d <= q);
 
