@@ -1,9 +1,50 @@
+1997-12-15  Paul Eggert  <eggert@twinsun.com>
+
+	* ls.c (struct bin_str): Make len int, not unsigned, to avoid
+	bogus comparison < 0.
+	(quote_filename): Add forward decl.
+	(decode_switches): -b, -e, -N, -Q are now mutually exclusive.
+	(print_dir): Quote directory name as per quoting options.
+	(print_long_format): Don't count color changes as part of file name.
+	(quote_filename): Revamp interface: now accepts stream to output to
+	and filename, and returns length of quoted filename.
+	This removes duplicated code and should make errors less likely.
+	Also, no longer mallocs storage.  All callers changed.
+	Don't quote ' ' if -Q.
+	(OUTCHAR): New macro.
+	(SAVECHAR, SAVE_2_CHARS): Remove.
+	(print_name_with_quoting): New stack arg.  All callers changed.
+	(print_color_indicator): Cast ext len to size_t to avoid warning
+	with GCC 2.8.
+	(length_of_file_name_and_frills): Rewrite to use quote_filename.
+	This fixes bug when computing file name length with -e.
+
+1997-12-15  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* tests/rm/deep-1 (deep): Remove `find > k' debugging remnant.
+
+1997-12-14  Paul Eggert  <eggert@twinsun.com>
+
+	Add shell style quoting, and make it the default.
+
+	* NEWS, doc/fileutils.texi: Describe -e, which is now the default.
+	Describe change to --dired output.
+
+	* src/ls.c (quote_shell): New var.
+	(long_options, decode_switches, usage): New option -e or --quote-shell.
+	(dired_dump_obstack): New arg STYLE.
+	(main): Pass quoting style to dired_dump_obstack.
+	(decode_switches): -N now clears quote_as_string.
+	(quote_filename): Add shell style quoting.
+
 1997-12-14  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* tests/ln/sf-1: Make sure we get diagnostics in English.
+
+	* Version 3.16g.
 
 	* src/system.h: Remove lseek and memchr dcls.
 	* src/sys2.h: Put them here instead.
-
-	* Version 3.16g.
 
 	* src/rm.c (ASSIGN_STRDUPA): Cast alloca return value to char*.
 
