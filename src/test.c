@@ -824,23 +824,31 @@ unary_operator ()
 
     case 'u':			/* File is setuid? */
       unary_advance ();
+#ifndef S_ISUID
+      return (FALSE);
+#else
       if (test_stat (argv[pos - 1], &stat_buf) < 0)
 	return (FALSE);
 
       return (TRUE == (0 != (stat_buf.st_mode & S_ISUID)));
+#endif
 
     case 'g':			/* File is setgid? */
       unary_advance ();
+#ifndef S_ISGID
+      return (FALSE);
+#else
       if (test_stat (argv[pos - 1], &stat_buf) < 0)
 	return (FALSE);
 
       return (TRUE == (0 != (stat_buf.st_mode & S_ISGID)));
+#endif
 
     case 'k':			/* File has sticky bit set? */
       unary_advance ();
       if (test_stat (argv[pos - 1], &stat_buf) < 0)
 	return (FALSE);
-#if !defined (S_ISVTX)
+#ifndef S_ISVTX
       /* This is not Posix, and is not defined on some Posix systems. */
       return (FALSE);
 #else
