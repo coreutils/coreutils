@@ -5,6 +5,7 @@
 	* strtoll.c: New file, from GNU libc.
 	* xstrtoimax.c: New file.
 
+	* xstrtol.h: Add xstrtoimax.
 	* strtoumax.c: New file.  Simply include "strtoumax.c".
 	* strtoimax.c: New file.  Likewise, but first define STRTOUXMAX_SIGNED.
 
