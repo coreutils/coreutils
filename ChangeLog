@@ -6,6 +6,8 @@
 	properly.  Reported by Jeff Sheinberg as Debian bug #168203.
 	Patch by Michael Stone.
 
+	* tests/ls-2/tests (sl-dF-color): New test for the above fix.
+
 	* src/stat.c (usage): Transform --help items output via s/ - /   /,
 	so that help2man produces properly formatted man pages.
 	Reported by Herbert Xu as Debian bug #168400.
