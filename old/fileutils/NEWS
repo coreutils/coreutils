@@ -1,4 +1,7 @@
 Changes in release 4.1:
+[4.1-b2]
+* concurrent `mkdir -p' processes no longer fail when creating the
+  same hierarchy
 [4.1-b1]
 * ls --quoting-style=c prints correct octal escapes for certain nonprinting
   characters in file names.
