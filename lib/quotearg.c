@@ -58,8 +58,11 @@
 # include <string.h>
 #endif
 
-#if HAVE_MBRTOWC && HAVE_WCHAR_H
+#if HAVE_WCHAR_H
 # include <wchar.h>
+#endif
+
+#if HAVE_MBRTOWC && HAVE_WCHAR_H
 # if !HAVE_MBSTATE_T_OBJECT
 #  define mbrtowc(pwc, s, n, ps) (mbrtowc) (pwc, s, n, 0)
 # endif
