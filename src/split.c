@@ -80,7 +80,7 @@ static struct option const longopts[] =
   {"lines", required_argument, NULL, 'l'},
   {"line-bytes", required_argument, NULL, 'C'},
   {"suffix-length", required_argument, NULL, 'a'},
-  {"verbose", no_argument, &verbose, 0},
+  {"verbose", no_argument, &verbose, 1},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
