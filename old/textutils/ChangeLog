@@ -1,9 +1,15 @@
+Mon Feb 12 21:12:28 1996  Jim Meyering  (meyering@na-net.ornl.gov)
+
+	* fmt.c [TRUE]: Undefine before defining to avoid warning on NeXT.
+	[FALSE]: Likewise.
+	From Derek Clegg (dclegg@next.com).
+
 Sat Feb  3 16:20:40 1996  Jim Meyering  (meyering@na-net.ornl.gov)
-	
+
 	* Version 1.14.
-	
+
 Wed Jan 31 23:26:13 1996  Jim Meyering  (meyering@na-net.ornl.gov)
-	
+
 	* tail.c (dump_remainder): Flush stdout when tailing-forever on
 	multiple files.  From Carlos Canau <Carlos.Canau@relay.puug.pt>.
 
