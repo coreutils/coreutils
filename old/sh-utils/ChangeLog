@@ -1,3 +1,21 @@
+Sun May 29 17:40:21 1994  Jim Meyering  (meyering@comco.com)
+
+	* long-options.c: Move from src/ to lib/.
+	* long-options.h: Ditto.
+	* src/Makefile.in: Remove references to long-options.[ch].
+	* lib/Makefile.in (SOURCES, OBJECTS): Add long-options.[co].
+
+Fri May 27 18:20:18 1994  Jim Meyering  (meyering@comco.com)
+
+	* stty.c [VFLUSH && !VFLUSHO]: Define VFLUSH0.
+	Ultrix's termios.h defines VFLUSH, but not VFLUSHO.
+	From Kjetil Torgrim Homme <kjetilho@ifi.uio.no>.
+
+Thu May 26 08:46:32 1994  Jim Meyering  (meyering@comco.com)
+
+	* configure.in [INSTALL]: Revert change of March 8.  autoconf
+	has fixed this.
+
 Thu May 19 01:10:20 1994  Jim Meyering  (meyering@comco.com)
 
 	* Version 1.10.
