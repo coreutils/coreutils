@@ -27,6 +27,8 @@ fi
 
 fail=0
 
-du -sD A B || fail=1
+# This used to fail with the following diagnostic:
+# du: `B': No such file or directory
+du -sD A B > /dev/null 2>&1 || fail=1
 
 (exit $fail); exit $fail
