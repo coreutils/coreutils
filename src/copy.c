@@ -39,6 +39,7 @@
 #include "quote.h"
 #include "same.h"
 #include "savedir.h"
+#include "utimecmp.h"
 #include "utimens.h"
 #include "xreadlink.h"
 
@@ -945,16 +946,28 @@ copy_internal (const char *src_path, const char *dst_path,
 		  return 1;
 		}
 
-	      if (x->update && MTIME_CMP (src_sb, dst_sb) <= 0)
+	      if (x->update)
 		{
-		  /* We're using --update and the source file is older
-		     than the destination file, so there is no need to
-		     copy or move.  */
-		  /* Pretend the rename succeeded, so the caller (mv)
-		     doesn't end up removing the source file.  */
-		  if (rename_succeeded)
-		    *rename_succeeded = 1;
-		  return 0;
+		  /* When preserving time stamps (but not moving within a file
+		     system), don't worry if the destination time stamp is
+		     less than the source merely because of time stamp
+		     truncation.  */
+		  int options = ((x->preserve_timestamps
+				  && ! (x->move_mode
+					&& dst_sb.st_dev == src_sb.st_dev))
+				 ? UTIMECMP_TRUNCATE_SOURCE
+				 : 0);
+
+		  if (0 <= utimecmp (dst_path, &dst_sb, &src_sb, options))
+		    {
+		      /* We're using --update and the destination is not older
+			 than the source, so do not copy or move.  Pretend the
+			 rename succeeded, so the caller (if it's mv) doesn't
+			 end up removing the source file.  */
+		      if (rename_succeeded)
+			*rename_succeeded = 1;
+		      return 0;
+		    }
 		}
 	    }
 
