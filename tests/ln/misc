@@ -94,7 +94,8 @@ ln b b~ || test_failure=1
 ln -V simple -f -b a b || fail=1
 
 # Create a hard link to a dangling symlink.
-# This is not portable.  At least sunos4.1.4 fails this test.  It gets
+# This is not portable.  At least sunos4.1.4 and OpenBSD 2.3 fail this test.
+# They get this:
 # ln: cannot create hard link `hard-to-dangle' to `no-such-dir': \
 #   No such file or directory
 #
