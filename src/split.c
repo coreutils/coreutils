@@ -112,7 +112,8 @@ Usage: %s [OPTION] [INPUT [PREFIX]]\n\
 	      program_name);
     fputs (_("\
 Output fixed-size pieces of INPUT to PREFIXaa, PREFIXab, ...; default\n\
-PREFIX is `x'.  With no INPUT, or when INPUT is -, read standard input.\n\
+size is 1000 lines, and default PREFIX is `x'.  With no INPUT, or when INPUT\n\
+is -, read standard input.\n\
 \n\
 "), stdout);
       fputs (_("\
