@@ -1,5 +1,11 @@
 Sat Nov  2 07:05:36 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* src/ls.c (gobble_file): Set linkok for non-orphaned symlinks.
+	From Bauke Jan Douma.
+	(gobble_file): Initialize linkok.
+	With these two changes, ls --color should display orphaned symlinks
+	as blinking text on terminals that support it.
+
 	* configure.in (ALL_LINGUAS): Add Spanish (es).
 
 	* doc/Makefile.am (MAKEINFO): Set to makeinfo --no-split.
