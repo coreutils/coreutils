@@ -1,0 +1,51 @@
+#!/bin/sh
+# Ensure that cp/mv don't clobber a just-copied file.
+# With fileutils-4.1 and earlier, this test would fail.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  cp --version
+  mv --version
+fi
+
+. $srcdir/../envvar-check
+. $srcdir/../lang-default
+PRIV_CHECK_ARG=require-non-root . $srcdir/../priv-check
+
+pwd=`pwd`
+tmp=childproof.$$
+trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
+trap '(exit $?); exit' 1 2 13 15
+
+framework_failure=0
+mkdir $tmp || framework_failure=1
+cd $tmp || framework_failure=1
+mkdir a b c || framework_failure=1
+echo a > a/f || framework_failure=1
+echo b > b/f || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo 'failure in testing framework' 1>&2
+  (exit 1); exit
+fi
+
+fail=0
+
+cp a/f b/f c 2> /dev/null && fail=1
+rm -f c/f
+
+# With --backup=numbered, it should succeed
+cp --backup=numbered a/f b/f c || fail=1
+rm -f c/f*
+
+mv a/f b/f c 2> /dev/null && fail=1
+
+# Make sure mv still works when moving hard links.
+# This is where the same_file test is necessary, and why
+# we save file names in addition to dev/ino.
+rm -f c/f* b/f
+touch a/f
+ln a/f b/g
+mv a/f b/g c || fail=1
+
+(exit $fail); exit
