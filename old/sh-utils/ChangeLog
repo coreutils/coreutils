@@ -1,10 +1,14 @@
+2002-07-27  Jim Meyering  <meyering@lucent.com>
+
+	* Version 2.0.13.
+	* Upgrade to cvs automake -- required to work with 2.53b.
+	* configure.ac: Require automake-1.6a.
+
 2002-07-24  Jim Meyering  <meyering@lucent.com>
 
 	* src/Makefile.am (AM_INSTALLCHECK_STD_OPTIONS_EXEMPT): Exempt false.
 
 2002-07-20  Jim Meyering  <meyering@lucent.com>
-
-	* Version 2.0.13.
 
 	* tests/Makefile.am (TESTS_ENVIRONMENT): Remove now-unused parts
 	of this definition.
@@ -42,7 +46,7 @@
 
 2002-07-13  Bruno Haible  <bruno@clisp.org>
 
-	* uptime.c: Include sys/sysctl.h.
+	* src/uptime.c: Include sys/sysctl.h.
 	(print_uptime): Add support for determining the boot time on FreeBSD.
 
 2002-07-15  Jim Meyering  <meyering@lucent.com>
