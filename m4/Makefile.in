@@ -69,7 +69,6 @@ CXX = @CXX@
 CXXCPP = @CXXCPP@
 DATADIRNAME = @DATADIRNAME@
 DEPDIR = @DEPDIR@
-DF_PROG = @DF_PROG@
 GENCAT = @GENCAT@
 GETCONF = @GETCONF@
 GMOFILES = @GMOFILES@
@@ -90,6 +89,7 @@ PACKAGE = @PACKAGE@
 PERL = @PERL@
 POFILES = @POFILES@
 POSUB = @POSUB@
+POW_LIBM = @POW_LIBM@
 RANLIB = @RANLIB@
 U = @U@
 USE_INCLUDED_LIBINTL = @USE_INCLUDED_LIBINTL@
@@ -139,7 +139,6 @@ readdir.m4 \
 realloc.m4 \
 regex.m4 \
 search-libs.m4 \
-ssize_t.m4 \
 st_dm_mode.m4 \
 st_mtim.m4 \
 stat.m4 \
