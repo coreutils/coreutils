@@ -1,3 +1,8 @@
+2000-05-20  Jim Meyering  <meyering@lucent.com>
+
+	* prereq.m4 (jm_PREREQ_HUMAN): New macro.
+	(jm_PREREQ): Use it.
+
 2000-05-09  Jim Meyering  <meyering@lucent.com>
 
 	* gettext.m4: Rename this...
