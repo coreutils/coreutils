@@ -1,6 +1,6 @@
 /* human.h -- print human readable file size
 
-   Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004
+   Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005
    Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -39,13 +39,13 @@
 /* A conservative bound on the maximum length of a human-readable string.
    The output can be the square of the largest uintmax_t, so double
    its size before converting to a bound.
-   302 / 1000 is ceil (log10 (2.0)).  Add 1 for integer division truncation.
+   log10 (2.0) < 146/485.  Add 1 for integer division truncation.
    Also, the output can have a thousands separator between every digit,
    so multiply by MB_LEN_MAX + 1 and then subtract MB_LEN_MAX.
    Append 1 for a space before the suffix.
    Finally, append 3, the maximum length of a suffix.  */
 # define LONGEST_HUMAN_READABLE \
-  ((2 * sizeof (uintmax_t) * CHAR_BIT * 302 / 1000 + 1) * (MB_LEN_MAX + 1) \
+  ((2 * sizeof (uintmax_t) * CHAR_BIT * 146 / 485 + 1) * (MB_LEN_MAX + 1) \
    - MB_LEN_MAX + 1 + 3)
 
 /* Options for human_readable.  */
