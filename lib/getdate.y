@@ -953,6 +953,8 @@ get_date (const char *p, const time_t *now)
   tm.tm_hour += yyRelHour;
   tm.tm_min += yyRelMinutes;
   tm.tm_sec += yyRelSeconds;
+  if (yyHaveDate | yyHaveDay | yyHaveTime | yyRelDay | yyRelMonth | yyRelYear)
+    tm.tm_isdst = -1;
   tm0 = tm;
 
   Start = mktime (&tm);
