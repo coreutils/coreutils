@@ -20,6 +20,7 @@
 # endif
 #endif
 
+/* This is for BeOS.  */
 #if !defined getpagesize && HAVE_OS_H
 # include <OS.h>
 # if defined B_PAGE_SIZE
