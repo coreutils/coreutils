@@ -1,6 +1,21 @@
-2004-07-01  Jim Meyering  <jim@meyering.net>
+2004-07-01  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.0.
+
+	* NEWS: Add short names -t and -T for --target-directory
+	and --no-target-directory options, respectively.
+
+	* src/cp.c (NO_TARGET_DIRECTORY_OPTION, TARGET_DIRECTORY_OPTION):
+	Remove.  All uses changed to 'T' and 't', respectively.
+	* src/install.c, src/ln.c, src/mv.c: Likewise.
+
+	* src/cp.c (long_opts, usage, do_copy, main): Add -t and -T as
+	aliases for --target-directory and --no-target-directory,
+	respectively.
+	* src/install.c (long_options, main, usage): Likewise.
+	* src/ln.c, src/mv.c: Likewise.
+
+2004-07-01  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.maint (sc_file_system): New target.
 	(syntax-check-rules): Add it.
