@@ -1,3 +1,8 @@
+1997-11-15  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* intl/Makefile.in (distclean): Don't remove libintl.h here.
+	* Makefile.am (DISTCLEANFILES): Remove it here instead.
+
 1997-11-13  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* lib/mktime.c: Update from FSF.
