@@ -1,5 +1,19 @@
 Wed Jan 29 20:54:24 1997  Jim Meyering  <meyering@na-net.ornl.gov>
 
+	* tests/tr-test/Test.pm: Do each test twice: get input via REDIR
+	and PIPE.
+
+	* tests/tail/Test.pm (test_vector): Do each (non-stdin-requiring)
+	test three times.
+
+	* tests/pr-test/Test.pm: Remove common_option_prefix flag.
+	(test_vector): Prepend the common option here instead.
+
+	* tests/md5sum-test/Test.pm: Remove input_via_stdin flag.
+	Do each test twice: get input via REDIR and PIPE.
+
+	* tests/cut-test/Test.pm: Do each test three times.
+
 	* tests/cut-test/mk-script.pl: Allow each test to be run any or all
 	of three different ways.  Program input may be specified via a file
 	or files listed on the command line, via input redirection (if there's
