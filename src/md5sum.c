@@ -152,7 +152,7 @@ split_3 (char *s, size_t s_len, unsigned char **u, int *binary, char **w)
       ++i;
       filename_has_newline = 1;
     }
-  *u = &s[i];
+  *u = (unsigned char *) &s[i];
 
   /* The first field has to be the 32-character hexadecimal
      representation of the message digest.  If it is not followed
