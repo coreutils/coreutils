@@ -1,5 +1,5 @@
 /* makepath.c -- Ensure that a directory path exists.
-   Copyright (C) 1990, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1990, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -48,6 +48,10 @@ char *alloca ();
 
 #if !defined(S_ISDIR) && defined(S_IFDIR)
 # define S_ISDIR(m) (((m) & S_IFMT) == S_IFDIR)
+#endif
+
+#ifndef S_IRWXUGO
+# define S_IRWXUGO (S_IRWXU | S_IRWXG | S_IRWXO)
 #endif
 
 #if STDC_HEADERS
@@ -380,13 +384,17 @@ make_path (const char *argpath,
 	      error (0, errno, _("cannot chown %s"), dirpath);
 	      retval = 1;
 	    }
-	  /* chown may have turned off some permission bits we wanted.  */
-	  if ((mode & (S_ISUID | S_ISGID | S_ISVTX))
-	      && chmod (basename_dir, mode))
-	    {
-	      error (0, errno, _("cannot chmod %s"), dirpath);
-	      retval = 1;
-	    }
+	}
+
+      /* The above chown may have turned off some permission bits in MODE.
+	 Another reason we may have to use chmod here is that mkdir(2) is
+	 required to honor only the file permission bits.  In particular,
+	 it may not have honored the `special' bits.  */
+      if ((mode & ~S_IRWXUGO)
+	  && chmod (basename_dir, mode))
+	{
+	  error (0, errno, _("cannot chmod %s"), dirpath);
+	  retval = 1;
 	}
 
       CLEANUP_CWD;
