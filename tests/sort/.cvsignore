@@ -2,5 +2,5 @@ t*.out
 t*.in
 t*.exp
 t*.err
-build-script
 Makefile
+mk-script
