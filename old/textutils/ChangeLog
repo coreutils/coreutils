@@ -15,6 +15,33 @@
 
 	* tests/Makefile.am: Qualify .env-warn with $(srcdir)/ prefix.
 
+1999-05-25  Paul Eggert  <eggert@shade.twinsun.com>
+
+	* lib/linebuffer.c (readline):
+	Append trailing newline to line.
+	* lib/linebuffer.h
+	[struct linebuffer] (size): Declare to be of type size_t, not long.
+	[struct linebuffer] (length): Likewise.
+	* src/comm.c, (writeline): Lines now contain trailing newline.
+	* src/uniq.c (find_field, different): Use size_t, not int, for lengths.
+	(writeline): Lines now contain trailing newline.
+	(check_file): Use size_t, not int, for lengths.
+	* src/nl.c (proc_text, check_section, main): More of the same.
+
+	* lib/linebuffer.h (struct linebuffer): Use size_t for sizes.
+	src/nl.c (header_del_len, body_del_len, footer_del_len, main):
+	Likewise.
+	src/uniq.c (find_field, different, check_file): Likewise.
+
+	* lib/linebuffer.c (readline): Silently append trailing
+	newline if needed.  Do not bother setting buffer length to 0
+	at EOF, since it's not part of the spec and nobody relies on
+	it.  Do not compute the difference between unrelated pointers.
+
+1999-05-25  Paul Eggert  <eggert@twinsun.com>
+
+	* src/tac.c (memrchr): Ifdef out this unused function.
+
 1999-05-25  Jim Meyering  <meyering@ascend.com>
 
 	* doc/textutils.texi (Squeezing): Remove misleading square brackets
