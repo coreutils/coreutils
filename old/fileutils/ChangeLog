@@ -12,6 +12,9 @@
 	chmod step.  copy_reg now sets permissions of such files upon creation.
 	Use get_dest_mode, so there's just one chmod call here.
 
+	* tests/cp/perm: New tests, to help ensure the above didn't
+	change anything.
+
 2000-08-12  Jim Meyering  <meyering@lucent.com>
 
 	* tests/mv/into-self-2: Remove test for the VERSION_CONTROL and/or
