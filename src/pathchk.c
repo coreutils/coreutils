@@ -212,7 +212,7 @@ dir_ok (path)
 {
   struct stat stats;
 
-  if (SAFE_STAT (path, &stats))
+  if (safe_stat (path, &stats))
     return 2;
 
   if (!S_ISDIR (stats.st_mode))
