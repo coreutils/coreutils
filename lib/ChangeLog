@@ -1,3 +1,8 @@
+2000-07-16  Bruno Haible  <haible@clisp.cons.org>
+
+	* mbswidth.h: New file.
+	* mbswidth.c: New file.
+
 2000-07-17  Bruno Haible  <haible@clisp.cons.org>
 
 	* config.charset: Add support for FreeBSD. Improve support for HP-UX
