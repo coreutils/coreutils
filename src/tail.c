@@ -523,7 +523,7 @@ pipe_lines (const char *pretty_filename, int fd, long int n_lines)
     }
 
   /* If the file is empty, then bail out.  */
-  if (nbytes + last->nbytes == 0)
+  if (last->nbytes == 0)
     goto free_lbuffers;
 
   /* This prevents a core dump when the pipe contains no newlines.  */
