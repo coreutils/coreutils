@@ -25,6 +25,8 @@
 # include <config.h>
 #endif
 
+#include <alloca.h>
+
 #include <string.h>
 #include <stdlib.h>
 

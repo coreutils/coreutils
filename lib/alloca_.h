@@ -1,5 +1,7 @@
 /* Memory allocation on the stack.
-   Copyright (C) 1995, 1999, 2001-2003 Free Software Foundation, Inc.
+
+   Copyright (C) 1995, 1999, 2001, 2002, 2003, 2004 Free Software
+   Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published
@@ -23,8 +25,8 @@
 #ifndef _ALLOCA_H
 # define _ALLOCA_H
 
-/* alloca(N) returns a pointer (void* or char*) to N bytes of memory
-   allocated on the stack, and which will last until the function returns.
+/* alloca (N) returns a pointer to N bytes of memory
+   allocated on the stack, which will last until the function returns.
    Use of alloca should be avoided:
      - inside arguments of function calls - undefined behaviour,
      - in inline functions - the allocation may actually last until the
@@ -34,35 +36,19 @@
        request, the program just crashes.
  */
 
-# ifdef __GNUC__
-#  ifndef alloca
-#   define alloca __builtin_alloca
-#  endif
-# else
-#  ifdef _MSC_VER
-#   include <malloc.h>
-#   define alloca _alloca
-#  else
-#   if HAVE_ALLOCA_H
-#    include <alloca.h>
-#   else
-#    ifdef _AIX
- #    pragma alloca
-#    else
-#     ifdef __hpux /* This section must match that of bison generated files. */
-#      ifdef __cplusplus
-extern "C" void *alloca (unsigned int);
-#      else /* not __cplusplus */
-extern void *alloca ();
-#      endif /* not __cplusplus */
-#     else /* not __hpux */
-#      ifndef alloca
-extern char *alloca ();
-#      endif
-#     endif /* __hpux */
-#    endif
-#   endif
-#  endif
+#ifdef __GNUC__
+# define alloca __builtin_alloca
+#elif defined _AIX
+# define alloca __alloca 
+#elif defined _MSC_VER
+# include <malloc.h>
+# define alloca _alloca
+#else
+# include <stddef.h>
+# ifdef  __cplusplus
+extern "C"
 # endif
+void *alloca (size_t);
+#endif
 
 #endif /* _ALLOCA_H */
