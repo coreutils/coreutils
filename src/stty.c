@@ -1,5 +1,5 @@
 /* stty -- change and print terminal line settings
-   Copyright (C) 1990-2002 Free Software Foundation, Inc.
+   Copyright (C) 1990-2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -449,6 +449,9 @@ static struct option longopts[] =
 
 /* The name this program was run with. */
 char *program_name;
+
+static void wrapf (const char *message, ...)
+     __attribute__ ((__format__ (__printf__, 1, 2)));
 
 /* Print format string MESSAGE and optional args.
    Wrap to next line first if it won't fit.
