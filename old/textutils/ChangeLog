@@ -1,5 +1,9 @@
 Sat Jun 24 16:18:01 1995  Jim Meyering  (meyering@comco.com)
 
+	* md5sum.c [__GNUC__]: Don't conditionalize use of "inline".
+	Autoconf (via config.h) defines it away for compilers that don't
+	grok it.
+
 	* cat.c, comm.c, join.c, sort.c, uniq.c: Undefine min/max before
 	defining to avoid redefinition warning on some systems.
 
