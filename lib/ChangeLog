@@ -1,3 +1,9 @@
+2004-09-23  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* modechange.c (mode_compile): Don't decrement a pointer that
+	points to the start of a string, as the C Standard says the
+	resulting behavior is undefined.
+
 2004-09-22  Jim Meyering  <jim@meyering.net>
 
 	* getopt.c: Remove extraneous spaces before TAB.
