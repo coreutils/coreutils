@@ -54,6 +54,8 @@ char *getenv ();
 # include <strings.h>
 #endif
 
+#include <stdio.h>
+
 #include "gettext.h"
 #define _(msgid) gettext (msgid)
 
