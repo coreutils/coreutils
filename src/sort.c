@@ -362,6 +362,9 @@ native byte values.\n\
   exit (status);
 }
 
+static char const short_options[] =
+"-bcdfgik:mMno:rsS:t:T:uy" OPTARG_POSIX "z";
+
 static struct option const long_options[] =
 {
   {"ignore-leading-blanks", no_argument, NULL, 'b'},
@@ -2262,8 +2265,7 @@ main (int argc, char **argv)
 		    && optind != argc
 		    && argv[optind][0] == '-' && argv[optind][1] == 'o'
 		    && (argv[optind][2] || optind + 1 != argc)))
-	  || ((c = getopt_long (argc, argv,
-				"-bcdfgik:mMno:rsS:t:T:uy::z",
+	  || ((c = getopt_long (argc, argv, short_options,
 				long_options, NULL))
 	      == -1))
 	{
@@ -2292,7 +2294,7 @@ main (int argc, char **argv)
 		}
 	      else
 		{
-		  if (! posix_pedantic)
+		  if (OBSOLETE_OPTION_WARNINGS && ! posix_pedantic)
 		    error (0, 0,
 			   _("warning: `sort %s' is obsolete; use `sort -k'"),
 			   optarg);
@@ -2428,8 +2430,10 @@ main (int argc, char **argv)
 
 	case 'y':
 	  /* Accept and ignore e.g. -y0 for compatibility with Solaris
-	     2.x through Solaris 7.  -y is marked as obsolete starting
-	     with Solaris 8.  */
+	     2.x through Solaris 7.  -y SIZE is marked as obsolete
+	     starting with Solaris 8.  */
+	  if (OBSOLETE_OPTION_WARNINGS && ! optarg && ! posix_pedantic)
+	    error (0, 0, _("warning: `sort -y' is obsolete; omit `-y'"));
 	  break;
 
 	case 'z':
