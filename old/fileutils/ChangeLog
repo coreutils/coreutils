@@ -1,5 +1,9 @@
 2001-05-24  Jim Meyering  <meyering@lucent.com>
 
+	* Makefile.maint (wget-update): Have wget write to a temporary file,
+	and replace the original only if wget succeeds.
+	Also get ansi2nkr.c.
+
 	* src/ls.c: Use `#if D_TYPE_IN_DIRENT && defined DTTOIF' to
 	determine whether to enable the DT_INIT definition, not the less
 	portable `#if defined _DIRENT_HAVE_D_TYPE || defined DTTOIF'.
