@@ -23,16 +23,15 @@
 
 #include <sys/types.h>
 
-#if HAVE_UNISTD_H
-# include <unistd.h>
+#include <errno.h>
+#ifndef errno
+extern int errno;
 #endif
 
 #if HAVE_DIRENT_H
 # include <dirent.h>
-# define NAMLEN(dirent) strlen((dirent)->d_name)
 #else
 # define dirent direct
-# define NAMLEN(dirent) (dirent)->d_namlen
 # if HAVE_SYS_NDIR_H
 #  include <sys/ndir.h>
 # endif
@@ -54,26 +53,25 @@
 #ifdef STDC_HEADERS
 # include <stdlib.h>
 # include <string.h>
-#else
-char *malloc ();
-char *realloc ();
 #endif
 #ifndef NULL
 # define NULL 0
 #endif
 
-#ifndef stpcpy
-char *stpcpy ();
-#endif
-
 #include "savedir.h"
+#include "xalloc.h"
 
 /* Return a freshly allocated string containing the filenames
    in directory DIR, separated by '\0' characters;
    the end is marked by two '\0' characters in a row.
    NAME_SIZE is the number of bytes to initially allocate
    for the string; it will be enlarged as needed.
-   Return NULL if DIR cannot be opened or if out of memory. */
+   Use NAME_SIZE == -1 if you do not know the size.
+   Return NULL (setting errno) if DIR cannot be opened, read, or closed.  */
+
+#ifndef NAME_SIZE_DEFAULT
+# define NAME_SIZE_DEFAULT 512
+#endif
 
 char *
 savedir (const char *dir, off_t name_size)
@@ -81,57 +79,58 @@ savedir (const char *dir, off_t name_size)
   DIR *dirp;
   struct dirent *dp;
   char *name_space;
-  char *namep;
+  size_t allocated = name_size; /* Overflow is checked indirectly below.  */
+  size_t used = 0;
+  int save_errno;
 
   dirp = opendir (dir);
   if (dirp == NULL)
     return NULL;
 
-  /* Be sure name_size is at least `1' so there's room for
-     the final NUL byte.  */
-  if (name_size <= 0)
-    name_size = 1;
+  /* Use the default if the size is not known.  Be sure "allocated"
+     is at least `1' so there's room for the final NUL byte.
+     Do not simply test name_size <= 0, because the initialization
+     of "allocated" might have overflowed.  */
+  if (name_size < 0 || allocated == 0)
+    allocated = NAME_SIZE_DEFAULT;
 
-  name_space = (char *) malloc (name_size);
-  if (name_space == NULL)
-    {
-      closedir (dirp);
-      return NULL;
-    }
-  namep = name_space;
+  name_space = xmalloc (allocated);
 
+  errno = 0;
   while ((dp = readdir (dirp)) != NULL)
     {
-      /* Skip "." and ".." (some NFS filesystems' directories lack them). */
-      if (dp->d_name[0] != '.'
-	  || (dp->d_name[1] != '\0'
-	      && (dp->d_name[1] != '.' || dp->d_name[2] != '\0')))
+      /* Skip "", ".", and "..".  "" is returned by at least one buggy
+         implementation: Solaris 2.4 readdir on NFS filesystems.  */
+      char const *entry = dp->d_name;
+      if (entry[entry[0] != '.' ? 0 : entry[1] != '.' ? 1 : 2] != '\0')
 	{
-	  off_t size_needed = (namep - name_space) + NAMLEN (dp) + 2;
-
-	  if (size_needed > name_size)
+	  size_t entry_size = strlen (entry) + 1;
+	  if (used + entry_size < used)
+	    xalloc_die ();
+	  if (allocated <= used + entry_size)
 	    {
-	      char *new_name_space;
-
-	      while (size_needed > name_size)
-		name_size += 1024;
-
-	      new_name_space = realloc (name_space, name_size);
-	      if (new_name_space == NULL)
+	      do
 		{
-		  closedir (dirp);
-		  return NULL;
+		  if (2 * allocated < allocated)
+		    xalloc_die ();
+		  allocated *= 2;
 		}
-	      namep += new_name_space - name_space;
-	      name_space = new_name_space;
+	      while (allocated <= used + entry_size);
+
+	      name_space = xrealloc (name_space, allocated);
 	    }
-	  namep = stpcpy (namep, dp->d_name) + 1;
+	  memcpy (name_space + used, entry, entry_size);
+	  used += entry_size;
 	}
     }
-  *namep = '\0';
-  if (CLOSEDIR (dirp))
+  name_space[used] = '\0';
+  save_errno = errno;
+  if (CLOSEDIR (dirp) != 0)
+    save_errno = errno;
+  if (save_errno != 0)
     {
       free (name_space);
+      errno = save_errno;
       return NULL;
     }
   return name_space;
