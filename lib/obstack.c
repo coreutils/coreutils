@@ -39,7 +39,7 @@
    files, it is simpler to just do this in the source for each such file.  */
 
 #include <stdio.h>		/* Random thing to get __GNU_LIBRARY__.  */
-#if !defined (_LIBC) && defined (__GNU_LIBRARY__) && __GNU_LIBRARY__ > 1
+#if !defined _LIBC && defined __GNU_LIBRARY__ && __GNU_LIBRARY__ > 1
 # include <gnu-versions.h>
 # if _GNU_OBSTACK_INTERFACE_VERSION == OBSTACK_INTERFACE_VERSION
 #  define ELIDE_CODE
@@ -53,7 +53,7 @@
 #ifndef ELIDE_CODE
 
 
-# if defined (__STDC__) && __STDC__
+# if defined __STDC__ && __STDC__
 #  define POINTER void *
 # else
 #  define POINTER char *
@@ -84,7 +84,7 @@ union fooround {long x; double d;};
    abort gracefully or use longjump - but shouldn't return.  This
    variable by default points to the internal function
    `print_and_abort'.  */
-# if defined (__STDC__) && __STDC__
+# if defined __STDC__ && __STDC__
 static void print_and_abort (void);
 void (*obstack_alloc_failed_handler) (void) = print_and_abort;
 # else
@@ -112,7 +112,7 @@ struct obstack *_obstack;
    For free, do not use ?:, since some compilers, like the MIPS compilers,
    do not allow (expr) ? void : void.  */
 
-# if defined (__STDC__) && __STDC__
+# if defined __STDC__ && __STDC__
 #  define CALL_CHUNKFUN(h, size) \
   (((h) -> use_extra_arg) \
    ? (*(h)->chunkfun) ((h)->extra_arg, (size)) \
@@ -154,7 +154,7 @@ _obstack_begin (h, size, alignment, chunkfun, freefun)
      struct obstack *h;
      int size;
      int alignment;
-# if defined (__STDC__) && __STDC__
+# if defined __STDC__ && __STDC__
      POINTER (*chunkfun) (long);
      void (*freefun) (void *);
 # else
@@ -183,7 +183,7 @@ _obstack_begin (h, size, alignment, chunkfun, freefun)
       size = 4096 - extra;
     }
 
-# if defined (__STDC__) && __STDC__
+# if defined __STDC__ && __STDC__
   h->chunkfun = (struct _obstack_chunk * (*)(void *, long)) chunkfun;
   h->freefun = (void (*) (void *, struct _obstack_chunk *)) freefun;
 # else
@@ -212,7 +212,7 @@ _obstack_begin_1 (h, size, alignment, chunkfun, freefun, arg)
      struct obstack *h;
      int size;
      int alignment;
-# if defined (__STDC__) && __STDC__
+# if defined __STDC__ && __STDC__
      POINTER (*chunkfun) (POINTER, long);
      void (*freefun) (POINTER, POINTER);
 # else
@@ -242,7 +242,7 @@ _obstack_begin_1 (h, size, alignment, chunkfun, freefun, arg)
       size = 4096 - extra;
     }
 
-# if defined(__STDC__) && __STDC__
+# if defined __STDC__ && __STDC__
   h->chunkfun = (struct _obstack_chunk * (*)(void *,long)) chunkfun;
   h->freefun = (void (*) (void *, struct _obstack_chunk *)) freefun;
 # else
@@ -343,7 +343,7 @@ _obstack_newchunk (h, length)
    This is here for debugging.
    If you use it in a program, you are probably losing.  */
 
-# if defined (__STDC__) && __STDC__
+# if defined __STDC__ && __STDC__
 /* Suppress -Wmissing-prototypes warning.  We don't want to declare this in
    obstack.h because it is just for debugging.  */
 int _obstack_allocated_p (struct obstack *h, POINTER obj);
