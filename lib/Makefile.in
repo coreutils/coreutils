@@ -101,7 +101,7 @@ libfu_a_DEPENDENCIES = $(libfu_a_LIBADD)
 noinst_HEADERS = argmatch.h backupfile.h error.h fnmatch.h fsusage.h \
 getdate.h getline.h getopt.h group-member.h long-options.h \
 makepath.h modechange.h mountlist.h path-concat.h pathmax.h \
-save-cwd.h xstrtol.h xstrtoul.h
+save-cwd.h xstrtol.h xstrtoul.h strverscmp.h
 
 BUILT_SOURCES = getdate.c posixtm.c
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
@@ -131,7 +131,7 @@ euidaccess.c fileblocks.c fnmatch.c fsusage.c ftruncate.c getdate.c \
 getgroups.c getline.c group-member.c memcmp.c memcpy.c memset.c mkdir.c \
 mktime.c mountlist.c obstack.c obstack.h posixtm.c regex.c regex.h \
 rename.c rmdir.c rpmatch.c rx.c rx.h stpcpy.c strcasecmp.c strdup.c \
-strftime.c strndup.c strstr.c strtol.c strtoul.c ylwrap
+strftime.c strndup.c strstr.c strtol.c strtoul.c strverscmp.c ylwrap
 
 
 DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
@@ -151,8 +151,8 @@ DEP_FILES =  .deps/addext.P .deps/alloca.P .deps/argmatch.P \
 .deps/safe-read.P .deps/save-cwd.P .deps/savedir.P .deps/stpcpy.P \
 .deps/strcasecmp.P .deps/strdup.P .deps/strftime.P .deps/stripslash.P \
 .deps/strndup.P .deps/strstr.P .deps/strtol.P .deps/strtoul.P \
-.deps/userspec.P .deps/xgetcwd.P .deps/xmalloc.P .deps/xstrdup.P \
-.deps/xstrtol.P .deps/xstrtoul.P .deps/yesno.P
+.deps/strverscmp.P .deps/userspec.P .deps/xgetcwd.P .deps/xmalloc.P \
+.deps/xstrdup.P .deps/xstrtol.P .deps/xstrtoul.P .deps/yesno.P
 SOURCES = $(libfu_a_SOURCES)
 OBJECTS = $(libfu_a_OBJECTS)
 
@@ -163,7 +163,7 @@ default: all
 $(srcdir)/Makefile.in: @MAINT@ Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
 	cd $(top_srcdir) && $(AUTOMAKE) --gnits lib/Makefile
 
-Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
+Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status $(BUILT_SOURCES)
 	cd $(top_builddir) \
 	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status
 
