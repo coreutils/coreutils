@@ -2,6 +2,11 @@
 
 	* Version 5.0.1.
 
+	* src/touch.c (O_NDELAY, O_NONBLOCK, O_NOCTTY, EISDIR): Remove
+	definitions.
+	* src/system.h (O_NDELAY, O_NONBLOCK, O_NOCTTY, EISDIR): Define
+	them here instead, but with one change: define EISDIR to -1, not 0.
+
 	* src/cat.c (cat): Remove `#ifndef ENOSYS', now that it's
 	guaranteed to be defined.
 	* src/system.h (ENOSYS, ENOTSUP): Define to -1 if not defined.
