@@ -1,4 +1,6 @@
 Changes in release 2.1
+[2.0.10]
+* od is faster and more portable than it was in 2.0.9
 [2.0.9]
 * od now prints valid addresses for offsets of 2^32 and larger, and allows
     the byte offset (-j) and byte count (-N) arguments to be 2^32 and larger.
