@@ -263,7 +263,13 @@ static void
 xfclose (fp)
      FILE *fp;
 {
-  fflush (fp);
+  if (fflush (fp) != 0)
+    {
+      error (0, errno, "flushing file");
+      cleanup ();
+      exit (2);
+    }
+
   if (fp != stdin && fp != stdout)
     {
       if (fclose (fp) != 0)
@@ -274,8 +280,10 @@ xfclose (fp)
 	}
     }
   else
-    /* Allow reading stdin from tty more than once. */
-    clearerr (fp);
+    {
+      /* Allow reading stdin from tty more than once. */
+      clearerr (fp);
+    }
 }
 
 static void
@@ -1797,12 +1805,12 @@ main (argc, argv)
      Solaris, Ultrix, and Irix.  This premature fflush makes the output
      reappear. --karl@cs.umb.edu  */
   if (fflush (ofp) < 0)
-    error (1, errno, "fflush", outfile);
+    error (1, errno, "%s: write error", outfile);
 
   if (have_read_stdin && fclose (stdin) == EOF)
-    error (1, errno, "-");
+    error (1, errno, outfile);
   if (ferror (stdout) || fclose (stdout) == EOF)
-    error (1, errno, "write error");
+    error (1, errno, "%s: write error", outfile);
 
   exit (0);
 }
