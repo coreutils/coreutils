@@ -1,3 +1,7 @@
+2000-07-01  Jim Meyering  <meyering@lucent.com>
+
+	* src/cut.c: Change type of global, field_1_bufsize, from int to size_t.
+
 2000-06-29  Jim Meyering  <meyering@lucent.com>
 
 	* src/tr.c (find_bracketed_repeat): Add a cast to suppress a warning.
