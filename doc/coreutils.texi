@@ -5503,7 +5503,7 @@ be one of the following:
 @vindex LC_TIME
 List timestamps using @var{format}, where @var{format} is interpreted
 like the format argument of @command{date} (@pxref{date invocation}).
-For example, @option{--time-style="+%Y-%m-%d %H:%M:S"} causes
+For example, @option{--time-style="+%Y-%m-%d %H:%M:%S"} causes
 @command{ls} to list timestamps like @samp{2002-03-30 23:45:56}.  As
 with @command{date}, @var{format}'s interpretation is affected by the
 @env{LC_TIME} locale category.
