@@ -7,6 +7,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   ptx now diagnoses invalid values for its --width=N (-w)
   and --gap-size=N (-g) options.
 
+  tee now exits when it gets a SIGPIPE signal, as POSIX requires.
+  To get tee's old behavior, use the shell command "(trap '' PIPE; tee)".
+
 ** New features
 
   pwd now works even when run from a working directory whose name
