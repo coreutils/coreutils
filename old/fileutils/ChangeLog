@@ -6,8 +6,7 @@
 	Fix cp so that `cp -r DIR1/ DIR2' works once again.
 	* src/cp.c (ASSIGN_BASENAME_STRDUPA): New macro.
 	(do_copy): Use it here (so we always strip trailing slashes before
-	calling base_name).
-	Reported by Michael Stone.
+	calling base_name).  Reported by Branden Robinson via Michael Stone.
 
 	Test for the above fix.
 	* tests/cp/Makefile.am (TESTS): Add dir-slash.
