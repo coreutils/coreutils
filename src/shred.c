@@ -1,3 +1,24 @@
+/* shred.c - overwrite files and devices to make it harder to recover data
+
+   Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999 Colin Plumb.
+
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2, or (at your option)
+   any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
+   Written by Colin Plumb.  */
+
 /* TODO:
    - use consistent non-capitalization in error messages
    - add standard GNU copyleft comment
@@ -13,8 +34,6 @@
  */
 
 /*
- * shred.c - by Colin Plumb.
- *
  * Do a securer overwrite of given files or devices, to make it harder
  * for even very expensive hardware probing to recover the data.
  *
@@ -43,11 +62,6 @@
  *
  * If asked to wipe a file, this also unlinks it, renaming it to in a
  * clever way to try to leave no trace of the original filename.
- *
- * Copyright 1997, 1998, 1999 Colin Plumb <colin@nyx.net>.  This program
- * may be freely distributed under the terms of the GNU GPL, the BSD license,
- * or Larry Wall's "Artistic License"   Even if you use the BSD license,
- * which does not require it, I'd really like to get improvements back.
  *
  * The ISAAC code still bears some resemblance to the code written
  * by Bob Jenkins, but he permits pretty unlimited use.
