@@ -3271,12 +3271,12 @@ standard input if nothing is given or for an @var{input} name of
 uniq [@var{option}]@dots{} [@var{input} [@var{output}]]
 @end example
 
-By default, @command{uniq} prints the unique lines in a sorted file, i.e.,
-discards all but one of identical successive lines.  Optionally, it can
-instead show only lines that appear exactly once, or lines that appear
-more than once.
+By default, @command{uniq} prints its input lines, except that
+it discards all but the first of adjacent repeated lines, so that
+no output lines are repeated.  Optionally, it can instead discard
+lines that are not repeated, or all repeated lines.
 
-The input need not be sorted, but duplicate input lines are detected
+The input need not be sorted, but repeated input lines are detected
 only if they are adjacent.  If you want to discard non-adjacent
 duplicate lines, perhaps you want to use @code{sort -u}.
 
@@ -3295,7 +3295,8 @@ The program accepts the following options.  Also see @ref{Common options}.
 @itemx --skip-fields=@var{n}
 @opindex -f
 @opindex --skip-fields
-Skip @var{n} fields on each line before checking for uniqueness.  Fields
+Skip @var{n} fields on each line before checking for uniqueness.  Use
+a null string for comparison if a line has fewer than @var{n} fields.  Fields
 are sequences of non-space non-tab characters that are separated from
 each other by at least one space or tab.
 
@@ -3307,7 +3308,8 @@ does not allow this; use @option{-f @var{n}} instead.
 @itemx --skip-chars=@var{n}
 @opindex -s
 @opindex --skip-chars
-Skip @var{n} characters before checking for uniqueness.  If you use both
+Skip @var{n} characters before checking for uniqueness.  Use a null string
+for comparison if a line has fewer than @var{n} characters.  If you use both
 the field and character skipping options, fields are skipped over first.
 
 On older systems, @command{uniq} supports an obsolete option
@@ -3330,31 +3332,34 @@ Ignore differences in case when comparing lines.
 @itemx --repeated
 @opindex -d
 @opindex --repeated
-@cindex duplicate lines, outputting
-Print one copy of each duplicate line.
+@cindex repeated lines, outputting
+Discard lines that are not repeated.  When used by itself, this option
+causes @command{uniq} to print the first copy of each repeated line,
+and nothing else.
 
 @item -D
 @itemx --all-repeated[=@var{delimit-method}]
 @opindex -D
 @opindex --all-repeated
-@cindex all duplicate lines, outputting
-Print all copies of each duplicate line.
+@cindex all repeated lines, outputting
+Do not discard the second and subsequent repeated input lines,
+but discard lines that are not repeated.
 This option is useful mainly in conjunction with other options e.g.,
 to ignore case or to compare only selected fields.
 The optional @var{delimit-method} tells how to delimit
-groups of duplicate lines, and must be one of the following:
+groups of repeated lines, and must be one of the following:
 
 @table @samp
 
 @item none
-Do not delimit groups of duplicate lines.
+Do not delimit groups of repeated lines.
 This is equivalent to @option{--all-repeated} (@option{-D}).
 
 @item prepend
-Output a newline before each group of duplicate lines.
+Output a newline before each group of repeated lines.
 
 @item separate
-Separate groups of duplicate lines with a single newline.
+Separate groups of repeated lines with a single newline.
 This is the same as using @samp{prepend}, except that
 there is no newline before the first group, and hence
 may be better suited for output direct to users.
@@ -3373,13 +3378,14 @@ This is a @sc{gnu} extension.
 @opindex -u
 @opindex --unique
 @cindex unique lines, outputting
-Print non-duplicate lines.
+Discard the first repeated line.  When used by itself, this option
+causes @command{uniq} to print unique lines, and nothing else.
 
 @item -w @var{n}
 @itemx --check-chars=@var{n}
 @opindex -w
 @opindex --check-chars
-Compare @var{n} characters on each line (after skipping any specified
+Compare at most @var{n} characters on each line (after skipping any specified
 fields and characters).  By default the entire rest of the lines are
 compared.
 
@@ -4649,13 +4655,13 @@ tr -s '\n'
 
 @item
 Find doubled occurrences of words in a document.
-For example, people often write ``the the'' with the duplicated words
+For example, people often write ``the the'' with the repeated words
 separated by a newline.  The bourne shell script below works first
 by converting each sequence of punctuation and blank characters to a
 single newline.  That puts each ``word'' on a line by itself.
 Next it maps all uppercase characters to lower case, and finally it
 runs @command{uniq} with the @option{-d} option to print out only the words
-that were adjacent duplicates.
+that were repeated.
 
 @example
 #!/bin/sh
@@ -12055,8 +12061,8 @@ Finally (at least for now), we'll look at the @command{uniq} program.  When
 sorting data, you will often end up with duplicate lines, lines that
 are identical.  Usually, all you need is one instance of each line.
 This is where @command{uniq} comes in. The @command{uniq} program reads its
-standard input, which it expects to be sorted.  It only prints out one
-copy of each duplicated line.  It does have several options.  Later on,
+standard input.  It prints only one
+copy of each repeated line.  It does have several options.  Later on,
 we'll use the @option{-c} option, which prints each unique line, preceded
 by a count of the number of times that line occurred in the input.
 
