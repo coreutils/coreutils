@@ -24,7 +24,7 @@ printf 'make-sure-the-file-is-non-empty\n' > a/b/F || framework_failure=1
 # Ensure that these files contain more than 64 bytes, so that we don't
 # immediately disqualify file systems (e.g., NetApp) on which smaller
 # files take up zero disk blocks.
-seq --format=%100g 1 50 | head --bytes=4k > d/1
+seq --format=%100g 1 90 | head --bytes=4k > d/1
 cp d/1 d/sub/2
 
 if test $framework_failure = 1; then
