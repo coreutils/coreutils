@@ -554,11 +554,11 @@ get_ids (void)
       pw = getpwnam (owner_name);
       if (pw == NULL)
 	{
-	  long int tmp_long;
-	  if (xstrtol (owner_name, NULL, 0, &tmp_long, NULL) != LONGINT_OK
-	      || !(0 <= tmp_long && (uid_t) tmp_long <= UID_T_MAX))
+	  unsigned long int tmp;
+	  if (xstrtoul (owner_name, NULL, 0, &tmp, NULL) != LONGINT_OK
+	      || UID_T_MAX < tmp)
 	    error (EXIT_FAILURE, 0, _("invalid user %s"), quote (owner_name));
-	  owner_id = (uid_t) tmp_long;
+	  owner_id = tmp;
 	}
       else
 	owner_id = pw->pw_uid;
@@ -572,11 +572,11 @@ get_ids (void)
       gr = getgrnam (group_name);
       if (gr == NULL)
 	{
-	  long int tmp_long;
-	  if (xstrtol (group_name, NULL, 0, &tmp_long, NULL) != LONGINT_OK
-	      || !(0 <= tmp_long && (gid_t) tmp_long <= GID_T_MAX))
+	  unsigned long int tmp;
+	  if (xstrtoul (group_name, NULL, 0, &tmp, NULL) != LONGINT_OK
+	      || GID_T_MAX < tmp)
 	    error (EXIT_FAILURE, 0, _("invalid group %s"), quote (group_name));
-	  group_id = (gid_t) tmp_long;
+	  group_id = tmp;
 	}
       else
 	group_id = gr->gr_gid;
