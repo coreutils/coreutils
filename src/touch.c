@@ -102,6 +102,43 @@ static int const time_masks[] =
   CH_ATIME, CH_ATIME, CH_ATIME, CH_MTIME, CH_MTIME
 };
 
+/* Open FILE, possibly creating it.  Set *FILE_CREATED to nonzero if the
+   open creates it, or to zero if the open call opened an existing file.
+   Return the result of the open call.  Be careful to avoid race conditions.  */
+
+static int
+open_maybe_create (const char *file, int *file_created)
+{
+  int fd;
+
+  *file_created = 0;
+  while (1)
+    {
+      /* First, see if we can create a new FILE.  */
+      fd = open (file, O_WRONLY | O_CREAT | O_EXCL, 0666);
+      if (fd != -1)
+	*file_created = 1;
+
+      /* If the open succeeded or if it failed for any reason other
+	 than the existence of FILE, then we're done.  */
+      if (fd != -1 || errno != EEXIST)
+	break;
+
+      /* The first open failed because FILE already exists.
+	 Now try to open it for writing.  */
+      fd = open (file, O_WRONLY);
+
+      /* If the open succeeded or if it failed for any reason other
+	 than the absence of FILE, then we're done.  */
+      /* The 2nd open can fail if FILE was unlinked between the two
+	 open calls.  When that happens, just iterate.  */
+      if (fd != -1 || errno != ENOENT)
+	break;
+    }
+
+  return fd;
+}
+
 /* Update the time of file FILE according to the options given.
    Return 0 if successful, 1 if an error occurs. */
 
@@ -111,42 +148,52 @@ touch (const char *file)
   int status;
   struct stat sbuf;
   int fd;
+  int file_created;
 
-  if (stat (file, &sbuf))
+  if (no_create)
     {
-      if (errno != ENOENT)
+      /* Try to open an existing FILE.  */
+      fd = open (file, O_WRONLY);
+      if (fd == -1 && errno == ENOENT)
 	{
-	  error (0, errno, "%s", file);
-	  return 1;
+	  /* FILE doesn't exist.  So we're done.  */
+	  return 0;
 	}
-      if (no_create)
-	return 0;
-      fd = creat (file, 0666);
-      if (fd == -1)
-	{
-	  error (0, errno, "%s", file);
-	  return 1;
-	}
-      if (amtime_now)
-	{
-	  if (close (fd) < 0)
-	    {
-	      error (0, errno, "%s", file);
-	      return 1;
-	    }
-	  return 0;		/* We've done all we have to. */
-	}
-      if (fstat (fd, &sbuf))
-	{
-	  error (0, errno, "%s", file);
-	  close (fd);
-	  return 1;
-	}
+      file_created = 0;
+    }
+  else
+    {
+      /* Try to open FILE, creating it if necessary.  */
+      fd = open_maybe_create (file, &file_created);
+    }
+
+  if (fd == -1)
+    {
+      error (0, errno, "%s", file);
+      return 1;
+    }
+
+  if (file_created && amtime_now)
+    {
       if (close (fd) < 0)
 	{
 	  error (0, errno, "%s", file);
 	  return 1;
 	}
+      return 0;		/* We've done all we have to. */
+    }
+
+  if (fstat (fd, &sbuf))
+    {
+      error (0, errno, "%s", file);
+      close (fd);
+      return 1;
+    }
+
+  if (close (fd) < 0)
+    {
+      error (0, errno, "%s", file);
+      return 1;
     }
 
   if (amtime_now)
