@@ -30,6 +30,7 @@
 #include <getopt.h>
 
 #include "system.h"
+#include "closeout.h"
 #include "error.h"
 #include "getpagesize.h"
 #include "human.h"
@@ -314,7 +315,6 @@ Each KEYWORD may be:\n\
   sync      pad every input block with NULs to ibs-size\n\
 "));
       puts (_("\nReport bugs to <bug-fileutils@gnu.org>."));
-      close_stdout ();
     }
   exit (status);
 }
@@ -1048,6 +1048,17 @@ dd_copy (void)
   return exit_status;
 }
 
+/* This is gross, but necessary, because of the way close_stdout
+   works and because dd.c closes STDOUT_FILENO directly.  */
+static void (*closeout_func) (void) = close_stdout;
+
+static void
+close_stdout_wrapper (void)
+{
+  if (*closeout_func)
+    (*closeout_func) ();
+}
+
 int
 main (int argc, char **argv)
 {
@@ -1059,8 +1070,14 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
+  /* Arrange to close stdout if parse_long_options exits.  */
+  atexit (close_stdout_wrapper);
+
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
 		      AUTHORS, usage);
+
+  /* Don't close stdout on exit from here on.  */
+  closeout_func = NULL;
 
   /* Initialize translation table to identity translation. */
   for (i = 0; i < 256; i++)
