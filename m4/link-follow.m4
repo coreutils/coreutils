@@ -54,7 +54,7 @@ AC_DEFUN(jm_AC_FUNC_LINK_FOLLOWS_SYMLINK,
       ],
       jm_ac_cv_func_link_follows_symlink=yes,
       jm_ac_cv_func_link_follows_symlink=no,
-      jm_ac_cv_func_link_follows_symlink=yes, We're cross compiling.
+      jm_ac_cv_func_link_follows_symlink=yes dnl We're cross compiling.
     )
   ])
   if test $jm_ac_cv_func_link_follows_symlink = yes; then
