@@ -392,6 +392,8 @@ same_file_ok (const char *src_path, const struct stat *src_sb,
 {
   const struct stat *src_sb_link;
   const struct stat *dst_sb_link;
+  struct stat tmp_dst_sb;
+  struct stat tmp_src_sb;
 
   int same_link;
   int same = (SAME_INODE (*src_sb, *dst_sb));
@@ -424,8 +426,6 @@ same_file_ok (const char *src_path, const struct stat *src_sb,
     }
   else
     {
-      static struct stat tmp_dst_sb;
-      static struct stat tmp_src_sb;
       if (!same)
 	return 1;
 
@@ -512,8 +512,6 @@ same_file_ok (const char *src_path, const struct stat *src_sb,
 
   if (x->xstat == lstat)
     {
-      static struct stat tmp_dst_sb;
-      static struct stat tmp_src_sb;
       if (stat (dst_path, &tmp_dst_sb)
 	  || stat (src_path, &tmp_src_sb)
 	  || ! SAME_INODE (tmp_dst_sb, tmp_dst_sb))
