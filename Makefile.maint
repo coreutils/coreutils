@@ -303,7 +303,7 @@ endef
 $(xd-delta): $(release_archive_dir)/$(prev-tgz) $(distdir).tar.gz
 	xdelta delta -9 $^ $@ || :
 
-alpha:
+alpha: local-check
 	$(MAKE) cvs-dist
 	$(MAKE) $(xd-delta)
 	$(MAKE) -s announcement > /tmp/announce-$(my_distdir)
