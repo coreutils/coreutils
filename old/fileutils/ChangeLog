@@ -1,3 +1,24 @@
+1998-03-31  Jim Meyering  <meyering@eng.ascend.com>
+
+	* src/system.h (TYPE_MAXIMUM): Cast result to `(t)' so this macro
+	works with `unsigned char'.
+        From Greg Wooledge.
+	(SCHAR_MIN, SCHAR_MAX, SHRT_MIN, SHRT_MAX, LONG_MAX, ULONG_MAX): Define.
+
+	* lib/xstrtol.c: Merge with the version from textutils.
+
+	* tests/Makefile.am (EXTRA_DIST): Add mk-script.
+	* tests/Makefile.am.in (EXTRA_DIST): Remove mk-script.pl.
+	(mk_script): Set to ../mk-script.
+	(x-tests): Use `$(PERL) -w -- $(mk_script)', not ./mk-script.
+	Remove @MAINT@ cruft.
+	(Makefile.am): Likewise.
+	Remove @MAINT@ cruft.  Now `missing' will explain the failure
+	when people don't have Perl yet modify a file whose rebuilding
+	would lead to the use of Perl.
+
+	* lib/memcmp.c (rpl_memcmp): Rename from memcmp.
+
 1998-03-28  Jim Meyering  <meyering@eng.ascend.com>
 
 	* src/copy.c: Add copyright.
