@@ -51,6 +51,11 @@ exec 1> $actual
 # FIXME: This should be bigger: like more than 8k
 contents=XYZ
 
+loc_reg=loc_reg
+loc_sl=loc_sl
+rem_reg=$other_partition_tmpdir/rem_reg
+rem_sl=$other_partition_tmpdir/rem_sl
+
 for copy in cp mv; do
   for args in \
       'loc_reg rem_sl' \
@@ -59,22 +64,20 @@ for copy in cp mv; do
       'rem_reg loc_sl' \
       ; do
     for options in '' --rem; do
-      rm -rf dir $other_partition_tmpdir/reg || fail=1
-      rm -f $other_partition_tmpdir/reg || fail=1
+      rm -rf dir || fail=1
+      rm -f $other_partition_tmpdir/rem_reg || fail=1
       rm -f $other_partition_tmpdir/rem_sl || fail=1
       mkdir dir || fail=1
       cd dir || fail=1
-      case "$args" in *loc_reg*) reg=reg; reg_abs="`pwd`/$reg" ;; esac
-      case "$args" in *rem_reg*) reg=$other_partition_tmpdir/reg
-                                   reg_abs=$reg ;; esac
-      case "$args" in *loc_sl*) slink=slink ;; esac
-      case "$args" in *rem_sl*) slink=$other_partition_tmpdir/slink ;; esac
+      case "$args" in *loc_reg*) reg_abs="`pwd`/$loc_reg" ;; esac
+      case "$args" in *rem_reg*) reg_abs=$rem_reg ;; esac
+      case "$args" in *loc_sl*) slink=$loc_sl ;; esac
+      case "$args" in *rem_sl*) slink=$rem_sl ;; esac
 
-      echo $contents > $reg || fail=1
+      echo $contents > $reg_abs || fail=1
       ln -nsf $reg_abs $slink || fail=1
-      actual_args=$args
-      actual_args=`echo $actual_args|sed "s,..._reg,$reg,"`
-      actual_args=`echo $actual_args|sed "s,..._sl,$slink,"`
+      actual_args=`echo $args|sed 's,^,$,;s/ / $/'`
+      actual_args=`eval echo $actual_args`
 
       (
 	(
@@ -85,7 +88,8 @@ for copy in cp mv; do
 
 	  # Normalize the program name in the error output,
 	  # and put brackets around the output.
-	  test -s .err && echo "[`sed 's/^[^:][^:]*\(..\):/\1:/' .err`]"
+	  test -s .err &&
+	    echo "[`sed 's/^[^:][^:]*\(..\):/\1:/;s,$other_partition_tmpdir/,,' .err`]"
 	  # Strip off all but the file names.
 	  ls="`ls -lG --ignore=.err . \
 	      | sed \
