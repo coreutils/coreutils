@@ -29,7 +29,7 @@ The available options are:
 	ordinates.  The generated abscissas are evenly spaced with spacing given by
 	the argument, or 1 if the next argument is not a number.
 
--f	Set the first derivative of the spline function at the left and right end 
+-f	Set the first derivative of the spline function at the left and right end
 	points to the first and second arguments following -f.  If only one numerical
 	argument follows -f then that value is used for both left and right end points.
 
@@ -47,7 +47,7 @@ The available options are:
 -p	The splines used for interpolation are forced to be periodic, i.e. y'[0] = y'[n].
 	The first and last ordinates should be equal.
 
--s	Set the second derivative of the spline function at the left and right end 
+-s	Set the second derivative of the spline function at the left and right end
 	points to the first and second arguments following -s.  If only one numerical
 	argument follows -s then that value is used for both left and right end points.
 
@@ -75,48 +75,48 @@ Non-numeric data in the input is ignored.
 /* #define DOUBLE	*/
 
 #ifdef	DOUBLE
-# define	double	real; 		/* Type used for data storage. */
-# define	IFMT	"%F"		/* Input format. */
-# define	OFMT	"%18.14g %18.14g\n"	/* Output format. */
+# define double	real;		/* Type used for data storage. */
+# define IFMT	"%F"		/* Input format. */
+# define OFMT	"%18.14g %18.14g\n"	/* Output format. */
 #else
-# define	float	real;		/* Type used for data storage. */
-# define	IFMT	"%f"		/* Input format. */
-# define	OFMT	"%8.5g %8.5g\n"	/* Output format. */
+# define float	real;		/* Type used for data storage. */
+# define IFMT	"%f"		/* Input format. */
+# define OFMT	"%8.5g %8.5g\n"	/* Output format. */
 #endif
 
 /* Numerical constants: These may be machine and/or precision dependent. */
-#define	HUGE	(1.e38)		/* Largest floating point number. */
-#define	EPS	1.e-5		/* Test for zero when solving linear equations. */
+#define HUGE	(1.e38)		/* Largest floating point number. */
+#define EPS	1.e-5		/* Test for zero when solving linear equations. */
 
 /* Default parameters */
-#define	NPTS	1000
-#define	NINT	100
-#define	DEFSTEP	1.	/* Default step size for automatic abcissas. */
-#define	DEFBVK	0.	/* Default boundary value constant. */
+#define NPTS	1000
+#define NINT	100
+#define DEFSTEP	1.	/* Default step size for automatic abcissas. */
+#define DEFBVK	0.	/* Default boundary value constant. */
 
 /* Boundary condition types. */
-#define	EXTRAP	0	/* Extrapolate second derivative:
+#define EXTRAP	0	/* Extrapolate second derivative:
 			   y''(0) = k * y''(1), y''(n) = k * y''(n-1) */
-#define	FDERIV	1	/* Fixed first derivatives y'(0) and y'(n). */
-#define	SDERIV	2	/* Fixed second derivatives y''(0) and y''(n). */
-#define	PERIOD	3	/* Periodic:  derivatives equal at end points. */
+#define FDERIV	1	/* Fixed first derivatives y'(0) and y'(n). */
+#define SDERIV	2	/* Fixed second derivatives y''(0) and y''(n). */
+#define PERIOD	3	/* Periodic:  derivatives equal at end points. */
 
 /* Token types for command line processing. */
-#define	OPTION	1
-#define	NUMBER	2
-#define	OTHER	3
+#define OPTION	1
+#define NUMBER	2
+#define OTHER	3
 
 /* Define error numbers. */
-#define	MEMERR	1
-#define	NODATA	2
-#define	BADOPT	4
-#define	BADFILE	5
-#define	XTRAARG	6
-#define	XTRAPTS	7
-#define	SINGERR	8
-#define	DUPX	9
-#define	BADBC	10
-#define	RANGERR	11
+#define MEMERR	1
+#define NODATA	2
+#define BADOPT	4
+#define BADFILE	5
+#define XTRAARG	6
+#define XTRAPTS	7
+#define SINGERR	8
+#define DUPX	9
+#define BADBC	10
+#define RANGERR	11
 
 /* Constants and flags are global. */
 int aflag = FALSE;	/* Automatic abscissa flag. */
@@ -181,7 +181,7 @@ int errno;
 char *auxmsg;
 {	char *msg;
 	int fatal, usemsg;
-	static char *usage = 
+	static char *usage =
 	"usage: spline [options] [file]\noptions:\n",
 	*options = "-a spacing\n-k const\n-n intervals\n-m points\n-p\n-x xmin xmax\n";
 
@@ -391,7 +391,7 @@ char *str;
 		/* Found an option. */
 		*str = *++s;
 		str[1] = '\0';
-		++s;	
+		++s;
 		type = OPTION;
 	}
 	else if (is_number(s)) {
@@ -413,7 +413,7 @@ char *str;
 is_number(string)
 char *string;
 {
-	if (isdigit(*string) || 
+	if (isdigit(*string) ||
 	   *string == '.'    ||
 	   *string == '+'   ||
 	   (*string == '-' && (isdigit(string[1]) || string[1] == '.')))
@@ -527,7 +527,7 @@ calccoef()
 	++ptr;
 
 	/* Initialize rows 1 to n-1, sub-diagonal band is assumed to be 1. */
-	for (i=1; i 	< nknots-1; ++i, ++ptr) {
+	for (i=1; i	< nknots-1; ++i, ++ptr) {
 		h = h1;
 		if ((h1 = data[i+1].x - data[i].x) == 0.) {
 			sprintf(str, "%8.5g", data[i].x);
@@ -632,8 +632,8 @@ solvband()
 			else {
 				ptr->rhs = (ptr+1)->rhs - (k1 = ptr->rhs/ptr->upper)*(ptr+1)->diag;
 				ptr->upper = (ptr+1)->upper;	/* This isn't super-diagonal element
-								but rather one to its right. 
-								Must watch for this when 
+								but rather one to its right.
+								Must watch for this when
 								back substituting. */
 				(++ptr)->diag = i-1;
 				++i;
@@ -697,7 +697,7 @@ interpolate()
 	struct pair *dp;
 	struct bandm *ep;
 	real h, xi, yi, hi, xu, xl, limit;
-	
+
 	h = (xmax - xmin)/nint;
 	ep = eqns;
 	dp = data + 1;
