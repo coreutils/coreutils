@@ -1,3 +1,13 @@
+2003-06-17  Jim Meyering  <jim@meyering.net>
+
+	* src/system.h (initialize_main): Define.
+	Use it in every `main'.  Applied via this:
+	p='initialize_main (&argc, &argv);'
+	perl -ni -e '/program_name.=.argv.0/ and print "  '"$p"'\n"; print' \
+	  $(grep -l program_name.=.argv.0 *.c)
+	test.c uses margc/margv, so I made the change manually for that file.
+	Based on a patch from Bernard Giroud.
+
 2003-06-09  John David Anglin  <dave.anglin@nrc-cnrc.gc.ca>
 
 	Fix for build failure on Ultrix 4.3.
