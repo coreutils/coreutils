@@ -136,8 +136,8 @@ xrealloc (void *p, size_t n)
    Here is an example of use:
 
      int *p = NULL;
-     size used = 0;
-     size allocated = 0;
+     size_t used = 0;
+     size_t allocated = 0;
 
      void
      append_int (int value)
@@ -155,9 +155,9 @@ xrealloc (void *p, size_t n)
    example:
 
      int *p = NULL;
-     size used = 0;
-     size allocated = 0;
-     size allocated1 = 1000;
+     size_t used = 0;
+     size_t allocated = 0;
+     size_t allocated1 = 1000;
 
      void
      append_int (int value)
