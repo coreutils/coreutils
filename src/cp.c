@@ -303,7 +303,7 @@ re_protect (const char *const_dst_path, int src_offset,
 	    }
 	}
 
-      if (x->preserve_owner_and_group)
+      if (x->preserve_ownership)
 	{
 	  /* If non-root uses -p, it's ok if we can't preserve ownership.
 	     But root probably wants to know, e.g. if NFS disallows it,
@@ -317,7 +317,7 @@ re_protect (const char *const_dst_path, int src_offset,
 	    }
 	}
 
-      if (x->preserve_chmod_bits || p->is_new_dir)
+      if (x->preserve_mode || p->is_new_dir)
 	{
 	  if (chmod (dst_path, src_sb.st_mode & x->umask_kill))
 	    {
@@ -697,8 +697,8 @@ cp_option_init (struct cp_options *x)
   x->move_mode = 0;
   x->one_file_system = 0;
 
-  x->preserve_owner_and_group = 0;
-  x->preserve_chmod_bits = 0;
+  x->preserve_ownership = 0;
+  x->preserve_mode = 0;
   x->preserve_timestamps = 0;
 
   x->require_preserve = 0;
@@ -760,8 +760,8 @@ main (int argc, char **argv)
 
 	case 'a':		/* Like -dpR. */
 	  x.dereference = DEREF_NEVER;
-	  x.preserve_owner_and_group = 1;
-	  x.preserve_chmod_bits = 1;
+	  x.preserve_ownership = 1;
+	  x.preserve_mode = 1;
 	  x.preserve_timestamps = 1;
 	  x.require_preserve = 1;
 	  x.recursive = 1;
@@ -806,8 +806,8 @@ main (int argc, char **argv)
 	  break;
 
 	case 'p':
-	  x.preserve_owner_and_group = 1;
-	  x.preserve_chmod_bits = 1;
+	  x.preserve_ownership = 1;
+	  x.preserve_mode = 1;
 	  x.preserve_timestamps = 1;
 	  x.require_preserve = 1;
 	  break;
@@ -902,7 +902,7 @@ Use `--parents' for the old meaning, and `--no-dereference' for the new one."));
 				   version_control_string)
 		   : none);
 
-  if (x.preserve_chmod_bits == 1)
+  if (x.preserve_mode == 1)
     x.umask_kill = ~ (mode_t) 0;
 
   if (x.dereference == DEREF_UNDEFINED)

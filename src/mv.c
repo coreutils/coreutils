@@ -128,8 +128,8 @@ cp_option_init (struct cp_options *x)
   x->move_mode = 1;
   x->myeuid = geteuid ();
   x->one_file_system = 0;
-  x->preserve_owner_and_group = 1;
-  x->preserve_chmod_bits = 1;
+  x->preserve_ownership = 1;
+  x->preserve_mode = 1;
   x->preserve_timestamps = 1;
   x->require_preserve = 0;  /* FIXME: maybe make this an option */
   x->recursive = 1;

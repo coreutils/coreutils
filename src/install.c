@@ -156,8 +156,8 @@ cp_option_init (struct cp_options *x)
   x->move_mode = 0;
   x->myeuid = geteuid ();
   x->one_file_system = 0;
-  x->preserve_owner_and_group = 0;
-  x->preserve_chmod_bits = 0;
+  x->preserve_ownership = 0;
+  x->preserve_mode = 0;
   x->preserve_timestamps = 0;
   x->require_preserve = 0;
   x->recursive = 0;
