@@ -11,8 +11,9 @@ Changes in release 3.13:
 * uses automake-generated Makefile templates
 * chown and chgrp accept new option --no-dereference (-h)
 * ln -f FILE FILE fails with a diagnostic rather than silently removing FILE
-* when building on systems that have getopt_long (like Linux), the system-
-  provided function will be used -- so executables may be a little smaller
+* when building on systems that have getopt_long (most GNU-oriented ones),
+  the system-provided function will be used -- so executables may be a
+  little smaller
 * cp -p, and mv modify owner and/or group of symlinks on systems
   (like Solaris) that provide the lchown system call.
 * df no longer invokes the sync system call by default.  You can use the
