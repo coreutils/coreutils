@@ -17,6 +17,8 @@ mkdir -p $tmp || framework_failure=1
 cd $tmp || framework_failure=1
 mkdir -p dir/a
 ln -s dir slink
+seq --format=%100g 900 | head --bytes=64k > 64k
+ln -s 64k slink-to-64k
 
 if test $framework_failure = 1; then
   echo "$0: failure in testing framework" 1>&2
@@ -28,11 +30,17 @@ fail=0
 du -D slink | sed 's/^[0-9][0-9]*	//' > out
 # Ensure that the trailing slash is preserved and handled properly.
 du -D slink/ | sed 's/^[0-9][0-9]*	//' >> out
+
+# Ensure that -D makes du dereference even symlinks to non-directories.
+# The sed command maps the 68 I get on an ext3 file system to the 64 I expected.
+# On tmpfs, I get 64.
+du -kD slink-to-64k | sed 's/^6[0-9]/64/' >> out
 cat <<\EOF > exp
 slink/a
 slink
 slink/a
 slink/
+64	slink-to-64k
 EOF
 
 cmp out exp || fail=1
