@@ -19,8 +19,8 @@ if test -z "$other_partition_tmpdir"; then
   (exit 77); exit
 fi
 
-null=.mv-null
-dir=.mv-dir
+null=mv-null
+dir=mv-dir
 
 framework_failure=0
 mkdir $tmp || framework_failure=1
