@@ -1015,7 +1015,7 @@ close_output_file (void)
 {
   if (output_stream)
     {
-      if (fclose (output_stream) == EOF)
+      if (ferror (output_stream) || fclose (output_stream) == EOF)
 	{
 	  error (0, errno, _("write error for `%s'"), output_filename);
 	  output_stream = NULL;
@@ -1028,8 +1028,12 @@ close_output_file (void)
 	  files_created--;
 	}
       else
-        if (!suppress_count)
-	  fprintf (stdout, "%d\n", bytes_written);
+	{
+	  /* FIXME: if we write to stdout here, we have to close stdout
+	     and check for errors.  */
+	  if (!suppress_count)
+	    fprintf (stdout, "%d\n", bytes_written);
+	}
       output_stream = NULL;
     }
 }
@@ -1506,6 +1510,9 @@ main (int argc, char **argv)
       error (0, errno, _("read error"));
       cleanup_fatal ();
     }
+
+  if (!suppress_count && (ferror (stdout) || fclose (stdout) == EOF))
+    error (EXIT_FAILURE, errno, _("write error"));
 
   exit (EXIT_SUCCESS);
 }
