@@ -1,3 +1,8 @@
+2003-07-28  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi (dd invocation): Explain that a SIGUSR1 signal
+	makes dd give a progress report to stderr.
+
 2003-07-24  Paul Eggert  <eggert@twinsun.com>
 
 	* coreutils.texi: Document changes of 2003-07-24.
