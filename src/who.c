@@ -108,10 +108,10 @@ idle_string (time_t when)
   return _(" old ");
 }
 
-/* Display a line of information about entry THIS. */
+/* Display a line of information about UTMP_ENT. */
 
 static void
-print_entry (STRUCT_UTMP *this)
+print_entry (const STRUCT_UTMP *utmp_ent)
 {
   struct stat stats;
   time_t last_change;
@@ -120,22 +120,22 @@ print_entry (STRUCT_UTMP *this)
 #define DEV_DIR_WITH_TRAILING_SLASH "/dev/"
 #define DEV_DIR_LEN (sizeof (DEV_DIR_WITH_TRAILING_SLASH) - 1)
 
-  char line[sizeof (this->ut_line) + DEV_DIR_LEN + 1];
+  char line[sizeof (utmp_ent->ut_line) + DEV_DIR_LEN + 1];
   time_t tm;
 
   /* Copy ut_line into LINE, prepending `/dev/' if ut_line is not
      already an absolute pathname.  Some system may put the full,
      absolute pathname in ut_line.  */
-  if (this->ut_line[0] == '/')
+  if (utmp_ent->ut_line[0] == '/')
     {
-      strncpy (line, this->ut_line, sizeof (this->ut_line));
-      line[sizeof (this->ut_line)] = '\0';
+      strncpy (line, utmp_ent->ut_line, sizeof (utmp_ent->ut_line));
+      line[sizeof (utmp_ent->ut_line)] = '\0';
     }
   else
     {
       strcpy (line, DEV_DIR_WITH_TRAILING_SLASH);
-      strncpy (line + DEV_DIR_LEN, this->ut_line, sizeof (this->ut_line));
-      line[DEV_DIR_LEN + sizeof (this->ut_line)] = '\0';
+      strncpy (line + DEV_DIR_LEN, utmp_ent->ut_line, sizeof (utmp_ent->ut_line));
+      line[DEV_DIR_LEN + sizeof (utmp_ent->ut_line)] = '\0';
     }
 
   if (stat (line, &stats) == 0)
@@ -149,10 +149,10 @@ print_entry (STRUCT_UTMP *this)
       last_change = 0;
     }
 
-  printf ("%-8.*s", (int) sizeof (this->ut_name), this->ut_name);
+  printf ("%-8.*s", (int) sizeof (utmp_ent->ut_name), utmp_ent->ut_name);
   if (include_mesg)
     printf ("  %c  ", mesg);
-  printf (" %-8.*s", (int) sizeof (this->ut_line), this->ut_line);
+  printf (" %-8.*s", (int) sizeof (utmp_ent->ut_line), utmp_ent->ut_line);
 
   /* Don't take the address of UT_TIME_MEMBER directly.
      Ulrich Drepper wrote:
@@ -160,7 +160,7 @@ print_entry (STRUCT_UTMP *this)
      utmp file formats which do not use a simple time_t ut_time field.
      In glibc, ut_time is a macro which selects for backward compatibility
      the tv_sec member of a struct timeval value.''  */
-  tm = UT_TIME_MEMBER (this);
+  tm = UT_TIME_MEMBER (utmp_ent);
   printf (" %-12.12s", ctime (&tm) + 4);
 
   if (include_idle)
@@ -171,15 +171,15 @@ print_entry (STRUCT_UTMP *this)
 	printf ("   .  ");
     }
 #ifdef HAVE_UT_HOST
-  if (this->ut_host[0])
+  if (utmp_ent->ut_host[0])
     {
       extern char *canon_host ();
-      char ut_host[sizeof (this->ut_host) + 1];
+      char ut_host[sizeof (utmp_ent->ut_host) + 1];
       char *host = 0, *display = 0;
 
       /* Copy the host name into UT_HOST, and ensure it's nul terminated. */
-      strncpy (ut_host, this->ut_host, (int) sizeof (this->ut_host));
-      ut_host[sizeof (this->ut_host)] = '\0';
+      strncpy (ut_host, utmp_ent->ut_host, (int) sizeof (utmp_ent->ut_host));
+      ut_host[sizeof (utmp_ent->ut_host)] = '\0';
 
       /* Look for an X display.  */
       display = strrchr (ut_host, ':');
@@ -203,32 +203,31 @@ print_entry (STRUCT_UTMP *this)
 }
 
 /* Print the username of each valid entry and the number of valid entries
-   in `utmp_contents', which should have N elements. */
+   in UTMP_BUF, which should have N elements. */
 
 static void
-list_entries_who (int n)
+list_entries_who (int n, const STRUCT_UTMP *utmp_buf)
 {
-  register STRUCT_UTMP *this = utmp_contents;
   int entries;
 
   entries = 0;
   while (n--)
     {
-      if (this->ut_name[0]
+      if (utmp_buf->ut_name[0]
 #ifdef USER_PROCESS
-	  && this->ut_type == USER_PROCESS
+	  && utmp_buf->ut_type == USER_PROCESS
 #endif
 	 )
 	{
 	  char *trimmed_name;
 
-	  trimmed_name = extract_trimmed_name (this);
+	  trimmed_name = extract_trimmed_name (utmp_buf);
 
 	  printf ("%s ", trimmed_name);
 	  free (trimmed_name);
 	  entries++;
 	}
-      this++;
+      utmp_buf++;
     }
   printf (_("\n# users=%u\n"), entries);
 }
@@ -246,25 +245,23 @@ print_heading (void)
   printf (_("FROM\n"));
 }
 
-/* Display `utmp_contents', which should have N entries. */
+/* Display UTMP_BUF, which should have N entries. */
 
 static void
-scan_entries (int n)
+scan_entries (int n, const STRUCT_UTMP *utmp_buf)
 {
-  register STRUCT_UTMP *this = utmp_contents;
-
   if (include_heading)
     print_heading ();
 
   while (n--)
     {
-      if (this->ut_name[0]
+      if (utmp_buf->ut_name[0]
 #ifdef USER_PROCESS
-	  && this->ut_type == USER_PROCESS
+	  && utmp_buf->ut_type == USER_PROCESS
 #endif
 	 )
-	print_entry (this);
-      this++;
+	print_entry (utmp_buf);
+      utmp_buf++;
     }
 }
 
@@ -273,32 +270,36 @@ scan_entries (int n)
 static void
 who (const char *filename)
 {
-  int n_users = read_utmp (filename);
+  int n_users;
+  STRUCT_UTMP *utmp_buf;
+  int fail = read_utmp (filename, &n_users, &utmp_buf);
+
+  if (fail)
+    error (1, errno, "%s", filename);
+
   if (short_list)
-    list_entries_who (n_users);
+    list_entries_who (n_users, utmp_buf);
   else
-    scan_entries (n_users);
+    scan_entries (n_users, utmp_buf);
 }
 
-/* Search `utmp_contents', which should have N entries, for
+/* Search UTMP_CONTENTS, which should have N entries, for
    an entry with a `ut_line' field identical to LINE.
    Return the first matching entry found, or NULL if there
    is no matching entry. */
 
-static STRUCT_UTMP *
-search_entries (int n, char *line)
+static const STRUCT_UTMP *
+search_entries (int n, const STRUCT_UTMP *utmp_buf, const char *line)
 {
-  register STRUCT_UTMP *this = utmp_contents;
-
   while (n--)
     {
-      if (this->ut_name[0]
+      if (utmp_buf->ut_name[0]
 #ifdef USER_PROCESS
-	  && this->ut_type == USER_PROCESS
+	  && utmp_buf->ut_type == USER_PROCESS
 #endif
-	  && !strncmp (line, this->ut_line, sizeof (this->ut_line)))
-	return this;
-      this++;
+	  && !strncmp (line, utmp_buf->ut_line, sizeof (utmp_buf->ut_line)))
+	return utmp_buf;
+      utmp_buf++;
     }
   return NULL;
 }
@@ -307,11 +308,14 @@ search_entries (int n, char *line)
    or nothing if there is no entry for it. */
 
 static void
-who_am_i (char *filename)
+who_am_i (const char *filename)
 {
-  register STRUCT_UTMP *utmp_entry;
+  const STRUCT_UTMP *utmp_entry;
+  STRUCT_UTMP *utmp_buf;
   char hostname[MAXHOSTNAMELEN + 1];
   char *tty;
+  int fail;
+  int n_users;
 
   if (gethostname (hostname, MAXHOSTNAMELEN + 1))
     *hostname = 0;
@@ -327,7 +331,12 @@ who_am_i (char *filename)
     return;
   tty += 5;			/* Remove "/dev/".  */
 
-  utmp_entry = search_entries (read_utmp (filename), tty);
+  fail = read_utmp (filename, &n_users, &utmp_buf);
+
+  if (fail)
+    error (1, errno, "%s", filename);
+
+  utmp_entry = search_entries (n_users, utmp_buf, tty);
   if (utmp_entry == NULL)
     return;
 
