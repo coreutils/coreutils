@@ -1,4 +1,23 @@
+1999-01-01  Jim Meyering  <meyering@ascend.com>
+
+	* lib/quotearg.c (quotearg_buffer): Cast -1 to size_t before comparing.
+	(quotearg_n): Change type of 1st parameter from int to unsigned int.
+	(quotearg_n_options): Likewise.
+	From Akim Demaille.
+	(quotearg_n_options): Declare `options' parameter to be `const'.
+
+	* lib/human.c (humblock): Use ARGMATCH in place of argmatch.
+
+	* lib/backupfile.c (get_version): Use XARGCASEMATCH in place of
+	argmatch & co.
+
 1998-12-31  Jim Meyering  <meyering@ascend.com>
+
+	* lib/Makefile.am (libfu_a_SOURCES): Remove strcasecmp.c.
+	(BUILT_SOURCES): Add strcasecmp.c and strncasecmp.c.
+	(EXTRA_DIST): Add strcasecmp.cin.
+	(strcasecmp.c): New rule.
+	(strncasecmp.c): New rule.
 
 	* src/ls.c (indicator_style_types): New variable.
 	(format_types): Rename from `formats'.
@@ -9,11 +28,12 @@
 	in each of several cases.
 	From Akim Demaille.
 
-	* src/cp.c (main):  Use XARGCASEMATCH in place of argmatch & co.
+	* src/cp.c (main): Use XARGCASEMATCH in place of argmatch & co.
 	* src/touch.c (main): Likewise.
+	* lib/backupfile.c (get_version): Likewise.
 	From Akim Demaille.
 
-	* lib/strncasecmp.c: New file.
+	* lib/strncasecmp.cin: New file.
 	* lib/argmatch.c (strncasecmp): Move to a separate file.
 	Add curly braces around some one-stmt-but-multiline blocks.
 
