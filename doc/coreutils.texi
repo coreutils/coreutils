@@ -9289,18 +9289,35 @@ True if either @var{expr1} or @var{expr2} is true.
 @command{expr} evaluates an expression and writes the result on standard
 output.  Each token of the expression must be a separate argument.
 
-Operands are either numbers or strings.  @command{expr} converts
+Operands are either integers or strings.  Integers consist of one or
+more decimal digits, with an optional leading @samp{-}.
+@command{expr} converts
 anything appearing in an operand position to an integer or a string
 depending on the operation being applied to it.
 
 Strings are not quoted for @command{expr} itself, though you may need to
 quote them to protect characters with special meaning to the shell,
-e.g., spaces.
+e.g., spaces.  However, regardless of whether it is quoted, a string
+operand should not be a parenthesis or any of @command{expr}'s
+operators like @code{+}, so you cannot safely pass an arbitrary string
+@code{$str} to expr merely by quoting it to the shell.  One way to
+work around this is to use the @command{GNU} extension @code{+},
+(e.g., @code{+ "$str" = foo}); a more portable way is to use
+@code{@w{" $str"}} and to adjust the rest of the expression to take
+the leading space into account (e.g., @code{@w{" $str" = " foo"}}).
+
+You should not pass a negative integer or a string with leading
+@samp{-} as @command{expr}'s first argument, as it might be
+misinterpreted as an option; this can be avoided by parenthesization.
+Also, portable scripts should not use a string operand that happens to
+take the form of an integer; this can be worked around by inserting
+leading spaces as mentioned above.
 
 @cindex parentheses for grouping
 Operators may be given as infix symbols or prefix keywords.  Parentheses
-may be used for grouping in the usual manner (you must quote parentheses
-to avoid the shell evaluating them, however).
+may be used for grouping in the usual manner.  You must quote
+parentheses and many operators to avoid the shell evaluating them,
+however.
 
 @cindex exit status of @command{expr}
 Exit status:
@@ -9417,7 +9434,7 @@ the connectives (next section) have higher.
 @kindex -
 @cindex addition
 @cindex subtraction
-Addition and subtraction.  Both arguments are converted to numbers;
+Addition and subtraction.  Both arguments are converted to integers;
 an error occurs if this cannot be done.
 
 @item * / %
@@ -9428,7 +9445,7 @@ an error occurs if this cannot be done.
 @cindex division
 @cindex remainder
 Multiplication, division, remainder.  Both arguments are converted to
-numbers; an error occurs if this cannot be done.
+integers; an error occurs if this cannot be done.
 
 @end table
 
@@ -9450,15 +9467,18 @@ are higher precedence than either the string or numeric operators
 @kindex |
 @cindex logical or operator
 @cindex or operator
-Returns its first argument if that is neither null nor 0, otherwise its
-second argument.
+Returns its first argument if that is neither null nor zero, otherwise
+its second argument if it is neither null nor zero, otherwise 0.  It
+does not evaluate its second argument if its first argument is neither
+null nor zero.
 
 @item &
 @kindex &
 @cindex logical and operator
 @cindex and operator
-Return its first argument if neither argument is null or 0, otherwise
-0.
+Return its first argument if neither argument is null or zero, otherwise
+0.  It does not evaluate its second argument if its first argument is
+null or zero.
 
 @item < <= = == != >= >
 @kindex <
@@ -9471,7 +9491,7 @@ Return its first argument if neither argument is null or 0, otherwise
 @vindex LC_COLLATE
 Compare the arguments and return 1 if the relation is true, 0 otherwise.
 @code{==} is a synonym for @code{=}.  @command{expr} first tries to convert
-both arguments to numbers and do a numeric comparison; if either
+both arguments to integers and do a numeric comparison; if either
 conversion fails, it does a lexicographic comparison using the character
 collating sequence specified by the @env{LC_COLLATE} locale.
 
