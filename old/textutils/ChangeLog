@@ -1,5 +1,7 @@
 1999-02-07  Jim Meyering  <meyering@ascend.com>
 
+	* Version 1.22h.
+
 	* Makefile.maint (my-distcheck): Don't depend on dist, now that this
 	is hooked up to the distcheck rule.
 	* Makefile.am (distcheck-hook): New target and rule -- link to shared
@@ -11,8 +13,6 @@
 	@ifinfo so `makeinfo --html ...' works.  From Karl Berry.
 
 1999-01-30  Jim Meyering  <meyering@ascend.com>
-
-	* Version 1.22h.
 
 	* acconfig.h: Remove lots of `#undef's, now that we use the
 	3-argument forms of AC_DEFINE* macros.
