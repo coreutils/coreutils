@@ -1,5 +1,5 @@
 /* obstack.h - object stack macros
-   Copyright (C) 1988,89,90,91,92,93,94,96,97,98,99,2003 Free Software Foundation, Inc.
+   Copyright (C) 1988-1994,1996-1999,2003,2004 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.  Its master source is NOT part of
    the C library, however.  The master source lives in /gd/gnu/lib.
@@ -409,9 +409,8 @@ __extension__								\
 # define obstack_finish(OBSTACK)					\
 __extension__								\
 ({ struct obstack *__o1 = (OBSTACK);					\
-   void *value;								\
-   value = (void *) __o1->object_base;					\
-   if (__o1->next_free == value)					\
+   void *__value = (void *) __o1->object_base;				\
+   if (__o1->next_free == __value)					\
      __o1->maybe_empty_object = 1;					\
    __o1->next_free							\
      = __INT_TO_PTR ((__PTR_TO_INT (__o1->next_free)+__o1->alignment_mask)\
@@ -420,7 +419,7 @@ __extension__								\
        > __o1->chunk_limit - (char *)__o1->chunk)			\
      __o1->next_free = __o1->chunk_limit;				\
    __o1->object_base = __o1->next_free;					\
-   value; })
+   __value; })
 
 # define obstack_free(OBSTACK, OBJ)					\
 __extension__								\
