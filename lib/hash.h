@@ -1,5 +1,5 @@
 /* hash - hashing table processing.
-   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2001 Free Software Foundation, Inc.
    Written by Jim Meyering <meyering@ascend.com>, 1998.
 
    This program is free software; you can redistribute it and/or modify
@@ -21,13 +21,16 @@
 /* Make sure USE_OBSTACK is defined to 1 if you want the allocator to use
    obstacks instead of malloc, and recompile `hash.c' with same setting.  */
 
-#ifndef PARAMS
-# if PROTOTYPES || __STDC__
-#  define PARAMS(Args) Args
-# else
-#  define PARAMS(Args) ()
+#ifndef HASH_H_
+# define HASH_H_
+
+# ifndef PARAMS
+#  if PROTOTYPES || __STDC__
+#   define PARAMS(Args) Args
+#  else
+#   define PARAMS(Args) ()
+#  endif
 # endif
-#endif
 
 typedef unsigned (*Hash_hasher) PARAMS ((const void *, unsigned));
 typedef bool (*Hash_comparator) PARAMS ((const void *, const void *));
@@ -80,12 +83,12 @@ struct hash_table
     /* A linked list of freed struct hash_entry structs.  */
     struct hash_entry *free_entry_list;
 
-#if USE_OBSTACK
+# if USE_OBSTACK
     /* Whenever obstacks are used, it is possible to allocate all overflowed
        entries into a single stack, so they all can be freed in a single
        operation.  It is not clear if the speedup is worth the trouble.  */
     struct obstack entry_stack;
-#endif
+# endif
   };
 
 typedef struct hash_table Hash_table;
@@ -118,3 +121,5 @@ void hash_free PARAMS ((Hash_table *));
 bool hash_rehash PARAMS ((Hash_table *, unsigned));
 void *hash_insert PARAMS ((Hash_table *, const void *));
 void *hash_delete PARAMS ((Hash_table *, const void *));
+
+#endif
