@@ -31,7 +31,7 @@ infodir = $(prefix)/info
 .SUFFIXES:
 
 DISTFILES = Makefile.in fileutils.texi texinfo.tex fileutils.info \
-perm.texi version.texi
+perm.texi version.texi getdate.texi
 
 all: fileutils.info
 
