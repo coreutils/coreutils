@@ -19,4 +19,20 @@ case "$1" in
   *) fail=1 ;;
 esac
 
+rmdir $tmp || fail=1
+tmp2=$tmp/sub
+
+# This should fail.
+mkdir -m2755 $tmp2 2> /dev/null && fail=1
+
+# Now test the --parents option.
+mkdir --parents -m2755 $tmp2 || fail=1
+
+test -d $tmp2 || fail=1
+set -- `ls -ld $tmp2`
+case "$1" in
+  drwxr-sr-x) ;;
+  *) fail=1 ;;
+esac
+
 exit $fail
