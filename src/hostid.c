@@ -1,5 +1,5 @@
 /* print the hexadecimal identifier for the current host
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@
 #endif
 
 #include "system.h"
+#include "closeout.h"
 #include "long-options.h"
 #include "error.h"
 
@@ -73,8 +74,7 @@ main (int argc, char **argv)
   id = gethostid ();
   printf ("%lx\n", id);
 
-  if (fclose (stdout) == EOF)
-    error (EXIT_FAILURE, errno, _("write error"));
+  close_stdout ();
 
   exit (EXIT_SUCCESS);
 }

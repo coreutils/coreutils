@@ -1,5 +1,5 @@
 /* tee - read from standard input and write to standard output and files.
-   Copyright (C) 85,90,91,92,93,94,95,96,1997 Free Software Foundation, Inc.
+   Copyright (C) 85,1990-1999 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@
 #include <getopt.h>
 
 #include "system.h"
+#include "closeout.h"
 #include "error.h"
 
 int full_write ();
@@ -151,8 +152,9 @@ main (int argc, char **argv)
   errs = tee (argc - optind, (const char **) &argv[optind]);
   if (close (0) != 0)
     error (1, errno, _("standard input"));
-  if (close (1) != 0)
-    error (1, errno, _("standard output"));
+
+  close_stdout ();
+
   exit (errs);
 }
 
