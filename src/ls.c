@@ -522,7 +522,6 @@ static struct option const long_options[] =
   {"help", no_argument, &show_help, 1},
   {"version", no_argument, &show_version, 1},
   {"color", optional_argument, 0, 13},
-  {"colour", optional_argument, 0, 13},
   {NULL, 0, NULL, 0}
 };
 
@@ -1281,6 +1280,9 @@ get_funky_string (char **dest, const char **src, int equals_end)
 	  else
 	    state = ST_ERROR;
 	  break;
+
+	default:
+	  abort();
 	}
     }
 
@@ -1294,7 +1296,6 @@ static void
 parse_ls_color (void)
 {
   const char *p;		/* Pointer to character being parsed */
-  char *whichvar;		/* LS_COLORS or LS_COLOURS? */
   char *buf;			/* color_buf buffer pointer */
   int state;			/* State of parser */
   int ind_no;			/* Indicator number */
@@ -1303,8 +1304,7 @@ parse_ls_color (void)
   struct col_ext_type *ext2;	/* Extra pointer */
 
   strcpy (label, "??");
-  if (((p = getenv (whichvar = "LS_COLORS")) != NULL && *p != '\0')
-      || ((p = getenv (whichvar = "LS_COLOURS")) != NULL && *p != '\0'))
+  if (((p = getenv ("LS_COLORS")) != NULL && *p != '\0'))
     {
       buf = color_buf = xstrdup (p);
       /* This is an overly conservative estimate, but any possible
@@ -1398,12 +1398,15 @@ parse_ls_color (void)
 
       if (state < 0)
 	{
-	  error (0, 0, _("unparsable %s variable"), whichvar);
+	  struct col_ext_type *e;
+
+	  error (0, 0,
+		 _("unparsable value for LS_COLORS environment variable"));
 	  free (color_buf);
-	  for (ext = col_ext_list; ext != NULL ; )
+	  for (e = col_ext_list; e != NULL ; /* empty */)
 	    {
-	      ext2 = ext;
-	      ext = ext->next;
+	      ext2 = e;
+	      e = e->next;
 	      free (ext2);
 	    }
 	  print_with_color = 0;
@@ -2682,7 +2685,7 @@ Sort entries alphabetically if none of -cftuSUX nor --sort.\n\
   -C                         list entries by columns\n\
   -c                         sort by change time; with -l: show ctime\n\
       --color[=WORD]         colorize entries according to WORD\n\
-      --colour[=WORD]        yes, no, or tty (if output is terminal)\n\
+                             yes, no, or tty (if output is terminal)\n\
   -D, --dired                generate output well suited to Emacs' dired mode\n\
   -d, --directory            list directory entries instead of contents\n\
   -F, --classify             append a character for typing each entry\n\
