@@ -1,6 +1,6 @@
 /* inttostr.h -- convert integers to printable strings
 
-   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -44,14 +44,6 @@
 
 #define INT_BUFSIZE_BOUND(t) (INT_STRLEN_BOUND (t) + 1)
 
-#ifndef PARAMS
-# if defined PROTOTYPES || defined __STDC__
-#  define PARAMS(Args) Args
-# else
-#  define PARAMS(Args) ()
-# endif
-#endif
-
-char *offtostr PARAMS ((off_t, char *));
-char *imaxtostr PARAMS ((intmax_t, char *));
-char *umaxtostr PARAMS ((uintmax_t, char *));
+char *offtostr (off_t, char *);
+char *imaxtostr (intmax_t, char *);
+char *umaxtostr (uintmax_t, char *);
