@@ -188,9 +188,14 @@ xstrtoumax (char const *ptr, char const **end, int base, uintmax_t *res,
     *end = end_ptr;
   if (errno)
     return LONGINT_OVERFLOW;
-  if (ptr == end_ptr)
-    return LONGINT_INVALID;
   c = *end_ptr;
+  if (ptr == end_ptr)
+    {
+      if (valid_suffixes && c && strchr (valid_suffixes, c))
+	n = 1;
+      else
+	return LONGINT_INVALID;
+    }
   if (!c)
     return LONGINT_OK;
   /* Now deal with metric-style suffixes */
@@ -227,18 +232,19 @@ def:default:
       if (!p)
 	return LONGINT_INVALID_SUFFIX_CHAR;
       /*
-       * If valid_suffixes contains '0', then xD (decimal) and xB (binary)
+       * If valid_suffixes contains '0', then B (decimal) and iB (binary)
        * are allowed as "supersuffixes".  Binary is the default.
        */
       if (strchr (valid_suffixes, '0'))
         {
-	  if (end_ptr[1] == 'B')
-	    end_ptr++;
-	  else if (end_ptr[1] == 'D')
+	  /* 'D' is obsolescent */
+	  if (end_ptr[1] == 'B' || end_ptr[1] == 'D')
 	    {
 	      decimal_flag = 1;
 	      end_ptr++;
 	    }
+	  else if (end_ptr[1] == 'i' && end_ptr[2] == 'B')
+	    end_ptr += 2;
 	}
       /* Now do the scaling */
       p++;
@@ -474,7 +480,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       printf (_("\
   -f, --force    change permissions to allow writing if necessary\n\
   -n, --iterations=N  Overwrite N times instead of the default (%d)\n\
-  -s, --size=N   shred this many bytes (suffixes like k, M, G accepted)\n\
+  -s, --size=N   shred this many bytes (suffixes like K, M, G accepted)\n\
 "), DEFAULT_PASSES);
       fputs (_("\
   -u, --remove   truncate and remove file after overwriting\n\
@@ -1838,7 +1844,7 @@ main (int argc, char **argv)
 	case 's':
 	  {
 	    uintmax_t tmp;
-	    if (xstrtoumax (optarg, NULL, 0, &tmp, "cbBkMGTPEZY0")
+	    if (xstrtoumax (optarg, NULL, 0, &tmp, "cbBkKMGTPEZY0")
 		!= LONGINT_OK)
 	      {
 		error (1, 0, _("%s: invalid file size"),
