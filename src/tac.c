@@ -270,9 +270,9 @@ tac_stdin ()
   RETSIGTYPE (*sigint) (), (*sighup) (), (*sigpipe) (), (*sigterm) ();
   int errors;
   struct stat stats;
-#ifdef _POSIX_VERSION
+#ifdef SA_INTERRUPT
     struct sigaction oldact, newact;
-#endif				/* _POSIX_VERSION */
+#endif				/* SA_INTERRUPT */
 
   /* No tempfile is needed for "tac < file".
      Use fstat instead of checking for errno == ESPIPE because
@@ -286,7 +286,7 @@ tac_stdin ()
   if (S_ISREG (stats.st_mode))
     return tac (0, _("standard input"));
 
-#ifdef _POSIX_VERSION
+#ifdef SA_INTERRUPT
   newact.sa_handler = cleanup;
   sigemptyset (&newact.sa_mask);
   newact.sa_flags = 0;
@@ -310,7 +310,7 @@ tac_stdin ()
   sigterm = oldact.sa_handler;
   if (sigterm != SIG_IGN)
     sigaction (SIGTERM, &newact, NULL);
-#else				/* !_POSIX_VERSION */
+#else				/* !SA_INTERRUPT */
   sigint = signal (SIGINT, SIG_IGN);
   if (sigint != SIG_IGN)
     signal (SIGINT, cleanup);
@@ -326,7 +326,7 @@ tac_stdin ()
   sigterm = signal (SIGTERM, SIG_IGN);
   if (sigterm != SIG_IGN)
     signal (SIGTERM, cleanup);
-#endif				/* _POSIX_VERSION */
+#endif				/* SA_INTERRUPT */
 
   save_stdin ();
 
@@ -334,7 +334,7 @@ tac_stdin ()
 
   unlink (tempfile);
 
-#ifdef _POSIX_VERSION
+#ifdef SA_INTERRUPT
   newact.sa_handler = sigint;
   sigaction (SIGINT, &newact, NULL);
   newact.sa_handler = sighup;
@@ -343,12 +343,12 @@ tac_stdin ()
   sigaction (SIGTERM, &newact, NULL);
   newact.sa_handler = sigpipe;
   sigaction (SIGPIPE, &newact, NULL);
-#else				/* !_POSIX_VERSION */
+#else				/* !SA_INTERRUPT */
   signal (SIGINT, sigint);
   signal (SIGHUP, sighup);
   signal (SIGTERM, sigterm);
   signal (SIGPIPE, sigpipe);
-#endif				/* _POSIX_VERSION */
+#endif				/* SA_INTERRUPT */
 
   return errors;
 }

@@ -32,7 +32,7 @@
 #include "long-options.h"
 #include "error.h"
 
-#ifdef _POSIX_VERSION
+#ifdef HAVE_LIMITS_H
 #include <limits.h>
 #else
 #ifndef UCHAR_MAX
@@ -1411,16 +1411,16 @@ static void
 sighandler (sig)
      int sig;
 {
-#ifdef _POSIX_VERSION
+#ifdef SA_INTERRUPT
   struct sigaction sigact;
 
   sigact.sa_handler = SIG_DFL;
   sigemptyset (&sigact.sa_mask);
   sigact.sa_flags = 0;
   sigaction (sig, &sigact, NULL);
-#else				/* !_POSIX_VERSION */
+#else				/* !SA_INTERRUPT */
   signal (sig, SIG_DFL);
-#endif				/* _POSIX_VERSION */
+#endif				/* SA_INTERRUPT */
   cleanup ();
   kill (getpid (), sig);
 }
@@ -1492,9 +1492,9 @@ main (argc, argv)
   int checkonly = 0, mergeonly = 0, nfiles = 0;
   char *minus = "-", *outfile = minus, **files, *tmp;
   FILE *ofp;
-#ifdef _POSIX_VERSION
+#ifdef SA_INTERRUPT
   struct sigaction oldact, newact;
-#endif				/* _POSIX_VERSION */
+#endif				/* SA_INTERRUPT */
 
   program_name = argv[0];
 
@@ -1507,7 +1507,7 @@ main (argc, argv)
   if (temp_file_prefix == NULL)
     temp_file_prefix = DEFAULT_TMPDIR;
 
-#ifdef _POSIX_VERSION
+#ifdef SA_INTERRUPT
   newact.sa_handler = sighandler;
   sigemptyset (&newact.sa_mask);
   newact.sa_flags = 0;
@@ -1524,7 +1524,7 @@ main (argc, argv)
   sigaction (SIGTERM, NULL, &oldact);
   if (oldact.sa_handler != SIG_IGN)
     sigaction (SIGTERM, &newact, NULL);
-#else				/* !_POSIX_VERSION */
+#else				/* !SA_INTERRUPT */
   if (signal (SIGINT, SIG_IGN) != SIG_IGN)
     signal (SIGINT, sighandler);
   if (signal (SIGHUP, SIG_IGN) != SIG_IGN)
@@ -1533,7 +1533,7 @@ main (argc, argv)
     signal (SIGPIPE, sighandler);
   if (signal (SIGTERM, SIG_IGN) != SIG_IGN)
     signal (SIGTERM, sighandler);
-#endif				/* !_POSIX_VERSION */
+#endif				/* !SA_INTERRUPT */
 
   gkey.sword = gkey.eword = -1;
   gkey.ignore = NULL;

@@ -1435,9 +1435,9 @@ main (argc, argv)
      char **argv;
 {
   int optc;
-#ifdef _POSIX_VERSION
+#ifdef SA_INTERRUPT
   struct sigaction oldact, newact;
-#endif				/* _POSIX_VERSION */
+#endif				/* SA_INTERRUPT */
 
   program_name = argv[0];
   global_argv = argv;
@@ -1447,7 +1447,7 @@ main (argc, argv)
   remove_files = TRUE;
   prefix = DEFAULT_PREFIX;
 
-#ifdef _POSIX_VERSION
+#ifdef SA_INTERRUPT
   newact.sa_handler = interrupt_handler;
   sigemptyset (&newact.sa_mask);
   newact.sa_flags = 0;
@@ -1467,7 +1467,7 @@ main (argc, argv)
   sigaction (SIGTERM, NULL, &oldact);
   if (oldact.sa_handler != SIG_IGN)
     sigaction (SIGTERM, &newact, NULL);
-#else				/* !_POSIX_VERSION */
+#else
   if (signal (SIGHUP, SIG_IGN) != SIG_IGN)
     signal (SIGHUP, interrupt_handler);
   if (signal (SIGINT, SIG_IGN) != SIG_IGN)
