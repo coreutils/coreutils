@@ -10,6 +10,7 @@ TESTS_ENVIRONMENT = \
   PROG=$$tst
 
 TESTS = \
+  split-fail \
   false \
   tty-eof \
   printf-hex \
