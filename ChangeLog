@@ -2,6 +2,8 @@
 
 	* Version 5.0.
 
+	* NEWS: Note the location of older NEWS files.
+
 	* src/remove.c (is_empty_dir): Don't let a failing closedir
 	clobber errno.  Spotted by Arnold Robbins.
 
