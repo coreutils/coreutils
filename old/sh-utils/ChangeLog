@@ -1,5 +1,7 @@
 2002-05-03  Jim Meyering  <meyering@lucent.com>
 
+	* Version 2.0.13.
+
 	* src/kill.c (usage): Add a little to the description of --list.
 	Uncapitalize first word and remove period at end of each one line
 	option description.
