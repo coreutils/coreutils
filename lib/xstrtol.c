@@ -71,9 +71,7 @@ extern int errno;
 __unsigned long int __strtol ();
 
 static int
-bkm_scale (x, scale_factor)
-     __unsigned long int *x;
-     int scale_factor;
+bkm_scale (__unsigned long int *x, int scale_factor)
 {
   __unsigned long int product = *x * scale_factor;
   if (*x != product / scale_factor)
@@ -83,10 +81,7 @@ bkm_scale (x, scale_factor)
 }
 
 static int
-bkm_scale_by_power (x, base, power)
-     __unsigned long int *x;
-     int base;
-     int power;
+bkm_scale_by_power (__unsigned long int *x, int base, int power)
 {
   while (power--)
     if (bkm_scale (x, base))
