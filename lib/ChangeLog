@@ -1,3 +1,12 @@
+2000-02-12  Jim Meyering  <meyering@lucent.com>
+
+	* userspec.c (ISDIGIT): Define it.
+	(isdigit): Remove definition.
+	(is_number): Use ISDIGIT, not isdigit.
+	<libintl.h>: Include.
+	(_ and N_): Define.
+	(parse_user_spec): Mark translatable strings.
+
 2000-02-10  Jim Meyering  <meyering@lucent.com>
 
 	With these changes, nanosleep.[ch] are finally enough like the other
