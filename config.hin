@@ -710,12 +710,6 @@
 /* Define to 1 if you have the `setlocale' function. */
 #undef HAVE_SETLOCALE
 
-/* Define to 1 if you have the `setregid' function. */
-#undef HAVE_SETREGID
-
-/* Define to 1 if you have the `setreuid' function. */
-#undef HAVE_SETREUID
-
 /* Define to 1 if you have the <shadow.h> header file. */
 #undef HAVE_SHADOW_H
 
