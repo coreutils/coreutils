@@ -37,6 +37,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   that support hard links (stat.st_nlink > 1).  This mitigates the problem
   in two ways: few file systems appear to be affected (hpfs and ntfs are),
   when the bug is triggered, mv no longer removes the last hard link to a file.
+  *** ATTENTION ***: if you know how to distinguish the following two cases
+  without writing to the file system in question, please let me know:
+  1) B and b refer to the same directory entry on a file system like NTFS
+       (B may well have a link count larger than 1)
+  2) B and b are hard links to the same file
 
   stat no longer overruns a buffer for format strings ending in `%'
 
@@ -52,7 +57,7 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   seq's default step is 1, even if LAST < FIRST.
 
-  paste no longer mistakenly outputs 0xff bytes for a nonempty input file
+  paste no longer mistakenly outputs 0xFF bytes for a nonempty input file
   without a trailing newline.
 
   `tail -n0 -f FILE' and `tail -c0 -f FILE' no longer perform what amounted
