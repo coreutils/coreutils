@@ -1,5 +1,7 @@
 1998-03-14  Jim Meyering  <meyering@eng.ascend.com>
 
+	* Version 3.16n.
+
 	* src/remove.c: Use `virtual memory exhausted' message, not
 	`Memory exhausted' to be consistent with the majority of other
 	such messages.
