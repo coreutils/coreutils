@@ -324,7 +324,6 @@ main (int argc, char **argv)
   gid_t group = (uid_t) -1;	/* New gid; -1 if not to be changed. */
   int errors = 0;
   int optc;
-  char *e;
 
   program_name = argv[0];
   setlocale (LC_ALL, "");
@@ -385,7 +384,8 @@ main (int argc, char **argv)
     }
   else
     {
-      e = parse_user_spec (argv[optind], &user, &group, &username, &groupname);
+      const char *e = parse_user_spec (argv[optind], &user, &group,
+				       &username, &groupname);
       if (e)
         error (1, 0, "%s: %s", argv[optind], e);
       if (username == NULL)
