@@ -1,0 +1,28 @@
+#!/bin/sh
+# make sure ls -L always follows symlinks
+
+if test "$VERBOSE" = yes; then
+  set -x
+  ls --version
+fi
+
+pwd=`pwd`
+tmp=follow-sl.$$
+trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
+trap '(exit $?); exit' 1 2 13 15
+
+framework_failure=0
+mkdir $tmp || framework_failure=1
+cd $tmp || framework_failure=1
+ln -s link link || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo 'failure in testing framework'
+  (exit 1); exit
+fi
+
+fail=0
+
+ls -L link 2> /dev/null && fail=1
+
+(exit $fail); exit
