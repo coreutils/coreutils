@@ -48,6 +48,7 @@
 #define AUTHORS "Q. Frank Xia"
 
 #include <stdio.h>
+#include <sys/types.h>
 #include "system.h"
 
 #if !defined UINT_FAST32_MAX && !defined uint_fast32_t
@@ -116,7 +117,6 @@ main (void)
 #else /* !CRCTAB */
 
 # include <getopt.h>
-# include <sys/types.h>
 # include "closeout.h"
 # include "long-options.h"
 # include "error.h"
