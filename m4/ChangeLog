@@ -1,3 +1,8 @@
+2000-12-06  Paul Eggert  <eggert@twinsun.com>
+
+	* off_t-format.m4: Remove this file.
+	* jm-macros.m4 (jm_MACROS): Remove jm_SYS_OFF_T_PRINTF_FORMAT.
+
 2000-12-06  Jim Meyering  <meyering@lucent.com>
 
 	* xstrtoumax.m4 (jm_AC_PREREQ_XSTRTOUMAX): If we need the replacement

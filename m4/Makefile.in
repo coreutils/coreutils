@@ -159,7 +159,6 @@ mbstate_t.m4 \
 mbswidth.m4 \
 memcmp.m4 \
 nanosleep.m4 \
-off_t-format.m4 \
 perl.m4 \
 prereq.m4 \
 progtest.m4 \
