@@ -674,7 +674,7 @@ do_stat (char const *filename, int follow_links, int terse,
 	      format =
 		"  File: %N\n"
 		"  Size: %-10s\tBlocks: %-10b IO Block: %-6o %F\n"
-		"Device: %Dh/%dd\tInode: %-10i  Links: %-5h\n"
+		"Device: %Dh/%dd\tInode: %-10i  Links: %h\n"
 		"Access: (%04a/%10.10A)  Uid: (%5u/%8U)   Gid: (%5g/%8G)\n"
 		"Access: %x\n" "Modify: %y\n" "Change: %z\n";
 	    }
