@@ -1,4 +1,21 @@
+1998-06-28  Jim Meyering  <meyering@ascend.com>
+
+	* lib/mountlist.c (fsp_to_string): Clean out some crufty #ifdefs
+	now that we're using the jm_FSTYPENAME autoconf macro.
+
+	* configure.in: Move big block of list_mounted_fs checks into
+	new jm_LIST_MOUNTED_FILESYSTEMS macro.
+	Use new jm_FSTYPENAME macro.
+
+	* src/sys2.h: Add macro definitions for GNU libc unlocked wrappers.
+
+	* src/ls.c: Add DIRED_ prefix to the macros: PUTCHAR, FPUTS, and
+	FPUTS_LITERAL
+
 1998-06-27  Jim Meyering  <meyering@ascend.com>
+
+	* src/copy.c (copy_reg): Detect identical source and dest here.
+	(copy_internal): Make the test symmetric.
 
 	* Version 3.16q.
 
