@@ -19,6 +19,11 @@ framework_failure=0
 mkdir $tmp || framework_failure=1
 cd $tmp || framework_failure=1
 
+d1=/no-$$
+dir=/$d1/such-dir
+# Ensure that $d1 doesn't already exist.
+ld -d $d1 2> /dev/null && framework_failure=1
+
 if test $framework_failure = 1; then
   echo 'failure in testing framework' 1>&2
   (exit 1); exit
@@ -31,14 +36,14 @@ fail=0
 # touch: creating `/': Is a directory
 touch / > out 2>&1 && fail=1
 
-touch /no/such-dir >> out 2>&1 && fail=1
+touch $dir >> out 2>&1 && fail=1
 
 # On SunOS4, EPERM is `Not owner'.
 # On some *BSD systems it's `Operation not permitted'.
 for msg in 'Not owner' 'Operation not permitted' 'Permission denied'; do
   cat > exp <<EOF
   touch: setting times of \`/': $msg
-  touch: creating \`/no/such-dir': No such file or directory
+  touch: creating \`$dir': No such file or directory
 EOF
 
   cmp out exp > /dev/null 2>&1 && break
