@@ -182,10 +182,7 @@ hash_get_table_size (const HT *ht)
    - if KEY_COMPARATOR or HASH is null
    - if it was unable to allocate sufficient storage for the hash table
    - if WHEN_TO_REHASH is zero or negative
-   Otherwise it returns zero.
-
-   FIXME: tell what happens to any existing hash table when this
-   function is called (e.g. a second time).  */
+   Otherwise it returns zero.  */
 
 HT *
 hash_initialize (unsigned int candidate_table_size,
