@@ -19,6 +19,9 @@
 # include <config.h>
 #endif
 
+#include <sys/types.h>
+#include <sys/stat.h>
+
 #if ENABLE_NLS
 # include <libintl.h>
 # define _(Text) gettext (Text)
@@ -33,16 +36,26 @@
 # define EXIT_FAILURE 1
 #endif
 
+#if HAVE_UNISTD_H
+# include <unistd.h>
+#endif
+
+#include <stdio.h>
+
 #include <errno.h>
 #ifndef errno
 extern int errno;
 #endif
 
-#include <stdio.h>
+#ifndef STDOUT_FILENO
+# define STDOUT_FILENO 1
+#endif
+
 #include "closeout.h"
 #include "error.h"
 
 static int default_exit_status = EXIT_FAILURE;
+static const char *file_name = NULL;
 
 /* Set the value to be used for the exit status when close_stdout is called.
    This is useful when it is not convenient to call close_stdout_status,
@@ -51,6 +64,14 @@ void
 close_stdout_set_status (int status)
 {
   default_exit_status = status;
+}
+
+/* Set the file name to be reported in the event an error is detected
+   by close_stdout_status.  */
+void
+close_stdout_set_file_name (const char *file)
+{
+  file_name = file;
 }
 
 /* Close standard output, exiting with status STATUS on failure.
@@ -78,10 +99,27 @@ close_stdout_set_status (int status)
 void
 close_stdout_status (int status)
 {
+#ifdef EBADF
+  struct stat sbuf;
+  if (fstat (STDOUT_FILENO, &sbuf) && errno == EBADF)
+    return;
+#endif
+
   if (ferror (stdout))
-    error (status, 0, _("write error"));
+    {
+      if (file_name)
+	error (status, 0, _("%s: write error"), file_name);
+      else
+	error (status, 0, _("write error"));
+    }
+
   if (fclose (stdout) != 0)
-    error (status, errno, _("write error"));
+    {
+      if (file_name)
+	error (status, errno, _("%s: write error"), file_name);
+      else
+	error (status, errno, _("write error"));
+    }
 }
 
 /* Close standard output, exiting with status EXIT_FAILURE on failure.  */
