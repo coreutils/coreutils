@@ -35,10 +35,7 @@ if test $framework_failure = 1; then
   exit 1
 fi
 
-LANGUAGE=C
-export LANGUAGE
-LANG=C
-export LANG
+. $srcdir/../lang-default
 
 fail=0
 rm --verbose -r $tmp/a $tmp/b > $tmp/$test.O || fail=1
