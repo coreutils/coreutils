@@ -405,15 +405,15 @@ static speed_t string_to_baud PARAMS ((const char *arg));
 static tcflag_t *mode_type_flag PARAMS ((enum mode_type type,
 					 struct termios *mode));
 static void display_all PARAMS ((struct termios *mode, int fd,
-				 const char *device));
+				 const char *device_name));
 static void display_changed PARAMS ((struct termios *mode));
 static void display_recoverable PARAMS ((struct termios *mode));
 static void display_settings PARAMS ((enum output_type output_type,
 				      struct termios *mode, int fd,
-				      const char *device));
+				      const char *device_name));
 static void display_speed PARAMS ((struct termios *mode, int fancy));
 static void display_window_size PARAMS ((int fancy, int fd,
-					 const char *device));
+					 const char *device_name));
 static void sane_mode PARAMS ((struct termios *mode));
 static void set_control_char PARAMS ((struct control_info *info,
 				      const char *arg,
@@ -421,7 +421,7 @@ static void set_control_char PARAMS ((struct control_info *info,
 static void set_speed PARAMS ((enum speed_setting type, const char *arg,
 			       struct termios *mode));
 static void set_window_size PARAMS ((int rows, int cols, int fd,
- 				  const char *device));
+ 				  const char *device_name));
 
 /* The width of the screen, for output wrapping. */
 static int max_col;
@@ -799,7 +799,7 @@ mutually exclusive"));
       device_name = file_name;
       fd = open (device_name, O_RDONLY | O_NONBLOCK);
       if (fd < 0)
-	error (1, errno, device_name);
+	error (1, errno, "%s", device_name);
       if ((fdflags = fcntl (fd, F_GETFL)) == -1
 	  || fcntl (fd, F_SETFL, fdflags & ~O_NONBLOCK) < 0)
 	error (1, errno, _("%s: couldn't reset non-blocking mode"),
@@ -815,7 +815,7 @@ mutually exclusive"));
      spurious difference in an uninitialized portion of the structure.  */
   memset (&mode, 0, sizeof (mode));
   if (tcgetattr (fd, &mode))
-    error (1, errno, device_name);
+    error (1, errno, "%s", device_name);
 
   if (verbose_output || recoverable_output || noargs)
     {
@@ -977,7 +977,7 @@ mutually exclusive"));
       struct termios new_mode;
 
       if (tcsetattr (fd, TCSADRAIN, &mode))
-	error (1, errno, device_name);
+	error (1, errno, "%s", device_name);
 
       /* POSIX (according to Zlotnick's book) tcsetattr returns zero if
 	 it performs *any* of the requested operations.  This means it
@@ -990,7 +990,7 @@ mutually exclusive"));
 	 spurious difference in an uninitialized portion of the structure.  */
       memset (&new_mode, 0, sizeof (new_mode));
       if (tcgetattr (fd, &new_mode))
-	error (1, errno, device_name);
+	error (1, errno, "%s", device_name);
 
       /* Normally, one shouldn't use memcmp to compare structures that
 	 may have `holes' containing uninitialized data, but we have been
@@ -1285,14 +1285,14 @@ get_win_size (int fd, struct winsize *win)
 }
 
 static void
-set_window_size (int rows, int cols, int fd, const char *device)
+set_window_size (int rows, int cols, int fd, const char *device_name)
 {
   struct winsize win;
 
   if (get_win_size (fd, &win))
     {
       if (errno != EINVAL)
-	error (1, errno, device);
+	error (1, errno, "%s", device_name);
       memset (&win, 0, sizeof (win));
     }
 
@@ -1334,29 +1334,29 @@ set_window_size (int rows, int cols, int fd, const char *device)
       win.ws_col = 1;
 
       if (ioctl (fd, TIOCSWINSZ, (char *) &win))
-	error (1, errno, device);
+	error (1, errno, "%s", device_name);
 
       if (ioctl (fd, TIOCSSIZE, (char *) &ttysz))
-	error (1, errno, device);
+	error (1, errno, "%s", device_name);
       return;
     }
 # endif
 
   if (ioctl (fd, TIOCSWINSZ, (char *) &win))
-    error (1, errno, device);
+    error (1, errno, "%s", device_name);
 }
 
 static void
-display_window_size (int fancy, int fd, const char *device)
+display_window_size (int fancy, int fd, const char *device_name)
 {
   struct winsize win;
 
   if (get_win_size (fd, &win))
     {
       if (errno != EINVAL)
-	error (1, errno, device);
+	error (1, errno, "%s", device_name);
       if (!fancy)
-	error (1, 0, _("no size information for this device"));
+	error (1, 0, _("%s: no size information for this device"), device_name);
     }
   else
     {
@@ -1416,7 +1416,7 @@ mode_type_flag (enum mode_type type, struct termios *mode)
 
 static void
 display_settings (enum output_type output_type, struct termios *mode,
-		  int fd, const char *device)
+		  int fd, const char *device_name)
 {
   switch (output_type)
     {
@@ -1425,7 +1425,7 @@ display_settings (enum output_type output_type, struct termios *mode,
       break;
 
     case all:
-      display_all (mode, fd, device);
+      display_all (mode, fd, device_name);
       break;
 
     case recoverable:
@@ -1519,7 +1519,7 @@ display_changed (struct termios *mode)
 }
 
 static void
-display_all (struct termios *mode, int fd, const char *device)
+display_all (struct termios *mode, int fd, const char *device_name)
 {
   int i;
   tcflag_t *bitsp;
@@ -1528,7 +1528,7 @@ display_all (struct termios *mode, int fd, const char *device)
 
   display_speed (mode, 1);
 #ifdef TIOCGWINSZ
-  display_window_size (1, fd, device);
+  display_window_size (1, fd, device_name);
 #endif
 #ifdef HAVE_C_LINE
   wrapf ("line = %d;", mode->c_line);
