@@ -1,3 +1,19 @@
+Thu Jul  4 07:24:54 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/md5sum.c (MIN_DIGEST_LINE_LENGTH): New macro.
+	[NEWLINE_REPLACEMENT_STRING*]: Remove macros.
+	(main): Output a leading backslash for a line describing a file
+	whose name contains a newline.  Then translate each NEWLINE byte
+	in the file name to the string, "\\n", and each backslash to "\\\\".
+	File names that don't contain NEWLINE aren't translated.
+	(split_3): Rewrite to handle file names with embedded newlines.
+	Miles Bader and Jim Blandy suggested this new encoding scheme.
+
+Wed Jul  3 23:21:09 1996  Jim Meyering  <meyering@na-net.ornl.gov>
+
+	* src/md5sum.c (split_3): Correct test for 35-byte line to accomodate
+	fact that leading blanks may be stripped.
+
 Tue Jul  2 21:51:40 1996  Jim Meyering  <meyering@na-net.ornl.gov>
 
 	* configure.in (ALL_LINGUAS): Add dutch (nl).
