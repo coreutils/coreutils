@@ -23,6 +23,7 @@
 # include <config.h>
 #endif
 
+#include <limits.h>
 #include <stdio.h>
 #include <errno.h>
 #include <sys/types.h>
@@ -60,6 +61,8 @@ xgetcwd (void)
   return cwd;
 #else
 
+  int saved_errno;
+
   /* The initial buffer size for the working directory.  A power of 2
      detects arithmetic overflow earlier, but is not required.  */
 # ifndef INITIAL_BUFFER_SIZE
@@ -72,16 +75,29 @@ xgetcwd (void)
     {
       char *buf = xmalloc (buf_size);
       char *cwd = getcwd (buf, buf_size);
-      int saved_errno;
       if (cwd)
 	return cwd;
       saved_errno = errno;
       free (buf);
       if (saved_errno != ERANGE)
-	return NULL;
+	break;
+
+#ifdef PATH_MAX
+      if (PATH_MAX / 2 < buf_size)
+	{
+	  if (PATH_MAX <= buf_size)
+	    break;
+	  buf_size = PATH_MAX;
+	  continue;
+	}
+#endif
+
       buf_size *= 2;
       if (buf_size == 0)
 	xalloc_die ();
     }
+
+  errno = saved_errno;
+  return NULL;
 #endif
 }
