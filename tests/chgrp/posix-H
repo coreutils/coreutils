@@ -33,7 +33,7 @@ fi
 
 fail=0
 
-chgrp -HR $g2 1s 2 || fail=1
+chgrp -h -HR $g2 1s 2 || fail=1
 
 # These must have group $g2.
 # =========================
