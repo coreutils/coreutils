@@ -6,14 +6,6 @@ TESTS = mv-special-1 into-self into-self-2 into-self-3 backup-is-src \
 
 EXTRA_DIST = $(TESTS) setup
 TESTS_ENVIRONMENT = \
-  DF=../../src/df \
-  LN=../../src/ln \
-  LS=../../src/ls \
-  MKDIR=../../src/mkdir \
-  MKNOD=../../src/mknod \
-  MV=../../src/mv \
-  RM=../../src/rm \
-  TOUCH=../../src/touch \
   PERL="@PERL@" \
   PATH=`pwd`/../../src:$$PATH \
   PROG=mv
