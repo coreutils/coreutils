@@ -1,5 +1,9 @@
 2000-09-09  Jim Meyering  <meyering@lucent.com>
 
+	* tests/cp/special-bits: New file.
+	* tests/cp/Makefile.am (TESTS): Add special-bits.
+	(TESTS_ENVIRONMENT): Propagate $MAKE into environment, for special-bits.
+
 	* src/copy.c (SAME_OWNER, SAME_GROUP, SAME_OWNER_AND_GROUP): Define.
 	(copy_internal): Avoid calling chown if we know it's not necessary.
 
