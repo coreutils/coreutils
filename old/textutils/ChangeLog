@@ -2,6 +2,11 @@
 
 	* Version 2.0.15.
 
+	The command `echo a|./fmt -2147483647' would cause fmt to segfault.
+	* src/fmt.c (fmt_paragraph): Avoid adding to the sentinal length
+	of INT_MAX.
+	* tests/fmt/basic: Add tests for the above.
+
 	tail: accept new option: -F, equivalent to `--follow=name --retry',
 	for compatibility with FreeBSD and NetBSD versions of tail.
 
