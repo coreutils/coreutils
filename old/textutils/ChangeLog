@@ -1,6 +1,11 @@
-2001-11-04  Jim Meyering  <meyering@lucent.com>
+2001-11-05  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.17.
+
+	* src/sort.c (usage): Don't recommend setting LC_COLLATE=C.
+	That can cause problems (now documented in coreutils.texi).
+
+2001-11-04  Jim Meyering  <meyering@lucent.com>
 
 	* uniq.c, unexpand.c, tail.c, tac.c, split.c, sort.c, pr.c, paste.c:
 	* od.c, nl.c, head.c, fold.c, expand.c, cut.c, csplit.c (usage):
