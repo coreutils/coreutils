@@ -473,7 +473,7 @@ count_entry (ent, top, last_dev)
 	{
 	  printf ("%ld\t%s\n", output_size == size_bytes ? size
 		  : convert_blocks (size, output_size == size_kilobytes),
-		  path->text);
+		  path->length > 0 ? path->text : "/");
 	  fflush (stdout);
 	}
       return opt_separate_dirs ? 0 : size;
