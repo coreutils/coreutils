@@ -34,9 +34,11 @@
 
 /* Most systems do not distinguish between external and internal
    text representations.  */
+/* FIXME: This begs for an autoconf test.  */
 #if UNIX || __UNIX__ || unix || __unix__ || _POSIX_VERSION
 # define OPENOPTS(BINARY) "r"
 #else
+# define OPENOPTS(BINARY) ((BINARY) != 0 ? TEXT1TO1 : TEXTCNVT)
 # ifdef MSDOS
 #  define TEXT1TO1 "rb"
 #  define TEXTCNVT "r"
@@ -50,7 +52,6 @@
     "Cannot determine system type."
 #  endif
 # endif
-# define OPENOPTS(BINARY) ((BINARY) != 0 ? TEXT1TO1 : TEXTCNVT)
 #endif
 
 #if _LIBC || STDC_HEADERS
