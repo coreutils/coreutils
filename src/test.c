@@ -434,7 +434,8 @@ binary_operator (bool l_is_l)
 	  if (argv[op][2] == 't' && !argv[op][3])
 	    {
 	      /* nt - newer than */
-	      time_t lt, rt;
+	      time_t lt IF_LINT (= 0);
+	      time_t rt IF_LINT (= 0);
 	      bool le, re;
 	      pos += 3;
 	      if (l_is_l | r_is_l)
@@ -505,7 +506,8 @@ binary_operator (bool l_is_l)
 	  if ('t' == argv[op][2] && '\000' == argv[op][3])
 	    {
 	      /* ot - older than */
-	      time_t lt, rt;
+	      time_t lt IF_LINT (= 0);
+	      time_t rt IF_LINT (= 0);
 	      bool le, re;
 	      pos += 3;
 	      if (l_is_l | r_is_l)
