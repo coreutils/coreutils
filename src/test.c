@@ -144,7 +144,7 @@ integer_expected_error (char const *pch)
    valid number.  Stuff the converted number into RESULT if RESULT is
    not null.  */
 static bool
-is_int (char *string, intmax_t *result)
+is_int (char const *string, intmax_t *result)
 {
   int sign;
   intmax_t value;
@@ -212,7 +212,7 @@ is_int (char *string, intmax_t *result)
 /* Find the modification time of FILE, and stuff it into *AGE.
    Return true if successful.  */
 static bool
-age_of (char *filename, time_t *age)
+age_of (char const *filename, time_t *age)
 {
   struct stat finfo;
   bool ok = (stat (filename, &finfo) == 0);
@@ -704,7 +704,7 @@ expr (void)
 
 /* Return true if S is one of the test command's binary operators.  */
 static bool
-binop (char *s)
+binop (char const *s)
 {
   return ((STREQ (s,   "=")) || (STREQ (s,  "!=")) || (STREQ (s, "-nt")) ||
 	  (STREQ (s, "-ot")) || (STREQ (s, "-ef")) || (STREQ (s, "-eq")) ||
