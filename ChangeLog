@@ -3,8 +3,8 @@
 	* Version 5.3.1.
 
 	Placate gcc-4's -Wuninitialized.
-	* src/md5sum.c (digest_check) [LINT]: Initialize hex_digest to NULL.
-	* src/test.c (binary_operator) [LINT]: Initialize lt and rt to 0.
+	* src/md5sum.c (digest_check) [lint]: Initialize hex_digest to NULL.
+	* src/test.c (binary_operator) [lint]: Initialize lt and rt to 0.
 
 	* src/test.c (is_int, age_of, binop): Declare `char *' parameters to
 	be `const'.
