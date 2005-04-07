@@ -415,7 +415,7 @@ digest_check (const char *checkfile_name, int (*digest_stream) (FILE *, void *))
     {
       char *filename;
       bool binary;
-      unsigned char *hex_digest;
+      unsigned char *hex_digest IF_LINT (= NULL);
       ssize_t line_length;
 
       ++line_number;
