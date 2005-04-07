@@ -1,6 +1,11 @@
-2005-04-05  Paul Eggert  <eggert@cs.ucla.edu>
+2005-04-07  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* src/test.c (is_int, age_of, binop): Declare `char *' parameters to
+	be `const'.
+
+2005-04-05  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* man/Makefile.am (.x.1): Remove "COMMAND.td/" from examples.
 	* src/basename.c (usage): Add examples.
