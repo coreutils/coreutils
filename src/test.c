@@ -77,7 +77,6 @@ static int argc;	/* The number of arguments present in ARGV. */
 static char **argv;	/* The argument list. */
 
 static bool test_unop (char const *s);
-static bool binop (char *s);
 static bool unary_operator (void);
 static bool binary_operator (bool);
 static bool two_arguments (void);
@@ -219,6 +218,16 @@ age_of (char const *filename, time_t *age)
   if (ok)
     *age = finfo.st_mtime;
   return ok;
+}
+
+/* Return true if S is one of the test command's binary operators.  */
+static bool
+binop (char const *s)
+{
+  return ((STREQ (s,   "=")) || (STREQ (s,  "!=")) || (STREQ (s, "-nt")) ||
+	  (STREQ (s, "-ot")) || (STREQ (s, "-ef")) || (STREQ (s, "-eq")) ||
+	  (STREQ (s, "-ne")) || (STREQ (s, "-lt")) || (STREQ (s, "-le")) ||
+	  (STREQ (s, "-gt")) || (STREQ (s, "-ge")));
 }
 
 /*
@@ -700,16 +709,6 @@ expr (void)
     beyond ();
 
   return or ();		/* Same with this. */
-}
-
-/* Return true if S is one of the test command's binary operators.  */
-static bool
-binop (char const *s)
-{
-  return ((STREQ (s,   "=")) || (STREQ (s,  "!=")) || (STREQ (s, "-nt")) ||
-	  (STREQ (s, "-ot")) || (STREQ (s, "-ef")) || (STREQ (s, "-eq")) ||
-	  (STREQ (s, "-ne")) || (STREQ (s, "-lt")) || (STREQ (s, "-le")) ||
-	  (STREQ (s, "-gt")) || (STREQ (s, "-ge")));
 }
 
 /* Return true if OP is one of the test command's unary operators. */
