@@ -4,6 +4,8 @@
 
 	* src/test.c (is_int, age_of, binop): Declare `char *' parameters to
 	be `const'.
+	(binop): Move function definition to precede first use so we can...
+	(binop): ...remove prototype.
 
 2005-04-05  Paul Eggert  <eggert@cs.ucla.edu>
 
