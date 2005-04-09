@@ -1,5 +1,5 @@
 /* `rm' file deletion utility for GNU.
-   Copyright (C) 88, 90, 91, 1994-2004 Free Software Foundation, Inc.
+   Copyright (C) 88, 90, 91, 1994-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -117,11 +117,16 @@ Remove (unlink) the FILE(s).\n\
       fputs (_("\
       --no-preserve-root do not treat `/' specially (the default)\n\
       --preserve-root   fail to operate recursively on `/'\n\
-  -r, -R, --recursive   remove the contents of directories recursively\n\
+  -r, -R, --recursive   remove directories and their contents recursively\n\
   -v, --verbose         explain what is being done\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      fputs (_("\
+\n\
+By default, rm does not remove directories.  Use the --recursive (-r or -R)\n\
+option to remove each listed directory, too, along with all of its contents.\n\
+"), stdout);
       printf (_("\
 \n\
 To remove a file whose name starts with a `-', for example `-foo',\n\
