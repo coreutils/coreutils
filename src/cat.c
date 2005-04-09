@@ -488,17 +488,6 @@ cat (
     }
 }
 
-/* This is gross, but necessary, because of the way close_stdout
-   works and because this program closes STDOUT_FILENO directly.  */
-static void (*closeout_func) (void) = close_stdout;
-
-static void
-close_stdout_wrapper (void)
-{
-  if (closeout_func)
-    (*closeout_func) ();
-}
-
 int
 main (int argc, char **argv)
 {
@@ -574,7 +563,7 @@ main (int argc, char **argv)
 
   /* Arrange to close stdout if we exit via the
      case_GETOPT_HELP_CHAR or case_GETOPT_VERSION_CHAR code.  */
-  atexit (close_stdout_wrapper);
+  atexit (close_stdout);
 
   /* Parse command line options.  */
 
@@ -647,9 +636,6 @@ main (int argc, char **argv)
 	  usage (EXIT_FAILURE);
 	}
     }
-
-  /* Don't close stdout on exit from here on.  */
-  closeout_func = NULL;
 
   /* Get device, i-node number, and optimal blocksize of output.  */
 
@@ -851,9 +837,6 @@ main (int argc, char **argv)
 
   if (have_read_stdin && close (STDIN_FILENO) < 0)
     error (EXIT_FAILURE, errno, _("closing standard input"));
-
-  if (close (STDOUT_FILENO) < 0)
-    error (EXIT_FAILURE, errno, _("closing standard output"));
 
   exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
