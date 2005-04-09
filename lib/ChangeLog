@@ -1,5 +1,8 @@
 2005-04-09  Jim Meyering  <jim@meyering.net>
 
+	* posixtm.c (posixtime) [lint]: Avoid spurious warning from gcc-4's
+	-Wuninitialized: initialize tm0.tm_year.
+
 	* human.c (humblock): Set *options even when returning due to
 	xstrtoumax conversion failure.  Thanks to a used-uninitialized
 	warning from gcc-4.
