@@ -142,6 +142,16 @@ int rpl_lstat (const char *, struct stat *);
 # define __set_errno(Val) errno = (Val)
 #endif
 
+#ifndef __attribute__
+# if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 8) || __STRICT_ANSI__
+#  define __attribute__(x) /* empty */
+# endif
+#endif
+
+#ifndef ATTRIBUTE_UNUSED
+# define ATTRIBUTE_UNUSED __attribute__ ((__unused__))
+#endif
+
 
 static FTSENT	*fts_alloc __P((FTS *, const char *, size_t)) internal_function;
 static FTSENT	*fts_build __P((FTS *, int)) internal_function;
@@ -746,10 +756,7 @@ name:		t = sp->fts_path + NAPPEND(p->fts_parent);
  */
 /* ARGSUSED */
 int
-fts_set(sp, p, instr)
-	FTS *sp;
-	FTSENT *p;
-	int instr;
+fts_set(FTS *sp ATTRIBUTE_UNUSED, FTSENT *p, int instr)
 {
 	if (instr != 0 && instr != FTS_AGAIN && instr != FTS_FOLLOW &&
 	    instr != FTS_NOINSTR && instr != FTS_SKIP) {
