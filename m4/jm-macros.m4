@@ -1,4 +1,4 @@
-#serial 82   -*- autoconf -*-
+#serial 83   -*- autoconf -*-
 
 dnl Misc type-related macros for coreutils.
 
@@ -115,6 +115,7 @@ AC_DEFUN([gl_MACROS],
     mbrlen \
     realpath \
     sethostname \
+    siginterrupt \
     strchr \
     strerror \
     strrchr \
@@ -267,7 +268,6 @@ AC_DEFUN([gl_CHECK_ALL_TYPES],
   AC_REQUIRE([AC_TYPE_MODE_T])
   AC_REQUIRE([AC_TYPE_OFF_T])
   AC_REQUIRE([AC_TYPE_PID_T])
-  AC_REQUIRE([AC_TYPE_SIGNAL])
   AC_REQUIRE([AC_TYPE_SIZE_T])
   AC_REQUIRE([AC_TYPE_UID_T])
   AC_CHECK_TYPE(ino_t, unsigned long int)
