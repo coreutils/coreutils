@@ -572,12 +572,16 @@ cleanup (void)
   if (close (STDIN_FILENO) < 0)
     error (EXIT_FAILURE, errno,
 	   _("closing input file %s"), quote (input_file));
+
+  /* Don't remove this call to close, even though close_stdout
+     closes standard output.  This close is necessary when cleanup
+     is called as part of a signal handler.  */
   if (close (STDOUT_FILENO) < 0)
     error (EXIT_FAILURE, errno,
 	   _("closing output file %s"), quote (output_file));
 }
 
-static inline void
+static inline void ATTRIBUTE_NORETURN
 quit (int code)
 {
   cleanup ();
@@ -1561,17 +1565,6 @@ dd_copy (void)
   return exit_status;
 }
 
-/* This is gross, but necessary, because of the way close_stdout
-   works and because this program closes STDOUT_FILENO directly.  */
-static void (*closeout_func) (void) = close_stdout;
-
-static void
-close_stdout_wrapper (void)
-{
-  if (closeout_func)
-    (*closeout_func) ();
-}
-
 int
 main (int argc, char **argv)
 {
@@ -1586,15 +1579,12 @@ main (int argc, char **argv)
   textdomain (PACKAGE);
 
   /* Arrange to close stdout if parse_long_options exits.  */
-  atexit (close_stdout_wrapper);
+  atexit (close_stdout);
 
   parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE, VERSION,
 		      usage, AUTHORS, (char const *) NULL);
   if (getopt_long (argc, argv, "", NULL, NULL) != -1)
     usage (EXIT_FAILURE);
-
-  /* Don't close stdout on exit from here on.  */
-  closeout_func = NULL;
 
   /* Initialize translation table to identity translation. */
   for (i = 0; i < 256; i++)
