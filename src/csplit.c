@@ -35,9 +35,15 @@
 #include "quote.h"
 #include "xstrtol.h"
 
+/* Use SA_NOCLDSTOP as a proxy for whether the sigaction machinery is
+   present.  */
 #ifndef SA_NOCLDSTOP
+# define SA_NOCLDSTOP 0
 # define sigprocmask(How, Set, Oset) /* empty */
 # define sigset_t int
+# if ! HAVE_SIGINTERRUPT
+#  define siginterrupt(sig, flag) /* empty */
+# endif
 #endif
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -116,7 +122,7 @@ struct buffer_record
 
 static void close_output_file (void);
 static void create_output_file (void);
-static void delete_all_files (void);
+static void delete_all_files (bool);
 static void save_line_to_file (const struct cstring *line);
 void usage (int status);
 
@@ -215,7 +221,7 @@ cleanup (void)
   close_output_file ();
 
   sigprocmask (SIG_BLOCK, &caught_signals, &oldset);
-  delete_all_files ();
+  delete_all_files (false);
   sigprocmask (SIG_SETMASK, &oldset, NULL);
 }
 
@@ -237,11 +243,10 @@ xalloc_die (void)
 static void
 interrupt_handler (int sig)
 {
-#ifndef SA_NOCLDSTOP
-  signal (sig, SIG_IGN);
-#endif
+  if (! SA_NOCLDSTOP)
+    signal (sig, SIG_IGN);
 
-  delete_all_files ();
+  delete_all_files (true);
 
   signal (sig, SIG_DFL);
   raise (sig);
@@ -903,16 +908,21 @@ split_file (void)
   close_output_file ();
 }
 
-/* Return the name of output file number NUM. */
+/* Return the name of output file number NUM.
+
+   This function is called from a signal handler, so it should invoke
+   only reentrant functions that are async-signal-safe.  POSIX does
+   not guarantee this for the functions called below, but we don't
+   know of any hosts where this implementation isn't safe.  */
 
 static char *
 make_filename (unsigned int num)
 {
   strcpy (filename_space, prefix);
   if (suffix)
-    sprintf (filename_space+strlen(prefix), suffix, num);
+    sprintf (filename_space + strlen (prefix), suffix, num);
   else
-    sprintf (filename_space+strlen(prefix), "%0*u", digits, num);
+    sprintf (filename_space + strlen (prefix), "%0*u", digits, num);
   return filename_space;
 }
 
@@ -947,7 +957,7 @@ create_output_file (void)
    must be called only from critical sections.  */
 
 static void
-delete_all_files (void)
+delete_all_files (bool in_signal_handler)
 {
   unsigned int i;
 
@@ -957,7 +967,7 @@ delete_all_files (void)
   for (i = 0; i < files_created; i++)
     {
       const char *name = make_filename (i);
-      if (unlink (name))
+      if (unlink (name) != 0 && !in_signal_handler)
 	error (0, errno, "%s", name);
     }
 
@@ -1397,7 +1407,7 @@ main (int argc, char **argv)
     static int const sig[] = { SIGHUP, SIGINT, SIGQUIT, SIGTERM };
     enum { nsigs = sizeof sig / sizeof sig[0] };
 
-#ifdef SA_NOCLDSTOP
+#if SA_NOCLDSTOP
     struct sigaction act;
 
     sigemptyset (&caught_signals);
@@ -1418,7 +1428,10 @@ main (int argc, char **argv)
 #else
     for (i = 0; i < nsigs; i++)
       if (signal (sig[i], SIG_IGN) != SIG_IGN)
-	signal (sig[i], interrupt_handler);
+	{
+	  signal (sig[i], interrupt_handler);
+	  siginterrupt (sig[i], 1);
+	}
 #endif
   }
 
