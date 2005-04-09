@@ -2,6 +2,12 @@
 
 	* Version 5.3.1.
 
+	* src/system.h (__attribute__): Readability nit:
+	Change this:
+	#  define __attribute__(x)
+	to this:
+	#  define __attribute__(x) /* empty */
+
 	* src/rm.c (usage): Mention that --recursive removes listed
 	directories too, not just their contents.
 	Say that by default, rm does not remove directories.
