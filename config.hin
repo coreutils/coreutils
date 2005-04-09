@@ -778,6 +778,9 @@
 /* Define to 1 if you have the `sig2str' function. */
 #undef HAVE_SIG2STR
 
+/* Define to 1 if you have the `siginterrupt' function. */
+#undef HAVE_SIGINTERRUPT
+
 /* Define to 1 if you have the `snprintf' function. */
 #undef HAVE_SNPRINTF
 
@@ -1368,9 +1371,6 @@
 /* Define if rename does not work for source paths with a trailing slash, like
    the one from SunOS 4.1.1_U1. */
 #undef RENAME_TRAILING_SLASH_BUG
-
-/* Define as the return type of signal handlers (`int' or `void'). */
-#undef RETSIGTYPE
 
 /* the value to which errno is set when rmdir fails on a nonempty directory */
 #undef RMDIR_ERRNO_NOT_EMPTY
