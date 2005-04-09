@@ -1,5 +1,8 @@
 2005-04-09  Jim Meyering  <jim@meyering.net>
 
+	* fts.c (__attribute__, ATTRIBUTE_UNUSED): Define.
+	Mark parameter `sp' with ATTRIBUTE_UNUSED.
+
 	Avoid warnings from gcc-4.
 	* canon-host.c (canon_host) [HAVE_GETADDRINFO]: Use memset
 	rather than `= { 0 };' to initialize local `hint'.
