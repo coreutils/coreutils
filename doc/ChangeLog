@@ -1,3 +1,8 @@
+2005-04-09  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi (rm invocation): Say that --recursive removes
+	listed directories too, not just their contents.
+
 2005-04-08  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (dd invocation): Document the distinction between
