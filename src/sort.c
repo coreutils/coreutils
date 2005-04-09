@@ -55,9 +55,15 @@ struct rlimit { size_t rlim_cur; };
 # include <langinfo.h>
 #endif
 
+/* Use SA_NOCLDSTOP as a proxy for whether the sigaction machinery is
+   present.  */
 #ifndef SA_NOCLDSTOP
+# define SA_NOCLDSTOP 0
 # define sigprocmask(How, Set, Oset) /* empty */
 # define sigset_t int
+# if ! HAVE_SIGINTERRUPT
+#  define siginterrupt(sig, flag) /* empty */
+# endif
 #endif
 
 #ifndef STDC_HEADERS
@@ -2210,9 +2216,8 @@ parse_field_count (char const *string, size_t *val, char const *msgid)
 static void
 sighandler (int sig)
 {
-#ifndef SA_NOCLDSTOP
-  signal (sig, SIG_IGN);
-#endif
+  if (! SA_NOCLDSTOP)
+    signal (sig, SIG_IGN);
 
   cleanup ();
 
@@ -2337,7 +2342,7 @@ main (int argc, char **argv)
     static int const sig[] = { SIGHUP, SIGINT, SIGPIPE, SIGTERM };
     enum { nsigs = sizeof sig / sizeof sig[0] };
 
-#ifdef SA_NOCLDSTOP
+#if SA_NOCLDSTOP
     struct sigaction act;
 
     sigemptyset (&caught_signals);
@@ -2358,7 +2363,10 @@ main (int argc, char **argv)
 #else
     for (i = 0; i < nsigs; i++)
       if (signal (sig[i], SIG_IGN) != SIG_IGN)
-	signal (sig[i], sighandler);
+	{
+	  signal (sig[i], sighandler);
+	  siginterrupt (sig[i], 1);
+	}
 #endif
   }
 
