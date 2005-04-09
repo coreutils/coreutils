@@ -352,10 +352,6 @@ initialize_exit_failure (int status)
 
 #include "timespec.h"
 
-#ifndef RETSIGTYPE
-# define RETSIGTYPE void
-#endif
-
 #ifdef __DJGPP__
   /* We need the declaration of setmode.  */
 # include <io.h>
