@@ -737,7 +737,7 @@ enum
 
 #ifndef __attribute__
 # if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 8) || __STRICT_ANSI__
-#  define __attribute__(x)
+#  define __attribute__(x) /* empty */
 # endif
 #endif
 
