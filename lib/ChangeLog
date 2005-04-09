@@ -1,3 +1,14 @@
+2005-04-08  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* nanosleep.c (rpl_nanosleep): Include "timespec.h" before macros
+	that might redefine system include files.
+	(siginterrupt) [!HAVE_SIGINTERRUPT]: New macro.
+	(my_usleep): Use NULL rather than (void *) 0.
+	(rpl_nanosleep) [!defined SA_NOCLDSTOP]:
+	Use siginterrupt to specify that system calls should be interrupted.
+	(rpl_nanosleep): Move initialization of suspended closer to call of
+	my_usleep.
+
 2005-04-04  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* getdate.y (parser_control): rels_seen is now a boolean, not a

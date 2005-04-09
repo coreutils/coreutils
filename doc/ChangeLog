@@ -1,3 +1,8 @@
+2005-04-08  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (dd invocation): Document the distinction between
+	INFO and USR1 for dd, and the effect of POSIXLY_CORRECT here.
+
 2005-04-05  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* doc/coreutils.texi (cat invocation, chown invocation)

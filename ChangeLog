@@ -1,6 +1,61 @@
-2005-04-07  Jim Meyering  <jim@meyering.net>
+2005-04-08  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	* NEWS: Document that dd no longer treats QUIT or PIPE specially,
+	and when conforming to POSIX no longer treats USR1 specially.
+	Document that dd no longer dumps core when handling signals.
+	* src/system.h (RETSIGTYPE): Remove; no longer needed.  All uses
+	replaced with void.
+	* src/csplit.c (SA_NOCLDSTOP): Define to 0 if not defined.
+	All uses changed.
+	(siginterrupt) [!HAVE_SIGINTERRUPT]: New macro.
+	(delete_all_files): New arg IN_SIGNAL_HANDLER, to avoid undefined
+	behavior when called from a signal handler.  All uses changed.
+	(main) [!defined SA_NOCLDSTOP]:
+	Use siginterrupt to specify that system calls should be interrupted.
+	* src/dd.c: Do not include safe-read.h or full-write; no longer needed.
+	(process_signals): Add forward decl.
+	(SA_NOCLDSTOP, sigprocmask, sigset_t) [!defined SA_NOCLDSTOP]:
+	New macros.
+	(siginterrupt) [! HAVE_SIGINTERRUPT]: New macro.
+	(SA_NODEFER) [!defined SA_NODEFER]: New macro.
+	(SA_RESETHAND) [!defined SA_RESETHAND]: New macro.
+	(caught_signals, interrupt_signal, info_signal_count, catch_siginfo):
+	New vars.
+	(usage): Mention -USR1 versus -INFO.
+	(cleanup): Don't invoke print_stats; the caller must do it now.
+	All callers changed.
+	(quit): Process signals just before exiting.
+	(interrupt_handler): Simply record the signal and return.
+	(siginfo_handler): Simply increment the signal counter and return.
+	(install_handler): Remove, replacing with:
+	(install_signal_handlers, process_signals, iread, iwrite):
+	New functions.  All callers to safe_read and full_write replaced
+	by iread and iwrite.  All callers to install_handler replaced by
+	install_handlers.
+	* src/ls.c (SA_NOCLDSTOP): Define to 0 if not defined.
+	All uses changed.
+	(siginterrupt) [! HAVE_SIGINTERRUPT]: New macro.
+	(main) [! SA_NOCLDSTOP]: Use it.
+	* src/shred.c: Remove all uses of signals; modern hosts have
+	/dev/random and don't need this gorp.
+	Do not include signal.h.
+	(env, sigill_handler, isaac_seed_machdep): Remove.  All uses removed.
+	* src/sort.c (SA_NOCLDSTOP): Define to 0 if not defined.
+	All uses changed.
+	(siginterrupt) [! HAVE_SIGINTERRUPT]: New macro.
+	(main) [! SA_NOCLDSTOP]: Use it.
+
+	* src/dd.c: Do not include inttostr.h, no longer needed.
+	(print_stats, main): Rewrite and simplify formats to use PRIuMAX
+	instead of umaxtostr.
+	(print_stats): Work even in languages that have special
+	forms for two of things, for r_truncate and w_bytes.  We can't
+	fix delta_s in this way, since ngettext doesn't support floating-point.
+	(main): Rewrite to avoid casts.
+
+2005-04-07  Jim Meyering  <jim@meyering.net>
 
 	Placate gcc-4's -Wuninitialized.
 	* src/md5sum.c (digest_check) [lint]: Initialize hex_digest to NULL.
@@ -400,7 +455,7 @@
 
 	* src/nice.c (NZERO) [NZERO == 0]: Undefine and define to 20,
 	to work around the invalid definition from Darwin 7.7.0.
-	Test failure reported by Sébastien Maret.
+	Test failure reported by SÃ©bastien Maret.
 
 2005-02-14  Paul Eggert  <eggert@cs.ucla.edu>
 
