@@ -698,7 +698,7 @@ process_signals (void)
    bytes read if successful, -1 (setting errno) on failure.  */
 
 static ssize_t
-iread (int fd, void *buf, size_t size)
+iread (int fd, char *buf, size_t size)
 {
   for (;;)
     {
@@ -716,7 +716,7 @@ iread (int fd, void *buf, size_t size)
    writes.  */
 
 static size_t
-iwrite (int fd, void const *buf, size_t size)
+iwrite (int fd, char const *buf, size_t size)
 {
   size_t total_written = 0;
 
