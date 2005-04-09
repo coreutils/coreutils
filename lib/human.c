@@ -451,7 +451,10 @@ humblock (char const *spec, uintmax_t *block_size, int *options)
 	  strtol_error e = xstrtoumax (spec, &ptr, 0, block_size,
 				       "eEgGkKmMpPtTyYzZ0");
 	  if (e != LONGINT_OK)
-	    return e;
+	    {
+	      *options = 0;
+	      return e;
+	    }
 	  for (; ! ('0' <= *spec && *spec <= '9'); spec++)
 	    if (spec == ptr)
 	      {
