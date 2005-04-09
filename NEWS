@@ -4,6 +4,13 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Changes for better compliance with POSIX
 
+  dd changes:
+
+    On a QUIT or PIPE signal, dd now exits without printing statistics.
+
+    On hosts lacking the INFO signal, dd no longer treats the USR1
+    signal as if it were INFO when POSIXLY_CORRECT is set.
+
   nohup changes:
 
     nohup now ignores the umask when creating nohup.out.
@@ -28,7 +35,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   dd now computes statistics using a realtime clock (if available)
   rather than the time-of-day clock, to avoid glitches if the
-  time-of-day is changed while dd is running.
+  time-of-day is changed while dd is running.  Also, it avoids
+  using unsafe code in signal handlers; this fixes some core dumps.
 
   expr now detects integer overflow when evaluating large integers,
   rather than silently wrapping around.
