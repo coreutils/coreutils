@@ -321,7 +321,6 @@
 #include "mbswidth.h"
 #include "posixver.h"
 #include "strftime.h"
-#include "timespec.h"
 #include "xstrtol.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
