@@ -7265,7 +7265,7 @@ Cancel the effect of any preceding @option{--preserve-root} option.
 @opindex -R
 @opindex --recursive
 @cindex directories, removing (recursively)
-Remove the contents of directories recursively.
+Remove the listed directories and their contents recursively.
 
 @item -v
 @itemx --verbose
