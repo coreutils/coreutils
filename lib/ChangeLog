@@ -1,3 +1,9 @@
+2005-04-09  Jim Meyering  <jim@meyering.net>
+
+	* human.c (humblock): Set *options even when returning due to
+	xstrtoumax conversion failure.  Thanks to a used-uninitialized
+	warning from gcc-4.
+
 2005-04-08  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* nanosleep.c (rpl_nanosleep): Include "timespec.h" before macros
