@@ -206,7 +206,7 @@ sc_root_tests:
 sc_system_h_headers: .re-list
 	@if test -f $(srcdir)/src/system.h; then			\
 	  ( $(CVS_LIST) ) > /dev/null 2>&1 || exit 0;			\
-	  trap 'rm -f .re-list' 0 1 2 3 15;				\
+	  trap 'rc=$$?; rm -f .re-list; exit $$rc' 0 1 2 3 15;		\
 	  grep -E -f .re-list						\
 	      $$($(CVS_LIST) src | grep -Ev '(copy|system)\.h$$')	\
 	    && { echo '$(ME): the above are already included via system.h'\
