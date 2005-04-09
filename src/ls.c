@@ -60,9 +60,15 @@
 #include <getopt.h>
 #include <signal.h>
 
+/* Use SA_NOCLDSTOP as a proxy for whether the sigaction machinery is
+   present.  */
 #ifndef SA_NOCLDSTOP
+# define SA_NOCLDSTOP 0
 # define sigprocmask(How, Set, Oset) /* empty */
 # define sigset_t int
+# if ! HAVE_SIGINTERRUPT
+#  define siginterrupt(sig, flag) /* empty */
+# endif
 #endif
 
 /* Get mbstate_t, mbrtowc(), mbsinit(), wcwidth().  */
@@ -1026,10 +1032,8 @@ restore_default_color (void)
 static void
 sighandler (int sig)
 {
-#ifndef SA_NOCLDSTOP
-  signal (sig, SIG_IGN);
-#endif
-
+  if (! SA_NOCLDSTOP)
+    signal (sig, SIG_IGN);
   if (! interrupt_signal)
     interrupt_signal = sig;
 }
@@ -1039,10 +1043,8 @@ sighandler (int sig)
 static void
 stophandler (int sig)
 {
-#ifndef SA_NOCLDSTOP
-  signal (sig, stophandler);
-#endif
-
+  if (! SA_NOCLDSTOP)
+    signal (sig, stophandler);
   if (! interrupt_signal)
     stop_signal_count++;
 }
@@ -1104,7 +1106,7 @@ main (int argc, char **argv)
 			     SIGQUIT, SIGTERM, SIGTSTP };
   enum { nsigs = sizeof sig / sizeof sig[0] };
 
-#ifndef SA_NOCLDSTOP
+#if ! SA_NOCLDSTOP
   bool caught_sig[nsigs];
 #endif
 
@@ -1146,7 +1148,7 @@ main (int argc, char **argv)
       if (0 <= tcgetpgrp (STDOUT_FILENO))
 	{
 	  int j;
-#ifdef SA_NOCLDSTOP
+#if SA_NOCLDSTOP
 	  struct sigaction act;
 
 	  sigemptyset (&caught_signals);
@@ -1171,7 +1173,10 @@ main (int argc, char **argv)
 	    {
 	      caught_sig[j] = (signal (sig[j], SIG_IGN) != SIG_IGN);
 	      if (caught_sig[j])
-		signal (sig[j], sig[j] == SIGTSTP ? stophandler : sighandler);
+		{
+		  signal (sig[j], sig[j] == SIGTSTP ? stophandler : sighandler);
+		  siginterrupt (sig[j], 0);
+		}
 	    }
 #endif
 	}
@@ -1293,7 +1298,7 @@ main (int argc, char **argv)
       fflush (stdout);
 
       /* Restore the default signal handling.  */
-#ifdef SA_NOCLDSTOP
+#if SA_NOCLDSTOP
       for (j = 0; j < nsigs; j++)
 	if (sigismember (&caught_signals, sig[j]))
 	  signal (sig[j], SIG_DFL);
