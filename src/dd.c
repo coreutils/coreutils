@@ -28,21 +28,37 @@
 
 #include "system.h"
 #include "error.h"
-#include "full-write.h"
 #include "gethrxtime.h"
 #include "getpagesize.h"
 #include "human.h"
-#include "inttostr.h"
 #include "long-options.h"
 #include "quote.h"
-#include "safe-read.h"
 #include "xstrtol.h"
 #include "xtime.h"
+
+static void process_signals (void);
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "dd"
 
 #define AUTHORS "Paul Rubin", "David MacKenzie", "Stuart Kemp"
+
+/* Use SA_NOCLDSTOP as a proxy for whether the sigaction machinery is
+   present.  SA_NODEFER and SA_RESETHAND are XSI extensions.  */
+#ifndef SA_NOCLDSTOP
+# define SA_NOCLDSTOP 0
+# define sigprocmask(How, Set, Oset) /* empty */
+# define sigset_t int
+# if ! HAVE_SIGINTERRUPT
+#  define siginterrupt(sig, flag) /* empty */
+# endif
+#endif
+#ifndef SA_NODEFER
+# define SA_NODEFER 0
+#endif
+#ifndef SA_RESETHAND
+# define SA_RESETHAND 0
+#endif
 
 #ifndef SIGINFO
 # define SIGINFO SIGUSR1
@@ -194,6 +210,15 @@ static size_t oc = 0;
 
 /* Index into current line, for `conv=block' and `conv=unblock'.  */
 static size_t col = 0;
+
+/* The set of signals that are caught.  */
+static sigset_t caught_signals;
+
+/* If nonzero, the value of the pending fatal signal.  */
+static sig_atomic_t volatile interrupt_signal;
+
+/* A count of the number of pending info signals that have been received.  */
+static sig_atomic_t volatile info_signal_count;
 
 /* A longest symbol in the struct symbol_values tables below.  */
 #define LONGEST_SYMBOL "fdatasync"
@@ -437,20 +462,26 @@ Each FLAG symbol may be:\n\
       if (O_NOCTTY)
 	fputs (_("  noctty    do not assign controlling terminal from file\n"),
 	       stdout);
-      fputs (_("\
+
+      {
+	char const *siginfo_name = (SIGINFO == SIGUSR1 ? "USR1" : "INFO");
+	printf (_("\
 \n\
-Sending a SIGUSR1 signal to a running `dd' process makes it\n\
-print I/O statistics to standard error, then to resume copying.\n\
+Sending a %s signal to a running `dd' process makes it\n\
+print I/O statistics to standard error and then resume copying.\n\
 \n\
   $ dd if=/dev/zero of=/dev/null& pid=$!\n\
-  $ kill -USR1 $pid; sleep 1; kill $pid\n\
+  $ kill -%s $pid; sleep 1; kill $pid\n\
   18335302+0 records in\n\
   18335302+0 records out\n\
   9387674624 bytes (9.4 GB) copied, 34.6279 seconds, 271 MB/s\n\
 \n\
 Options are:\n\
 \n\
-"), stdout);
+"),
+		siginfo_name, siginfo_name);
+      }
+
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
@@ -476,30 +507,30 @@ multiple_bits_set (int i)
   return (i & (i - 1)) != 0;
 }
 
+/* Print transfer statistics.  */
+
 static void
 print_stats (void)
 {
   xtime_t now = gethrxtime ();
-  char buf[2][MAX (INT_BUFSIZE_BOUND (uintmax_t), LONGEST_HUMAN_READABLE + 1)];
+  char hbuf[LONGEST_HUMAN_READABLE + 1];
   int human_opts =
     (human_autoscale | human_round_to_nearest
      | human_space_before_unit | human_SI | human_B);
-  double XTIME_PRECISIONe0 = XTIME_PRECISION;
   double delta_s;
   char const *bytes_per_second;
 
-  fprintf (stderr, _("%s+%s records in\n"),
-	   umaxtostr (r_full, buf[0]), umaxtostr (r_partial, buf[1]));
-  fprintf (stderr, _("%s+%s records out\n"),
-	   umaxtostr (w_full, buf[0]), umaxtostr (w_partial, buf[1]));
-  if (r_truncate > 0)
-    {
-      fprintf (stderr, "%s %s\n",
-	       umaxtostr (r_truncate, buf[0]),
-	       (r_truncate == 1
-		? _("truncated record")
-		: _("truncated records")));
-    }
+  fprintf (stderr,
+	   _("%"PRIuMAX"+%"PRIuMAX" records in\n"
+	     "%"PRIuMAX"+%"PRIuMAX" records out\n"),
+	   r_full, r_partial, w_full, w_partial);
+
+  if (r_truncate != 0)
+    fprintf (stderr,
+	     ngettext ("1 truncated record\n",
+		       "%"PRIuMAX" truncated records\n",
+		       MIN (r_truncate, ULONG_MAX)),
+	     r_truncate);
 
   if (status_flags & STATUS_NOXFER)
     return;
@@ -508,24 +539,25 @@ print_stats (void)
      since that makes it easy to use SI abbreviations.  */
 
   fprintf (stderr,
-	   ngettext ("%s byte (%s) copied",
-		     "%s bytes (%s) copied", w_bytes == 1),
-	   umaxtostr (w_bytes, buf[0]),
-	   human_readable (w_bytes, buf[1], human_opts, 1, 1));
+	   ngettext ("1 byte (1 B) copied",
+		     "%"PRIuMAX" bytes (%s) copied",
+		     MIN (w_bytes, ULONG_MAX)),
+	   w_bytes,
+	   human_readable (w_bytes, hbuf, human_opts, 1, 1));
 
   if (start_time < now)
     {
+      double XTIME_PRECISIONe0 = XTIME_PRECISION;
       uintmax_t delta_xtime = now;
       delta_xtime -= start_time;
       delta_s = delta_xtime / XTIME_PRECISIONe0;
-      bytes_per_second = human_readable (w_bytes, buf[1], human_opts,
+      bytes_per_second = human_readable (w_bytes, hbuf, human_opts,
 					 XTIME_PRECISION, delta_xtime);
     }
   else
     {
       delta_s = 0;
-      sprintf (buf[1], "%s B", _("Infinity"));
-      bytes_per_second = buf[1];
+      bytes_per_second = _("Infinity B");
     }
 
   fprintf (stderr,
@@ -543,58 +575,175 @@ cleanup (void)
   if (close (STDOUT_FILENO) < 0)
     error (EXIT_FAILURE, errno,
 	   _("closing output file %s"), quote (output_file));
-  print_stats ();
 }
 
 static inline void
 quit (int code)
 {
   cleanup ();
+  print_stats ();
+  process_signals ();
   exit (code);
 }
 
-static RETSIGTYPE
-interrupt_handler (int sig)
-{
-#ifdef SA_NOCLDSTOP
-  struct sigaction sigact;
-
-  sigact.sa_handler = SIG_DFL;
-  sigemptyset (&sigact.sa_mask);
-  sigact.sa_flags = 0;
-  sigaction (sig, &sigact, NULL);
-#else
-  signal (sig, SIG_DFL);
-#endif
-  cleanup ();
-  raise (sig);
-}
-
-static RETSIGTYPE
-siginfo_handler (int sig ATTRIBUTE_UNUSED)
-{
-  print_stats ();
-}
-
-/* Encapsulate portability mess of establishing signal handlers.  */
+/* An ordinary signal was received; arrange for the program to exit.  */
 
 static void
-install_handler (int sig_num, RETSIGTYPE (*sig_handler) (int sig))
+interrupt_handler (int sig)
 {
-#ifdef SA_NOCLDSTOP
-  struct sigaction sigact;
-  sigaction (sig_num, NULL, &sigact);
-  if (sigact.sa_handler != SIG_IGN)
+  if (! SA_RESETHAND)
+    signal (sig, SIG_DFL);
+  interrupt_signal = sig;
+}
+
+/* An info signal was received; arrange for the program to print status.  */
+
+static void
+siginfo_handler (int sig)
+{
+  if (! SA_NOCLDSTOP)
+    signal (sig, siginfo_handler);
+  info_signal_count++;
+}
+
+/* Install the signal handlers.  */
+
+static void
+install_signal_handlers (void)
+{
+  bool catch_siginfo = ! (SIGINFO == SIGUSR1 && getenv ("POSIXLY_CORRECT"));
+
+#if SA_NOCLDSTOP
+
+  struct sigaction act;
+  sigemptyset (&caught_signals);
+  if (catch_siginfo)
     {
-      sigact.sa_handler = sig_handler;
-      sigemptyset (&sigact.sa_mask);
-      sigact.sa_flags = 0;
-      sigaction (sig_num, &sigact, NULL);
+      sigaction (SIGINFO, NULL, &act);
+      if (act.sa_handler != SIG_IGN)
+	sigaddset (&caught_signals, SIGINFO);
     }
+  sigaction (SIGINT, NULL, &act);
+  if (act.sa_handler != SIG_IGN)
+    sigaddset (&caught_signals, SIGINT);
+  act.sa_mask = caught_signals;
+
+  if (sigismember (&caught_signals, SIGINFO))
+    {
+      act.sa_handler = siginfo_handler;
+      act.sa_flags = 0;
+      sigaction (SIGINFO, &act, NULL);
+    }
+
+  if (sigismember (&caught_signals, SIGINT))
+    {
+      /* POSIX 1003.1-2001 says SA_RESETHAND implies SA_NODEFER,
+	 but this is not true on Solaris 8 at least.  It doesn't
+	 hurt to use SA_NODEFER here, so leave it in.  */
+      act.sa_handler = interrupt_handler;
+      act.sa_flags = SA_NODEFER | SA_RESETHAND;
+      sigaction (SIGINT, &act, NULL);
+    }
+
 #else
-  if (signal (sig_num, SIG_IGN) != SIG_IGN)
-    signal (sig_num, sig_handler);
+
+  if (catch_siginfo && signal (SIGINFO, SIG_IGN) != SIG_IGN)
+    {
+      signal (SIGINFO, siginfo_handler);
+      siginterrupt (SIGINFO, 1);
+    }
+  if (signal (SIGINT, SIG_IGN) != SIG_IGN)
+    {
+      signal (SIGINT, interrupt_handler);
+      siginterrupt (SIGINT, 1);
+    }
 #endif
+}
+
+/* Process any pending signals.  If signals are caught, this function
+   should be called periodically.  Ideally there should never be an
+   unbounded amount of time when signals are not being processed.  */
+
+static void
+process_signals (void)
+{
+  while (interrupt_signal | info_signal_count)
+    {
+      int interrupt;
+      int infos;
+      sigset_t oldset;
+
+      sigprocmask (SIG_BLOCK, &caught_signals, &oldset);
+
+      /* Reload interrupt_signal and info_signal_count, in case a new
+	 signal was handled before sigprocmask took effect.  */
+      interrupt = interrupt_signal;
+      infos = info_signal_count;
+
+      if (infos)
+	info_signal_count = infos - 1;
+
+      sigprocmask (SIG_SETMASK, &oldset, NULL);
+
+      if (interrupt)
+	cleanup ();
+      print_stats ();
+      if (interrupt)
+	raise (interrupt);
+    }
+}
+
+/* Read from FD into the buffer BUF of size SIZE, processing any
+   signals that arrive before bytes are read.  Return the number of
+   bytes read if successful, -1 (setting errno) on failure.  */
+
+static ssize_t
+iread (int fd, void *buf, size_t size)
+{
+  for (;;)
+    {
+      ssize_t nread;
+      process_signals ();
+      nread = read (fd, buf, size);
+      if (! (nread < 0 && errno == EINTR))
+	return nread;
+    }
+}
+
+/* Write to FD the buffer BUF of size SIZE, processing any signals
+   that arrive.  Return the number of bytes written, setting errno if
+   this is less than SIZE.  Keep trying if there are partial
+   writes.  */
+
+static size_t
+iwrite (int fd, void const *buf, size_t size)
+{
+  size_t total_written = 0;
+
+  while (total_written < size)
+    {
+      ssize_t nwritten;
+      process_signals ();
+      nwritten = write (fd, buf + total_written, size - total_written);
+      if (nwritten < 0)
+	{
+	  if (errno != EINTR)
+	    break;
+	}
+      else if (nwritten == 0)
+	{
+	  /* Some buggy drivers return 0 when one tries to write beyond
+	     a device's end.  (Example: Linux 1.2.13 on /dev/fd0.)
+	     Set errno to ENOSPC so they get a sensible diagnostic.  */
+	  errno = ENOSPC;
+	  nwritten = -1;
+	  break;
+	}
+      else
+	total_written += nwritten;
+    }
+
+  return total_written;
 }
 
 /* Open a file to a particular file descriptor.  This is like standard
@@ -624,7 +773,7 @@ open_fd (int desired_fd, char const *filename, int options, mode_t mode)
 static void
 write_output (void)
 {
-  size_t nwritten = full_write (STDOUT_FILENO, obuf, output_blocksize);
+  size_t nwritten = iwrite (STDOUT_FILENO, obuf, output_blocksize);
   w_bytes += nwritten;
   if (nwritten != output_blocksize)
     {
@@ -999,8 +1148,8 @@ skip (int fdesc, char const *file, uintmax_t records, size_t blocksize,
       int lseek_errno = errno;
       while (records--)
 	{
-	  size_t nread = safe_read (fdesc, buf, blocksize);
-	  if (nread == SAFE_READ_ERROR)
+	  ssize_t nread = iread (fdesc, buf, blocksize);
+	  if (nread < 0)
 	    {
 	      if (fdesc == STDIN_FILENO)
 		{
@@ -1187,7 +1336,7 @@ dd_copy (void)
   char *ibuf, *bufstart;	/* Input buffer. */
   char *real_buf;		/* real buffer address before alignment */
   char *real_obuf;
-  size_t nread;			/* Bytes read in the current block. */
+  ssize_t nread;		/* Bytes read in the current block.  */
 
   /* If nonzero, then the previously read block was partial and
      PARTREAD was its size.  */
@@ -1256,12 +1405,12 @@ dd_copy (void)
 		(conversions_mask & (C_BLOCK | C_UNBLOCK)) ? ' ' : '\0',
 		input_blocksize);
 
-      nread = safe_read (STDIN_FILENO, ibuf, input_blocksize);
+      nread = iread (STDIN_FILENO, ibuf, input_blocksize);
 
       if (nread == 0)
 	break;			/* EOF.  */
 
-      if (nread == SAFE_READ_ERROR)
+      if (nread < 0)
 	{
 	  error (0, errno, _("reading %s"), quote (input_file));
 	  if (conversions_mask & C_NOERROR)
@@ -1316,7 +1465,7 @@ dd_copy (void)
 
       if (ibuf == obuf)		/* If not C_TWOBUFS. */
 	{
-	  size_t nwritten = full_write (STDOUT_FILENO, obuf, n_bytes_read);
+	  size_t nwritten = iwrite (STDOUT_FILENO, obuf, n_bytes_read);
 	  w_bytes += nwritten;
 	  if (nwritten != n_bytes_read)
 	    {
@@ -1376,7 +1525,7 @@ dd_copy (void)
   /* Write out the last block. */
   if (oc != 0)
     {
-      size_t nwritten = full_write (STDOUT_FILENO, obuf, oc);
+      size_t nwritten = iwrite (STDOUT_FILENO, obuf, oc);
       w_bytes += nwritten;
       if (nwritten != 0)
 	w_partial++;
@@ -1499,7 +1648,8 @@ main (int argc, char **argv)
 	{
 	  struct stat stdout_stat;
 	  off_t o = seek_records * output_blocksize;
-	  if ((uintmax_t) o / output_blocksize != seek_records)
+	  uintmax_t uo = o;
+	  if (uo / output_blocksize != seek_records)
 	    error (EXIT_FAILURE, 0, _("file offset out of range"));
 
 	  if (fstat (STDOUT_FILENO, &stdout_stat) != 0)
@@ -1515,20 +1665,14 @@ main (int argc, char **argv)
 	      && (S_ISREG (stdout_stat.st_mode)
 		  || S_ISDIR (stdout_stat.st_mode)
 		  || S_TYPEISSHM (&stdout_stat)))
-	    {
-	      char buf[INT_BUFSIZE_BOUND (off_t)];
-	      error (EXIT_FAILURE, errno,
-		     _("advancing past %s bytes in output file %s"),
-		     offtostr (o, buf), quote (output_file));
-	    }
+	    error (EXIT_FAILURE, errno,
+		   _("advancing past %"PRIuMAX" bytes in output file %s"),
+		   uo, quote (output_file));
 	}
 #endif
     }
 
-  install_handler (SIGINT, interrupt_handler);
-  install_handler (SIGQUIT, interrupt_handler);
-  install_handler (SIGPIPE, interrupt_handler);
-  install_handler (SIGINFO, siginfo_handler);
+  install_signal_handlers ();
 
   start_time = gethrxtime ();
 
