@@ -6906,16 +6906,16 @@ tape=/dev/rmt/0
 (dd bs=4k seek=1 count=0 && dd bs=512k) <$tape >$disk
 @end example
 
-Note that sending a @samp{SIGUSR1} signal to a running @command{dd}
-process makes it print I/O statistics to standard error,
-then to resume copying.  In the example below,
+Sending an @samp{INFO} signal to a running @command{dd}
+process makes it print I/O statistics to standard error
+and then resume copying.  In the example below,
 @command{dd} is run in the background to copy 10 million blocks.
 The @command{kill} command makes it output intermediate I/O statistics,
 and when @command{dd} completes, it outputs the final statistics.
 
 @example
 $ dd if=/dev/zero of=/dev/null count=10MB & pid=$!
-$ kill -s USR1 $pid; wait $pid
+$ kill -s INFO $pid; wait $pid
 3385223+0 records in
 3385223+0 records out
 1733234176 bytes (1.7 GB) copied, 6.42173 seconds, 270 MB/s
@@ -6923,6 +6923,11 @@ $ kill -s USR1 $pid; wait $pid
 10000000+0 records out
 5120000000 bytes (5.1 GB) copied, 18.913 seconds, 271 MB/s
 @end example
+
+@vindex POSIXLY_CORRECT
+On systems lacking the @samp{INFO} signal @command{dd} responds to the
+@samp{USR1} signal instead, unless the @env{POSIXLY_CORRECT}
+environment variable is set.
 
 @exitstatus
 
