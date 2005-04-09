@@ -1,5 +1,12 @@
 2005-04-09  Jim Meyering  <jim@meyering.net>
 
+	Avoid warnings from gcc-4.
+	* canon-host.c (canon_host) [HAVE_GETADDRINFO]: Use memset
+	rather than `= { 0 };' to initialize local `hint'.
+	* unicodeio.c (__attribute__, ATTRIBUTE_UNUSED): Define.
+	(exit_failure_callback, fallback_failure_callback): Mark unused
+	parameters with ATTRIBUTE_UNUSED.
+
 	* posixtm.c (posixtime) [lint]: Avoid spurious warning from gcc-4's
 	-Wuninitialized: initialize tm0.tm_year.
 
