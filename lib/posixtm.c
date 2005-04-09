@@ -1,6 +1,6 @@
 /* Parse dates for touch and date.
 
-   Copyright (C) 1989, 1990, 1991, 1998, 2000, 2001, 2002, 2003, 2004
+   Copyright (C) 1989, 1990, 1991, 1998, 2000, 2001, 2002, 2003, 2004, 2005
    Free Software Foundation Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -197,6 +197,14 @@ posixtime (time_t *p, const char *s, unsigned int syntax_bits)
   struct tm tm1;
   struct tm const *tm;
   time_t t;
+
+#ifdef lint
+  /* Placate gcc-4's -Wuninitialized.
+     posix_time_parse fails to set tm0.tm_year only when it returns
+     nonzero (due to year() returning nonzero), and in that case,
+     this code doesn't use the tm0 at all.  */
+  tm0.tm_year = 0;
+#endif
 
   if (posix_time_parse (&tm0, s, syntax_bits))
     return false;
