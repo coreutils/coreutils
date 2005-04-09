@@ -2,6 +2,10 @@
 
 	* Version 5.3.1.
 
+	* src/rm.c (usage): Mention that --recursive removes listed
+	directories too, not just their contents.
+	Say that by default, rm does not remove directories.
+
 	* src/pr.c: Don't include "timespec.h".  system.h does that.
 	* Makefile.maint (sc_system_h_headers): Propagate exit status
 	through trap.
@@ -20,7 +24,7 @@
 	behavior when called from a signal handler.  All uses changed.
 	(main) [!defined SA_NOCLDSTOP]:
 	Use siginterrupt to specify that system calls should be interrupted.
-	* src/dd.c: Do not include safe-read.h or full-write; no longer needed.
+	* src/dd.c: Do not include safe-read.h or full-write.h; no longer needed.
 	(process_signals): Add forward decl.
 	(SA_NOCLDSTOP, sigprocmask, sigset_t) [!defined SA_NOCLDSTOP]:
 	New macros.
