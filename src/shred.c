@@ -96,7 +96,6 @@
 #include <stdio.h>
 #include <assert.h>
 #include <setjmp.h>
-#include <signal.h>
 #include <sys/types.h>
 
 #include "system.h"
@@ -495,81 +494,6 @@ isaac_seed_finish (struct isaac_state *s)
 }
 #define ISAAC_SEED(s,x) isaac_seed_data (s, &(x), sizeof (x))
 
-
-#if __GNUC__ >= 2 && (__i386__ || __alpha__)
-/*
- * Many processors have very-high-resolution timer registers,
- * The timer registers can be made inaccessible, so we have to deal with the
- * possibility of SIGILL while we're working.
- */
-static jmp_buf env;
-static void
-sigill_handler (int signum)
-{
-  (void) signum;
-  longjmp (env, 1);  /* Trivial, just return an indication that it happened */
-}
-
-/* FIXME: find a better way.
-   This signal-handling code may well end up being ripped out eventually.
-   An example of how fragile it is, on an i586-sco-sysv5uw7.0.1 system, with
-   gcc-2.95.3pl1, the "rdtsc" instruction causes a segmentation violation.
-   So now, the code catches SIGSEGV.  It'd probably be better to remove all
-   of that mess and find a better source of random data.  Patches welcome.  */
-
-static void
-isaac_seed_machdep (struct isaac_state *s)
-{
-  void (* volatile old_handler[2]) (int);
-
-  /* This is how one does try/except in C */
-  old_handler[0] = signal (SIGILL, sigill_handler);
-  old_handler[1] = signal (SIGSEGV, sigill_handler);
-  if (setjmp (env))  /* ANSI: Must be entire controlling expression */
-    {
-      signal (SIGILL, old_handler[0]);
-      signal (SIGSEGV, old_handler[1]);
-    }
-  else
-    {
-# if __i386__
-      uint32_t t[2];
-      __asm__ __volatile__ ("rdtsc" : "=a" (t[0]), "=d" (t[1]));
-# endif
-# if __alpha__
-      unsigned long int t;
-      __asm__ __volatile__ ("rpcc %0" : "=r" (t));
-# endif
-# if _ARCH_PPC
-      /* Code not used because this instruction is available only on first-
-	 generation PPCs and evokes a SIGBUS on some Linux 2.4 kernels.  */
-      uint32_t t;
-      __asm__ __volatile__ ("mfspr %0,22" : "=r" (t));
-# endif
-# if __mips
-      /* Code not used because this is not accessible from userland */
-      uint32_t t;
-      __asm__ __volatile__ ("mfc0\t%0,$9" : "=r" (t));
-# endif
-# if __sparc__
-      /* This doesn't compile on all platforms yet.  How to fix? */
-      unsigned long int t;
-      __asm__ __volatile__ ("rd	%%tick, %0" : "=r" (t));
-# endif
-     signal (SIGILL, old_handler[0]);
-     signal (SIGSEGV, old_handler[1]);
-     isaac_seed_data (s, &t, sizeof t);
-  }
-}
-
-#else /* !(__i386__ || __alpha__) */
-
-/* Do-nothing stub */
-# define isaac_seed_machdep(s) (void) 0
-
-#endif /* !(__i386__ || __alpha__) */
-
-
 /*
  * Get seed material.  16 bytes (128 bits) is plenty, but if we have
  * /dev/urandom, we get 32 bytes = 256 bits for complete overkill.
@@ -588,8 +512,6 @@ isaac_seed (struct isaac_state *s)
     xtime_t t = gethrxtime ();
     ISAAC_SEED (s, t);
   }
-
-  isaac_seed_machdep (s);
 
   {
     char buf[32];
