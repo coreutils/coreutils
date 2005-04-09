@@ -1,6 +1,12 @@
-2005-04-08  Paul Eggert  <eggert@cs.ucla.edu>
+2005-04-09  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* src/pr.c: Don't include "timespec.h".  system.h does that.
+	* Makefile.maint (sc_system_h_headers): Propagate exit status
+	through trap.
+
+2005-04-08  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: Document that dd no longer treats QUIT or PIPE specially,
 	and when conforming to POSIX no longer treats USR1 specially.
