@@ -2,6 +2,15 @@
 
 	* Version 5.3.1.
 
+	* src/dd.c (quit): Define with ATTRIBUTE_NORETURN.
+
+	Now that close_stdout closes standard output unconditionally,
+	these workarounds for dd and cat are no longer necessary.
+	* src/dd.c (close_stdout_wrapper): Remove function.
+	(main): Call atexit with close_stdout, instead.
+	* src/cat.c (close_stdout_wrapper): Likewise.
+	Don't close STDOUT_FILENO explicitly; close_stdout does it.
+
 	* src/system.h (__attribute__): Readability nit:
 	Change this:
 	#  define __attribute__(x)
