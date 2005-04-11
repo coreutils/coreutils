@@ -37,6 +37,7 @@
 #include "posixver.h"
 #include "quote.h"
 #include "safe-read.h"
+#include "unistd-safer.h"
 #include "xstrtol.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -212,8 +213,10 @@ cwrite (bool new_file_flag, const char *bp, size_t bytes)
       next_file_name ();
       if (verbose)
 	fprintf (stderr, _("creating file `%s'\n"), outfile);
-      output_desc = open (outfile,
-			  O_WRONLY | O_CREAT | O_TRUNC | O_BINARY, 0666);
+      output_desc = fd_safer (open (outfile,
+				    O_WRONLY | O_CREAT | O_TRUNC | O_BINARY,
+				    (S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP
+				     | S_IROTH | S_IWOTH)));
       if (output_desc < 0)
 	error (EXIT_FAILURE, errno, "%s", outfile);
     }
