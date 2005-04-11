@@ -48,6 +48,7 @@ tac -r -s '.\|
 #include "quote.h"
 #include "quotearg.h"
 #include "safe-read.h"
+#include "unistd-safer.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "tac"
@@ -448,14 +449,13 @@ copy_to_temp (FILE **g_tmp, char **g_tempfile, int input_fd, char const *file)
 
   tempfile = template;
   fd = mkstemp (template);
-  if (fd == -1)
+  if (fd < 0)
     {
       error (0, errno, _("cannot create temporary file %s"), quote (tempfile));
       return false;
     }
 
-  tmp = fdopen (fd, "w+");
-  if (tmp == NULL)
+  if ((fd = fd_safer (fd)) < 0 || ! (tmp = fdopen (fd, "w+")))
     {
       error (0, errno, _("cannot open %s for writing"), quote (tempfile));
       close (fd);
@@ -521,8 +521,9 @@ tac_file (const char *filename)
   bool ok;
   off_t file_size;
   int fd;
+  bool is_stdin = STREQ (filename, "-");
 
-  if (STREQ (filename, "-"))
+  if (is_stdin)
     {
       have_read_stdin = true;
       fd = STDIN_FILENO;
@@ -554,7 +555,7 @@ tac_file (const char *filename)
 	? tac_seekable (fd, filename)
 	: tac_nonseekable (fd, filename));
 
-  if (fd != STDIN_FILENO && close (fd) == -1)
+  if (!is_stdin && close (fd) != 0)
     {
       error (0, errno, _("%s: read error"), quotearg_colon (filename));
       ok = false;
