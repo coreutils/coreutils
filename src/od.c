@@ -240,7 +240,7 @@ static size_t n_specs_allocated;
 static size_t bytes_per_block;
 
 /* Human-readable representation of *file_list (for error messages).
-   It differs from *file_list only when *file_list is "-".  */
+   It differs from file_list[-1] only when file_list[-1] is "-".  */
 static char const *input_filename;
 
 /* A NULL-terminated list of the file-arguments from the command line.  */
@@ -937,11 +937,11 @@ check_and_close (int in_errno)
       if (ferror (in_stream))
 	{
 	  error (0, in_errno, _("%s: read error"), input_filename);
-	  if (in_stream != stdin)
+	  if (! STREQ (file_list[-1], "-"))
 	    fclose (in_stream);
 	  ok = false;
 	}
-      else if (in_stream != stdin && fclose (in_stream) == EOF)
+      else if (! STREQ (file_list[-1], "-") && fclose (in_stream) != 0)
 	{
 	  error (0, errno, "%s", input_filename);
 	  ok = false;
