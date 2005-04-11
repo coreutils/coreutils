@@ -336,7 +336,8 @@ paste_serial (size_t nfiles, char **fnamptr)
   for (; nfiles; nfiles--, fnamptr++)
     {
       int saved_errno;
-      if (STREQ (*fnamptr, "-"))
+      bool is_stdin = STREQ (*fnamptr, "-");
+      if (is_stdin)
 	{
 	  have_read_stdin = true;
 	  fileptr = stdin;
@@ -394,7 +395,7 @@ paste_serial (size_t nfiles, char **fnamptr)
 	  error (0, saved_errno, "%s", *fnamptr);
 	  ok = false;
 	}
-      if (fileptr == stdin)
+      if (is_stdin)
 	clearerr (fileptr);	/* Also clear EOF. */
       else if (fclose (fileptr) == EOF)
 	{
