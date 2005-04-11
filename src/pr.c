@@ -320,6 +320,7 @@
 #include "inttostr.h"
 #include "mbswidth.h"
 #include "posixver.h"
+#include "stdio-safer.h"
 #include "strftime.h"
 #include "xstrtol.h"
 
@@ -1513,7 +1514,7 @@ open_file (char *name, COLUMN *p)
   else
     {
       p->name = name;
-      p->fp = fopen (name, "r");
+      p->fp = fopen_safer (name, "r");
     }
   if (p->fp == NULL)
     {
@@ -1543,7 +1544,7 @@ close_file (COLUMN *p)
     return;
   if (ferror (p->fp))
     error (EXIT_FAILURE, errno, "%s", p->name);
-  if (p->fp != stdin && fclose (p->fp) == EOF)
+  if (fileno (p->fp) != STDIN_FILENO && fclose (p->fp) != 0)
     error (EXIT_FAILURE, errno, "%s", p->name);
 
   if (!parallel_files)
