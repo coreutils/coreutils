@@ -1,3 +1,13 @@
+2005-04-11  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Add bulletproofing for cases where stdin, stdout, or stderr are closed.
+	* fcntl-safer.m4: Remove.
+	* stdio-safer.m4 (gl_STDIO_SAFER): Use AC_LIBSOURCES and AC_LIBOBJ.
+	* unistd-safer.m4 (gl_UNISTD_SAFER): Likewise.
+	Invoke gl_PREREQ_FD_SAFER.
+	(gl_PREREQ_FD_SAFER): New macro.
+	* prereq.m4 (gl_PREREQ): Don't require gl_FCNTL_SAFER.
+
 2005-04-08  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* jm-macros.m4 (gl_MACROS): Check for siginterrupt.
