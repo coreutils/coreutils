@@ -41,6 +41,7 @@
 #include "quote.h"
 #include "same.h"
 #include "savedir.h"
+#include "unistd-safer.h"
 #include "utimecmp.h"
 #include "utimens.h"
 #include "xreadlink.h"
@@ -216,6 +217,7 @@ copy_reg (const char *src_path, const char *dst_path,
   bool make_holes = false;
 
   source_desc = open (src_path, O_RDONLY);
+  source_desc = fd_safer (source_desc);
   if (source_desc < 0)
     {
       error (0, errno, _("cannot open %s for reading"), quote (src_path));
@@ -267,6 +269,7 @@ copy_reg (const char *src_path, const char *dst_path,
 	}
     }
 
+  dest_desc = fd_safer (dest_desc);
   if (dest_desc < 0)
     {
       error (0, errno, _("cannot create regular file %s"), quote (dst_path));
