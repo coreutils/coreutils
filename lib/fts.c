@@ -68,6 +68,7 @@ static char sccsid[] = "@(#)fts.c	8.6 (Berkeley) 8/14/94";
 #include "dirfd.h"
 #include "fts_.h"
 #include "intprops.h"
+#include "unistd-safer.h"
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -1429,7 +1430,7 @@ fts_safe_changedir(sp, p, fd, path)
 	newfd = fd;
 	if (ISSET(FTS_NOCHDIR))
 		return (0);
-	if (fd < 0 && (newfd = diropen (path)) < 0)
+	if (fd < 0 && (newfd = fd_safer (diropen (path))) < 0)
 		return (-1);
 	if (fstat(newfd, &sb)) {
 		ret = -1;
