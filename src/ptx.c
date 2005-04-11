@@ -2154,9 +2154,7 @@ Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.\n"),
 
       if (optind < argc)
 	{
-	  /* FIXME: don't fclose here? */
-	  fclose (stdout);
-	  if (fopen (argv[optind], "w") == NULL)
+	  if (! freopen (argv[optind], "w", stdout))
 	    error (EXIT_FAILURE, errno, "%s", argv[optind]);
 	  optind++;
 	}
