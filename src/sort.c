@@ -35,6 +35,7 @@
 #include "posixver.h"
 #include "quote.h"
 #include "stdio-safer.h"
+#include "unistd-safer.h"
 #include "xmemcoll.h"
 #include "xstrtol.h"
 
@@ -438,6 +439,7 @@ create_temp_file (FILE **pfp)
   sigprocmask (SIG_SETMASK, &oldset, NULL);
   errno = saved_errno;
 
+  fd = fd_safer (fd);
   if (fd < 0 || (*pfp = fdopen (fd, "w")) == NULL)
     die (_("cannot create temporary file"), file);
 
@@ -447,7 +449,8 @@ create_temp_file (FILE **pfp)
 /* Return a stream for FILE, opened with mode HOW.  A null FILE means
    standard output; HOW should be "w".  When opening for input, "-"
    means standard input.  To avoid confusion, do not return file
-   descriptors 0, 1, or 2.  */
+   descriptors STDIN_FILENO, STDOUT_FILENO, or STDERR_FILENO when
+   opening an ordinary FILE.  */
 
 static FILE *
 xfopen (const char *file, const char *how)
@@ -475,22 +478,24 @@ xfopen (const char *file, const char *how)
 static void
 xfclose (FILE *fp, char const *file)
 {
-  if (fp == stdin)
+  switch (fileno (fp))
     {
-      /* Allow reading stdin from tty more than once. */
+    case STDIN_FILENO:
+      /* Allow reading stdin from tty more than once.  */
       if (feof (fp))
 	clearerr (fp);
-    }
-  else if (fp == stdout)
-    {
+      break;
+
+    case STDOUT_FILENO:
       /* Don't close stdout just yet.  close_stdout does that.  */
       if (fflush (fp) != 0)
 	die (_("fflush failed"), file);
-    }
-  else
-    {
+      break;
+
+    default:
       if (fclose (fp) != 0)
 	die (_("close failed"), file);
+      break;
     }
 }
 
@@ -1953,11 +1958,11 @@ avoid_trashing_input (char **files, size_t ntemps, size_t nfiles,
 
   for (i = ntemps; i < nfiles; i++)
     {
-      bool standard_input = STREQ (files[i], "-");
+      bool is_stdin = STREQ (files[i], "-");
       bool same;
       struct stat instat;
 
-      if (outfile && STREQ (outfile, files[i]) && ! standard_input)
+      if (outfile && STREQ (outfile, files[i]) && !is_stdin)
 	same = true;
       else
 	{
@@ -1971,7 +1976,7 @@ avoid_trashing_input (char **files, size_t ntemps, size_t nfiles,
 	      got_outstat = true;
 	    }
 
-	  same = (((standard_input
+	  same = (((is_stdin
 		    ? fstat (STDIN_FILENO, &instat)
 		    : stat (files[i], &instat))
 		   == 0)
