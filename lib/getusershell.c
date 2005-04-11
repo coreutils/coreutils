@@ -1,6 +1,6 @@
 /* getusershell.c -- Return names of valid user shells.
 
-   Copyright (C) 1991, 1997, 2000, 2001, 2003, 2004 Free Software
+   Copyright (C) 1991, 1997, 2000, 2001, 2003, 2004, 2005 Free Software
    Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -37,6 +37,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 
+#include "stdio-safer.h"
 #include "xalloc.h"
 
 #if USE_UNLOCKED_IO
@@ -98,7 +99,7 @@ getusershell (void)
 
   if (shellstream == NULL)
     {
-      shellstream = fopen (SHELLS_FILE, "r");
+      shellstream = fopen_safer (SHELLS_FILE, "r");
       if (shellstream == NULL)
 	{
 	  /* No shells file.  Use the default list.  */
