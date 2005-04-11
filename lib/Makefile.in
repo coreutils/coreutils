@@ -50,41 +50,43 @@ DIST_COMMON = README $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	c-strtold.c calloc.c canon-host.c canonicalize.c \
 	canonicalize.h chdir-long.c chdir-long.h chown.c cloexec.c \
 	cloexec.h closeout.c closeout.h cycle-check.c cycle-check.h \
-	dirfd.c dirfd.h dirname.c dirname.h dup2.c error.c error.h \
-	euidaccess.c exclude.c exclude.h exitfail.c exitfail.h \
-	fchdir-stub.c fchown-stub.c file-type.c file-type.h \
-	fileblocks.c filemode.c filemode.h fnmatch.c free.c fsusage.c \
-	fsusage.h ftruncate.c fts.c fts_.h getcwd.c getcwd.h getdate.h \
-	getdate.y getgroups.c gethostname.c gethrxtime.c gethrxtime.h \
-	getline.c getline.h getloadavg.c getndelim2.c getopt.c \
-	getopt1.c getpagesize.h getpass.c gettime.c gettimeofday.c \
-	getugroups.c getusershell.c group-member.c group-member.h \
-	hard-locale.c hard-locale.h hash-pjw.c hash-pjw.h hash.c \
-	hash.h human.c human.h idcache.c imaxtostr.c intprops.h \
-	inttostr.c inttostr.h lchown.c lchown.h linebuffer.c \
-	linebuffer.h long-options.c long-options.h lstat.c makepath.c \
-	makepath.h malloc.c md5.c md5.h memcasecmp.c memcasecmp.h \
-	memchr.c memcmp.c memcoll.c memcoll.h memcpy.c memmove.c \
-	mempcpy.c mempcpy.h memrchr.c memrchr.h memset.c mkdir.c \
-	mkstemp.c mktime.c modechange.c modechange.h mountlist.c \
-	mountlist.h nanosleep.c obstack.c obstack.h offtostr.c \
-	openat.c openat.h path-concat.c path-concat.h pathmax.h \
-	physmem.c physmem.h posixtm.c posixtm.h posixver.c posixver.h \
-	printf-args.c printf-parse.c putenv.c quote.c quote.h \
-	quotearg.c quotearg.h raise.c readlink.c readtokens.c \
-	readtokens.h readutmp.c readutmp.h realloc.c regex.c rename.c \
-	rmdir.c rpmatch.c safe-read.c safe-read.h safe-write.c \
-	safe-write.h same.c same.h save-cwd.c save-cwd.h savedir.c \
-	savedir.h setenv.c setenv.h settime.c sha1.c sha1.h sig2str.c \
-	sig2str.h stat-macros.h stat.c stpcpy.c strcasecmp.c strcspn.c \
-	strdup.c strdup.h strftime.c strftime.h stripslash.c \
-	strncasecmp.c strndup.c strndup.h strnlen.c strpbrk.c strstr.c \
-	strtod.c strtoimax.c strtol.c strtoll.c strtoul.c strtoull.c \
+	dirfd.c dirfd.h dirname.c dirname.h dup-safer.c dup2.c error.c \
+	error.h euidaccess.c exclude.c exclude.h exitfail.c exitfail.h \
+	fchdir-stub.c fchown-stub.c fd-safer.c file-type.c file-type.h \
+	fileblocks.c filemode.c filemode.h fnmatch.c fopen-safer.c \
+	free.c fsusage.c fsusage.h ftruncate.c fts.c fts_.h getcwd.c \
+	getcwd.h getdate.h getdate.y getgroups.c gethostname.c \
+	gethrxtime.c gethrxtime.h getline.c getline.h getloadavg.c \
+	getndelim2.c getopt.c getopt1.c getpagesize.h getpass.c \
+	gettime.c gettimeofday.c getugroups.c getusershell.c \
+	group-member.c group-member.h hard-locale.c hard-locale.h \
+	hash-pjw.c hash-pjw.h hash.c hash.h human.c human.h idcache.c \
+	imaxtostr.c intprops.h inttostr.c inttostr.h lchown.c lchown.h \
+	linebuffer.c linebuffer.h long-options.c long-options.h \
+	lstat.c makepath.c makepath.h malloc.c md5.c md5.h \
+	memcasecmp.c memcasecmp.h memchr.c memcmp.c memcoll.c \
+	memcoll.h memcpy.c memmove.c mempcpy.c mempcpy.h memrchr.c \
+	memrchr.h memset.c mkdir.c mkstemp.c mktime.c modechange.c \
+	modechange.h mountlist.c mountlist.h nanosleep.c obstack.c \
+	obstack.h offtostr.c openat.c openat.h path-concat.c \
+	path-concat.h pathmax.h physmem.c physmem.h posixtm.c \
+	posixtm.h posixver.c posixver.h printf-args.c printf-parse.c \
+	putenv.c quote.c quote.h quotearg.c quotearg.h raise.c \
+	readlink.c readtokens.c readtokens.h readutmp.c readutmp.h \
+	realloc.c regex.c rename.c rmdir.c rpmatch.c safe-read.c \
+	safe-read.h safe-write.c safe-write.h same.c same.h save-cwd.c \
+	save-cwd.h savedir.c savedir.h setenv.c setenv.h settime.c \
+	sha1.c sha1.h sig2str.c sig2str.h stat-macros.h stat.c \
+	stdio-safer.h stpcpy.c strcasecmp.c strcspn.c strdup.c \
+	strdup.h strftime.c strftime.h stripslash.c strncasecmp.c \
+	strndup.c strndup.h strnlen.c strpbrk.c strstr.c strtod.c \
+	strtoimax.c strtol.c strtoll.c strtoul.c strtoull.c \
 	strtoumax.c strverscmp.c strverscmp.h tempname.c timespec.h \
-	umaxtostr.c unlocked-io.h unsetenv.c userspec.c userspec.h \
-	utime.c utimecmp.c utimecmp.h utimens.c utimens.h vasnprintf.c \
-	vasprintf.c xalloc.h xmalloc.c xnanosleep.c xnanosleep.h \
-	xstrtol.c xstrtol.h xstrtoul.c xtime.h yesno.c yesno.h
+	umaxtostr.c unistd-safer.h unlocked-io.h unsetenv.c userspec.c \
+	userspec.h utime.c utimecmp.c utimecmp.h utimens.c utimens.h \
+	vasnprintf.c vasprintf.c xalloc.h xmalloc.c xnanosleep.c \
+	xnanosleep.h xstrtol.c xstrtol.h xstrtoul.c xtime.h yesno.c \
+	yesno.h
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/afs.m4 \
 	$(top_srcdir)/m4/alloca.m4 $(top_srcdir)/m4/allocsa.m4 \
@@ -104,19 +106,19 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/afs.m4 \
 	$(top_srcdir)/m4/eealloc.m4 $(top_srcdir)/m4/eoverflow.m4 \
 	$(top_srcdir)/m4/error.m4 $(top_srcdir)/m4/euidaccess.m4 \
 	$(top_srcdir)/m4/exclude.m4 $(top_srcdir)/m4/exitfail.m4 \
-	$(top_srcdir)/m4/extensions.m4 $(top_srcdir)/m4/fcntl-safer.m4 \
-	$(top_srcdir)/m4/file-type.m4 $(top_srcdir)/m4/fileblocks.m4 \
-	$(top_srcdir)/m4/filemode.m4 $(top_srcdir)/m4/fnmatch.m4 \
-	$(top_srcdir)/m4/fpending.m4 $(top_srcdir)/m4/free.m4 \
-	$(top_srcdir)/m4/fstypename.m4 $(top_srcdir)/m4/fsusage.m4 \
-	$(top_srcdir)/m4/ftruncate.m4 $(top_srcdir)/m4/fts.m4 \
-	$(top_srcdir)/m4/getcwd-path-max.m4 $(top_srcdir)/m4/getcwd.m4 \
-	$(top_srcdir)/m4/getdate.m4 $(top_srcdir)/m4/getgroups.m4 \
-	$(top_srcdir)/m4/gethostname.m4 $(top_srcdir)/m4/gethrxtime.m4 \
-	$(top_srcdir)/m4/getline.m4 $(top_srcdir)/m4/getndelim2.m4 \
-	$(top_srcdir)/m4/getopt.m4 $(top_srcdir)/m4/getpagesize.m4 \
-	$(top_srcdir)/m4/getpass.m4 $(top_srcdir)/m4/gettext.m4 \
-	$(top_srcdir)/m4/gettime.m4 $(top_srcdir)/m4/gettimeofday.m4 \
+	$(top_srcdir)/m4/extensions.m4 $(top_srcdir)/m4/file-type.m4 \
+	$(top_srcdir)/m4/fileblocks.m4 $(top_srcdir)/m4/filemode.m4 \
+	$(top_srcdir)/m4/fnmatch.m4 $(top_srcdir)/m4/fpending.m4 \
+	$(top_srcdir)/m4/free.m4 $(top_srcdir)/m4/fstypename.m4 \
+	$(top_srcdir)/m4/fsusage.m4 $(top_srcdir)/m4/ftruncate.m4 \
+	$(top_srcdir)/m4/fts.m4 $(top_srcdir)/m4/getcwd-path-max.m4 \
+	$(top_srcdir)/m4/getcwd.m4 $(top_srcdir)/m4/getdate.m4 \
+	$(top_srcdir)/m4/getgroups.m4 $(top_srcdir)/m4/gethostname.m4 \
+	$(top_srcdir)/m4/gethrxtime.m4 $(top_srcdir)/m4/getline.m4 \
+	$(top_srcdir)/m4/getndelim2.m4 $(top_srcdir)/m4/getopt.m4 \
+	$(top_srcdir)/m4/getpagesize.m4 $(top_srcdir)/m4/getpass.m4 \
+	$(top_srcdir)/m4/gettext.m4 $(top_srcdir)/m4/gettime.m4 \
+	$(top_srcdir)/m4/gettimeofday.m4 \
 	$(top_srcdir)/m4/getugroups.m4 \
 	$(top_srcdir)/m4/getusershell.m4 $(top_srcdir)/m4/glibc21.m4 \
 	$(top_srcdir)/m4/group-member.m4 \
@@ -206,15 +208,14 @@ libfetish_a_AR = $(AR) $(ARFLAGS)
 am__DEPENDENCIES_1 = @LIBOBJS@
 am__DEPENDENCIES_2 = @ALLOCA@
 am_libfetish_a_OBJECTS = allocsa.$(OBJEXT) diacrit.$(OBJEXT) \
-	dup-safer.$(OBJEXT) fopen-safer.$(OBJEXT) full-read.$(OBJEXT) \
-	full-write.$(OBJEXT) localcharset.$(OBJEXT) mbswidth.$(OBJEXT) \
-	open-safer.$(OBJEXT) readtokens0.$(OBJEXT) \
-	root-dev-ino.$(OBJEXT) time_r.$(OBJEXT) unicodeio.$(OBJEXT) \
-	version-etc.$(OBJEXT) version-etc-fsf.$(OBJEXT) \
-	xalloc-die.$(OBJEXT) xfts.$(OBJEXT) xgetcwd.$(OBJEXT) \
-	xgethostname.$(OBJEXT) xmemcoll.$(OBJEXT) xreadlink.$(OBJEXT) \
-	xstrndup.$(OBJEXT) xstrtod.$(OBJEXT) xstrtoimax.$(OBJEXT) \
-	xstrtoumax.$(OBJEXT)
+	full-read.$(OBJEXT) full-write.$(OBJEXT) \
+	localcharset.$(OBJEXT) mbswidth.$(OBJEXT) \
+	readtokens0.$(OBJEXT) root-dev-ino.$(OBJEXT) time_r.$(OBJEXT) \
+	unicodeio.$(OBJEXT) version-etc.$(OBJEXT) \
+	version-etc-fsf.$(OBJEXT) xalloc-die.$(OBJEXT) xfts.$(OBJEXT) \
+	xgetcwd.$(OBJEXT) xgethostname.$(OBJEXT) xmemcoll.$(OBJEXT) \
+	xreadlink.$(OBJEXT) xstrndup.$(OBJEXT) xstrtod.$(OBJEXT) \
+	xstrtoimax.$(OBJEXT) xstrtoumax.$(OBJEXT)
 libfetish_a_OBJECTS = $(am_libfetish_a_OBJECTS)
 PROGRAMS = $(noinst_PROGRAMS)
 t_fpending_SOURCES = t-fpending.c
@@ -364,16 +365,15 @@ noinst_LIBRARIES = libfetish.a
 LDADD = $(noinst_LIBRARIES)
 AM_CPPFLAGS = -I.. -I$(srcdir)
 libfetish_a_SOURCES = allocsa.c allocsa.h dev-ino.h diacrit.c \
-	diacrit.h dup-safer.c euidaccess.h exit.h fcntl-safer.h \
-	fopen-safer.c full-read.c full-read.h full-write.c \
-	full-write.h gettext.h localcharset.c localcharset.h \
-	mbswidth.c mbswidth.h open-safer.c readtokens0.c readtokens0.h \
-	regex.h root-dev-ino.c root-dev-ino.h stdio-safer.h time_r.c \
-	time_r.h unicodeio.c unicodeio.h unistd-safer.h version-etc.c \
-	version-etc.h version-etc-fsf.c xalloc-die.c xfts.c xfts.h \
-	xgetcwd.c xgetcwd.h xgethostname.c xgethostname.h xmemcoll.c \
-	xmemcoll.h xreadlink.c xreadlink.h xstrndup.c xstrndup.h \
-	xstrtod.c xstrtod.h xstrtoimax.c xstrtoumax.c printf-args.h \
+	diacrit.h euidaccess.h exit.h full-read.c full-read.h \
+	full-write.c full-write.h gettext.h localcharset.c \
+	localcharset.h mbswidth.c mbswidth.h readtokens0.c \
+	readtokens0.h regex.h root-dev-ino.c root-dev-ino.h time_r.c \
+	time_r.h unicodeio.c unicodeio.h version-etc.c version-etc.h \
+	version-etc-fsf.c xalloc-die.c xfts.c xfts.h xgetcwd.c \
+	xgetcwd.h xgethostname.c xgethostname.h xmemcoll.c xmemcoll.h \
+	xreadlink.c xreadlink.h xstrndup.c xstrndup.h xstrtod.c \
+	xstrtod.h xstrtoimax.c xstrtoumax.c printf-args.h \
 	printf-parse.h vasprintf.h vasnprintf.h
 libfetish_a_LIBADD = $(LIBOBJS) $(ALLOCA)
 libfetish_a_DEPENDENCIES = $(libfetish_a_LIBADD)
@@ -465,6 +465,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/cycle-check.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/dirfd.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/dirname.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/dup-safer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/dup2.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/error.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/euidaccess.Po@am__quote@
@@ -472,10 +473,12 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/exitfail.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/fchdir-stub.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/fchown-stub.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/fd-safer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/file-type.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/fileblocks.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/filemode.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/fnmatch.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/fopen-safer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/free.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/fsusage.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/ftruncate.Po@am__quote@
@@ -592,13 +595,10 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/yesno.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/allocsa.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/diacrit.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dup-safer.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fopen-safer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/full-read.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/full-write.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/localcharset.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mbswidth.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/open-safer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/readtokens0.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/root-dev-ino.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/t-fpending.Po@am__quote@
