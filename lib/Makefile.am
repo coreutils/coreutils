@@ -29,24 +29,18 @@ libfetish_a_SOURCES = \
   allocsa.c allocsa.h \
   dev-ino.h \
   diacrit.c diacrit.h \
-  dup-safer.c \
   euidaccess.h \
   exit.h \
-  fcntl-safer.h \
-  fopen-safer.c \
   full-read.c full-read.h \
   full-write.c full-write.h \
   gettext.h \
   localcharset.c localcharset.h \
   mbswidth.c mbswidth.h \
-  open-safer.c \
   readtokens0.c readtokens0.h \
   regex.h \
   root-dev-ino.c root-dev-ino.h \
-  stdio-safer.h \
   time_r.c time_r.h \
   unicodeio.c unicodeio.h \
-  unistd-safer.h \
   version-etc.c version-etc.h version-etc-fsf.c \
   xalloc-die.c \
   xfts.c xfts.h \
