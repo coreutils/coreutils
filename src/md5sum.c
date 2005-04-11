@@ -335,8 +335,9 @@ digest_file (const char *filename, bool binary, unsigned char *bin_result,
 {
   FILE *fp;
   int err;
+  bool is_stdin = STREQ (filename, "-");
 
-  if (STREQ (filename, "-"))
+  if (is_stdin)
     {
       have_read_stdin = true;
       fp = stdin;
@@ -370,7 +371,7 @@ digest_file (const char *filename, bool binary, unsigned char *bin_result,
       return false;
     }
 
-  if (fp != stdin && fclose (fp) == EOF)
+  if (!is_stdin && fclose (fp) != 0)
     {
       error (0, errno, "%s", filename);
       return false;
@@ -390,8 +391,9 @@ digest_check (const char *checkfile_name, int (*digest_stream) (FILE *, void *))
   uintmax_t line_number;
   char *line;
   size_t line_chars_allocated;
+  bool is_stdin = STREQ (checkfile_name, "-");
 
-  if (STREQ (checkfile_name, "-"))
+  if (is_stdin)
     {
       have_read_stdin = true;
       checkfile_name = _("standard input");
@@ -505,7 +507,7 @@ digest_check (const char *checkfile_name, int (*digest_stream) (FILE *, void *))
       return false;
     }
 
-  if (checkfile_stream != stdin && fclose (checkfile_stream) == EOF)
+  if (!is_stdin && fclose (checkfile_stream) != 0)
     {
       error (0, errno, "%s", checkfile_name);
       return false;
