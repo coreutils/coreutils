@@ -1,6 +1,66 @@
-2005-04-09  Jim Meyering  <jim@meyering.net>
+2005-04-11  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	Add bulletproofing for cases where stdin, stdout, or stderr are closed.
+	* src/comm.c: Include stdio-safer.h.
+	(compare_files): Exit right away on I/O error rather than continuing
+	and producing confusing output and error messages.
+	Return void, not int; all callers changed.
+	Use fopen_safer to avoid confusion with file descriptors.
+	* src/copy.c: Include unistd-safer.h.
+	(copy_reg): Use fd_safer.
+	* src/csplit.c: Include stdio-safer.h.
+	(input_desc): Remove unnecessary static initialization.
+	(set_input_file): Use STDIN_FILENO, not 0.
+	(create_output_file): Use fopen_safer.
+	* src/dircolors.c (dc_parse_file): Don't assume fopen does not
+	return stdin.
+	* src/head.c (head_file): Don't assume open does not return 0.
+	* src/join.c: Include stdio-safer.h.
+	(main): Use fopen_safer.  Simplify the resulting code.
+	* src/md5sum.c (digest_file, digest_check):
+	Don't assume that fopen does not return stdin.
+	* src/nohup.c: Include unistd-safer.h.
+	(main): Don't dup stderr to stdin or stdout by mistake.
+	* src/od.c (check_and_close): Don't assume fopen does not return stdin.
+	* src/paste.c (paste_serial): Likewise.
+	* src/pr.c: Include stdio-safer.h.
+	(open_file): Use fopen_safer.
+	(close_file): Don't assume fopen does not return stdin.
+	* src/ptx.c (main): Don't assume fopen returns stdout after closing
+	stdout.  Use freopen instead.
+	* src/shred.c: Include unistd-safer.h.
+	(wipename): Use fd_safer on directory file descriptor.
+	(wipefile): Remove special case for /dev/fd/* on older hosts.
+	It didn't work in general, and wasn't documented.
+	Use fd_safer.
+	* src/sort.c: Include unistd-safer.h.
+	(create_temp_file): Use fd_safer.
+	(xfclose): Don't assume fileno (stdin) == STDIN_FILENO, etc.
+	* src/split.c: Include unistd-safer.h.
+	(cwrite): Use fd_safer.  Replace mystery constant 0666 with symbolic
+	version, as POSIX requires.
+	* src/sum.c (bsd_sum_file, sysv_sym_file):
+	Use same pattern as elsewhere for checking for stdin.
+	* src/tac.c: Include unistd-safer.h.
+	(copy_to_temp): Use fd_safer.
+	(tac_file): Don't assume fopen cannot return stdin.
+	* src/tail.c: Include unistd-safer.h rather than fcntl-safer.h.
+	(recheck, tail_file): Use fd_safer rather than open_safer.
+	* src/tee.c: Include stdio-safer.h.
+	(tee): Use fopen_safer.
+	* src/touch.c: Include unistd-safer.h.
+	(touch): Use fd_safer.
+	* src/tsort.c (have_read_stdin): Remove; no longer needed.  All uses
+	removed.
+	(tsort): Do not assume fopen can't return stdin.
+	Close stdin before returning.  All uses changed.
+	* src/unexpand.c (next_file): Don't assume fopen cannot return stdin.
+	* src/uniq.c: Include stdio_safer.h.
+	(check_file): Don't assume fopen cannot return stdin or stdout.
+
+2005-04-09  Jim Meyering  <jim@meyering.net>
 
 	* src/dd.c (quit): Define with ATTRIBUTE_NORETURN.
 
