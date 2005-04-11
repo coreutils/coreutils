@@ -25,11 +25,12 @@
 
 #include "system.h"
 
+#include "cloexec.h"
 #include "error.h"
 #include "long-options.h"
 #include "path-concat.h"
 #include "quote.h"
-#include "cloexec.h"
+#include "unistd-safer.h"
 
 #define PROGRAM_NAME "nohup"
 
@@ -145,7 +146,7 @@ main (int argc, char **argv)
 	 if execve fails.  It's no big deal if this dup fails.  It might
 	 not change anything, and at worst, it'll lead to suppression of
 	 the post-failed-execve diagnostic.  */
-      saved_stderr_fd = dup (STDERR_FILENO);
+      saved_stderr_fd = dup_safer (STDERR_FILENO);
 
       if (0 <= saved_stderr_fd
 	  && set_cloexec_flag (saved_stderr_fd, true) != 0)
