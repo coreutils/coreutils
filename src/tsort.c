@@ -63,9 +63,6 @@ struct item
 /* The name this program was run with. */
 char *program_name;
 
-/* True if any of the input files are the standard input. */
-static bool have_read_stdin;
-
 /* The head of the sorted list.  */
 static struct item *head = NULL;
 
@@ -442,30 +439,21 @@ tsort (const char *file)
   struct item *root;
   struct item *j = NULL;
   struct item *k = NULL;
-  FILE *fp;
   token_buffer tokenbuffer;
+  bool is_stdin = STREQ (file, "-");
 
   /* Intialize the head of the tree will hold the strings we're sorting.  */
   root = new_item (NULL);
 
-  if (STREQ (file, "-"))
-    {
-      fp = stdin;
-      have_read_stdin = true;
-    }
-  else
-    {
-      fp = fopen (file, "r");
-      if (fp == NULL)
-	error (EXIT_FAILURE, errno, "%s", file);
-    }
+  if (!is_stdin && ! freopen (file, "r", stdin))
+    error (EXIT_FAILURE, errno, "%s", file);
 
   init_tokenbuffer (&tokenbuffer);
 
   while (1)
     {
       /* T2. Next Relation.  */
-      size_t len = readtoken (fp, DELIM, sizeof (DELIM) - 1, &tokenbuffer);
+      size_t len = readtoken (stdin, DELIM, sizeof (DELIM) - 1, &tokenbuffer);
       if (len == (size_t) -1)
 	break;
 
@@ -534,6 +522,10 @@ tsort (const char *file)
 	}
     }
 
+  if (fclose (stdin) != 0)
+    error (EXIT_FAILURE, errno,
+	   is_stdin ? _("standard input") : file);
+
   return ok;
 }
 
@@ -555,8 +547,6 @@ main (int argc, char **argv)
   if (getopt_long (argc, argv, "", NULL, NULL) != -1)
     usage (EXIT_FAILURE);
 
-  have_read_stdin = false;
-
   if (1 < argc - optind)
     {
       error (0, 0, _("extra operand %s"), quote (argv[optind + 1]));
@@ -564,9 +554,6 @@ main (int argc, char **argv)
     }
 
   ok = tsort (optind == argc ? "-" : argv[optind]);
-
-  if (have_read_stdin && fclose (stdin) == EOF)
-    error (EXIT_FAILURE, errno, _("standard input"));
 
   exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
