@@ -376,8 +376,9 @@ dc_parse_file (const char *filename)
 {
   FILE *fp;
   bool ok;
+  bool is_stdin = STREQ (filename, "-");
 
-  if (STREQ (filename, "-"))
+  if (is_stdin)
     {
       have_read_stdin = true;
       fp = stdin;
@@ -398,7 +399,7 @@ dc_parse_file (const char *filename)
 
   ok = dc_parse_stream (fp, filename);
 
-  if (fp != stdin && fclose (fp) == EOF)
+  if (!is_stdin && fclose (fp) != 0)
     {
       error (0, errno, "%s", quote (filename));
       return false;
