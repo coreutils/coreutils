@@ -1,5 +1,5 @@
 /* join - join lines of two files on a common field
-   Copyright (C) 91, 1995-2004 Free Software Foundation, Inc.
+   Copyright (C) 91, 1995-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -31,6 +31,7 @@
 #include "memcasecmp.h"
 #include "posixver.h"
 #include "quote.h"
+#include "stdio-safer.h"
 #include "xmemcoll.h"
 #include "xstrtol.h"
 
@@ -852,22 +853,20 @@ main (int argc, char **argv)
       usage (EXIT_FAILURE);
     }
 
-  fp1 = STREQ (names[0], "-") ? stdin : fopen (names[0], "r");
+  fp1 = STREQ (names[0], "-") ? stdin : fopen_safer (names[0], "r");
   if (!fp1)
     error (EXIT_FAILURE, errno, "%s", names[0]);
-  fp2 = STREQ (names[1], "-") ? stdin : fopen (names[1], "r");
+  fp2 = STREQ (names[1], "-") ? stdin : fopen_safer (names[1], "r");
   if (!fp2)
     error (EXIT_FAILURE, errno, "%s", names[1]);
   if (fp1 == fp2)
     error (EXIT_FAILURE, errno, _("both files cannot be standard input"));
   join (fp1, fp2);
 
-  if (fp1 != stdin && fclose (fp1) == EOF)
+  if (fclose (fp1) != 0)
     error (EXIT_FAILURE, errno, "%s", names[0]);
-  if (fp2 != stdin && fclose (fp2) == EOF)
+  if (fclose (fp2) != 0)
     error (EXIT_FAILURE, errno, "%s", names[1]);
-  if ((fp1 == stdin || fp2 == stdin) && fclose (stdin) == EOF)
-    error (EXIT_FAILURE, errno, "-");
 
   exit (EXIT_SUCCESS);
 }
