@@ -1,5 +1,5 @@
 /* Invoke dup, but avoid some glitches.
-   Copyright (C) 2001, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2004, 2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 # include <config.h>
 #endif
 
-#include <errno.h>
+#include "unistd-safer.h"
 
 #if HAVE_FCNTL_H
 # include <fcntl.h>
@@ -34,8 +34,6 @@
 # define STDERR_FILENO 2
 #endif
 
-#include <unistd-safer.h>
-
 /* Like dup, but do not return STDIN_FILENO, STDOUT_FILENO, or
    STDERR_FILENO.  */
 
@@ -45,15 +43,8 @@ dup_safer (int fd)
 #ifdef F_DUPFD
   return fcntl (fd, F_DUPFD, STDERR_FILENO + 1);
 #else
-  int f = dup (fd);
-  if (0 <= f && f <= STDERR_FILENO)
-    {
-      int f1 = dup_safer (f);
-      int e = errno;
-      close (f);
-      errno = e;
-      f = f1;
-    }
-  return f;
+  /* fd_safer calls us back, but eventually the recursion unwinds and
+     does the right thing.  */
+  return fd_safer (dup (fd));
 #endif
 }
