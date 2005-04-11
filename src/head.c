@@ -851,8 +851,9 @@ head_file (const char *filename, uintmax_t n_units, bool count_lines,
 {
   int fd;
   bool ok;
+  bool is_stdin = STREQ (filename, "-");
 
-  if (STREQ (filename, "-"))
+  if (is_stdin)
     {
       have_read_stdin = true;
       fd = STDIN_FILENO;
@@ -869,7 +870,7 @@ head_file (const char *filename, uintmax_t n_units, bool count_lines,
     }
 
   ok = head (filename, fd, n_units, count_lines, elide_from_end);
-  if (fd != STDIN_FILENO && close (fd) == -1)
+  if (!is_stdin && close (fd) != 0)
     {
       error (0, errno, _("closing %s"), quote (filename));
       return false;
