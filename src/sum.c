@@ -91,8 +91,9 @@ bsd_sum_file (const char *file, int print_name)
   uintmax_t total_bytes = 0;	/* The number of bytes. */
   int ch;		/* Each character read. */
   char hbuf[LONGEST_HUMAN_READABLE + 1];
+  bool is_stdin = STREQ (file, "-");
 
-  if (STREQ (file, "-"))
+  if (is_stdin)
     {
       fp = stdin;
       have_read_stdin = true;
@@ -120,12 +121,12 @@ bsd_sum_file (const char *file, int print_name)
   if (ferror (fp))
     {
       error (0, errno, "%s", file);
-      if (!STREQ (file, "-"))
+      if (!is_stdin)
 	fclose (fp);
       return false;
     }
 
-  if (!STREQ (file, "-") && fclose (fp) == EOF)
+  if (!is_stdin && fclose (fp) != 0)
     {
       error (0, errno, "%s", file);
       return false;
@@ -158,9 +159,11 @@ sysv_sum_file (const char *file, int print_name)
   /* The sum of all the input bytes, modulo (UINT_MAX + 1).  */
   unsigned int s = 0;
 
-  if (STREQ (file, "-"))
+  bool is_stdin = STREQ (file, "-");
+
+  if (is_stdin)
     {
-      fd = 0;
+      fd = STDIN_FILENO;
       have_read_stdin = true;
     }
   else
@@ -186,7 +189,7 @@ sysv_sum_file (const char *file, int print_name)
       if (bytes_read == SAFE_READ_ERROR)
 	{
 	  error (0, errno, "%s", file);
-	  if (!STREQ (file, "-"))
+	  if (!is_stdin)
 	    close (fd);
 	  return false;
 	}
@@ -196,7 +199,7 @@ sysv_sum_file (const char *file, int print_name)
       total_bytes += bytes_read;
     }
 
-  if (!STREQ (file, "-") && close (fd) == -1)
+  if (!is_stdin && close (fd) != 0)
     {
       error (0, errno, "%s", file);
       return false;
