@@ -30,6 +30,7 @@
 #include "hard-locale.h"
 #include "posixver.h"
 #include "quote.h"
+#include "stdio-safer.h"
 #include "xmemcoll.h"
 #include "xstrtol.h"
 #include "memcasecmp.h"
@@ -261,24 +262,22 @@ writeline (struct linebuffer const *line, FILE *stream,
 static void
 check_file (const char *infile, const char *outfile)
 {
-  FILE *istream;
   FILE *ostream;
   struct linebuffer lb1, lb2;
   struct linebuffer *thisline, *prevline;
+  bool is_stdin = STREQ (infile, "-");
+  bool is_stdout = STREQ (outfile, "-");
 
-  if (STREQ (infile, "-"))
-    istream = stdin;
-  else
-    istream = fopen (infile, "r");
-  if (istream == NULL)
+  if (!is_stdin && ! freopen (infile, "r", stdin))
     error (EXIT_FAILURE, errno, "%s", infile);
-
-  if (STREQ (outfile, "-"))
+  if (is_stdout)
     ostream = stdout;
   else
-    ostream = fopen (outfile, "w");
-  if (ostream == NULL)
-    error (EXIT_FAILURE, errno, "%s", outfile);
+    {
+      ostream = fopen_safer (outfile, "w");
+      if (! ostream)
+	error (EXIT_FAILURE, errno, "%s", outfile);
+    }
 
   thisline = &lb1;
   prevline = &lb2;
@@ -298,11 +297,11 @@ check_file (const char *infile, const char *outfile)
       char *prevfield IF_LINT (= NULL);
       size_t prevlen IF_LINT (= 0);
 
-      while (!feof (istream))
+      while (!feof (stdin))
 	{
 	  char *thisfield;
 	  size_t thislen;
-	  if (readlinebuffer (thisline, istream) == 0)
+	  if (readlinebuffer (thisline, stdin) == 0)
 	    break;
 	  thisfield = find_field (thisline);
 	  thislen = thisline->length - 1 - (thisfield - thisline->buffer);
@@ -325,19 +324,19 @@ check_file (const char *infile, const char *outfile)
       uintmax_t match_count = 0;
       bool first_delimiter = true;
 
-      if (readlinebuffer (prevline, istream) == 0)
+      if (readlinebuffer (prevline, stdin) == 0)
 	goto closefiles;
       prevfield = find_field (prevline);
       prevlen = prevline->length - 1 - (prevfield - prevline->buffer);
 
-      while (!feof (istream))
+      while (!feof (stdin))
 	{
 	  bool match;
 	  char *thisfield;
 	  size_t thislen;
-	  if (readlinebuffer (thisline, istream) == 0)
+	  if (readlinebuffer (thisline, stdin) == 0)
 	    {
-	      if (ferror (istream))
+	      if (ferror (stdin))
 		goto closefiles;
 	      break;
 	    }
@@ -384,18 +383,13 @@ check_file (const char *infile, const char *outfile)
     }
 
  closefiles:
-  if (ferror (istream) || fclose (istream) == EOF)
-    error (EXIT_FAILURE, errno, _("error reading %s"), infile);
+  if (ferror (stdin) || fclose (stdin) != 0)
+    error (EXIT_FAILURE, 0, _("error reading %s"), infile);
 
   /* Check for errors and close ostream only if it's not stdout --
      stdout is handled via the atexit-invoked close_stdout function.  */
-  if (ostream != stdout)
-    {
-      if (ferror (ostream))
-	error (EXIT_FAILURE, 0, _("error writing %s"), outfile);
-      if (ostream != stdout && fclose (ostream) != 0)
-	error (EXIT_FAILURE, errno, _("error writing %s"), outfile);
-    }
+  if (!is_stdout && (ferror (ostream) || fclose (ostream) != 0))
+    error (EXIT_FAILURE, 0, _("error writing %s"), outfile);
 
   free (lb1.buffer);
   free (lb2.buffer);
