@@ -31,8 +31,9 @@
 
 #include "error.h"
 #include "inttostr.h"
-#include "safe-read.h"
 #include "quote.h"
+#include "safe-read.h"
+#include "stdio-safer.h"
 #include "xstrtol.h"
 
 /* Use SA_NOCLDSTOP as a proxy for whether the sigaction machinery is
@@ -130,7 +131,7 @@ void usage (int status);
 char *program_name;
 
 /* Input file descriptor. */
-static int input_desc = 0;
+static int input_desc;
 
 /* Start of buffer list. */
 static struct buffer_record *head = NULL;
@@ -643,7 +644,7 @@ static void
 set_input_file (const char *name)
 {
   if (STREQ (name, "-"))
-    input_desc = 0;
+    input_desc = STDIN_FILENO;
   else
     {
       input_desc = open (name, O_RDONLY);
@@ -939,7 +940,7 @@ create_output_file (void)
 
   /* Create the output file in a critical section, to avoid races.  */
   sigprocmask (SIG_BLOCK, &caught_signals, &oldset);
-  output_stream = fopen (output_filename, "w");
+  output_stream = fopen_safer (output_filename, "w");
   fopen_ok = (output_stream != NULL);
   fopen_errno = errno;
   files_created += fopen_ok;
