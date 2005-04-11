@@ -108,6 +108,7 @@
 #include "inttostr.h"
 #include "quotearg.h"		/* For quotearg_colon */
 #include "quote.h"		/* For quotearg_colon */
+#include "unistd-safer.h"
 
 #define DEFAULT_PASSES 25	/* Default */
 
@@ -1345,6 +1346,7 @@ wipename (char *oldname, char const *qoldname, struct Options const *flags)
   int dir_fd = open (dir, O_WRONLY | O_NOCTTY);
   if (dir_fd < 0)
     dir_fd = open (dir, O_RDONLY | O_NOCTTY);
+  dir_fd = fd_safer (dir_fd);
 
   if (flags->verbose)
     error (0, 0, _("%s: removing"), qoldname);
@@ -1434,32 +1436,11 @@ wipefile (char *name, char const *qname,
   int fd;
 
   fd = open (name, O_WRONLY | O_NOCTTY);
-  if (fd < 0)
-    {
-      if (errno == EACCES && flags->force)
-	{
-	  if (chmod (name, S_IWUSR) >= 0) /* 0200, user-write-only */
-	    fd = open (name, O_WRONLY | O_NOCTTY);
-	}
-      else if ((errno == ENOENT || errno == ENOTDIR)
-	       && strncmp (name, "/dev/fd/", 8) == 0)
-	{
-	  /* We accept /dev/fd/# even if the OS doesn't support it */
-	  int errnum = errno;
-	  unsigned long int num;
-	  char *p;
-	  errno = 0;
-	  num = strtoul (name + 8, &p, 10);
-	  /* If it's completely decimal with no leading zeros... */
-	  if (errno == 0 && !*p && num <= INT_MAX &&
-	      (('1' <= name[8] && name[8] <= '9')
-	       || (name[8] == '0' && !name[9])))
-	    {
-	      return wipefd (num, qname, s, flags);
-	    }
-	  errno = errnum;
-	}
-    }
+  if (fd < 0
+      && (errno == EACCES && flags->force)
+      && chmod (name, S_IWUSR) == 0)
+    fd = open (name, O_WRONLY | O_NOCTTY);
+  fd = fd_safer (fd);
   if (fd < 0)
     {
       error (0, errno, _("%s: failed to open for writing"), qname);
