@@ -1,5 +1,5 @@
 /* tee - read from standard input and write to standard output and files.
-   Copyright (C) 85,1990-2004 Free Software Foundation, Inc.
+   Copyright (C) 85,1990-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@
 
 #include "system.h"
 #include "error.h"
+#include "stdio-safer.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "tee"
@@ -161,7 +162,7 @@ tee (int nfiles, const char **files)
     {
       descriptors[i] = (STREQ (files[i], "-")
 			? stdout
-			: fopen (files[i], mode_string));
+			: fopen_safer (files[i], mode_string));
       if (descriptors[i] == NULL)
 	{
 	  error (0, errno, "%s", files[i]);
