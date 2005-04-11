@@ -1,3 +1,24 @@
+2005-04-11  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Add bulletproofing for cases where stdin, stdout, or stderr are closed.
+	* fcntl-safer.h, open-safer.c: Remove.
+	* fd-safer.c: New file.
+	* dup-safer.c: Include unistd-safer.h first, to test interface.
+	(dup_safer) [!deefined F_DUPD]: Use new fd_safer function instead of
+	rolling our own code.
+	* fts.c: Include unistd-safer.h.
+	(fts_safe_changedir): Use fd_safer.
+	* getloadavg.c: Include unistd-safer.h.
+	(getloadavg): Use fd_safer.
+	* getusershell.c: Include stdio-safer.h.
+	(getusershell): Use fopen_safer.
+	* save-cwd.c: Include unistd-safer.h.
+	(save_cwd): Use fd_safer.
+	* unistd-safer.h (fd_safer): New decl.
+	* Makefile.am (libfetish_a_SOURCES): Remove dup-safer.c,
+	fcntl-safer.h, fopen-safer.c, open-safer.c, stdio-safer.h,
+	unistd-safer.h.
+
 2005-04-09  Jim Meyering  <jim@meyering.net>
 
 	* fts.c (__attribute__, ATTRIBUTE_UNUSED): Define.
