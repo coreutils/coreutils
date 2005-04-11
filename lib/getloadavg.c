@@ -452,6 +452,8 @@
 # else
 #  include <sys/file.h>
 # endif
+
+# include "unistd-safer.h"
 
 /* Avoid static vars inside a function since in HPUX they dump as pure.  */
 
@@ -911,7 +913,7 @@ getloadavg (double loadavg[], int nelem)
   if (!getloadavg_initialized)
     {
 #  ifndef SUNOS_5
-      channel = open ("/dev/kmem", 0);
+      channel = fd_safer (open ("/dev/kmem", O_RDONLY));
       if (channel >= 0)
 	{
 	  /* Set the channel to close on exec, so it does not
