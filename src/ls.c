@@ -4118,7 +4118,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -m                         fill width with a comma separated list of entries\n\
 "), stdout);
       fputs (_("\
-  -n, --numeric-uid-gid      like -l, but list numeric UIDs and GIDs\n\
+  -n, --numeric-uid-gid      like -l, but list numeric user and group IDs\n\
   -N, --literal              print raw entry names (don't treat e.g. control\n\
                                characters specially)\n\
   -o                         like -l, but do not list group information\n\
