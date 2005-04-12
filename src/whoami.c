@@ -49,7 +49,7 @@ usage (int status)
     {
       printf (_("Usage: %s [OPTION]...\n"), program_name);
       fputs (_("\
-Print the user name associated with the current effective user id.\n\
+Print the user name associated with the current effective user ID.\n\
 Same as id -un.\n\
 \n\
 "), stdout);
@@ -92,7 +92,7 @@ main (int argc, char **argv)
       puts (pw->pw_name);
       exit (EXIT_SUCCESS);
     }
-  fprintf (stderr, _("%s: cannot find username for UID %lu\n"),
+  fprintf (stderr, _("%s: cannot find name for user ID %lu\n"),
 	   program_name, (unsigned long int) uid);
   exit (EXIT_FAILURE);
 }
