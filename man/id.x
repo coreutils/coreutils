@@ -1,4 +1,4 @@
 [NAME]
-id \- print real and effective UIDs and GIDs
+id \- print user identity
 [DESCRIPTION]
 .\" Add any additional description here
