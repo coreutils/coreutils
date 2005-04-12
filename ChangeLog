@@ -1,6 +1,10 @@
-2005-04-12  Jim Meyering  <jim@meyering.net>
+2005-04-12  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	* src/ls.c (usage): "uid" -> "user ID".
+
+2005-04-12  Jim Meyering  <jim@meyering.net>
 
 	* src/tsort.c (tsort): Use "%s" as the format string,
 	rather than a diagnostic or a file name.
