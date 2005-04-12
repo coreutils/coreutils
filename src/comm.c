@@ -154,7 +154,6 @@ compare_files (char **infiles)
   FILE *streams[2];
 
   int i;
-  bool ret = true;
 
   /* Initialize the storage. */
   for (i = 0; i < 2; i++)
