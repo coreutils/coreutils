@@ -1,6 +1,15 @@
-2005-04-11  Paul Eggert  <eggert@cs.ucla.edu>
+2005-04-12  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* src/tsort.c (tsort): Use "%s" as the format string,
+	rather than a diagnostic or a file name.
+
+	* src/comm.c (compare_files): Remove declaration of unused local.
+
+	* src/chown-core.c (chopt_free): Mark parameter as unused.
+
+2005-04-11  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* man/chown.x: Reword to match user manual.
 	* man/id.x: Likewise.
@@ -82,6 +91,8 @@
 	#  define __attribute__(x)
 	to this:
 	#  define __attribute__(x) /* empty */
+
+2005-04-09  Jim Meyering  <jim@meyering.net>
 
 	* src/rm.c (usage): Mention that --recursive removes listed
 	directories too, not just their contents.
