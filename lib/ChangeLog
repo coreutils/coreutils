@@ -1,3 +1,12 @@
+2005-04-12  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* getdate.y (universal_time_zone_table): New constant.
+	(time_zone_table): Remove GMT, UT, UTC entries; they're now in
+	universal_time_zone_table.
+	(lookup_zone): Prefer universal_time_zone_table to
+	local_time_zone_table, so that "GMT" time stamps are allowed in
+	London during the summer.  Problem reported by Ian Abbott.
+
 2005-04-11  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Add bulletproofing for cases where stdin, stdout, or stderr are closed.
