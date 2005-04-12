@@ -1,3 +1,8 @@
+2005-04-11  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi: For consistency, standardize on "user ID" rather
+	than "uid" or "UID" or "user id".  Similarly for "group ID".
+
 2005-04-09  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (rm invocation): Say that --recursive removes
