@@ -66,7 +66,7 @@
 * head: (coreutils)head invocation.             Output the first part of files.
 * hostid: (coreutils)hostid invocation.         Print numeric host identifier.
 * hostname: (coreutils)hostname invocation.     Print or set system name.
-* id: (coreutils)id invocation.                 Print real/effective uid/gid.
+* id: (coreutils)id invocation.                 Print user identity.
 * install: (coreutils)install invocation.       Copy and change attributes.
 * join: (coreutils)join invocation.             Join lines on a common field.
 * kill: (coreutils)kill invocation.             Send a signal to processes.
@@ -100,7 +100,7 @@
 * split: (coreutils)split invocation.           Split into fixed-size pieces.
 * stat: (coreutils)stat invocation.             Report file(system) status.
 * stty: (coreutils)stty invocation.             Print/change terminal settings.
-* su: (coreutils)su invocation.                 Modify user and group id.
+* su: (coreutils)su invocation.                 Modify user and group ID.
 * sum: (coreutils)sum invocation.               Print traditional checksum.
 * sync: (coreutils)sync invocation.             Synchronize memory and disk.
 * tac: (coreutils)tac invocation.               Reverse files.
@@ -120,7 +120,7 @@
 * vdir: (coreutils)vdir invocation.             List directories verbosely.
 * wc: (coreutils)wc invocation.                 Line, word, and byte counts.
 * who: (coreutils)who invocation.               Print who is logged in.
-* whoami: (coreutils)whoami invocation.         Print effective user id.
+* whoami: (coreutils)whoami invocation.         Print effective user ID.
 * yes: (coreutils)yes invocation.               Print a string indefinitely.
 @end direntry
 
@@ -379,9 +379,9 @@ Working context
 
 User information
 
-* id invocation::                Print real and effective uid and gid
+* id invocation::                Print user identity
 * logname invocation::           Print current login name
-* whoami invocation::            Print effective user id
+* whoami invocation::            Print effective user ID
 * groups invocation::            Print group names a user is in
 * users invocation::             Print login names of users currently logged in
 * who invocation::               Print who is currently logged in
@@ -409,7 +409,7 @@ Modified command invocation
 * env invocation::               Run a command in a modified environment
 * nice invocation::              Run a command with modified scheduling priority
 * nohup invocation::             Run a command immune to hangups
-* su invocation::                Run a command with substitute user and group id
+* su invocation::                Run a command with substitute user and group ID
 
 Process control
 
@@ -5652,8 +5652,9 @@ is a printing character (e.g., @samp{+}), then there is such a method.
 @opindex -n
 @opindex --numeric-uid-gid
 @cindex numeric uid and gid
+@cindex numeric user and group IDs
 Produce long format directory listings, but
-display numeric UIDs and GIDs instead of the owner and group names.
+display numeric user and group IDs instead of the owner and group names.
 
 @item -o
 @opindex -o
@@ -6494,7 +6495,8 @@ to @option{--preserve=mode,ownership,timestamps}.
 
 In the absence of this option, each destination file is created with the
 permissions of the corresponding source file, minus the bits set in the
-umask and minus the set-user-id and set-group-id bits.  @xref{File permissions}.
+umask and minus the set-user-ID and set-group-ID bits.
+@xref{File permissions}.
 
 @itemx @w{@kbd{--no-preserve}=@var{attribute_list}}
 @cindex file information, preserving
@@ -7002,7 +7004,7 @@ gives directories that it creates the default attributes.)
 @cindex group ownership of installed files, setting
 Set the group ownership of installed files or directories to
 @var{group}.  The default is the process's current group.  @var{group}
-may be either a group name or a numeric group id.
+may be either a group name or a numeric group ID.
 
 @item -m @var{mode}
 @itemx --mode=@var{mode}
@@ -8072,8 +8074,8 @@ The @command{unlink} command honors the @option{--help} and
 @cindex attributes, file
 
 A file is not merely its contents, a name, and a file type
-(@pxref{Special file types}).  A file also has an owner (a userid), a
-group (a group id), permissions (what the owner can do with the file,
+(@pxref{Special file types}).  A file also has an owner (a user ID), a
+group (a group ID), permissions (what the owner can do with the file,
 what people in the group can do, and what everyone else can do), various
 timestamps, and other information.  Collectively, we call these a file's
 @dfn{attributes}.
@@ -8116,13 +8118,13 @@ Specifically:
 
 @table @var
 @item owner
-If only an @var{owner} (a user name or numeric user id) is given, that
+If only an @var{owner} (a user name or numeric user ID) is given, that
 user is made the owner of each given file, and the files' group is not
 changed.
 
 @item owner@samp{:}group
 If the @var{owner} is followed by a colon and a @var{group} (a
-group name or numeric group id), with no spaces between them, the group
+group name or numeric group ID), with no spaces between them, the group
 ownership of the files is changed as well (to @var{group}).
 
 @item owner@samp{:}
@@ -8190,7 +8192,7 @@ by @var{old-owner}.  @var{old-owner} has the same form as @var{new-owner}
 described above.
 This option is useful primarily from a security standpoint in that
 it narrows considerably the window of potential abuse.
-For example, to reflect a UID numbering change for one user's files
+For example, to reflect a user ID numbering change for one user's files
 without an option like this, @code{root} might run
 
 @smallexample
@@ -8308,7 +8310,7 @@ chown -hR root /u
 @cindex changing group ownership
 
 @command{chgrp} changes the group ownership of each given @var{file}
-to @var{group} (which can be either a group name or a numeric group id)
+to @var{group} (which can be either a group name or a numeric group ID)
 or to the group of an existing reference file.  Synopsis:
 
 @example
@@ -9674,8 +9676,8 @@ These options test for particular access permissions.
 
 @item -g @var{file}
 @opindex -g
-@cindex set-group-id check
-True if @var{file} exists and has its set-group-id bit set.
+@cindex set-group-ID check
+True if @var{file} exists and has its set-group-ID bit set.
 
 @item -k @var{file}
 @opindex -k
@@ -9689,8 +9691,8 @@ True if @var{file} exists and read permission is granted.
 
 @item -u @var{file}
 @opindex -u
-@cindex set-user-id check
-True if @var{file} exists and has its set-user-id bit set.
+@cindex set-user-ID check
+True if @var{file} exists and has its set-user-ID bit set.
 
 @item -w @var{file}
 @opindex -w
@@ -9705,13 +9707,13 @@ True if @var{file} exists and execute permission is granted
 
 @item -O @var{file}
 @opindex -O
-@cindex owned by effective uid check
-True if @var{file} exists and is owned by the current effective user id.
+@cindex owned by effective user ID check
+True if @var{file} exists and is owned by the current effective user ID.
 
 @item -G @var{file}
 @opindex -G
-@cindex owned by effective gid check
-True if @var{file} exists and is owned by the current effective group id.
+@cindex owned by effective group ID check
+True if @var{file} exists and is owned by the current effective group ID.
 
 @end table
 
@@ -11135,9 +11137,9 @@ This section describes commands that print user-related information:
 logins, groups, and so forth.
 
 @menu
-* id invocation::               Print real and effective uid and gid.
+* id invocation::               Print user identity.
 * logname invocation::          Print current login name.
-* whoami invocation::           Print effective user id.
+* whoami invocation::           Print effective user ID.
 * groups invocation::           Print group names a user is in.
 * users invocation::            Print login names of users currently logged in.
 * who invocation::              Print who is currently logged in.
@@ -11145,12 +11147,12 @@ logins, groups, and so forth.
 
 
 @node id invocation
-@section @command{id}: Print real and effective uid and gid
+@section @command{id}: Print user identity
 
 @pindex id
-@cindex real uid and gid, printing
-@cindex effective uid and gid, printing
-@cindex printing real and effective uid and gid
+@cindex real user and group IDs, printing
+@cindex effective user and group IDs, printing
+@cindex printing real and effective user and group IDs
 
 @command{id} prints information about the given user, or the process
 running it if no user is specified.  Synopsis:
@@ -11159,9 +11161,9 @@ running it if no user is specified.  Synopsis:
 id [@var{option}]@dots{} [@var{username}]
 @end example
 
-By default, it prints the real user id, real group id, effective user id
-if different from the real user id, effective group id if different from
-the real group id, and supplemental group ids.
+By default, it prints the real user ID, real group ID, effective user ID
+if different from the real user ID, effective group ID if different from
+the real group ID, and supplemental group IDs.
 
 Each of these numeric values is preceded by an identifying string and
 followed by the corresponding user or group name in parentheses.
@@ -11174,13 +11176,13 @@ Also see @ref{Common options}.
 @itemx --group
 @opindex -g
 @opindex --group
-Print only the group id.
+Print only the group ID.
 
 @item -G
 @itemx --groups
 @opindex -G
 @opindex --groups
-Print only the group id and the supplementary groups.
+Print only the group ID and the supplementary groups.
 
 @item -n
 @itemx --name
@@ -11193,14 +11195,14 @@ Print the user or group name instead of the ID number.  Requires
 @itemx --real
 @opindex -r
 @opindex --real
-Print the real, instead of effective, user or group id.  Requires
+Print the real, instead of effective, user or group ID.  Requires
 @option{-u}, @option{-g}, or @option{-G}.
 
 @item -u
 @itemx --user
 @opindex -u
 @opindex --user
-Print only the user id.
+Print only the user ID.
 
 @end table
 
@@ -11229,14 +11231,14 @@ options}.
 
 
 @node whoami invocation
-@section @command{whoami}: Print effective user id
+@section @command{whoami}: Print effective user ID
 
 @pindex whoami
-@cindex effective UID, printing
-@cindex printing the effective UID
+@cindex effective user ID, printing
+@cindex printing the effective user ID
 
 @command{whoami} prints the user name associated with the current
-effective user id.  It is equivalent to the command @samp{id -un}.
+effective user ID.  It is equivalent to the command @samp{id -un}.
 
 The only options are @option{--help} and @option{--version}.  @xref{Common
 options}.
@@ -12250,7 +12252,7 @@ user, etc.
 * env invocation::              Modify environment variables.
 * nice invocation::             Modify scheduling priority.
 * nohup invocation::            Immunize to hangups.
-* su invocation::               Modify user and group id.
+* su invocation::               Modify user and group ID.
 @end menu
 
 
@@ -12570,17 +12572,17 @@ the exit status of @var{command} otherwise
 
 
 @node su invocation
-@section @command{su}: Run a command with substitute user and group id
+@section @command{su}: Run a command with substitute user and group ID
 
 @pindex su
-@cindex substitute user and group ids
-@cindex user id, switching
+@cindex substitute user and group IDs
+@cindex user ID, switching
 @cindex super-user, becoming
 @cindex root, becoming
 
 @command{su} allows one user to temporarily become another user.  It runs a
 command (often an interactive shell) with the real and effective user
-id, group id, and supplemental groups of a given @var{user}.  Synopsis:
+ID, group ID, and supplemental groups of a given @var{user}.  Synopsis:
 
 @example
 su [@var{option}]@dots{} [@var{user} [@var{arg}]@dots{}]
@@ -12593,7 +12595,7 @@ If no @var{user} is given, the default is @code{root}, the super-user.
 The shell to use is taken from @var{user}'s @code{passwd} entry, or
 @file{/bin/sh} if none is specified there.  If @var{user} has a
 password, @command{su} prompts for the password unless run by a user with
-effective user id of zero (the super-user).
+effective user ID of zero (the super-user).
 
 @vindex HOME
 @vindex SHELL
@@ -12759,7 +12761,7 @@ valid signal, but can be used to test whether the @var{pid} arguments
 specify processes to which a signal could be sent.
 
 If @var{pid} is positive, the signal is sent to the process with the
-process id @var{pid}.  If @var{pid} is zero, the signal is sent to all
+process ID @var{pid}.  If @var{pid} is zero, the signal is sent to all
 processes in the process group of the current process.  If @var{pid}
 is @minus{}1, the signal is sent to all processes for which the user has
 permission to send a signal.  If @var{pid} is less than @minus{}1, the signal
