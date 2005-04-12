@@ -2,6 +2,12 @@
 
 	* Version 5.3.1.
 
+	* man/chown.x: Reword to match user manual.
+	* man/id.x: Likewise.
+	* src/setuidgid.c (usage): Use "user ID", not "UID", and similarly
+	for "group ID".
+	* src/whoami.c (usage, main): Likewise.
+
 	Add bulletproofing for cases where stdin, stdout, or stderr are closed.
 	* src/comm.c: Include stdio-safer.h.
 	(compare_files): Exit right away on I/O error rather than continuing
