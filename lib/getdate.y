@@ -202,8 +202,8 @@ static long int time_zone_hhmm (textint, long int);
 %parse-param { parser_control *pc }
 %lex-param { parser_control *pc }
 
-/* This grammar has 14 shift/reduce conflicts. */
-%expect 14
+/* This grammar has 20 shift/reduce conflicts. */
+%expect 20
 
 %union
 {
@@ -321,6 +321,8 @@ local_zone:
 zone:
     tZONE
       { pc->time_zone = $1; }
+  | tZONE relunit_snumber
+      { pc->time_zone = $1; pc->rels_seen = true; }
   | tZONE tSNUMBER o_colon_minutes
       { pc->time_zone = $1 + time_zone_hhmm ($2, $3); }
   | tDAYZONE
@@ -444,15 +446,11 @@ relunit:
       { pc->rel_year += $1 * $2; }
   | tUNUMBER tYEAR_UNIT
       { pc->rel_year += $1.value * $2; }
-  | tSNUMBER tYEAR_UNIT
-      { pc->rel_year += $1.value * $2; }
   | tYEAR_UNIT
       { pc->rel_year += $1; }
   | tORDINAL tMONTH_UNIT
       { pc->rel_month += $1 * $2; }
   | tUNUMBER tMONTH_UNIT
-      { pc->rel_month += $1.value * $2; }
-  | tSNUMBER tMONTH_UNIT
       { pc->rel_month += $1.value * $2; }
   | tMONTH_UNIT
       { pc->rel_month += $1; }
@@ -460,15 +458,11 @@ relunit:
       { pc->rel_day += $1 * $2; }
   | tUNUMBER tDAY_UNIT
       { pc->rel_day += $1.value * $2; }
-  | tSNUMBER tDAY_UNIT
-      { pc->rel_day += $1.value * $2; }
   | tDAY_UNIT
       { pc->rel_day += $1; }
   | tORDINAL tHOUR_UNIT
       { pc->rel_hour += $1 * $2; }
   | tUNUMBER tHOUR_UNIT
-      { pc->rel_hour += $1.value * $2; }
-  | tSNUMBER tHOUR_UNIT
       { pc->rel_hour += $1.value * $2; }
   | tHOUR_UNIT
       { pc->rel_hour += $1; }
@@ -476,15 +470,11 @@ relunit:
       { pc->rel_minutes += $1 * $2; }
   | tUNUMBER tMINUTE_UNIT
       { pc->rel_minutes += $1.value * $2; }
-  | tSNUMBER tMINUTE_UNIT
-      { pc->rel_minutes += $1.value * $2; }
   | tMINUTE_UNIT
       { pc->rel_minutes += $1; }
   | tORDINAL tSEC_UNIT
       { pc->rel_seconds += $1 * $2; }
   | tUNUMBER tSEC_UNIT
-      { pc->rel_seconds += $1.value * $2; }
-  | tSNUMBER tSEC_UNIT
       { pc->rel_seconds += $1.value * $2; }
   | tSDECIMAL_NUMBER tSEC_UNIT
       { pc->rel_seconds += $1.tv_sec * $2; pc->rel_ns += $1.tv_nsec * $2; }
@@ -492,6 +482,22 @@ relunit:
       { pc->rel_seconds += $1.tv_sec * $2; pc->rel_ns += $1.tv_nsec * $2; }
   | tSEC_UNIT
       { pc->rel_seconds += $1; }
+  | relunit_snumber
+  ;
+
+relunit_snumber:
+    tSNUMBER tYEAR_UNIT
+      { pc->rel_year += $1.value * $2; }
+  | tSNUMBER tMONTH_UNIT
+      { pc->rel_month += $1.value * $2; }
+  | tSNUMBER tDAY_UNIT
+      { pc->rel_day += $1.value * $2; }
+  | tSNUMBER tHOUR_UNIT
+      { pc->rel_hour += $1.value * $2; }
+  | tSNUMBER tMINUTE_UNIT
+      { pc->rel_minutes += $1.value * $2; }
+  | tSNUMBER tSEC_UNIT
+      { pc->rel_seconds += $1.value * $2; }
   ;
 
 seconds: signed_seconds | unsigned_seconds;
