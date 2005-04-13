@@ -1,3 +1,11 @@
+2005-04-13  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* getdate.y (zone): Allow relunit_snumber after tZONE, so
+	that "UTC +1 second" continues to work.  Problem reported
+	by Dmitry V. Levin.
+	(relunit_snumber): New rule.
+	(relunit): Use it.
+
 2005-04-12  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* getdate.y (universal_time_zone_table): New constant.
