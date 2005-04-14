@@ -1,6 +1,16 @@
-2005-04-14  Jim Meyering  <jim@meyering.net>
+2005-04-14  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	Fix test suite problems reported by Eric Blake on Cygwin.
+	* tests/mv/mv-special-1: Ignore chatter about when files are removed,
+	since POSIX doesn't require rename to fail across file systems.
+	* tests/mv/setup (dot_mount_point): Use stat rather than df, as
+	it's more reliable.
+	(other_partition_tmpdir): Remove df from name as that would be
+	misleading now.
+
+2005-04-14  Jim Meyering  <jim@meyering.net>
 
 	* src/chown-core.c: Correct typo, fchmod -> fchown, in a comment.
 
