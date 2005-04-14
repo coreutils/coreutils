@@ -175,7 +175,7 @@ describe_change (const char *file, enum Change_status changed,
    FILE and do everything else via the resulting file descriptor.
    We first call fstat and verify that the dev/inode match those from
    the preceding stat call, and only then, if appropriate (given the
-   required_uid and required_gid constraints) do we call fchmod.
+   required_uid and required_gid constraints) do we call fchown.
 
    A minor problem:
    This function fails when FILE cannot be opened, but chown/lchown have
