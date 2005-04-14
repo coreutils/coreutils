@@ -1,6 +1,10 @@
-2005-04-12  Paul Eggert  <eggert@cs.ucla.edu>
+2005-04-14  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* src/chown-core.c: Correct typo, fchmod -> fchown, in a comment.
+
+2005-04-12  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/ls.c (usage): "uid" -> "user ID".
 
