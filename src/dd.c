@@ -33,6 +33,7 @@
 #include "human.h"
 #include "long-options.h"
 #include "quote.h"
+#include "stat-macros.h"
 #include "xstrtol.h"
 #include "xtime.h"
 
@@ -62,10 +63,6 @@ static void process_signals (void);
 
 #ifndef SIGINFO
 # define SIGINFO SIGUSR1
-#endif
-
-#ifndef S_TYPEISSHM
-# define S_TYPEISSHM(Stat_ptr) 0
 #endif
 
 #if ! HAVE_FDATASYNC
