@@ -1,6 +1,11 @@
-2005-04-14  Paul Eggert  <eggert@cs.ucla.edu>
+2005-04-16  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* src/dd.c (S_TYPEISSHM): Remove definition.
+	Get the definition by including "stat-macros.h", instead.
+
+2005-04-14  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Fix test suite problems reported by Eric Blake on Cygwin.
 	* tests/mv/mv-special-1: Ignore chatter about when files are removed,
