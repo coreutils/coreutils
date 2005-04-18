@@ -555,7 +555,6 @@ emit_upload_commands:
 	@echo =====================================
 	@echo =====================================
 	@echo "$(srcdir)/gnupload $(GNUPLOADFLAGS) \\"
-	@echo "    --to fetish.sf.net:fetish-ftp \\"
 	@echo "    --to $(gnu_rel_host):coreutils \\"
 	@echo "  $(rel-files)"
 	@echo '# send the /tmp/announcement e-mail'
