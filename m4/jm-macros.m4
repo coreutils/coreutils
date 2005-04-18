@@ -1,4 +1,4 @@
-#serial 83   -*- autoconf -*-
+#serial 84   -*- autoconf -*-
 
 dnl Misc type-related macros for coreutils.
 
@@ -52,7 +52,7 @@ AC_DEFUN([gl_MACROS],
   AC_REQUIRE([gl_FUNC_DIRFD])
   AC_REQUIRE([AC_FUNC_ACL])
   AC_REQUIRE([gl_FUNC_LCHOWN])
-  AC_REQUIRE([fetish_FUNC_RMDIR_NOTEMPTY])
+  AC_REQUIRE([gl_FUNC_RMDIR_NOTEMPTY])
   AC_REQUIRE([gl_FUNC_CHOWN])
   AC_REQUIRE([AC_FUNC_LSTAT_FOLLOWS_SLASHED_SYMLINK])
   AC_REQUIRE([AC_FUNC_STRERROR_R])
@@ -132,13 +132,13 @@ AC_DEFUN([gl_MACROS],
   AC_REQUIRE([GL_FUNC_READDIR])
 
   # for dd.c and shred.c
-  fetish_saved_libs=$LIBS
+  coreutils_saved_libs=$LIBS
     AC_SEARCH_LIBS([fdatasync], [rt posix4],
 		   [test "$ac_cv_search_fdatasync" = "none required" ||
 		    LIB_FDATASYNC=$ac_cv_search_fdatasync])
     AC_SUBST([LIB_FDATASYNC])
     AC_CHECK_FUNCS(fdatasync)
-  LIBS=$fetish_saved_libs
+  LIBS=$coreutils_saved_libs
 
   # See if linking `seq' requires -lm.
   # It does on nearly every system.  The single exception (so far) is
