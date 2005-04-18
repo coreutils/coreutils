@@ -8,7 +8,7 @@ fi
 dir=dir
 file=file
 
-# Skip this test if we're on a non-POSIX platform where executable's names end
+# Skip this test if we're on a non-POSIX platform where executables' names end
 # in .exe, or we have some other problem like that.
 cat ../../src/dd > /dev/null || {
   echo >&2 "$0: ../../src/dd is not readable, so can't run this test"
