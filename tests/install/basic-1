@@ -8,6 +8,11 @@ fi
 dir=dir
 file=file
 
+test -r ../../src/dd || {
+  echo >&2 "$0: ../../src/dd is not readable, so can't run this test"
+  exit 77
+}
+
 pwd=`pwd`
 tmp=inst-basic.$$
 trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
