@@ -1,6 +1,10 @@
-2005-04-17  Paul Eggert  <eggert@cs.ucla.edu>
+2005-04-18  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* src/dd.c: Don't include stat-macros.h directly.  system.h does that.
+
+2005-04-17  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Work around a couple of "make check" failures reported for Cygwin
 	and ash by Eric Blake.
