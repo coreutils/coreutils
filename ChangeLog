@@ -1,6 +1,13 @@
-2005-04-16  Jim Meyering  <jim@meyering.net>
+2005-04-17  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	Work around a couple of "make check" failures reported for Cygwin
+	and ash by Eric Blake.
+	* tests/install/basic-1: Skip this test if ../../src/dd isn't readable.
+	* tests/install/trap: Skip this test if "trap '' CHLD" doesn't work.
+
+2005-04-16  Jim Meyering  <jim@meyering.net>
 
 	* src/dd.c (S_TYPEISSHM): Remove definition.
 	Get the definition by including "stat-macros.h", instead.
