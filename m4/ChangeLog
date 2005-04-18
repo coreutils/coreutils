@@ -1,3 +1,13 @@
+2005-04-18  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* clock_time.m4 (gl_CLOCK_TIME): Use gl_ rather than fetish_ for
+	variable names.
+	* jm-macros.m4 (gl_MACROS): Use gl_ or coreutils_ rather than fetish_
+	for prefixes.
+	* rmdir-errno.m4 (gl_FUNC_RMDIR_NOTEMPTY): Renamed from
+	fetish_FUNC_RMDIR_NOTEMPTY.  All uses changed.  Use gl_ for
+	variable prefixes.
+
 2005-04-11  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Add bulletproofing for cases where stdin, stdout, or stderr are closed.

@@ -1,6 +1,18 @@
-2005-04-18  Jim Meyering  <jim@meyering.net>
+2005-04-18  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	"fetish" -> "coreutils" in several places.
+	* Makefile.cfg (ftp): Remove fetish.sf.net.
+	* Makefile.maint (emit_upload_commands): Likewise.
+	* src/Makefile.am (LDADD, $(PROGRAMS)): fetish -> coreutils.
+	* tests/group-names (COREUTILS_GROUPS): Renamed from FETISH_GROUPS.
+	* tests/chmod/setgid (FETISH_GROUP): Renamed from COREUTILS_GROUP.
+
+	* tests/install/basic-1: Use "cat", not "test", to test for
+	../../src/dd.  Problem reported by Eric Blake.
+
+2005-04-18  Jim Meyering  <jim@meyering.net>
 
 	* src/dd.c: Don't include stat-macros.h directly.  system.h does that.
 

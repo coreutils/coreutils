@@ -1,3 +1,15 @@
+2005-04-18  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* Makefile.am (noinst_LIBRARIES): fetish -> coreutils.
+	(libcoreutils_a_SOURCES): Renamed from libfetish_a_SOURCES.
+	All uses changed.
+	(libcoreutils_a_LIBADD): Renamed from libfetish_a_LIBADD.
+	All uses changed.
+	(libcoreutils_a_DEPENDENCIES): Renamed from libfetish_a_DEPENDENCIES.
+	All uses changed.
+	* chdir-long.c: fetish->coreutils in comment.
+	* t-chdir-long: fetish->coreutils in compilation command.
+
 2005-04-13  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* getdate.y (zone): Allow relunit_snumber after tZONE, so
