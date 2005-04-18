@@ -7,6 +7,12 @@ if test "$VERBOSE" = yes; then
   ginstall --version
 fi
 
+(trap '' CHLD) || {
+  echo >&2 "$0: the shell command \"trap '' CHLD\" does not work," \
+    "so can't run this test"
+  exit 77
+}
+
 pwd=`pwd`
 t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
 trap 'status=$?; cd $pwd; chmod -R u+rwx $t0; rm -rf $t0 && exit $status' 0
