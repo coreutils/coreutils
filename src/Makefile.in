@@ -189,62 +189,62 @@ PROGRAMS = $(bin_PROGRAMS) $(noinst_PROGRAMS)
 am___OBJECTS = lbracket.$(OBJEXT)
 __OBJECTS = $(am___OBJECTS)
 am__DEPENDENCIES_1 =
-am__DEPENDENCIES_2 = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+am__DEPENDENCIES_2 = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 __DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1)
 basename_SOURCES = basename.c
 basename_OBJECTS = basename.$(OBJEXT)
 basename_LDADD = $(LDADD)
-basename_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+basename_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 cat_SOURCES = cat.c
 cat_OBJECTS = cat.$(OBJEXT)
 cat_LDADD = $(LDADD)
-cat_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+cat_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 am_chgrp_OBJECTS = chgrp.$(OBJEXT) chown-core.$(OBJEXT)
 chgrp_OBJECTS = $(am_chgrp_OBJECTS)
 chgrp_LDADD = $(LDADD)
-chgrp_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+chgrp_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 chmod_SOURCES = chmod.c
 chmod_OBJECTS = chmod.$(OBJEXT)
 chmod_LDADD = $(LDADD)
-chmod_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+chmod_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 am_chown_OBJECTS = chown.$(OBJEXT) chown-core.$(OBJEXT)
 chown_OBJECTS = $(am_chown_OBJECTS)
 chown_LDADD = $(LDADD)
-chown_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+chown_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 chroot_SOURCES = chroot.c
 chroot_OBJECTS = chroot.$(OBJEXT)
 chroot_LDADD = $(LDADD)
-chroot_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+chroot_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 cksum_SOURCES = cksum.c
 cksum_OBJECTS = cksum.$(OBJEXT)
 cksum_LDADD = $(LDADD)
-cksum_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+cksum_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 comm_SOURCES = comm.c
 comm_OBJECTS = comm.$(OBJEXT)
 comm_LDADD = $(LDADD)
-comm_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+comm_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 am_cp_OBJECTS = cp.$(OBJEXT) copy.$(OBJEXT) cp-hash.$(OBJEXT)
 cp_OBJECTS = $(am_cp_OBJECTS)
 cp_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1)
 csplit_SOURCES = csplit.c
 csplit_OBJECTS = csplit.$(OBJEXT)
 csplit_LDADD = $(LDADD)
-csplit_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+csplit_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 cut_SOURCES = cut.c
 cut_OBJECTS = cut.$(OBJEXT)
 cut_LDADD = $(LDADD)
-cut_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+cut_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 date_SOURCES = date.c
 date_OBJECTS = date.$(OBJEXT)
 date_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1)
@@ -255,64 +255,64 @@ dd_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1) \
 df_SOURCES = df.c
 df_OBJECTS = df.$(OBJEXT)
 df_LDADD = $(LDADD)
-df_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+df_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 am_dir_OBJECTS = ls.$(OBJEXT) ls-dir.$(OBJEXT)
 dir_OBJECTS = $(am_dir_OBJECTS)
 dir_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1)
 dircolors_SOURCES = dircolors.c
 dircolors_OBJECTS = dircolors.$(OBJEXT)
 dircolors_LDADD = $(LDADD)
-dircolors_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+dircolors_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 dirname_SOURCES = dirname.c
 dirname_OBJECTS = dirname.$(OBJEXT)
 dirname_LDADD = $(LDADD)
-dirname_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+dirname_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 du_SOURCES = du.c
 du_OBJECTS = du.$(OBJEXT)
 du_LDADD = $(LDADD)
-du_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+du_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 echo_SOURCES = echo.c
 echo_OBJECTS = echo.$(OBJEXT)
 echo_LDADD = $(LDADD)
-echo_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+echo_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 env_SOURCES = env.c
 env_OBJECTS = env.$(OBJEXT)
 env_LDADD = $(LDADD)
-env_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+env_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 expand_SOURCES = expand.c
 expand_OBJECTS = expand.$(OBJEXT)
 expand_LDADD = $(LDADD)
-expand_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+expand_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 expr_SOURCES = expr.c
 expr_OBJECTS = expr.$(OBJEXT)
 expr_LDADD = $(LDADD)
-expr_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+expr_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 factor_SOURCES = factor.c
 factor_OBJECTS = factor.$(OBJEXT)
 factor_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1)
 false_SOURCES = false.c
 false_OBJECTS = false.$(OBJEXT)
 false_LDADD = $(LDADD)
-false_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+false_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 fmt_SOURCES = fmt.c
 fmt_OBJECTS = fmt.$(OBJEXT)
 fmt_LDADD = $(LDADD)
-fmt_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+fmt_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 fold_SOURCES = fold.c
 fold_OBJECTS = fold.$(OBJEXT)
 fold_LDADD = $(LDADD)
-fold_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+fold_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 am_ginstall_OBJECTS = install.$(OBJEXT) copy.$(OBJEXT) \
 	cp-hash.$(OBJEXT)
 ginstall_OBJECTS = $(am_ginstall_OBJECTS)
@@ -320,71 +320,71 @@ ginstall_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1)
 head_SOURCES = head.c
 head_OBJECTS = head.$(OBJEXT)
 head_LDADD = $(LDADD)
-head_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+head_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 hostid_SOURCES = hostid.c
 hostid_OBJECTS = hostid.$(OBJEXT)
 hostid_LDADD = $(LDADD)
-hostid_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+hostid_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 hostname_SOURCES = hostname.c
 hostname_OBJECTS = hostname.$(OBJEXT)
 hostname_LDADD = $(LDADD)
-hostname_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+hostname_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 id_SOURCES = id.c
 id_OBJECTS = id.$(OBJEXT)
 id_LDADD = $(LDADD)
-id_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+id_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 join_SOURCES = join.c
 join_OBJECTS = join.$(OBJEXT)
 join_LDADD = $(LDADD)
-join_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+join_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 kill_SOURCES = kill.c
 kill_OBJECTS = kill.$(OBJEXT)
 kill_LDADD = $(LDADD)
-kill_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+kill_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 link_SOURCES = link.c
 link_OBJECTS = link.$(OBJEXT)
 link_LDADD = $(LDADD)
-link_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+link_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 ln_SOURCES = ln.c
 ln_OBJECTS = ln.$(OBJEXT)
 ln_LDADD = $(LDADD)
-ln_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+ln_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 logname_SOURCES = logname.c
 logname_OBJECTS = logname.$(OBJEXT)
 logname_LDADD = $(LDADD)
-logname_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+logname_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 am_ls_OBJECTS = ls.$(OBJEXT) ls-ls.$(OBJEXT)
 ls_OBJECTS = $(am_ls_OBJECTS)
 ls_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1)
 am_md5sum_OBJECTS = md5sum.$(OBJEXT) md5.$(OBJEXT)
 md5sum_OBJECTS = $(am_md5sum_OBJECTS)
 md5sum_LDADD = $(LDADD)
-md5sum_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+md5sum_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 mkdir_SOURCES = mkdir.c
 mkdir_OBJECTS = mkdir.$(OBJEXT)
 mkdir_LDADD = $(LDADD)
-mkdir_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+mkdir_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 mkfifo_SOURCES = mkfifo.c
 mkfifo_OBJECTS = mkfifo.$(OBJEXT)
 mkfifo_LDADD = $(LDADD)
-mkfifo_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+mkfifo_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 mknod_SOURCES = mknod.c
 mknod_OBJECTS = mknod.$(OBJEXT)
 mknod_LDADD = $(LDADD)
-mknod_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+mknod_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 am_mv_OBJECTS = mv.$(OBJEXT) copy.$(OBJEXT) cp-hash.$(OBJEXT) \
 	remove.$(OBJEXT)
 mv_OBJECTS = $(am_mv_OBJECTS)
@@ -392,44 +392,44 @@ mv_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1)
 nice_SOURCES = nice.c
 nice_OBJECTS = nice.$(OBJEXT)
 nice_LDADD = $(LDADD)
-nice_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+nice_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 nl_SOURCES = nl.c
 nl_OBJECTS = nl.$(OBJEXT)
 nl_LDADD = $(LDADD)
-nl_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+nl_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 nohup_SOURCES = nohup.c
 nohup_OBJECTS = nohup.$(OBJEXT)
 nohup_LDADD = $(LDADD)
-nohup_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+nohup_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 od_SOURCES = od.c
 od_OBJECTS = od.$(OBJEXT)
 od_LDADD = $(LDADD)
-od_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+od_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 paste_SOURCES = paste.c
 paste_OBJECTS = paste.$(OBJEXT)
 paste_LDADD = $(LDADD)
-paste_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+paste_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 pathchk_SOURCES = pathchk.c
 pathchk_OBJECTS = pathchk.$(OBJEXT)
 pathchk_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1)
 pinky_SOURCES = pinky.c
 pinky_OBJECTS = pinky.$(OBJEXT)
 pinky_LDADD = $(LDADD)
-pinky_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+pinky_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 pr_SOURCES = pr.c
 pr_OBJECTS = pr.$(OBJEXT)
 pr_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1)
 printenv_SOURCES = printenv.c
 printenv_OBJECTS = printenv.$(OBJEXT)
 printenv_LDADD = $(LDADD)
-printenv_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+printenv_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 printf_SOURCES = printf.c
 printf_OBJECTS = printf.$(OBJEXT)
 printf_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1) \
@@ -437,39 +437,39 @@ printf_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1) \
 ptx_SOURCES = ptx.c
 ptx_OBJECTS = ptx.$(OBJEXT)
 ptx_LDADD = $(LDADD)
-ptx_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+ptx_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 pwd_SOURCES = pwd.c
 pwd_OBJECTS = pwd.$(OBJEXT)
 pwd_LDADD = $(LDADD)
-pwd_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+pwd_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 readlink_SOURCES = readlink.c
 readlink_OBJECTS = readlink.$(OBJEXT)
 readlink_LDADD = $(LDADD)
-readlink_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+readlink_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 am_rm_OBJECTS = rm.$(OBJEXT) remove.$(OBJEXT)
 rm_OBJECTS = $(am_rm_OBJECTS)
 rm_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1)
 rmdir_SOURCES = rmdir.c
 rmdir_OBJECTS = rmdir.$(OBJEXT)
 rmdir_LDADD = $(LDADD)
-rmdir_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+rmdir_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 seq_SOURCES = seq.c
 seq_OBJECTS = seq.$(OBJEXT)
 seq_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1)
 setuidgid_SOURCES = setuidgid.c
 setuidgid_OBJECTS = setuidgid.$(OBJEXT)
 setuidgid_LDADD = $(LDADD)
-setuidgid_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+setuidgid_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 am_sha1sum_OBJECTS = md5sum.$(OBJEXT) sha1sum.$(OBJEXT)
 sha1sum_OBJECTS = $(am_sha1sum_OBJECTS)
 sha1sum_LDADD = $(LDADD)
-sha1sum_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+sha1sum_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 shred_SOURCES = shred.c
 shred_OBJECTS = shred.$(OBJEXT)
 shred_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1) \
@@ -485,44 +485,44 @@ sort_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1)
 split_SOURCES = split.c
 split_OBJECTS = split.$(OBJEXT)
 split_LDADD = $(LDADD)
-split_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+split_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 stat_SOURCES = stat.c
 stat_OBJECTS = stat.$(OBJEXT)
 stat_LDADD = $(LDADD)
-stat_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+stat_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 stty_SOURCES = stty.c
 stty_OBJECTS = stty.$(OBJEXT)
 stty_LDADD = $(LDADD)
-stty_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+stty_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 su_SOURCES = su.c
 su_OBJECTS = su.$(OBJEXT)
 su_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1)
 sum_SOURCES = sum.c
 sum_OBJECTS = sum.$(OBJEXT)
 sum_LDADD = $(LDADD)
-sum_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+sum_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 sync_SOURCES = sync.c
 sync_OBJECTS = sync.$(OBJEXT)
 sync_LDADD = $(LDADD)
-sync_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+sync_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 tac_SOURCES = tac.c
 tac_OBJECTS = tac.$(OBJEXT)
 tac_LDADD = $(LDADD)
-tac_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+tac_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 tail_SOURCES = tail.c
 tail_OBJECTS = tail.$(OBJEXT)
 tail_DEPENDENCIES = $(am__DEPENDENCIES_3)
 tee_SOURCES = tee.c
 tee_OBJECTS = tee.$(OBJEXT)
 tee_LDADD = $(LDADD)
-tee_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+tee_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 test_SOURCES = test.c
 test_OBJECTS = test.$(OBJEXT)
 test_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1)
@@ -532,74 +532,74 @@ touch_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1)
 tr_SOURCES = tr.c
 tr_OBJECTS = tr.$(OBJEXT)
 tr_LDADD = $(LDADD)
-tr_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+tr_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 true_SOURCES = true.c
 true_OBJECTS = true.$(OBJEXT)
 true_LDADD = $(LDADD)
-true_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+true_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 tsort_SOURCES = tsort.c
 tsort_OBJECTS = tsort.$(OBJEXT)
 tsort_LDADD = $(LDADD)
-tsort_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+tsort_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 tty_SOURCES = tty.c
 tty_OBJECTS = tty.$(OBJEXT)
 tty_LDADD = $(LDADD)
-tty_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+tty_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 uname_SOURCES = uname.c
 uname_OBJECTS = uname.$(OBJEXT)
 uname_LDADD = $(LDADD)
-uname_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+uname_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 unexpand_SOURCES = unexpand.c
 unexpand_OBJECTS = unexpand.$(OBJEXT)
 unexpand_LDADD = $(LDADD)
-unexpand_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+unexpand_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 uniq_SOURCES = uniq.c
 uniq_OBJECTS = uniq.$(OBJEXT)
 uniq_LDADD = $(LDADD)
-uniq_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+uniq_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 unlink_SOURCES = unlink.c
 unlink_OBJECTS = unlink.$(OBJEXT)
 unlink_LDADD = $(LDADD)
-unlink_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+unlink_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 uptime_SOURCES = uptime.c
 uptime_OBJECTS = uptime.$(OBJEXT)
 uptime_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1)
 users_SOURCES = users.c
 users_OBJECTS = users.$(OBJEXT)
 users_LDADD = $(LDADD)
-users_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+users_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 am_vdir_OBJECTS = ls.$(OBJEXT) ls-vdir.$(OBJEXT)
 vdir_OBJECTS = $(am_vdir_OBJECTS)
 vdir_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1)
 wc_SOURCES = wc.c
 wc_OBJECTS = wc.$(OBJEXT)
 wc_LDADD = $(LDADD)
-wc_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+wc_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 who_SOURCES = who.c
 who_OBJECTS = who.$(OBJEXT)
 who_LDADD = $(LDADD)
-who_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+who_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 whoami_SOURCES = whoami.c
 whoami_OBJECTS = whoami.$(OBJEXT)
 whoami_LDADD = $(LDADD)
-whoami_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+whoami_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 yes_SOURCES = yes.c
 yes_OBJECTS = yes.$(OBJEXT)
 yes_LDADD = $(LDADD)
-yes_DEPENDENCIES = ../lib/libfetish.a $(am__DEPENDENCIES_1) \
-	../lib/libfetish.a
+yes_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 binSCRIPT_INSTALL = $(INSTALL_SCRIPT)
 SCRIPTS = $(bin_SCRIPTS)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
@@ -784,11 +784,11 @@ CLEANFILES = $(SCRIPTS) su
 AM_CPPFLAGS = -I.. -I$(srcdir) -I$(top_srcdir)/lib -I../lib
 
 # Sometimes, the expansion of $(LIBINTL) includes -lc which may
-# include modules defining variables like `optind', so libfetish.a
+# include modules defining variables like `optind', so libcoreutils.a
 # must precede $(LIBINTL) in order to ensure we use GNU getopt.
-# But libfetish.a must also follow $(LIBINTL), since libintl uses
-# replacement functions defined in libfetish.a.
-LDADD = ../lib/libfetish.a $(LIBINTL) ../lib/libfetish.a
+# But libcoreutils.a must also follow $(LIBINTL), since libintl uses
+# replacement functions defined in libcoreutils.a.
+LDADD = ../lib/libcoreutils.a $(LIBINTL) ../lib/libcoreutils.a
 
 # for eaccess in lib/euidaccess.c.
 cp_LDADD = $(LDADD) $(LIB_EACCESS)
@@ -1571,7 +1571,7 @@ uninstall-am: uninstall-binPROGRAMS uninstall-binSCRIPTS \
 	uninstall-binSCRIPTS uninstall-info-am uninstall-local
 
 
-$(PROGRAMS): ../lib/libfetish.a
+$(PROGRAMS): ../lib/libcoreutils.a
 
 .sh:
 	rm -f $@ $@-t
