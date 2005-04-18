@@ -26,11 +26,11 @@ CLEANFILES = $(SCRIPTS) su
 AM_CPPFLAGS = -I.. -I$(srcdir) -I$(top_srcdir)/lib -I../lib
 
 # Sometimes, the expansion of $(LIBINTL) includes -lc which may
-# include modules defining variables like `optind', so libfetish.a
+# include modules defining variables like `optind', so libcoreutils.a
 # must precede $(LIBINTL) in order to ensure we use GNU getopt.
-# But libfetish.a must also follow $(LIBINTL), since libintl uses
-# replacement functions defined in libfetish.a.
-LDADD = ../lib/libfetish.a $(LIBINTL) ../lib/libfetish.a
+# But libcoreutils.a must also follow $(LIBINTL), since libintl uses
+# replacement functions defined in libcoreutils.a.
+LDADD = ../lib/libcoreutils.a $(LIBINTL) ../lib/libcoreutils.a
 
 # for eaccess in lib/euidaccess.c.
 cp_LDADD = $(LDADD) $(LIB_EACCESS)
@@ -79,7 +79,7 @@ uptime_LDADD = $(LDADD) $(GETLOADAVG_LIBS)
 
 su_LDADD = $(LDADD) $(LIB_CRYPT)
 
-$(PROGRAMS): ../lib/libfetish.a
+$(PROGRAMS): ../lib/libcoreutils.a
 
 SUFFIXES = .sh
 
