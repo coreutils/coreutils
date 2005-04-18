@@ -33,7 +33,6 @@
 #include "human.h"
 #include "long-options.h"
 #include "quote.h"
-#include "stat-macros.h"
 #include "xstrtol.h"
 #include "xtime.h"
 
