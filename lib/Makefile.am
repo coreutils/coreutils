@@ -17,7 +17,7 @@
 ## Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
 ## 02111-1307, USA.
 
-noinst_LIBRARIES = libfetish.a
+noinst_LIBRARIES = libcoreutils.a
 
 noinst_PROGRAMS = t-fpending
 LDADD = $(noinst_LIBRARIES)
@@ -25,7 +25,7 @@ LDADD = $(noinst_LIBRARIES)
 AM_CPPFLAGS = -I.. -I$(srcdir)
 DEFS += -DLIBDIR=\"$(libdir)\"
 
-libfetish_a_SOURCES = \
+libcoreutils_a_SOURCES = \
   allocsa.c allocsa.h \
   dev-ino.h \
   diacrit.c diacrit.h \
@@ -53,16 +53,16 @@ libfetish_a_SOURCES = \
   xstrtoimax.c \
   xstrtoumax.c
 
-libfetish_a_SOURCES += \
+libcoreutils_a_SOURCES += \
   printf-args.h \
   printf-parse.h \
   vasprintf.h \
   vasnprintf.h
 
-libfetish_a_LIBADD = $(LIBOBJS) $(ALLOCA)
-libfetish_a_DEPENDENCIES = $(libfetish_a_LIBADD)
+libcoreutils_a_LIBADD = $(LIBOBJS) $(ALLOCA)
+libcoreutils_a_DEPENDENCIES = $(libcoreutils_a_LIBADD)
 
-lib_OBJECTS = $(libfetish_a_OBJECTS)
+lib_OBJECTS = $(libcoreutils_a_OBJECTS)
 
 
 BUILT_SOURCES = getdate.c
