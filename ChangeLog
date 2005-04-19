@@ -2,6 +2,10 @@
 
 	* Version 5.3.1.
 
+	* tests/mv/setup (dot_mount_point): Use stat -L, in case the
+	directory is actually a symbolic link.  Problem reported by
+	Eric Blake.
+
 	* tests/mv/mv-special-1: Use test -p to test for fifos, rather
 	than the (incorrect) test -f and the (inadequate) ls.  ls is
 	inadequate because on some hosts a buggy mv will create a file of
