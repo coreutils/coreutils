@@ -1,6 +1,12 @@
-2005-04-18  Paul Eggert  <eggert@cs.ucla.edu>
+2005-04-19  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	* tests/chmod/setgid: Use numeric group ids, not symbolic group names,
+	since the latter can have shell metacharacters in them (e.g., spaces).
+	This follows up to the 2005-01-17 patch, which missed this occurrence.
+
+2005-04-18  Paul Eggert  <eggert@cs.ucla.edu>
 
 	"fetish" -> "coreutils" in several places.
 	* Makefile.cfg (ftp): Remove fetish.sf.net.
