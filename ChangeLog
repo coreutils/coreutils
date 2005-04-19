@@ -2,6 +2,12 @@
 
 	* Version 5.3.1.
 
+	* tests/mv/mv-special-1: Use test -p to test for fifos, rather
+	than the (incorrect) test -f and the (inadequate) ls.  ls is
+	inadequate because on some hosts a buggy mv will create a file of
+	the wrong type (problem reported by Eric Blake).  Skip this test
+	if test -p doesn't work.
+
 	* tests/chmod/setgid: Use numeric group ids, not symbolic group names,
 	since the latter can have shell metacharacters in them (e.g., spaces).
 	This follows up to the 2005-01-17 patch, which missed this occurrence.
