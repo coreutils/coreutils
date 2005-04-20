@@ -1,6 +1,14 @@
-2005-04-19  Paul Eggert  <eggert@cs.ucla.edu>
+2005-04-20  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	"fetish" -> "coreutils" in more places.
+	* tests/Coreutils.pm: Renamed from tests/Fetish.pm.
+	(package Coreutils): Renamed from package Fetish.  All uses changed.
+	* tests/Makefile.am (EXTRA_DIST): Add Coreutils.pm and
+	remove Fetish.pm.
+
+2005-04-19  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* tests/mv/setup (dot_mount_point): Use stat -L, in case the
 	directory is actually a symbolic link.  Problem reported by
