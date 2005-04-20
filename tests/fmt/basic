@@ -12,11 +12,11 @@ $PERL -e 1 > /dev/null 2>&1 || {
 
 # Export this to avoid hassles when run in a UTF-8 locale,
 # since we use 8-bit characters below, and those values are
-# interpolated into strings (to perform substitution) in Fetish.pm.
+# interpolated into strings (to perform substitution) in Coreutils.pm.
 LC_ALL=C
 export LC_ALL
 
-exec $PERL -w -I$srcdir/.. -MFetish -- - <<\EOF
+exec $PERL -w -I$srcdir/.. -MCoreutils -- - <<\EOF
 require 5.003;
 use strict;
 

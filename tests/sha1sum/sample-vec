@@ -9,7 +9,7 @@ $PERL -e 1 > /dev/null 2>&1 || {
   exit 77
 }
 
-exec $PERL -w -I$srcdir/.. -MFetish -- - <<\EOF
+exec $PERL -w -I$srcdir/.. -MCoreutils -- - <<\EOF
 require 5.003;
 use strict;
 

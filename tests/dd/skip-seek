@@ -13,7 +13,7 @@ $PERL -e 1 > /dev/null 2>&1 || {
 SCRIPT_NAME=$0
 export SCRIPT_NAME
 
-exec $PERL -w -I$srcdir/.. -MFetish -- - <<\EOF
+exec $PERL -w -I$srcdir/.. -MCoreutils -- - <<\EOF
 require 5.003;
 use strict;
 
