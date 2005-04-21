@@ -4,4 +4,5 @@ AUTOMAKE_OPTIONS = 1.3 gnits
 TESTS = trap basic-1 create-leading
 EXTRA_DIST = $(TESTS)
 TESTS_ENVIRONMENT = \
+  EXEEXT='$(EXEEXT)' \
   PATH="`pwd`/../../src$(PATH_SEPARATOR)$$PATH"
