@@ -8,13 +8,6 @@ fi
 dir=dir
 file=file
 
-# Skip this test if we're on a non-POSIX platform where executables' names end
-# in .exe, or we have some other problem like that.
-cat ../../src/dd > /dev/null || {
-  echo >&2 "$0: ../../src/dd is not readable, so can't run this test"
-  exit 77
-}
-
 pwd=`pwd`
 tmp=inst-basic.$$
 trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
@@ -41,10 +34,12 @@ test -f $file || fail=1
 test -f $dir/$file || fail=1
 
 # Make sure strip works.
-cp ../../../src/dd .
-cp dd dd2
+dd=dd$EXEEXT
+dd2=dd2$EXEEXT
+cp ../../../src/$dd . || fail=1
+cp $dd $dd2 || fail=1
 
-strip dd2 || \
+strip $dd2 || \
   {
     cat 1>&2 <<EOF
 $0: WARNING!!!
@@ -56,12 +51,12 @@ EOF
 
 # This test would fail with 3.16s when using versions of strip that
 # don't work on read-only files (the one from binutils works fine).
-ginstall -s -c -m 555 dd $dir || fail=1
+ginstall -s -c -m 555 $dd $dir || fail=1
 # Make sure the source file is still around.
-test -f dd || fail=1
+test -f $dd || fail=1
 
 # Make sure that the destination file has the requested permissions.
-set X `ls -l $dir/dd`
+set X `ls -l $dir/$dd`
 shift
 test "$1" = -r-xr-xr-x || fail=1
 
