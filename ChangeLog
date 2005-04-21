@@ -2,6 +2,15 @@
 
 	* Version 5.3.1.
 
+	Port test cases to Microsoft-Windows-related environments,
+	following suggestions from Eric Blake.
+	* tests/install/Makefile.am (TESTS_ENVIRONMENT): Add EXEEXT.
+	* tests/install/basic-1: Undo previous change.
+	(dd, dd2): New vars, which use $EXEEXT.  All uses of dd and dd2 changed.
+	* tests/install/trap: Undo previous change.
+	(sig): New var.  Use it insted of "trap '' CHLD".
+	Append $EXEEXT to executable name.
+
 	"fetish" -> "coreutils" in more places.
 	* tests/Coreutils.pm: Renamed from tests/Fetish.pm.
 	(package Coreutils): Renamed from package Fetish.  All uses changed.
