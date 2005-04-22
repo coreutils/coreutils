@@ -1,5 +1,5 @@
 /* mknod -- make special files
-   Copyright (C) 90, 91, 1995-2004 Free Software Foundation, Inc.
+   Copyright (C) 90, 91, 1995-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -121,13 +121,13 @@ main (int argc, char **argv)
   newmode = (S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
   if (specified_mode)
     {
-      newmode &= ~ umask (0);
-      change = mode_compile (specified_mode, 0);
+      change = mode_compile (specified_mode, MODE_MASK_ALL);
       if (change == MODE_INVALID)
 	error (EXIT_FAILURE, 0, _("invalid mode"));
       else if (change == MODE_MEMORY_EXHAUSTED)
 	xalloc_die ();
       newmode = mode_adjust (newmode, change);
+      umask (0);
     }
 
   /* If the number of arguments is 0 or 1,
