@@ -1,6 +1,15 @@
-2005-04-20  Paul Eggert  <eggert@cs.ucla.edu>
+2005-04-22  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	* NEWS: Fix bug with "mkdir -m =+x dir"; the umask was being ignored
+	when the "+x" was being evaluated.
+	* mkdir.c (main): Compile mode with MODE_MASK_ALL and initial umask.
+	* mkfifo.c (main): Likewise.
+	* mknod.c (main): Likewise.
+	* tests/mkdir/perm: Test for the above bug.
+
+2005-04-20  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Port test cases to Microsoft-Windows-related environments,
 	following suggestions from Eric Blake.
