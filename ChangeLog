@@ -2,6 +2,9 @@
 
 	* Version 5.3.1.
 
+	* src/nice.c (main): Report proper program name when getopt finds
+	trouble.  Problem reported by Behdad Esfahbod.
+
 	* NEWS: Fix bug with "mkdir -m =+x dir"; the umask was being ignored
 	when the "+x" was being evaluated.
 	* mkdir.c (main): Compile mode with MODE_MASK_ALL and initial umask.
