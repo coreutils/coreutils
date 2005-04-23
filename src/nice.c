@@ -116,7 +116,7 @@ main (int argc, char **argv)
 
   for (i = 1; i < argc; /* empty */)
     {
-      char *s = argv[i];
+      char const *s = argv[i];
 
       if (s[0] == '-' && ISDIGIT (s[1 + (s[1] == '-' || s[1] == '+')])
 	  && posix2_version () < 200112)
@@ -127,28 +127,23 @@ main (int argc, char **argv)
       else
 	{
 	  int optc;
-	  char **fake_argv = argv + i - 1;
+	  int fake_argc = argc - (i - 1);
+	  char **fake_argv = argv + (i - 1);
+
+	  /* Ensure that any getopt diagnostics use the right name.  */
+	  fake_argv[0] = program_name;
 
 	  /* Initialize getopt_long's internal state.  */
 	  optind = 0;
 
-	  if ((optc = getopt_long (argc - (i - 1), fake_argv, "+n:",
-				   longopts, NULL)) != -1)
-	    {
-	      switch (optc)
-		{
-		case '?':
-		  usage (EXIT_FAIL);
-
-		case 'n':
-		  adjustment_given = optarg;
-		  break;
-		}
-	    }
-
+	  optc = getopt_long (fake_argc, fake_argv, "+n:", longopts, NULL);
 	  i += optind - 1;
 
-	  if (optc == EOF)
+	  if (optc == '?')
+	    usage (EXIT_FAIL);
+	  else if (optc == 'n')
+	    adjustment_given = optarg;
+	  else /* optc == -1 */
 	    break;
 	}
     }
