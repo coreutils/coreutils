@@ -17,6 +17,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
     nohup now closes stderr if it is a terminal and stdout is closed.
 
+    nohup now exits with status 127 (not 1) when given an invalid option.
+
   pathchk changes:
 
     It now rejects the empty name in the normal case.  That is,
