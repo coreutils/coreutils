@@ -88,7 +88,7 @@ main (int argc, char **argv)
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
 		      usage, AUTHORS, (char const *) NULL);
   if (getopt_long (argc, argv, "+", NULL, NULL) != -1)
-    usage (EXIT_FAILURE);
+    usage (NOHUP_FAILURE);
 
   if (argc <= optind)
     {
