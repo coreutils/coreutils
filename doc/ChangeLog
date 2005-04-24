@@ -1,3 +1,11 @@
+2005-04-23  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (install invocation): Use a= instead of 0 for
+	the point of departure for -m, and explain what it meeams.
+	(mkdir invocation, mkfifo invocation, mknod invocation):
+	The umask does not affect the point of departure.
+	Problem reported by Mike Stone.
+
 2005-04-11  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi: For consistency, standardize on "user ID" rather
@@ -15,7 +23,7 @@
 
 2005-04-05  Paul Eggert  <eggert@cs.ucla.edu>
 
-	* doc/coreutils.texi (cat invocation, chown invocation)
+	* coreutils.texi (cat invocation, chown invocation)
 	(chgrp invocation, basename invocation, dirname invocation):
 	Add examples, which are copies of the examples newly added
 	to the usage messages.

@@ -7013,8 +7013,9 @@ may be either a group name or a numeric group ID.
 @cindex permissions of installed files, setting
 Set the permissions for the installed file or directory to @var{mode},
 which can be either an octal number, or a symbolic mode as in
-@command{chmod}, with 0 as the point of departure (@pxref{File
-permissions}).  The default mode is @samp{u=rwx,go=rx}---read, write,
+@command{chmod}, with @samp{a=} (no access allowed to anyone) as the
+point of departure (@pxref{File permissions}).
+The default mode is @samp{u=rwx,go=rx}---read, write,
 and execute for the owner, and read and execute for group and other.
 
 @item -o @var{owner}
@@ -7766,8 +7767,7 @@ The program accepts the following options.  Also see @ref{Common options}.
 @cindex modes of created directories, setting
 Set the mode of created directories to @var{mode}, which is symbolic as
 in @command{chmod} and uses @samp{a=rwx} (read, write and execute allowed for
-everyone) minus the bits set in the umask for the point of the
-departure.  @xref{File permissions}.
+everyone) for the point of the departure.  @xref{File permissions}.
 
 @item -p
 @itemx --parents
@@ -7819,8 +7819,8 @@ The program accepts the following option.  Also see @ref{Common options}.
 @opindex --mode
 @cindex modes of created FIFOs, setting
 Set the mode of created FIFOs to @var{mode}, which is symbolic as in
-@command{chmod} and uses @samp{a=rw} (read and write allowed for everyone) minus
-the bits set in the umask for the point of departure.  @xref{File permissions}.
+@command{chmod} and uses @samp{a=rw} (read and write allowed for everyone)
+for the point of departure.  @xref{File permissions}.
 
 @end table
 
@@ -7890,8 +7890,8 @@ The program accepts the following option.  Also see @ref{Common options}.
 @opindex -m
 @opindex --mode
 Set the mode of created files to @var{mode}, which is symbolic as in
-@command{chmod} and uses @samp{a=rw} minus the bits set in the umask as the point
-of departure.  @xref{File permissions}.
+@command{chmod} and uses @samp{a=rw} as the point of departure.
+@xref{File permissions}.
 
 @end table
 
