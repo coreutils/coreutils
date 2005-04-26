@@ -41,7 +41,6 @@
 #include <sys/types.h>
 #include "system.h"
 #include "error.h"
-#include "posixver.h"
 #include "quote.h"
 #include "xstrndup.h"
 
@@ -469,8 +468,6 @@ main (int argc, char **argv)
      so that only leading blanks will be considered.  */
   bool convert_first_only = false;
 
-  bool obsolete_tablist = false;
-
   initialize_main (&argc, &argv);
   program_name = argv[0];
   setlocale (LC_ALL, "");
@@ -506,7 +503,6 @@ main (int argc, char **argv)
 	  if (have_tabval)
 	    add_tab_stop (tabval);
 	  have_tabval = false;
-	  obsolete_tablist = true;
 	  break;
 	case_GETOPT_HELP_CHAR;
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
@@ -516,20 +512,10 @@ main (int argc, char **argv)
 	      tabval = 0;
 	      have_tabval = true;
 	    }
-	  {
-	    if (!DECIMAL_DIGIT_ACCUMULATE (tabval, c - '0', UINTMAX_MAX))
-	      error (EXIT_FAILURE, 0, _("tab stop value is too large"));
-	  }
-	  obsolete_tablist = true;
+	  if (!DECIMAL_DIGIT_ACCUMULATE (tabval, c - '0', UINTMAX_MAX))
+	    error (EXIT_FAILURE, 0, _("tab stop value is too large"));
 	  break;
 	}
-    }
-
-  if (obsolete_tablist && 200112 <= posix2_version ())
-    {
-      error (0, 0,
-	     _("`-LIST' option is obsolete; use `--first-only -t LIST'"));
-      usage (EXIT_FAILURE);
     }
 
   if (convert_first_only)
