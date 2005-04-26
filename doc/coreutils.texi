@@ -1182,10 +1182,9 @@ environment variable to a value of the form @var{yyyymm} specifying
 the year and month the standard was adopted.  Two values are currently
 supported for @env{_POSIX2_VERSION}: @samp{199209} stands for
 @acronym{POSIX} 1003.2-1992, and @samp{200112} stands for @acronym{POSIX}
-1003.1-2001.  For example, if you are running older software that
-assumes an older version of @acronym{POSIX} and uses @samp{sort +1},
-@samp{head -10}, or @samp{tail +10}, you
-can work around the compatibility problems by setting
+1003.1-2001.  For example, if you have a newer system but are running software
+that assumes an older version of @acronym{POSIX} and uses @samp{sort +1}
+or @samp{tail +10}, you can work around any compatibility problems by setting
 @samp{_POSIX2_VERSION=199209} in your environment.
 
 @node Output of entire files
@@ -1702,7 +1701,7 @@ more consecutive output lines would be identical, @command{od} outputs only
 the first line, and puts just an asterisk on the following line to
 indicate the elision.
 
-@item -w @var{n}
+@item -w[@var{n}]
 @itemx --width[=@var{n}]
 @opindex -w
 @opindex --width
@@ -1711,11 +1710,7 @@ the least common multiple of the sizes associated with the specified
 output types.
 
 If this option is not given at all, the default is 16.  If @var{n} is
-omitted with @option{--width}, the default is 32.  On older systems,
-@sc{gnu} @command{od} instead supports an obsolete option
-@option{-w[@var{n}]}, where @var{n} also defaults to 32.  @acronym{POSIX}
-1003.1-2001 (@pxref{Standards conformance}) does not allow @option{-w}
-without an argument; use @option{--width} instead.
+omitted, the default is 32.
 
 @end table
 
@@ -2203,7 +2198,7 @@ three column options (@option{-COLUMN}|@option{-a -COLUMN}|@option{-m}) unless
 @option{-w} is set.  This is a @acronym{POSIX}-compliant formulation.
 
 
-@item -S @var{string}
+@item -S@var{string}
 @itemx --sep-string[=@var{string}]
 @opindex -S
 @opindex --sep-string
@@ -2213,15 +2208,8 @@ does not affect line truncation or column alignment.
 Without @option{-S}, and with @option{-J}, @command{pr} uses the default output
 separator, TAB@.
 Without @option{-S} or @option{-J}, @command{pr} uses a @samp{space}
-(same as @option{-S"@w{ }"}).  With @option{-S@var{string}},
-@var{string} must be nonempty; @option{--sep-string} with no
-@var{string} is equivalent to @option{--sep-string=""}.
-
-On older systems, @command{pr} instead supports an obsolete option
-@option{-S[@var{string}]}, where @var{string} is optional.  @acronym{POSIX}
-1003.1-2001 (@pxref{Standards conformance}) does not allow this older
-usage.  To specify an empty @var{string} portably, use
-@option{--sep-string}.
+(same as @option{-S"@w{ }"}).  @option{--sep-string} with no
+@samp{=@var{string}} is equivalent to @option{--sep-string=""}.
 
 @item -t
 @itemx --omit-header
@@ -2328,9 +2316,8 @@ is broken at the maximum line length as usual.
 @opindex --width
 Use a maximum line length of @var{width} columns instead of 80.
 
-On older systems, @command{fold} supports an obsolete option
-@option{-@var{width}}.  @acronym{POSIX} 1003.1-2001 (@pxref{Standards
-conformance}) does not allow this; use @option{-w @var{width}}
+For compatibility @command{fold} supports an obsolete option syntax
+@option{-@var{width}}.  New scripts should use @option{-w @var{width}}
 instead.
 
 @end table
@@ -2416,13 +2403,13 @@ Always print file name headers.
 
 @end table
 
-On older systems, @command{head} supports an obsolete option
+For compatibility @command{head} also supports an obsolete option syntax
 @option{-@var{count}@var{options}}, which is recognized only if it is
 specified first.  @var{count} is a decimal number optionally followed
 by a size letter (@samp{b}, @samp{k}, @samp{m}) as in @option{-c}, or
 @samp{l} to mean count by lines, or other option letters (@samp{cqv}).
-@acronym{POSIX} 1003.1-2001 (@pxref{Standards conformance}) does not allow
-this; use @option{-c @var{count}} or @option{-n @var{count}} instead.
+New scripts should use @option{-c @var{count}} or @option{-n
+@var{count}} instead.
 
 @exitstatus
 
@@ -2597,21 +2584,28 @@ Always print file name headers.
 
 @end table
 
-On older systems, @command{tail} supports an obsolete option
-@option{-@var{count}[bcl][f]}, which is recognized only if it is
-specified first.  @var{count} is an optional decimal number optionally
+For compatibility @command{tail} also supports an obsolete option
+syntax @option{-@var{count}[bcl][f]}, which is recognized only if it
+is specified first and does not conflict with the usage described
+above.  @var{count} is an optional decimal number optionally
 followed by a size letter (@samp{b}, @samp{c}, @samp{l}) to mean count
 by 512-byte blocks, bytes, or lines, optionally followed by @samp{f}
-which has the same meaning as @option{-f}.  Also, the leading @samp{-}
-can be replaced by @samp{+} with the same meaning as in counts.
-@acronym{POSIX} 1003.1-2001 (@pxref{Standards conformance}) does not
-allow most of these obsolete usages; use @option{-c @var{count}[b]},
+which has the same meaning as @option{-f}.
+New scripts should use @option{-c @var{count}[b]},
 @option{-n @var{count}}, and/or @option{-f} instead.
 
-On older systems, obsolete usage overrides normal usage, so portable
-shell scripts should avoid commands that can be interpreted either
-way.  For example, use @samp{tail -- - file} rather than @samp{tail -
-file}, and use @samp{tail -c4} rather than @samp{tail -c 4}.
+@vindex _POSIX2_VERSION
+On older systems, the leading @samp{-} can be replaced by @samp{+} in
+the obsolete option syntax with the same meaning as in counts, and
+obsolete usage overrides normal usage when the two conflict.
+This obsolete behavior can be enabled or disabled with the
+@env{_POSIX2_VERSION} environment variable (@pxref{Standards
+conformance}), but portable scripts should avoid commands whose
+behavior depends on this variable.
+For example, use @samp{tail -- - main.c} or @samp{tail main.c} rather than
+the ambiguous @samp{tail - main.c}, @samp{tail -c4} or @samp{tail -c 10
+4} rather than the ambiguous @samp{tail -c 4}, and @samp{tail ./+4}
+or @samp{tail -n +4} rather than the ambiguous @samp{tail +4}.
 
 @exitstatus
 
@@ -2659,10 +2653,9 @@ Use suffixes of length @var{length}.  The default @var{length} is 2.
 @opindex --lines
 Put @var{lines} lines of @var{input} into each output file.
 
-On older systems, @command{split} supports an obsolete option
-@option{-@var{lines}}.  @acronym{POSIX} 1003.1-2001 (@pxref{Standards
-conformance}) does not allow this; use @option{-l @var{lines}}
-instead.
+For compatibility @command{split} also supports an obsolete
+option syntax @option{-@var{lines}}.  New scripts should use @option{-l
+@var{lines}} instead.
 
 @item -b @var{bytes}
 @itemx --bytes=@var{bytes}
@@ -3526,10 +3519,15 @@ numbers of leading blanks in fields can cause confusing results.
 
 Keys can span multiple fields.
 
+@vindex _POSIX2_VERSION
 On older systems, @command{sort} supports an obsolete origin-zero
 syntax @samp{+@var{pos1} [-@var{pos2}]} for specifying sort keys.
-@acronym{POSIX} 1003.1-2001 (@pxref{Standards conformance}) does not allow
-this; use @option{-k} instead.
+This obsolete behavior can be enabled or disabled with the
+@env{_POSIX2_VERSION} environment variable (@pxref{Standards
+conformance}), but portable scripts should avoid commands whose
+behavior depends on this variable.
+For example, use @samp{sort ./+2} or @samp{sort -k 3} rather than
+the ambiguous @samp{sort +2}.
 
 Here are some examples to illustrate various combinations of options.
 
@@ -3699,9 +3697,8 @@ a null string for comparison if a line has fewer than @var{n} fields.  Fields
 are sequences of non-space non-tab characters that are separated from
 each other by at least one space or tab.
 
-On older systems, @command{uniq} supports an obsolete option
-@option{-@var{n}}.  @acronym{POSIX} 1003.1-2001 (@pxref{Standards conformance})
-does not allow this; use @option{-f @var{n}} instead.
+For compatibility @command{uniq} supports an obsolete option syntax
+@option{-@var{n}}.  New scripts should use @option{-f @var{n}} instead.
 
 @item -s @var{n}
 @itemx --skip-chars=@var{n}
@@ -3711,9 +3708,15 @@ Skip @var{n} characters before checking for uniqueness.  Use a null string
 for comparison if a line has fewer than @var{n} characters.  If you use both
 the field and character skipping options, fields are skipped over first.
 
-On older systems, @command{uniq} supports an obsolete option
-@option{+@var{n}}.  @acronym{POSIX} 1003.1-2001 (@pxref{Standards conformance})
-does not allow this; use @option{-s @var{n}} instead.
+@vindex _POSIX2_VERSION
+On older systems, @command{uniq} supports an obsolete option syntax
+@option{+@var{n}}.
+This obsolete behavior can be enabled or disabled with the
+@env{_POSIX2_VERSION} environment variable (@pxref{Standards
+conformance}), but portable scripts should avoid commands whose
+behavior depends on this variable.
+For example, use @samp{uniq ./+10} or @samp{uniq -s 10} rather than
+the ambiguous @samp{uniq +10}.
 
 @item -c
 @itemx --count
@@ -4753,10 +4756,6 @@ Print a line for each unpairable line in file @var{file-number}
 
 @end table
 
-In addition, when @sc{gnu} @command{join} is invoked with exactly one argument,
-the @option{--help} and @option{--version} options are recognized.
-@xref{Common options}.
-
 @exitstatus
 
 
@@ -5183,11 +5182,9 @@ If only one tab stop is given, set the tabs @var{tab1} spaces apart
 last tab stop given with single spaces.  Tab stops can be separated by
 blanks as well as by commas.
 
-On older systems, @command{expand} supports an obsolete option
-@option{-@var{tab1}[,@var{tab2}]@dots{}}, where tab stops must be
-separated by commas.  @acronym{POSIX} 1003.1-2001 (@pxref{Standards
-conformance}) does not allow this; use @option{-t
-@var{tab1}[,@var{tab2}]@dots{}} instead.
+For compatibility @command{expand} also supports an obsolete
+option syntax @option{-@var{tab1}[,@var{tab2}]@dots{}}.  New scripts
+should use @option{-t @var{tab1}[,@var{tab2}]@dots{}} instead.
 
 @item -i
 @itemx --initial
@@ -5238,11 +5235,10 @@ instead of the default 8.  Otherwise, set the tabs at columns
 beyond the tab stops given unchanged.  Tab stops can be separated by
 blanks as well as by commas.  This option implies the @option{-a} option.
 
-On older systems, @command{unexpand} supports an obsolete option
+For compatibility @command{unexpand} supports an obsolete option syntax
 @option{-@var{tab1}[,@var{tab2}]@dots{}}, where tab stops must be
 separated by commas.  (Unlike @option{-t}, this obsolete option does
-not imply @option{-a}.)  @acronym{POSIX} 1003.1-2001 (@pxref{Standards
-conformance}) does not allow this; use @option{--first-only -t
+not imply @option{-a}.)  New scripts should use @option{--first-only -t
 @var{tab1}[,@var{tab2}]@dots{}} instead.
 
 @item -a
@@ -8523,14 +8519,6 @@ specified files.  Synopsis:
 touch [@var{option}]@dots{} @var{file}@dots{}
 @end example
 
-On older systems, @command{touch} supports an obsolete syntax, as follows.
-If the first @var{file} would be a valid argument to the @option{-t}
-option and no timestamp is given with any of the @option{-d}, @option{-r},
-or @option{-t} options and the @samp{--} argument is not given, that
-argument is interpreted as the time for the other files instead of
-as a file name.  @acronym{POSIX} 1003.1-2001 (@pxref{Standards conformance})
-does not allow this; use @option{-t} instead.
-
 @cindex empty files, creating
 Any @var{file} that does not exist is created empty.
 
@@ -8623,7 +8611,7 @@ the origin for any relative @var{time}s given, but is otherwise ignored.
 For example, @samp{-r foo -d '-5 seconds'} specifies a time stamp
 equal to five seconds before the corresponding time stamp for @file{foo}.
 
-@item -t [[CC]YY]MMDDhhmm[.ss]
+@item -t [[@var{CC}]@var{YY}]@var{MMDDhhmm}[.@var{ss}]
 Use the argument (optional four-digit or two-digit years, months,
 days, hours, minutes, optional seconds) instead of the current time.
 If the year is specified with only two digits, then @var{CC}
@@ -8632,6 +8620,21 @@ is 20 for years in the range 0 @dots{} 68, and 19 for years in
 the argument is interpreted as a date in the current year.
 
 @end table
+
+@vindex _POSIX2_VERSION
+On older systems, @command{touch} supports an obsolete syntax, as follows.
+If no timestamp is given with any of the @option{-d}, @option{-r}, or
+@option{-t} options, and if there are two or more @var{file}s and the
+first @var{file} is of the form @samp{@var{MMDDhhmm}[@var{YY}]} and this
+would be a valid argument to the @option{-t} option (if the @var{YY}, if
+any, were moved to the front), that argument is interpreted as the time
+for the other files instead of as a file name.
+This obsolete behavior can be enabled or disabled with the
+@env{_POSIX2_VERSION} environment variable (@pxref{Standards
+conformance}), but portable scripts should avoid commands whose
+behavior depends on this variable.
+For example, use @samp{touch ./12312359 main.c} or @samp{touch -t
+12312359 main.c} rather than the ambiguous @samp{touch 12312359 main.c}.
 
 @exitstatus
 
@@ -11835,9 +11838,9 @@ input.  This is useful when you have many dates to process, because the
 system overhead of starting up the @command{date} executable many times can
 be considerable.
 
-@item -I @var{timespec}
+@item -I[@var{timespec}]
 @itemx --iso-8601[=@var{timespec}]
-@opindex -I @var{timespec}
+@opindex -I[@var{timespec}]
 @opindex --iso-8601[=@var{timespec}]
 Display the date using the @acronym{ISO} 8601 format, @samp{%Y-%m-%d}.
 
@@ -11845,7 +11848,7 @@ The argument @var{timespec} specifies the number of additional
 terms of the time to include.  It can be one of the following:
 @table @samp
 @item auto
-The default behavior: print just the date.
+Print just the date.  This is the default if @var{timespec} is omitted.
 
 @item hours
 Append the hour of the day to the date.
@@ -11862,13 +11865,6 @@ Append the hours, minutes, seconds, and nanoseconds.
 
 If showing any time terms, then include the time zone using the format
 @samp{%z}.
-
-If @var{timespec} is omitted with @option{--iso-8601}, the default is
-@samp{auto}.  On older systems, @sc{gnu} @command{date} instead
-supports an obsolete option @option{-I[@var{timespec}]}, where
-@var{timespec} defaults to @samp{auto}.  @acronym{POSIX} 1003.1-2001
-(@pxref{Standards conformance}) does not allow @option{-I} without an
-argument; use @option{--iso-8601} instead.
 
 @item -R
 @itemx --rfc-822
@@ -12453,10 +12449,9 @@ Add @var{adjustment} instead of 10 to the command's nice value.  If
 @command{nice} issues a warning but otherwise acts as if you specified
 a zero adjustment.
 
-On older systems, @command{nice} supports an obsolete option
-@option{-@var{adjustment}}.  @acronym{POSIX} 1003.1-2001 (@pxref{Standards
-conformance}) does not allow this; use @option{-n @var{adjustment}}
-instead.
+For compatibility @command{nice} also supports an obsolete
+option syntax @option{-@var{adjustment}}.  New scripts should use
+@option{-n @var{adjustment}} instead.
 
 @end table
 
