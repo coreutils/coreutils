@@ -354,7 +354,7 @@ native byte values.\n\
   exit (status);
 }
 
-#define COMMON_SHORT_OPTIONS "-bcdfgik:mMno:rsS:t:T:uz"
+static char const short_options[] = "-bcdfgik:mMno:rsS:t:T:uy:z";
 
 static struct option const long_options[] =
 {
@@ -2300,9 +2300,6 @@ main (int argc, char **argv)
   size_t nfiles = 0;
   bool posixly_correct = (getenv ("POSIXLY_CORRECT") != NULL);
   bool obsolete_usage = (posix2_version () < 200112);
-  char const *short_options = (obsolete_usage
-			       ? COMMON_SHORT_OPTIONS "y::"
-			       : COMMON_SHORT_OPTIONS "y:");
   char *minus = "-", **files;
   char const *outfile = NULL;
 
@@ -2582,12 +2579,12 @@ main (int argc, char **argv)
 	     emulate Solaris 8 and 9 "sort -y 100" which ignores the "100",
 	     and which in general ignores the argument after "-y" if it
 	     consists entirely of digits (it can even be empty).  */
-	  if (!optarg && optind != argc)
+	  if (optarg == argv[optind - 1])
 	    {
 	      char const *p;
-	      for (p = argv[optind]; ISDIGIT (*p); p++)
+	      for (p = optarg; ISDIGIT (*p); p++)
 		continue;
-	      optind += !*p;
+	      optind -= (*p != '\0');
 	    }
 	  break;
 
