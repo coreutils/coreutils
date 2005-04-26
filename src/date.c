@@ -32,7 +32,6 @@
 #include "getline.h"
 #include "inttostr.h"
 #include "posixtm.h"
-#include "posixver.h"
 #include "quote.h"
 #include "strftime.h"
 
@@ -79,7 +78,7 @@ static int iso_8601_format = 0;
 /* If true, display time in RFC-(2)822 format for mail or news. */
 static bool rfc_format = false;
 
-#define COMMON_SHORT_OPTIONS "Rd:f:r:s:u"
+static char const short_options[] = "d:f:I::r:Rs:u";
 
 static struct option const long_options[] =
 {
@@ -128,7 +127,7 @@ Display the current time in the given FORMAT, or set the system date.\n\
 \n\
   -d, --date=STRING         display time described by STRING, not `now'\n\
   -f, --file=DATEFILE       like --date once for each line of DATEFILE\n\
-      --iso-8601[=TIMESPEC] output date/time in ISO 8601 format.\n\
+  -I[TIMESPEC], --iso-8601[=TIMESPEC]  output date/time in ISO 8601 format.\n\
                             TIMESPEC=`date' for date only (the default),\n\
                             `hours', `minutes', `seconds', or `ns' for date and\n\
                             time to the indicated precision.\n\
@@ -307,9 +306,6 @@ main (int argc, char **argv)
   int n_args;
   bool ok;
   int option_specified_date;
-  char const *short_options = (posix2_version () < 200112
-			       ? COMMON_SHORT_OPTIONS "I::"
-			       : COMMON_SHORT_OPTIONS "I:");
 
   initialize_main (&argc, &argv);
   program_name = argv[0];
