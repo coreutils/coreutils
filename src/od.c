@@ -25,7 +25,6 @@
 #include <sys/types.h>
 #include "system.h"
 #include "error.h"
-#include "posixver.h"
 #include "quote.h"
 #include "xstrtol.h"
 
@@ -262,7 +261,7 @@ static enum size_spec integral_type_size[MAX_INTEGRAL_TYPE_SIZE + 1];
 #define MAX_FP_TYPE_SIZE sizeof (LONG_DOUBLE)
 static enum size_spec fp_type_size[MAX_FP_TYPE_SIZE + 1];
 
-#define COMMON_SHORT_OPTIONS "A:aBbcDdeFfHhIij:LlN:OoS:st:vXx"
+static char const short_options[] = "A:aBbcDdeFfHhIij:LlN:OoS:st:vw::Xx";
 
 /* For long options that have no equivalent short option, use a
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
@@ -1550,9 +1549,6 @@ main (int argc, char **argv)
   bool modern = false;
   bool width_specified = false;
   bool ok = true;
-  char const *short_options = (posix2_version () < 200112
-			       ? COMMON_SHORT_OPTIONS "w::"
-			       : COMMON_SHORT_OPTIONS "w:");
 
   /* The old-style `pseudo starting address' to be printed in parentheses
      after any true address.  */
