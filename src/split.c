@@ -34,7 +34,6 @@
 #include "full-read.h"
 #include "full-write.h"
 #include "inttostr.h"
-#include "posixver.h"
 #include "quote.h"
 #include "safe-read.h"
 #include "unistd-safer.h"
@@ -510,14 +509,6 @@ main (int argc, char **argv)
 	}
     }
 
-  if (digits_optind && 200112 <= posix2_version ())
-    {
-      char buffer[INT_BUFSIZE_BOUND (uintmax_t)];
-      char const *a = umaxtostr (n_units, buffer);
-      error (0, 0, _("`-%s' option is obsolete; use `-l %s'"), a, a);
-      usage (EXIT_FAILURE);
-    }
-
   /* Handle default case.  */
   if (split_type == type_undef)
     {
@@ -527,8 +518,6 @@ main (int argc, char **argv)
 
   if (n_units == 0)
     {
-      /* FIXME: be sure to remove this block when removing
-	 support for obsolete options like `-10'.  */
       error (0, 0, _("invalid number of lines: 0"));
       usage (EXIT_FAILURE);
     }
