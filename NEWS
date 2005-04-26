@@ -2,7 +2,53 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Major changes in release 5.3.1 (2005-??-??) [unstable]
 
-** Changes for better compliance with POSIX
+** Bring back support for `head -NUM', `tail -NUM', etc. even when
+  conforming to POSIX 1003.1-2001.  The following changes apply only
+  when conforming to POSIX 1003.1-2001; there is no effect when
+  conforming to older POSIX versions.
+
+  The following usages now behave just as when conforming to older POSIX:
+
+    date -I
+    expand -TAB1[,TAB2,...]
+    fold -WIDTH
+    head -NUM
+    join -j FIELD
+    join -j1 FIELD
+    join -j2 FIELD
+    join -o FIELD_NAME1 FIELD_NAME2...
+    nice -NUM
+    od -w
+    pr -S
+    split -NUM
+    tail -[NUM][bcl][f] [FILE]
+
+  The following usages no longer work, due to the above changes:
+
+    date -I TIMESPEC  (use `date -ITIMESPEC' instead)
+    od -w WIDTH       (use `od -wWIDTH' instead)
+    pr -S STRING      (use `pr -SSTRING' instead)
+
+  A few usages still have behavior that depends on which POSIX standard is
+  being conformed to, and portable applications should beware these
+  problematic usages.  These include:
+
+    Problematic       Standard-conforming replacement, depending on
+       usage            whether you prefer the behavior of:
+                      POSIX 1003.2-1992    POSIX 1003.1-2001
+    sort +4           sort -k 5            sort ./+4
+    tail +4           tail -n +4           tail ./+4
+    tail - main.c     tail main.c          tail -- - main.c
+    tail -c 4         tail -c 10 ./4       tail -c4
+    touch 12312359 f  touch -t 12312359 f  touch ./12312359 f
+    uniq +4           uniq -s 4            uniq ./+4
+
+  These changes are in response to decisions taken in the January 2005
+  Austin Group standardization meeting.  For more details, please see
+  "Utility Syntax Guidelines" in the Minutes of the January 2005
+  Meeting <http://www.opengroup.org/austin/docs/austin_239.html>.
+
+** Changes for better conformance to POSIX
 
   dd changes:
 
@@ -10,6 +56,11 @@ GNU coreutils NEWS                                    -*- outline -*-
 
     On hosts lacking the INFO signal, dd no longer treats the USR1
     signal as if it were INFO when POSIXLY_CORRECT is set.
+
+  fold changes:
+
+    When POSIXLY_CORRECT is set, "fold file -3" is now equivalent to
+    "fold file ./-3", not the obviously-erroneous "fold file ./-w3".
 
   nohup changes:
 
@@ -62,6 +113,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   in spite of that kernel's buggy nanosleep implementation.
 
 ** New features
+
+  join now supports a NUL field separator, e.g., "join -t '\0'".
+  join now detects and reports incompatible options, e.g., "join -t x -t y",
 
   stat -f -c %S outputs the fundamental block size (used for block counts).
   stat -f's default output format has been changed to output this size as well.
@@ -473,6 +527,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   "-o LIST1,LIST2..." respectively.  If join was compiled on a
   POSIX 1003.1-2001 system, you may enable the old behavior
   by setting _POSIX2_VERSION=199209 in your environment.
+  [This change was reverted in coreutils 5.3.1.]
 
 
 * Major changes in release 5.1.0 (2003-12-21):
@@ -1021,10 +1076,10 @@ point at which the packages merged to form the coreutils:
    --process (-p), --runlevel (-r), --short (-s), --time (-t), --users (-u).
    The -u option now produces POSIX-specified results and is the same as
    the long option `--users'.  --idle is no longer the same as -u.
-* The following changes apply on systems conforming to POSIX 1003.1-2001,
-  and are required by the new POSIX standard:
+* The following changes apply on systems conforming to POSIX 1003.1-2001:
    - `date -I' is no longer supported.  Instead, use `date --iso-8601'.
    - `nice -NUM' is no longer supported.  Instead, use `nice -n NUM'.
+  [This change was reverted in coreutils 5.3.1.]
 * New 'uname' options -i or --hardware-platform, and -o or --operating-system.
    'uname -a' now outputs -i and -o information at the end.
    New uname option --kernel-version is an alias for -v.
