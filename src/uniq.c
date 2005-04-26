@@ -510,7 +510,7 @@ main (int argc, char **argv)
 					delimit_method_map);
 	  break;
 
-	case 'f':		/* Like '-#'. */
+	case 'f':
 	  skip_field_option_type = SFO_NEW;
 	  skip_fields = size_opt (optarg,
 				  N_("invalid number of fields to skip"));
@@ -520,7 +520,7 @@ main (int argc, char **argv)
 	  ignore_case = true;
 	  break;
 
-	case 's':		/* Like '+#'. */
+	case 's':
 	  skip_chars = size_opt (optarg,
 				 N_("invalid number of bytes to skip"));
 	  break;
@@ -541,13 +541,6 @@ main (int argc, char **argv)
 	default:
 	  usage (EXIT_FAILURE);
 	}
-    }
-
-  if (skip_field_option_type == SFO_OBSOLETE && 200112 <= posix2_version ())
-    {
-      error (0, 0, _("`-%lu' option is obsolete; use `-f %lu'"),
-	     (unsigned long int) skip_fields, (unsigned long int) skip_fields);
-      usage (EXIT_FAILURE);
     }
 
   if (countmode == count_occurrences && output_later_repeated)
