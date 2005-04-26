@@ -1,3 +1,22 @@
+2005-04-26  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (Standards conformance): Do not mention head -10,
+	since it now works the same regardless of POSIX version.
+	(od invocation): -w N -> -w[N].
+	(pr invocation): -S STRING -> -SSTRING.
+	(fold invocation): -WIDTH works even when conforming to POSIX
+	1003.1-2001.
+	(head invocation, tail invocation): Likewise for -NUM.
+	(split invocation): Likewise for -LINES.
+	(uniq invocation): Likewise for -N.
+	(expand invocation, unexpand invocation): Likewise for -TAB.
+	(nice invocation): Likewise for -ADJUSTMENT.
+	(sort invocation): Clarify explanation of +N option.
+	(uniq invocation): Likewise.
+	(join invocation): Remove special case for --help, --version.
+	(touch invocation): Clarify explanation of date options.
+	(Options for date): -I timespec -> -I[timespec].
+
 2005-04-23  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (install invocation): Use a= instead of 0 for
