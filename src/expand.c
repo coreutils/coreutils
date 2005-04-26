@@ -40,7 +40,6 @@
 #include <sys/types.h>
 #include "system.h"
 #include "error.h"
-#include "posixver.h"
 #include "quote.h"
 #include "xstrndup.h"
 
@@ -89,6 +88,8 @@ static bool have_read_stdin;
 
 /* The desired exit status.  */
 static int exit_status;
+
+static char const shortopts[] = "it:0::1::2::3::4::5::6::7::8::9::";
 
 static struct option const longopts[] =
 {
@@ -170,18 +171,16 @@ parse_tab_stops (char const *stops)
 	      have_tabval = true;
 	      num_start = stops;
 	    }
-	  {
-	    /* Detect overflow.  */
-	    if (!DECIMAL_DIGIT_ACCUMULATE (tabval, *stops - '0', UINTMAX_MAX))
-	      {
-		size_t len = strspn (num_start, "0123456789");
-		char *bad_num = xstrndup (num_start, len);
-		error (0, 0, _("tab stop is too large %s"), quote (bad_num));
-		free (bad_num);
-		ok = false;
-		stops = num_start + len - 1;
-	      }
-	  }
+
+	  if (!DECIMAL_DIGIT_ACCUMULATE (tabval, *stops - '0', UINTMAX_MAX))
+	    {
+	      size_t len = strspn (num_start, "0123456789");
+	      char *bad_num = xstrndup (num_start, len);
+	      error (0, 0, _("tab stop is too large %s"), quote (bad_num));
+	      free (bad_num);
+	      ok = false;
+	      stops = num_start + len - 1;
+	    }
 	}
       else
 	{
@@ -371,11 +370,7 @@ expand (void)
 int
 main (int argc, char **argv)
 {
-  bool have_tabval = false;
-  uintmax_t tabval IF_LINT (= 0);
   int c;
-
-  bool obsolete_tablist = false;
 
   initialize_main (&argc, &argv);
   program_name = argv[0];
@@ -391,50 +386,39 @@ main (int argc, char **argv)
   tab_list = NULL;
   first_free_tab = 0;
 
-  while ((c = getopt_long (argc, argv, "it:,0123456789", longopts, NULL))
-	 != -1)
+  while ((c = getopt_long (argc, argv, shortopts, longopts, NULL)) != -1)
     {
       switch (c)
 	{
-	case '?':
-	  usage (EXIT_FAILURE);
 	case 'i':
 	  convert_entire_line = false;
 	  break;
+
 	case 't':
 	  parse_tab_stops (optarg);
 	  break;
-	case ',':
-	  if (have_tabval)
-	    add_tab_stop (tabval);
-	  have_tabval = false;
-	  obsolete_tablist = true;
-	  break;
-	case_GETOPT_HELP_CHAR;
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
-	default:
-	  if (!have_tabval)
+
+	case '0': case '1': case '2': case '3': case '4':
+	case '5': case '6': case '7': case '8': case '9':
+	  if (optarg)
+	    parse_tab_stops (optarg - 1);
+	  else
 	    {
-	      tabval = 0;
-	      have_tabval = true;
+	      char tab_stop[2];
+	      tab_stop[0] = c;
+	      tab_stop[1] = '\0';
+	      parse_tab_stops (tab_stop);
 	    }
-	  {
-	    if (!DECIMAL_DIGIT_ACCUMULATE (tabval, c - '0', UINTMAX_MAX))
-	      error (EXIT_FAILURE, 0, _("tab stop value is too large"));
-	  }
-	  obsolete_tablist = true;
 	  break;
+
+	case_GETOPT_HELP_CHAR;
+
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+
+	default:
+	  usage (EXIT_FAILURE);
 	}
     }
-
-  if (obsolete_tablist && 200112 <= posix2_version ())
-    {
-      error (0, 0, _("`-LIST' option is obsolete; use `-t LIST'"));
-      usage (EXIT_FAILURE);
-    }
-
-  if (have_tabval)
-    add_tab_stop (tabval);
 
   validate_tab_stops (tab_list, first_free_tab);
 
