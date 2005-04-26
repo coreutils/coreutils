@@ -36,7 +36,6 @@
 #include "full-write.h"
 #include "full-read.h"
 #include "inttostr.h"
-#include "posixver.h"
 #include "quote.h"
 #include "safe-read.h"
 #include "xstrtol.h"
@@ -63,9 +62,6 @@ enum header_mode
 {
   multiple_files, always, never
 };
-
-/* Options corresponding to header_mode values.  */
-static char const header_mode_option[][4] = { "", " -v", " -q" };
 
 /* The name this program was run with. */
 char *program_name;
@@ -996,17 +992,6 @@ main (int argc, char **argv)
 	    }
 	}
 
-      if (200112 <= posix2_version ())
-	{
-	  int n_string_prefix_len = end_n_string - n_string;
-	  error (0, 0, _("`-%s' option is obsolete; use `-%c %.*s%.*s%s'"),
-		 n_string, count_lines ? 'n' : 'c',
-		 n_string_prefix_len, n_string,
-		 multiplier_char != 0, &multiplier_char,
-		 header_mode_option[header_mode]);
-	  usage (EXIT_FAILURE);
-	}
-
       /* Append the multiplier character (if any) onto the end of
 	 the digit string.  Then add NUL byte if necessary.  */
       *end_n_string = multiplier_char;
@@ -1019,9 +1004,6 @@ main (int argc, char **argv)
       argv[1] = argv[0];
       argv++;
       argc--;
-
-      /* FIXME: allow POSIX options if there were obsolescent ones?  */
-
     }
 
   while ((c = getopt_long (argc, argv, "c:n:qv", long_options, NULL)) != -1)
