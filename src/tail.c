@@ -1411,8 +1411,8 @@ parse_obsolete_option (int argc, char * const *argv, uintmax_t *n_units)
     case '-':
       /* In the non-obsolete form, "-" is standard input and "-c"
 	 requires an option-argument.  The obsolete multidigit options
-	 are diagnosed more nicely below than they would be if we
-	 simply returned false here.  */
+	 are supported as a GNU extension even when conforming to
+	 POSIX 1003.1-2001, so don't complain about them.  */
       if (!obsolete_usage && !p[p[0] == 'c'])
 	return false;
 
@@ -1443,21 +1443,10 @@ parse_obsolete_option (int argc, char * const *argv, uintmax_t *n_units)
 
   if (n_string == n_string_end)
     *n_units = default_count;
-  else
-    {
-      if ((xstrtoumax (n_string, NULL, 10, n_units, "b")
-	   & ~LONGINT_INVALID_SUFFIX_CHAR)
-	  != LONGINT_OK)
-	error (EXIT_FAILURE, 0, _("number in `%s' is too large"), argv[1]);
-
-      if (!obsolete_usage)
-	{
-	  error (0, 0, _("`%s' option is obsolete; use `%s-%c %"PRIuMAX"'"),
-		 argv[1], t_forever ? "-f " : "", t_count_lines ? 'n' : 'c',
-		 *n_units);
-	  usage (EXIT_FAILURE);
-	}
-    }
+  else if ((xstrtoumax (n_string, NULL, 10, n_units, "b")
+	    & ~LONGINT_INVALID_SUFFIX_CHAR)
+	   != LONGINT_OK)
+    error (EXIT_FAILURE, 0, _("number in `%s' is too large"), argv[1]);
 
   /* Set globals.  */
   from_start = t_from_start;
