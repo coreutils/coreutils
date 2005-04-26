@@ -35,7 +35,6 @@
 
 #include "error.h"
 #include "long-options.h"
-#include "posixver.h"
 #include "xstrtol.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -118,8 +117,7 @@ main (int argc, char **argv)
     {
       char const *s = argv[i];
 
-      if (s[0] == '-' && ISDIGIT (s[1 + (s[1] == '-' || s[1] == '+')])
-	  && posix2_version () < 200112)
+      if (s[0] == '-' && ISDIGIT (s[1 + (s[1] == '-' || s[1] == '+')]))
 	{
 	  adjustment_given = s + 1;
 	  ++i;
