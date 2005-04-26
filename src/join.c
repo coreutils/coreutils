@@ -29,7 +29,6 @@
 #include "hard-locale.h"
 #include "linebuffer.h"
 #include "memcasecmp.h"
-#include "posixver.h"
 #include "quote.h"
 #include "stdio-safer.h"
 #include "xmemcoll.h"
@@ -87,9 +86,6 @@ char *program_name;
 /* True if the LC_COLLATE locale is hard.  */
 static bool hard_LC_COLLATE;
 
-/* True if obsolete option usage should be supported.  */
-static bool obsolete_usage;
-
 /* If nonzero, print unpairable lines in file 1 or 2.  */
 static bool print_unpairables_1, print_unpairables_2;
 
@@ -99,8 +95,9 @@ static bool print_pairables;
 /* Empty output field filler.  */
 static char const *empty_filler;
 
-/* Field to join on.  */
-static size_t join_field_1, join_field_2;
+/* Field to join on; SIZE_MAX means they haven't been determined yet.  */
+static size_t join_field_1 = SIZE_MAX;
+static size_t join_field_2 = SIZE_MAX;
 
 /* List of fields to print.  */
 static struct outlist outlist_head;
@@ -108,45 +105,24 @@ static struct outlist outlist_head;
 /* Last element in `outlist', where a new element can be added.  */
 static struct outlist *outlist_end = &outlist_head;
 
-/* Tab character separating fields; if this is NUL fields are separated
-   by any nonempty string of white space, otherwise by exactly one
-   tab character.  */
-static char tab;
+/* Tab character separating fields.  If negative, fields are separated
+   by any nonempty string of blanks, otherwise by exactly one
+   tab character whose value (when cast to unsigned char) equals TAB.  */
+static int tab = -1;
 
-/* When using getopt_long_only, no long option can start with
-   a character that is a short option.  */
 static struct option const longopts[] =
 {
-  /* These three options are obsolete; see OBSOLETE_LONG_OPTIONS below.  */
-  {"j", required_argument, NULL, 'j'},
-  {"j1", required_argument, NULL, '1'},
-  {"j2", required_argument, NULL, '2'},
-
   {"ignore-case", no_argument, NULL, 'i'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
 };
 
-/* Number of options at the start of longopts that are obsolete.  */
-enum { OBSOLETE_LONG_OPTIONS = 3 };
-
 /* Used to print non-joining lines */
 static struct line uni_blank;
 
 /* If nonzero, ignore case when comparing join fields.  */
 static bool ignore_case;
-
-/* Get the next option from the argument vector.  */
-
-static int
-get_option (int argc, char **argv)
-{
-  return (obsolete_usage
-	  ? getopt_long_only (argc, argv, "-a:e:i1:2:o:t:v:", longopts, NULL)
-	  : getopt_long (argc, argv, "a:e:ij:1:2:o:t:v:",
-			 longopts + OBSOLETE_LONG_OPTIONS, NULL));
-}
 
 void
 usage (int status)
@@ -232,11 +208,10 @@ xfields (struct line *line)
   if (ptr == lim)
     return;
 
-  if (tab)
+  if (0 <= tab)
     {
-      unsigned char t = tab;
       char *sep;
-      for (; (sep = memchr (ptr, t, lim - ptr)) != NULL; ptr = sep + 1)
+      for (; (sep = memchr (ptr, tab, lim - ptr)) != NULL; ptr = sep + 1)
 	extract_field (line, ptr, sep - ptr);
     }
   else
@@ -415,7 +390,7 @@ static void
 prjoin (struct line const *line1, struct line const *line2)
 {
   const struct outlist *outlist;
-  char output_separator = tab ? tab : ' ';
+  char output_separator = tab < 0 ? ' ' : tab;
 
   outlist = outlist_head.next;
   if (outlist)
@@ -637,12 +612,12 @@ add_field (int file, size_t field)
    diagnostic and exit.  */
 
 static size_t
-string_to_join_field (char const *str, char const *err_msg_fmt)
+string_to_join_field (char const *str)
 {
   size_t result;
-  uintmax_t val;
+  unsigned long int val;
 
-  strtol_error s_err = xstrtoumax (str, NULL, 10, &val, "");
+  strtol_error s_err = xstrtoul (str, NULL, 10, &val, "");
   if (s_err == LONGINT_OVERFLOW || (s_err == LONGINT_OK && SIZE_MAX < val))
     {
       error (EXIT_FAILURE, 0,
@@ -651,7 +626,7 @@ string_to_join_field (char const *str, char const *err_msg_fmt)
     }
 
   if (s_err != LONGINT_OK || val == 0)
-    error (EXIT_FAILURE, 0, err_msg_fmt, quote (str));
+    error (EXIT_FAILURE, 0, _("invalid field number: %s"), quote (str));
 
   result = val - 1;
 
@@ -660,53 +635,42 @@ string_to_join_field (char const *str, char const *err_msg_fmt)
 
 /* Convert a single field specifier string, S, to a *FILE_INDEX, *FIELD_INDEX
    pair.  In S, the field index string is 1-based; *FIELD_INDEX is zero-based.
-   If S is valid, return true.  Otherwise, give a diagnostic, don't update
-   *FILE_INDEX or *FIELD_INDEX, and return false.  */
+   If S is valid, return true.  Otherwise, give a diagnostic and exit.  */
 
-static bool
+static void
 decode_field_spec (const char *s, int *file_index, size_t *field_index)
 {
-  bool valid = false;
-
   /* The first character must be 0, 1, or 2.  */
   switch (s[0])
     {
     case '0':
-      if (s[1] == '\0')
-	{
-	  *file_index = 0;
-	  *field_index = 0;
-	  valid = true;
-	}
-      else
+      if (s[1])
         {
 	  /* `0' must be all alone -- no `.FIELD'.  */
-	  error (0, 0, _("invalid field specifier: `%s'"), s);
+	  error (EXIT_FAILURE, 0, _("invalid field specifier: %s"), quote (s));
 	}
+      *file_index = 0;
+      *field_index = 0;
       break;
 
     case '1':
     case '2':
-      if (s[1] == '.' && s[2] != '\0')
-        {
-	  *field_index
-	    = string_to_join_field (s + 2, _("invalid field number: %s"));
-	  *file_index = s[0] - '0';
-	  valid = true;
-	}
+      if (s[1] != '.')
+	error (EXIT_FAILURE, 0, _("invalid field specifier: %s"), quote (s));
+      *file_index = s[0] - '0';
+      *field_index = string_to_join_field (s + 2);
       break;
 
     default:
-      error (0, 0, _("invalid file number in field spec: `%s'"), s);
+      error (EXIT_FAILURE, 0,
+	     _("invalid file number in field spec: %s"), quote (s));
       break;
     }
-  return valid;
 }
 
-/* Add the comma or blank separated field spec(s) in STR to `outlist'.
-   Return true if successful.  */
+/* Add the comma or blank separated field spec(s) in STR to `outlist'.  */
 
-static bool
+static void
 add_field_list (char *str)
 {
   char *p = str;
@@ -719,36 +683,108 @@ add_field_list (char *str)
 
       p = strpbrk (p, ", \t");
       if (p)
-        *p++ = 0;
-      if (! decode_field_spec (spec_item, &file_index, &field_index))
-	return false;
+        *p++ = '\0';
+      decode_field_spec (spec_item, &file_index, &field_index);
       add_field (file_index, field_index);
     }
   while (p);
-
-  return true;
 }
 
-/* Add NAME to the array of input file NAMES; currently there are
-   *NFILES names in the list.  */
+/* Set the join field *VAR to VAL, but report an error if *VAR is set
+   more than once to incompatible values.  */
 
 static void
-add_file_name (char const *name, char const *names[2], int *nfiles)
+set_join_field (size_t *var, size_t val)
 {
-  if (*nfiles == 2)
+  if (*var != SIZE_MAX && *var != val)
     {
-      error (0, 0, _("extra operand %s"), quote (name));
-      usage (EXIT_FAILURE);
+      unsigned long int var1 = *var + 1;
+      unsigned long int val1 = val + 1;
+      error (EXIT_FAILURE, 0, _("incompatible join fields %lu, %lu"),
+	     var1, val1);
     }
-  names[(*nfiles)++] = name;
+  *var = val;
+}
+
+/* Status of command-line arguments.  */
+
+enum operand_status
+  {
+    /* This argument must be an operand, i.e., one of the files to be
+       joined.  */
+    MUST_BE_OPERAND,
+
+    /* This might be the argument of the preceding -j1 or -j2 option,
+       or it might be an operand.  */
+    MIGHT_BE_J1_ARG,
+    MIGHT_BE_J2_ARG,
+
+    /* This might be the argument of the preceding -o option, or it might be
+       an operand.  */
+    MIGHT_BE_O_ARG
+  };
+
+/* Add NAME to the array of input file NAMES with operand statuses
+   OPERAND_STATUS; currently there are NFILES names in the list.  */
+
+static void
+add_file_name (char *name, char *names[2],
+	       int operand_status[2], int joption_count[2], int *nfiles,
+	       int *prev_optc_status, int *optc_status)
+{
+  int n = *nfiles;
+
+  if (n == 2)
+    {
+      bool op0 = (operand_status[0] == MUST_BE_OPERAND);
+      char *arg = names[op0];
+      switch (operand_status[op0])
+	{
+	case MUST_BE_OPERAND:
+	  error (0, 0, _("extra operand %s"), quote (name));
+	  usage (EXIT_FAILURE);
+
+	case MIGHT_BE_J1_ARG:
+	  joption_count[0]--;
+	  set_join_field (&join_field_1, string_to_join_field (arg));
+	  break;
+
+	case MIGHT_BE_J2_ARG:
+	  joption_count[1]--;
+	  set_join_field (&join_field_2, string_to_join_field (arg));
+	  break;
+
+	case MIGHT_BE_O_ARG:
+	  add_field_list (arg);
+	  break;
+	}
+      if (!op0)
+	{
+	  operand_status[0] = operand_status[1];
+	  names[0] = names[1];
+	}
+      n = 1;
+    }
+
+  operand_status[n] = *prev_optc_status;
+  names[n] = name;
+  *nfiles = n + 1;
+  if (*prev_optc_status == MIGHT_BE_O_ARG)
+    *optc_status = MIGHT_BE_O_ARG;
 }
 
 int
 main (int argc, char **argv)
 {
-  char const *names[2];
+  int optc_status;
+  int prev_optc_status = MUST_BE_OPERAND;
+  int operand_status[2];
+  int joption_count[2] = { 0, 0 };
+  char *names[2];
   FILE *fp1, *fp2;
-  int optc, prev_optc = 0, nfiles;
+  int optc;
+  int nfiles = 0;
+  int i;
 
   initialize_main (&argc, &argv);
   program_name = argv[0];
@@ -756,16 +792,16 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
   hard_LC_COLLATE = hard_locale (LC_COLLATE);
-  obsolete_usage = (posix2_version () < 200112);
 
   atexit (close_stdout);
 
-  nfiles = 0;
   print_pairables = true;
 
-  while ((optc = get_option (argc, argv)) != -1)
+  while ((optc = getopt_long (argc, argv, "-a:e:i1:2:j:o:t:v:",
+			      longopts, NULL))
+	 != -1)
     {
-      long int val;
+      optc_status = MUST_BE_OPERAND;
 
       switch (optc)
 	{
@@ -774,16 +810,23 @@ main (int argc, char **argv)
 	    /* Fall through.  */
 
 	case 'a':
-	  if (xstrtol (optarg, NULL, 10, &val, "") != LONGINT_OK
-	      || (val != 1 && val != 2))
-	    error (EXIT_FAILURE, 0, _("invalid field number: `%s'"), optarg);
-	  if (val == 1)
-	    print_unpairables_1 = true;
-	  else
-	    print_unpairables_2 = true;
+	  {
+	    unsigned long int val;
+	    if (xstrtoul (optarg, NULL, 10, &val, "") != LONGINT_OK
+		|| (val != 1 && val != 2))
+	      error (EXIT_FAILURE, 0,
+		     _("invalid field number: %s"), quote (optarg));
+	    if (val == 1)
+	      print_unpairables_1 = true;
+	    else
+	      print_unpairables_2 = true;
+	  }
 	  break;
 
 	case 'e':
+	  if (empty_filler && ! STREQ (empty_filler, optarg))
+	    error (EXIT_FAILURE, 0,
+		   _("conflicting empty-field replacement strings"));
 	  empty_filler = optarg;
 	  break;
 
@@ -792,42 +835,56 @@ main (int argc, char **argv)
 	  break;
 
 	case '1':
-	  join_field_1 =
-	    string_to_join_field (optarg,
-				  _("invalid field number for file 1: `%s'"));
+	  set_join_field (&join_field_1, string_to_join_field (optarg));
 	  break;
 
 	case '2':
-	  join_field_2 =
-	    string_to_join_field (optarg,
-				  _("invalid field number for file 2: `%s'"));
+	  set_join_field (&join_field_2, string_to_join_field (optarg));
 	  break;
 
 	case 'j':
-	  join_field_1 = join_field_2 =
-	    string_to_join_field (optarg,
-				  _("invalid field number: `%s'"));
+	  if ((optarg[0] == '1' || optarg[0] == '2') && !optarg[1]
+	      && optarg == argv[optind - 1] + 2)
+	    {
+	      /* The argument was either "-j1" or "-j2".  */
+	      bool is_j2 = (optarg[0] == '2');
+	      joption_count[is_j2]++;
+	      optc_status = MIGHT_BE_J1_ARG + is_j2;
+	    }
+	  else
+	    {
+	      set_join_field (&join_field_1, string_to_join_field (optarg));
+	      set_join_field (&join_field_2, join_field_1);
+	    }
 	  break;
 
 	case 'o':
-	  if (! add_field_list (optarg))
-	    exit (EXIT_FAILURE);
+	  add_field_list (optarg);
+	  optc_status = MIGHT_BE_O_ARG;
 	  break;
 
 	case 't':
-	  tab = *optarg;
+	  {
+	    unsigned char newtab = optarg[0];
+	    if (! newtab)
+	      error (EXIT_FAILURE, 0, _("empty tab"));
+	    if (optarg[1])
+	      {
+		if (STREQ (optarg, "\\0"))
+		  newtab = '\0';
+		else
+		  error (EXIT_FAILURE, 0, _("multi-character tab `%s'"),
+			 optarg);
+	      }
+	    if (0 <= tab && tab != newtab)
+	      error (EXIT_FAILURE, 0, _("incompatible tabs"));
+	    tab = newtab;
+	  }
 	  break;
 
 	case 1:		/* Non-option argument.  */
-	  if (prev_optc == 'o' && optind <= argc - 2)
-	    {
-	      if (! add_field_list (optarg))
-		exit (EXIT_FAILURE);
-
-	      /* Might be continuation of args to -o.  */
-	      continue;		/* Don't change `prev_optc'.  */
-	    }
-	  add_file_name (optarg, names, &nfiles);
+	  add_file_name (optarg, names, operand_status, joption_count,
+			 &nfiles, &prev_optc_status, &optc_status);
 	  break;
 
 	case_GETOPT_HELP_CHAR;
@@ -837,12 +894,15 @@ main (int argc, char **argv)
 	default:
 	  usage (EXIT_FAILURE);
 	}
-      prev_optc = optc;
+
+      prev_optc_status = optc_status;
     }
 
-  if (! obsolete_usage)
-    while (optind < argc)
-      add_file_name (argv[optind++], names, &nfiles);
+  /* Process any operands after "--".  */
+  prev_optc_status = MUST_BE_OPERAND;
+  while (optind < argc)
+    add_file_name (argv[optind++], names, operand_status, joption_count,
+		   &nfiles, &prev_optc_status, &optc_status);
 
   if (nfiles != 2)
     {
@@ -852,6 +912,20 @@ main (int argc, char **argv)
 	error (0, 0, _("missing operand after %s"), quote (argv[argc - 1]));
       usage (EXIT_FAILURE);
     }
+
+  /* If "-j1" was specified and it turns out not to have had an argument,
+     treat it as "-j 1".  Likewise for -j2.  */
+  for (i = 0; i < 2; i++)
+    if (joption_count[i] != 0)
+      {
+	set_join_field (&join_field_1, i);
+	set_join_field (&join_field_2, i);
+      }
+
+  if (join_field_1 == SIZE_MAX)
+    join_field_1 = 0;
+  if (join_field_2 == SIZE_MAX)
+    join_field_2 = 0;
 
   fp1 = STREQ (names[0], "-") ? stdin : fopen_safer (names[0], "r");
   if (!fp1)
