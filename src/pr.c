@@ -319,7 +319,6 @@
 #include "hard-locale.h"
 #include "inttostr.h"
 #include "mbswidth.h"
-#include "posixver.h"
 #include "stdio-safer.h"
 #include "strftime.h"
 #include "xstrtol.h"
@@ -740,8 +739,8 @@ enum
   PAGES_OPTION
 };
 
-#define COMMON_SHORT_OPTIONS \
-	"-0123456789D:FJN:TW:abcde::fh:i::l:mn::o:rs::tvw:"
+static char const short_options[] =
+  "-0123456789D:FJN:S::TW:abcde::fh:i::l:mn::o:rs::tvw:";
 
 static struct option const long_options[] =
 {
@@ -868,10 +867,6 @@ main (int argc, char **argv)
   char *column_count_string = NULL;
   size_t n_digits = 0;
   size_t n_alloc = 0;
-
-  char const *short_options = (posix2_version () < 200112
-			       ? COMMON_SHORT_OPTIONS "S::"
-			       : COMMON_SHORT_OPTIONS "S:");
 
   initialize_main (&argc, &argv);
   program_name = argv[0];
