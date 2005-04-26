@@ -1,6 +1,77 @@
-2005-04-22  Paul Eggert  <eggert@cs.ucla.edu>
+2005-04-26  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	Restore support for usages like "head -1" and "tail -1",
+	even when conforming to POSIX 1003.1-2001.
+	Fix bug with "POSIXLY_CORRECT=1 fold file -3".
+	join now supports a NUL field separator, e.g., "join -t '\0'".
+	join now detects and reports incompatible options, e.g.,
+	"join -t x -t y",
+	* NEWS: Document this.
+	* src/date.c: Remove posixver.h and its uses.
+	(COMMON_SHORT_OPTIONS): Remove.
+	(short_options): New constant.
+	(short_options, usage): -I now always takes an optional arg.
+	* src/expand.c: Remove posixver.h and its uses.
+	(shortopts): New constant.  -DIGIT now always takes an optional arg.
+	(main): Revamp parsing of -DIGIT to let parse_tab_stops handle it.
+	Don't complain about -DIGIT.
+	* src/fold.c: Remove posixver.h and its uses.
+	(shortopts): New constant.  -DIGIT now always takes an optional arg.
+	(main): Don't preprocess arg list; that was buggy.  Use method
+	similar to expand.
+	* src/head.c: Remove posixver.h and its uses.
+	(header_mode_option): Remove.
+	(main): Don't complain about obsolete -NUM args.
+	* src/join.c: Remove posixver.h and its uses.
+	(obsolete_usage): Remove.
+	(join_field_1, join_field_2): Initialize to SIZE_MAX to indicate
+	they haven't been set yet.
+	(tab): Now int, not char.  Initialize to -1 to indicate white space
+	separates columns, so that we can use NUL as a separator.
+	All uses changed.
+	(OBSOLETE_LONG_OPTIONS, get_option): Remove.
+	(string_to_join_field): Remove ERR_MSG_FMT arg; a single format
+	suffices.  Use xstrtoul for sizes; it suffices.
+	(decode_field_spec): Report an error and exit on failure.  Return void,
+	not bool.
+	(add_field_list): Likewise.
+	(set_join_field): New function.
+	(enum operand_status): New enum.
+	(add_file_name): New args OPERAND_STATUS, JOPTION_COUNT,
+	PREV_OPTC_STATUS, OPTC_STATUS to handle the bewildering array of
+	possibilities with obsolete option parsing.
+	(main): Use it.  Do not depend on POSIX version.
+	Check for conflicting options.  Parse obsolete options -j1 and -j2
+	so that it is a pure extension to POSIX 1003.1-2001.
+	Allow '-t\0' to specify a NUL tab, stealing the code from 'sort'.
+	* src/nice.c: Remove posixver.h and its uses.
+	(main): Always support -NUM option.
+	* src/od.c: Remove posixver.h and its uses.
+	(short_options): New constant, which always supports -w[num].
+	(COMMON_SHORT_OPTIONS): Remove.
+	* src/pr.c: Remove posixver.h and its uses.
+	(short_options): New constant, which always supports -S[string].
+	(COMMON_SHORT_OPTIONS): Remove.
+	* src/sort.c: Remove posixver.h and its uses.
+	(short_options): New constant, which always supports -y arg.
+	(COMMON_SHORT_OPTIONS): Remove.
+	(main): Redo workaround for Solaris compatibility with -y.
+	This change isn't visible to the user; it just cleans up the
+	code so that we don't need posixver.h.
+	* src/split.c: Remove posixver.h and its uses.
+	(main): Don't complain about -NUM option.
+	* src/tail.c (parse_obsolete_option): Don't complain about -NUM.
+	* src/unexpand.c: Remove posixver.h and its uses.
+	(main): Don't complain about -TAB.
+	* src/uniq.c (main): Don't complain about -NUM.
+
+2005-04-22  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/nohup.c (main): If getopt fails, exit with status 127,
+	not status 1.  POSIX requires this.
+	* NEWS: Document this.
 
 	* src/nice.c (main): Report proper program name when getopt finds
 	trouble.  Problem reported by Behdad Esfahbod.
