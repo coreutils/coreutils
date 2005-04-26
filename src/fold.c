@@ -25,7 +25,6 @@
 
 #include "system.h"
 #include "error.h"
-#include "posixver.h"
 #include "xstrtol.h"
 
 #define TAB_WIDTH 8
@@ -46,6 +45,8 @@ static bool count_bytes;
 
 /* If nonzero, at least one of the files we read was standard input. */
 static bool have_read_stdin;
+
+static char const shortopts[] = "bsw:0::1::2::3::4::5::6::7::8::9::";
 
 static struct option const longopts[] =
 {
@@ -255,33 +256,10 @@ main (int argc, char **argv)
 
   break_spaces = count_bytes = have_read_stdin = false;
 
-  /* Turn any numeric options into -w options.  */
-  for (i = 1; i < argc; i++)
+  while ((optc = getopt_long (argc, argv, shortopts, longopts, NULL)) != -1)
     {
-      char const *a = argv[i];
-      if (a[0] == '-')
-	{
-	  if (a[1] == '-' && ! a[2])
-	    break;
-	  if (ISDIGIT (a[1]))
-	    {
-	      size_t len_a = strlen (a);
-	      char *s = xmalloc (len_a + 2);
-	      s[0] = '-';
-	      s[1] = 'w';
-	      memcpy (s + 2, a + 1, len_a);
-	      argv[i] = s;
-	      if (200112 <= posix2_version ())
-		{
-		  error (0, 0, _("`%s' option is obsolete; use `%s'"), a, s);
-		  usage (EXIT_FAILURE);
-		}
-	    }
-	}
-    }
+      char optargbuf[2];
 
-  while ((optc = getopt_long (argc, argv, "bsw:", longopts, NULL)) != -1)
-    {
       switch (optc)
 	{
 	case 'b':		/* Count bytes rather than columns. */
@@ -292,6 +270,17 @@ main (int argc, char **argv)
 	  break_spaces = true;
 	  break;
 
+	case '0': case '1': case '2': case '3': case '4':
+	case '5': case '6': case '7': case '8': case '9':
+	  if (optarg)
+	    optarg--;
+	  else
+	    {
+	      optargbuf[0] = optc;
+	      optargbuf[1] = '\0';
+	      optarg = optargbuf;
+	    }
+	  /* Fall through.  */
 	case 'w':		/* Line width. */
 	  {
 	    unsigned long int tmp_ulong;
