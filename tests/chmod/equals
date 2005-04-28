@@ -1,6 +1,7 @@
 #!/bin/sh
 # Make sure chmod mode arguments of the form A=B work properly.
 # Before fileutils-4.1.2, some of them didn't.
+# Also, before coreutils-5.3.1, =[ugo] sometimes didn't work.
 
 if test "$VERBOSE" = yes; then
   set -x
@@ -37,5 +38,10 @@ for src in u g o; do
     test "$actual_perms" = "$expected_perms" || fail=1
   done
 done
+
+umask 027
+chmod a=,u=rwx,=u f || fail=1
+set _ `ls -l f`; shift; actual_perms=$1
+test "$actual_perms" = "-rwxr-x---" || fail=1
 
 (exit $fail); exit $fail
