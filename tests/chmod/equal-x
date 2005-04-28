@@ -16,18 +16,20 @@ cd $tmp || framework_failure=1
 
 file=f
 touch $file || framework_failure=1
-chmod 444 $file || framework_failure=1
 
 if test $framework_failure = 1; then
   echo 'failure in testing framework'
   (exit 1); exit 1
 fi
 
+fail=0
 umask 005
-chmod =x $file
-case "`ls -l $file`" in
-  ---x--x---*) fail=0 ;;
-  *) fail=1; ls -l $file ;;
-esac
+for mode in =x =xX =Xx =x,=X =X,=x; do
+  chmod a=r,$mode $file || fail=1
+  case "`ls -l $file`" in
+    ---x--x---*) ;;
+    *) fail=1; echo "after \`chmod $mode $file':"; ls -l $file ;;
+  esac
+done
 
 (exit $fail); exit $fail
