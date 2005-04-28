@@ -1,4 +1,4 @@
-# modechange.m4 serial 4
+# modechange.m4 serial 5
 dnl Copyright (C) 2002, 2003, 2005 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
@@ -8,6 +8,4 @@ AC_DEFUN([gl_MODECHANGE],
 [
   AC_LIBSOURCES([modechange.c, modechange.h])
   AC_LIBOBJ([modechange])
-
-  AC_REQUIRE([AC_HEADER_STAT])
 ])

@@ -1,3 +1,15 @@
+2005-04-27  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* stat-macros.m4: New file, from gnulib, except that gl_STAT_MACROS
+	also requires AC_HEADER_STAT.
+	* canonicalize.m4 (AC_FUNC_CANONICALIZE_FILE_NAME): Don't
+	mention stat-macros.h or AC_HEADER_STAT, since we'll make
+	the stat-macros module a prerequisite.
+	* file-type.m4 (gl_FILE_TYPE): Likewise.
+	* filemode.m4 (gl_FILEMODE): Likewise.
+	* makepath.m4 (gl_MAKEPATH): Likewise.
+	* modechange.m4 (gl_MODECHANGE): Likewise.
+
 2005-04-18  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* clock_time.m4 (gl_CLOCK_TIME): Use gl_ rather than fetish_ for
