@@ -86,6 +86,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  chmod, mkdir, mkfifo, and mknod formerly mishandled rarely-used symbolic
+  permissions like =xX and =u, and did not properly diagnose some invalid
+  strings like g+gr and ug,+x.  These bugs have been fixed.
+
   dd now computes statistics using a realtime clock (if available)
   rather than the time-of-day clock, to avoid glitches if the
   time-of-day is changed while dd is running.  Also, it avoids
