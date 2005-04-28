@@ -125,22 +125,24 @@ main (int argc, char **argv)
     }
 
   newmode = S_IRWXUGO;
-  if (specified_mode)
-    {
-      struct mode_change *change = mode_compile (specified_mode, MODE_MASK_ALL);
-      if (change == MODE_INVALID)
-	error (EXIT_FAILURE, 0, _("invalid mode %s"), quote (specified_mode));
-      else if (change == MODE_MEMORY_EXHAUSTED)
-	xalloc_die ();
-      newmode = mode_adjust (newmode, change);
-    }
 
   if (specified_mode || create_parents)
     {
       mode_t umask_value = umask (0);
-      if (! specified_mode)
-	umask (umask_value);
+
       parent_mode = (S_IRWXUGO & ~umask_value) | (S_IWUSR | S_IXUSR);
+
+      if (specified_mode)
+	{
+	  struct mode_change *change = mode_compile (specified_mode);
+	  if (!change)
+	    error (EXIT_FAILURE, 0, _("invalid mode %s"),
+		   quote (specified_mode));
+	  newmode = mode_adjust (S_IRWXUGO, change, umask_value);
+	  mode_free (change);
+	}
+      else
+	umask (umask_value);
     }
 
   for (; optind < argc; ++optind)

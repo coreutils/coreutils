@@ -353,12 +353,11 @@ main (int argc, char **argv)
 
   if (specified_mode)
     {
-      struct mode_change *change = mode_compile (specified_mode, 0);
-      if (change == MODE_INVALID)
+      struct mode_change *change = mode_compile (specified_mode);
+      if (!change)
 	error (EXIT_FAILURE, 0, _("invalid mode %s"), quote (specified_mode));
-      else if (change == MODE_MEMORY_EXHAUSTED)
-	xalloc_die ();
-      mode = mode_adjust (0, change);
+      mode = mode_adjust (0, change, 0);
+      mode_free (change);
     }
 
   get_ids ();

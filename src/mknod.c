@@ -88,7 +88,6 @@ int
 main (int argc, char **argv)
 {
   mode_t newmode;
-  struct mode_change *change;
   const char *specified_mode;
   int optc;
   int expected_operands;
@@ -121,13 +120,11 @@ main (int argc, char **argv)
   newmode = (S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
   if (specified_mode)
     {
-      change = mode_compile (specified_mode, MODE_MASK_ALL);
-      if (change == MODE_INVALID)
+      struct mode_change *change = mode_compile (specified_mode);
+      if (!change)
 	error (EXIT_FAILURE, 0, _("invalid mode"));
-      else if (change == MODE_MEMORY_EXHAUSTED)
-	xalloc_die ();
-      newmode = mode_adjust (newmode, change);
-      umask (0);
+      newmode = mode_adjust (newmode, change, umask (0));
+      mode_free (change);
     }
 
   /* If the number of arguments is 0 or 1,
