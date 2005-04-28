@@ -54,6 +54,8 @@ cases='
   f --       :
   f -w       : f
   f f        :
+  u+gr f     :
+  ug,+x f    :
 '
 
 all_files=`echo "$cases" | sed 's/.*://'`
