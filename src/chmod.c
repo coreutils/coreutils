@@ -60,6 +60,12 @@ enum Verbosity
 /* The name the program was run with. */
 char *program_name;
 
+/* The desired change to the mode.  */
+static struct mode_change *change;
+
+/* The initial umask value, if it might be needed.  */
+static mode_t umask_value;
+
 /* If true, change the modes of directories recursively. */
 static bool recurse;
 
@@ -68,10 +74,6 @@ static bool force_silent;
 
 /* Level of verbosity.  */
 static enum Verbosity verbosity = V_off;
-
-/* The argument to the --reference option.  Use the owner and group IDs
-   of this file.  This file must exist.  */
-static char *reference_file;
 
 /* Pointer to the device and inode numbers of `/', when --recursive.
    Otherwise NULL.  */
@@ -164,12 +166,12 @@ describe_change (const char *file, mode_t mode,
 	  (unsigned long int) (mode & CHMOD_MODE_BITS), &perms[1]);
 }
 
-/* Change the mode of FILE according to the list of operations CHANGES.
+/* Change the mode of FILE.
    Return true if successful.  This function is called
    once for every file system object that fts encounters.  */
 
 static bool
-process_file (FTS *fts, FTSENT *ent, const struct mode_change *changes)
+process_file (FTS *fts, FTSENT *ent)
 {
   char const *file_full_name = ent->fts_path;
   char const *file = ent->fts_accpath;
@@ -215,7 +217,7 @@ process_file (FTS *fts, FTSENT *ent, const struct mode_change *changes)
 
   if (do_chmod)
     {
-      new_mode = mode_adjust (file_stats->st_mode, changes);
+      new_mode = mode_adjust (file_stats->st_mode, change, umask_value);
 
       if (S_ISLNK (file_stats->st_mode))
 	symlink_changed = false;
@@ -253,12 +255,11 @@ process_file (FTS *fts, FTSENT *ent, const struct mode_change *changes)
 }
 
 /* Recursively change the modes of the specified FILES (the last entry
-   of which is NULL) according to the list of operations CHANGES.
-   BIT_FLAGS controls how fts works.
+   of which is NULL).  BIT_FLAGS controls how fts works.
    Return true if successful.  */
 
 static bool
-process_files (char **files, int bit_flags, const struct mode_change *changes)
+process_files (char **files, int bit_flags)
 {
   bool ok = true;
 
@@ -280,7 +281,7 @@ process_files (char **files, int bit_flags, const struct mode_change *changes)
 	  break;
 	}
 
-      ok &= process_file (fts, ent, changes);
+      ok &= process_file (fts, ent);
     }
 
   /* Ignore failure, since the only way it can do so is in failing to
@@ -324,8 +325,7 @@ Change the mode of each FILE to MODE.\n\
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
 \n\
-Each MODE is one or more of the letters ugoa, one of the symbols +-= and\n\
-one or more of the letters rwxXstugo.\n\
+Each MODE is of the form `[ugoa]*([-+=]([rwxXst]*|[ugo]))+'.\n\
 "), stdout);
       printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
@@ -338,12 +338,12 @@ one or more of the letters rwxXstugo.\n\
 int
 main (int argc, char **argv)
 {
-  struct mode_change *changes;
   char *mode = NULL;
   size_t mode_len = 0;
   size_t mode_alloc = 0;
   bool ok;
   bool preserve_root = false;
+  char const *reference_file = NULL;
   int c;
 
   initialize_main (&argc, &argv);
@@ -428,8 +428,10 @@ main (int argc, char **argv)
   if (reference_file)
     {
       if (mode)
-	error (EXIT_FAILURE, 0,
-	       _("cannot combine mode and --reference options"));
+	{
+	  error (0, 0, _("cannot combine mode and --reference options"));
+	  usage (EXIT_FAILURE);
+	}
     }
   else
     {
@@ -446,16 +448,23 @@ main (int argc, char **argv)
       usage (EXIT_FAILURE);
     }
 
-  changes = (reference_file ? mode_create_from_ref (reference_file)
-	     : mode_compile (mode, MODE_MASK_ALL));
-
-  if (changes == MODE_INVALID)
-    error (EXIT_FAILURE, 0, _("invalid mode: %s"), quote (mode));
-  else if (changes == MODE_MEMORY_EXHAUSTED)
-    xalloc_die ();
-  else if (changes == MODE_BAD_REFERENCE)
-    error (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
-	   quote (reference_file));
+  if (reference_file)
+    {
+      change = mode_create_from_ref (reference_file);
+      if (!change)
+	error (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
+	       quote (reference_file));
+    }
+  else
+    {
+      change = mode_compile (mode);
+      if (!change)
+	{
+	  error (0, 0, _("invalid mode: %s"), quote (mode));
+	  usage (EXIT_FAILURE);
+	}
+      umask_value = umask (0);
+    }
 
   if (recurse & preserve_root)
     {
@@ -470,7 +479,7 @@ main (int argc, char **argv)
       root_dev_ino = NULL;
     }
 
-  ok = process_files (argv + optind, FTS_COMFOLLOW, changes);
+  ok = process_files (argv + optind, FTS_COMFOLLOW);
 
   exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
