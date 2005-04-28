@@ -70,11 +70,12 @@ matter what group the user who creates them is in.
 @cindex swap space, saving text image in
 @cindex text image, saving in swap space
 @cindex restricted deletion flag
-save the program's text image on the swap device so it will load more
-quickly when run (called the @dfn{sticky bit}).  For directories on some
-systems, prevent users from removing or renaming a file in a directory
+prevent users from removing or renaming a file in a directory
 unless they own the file or the directory; this is called the
 @dfn{restricted deletion flag} for the directory.
+For regular files on some systems, save the program's text image on the
+swap device so it will load more quickly when run; this is called the
+@dfn{sticky bit}.
 @end enumerate
 
 In addition to the permissions listed above, there may be file attributes
@@ -86,7 +87,8 @@ specific to the file system.  For example:
 
 @table @asis
 @item ext2
-On GNU and Linux/GNU the file permissions (``attributes'') specific to
+On @acronym{GNU} and @acronym{GNU}/Linux the file permissions
+(``attributes'') specific to
 the ext2 file system are set using @command{chattr}.
 
 @item FFS
@@ -122,8 +124,12 @@ their previous values, and perhaps on the current @code{umask} as well
 The format of symbolic modes is:
 
 @example
-@r{[}ugoa@dots{}@r{][[}+-=@r{][}rwxXstugo@dots{}@r{]}@dots{}@r{][},@dots{}@r{]}
+@r{[}ugoa@dots{}@r{][}+-=@r{]}@var{perms}@dots{}@r{[},@dots{}@r{]}
 @end example
+
+@noindent
+where @var{perms} is either zero or more letters from the set
+@samp{rwxXst}, or a single letter from the set @samp{ugo}.
 
 The following sections describe the operators and other details of
 symbolic modes.
@@ -193,7 +199,7 @@ have for the file.
 @end table
 
 The @var{permissions} part tells what kind of access to the file should
-be changed; it is zero or more of the following letters.  As with the
+be changed; it is normally zero or more of the following letters.  As with the
 @var{users} part, the order does not matter when more than one letter is
 given.  Omitting the @var{permissions} part is useful only with the
 @samp{=} operation, where it gives the specified @var{users} no access
@@ -242,7 +248,7 @@ go=
 Another way to specify the same thing is:
 
 @example
-og-rxw
+og-rwx
 @end example
 
 @node Copying Permissions
@@ -251,12 +257,15 @@ og-rxw
 @cindex copying existing permissions
 @cindex permissions, copying existing
 You can base a file's permissions on its existing permissions.  To do
-this, instead of using @samp{r}, @samp{w}, or @samp{x} after the
+this, instead of using a series of @samp{r}, @samp{w}, or @samp{x}
+letters after the
 operator, you use the letter @samp{u}, @samp{g}, or @samp{o}.  For
 example, the mode
+
 @example
 o+g
 @end example
+
 @noindent
 adds the permissions for users who are in a file's group to the
 permissions that other users have for the file.  Thus, if the file
@@ -282,35 +291,34 @@ To change a file's permission to set the group ID on execution, use
 @samp{g} in the @var{users} part of the symbolic mode and
 @samp{s} in the @var{permissions} part.
 
-To change a file's permission to stay permanently on the swap device,
-use @samp{o} in the @var{users} part of the symbolic mode and
+To change a file's permission to set the restricted deletion flag or sticky bit,
+omit the @var{users} part of the symbolic mode (or use @samp{a}) and put
 @samp{t} in the @var{permissions} part.
 
-For example, to add set user ID permission to a program,
+For example, to add set-user-ID permission to a program,
 you can use the mode:
 
 @example
 u+s
 @end example
 
-To remove both set user ID and set group ID permission from
+To remove both set-user-ID and set-group-ID permission from
 it, you can use the mode:
 
 @example
 ug-s
 @end example
 
-To cause a program to be saved on the swap device, you can use
+To set the restricted deletion flag or sticky bit, you can use
 the mode:
 
 @example
-o+t
++t
 @end example
 
-Remember that the special permissions only affect files that are
-executable, plus, on some systems, directories (on which they have
-different meanings; @pxref{Mode Structure}).
-Also, the combinations @samp{u+t}, @samp{g+t}, and @samp{o+s} have no effect.
+The combination @samp{o+s} has no effect.  On @acronym{GNU} systems
+the combinations @samp{u+t} and @samp{g+t} have no effect, and
+@samp{o+t} acts like plain @samp{+t}.
 
 The @samp{=} operator is not very useful with special permissions; for
 example, the mode:
@@ -320,7 +328,7 @@ o=t
 @end example
 
 @noindent
-does cause the file to be saved on the swap device, but it also
+does set the restricted deletion flag or sticky bit, but it also
 removes all read, write, and execute permissions that users not in the
 file's group might have had for it.
 
@@ -330,9 +338,7 @@ file's group might have had for it.
 @cindex conditional executability
 There is one more special type of symbolic permission: if you use
 @samp{X} instead of @samp{x}, execute permission is affected only if the
-file already had execute permission or is a directory.  It affects
-directories' execute permission even if they did not initially have any
-execute permissions set.
+file is a directory or already had execute permission.
 
 For example, this mode:
 
@@ -341,8 +347,8 @@ a+X
 @end example
 
 @noindent
-gives all users permission to execute files (or search directories) if
-anyone could before.
+gives all users permission to search directories, or to execute files if
+anyone could execute them before.
 
 @node Multiple Changes
 @subsection Making Multiple Changes
@@ -453,9 +459,9 @@ the file to all users.
 @cindex numeric modes
 @cindex file permissions, numeric
 @cindex octal numbers for file modes
-File permissions are stored internally as integers.  As an
+As an
 alternative to giving a symbolic mode, you can give an octal (base 8)
-number that corresponds to the internal representation of the new mode.
+number that represents the new mode.
 This number is always interpreted in octal; you do not have to add a
 leading 0, as you do in C.  Mode 0055 is the same as mode 55.
 
@@ -463,11 +469,11 @@ A numeric mode is usually shorter than the corresponding symbolic
 mode, but it is limited in that it cannot take into account a file's
 previous permissions; it can only set them absolutely.
 
-On most systems, the permissions granted to the user,
+The permissions granted to the user,
 to other users in the file's group,
-and to other users not in the file's group are each stored as three
+and to other users not in the file's group each require three
 bits, which are represented as one octal digit.  The three special
-permissions are also each stored as one bit, and they are as a group
+permissions also require one bit each, and they are as a group
 represented as another octal digit.  Here is how the bits are arranged,
 starting with the lowest valued bit:
 
@@ -491,7 +497,7 @@ Mode      Permission
  400      Read
 
           Special permissions:
-1000      Save text image on swap device
+1000      Restricted deletion flag or sticky bit
 2000      Set group ID on execution
 4000      Set user ID on execution
 @end example
@@ -499,4 +505,4 @@ Mode      Permission
 For example, numeric mode 4755 corresponds to symbolic mode
 @samp{u=rwxs,go=rx}, and numeric mode 664 corresponds to symbolic mode
 @samp{ug=rw,o=r}.  Numeric mode 0 corresponds to symbolic mode
-@samp{ugo=}.
+@samp{a=}.
