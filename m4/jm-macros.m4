@@ -1,4 +1,4 @@
-#serial 84   -*- autoconf -*-
+#serial 85   -*- autoconf -*-
 
 dnl Misc type-related macros for coreutils.
 
@@ -259,7 +259,6 @@ AC_DEFUN([gl_CHECK_ALL_TYPES],
   ])
   AC_REQUIRE([AC_STRUCT_ST_BLOCKS])
 
-  AC_REQUIRE([AC_HEADER_STAT])
   AC_REQUIRE([AC_STRUCT_ST_MTIM_NSEC])
   AC_REQUIRE([AC_STRUCT_ST_DM_MODE])
 
