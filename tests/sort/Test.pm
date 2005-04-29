@@ -3,7 +3,7 @@ package Test;
 require 5.002;
 use strict;
 
-# Tell sort to accept old-style options like `-1'.
+# Tell sort to accept old-style options like `+1'.
 $Test::env_default = ['_POSIX2_VERSION=199209'];
 
 my @tv = (
