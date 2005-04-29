@@ -1,5 +1,5 @@
-# euidaccess.m4 serial 5
-dnl Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+# euidaccess.m4 serial 6
+dnl Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
@@ -32,7 +32,6 @@ AC_DEFUN([gl_PREREQ_EUIDACCESS], [
   AC_CHECK_HEADERS_ONCE(libgen.h)
   AC_CHECK_DECLS_ONCE(setregid)
   AC_REQUIRE([AC_FUNC_GETGROUPS])
-  AC_REQUIRE([AC_HEADER_STAT])
 
   # Solaris 9 needs -lgen to get the eaccess function.
   # Save and restore LIBS so -lgen isn't added to it.  Otherwise, *all*
