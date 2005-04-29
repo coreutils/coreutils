@@ -3,9 +3,6 @@ package Test;
 require 5.002;
 use strict;
 
-# Tell pr to accept old-style options like operand-less `-S'.
-$Test::env_default = ['_POSIX2_VERSION=199209'];
-
 my @tv = (
 
 # -b option is no longer an official option. But it's still working to

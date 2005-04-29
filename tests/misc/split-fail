@@ -31,10 +31,10 @@ split -C 0 in 2> /dev/null && fail=1
 split -l 0 in 2> /dev/null && fail=1
 
 # Make sure that the obsolete -N notation still works
-_POSIX2_VERSION=199209 split -1 in 2> /dev/null || fail=1
+split -1 in 2> /dev/null || fail=1
 
 # Then make sure that -0 evokes a failure.
-_POSIX2_VERSION=199209 split -0 in 2> /dev/null && fail=1
+split -0 in 2> /dev/null && fail=1
 
 # Ensure that split --lines=N and --bytes=N work for N=2^32,
 # assuming our host supports integers that wide.
@@ -51,7 +51,7 @@ fi
 #split --line-bytes=$_4gb 2> /dev/null in && fail=1
 
 # Make sure that a huge obsolete option evokes the right failure.
-env -u _POSIX2_VERSION split -99999999999999999991 2> out && fail=1
+split -99999999999999999991 2> out && fail=1
 
 # On losing systems (x86 Solaris 5.9 c89), we get a message like this:
 #   split: line count option -9999999999... is too large
