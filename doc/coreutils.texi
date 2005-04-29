@@ -5880,12 +5880,21 @@ Piping a colorized listing through a pager like @command{more} or
 Append a character to each file name indicating the file type.  Also,
 for regular files that are executable, append @samp{*}.  The file type
 indicators are @samp{/} for directories, @samp{@@} for symbolic links,
-@samp{|} for FIFOs, @samp{=} for sockets, and nothing for regular files.
+@samp{|} for FIFOs, @samp{=} for sockets, @samp{>} for doors,
+and nothing for regular files.
 @c The following sentence is the same as the one for -d.
 Do not follow symbolic links listed on the
 command line unless the @option{--dereference-command-line} (@option{-H}),
 @option{--dereference} (@option{-L}), or
 @option{--dereference-command-line-symlink-to-dir} options are specified.
+
+@item --file-type
+@itemx --indicator-style=file-type
+@opindex --file-type
+@opindex --indicator-style
+@cindex file type, marking
+Append a character to each file name indicating the file type.  This is
+like @option{-F}, except that executables are not marked.
 
 @item --indicator-style=@var{word}
 @opindex --indicator-style
@@ -5894,10 +5903,13 @@ as follows:
 @table @samp
 @item none
 Do not append any character indicator; this is the default.
+@item directory
+Append @samp{/} for directories.  This is the same as the @option{-p}
+option.
 @item file-type
 Append @samp{/} for directories, @samp{@@} for symbolic links, @samp{|}
 for FIFOs, @samp{=} for sockets, and nothing for regular files.  This is
-the same as the @option{-p} or @option{--file-type} option.
+the same as the @option{--file-type} option.
 @item classify
 Append @samp{*} for executable regular files, otherwise behave as for
 @samp{file-type}.  This is the same as the @option{-F} or
@@ -5919,13 +5931,11 @@ List files horizontally, with as many as will fit on each line,
 separated by @samp{, } (a comma and a space).
 
 @item -p
-@itemx --file-type
-@itemx --indicator-style=file-type
-@opindex --file-type
+@itemx --indicator-style=directory
+@opindex -p
 @opindex --indicator-style
 @cindex file type, marking
-Append a character to each file name indicating the file type.  This is
-like @option{-F}, except that executables are not marked.
+Append a @samp{/} to directory names.
 
 @item -x
 @itemx --format=across
