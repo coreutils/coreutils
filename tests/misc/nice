@@ -29,15 +29,12 @@ tests='
 19 --1:-12 12
 NA LAST NA
 '
-set - $tests
+set $tests
 
 if test "$VERBOSE" = yes; then
   nice --version
   set -x
 fi
-
-_POSIX2_VERSION=199209
-export _POSIX2_VERSION
 
 # Require that this test be run at `nice' level 0.
 niceness=`nice`
