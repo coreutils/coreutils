@@ -62,6 +62,12 @@ GNU coreutils NEWS                                    -*- outline -*-
     When POSIXLY_CORRECT is set, "fold file -3" is now equivalent to
     "fold file ./-3", not the obviously-erroneous "fold file ./-w3".
 
+  ls changes:
+
+    -p now appends '/' only to directories; it is equivalent to the
+    new option --indicator-style=directory.  Use --file-type or
+    --indicator-style=file-type to get -p's old behavior.
+
   nohup changes:
 
     nohup now ignores the umask when creating nohup.out.
