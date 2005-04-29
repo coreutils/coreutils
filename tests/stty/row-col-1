@@ -36,7 +36,7 @@ tests='
 9 rows_30 30_80
 NA LAST NA
 '
-set - $tests
+set $tests
 
 saved_size=.saved-size
 
