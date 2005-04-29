@@ -1,5 +1,5 @@
 #!/bin/sh
-# contrast ls -F and ls --indicator-style=file-type
+# contrast ls -F, ls -p, and ls --indicator-style=file-type
 
 if test "$VERBOSE" = yes; then
   set -x
@@ -40,7 +40,7 @@ fi
 
 fail=0
 
-ls -1F sub > out || fail=1
+ls -F sub > out || fail=1
 cat <<EOF > exp
 $block${char}dir/
 executable*
@@ -52,7 +52,10 @@ slink-reg@
 EOF
 
 sed 's/\*//' exp > exp2
-ls -1 --indicator-style=file-type sub > out2 || fail=1
+ls --indicator-style=file-type sub > out2 || fail=1
+
+sed 's/[@|]$//' exp2 > exp3
+ls -p sub > out3 || fail=1
 
 cmp out exp || fail=1
 test $fail = 1 && diff out exp 2> /dev/null
@@ -60,15 +63,11 @@ test $fail = 1 && diff out exp 2> /dev/null
 cmp out2 exp2 || fail=1
 test $fail = 1 && diff out2 exp2 2> /dev/null
 
-ls --color -1F sub > out3 || fail=1
-cat <<EOF > exp3
-$block${char}dir/
-executable*
-fifo|
-regular
-slink-dangle@
-slink-dir@
-slink-reg@
-EOF
+cmp out3 exp3 || fail=1
+test $fail = 1 && diff out3 exp3 2> /dev/null
+
+ls --color=auto -F sub > out || fail=1
+cmp out exp || fail=1
+test $fail = 1 && diff out exp 2> /dev/null
 
 (exit $fail); exit $fail
