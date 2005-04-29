@@ -44,12 +44,14 @@ tests='
     027  :   -m =+x   : drwxr-x--- : d--x--x--- :
     -    :   -        : last       : last       :
     '
+colon_tests=`echo $tests | sed 's/^ *//; s/ *: */:/g'`
+
 for p in empty -p; do
   test _$p = _empty && p=
 
   old_IFS=$IFS
   IFS=':'
-  set - `(echo "$tests"|tr -d '\n'; echo)|sed 's/^ *//;s/ *:/:/g;s/: */:/g'`
+  set $colon_tests
   IFS=$old_IFS
 
   while :; do
@@ -71,11 +73,11 @@ for p in empty -p; do
 
     mkdir $p $mode parent/sub || fail=1
 
-    perms=`ls -ld parent | sed 's/ .*//'`
+    perms=`ls -ld parent | sed 's/ .*//; s/+$//'`
     test "$parent_perms" = "$perms" \
       || { fail=1; echo parent: expected $parent_perms, got $perms; }
 
-    perms=`ls -ld parent/sub | sed 's/ .*//'`
+    perms=`ls -ld parent/sub | sed 's/ .*//; s/+$//'`
     test "$sub_perms" = "$perms" \
       || { fail=1; echo parent/sub: expected $sub_perms, got $perms; }
 
