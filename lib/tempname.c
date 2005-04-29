@@ -1,7 +1,7 @@
 /* tempname.c - generate the name of a temporary file.
 
    Copyright (C) 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
-   2000, 2001, 2002, 2003 Free Software Foundation, Inc.
+   2000, 2001, 2002, 2003, 2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -67,34 +67,11 @@
 #endif
 
 #include <sys/stat.h>
-#if STAT_MACROS_BROKEN
-# undef S_ISDIR
-#endif
-#if !defined S_ISDIR && defined S_IFDIR
-# define S_ISDIR(mode) (((mode) & S_IFMT) == S_IFDIR)
-#endif
-#if !S_IRUSR && S_IREAD
-# define S_IRUSR S_IREAD
-#endif
-#if !S_IRUSR
-# define S_IRUSR 00400
-#endif
-#if !S_IWUSR && S_IWRITE
-# define S_IWUSR S_IWRITE
-#endif
-#if !S_IWUSR
-# define S_IWUSR 00200
-#endif
-#if !S_IXUSR && S_IEXEC
-# define S_IXUSR S_IEXEC
-#endif
-#if !S_IXUSR
-# define S_IXUSR 00100
-#endif
 
 #if _LIBC
 # define struct_stat64 struct stat64
 #else
+# include "stat-macros.h"
 # define struct_stat64 struct stat
 # define __getpid getpid
 # define __gettimeofday gettimeofday
