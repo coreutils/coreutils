@@ -64,8 +64,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   ls changes:
 
-    -p now appends '/' only to directories; it is equivalent to the
-    new option --indicator-style=directory.  Use --file-type or
+    -p now marks only directories; it is equivalent to the new option
+    --indicator-style=directory.  Use --file-type or
     --indicator-style=file-type to get -p's old behavior.
 
   nohup changes:
