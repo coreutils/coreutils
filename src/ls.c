@@ -463,16 +463,18 @@ static uintmax_t file_output_block_size = 1;
 static bool dired;
 
 /* `none' means don't mention the type of files.
+   `directory' means mention directories.
+   `file_type' means mention file types.
    `classify' means mention file types and mark executables.
-   `file_type' means mention only file types.
 
    Controlled by -F, -p, and --indicator-style.  */
 
 enum indicator_style
   {
-    none,	/*     --indicator-style=none */
-    classify,	/* -F, --indicator-style=classify */
-    file_type	/* -p, --indicator-style=file-type */
+    none,		/*     --indicator-style=none */
+    directory_only,	/* -p, --indicator-style=directory */
+    file_type,		/*     --indicator-style=file-type */
+    classify		/* -F, --indicator-style=classify */
   };
 
 static enum indicator_style indicator_style;
@@ -480,12 +482,12 @@ static enum indicator_style indicator_style;
 /* Names of indicator styles.  */
 static char const *const indicator_style_args[] =
 {
-  "none", "classify", "file-type", NULL
+  "none", "directory", "file-type", "classify", NULL
 };
 
-static enum indicator_style const indicator_style_types[]=
+static enum indicator_style const indicator_style_types[] =
 {
-  none, classify, file_type
+  none, directory_only, file_type, classify
 };
 
 /* True means use colors to mark types.  Also define the different
@@ -1545,7 +1547,7 @@ decode_switches (int argc, char **argv)
 	  break;
 
 	case 'p':
-	  indicator_style = file_type;
+	  indicator_style = directory_only;
 	  break;
 
 	case 'q':
@@ -1775,10 +1777,10 @@ decode_switches (int argc, char **argv)
   filename_quoting_options = clone_quoting_options (NULL);
   if (get_quoting_style (filename_quoting_options) == escape_quoting_style)
     set_char_quoting (filename_quoting_options, ' ', 1);
-  if (indicator_style != none)
+  if (file_type <= indicator_style)
     {
       char const *p;
-      for (p = "*=@|" + indicator_style - 1;  *p;  p++)
+      for (p = "*=>@|" + indicator_style - file_type; *p; p++)
 	set_char_quoting (filename_quoting_options, *p, 1);
     }
 
@@ -2580,7 +2582,7 @@ gobble_file (char const *name, enum filetype type, bool command_line_arg,
 	  /* Avoid following symbolic links when possible, ie, when
 	     they won't be traced and when no indicator is needed.  */
 	  if (linkpath
-	      && (indicator_style != none || check_symlink_color)
+	      && (file_type <= indicator_style || check_symlink_color)
 	      && stat (linkpath, &linkstats) == 0)
 	    {
 	      f->linkok = true;
@@ -3631,7 +3633,7 @@ print_type_indicator (mode_t mode)
   if (S_ISREG (mode))
     {
       if (indicator_style == classify && (mode & S_IXUGO))
-	c ='*';
+	c = '*';
       else
 	c = 0;
     }
@@ -3639,6 +3641,8 @@ print_type_indicator (mode_t mode)
     {
       if (S_ISDIR (mode))
 	c = '/';
+      else if (indicator_style == directory_only)
+	c = 0;
       else if (S_ISLNK (mode))
 	c = '@';
       else if (S_ISFIFO (mode))
@@ -3750,21 +3754,16 @@ length_of_file_name_and_frills (const struct fileinfo *f)
 
   if (indicator_style != none)
     {
-      mode_t filetype = f->stat.st_mode;
+      mode_t mode = f->stat.st_mode;
 
-      if (S_ISREG (filetype))
-	{
-	  if (indicator_style == classify
-	      && (f->stat.st_mode & S_IXUGO))
-	    len += 1;
-	}
-      else if (S_ISDIR (filetype)
-	       || S_ISLNK (filetype)
-	       || S_ISFIFO (filetype)
-	       || S_ISSOCK (filetype)
-	       || S_ISDOOR (filetype)
-	       )
-	len += 1;
+      len += (S_ISREG (mode)
+	      ? (indicator_style == classify && (mode & S_IXUGO))
+	      : (S_ISDIR (mode)
+		 || (indicator_style != directory_only
+		     && (S_ISLNK (mode)
+			 || S_ISFIFO (mode)
+			 || S_ISSOCK (mode)
+			 || S_ISDOOR (mode)))));
     }
 
   return len;
@@ -4084,7 +4083,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
   -f                         do not sort, enable -aU, disable -lst\n\
-  -F, --classify             append indicator (one of */=@|) to entries\n\
+  -F, --classify             append indicator (one of */=>@|) to entries\n\
+      --file-type            likewise, except do not append `*'\n\
       --format=WORD          across -x, commas -m, horizontal -x, long -l,\n\
                                single-column -1, verbose -l, vertical -C\n\
       --full-time            like -l --time-style=full-iso\n\
@@ -4105,7 +4105,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
       --indicator-style=WORD append indicator with style WORD to entry names:\n\
-                               none (default), classify (-F), file-type (-p)\n\
+                               none (default), directory (-p),\n\
+                               file-type (--file-type), classify (-F)\n\
   -i, --inode                with -l, print the index number of each file\n\
   -I, --ignore=PATTERN       do not list implied entries matching shell PATTERN\n\
   -k                         like --block-size=1K\n\
@@ -4122,7 +4123,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -N, --literal              print raw entry names (don't treat e.g. control\n\
                                characters specially)\n\
   -o                         like -l, but do not list group information\n\
-  -p, --file-type            append indicator (one of /=@|) to entries\n\
+  -p, --indicator-style=directory\n\
+                             append / indicator to directories\n\
 "), stdout);
       fputs (_("\
   -q, --hide-control-chars   print ? instead of non graphic characters\n\
