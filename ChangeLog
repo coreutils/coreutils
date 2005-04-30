@@ -1,6 +1,60 @@
-2005-04-26  Paul Eggert  <eggert@cs.ucla.edu>
+2005-04-29  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	* NEWS: ls -p now marks only directories.  New option
+	--indicator-style=directory equivalent to -p.
+	* doc/coreutils.texi (ls invocation): Document this.
+	Also, mention ">" is for doors.
+	* src/ls.c (enum indicator_style): New constant directory_only,
+	for -p.
+	(indicator_style_args, indicator_style_types): Set it appropriately.
+	(decode_switches, gobble_file, print_type_indicator):
+	(length_of_file_name_and_frills):
+	Implement the change described in NEWS.
+	(decode_switches): Quote ">", too.
+	(usage): Update to match the new behavior.  Describe ">".
+	* tests/ls/file-type: Test for new behavior.  Omit -1 option.
+	The "ls --color" test wasn't being checked; add a check for
+	"ls --color=auto" instead.
+
+	* tests/head/Test.pm: Don't set _POSIX2_VERSION; no longer needed.
+	* tests/misc/split-fail: Likewise.
+	* tests/pr/Test.pm: Likewise.
+	* tests/sort/Test.pm: Fix comment to match new behavior of "sort".
+	* tests/tail/Test.pm (tv): Rename tests from obs to obs-plus
+	if they use file names starting with +.
+	(test_vector): Don't set _POSIX2_VERSION if obs but not obs-plus.
+	* tests/uniq/Test.pm (tv, test_vector): Likewise.
+
+	The following was partly derived from a tiny change by Eric Blake:
+	* tests/misc/nice: Don't use 'set -'.  It's not portable to strict
+	POSIX 1003.1-2001 hosts.  Also, don't set _POSIX2_VERSION.
+	* tests/mkdir/perm: Don't use 'set -'.  Simplify test construction.
+	Work even if the underyling system attaches ACLs to new dirs.
+	* tests/mv/part-hardlink: Don't use 'set -'.
+	* tests/stty/row-col-1: Don't use 'set -'.
+
+2005-04-28  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* NEWS: Document fixes described below.
+	* src/chmod.c (change, umask_value): New static vars.
+	(reference_file): Move this static var to inside "main".
+	(process_file, process_files): Remove CHANGES arg; now taken from
+	static var.  All uses changed.
+	(usage): Fix incorrect description of MODE operand.
+	(main): For invalid mode usages, output a brief usage message.
+	Adjust to new modechange API.
+	* install.c (main): Adjust to new modechange API.
+	Also, free the mode_change object when done.
+	* mkdir.c (main): Likewise.
+	* mkfifo.c (main): Likewise.
+	* mknod.c (main): Likewise.
+	* tests/chmod/equal-X: Check for =xX bug.
+	* tests/chmod/equals: Check for =u bug.
+	* tests/chmod/usage: Check for u+gr and ug,+x bugs.
+
+2005-04-26  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Restore support for usages like "head -1" and "tail -1",
 	even when conforming to POSIX 1003.1-2001.
