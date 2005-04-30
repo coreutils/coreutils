@@ -1,3 +1,42 @@
+2005-04-28  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* tempname.c (S_ISDIR, S_IRUSR, S_IRUSR, S_IWUSR, S_IXUSR): Remove.
+	[!_LIBC] Include "stat-macros.h" instead.
+
+	* file-type.c: Include file-type.h first.
+	* filetype.h: Don't assume <sys/stat.h> was included first.
+
+	* modechange.c: Include stat-macros.h, xalloc.h.
+	(S_ISDIR, S_ISUID, S_ISGID, S_ISVTX, S_IRUSR, S_IWUSR, S_IXUSR):
+	(S_IRGRP, S_IWGRP, S_IXGRP, S_IROTH, S_IWOTH, S_IXOTH, S_IRXWU):
+	(S_IRWXG, S_IRWXO, CHMOD_MODE_BITS):
+	Remove.  This is now stat-macros.h's job.
+	(talloc): Remove.  All callers replaced by xalloc, so that
+	our invokers don't have to worry about reporting memory failures.
+	(make_node_op_equals): Remove.
+	(MODE_ORDINARY_CHAGE, MODE_X_IF_ANY_X, MODE_COPY_EXISTING):
+	New constants.
+	(struct mode_change): Moved here from modechange.h.
+	(mode_append_entry): Remove.
+	(mode_compile): Remove MASKED_OPS arg, since it encouraged
+	apps to have incorrect behavior.  Use simpler algorithm for head
+	and tail.  Don't futz with umask; that's now the job of mode_adjust.
+	Detect more invalid usages rather than having somewhat-random behavior.
+	Don't insert an "a=" action, as that leads to incorrect behavior.
+	(mode_compile, mode_create_from_ref): Return NULL on error instead
+	of an enum, since now there's only one way to have an error.  All
+	callers changed.
+	(mode_adjust): Accept new arg UMASK_VALUE, and interpret it
+	at the correct time.  Simplify calculation of "+u" and its ilk.
+	Don't mishandle "+X".
+	(mode_free): Remove "register" and localize decls.
+	* modechange.h (MODE_X_IF_ANY_X, MODE_COPY_EXISTING):
+	(struct mode_change): Move to modechange.c; callers don't
+	need to see this stuff.
+	(MODE_MASK_EQUALS, MODE_MASK_PLUS, MODE_MASK_MINUS, MODE_MASK_ALL):
+	(MODE_INVALID, MODE_MEMORY_EXHAUSTED, MODE_BAD_REFERENCE): Remove.
+	(mode_change, mode_adjust): Reflect the new signatures noted above.
+
 2005-04-18  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Makefile.am (noinst_LIBRARIES): fetish -> coreutils.

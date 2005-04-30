@@ -1,3 +1,21 @@
+2005-04-28  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* perm.texi (Mode Structure, Changing Special Permissions):
+	(Conditional Executability, Numeric Modes):
+	These days the sticky bit is more often uses as the restricted
+	deletion flag, so modernize the discussion about this.
+	(Mode Structure): Linux/GNU -> GNU/Linux.
+	(Symbolic Modes): Don't imply that "+ur" or "u" is valid.
+	(Setting Permissions): Don't imply that "+t" is invalid.
+	Use "rwx" rather than the less-common "rxw" in an example.
+	(Copying Permissions): Say that ugo is a replacement for
+	a string of the other letters.  Add spaces around examples.
+	Use "set-user-ID" rather than "set user ID" to avoid ambiguity.
+	Use "+t" rather than "o+t", since POSIX doesn't specify the latter.
+	Mention which combinations are portable and which are GNU.
+	(Numeric Modes): Don't imply they aren't portable; they are
+	nowadays.
+
 2005-04-26  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (Standards conformance): Do not mention head -10,
