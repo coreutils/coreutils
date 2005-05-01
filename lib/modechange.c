@@ -19,7 +19,7 @@
 
 /* Written by David MacKenzie <djm@ai.mit.edu> */
 
-/* The ASCII mode string is compiled into a linked list of `struct
+/* The ASCII mode string is compiled into an array of `struct
    modechange', which can then be applied to each file to be changed.
    We do this instead of re-parsing the ASCII string for each file
    because the compiled form requires less computation to use; when
@@ -34,9 +34,6 @@
 #include <sys/stat.h>
 #include "stat-macros.h"
 #include "xalloc.h"
-#include "xstrtol.h"
-#include <stdbool.h>
-#include <stddef.h>
 #include <stdlib.h>
 
 /* The traditional octal values corresponding to each mode bit.  */
@@ -57,6 +54,9 @@
 /* Special operations flags.  */
 enum
   {
+    /* For the sentinel at the end of the mode changes array.  */
+    MODE_DONE,
+
     /* The typical case.  */
     MODE_ORDINARY_CHANGE,
 
@@ -78,10 +78,24 @@ struct mode_change
   char flag;			/* Special operations flag.  */
   mode_t affected;		/* Set for u, g, o, or a.  */
   mode_t value;			/* Bits to add/remove.  */
-  struct mode_change *next;	/* Link to next change in list.  */
 };
 
-/* Return a linked list of file mode change operations created from
+/* Return a mode_change array with the specified `=ddd'-style
+   mode change operation, where NEW_MODE is `ddd'.  */
+
+static struct mode_change *
+make_node_op_equals (mode_t new_mode)
+{
+  struct mode_change *p = xmalloc (2 * sizeof *p);
+  p->op = '=';
+  p->flag = MODE_ORDINARY_CHANGE;
+  p->affected = CHMOD_MODE_BITS;
+  p->value = new_mode;
+  p[1].flag = MODE_DONE;
+  return p;
+}
+
+/* Return a pointer to an array of file mode change operations created from
    MODE_STRING, an ASCII string that contains either an octal number
    specifying an absolute mode, or symbolic mode change operations with
    the form:
@@ -93,15 +107,22 @@ struct mode_change
 struct mode_change *
 mode_compile (char const *mode_string)
 {
-  struct mode_change *head;	/* First element of the linked list.  */
-  struct mode_change **tail = &head;  /* Pointer to list end.  */
-  unsigned long octal_value;	/* The mode value, if octal.  */
+  /* The array of mode-change directives to be returned.  */
+  struct mode_change *mc;
+  size_t used = 0;
 
-  if (xstrtoul (mode_string, NULL, 8, &octal_value, "") == LONGINT_OK)
+  if ('0' <= *mode_string && *mode_string < '8')
     {
       mode_t mode;
-      if (octal_value != (octal_value & ALLM))
-	return NULL;
+      unsigned int octal_value = 0;
+
+      do
+	{
+	  octal_value = 8 * octal_value + *mode_string++ - '0';
+	  if (ALLM < octal_value)
+	    return NULL;
+	}
+      while ('0' <= *mode_string && *mode_string < '8');
 
       /* Help the compiler optimize the usual case where mode_t uses
 	 the traditional octal representation.  */
@@ -123,14 +144,17 @@ mode_compile (char const *mode_string)
 			  | (octal_value & WOTH ? S_IWOTH : 0)
 			  | (octal_value & XOTH ? S_IXOTH : 0)));
 
-      head = xmalloc (sizeof *head);
-      head->op = '=';
-      head->flag = MODE_ORDINARY_CHANGE;
-      head->affected = CHMOD_MODE_BITS;
-      head->value = mode;
-      head->next = NULL;
-      return head;
+      return make_node_op_equals (mode);
     }
+
+  /* Allocate enough space to hold the result.  */
+  {
+    size_t needed = 1;
+    char const *p;
+    for (p = mode_string; *p; p++)
+      needed += (*p == '=' || *p == '+' || *p == '-');
+    mc = xnmalloc (needed, sizeof *mc);
+  }
 
   /* One loop iteration for each `[ugoa]*([-+=]([rwxXst]*|[ugo]))+'.  */
   for (;; mode_string++)
@@ -142,6 +166,8 @@ mode_compile (char const *mode_string)
       for (;; mode_string++)
 	switch (*mode_string)
 	  {
+	  default:
+	    goto invalid;
 	  case 'u':
 	    affected |= S_ISUID | S_IRWXU;
 	    break;
@@ -156,8 +182,6 @@ mode_compile (char const *mode_string)
 	    break;
 	  case '=': case '+': case '-':
 	    goto no_more_affected;
-	  default:
-	    goto invalid;
 	  }
     no_more_affected:;
 
@@ -219,14 +243,11 @@ mode_compile (char const *mode_string)
 	    no_more_values:;
 	    }
 
-	  change = xmalloc (sizeof *change);
+	  change = &mc[used++];
 	  change->op = op;
 	  change->flag = flag;
 	  change->affected = affected;
 	  change->value = value;
-
-	  *tail = change;
-	  tail = &change->next;
 	}
       while (*mode_string == '=' || *mode_string == '+'
 	     || *mode_string == '-');
@@ -237,13 +258,12 @@ mode_compile (char const *mode_string)
 
   if (*mode_string == 0)
     {
-      *tail = NULL;
-      return head;
+      mc[used].flag = MODE_DONE;
+      return mc;
     }
 
 invalid:
-  *tail = NULL;
-  mode_free (head);
+  free (mc);
   return NULL;
 }
 
@@ -253,20 +273,11 @@ invalid:
 struct mode_change *
 mode_create_from_ref (const char *ref_file)
 {
-  struct mode_change *change;	/* the only change element */
   struct stat ref_stats;
 
   if (stat (ref_file, &ref_stats) != 0)
     return NULL;
-
-  change = xmalloc (sizeof *change);
-  change->op = '=';
-  change->flag = MODE_ORDINARY_CHANGE;
-  change->affected = CHMOD_MODE_BITS;
-  change->value = ref_stats.st_mode;
-  change->next = NULL;
-
-  return change;
+  return make_node_op_equals (ref_stats.st_mode);
 }
 
 /* Return file mode OLDMODE, adjusted as indicated by the list of change
@@ -282,7 +293,7 @@ mode_adjust (mode_t oldmode, struct mode_change const *changes,
   /* The adjusted mode.  */
   mode_t newmode = oldmode & CHMOD_MODE_BITS;
 
-  for (; changes; changes = changes->next)
+  for (; changes->flag != MODE_DONE; changes++)
     {
       mode_t affected = changes->affected;
       mode_t value = changes->value;
@@ -336,18 +347,4 @@ mode_adjust (mode_t oldmode, struct mode_change const *changes,
     }
 
   return newmode;
-}
-
-/* Free the memory used by the list of file mode change operations
-   CHANGES.  */
-
-void
-mode_free (struct mode_change *changes)
-{
-  while (changes)
-    {
-      struct mode_change *next = changes->next;
-      free (changes);
-      changes = next;
-    }
 }
