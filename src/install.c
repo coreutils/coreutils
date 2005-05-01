@@ -357,7 +357,7 @@ main (int argc, char **argv)
       if (!change)
 	error (EXIT_FAILURE, 0, _("invalid mode %s"), quote (specified_mode));
       mode = mode_adjust (0, change, 0);
-      mode_free (change);
+      free (change);
     }
 
   get_ids ();

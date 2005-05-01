@@ -139,7 +139,7 @@ main (int argc, char **argv)
 	    error (EXIT_FAILURE, 0, _("invalid mode %s"),
 		   quote (specified_mode));
 	  newmode = mode_adjust (S_IRWXUGO, change, umask_value);
-	  mode_free (change);
+	  free (change);
 	}
       else
 	umask (umask_value);

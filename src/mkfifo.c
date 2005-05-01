@@ -119,7 +119,7 @@ main (int argc, char **argv)
       if (!change)
 	error (EXIT_FAILURE, 0, _("invalid mode"));
       newmode = mode_adjust (newmode, change, umask (0));
-      mode_free (change);
+      free (change);
     }
 
   for (; optind < argc; ++optind)
