@@ -1,3 +1,18 @@
+2005-05-01  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* modechange.h (mode_free): Remove; all callers changed to invoke
+	'free'.
+	* modechange.c: Likewise.
+	xstrtol.h, stdbool.h, stddef.h: Don't include; no longer needed.
+	(MODE_DONE): New constant.
+	(struct mode_change): Remove 'next' member.
+	(make_node_op_equals): New function; like the old one of the
+	same name, except it allocates an array.
+	(mode_compile, mode_create_from_ref): Use it.
+	(mode_compile): Allocate result as an array, not a linked list.
+	Parse octal string ourself, so that we catch mistakes like "+0".
+	(mode_adjust): Arg is an array, not a linked list.
+
 2005-04-28  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* tempname.c (S_ISDIR, S_IRUSR, S_IRUSR, S_IWUSR, S_IXUSR): Remove.
