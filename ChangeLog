@@ -1,6 +1,10 @@
-2005-04-29  Paul Eggert  <eggert@cs.ucla.edu>
+2005-05-01  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	* NEWS: "chmod +1 foo" is now diagnosed.
+
+2005-04-29  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: ls -p now marks only directories.  New option
 	--indicator-style=directory equivalent to -p.
