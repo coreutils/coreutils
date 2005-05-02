@@ -1,6 +1,13 @@
-2005-05-01  Paul Eggert  <eggert@cs.ucla.edu>
+2005-05-02  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	* NEWS: ls --indicator-style=directory renamed to ls
+	--indicator-style=slash, to avoid confusion with ls --directory.
+	* src/ls.c (usage): Likewise.
+	(slash): Renamed from directory_only.  All uses changed.
+
+2005-05-01  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: "chmod +1 foo" is now diagnosed.
 
