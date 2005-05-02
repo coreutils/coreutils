@@ -463,7 +463,7 @@ static uintmax_t file_output_block_size = 1;
 static bool dired;
 
 /* `none' means don't mention the type of files.
-   `directory' means mention directories.
+   `slash' means mention directories only, with a '/'.
    `file_type' means mention file types.
    `classify' means mention file types and mark executables.
 
@@ -471,10 +471,10 @@ static bool dired;
 
 enum indicator_style
   {
-    none,		/*     --indicator-style=none */
-    directory_only,	/* -p, --indicator-style=directory */
-    file_type,		/*     --indicator-style=file-type */
-    classify		/* -F, --indicator-style=classify */
+    none,	/*     --indicator-style=none */
+    slash,	/* -p, --indicator-style=slash */
+    file_type,	/*     --indicator-style=file-type */
+    classify	/* -F, --indicator-style=classify */
   };
 
 static enum indicator_style indicator_style;
@@ -482,12 +482,12 @@ static enum indicator_style indicator_style;
 /* Names of indicator styles.  */
 static char const *const indicator_style_args[] =
 {
-  "none", "directory", "file-type", "classify", NULL
+  "none", "slash", "file-type", "classify", NULL
 };
 
 static enum indicator_style const indicator_style_types[] =
 {
-  none, directory_only, file_type, classify
+  none, slash, file_type, classify
 };
 
 /* True means use colors to mark types.  Also define the different
@@ -1547,7 +1547,7 @@ decode_switches (int argc, char **argv)
 	  break;
 
 	case 'p':
-	  indicator_style = directory_only;
+	  indicator_style = slash;
 	  break;
 
 	case 'q':
@@ -3641,7 +3641,7 @@ print_type_indicator (mode_t mode)
     {
       if (S_ISDIR (mode))
 	c = '/';
-      else if (indicator_style == directory_only)
+      else if (indicator_style == slash)
 	c = 0;
       else if (S_ISLNK (mode))
 	c = '@';
@@ -3759,7 +3759,7 @@ length_of_file_name_and_frills (const struct fileinfo *f)
       len += (S_ISREG (mode)
 	      ? (indicator_style == classify && (mode & S_IXUGO))
 	      : (S_ISDIR (mode)
-		 || (indicator_style != directory_only
+		 || (indicator_style != slash
 		     && (S_ISLNK (mode)
 			 || S_ISFIFO (mode)
 			 || S_ISSOCK (mode)
@@ -4105,7 +4105,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
       --indicator-style=WORD append indicator with style WORD to entry names:\n\
-                               none (default), directory (-p),\n\
+                               none (default), slash (-p),\n\
                                file-type (--file-type), classify (-F)\n\
   -i, --inode                with -l, print the index number of each file\n\
   -I, --ignore=PATTERN       do not list implied entries matching shell PATTERN\n\
@@ -4123,7 +4123,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -N, --literal              print raw entry names (don't treat e.g. control\n\
                                characters specially)\n\
   -o                         like -l, but do not list group information\n\
-  -p, --indicator-style=directory\n\
+  -p, --indicator-style=slash\n\
                              append / indicator to directories\n\
 "), stdout);
       fputs (_("\
