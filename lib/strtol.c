@@ -127,9 +127,9 @@ extern int errno;
 /* The extra casts in the following macros work around compiler bugs,
    e.g., in Cray C 5.0.3.0.  */
 
-/* True if negative values of the signed integer type T use twos
-   complement, ones complement, or signed magnitude representation,
-   respectively.  Much GNU code assumes twos complement, but some
+/* True if negative values of the signed integer type T use two's
+   complement, ones' complement, or signed magnitude representation,
+   respectively.  Much GNU code assumes two's complement, but some
    people like to be portable to all possible C hosts.  */
 # define TYPE_TWOS_COMPLEMENT(t) ((t) ~ (t) 0 == (t) -1)
 # define TYPE_ONES_COMPLEMENT(t) ((t) ~ (t) 0 == 0)

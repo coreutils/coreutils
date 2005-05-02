@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2005-03-21.17}
+\def\texinfoversion{2005-04-17.16}
 %
 % Copyright (C) 1985, 1986, 1988, 1990, 1991, 1992, 1993, 1994, 1995,
 % 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005 Free Software
@@ -6883,9 +6883,9 @@ should work if nowhere else does.}
   \fi
 }
 
-% Parameters in order: 1) textheight; 2) textwidth; 3) voffset;
-% 4) hoffset; 5) binding offset; 6) topskip; 7) physical page height; 8)
-% physical page width.
+% Parameters in order: 1) textheight; 2) textwidth;
+% 3) voffset; 4) hoffset; 5) binding offset; 6) topskip;
+% 7) physical page height; 8) physical page width.
 %
 % We also call \setleading{\textleading}, so the caller should define
 % \textleading.  The caller should also set \parskip.
@@ -6932,7 +6932,7 @@ should work if nowhere else does.}
                     {11in}{8.5in}%
 }}
 
-% Use @smallbook to reset parameters for 7x9.5 (or so) format.
+% Use @smallbook to reset parameters for 7x9.25 trim size.
 \def\smallbook{{\globaldefs = 1
   \parskip = 2pt plus 1pt
   \textleading = 12pt
@@ -6947,6 +6947,24 @@ should work if nowhere else does.}
   \hfuzz = 1pt
   \contentsrightmargin = 0pt
   \defbodyindent = .5cm
+}}
+
+% Use @smallerbook to reset parameters for 6x9 trim size.
+% (Just testing, parameters still in flux.)
+\def\smallerbook{{\globaldefs = 1
+  \parskip = 1.5pt plus 1pt
+  \textleading = 12pt
+  %
+  \internalpagesizes{7.4in}{4.8in}%
+                    {-.2in}{-.4in}%
+                    {0pt}{14pt}%
+                    {9in}{6in}%
+  %
+  \lispnarrowing = 0.25in
+  \tolerance = 700
+  \hfuzz = 1pt
+  \contentsrightmargin = 0pt
+  \defbodyindent = .4cm
 }}
 
 % Use @afourpaper to print on European A4 paper.

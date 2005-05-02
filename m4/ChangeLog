@@ -1,3 +1,7 @@
+2005-05-01  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* getpass.m4, gettext.m4: Sync from gnulib.
+
 2005-04-28  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* euidaccess.m4 (gl_PREREQ_EUIDACCESS): Don't require AC_HEADER_STAT.

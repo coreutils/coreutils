@@ -13,6 +13,8 @@
 	Parse octal string ourself, so that we catch mistakes like "+0".
 	(mode_adjust): Arg is an array, not a linked list.
 
+	* mbswidth.c, regex.c, strtol.c: Sync from gnulib.
+
 2005-04-28  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* tempname.c (S_ISDIR, S_IRUSR, S_IRUSR, S_IWUSR, S_IXUSR): Remove.
