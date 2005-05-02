@@ -5903,7 +5903,7 @@ as follows:
 @table @samp
 @item none
 Do not append any character indicator; this is the default.
-@item directory
+@item slash
 Append @samp{/} for directories.  This is the same as the @option{-p}
 option.
 @item file-type
@@ -5931,7 +5931,7 @@ List files horizontally, with as many as will fit on each line,
 separated by @samp{, } (a comma and a space).
 
 @item -p
-@itemx --indicator-style=directory
+@itemx --indicator-style=slash
 @opindex -p
 @opindex --indicator-style
 @cindex file type, marking
