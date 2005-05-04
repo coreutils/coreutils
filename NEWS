@@ -124,6 +124,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New features
 
+  chmod -w now complains if its behavior differs from what chmod a-w
+  would do, and similarly for chmod -r, chmod -x, etc.
+
   join now supports a NUL field separator, e.g., "join -t '\0'".
   join now detects and reports incompatible options, e.g., "join -t x -t y",
 
