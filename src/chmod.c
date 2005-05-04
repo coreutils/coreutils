@@ -29,6 +29,7 @@
 #include "filemode.h"
 #include "modechange.h"
 #include "quote.h"
+#include "quotearg.h"
 #include "root-dev-ino.h"
 #include "xfts.h"
 
@@ -71,6 +72,11 @@ static bool recurse;
 
 /* If true, force silence (no error messages). */
 static bool force_silent;
+
+/* If true, diagnose surprises from naive misuses like "chmod -r file".
+   POSIX allows diagnostics here, as portable code is supposed to use
+   "chmod -- -r file".  */
+static bool diagnose_surprises;
 
 /* Level of verbosity.  */
 static enum Verbosity verbosity = V_off;
@@ -176,10 +182,10 @@ process_file (FTS *fts, FTSENT *ent)
   char const *file_full_name = ent->fts_path;
   char const *file = ent->fts_accpath;
   const struct stat *file_stats = ent->fts_statp;
+  mode_t old_mode IF_LINT (= 0);
   mode_t new_mode IF_LINT (= 0);
   bool ok = true;
-  bool do_chmod;
-  bool symlink_changed = true;
+  bool chmod_succeeded = false;
 
   switch (ent->fts_info)
     {
@@ -206,45 +212,62 @@ process_file (FTS *fts, FTSENT *ent)
       break;
     }
 
-  do_chmod = ok;
-
-  if (do_chmod && ROOT_DEV_INO_CHECK (root_dev_ino, file_stats))
+  if (ok && ROOT_DEV_INO_CHECK (root_dev_ino, file_stats))
     {
       ROOT_DEV_INO_WARN (file_full_name);
       ok = false;
-      do_chmod = false;
     }
 
-  if (do_chmod)
+  if (ok)
     {
-      new_mode = mode_adjust (file_stats->st_mode, change, umask_value);
+      old_mode = file_stats->st_mode;
+      new_mode = mode_adjust (old_mode, change, umask_value);
 
-      if (S_ISLNK (file_stats->st_mode))
-	symlink_changed = false;
-      else
+      if (! S_ISLNK (old_mode))
 	{
-	  ok = (chmod (file, new_mode) == 0);
-
-	  if (! (ok | force_silent))
-	    error (0, errno, _("changing permissions of %s"),
-		   quote (file_full_name));
+	  if (chmod (file, new_mode) == 0)
+	    chmod_succeeded = true;
+	  else
+	    {
+	      if (! force_silent)
+		error (0, errno, _("changing permissions of %s"),
+		       quote (file_full_name));
+	      ok = false;
+	    }
 	}
     }
 
   if (verbosity != V_off)
     {
-      bool changed =
-	(ok && symlink_changed
-	 && mode_changed (file, file_stats->st_mode, new_mode));
+      bool changed = (chmod_succeeded
+		      && mode_changed (file, old_mode, new_mode));
 
       if (changed || verbosity == V_high)
 	{
 	  enum Change_status ch_status =
 	    (!ok ? CH_FAILED
-	     : !symlink_changed ? CH_NOT_APPLIED
+	     : !chmod_succeeded ? CH_NOT_APPLIED
 	     : !changed ? CH_NO_CHANGE_REQUESTED
 	     : CH_SUCCEEDED);
 	  describe_change (file_full_name, new_mode, ch_status);
+	}
+    }
+
+  if (chmod_succeeded & diagnose_surprises)
+    {
+      mode_t naively_expected_mode = mode_adjust (old_mode, change, 0);
+      if (new_mode & ~naively_expected_mode)
+	{
+	  char new_perms[11];
+	  char naively_expected_perms[11];
+	  mode_string (new_mode, new_perms);
+	  mode_string (naively_expected_mode, naively_expected_perms);
+	  new_perms[10] = naively_expected_perms[10] = '\0';
+	  error (0, 0,
+		 _("%s: new permissions are %s, not %s"),
+		 quotearg_colon (file_full_name),
+		 new_perms + 1, naively_expected_perms + 1);
+	  ok = false;
 	}
     }
 
@@ -354,10 +377,10 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  recurse = force_silent = false;
+  recurse = force_silent = diagnose_surprises = false;
 
   while ((c = getopt_long (argc, argv,
-			   "Rcfvr::w::x::X::s::t::u::g::o::a::,::+::-::=::",
+			   "Rcfvr::w::x::X::s::t::u::g::o::a::,::+::=::",
 			   long_options, NULL))
 	 != -1)
     {
@@ -375,8 +398,11 @@ main (int argc, char **argv)
 	case 'a':
 	case ',':
 	case '+':
-	case '-':
 	case '=':
+	  /* Support nonportable uses like "chmod -w", but diagnose
+	     surprises due to umask confusion.  Even though "--", "--r",
+	     etc., are valid modes, there is no "case '-'" here since
+	     getopt_long reserves leading "--" for long options.  */
 	  {
 	    /* Allocate a mode string (e.g., "-rwx") by concatenating
 	       the argument containing this option.  If a previous mode
@@ -395,6 +421,8 @@ main (int argc, char **argv)
 	    mode[mode_len] = ',';
 	    strcpy (mode + mode_comma_len, arg);
 	    mode_len = new_mode_len;
+
+	    diagnose_surprises = true;
 	  }
 	  break;
 	case NO_PRESERVE_ROOT:
