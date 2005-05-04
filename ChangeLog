@@ -1,6 +1,18 @@
-2005-05-02  Paul Eggert  <eggert@cs.ucla.edu>
+2005-05-04  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	* NEWS: chmod -w now complains if it differs from chmod a-w.
+	* src/chmod.c: Include quotearg.h.
+	(diagnose_surprises): New var.
+	(process_file): Diagnose surprises.  Simplify the logic a bit,
+	while we're at it.
+	(main): Prepare to diagnose surprises.  Remove useless code for
+	'-' option.
+	* tests/chmod/Makefile.am (TESTS): Add umask-x.
+	* tests/chmod/umask-x: New file.
+
+2005-05-02  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: ls --indicator-style=directory renamed to ls
 	--indicator-style=slash, to avoid confusion with ls --directory.
