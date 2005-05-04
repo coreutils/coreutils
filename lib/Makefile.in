@@ -58,7 +58,7 @@ DIST_COMMON = README $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	getcwd.h getdate.h getdate.y getgroups.c gethostname.c \
 	gethrxtime.c gethrxtime.h getline.c getline.h getloadavg.c \
 	getndelim2.c getopt.c getopt1.c getpagesize.h getpass.c \
-	gettime.c gettimeofday.c getugroups.c getusershell.c \
+	getpass.h gettime.c gettimeofday.c getugroups.c getusershell.c \
 	group-member.c group-member.h hard-locale.c hard-locale.h \
 	hash-pjw.c hash-pjw.h hash.c hash.h human.c human.h idcache.c \
 	imaxtostr.c intprops.h inttostr.c inttostr.h lchown.c lchown.h \
