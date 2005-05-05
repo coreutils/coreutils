@@ -1,3 +1,10 @@
+2005-05-05  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* makepath.c (make_path): chdir to "//", not "/", if the file name
+	starts with exactly two slashes.  This doesn't solve the problem
+	in general but it's better than nothing.  Problem reported by
+	Pierre A. Humblet via Eric Blake.
+
 2005-05-01  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* modechange.h (mode_free): Remove; all callers changed to invoke
