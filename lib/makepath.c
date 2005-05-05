@@ -1,7 +1,7 @@
 /* makepath.c -- Ensure that a directory path exists.
 
-   Copyright (C) 1990, 1997, 1998, 1999, 2000, 2002, 2003, 2004 Free
-   Software Foundation, Inc.
+   Copyright (C) 1990, 1997, 1998, 1999, 2000, 2002, 2003, 2004, 2005
+   Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -207,8 +207,14 @@ make_path (const char *argpath,
       /* If we've saved the cwd and DIRPATH is an absolute pathname,
 	 we must chdir to `/' in order to enable the chdir optimization.
          So if chdir ("/") fails, turn off the optimization.  */
-      if (do_chdir && *dirpath == '/' && chdir ("/") < 0)
-	do_chdir = false;
+      if (do_chdir && dirpath[0] == '/')
+	{
+	  /* POSIX says "//" might be special, so chdir to "//" if the
+	     file name starts with exactly two slashes.  */
+	  char const *root = "//" + (dirpath[1] != '/' || dirpath[2] == '/');
+	  if (chdir (root) != 0)
+	    do_chdir = false;
+	}
 
       slash = dirpath;
 
