@@ -127,6 +127,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   chmod -w now complains if its behavior differs from what chmod a-w
   would do, and similarly for chmod -r, chmod -x, etc.
 
+  dd has new iflag= and oflag= flags "binary" and "text", which have an
+  effect only on nonstandard platforms that distinguish text from binary I/O.
+
   join now supports a NUL field separator, e.g., "join -t '\0'".
   join now detects and reports incompatible options, e.g., "join -t x -t y",
 
