@@ -9,6 +9,6 @@
 AC_DEFUN([gl_STAT_MACROS],
 [
   AC_LIBSOURCES([stat-macros.h])
-  
+
   AC_REQUIRE([AC_HEADER_STAT])
 ])
