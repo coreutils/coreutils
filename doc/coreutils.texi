@@ -6881,6 +6881,18 @@ This has no effect when the file is not a terminal.
 On many hosts (e.g., @acronym{GNU}/Linux hosts), this option has no effect
 at all.
 
+@item binary
+@opindex binary
+@cindex binary I/O
+Use binary I/O.  This option has an effect only on nonstandard
+platforms that distinguish binary from text I/O.
+
+@item text
+@opindex text
+@cindex text I/O
+Use text I/O.  Like @samp{binary}, this option has no effect on
+standard platforms.
+
 @end table
 
 These flags are not supported on all systems, and @samp{dd} rejects
