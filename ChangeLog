@@ -1,6 +1,11 @@
-2005-05-04  Paul Eggert  <eggert@cs.ucla.edu>
+2005-05-06  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	* NEWS: dd has new iflag= and oflag= flags "binary" and "text".
+	* src/dd.c (flags, usage): Add support for "binary" and "text".
+
+2005-05-04  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: chmod -w now complains if it differs from chmod a-w.
 	* src/chmod.c: Include quotearg.h.
