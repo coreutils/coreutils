@@ -1,3 +1,7 @@
+2005-05-06  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (dd invocation): New flags "binary" and "text".
+
 2005-05-04  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (chmod invocation): chmod -w complains if its
