@@ -251,12 +251,14 @@ static struct symbol_value const conversions[] =
 static struct symbol_value const flags[] =
 {
   {"append",	O_APPEND},
+  {"binary",	O_BINARY},
   {"direct",	O_DIRECT},
   {"dsync",	O_DSYNC},
   {"noctty",	O_NOCTTY},
   {"nofollow",	O_NOFOLLOW},
   {"nonblock",	O_NONBLOCK},
   {"sync",	O_SYNC},
+  {"text",	O_TEXT},
   {"",		0}
 };
 
@@ -458,6 +460,10 @@ Each FLAG symbol may be:\n\
       if (O_NOCTTY)
 	fputs (_("  noctty    do not assign controlling terminal from file\n"),
 	       stdout);
+      if (O_BINARY)
+	fputs (_("  binary    use binary I/O for data\n"), stdout);
+      if (O_TEXT)
+	fputs (_("  text      use text I/O for data\n"), stdout);
 
       {
 	char const *siginfo_name = (SIGINFO == SIGUSR1 ? "USR1" : "INFO");
