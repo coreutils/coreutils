@@ -50,6 +50,12 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Changes for better conformance to POSIX
 
+  cp, ln, mv, rm changes:
+
+    Leading white space is now significant in responses to yes-or-no questions.
+    For example, if "rm" asks "remove regular file `foo'?" and you respond
+    with " y" (i.e., space before "y"), it counts as "no".
+
   dd changes:
 
     On a QUIT or PIPE signal, dd now exits without printing statistics.
