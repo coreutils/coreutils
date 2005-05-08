@@ -1,3 +1,9 @@
+2005-05-08  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* yesno.c: Include getline.h, not ctype.h.
+	(yesno): Don't remove leading white space; POSIX doesn't allow it.
+	Use getline to remove arbitrary restriction on response length.
+
 2005-05-05  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* makepath.c (make_path): chdir to "//", not "/", if the file name
