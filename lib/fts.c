@@ -60,8 +60,6 @@ static char sccsid[] = "@(#)fts.c	8.6 (Berkeley) 8/14/94";
 # include <include/sys/stat.h>
 #else
 # include <sys/stat.h>
-# undef __P
-# define __P(x) x
 #endif
 #include <fcntl.h>
 #include <errno.h>
@@ -154,17 +152,16 @@ int rpl_lstat (const char *, struct stat *);
 #endif
 
 
-static FTSENT	*fts_alloc __P((FTS *, const char *, size_t)) internal_function;
-static FTSENT	*fts_build __P((FTS *, int)) internal_function;
-static void	 fts_lfree __P((FTSENT *)) internal_function;
-static void	 fts_load __P((FTS *, FTSENT *)) internal_function;
-static size_t	 fts_maxarglen __P((char * const *)) internal_function;
-static void	 fts_padjust __P((FTS *, FTSENT *)) internal_function;
-static bool	 fts_palloc __P((FTS *, size_t)) internal_function;
-static FTSENT	*fts_sort __P((FTS *, FTSENT *, size_t)) internal_function;
-static unsigned short int fts_stat __P((FTS *, FTSENT *, bool))
-     internal_function;
-static int      fts_safe_changedir __P((FTS *, FTSENT *, int, const char *))
+static FTSENT	*fts_alloc (FTS *, const char *, size_t) internal_function;
+static FTSENT	*fts_build (FTS *, int) internal_function;
+static void	 fts_lfree (FTSENT *) internal_function;
+static void	 fts_load (FTS *, FTSENT *) internal_function;
+static size_t	 fts_maxarglen (char * const *) internal_function;
+static void	 fts_padjust (FTS *, FTSENT *) internal_function;
+static bool	 fts_palloc (FTS *, size_t) internal_function;
+static FTSENT	*fts_sort (FTS *, FTSENT *, size_t) internal_function;
+static unsigned short int fts_stat (FTS *, FTSENT *, bool) internal_function;
+static int      fts_safe_changedir (FTS *, FTSENT *, int, const char *)
      internal_function;
 
 #ifndef MAX
@@ -326,10 +323,9 @@ diropen (char const *dir)
 }
 
 FTS *
-fts_open(argv, options, compar)
-	char * const *argv;
-	register int options;
-	int (*compar) __P((const FTSENT **, const FTSENT **));
+fts_open (char * const *argv,
+	  register int options,
+	  int (*compar) (FTSENT const **, FTSENT const **))
 {
 	register FTS *sp;
 	register FTSENT *p, *root;
@@ -347,7 +343,7 @@ fts_open(argv, options, compar)
 	if ((sp = malloc(sizeof(FTS))) == NULL)
 		return (NULL);
 	memset(sp, 0, sizeof(FTS));
-	sp->fts_compar = (int (*) __P((const void *, const void *))) compar;
+	sp->fts_compar = compar;
 	sp->fts_options = options;
 
 	/* Logical walks turn on NOCHDIR; symbolic links are too hard. */
@@ -458,9 +454,7 @@ mem1:	free(sp);
 
 static void
 internal_function
-fts_load(sp, p)
-	FTS *sp;
-	register FTSENT *p;
+fts_load (FTS *sp, register FTSENT *p)
 {
 	register size_t len;
 	register char *cp;
@@ -480,12 +474,11 @@ fts_load(sp, p)
 		p->fts_namelen = len;
 	}
 	p->fts_accpath = p->fts_path = sp->fts_path;
-	sp->fts_dev = p->fts_dev;
+	sp->fts_dev = p->fts_statp->st_dev;
 }
 
 int
-fts_close(sp)
-	FTS *sp;
+fts_close (FTS *sp)
 {
 	register FTSENT *freep, *p;
 	int saved_errno = 0;
@@ -545,8 +538,7 @@ fts_close(sp)
 	    ? p->fts_pathlen - 1 : p->fts_pathlen)
 
 FTSENT *
-fts_read(sp)
-	register FTS *sp;
+fts_read (register FTS *sp)
 {
 	register FTSENT *p, *tmp;
 	register unsigned short int instr;
@@ -597,7 +589,7 @@ fts_read(sp)
 	if (p->fts_info == FTS_D) {
 		/* If skipped or crossed mount point, do post-order visit. */
 		if (instr == FTS_SKIP ||
-		    (ISSET(FTS_XDEV) && p->fts_dev != sp->fts_dev)) {
+		    (ISSET(FTS_XDEV) && p->fts_statp->st_dev != sp->fts_dev)) {
 			if (p->fts_flags & FTS_SYMFOLLOW)
 				(void)close(p->fts_symfd);
 			if (sp->fts_child) {
@@ -769,9 +761,7 @@ fts_set(FTS *sp ATTRIBUTE_UNUSED, FTSENT *p, int instr)
 }
 
 FTSENT *
-fts_children(sp, instr)
-	register FTS *sp;
-	int instr;
+fts_children (register FTS *sp, int instr)
 {
 	register FTSENT *p;
 	int fd;
@@ -854,9 +844,7 @@ fts_children(sp, instr)
  */
 static FTSENT *
 internal_function
-fts_build(sp, type)
-	register FTS *sp;
-	int type;
+fts_build (register FTS *sp, int type)
 {
 	register struct dirent *dp;
 	register FTSENT *p, *head;
@@ -907,7 +895,8 @@ fts_build(sp, type)
 		/* Be quiet about nostat, GCC. */
 		nostat = false;
 	} else if (ISSET(FTS_NOSTAT) && ISSET(FTS_PHYSICAL)) {
-		nlinks = cur->fts_nlink - (ISSET(FTS_SEEDOT) ? 0 : 2);
+		nlinks = (cur->fts_statp->st_nlink
+			  - (ISSET(FTS_SEEDOT) ? 0 : 2));
 		nostat = true;
 	} else {
 		nlinks = -1;
@@ -1221,20 +1210,8 @@ err:		memset(sbp, 0, sizeof(struct stat));
 	}
 
 	if (S_ISDIR(sbp->st_mode)) {
-		/*
-		 * Set the device/inode.  Used to find cycles and check for
-		 * crossing mount points.  Also remember the link count, used
-		 * in fts_build to limit the number of stat calls.  It is
-		 * understood that these fields are only referenced if fts_info
-		 * is set to FTS_D.
-		 */
-		p->fts_dev = sbp->st_dev;
-		p->fts_ino = sbp->st_ino;
-		p->fts_nlink = sbp->st_nlink;
-
 		if (ISDOT(p->fts_name))
 			return (FTS_DOT);
-
 		return (FTS_D);
 	}
 	if (S_ISLNK(sbp->st_mode))
@@ -1244,12 +1221,22 @@ err:		memset(sbp, 0, sizeof(struct stat));
 	return (FTS_DEFAULT);
 }
 
+static int
+fts_compar (void const *a, void const *b)
+{
+  /* Convert A and B to the correct types, to pacify the compiler, and
+     for portability to bizarre hosts where "void const *" and "FTSENT
+     const **" differ in runtime representation.  The comparison
+     function cannot modify *a and *b, but there is no compile-time
+     check for this.  */
+  FTSENT const **pa = (FTSENT const **) a;
+  FTSENT const **pb = (FTSENT const **) b;
+  return pa[0]->fts_fts->fts_compar (pa, pb);
+}
+
 static FTSENT *
 internal_function
-fts_sort(sp, head, nitems)
-	FTS *sp;
-	FTSENT *head;
-	register size_t nitems;
+fts_sort (FTS *sp, FTSENT *head, register size_t nitems)
 {
 	register FTSENT **ap, *p;
 
@@ -1276,7 +1263,7 @@ fts_sort(sp, head, nitems)
 	}
 	for (ap = sp->fts_array, p = head; p; p = p->fts_link)
 		*ap++ = p;
-	qsort((void *)sp->fts_array, nitems, sizeof(FTSENT *), sp->fts_compar);
+	qsort((void *)sp->fts_array, nitems, sizeof(FTSENT *), fts_compar);
 	for (head = *(ap = sp->fts_array); --nitems; ++ap)
 		ap[0]->fts_link = ap[1];
 	ap[0]->fts_link = NULL;
@@ -1285,10 +1272,7 @@ fts_sort(sp, head, nitems)
 
 static FTSENT *
 internal_function
-fts_alloc(sp, name, namelen)
-	FTS *sp;
-	const char *name;
-	register size_t namelen;
+fts_alloc (FTS *sp, const char *name, register size_t namelen)
 {
 	register FTSENT *p;
 	size_t len;
@@ -1306,6 +1290,7 @@ fts_alloc(sp, name, namelen)
 	p->fts_name[namelen] = '\0';
 
 	p->fts_namelen = namelen;
+	p->fts_fts = sp;
 	p->fts_path = sp->fts_path;
 	p->fts_errno = 0;
 	p->fts_flags = 0;
@@ -1317,8 +1302,7 @@ fts_alloc(sp, name, namelen)
 
 static void
 internal_function
-fts_lfree(head)
-	register FTSENT *head;
+fts_lfree (register FTSENT *head)
 {
 	register FTSENT *p;
 
@@ -1337,9 +1321,7 @@ fts_lfree(head)
  */
 static bool
 internal_function
-fts_palloc(sp, more)
-	FTS *sp;
-	size_t more;
+fts_palloc (FTS *sp, size_t more)
 {
 	char *p;
 	size_t new_len = sp->fts_pathlen + more + 256;
@@ -1373,9 +1355,7 @@ fts_palloc(sp, more)
  */
 static void
 internal_function
-fts_padjust(sp, head)
-	FTS *sp;
-	FTSENT *head;
+fts_padjust (FTS *sp, FTSENT *head)
 {
 	FTSENT *p;
 	char *addr = sp->fts_path;
@@ -1400,8 +1380,7 @@ fts_padjust(sp, head)
 
 static size_t
 internal_function
-fts_maxarglen(argv)
-	char * const *argv;
+fts_maxarglen (char * const *argv)
 {
 	size_t len, max;
 
@@ -1414,15 +1393,11 @@ fts_maxarglen(argv)
 /*
  * Change to dir specified by fd or path without getting
  * tricked by someone changing the world out from underneath us.
- * Assumes p->fts_dev and p->fts_ino are filled in.
+ * Assumes p->fts_statp->st_dev and p->fts_statp->st_ino are filled in.
  */
 static int
 internal_function
-fts_safe_changedir(sp, p, fd, path)
-	FTS *sp;
-	FTSENT *p;
-	int fd;
-	const char *path;
+fts_safe_changedir (FTS *sp, FTSENT *p, int fd, char const *path)
 {
 	int ret, oerrno, newfd;
 	struct stat sb;
@@ -1436,7 +1411,8 @@ fts_safe_changedir(sp, p, fd, path)
 		ret = -1;
 		goto bail;
 	}
-	if (p->fts_dev != sb.st_dev || p->fts_ino != sb.st_ino) {
+	if (p->fts_statp->st_dev != sb.st_dev
+	    || p->fts_statp->st_ino != sb.st_ino) {
 		__set_errno (ENOENT);		/* disinformation */
 		ret = -1;
 		goto bail;
