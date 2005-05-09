@@ -1240,6 +1240,20 @@ fts_sort (FTS *sp, FTSENT *head, register size_t nitems)
 {
 	register FTSENT **ap, *p;
 
+	/* On most modern hosts, void * and FTSENT ** have the same
+	   run-time representation, and one can convert sp->fts_compar to
+	   the type qsort expects without problem.  Use the heuristic that
+	   this is OK if the two pointer types are the same size, and if
+	   converting FTSENT ** to long int is the same as converting
+	   FTSENT ** to void * and then to long int.  This heuristic isn't
+	   valid in general but we don't know of any counterexamples.  */
+	FTSENT *dummy;
+	int (*compare) (void const *, void const *) =
+	  ((sizeof &dummy == sizeof (void *)
+	    && (long int) &dummy == (long int) (void *) &dummy)
+	   ? (int (*) (void const *, void const *)) sp->fts_compar
+	   : fts_compar);
+
 	/*
 	 * Construct an array of pointers to the structures and call qsort(3).
 	 * Reassemble the array in the order returned by qsort.  If unable to
@@ -1263,7 +1277,7 @@ fts_sort (FTS *sp, FTSENT *head, register size_t nitems)
 	}
 	for (ap = sp->fts_array, p = head; p; p = p->fts_link)
 		*ap++ = p;
-	qsort((void *)sp->fts_array, nitems, sizeof(FTSENT *), fts_compar);
+	qsort((void *)sp->fts_array, nitems, sizeof(FTSENT *), compare);
 	for (head = *(ap = sp->fts_array); --nitems; ++ap)
 		ap[0]->fts_link = ap[1];
 	ap[0]->fts_link = NULL;
