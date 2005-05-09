@@ -1,3 +1,14 @@
+2005-05-09  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* fts_.h (FTS): Use correct type for fts_compar member.
+	(FTSENT): New member fts_fts.  Remove members fts_ino, fts_dev,
+	fts_nlink; no longer needed now that fts_statp is always there.
+	All uses changed to use fts_statp instead.
+	* fts.c (__P): Remove.  All uses rewritten to assume C89 or better.
+	(fts_open): Don't cast a function value in a possibly-unsafe way.
+	(fts_compar): New function.
+	(fts_sort): Use it.
+
 2005-05-08  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* yesno.c: Include getline.h, not ctype.h.
