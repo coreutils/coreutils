@@ -1,6 +1,6 @@
 /* Traverse a file hierarchy.
 
-   Copyright (C) 2004 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -75,7 +75,8 @@ typedef struct {
 	int fts_rfd;			/* fd for root */
 	size_t fts_pathlen;		/* sizeof(path) */
 	size_t fts_nitems;			/* elements in the sort array */
-	int (*fts_compar) (const void *, const void *); /* compare fn */
+	int (*fts_compar) (struct _ftsent const **, struct _ftsent const **);
+					/* compare fn */
 
 # define FTS_COMFOLLOW	0x0001		/* follow command line symlinks */
 # define FTS_LOGICAL	0x0002		/* logical walk */
@@ -126,14 +127,12 @@ typedef struct _ftsent {
 	long fts_number;	        /* local numeric value */
 	void *fts_pointer;	        /* local address value */
 	char *fts_accpath;		/* access path */
-	char *fts_path;			/* root path */
+	char *fts_path;			/* root path; == fts_fts->fts_path */
 	int fts_errno;			/* errno for this node */
 	int fts_symfd;			/* fd for symlink */
 	size_t fts_pathlen;		/* strlen(fts_path) */
 
-	ino_t fts_ino;			/* inode */
-	dev_t fts_dev;			/* device */
-	nlink_t fts_nlink;		/* link count */
+	FTS *fts_fts;			/* the file hierarchy itself */
 
 # define FTS_ROOTPARENTLEVEL	(-1)
 # define FTS_ROOTLEVEL		 0
