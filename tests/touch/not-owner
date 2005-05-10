@@ -25,6 +25,11 @@ if test $framework_failure = 1; then
   (exit 1); exit 1
 fi
 
+if test -w /; then
+  echo Skipping because you have write access to /.
+  (exit 77); exit 77
+fi
+
 fail=0
 
 # Before fileutils-4.1, we'd get the following misleading
