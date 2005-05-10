@@ -1,6 +1,10 @@
-2005-05-08  Paul Eggert  <eggert@cs.ucla.edu>
+2005-05-10  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* tests/ls-2/tests: Don't print PATH to stderr.
+
+2005-05-08  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: cp, ln, mv, rm no longer discard white space when intepreting
 	responses.
