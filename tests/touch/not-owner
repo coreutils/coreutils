@@ -11,6 +11,17 @@ fi
 . $srcdir/../lang-default
 PRIV_CHECK_ARG=require-non-root . $srcdir/../priv-check
 
+test=../../src/test
+if $test -w /; then
+  echo Skipping because you have write access to /.
+  (exit 77); exit 77
+fi
+
+if $test -O / || $test -G /; then
+  echo Skipping because you own /.
+  (exit 77); exit 77
+fi
+
 pwd=`pwd`
 t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
 trap 'status=$?; cd $pwd; chmod -R u+rwx $t0; rm -rf $t0 && exit $status' 0
@@ -23,11 +34,6 @@ cd $tmp || framework_failure=1
 if test $framework_failure = 1; then
   echo "$0: failure in testing framework" 1>&2
   (exit 1); exit 1
-fi
-
-if test -w /; then
-  echo Skipping because you have write access to /.
-  (exit 77); exit 77
 fi
 
 fail=0
