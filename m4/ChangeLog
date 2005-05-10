@@ -1,3 +1,8 @@
+2005-05-10  Derek Price  <derek@ximbiot.com>
+
+	* getopt.m4 (gl_GETOPT): Check for Solaris 10 bug, not decl, when
+	possible.
+
 2005-05-05  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* getopt.m4 (gl_GETOPT): Check for Solaris 10 getopt, and avoid
