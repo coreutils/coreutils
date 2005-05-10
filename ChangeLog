@@ -7,6 +7,7 @@
 	performing the move operation).  But note that specifying `-i'
 	after `--reply=no' does *not* work.
 	Tiny patch from Vlada Macek.
+	Correct a comment.
 	* tests/mv/reply-no: New file.  Test for the above fix.
 	* tests/mv/Makefile.am (TESTS): Add reply-no.
 
