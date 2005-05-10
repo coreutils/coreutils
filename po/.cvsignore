@@ -6,6 +6,7 @@ Makefile
 Makefile.in
 POTFILES
 cat-id-tbl.c
+messages.mo
+remove-potcdate.sed
 stamp-cat-id
 stamp-po
-remove-potcdate.sed
