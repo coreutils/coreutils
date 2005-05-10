@@ -798,8 +798,8 @@ record_file (Hash_table *ht, char const *filename,
 
 /* When effecting a move (e.g., for mv(1)), and given the name DST_PATH
    of the destination and a corresponding stat buffer, DST_SB, return
-   true if the logical `move' operation should not proceed.
-   Return true if it may proceed.
+   true if the logical `move' operation should _not_ proceed.
+   Otherwise, return false.
    Depending on options specified in X, this code may issue an
    interactive prompt asking whether it's ok to overwrite DST_PATH.  */
 static bool
@@ -808,8 +808,7 @@ abandon_move (const struct cp_options *x,
               struct stat const *dst_sb)
 {
   assert (x->move_mode);
-  return ((x->interactive == I_ALWAYS_NO
-           && UNWRITABLE (dst_path, dst_sb->st_mode))
+  return (x->interactive == I_ALWAYS_NO
           || ((x->interactive == I_ASK_USER
                || (x->interactive == I_UNSPECIFIED
                    && x->stdin_tty
