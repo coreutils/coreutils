@@ -1,3 +1,7 @@
+2005-05-10  Jim Meyering  <jim@meyering.net>
+
+	* LINGUAS: Add Vietnamese (vi).
+
 2005-04-06  Jim Meyering  <jim@meyering.net>
 
 	* LINGUAS: Remove rw.
