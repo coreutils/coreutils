@@ -2,8 +2,8 @@
 
 	* Version 5.3.1.
 
-	* tests/touch/not-owner: Skip the test if the user running it
-	has write access to `/'.
+	* tests/touch/not-owner: Skip this test if the user running it
+	owns `/' or has write access to it.
 
 	* src/copy.c (abandon_move): Remove erroneous UNWRITABLE check.
 	This makes `mv -i --reply=no f1 f2' work as expected (in not
