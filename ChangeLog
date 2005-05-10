@@ -2,6 +2,14 @@
 
 	* Version 5.3.1.
 
+	* src/copy.c (abandon_move): Remove erroneous UNWRITABLE check.
+	This makes `mv -i --reply=no f1 f2' work as expected (in not
+	performing the move operation).  But note that specifying `-i'
+	after `--reply=no' does *not* work.
+	Tiny patch from Vlada Macek.
+	* tests/mv/reply-no: New file.  Test for the above fix.
+	* tests/mv/Makefile.am (TESTS): Add reply-no.
+
 	* tests/ls-2/tests: Don't print PATH to stderr.
 
 2005-05-08  Paul Eggert  <eggert@cs.ucla.edu>
