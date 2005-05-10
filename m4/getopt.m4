@@ -1,4 +1,4 @@
-# getopt.m4 serial 8
+# getopt.m4 serial 9
 dnl Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
@@ -39,8 +39,27 @@ AC_DEFUN([gl_GETOPT],
     dnl Solaris 10 getopt doesn't handle `+' as a leading character in an
     dnl option string (as of 2005-05-05).
     if test -z "$GETOPT_H"; then
-      AC_CHECK_DECL([getopt_clip], [GETOPT_H=getopt.h], [],
-	[#include <getopt.h>])
+      AC_CACHE_CHECK([for working GNU getopt function], [gl_cv_func_gnu_getopt],
+      [AC_RUN_IFELSE(
+        [AC_LANG_PROGRAM([#include <getopt.h>],
+	   [[
+	     char *myargv[3];
+	     myargv[0] = "conftest";
+	     myargv[1] = "-+";
+	     myargv[2] = 0;
+	     return getopt (2, myargv, "+a") != '?';
+           ]])],
+        [gl_cv_func_gnu_getopt=yes],
+        [gl_cv_func_gnu_getopt=no],
+        [dnl cross compiling - pessimistically guess based on decls
+         dnl Solaris 10 getopt doesn't handle `+' as a leading character in an
+         dnl option string (as of 2005-05-05).
+         AC_CHECK_DECL([getopt_clip],
+	   [gl_cv_func_gnu_getopt=no], [gl_cv_func_gnu_getopt=yes],
+	   [#include <getopt.h>])])])
+      if test "$gl_cv_func_gnu_getopt" = "no"; then
+	GETOPT_H=getopt.h
+      fi
     fi
 
     if test -n "$GETOPT_H"; then
