@@ -1,7 +1,7 @@
 @c GNU date syntax documentation
 
 @c Copyright (C) 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002,
-@c 2003, 2004 Free Software Foundation, Inc.
+@c 2003, 2004, 2005 Free Software Foundation, Inc.
 
 @c Permission is granted to copy, distribute and/or modify this document
 @c under the terms of the GNU Free Documentation License, Version 1.1 or
