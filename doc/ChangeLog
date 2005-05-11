@@ -1,3 +1,9 @@
+2005-05-11  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* getdate.texi (General date syntax): Don't say that date
+	date --iso-8601=ns generates acceptable dates; it doesn't yet.
+	Problem reported by Nic Ferrier.
+
 2005-05-06  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (dd invocation): New flags "binary" and "text".
