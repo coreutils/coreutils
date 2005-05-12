@@ -1005,10 +1005,8 @@ visit_dir (dev_t dev, ino_t ino)
 static void
 free_pending_ent (struct pending *p)
 {
-  if (p->name)
-    free (p->name);
-  if (p->realname)
-    free (p->realname);
+  free (p->name);
+  free (p->realname);
   free (p);
 }
 
@@ -2448,8 +2446,7 @@ clear_files (void)
   for (i = 0; i < files_index; i++)
     {
       free (files[i].name);
-      if (files[i].linkname)
-	free (files[i].linkname);
+      free (files[i].linkname);
     }
 
   files_index = 0;
@@ -2599,8 +2596,7 @@ gobble_file (char const *name, enum filetype type, bool command_line_arg,
 		  f->linkok = true;
 		}
 	    }
-	  if (linkpath)
-	    free (linkpath);
+	  free (linkpath);
 	}
 
       if (S_ISLNK (f->stat.st_mode))

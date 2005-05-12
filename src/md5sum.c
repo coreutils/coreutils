@@ -498,8 +498,7 @@ digest_check (const char *checkfile_name, int (*digest_stream) (FILE *, void *))
     }
   while (!feof (checkfile_stream) && !ferror (checkfile_stream));
 
-  if (line)
-    free (line);
+  free (line);
 
   if (ferror (checkfile_stream))
     {

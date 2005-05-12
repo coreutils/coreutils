@@ -1313,8 +1313,7 @@ init_parameters (int number_of_files)
 
   if (numbered_lines)
     {
-      if (number_buff != NULL)
-	free (number_buff);
+      free (number_buff);
       number_buff = xmalloc (2 * chars_per_number);
     }
 
@@ -1323,8 +1322,7 @@ init_parameters (int number_of_files)
      The width of an escape sequence (4) isn't the lower limit any longer.
      We've to use 8 as the lower limit, if we use chars_per_default_tab = 8
      to expand a tab which is not an input_tab-char. */
-  if (clump_buff != NULL)
-    free (clump_buff);
+  free (clump_buff);
   clump_buff = xmalloc (MAX (8, chars_per_input_tab));
 }
 
@@ -1349,8 +1347,7 @@ init_fps (int number_of_files, char **av)
 
   total_files = 0;
 
-  if (column_vector != NULLCOL)
-    free (column_vector);
+  free (column_vector);
   column_vector = xnmalloc (columns, sizeof (COLUMN));
 
   if (parallel_files)
@@ -1694,8 +1691,7 @@ init_header (char *filename, int desc)
       nstrftime (buf, bufsize, date_format, tm, 0, ns);
     }
 
-  if (date_text)
-    free (date_text);
+  free (date_text);
   date_text = buf;
   file_text = custom_header ? custom_header : desc < 0 ? "" : filename;
   header_width_available = (chars_per_line
@@ -1928,17 +1924,14 @@ init_store_cols (void)
   int total_lines = lines_per_body * columns;
   int chars_if_truncate = total_lines * (chars_per_column + 1);
 
-  if (line_vector != NULL)
-    free (line_vector);
+  free (line_vector);
   /* FIXME: here's where it was allocated.  */
   line_vector = xmalloc ((total_lines + 1) * sizeof (int *));
 
-  if (end_vector != NULL)
-    free (end_vector);
+  free (end_vector);
   end_vector = xmalloc (total_lines * sizeof (int *));
 
-  if (buff != NULL)
-    free (buff);
+  free (buff);
   buff_allocated = (use_col_separator
 		    ? 2 * chars_if_truncate
 		    : chars_if_truncate);	/* Tune this. */
@@ -2756,18 +2749,12 @@ char_to_clump (char c)
 static void
 cleanup (void)
 {
-  if (number_buff)
-    free (number_buff);
-  if (clump_buff)
-    free (clump_buff);
-  if (column_vector)
-    free (column_vector);
-  if (line_vector)
-    free (line_vector);
-  if (end_vector)
-    free (end_vector);
-  if (buff)
-    free (buff);
+  free (number_buff);
+  free (clump_buff);
+  free (column_vector);
+  free (line_vector);
+  free (end_vector);
+  free (buff);
 }
 
 /* Complain, print a usage message, and die. */
