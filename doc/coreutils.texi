@@ -12568,6 +12568,12 @@ regardless of the current umask settings.
 If standard error is a terminal, it is redirected to the same file
 descriptor as the (possibly-redirected) standard output.
 
+@vindex POSIXLY_CORRECT
+If standard input is a terminal, it is closed so that terminal
+sessions do not mistakenly consider the terminal to be used by the
+command.  However, this step is skipped if @env{POSIXLY_CORRECT} is
+set since @acronym{POSIX} requires standard input to be left alone.
+
 @command{nohup} does not automatically put the command it runs in the
 background; you must do that explicitly, by ending the command line
 with an @samp{&}.  Also, @command{nohup} does not change the
