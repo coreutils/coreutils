@@ -285,8 +285,7 @@ batch_convert (const char *input_filename, const char *format)
   if (fclose (in_stream) == EOF)
     error (EXIT_FAILURE, errno, "%s", quote (input_filename));
 
-  if (line != NULL)
-    free (line);
+  free (line);
 
   return ok;
 }
