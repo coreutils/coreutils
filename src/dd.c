@@ -1543,8 +1543,7 @@ dd_copy (void)
     }
 
   free (real_buf);
-  if (real_obuf)
-    free (real_obuf);
+  free (real_obuf);
 
   if ((conversions_mask & C_FDATASYNC) && fdatasync (STDOUT_FILENO) != 0)
     {

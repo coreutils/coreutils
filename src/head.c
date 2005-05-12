@@ -392,8 +392,7 @@ elide_tail_bytes_pipe (const char *filename, int fd, uintmax_t n_elide_0)
 
     free_mem:;
       for (i = 0; i < n_bufs; i++)
-	if (b[i])
-	  free (b[i]);
+	free (b[i]);
       free (b);
 
       return ok;

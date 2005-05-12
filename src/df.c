@@ -591,8 +591,7 @@ show_point (const char *point, const struct stat *statp)
 	      }
 	}
 
-      if (resolved)
-	free (resolved);
+      free (resolved);
 
       if (best_match
 	  && (stat (best_match->me_mountdir, &disk_stats) != 0

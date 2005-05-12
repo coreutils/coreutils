@@ -364,8 +364,7 @@ dc_parse_stream (FILE *fp, const char *filename)
 	}
 
       free (keywd);
-      if (arg)
-	free (arg);
+      free (arg);
     }
 
   return ok;
