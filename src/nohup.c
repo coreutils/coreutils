@@ -96,6 +96,12 @@ main (int argc, char **argv)
       usage (NOHUP_FAILURE);
     }
 
+  /* If standard input is a tty, close it.  POSIX requires nohup to
+     leave standard input alone, but that's less useful in practice as
+     it causes a "nohup foo & exit" session to hang with OpenSSH.  */
+  if (!getenv ("POSIXLY_CORRECT") && isatty (STDIN_FILENO))
+    close (STDIN_FILENO);
+
   /* If standard output is a tty, redirect it (appending) to a file.
      First try nohup.out, then $HOME/nohup.out.  */
   if (isatty (STDOUT_FILENO))
@@ -139,7 +145,7 @@ main (int argc, char **argv)
       free (in_home);
     }
 
-  /* If stderr is on a tty, redirect it to stdout.  */
+  /* If standard error is a tty, redirect it to stdout.  */
   if (isatty (STDERR_FILENO))
     {
       /* Save a copy of stderr before redirecting, so we can use the original
