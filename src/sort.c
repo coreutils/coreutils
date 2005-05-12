@@ -1631,8 +1631,7 @@ check (char const *file_name)
 
   xfclose (fp, file_name);
   free (buf.buf);
-  if (temp.text)
-    free (temp.text);
+  free (temp.text);
   return ordered;
 }
 
