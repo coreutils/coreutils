@@ -1,6 +1,15 @@
-2005-05-12  Jim Meyering  <jim@meyering.net>
+2005-05-12  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	* NEWS: nohup now closes stdin if it is a terminal, unless
+	POSIXLY_CORRECT is set.  This fixes a glitch noted by Wayne Pollock in
+	<https://www.opengroup.org/sophocles/show_mail.tpl?source=L&listname=aus
+tin-group-l&id=8341>.
+	* doc/coreutils.texi (nohup invocation): Document this.
+	* src/nohup.c (main): Implement this.
+
+2005-05-12  Jim Meyering  <jim@meyering.net>
 
 	* src/date.c: Assume `free (NULL)' works.
 	* src/dd.c: Likewise.
