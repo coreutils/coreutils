@@ -125,6 +125,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   nice now works on Darwin 7.7.0 in spite of its invalid definition of NZERO.
 
+  `rm -r' can remove all entries in a directory even when it is on a
+  file system for which readdir is buggy and that was not checked by
+  coreutils' old configure-time run-test.
+
   sleep no longer fails when resumed after being suspended on linux-2.6.8.1,
   in spite of that kernel's buggy nanosleep implementation.
 
