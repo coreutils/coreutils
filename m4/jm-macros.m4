@@ -129,7 +129,6 @@ AC_DEFUN([gl_MACROS],
   AC_FUNC_STRTOD
 
   AC_REQUIRE([cu_PREREQ_STAT_PROG])
-  AC_REQUIRE([GL_FUNC_READDIR])
 
   # for dd.c and shred.c
   coreutils_saved_libs=$LIBS
