@@ -1,6 +1,31 @@
-2005-05-12  Paul Eggert  <eggert@cs.ucla.edu>
+2005-05-13  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* NEWS: `rm -r' now removes all of the files it should, even on
+	systems with a buggy readdir affecting file systems inaccessible
+	at configure time.
+
+	In some unusual circumstances `rm -r' would fail to remove --
+	or even consider -- all entries in a directory with more than 254
+	(SunOS) or 338 (Darwin) entries.  This could cause trouble even on
+	other types of systems when using an affected file system via e.g.,
+	NFS.  The underlying cause was a bug in readdir on those systems.
+	Coreutils-5.2.1 and earlier used a configure-time test designed
+	to detect precisely those problem systems, but it would detect
+	the problem and enable remove.c's work-around code only when its
+	configure-time test was run on a losing file system.  Obviously,
+	it couldn't detect a problem if the offending file system wasn't
+	tested or even mounted at coreutils configure time.  Now, rm itself
+	performs a minimal-cost run-time test to detect the problem.
+
+	* src/remove.c (CONSECUTIVE_READDIR_UNLINK_THRESHOLD): Define.
+	(remove_cwd_entries):  When readdir returns NULL for a directory from
+	which we've removed more than CONSECUTIVE_READDIR_UNLINK_THRESHOLD
+	entries, call rewinddir and then resume the readdir/unlink loop.
+	(UNLINK_CAN_UNLINK_DIRS): Rename from ROOT_CAN_UNLINK_DIRS.
+
+2005-05-12  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: nohup now closes stdin if it is a terminal, unless
 	POSIXLY_CORRECT is set.  This fixes a glitch noted by Wayne Pollock in
