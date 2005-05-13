@@ -920,7 +920,7 @@ remove_cwd_entries (Dirstack_state *ds, char **subdir, struct stat *subdir_sb,
 	case RM_OK:
 	  /* Count how many files we've unlinked since the initial
 	     opendir or the last rewinddir.  On buggy systems, if you
-	     remove too many, readdir return NULL even though there
+	     remove too many, readdir returns NULL even though there
 	     remain unprocessed directory entries.  */
 	  ++n_unlinked_since_opendir_or_last_rewind;
 	  break;
