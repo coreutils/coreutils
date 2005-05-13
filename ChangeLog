@@ -29,8 +29,8 @@
 
 	* NEWS: nohup now closes stdin if it is a terminal, unless
 	POSIXLY_CORRECT is set.  This fixes a glitch noted by Wayne Pollock in
-	<https://www.opengroup.org/sophocles/show_mail.tpl?source=L&listname=aus
-tin-group-l&id=8341>.
+	<https://www.opengroup.org/sophocles/show_mail.tpl?
+	source=L&listname=austin-group-l&id=8341>.
 	* doc/coreutils.texi (nohup invocation): Document this.
 	* src/nohup.c (main): Implement this.
 

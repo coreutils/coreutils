@@ -1229,9 +1229,6 @@
 /* Define to 1 if you have the `wmempcpy' function. */
 #undef HAVE_WMEMPCPY
 
-/* Define if readdir is found to work properly in some unusual cases. */
-#undef HAVE_WORKING_READDIR
-
 /* Define if utimes works properly. */
 #undef HAVE_WORKING_UTIMES
 
