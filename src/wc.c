@@ -1,4 +1,4 @@
-/* wc - print the number of bytes, words, and lines in files
+/* wc - print the number of lines, words, and bytes in files
    Copyright (C) 85, 91, 1995-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
