@@ -46,16 +46,29 @@
 #define obstack_chunk_alloc malloc
 #define obstack_chunk_free free
 
-/* FIXME: if possible, use autoconf...  */
+/* If anyone knows of another system for which unlink can never
+   remove a directory, please report it to bug-coreutils@gnu.org.
+   The code below is slightly more efficient if it *knows* that
+   unlink(2) cannot possibly unlink a directory.  */
 #ifdef __GLIBC__
-# define ROOT_CAN_UNLINK_DIRS 0
+# define UNLINK_CAN_UNLINK_DIRS 0  /* Good!  */
 #else
-# define ROOT_CAN_UNLINK_DIRS 1
+# define UNLINK_CAN_UNLINK_DIRS 1  /* Less efficient.  */
 #endif
 
-#ifndef HAVE_WORKING_READDIR
-# define HAVE_WORKING_READDIR 0
-#endif
+/* This is the maximum number of consecutive readdir/unlink calls that
+   can be made (with no intervening rewinddir or closedir/opendir)
+   before triggering a bug that makes readdir return NULL even though
+   some directory entries have not been processed.  The bug afflicts
+   SunOS's readdir when applied to ufs file systems and Darwin 6.5's
+   (and OSX v.10.3.8's) HFS+.  This maximum is conservative in that
+   demonstrating the problem seems to require a directory containing
+   at least 254 deletable entries (which doesn't count . and ..), so
+   we could conceivably increase the maximum value to 254.  */
+enum
+  {
+    CONSECUTIVE_READDIR_UNLINK_THRESHOLD = 200
+  };
 
 enum Ternary
   {
@@ -718,15 +731,19 @@ remove_entry (Dirstack_state const *ds, char const *filename,
 
   /* Why bother with the following #if/#else block?  Because on systems with
      an unlink function that *can* unlink directories, we must determine the
-     type of each entry before removing it.  Otherwise, we'd risk unlinking an
-     entire directory tree simply by unlinking a single directory;  then all
-     the storage associated with that hierarchy would not be freed until the
-     next reboot.  Not nice.  To avoid that, on such slightly losing systems, we
-     need to call lstat to determine the type of each entry, and that represents
-     extra overhead that -- it turns out -- we can avoid on GNU-libc-based
-     systems, since there, unlink will never remove a directory.  */
+     type of each entry before removing it.  Otherwise, we'd risk unlinking
+     an entire directory tree simply by unlinking a single directory;  then
+     all the storage associated with that hierarchy would not be freed until
+     the next reboot.  Not nice.  To avoid that, on such slightly losing
+     systems, we need to call lstat to determine the type of each entry,
+     and that represents extra overhead that -- it turns out -- we can
+     avoid on GNU-libc-based systems, since there, unlink will never remove
+     a directory.  Also, on systems where unlink may unlink directories,
+     we're forced to allow a race condition: we lstat a non-directory, then
+     go to unlink it, but in the mean time, a malicious someone has replaced
+     it with a directory.  */
 
-#if ROOT_CAN_UNLINK_DIRS
+#if UNLINK_CAN_UNLINK_DIRS
 
   /* If we don't already know whether FILENAME is a directory, find out now.
      Then, if it's a non-directory, we can use unlink on it.  */
@@ -780,7 +797,7 @@ remove_entry (Dirstack_state const *ds, char const *filename,
     }
 
 
-#else /* ! ROOT_CAN_UNLINK_DIRS */
+#else /* ! UNLINK_CAN_UNLINK_DIRS */
 
   if (is_dir == T_YES && ! x->recursive)
     {
@@ -838,7 +855,7 @@ remove_cwd_entries (Dirstack_state *ds, char **subdir, struct stat *subdir_sb,
   DIR *dirp = opendir (".");
   struct AD_ent *top = AD_stack_top (ds);
   enum RM_status status = top->status;
-  bool need_rewinddir = false;
+  size_t n_unlinked_since_opendir_or_last_rewind = 0;
 
   assert (VALID_STATUS (status));
   *subdir = NULL;
@@ -874,12 +891,14 @@ remove_cwd_entries (Dirstack_state *ds, char **subdir, struct stat *subdir_sb,
 	      /* Arrange to give a diagnostic after exiting this loop.  */
 	      dirp = NULL;
 	    }
-	  else if (need_rewinddir)
+	  else if (CONSECUTIVE_READDIR_UNLINK_THRESHOLD
+		   < n_unlinked_since_opendir_or_last_rewind)
 	    {
-	      /* On buggy systems, call rewinddir if we've called unlink
-		 or rmdir since the opendir or a previous rewinddir.  */
+	      /* Call rewinddir if we've called unlink or rmdir so many times
+		 (since the opendir or the previous rewinddir) that this
+		 NULL-return may be the symptom of a buggy readdir.  */
 	      rewinddir (dirp);
-	      need_rewinddir = false;
+	      n_unlinked_since_opendir_or_last_rewind = 0;
 	      continue;
 	    }
 	  break;
@@ -899,9 +918,11 @@ remove_cwd_entries (Dirstack_state *ds, char **subdir, struct stat *subdir_sb,
       switch (tmp_status)
 	{
 	case RM_OK:
-	  /* On buggy systems, record the fact that we've just
-	     removed a directory entry.  */
-	  need_rewinddir = ! HAVE_WORKING_READDIR;
+	  /* Count how many files we've unlinked since the initial
+	     opendir or the last rewinddir.  On buggy systems, if you
+	     remove too many, readdir return NULL even though there
+	     remain unprocessed directory entries.  */
+	  ++n_unlinked_since_opendir_or_last_rewind;
 	  break;
 
 	case RM_ERROR:
@@ -929,7 +950,7 @@ remove_cwd_entries (Dirstack_state *ds, char **subdir, struct stat *subdir_sb,
 		/* It is much more common that we reach this point for an
 		   inaccessible directory.  Hence the second diagnostic, below.
 		   However it is also possible that F is a non-directory.
-		   That can happen when we use the `! ROOT_CAN_UNLINK_DIRS'
+		   That can happen when we use the `! UNLINK_CAN_UNLINK_DIRS'
 		   block of code and when DO_UNLINK fails due to EPERM.
 		   In that case, give a better diagnostic.  */
 		if (errno == ENOTDIR)
