@@ -19,24 +19,24 @@
 /* Written by Paul Eggert.  */
 
 #ifndef XTIME_H_
-#define XTIME_H_ 1
+# define XTIME_H_ 1
 
 /* xtime_t is a signed type used for time stamps.  It is an integer
    type that is a count of nanoseconds -- except for obsolescent hosts
    without sufficiently-wide integers, where it is a count of
    seconds.  */
-#if HAVE_LONG_LONG
+# if HAVE_LONG_LONG
 typedef long long int xtime_t;
-# define XTIME_PRECISION 1000000000LL
-#else
-# include <limits.h>
-typedef long int xtime_t;
-# if LONG_MAX >> 31 >> 31 == 0
-#  define XTIME_PRECISION 1L
+#  define XTIME_PRECISION 1000000000LL
 # else
-#  define XTIME_PRECISION 1000000000L
+#  include <limits.h>
+typedef long int xtime_t;
+#  if LONG_MAX >> 31 >> 31 == 0
+#   define XTIME_PRECISION 1L
+#  else
+#   define XTIME_PRECISION 1000000000L
+#  endif
 # endif
-#endif
 
 /* Return an extended time value that contains S seconds and NS
    nanoseconds, without any overflow checking.  */

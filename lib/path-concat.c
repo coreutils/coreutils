@@ -89,8 +89,8 @@ path_concat (char const *dir, char const *abase, char **base_in_result)
 }
 
 #ifdef TEST_PATH_CONCAT
-#include <stdlib.h>
-#include <stdio.h>
+# include <stdlib.h>
+# include <stdio.h>
 int
 main ()
 {

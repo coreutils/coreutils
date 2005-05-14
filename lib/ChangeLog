@@ -1,3 +1,12 @@
+2005-05-14  Jim Meyering  <jim@meyering.net>
+
+	* unlocked-io.h, gethrxtime.c, gethrxtime.h, mountlist.h,
+	* xtime.h, path-concat.c: Correct cpp indentation.
+
+2005-05-14  Jim Meyering  <jim@meyering.net>
+
+	Update FSF postal mail address everywhere.
+
 2005-05-09  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* fts_.h (FTS): Use correct type for fts_compar member.

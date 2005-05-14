@@ -18,10 +18,10 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 
 #ifndef MOUNTLIST_H_
-#define MOUNTLIST_H_
+# define MOUNTLIST_H_
 
-#include <stdbool.h>
-#include <sys/types.h>
+# include <stdbool.h>
+# include <sys/types.h>
 
 /* A mount table entry. */
 struct mount_entry

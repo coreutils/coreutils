@@ -19,19 +19,19 @@
 /* Written by Paul Eggert.  */
 
 #ifndef GETHRXTIME_H_
-#define GETHRXTIME_H_ 1
+# define GETHRXTIME_H_ 1
 
-#include "xtime.h"
+# include "xtime.h"
 
 /* Get the current time, as a count of the number of nanoseconds since
    an arbitrary epoch (e.g., the system boot time).  This clock can't
    be set, is always increasing, and is nearly linear.  */
 
-#if HAVE_ARITHMETIC_HRTIME_T && HAVE_DECL_GETHRTIME
-# include <time.h>
+# if HAVE_ARITHMETIC_HRTIME_T && HAVE_DECL_GETHRTIME
+#  include <time.h>
 static inline xtime_t gethrxtime (void) { return gethrtime (); }
-#else
+# else
 xtime_t gethrxtime (void);
-#endif
+# endif
 
 #endif

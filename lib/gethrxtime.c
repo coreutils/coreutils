@@ -58,7 +58,7 @@ gethrxtime (void)
   }
 # endif
 
-#if HAVE_MICROUPTIME
+# if HAVE_MICROUPTIME
   {
     struct timeval tv;
     microuptime (&tv);
