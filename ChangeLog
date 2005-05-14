@@ -1,6 +1,32 @@
-2005-05-13  Jim Meyering  <jim@meyering.net>
+2005-05-14  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	Update FSF postal mail address.
+	* src/basename.c, src/cat.c, src/checksum.h, src/chgrp.c
+	* src/chmod.c, src/chown-core.c, src/chown-core.h, src/chown.c
+	* src/chroot.c, src/cksum.c, src/comm.c, src/copy.c, src/copy.h
+	* src/cp-hash.c, src/cp-hash.h, src/cp.c, src/csplit.c, src/cut.c
+	* src/date.c, src/dcgen, src/dd.c, src/df.c, src/dircolors.c
+	* src/dirname.c, src/du.c, src/echo.c, src/env.c, src/expand.c
+	* src/expr.c, src/factor.c, src/fmt.c, src/fold.c, src/fs.h
+	* src/groups.sh, src/head.c, src/hostid.c, src/hostname.c, src/id.c
+	* src/install.c, src/join.c, src/kill.c, src/lbracket.c, src/link.c
+	* src/ln.c, src/logname.c, src/ls-dir.c, src/ls-ls.c, src/ls-vdir.c
+	* src/ls.c, src/ls.h, src/md5.c, src/md5sum.c, src/mkdir.c
+	* src/mkfifo.c, src/mknod.c, src/mv.c, src/nice.c, src/nl.c
+	* src/nohup.c, src/od.c, src/paste.c, src/pathchk.c, src/pinky.c
+	* src/pr.c, src/printenv.c, src/printf.c, src/ptx.c, src/pwd.c
+	* src/readlink.c, src/remove.c, src/remove.h, src/rm.c, src/rmdir.c
+	* src/seq.c, src/setuidgid.c, src/sha1sum.c, src/shred.c
+	* src/sleep.c, src/sort.c, src/split.c, src/stat.c, src/stty.c
+	* src/su.c, src/sum.c, src/sync.c, src/system.h, src/tac-pipe.c
+	* src/tac.c, src/tail.c, src/tee.c, src/test.c, src/touch.c
+	* src/tr.c, src/true.c, src/tsort.c, src/tty.c, src/uname.c
+	* src/unexpand.c, src/uniq.c, src/unlink.c, src/uptime.c
+	* src/users.c, src/wc.c, src/who.c, src/whoami.c, src/yes.c
+
+2005-05-13  Jim Meyering  <jim@meyering.net>
 
 	* NEWS: `rm -r' now removes all of the files it should, even on
 	systems with a buggy readdir affecting file systems inaccessible
