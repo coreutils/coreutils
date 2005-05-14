@@ -28,9 +28,3 @@ time_r.h
 utimecmp.h
 vasnprintf.h
 vasprintf.h
-unlocked-io.h
-gethrxtime.c
-gethrxtime.h
-mountlist.h
-xtime.h
-path-concat.c
