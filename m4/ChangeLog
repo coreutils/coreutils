@@ -1,5 +1,9 @@
 2005-05-13  Jim Meyering  <jim@meyering.net>
 
+	* prereq.m4: Don't require gl_FUNC_STAT or gl_FUNC_LSTAT.
+	* stat.m4: Remove unnecessary file.
+	* lstat.m4: Remove unnecessary file.
+
 	* readdir.m4 (GL_FUNC_READDIR): Remove, now that remove.c no
 	longer needs it.
 	* jm-macros.m4 (gl_MACROS): Don't require GL_FUNC_READDIR.
