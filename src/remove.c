@@ -36,6 +36,7 @@
 #include "quote.h"
 #include "remove.h"
 #include "root-dev-ino.h"
+#include "unlinkdir.h"
 #include "yesno.h"
 
 /* Avoid shadowing warnings because these are functions declared
@@ -45,16 +46,6 @@
 
 #define obstack_chunk_alloc malloc
 #define obstack_chunk_free free
-
-/* If anyone knows of another system for which unlink can never
-   remove a directory, please report it to bug-coreutils@gnu.org.
-   The code below is slightly more efficient if it *knows* that
-   unlink(2) cannot possibly unlink a directory.  */
-#ifdef __GLIBC__
-# define UNLINK_CAN_UNLINK_DIRS 0  /* Good!  */
-#else
-# define UNLINK_CAN_UNLINK_DIRS 1  /* Less efficient.  */
-#endif
 
 /* This is the maximum number of consecutive readdir/unlink calls that
    can be made (with no intervening rewinddir or closedir/opendir)
@@ -729,111 +720,110 @@ remove_entry (Dirstack_state const *ds, char const *filename,
   if (s != RM_OK)
     return s;
 
-  /* Why bother with the following #if/#else block?  Because on systems with
+  /* Why bother with the following if/else block?  Because on systems with
      an unlink function that *can* unlink directories, we must determine the
      type of each entry before removing it.  Otherwise, we'd risk unlinking
      an entire directory tree simply by unlinking a single directory;  then
      all the storage associated with that hierarchy would not be freed until
-     the next reboot.  Not nice.  To avoid that, on such slightly losing
+     the next fsck.  Not nice.  To avoid that, on such slightly losing
      systems, we need to call lstat to determine the type of each entry,
      and that represents extra overhead that -- it turns out -- we can
-     avoid on GNU-libc-based systems, since there, unlink will never remove
+     avoid on non-losing systems, since there, unlink will never remove
      a directory.  Also, on systems where unlink may unlink directories,
      we're forced to allow a race condition: we lstat a non-directory, then
      go to unlink it, but in the mean time, a malicious someone has replaced
      it with a directory.  */
 
-#if UNLINK_CAN_UNLINK_DIRS
-
-  /* If we don't already know whether FILENAME is a directory, find out now.
-     Then, if it's a non-directory, we can use unlink on it.  */
-  if (is_dir == T_UNKNOWN)
+  if (cannot_unlink_dir ())
     {
-# if HAVE_STRUCT_DIRENT_D_TYPE
-      if (dp && dp->d_type != DT_UNKNOWN)
-	is_dir = DT_IS_DIR (dp) ? T_YES : T_NO;
-      else
-# endif
+      if (is_dir == T_YES && ! x->recursive)
 	{
-	  struct stat sbuf;
-	  if (lstat (filename, &sbuf))
-	    {
-	      if (errno == ENOENT && x->ignore_missing_files)
-		return RM_OK;
-
-	      error (0, errno,
-		     _("cannot lstat %s"), quote (full_filename (filename)));
-	      return RM_ERROR;
-	    }
-
-	  is_dir = S_ISDIR (sbuf.st_mode) ? T_YES : T_NO;
+	  error (0, EISDIR, _("cannot remove directory %s"),
+		 quote (full_filename (filename)));
+	  return RM_ERROR;
 	}
-    }
 
-  if (is_dir == T_NO)
-    {
-      /* At this point, barring race conditions, FILENAME is known
-	 to be a non-directory, so it's ok to try to unlink it.  */
+      /* is_empty_directory is set iff it's ok to use rmdir.
+	 Note that it's set only in interactive mode -- in which case it's
+	 an optimization that arranges so that the user is asked just
+	 once whether to remove the directory.  */
+      if (is_empty_directory == T_YES)
+	DO_RMDIR (filename, x);
+
+      /* If we happen to know that FILENAME is a directory, return now
+	 and let the caller remove it -- this saves the overhead of a failed
+	 unlink call.  If FILENAME is a command-line argument, then dp is NULL,
+	 so we'll first try to unlink it.  Using unlink here is ok, because it
+	 cannot remove a directory.  */
+      if ((dp && DT_IS_DIR (dp)) || is_dir == T_YES)
+	return RM_NONEMPTY_DIR;
+
       DO_UNLINK (filename, x);
 
-      /* unlink failed with some other error code.  report it.  */
-      error (0, errno, _("cannot remove %s"),
-	     quote (full_filename (filename)));
-      return RM_ERROR;
+      if (! x->recursive
+	  || errno == ENOENT || errno == ENOTDIR
+	  || errno == ELOOP || errno == ENAMETOOLONG)
+	{
+	  /* Either --recursive is not in effect, or the file cannot be a
+	     directory.  Report the unlink problem and fail.  */
+	  error (0, errno, _("cannot remove %s"),
+		 quote (full_filename (filename)));
+	  return RM_ERROR;
+	}
     }
-
-  if (! x->recursive)
+  else
     {
-      error (0, EISDIR, _("cannot remove directory %s"),
-	     quote (full_filename (filename)));
-      return RM_ERROR;
-    }
-
-  if (is_empty_directory == T_YES)
-    {
-      DO_RMDIR (filename, x);
-      /* Don't diagnose any failure here.
-	 It'll be detected when the caller tries another way.  */
-    }
-
-
-#else /* ! UNLINK_CAN_UNLINK_DIRS */
-
-  if (is_dir == T_YES && ! x->recursive)
-    {
-      error (0, EISDIR, _("cannot remove directory %s"),
-	     quote (full_filename (filename)));
-      return RM_ERROR;
-    }
-
-  /* is_empty_directory is set iff it's ok to use rmdir.
-     Note that it's set only in interactive mode -- in which case it's
-     an optimization that arranges so that the user is asked just
-     once whether to remove the directory.  */
-  if (is_empty_directory == T_YES)
-    DO_RMDIR (filename, x);
-
-  /* If we happen to know that FILENAME is a directory, return now
-     and let the caller remove it -- this saves the overhead of a failed
-     unlink call.  If FILENAME is a command-line argument, then dp is NULL,
-     so we'll first try to unlink it.  Using unlink here is ok, because it
-     cannot remove a directory.  */
-  if ((dp && DT_IS_DIR (dp)) || is_dir == T_YES)
-    return RM_NONEMPTY_DIR;
-
-  DO_UNLINK (filename, x);
-
-  if (! x->recursive
-      || errno == ENOENT || errno == ENOTDIR
-      || errno == ELOOP || errno == ENAMETOOLONG)
-    {
-      /* Either --recursive is not in effect, or the file cannot be a
-	 directory.  Report the unlink problem and fail.  */
-      error (0, errno, _("cannot remove %s"),
-	     quote (full_filename (filename)));
-      return RM_ERROR;
-    }
+      /* If we don't already know whether FILENAME is a directory, find out now.
+	 Then, if it's a non-directory, we can use unlink on it.  */
+      if (is_dir == T_UNKNOWN)
+	{
+#if HAVE_STRUCT_DIRENT_D_TYPE
+	  if (dp && dp->d_type != DT_UNKNOWN)
+	    is_dir = DT_IS_DIR (dp) ? T_YES : T_NO;
+	  else
 #endif
+	    {
+	      struct stat sbuf;
+	      if (lstat (filename, &sbuf))
+		{
+		  if (errno == ENOENT && x->ignore_missing_files)
+		    return RM_OK;
+
+		  error (0, errno, _("cannot lstat %s"),
+			 quote (full_filename (filename)));
+		  return RM_ERROR;
+		}
+
+	      is_dir = S_ISDIR (sbuf.st_mode) ? T_YES : T_NO;
+	    }
+	}
+
+      if (is_dir == T_NO)
+	{
+	  /* At this point, barring race conditions, FILENAME is known
+	     to be a non-directory, so it's ok to try to unlink it.  */
+	  DO_UNLINK (filename, x);
+
+	  /* unlink failed with some other error code.  report it.  */
+	  error (0, errno, _("cannot remove %s"),
+		 quote (full_filename (filename)));
+	  return RM_ERROR;
+	}
+
+      if (! x->recursive)
+	{
+	  error (0, EISDIR, _("cannot remove directory %s"),
+		 quote (full_filename (filename)));
+	  return RM_ERROR;
+	}
+
+      if (is_empty_directory == T_YES)
+	{
+	  DO_RMDIR (filename, x);
+	  /* Don't diagnose any failure here.
+	     It'll be detected when the caller tries another way.  */
+	}
+    }
 
   return RM_NONEMPTY_DIR;
 }
