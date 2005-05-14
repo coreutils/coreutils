@@ -1,3 +1,7 @@
+2005-05-14  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* unlinkdir.c, unlinkdir.h: New files.
+
 2005-05-14  Jim Meyering  <jim@meyering.net>
 
 	* unlocked-io.h, gethrxtime.c, gethrxtime.h, mountlist.h,
