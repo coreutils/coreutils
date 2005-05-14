@@ -3,6 +3,7 @@
 	* Version 5.3.1.
 
 	Update FSF postal mail address.
+	* Makefile.maint, Makefile.cfg, gnupload
 	* src/basename.c, src/cat.c, src/checksum.h, src/chgrp.c
 	* src/chmod.c, src/chown-core.c, src/chown-core.h, src/chown.c
 	* src/chroot.c, src/cksum.c, src/comm.c, src/copy.c, src/copy.h
