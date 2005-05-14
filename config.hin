@@ -714,9 +714,6 @@
 /* Define to 1 if you have the <paths.h> header file. */
 #undef HAVE_PATHS_H
 
-/* Define to 1 if you have the <priv.h> header file. */
-#undef HAVE_PRIV_H
-
 /* Define if your system has the /proc/uptime special file. */
 #undef HAVE_PROC_UPTIME
 
@@ -1465,9 +1462,6 @@
 /* Define to 1 for Encore UMAX 4.3 that has <inq_status/cpustats.h> instead of
    <sys/cpustats.h>. */
 #undef UMAX4_3
-
-/* Define to 1 if unlink (dir) cannot possibly succeed. */
-#undef UNLINK_CANNOT_UNLINK_DIR
 
 /* Define to 1 if you want getc etc. to use unlocked I/O if available.
    Unlocked I/O can improve performance in unithreaded apps, but it is not

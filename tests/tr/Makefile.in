@@ -133,7 +133,7 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/afs.m4 \
 	$(top_srcdir)/m4/uintptr_t.m4 $(top_srcdir)/m4/ullong_max.m4 \
 	$(top_srcdir)/m4/ulonglong.m4 $(top_srcdir)/m4/unicodeio.m4 \
 	$(top_srcdir)/m4/unistd-safer.m4 \
-	$(top_srcdir)/m4/unlink-busy.m4 $(top_srcdir)/m4/unlinkdir.m4 \
+	$(top_srcdir)/m4/unlink-busy.m4 \
 	$(top_srcdir)/m4/unlocked-io.m4 $(top_srcdir)/m4/uptime.m4 \
 	$(top_srcdir)/m4/userspec.m4 $(top_srcdir)/m4/utimbuf.m4 \
 	$(top_srcdir)/m4/utime.m4 $(top_srcdir)/m4/utimecmp.m4 \
