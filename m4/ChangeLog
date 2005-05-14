@@ -1,3 +1,8 @@
+2005-05-14  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* prereqs.m4 (gl_PREREQ): Require gl_UNLINKDIR.
+	* unlinkdir.m4: New file.
+
 2005-05-13  Jim Meyering  <jim@meyering.net>
 
 	* prereq.m4: Don't require gl_FUNC_STAT or gl_FUNC_LSTAT.
