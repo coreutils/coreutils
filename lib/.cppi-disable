@@ -25,6 +25,7 @@ strdup.h
 strndup.h
 strtoul.c
 time_r.h
+unlocked-io.h
 utimecmp.h
 vasnprintf.h
 vasprintf.h
