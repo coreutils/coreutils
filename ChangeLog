@@ -1,6 +1,13 @@
-2005-05-14  Jim Meyering  <jim@meyering.net>
+2005-05-14  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	* src/remove.c: Include unlinkdir.h.
+	(UNLINK_CAN_UNLINK_DIRS): Remove.
+	(remove_entry): Use cannot_unlink_dirs () rather than
+	UNLINK_CAN_UNLINK_DIRS.
+
+2005-05-14  Jim Meyering  <jim@meyering.net>
 
 	Update FSF postal mail address.
 	* Makefile.maint, Makefile.cfg, gnupload
