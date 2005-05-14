@@ -1,3 +1,8 @@
+2005-05-14  Jim Meyering  <jim@meyering.net>
+
+	* unlinkdir.m4: Register unlinkdir.c and unlinkdir.h via AC_LIBSOURCES.
+	Add `AC_LIBOBJ([unlinkdir])'.
+
 2005-05-14  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* prereqs.m4 (gl_PREREQ): Require gl_UNLINKDIR.
