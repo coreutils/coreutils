@@ -1,3 +1,8 @@
+2005-05-15  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* depcomp, install-sh, mdate-sh, missing, pmkinstalldirs:
+	Sync from gnulib (scriptversion change only).
+
 2005-05-14  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* config.guess, config.sub: Sync from gnulib.
