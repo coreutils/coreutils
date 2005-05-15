@@ -59,11 +59,11 @@ cannot_unlink_dir (void)
 	}
 # else
       /* In traditional Unix, only root can unlink directories.  */
-      cannot = (getuid () != 0);
+      cannot = (geteuid () != 0);
 # endif
+      initialized = true;
     }
 
-  initialized = true;
   return cannot;
 }
 
