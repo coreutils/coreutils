@@ -1,3 +1,8 @@
+2005-05-16  Jim Meyering  <jim@meyering.net>
+
+	* fts.m4 (gl_FUNC_FTS): Don't require AC_FUNC_MALLOC or
+	AC_FUNC_REALLOC.  They are not needed.
+
 2005-05-14  Jim Meyering  <jim@meyering.net>
 
 	* unlinkdir.m4: Register unlinkdir.c and unlinkdir.h via AC_LIBSOURCES.
