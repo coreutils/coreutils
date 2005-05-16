@@ -1,4 +1,4 @@
-#serial 1
+#serial 2
 dnl Copyright (C) 2005 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
@@ -31,8 +31,6 @@ AC_DEFUN([gl_FUNC_FTS],
   AC_REQUIRE([AC_FUNC_CLOSEDIR_VOID])
   AC_REQUIRE([AC_FUNC_LSTAT])
   AC_REQUIRE([AC_FUNC_LSTAT_FOLLOWS_SLASHED_SYMLINK])
-  AC_REQUIRE([AC_FUNC_MALLOC])
-  AC_REQUIRE([AC_FUNC_REALLOC])
   AC_REQUIRE([AC_FUNC_STAT])
   AC_CHECK_FUNCS_ONCE([fchdir memmove memset strrchr])
 ])
