@@ -1,6 +1,13 @@
-2005-05-14  Paul Eggert  <eggert@cs.ucla.edu>
+2005-05-16  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	Fix Cygwin porting problem reported by Eric Blake.
+	* src/remove.c (DT_IS_DIR): Remove.
+	(DT_IS_KNOWN, DT_MUST_BE): New macros.
+	(remove_entry): Use them.
+
+2005-05-14  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/remove.c: Include unlinkdir.h.
 	(UNLINK_CAN_UNLINK_DIRS): Remove.
