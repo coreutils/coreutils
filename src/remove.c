@@ -664,10 +664,16 @@ prompt (Dirstack_state const *ds, char const *filename,
 }
 
 #if HAVE_STRUCT_DIRENT_D_TYPE
-# define DT_IS_DIR(D) ((D)->d_type == DT_DIR)
+
+/* True if the type of the directory entry D is known.  */
+# define DT_IS_KNOWN(d) ((d)->d_type != DT_UNKNOWN)
+
+/* True if the type of the directory entry D must be T.  */
+# define DT_MUST_BE(d, t) ((d)->d_type == (t))
+
 #else
-/* Use this only if the member exists -- i.e., don't return 0.  */
-# define DT_IS_DIR(D) do_not_use_this_macro
+# define DT_IS_KNOWN(d) false
+# define DT_MUST_BE(d, t) false
 #endif
 
 #define DO_UNLINK(Filename, X)						\
@@ -755,7 +761,7 @@ remove_entry (Dirstack_state const *ds, char const *filename,
 	 unlink call.  If FILENAME is a command-line argument, then dp is NULL,
 	 so we'll first try to unlink it.  Using unlink here is ok, because it
 	 cannot remove a directory.  */
-      if ((dp && DT_IS_DIR (dp)) || is_dir == T_YES)
+      if ((dp && DT_MUST_BE (dp, DT_DIR)) || is_dir == T_YES)
 	return RM_NONEMPTY_DIR;
 
       DO_UNLINK (filename, x);
@@ -777,11 +783,9 @@ remove_entry (Dirstack_state const *ds, char const *filename,
 	 Then, if it's a non-directory, we can use unlink on it.  */
       if (is_dir == T_UNKNOWN)
 	{
-#if HAVE_STRUCT_DIRENT_D_TYPE
-	  if (dp && dp->d_type != DT_UNKNOWN)
-	    is_dir = DT_IS_DIR (dp) ? T_YES : T_NO;
+	  if (dp && DT_IS_KNOWN (dp))
+	    is_dir = DT_MUST_BE (dp, DT_DIR) ? T_YES : T_NO;
 	  else
-#endif
 	    {
 	      struct stat sbuf;
 	      if (lstat (filename, &sbuf))
