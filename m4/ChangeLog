@@ -29,6 +29,7 @@
 	Use "cu_saved_libs" for local var name, not "ac_su_saved_lib".
 	* prereq.m4: Add copyright notice.
 	(gl_PREREQ): Add gl_LOCALCHARSET.
+	* localcharset.m4: New file, from gnulib.
 
 2005-05-16  Jim Meyering  <jim@meyering.net>
 
