@@ -84,6 +84,7 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/afs.m4 \
 	$(top_srcdir)/m4/lib-check.m4 $(top_srcdir)/m4/lib-ld.m4 \
 	$(top_srcdir)/m4/lib-link.m4 $(top_srcdir)/m4/lib-prefix.m4 \
 	$(top_srcdir)/m4/linebuffer.m4 $(top_srcdir)/m4/link-follow.m4 \
+	$(top_srcdir)/m4/localcharset.m4 \
 	$(top_srcdir)/m4/long-options.m4 \
 	$(top_srcdir)/m4/longdouble.m4 $(top_srcdir)/m4/longlong.m4 \
 	$(top_srcdir)/m4/ls-mntd-fs.m4 $(top_srcdir)/m4/makepath.m4 \
@@ -237,7 +238,6 @@ RANLIB = @RANLIB@
 SEQ_LIBM = @SEQ_LIBM@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
-SQRT_LIBM = @SQRT_LIBM@
 STDBOOL_H = @STDBOOL_H@
 STRIP = @STRIP@
 U = @U@

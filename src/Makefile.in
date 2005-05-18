@@ -113,6 +113,7 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/afs.m4 \
 	$(top_srcdir)/m4/lib-check.m4 $(top_srcdir)/m4/lib-ld.m4 \
 	$(top_srcdir)/m4/lib-link.m4 $(top_srcdir)/m4/lib-prefix.m4 \
 	$(top_srcdir)/m4/linebuffer.m4 $(top_srcdir)/m4/link-follow.m4 \
+	$(top_srcdir)/m4/localcharset.m4 \
 	$(top_srcdir)/m4/long-options.m4 \
 	$(top_srcdir)/m4/longdouble.m4 $(top_srcdir)/m4/longlong.m4 \
 	$(top_srcdir)/m4/ls-mntd-fs.m4 $(top_srcdir)/m4/makepath.m4 \
@@ -296,7 +297,9 @@ expr_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
 	../lib/libcoreutils.a
 factor_SOURCES = factor.c
 factor_OBJECTS = factor.$(OBJEXT)
-factor_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1)
+factor_LDADD = $(LDADD)
+factor_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 false_SOURCES = false.c
 false_OBJECTS = false.$(OBJEXT)
 false_LDADD = $(LDADD)
@@ -724,7 +727,6 @@ RANLIB = @RANLIB@
 SEQ_LIBM = @SEQ_LIBM@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
-SQRT_LIBM = @SQRT_LIBM@
 STDBOOL_H = @STDBOOL_H@
 STRIP = @STRIP@
 U = @U@
@@ -811,9 +813,6 @@ sort_LDADD = $(LDADD) $(POW_LIB)
 # for get_date and gettime
 date_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME)
 touch_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME)
-
-# For sqrt
-factor_LDADD = $(LDADD) $(SQRT_LIBM)
 
 # If necessary, add -lm to resolve use of pow in lib/strtod.c.
 # If necessary, add -liconv to resolve use of iconv in lib/unicodeio.c.
@@ -948,7 +947,7 @@ uninstall-binPROGRAMS:
 	done
 
 clean-binPROGRAMS:
-	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS) > /dev/null 2>&1 || /bin/rm -f $(bin_PROGRAMS)
+	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
 
 installcheck-binPROGRAMS: $(bin_PROGRAMS)
 	bad=0; pid=$$$$; list="$(bin_PROGRAMS)"; for p in $$list; do \

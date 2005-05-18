@@ -89,9 +89,6 @@
    */
 #undef GETLOADAVG_PRIVILEGED
 
-/* Define if gettimeofday clobbers localtime's static buffer. */
-#undef GETTIMEOFDAY_CLOBBERS_LOCALTIME_BUFFER
-
 /* The concatenation of the strings `GNU ', and PACKAGE. */
 #undef GNU_PACKAGE
 
@@ -417,9 +414,6 @@
 /* Define if you have the declaration of errno. */
 #undef HAVE_ERRNO_DECL
 
-/* Define to 1 if you have the <errno.h> header file. */
-#undef HAVE_ERRNO_H
-
 /* Define to 1 if you have the `euidaccess' function. */
 #undef HAVE_EUIDACCESS
 
@@ -434,9 +428,6 @@
 
 /* Define to 1 if you have the `fesetround' function. */
 #undef HAVE_FESETROUND
-
-/* Define to 1 if you have the <float.h> header file. */
-#undef HAVE_FLOAT_H
 
 /* Define to 1 if you have the `floor' function. */
 #undef HAVE_FLOOR
@@ -579,9 +570,6 @@
 
 /* Define to 1 if you have the `ypsec' library (-lypsec). */
 #undef HAVE_LIBYPSEC
-
-/* Define to 1 if you have the <limits.h> header file. */
-#undef HAVE_LIMITS_H
 
 /* Define to 1 if you have the `listmntent' function. */
 #undef HAVE_LISTMNTENT
@@ -787,15 +775,8 @@
 /* Define to 1 if you have the `snprintf' function. */
 #undef HAVE_SNPRINTF
 
-/* Define to 1 if you have the `sqrt' function. */
-#undef HAVE_SQRT
-
 /* Define to 1 if you have the `statvfs' function. */
 #undef HAVE_STATVFS
-
-/* Define to 1 if `stat' has the bug that it succeeds when given the
-   zero-length file name argument. */
-#undef HAVE_STAT_EMPTY_STRING_BUG
 
 /* Define to 1 if stdbool.h conforms to C99. */
 #undef HAVE_STDBOOL_H
@@ -825,9 +806,6 @@
 /* Define to 1 if you have the `strcasecmp' function. */
 #undef HAVE_STRCASECMP
 
-/* Define to 1 if you have the `strchr' function. */
-#undef HAVE_STRCHR
-
 /* Define to 1 if you have the `strcoll' function and it is properly defined.
    */
 #undef HAVE_STRCOLL
@@ -837,9 +815,6 @@
 
 /* Define to 1 if you have the `strdup' function. */
 #undef HAVE_STRDUP
-
-/* Define to 1 if you have the `strerror' function. */
-#undef HAVE_STRERROR
 
 /* Define to 1 if you have the `strerror_r' function. */
 #undef HAVE_STRERROR_R
@@ -861,9 +836,6 @@
 
 /* Define to 1 if you have the `strpbrk' function. */
 #undef HAVE_STRPBRK
-
-/* Define to 1 if you have the `strrchr' function. */
-#undef HAVE_STRRCHR
 
 /* Define to 1 if you have the `strstr' function. */
 #undef HAVE_STRSTR
