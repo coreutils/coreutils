@@ -1,5 +1,22 @@
 ## Process this file with automake to produce Makefile.in -*-Makefile-*-
 
+## Copyright (C) 1990, 1991, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
+## 2000, 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+
+## This program is free software; you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation; either version 2, or (at your option)
+## any later version.
+
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+
+## You should have received a copy of the GNU General Public License
+## along with this program; if not, write to the Free Software Foundation,
+## Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+
 EXTRA_PROGRAMS = chroot df hostid nice pinky stty su uname uptime users who
 
 bin_SCRIPTS = groups
@@ -56,9 +73,6 @@ sort_LDADD = $(LDADD) $(POW_LIB)
 # for get_date and gettime
 date_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME)
 touch_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME)
-
-# For sqrt
-factor_LDADD = $(LDADD) $(SQRT_LIBM)
 
 # If necessary, add -lm to resolve use of pow in lib/strtod.c.
 # If necessary, add -liconv to resolve use of iconv in lib/unicodeio.c.
