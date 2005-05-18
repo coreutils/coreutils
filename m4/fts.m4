@@ -1,4 +1,4 @@
-#serial 2
+#serial 3
 dnl Copyright (C) 2005 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
@@ -16,21 +16,12 @@ AC_DEFUN([gl_FUNC_FTS],
 
   # Checks for header files.
   AC_REQUIRE([AC_HEADER_DIRENT])
-  AC_REQUIRE([AC_HEADER_STDC])
-  AC_CHECK_HEADERS_ONCE([fcntl.h inttypes.h stddef.h stdint.h])
-  AC_CHECK_HEADERS_ONCE([stdlib.h string.h sys/param.h unistd.h])
+  AC_CHECK_HEADERS_ONCE([inttypes.h stdint.h])
+  AC_CHECK_HEADERS_ONCE([sys/param.h])
 
   # Checks for typedefs, structures, and compiler characteristics.
-  AC_REQUIRE([AM_STDBOOL_H])
-  AC_REQUIRE([AC_C_CONST])
-  AC_REQUIRE([AC_TYPE_SIZE_T])
   AC_REQUIRE([gt_INTTYPES_PRI])
-  AC_CHECK_TYPES([ptrdiff_t])
 
   # Checks for library functions.
-  AC_REQUIRE([AC_FUNC_CLOSEDIR_VOID])
-  AC_REQUIRE([AC_FUNC_LSTAT])
   AC_REQUIRE([AC_FUNC_LSTAT_FOLLOWS_SLASHED_SYMLINK])
-  AC_REQUIRE([AC_FUNC_STAT])
-  AC_CHECK_FUNCS_ONCE([fchdir memmove memset strrchr])
 ])
