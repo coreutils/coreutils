@@ -1,6 +1,6 @@
-#serial 6
+#serial 7
 
-# Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
+# Copyright (C) 2001, 2002, 2003, 2005 Free Software Foundation, Inc.
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
 # with or without modifications, as long as this notice is preserved.
@@ -62,8 +62,6 @@ main ()
 
     AC_DEFINE(gettimeofday, rpl_gettimeofday,
       [Define to rpl_gettimeofday if the replacement function should be used.])
-    AC_DEFINE(GETTIMEOFDAY_CLOBBERS_LOCALTIME_BUFFER, 1,
-      [Define if gettimeofday clobbers localtime's static buffer.])
     gl_PREREQ_GETTIMEOFDAY
   fi
 ])
