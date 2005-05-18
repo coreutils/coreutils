@@ -1,6 +1,14 @@
-2005-05-16  Paul Eggert  <eggert@cs.ucla.edu>
+2005-05-18  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	* configure.ac: Add copyright notice.  gl_LIB_CHECK -> cu_LIB_CHECK.
+	* src/Makefile.am: Add copyright notice.
+	(factor_LDADD): Remove, as factor no longer needs sqrt.
+	* src/hostname.c: Remove test for HAVE_LIMITS_H; we can assume
+	it's always true now.
+
+2005-05-16  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Fix Cygwin porting problem reported by Eric Blake.
 	* src/remove.c (DT_IS_DIR): Remove.

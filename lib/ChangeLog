@@ -1,3 +1,18 @@
+2005-05-18  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* canonicalize.c: Include canonicalize.h first, to test interface.
+	Include <stddef.h> unconditionally, since we assume C89 now.
+	All uses of PTR_INT_TYPE replaced by ptrdiff_t.
+	* fts.c: Include fts_.h first, to check interface.
+	Do not include intprops.h; no longer needed.
+	Include cycle-check.h and hash.h, since fts_.h no longer does.
+	Remove unnecessary casts of closedir to void.
+	(fts_build): Use a simpler method (not involving TYPE_SIGNED) to
+	decide whether to decrement nlinks.
+	* fts_.h: Do not include hash.h or cycle-check.h; no longer needed.
+	(FTS): Use struct hash_table * instead of Hash_table, so that
+	we no longer need to include hash.h here.
+
 2005-05-14  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* unlinkdir.c, unlinkdir.h: New files.

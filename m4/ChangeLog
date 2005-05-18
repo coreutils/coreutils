@@ -1,3 +1,35 @@
+2005-05-18  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* canonicalize.m4 (AC_FUNC_CANONICALIZE_FILE_NAME]):
+	Don't check for stddef.h.
+	* fts.m4 (gl_FUNC_FTS): Don't require AC_HEADER_STDC, as we
+	don't use its results.
+	Don't check for fcntl.h, stddef.h, stdlib.h, string.h, unistd.h,
+	since we include them unconditionally.  Don't require
+	AM_STDBOOL_H, since stdbool is a prerequisite.
+	Don't require AC_C_CONST, AC_TYPE_SIZE_T or check for ptrdiff_t
+	since we assume C89 or better.
+	Don't require AC_FUNC_CLOSEDIR_VOID, AC_FUNC_LSTAT, or AC_FUNC_STAT,
+	as we don't use their results.
+	Don't check for fchdir, memmove, memset, strrchr, as we use
+	them unconditionally.
+	* gettimeofday.m4 (AC_FUNC_GETTIMEOFDAY_CLOBBER): Don't define
+	GETTIMEOFDAY_CLOBBERS_LOCALTIME_BUFFER, since nobody uses it.
+	* jm-macros.m4 (gl_MACROS): Require AC_FUNC_LSTAT.
+	Don't check for memcpy, strchr, strerror, strrchr, float.h.
+	Use AC_REQUIRE on AM_LANGINFO_CODESET and gl_GLIBC21 rather
+	than invoking them directly.
+	(gl_CHECK_ALL_HEADERS): Don't check for errno.h, float.h,
+	limits.h, stddef.h, since we assume C89 now.
+	* lib-check.m4: Add copyright notice.
+	(cu_LIB_CHECK): Renamed from gl_LIB_CHECK.
+	Don't check for sqrt; factor no longer needs it.
+	Revamp tests for floor, modf, rint, to define SEQ_LIBM.
+	Redo tests for fesetround to act like the other wons.
+	Use "cu_saved_libs" for local var name, not "ac_su_saved_lib".
+	* prereq.m4: Add copyright notice.
+	(gl_PREREQ): Add gl_LOCALCHARSET.
+
 2005-05-16  Jim Meyering  <jim@meyering.net>
 
 	* fts.m4 (gl_FUNC_FTS): Don't require AC_FUNC_MALLOC or
