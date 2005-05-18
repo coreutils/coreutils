@@ -20,6 +20,8 @@
 # include <config.h>
 #endif
 
+#include "canonicalize.h"
+
 #ifdef STDC_HEADERS
 # include <stdlib.h>
 #else
@@ -43,6 +45,7 @@ void free ();
 #endif
 
 #include <errno.h>
+#include <stddef.h>
 
 #include "cycle-check.h"
 #include "path-concat.h"
@@ -54,24 +57,6 @@ void free ();
 # define __set_errno(Val) errno = (Val)
 #endif
 
-/* If __PTRDIFF_TYPE__ is
-   defined, as with GNU C, use that; that way we don't pollute the
-   namespace with <stddef.h>'s symbols.  Otherwise, if <stddef.h> is
-   available, include it and use ptrdiff_t.  In traditional C, long is
-   the best that we can do.  */
-
-#ifdef __PTRDIFF_TYPE__
-# define PTR_INT_TYPE __PTRDIFF_TYPE__
-#else
-# ifdef HAVE_STDDEF_H
-#  include <stddef.h>
-#  define PTR_INT_TYPE ptrdiff_t
-# else
-#  define PTR_INT_TYPE long
-# endif
-#endif
-
-#include "canonicalize.h"
 #include "pathmax.h"
 #include "xreadlink.h"
 
@@ -230,7 +215,7 @@ canonicalize_filename_mode (const char *name, canonicalize_mode_t can_mode)
 
 	  if (dest + (end - start) >= rpath_limit)
 	    {
-	      PTR_INT_TYPE dest_offset = dest - rpath;
+	      ptrdiff_t dest_offset = dest - rpath;
 	      size_t new_size = rpath_limit - rpath;
 
 	      if (end - start + 1 > PATH_MAX)
