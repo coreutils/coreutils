@@ -1,8 +1,27 @@
-#serial 7
+#serial 8
 
-dnl Misc lib-related macros for fileutils, sh-utils, textutils.
+dnl Misc lib-related macros for coreutils.
 
-AC_DEFUN([gl_LIB_CHECK],
+# Copyright (C) 1993, 1994, 1995, 1996, 1997, 2000, 2001, 2003, 2004,
+# 2005 Free Software Foundation, Inc.
+
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2, or (at your option)
+# any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software Foundation,
+# Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+
+# Written by Jim Meyering.
+
+AC_DEFUN([cu_LIB_CHECK],
 [
 
   # Check for libypsec.a on Dolphin M88K machines.
@@ -13,26 +32,24 @@ AC_DEFUN([gl_LIB_CHECK],
 
   # Some programs need to link with -lm.  printf does if it uses
   # lib/strtod.c which uses pow.  And seq uses the math functions,
-  # floor, modf, rint.  And factor uses sqrt.  And sleep uses fesetround.
+  # floor, modf, rint.  And sleep uses fesetround.
 
-  # Save a copy of $LIBS and add $FLOOR_LIBM before these tests
   # Check for these math functions used by seq.
-  ac_su_saved_lib="$LIBS"
-  LIBS="$LIBS -lm"
-  AC_CHECK_FUNCS(floor modf rint)
-  LIBS="$ac_su_saved_lib"
-
-  AC_SUBST(SQRT_LIBM)
-  AC_CHECK_FUNCS(sqrt)
-  if test $ac_cv_func_sqrt = no; then
-    AC_CHECK_LIB(m, sqrt, [SQRT_LIBM=-lm])
-  fi
+  AC_SUBST([SEQ_LIBM])
+  cu_saved_libs=$LIBS
+  AC_SEARCH_LIBS([floor], [m])
+  AC_SEARCH_LIBS([modf], [m])
+  AC_SEARCH_LIBS([rint], [m])
+  AC_CHECK_FUNCS([floor modf rint])
+  test "X$LIBS" = "X$cu_saved_libs" || SEQ_LIBM=-lm
+  LIBS=$cu_saved_libs
 
   AC_SUBST(FESETROUND_LIBM)
-  AC_CHECK_FUNCS(fesetround)
-  if test $ac_cv_func_fesetround = no; then
-    AC_CHECK_LIB(m, fesetround, [FESETROUND_LIBM=-lm])
-  fi
+  cu_saved_libs=$LIBS
+  AC_SEARCH_LIBS([fesetround], [m])
+  AC_CHECK_FUNCS([fesetround])
+  test "X$LIBS" = "X$cu_saved_libs" || FESETROUND_LIBM=-lm
+  LIBS=$cu_saved_libs
 
   # The -lsun library is required for YP support on Irix-4.0.5 systems.
   # m88k/svr3 DolphinOS systems using YP need -lypsec for id.
@@ -56,10 +73,10 @@ $ac_includes_default
 
   # SCO-ODT-3.0 is reported to need -lufc for crypt.
   # NetBSD needs -lcrypt for crypt.
-  ac_su_saved_lib="$LIBS"
+  cu_saved_libs="$LIBS"
   AC_SEARCH_LIBS(crypt, [ufc crypt],
 		 [test "$ac_cv_search_crypt" = "none required" ||
 		  LIB_CRYPT="$ac_cv_search_crypt"])
-  LIBS="$ac_su_saved_lib"
+  LIBS="$cu_saved_libs"
   AC_SUBST(LIB_CRYPT)
 ])
