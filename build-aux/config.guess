@@ -655,7 +655,7 @@ EOF
 	then
 	    # avoid double evaluation of $set_cc_for_build
 	    test -n "$CC_FOR_BUILD" || eval $set_cc_for_build
-	    
+
 	    # hppa2.0w-hp-hpux* has a 64-bit kernel and a compiler generating
 	    # 32-bit code.  hppa64-hp-hpux* has the same kernel and a compiler
 	    # generating 64-bit code.  GNU and HP use different nomenclature:
