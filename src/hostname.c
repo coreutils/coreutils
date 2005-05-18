@@ -1,5 +1,5 @@
 /* hostname - set or print the name of current host system
-   Copyright (C) 1994-1997, 1999-2004 Free Software Foundation, Inc.
+   Copyright (C) 1994-1997, 1999-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@ int sethostname ();
 #endif
 
 #if !defined(HAVE_SETHOSTNAME) && defined(HAVE_SYSINFO) && \
-     defined (HAVE_SYS_SYSTEMINFO_H) && defined(HAVE_LIMITS_H)
+     defined (HAVE_SYS_SYSTEMINFO_H)
 # include <sys/systeminfo.h>
 
 int
