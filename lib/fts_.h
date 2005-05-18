@@ -63,8 +63,7 @@
 
 # include <stddef.h>
 # include <sys/types.h>
-# include "hash.h"
-# include "cycle-check.h"
+# include <sys/stat.h>
 
 typedef struct {
 	struct _ftsent *fts_cur;	/* current node */
@@ -116,7 +115,7 @@ typedef struct {
 	   and promptly even when the depth of a hierarchy is in the tens
 	   of thousands.  Lazy checking, as done by GNU rm via cycle-check.c,
 	   wouldn't be appropriate for du.  */
-	Hash_table *active_dir_ht;
+	struct hash_table *active_dir_ht;
 	struct cycle_check_state *cycle_state;
 } FTS;
 
