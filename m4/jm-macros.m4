@@ -1,4 +1,4 @@
-#serial 86   -*- autoconf -*-
+#serial 87   -*- autoconf -*-
 
 dnl Misc type-related macros for coreutils.
 
@@ -54,6 +54,7 @@ AC_DEFUN([gl_MACROS],
   AC_REQUIRE([gl_FUNC_LCHOWN])
   AC_REQUIRE([gl_FUNC_RMDIR_NOTEMPTY])
   AC_REQUIRE([gl_FUNC_CHOWN])
+  AC_REQUIRE([AC_FUNC_LSTAT])
   AC_REQUIRE([AC_FUNC_LSTAT_FOLLOWS_SLASHED_SYMLINK])
   AC_REQUIRE([AC_FUNC_STRERROR_R])
   AC_REQUIRE([gl_FUNC_GROUP_MEMBER])
@@ -109,16 +110,12 @@ AC_DEFUN([gl_MACROS],
     iswspace \
     lchown \
     listmntent \
-    memcpy \
     mempcpy \
     mkfifo \
     mbrlen \
     realpath \
     sethostname \
     siginterrupt \
-    strchr \
-    strerror \
-    strrchr \
     sysctl \
     sysinfo \
     tcgetpgrp \
@@ -157,8 +154,8 @@ AC_DEFUN([gl_MACROS],
      LIBS="$ac_seq_save_LIBS"
     ])
 
-  AM_LANGINFO_CODESET
-  gl_GLIBC21
+  AC_REQUIRE([AM_LANGINFO_CODESET])
+  AC_REQUIRE([gl_GLIBC21])
   AM_ICONV
   gl_FUNC_UNLINK_BUSY_TEXT
 
@@ -185,18 +182,14 @@ AC_DEFUN([gl_MACROS],
 AC_DEFUN([gl_CHECK_ALL_HEADERS],
 [
   AC_CHECK_HEADERS_ONCE( \
-    errno.h  \
     fcntl.h \
-    float.h \
     hurd.h \
-    limits.h \
     memory.h \
     mntent.h \
     mnttab.h \
     netdb.h \
     paths.h \
     stdlib.h \
-    stddef.h \
     stdint.h \
     string.h \
     sys/filsys.h \
