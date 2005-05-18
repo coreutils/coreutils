@@ -1,4 +1,24 @@
 dnl Process this file with autoconf to produce a configure script. -*-m4-*-
+
+dnl Copyright (C) 1991, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,
+dnl 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+
+dnl This program is free software; you can redistribute it and/or modify
+dnl it under the terms of the GNU General Public License as published by
+dnl the Free Software Foundation; either version 2, or (at your option)
+dnl any later version.
+
+dnl This program is distributed in the hope that it will be useful,
+dnl but WITHOUT ANY WARRANTY; without even the implied warranty of
+dnl MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+dnl GNU General Public License for more details.
+
+dnl You should have received a copy of the GNU General Public License
+dnl along with this program; if not, write to the Free Software Foundation,
+dnl Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+
+dnl Written by Jim Meyering.
+
 AC_INIT([GNU coreutils],[5.3.1],[bug-coreutils@gnu.org])
 AC_CONFIG_SRCDIR(src/ls.c)
 
@@ -232,7 +252,7 @@ AC_CHECK_DECLS([strsignal, sys_siglist, _sys_siglist, __sys_siglist], , ,
 # For src/kill.c and src/printf.c.
 AC_CHECK_DECLS([strtoimax, strtoumax])
 
-gl_LIB_CHECK
+cu_LIB_CHECK
 
 AM_GNU_GETTEXT([external], [need-ngettext])
 AM_GNU_GETTEXT_VERSION(0.13.1)
