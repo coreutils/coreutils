@@ -53,6 +53,8 @@
 static char sccsid[] = "@(#)fts.c	8.6 (Berkeley) 8/14/94";
 #endif /* LIBC_SCCS and not lint */
 
+#include "fts_.h"
+
 #if HAVE_SYS_PARAM_H || defined _LIBC
 # include <sys/param.h>
 #endif
@@ -64,9 +66,10 @@ static char sccsid[] = "@(#)fts.c	8.6 (Berkeley) 8/14/94";
 #include <fcntl.h>
 #include <errno.h>
 #include "dirfd.h"
-#include "fts_.h"
-#include "intprops.h"
+#include "cycle-check.h"
+#include "hash.h"
 #include "unistd-safer.h"
+#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -926,7 +929,7 @@ fts_build (register FTS *sp, int type)
 			cur->fts_flags |= FTS_DONTCHDIR;
 			descend = false;
 			cderrno = errno;
-			(void)closedir(dirp);
+			closedir(dirp);
 			dirp = NULL;
 		} else
 			descend = true;
@@ -976,7 +979,7 @@ mem1:				saved_errno = errno;
 				if (p)
 					free(p);
 				fts_lfree(head);
-				(void)closedir(dirp);
+				closedir(dirp);
 				cur->fts_info = FTS_ERR;
 				SET(FTS_STOP);
 				__set_errno (saved_errno);
@@ -1001,7 +1004,7 @@ mem1:				saved_errno = errno;
 			 */
 			free(p);
 			fts_lfree(head);
-			(void)closedir(dirp);
+			closedir(dirp);
 			cur->fts_info = FTS_ERR;
 			SET(FTS_STOP);
 			__set_errno (ENAMETOOLONG);
@@ -1043,11 +1046,9 @@ mem1:				saved_errno = errno;
 			p->fts_info = fts_stat(sp, p, false);
 
 			/* Decrement link count if applicable. */
-			if (nlinks > 0
-			    && (TYPE_SIGNED (nlink_t) || nostat)
-			    && (p->fts_info == FTS_D ||
+			if (nlinks > 0 && (p->fts_info == FTS_D ||
 			    p->fts_info == FTS_DC || p->fts_info == FTS_DOT))
-				--nlinks;
+				nlinks -= nostat;
 		}
 
 		/* We walk in directory order so "ls -f" doesn't get upset. */
@@ -1061,7 +1062,7 @@ mem1:				saved_errno = errno;
 		++nitems;
 	}
 	if (dirp)
-		(void)closedir(dirp);
+		closedir(dirp);
 
 	/*
 	 * If realloc() changed the address of the path, adjust the
