@@ -21,7 +21,7 @@
 #include <stdbool.h>
 
 #if UNLINK_CANNOT_UNLINK_DIR
-static bool cannot_unlink_dir (void) { return true; }
+# define cannot_unlink_dir() true
 #else
 bool cannot_unlink_dir (void);
 #endif
