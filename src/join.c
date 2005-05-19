@@ -664,6 +664,12 @@ decode_field_spec (const char *s, int *file_index, size_t *field_index)
     default:
       error (EXIT_FAILURE, 0,
 	     _("invalid file number in field spec: %s"), quote (s));
+
+      /* Tell gcc -W -Wall that we can't get beyond this point.
+	 This avoids a warning (otherwise legit) that the caller's copies
+	 of *file_index and *field_index might be used uninitialized.  */
+      abort ();
+
       break;
     }
 }
