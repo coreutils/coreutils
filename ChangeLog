@@ -1,6 +1,12 @@
-2005-05-18  Paul Eggert  <eggert@cs.ucla.edu>
+2005-05-19  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* src/join.c (decode_field_spec): Add an abort after
+	`error (EXIT_FAILURE, ...' to avoid a gcc warning in caller,
+	about variables being used uninitialized.
+
+2005-05-18  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* configure.ac: Add copyright notice.  gl_LIB_CHECK -> cu_LIB_CHECK.
 	* src/Makefile.am: Add copyright notice.
