@@ -2,6 +2,9 @@
 
 	* Version 5.3.1.
 
+	* src/remove.c (AD_mark_helper, AD_mark_current_as_unremovable):
+	Remove inaccurate-but-harmless `const' attributes.
+
 	* src/join.c (decode_field_spec): Add an abort after
 	`error (EXIT_FAILURE, ...' to avoid a gcc warning in caller,
 	about variables being used uninitialized.
