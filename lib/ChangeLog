@@ -1,3 +1,9 @@
+2005-05-19  Jim Meyering  <jim@meyering.net>
+
+	* unlinkdir.h (cannot_unlink_dir) [UNLINK_CANNOT_UNLINK_DIR]:
+	Use #define rather than a static function, to avoid a warning
+	when the function was not used.
+
 2005-05-18  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* canonicalize.c: Include canonicalize.h first, to test interface.
