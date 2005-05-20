@@ -1,4 +1,4 @@
-#serial 12
+#serial 13
 # Determine whether we need the chown wrapper.
 
 dnl Copyright (C) 1997, 1998, 1999, 2000, 2001, 2003, 2004, 2005 Free
@@ -20,7 +20,7 @@ AC_DEFUN([gl_FUNC_CHOWN],
   AC_REQUIRE([AC_FUNC_CHOWN])
   AC_REQUIRE([gl_FUNC_CHOWN_FOLLOWS_SYMLINK])
 
-  if test $ac_cv_func_chown_works = yes; then
+  if test $ac_cv_func_chown_works = no; then
     AC_DEFINE(CHOWN_FAILS_TO_HONOR_ID_OF_NEGATIVE_ONE, 1,
       [Define if chown is not POSIX compliant regarding IDs of -1.])
   fi
