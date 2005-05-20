@@ -66,8 +66,6 @@ static char sccsid[] = "@(#)fts.c	8.6 (Berkeley) 8/14/94";
 #include <fcntl.h>
 #include <errno.h>
 #include "dirfd.h"
-#include "cycle-check.h"
-#include "hash.h"
 #include "unistd-safer.h"
 #include <stdbool.h>
 #include <stdlib.h>
@@ -167,6 +165,15 @@ static unsigned short int fts_stat (FTS *, FTSENT *, bool) internal_function;
 static int      fts_safe_changedir (FTS *, FTSENT *, int, const char *)
      internal_function;
 
+#if _LGPL_PACKAGE
+static bool enter_dir (FTS *fts, FTSENT *ent) { return true; }
+static void leave_dir (FTS *fts, FTSENT *ent) {}
+static bool setup_dir (FTS *fts) { return true; }
+static void free_dir (FTS *fts) {}
+#else
+# include "fts-cycle.c"
+#endif
+
 #ifndef MAX
 # define MAX(a,b) ((a) > (b) ? (a) : (b))
 #endif
@@ -192,8 +199,6 @@ static int      fts_safe_changedir (FTS *, FTSENT *, int, const char *)
 #define BNAMES		2		/* fts_children, names only */
 #define BREAD		3		/* fts_read */
 
-#define HT_INITIAL_SIZE 31
-
 #if FTS_DEBUG
 bool fts_debug = false;
 # include <stdio.h>
@@ -202,114 +207,13 @@ bool fts_debug = false;
 # define Dprintf(x)
 #endif
 
-#define ENTER_DIR(Fts, Ent, Tag)				\
-  do {								\
-      Dprintf (("  %s-entering: %s\n", Tag, (Ent)->fts_path));	\
-      enter_dir (sp, p);					\
-    } while (0)
-
 #define LEAVE_DIR(Fts, Ent, Tag)				\
-  do {								\
+  do								\
+    {								\
       Dprintf (("  %s-leaving: %s\n", Tag, (Ent)->fts_path));	\
-      leave_dir (sp, p);					\
-    } while (0)
-
-/* Use these each of these to map a device/inode pair to an FTSENT.  */
-struct Active_dir
-{
-  dev_t dev;
-  ino_t ino;
-  FTSENT *fts_ent;
-};
-
-static bool
-AD_compare (void const *x, void const *y)
-{
-  struct Active_dir const *ax = x;
-  struct Active_dir const *ay = y;
-  return ax->ino == ay->ino
-      && ax->dev == ay->dev;
-}
-
-static size_t
-AD_hash (void const *x, size_t table_size)
-{
-  struct Active_dir const *ax = x;
-  return (uintmax_t) ax->ino % table_size;
-}
-
-static void
-enter_dir (FTS *fts, FTSENT *ent)
-{
-  if (fts->active_dir_ht)
-    {
-      struct stat const *st = ent->fts_statp;
-      struct Active_dir *ad = malloc (sizeof (struct Active_dir));
-      struct Active_dir *ad_from_table;
-
-      if (ad == NULL)
-	goto give_up;
-
-      ad->dev = st->st_dev;
-      ad->ino = st->st_ino;
-      ad->fts_ent = ent;
-
-      /* See if we've already encountered this directory.
-	 This can happen when following symlinks as well as
-	 with a corrupted directory hierarchy. */
-      ad_from_table = hash_insert (fts->active_dir_ht, ad);
-
-      if (ad_from_table == NULL)
-	{
-	give_up:
-	  /* Insertion failed due to lack of memory.  Free the hash
-	     table and turn off this sort of cycle detection.  */
-	  hash_free (fts->active_dir_ht);
-	  fts->active_dir_ht = NULL;
-	  return;
-	}
-
-      if (ad_from_table != ad)
-	{
-	  /* There was an entry with matching dev/inode already in the table.
-	     Record the fact that we've found a cycle.  */
-	  ent->fts_cycle = ad_from_table->fts_ent;
-	  ent->fts_info = FTS_DC;
-
-	  /* ad was not inserted, so free it.  */
-	  free (ad);
-	}
-    }
-  else if (fts->cycle_state)
-    {
-      if (cycle_check (fts->cycle_state, ent->fts_statp))
-	{
-	  /* FIXME: setting fts_cycle like this isn't proper.
-	     To do what the documentation requires, we'd have to
-	     go around the cycle again and find the right entry.
-	     But no callers in coreutils use the fts_cycle member. */
-	  ent->fts_cycle = ent;
-	  ent->fts_info = FTS_DC;
-	}
-    }
-}
-
-static void
-leave_dir (FTS *fts, FTSENT *ent)
-{
-  if (fts->active_dir_ht)
-    {
-      struct stat const *st = ent->fts_statp;
-      struct Active_dir obj;
-      void *found;
-      obj.dev = st->st_dev;
-      obj.ino = st->st_ino;
-      found = hash_delete (fts->active_dir_ht, &obj);
-      if (!found)
-	abort ();
-      free (found);
-    }
-}
+      leave_dir (Fts, Ent);					\
+    }								\
+  while (false)
 
 /* Open the directory DIR if possible, and return a file
    descriptor.  Return -1 and set errno on failure.  It doesn't matter
@@ -416,23 +320,8 @@ fts_open (char * const *argv,
 		goto mem3;
 	sp->fts_cur->fts_link = root;
 	sp->fts_cur->fts_info = FTS_INIT;
-
-	if (ISSET (FTS_TIGHT_CYCLE_CHECK))
-	  {
-	    sp->active_dir_ht = hash_initialize (HT_INITIAL_SIZE,
-						 NULL, AD_hash,
-						 AD_compare, free);
-	    if (sp->active_dir_ht == NULL)
-	      goto mem3;
-	  }
-	else
-	  {
-	    sp->cycle_state = malloc (sizeof *sp->cycle_state);
-	    if (sp->cycle_state == NULL)
-	      goto mem3;
-	    cycle_check_init (sp->cycle_state);
-	    sp->active_dir_ht = NULL;
-	  }
+	if (! setup_dir (sp))
+	  goto mem3;
 
 	/*
 	 * If using chdir(2), grab a file descriptor pointing to dot to ensure
@@ -513,11 +402,7 @@ fts_close (FTS *sp)
 		(void)close(sp->fts_rfd);
 	}
 
-	/* Free any memory used for cycle detection.  */
-	if (sp->active_dir_ht)
-	  hash_free (sp->active_dir_ht);
-	if (sp->cycle_state)
-	  free (sp->cycle_state);
+	free_dir (sp);
 
 	/* Free up the stream pointer. */
 	free(sp);
@@ -582,9 +467,7 @@ fts_read (register FTS *sp)
 			} else
 				p->fts_flags |= FTS_SYMFOLLOW;
 		}
-		if (p->fts_info == FTS_D)
-			ENTER_DIR (sp, p, "7");
-		return (p);
+		goto check_for_dir;
 	}
 
 	/* Directory in pre-order. */
@@ -663,9 +546,7 @@ next:	tmp = p;
 				return (NULL);
 			}
 			fts_load(sp, p);
-			if (p->fts_info == FTS_D)
-				ENTER_DIR (sp, p, "8");
-			return (sp->fts_cur = p);
+			goto check_for_dir;
 		}
 
 		/*
@@ -690,9 +571,18 @@ next:	tmp = p;
 name:		t = sp->fts_path + NAPPEND(p->fts_parent);
 		*t++ = '/';
 		memmove(t, p->fts_name, p->fts_namelen + 1);
+check_for_dir:
+		sp->fts_cur = p;
 		if (p->fts_info == FTS_D)
-			ENTER_DIR (sp, p, "9");
-		return (sp->fts_cur = p);
+		  {
+		    Dprintf (("  %s-entering: %s\n", sp, p->fts_path));
+		    if (! enter_dir (sp, p))
+		      {
+			__set_errno (ENOMEM);
+			return NULL;
+		      }
+		  }
+		return p;
 	}
 
 	/* Move up to the parent node. */
@@ -1212,6 +1102,28 @@ err:		memset(sbp, 0, sizeof(struct stat));
 	if (S_ISDIR(sbp->st_mode)) {
 		if (ISDOT(p->fts_name))
 			return (FTS_DOT);
+
+#if _LGPL_PACKAGE
+		{
+		  /*
+		   * Cycle detection is done by brute force when the directory
+		   * is first encountered.  If the tree gets deep enough or the
+		   * number of symbolic links to directories is high enough,
+		   * something faster might be worthwhile.
+		   */
+		  FTSENT *t;
+
+		  for (t = p->fts_parent;
+		       t->fts_level >= FTS_ROOTLEVEL; t = t->fts_parent)
+		    if (sbp->st_ino == t->fts_statp->st_ino
+			&& sbp->st_dev == t->fts_statp->st_dev)
+		      {
+			p->fts_cycle = t;
+			return (FTS_DC);
+		      }
+		}
+#endif
+
 		return (FTS_D);
 	}
 	if (S_ISLNK(sbp->st_mode))
