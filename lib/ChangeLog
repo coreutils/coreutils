@@ -1,3 +1,8 @@
+2005-05-20  Jim Meyering  <jim@meyering.net>
+
+	* fts.c (fts_open): Remove useless but otherwise harmless malloc call.
+	Spotted by Paul Eggert.
+
 2005-05-19  Jim Meyering  <jim@meyering.net>
 
 	* unlinkdir.h (cannot_unlink_dir) [UNLINK_CANNOT_UNLINK_DIR]:
