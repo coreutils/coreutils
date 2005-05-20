@@ -1,3 +1,8 @@
+2005-05-20  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* fts.m4 (gl_FUNC_FTS_CORE): Renamed from gl_FUNC_FTS.
+	(gl_FUNC_FTS, gl_FUNC_FTS_LGPL): New macros.
+
 2005-05-18  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* canonicalize.m4 (AC_FUNC_CANONICALIZE_FILE_NAME]):
