@@ -1,10 +1,24 @@
-#serial 3
+#serial 4
 dnl Copyright (C) 2005 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
 
 AC_DEFUN([gl_FUNC_FTS],
+[
+  AC_REQUIRE([gl_FUNC_FTS_CORE])
+  AC_LIBSOURCES([fts-cycle.c])
+])
+
+AC_DEFUN([gl_FUNC_FTS_LGPL],
+[
+  AC_REQUIRE([gl_FUNC_FTS_CORE])
+  AC_DEFINE([_LGPL_PACKAGE], 1,
+    [Define to 1 if compiling for a package to be distributed under the
+     GNU Lesser Public License.])
+])
+
+AC_DEFUN([gl_FUNC_FTS_CORE],
 [
   AC_LIBSOURCES([fts.c, fts_.h])
 
