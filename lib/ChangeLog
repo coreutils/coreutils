@@ -29,6 +29,10 @@
 	(enter_dir, leave_dir): Accommodate change to FTS by inspecting
 	fts->fts_options to see which union member to use.
 
+2005-05-20  Eric Blake  <ebb9@byu.net>  (tiny change)
+
+	* chown.c (rpl_chown): Return -1 on failure.
+
 2005-05-20  Jim Meyering  <jim@meyering.net>
 
 	* fts.c (fts_open): Remove useless but otherwise harmless malloc call.
