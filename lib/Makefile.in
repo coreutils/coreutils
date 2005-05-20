@@ -54,17 +54,17 @@ DIST_COMMON = README $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	error.h euidaccess.c exclude.c exclude.h exitfail.c exitfail.h \
 	fchdir-stub.c fchown-stub.c fd-safer.c file-type.c file-type.h \
 	fileblocks.c filemode.c filemode.h fnmatch.c fopen-safer.c \
-	free.c fsusage.c fsusage.h ftruncate.c fts.c fts_.h getcwd.c \
-	getcwd.h getdate.h getdate.y getgroups.c gethostname.c \
-	gethrxtime.c gethrxtime.h getline.c getline.h getloadavg.c \
-	getndelim2.c getopt.c getopt1.c getpagesize.h getpass.c \
-	getpass.h gettime.c gettimeofday.c getugroups.c getusershell.c \
-	group-member.c group-member.h hard-locale.c hard-locale.h \
-	hash-pjw.c hash-pjw.h hash.c hash.h human.c human.h idcache.c \
-	imaxtostr.c intprops.h inttostr.c inttostr.h lchown.c lchown.h \
-	linebuffer.c linebuffer.h long-options.c long-options.h \
-	lstat.c makepath.c makepath.h malloc.c md5.c md5.h \
-	memcasecmp.c memcasecmp.h memchr.c memcmp.c memcoll.c \
+	free.c fsusage.c fsusage.h ftruncate.c fts-cycle.c fts.c \
+	fts_.h getcwd.c getcwd.h getdate.h getdate.y getgroups.c \
+	gethostname.c gethrxtime.c gethrxtime.h getline.c getline.h \
+	getloadavg.c getndelim2.c getopt.c getopt1.c getpagesize.h \
+	getpass.c getpass.h gettime.c gettimeofday.c getugroups.c \
+	getusershell.c group-member.c group-member.h hard-locale.c \
+	hard-locale.h hash-pjw.c hash-pjw.h hash.c hash.h human.c \
+	human.h idcache.c imaxtostr.c intprops.h inttostr.c inttostr.h \
+	lchown.c lchown.h linebuffer.c linebuffer.h long-options.c \
+	long-options.h lstat.c makepath.c makepath.h malloc.c md5.c \
+	md5.h memcasecmp.c memcasecmp.h memchr.c memcmp.c memcoll.c \
 	memcoll.h memcpy.c memmove.c mempcpy.c mempcpy.h memrchr.c \
 	memrchr.h memset.c mkdir.c mkstemp.c mktime.c modechange.c \
 	modechange.h mountlist.c mountlist.h nanosleep.c obstack.c \
@@ -481,6 +481,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/free.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/fsusage.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/ftruncate.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/fts-cycle.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/fts.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/getcwd.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/getdate.Po@am__quote@
