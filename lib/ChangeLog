@@ -1,3 +1,34 @@
+2005-05-20  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* fts.c: Don't include "cycle-check.h" or "hash.h".
+	(setup_dir, free_dir): New functions.
+	(enter_dir, leave_dir): Define trivial
+	alternatives of _LGPL_PACKAGE.  Move to fts-cycle.c if !_LGPL_PACKAGE.
+	(HT_INITIAL_SIZE, ENTER_DIR): Remove.  All uses removed.
+	(LEAVE_DIR): Fix typo: pass Fts and Ent to leave_dir.
+	(struct Active_dir, AD_compare, AD_hash, enter_dir, leave_dir):
+	Move to fts-cycle.c.
+	(fts_open): Use setup_dir.
+	(fts_close): Use free_dir.
+	(fts_read): Have just one copy of the ENTER_DIR code rather than three.
+	This adds a label and some gotos, but the alternatives were messier.
+	Check for memory allocation failure when entering a dir.
+	(fts_stat) [_LGPL_PACKAGE]: Bring back glibc cycle detection code.
+	* fts_.h (_LGPL_PACKAGE) [defined _LIBC]: New macro.
+	(FTS): New member fts_cycle, that is a union that contains the
+	old active_dir_ht and cycle_state.  All uses changed to mention
+	fts_cycle.ht and fts_cycle.state.
+	* fts-cycle.c: New file, containing GPL'ed code migrated out of
+	fts.c, with the following changes:
+	(setup_dir, free_dir): New functions.
+	(enter_dir): Now returns bool.  Return true if successful, false
+	if memory exhausted.  All callers changed.
+	Do not bother partly cleaning up on
+	memory allocation failure; that is free_dir's job.
+	However, free ad if hash_insert fails, to avoid memory leak.
+	(enter_dir, leave_dir): Accommodate change to FTS by inspecting
+	fts->fts_options to see which union member to use.
+
 2005-05-20  Jim Meyering  <jim@meyering.net>
 
 	* fts.c (fts_open): Remove useless but otherwise harmless malloc call.
