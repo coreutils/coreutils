@@ -3,7 +3,7 @@
 #   Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
 #   2000, 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
 
-timestamp='2005-05-12'
+timestamp='2005-05-15'
 
 # This file is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by
@@ -352,7 +352,7 @@ case "${UNAME_MACHINE}:${UNAME_SYSTEM}:${UNAME_RELEASE}:${UNAME_VERSION}" in
 	exit ;;
     DRS?6000:UNIX_SV:4.2*:7* | DRS?6000:isis:4.2*:7*)
 	case `/usr/bin/uname -p` in
-	    sparc) echo sparc-icl-nx7 && exit ;;
+	    sparc) echo sparc-icl-nx7; exit ;;
 	esac ;;
     sun4H:SunOS:5.*:*)
 	echo sparc-hal-solaris2`echo ${UNAME_RELEASE}|sed -e 's/[^.]*//'`
@@ -463,9 +463,10 @@ case "${UNAME_MACHINE}:${UNAME_SYSTEM}:${UNAME_RELEASE}:${UNAME_VERSION}" in
 	  exit (-1);
 	}
 EOF
-	$CC_FOR_BUILD -o $dummy $dummy.c \
-	  && $dummy `echo "${UNAME_RELEASE}" | sed -n 's/\([0-9]*\).*/\1/p'` \
-	  && exit 0
+	$CC_FOR_BUILD -o $dummy $dummy.c &&
+	  dummyarg=`echo "${UNAME_RELEASE}" | sed -n 's/\([0-9]*\).*/\1/p'` &&
+	  SYSTEM_NAME=`$dummy $dummyarg` &&
+	    { echo "$SYSTEM_NAME"; exit; }
 	echo mips-mips-riscos${UNAME_RELEASE}
 	exit ;;
     Motorola:PowerMAX_OS:*:*)
@@ -549,8 +550,12 @@ EOF
 			exit(0);
 			}
 EOF
-		$CC_FOR_BUILD -o $dummy $dummy.c && $dummy && exit 0
-		echo rs6000-ibm-aix3.2.5
+		if $CC_FOR_BUILD -o $dummy $dummy.c && SYSTEM_NAME=`$dummy`
+		then
+			echo "$SYSTEM_NAME"
+		else
+			echo rs6000-ibm-aix3.2.5
+		fi
 	elif grep bos324 /usr/include/stdio.h >/dev/null 2>&1; then
 		echo rs6000-ibm-aix3.2.4
 	else
@@ -706,7 +711,8 @@ EOF
 	  exit (0);
 	}
 EOF
-	$CC_FOR_BUILD -o $dummy $dummy.c && $dummy && exit 0
+	$CC_FOR_BUILD -o $dummy $dummy.c && SYSTEM_NAME=`$dummy` &&
+		{ echo "$SYSTEM_NAME"; exit; }
 	echo unknown-hitachi-hiuxwe2
 	exit ;;
     9000/7??:4.3bsd:*:* | 9000/8?[79]:4.3bsd:*:* )
@@ -799,7 +805,7 @@ EOF
     i*:CYGWIN*:*)
 	echo ${UNAME_MACHINE}-pc-cygwin
 	exit ;;
-    i*:MINGW*:*)
+    i*:MINGW*:* | i*:windows32*:*)
 	echo ${UNAME_MACHINE}-pc-mingw32
 	exit ;;
     i*:PW*:*)
@@ -878,7 +884,7 @@ EOF
 	#endif
 EOF
 	eval `$CC_FOR_BUILD -E $dummy.c 2>/dev/null | grep ^CPU=`
-	test x"${CPU}" != x && echo "${CPU}-unknown-linux-gnu" && exit 0
+	test x"${CPU}" != x && { echo "${CPU}-unknown-linux-gnu"; exit; }
 	;;
     mips64:Linux:*:*)
 	eval $set_cc_for_build
@@ -897,7 +903,7 @@ EOF
 	#endif
 EOF
 	eval `$CC_FOR_BUILD -E $dummy.c 2>/dev/null | grep ^CPU=`
-	test x"${CPU}" != x && echo "${CPU}-unknown-linux-gnu" && exit 0
+	test x"${CPU}" != x && { echo "${CPU}-unknown-linux-gnu"; exit; }
 	;;
     ppc:Linux:*:*)
 	echo powerpc-unknown-linux-gnu
@@ -998,8 +1004,11 @@ EOF
 	#endif
 EOF
 	eval `$CC_FOR_BUILD -E $dummy.c 2>/dev/null | grep ^LIBC=`
-	test x"${LIBC}" != x && echo "${UNAME_MACHINE}-pc-linux-${LIBC}" && exit 0
-	test x"${TENTATIVE}" != x && echo "${TENTATIVE}" && exit 0
+	test x"${LIBC}" != x && {
+		echo "${UNAME_MACHINE}-pc-linux-${LIBC}"
+		exit
+	}
+	test x"${TENTATIVE}" != x && { echo "${TENTATIVE}"; exit; }
 	;;
     i*86:DYNIX/ptx:4*:*)
 	# ptx 4.0 does uname -s correctly, with DYNIX/ptx in there.
@@ -1100,18 +1109,18 @@ EOF
 	echo m68k-diab-dnix
 	exit ;;
     M68*:*:R3V[5678]*:*)
-	test -r /sysV68 && echo 'm68k-motorola-sysv' && exit 0 ;;
+	test -r /sysV68 && { echo 'm68k-motorola-sysv'; exit; } ;;
     3[345]??:*:4.0:3.0 | 3[34]??A:*:4.0:3.0 | 3[34]??,*:*:4.0:3.0 | 3[34]??/*:*:4.0:3.0 | 4400:*:4.0:3.0 | 4850:*:4.0:3.0 | SKA40:*:4.0:3.0 | SDS2:*:4.0:3.0 | SHG2:*:4.0:3.0 | S7501*:*:4.0:3.0)
 	OS_REL=''
 	test -r /etc/.relid \
 	&& OS_REL=.`sed -n 's/[^ ]* [^ ]* \([0-9][0-9]\).*/\1/p' < /etc/.relid`
 	/bin/uname -p 2>/dev/null | grep 86 >/dev/null \
-	  && echo i486-ncr-sysv4.3${OS_REL} && exit 0
+	  && { echo i486-ncr-sysv4.3${OS_REL}; exit; }
 	/bin/uname -p 2>/dev/null | /bin/grep entium >/dev/null \
-	  && echo i586-ncr-sysv4.3${OS_REL} && exit 0 ;;
+	  && { echo i586-ncr-sysv4.3${OS_REL}; exit; } ;;
     3[34]??:*:4.0:* | 3[34]??,*:*:4.0:*)
         /bin/uname -p 2>/dev/null | grep 86 >/dev/null \
-          && echo i486-ncr-sysv4 && exit 0 ;;
+          && { echo i486-ncr-sysv4; exit; } ;;
     m68*:LynxOS:2.*:* | m68*:LynxOS:3.0*:*)
 	echo m68k-unknown-lynxos${UNAME_RELEASE}
 	exit ;;
@@ -1404,7 +1413,8 @@ main ()
 }
 EOF
 
-$CC_FOR_BUILD -o $dummy $dummy.c 2>/dev/null && $dummy && exit 0
+$CC_FOR_BUILD -o $dummy $dummy.c 2>/dev/null && SYSTEM_NAME=`$dummy` &&
+	{ echo "$SYSTEM_NAME"; exit; }
 
 # Apollos put the system type in the environment.
 
