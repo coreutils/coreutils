@@ -52,6 +52,7 @@
 
 # ifdef _LIBC
 #  include <features.h>
+#  define _LGPL_PACKAGE 1
 # else
 #  undef __THROW
 #  define __THROW
@@ -104,19 +105,28 @@ typedef struct {
 # define FTS_STOP	0x2000		/* (private) unrecoverable error */
 	int fts_options;		/* fts_open options, global flags */
 
-	/* This data structure records the directories between a starting
-	   point and the current directory.  I.e., a directory is recorded
-	   here IFF we have visited it once, but we have not yet completed
-	   processing of all its entries.  Every time we visit a new directory,
-	   we add that directory to this set.  When we finish with a directory
-	   (usually by visiting it a second time), we remove it from this
-	   set.  Each entry in this data structure is a device/inode pair.
-	   This data structure is used to detect directory cycles efficiently
-	   and promptly even when the depth of a hierarchy is in the tens
-	   of thousands.  Lazy checking, as done by GNU rm via cycle-check.c,
-	   wouldn't be appropriate for du.  */
-	struct hash_table *active_dir_ht;
-	struct cycle_check_state *cycle_state;
+# if !_LGPL_PACKAGE
+	union {
+		/* This data structure is used if FTS_TIGHT_CYCLE_CHECK is
+		   specified.  It records the directories between a starting
+		   point and the current directory.  I.e., a directory is
+		   recorded here IFF we have visited it once, but we have not
+		   yet completed processing of all its entries.  Every time we
+		   visit a new directory, we add that directory to this set.
+		   When we finish with a directory (usually by visiting it a
+		   second time), we remove it from this set.  Each entry in
+		   this data structure is a device/inode pair.  This data
+		   structure is used to detect directory cycles efficiently and
+		   promptly even when the depth of a hierarchy is in the tens
+		   of thousands.  */
+		struct hash_table *ht;
+
+		/* This data structure uses lazy checking, as done by rm via
+	           cycle-check.c.  It's the default, but it's not appropriate
+	           for programs like du.  */
+		struct cycle_check_state *state;
+	} fts_cycle;
+# endif
 } FTS;
 
 typedef struct _ftsent {
