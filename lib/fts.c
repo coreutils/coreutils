@@ -424,7 +424,6 @@ fts_open (char * const *argv,
 						 AD_compare, free);
 	    if (sp->active_dir_ht == NULL)
 	      goto mem3;
-	    sp->cycle_state = malloc (sizeof *sp->cycle_state);
 	  }
 	else
 	  {
