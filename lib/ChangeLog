@@ -1,5 +1,8 @@
 2005-05-20  Paul Eggert  <eggert@cs.ucla.edu>
 
+	Split the fts code into GPL'ed and LGPL'ed parts, and fix some
+	minor memory-allocation bugs.
+
 	* fts.c: Don't include "cycle-check.h" or "hash.h".
 	(setup_dir, free_dir): New functions.
 	(enter_dir, leave_dir): Define trivial
