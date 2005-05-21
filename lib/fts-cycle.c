@@ -21,7 +21,7 @@
 #include "cycle-check.h"
 #include "hash.h"
 
-/* Use these each of these to map a device/inode pair to an FTSENT.  */
+/* Use each of these to map a device/inode pair to an FTSENT.  */
 struct Active_dir
 {
   dev_t dev;
