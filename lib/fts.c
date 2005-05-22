@@ -66,7 +66,6 @@ static char sccsid[] = "@(#)fts.c	8.6 (Berkeley) 8/14/94";
 #include <fcntl.h>
 #include <errno.h>
 #include "dirfd.h"
-#include "unistd-safer.h"
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
@@ -170,8 +169,10 @@ static bool enter_dir (FTS *fts, FTSENT *ent) { return true; }
 static void leave_dir (FTS *fts, FTSENT *ent) {}
 static bool setup_dir (FTS *fts) { return true; }
 static void free_dir (FTS *fts) {}
+static int fd_safer (int fd) { return fd; }
 #else
 # include "fts-cycle.c"
+# include "unistd-safer.h"
 #endif
 
 #ifndef MAX

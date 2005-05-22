@@ -1,3 +1,8 @@
+2005-05-22  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* fts.c (fd_safer) [_LGPL_PACKAGE]: New static function,
+	so that unistd-safer.h (GPL'ed code) need not be included.
+
 2005-05-20  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Split the fts code into GPL'ed and LGPL'ed parts, and fix some
