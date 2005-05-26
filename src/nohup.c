@@ -75,6 +75,7 @@ int
 main (int argc, char **argv)
 {
   int saved_stderr_fd = STDERR_FILENO;
+  bool nohup_out = false;
 
   initialize_main (&argc, &argv);
   program_name = argv[0];
@@ -95,12 +96,6 @@ main (int argc, char **argv)
       error (0, 0, _("missing operand"));
       usage (NOHUP_FAILURE);
     }
-
-  /* If standard input is a tty, close it.  POSIX requires nohup to
-     leave standard input alone, but that's less useful in practice as
-     it causes a "nohup foo & exit" session to hang with OpenSSH.  */
-  if (!getenv ("POSIXLY_CORRECT") && isatty (STDIN_FILENO))
-    close (STDIN_FILENO);
 
   /* If standard output is a tty, redirect it (appending) to a file.
      First try nohup.out, then $HOME/nohup.out.  */
@@ -143,6 +138,7 @@ main (int argc, char **argv)
 
       error (0, 0, _("appending output to %s"), quote (file));
       free (in_home);
+      nohup_out = true;
     }
 
   /* If standard error is a tty, redirect it to stdout.  */
@@ -165,6 +161,25 @@ main (int argc, char **argv)
 	    error (NOHUP_FAILURE, errno,
 		   _("failed to redirect standard error"));
 	  close (STDERR_FILENO);
+	}
+    }
+
+  /* If standard input is a tty, replace it with a file descriptor
+     that exists but gives you an error if you try to read it.  POSIX
+     requires nohup to leave standard input alone, but that's less
+     useful in practice as it causes a "nohup foo & exit" session to
+     hang with OpenSSH.  */
+  if (!getenv ("POSIXLY_CORRECT") && isatty (STDIN_FILENO))
+    {
+      close (STDIN_FILENO);
+      if (nohup_out)
+	dup (STDOUT_FILENO);
+      else
+	{
+	  /* This doesn't give you an error on older systems if you're
+	     root, but there's no portable way to fix this and it's
+	     not worth worrying about these days.  */
+	  open ("/", O_RDONLY);
 	}
     }
 

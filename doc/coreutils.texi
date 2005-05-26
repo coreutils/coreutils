@@ -12571,7 +12571,9 @@ descriptor as the (possibly-redirected) standard output.
 @vindex POSIXLY_CORRECT
 If standard input is a terminal, it is closed so that terminal
 sessions do not mistakenly consider the terminal to be used by the
-command.  However, this step is skipped if @env{POSIXLY_CORRECT} is
+command.  To avoid glitches in poorly-written programs standard input
+is then reopened with an innocuous file descriptor that cannot be read
+from.  However, these steps are skipped if @env{POSIXLY_CORRECT} is
 set since @acronym{POSIX} requires standard input to be left alone.
 
 @command{nohup} does not automatically put the command it runs in the

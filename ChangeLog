@@ -1,6 +1,13 @@
-2005-05-26  Jim Meyering  <jim@meyering.net>
+2005-05-26  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	* NEWS: nohup now redirects a tty stdin to an unreadable fd
+	instead of closing it.
+	* doc/coreutils.texi (nohup invocation): Document this.
+	* src/nohup.c (main): Implement this.
+
+2005-05-26  Jim Meyering  <jim@meyering.net>
 
 	* src/expr.c (toarith): Fix a sign error introduced on 2005-01-14.
 	Reported by David Alan Gilbert.

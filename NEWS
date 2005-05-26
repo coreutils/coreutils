@@ -143,7 +143,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   join now supports a NUL field separator, e.g., "join -t '\0'".
   join now detects and reports incompatible options, e.g., "join -t x -t y",
 
-  nohup now closes stdin if it is a terminal, unless POSIXLY_CORRECT is set.
+  If stdin is a terminal, nohup now closes it and then reopens it with an
+  unreadable file descriptor.  (This step is skipped if POSIXLY_CORRECT is set.)
   This prevents the command from tying up an OpenSSH session after you logout.
 
   stat -f -c %S outputs the fundamental block size (used for block counts).
