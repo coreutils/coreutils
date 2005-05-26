@@ -356,7 +356,7 @@ toarith (VALUE *v)
 	while (*++cp);
 
 	free (v->u.s);
-	v->u.i = value * sign;
+	v->u.i = value;
 	v->type = integer;
 	return true;
       }
