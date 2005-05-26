@@ -176,7 +176,7 @@ main (int argc, char **argv)
 	dup (STDOUT_FILENO);
       else
 	{
-	  /* This doesn't give you an error on older systems if you're
+	  /* This won't give you a read error on older systems if you're
 	     root, but there's no portable way to fix this and it's
 	     not worth worrying about these days.  */
 	  open ("/", O_RDONLY);
