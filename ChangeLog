@@ -1,6 +1,11 @@
-2005-05-19  Jim Meyering  <jim@meyering.net>
+2005-05-26  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* src/expr.c (toarith): Fix a sign error introduced on 2005-01-14.
+	* tests/expr/basic: Add tests using arithmetic on negative integers.
+
+2005-05-19  Jim Meyering  <jim@meyering.net>
 
 	* src/remove.c (AD_mark_helper, AD_mark_current_as_unremovable):
 	Remove inaccurate-but-harmless `const' attributes.
