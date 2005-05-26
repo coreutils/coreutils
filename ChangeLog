@@ -3,6 +3,7 @@
 	* Version 5.3.1.
 
 	* src/expr.c (toarith): Fix a sign error introduced on 2005-01-14.
+	Reported by David Alan Gilbert.
 	* tests/expr/basic: Add tests using arithmetic on negative integers.
 
 2005-05-19  Jim Meyering  <jim@meyering.net>
