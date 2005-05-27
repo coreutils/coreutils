@@ -59,6 +59,10 @@ my @Tests =
      ['fail-a', '3 + -', {ERR => "$prog: non-numeric argument\n"},
       {EXIT => 3}],
 
+     # This erroneously succeeded before 5.3.1.
+     ['bigcmp', '-- -2417851639229258349412352 \< 2417851639229258349412352',
+      {OUT => '1'}, {EXIT => 0}],
+
      ['fail-b', '9 9', {ERR => "$prog: syntax error\n"},
       {EXIT => 2}],
      ['fail-c', {ERR => "$prog: missing operand\n"
