@@ -1,3 +1,8 @@
+2005-05-27  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* prereq.m4 (gl_PREREQ): Require gl_STRINTCMP, gl_STRNUMCMP.
+	* strnumcmp.m4: New file.
+
 2005-05-20  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* fts.m4 (gl_FUNC_FTS_CORE): Renamed from gl_FUNC_FTS.
