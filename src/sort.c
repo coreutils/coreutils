@@ -35,6 +35,7 @@
 #include "posixver.h"
 #include "quote.h"
 #include "stdio-safer.h"
+#include "strnumcmp.h"
 #include "unistd-safer.h"
 #include "xmemcoll.h"
 #include "xstrtol.h"
@@ -89,13 +90,10 @@ enum
     SORT_FAILURE = 2
   };
 
-#define NEGATION_SIGN   '-'
-#define NUMERIC_ZERO    '0'
-
 /* The representation of the decimal point in the current locale.  */
-static char decimal_point;
+static int decimal_point;
 
-/* Thousands separator; if CHAR_MAX + 1, then there isn't one.  */
+/* Thousands separator; if -1, then there isn't one.  */
 static int thousands_sep;
 
 /* Nonzero if the corresponding locales are hard.  */
@@ -1063,71 +1061,6 @@ fillbuf (struct buffer *buf, FILE *fp, char const *file)
     }
 }
 
-/* Compare strings A and B containing decimal fractions < 1.  Each string
-   should begin with a decimal point followed immediately by the digits
-   of the fraction.  Strings not of this form are considered to be zero. */
-
-/* The goal here, is to take two numbers a and b... compare these
-   in parallel.  Instead of converting each, and then comparing the
-   outcome.  Most likely stopping the comparison before the conversion
-   is complete.  The algorithm used, in the old sort:
-
-   Algorithm: fraccompare
-   Action   : compare two decimal fractions
-   accepts  : char *a, char *b
-   returns  : -1 if a<b, 0 if a=b, 1 if a>b.
-   implement:
-
-   if *a == decimal_point AND *b == decimal_point
-     find first character different in a and b.
-     if both are digits, return the difference *a - *b.
-     if *a is a digit
-       skip past zeros
-       if digit return 1, else 0
-     if *b is a digit
-       skip past zeros
-       if digit return -1, else 0
-   if *a is a decimal_point
-     skip past decimal_point and zeros
-     if digit return 1, else 0
-   if *b is a decimal_point
-     skip past decimal_point and zeros
-     if digit return -1, else 0
-   return 0 */
-
-static int
-fraccompare (const char *a, const char *b)
-{
-  if (*a == decimal_point && *b == decimal_point)
-    {
-      while (*++a == *++b)
-	if (! ISDIGIT (*a))
-	  return 0;
-      if (ISDIGIT (*a) && ISDIGIT (*b))
-	return *a - *b;
-      if (ISDIGIT (*a))
-	goto a_trailing_nonzero;
-      if (ISDIGIT (*b))
-	goto b_trailing_nonzero;
-      return 0;
-    }
-  else if (*a++ == decimal_point)
-    {
-    a_trailing_nonzero:
-      while (*a == NUMERIC_ZERO)
-	a++;
-      return ISDIGIT (*a);
-    }
-  else if (*b++ == decimal_point)
-    {
-    b_trailing_nonzero:
-      while (*b == NUMERIC_ZERO)
-	b++;
-      return - ISDIGIT (*b);
-    }
-  return 0;
-}
-
 /* Compare strings A and B as numbers without explicitly converting them to
    machine numbers.  Comparatively slow for short strings, but asymptotically
    hideously fast. */
@@ -1135,136 +1068,12 @@ fraccompare (const char *a, const char *b)
 static int
 numcompare (const char *a, const char *b)
 {
-  char tmpa;
-  char tmpb;
-  int tmp;
-  size_t log_a;
-  size_t log_b;
-
-  while (blanks[to_uchar (tmpa = *a)])
+  while (blanks[to_uchar (*a)])
     a++;
-  while (blanks[to_uchar (tmpb = *b)])
+  while (blanks[to_uchar (*b)])
     b++;
 
-  if (tmpa == NEGATION_SIGN)
-    {
-      do
-	tmpa = *++a;
-      while (tmpa == NUMERIC_ZERO || tmpa == thousands_sep);
-      if (tmpb != NEGATION_SIGN)
-	{
-	  if (tmpa == decimal_point)
-	    do
-	      tmpa = *++a;
-	    while (tmpa == NUMERIC_ZERO);
-	  if (ISDIGIT (tmpa))
-	    return -1;
-	  while (tmpb == NUMERIC_ZERO || tmpb == thousands_sep)
-	    tmpb = *++b;
-	  if (tmpb == decimal_point)
-	    do
-	      tmpb = *++b;
-	    while (tmpb == NUMERIC_ZERO);
-	  return - ISDIGIT (tmpb);
-	}
-      do
-	tmpb = *++b;
-      while (tmpb == NUMERIC_ZERO || tmpb == thousands_sep);
-
-      while (tmpa == tmpb && ISDIGIT (tmpa))
-	{
-	  do
-	    tmpa = *++a;
-	  while (tmpa == thousands_sep);
-	  do
-	    tmpb = *++b;
-	  while (tmpb == thousands_sep);
-	}
-
-      if ((tmpa == decimal_point && !ISDIGIT (tmpb))
-	  || (tmpb == decimal_point && !ISDIGIT (tmpa)))
-	return fraccompare (b, a);
-
-      tmp = tmpb - tmpa;
-
-      for (log_a = 0; ISDIGIT (tmpa); ++log_a)
-	do
-	  tmpa = *++a;
-	while (tmpa == thousands_sep);
-
-      for (log_b = 0; ISDIGIT (tmpb); ++log_b)
-	do
-	  tmpb = *++b;
-	while (tmpb == thousands_sep);
-
-      if (log_a != log_b)
-	return log_a < log_b ? 1 : -1;
-
-      if (!log_a)
-	return 0;
-
-      return tmp;
-    }
-  else if (tmpb == NEGATION_SIGN)
-    {
-      do
-	tmpb = *++b;
-      while (tmpb == NUMERIC_ZERO || tmpb == thousands_sep);
-      if (tmpb == decimal_point)
-	do
-	  tmpb = *++b;
-	while (tmpb == NUMERIC_ZERO);
-      if (ISDIGIT (tmpb))
-	return 1;
-      while (tmpa == NUMERIC_ZERO || tmpa == thousands_sep)
-	tmpa = *++a;
-      if (tmpa == decimal_point)
-	do
-	  tmpa = *++a;
-	while (tmpa == NUMERIC_ZERO);
-      return ISDIGIT (tmpa);
-    }
-  else
-    {
-      while (tmpa == NUMERIC_ZERO || tmpa == thousands_sep)
-	tmpa = *++a;
-      while (tmpb == NUMERIC_ZERO || tmpb == thousands_sep)
-	tmpb = *++b;
-
-      while (tmpa == tmpb && ISDIGIT (tmpa))
-	{
-	  do
-	    tmpa = *++a;
-	  while (tmpa == thousands_sep);
-	  do
-	    tmpb = *++b;
-	  while (tmpb == thousands_sep);
-	}
-
-      if ((tmpa == decimal_point && !ISDIGIT (tmpb))
-	  || (tmpb == decimal_point && !ISDIGIT (tmpa)))
-	return fraccompare (a, b);
-
-      tmp = tmpa - tmpb;
-
-      for (log_a = 0; ISDIGIT (tmpa); ++log_a)
-	do
-	  tmpa = *++a;
-	while (tmpa == thousands_sep);
-
-      for (log_b = 0; ISDIGIT (tmpb); ++log_b)
-	do
-	  tmpb = *++b;
-	while (tmpb == thousands_sep);
-
-      if (log_a != log_b)
-	return log_a < log_b ? -1 : 1;
-
-      if (!log_a)
-	return 0;
-
-      return tmp;
-    }
+  return strnumcmp (a, b, decimal_point, thousands_sep);
 }
 
 static int
@@ -2325,14 +2134,14 @@ main (int argc, char **argv)
     /* If the locale doesn't define a decimal point, or if the decimal
        point is multibyte, use the C locale's decimal point.  FIXME:
        add support for multibyte decimal points.  */
-    decimal_point = locale->decimal_point[0];
+    decimal_point = to_uchar (locale->decimal_point[0]);
     if (! decimal_point || locale->decimal_point[1])
       decimal_point = '.';
 
     /* FIXME: add support for multibyte thousands separators.  */
-    thousands_sep = *locale->thousands_sep;
+    thousands_sep = to_uchar (*locale->thousands_sep);
     if (! thousands_sep || locale->thousands_sep[1])
-      thousands_sep = CHAR_MAX + 1;
+      thousands_sep = -1;
   }
 
   have_read_stdin = false;
