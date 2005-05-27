@@ -1,6 +1,40 @@
-2005-05-26  Paul Eggert  <eggert@cs.ucla.edu>
+2005-05-27  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	* NEWS: expr and test now correctly compare integers of unlimited size.
+	(Also, correct a comment that claimed that expr detects integer
+	overflow; it does so only when converting from strings.)
+	* src/expr.c: Include strnumcmp.h, xstrtol.h.
+	(looks_like_integer): New function.
+	(toarith): Use it.  Also, use xstrtoimax rather than rolling our
+	own diagnostics.
+	(eval2): Don't look for trouble if !evaluate; this simplifies things.
+	Compare numbers using string comparison, so that overflow is
+	not possible.
+	* src/sort.c: Refactor so that others can use large-integer
+	comparison functions.
+	Include "strnumcmp.h".
+	(NEGATION_SIGN, NUMERIC_ZERO, fraccompare):
+	Remove; moved to strnumcmp.
+	(decimal_point): Now int, to simplify converison overhead with
+	new API.  All uses changed.
+	(thousands_sep): Now -1 if there isn't one, as per new API.
+	All uses changed.
+	(numcompare): Move contents to strnumcmp module, except for
+	skipping blanks.
+	* src/test.c: Include inttostr.h, strnumcmp.h.
+	(whitespace, digit, digit_value, integer_expected_error): Remove.
+	(is_int): Remove; replaced by...
+	(find_int): New function.
+	(binary_operator): Don't let integers overflow in comparisons;
+	return the correct answer instead.  Simplify the code.
+	(unary_operator): Convert the integer ourself, since find_int
+	no longer does so.
+	* tests/expr/basic (bigcmp): New test.
+	* tests/test/Test.pm (eq-6, gt-5, lt-5): New tests.
+
+2005-05-26  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: nohup now redirects a tty stdin to an unreadable fd
 	instead of closing it.
