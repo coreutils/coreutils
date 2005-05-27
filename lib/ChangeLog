@@ -1,3 +1,8 @@
+2005-05-27  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* strnumcmp.c, strnumcmp.h, strnumcmp-in.h, strintcmp.c:
+	New files.
+
 2005-05-22  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* fts.c (fd_safer) [_LGPL_PACKAGE]: New static function,
