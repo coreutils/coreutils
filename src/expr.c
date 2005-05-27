@@ -38,6 +38,8 @@
 #include "error.h"
 #include "inttostr.h"
 #include "quotearg.h"
+#include "strnumcmp.h"
+#include "xstrtol.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "expr"
@@ -297,6 +299,21 @@ null (VALUE *v)
     }
 }
 
+/* Return true if CP takes the form of an integer.  */
+
+static bool
+looks_like_integer (char const *cp)
+{
+  cp += (*cp == '-');
+
+  do
+    if (! ISDIGIT (*cp))
+      return false;
+  while (*++cp);
+
+  return true;
+}
+
 /* Coerce V to a string value (can't fail).  */
 
 static void
@@ -328,33 +345,12 @@ toarith (VALUE *v)
       return true;
     case string:
       {
-	intmax_t value = 0;
-	char *cp = v->u.s;
-	int sign = (*cp == '-' ? -1 : 1);
+	intmax_t value;
 
-	if (sign < 0)
-	  cp++;
-
-	do
-	  {
-	    if (ISDIGIT (*cp))
-	      {
-		intmax_t new_v = 10 * value + sign * (*cp - '0');
-		if (0 < sign
-		    ? (INTMAX_MAX / 10 < value || new_v < 0)
-		    : (value < INTMAX_MIN / 10 || 0 < new_v))
-		  error (EXPR_FAILURE, 0,
-			 (0 < sign
-			  ? _("integer is too large: %s")
-			  : _("integer is too small: %s")),
-			 quotearg_colon (v->u.s));
-		value = new_v;
-	      }
-	    else
-	      return false;
-	  }
-	while (*++cp);
-
+	if (! looks_like_integer (v->u.s))
+	  return false;
+	if (xstrtoimax (v->u.s, NULL, 10, &value, NULL) != LONGINT_OK)
+	  error (EXPR_FAILURE, ERANGE, "%s", v->u.s);
 	free (v->u.s);
 	v->u.i = value;
 	v->type = integer;
@@ -693,16 +689,6 @@ static VALUE *
 eval2 (bool evaluate)
 {
   VALUE *l;
-  VALUE *r;
-  enum
-  {
-    less_than, less_equal, equal, not_equal, greater_equal, greater_than
-  } fxn;
-  bool val;
-  intmax_t lval;
-  intmax_t rval;
-  int collation_errno;
-  char *collation_arg1;
 
 #ifdef EVAL_TRACE
   trace ("eval2");
@@ -710,6 +696,13 @@ eval2 (bool evaluate)
   l = eval3 (evaluate);
   while (1)
     {
+      VALUE *r;
+      enum
+	{
+	  less_than, less_equal, equal, not_equal, greater_equal, greater_than
+	} fxn;
+      bool val = false;
+
       if (nextarg ("<"))
 	fxn = less_than;
       else if (nextarg ("<="))
@@ -725,46 +718,45 @@ eval2 (bool evaluate)
       else
 	return l;
       r = eval3 (evaluate);
-      tostring (l);
-      tostring (r);
 
-      /* Save the first arg to strcoll, in case we need its value for
-	 a diagnostic later.  This is needed because 'toarith' might
-	 free the first arg.  */
-      collation_arg1 = xstrdup (l->u.s);
+      if (evaluate)
+	{
+	  int cmp;
+	  tostring (l);
+	  tostring (r);
 
-      errno = 0;
-      lval = strcoll (collation_arg1, r->u.s);
-      collation_errno = errno;
-      rval = 0;
-      if (toarith (l) && toarith (r))
-	{
-	  lval = l->u.i;
-	  rval = r->u.i;
-	}
-      else if (collation_errno && evaluate)
-	{
-	  error (0, collation_errno, _("string comparison failed"));
-	  error (0, 0, _("Set LC_ALL='C' to work around the problem."));
-	  error (EXPR_FAILURE, 0,
-		 _("The strings compared were %s and %s."),
-		 quotearg_n_style (0, locale_quoting_style, collation_arg1),
-		 quotearg_n_style (1, locale_quoting_style, r->u.s));
+	  if (looks_like_integer (l->u.s) && looks_like_integer (r->u.s))
+	    cmp = strintcmp (l->u.s, r->u.s);
+	  else
+	    {
+	      errno = 0;
+	      cmp = strcoll (l->u.s, r->u.s);
+
+	      if (errno)
+		{
+		  error (0, errno, _("string comparison failed"));
+		  error (0, 0, _("Set LC_ALL='C' to work around the problem."));
+		  error (EXPR_FAILURE, 0,
+			 _("The strings compared were %s and %s."),
+			 quotearg_n_style (0, locale_quoting_style, l->u.s),
+			 quotearg_n_style (1, locale_quoting_style, r->u.s));
+		}
+	    }
+
+	  switch (fxn)
+	    {
+	    case less_than:     val = (cmp <  0); break;
+	    case less_equal:    val = (cmp <= 0); break;
+	    case equal:         val = (cmp == 0); break;
+	    case not_equal:     val = (cmp != 0); break;
+	    case greater_equal: val = (cmp >= 0); break;
+	    case greater_than:  val = (cmp >  0); break;
+	    default: abort ();
+	    }
 	}
 
-      switch (fxn)
-	{
-	case less_than:     val = (lval <  rval); break;
-	case less_equal:    val = (lval <= rval); break;
-	case equal:         val = (lval == rval); break;
-	case not_equal:     val = (lval != rval); break;
-	case greater_equal: val = (lval >= rval); break;
-	case greater_than:  val = (lval >  rval); break;
-	default: abort ();
-	}
       freev (l);
       freev (r);
-      free (collation_arg1);
       l = int_value (val);
     }
 }
