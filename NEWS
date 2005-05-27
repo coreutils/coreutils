@@ -107,7 +107,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   time-of-day is changed while dd is running.  Also, it avoids
   using unsafe code in signal handlers; this fixes some core dumps.
 
-  expr now detects integer overflow when evaluating large integers,
+  expr and test now correctly compare integers of unlimited magnitude.
+
+  expr now detects integer overflow when converting strings to integers,
   rather than silently wrapping around.
 
   ls now refuses to generate time stamps containing more than 1000 bytes, to
@@ -117,9 +119,6 @@ GNU coreutils NEWS                                    -*- outline -*-
   and similarly for mkfifo and mknod.
 
   "pr -D FORMAT" now accepts the same formats that "date +FORMAT" does.
-
-  test now detects integer overflow when evaluating large integers,
-  rather than silently wrapping around.
 
 ** Improved portability
 
