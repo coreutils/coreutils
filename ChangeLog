@@ -2,6 +2,12 @@
 
 	* Version 5.3.1.
 
+	* NEWS: dd seek=N now conforms to POSIX if the output isn't seekable.
+	* src/dd.c (skip): Return the number of records that were not
+	skipped due to encountering EOF.
+	(dd_copy): If the file wasn't seekable and EOF was encountered,
+	write zeros past EOF until the desired offset is reached.
+
 	* NEWS: expr and test now correctly compare integers of unlimited size.
 	(Also, correct a comment that claimed that expr detects integer
 	overflow; it does so only when converting from strings.)
