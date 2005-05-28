@@ -1130,9 +1130,11 @@ skip_via_lseek (char const *filename, int fdesc, off_t offset, int whence)
 /* Throw away RECORDS blocks of BLOCKSIZE bytes on file descriptor FDESC,
    which is open with read permission for FILE.  Store up to BLOCKSIZE
    bytes of the data at a time in BUF, if necessary.  RECORDS must be
-   nonzero.  If fdesc is STDIN_FILENO, advance the input offset.  */
+   nonzero.  If fdesc is STDIN_FILENO, advance the input offset.
+   Return the number of records remaining, i.e., that were not skipped
+   because EOF was reached.  */
 
-static void
+static uintmax_t
 skip (int fdesc, char const *file, uintmax_t records, size_t blocksize,
       char *buf)
 {
@@ -1148,11 +1150,13 @@ skip (int fdesc, char const *file, uintmax_t records, size_t blocksize,
     {
       if (fdesc == STDIN_FILENO)
 	advance_input_offset (offset);
+      return 0;
     }
   else
     {
       int lseek_errno = errno;
-      while (records--)
+
+      do
 	{
 	  ssize_t nread = iread (fdesc, buf, blocksize);
 	  if (nread < 0)
@@ -1170,14 +1174,15 @@ skip (int fdesc, char const *file, uintmax_t records, size_t blocksize,
 		error (0, lseek_errno, _("%s: cannot seek"), quote (file));
 	      quit (EXIT_FAILURE);
 	    }
-	  /* POSIX doesn't say what to do when dd detects it has been
-	     asked to skip past EOF, so I assume it's non-fatal.
-	     FIXME: maybe give a warning.  */
+
 	  if (nread == 0)
 	    break;
 	  if (fdesc == STDIN_FILENO)
 	    advance_input_offset (nread);
 	}
+      while (records-- != 0);
+
+      return records;
     }
 }
 
@@ -1390,10 +1395,32 @@ dd_copy (void)
     }
 
   if (skip_records != 0)
-    skip (STDIN_FILENO, input_file, skip_records, input_blocksize, ibuf);
+    {
+      skip (STDIN_FILENO, input_file, skip_records, input_blocksize, ibuf);
+      /* POSIX doesn't say what to do when dd detects it has been
+	 asked to skip past EOF, so I assume it's non-fatal if the
+	 call to 'skip' returns nonzero.  FIXME: maybe give a warning.  */
+    }
 
   if (seek_records != 0)
-    skip (STDOUT_FILENO, output_file, seek_records, output_blocksize, obuf);
+    {
+      uintmax_t write_records = skip (STDOUT_FILENO, output_file,
+				      seek_records, output_blocksize, obuf);
+
+      if (write_records != 0)
+	{
+	  memset (obuf, 0, output_blocksize);
+
+	  do
+	    if (iwrite (STDOUT_FILENO, obuf, output_blocksize)
+		!= output_blocksize)
+	      {
+		error (0, errno, _("writing to %s"), quote (output_file));
+		quit (EXIT_FAILURE);
+	      }
+	  while (--write_records != 0);
+	}
+    }
 
   if (max_records == 0)
     return exit_status;
