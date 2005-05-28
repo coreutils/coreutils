@@ -70,23 +70,6 @@ static char sccsid[] = "@(#)fts.c	8.6 (Berkeley) 8/14/94";
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#if HAVE_INTTYPES_H
-# include <inttypes.h>
-#endif
-#if HAVE_STDINT_H
-# include <stdint.h>
-#endif
-#if ULONG_MAX < ULLONG_MAX
-# define LONGEST_MODIFIER "ll"
-#else
-# define LONGEST_MODIFIER "l"
-#endif
-#if PRI_MACROS_BROKEN
-# undef PRIuMAX
-#endif
-#ifndef PRIuMAX
-# define PRIuMAX LONGEST_MODIFIER "u"
-#endif
 
 #if defined _LIBC
 # include <dirent.h>
@@ -201,8 +184,10 @@ static int fd_safer (int fd) { return fd; }
 #define BREAD		3		/* fts_read */
 
 #if FTS_DEBUG
-bool fts_debug = false;
+# include <inttypes.h>
+# include <stdint.h>
 # include <stdio.h>
+bool fts_debug = false;
 # define Dprintf(x) do { if (fts_debug) printf x; } while (0)
 #else
 # define Dprintf(x)
