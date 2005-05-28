@@ -63,6 +63,10 @@ GNU coreutils NEWS                                    -*- outline -*-
     On hosts lacking the INFO signal, dd no longer treats the USR1
     signal as if it were INFO when POSIXLY_CORRECT is set.
 
+    If the file F is non-seekable and contains fewer than N blocks,
+    then before copying "dd seek=N of=F" now extends F with zeroed
+    blocks until F contains N blocks.
+
   fold changes:
 
     When POSIXLY_CORRECT is set, "fold file -3" is now equivalent to
