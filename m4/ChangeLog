@@ -1,5 +1,8 @@
 2005-05-27  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* fts.m4 (gl_FUNC_FTS_CORE): Don't check for inttypes.h or stdint.h,
+	and don't require gt_INTTYPES_PRI.
+
 	* prereq.m4 (gl_PREREQ): Require gl_STRINTCMP, gl_STRNUMCMP.
 	* strnumcmp.m4: New file.
 
