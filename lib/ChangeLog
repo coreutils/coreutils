@@ -1,5 +1,10 @@
 2005-05-27  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* fts.c: Don't worry about debugging on pre-C99-comopatible hosts;
+	the configuration hassle isn't worth it.
+	Include inttypes.h and stdint.h unconditionally if FTS_DEBUG.
+	(LONGEST_MODIFIER, PRIuMAX): Remove.
+
 	* strnumcmp.c, strnumcmp.h, strnumcmp-in.h, strintcmp.c:
 	New files.
 
