@@ -35,8 +35,6 @@ you must include <sys/types.h> before including this file
 # include <sys/param.h>
 #endif
 
-/* <unistd.h> should be included before any preprocessor test
-   of _POSIX_VERSION.  */
 #if HAVE_UNISTD_H
 # include <unistd.h>
 #endif
