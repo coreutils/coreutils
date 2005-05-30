@@ -37,29 +37,6 @@
 
 #define AUTHORS "Ulrich Drepper", "Scott Miller"
 
-/* Most systems do not distinguish between external and internal
-   text representations.  */
-/* FIXME: This begs for an autoconf test.  */
-#if O_BINARY
-# define OPENOPTS(BINARY) ((BINARY) ? TEXT1TO1 : TEXTCNVT)
-# define TEXT1TO1 "rb"
-# define TEXTCNVT "r"
-#else
-# if defined VMS
-#  define OPENOPTS(BINARY) ((BINARY) ? TEXT1TO1 : TEXTCNVT)
-#  define TEXT1TO1 "rb", "ctx=stm"
-#  define TEXTCNVT "r", "ctx=stm"
-# else
-#  if UNIX || __UNIX__ || unix || __unix__ || _POSIX_VERSION
-#   define OPENOPTS(BINARY) "r"
-#  else
-    /* The following line is intended to evoke an error.
-       Using #error is not portable enough.  */
-    "Cannot determine system type."
-#  endif
-# endif
-#endif
-
 
 #define DIGEST_TYPE_STRING(Alg) ((Alg) == ALG_MD5 ? "MD5" : "SHA1")
 #define DIGEST_STREAM(Alg) ((Alg) == ALG_MD5 ? md5_stream : sha1_stream)
@@ -354,7 +331,7 @@ digest_file (const char *filename, bool binary, unsigned char *bin_result,
 	 Some systems distinguish between internal and
 	 external text representations.  */
 
-      fp = fopen (filename, OPENOPTS (binary));
+      fp = fopen (filename, (O_BINARY && binary ? "rb" : "r"));
       if (fp == NULL)
 	{
 	  error (0, errno, "%s", filename);
