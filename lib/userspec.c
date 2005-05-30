@@ -53,12 +53,6 @@
 #define _(msgid) gettext (msgid)
 #define N_(msgid) msgid
 
-#ifndef _POSIX_VERSION
-struct passwd *getpwnam ();
-struct group *getgrnam ();
-struct group *getgrgid ();
-#endif
-
 #ifndef HAVE_ENDGRENT
 # define endgrent() ((void) 0)
 #endif
