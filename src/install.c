@@ -1,5 +1,5 @@
 /* install - copy files and set attributes
-   Copyright (C) 89, 90, 91, 1995-2004 Free Software Foundation, Inc.
+   Copyright (C) 89, 90, 91, 1995-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -45,14 +45,6 @@
 
 #if HAVE_SYS_WAIT_H
 # include <sys/wait.h>
-#endif
-
-struct passwd *getpwnam ();
-struct group *getgrnam ();
-
-#ifndef _POSIX_VERSION
-uid_t getuid ();
-gid_t getgid ();
 #endif
 
 #if ! HAVE_ENDGRENT
