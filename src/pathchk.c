@@ -40,7 +40,7 @@
 #define AUTHORS "Paul Eggert", "David MacKenzie", "Jim Meyering"
 
 #ifndef _POSIX_PATH_MAX
-# define _POSIX_PATH_MAX 255
+# define _POSIX_PATH_MAX 256
 #endif
 #ifndef _POSIX_NAME_MAX
 # define _POSIX_NAME_MAX 14

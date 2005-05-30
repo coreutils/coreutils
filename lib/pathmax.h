@@ -1,5 +1,5 @@
 /* Define PATH_MAX somehow.  Requires sys/types.h.
-   Copyright (C) 1992, 1999, 2001, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1992, 1999, 2001, 2003, 2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@
 # endif
 
 # ifndef _POSIX_PATH_MAX
-#  define _POSIX_PATH_MAX 255
+#  define _POSIX_PATH_MAX 256
 # endif
 
 # if !defined PATH_MAX && defined _PC_PATH_MAX
