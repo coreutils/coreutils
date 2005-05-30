@@ -37,10 +37,6 @@
 
 #define AUTHORS "David MacKenzie", "Jim Meyering"
 
-#ifndef _POSIX_VERSION
-struct group *getgrnam ();
-#endif
-
 #if ! HAVE_ENDGRENT
 # define endgrent() ((void) 0)
 #endif
