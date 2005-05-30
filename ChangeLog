@@ -1,6 +1,27 @@
-2005-05-27  Paul Eggert  <eggert@cs.ucla.edu>
+2005-05-29  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	* src/chgrp.c (getgrnam) [!defined _POSIX_VERSION]: Remove decl.
+	* src/chown-core.c (getgrnam, getgrgid) [!defined _POSIX_VERSION]:
+	Remove decls.
+	* src/cp.c (geteuid) [!defined _POSIX_VERSION]: Remove decl.
+	* src/id.c (getpwuid, getgrgid, getuid, getgid, geteuid, getegid)
+	[!defined _POSIX_VERSION]: Remove decls.
+	* src/install.c (getpwnam, getgrnam): Remove decl.
+	(getuid, getgid) [!defined _POSIX_VERSION]: Remove decls.
+	* src/md5sum.c (OPENOPTS, TEXT1T01, TEXTCNVT): Remove.
+	(digest_file): Use O_BINARY-using expr instead of OPENOPTS.
+	* src/system.h: Don't bother mentioning _POSIX_VERSION in comment.
+	* src/test.c: Include sys/param.h if it exists, not if _POSIX_VERSION
+	isn't defined.
+	Don't include <sys/file.h>; no longer needed.
+	(getegid, geteuid): Remove no-longer-necessary decls.
+
+	* src/pathchk.c (_POSIX_PATH_MAX) [!defined _POSIX_PATH_MAX]:
+	Define to 256, not 255, as per modern POSIX.
+
+2005-05-27  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: dd seek=N now conforms to POSIX if the output isn't seekable.
 	* src/dd.c (skip): Return the number of records that were not

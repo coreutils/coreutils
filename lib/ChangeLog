@@ -1,3 +1,20 @@
+2005-05-30  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* euidaccess.c (getuid, getgid, getuid, getegid)
+	[!defined _POSIX_VERSION]: Remove decls; not needed these days.
+	* idcache.c (getpwuid, getpwnam, getgrgid, getgrnam)
+	[!defined _POSIX_VERSION]: Remove decls; not needed these days.
+	* pathmax.h: Include <limits.h> unconditionally, since other
+	files have been getting away with it for years (MORE/BSD 4.3
+	is extinct now).
+	* userspec.c (getpwnam, getgrnam, getgrgid)
+	[!defined _POSIX_VERSION]: Remove decls; not needed these days.
+
+2005-05-29  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* pathmax.h (_POSIX_PATH_MAX) [!defined _POSIX_PATH_MAX]:
+	Define to 256, not 255, as per modern POSIX.
+
 2005-05-27  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* fts.c: Don't worry about debugging on pre-C99-comopatible hosts;
