@@ -32,11 +32,6 @@
 #include "root-dev-ino.h"
 #include "xfts.h"
 
-#ifndef _POSIX_VERSION
-struct group *getgrnam ();
-struct group *getgrgid ();
-#endif
-
 enum RCH_status
   {
     /* we called fchown and close, and both succeeded */
