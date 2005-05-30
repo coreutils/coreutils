@@ -35,15 +35,6 @@
 
 #define AUTHORS "Arnold Robbins", "David MacKenzie"
 
-#ifndef _POSIX_VERSION
-struct passwd *getpwuid ();
-struct group *getgrgid ();
-uid_t getuid ();
-gid_t getgid ();
-uid_t geteuid ();
-gid_t getegid ();
-#endif /* not _POSIX_VERSION */
-
 int getugroups ();
 
 static void print_user (uid_t uid);
