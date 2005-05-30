@@ -1,6 +1,6 @@
 /* euidaccess -- check if effective user id can access file
 
-   Copyright (C) 1990, 1991, 1995, 1998, 2000, 2003, 2004 Free
+   Copyright (C) 1990, 1991, 1995, 1998, 2000, 2003, 2004, 2005 Free
    Software Foundation, Inc.
 
    This file is part of the GNU C Library.
@@ -39,13 +39,6 @@
 
 #if HAVE_LIBGEN_H
 # include <libgen.h>
-#endif
-
-#ifndef _POSIX_VERSION
-uid_t getuid ();
-gid_t getgid ();
-uid_t geteuid ();
-gid_t getegid ();
 #endif
 
 #include <errno.h>
