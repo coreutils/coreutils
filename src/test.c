@@ -47,18 +47,11 @@
 #include "quote.h"
 #include "strnumcmp.h"
 
-#ifndef _POSIX_VERSION
+#if HAVE_SYS_PARAM_H
 # include <sys/param.h>
-#endif /* _POSIX_VERSION */
+#endif
 
 char *program_name;
-
-#if !defined (_POSIX_VERSION)
-# include <sys/file.h>
-#endif /* !_POSIX_VERSION */
-
-extern gid_t getegid ();
-extern uid_t geteuid ();
 
 /* Exit status for syntax errors, etc.  */
 enum { TEST_TRUE, TEST_FALSE, TEST_FAILURE };
