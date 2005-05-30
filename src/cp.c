@@ -50,10 +50,6 @@
 
 #define AUTHORS "Torbjorn Granlund", "David MacKenzie", "Jim Meyering"
 
-#ifndef _POSIX_VERSION
-uid_t geteuid ();
-#endif
-
 /* Used by do_copy, make_path_private, and re_protect
    to keep a list of leading directories whose protections
    need to be fixed after copying. */
