@@ -281,7 +281,6 @@ re_protect (const char *const_dst_path, size_t src_offset,
   struct dir_attr *p;
   char *dst_path;		/* A copy of CONST_DST_PATH we can change. */
   char *src_path;		/* The source name in `dst_path'. */
-  uid_t myeuid = geteuid ();
 
   ASSIGN_STRDUPA (dst_path, const_dst_path);
   src_path = dst_path + src_offset;
@@ -322,11 +321,8 @@ re_protect (const char *const_dst_path, size_t src_offset,
 
       if (x->preserve_ownership)
 	{
-	  /* If non-root uses -p, it's ok if we can't preserve ownership.
-	     But root probably wants to know, e.g. if NFS disallows it,
-	     or if the target system doesn't support file ownership.  */
-	  if (chown (dst_path, src_sb.st_uid, src_sb.st_gid)
-	      && ((errno != EPERM && errno != EINVAL) || myeuid == 0))
+	  if (chown (dst_path, src_sb.st_uid, src_sb.st_gid) != 0
+	      && ! chown_failure_ok (x))
 	    {
 	      error (0, errno, _("failed to preserve ownership for %s"),
 		     quote (dst_path));
@@ -683,7 +679,7 @@ cp_option_init (struct cp_options *x)
   x->unlink_dest_after_failed_open = false;
   x->hard_link = false;
   x->interactive = I_UNSPECIFIED;
-  x->myeuid = geteuid ();
+  x->chown_privileges = chown_privileges ();
   x->move_mode = false;
   x->one_file_system = false;
 
