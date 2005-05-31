@@ -1,4 +1,4 @@
-#serial 87   -*- autoconf -*-
+#serial 88   -*- autoconf -*-
 
 dnl Misc type-related macros for coreutils.
 
@@ -189,6 +189,7 @@ AC_DEFUN([gl_CHECK_ALL_HEADERS],
     mnttab.h \
     netdb.h \
     paths.h \
+    priv.h \
     stdlib.h \
     stdint.h \
     string.h \
