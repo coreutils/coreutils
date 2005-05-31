@@ -1,3 +1,7 @@
+2005-05-30  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* jm-macros.m4 (gl_CHECK_ALL_HEADERS): Check for priv.h.
+
 2005-05-27  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* fts.m4 (gl_FUNC_FTS_CORE): Don't check for inttypes.h or stdint.h,
