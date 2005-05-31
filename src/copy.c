@@ -1703,7 +1703,7 @@ copy (const char *src_path, const char *dst_path,
 /* Return true if this process has appropriate privileges to chown a
    file whose owner is not the effective user ID.  */
 
-bool
+extern bool
 chown_privileges (void)
 {
 #ifdef PRIV_FILE_CHOWN
@@ -1724,7 +1724,7 @@ chown_privileges (void)
    the error number that chown failed with and X is the copying
    option set.  */
 
-bool
+extern bool
 chown_failure_ok (struct cp_options const *x)
 {
   /* If non-root uses -p, it's ok if we can't preserve ownership.
