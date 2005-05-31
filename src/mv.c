@@ -121,7 +121,7 @@ cp_option_init (struct cp_options *x)
   x->hard_link = false;
   x->interactive = I_UNSPECIFIED;
   x->move_mode = true;
-  x->myeuid = geteuid ();
+  x->chown_privileges = chown_privileges ();
   x->one_file_system = false;
   x->preserve_ownership = true;
   x->preserve_links = true;
