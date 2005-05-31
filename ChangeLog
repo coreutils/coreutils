@@ -1,6 +1,25 @@
-2005-05-29  Paul Eggert  <eggert@cs.ucla.edu>
+2005-05-30  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	Port to Solaris 10's rules for whether programs can chown files.
+	* src/copy.c [HAVE_PRIV_H]: Include <priv.h>.
+	(DO_CHOWN): Remove.  Replaced by chown_failure_ok.  All callers
+	changed.
+	(copy_internal): If chown failed, don't worry about what happened
+	to the mode bits; they can't have changed.
+	(chown_privileges, chown_failure_ok): New functions.
+	* src/copy.h: Add copyright notice.
+	(struct cp_options): Remove myeuid member.  Add chown_privileges
+	member.
+	(chown_privileges, chown_failure_ok): New function decls.
+	* src/cp.c (re_protect): Remove unnecessary call to geteuid.
+	Use chown_failure_ok rather than our own code.
+	* src/cp.c (cp_options_init): Use chown_privileges rather than geteuid.
+	* src/install.c (cp_option_init): Likewise.
+	* src/mv.c (cp_option_init): Likewise.
+
+2005-05-29  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/chgrp.c (getgrnam) [!defined _POSIX_VERSION]: Remove decl.
 	* src/chown-core.c (getgrnam, getgrgid) [!defined _POSIX_VERSION]:
