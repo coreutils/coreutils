@@ -25,6 +25,9 @@
 #if HAVE_HURD_H
 # include <hurd.h>
 #endif
+#if HAVE_PRIV_H
+# include <priv.h>
+#endif
 
 #include "system.h"
 #include "backupfile.h"
@@ -46,13 +49,6 @@
 #include "utimens.h"
 #include "xreadlink.h"
 #include "yesno.h"
-
-#define DO_CHOWN(Chown, File, New_uid, New_gid)				\
-  (Chown (File, New_uid, New_gid)					\
-   /* If non-root uses -p, it's ok if we can't preserve ownership.	\
-      But root probably wants to know, e.g. if NFS disallows it,	\
-      or if the target system doesn't support file ownership.  */	\
-   && ((errno != EPERM && errno != EINVAL) || x->myeuid == 0))
 
 #define SAME_OWNER(A, B) ((A).st_uid == (B).st_uid)
 #define SAME_GROUP(A, B) ((A).st_gid == (B).st_gid)
@@ -848,7 +844,7 @@ copy_internal (const char *src_path, const char *dst_path,
   bool backup_succeeded = false;
   bool delayed_ok;
   bool copied_as_regular = false;
-  bool ran_chown = false;
+  bool chown_succeeded = false;
   bool preserve_metadata;
 
   if (x->move_mode && rename_succeeded)
@@ -1530,7 +1526,8 @@ copy_internal (const char *src_path, const char *dst_path,
 	  /* Preserve the owner and group of the just-`copied'
 	     symbolic link, if possible.  */
 # if HAVE_LCHOWN
-	  if (DO_CHOWN (lchown, dst_path, src_sb.st_uid, src_sb.st_gid))
+	  if (lchown (dst_path, src_sb.st_uid, src_sb.st_gid) != 0
+	      && ! chown_failure_ok (x))
 	    {
 	      error (0, errno, _("failed to preserve ownership for %s"),
 		     dst_path);
@@ -1590,8 +1587,9 @@ copy_internal (const char *src_path, const char *dst_path,
   if (x->preserve_ownership
       && (new_dst || !SAME_OWNER_AND_GROUP (src_sb, dst_sb)))
     {
-      ran_chown = true;
-      if (DO_CHOWN (chown, dst_path, src_sb.st_uid, src_sb.st_gid))
+      if (chown (dst_path, src_sb.st_uid, src_sb.st_gid) == 0)
+	chown_succeeded = true;
+      else if (! chown_failure_ok (x))
 	{
 	  error (0, errno, _("failed to preserve ownership for %s"),
 		 quote (dst_path));
@@ -1619,9 +1617,9 @@ copy_internal (const char *src_path, const char *dst_path,
 
   /* Permissions of newly-created regular files were set upon `open' in
      copy_reg.  But don't return early if there were any special bits and
-     we had to run chown, because the chown must have reset those bits.  */
+     chown succeeded, because the chown must have reset those bits.  */
   if ((new_dst && copied_as_regular)
-      && !(ran_chown && (src_mode & ~S_IRWXUGO)))
+      && !(chown_succeeded && (src_mode & ~S_IRWXUGO)))
     return delayed_ok;
 
   if ((x->preserve_mode || new_dst)
@@ -1700,4 +1698,38 @@ copy (const char *src_path, const char *dst_path,
 
   return copy_internal (src_path, dst_path, nonexistent_dst, 0, NULL,
 			options, true, copy_into_self, rename_succeeded);
+}
+
+/* Return true if this process has appropriate privileges to chown a
+   file whose owner is not the effective user ID.  */
+
+bool
+chown_privileges (void)
+{
+#ifdef PRIV_FILE_CHOWN
+  bool result;
+  priv_set_t *pset = priv_allocset ();
+  if (!pset)
+    xalloc_die ();
+  result = (getppriv (PRIV_EFFECTIVE, pset) == 0
+	    && priv_ismember (pset, PRIV_FILE_CHOWN));
+  priv_freeset (pset);
+  return result;
+#else
+  return (geteuid () == 0);
+#endif
+}
+
+/* Return true if it's OK for chown to fail, where errno is
+   the error number that chown failed with and X is the copying
+   option set.  */
+
+bool
+chown_failure_ok (struct cp_options const *x)
+{
+  /* If non-root uses -p, it's ok if we can't preserve ownership.
+     But root probably wants to know, e.g. if NFS disallows it,
+     or if the target system doesn't support file ownership.  */
+
+  return ((errno == EPERM || errno == EINVAL) && !x->chown_privileges);
 }
