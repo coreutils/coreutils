@@ -1,6 +1,12 @@
-2005-05-30  Paul Eggert  <eggert@cs.ucla.edu>
+2005-05-31  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* src/copy.c (chown_privileges, chown_failure_ok): Mark as `extern'.
+	This is a crutch so that `make distcheck's sc_tight_scope rule
+	knows that they really are deliberately declared that way.
+
+2005-05-30  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Port to Solaris 10's rules for whether programs can chown files.
 	* src/copy.c [HAVE_PRIV_H]: Include <priv.h>.
