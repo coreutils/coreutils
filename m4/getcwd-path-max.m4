@@ -1,5 +1,5 @@
-#serial 8
-# Check for several getcwd bugs with long paths.
+#serial 9
+# Check for several getcwd bugs with long file names.
 # If so, arrange to compile the wrapper function.
 
 # This is necessary for at least GNU libc on linux-2.4.19 and 2.4.20.

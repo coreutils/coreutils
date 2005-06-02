@@ -1,12 +1,12 @@
-#serial 7
+#serial 8
 
-# Copyright (C) 2001, 2003 Free Software Foundation, Inc.
+# Copyright (C) 2001, 2003, 2005 Free Software Foundation, Inc.
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
 # with or without modifications, as long as this notice is preserved.
 
 dnl From Volker Borchert.
-dnl Determine whether rename works for source paths with a trailing slash.
+dnl Determine whether rename works for source file names with a trailing slash.
 dnl The rename from SunOS 4.1.1_U1 doesn't.
 dnl
 dnl If it doesn't, then define RENAME_TRAILING_SLASH_BUG and arrange
@@ -41,8 +41,8 @@ AC_DEFUN([vb_FUNC_RENAME],
     AC_DEFINE(rename, rpl_rename,
       [Define to rpl_rename if the replacement function should be used.])
     AC_DEFINE(RENAME_TRAILING_SLASH_BUG, 1,
-      [Define if rename does not work for source paths with a trailing slash,
-       like the one from SunOS 4.1.1_U1.])
+      [Define if rename does not work for source file names with a trailing
+       slash, like the one from SunOS 4.1.1_U1.])
     gl_PREREQ_RENAME
   fi
 ])

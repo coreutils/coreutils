@@ -1,3 +1,17 @@
+2005-06-01  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* mkdir-p.m4: Renamed from makepath.m4.
+	(gl_MKDIR_PARENTS): Renamed from gl_MAKEPATH.  All uses changed.
+	Rename files from makepath.c to mkdir-p.c, and from
+	makepath.h to mkdir-p.h.
+	* filenamecat.m4: Renamed from path-concat.m4.
+	(gl_FILE_NAME_CONCAT): Renamed from gl_PATH_CONCAT.  All uses changed.
+	Rename files from path-concat.c to filenamecat.c,
+	and from path-concat.h to filenamecat.h.
+	* getcwd-path-max.m4: Don't use "path" or "filename" to mean
+	"file name" in local variables or comments.
+	* rename.m4: Likewise.
+
 2005-05-30  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* jm-macros.m4 (gl_CHECK_ALL_HEADERS): Check for priv.h.
