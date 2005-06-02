@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2005-04-17.16}
+\def\texinfoversion{2005-05-20.06}
 %
 % Copyright (C) 1985, 1986, 1988, 1990, 1991, 1992, 1993, 1994, 1995,
 % 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005 Free Software
@@ -1924,14 +1924,14 @@ where each line of input produces a line of output.}
 \def\keywordfalse{false}
 
 \parseargdef\allowcodebreaks{%
-  \def\arg{#1}%
-  \ifx\arg\keywordtrue
+  \def\txiarg{#1}%
+  \ifx\txiarg\keywordtrue
     \allowcodebreakstrue
-  \else\ifx\arg\keywordfalse
+  \else\ifx\txiarg\keywordfalse
     \allowcodebreaksfalse
   \else
     \errhelp = \EMsimple
-    \errmessage{Unknown @allowcodebreaks option `\arg'}%
+    \errmessage{Unknown @allowcodebreaks option `\txiarg'}%
   \fi\fi
 }
 
@@ -1942,16 +1942,16 @@ where each line of input produces a line of output.}
 %   `example' (@kbd uses ttsl only inside of @example and friends),
 %   or `code' (@kbd uses normal tty font always).
 \parseargdef\kbdinputstyle{%
-  \def\arg{#1}%
-  \ifx\arg\worddistinct
+  \def\txiarg{#1}%
+  \ifx\txiarg\worddistinct
     \gdef\kbdexamplefont{\ttsl}\gdef\kbdfont{\ttsl}%
-  \else\ifx\arg\wordexample
+  \else\ifx\txiarg\wordexample
     \gdef\kbdexamplefont{\ttsl}\gdef\kbdfont{\tt}%
-  \else\ifx\arg\wordcode
+  \else\ifx\txiarg\wordcode
     \gdef\kbdexamplefont{\tt}\gdef\kbdfont{\tt}%
   \else
     \errhelp = \EMsimple
-    \errmessage{Unknown @kbdinputstyle option `\arg'}%
+    \errmessage{Unknown @kbdinputstyle option `\txiarg'}%
   \fi\fi\fi
 }
 \def\worddistinct{distinct}

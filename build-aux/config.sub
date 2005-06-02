@@ -3,7 +3,7 @@
 #   Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
 #   2000, 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
 
-timestamp='2005-05-12'
+timestamp='2005-06-02'
 
 # This file is (in principle) common to ALL GNU software.
 # The presence of a machine in this file suggests that SOME GNU software
@@ -256,6 +256,7 @@ case $basic_machine in
 	| mipsisa64sr71k | mipsisa64sr71kel \
 	| mipstx39 | mipstx39el \
 	| mn10200 | mn10300 \
+	| ms1 \
 	| msp430 \
 	| ns16k | ns32k \
 	| openrisc | or32 \
@@ -272,6 +273,9 @@ case $basic_machine in
 	| we32k \
 	| x86 | xscale | xscalee[bl] | xstormy16 | xtensa \
 	| z8k)
+		basic_machine=$basic_machine-unknown
+		;;
+	m32c)
 		basic_machine=$basic_machine-unknown
 		;;
 	m6811 | m68hc11 | m6812 | m68hc12)
@@ -330,6 +334,7 @@ case $basic_machine in
 	| mipsisa64sr71k-* | mipsisa64sr71kel-* \
 	| mipstx39-* | mipstx39el-* \
 	| mmix-* \
+	| ms1-* \
 	| msp430-* \
 	| none-* | np1-* | ns16k-* | ns32k-* \
 	| orion-* \
@@ -351,6 +356,8 @@ case $basic_machine in
 	| xstormy16-* | xtensa-* \
 	| ymp-* \
 	| z8k-*)
+		;;
+	m32c-*)
 		;;
 	# Recognize the various machine names and aliases which stand
 	# for a CPU type and a company and sometimes even an OS.

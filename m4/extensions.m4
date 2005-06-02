@@ -21,6 +21,10 @@ AC_DEFUN([gl_USE_SYSTEM_EXTENSIONS], [
 [/* Enable extensions on Solaris.  */
 #ifndef __EXTENSIONS__
 # undef __EXTENSIONS__
+#endif
+#ifndef _POSIX_PTHREAD_SEMANTICS
+# undef _POSIX_PTHREAD_SEMANTICS
 #endif])
   AC_DEFINE([__EXTENSIONS__])
+  AC_DEFINE([_POSIX_PTHREAD_SEMANTICS])
 ])
