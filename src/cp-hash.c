@@ -1,5 +1,5 @@
 /* cp-hash.c  -- file copying (hash search routines)
-   Copyright (C) 89, 90, 91, 1995-2004 Free Software Foundation.
+   Copyright (C) 89, 90, 91, 1995-2005 Free Software Foundation.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@
 #include "cp-hash.h"
 
 /* Use ST_DEV and ST_INO as the key, FILENAME as the value.
-   These are used e.g., in copy.c to associate the destination path with
+   These are used e.g., in copy.c to associate the destination name with
    the source device/inode pair so that if we encounter a matching dev/ino
    pair in the source tree we can arrange to create a hard link between
    the corresponding names in the destination tree.  */
@@ -39,8 +39,8 @@ struct Src_to_dest
 {
   ino_t st_ino;
   dev_t st_dev;
-  /* Destination path name (of non-directory or pre-existing directory)
-     corresponding to the dev/ino of a copied file, or the destination path
+  /* Destination file name (of non-directory or pre-existing directory)
+     corresponding to the dev/ino of a copied file, or the destination file
      name corresponding to a dev/ino pair for a newly-created directory. */
   char *name;
 };
@@ -98,21 +98,21 @@ forget_created (ino_t ino, dev_t dev)
     src_to_dest_free (ent);
 }
 
-/* Add PATH to the list of files that we have created.
+/* Add FILE to the list of files that we have created.
    Return true if successful.  */
 
 extern bool
-remember_created (const char *path)
+remember_created (char const *file)
 {
   struct stat sb;
 
-  if (stat (path, &sb) < 0)
+  if (stat (file, &sb) < 0)
     {
-      error (0, errno, "%s", quote (path));
+      error (0, errno, "%s", quote (file));
       return false;
     }
 
-  remember_copied (path, sb.st_ino, sb.st_dev);
+  remember_copied (file, sb.st_ino, sb.st_dev);
   return true;
 }
 
@@ -130,7 +130,7 @@ src_to_dest_lookup (ino_t ino, dev_t dev)
   return e ? e->name : NULL;
 }
 
-/* Add path NAME, copied from inode number INO and device number DEV,
+/* Add file NAME, copied from inode number INO and device number DEV,
    to the list of files we have copied.
    Return NULL if inserted, otherwise non-NULL. */
 

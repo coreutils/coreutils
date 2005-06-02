@@ -192,10 +192,10 @@ struct cp_options
   Hash_table *src_info;
 };
 
-# define XSTAT(X, Src_path, Src_sb) \
+# define XSTAT(X, Src_name, Src_sb) \
   ((X)->dereference == DEREF_NEVER \
-   ? lstat (Src_path, Src_sb) \
-   : stat (Src_path, Src_sb))
+   ? lstat (Src_name, Src_sb) \
+   : stat (Src_name, Src_sb))
 
 /* Arrange to make lstat calls go through the wrapper function
    on systems with an lstat function that does not dereference symlinks
@@ -207,7 +207,7 @@ int rpl_lstat (const char *, struct stat *);
 # endif
 
 /* Arrange to make rename calls go through the wrapper function
-   on systems with a rename function that fails for a source path
+   on systems with a rename function that fails for a source file name
    specified with a trailing slash.  */
 # if RENAME_TRAILING_SLASH_BUG
 int rpl_rename (const char *, const char *);
@@ -215,7 +215,7 @@ int rpl_rename (const char *, const char *);
 #  define rename rpl_rename
 # endif
 
-bool copy (const char *src_path, const char *dst_path,
+bool copy (char const *src_name, char const *dst_name,
 	   bool nonexistent_dst, const struct cp_options *options,
 	   bool *copy_into_self, bool *rename_succeeded);
 

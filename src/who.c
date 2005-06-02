@@ -333,8 +333,8 @@ print_user (const STRUCT_UTMP *utmp_ent, time_t boottime)
   PIDSTR_DECL_AND_INIT (pidstr, utmp_ent);
 
   /* Copy ut_line into LINE, prepending `/dev/' if ut_line is not
-     already an absolute pathname.  Some system may put the full,
-     absolute pathname in ut_line.  */
+     already an absolute file name.  Some systems may put the full,
+     absolute file name in ut_line.  */
   if (utmp_ent->ut_line[0] == '/')
     {
       strncpy (line, utmp_ent->ut_line, sizeof (utmp_ent->ut_line));

@@ -1,4 +1,4 @@
-/* system-dependent definitions for fileutils, textutils, and sh-utils packages.
+/* system-dependent definitions for coreutils
    Copyright (C) 1989, 1991-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -28,7 +28,7 @@ you must include <sys/types.h> before including this file
 #include <sys/stat.h>
 
 #if !defined HAVE_MKFIFO
-# define mkfifo(path, mode) (mknod ((path), (mode) | S_IFIFO, 0))
+# define mkfifo(name, mode) mknod (name, (mode) | S_IFIFO, 0)
 #endif
 
 #if HAVE_SYS_PARAM_H

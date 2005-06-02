@@ -231,7 +231,7 @@ pop_dir (Dirstack_state *ds)
   top_len = length[n_lengths - 1];
   assert (top_len >= 2);
 
-  /* Pop off the specified length of pathname.  */
+  /* Pop the specified length of file name.  */
   assert (obstack_object_size (&ds->dir_stack) >= top_len);
   obstack_blank (&ds->dir_stack, -top_len);
 
@@ -271,7 +271,7 @@ right_justify (char *dst, size_t dst_len, const char *src, size_t src_len,
   return dst_len - src_len;
 }
 
-/* Using the global directory name obstack, create the full path to FILENAME.
+/* Using the global directory name obstack, create the full name FILENAME.
    Return it in sometimes-realloc'd space that should not be freed by the
    caller.  Realloc as necessary.  If realloc fails, use a static buffer
    and put as long a suffix in that buffer as possible.  */

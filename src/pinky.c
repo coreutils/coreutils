@@ -219,8 +219,8 @@ print_entry (const STRUCT_UTMP *utmp_ent)
   char line[sizeof (utmp_ent->ut_line) + DEV_DIR_LEN + 1];
 
   /* Copy ut_line into LINE, prepending `/dev/' if ut_line is not
-     already an absolute pathname.  Some system may put the full,
-     absolute pathname in ut_line.  */
+     already an absolute file name.  Some system may put the full,
+     absolute file name in ut_line.  */
   if (utmp_ent->ut_line[0] == '/')
     {
       strncpy (line, utmp_ent->ut_line, sizeof (utmp_ent->ut_line));

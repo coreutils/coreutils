@@ -1,4 +1,4 @@
-/* dirname -- strip filename suffix from pathname
+/* dirname -- strip suffix from file name
 
    Copyright (C) 1990-1997, 1999-2002, 2004, 2005 Free Software
    Foundation, Inc.

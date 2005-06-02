@@ -29,7 +29,7 @@
 
    Improve the printing of control prefixes.
 
-   Expand the filename in the centered header line to a full pathname.
+   Expand the file name in the centered header line to a full file name.
 
 
    Concept:

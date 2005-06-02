@@ -30,7 +30,7 @@
 #include "cp-hash.h"
 #include "dirname.h"
 #include "error.h"
-#include "path-concat.h"
+#include "filenamecat.h"
 #include "quote.h"
 #include "remove.h"
 
@@ -274,7 +274,7 @@ movefile (char *source, char *dest, bool dest_is_dir,
     {
       /* Treat DEST as a directory; build the full filename.  */
       char const *src_basename = base_name (source);
-      char *new_dest = path_concat (dest, src_basename, NULL);
+      char *new_dest = file_name_concat (dest, src_basename, NULL);
       strip_trailing_slashes (new_dest);
       ok = do_move (source, new_dest, x);
       free (new_dest);

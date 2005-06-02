@@ -25,7 +25,7 @@
 #include "system.h"
 #include "dirname.h"
 #include "error.h"
-#include "makepath.h"
+#include "mkdir-p.h"
 #include "modechange.h"
 #include "quote.h"
 
@@ -152,8 +152,8 @@ main (int argc, char **argv)
       if (create_parents)
 	{
 	  char *dir = argv[optind];
-	  ok = make_path (dir, newmode, parent_mode,
-			  -1, -1, true, verbose_fmt_string);
+	  ok = make_dir_parents (dir, newmode, parent_mode,
+				 -1, -1, true, verbose_fmt_string);
 	}
       else
 	{

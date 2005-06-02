@@ -27,8 +27,8 @@
 
 #include "cloexec.h"
 #include "error.h"
+#include "filenamecat.h"
 #include "long-options.h"
-#include "path-concat.h"
 #include "quote.h"
 #include "unistd-safer.h"
 
@@ -114,7 +114,7 @@ main (int argc, char **argv)
 	  char const *home = getenv ("HOME");
 	  if (home)
 	    {
-	      in_home = path_concat (home, file, NULL);
+	      in_home = file_name_concat (home, file, NULL);
 	      fd = open (in_home, flags, mode);
 	    }
 	  if (fd < 0)

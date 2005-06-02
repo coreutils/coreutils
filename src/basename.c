@@ -1,4 +1,4 @@
-/* basename -- strip directory and suffix from filenames
+/* basename -- strip directory and suffix from file names
    Copyright (C) 1990-1997, 1999-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -16,7 +16,7 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 
 /* Usage: basename name [suffix]
-   NAME is a pathname; SUFFIX is a suffix to strip from it.
+   NAME is a file name; SUFFIX is a suffix to strip from it.
 
    basename /usr/foo/lossage/functions.l
    => functions.l
