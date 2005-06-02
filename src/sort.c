@@ -286,11 +286,13 @@ Usage: %s [OPTION]... [FILE]...\n\
       fputs (_("\
 Write sorted concatenation of all FILE(s) to standard output.\n\
 \n\
-Ordering options:\n\
-\n\
 "), stdout);
       fputs (_("\
 Mandatory arguments to long options are mandatory for short options too.\n\
+"), stdout);
+      fputs (_("\
+Ordering options:\n\
+\n\
 "), stdout);
       fputs (_("\
   -b, --ignore-leading-blanks ignore leading blanks\n\
