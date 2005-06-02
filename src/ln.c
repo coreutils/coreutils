@@ -1,5 +1,5 @@
 /* `ln' program to create links between files.
-   Copyright (C) 86, 89, 90, 91, 1995-2004 Free Software Foundation, Inc.
+   Copyright (C) 86, 89, 90, 91, 1995-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -56,7 +56,7 @@
 /* Construct a string NEW_DEST by concatenating DEST, a slash, and
    basename(SOURCE) in alloca'd memory.  Don't modify DEST or SOURCE.  */
 
-#define PATH_BASENAME_CONCAT(new_dest, dest, source)			\
+#define FILE_BASENAME_CONCAT(new_dest, dest, source)			\
     do									\
       {									\
 	const char *source_base;					\
@@ -193,7 +193,7 @@ do_link (const char *source, const char *dest, bool dest_is_dir)
     {
       /* Treat DEST as a directory; build the full filename.  */
       char *new_dest;
-      PATH_BASENAME_CONCAT (new_dest, dest, source);
+      FILE_BASENAME_CONCAT (new_dest, dest, source);
       dest = new_dest;
     }
 
