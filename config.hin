@@ -1499,6 +1499,9 @@
 #ifndef __EXTENSIONS__
 # undef __EXTENSIONS__
 #endif
+#ifndef _POSIX_PTHREAD_SEMANTICS
+# undef _POSIX_PTHREAD_SEMANTICS
+#endif
 
 /* Define to rpl_ if the getcwd replacement function should be used. */
 #undef __GETCWD_PREFIX
