@@ -1340,8 +1340,8 @@
 /* Define to 1 if the C compiler supports function prototypes. */
 #undef PROTOTYPES
 
-/* Define if rename does not work for source paths with a trailing slash, like
-   the one from SunOS 4.1.1_U1. */
+/* Define if rename does not work for source file names with a trailing slash,
+   like the one from SunOS 4.1.1_U1. */
 #undef RENAME_TRAILING_SLASH_BUG
 
 /* the value to which errno is set when rmdir fails on a nonempty directory */

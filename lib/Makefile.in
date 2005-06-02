@@ -53,23 +53,23 @@ DIST_COMMON = README $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	dirfd.c dirfd.h dirname.c dirname.h dup-safer.c dup2.c error.c \
 	error.h euidaccess.c exclude.c exclude.h exitfail.c exitfail.h \
 	fchdir-stub.c fchown-stub.c fd-safer.c file-type.c file-type.h \
-	fileblocks.c filemode.c filemode.h fnmatch.c fopen-safer.c \
-	free.c fsusage.c fsusage.h ftruncate.c fts-cycle.c fts.c \
-	fts_.h getcwd.c getcwd.h getdate.h getdate.y getgroups.c \
-	gethostname.c gethrxtime.c gethrxtime.h getline.c getline.h \
-	getloadavg.c getndelim2.c getopt.c getopt1.c getpagesize.h \
-	getpass.c getpass.h gettime.c gettimeofday.c getugroups.c \
-	getusershell.c group-member.c group-member.h hard-locale.c \
-	hard-locale.h hash-pjw.c hash-pjw.h hash.c hash.h human.c \
-	human.h idcache.c imaxtostr.c intprops.h inttostr.c inttostr.h \
-	lchown.c lchown.h linebuffer.c linebuffer.h long-options.c \
-	long-options.h lstat.c makepath.c makepath.h malloc.c md5.c \
-	md5.h memcasecmp.c memcasecmp.h memchr.c memcmp.c memcoll.c \
-	memcoll.h memcpy.c memmove.c mempcpy.c mempcpy.h memrchr.c \
-	memrchr.h memset.c mkdir.c mkstemp.c mktime.c modechange.c \
-	modechange.h mountlist.c mountlist.h nanosleep.c obstack.c \
-	obstack.h offtostr.c openat.c openat.h path-concat.c \
-	path-concat.h pathmax.h physmem.c physmem.h posixtm.c \
+	fileblocks.c filemode.c filemode.h filenamecat.c filenamecat.h \
+	fnmatch.c fopen-safer.c free.c fsusage.c fsusage.h ftruncate.c \
+	fts-cycle.c fts.c fts_.h getcwd.c getcwd.h getdate.h getdate.y \
+	getgroups.c gethostname.c gethrxtime.c gethrxtime.h getline.c \
+	getline.h getloadavg.c getndelim2.c getopt.c getopt1.c \
+	getpagesize.h getpass.c getpass.h gettime.c gettimeofday.c \
+	getugroups.c getusershell.c group-member.c group-member.h \
+	hard-locale.c hard-locale.h hash-pjw.c hash-pjw.h hash.c \
+	hash.h human.c human.h idcache.c imaxtostr.c intprops.h \
+	inttostr.c inttostr.h lchown.c lchown.h linebuffer.c \
+	linebuffer.h long-options.c long-options.h lstat.c malloc.c \
+	md5.c md5.h memcasecmp.c memcasecmp.h memchr.c memcmp.c \
+	memcoll.c memcoll.h memcpy.c memmove.c mempcpy.c mempcpy.h \
+	memrchr.c memrchr.h memset.c mkdir-p.c mkdir-p.h mkdir.c \
+	mkstemp.c mktime.c modechange.c modechange.h mountlist.c \
+	mountlist.h nanosleep.c obstack.c obstack.h offtostr.c \
+	openat.c openat.h pathmax.h physmem.c physmem.h posixtm.c \
 	posixtm.h posixver.c posixver.h printf-args.c printf-parse.c \
 	putenv.c quote.c quote.h quotearg.c quotearg.h raise.c \
 	readlink.c readtokens.c readtokens.h readutmp.c readutmp.h \
@@ -108,17 +108,17 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/afs.m4 \
 	$(top_srcdir)/m4/exclude.m4 $(top_srcdir)/m4/exitfail.m4 \
 	$(top_srcdir)/m4/extensions.m4 $(top_srcdir)/m4/file-type.m4 \
 	$(top_srcdir)/m4/fileblocks.m4 $(top_srcdir)/m4/filemode.m4 \
-	$(top_srcdir)/m4/fnmatch.m4 $(top_srcdir)/m4/fpending.m4 \
-	$(top_srcdir)/m4/free.m4 $(top_srcdir)/m4/fstypename.m4 \
-	$(top_srcdir)/m4/fsusage.m4 $(top_srcdir)/m4/ftruncate.m4 \
-	$(top_srcdir)/m4/fts.m4 $(top_srcdir)/m4/getcwd-path-max.m4 \
-	$(top_srcdir)/m4/getcwd.m4 $(top_srcdir)/m4/getdate.m4 \
-	$(top_srcdir)/m4/getgroups.m4 $(top_srcdir)/m4/gethostname.m4 \
-	$(top_srcdir)/m4/gethrxtime.m4 $(top_srcdir)/m4/getline.m4 \
-	$(top_srcdir)/m4/getndelim2.m4 $(top_srcdir)/m4/getopt.m4 \
-	$(top_srcdir)/m4/getpagesize.m4 $(top_srcdir)/m4/getpass.m4 \
-	$(top_srcdir)/m4/gettext.m4 $(top_srcdir)/m4/gettime.m4 \
-	$(top_srcdir)/m4/gettimeofday.m4 \
+	$(top_srcdir)/m4/filenamecat.m4 $(top_srcdir)/m4/fnmatch.m4 \
+	$(top_srcdir)/m4/fpending.m4 $(top_srcdir)/m4/free.m4 \
+	$(top_srcdir)/m4/fstypename.m4 $(top_srcdir)/m4/fsusage.m4 \
+	$(top_srcdir)/m4/ftruncate.m4 $(top_srcdir)/m4/fts.m4 \
+	$(top_srcdir)/m4/getcwd-path-max.m4 $(top_srcdir)/m4/getcwd.m4 \
+	$(top_srcdir)/m4/getdate.m4 $(top_srcdir)/m4/getgroups.m4 \
+	$(top_srcdir)/m4/gethostname.m4 $(top_srcdir)/m4/gethrxtime.m4 \
+	$(top_srcdir)/m4/getline.m4 $(top_srcdir)/m4/getndelim2.m4 \
+	$(top_srcdir)/m4/getopt.m4 $(top_srcdir)/m4/getpagesize.m4 \
+	$(top_srcdir)/m4/getpass.m4 $(top_srcdir)/m4/gettext.m4 \
+	$(top_srcdir)/m4/gettime.m4 $(top_srcdir)/m4/gettimeofday.m4 \
 	$(top_srcdir)/m4/getugroups.m4 \
 	$(top_srcdir)/m4/getusershell.m4 $(top_srcdir)/m4/glibc21.m4 \
 	$(top_srcdir)/m4/group-member.m4 \
@@ -136,53 +136,53 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/afs.m4 \
 	$(top_srcdir)/m4/localcharset.m4 \
 	$(top_srcdir)/m4/long-options.m4 \
 	$(top_srcdir)/m4/longdouble.m4 $(top_srcdir)/m4/longlong.m4 \
-	$(top_srcdir)/m4/ls-mntd-fs.m4 $(top_srcdir)/m4/makepath.m4 \
-	$(top_srcdir)/m4/mbrtowc.m4 $(top_srcdir)/m4/mbstate_t.m4 \
-	$(top_srcdir)/m4/mbswidth.m4 $(top_srcdir)/m4/md5.m4 \
-	$(top_srcdir)/m4/memcasecmp.m4 $(top_srcdir)/m4/memchr.m4 \
-	$(top_srcdir)/m4/memcmp.m4 $(top_srcdir)/m4/memcoll.m4 \
-	$(top_srcdir)/m4/memcpy.m4 $(top_srcdir)/m4/memmove.m4 \
-	$(top_srcdir)/m4/mempcpy.m4 $(top_srcdir)/m4/memrchr.m4 \
-	$(top_srcdir)/m4/memset.m4 $(top_srcdir)/m4/mkdir-slash.m4 \
+	$(top_srcdir)/m4/ls-mntd-fs.m4 $(top_srcdir)/m4/mbrtowc.m4 \
+	$(top_srcdir)/m4/mbstate_t.m4 $(top_srcdir)/m4/mbswidth.m4 \
+	$(top_srcdir)/m4/md5.m4 $(top_srcdir)/m4/memcasecmp.m4 \
+	$(top_srcdir)/m4/memchr.m4 $(top_srcdir)/m4/memcmp.m4 \
+	$(top_srcdir)/m4/memcoll.m4 $(top_srcdir)/m4/memcpy.m4 \
+	$(top_srcdir)/m4/memmove.m4 $(top_srcdir)/m4/mempcpy.m4 \
+	$(top_srcdir)/m4/memrchr.m4 $(top_srcdir)/m4/memset.m4 \
+	$(top_srcdir)/m4/mkdir-p.m4 $(top_srcdir)/m4/mkdir-slash.m4 \
 	$(top_srcdir)/m4/mkstemp.m4 $(top_srcdir)/m4/mktime.m4 \
 	$(top_srcdir)/m4/modechange.m4 $(top_srcdir)/m4/mountlist.m4 \
 	$(top_srcdir)/m4/nanosleep.m4 $(top_srcdir)/m4/nls.m4 \
 	$(top_srcdir)/m4/obstack.m4 $(top_srcdir)/m4/onceonly_2_57.m4 \
-	$(top_srcdir)/m4/openat.m4 $(top_srcdir)/m4/path-concat.m4 \
-	$(top_srcdir)/m4/pathmax.m4 $(top_srcdir)/m4/perl.m4 \
-	$(top_srcdir)/m4/physmem.m4 $(top_srcdir)/m4/po.m4 \
-	$(top_srcdir)/m4/posixtm.m4 $(top_srcdir)/m4/posixver.m4 \
-	$(top_srcdir)/m4/prereq.m4 $(top_srcdir)/m4/progtest.m4 \
-	$(top_srcdir)/m4/putenv.m4 $(top_srcdir)/m4/quote.m4 \
-	$(top_srcdir)/m4/quotearg.m4 $(top_srcdir)/m4/readlink.m4 \
-	$(top_srcdir)/m4/readtokens.m4 $(top_srcdir)/m4/readutmp.m4 \
-	$(top_srcdir)/m4/regex.m4 $(top_srcdir)/m4/rename.m4 \
-	$(top_srcdir)/m4/restrict.m4 $(top_srcdir)/m4/rmdir-errno.m4 \
-	$(top_srcdir)/m4/rmdir.m4 $(top_srcdir)/m4/rpmatch.m4 \
-	$(top_srcdir)/m4/safe-read.m4 $(top_srcdir)/m4/safe-write.m4 \
-	$(top_srcdir)/m4/same.m4 $(top_srcdir)/m4/save-cwd.m4 \
-	$(top_srcdir)/m4/savedir.m4 $(top_srcdir)/m4/setenv.m4 \
-	$(top_srcdir)/m4/settime.m4 $(top_srcdir)/m4/sha1.m4 \
-	$(top_srcdir)/m4/sig2str.m4 $(top_srcdir)/m4/signed.m4 \
-	$(top_srcdir)/m4/ssize_t.m4 $(top_srcdir)/m4/st_dm_mode.m4 \
-	$(top_srcdir)/m4/st_mtim.m4 $(top_srcdir)/m4/stat-macros.m4 \
-	$(top_srcdir)/m4/stat-prog.m4 $(top_srcdir)/m4/stdbool.m4 \
-	$(top_srcdir)/m4/stdint_h.m4 $(top_srcdir)/m4/stdio-safer.m4 \
-	$(top_srcdir)/m4/stpcpy.m4 $(top_srcdir)/m4/strcase.m4 \
-	$(top_srcdir)/m4/strcspn.m4 $(top_srcdir)/m4/strdup.m4 \
-	$(top_srcdir)/m4/strftime.m4 $(top_srcdir)/m4/stripslash.m4 \
-	$(top_srcdir)/m4/strndup.m4 $(top_srcdir)/m4/strnlen.m4 \
-	$(top_srcdir)/m4/strnumcmp.m4 $(top_srcdir)/m4/strpbrk.m4 \
-	$(top_srcdir)/m4/strstr.m4 $(top_srcdir)/m4/strtod.m4 \
-	$(top_srcdir)/m4/strtoimax.m4 $(top_srcdir)/m4/strtol.m4 \
-	$(top_srcdir)/m4/strtoll.m4 $(top_srcdir)/m4/strtoul.m4 \
-	$(top_srcdir)/m4/strtoull.m4 $(top_srcdir)/m4/strtoumax.m4 \
-	$(top_srcdir)/m4/strverscmp.m4 $(top_srcdir)/m4/timespec.m4 \
-	$(top_srcdir)/m4/tm_gmtoff.m4 $(top_srcdir)/m4/typeof.m4 \
-	$(top_srcdir)/m4/tzset.m4 $(top_srcdir)/m4/uint32_t.m4 \
-	$(top_srcdir)/m4/uintmax_t.m4 $(top_srcdir)/m4/uintptr_t.m4 \
-	$(top_srcdir)/m4/ullong_max.m4 $(top_srcdir)/m4/ulonglong.m4 \
-	$(top_srcdir)/m4/unicodeio.m4 $(top_srcdir)/m4/unistd-safer.m4 \
+	$(top_srcdir)/m4/openat.m4 $(top_srcdir)/m4/pathmax.m4 \
+	$(top_srcdir)/m4/perl.m4 $(top_srcdir)/m4/physmem.m4 \
+	$(top_srcdir)/m4/po.m4 $(top_srcdir)/m4/posixtm.m4 \
+	$(top_srcdir)/m4/posixver.m4 $(top_srcdir)/m4/prereq.m4 \
+	$(top_srcdir)/m4/progtest.m4 $(top_srcdir)/m4/putenv.m4 \
+	$(top_srcdir)/m4/quote.m4 $(top_srcdir)/m4/quotearg.m4 \
+	$(top_srcdir)/m4/readlink.m4 $(top_srcdir)/m4/readtokens.m4 \
+	$(top_srcdir)/m4/readutmp.m4 $(top_srcdir)/m4/regex.m4 \
+	$(top_srcdir)/m4/rename.m4 $(top_srcdir)/m4/restrict.m4 \
+	$(top_srcdir)/m4/rmdir-errno.m4 $(top_srcdir)/m4/rmdir.m4 \
+	$(top_srcdir)/m4/rpmatch.m4 $(top_srcdir)/m4/safe-read.m4 \
+	$(top_srcdir)/m4/safe-write.m4 $(top_srcdir)/m4/same.m4 \
+	$(top_srcdir)/m4/save-cwd.m4 $(top_srcdir)/m4/savedir.m4 \
+	$(top_srcdir)/m4/setenv.m4 $(top_srcdir)/m4/settime.m4 \
+	$(top_srcdir)/m4/sha1.m4 $(top_srcdir)/m4/sig2str.m4 \
+	$(top_srcdir)/m4/signed.m4 $(top_srcdir)/m4/ssize_t.m4 \
+	$(top_srcdir)/m4/st_dm_mode.m4 $(top_srcdir)/m4/st_mtim.m4 \
+	$(top_srcdir)/m4/stat-macros.m4 $(top_srcdir)/m4/stat-prog.m4 \
+	$(top_srcdir)/m4/stdbool.m4 $(top_srcdir)/m4/stdint_h.m4 \
+	$(top_srcdir)/m4/stdio-safer.m4 $(top_srcdir)/m4/stpcpy.m4 \
+	$(top_srcdir)/m4/strcase.m4 $(top_srcdir)/m4/strcspn.m4 \
+	$(top_srcdir)/m4/strdup.m4 $(top_srcdir)/m4/strftime.m4 \
+	$(top_srcdir)/m4/stripslash.m4 $(top_srcdir)/m4/strndup.m4 \
+	$(top_srcdir)/m4/strnlen.m4 $(top_srcdir)/m4/strnumcmp.m4 \
+	$(top_srcdir)/m4/strpbrk.m4 $(top_srcdir)/m4/strstr.m4 \
+	$(top_srcdir)/m4/strtod.m4 $(top_srcdir)/m4/strtoimax.m4 \
+	$(top_srcdir)/m4/strtol.m4 $(top_srcdir)/m4/strtoll.m4 \
+	$(top_srcdir)/m4/strtoul.m4 $(top_srcdir)/m4/strtoull.m4 \
+	$(top_srcdir)/m4/strtoumax.m4 $(top_srcdir)/m4/strverscmp.m4 \
+	$(top_srcdir)/m4/timespec.m4 $(top_srcdir)/m4/tm_gmtoff.m4 \
+	$(top_srcdir)/m4/typeof.m4 $(top_srcdir)/m4/tzset.m4 \
+	$(top_srcdir)/m4/uint32_t.m4 $(top_srcdir)/m4/uintmax_t.m4 \
+	$(top_srcdir)/m4/uintptr_t.m4 $(top_srcdir)/m4/ullong_max.m4 \
+	$(top_srcdir)/m4/ulonglong.m4 $(top_srcdir)/m4/unicodeio.m4 \
+	$(top_srcdir)/m4/unistd-safer.m4 \
 	$(top_srcdir)/m4/unlink-busy.m4 $(top_srcdir)/m4/unlinkdir.m4 \
 	$(top_srcdir)/m4/unlocked-io.m4 $(top_srcdir)/m4/uptime.m4 \
 	$(top_srcdir)/m4/userspec.m4 $(top_srcdir)/m4/utimbuf.m4 \
@@ -476,6 +476,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/file-type.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/fileblocks.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/filemode.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/filenamecat.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/fnmatch.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/fopen-safer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/free.Po@am__quote@
@@ -511,7 +512,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/linebuffer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/long-options.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/lstat.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/makepath.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/malloc.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/md5.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/memcasecmp.Po@am__quote@
@@ -523,6 +523,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/mempcpy.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/memrchr.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/memset.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/mkdir-p.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/mkdir.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/mkstemp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/mktime.Po@am__quote@
@@ -532,7 +533,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/obstack.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/offtostr.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/openat.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/path-concat.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/physmem.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/posixtm.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/posixver.Po@am__quote@
