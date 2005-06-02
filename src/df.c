@@ -33,7 +33,6 @@
 #include "human.h"
 #include "inttostr.h"
 #include "mountlist.h"
-#include "path-concat.h"
 #include "quote.h"
 #include "save-cwd.h"
 #include "xgetcwd.h"
@@ -251,8 +250,8 @@ df_readable (bool negative, uintmax_t n, char *buf,
     }
 }
 
-/* Display a space listing for the disk device with absolute path DISK.
-   If MOUNT_POINT is non-NULL, it is the path of the root of the
+/* Display a space listing for the disk device with absolute file name DISK.
+   If MOUNT_POINT is non-NULL, it is the name of the root of the
    file system on DISK.
    If FSTYPE is non-NULL, it is the type of the file system on DISK.
    If MOUNT_POINT is non-NULL, then DISK may be NULL -- certain systems may
@@ -438,7 +437,7 @@ find_mount_point (const char *file, const struct stat *file_stat)
 {
   struct saved_cwd cwd;
   struct stat last_stat;
-  char *mp = NULL;		/* The malloced mount point path.  */
+  char *mp = NULL;		/* The malloced mount point.  */
 
   if (save_cwd (&cwd) != 0)
     {
@@ -550,7 +549,7 @@ show_point (const char *point, const struct stat *statp)
   struct mount_entry *me;
   struct mount_entry const *best_match = NULL;
 
-  /* If POINT is an absolute path name, see if we can find the
+  /* If POINT is an absolute file name, see if we can find the
      mount point without performing any extra stat calls at all.  */
   if (*point == '/')
     {
@@ -563,7 +562,7 @@ show_point (const char *point, const struct stat *statp)
 	  best_match = me;
     }
 
-  /* Calculate the real absolute path for POINT, and use that to find
+  /* Calculate the real absolute file name for POINT, and use that to find
      the mount point.  This avoids statting unavailable mount points,
      which can hang df.  */
   if (! best_match)
@@ -647,17 +646,17 @@ show_point (const char *point, const struct stat *statp)
     }
 }
 
-/* Determine what kind of node PATH is and show the disk usage
-   for it.  STATP is the results of `stat' on PATH.  */
+/* Determine what kind of node NAME is and show the disk usage
+   for it.  STATP is the results of `stat' on NAME.  */
 
 static void
-show_entry (const char *path, const struct stat *statp)
+show_entry (char const *name, struct stat const *statp)
 {
   if ((S_ISBLK (statp->st_mode) || S_ISCHR (statp->st_mode))
-      && show_disk (path))
+      && show_disk (name))
     return;
 
-  show_point (path, statp);
+  show_point (name, statp);
 }
 
 /* Show all mounted file systems, except perhaps those that are of
