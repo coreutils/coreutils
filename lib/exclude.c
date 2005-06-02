@@ -1,7 +1,7 @@
 /* exclude.c -- exclude file names
 
    Copyright (C) 1992, 1993, 1994, 1997, 1999, 2000, 2001, 2002, 2003,
-   2004 Free Software Foundation, Inc.
+   2004, 2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -134,7 +134,7 @@ fnmatch_no_wildcards (char const *pattern, char const *f, int options)
 /* Return true if EX excludes F.  */
 
 bool
-excluded_filename (struct exclude const *ex, char const *f)
+excluded_file_name (struct exclude const *ex, char const *f)
 {
   size_t exclude_count = ex->exclude_count;
 
@@ -193,17 +193,17 @@ add_exclude (struct exclude *ex, char const *pattern, int options)
   patopts->options = options;
 }
 
-/* Use ADD_FUNC to append to EX the patterns in FILENAME, each with
+/* Use ADD_FUNC to append to EX the patterns in FILE_NAME, each with
    OPTIONS.  LINE_END terminates each pattern in the file.  If
    LINE_END is a space character, ignore trailing spaces and empty
    lines in FILE.  Return -1 on failure, 0 on success.  */
 
 int
 add_exclude_file (void (*add_func) (struct exclude *, char const *, int),
-		  struct exclude *ex, char const *filename, int options,
+		  struct exclude *ex, char const *file_name, int options,
 		  char line_end)
 {
-  bool use_stdin = filename[0] == '-' && !filename[1];
+  bool use_stdin = file_name[0] == '-' && !file_name[1];
   FILE *in;
   char *buf = NULL;
   char *p;
@@ -216,7 +216,7 @@ add_exclude_file (void (*add_func) (struct exclude *, char const *, int),
 
   if (use_stdin)
     in = stdin;
-  else if (! (in = fopen (filename, "r")))
+  else if (! (in = fopen (file_name, "r")))
     return -1;
 
   while ((c = getc (in)) != EOF)
