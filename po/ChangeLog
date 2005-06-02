@@ -1,3 +1,7 @@
+2005-06-02  Jim Meyering  <jim@meyering.net>
+
+	* POTFILES.in: Change makepath.c to mkdir-p.c here, too.
+
 2005-05-10  Jim Meyering  <jim@meyering.net>
 
 	* LINGUAS: Add Vietnamese (vi).
