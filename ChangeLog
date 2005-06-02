@@ -1,6 +1,49 @@
-2005-05-31  Jim Meyering  <jim@meyering.net>
+2005-06-01  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	Use "file name" when talking about file names, instead of "filename"
+	or "path", as per the GNU coding standards.
+	* src/basename.c: Don't use "path" or "filename".
+	* src/copy.c: Likewise.
+	* src/copy.h: Likewise.
+	* src/cp-hash.c: Likewise.
+	* src/cp.c: Likewise.
+	* src/df.c: Likewise.
+	* src/install.c: Likewise.
+	* src/ls.c: Likewise.
+	* src/pinky.c: Likewise.
+	* src/pr.c: Likewise.
+	* src/pwd.c: Likewise.
+	* src/remove.c: Likewise.
+	* src/rmdir.c: Likewise.
+	* src/sort.c: Likewise.
+	* src/system.h: Likewise.
+	* src/tty.c: Likewise.
+	* src/who.c: Likewise.
+	* src/cp.c (parents_option): Renamed from flag_path.  All uses changed.
+	(make_dir_parents_private): Renamed from make_path_private.
+	All uses changed.
+	* src/cp.c (usage): Don't use "path" to describe a file name.
+	* src/readlink.c (usage): Likewise.
+	* src/rmdir.c (usage): Likewise.
+	* src/df.c: Don't include "path-concat.h"; not needed.
+	* src/install.c (install_file_in_file_parents): Renamed from
+	install_file_to_path.  All uses changed.
+	* src/ln.c (FILE_BASENAME_CONCAT): Renamed from PATH_BASENAME_CONCAT.
+	All uses changed.
+	* src/ls.c (make_link_name): Renamed from make_link_path.
+	All uses changed.
+	* src/pwd.c (struct file_name): Renamed from struct Path.
+	All uses changed.
+	(file_name_free): Renamed from path_free.  All uses changed.
+	(file_name_init): Renamed from path_init.  All uses changed.
+	(file_name_prepend): Renamed from path_prepend.  All uses changed.
+	* src/rmdir.c (remove_empty_parents): Renamed from empty_paths.
+	All uses changed.
+	(longopts): Add comment that --path is deprecated.
+
+2005-05-31  Jim Meyering  <jim@meyering.net>
 
 	* src/copy.c (chown_privileges, chown_failure_ok): Mark as `extern'.
 	This is a crutch so that `make distcheck's sc_tight_scope rule
