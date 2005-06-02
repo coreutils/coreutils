@@ -71,7 +71,7 @@ typedef struct {
 	struct _ftsent *fts_child;	/* linked list of children */
 	struct _ftsent **fts_array;	/* sort array */
 	dev_t fts_dev;			/* starting device # */
-	char *fts_path;			/* path for this descent */
+	char *fts_path;			/* file name for this descent */
 	int fts_rfd;			/* fd for root */
 	size_t fts_pathlen;		/* sizeof(path) */
 	size_t fts_nitems;			/* elements in the sort array */
@@ -135,8 +135,8 @@ typedef struct _ftsent {
 	struct _ftsent *fts_link;	/* next file in directory */
 	long fts_number;	        /* local numeric value */
 	void *fts_pointer;	        /* local address value */
-	char *fts_accpath;		/* access path */
-	char *fts_path;			/* root path; == fts_fts->fts_path */
+	char *fts_accpath;		/* access file name */
+	char *fts_path;			/* root name; == fts_fts->fts_path */
 	int fts_errno;			/* errno for this node */
 	int fts_symfd;			/* fd for symlink */
 	size_t fts_pathlen;		/* strlen(fts_path) */

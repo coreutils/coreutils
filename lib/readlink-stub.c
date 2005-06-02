@@ -8,7 +8,7 @@
    symlinks. */
 
 int
-readlink (const char *filename, char *buffer, size_t size)
+readlink (const char *file, char *buffer, size_t size)
 {
   errno = EINVAL;
   return -1;

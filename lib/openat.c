@@ -43,7 +43,7 @@
    Otherwise, upon failure, set errno and return -1, as openat does.
    Upon successful completion, return a file descriptor.  */
 int
-rpl_openat (int fd, char const *filename, int flags, ...)
+rpl_openat (int fd, char const *file, int flags, ...)
 {
   struct saved_cwd saved_cwd;
   int saved_errno;
@@ -62,8 +62,8 @@ rpl_openat (int fd, char const *filename, int flags, ...)
       va_end (arg);
     }
 
-  if (fd == AT_FDCWD || *filename == '/')
-    return open (filename, flags, mode);
+  if (fd == AT_FDCWD || *file == '/')
+    return open (file, flags, mode);
 
   if (save_cwd (&saved_cwd) != 0)
     error (exit_failure, errno,
@@ -77,7 +77,7 @@ rpl_openat (int fd, char const *filename, int flags, ...)
       return -1;
     }
 
-  new_fd = open (filename, flags, mode);
+  new_fd = open (file, flags, mode);
   saved_errno = errno;
 
   if (restore_cwd (&saved_cwd) != 0)
@@ -140,7 +140,7 @@ fdopendir (int fd)
    then give a diagnostic and exit nonzero.
    Otherwise, this function works just like Solaris' fstatat.  */
 int
-fstatat (int fd, char const *filename, struct stat *st, int flag)
+fstatat (int fd, char const *file, struct stat *st, int flag)
 {
   struct saved_cwd saved_cwd;
   int saved_errno;
@@ -148,8 +148,8 @@ fstatat (int fd, char const *filename, struct stat *st, int flag)
 
   if (fd == AT_FDCWD)
     return (flag == AT_SYMLINK_NOFOLLOW
-	    ? lstat (filename, st)
-	    : stat (filename, st));
+	    ? lstat (file, st)
+	    : stat (file, st));
 
   if (save_cwd (&saved_cwd) != 0)
     error (exit_failure, errno,
@@ -164,8 +164,8 @@ fstatat (int fd, char const *filename, struct stat *st, int flag)
     }
 
   err = (flag == AT_SYMLINK_NOFOLLOW
-	 ? lstat (filename, st)
-	 : stat (filename, st));
+	 ? lstat (file, st)
+	 : stat (file, st));
   saved_errno = errno;
 
   if (restore_cwd (&saved_cwd) != 0)

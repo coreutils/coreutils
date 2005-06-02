@@ -1,5 +1,5 @@
 /* Return the canonical absolute name of a given file.
-   Copyright (C) 1996-2004 Free Software Foundation, Inc.
+   Copyright (C) 1996-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -21,10 +21,10 @@
 
 enum canonicalize_mode_t
   {
-    /* All path components must exist.  */
+    /* All components must exist.  */
     CAN_EXISTING = 0,
 
-    /* All path components excluding last one must exist.  */
+    /* All components excluding last one must exist.  */
     CAN_ALL_BUT_LAST = 1,
 
     /* No requirements on components existence.  */

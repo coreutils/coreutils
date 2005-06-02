@@ -72,7 +72,7 @@ desirable_utmp_entry (STRUCT_UTMP const *u, int options)
 		|| (kill (UT_PID (u), 0) < 0 && errno == ESRCH)));
 }
 
-/* Read the utmp entries corresponding to file FILENAME into freshly-
+/* Read the utmp entries corresponding to file FILE into freshly-
    malloc'd storage, set *UTMP_BUF to that pointer, set *N_ENTRIES to
    the number of entries, and return zero.  If there is any error,
    return -1, setting errno, and don't modify the parameters.
@@ -82,7 +82,7 @@ desirable_utmp_entry (STRUCT_UTMP const *u, int options)
 #ifdef UTMP_NAME_FUNCTION
 
 int
-read_utmp (const char *filename, size_t *n_entries, STRUCT_UTMP **utmp_buf,
+read_utmp (char const *file, size_t *n_entries, STRUCT_UTMP **utmp_buf,
 	   int options)
 {
   size_t n_read = 0;
@@ -94,7 +94,7 @@ read_utmp (const char *filename, size_t *n_entries, STRUCT_UTMP **utmp_buf,
      Solaris' utmpname returns 1 upon success -- which is contrary
      to what the GNU libc version does.  In addition, older GNU libc
      versions are actually void.   */
-  UTMP_NAME_FUNCTION (filename);
+  UTMP_NAME_FUNCTION (file);
 
   SET_UTMP_ENT ();
 
@@ -118,14 +118,14 @@ read_utmp (const char *filename, size_t *n_entries, STRUCT_UTMP **utmp_buf,
 #else
 
 int
-read_utmp (const char *filename, size_t *n_entries, STRUCT_UTMP **utmp_buf,
+read_utmp (char const *file, size_t *n_entries, STRUCT_UTMP **utmp_buf,
 	   int options)
 {
   size_t n_read = 0;
   size_t n_alloc = 0;
   STRUCT_UTMP *utmp = NULL;
   int saved_errno;
-  FILE *f = fopen (filename, "r");
+  FILE *f = fopen (file, "r");
 
   if (! f)
     return -1;

@@ -1,6 +1,6 @@
 /* acl.c - access control lists
 
-   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003, 2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -39,11 +39,11 @@
 # define MIN_ACL_ENTRIES 4
 #endif
 
-/* Return 1 if PATH has a nontrivial access control list, 0 if not,
+/* Return 1 if FILE has a nontrivial access control list, 0 if not,
    and -1 (setting errno) if an error is encountered.  */
 
 int
-file_has_acl (char const *path, struct stat const *pathstat)
+file_has_acl (char const *file, struct stat const *filestat)
 {
   /* FIXME: This implementation should work on recent-enough versions
      of HP-UX, Solaris, and Unixware, but it simply returns 0 with
@@ -52,9 +52,9 @@ file_has_acl (char const *path, struct stat const *pathstat)
      fix-related ideas.  */
 
 #if HAVE_ACL && defined GETACLCNT
-  if (! S_ISLNK (pathstat->st_mode))
+  if (! S_ISLNK (filestat->st_mode))
     {
-      int n = acl (path, GETACLCNT, 0, NULL);
+      int n = acl (file, GETACLCNT, 0, NULL);
       return n < 0 ? (errno == ENOSYS ? 0 : -1) : (MIN_ACL_ENTRIES < n);
     }
 #endif

@@ -36,11 +36,11 @@
 #  define __OPENAT_XCONCAT(x, y) __OPENAT_CONCAT (x, y)
 #  define __OPENAT_ID(y) __OPENAT_XCONCAT (__OPENAT_PREFIX, y)
 #  define openat __OPENAT_ID (openat)
-int openat (int fd, char const *filename, int flags, /* mode_t mode */ ...);
+int openat (int fd, char const *file, int flags, /* mode_t mode */ ...);
 #  define fdopendir __OPENAT_ID (fdopendir)
 DIR *fdopendir (int fd);
 #  define fstatat __OPENAT_ID (fstatat)
-int fstatat (int fd, char const *filename, struct stat *st, int flag);
+int fstatat (int fd, char const *file, struct stat *st, int flag);
 # endif
 
 #endif

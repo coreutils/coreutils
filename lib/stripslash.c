@@ -1,5 +1,6 @@
 /* stripslash.c -- remove redundant trailing slashes from a file name
-   Copyright (C) 1990, 2001, 2003, 2004 Free Software Foundation, Inc.
+
+   Copyright (C) 1990, 2001, 2003, 2004, 2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -21,17 +22,17 @@
 
 #include "dirname.h"
 
-/* Remove trailing slashes from PATH.
+/* Remove trailing slashes from FILE.
    Return true if a trailing slash was removed.
-   This is useful when using filename completion from a shell that
+   This is useful when using file name completion from a shell that
    adds a "/" after directory names (such as tcsh and bash), because
    the Unix rename and rmdir system calls return an "Invalid argument" error
-   when given a path that ends in "/" (except for the root directory).  */
+   when given a file that ends in "/" (except for the root directory).  */
 
 bool
-strip_trailing_slashes (char *path)
+strip_trailing_slashes (char *file)
 {
-  char *base = base_name (path);
+  char *base = base_name (file);
   char *base_lim = base + base_len (base);
   bool had_slash = (*base_lim != '\0');
   *base_lim = '\0';

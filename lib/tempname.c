@@ -78,8 +78,8 @@
 # define __mkdir mkdir
 # define __open open
 # define __open64 open
-# define __lxstat64(version, path, buf) lstat (path, buf)
-# define __xstat64(version, path, buf) stat (path, buf)
+# define __lxstat64(version, file, buf) lstat (file, buf)
+# define __xstat64(version, file, buf) stat (file, buf)
 #endif
 
 #if ! (HAVE___SECURE_GETENV || _LIBC)
@@ -185,7 +185,7 @@ __path_search (char *tmpl, size_t tmpl_len, const char *dir, const char *pfx,
   return 0;
 }
 
-/* These are the characters used in temporary filenames.  */
+/* These are the characters used in temporary file names.  */
 static const char letters[] =
 "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 

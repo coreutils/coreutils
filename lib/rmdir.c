@@ -1,6 +1,7 @@
 /* BSD compatible remove directory function for System V
 
-   Copyright (C) 1988, 1990, 1999, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1988, 1990, 1999, 2003, 2004, 2005 Free Software
+   Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -28,17 +29,17 @@
 
 /* rmdir adapted from GNU tar.  */
 
-/* Remove directory DPATH.
+/* Remove directory DIR.
    Return 0 if successful, -1 if not.  */
 
 int
-rmdir (char const *dpath)
+rmdir (char const *dir)
 {
   pid_t cpid;
   int status;
   struct stat statbuf;
 
-  if (stat (dpath, &statbuf) != 0)
+  if (stat (dir, &statbuf) != 0)
     return -1;			/* errno already set */
 
   if (!S_ISDIR (statbuf.st_mode))
@@ -54,7 +55,7 @@ rmdir (char const *dpath)
       return -1;		/* errno already set */
 
     case 0:			/* child process */
-      execl ("/bin/rmdir", "rmdir", dpath, (char *) 0);
+      execl ("/bin/rmdir", "rmdir", dir, (char *) 0);
       _exit (1);
 
     default:			/* parent process */

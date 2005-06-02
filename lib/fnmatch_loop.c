@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,1992,1993,1996,1997,1998,1999,2000,2001,2002,2003,2004
+/* Copyright (C) 1991,1992,1993,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005
 	Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -15,7 +15,7 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 
-/* Match STRING against the filename pattern PATTERN, returning zero if
+/* Match STRING against the file name pattern PATTERN, returning zero if
    it matches, nonzero if not.  */
 static int EXT (INT opt, const CHAR *pattern, const CHAR *string,
 		const CHAR *string_end, bool no_leading_period, int flags)

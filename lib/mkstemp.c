@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2001, 2005 Free Software Foundation, Inc.
    This file is derived from the one in the GNU C Library.
 
    This program is free software; you can redistribute it and/or modify
@@ -33,7 +33,7 @@ int __gen_tempname ();
 
 /* Generate a unique temporary file name from TEMPLATE.
    The last six characters of TEMPLATE must be "XXXXXX";
-   they are replaced with a string that makes the filename unique.
+   they are replaced with a string that makes the file name unique.
    Then open the file and return a fd. */
 int
 rpl_mkstemp (char *template)

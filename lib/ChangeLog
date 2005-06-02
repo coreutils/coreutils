@@ -1,3 +1,42 @@
+2005-06-01  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Use "file name" when talking about file names, instead of "filename"
+	or "path", as per the GNU coding standards.
+	* mkdir-p.c: Renamed from makepath.c.
+	(make_dir_parents): Renamed from make_path.  All callers changed.
+	* mkdir-p.h: Likewise.  All includers changed.
+	* filenamecat.c: Renamed from path-concat.c.
+	(file_name_concat): Renamed from path_concat.  All callers changed.
+	[TEST_FILE_NAME_CONCAT]: Renamed from TEST_PATH_CONCAT.
+	* filenamecat.h: Likewise.  All includers changed.
+	* acl.c: Don't use "path" or "filename" to mean "file name"
+	in comments or local variable names.
+	* basename.c: Likewise.
+	* canonicalize.c, canonicalize.h: Likewise.
+	* dirname.c, dirname.h: Likewise.
+	* euidaccess.c: Likewise.
+	* exclude.c: Likewise
+	* fnmatch_.h, fnmatch_loop.c: Likewise.
+	* fsusage.c, fsuage.h: Likewise.
+	* fts.c, fts_.h: Likewise.
+	* getcwd.c: Likewise.
+	* getloadavg.c: Likewise.
+	* mkstemp.c: Likewise.
+	* mountlist.c, mountlist.h: Likewise.
+	* openat.c, openat.h: Likewise.
+	* readlink-stub.c: Likewise.
+	* readutmp.c, readutmp.h: Likewise.
+	* rename.c: Likewise.
+	* rmdir.c: Likewise.
+	* same.c: Likewise.
+	* savedir.c: Likewise.
+	* stripslash.c: Likewise.
+	* tempname.c: Likewise.
+	* xreadlink.c: Likewise.
+	* exclude.c (excluded_file_name): Renamed from excluded_filename.
+	All uses changed.
+	* exclude.h: Likewise.
+
 2005-05-30  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* euidaccess.c (getuid, getgid, getuid, getegid)

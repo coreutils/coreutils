@@ -1,6 +1,6 @@
 /* fsusage.h -- declarations for file system space usage info
 
-   Copyright (C) 1991, 1992, 1997, 2003, 2004 Free Software
+   Copyright (C) 1991, 1992, 1997, 2003, 2004, 2005 Free Software
    Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -35,6 +35,6 @@ struct fs_usage
   uintmax_t fsu_ffree;		/* Free file nodes. */
 };
 
-int get_fs_usage (const char *path, const char *disk, struct fs_usage *fsp);
+int get_fs_usage (char const *file, char const *disk, struct fs_usage *fsp);
 
 #endif

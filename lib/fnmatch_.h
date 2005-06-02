@@ -1,5 +1,5 @@
-/* Copyright (C) 1991, 1992, 1993, 1996, 1997, 1998, 1999, 2001, 2002, 2003
-   Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1996, 1997, 1998, 1999, 2001, 2002, 2003,
+   2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -51,7 +51,7 @@ extern "C" {
 #  define FNM_NOSYS	(-1)
 # endif
 
-/* Match NAME against the filename pattern PATTERN,
+/* Match NAME against the file name pattern PATTERN,
    returning zero if it matches, FNM_NOMATCH if not.  */
 extern int fnmatch (const char *__pattern, const char *__name,
 		    int __flags);

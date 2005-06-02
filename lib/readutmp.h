@@ -205,7 +205,7 @@ enum
   };
 
 char *extract_trimmed_name (const STRUCT_UTMP *ut);
-int read_utmp (const char *filename, size_t *n_entries, STRUCT_UTMP **utmp_buf,
+int read_utmp (char const *file, size_t *n_entries, STRUCT_UTMP **utmp_buf,
 	       int options);
 
 #endif /* __READUTMP_H__ */

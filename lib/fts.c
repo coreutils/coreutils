@@ -244,8 +244,8 @@ fts_open (char * const *argv,
 		SET(FTS_NOCHDIR);
 
 	/*
-	 * Start out with 1K of path space, and enough, in any case,
-	 * to hold the user's paths.
+	 * Start out with 1K of file name space, and enough, in any case,
+	 * to hold the user's file names.
 	 */
 #ifndef MAXPATHLEN
 # define MAXPATHLEN 1024
@@ -260,7 +260,7 @@ fts_open (char * const *argv,
 
 	/* Allocate/initialize root(s). */
 	for (root = NULL, nitems = 0; *argv != NULL; ++argv, ++nitems) {
-		/* Don't allow zero-length paths. */
+		/* Don't allow zero-length file names. */
 		if ((len = strlen(*argv)) == 0) {
 			__set_errno (ENOENT);
 			goto mem3;
@@ -311,7 +311,7 @@ fts_open (char * const *argv,
 
 	/*
 	 * If using chdir(2), grab a file descriptor pointing to dot to ensure
-	 * that we can get back here; this could be avoided for some paths,
+	 * that we can get back here; this could be avoided for some file names,
 	 * but almost certainly not worth the effort.  Slashes, symbolic links,
 	 * and ".." are all fairly nasty problems.  Note, if we can't get the
 	 * descriptor we run anyway, just more slowly.
@@ -341,7 +341,7 @@ fts_load (FTS *sp, register FTSENT *p)
 	 * actually enter the directory until after the preorder visit, set
 	 * the fts_accpath field specially so the chdir gets done to the right
 	 * place and the user can access the first node.  From fts_open it's
-	 * known that the path will fit.
+	 * known that the file name will fit.
 	 */
 	len = p->fts_pathlen = p->fts_namelen;
 	memmove(sp->fts_path, p->fts_name, len + 1);
@@ -374,7 +374,7 @@ fts_close (FTS *sp)
 		free(p);
 	}
 
-	/* Free up child linked list, sort array, path buffer. */
+	/* Free up child linked list, sort array, file name buffer. */
 	if (sp->fts_child)
 		fts_lfree(sp->fts_child);
 	if (sp->fts_array)
@@ -403,8 +403,8 @@ fts_close (FTS *sp)
 }
 
 /*
- * Special case of "/" at the end of the path so that slashes aren't
- * appended which would cause paths to be written as "....//foo".
+ * Special case of "/" at the end of the file name so that slashes aren't
+ * appended which would cause file names to be written as "....//foo".
  */
 #define NAPPEND(p)							\
 	(p->fts_path[p->fts_pathlen - 1] == '/'				\
@@ -524,7 +524,8 @@ next:	tmp = p;
 
 		/*
 		 * If reached the top, return to the original directory (or
-		 * the root of the tree), and load the paths for the next root.
+		 * the root of the tree), and load the file names for the next
+		 * root.
 		 */
 		if (p->fts_level == FTS_ROOTLEVEL) {
 			if (FCHDIR(sp, sp->fts_rfd)) {
@@ -585,7 +586,7 @@ check_for_dir:
 		return (sp->fts_cur = NULL);
 	}
 
-	/* NUL terminate the pathname. */
+	/* NUL terminate the file name.  */
 	sp->fts_path[p->fts_pathlen] = '\0';
 
 	/*
@@ -685,8 +686,8 @@ fts_children (register FTS *sp, int instr)
 		instr = BCHILD;
 
 	/*
-	 * If using chdir on a relative path and called BEFORE fts_read does
-	 * its chdir to the root of a traversal, we can lose -- we need to
+	 * If using chdir on a relative file name and called BEFORE fts_read
+	 * does its chdir to the root of a traversal, we can lose -- we need to
 	 * chdir into the subdirectory, and we don't know where the current
 	 * directory is, so we can't get back so that the upcoming chdir by
 	 * fts_read will work.
@@ -753,7 +754,7 @@ fts_build (register FTS *sp, int type)
 	else
 		oflag = DTF_HIDEW|DTF_NODUP|DTF_REWIND;
 #else
-# define __opendir2(path, flag) opendir(path)
+# define __opendir2(file, flag) opendir(file)
 #endif
        if ((dirp = __opendir2(cur->fts_accpath, oflag)) == NULL) {
 		if (type == BREAD) {
@@ -787,7 +788,7 @@ fts_build (register FTS *sp, int type)
 	 * but set a flag so we don't chdir after the post-order visit.
 	 * We won't be able to stat anything, but we can still return the
 	 * names themselves.  Note, that since fts_read won't be able to
-	 * chdir into the directory, it will have to return different path
+	 * chdir into the directory, it will have to return different file
 	 * names than before, i.e. "a/b" instead of "b".  Since the node
 	 * has already been visited in pre-order, have to wait until the
 	 * post-order visit to return the error.  There is a special case
@@ -813,13 +814,13 @@ fts_build (register FTS *sp, int type)
 
 	/*
 	 * Figure out the max file name length that can be stored in the
-	 * current path -- the inner loop allocates more path as necessary.
+	 * current buffer -- the inner loop allocates more space as necessary.
 	 * We really wouldn't have to do the maxlen calculations here, we
-	 * could do them in fts_read before returning the path, but it's a
+	 * could do them in fts_read before returning the name, but it's a
 	 * lot easier here since the length is part of the dirent structure.
 	 *
 	 * If not changing directories set a pointer so that can just append
-	 * each new name into the path.
+	 * each new component into the file name.
 	 */
 	len = NAPPEND(cur);
 	if (ISSET(FTS_NOCHDIR)) {
@@ -846,7 +847,7 @@ fts_build (register FTS *sp, int type)
 			oldaddr = sp->fts_path;
 			if (! fts_palloc(sp, NAMLEN (dp) + len + 1)) {
 				/*
-				 * No more memory for path or structures.  Save
+				 * No more memory.  Save
 				 * errno, free up the current structure and the
 				 * structures already allocated.
 				 */
@@ -873,7 +874,7 @@ mem1:				saved_errno = errno;
 		if (new_len < len) {
 			/*
 			 * In the unlikely even that we would end up
-			 * with a path longer than SIZE_MAX, free up
+			 * with a file name longer than SIZE_MAX, free up
 			 * the current structure and the structures already
 			 * allocated, then error out with ENAMETOOLONG.
 			 */
@@ -940,14 +941,14 @@ mem1:				saved_errno = errno;
 		closedir(dirp);
 
 	/*
-	 * If realloc() changed the address of the path, adjust the
+	 * If realloc() changed the address of the file name, adjust the
 	 * addresses for the rest of the tree and the dir list.
 	 */
 	if (doadjust)
 		fts_padjust(sp, head);
 
 	/*
-	 * If not changing directories, reset the path back to original
+	 * If not changing directories, reset the file name back to original
 	 * state.
 	 */
 	if (ISSET(FTS_NOCHDIR)) {
@@ -959,7 +960,7 @@ mem1:				saved_errno = errno;
 	/*
 	 * If descended after called from fts_children or after called from
 	 * fts_read and nothing found, get back.  At the root level we use
-	 * the saved fd; if one of fts_open()'s arguments is a relative path
+	 * the saved fd; if one of fts_open()'s arguments is a relative name
 	 * to an empty directory, we wind up here with no other way back.  If
 	 * can't get back, we're done.
 	 */
@@ -1226,10 +1227,11 @@ fts_lfree (register FTSENT *head)
 }
 
 /*
- * Allow essentially unlimited paths; find, rm, ls should all work on any tree.
- * Most systems will allow creation of paths much longer than MAXPATHLEN, even
- * though the kernel won't resolve them.  Add the size (not just what's needed)
- * plus 256 bytes so don't realloc the path 2 bytes at a time.
+ * Allow essentially unlimited file name lengths; find, rm, ls should
+ * all work on any tree.  Most systems will allow creation of file
+ * names much longer than MAXPATHLEN, even though the kernel won't
+ * resolve them.  Add the size (not just what's needed) plus 256 bytes
+ * so don't realloc the file name 2 bytes at a time.
  */
 static bool
 internal_function
@@ -1262,8 +1264,8 @@ fts_palloc (FTS *sp, size_t more)
 }
 
 /*
- * When the path is realloc'd, have to fix all of the pointers in structures
- * already returned.
+ * When the file name is realloc'd, have to fix all of the pointers in
+ *  structures already returned.
  */
 static void
 internal_function
@@ -1303,13 +1305,13 @@ fts_maxarglen (char * const *argv)
 }
 
 /*
- * Change to dir specified by fd or path without getting
+ * Change to dir specified by fd or file name without getting
  * tricked by someone changing the world out from underneath us.
  * Assumes p->fts_statp->st_dev and p->fts_statp->st_ino are filled in.
  */
 static int
 internal_function
-fts_safe_changedir (FTS *sp, FTSENT *p, int fd, char const *path)
+fts_safe_changedir (FTS *sp, FTSENT *p, int fd, char const *dir)
 {
 	int ret, oerrno, newfd;
 	struct stat sb;
@@ -1317,7 +1319,7 @@ fts_safe_changedir (FTS *sp, FTSENT *p, int fd, char const *path)
 	newfd = fd;
 	if (ISSET(FTS_NOCHDIR))
 		return (0);
-	if (fd < 0 && (newfd = fd_safer (diropen (path))) < 0)
+	if (fd < 0 && (newfd = fd_safer (diropen (dir))) < 0)
 		return (-1);
 	if (fstat(newfd, &sb)) {
 		ret = -1;

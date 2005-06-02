@@ -32,7 +32,7 @@
 				AC_CHECK_FUNCS(pstat_getdynamic) in your
 				configure.in file.
    FIXUP_KERNEL_SYMBOL_ADDR()	Adjust address in returned struct nlist.
-   KERNEL_FILE			Pathname of the kernel to nlist.
+   KERNEL_FILE			Name of the kernel file to nlist.
    LDAV_CVT()			Scale the load average from the kernel.
 				Returns a double.
    LDAV_SYMBOL			Name of kernel symbol giving load average.

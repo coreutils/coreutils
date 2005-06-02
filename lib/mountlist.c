@@ -755,16 +755,16 @@ read_file_system_list (bool need_fs_type)
 	me = xmalloc (sizeof *me);
 	if (vmp->vmt_flags & MNT_REMOTE)
 	  {
-	    char *host, *path;
+	    char *host, *dir;
 
 	    me->me_remote = 1;
-	    /* Prepend the remote pathname.  */
+	    /* Prepend the remote dirname.  */
 	    host = thisent + vmp->vmt_data[VMT_HOSTNAME].vmt_off;
-	    path = thisent + vmp->vmt_data[VMT_OBJECT].vmt_off;
-	    me->me_devname = xmalloc (strlen (host) + strlen (path) + 2);
+	    dir = thisent + vmp->vmt_data[VMT_OBJECT].vmt_off;
+	    me->me_devname = xmalloc (strlen (host) + strlen (dir) + 2);
 	    strcpy (me->me_devname, host);
 	    strcat (me->me_devname, ":");
-	    strcat (me->me_devname, path);
+	    strcat (me->me_devname, dir);
 	  }
 	else
 	  {

@@ -1,6 +1,6 @@
 /* Determine whether two file names refer to the same file.
 
-   Copyright (C) 1997, 1998, 1999, 2000, 2002, 2003, 2004 Free
+   Copyright (C) 1997, 1998, 1999, 2000, 2002, 2003, 2004, 2005 Free
    Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -72,7 +72,7 @@ same_name (const char *source, const char *dest)
   bool same = false;
 
 #if ! _POSIX_NO_TRUNC && HAVE_PATHCONF && defined _PC_NAME_MAX
-  /* This implementation silently truncates pathname components.  If
+  /* This implementation silently truncates components of file names.  If
      the base names might be truncated, check whether the truncated
      base names are the same, while checking the directories.  */
   size_t slen_max = HAVE_LONG_FILE_NAMES ? 255 : _POSIX_NAME_MAX;

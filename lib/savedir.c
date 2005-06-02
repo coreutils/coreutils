@@ -1,6 +1,6 @@
 /* savedir.c -- save the list of files in a directory in a string
 
-   Copyright 1990, 1997, 1998, 1999, 2000, 2001, 2003, 2004 Free
+   Copyright 1990, 1997, 1998, 1999, 2000, 2001, 2003, 2004, 2005 Free
    Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -57,7 +57,7 @@
 
 #include "xalloc.h"
 
-/* Return a freshly allocated string containing the filenames
+/* Return a freshly allocated string containing the file names
    in directory DIR, separated by '\0' characters;
    the end is marked by two '\0' characters in a row.
    Return NULL (setting errno) if DIR cannot be opened, read, or closed.  */
