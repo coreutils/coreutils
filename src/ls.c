@@ -108,6 +108,7 @@ int wcwidth ();
 #include "dirname.h"
 #include "dirfd.h"
 #include "error.h"
+#include "filenamecat.h"
 #include "hard-locale.h"
 #include "hash.h"
 #include "human.h"
@@ -116,7 +117,6 @@ int wcwidth ();
 #include "ls.h"
 #include "mbswidth.h"
 #include "obstack.h"
-#include "path-concat.h"
 #include "quote.h"
 #include "quotearg.h"
 #include "same.h"
@@ -232,7 +232,7 @@ char *getuser ();
 static size_t quote_name (FILE *out, const char *name,
 			  struct quoting_options const *options,
 			  size_t *width);
-static char *make_link_path (const char *path, const char *linkname);
+static char *make_link_name (char const *name, char const *linkname);
 static int decode_switches (int argc, char **argv);
 static bool file_ignored (char const *name);
 static uintmax_t gobble_file (char const *name, enum filetype type,
@@ -269,7 +269,7 @@ static void sort_files (void);
 static void parse_ls_color (void);
 void usage (int status);
 
-/* The name the program was run with, stripped of any leading path.  */
+/* The name this program was run with.  */
 char *program_name;
 
 /* Initial size of hash table.
@@ -2470,7 +2470,6 @@ gobble_file (char const *name, enum filetype type, bool command_line_arg,
 	     char const *dirname)
 {
   uintmax_t blocks;
-  char *path;
   struct fileinfo *f;
 
   if (files_index == nfiles)
@@ -2507,21 +2506,23 @@ gobble_file (char const *name, enum filetype type, bool command_line_arg,
 				     )))))
 
     {
-      /* `path' is the absolute pathname of this file.  */
+      /* Absolute name of this file.  */
+      char *absolute_name;
+
       int err;
 
       if (name[0] == '/' || dirname[0] == 0)
-	path = (char *) name;
+	absolute_name = (char *) name;
       else
 	{
-	  path = alloca (strlen (name) + strlen (dirname) + 2);
-	  attach (path, dirname, name);
+	  absolute_name = alloca (strlen (name) + strlen (dirname) + 2);
+	  attach (absolute_name, dirname, name);
 	}
 
       switch (dereference)
 	{
 	case DEREF_ALWAYS:
-	  err = stat (path, &f->stat);
+	  err = stat (absolute_name, &f->stat);
 	  break;
 
 	case DEREF_COMMAND_LINE_ARGUMENTS:
@@ -2529,7 +2530,7 @@ gobble_file (char const *name, enum filetype type, bool command_line_arg,
 	  if (command_line_arg)
 	    {
 	      bool need_lstat;
-	      err = stat (path, &f->stat);
+	      err = stat (absolute_name, &f->stat);
 
 	      if (dereference == DEREF_COMMAND_LINE_ARGUMENTS)
 		break;
@@ -2541,46 +2542,46 @@ gobble_file (char const *name, enum filetype type, bool command_line_arg,
 		break;
 
 	      /* stat failed because of ENOENT, maybe indicating a dangling
-		 symlink.  Or stat succeeded, PATH does not refer to a
+		 symlink.  Or stat succeeded, ABSOLUTE_NAME does not refer to a
 		 directory, and --dereference-command-line-symlink-to-dir is
 		 in effect.  Fall through so that we call lstat instead.  */
 	    }
 
 	default: /* DEREF_NEVER */
-	  err = lstat (path, &f->stat);
+	  err = lstat (absolute_name, &f->stat);
 	  break;
 	}
 
       if (err < 0)
 	{
-	  file_failure (command_line_arg, "%s", path);
+	  file_failure (command_line_arg, "%s", absolute_name);
 	  return 0;
 	}
 
 #if HAVE_ACL
       if (format == long_format)
 	{
-	  int n = file_has_acl (path, &f->stat);
+	  int n = file_has_acl (absolute_name, &f->stat);
 	  f->have_acl = (0 < n);
 	  if (n < 0)
-	    error (0, errno, "%s", quotearg_colon (path));
+	    error (0, errno, "%s", quotearg_colon (absolute_name));
 	}
 #endif
 
       if (S_ISLNK (f->stat.st_mode)
 	  && (format == long_format || check_symlink_color))
 	{
-	  char *linkpath;
+	  char *linkname;
 	  struct stat linkstats;
 
-	  get_link_name (path, f, command_line_arg);
-	  linkpath = make_link_path (path, f->linkname);
+	  get_link_name (absolute_name, f, command_line_arg);
+	  linkname = make_link_name (absolute_name, f->linkname);
 
 	  /* Avoid following symbolic links when possible, ie, when
 	     they won't be traced and when no indicator is needed.  */
-	  if (linkpath
+	  if (linkname
 	      && (file_type <= indicator_style || check_symlink_color)
-	      && stat (linkpath, &linkstats) == 0)
+	      && stat (linkname, &linkstats) == 0)
 	    {
 	      f->linkok = true;
 
@@ -2596,7 +2597,7 @@ gobble_file (char const *name, enum filetype type, bool command_line_arg,
 		  f->linkok = true;
 		}
 	    }
-	  free (linkpath);
+	  free (linkname);
 	}
 
       if (S_ISLNK (f->stat.st_mode))
@@ -2710,13 +2711,13 @@ get_link_name (char const *filename, struct fileinfo *f, bool command_line_arg)
 		  filename);
 }
 
-/* If `linkname' is a relative path and `path' contains one or more
+/* If `linkname' is a relative name and `name' contains one or more
    leading directories, return `linkname' with those directories
    prepended; otherwise, return a copy of `linkname'.
    If `linkname' is zero, return zero.  */
 
 static char *
-make_link_path (const char *path, const char *linkname)
+make_link_name (char const *name, char const *linkname)
 {
   char *linkbuf;
   size_t bufsiz;
@@ -2727,15 +2728,15 @@ make_link_path (const char *path, const char *linkname)
   if (*linkname == '/')
     return xstrdup (linkname);
 
-  /* The link is to a relative path.  Prepend any leading path
-     in `path' to the link name.  */
-  linkbuf = strrchr (path, '/');
+  /* The link is to a relative name.  Prepend any leading directory
+     in `name' to the link name.  */
+  linkbuf = strrchr (name, '/');
   if (linkbuf == 0)
     return xstrdup (linkname);
 
-  bufsiz = linkbuf - path + 1;
+  bufsiz = linkbuf - name + 1;
   linkbuf = xmalloc (bufsiz + strlen (linkname) + 1);
-  strncpy (linkbuf, path, bufsiz);
+  strncpy (linkbuf, name, bufsiz);
   strcpy (linkbuf + bufsiz, linkname);
   return linkbuf;
 }
@@ -2788,9 +2789,9 @@ extract_dirs_from_files (char const *dirname, bool command_line_arg)
 	  }
 	else
 	  {
-	    char *path = path_concat (dirname, files[i].name, NULL);
-	    queue_directory (path, files[i].linkname, command_line_arg);
-	    free (path);
+	    char *name = file_name_concat (dirname, files[i].name, NULL);
+	    queue_directory (name, files[i].linkname, command_line_arg);
+	    free (name);
 	  }
 	if (files[i].filetype == arg_directory)
 	  free (files[i].name);
@@ -3895,7 +3896,7 @@ indent (size_t from, size_t to)
 
 /* Put DIRNAME/NAME into DEST, handling `.' and `/' properly.  */
 /* FIXME: maybe remove this function someday.  See about using a
-   non-malloc'ing version of path_concat.  */
+   non-malloc'ing version of file_name_concat.  */
 
 static void
 attach (char *dest, const char *dirname, const char *name)
