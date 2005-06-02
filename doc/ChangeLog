@@ -1,3 +1,10 @@
+2005-06-01  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Use "file name" when talking about file names, instead of "filename"
+	or "path", as per the GNU coding standards.
+	* coreutils.texi (readlink invocation): "path component" ->
+	"component", since we don't use the POSIX "path" nomenclature.
+
 2005-05-11  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* getdate.texi (General date syntax): Don't say that date
