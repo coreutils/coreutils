@@ -30,7 +30,7 @@
 #include "cp-hash.h"
 #include "error.h"
 #include "dirname.h"
-#include "path-concat.h"
+#include "filenamecat.h"
 #include "quote.h"
 #include "quotearg.h"
 #include "utimens.h"
@@ -50,7 +50,7 @@
 
 #define AUTHORS "Torbjorn Granlund", "David MacKenzie", "Jim Meyering"
 
-/* Used by do_copy, make_path_private, and re_protect
+/* Used by do_copy, make_dir_parents_private, and re_protect
    to keep a list of leading directories whose protections
    need to be fixed after copying. */
 struct dir_attr
@@ -85,7 +85,7 @@ char *program_name;
 
 /* If true, the command "cp x/e_file e_dir" uses "e_dir/x/e_file"
    as its destination instead of the usual "e_dir/e_file." */
-static bool flag_path = false;
+static bool parents_option = false;
 
 /* Remove any trailing slashes from each SOURCE argument.  */
 static bool remove_trailing_slashes;
@@ -193,7 +193,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
       --no-preserve=ATTR_LIST  don't preserve the specified attributes\n\
-      --parents                append source path to DIRECTORY\n\
+      --parents                use full source file name under DIRECTORY\n\
 "), stdout);
       fputs (_("\
   -R, -r, --recursive          copy directories recursively\n\
@@ -254,47 +254,47 @@ regular file.\n\
   exit (status);
 }
 
-/* Ensure that the parent directories of CONST_DST_PATH have the
+/* Ensure that the parent directories of CONST_DST_NAME have the
    correct protections, for the --parents option.  This is done
    after all copying has been completed, to allow permissions
    that don't include user write/execute.
 
-   SRC_OFFSET is the index in CONST_DST_PATH of the beginning of the
+   SRC_OFFSET is the index in CONST_DST_NAME of the beginning of the
    source directory name.
 
    ATTR_LIST is a null-terminated linked list of structures that
    indicates the end of the filename of each intermediate directory
-   in CONST_DST_PATH that may need to have its attributes changed.
+   in CONST_DST_NAME that may need to have its attributes changed.
    The command `cp --parents --preserve a/b/c d/e_dir' changes the
    attributes of the directories d/e_dir/a and d/e_dir/a/b to match
    the corresponding source directories regardless of whether they
    existed before the `cp' command was given.
 
-   Return true if the parent of CONST_DST_PATH and any intermediate
+   Return true if the parent of CONST_DST_NAME and any intermediate
    directories specified by ATTR_LIST have the proper permissions
    when done.  */
 
 static bool
-re_protect (const char *const_dst_path, size_t src_offset,
+re_protect (char const *const_dst_name, size_t src_offset,
 	    struct dir_attr *attr_list, const struct cp_options *x)
 {
   struct dir_attr *p;
-  char *dst_path;		/* A copy of CONST_DST_PATH we can change. */
-  char *src_path;		/* The source name in `dst_path'. */
+  char *dst_name;		/* A copy of CONST_DST_NAME we can change. */
+  char *src_name;		/* The source name in `dst_name'. */
 
-  ASSIGN_STRDUPA (dst_path, const_dst_path);
-  src_path = dst_path + src_offset;
+  ASSIGN_STRDUPA (dst_name, const_dst_name);
+  src_name = dst_name + src_offset;
 
   for (p = attr_list; p; p = p->next)
     {
       struct stat src_sb;
 
-      dst_path[p->slash_offset] = '\0';
+      dst_name[p->slash_offset] = '\0';
 
-      if (XSTAT (x, src_path, &src_sb))
+      if (XSTAT (x, src_name, &src_sb))
 	{
 	  error (0, errno, _("failed to get attributes of %s"),
-		 quote (src_path));
+		 quote (src_name));
 	  return false;
 	}
 
@@ -311,45 +311,45 @@ re_protect (const char *const_dst_path, size_t src_offset,
 	  timespec[1].tv_sec = src_sb.st_mtime;
 	  timespec[1].tv_nsec = TIMESPEC_NS (src_sb.st_mtim);
 
-	  if (utimens (dst_path, timespec))
+	  if (utimens (dst_name, timespec))
 	    {
 	      error (0, errno, _("failed to preserve times for %s"),
-		     quote (dst_path));
+		     quote (dst_name));
 	      return false;
 	    }
 	}
 
       if (x->preserve_ownership)
 	{
-	  if (chown (dst_path, src_sb.st_uid, src_sb.st_gid) != 0
+	  if (chown (dst_name, src_sb.st_uid, src_sb.st_gid) != 0
 	      && ! chown_failure_ok (x))
 	    {
 	      error (0, errno, _("failed to preserve ownership for %s"),
-		     quote (dst_path));
+		     quote (dst_name));
 	      return false;
 	    }
 	}
 
       if (x->preserve_mode | p->is_new_dir)
 	{
-	  if (chmod (dst_path, src_sb.st_mode & x->umask_kill))
+	  if (chmod (dst_name, src_sb.st_mode & x->umask_kill))
 	    {
 	      error (0, errno, _("failed to preserve permissions for %s"),
-		     quote (dst_path));
+		     quote (dst_name));
 	      return false;
 	    }
 	}
 
-      dst_path[p->slash_offset] = '/';
+      dst_name[p->slash_offset] = '/';
     }
   return true;
 }
 
-/* Ensure that the parent directory of CONST_DIRPATH exists, for
+/* Ensure that the parent directory of CONST_DIR exists, for
    the --parents option.
 
-   SRC_OFFSET is the index in CONST_DIRPATH (which is a destination
-   path) of the beginning of the source directory name.
+   SRC_OFFSET is the index in CONST_DIR (which is a destination
+   directory) of the beginning of the source directory name.
    Create any leading directories that don't already exist,
    giving them permissions MODE.
    If VERBOSE_FMT_STRING is nonzero, use it as a printf format
@@ -358,38 +358,39 @@ re_protect (const char *const_dst_path, size_t src_offset,
    source and destination directories.
    Creates a linked list of attributes of intermediate directories,
    *ATTR_LIST, for re_protect to use after calling copy.
-   Sets *NEW_DST if this function creates parent of CONST_DIRPATH.
+   Sets *NEW_DST if this function creates parent of CONST_DIR.
 
-   Return true if parent of CONST_DIRPATH exists as a directory with the proper
+   Return true if parent of CONST_DIR exists as a directory with the proper
    permissions when done.  */
 
-/* FIXME: find a way to synch this function with the one in lib/makepath.c. */
+/* FIXME: Synch this function with the one in ../lib/mkdir-p.c.  */
 
 static bool
-make_path_private (const char *const_dirpath, size_t src_offset, mode_t mode,
-		   const char *verbose_fmt_string, struct dir_attr **attr_list,
-		   bool *new_dst, int (*xstat)())
+make_dir_parents_private (char const *const_dir, size_t src_offset,
+			  mode_t mode, char const *verbose_fmt_string,
+			  struct dir_attr **attr_list, bool *new_dst,
+			  int (*xstat) ())
 {
   struct stat stats;
-  char *dirpath;		/* A copy of CONST_DIRPATH we can change. */
-  char *src;			/* Source name in `dirpath'. */
-  char *dst_dirname;		/* Leading path of `dirpath'. */
-  size_t dirlen;		/* Length of leading path of `dirpath'. */
+  char *dir;		/* A copy of CONST_DIR we can change.  */
+  char *src;		/* Source name in DIR.  */
+  char *dst_dir;	/* Leading directory of DIR.  */
+  size_t dirlen;	/* Length of DIR.  */
 
-  ASSIGN_STRDUPA (dirpath, const_dirpath);
+  ASSIGN_STRDUPA (dir, const_dir);
 
-  src = dirpath + src_offset;
+  src = dir + src_offset;
 
-  dirlen = dir_len (dirpath);
-  dst_dirname = alloca (dirlen + 1);
-  memcpy (dst_dirname, dirpath, dirlen);
-  dst_dirname[dirlen] = '\0';
+  dirlen = dir_len (dir);
+  dst_dir = alloca (dirlen + 1);
+  memcpy (dst_dir, dir, dirlen);
+  dst_dir[dirlen] = '\0';
 
   *attr_list = NULL;
 
-  if ((*xstat) (dst_dirname, &stats))
+  if ((*xstat) (dst_dir, &stats))
     {
-      /* Parent of CONST_DIRNAME does not exist.
+      /* A parent of CONST_DIR does not exist.
 	 Make all missing intermediate directories. */
       char *slash;
 
@@ -401,36 +402,36 @@ make_path_private (const char *const_dirpath, size_t src_offset, mode_t mode,
 	  /* Add this directory to the list of directories whose modes need
 	     fixing later. */
 	  struct dir_attr *new = xmalloc (sizeof *new);
-	  new->slash_offset = slash - dirpath;
+	  new->slash_offset = slash - dir;
 	  new->next = *attr_list;
 	  *attr_list = new;
 
 	  *slash = '\0';
-	  if ((*xstat) (dirpath, &stats))
+	  if ((*xstat) (dir, &stats))
 	    {
-	      /* This element of the path does not exist.  We must set
+	      /* This component does not exist.  We must set
 		 *new_dst and new->is_new_dir inside this loop because,
 		 for example, in the command `cp --parents ../a/../b/c e_dir',
-		 make_path_private creates only e_dir/../a if ./b already
-		 exists. */
+		 make_dir_parents_private creates only e_dir/../a if
+		 ./b already exists. */
 	      *new_dst = true;
 	      new->is_new_dir = true;
-	      if (mkdir (dirpath, mode))
+	      if (mkdir (dir, mode))
 		{
 		  error (0, errno, _("cannot make directory %s"),
-			 quote (dirpath));
+			 quote (dir));
 		  return false;
 		}
 	      else
 		{
 		  if (verbose_fmt_string != NULL)
-		    printf (verbose_fmt_string, src, dirpath);
+		    printf (verbose_fmt_string, src, dir);
 		}
 	    }
 	  else if (!S_ISDIR (stats.st_mode))
 	    {
 	      error (0, 0, _("%s exists but is not a directory"),
-		     quote (dirpath));
+		     quote (dir));
 	      return false;
 	    }
 	  else
@@ -441,17 +442,17 @@ make_path_private (const char *const_dirpath, size_t src_offset, mode_t mode,
 	  *slash++ = '/';
 
 	  /* Avoid unnecessary calls to `stat' when given
-	     pathnames containing multiple adjacent slashes.  */
+	     file names containing multiple adjacent slashes.  */
 	  while (*slash == '/')
 	    slash++;
 	}
     }
 
-  /* We get here if the parent of `dirpath' already exists. */
+  /* We get here if the parent of DIR already exists.  */
 
   else if (!S_ISDIR (stats.st_mode))
     {
-      error (0, 0, _("%s exists but is not a directory"), quote (dst_dirname));
+      error (0, 0, _("%s exists but is not a directory"), quote (dst_dir));
       return false;
     }
   else
@@ -554,8 +555,8 @@ do_copy (int n_files, char **file, const char *target_directory,
 
       for (i = 0; i < n_files; i++)
 	{
-	  char *dst_path;
-	  bool parent_exists = true;  /* True if dir_name (dst_path) exists. */
+	  char *dst_name;
+	  bool parent_exists = true;  /* True if dir_name (dst_name) exists. */
 	  struct dir_attr *attr_list;
 	  char *arg_in_concat = NULL;
 	  char *arg = file[i];
@@ -565,7 +566,7 @@ do_copy (int n_files, char **file, const char *target_directory,
 	  if (remove_trailing_slashes)
 	    strip_trailing_slashes (arg);
 
-	  if (flag_path)
+	  if (parents_option)
 	    {
 	      char *arg_no_trailing_slash;
 
@@ -578,19 +579,18 @@ do_copy (int n_files, char **file, const char *target_directory,
 	      strip_trailing_slashes (arg_no_trailing_slash);
 
 	      /* Append all of `arg' (minus any trailing slash) to `dest'.  */
-	      dst_path = path_concat (target_directory, arg_no_trailing_slash,
-				      &arg_in_concat);
+	      dst_name = file_name_concat (target_directory,
+					   arg_no_trailing_slash,
+					   &arg_in_concat);
 
 	      /* For --parents, we have to make sure that the directory
-	         dir_name (dst_path) exists.  We may have to create a few
+	         dir_name (dst_name) exists.  We may have to create a few
 	         leading directories. */
-	      parent_exists = make_path_private (dst_path,
-						 arg_in_concat - dst_path,
-						 S_IRWXU,
-						 (x->verbose
-						  ? "%s -> %s\n" : NULL),
-						 &attr_list, &new_dst,
-						 xstat);
+	      parent_exists =
+		(make_dir_parents_private
+		 (dst_name, arg_in_concat - dst_name, S_IRWXU,
+		  (x->verbose ? "%s -> %s\n" : NULL),
+		  &attr_list, &new_dst, xstat));
 	    }
 	  else
 	    {
@@ -599,27 +599,29 @@ do_copy (int n_files, char **file, const char *target_directory,
 
 	      ASSIGN_BASENAME_STRDUPA (arg_base, arg);
 	      /* For `cp -R source/.. dest', don't copy into `dest/..'. */
-	      dst_path = (STREQ (arg_base, "..")
+	      dst_name = (STREQ (arg_base, "..")
 			  ? xstrdup (target_directory)
-			  : path_concat (target_directory, arg_base, NULL));
+			  : file_name_concat (target_directory, arg_base,
+					      NULL));
 	    }
 
 	  if (!parent_exists)
 	    {
-	      /* make_path_private failed, so don't even attempt the copy. */
+	      /* make_dir_parents_private failed, so don't even
+		 attempt the copy.  */
 	      ok = false;
 	    }
 	  else
 	    {
 	      bool copy_into_self;
-	      ok &= copy (arg, dst_path, new_dst, x, &copy_into_self, NULL);
+	      ok &= copy (arg, dst_name, new_dst, x, &copy_into_self, NULL);
 
-	      if (flag_path)
-		ok &= re_protect (dst_path, arg_in_concat - dst_path,
+	      if (parents_option)
+		ok &= re_protect (dst_name, arg_in_concat - dst_name,
 				  attr_list, x);
 	    }
 
-	  free (dst_path);
+	  free (dst_name);
 	}
     }
   else /* !target_directory */
@@ -629,10 +631,10 @@ do_copy (int n_files, char **file, const char *target_directory,
       char const *dest = file[1];
       bool unused;
 
-      if (flag_path)
+      if (parents_option)
 	{
 	  error (0, 0,
-	       _("when preserving paths, the destination must be a directory"));
+		 _("with --parents, the destination must be a directory"));
 	  usage (EXIT_FAILURE);
 	}
 
@@ -903,7 +905,7 @@ main (int argc, char **argv)
 	  break;
 
 	case PARENTS_OPTION:
-	  flag_path = true;
+	  parents_option = true;
 	  break;
 
 	case 'r':
