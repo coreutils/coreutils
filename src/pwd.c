@@ -33,7 +33,7 @@
 
 #define AUTHORS "Jim Meyering"
 
-struct Path
+struct file_name
 {
   char *buf;
   size_t n_alloc;
@@ -77,16 +77,16 @@ Print the full filename of the current working directory.\n\
 }
 
 static void
-path_free (struct Path *p)
+file_name_free (struct file_name *p)
 {
   free (p->buf);
   free (p);
 }
 
-static struct Path *
-path_init (void)
+static struct file_name *
+file_name_init (void)
 {
-  struct Path *p = xmalloc (sizeof *p);
+  struct file_name *p = xmalloc (sizeof *p);
 
   /* Start with a buffer larger than PATH_MAX, but beware of systems
      on which PATH_MAX is very large -- e.g., INT_MAX.  */
@@ -98,9 +98,9 @@ path_init (void)
   return p;
 }
 
-/* Prepend the name S of length S_LEN, to the growing path, P.  */
+/* Prepend the name S of length S_LEN, to the growing file_name, P.  */
 static void
-path_prepend (struct Path *p, char const *s, size_t s_len)
+file_name_prepend (struct file_name *p, char const *s, size_t s_len)
 {
   size_t n_free = p->start - p->buf;
   if (n_free < 1 + s_len)
@@ -142,10 +142,10 @@ nth_parent (size_t n)
 }
 
 /* Determine the basename of the current directory, where DOT_SB is the
-   result of lstat'ing "." and prepend that to the file name in *PATH.
+   result of lstat'ing "." and prepend that to the file name in *FILE_NAME.
    Find the directory entry in `..' that matches the dev/i-node of DOT_SB.
    Upon success, update *DOT_SB with stat information of `..', chdir to `..',
-   and prepend "/basename" to PATH.
+   and prepend "/basename" to FILE_NAME.
    Otherwise, exit with a diagnostic.
    PARENT_HEIGHT is the number of levels `..' is above the starting directory.
    The first time this function is called (from the initial directory),
@@ -153,7 +153,8 @@ nth_parent (size_t n)
    Exit nonzero upon error.  */
 
 static void
-find_dir_entry (struct stat *dot_sb, struct Path *path, size_t parent_height)
+find_dir_entry (struct stat *dot_sb, struct file_name *file_name,
+		size_t parent_height)
 {
   DIR *dirp;
   int fd;
@@ -224,7 +225,7 @@ find_dir_entry (struct stat *dot_sb, struct Path *path, size_t parent_height)
 	 match is enough.  */
       if ( ! use_lstat || ent_sb.st_dev == dot_sb->st_dev)
 	{
-	  path_prepend (path, dp->d_name, NLENGTH (dp));
+	  file_name_prepend (file_name, dp->d_name, NLENGTH (dp));
 	  found = true;
 	  break;
 	}
@@ -247,7 +248,7 @@ find_dir_entry (struct stat *dot_sb, struct Path *path, size_t parent_height)
 }
 
 /* Construct the full, absolute name of the current working
-   directory and store it in *PATH.
+   directory and store it in *FILE_NAME.
    The getcwd function performs nearly the same task, but is typically
    unable to handle names longer than PATH_MAX.  This function has
    no such limitation.  However, this function *can* fail due to
@@ -270,7 +271,7 @@ find_dir_entry (struct stat *dot_sb, struct Path *path, size_t parent_height)
    getcwd works from there.  */
 
 static void
-robust_getcwd (struct Path *path)
+robust_getcwd (struct file_name *file_name)
 {
   size_t height = 1;
   struct dev_ino dev_ino_buf;
@@ -290,11 +291,11 @@ robust_getcwd (struct Path *path)
       if (SAME_INODE (dot_sb, *root_dev_ino))
 	break;
 
-      find_dir_entry (&dot_sb, path, height++);
+      find_dir_entry (&dot_sb, file_name, height++);
     }
 
-  if (path->start[0] == '\0')
-    path_prepend (path, "/", 1);
+  if (file_name->start[0] == '\0')
+    file_name_prepend (file_name, "/", 1);
 }
 
 int
@@ -326,10 +327,10 @@ main (int argc, char **argv)
     }
   else
     {
-      struct Path *path = path_init ();
-      robust_getcwd (path);
-      puts (path->start);
-      path_free (path);
+      struct file_name *file_name = file_name_init ();
+      robust_getcwd (file_name);
+      puts (file_name->start);
+      file_name_free (file_name);
     }
 
   exit (EXIT_SUCCESS);
