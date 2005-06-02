@@ -1,5 +1,5 @@
 /* rmdir -- remove directories
-   Copyright (C) 90, 91, 1995-2002, 2004 Free Software Foundation, Inc.
+   Copyright (C) 90, 91, 1995-2002, 2004, 2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -49,7 +49,7 @@
 char *program_name;
 
 /* If true, remove empty parent directories.  */
-static bool empty_paths;
+static bool remove_empty_parents;
 
 /* If true, don't treat failure to remove a nonempty directory
    as an error.  */
@@ -72,7 +72,7 @@ static struct option const longopts[] =
   {"ignore-fail-on-non-empty", no_argument, NULL,
    IGNORE_FAIL_ON_NON_EMPTY_OPTION},
 
-  {"path", no_argument, NULL, 'p'},
+  {"path", no_argument, NULL, 'p'},  /* Deprecated.  */
   {"parents", no_argument, NULL, 'p'},
   {"verbose", no_argument, NULL, 'v'},
   {GETOPT_HELP_OPTION_DECL},
@@ -89,34 +89,34 @@ errno_rmdir_non_empty (int error_number)
   return (error_number == RMDIR_ERRNO_NOT_EMPTY);
 }
 
-/* Remove any empty parent directories of PATH.
-   If PATH contains slash characters, at least one of them
+/* Remove any empty parent directories of DIR.
+   If DIR contains slash characters, at least one of them
    (beginning with the rightmost) is replaced with a NUL byte.
    Return true if successful.  */
 
 static bool
-remove_parents (char *path)
+remove_parents (char *dir)
 {
   char *slash;
   bool ok = true;
 
-  strip_trailing_slashes (path);
+  strip_trailing_slashes (dir);
   while (1)
     {
-      slash = strrchr (path, '/');
+      slash = strrchr (dir, '/');
       if (slash == NULL)
 	break;
       /* Remove any characters after the slash, skipping any extra
 	 slashes in a row. */
-      while (slash > path && *slash == '/')
+      while (slash > dir && *slash == '/')
 	--slash;
       slash[1] = 0;
 
       /* Give a diagnostic for each attempted removal if --verbose.  */
       if (verbose)
-	error (0, 0, _("removing directory, %s"), path);
+	error (0, 0, _("removing directory, %s"), dir);
 
-      ok = (rmdir (path) == 0);
+      ok = (rmdir (dir) == 0);
 
       if (!ok)
 	{
@@ -128,7 +128,7 @@ remove_parents (char *path)
 	    }
 	  else
 	    {
-	      error (0, errno, "%s", quote (path));
+	      error (0, errno, "%s", quote (dir));
 	    }
 	  break;
 	}
@@ -153,8 +153,7 @@ Remove the DIRECTORY(ies), if they are empty.\n\
                   is non-empty\n\
 "), stdout);
       fputs (_("\
-  -p, --parents   remove DIRECTORY, then try to remove each directory\n\
-                  component of that path name.  E.g., `rmdir -p a/b/c' is\n\
+  -p, --parents   Remove DIRECTORY and its ancestors.  E.g., `rmdir -p a/b/c' is\n\
                   similar to `rmdir a/b/c a/b a'.\n\
   -v, --verbose   output a diagnostic for every directory processed\n\
 "), stdout);
@@ -179,14 +178,14 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  empty_paths = false;
+  remove_empty_parents = false;
 
   while ((optc = getopt_long (argc, argv, "pv", longopts, NULL)) != -1)
     {
       switch (optc)
 	{
 	case 'p':
-	  empty_paths = true;
+	  remove_empty_parents = true;
 	  break;
 	case IGNORE_FAIL_ON_NON_EMPTY_OPTION:
 	  ignore_fail_on_non_empty = true;
@@ -224,7 +223,7 @@ main (int argc, char **argv)
 	  error (0, errno, "%s", quote (dir));
 	  ok = false;
 	}
-      else if (empty_paths)
+      else if (remove_empty_parents)
 	{
 	  ok &= remove_parents (dir);
 	}
