@@ -7955,7 +7955,7 @@ The program accepts the following options.  Also see @ref{Common options}.
 @opindex -f
 @opindex --canonicalize
 Activate canonicalize mode.
-If any path component except the last one is missing or unavailable,
+If any component of the file name except the last one is missing or unavailable,
 @command{readlink} produces no output and exits with a nonzero exit code.
 
 @item -e
@@ -7963,7 +7963,7 @@ If any path component except the last one is missing or unavailable,
 @opindex -e
 @opindex --canonicalize-existing
 Activate canonicalize mode.
-If any path component is missing or unavailable, @command{readlink} produces
+If any component is missing or unavailable, @command{readlink} produces
 no output and exits with a nonzero exit code.
 
 @item -m
@@ -7971,7 +7971,7 @@ no output and exits with a nonzero exit code.
 @opindex -m
 @opindex --canonicalize-missing
 Activate canonicalize mode.
-If any path component is missing or unavailable, @command{readlink} treats it
+If any component is missing or unavailable, @command{readlink} treats it
 as a directory.
 
 @item -n
