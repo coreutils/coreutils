@@ -7741,14 +7741,29 @@ Print the name of each file before linking it.
 Examples:
 
 @smallexample
-# Create link ./name pointing to /some/name.
-ln -s /some/name
+Bad Example:
 
-# Create link ./myname pointing to /some/name.
-ln -s /some/name myname
+# Create link ../a pointing to a in that directory.
+# Not really useful because it points to itself.
+ln -s a ..
 
-# Create links ../a and ../b pointing to ./a and ./b.
-ln -s a b ..
+Better Example:
+
+# Change to the target before creating symlinks to avoid being confused.
+cd ..
+ln -s adir/a .
+
+Bad Example:
+
+# Hard coded paths don't move well.
+ln -s $(pwd)/a /some/dir/
+
+Better Example:
+
+# Relative paths survive directory moves and also work across
+# networked filesystems.
+ln -s afile anotherfile
+ln -s ../adir/afile yetanotherfile
 @end smallexample
 
 
