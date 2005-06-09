@@ -7761,7 +7761,7 @@ ln -s $(pwd)/a /some/dir/
 Better Example:
 
 # Relative paths survive directory moves and also work across
-# networked filesystems.
+# networked file systems.
 ln -s afile anotherfile
 ln -s ../adir/afile yetanotherfile
 @end smallexample
