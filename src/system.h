@@ -825,7 +825,7 @@ ptr_align (void const *ptr, size_t alignment)
 #if HAVE_TYPEOF
 # define VERIFY_W_TYPEOF(assertion) VERIFY_EXPR (assertion)
 #else
-# define VERIFY_W_TYPEOF(assertion) (void) 0
+# define VERIFY_W_TYPEOF(assertion) ((void) 0)
 #endif
 
 /* If 10*Accum+Digit_val is larger than Type_max, then don't update Accum
