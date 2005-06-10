@@ -146,6 +146,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   join now supports a NUL field separator, e.g., "join -t '\0'".
   join now detects and reports incompatible options, e.g., "join -t x -t y",
 
+  ls no longer outputs an extra space between the mode and the link count
+  when none of the listed files has an ACL.
+
   If stdin is a terminal, nohup now closes it and then reopens it with an
   unreadable file descriptor.  (This step is skipped if POSIXLY_CORRECT is set.)
   This prevents the command from tying up an OpenSSH session after you logout.
