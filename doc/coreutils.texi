@@ -5500,23 +5500,23 @@ $ touch a/sub/deeper/file
 $ ls -gloRF --dired a
   a:
   total 8
-  -rw-r--r--  1    0 Dec  3 00:50 f1
-  -rw-r--r--  1    0 Dec  3 00:50 f2
-  drwxr-xr-x  3 4096 Dec  3 00:50 sub/
-  drwxr-xr-x  2 4096 Dec  3 00:50 sub2/
+  -rw-r--r-- 1    0 Jun 10 12:27 f1
+  -rw-r--r-- 1    0 Jun 10 12:27 f2
+  drwxr-xr-x 3 4096 Jun 10 12:27 sub/
+  drwxr-xr-x 2 4096 Jun 10 12:27 sub2/
 
   a/sub:
   total 4
-  drwxr-xr-x  2 4096 Dec  3 00:50 deeper/
+  drwxr-xr-x 2 4096 Jun 10 12:27 deeper/
 
   a/sub/deeper:
   total 0
-  -rw-r--r--  1 0 Dec  3 00:50 file
+  -rw-r--r-- 1 0 Jun 10 12:27 file
 
   a/sub2:
   total 0
-//DIRED// 49 51 86 88 123 126 162 166 222 228 288 292
-//SUBDIRED// 2 3 171 176 233 245 296 302
+//DIRED// 48 50 84 86 120 123 158 162 217 223 282 286
+//SUBDIRED// 2 3 167 172 228 240 290 296
 //DIRED-OPTIONS// --quoting-style=literal
 @end example
 
@@ -5545,8 +5545,8 @@ on a file whose name contains special characters, notice that the backslash
 @example
 $ touch 'a b'
 $ ls -blog --dired 'a b'
-  -rw-r--r--  1 0 Dec  3 00:52 a\ b
-//DIRED// 31 35
+  -rw-r--r-- 1 0 Jun 10 12:28 a\ b
+//DIRED// 30 34
 //DIRED-OPTIONS// --quoting-style=escape
 @end example
 
@@ -12337,7 +12337,7 @@ Then you'll see output like this:
 @example
 /:
 total 1023
--rwxr-xr-x  1 0 0 1041745 Aug 16 11:17 ls
+-rwxr-xr-x 1 0 0 1041745 Aug 16 11:17 ls
 @end example
 
 If you want to use a dynamically linked executable, say @command{bash},
