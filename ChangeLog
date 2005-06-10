@@ -1,6 +1,17 @@
-2005-06-10  Jim Meyering  <jim@meyering.net>
+2005-06-10  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	Act on the Austin Group's response yesterday to XCU ERN 63; see
+	<http://www.opengroup.org/austin/docs/austin_260.txt>.
+	* NEWS: ls no longer outputs an extra space between mode and link count.
+	* doc/coreutils.texi: Remove the extra spaces in "ls -l" output.
+	* src/ls.c (any_has_acl): New var.
+	(clear_files): Clear it.
+	(gobble_file): Set it if a file has an ACL.
+	(print_long_format): Omit needless space unless some file has an ACL.
+
+2005-06-10  Jim Meyering  <jim@meyering.net>
 
 	* src/system.h (VERIFY_W_TYPEOF): Add parentheses.
 
