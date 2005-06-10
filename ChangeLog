@@ -1,6 +1,10 @@
-2005-06-02  Jim Meyering  <jim@meyering.net>
+2005-06-10  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* src/system.h (VERIFY_W_TYPEOF): Add parentheses.
+
+2005-06-02  Jim Meyering  <jim@meyering.net>
 
 	* src/sort.c (usage): Put `Ordering options:' line where it belongs.
 
