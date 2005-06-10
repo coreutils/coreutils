@@ -336,6 +336,15 @@ static struct pending *pending_dirs;
 static time_t current_time = TYPE_MINIMUM (time_t);
 static int current_time_ns = -1;
 
+/* Whether any of the files has an ACL.  This affects the width of the
+   mode column.  */
+
+#if HAVE_ACL
+static bool any_has_acl;
+#else
+enum { any_has_acl = false };
+#endif
+
 /* The number of columns to use for columns containing inode numbers,
    block sizes, link counts, owners, groups, authors, major device
    numbers, minor device numbers, and file sizes, respectively.  */
@@ -2450,6 +2459,9 @@ clear_files (void)
     }
 
   files_index = 0;
+#if HAVE_ACL
+  any_has_acl = false;
+#endif
   inode_number_width = 0;
   block_size_width = 0;
   nlink_width = 0;
@@ -2563,6 +2575,7 @@ gobble_file (char const *name, enum filetype type, bool command_line_arg,
 	{
 	  int n = file_has_acl (absolute_name, &f->stat);
 	  f->have_acl = (0 < n);
+	  any_has_acl |= f->have_acl;
 	  if (n < 0)
 	    error (0, errno, "%s", quotearg_colon (absolute_name));
 	}
@@ -3219,7 +3232,7 @@ print_long_format (const struct fileinfo *f)
   mode_string (ST_DM_MODE (f->stat), modebuf);
 
   modebuf[10] = (FILE_HAS_ACL (f) ? '+' : ' ');
-  modebuf[11] = '\0';
+  modebuf[10 + any_has_acl] = '\0';
 
   switch (time_type)
     {
@@ -3268,7 +3281,7 @@ print_long_format (const struct fileinfo *f)
     sprintf (p, "%s %*s ", modebuf, nlink_width,
 	     umaxtostr (f->stat.st_nlink, hbuf));
   }
-  p += sizeof modebuf + nlink_width + 1;
+  p += sizeof modebuf - 2 + any_has_acl + 1 + nlink_width + 1;
 
   DIRED_INDENT ();
 
