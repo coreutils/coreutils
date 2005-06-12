@@ -1,3 +1,8 @@
+2005-06-12  Jim Meyering  <jim@meyering.net>
+
+	* mkdir-p.c (CLEANUP_CWD): Change one more `return 1' to
+	`return false'.  This fixes a bug introduced on 2004-07-30.
+
 2005-06-01  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Use "file name" when talking about file names, instead of "filename"
