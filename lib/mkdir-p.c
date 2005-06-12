@@ -63,7 +63,7 @@
 		_("failed to return to initial working directory")); \
 	      free_cwd (&cwd);				\
 	      errno = _saved_errno;			\
-	      return 1;					\
+	      return false;				\
 	    }						\
 	  free_cwd (&cwd);				\
 	}						\
