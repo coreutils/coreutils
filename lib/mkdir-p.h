@@ -28,7 +28,8 @@ bool make_dir_parents (char const *argname,
 		       uid_t owner,
 		       gid_t group,
 		       bool preserve_existing,
-		       char const *verbose_fmt_string);
+		       char const *verbose_fmt_string,
+		       bool *different_working_dir);
 
 bool make_dir (char const *dir,
 	       char const *fulldir,
