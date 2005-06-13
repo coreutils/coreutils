@@ -1,6 +1,20 @@
-2005-06-10  Paul Eggert  <eggert@cs.ucla.edu>
+2005-06-13  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* src/mkdir.c (main): When make_dir_parents changes the current working
+	directory, give a diagnostic about each subsequent failure to create
+	a dot-relative directory.
+	* src/install.c (main): Likewise.
+	(install_file_in_file_parents): Update make_dir_parents caller.
+
+	* src/mkdir.c (main): Give a diagnostic for -- and skip -- each
+	relative directory name after make_dir_parents fails to restore
+	the working directory.  Before, `mkdir -p' could create directories
+	in the wrong place in unusual circumstances.
+	* tests/mkdir/p-3: New test for today's mkdir.c/mkdir-p.c bug fixes.
+
+2005-06-10  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Act on the Austin Group's response yesterday to XCU ERN 63; see
 	<http://www.opengroup.org/austin/docs/austin_260.txt>.

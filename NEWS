@@ -122,6 +122,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   "mkdir -m =+x dir" no longer ignores the umask when evaluating "+x",
   and similarly for mkfifo and mknod.
 
+  "mkdir -p /tmp/a/b dir" no longer attempts to create the `.'-relative
+  directory, dir (in /tmp/a), when, after creating /tmp/a/b, it is unable
+  to return to its initial working directory.
+
   "pr -D FORMAT" now accepts the same formats that "date +FORMAT" does.
 
 ** Improved portability
