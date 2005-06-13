@@ -63,6 +63,7 @@
 		_("failed to return to initial working directory")); \
 	      free_cwd (&cwd);				\
 	      errno = _saved_errno;			\
+	      *different_working_dir = true;		\
 	      return false;				\
 	    }						\
 	  free_cwd (&cwd);				\
@@ -144,6 +145,9 @@ make_dir (char const *dir, char const *fulldir, mode_t mode,
    with the name of the directory that was just made as an argument.
    If PRESERVE_EXISTING is true and ARG is an existing directory,
    then do not attempt to set its permissions and ownership.
+   Upon return, set *DIFFERENT_WORKING_DIR to true if this function
+   has changed the current working directory and is unable to restore
+   it to its initial state.
 
    Return true iff ARG exists as a directory with the proper
    ownership and permissions when done.  */
@@ -155,10 +159,12 @@ make_dir_parents (char const *arg,
 		  uid_t owner,
 		  gid_t group,
 		  bool preserve_existing,
-		  char const *verbose_fmt_string)
+		  char const *verbose_fmt_string,
+		  bool *different_working_dir)
 {
   struct stat stats;
   bool retval = true;
+  *different_working_dir = false;
 
   if (stat (arg, &stats) != 0)
     {
