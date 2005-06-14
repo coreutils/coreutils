@@ -65,7 +65,7 @@ rpl_openat (int fd, char const *file, int flags, ...)
     return open (file, flags, mode);
 
   if (save_cwd (&saved_cwd) != 0)
-    openat_save_die (errno);
+    openat_save_fail (errno);
 
   if (fchdir (fd) != 0)
     {
@@ -79,7 +79,7 @@ rpl_openat (int fd, char const *file, int flags, ...)
   saved_errno = errno;
 
   if (restore_cwd (&saved_cwd) != 0)
-    openat_restore_die (errno);
+    openat_restore_fail (errno);
 
   free_cwd (&saved_cwd);
 
@@ -105,7 +105,7 @@ fdopendir (int fd)
     return opendir (".");
 
   if (save_cwd (&saved_cwd) != 0)
-    openat_save_die (errno);
+    openat_save_fail (errno);
 
   if (fchdir (fd) != 0)
     {
@@ -119,7 +119,7 @@ fdopendir (int fd)
   saved_errno = errno;
 
   if (restore_cwd (&saved_cwd) != 0)
-    openat_restore_die (errno);
+    openat_restore_fail (errno);
 
   free_cwd (&saved_cwd);
 
@@ -147,7 +147,7 @@ fstatat (int fd, char const *file, struct stat *st, int flag)
 	    : stat (file, st));
 
   if (save_cwd (&saved_cwd) != 0)
-    openat_save_die (errno);
+    openat_save_fail (errno);
 
   if (fchdir (fd) != 0)
     {
@@ -163,7 +163,7 @@ fstatat (int fd, char const *file, struct stat *st, int flag)
   saved_errno = errno;
 
   if (restore_cwd (&saved_cwd) != 0)
-    openat_restore_die (errno);
+    openat_restore_fail (errno);
 
   free_cwd (&saved_cwd);
 
