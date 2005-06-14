@@ -423,7 +423,7 @@ install_file_in_file_parents (char const *from, char const *to,
 	 that this option is intended mainly to help installers when the
 	 distribution doesn't provide proper install rules.  */
       mode_t dir_mode = S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH;
-      bool different_cwd; /* FIXME: use this */
+      bool different_cwd;
       ok = make_dir_parents (dest_dir, dir_mode, dir_mode,
 			     owner_id, group_id, true,
 			     (x->verbose ? _("creating directory %s") : NULL),
