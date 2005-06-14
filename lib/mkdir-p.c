@@ -49,59 +49,6 @@
 
 #define WX_USR (S_IWUSR | S_IXUSR)
 
-/* Attempt to create directory DIR (aka FULLDIR) with the specified MODE.
-   If CREATED_DIR_P is non-NULL, set *CREATED_DIR_P if this
-   function creates DIR and clear it otherwise.  Give a diagnostic and
-   return false if DIR cannot be created or cannot be determined to
-   exist already.  Use FULLDIR in any diagnostic, not DIR.
-   Note that if DIR already exists, this function returns true
-   (indicating success) and clears *CREATED_DIR_P.  */
-
-bool
-make_dir (char const *dir, char const *fulldir, mode_t mode,
-	  bool *created_dir_p)
-{
-  bool ok = true;
-  bool created_dir;
-
-  created_dir = (mkdir (dir, mode) == 0);
-
-  if (!created_dir)
-    {
-      struct stat stats;
-      int saved_errno = errno;
-
-      /* The mkdir and stat calls below may appear to be reversed.
-	 They are not.  It is important to call mkdir first and then to
-	 call stat (to distinguish the three cases) only if mkdir fails.
-	 The alternative to this approach is to `stat' each directory,
-	 then to call mkdir if it doesn't exist.  But if some other process
-	 were to create the directory between the stat & mkdir, the mkdir
-	 would fail with EEXIST.  */
-
-      if (stat (dir, &stats))
-	{
-	  error (0, saved_errno, _("cannot create directory %s"),
-		 quote (fulldir));
-	  ok = false;
-	}
-      else if (!S_ISDIR (stats.st_mode))
-	{
-	  error (0, 0, _("%s exists but is not a directory"), quote (fulldir));
-	  ok = false;
-	}
-      else
-	{
-	  /* DIR (aka FULLDIR) already exists and is a directory. */
-	}
-    }
-
-  if (created_dir_p)
-    *created_dir_p = created_dir;
-
-  return ok;
-}
-
 /* Ensure that the directory ARG exists.
 
    Create any leading directories that don't already exist, with
@@ -116,9 +63,10 @@ make_dir (char const *dir, char const *fulldir, mode_t mode,
    If PRESERVE_EXISTING is true and ARG is an existing directory,
    then do not attempt to set its permissions and ownership.
 
-   Set *DIFFERENT_WORKING_DIR to true if this function has changed the
-   current working directory and is unable to restore it to its
-   initial state.  Do not change *DIFFERENT_WORKING_DIR otherwise.
+   Set *CWD_ERRNO to a (nonzero) error number if this
+   function has changed the current working directory and is unable to
+   restore it to its initial state.  Do not change
+   *CWD_ERRNO otherwise.
 
    Return true iff ARG exists as a directory with the proper ownership
    and permissions when done.  Note that this function returns true
@@ -132,7 +80,7 @@ make_dir_parents (char const *arg,
 		  gid_t group,
 		  bool preserve_existing,
 		  char const *verbose_fmt_string,
-		  bool *different_working_dir)
+		  int *cwd_errno)
 {
   struct stat stats;
   bool retval = true;
@@ -225,8 +173,6 @@ make_dir_parents (char const *arg,
 
       while (true)
 	{
-	  bool newly_created_dir;
-
 	  /* slash points to the leftmost unprocessed component of dir.  */
 	  basename_dir = slash;
 
@@ -240,13 +186,7 @@ make_dir_parents (char const *arg,
 	    basename_dir = dir;
 
 	  *slash = '\0';
-	  if (! make_dir (basename_dir, dir, tmp_mode, &newly_created_dir))
-	    {
-	      retval = false;
-	      break;
-	    }
-
-	  if (newly_created_dir)
+	  if (mkdir (basename_dir, tmp_mode) == 0)
 	    {
 	      if (verbose_fmt_string)
 		error (0, 0, verbose_fmt_string, quote (dir));
@@ -273,11 +213,22 @@ make_dir_parents (char const *arg,
 		  leading_dirs = new;
 		}
 	    }
+	  else if (errno == EEXIST)
+	    {
+	      /* A file is already there.  Perhaps it is a directory.
+		 If not, it will be diagnosed later.  */
+	    }
+	  else
+	    {
+	      error (0, errno, _("cannot create directory %s"), quote (dir));
+	      retval = false;
+	      break;
+	    }
 
 	  /* If we were able to save the initial working directory,
 	     then we can use chdir to change into each directory before
 	     creating an entry in that directory.  This avoids making
-	     stat and mkdir process O(n^2) file name components.  */
+	     mkdir process O(n^2) file name components.  */
 	  if (do_chdir && chdir (basename_dir) < 0)
 	    {
 	      error (0, errno, _("cannot chdir to directory %s"),
@@ -288,7 +239,7 @@ make_dir_parents (char const *arg,
 
 	  *slash++ = '/';
 
-	  /* Avoid unnecessary calls to `stat' when given
+	  /* Avoid unnecessary calls to mkdir when given
 	     file names containing multiple adjacent slashes.  */
 	  while (*slash == '/')
 	    slash++;
@@ -304,12 +255,12 @@ make_dir_parents (char const *arg,
 	 Create the final component of the file name.  */
       if (retval)
 	{
-	  bool newly_created_dir;
-
-	  if (! make_dir (basename_dir, dir, mode, &newly_created_dir))
-	    retval = false;
-
-	  if (newly_created_dir)
+	  if (mkdir (basename_dir, mode) != 0)
+	    {
+	      error (0, errno, _("cannot create directory %s"), quote (dir));
+	      retval = false;
+	    }
+	  else
 	    {
 	      if (verbose_fmt_string)
 		error (0, 0, verbose_fmt_string, quote (dir));
@@ -355,17 +306,12 @@ make_dir_parents (char const *arg,
 
   if (do_chdir)
     {
-      int saved_errno;
-      cwd_problem = (restore_cwd (&cwd) != 0);
-      saved_errno = errno;
-      free_cwd (&cwd);
-
-      if (cwd_problem)
+      if (restore_cwd (&cwd) != 0)
 	{
-	  error (0, saved_errno,
-		 _("failed to return to initial working directory"));
-	  *different_working_dir = true;
+	  *cwd_errno = errno;
+	  cwd_problem = true;
 	}
+      free_cwd (&cwd);
     }
 
   /* If the mode for leading directories didn't include owner "wx"
