@@ -1,5 +1,9 @@
 2005-06-14  Jim Meyering  <jim@meyering.net>
 
+	* openat-die.c (openat_save_fail): Rename from openat_save_die.
+	(openat_restore_fail): Rename from openat_restore_die.
+	* openat.c, openat.h: Reflect s/_die/_fail/ renaming.
+
 	* mkdir-p.c (CLEANUP_CWD): Return *true*, not false when failing
 	to restore initial working directory.
 
