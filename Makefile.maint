@@ -394,6 +394,8 @@ null_AM_MAKEFLAGS = \
 # by the use of _().  The --disable-nls effectively defines away that macro,
 # and building with CFLAGS='-Wformat -Werror' causes any format warning to be
 # treated as a failure.  Also, check for shadowing problems with -Wshadow.
+# These CFLAGS are pretty strict.  If you build this target, you probably
+# have to have a recent version of gcc and glibc headers.
 TMPDIR ?= /tmp
 t=$(TMPDIR)/$(PACKAGE)/test
 my-distcheck: $(local-check)
@@ -402,7 +404,7 @@ my-distcheck: $(local-check)
 	GZIP=$(GZIP_ENV) $(AMTAR) -C $(t) -zxf $(distdir).tar.gz
 	cd $(t)/$(distdir)				\
 	  && ./configure --disable-nls			\
-	  && $(MAKE) CFLAGS='-Wformat -Werror -Wshadow'	\
+	  && $(MAKE) CFLAGS='-Werror -Wall -Wformat -Wshadow' \
 	      AM_MAKEFLAGS='$(null_AM_MAKEFLAGS)'	\
 	  && $(MAKE) dvi				\
 	  && $(MAKE) check				\
