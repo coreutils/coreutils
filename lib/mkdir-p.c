@@ -64,7 +64,7 @@
 	      free_cwd (&cwd);				\
 	      errno = _saved_errno;			\
 	      *different_working_dir = true;		\
-	      return false;				\
+	      return true;				\
 	    }						\
 	  free_cwd (&cwd);				\
 	}						\
