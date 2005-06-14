@@ -37,9 +37,6 @@
 /* The name this program was run with. */
 char *program_name;
 
-/* If true, ensure that all parents of the specified directory exist.  */
-static bool create_parents;
-
 static struct option const longopts[] =
 {
   {"mode", required_argument, NULL, 'm'},
@@ -85,9 +82,10 @@ main (int argc, char **argv)
   mode_t parent_mode IF_LINT (= 0);
   const char *specified_mode = NULL;
   const char *verbose_fmt_string = NULL;
+  bool create_parents = false;
   int exit_status = EXIT_SUCCESS;
   int optc;
-  bool cwd_not_restored = false;
+  int cwd_errno = 0;
 
   initialize_main (&argc, &argv);
   program_name = argv[0];
@@ -96,8 +94,6 @@ main (int argc, char **argv)
   textdomain (PACKAGE);
 
   atexit (close_stdout);
-
-  create_parents = false;
 
   while ((optc = getopt_long (argc, argv, "pm:v", longopts, NULL)) != -1)
     {
@@ -148,42 +144,27 @@ main (int argc, char **argv)
 
   for (; optind < argc; ++optind)
     {
+      char *dir = argv[optind];
       bool ok;
-
-      if (cwd_not_restored && IS_RELATIVE_FILE_NAME (argv[optind]))
-	{
-	  error (0, 0, _("unable to create relative-named directory, %s,"
-			 " due to prior failure to return to working directory"),
-		 quote (argv[optind]));
-	  exit_status = EXIT_FAILURE;
-	  continue;
-	}
 
       if (create_parents)
 	{
-	  char *dir = argv[optind];
-	  ok = make_dir_parents (dir, newmode, parent_mode,
-				 -1, -1, true, verbose_fmt_string,
-				 &cwd_not_restored);
+	  if (cwd_errno != 0 && IS_RELATIVE_FILE_NAME (dir))
+	    {
+	      error (0, cwd_errno, _("cannot return to working directory"));
+	      ok = false;
+	    }
+	  else
+	    ok = make_dir_parents (dir, newmode, parent_mode,
+				   -1, -1, true, verbose_fmt_string,
+				   &cwd_errno);
 	}
       else
 	{
-	  const char *dir = argv[optind];
-	  bool dir_created;
-	  ok = make_dir (dir, dir, newmode, &dir_created);
+	  ok = (mkdir (dir, newmode) == 0);
+
 	  if (! ok)
-	    {
-	      /* make_dir already gave a diagnostic.  */
-	    }
-	  else if (!create_parents && !dir_created)
-	    {
-	      /* make_dir `succeeds' when DIR already exists.
-		 In that case, mkdir must fail, unless --parents (-p)
-		 was specified.  */
-	      error (0, EEXIST, _("cannot create directory %s"),
-		     quote (dir));
-	      ok = false;
-	    }
+	    error (0, errno, _("cannot create directory %s"), quote (dir));
 	  else if (verbose_fmt_string)
 	    error (0, 0, verbose_fmt_string, quote (dir));
 
@@ -196,7 +177,7 @@ main (int argc, char **argv)
 	  /* Set the permissions only if this directory has just
 	     been created.  */
 
-	  if (ok && specified_mode && dir_created
+	  if (ok && specified_mode
 	      && chmod (dir, newmode) != 0)
 	    {
 	      error (0, errno, _("cannot set permissions of directory %s"),
