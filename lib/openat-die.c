@@ -30,20 +30,20 @@
 #define N_(msgid) msgid
 
 void
-openat_save_die (int errno)
+openat_save_fail (int errno)
 {
   error (exit_failure, errno,
 	 _("unable to record current working directory"));
 
   /* The `noreturn' attribute cannot be applied to error, since it returns
-     when its first argument is 0.  To help compilers understand the
-     xalloc_die does not return, call abort.  Also, the abort is a
+     when its first argument is 0.  To help compilers understand that this
+     function does not return, call abort.  Also, the abort is a
      safety feature if exit_failure is 0 (which shouldn't happen).  */
   abort ();
 }
 
 void
-openat_restore_die (int errno)
+openat_restore_fail (int errno)
 {
   error (exit_failure, errno,
 	 _("failed to return to initial working directory"));
