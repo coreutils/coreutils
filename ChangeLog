@@ -9,6 +9,7 @@
 	* src/install.c (main): Likewise.
 	(install_file_in_file_parents): Update make_dir_parents caller.
 	* tests/mkdir/p-3: New test for today's mkdir.c/mkdir-p.c bug fixes.
+	* tests/mkdir/Makefile.am (TESTS): Add p-3.
 
 2005-06-10  Paul Eggert  <eggert@cs.ucla.edu>
 
