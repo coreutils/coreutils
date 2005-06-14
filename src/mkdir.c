@@ -87,7 +87,7 @@ main (int argc, char **argv)
   const char *verbose_fmt_string = NULL;
   int exit_status = EXIT_SUCCESS;
   int optc;
-  bool cwd_not_restored;
+  bool cwd_not_restored = false;
 
   initialize_main (&argc, &argv);
   program_name = argv[0];
@@ -146,8 +146,6 @@ main (int argc, char **argv)
 	umask (umask_value);
     }
 
-  /* FIXME: when we assume C99, declare this here.  */
-  cwd_not_restored = false;
   for (; optind < argc; ++optind)
     {
       bool ok;
@@ -163,12 +161,10 @@ main (int argc, char **argv)
 
       if (create_parents)
 	{
-	  bool different_cwd;
 	  char *dir = argv[optind];
 	  ok = make_dir_parents (dir, newmode, parent_mode,
 				 -1, -1, true, verbose_fmt_string,
-				 &different_cwd);
-	  cwd_not_restored |= different_cwd;
+				 &cwd_not_restored);
 	}
       else
 	{

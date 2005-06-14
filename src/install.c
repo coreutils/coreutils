@@ -360,7 +360,6 @@ main (int argc, char **argv)
       bool cwd_not_restored = false;
       for (i = 0; i < n_files; i++)
 	{
-	  bool different_cwd;
 	  if (cwd_not_restored && IS_RELATIVE_FILE_NAME (argv[optind]))
 	    {
 	      error (0, 0,
@@ -374,8 +373,7 @@ main (int argc, char **argv)
 	  ok &=
 	    make_dir_parents (file[i], mode, mode, owner_id, group_id, false,
 			      (x.verbose ? _("creating directory %s") : NULL),
-			      &different_cwd);
-	  cwd_not_restored |= different_cwd;
+			      &cwd_not_restored);
 	}
     }
   else
