@@ -1,3 +1,7 @@
+2005-06-13  Jim Meyering  <jim@meyering.net>
+
+	* openat.m4 (gl_FUNC_OPENAT): Add openat-die.c.
+
 2005-06-02  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* extensions.m4: Sync from gnulib; this defines
