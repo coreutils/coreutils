@@ -365,7 +365,7 @@ main (int argc, char **argv)
 	    {
 	      error (0, 0,
 		     _("unable to create relative-named directory, %s,"
-		       " due to prior failure to restore working directory"),
+		       " due to prior failure to return to working directory"),
 		     quote (argv[optind]));
 	      ok = false;;
 	      continue;

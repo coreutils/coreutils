@@ -155,7 +155,7 @@ main (int argc, char **argv)
       if (cwd_not_restored && IS_RELATIVE_FILE_NAME (argv[optind]))
 	{
 	  error (0, 0, _("unable to create relative-named directory, %s,"
-			 " due to prior failure to restore working directory"),
+			 " due to prior failure to return to working directory"),
 		 quote (argv[optind]));
 	  exit_status = EXIT_FAILURE;
 	  continue;
