@@ -27,8 +27,7 @@
 #include <errno.h>
 #include <fcntl.h>
 
-#include "error.h"
-#include "exitfail.h"
+#include "dirname.h" /* solely for definition of IS_ABSOLUTE_FILE_NAME */
 #include "save-cwd.h"
 
 #include "gettext.h"
@@ -62,12 +61,11 @@ rpl_openat (int fd, char const *file, int flags, ...)
       va_end (arg);
     }
 
-  if (fd == AT_FDCWD || *file == '/')
+  if (fd == AT_FDCWD || IS_ABSOLUTE_FILE_NAME (file))
     return open (file, flags, mode);
 
   if (save_cwd (&saved_cwd) != 0)
-    error (exit_failure, errno,
-	   _("openat: unable to record current working directory"));
+    openat_save_die (errno);
 
   if (fchdir (fd) != 0)
     {
@@ -81,8 +79,7 @@ rpl_openat (int fd, char const *file, int flags, ...)
   saved_errno = errno;
 
   if (restore_cwd (&saved_cwd) != 0)
-    error (exit_failure, errno,
-	   _("openat: unable to restore working directory"));
+    openat_restore_die (errno);
 
   free_cwd (&saved_cwd);
 
@@ -108,8 +105,7 @@ fdopendir (int fd)
     return opendir (".");
 
   if (save_cwd (&saved_cwd) != 0)
-    error (exit_failure, errno,
-	   _("fdopendir: unable to record current working directory"));
+    openat_save_die (errno);
 
   if (fchdir (fd) != 0)
     {
@@ -123,8 +119,7 @@ fdopendir (int fd)
   saved_errno = errno;
 
   if (restore_cwd (&saved_cwd) != 0)
-    error (exit_failure, errno,
-	   _("fdopendir: unable to restore working directory"));
+    openat_restore_die (errno);
 
   free_cwd (&saved_cwd);
 
@@ -152,8 +147,7 @@ fstatat (int fd, char const *file, struct stat *st, int flag)
 	    : stat (file, st));
 
   if (save_cwd (&saved_cwd) != 0)
-    error (exit_failure, errno,
-	   _("fstatat: unable to record current working directory"));
+    openat_save_die (errno);
 
   if (fchdir (fd) != 0)
     {
@@ -169,8 +163,7 @@ fstatat (int fd, char const *file, struct stat *st, int flag)
   saved_errno = errno;
 
   if (restore_cwd (&saved_cwd) != 0)
-    error (exit_failure, errno,
-	   _("fstatat: unable to restore working directory"));
+    openat_restore_die (errno);
 
   free_cwd (&saved_cwd);
 
