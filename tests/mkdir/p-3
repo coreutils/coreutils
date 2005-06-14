@@ -24,7 +24,7 @@ if test $framework_failure = 1; then
 fi
 
 p=$pwd/$tmp
-(cd no-access; chmod 0 . && mkdir -p $p/a/b u/v) && fail=1
+(cd no-access; chmod 0 . && mkdir -p $p/a/b u/v) 2> /dev/null && fail=1
 
 test -d $p/a/b || fail=1
 b=`ls $p/a|tr -d '\n'`
