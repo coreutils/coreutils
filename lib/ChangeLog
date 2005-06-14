@@ -1,3 +1,17 @@
+2005-06-14  Jim Meyering  <jim@meyering.net>
+
+	Provide an alternative to exiting immediately upon save_cwd or
+	restore_cwd failure.  Now, an application can arrange e.g.,
+	to perform a longjump in that case.
+	* openat.c: Include dirname.h.
+	Use IS_ABSOLUTE_FILE_NAME rather than testing for leading slash.
+	(rpl_openat, fdopendir, fstatat): Call openat_save_die
+	and openat_restore_die rather than calling error directly.
+	Don't include "error.h" or "exitfail.h"; they're no longer needed.
+
+	* openat-die.c (openat_save_die, openat_restore_die): New file.
+	* openat.h (openat_save_die, openat_restore_die): Declare and define.
+
 2005-06-13  Jim Meyering  <jim@meyering.net>
 
 	* mkdir-p.c (make_dir_parents): New parameter: different_working_dir,
