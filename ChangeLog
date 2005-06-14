@@ -2,6 +2,17 @@
 
 	* Version 5.3.1.
 
+	Improve diagnostics for restore_cwd failure.
+	* src/install.c (main): Standardize on a diagnostic for
+	restore_cwd failure, and report errno.
+	(install_file_in_file_parents): Fail if restore_cwd fails and
+	one of the files is relative.  This fixes a bug (albeit unlikely).
+	* src/mkdir.c (create_parents): Remove static var (now local to 'main').
+	(main): Standardize on a diagnostic for restore_cwd failure,
+	and report errno.
+	Don't bother to check cwd_errno unless create_parents.
+	Use mkdir rather than make_dir; it's simpler.
+
 	* src/install.c (main): Adjust to new make_dir_parents convention.
 	* src/mkdir.c (main): Likewise.
 

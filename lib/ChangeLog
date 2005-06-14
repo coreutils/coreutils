@@ -1,5 +1,13 @@
 2005-06-14  Paul Eggert  <eggert@cs.ucla.edu>
 
+	Improve quality of diagnostics on restore_cwd failure.
+	* mkdir-p.h (make_dir): Remove.  All uses replaced by mkdir.
+	(make_dir_parents): Last arg is now int * (for errno), not bool *.
+	* mkdir-p.c (make_dir, make_dir_parents): Likewise.
+	Rewrite "mkdir -p" algorithm to avoid the need for "stat"
+	each time through the loop.  Do not diagnose restore_cwd failure;
+	that is the caller's job (and perhaps the caller does not care).
+
 	* mkdir-p.c (CLEANUP_CWD, CLEANUP): Remove.
 	(make_dir_parents): Revamp to avoid need for CLEANUP_CWD, CLEANUP.
 	If the file already exists but is not a directory, don't bother
