@@ -10,7 +10,7 @@ lib/getopt.c
 lib/human.c
 lib/mkdir-p.c
 lib/obstack.c
-lib/openat.c
+lib/openat-die.c
 lib/quotearg.c
 lib/root-dev-ino.h
 lib/rpmatch.c
