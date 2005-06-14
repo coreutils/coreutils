@@ -149,8 +149,9 @@ make_dir (char const *dir, char const *fulldir, mode_t mode,
    has changed the current working directory and is unable to restore
    it to its initial state.
 
-   Return true iff ARG exists as a directory with the proper
-   ownership and permissions when done.  */
+   Return true iff ARG exists as a directory with the proper ownership
+   and permissions when done.  Note that this function returns true
+   even when it fails to return to the initial working directory.  */
 
 bool
 make_dir_parents (char const *arg,
