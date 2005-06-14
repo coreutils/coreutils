@@ -1,3 +1,7 @@
+2005-06-14  Jim Meyering  <jim@meyering.net>
+
+	* POTFILES.in: Change openat.c to openat-die.c.
+
 2005-06-02  Jim Meyering  <jim@meyering.net>
 
 	* POTFILES.in: Change makepath.c to mkdir-p.c here, too.
