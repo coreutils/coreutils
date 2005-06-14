@@ -17,6 +17,7 @@ framework_failure=0
 mkdir -p $tmp || framework_failure=1
 cd $tmp || framework_failure=1
 mkdir no-access || framework_failure=1
+mkdir no-acce2s || framework_failure=1
 
 if test $framework_failure = 1; then
   echo "$0: failure in testing framework" 1>&2
@@ -26,8 +27,13 @@ fi
 p=$pwd/$tmp
 (cd no-access; chmod 0 . && mkdir -p $p/a/b u/v) 2> /dev/null && fail=1
 
+# Same as above, but with a following *absolute* name, it should succeed
+(cd no-acce2s; chmod 0 . && mkdir -p $p/a/b $p/z) || fail=1
+
 test -d $p/a/b || fail=1
 b=`ls $p/a|tr -d '\n'`
+
+test -d $p/z || fail=1
 
 # With coreutils-5.3.0, this would fail with $b=bu.
 test "x$b" = xb || fail=1
