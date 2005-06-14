@@ -2,6 +2,9 @@
 
 	* Version 5.3.1.
 
+	* tests/mkdir/p-3: Ensure mkdir succeeds if the following argument
+	is an absolute directory name.
+
 	* Makefile.maint (my-distcheck): Add -Wall to the list of options that
 	are used with -Werror.  This target is not intended for general use.
 
