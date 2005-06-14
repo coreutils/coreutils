@@ -357,23 +357,19 @@ main (int argc, char **argv)
   if (dir_arg)
     {
       int i;
-      bool cwd_not_restored = false;
+      int cwd_errno = 0;
       for (i = 0; i < n_files; i++)
 	{
-	  if (cwd_not_restored && IS_RELATIVE_FILE_NAME (argv[optind]))
+	  if (cwd_errno != 0 && IS_RELATIVE_FILE_NAME (argv[optind]))
 	    {
-	      error (0, 0,
-		     _("unable to create relative-named directory, %s,"
-		       " due to prior failure to return to working directory"),
-		     quote (argv[optind]));
-	      ok = false;;
-	      continue;
+	      error (0, cwd_errno, _("cannot return to working directory"));
+	      ok = false;
 	    }
-
-	  ok &=
-	    make_dir_parents (file[i], mode, mode, owner_id, group_id, false,
-			      (x.verbose ? _("creating directory %s") : NULL),
-			      &cwd_not_restored);
+	  else
+	    ok &=
+	      make_dir_parents (file[i], mode, mode, owner_id, group_id, false,
+				(x.verbose ? _("creating directory %s") : NULL),
+				&cwd_errno);
 	}
     }
   else
@@ -421,12 +417,17 @@ install_file_in_file_parents (char const *from, char const *to,
 	 that this option is intended mainly to help installers when the
 	 distribution doesn't provide proper install rules.  */
       mode_t dir_mode = S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH;
-      bool different_cwd;
+      int cwd_errno = 0;
       ok = make_dir_parents (dest_dir, dir_mode, dir_mode,
 			     owner_id, group_id, true,
 			     (x->verbose ? _("creating directory %s") : NULL),
-			     &different_cwd);
-      /* Ignore different_cwd, since this function is called at most once.  */
+			     &cwd_errno);
+      if (ok && cwd_errno != 0
+	  && (IS_RELATIVE_FILE_NAME (from) || IS_RELATIVE_FILE_NAME (to)))
+	{
+	  error (0, cwd_errno, _("cannot return to current directory"));
+	  ok = false;
+	}
     }
 
   free (dest_dir);
