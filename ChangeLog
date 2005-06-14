@@ -1,6 +1,11 @@
-2005-06-13  Jim Meyering  <jim@meyering.net>
+2005-06-14  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* Makefile.maint (my-distcheck): Add -Wall to the list of options that
+	are used with -Werror.  This target is not intended for general use.
+
+2005-06-13  Jim Meyering  <jim@meyering.net>
 
 	* src/mkdir.c (main): Give a diagnostic for -- and skip -- each
 	relative directory name after make_dir_parents fails to restore
