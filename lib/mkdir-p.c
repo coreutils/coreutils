@@ -49,36 +49,6 @@
 
 #define WX_USR (S_IWUSR | S_IXUSR)
 
-#define CLEANUP_CWD					\
-  do							\
-    {							\
-      /* We're done operating on basename_dir.		\
-	 Restore working directory.  */			\
-      if (do_chdir)					\
-	{						\
-	  if (restore_cwd (&cwd) != 0)			\
-	    {						\
-	      int _saved_errno = errno;			\
-	      error (0, errno,				\
-		_("failed to return to initial working directory")); \
-	      free_cwd (&cwd);				\
-	      errno = _saved_errno;			\
-	      *different_working_dir = true;		\
-	      return true;				\
-	    }						\
-	  free_cwd (&cwd);				\
-	}						\
-    }							\
-  while (0)
-
-#define CLEANUP						\
-  do							\
-    {							\
-      umask (oldmask);					\
-      CLEANUP_CWD;					\
-    }							\
-  while (0)
-
 /* Attempt to create directory DIR (aka FULLDIR) with the specified MODE.
    If CREATED_DIR_P is non-NULL, set *CREATED_DIR_P if this
    function creates DIR and clear it otherwise.  Give a diagnostic and
@@ -145,9 +115,10 @@ make_dir (char const *dir, char const *fulldir, mode_t mode,
    with the name of the directory that was just made as an argument.
    If PRESERVE_EXISTING is true and ARG is an existing directory,
    then do not attempt to set its permissions and ownership.
-   Upon return, set *DIFFERENT_WORKING_DIR to true if this function
-   has changed the current working directory and is unable to restore
-   it to its initial state.
+
+   Set *DIFFERENT_WORKING_DIR to true if this function has changed the
+   current working directory and is unable to restore it to its
+   initial state.  Do not change *DIFFERENT_WORKING_DIR otherwise.
 
    Return true iff ARG exists as a directory with the proper ownership
    and permissions when done.  Note that this function returns true
@@ -165,21 +136,40 @@ make_dir_parents (char const *arg,
 {
   struct stat stats;
   bool retval = true;
-  *different_working_dir = false;
+  bool do_chdir = false;	/* Whether to chdir before each mkdir.  */
+  struct saved_cwd cwd;
+  bool cwd_problem = false;
+  char const *fixup_permissions_dir = NULL;
+  char const *full_dir = arg;
 
-  if (stat (arg, &stats) != 0)
+  struct ptr_list
+  {
+    char *dirname_end;
+    struct ptr_list *next;
+  };
+  struct ptr_list *leading_dirs = NULL;
+
+  if (stat (arg, &stats) == 0)
+    {
+      if (! S_ISDIR (stats.st_mode))
+	{
+	  error (0, 0, _("%s exists but is not a directory"), quote (arg));
+	  return false;
+	}
+
+      if (!preserve_existing)
+	fixup_permissions_dir = arg;
+    }
+  else if (errno != ENOENT || !*arg)
+    {
+      error (0, errno, "%s", quote (arg));
+      return false;
+    }
+  else
     {
       char *slash;
       mode_t tmp_mode;		/* Initial perms for leading dirs.  */
       bool re_protect;		/* Should leading dirs be unwritable? */
-      struct ptr_list
-      {
-	char *dirname_end;
-	struct ptr_list *next;
-      };
-      struct ptr_list *p, *leading_dirs = NULL;
-      bool do_chdir;		/* Whether to chdir before each mkdir.  */
-      struct saved_cwd cwd;
       char *basename_dir;
       char *dir;
 
@@ -190,6 +180,7 @@ make_dir_parents (char const *arg,
       dir = (char *) alloca (strlen (arg) + 1);
       strcpy (dir, arg);
       strip_trailing_slashes (dir);
+      full_dir = dir;
 
       /* If leading directories shouldn't be writable or executable,
 	 or should have set[ug]id or sticky bits set and we are setting
@@ -220,7 +211,10 @@ make_dir_parents (char const *arg,
 	     file name starts with exactly two slashes.  */
 	  char const *root = "//" + (dir[1] != '/' || dir[2] == '/');
 	  if (chdir (root) != 0)
-	    do_chdir = false;
+	    {
+	      free_cwd (&cwd);
+	      do_chdir = false;
+	    }
 	}
 
       slash = dir;
@@ -229,7 +223,7 @@ make_dir_parents (char const *arg,
       while (*slash == '/')
 	slash++;
 
-      while (1)
+      while (true)
 	{
 	  bool newly_created_dir;
 
@@ -248,8 +242,8 @@ make_dir_parents (char const *arg,
 	  *slash = '\0';
 	  if (! make_dir (basename_dir, dir, tmp_mode, &newly_created_dir))
 	    {
-	      CLEANUP;
-	      return false;
+	      retval = false;
+	      break;
 	    }
 
 	  if (newly_created_dir)
@@ -266,8 +260,8 @@ make_dir_parents (char const *arg,
 		{
 		  error (0, errno, _("cannot change owner and/or group of %s"),
 			 quote (dir));
-		  CLEANUP;
-		  return false;
+		  retval = false;
+		  break;
 		}
 
 	      if (re_protect)
@@ -288,8 +282,8 @@ make_dir_parents (char const *arg,
 	    {
 	      error (0, errno, _("cannot chdir to directory %s"),
 		     quote (dir));
-	      CLEANUP;
-	      return false;
+	      retval = false;
+	      break;
 	    }
 
 	  *slash++ = '/';
@@ -308,26 +302,40 @@ make_dir_parents (char const *arg,
 
       /* We're done making leading directories.
 	 Create the final component of the file name.  */
-
-      if (! make_dir (basename_dir, dir, mode, NULL))
+      if (retval)
 	{
-	  CLEANUP;
-	  return false;
-	}
+	  bool newly_created_dir;
 
-      if (verbose_fmt_string != NULL)
-	error (0, 0, verbose_fmt_string, quote (dir));
+	  if (! make_dir (basename_dir, dir, mode, &newly_created_dir))
+	    retval = false;
+
+	  if (newly_created_dir)
+	    {
+	      if (verbose_fmt_string)
+		error (0, 0, verbose_fmt_string, quote (dir));
+	      fixup_permissions_dir = basename_dir;
+	    }
+	}
+    }
+
+  if (fixup_permissions_dir)
+    {
+      /* chown must precede chmod because on some systems,
+	 chown clears the set[ug]id bits for non-superusers,
+	 resulting in incorrect permissions.
+	 On System V, users can give away files with chown and then not
+	 be able to chmod them.  So don't give files away.  */
 
       if (owner != (uid_t) -1 || group != (gid_t) -1)
 	{
-	  if (chown (basename_dir, owner, group)
+	  if (chown (fixup_permissions_dir, owner, group) != 0
 #ifdef AFS
 	      && errno != EPERM
 #endif
 	      )
 	    {
 	      error (0, errno, _("cannot change owner and/or group of %s"),
-		     quote (dir));
+		     quote (full_dir));
 	      retval = false;
 	    }
 	}
@@ -337,67 +345,39 @@ make_dir_parents (char const *arg,
 	 required to honor only the file permission bits.  In particular,
 	 it need not honor the `special' bits, so if MODE includes any
 	 special bits, set them here.  */
-      if ((mode & ~S_IRWXUGO)
-	  && chmod (basename_dir, mode))
+      if ((mode & ~S_IRWXUGO) && chmod (fixup_permissions_dir, mode) != 0)
 	{
 	  error (0, errno, _("cannot change permissions of %s"),
-		 quote (dir));
+		 quote (full_dir));
 	  retval = false;
 	}
+    }
 
-      CLEANUP_CWD;
+  if (do_chdir)
+    {
+      int saved_errno;
+      cwd_problem = (restore_cwd (&cwd) != 0);
+      saved_errno = errno;
+      free_cwd (&cwd);
 
-      /* If the mode for leading directories didn't include owner "wx"
-	 privileges, we have to reset their protections to the correct
-	 value.  */
-      for (p = leading_dirs; p != NULL; p = p->next)
+      if (cwd_problem)
 	{
-	  *(p->dirname_end) = '\0';
-	  if (chmod (dir, parent_mode) != 0)
-	    {
-	      error (0, errno, _("cannot change permissions of %s"),
-		     quote (dir));
-	      retval = false;
-	    }
+	  error (0, saved_errno,
+		 _("failed to return to initial working directory"));
+	  *different_working_dir = true;
 	}
     }
-  else
+
+  /* If the mode for leading directories didn't include owner "wx"
+     privileges, reset their protections to the correct value.  */
+  for (; leading_dirs != NULL; leading_dirs = leading_dirs->next)
     {
-      /* We get here if the file already exists.  */
-
-      char const *dir = arg;
-
-      if (!S_ISDIR (stats.st_mode))
+      leading_dirs->dirname_end[0] = '\0';
+      if (cwd_problem || chmod (full_dir, parent_mode) != 0)
 	{
-	  error (0, 0, _("%s exists but is not a directory"), quote (dir));
-	  return false;
-	}
-
-      if (!preserve_existing)
-	{
-	  /* chown must precede chmod because on some systems,
-	     chown clears the set[ug]id bits for non-superusers,
-	     resulting in incorrect permissions.
-	     On System V, users can give away files with chown and then not
-	     be able to chmod them.  So don't give files away.  */
-
-	  if ((owner != (uid_t) -1 || group != (gid_t) -1)
-	      && chown (dir, owner, group)
-#ifdef AFS
-	      && errno != EPERM
-#endif
-	      )
-	    {
-	      error (0, errno, _("cannot change owner and/or group of %s"),
-		     quote (dir));
-	      retval = false;
-	    }
-	  if (chmod (dir, mode) != 0)
-	    {
-	      error (0, errno, _("cannot change permissions of %s"),
-				 quote (dir));
-	      retval = false;
-	    }
+	  error (0, (cwd_problem ? 0 : errno),
+		 _("cannot change permissions of %s"), quote (full_dir));
+	  retval = false;
 	}
     }
 
