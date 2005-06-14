@@ -1,3 +1,17 @@
+2005-06-14  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* mkdir-p.c (CLEANUP_CWD, CLEANUP): Remove.
+	(make_dir_parents): Revamp to avoid need for CLEANUP_CWD, CLEANUP.
+	If the file already exists but is not a directory, don't bother
+	to try to make its parents.
+	Close potential file descriptor leak if we can't chdir("/") (!).
+	Don't always return true if chdir($PWD) fails; return true only
+	if the requested action was done successfully (except for the
+	chdir($PWD)).
+	Don't log final directory unless we actually made it.
+	Refactor to avoid duplicate code to fix up permissions.
+	Don't attempt to fix up parent permissions if chdir($PWD) fails.
+
 2005-06-14  Jim Meyering  <jim@meyering.net>
 
 	* openat-die.c (openat_save_fail): Rename from openat_save_die.
