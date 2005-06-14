@@ -1,6 +1,11 @@
-2005-06-14  Jim Meyering  <jim@meyering.net>
+2005-06-14  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	* src/install.c (main): Adjust to new make_dir_parents convention.
+	* src/mkdir.c (main): Likewise.
+
+2005-06-14  Jim Meyering  <jim@meyering.net>
 
 	* tests/mkdir/p-3: Ensure mkdir succeeds if the following argument
 	is an absolute directory name.
