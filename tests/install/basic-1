@@ -9,12 +9,12 @@ dir=dir
 file=file
 
 pwd=`pwd`
-tmp=inst-basic.$$
-trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
-trap 'exit $?' 1 2 13 15
+t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
+trap 'status=$?; cd $pwd; chmod -R u+rwx $t0; rm -rf $t0 && exit $status' 0
+trap '(exit $?); exit $?' 1 2 13 15
 
 framework_failure=0
-mkdir $tmp || framework_failure=1
+mkdir -p $tmp || framework_failure=1
 cd $tmp || framework_failure=1
 
 rm -rf $dir $file || framework_failure=1
@@ -36,7 +36,7 @@ test -f $dir/$file || fail=1
 # Make sure strip works.
 dd=dd$EXEEXT
 dd2=dd2$EXEEXT
-cp ../../../src/$dd . || fail=1
+cp $pwd/../../src/$dd . || fail=1
 cp $dd $dd2 || fail=1
 
 strip $dd2 || \
@@ -63,9 +63,26 @@ test "$1" = -r-xr-xr-x || fail=1
 # These failed in coreutils CVS from 2004-06-25 to 2004-08-11.
 ginstall -d . || fail=1
 ginstall -d newdir || fail=1
+test -d newdir || fail=1
 ginstall -d newdir1 newdir2 newdir3 || fail=1
 test -d newdir1 || fail=1
 test -d newdir2 || fail=1
 test -d newdir3 || fail=1
+
+# This fails because mkdir-p.c's make_dir_parents fails to return to its
+# initial working directory ($abs) after creating the first argument, and
+# hence cannot do anything meaningful with the following relative-named dirs.
+abs=$pwd/$tmp
+mkdir sub && cd sub
+chmod 0 .; ginstall -d $abs/xx/yy rel/sub1 rel/sub2 2> /dev/null && fail=1
+chmod 755 $abs/sub
+
+# Ensure that the first argument-dir has been created.
+test -d $abs/xx/yy || fail=1
+
+# Make sure that the `rel' directory was not created...
+test -d $abs/sub/rel && fail=1
+# and make sure it was not created in the wrong place.
+test -d $abs/xx/rel && fail=1
 
 (exit $fail); exit $fail
