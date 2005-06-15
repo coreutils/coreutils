@@ -18,6 +18,7 @@ mkdir -p $tmp || framework_failure=1
 cd $tmp || framework_failure=1
 mkdir no-access || framework_failure=1
 mkdir no-acce2s || framework_failure=1
+mkdir no-acce3s || framework_failure=1
 
 if test $framework_failure = 1; then
   echo "$0: failure in testing framework" 1>&2
@@ -26,16 +27,25 @@ fi
 
 p=$pwd/$tmp
 (cd no-access; chmod 0 . && mkdir -p $p/a/b u/v) 2> /dev/null && fail=1
+test -d $p/a/b || fail=1
 
 # Same as above, but with a following *absolute* name, it should succeed
-(cd no-acce2s; chmod 0 . && mkdir -p $p/a/b $p/z) || fail=1
-
-test -d $p/a/b || fail=1
-b=`ls $p/a|tr -d '\n'`
+(cd no-acce2s; chmod 0 . && mkdir -p $p/b/b $p/z) || fail=1
 
 test -d $p/z || fail=1
 
+b=`ls $p/a|tr -d '\n'`
 # With coreutils-5.3.0, this would fail with $b=bu.
 test "x$b" = xb || fail=1
+
+# Ensure that the re_protect code is run on absolute names, even
+# after failure to return to the initial working directory.
+# This is actually a test of the underlying mkdir-p.c code.
+# The part in question cannot be tested via mkdir(1) because that
+# program cannot create leading directories that lack u=wx permissions,
+# so we have to test with install (aka ginstall in the build directory).
+(cd no-acce3s; chmod 0 . && ginstall -m 0 -d $p/c/b $p/y/z) || fail=1
+p=`ls -ld $p/y|sed 's/ .*//'`
+case $p in d---------);; *) fail=1;; esac
 
 exit $fail
