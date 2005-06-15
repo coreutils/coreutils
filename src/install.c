@@ -360,7 +360,7 @@ main (int argc, char **argv)
       int cwd_errno = 0;
       for (i = 0; i < n_files; i++)
 	{
-	  if (cwd_errno != 0 && IS_RELATIVE_FILE_NAME (argv[optind]))
+	  if (cwd_errno != 0 && IS_RELATIVE_FILE_NAME (file[i]))
 	    {
 	      error (0, cwd_errno, _("cannot return to working directory"));
 	      ok = false;
