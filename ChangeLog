@@ -2,6 +2,11 @@
 
 	* Version 5.3.1.
 
+	* src/install.c (main): Fix my typo: s/argv[optind]/file[i]/.
+	* tests/install/basic-1: Ensure that each `-d'-specified directory
+	is created.  Ensure that rel-named dirs are not created when
+	chdir($PWD) fails.
+
 	* tests/mkdir/p-3: Add a test for just-fixed bug in mkdir-p.c.
 
 2005-06-14  Paul Eggert  <eggert@cs.ucla.edu>
