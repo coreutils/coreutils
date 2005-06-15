@@ -64,5 +64,8 @@ test "$1" = -r-xr-xr-x || fail=1
 ginstall -d . || fail=1
 ginstall -d newdir || fail=1
 ginstall -d newdir1 newdir2 newdir3 || fail=1
+test -d newdir1 || fail=1
+test -d newdir2 || fail=1
+test -d newdir3 || fail=1
 
 (exit $fail); exit $fail
