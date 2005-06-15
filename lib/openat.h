@@ -51,11 +51,11 @@ int openat (int fd, char const *file, int flags, /* mode_t mode */ ...);
 DIR *fdopendir (int fd);
 #  define fstatat __OPENAT_ID (fstatat)
 int fstatat (int fd, char const *file, struct stat *st, int flag);
-void openat_restore_die (int) ATTRIBUTE_NORETURN;
-void openat_save_die (int) ATTRIBUTE_NORETURN;
+void openat_restore_fail (int) ATTRIBUTE_NORETURN;
+void openat_save_fail (int) ATTRIBUTE_NORETURN;
 # else
-#  define openat_restore_die(Errno) /* empty */
-#  define openat_save_die(Errno) /* empty */
+#  define openat_restore_fail(Errno) /* empty */
+#  define openat_save_fail(Errno) /* empty */
 # endif
 
 #endif
