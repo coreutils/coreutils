@@ -125,7 +125,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   "mkdir -p /tmp/a/b dir" no longer attempts to create the `.'-relative
   directory, dir (in /tmp/a), when, after creating /tmp/a/b, it is unable
   to return to its initial working directory.  Similarly for "install -D
-  file /tmp/a/b".
+  file /tmp/a/b/file".
 
   "pr -D FORMAT" now accepts the same formats that "date +FORMAT" does.
 
