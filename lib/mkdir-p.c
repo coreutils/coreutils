@@ -319,7 +319,8 @@ make_dir_parents (char const *arg,
   for (; leading_dirs != NULL; leading_dirs = leading_dirs->next)
     {
       leading_dirs->dirname_end[0] = '\0';
-      if (cwd_problem || chmod (full_dir, parent_mode) != 0)
+      if ((cwd_problem && *full_dir != '/')
+	  || chmod (full_dir, parent_mode) != 0)
 	{
 	  error (0, (cwd_problem ? 0 : errno),
 		 _("cannot change permissions of %s"), quote (full_dir));
