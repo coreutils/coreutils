@@ -1,3 +1,9 @@
+2005-06-15  Jim Meyering  <jim@meyering.net>
+
+	* mkdir-p.c (make_dir_parents): Don't let a failed chdir($PWD)
+	stop us from restricting permissions of just-created absolute-named
+	directories.
+
 2005-06-14  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Improve quality of diagnostics on restore_cwd failure.

@@ -1,6 +1,10 @@
-2005-06-14  Paul Eggert  <eggert@cs.ucla.edu>
+2005-06-15  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* tests/mkdir/p-3: Add a test for just-fixed bug in mkdir-p.c.
+
+2005-06-14  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Improve diagnostics for restore_cwd failure.
 	* src/install.c (main): Standardize on a diagnostic for
