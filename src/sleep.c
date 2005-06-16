@@ -1,5 +1,5 @@
 /* sleep - delay for a specified amount of time.
-   Copyright (C) 84, 1991-1997, 1999-2004 Free Software Foundation, Inc.
+   Copyright (C) 84, 1991-1997, 1999-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -25,6 +25,7 @@
 #include "c-strtod.h"
 #include "error.h"
 #include "long-options.h"
+#include "quote.h"
 #include "xnanosleep.h"
 #include "xstrtod.h"
 
@@ -134,7 +135,7 @@ main (int argc, char **argv)
 	  /* Check any suffix char and update S based on the suffix.  */
 	  || ! apply_suffix (&s, *p))
 	{
-	  error (0, 0, _("invalid time interval `%s'"), argv[i]);
+	  error (0, 0, _("invalid time interval %s"), quote (argv[i]));
 	  ok = false;
 	}
 
