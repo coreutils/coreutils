@@ -53,8 +53,9 @@
 
 #include "system.h"
 #include "c-strtod.h"
-#include "long-options.h"
 #include "error.h"
+#include "long-options.h"
+#include "quote.h"
 #include "unicodeio.h"
 
 #if ! (HAVE_DECL_STRTOIMAX || defined strtoimax)
@@ -683,8 +684,8 @@ main (int argc, char **argv)
 
   if (argc > 0)
     error (0, 0,
-	   _("warning: ignoring excess arguments, starting with `%s'"),
-	   argv[0]);
+	   _("warning: ignoring excess arguments, starting with %s"),
+	   quote (argv[0]));
 
   exit (exit_status);
 }
