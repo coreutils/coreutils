@@ -25,6 +25,7 @@
 
 #include "system.h"
 #include "error.h"
+#include "quote.h"
 #include "xstrtol.h"
 
 #define TAB_WIDTH 8
@@ -287,7 +288,7 @@ main (int argc, char **argv)
 	    if (! (xstrtoul (optarg, NULL, 10, &tmp_ulong, "") == LONGINT_OK
 		   && 0 < tmp_ulong && tmp_ulong < SIZE_MAX - TAB_WIDTH))
 	      error (EXIT_FAILURE, 0,
-		     _("invalid number of columns: `%s'"), optarg);
+		     _("invalid number of columns: %s"), quote (optarg));
 	    width = tmp_ulong;
 	  }
 	  break;
