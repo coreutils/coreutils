@@ -1,6 +1,13 @@
-2005-06-15  Jim Meyering  <jim@meyering.net>
+2005-06-16  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* src/mv.c: Finally remove support for --version-control=S (-V).
+	It was deprecated nearly 6 years ago and has been warning
+	users to switch to --backup=S since fileutils-4.0j.
+	* src/cp.c, src/install.c, src/ln.c: Likewise.
+
+2005-06-15  Jim Meyering  <jim@meyering.net>
 
 	* src/install.c (main): Fix my typo: s/argv[optind]/file[i]/.
 	* tests/install/basic-1: Ensure that each `-d'-specified directory
