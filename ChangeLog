@@ -2,6 +2,17 @@
 
 	* Version 5.3.1.
 
+	Don't embed `this'-style quotes in format strings.
+	* src/tr.c: Rather than this: error (..., "...`%s'...", arg);
+	do this:                      error (..., "...%s...", quote (arg));
+	* src/od.c, src/tr.c, src/csplit.c, src/date.c, src/hostname.c:
+	* src/join.c, src/ptx.c, src/seq.c, src/sort.c, src/split.c:
+	* src/split.c, src/tail.c: Likewise.
+
+	* src/sleep.c: Include "quote.h".  Remove hard-coded quotes, as above.
+	* src/nice.c, src/printf.c, src/fold.c: Likewise.
+	* src/factor.c, src/cat.c, src/expr.c, src/stty.c: Likewise.
+
 	* src/mv.c: Finally remove support for --version-control=S (-V).
 	It was deprecated nearly 6 years ago and has been warning
 	users to switch to --backup=S since fileutils-4.0j.
