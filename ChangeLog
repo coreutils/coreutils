@@ -10,7 +10,7 @@
 	* src/split.c, src/tail.c: Likewise.
 
 	* src/sleep.c: Include "quote.h".  Remove hard-coded quotes, as above.
-	* src/nice.c, src/printf.c, src/fold.c: Likewise.
+	* src/nice.c, src/printf.c, src/fold.c, src/pr.c: Likewise.
 	* src/factor.c, src/cat.c, src/expr.c, src/stty.c: Likewise.
 
 	* src/mv.c: Finally remove support for --version-control=S (-V).
