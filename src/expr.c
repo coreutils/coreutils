@@ -37,6 +37,7 @@
 #include "long-options.h"
 #include "error.h"
 #include "inttostr.h"
+#include "quote.h"
 #include "quotearg.h"
 #include "strnumcmp.h"
 #include "xstrtol.h"
@@ -423,7 +424,7 @@ docolon (VALUE *sv, VALUE *pv)
       error (0, 0, _("\
 warning: unportable BRE: `%s': using `^' as the first character\n\
 of the basic regular expression is not portable; it is being ignored"),
-	     pv->u.s);
+	     quote (pv->u.s));
     }
 
   len = strlen (pv->u.s);
