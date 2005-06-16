@@ -131,6 +131,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Improved portability
 
+  hostid now prints exactly 8 hexadecimal digits, possibly with leading zeros,
+  and without any spurious leading "fff..." on 64-bit hosts.
+
   nice now works on Darwin 7.7.0 in spite of its invalid definition of NZERO.
 
   `rm -r' can remove all entries in a directory even when it is on a

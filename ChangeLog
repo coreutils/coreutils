@@ -1,6 +1,12 @@
-2005-06-16  Jim Meyering  <jim@meyering.net>
+2005-06-16  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	* src/hostid.c (main): Don't print fewer than 8 digits, or spurious
+	leading "f"s.  "f" problem reported by Tim Waugh.
+	* NEWS: Document this.
+
+2005-06-16  Jim Meyering  <jim@meyering.net>
 
 	Don't embed `this'-style quotes in format strings.
 	* src/tr.c: Rather than this: error (..., "...`%s'...", arg);
