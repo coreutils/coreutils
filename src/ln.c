@@ -120,7 +120,6 @@ static struct option const long_options[] =
   {"target-directory", required_argument, NULL, 't'},
   {"symbolic", no_argument, NULL, 's'},
   {"verbose", no_argument, NULL, 'v'},
-  {"version-control", required_argument, NULL, 'V'}, /* Deprecated. FIXME. */
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
@@ -420,18 +419,11 @@ main (int argc, char **argv)
   symbolic_link = remove_existing_files = interactive = verbose
     = hard_dir_link = false;
 
-  while ((c = getopt_long (argc, argv, "bdfinst:vFS:TV:", long_options, NULL))
+  while ((c = getopt_long (argc, argv, "bdfinst:vFS:T", long_options, NULL))
 	 != -1)
     {
       switch (c)
 	{
-	case 'V':  /* FIXME: this is deprecated.  Remove it in 2001.  */
-	  error (0, 0,
-		 _("warning: --version-control (-V) is obsolete;  support for\
- it\nwill be removed in some future release.  Use --backup=%s instead."
-		   ), optarg);
-	  /* Fall through.  */
-
 	case 'b':
 	  make_backups = true;
 	  if (optarg)

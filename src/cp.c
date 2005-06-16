@@ -138,7 +138,6 @@ static struct option const long_opts[] =
   {"target-directory", required_argument, NULL, 't'},
   {"update", no_argument, NULL, 'u'},
   {"verbose", no_argument, NULL, 'v'},
-  {"version-control", required_argument, NULL, 'V'}, /* Deprecated. FIXME. */
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
@@ -814,7 +813,7 @@ main (int argc, char **argv)
      we'll actually use backup_suffix_string.  */
   backup_suffix_string = getenv ("SIMPLE_BACKUP_SUFFIX");
 
-  while ((c = getopt_long (argc, argv, "abdfHilLprst:uvxPRS:TV:",
+  while ((c = getopt_long (argc, argv, "abdfHilLprst:uvxPRS:T",
 			   long_opts, NULL))
 	 != -1)
     {
@@ -834,13 +833,6 @@ main (int argc, char **argv)
 	  x.require_preserve = true;
 	  x.recursive = true;
 	  break;
-
-	case 'V':  /* FIXME: this is deprecated.  Remove it in 2001.  */
-	  error (0, 0,
-		 _("warning: --version-control (-V) is obsolete;  support for\
- it\nwill be removed in some future release.  Use --backup=%s instead."
-		   ), optarg);
-	  /* Fall through.  */
 
 	case 'b':
 	  make_backups = true;
