@@ -34,6 +34,7 @@
 #include "error.h"
 #include "full-write.h"
 #include "getpagesize.h"
+#include "quote.h"
 #include "safe-read.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -313,7 +314,7 @@ cat (
 		    use_fionread = false;
 		  else
 		    {
-		      error (0, errno, _("cannot do ioctl on `%s'"), infile);
+		      error (0, errno, _("cannot do ioctl on %s"), quote (infile));
 		      newlines2 = newlines;
 		      return false;
 		    }
