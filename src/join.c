@@ -879,8 +879,8 @@ main (int argc, char **argv)
 		if (STREQ (optarg, "\\0"))
 		  newtab = '\0';
 		else
-		  error (EXIT_FAILURE, 0, _("multi-character tab `%s'"),
-			 optarg);
+		  error (EXIT_FAILURE, 0, _("multi-character tab %s"),
+			 quote (optarg));
 	      }
 	    if (0 <= tab && tab != newtab)
 	      error (EXIT_FAILURE, 0, _("incompatible tabs"));

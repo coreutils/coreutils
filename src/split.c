@@ -211,7 +211,7 @@ cwrite (bool new_file_flag, const char *bp, size_t bytes)
 
       next_file_name ();
       if (verbose)
-	fprintf (stderr, _("creating file `%s'\n"), outfile);
+	fprintf (stderr, _("creating file %s\n"), quote (outfile));
       output_desc = fd_safer (open (outfile,
 				    O_WRONLY | O_CREAT | O_TRUNC | O_BINARY,
 				    (S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP

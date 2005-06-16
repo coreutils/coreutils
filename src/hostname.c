@@ -100,7 +100,7 @@ main (int argc, char **argv)
       /* Set hostname to operand.  */
       char const *name = argv[optind];
       if (sethostname (name, strlen (name)) != 0)
-	error (EXIT_FAILURE, errno, _("cannot set name to `%s'"), name);
+	error (EXIT_FAILURE, errno, _("cannot set name to %s"), quote (name));
 #else
       error (EXIT_FAILURE, 0,
 	     _("cannot set hostname; this system lacks the functionality"));

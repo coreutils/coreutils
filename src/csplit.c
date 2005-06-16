@@ -710,8 +710,8 @@ handle_line_error (const struct control *p, uintmax_t repetition)
 {
   char buf[INT_BUFSIZE_BOUND (uintmax_t)];
 
-  fprintf (stderr, _("%s: `%s': line number out of range"),
-	   program_name, umaxtostr (p->lines_required, buf));
+  fprintf (stderr, _("%s: %s: line number out of range"),
+	   program_name, quote (umaxtostr (p->lines_required, buf)));
   if (repetition)
     fprintf (stderr, _(" on repetition %s\n"), umaxtostr (repetition, buf));
   else
@@ -756,8 +756,8 @@ static void regexp_error (struct control *, uintmax_t, bool) ATTRIBUTE_NORETURN;
 static void
 regexp_error (struct control *p, uintmax_t repetition, bool ignore)
 {
-  fprintf (stderr, _("%s: `%s': match not found"),
-	   program_name, global_argv[p->argnum]);
+  fprintf (stderr, _("%s: %s: match not found"),
+	   program_name, quote (global_argv[p->argnum]));
 
   if (repetition)
     {
@@ -985,7 +985,7 @@ close_output_file (void)
     {
       if (ferror (output_stream))
 	{
-	  error (0, 0, _("write error for `%s'"), output_filename);
+	  error (0, 0, _("write error for %s"), quote (output_filename));
 	  output_stream = NULL;
 	  cleanup_fatal ();
 	}
@@ -1172,14 +1172,14 @@ parse_patterns (int argc, int start, char **argv)
 	    {
 	      char buf[INT_BUFSIZE_BOUND (uintmax_t)];
 	      error (EXIT_FAILURE, 0,
-	       _("line number `%s' is smaller than preceding line number, %s"),
-		     argv[i], umaxtostr (last_val, buf));
+	       _("line number %s is smaller than preceding line number, %s"),
+		     quote (argv[i]), umaxtostr (last_val, buf));
 	    }
 
 	  if (val == last_val)
 	    error (0, 0,
-	   _("warning: line number `%s' is the same as preceding line number"),
-		   argv[i]);
+	   _("warning: line number %s is the same as preceding line number"),
+		   quote (argv[i]));
 
 	  last_val = val;
 

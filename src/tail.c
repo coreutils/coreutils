@@ -877,8 +877,8 @@ recheck (struct File_spec *f, bool blocking)
 		 unreadable (perms), and later becomes readable again and can
 		 be seen to be the same file (dev/ino).  Otherwise, tail prints
 		 the entire contents of the file when it becomes readable.  */
-	      error (0, f->errnum, _("`%s' has become inaccessible"),
-		     pretty_name (f));
+	      error (0, f->errnum, _("%s has become inaccessible"),
+		     quote (pretty_name (f)));
 	    }
 	  else
 	    {
@@ -894,9 +894,9 @@ recheck (struct File_spec *f, bool blocking)
     {
       ok = false;
       f->errnum = -1;
-      error (0, 0, _("`%s' has been replaced with an untailable file;\
+      error (0, 0, _("%s has been replaced with an untailable file;\
  giving up on this name"),
-	     pretty_name (f));
+	     quote (pretty_name (f)));
       f->ignore = true;
     }
   else
@@ -915,7 +915,7 @@ recheck (struct File_spec *f, bool blocking)
     {
       new_file = true;
       assert (f->fd == -1);
-      error (0, 0, _("`%s' has become accessible"), pretty_name (f));
+      error (0, 0, _("%s has become accessible"), quote (pretty_name (f)));
     }
   else if (f->ino != new_stats.st_ino || f->dev != new_stats.st_dev)
     {
@@ -923,8 +923,8 @@ recheck (struct File_spec *f, bool blocking)
       if (f->fd == -1)
 	{
 	  error (0, 0,
-		 _("`%s' has appeared;  following end of new file"),
-		 pretty_name (f));
+		 _("%s has appeared;  following end of new file"),
+		 quote (pretty_name (f)));
 	}
       else
 	{
@@ -934,8 +934,8 @@ recheck (struct File_spec *f, bool blocking)
 	  /* File has been replaced (e.g., via log rotation) --
 	     tail the new one.  */
 	  error (0, 0,
-		 _("`%s' has been replaced;  following end of new file"),
-		 pretty_name (f));
+		 _("%s has been replaced;  following end of new file"),
+		 quote (pretty_name (f)));
 	}
     }
   else
@@ -1446,7 +1446,7 @@ parse_obsolete_option (int argc, char * const *argv, uintmax_t *n_units)
   else if ((xstrtoumax (n_string, NULL, 10, n_units, "b")
 	    & ~LONGINT_INVALID_SUFFIX_CHAR)
 	   != LONGINT_OK)
-    error (EXIT_FAILURE, 0, _("number in `%s' is too large"), argv[1]);
+    error (EXIT_FAILURE, 0, _("number in %s is too large"), quote (argv[1]));
 
   /* Set globals.  */
   from_start = t_from_start;

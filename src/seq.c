@@ -376,7 +376,7 @@ main (int argc, char **argv)
 
   if (format_str && !valid_format (format_str))
     {
-      error (0, 0, _("invalid format string: `%s'"), format_str);
+      error (0, 0, _("invalid format string: %s"), quote (format_str));
       usage (EXIT_FAILURE);
     }
 

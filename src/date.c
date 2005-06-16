@@ -273,7 +273,7 @@ batch_convert (const char *input_filename, const char *format)
 	{
 	  if (line[line_length - 1] == '\n')
 	    line[line_length - 1] = '\0';
-	  error (0, 0, _("invalid date `%s'"), line);
+	  error (0, 0, _("invalid date %s"), quote (line));
 	  ok = false;
 	}
       else
@@ -384,10 +384,10 @@ main (int argc, char **argv)
       && n_args == 1 && argv[optind][0] != '+')
     {
       error (0, 0, _("\
-the argument `%s' lacks a leading `+';\n\
+the argument %s lacks a leading `+';\n\
 When using an option to specify date(s), any non-option\n\
 argument must be a format string beginning with `+'."),
-	     argv[optind]);
+	     quote (argv[optind]));
       usage (EXIT_FAILURE);
     }
 
@@ -452,7 +452,7 @@ argument must be a format string beginning with `+'."),
 	}
 
       if (! valid_date)
-	error (EXIT_FAILURE, 0, _("invalid date `%s'"), datestr);
+	error (EXIT_FAILURE, 0, _("invalid date %s"), quote (datestr));
 
       if (set_date)
 	{

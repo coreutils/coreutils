@@ -407,7 +407,7 @@ alloc_and_compile_regex (const char *string)
 
   message = re_compile_pattern (string, (int) strlen (string), pattern);
   if (message)
-    error (EXIT_FAILURE, 0, _("%s (for regexp `%s')"), message, string);
+    error (EXIT_FAILURE, 0, _("%s (for regexp %s)"), message, quote (string));
 
   /* The fastmap should be compiled before `re_match'.  The following
      call is not mandatory, because `re_search' is always called sooner,

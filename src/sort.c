@@ -1985,8 +1985,8 @@ static void badfieldspec (char const *, char const *)
 static void
 badfieldspec (char const *spec, char const *msgid)
 {
-  error (SORT_FAILURE, 0, _("%s: invalid field specification `%s'"),
-	 _(msgid), spec);
+  error (SORT_FAILURE, 0, _("%s: invalid field specification %s"),
+	 _(msgid), quote (spec));
   abort ();
 }
 
@@ -2018,8 +2018,8 @@ parse_field_count (char const *string, size_t *val, char const *msgid)
 
     case LONGINT_INVALID:
       if (msgid)
-	error (SORT_FAILURE, 0, _("%s: invalid count at start of `%s'"),
-	       _(msgid), string);
+	error (SORT_FAILURE, 0, _("%s: invalid count at start of %s"),
+	       _(msgid), quote (string));
       return NULL;
     }
 
@@ -2360,8 +2360,8 @@ main (int argc, char **argv)
 		       "multi-character tab" instead of "multibyte tab", so
 		       that the diagnostic's wording does not need to be
 		       changed once multibyte characters are supported.  */
-		    error (SORT_FAILURE, 0, _("multi-character tab `%s'"),
-			   optarg);
+		    error (SORT_FAILURE, 0, _("multi-character tab %s"),
+			   quote (optarg));
 		  }
 	      }
 	    if (tab != TAB_DEFAULT && tab != newtab)
