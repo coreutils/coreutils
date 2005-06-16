@@ -1,5 +1,5 @@
 /* tr -- a filter to translate characters
-   Copyright (C) 91, 1995-2004 Free Software Foundation, Inc.
+   Copyright (C) 91, 1995-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -834,8 +834,8 @@ find_bracketed_repeat (const struct E_string *es, size_t start_idx,
 		{
 		  char *tmp = make_printable_str (digit_str, digit_str_len);
 		  error (0, 0,
-			 _("invalid repeat count `%s' in [c*n] construct"),
-			 tmp);
+			 _("invalid repeat count %s in [c*n] construct"),
+			 quote (tmp));
 		  free (tmp);
 		  return -2;
 		}
@@ -933,8 +933,8 @@ build_spec_list (const struct E_string *es, struct Spec_list *result)
 			    {
 			      char *tmp = make_printable_str (opnd_str,
 							      opnd_str_len);
-			      error (0, 0, _("invalid character class `%s'"),
-				     tmp);
+			      error (0, 0, _("invalid character class %s"),
+				     quote (tmp));
 			      free (tmp);
 			      return false;
 			    }
