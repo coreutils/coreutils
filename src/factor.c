@@ -30,6 +30,7 @@
 #include "error.h"
 #include "inttostr.h"
 #include "long-options.h"
+#include "quote.h"
 #include "readtokens.h"
 #include "xstrtol.h"
 
@@ -153,9 +154,9 @@ print_factors (const char *s)
   if ((err = xstrtoumax (s, NULL, 10, &n, "")) != LONGINT_OK)
     {
       if (err == LONGINT_OVERFLOW)
-	error (0, 0, _("`%s' is too large"), s);
+	error (0, 0, _("%s is too large"), quote (s));
       else
-	error (0, 0, _("`%s' is not a valid positive integer"), s);
+	error (0, 0, _("%s is not a valid positive integer"), quote (s));
       return false;
     }
   n_factors = factor (n, MAX_N_FACTORS, factors);

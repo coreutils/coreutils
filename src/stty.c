@@ -56,6 +56,7 @@
 
 #include "system.h"
 #include "error.h"
+#include "quote.h"
 #include "vasprintf.h"
 #include "xstrtol.h"
 
@@ -882,7 +883,7 @@ main (int argc, char **argv)
 	}
       if (!match_found & reversed)
 	{
-	  error (0, 0, _("invalid argument `%s'"), arg - 1);
+	  error (0, 0, _("invalid argument %s"), quote (arg - 1));
 	  usage (EXIT_FAILURE);
 	}
       if (!match_found)
@@ -893,7 +894,7 @@ main (int argc, char **argv)
 		{
 		  if (k == argc - 1)
 		    {
-		      error (0, 0, _("missing argument to `%s'"), arg);
+		      error (0, 0, _("missing argument to %s"), quote (arg));
 		      usage (EXIT_FAILURE);
 		    }
 		  match_found = true;
@@ -910,7 +911,7 @@ main (int argc, char **argv)
 	    {
 	      if (k == argc - 1)
 		{
-		  error (0, 0, _("missing argument to `%s'"), arg);
+		  error (0, 0, _("missing argument to %s"), quote (arg));
 		  usage (EXIT_FAILURE);
 		}
 	      ++k;
@@ -922,7 +923,7 @@ main (int argc, char **argv)
 	    {
 	      if (k == argc - 1)
 		{
-		  error (0, 0, _("missing argument to `%s'"), arg);
+		  error (0, 0, _("missing argument to %s"), quote (arg));
 		  usage (EXIT_FAILURE);
 		}
 	      ++k;
@@ -935,7 +936,7 @@ main (int argc, char **argv)
 	    {
 	      if (k == argc - 1)
 		{
-		  error (0, 0, _("missing argument to `%s'"), arg);
+		  error (0, 0, _("missing argument to %s"), quote (arg));
 		  usage (EXIT_FAILURE);
 		}
 	      ++k;
@@ -947,7 +948,7 @@ main (int argc, char **argv)
 	    {
 	      if (k == argc - 1)
 		{
-		  error (0, 0, _("missing argument to `%s'"), arg);
+		  error (0, 0, _("missing argument to %s"), quote (arg));
 		  usage (EXIT_FAILURE);
 		}
 	      ++k;
@@ -967,13 +968,13 @@ main (int argc, char **argv)
 	      unsigned long int value;
 	      if (k == argc - 1)
 		{
-		  error (0, 0, _("missing argument to `%s'"), arg);
+		  error (0, 0, _("missing argument to %s"), quote (arg));
 		  usage (EXIT_FAILURE);
 		}
 	      ++k;
 	      mode.c_line = value = integer_arg (argv[k], ULONG_MAX);
 	      if (mode.c_line != value)
-		error (0, 0, _("invalid line discipline `%s'"), argv[k]);
+		error (0, 0, _("invalid line discipline %s"), quote (argv[k]));
 	      require_set_attr = true;
 	    }
 #endif
@@ -992,7 +993,7 @@ main (int argc, char **argv)
 	    {
 	      if (! recover_mode (arg, &mode))
 		{
-		  error (0, 0, _("invalid argument `%s'"), arg);
+		  error (0, 0, _("invalid argument %s"), quote (arg));
 		  usage (EXIT_FAILURE);
 		}
 	      require_set_attr = true;
@@ -1886,7 +1887,7 @@ integer_arg (const char *s, unsigned long int maxval)
   if (xstrtoul (s, NULL, 0, &value, "bB") != LONGINT_OK
       || maxval < value)
     {
-      error (0, 0, _("invalid integer argument `%s'"), s);
+      error (0, 0, _("invalid integer argument %s"), quote (s));
       usage (EXIT_FAILURE);
     }
   return value;
