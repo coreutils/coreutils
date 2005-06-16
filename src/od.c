@@ -668,7 +668,7 @@ decode_one_format (const char *s_orig, const char *s, const char **next,
 	      /* The integer at P in S would overflow an unsigned long int.
 		 A digit string that long is sufficiently odd looking
 		 that the following diagnostic is sufficient.  */
-	      error (0, 0, _("invalid type string `%s'"), s_orig);
+	      error (0, 0, _("invalid type string %s"), quote (s_orig));
 	      return false;
 	    }
 	  if (p == s)
@@ -678,8 +678,8 @@ decode_one_format (const char *s_orig, const char *s, const char **next,
 	      if (MAX_INTEGRAL_TYPE_SIZE < size
 		  || integral_type_size[size] == NO_SIZE)
 		{
-		  error (0, 0, _("invalid type string `%s';\n\
-this system doesn't provide a %lu-byte integral type"), s_orig, size);
+		  error (0, 0, _("invalid type string %s;\n\
+this system doesn't provide a %lu-byte integral type"), quote (s_orig), size);
 		  return false;
 		}
 	      s = p;
@@ -787,7 +787,7 @@ this system doesn't provide a %lu-byte integral type"), s_orig, size);
 	      /* The integer at P in S would overflow an unsigned long int.
 		 A digit string that long is sufficiently odd looking
 		 that the following diagnostic is sufficient.  */
-	      error (0, 0, _("invalid type string `%s'"), s_orig);
+	      error (0, 0, _("invalid type string %s"), quote (s_orig));
 	      return false;
 	    }
 	  if (p == s)
@@ -797,8 +797,9 @@ this system doesn't provide a %lu-byte integral type"), s_orig, size);
 	      if (size > MAX_FP_TYPE_SIZE
 		  || fp_type_size[size] == NO_SIZE)
 		{
-		  error (0, 0, _("invalid type string `%s';\n\
-this system doesn't provide a %lu-byte floating point type"), s_orig, size);
+		  error (0, 0, _("invalid type string %s;\n\
+this system doesn't provide a %lu-byte floating point type"),
+			 quote (s_orig), size);
 		  return false;
 		}
 	      s = p;
@@ -855,8 +856,8 @@ this system doesn't provide a %lu-byte floating point type"), s_orig, size);
       break;
 
     default:
-      error (0, 0, _("invalid character `%c' in type string `%s'"),
-	     *s, s_orig);
+      error (0, 0, _("invalid character `%c' in type string %s"),
+	     *s, quote (s_orig));
       return false;
     }
 
