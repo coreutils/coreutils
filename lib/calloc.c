@@ -1,6 +1,6 @@
 /* calloc() function that is glibc compatible.
    This wrapper function is required at least on Tru64 UNIX 5.1.
-   Copyright (C) 2004 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -32,10 +32,9 @@ void *
 rpl_calloc (size_t n, size_t s)
 {
   size_t bytes;
-  if (n == 0)
-    n = 1;
-  if (s == 0)
-    s = 1;
+
+  if (n == 0 || s == 0)
+    return calloc (1, 1);
 
   /* Defend against buggy calloc implementations that mishandle
      size_t overflow.  */
