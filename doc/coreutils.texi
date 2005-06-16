@@ -575,17 +575,6 @@ Remove any trailing slashes from each @var{source} argument.
 @xref{Trailing slashes}.
 @end macro
 
-@macro optVersionControl
-@item -V @var{method}
-@itemx --version-control=@var{method}
-@opindex -V
-@opindex --version-control
-Change the type of backups made with @option{-b}.  The @var{method}
-argument can be @samp{none} (or @samp{off}), @samp{numbered} (or
-@samp{t}), @samp{existing} (or @samp{nil}), or @samp{never} (or
-@samp{simple}).  @xref{Backup options}.
-@end macro
-
 @cindex common options
 
 Certain options are available in all of these programs.  Rather than
@@ -644,7 +633,7 @@ name.
 
 @menu
 * Exit status::                 Indicating program success or failure.
-* Backup options::              -b -S -V, in some programs.
+* Backup options::              -b -S, in some programs.
 * Block size::                  BLOCK_SIZE and --block-size, in some programs.
 * Target directory::            Specifying a target directory, in some programs.
 * Trailing slashes::            --strip-trailing-slashes, in some programs.
@@ -750,13 +739,6 @@ Append @var{suffix} to each backup file made with @option{-b}.  If this
 option is not specified, the value of the @env{SIMPLE_BACKUP_SUFFIX}
 environment variable is used.  And if @env{SIMPLE_BACKUP_SUFFIX} is not
 set, the default is @samp{~}, just as in Emacs.
-
-@itemx --version-control=@var{method}
-@opindex --version-control
-@c FIXME: remove this block one or two releases after the actual
-@c removal from the code.
-This option is obsolete and will be removed in a future release.
-It has been replaced with @w{@kbd{--backup}}.
 
 @end table
 
@@ -6638,8 +6620,6 @@ destination.
 @opindex --verbose
 Print the name of each file before copying it.
 
-@optVersionControl
-
 @item -x
 @itemx --one-file-system
 @opindex -x
@@ -7081,8 +7061,6 @@ Strip the symbol tables from installed binary executables.
 @opindex --verbose
 Print the name of each file before copying it.
 
-@optVersionControl
-
 @end table
 
 @exitstatus
@@ -7197,8 +7175,6 @@ Print the name of each file before moving it.
 @optTargetDirectory
 
 @optNoTargetDirectory
-
-@optVersionControl
 
 @end table
 
@@ -7731,8 +7707,6 @@ an error message on systems that do not support symbolic links.
 @opindex -v
 @opindex --verbose
 Print the name of each file before linking it.
-
-@optVersionControl
 
 @end table
 
