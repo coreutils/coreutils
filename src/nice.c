@@ -35,6 +35,7 @@
 
 #include "error.h"
 #include "long-options.h"
+#include "quote.h"
 #include "xstrtol.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -154,7 +155,8 @@ main (int argc, char **argv)
       enum { MIN_ADJUSTMENT = 1 - 2 * NZERO, MAX_ADJUSTMENT = 2 * NZERO - 1 };
       long int tmp;
       if (LONGINT_OVERFLOW < xstrtol (adjustment_given, NULL, 10, &tmp, ""))
-	error (EXIT_FAIL, 0, _("invalid adjustment `%s'"), adjustment_given);
+	error (EXIT_FAIL, 0, _("invalid adjustment %s"),
+	       quote (adjustment_given));
       adjustment = MAX (MIN_ADJUSTMENT, MIN (tmp, MAX_ADJUSTMENT));
     }
 
