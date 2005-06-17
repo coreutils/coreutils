@@ -1,6 +1,12 @@
-2005-06-16  Paul Eggert  <eggert@cs.ucla.edu>
+2005-06-17  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* src/shred.c (usage): Clarify that shred works on an ext3 file
+	system as long as it's not in data=journal mode.
+	Tiny change by Mark Melahn.
+
+2005-06-16  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/hostid.c (main): Don't print fewer than 8 digits, or spurious
 	leading "f"s.  "f" problem reported by Tim Waugh.
