@@ -7349,8 +7349,8 @@ assumption.  Exceptions include:
 
 @item
 Log-structured or journaled file systems, such as those supplied with
-AIX and Solaris, and JFS, ReiserFS, XFS, Ext3, BFS, NTFS etc.@: when
-they are configured to journal @emph{data}.
+AIX and Solaris, and JFS, ReiserFS, XFS, Ext3 (in @code{data=journal} mode),
+BFS, NTFS, etc.@: when they are configured to journal @emph{data}.
 
 @item
 File systems that write redundant data and carry on even if some writes
@@ -7366,6 +7366,15 @@ clients.
 @item
 Compressed file systems.
 @end itemize
+
+In the particular case of ext3 filesystems, the above disclaimer applies (and
+@command{shred} is thus of limited effectiveness) only in @code{data=journal}
+mode, which journals file data in addition to just metadata. In both
+the @code{data=ordered} (default) and @code{data=writeback} modes,
+@command{shred} works as usual.  Ext3 journaling modes can be changed
+by adding the @code{data=something} option to the mount options for a
+particular file system in the @file{/etc/fstab} file, as documented in
+the mount man page (man mount).
 
 If you are not sure how your file system operates, then you should assume
 that it does not overwrite data in place, which means that shred cannot
