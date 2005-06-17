@@ -1,3 +1,9 @@
+2005-06-17  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi (shred invocation): Clarify that shred
+	works on ext3 as long as it's not in data=journal mode.
+	Patch from Mark Melahn.
+
 2005-06-16  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (Backup options): Undocument --version-control=S (-V).
