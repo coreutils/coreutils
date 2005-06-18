@@ -516,7 +516,7 @@ unquote (char const *s, struct E_string *es)
 			     is undefined, which means we're allowed to issue
 			     a warning.  */
 			  error (0, 0, _("warning: the ambiguous octal escape \
-\\%c%c%c is being\n\tinterpreted as the 2-byte sequence \\0%c%c, `%c'"),
+\\%c%c%c is being\n\tinterpreted as the 2-byte sequence \\0%c%c, %c"),
 				 s[i], s[i + 1], s[i + 2],
 				 s[i], s[i + 1], s[i + 2]);
 			}
