@@ -1,6 +1,10 @@
-2005-06-17  Jim Meyering  <jim@meyering.net>
+2005-06-18  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* src/tr.c (unquote): Remove unnecessary `' quotes from a diagnostic.
+
+2005-06-17  Jim Meyering  <jim@meyering.net>
 
 	* src/shred.c (usage): Clarify that shred works on an ext3 file
 	system as long as it's not in data=journal mode.
