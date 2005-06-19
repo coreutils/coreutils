@@ -43,8 +43,6 @@ libcoreutils_a_SOURCES = \
   unicodeio.c unicodeio.h \
   version-etc.c version-etc.h version-etc-fsf.c \
   xalloc-die.c \
-  xfts.c xfts.h \
-  xgetcwd.c xgetcwd.h \
   xgethostname.c xgethostname.h \
   xmemcoll.c xmemcoll.h \
   xreadlink.c xreadlink.h \
