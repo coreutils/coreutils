@@ -1,6 +1,10 @@
-2005-06-18  Jim Meyering  <jim@meyering.net>
+2005-06-19  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* src/shred.c (usage): Use `file system', not `filesystem'.
+
+2005-06-18  Jim Meyering  <jim@meyering.net>
 
 	* src/tr.c (unquote): Remove unnecessary `' quotes from a diagnostic.
 
