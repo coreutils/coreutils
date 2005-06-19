@@ -1,4 +1,4 @@
-#serial 88   -*- autoconf -*-
+#serial 89   -*- autoconf -*-
 
 dnl Misc type-related macros for coreutils.
 
@@ -174,6 +174,7 @@ AC_DEFUN([gl_MACROS],
 
   AC_REQUIRE([gl_FUNC_FREE])
   AC_REQUIRE([gl_FUNC_CHDIR_LONG])
+  AC_REQUIRE([gl_FUNC_XFTS])
 ])
 
 # These tests must be run before any use of AC_CHECK_TYPE,
