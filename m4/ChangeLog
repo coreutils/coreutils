@@ -1,3 +1,11 @@
+2005-06-19  Jim Meyering  <jim@meyering.net>
+
+	* xgetcwd.m4 (gl_XGETCWD): Add `AC_LIBOBJ([xgetcwd])'.
+	Register xgetcwd.c and xgetcwd.h via AC_LIBSOURCES.
+
+	* xfts.m4 (gl_FUNC_XFTS): New file/macro.
+	* jm-macros.m4: Require it.
+
 2005-06-13  Jim Meyering  <jim@meyering.net>
 
 	* openat.m4 (gl_FUNC_OPENAT): Add openat-die.c.

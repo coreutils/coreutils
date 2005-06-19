@@ -1,3 +1,8 @@
+2005-06-19  Jim Meyering  <jim@meyering.net>
+
+	* Makefile.am (libcoreutils_a_SOURCES): Remove xgetcwd.c, xgetcwd.h,
+	xfts.c and xfts.h.
+
 2005-06-16  Jim Meyering  <jim@meyering.net>
 
 	* calloc.c (rpl_calloc): Allocate a 1-byte buffer (not 1xS or Nx1)
