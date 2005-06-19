@@ -1,3 +1,7 @@
+2005-06-19  Jim Meyering  <jim@meyering.net>
+
+	* Makefile.am (check-texinfo): Also catch uses of path, pathname.
+
 2005-06-17  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (shred invocation): Clarify that shred
