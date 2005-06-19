@@ -7367,7 +7367,7 @@ clients.
 Compressed file systems.
 @end itemize
 
-In the particular case of ext3 filesystems, the above disclaimer applies (and
+In the particular case of ext3 file systems, the above disclaimer applies (and
 @command{shred} is thus of limited effectiveness) only in @code{data=journal}
 mode, which journals file data in addition to just metadata. In both
 the @code{data=ordered} (default) and @code{data=writeback} modes,
