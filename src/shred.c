@@ -190,7 +190,7 @@ CAUTION: Note that shred relies on a very important assumption:\n\
 that the file system overwrites data in place.  This is the traditional\n\
 way to do things, but many modern file system designs do not satisfy this\n\
 assumption.  The following are examples of file systems on which shred is\n\
-not effective, or is not guaranteed to be effective in all filesystem modes:\n\
+not effective, or is not guaranteed to be effective in all file system modes:\n\
 \n\
 "), stdout);
       fputs (_("\
@@ -209,7 +209,7 @@ not effective, or is not guaranteed to be effective in all filesystem modes:\n\
 \n\
 * compressed file systems\n\
 \n\
-In the case of ext3 filesystems, the above disclaimer applies\n\
+In the case of ext3 file systems, the above disclaimer applies\n\
 (and shred is thus of limited effectiveness) only in data=journal mode,\n\
 which journals file data in addition to just metadata.  In both the\n\
 data=ordered (default) and data=writeback modes, shred works as usual.\n\
