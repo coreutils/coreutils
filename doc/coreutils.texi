@@ -7738,13 +7738,13 @@ ln -s adir/a .
 
 Bad Example:
 
-# Hard coded paths don't move well.
+# Hard coded file names don't move well.
 ln -s $(pwd)/a /some/dir/
 
 Better Example:
 
-# Relative paths survive directory moves and also work across
-# networked file systems.
+# Relative file names survive directory moves and also
+# work across networked file systems.
 ln -s afile anotherfile
 ln -s ../adir/afile yetanotherfile
 @end smallexample
