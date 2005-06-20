@@ -142,11 +142,11 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/afs.m4 \
 	$(top_srcdir)/m4/utimes.m4 $(top_srcdir)/m4/vasnprintf.m4 \
 	$(top_srcdir)/m4/vasprintf.m4 $(top_srcdir)/m4/wchar_t.m4 \
 	$(top_srcdir)/m4/wint_t.m4 $(top_srcdir)/m4/xalloc.m4 \
-	$(top_srcdir)/m4/xgetcwd.m4 $(top_srcdir)/m4/xnanosleep.m4 \
-	$(top_srcdir)/m4/xreadlink.m4 $(top_srcdir)/m4/xstrtod.m4 \
-	$(top_srcdir)/m4/xstrtoimax.m4 $(top_srcdir)/m4/xstrtol.m4 \
-	$(top_srcdir)/m4/xstrtoumax.m4 $(top_srcdir)/m4/yesno.m4 \
-	$(top_srcdir)/configure.ac
+	$(top_srcdir)/m4/xfts.m4 $(top_srcdir)/m4/xgetcwd.m4 \
+	$(top_srcdir)/m4/xnanosleep.m4 $(top_srcdir)/m4/xreadlink.m4 \
+	$(top_srcdir)/m4/xstrtod.m4 $(top_srcdir)/m4/xstrtoimax.m4 \
+	$(top_srcdir)/m4/xstrtol.m4 $(top_srcdir)/m4/xstrtoumax.m4 \
+	$(top_srcdir)/m4/yesno.m4 $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(SHELL) $(top_srcdir)/build-aux/mkinstalldirs
@@ -648,6 +648,8 @@ check-texinfo:
 	  '/\bPOSIX\b/ && !/\@acronym{POSIX}/ && !/^\* / || /{posix}/ and print,exit 1' \
 	  $(srcdir)/*.texi 2> /dev/null || fail=1; }; \
 	grep -iwE 'builtins?' $(srcdir)/*.texi && fail=1; \
+	grep -iwE 'path(name)?s?' $(srcdir)/*.texi \
+	  | grep -vE '@vindex PATH$$|@env{PATH}' && fail=1; \
 	exit $$fail
 
 check: check-texinfo
