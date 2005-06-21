@@ -1,6 +1,13 @@
-2005-06-19  Jim Meyering  <jim@meyering.net>
+2005-06-21  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* tests/du/deref-args: Use --apparent-size to avoid the vagaries
+	of counting blocks.  Kevin Mudrick reported that this test would
+	fail on an nfs-mounted directory where attribute-caching is
+	turned on.
+
+2005-06-19  Jim Meyering  <jim@meyering.net>
 
 	* src/tac.c (tac_mem, tac_stdin_to_mem): Remove #if-0'd functions.
 
