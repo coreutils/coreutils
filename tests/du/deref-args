@@ -34,10 +34,10 @@ du -D slink | sed 's/^[0-9][0-9]*	//' > out
 du -D slink/ | sed 's/^[0-9][0-9]*	//' >> out
 
 # Ensure that -D makes du dereference even symlinks to non-directories.
-# The sed command maps the 68 I get on an ext3 file system to the 64 I expected.
-# On tmpfs, I get 64.  Similarly, on SELinux-enabled systems, file security
-# context labels take up file system space, making du print 72 here.
-du -kD slink-to-64k | sed 's/^[67][0-9]/64/' >> out
+# Be sure to use --apparent-size.  Otherwise, we'd get varying block counts
+# depending on file system type (e.g. 68 on ext3 vs. 64 on tmpfs and 72
+# on SELinux-enabled systems).
+du --apparent-size --block-size=1K -D slink-to-64k >> out
 cat <<\EOF > exp
 slink/a
 slink
