@@ -31,6 +31,9 @@ cd $tmp || framework_failure=1
 mkdir foo bar || framework_failure=1
 mkdir -p a/b/c d e || framework_failure=1
 
+# Systems with ACLs might need this, if ACLs override umask.
+chmod -R 755 a d e || framework_failure=1
+
 if test $framework_failure = 1; then
   echo 'failure in testing framework'
   exit 1

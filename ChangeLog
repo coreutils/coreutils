@@ -1,6 +1,11 @@
-2005-06-21  Jim Meyering  <jim@meyering.net>
+2005-06-22  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	* tests/cp/cp-parents: Use chmod to work around some hosts with
+	ACL problems.  Problem reported by Kevin Mudrick.
+
+2005-06-21  Jim Meyering  <jim@meyering.net>
 
 	* tests/du/deref-args: Use --apparent-size to avoid the vagaries
 	of counting blocks.  Kevin Mudrick reported that this test would
