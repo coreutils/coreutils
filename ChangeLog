@@ -2,7 +2,7 @@
 
 	* Version 5.3.1.
 
-	Produce diagnostics like this:
+	Make rmdir produce diagnostics like this:
 	rmdir: /tmp: Permission denied
 	not like this:
 	rmdir: `/tmp': Permission denied
