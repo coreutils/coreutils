@@ -2,6 +2,11 @@
 
 	* Version 5.3.1.
 
+	Produce diagnostics like this:
+	rmdir: /tmp: Permission denied
+	not like this:
+	rmdir: `/tmp': Permission denied
+
 	* src/rmdir.c: Include "quotearg.h", not "quote.h".
 	(remove_parents, main): Use quotearg_colon, not quote.
 
