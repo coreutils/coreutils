@@ -68,6 +68,7 @@ static inline bool
 desirable_utmp_entry (STRUCT_UTMP const *u, int options)
 {
   return ! (options & READ_UTMP_CHECK_PIDS
+	    && IS_USER_PROCESS (u)
 	    && (UT_PID (u) <= 0
 		|| (kill (UT_PID (u), 0) < 0 && errno == ESRCH)));
 }

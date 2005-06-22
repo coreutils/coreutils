@@ -1,3 +1,8 @@
+2005-06-22  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* readutmp.c (desirable_utmp_entry): Fix bug where "who -b" and
+	"who -r" failed to give output.  Problem reported by Tim Waugh.
+
 2005-06-22  Jim Meyering  <jim@meyering.net>
 
 	* xmalloc.c: Update from gnulib.
