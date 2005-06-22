@@ -1,7 +1,7 @@
 /* xmalloc.c -- malloc with out of memory checking
 
    Copyright (C) 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,
-   1999, 2000, 2002, 2003, 2004 Free Software Foundation, Inc.
+   1999, 2000, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -28,6 +28,15 @@
 
 #ifndef SIZE_MAX
 # define SIZE_MAX ((size_t) -1)
+#endif
+
+/* 1 if calloc is known to be compatible with GNU calloc.  This
+   matters if we are not also using the calloc module, which defines
+   HAVE_CALLOC and supports the GNU API even on non-GNU platforms.  */
+#if defined HAVE_CALLOC || defined __GLIBC__
+enum { HAVE_GNU_CALLOC = 1 };
+#else
+enum { HAVE_GNU_CALLOC = 0 };
 #endif
 
 /* Allocate an array of N objects, each with S bytes of memory,
@@ -204,8 +213,11 @@ xcalloc (size_t n, size_t s)
 {
   void *p;
   /* Test for overflow, since some calloc implementations don't have
-     proper overflow checks.  */
-  if (xalloc_oversized (n, s) || (! (p = calloc (n, s)) && n != 0))
+     proper overflow checks.  But omit overflow and size-zero tests if
+     HAVE_GNU_CALLOC, since GNU calloc catches overflow and never
+     returns NULL if successful.  */
+  if ((! HAVE_GNU_CALLOC && xalloc_oversized (n, s))
+      || (! (p = calloc (n, s)) && (HAVE_GNU_CALLOC || n != 0)))
     xalloc_die ();
   return p;
 }
