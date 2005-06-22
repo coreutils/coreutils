@@ -1,6 +1,11 @@
-2005-06-22  Paul Eggert  <eggert@cs.ucla.edu>
+2005-06-22  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* src/rmdir.c: Include "quotearg.h", not "quote.h".
+	(remove_parents, main): Use quotearg_colon, not quote.
+
+2005-06-22  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* tests/cp/cp-parents: Use chmod to work around some hosts with
 	ACL problems.  Problem reported by Kevin Mudrick.
