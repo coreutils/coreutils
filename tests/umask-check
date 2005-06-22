@@ -1,0 +1,37 @@
+# -*- sh -*-
+# Disable the current test if umask doesn't work as usual.
+
+# Copyright (C) 2005 Free Software Foundation, Inc.
+
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2, or (at your option)
+# any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software Foundation,
+# Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
+
+# This test should be run in the temporary directory that ends
+# up being removed via the trap commands.
+
+umask 022
+touch file1 file2
+chmod 644 file2
+perms=`ls -l file1 file2 | sed 's/ .*//' | uniq`
+rm -f file1 file2
+
+case $perms in
+*'
+'*)
+  cat <<EOF >&2
+$0: Since it looks like you're running this test in a directory with
+something other than the usual umask semantics, we're skipping this test.
+EOF
+  (exit 77); exit 77
+esac
