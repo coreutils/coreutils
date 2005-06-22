@@ -28,6 +28,7 @@ if test $framework_failure = 1; then
 fi
 
 . $abs_srcdir/../setgid-check
+. $abs_srcdir/../umask-check
 
 fail=0
 
