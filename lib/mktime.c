@@ -1,5 +1,5 @@
 /* Convert a `struct tm' to a time_t value.
-   Copyright (C) 1993-1999, 2002, 2003, 2004, 2005 Free Software Foundation,
+   Copyright (C) 1993-1999, 2002-2004, 2005 Free Software Foundation, Inc.
    Inc.
    This file is part of the GNU C Library.
    Contributed by Paul Eggert (eggert@twinsun.com).
@@ -38,10 +38,11 @@
 
 #include <limits.h>
 
+#include <string.h>		/* For the real memcpy prototype.  */
+
 #if DEBUG
 # include <stdio.h>
 # include <stdlib.h>
-# include <string.h>
 /* Make it work even if the system's libc has its own mktime routine.  */
 # define mktime my_mktime
 #endif /* DEBUG */
@@ -228,13 +229,12 @@ static struct tm *
 ranged_convert (struct tm *(*convert) (const time_t *, struct tm *),
 		time_t *t, struct tm *tp)
 {
-  struct tm *r;
+  struct tm *r = convert (t, tp);
 
-  if (! (r = (*convert) (t, tp)) && *t)
+  if (!r && *t)
     {
       time_t bad = *t;
       time_t ok = 0;
-      struct tm tm;
 
       /* BAD is a known unconvertible time_t, and OK is a known good one.
 	 Use binary search to narrow the range between BAD and OK until
@@ -244,11 +244,9 @@ ranged_convert (struct tm *(*convert) (const time_t *, struct tm *),
 	  time_t mid = *t = (bad < 0
 			     ? bad + ((ok - bad) >> 1)
 			     : ok + ((bad - ok) >> 1));
-	  if ((r = (*convert) (t, tp)))
-	    {
-	      tm = *r;
-	      ok = mid;
-	    }
+	  r = convert (t, tp);
+	  if (r)
+	    ok = mid;
 	  else
 	    bad = mid;
 	}
@@ -258,8 +256,7 @@ ranged_convert (struct tm *(*convert) (const time_t *, struct tm *),
 	  /* The last conversion attempt failed;
 	     revert to the most recent successful attempt.  */
 	  *t = ok;
-	  *tp = tm;
-	  r = tp;
+	  r = convert (t, tp);
 	}
     }
 
@@ -488,7 +485,7 @@ __mktime_internal (struct tm *tp,
       t2 = t1 + sec_adjustment;
       if (((t1 < t) != (sec_requested < 0))
 	  | ((t2 < t1) != (sec_adjustment < 0))
-	  | ! (*convert) (&t2, &tm))
+	  | ! convert (&t2, &tm))
 	return -1;
       t = t2;
     }
