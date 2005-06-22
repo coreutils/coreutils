@@ -1,3 +1,7 @@
+2005-06-22  Jim Meyering  <jim@meyering.net>
+
+	* xmalloc.c: Update from gnulib.
+
 2005-06-19  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am (libcoreutils_a_SOURCES): Remove xgetcwd.c, xgetcwd.h,
