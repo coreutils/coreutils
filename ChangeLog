@@ -1,6 +1,14 @@
-2005-06-22  Jim Meyering  <jim@meyering.net>
+2005-06-22  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	* tests/umask-check: New file.
+	* tests/Makefile.am (EXTRA_DIST): Add umask-check.
+	* tests/mkdir/perm: Use umask-check.
+	* tests/cp/cp-parents: Likewise, instead of using chmod
+	as described below.  Problem reported by Kevin Mudrick.
+
+2005-06-22  Jim Meyering  <jim@meyering.net>
 
 	Make rmdir produce diagnostics like this:
 	rmdir: /tmp: Permission denied
