@@ -1,5 +1,12 @@
 2005-06-22  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* mktime.c: Include <string.h> even if !DEBUG.  (From glibc.)
+	(ranged_convert): Don't save conversion in a temporary struct.
+	This causes a warning with GCC 4.0.0, and anyway in the typical
+	case it's not worth the extra 100 bytes or so of code.
+	(ranged_convert, __mktime_internal): When calling a function via a
+	pointer P, use P () rather than (*P) (), as we now assume C89 or better.
+
 	* readutmp.c (desirable_utmp_entry): Fix bug where "who -b" and
 	"who -r" failed to give output.  Problem reported by Tim Waugh.
 
