@@ -16,7 +16,7 @@ TESTS_ENVIRONMENT = \
 EXTRA_DIST = \
   $(TESTS) .env-warn Coreutils.pm Makefile.am.in README envvar-check \
   expensive group-names input-tty lang-default mk-script priv-check \
-  rwx-to-mode sample-test setgid-check
+  rwx-to-mode sample-test setgid-check umask-check
 
 SUBDIRS = \
   basename chgrp chmod chown cp cut date dd dircolors du expr factor \
