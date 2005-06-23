@@ -399,6 +399,7 @@ hash_init (void)
     xalloc_die ();
 }
 
+/* FIXME: this code is nearly identical to code in date.c  */
 /* Display the date and time in WHEN/NSEC according to the format specified
    in TIME_FORMAT.  If TIME_FORMAT is NULL, use the standard output format.
    Return zero if successful.  */
