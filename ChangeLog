@@ -2,6 +2,12 @@
 
 	* Version 5.3.1.
 
+	* src/date.c (show_date): Use fputs rather than printf ("%s\n",.
+
+	* src/du.c (show_date): Rename local `time_format' so as not to
+	shadow the file-scoped global by that name.
+	(show_date): Add a FIXME comment.
+
 	* src/du.c: Include hard-locale.h and strftime.h.
 	(DUINFO_INI, DUINFO_SET, DUINFO_ADD):
 	Enclose body in `do {...} while (0)', not just `{...}'.
