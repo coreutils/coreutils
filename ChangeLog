@@ -4,7 +4,7 @@
 
 	* src/du.c (time_format): Add `const' attribute.
 
-	* src/date.c (show_date): Use fputs rather than printf ("%s\n",.
+	* src/date.c (show_date): Use puts rather than printf ("%s\n",.
 
 	* src/du.c (show_date): Rename local `time_format' so as not to
 	shadow the file-scoped global by that name.
