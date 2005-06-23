@@ -1,3 +1,7 @@
+2005-06-14  William Brendling  <wbrendling@gmail.com>
+
+	* src/du.c: Add --last-time and --time-style options.
+
 2005-06-22  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
