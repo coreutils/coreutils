@@ -553,7 +553,7 @@ show_date (const char *format, struct timespec when)
 	break;
     }
 
-  fputs (out, stdout);
+  puts (out);
   free (out);
   return true;
 }
