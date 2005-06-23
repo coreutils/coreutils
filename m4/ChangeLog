@@ -1,6 +1,7 @@
 2005-06-23  Jim Meyering  <jim@meyering.net>
 
 	* xreadlink.m4: Use AC_LIBSOURCES and AC_LIBOBJ.
+	* xstrtod.m4: Likewise.
 
 2005-06-19  Jim Meyering  <jim@meyering.net>
 
