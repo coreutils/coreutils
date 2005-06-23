@@ -317,15 +317,14 @@ Mandatory arguments to long options are mandatory for short options too.\n\
                           --summarize\n\
 "), stdout);
       fputs (_("\
-      --last-time            show time of the most recent modification of any\n\
-                             file in the directory, or any of its\n\
-                             subdirectories\n\
-      --last-time=WORD       show time as WORD instead of modification time:\n\
-                               atime, access, use, ctime or status; use\n\
-      --time-style=STYLE     show times using style STYLE:\n\
-                               full-iso, long-iso, iso, locale, +FORMAT\n\
-                             FORMAT is interpreted like `date';\n\
-                             implicity implies --last-time\n\
+      --last-time       show time of the most recent modification of any\n\
+                          file in the directory, or any of its subdirectories\n\
+      --last-time=WORD  show time as WORD instead of modification time:\n\
+                          atime, access, use, ctime or status; use\n\
+      --time-style=STYLE show times using style STYLE:\n\
+                          full-iso, long-iso, iso, locale, +FORMAT\n\
+                          FORMAT is interpreted like `date';\n\
+                          implies --last-time\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
