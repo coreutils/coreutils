@@ -1,6 +1,56 @@
-2005-06-23  Jim Meyering  <jim@meyering.net>
+2005-06-23  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	Address the following "du" issues:
+
+	- The option name "--last-time=TYPE" is different from the ls's option
+	  "--time=TYPE" with a similar meaning.  I assume this wasn't intended.
+
+	- --time-style implies --time, but this is not true for "ls".  It's
+	  better to be consistent.
+
+	- Since we don't have POSIX compatibility concerns, there's no need
+	  for the "posix-" styles, or for support of styles with newlines, or
+	  for the "locale" style, except for parsing the TIME_STYLE
+	  environment variable.
+
+	- It's cleaner (and these days, no less efficient) to use functions
+	  rather than macros when possible.
+
+	- struct duinfo doesn't need a 'valid' flag; you can simply use a time
+	  stamp that is less than all valid time stamps.
+
+	- The code needs a bit of reformatting to fit the usual GNU style.
+
+	* NEWS: du's --last-time option is now --time.
+	* doc/coreutils.texi (ls invocation): Fix typo: --time=use is
+	equivalent to --time=atime, not --time=ctime.
+	(ls invocation, du invocation): Fix typo: --time-style=long-iso
+	is equivalent to a time style with a leading "+".
+	(du invocation): --last-time is now --time.
+	--time-style no longer implies --time.
+	The locale and posix- stuff now works only for TIME_STYLE, not
+	for --time-style.  Give equivalent format for --time-style=iso.
+	* src/du.c: Do not include hard-locale.h.
+	(struct duinfo): Remove 'valid' member.  All uses changed to use
+	negative nsec instead.
+	(DUIINFO_INI, DUINFO_SET, DUINFO_ADD): Remove.
+	(duinfo_init, duinfo_set, duinfo_add): New functions, taking the
+	role of the removed macros.
+	(opt_time): Renamed from opt_last_time.  All uses changed.
+	(TIME_OPTION): Renamed from LAST_TIME_OPTION.  All uses changed.
+	(long_options, usage): Rename --last-time to --time.
+	(locale_time_style): Remove.
+	(time_style_args, time_style_types, usage): Remove support for
+	--time-style=locale.
+	(show_date): Now returns void, since nobody looked at the result.
+	Assume FORMAT is not null.  An empty FORMAT now outputs an empty time.
+	Simplify nstrftime invocation.
+	(main): Put in ls compatibility workarounds only for TIME_STYLE,
+	not for --time-style.  Omit unnecessary space in iso time style.
+
+2005-06-23  Jim Meyering  <jim@meyering.net>
 
 	* src/du.c (time_format): Add `const' attribute.
 
