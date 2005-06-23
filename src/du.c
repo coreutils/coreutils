@@ -34,6 +34,7 @@
 #include "dirname.h" /* for strip_trailing_slashes */
 #include "error.h"
 #include "exclude.h"
+#include "hard-locale.h"
 #include "hash.h"
 #include "human.h"
 #include "inttostr.h"
@@ -41,6 +42,7 @@
 #include "quotearg.h"
 #include "readtokens0.h"
 #include "same.h"
+#include "strftime.h"
 #include "xfts.h"
 #include "xstrtol.h"
 
@@ -86,15 +88,16 @@ struct duinfo
 };
 
 /* DUINFO_INI (struct duinfo a); - Initialise duinfo structure. */
-#define DUINFO_INI(a)  { (a).size = 0; (a).dmax = 0; (a).nsec = 0; (a).valid = 0; }
+#define DUINFO_INI(a) \
+  do { (a).size = 0; (a).dmax = 0; (a).nsec = 0; (a).valid = 0; } while (0)
 
 /* DUINFO_SET (struct duinfo a, uintmax_t size, time_t date, int nsec) - Set structure data. */
 #define DUINFO_SET(a, fsize, fdmax, fnsec)  \
-  { (a).size = (fsize); (a).dmax = (fdmax); (a).nsec = fnsec; (a).valid = 1; }
+  do { (a).size = (fsize); (a).dmax = (fdmax); (a).nsec = fnsec; (a).valid = 1; } while (0)
 
 /* DUINFO_ADD (struct duinfo a, const struct duinfo b) - Accumulate directory data. */
 #define DUINFO_ADD(a, b)  \
-  {  if ( (b).valid ) \
+  do {  if ( (b).valid ) \
        { \
          (a).size += (b).size; \
          if ( ( ! (a).valid ) || ( (b).dmax > (a).dmax ) ) \
@@ -108,7 +111,7 @@ struct duinfo
              (a).nsec = (b).nsec; \
            } \
        } \
-   }
+   } while (0)
 
 /* A structure for per-directory level information */
 struct dulevel
@@ -399,8 +402,7 @@ hash_init (void)
 
 /* Display the date and time in PDUI according to the format specified
    in TIME_FORMAT.  If TIME_FORMAT is NULL, use the standard output format.
-   Return zero if successful.
-*/
+   Return zero if successful.  */
 
 static int
 show_date (const char *time_format, time_t when, int nsec)
@@ -409,7 +411,7 @@ show_date (const char *time_format, time_t when, int nsec)
   char *out = NULL;
   size_t out_length = 0;
 
-  if ((time_format == NULL)||(*time_format == '\0'))
+  if (time_format == NULL || *time_format == '\0')
     {
       time_format = "%Y-%m-%d %H:%M";
     }
@@ -419,9 +421,9 @@ show_date (const char *time_format, time_t when, int nsec)
     {
       char buf[INT_BUFSIZE_BOUND (intmax_t)];
       error (0, 0, _("time %s is out of range"),
-            (TYPE_SIGNED (time_t)
-             ? imaxtostr (when, buf)
-             : umaxtostr (when, buf)));
+	     (TYPE_SIGNED (time_t)
+	      ? imaxtostr (when, buf)
+	      : umaxtostr (when, buf)));
       fputs (buf, stdout);
       return 1;
     }
@@ -438,9 +440,10 @@ show_date (const char *time_format, time_t when, int nsec)
       out[0] = '\1';
 
       done = (nstrftime (out, out_length, time_format, tm, 0, nsec)
-             || out[0] == '\0');
+	      || out[0] == '\0');
 
-      if (done) break;
+      if (done)
+	break;
     }
 
   fputs (out, stdout);
@@ -466,7 +469,7 @@ static void
 print_size (const struct duinfo *pdui, const char *string)
 {
   print_only_size (pdui->size);
-  if ( opt_last_time )
+  if (opt_last_time)
     {
       putchar ('\t');
       show_date (time_format, pdui->dmax, pdui->nsec);
@@ -490,13 +493,13 @@ process_file (FTS *fts, FTSENT *ent)
   static size_t prev_level;
   static size_t n_alloc;
   /* First element of the structure contains:
-       The sum of the st_size values of all entries in the single directory
-       at the corresponding level.  Although this does include the st_size
-       corresponding to each subdirectory, it does not include the size of
-       any file in a subdirectory. Also corresponding last modified date.
+     The sum of the st_size values of all entries in the single directory
+     at the corresponding level.  Although this does include the st_size
+     corresponding to each subdirectory, it does not include the size of
+     any file in a subdirectory. Also corresponding last modified date.
      Second element of the structure contains:
-       The sum of the sizes of all entries in the hierarchy at or below the
-       directory at the specified level.  */
+     The sum of the sizes of all entries in the hierarchy at or below the
+     directory at the specified level.  */
   static struct dulevel *dulvl;
   bool print = true;
 
@@ -549,22 +552,22 @@ process_file (FTS *fts, FTSENT *ent)
       /* Note that we must not simply return here.
 	 We still have to update prev_level and maybe propagate
 	 some sums up the hierarchy.  */
-      DUINFO_INI (dui)
+      DUINFO_INI (dui);
       print = false;
     }
   else
     {
       DUINFO_SET (dui,
-                   (apparent_size
-                      ? sb->st_size
-                      : ST_NBLOCKS (*sb) * ST_NBLOCKSIZE),
-                   ( time_type == time_ctime ) ? sb->st_ctime :
-                     ( time_type == time_atime ) ? sb->st_atime :
-                       sb->st_mtime,
-                   ( time_type == time_ctime ) ? TIMESPEC_NS (sb->st_ctim) :
-                     ( time_type == time_atime ) ? TIMESPEC_NS (sb->st_atim) :
-                       TIMESPEC_NS (sb->st_mtim))
-   }
+		  (apparent_size
+		   ? sb->st_size
+		   : ST_NBLOCKS (*sb) * ST_NBLOCKSIZE),
+		  ( time_type == time_ctime ) ? sb->st_ctime :
+		  ( time_type == time_atime ) ? sb->st_atime :
+						sb->st_mtime,
+		  ( time_type == time_ctime ) ? TIMESPEC_NS (sb->st_ctim) :
+		  ( time_type == time_atime ) ? TIMESPEC_NS (sb->st_atim) :
+						TIMESPEC_NS (sb->st_mtim));
+    }
 
   level = ent->fts_level;
   dui_to_print = dui;
@@ -590,14 +593,14 @@ process_file (FTS *fts, FTSENT *ent)
 
 	  if (n_alloc <= level)
 	    {
-             dulvl = xnrealloc (dulvl, level, 2 * sizeof *dulvl);
+	      dulvl = xnrealloc (dulvl, level, 2 * sizeof *dulvl);
 	      n_alloc = level * 2;
 	    }
 
 	  for (i = prev_level + 1; i <= level; i++)
-       {
-         DUINFO_INI (dulvl[i].ent)
-         DUINFO_INI (dulvl[i].subdir)
+	    {
+	      DUINFO_INI (dulvl[i].ent);
+	      DUINFO_INI (dulvl[i].subdir);
 	    }
 	}
       else /* level < prev_level */
@@ -608,12 +611,12 @@ process_file (FTS *fts, FTSENT *ent)
 	     propagate sums from the children (prev_level) to the parent.
 	     Here, the current level is always one smaller than the
 	     previous one.  */
-     assert (level == prev_level - 1);
-     DUINFO_ADD (dui_to_print, dulvl[prev_level].ent)
+	  assert (level == prev_level - 1);
+	  DUINFO_ADD (dui_to_print, dulvl[prev_level].ent);
 	  if (!opt_separate_dirs)
-       DUINFO_ADD (dui_to_print, dulvl[prev_level].subdir)
-     DUINFO_ADD (dulvl[level].subdir, dulvl[prev_level].ent)
-     DUINFO_ADD (dulvl[level].subdir, dulvl[prev_level].subdir)
+	    DUINFO_ADD (dui_to_print, dulvl[prev_level].subdir);
+	  DUINFO_ADD (dulvl[level].subdir, dulvl[prev_level].ent);
+	  DUINFO_ADD (dulvl[level].subdir, dulvl[prev_level].subdir);
 	}
     }
 
@@ -622,11 +625,11 @@ process_file (FTS *fts, FTSENT *ent)
   /* Let the size of a directory entry contribute to the total for the
      containing directory, unless --separate-dirs (-S) is specified.  */
   if ( ! (opt_separate_dirs && IS_DIR_TYPE (ent->fts_info)))
-    DUINFO_ADD (dulvl[level].ent, dui)
+    DUINFO_ADD (dulvl[level].ent, dui);
 
   /* Even if this directory is unreadable or we can't chdir into it,
      do let its size contribute to the total, ... */
-  DUINFO_ADD (tot_dui, dui)
+  DUINFO_ADD (tot_dui, dui);
 
   /* ... but don't print out a total for it, since without the size(s)
      of any potential entries, it could be very misleading.  */
@@ -851,16 +854,16 @@ main (int argc, char **argv)
 	  add_exclude (exclude, optarg, EXCLUDE_WILDCARDS);
 	  break;
 
-   case LAST_TIME_OPTION:
-     opt_last_time = 1;
-     if ( optarg )
-       time_type = XARGMATCH ("--last-time", optarg, time_args, time_types);
-     break;
+	case LAST_TIME_OPTION:
+	  opt_last_time = 1;
+	  if ( optarg )
+	    time_type = XARGMATCH ("--last-time", optarg, time_args, time_types);
+	  break;
 
-   case TIME_STYLE_OPTION:
-     opt_last_time = 1;
-     time_style = optarg;
-         break;
+	case TIME_STYLE_OPTION:
+	  opt_last_time = 1;
+	  time_style = optarg;
+	  break;
 
 	case_GETOPT_HELP_CHAR;
 
@@ -900,8 +903,8 @@ main (int argc, char **argv)
   if ( opt_last_time )
     {
       if (! time_style )
-        if (! (time_style = getenv ("TIME_STYLE")))
-          time_style = "posix-long-iso";
+	if (! (time_style = getenv ("TIME_STYLE")))
+	  time_style = "posix-long-iso";
 
       while (strncmp (time_style, posix_prefix, sizeof posix_prefix - 1) == 0)
         {
@@ -917,22 +920,21 @@ main (int argc, char **argv)
           switch (XARGMATCH ("time style", time_style,
                              time_style_args, time_style_types))
             {
-              case full_iso_time_style:
-                 time_format = "%Y-%m-%d %H:%M:%S.%N %z";
-                 break;
+	    case full_iso_time_style:
+	      time_format = "%Y-%m-%d %H:%M:%S.%N %z";
+	      break;
 
-              case long_iso_time_style:
-                time_format = "%Y-%m-%d %H:%M";
-                break;
+	    case long_iso_time_style:
+	      time_format = "%Y-%m-%d %H:%M";
+	      break;
 
-              case iso_time_style:
-                time_format = "%Y-%m-%d ";
-                break;
+	    case iso_time_style:
+	      time_format = "%Y-%m-%d ";
+	      break;
 
-              case locale_time_style:
-                if (hard_locale (LC_TIME))
-                  time_format =
-                     dcgettext (NULL, time_format, LC_TIME);
+	    case locale_time_style:
+	      if (hard_locale (LC_TIME))
+		time_format = dcgettext (NULL, time_format, LC_TIME);
             }
         }
     }
