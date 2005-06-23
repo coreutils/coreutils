@@ -1,10 +1,19 @@
+2005-06-23  Jim Meyering  <jim@meyering.net>
+
+	* Version 5.3.1.
+
+	* src/du.c: Include hard-locale.h and strftime.h.
+	(DUINFO_INI, DUINFO_SET, DUINFO_ADD):
+	Enclose body in `do {...} while (0)', not just `{...}'.
+	Adjust uses (add semicolons).
+	Adjust formatting, indentation.
+	(usage): Tweak formatting to maintain more or less constant indentation.
+
 2005-06-14  William Brendling  <wbrendling@gmail.com>
 
 	* src/du.c: Add --last-time and --time-style options.
 
 2005-06-22  Paul Eggert  <eggert@cs.ucla.edu>
-
-	* Version 5.3.1.
 
 	* tests/umask-check: New file.
 	* tests/Makefile.am (EXTRA_DIST): Add umask-check.
