@@ -399,20 +399,20 @@ hash_init (void)
     xalloc_die ();
 }
 
-/* Display the date and time in PDUI according to the format specified
+/* Display the date and time in WHEN/NSEC according to the format specified
    in TIME_FORMAT.  If TIME_FORMAT is NULL, use the standard output format.
    Return zero if successful.  */
 
 static int
-show_date (const char *time_format, time_t when, int nsec)
+show_date (const char *format, time_t when, int nsec)
 {
   struct tm *tm;
   char *out = NULL;
   size_t out_length = 0;
 
-  if (time_format == NULL || *time_format == '\0')
+  if (format == NULL || *format == '\0')
     {
-      time_format = "%Y-%m-%d %H:%M";
+      format = "%Y-%m-%d %H:%M";
     }
 
   tm = localtime (&when);
@@ -429,7 +429,7 @@ show_date (const char *time_format, time_t when, int nsec)
 
   while (1)
     {
-      int done;
+      bool done;
       out = x2nrealloc (out, &out_length, sizeof *out);
 
       /* Mark the first byte of the buffer so we can detect the case
@@ -438,7 +438,7 @@ show_date (const char *time_format, time_t when, int nsec)
          `LANG=de date +%p' on a system with good language support.  */
       out[0] = '\1';
 
-      done = (nstrftime (out, out_length, time_format, tm, 0, nsec)
+      done = (nstrftime (out, out_length, format, tm, 0, nsec)
 	      || out[0] == '\0');
 
       if (done)
