@@ -34,7 +34,6 @@
 #include "dirname.h" /* for strip_trailing_slashes */
 #include "error.h"
 #include "exclude.h"
-#include "hard-locale.h"
 #include "hash.h"
 #include "human.h"
 #include "inttostr.h"
@@ -81,43 +80,54 @@ static Hash_table *htab;
 
 struct duinfo
 {
-  uintmax_t size;    /* Size of files in directory */
-  time_t    dmax;    /* Last modified date */
-  int       nsec;    /* Nanoseconds part of date */
-  int       valid;   /* Indicates that date is valid */
+  /* Size of files in directory.  */
+  uintmax_t size;
+
+  /* Latest time stamp found.  If dmax == TYPE_MINIMUM (time_t) && nsec < 0,
+     no time stamp has been found.  */
+  time_t dmax;
+  int nsec;
 };
 
-/* DUINFO_INI (struct duinfo a); - Initialise duinfo structure. */
-#define DUINFO_INI(a) \
-  do { (a).size = 0; (a).dmax = 0; (a).nsec = 0; (a).valid = 0; } while (0)
+/* Initialize directory data.  */
+static inline void
+duinfo_init (struct duinfo *a)
+{
+  a->size = 0;
+  a->dmax = TYPE_MINIMUM (time_t);
+  a->nsec = -1;
+}
 
-/* DUINFO_SET (struct duinfo a, uintmax_t size, time_t date, int nsec) - Set structure data. */
-#define DUINFO_SET(a, fsize, fdmax, fnsec)  \
-  do { (a).size = (fsize); (a).dmax = (fdmax); (a).nsec = fnsec; (a).valid = 1; } while (0)
+/* Set directory data.  */
+static inline void
+duinfo_set (struct duinfo *a, uintmax_t size, time_t dmax, int nsec)
+{
+  a->size = size;
+  a->dmax = dmax;
+  a->nsec = nsec;
+}
 
-/* DUINFO_ADD (struct duinfo a, const struct duinfo b) - Accumulate directory data. */
-#define DUINFO_ADD(a, b)  \
-  do {  if ( (b).valid ) \
-       { \
-         (a).size += (b).size; \
-         if ( ( ! (a).valid ) || ( (b).dmax > (a).dmax ) ) \
-           { \
-             (a).dmax = (b).dmax; \
-             (a).nsec = (b).nsec; \
-             (a).valid = 1; \
-           } \
-         else if ( ( (b).dmax == (a).dmax ) && ( (b).nsec > (a).nsec ) ) \
-           { \
-             (a).nsec = (b).nsec; \
-           } \
-       } \
-   } while (0)
+/* Accumulate directory data.  */
+static inline void
+duinfo_add (struct duinfo *a, struct duinfo const *b)
+{
+  a->size += b->size;
+  if (a->dmax < b->dmax
+      || (a->dmax == b->dmax && a->nsec < b->nsec))
+    {
+      a->dmax = b->dmax;
+      a->nsec = b->nsec;
+    }
+}
 
-/* A structure for per-directory level information */
+/* A structure for per-directory level information.  */
 struct dulevel
 {
-  struct duinfo  ent;         /* Entries in this directory */
-  struct duinfo  subdir;      /* Total for subdirectories */
+  /* Entries in this directory.  */
+  struct duinfo ent;
+
+  /* Total for subdirectories.  */
+  struct duinfo subdir;
 };
 
 /* Name under which this program was invoked.  */
@@ -150,14 +160,14 @@ static size_t max_depth = SIZE_MAX;
 /* Human-readable options for output.  */
 static int human_output_opts;
 
-/* If option non-zero, print most recently modified date, using the specified format */
-static int opt_last_time = 0;
+/* If true, print most recently modified date, using the specified format.  */
+static bool opt_time = false;
 
-/* Type of time to display. controlled by --last-time */
+/* Type of time to display. controlled by --time.  */
 
 enum time_type
   {
-    time_mtime,                        /* default */
+    time_mtime,			/* default */
     time_ctime,
     time_atime
   };
@@ -177,7 +187,7 @@ static uintmax_t output_block_size;
 static struct exclude *exclude;
 
 /* Grand total size of all args, in bytes. Also latest modified date. */
-static struct duinfo tot_dui = { 0, 0, 0, 0 };
+static struct duinfo tot_dui = { 0, 0 };
 
 #define IS_DIR_TYPE(Type)	\
   ((Type) == FTS_DP		\
@@ -192,7 +202,7 @@ enum
   FILES0_FROM_OPTION,
   HUMAN_SI_OPTION,
   MAX_DEPTH_OPTION,
-  LAST_TIME_OPTION,
+  TIME_OPTION,
   TIME_STYLE_OPTION
 };
 
@@ -219,7 +229,7 @@ static struct option const long_options[] =
   {"separate-dirs", no_argument, NULL, 'S'},
   {"summarize", no_argument, NULL, 's'},
   {"total", no_argument, NULL, 'c'},
-  {"last-time", optional_argument, NULL, LAST_TIME_OPTION},
+  {"time", optional_argument, NULL, TIME_OPTION},
   {"time-style", required_argument, NULL, TIME_STYLE_OPTION},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
@@ -238,27 +248,23 @@ static enum time_type const time_types[] =
 
 /* `full-iso' uses full ISO-style dates and times.  `long-iso' uses longer
    ISO-style time stamps, though shorter than `full-iso'.  `iso' uses shorter
-   ISO-style time stamps.  `locale' uses locale-dependent time stamps.  */
+   ISO-style time stamps.  */
 enum time_style
   {
     full_iso_time_style,       /* --time-style=full-iso */
     long_iso_time_style,       /* --time-style=long-iso */
-    iso_time_style,            /* --time-style=iso */
-    locale_time_style          /* --time-style=locale */
+    iso_time_style	       /* --time-style=iso */
   };
 
 static char const *const time_style_args[] =
 {
-  "full-iso", "long-iso", "iso", "locale", 0
+  "full-iso", "long-iso", "iso", NULL
 };
 
 static enum time_style const time_style_types[] =
 {
-  full_iso_time_style, long_iso_time_style, iso_time_style,
-  locale_time_style, 0
+  full_iso_time_style, long_iso_time_style, iso_time_style, 0
 };
-
-static char const posix_prefix[] = "posix-";
 
 void
 usage (int status)
@@ -317,14 +323,13 @@ Mandatory arguments to long options are mandatory for short options too.\n\
                           --summarize\n\
 "), stdout);
       fputs (_("\
-      --last-time       show time of the most recent modification of any\n\
-                          file in the directory, or any of its subdirectories\n\
-      --last-time=WORD  show time as WORD instead of modification time:\n\
-                          atime, access, use, ctime or status; use\n\
+      --time            show time of the last modification of any file in the\n\
+                          directory, or any of its subdirectories\n\
+      --time=WORD       show time as WORD instead of modification time:\n\
+                          atime, access, use, ctime or status\n\
       --time-style=STYLE show times using style STYLE:\n\
-                          full-iso, long-iso, iso, locale, +FORMAT\n\
-                          FORMAT is interpreted like `date';\n\
-                          implies --last-time\n\
+                          full-iso, long-iso, iso, +FORMAT\n\
+                          FORMAT is interpreted like `date'\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
@@ -404,17 +409,12 @@ hash_init (void)
    in TIME_FORMAT.  If TIME_FORMAT is NULL, use the standard output format.
    Return zero if successful.  */
 
-static int
+static void
 show_date (const char *format, time_t when, int nsec)
 {
   struct tm *tm;
   char *out = NULL;
   size_t out_length = 0;
-
-  if (format == NULL || *format == '\0')
-    {
-      format = "%Y-%m-%d %H:%M";
-    }
 
   tm = localtime (&when);
   if (! tm)
@@ -425,12 +425,11 @@ show_date (const char *format, time_t when, int nsec)
 	      ? imaxtostr (when, buf)
 	      : umaxtostr (when, buf)));
       fputs (buf, stdout);
-      return 1;
+      return;
     }
 
-  while (1)
+  do
     {
-      bool done;
       out = x2nrealloc (out, &out_length, sizeof *out);
 
       /* Mark the first byte of the buffer so we can detect the case
@@ -438,17 +437,11 @@ show_date (const char *format, time_t when, int nsec)
          would not terminate when date was invoked like this
          `LANG=de date +%p' on a system with good language support.  */
       out[0] = '\1';
-
-      done = (nstrftime (out, out_length, format, tm, 0, nsec)
-	      || out[0] == '\0');
-
-      if (done)
-	break;
     }
+  while (nstrftime (out, out_length, format, tm, 0, nsec) == 0 && out[0]);
 
   fputs (out, stdout);
   free (out);
-  return 0;
 }
 
 /* Print N_BYTES.  Convert it to a readable value before printing.  */
@@ -461,15 +454,13 @@ print_only_size (uintmax_t n_bytes)
 			 1, output_block_size), stdout);
 }
 
-/* Print N_BYTES followed by STRING on a line.
-   Optionally include last modified date.
-   Convert N_BYTES to a readable value before printing.  */
+/* Print size (and optionally time) indicated by *PDUI, followed by STRING.  */
 
 static void
 print_size (const struct duinfo *pdui, const char *string)
 {
   print_only_size (pdui->size);
-  if (opt_last_time)
+  if (opt_time)
     {
       putchar ('\t');
       show_date (time_format, pdui->dmax, pdui->nsec);
@@ -552,21 +543,21 @@ process_file (FTS *fts, FTSENT *ent)
       /* Note that we must not simply return here.
 	 We still have to update prev_level and maybe propagate
 	 some sums up the hierarchy.  */
-      DUINFO_INI (dui);
+      duinfo_init (&dui);
       print = false;
     }
   else
     {
-      DUINFO_SET (dui,
+      duinfo_set (&dui,
 		  (apparent_size
 		   ? sb->st_size
 		   : ST_NBLOCKS (*sb) * ST_NBLOCKSIZE),
-		  ( time_type == time_ctime ) ? sb->st_ctime :
-		  ( time_type == time_atime ) ? sb->st_atime :
-						sb->st_mtime,
-		  ( time_type == time_ctime ) ? TIMESPEC_NS (sb->st_ctim) :
-		  ( time_type == time_atime ) ? TIMESPEC_NS (sb->st_atim) :
-						TIMESPEC_NS (sb->st_mtim));
+		  (time_type == time_ctime ? sb->st_ctime
+		   : time_type == time_atime ? sb->st_atime
+		   : sb->st_mtime),
+		  (time_type == time_ctime ? TIMESPEC_NS (sb->st_ctim)
+		   : time_type == time_atime ? TIMESPEC_NS (sb->st_atim)
+		   : TIMESPEC_NS (sb->st_mtim)));
     }
 
   level = ent->fts_level;
@@ -599,8 +590,8 @@ process_file (FTS *fts, FTSENT *ent)
 
 	  for (i = prev_level + 1; i <= level; i++)
 	    {
-	      DUINFO_INI (dulvl[i].ent);
-	      DUINFO_INI (dulvl[i].subdir);
+	      duinfo_init (&dulvl[i].ent);
+	      duinfo_init (&dulvl[i].subdir);
 	    }
 	}
       else /* level < prev_level */
@@ -612,11 +603,11 @@ process_file (FTS *fts, FTSENT *ent)
 	     Here, the current level is always one smaller than the
 	     previous one.  */
 	  assert (level == prev_level - 1);
-	  DUINFO_ADD (dui_to_print, dulvl[prev_level].ent);
+	  duinfo_add (&dui_to_print, &dulvl[prev_level].ent);
 	  if (!opt_separate_dirs)
-	    DUINFO_ADD (dui_to_print, dulvl[prev_level].subdir);
-	  DUINFO_ADD (dulvl[level].subdir, dulvl[prev_level].ent);
-	  DUINFO_ADD (dulvl[level].subdir, dulvl[prev_level].subdir);
+	    duinfo_add (&dui_to_print, &dulvl[prev_level].subdir);
+	  duinfo_add (&dulvl[level].subdir, &dulvl[prev_level].ent);
+	  duinfo_add (&dulvl[level].subdir, &dulvl[prev_level].subdir);
 	}
     }
 
@@ -625,11 +616,11 @@ process_file (FTS *fts, FTSENT *ent)
   /* Let the size of a directory entry contribute to the total for the
      containing directory, unless --separate-dirs (-S) is specified.  */
   if ( ! (opt_separate_dirs && IS_DIR_TYPE (ent->fts_info)))
-    DUINFO_ADD (dulvl[level].ent, dui);
+    duinfo_add (&dulvl[level].ent, &dui);
 
   /* Even if this directory is unreadable or we can't chdir into it,
      do let its size contribute to the total, ... */
-  DUINFO_ADD (tot_dui, dui);
+  duinfo_add (&tot_dui, &dui);
 
   /* ... but don't print out a total for it, since without the size(s)
      of any potential entries, it could be very misleading.  */
@@ -644,9 +635,7 @@ process_file (FTS *fts, FTSENT *ent)
 
   if ((IS_DIR_TYPE (ent->fts_info) && level <= max_depth)
       || ((opt_all && level <= max_depth) || level == 0))
-    {
-      print_size (&dui_to_print, file);
-    }
+    print_size (&dui_to_print, file);
 
   return ok;
 }
@@ -854,14 +843,15 @@ main (int argc, char **argv)
 	  add_exclude (exclude, optarg, EXCLUDE_WILDCARDS);
 	  break;
 
-	case LAST_TIME_OPTION:
-	  opt_last_time = 1;
-	  if ( optarg )
-	    time_type = XARGMATCH ("--last-time", optarg, time_args, time_types);
+	case TIME_OPTION:
+	  opt_time = true;
+	  time_type =
+	    (optarg
+	     ? XARGMATCH ("--time", optarg, time_args, time_types)
+	     : time_mtime);
 	  break;
 
 	case TIME_STYLE_OPTION:
-	  opt_last_time = 1;
 	  time_style = optarg;
 	  break;
 
@@ -899,22 +889,36 @@ main (int argc, char **argv)
   if (opt_summarize_only)
     max_depth = 0;
 
-  /* Process time style if printing last times */
-  if ( opt_last_time )
+  /* Process time style if printing last times.  */
+  if (opt_time)
     {
-      if (! time_style )
-	if (! (time_style = getenv ("TIME_STYLE")))
-	  time_style = "posix-long-iso";
+      if (! time_style)
+	{
+	  time_style = getenv ("TIME_STYLE");
 
-      while (strncmp (time_style, posix_prefix, sizeof posix_prefix - 1) == 0)
-        {
-          time_style += sizeof posix_prefix - 1;
-        }
+	  /* Ignore TIMESTYLE="locale", for compatibility with ls.  */
+	  if (! time_style || STREQ (time_style, "locale"))
+	    time_style = "long-iso";
+	  else if (*time_style == '+')
+	    {
+	      /* Ignore anything after a newline, for compatibility
+		 with ls.  */
+	      char *p = strchr (time_style, '\n');
+	      if (p)
+		*p = '\0';
+	    }
+	  else
+	    {
+	      /* Ignore "posix-" prefix, for compatibility with ls.  */
+	      static char const posix_prefix[] = "posix-";
+	      while (strncmp (time_style, posix_prefix, sizeof posix_prefix - 1)
+		     == 0)
+		time_style += sizeof posix_prefix - 1;
+	    }
+	}
 
       if (*time_style == '+')
-        {
-          time_format = time_style + 1;
-        }
+	time_format = time_style + 1;
       else
         {
           switch (XARGMATCH ("time style", time_style,
@@ -929,12 +933,8 @@ main (int argc, char **argv)
 	      break;
 
 	    case iso_time_style:
-	      time_format = "%Y-%m-%d ";
+	      time_format = "%Y-%m-%d";
 	      break;
-
-	    case locale_time_style:
-	      if (hard_locale (LC_TIME))
-		time_format = dcgettext (NULL, time_format, LC_TIME);
             }
         }
     }
