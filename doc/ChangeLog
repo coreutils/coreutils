@@ -1,3 +1,8 @@
+2005-06-14  William Brendling  <wbrendling@gmail.com>
+
+	* coreutils.texi (du invocation): New options --last-time and
+	--time-style.
+
 2005-06-19  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (ln invocation): Change a few `paths' to `file names'.
