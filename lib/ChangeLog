@@ -1,3 +1,7 @@
+2005-06-23  Jim Meyering  <jim@meyering.net>
+
+	* backupfile.c (backup_args): Change a `0' to NULL.
+
 2005-06-22  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* mktime.c: Include <string.h> even if !DEBUG.  (From glibc.)
