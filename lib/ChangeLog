@@ -2,6 +2,7 @@
 
 	* Makefile.am (libcoreutils_a_SOURCES): Remove xreadlink.c
 	and xreadlink.h.
+	(libcoreutils_a_SOURCES): Remove xstrtod.c and xstrtod.h.
 
 	* backupfile.c (backup_args): Change a `0' to NULL.
 
