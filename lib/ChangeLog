@@ -1,5 +1,8 @@
 2005-06-23  Jim Meyering  <jim@meyering.net>
 
+	* Makefile.am (libcoreutils_a_SOURCES): Remove xreadlink.c
+	and xreadlink.h.
+
 	* backupfile.c (backup_args): Change a `0' to NULL.
 
 2005-06-22  Paul Eggert  <eggert@cs.ucla.edu>
