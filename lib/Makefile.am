@@ -46,7 +46,6 @@ libcoreutils_a_SOURCES = \
   xgethostname.c xgethostname.h \
   xmemcoll.c xmemcoll.h \
   xstrndup.c xstrndup.h \
-  xstrtod.c xstrtod.h \
   xstrtoimax.c \
   xstrtoumax.c
 
