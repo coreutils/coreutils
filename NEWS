@@ -151,7 +151,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   dd has new iflag= and oflag= flags "binary" and "text", which have an
   effect only on nonstandard platforms that distinguish text from binary I/O.
 
-  du accepts new options: --last-time[=TYPE] and --time-style=STYLE
+  du accepts new options: --time[=TYPE] and --time-style=STYLE
 
   join now supports a NUL field separator, e.g., "join -t '\0'".
   join now detects and reports incompatible options, e.g., "join -t x -t y",
