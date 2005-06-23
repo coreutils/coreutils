@@ -5677,7 +5677,6 @@ it outputs.  By default, sorting is done by character code
 @item -c
 @itemx --time=ctime
 @itemx --time=status
-@itemx --time=use
 @opindex -c
 @opindex --time
 @opindex ctime@r{, printing or sorting by}
@@ -5724,6 +5723,7 @@ Sort by modification time (the @samp{mtime} in the inode), newest first.
 @item -u
 @itemx --time=atime
 @itemx --time=access
+@itemx --time=use
 @opindex -u
 @opindex --time
 @opindex use time@r{, printing or sorting files by}
@@ -6009,7 +6009,7 @@ uses the full timestamp to determine whether a file is out of date.
 List @acronym{ISO} 8601 date and time in minutes, e.g.,
 @samp{2002-03-30 23:45}.  These timestamps are shorter than
 @samp{full-iso} timestamps, and are usually good enough for everyday
-work.  This style is equivalent to @samp{%Y-%m-%d %H:%M}.
+work.  This style is equivalent to @samp{+%Y-%m-%d %H:%M}.
 
 @item iso
 List @acronym{ISO} 8601 dates for non-recent timestamps (e.g.,
@@ -9004,30 +9004,6 @@ Dereference symbolic links (show the disk space used by the file
 or directory that the link points to instead of the space used by
 the link).
 
-@itemx --last-time
-@opindex --last-time
-@cindex last modified dates, displaying in @command{du}
-Show time of the most recent modification of any file in the directory,
-or any of its subdirectories.
-
-@itemx --last-time=ctime
-@itemx --last-time=status
-@itemx --last-time=use
-@opindex --last-time
-@opindex ctime@r{, show the most recent}
-@opindex status time@r{, show the most recent}
-@opindex use time@r{, show the most recent}
-Show the most recent status change time (the @samp{ctime} in the inode) of
-any file in the directory, instead of the modification time.
-
-@itemx --last-time=atime
-@itemx --last-time=access
-@opindex --last-time
-@opindex atime@r{, show the most recent}
-@opindex access time@r{, show the most recent}
-Show the most recent access time (the @samp{atime} in the inode) of
-any file in the directory, instead of the modification time.
-
 @item -P
 @itemx --no-dereference
 @opindex -P
@@ -9073,12 +9049,35 @@ Display only a total for each argument.
 Report the size of each directory separately, not including the sizes
 of subdirectories.
 
+@itemx --time
+@opindex --time
+@cindex last modified dates, displaying in @command{du}
+Show time of the most recent modification of any file in the directory,
+or any of its subdirectories.
+
+@itemx --time=ctime
+@itemx --time=status
+@itemx --time=use
+@opindex --time
+@opindex ctime@r{, show the most recent}
+@opindex status time@r{, show the most recent}
+@opindex use time@r{, show the most recent}
+Show the most recent status change time (the @samp{ctime} in the inode) of
+any file in the directory, instead of the modification time.
+
+@itemx --time=atime
+@itemx --time=access
+@opindex --time
+@opindex atime@r{, show the most recent}
+@opindex access time@r{, show the most recent}
+Show the most recent access time (the @samp{atime} in the inode) of
+any file in the directory, instead of the modification time.
+
 @item --time-style=@var{style}
 @opindex --time-style
 @cindex time style
-Implicity selects the option @option{--last-time} to show last modified
-date if an explicit @option{--last-time} option has not been selected.
-List timestamps in style @var{style}.  The @var{style} should
+List timestamps in style @var{style}.  This option has an effect only if
+the @option{--time} option is also specified.  The @var{style} should
 be one of the following:
 
 @table @samp
@@ -9101,49 +9100,21 @@ format with nanosecond precision, e.g., @samp{2002-03-30
 List @acronym{ISO} 8601 date and time in minutes, e.g.,
 @samp{2002-03-30 23:45}.  These timestamps are shorter than
 @samp{full-iso} timestamps, and are usually good enough for everyday
-work.  This style is equivalent to @samp{%Y-%m-%d %H:%M}.
+work.  This style is equivalent to @samp{+%Y-%m-%d %H:%M}.
 
 @item iso
-List @acronym{ISO} 8601 dates for timestamps
-
-@item locale
-@vindex LC_TIME
-List timestamps in a locale-dependent form.  For example, a Finnish
-locale might list timestamps like @samp{maalis 30@ @ 2002}.
-Locale-dependent timestamps typically consume more space than @samp{iso}
-timestamps and are harder for programs to parse because locale
-conventions vary so widely, but they are easier for many people to read.
-
-The @env{LC_TIME} locale category specifies the timestamp format.  The
-default @acronym{POSIX} locale uses timestamps like @samp{Mar 30@
-@ 2002}; in this locale, the following two @command{du} invocations are
-equivalent:
-
-@example
-du --last-time --time-style="+%b %e %Y"
-du --last-time --time-style="locale"
-@end example
-
-Other locales behave differently.  For example, in a German locale,
-@option{--time-style="locale"} might be equivalent to
-@option{--time-style="+%e. %b %Y"}
-and might generate timestamps like @samp{30. M@"ar 2002@ }.
-
-@item posix-@var{style}
-@vindex LC_TIME
-List @acronym{POSIX}-locale timestamps if the @env{LC_TIME} locale
-category is @acronym{POSIX}, @var{style} timestamps otherwise.  For
-example, the default style, which is @samp{posix-long-iso}, lists
-timestamps like @samp{Mar 30@ @ 2002} when in
-the @acronym{POSIX} locale, and like @samp{2002-03-30 23:45} otherwise.
+List @acronym{ISO} 8601 dates for timestamps, e.g., @samp{2002-03-30}.
+This style is equivalent to @samp{+%Y-%m-%d}.
 @end table
 
 @vindex TIME_STYLE
 You can specify the default value of the @option{--time-style} option
 with the environment variable @env{TIME_STYLE}; if @env{TIME_STYLE} is not set
-the default style is @samp{posix-long-iso}. If @env{TIME_STYLE} contains two
-styles, separated by a newline (for @command{ls}), the @command{du} uses only
-the first of the two styles.
+the default style is @samp{long-iso}.  For compatibility with @command{ls},
+if @env{TIME_STYLE} begins with @samp{+} and contains a newline,
+the newline and any later characters are ignored; if @env{TIME_STYLE}
+begins with @samp{posix-} the @samp{posix-} is ignored; and if
+@env{TIME_STYLE} is @samp{locale} it is ignored.
 
 @item -x
 @itemx --one-file-system
