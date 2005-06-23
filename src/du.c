@@ -168,7 +168,7 @@ static enum time_type time_type = time_mtime;
 static char *time_style = NULL;
 
 /* Format used to display date / time. Controlled by --time-style */
-static char *time_format = NULL;
+static char const *time_format = NULL;
 
 /* The units to use when printing sizes.  */
 static uintmax_t output_block_size;
