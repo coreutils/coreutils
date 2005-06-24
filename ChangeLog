@@ -1,6 +1,10 @@
-2005-06-23  Paul Eggert  <eggert@cs.ucla.edu>
+2005-06-24  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* src/mv.c (usage): Clarify how --reply=no works.
+
+2005-06-23  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Address the following "du" issues:
 

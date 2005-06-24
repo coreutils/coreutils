@@ -1,3 +1,7 @@
+2005-06-24  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi (cp invocation): Clarify how --reply=no works.
+
 2005-06-14  William Brendling  <wbrendling@gmail.com>
 
 	* coreutils.texi (du invocation): New options --last-time and
