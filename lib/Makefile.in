@@ -87,8 +87,9 @@ DIST_COMMON = README $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	unlocked-io.h unsetenv.c userspec.c userspec.h utime.c \
 	utimecmp.c utimecmp.h utimens.c utimens.h vasnprintf.c \
 	vasprintf.c xalloc.h xfts.c xfts.h xgetcwd.c xgetcwd.h \
-	xmalloc.c xnanosleep.c xnanosleep.h xstrtol.c xstrtol.h \
-	xstrtoul.c xtime.h yesno.c yesno.h
+	xmalloc.c xnanosleep.c xnanosleep.h xreadlink.c xreadlink.h \
+	xstrtod.c xstrtod.h xstrtol.c xstrtol.h xstrtoul.c xtime.h \
+	yesno.c yesno.h
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/afs.m4 \
 	$(top_srcdir)/m4/alloca.m4 $(top_srcdir)/m4/allocsa.m4 \
@@ -215,9 +216,8 @@ am_libcoreutils_a_OBJECTS = allocsa.$(OBJEXT) diacrit.$(OBJEXT) \
 	readtokens0.$(OBJEXT) root-dev-ino.$(OBJEXT) time_r.$(OBJEXT) \
 	unicodeio.$(OBJEXT) version-etc.$(OBJEXT) \
 	version-etc-fsf.$(OBJEXT) xalloc-die.$(OBJEXT) \
-	xgethostname.$(OBJEXT) xmemcoll.$(OBJEXT) xreadlink.$(OBJEXT) \
-	xstrndup.$(OBJEXT) xstrtod.$(OBJEXT) xstrtoimax.$(OBJEXT) \
-	xstrtoumax.$(OBJEXT)
+	xgethostname.$(OBJEXT) xmemcoll.$(OBJEXT) xstrndup.$(OBJEXT) \
+	xstrtoimax.$(OBJEXT) xstrtoumax.$(OBJEXT)
 libcoreutils_a_OBJECTS = $(am_libcoreutils_a_OBJECTS)
 PROGRAMS = $(noinst_PROGRAMS)
 t_fpending_SOURCES = t-fpending.c
@@ -372,9 +372,9 @@ libcoreutils_a_SOURCES = allocsa.c allocsa.h dev-ino.h diacrit.c \
 	readtokens0.h regex.h root-dev-ino.c root-dev-ino.h time_r.c \
 	time_r.h unicodeio.c unicodeio.h version-etc.c version-etc.h \
 	version-etc-fsf.c xalloc-die.c xgethostname.c xgethostname.h \
-	xmemcoll.c xmemcoll.h xreadlink.c xreadlink.h xstrndup.c \
-	xstrndup.h xstrtod.c xstrtod.h xstrtoimax.c xstrtoumax.c \
-	printf-args.h printf-parse.h vasprintf.h vasnprintf.h
+	xmemcoll.c xmemcoll.h xstrndup.c xstrndup.h xstrtoimax.c \
+	xstrtoumax.c printf-args.h printf-parse.h vasprintf.h \
+	vasnprintf.h
 libcoreutils_a_LIBADD = $(LIBOBJS) $(ALLOCA)
 libcoreutils_a_DEPENDENCIES = $(libcoreutils_a_LIBADD)
 lib_OBJECTS = $(libcoreutils_a_OBJECTS)
@@ -596,6 +596,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/xgetcwd.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/xmalloc.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/xnanosleep.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/xreadlink.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/xstrtod.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/xstrtol.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/xstrtoul.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/yesno.Po@am__quote@
@@ -615,9 +617,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xalloc-die.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xgethostname.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xmemcoll.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xreadlink.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xstrndup.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xstrtod.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xstrtoimax.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xstrtoumax.Po@am__quote@
 
