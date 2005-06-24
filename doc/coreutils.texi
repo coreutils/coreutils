@@ -6515,6 +6515,10 @@ given as a response to every prompt about a destination file.  That effectively
 cancels any preceding @option{--interactive} or @option{-i} option.
 Specify @option{--reply=no} to make @command{cp} act as if @samp{no} were
 given as a response to every prompt about a destination file.
+Note that @option{--reply=no} has an effect only when mv would prompt
+without @option{-i} or equivalent, i.e., when a destination file exists and is
+not writable, standard input is a terminal, and no @option{-f} (or equivalent)
+option is specified.
 Specify @option{--reply=query} to make @command{cp} prompt the user
 about each existing destination file.
 
