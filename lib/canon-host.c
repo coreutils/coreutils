@@ -54,9 +54,8 @@ canon_host (char const *host)
 
 #if HAVE_GETADDRINFO
   {
-    struct addrinfo hint;
+    struct addrinfo hint = { 0, };
     struct addrinfo *res = NULL;
-    memset (&hint, 0, sizeof hint);
     hint.ai_flags = AI_CANONNAME;
     if (getaddrinfo (host, NULL, &hint, &res) == 0)
       {

@@ -1,3 +1,9 @@
+2005-06-24  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* canon-host.c (canon_host) [HAVE_GETADDRINFO]: Use `= { 0, };' to
+	initialize local `hint'.  This undoes the previous change, and
+	syncs with gnulib.
+
 2005-06-23  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am (libcoreutils_a_SOURCES): Remove xreadlink.c
