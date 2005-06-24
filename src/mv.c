@@ -317,7 +317,12 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
       --reply={yes,no,query}   specify how to handle the prompt about an\n\
-                                 existing destination file\n\
+                                 existing destination file.  Note that\n\
+                                 --reply=no has an effect only when mv\n\
+                                 would prompt without -i or equivalent, i.e.,\n\
+                                 when a destination file exists and is not\n\
+                                 writable, standard input is a terminal, and\n\
+                                 no -f (or equivalent) option is specified\n\
       --strip-trailing-slashes remove any trailing slashes from each SOURCE\n\
                                  argument\n\
   -S, --suffix=SUFFIX          override the usual backup suffix\n\
