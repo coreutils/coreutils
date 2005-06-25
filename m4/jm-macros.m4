@@ -175,6 +175,7 @@ AC_DEFUN([gl_MACROS],
   AC_REQUIRE([gl_FUNC_FREE])
   AC_REQUIRE([gl_FUNC_CHDIR_LONG])
   AC_REQUIRE([gl_FUNC_XFTS])
+  AC_REQUIRE([gl_ROOT_DEV_INO])
 ])
 
 # These tests must be run before any use of AC_CHECK_TYPE,
