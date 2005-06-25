@@ -6,7 +6,7 @@ dnl with or without modifications, as long as this notice is preserved.
 
 AC_DEFUN([gl_ROOT_DEV_INO],
 [
-  AC_LIBSOURCES([root-dev-ino.c, root-dev-ino.h])
+  AC_LIBSOURCES([root-dev-ino.c, root-dev-ino.h, dev-ino.h])
   AC_LIBOBJ([root-dev-ino])
 
   dnl Prerequisites
