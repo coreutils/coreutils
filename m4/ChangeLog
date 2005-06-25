@@ -1,3 +1,8 @@
+2005-06-25  Jim Meyering  <jim@meyering.net>
+
+	* root-dev-ino.m4 (gl_ROOT_DEV_INO): New file/macro.
+	* jm-macros.m4: Require it.
+
 2005-06-23  Jim Meyering  <jim@meyering.net>
 
 	* xreadlink.m4: Use AC_LIBSOURCES and AC_LIBOBJ.
