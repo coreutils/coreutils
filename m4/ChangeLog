@@ -1,5 +1,8 @@
 2005-06-25  Jim Meyering  <jim@meyering.net>
 
+	* version-etc.m4 (gl_VERSION_ETC): New file/macro.
+	* jm-macros.m4: Require it.
+
 	* root-dev-ino.m4 (gl_ROOT_DEV_INO): New file/macro.
 	* jm-macros.m4: Require it.
 
