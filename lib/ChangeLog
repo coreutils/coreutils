@@ -2,6 +2,8 @@
 
 	* Makefile.am (libcoreutils_a_SOURCES): Remove
 	root-dev-ino.c and root-dev-ino.h.
+	(libcoreutils_a_SOURCES): Remove dev-ino.h too, now that we
+	get it via root-dev-ino.m4
 
 2005-06-24  Paul Eggert  <eggert@cs.ucla.edu>
 
