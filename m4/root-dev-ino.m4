@@ -10,5 +10,6 @@ AC_DEFUN([gl_ROOT_DEV_INO],
   AC_LIBOBJ([root-dev-ino])
 
   dnl Prerequisites
+  AC_REQUIRE([AC_FUNC_LSTAT])
   :
 ])
