@@ -38,7 +38,6 @@ libcoreutils_a_SOURCES = \
   mbswidth.c mbswidth.h \
   readtokens0.c readtokens0.h \
   regex.h \
-  root-dev-ino.c root-dev-ino.h \
   time_r.c time_r.h \
   unicodeio.c unicodeio.h \
   version-etc.c version-etc.h version-etc-fsf.c \
