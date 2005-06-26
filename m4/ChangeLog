@@ -1,3 +1,8 @@
+2005-06-26  Jim Meyering  <jim@meyering.net>
+
+	* diacrit.m4 (gl_DIACRIT): New file/macro.
+	* jm-macros.m4: Require it.
+
 2005-06-25  Jim Meyering  <jim@meyering.net>
 
 	* version-etc.m4 (gl_VERSION_ETC): New file/macro.
