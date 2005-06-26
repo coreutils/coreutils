@@ -27,7 +27,6 @@ DEFS += -DLIBDIR=\"$(libdir)\"
 
 libcoreutils_a_SOURCES = \
   allocsa.c allocsa.h \
-  diacrit.c diacrit.h \
   euidaccess.h \
   exit.h \
   full-read.c full-read.h \
