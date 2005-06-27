@@ -1,3 +1,7 @@
+2005-06-26  Jim Meyering  <jim@meyering.net>
+
+	* Makefile.am (libcoreutils_a_SOURCES): Remove diacrit.c and diacrit.h.
+
 2005-06-25  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am (libcoreutils_a_SOURCES): Remove
