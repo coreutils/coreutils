@@ -4,6 +4,10 @@
 
 	* src/pr.c (main, store_char): Use x2realloc on 1-byte base types,
 	not x2nrealloc.
+	* src/du.c (show_date): Likewise.
+	* src/date.c (show_date): Likewise.
+	* src/od.c (dump_strings): Likewise.
+	* src/sort.c (fillbuf): Likewise.
 
 2005-06-24  Jim Meyering  <jim@meyering.net>
 
