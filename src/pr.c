@@ -890,8 +890,7 @@ main (int argc, char **argv)
 	  /* Accumulate column-count digits specified via old-style options. */
 	  if (n_digits + 1 >= n_alloc)
 	    column_count_string
-	      = x2nrealloc (column_count_string, &n_alloc,
-			    sizeof *column_count_string);
+	      = x2realloc (column_count_string, &n_alloc);
 	  column_count_string[n_digits++] = c;
 	  column_count_string[n_digits] = 0;
 	  continue;
@@ -2030,7 +2029,7 @@ store_char (char c)
   if (buff_current >= buff_allocated)
     {
       /* May be too generous. */
-      buff = x2nrealloc (buff, &buff_allocated, sizeof *buff);
+      buff = x2realloc (buff, &buff_allocated);
     }
   buff[buff_current++] = c;
 }
