@@ -1470,7 +1470,7 @@ dump_strings (void)
 	{
 	  if (i == bufsize)
 	    {
-	      buf = x2nrealloc (buf, &bufsize, sizeof *buf);
+	      buf = x2realloc (buf, &bufsize);
 	    }
 	  ok &= read_char (&c);
 	  address++;
