@@ -532,7 +532,7 @@ show_date (const char *format, struct timespec when)
   while (1)
     {
       bool done;
-      out = x2nrealloc (out, &out_length, sizeof *out);
+      out = x2realloc (out, &out_length);
 
       /* Mark the first byte of the buffer so we can detect the case
 	 of nstrftime producing an empty string.  Otherwise, this loop
