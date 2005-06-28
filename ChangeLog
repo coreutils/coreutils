@@ -1,6 +1,11 @@
-2005-06-24  Jim Meyering  <jim@meyering.net>
+2005-06-28  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* src/pr.c (main, store_char): Use x2realloc on 1-byte base types,
+	not x2nrealloc.
+
+2005-06-24  Jim Meyering  <jim@meyering.net>
 
 	* src/mv.c (usage): Clarify how --reply=no works.
 
