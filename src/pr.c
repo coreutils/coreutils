@@ -890,7 +890,7 @@ main (int argc, char **argv)
 	  /* Accumulate column-count digits specified via old-style options. */
 	  if (n_digits + 1 >= n_alloc)
 	    column_count_string
-	      = x2realloc (column_count_string, &n_alloc);
+	      = X2REALLOC (column_count_string, &n_alloc);
 	  column_count_string[n_digits++] = c;
 	  column_count_string[n_digits] = 0;
 	  continue;
