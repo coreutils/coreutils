@@ -2,6 +2,7 @@
 
 	* mkdir-p.c (make_dir_parents): Don't apply sizeof to a hard-coded
 	type name.  Use the variable name instead.
+	* idcache.c (getuser, getuidbyname, getgroup, getgidbyname): Likewise.
 
 	* xalloc.h (VERIFY_EXPR): Define.
 	(X2REALLOC): New macro, to make using x2realloc a little safer.
