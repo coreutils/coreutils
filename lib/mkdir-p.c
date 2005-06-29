@@ -207,7 +207,7 @@ make_dir_parents (char const *arg,
 	      if (re_protect)
 		{
 		  struct ptr_list *new = (struct ptr_list *)
-		    alloca (sizeof (struct ptr_list));
+		    alloca (sizeof *new);
 		  new->dirname_end = slash;
 		  new->next = leading_dirs;
 		  leading_dirs = new;
