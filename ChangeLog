@@ -10,7 +10,9 @@
 2005-06-28  Jim Meyering  <jim@meyering.net>
 
 	* src/pr.c (main, store_char): Use x2realloc on 1-byte base types,
-	not x2nrealloc.
+	not x2nrealloc.  The former is a little more concise and readable.
+	N.B. this sort of transformation is ok only when the base type is
+	unlikely ever to change to a multibyte type.
 	* src/du.c (show_date): Likewise.
 	* src/date.c (show_date): Likewise.
 	* src/od.c (dump_strings): Likewise.
