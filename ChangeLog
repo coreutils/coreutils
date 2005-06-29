@@ -2,6 +2,18 @@
 
 	* Version 5.3.1.
 
+	* src/pr.c (main, store_char): Use X2REALLOC rather than x2realloc.
+	* src/du.c (show_date): Likewise.
+	* src/date.c (show_date): Likewise.
+	* src/od.c (dump_strings): Likewise.
+	* src/sort.c (fillbuf): Likewise.
+	* src/chmod.c (main): Likewise.
+
+	* src/system.h (VERIFY): Rewrite to use string-concatenation
+	and __LINE__ so as not to require a struct name parameter.
+	(GL_CONCAT, GL_CONCAT2, GL_LINE_CONCAT): Define helper macros.
+	* src/od.c: Update sole use.
+
 	* src/ls.c (gobble_file): Use stat.st_author, not stat.st_uid
 	when computing the --author column width.  This bug might have
 	resulted in misaligned columns when using the --author option
