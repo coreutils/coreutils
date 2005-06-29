@@ -416,7 +416,7 @@ main (int argc, char **argv)
 	    if (mode_alloc <= new_mode_len)
 	      {
 		mode_alloc = new_mode_len + 1;
-		mode = x2realloc (mode, &mode_alloc);
+		mode = X2REALLOC (mode, &mode_alloc);
 	      }
 	    mode[mode_len] = ',';
 	    strcpy (mode + mode_comma_len, arg);
