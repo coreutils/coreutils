@@ -430,7 +430,7 @@ show_date (const char *format, time_t when, int nsec)
 
   do
     {
-      out = x2realloc (out, &out_length);
+      out = X2REALLOC (out, &out_length);
 
       /* Mark the first byte of the buffer so we can detect the case
          of nstrftime producing an empty string.  Otherwise, this loop
