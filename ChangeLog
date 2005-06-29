@@ -11,7 +11,7 @@
 
 	* src/system.h (VERIFY): Rewrite to use string-concatenation
 	and __LINE__ so as not to require a struct name parameter.
-	(GL_CONCAT, GL_CONCAT2, GL_LINE_CONCAT): Define helper macros.
+	(GL_CONCAT, GL_CONCAT2): Define helper macros.
 	* src/od.c: Update sole use.
 
 	* src/ls.c (gobble_file): Use stat.st_author, not stat.st_uid
