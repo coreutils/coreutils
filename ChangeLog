@@ -1,6 +1,13 @@
-2005-06-28  Jim Meyering  <jim@meyering.net>
+2005-06-29  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* src/ls.c (gobble_file): Use stat.st_author, not stat.st_uid
+	when computing the --author column width.  This bug might have
+	resulted in misaligned columns when using the --author option
+	on the Hurd.  Spotted by Arnold Robbins.
+
+2005-06-28  Jim Meyering  <jim@meyering.net>
 
 	* src/pr.c (main, store_char): Use x2realloc on 1-byte base types,
 	not x2nrealloc.
