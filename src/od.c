@@ -162,8 +162,7 @@ static const int width_bytes[] =
 
 /* Ensure that for each member of `enum size_spec' there is an
    initializer in the width_bytes array.  */
-VERIFY (assert_width_bytes_matches_size_spec_decl,
-	sizeof width_bytes / sizeof width_bytes[0] == N_SIZE_SPECS);
+VERIFY (sizeof width_bytes / sizeof width_bytes[0] == N_SIZE_SPECS);
 
 /* Names for some non-printing characters.  */
 static const char *const charname[33] =
@@ -1470,7 +1469,7 @@ dump_strings (void)
 	{
 	  if (i == bufsize)
 	    {
-	      buf = x2realloc (buf, &bufsize);
+	      buf = X2REALLOC (buf, &bufsize);
 	    }
 	  ok &= read_char (&c);
 	  address++;
