@@ -1059,7 +1059,7 @@ fillbuf (struct buffer *buf, FILE *fp, char const *file)
 
       /* The current input line is too long to fit in the buffer.
 	 Double the buffer size and try again.  */
-      buf->buf = x2realloc (buf->buf, &buf->alloc);
+      buf->buf = X2REALLOC (buf->buf, &buf->alloc);
     }
 }
 
