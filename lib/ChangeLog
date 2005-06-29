@@ -1,3 +1,8 @@
+2005-06-29  Jim Meyering  <jim@meyering.net>
+
+	* xalloc.h (VERIFY_EXPR): Define.
+	(X2REALLOC): New macro, to make using x2realloc a little safer.
+
 2005-06-26  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am (libcoreutils_a_SOURCES): Remove diacrit.c and diacrit.h.
