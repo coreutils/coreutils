@@ -2658,7 +2658,7 @@ gobble_file (char const *name, enum filetype type, bool command_line_arg,
 
       if (print_author)
 	{
-	  int len = format_user_width (f->stat.st_uid);
+	  int len = format_user_width (f->stat.st_author);
 	  if (author_width < len)
 	    author_width = len;
 	}
