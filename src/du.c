@@ -245,6 +245,7 @@ static enum time_type const time_types[] =
 {
   time_atime, time_atime, time_atime, time_ctime, time_ctime
 };
+ARGMATCH_VERIFY (time_args, time_types);
 
 /* `full-iso' uses full ISO-style dates and times.  `long-iso' uses longer
    ISO-style time stamps, though shorter than `full-iso'.  `iso' uses shorter
@@ -260,11 +261,11 @@ static char const *const time_style_args[] =
 {
   "full-iso", "long-iso", "iso", NULL
 };
-
 static enum time_style const time_style_types[] =
 {
-  full_iso_time_style, long_iso_time_style, iso_time_style, 0
+  full_iso_time_style, long_iso_time_style, iso_time_style
 };
+ARGMATCH_VERIFY (time_style_args, time_style_types);
 
 void
 usage (int status)

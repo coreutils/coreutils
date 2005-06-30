@@ -94,23 +94,23 @@ static char const *const sparse_type_string[] =
 {
   "never", "auto", "always", NULL
 };
-
 static enum Sparse_type const sparse_type[] =
 {
   SPARSE_NEVER, SPARSE_AUTO, SPARSE_ALWAYS
 };
+ARGMATCH_VERIFY (sparse_type_string, sparse_type);
 
 /* Valid arguments to the `--reply' option. */
 static char const* const reply_args[] =
 {
   "yes", "no", "query", NULL
 };
-
 /* The values that correspond to the above strings. */
 static int const reply_vals[] =
 {
   I_ALWAYS_YES, I_ALWAYS_NO, I_ASK_USER
 };
+ARGMATCH_VERIFY (reply_args, reply_vals);
 
 static struct option const long_opts[] =
 {
@@ -729,13 +729,13 @@ decode_preserve_arg (char const *arg, struct cp_options *x, bool on_off)
       PRESERVE_MODE, PRESERVE_TIMESTAMPS,
       PRESERVE_OWNERSHIP, PRESERVE_LINK, PRESERVE_ALL
     };
-
   /* Valid arguments to the `--preserve' option. */
   static char const* const preserve_args[] =
     {
       "mode", "timestamps",
       "ownership", "links", "all", NULL
     };
+  ARGMATCH_VERIFY (preserve_args, preserve_vals);
 
   char *arg_writable = xstrdup (arg);
   char *s = arg_writable;
