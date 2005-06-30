@@ -1,3 +1,11 @@
+2005-06-30  Jim Meyering  <jim@meyering.net>
+
+	* argmatch.h [!VERIFY] (VERIFY): Define.
+	(ARGMATCH_VERIFY): Use it, so this macro may be used more than
+	once in any given scope.
+
+	* xalloc.h (VERIFY_EXPR): Undef and add a comment.
+
 2005-06-29  Jim Meyering  <jim@meyering.net>
 
 	* mkdir-p.c (make_dir_parents): Don't apply sizeof to a hard-coded
