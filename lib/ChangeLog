@@ -1,5 +1,16 @@
 2005-06-30  Jim Meyering  <jim@meyering.net>
 
+	* stdopen.c: Add copyright.
+	Include <fcntl.h> and <unistd.h> unconditionally --
+	it seems to be ok to do this, these days.
+
+	* stdopen.c: Rewritten by Paul Eggert.
+	Now, the minimum overhead is just two system calls: dup and close.
+
+	* stdopen.c: New file.  As yet unused.
+	The minimum overhead is three fstat calls.
+	* stdopen.h: New file.
+
 	* argmatch.h [!VERIFY] (VERIFY): Define.
 	(ARGMATCH_VERIFY): Use it, so this macro may be used more than
 	once in any given scope.
