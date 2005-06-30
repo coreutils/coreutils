@@ -56,8 +56,10 @@ void *x2nrealloc (void *p, size_t *pn, size_t s);
 void *xmemdup (void const *p, size_t s);
 char *xstrdup (char const *str);
 
+/* Verify a requirement at compile-time (unlike assert, which is runtime).  */
+# undef VERIFY_EXPR
 # define VERIFY_EXPR(assertion) \
-    (void)((struct {char a[(assertion) ? 1 : -1]; } *) 0)
+   (void)((struct {char a[(assertion) ? 1 : -1]; } *) 0)
 
 /* Using x2realloc (when appropriate) usually makes your code more
    readable than using x2nrealloc, but it also makes it so your
