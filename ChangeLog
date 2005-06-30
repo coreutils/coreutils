@@ -1,6 +1,11 @@
-2005-06-29  Jim Meyering  <jim@meyering.net>
+2005-06-30  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* src/system.h (VERIFY): Guard definition with #ifndef.
+	(VERIFY_EXPR): Undef before defining.
+
+2005-06-29  Jim Meyering  <jim@meyering.net>
 
 	* src/pr.c (main, store_char): Use X2REALLOC rather than x2realloc.
 	* src/du.c (show_date): Likewise.
