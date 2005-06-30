@@ -2,6 +2,14 @@
 
 	* Version 5.3.1.
 
+	* src/cp.c: Add uses of ARGMATCH_VERIFY to ensure that
+	corresponding option string and value arrays are consistent.
+	* src/date.c: Likewise.
+	* src/du.c: Likewise.
+	* src/ls.c: Likewise.
+	cp.c and date.c each had a harmless trailing `, 0' (now-removed)
+	in a value list.
+
 	* src/system.h (VERIFY): Guard definition with #ifndef.
 	(VERIFY_EXPR): Undef before defining.
 
