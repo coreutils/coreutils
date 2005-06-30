@@ -62,12 +62,12 @@ static char const *const time_spec_string[] =
 {
   "date", "hours", "minutes", "seconds", "ns", NULL
 };
-
 static enum Time_spec const time_spec[] =
 {
   TIME_SPEC_DATE, TIME_SPEC_HOURS, TIME_SPEC_MINUTES, TIME_SPEC_SECONDS,
   TIME_SPEC_NS
 };
+ARGMATCH_VERIFY (time_spec_string, time_spec);
 
 /* The name this program was run with, for error messages. */
 char *program_name;

@@ -396,12 +396,12 @@ static char const *const time_style_args[] =
 {
   "full-iso", "long-iso", "iso", "locale", NULL
 };
-
 static enum time_style const time_style_types[] =
 {
   full_iso_time_style, long_iso_time_style, iso_time_style,
-  locale_time_style, 0
+  locale_time_style
 };
+ARGMATCH_VERIFY (time_style_args, time_style_types);
 
 /* Type of time to print or sort by.  Controlled by -c and -u.  */
 
@@ -493,11 +493,11 @@ static char const *const indicator_style_args[] =
 {
   "none", "slash", "file-type", "classify", NULL
 };
-
 static enum indicator_style const indicator_style_types[] =
 {
   none, slash, file_type, classify
 };
+ARGMATCH_VERIFY (indicator_style_args, indicator_style_types);
 
 /* True means use colors to mark types.  Also define the different
    colors as well as the stuff for the LS_COLORS environment variable.
@@ -789,32 +789,32 @@ static char const *const format_args[] =
   "verbose", "long", "commas", "horizontal", "across",
   "vertical", "single-column", NULL
 };
-
 static enum format const format_types[] =
 {
   long_format, long_format, with_commas, horizontal, horizontal,
   many_per_line, one_per_line
 };
+ARGMATCH_VERIFY (format_args, format_types);
 
 static char const *const sort_args[] =
 {
   "none", "time", "size", "extension", "version", NULL
 };
-
 static enum sort_type const sort_types[] =
 {
   sort_none, sort_time, sort_size, sort_extension, sort_version
 };
+ARGMATCH_VERIFY (sort_args, sort_types);
 
 static char const *const time_args[] =
 {
   "atime", "access", "use", "ctime", "status", NULL
 };
-
 static enum time_type const time_types[] =
 {
   time_atime, time_atime, time_atime, time_ctime, time_ctime
 };
+ARGMATCH_VERIFY (time_args, time_types);
 
 static char const *const color_args[] =
 {
@@ -823,13 +823,13 @@ static char const *const color_args[] =
   "never", "no", "none",
   "auto", "tty", "if-tty", NULL
 };
-
 static enum color_type const color_types[] =
 {
   color_always, color_always, color_always,
   color_never, color_never, color_never,
   color_if_tty, color_if_tty, color_if_tty
 };
+ARGMATCH_VERIFY (color_args, color_types);
 
 /* Information about filling a column.  */
 struct column_info
