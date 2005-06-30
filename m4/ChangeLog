@@ -1,3 +1,8 @@
+2005-06-30  Jim Meyering  <jim@meyering.net>
+
+	* stdopen.m4 (gl_STDOPEN): New file/macro.
+	* jm-macros.m4: Require it.
+
 2005-06-26  Jim Meyering  <jim@meyering.net>
 
 	* diacrit.m4 (gl_DIACRIT): New file/macro.
