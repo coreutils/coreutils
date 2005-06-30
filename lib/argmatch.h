@@ -1,6 +1,6 @@
 /* argmatch.h -- definitions and prototypes for argmatch.c
 
-   Copyright (C) 1990, 1998, 1999, 2001, 2002, 2004 Free Software
+   Copyright (C) 1990, 1998, 1999, 2001, 2002, 2004, 2005 Free Software
    Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -25,6 +25,15 @@
 
 # include <stddef.h>
 
+# ifndef VERIFY
+#  define GL_CONCAT0(x, y) x##y
+#  define GL_CONCAT(x, y) GL_CONCAT0 (x, y)
+/* Verify a requirement at compile-time (unlike assert, which is runtime).  */
+#  define VERIFY(assertion) \
+    struct GL_CONCAT (compile_time_assert_, __LINE__) \
+      { char a[(assertion) ? 1 : -1]; }
+# endif
+
 # define ARRAY_CARDINALITY(Array) (sizeof (Array) / sizeof *(Array))
 
 # define ARGMATCH_CONSTRAINT(Arglist, Vallist) \
@@ -35,11 +44,8 @@
    preferred, since it is guaranteed to be checked at compile-time.
    ARGMATCH_ASSERT is for backward compatibility only.  */
 
-# define ARGMATCH_VERIFY(Arglist, Vallist)				  \
-  struct argmatch_verify						  \
-  {									  \
-    char argmatch_verify[ARGMATCH_CONSTRAINT(Arglist, Vallist) ? 1 : -1]; \
-  }
+# define ARGMATCH_VERIFY(Arglist, Vallist) \
+    VERIFY (ARGMATCH_CONSTRAINT (Arglist, Vallist))
 
 # define ARGMATCH_ASSERT(Arglist, Vallist) \
   assert (ARGMATCH_CONSTRAINT (Arglist, Vallist))
