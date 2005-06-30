@@ -1,6 +1,24 @@
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <fcntl.h>
+#if HAVE_FCNTL_H
+# include <fcntl.h>
+#endif
+#if HAVE_UNISTD_H
+# include <unistd.h>
+#endif
+#include <errno.h>
+
+#ifndef STDIN_FILENO
+# define STDIN_FILENO 0
+#endif
+
+#ifndef STDOUT_FILENO
+# define STDOUT_FILENO 1
+#endif
+
+#ifndef STDERR_FILENO
+# define STDERR_FILENO 2
+#endif
 
 /* Try to ensure that each of the standard file numbers (0, 1, 2)
    is in use.  Without this, each application would have to guard
@@ -9,23 +27,19 @@
 void
 stdopen (void)
 {
-  int fd;
-  for (fd = 0; fd <= 2; fd++)
+  int fd = dup (STDIN_FILENO);
+
+  if (0 <= fd)
+    close (fd);
+  else if (errno == EBADF)
+    fd = open ("/dev/null", O_WRONLY);
+
+  if (STDIN_FILENO <= fd && fd <= STDERR_FILENO)
     {
-      struct stat sb;
-      if (fstat (fd, &sb) < 0)
-	{
-	  static const int flag[] = { O_WRONLY, O_RDONLY, O_RDONLY };
-	  /* FIXME: worry about errno != EBADF?  */
-	  char const *file = "/dev/null";
-	  int fd2 = open (file, flag[fd]);
-	  if (fd2 < 0)
-	    break;
-	  if (fd2 != fd)
-	    {
-	      close (fd2);
-	      break;
-	    }
-	}
+      fd = open ("/dev/null", O_RDONLY);
+      if (fd == STDOUT_FILENO)
+	fd = dup (fd);
+      if (STDERR_FILENO < fd)
+	close (fd);
     }
 }
