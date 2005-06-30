@@ -240,7 +240,6 @@ static char const *const time_args[] =
 {
   "atime", "access", "use", "ctime", "status", 0
 };
-
 static enum time_type const time_types[] =
 {
   time_atime, time_atime, time_atime, time_ctime, time_ctime
