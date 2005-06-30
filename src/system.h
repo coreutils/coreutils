@@ -812,15 +812,18 @@ ptr_align (void const *ptr, size_t alignment)
   return (void *) (p1 - (size_t) p1 % alignment);
 }
 
-#define GL_CONCAT0(x, y) x##y
-#define GL_CONCAT(x, y) GL_CONCAT0 (x, y)
+#ifndef VERIFY
+# define GL_CONCAT0(x, y) x##y
+# define GL_CONCAT(x, y) GL_CONCAT0 (x, y)
 /* Verify a requirement at compile-time (unlike assert, which is runtime).  */
-#define VERIFY(assertion) \
-  struct GL_CONCAT (compile_time_assert_, __LINE__) \
-    { char a[(assertion) ? 1 : -1]; }
+# define VERIFY(assertion) \
+   struct GL_CONCAT (compile_time_assert_, __LINE__) \
+     { char a[(assertion) ? 1 : -1]; }
+#endif
 
 /* Like the above, but use an expression rather than a struct declaration.
    This macro may be used in some contexts where the other may not.  */
+#undef VERIFY_EXPR
 #define VERIFY_EXPR(assertion) \
   (void)((struct {char a[(assertion) ? 1 : -1]; } *) 0)
 
