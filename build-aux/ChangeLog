@@ -1,3 +1,8 @@
+2005-07-01  Jim Meyering  <jim@meyering.net>
+
+	* config.guess, config.sub, mdate-sh, missing, mkinstalldirs:
+	* texinfo.tex: Update from gnulib.
+
 2005-06-02  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* config.guess, config.sub, texinfo.tex: Sync from gnulib.
