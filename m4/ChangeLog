@@ -1,3 +1,9 @@
+2005-07-01  Jim Meyering  <jim@meyering.net>
+
+	* getcwd-path-max.m4 (gl_FUNC_GETCWD_PATH_MAX):
+	Assume HAVE_FCNTL_H (i.e., include <fcntl.h> unconditionally,
+	and don't check for fcntl.h).
+
 2005-06-30  Jim Meyering  <jim@meyering.net>
 
 	* stdopen.m4 (gl_STDOPEN): New file/macro.
