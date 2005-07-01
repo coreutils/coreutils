@@ -30,9 +30,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-#if HAVE_FCNTL_H
-# include <fcntl.h> /* For AT_FDCWD on Solaris 9.  */
-#endif
+#include <fcntl.h> /* For AT_FDCWD on Solaris 9.  */
 
 #ifndef __set_errno
 # define __set_errno(val) (errno = (val))

@@ -60,9 +60,7 @@
 # include <sys/filsys.h>	/* SVR2 */
 #endif
 
-#if HAVE_FCNTL_H
-# include <fcntl.h>
-#endif
+#include <fcntl.h>
 
 #if HAVE_SYS_STATFS_H
 # include <sys/statfs.h>

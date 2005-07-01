@@ -447,11 +447,7 @@
 #  include <sys/dg_sys_info.h>
 # endif
 
-# if defined (HAVE_FCNTL_H) || defined (_POSIX_VERSION)
-#  include <fcntl.h>
-# else
-#  include <sys/file.h>
-# endif
+# include <fcntl.h>
 
 # include "unistd-safer.h"
 

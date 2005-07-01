@@ -17,9 +17,7 @@
 
 /* written by Jim Meyering */
 
-#if HAVE_FCNTL_H
-# include <fcntl.h>
-#endif
+#include <fcntl.h>
 
 #include <sys/types.h>
 #include <sys/stat.h>

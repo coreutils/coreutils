@@ -33,11 +33,7 @@
 # include <unistd.h>
 #endif
 
-#if HAVE_FCNTL_H
-# include <fcntl.h>
-#else
-# include <sys/file.h>
-#endif
+#include <fcntl.h>
 
 #include <errno.h>
 

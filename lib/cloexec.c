@@ -27,9 +27,7 @@
 # include <unistd.h>
 #endif
 
-#if HAVE_FCNTL_H
-# include <fcntl.h>
-#endif
+#include <fcntl.h>
 
 #ifndef FD_CLOEXEC
 # define FD_CLOEXEC 1

@@ -30,11 +30,7 @@
 #if HAVE_UNISTD_H
 # include <unistd.h>
 #endif
-#if HAVE_FCNTL_H
-# include <fcntl.h>
-#else
-# include <sys/file.h>
-#endif
+#include <fcntl.h>
 #include <errno.h>
 
 /* Provide a more-closely POSIX-conforming version of chown on
