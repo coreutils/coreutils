@@ -1,5 +1,9 @@
 2005-07-01  Jim Meyering  <jim@meyering.net>
 
+	* chown.m4, cloexec.m4, dup2.m4, fsusage.m4, getcwd.m4, jm-macros.m4:
+	* mkstemp.m4, mountlist.m4, save-cwd.m4, unistd-safer.m4:
+	Don't check for fcntl.h anymore. Now we assume it exists and is usable.
+
 	* getcwd-path-max.m4 (gl_FUNC_GETCWD_PATH_MAX):
 	Assume HAVE_FCNTL_H (i.e., include <fcntl.h> unconditionally,
 	and don't check for fcntl.h).
