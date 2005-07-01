@@ -33,6 +33,7 @@
 #include <time.h>
 
 #include "intprops.h"
+#include "timespec.h"
 
 #ifndef TIME_T_MAX
 # define TIME_T_MAX TYPE_MAXIMUM (time_t)

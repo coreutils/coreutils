@@ -1,3 +1,8 @@
+2005-07-01  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* xnanosleep.c: Include timespec.h, since OpenBSD 3.4 <time.h>
+	declares only 'struct timespec;' (!).
+
 2005-06-30  Jim Meyering  <jim@meyering.net>
 
 	* stdopen.c: Add copyright.
