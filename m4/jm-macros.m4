@@ -187,7 +187,6 @@ AC_DEFUN([gl_MACROS],
 AC_DEFUN([gl_CHECK_ALL_HEADERS],
 [
   AC_CHECK_HEADERS_ONCE( \
-    fcntl.h \
     hurd.h \
     memory.h \
     mntent.h \

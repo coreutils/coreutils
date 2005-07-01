@@ -1,4 +1,4 @@
-# fsusage.m4 serial 15
+#serial 16
 # Obtaining file system usage information.
 
 # Copyright (C) 1997, 1998, 2000, 2001, 2003, 2004, 2005 Free Software
@@ -255,7 +255,6 @@ choke -- this is a workaround for a Sun-specific problem
 AC_DEFUN([gl_PREREQ_FSUSAGE_EXTRA],
 [
   AC_REQUIRE([gl_AC_TYPE_UINTMAX_T])
-  AC_CHECK_HEADERS_ONCE(fcntl.h)
   AC_CHECK_HEADERS(dustat.h sys/fs/s5param.h sys/filsys.h sys/statfs.h sys/statvfs.h)
   gl_STATFS_TRUNCATES
 ])

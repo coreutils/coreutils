@@ -1,4 +1,4 @@
-#serial 13
+#serial 14
 # Determine whether we need the chown wrapper.
 
 dnl Copyright (C) 1997, 1998, 1999, 2000, 2001, 2003, 2004, 2005 Free
@@ -81,6 +81,6 @@ AC_DEFUN([gl_FUNC_CHOWN_FOLLOWS_SYMLINK],
 # Prerequisites of lib/chown.c.
 AC_DEFUN([gl_PREREQ_CHOWN],
 [
-  AC_CHECK_HEADERS_ONCE(unistd.h fcntl.h)
+  AC_CHECK_HEADERS_ONCE(unistd.h)
   AC_CHECK_FUNC([fchown], , [AC_LIBOBJ(fchown-stub)])
 ])
