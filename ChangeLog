@@ -4,6 +4,7 @@
 
 	* src/system.h: Assume HAVE_FCNTL_H (i.e., include <fcntl.h>
 	unconditionally, and don't include <sys/file.h>).
+	* src/system.h: Likewise for HAVE_UNISTD_H.
 
 2005-06-30  Jim Meyering  <jim@meyering.net>
 
