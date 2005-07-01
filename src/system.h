@@ -158,11 +158,7 @@ initialize_exit_failure (int status)
     exit_failure = status;
 }
 
-#if HAVE_FCNTL_H
-# include <fcntl.h>
-#else
-# include <sys/file.h>
-#endif
+#include <fcntl.h>
 
 #if !defined SEEK_SET
 # define SEEK_SET 0
