@@ -1,3 +1,10 @@
+2005-07-01  Jim Meyering  <jim@meyering.net>
+
+	* chown.c, cloexec.c, dup-safer.c, dup2.c, fsusage.c, getcwd.c:
+	* getloadavg.c, mountlist.c, openat.h, save-cwd.c, tempname.c:
+	Assume HAVE_FCNTL_H (i.e., include <fcntl.h> unconditionally,
+	and don't include <sys/file.h>).
+
 2005-07-01  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* xnanosleep.c: Include timespec.h, since OpenBSD 3.4 <time.h>
