@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2005-05-20.06}
+\def\texinfoversion{2005-07-01.06}
 %
 % Copyright (C) 1985, 1986, 1988, 1990, 1991, 1992, 1993, 1994, 1995,
 % 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005 Free Software
@@ -655,13 +655,13 @@
 \let\/=\allowbreak
 
 % @. is an end-of-sentence period.
-\def\.{.\spacefactor=\endofsentencespacefactor}
+\def\.{.\spacefactor=\endofsentencespacefactor\space}
 
 % @! is an end-of-sentence bang.
-\def\!{!\spacefactor=\endofsentencespacefactor}
+\def\!{!\spacefactor=\endofsentencespacefactor\space}
 
 % @? is an end-of-sentence query.
-\def\?{?\spacefactor=\endofsentencespacefactor}
+\def\?{?\spacefactor=\endofsentencespacefactor\space}
 
 % @frenchspacing on|off  says whether to put extra space after punctuation.
 % 
@@ -4934,7 +4934,8 @@ where each line of input produces a line of output.}
 
 \let\afterenvbreak = \aboveenvbreak
 
-% \nonarrowing is a flag.  If "set", @lisp etc don't narrow margins.
+% \nonarrowing is a flag.  If "set", @lisp etc don't narrow margins; it will
+% also clear it, so that its embedded environments do the narrowing again.
 \let\nonarrowing=\relax
 
 % @cartouche ... @end cartouche: draw rectangle w/rounded corners around
@@ -4971,7 +4972,7 @@ where each line of input produces a line of output.}
 				% each corner char, and rule thickness
   \normbskip=\baselineskip \normpskip=\parskip \normlskip=\lineskip
   % Flag to tell @lisp, etc., not to narrow margin.
-  \let\nonarrowing=\comment
+  \let\nonarrowing = t%
   \vbox\bgroup
       \baselineskip=0pt\parskip=0pt\lineskip=0pt
       \carttop
@@ -5011,11 +5012,11 @@ where each line of input produces a line of output.}
   \parskip = 0pt
   \parindent = 0pt
   \emergencystretch = 0pt % don't try to avoid overfull boxes
-  % @cartouche defines \nonarrowing to inhibit narrowing
-  % at next level down.
   \ifx\nonarrowing\relax
     \advance \leftskip by \lispnarrowing
     \exdentamount=\lispnarrowing
+  \else
+    \let\nonarrowing = \relax
   \fi
   \let\exdent=\nofillexdent
 }
@@ -5115,6 +5116,7 @@ where each line of input produces a line of output.}
     \advance\leftskip by \lispnarrowing
     \advance\rightskip by \lispnarrowing
     \exdentamount = \lispnarrowing
+  \else
     \let\nonarrowing = \relax
   \fi
   \parsearg\quotationlabel
@@ -5207,8 +5209,8 @@ where each line of input produces a line of output.}
   }
 \endgroup
 \def\setupverbatim{%
+  \let\nonarrowing = t%
   \nonfillstart
-  \advance\leftskip by -\defbodyindent
   % Easiest (and conventionally used) font for verbatim
   \tt
   \def\par{\leavevmode\egroup\box0\endgraf}%

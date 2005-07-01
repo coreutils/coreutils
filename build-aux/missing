@@ -1,7 +1,7 @@
 #! /bin/sh
 # Common stub for a few missing GNU programs while installing.
 
-scriptversion=2005-05-14.22
+scriptversion=2005-06-08.21
 
 # Copyright (C) 1996, 1997, 1999, 2000, 2002, 2003, 2004, 2005
 #   Free Software Foundation, Inc.
@@ -297,6 +297,9 @@ WARNING: \`$1' is $msg.  You should only need it if
       # ... or it is derived from the source name (dir/f.texi becomes f.info)
       test -z "$file" && file=`echo "$infile" | sed 's,.*/,,;s,.[^.]*$,,'`.info
     fi
+    # If the file does not exist, the user really needs makeinfo;
+    # let's fail without touching anything.
+    test -f $file || exit 1
     touch $file
     ;;
 
