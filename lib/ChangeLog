@@ -1,5 +1,8 @@
 2005-07-02  Jim Meyering  <jim@meyering.net>
 
+	* getopt_.h: Assume HAVE_UNISTD_H, i.e., include <unistd.h>
+	unconditionally.
+
 	* fnmatch.c: Update from gnulib.
 
 	* backupfile.c, canon-host.c, canonicalize.c, chown.c, cloexec.c:
