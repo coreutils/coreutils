@@ -4,7 +4,7 @@ SUBDIRS = lib src doc man po tests
 EXTRA_DIST = Makefile.cfg Makefile.maint GNUmakefile \
   .kludge-stamp .prev-version THANKS-to-translators THANKStt.in \
   .x-sc_space_tab .x-sc_sun_os_names \
-  .x-sc_file_system \
+  .x-sc_file_system .x-sc_obsolete_symbols \
   announce-gen \
   m4/ChangeLog \
   old/fileutils/ChangeLog \
