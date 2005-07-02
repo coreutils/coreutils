@@ -1,5 +1,7 @@
 2005-07-02  Jim Meyering  <jim@meyering.net>
 
+	* fnmatch.c: Update from gnulib.
+
 	* backupfile.c, canon-host.c, canonicalize.c, chown.c, cloexec.c:
 	* dup-safer.c, dup2.c, euidaccess.c, fd-safer.c, fileblocks.c:
 	* fopen-safer.c, fsusage.c, ftruncate.c, getcwd.c, getcwd.h:
