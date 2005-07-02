@@ -22,9 +22,7 @@
    cause confusion if included after this file.  */
 
 #include <stdlib.h>
-#if HAVE_UNISTD_H
-# include <unistd.h>
-#endif
+#include <unistd.h>
 
 /* If necessary, systematically rename identifiers so that they do not
    collide with the system function.  Renaming avoids problems with

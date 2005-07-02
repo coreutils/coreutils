@@ -32,9 +32,7 @@
 # if HAVE_STDINT_H
 #  include <stdint.h>
 # endif
-# if HAVE_UNISTD_H
-#  include <unistd.h>
-# endif
+# include <unistd.h>
 
 /* A conservative bound on the maximum length of a human-readable string.
    The output can be the square of the largest uintmax_t, so double

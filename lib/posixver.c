@@ -27,9 +27,7 @@
 #include <limits.h>
 #include <stdlib.h>
 
-#if HAVE_UNISTD_H
-# include <unistd.h>
-#endif
+#include <unistd.h>
 #ifndef _POSIX2_VERSION
 # define _POSIX2_VERSION 0
 #endif

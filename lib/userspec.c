@@ -39,9 +39,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#if HAVE_UNISTD_H
-# include <unistd.h>
-#endif
+#include <unistd.h>
 
 #include "intprops.h"
 #include "inttostr.h"

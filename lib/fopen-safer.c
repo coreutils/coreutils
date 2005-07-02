@@ -21,9 +21,7 @@
 # include <config.h>
 #endif
 
-#if HAVE_UNISTD_H
-# include <unistd.h>
-#endif
+#include <unistd.h>
 #include <unistd-safer.h>
 
 #ifndef STDERR_FILENO

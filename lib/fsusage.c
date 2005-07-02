@@ -27,9 +27,7 @@
 #if HAVE_STDINT_H
 # include <stdint.h>
 #endif
-#if HAVE_UNISTD_H
-# include <unistd.h>
-#endif
+#include <unistd.h>
 #ifndef UINTMAX_MAX
 # define UINTMAX_MAX ((uintmax_t) -1)
 #endif

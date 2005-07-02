@@ -25,9 +25,7 @@
 #if HAVE_PRIV_H
 # include <priv.h>
 #endif
-#if HAVE_UNISTD_H
-# include <unistd.h>
-#endif
+#include <unistd.h>
 
 #if ! UNLINK_CANNOT_UNLINK_DIR
 

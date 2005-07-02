@@ -21,9 +21,7 @@
 
 #include <sys/types.h>
 #include <signal.h>
-#if HAVE_UNISTD_H
-# include <unistd.h>
-#endif
+#include <unistd.h>
 
 int
 raise (int sig)

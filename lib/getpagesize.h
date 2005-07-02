@@ -1,5 +1,5 @@
 /* Emulate getpagesize on systems that lack it.
-   Copyright (C) 1999, 2000, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2004, 2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -18,9 +18,7 @@
 
 #ifndef HAVE_GETPAGESIZE
 
-#ifdef HAVE_UNISTD_H
-# include <unistd.h>
-#endif
+#include <unistd.h>
 
 #if !defined getpagesize && defined _SC_PAGESIZE
 # if !(defined VMS && __VMS_VER < 70000000)

@@ -1,3 +1,15 @@
+2005-07-02  Jim Meyering  <jim@meyering.net>
+
+	* backupfile.c, canon-host.c, canonicalize.c, chown.c, cloexec.c:
+	* dup-safer.c, dup2.c, euidaccess.c, fd-safer.c, fileblocks.c:
+	* fopen-safer.c, fsusage.c, ftruncate.c, getcwd.c, getcwd.h:
+	* getloadavg.c, getopt_.h, getpagesize.h, getugroups.c, group-member.c:
+	* human.h, idcache.c, mkdir-p.c, mountlist.c, nanosleep.c, pathmax.h:
+	* physmem.c, posixver.c, putenv.c, raise.c, safe-read.c, same.c:
+	* save-cwd.c, setenv.c, settime.c, tempname.c, unlinkdir.c:
+	* unsetenv.c, userspec.c, xgethostname.c, xreadlink.c:
+	Assume HAVE_UNISTD_H, i.e., include <unistd.h> unconditionally.
+
 2005-07-01  Jim Meyering  <jim@meyering.net>
 
 	* chown.c, cloexec.c, dup-safer.c, dup2.c, fsusage.c, getcwd.c:

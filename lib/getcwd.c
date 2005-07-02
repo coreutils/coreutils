@@ -60,10 +60,7 @@
 # define _D_ALLOC_NAMLEN(d) (_D_EXACT_NAMLEN (d) + 1)
 #endif
 
-#if HAVE_UNISTD_H || _LIBC
-# include <unistd.h>
-#endif
-
+#include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
 

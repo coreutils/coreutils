@@ -23,9 +23,7 @@
 
 #include "physmem.h"
 
-#if HAVE_UNISTD_H
-# include <unistd.h>
-#endif
+#include <unistd.h>
 
 #if HAVE_SYS_PSTAT_H
 # include <sys/pstat.h>

@@ -37,9 +37,7 @@ char *strstr ();
 
 #include <fcntl.h>
 
-#ifdef HAVE_UNISTD_H
-# include <unistd.h>
-#endif
+#include <unistd.h>
 
 #if HAVE_SYS_PARAM_H
 # include <sys/param.h>

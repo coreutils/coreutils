@@ -32,10 +32,7 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
-
-#if HAVE_UNISTD_H || defined _LIBC
-# include <unistd.h>
-#endif
+#include <unistd.h>
 
 #if HAVE_LIBGEN_H
 # include <libgen.h>
