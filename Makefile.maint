@@ -75,6 +75,7 @@ syntax-check-rules = \
   sc_dd_max_sym_length \
   sc_error_exit_success \
   sc_file_system \
+  sc_obsolete_symbols \
   sc_prohibit_atoi_atof \
   sc_prohibit_jm_in_m4 \
   sc_root_tests \
@@ -146,6 +147,13 @@ sc_file_system:
 	  { echo '$(ME): found use of "filesystem";'			\
 	    'rewrite to use "file system"' 1>&2;			\
 	    exit 1; } || :
+
+sc_obsolete_symbols:
+	@( $(CVS_LIST) ) > /dev/null 2>&1 || : &&			\
+	  grep -E '\<(HAVE_(FCNTL|UNISTD)_H)\>'				\
+	     $$($(CVS_LIST) | grep -vEf .x-$@ ) &&			\
+	  { echo '$(ME): do not use HAVE_FCNTL_H or HAVE_UNISTD_H'	\
+		1>&2; exit 1; } || :
 
 # FIXME: warn about definitions of EXIT_FAILURE, EXIT_SUCCESS, STREQ
 
