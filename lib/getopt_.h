@@ -34,9 +34,7 @@
 #if defined __GETOPT_PREFIX && !defined __need_getopt
 # include <stdlib.h>
 # include <stdio.h>
-# if HAVE_UNISTD_H
-#  include <unistd.h>
-# endif
+# include <unistd.h>
 # undef __need_getopt
 # undef getopt
 # undef getopt_long
