@@ -1,4 +1,4 @@
-#serial 20
+#serial 21
 
 dnl This is just a wrapper function to encapsulate this kludge.
 dnl Putting it in a separate file like this helps share it between
@@ -12,9 +12,7 @@ AC_DEFUN([gl_CHECK_DECLS],
 #include <string.h>
 #include <stdlib.h>
 
-#if HAVE_UNISTD_H
-# include <unistd.h>
-#endif
+#include <unistd.h>
 
 #include <sys/types.h>
 #if TIME_WITH_SYS_TIME

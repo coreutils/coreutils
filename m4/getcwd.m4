@@ -17,9 +17,7 @@ AC_DEFUN([gl_FUNC_GETCWD_NULL],
      [AC_TRY_RUN(
         [
 #	 include <stdlib.h>
-#	 ifdef HAVE_UNISTD_H
-#	  include <unistd.h>
-#	 endif
+#	 include <unistd.h>
 #	 ifndef getcwd
 	 char *getcwd ();
 #	 endif

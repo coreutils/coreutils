@@ -1,8 +1,8 @@
-#serial 5
+#serial 6
 dnl Run a program to determine whether whether link(2) follows symlinks.
 dnl Set LINK_FOLLOWS_SYMLINKS accordingly.
 
-# Copyright (C) 1999, 2000, 2001, 2004 Free Software Foundation, Inc.
+# Copyright (C) 1999, 2000, 2001, 2004, 2005 Free Software Foundation, Inc.
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
 # with or without modifications, as long as this notice is preserved.
@@ -24,9 +24,7 @@ AC_DEFUN([gl_AC_FUNC_LINK_FOLLOWS_SYMLINK],
       [
 #       include <sys/types.h>
 #       include <sys/stat.h>
-#       ifdef HAVE_UNISTD_H
-#        include <unistd.h>
-#       endif
+#       include <unistd.h>
 
 #       define SAME_INODE(Stat_buf_1, Stat_buf_2) \
 	  ((Stat_buf_1).st_ino == (Stat_buf_2).st_ino \

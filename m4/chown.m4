@@ -1,4 +1,4 @@
-#serial 14
+#serial 15
 # Determine whether we need the chown wrapper.
 
 dnl Copyright (C) 1997, 1998, 1999, 2000, 2001, 2003, 2004, 2005 Free
@@ -44,9 +44,7 @@ AC_DEFUN([gl_FUNC_CHOWN_FOLLOWS_SYMLINK],
     gl_cv_func_chown_follows_symlink,
     [
       AC_RUN_IFELSE([AC_LANG_SOURCE([[
-#ifdef HAVE_UNISTD_H
-# include <unistd.h>
-#endif
+#include <unistd.h>
 #include <stdlib.h>
 #include <errno.h>
 
