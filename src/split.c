@@ -30,13 +30,14 @@
 #include "system.h"
 #include "dirname.h"
 #include "error.h"
+#include "fd-reopen.h"
+#include "fcntl--.h"
 #include "getpagesize.h"
 #include "full-read.h"
 #include "full-write.h"
 #include "inttostr.h"
 #include "quote.h"
 #include "safe-read.h"
-#include "unistd-safer.h"
 #include "xstrtol.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -67,9 +68,6 @@ static char const *suffix_alphabet = "abcdefghijklmnopqrstuvwxyz";
 
 /* Name of input file.  May be "-".  */
 static char *infile;
-
-/* Descriptor on which input file is open.  */
-static int input_desc;
 
 /* Descriptor on which output file is open.  */
 static int output_desc;
@@ -212,10 +210,10 @@ cwrite (bool new_file_flag, const char *bp, size_t bytes)
       next_file_name ();
       if (verbose)
 	fprintf (stderr, _("creating file %s\n"), quote (outfile));
-      output_desc = fd_safer (open (outfile,
-				    O_WRONLY | O_CREAT | O_TRUNC | O_BINARY,
-				    (S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP
-				     | S_IROTH | S_IWOTH)));
+      output_desc = open (outfile,
+			  O_WRONLY | O_CREAT | O_TRUNC | O_BINARY,
+			  (S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP
+			   | S_IROTH | S_IWOTH));
       if (output_desc < 0)
 	error (EXIT_FAILURE, errno, "%s", outfile);
     }
@@ -237,7 +235,7 @@ bytes_split (uintmax_t n_bytes, char *buf, size_t bufsize)
 
   do
     {
-      n_read = full_read (input_desc, buf, bufsize);
+      n_read = full_read (STDIN_FILENO, buf, bufsize);
       if (n_read == SAFE_READ_ERROR)
         error (EXIT_FAILURE, errno, "%s", infile);
       bp_out = buf;
@@ -281,7 +279,7 @@ lines_split (uintmax_t n_lines, char *buf, size_t bufsize)
 
   do
     {
-      n_read = full_read (input_desc, buf, bufsize);
+      n_read = full_read (STDIN_FILENO, buf, bufsize);
       if (n_read == SAFE_READ_ERROR)
 	error (EXIT_FAILURE, errno, "%s", infile);
       bp = bp_out = buf;
@@ -333,7 +331,7 @@ line_bytes_split (size_t n_bytes)
     {
       /* Fill up the full buffer size from the input file.  */
 
-      n_read = full_read (input_desc, buf + n_buffered, n_bytes - n_buffered);
+      n_read = full_read (STDIN_FILENO, buf + n_buffered, n_bytes - n_buffered);
       if (n_read == SAFE_READ_ERROR)
 	error (EXIT_FAILURE, errno, "%s", infile);
 
@@ -537,23 +535,20 @@ main (int argc, char **argv)
     }
 
   /* Open the input file.  */
-  if (STREQ (infile, "-"))
-    input_desc = STDIN_FILENO;
-  else
-    {
-      input_desc = open (infile, O_RDONLY);
-      if (input_desc < 0)
-	error (EXIT_FAILURE, errno, "%s", infile);
-    }
+  if (! STREQ (infile, "-")
+      && fd_reopen (STDIN_FILENO, infile, O_RDONLY, 0) < 0)
+    error (EXIT_FAILURE, errno, _("cannot open %s for reading"),
+	   quote (infile));
+
   /* Binary I/O is safer when bytecounts are used.  */
-  SET_BINARY (input_desc);
+  SET_BINARY (STDIN_FILENO);
 
   /* No output file is open now.  */
   output_desc = -1;
 
   /* Get the optimal block size of input device and make a buffer.  */
 
-  if (fstat (input_desc, &stat_buf) < 0)
+  if (fstat (STDIN_FILENO, &stat_buf) != 0)
     error (EXIT_FAILURE, errno, "%s", infile);
   in_blk_size = ST_BLKSIZE (stat_buf);
 
@@ -578,7 +573,7 @@ main (int argc, char **argv)
       abort ();
     }
 
-  if (close (input_desc) < 0)
+  if (close (STDIN_FILENO) != 0)
     error (EXIT_FAILURE, errno, "%s", infile);
   if (output_desc >= 0 && close (output_desc) < 0)
     error (EXIT_FAILURE, errno, "%s", outfile);
