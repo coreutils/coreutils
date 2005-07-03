@@ -63,35 +63,35 @@ DIST_COMMON = README $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	hard-locale.h hash-pjw.c hash-pjw.h hash.c hash.h human.c \
 	human.h idcache.c imaxtostr.c intprops.h inttostr.c inttostr.h \
 	lchown.c lchown.h linebuffer.c linebuffer.h long-options.c \
-	long-options.h lstat.c malloc.c md5.c md5.h memcasecmp.c \
-	memcasecmp.h memchr.c memcmp.c memcoll.c memcoll.h memcpy.c \
-	memmove.c mempcpy.c mempcpy.h memrchr.c memrchr.h memset.c \
-	mkdir-p.c mkdir-p.h mkdir.c mkstemp-safer.c mkstemp.c mktime.c \
-	modechange.c modechange.h mountlist.c mountlist.h nanosleep.c \
-	obstack.c obstack.h offtostr.c open-safer.c openat-die.c \
-	openat.c openat.h pathmax.h physmem.c physmem.h posixtm.c \
-	posixtm.h posixver.c posixver.h printf-args.c printf-parse.c \
-	putenv.c quote.c quote.h quotearg.c quotearg.h raise.c \
-	readlink.c readtokens.c readtokens.h readutmp.c readutmp.h \
-	realloc.c regex.c rename.c rmdir.c root-dev-ino.c \
-	root-dev-ino.h rpmatch.c safe-read.c safe-read.h safe-write.c \
-	safe-write.h same.c same.h save-cwd.c save-cwd.h savedir.c \
-	savedir.h setenv.c setenv.h settime.c sha1.c sha1.h sig2str.c \
-	sig2str.h stat-macros.h stdio--.h stdio-safer.h stdlib--.h \
-	stdlib-safer.h stdopen.c stdopen.h stpcpy.c strcasecmp.c \
-	strcspn.c strdup.c strdup.h strftime.c strftime.h strintcmp.c \
-	stripslash.c strncasecmp.c strndup.c strndup.h strnlen.c \
-	strnumcmp-in.h strnumcmp.c strnumcmp.h strpbrk.c strstr.c \
-	strtod.c strtoimax.c strtol.c strtoll.c strtoul.c strtoull.c \
-	strtoumax.c strverscmp.c strverscmp.h tempname.c timespec.h \
-	umaxtostr.c unistd--.h unistd-safer.h unlinkdir.c unlinkdir.h \
-	unlocked-io.h unsetenv.c userspec.c userspec.h utime.c \
-	utimecmp.c utimecmp.h utimens.c utimens.h vasnprintf.c \
-	vasprintf.c version-etc-fsf.c version-etc.c version-etc.h \
-	xalloc.h xfts.c xfts.h xgetcwd.c xgetcwd.h xmalloc.c \
-	xnanosleep.c xnanosleep.h xreadlink.c xreadlink.h xstrtod.c \
-	xstrtod.h xstrtol.c xstrtol.h xstrtoul.c xtime.h yesno.c \
-	yesno.h
+	long-options.h lstat.c lstat.h malloc.c md5.c md5.h \
+	memcasecmp.c memcasecmp.h memchr.c memcmp.c memcoll.c \
+	memcoll.h memcpy.c memmove.c mempcpy.c mempcpy.h memrchr.c \
+	memrchr.h memset.c mkdir-p.c mkdir-p.h mkdir.c mkstemp-safer.c \
+	mkstemp.c mktime.c modechange.c modechange.h mountlist.c \
+	mountlist.h nanosleep.c obstack.c obstack.h offtostr.c \
+	open-safer.c openat-die.c openat.c openat.h pathmax.h \
+	physmem.c physmem.h posixtm.c posixtm.h posixver.c posixver.h \
+	printf-args.c printf-parse.c putenv.c quote.c quote.h \
+	quotearg.c quotearg.h raise.c readlink.c readtokens.c \
+	readtokens.h readutmp.c readutmp.h realloc.c regex.c rename.c \
+	rmdir.c root-dev-ino.c root-dev-ino.h rpmatch.c safe-read.c \
+	safe-read.h safe-write.c safe-write.h same.c same.h save-cwd.c \
+	save-cwd.h savedir.c savedir.h setenv.c setenv.h settime.c \
+	sha1.c sha1.h sig2str.c sig2str.h stat-macros.h stdio--.h \
+	stdio-safer.h stdlib--.h stdlib-safer.h stdopen.c stdopen.h \
+	stpcpy.c strcasecmp.c strcspn.c strdup.c strdup.h strftime.c \
+	strftime.h strintcmp.c stripslash.c strncasecmp.c strndup.c \
+	strndup.h strnlen.c strnumcmp-in.h strnumcmp.c strnumcmp.h \
+	strpbrk.c strstr.c strtod.c strtoimax.c strtol.c strtoll.c \
+	strtoul.c strtoull.c strtoumax.c strverscmp.c strverscmp.h \
+	tempname.c timespec.h umaxtostr.c unistd--.h unistd-safer.h \
+	unlinkdir.c unlinkdir.h unlocked-io.h unsetenv.c userspec.c \
+	userspec.h utime.c utimecmp.c utimecmp.h utimens.c utimens.h \
+	vasnprintf.c vasprintf.c version-etc-fsf.c version-etc.c \
+	version-etc.h xalloc.h xfts.c xfts.h xgetcwd.c xgetcwd.h \
+	xmalloc.c xnanosleep.c xnanosleep.h xreadlink.c xreadlink.h \
+	xstrtod.c xstrtod.h xstrtol.c xstrtol.h xstrtoul.c xtime.h \
+	yesno.c yesno.h
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/afs.m4 \
 	$(top_srcdir)/m4/alloca.m4 $(top_srcdir)/m4/allocsa.m4 \
