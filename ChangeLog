@@ -2,7 +2,7 @@
 
 	* Version 5.3.1.
 
-	Deprecate mv's and cp's --reply option.
+	* NEWS: cp and mv: the --reply=X option is deprecated
 	* src/mv.c (main): Using --reply now evokes a warning.
 	(usage): Remove description of --reply.
 	* src/cp.c (main): Using --reply now evokes a warning.
