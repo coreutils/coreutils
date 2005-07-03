@@ -31,7 +31,4 @@ AC_DEFUN([gl_FUNC_FTS_CORE],
   # Checks for header files.
   AC_REQUIRE([AC_HEADER_DIRENT])
   AC_CHECK_HEADERS_ONCE([sys/param.h])
-
-  # Checks for library functions.
-  AC_REQUIRE([AC_FUNC_LSTAT_FOLLOWS_SLASHED_SYMLINK])
 ])

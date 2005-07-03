@@ -1,4 +1,4 @@
-#serial 89   -*- autoconf -*-
+#serial 90   -*- autoconf -*-
 
 dnl Misc type-related macros for coreutils.
 
@@ -55,7 +55,6 @@ AC_DEFUN([gl_MACROS],
   AC_REQUIRE([gl_FUNC_RMDIR_NOTEMPTY])
   AC_REQUIRE([gl_FUNC_CHOWN])
   AC_REQUIRE([AC_FUNC_LSTAT])
-  AC_REQUIRE([AC_FUNC_LSTAT_FOLLOWS_SLASHED_SYMLINK])
   AC_REQUIRE([AC_FUNC_STRERROR_R])
   AC_REQUIRE([gl_FUNC_GROUP_MEMBER])
   AC_REQUIRE([gl_AFS])
