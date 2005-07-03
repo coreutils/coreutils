@@ -43,6 +43,13 @@
 # include "unlocked-io.h"
 #endif
 
+/* Use this to suppress gcc's `...may be used before initialized' warnings. */
+#ifdef lint
+# define IF_LINT(Code) Code
+#else
+# define IF_LINT(Code) /* empty */
+#endif
+
 /* ISDIGIT differs from isdigit, as follows:
    - Its arg may be any int or unsigned int; it need not be an unsigned char.
    - It's guaranteed to evaluate its argument exactly once.
@@ -193,18 +200,18 @@ posix_time_parse (struct tm *tm, const char *s, unsigned int syntax_bits)
 bool
 posixtime (time_t *p, const char *s, unsigned int syntax_bits)
 {
-  struct tm tm0;
+  struct tm tm0
+#ifdef lint
+  /* Placate gcc-4's -Wuninitialized.
+     posix_time_parse fails to set all of tm0 only when it returns
+     nonzero (due to year() returning nonzero), and in that case,
+     this code doesn't use the tm0 at all.  */
+    = { 0, }
+#endif
+    ;
   struct tm tm1;
   struct tm const *tm;
   time_t t;
-
-#ifdef lint
-  /* Placate gcc-4's -Wuninitialized.
-     posix_time_parse fails to set tm0.tm_year only when it returns
-     nonzero (due to year() returning nonzero), and in that case,
-     this code doesn't use the tm0 at all.  */
-  tm0.tm_year = 0;
-#endif
 
   if (posix_time_parse (&tm0, s, syntax_bits))
     return false;
