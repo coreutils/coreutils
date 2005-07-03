@@ -1,3 +1,9 @@
+2005-07-03  Jim Meyering  <jim@meyering.net>
+
+	* posixtm.c (posixtime) [lint]: Initialize *all* of tm0, not just
+	the .tm_year member, since otherwise gcc-4.0 would now warn about
+	tm_zone, tm_gmtoff, tm_isdst, tm_yday, tm_wday.
+
 2005-07-03  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Makefile.am (libcoreutils_a_SOURCES): Undo previous change.
