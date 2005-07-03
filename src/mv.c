@@ -77,7 +77,8 @@ static struct option const long_options[] =
   {"force", no_argument, NULL, 'f'},
   {"interactive", no_argument, NULL, 'i'},
   {"no-target-directory", no_argument, NULL, 'T'},
-  {"reply", required_argument, NULL, REPLY_OPTION},
+  {"reply", required_argument, NULL, REPLY_OPTION}, /* Deprecated 2005-07-03,
+						       remove in 2008. */
   {"strip-trailing-slashes", no_argument, NULL, STRIP_TRAILING_SLASHES_OPTION},
   {"suffix", required_argument, NULL, 'S'},
   {"target-directory", required_argument, NULL, 't'},
@@ -311,18 +312,9 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       --backup[=CONTROL]       make a backup of each existing destination file\n\
   -b                           like --backup but does not accept an argument\n\
   -f, --force                  do not prompt before overwriting\n\
-                                 (equivalent to --reply=yes)\n\
   -i, --interactive            prompt before overwrite\n\
-                                 (equivalent to --reply=query)\n\
 "), stdout);
       fputs (_("\
-      --reply={yes,no,query}   specify how to handle the prompt about an\n\
-                                 existing destination file.  Note that\n\
-                                 --reply=no has an effect only when mv\n\
-                                 would prompt without -i or equivalent, i.e.,\n\
-                                 when a destination file exists and is not\n\
-                                 writable, standard input is a terminal, and\n\
-                                 no -f (or equivalent) option is specified\n\
       --strip-trailing-slashes remove any trailing slashes from each SOURCE\n\
                                  argument\n\
   -S, --suffix=SUFFIX          override the usual backup suffix\n\
@@ -399,9 +391,11 @@ main (int argc, char **argv)
 	case 'i':
 	  x.interactive = I_ASK_USER;
 	  break;
-	case REPLY_OPTION:
+	case REPLY_OPTION: /* Deprecated */
 	  x.interactive = XARGMATCH ("--reply", optarg,
 				     reply_args, reply_vals);
+	  error (0, 0,
+		 _("the --reply option is deprecated; use -i or -f instead"));
 	  break;
 	case STRIP_TRAILING_SLASHES_OPTION:
 	  remove_trailing_slashes = true;

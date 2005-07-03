@@ -130,7 +130,8 @@ static struct option const long_opts[] =
   {"preserve", optional_argument, NULL, PRESERVE_ATTRIBUTES_OPTION},
   {"recursive", no_argument, NULL, 'R'},
   {"remove-destination", no_argument, NULL, UNLINK_DEST_BEFORE_OPENING},
-  {"reply", required_argument, NULL, REPLY_OPTION},
+  {"reply", required_argument, NULL, REPLY_OPTION}, /* Deprecated 2005-07-03,
+						       remove in 2008. */
   {"sparse", required_argument, NULL, SPARSE_OPTION},
   {"strip-trailing-slashes", no_argument, NULL, STRIP_TRAILING_SLASHES_OPTION},
   {"suffix", required_argument, NULL, 'S'},
@@ -200,8 +201,6 @@ Mandatory arguments to long options are mandatory for short options too.\n\
                                  attempting to open it (contrast with --force)\n\
 "), stdout);
       fputs (_("\
-      --reply={yes,no,query}   specify how to handle the prompt about an\n\
-                                 existing destination file\n\
       --sparse=WHEN            control creation of sparse files\n\
       --strip-trailing-slashes remove any trailing slashes from each SOURCE\n\
                                  argument\n\
@@ -905,9 +904,11 @@ main (int argc, char **argv)
 	  x.recursive = true;
 	  break;
 
-	case REPLY_OPTION:
+	case REPLY_OPTION: /* Deprecated */
 	  x.interactive = XARGMATCH ("--reply", optarg,
 				     reply_args, reply_vals);
+	  error (0, 0,
+		 _("the --reply option is deprecated; use -i or -f instead"));
 	  break;
 
 	case UNLINK_DEST_BEFORE_OPENING:
