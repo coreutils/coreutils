@@ -1,3 +1,7 @@
+2005-07-03  Jim Meyering  <jim@meyering.net>
+
+	* lstat.m4 (gl_FUNC_LSTAT): New file, from gnulib.
+
 2005-07-03  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* fts.m4 (gl_FUNC_FTS_CORE): Don't require
