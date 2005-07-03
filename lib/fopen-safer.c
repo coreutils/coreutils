@@ -1,5 +1,5 @@
 /* Invoke fopen, but avoid some glitches.
-   Copyright (C) 2001, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2004, 2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -21,16 +21,15 @@
 # include <config.h>
 #endif
 
+#include "stdio-safer.h"
+
+#include <errno.h>
 #include <unistd.h>
-#include <unistd-safer.h>
+#include "unistd-safer.h"
 
 #ifndef STDERR_FILENO
 # define STDERR_FILENO 2
 #endif
-
-#include <errno.h>
-#include <stdio.h>
-#include <stdio-safer.h>
 
 /* Like fopen, but do not return stdin, stdout, or stderr.  */
 
