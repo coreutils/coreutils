@@ -56,6 +56,7 @@
 
 #include "system.h"
 #include "error.h"
+#include "fd-reopen.h"
 #include "quote.h"
 #include "vasprintf.h"
 #include "xstrtol.h"
@@ -420,22 +421,21 @@ static bool set_mode (struct mode_info *info, bool reversed,
 static unsigned long int integer_arg (const char *s, unsigned long int max);
 static speed_t string_to_baud (const char *arg);
 static tcflag_t *mode_type_flag (enum mode_type type, struct termios *mode);
-static void display_all (struct termios *mode, int fd, const char *device_name);
+static void display_all (struct termios *mode, char const *device_name);
 static void display_changed (struct termios *mode);
 static void display_recoverable (struct termios *mode);
 static void display_settings (enum output_type output_type,
-			      struct termios *mode, int fd,
+			      struct termios *mode,
 			      const char *device_name);
 static void display_speed (struct termios *mode, bool fancy);
-static void display_window_size (bool fancy, int fd, const char *device_name);
+static void display_window_size (bool fancy, char const *device_name);
 static void sane_mode (struct termios *mode);
 static void set_control_char (struct control_info *info,
 			      const char *arg,
 			      struct termios *mode);
 static void set_speed (enum speed_setting type, const char *arg,
 		       struct termios *mode);
-static void set_window_size (int rows, int cols, int fd,
-			     const char *device_name);
+static void set_window_size (int rows, int cols, char const *device_name);
 
 /* The width of the screen, for output wrapping. */
 static int max_col;
@@ -737,7 +737,6 @@ main (int argc, char **argv)
   int k;
   bool noargs = true;
   char *file_name = NULL;
-  int fd;
   const char *device_name;
 
   initialize_main (&argc, &argv);
@@ -827,31 +826,27 @@ main (int argc, char **argv)
     {
       int fdflags;
       device_name = file_name;
-      fd = open (device_name, O_RDONLY | O_NONBLOCK);
-      if (fd < 0)
+      if (fd_reopen (STDIN_FILENO, device_name, O_RDONLY | O_NONBLOCK, 0) < 0)
 	error (EXIT_FAILURE, errno, "%s", device_name);
-      if ((fdflags = fcntl (fd, F_GETFL)) == -1
-	  || fcntl (fd, F_SETFL, fdflags & ~O_NONBLOCK) < 0)
+      if ((fdflags = fcntl (STDIN_FILENO, F_GETFL)) == -1
+	  || fcntl (STDIN_FILENO, F_SETFL, fdflags & ~O_NONBLOCK) < 0)
 	error (EXIT_FAILURE, errno, _("%s: couldn't reset non-blocking mode"),
 	       device_name);
     }
   else
-    {
-      fd = STDIN_FILENO;
-      device_name = _("standard input");
-    }
+    device_name = _("standard input");
 
   /* Initialize to all zeroes so there is no risk memcmp will report a
      spurious difference in an uninitialized portion of the structure.  */
   memset (&mode, 0, sizeof (mode));
-  if (tcgetattr (fd, &mode))
+  if (tcgetattr (STDIN_FILENO, &mode))
     error (EXIT_FAILURE, errno, "%s", device_name);
 
   if (verbose_output | recoverable_output | noargs)
     {
       max_col = screen_columns ();
       current_col = 0;
-      display_settings (output_type, &mode, fd, device_name);
+      display_settings (output_type, &mode, device_name);
       exit (EXIT_SUCCESS);
     }
 
@@ -941,7 +936,7 @@ main (int argc, char **argv)
 		}
 	      ++k;
 	      set_window_size (integer_arg (argv[k], INT_MAX), -1,
-			       fd, device_name);
+			       device_name);
 	    }
 	  else if (STREQ (arg, "cols")
 		   || STREQ (arg, "columns"))
@@ -953,13 +948,13 @@ main (int argc, char **argv)
 		}
 	      ++k;
 	      set_window_size (-1, integer_arg (argv[k], INT_MAX),
-			       fd, device_name);
+			       device_name);
 	    }
 	  else if (STREQ (arg, "size"))
 	    {
 	      max_col = screen_columns ();
 	      current_col = 0;
-	      display_window_size (false, fd, device_name);
+	      display_window_size (false, device_name);
 	    }
 #endif
 #ifdef HAVE_C_LINE
@@ -1005,7 +1000,7 @@ main (int argc, char **argv)
     {
       struct termios new_mode;
 
-      if (tcsetattr (fd, TCSADRAIN, &mode))
+      if (tcsetattr (STDIN_FILENO, TCSADRAIN, &mode))
 	error (EXIT_FAILURE, errno, "%s", device_name);
 
       /* POSIX (according to Zlotnick's book) tcsetattr returns zero if
@@ -1018,7 +1013,7 @@ main (int argc, char **argv)
       /* Initialize to all zeroes so there is no risk memcmp will report a
 	 spurious difference in an uninitialized portion of the structure.  */
       memset (&new_mode, 0, sizeof (new_mode));
-      if (tcgetattr (fd, &new_mode))
+      if (tcgetattr (STDIN_FILENO, &new_mode))
 	error (EXIT_FAILURE, errno, "%s", device_name);
 
       /* Normally, one shouldn't use memcmp to compare structures that
@@ -1319,11 +1314,11 @@ get_win_size (int fd, struct winsize *win)
 }
 
 static void
-set_window_size (int rows, int cols, int fd, const char *device_name)
+set_window_size (int rows, int cols, char const *device_name)
 {
   struct winsize win;
 
-  if (get_win_size (fd, &win))
+  if (get_win_size (STDIN_FILENO, &win))
     {
       if (errno != EINVAL)
 	error (EXIT_FAILURE, errno, "%s", device_name);
@@ -1367,25 +1362,25 @@ set_window_size (int rows, int cols, int fd, const char *device_name)
       win.ws_row = 1;
       win.ws_col = 1;
 
-      if (ioctl (fd, TIOCSWINSZ, (char *) &win))
+      if (ioctl (STDIN_FILENO, TIOCSWINSZ, (char *) &win))
 	error (EXIT_FAILURE, errno, "%s", device_name);
 
-      if (ioctl (fd, TIOCSSIZE, (char *) &ttysz))
+      if (ioctl (STDIN_FILENO, TIOCSSIZE, (char *) &ttysz))
 	error (EXIT_FAILURE, errno, "%s", device_name);
       return;
     }
 # endif
 
-  if (ioctl (fd, TIOCSWINSZ, (char *) &win))
+  if (ioctl (STDIN_FILENO, TIOCSWINSZ, (char *) &win))
     error (EXIT_FAILURE, errno, "%s", device_name);
 }
 
 static void
-display_window_size (bool fancy, int fd, const char *device_name)
+display_window_size (bool fancy, char const *device_name)
 {
   struct winsize win;
 
-  if (get_win_size (fd, &win))
+  if (get_win_size (STDIN_FILENO, &win))
     {
       if (errno != EINVAL)
 	error (EXIT_FAILURE, errno, "%s", device_name);
@@ -1419,7 +1414,7 @@ screen_columns (void)
     return win.ws_col;
 #endif
   {
-    /* Use $COLUMNS if it's in [1..INT_MAX-1].  */
+    /* Use $COLUMNS if it's in [1..INT_MAX].  */
     char *col_string = getenv ("COLUMNS");
     long int n_columns;
     if (!(col_string != NULL
@@ -1458,7 +1453,7 @@ mode_type_flag (enum mode_type type, struct termios *mode)
 
 static void
 display_settings (enum output_type output_type, struct termios *mode,
-		  int fd, const char *device_name)
+		  char const *device_name)
 {
   switch (output_type)
     {
@@ -1467,7 +1462,7 @@ display_settings (enum output_type output_type, struct termios *mode,
       break;
 
     case all:
-      display_all (mode, fd, device_name);
+      display_all (mode, device_name);
       break;
 
     case recoverable:
@@ -1562,7 +1557,7 @@ display_changed (struct termios *mode)
 }
 
 static void
-display_all (struct termios *mode, int fd, const char *device_name)
+display_all (struct termios *mode, char const *device_name)
 {
   int i;
   tcflag_t *bitsp;
@@ -1571,7 +1566,7 @@ display_all (struct termios *mode, int fd, const char *device_name)
 
   display_speed (mode, true);
 #ifdef TIOCGWINSZ
-  display_window_size (true, fd, device_name);
+  display_window_size (true, device_name);
 #endif
 #ifdef HAVE_C_LINE
   wrapf ("line = %d;", mode->c_line);
