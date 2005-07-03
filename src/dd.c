@@ -28,6 +28,7 @@
 
 #include "system.h"
 #include "error.h"
+#include "fd-reopen.h"
 #include "gethrxtime.h"
 #include "getpagesize.h"
 #include "human.h"
@@ -750,28 +751,6 @@ iwrite (int fd, char const *buf, size_t size)
     }
 
   return total_written;
-}
-
-/* Open a file to a particular file descriptor.  This is like standard
-   `open', except it always returns DESIRED_FD if successful.  */
-static int
-open_fd (int desired_fd, char const *filename, int options, mode_t mode)
-{
-  int fd;
-  close (desired_fd);
-  fd = open (filename, options, mode);
-  if (fd < 0)
-    return -1;
-
-  if (fd != desired_fd)
-    {
-      if (dup2 (fd, desired_fd) != desired_fd)
-	desired_fd = -1;
-      if (close (fd) != 0)
-	return -1;
-    }
-
-  return desired_fd;
 }
 
 /* Write, then empty, the output buffer `obuf'. */
@@ -1630,7 +1609,7 @@ main (int argc, char **argv)
     }
   else
     {
-      if (open_fd (STDIN_FILENO, input_file, O_RDONLY | input_flags, 0) < 0)
+      if (fd_reopen (STDIN_FILENO, input_file, O_RDONLY | input_flags, 0) < 0)
 	error (EXIT_FAILURE, errno, _("opening %s"), quote (input_file));
     }
 
@@ -1657,8 +1636,9 @@ main (int argc, char **argv)
 	 need to read to satisfy a `seek=' request.  If we can't read
 	 the file, go ahead with write-only access; it might work.  */
       if ((! seek_records
-	   || open_fd (STDOUT_FILENO, output_file, O_RDWR | opts, perms) < 0)
-	  && open_fd (STDOUT_FILENO, output_file, O_WRONLY | opts, perms) < 0)
+	   || fd_reopen (STDOUT_FILENO, output_file, O_RDWR | opts, perms) < 0)
+	  && (fd_reopen (STDOUT_FILENO, output_file, O_WRONLY | opts, perms)
+	      < 0))
 	error (EXIT_FAILURE, errno, _("opening %s"), quote (output_file));
 
 #if HAVE_FTRUNCATE
