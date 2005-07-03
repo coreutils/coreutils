@@ -148,7 +148,7 @@ ARGUMENTs converted to proper type first.  Variable widths are handled.\n\
 }
 
 static void
-verify (const char *s, const char *end)
+verify_numeric (const char *s, const char *end)
 {
   if (errno)
     {
@@ -187,7 +187,7 @@ FUNC_NAME (char const *s)						 \
     {									 \
       errno = 0;							 \
       val = (LIB_FUNC_EXPR);						 \
-      verify (s, end);							 \
+      verify_numeric (s, end);						 \
     }									 \
   return val;								 \
 }									 \
