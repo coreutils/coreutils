@@ -35,11 +35,11 @@
 #include "argmatch.h"
 #include "c-strtod.h"
 #include "error.h"
+#include "fcntl--.h"
 #include "inttostr.h"
 #include "posixver.h"
 #include "quote.h"
 #include "safe-read.h"
-#include "unistd-safer.h"
 #include "xnanosleep.h"
 #include "xstrtol.h"
 #include "xstrtod.h"
@@ -856,8 +856,7 @@ recheck (struct File_spec *f, bool blocking)
   bool new_file;
   int fd = (is_stdin
 	    ? STDIN_FILENO
-	    : fd_safer (open (f->name,
-			      O_RDONLY | (blocking ? 0 : O_NONBLOCK))));
+	    : open (f->name, O_RDONLY | (blocking ? 0 : O_NONBLOCK)));
 
   assert (valid_file_spec (f));
 
@@ -1286,9 +1285,7 @@ tail_file (struct File_spec *f, uintmax_t n_units)
       fd = STDIN_FILENO;
     }
   else
-    {
-      fd = fd_safer (open (f->name, O_RDONLY));
-    }
+    fd = open (f->name, O_RDONLY);
 
   f->tailable = !(reopen_inaccessible_files && fd == -1);
 
