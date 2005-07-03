@@ -1,3 +1,8 @@
+2005-07-03  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi (cp invocation): Mark --reply as deprecated.
+	(mv invocation): Likewise.
+
 2005-06-24  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (cp invocation): Clarify how --reply=no works.
