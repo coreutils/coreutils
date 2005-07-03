@@ -34,9 +34,9 @@
 #include "physmem.h"
 #include "posixver.h"
 #include "quote.h"
-#include "stdio-safer.h"
+#include "stdlib--.h"
+#include "stdio--.h"
 #include "strnumcmp.h"
-#include "unistd-safer.h"
 #include "xmemcoll.h"
 #include "xstrtol.h"
 
@@ -439,7 +439,6 @@ create_temp_file (FILE **pfp)
   sigprocmask (SIG_SETMASK, &oldset, NULL);
   errno = saved_errno;
 
-  fd = fd_safer (fd);
   if (fd < 0 || (*pfp = fdopen (fd, "w")) == NULL)
     die (_("cannot create temporary file"), file);
 
@@ -466,7 +465,8 @@ xfopen (const char *file, const char *how)
     }
   else
     {
-      if ((fp = fopen_safer (file, how)) == NULL)
+      fp = fopen (file, how);
+      if (! fp)
 	die (_("open failed"), file);
     }
 
