@@ -26,12 +26,12 @@
 #include "system.h"
 #include "argmatch.h"
 #include "error.h"
+#include "fcntl--.h"
 #include "getdate.h"
 #include "posixtm.h"
 #include "posixver.h"
 #include "quote.h"
 #include "safe-read.h"
-#include "unistd-safer.h"
 #include "utimens.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -129,7 +129,6 @@ touch (const char *file)
       /* Try to open FILE, creating it if necessary.  */
       fd = open (file, O_WRONLY | O_CREAT | O_NONBLOCK | O_NOCTTY,
 		 S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
-      fd = fd_safer (fd);
 
       /* Don't save a copy of errno if it's EISDIR, since that would lead
 	 touch to give a bogus diagnostic for e.g., `touch /' (assuming
