@@ -6,6 +6,6 @@ dnl with or without modifications, as long as this notice is preserved.
 
 AC_DEFUN([gl_FCNTL_SAFER],
 [
-  AC_LIBSOURCES([open-safer.c, fcntl-safer.h])
+  AC_LIBSOURCES([open-safer.c, fcntl-safer.h, fcntl--.h])
   AC_LIBOBJ([open-safer])
 ])
