@@ -30,7 +30,7 @@
 #include "linebuffer.h"
 #include "memcasecmp.h"
 #include "quote.h"
-#include "stdio-safer.h"
+#include "stdio--.h"
 #include "xmemcoll.h"
 #include "xstrtol.h"
 
@@ -933,10 +933,10 @@ main (int argc, char **argv)
   if (join_field_2 == SIZE_MAX)
     join_field_2 = 0;
 
-  fp1 = STREQ (names[0], "-") ? stdin : fopen_safer (names[0], "r");
+  fp1 = STREQ (names[0], "-") ? stdin : fopen (names[0], "r");
   if (!fp1)
     error (EXIT_FAILURE, errno, "%s", names[0]);
-  fp2 = STREQ (names[1], "-") ? stdin : fopen_safer (names[1], "r");
+  fp2 = STREQ (names[1], "-") ? stdin : fopen (names[1], "r");
   if (!fp2)
     error (EXIT_FAILURE, errno, "%s", names[1]);
   if (fp1 == fp2)
