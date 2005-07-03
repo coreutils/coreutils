@@ -1,3 +1,7 @@
+2005-07-03  Jim Meyering  <jim@meyering.net>
+
+	* fd-reopen.c: Include <unistd.h> for declaration of close.
+
 2005-07-02  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Cleanup to isolate "safer" functions to a small part of the code.
