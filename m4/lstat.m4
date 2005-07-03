@@ -8,13 +8,6 @@
 # with or without modifications, as long as this notice is preserved.
 
 dnl From Jim Meyering.
-dnl Determine whether lstat has the bug that it succeeds when given the
-dnl zero-length file name argument.  The lstat from SunOS 4.1.4 and the Hurd
-dnl (as of 1998-11-01) do this.
-dnl
-dnl If it does, then define HAVE_LSTAT_EMPTY_STRING_BUG and arrange to
-dnl compile the wrapper function.
-dnl
 
 AC_DEFUN([gl_FUNC_LSTAT],
 [
