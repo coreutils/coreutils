@@ -27,7 +27,7 @@
 #include "error.h"
 #include "hard-locale.h"
 #include "quote.h"
-#include "stdio-safer.h"
+#include "stdio--.h"
 #include "xmemcoll.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -160,9 +160,7 @@ compare_files (char **infiles)
     {
       initbuffer (&lb1[i]);
       thisline[i] = &lb1[i];
-      streams[i] = (STREQ (infiles[i], "-")
-		    ? stdin
-		    : fopen_safer (infiles[i], "r"));
+      streams[i] = (STREQ (infiles[i], "-") ? stdin : fopen (infiles[i], "r"));
       if (!streams[i])
 	error (EXIT_FAILURE, errno, "%s", infiles[i]);
 
