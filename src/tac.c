@@ -48,7 +48,7 @@ tac -r -s '.\|
 #include "quote.h"
 #include "quotearg.h"
 #include "safe-read.h"
-#include "unistd-safer.h"
+#include "stdlib--.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "tac"
@@ -455,7 +455,8 @@ copy_to_temp (FILE **g_tmp, char **g_tempfile, int input_fd, char const *file)
       return false;
     }
 
-  if ((fd = fd_safer (fd)) < 0 || ! (tmp = fdopen (fd, "w+")))
+  tmp = fdopen (fd, "w+");
+  if (! tmp)
     {
       error (0, errno, _("cannot open %s for writing"), quote (tempfile));
       close (fd);
