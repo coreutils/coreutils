@@ -29,6 +29,7 @@ libcoreutils_a_SOURCES = \
   allocsa.c allocsa.h \
   euidaccess.h \
   exit.h \
+  fcntl--.h \
   full-read.c full-read.h \
   full-write.c full-write.h \
   gettext.h \
@@ -36,8 +37,11 @@ libcoreutils_a_SOURCES = \
   mbswidth.c mbswidth.h \
   readtokens0.c readtokens0.h \
   regex.h \
+  stdio--.h \
+  stdlib--.h \
   time_r.c time_r.h \
   unicodeio.c unicodeio.h \
+  unistd--.h \
   xalloc-die.c \
   xgethostname.c xgethostname.h \
   xmemcoll.c xmemcoll.h \
