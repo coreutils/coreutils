@@ -33,11 +33,10 @@
 # endif
 #endif
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
 
-#include "stdio-safer.h"
+#include "stdio--.h"
 #include "xalloc.h"
 
 #if USE_UNLOCKED_IO
@@ -99,7 +98,7 @@ getusershell (void)
 
   if (shellstream == NULL)
     {
-      shellstream = fopen_safer (SHELLS_FILE, "r");
+      shellstream = fopen (SHELLS_FILE, "r");
       if (shellstream == NULL)
 	{
 	  /* No shells file.  Use the default list.  */
