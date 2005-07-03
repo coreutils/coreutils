@@ -102,13 +102,13 @@
 #include "xstrtol.h"
 #include "dirname.h"
 #include "error.h"
+#include "fcntl--.h"
 #include "gethrxtime.h"
 #include "getpagesize.h"
 #include "human.h"
 #include "inttostr.h"
 #include "quotearg.h"		/* For quotearg_colon */
 #include "quote.h"		/* For quotearg_colon */
-#include "unistd-safer.h"
 
 #define DEFAULT_PASSES 25	/* Default */
 
@@ -1354,7 +1354,6 @@ wipename (char *oldname, char const *qoldname, struct Options const *flags)
   int dir_fd = open (dir, O_WRONLY | O_NOCTTY);
   if (dir_fd < 0)
     dir_fd = open (dir, O_RDONLY | O_NOCTTY);
-  dir_fd = fd_safer (dir_fd);
 
   if (flags->verbose)
     error (0, 0, _("%s: removing"), qoldname);
@@ -1448,7 +1447,6 @@ wipefile (char *name, char const *qname,
       && (errno == EACCES && flags->force)
       && chmod (name, S_IWUSR) == 0)
     fd = open (name, O_WRONLY | O_NOCTTY);
-  fd = fd_safer (fd);
   if (fd < 0)
     {
       error (0, errno, _("%s: failed to open for writing"), qname);
