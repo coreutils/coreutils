@@ -1,3 +1,14 @@
+2005-07-03  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* Makefile.am (libcoreutils_a_SOURCES): Undo previous change.
+
+	* Makefile.am (libcoreutils_a_SOURCES): Add fcntl--.h, stdio--h,
+	stdlib--.h, unistd--.h.
+	* fts.c [! _LIBC]: Include "lstat.h" rather than rolling our own.
+	* lstat.c: Sync from gnulib.
+	* lstat.h: New file, from gnulib.
+	* stat.c: Remove.
+
 2005-07-03  Jim Meyering  <jim@meyering.net>
 
 	* fd-reopen.c: Include <unistd.h> for declaration of close.
