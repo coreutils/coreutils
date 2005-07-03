@@ -1,4 +1,4 @@
-# generated automatically by aclocal 1.9.5 -*- Autoconf -*-
+# generated automatically by aclocal 1.9.5b -*- Autoconf -*-
 
 # Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004,
 # 2005  Free Software Foundation, Inc.
@@ -28,7 +28,7 @@ AC_DEFUN([AM_AUTOMAKE_VERSION], [am__api_version="1.9"])
 # Call AM_AUTOMAKE_VERSION so it can be traced.
 # This function is AC_REQUIREd by AC_INIT_AUTOMAKE.
 AC_DEFUN([AM_SET_CURRENT_AUTOMAKE_VERSION],
-	 [AM_AUTOMAKE_VERSION([1.9.5])])
+	 [AM_AUTOMAKE_VERSION([1.9.5b])])
 
 # AM_AUX_DIR_EXPAND                                         -*- Autoconf -*-
 
@@ -968,6 +968,7 @@ m4_include([m4/long-options.m4])
 m4_include([m4/longdouble.m4])
 m4_include([m4/longlong.m4])
 m4_include([m4/ls-mntd-fs.m4])
+m4_include([m4/lstat.m4])
 m4_include([m4/mbrtowc.m4])
 m4_include([m4/mbstate_t.m4])
 m4_include([m4/mbswidth.m4])
