@@ -25,7 +25,7 @@
 
 #include "system.h"
 #include "error.h"
-#include "stdio-safer.h"
+#include "stdio--.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "tee"
@@ -162,7 +162,7 @@ tee (int nfiles, const char **files)
     {
       descriptors[i] = (STREQ (files[i], "-")
 			? stdout
-			: fopen_safer (files[i], mode_string));
+			: fopen (files[i], mode_string));
       if (descriptors[i] == NULL)
 	{
 	  error (0, errno, "%s", files[i]);
