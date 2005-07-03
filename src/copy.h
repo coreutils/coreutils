@@ -22,6 +22,7 @@
 
 # include <stdbool.h>
 # include "hash.h"
+# include "lstat.h"
 
 /* Control creation of sparse files (files with holes).  */
 enum Sparse_type
@@ -196,15 +197,6 @@ struct cp_options
   ((X)->dereference == DEREF_NEVER \
    ? lstat (Src_name, Src_sb) \
    : stat (Src_name, Src_sb))
-
-/* Arrange to make lstat calls go through the wrapper function
-   on systems with an lstat function that does not dereference symlinks
-   that are specified with a trailing slash.  */
-# if ! LSTAT_FOLLOWS_SLASHED_SYMLINK
-int rpl_lstat (const char *, struct stat *);
-#  undef lstat
-#  define lstat rpl_lstat
-# endif
 
 /* Arrange to make rename calls go through the wrapper function
    on systems with a rename function that fails for a source file name

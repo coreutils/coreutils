@@ -32,6 +32,7 @@
 #include "file-type.h"
 #include "hash.h"
 #include "hash-pjw.h"
+#include "lstat.h"
 #include "obstack.h"
 #include "quote.h"
 #include "remove.h"
@@ -77,13 +78,6 @@ enum Prompt_action
     PA_DESCEND_INTO_DIR = 2,
     PA_REMOVE_DIR
   };
-
-/* On systems with an lstat function that accepts the empty string,
-   arrange to make lstat calls go through the wrapper function.  */
-#if HAVE_LSTAT_EMPTY_STRING_BUG
-int rpl_lstat (const char *, struct stat *);
-# define lstat(Name, Stat_buf) rpl_lstat(Name, Stat_buf)
-#endif
 
 /* Initial capacity of per-directory hash table of entries that have
    been processed but not been deleted.  */

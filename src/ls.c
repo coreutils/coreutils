@@ -115,6 +115,7 @@ int wcwidth ();
 #include "filemode.h"
 #include "inttostr.h"
 #include "ls.h"
+#include "lstat.h"
 #include "mbswidth.h"
 #include "obstack.h"
 #include "quote.h"
@@ -137,15 +138,6 @@ int wcwidth ();
 /* Return an int indicating the result of comparing two integers.
    Subtracting doesn't always work, due to overflow.  */
 #define longdiff(a, b) ((a) < (b) ? -1 : (a) > (b))
-
-/* Arrange to make lstat calls go through the wrapper function
-   on systems with an lstat function that does not dereference symlinks
-   that are specified with a trailing slash.  */
-#if ! LSTAT_FOLLOWS_SLASHED_SYMLINK
-int rpl_lstat (const char *, struct stat *);
-# undef lstat
-# define lstat(Name, Stat_buf) rpl_lstat(Name, Stat_buf)
-#endif
 
 #if HAVE_STRUCT_DIRENT_D_TYPE && defined DTTOIF
 # define DT_INIT(Val) = Val
