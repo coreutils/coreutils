@@ -1,6 +1,7 @@
 2005-07-03  Jim Meyering  <jim@meyering.net>
 
 	* lstat.m4 (gl_FUNC_LSTAT): New file, from gnulib.
+	Use AC_LIBSOURCES to require lstat.c and lstat.h.
 
 2005-07-03  Paul Eggert  <eggert@cs.ucla.edu>
 
