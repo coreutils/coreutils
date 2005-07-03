@@ -29,9 +29,11 @@ mv --interactive --reply=no a b > out 2>&1 || fail=1
 test -f a || fail=1
 test -f b || fail=1
 
-# Expect no output.
-touch exp
-cmp out exp || fail=1
-test $fail = 1 && diff out exp 2> /dev/null
+cat <<EOF > exp_err
+mv: the --reply option is deprecated; use -i or -f instead
+EOF
+
+cmp out exp_err || fail=1
+test $fail = 1 && diff out exp_err 2> /dev/null
 
 (exit $fail); exit $fail
