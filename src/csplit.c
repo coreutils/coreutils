@@ -30,10 +30,11 @@
 #include <regex.h>
 
 #include "error.h"
+#include "fd-reopen.h"
 #include "inttostr.h"
 #include "quote.h"
 #include "safe-read.h"
-#include "stdio-safer.h"
+#include "stdio--.h"
 #include "xstrtol.h"
 
 /* Use SA_NOCLDSTOP as a proxy for whether the sigaction machinery is
@@ -129,9 +130,6 @@ void usage (int status);
 
 /* The name this program was run with. */
 char *program_name;
-
-/* Input file descriptor. */
-static int input_desc;
 
 /* Start of buffer list. */
 static struct buffer_record *head = NULL;
@@ -279,7 +277,7 @@ read_input (char *dest, size_t max_n_bytes)
   if (max_n_bytes == 0)
     return 0;
 
-  bytes_read = safe_read (input_desc, dest, max_n_bytes);
+  bytes_read = safe_read (STDIN_FILENO, dest, max_n_bytes);
 
   if (bytes_read == 0)
     have_read_eof = true;
@@ -638,19 +636,13 @@ no_more_lines (void)
   return find_line (current_line + 1) == NULL;
 }
 
-/* Set the name of the input file to NAME and open it. */
+/* Open NAME as standard input.  */
 
 static void
 set_input_file (const char *name)
 {
-  if (STREQ (name, "-"))
-    input_desc = STDIN_FILENO;
-  else
-    {
-      input_desc = open (name, O_RDONLY);
-      if (input_desc < 0)
-	error (EXIT_FAILURE, errno, "%s", name);
-    }
+  if (! STREQ (name, "-") && fd_reopen (STDIN_FILENO, name, O_RDONLY, 0) < 0)
+    error (EXIT_FAILURE, errno, _("cannot open %s for reading"), quote (name));
 }
 
 /* Write all lines from the beginning of the buffer up to, but
@@ -940,7 +932,7 @@ create_output_file (void)
 
   /* Create the output file in a critical section, to avoid races.  */
   sigprocmask (SIG_BLOCK, &caught_signals, &oldset);
-  output_stream = fopen_safer (output_filename, "w");
+  output_stream = fopen (output_filename, "w");
   fopen_ok = (output_stream != NULL);
   fopen_errno = errno;
   files_created += fopen_ok;
@@ -1438,7 +1430,7 @@ main (int argc, char **argv)
 
   split_file ();
 
-  if (close (input_desc) < 0)
+  if (close (STDIN_FILENO) != 0)
     {
       error (0, errno, _("read error"));
       cleanup_fatal ();
