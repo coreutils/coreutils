@@ -30,7 +30,6 @@
 #include "hard-locale.h"
 #include "posixver.h"
 #include "quote.h"
-#include "stdio-safer.h"
 #include "xmemcoll.h"
 #include "xstrtol.h"
 #include "memcasecmp.h"
@@ -235,14 +234,14 @@ different (char *old, char *new, size_t oldlen, size_t newlen)
     return oldlen != newlen || memcmp (old, new, oldlen);
 }
 
-/* Output the line in linebuffer LINE to stream STREAM
+/* Output the line in linebuffer LINE to standard output
    provided that the switches say it should be output.
    MATCH is true if the line matches the previous line.
    If requested, print the number of times it occurred, as well;
    LINECOUNT + 1 is the number of times that the line occurred. */
 
 static void
-writeline (struct linebuffer const *line, FILE *stream,
+writeline (struct linebuffer const *line,
 	   bool match, uintmax_t linecount)
 {
   if (! (linecount == 0 ? output_unique
@@ -251,9 +250,9 @@ writeline (struct linebuffer const *line, FILE *stream,
     return;
 
   if (countmode == count_occurrences)
-    fprintf (stream, "%7" PRIuMAX " ", linecount + 1);
+    printf ("%7" PRIuMAX " ", linecount + 1);
 
-  fwrite (line->buffer, sizeof (char), line->length, stream);
+  fwrite (line->buffer, sizeof (char), line->length, stdout);
 }
 
 /* Process input file INFILE with output to OUTFILE.
@@ -262,22 +261,13 @@ writeline (struct linebuffer const *line, FILE *stream,
 static void
 check_file (const char *infile, const char *outfile)
 {
-  FILE *ostream;
   struct linebuffer lb1, lb2;
   struct linebuffer *thisline, *prevline;
-  bool is_stdin = STREQ (infile, "-");
-  bool is_stdout = STREQ (outfile, "-");
 
-  if (!is_stdin && ! freopen (infile, "r", stdin))
+  if (! (STREQ (infile, "-") || freopen (infile, "r", stdin)))
     error (EXIT_FAILURE, errno, "%s", infile);
-  if (is_stdout)
-    ostream = stdout;
-  else
-    {
-      ostream = fopen_safer (outfile, "w");
-      if (! ostream)
-	error (EXIT_FAILURE, errno, "%s", outfile);
-    }
+  if (! (STREQ (outfile, "-") || freopen (outfile, "w", stdout)))
+    error (EXIT_FAILURE, errno, "%s", outfile);
 
   thisline = &lb1;
   prevline = &lb2;
@@ -309,7 +299,7 @@ check_file (const char *infile, const char *outfile)
 	      || different (thisfield, prevfield, thislen, prevlen))
 	    {
 	      fwrite (thisline->buffer, sizeof (char),
-		      thisline->length, ostream);
+		      thisline->length, stdout);
 
 	      SWAP_LINES (prevline, thisline);
 	      prevfield = thisfield;
@@ -364,13 +354,13 @@ check_file (const char *infile, const char *outfile)
 		  if ((delimit_groups == DM_PREPEND)
 		      || (delimit_groups == DM_SEPARATE
 			  && !first_delimiter))
-		    putc ('\n', ostream);
+		    putchar ('\n');
 		}
 	    }
 
 	  if (!match || output_later_repeated)
 	    {
-	      writeline (prevline, ostream, match, match_count);
+	      writeline (prevline, match, match_count);
 	      SWAP_LINES (prevline, thisline);
 	      prevfield = thisfield;
 	      prevlen = thislen;
@@ -379,17 +369,14 @@ check_file (const char *infile, const char *outfile)
 	    }
 	}
 
-      writeline (prevline, ostream, false, match_count);
+      writeline (prevline, false, match_count);
     }
 
  closefiles:
   if (ferror (stdin) || fclose (stdin) != 0)
     error (EXIT_FAILURE, 0, _("error reading %s"), infile);
 
-  /* Check for errors and close ostream only if it's not stdout --
-     stdout is handled via the atexit-invoked close_stdout function.  */
-  if (!is_stdout && (ferror (ostream) || fclose (ostream) != 0))
-    error (EXIT_FAILURE, 0, _("error writing %s"), outfile);
+  /* stdout is handled via the atexit-invoked close_stdout function.  */
 
   free (lb1.buffer);
   free (lb2.buffer);
