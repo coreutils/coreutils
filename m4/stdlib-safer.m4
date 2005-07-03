@@ -6,6 +6,6 @@ dnl with or without modifications, as long as this notice is preserved.
 
 AC_DEFUN([gl_STDLIB_SAFER],
 [
-  AC_LIBSOURCES([mkstemp-safer.c, stdlib-safer.h])
+  AC_LIBSOURCES([mkstemp-safer.c, stdlib-safer.h, stdlib--.h])
   AC_LIBOBJ([mkstemp-safer])
 ])
