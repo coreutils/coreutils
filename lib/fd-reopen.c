@@ -22,6 +22,7 @@
 
 #include <errno.h>
 #include <fcntl.h>
+#include <unistd.h>
 
 /* Open a file to a particular file descriptor.  This is like standard
    `open', except it always returns DESIRED_FD if successful.  */
