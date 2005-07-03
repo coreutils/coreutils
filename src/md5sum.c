@@ -31,6 +31,7 @@
 #include "getline.h"
 #include "error.h"
 #include "quote.h"
+#include "stdio--.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME (algorithm == ALG_MD5 ? "md5sum" : "sha1sum")
@@ -415,6 +416,7 @@ digest_check (const char *checkfile_name, int (*digest_stream) (FILE *, void *))
 	line[--line_length] = '\0';
 
       if (! (split_3 (line, line_length, &hex_digest, &binary, &filename)
+	     && ! (is_stdin && STREQ (filename, "-"))
 	     && hex_digits (hex_digest)))
 	{
 	  if (warn)
