@@ -1,6 +1,73 @@
-2005-07-02  Jim Meyering  <jim@meyering.net>
+2005-07-02  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	Cleanup to isolate "safer" functions to a small part of the code.
+	* src/comm.c: Include stdio--.h, not stdio-safer.h.
+	(compare_files): Use fopen, not fopen_safer.
+	* src/copy.c: Include fcntl--.h, not unistd-safer.h.
+	(copy_reg): Don't call fd_safer; no longer needed
+	now that we include fcntl--.h.
+	* src/csplit.c: Include fd-reopen.h.
+	Include stdio--.h, not stdio-safer.h.
+	(input_desc): Remove.  All uses changed to STDIN_FILENO.
+	(set_input_file): Reopen stdin, to simplify code.
+	(create_output_file): Use fopen, not fopen_safer.
+	* src/dd.c: Include fd-reopen.h.
+	(open_fd): Remove.  All callers changed to use fd_reopen instead.
+	* src/join.c: Include stdio--.h, not stdio-safer.h.
+	(main): Use fopen, not fopen_safer.
+	* src/md5sum.c: Include stdio--.h.
+	(digest_check): Don't try to read both checksums and data from stdin.
+	* src/nohup.c: Include fd-reopen.h.
+	Include unistd--.h, not unistd-safer.h.
+	(main): Use fd_reopen to simplify code.  When replacing stdin,
+	use "/dev/null" not "/", as that's less likely to go wrong these days.
+	(main): Use dup, not dup_safer.
+	* src/pr.c: Include stdio--.h, not stdio-safer.h.
+	(open_file): Invoke fopen, not fopen_safer.
+	* src/shred.c: Include fcntl--.h, not unistd-safer.h.
+	(wipename, wipe_file): Don't use fd_safer; no longer needed
+	now that we include fcntl--.h.
+	* src/sort.c: Include stdio--.h rather than stdio-safer.h.
+	Include stdlib--.h.  Do not include unistd-safer.h.
+	(create_temp_file): Don't call fd_safer; no longer needed
+	now that we include *--.h files.
+	(xfopen): Don't call fopen_safer, for similar reasons.
+	* src/split.c: Include fcntl--.h rather than unistd-safer.h.
+	Include fd-reopen.h.
+	(input_desc): Remove.  All uses replaced by STDIN_FILENO.
+	(cwrite): Don't call fd_safer; no longer needed now that
+	we include fcntl--.h.
+	(main): Reuse stdin rather than opening a new one.  This
+	saves a file descriptor.
+	* src/stty.c: Include fd-reopen.h.
+	(display_all, display_settings, display_window_size, set_window_size):
+	Remove fd arg, since we now assume stdin.  All callers changed.
+	(main): Reuse stdin rather than opening a new one.  This
+	saves a file descriptor.
+	* src/tac.c: Include stdlib--.h rather than unistd-safer.h.
+	(copy_to_temp): Don't call fd_safer; no longer needed now
+	that we include stdlib--.h.
+	* src/tail.c: Include fcntl--.h, not unistd-safer.h.
+	(recheck, tail_file): Don't call fd_safer; no longer needed
+	now that we include fcntl--.h.
+	* src/tee.c: Include stdio--.h, not stdio-safer.h.
+	(tee): Don't call fopen_safer; no longer needed now that we
+	include stdio--.h.
+	* src/touch.c: Include fcntl--.h, not unistd-safer.h.
+	(touch): Don't call fd_safer; no longer needed now that
+	we include fcntl--.h.
+
+	* src/du.c (main): Reuse stdin rather than opening a new stream.
+	This saves a file descriptor.
+	* src/uniq.c: Don't include stdio-safer.h; no longer needed.
+	(writeline): Remove stream arg; we now always output to stdout.
+	All callers changed.
+	(check_file): Reuse stdout rather than opening a new stream.
+	This saves a file descriptor.
+
+2005-07-02  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.maint (sc_obsolete_symbols): New rule.
 	(syntax-check-rules): Add it to the list.

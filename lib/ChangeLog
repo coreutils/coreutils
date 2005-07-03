@@ -1,3 +1,27 @@
+2005-07-02  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Cleanup to isolate "safer" functions to a small part of the code.
+	* fcntl--.h, stdio--.h, stdlib--.h, unistd--.h, fcntl-safer.h:
+	* open-safer.c, stdlib-safer.h, mkstemp-safer.c, fd-reopen.h:
+	* fd-reopen.c: New files.
+	* fopen-safer.c: Include stdio-safer.h first, to check interface.
+	Don't bother including stdio.h, since stdio-safer.h does.
+	* fts.c (fd_safer): Remove decl.
+	Include fcntl--.h rather than unistd-safer.h
+	(fts_safe_changedir): Don't call fd_safer; no longer needed
+	now that we include fcntl--.h.
+	* getloadavg.c: Include fcntl--.h rather than fcntl.h.
+	Do not include unistd-safer.h.
+	(getloadavg): Don't call fd_safer; no longer needed
+	now that we include fcntl--.h.
+	* getusershell.c: Include stdio--.h rather than stdio.h
+	and stdio-safer.h.
+	(getusershell): Call fopen, not fopen_safer.
+	* save-cwd.c: Include fcntl--.h rather than fcntl.h.
+	Do not include unistd-safer.h.
+	(save_cwd): Don't call fd_safer; no longer needed
+	now that we include fcntl--.h.
+
 2005-07-02  Jim Meyering  <jim@meyering.net>
 
 	* getopt_.h: Assume HAVE_UNISTD_H, i.e., include <unistd.h>
