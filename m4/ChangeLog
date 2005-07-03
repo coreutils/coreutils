@@ -1,3 +1,11 @@
+2005-07-03  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* fts.m4 (gl_FUNC_FTS_CORE): Don't require
+	AC_FUNC_LSTAT_FOLLOWS_SLASHED_SYMLINK; that's now the lstat
+	module's job.
+	* jm-macros.m4 (gl_MACROS): Likewise.
+	* prereq.m4 (gl_PREREQ): Add gl_FUNC_LSTAT.
+
 2005-07-03  Jim Meyering  <jim@meyering.net>
 
 	* fcntl-safer.m4 (gl_FCNTL_SAFER): Add fcntl--.h to the list.
