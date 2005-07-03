@@ -1,6 +1,12 @@
-2005-07-02  Paul Eggert  <eggert@cs.ucla.edu>
+2005-07-03  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	* src/copy.h: Include "lstat.h" rather than rolling our own.
+	* src/ls.c: Likewise.
+	* src/remove.c: Likewise.
+
+2005-07-02  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Cleanup to isolate "safer" functions to a small part of the code.
 	* src/comm.c: Include stdio--.h, not stdio-safer.h.
