@@ -36,6 +36,7 @@ cat <<EOF > exp
 EOF
 
 cat <<EOF > exp_err
+mv: the --reply option is deprecated; use -i or -f instead
 EOF
 
 cmp err exp_err || fail=1
