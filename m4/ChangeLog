@@ -1,3 +1,10 @@
+2005-07-03  Jim Meyering  <jim@meyering.net>
+
+	* fcntl-safer.m4 (gl_FCNTL_SAFER): Add fcntl--.h to the list.
+	* stdio-safer.m4 (gl_STDIO_SAFER): Add stdio--.h to the list.
+	* stdlib-safer.m4: (gl_STDLIB_SAFER): Add stdlib--.h to the list.
+	* unistd-safer.m4 (gl_UNISTD_SAFER): Add unistd--.h to the list.
+
 2005-07-02  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Cleanup to isolate "safer" functions to a small part of the code.
