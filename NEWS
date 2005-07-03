@@ -148,6 +148,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   chmod -w now complains if its behavior differs from what chmod a-w
   would do, and similarly for chmod -r, chmod -x, etc.
 
+  cp and mv: the --reply=X option is deprecated
+
   dd has new iflag= and oflag= flags "binary" and "text", which have an
   effect only on nonstandard platforms that distinguish text from binary I/O.
 
