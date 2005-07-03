@@ -71,6 +71,10 @@ static char sccsid[] = "@(#)fts.c	8.6 (Berkeley) 8/14/94";
 #include <string.h>
 #include <unistd.h>
 
+#if ! _LIBC
+# include "lstat.h"
+#endif
+
 #if defined _LIBC
 # include <dirent.h>
 # define NAMLEN(dirent) _D_EXACT_NAMLEN (dirent)
@@ -109,15 +113,6 @@ static char sccsid[] = "@(#)fts.c	8.6 (Berkeley) 8/14/94";
 #else
 # undef internal_function
 # define internal_function /* empty */
-#endif
-
-/* Arrange to make lstat calls go through the wrapper function
-   on systems with an lstat function that does not dereference symlinks
-   that are specified with a trailing slash.  */
-#if ! _LIBC && ! LSTAT_FOLLOWS_SLASHED_SYMLINK
-int rpl_lstat (const char *, struct stat *);
-# undef lstat
-# define lstat(Name, Stat_buf) rpl_lstat(Name, Stat_buf)
 #endif
 
 #ifndef __set_errno
