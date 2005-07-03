@@ -152,10 +152,9 @@ static bool enter_dir (FTS *fts, FTSENT *ent) { return true; }
 static void leave_dir (FTS *fts, FTSENT *ent) {}
 static bool setup_dir (FTS *fts) { return true; }
 static void free_dir (FTS *fts) {}
-static int fd_safer (int fd) { return fd; }
 #else
+# include "fcntl--.h"
 # include "fts-cycle.c"
-# include "unistd-safer.h"
 #endif
 
 #ifndef MAX
@@ -1319,7 +1318,7 @@ fts_safe_changedir (FTS *sp, FTSENT *p, int fd, char const *dir)
 	newfd = fd;
 	if (ISSET(FTS_NOCHDIR))
 		return (0);
-	if (fd < 0 && (newfd = fd_safer (diropen (dir))) < 0)
+	if (fd < 0 && (newfd = diropen (dir)) < 0)
 		return (-1);
 	if (fstat(newfd, &sb)) {
 		ret = -1;
