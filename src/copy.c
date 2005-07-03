@@ -36,6 +36,7 @@
 #include "dirname.h"
 #include "euidaccess.h"
 #include "error.h"
+#include "fcntl--.h"
 #include "filenamecat.h"
 #include "full-write.h"
 #include "getpagesize.h"
@@ -44,7 +45,6 @@
 #include "quote.h"
 #include "same.h"
 #include "savedir.h"
-#include "unistd-safer.h"
 #include "utimecmp.h"
 #include "utimens.h"
 #include "xreadlink.h"
@@ -213,7 +213,6 @@ copy_reg (char const *src_name, char const *dst_name,
   bool make_holes = false;
 
   source_desc = open (src_name, O_RDONLY);
-  source_desc = fd_safer (source_desc);
   if (source_desc < 0)
     {
       error (0, errno, _("cannot open %s for reading"), quote (src_name));
@@ -265,7 +264,6 @@ copy_reg (char const *src_name, char const *dst_name,
 	}
     }
 
-  dest_desc = fd_safer (dest_desc);
   if (dest_desc < 0)
     {
       error (0, errno, _("cannot create regular file %s"), quote (dst_name));
