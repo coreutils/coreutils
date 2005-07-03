@@ -7,6 +7,8 @@
 	(usage): Remove description of --reply.
 	* src/cp.c (main): Using --reply now evokes a warning.
 	(usage): Remove description of --reply.
+	* tests/mv/i-link-no: Adjust for new diagnostic.
+	* tests/mv/reply-no: Likewise.
 
 	* src/printf.c (verify_numeric): Rename from verify.
 	Update caller.
