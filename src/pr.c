@@ -320,7 +320,7 @@
 #include "inttostr.h"
 #include "mbswidth.h"
 #include "quote.h"
-#include "stdio-safer.h"
+#include "stdio--.h"
 #include "strftime.h"
 #include "xstrtol.h"
 
@@ -1506,7 +1506,7 @@ open_file (char *name, COLUMN *p)
   else
     {
       p->name = name;
-      p->fp = fopen_safer (name, "r");
+      p->fp = fopen (name, "r");
     }
   if (p->fp == NULL)
     {
