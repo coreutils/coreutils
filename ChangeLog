@@ -1,6 +1,17 @@
-2005-07-03  Paul Eggert  <eggert@cs.ucla.edu>
+2005-07-03  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	Deprecate mv's and cp's --reply option.
+	* src/mv.c (main): Using --reply now evokes a warning.
+	(usage): Remove description of --reply.
+	* src/cp.c (main): Using --reply now evokes a warning.
+	(usage): Remove description of --reply.
+
+	* src/printf.c (verify_numeric): Rename from verify.
+	Update caller.
+
+2005-07-03  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/copy.h: Include "lstat.h" rather than rolling our own.
 	* src/ls.c: Likewise.
