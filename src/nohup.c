@@ -28,9 +28,10 @@
 #include "cloexec.h"
 #include "error.h"
 #include "filenamecat.h"
+#include "fd-reopen.h"
 #include "long-options.h"
 #include "quote.h"
-#include "unistd-safer.h"
+#include "unistd--.h"
 
 #define PROGRAM_NAME "nohup"
 
@@ -75,7 +76,6 @@ int
 main (int argc, char **argv)
 {
   int saved_stderr_fd = STDERR_FILENO;
-  bool nohup_out = false;
 
   initialize_main (&argc, &argv);
   program_name = argv[0];
@@ -97,6 +97,14 @@ main (int argc, char **argv)
       usage (NOHUP_FAILURE);
     }
 
+  /* If standard input is a tty, replace it with a file descriptor
+     that exists but gives you an error if you try to read it.  POSIX
+     requires nohup to leave standard input alone, but that's less
+     useful in practice as it causes a "nohup foo & exit" session to
+     hang with OpenSSH.  */
+  if (!getenv ("POSIXLY_CORRECT") && isatty (STDIN_FILENO))
+    fd_reopen (STDIN_FILENO, "/dev/null", O_WRONLY, 0);
+
   /* If standard output is a tty, redirect it (appending) to a file.
      First try nohup.out, then $HOME/nohup.out.  */
   if (isatty (STDOUT_FILENO))
@@ -106,7 +114,7 @@ main (int argc, char **argv)
       int flags = O_CREAT | O_WRONLY | O_APPEND;
       mode_t mode = S_IRUSR | S_IWUSR;
       mode_t umask_value = umask (~mode);
-      int fd = open (file, flags, mode);
+      int fd = fd_reopen (STDOUT_FILENO, file, flags, mode);
 
       if (fd < 0)
 	{
@@ -115,7 +123,7 @@ main (int argc, char **argv)
 	  if (home)
 	    {
 	      in_home = file_name_concat (home, file, NULL);
-	      fd = open (in_home, flags, mode);
+	      fd = fd_reopen (STDOUT_FILENO, in_home, flags, mode);
 	    }
 	  if (fd < 0)
 	    {
@@ -130,15 +138,8 @@ main (int argc, char **argv)
 	}
 
       umask (umask_value);
-
-      /* Redirect standard output to the file.  */
-      if (fd != STDOUT_FILENO
-	  && (dup2 (fd, STDOUT_FILENO) < 0 || close (fd) != 0))
-	error (NOHUP_FAILURE, errno, _("failed to redirect standard output"));
-
       error (0, 0, _("appending output to %s"), quote (file));
       free (in_home);
-      nohup_out = true;
     }
 
   /* If standard error is a tty, redirect it to stdout.  */
@@ -148,7 +149,7 @@ main (int argc, char **argv)
 	 if execve fails.  It's no big deal if this dup fails.  It might
 	 not change anything, and at worst, it'll lead to suppression of
 	 the post-failed-execve diagnostic.  */
-      saved_stderr_fd = dup_safer (STDERR_FILENO);
+      saved_stderr_fd = dup (STDERR_FILENO);
 
       if (0 <= saved_stderr_fd
 	  && set_cloexec_flag (saved_stderr_fd, true) != 0)
@@ -161,25 +162,6 @@ main (int argc, char **argv)
 	    error (NOHUP_FAILURE, errno,
 		   _("failed to redirect standard error"));
 	  close (STDERR_FILENO);
-	}
-    }
-
-  /* If standard input is a tty, replace it with a file descriptor
-     that exists but gives you an error if you try to read it.  POSIX
-     requires nohup to leave standard input alone, but that's less
-     useful in practice as it causes a "nohup foo & exit" session to
-     hang with OpenSSH.  */
-  if (!getenv ("POSIXLY_CORRECT") && isatty (STDIN_FILENO))
-    {
-      close (STDIN_FILENO);
-      if (nohup_out)
-	dup (STDOUT_FILENO);
-      else
-	{
-	  /* This won't give you a read error on older systems if you're
-	     root, but there's no portable way to fix this and it's
-	     not worth worrying about these days.  */
-	  open ("/", O_RDONLY);
 	}
     }
 
