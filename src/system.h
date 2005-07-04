@@ -806,27 +806,34 @@ ptr_align (void const *ptr, size_t alignment)
   return (void *) (p1 - (size_t) p1 % alignment);
 }
 
-#ifndef VERIFY
+#ifndef verify_dcl
 # define GL_CONCAT0(x, y) x##y
 # define GL_CONCAT(x, y) GL_CONCAT0 (x, y)
-/* Verify a requirement at compile-time (unlike assert, which is runtime).  */
-# define VERIFY(assertion) \
-   struct GL_CONCAT (compile_time_assert_, __LINE__) \
-     { char a[(assertion) ? 1 : -1]; }
+
+/* Verify requirement, R, at compile-time, as a declaration.
+   The implementation uses a struct declaration whose name includes the
+   expansion of __LINE__, so there is a small chance that two uses of
+   verify_dcl from different files will end up colliding (for example,
+   f.c includes f.h and verify_dcl is used on the same line in each).  */
+# define verify_dcl(R) \
+    struct GL_CONCAT (ct_assert_, __LINE__) { char a[(R) ? 1 : -1]; }
 #endif
 
-/* Like the above, but use an expression rather than a struct declaration.
-   This macro may be used in some contexts where the other may not.  */
-#undef VERIFY_EXPR
-#define VERIFY_EXPR(assertion) \
-  (void)((struct {char a[(assertion) ? 1 : -1]; } *) 0)
+/* Verify requirement, R, at compile-time, as an expression.
+   Unlike assert, there is no run-time overhead.  Unlike verify_dcl,
+   above, there is no risk of collision, since there is no declared name.
+   This macro may be used in some contexts where the other may not.
+   Return void.  */
+#undef verify
+#define verify(R) ((void) sizeof (struct { char a[(R) ? 1 : -1]; }))
 
-/* Use the compile-time type-max. assertion only if the compiler provides
-   the __typeof__ operator.  */
+/* With a compiler that supports the __typeof__ operator, ensure that
+   TYPEOF_REQUIREMENT is nonzero at compile time.  If the compiler does
+   not support __typeof__, do nothing.  */
 #if HAVE_TYPEOF
-# define VERIFY_W_TYPEOF(assertion) VERIFY_EXPR (assertion)
+# define VERIFY_W_TYPEOF(typeof_requirement) verify (typeof_requirement)
 #else
-# define VERIFY_W_TYPEOF(assertion) ((void) 0)
+# define VERIFY_W_TYPEOF(typeof_requirement) ((void) 0)
 #endif
 
 /* If 10*Accum+Digit_val is larger than Type_max, then don't update Accum
