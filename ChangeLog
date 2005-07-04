@@ -1,6 +1,13 @@
-2005-07-03  Jim Meyering  <jim@meyering.net>
+2005-07-04  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* src/system.h (verify): Rename from VERIFY_EXPR, to be lower case,
+	like assert.  Use sizeof, rather than equivalent ((...)0), for
+	it's slightly simpler syntax.  Suggestions from Paul Eggert.
+	(verify_decl): Rename from VERIFY.
+
+2005-07-03  Jim Meyering  <jim@meyering.net>
 
 	* NEWS: cp and mv: the --reply=X option is deprecated
 	Suggested by Bob Proulx, after numerous user complaints
