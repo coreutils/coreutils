@@ -1,3 +1,7 @@
+2005-07-04  Jim Meyering  <jim@meyering.net>
+
+	* argmatch.h (verify_dcl): Rename from VERIFY.  Update use.
+
 2005-07-03  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Remove the dependency of the strftime module on the tzset module.
