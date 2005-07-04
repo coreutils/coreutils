@@ -1,3 +1,9 @@
+2005-07-03  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Remove the dependency of the strftime module on the tzset module.
+	* strftime.m4 (gl_FUNC_STRFTIME): Don't require gl_FUNC_TZSET_CLOBBER.
+	* prereq.m4 (gl_PREREQ): Add gl_FUNC_TZSET_CLOBBER.
+
 2005-07-03  Jim Meyering  <jim@meyering.net>
 
 	* lstat.m4 (gl_FUNC_LSTAT): New file, from gnulib.

@@ -1,3 +1,10 @@
+2005-07-03  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Remove the dependency of the strftime module on the tzset module.
+	* strftime.c (my_strftime) [! defined _LIBC && ! HAVE_RUN_TZSET_TEST]:
+	Copy the input structure, to work around some of the bug with
+	Solaris 2.5.1 and Solaris 2.6.
+
 2005-07-03  Jim Meyering  <jim@meyering.net>
 
 	* posixtm.c (posixtime) [lint]: Initialize *all* of tm0, not just
