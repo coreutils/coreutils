@@ -25,13 +25,17 @@
 
 # include <stddef.h>
 
-# ifndef VERIFY
+# ifndef verify_dcl
 #  define GL_CONCAT0(x, y) x##y
 #  define GL_CONCAT(x, y) GL_CONCAT0 (x, y)
-/* Verify a requirement at compile-time (unlike assert, which is runtime).  */
-#  define VERIFY(assertion) \
-    struct GL_CONCAT (compile_time_assert_, __LINE__) \
-      { char a[(assertion) ? 1 : -1]; }
+
+/* Verify requirement, R, at compile-time, as a declaration.
+   The implementation uses a struct declaration whose name includes the
+   expansion of __LINE__, so there is a small chance that two uses of
+   verify_dcl from different files will end up colliding (for example,
+   f.c includes f.h and verify_dcl is used on the same line in each).  */
+#  define verify_dcl(R) \
+    struct GL_CONCAT (ct_assert_, __LINE__) { char a[(R) ? 1 : -1]; }
 # endif
 
 # define ARRAY_CARDINALITY(Array) (sizeof (Array) / sizeof *(Array))
@@ -45,7 +49,7 @@
    ARGMATCH_ASSERT is for backward compatibility only.  */
 
 # define ARGMATCH_VERIFY(Arglist, Vallist) \
-    VERIFY (ARGMATCH_CONSTRAINT (Arglist, Vallist))
+    verify_dcl (ARGMATCH_CONSTRAINT (Arglist, Vallist))
 
 # define ARGMATCH_ASSERT(Arglist, Vallist) \
   assert (ARGMATCH_CONSTRAINT (Arglist, Vallist))
