@@ -1,6 +1,8 @@
 2005-07-04  Jim Meyering  <jim@meyering.net>
 
 	* verify.h (verify, verify_dcl): New file/macros.
+	* Makefile.am (libcoreutils_a_SOURCES): Add verify.h here, temporarily.
+	Eventually, it'll be pulled in via AC_LIBSOURCES.
 
 	* argmatch.h (verify_dcl): Rename from VERIFY.  Update use.
 
