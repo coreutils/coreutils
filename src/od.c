@@ -162,7 +162,7 @@ static const int width_bytes[] =
 
 /* Ensure that for each member of `enum size_spec' there is an
    initializer in the width_bytes array.  */
-verify_dcl (sizeof width_bytes / sizeof width_bytes[0] == N_SIZE_SPECS);
+verify_decl (sizeof width_bytes / sizeof width_bytes[0] == N_SIZE_SPECS);
 
 /* Names for some non-printing characters.  */
 static const char *const charname[33] =
