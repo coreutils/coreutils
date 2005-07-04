@@ -6,6 +6,7 @@
 	like assert.  Use sizeof, rather than equivalent ((...)0), for
 	it's slightly simpler syntax.  Suggestions from Paul Eggert.
 	(verify_decl): Rename from VERIFY.
+	* src/od.c: Reflect name change.
 
 2005-07-03  Jim Meyering  <jim@meyering.net>
 
