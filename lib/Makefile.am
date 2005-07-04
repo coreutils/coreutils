@@ -38,6 +38,7 @@ libcoreutils_a_SOURCES = \
   regex.h \
   time_r.c time_r.h \
   unicodeio.c unicodeio.h \
+  verify.h \
   xalloc-die.c \
   xgethostname.c xgethostname.h \
   xmemcoll.c xmemcoll.h \
