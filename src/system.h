@@ -613,6 +613,7 @@ enum
   _("      --version  output version information and exit\n")
 
 #include "closeout.h"
+#include "verify.h"
 #include "version-etc.h"
 
 #define case_GETOPT_VERSION_CHAR(Program_name, Authors)			\
@@ -805,27 +806,6 @@ ptr_align (void const *ptr, size_t alignment)
   char const *p1 = p0 + alignment - 1;
   return (void *) (p1 - (size_t) p1 % alignment);
 }
-
-#ifndef verify_dcl
-# define GL_CONCAT0(x, y) x##y
-# define GL_CONCAT(x, y) GL_CONCAT0 (x, y)
-
-/* Verify requirement, R, at compile-time, as a declaration.
-   The implementation uses a struct declaration whose name includes the
-   expansion of __LINE__, so there is a small chance that two uses of
-   verify_dcl from different files will end up colliding (for example,
-   f.c includes f.h and verify_dcl is used on the same line in each).  */
-# define verify_dcl(R) \
-    struct GL_CONCAT (ct_assert_, __LINE__) { char a[(R) ? 1 : -1]; }
-#endif
-
-/* Verify requirement, R, at compile-time, as an expression.
-   Unlike assert, there is no run-time overhead.  Unlike verify_dcl,
-   above, there is no risk of collision, since there is no declared name.
-   This macro may be used in some contexts where the other may not.
-   Return void.  */
-#undef verify
-#define verify(R) ((void) sizeof (struct { char a[(R) ? 1 : -1]; }))
 
 /* With a compiler that supports the __typeof__ operator, ensure that
    TYPEOF_REQUIREMENT is nonzero at compile time.  If the compiler does
