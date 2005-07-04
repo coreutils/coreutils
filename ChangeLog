@@ -2,6 +2,8 @@
 
 	* Version 5.3.1.
 
+	* src/system.h: Include "verify.h".
+
 	* src/system.h (verify): Rename from VERIFY_EXPR, to be lower case,
 	like assert.  Use sizeof, rather than equivalent ((...)0), for
 	it's slightly simpler syntax.  Suggestions from Paul Eggert.
