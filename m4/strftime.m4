@@ -1,4 +1,4 @@
-#serial 24
+#serial 25
 
 # Copyright (C) 1996, 1997, 1999, 2000, 2001, 2002, 2003, 2004, 2005
 # Free Software Foundation, Inc.
@@ -29,7 +29,6 @@ AC_DEFUN([gl_FUNC_STRFTIME],
  AC_REQUIRE([AC_HEADER_TIME])
  AC_REQUIRE([AC_TYPE_MBSTATE_T])
  AC_REQUIRE([gl_TM_GMTOFF])
- AC_REQUIRE([gl_FUNC_TZSET_CLOBBER])
 
  AC_CHECK_FUNCS_ONCE(mblen mbrlen mempcpy tzset)
  AC_CHECK_HEADERS_ONCE(sys/time.h wchar.h)
