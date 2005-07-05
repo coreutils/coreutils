@@ -1,3 +1,14 @@
+2005-07-04  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* verify.h (GL_CONCAT0, GL_CONCAT): Define unconditionally; don't
+	depend on whether verify_decl is defined.
+	(verify): Renamed from verify_decl.  All uses changed.
+	Use an extern function decl, as it can't possibly collide with other
+	decls.
+	(verify_expr): Renamed from verify.  All uses changed.
+	(verify_type__): New private macro.
+	(verify, verify_expr): Use it.
+
 2005-07-04  Jim Meyering  <jim@meyering.net>
 
 	* verify.h (verify, verify_dcl): New file/macros.
