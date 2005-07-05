@@ -481,7 +481,7 @@ main (int argc, char **argv)
 	  if (digits_optind != 0 && digits_optind != this_optind)
 	    n_units = 0;	/* More than one number given; ignore other. */
 	  digits_optind = this_optind;
-	  if (!DECIMAL_DIGIT_ACCUMULATE (n_units, c - '0', UINTMAX_MAX))
+	  if (!DECIMAL_DIGIT_ACCUMULATE (n_units, c - '0', uintmax_t))
 	    {
 	      char buffer[INT_BUFSIZE_BOUND (uintmax_t)];
 	      error (EXIT_FAILURE, 0,

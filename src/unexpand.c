@@ -192,7 +192,7 @@ parse_tab_stops (char const *stops)
 	    }
 	  {
 	    /* Detect overflow.  */
-	    if (!DECIMAL_DIGIT_ACCUMULATE (tabval, *stops - '0', UINTMAX_MAX))
+	    if (!DECIMAL_DIGIT_ACCUMULATE (tabval, *stops - '0', uintmax_t))
 	      {
 		size_t len = strspn (num_start, "0123456789");
 		char *bad_num = xstrndup (num_start, len);
@@ -512,7 +512,7 @@ main (int argc, char **argv)
 	      tabval = 0;
 	      have_tabval = true;
 	    }
-	  if (!DECIMAL_DIGIT_ACCUMULATE (tabval, c - '0', UINTMAX_MAX))
+	  if (!DECIMAL_DIGIT_ACCUMULATE (tabval, c - '0', uintmax_t))
 	    error (EXIT_FAILURE, 0, _("tab stop value is too large"));
 	  break;
 	}

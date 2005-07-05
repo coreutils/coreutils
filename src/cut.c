@@ -455,7 +455,7 @@ set_fields (const char *fieldstr)
 	  in_digits = true;
 
 	  /* Detect overflow.  */
-	  if (!DECIMAL_DIGIT_ACCUMULATE (value, *fieldstr - '0', SIZE_MAX))
+	  if (!DECIMAL_DIGIT_ACCUMULATE (value, *fieldstr - '0', size_t))
 	    {
 	      /* In case the user specified -c4294967296,22,
 		 complain only about the first number.  */

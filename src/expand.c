@@ -172,7 +172,7 @@ parse_tab_stops (char const *stops)
 	      num_start = stops;
 	    }
 
-	  if (!DECIMAL_DIGIT_ACCUMULATE (tabval, *stops - '0', UINTMAX_MAX))
+	  if (!DECIMAL_DIGIT_ACCUMULATE (tabval, *stops - '0', uintmax_t))
 	    {
 	      size_t len = strspn (num_start, "0123456789");
 	      char *bad_num = xstrndup (num_start, len);
