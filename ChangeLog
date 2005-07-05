@@ -1,6 +1,11 @@
-2005-07-04  Jim Meyering  <jim@meyering.net>
+2005-07-04  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	* src/od.c: Adjust to verify.h change.
+	* src/system.h (VERIFY_W_TYPEOF): Likewise.
+
+2005-07-04  Jim Meyering  <jim@meyering.net>
 
 	* src/system.h: Include "verify.h".
 
