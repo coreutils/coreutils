@@ -811,7 +811,7 @@ ptr_align (void const *ptr, size_t alignment)
    TYPEOF_REQUIREMENT is nonzero at compile time.  If the compiler does
    not support __typeof__, do nothing.  */
 #if HAVE_TYPEOF
-# define VERIFY_W_TYPEOF(typeof_requirement) verify (typeof_requirement)
+# define VERIFY_W_TYPEOF(typeof_requirement) verify_expr (typeof_requirement)
 #else
 # define VERIFY_W_TYPEOF(typeof_requirement) ((void) 0)
 #endif
