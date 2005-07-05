@@ -1,3 +1,8 @@
+2005-07-04  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* prereq.m4 (gl_PREREQ): Don't require gl_TYPEOF; no longer needed.
+	* typeof.m4: Remove; no longer needed.
+
 2005-07-03  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Remove the dependency of the strftime module on the tzset module.
