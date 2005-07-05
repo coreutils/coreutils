@@ -2,6 +2,13 @@
 
 	* Version 5.3.1.
 
+	* src/system.h (VERIFY_W_TYPEOF): Remove; no longer needed.
+	(DECIMAL_DIGIT_ACCUMULATE): Change last arg from T's maximum value
+	to T itself.  All callers changed.  Check that T is unsigned, and
+	that Accum is of type T.  This fixes a bug in the unlikely case
+	where SIZE_MAX <= INT_MAX, and it no longer requires typeof to do
+	the proper validity checks.
+
 	* src/od.c: Adjust to verify.h change.
 	* src/system.h (VERIFY_W_TYPEOF): Likewise.
 
