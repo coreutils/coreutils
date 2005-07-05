@@ -807,25 +807,18 @@ ptr_align (void const *ptr, size_t alignment)
   return (void *) (p1 - (size_t) p1 % alignment);
 }
 
-/* With a compiler that supports the __typeof__ operator, ensure that
-   TYPEOF_REQUIREMENT is nonzero at compile time.  If the compiler does
-   not support __typeof__, do nothing.  */
-#if HAVE_TYPEOF
-# define VERIFY_W_TYPEOF(typeof_requirement) verify_expr (typeof_requirement)
-#else
-# define VERIFY_W_TYPEOF(typeof_requirement) ((void) 0)
-#endif
+/* If 10*Accum + Digit_val is larger than the maximum value for Type,
+   then don't update Accum and return false to indicate it would
+   overflow.  Otherwise, set Accum to that new value and return true.
+   Verify at compile-time that Type is Accum's type, and that Type is
+   unsigned.  Accum must be an object, so that we can take its address.
+   Accum and Digit_val may be evaluated multiple times.  */
 
-/* If 10*Accum+Digit_val is larger than Type_max, then don't update Accum
-   and return zero to indicate it would overflow.  Otherwise, set Accum to
-   that new value and return nonzero.  With a compiler that provides the
-   __typeof__ operator, perform a compile-time check to verify that the
-   specified Type_max value is the same as the constant derived from the
-   type of Accum.  */
-#define DECIMAL_DIGIT_ACCUMULATE(Accum, Digit_val, Type_max)		\
+#define DECIMAL_DIGIT_ACCUMULATE(Accum, Digit_val, Type)		\
   (									\
-   /* Ensure that Type_max is the maximum value of Accum.  */		\
-   VERIFY_W_TYPEOF (TYPE_MAXIMUM (__typeof__ (Accum)) == (Type_max)),	\
-   ((Type_max) / 10 < Accum || Accum * 10 + (Digit_val) < Accum		\
-	       ? 0 : ((Accum = Accum * 10 + (Digit_val)), 1))		\
+   (void) (&(Accum) == (Type *) NULL),  /* The type matches.  */	\
+   verify_expr (! TYPE_SIGNED (Type)),  /* The type is unsigned.  */	\
+   (((Type) -1 / 10 < (Accum)						\
+     || (Type) ((Accum) * 10 + (Digit_val)) < (Accum))			\
+    ? false : (((Accum) = (Accum) * 10 + (Digit_val)), true))		\
   )
