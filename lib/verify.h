@@ -24,7 +24,7 @@
 # define GL_CONCAT0(x, y) x##y
 # define GL_CONCAT(x, y) GL_CONCAT0 (x, y)
 
-/* A type that is valid if and only R is nonzero.
+/* A type that is valid if and only if R is nonzero.
    R should be an integer constant expression.
    verify_type__ and verify_error_if_negative_size__ are symbols that
    are private to this header file.  */
