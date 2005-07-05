@@ -811,13 +811,18 @@ ptr_align (void const *ptr, size_t alignment)
    then don't update Accum and return false to indicate it would
    overflow.  Otherwise, set Accum to that new value and return true.
    Verify at compile-time that Type is Accum's type, and that Type is
-   unsigned.  Accum must be an object, so that we can take its address.
-   Accum and Digit_val may be evaluated multiple times.  */
+   unsigned.  Accum must be an object, so that we can take its
+   address.  Accum and Digit_val may =be evaluated multiple times.
+
+   The "Added check" below is not strictly required, but it causes GCC
+   to return a nonzero exit status instead of merely a warning
+   diagnostic, and that is more useful.  */
 
 #define DECIMAL_DIGIT_ACCUMULATE(Accum, Digit_val, Type)		\
   (									\
    (void) (&(Accum) == (Type *) NULL),  /* The type matches.  */	\
    verify_expr (! TYPE_SIGNED (Type)),  /* The type is unsigned.  */	\
+   verify_expr (sizeof (Accum) == sizeof (Type)),  /* Added check.  */	\
    (((Type) -1 / 10 < (Accum)						\
      || (Type) ((Accum) * 10 + (Digit_val)) < (Accum))			\
     ? false : (((Accum) = (Accum) * 10 + (Digit_val)), true))		\
