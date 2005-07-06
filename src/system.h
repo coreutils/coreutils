@@ -812,7 +812,7 @@ ptr_align (void const *ptr, size_t alignment)
    overflow.  Otherwise, set Accum to that new value and return true.
    Verify at compile-time that Type is Accum's type, and that Type is
    unsigned.  Accum must be an object, so that we can take its
-   address.  Accum and Digit_val may =be evaluated multiple times.
+   address.  Accum and Digit_val may be evaluated multiple times.
 
    The "Added check" below is not strictly required, but it causes GCC
    to return a nonzero exit status instead of merely a warning
