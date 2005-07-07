@@ -187,11 +187,11 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/afs.m4 \
 	$(top_srcdir)/m4/strtoll.m4 $(top_srcdir)/m4/strtoul.m4 \
 	$(top_srcdir)/m4/strtoull.m4 $(top_srcdir)/m4/strtoumax.m4 \
 	$(top_srcdir)/m4/strverscmp.m4 $(top_srcdir)/m4/timespec.m4 \
-	$(top_srcdir)/m4/tm_gmtoff.m4 $(top_srcdir)/m4/typeof.m4 \
-	$(top_srcdir)/m4/tzset.m4 $(top_srcdir)/m4/uint32_t.m4 \
-	$(top_srcdir)/m4/uintmax_t.m4 $(top_srcdir)/m4/uintptr_t.m4 \
-	$(top_srcdir)/m4/ullong_max.m4 $(top_srcdir)/m4/ulonglong.m4 \
-	$(top_srcdir)/m4/unicodeio.m4 $(top_srcdir)/m4/unistd-safer.m4 \
+	$(top_srcdir)/m4/tm_gmtoff.m4 $(top_srcdir)/m4/tzset.m4 \
+	$(top_srcdir)/m4/uint32_t.m4 $(top_srcdir)/m4/uintmax_t.m4 \
+	$(top_srcdir)/m4/uintptr_t.m4 $(top_srcdir)/m4/ullong_max.m4 \
+	$(top_srcdir)/m4/ulonglong.m4 $(top_srcdir)/m4/unicodeio.m4 \
+	$(top_srcdir)/m4/unistd-safer.m4 \
 	$(top_srcdir)/m4/unlink-busy.m4 $(top_srcdir)/m4/unlinkdir.m4 \
 	$(top_srcdir)/m4/unlocked-io.m4 $(top_srcdir)/m4/uptime.m4 \
 	$(top_srcdir)/m4/userspec.m4 $(top_srcdir)/m4/utimbuf.m4 \
@@ -373,7 +373,7 @@ libcoreutils_a_SOURCES = allocsa.c allocsa.h euidaccess.h exit.h \
 	full-read.c full-read.h full-write.c full-write.h gettext.h \
 	localcharset.c localcharset.h mbswidth.c mbswidth.h \
 	readtokens0.c readtokens0.h regex.h time_r.c time_r.h \
-	unicodeio.c unicodeio.h xalloc-die.c xgethostname.c \
+	unicodeio.c unicodeio.h verify.h xalloc-die.c xgethostname.c \
 	xgethostname.h xmemcoll.c xmemcoll.h xstrndup.c xstrndup.h \
 	xstrtoimax.c xstrtoumax.c printf-args.h printf-parse.h \
 	vasprintf.h vasnprintf.h

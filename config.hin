@@ -1116,9 +1116,6 @@
 /* Define to 1 if you have the `tsearch' function. */
 #undef HAVE_TSEARCH
 
-/* Define to 1 if __typeof__ works with your compiler. */
-#undef HAVE_TYPEOF
-
 /* Define to 1 if you don't have `tm_zone' but do have the external array
    `tzname'. */
 #undef HAVE_TZNAME
