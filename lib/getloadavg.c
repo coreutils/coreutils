@@ -47,7 +47,8 @@
 				the nlist n_name element is a pointer,
 				not an array.
    HAVE_STRUCT_NLIST_N_UN_N_NAME `n_un.n_name' is member of `struct nlist'.
-   LINUX_LDAV_FILE		[__linux__]: File containing load averages.
+   LINUX_LDAV_FILE		[__linux__, __CYGWIN__]: File containing
+				load averages.
 
    Specific system predefines this file uses, aside from setting
    default values if not emacs:
@@ -70,6 +71,7 @@
    WINDOWS32			No-op for Windows95/NT.
    __linux__			Linux: assumes /proc file system mounted.
 				Support from Michael K. Johnson.
+   __CYGWIN__			Cygwin emulates linux /proc/loadavg.
    __NetBSD__			NetBSD: assumes /kern file system mounted.
 
    In addition, to avoid nesting many #ifdefs, we internally set
@@ -563,7 +565,7 @@ getloadavg (double loadavg[], int nelem)
 
 # endif /* hpux && HAVE_PSTAT_GETDYNAMIC */
 
-# if !defined (LDAV_DONE) && defined (__linux__)
+# if !defined (LDAV_DONE) && (defined (__linux__) || defined (__CYGWIN__))
 #  define LDAV_DONE
 #  undef LOAD_AVE_TYPE
 
@@ -571,7 +573,7 @@ getloadavg (double loadavg[], int nelem)
 #   define LINUX_LDAV_FILE "/proc/loadavg"
 #  endif
 
-  char ldavgbuf[3 * (INT_STRLEN_BOUND (long int) + sizeof ".00")];
+  char ldavgbuf[3 * (INT_STRLEN_BOUND (int) + sizeof ".00 ")];
   char const *ptr = ldavgbuf;
   int fd, count;
 
@@ -600,7 +602,7 @@ getloadavg (double loadavg[], int nelem)
 
   return elem;
 
-# endif /* __linux__ */
+# endif /* __linux__ || __CYGWIN__ */
 
 # if !defined (LDAV_DONE) && defined (__NetBSD__)
 #  define LDAV_DONE
@@ -964,14 +966,13 @@ getloadavg (double loadavg[], int nelem)
 #  define LDAV_DONE
 # endif /* !LDAV_DONE && LOAD_AVE_TYPE */
 
-# ifdef LDAV_DONE
-  return elem;
-# else
+# if !defined LDAV_DONE
   /* Set errno to zero to indicate that there was no particular error;
      this function just can't work at all on this system.  */
   errno = 0;
-  return -1;
+  elem = -1;
 # endif
+  return elem;
 }
 
 #endif /* ! HAVE_GETLOADAVG */

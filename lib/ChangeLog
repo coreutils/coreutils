@@ -1,4 +1,10 @@
 2005-07-08  Eric Blake  <ebb9@byu.net>  (tiny change)
+
+	* getloadavg.c (getloadavg) [__CYGWIN__]: Port to cygwin.
+	[__linux__]: Allocate a big enough buffer for /proc/loadavg.
+	[!LDAV_DONE]: Avoid unused variable warning.
+
+2005-07-08  Eric Blake  <ebb9@byu.net>  (tiny change)
        and  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* regcomp.c (init_dfa, build_range_exp): Store __btowc value
