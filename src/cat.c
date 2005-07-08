@@ -27,7 +27,10 @@
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
-#ifndef _POSIX_SOURCE
+#if HAVE_STROPT_H
+# include <stropt.h>
+#endif
+#if HAVE_FIONREAD_IN_SYS_IOCTL
 # include <sys/ioctl.h>
 #endif
 #include "system.h"
