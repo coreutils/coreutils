@@ -426,6 +426,9 @@
 /* Define to 1 if you have the `fesetround' function. */
 #undef HAVE_FESETROUND
 
+/* Define to 1 if <sys/ioctl.h> defines FIONREAD. */
+#undef HAVE_FIONREAD_IN_SYS_IOCTL
+
 /* Define to 1 if you have the `floor' function. */
 #undef HAVE_FLOOR
 
@@ -836,6 +839,9 @@
 
 /* Define to 1 if you have the `strndup' function. */
 #undef HAVE_STRNDUP
+
+/* Define to 1 if you have the <stropt.h> header file. */
+#undef HAVE_STROPT_H
 
 /* Define to 1 if you have the `strpbrk' function. */
 #undef HAVE_STRPBRK
