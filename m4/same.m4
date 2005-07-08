@@ -1,4 +1,4 @@
-# same.m4 serial 4
+# same.m4 serial 5
 dnl Copyright (C) 2002, 2003, 2005 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
@@ -10,6 +10,7 @@ AC_DEFUN([gl_SAME],
   AC_LIBOBJ([same])
 
   dnl Prerequisites of lib/same.c.
-  AC_CHECK_HEADERS_ONCE(unistd.h)
-  AC_CHECK_FUNCS(pathconf)
+  AC_REQUIRE([AC_SYS_LONG_FILE_NAMES])
+  AC_CHECK_HEADERS_ONCE([unistd.h])
+  AC_CHECK_FUNCS_ONCE([pathconf])
 ])
