@@ -196,6 +196,7 @@ AC_DEFUN([gl_CHECK_ALL_HEADERS],
     stdlib.h \
     stdint.h \
     string.h \
+    stropt.h \
     sys/filsys.h \
     sys/fs/s5param.h \
     sys/fs_types.h \

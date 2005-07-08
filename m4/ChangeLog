@@ -1,3 +1,7 @@
+2005-07-08  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* jm-macros.m4 (gl_CHECK_ALL_HEADERS): Check for stropt.h.
+
 2005-07-07  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* backupfile.m4 (gl_BACKUPFILE): Use AC_CHECK_FUNCS_ONCE on pathconf.
