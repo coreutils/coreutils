@@ -1,3 +1,9 @@
+2005-07-08  Eric Blake  <ebb9@byu.net>  (tiny change)
+       and  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* regcomp.c (init_dfa, build_range_exp): Store __btowc value
+	in wint_t, not wchar_t.  Remove now-unnecessary cast.
+
 2005-07-07  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Switch to Isamu Hasegawa's implementation of regex, which is

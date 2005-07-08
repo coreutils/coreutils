@@ -917,11 +917,11 @@ init_dfa (dfa, pat_len)
 	  for (i = 0, ch = 0; i < BITSET_UINTS; ++i)
 	    for (j = 0; j < UINT_BITS; ++j, ++ch)
 	      {
-		wchar_t wch = __btowc (ch);
+		wint_t wch = __btowc (ch);
 		if (wch != WEOF)
 		  dfa->sb_char[i] |= 1 << j;
 # ifndef _LIBC
-		if (isascii (ch) && wch != (wchar_t) ch)
+		if (isascii (ch) && wch != ch)
 		  dfa->map_notascii = 1;
 # endif
 	      }
@@ -2682,7 +2682,8 @@ build_range_exp (sbcset, start_elem, end_elem)
 
 # ifdef RE_ENABLE_I18N
   {
-    wchar_t wc, start_wc, end_wc;
+    wchar_t wc;
+    wint_t start_wc, end_wc;
     wchar_t cmp_buf[6] = {L'\0', L'\0', L'\0', L'\0', L'\0', L'\0'};
 
     start_ch = ((start_elem->type == SB_CHAR) ? start_elem->opr.ch
