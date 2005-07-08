@@ -202,7 +202,8 @@ print_user (uid_t uid)
       pwd = getpwuid (uid);
       if (pwd == NULL)
 	{
-	  error (0, 0, _("cannot find name for user ID %u"), uid);
+	  error (0, 0, _("cannot find name for user ID %lu"),
+		 (unsigned long int) uid);
 	  ok = false;
 	}
     }
@@ -225,7 +226,8 @@ print_group (gid_t gid)
       grp = getgrgid (gid);
       if (grp == NULL)
 	{
-	  error (0, 0, _("cannot find name for group ID %u"), gid);
+	  error (0, 0, _("cannot find name for group ID %lu"),
+		 (unsigned long int) gid);
 	  ok = false;
 	}
     }
