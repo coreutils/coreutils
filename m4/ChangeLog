@@ -1,5 +1,9 @@
 2005-07-07  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* backupfile.m4 (gl_BACKUPFILE): Use AC_CHECK_FUNCS_ONCE on pathconf.
+	* same.m4 (gl_SAME): Likewise.
+	Require AC_SYS_LONG_FILE_NAMES; bug reported by Gerrit P. Haase.
+
 	Switch to Isamu Hasegawa's implementation of regex, which is
 	now in gnulib.
 	* regex.m4: Import from gnulib.
