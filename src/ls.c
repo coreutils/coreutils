@@ -60,6 +60,10 @@
 #include <getopt.h>
 #include <signal.h>
 
+#if HAVE_STROPT_H
+# include <stropt.h>
+#endif
+
 /* Use SA_NOCLDSTOP as a proxy for whether the sigaction machinery is
    present.  */
 #ifndef SA_NOCLDSTOP

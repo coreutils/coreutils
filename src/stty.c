@@ -54,6 +54,10 @@
 #include <getopt.h>
 #include <stdarg.h>
 
+#if HAVE_STROPT_H
+# include <stropt.h>
+#endif
+
 #include "system.h"
 #include "error.h"
 #include "fd-reopen.h"
