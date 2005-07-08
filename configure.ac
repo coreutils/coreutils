@@ -244,6 +244,12 @@ if test $jm_cv_sys_tiocgwinsz_needs_termios_h = no && \
                    [Define if your system defines TIOCGWINSZ in sys/pty.h.])
 fi
 
+# For src/cat.c.
+AC_CHECK_DECL([FIONREAD],
+  [AC_DEFINE([HAVE_FIONREAD_IN_SYS_IOCTL], 1,
+     [Define to 1 if <sys/ioctl.h> defines FIONREAD.])],
+  [], [#include <sys/ioctl.h>])
+
 # For src/kill.c.
 AC_CHECK_DECLS([strsignal, sys_siglist, _sys_siglist, __sys_siglist], , ,
   [AC_INCLUDES_DEFAULT
