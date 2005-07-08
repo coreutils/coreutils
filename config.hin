@@ -535,6 +535,9 @@
 /* Define to 1 if you have the `isascii' function. */
 #undef HAVE_ISASCII
 
+/* Define to 1 if you have the `isblank' function. */
+#undef HAVE_ISBLANK
+
 /* Define to 1 if you have the `iswcntrl' function. */
 #undef HAVE_ISWCNTRL
 
@@ -571,6 +574,9 @@
 /* Define to 1 if you have the `listmntent' function. */
 #undef HAVE_LISTMNTENT
 
+/* Define to 1 if you have the <locale.h> header file. */
+#undef HAVE_LOCALE_H
+
 /* Define if you have the 'long double' type. */
 #undef HAVE_LONG_DOUBLE
 
@@ -600,7 +606,7 @@
 /* Define to 1 if you have the `mbrlen' function. */
 #undef HAVE_MBRLEN
 
-/* Define to 1 if mbrtowc and mbstate_t are properly declared. */
+/* Define to 1 if you have the `mbrtowc' function. */
 #undef HAVE_MBRTOWC
 
 /* Define to 1 if you have the `mbsinit' function. */
@@ -1176,6 +1182,9 @@
 
 /* Define to 1 if you have the `wcrtomb' function. */
 #undef HAVE_WCRTOMB
+
+/* Define to 1 if you have the `wcscoll' function. */
+#undef HAVE_WCSCOLL
 
 /* Define to 1 if you have the `wcslen' function. */
 #undef HAVE_WCSLEN
