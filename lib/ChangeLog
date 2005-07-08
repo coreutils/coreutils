@@ -1,3 +1,14 @@
+2005-07-07  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Switch to Isamu Hasegawa's implementation of regex, which is
+	now in gnulib.
+	* regcomp.c, regex_internal.c, regex_internal.h, regexec.c:
+	New files, from gnulib.
+	* regex.h, regex.c: Sync from gnulib.
+	* Makefile.am (libcoreutils_a_SOURCES): Remove regex.h; gnulib
+	now does this automatically for us.
+	* .cppi-disable: Add regcomp.c, regex_internal.c, regex_internal.h.
+
 2005-07-04  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* verify.h (GL_CONCAT0, GL_CONCAT): Define unconditionally; don't

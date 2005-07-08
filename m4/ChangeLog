@@ -1,3 +1,9 @@
+2005-07-07  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Switch to Isamu Hasegawa's implementation of regex, which is
+	now in gnulib.
+	* regex.m4: Import from gnulib.
+
 2005-07-04  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* prereq.m4 (gl_PREREQ): Don't require gl_TYPEOF; no longer needed.
