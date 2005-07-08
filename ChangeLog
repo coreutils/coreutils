@@ -1,6 +1,19 @@
-2005-07-05  Paul Eggert  <eggert@cs.ucla.edu>
+2005-07-08  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	Fix porting problems reported by Eric Blake.
+
+	* configure.ac: Add check for HAVE_FIONREAD_IN_SYS_IOCTL.
+	* src/cat.c, src/ls.c, src/stty.c: Include stropt.h if available,
+	because POSIX says that's where ioctl is declared.
+	* src/cat.c: Use HAVE_FIONREAD_IN_SYS_IOCTL instead of _POSIX_SOURCE
+	to decide whether to include <sys/ioctl.h>.
+
+	* src/id.c (print_user): Don't assume uid fits in unsigned int.
+	(print_group): Likewise, for gid.
+
+2005-07-05  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/system.h (DECIMAL_DIGIT_ACCUMULATE): Generate a hard error
 	(not just a warning) if GCC is used and the types don't match.
