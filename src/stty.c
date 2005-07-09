@@ -36,27 +36,27 @@
 
 #include <stdio.h>
 #include <sys/types.h>
+
 #if HAVE_TERMIOS_H
 # include <termios.h>
 #endif
-#ifdef GWINSZ_IN_SYS_IOCTL
+#if HAVE_STROPTS_H
+# include <stropts.h>
+#endif
+#ifdef HAVE_SYS_IOCTL_H
 # include <sys/ioctl.h>
 #endif
+
 #ifdef WINSIZE_IN_PTEM
 # include <sys/stream.h>
 # include <sys/ptem.h>
 #endif
 #ifdef GWINSZ_IN_SYS_PTY
-# include <sys/ioctl.h>
 # include <sys/tty.h>
 # include <sys/pty.h>
 #endif
 #include <getopt.h>
 #include <stdarg.h>
-
-#if HAVE_STROPT_H
-# include <stropt.h>
-#endif
 
 #include "system.h"
 #include "error.h"
