@@ -50,7 +50,6 @@ AC_CHECK_FUNCS(gethostid,
 
 gl_MACROS
 
-AC_HEADER_TIOCGWINSZ()
 gl_WINSIZE_IN_PTEM
 
 AC_MSG_CHECKING(whether localtime caches TZ)
@@ -243,12 +242,6 @@ if test $jm_cv_sys_tiocgwinsz_needs_termios_h = no && \
       && AC_DEFINE(GWINSZ_IN_SYS_PTY, 1,
                    [Define if your system defines TIOCGWINSZ in sys/pty.h.])
 fi
-
-# For src/cat.c.
-AC_CHECK_DECL([FIONREAD],
-  [AC_DEFINE([HAVE_FIONREAD_IN_SYS_IOCTL], 1,
-     [Define to 1 if <sys/ioctl.h> defines FIONREAD.])],
-  [], [#include <sys/ioctl.h>])
 
 # For src/kill.c.
 AC_CHECK_DECLS([strsignal, sys_siglist, _sys_siglist, __sys_siglist], , ,
