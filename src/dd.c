@@ -18,7 +18,6 @@
 /* Written by Paul Rubin, David MacKenzie, and Stuart Kemp. */
 
 #include <config.h>
-#include <stdio.h>
 
 #define SWAB_ALIGN_OFFSET 2
 

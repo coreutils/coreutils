@@ -20,7 +20,6 @@
 #include <config.h>
 
 #include <getopt.h>
-#include <stdio.h>
 #include <sys/types.h>
 
 #include "system.h"

@@ -19,7 +19,6 @@
 
 #include <config.h>
 
-#include <stdio.h>
 #include <assert.h>
 #include <sys/types.h>
 #include <getopt.h>

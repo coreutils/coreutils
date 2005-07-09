@@ -18,7 +18,6 @@
 /* Mike Parker, Richard M. Stallman, and David MacKenzie */
 
 #include <config.h>
-#include <stdio.h>
 #include <sys/types.h>
 #include <signal.h>
 #include <getopt.h>

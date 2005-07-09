@@ -1,6 +1,12 @@
-2005-07-08  Paul Eggert  <eggert@cs.ucla.edu>
+2005-07-09  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	* src/comm.c, src/csplit.c, src/dd.c, src/join.c, src/md5sum.c:
+	* src/pr.c, src/sort.c, src/tee.c:
+	Don't include stdio.h; no longer needed.
+
+2005-07-08  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Fix porting problems reported by Eric Blake.
 
