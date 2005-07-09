@@ -27,12 +27,14 @@
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
-#if HAVE_STROPT_H
-# include <stropt.h>
+
+#if HAVE_STROPTS_H
+# include <stropts.h>
 #endif
-#if HAVE_FIONREAD_IN_SYS_IOCTL
+#if HAVE_SYS_IOCTL_H
 # include <sys/ioctl.h>
 #endif
+
 #include "system.h"
 #include "error.h"
 #include "full-write.h"
