@@ -42,8 +42,10 @@
 #if HAVE_TERMIOS_H
 # include <termios.h>
 #endif
-
-#ifdef GWINSZ_IN_SYS_IOCTL
+#if HAVE_STROPTS_H
+# include <stropts.h>
+#endif
+#if HAVE_SYS_IOCTL_H
 # include <sys/ioctl.h>
 #endif
 
@@ -59,10 +61,6 @@
 #include <pwd.h>
 #include <getopt.h>
 #include <signal.h>
-
-#if HAVE_STROPT_H
-# include <stropt.h>
-#endif
 
 /* Use SA_NOCLDSTOP as a proxy for whether the sigaction machinery is
    present.  */
