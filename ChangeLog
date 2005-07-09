@@ -4,11 +4,13 @@
 
 	Fix porting problems reported by Eric Blake.
 
-	* configure.ac: Add check for HAVE_FIONREAD_IN_SYS_IOCTL.
-	* src/cat.c, src/ls.c, src/stty.c: Include stropt.h if available,
+	* configure.ac: Remove check for AC_HEADER_TIOCGWINSZ.
+	* src/cat.c, src/ls.c, src/stty.c: Include stropts.h if available,
 	because POSIX says that's where ioctl is declared.
-	* src/cat.c: Use HAVE_FIONREAD_IN_SYS_IOCTL instead of _POSIX_SOURCE
+	* src/cat.c: Use HAVE_SYS_IOCTL_H instead of _POSIX_SOURCE
 	to decide whether to include <sys/ioctl.h>.
+	* src/stty.c: Use only HAVE_SYS_IOCTL_H to decide whether
+	to include <sys/ioctl.h>.
 
 	* src/id.c (print_user): Don't assume uid fits in unsigned int.
 	(print_group): Likewise, for gid.
