@@ -1,4 +1,4 @@
-#serial 90   -*- autoconf -*-
+#serial 91   -*- autoconf -*-
 
 dnl Misc type-related macros for coreutils.
 
@@ -196,7 +196,7 @@ AC_DEFUN([gl_CHECK_ALL_HEADERS],
     stdlib.h \
     stdint.h \
     string.h \
-    stropt.h \
+    stropts.h \
     sys/filsys.h \
     sys/fs/s5param.h \
     sys/fs_types.h \
