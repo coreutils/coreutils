@@ -118,12 +118,6 @@ Concatenate FILE(s), or standard input, to standard output.\n\
 \n\
 With no FILE, or when FILE is -, read standard input.\n\
 "), stdout);
-#if O_BINARY
-      fputs (_("\
-\n\
-  -B, --binary             use binary writes to the console device.\n\n\
-"), stdout);
-#endif
       printf (_("\
 \n\
 Examples:\n\
@@ -538,10 +532,6 @@ main (int argc, char **argv)
   bool show_ends = false;
   bool show_nonprinting = false;
   bool show_tabs = false;
-#if O_BINARY
-  bool binary = false;
-  bool binary_output = false;
-#endif
   int file_open_mode = O_RDONLY;
 
   static struct option const long_options[] =
@@ -553,9 +543,6 @@ main (int argc, char **argv)
     {"show-ends", no_argument, NULL, 'E'},
     {"show-tabs", no_argument, NULL, 'T'},
     {"show-all", no_argument, NULL, 'A'},
-#if O_BINARY
-    {"binary", no_argument, NULL, 'B'},
-#endif
     {GETOPT_HELP_OPTION_DECL},
     {GETOPT_VERSION_OPTION_DECL},
     {NULL, 0, NULL, 0}
@@ -573,13 +560,8 @@ main (int argc, char **argv)
 
   /* Parse command line options.  */
 
-  while ((c = getopt_long (argc, argv,
-#if O_BINARY
-			   "benstuvABET"
-#else
-			   "benstuvAET"
-#endif
-			   , long_options, NULL)) != -1)
+  while ((c = getopt_long (argc, argv, "benstuvAET", long_options, NULL))
+	 != -1)
     {
       switch (c)
 	{
@@ -619,12 +601,6 @@ main (int argc, char **argv)
 	  show_ends = true;
 	  show_tabs = true;
 	  break;
-
-#if O_BINARY
-	case 'B':
-	  binary = true;
-	  break;
-#endif
 
 	case 'E':
 	  show_ends = true;
@@ -669,41 +645,12 @@ main (int argc, char **argv)
 #endif
     }
 
-#if O_BINARY
-  /* We always read and write in BINARY mode, since this is the
-     best way to copy the files verbatim.  Exceptions are when
-     they request line numbering, squeezing of empty lines or
-     marking lines' ends: then we use text I/O, because otherwise
-     -b, -s and -E would surprise users on DOS/Windows where a line
-     with only CR-LF is an empty line.  (Besides, if they ask for
-     one of these options, they don't care much about the original
-     file contents anyway).  */
-  if (binary
-      || ! ((number | squeeze_blank | show_ends)
-	    || isatty (STDOUT_FILENO)))
+  if (! (number | show_ends | squeeze_blank))
     {
-      /* Switch stdout to BINARY mode.  */
-      binary_output = true;
-      SET_BINARY (STDOUT_FILENO);
-      /* When stdout is in binary mode, make sure all input files are
-	 also read in binary mode.  */
       file_open_mode |= O_BINARY;
+      if (O_BINARY && ! isatty (STDOUT_FILENO))
+	freopen (NULL, "wb", stdout);
     }
-  else if (show_nonprinting)
-    {
-      /* If they want to see the non-printables, let's show them
-	 those CR characters as well, so make the input binary.
-	 But keep console output in text mode, so that LF causes
-	 both CR and LF on output, and the output is readable.  */
-      file_open_mode |= O_BINARY;
-      SET_BINARY (0);
-
-      /* Setting stdin to binary switches the console device to
-	 raw I/O, which also affects stdout to console.  Undo that.  */
-      if (isatty (STDOUT_FILENO))
-	setmode (STDOUT_FILENO, O_TEXT);
-    }
-#endif
 
   /* Check if any of the input files are the same as the output file.  */
 
@@ -717,37 +664,12 @@ main (int argc, char **argv)
       if (argind < argc)
 	infile = argv[argind];
 
-      if (infile[0] == '-' && infile[1] == 0)
+      if (STREQ (infile, "-"))
 	{
 	  have_read_stdin = true;
-	  input_desc = 0;
-
-#if O_BINARY
-	  /* Switch stdin to BINARY mode if needed.  */
-	  if (binary_output)
-	    {
-	      bool tty_in = isatty (input_desc);
-
-	      /* If stdin is a terminal device, and it is the ONLY
-		 input file (i.e. we didn't write anything to the
-		 output yet), switch the output back to TEXT mode.
-		 This is so "cat > xyzzy" creates a DOS-style text
-		 file, like people expect.  */
-	      if (tty_in && optind <= argc)
-		setmode (STDOUT_FILENO, O_TEXT);
-	      else
-		{
-		  SET_BINARY (input_desc);
-# ifdef __DJGPP__
-		  /* This is DJGPP-specific.  By default, switching console
-		     to binary mode disables SIGINT.  But we want terminal
-		     reads to be interruptible.  */
-		  if (tty_in)
-		    __djgpp_set_ctrl_c (1);
-# endif
-		}
-	    }
-#endif
+	  input_desc = STDIN_FILENO;
+	  if ((file_open_mode & O_BINARY) && ! isatty (STDIN_FILENO))
+	    freopen (NULL, "rb", stdin);
 	}
       else
 	{
