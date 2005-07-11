@@ -1761,7 +1761,10 @@ main (int argc, char **argv)
   /* Use binary I/O, since `tr' is sometimes used to transliterate
      non-printable characters, or characters which are stripped away
      by text-mode reads (like CR and ^Z).  */
-  SET_BINARY2 (STDIN_FILENO, STDOUT_FILENO);
+  if (O_BINARY && ! isatty (STDIN_FILENO))
+    freopen (NULL, "rb", stdin);
+  if (O_BINARY && ! isatty (STDOUT_FILENO))
+    freopen (NULL, "wb", stdout);
 
   if (squeeze_repeats && non_option_args == 1)
     {
