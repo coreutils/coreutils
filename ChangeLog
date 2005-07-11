@@ -1,6 +1,47 @@
-2005-07-09  Paul Eggert  <eggert@cs.ucla.edu>
+2005-07-11  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	* NEWS: Binary input and output are now implemented more consistently.
+	These changes affect only platforms like MS-DOS that distinguish
+	between binary and text files.
+	* src/cat.c (usage, main, long_options) [O_BINARY]:
+	Remove support for -B.  Use same rules as other programs to decide
+	whether to use binary I/O, except that the -bensAE options always
+	select text mode.
+	* src/cat.c (main): Avoid setmode; use POSIX-specified routines instead.
+	* src/cksum.c (cksum): Likewise.
+	* src/head.c (head_lines, head_file): Likewise.
+	* src/od.c (open_next_file): Likewise.
+	* src/split.c (main): Likewise.
+	* src/sum.c (bsd_sum_file, sysv_sym_file): Likewise.
+	* src/tac.c (copy_to_temp, tac_file, main): Likewise.
+	* src/tail.c (tail_bytes, tail_lines, tail_file, main): Likewise.
+	* src/tee.c (tee): Likewise.
+	* src/tr.c (main): Likewise.
+	* src/wc.c (wc): Likewise.
+	* src/copy.c (copy_reg): Always copy in binary mode.
+	* src/expand.c (expand): Always copy in text mode.  POSIX says
+	the input and output must be text.
+	* src/unexpand.c (unexpand): Likewise.
+	* src/head.c (elide_tail_bytes_file, elide_tail_lines_file, head_bytes):
+	(head_lines, head_file): Always use binary mode except for std tty.
+	* src/md5sum.c (usage): Clarify whether text or binary is the default.
+	(split_3, main): BINARY is now a 3-way value.  All uses changed.
+	(digest_file): Likewise.  Clear *BINARY if we determine the file
+	to be text.  All uses changed.
+	(main): Don't report a file to be binary if we actually read it
+	as text in MS-DOS, because it was a terminal.
+	* src/shred.c (wipefile): Always use binary mode.  Clearly this
+	never worked right on DOS!
+	* src/system.h (setmode, fileno): Remove; no longer needed, we think.
+	(SET_MODE, SET_BINARY, SET_BINARY2): Remove.
+	[defined __DJGPP__]: Don't include <io.h> or <sys/exceptn.h>.
+	* src/wc.c (wc_file): FILE might be null now.
+	(main): Simplify code a bit, so that fewer places need the
+	setmode fixes.
+
+2005-07-09  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/comm.c, src/csplit.c, src/dd.c, src/join.c, src/md5sum.c:
 	* src/pr.c, src/sort.c, src/tee.c:
