@@ -212,7 +212,7 @@ copy_reg (char const *src_name, char const *dst_name,
   bool last_write_made_hole = false;
   bool make_holes = false;
 
-  source_desc = open (src_name, O_RDONLY);
+  source_desc = open (src_name, O_RDONLY | O_BINARY);
   if (source_desc < 0)
     {
       error (0, errno, _("cannot open %s for reading"), quote (src_name));
@@ -241,11 +241,11 @@ copy_reg (char const *src_name, char const *dst_name,
      The if-block will be taken in move_mode.  */
   if (*new_dst)
     {
-      dest_desc = open (dst_name, O_WRONLY | O_CREAT, dst_mode);
+      dest_desc = open (dst_name, O_WRONLY | O_CREAT | O_BINARY, dst_mode);
     }
   else
     {
-      dest_desc = open (dst_name, O_WRONLY | O_TRUNC, dst_mode);
+      dest_desc = open (dst_name, O_WRONLY | O_TRUNC | O_BINARY, dst_mode);
 
       if (dest_desc < 0 && x->unlink_dest_after_failed_open)
 	{
@@ -260,7 +260,7 @@ copy_reg (char const *src_name, char const *dst_name,
 	  *new_dst = true;
 
 	  /* Try the open again, but this time with different flags.  */
-	  dest_desc = open (dst_name, O_WRONLY | O_CREAT, dst_mode);
+	  dest_desc = open (dst_name, O_WRONLY | O_CREAT | O_BINARY, dst_mode);
 	}
     }
 
@@ -270,7 +270,6 @@ copy_reg (char const *src_name, char const *dst_name,
       return_val = false;
       goto close_src_desc;
     }
-  SET_BINARY2 (source_desc, dest_desc);
 
   /* Determine the optimal buffer size.  */
 
