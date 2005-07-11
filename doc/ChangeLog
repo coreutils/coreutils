@@ -1,3 +1,12 @@
+2005-07-11  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (cat invocation): Remove -B or --binary option
+	(available on MS-DOS-like platforms only).  Explain when text and
+	binary mode are used now.
+	(md5sum invocation): -b actually does have an effect on Unix: it
+	causes "*" to be output.  Explain when text and binary mode are
+	used now.
+
 2005-07-03  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (cp invocation): Mark --reply as deprecated.
