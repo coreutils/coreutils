@@ -140,7 +140,10 @@ tee (int nfiles, const char **files)
   ssize_t bytes_read;
   int i;
   bool ok = true;
-  const char *mode_string = (append ? "a" : "w");
+  char const *mode_string =
+    (O_BINARY
+     ? (append ? "ab" : "wb")
+     : (append ? "a" : "w"));
 
   descriptors = xnmalloc (nfiles + 1, sizeof *descriptors);
 
@@ -149,7 +152,10 @@ tee (int nfiles, const char **files)
   for (i = nfiles; i >= 1; i--)
     files[i] = files[i - 1];
 
-  SET_BINARY2 (0, 1);
+  if (O_BINARY && ! isatty (STDIN_FILENO))
+    freopen (NULL, "rb", stdin);
+  if (O_BINARY && ! isatty (STDOUT_FILENO))
+    freopen (NULL, "wb", stdout);
 
   /* In the array of NFILES + 1 descriptors, make
      the first one correspond to standard output.   */
@@ -168,10 +174,7 @@ tee (int nfiles, const char **files)
 	  ok = false;
 	}
       else
-	{
-	  SETVBUF (descriptors[i], NULL, _IONBF, 0);
-	  SET_BINARY (fileno (descriptors[i]));
-	}
+	SETVBUF (descriptors[i], NULL, _IONBF, 0);
     }
 
   while (1)
