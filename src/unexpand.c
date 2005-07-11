@@ -302,9 +302,6 @@ unexpand (void)
   if (!fp)
     return;
 
-  /* Binary I/O will preserve the original EOL style (DOS/Unix) of files.  */
-  SET_BINARY2 (fileno (fp), STDOUT_FILENO);
-
   /* The worst case is a non-blank character, then one blank, then a
      tab stop, then MAX_COLUMN_WIDTH - 1 blanks, then a non-blank; so
      allocate MAX_COLUMN_WIDTH bytes to store the blanks.  */
@@ -348,7 +345,7 @@ unexpand (void)
       do
 	{
 	  while ((c = getc (fp)) < 0 && (fp = next_file (fp)))
-	    SET_BINARY2 (fileno (fp), STDOUT_FILENO);
+	    continue;
 
 	  if (convert)
 	    {
