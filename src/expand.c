@@ -276,9 +276,6 @@ expand (void)
   if (!fp)
     return;
 
-  /* Binary I/O will preserve the original EOL style (DOS/Unix) of files.  */
-  SET_BINARY2 (fileno (fp), STDOUT_FILENO);
-
   for (;;)
     {
       /* Input character, or EOF.  */
@@ -303,7 +300,7 @@ expand (void)
       do
 	{
 	  while ((c = getc (fp)) < 0 && (fp = next_file (fp)))
-	    SET_BINARY2 (fileno (fp), STDOUT_FILENO);
+	    continue;
 
 	  if (convert)
 	    {
