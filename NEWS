@@ -48,6 +48,31 @@ GNU coreutils NEWS                                    -*- outline -*-
   "Utility Syntax Guidelines" in the Minutes of the January 2005
   Meeting <http://www.opengroup.org/austin/docs/austin_239.html>.
 
+** Binary input and output are now implemented more consistently.
+  These changes affect only platforms like MS-DOS that distinguish
+  between binary and text files.
+
+  The following programs now always use text input/output:
+
+    expand unexpand
+
+  The following programs now always use binary input/output to copy data:
+
+    cp install mv shred
+
+  The following programs now always use binary input/output to copy
+  data, except for stdin and stdout when it is a terminal.
+
+    head tac tail tee tr
+    (cat behaves similarly, unless one of the options -bensAE is used.)
+
+  cat's --binary or -B option has been removed.  It existed only on
+  MS-DOS-like platforms, and didn't work as documented there.
+
+  md5sum and sha1sum now obey the -b or --binary option, even if
+  standard input is a terminal, and they no longer report files to be
+  binary if they actually read them in text mode.
+
 ** Changes for better conformance to POSIX
 
   cp, ln, mv, rm changes:
