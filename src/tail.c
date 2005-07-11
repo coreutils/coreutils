@@ -1127,10 +1127,6 @@ tail_bytes (const char *pretty_filename, int fd, uintmax_t n_bytes,
 {
   struct stat stats;
 
-  /* We need binary input, since `tail' relies on `lseek' and byte counts,
-     while binary output will preserve the style (Unix/DOS) of text file.  */
-  SET_BINARY2 (fd, STDOUT_FILENO);
-
   if (fstat (fd, &stats))
     {
       error (0, errno, _("cannot fstat %s"), quote (pretty_filename));
@@ -1196,10 +1192,6 @@ tail_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
 	    uintmax_t *read_pos)
 {
   struct stat stats;
-
-  /* We need binary input, since `tail' relies on `lseek' and byte counts,
-     while binary output will preserve the style (Unix/DOS) of text file.  */
-  SET_BINARY2 (fd, STDOUT_FILENO);
 
   if (fstat (fd, &stats))
     {
@@ -1283,9 +1275,11 @@ tail_file (struct File_spec *f, uintmax_t n_units)
     {
       have_read_stdin = true;
       fd = STDIN_FILENO;
+      if (O_BINARY && ! isatty (STDIN_FILENO))
+	freopen (NULL, "rb", stdin);
     }
   else
-    fd = open (f->name, O_RDONLY);
+    fd = open (f->name, O_RDONLY | O_BINARY);
 
   f->tailable = !(reopen_inaccessible_files && fd == -1);
 
@@ -1674,6 +1668,9 @@ main (int argc, char **argv)
   if (header_mode == always
       || (header_mode == multiple_files && n_files > 1))
     print_headers = true;
+
+  if (O_BINARY && ! isatty (STDOUT_FILENO))
+    freopen (NULL, "wb", stdout);
 
   for (i = 0; i < n_files; i++)
     ok &= tail_file (&F[i], n_units);
