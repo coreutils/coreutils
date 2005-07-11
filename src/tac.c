@@ -455,7 +455,7 @@ copy_to_temp (FILE **g_tmp, char **g_tempfile, int input_fd, char const *file)
       return false;
     }
 
-  tmp = fdopen (fd, "w+");
+  tmp = fdopen (fd, (O_BINARY ? "w+b" : "w+"));
   if (! tmp)
     {
       error (0, errno, _("cannot open %s for writing"), quote (tempfile));
@@ -490,7 +490,6 @@ copy_to_temp (FILE **g_tmp, char **g_tempfile, int input_fd, char const *file)
       goto Fail;
     }
 
-  SET_BINARY (fileno (tmp));
   *g_tmp = tmp;
   *g_tempfile = tempfile;
   return true;
@@ -529,26 +528,18 @@ tac_file (const char *filename)
       have_read_stdin = true;
       fd = STDIN_FILENO;
       filename = _("standard input");
+      if (O_BINARY && ! isatty (STDIN_FILENO))
+	freopen (NULL, "rb", stdin);
     }
   else
     {
-      fd = open (filename, O_RDONLY);
+      fd = open (filename, O_RDONLY | O_BINARY);
       if (fd < 0)
 	{
 	  error (0, errno, _("cannot open %s for reading"), quote (filename));
 	  return false;
 	}
     }
-
-  /* We need binary I/O, since `tac' relies
-     on `lseek' and byte counts.
-
-     Binary output will leave the lines' ends (NL or
-     CR/LF) intact when the output is a disk file.
-     Writing a file with CR/LF pairs at end of lines in
-     text mode has no visible effect on console output,
-     since two CRs in a row are just like one CR.  */
-  SET_BINARY2 (fd, STDOUT_FILENO);
 
   file_size = lseek (fd, (off_t) 0, SEEK_END);
 
@@ -650,6 +641,9 @@ main (int argc, char **argv)
   file = (optind < argc
 	  ? (char const *const *) &argv[optind]
 	  : default_file_list);
+
+  if (O_BINARY && ! isatty (STDOUT_FILENO))
+    freopen (NULL, "wb", stdout);
 
   {
     size_t i;
