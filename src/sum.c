@@ -97,18 +97,18 @@ bsd_sum_file (const char *file, int print_name)
     {
       fp = stdin;
       have_read_stdin = true;
+      if (O_BINARY && ! isatty (STDIN_FILENO))
+	freopen (NULL, "rb", stdin);
     }
   else
     {
-      fp = fopen (file, "r");
+      fp = fopen (file, (O_BINARY ? "rb" : "r"));
       if (fp == NULL)
 	{
 	  error (0, errno, "%s", file);
 	  return false;
 	}
     }
-  /* Need binary I/O, or else byte counts and checksums are incorrect.  */
-  SET_BINARY (fileno(fp));
 
   while ((ch = getc (fp)) != EOF)
     {
@@ -165,18 +165,18 @@ sysv_sum_file (const char *file, int print_name)
     {
       fd = STDIN_FILENO;
       have_read_stdin = true;
+      if (O_BINARY && ! isatty (STDIN_FILENO))
+	freopen (NULL, "rb", stdin);
     }
   else
     {
-      fd = open (file, O_RDONLY);
+      fd = open (file, O_RDONLY | O_BINARY);
       if (fd == -1)
 	{
 	  error (0, errno, "%s", file);
 	  return false;
 	}
     }
-  /* Need binary I/O, or else byte counts and checksums are incorrect.  */
-  SET_BINARY (fd);
 
   while (1)
     {
