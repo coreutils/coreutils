@@ -27,5 +27,7 @@
 /* Default copyright goes to the FSF. */
 
 const char version_etc_copyright[] =
-  /* Do *not* mark this string for translation.  */
-  "Copyright (C) 2005 Free Software Foundation, Inc.";
+  /* Do *not* mark this string for translation.  %s is a copyright
+     symbol suitable for this locale, and %d is the copyright
+     year.  */
+  "Copyright %s %d Free Software Foundation, Inc.";
