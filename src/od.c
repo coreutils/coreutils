@@ -899,10 +899,12 @@ open_next_file (void)
 	  input_filename = _("standard input");
 	  in_stream = stdin;
 	  have_read_stdin = true;
+	  if (O_BINARY && ! isatty (STDIN_FILENO))
+	    freopen (NULL, "rb", stdin);
 	}
       else
 	{
-	  in_stream = fopen (input_filename, "r");
+	  in_stream = fopen (input_filename, (O_BINARY ? "rb" : "r"));
 	  if (in_stream == NULL)
 	    {
 	      error (0, errno, "%s", input_filename);
@@ -914,7 +916,6 @@ open_next_file (void)
 
   if (limit_bytes_to_format & !flag_dump_strings)
     SETVBUF (in_stream, NULL, _IONBF, 0);
-  SET_BINARY (fileno (in_stream));
 
   return ok;
 }
