@@ -52,6 +52,6 @@
    This macro can be used in some contexts where verify cannot, and vice versa.
    Return void.  */
 
-# define verify_expr(R) ((void) sizeof (verify_type__ (R)))
+# define verify_expr(R) ((void) ((verify_type__ (R) *) 0))
 
 #endif

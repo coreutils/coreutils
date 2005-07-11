@@ -1,5 +1,9 @@
 2005-07-11  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* verify.h (verify_expr): Use ((verify_type__ (R) *) 0), not
+	sizeof (verify_type__ (R)), to pacify C++ compilers.  Problem
+	reported by Bruno Haible.
+
 	* version-etc-fsf.c (version_etc_copyright): Parameterize the
 	copyright symbol and the year.
 	* version-etc.c (COPYRIGHT_YEAR): New constant.
