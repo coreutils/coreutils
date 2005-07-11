@@ -1,3 +1,11 @@
+2005-07-11  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* version-etc-fsf.c (version_etc_copyright): Parameterize the
+	copyright symbol and the year.
+	* version-etc.c (COPYRIGHT_YEAR): New constant.
+	(version_etc_va): Use parameterized copyright notice.
+	Reword to conform to the current GNU coding standards.
+
 2005-07-08  Eric Blake  <ebb9@byu.net>  (tiny change)
 
 	* getloadavg.c (getloadavg) [__CYGWIN__]: Port to cygwin.
