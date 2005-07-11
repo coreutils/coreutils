@@ -35,6 +35,8 @@
 #include "gettext.h"
 #define _(msgid) gettext (msgid)
 
+enum { COPYRIGHT_YEAR = 2005 };
+
 /* Like version_etc, below, but with the NULL-terminated author list
    provided via a variable of type va_list.  */
 void
@@ -63,6 +65,20 @@ version_etc_va (FILE *stream,
     fprintf (stream, "%s (%s) %s\n", command_name, package, version);
   else
     fprintf (stream, "%s %s\n", package, version);
+
+  /* TRANSLATORS: Translate "(C)" to the copyright symbol
+     (C-in-a-circle), if this symbol is available in the user's
+     locale.  Otherwise, do not translate "(C)"; leave it as-is.  */
+  fprintf (stream, version_etc_copyright, _("(C)"), COPYRIGHT_YEAR);
+
+  fputs (_("\
+\n\
+This is free software.  You may redistribute copies of it under the terms of\n\
+the GNU General Public License <http://www.gnu.org/licenses/gpl.html>.\n\
+There is NO WARRANTY, to the extent permitted by law.\n\
+\n\
+"),
+	 stream);
 
   switch (n_authors)
     {
@@ -135,15 +151,6 @@ Written by %s, %s, %s,\n%s, %s, %s, %s,\n%s, %s, and others.\n"),
       break;
     }
   va_end (authors);
-  putc ('\n', stream);
-
-  fputs (version_etc_copyright, stream);
-  putc ('\n', stream);
-
-  fputs (_("\
-This is free software; see the source for copying conditions.  There is NO\n\
-warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"),
-	 stream);
 }
 
 
