@@ -411,10 +411,6 @@ elide_tail_bytes_file (const char *filename, int fd, uintmax_t n_elide)
 {
   struct stat stats;
 
-  /* We need binary input, since `head' relies on `lseek' and byte counts,
-     while binary output will preserve the style (Unix/DOS) of text file.  */
-  SET_BINARY2 (fd, STDOUT_FILENO);
-
   if (presume_input_pipe || fstat (fd, &stats) || ! S_ISREG (stats.st_mode))
     {
       return elide_tail_bytes_pipe (filename, fd, n_elide);
@@ -713,10 +709,6 @@ elide_tail_lines_seekable (const char *pretty_filename, int fd,
 static bool
 elide_tail_lines_file (const char *filename, int fd, uintmax_t n_elide)
 {
-  /* We need binary input, since `head' relies on `lseek' and byte counts,
-     while binary output will preserve the style (Unix/DOS) of text file.  */
-  SET_BINARY2 (fd, STDOUT_FILENO);
-
   if (!presume_input_pipe)
     {
       /* Find the offset, OFF, of the Nth newline from the end,
@@ -749,9 +741,6 @@ head_bytes (const char *filename, int fd, uintmax_t bytes_to_write)
   char buffer[BUFSIZ];
   size_t bytes_to_read = BUFSIZ;
 
-  /* Need BINARY I/O for the byte counts to be accurate.  */
-  SET_BINARY2 (fd, fileno (stdout));
-
   while (bytes_to_write)
     {
       size_t bytes_read;
@@ -776,10 +765,6 @@ static bool
 head_lines (const char *filename, int fd, uintmax_t lines_to_write)
 {
   char buffer[BUFSIZ];
-
-  /* Need BINARY I/O for the byte counts to be accurate.  */
-  /* FIXME: do we really need this when counting *lines*?  */
-  SET_BINARY2 (fd, fileno (stdout));
 
   while (lines_to_write)
     {
@@ -853,10 +838,12 @@ head_file (const char *filename, uintmax_t n_units, bool count_lines,
       have_read_stdin = true;
       fd = STDIN_FILENO;
       filename = _("standard input");
+      if (O_BINARY && ! isatty (STDIN_FILENO))
+	freopen (NULL, "rb", stdin);
     }
   else
     {
-      fd = open (filename, O_RDONLY);
+      fd = open (filename, O_RDONLY | O_BINARY);
       if (fd < 0)
 	{
 	  error (0, errno, _("cannot open %s for reading"), quote (filename));
@@ -1060,6 +1047,9 @@ main (int argc, char **argv)
   file_list = (optind < argc
 	       ? (char const *const *) &argv[optind]
 	       : default_file_list);
+
+  if (O_BINARY && ! isatty (STDOUT_FILENO))
+    freopen (NULL, "wb", stdout);
 
   for (i = 0; file_list[i]; ++i)
     ok &= head_file (file_list[i], n_units, count_lines, elide_from_end);
