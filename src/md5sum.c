@@ -110,19 +110,32 @@ Usage: %s [OPTION] [FILE]...\n\
   or:  %s [OPTION] --check [FILE]\n\
 Print or check %s (%d-bit) checksums.\n\
 With no FILE, or when FILE is -, read standard input.\n\
+\n\
 "),
 	      program_name, program_name,
 	      DIGEST_TYPE_STRING (algorithm),
 	      DIGEST_BITS (algorithm));
+      if (O_BINARY)
+	fputs (_("\
+  -b, --binary            read in binary mode (default unless reading tty stdin)\n\
+"), stdout);
+      else
+	fputs (_("\
+  -b, --binary            read in binary mode\n\
+"), stdout);
       printf (_("\
-\n\
-  -b, --binary            read files in binary mode (default on DOS/Windows)\n\
-  -c, --check             check %s sums against given list\n\
-  -t, --text              read files in text mode (default)\n\
-\n\
-"),
+  -c, --check             check %s sums against given list\n"),
 	      DIGEST_TYPE_STRING (algorithm));
+      if (O_BINARY)
+	fputs (_("\
+  -t, --text              read in text mode (default if reading tty stdin)\n\
+"), stdout);
+      else
+	fputs (_("\
+  -t, --text              read in text mode (default)\n\
+"), stdout);
       fputs (_("\
+\n\
 The following two options are useful only when verifying checksums:\n\
       --status            don't output anything, status code shows success\n\
   -w, --warn              warn about improperly formated checksum lines\n\
@@ -188,7 +201,7 @@ bsd_split_3 (char *s, size_t s_len, unsigned char **hex_digest, char **file_name
 
 static bool
 split_3 (char *s, size_t s_len,
-	 unsigned char **hex_digest, bool *binary, char **file_name)
+	 unsigned char **hex_digest, int *binary, char **file_name)
 {
   size_t i;
   bool escaped_filename = false;
@@ -204,7 +217,7 @@ split_3 (char *s, size_t s_len,
     {
       if (strncmp (s + i + algo_name_len, " (", 2) == 0)
 	{
-	  *binary = false;
+	  *binary = 0;
 	  return bsd_split_3 (s +      i + algo_name_len + 2,
 			      s_len - (i + algo_name_len + 2),
 			      hex_digest, file_name);
@@ -303,11 +316,18 @@ hex_digits (unsigned char const *s)
 
 /* An interface to the function, DIGEST_STREAM,
    (either md5_stream or sha1_stream).
-   Operate on FILENAME (it may be "-") and put the result in *BIN_RESULT.
+   Operate on FILENAME (it may be "-").
+
+   *BINARY indicates whether the file is binary.  BINARY < 0 means it
+   depends on whether binary mode makes any difference and the file is
+   a terminal; in that case, clear *BINARY if the file was treated as
+   text because it was a terminal.
+
+   Put the checksum in *BIN_RESULT.
    Return true if successful.  */
 
 static bool
-digest_file (const char *filename, bool binary, unsigned char *bin_result,
+digest_file (const char *filename, int *binary, unsigned char *bin_result,
 	     int (*digest_stream) (FILE *, void *))
 {
   FILE *fp;
@@ -318,20 +338,17 @@ digest_file (const char *filename, bool binary, unsigned char *bin_result,
     {
       have_read_stdin = true;
       fp = stdin;
-#if O_BINARY
-      /* If we need binary reads from a pipe or redirected stdin, we need
-	 to switch it to BINARY mode here, since stdin is already open.  */
-      if (binary)
-	SET_BINARY (fileno (stdin));
-#endif
+      if (O_BINARY && *binary)
+	{
+	  if (*binary < 0)
+	    *binary = ! isatty (STDIN_FILENO);
+	  if (*binary)
+	    freopen (NULL, "rb", stdin);
+	}
     }
   else
     {
-      /* OPENOPTS is a macro.  It varies with the system.
-	 Some systems distinguish between internal and
-	 external text representations.  */
-
-      fp = fopen (filename, (O_BINARY && binary ? "rb" : "r"));
+      fp = fopen (filename, (O_BINARY && *binary ? "rb" : "r"));
       if (fp == NULL)
 	{
 	  error (0, errno, "%s", filename);
@@ -386,14 +403,13 @@ digest_check (const char *checkfile_name, int (*digest_stream) (FILE *, void *))
 	}
     }
 
-  SET_MODE (fileno (checkfile_stream), O_TEXT);
   line_number = 0;
   line = NULL;
   line_chars_allocated = 0;
   do
     {
       char *filename;
-      bool binary;
+      int binary;
       unsigned char *hex_digest IF_LINT (= NULL);
       ssize_t line_length;
 
@@ -437,7 +453,7 @@ digest_check (const char *checkfile_name, int (*digest_stream) (FILE *, void *))
 
 	  ++n_properly_formatted_lines;
 
-	  ok = digest_file (filename, binary, bin_buffer, digest_stream);
+	  ok = digest_file (filename, &binary, bin_buffer, digest_stream);
 
 	  if (!ok)
 	    {
@@ -536,16 +552,7 @@ main (int argc, char **argv)
   bool do_check = false;
   int opt;
   bool ok = true;
-  bool file_type_specified = false;
-
-#if O_BINARY
-  /* Binary is default on MSDOS, so the actual file contents
-     are used in computation.  */
-  bool binary = true;
-#else
-  /* Text is default of the Plumb/Lankester format.  */
-  bool binary = false;
-#endif
+  int binary = -1;
 
   /* Setting values of global variables.  */
   initialize_main (&argc, &argv);
@@ -560,8 +567,7 @@ main (int argc, char **argv)
     switch (opt)
       {
       case 'b':
-	file_type_specified = true;
-	binary = true;
+	binary = 1;
 	break;
       case 'c':
 	do_check = true;
@@ -571,8 +577,7 @@ main (int argc, char **argv)
 	warn = false;
 	break;
       case 't':
-	file_type_specified = true;
-	binary = false;
+	binary = 0;
 	break;
       case 'w':
 	status_only = false;
@@ -587,7 +592,7 @@ main (int argc, char **argv)
   min_digest_line_length = MIN_DIGEST_LINE_LENGTH (algorithm);
   digest_hex_bytes = DIGEST_HEX_BYTES (algorithm);
 
-  if (file_type_specified & do_check)
+  if (0 <= binary && do_check)
     {
       error (0, 0, _("the --binary and --text options are meaningless when "
 		     "verifying checksums"));
@@ -629,8 +634,9 @@ main (int argc, char **argv)
       for (; optind < argc; ++optind)
 	{
 	  char *file = argv[optind];
+	  int file_is_binary = binary;
 
-	  if (! digest_file (file, binary, bin_buffer,
+	  if (! digest_file (file, &file_is_binary, bin_buffer,
 			     DIGEST_STREAM (algorithm)))
 	    ok = false;
 	  else
@@ -646,7 +652,7 @@ main (int argc, char **argv)
 		printf ("%02x", bin_buffer[i]);
 
 	      putchar (' ');
-	      if (binary)
+	      if (file_is_binary)
 		putchar ('*');
 	      else
 		putchar (' ');
