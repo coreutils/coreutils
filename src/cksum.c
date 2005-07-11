@@ -199,19 +199,18 @@ cksum (const char *file, bool print_name)
     {
       fp = stdin;
       have_read_stdin = true;
+      if (O_BINARY && ! isatty (STDIN_FILENO))
+	freopen (NULL, "rb", stdin);
     }
   else
     {
-      fp = fopen (file, "r");
+      fp = fopen (file, (O_BINARY ? "rb" : "r"));
       if (fp == NULL)
 	{
 	  error (0, errno, "%s", file);
 	  return false;
 	}
     }
-
-  /* Read input in BINARY mode, unless it is a console device.  */
-  SET_BINARY (fileno (fp));
 
   while ((bytes_read = fread (buf, 1, BUFLEN, fp)) > 0)
     {
