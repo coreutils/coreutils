@@ -1209,32 +1209,11 @@ The program accepts the following options.  Also see @ref{Common options}.
 @opindex --show-all
 Equivalent to @option{-vET}.
 
-@item -B
-@itemx --binary
-@opindex -B
-@opindex --binary
-@cindex binary and text I/O in cat
-On MS-DOS and MS-Windows only, read and write the files in binary mode.
-By default, @command{cat} on MS-DOS/MS-Windows uses binary mode only when
-standard output is redirected to a file or a pipe; this option overrides
-that.  Binary file I/O is used so that the files retain their format
-(Unix text as opposed to DOS text and binary), because @command{cat} is
-frequently used as a file-copying program.  Some options (see below)
-cause @command{cat} to read and write files in text mode because in those
-cases the original file contents aren't important (e.g., when lines are
-numbered by @command{cat}, or when line endings should be marked).  This is
-so these options work as DOS/Windows users would expect; for example,
-DOS-style text files have their lines end with the CR-LF pair of
-characters, which won't be processed as an empty line by @option{-b} unless
-the file is read in text mode.
-
 @item -b
 @itemx --number-nonblank
 @opindex -b
 @opindex --number-nonblank
-Number all nonblank output lines, starting with 1.  On MS-DOS and
-MS-Windows, this option causes @command{cat} to read and write files in
-text mode.
+Number all nonblank output lines, starting with 1.
 
 @item -e
 @opindex -e
@@ -1244,25 +1223,20 @@ Equivalent to @option{-vE}.
 @itemx --show-ends
 @opindex -E
 @opindex --show-ends
-Display a @samp{$} after the end of each line.  On MS-DOS and
-MS-Windows, this option causes @command{cat} to read and write files in
-text mode.
+Display a @samp{$} after the end of each line.
 
 @item -n
 @itemx --number
 @opindex -n
 @opindex --number
-Number all output lines, starting with 1.  On MS-DOS and MS-Windows,
-this option causes @command{cat} to read and write files in text mode.
+Number all output lines, starting with 1.
 
 @item -s
 @itemx --squeeze-blank
 @opindex -s
 @opindex --squeeze-blank
 @cindex squeezing blank lines
-Replace multiple adjacent blank lines with a single blank line.  On
-MS-DOS and MS-Windows, this option causes @command{cat} to read and write
-files in text mode.
+Replace multiple adjacent blank lines with a single blank line.
 
 @item -t
 @opindex -t
@@ -1276,7 +1250,7 @@ Display TAB characters as @samp{^I}.
 
 @item -u
 @opindex -u
-Ignored; for Unix compatibility.
+Ignored; for @acronym{POSIX} compatibility.
 
 @item -v
 @itemx --show-nonprinting
@@ -1284,11 +1258,17 @@ Ignored; for Unix compatibility.
 @opindex --show-nonprinting
 Display control characters except for LFD and TAB using
 @samp{^} notation and precede characters that have the high bit set with
-@samp{M-}.  On MS-DOS and MS-Windows, this option causes @command{cat} to
-read files and standard input in DOS binary mode, so the CR
-characters at the end of each line are also visible.
+@samp{M-}.
 
 @end table
+
+On systems like MS-DOS that distinguish between text and binary files,
+@command{cat} normally reads and writes in binary mode.  However,
+@command{cat} reads in text mode if one of the options
+@option{-bensAE} is used or if @command{cat} is reading from standard
+input and standard input is a terminal.  Similarly, @command{cat}
+writes in text mode if one of the options @option{-bensAE} is used or
+if standard output is a terminal.
 
 @exitstatus
 
@@ -3023,11 +3003,13 @@ The program accepts the following options.  Also see @ref{Common options}.
 @opindex -b
 @opindex --binary
 @cindex binary input files
-Treat all input files as binary.  This option has no effect on Unix
-systems, since they don't distinguish between binary and text files.
-This option is useful on systems that have different internal and
-external character representations.  On MS-DOS and MS-Windows, this is
-the default.
+Treat each input file as binary, by reading it in binary mode and
+outputting a @samp{*} flag.  This is the inverse of @option{--text}.
+On systems like @acronym{GNU} that do not distinguish between binary
+and text files, this option merely flags each input file as binary:
+the MD5 checksum is unaffected.  This option is the default on systems
+like MS-DOS that distinguish between binary and text files, except
+for reading standard input when standard input is a terminal.
 
 @item -c
 @itemx --check
@@ -3070,8 +3052,12 @@ indicating there was a failure.
 @opindex -t
 @opindex --text
 @cindex text input files
-Treat all input files as text files.  This is the reverse of
-@option{--binary}.
+Treat each input file as text, by reading it in text mode and
+outputting a @samp{ } flag.  This is the inverse of @option{--binary}.
+This option is the default on systems like @acronym{GNU} that do not
+distinguish between binary and text files.  On other systems, it is
+the default for reading standard input when standard input is a
+terminal.
 
 @item -w
 @itemx --warn
