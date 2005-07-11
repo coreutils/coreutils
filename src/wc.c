@@ -226,9 +226,6 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
     }
   count_complicated = print_words | print_linelength;
 
-  /* We need binary input, since `wc' relies on `lseek' and byte counts.  */
-  SET_BINARY (fd);
-
   /* When counting only bytes, save some line- and word-counting
      overhead.  If FD is a `regular' Unix file, using lseek is enough
      to get its `size' in bytes.  Otherwise, read blocks of BUFFER_SIZE
@@ -504,14 +501,16 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
 static bool
 wc_file (char const *file, struct fstatus *fstatus)
 {
-  if (STREQ (file, "-"))
+  if (! file || STREQ (file, "-"))
     {
       have_read_stdin = true;
+      if (O_BINARY && ! isatty (STDIN_FILENO))
+	freopen (NULL, "rb", stdin);
       return wc (STDIN_FILENO, file, fstatus);
     }
   else
     {
-      int fd = open (file, O_RDONLY);
+      int fd = open (file, O_RDONLY | O_BINARY);
       if (fd == -1)
 	{
 	  error (0, errno, "%s", file);
@@ -595,6 +594,7 @@ compute_number_width (int nfiles, struct fstatus const *fstatus)
 int
 main (int argc, char **argv)
 {
+  int i;
   bool ok;
   int optc;
   int nfiles;
@@ -653,23 +653,13 @@ main (int argc, char **argv)
   fstatus = get_input_fstatus (nfiles, argv + optind);
   number_width = compute_number_width (nfiles, fstatus);
 
-  if (! argv[optind])
-    {
-      have_read_stdin = true;
-      ok = wc (STDIN_FILENO, NULL, &fstatus[0]);
-    }
-  else
-    {
-      int i;
+  ok = true;
+  for (i = 0; i < nfiles; i++)
+    ok &= wc_file (argv[optind + i], &fstatus[i]);
 
-      ok = true;
-      for (i = 0; i < nfiles; i++)
-	ok &= wc_file (argv[optind + i], &fstatus[i]);
-
-      if (nfiles > 1)
-	write_counts (total_lines, total_words, total_chars, total_bytes,
-		      max_line_length, _("total"));
-    }
+  if (1 < nfiles)
+    write_counts (total_lines, total_words, total_chars, total_bytes,
+		  max_line_length, _("total"));
 
   free (fstatus);
 
