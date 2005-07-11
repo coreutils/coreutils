@@ -1442,11 +1442,11 @@ wipefile (char *name, char const *qname,
   bool ok;
   int fd;
 
-  fd = open (name, O_WRONLY | O_NOCTTY);
+  fd = open (name, O_WRONLY | O_NOCTTY | O_BINARY);
   if (fd < 0
       && (errno == EACCES && flags->force)
       && chmod (name, S_IWUSR) == 0)
-    fd = open (name, O_WRONLY | O_NOCTTY);
+    fd = open (name, O_WRONLY | O_NOCTTY | O_BINARY);
   if (fd < 0)
     {
       error (0, errno, _("%s: failed to open for writing"), qname);
