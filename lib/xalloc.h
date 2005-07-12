@@ -61,6 +61,13 @@ char *xstrdup (char const *str);
 # define VERIFY_EXPR(assertion) \
    (void)((struct {char a[(assertion) ? 1 : -1]; } *) 0)
 
+/* This is simply a shorthand for the common case in which
+   the third argument to x2nrealloc would be `sizeof (*P)'.
+   Ensure that sizeof (*P) is *not* 1.  In that case, it'd be
+   better to use X2REALLOC, although not strictly necessary.  */
+# define X2NREALLOC(P, PN) (VERIFY_EXPR (sizeof(*P) != 1), \
+                            x2nrealloc (P, PN, sizeof (*P)))
+
 /* Using x2realloc (when appropriate) usually makes your code more
    readable than using x2nrealloc, but it also makes it so your
    code will malfunction if sizeof (*P) ever becomes 2 or greater.
