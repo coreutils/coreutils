@@ -17,7 +17,7 @@
 	[!LDAV_DONE]: Avoid unused variable warning.
 
 2005-07-08  Eric Blake  <ebb9@byu.net>  (tiny change)
-       and  Paul Eggert  <eggert@cs.ucla.edu>
+	and  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* regcomp.c (init_dfa, build_range_exp): Store __btowc value
 	in wint_t, not wchar_t.  Remove now-unnecessary cast.
@@ -46,7 +46,7 @@
 
 2005-07-04  Jim Meyering  <jim@meyering.net>
 
-	* verify.h (verify, verify_dcl): New file/macros.
+	* verify.h (verify, verify_decl): New file/macros.
 	* Makefile.am (libcoreutils_a_SOURCES): Add verify.h here, temporarily.
 	Eventually, it'll be pulled in via AC_LIBSOURCES.
 
