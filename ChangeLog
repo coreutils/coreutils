@@ -1,6 +1,11 @@
-2005-07-11  Paul Eggert  <eggert@cs.ucla.edu>
+2005-07-12  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* Makefile.maint (copyright-check): Reflect rearrangement in
+	version-etc files.
+
+2005-07-11  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: Binary input and output are now implemented more consistently.
 	These changes affect only platforms like MS-DOS that distinguish
