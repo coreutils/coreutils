@@ -1,3 +1,7 @@
+2005-07-12  Jim Meyering  <jim@meyering.net>
+
+	* xalloc.h (X2NREALLOC): Define.
+
 2005-07-11  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* verify.h (verify_expr): Use ((verify_type__ (R) *) 0), not
