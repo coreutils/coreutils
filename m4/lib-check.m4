@@ -1,4 +1,4 @@
-#serial 8
+#serial 9
 
 dnl Misc lib-related macros for coreutils.
 
@@ -32,7 +32,7 @@ AC_DEFUN([cu_LIB_CHECK],
 
   # Some programs need to link with -lm.  printf does if it uses
   # lib/strtod.c which uses pow.  And seq uses the math functions,
-  # floor, modf, rint.  And sleep uses fesetround.
+  # floor, modf, rint.
 
   # Check for these math functions used by seq.
   AC_SUBST([SEQ_LIBM])
@@ -42,13 +42,6 @@ AC_DEFUN([cu_LIB_CHECK],
   AC_SEARCH_LIBS([rint], [m])
   AC_CHECK_FUNCS([floor modf rint])
   test "X$LIBS" = "X$cu_saved_libs" || SEQ_LIBM=-lm
-  LIBS=$cu_saved_libs
-
-  AC_SUBST(FESETROUND_LIBM)
-  cu_saved_libs=$LIBS
-  AC_SEARCH_LIBS([fesetround], [m])
-  AC_CHECK_FUNCS([fesetround])
-  test "X$LIBS" = "X$cu_saved_libs" || FESETROUND_LIBM=-lm
   LIBS=$cu_saved_libs
 
   # The -lsun library is required for YP support on Irix-4.0.5 systems.

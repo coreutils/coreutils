@@ -81,10 +81,9 @@ printf_LDADD = $(LDADD) $(POW_LIB) $(LIBICONV)
 # If necessary, add -lm to resolve use of floor, rint, modf.
 seq_LDADD = $(LDADD) $(SEQ_LIBM)
 
-# If necessary, add -lm to resolve the `pow' reference in lib/strtod.c
-# or for the fesetround reference in programs using nanosec.c.
-nanosec_libs = \
-  $(LDADD) $(FESETROUND_LIBM) $(POW_LIB) $(LIB_NANOSLEEP)
+# If necessary, add libraries to resolve the `pow' reference in lib/strtod.c
+# and the `nanosleep' reference in lib/xnanosleep.c.
+nanosec_libs = $(LDADD) $(POW_LIB) $(LIB_NANOSLEEP)
 
 sleep_LDADD = $(nanosec_libs)
 tail_LDADD = $(nanosec_libs)

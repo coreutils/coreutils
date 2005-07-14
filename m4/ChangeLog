@@ -1,3 +1,8 @@
+2005-07-13  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* lib-check.m4 (cu_LIB_CHECK): Remove no-longer-necessary check
+	for fesetround.
+
 2005-07-08  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* jm-macros.m4 (gl_CHECK_ALL_HEADERS): Check for stropts.h.
