@@ -1,3 +1,8 @@
+2005-07-15  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (nohup invocation): POSIXLY_CORRECT no longer
+	affects nohup's behavior.  Input is redirected from /dev/null.
+
 2005-07-11  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (cat invocation): Remove -B or --binary option

@@ -1,6 +1,12 @@
-2005-07-13  Paul Eggert  <eggert@cs.ucla.edu>
+2005-07-15  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	* src/nohup.c (main): Don't worry about POSIXLY_CORRECT.  Today's
+	Austin Group Minutes says that the GNU behavior will be put
+	forward as proposed text for a future revision.
+
+2005-07-13  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/Makefile.am (nanosec_libs): Remove $(FESETROUND_LIBM); no longer
 	needed.  Problem reported by Jeff Bailey.
