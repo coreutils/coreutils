@@ -186,9 +186,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   ls no longer outputs an extra space between the mode and the link count
   when none of the listed files has an ACL.
 
-  If stdin is a terminal, nohup now closes it and then reopens it with an
-  unreadable file descriptor.  (This step is skipped if POSIXLY_CORRECT is set.)
-  This prevents the command from tying up an OpenSSH session after you logout.
+  If stdin is a terminal, nohup now redirects it from /dev/null to
+  prevent the command from tying up an OpenSSH session after you logout.
 
   stat -f -c %S outputs the fundamental block size (used for block counts).
   stat -f's default output format has been changed to output this size as well.
