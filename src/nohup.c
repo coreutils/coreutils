@@ -97,12 +97,8 @@ main (int argc, char **argv)
       usage (NOHUP_FAILURE);
     }
 
-  /* If standard input is a tty, replace it with a file descriptor
-     that exists but gives you an error if you try to read it.  POSIX
-     requires nohup to leave standard input alone, but that's less
-     useful in practice as it causes a "nohup foo & exit" session to
-     hang with OpenSSH.  */
-  if (!getenv ("POSIXLY_CORRECT") && isatty (STDIN_FILENO))
+  /* If standard input is a tty, replace it with /dev/null.  */
+  if (isatty (STDIN_FILENO))
     fd_reopen (STDIN_FILENO, "/dev/null", O_WRONLY, 0);
 
   /* If standard output is a tty, redirect it (appending) to a file.
