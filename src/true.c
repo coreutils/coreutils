@@ -20,7 +20,17 @@
 #include <sys/types.h>
 #include "system.h"
 
-#define PROGRAM_NAME "true"
+/* Act like "true" by default; false.c overrides this.  */
+#ifndef EXIT_STATUS
+# define EXIT_STATUS EXIT_SUCCESS
+#endif
+
+#if EXIT_STATUS == EXIT_SUCCESS
+# define PROGRAM_NAME "true"
+#else
+# define PROGRAM_NAME "false"
+#endif
+
 #define AUTHORS "Jim Meyering"
 
 /* The name this program was run with. */
@@ -34,13 +44,10 @@ Usage: %s [ignored command line arguments]\n\
   or:  %s OPTION\n\
 "),
 	  program_name, program_name);
-  fputs (_("\
-Exit with a status code indicating success.\n\
-\n\
-These option names may not be abbreviated.\n\
-\n\
-"),
-	 stdout);
+  printf ("%s\n\n",
+	  _(EXIT_STATUS == EXIT_SUCCESS
+	    ? "Exit with a status code indicating success."
+	    : "Exit with a status code indicating failure."));
   fputs (HELP_OPTION_DESCRIPTION, stdout);
   fputs (VERSION_OPTION_DESCRIPTION, stdout);
   printf (USAGE_BUILTIN_WARNING, PROGRAM_NAME);
@@ -64,12 +71,12 @@ main (int argc, char **argv)
   if (argc == 2)
     {
       if (STREQ (argv[1], "--help"))
-	usage (EXIT_SUCCESS);
+	usage (EXIT_STATUS);
 
       if (STREQ (argv[1], "--version"))
 	version_etc (stdout, PROGRAM_NAME, GNU_PACKAGE, VERSION, AUTHORS,
 		     (char *) NULL);
     }
 
-  exit (EXIT_SUCCESS);
+  exit (EXIT_STATUS);
 }
