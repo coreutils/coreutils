@@ -9577,6 +9577,9 @@ pipeline.
 @command{false} does nothing except return an exit status of 1, meaning
 @dfn{failure}.  It can be used as a place holder in shell scripts
 where an unsuccessful command is needed.
+In most modern shells, @command{false} is a built-in command, so when
+you use @samp{false} in a script, you're probably using the built-in
+command, not the one documented here.
 
 @command{false} honors the @option{--help} and @option{--version} options.
 
@@ -9587,6 +9590,10 @@ be used as a dummy shell for the purpose of disabling accounts.
 Note that @command{false} (unlike all other programs documented herein)
 exits unsuccessfully, even when invoked with
 @option{--help} or @option{--version}.
+
+Portable programs should not assume that the exit status of
+@command{false} is 1, as it is greater than 1 on some
+non-@acronym{GNU} hosts.
 
 
 @node true invocation
@@ -9609,8 +9616,8 @@ command, not the one documented here.
 @command{true} honors the @option{--help} and @option{--version} options.
 
 Note, however, that it is possible to cause @command{true}
-to exit with nonzero status: when invoked in non-@acronym{POSIX} mode,
-with the @option{--help} or @option{--version} option, and with standard
+to exit with nonzero status: with the @option{--help} or @option{--version}
+option, and with standard
 output already closed or redirected to a file that evokes an I/O error.
 For example, using a Bourne-compatible shell:
 
