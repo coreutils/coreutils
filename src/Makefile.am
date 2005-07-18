@@ -211,17 +211,6 @@ wheel.h: wheel-gen.pl Makefile.am
 # Tell automake to exempt then from that installcheck test.
 AM_INSTALLCHECK_STD_OPTIONS_EXEMPT = false test
 
-BUILT_SOURCES += false.c
-false.c: true.c
-	@rm -f $@ $@-t
-	sed \
-	  -e s/true/false/g \
-	  -e s/success/failure/g \
-	  -e 's/(EXIT_SUCCESS)/(EXIT_FAILURE)/g' \
-	  $(srcdir)/true.c > $@-t
-	@chmod a-w $@-t
-	mv $@-t $@
-
 BUILT_SOURCES += fs.h
 fs.h: stat.c extract-magic
 	rm -f $@
