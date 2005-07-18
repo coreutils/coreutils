@@ -1,6 +1,17 @@
-2005-07-15  Paul Eggert  <eggert@cs.ucla.edu>
+2005-07-18  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	Fix a problem noted by James Youngman: VPATH-style builds don't
+	work because of po file problems.
+	* src/Makefile.am (BUILT_SOURCES): Remove false.c.
+	(false.c): Remove; it's now a source file.
+	* src/false.c: New file.
+	* src/true.c (EXIT_STATUS): New macro.
+	(PROGRAM_NAME, usage): Behave like "false" if EXIT_STATUS indicates.
+	(usage): Remove "These option names may not be abbreviated."
+
+2005-07-15  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/nohup.c (main): Don't worry about POSIXLY_CORRECT.  Today's
 	Austin Group Minutes says that the GNU behavior will be put
