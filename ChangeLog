@@ -1,6 +1,11 @@
-2005-07-19  Paul Eggert  <eggert@cs.ucla.edu>
+2005-07-19  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* src/md5sum.c (usage): Adjust printf argument list to match
+	new format string.
+
+2005-07-19  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: md5sum --check now accepts multiple input files, and
 	similarly for sha1sum.  Extension suggested by Chris Girling.
