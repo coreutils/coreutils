@@ -111,7 +111,7 @@ Print or check %s (%d-bit) checksums.\n\
 With no FILE, or when FILE is -, read standard input.\n\
 \n\
 "),
-	      program_name, program_name,
+	      program_name,
 	      DIGEST_TYPE_STRING (algorithm),
 	      DIGEST_BITS (algorithm));
       if (O_BINARY)
