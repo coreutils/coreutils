@@ -107,7 +107,6 @@ usage (int status)
     {
       printf (_("\
 Usage: %s [OPTION] [FILE]...\n\
-  or:  %s [OPTION] --check [FILE]\n\
 Print or check %s (%d-bit) checksums.\n\
 With no FILE, or when FILE is -, read standard input.\n\
 \n\
@@ -124,7 +123,7 @@ With no FILE, or when FILE is -, read standard input.\n\
   -b, --binary            read in binary mode\n\
 "), stdout);
       printf (_("\
-  -c, --check             check %s sums against given list\n"),
+  -c, --check             read %s sums from the FILEs and check them\n"),
 	      DIGEST_TYPE_STRING (algorithm));
       if (O_BINARY)
 	fputs (_("\
@@ -613,27 +612,17 @@ main (int argc, char **argv)
       usage (EXIT_FAILURE);
     }
 
-  if (do_check)
-    {
-      if (optind + 1 < argc)
-	{
-	  error (0, 0, _("extra operand %s"), quote (argv[optind + 1]));
-	  fprintf (stderr, "%s\n",
-		   _("Only one operand may be specified when using --check."));
-	  usage (EXIT_FAILURE);
-	}
+  if (optind == argc)
+    argv[argc++] = "-";
 
-      ok = digest_check (optind == argc ? "-" : argv[optind],
-			 DIGEST_STREAM (algorithm));
-    }
-  else
+  for (; optind < argc; ++optind)
     {
-      if (optind == argc)
-	argv[argc++] = "-";
+      char *file = argv[optind];
 
-      for (; optind < argc; ++optind)
+      if (do_check)
+	ok &= digest_check (file, DIGEST_STREAM (algorithm));
+      else
 	{
-	  char *file = argv[optind];
 	  int file_is_binary = binary;
 
 	  if (! digest_file (file, &file_is_binary, bin_buffer,
