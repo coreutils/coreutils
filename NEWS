@@ -186,6 +186,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   ls no longer outputs an extra space between the mode and the link count
   when none of the listed files has an ACL.
 
+  md5sum --check now accepts multiple input files, and similarly for sha1sum.
+
   If stdin is a terminal, nohup now redirects it from /dev/null to
   prevent the command from tying up an OpenSSH session after you logout.
 
