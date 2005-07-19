@@ -2983,11 +2983,10 @@ options}.
 If a @var{file} is specified as @samp{-} or if no files are given
 @command{md5sum} computes the checksum for the standard input.
 @command{md5sum} can also determine whether a file and checksum are
-consistent.  Synopses:
+consistent.  Synopsis:
 
 @example
 md5sum [@var{option}]@dots{} [@var{file}]@dots{}
-md5sum [@var{option}]@dots{} --check [@var{file}]
 @end example
 
 For each @var{file}, @samp{md5sum} outputs the MD5 checksum, a flag
@@ -3013,9 +3012,9 @@ for reading standard input when standard input is a terminal.
 
 @item -c
 @itemx --check
-Read file names and checksum information from the single @var{file}
-(or from stdin if no @var{file} was specified) and report whether
-each named file and the corresponding checksum data are consistent.
+Read file names and checksum information (not data) from each
+@var{file} (or from stdin if no @var{file} was specified) and report
+whether the checksums match the contents of the named files.
 The input to this mode of @command{md5sum} is usually the output of
 a prior, checksum-generating run of @samp{md5sum}.
 Each valid line of input consists of an MD5 checksum, a binary/text
