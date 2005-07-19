@@ -1,6 +1,12 @@
-2005-07-18  Paul Eggert  <eggert@cs.ucla.edu>
+2005-07-19  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	* NEWS: md5sum --check now accepts multiple input files, and
+	similarly for sha1sum.  Extension suggested by Chris Girling.
+	* src/md5sum.c (usage, main): Support this new usage.
+
+2005-07-18  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Fix a problem noted by James Youngman: VPATH-style builds don't
 	work because of po file problems.
