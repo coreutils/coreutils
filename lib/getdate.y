@@ -137,6 +137,25 @@ enum { MERam, MERpm, MER24 };
 
 enum { BILLION = 1000000000, LOG10_BILLION = 9 };
 
+/* Relative times.  */
+typedef struct
+{
+  /* Relative year, month, day, hour, minutes, seconds, and nanoseconds.  */
+  long int year;
+  long int month;
+  long int day;
+  long int hour;
+  long int minutes;
+  long int seconds;
+  long int ns;
+} relative_time;
+
+#if HAVE_COMPOUND_LITERALS
+# define RELATIVE_TIME_0 ((relative_time) { 0, 0, 0, 0, 0, 0, 0 })
+#else
+static relative_time const RELATIVE_TIME_0;
+#endif
+
 /* Information passed to and from the parser.  */
 typedef struct
 {
@@ -167,13 +186,7 @@ typedef struct
   struct timespec seconds; /* includes nanoseconds */
 
   /* Relative year, month, day, hour, minutes, seconds, and nanoseconds.  */
-  long int rel_year;
-  long int rel_month;
-  long int rel_day;
-  long int rel_hour;
-  long int rel_minutes;
-  long int rel_seconds;
-  long int rel_ns;
+  relative_time rel;
 
   /* Presence or counts of nonterminals of various flavors parsed so far.  */
   bool timespec_seen;
@@ -210,19 +223,24 @@ static long int time_zone_hhmm (textint, long int);
   long int intval;
   textint textintval;
   struct timespec timespec;
+  relative_time rel;
 }
 
 %token tAGO tDST
 
-%token <intval> tDAY tDAY_UNIT tDAYZONE tHOUR_UNIT tLOCAL_ZONE tMERIDIAN
-%token <intval> tMINUTE_UNIT tMONTH tMONTH_UNIT tORDINAL
-%token <intval> tSEC_UNIT tYEAR_UNIT tZONE
+%token tYEAR_UNIT tMONTH_UNIT tHOUR_UNIT tMINUTE_UNIT tSEC_UNIT
+%token <intval> tDAY_UNIT
+
+%token <intval> tDAY tDAYZONE tLOCAL_ZONE tMERIDIAN
+%token <intval> tMONTH tORDINAL tZONE
 
 %token <textintval> tSNUMBER tUNUMBER
 %token <timespec> tSDECIMAL_NUMBER tUDECIMAL_NUMBER
 
 %type <intval> o_colon_minutes o_merid
 %type <timespec> seconds signed_seconds unsigned_seconds
+
+%type <rel> relunit relunit_snumber
 
 %%
 
@@ -322,7 +340,15 @@ zone:
     tZONE
       { pc->time_zone = $1; }
   | tZONE relunit_snumber
-      { pc->time_zone = $1; pc->rels_seen = true; }
+      { pc->time_zone = $1;
+	pc->rel.ns += $2.ns;
+	pc->rel.seconds += $2.seconds;
+	pc->rel.minutes += $2.minutes;
+	pc->rel.hour += $2.hour;
+	pc->rel.day += $2.day;
+	pc->rel.month += $2.month;
+	pc->rel.year += $2.year;
+        pc->rels_seen = true; }
   | tZONE tSNUMBER o_colon_minutes
       { pc->time_zone = $1 + time_zone_hhmm ($2, $3); }
   | tDAYZONE
@@ -430,74 +456,83 @@ date:
 rel:
     relunit tAGO
       {
-	pc->rel_ns = -pc->rel_ns;
-	pc->rel_seconds = -pc->rel_seconds;
-	pc->rel_minutes = -pc->rel_minutes;
-	pc->rel_hour = -pc->rel_hour;
-	pc->rel_day = -pc->rel_day;
-	pc->rel_month = -pc->rel_month;
-	pc->rel_year = -pc->rel_year;
+	pc->rel.ns -= $1.ns;
+	pc->rel.seconds -= $1.seconds;
+	pc->rel.minutes -= $1.minutes;
+	pc->rel.hour -= $1.hour;
+	pc->rel.day -= $1.day;
+	pc->rel.month -= $1.month;
+	pc->rel.year -= $1.year;
       }
   | relunit
+      {
+	pc->rel.ns += $1.ns;
+	pc->rel.seconds += $1.seconds;
+	pc->rel.minutes += $1.minutes;
+	pc->rel.hour += $1.hour;
+	pc->rel.day += $1.day;
+	pc->rel.month += $1.month;
+	pc->rel.year += $1.year;
+      }
   ;
 
 relunit:
     tORDINAL tYEAR_UNIT
-      { pc->rel_year += $1 * $2; }
+      { $$ = RELATIVE_TIME_0; $$.year = $1; }
   | tUNUMBER tYEAR_UNIT
-      { pc->rel_year += $1.value * $2; }
+      { $$ = RELATIVE_TIME_0; $$.year = $1.value; }
   | tYEAR_UNIT
-      { pc->rel_year += $1; }
+      { $$ = RELATIVE_TIME_0; $$.year = 1; }
   | tORDINAL tMONTH_UNIT
-      { pc->rel_month += $1 * $2; }
+      { $$ = RELATIVE_TIME_0; $$.month = $1; }
   | tUNUMBER tMONTH_UNIT
-      { pc->rel_month += $1.value * $2; }
+      { $$ = RELATIVE_TIME_0; $$.month = $1.value; }
   | tMONTH_UNIT
-      { pc->rel_month += $1; }
+      { $$ = RELATIVE_TIME_0; $$.month = 1; }
   | tORDINAL tDAY_UNIT
-      { pc->rel_day += $1 * $2; }
+      { $$ = RELATIVE_TIME_0; $$.day = $1 * $2; }
   | tUNUMBER tDAY_UNIT
-      { pc->rel_day += $1.value * $2; }
+      { $$ = RELATIVE_TIME_0; $$.day = $1.value * $2; }
   | tDAY_UNIT
-      { pc->rel_day += $1; }
+      { $$ = RELATIVE_TIME_0; $$.day = $1; }
   | tORDINAL tHOUR_UNIT
-      { pc->rel_hour += $1 * $2; }
+      { $$ = RELATIVE_TIME_0; $$.hour = $1; }
   | tUNUMBER tHOUR_UNIT
-      { pc->rel_hour += $1.value * $2; }
+      { $$ = RELATIVE_TIME_0; $$.hour = $1.value; }
   | tHOUR_UNIT
-      { pc->rel_hour += $1; }
+      { $$ = RELATIVE_TIME_0; $$.hour = 1; }
   | tORDINAL tMINUTE_UNIT
-      { pc->rel_minutes += $1 * $2; }
+      { $$ = RELATIVE_TIME_0; $$.minutes = $1; }
   | tUNUMBER tMINUTE_UNIT
-      { pc->rel_minutes += $1.value * $2; }
+      { $$ = RELATIVE_TIME_0; $$.minutes = $1.value; }
   | tMINUTE_UNIT
-      { pc->rel_minutes += $1; }
+      { $$ = RELATIVE_TIME_0; $$.minutes = 1; }
   | tORDINAL tSEC_UNIT
-      { pc->rel_seconds += $1 * $2; }
+      { $$ = RELATIVE_TIME_0; $$.seconds = $1; }
   | tUNUMBER tSEC_UNIT
-      { pc->rel_seconds += $1.value * $2; }
+      { $$ = RELATIVE_TIME_0; $$.seconds = $1.value; }
   | tSDECIMAL_NUMBER tSEC_UNIT
-      { pc->rel_seconds += $1.tv_sec * $2; pc->rel_ns += $1.tv_nsec * $2; }
+      { $$ = RELATIVE_TIME_0; $$.seconds = $1.tv_sec; $$.ns = $1.tv_nsec; }
   | tUDECIMAL_NUMBER tSEC_UNIT
-      { pc->rel_seconds += $1.tv_sec * $2; pc->rel_ns += $1.tv_nsec * $2; }
+      { $$ = RELATIVE_TIME_0; $$.seconds = $1.tv_sec; $$.ns = $1.tv_nsec; }
   | tSEC_UNIT
-      { pc->rel_seconds += $1; }
+      { $$ = RELATIVE_TIME_0; $$.seconds = 1; }
   | relunit_snumber
   ;
 
 relunit_snumber:
     tSNUMBER tYEAR_UNIT
-      { pc->rel_year += $1.value * $2; }
+      { $$ = RELATIVE_TIME_0; $$.year = $1.value; }
   | tSNUMBER tMONTH_UNIT
-      { pc->rel_month += $1.value * $2; }
+      { $$ = RELATIVE_TIME_0; $$.month = $1.value; }
   | tSNUMBER tDAY_UNIT
-      { pc->rel_day += $1.value * $2; }
+      { $$ = RELATIVE_TIME_0; $$.day = $1.value * $2; }
   | tSNUMBER tHOUR_UNIT
-      { pc->rel_hour += $1.value * $2; }
+      { $$ = RELATIVE_TIME_0; $$.hour = $1.value; }
   | tSNUMBER tMINUTE_UNIT
-      { pc->rel_minutes += $1.value * $2; }
+      { $$ = RELATIVE_TIME_0; $$.minutes = $1.value; }
   | tSNUMBER tSEC_UNIT
-      { pc->rel_seconds += $1.value * $2; }
+      { $$ = RELATIVE_TIME_0; $$.seconds = $1.value; }
   ;
 
 seconds: signed_seconds | unsigned_seconds;
@@ -1215,13 +1250,7 @@ get_date (struct timespec *result, char const *p, struct timespec const *now)
   tm.tm_isdst = tmp->tm_isdst;
 
   pc.meridian = MER24;
-  pc.rel_ns = 0;
-  pc.rel_seconds = 0;
-  pc.rel_minutes = 0;
-  pc.rel_hour = 0;
-  pc.rel_day = 0;
-  pc.rel_month = 0;
-  pc.rel_year = 0;
+  pc.rel = RELATIVE_TIME_0;
   pc.timespec_seen = false;
   pc.rels_seen = false;
   pc.dates_seen = 0;
@@ -1396,14 +1425,14 @@ get_date (struct timespec *result, char const *p, struct timespec const *now)
 	}
 
       /* Add relative date.  */
-      if (pc.rel_year | pc.rel_month | pc.rel_day)
+      if (pc.rel.year | pc.rel.month | pc.rel.day)
 	{
-	  int year = tm.tm_year + pc.rel_year;
-	  int month = tm.tm_mon + pc.rel_month;
-	  int day = tm.tm_mday + pc.rel_day;
-	  if (((year < tm.tm_year) ^ (pc.rel_year < 0))
-	      | ((month < tm.tm_mon) ^ (pc.rel_month < 0))
-	      | ((day < tm.tm_mday) ^ (pc.rel_day < 0)))
+	  int year = tm.tm_year + pc.rel.year;
+	  int month = tm.tm_mon + pc.rel.month;
+	  int day = tm.tm_mday + pc.rel.day;
+	  if (((year < tm.tm_year) ^ (pc.rel.year < 0))
+	      | ((month < tm.tm_mon) ^ (pc.rel.month < 0))
+	      | ((day < tm.tm_mday) ^ (pc.rel.day < 0)))
 	    goto fail;
 	  tm.tm_year = year;
 	  tm.tm_mon = month;
@@ -1421,20 +1450,20 @@ get_date (struct timespec *result, char const *p, struct timespec const *now)
 	 must be applied before relative times, and if mktime is applied
 	 again the time zone will be lost.  */
       {
-	long int sum_ns = pc.seconds.tv_nsec + pc.rel_ns;
+	long int sum_ns = pc.seconds.tv_nsec + pc.rel.ns;
 	long int normalized_ns = (sum_ns % BILLION + BILLION) % BILLION;
 	time_t t0 = Start;
-	long int d1 = 60 * 60 * pc.rel_hour;
+	long int d1 = 60 * 60 * pc.rel.hour;
 	time_t t1 = t0 + d1;
-	long int d2 = 60 * pc.rel_minutes;
+	long int d2 = 60 * pc.rel.minutes;
 	time_t t2 = t1 + d2;
-	long int d3 = pc.rel_seconds;
+	long int d3 = pc.rel.seconds;
 	time_t t3 = t2 + d3;
 	long int d4 = (sum_ns - normalized_ns) / BILLION;
 	time_t t4 = t3 + d4;
 
-	if ((d1 / (60 * 60) ^ pc.rel_hour)
-	    | (d2 / 60 ^ pc.rel_minutes)
+	if ((d1 / (60 * 60) ^ pc.rel.hour)
+	    | (d2 / 60 ^ pc.rel.minutes)
 	    | ((t1 < t0) ^ (d1 < 0))
 	    | ((t2 < t1) ^ (d2 < 0))
 	    | ((t3 < t2) ^ (d3 < 0))
