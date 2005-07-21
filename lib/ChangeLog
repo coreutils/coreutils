@@ -1,3 +1,14 @@
+2005-07-21  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* getdate.y (relative_time): New type.
+	(RELATIVE_TIME_0): New constant.
+	(parser_control): Use relative_time instead of doing it ourselves.
+	(%union): Add new relative_time rel member.
+	(tYEAR_UNIT, tMONTH_UNIT, tHOUR_UNIT, tMINUTE_UNIT, tSEC_UNIT):
+	Now typeless.
+	(relunit, relunit_snumber): Now of type rel.
+	(zone, rel, relunit, get_date): Adjust to above changes.
+
 2005-07-12  Jim Meyering  <jim@meyering.net>
 
 	* xalloc.h (X2NREALLOC): Define.

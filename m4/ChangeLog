@@ -1,3 +1,8 @@
+2005-07-21  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* getdate.m4 (gl_C_COMPOUND_LITERALS): New macro.
+	(gl_GETDATE): Use it.
+
 2005-07-13  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* lib-check.m4 (cu_LIB_CHECK): Remove no-longer-necessary check
