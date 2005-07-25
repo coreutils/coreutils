@@ -1,3 +1,8 @@
+2005-07-25  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* regex.m4 (gl_INCLUDED_REGEX): Use AC_RUN_ELSE instead of the
+	obsolescent AC_TRY_RUN.  Include the default includes files, for 'exit'.
+
 2005-07-21  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* getdate.m4 (gl_C_COMPOUND_LITERALS): New macro.
