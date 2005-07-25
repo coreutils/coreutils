@@ -1,4 +1,4 @@
-#serial 23
+#serial 24
 
 # Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2003, 2004, 2005 Free
 # Software Foundation, Inc.
@@ -36,71 +36,65 @@ AC_DEFUN([gl_INCLUDED_REGEX],
     # test #75' in grep-2.3.
     AC_CACHE_CHECK([for working re_compile_pattern],
 		   [gl_cv_func_working_re_compile_pattern],
-      [AC_TRY_RUN(
-	 [[
-#include <stdio.h>
-#include <string.h>
-#include <regex.h>
-	  int
-	  main ()
-	  {
-	    static struct re_pattern_buffer regex;
-	    const char *s;
-	    struct re_registers regs;
-	    re_set_syntax (RE_SYNTAX_POSIX_EGREP);
-	    memset (&regex, 0, sizeof (regex));
-	    s = re_compile_pattern ("a[:@:>@:]b\n", 9, &regex);
-	    /* This should fail with _Invalid character class name_ error.  */
-	    if (!s)
-	      exit (1);
+      [AC_RUN_IFELSE(
+	 [AC_LANG_PROGRAM(
+	    [AC_INCLUDES_DEFAULT
+	     #include <regex.h>],
+	    [[static struct re_pattern_buffer regex;
+	      const char *s;
+	      struct re_registers regs;
+	      re_set_syntax (RE_SYNTAX_POSIX_EGREP);
+	      memset (&regex, 0, sizeof (regex));
+	      s = re_compile_pattern ("a[:@:>@:]b\n", 9, &regex);
+	      /* This should fail with _Invalid character class name_ error.  */
+	      if (!s)
+		exit (1);
 
-	    /* This should succeed, but does not for e.g. glibc-2.1.3.  */
-	    memset (&regex, 0, sizeof (regex));
-	    s = re_compile_pattern ("{1", 2, &regex);
+	      /* This should succeed, but does not for e.g. glibc-2.1.3.  */
+	      memset (&regex, 0, sizeof (regex));
+	      s = re_compile_pattern ("{1", 2, &regex);
 
-	    if (s)
-	      exit (1);
+	      if (s)
+		exit (1);
 
-	    /* The following example is derived from a problem report
-               against gawk from Jorge Stolfi <stolfi@ic.unicamp.br>.  */
-	    memset (&regex, 0, sizeof (regex));
-	    s = re_compile_pattern ("[an\371]*n", 7, &regex);
-	    if (s)
-	      exit (1);
+	      /* The following example is derived from a problem report
+		 against gawk from Jorge Stolfi <stolfi@ic.unicamp.br>.  */
+	      memset (&regex, 0, sizeof (regex));
+	      s = re_compile_pattern ("[an\371]*n", 7, &regex);
+	      if (s)
+		exit (1);
 
-	    /* This should match, but does not for e.g. glibc-2.2.1.  */
-	    if (re_match (&regex, "an", 2, 0, &regs) != 2)
-	      exit (1);
+	      /* This should match, but does not for e.g. glibc-2.2.1.  */
+	      if (re_match (&regex, "an", 2, 0, &regs) != 2)
+		exit (1);
 
-	    memset (&regex, 0, sizeof (regex));
-	    s = re_compile_pattern ("x", 1, &regex);
-	    if (s)
-	      exit (1);
+	      memset (&regex, 0, sizeof (regex));
+	      s = re_compile_pattern ("x", 1, &regex);
+	      if (s)
+		exit (1);
 
-	    /* The version of regex.c in e.g. GNU libc-2.2.93 did not
-	       work with a negative RANGE argument.  */
-	    if (re_search (&regex, "wxy", 3, 2, -2, &regs) != 1)
-	      exit (1);
+	      /* The version of regex.c in e.g. GNU libc-2.2.93 did not
+		 work with a negative RANGE argument.  */
+	      if (re_search (&regex, "wxy", 3, 2, -2, &regs) != 1)
+		exit (1);
 
-	    /* The version of regex.c in older versions of gnulib
-             * ignored RE_ICASE.  Detect that problem too. */
-	    memset (&regex, 0, sizeof (regex));
-	    re_set_syntax(RE_SYNTAX_EMACS|RE_ICASE);
-	    s = re_compile_pattern ("x", 1, &regex);
-	    if (s)
-	      exit (1);
+	      /* The version of regex.c in older versions of gnulib
+	       * ignored RE_ICASE.  Detect that problem too. */
+	      memset (&regex, 0, sizeof (regex));
+	      re_set_syntax(RE_SYNTAX_EMACS|RE_ICASE);
+	      s = re_compile_pattern ("x", 1, &regex);
+	      if (s)
+		exit (1);
 
-	    if (re_search (&regex, "WXY", 3, 0, 3, &regs) < 0)
-	      exit (1);
+	      if (re_search (&regex, "WXY", 3, 0, 3, &regs) < 0)
+		exit (1);
 
-	    /* REG_STARTEND was added to glibc on 2004-01-15.
-	       Reject older versions.  */
-	    if (! REG_STARTEND)
-	      exit (1);
+	      /* REG_STARTEND was added to glibc on 2004-01-15.
+		 Reject older versions.  */
+	      if (! REG_STARTEND)
+		exit (1);
 
-	    exit (0);
-	  }
-	 ]],
+	      exit (0);]])],
 	 [gl_cv_func_working_re_compile_pattern=yes],
 	 [gl_cv_func_working_re_compile_pattern=no],
 	 dnl When crosscompiling, assume it is broken.
