@@ -177,7 +177,7 @@ AC_DEFUN([gl_MACROS],
   AC_REQUIRE([gl_ROOT_DEV_INO])
   AC_REQUIRE([gl_VERSION_ETC])
   AC_REQUIRE([gl_DIACRIT])
-  AC_REQUIRE([gl_STDOPEN])
+  AC_REQUIRE([gl_FUNC_XANSTRFTIME])
 ])
 
 # These tests must be run before any use of AC_CHECK_TYPE,
