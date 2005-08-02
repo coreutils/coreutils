@@ -1,6 +1,12 @@
-2005-07-29  Jim Meyering  <jim@meyering.net>
+2005-08-02  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* src/date.c: Include "xanstrftime.h".
+	(show_date): Use xanstrftime instead of open-coding it.
+	* src/du.c: Likewise.
+
+2005-07-29  Jim Meyering  <jim@meyering.net>
 
 	* src/date.c (show_date): Remove now-unnecessary code that
 	treated an empty format string as a special case.
