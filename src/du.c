@@ -42,6 +42,7 @@
 #include "readtokens0.h"
 #include "same.h"
 #include "strftime.h"
+#include "xanstrftime.h"
 #include "xfts.h"
 #include "xstrtol.h"
 
@@ -412,11 +413,8 @@ hash_init (void)
 static void
 show_date (const char *format, time_t when, int nsec)
 {
-  struct tm *tm;
-  char *out = NULL;
-  size_t out_length = 0;
-
-  tm = localtime (&when);
+  char *out;
+  struct tm *tm = localtime (&when);
   if (! tm)
     {
       char buf[INT_BUFSIZE_BOUND (intmax_t)];
@@ -428,18 +426,7 @@ show_date (const char *format, time_t when, int nsec)
       return;
     }
 
-  do
-    {
-      out = X2REALLOC (out, &out_length);
-
-      /* Mark the first byte of the buffer so we can detect the case
-         of nstrftime producing an empty string.  Otherwise, this loop
-         would not terminate when date was invoked like this
-         `LANG=de date +%p' on a system with good language support.  */
-      out[0] = '\1';
-    }
-  while (nstrftime (out, out_length, format, tm, 0, nsec) == 0 && out[0]);
-
+  out = xanstrftime (format, tm, 0, nsec);
   fputs (out, stdout);
   free (out);
 }
