@@ -1,3 +1,7 @@
+2005-08-02  Jim Meyering  <jim@meyering.net>
+
+	* xanstrftime.c, xanstrftime.h: New files.
+
 2005-07-21  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* getdate.y (relative_time): New type.
