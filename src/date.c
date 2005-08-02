@@ -511,11 +511,6 @@ show_date (const char *format, struct timespec when)
 	  format = *date_fmt ? date_fmt : "%a %b %e %H:%M:%S %Z %Y";
 	}
     }
-  else if (*format == '\0')
-    {
-      printf ("\n");
-      return true;
-    }
 
   tm = localtime (&when.tv_sec);
   if (! tm)
