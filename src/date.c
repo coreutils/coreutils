@@ -34,6 +34,7 @@
 #include "posixtm.h"
 #include "quote.h"
 #include "strftime.h"
+#include "xanstrftime.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "date"
@@ -480,8 +481,6 @@ static bool
 show_date (const char *format, struct timespec when)
 {
   struct tm *tm;
-  char *out = NULL;
-  size_t out_length = 0;
   /* ISO 8601 formats.  See below regarding %z */
   static char const * const iso_format_string[] =
   {
@@ -524,31 +523,17 @@ show_date (const char *format, struct timespec when)
       return false;
     }
 
-  while (1)
-    {
-      bool done;
-      out = X2REALLOC (out, &out_length);
+  {
+    char *out;
 
-      /* Mark the first byte of the buffer so we can detect the case
-	 of nstrftime producing an empty string.  Otherwise, this loop
-	 would not terminate when date was invoked like this
-	 `LANG=de date +%p' on a system with good language support.  */
-      out[0] = '\1';
+    if (rfc_format)
+      setlocale (LC_TIME, "C");
+    out = xanstrftime (format, tm, 0, when.tv_nsec);
+    if (rfc_format)
+      setlocale (LC_TIME, "");
 
-      if (rfc_format)
-	setlocale (LC_ALL, "C");
-
-      done = (nstrftime (out, out_length, format, tm, 0, when.tv_nsec)
-	      || out[0] == '\0');
-
-      if (rfc_format)
-	setlocale (LC_ALL, "");
-
-      if (done)
-	break;
-    }
-
-  puts (out);
-  free (out);
+    puts (out);
+    free (out);
+  }
   return true;
 }
