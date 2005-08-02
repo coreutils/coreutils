@@ -160,6 +160,9 @@
 /* Define to 1 if you have the `clock_settime' function. */
 #undef HAVE_CLOCK_SETTIME
 
+/* Define if you have compound literals. */
+#undef HAVE_COMPOUND_LITERALS
+
 /* FIXME */
 #undef HAVE_C_LINE
 
@@ -422,9 +425,6 @@
 
 /* Define to 1 if you have the `fdatasync' function. */
 #undef HAVE_FDATASYNC
-
-/* Define to 1 if you have the `fesetround' function. */
-#undef HAVE_FESETROUND
 
 /* Define to 1 if you have the `floor' function. */
 #undef HAVE_FLOOR

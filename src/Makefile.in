@@ -149,22 +149,21 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/afs.m4 \
 	$(top_srcdir)/m4/stat-macros.m4 $(top_srcdir)/m4/stat-prog.m4 \
 	$(top_srcdir)/m4/stdbool.m4 $(top_srcdir)/m4/stdint_h.m4 \
 	$(top_srcdir)/m4/stdio-safer.m4 \
-	$(top_srcdir)/m4/stdlib-safer.m4 $(top_srcdir)/m4/stdopen.m4 \
-	$(top_srcdir)/m4/stpcpy.m4 $(top_srcdir)/m4/strcase.m4 \
-	$(top_srcdir)/m4/strcspn.m4 $(top_srcdir)/m4/strdup.m4 \
-	$(top_srcdir)/m4/strftime.m4 $(top_srcdir)/m4/stripslash.m4 \
-	$(top_srcdir)/m4/strndup.m4 $(top_srcdir)/m4/strnlen.m4 \
-	$(top_srcdir)/m4/strnumcmp.m4 $(top_srcdir)/m4/strpbrk.m4 \
-	$(top_srcdir)/m4/strstr.m4 $(top_srcdir)/m4/strtod.m4 \
-	$(top_srcdir)/m4/strtoimax.m4 $(top_srcdir)/m4/strtol.m4 \
-	$(top_srcdir)/m4/strtoll.m4 $(top_srcdir)/m4/strtoul.m4 \
-	$(top_srcdir)/m4/strtoull.m4 $(top_srcdir)/m4/strtoumax.m4 \
-	$(top_srcdir)/m4/strverscmp.m4 $(top_srcdir)/m4/timespec.m4 \
-	$(top_srcdir)/m4/tm_gmtoff.m4 $(top_srcdir)/m4/tzset.m4 \
-	$(top_srcdir)/m4/uint32_t.m4 $(top_srcdir)/m4/uintmax_t.m4 \
-	$(top_srcdir)/m4/uintptr_t.m4 $(top_srcdir)/m4/ullong_max.m4 \
-	$(top_srcdir)/m4/ulonglong.m4 $(top_srcdir)/m4/unicodeio.m4 \
-	$(top_srcdir)/m4/unistd-safer.m4 \
+	$(top_srcdir)/m4/stdlib-safer.m4 $(top_srcdir)/m4/stpcpy.m4 \
+	$(top_srcdir)/m4/strcase.m4 $(top_srcdir)/m4/strcspn.m4 \
+	$(top_srcdir)/m4/strdup.m4 $(top_srcdir)/m4/strftime.m4 \
+	$(top_srcdir)/m4/stripslash.m4 $(top_srcdir)/m4/strndup.m4 \
+	$(top_srcdir)/m4/strnlen.m4 $(top_srcdir)/m4/strnumcmp.m4 \
+	$(top_srcdir)/m4/strpbrk.m4 $(top_srcdir)/m4/strstr.m4 \
+	$(top_srcdir)/m4/strtod.m4 $(top_srcdir)/m4/strtoimax.m4 \
+	$(top_srcdir)/m4/strtol.m4 $(top_srcdir)/m4/strtoll.m4 \
+	$(top_srcdir)/m4/strtoul.m4 $(top_srcdir)/m4/strtoull.m4 \
+	$(top_srcdir)/m4/strtoumax.m4 $(top_srcdir)/m4/strverscmp.m4 \
+	$(top_srcdir)/m4/timespec.m4 $(top_srcdir)/m4/tm_gmtoff.m4 \
+	$(top_srcdir)/m4/tzset.m4 $(top_srcdir)/m4/uint32_t.m4 \
+	$(top_srcdir)/m4/uintmax_t.m4 $(top_srcdir)/m4/uintptr_t.m4 \
+	$(top_srcdir)/m4/ullong_max.m4 $(top_srcdir)/m4/ulonglong.m4 \
+	$(top_srcdir)/m4/unicodeio.m4 $(top_srcdir)/m4/unistd-safer.m4 \
 	$(top_srcdir)/m4/unlink-busy.m4 $(top_srcdir)/m4/unlinkdir.m4 \
 	$(top_srcdir)/m4/unlocked-io.m4 $(top_srcdir)/m4/uptime.m4 \
 	$(top_srcdir)/m4/userspec.m4 $(top_srcdir)/m4/utimbuf.m4 \
@@ -173,12 +172,12 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/afs.m4 \
 	$(top_srcdir)/m4/utimes.m4 $(top_srcdir)/m4/vasnprintf.m4 \
 	$(top_srcdir)/m4/vasprintf.m4 $(top_srcdir)/m4/version-etc.m4 \
 	$(top_srcdir)/m4/wchar_t.m4 $(top_srcdir)/m4/wint_t.m4 \
-	$(top_srcdir)/m4/xalloc.m4 $(top_srcdir)/m4/xfts.m4 \
-	$(top_srcdir)/m4/xgetcwd.m4 $(top_srcdir)/m4/xnanosleep.m4 \
-	$(top_srcdir)/m4/xreadlink.m4 $(top_srcdir)/m4/xstrtod.m4 \
-	$(top_srcdir)/m4/xstrtoimax.m4 $(top_srcdir)/m4/xstrtol.m4 \
-	$(top_srcdir)/m4/xstrtoumax.m4 $(top_srcdir)/m4/yesno.m4 \
-	$(top_srcdir)/configure.ac
+	$(top_srcdir)/m4/xalloc.m4 $(top_srcdir)/m4/xanstrftime.m4 \
+	$(top_srcdir)/m4/xfts.m4 $(top_srcdir)/m4/xgetcwd.m4 \
+	$(top_srcdir)/m4/xnanosleep.m4 $(top_srcdir)/m4/xreadlink.m4 \
+	$(top_srcdir)/m4/xstrtod.m4 $(top_srcdir)/m4/xstrtoimax.m4 \
+	$(top_srcdir)/m4/xstrtol.m4 $(top_srcdir)/m4/xstrtoumax.m4 \
+	$(top_srcdir)/m4/yesno.m4 $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(SHELL) $(top_srcdir)/build-aux/mkinstalldirs
@@ -482,7 +481,7 @@ shred_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1) \
 sleep_SOURCES = sleep.c
 sleep_OBJECTS = sleep.$(OBJEXT)
 am__DEPENDENCIES_3 = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
+	$(am__DEPENDENCIES_1)
 sleep_DEPENDENCIES = $(am__DEPENDENCIES_3)
 sort_SOURCES = sort.c
 sort_OBJECTS = sort.$(OBJEXT)
@@ -677,7 +676,6 @@ ECHO_T = @ECHO_T@
 EGREP = @EGREP@
 EOVERFLOW = @EOVERFLOW@
 EXEEXT = @EXEEXT@
-FESETROUND_LIBM = @FESETROUND_LIBM@
 FNMATCH_H = @FNMATCH_H@
 GETLOADAVG_LIBS = @GETLOADAVG_LIBS@
 GETOPT_H = @GETOPT_H@
@@ -824,11 +822,9 @@ printf_LDADD = $(LDADD) $(POW_LIB) $(LIBICONV)
 # If necessary, add -lm to resolve use of floor, rint, modf.
 seq_LDADD = $(LDADD) $(SEQ_LIBM)
 
-# If necessary, add -lm to resolve the `pow' reference in lib/strtod.c
-# or for the fesetround reference in programs using nanosec.c.
-nanosec_libs = \
-  $(LDADD) $(FESETROUND_LIBM) $(POW_LIB) $(LIB_NANOSLEEP)
-
+# If necessary, add libraries to resolve the `pow' reference in lib/strtod.c
+# and the `nanosleep' reference in lib/xnanosleep.c.
+nanosec_libs = $(LDADD) $(POW_LIB) $(LIB_NANOSLEEP)
 sleep_LDADD = $(nanosec_libs)
 tail_LDADD = $(nanosec_libs)
 uptime_LDADD = $(LDADD) $(GETLOADAVG_LIBS)
@@ -861,8 +857,7 @@ md5sum_SOURCES = md5sum.c md5.c
 sha1sum_SOURCES = md5sum.c sha1sum.c
 editpl = sed -e 's,@''PERL''@,$(PERL),g'
 localedir = $(datadir)/locale
-BUILT_SOURCES = localedir.h dircolors.h wheel-size.h wheel.h false.c \
-	fs.h
+BUILT_SOURCES = localedir.h dircolors.h wheel-size.h wheel.h fs.h
 DISTCLEANFILES = localedir.h
 wheel_size = 5
 
@@ -950,7 +945,7 @@ uninstall-binPROGRAMS:
 	done
 
 clean-binPROGRAMS:
-	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
+	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS) > /dev/null 2>&1 || /bin/rm -f $(bin_PROGRAMS)
 
 installcheck-binPROGRAMS: $(bin_PROGRAMS)
 	bad=0; pid=$$$$; list="$(bin_PROGRAMS)"; for p in $$list; do \
@@ -1629,15 +1624,6 @@ wheel-size.h: Makefile.am
 wheel.h: wheel-gen.pl Makefile.am
 	@rm -f $@ $@-t
 	$(srcdir)/wheel-gen.pl $(wheel_size) > $@-t
-	@chmod a-w $@-t
-	mv $@-t $@
-false.c: true.c
-	@rm -f $@ $@-t
-	sed \
-	  -e s/true/false/g \
-	  -e s/success/failure/g \
-	  -e 's/(EXIT_SUCCESS)/(EXIT_FAILURE)/g' \
-	  $(srcdir)/true.c > $@-t
 	@chmod a-w $@-t
 	mv $@-t $@
 fs.h: stat.c extract-magic

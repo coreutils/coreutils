@@ -79,20 +79,20 @@ DIST_COMMON = README $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	safe-read.h safe-write.c safe-write.h same.c same.h save-cwd.c \
 	save-cwd.h savedir.c savedir.h setenv.c setenv.h settime.c \
 	sha1.c sha1.h sig2str.c sig2str.h stat-macros.h stdio--.h \
-	stdio-safer.h stdlib--.h stdlib-safer.h stdopen.c stdopen.h \
-	stpcpy.c strcasecmp.c strcspn.c strdup.c strdup.h strftime.c \
-	strftime.h strintcmp.c stripslash.c strncasecmp.c strndup.c \
-	strndup.h strnlen.c strnumcmp-in.h strnumcmp.c strnumcmp.h \
-	strpbrk.c strstr.c strtod.c strtoimax.c strtol.c strtoll.c \
-	strtoul.c strtoull.c strtoumax.c strverscmp.c strverscmp.h \
-	tempname.c timespec.h umaxtostr.c unistd--.h unistd-safer.h \
-	unlinkdir.c unlinkdir.h unlocked-io.h unsetenv.c userspec.c \
-	userspec.h utime.c utimecmp.c utimecmp.h utimens.c utimens.h \
-	vasnprintf.c vasprintf.c version-etc-fsf.c version-etc.c \
-	version-etc.h xalloc.h xfts.c xfts.h xgetcwd.c xgetcwd.h \
-	xmalloc.c xnanosleep.c xnanosleep.h xreadlink.c xreadlink.h \
-	xstrtod.c xstrtod.h xstrtol.c xstrtol.h xstrtoul.c xtime.h \
-	yesno.c yesno.h
+	stdio-safer.h stdlib--.h stdlib-safer.h stpcpy.c strcasecmp.c \
+	strcspn.c strdup.c strdup.h strftime.c strftime.h strintcmp.c \
+	stripslash.c strncasecmp.c strndup.c strndup.h strnlen.c \
+	strnumcmp-in.h strnumcmp.c strnumcmp.h strpbrk.c strstr.c \
+	strtod.c strtoimax.c strtol.c strtoll.c strtoul.c strtoull.c \
+	strtoumax.c strverscmp.c strverscmp.h tempname.c timespec.h \
+	umaxtostr.c unistd--.h unistd-safer.h unlinkdir.c unlinkdir.h \
+	unlocked-io.h unsetenv.c userspec.c userspec.h utime.c \
+	utimecmp.c utimecmp.h utimens.c utimens.h vasnprintf.c \
+	vasprintf.c version-etc-fsf.c version-etc.c version-etc.h \
+	xalloc.h xanstrftime.c xanstrftime.h xfts.c xfts.h xgetcwd.c \
+	xgetcwd.h xmalloc.c xnanosleep.c xnanosleep.h xreadlink.c \
+	xreadlink.h xstrtod.c xstrtod.h xstrtol.c xstrtol.h xstrtoul.c \
+	xtime.h yesno.c yesno.h
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/afs.m4 \
 	$(top_srcdir)/m4/alloca.m4 $(top_srcdir)/m4/allocsa.m4 \
@@ -177,22 +177,21 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/afs.m4 \
 	$(top_srcdir)/m4/stat-macros.m4 $(top_srcdir)/m4/stat-prog.m4 \
 	$(top_srcdir)/m4/stdbool.m4 $(top_srcdir)/m4/stdint_h.m4 \
 	$(top_srcdir)/m4/stdio-safer.m4 \
-	$(top_srcdir)/m4/stdlib-safer.m4 $(top_srcdir)/m4/stdopen.m4 \
-	$(top_srcdir)/m4/stpcpy.m4 $(top_srcdir)/m4/strcase.m4 \
-	$(top_srcdir)/m4/strcspn.m4 $(top_srcdir)/m4/strdup.m4 \
-	$(top_srcdir)/m4/strftime.m4 $(top_srcdir)/m4/stripslash.m4 \
-	$(top_srcdir)/m4/strndup.m4 $(top_srcdir)/m4/strnlen.m4 \
-	$(top_srcdir)/m4/strnumcmp.m4 $(top_srcdir)/m4/strpbrk.m4 \
-	$(top_srcdir)/m4/strstr.m4 $(top_srcdir)/m4/strtod.m4 \
-	$(top_srcdir)/m4/strtoimax.m4 $(top_srcdir)/m4/strtol.m4 \
-	$(top_srcdir)/m4/strtoll.m4 $(top_srcdir)/m4/strtoul.m4 \
-	$(top_srcdir)/m4/strtoull.m4 $(top_srcdir)/m4/strtoumax.m4 \
-	$(top_srcdir)/m4/strverscmp.m4 $(top_srcdir)/m4/timespec.m4 \
-	$(top_srcdir)/m4/tm_gmtoff.m4 $(top_srcdir)/m4/tzset.m4 \
-	$(top_srcdir)/m4/uint32_t.m4 $(top_srcdir)/m4/uintmax_t.m4 \
-	$(top_srcdir)/m4/uintptr_t.m4 $(top_srcdir)/m4/ullong_max.m4 \
-	$(top_srcdir)/m4/ulonglong.m4 $(top_srcdir)/m4/unicodeio.m4 \
-	$(top_srcdir)/m4/unistd-safer.m4 \
+	$(top_srcdir)/m4/stdlib-safer.m4 $(top_srcdir)/m4/stpcpy.m4 \
+	$(top_srcdir)/m4/strcase.m4 $(top_srcdir)/m4/strcspn.m4 \
+	$(top_srcdir)/m4/strdup.m4 $(top_srcdir)/m4/strftime.m4 \
+	$(top_srcdir)/m4/stripslash.m4 $(top_srcdir)/m4/strndup.m4 \
+	$(top_srcdir)/m4/strnlen.m4 $(top_srcdir)/m4/strnumcmp.m4 \
+	$(top_srcdir)/m4/strpbrk.m4 $(top_srcdir)/m4/strstr.m4 \
+	$(top_srcdir)/m4/strtod.m4 $(top_srcdir)/m4/strtoimax.m4 \
+	$(top_srcdir)/m4/strtol.m4 $(top_srcdir)/m4/strtoll.m4 \
+	$(top_srcdir)/m4/strtoul.m4 $(top_srcdir)/m4/strtoull.m4 \
+	$(top_srcdir)/m4/strtoumax.m4 $(top_srcdir)/m4/strverscmp.m4 \
+	$(top_srcdir)/m4/timespec.m4 $(top_srcdir)/m4/tm_gmtoff.m4 \
+	$(top_srcdir)/m4/tzset.m4 $(top_srcdir)/m4/uint32_t.m4 \
+	$(top_srcdir)/m4/uintmax_t.m4 $(top_srcdir)/m4/uintptr_t.m4 \
+	$(top_srcdir)/m4/ullong_max.m4 $(top_srcdir)/m4/ulonglong.m4 \
+	$(top_srcdir)/m4/unicodeio.m4 $(top_srcdir)/m4/unistd-safer.m4 \
 	$(top_srcdir)/m4/unlink-busy.m4 $(top_srcdir)/m4/unlinkdir.m4 \
 	$(top_srcdir)/m4/unlocked-io.m4 $(top_srcdir)/m4/uptime.m4 \
 	$(top_srcdir)/m4/userspec.m4 $(top_srcdir)/m4/utimbuf.m4 \
@@ -201,12 +200,12 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/afs.m4 \
 	$(top_srcdir)/m4/utimes.m4 $(top_srcdir)/m4/vasnprintf.m4 \
 	$(top_srcdir)/m4/vasprintf.m4 $(top_srcdir)/m4/version-etc.m4 \
 	$(top_srcdir)/m4/wchar_t.m4 $(top_srcdir)/m4/wint_t.m4 \
-	$(top_srcdir)/m4/xalloc.m4 $(top_srcdir)/m4/xfts.m4 \
-	$(top_srcdir)/m4/xgetcwd.m4 $(top_srcdir)/m4/xnanosleep.m4 \
-	$(top_srcdir)/m4/xreadlink.m4 $(top_srcdir)/m4/xstrtod.m4 \
-	$(top_srcdir)/m4/xstrtoimax.m4 $(top_srcdir)/m4/xstrtol.m4 \
-	$(top_srcdir)/m4/xstrtoumax.m4 $(top_srcdir)/m4/yesno.m4 \
-	$(top_srcdir)/configure.ac
+	$(top_srcdir)/m4/xalloc.m4 $(top_srcdir)/m4/xanstrftime.m4 \
+	$(top_srcdir)/m4/xfts.m4 $(top_srcdir)/m4/xgetcwd.m4 \
+	$(top_srcdir)/m4/xnanosleep.m4 $(top_srcdir)/m4/xreadlink.m4 \
+	$(top_srcdir)/m4/xstrtod.m4 $(top_srcdir)/m4/xstrtoimax.m4 \
+	$(top_srcdir)/m4/xstrtol.m4 $(top_srcdir)/m4/xstrtoumax.m4 \
+	$(top_srcdir)/m4/yesno.m4 $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(SHELL) $(top_srcdir)/build-aux/mkinstalldirs
@@ -269,7 +268,6 @@ ECHO_T = @ECHO_T@
 EGREP = @EGREP@
 EOVERFLOW = @EOVERFLOW@
 EXEEXT = @EXEEXT@
-FESETROUND_LIBM = @FESETROUND_LIBM@
 FNMATCH_H = @FNMATCH_H@
 GETLOADAVG_LIBS = @GETLOADAVG_LIBS@
 GETOPT_H = @GETOPT_H@
@@ -572,7 +570,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/settime.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/sha1.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/sig2str.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/stdopen.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/stpcpy.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/strcasecmp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/strcspn.Po@am__quote@
@@ -606,6 +603,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/vasprintf.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/version-etc-fsf.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/version-etc.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/xanstrftime.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/xfts.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/xgetcwd.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/xmalloc.Po@am__quote@
