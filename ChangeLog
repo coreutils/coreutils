@@ -1,6 +1,12 @@
-2005-07-19  Jim Meyering  <jim@meyering.net>
+2005-07-29  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* src/date.c (show_date): Remove now-unnecessary code that
+	treated an empty format string as a special case.
+	* tests/date/Test.pm (empty-format): New test, for this case.
+
+2005-07-19  Jim Meyering  <jim@meyering.net>
 
 	* src/md5sum.c (usage): Adjust printf argument list to match
 	new format string.
