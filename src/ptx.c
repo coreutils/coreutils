@@ -398,7 +398,7 @@ alloc_and_compile_regex (const char *string)
   const char *message;		/* error message returned by regex.c */
 
   pattern = xmalloc (sizeof *pattern);
-  memset (pattern, 0, sizeof (struct re_pattern_buffer));
+  memset (pattern, 0, sizeof *pattern);
 
   pattern->buffer = NULL;
   pattern->allocated = 0;
@@ -698,7 +698,7 @@ sort_found_occurs (void)
 
   /* Only one language for the time being.  */
 
-  qsort (occurs_table[0], number_of_occurs[0], sizeof (OCCURS),
+  qsort (occurs_table[0], number_of_occurs[0], sizeof **occurs_table,
 	 compare_occurs);
 }
 
@@ -801,7 +801,7 @@ digest_word_file (const char *file_name, WORD_TABLE *table)
 
   /* Finally, sort all the words read.  */
 
-  qsort (table->start, table->length, (size_t) sizeof (WORD), compare_words);
+  qsort (table->start, table->length, sizeof table->start[0], compare_words);
 }
 
 /* Keyword recognition and selection.  */
