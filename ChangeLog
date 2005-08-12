@@ -2,6 +2,15 @@
 
 	* Version 5.3.1.
 
+	* src/csplit.c (new_control_record): Cosmetic: use X2NREALLOC (only
+	two arguments) rather than x2nrealloc (with three).
+	* src/cut.c (ADD_RANGE_PAIR): Likewise.
+	* src/expand.c (add_tab_stop): Likewise.
+	* src/join.c (extract_field, getseq): Likewise.
+	* src/od.c (decode_format_string): Likewise.
+	* src/sort.c (add_temp_dir): Likewise.
+	* src/unexpand.c (add_tab_stop): Likewise.
+
 	* src/pr.c (main): Cosmetic: use '\0' in place of 0.
 
 2005-08-02  Jim Meyering  <jim@meyering.net>
