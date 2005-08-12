@@ -891,7 +891,7 @@ main (int argc, char **argv)
 	    column_count_string
 	      = X2REALLOC (column_count_string, &n_alloc);
 	  column_count_string[n_digits++] = c;
-	  column_count_string[n_digits] = 0;
+	  column_count_string[n_digits] = '\0';
 	  continue;
 	}
 
