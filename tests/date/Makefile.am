@@ -11,7 +11,7 @@ next-w.X next-mo.X next-y.X utc-0.X utc-0a.X utc-1.I utc-1.X utc-1a.I \
 utc-1a.X date2sec-0.X date2sec-0a.X date2sec-1.X sec2date-0.X this-m.X \
 this-h.X this-w.X this-mo.X this-y.X risks-1.X regress-1.X datevtime-1.X \
 rfc822-1.X relative-1.X relative-2.X wide-fmt.X moname-d-y.X epoch.X ns-10.X \
-ns-max32.X ns-relative.X
+ns-max32.X ns-relative.X empty-fmt.X
 run_gen = 1.O 1.E 3.O 3.E 4.O 4.E 5.O 5.E 6.O 6.E 7.O 7.E 8.O 8.E 9.O 9.E \
 leap-1.O leap-1.E U95-1.O U95-1.E U95-2.O U95-2.E U95-3.O U95-3.E U92-1.O \
 U92-1.E U92-2.O U92-2.E U92-3.O U92-3.E V92-1.O V92-1.E V92-2.O V92-2.E \
@@ -28,7 +28,7 @@ this-mo.E this-y.O this-y.E risks-1.O risks-1.E regress-1.O regress-1.E \
 datevtime-1.O datevtime-1.E rfc822-1.O rfc822-1.E relative-1.O relative-1.E \
 relative-2.O relative-2.E wide-fmt.O wide-fmt.E moname-d-y.O moname-d-y.E \
 epoch.O epoch.E ns-10.O ns-10.E ns-max32.O ns-max32.E ns-relative.O \
-ns-relative.E
+ns-relative.E empty-fmt.O empty-fmt.E
 ##test-files-end
 
 EXTRA_DIST = Test.pm $x-tests $(explicit) $(maint_gen)
