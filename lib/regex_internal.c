@@ -153,10 +153,10 @@ re_string_realloc_buffers (pstr, new_buf_len)
       pstr->wcs = new_array;
       if (pstr->offsets != NULL)
 	{
-	  int *new_array = re_realloc (pstr->offsets, int, new_buf_len);
-	  if (BE (new_array == NULL, 0))
+	  int *offsets = re_realloc (pstr->offsets, int, new_buf_len);
+	  if (BE (offsets == NULL, 0))
 	    return REG_ESPACE;
-	  pstr->offsets = new_array;
+	  pstr->offsets = offsets;
 	}
     }
 #endif /* RE_ENABLE_I18N  */
@@ -1423,13 +1423,19 @@ re_acquire_state (err, dfa, nodes)
       if (hash != state->hash)
 	continue;
       if (re_node_set_compare (&state->nodes, nodes))
-	return state;
+	{
+	  IF_LINT (*err = REG_NOERROR);
+	  return state;
+	}
     }
 
   /* There are no appropriate state in the dfa, create the new one.  */
   new_state = create_ci_newstate (dfa, nodes, hash);
   if (BE (new_state != NULL, 1))
-    return new_state;
+    {
+      IF_LINT (*err = REG_NOERROR);
+      return new_state;
+    }
   else
     {
       *err = REG_ESPACE;
@@ -1458,11 +1464,9 @@ re_acquire_state_context (err, dfa, nodes, context)
   re_dfastate_t *new_state;
   struct re_state_table_entry *spot;
   int i;
+  *err = REG_NOERROR;
   if (nodes->nelem == 0)
-    {
-      *err = REG_NOERROR;
-      return NULL;
-    }
+    return NULL;
   hash = calc_state_hash (nodes, context);
   spot = dfa->state_table + (hash & dfa->state_hash_mask);
 
