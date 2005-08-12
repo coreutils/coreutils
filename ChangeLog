@@ -2,6 +2,11 @@
 
 	* Version 5.3.1.
 
+	* src/ls.c (sort_files): Use cleaner `sizeof *VAR_NAME'
+	rather than `sizeof (TYPE_NAME)'.
+	* src/ptx.c (sort_found_occurs, digest_word_file): Likewise.
+	(alloc_and_compile_regex): Likewise.
+
 	* src/wc.c: Test `!defined HAVE_MBSTATE_T' rather than
 	`defined mbstate_t' to detect missing support for mbstate_t.
 	The latter didn't work for HP-UX 11.23.
