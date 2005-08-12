@@ -2,6 +2,10 @@
 
 	* Version 5.3.1.
 
+	* src/ls.c (long_time_expected_width): Don't test for failed localtime.
+	That cannot happen when the result date's year is in range.
+	Add an assertion instead.
+
 	* src/ls.c (sort_files): Use cleaner `sizeof *VAR_NAME'
 	rather than `sizeof (TYPE_NAME)'.
 	* src/ptx.c (sort_found_occurs, digest_word_file): Likewise.
