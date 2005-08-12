@@ -1603,7 +1603,10 @@ duplicate_node (new_idx, dfa, org_idx, constraint)
 {
   int dup_idx = re_dfa_add_node (dfa, dfa->nodes[org_idx]);
   if (BE (dup_idx == -1, 0))
-    return REG_ESPACE;
+    {
+      IF_LINT (*new_idx = -1);
+      return REG_ESPACE;
+    }
   dfa->nodes[dup_idx].constraint = constraint;
   if (dfa->nodes[org_idx].type == ANCHOR)
     dfa->nodes[dup_idx].constraint |= dfa->nodes[org_idx].opr.ctx_type;
