@@ -97,7 +97,9 @@ main (int argc, char **argv)
       usage (NOHUP_FAILURE);
     }
 
-  /* If standard input is a tty, replace it with /dev/null.  */
+  /* If standard input is a tty, replace it with /dev/null.
+     Note that it is deliberately opened for *writing*,
+     to ensure any read evokes an error.  */
   if (isatty (STDIN_FILENO))
     fd_reopen (STDIN_FILENO, "/dev/null", O_WRONLY, 0);
 
