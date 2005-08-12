@@ -912,7 +912,8 @@ main (int argc, char **argv)
 	      error (EXIT_FAILURE, 0,
 		     _("`--pages=FIRST_PAGE[:LAST_PAGE]' missing argument"));
 	    else if (! first_last_page (optarg))
-	      error (EXIT_FAILURE, 0, _("Invalid page range %s"), quote (optarg));
+	      error (EXIT_FAILURE, 0, _("Invalid page range %s"),
+		     quote (optarg));
 	    break;
 	  }
 
@@ -1197,7 +1198,7 @@ getoptarg (char *arg, char switch_char, char *character, int *number)
 	  || tmp_long <= 0 || tmp_long > INT_MAX)
 	{
 	  error (0, 0,
-		 _("`-%c' extra characters or invalid number in the argument: %s"),
+	     _("`-%c' extra characters or invalid number in the argument: %s"),
 		 switch_char, quote (arg));
 	  usage (EXIT_FAILURE);
 	}
