@@ -2,6 +2,9 @@
 
 	* Version 5.3.1.
 
+	* src/fold.c (fold_file): Cosmetic: use X2REALLOC rather than x2realloc.
+	* src/pr.c (main): Likewise.
+
 	* src/csplit.c (new_control_record): Cosmetic: use X2NREALLOC (only
 	two arguments) rather than x2nrealloc (with three).
 	* src/cut.c (ADD_RANGE_PAIR): Likewise.
