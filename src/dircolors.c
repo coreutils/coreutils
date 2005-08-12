@@ -61,9 +61,6 @@ enum Shell_syntax
    variable.  */
 static struct obstack lsc_obstack;
 
-/* True if the input file was the standard input. */
-static bool have_read_stdin;
-
 /* FIXME: associate with ls_codes? */
 static const char *const slack_codes[] =
 {
@@ -373,28 +370,17 @@ dc_parse_stream (FILE *fp, const char *filename)
 static bool
 dc_parse_file (const char *filename)
 {
-  FILE *fp;
   bool ok;
-  bool is_stdin = STREQ (filename, "-");
 
-  if (is_stdin)
+  if (! STREQ (filename, "-") && freopen (filename, "r", stdin) == NULL)
     {
-      have_read_stdin = true;
-      fp = stdin;
-    }
-  else
-    {
-      fp = fopen (filename, "r");
-      if (fp == NULL)
-	{
-	  error (0, errno, "%s", quote (filename));
-	  return false;
-	}
+      error (0, errno, "%s", filename);
+      return false;
     }
 
-  ok = dc_parse_stream (fp, filename);
+  ok = dc_parse_stream (stdin, filename);
 
-  if (!is_stdin && fclose (fp) != 0)
+  if (fclose (stdin) != 0)
     {
       error (0, errno, "%s", quote (filename));
       return false;
@@ -515,10 +501,6 @@ to select a shell syntax are mutually exclusive"));
 	  fputs (suffix, stdout);
 	}
     }
-
-
-  if (have_read_stdin && fclose (stdin) == EOF)
-    error (EXIT_FAILURE, errno, _("standard input"));
 
   exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
