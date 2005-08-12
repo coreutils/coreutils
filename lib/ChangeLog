@@ -1,5 +1,22 @@
 2005-08-12  Jim Meyering  <jim@meyering.net>
 
+	* regcomp.c (duplicate_node) [lint]: Set *new_idx to -1, to avoid
+	warnings (unfounded) in caller that it may be used uninitialized.
+
+	* regex.c (IF_LINT): Define.
+
+	* regex_internal.c (re_string_realloc_buffers): Rename local-shadowed
+	variable: s/new_array/offsets/.
+	(re_acquire_state) [lint]: Set *err, to avoid warnings in caller.
+
+	* regexec.c (regexec, re_search_stub) [!_LIBC]: Omit declaration
+	of unused local, dfa.
+	(proceed_next_node): Remove outer declaration and
+	unnecessary initialization of local-shadowed `dest_node'.
+	Declare it in inner scopes, nearer its uses instead.
+
+	* regex.h (RE_SYNTAX_POSIX_AWK): Remove useless space-before-TAB.
+
 	* fts-cycle.c (setup_dir, enter_dir, leave_dir, free_dir):
 	Use the hash-table-based cycle-detection code not just when
 	FTS_TIGHT_CYCLE_CHECK if specified, but also with FTS_LOGICAL.
