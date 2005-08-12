@@ -3012,7 +3012,7 @@ sort_files (void)
 	}
     }
 
-  qsort (files, files_index, sizeof (struct fileinfo), func);
+  qsort (files, files_index, sizeof *files, func);
 }
 
 /* List all the files now in the table.  */
