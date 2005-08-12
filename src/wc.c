@@ -51,7 +51,7 @@
 #include "safe-read.h"
 
 /* Some systems, like BeOS, have multibyte encodings but lack mbstate_t.  */
-#if HAVE_MBRTOWC && defined mbstate_t
+#if HAVE_MBRTOWC && ! defined HAVE_MBSTATE_T
 # define mbrtowc(pwc, s, n, ps) (mbrtowc) (pwc, s, n, 0)
 #endif
 
