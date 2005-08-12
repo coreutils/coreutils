@@ -149,7 +149,7 @@ fold_file (char *filename, size_t width)
   while ((c = getc (istream)) != EOF)
     {
       if (offset_out + 1 >= allocated_out)
-	line_out = x2nrealloc (line_out, &allocated_out, sizeof *line_out);
+	line_out = X2REALLOC (line_out, &allocated_out);
 
       if (c == '\n')
 	{
