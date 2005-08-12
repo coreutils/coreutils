@@ -188,8 +188,7 @@ extract_field (struct line *line, char *field, size_t len)
 {
   if (line->nfields >= line->nfields_allocated)
     {
-      line->fields = x2nrealloc (line->fields, &line->nfields_allocated,
-				 sizeof (struct field));
+      line->fields = X2NREALLOC (line->fields, &line->nfields_allocated);
     }
   line->fields[line->nfields].beg = field;
   line->fields[line->nfields].len = len;
@@ -283,7 +282,7 @@ static bool
 getseq (FILE *fp, struct seq *seq)
 {
   if (seq->count == seq->alloc)
-    seq->lines = x2nrealloc (seq->lines, &seq->alloc, sizeof *seq->lines);
+    seq->lines = X2NREALLOC (seq->lines, &seq->alloc);
 
   if (get_line (fp, &seq->lines[seq->count]))
     {

@@ -1033,7 +1033,7 @@ new_control_record (void)
   struct control *p;
 
   if (control_used == control_allocated)
-    controls = x2nrealloc (controls, &control_allocated, sizeof *controls);
+    controls = X2NREALLOC (controls, &control_allocated);
   p = &controls[control_used++];
   p->regexpr = NULL;
   p->repeat = 0;

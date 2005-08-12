@@ -54,17 +54,17 @@
    space if necessary.  Update local variable N_RP.  When allocating,
    update global variable N_RP_ALLOCATED.  */
 
-#define ADD_RANGE_PAIR(rp, low, high)					\
-  do									\
-    {									\
-      if (n_rp >= n_rp_allocated)					\
-	{								\
-	  (rp) = x2nrealloc (rp, &n_rp_allocated, sizeof *(rp));	\
-	}								\
-      rp[n_rp].lo = (low);						\
-      rp[n_rp].hi = (high);						\
-      ++n_rp;								\
-    }									\
+#define ADD_RANGE_PAIR(rp, low, high)			\
+  do							\
+    {							\
+      if (n_rp >= n_rp_allocated)			\
+	{						\
+	  (rp) = X2NREALLOC (rp, &n_rp_allocated);	\
+	}						\
+      rp[n_rp].lo = (low);				\
+      rp[n_rp].hi = (high);				\
+      ++n_rp;						\
+    }							\
   while (0)
 
 struct range_pair

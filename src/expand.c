@@ -140,7 +140,7 @@ static void
 add_tab_stop (uintmax_t tabval)
 {
   if (first_free_tab == n_tabs_allocated)
-    tab_list = x2nrealloc (tab_list, &n_tabs_allocated, sizeof *tab_list);
+    tab_list = X2NREALLOC (tab_list, &n_tabs_allocated);
   tab_list[first_free_tab++] = tabval;
 }
 

@@ -974,7 +974,7 @@ decode_format_string (const char *s)
       const char *next;
 
       if (n_specs_allocated <= n_specs)
-	spec = x2nrealloc (spec, &n_specs_allocated, sizeof *spec);
+	spec = X2NREALLOC (spec, &n_specs_allocated);
 
       if (! decode_one_format (s_orig, s, &next, &spec[n_specs]))
 	return false;
