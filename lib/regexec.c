@@ -218,7 +218,9 @@ regexec (preg, string, nmatch, pmatch, eflags)
 {
   reg_errcode_t err;
   int start, length;
+#if defined _LIBC
   re_dfa_t *dfa = (re_dfa_t *)preg->buffer;
+#endif
 
   if (eflags & ~(REG_NOTBOL | REG_NOTEOL | REG_STARTEND))
     return REG_BADPAT;
@@ -405,7 +407,9 @@ re_search_stub (bufp, string, length, start, range, stop, regs, ret_len)
   regmatch_t *pmatch;
   int nregs, rval;
   int eflags = 0;
+#if defined _LIBC
   re_dfa_t *dfa = (re_dfa_t *)bufp->buffer;
+#endif
 
   /* Check for out-of-range.  */
   if (BE (start < 0 || start > length, 0))
@@ -1236,8 +1240,7 @@ proceed_next_node (mctx, nregs, regs, pidx, node, eps_via_nodes, fs)
     struct re_fail_stack_t *fs;
 {
   re_dfa_t *const dfa = mctx->dfa;
-  int i, err, dest_node;
-  dest_node = -1;
+  int i, err;
   if (IS_EPSILON_NODE (dfa->nodes[node].type))
     {
       re_node_set *cur_nodes = &mctx->state_log[*pidx]->nodes;
@@ -1303,6 +1306,7 @@ proceed_next_node (mctx, nregs, regs, pidx, node, eps_via_nodes, fs)
 
 	  if (naccepted == 0)
 	    {
+	      int dest_node;
 	      err = re_node_set_insert (eps_via_nodes, node);
 	      if (BE (err < 0, 0))
 		return -2;
@@ -1316,7 +1320,7 @@ proceed_next_node (mctx, nregs, regs, pidx, node, eps_via_nodes, fs)
       if (naccepted != 0
 	  || check_node_accept (mctx, dfa->nodes + node, *pidx))
 	{
-	  dest_node = dfa->nexts[node];
+	  int dest_node = dfa->nexts[node];
 	  *pidx = (naccepted == 0) ? *pidx + 1 : *pidx + naccepted;
 	  if (fs && (*pidx > mctx->match_last || mctx->state_log[*pidx] == NULL
 		     || !re_node_set_contains (&mctx->state_log[*pidx]->nodes,
