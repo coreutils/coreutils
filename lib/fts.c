@@ -1023,7 +1023,7 @@ fts_cross_check (FTS const *sp)
       struct Active_dir ad;
       ad.ino = t->fts_statp->st_ino;
       ad.dev = t->fts_statp->st_dev;
-      if ( ! hash_lookup (sp->active_dir_ht, &ad))
+      if ( ! hash_lookup (sp->fts_cycle.ht, &ad))
 	printf ("ERROR: active dir, %s, not in tree\n", t->fts_path);
     }
 
@@ -1034,8 +1034,8 @@ fts_cross_check (FTS const *sp)
 	  || ent->fts_info == FTS_D))
     {
       struct Active_dir *ad;
-      for (ad = hash_get_first (sp->active_dir_ht); ad != NULL;
-	   ad = hash_get_next (sp->active_dir_ht, ad))
+      for (ad = hash_get_first (sp->fts_cycle.ht); ad != NULL;
+	   ad = hash_get_next (sp->fts_cycle.ht, ad))
 	{
 	  find_matching_ancestor (ent, ad);
 	}
