@@ -3068,13 +3068,15 @@ long_time_expected_width (void)
       struct tm const *tm = localtime (&epoch);
       char buf[TIME_STAMP_LEN_MAXIMUM + 1];
 
-      if (tm)
-	{
-	  size_t len =
-	    nstrftime (buf, sizeof buf, long_time_format[0], tm, 0, 0);
-	  if (len != 0)
-	    width = mbsnwidth (buf, len, 0);
-	}
+      /* The above use of localtime cannot fail.  */
+      assert (tm != NULL);
+
+      {
+	size_t len =
+	  nstrftime (buf, sizeof buf, long_time_format[0], tm, 0, 0);
+	if (len != 0)
+	  width = mbsnwidth (buf, len, 0);
+      }
 
       if (width < 0)
 	width = 0;
