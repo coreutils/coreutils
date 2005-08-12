@@ -2,6 +2,14 @@
 
 	* Version 5.3.1.
 
+	Add bulletproofing in case stdin is closed.
+	* src/dircolors.c (have_read_stdin): Remove global variable.
+	(dc_parse_stream): Always use stdin (freopen, if needed) rather
+	than sometimes using fopen to get a new file descriptor.
+	Call fclose unconditionally.
+	(main): Don't close stdin here.  If needed, now it's already done
+	by dc_parse_stream.
+
 	* src/dircolors.c (dc_parse_file): Remove comment about
 	now-removed OPENOPTS.
 
