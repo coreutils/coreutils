@@ -88,7 +88,8 @@ typedef struct {
 # define FTS_WHITEOUT	0x0080		/* return whiteout information */
 
   /* There are two ways to detect cycles.
-     The lazy way, with which one may process a directory that is a
+     The lazy way (which works only with FTS_PHYSICAL),
+     with which one may process a directory that is a
      part of the cycle several times before detecting the cycle.
      The `tight' way, whereby fts uses more memory (proportional
      to number of `active' directories, aka distance from root
@@ -96,7 +97,19 @@ typedef struct {
      to detect any cycle right away.  For example, du must use
      this option to avoid counting disk space in a cycle multiple
      times, but chown -R need not.
-     The default is to use the constant-memory lazy way. */
+     The default is to use the constant-memory lazy way, when possible
+     (see below).
+
+     However, with FTS_LOGICAL (when following symlinks, e.g., chown -L)
+     using lazy cycle detection is inadequate.  For example, traversing
+     a directory containing a symbolic link to a peer directory, it is
+     possible to encounter the same directory twice even though there
+     is no cycle:
+     dir
+     ...
+     slink -> dir
+     So, when FTS_LOGICAL is selected, we have to use a different
+     mode of cycle detection: FTS_TIGHT_CYCLE_CHECK.  */
 # define FTS_TIGHT_CYCLE_CHECK	0x0100
 
 # define FTS_OPTIONMASK	0x01ff		/* valid user option mask */
