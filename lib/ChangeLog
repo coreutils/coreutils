@@ -1,3 +1,15 @@
+2005-08-12  Jim Meyering  <jim@meyering.net>
+
+	* fts-cycle.c (setup_dir, enter_dir, leave_dir, free_dir):
+	Use the hash-table-based cycle-detection code not just when
+	FTS_TIGHT_CYCLE_CHECK if specified, but also with FTS_LOGICAL.
+	Reported by James Youngman in
+	<http://lists.gnu.org/archive/html/bug-gnulib/2005-08/msg00011.html>.
+	* fts_.h: Mention that with FTS_LOGICAL, we use FTS_TIGHT_CYCLE_CHECK.
+
+	* fts.c (fts_cross_check) [FTS_DEBUG]: s/active_dir_ht/fts_cycle.ht/.
+	This lets us compile with -DFTS_DEBUG, once again.
+
 2005-08-02  Jim Meyering  <jim@meyering.net>
 
 	* xanstrftime.c, xanstrftime.h: New files.
