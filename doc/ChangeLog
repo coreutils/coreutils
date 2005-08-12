@@ -1,3 +1,8 @@
+2005-08-12  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi (cp invocation, mv invocation): Remove square
+	brackets in --reply=[HOW].  Reported by Oscar Liljeblad.
+
 2005-07-19  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (md5sum invocation): --check now allows multiple
