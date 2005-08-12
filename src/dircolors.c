@@ -384,10 +384,6 @@ dc_parse_file (const char *filename)
     }
   else
     {
-      /* OPENOPTS is a macro.  It varies with the system.
-	 Some systems distinguish between internal and
-	 external text representations.  */
-
       fp = fopen (filename, "r");
       if (fp == NULL)
 	{
