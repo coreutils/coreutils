@@ -2,6 +2,10 @@
 
 	* Version 5.3.1.
 
+	* src/wc.c: Test `!defined HAVE_MBSTATE_T' rather than
+	`defined mbstate_t' to detect missing support for mbstate_t.
+	The latter didn't work for HP-UX 11.23.
+
 	Add bulletproofing in case stdin is closed.
 	* src/dircolors.c (have_read_stdin): Remove global variable.
 	(dc_parse_stream): Always use stdin (freopen, if needed) rather
