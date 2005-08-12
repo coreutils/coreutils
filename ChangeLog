@@ -2,6 +2,8 @@
 
 	* Version 5.3.1.
 
+	* src/nohup.c (main): Explain why we reopen stdin for write-only access.
+
 	* src/ls.c (long_time_expected_width): Don't test for failed localtime.
 	That cannot happen when the result date's year is in range.
 	Add an assertion instead.
