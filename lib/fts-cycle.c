@@ -50,7 +50,7 @@ AD_hash (void const *x, size_t table_size)
 static bool
 setup_dir (FTS *fts)
 {
-  if (fts->fts_options & FTS_TIGHT_CYCLE_CHECK)
+  if (fts->fts_options & (FTS_TIGHT_CYCLE_CHECK | FTS_LOGICAL))
     {
       enum { HT_INITIAL_SIZE = 31 };
       fts->fts_cycle.ht = hash_initialize (HT_INITIAL_SIZE, NULL, AD_hash,
@@ -74,7 +74,7 @@ setup_dir (FTS *fts)
 static bool
 enter_dir (FTS *fts, FTSENT *ent)
 {
-  if (fts->fts_options & FTS_TIGHT_CYCLE_CHECK)
+  if (fts->fts_options & (FTS_TIGHT_CYCLE_CHECK | FTS_LOGICAL))
     {
       struct stat const *st = ent->fts_statp;
       struct Active_dir *ad = malloc (sizeof *ad);
@@ -125,7 +125,7 @@ enter_dir (FTS *fts, FTSENT *ent)
 static void
 leave_dir (FTS *fts, FTSENT *ent)
 {
-  if (fts->fts_options & FTS_TIGHT_CYCLE_CHECK)
+  if (fts->fts_options & (FTS_TIGHT_CYCLE_CHECK | FTS_LOGICAL))
     {
       struct stat const *st = ent->fts_statp;
       struct Active_dir obj;
@@ -144,7 +144,7 @@ leave_dir (FTS *fts, FTSENT *ent)
 static void
 free_dir (FTS *sp)
 {
-  if (sp->fts_options & FTS_TIGHT_CYCLE_CHECK)
+  if (sp->fts_options & (FTS_TIGHT_CYCLE_CHECK | FTS_LOGICAL))
     {
       if (sp->fts_cycle.ht)
 	hash_free (sp->fts_cycle.ht);
