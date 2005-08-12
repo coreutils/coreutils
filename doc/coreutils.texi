@@ -6492,7 +6492,7 @@ cp --parents a/b/c existing_dir
 copies the file @file{a/b/c} to @file{existing_dir/a/b/c}, creating
 any missing intermediate directories.
 
-@itemx @w{@kbd{--reply}[=@var{how}]}
+@itemx @w{@kbd{--reply}=@var{how}}
 @opindex --reply
 @cindex interactivity
 @c FIXME: remove in 2008
@@ -7127,7 +7127,7 @@ Prompt whether to overwrite each existing destination file, regardless
 of its permissions.
 If the response is not affirmative, the file is skipped.
 
-@itemx @w{@kbd{--reply}[=@var{how}]}
+@itemx @w{@kbd{--reply}=@var{how}}
 @opindex --reply
 @cindex interactivity
 @c FIXME: remove in 2008
