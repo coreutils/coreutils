@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script. -*-m4-*-
 
-dnl Copyright (C) 1991, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,
+dnl Copyright (C) 1991, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2005,
 dnl 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
 
 dnl This program is free software; you can redistribute it and/or modify
@@ -270,7 +270,6 @@ AC_CONFIG_FILES(
   tests/chown/Makefile
   tests/cp/Makefile
   tests/cut/Makefile
-  tests/date/Makefile
   tests/dd/Makefile
   tests/dircolors/Makefile
   tests/du/Makefile
