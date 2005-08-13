@@ -31,29 +31,6 @@ sub test_vector
   my @tvec =
     (
 
-     ['rel-0', "-d '$d1 now' '+%Y-%m-%d %T'", {}, "$d0 $t0", 0],
-
-     ['rel-1a', "-d '$d1 yesterday' $fmt", {}, "1997-01-18 $t0", 0],
-     ['rel-1b', "-d '$d1 tomorrow' $fmt", {}, "1997-01-20 $t0", 0],
-
-     ['rel-2a', "-d '$d1 6 years ago' $fmt", {}, "1991-01-19 $t0", 0],
-     ['rel-2b', "-d '$d1 7 months ago' $fmt", {}, "1996-06-19 $t0", 0],
-     ['rel-2c', "-d '$d1 8 weeks ago' $fmt", {}, "1996-11-24 $t0", 0],
-     ['rel-2d', "-d '$d1 1 day ago' $fmt", {}, "1997-01-18 $t0", 0],
-     ['rel-2e', "-d '$d1 2 hours ago' $fmt", {}, "$d0 06:17:48", 0],
-     ['rel-2f', "-d '$d1 3 minutes ago' $fmt", {}, "$d0 08:14:48", 0],
-     ['rel-2g', "-d '$d1 4 seconds ago' $fmt", {}, "$d0 08:17:44", 0],
-
-     ['rel-3a', "-d '$d1 4 seconds ago' $fmt", {}, "$d0 08:17:44", 0],
-
-     ['next-s', "-d '$d1 next second' '+%Y-%m-%d %T'", {}, "$d0 $ts", 0],
-     ['next-m', "-d '$d1 next minute' '+%Y-%m-%d %T'", {}, "$d0 $tm", 0],
-     ['next-h', "-d '$d1 next hour'   '+%Y-%m-%d %T'", {}, "$d0 $th", 0],
-     ['next-d', "-d '$d1 next day'    '+%Y-%m-%d %T'", {}, "$dd $t0", 0],
-     ['next-w', "-d '$d1 next week'   '+%Y-%m-%d %T'", {}, "$dw $t0", 0],
-     ['next-mo', "-d '$d1 next month' '+%Y-%m-%d %T'", {}, "$dm $t0", 0],
-     ['next-y', "-d '$d1 next year'   '+%Y-%m-%d %T'", {}, "$dy $t0", 0],
-
      ['utc-0', "-u -d '08/01/97 6:00' '+%D,%H:%M'", {}, "08/01/97,06:00", 0],
      ['utc-0a', "-u -d '08/01/97 6:00 UTC +4 hours' '+%D,%H:%M'", {},
       "08/01/97,10:00", 0],
