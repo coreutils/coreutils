@@ -9,14 +9,15 @@ use FileHandle;
 use File::Compare qw(compare);
 
 @ISA = qw(Exporter);
-($VERSION = '$Revision: 1.1 $ ') =~ tr/[0-9].//cd;
+($VERSION = '$Revision: 1.2 $ ') =~ tr/[0-9].//cd;
 @EXPORT = qw (run_tests);
 
 my $debug = $ENV{DEBUG};
 
-my @Types = qw (IN OUT ERR AUX CMP EXIT PRE POST OUT_SUBST ERR_SUBST);
+my @Types = qw (IN OUT ERR AUX CMP EXIT PRE POST OUT_SUBST ERR_SUBST ENV ENV_DEL);
 my %Types = map {$_ => 1} @Types;
-my %Zero_one_type = map {$_ => 1} qw (OUT ERR EXIT PRE POST OUT_SUBST ERR_SUBST);
+my %Zero_one_type = map {$_ => 1}
+   qw (OUT ERR EXIT PRE POST OUT_SUBST ERR_SUBST ENV);
 my $srcdir = $ENV{srcdir};
 my $Global_count = 1;
 
@@ -61,6 +62,11 @@ defined $ENV{DJDIR}
 #   For example, in rm/fail-2eperm, we have to account for three different
 #   diagnostics: Operation not permitted, Not owner, and Permission denied.
 # {EXIT => N} expect exit status of cmd to be N
+# {ENV => 'VAR=val ...'}
+#   Prepend 'VAR=val ...' to the command that we execute via `system'.
+# {ENV_DEL => 'VAR'}
+#   Remove VAR from the environment just before running the corresponding
+#   command, and restore any value just afterwards.
 #
 # There may be many input file specs.  File names from the input specs
 # are concatenated in order on the command line.
@@ -253,6 +259,8 @@ sub run_tests ($$$$$)
       my @args;
       my $io_spec;
       my %seen_type;
+      my @env_delete;
+      my $env_prefix = '';
       foreach $io_spec (@$t)
 	{
 	  if (!ref $io_spec)
@@ -272,7 +280,7 @@ sub run_tests ($$$$$)
 	  die "$program_name: $test_name: invalid key `$type' in test spec\n"
 	    if ! $Types{$type};
 
-	  # Make sure there's no more than one of OUT, ERR, EXIT.
+	  # Make sure there's no more than one of OUT, ERR, EXIT, etc.
 	  die "$program_name: $test_name: more than one $type spec\n"
 	    if $Zero_one_type{$type} and $seen_type{$type}++;
 
@@ -340,6 +348,18 @@ sub run_tests ($$$$$)
 	      next;
 	    }
 
+	  if ($type eq 'ENV')
+	    {
+	      $env_prefix = "$val ";
+	      next;
+	    }
+
+	  if ($type eq 'ENV_DEL')
+	    {
+	      push @env_delete, $val;
+	      next;
+	    }
+
 	  my $file = _process_file_spec ($program_name, $test_name, $val,
 					 $type, \@junk_files);
 
@@ -390,9 +410,27 @@ sub run_tests ($$$$$)
       $actual{ERR} = "$test_name.E";
       push @junk_files, $actual{OUT}, $actual{ERR};
       my @cmd = ($prog, @args, "> $actual{OUT}", "2> $actual{ERR}");
-      my $cmd_str = join ' ', @cmd;
+      my $cmd_str = $env_prefix . join (' ', @cmd);
+
+      # Delete from the environment any symbols specified by syntax
+      # like this: {ENV_DEL => 'TZ'}.
+      my %pushed_env;
+      foreach my $env_sym (@env_delete)
+	{
+	  my $val = delete $ENV{$env_sym};
+	  defined $val
+	    and $pushed_env{$env_sym} = $val;
+	}
+
       warn "Running command: `$cmd_str'\n" if $debug;
       my $rc = 0xffff & system $cmd_str;
+
+      # Restore any environment setting we changed via a deletion.
+      foreach my $env_sym (keys %pushed_env)
+	{
+	  $ENV{$env_sym} = $pushed_env{$env_sym};
+	}
+
       if ($rc == 0xff00)
 	{
 	  warn "$program_name: test $test_name failed: command failed:\n"
