@@ -171,7 +171,11 @@ sub test_vector
      # FIXME: add a lot more...
      );
 
-  my $sunos4 = "$Config::Config{osname}$Config::Config{osvers}" =~ /sunos4/;
+  # Repeat the cross-dst test, using Jan 1, 2005 and every interval from 1..364.
+  foreach my $i (1..364)
+    {
+      push @tvec, ["cross-dst$i", "-d '2005-01-01 +$i day' +%Y", {}, '2005', 0];
+    }
 
   my @tv;
   my $t;
