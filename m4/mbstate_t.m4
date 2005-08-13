@@ -1,5 +1,5 @@
-# mbstate_t.m4 serial 9
-dnl Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.
+# serial 10
+dnl Copyright (C) 2000, 2001, 2002, 2005 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
@@ -14,11 +14,17 @@ dnl with or without modifications, as long as this notice is preserved.
 # -----------------
 AC_DEFUN([AC_TYPE_MBSTATE_T],
   [AC_CACHE_CHECK([for mbstate_t], ac_cv_type_mbstate_t,
-     [AC_COMPILE_IFELSE(
+     [AC_CHECK_HEADERS([wctype.h])
+      AC_COMPILE_IFELSE(
 	[AC_LANG_PROGRAM(
 	   [AC_INCLUDES_DEFAULT
-#	    include <wchar.h>],
-	   [mbstate_t x; return sizeof x;])],
+#	    include <wchar.h>
+#           if HAVE_WCTYPE_H
+#            include <wctype.h>
+#           endif
+],
+	   [
+	   mbstate_t x; return sizeof x;])],
 	[ac_cv_type_mbstate_t=yes],
 	[ac_cv_type_mbstate_t=no])])
    if test $ac_cv_type_mbstate_t = yes; then
