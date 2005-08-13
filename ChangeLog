@@ -2,8 +2,17 @@
 
 	* Version 5.3.1.
 
+	With todays additions, the generated shell script,
+	tests/date/date-tests had becoming far too large (over 350KB),
+	so use the superior-but-perl-requiring framework instead.
+	* tests/date/Test.pm: Move new tests from here...
+	* tests/misc/date: ...to this new file.
+	* tests/misc/Makefile.am (TESTS): Add date.
+
 	* tests/date/Test.pm (test_vector) [cross-dst]: New test for
 	just-fixed getdate.y bug.
+	* tests/date/Test.pm (test_vector): Add 364 more tests like the above.
+	Remove unused $sunos4 variable.
 
 2005-08-12  Jim Meyering  <jim@meyering.net>
 
