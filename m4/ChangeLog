@@ -1,3 +1,8 @@
+2005-08-14  Jim Meyering  <jim@meyering.net>
+
+	* mbstate_t.m4 [HAVE_WCTYPE_H]: Include <wctype.h>; this is
+	needed on HP-UX 11.23 in order to get a definition of mbstate_t.
+
 2005-08-01  Jim Meyering  <jim@meyering.net>
 
 	* xanstrftime.m4 (gl_FUNC_XANSTRFTIME): New file/macro.
