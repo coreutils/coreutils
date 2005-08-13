@@ -23,6 +23,26 @@ $ENV{TZ} = 'UTC0';
 
 my @Tests =
     (
+     # This would infloop (or appear to) prior to coreutils-4.5.5,
+     # due to a bug in strftime.c.
+     ['wide-fmt', "-d '1999-06-01'", '+%3004Y', {OUT=>'0' x 3000 . '1999'}],
+
+     # Ensure that we can parse MONTHNAME-DAY-YEAR.
+     ['moname-d-y', '--iso -d May-23-2003', {OUT=>'2003-05-23'}],
+
+     ['epoch', '--iso=sec -d @31536000',
+      {OUT=>'1971-01-01T00:00:00+0000'}],
+
+     ['ns-10', '--iso=ns', '-d "1969-12-31 13:00:00.00000001-1100"',
+      {OUT=>'1970-01-01T00:00:00,000000010+0000'}],
+
+     ['ns-max32', '--iso=ns', '-d "2038-01-19 03:14:07.999999999"',
+      {OUT=>'2038-01-19T03:14:07,999999999+0000'}],
+
+     ['ns-relative',
+      '--iso=ns', "-d'1970-01-01 00:00:00.1234567 UTC +961062237.987654321 sec'",
+      {OUT=>'2000-06-15T09:43:58,111111021+0000'}],
+
      # Since coreutils/lib/getdate.y revision 1.96 (post-coreutils-5.3.0),
      # a command like the following would mistakenly exit nonzero with an
      # `invalid date ...' diagnostic, but when run in a time zone for
