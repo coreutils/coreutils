@@ -1,6 +1,12 @@
-2005-08-13  Jim Meyering  <jim@meyering.net>
+2005-08-14  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* src/wc.c: Don't define mbrtowc at all.
+	If mbstate_t is not defined, then AC_TYPE_MBSTATE_T will define
+	it to `int' for us.
+
+2005-08-13  Jim Meyering  <jim@meyering.net>
 
 	* tests/date: Remove directory
 	* tests/Makefile.am (SUBDIRS): Remove date.
