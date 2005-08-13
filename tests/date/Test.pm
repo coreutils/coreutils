@@ -138,26 +138,6 @@ sub test_vector
      ['relative-2', "--utc -d '1970-01-01 UTC +961062237 sec' $fmt", {},
       "2000-06-15 09:43:57", 0],
 
-     # This would infloop (or appear to) prior to coreutils-4.5.5,
-     # due to a bug in strftime.c.
-     ['wide-fmt', "-d '1999-06-01' +%3004Y", {}, '0' x 3000 . '1999', 0],
-
-     # Ensure that we can parse MONTHNAME-DAY-YEAR.
-     ['moname-d-y', '--iso -d May-23-2003', {}, '2003-05-23', 0],
-
-     ['epoch', '--iso=sec -d @31536000', {},
-      '1971-01-01T00:00:00+0000', 0],
-
-     ['ns-10', '--iso=ns -d "1969-12-31 13:00:00.00000001-1100"', {},
-      '1970-01-01T00:00:00,000000010+0000', 0],
-
-     ['ns-max32', '--iso=ns -d "2038-01-19 03:14:07.999999999"', {},
-      '2038-01-19T03:14:07,999999999+0000', 0],
-
-     ['ns-relative',
-      "--iso=ns -d'1970-01-01 00:00:00.1234567 UTC +961062237.987654321 sec'",
-      {}, '2000-06-15T09:43:58,111111021+0000', 0],
-
      # FIXME: add new date-related tests in ../misc/date.
      );
 
@@ -166,6 +146,8 @@ sub test_vector
   foreach $t (@tvec)
     {
       my ($test_name, $flags, $in, $exp, $ret) = @$t;
+
+      print "['$test_name', "{OUT=$exp}" ],\n";
 
       # Append a newline to end of each expected string.
       push (@tv, [$test_name, $flags, $in, "$exp\n", $ret]);
