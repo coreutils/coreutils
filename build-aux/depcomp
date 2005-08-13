@@ -1,7 +1,7 @@
 #! /bin/sh
 # depcomp - compile a program generating dependencies as side-effects
 
-scriptversion=2005-05-14.22
+scriptversion=2005-07-09.11
 
 # Copyright (C) 1999, 2000, 2003, 2004, 2005 Free Software Foundation, Inc.
 
@@ -467,7 +467,8 @@ cpp)
   done
 
   "$@" -E |
-    sed -n '/^# [0-9][0-9]* "\([^"]*\)".*/ s:: \1 \\:p' |
+    sed -n -e '/^# [0-9][0-9]* "\([^"]*\)".*/ s:: \1 \\:p' \
+       -e '/^#line [0-9][0-9]* "\([^"]*\)".*/ s:: \1 \\:p' |
     sed '$ s: \\$::' > "$tmpdepfile"
   rm -f "$depfile"
   echo "$object : \\" > "$depfile"
