@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2005-07-01.06}
+\def\texinfoversion{2005-08-13.08}
 %
 % Copyright (C) 1985, 1986, 1988, 1990, 1991, 1992, 1993, 1994, 1995,
 % 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005 Free Software
@@ -310,10 +310,7 @@
     % take effect in \write's, yet the group defined by the \vbox ends
     % before the \shipout runs.
     %
-    \escapechar = `\\     % use backslash in output files.
     \indexdummies         % don't expand commands in the output.
-    \normalturnoffactive  % \ in index entries must not stay \, e.g., if
-                   % the page break happens to be in the middle of an example.
     \shipout\vbox{%
       % Do this early so pdf references go to the beginning of the page.
       \ifpdfmakepagedest \pdfdest name{\the\pageno} xyz\fi
@@ -364,7 +361,7 @@
       \egroup % \vbox from first cropmarks clause
       \fi
     }% end of \shipout\vbox
-  }% end of group with \normalturnoffactive
+  }% end of group with \indexdummies
   \advancepageno
   \ifnum\outputpenalty>-20000 \else\dosupereject\fi
 }
@@ -3222,6 +3219,7 @@ where each line of input produces a line of output.}
 % we have to laboriously prevent expansion for those that we don't.
 %
 \def\indexdummies{%
+  \escapechar = `\\     % use backslash in output files.
   \def\@{@}% change to @@ when we switch to @ as escape char in index files.
   \def\ {\realbackslash\space }%
   % Need these in case \tex is in effect and \{ is a \delimiter again.
@@ -3229,27 +3227,6 @@ where each line of input produces a line of output.}
   % braces and backslashes are used only as delimiters.
   \let\{ = \mylbrace
   \let\} = \myrbrace
-  %
-  % \definedummyword defines \#1 as \realbackslash #1\space, thus
-  % effectively preventing its expansion.  This is used only for control
-  % words, not control letters, because the \space would be incorrect
-  % for control characters, but is needed to separate the control word
-  % from whatever follows.
-  %
-  % For control letters, we have \definedummyletter, which omits the
-  % space.
-  %
-  % These can be used both for control words that take an argument and
-  % those that do not.  If it is followed by {arg} in the input, then
-  % that will dutifully get written to the index (or wherever).
-  %
-  \def\definedummyword##1{%
-    \expandafter\def\csname ##1\endcsname{\realbackslash ##1\space}%
-  }%
-  \def\definedummyletter##1{%
-    \expandafter\def\csname ##1\endcsname{\realbackslash ##1}%
-  }%
-  \let\definedummyaccent\definedummyletter
   %
   % Do the redefinitions.
   \commondummies
@@ -3266,86 +3243,90 @@ where each line of input produces a line of output.}
   \let\{ = \lbraceatcmd
   \let\} = \rbraceatcmd
   %
-  % (See comments in \indexdummies.)
-  \def\definedummyword##1{%
-    \expandafter\def\csname ##1\endcsname{@##1\space}%
-  }%
-  \def\definedummyletter##1{%
-    \expandafter\def\csname ##1\endcsname{@##1}%
-  }%
-  \let\definedummyaccent\definedummyletter
-  %
   % Do the redefinitions.
   \commondummies
 }
 
-% Called from \indexdummies and \atdummies.  \definedummyword and
-% \definedummyletter must be defined first.
+% Called from \indexdummies and \atdummies.
 %
 \def\commondummies{%
   %
-  \normalturnoffactive
+  % \definedummyword defines \#1 as \string\#1\space, thus effectively
+  % preventing its expansion.  This is used only for control% words,
+  % not control letters, because the \space would be incorrect for
+  % control characters, but is needed to separate the control word
+  % from whatever follows.
+  %
+  % For control letters, we have \definedummyletter, which omits the
+  % space.
+  %
+  % These can be used both for control words that take an argument and
+  % those that do not.  If it is followed by {arg} in the input, then
+  % that will dutifully get written to the index (or wherever).
+  %
+  \def\definedummyword  ##1{\def##1{\string##1\space}}%
+  \def\definedummyletter##1{\def##1{\string##1}}%
+  \let\definedummyaccent\definedummyletter
   %
   \commondummiesnofonts
   %
-  \definedummyletter{_}%
+  \definedummyletter\_%
   %
   % Non-English letters.
-  \definedummyword{AA}%
-  \definedummyword{AE}%
-  \definedummyword{L}%
-  \definedummyword{OE}%
-  \definedummyword{O}%
-  \definedummyword{aa}%
-  \definedummyword{ae}%
-  \definedummyword{l}%
-  \definedummyword{oe}%
-  \definedummyword{o}%
-  \definedummyword{ss}%
-  \definedummyword{exclamdown}%
-  \definedummyword{questiondown}%
-  \definedummyword{ordf}%
-  \definedummyword{ordm}%
+  \definedummyword\AA
+  \definedummyword\AE
+  \definedummyword\L
+  \definedummyword\OE
+  \definedummyword\O
+  \definedummyword\aa
+  \definedummyword\ae
+  \definedummyword\l
+  \definedummyword\oe
+  \definedummyword\o
+  \definedummyword\ss
+  \definedummyword\exclamdown
+  \definedummyword\questiondown
+  \definedummyword\ordf
+  \definedummyword\ordm
   %
   % Although these internal commands shouldn't show up, sometimes they do.
-  \definedummyword{bf}%
-  \definedummyword{gtr}%
-  \definedummyword{hat}%
-  \definedummyword{less}%
-  \definedummyword{sf}%
-  \definedummyword{sl}%
-  \definedummyword{tclose}%
-  \definedummyword{tt}%
+  \definedummyword\bf
+  \definedummyword\gtr
+  \definedummyword\hat
+  \definedummyword\less
+  \definedummyword\sf
+  \definedummyword\sl
+  \definedummyword\tclose
+  \definedummyword\tt
   %
-  \definedummyword{LaTeX}%
-  \definedummyword{TeX}%
+  \definedummyword\LaTeX
+  \definedummyword\TeX
   %
   % Assorted special characters.
-  \definedummyword{bullet}%
-  \definedummyword{comma}%
-  \definedummyword{copyright}%
-  \definedummyword{registeredsymbol}%
-  \definedummyword{dots}%
-  \definedummyword{enddots}%
-  \definedummyword{equiv}%
-  \definedummyword{error}%
-  \definedummyword{euro}%
-  \definedummyword{expansion}%
-  \definedummyword{minus}%
-  \definedummyword{pounds}%
-  \definedummyword{point}%
-  \definedummyword{print}%
-  \definedummyword{result}%
+  \definedummyword\bullet
+  \definedummyword\comma
+  \definedummyword\copyright
+  \definedummyword\registeredsymbol
+  \definedummyword\dots
+  \definedummyword\enddots
+  \definedummyword\equiv
+  \definedummyword\error
+  \definedummyword\euro
+  \definedummyword\expansion
+  \definedummyword\minus
+  \definedummyword\pounds
+  \definedummyword\point
+  \definedummyword\print
+  \definedummyword\result
+  %
+  % We want to disable all macros so that they are not expanded by \write.
+  \macrolist
+  %
+  \normalturnoffactive
   %
   % Handle some cases of @value -- where it does not contain any
   % (non-fully-expandable) commands.
   \makevalueexpandable
-  %
-  % Normal spaces, not active ones.
-  \unsepspaces
-  %
-  % No macro expansion.
-  \turnoffmacros
 }
 
 % \commondummiesnofonts: common to \commondummies and \indexnofonts.
@@ -3355,57 +3336,60 @@ where each line of input produces a line of output.}
   \catcode`\~=\other
   \gdef\commondummiesnofonts{%
     % Control letters and accents.
-    \definedummyletter{!}%
-    \definedummyaccent{"}%
-    \definedummyaccent{'}%
-    \definedummyletter{*}%
-    \definedummyaccent{,}%
-    \definedummyletter{.}%
-    \definedummyletter{/}%
-    \definedummyletter{:}%
-    \definedummyaccent{=}%
-    \definedummyletter{?}%
-    \definedummyaccent{^}%
-    \definedummyaccent{`}%
-    \definedummyaccent{~}%
-    \definedummyword{u}%
-    \definedummyword{v}%
-    \definedummyword{H}%
-    \definedummyword{dotaccent}%
-    \definedummyword{ringaccent}%
-    \definedummyword{tieaccent}%
-    \definedummyword{ubaraccent}%
-    \definedummyword{udotaccent}%
-    \definedummyword{dotless}%
+    \definedummyletter\!%
+    \definedummyaccent\"%
+    \definedummyaccent\'%
+    \definedummyletter\*%
+    \definedummyaccent\,%
+    \definedummyletter\.%
+    \definedummyletter\/%
+    \definedummyletter\:%
+    \definedummyaccent\=%
+    \definedummyletter\?%
+    \definedummyaccent\^%
+    \definedummyaccent\`%
+    \definedummyaccent\~%
+    \definedummyword\u
+    \definedummyword\v
+    \definedummyword\H
+    \definedummyword\dotaccent
+    \definedummyword\ringaccent
+    \definedummyword\tieaccent
+    \definedummyword\ubaraccent
+    \definedummyword\udotaccent
+    \definedummyword\dotless
     %
     % Texinfo font commands.
-    \definedummyword{b}%
-    \definedummyword{i}%
-    \definedummyword{r}%
-    \definedummyword{sc}%
-    \definedummyword{t}%
+    \definedummyword\b
+    \definedummyword\i
+    \definedummyword\r
+    \definedummyword\sc
+    \definedummyword\t
     %
     % Commands that take arguments.
-    \definedummyword{acronym}%
-    \definedummyword{cite}%
-    \definedummyword{code}%
-    \definedummyword{command}%
-    \definedummyword{dfn}%
-    \definedummyword{emph}%
-    \definedummyword{env}%
-    \definedummyword{file}%
-    \definedummyword{kbd}%
-    \definedummyword{key}%
-    \definedummyword{math}%
-    \definedummyword{option}%
-    \definedummyword{samp}%
-    \definedummyword{strong}%
-    \definedummyword{tie}%
-    \definedummyword{uref}%
-    \definedummyword{url}%
-    \definedummyword{var}%
-    \definedummyword{verb}%
-    \definedummyword{w}%
+    \definedummyword\acronym
+    \definedummyword\cite
+    \definedummyword\code
+    \definedummyword\command
+    \definedummyword\dfn
+    \definedummyword\emph
+    \definedummyword\env
+    \definedummyword\file
+    \definedummyword\kbd
+    \definedummyword\key
+    \definedummyword\math
+    \definedummyword\option
+    \definedummyword\pxref
+    \definedummyword\ref
+    \definedummyword\samp
+    \definedummyword\strong
+    \definedummyword\tie
+    \definedummyword\uref
+    \definedummyword\url
+    \definedummyword\var
+    \definedummyword\verb
+    \definedummyword\w
+    \definedummyword\xref
   }
 }
 
@@ -3416,13 +3400,9 @@ where each line of input produces a line of output.}
 %
 \def\indexnofonts{%
   % Accent commands should become @asis.
-  \def\definedummyaccent##1{%
-    \expandafter\let\csname ##1\endcsname\asis
-  }%
+  \def\definedummyaccent##1{\let##1\asis}%
   % We can just ignore other control letters.
-  \def\definedummyletter##1{%
-    \expandafter\def\csname ##1\endcsname{}%
-  }%
+  \def\definedummyletter##1{\let##1\empty}%
   % Hopefully, all control words can become @asis.
   \let\definedummyword\definedummyaccent
   %
@@ -3476,8 +3456,17 @@ where each line of input produces a line of output.}
   \def\print{-|}%
   \def\result{=>}%
   %
-  % Don't write macro names.
-  \emptyusermacros
+  % We need to get rid of all macros, leaving only the arguments (if present).
+  % Of course this is not nearly correct, but it is the best we can do for now.
+  % makeinfo does not expand macros in the argument to @deffn, which ends up
+  % writing an index entry, and texindex isn't prepared for an index sort entry
+  % that starts with \.
+  % 
+  % Since macro invocations are followed by braces, we can just redefine them
+  % to take a single TeX argument.  The case of a macro invocation that
+  % goes to end-of-line is not handled.
+  % 
+  \macrolist
 }
 
 \let\indexbackslash=0  %overridden during \printindex.
@@ -3524,7 +3513,6 @@ where each line of input produces a line of output.}
   %
   % Remember, we are within a group.
   \indexdummies % Must do this here, since \bf, etc expand at this stage
-  \escapechar=`\\
   \def\backslashcurfont{\indexbackslash}% \indexbackslash isn't defined now
       % so it will be output as is; and it will print as backslash.
   %
@@ -4584,7 +4572,8 @@ where each line of input produces a line of output.}
     \fi
     %
     \iflinks
-      {\atdummies \turnoffactive
+      {\atdummies
+       \turnoffactive
        \edef\temp{%
          \write\tocfile{@#1entry{#2}{#3}{\lastnode}{\noexpand\folio}}}%
        \temp
@@ -5680,8 +5669,19 @@ where each line of input produces a line of output.}
 \newcount\paramno   % Count of parameters
 \newtoks\macname    % Macro name
 \newif\ifrecursive  % Is it recursive?
-\def\macrolist{}    % List of all defined macros in the form
-                    % \do\macro1\do\macro2...
+
+% List of all defined macros in the form
+%    \definedummyword\macro1\definedummyword\macro2...
+% Currently is also contains all @aliases; the list can be split
+% if there is a need.
+\def\macrolist{}
+
+% Add the macro to \macrolist
+\def\addtomacrolist#1{\expandafter \addtomacrolistxxx \csname#1\endcsname}
+\def\addtomacrolistxxx#1{%
+     \toks0 = \expandafter{\macrolist\definedummyword#1}%
+     \xdef\macrolist{\the\toks0}%
+}
 
 % Utility routines.
 % This does \let #1 = #2, with \csnames; that is,
@@ -5779,10 +5779,7 @@ where each line of input produces a line of output.}
      \else \errmessage{Macro name \the\macname\space already defined}\fi
      \global\cslet{macsave.\the\macname}{\the\macname}%
      \global\expandafter\let\csname ismacro.\the\macname\endcsname=1%
-     % Add the macroname to \macrolist
-     \toks0 = \expandafter{\macrolist\do}%
-     \xdef\macrolist{\the\toks0
-       \expandafter\noexpand\csname\the\macname\endcsname}%
+     \addtomacrolist{\the\macname}%
   \fi
   \begingroup \macrobodyctxt
   \ifrecursive \expandafter\parsermacbody
@@ -5796,7 +5793,7 @@ where each line of input produces a line of output.}
     % Remove the macro name from \macrolist:
     \begingroup
       \expandafter\let\csname#1\endcsname \relax
-      \let\do\unmacrodo
+      \let\definedummyword\unmacrodo
       \xdef\macrolist{\macrolist}%
     \endgroup
   \else
@@ -5808,10 +5805,10 @@ where each line of input produces a line of output.}
 % macro definitions that have been changed to \relax.
 %
 \def\unmacrodo#1{%
-  \ifx#1\relax
+  \ifx #1\relax
     % remove this
   \else
-    \noexpand\do \noexpand #1%
+    \noexpand\definedummyword \noexpand#1%
   \fi
 }
 
@@ -5930,25 +5927,6 @@ where each line of input produces a line of output.}
     \expandafter\parsearg
   \fi \next}
 
-% We want to disable all macros during \shipout so that they are not
-% expanded by \write.
-\def\turnoffmacros{\begingroup \def\do##1{\let\noexpand##1=\relax}%
-  \edef\next{\macrolist}\expandafter\endgroup\next}
-
-% For \indexnofonts, we need to get rid of all macros, leaving only the
-% arguments (if present).  Of course this is not nearly correct, but it
-% is the best we can do for now.  makeinfo does not expand macros in the
-% argument to @deffn, which ends up writing an index entry, and texindex
-% isn't prepared for an index sort entry that starts with \.
-% 
-% Since macro invocations are followed by braces, we can just redefine them
-% to take a single TeX argument.  The case of a macro invocation that
-% goes to end-of-line is not handled.
-% 
-\def\emptyusermacros{\begingroup
-  \def\do##1{\let\noexpand##1=\noexpand\asis}%
-  \edef\next{\macrolist}\expandafter\endgroup\next}
-
 
 % @alias.
 % We need some trickery to remove the optional spaces around the equal
@@ -5958,6 +5936,7 @@ where each line of input produces a line of output.}
 \def\aliasyyy #1=#2\relax{%
   {%
     \expandafter\let\obeyedspace=\empty
+    \addtomacrolist{#1}%
     \xdef\next{\global\let\makecsname{#1}=\makecsname{#2}}%
   }%
   \next
@@ -6695,7 +6674,9 @@ where each line of input produces a line of output.}
       % \floatlabel-lof.  Besides \floatident, we include the short
       % caption if specified, else the full caption if specified, else nothing.
       {%
-        \atdummies \turnoffactive
+        \atdummies
+        \turnoffactive
+        %
         % since we read the caption text in the macro world, where ^^M
         % is turned into a normal character, we have to scan it back, so
         % we don't write the literal three characters "^^M" into the aux file.
@@ -6716,8 +6697,9 @@ where each line of input produces a line of output.}
   %
   % place the captured inserts
   %
-  % BEWARE: when the floats start float, we have to issue warning whenever an
-  % insert appears inside a float which could possibly float. --kasal, 26may04
+  % BEWARE: when the floats start floating, we have to issue warning
+  % whenever an insert appears inside a float which could possibly
+  % float. --kasal, 26may04
   %
   \checkinserts
 }
