@@ -1,0 +1,66 @@
+#!/bin/sh
+
+: ${PERL=perl}
+: ${srcdir=.}
+
+$PERL -e 1 > /dev/null 2>&1 || {
+  echo 1>&2 "$0: configure didn't find a usable version of Perl," \
+    "so can't run this test"
+  exit 77
+}
+
+exec $PERL -w -I$srcdir/.. -MCoreutils -- - <<\EOF
+require 5.003;
+use strict;
+
+(my $ME = $0) =~ s|.*/||;
+
+# Turn off localisation of executable's ouput.
+@ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
+
+# Export TZ=UTC0 so that zone-dependent strings match.
+$ENV{TZ} = 'UTC0';
+
+my @Tests =
+    (
+     # Since coreutils/lib/getdate.y revision 1.96 (post-coreutils-5.3.0),
+     # a command like the following would mistakenly exit nonzero with an
+     # `invalid date ...' diagnostic, but when run in a time zone for
+     # which daylight savings time is in effect for the starting date.
+     # Unfortunately (for ease of testing), if you set TZ at all, this
+     # failure is not triggered, hence the removal of TZ from the environment.
+     ['cross-dst', "-d'2005-03-27 +1 day'", '+%Y', {OUT=>'2005'},
+		  {PRE => sub {delete $ENV{TZ}}},
+		  ],
+
+     ['empty-fmt', '+', {OUT=>''}],
+    );
+
+# Repeat the cross-dst test, using Jan 1, 2005 and every interval from 1..364.
+foreach my $i (1..364)
+  {
+    push @Tests, ["cross-dst$i",
+		  "-d'2005-01-01 +$i day'", '+%Y', {OUT=>'2005'},
+		  {PRE => sub {delete $ENV{TZ}}},
+		  ];
+  }
+
+# Append "\n" to each OUT=> RHS.
+foreach my $t (@Tests)
+  {
+    foreach my $e (@$t)
+      {
+        !ref $e || ref $e ne 'HASH'
+	  and next;
+        defined $e->{OUT}
+          and $e->{OUT} .= "\n";
+      }
+  }
+
+my $save_temps = $ENV{DEBUG};
+my $verbose = $ENV{VERBOSE};
+
+my $prog = 'date';
+my $fail = run_tests ($ME, $prog, \@Tests, $save_temps, $verbose);
+exit $fail;
+EOF

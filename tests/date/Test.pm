@@ -158,24 +158,8 @@ sub test_vector
       "--iso=ns -d'1970-01-01 00:00:00.1234567 UTC +961062237.987654321 sec'",
       {}, '2000-06-15T09:43:58,111111021+0000', 0],
 
-     ['empty-fmt', '+', {}, '', 0],
-
-     # Since coreutils/lib/getdate.y revision 1.96 (post-coreutils-5.3.0),
-     # a command like the following would mistakenly exit nonzero with an
-     # `invalid date ...' diagnostic, but only when run in a time zone for
-     # which that 24-hour range spans a daylight savings time transition.
-     # Unfortunately (for ease of testing), if you set TZ at all, this
-     # failure is not triggered, hence the cross-dst env setting below.
-     ['cross-dst', "--date '2005-03-27 +1 day' +%Y", {}, '2005', 0],
-
-     # FIXME: add a lot more...
+     # FIXME: add new date-related tests in ../misc/date.
      );
-
-  # Repeat the cross-dst test, using Jan 1, 2005 and every interval from 1..364.
-  foreach my $i (1..364)
-    {
-      push @tvec, ["cross-dst$i", "-d '2005-01-01 +$i day' +%Y", {}, '2005', 0];
-    }
 
   my @tv;
   my $t;
@@ -201,7 +185,6 @@ sub test_vector
 
   $Test::env{'rfc822-1'} = ['LC_ALL=de_DE TZ=UTC0'];
   $Test::env{'relative-2'} = ['TZ=UTC+1'];
-  $Test::env{'cross-dst'} = ['no_TZ=1'];
 
   return @tv;
 }
