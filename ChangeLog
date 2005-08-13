@@ -1,6 +1,11 @@
-2005-08-12  Jim Meyering  <jim@meyering.net>
+2005-08-13  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* tests/date/Test.pm (test_vector) [cross-dst]: New test for
+	just-fixed getdate.y bug.
+
+2005-08-12  Jim Meyering  <jim@meyering.net>
 
 	* src/nohup.c (main): Explain why we reopen stdin for write-only access.
 
