@@ -1347,7 +1347,7 @@ get_date (struct timespec *result, char const *p, struct timespec const *now)
 	}
 
       /* Let mktime deduce tm_isdst if we have an absolute time stamp.  */
-      if (!pc.rels_seen)
+      if (pc.dates_seen | pc.days_seen | pc.times_seen)
 	tm.tm_isdst = -1;
 
       /* But if the input explicitly specifies local time with or without
