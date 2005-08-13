@@ -103,6 +103,20 @@ my @Tests =
      ['next-mo', "-d '$d1 next month' '+%Y-%m-%d %T'", {OUT=>"$dm $t0"}],
      ['next-y', "-d '$d1 next year'   '+%Y-%m-%d %T'", {OUT=>"$dy $t0"}],
 
+     ['utc-0', "-u -d '08/01/97 6:00' '+%D,%H:%M'", {OUT=>"08/01/97,06:00"},
+	       {ENV => 'TZ=UTC+4'}],
+
+     ['utc-0a', "-u -d '08/01/97 6:00 UTC +4 hours' '+%D,%H:%M'",
+      {OUT=>"08/01/97,10:00"}],
+     # Make sure --file=FILE works with -u.
+     ['utc-1', "-u --file=f '+%Y-%m-%d %T'",
+      {AUX=>{f=>"$d0 $t0\n$d0 $t0\n"}},
+      {OUT=>"$d0 $t0\n$d0 $t0"},
+      {ENV => 'TZ=UTC+1'}],
+
+     ['utc-1a', "-u --file=f '+%Y-%m-%d %T'",
+      {AUX=>{f=>"$d0 $t0 UTC +1 hour\n$d0 $t0 UTC +1 hour\n"}},
+      {OUT=>"$d0 $th\n$d0 $th"}],
 
      # This would infloop (or appear to) prior to coreutils-4.5.5,
      # due to a bug in strftime.c.
@@ -131,7 +145,7 @@ my @Tests =
      # Unfortunately (for ease of testing), if you set TZ at all, this
      # failure is not triggered, hence the removal of TZ from the environment.
      ['cross-dst', "-d'2005-03-27 +1 day'", '+%Y', {OUT=>'2005'},
-		  {PRE => sub {delete $ENV{TZ}}},
+		  {ENV_DEL => 'TZ'},
 		  ],
 
      ['empty-fmt', '+', {OUT=>''}],
@@ -142,13 +156,13 @@ foreach my $i (1..364)
   {
     push @Tests, ["cross-dst$i",
 		  "-d'2005-01-01 +$i day'", '+%Y', {OUT=>'2005'},
-		  {PRE => sub {delete $ENV{TZ}}},
+		  {ENV_DEL => 'TZ'},
 		  ];
   }
 
-# Append "\n" to each OUT=> RHS.
 foreach my $t (@Tests)
   {
+    # Append "\n" to each OUT=> RHS.
     foreach my $e (@$t)
       {
         !ref $e || ref $e ne 'HASH'
