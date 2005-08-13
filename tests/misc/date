@@ -118,6 +118,47 @@ my @Tests =
       {AUX=>{f=>"$d0 $t0 UTC +1 hour\n$d0 $t0 UTC +1 hour\n"}},
       {OUT=>"$d0 $th\n$d0 $th"}],
 
+     # From the examples in the documentation.
+     ['date2sec-0', "-d '1970-01-01 00:00:01' +%s", {OUT=>"7201"},
+      {ENV => 'TZ=UTC+2'}],
+
+     # Same as above, but don't rely on TZ in environment.
+     ['date2sec-0a', "-d '1970-01-01 00:00:01 UTC +2 hours' +%s", {OUT=>"7201"}],
+
+     ['date2sec-1', "-d 2000-01-01 +%s", {OUT=>"946684800"}],
+     ['sec2date-0', "-d '1970-01-01 UTC 946684800 sec' +'%Y-%m-%d %T %z'",
+      {OUT=>"2000-01-01 00:00:00 +0000"}],
+
+     ['this-m', "-d '$d0 $t0 this minute' $fmt", {OUT=>"$d0 $t0"}],
+     ['this-h', "-d '$d0 $t0 this hour' $fmt", {OUT=>"$d0 $t0"}],
+     ['this-w', "-d '$d0 $t0 this week' $fmt", {OUT=>"$d0 $t0"}],
+     ['this-mo', "-d '$d0 $t0 this month' $fmt", {OUT=>"$d0 $t0"}],
+     ['this-y', "-d '$d0 $t0 this year' $fmt", {OUT=>"$d0 $t0"}],
+
+     ['risks-1', "-d 'Nov 10 1996' $fmt", {OUT=>"1996-11-10 00:00:00"}],
+
+     # This one would pass if TZ (with any, or even no, value) were in
+     # the environment.
+     ['regress-1', "-u -d '1996-11-10 0:00:00 +0' $fmt",
+     {OUT=>"1996-11-10 00:00:00"},
+     {ENV =>'LANG=C'}],
+
+
+     ['datevtime-1', "-d 000909 $fmt", {OUT=>"2000-09-09 00:00:00"}],
+
+     # test for RFC-822 conformance
+     ['rfc822-1', "-R -d '$d1'", {OUT=>"Sun, 19 Jan 1997 08:17:48 +0000"},
+      {ENV => 'LC_ALL=de_DE TZ=UTC0'}],
+
+     # Relative seconds, with time.  fixed in 2.0j
+     ['relative-1', "--utc -d '1970-01-01 00:00:00 UTC +961062237 sec' $fmt",
+      {OUT=>"2000-06-15 09:43:57"}],
+
+     # Relative seconds, no time.
+     ['relative-2', "--utc -d '1970-01-01 UTC +961062237 sec' $fmt",
+      {OUT=>"2000-06-15 09:43:57"},
+      {ENV => 'TZ=UTC+1'}],
+
      # This would infloop (or appear to) prior to coreutils-4.5.5,
      # due to a bug in strftime.c.
      ['wide-fmt', "-d '1999-06-01'", '+%3004Y', {OUT=>'0' x 3000 . '1999'}],
