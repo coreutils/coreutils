@@ -80,6 +80,30 @@ my @Tests =
 
      ['millen-1', "--date '1998-1-1 3 years' +%Y", {OUT=>'2001'}],
 
+     ['rel-0', "-d '$d1 now' '+%Y-%m-%d %T'", {OUT=>"$d0 $t0"}],
+
+     ['rel-1a', "-d '$d1 yesterday' $fmt", {OUT=>"1997-01-18 $t0"}],
+     ['rel-1b', "-d '$d1 tomorrow' $fmt", {OUT=>"1997-01-20 $t0"}],
+
+     ['rel-2a', "-d '$d1 6 years ago' $fmt", {OUT=>"1991-01-19 $t0"}],
+     ['rel-2b', "-d '$d1 7 months ago' $fmt", {OUT=>"1996-06-19 $t0"}],
+     ['rel-2c', "-d '$d1 8 weeks ago' $fmt", {OUT=>"1996-11-24 $t0"}],
+     ['rel-2d', "-d '$d1 1 day ago' $fmt", {OUT=>"1997-01-18 $t0"}],
+     ['rel-2e', "-d '$d1 2 hours ago' $fmt", {OUT=>"$d0 06:17:48"}],
+     ['rel-2f', "-d '$d1 3 minutes ago' $fmt", {OUT=>"$d0 08:14:48"}],
+     ['rel-2g', "-d '$d1 4 seconds ago' $fmt", {OUT=>"$d0 08:17:44"}],
+
+     ['rel-3a', "-d '$d1 4 seconds ago' $fmt", {OUT=>"$d0 08:17:44"}],
+
+     ['next-s', "-d '$d1 next second' '+%Y-%m-%d %T'", {OUT=>"$d0 $ts"}],
+     ['next-m', "-d '$d1 next minute' '+%Y-%m-%d %T'", {OUT=>"$d0 $tm"}],
+     ['next-h', "-d '$d1 next hour'   '+%Y-%m-%d %T'", {OUT=>"$d0 $th"}],
+     ['next-d', "-d '$d1 next day'    '+%Y-%m-%d %T'", {OUT=>"$dd $t0"}],
+     ['next-w', "-d '$d1 next week'   '+%Y-%m-%d %T'", {OUT=>"$dw $t0"}],
+     ['next-mo', "-d '$d1 next month' '+%Y-%m-%d %T'", {OUT=>"$dm $t0"}],
+     ['next-y', "-d '$d1 next year'   '+%Y-%m-%d %T'", {OUT=>"$dy $t0"}],
+
+
      # This would infloop (or appear to) prior to coreutils-4.5.5,
      # due to a bug in strftime.c.
      ['wide-fmt', "-d '1999-06-01'", '+%3004Y', {OUT=>'0' x 3000 . '1999'}],
