@@ -30,47 +30,6 @@ sub test_vector
 
   my @tvec =
     (
-     # test-name options input expected-output expected-return-code
-     #
-     ['1', "-d '$d1' +'%% %a %A %b %B'", {}, '% Sun Sunday Jan January', 0],
-
-     # [Actually, skip it on *all* systems. -- this Perl code is run at
-     # distribution-build-time, not at configure/test time.  ]
-
-     # Skip the test of %c on SunOS4 systems.  Such systems would fail this
-     # test because their underlying strftime doesn't handle the %c format
-     # properly.  GNU strftime must rely on the underlying host library
-     # function to get locale-dependent behavior, as strftime is the only
-     # portable interface to that behavior.
-     # ['2', "-d '$d1' +'%c'", {}, "Sun Jan 19 $t0 1997", 0],
-
-     ['3', "-d '$d1' +'%d_%D_%e_%h_%H'", {}, '19_01/19/97_19_Jan_08', 0],
-     ['4', "-d '$d1' +'%I_%j_%k_%l_%m'", {}, '08_019_ 8_ 8_01', 0],
-     ['5', "-d '$d1' +'%M_%n_%p_%r'", {}, "17_\n_AM_$t0 AM", 0],
-     ['6', "-d '$d1' +'%s_%S_%t_%T'", {}, "853661868_48_\t_$t0", 0],
-     ['7', "-d '$d1' +'%U_%V_%w_%W'", {}, '03_03_0_02', 0],
-     ['8', "-d '$d1' +'%x_%X_%y_%Y'", {}, "01/19/97_${t0}_97_1997", 0],
-     ['9', "-d '$d1' +'%z'", {}, '+0000', 0],
-
-     ['leap-1', "--date '02/29/1996 1 year' +%Y-%m-%d", {}, '1997-03-01', 0],
-
-     ['U95-1', "--date '1995-1-1' +%U", {}, '01', 0],
-     ['U95-2', "--date '1995-1-7' +%U", {}, '01', 0],
-     ['U95-3', "--date '1995-1-8' +%U", {}, '02', 0],
-
-     ['U92-1', "--date '1992-1-1' +%U", {}, '00', 0],
-     ['U92-2', "--date '1992-1-4' +%U", {}, '00', 0],
-     ['U92-3', "--date '1992-1-5' +%U", {}, '01', 0],
-
-     ['V92-1', "--date '1992-1-1' +%V", {}, '01', 0],
-     ['V92-2', "--date '1992-1-5' +%V", {}, '01', 0],
-     ['V92-3', "--date '1992-1-6' +%V", {}, '02', 0],
-
-     ['W92-1', "--date '1992-1-1' +%W", {}, '00', 0],
-     ['W92-2', "--date '1992-1-5' +%W", {}, '00', 0],
-     ['W92-3', "--date '1992-1-6' +%W", {}, '01', 0],
-
-     ['millen-1', "--date '1998-1-1 3 years' +%Y", {}, '2001', 0],
 
      ['rel-0', "-d '$d1 now' '+%Y-%m-%d %T'", {}, "$d0 $t0", 0],
 
