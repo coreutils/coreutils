@@ -1,3 +1,9 @@
+2005-08-13  Jim Meyering  <jim@meyering.net>
+
+	* getdate.y (get_date): Undo part of the 2005-04-04 change, so that
+	the command "date -d'2005-03-27 +1 day'" succeeds once again, even
+	when that 24-hour range spans a daylight savings time transition.
+
 2005-08-12  Jim Meyering  <jim@meyering.net>
 
 	* regcomp.c (duplicate_node) [lint]: Set *new_idx to -1, to avoid
