@@ -2,10 +2,17 @@
 
 	* Version 5.3.1.
 
+	* tests/date: Remove directory
+	* tests/Makefile.am (SUBDIRS): Remove date.
+	* configure.ac (AC_CONFIG_FILES): Remove tests/date/Makefile.
+
+	* tests/Coreutils.pm: New keywords, ENV and ENV_DEL, to support
+	tests/misc/date.
+
 	With todays additions, the generated shell script,
 	tests/date/date-tests had becoming far too large (over 350KB),
 	so use the superior-but-perl-requiring framework instead.
-	* tests/date/Test.pm: Move new tests from here...
+	* tests/date/Test.pm: Move all tests from here...
 	* tests/misc/date: ...to this new file.
 	* tests/misc/Makefile.am (TESTS): Add date.
 
