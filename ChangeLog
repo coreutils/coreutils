@@ -9,8 +9,8 @@
 2005-08-14  James Youngman  <jay@gnu.org>
 	and Jim Meyering  <jim@meyering.net>
 
-	* src/test.c: Include "timespec.h".
-	(age_of): Return the nanoseconds part of the timestamp, if available.
+	* src/test.c (age_of): Return the nanoseconds part of the timestamp,
+	if available.
 	(binary_operator) [-nt, -ot]: Use nanosecond values to break ties.
 
 2005-08-14  Jim Meyering  <jim@meyering.net>
