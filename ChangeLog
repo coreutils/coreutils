@@ -2,13 +2,26 @@
 
 	* Version 5.3.1.
 
+	Use one fewer file descriptor in a common case.
+	* src/touch.c: Include "fd-reopen.h", rather than "fcntl--.h".
+	Use fd_reopen rather than open.
+
+2005-07-17  James Youngman  <jay@gnu.org>
+	and Jim Meyering  <jim@meyering.net>
+
+	* src/test.c: Include "timespec.h".
+	(age_of): Return the nanoseconds part of the timestamp, if available.
+	(binary_operator) [-nt, -ot]: Use nanosecond values to break ties.
+
+2005-08-14  Jim Meyering  <jim@meyering.net>
+
 	* src/ls.c (long_time_expected_width): Revert last change, just to
 	be paranoid, and add a comment explaining why.  Paul Eggert mentioned
 	the possibility.
 
 	* src/wc.c: Don't define mbrtowc at all.
 	If mbstate_t is not defined, then AC_TYPE_MBSTATE_T will define
-	it to `int' for us.
+	it to `int' for us.  Now wc.c really does compile on HP-UX 11.23.
 
 2005-08-13  Jim Meyering  <jim@meyering.net>
 
