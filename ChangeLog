@@ -6,7 +6,7 @@
 	* src/touch.c: Include "fd-reopen.h", rather than "fcntl--.h".
 	Use fd_reopen rather than open.
 
-2005-07-17  James Youngman  <jay@gnu.org>
+2005-08-14  James Youngman  <jay@gnu.org>
 	and Jim Meyering  <jim@meyering.net>
 
 	* src/test.c: Include "timespec.h".
