@@ -2,6 +2,10 @@
 
 	* Version 5.3.1.
 
+	* src/ls.c (long_time_expected_width): Revert last change, just to
+	be paranoid, and add a comment explaining why.  Paul Eggert mentioned
+	the possibility.
+
 	* src/wc.c: Don't define mbrtowc at all.
 	If mbstate_t is not defined, then AC_TYPE_MBSTATE_T will define
 	it to `int' for us.
