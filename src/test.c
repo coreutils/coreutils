@@ -46,6 +46,7 @@
 #include "inttostr.h"
 #include "quote.h"
 #include "strnumcmp.h"
+#include "timespec.h"
 
 #if HAVE_SYS_PARAM_H
 # include <sys/param.h>
@@ -160,14 +161,19 @@ find_int (char const *string)
 }
 
 /* Find the modification time of FILE, and stuff it into *AGE.
+   If the timestamp has a nonoseconds part, stuff that into *NS;
+   otherwise stuff zero into *NS.
    Return true if successful.  */
 static bool
-age_of (char const *filename, time_t *age)
+age_of (char const *filename, time_t *age, long *ns)
 {
   struct stat finfo;
   bool ok = (stat (filename, &finfo) == 0);
   if (ok)
-    *age = finfo.st_mtime;
+    {
+      *age = finfo.st_mtime;
+      *ns = TIMESPEC_NS (finfo.st_mtim);
+    }
   return ok;
 }
 
@@ -319,13 +325,18 @@ binary_operator (bool l_is_l)
 	      /* nt - newer than */
 	      time_t lt IF_LINT (= 0);
 	      time_t rt IF_LINT (= 0);
+	      long l_ns IF_LINT (= 0);
+	      long r_ns IF_LINT (= 0);
 	      bool le, re;
 	      pos += 3;
 	      if (l_is_l | r_is_l)
 		test_syntax_error (_("-nt does not accept -l\n"), NULL);
-	      le = age_of (argv[op - 1], &lt);
-	      re = age_of (argv[op + 1], &rt);
-	      return le > re || (le && lt > rt);
+	      le = age_of (argv[op - 1], &lt, &l_ns);
+	      re = age_of (argv[op + 1], &rt, &r_ns);
+	      if (le && re && (rt == lt))
+		return l_ns > r_ns;
+	      else
+		return le > re || (le && lt > rt);
 	    }
 	  break;
 
@@ -349,13 +360,18 @@ binary_operator (bool l_is_l)
 	      /* ot - older than */
 	      time_t lt IF_LINT (= 0);
 	      time_t rt IF_LINT (= 0);
+	      long l_ns IF_LINT (= 0);
+	      long r_ns IF_LINT (= 0);
 	      bool le, re;
 	      pos += 3;
 	      if (l_is_l | r_is_l)
 		test_syntax_error (_("-ot does not accept -l\n"), NULL);
-	      le = age_of (argv[op - 1], &lt);
-	      re = age_of (argv[op + 1], &rt);
-	      return le < re || (re && lt < rt);
+	      le = age_of (argv[op - 1], &lt, &l_ns);
+	      re = age_of (argv[op + 1], &rt, &r_ns);
+	      if (le && re && (lt == rt))
+		return l_ns < r_ns;
+	      else
+		return le < re || (re && lt < rt);
 	    }
 	  break;
 	}
