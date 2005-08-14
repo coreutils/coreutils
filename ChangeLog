@@ -2,6 +2,9 @@
 
 	* Version 5.3.1.
 
+	* src/md5sum.c (usage): Fix typo s/formated/formatted/ reported
+	by Norbert Kiesel
+
 	Use one fewer file descriptor in a common case.
 	* src/touch.c: Include "fd-reopen.h", rather than "fcntl--.h".
 	Use fd_reopen rather than open.
