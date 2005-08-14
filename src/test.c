@@ -46,7 +46,6 @@
 #include "inttostr.h"
 #include "quote.h"
 #include "strnumcmp.h"
-#include "timespec.h"
 
 #if HAVE_SYS_PARAM_H
 # include <sys/param.h>
