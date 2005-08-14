@@ -137,7 +137,7 @@ With no FILE, or when FILE is -, read standard input.\n\
 \n\
 The following two options are useful only when verifying checksums:\n\
       --status            don't output anything, status code shows success\n\
-  -w, --warn              warn about improperly formated checksum lines\n\
+  -w, --warn              warn about improperly formatted checksum lines\n\
 \n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
