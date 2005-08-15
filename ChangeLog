@@ -6,6 +6,8 @@
 	upon localtime failure.
 	* src/date.c (show_date): Remove stray `puts (buf);' (debugging?)
 	from the 2004-02-02 change.
+	* tests/misc/date (uninit-64): New test for the above.
+	Rewrite all other OUT strings to include the terminating "\n".
 
 2005-08-14  Jim Meyering  <jim@meyering.net>
 
