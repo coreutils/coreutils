@@ -519,7 +519,6 @@ show_date (const char *format, struct timespec when)
 	     (TYPE_SIGNED (time_t)
 	      ? imaxtostr (when.tv_sec, buf)
 	      : umaxtostr (when.tv_sec, buf)));
-      puts (buf);
       return false;
     }
 
