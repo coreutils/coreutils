@@ -1,6 +1,13 @@
-2005-08-14  Jim Meyering  <jim@meyering.net>
+2005-08-15  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	Don't print uninitialized data (or anything else) to stdout
+	upon localtime failure.
+	* src/date.c (show_date): Remove stray `puts (buf);' (debugging?)
+	from the 2004-02-02 change.
+
+2005-08-14  Jim Meyering  <jim@meyering.net>
 
 	* src/md5sum.c (usage): Fix typo s/formated/formatted/ reported
 	by Norbert Kiesel.
