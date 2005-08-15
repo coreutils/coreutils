@@ -199,6 +199,11 @@ my @Tests =
      # 0000003
      ['uninit-64', '-d @72057594037927935',
       {OUT=>''},
+      # Use ERR_SUBST to get around fact that the diagnostic
+      # you get on a system with 32-bit time_t is not the same as
+      # the one you get for a system where it's 64 bits wide:
+      # - date: time 72057594037927935 is out of range
+      # + date: invalid date `@72057594037927935'
       {ERR_SUBST => 's/.*//'},
       {ERR => "\n"},
       {EXIT => 1},
@@ -221,3 +226,5 @@ my $prog = 'date';
 my $fail = run_tests ($ME, $prog, \@Tests, $save_temps, $verbose);
 exit $fail;
 EOF
+
+j
