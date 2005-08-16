@@ -253,17 +253,22 @@ df_readable (bool negative, uintmax_t n, char *buf,
 /* Display a space listing for the disk device with absolute file name DISK.
    If MOUNT_POINT is non-NULL, it is the name of the root of the
    file system on DISK.
+   If STAT_FILE is non-null, it is the name of a file within the file
+   system that the user originally asked for; this provides better
+   diagnostics, and sometimes it provides better results on networked
+   file systems that give different free-space results depending on
+   where in the file system you probe.
    If FSTYPE is non-NULL, it is the type of the file system on DISK.
    If MOUNT_POINT is non-NULL, then DISK may be NULL -- certain systems may
    not be able to produce statistics in this case.
    ME_DUMMY and ME_REMOTE are the mount entry flags.  */
 
 static void
-show_dev (const char *disk, const char *mount_point, const char *fstype,
+show_dev (char const *disk, char const *mount_point,
+	  char const *stat_file, char const *fstype,
 	  bool me_dummy, bool me_remote)
 {
   struct fs_usage fsu;
-  const char *stat_file;
   char buf[3][LONGEST_HUMAN_READABLE + 2];
   int width;
   int use_width;
@@ -290,7 +295,8 @@ show_dev (const char *disk, const char *mount_point, const char *fstype,
      program reports on the file system that the special file is on.
      It would be better to report on the unmounted file system,
      but statfs doesn't do that on most systems.  */
-  stat_file = mount_point ? mount_point : disk;
+  if (!stat_file)
+    stat_file = mount_point ? mount_point : disk;
 
   if (get_fs_usage (stat_file, disk, &fsu))
     {
@@ -530,7 +536,7 @@ show_disk (char const *disk)
 
   if (best_match)
     {
-      show_dev (best_match->me_devname, best_match->me_mountdir,
+      show_dev (best_match->me_devname, best_match->me_mountdir, NULL,
 		best_match->me_type, best_match->me_dummy,
 		best_match->me_remote);
       return true;
@@ -628,7 +634,7 @@ show_point (const char *point, const struct stat *statp)
       }
 
   if (best_match)
-    show_dev (best_match->me_devname, best_match->me_mountdir,
+    show_dev (best_match->me_devname, best_match->me_mountdir, point,
 	      best_match->me_type, best_match->me_dummy, best_match->me_remote);
   else
     {
@@ -640,7 +646,7 @@ show_point (const char *point, const struct stat *statp)
       char *mp = find_mount_point (point, statp);
       if (mp)
 	{
-	  show_dev (NULL, mp, NULL, false, false);
+	  show_dev (NULL, mp, NULL, NULL, false, false);
 	  free (mp);
 	}
     }
@@ -668,7 +674,7 @@ show_all_entries (void)
   struct mount_entry *me;
 
   for (me = mount_list; me; me = me->me_next)
-    show_dev (me->me_devname, me->me_mountdir, me->me_type,
+    show_dev (me->me_devname, me->me_mountdir, NULL, me->me_type,
 	      me->me_dummy, me->me_remote);
 }
 
