@@ -1,6 +1,13 @@
-2005-08-15  Jim Meyering  <jim@meyering.net>
+2005-08-16  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1.
+
+	* src/df.c (show_dev): New arg STAT_FILE.  All uses changed.
+	This sometimes gives better results on networked file systems
+	that do not respect POSIX semantics.  Problem reported by
+	Bruno Haible.
+
+2005-08-15  Jim Meyering  <jim@meyering.net>
 
 	Don't print uninitialized data (or anything else) to stdout
 	upon localtime failure.
