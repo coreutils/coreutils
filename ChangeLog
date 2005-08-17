@@ -2,6 +2,9 @@
 
 	* Version 5.3.1.
 
+	* src/sort.c (usage): Fix typo s/POS 2/POS2/.
+	Reported by Edward Welbourne.
+
 	* tests/misc/date [neg-secs]: New test for today's strftime.c bug fix.
 	* tests/misc/date: Remove terminating "\n"s once again.
 	Automatically add them whenever EXIT != 0.
