@@ -310,7 +310,7 @@ Ordering options:\n\
 Other options:\n\
 \n\
   -c, --check               check whether input is sorted; do not sort\n\
-  -k, --key=POS1[,POS2]     start a key at POS1, end it at POS 2 (origin 1)\n\
+  -k, --key=POS1[,POS2]     start a key at POS1, end it at POS2 (origin 1)\n\
   -m, --merge               merge already sorted files; do not sort\n\
   -o, --output=FILE         write result to FILE instead of standard output\n\
   -s, --stable              stabilize sort by disabling last-resort comparison\n\
