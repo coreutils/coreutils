@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2005-08-13.08}
+\def\texinfoversion{2005-08-15.08}
 %
 % Copyright (C) 1985, 1986, 1988, 1990, 1991, 1992, 1993, 1994, 1995,
 % 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005 Free Software
@@ -153,27 +153,9 @@
 \ifx\putwordDefopt\undefined    \gdef\putwordDefopt{User Option}\fi
 \ifx\putwordDeffunc\undefined   \gdef\putwordDeffunc{Function}\fi
 
-% In some macros, we cannot use the `\? notation---the left quote is
-% in some cases the escape char.
-\chardef\backChar  = `\\
-\chardef\colonChar = `\:
-\chardef\commaChar = `\,
-\chardef\dotChar   = `\.
-\chardef\exclamChar= `\!
-\chardef\plusChar  = `\+
-\chardef\questChar = `\?
-\chardef\semiChar  = `\;
-\chardef\underChar = `\_
-
-\chardef\spaceChar = `\ %
+% Since the category of space is not known, we have to be careful.
 \chardef\spacecat = 10
-\def\spaceisspace{\catcode\spaceChar=\spacecat}
-
-{% for help with debugging.
- % example usage: \expandafter\show\activebackslash
- \catcode`\! = 0 \catcode`\\ = \active
- !global!def!activebackslash{\}
-}
+\def\spaceisspace{\catcode`\ =\spacecat}
 
 % Ignore a token.
 %
@@ -1051,9 +1033,9 @@ where each line of input produces a line of output.}
 % _ active, and distinguish by seeing if the current family is \slfam,
 % which is what @var uses.
 {
-  \catcode\underChar = \active
+  \catcode`\_ = \active
   \gdef\mathunderscore{%
-    \catcode\underChar=\active
+    \catcode`\_=\active
     \def_{\ifnum\fam=\slfam \_\else\sb\fi}%
   }
 }
@@ -1197,21 +1179,20 @@ where each line of input produces a line of output.}
   \fi
 \fi
 
-% PDF uses PostScript string constants for the names of xref targets, to
+% PDF uses PostScript string constants for the names of xref targets,
 % for display in the outlines, and in other places.  Thus, we have to
 % double any backslashes.  Otherwise, a name like "\node" will be
 % interpreted as a newline (\n), followed by o, d, e.  Not good.
 % http://www.ntg.nl/pipermail/ntg-pdftex/2004-July/000654.html
 % (and related messages, the final outcome is that it is up to the TeX
 % user to double the backslashes and otherwise make the string valid, so
-% that's we do).
+% that's what we do).
 
 % double active backslashes.
 % 
 {\catcode`\@=0 \catcode`\\=\active
- @gdef@activebackslash{@catcode`@\=@active @otherbackslash}
  @gdef@activebackslashdouble{%
-   @catcode@backChar=@active
+   @catcode`@\=@active
    @let\=@doublebackslash}
 }
 
@@ -1243,13 +1224,8 @@ where each line of input produces a line of output.}
 \def\backslashparens#1{%
   \xdef#1{#1}% redefine it as its expansion; the definition is simply
              % \lastnode when called from \setref -> \pdfmkdest.
-  \HyPsdSubst{(}{\backslashlparen}{#1}%
-  \HyPsdSubst{)}{\backslashrparen}{#1}%
-}
-
-{\catcode\exclamChar = 0 \catcode\backChar = \other
- !gdef!backslashlparen{\(}%
- !gdef!backslashrparen{\)}%
+  \HyPsdSubst{(}{\realbackslash(}{#1}%
+  \HyPsdSubst{)}{\realbackslash)}{#1}%
 }
 
 \ifpdf
@@ -1279,7 +1255,6 @@ where each line of input produces a line of output.}
     % We have to set dummies so commands such as @code, and characters
     % such as \, aren't expanded when present in a section title.
     \atdummies
-    \turnoffactive
     \activebackslashdouble
     \def\pdfdestname{#1}%
     \backslashparens\pdfdestname
@@ -1391,7 +1366,7 @@ where each line of input produces a line of output.}
       % now, I guess we'll just let the pdf reader have its way.
       \indexnofonts
       \setupdatafile
-      \activebackslash
+      \catcode`\\=\active \otherbackslash
       \input \jobname.toc
     \endgroup
   }
@@ -1810,6 +1785,13 @@ where each line of input produces a line of output.}
 % Set sfcode to normal for the chars that usually have another value.
 % Can't use plain's \frenchspacing because it uses the `\x notation, and
 % sometimes \x has an active definition that messes things up.
+%
+\chardef\colonChar = `\:
+\chardef\commaChar = `\,
+\chardef\dotChar   = `\.
+\chardef\exclamChar= `\!
+\chardef\questChar = `\?
+\chardef\semiChar  = `\;
 %
 \catcode`@=11
   \def\plainfrenchspacing{%
@@ -3245,6 +3227,7 @@ where each line of input produces a line of output.}
   %
   % Do the redefinitions.
   \commondummies
+  \otherbackslash
 }
 
 % Called from \indexdummies and \atdummies.
@@ -3331,66 +3314,62 @@ where each line of input produces a line of output.}
 
 % \commondummiesnofonts: common to \commondummies and \indexnofonts.
 %
-% Better have this without active chars.
-{
-  \catcode`\~=\other
-  \gdef\commondummiesnofonts{%
-    % Control letters and accents.
-    \definedummyletter\!%
-    \definedummyaccent\"%
-    \definedummyaccent\'%
-    \definedummyletter\*%
-    \definedummyaccent\,%
-    \definedummyletter\.%
-    \definedummyletter\/%
-    \definedummyletter\:%
-    \definedummyaccent\=%
-    \definedummyletter\?%
-    \definedummyaccent\^%
-    \definedummyaccent\`%
-    \definedummyaccent\~%
-    \definedummyword\u
-    \definedummyword\v
-    \definedummyword\H
-    \definedummyword\dotaccent
-    \definedummyword\ringaccent
-    \definedummyword\tieaccent
-    \definedummyword\ubaraccent
-    \definedummyword\udotaccent
-    \definedummyword\dotless
-    %
-    % Texinfo font commands.
-    \definedummyword\b
-    \definedummyword\i
-    \definedummyword\r
-    \definedummyword\sc
-    \definedummyword\t
-    %
-    % Commands that take arguments.
-    \definedummyword\acronym
-    \definedummyword\cite
-    \definedummyword\code
-    \definedummyword\command
-    \definedummyword\dfn
-    \definedummyword\emph
-    \definedummyword\env
-    \definedummyword\file
-    \definedummyword\kbd
-    \definedummyword\key
-    \definedummyword\math
-    \definedummyword\option
-    \definedummyword\pxref
-    \definedummyword\ref
-    \definedummyword\samp
-    \definedummyword\strong
-    \definedummyword\tie
-    \definedummyword\uref
-    \definedummyword\url
-    \definedummyword\var
-    \definedummyword\verb
-    \definedummyword\w
-    \definedummyword\xref
-  }
+\def\commondummiesnofonts{%
+  % Control letters and accents.
+  \definedummyletter\!%
+  \definedummyaccent\"%
+  \definedummyaccent\'%
+  \definedummyletter\*%
+  \definedummyaccent\,%
+  \definedummyletter\.%
+  \definedummyletter\/%
+  \definedummyletter\:%
+  \definedummyaccent\=%
+  \definedummyletter\?%
+  \definedummyaccent\^%
+  \definedummyaccent\`%
+  \definedummyaccent\~%
+  \definedummyword\u
+  \definedummyword\v
+  \definedummyword\H
+  \definedummyword\dotaccent
+  \definedummyword\ringaccent
+  \definedummyword\tieaccent
+  \definedummyword\ubaraccent
+  \definedummyword\udotaccent
+  \definedummyword\dotless
+  %
+  % Texinfo font commands.
+  \definedummyword\b
+  \definedummyword\i
+  \definedummyword\r
+  \definedummyword\sc
+  \definedummyword\t
+  %
+  % Commands that take arguments.
+  \definedummyword\acronym
+  \definedummyword\cite
+  \definedummyword\code
+  \definedummyword\command
+  \definedummyword\dfn
+  \definedummyword\emph
+  \definedummyword\env
+  \definedummyword\file
+  \definedummyword\kbd
+  \definedummyword\key
+  \definedummyword\math
+  \definedummyword\option
+  \definedummyword\pxref
+  \definedummyword\ref
+  \definedummyword\samp
+  \definedummyword\strong
+  \definedummyword\tie
+  \definedummyword\uref
+  \definedummyword\url
+  \definedummyword\var
+  \definedummyword\verb
+  \definedummyword\w
+  \definedummyword\xref
 }
 
 % \indexnofonts is used when outputting the strings to sort the index
@@ -4573,7 +4552,6 @@ where each line of input produces a line of output.}
     %
     \iflinks
       {\atdummies
-       \turnoffactive
        \edef\temp{%
          \write\tocfile{@#1entry{#2}{#3}{\lastnode}{\noexpand\folio}}}%
        \temp
@@ -6006,7 +5984,6 @@ where each line of input produces a line of output.}
   \iflinks
     {%
       \atdummies  % preserve commands, but don't expand them
-      \turnoffactive
       \edef\writexrdef##1##2{%
 	\write\auxfile{@xrdef{#1-% #1 of \setref, expanded by the \edef
 	  ##1}{##2}}% these are parameters of \writexrdef
@@ -6091,7 +6068,7 @@ where each line of input produces a line of output.}
     % If the user specified the print name (third arg) to the ref,
     % print it instead of our usual "Figure 1.2".
     \ifdim\wd0 = 0pt
-      \refx{#1-snt}%
+      \refx{#1-snt}{}%
     \else
       \printedrefname
     \fi
@@ -6675,7 +6652,6 @@ where each line of input produces a line of output.}
       % caption if specified, else the full caption if specified, else nothing.
       {%
         \atdummies
-        \turnoffactive
         %
         % since we read the caption text in the macro world, where ^^M
         % is turned into a normal character, we have to scan it back, so
@@ -7126,6 +7102,29 @@ should work if nowhere else does.}
 % \otherifyactive is called near the end of this file.
 \def\otherifyactive{\catcode`+=\other \catcode`\_=\other}
 
+% Same as @turnoffactive below, but backslash retains it's normal definition.
+% (Before 2004-08-15, this macro explicitly assigned @let\=@normalbackslash,
+% but it doesn't seem to be necessary. --kasal)
+\def\normalturnoffactive{%
+  \let"=\normaldoublequote
+  \let~=\normaltilde
+  \let^=\normalcaret
+  \let_=\normalunderscore
+  \let|=\normalverticalbar
+  \let<=\normalless
+  \let>=\normalgreater
+  \let+=\normalplus
+  \let$=\normaldollar %$ font-lock fix
+  \unsepspaces
+}
+
+% Used sometimes to turn off (effectively) the active characters even after
+% parsing them.
+\def\turnoffactive{%
+  \normalturnoffactive
+  \otherbackslash
+}
+
 \catcode`\@=0
 
 % \backslashcurfont outputs one backslash character in current font,
@@ -7133,44 +7132,22 @@ should work if nowhere else does.}
 \global\chardef\backslashcurfont=`\\
 \global\let\rawbackslashxx=\backslashcurfont  % let existing .??s files work
 
-% \rawbackslash defines an active \ to do \backslashcurfont.
-% \otherbackslash defines an active \ to be a literal `\' character with
-% catcode other.
-{\catcode`\\=\active
- @gdef@rawbackslash{@let\=@backslashcurfont}
- @gdef@otherbackslash{@let\=@realbackslash}
-}
-
 % \realbackslash is an actual character `\' with catcode other, and
 % \doublebackslash is two of them (for the pdf outlines).
 {\catcode`\\=\other @gdef@realbackslash{\} @gdef@doublebackslash{\\}}
 
-% \normalbackslash outputs one backslash in fixed width font.
-\def\normalbackslash{{\tt\backslashcurfont}}
-
+% In texinfo, backslash is an active character; it prints the backslash
+% in fixed width font.
 \catcode`\\=\active
+@def@normalbackslash{{@tt@backslashcurfont}}
+% On startup, @fixbackslash assigns:
+%  @let \ = @normalbackslash
 
-% Used sometimes to turn off (effectively) the active characters
-% even after parsing them.
-@def@turnoffactive{%
-  @let"=@normaldoublequote
-  @let\=@realbackslash
-  @let~=@normaltilde
-  @let^=@normalcaret
-  @let_=@normalunderscore
-  @let|=@normalverticalbar
-  @let<=@normalless
-  @let>=@normalgreater
-  @let+=@normalplus
-  @let$=@normaldollar %$ font-lock fix
-  @unsepspaces
-}
-
-% Same as @turnoffactive except outputs \ as {\tt\char`\\} instead of
-% the literal character `\'.  (Thus, \ is not expandable when this is in
-% effect.)
-%
-@def@normalturnoffactive{@turnoffactive @let\=@normalbackslash}
+% \rawbackslash defines an active \ to do \backslashcurfont.
+% \otherbackslash defines an active \ to be a literal `\' character with
+% catcode other.
+@gdef@rawbackslash{@let\=@backslashcurfont}
+@gdef@otherbackslash{@let\=@realbackslash}
 
 % Make _ and + \other characters, temporarily.
 % This is canceled by @fixbackslash.
@@ -7184,7 +7161,7 @@ should work if nowhere else does.}
 @global@let\ = @eatinput
 
 % On the other hand, perhaps the file did not have a `\input texinfo'. Then
-% the first `\{ in the file would cause an error. This macro tries to fix
+% the first `\' in the file would cause an error. This macro tries to fix
 % that, assuming it is called before the first `\' could plausibly occur.
 % Also turn back on active characters that might appear in the input
 % file name, in case not using a pre-dumped format.
