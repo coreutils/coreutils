@@ -909,10 +909,10 @@ my_strftime (CHAR_T *s, size_t maxsize, const CHAR_T *format,
 	    }
 	  while (u_number_value != 0);
 
+	do_number_sign_and_padding:
 	  if (digits < width)
 	    digits = width;
 
-	do_number_sign_and_padding:
 	  if (negative_number)
 	    *--bufp = L_('-');
 
