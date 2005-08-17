@@ -3,6 +3,8 @@
 	* Version 5.3.1.
 
 	* tests/misc/date [neg-secs]: New test for today's strftime.c bug fix.
+	* tests/misc/date: Remove terminating "\n"s once again.
+	Automatically add them whenever EXIT != 0.
 
 2005-08-16  Paul Eggert  <eggert@cs.ucla.edu>
 
@@ -19,8 +21,6 @@
 	from the 2004-02-02 change.
 	* tests/misc/date (uninit-64): New test for the above.
 	Rewrite all other OUT strings to include the terminating "\n".
-	FIXME: remove terminating "\n".  Automatically add them whenever
-	ERR != 0.
 
 2005-08-14  Jim Meyering  <jim@meyering.net>
 
