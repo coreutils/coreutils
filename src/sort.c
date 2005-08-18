@@ -294,7 +294,7 @@ Ordering options:\n\
 \n\
 "), stdout);
       fputs (_("\
-  -b, --ignore-leading-blanks ignore leading blanks\n\
+  -b, --ignore-leading-blanks  ignore leading blanks\n\
   -d, --dictionary-order      consider only blanks and alphanumeric characters\n\
   -f, --ignore-case           fold lower case to upper case characters\n\
 "), stdout);
@@ -317,7 +317,7 @@ Other options:\n\
   -S, --buffer-size=SIZE    use SIZE for main memory buffer\n\
 "), stdout);
       printf (_("\
-  -t, --field-separator=SEP use SEP instead of non-blank to blank transition\n\
+  -t, --field-separator=SEP  use SEP instead of non-blank to blank transition\n\
   -T, --temporary-directory=DIR  use DIR for temporaries, not $TMPDIR or %s;\n\
                               multiple options specify multiple directories\n\
   -u, --unique              with -c, check for strict ordering;\n\
