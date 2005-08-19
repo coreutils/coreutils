@@ -1,3 +1,7 @@
+2005-08-19  Jim Meyering  <jim@meyering.net>
+
+	* stdopen.c (stdopen): Return `bool' so caller can detect failure.
+
 2005-08-17  Jim Meyering  <jim@meyering.net>
 
 	Make the %s format (seconds since the epoch) work for a negative
