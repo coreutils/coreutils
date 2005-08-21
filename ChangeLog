@@ -1,6 +1,11 @@
-2005-08-19  Jim Meyering  <jim@meyering.net>
+2005-08-21  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* src/du.c (time_style): Add `const' attribute.
+	(tot_dui): Remove unnecessary (and too-short) initializer list.
+
+2005-08-19  Jim Meyering  <jim@meyering.net>
 
 	* src/sort.c (usage) [-b,-t]: Ensure that there are at least two
 	spaces between each option and the corresponding description -- this
