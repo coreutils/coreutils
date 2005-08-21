@@ -176,7 +176,7 @@ enum time_type
 static enum time_type time_type = time_mtime;
 
 /* User specified date / time style */
-static char *time_style = NULL;
+static char const *time_style = NULL;
 
 /* Format used to display date / time. Controlled by --time-style */
 static char const *time_format = NULL;
@@ -188,7 +188,7 @@ static uintmax_t output_block_size;
 static struct exclude *exclude;
 
 /* Grand total size of all args, in bytes. Also latest modified date. */
-static struct duinfo tot_dui = { 0, 0 };
+static struct duinfo tot_dui;
 
 #define IS_DIR_TYPE(Type)	\
   ((Type) == FTS_DP		\
