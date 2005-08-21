@@ -399,7 +399,7 @@ main (int argc, char **argv)
   bool make_backups = false;
   char *backup_suffix_string;
   char *version_control_string = NULL;
-  char *target_directory = NULL;
+  char const *target_directory = NULL;
   bool no_target_directory = false;
   int n_files;
   char **file;
