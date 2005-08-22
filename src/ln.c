@@ -244,6 +244,7 @@ do_link (const char *source, const char *dest, bool dest_is_dir)
 	  fprintf (stderr, _("%s: replace %s? "), program_name, quote (dest));
 	  if (!yesno ())
 	    return true;
+	  remove_existing_files = true;
 	}
 
       if (backup_type != no_backups)
