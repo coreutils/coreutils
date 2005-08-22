@@ -1,6 +1,17 @@
-2005-08-21  Jim Meyering  <jim@meyering.net>
+2005-08-22  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* src/tail.c (xwrite_stdout): Rename from xwrite.  Remove always-
+	equal-to-STDOUT_FILENO parameter and associated assertion.
+	Adjust all callers.
+
+2005-08-21  Jim Meyering  <jim@meyering.net>
+
+	* src/ln.c (do_link): If ln is invoked with --interactive (-i),
+	encounters an existing destination file, and gets an affirmative
+	response, then first try to unlink the destination file rather
+	than simply failing.  Suggestion from Karl Berry.
 
 	* src/ln.c (main): Declare `target_directory' with const attribute.
 	* src/du.c (time_style): Add `const' attribute.
