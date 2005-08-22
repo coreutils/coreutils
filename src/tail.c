@@ -311,9 +311,8 @@ pretty_name (struct File_spec const *f)
 }
 
 static void
-xwrite (int fd, char const *buffer, size_t n_bytes)
+xwrite_stdout (char const *buffer, size_t n_bytes)
 {
-  assert (fd == STDOUT_FILENO);
   if (n_bytes > 0 && fwrite (buffer, 1, n_bytes, stdout) == 0)
     error (EXIT_FAILURE, errno, _("write error"));
 }
@@ -384,7 +383,7 @@ dump_remainder (const char *pretty_filename, int fd, uintmax_t n_bytes)
 	}
       if (bytes_read == 0)
 	break;
-      xwrite (STDOUT_FILENO, buffer, bytes_read);
+      xwrite_stdout (buffer, bytes_read);
       n_written += bytes_read;
       if (n_bytes != COPY_TO_EOF)
 	{
@@ -492,7 +491,7 @@ file_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
 	      /* If this newline isn't the last character in the buffer,
 	         output the part that is after it.  */
 	      if (n != bytes_read - 1)
-		xwrite (STDOUT_FILENO, nl + 1, bytes_read - (n + 1));
+		xwrite_stdout (nl + 1, bytes_read - (n + 1));
 	      *read_pos += dump_remainder (pretty_filename, fd,
 					   end_pos - (pos + bytes_read));
 	      return true;
@@ -650,11 +649,11 @@ pipe_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
 	  }
       }
 
-    xwrite (STDOUT_FILENO, beg, buffer_end - beg);
+    xwrite_stdout (beg, buffer_end - beg);
   }
 
   for (tmp = tmp->next; tmp; tmp = tmp->next)
-    xwrite (STDOUT_FILENO, tmp->buffer, tmp->nbytes);
+    xwrite_stdout (tmp->buffer, tmp->nbytes);
 
 free_lbuffers:
   while (first)
@@ -752,10 +751,10 @@ pipe_bytes (const char *pretty_filename, int fd, uintmax_t n_bytes,
     i = total_bytes - n_bytes;
   else
     i = 0;
-  xwrite (STDOUT_FILENO, &tmp->buffer[i], tmp->nbytes - i);
+  xwrite_stdout (&tmp->buffer[i], tmp->nbytes - i);
 
   for (tmp = tmp->next; tmp; tmp = tmp->next)
-    xwrite (STDOUT_FILENO, tmp->buffer, tmp->nbytes);
+    xwrite_stdout (tmp->buffer, tmp->nbytes);
 
 free_cbuffers:
   while (first)
@@ -794,7 +793,7 @@ start_bytes (const char *pretty_filename, int fd, uintmax_t n_bytes,
 	{
 	  size_t n_remaining = bytes_read - n_bytes;
 	  if (n_remaining)
-	    xwrite (STDOUT_FILENO, &buffer[n_bytes], n_remaining);
+	    xwrite_stdout (&buffer[n_bytes], n_remaining);
 	  break;
 	}
     }
@@ -835,7 +834,7 @@ start_lines (const char *pretty_filename, int fd, uintmax_t n_lines,
 	  if (--n_lines == 0)
 	    {
 	      if (p < buffer_end)
-		xwrite (STDOUT_FILENO, p, buffer_end - p);
+		xwrite_stdout (p, buffer_end - p);
 	      return 0;
 	    }
 	}
