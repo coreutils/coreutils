@@ -33,9 +33,7 @@
 
 #define AUTHORS "Jim Meyering"
 
-#if defined(__GNUC__) || defined(STDC_HEADERS)
-# include <float.h>
-#endif
+#include <float.h>
 
 #ifdef HAVE_LONG_DOUBLE
 typedef long double LONG_DOUBLE;
