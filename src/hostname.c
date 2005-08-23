@@ -37,8 +37,8 @@
 int sethostname ();
 #endif
 
-#if !defined(HAVE_SETHOSTNAME) && defined(HAVE_SYSINFO) && \
-     defined (HAVE_SYS_SYSTEMINFO_H)
+#if !defined HAVE_SETHOSTNAME && defined HAVE_SYSINFO && \
+     defined HAVE_SYS_SYSTEMINFO_H
 # include <sys/systeminfo.h>
 
 int
