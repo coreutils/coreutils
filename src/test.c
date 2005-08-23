@@ -56,7 +56,7 @@ char *program_name;
 /* Exit status for syntax errors, etc.  */
 enum { TEST_TRUE, TEST_FALSE, TEST_FAILURE };
 
-#if defined (TEST_STANDALONE)
+#if defined TEST_STANDALONE
 # define test_exit(val) exit (val)
 #else
    static jmp_buf test_exit_buf;
@@ -691,7 +691,7 @@ posixtest (int nargs)
   return (value);
 }
 
-#if defined (TEST_STANDALONE)
+#if defined TEST_STANDALONE
 # include "long-options.h"
 
 void
@@ -791,7 +791,7 @@ INTEGER may also be -l STRING, which evaluates to the length of STRING.\n\
 }
 #endif /* TEST_STANDALONE */
 
-#if !defined (TEST_STANDALONE)
+#if !defined TEST_STANDALONE
 # define main test_command
 #endif
 
@@ -808,7 +808,7 @@ main (int margc, char **margv)
 {
   bool value;
 
-#if !defined (TEST_STANDALONE)
+#if !defined TEST_STANDALONE
   int code;
 
   code = setjmp (test_exit_buf);
