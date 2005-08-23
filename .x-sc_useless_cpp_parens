@@ -1,0 +1,14 @@
+^build-aux/config.guess
+^configure
+^lib/alloca.c
+^lib/fileblocks.c
+^lib/fts.c
+^lib/getdate.c
+^lib/getloadavg.c
+^lib/gettext.h
+^lib/getusershell.c
+^lib/mbswidth.c
+^lib/readutmp.h
+^lib/strtod.c
+^lib/xstrtol.c
+^m4/
