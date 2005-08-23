@@ -84,7 +84,8 @@ syntax-check-rules = \
   sc_system_h_headers \
   sc_tight_scope \
   sc_trailing_blank \
-  sc_unmarked_diagnostics
+  sc_unmarked_diagnostics \
+  sc_useless_cpp_parens
 
 syntax-check: $(syntax-check-rules)
 #	@grep -E '#  *include <(limits|std(def|arg|bool))\.h>'		\
@@ -247,6 +248,15 @@ sc_unmarked_diagnostics:
 	  | grep -v '_(' &&						\
 	  { echo '$(ME): found unmarked diagnostic(s)' 1>&2;		\
 	    exit 1; } || :
+
+# Avoid useless parentheses like those in this example:
+# #if defined (SYMBOL) || defined (SYM2)
+sc_useless_cpp_parens:
+	@( $(CVS_LIST) ) > /dev/null 2>&1 || : &&			\
+	  grep '^# *if .*defined *('					\
+	     $$($(CVS_LIST) | grep -vEf .x-$@ ) &&			\
+	  { echo '$(ME): found useless parentheses in cpp directive'	\
+		1>&2; exit 1; } || :
 
 # Ensure that date's --help output stays in sync with the info
 # documentation for GNU strftime.  The only exception is %N,
