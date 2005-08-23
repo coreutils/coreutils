@@ -1,6 +1,14 @@
-2005-08-22  Jim Meyering  <jim@meyering.net>
+2005-08-23  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1.
+
+	* src/od.c: Include <float.h> unconditionally.
+	* src/uptime.c (print_uptime): Remove unnecessary parens in
+	`#if defined (SYMBOL)' expressions.
+	* src/system.h: Likewise.
+	* src/hostname.c: Likewise.
+
+2005-08-22  Jim Meyering  <jim@meyering.net>
 
 	* src/tail.c (xwrite_stdout): Rename from xwrite.  Remove always-
 	equal-to-STDOUT_FILENO parameter and associated assertion.
