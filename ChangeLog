@@ -8,6 +8,7 @@
 	* src/system.h: Likewise.
 	* src/hostname.c: Likewise.
 	* src/su.c: Likewise.
+	* src/test.c: Likewise.
 
 2005-08-22  Jim Meyering  <jim@meyering.net>
 
