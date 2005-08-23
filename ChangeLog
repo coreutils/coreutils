@@ -2,13 +2,13 @@
 
 	* Version 5.3.1-cvs.
 
+	* configure.ac: Use `5.3.1-cvs' as the version string.
+	* NEWS: Adjust accordingly.
+
 	* Makefile.maint (sc_useless_cpp_parens): New rule.
 	(syntax-check-rules): Add it.
 	* .x-sc_useless_cpp_parens: New file.
 	* Makefile.am (EXTRA_DIST): Add it.
-
-	* configure.ac: Use `5.3.1-cvs' as the version string.
-	* NEWS: Adjust accordingly.
 
 	* src/od.c: Include <float.h> unconditionally.
 	* src/uptime.c (print_uptime): Remove unnecessary parens in
