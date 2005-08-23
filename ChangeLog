@@ -2,6 +2,8 @@
 
 	* Version 5.3.1-cvs.
 
+	* Makefile.maint (sc_useless_cpp_parens): New rule.
+	(syntax-check-rules): Add it.
 	* .x-sc_useless_cpp_parens: New file.
 	* Makefile.am (EXTRA_DIST): Add it.
 
