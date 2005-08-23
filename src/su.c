@@ -1,5 +1,5 @@
 /* su for GNU.  Run a shell with substitute user and group IDs.
-   Copyright (C) 1992-2004 Free Software Foundation, Inc.
+   Copyright (C) 1992-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -191,7 +191,7 @@ xsetenv (char const *name, char const *val)
     xalloc_die ();
 }
 
-#if defined (SYSLOG_SUCCESS) || defined (SYSLOG_FAILURE)
+#if defined SYSLOG_SUCCESS || defined SYSLOG_FAILURE
 /* Log the fact that someone has run su to the user given by PW;
    if SUCCESSFUL is true, they gave the correct password, etc.  */
 
