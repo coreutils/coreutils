@@ -375,7 +375,7 @@ initialize_exit_failure (int status)
    character >= 128 which gets sign-extended to a negative value.
    The macro ISUPPER protects against this as well."  */
 
-#if STDC_HEADERS || (!defined (isascii) && !HAVE_ISASCII)
+#if STDC_HEADERS || (!defined isascii && !HAVE_ISASCII)
 # define IN_CTYPE_DOMAIN(c) 1
 #else
 # define IN_CTYPE_DOMAIN(c) isascii(c)
