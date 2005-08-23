@@ -375,7 +375,6 @@ typedef struct re_dfa_t re_dfa_t;
 # endif
 #endif
 
-#ifndef RE_NO_INTERNAL_PROTOTYPES
 static reg_errcode_t re_string_allocate (re_string_t *pstr, const char *str,
 					 int len, int init_len,
 					 RE_TRANSLATE_TYPE trans, int icase,
@@ -390,21 +389,21 @@ static reg_errcode_t re_string_reconstruct (re_string_t *pstr, int idx,
 static reg_errcode_t re_string_realloc_buffers (re_string_t *pstr,
 						int new_buf_len)
      internal_function;
-# ifdef RE_ENABLE_I18N
+#ifdef RE_ENABLE_I18N
 static void build_wcs_buffer (re_string_t *pstr) internal_function;
 static int build_wcs_upper_buffer (re_string_t *pstr) internal_function;
-# endif /* RE_ENABLE_I18N */
+#endif /* RE_ENABLE_I18N */
 static void build_upper_buffer (re_string_t *pstr) internal_function;
 static void re_string_translate_buffer (re_string_t *pstr) internal_function;
 static void re_string_destruct (re_string_t *pstr) internal_function;
-# ifdef RE_ENABLE_I18N
+#ifdef RE_ENABLE_I18N
 static int re_string_elem_size_at (const re_string_t *pstr, int idx)
      internal_function __attribute ((pure));
 static inline int re_string_char_size_at (const re_string_t *pstr, int idx)
      internal_function __attribute ((pure));
 static inline wint_t re_string_wchar_at (const re_string_t *pstr, int idx)
      internal_function __attribute ((pure));
-# endif /* RE_ENABLE_I18N */
+#endif /* RE_ENABLE_I18N */
 static unsigned int re_string_context_at (const re_string_t *input, int idx,
 					  int eflags)
      internal_function __attribute ((pure));
@@ -413,7 +412,7 @@ static unsigned char re_string_peek_byte_case (const re_string_t *pstr,
      internal_function __attribute ((pure));
 static unsigned char re_string_fetch_byte_case (re_string_t *pstr)
      internal_function __attribute ((pure));
-#endif
+
 #define re_string_peek_byte(pstr, offset) \
   ((pstr)->mbs[(pstr)->cur_idx + offset])
 #define re_string_fetch_byte(pstr) \
