@@ -1,6 +1,6 @@
 GNU coreutils NEWS                                    -*- outline -*-
 
-* Major changes in release 5.3.1 (2005-??-??) [unstable]
+* Major changes in release 5.3.1-cvs (2005-??-??) [unstable]
 
 ** Bring back support for `head -NUM', `tail -NUM', etc. even when
   conforming to POSIX 1003.1-2001.  The following changes apply only
