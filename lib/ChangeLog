@@ -1,3 +1,8 @@
+2005-08-23  Jim Meyering  <jim@meyering.net>
+
+	* regcomp.c, regex.c, regex.h, regex_internal.c: Update from gnulib.
+	* regex_internal.h, regexec.c: Likewise.
+
 2005-08-19  Jim Meyering  <jim@meyering.net>
 
 	* stdopen.c (stdopen): Return `bool' so caller can detect failure.
