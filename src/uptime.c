@@ -132,7 +132,7 @@ print_uptime (size_t n, const STRUCT_UTMP *this)
   printf (ngettext ("%lu user", "%lu users", entries),
 	  (unsigned long int) entries);
 
-#if defined (HAVE_GETLOADAVG) || defined (C_GETLOADAVG)
+#if defined HAVE_GETLOADAVG || defined C_GETLOADAVG
   loads = getloadavg (avg, 3);
 #else
   loads = -1;
