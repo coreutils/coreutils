@@ -1,6 +1,8 @@
 2005-08-23  Jim Meyering  <jim@meyering.net>
 
-	* Version 5.3.1.
+	* Version 5.3.1-cvs.
+	* configure.ac: Use `5.3.1-cvs' as the version string.
+	* NEWS: Adjust accordingly.
 
 	* src/od.c: Include <float.h> unconditionally.
 	* src/uptime.c (print_uptime): Remove unnecessary parens in
@@ -22,6 +24,7 @@
 	encounters an existing destination file, and gets an affirmative
 	response, then first try to unlink the destination file rather
 	than simply failing.  Suggestion from Karl Berry.
+	FIXME: add test for this
 
 	* src/ln.c (main): Declare `target_directory' with const attribute.
 	* src/du.c (time_style): Add `const' attribute.
