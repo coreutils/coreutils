@@ -1,3 +1,11 @@
+2005-08-24  Jim Meyering  <jim@meyering.net>
+
+	* stdopen.c (stdopen): Revert to iterating over descriptors, but
+	rather than using fstat, use fcntl with its F_GETFD flag, which
+	is more efficient.  Unlike the 2-syscall dup-close approach,
+	this one doesn't apply any unnecessary pressure on the file
+	descriptor pool -- thus there is one fewer way to fail.
+
 2005-08-23  Jim Meyering  <jim@meyering.net>
 
 	* regcomp.c, regex.c, regex.h, regex_internal.c: Update from gnulib.
