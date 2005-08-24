@@ -30,18 +30,6 @@
 #include <unistd.h>
 #include <errno.h>
 
-#ifndef STDIN_FILENO
-# define STDIN_FILENO 0
-#endif
-
-#ifndef STDOUT_FILENO
-# define STDOUT_FILENO 1
-#endif
-
-#ifndef STDERR_FILENO
-# define STDERR_FILENO 2
-#endif
-
 /* Try to ensure that each of the standard file numbers (0, 1, 2)
    is in use.  Without this, each application would have to guard
    every call to open, dup, fopen, etc. with tests to ensure they
@@ -51,25 +39,29 @@
 bool
 stdopen (void)
 {
-  int fd = dup (STDIN_FILENO);
+  int fd;
+  bool ok = true;
 
-  if (0 <= fd)
-    close (fd);
-  else if (errno == EBADF)
-    fd = open ("/dev/null", O_WRONLY);
-  else
-    return false;
-
-  if (STDIN_FILENO <= fd && fd <= STDERR_FILENO)
+  for (fd = 0; fd <= 2; fd++)
     {
-      fd = open ("/dev/null", O_RDONLY);
-      if (fd == STDOUT_FILENO)
-	fd = dup (fd);
-      if (fd < 0)
-	return false;
-
-      if (STDERR_FILENO < fd)
-	close (fd);
+      if (fcntl (fd, F_GETFD) < 0)
+	{
+	  if (errno != EBADF)
+	    ok = false;
+	  else
+	    {
+	      static const int contrary_mode[]
+		= { O_WRONLY, O_RDONLY, O_RDONLY };
+	      int new_fd = open ("/dev/null", contrary_mode[fd]);
+	      if (new_fd != fd)
+		{
+		  if (0 <= new_fd)
+		    close (new_fd);
+		  ok = false;
+		}
+	    }
+	}
     }
-  return true;
+
+  return ok;
 }
