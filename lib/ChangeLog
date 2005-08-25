@@ -1,3 +1,9 @@
+2005-08-25  Jim Meyering  <jim@meyering.net>
+
+	* open-safer.c: Include <config.h>.
+	Otherwise, we'd lose LARGEFILE support in any file using
+	e.g. "fcntl--.h"
+
 2005-08-24  Jim Meyering  <jim@meyering.net>
 
 	* stdopen.c (stdopen): Revert to iterating over descriptors, but
