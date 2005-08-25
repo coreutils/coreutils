@@ -17,6 +17,10 @@
 
 /* Written by Paul Eggert.  */
 
+#if HAVE_CONFIG_H
+# include <config.h>
+#endif
+
 #include "fcntl-safer.h"
 
 #include <fcntl.h>
