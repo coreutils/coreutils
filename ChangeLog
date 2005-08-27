@@ -2,6 +2,10 @@
 
 	* Version 5.3.1-cvs.
 
+	* src/du.c: Go ahead and leave the patch in (i.e., revert
+	today's change).  It doesn't cause a problem after all, since
+	--exclude-from=- is always handled before --files0-from=F.
+
 	* src/du.c: Revert the du.c part of the change from 2005-07-02:
 	That change (to reopen stdin on F for --files0-from=F) made it so
 	--exclude-from=- and --files0-from=F would not work together.
