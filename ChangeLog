@@ -1,6 +1,12 @@
-2005-08-23  Jim Meyering  <jim@meyering.net>
+2005-08-27  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1-cvs.
+
+	* src/du.c: Revert the du.c part of the change from 2005-07-02:
+	That change (to reopen stdin on F for --files0-from=F) made it so
+	--exclude-from=- and --files0-from=F would not work together.
+
+2005-08-23  Jim Meyering  <jim@meyering.net>
 
 	* configure.ac: Use `5.3.1-cvs' as the version string.
 	* NEWS: Adjust accordingly.
