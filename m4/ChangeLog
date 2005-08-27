@@ -2,7 +2,6 @@
 
 	* fcntl-safer.m4, stdio-safer.m4, unistd-safer.m4: Sync from gnulib.
 
-
 2005-08-01  Jim Meyering  <jim@meyering.net>
 
 	* xanstrftime.m4 (gl_FUNC_XANSTRFTIME): New file/macro.
