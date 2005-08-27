@@ -18,4 +18,7 @@
 
 /* Written by Paul Eggert.  */
 
+#include <sys/types.h>
+
 int open_safer (char const *, int, ...);
+int creat_safer (char const *, mode_t);
