@@ -1,6 +1,6 @@
 /* md5.c - Functions to compute MD5 message digest of files or memory blocks
    according to the definition of MD5 in RFC 1321 from April 1992.
-   Copyright (C) 1995, 1996, 2001, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 2001, 2003, 2004, 2005 Free Software Foundation, Inc.
    NOTE: The canonical source of this file is maintained with the GNU C
    Library.  Bugs can be reported to bug-glibc@prep.ai.mit.edu.
 
@@ -59,8 +59,7 @@
 #define BLOCKSIZE 4096
 /* Ensure that BLOCKSIZE is a multiple of 64.  */
 #if BLOCKSIZE % 64 != 0
-/* FIXME-someday (soon?): use #error instead of this kludge.  */
-"invalid BLOCKSIZE"
+# error "invalid BLOCKSIZE"
 #endif
 
 /* This array contains the bytes used to pad the buffer to the next

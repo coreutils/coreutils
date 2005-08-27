@@ -1,7 +1,7 @@
 /* sha1.c - Functions to compute SHA1 message digest of files or
    memory blocks according to the NIST specification FIPS-180-1.
 
-   Copyright (C) 2000, 2001, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2003, 2004, 2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by the
@@ -53,8 +53,7 @@
 #define BLOCKSIZE 4096
 /* Ensure that BLOCKSIZE is a multiple of 64.  */
 #if BLOCKSIZE % 64 != 0
-/* FIXME-someday (soon?): use #error instead of this kludge.  */
-"invalid BLOCKSIZE"
+# error "invalid BLOCKSIZE"
 #endif
 
 /* This array contains the bytes used to pad the buffer to the next
