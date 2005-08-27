@@ -928,6 +928,8 @@ main (int argc, char **argv)
 
   if (files_from)
     {
+      FILE *istream;
+
       /* When using --files0-from=F, you may not specify any files
 	 on the command-line.  */
       if (optind < argc)
@@ -938,13 +940,14 @@ main (int argc, char **argv)
 	  usage (EXIT_FAILURE);
 	}
 
-      if (! (STREQ (files_from, "-") || freopen (files_from, "r", stdin)))
+      istream = (STREQ (files_from, "-") ? stdin : fopen (files_from, "r"));
+      if (istream == NULL)
 	error (EXIT_FAILURE, errno, _("cannot open %s for reading"),
 	       quote (files_from));
 
       readtokens0_init (&tok);
 
-      if (! readtokens0 (stdin, &tok) || fclose (stdin) != 0)
+      if (! readtokens0 (istream, &tok) || fclose (istream) != 0)
 	error (EXIT_FAILURE, 0, _("cannot read file names from %s"),
 	       quote (files_from));
 
