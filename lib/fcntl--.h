@@ -23,3 +23,6 @@
 
 #undef open
 #define open open_safer
+
+#undef creat
+#define creat creat_safer
