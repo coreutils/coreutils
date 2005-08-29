@@ -191,6 +191,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   If stdin is a terminal, nohup now redirects it from /dev/null to
   prevent the command from tying up an OpenSSH session after you logout.
 
+  "rm -FOO" now suggests "rm ./-FOO" if the file "-FOO" exists and
+  "-FOO" is not a valid option.
+
   stat -f -c %S outputs the fundamental block size (used for block counts).
   stat -f's default output format has been changed to output this size as well.
   stat -f recognizes file systems of type XFS and JFS

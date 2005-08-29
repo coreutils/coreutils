@@ -1,6 +1,14 @@
-2005-08-27  Jim Meyering  <jim@meyering.net>
+2005-08-29  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1-cvs.
+
+	* NEWS: "rm -FOO" now suggests "rm ./-FOO" if the file "-FOO"
+	exists and "-FOO" is not a valid option.
+	* src/rm.c: Include lstat.h, quotearg.h.
+	(diagnose_leading_hyphen): New function.
+	(main): Use it.
+
+2005-08-27  Jim Meyering  <jim@meyering.net>
 
 	* src/du.c: Go ahead and leave the patch in (i.e., revert
 	today's change).  It doesn't cause a problem after all, since
