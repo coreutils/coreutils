@@ -51,7 +51,9 @@
 #include "system.h"
 #include "dirname.h"
 #include "error.h"
+#include "lstat.h"
 #include "quote.h"
+#include "quotearg.h"
 #include "remove.h"
 #include "root-dev-ino.h"
 
@@ -94,6 +96,33 @@ static struct option const long_opts[] =
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
 };
+
+/* Advise the user about invalid usages like "rm -foo" if the file
+   "-foo" exists, assuming ARGC and ARGV are as with `main'.  */
+
+static void
+diagnose_leading_hyphen (int argc, char **argv)
+{
+  /* OPTIND is unreliable, so iterate through the arguments looking
+     for a file name that looks like an option.  */
+  int i;
+
+  for (i = 1; i < argc; i++)
+    {
+      char const *arg = argv[i];
+      struct stat st;
+
+      if (arg[0] == '-' && arg[1] && lstat (arg, &st) == 0)
+	{
+	  fprintf (stderr,
+		   _("Try `%s ./%s' to remove the file %s.\n"),
+		   argv[0],
+		   quotearg_n_style (1, shell_quoting_style, arg),
+		   quote (arg));
+	  break;
+	}
+    }
+}
 
 void
 usage (int status)
@@ -222,6 +251,7 @@ main (int argc, char **argv)
 	case_GETOPT_HELP_CHAR;
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 	default:
+	  diagnose_leading_hyphen (argc, argv);
 	  usage (EXIT_FAILURE);
 	}
     }
