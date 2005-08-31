@@ -1,5 +1,8 @@
 2005-08-31  Jim Meyering  <jim@meyering.net>
 
+	* quotearg.c (quotearg_n_options): Change code to be suboptimal, in
+	order to avoid an unsuppressible warning from gcc on 64-bit systems.
+
 	* localcharset.c (get_charset_aliases): Add `void' in parameter list
 	to placate gcc's -Wstrict-prototypes.
 
