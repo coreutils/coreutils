@@ -1,3 +1,8 @@
+2005-08-31  Jim Meyering  <jim@meyering.net>
+
+	* localcharset.c (get_charset_aliases): Add `void' in parameter list
+	to placate gcc's -Wstrict-prototypes.
+
 2005-08-27  Jim Meyering  <jim@meyering.net>
 
 	* md5.c: Use `#error' rather than a string literal to provoke failure.
