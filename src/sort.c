@@ -704,8 +704,8 @@ default_sort_size (void)
    by FPS and FILES, which are alternate names of the same files.
    NFILES gives the number of input files; NFPS may be less.  Assume
    that each input line requires LINE_BYTES extra bytes' worth of line
-   information.  Do not exceed a bound on the size: if the bound is
-   not specified by the user, use a default.  */
+   information.  Do not exceed the size bound specified by the user
+   (or a default size bound, if the user does not specify one).  */
 
 static size_t
 sort_buffer_size (FILE *const *fps, size_t nfps,
