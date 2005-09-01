@@ -13,5 +13,6 @@ AC_DEFUN([gl_FUNC_LCHOWN],
   AC_LIBSOURCES([lchown.c, lchown.h])
   AC_REQUIRE([AC_TYPE_UID_T])
   AC_REQUIRE([gl_FUNC_CHOWN])
+  AC_REQUIRE([gl_STAT_MACROS])
   AC_REPLACE_FUNCS(lchown)
 ])
