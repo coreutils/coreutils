@@ -1,3 +1,9 @@
+2005-09-01  Jim Meyering  <jim@meyering.net>
+
+	* lchown.m4: Require gl_FUNC_CHOWN, for the definition of
+	CHOWN_MODIFIES_SYMLINK, which is used by lchown.c.
+	Require gl_STAT_MACROS, too.
+
 2005-08-27  Jim Meyering  <jim@meyering.net>
 
 	* fcntl-safer.m4, stdio-safer.m4, unistd-safer.m4: Sync from gnulib.
