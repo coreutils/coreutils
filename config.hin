@@ -370,6 +370,10 @@
    don't. */
 #undef HAVE_DECL_TTYNAME
 
+/* Define to 1 if you have the declaration of `tzname', and to 0 if you don't.
+   */
+#undef HAVE_DECL_TZNAME
+
 /* Define to 1 if you have the declaration of wcwidth(), and to 0 otherwise.
    */
 #undef HAVE_DECL_WCWIDTH
@@ -1600,7 +1604,7 @@
 /* Define to rpl_nanosleep if the replacement function should be used. */
 #undef nanosleep
 
-/* Define to `long' if <sys/types.h> does not define. */
+/* Define to `long int' if <sys/types.h> does not define. */
 #undef off_t
 
 /* Define to `int' if <sys/types.h> does not define. */
@@ -1622,7 +1626,7 @@
 /* Define to empty if the C compiler doesn't support this keyword. */
 #undef signed
 
-/* Define to `unsigned' if <sys/types.h> does not define. */
+/* Define to `unsigned int' if <sys/types.h> does not define. */
 #undef size_t
 
 /* Define as a signed type of the same size as size_t. */
