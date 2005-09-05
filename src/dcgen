@@ -39,7 +39,6 @@ my @line;
 while (<>)
   {
     chomp;
-    s/[[:blank:]]*#.*//;
     s/[[:blank:]]+/ /g;
     $_
       and push @line, $_;
