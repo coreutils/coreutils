@@ -97,6 +97,27 @@ my @Tests =
 	 $mkdir, $rmdir, {EXIT => 2}],
 
      ['recursive-2', '-R d', {OUT => "d:\ne\n\nd/e:\n"}, $mkdir2, $rmdir2],
+
+     ['setuid-etc', '-1 -d --color=always owr owt setgid setuid sticky',
+	 {OUT =>
+	    "\e[0m\e[34;42mowr\e[0m\n"
+	    . "\e[30;42mowt\e[0m\n"
+	    . "\e[30;43msetgid\e[0m\n"
+	    . "\e[37;41msetuid\e[0m\n"
+	    . "\e[37;44msticky\e[0m\n"
+	    . "\e[m"
+	 },
+	{PRE => sub {
+	 system
+	   "touch setuid && chmod u+s setuid;"
+	  ."touch setgid && chmod g+s setgid;"
+	  ."mkdir sticky && chmod +t sticky;"
+	  ."mkdir owt    && chmod +t,o+w owt;"
+	  ."mkdir owr    && chmod o+w owr" }},
+	{POST => sub {
+         unlink qw(setuid setgid);
+	 foreach my $dir (qw(owr owt sticky)) {rmdir $dir} }},
+	 ],
     );
 
 my $save_temps = $ENV{SAVE_TEMPS};
