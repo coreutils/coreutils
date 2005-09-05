@@ -518,13 +518,15 @@ enum Dereference_symlink
 enum indicator_no
   {
     C_LEFT, C_RIGHT, C_END, C_NORM, C_FILE, C_DIR, C_LINK, C_FIFO, C_SOCK,
-    C_BLK, C_CHR, C_MISSING, C_ORPHAN, C_EXEC, C_DOOR
+    C_BLK, C_CHR, C_MISSING, C_ORPHAN, C_EXEC, C_DOOR, C_SETUID, C_SETGID,
+    C_STICKY, C_OTHER_WRITABLE, C_STICKY_OTHER_WRITABLE
   };
 
 static const char *const indicator_name[]=
   {
     "lc", "rc", "ec", "no", "fi", "di", "ln", "pi", "so",
-    "bd", "cd", "mi", "or", "ex", "do", NULL
+    "bd", "cd", "mi", "or", "ex", "do", "su", "sg", "st",
+    "ow", "tw", NULL
   };
 
 struct color_ext_type
@@ -550,7 +552,12 @@ static struct bin_str color_indicator[] =
     { 0, NULL },			/* mi: Missing file: undefined */
     { 0, NULL },			/* or: Orphaned symlink: undefined */
     { LEN_STR_PAIR ("01;32") },		/* ex: Executable: bright green */
-    { LEN_STR_PAIR ("01;35") }		/* do: Door: bright magenta */
+    { LEN_STR_PAIR ("01;35") },		/* do: Door: bright magenta */
+    { LEN_STR_PAIR ("37;41") },		/* su: setuid: white on red */
+    { LEN_STR_PAIR ("30;43") },		/* sg: setgid: black on yellow */
+    { LEN_STR_PAIR ("37;44") },		/* st: sticky: black on blue */
+    { LEN_STR_PAIR ("34;42") },		/* ow: other-writable: blue on green */
+    { LEN_STR_PAIR ("30;42") },		/* tw: ow w/ sticky: black on green */
   };
 
 /* FIXME: comment  */
@@ -3687,7 +3694,16 @@ print_color_indicator (const char *name, mode_t mode, int linkok)
   else
     {
       if (S_ISDIR (mode))
-	type = C_DIR;
+	{
+	  if ((mode & S_ISVTX) && (mode & S_IWOTH))
+	    type = C_STICKY_OTHER_WRITABLE;
+	  else if ((mode & S_IWOTH) != 0)
+	    type = C_OTHER_WRITABLE;
+	  else if ((mode & S_ISVTX) != 0)
+	    type = C_STICKY;
+	  else
+	    type = C_DIR;
+	}
       else if (S_ISLNK (mode))
 	type = ((!linkok && color_indicator[C_ORPHAN].string)
 		? C_ORPHAN : C_LINK);
@@ -3702,8 +3718,15 @@ print_color_indicator (const char *name, mode_t mode, int linkok)
       else if (S_ISDOOR (mode))
 	type = C_DOOR;
 
-      if (type == C_FILE && (mode & S_IXUGO) != 0)
-	type = C_EXEC;
+      if (type == C_FILE)
+	{
+	  if ((mode & S_ISUID) != 0)
+	    type = C_SETUID;
+	  else if ((mode & S_ISGID) != 0)
+	    type = C_SETGID;
+	  else if ((mode & S_IXUGO) != 0)
+	    type = C_EXEC;
+	}
 
       /* Check the file's suffix only if still classified as C_FILE.  */
       ext = NULL;
