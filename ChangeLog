@@ -1,6 +1,22 @@
-2005-08-29  Paul Eggert  <eggert@cs.ucla.edu>
+2005-09-05  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1-cvs.
+
+	* src/dcgen: Don't omit comments until there is better documentation.
+
+	Colorize set-user-ID and set-group-ID files and sticky,
+	other-writable, and sticky-and-other-writable directories.
+	* src/dircolors.c (slack_codes): Add new dircolors mode names.
+	(ls_codes): Add corresponding two-letter ls mode strings.
+	* src/ls.c (indicator_no[]): Add new symbols.
+	(indicator_name[]): Add corresponding mode strings.
+	(color_indicator[]): Add an entry for each new mode string.
+	(print_color_indicator): Honor new types.
+	* src/dircolors.hin: Document the default colors for the new strings.
+	From Mike Frysinger, based on a patch from Fedora.
+	* tests/ls-2/tests (setuid-etc): New test, for the above.
+
+2005-08-29  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: "rm -FOO" now suggests "rm ./-FOO" if the file "-FOO"
 	exists and "-FOO" is not a valid option.
