@@ -1,3 +1,10 @@
+2005-09-05  Jim Meyering  <jim@meyering.net>
+
+	* verify.h (__builtin_constant_p) [__GNUC__ <= 2]: Define to 1.
+	(verify_type__) [verify_error_if_non_const__]: New member/test,
+	to help detect when verify or verify_expr is mistakenly passed
+	a non-constant argument within a function.
+
 2005-08-31  Jim Meyering  <jim@meyering.net>
 
 	* quotearg.c (quotearg_n_options): Change code to be suboptimal, in
