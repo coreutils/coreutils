@@ -1,6 +1,10 @@
-2005-09-05  Jim Meyering  <jim@meyering.net>
+2005-09-07  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1-cvs.
+
+	* src/du.c (time_args): Use NULL in place of 0.
+
+2005-09-05  Jim Meyering  <jim@meyering.net>
 
 	* src/dcgen: Don't omit comments until there is better documentation.
 
