@@ -239,7 +239,7 @@ static struct option const long_options[] =
 
 static char const *const time_args[] =
 {
-  "atime", "access", "use", "ctime", "status", 0
+  "atime", "access", "use", "ctime", "status", NULL
 };
 static enum time_type const time_types[] =
 {
