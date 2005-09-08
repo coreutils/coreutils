@@ -1,3 +1,9 @@
+2005-09-07  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (nice invocation): Use "niceness", not "nice value"
+	to talk about nice values offset by -20.  Don't use the word
+	"priority" when niceness is intended.
+
 2005-08-15  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (join invocation): Itemize the defaults.

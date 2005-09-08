@@ -1,4 +1,4 @@
-/* nice -- run a program with modified scheduling priority
+/* nice -- run a program with modified nice value
    Copyright (C) 1990-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -44,9 +44,9 @@
 #define AUTHORS "David MacKenzie"
 
 #ifdef NICE_PRIORITY
-# define GET_NICE_VALUE() nice (0)
+# define GET_NICENESS() nice (0)
 #else
-# define GET_NICE_VALUE() getpriority (PRIO_PROCESS, 0)
+# define GET_NICENESS() getpriority (PRIO_PROCESS, 0)
 #endif
 
 #ifndef NZERO
@@ -78,11 +78,11 @@ usage (int status)
     {
       printf (_("Usage: %s [OPTION] [COMMAND [ARG]...]\n"), program_name);
       printf (_("\
-Run COMMAND with an adjusted nice value, which affects the scheduling priority.\n\
-With no COMMAND, print the current nice value.  Nice values range from\n\
+Run COMMAND with an adjusted niceness, which affects process scheduling.\n\
+With no COMMAND, print the current niceness.  Nicenesses range from\n\
 %d (most favorable scheduling) to %d (least favorable).\n\
 \n\
-  -n, --adjustment=N   add integer N to the nice value (default 10)\n\
+  -n, --adjustment=N   add integer N to the niceness (default 10)\n\
 "),
 	      - NZERO, NZERO - 1);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
@@ -96,7 +96,7 @@ With no COMMAND, print the current nice value.  Nice values range from\n\
 int
 main (int argc, char **argv)
 {
-  int current_nice_value;
+  int current_niceness;
   int adjustment = 10;
   char const *adjustment_given = NULL;
   bool ok;
@@ -169,25 +169,25 @@ main (int argc, char **argv)
 	}
       /* No command given; print the nice value.  */
       errno = 0;
-      current_nice_value = GET_NICE_VALUE ();
-      if (current_nice_value == -1 && errno != 0)
-	error (EXIT_FAIL, errno, _("cannot get priority"));
-      printf ("%d\n", current_nice_value);
+      current_niceness = GET_NICENESS ();
+      if (current_niceness == -1 && errno != 0)
+	error (EXIT_FAIL, errno, _("cannot get niceness"));
+      printf ("%d\n", current_niceness);
       exit (EXIT_SUCCESS);
     }
 
 #ifndef NICE_PRIORITY
   errno = 0;
-  current_nice_value = GET_NICE_VALUE ();
-  if (current_nice_value == -1 && errno != 0)
-    error (EXIT_FAIL, errno, _("cannot get priority"));
-  ok = (setpriority (PRIO_PROCESS, 0, current_nice_value + adjustment) == 0);
+  current_niceness = GET_NICENESS ();
+  if (current_niceness == -1 && errno != 0)
+    error (EXIT_FAIL, errno, _("cannot get niceness"));
+  ok = (setpriority (PRIO_PROCESS, 0, current_niceness + adjustment) == 0);
 #else
   errno = 0;
   ok = (nice (adjustment) != -1 || errno == 0);
 #endif
   if (!ok)
-    error (errno == EPERM ? 0 : EXIT_FAIL, errno, _("cannot set priority"));
+    error (errno == EPERM ? 0 : EXIT_FAIL, errno, _("cannot set niceness"));
 
   execvp (argv[i], &argv[i]);
 

@@ -79,7 +79,7 @@
 * mkfifo: (coreutils)mkfifo invocation.         Create FIFOs (named pipes).
 * mknod: (coreutils)mknod invocation.           Create special files.
 * mv: (coreutils)mv invocation.                 Rename files.
-* nice: (coreutils)nice invocation.             Modify scheduling priority.
+* nice: (coreutils)nice invocation.             Modify niceness.
 * nl: (coreutils)nl invocation.                 Number lines and write files.
 * nohup: (coreutils)nohup invocation.           Immunize to hangups.
 * od: (coreutils)od invocation.                 Dump files in octal, etc.
@@ -407,7 +407,7 @@ Modified command invocation
 
 * chroot invocation::            Run a command with a different root directory
 * env invocation::               Run a command in a modified environment
-* nice invocation::              Run a command with modified scheduling priority
+* nice invocation::              Run a command with modified niceness
 * nohup invocation::             Run a command immune to hangups
 * su invocation::                Run a command with substitute user and group ID
 
@@ -12339,7 +12339,7 @@ user, etc.
 @menu
 * chroot invocation::           Modify the root directory.
 * env invocation::              Modify environment variables.
-* nice invocation::             Modify scheduling priority.
+* nice invocation::             Modify niceness.
 * nohup invocation::            Immunize to hangups.
 * su invocation::               Modify user and group ID.
 @end menu
@@ -12491,32 +12491,29 @@ the exit status of @var{command} otherwise
 
 
 @node nice invocation
-@section @command{nice}: Run a command with modified scheduling priority
+@section @command{nice}: Run a command with modified niceness
 
 @pindex nice
-@cindex nice value
-@cindex modifying scheduling priority
-@cindex scheduling priority, modifying
-@cindex priority, modifying
+@cindex niceness
+@cindex scheduling, affecting
 @cindex appropriate privileges
 
-@command{nice} prints or modifies a process's @dfn{nice value},
-a parameter that affects the process's scheduling priority.
+@command{nice} prints or modifies a process's @dfn{niceness},
+a parameter that affects whether the process is scheduled favorably.
 Synopsis:
 
 @example
 nice [@var{option}]@dots{} [@var{command} [@var{arg}]@dots{}]
 @end example
 
-If no arguments are given, @command{nice} prints the current nice
-value, which it inherited.  Otherwise, @command{nice} runs the given
-@var{command} with its nice value adjusted.  By default, its nice
-value is incremented by 10.
+If no arguments are given, @command{nice} prints the current niceness.
+Otherwise, @command{nice} runs the given @var{command} with its
+niceness adjusted.  By default, its niceness is incremented by 10.
 
-Nice values range at least from @minus{}20 (resulting in the most
+Nicenesses range at least from @minus{}20 (resulting in the most
 favorable scheduling) through 19 (the least favorable).  Some systems
-may have a wider range of nice values; conversely, other systems may
-enforce more restrictive limits.  An attempt to set the nice value
+may have a wider range of nicenesses; conversely, other systems may
+enforce more restrictive limits.  An attempt to set the niceness
 outside the supported range is treated as an attempt to use the
 minimum or maximum supported value.
 
@@ -12537,7 +12534,7 @@ Options must precede operands.
 @itemx --adjustment=@var{adjustment}
 @opindex -n
 @opindex --adjustment
-Add @var{adjustment} instead of 10 to the command's nice value.  If
+Add @var{adjustment} instead of 10 to the command's niceness.  If
 @var{adjustment} is negative and you lack appropriate privileges,
 @command{nice} issues a warning but otherwise acts as if you specified
 a zero adjustment.
@@ -12552,23 +12549,23 @@ option syntax @option{-@var{adjustment}}.  New scripts should use
 Exit status:
 
 @display
-0   if no @var{command} is specified and the current priority is output
+0   if no @var{command} is specified and the niceness is output
 1   if @command{nice} itself fails
 126 if @var{command} is found but cannot be invoked
 127 if @var{command} cannot be found
 the exit status of @var{command} otherwise
 @end display
 
-It is sometimes useful to run non-interactive programs with reduced priority.
+It is sometimes useful to run a non-interactive program with reduced niceness.
 
 @example
 $ nice factor 4611686018427387903
 @end example
 
-Since @command{nice} prints the current priority,
+Since @command{nice} prints the current niceness,
 you can invoke it through itself to demonstrate how it works.
 
-The default behavior is to increase the nice value by @samp{10}:
+The default behavior is to increase the niceness by @samp{10}:
 
 @example
 $ nice
@@ -12579,17 +12576,17 @@ $ nice -n 10 nice
 10
 @end example
 
-The @var{adjustment} is relative to the current nice value.  In the
+The @var{adjustment} is relative to the current niceness.  In the
 next example, the first @command{nice} invocation runs the second one
-with nice value 10, and it in turn runs the final one with a nice
-value that is 3 more:
+with niceness 10, and it in turn runs the final one with a niceness
+that is 3 more:
 
 @example
 $ nice nice -n 3 nice
 13
 @end example
 
-Specifying a nice value larger than the supported range
+Specifying a niceness larger than the supported range
 is the same as specifying the maximum supported value:
 
 @example
@@ -12597,11 +12594,11 @@ $ nice -n 10000000000 nice
 19
 @end example
 
-Only a privileged user may run a process with higher priority:
+Only a privileged user may run a process with lower niceness:
 
 @example
 $ nice -n -1 nice
-nice: cannot set priority: Permission denied
+nice: cannot set niceness: Permission denied
 0
 $ sudo nice -n -1 nice
 -1
@@ -12646,8 +12643,8 @@ descriptor as the (possibly-redirected) standard output.
 
 @command{nohup} does not automatically put the command it runs in the
 background; you must do that explicitly, by ending the command line
-with an @samp{&}.  Also, @command{nohup} does not change the
-scheduling priority of @var{command}; use @command{nice} for that,
+with an @samp{&}.  Also, @command{nohup} does not alter the
+niceness of @var{command}; use @command{nice} for that,
 e.g., @samp{nohup nice @var{command}}.
 
 @var{command} must not be a special built-in utility (@pxref{Special
