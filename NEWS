@@ -103,6 +103,11 @@ GNU coreutils NEWS                                    -*- outline -*-
     --indicator-style=slash.  Use --file-type or
     --indicator-style=file-type to get -p's old behavior.
 
+  nice changes:
+
+    Documentation and diagnostics now refer to "nicenesses" (commonly
+    in the range -20...19 rather than "nice values" (commonly 0...39).
+
   nohup changes:
 
     nohup now ignores the umask when creating nohup.out.
@@ -270,15 +275,15 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   Fixes for "nice":
 
-    If it fails to lower the nice value due to lack of permissions,
+    If it fails to lower the niceness due to lack of permissions,
     it goes ahead and runs the command anyway, as POSIX requires.
 
-    It no longer incorrectly reports an error if the current nice
-    value happens to be -1.
+    It no longer incorrectly reports an error if the current niceness
+    happens to be -1.
 
-    It no longer assumes that nice values range from -20 through 19.
+    It no longer assumes that nicenesses range from -20 through 19.
 
-    It now consistently adjusts out-of-range nice values to the
+    It now consistently adjusts out-of-range nicenesses to the
     closest values in range; formerly it sometimes reported an error.
 
   pathchk no longer accepts trailing options, e.g., "pathchk -p foo -b"
