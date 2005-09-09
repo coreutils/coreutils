@@ -12517,6 +12517,16 @@ enforce more restrictive limits.  An attempt to set the niceness
 outside the supported range is treated as an attempt to use the
 minimum or maximum supported value.
 
+A niceness should not be confused with a scheduling priority, which
+lets applications determine the order in which threads are scheduled
+to run.  Unlike a priority, a niceness is merely advice to the
+scheduler, which the scheduler is free to ignore.  Also, as a point of
+terminology, @acronym{POSIX} defines the behavior of @command{nice} in
+terms of a @dfn{nice value}, which is the nonnegative difference
+between a niceness and the minimum niceness.  Though @command{nice}
+conforms to @command{POSIX}, its documentation and diagnostics use the
+term ``niceness'' for compatibility with historical practice.
+
 @var{command} must not be a special built-in utility (@pxref{Special
 built-in utilities}).
 
