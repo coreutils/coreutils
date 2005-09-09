@@ -1,4 +1,4 @@
-/* nice -- run a program with modified nice value
+/* nice -- run a program with modified niceness
    Copyright (C) 1990-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -27,7 +27,7 @@
 
 #include "system.h"
 
-#ifndef NICE_PRIORITY
+#if ! HAVE_NICE
 /* Include this after "system.h" so we're sure to have definitions
    (from time.h or sys/time.h) required for e.g. the ru_utime member.  */
 # include <sys/resource.h>
@@ -43,7 +43,7 @@
 
 #define AUTHORS "David MacKenzie"
 
-#ifdef NICE_PRIORITY
+#if HAVE_NICE
 # define GET_NICENESS() nice (0)
 #else
 # define GET_NICENESS() getpriority (PRIO_PROCESS, 0)
@@ -167,7 +167,7 @@ main (int argc, char **argv)
 	  error (0, 0, _("a command must be given with an adjustment"));
 	  usage (EXIT_FAIL);
 	}
-      /* No command given; print the nice value.  */
+      /* No command given; print the niceness.  */
       errno = 0;
       current_niceness = GET_NICENESS ();
       if (current_niceness == -1 && errno != 0)
@@ -176,15 +176,14 @@ main (int argc, char **argv)
       exit (EXIT_SUCCESS);
     }
 
-#ifndef NICE_PRIORITY
   errno = 0;
+#if HAVE_NICE
+  ok = (nice (adjustment) != -1 || errno == 0);
+#else
   current_niceness = GET_NICENESS ();
   if (current_niceness == -1 && errno != 0)
     error (EXIT_FAIL, errno, _("cannot get niceness"));
   ok = (setpriority (PRIO_PROCESS, 0, current_niceness + adjustment) == 0);
-#else
-  errno = 0;
-  ok = (nice (adjustment) != -1 || errno == 0);
 #endif
   if (!ok)
     error (errno == EPERM ? 0 : EXIT_FAIL, errno, _("cannot set niceness"));
