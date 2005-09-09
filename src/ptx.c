@@ -190,9 +190,11 @@ static BLOCK text_buffer;	/* file to study */
 #define SKIP_SOMETHING(cursor, limit) \
   if (word_regex_string)						\
     {									\
-      int count;							\
+      regoff_t count;							\
       count = re_match (word_regex, cursor, limit - cursor, 0, NULL);	\
-      cursor += count <= 0 ? 1 : count;					\
+      if (count == -2)							\
+        matcher_error ();						\
+      cursor += count == -1 ? 1 : count;				\
     }									\
   else if (word_fastmap[to_uchar (*cursor)])				\
     while (cursor < limit && word_fastmap[to_uchar (*cursor)])		\
@@ -277,6 +279,15 @@ static int head_truncation;	/* flag truncation before the head field */
 static BLOCK reference;		/* reference field for input reference mode */
 
 /* Miscellaneous routines.  */
+
+/* Diagnose an error in the regular expression matcher.  Then exit.  */
+
+static void ATTRIBUTE_NORETURN
+matcher_error (void)
+{
+  error (0, errno, _("error in regular expression matcher"));
+  exit (EXIT_FAILURE);
+}
 
 /*------------------------------------------------------.
 | Duplicate string STRING, while evaluating \-escapes.  |
@@ -417,12 +428,8 @@ alloc_and_compile_regex (const char *string)
 
   /* Do not waste extra allocated space.  */
 
-  if (pattern->allocated > pattern->used)
-    {
-      pattern->buffer
-	= xrealloc (pattern->buffer, (size_t) pattern->used);
-      pattern->allocated = pattern->used;
-    }
+  pattern->buffer = xrealloc (pattern->buffer, pattern->used);
+  pattern->allocated = pattern->used;
 
   return pattern;
 }
@@ -872,14 +879,21 @@ find_occurs_in_text (void)
 	 This test also accounts for the case of an incomplete line or
 	 sentence at the end of the buffer.  */
 
-      if (context_regex_string
-	  && (re_search (context_regex, cursor, text_buffer.end - cursor,
-			 0, text_buffer.end - cursor, &context_regs)
-	      >= 0))
-	next_context_start = cursor + context_regs.end[0];
+      next_context_start = text_buffer.end;
+      if (context_regex_string)
+	switch (re_search (context_regex, cursor, text_buffer.end - cursor,
+			   0, text_buffer.end - cursor, &context_regs))
+	  {
+	  case -2:
+	    matcher_error ();
 
-      else
-	next_context_start = text_buffer.end;
+	  case -1:
+	    break;
+
+	  default:
+	    next_context_start = cursor + context_regs.end[0];
+	    break;
+	  }
 
       /* Include the separator into the right context, but not any suffix
 	 white space in this separator; this insures it will be seen in
@@ -900,9 +914,11 @@ find_occurs_in_text (void)
 	       the loop.  */
 
 	    {
-	      if (re_search (word_regex, cursor, context_end - cursor,
-			     0, context_end - cursor, &word_regs)
-		  < 0)
+	      regoff_t r = re_search (word_regex, cursor, context_end - cursor,
+				      0, context_end - cursor, &word_regs);
+	      if (r == -2)
+		matcher_error ();
+	      if (r == -1)
 		break;
 	      word_start = cursor + word_regs.start[0];
 	      word_end = cursor + word_regs.end[0];
