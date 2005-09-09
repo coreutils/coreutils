@@ -114,29 +114,24 @@ if test $ac_cv_func_syslog = no; then
   done
 fi
 
-AC_MSG_CHECKING(for 3-argument setpriority function)
-AC_CACHE_VAL(utils_cv_func_setpriority,
-[AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <sys/time.h>
-  #include <sys/resource.h>]], [[setpriority(0, 0, 0);]])],
-  [utils_cv_func_setpriority=yes],
-  [utils_cv_func_setpriority=no])])
-AC_MSG_RESULT($utils_cv_func_setpriority)
-if test $utils_cv_func_setpriority = yes; then
-  OPTIONAL_BIN_PROGS="$OPTIONAL_BIN_PROGS nice\$(EXEEXT)"
-  MAN="$MAN nice.1"
-else
-  AC_MSG_CHECKING(for nice function)
-  AC_CACHE_VAL(utils_cv_func_nice,
-    [AC_LINK_IFELSE([AC_LANG_PROGRAM([[]], [[nice();]])],
-		    [utils_cv_func_nice=yes],
-		    [utils_cv_func_nice=no])])
-  AC_MSG_RESULT($utils_cv_func_nice)
-  if test $utils_cv_func_nice = yes; then
-    AC_DEFINE(NICE_PRIORITY, 1, [FIXME])
-    OPTIONAL_BIN_PROGS="$OPTIONAL_BIN_PROGS nice\$(EXEEXT)"
-    MAN="$MAN nice.1"
-  fi
+AC_CACHE_CHECK([for 3-argument setpriority function],
+  [utils_cv_func_setpriority],
+  [AC_LINK_IFELSE(
+    [AC_LANG_PROGRAM(
+       [[#include <sys/time.h>
+	 #include <sys/resource.h>
+       ]],
+       [[setpriority (0, 0, 0);]])],
+    [utils_cv_func_setpriority=yes],
+    [utils_cv_func_setpriority=no])])
+if test $utils_cv_func_setpriority = no; then
+  AC_CHECK_FUNCS([nice])
 fi
+case $utils_cv_func_setpriority,$ac_cv_func_nice in
+*yes*)
+  OPTIONAL_BIN_PROGS="$OPTIONAL_BIN_PROGS nice\$(EXEEXT)"
+  MAN="$MAN nice.1";;
+esac
 
 AC_DEFUN([coreutils_DUMMY_1],
 [
