@@ -777,7 +777,7 @@ process_regexp (struct control *p, uintmax_t repetition)
   size_t line_len;		/* To make "$" in regexps work. */
   uintmax_t break_line;		/* First line number of next file. */
   bool ignore = p->ignore;	/* If true, skip this section. */
-  int ret;
+  regoff_t ret;
 
   if (!ignore)
     create_output_file ();
@@ -854,7 +854,7 @@ process_regexp (struct control *p, uintmax_t repetition)
 	      error (0, 0, _("error in regular expression search"));
 	      cleanup_fatal ();
 	    }
-	  if (ret >= 0)
+	  if (ret != -1)
 	    break;
 	}
     }
