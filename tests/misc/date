@@ -193,6 +193,7 @@ my @Tests =
      ['empty-fmt', '+', {OUT=>""}],
 
      ['neg-secs', '-d @-22 +%05s', {OUT=>"-0022"}],
+     ['neg-secs2', '-d @-22 +%_5s', {OUT=>"  -22"}],
 
      # Before today's fix, date would print uninitialized data
      # to standard output for an out-of-range date:
@@ -210,6 +211,9 @@ my @Tests =
       {ERR => "\n"},
       {EXIT => 1},
      ],
+
+     ['fill-1', '-d 1999-12-08 +%_3d', {OUT=>'  8'}],
+     ['fill-2', '-d 1999-12-08 +%03d', {OUT=>'008'}],
     );
 
 # Repeat the cross-dst test, using Jan 1, 2005 and every interval from 1..364.
