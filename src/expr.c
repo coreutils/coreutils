@@ -414,7 +414,7 @@ docolon (VALUE *sv, VALUE *pv)
   struct re_pattern_buffer re_buffer;
   struct re_registers re_regs;
   size_t len;
-  int matchlen;
+  regoff_t matchlen;
 
   tostring (sv);
   tostring (pv);
@@ -430,10 +430,8 @@ of the basic regular expression is not portable; it is being ignored"),
   len = strlen (pv->u.s);
   memset (&re_buffer, 0, sizeof (re_buffer));
   memset (&re_regs, 0, sizeof (re_regs));
+  re_buffer.buffer = xnmalloc (len, 2);
   re_buffer.allocated = 2 * len;
-  if (re_buffer.allocated < len)
-    xalloc_die ();
-  re_buffer.buffer = xmalloc (re_buffer.allocated);
   re_buffer.translate = NULL;
   re_syntax_options = RE_SYNTAX_POSIX_BASIC;
   errmsg = re_compile_pattern (pv->u.s, len, &re_buffer);
@@ -452,7 +450,7 @@ of the basic regular expression is not portable; it is being ignored"),
       else
 	v = int_value (matchlen);
     }
-  else
+  else if (matchlen == -1)
     {
       /* Match failed -- return the right kind of null.  */
       if (re_buffer.re_nsub > 0)
@@ -460,6 +458,11 @@ of the basic regular expression is not portable; it is being ignored"),
       else
 	v = int_value (0);
     }
+  else
+    error (EXPR_FAILURE,
+	   (matchlen == -2 ? errno : EOVERFLOW),
+	   _("error in regular expression matcher"));
+
   free (re_buffer.buffer);
   return v;
 }
