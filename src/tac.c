@@ -255,14 +255,18 @@ tac_seekable (int input_fd, const char *file)
 	 Otherwise, make `match_start' < `G_buffer'. */
       if (sentinel_length == 0)
 	{
-	  ptrdiff_t i = match_start - G_buffer;
-	  int ret;
+	  size_t i = match_start - G_buffer;
+	  regoff_t ri = i;
+	  regoff_t range = 1 - ri;
+	  regoff_t ret;
 
-	  if (! (INT_MIN < i && i <= INT_MAX))
+	  if (1 < range)
 	    error (EXIT_FAILURE, 0, _("record too large"));
 
-	  ret = re_search (&compiled_separator, G_buffer, i, i - 1, -i, &regs);
-	  if (ret == -1)
+	  if (range == 1
+	      || ((ret = re_search (&compiled_separator, G_buffer,
+				    i, i - 1, range, &regs))
+		  == -1))
 	    match_start = G_buffer - 1;
 	  else if (ret == -2)
 	    {
