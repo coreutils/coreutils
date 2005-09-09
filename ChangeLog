@@ -2,6 +2,23 @@
 
 	* Version 5.3.1-cvs.
 
+	Support regular expressions in 64-bit code correctly, by
+	importing the latest gnulib regexp code, and not assuming
+	that sizes fit in 32 bits.
+	* src/csplit.c (process_regexp): Store match length in regoff_t,
+	not int.  Assume that negative return values less than -2
+	represent regoff_t overflow.
+	* src/expr.c (docolon): Likewise.
+	* src/nl.c (proc_text): Likewise.
+	* src/ptx.c (SKIP_SOMETHING, find_occurs_in_text): Likewise.
+	* src/tac.c (tac_seekable): Likewise.
+	* src/expr.c (docolon) Check for size calculation overflow.
+	* src/nl.c (build_type_arg): Likewise.
+	* src/ptx.c (matcher_error): New function.
+	(SKIP_SOMETHING): Use it to report matcher errors.
+	(alloc_and_compile_regex): No longer any need to worry about
+	int versus size_t mismatch.
+
 	* NEWS: Document "niceness" vs "nice value".
 	* configure.ac (utils_cv_func_setpriority): Simplify the tests.
 	Define HAVE_NICE rather than NICE_PRIORITY (since a niceness is

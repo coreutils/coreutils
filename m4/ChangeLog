@@ -1,3 +1,7 @@
+2005-09-09  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* regex.m4: Import from gnulib, to fix some 64-bit bugs.
+
 2005-09-01  Jim Meyering  <jim@meyering.net>
 
 	* lchown.m4: Require gl_FUNC_CHOWN, for the definition of
