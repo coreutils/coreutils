@@ -370,10 +370,6 @@
    don't. */
 #undef HAVE_DECL_TTYNAME
 
-/* Define to 1 if you have the declaration of `tzname', and to 0 if you don't.
-   */
-#undef HAVE_DECL_TZNAME
-
 /* Define to 1 if you have the declaration of wcwidth(), and to 0 otherwise.
    */
 #undef HAVE_DECL_WCWIDTH
@@ -684,6 +680,9 @@
 
 /* Define to 1 if you have the <nfs/vfs.h> header file. */
 #undef HAVE_NFS_VFS_H
+
+/* Define to 1 if you have the `nice' function. */
+#undef HAVE_NICE
 
 /* Define to 1 if you have the <nlist.h> header file. */
 #undef HAVE_NLIST_H
@@ -1309,9 +1308,6 @@
 /* Define to 1 if assertions should be disabled. */
 #undef NDEBUG
 
-/* FIXME */
-#undef NICE_PRIORITY
-
 /* Define to 1 if your `struct nlist' has an `n_un' member. Obsolete, depend
    on `HAVE_STRUCT_NLIST_N_UN_N_NAME */
 #undef NLIST_NAME_UNION
@@ -1500,6 +1496,9 @@
 /* Define to 1 if you need to in order for `stat' and other things to work. */
 #undef _POSIX_SOURCE
 
+/* Define if you want regoff_t to be at least as wide POSIX requires. */
+#undef _REGEX_LARGE_OFFSETS
+
 /* Define for Solaris 2.5.1 so uint32_t typedef from <sys/synch.h>,
    <pthread.h>, or <semaphore.h> is not used. If the typedef was allowed, the
    #define below would cause a syntax error. */
@@ -1604,7 +1603,7 @@
 /* Define to rpl_nanosleep if the replacement function should be used. */
 #undef nanosleep
 
-/* Define to `long int' if <sys/types.h> does not define. */
+/* Define to `long' if <sys/types.h> does not define. */
 #undef off_t
 
 /* Define to `int' if <sys/types.h> does not define. */
@@ -1626,7 +1625,7 @@
 /* Define to empty if the C compiler doesn't support this keyword. */
 #undef signed
 
-/* Define to `unsigned int' if <sys/types.h> does not define. */
+/* Define to `unsigned' if <sys/types.h> does not define. */
 #undef size_t
 
 /* Define as a signed type of the same size as size_t. */
