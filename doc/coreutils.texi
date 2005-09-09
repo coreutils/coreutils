@@ -12524,7 +12524,7 @@ scheduler, which the scheduler is free to ignore.  Also, as a point of
 terminology, @acronym{POSIX} defines the behavior of @command{nice} in
 terms of a @dfn{nice value}, which is the nonnegative difference
 between a niceness and the minimum niceness.  Though @command{nice}
-conforms to @command{POSIX}, its documentation and diagnostics use the
+conforms to @acronym{POSIX}, its documentation and diagnostics use the
 term ``niceness'' for compatibility with historical practice.
 
 @var{command} must not be a special built-in utility (@pxref{Special
