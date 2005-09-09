@@ -1,3 +1,8 @@
+2005-09-08  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (nice invocation): Document "niceness" versus
+	"nice value" versus "scheduling priority".
+
 2005-09-07  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (nice invocation): Use "niceness", not "nice value"

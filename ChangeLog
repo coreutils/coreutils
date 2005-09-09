@@ -1,6 +1,14 @@
-2005-09-09  Jim Meyering  <jim@meyering.net>
+2005-09-09  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1-cvs.
+
+	* NEWS: Document "niceness" vs "nice value".
+	* configure.ac (utils_cv_func_setpriority): Simplify the tests.
+	Define HAVE_NICE rather than NICE_PRIORITY (since a niceness is
+	not a priority); all uses changed.
+	* src/nice.c (main): Hoist errno=0 outside the ifdef.
+
+2005-09-09  Jim Meyering  <jim@meyering.net>
 
 	* tests/misc/date (neg-secs2, fill-1, fill-2): Add new tests.
 
