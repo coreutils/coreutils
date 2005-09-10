@@ -136,6 +136,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   permissions like =xX and =u, and did not properly diagnose some invalid
   strings like g+gr, ug,+x, and +1.  These bugs have been fixed.
 
+  csplit could produce corrupt output, given input lines longer than 8KB
+
   dd now computes statistics using a realtime clock (if available)
   rather than the time-of-day clock, to avoid glitches if the
   time-of-day is changed while dd is running.  Also, it avoids
