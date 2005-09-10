@@ -251,16 +251,12 @@ interrupt_handler (int sig)
 }
 
 /* Keep track of NUM bytes of a partial line in buffer START.
-   These bytes will be retrieved later when another large buffer is read.
-   It is not necessary to create a new buffer for these bytes; instead,
-   we keep a pointer to the existing buffer.  This buffer *is* on the
-   free list, and when the next buffer is obtained from this list
-   (even if it is this one), these bytes will be placed at the
-   start of the new buffer. */
+   These bytes will be retrieved later when another large buffer is read.  */
 
 static void
 save_to_hold_area (char *start, size_t num)
 {
+  free (hold_area);
   hold_area = start;
   hold_count = num;
 }
@@ -386,7 +382,7 @@ record_line_starts (struct buffer_record *b)
 	  lines++;
 	}
       else
-	save_to_hold_area (line_start, bytes_left);
+	save_to_hold_area (xmemdup (line_start, bytes_left), bytes_left);
     }
 
   b->num_lines = lines;
@@ -442,6 +438,7 @@ static void
 free_buffer (struct buffer_record *buf)
 {
   free (buf->buffer);
+  buf->buffer = NULL;
 }
 
 /* Append buffer BUF to the linked list of buffers that contain
@@ -495,7 +492,7 @@ load_buffer (void)
   if (bytes_wanted < hold_count)
     bytes_wanted = hold_count;
 
-  do
+  while (1)
     {
       b = get_new_buffer (bytes_wanted);
       bytes_avail = b->bytes_alloc; /* Size of buffer returned. */
@@ -504,8 +501,7 @@ load_buffer (void)
       /* First check the `holding' area for a partial line. */
       if (hold_count)
 	{
-	  if (p != hold_area)
-	    memcpy (p, hold_area, hold_count);
+	  memcpy (p, hold_area, hold_count);
 	  p += hold_count;
 	  b->bytes_used += hold_count;
 	  bytes_avail -= hold_count;
@@ -515,11 +511,18 @@ load_buffer (void)
       b->bytes_used += read_input (p, bytes_avail);
 
       lines_found = record_line_starts (b);
-      bytes_wanted = b->bytes_alloc * 2;
       if (!lines_found)
 	free_buffer (b);
+
+      if (lines_found || have_read_eof)
+	break;
+
+      if (xalloc_oversized (2, b->bytes_alloc))
+	xalloc_die ();
+      bytes_wanted = 2 * b->bytes_alloc;
+      free_buffer (b);
+      free (b);
     }
-  while (!lines_found && !have_read_eof);
 
   if (lines_found)
     save_buffer (b);
