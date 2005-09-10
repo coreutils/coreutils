@@ -1,6 +1,19 @@
-2005-09-09  Paul Eggert  <eggert@cs.ucla.edu>
+2005-09-10  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1-cvs.
+
+	csplit could produce corrupt output, given input lines longer than 8KB
+
+	* src/csplit.c (load_buffer): Don't read from free'd memory
+	when handling lines longer than the initial buffer length.
+	(save_to_hold_area): Don't leak the previous hold_area buffer.
+	Reported by Tristan Miller and Luke Kendall.
+	* NEWS: Mention this.
+
+	* src/csplit.c (load_buffer): Avoid integer overflow in buffer
+	size calculations for very long lines.
+
+2005-09-09  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Support regular expressions in 64-bit code correctly, by
 	importing the latest gnulib regexp code, and not assuming
