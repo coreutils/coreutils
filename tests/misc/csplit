@@ -86,4 +86,13 @@ EOF
 cmp err experr || fail=1
 test $fail = 1 && diff err experr 2> /dev/null
 
+# Ensure that lines longer than the initial buffer length don't cause
+# trouble (e.g. reading from freed memory, resulting in corrupt output).
+# This test failed at least in coreutils-5.2.1 and 5.3.0, and was fixed
+# in 5.3.1.
+rm -f in out exp err experr xx??
+printf 'x%8199s\nx\n%8199s\nx\n' x x > in
+csplit in '/x/' '{*}' > /dev/null || fail=1
+cat xx?? | cmp - in || fail=1
+
 (exit $fail); exit $fail
