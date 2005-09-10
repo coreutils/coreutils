@@ -9,6 +9,7 @@
 	(save_to_hold_area): Don't leak the previous hold_area buffer.
 	Reported by Tristan Miller and Luke Kendall.
 	* NEWS: Mention this.
+	* tests/misc/csplit: New test for this.
 
 	* src/csplit.c (load_buffer): Avoid integer overflow in buffer
 	size calculations for very long lines.
