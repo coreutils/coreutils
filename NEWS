@@ -106,7 +106,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   nice changes:
 
     Documentation and diagnostics now refer to "nicenesses" (commonly
-    in the range -20...19 rather than "nice values" (commonly 0...39).
+    in the range -20...19) rather than "nice values" (commonly 0...39).
 
   nohup changes:
 
