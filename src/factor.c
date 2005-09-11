@@ -85,8 +85,8 @@ Print the prime factors of each NUMBER.\n\
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
 \n\
-  Print the prime factors of all specified integer NUMBERs.  If no arguments\n\
-  are specified on the command line, they are read from standard input.\n\
+Print the prime factors of all specified integer NUMBERs.  If no arguments\n\
+are specified on the command line, they are read from standard input.\n\
 "), stdout);
       printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
