@@ -47,37 +47,47 @@ static bool show_date (const char *format, struct timespec when);
 
 enum Time_spec
 {
-  /* display only the date: 1999-03-25 */
-  TIME_SPEC_DATE=1,
-  /* display date and hour: 1999-03-25T03-0500 */
-  TIME_SPEC_HOURS,
-  /* display date, hours, and minutes: 1999-03-25T03:23-0500 */
-  TIME_SPEC_MINUTES,
-  /* display date, hours, minutes, and seconds: 1999-03-25T03:23:14-0500 */
+  /* Display only the date.  */
+  TIME_SPEC_DATE,
+  /* Display date, hours, minutes, and seconds.  */
   TIME_SPEC_SECONDS,
-  /* similar, but display nanoseconds: 1999-03-25T03:23:14,123456789-0500 */
-  TIME_SPEC_NS
+  /* Similar, but display nanoseconds. */
+  TIME_SPEC_NS,
+
+  /* Put these last, since they aren't valid for --rfc-3339.  */
+
+  /* Display date and hour.  */
+  TIME_SPEC_HOURS,
+  /* Display date, hours, and minutes.  */
+  TIME_SPEC_MINUTES
 };
 
 static char const *const time_spec_string[] =
 {
-  "date", "hours", "minutes", "seconds", "ns", NULL
+  /* Put "hours" and "minutes" first, since they aren't valid for
+     --rfc-3339.  */
+  "hours", "minutes",
+  "date", "seconds", "ns", NULL
 };
 static enum Time_spec const time_spec[] =
 {
-  TIME_SPEC_DATE, TIME_SPEC_HOURS, TIME_SPEC_MINUTES, TIME_SPEC_SECONDS,
-  TIME_SPEC_NS
+  TIME_SPEC_HOURS, TIME_SPEC_MINUTES,
+  TIME_SPEC_DATE, TIME_SPEC_SECONDS, TIME_SPEC_NS
 };
 ARGMATCH_VERIFY (time_spec_string, time_spec);
+
+/* A format suitable for Internet RFC 2822.  */
+static char const rfc_2822_format[] = "%a, %d %b %Y %H:%M:%S %z";
 
 /* The name this program was run with, for error messages. */
 char *program_name;
 
-/* If nonzero, display an ISO 8601 format date/time string */
-static int iso_8601_format = 0;
-
-/* If true, display time in RFC-(2)822 format for mail or news. */
-static bool rfc_format = false;
+/* For long options that have no equivalent short option, use a
+   non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
+enum
+{
+  RFC_3339_OPTION = CHAR_MAX + 1
+};
 
 static char const short_options[] = "d:f:I::r:Rs:u";
 
@@ -85,10 +95,11 @@ static struct option const long_options[] =
 {
   {"date", required_argument, NULL, 'd'},
   {"file", required_argument, NULL, 'f'},
-  {"iso-8601", optional_argument, NULL, 'I'},
+  {"iso-8601", optional_argument, NULL, 'I'}, /* Deprecated.  */
   {"reference", required_argument, NULL, 'r'},
   {"rfc-822", no_argument, NULL, 'R'},
   {"rfc-2822", no_argument, NULL, 'R'},
+  {"rfc-3339", required_argument, NULL, RFC_3339_OPTION},
   {"set", required_argument, NULL, 's'},
   {"uct", no_argument, NULL, 'u'},
   {"utc", no_argument, NULL, 'u'},
@@ -128,14 +139,13 @@ Display the current time in the given FORMAT, or set the system date.\n\
 \n\
   -d, --date=STRING         display time described by STRING, not `now'\n\
   -f, --file=DATEFILE       like --date once for each line of DATEFILE\n\
-  -I[TIMESPEC], --iso-8601[=TIMESPEC]  output date/time in ISO 8601 format.\n\
-                            TIMESPEC=`date' for date only (the default),\n\
-                            `hours', `minutes', `seconds', or `ns' for date and\n\
-                            time to the indicated precision.\n\
 "), stdout);
       fputs (_("\
   -r, --reference=FILE      display the last modification time of FILE\n\
-  -R, --rfc-2822            output RFC-2822 compliant date string\n\
+  -R, --rfc-2822            output date and time in RFC 2822 format\n\
+      --rfc-3339=TIMESPEC   output date and time in RFC 3339 format.\n\
+                            TIMESPEC=`date', `seconds', or `ns' for\n\
+                            date and time to the indicated precision.\n\
   -s, --set=STRING          set time described by STRING\n\
   -u, --utc, --universal    print or set Coordinated Universal Time\n\
 "), stdout);
@@ -206,7 +216,10 @@ specifies Coordinated Universal Time.  Interpreted sequences are:\n\
   %Y   year\n\
 "), stdout);
       fputs (_("\
-  %z   numeric timezone (e.g., -0400)\n\
+  %z   +hhmm numeric timezone (e.g., -0400)\n\
+  %:z  +hh:mm numeric timezone (e.g., -04:00)\n\
+  %::z +hh:mm:ss numeric time zone (e.g., -04:00:00)\n\
+  %:::z numeric time zone with : to necessary precision (e.g., -04, +05:30)\n\
   %Z   alphabetic time zone abbreviation (e.g., EDT)\n\
 \n\
 By default, date pads numeric fields with zeroes.\n\
@@ -299,11 +312,10 @@ main (int argc, char **argv)
   const char *set_datestr = NULL;
   struct timespec when;
   bool set_date = false;
-  char *format;
+  char const *format = NULL;
   char *batch_file = NULL;
   char *reference = NULL;
   struct stat refstats;
-  int n_args;
   bool ok;
   int option_specified_date;
 
@@ -317,45 +329,79 @@ main (int argc, char **argv)
 
   while ((optc = getopt_long (argc, argv, short_options, long_options, NULL))
 	 != -1)
-    switch (optc)
-      {
-      case 'd':
-	datestr = optarg;
-	break;
-      case 'f':
-	batch_file = optarg;
-	break;
-      case 'I':
-	iso_8601_format = (optarg
-			   ? XARGMATCH ("--iso-8601", optarg,
-					time_spec_string, time_spec)
-			   : TIME_SPEC_DATE);
-	break;
-      case 'r':
-	reference = optarg;
-	break;
-      case 'R':
-	rfc_format = true;
-	break;
-      case 's':
-	set_datestr = optarg;
-	set_date = true;
-	break;
-      case 'u':
-	/* POSIX says that `date -u' is equivalent to setting the TZ
-	   environment variable, so this option should do nothing other
-	   than setting TZ.  */
-	if (putenv ("TZ=UTC0") != 0)
-	  xalloc_die ();
-	TZSET;
-	break;
-      case_GETOPT_HELP_CHAR;
-      case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
-      default:
-	usage (EXIT_FAILURE);
-      }
+    {
+      char const *new_format = NULL;
 
-  n_args = argc - optind;
+      switch (optc)
+	{
+	case 'd':
+	  datestr = optarg;
+	  break;
+	case 'f':
+	  batch_file = optarg;
+	  break;
+	case RFC_3339_OPTION:
+	  {
+	    static char const rfc_3339_format[][32] =
+	      {
+		"%Y-%m-%d",
+		"%Y-%m-%d %H:%M:%S%:z",
+		"%Y-%m-%d %H:%M:%S.%N%:z"
+	      };
+	    enum Time_spec i =
+	      XARGMATCH ("--rfc-3339", optarg,
+			 time_spec_string + 2, time_spec + 2);
+	    new_format = rfc_3339_format[i];
+	    break;
+	  }
+	case 'I':
+	  {
+	    static char const iso_8601_format[][32] =
+	      {
+		"%Y-%m-%d",
+		"%Y-%m-%dT%H:%M:%S%z",
+		"%Y-%m-%dT%H:%M:%S,%N%z",
+		"%Y-%m-%dT%H%z",
+		"%Y-%m-%dT%H:%M%z"
+	      };
+	    enum Time_spec i =
+	      (optarg
+	       ? XARGMATCH ("--iso-8601", optarg, time_spec_string, time_spec)
+	       : TIME_SPEC_DATE);
+	    new_format = iso_8601_format[i];
+	    break;
+	  }
+	case 'r':
+	  reference = optarg;
+	  break;
+	case 'R':
+	  new_format = rfc_2822_format;
+	  break;
+	case 's':
+	  set_datestr = optarg;
+	  set_date = true;
+	  break;
+	case 'u':
+	  /* POSIX says that `date -u' is equivalent to setting the TZ
+	     environment variable, so this option should do nothing other
+	     than setting TZ.  */
+	  if (putenv ("TZ=UTC0") != 0)
+	    xalloc_die ();
+	  TZSET;
+	  break;
+	case_GETOPT_HELP_CHAR;
+	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+	default:
+	  usage (EXIT_FAILURE);
+	}
+
+      if (new_format)
+	{
+	  if (format)
+	    error (EXIT_FAILURE, 0, _("multiple output formats specified"));
+	  format = new_format;
+	}
+    }
 
   option_specified_date = ((datestr ? 1 : 0)
 			   + (batch_file ? 1 : 0)
@@ -375,37 +421,49 @@ main (int argc, char **argv)
       usage (EXIT_FAILURE);
     }
 
-  if (n_args > 1)
+  if (optind < argc)
     {
-      error (0, 0, _("extra operand %s"), quote (argv[optind + 1]));
-      usage (EXIT_FAILURE);
+      if (optind + 1 < argc)
+	{
+	  error (0, 0, _("extra operand %s"), quote (argv[optind + 1]));
+	  usage (EXIT_FAILURE);
+	}
+
+      if (argv[optind][0] == '+')
+	{
+	  if (format)
+	    error (EXIT_FAILURE, 0, _("multiple output formats specified"));
+	  format = argv[optind++] + 1;
+	}
+      else if (set_date || option_specified_date)
+	{
+	  error (0, 0,
+		 _("the argument %s lacks a leading `+';\n"
+		   "When using an option to specify date(s), any non-option\n"
+		   "argument must be a format string beginning with `+'."),
+		 quote (argv[optind]));
+	  usage (EXIT_FAILURE);
+	}
     }
 
-  if ((set_date || option_specified_date)
-      && n_args == 1 && argv[optind][0] != '+')
+  if (!format)
     {
-      error (0, 0, _("\
-the argument %s lacks a leading `+';\n\
-When using an option to specify date(s), any non-option\n\
-argument must be a format string beginning with `+'."),
-	     quote (argv[optind]));
-      usage (EXIT_FAILURE);
+      format = DATE_FMT_LANGINFO ();
+      if (! *format)
+	{
+	  /* Do not wrap the following literal format string with _(...).
+	     For example, suppose LC_ALL is unset, LC_TIME="POSIX",
+	     and LANG="ko_KR".  In that case, POSIX says that LC_TIME
+	     determines the format and contents of date and time strings
+	     written by date, which means "date" must generate output
+	     using the POSIX locale; but adding _() would cause "date"
+	     to use a Korean translation of the format.  */
+	  format = "%a %b %e %H:%M:%S %Z %Y";
+	}
     }
-
-  /* Simply ignore --rfc-2822 if specified when setting the date.  */
-  if (rfc_format && !set_date && n_args > 0)
-    {
-      error (0, 0,
-	     _("a format string may not be specified when using\
- the --rfc-2822 (-R) option"));
-      usage (EXIT_FAILURE);
-    }
-
-  if (set_date)
-    datestr = set_datestr;
 
   if (batch_file != NULL)
-    ok = batch_convert (batch_file, (n_args == 1 ? argv[optind] + 1 : NULL));
+    ok = batch_convert (batch_file, format);
   else
     {
       bool valid_date = true;
@@ -413,7 +471,7 @@ argument must be a format string beginning with `+'."),
 
       if (!option_specified_date && !set_date)
 	{
-	  if (n_args == 1 && argv[optind][0] != '+')
+	  if (optind < argc)
 	    {
 	      /* Prepare to set system clock to the specified date/time
 		 given in the POSIX-format.  */
@@ -424,14 +482,11 @@ argument must be a format string beginning with `+'."),
 				      (PDS_TRAILING_YEAR
 				       | PDS_CENTURY | PDS_SECONDS));
 	      when.tv_nsec = 0; /* FIXME: posixtime should set this.  */
-	      format = NULL;
 	    }
 	  else
 	    {
 	      /* Prepare to print the current date/time.  */
-	      datestr = _("undefined");
 	      gettime (&when);
-	      format = (n_args == 1 ? argv[optind] + 1 : NULL);
 	    }
 	}
       else
@@ -446,10 +501,10 @@ argument must be a format string beginning with `+'."),
 	    }
 	  else
 	    {
+	      if (set_datestr)
+		datestr = set_datestr;
 	      valid_date = get_date (&when, datestr, NULL);
 	    }
-
-	  format = (n_args == 1 ? argv[optind] + 1 : NULL);
 	}
 
       if (! valid_date)
@@ -481,35 +536,6 @@ static bool
 show_date (const char *format, struct timespec when)
 {
   struct tm *tm;
-  /* ISO 8601 formats.  See below regarding %z */
-  static char const * const iso_format_string[] =
-  {
-    "%Y-%m-%d",
-    "%Y-%m-%dT%H%z",
-    "%Y-%m-%dT%H:%M%z",
-    "%Y-%m-%dT%H:%M:%S%z",
-    "%Y-%m-%dT%H:%M:%S,%N%z"
-  };
-
-  if (format == NULL)
-    {
-      if (rfc_format)
-	format = "%a, %d %b %Y %H:%M:%S %z";
-      else if (iso_8601_format)
-	format = iso_format_string[iso_8601_format - 1];
-      else
-	{
-	  char *date_fmt = DATE_FMT_LANGINFO ();
-	  /* Do not wrap the following literal format string with _(...).
-	     For example, suppose LC_ALL is unset, LC_TIME="POSIX",
-	     and LANG="ko_KR".	In that case, POSIX says that LC_TIME
-	     determines the format and contents of date and time strings
-	     written by date, which means "date" must generate output
-	     using the POSIX locale; but adding _() would cause "date"
-	     to use a Korean translation of the format.  */
-	  format = *date_fmt ? date_fmt : "%a %b %e %H:%M:%S %Z %Y";
-	}
-    }
 
   tm = localtime (&when.tv_sec);
   if (! tm)
@@ -525,10 +551,10 @@ show_date (const char *format, struct timespec when)
   {
     char *out;
 
-    if (rfc_format)
+    if (format == rfc_2822_format)
       setlocale (LC_TIME, "C");
     out = xanstrftime (format, tm, 0, when.tv_nsec);
-    if (rfc_format)
+    if (format == rfc_2822_format)
       setlocale (LC_TIME, "");
 
     puts (out);
