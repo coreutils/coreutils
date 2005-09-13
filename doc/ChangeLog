@@ -1,3 +1,12 @@
+2005-09-13  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (Time conversion specifiers, Options for date):
+	Document date --rfc-3339 and new specifiers %:z, %::z, %:::z.  Use
+	"date and time" consistently; the old version sometimes said "time
+	and date".  Fix a minor bug in the documentation for --rfc-2822:
+	it claimed day-of-month < 10 had leading space, not leading zero.
+	Use a consistent format for terms like "RFC".
+
 2005-09-08  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (nice invocation): Document "niceness" versus

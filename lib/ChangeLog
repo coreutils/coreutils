@@ -1,3 +1,8 @@
+2005-09-13  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* strftime.c (my_strftime): Add support for %:z, %::z, %:::z.
+	Fix bug in formats like %2N.
+
 2005-09-13  Jim Meyering  <jim@meyering.net>
 
 	* xalloc.h: Revert unintended change that removed definitions
@@ -68,6 +73,12 @@
 	label so that it precedes the code to set `digits'.  Otherwise,
 	%0Ns wouldn't work.  Before this change, `date -d @-22 +%05s' would
 	print `00-22'.  Now, it prints `-0022', as it should.
+
+2005-08-15  Bruno Haible  <bruno@clisp.org>
+
+	Import from gnulib.
+	* regex.h (__restrict_arr): Don't define to __restrict if __cplusplus
+	is defined.
 
 2005-08-13  Jim Meyering  <jim@meyering.net>
 

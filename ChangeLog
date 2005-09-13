@@ -1,3 +1,28 @@
+2005-09-13  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* NEWS: date has a new --rfc-3339 option, and the old --iso-8601
+	option is deprecated.  date and ls also have new time format
+	specifiers %:z, %::z, %:::z.
+	* src/date.c (TIME_SPEC_DATE): No longer needs to be nonzero, so
+	remove the "=1".
+	(TIME_SOEC_HOURS, TIME_SPEC_MINUTES): Must be at end now, so put
+	them there.
+	(time_spec_string, time_spec): Hours and minutes must be at
+	start now, so put them there.
+	(rfc_2822_format): Now a string constant, not a boolean.  All uses
+	changed.
+	(iso_8601_format, rfc_format): Remove.
+	(RFC_3339_OPTION): New constant.
+	(long_options): Add --rfc-3339.
+	(usage): Add --rfc-3339.  Don't mention --iso-8601.
+	Mention %:z, %::z, %:::z.
+	(main): Simplify calculation of 'format'; it was getting too hairy
+	to follow.  Add --rfc-3339.
+	(show_date): Assume format arg is not NULL, which is the case
+	now.  The default code is moved to 'main'.  This simplifies things
+	and allows the default to be calculated just once.
+	* tests/misc/date: Add tests for --rfc-3339.
+
 2005-09-13  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1-cvs.
