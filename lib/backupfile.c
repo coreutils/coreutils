@@ -332,7 +332,7 @@ find_backup_file_name (char const *file, enum backup_type backup_type)
 
 static char const * const backup_args[] =
 {
-  /* In a series of synonyms, present the most meaning full first, so
+  /* In a series of synonyms, present the most meaningful first, so
      that argmatch_valid be more readable. */
   "none", "off",
   "simple", "never",
@@ -348,6 +348,10 @@ static const enum backup_type backup_types[] =
   numbered_existing_backups, numbered_existing_backups,
   numbered_backups, numbered_backups
 };
+
+/* Ensure that these two vectors have the same number of elements,
+   not counting the final NULL in the first one.  */
+ARGMATCH_VERIFY (backup_args, backup_types);
 
 /* Return the type of backup specified by VERSION.
    If VERSION is NULL or the empty string, return numbered_existing_backups.
