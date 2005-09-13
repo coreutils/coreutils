@@ -278,7 +278,7 @@ strftime-check:
 # to emit a definition for each substituted variable.
 makefile-check:
 	grep -E '@[A-Z_0-9]+@' `find . -name Makefile.am` \
-	  && { echo 'Makefile.maint: use $(...), not @...@' 1>&2; exit 1; } || :
+	  && { echo 'Makefile.maint: use $$(...), not @...@' 1>&2; exit 1; } || :
 
 news-date-check: NEWS
 	today=`date +%Y-%m-%d`;	\
