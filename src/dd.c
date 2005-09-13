@@ -81,11 +81,18 @@ static void process_signals (void);
 /* Default input and output blocksize. */
 #define DEFAULT_BLOCKSIZE 512
 
-/* Maximum blocksize.  Keep it smaller than SIZE_MAX, so that we can
+/* How many bytes to add to the input and output block sizes before invoking
+   malloc.  See dd_copy for details.  INPUT_BLOCK_SLOP must be no less than
+   OUTPUT_BLOCK_SLOP.  */
+#define INPUT_BLOCK_SLOP (2 * SWAB_ALIGN_OFFSET + 2 * page_size - 1)
+#define OUTPUT_BLOCK_SLOP (page_size - 1)
+
+/* Maximum blocksize for the given SLOP.
+   Keep it smaller than SIZE_MAX - SLOP, so that we can
    allocate buffers that size.  Keep it smaller than SSIZE_MAX, for
    the benefit of system calls like "read".  And keep it smaller than
    OFF_T_MAX, for the benefit of the large-offset seek code.  */
-#define MAX_BLOCKSIZE MIN (SIZE_MAX, MIN (SSIZE_MAX, OFF_T_MAX))
+#define MAX_BLOCKSIZE(slop) MIN (SIZE_MAX - (slop), MIN (SSIZE_MAX, OFF_T_MAX))
 
 /* Conversions bit masks. */
 enum
@@ -127,6 +134,9 @@ static char const *input_file = NULL;
 
 /* The name of the output file, or NULL for the standard output. */
 static char const *output_file = NULL;
+
+/* The page size on this host.  */
+static size_t page_size;
 
 /* The number of bytes in which atomic reads are done. */
 static size_t input_blocksize = 0;
@@ -883,26 +893,25 @@ scanargs (int argc, char **argv)
 
 	  if (STREQ (name, "ibs"))
 	    {
-	      invalid |= ! (0 < n && n <= MAX_BLOCKSIZE);
+	      invalid |= ! (0 < n && n <= MAX_BLOCKSIZE (INPUT_BLOCK_SLOP));
 	      input_blocksize = n;
 	      conversions_mask |= C_TWOBUFS;
 	    }
 	  else if (STREQ (name, "obs"))
 	    {
-	      invalid |= ! (0 < n && n <= MAX_BLOCKSIZE);
+	      invalid |= ! (0 < n && n <= MAX_BLOCKSIZE (OUTPUT_BLOCK_SLOP));
 	      output_blocksize = n;
 	      conversions_mask |= C_TWOBUFS;
 	    }
 	  else if (STREQ (name, "bs"))
 	    {
-	      invalid |= ! (0 < n && n <= MAX_BLOCKSIZE);
+	      invalid |= ! (0 < n && n <= MAX_BLOCKSIZE (INPUT_BLOCK_SLOP));
 	      output_blocksize = input_blocksize = n;
 	    }
 	  else if (STREQ (name, "cbs"))
 	    {
+	      invalid |= ! (0 < n && n <= SIZE_MAX);
 	      conversion_blocksize = n;
-	      invalid |= (conversion_blocksize != n
-			  || conversion_blocksize == 0);
 	    }
 	  else if (STREQ (name, "skip"))
 	    skip_records = n;
@@ -1116,14 +1125,14 @@ static uintmax_t
 skip (int fdesc, char const *file, uintmax_t records, size_t blocksize,
       char *buf)
 {
-  off_t offset = records * blocksize;
+  uintmax_t offset = records * blocksize;
 
   /* Try lseek and if an error indicates it was an inappropriate operation --
      or if the the file offset is not representable as an off_t --
      fall back on using read.  */
 
   errno = 0;
-  if ((uintmax_t) offset / blocksize == records
+  if (records <= OFF_T_MAX / blocksize
       && 0 <= skip_via_lseek (file, fdesc, offset, SEEK_CUR))
     {
       if (fdesc == STDIN_FILENO)
@@ -1332,7 +1341,6 @@ dd_copy (void)
   size_t partread = 0;
 
   int exit_status = EXIT_SUCCESS;
-  size_t page_size = getpagesize ();
   size_t n_bytes_read;
 
   /* Leave at least one extra byte at the beginning and end of `ibuf'
@@ -1352,9 +1360,7 @@ dd_copy (void)
      It is necessary when accessing raw (i.e. character special) disk
      devices on Unixware or other SVR4-derived system.  */
 
-  real_buf = xmalloc (input_blocksize
-		      + 2 * SWAB_ALIGN_OFFSET
-		      + 2 * page_size - 1);
+  real_buf = xmalloc (input_blocksize + INPUT_BLOCK_SLOP);
   ibuf = real_buf;
   ibuf += SWAB_ALIGN_OFFSET;	/* allow space for swab */
 
@@ -1363,7 +1369,7 @@ dd_copy (void)
   if (conversions_mask & C_TWOBUFS)
     {
       /* Page-align the output buffer, too.  */
-      real_obuf = xmalloc (output_blocksize + page_size - 1);
+      real_obuf = xmalloc (output_blocksize + OUTPUT_BLOCK_SLOP);
       obuf = ptr_align (real_obuf, page_size);
     }
   else
@@ -1587,6 +1593,8 @@ main (int argc, char **argv)
   /* Arrange to close stdout if parse_long_options exits.  */
   atexit (close_stdout);
 
+  page_size = getpagesize ();
+
   parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE, VERSION,
 		      usage, AUTHORS, (char const *) NULL);
   if (getopt_long (argc, argv, "", NULL, NULL) != -1)
@@ -1643,28 +1651,30 @@ main (int argc, char **argv)
 #if HAVE_FTRUNCATE
       if (seek_records != 0 && !(conversions_mask & C_NOTRUNC))
 	{
-	  struct stat stdout_stat;
-	  off_t o = seek_records * output_blocksize;
-	  uintmax_t uo = o;
-	  if (uo / output_blocksize != seek_records)
-	    error (EXIT_FAILURE, 0, _("file offset out of range"));
+	  uintmax_t size = seek_records * output_blocksize;
 
-	  if (fstat (STDOUT_FILENO, &stdout_stat) != 0)
-	    error (EXIT_FAILURE, errno, _("cannot fstat %s"),
-		   quote (output_file));
+	  if (OFF_T_MAX / output_blocksize < seek_records)
+	    error (EXIT_FAILURE, EOVERFLOW, "seek=%"PRIuMAX"", seek_records);
 
-	  /* Complain only when ftruncate fails on a regular file, a
-	     directory, or a shared memory object, as
-	     POSIX 1003.1-2004 specifies ftruncate's behavior only for these
-	     file types.  For example, do not complain when Linux 2.4
-	     ftruncate fails on /dev/fd0.  */
-	  if (ftruncate (STDOUT_FILENO, o) != 0
-	      && (S_ISREG (stdout_stat.st_mode)
+	  if (ftruncate (STDOUT_FILENO, size) != 0)
+	    {
+	      /* Complain only when ftruncate fails on a regular file, a
+		 directory, or a shared memory object, as POSIX 1003.1-2004
+		 specifies ftruncate's behavior only for these file types.
+		 For example, do not complain when Linux 2.4 ftruncate
+		 fails on /dev/fd0.  */
+	      int ftruncate_errno = errno;
+	      struct stat stdout_stat;
+	      if (fstat (STDOUT_FILENO, &stdout_stat) != 0)
+		error (EXIT_FAILURE, errno, _("cannot fstat %s"),
+		       quote (output_file));
+	      if (S_ISREG (stdout_stat.st_mode)
 		  || S_ISDIR (stdout_stat.st_mode)
-		  || S_TYPEISSHM (&stdout_stat)))
-	    error (EXIT_FAILURE, errno,
-		   _("advancing past %"PRIuMAX" bytes in output file %s"),
-		   uo, quote (output_file));
+		  || S_TYPEISSHM (&stdout_stat))
+		error (EXIT_FAILURE, ftruncate_errno,
+		       _("truncating at %"PRIuMAX" bytes in output file %s"),
+		       size, quote (output_file));
+	    }
 	}
 #endif
     }
