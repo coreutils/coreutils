@@ -6,6 +6,8 @@
 	and date".  Fix a minor bug in the documentation for --rfc-2822:
 	it claimed day-of-month < 10 had leading space, not leading zero.
 	Use a consistent format for terms like "RFC".
+	(uname invocation): Mention that Linux outputs "unknown" for
+	-i and -p.
 
 2005-09-08  Paul Eggert  <eggert@cs.ucla.edu>
 
