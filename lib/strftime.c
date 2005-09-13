@@ -480,8 +480,11 @@ my_strftime (CHAR_T *s, size_t maxsize, const CHAR_T *format,
       int digits;		/* Max digits for numeric format.  */
       int number_value;		/* Numeric value to be printed.  */
       unsigned int u_number_value; /* (unsigned int) number_value.  */
-      bool negative_number;	/* 1 if the number is negative.  */
+      bool negative_number;	/* The number is negative.  */
+      bool always_output_a_sign; /* +/- should always be output.  */
+      int tz_colon_mask;	/* Bitmask of where ':' should appear.  */
       const CHAR_T *subfmt;
+      CHAR_T sign_char;
       CHAR_T *bufp;
       CHAR_T buf[1 + (sizeof (int) < sizeof (time_t)
 		      ? INT_STRLEN_BOUND (time_t)
@@ -489,6 +492,7 @@ my_strftime (CHAR_T *s, size_t maxsize, const CHAR_T *format,
       int width = -1;
       bool to_lowcase = false;
       bool to_uppcase = false;
+      size_t colons = 0;
       bool change_case = false;
       int format_char;
 
@@ -592,6 +596,11 @@ my_strftime (CHAR_T *s, size_t maxsize, const CHAR_T *format,
 	      pad = *f;
 	      continue;
 
+	      /* This influences the %z format.  */
+	    case L_(':'):
+	      colons++;
+	      continue;
+
 	      /* This changes textual output.  */
 	    case L_('^'):
 	      to_uppcase = true;
@@ -650,6 +659,11 @@ my_strftime (CHAR_T *s, size_t maxsize, const CHAR_T *format,
 	  digits = d;							      \
 	  negative_number = negative;					      \
 	  u_number_value = v; goto do_signed_number
+#define DO_TZ_OFFSET(d, negative, mask, v) \
+	  digits = d;							      \
+	  negative_number = negative;					      \
+	  tz_colon_mask = mask;						      \
+	  u_number_value = v; goto do_tz_offset
 #define DO_NUMBER_SPACEPAD(d, v) \
 	  digits = d;							      \
 	  number_value = v; goto do_number_spacepad
@@ -857,6 +871,10 @@ my_strftime (CHAR_T *s, size_t maxsize, const CHAR_T *format,
 	  /* All numeric formats set DIGITS and NUMBER_VALUE (or U_NUMBER_VALUE)
 	     and then jump to one of these three labels.  */
 
+	do_tz_offset:
+	  always_output_a_sign = true;
+	  goto do_number_body;
+
 	do_number_spacepad:
 	  /* Force `_' flag unless overridden by `0' or `-' flag.  */
 	  if (pad != L_('0') && pad != L_('-'))
@@ -868,6 +886,10 @@ my_strftime (CHAR_T *s, size_t maxsize, const CHAR_T *format,
 	  u_number_value = number_value;
 
 	do_signed_number:
+	  always_output_a_sign = false;
+	  tz_colon_mask = 0;
+
+	do_number_body:
 	  /* Format U_NUMBER_VALUE according to the MODIFIER flag.
 	     NEGATIVE_NUMBER is nonzero if the original number was
 	     negative; in this case it was converted directly to
@@ -904,17 +926,24 @@ my_strftime (CHAR_T *s, size_t maxsize, const CHAR_T *format,
 
 	  do
 	    {
+	      if (tz_colon_mask & 1)
+		*--bufp = ':';
+	      tz_colon_mask >>= 1;
 	      *--bufp = u_number_value % 10 + L_('0');
 	      u_number_value /= 10;
 	    }
-	  while (u_number_value != 0);
+	  while (u_number_value != 0 || tz_colon_mask != 0);
 
 	do_number_sign_and_padding:
 	  if (digits < width)
 	    digits = width;
 
-	  if (negative_number)
-	    *--bufp = L_('-');
+	  sign_char = (negative_number ? L_('-')
+		       : always_output_a_sign ? L_('+')
+		       : 0);
+
+	  if (sign_char)
+	      *--bufp = sign_char;
 
 	  if (pad != L_('-'))
 	    {
@@ -938,12 +967,12 @@ my_strftime (CHAR_T *s, size_t maxsize, const CHAR_T *format,
 		      if ((size_t) digits >= maxsize - i)
 			return 0;
 
-		      if (negative_number)
+		      if (sign_char)
 			{
 			  ++bufp;
 
 			  if (p)
-			    *p++ = L_('-');
+			    *p++ = sign_char;
 			  ++i;
 			}
 
@@ -1012,7 +1041,9 @@ my_strftime (CHAR_T *s, size_t maxsize, const CHAR_T *format,
 	    goto bad_format;
 
 	  number_value = ns;
-	  if (width != -1)
+	  if (width == -1)
+	    width = 9;
+	  else
 	    {
 	      /* Take an explicit width less than 9 as a precision.  */
 	      int j;
@@ -1020,7 +1051,7 @@ my_strftime (CHAR_T *s, size_t maxsize, const CHAR_T *format,
 		number_value /= 10;
 	    }
 
-	  DO_NUMBER (9, number_value);
+	  DO_NUMBER (width, number_value);
 #endif
 
 	case L_('n'):
@@ -1093,6 +1124,7 @@ my_strftime (CHAR_T *s, size_t maxsize, const CHAR_T *format,
 	    while (t != 0);
 
 	    digits = 1;
+	    always_output_a_sign = false;
 	    goto do_number_sign_and_padding;
 	  }
 
@@ -1286,6 +1318,9 @@ my_strftime (CHAR_T *s, size_t maxsize, const CHAR_T *format,
 
 	  {
 	    int diff;
+	    int hour_diff;
+	    int min_diff;
+	    int sec_diff;
 #if HAVE_TM_GMTOFF
 	    diff = tp->tm_gmtoff;
 #else
@@ -1324,16 +1359,32 @@ my_strftime (CHAR_T *s, size_t maxsize, const CHAR_T *format,
 	      }
 #endif
 
-	    if (diff < 0)
-	      {
-		add (1, *p = L_('-'));
-		diff = -diff;
-	      }
-	    else
-	      add (1, *p = L_('+'));
+	    hour_diff = diff / 60 / 60;
+	    min_diff = diff / 60 % 60;
+	    sec_diff = diff % 60;
 
-	    diff /= 60;
-	    DO_NUMBER (4, (diff / 60) * 100 + diff % 60);
+	    switch (colons)
+	      {
+	      case 0: /* +hhmm */
+		DO_TZ_OFFSET (5, diff < 0, 0, hour_diff * 100 + min_diff);
+
+	      case 1: tz_hh_mm: /* +hh:mm */
+		DO_TZ_OFFSET (6, diff < 0, 04, hour_diff * 100 + min_diff);
+
+	      case 2: tz_hh_mm_ss: /* +hh:mm:ss */
+		DO_TZ_OFFSET (9, diff < 0, 044,
+			      hour_diff * 10000 + min_diff * 100 + sec_diff);
+
+	      case 3: /* +hh if possible, else +hh:mm, else +hh:mm:ss */
+		if (sec_diff != 0)
+		  goto tz_hh_mm_ss;
+		if (min_diff != 0)
+		  goto tz_hh_mm;
+		DO_TZ_OFFSET (3, diff < 0, 0, hour_diff);
+
+	      default:
+		goto bad_format;
+	      }
 	  }
 
 	case L_('\0'):		/* GNU extension: % at end of format.  */
