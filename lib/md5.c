@@ -57,7 +57,6 @@
 #endif
 
 #define BLOCKSIZE 4096
-/* Ensure that BLOCKSIZE is a multiple of 64.  */
 #if BLOCKSIZE % 64 != 0
 # error "invalid BLOCKSIZE"
 #endif
@@ -334,15 +333,22 @@ md5_process_block (const void *buffer, size_t len, struct md5_ctx *ctx)
         {								\
 	  a += FF (b, c, d) + (*cwp++ = SWAP (*words)) + T;		\
 	  ++words;							\
-	  a = rol (a, s);						\
+	  CYCLIC (a, s);						\
 	  a += b;							\
         }								\
       while (0)
 
+      /* It is unfortunate that C does not provide an operator for
+	 cyclic rotation.  Hope the C compiler is smart enough.  */
+#define CYCLIC(w, s) (w = (w << s) | (w >> (32 - s)))
+
       /* Before we start, one word to the strange constants.
 	 They are defined in RFC 1321 as
 
-	 T[i] = (int) (4294967296.0 * fabs (sin (i))), i=1..64, or
+	 T[i] = (int) (4294967296.0 * fabs (sin (i))), i=1..64
+
+	 Here is an equivalent invocation using Perl:
+
 	 perl -e 'foreach(1..64){printf "0x%08x\n", int (4294967296 * abs (sin $_))}'
        */
 
@@ -372,7 +378,7 @@ md5_process_block (const void *buffer, size_t len, struct md5_ctx *ctx)
       do								\
 	{								\
 	  a += f (b, c, d) + correct_words[k] + T;			\
-	  a = rol (a, s);						\
+	  CYCLIC (a, s);						\
 	  a += b;							\
 	}								\
       while (0)
