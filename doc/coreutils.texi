@@ -11593,7 +11593,7 @@ is not set.  @xref{TZ Variable,, Specifying the Time Zone with
 @cindex time formats
 @cindex formatting times
 If given an argument that starts with a @samp{+}, @command{date} prints the
-current time and date (or the time and date specified by the
+current date and time (or the date and time specified by the
 @option{--date} option, see below) in the format defined by that argument,
 which is similar to that of the @code{strftime} function.  Except for
 conversion specifiers, which start with @samp{%}, characters in the
@@ -11664,13 +11664,28 @@ This may be @samp{60} if leap seconds are supported.
 @item %X
 locale's time representation (e.g., @samp{23:13:48})
 @item %z
-@w{RFC 2822/ISO 8601} style numeric time zone (e.g., @samp{-0600}
-or @samp{+0100}), or nothing if no
+@w{@acronym{RFC} 2822/@acronym{ISO} 8601} style numeric time zone
+(e.g., @samp{-0600} or @samp{+0530}), or nothing if no
 time zone is determinable.  This value reflects the numeric time zone
 appropriate for the current time, using the time zone rules specified
 by the @env{TZ} environment variable.
 The time (and optionally, the time zone rules) can be overridden
 by the @option{--date} option.
+This is a @acronym{GNU} extension.
+@item %:z
+@w{@acronym{RFC} 3339/@acronym{ISO} 8601} style numeric time zone with
+@samp{:} (e.g., @samp{-06:00} or @samp{+05:30}), or nothing if no time
+zone is determinable.
+This is a @acronym{GNU} extension.
+@item %::z
+Numeric time zone to the nearest second with @samp{:} (e.g.,
+@samp{-06:00:00} or @samp{+05:30:00}), or nothing if no time zone is
+determinable.
+This is a @acronym{GNU} extension.
+@item %:::z
+Numeric time zone with @samp{:} using the minimum necessary precision
+(e.g., @samp{-06}, @samp{+05:30}, or @samp{-04:56:02}), or nothing if
+no time zone is determinable.
 This is a @acronym{GNU} extension.
 @item %Z
 alphabetic time zone abbreviation (e.g., @samp{EDT}), or nothing if no
@@ -11860,11 +11875,11 @@ is available, it is ignored.
 @cindex appropriate privileges
 
 If given an argument that does not start with @samp{+}, @command{date} sets
-the system clock to the time and date specified by that argument (as
+the system clock to the date and time specified by that argument (as
 described below).  You must have appropriate privileges to set the
 system clock.  The @option{--date} and @option{--set} options may not be
 used with such an argument.  The @option{--universal} option may be used
-with such an argument to indicate that the specified time and date are
+with such an argument to indicate that the specified date and time are
 relative to Coordinated Universal Time rather than to the local time
 zone.
 
@@ -11912,8 +11927,8 @@ The program accepts the following options.  Also see @ref{Common options}.
 @opindex tomorrow
 @opindex next @var{day}
 @opindex last @var{day}
-Display the time and date specified in @var{datestr} instead of the
-current time and date.  @var{datestr} can be in almost any common
+Display the date and time specified in @var{datestr} instead of the
+current date and time.  @var{datestr} can be in almost any common
 format.  It can contain month names, time zones, @samp{am} and @samp{pm},
 @samp{yesterday}, etc.  For example, @option{--date="2004-02-27
 14:19:13.489392193 +0530"} specifies the instant of time that is
@@ -11926,38 +11941,17 @@ time zone that is 5 hours and 30 minutes east of @acronym{UTC}.
 @opindex -f
 @opindex --file
 Parse each line in @var{datefile} as with @option{-d} and display the
-resulting time and date.  If @var{datefile} is @samp{-}, use standard
+resulting date and time.  If @var{datefile} is @samp{-}, use standard
 input.  This is useful when you have many dates to process, because the
 system overhead of starting up the @command{date} executable many times can
 be considerable.
 
-@item -I[@var{timespec}]
-@itemx --iso-8601[=@var{timespec}]
-@opindex -I[@var{timespec}]
-@opindex --iso-8601[=@var{timespec}]
-Display the date using the @acronym{ISO} 8601 format, @samp{%Y-%m-%d}.
-
-The argument @var{timespec} specifies the number of additional
-terms of the time to include.  It can be one of the following:
-@table @samp
-@item auto
-Print just the date.  This is the default if @var{timespec} is omitted.
-
-@item hours
-Append the hour of the day to the date.
-
-@item minutes
-Append the hours and minutes.
-
-@item seconds
-Append the hours, minutes, and seconds.
-
-@item ns
-Append the hours, minutes, seconds, and nanoseconds.
-@end table
-
-If showing any time terms, then include the time zone using the format
-@samp{%z}.
+@item -r @var{file}
+@itemx --reference=@var{file}
+@opindex -r
+@opindex --reference
+Display the date and time of the last modification of @var{file},
+instead of the current date and time.
 
 @item -R
 @itemx --rfc-822
@@ -11965,31 +11959,58 @@ If showing any time terms, then include the time zone using the format
 @opindex -R
 @opindex --rfc-822
 @opindex --rfc-2822
-Display the time and date using the format @samp{%a, %d %b %Y %H:%M:%S
+Display the date and time using the format @samp{%a, %d %b %Y %H:%M:%S
 %z}, evaluated in the C locale so abbreviations are always in English.
 For example:
 
 @example
-Fri,@ @ 1 Aug 2003 23:05:56 -0700
+Fri, 09 Sep 2005 13:51:39 -0700
 @end example
 
 This format conforms to
-@uref{ftp://ftp.rfc-editor.org/in-notes/rfc2822.txt, RFC 2822} and
-@uref{ftp://ftp.rfc-editor.org/in-notes/rfc822.txt, RFC 822}, the
+@uref{ftp://ftp.rfc-editor.org/in-notes/rfc2822.txt, Internet
+@acronym{RFCs} 2822} and
+@uref{ftp://ftp.rfc-editor.org/in-notes/rfc822.txt, 822}, the
 current and previous standards for Internet email.
 
-@item -r @var{file}
-@itemx --reference=@var{file}
-@opindex -r
-@opindex --reference
-Display the time and date reference according to the last modification
-time of @var{file}, instead of the current time and date.
+@item --rfc-3339=@var{timespec}
+@opindex --rfc-3339=@var{timespec}
+Display the date using a format specified by
+@uref{ftp://ftp.rfc-editor.org/in-notes/rfc3339.txt, Internet
+@acronym{RFC} 3339}.  This is a subset of the @acronym{ISO} 8601
+format, except that it also permits applications to use a space rather
+than a @samp{T} to separate dates from times.  Unlike the other
+standard formats, @acronym{RFC} 3339 format is always suitable as
+input for the @option{--date} (@option{-d}) and @option{--file}
+(@option{-f}) options, regardless of the current locale.
+
+The argument @var{timespec} specifies how much of the time to include.
+It can be one of the following:
+
+@table @samp
+@item date
+Print just the full-date, e.g., @samp{2005-09-14}.
+This is equivalent to the format @samp{%Y-%m-%d}.
+
+@item seconds
+Print the full-date and full-time separated by a space, e.g.,
+@samp{2005-09-14 00:56:06+05:30}.  The output ends with a numeric
+time-offset; here the @samp{+05:30} means that local time is five
+hours and thirty minutes east of @acronym{UTC}.  This is equivalent to
+the format @samp{%Y-%m-%d %H:%M:%S%:z}.
+
+@item ns
+Like @samp{seconds}, but also print nanoseconds, e.g.,
+@samp{2005-09-14 00:56:06.998458565+05:30}.
+This is equivalent to the format @samp{%Y-%m-%d %H:%M:%S.%N%:z}.
+
+@end table
 
 @item -s @var{datestr}
 @itemx --set=@var{datestr}
 @opindex -s
 @opindex --set
-Set the time and date to @var{datestr}.  See @option{-d} above.
+Set the date and time to @var{datestr}.  See @option{-d} above.
 
 @item -u
 @itemx --utc
@@ -12078,11 +12099,11 @@ date --set='+2 minutes'
 @end example
 
 @item
-To print the date in the format specified by RFC-2822,
-use @samp{date --rfc-2822}.  I just did and saw this:
+To print the date in @acronym{RFC} 2822 format,
+use @samp{date --rfc-2822}.  Here is some example output:
 
 @example
-Thu, 31 Jul 2003 13:13:05 -0700
+Fri, 09 Sep 2005 13:51:39 -0700
 @end example
 
 @anchor{%s-examples}
