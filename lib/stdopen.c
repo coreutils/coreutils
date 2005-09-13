@@ -30,8 +30,8 @@
 #include <unistd.h>
 #include <errno.h>
 
-/* Try to ensure that each of the standard file numbers (0, 1, 2)
-   is in use.  Without this, each application would have to guard
+/* Try to ensure that all of the standard file numbers (0, 1, 2)
+   are in use.  Without this, each application would have to guard
    every call to open, dup, fopen, etc. with tests to ensure they
    don't use one of the special file numbers when opening a file.
    Return false if at least one of the file descriptors is initially
