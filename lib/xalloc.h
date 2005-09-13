@@ -1,7 +1,7 @@
 /* xalloc.h -- malloc with out-of-memory checking
 
    Copyright (C) 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,
-   1999, 2000, 2003, 2004, 2005 Free Software Foundation, Inc.
+   1999, 2000, 2003, 2004 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -55,24 +55,6 @@ void *x2realloc (void *p, size_t *pn);
 void *x2nrealloc (void *p, size_t *pn, size_t s);
 void *xmemdup (void const *p, size_t s);
 char *xstrdup (char const *str);
-
-/* Verify a requirement at compile-time (unlike assert, which is runtime).  */
-# undef VERIFY_EXPR
-# define VERIFY_EXPR(assertion) \
-   (void)((struct {char a[(assertion) ? 1 : -1]; } *) 0)
-
-/* This is simply a shorthand for the common case in which
-   the third argument to x2nrealloc would be `sizeof (*P)'.
-   Ensure that sizeof (*P) is *not* 1.  In that case, it'd be
-   better to use X2REALLOC, although not strictly necessary.  */
-# define X2NREALLOC(P, PN) (VERIFY_EXPR (sizeof(*P) != 1), \
-                            x2nrealloc (P, PN, sizeof (*P)))
-
-/* Using x2realloc (when appropriate) usually makes your code more
-   readable than using x2nrealloc, but it also makes it so your
-   code will malfunction if sizeof (*P) ever becomes 2 or greater.
-   So use this macro instead of using x2realloc directly.  */
-# define X2REALLOC(P, PN) (VERIFY_EXPR (sizeof(*P) == 1), x2realloc (P, PN))
 
 /* Return 1 if an array of N objects, each of size S, cannot exist due
    to size arithmetic overflow.  S must be positive and N must be
