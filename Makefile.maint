@@ -71,7 +71,6 @@ syntax-check-rules = \
   sc_cast_of_argument_to_free \
   sc_cast_of_x_alloc_return_value \
   sc_cast_of_alloca_return_value \
-  sc_changelog \
   sc_dd_max_sym_length \
   sc_error_exit_success \
   sc_file_system \
@@ -151,9 +150,9 @@ sc_file_system:
 
 sc_obsolete_symbols:
 	@( $(CVS_LIST) ) > /dev/null 2>&1 || : &&			\
-	  grep -E '\<(HAVE_(FCNTL|UNISTD)_H)\>'				\
+	  grep -E '\<(HAVE_FCNTL_H)\>'					\
 	     $$($(CVS_LIST) | grep -vEf .x-$@ ) &&			\
-	  { echo '$(ME): do not use HAVE_FCNTL_H or HAVE_UNISTD_H'	\
+	  { echo '$(ME): do not use HAVE_FCNTL_H'			\
 		1>&2; exit 1; } || :
 
 # FIXME: warn about definitions of EXIT_FAILURE, EXIT_SUCCESS, STREQ
@@ -168,7 +167,8 @@ sc_changelog:
 # with the strings from the two affected variables.
 dd_c = $(srcdir)/src/dd.c
 sc_dd_max_sym_length:
-	@len=$$( (sed -n '/conversions\[\] =$$/,/^};/p' $(dd_c);\
+	@test -f $(dd_c) || exit 0;				\
+	len=$$( (sed -n '/conversions\[\] =$$/,/^};/p' $(dd_c);	\
 		 sed -n '/flags\[\] =$$/,/^};/p' $(dd_c) )	\
 		|sed -n '/"/s/^[^"]*"\([^"]*\)".*/\1/p'		\
               | wc --max-line-length);				\
