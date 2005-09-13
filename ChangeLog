@@ -2,6 +2,8 @@
 
 	* Version 5.3.1-cvs.
 
+	* src/expr.c (docolon): Add IF_LINT check to avoid GCC warning.
+
 	* configure.ac: Don't invoke AC_CONFIGURE_HOST directly; AB_INIT
 	does it for us, and our invocation evokes a diagnostic from
 	Autoconf 2.59.
