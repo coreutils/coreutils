@@ -12225,8 +12225,8 @@ Print all of the below information.
 @cindex platform, hardware
 Print the hardware platform name
 (sometimes called the hardware implementation).
-Print @samp{unknown} if the kernel does not make this information visible,
-as is the case with Linux kernels.
+Print @samp{unknown} if the kernel does not make this information
+easily available, as is the case with Linux kernels.
 
 @item -m
 @itemx --machine
@@ -12254,8 +12254,8 @@ Print the network node hostname.
 @cindex host processor type
 Print the processor type (sometimes called the instruction set
 architecture or ISA).
-Print @samp{unknown} if the kernel does not make this information visible,
-as is the case with Linux kernels.
+Print @samp{unknown} if the kernel does not make this information
+easily available, as is the case with Linux kernels.
 
 @item -o
 @itemx --operating-system
