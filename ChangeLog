@@ -2,6 +2,8 @@
 
 	* Version 5.3.1-cvs.
 
+	* Makefile.maint (GZIP_ENV): Add --rsyncable option.
+
 	* configure.ac: Use AB_INIT (from autobuild).
 
 2005-09-11  Jim Meyering  <jim@meyering.net>
