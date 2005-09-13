@@ -3,6 +3,7 @@
 	* Version 5.3.1-cvs.
 
 	* Makefile.maint (GZIP_ENV): Add --rsyncable option.
+	(makefile-check): Escape a `$' in a diagnostic.
 
 	* configure.ac: Use AB_INIT (from autobuild).
 
