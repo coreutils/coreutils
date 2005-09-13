@@ -1,6 +1,10 @@
-2005-09-11  Jim Meyering  <jim@meyering.net>
+2005-09-13  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1-cvs.
+
+	* configure.ac: Use AB_INIT (from autobuild).
+
+2005-09-11  Jim Meyering  <jim@meyering.net>
 
 	* src/factor.c (usage): Remove leading spaces in 2-line
 	description, so that help2man doesn't mangle it.
