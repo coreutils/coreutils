@@ -1,5 +1,11 @@
 2005-09-13  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* Version 5.3.1-cvs.
+
+	* configure.ac: Don't invoke AC_CONFIGURE_HOST directly; AB_INIT
+	does it for us, and our invocation evokes a diagnostic from
+	Autoconf 2.59.
+
 	* NEWS: date has a new --rfc-3339 option, and the old --iso-8601
 	option is deprecated.  date and ls also have new time format
 	specifiers %:z, %::z, %:::z.
@@ -24,8 +30,6 @@
 	* tests/misc/date: Add tests for --rfc-3339.
 
 2005-09-13  Jim Meyering  <jim@meyering.net>
-
-	* Version 5.3.1-cvs.
 
 	* Makefile.maint (GZIP_ENV): Add --rsyncable option.
 	(makefile-check): Escape a `$' in a diagnostic.
