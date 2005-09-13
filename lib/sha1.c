@@ -35,23 +35,17 @@
 # include "unlocked-io.h"
 #endif
 
-/*
-  Not-swap is a macro that does an endian swap on architectures that are
-  big-endian, as SHA1 needs some data in a little-endian format
-*/
+/* SWAP does an endian swap on architectures that are little-endian,
+   as SHA1 needs some data in a big-endian form.  */
 
 #ifdef WORDS_BIGENDIAN
-# define NOTSWAP(n) (n)
-# define SWAP(n)							\
-    (((n) << 24) | (((n) & 0xff00) << 8) | (((n) >> 8) & 0xff00) | ((n) >> 24))
-#else
-# define NOTSWAP(n)                                                         \
-    (((n) << 24) | (((n) & 0xff00) << 8) | (((n) >> 8) & 0xff00) | ((n) >> 24))
 # define SWAP(n) (n)
+#else
+# define SWAP(n) \
+    (((n) << 24) | (((n) & 0xff00) << 8) | (((n) >> 8) & 0xff00) | ((n) >> 24))
 #endif
 
 #define BLOCKSIZE 4096
-/* Ensure that BLOCKSIZE is a multiple of 64.  */
 #if BLOCKSIZE % 64 != 0
 # error "invalid BLOCKSIZE"
 #endif
@@ -87,11 +81,11 @@ sha1_init_ctx (struct sha1_ctx *ctx)
 void *
 sha1_read_ctx (const struct sha1_ctx *ctx, void *resbuf)
 {
-  ((md5_uint32 *) resbuf)[0] = NOTSWAP (ctx->A);
-  ((md5_uint32 *) resbuf)[1] = NOTSWAP (ctx->B);
-  ((md5_uint32 *) resbuf)[2] = NOTSWAP (ctx->C);
-  ((md5_uint32 *) resbuf)[3] = NOTSWAP (ctx->D);
-  ((md5_uint32 *) resbuf)[4] = NOTSWAP (ctx->E);
+  ((md5_uint32 *) resbuf)[0] = SWAP (ctx->A);
+  ((md5_uint32 *) resbuf)[1] = SWAP (ctx->B);
+  ((md5_uint32 *) resbuf)[2] = SWAP (ctx->C);
+  ((md5_uint32 *) resbuf)[3] = SWAP (ctx->D);
+  ((md5_uint32 *) resbuf)[4] = SWAP (ctx->E);
 
   return resbuf;
 }
@@ -117,8 +111,8 @@ sha1_finish_ctx (struct sha1_ctx *ctx, void *resbuf)
   memcpy (&ctx->buffer[bytes], fillbuf, pad);
 
   /* Put the 64-bit file length in *bits* at the end of the buffer.  */
-  *(md5_uint32 *) &ctx->buffer[bytes + pad + 4] = NOTSWAP (ctx->total[0] << 3);
-  *(md5_uint32 *) &ctx->buffer[bytes + pad] = NOTSWAP ((ctx->total[1] << 3) |
+  *(md5_uint32 *) &ctx->buffer[bytes + pad + 4] = SWAP (ctx->total[0] << 3);
+  *(md5_uint32 *) &ctx->buffer[bytes + pad] = SWAP ((ctx->total[1] << 3) |
 						    (ctx->total[0] >> 29));
 
   /* Process last bytes.  */
@@ -316,6 +310,8 @@ sha1_process_block (const void *buffer, size_t len, struct sha1_ctx *ctx)
   if (ctx->total[0] < len)
     ++ctx->total[1];
 
+#define rol(x, n) (((x) << (n)) | ((x) >> (32 - (n))))
+
 #define M(I) ( tm =   x[I&0x0f] ^ x[(I-14)&0x0f] \
 		    ^ x[(I-8)&0x0f] ^ x[(I-3)&0x0f] \
 	       , (x[I&0x0f] = rol(tm, 1)) )
@@ -331,10 +327,9 @@ sha1_process_block (const void *buffer, size_t len, struct sha1_ctx *ctx)
     {
       md5_uint32 tm;
       int t;
-      /* FIXME: see sha1.c for a better implementation.  */
       for (t = 0; t < 16; t++)
 	{
-	  x[t] = NOTSWAP (*words);
+	  x[t] = SWAP (*words);
 	  words++;
 	}
 
