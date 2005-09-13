@@ -1,5 +1,8 @@
 2005-09-13  Jim Meyering  <jim@meyering.net>
 
+	* xalloc.h: Revert unintended change that removed definitions
+	of X2REALLOC and X2NREALLOC.
+
 	* backupfile.c: Use ARGMATCH_VERIFY, just in case.
 
 2005-09-09  Paul Eggert  <eggert@cs.ucla.edu>
