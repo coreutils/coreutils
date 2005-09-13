@@ -1,5 +1,22 @@
 2005-09-13  Paul Eggert  <eggert@cs.ucla.edu>
 
+	Merge md5 from libc, and clean up some sha1 glitches.
+	* md5.h (__GNUC_PREREQ, __THROW, __attribute__): New macros.
+	(__md5_buffer): Renamed from md5_buffer.  Add a macro undoing this
+	if _LIBC is not defined.  Add __THROW.
+	(__md5_finish_ctx, __md5_init_ctx, __md5_process_block):
+	(__md5_process_bytes, __md5_read_ctx, __md5_stream): Likewise.
+	(struct md5_ctx): Mark buffer as being aligned.
+	(rol): Remove; all uses changed to CYCLIC.
+	* md5.c (CYCLIC): New macro.  All uses of rol changed to use CYCLIC.
+	Redo comment to minimize changes from libc.
+	* sha1.h (struct sha1_ctx): Mark buffer as being aligned.
+	* sha1.c (SWAP): Renamed from NOTSWAP, to avoid a horrible misnaming.
+	All uses changed.  Remove the old SWAP.
+	Remove obvious comment about BLOCKSIZE.
+	(rol): New macro, moved here from md5.h.
+	(sha1_process_block): Remove an incoherent FIXME comment.
+
 	* strftime.c (my_strftime): Add support for %:z, %::z, %:::z.
 	Fix bug in formats like %2N.
 
