@@ -647,9 +647,9 @@ my_strftime (CHAR_T *s, size_t maxsize, const CHAR_T *format,
 	 not before, so we accept %9:z, not %:9z.  */
       {
 	const CHAR_T *q;
-	for (q = f; *q == ':' && q - f < 3; q++)
+	for (q = f; *q == L_(':') && q - f < 3; q++)
 	  ; /* empty */
-	if (*q == 'z')
+	if (*q == L_('z'))
 	  {
 	    colons = q - f;
 	    f = q;
