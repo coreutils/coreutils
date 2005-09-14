@@ -2,6 +2,7 @@
 
 	* strftime.c (my_strftime): Parse the colons of %:::z *after* the
 	optional field width, not before, so we accept %9:z, not %:9z.
+	(my_strftime): Be sure to use L_('x') for literals.
 
 2005-09-13  Paul Eggert  <eggert@cs.ucla.edu>
 
