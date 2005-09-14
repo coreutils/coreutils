@@ -184,8 +184,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   date accepts the new option --rfc-3339=TIMESPEC.  The old --iso-8602 (-I)
   option is deprecated; it still works, but new applications should avoid it.
-  date and ls's time formats now support new %:z, %::z, %:::z specifiers
-  for numeric time zone offsets like -07:00, -07:00:00, and -07.
+  date, du, ls, and pr's time formats now support new %:z, %::z, %:::z
+  specifiers for numeric time zone offsets like -07:00, -07:00:00, and -07.
 
   dd has new iflag= and oflag= flags "binary" and "text", which have an
   effect only on nonstandard platforms that distinguish text from binary I/O.
