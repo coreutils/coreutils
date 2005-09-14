@@ -193,6 +193,11 @@ my @Tests =
 
      ['tz-5', '+%:z', {OUT=>"-00:01"}, {ENV=>'TZ=XXX0:01'}],
 
+     # Accept %:z with a field width before the `:'.
+     ['tz-5w','+%8:z', {OUT=>"-0000:01"}, {ENV=>'TZ=XXX0:01'}],
+     # Don't recognize %:z with a field width between the `:' and the `z'.
+     ['tz-5wf', '+%:8z', {OUT=>"%:8z"}, {ENV=>'TZ=XXX0:01'}],
+
      ['ns-relative',
       '--iso=ns', "-d'1970-01-01 00:00:00.1234567 UTC +961062237.987654321 sec'",
       {OUT=>"2000-06-15T09:43:58,111111021+0000"}],
