@@ -1372,7 +1372,7 @@ my_strftime (CHAR_T *s, size_t maxsize, const CHAR_T *format,
 		DO_TZ_OFFSET (6, diff < 0, 04, hour_diff * 100 + min_diff);
 
 	      case 2: tz_hh_mm_ss: /* +hh:mm:ss */
-		DO_TZ_OFFSET (9, diff < 0, 044,
+		DO_TZ_OFFSET (9, diff < 0, 024,
 			      hour_diff * 10000 + min_diff * 100 + sec_diff);
 
 	      case 3: /* +hh if possible, else +hh:mm, else +hh:mm:ss */
