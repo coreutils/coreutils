@@ -596,11 +596,6 @@ my_strftime (CHAR_T *s, size_t maxsize, const CHAR_T *format,
 	      pad = *f;
 	      continue;
 
-	      /* This influences the %z format.  */
-	    case L_(':'):
-	      colons++;
-	      continue;
-
 	      /* This changes textual output.  */
 	    case L_('^'):
 	      to_uppcase = true;
@@ -647,6 +642,19 @@ my_strftime (CHAR_T *s, size_t maxsize, const CHAR_T *format,
 	  modifier = 0;
 	  break;
 	}
+
+      /* Parse the colons of %:::z *after* the optional field width,
+	 not before, so we accept %9:z, not %:9z.  */
+      {
+	const CHAR_T *q;
+	for (q = f; *q == ':' && q - f < 3; q++)
+	  ; /* empty */
+	if (*q == 'z')
+	  {
+	    colons = q - f;
+	    f = q;
+	  }
+      }
 
       /* Now do the specified format.  */
       format_char = *f;
