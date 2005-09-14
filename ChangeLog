@@ -1,6 +1,11 @@
-2005-09-13  Paul Eggert  <eggert@cs.ucla.edu>
+2005-09-14  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1-cvs.
+
+	* tests/misc/date (tz-5w, tz-5wf): Test new %:z format with
+	a field width.
+
+2005-09-13  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/dd.c: Detect some very unlikely buffer overflows.
 	(INPUT_BLOCK_SLOP, OUTPUT_BLOCK_SLOP): New macros.
