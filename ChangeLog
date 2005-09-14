@@ -19,11 +19,11 @@
 	Autoconf 2.59.
 
 	* NEWS: date has a new --rfc-3339 option, and the old --iso-8601
-	option is deprecated.  date and ls also have new time format
+	option is deprecated.  date, du, ls, and pr also have new time format
 	specifiers %:z, %::z, %:::z.
 	* src/date.c (TIME_SPEC_DATE): No longer needs to be nonzero, so
 	remove the "=1".
-	(TIME_SOEC_HOURS, TIME_SPEC_MINUTES): Must be at end now, so put
+	(TIME_SPEC_HOURS, TIME_SPEC_MINUTES): Must be at end now, so put
 	them there.
 	(time_spec_string, time_spec): Hours and minutes must be at
 	start now, so put them there.
@@ -39,7 +39,7 @@
 	(show_date): Assume format arg is not NULL, which is the case
 	now.  The default code is moved to 'main'.  This simplifies things
 	and allows the default to be calculated just once.
-	* tests/misc/date: Add tests for --rfc-3339.
+	* tests/misc/date: Add tests for --rfc-3339, %:z, %::z, %:::z.
 
 2005-09-13  Jim Meyering  <jim@meyering.net>
 
