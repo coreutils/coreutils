@@ -1,3 +1,8 @@
+2005-09-14  Jim Meyering  <jim@meyering.net>
+
+	* strftime.c (my_strftime): Parse the colons of %:::z *after* the
+	optional field width, not before, so we accept %9:z, not %:9z.
+
 2005-09-13  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Merge md5 from libc, and clean up some sha1 glitches.
