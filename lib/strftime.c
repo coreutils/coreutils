@@ -492,7 +492,7 @@ my_strftime (CHAR_T *s, size_t maxsize, const CHAR_T *format,
       int width = -1;
       bool to_lowcase = false;
       bool to_uppcase = false;
-      size_t colons = 0;
+      size_t colons;
       bool change_case = false;
       int format_char;
 
@@ -642,19 +642,6 @@ my_strftime (CHAR_T *s, size_t maxsize, const CHAR_T *format,
 	  modifier = 0;
 	  break;
 	}
-
-      /* Parse the colons of %:::z *after* the optional field width,
-	 not before, so we accept %9:z, not %:9z.  */
-      {
-	const CHAR_T *q;
-	for (q = f; *q == L_(':') && q - f < 3; q++)
-	  ; /* empty */
-	if (*q == L_('z'))
-	  {
-	    colons = q - f;
-	    f = q;
-	  }
-      }
 
       /* Now do the specified format.  */
       format_char = *f;
@@ -1320,7 +1307,20 @@ my_strftime (CHAR_T *s, size_t maxsize, const CHAR_T *format,
 #endif
 	  break;
 
+	case L_(':'):
+	  /* :, ::, and ::: are valid only just before 'z'.
+	     :::: etc. are rejected later.  */
+	  for (colons = 1; f[colons] == L_(':'); colons++)
+	    continue;
+	  if (f[colons] != L_('z'))
+	    goto bad_format;
+	  f += colons;
+	  goto do_z_conversion;
+
 	case L_('z'):
+	  colons = 0;
+
+	do_z_conversion:
 	  if (tp->tm_isdst < 0)
 	    break;
 
