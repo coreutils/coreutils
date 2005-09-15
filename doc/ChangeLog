@@ -1,3 +1,8 @@
+2005-09-15  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (uname invocation): uname -a no longer generates
+	the -p and -i outputs if they are unknown.
+
 2005-09-13  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (Time conversion specifiers, Options for date):

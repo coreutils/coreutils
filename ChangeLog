@@ -1,6 +1,13 @@
-2005-09-14  Jim Meyering  <jim@meyering.net>
+2005-09-15  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1-cvs.
+
+	* NEWS: uname -a no longer generates the -p and -i outputs if they
+	are unknown.
+	* src/uname.c (usage): Document this.
+	(main): Implement this.
+
+2005-09-14  Jim Meyering  <jim@meyering.net>
 
 	* tests/misc/date (tz-5w, tz-5wf): Test new %:z format with
 	a field width.

@@ -210,6 +210,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   stat -f's default output format has been changed to output this size as well.
   stat -f recognizes file systems of type XFS and JFS
 
+  uname -a no longer generates the -p and -i outputs if they are unknown.
+
 * Major changes in release 5.3.0 (2005-01-08) [unstable]
 
 ** Bug fixes

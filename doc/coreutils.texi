@@ -12214,7 +12214,8 @@ The program accepts the following options.  Also see @ref{Common options}.
 @itemx --all
 @opindex -a
 @opindex --all
-Print all of the below information.
+Print all of the below information, except omit the processor type
+and the hardware platform name if they are unknown.
 
 @item -i
 @itemx --hardware-platform
