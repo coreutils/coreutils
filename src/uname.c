@@ -118,7 +118,8 @@ usage (int status)
       fputs (_("\
 Print certain system information.  With no OPTION, same as -s.\n\
 \n\
-  -a, --all                print all information, in the following order:\n\
+  -a, --all                print all information, in the following order,\n\
+                             except omit -p and -i if unknown:\n\
   -s, --kernel-name        print the kernel name\n\
   -n, --nodename           print the network node hostname\n\
   -r, --kernel-release     print the kernel release\n\
@@ -126,8 +127,8 @@ Print certain system information.  With no OPTION, same as -s.\n\
       fputs (_("\
   -v, --kernel-version     print the kernel version\n\
   -m, --machine            print the machine hardware name\n\
-  -p, --processor          print the processor type\n\
-  -i, --hardware-platform  print the hardware platform\n\
+  -p, --processor          print the processor type or \"unknown\"\n\
+  -i, --hardware-platform  print the hardware platform or \"unknown\"\n\
   -o, --operating-system   print the operating system\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
@@ -172,7 +173,7 @@ main (int argc, char **argv)
       switch (c)
 	{
 	case 'a':
-	  toprint = -1;
+	  toprint = UINT_MAX;
 	  break;
 
 	case 's':
@@ -286,7 +287,8 @@ main (int argc, char **argv)
 # endif
 	}
 #endif
-      print_element (element);
+      if (! (toprint == UINT_MAX && element == unknown))
+	print_element (element);
     }
 
   if (toprint & PRINT_HARDWARE_PLATFORM)
@@ -310,7 +312,8 @@ main (int argc, char **argv)
 	    element = hardware_platform;
 	}
 #endif
-      print_element (element);
+      if (! (toprint == UINT_MAX && element == unknown))
+	print_element (element);
     }
 
   if (toprint & PRINT_OPERATING_SYSTEM)
