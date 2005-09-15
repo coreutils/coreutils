@@ -1,3 +1,8 @@
+2005-09-15  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* strftime.c (my_strftime): Rewrite the previous change slightly,
+	to make it a bit faster and (I hope) clearer.
+
 2005-09-14  Jim Meyering  <jim@meyering.net>
 
 	* strftime.c (my_strftime): Parse the colons of %:::z *after* the
