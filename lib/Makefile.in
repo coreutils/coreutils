@@ -79,12 +79,12 @@ DIST_COMMON = README $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	root-dev-ino.h rpmatch.c safe-read.c safe-read.h safe-write.c \
 	safe-write.h same.c same.h save-cwd.c save-cwd.h savedir.c \
 	savedir.h setenv.c setenv.h settime.c sha1.c sha1.h sig2str.c \
-	sig2str.h stat-macros.h stdio--.h stdio-safer.h stdlib--.h \
-	stdlib-safer.h stpcpy.c strcasecmp.c strcspn.c strdup.c \
-	strdup.h strftime.c strftime.h strintcmp.c stripslash.c \
-	strncasecmp.c strndup.c strndup.h strnlen.c strnumcmp-in.h \
-	strnumcmp.c strnumcmp.h strpbrk.c strstr.c strtod.c \
-	strtoimax.c strtol.c strtoll.c strtoul.c strtoull.c \
+	sig2str.h stat-macros.h stat-time.h stdio--.h stdio-safer.h \
+	stdlib--.h stdlib-safer.h stpcpy.c strcasecmp.c strcspn.c \
+	strdup.c strdup.h strftime.c strftime.h strintcmp.c \
+	stripslash.c strncasecmp.c strndup.c strndup.h strnlen.c \
+	strnumcmp-in.h strnumcmp.c strnumcmp.h strpbrk.c strstr.c \
+	strtod.c strtoimax.c strtol.c strtoll.c strtoul.c strtoull.c \
 	strtoumax.c strverscmp.c strverscmp.h tempname.c timespec.h \
 	umaxtostr.c unistd--.h unistd-safer.h unlinkdir.c unlinkdir.h \
 	unlocked-io.h unsetenv.c userspec.c userspec.h utime.c \
@@ -98,10 +98,11 @@ ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/afs.m4 \
 	$(top_srcdir)/m4/alloca.m4 $(top_srcdir)/m4/allocsa.m4 \
 	$(top_srcdir)/m4/argmatch.m4 $(top_srcdir)/m4/assert.m4 \
-	$(top_srcdir)/m4/atexit.m4 $(top_srcdir)/m4/backupfile.m4 \
-	$(top_srcdir)/m4/basename.m4 $(top_srcdir)/m4/bison.m4 \
-	$(top_srcdir)/m4/boottime.m4 $(top_srcdir)/m4/c-strtod.m4 \
-	$(top_srcdir)/m4/calloc.m4 $(top_srcdir)/m4/canon-host.m4 \
+	$(top_srcdir)/m4/atexit.m4 $(top_srcdir)/m4/autobuild.m4 \
+	$(top_srcdir)/m4/backupfile.m4 $(top_srcdir)/m4/basename.m4 \
+	$(top_srcdir)/m4/bison.m4 $(top_srcdir)/m4/boottime.m4 \
+	$(top_srcdir)/m4/c-strtod.m4 $(top_srcdir)/m4/calloc.m4 \
+	$(top_srcdir)/m4/canon-host.m4 \
 	$(top_srcdir)/m4/canonicalize.m4 \
 	$(top_srcdir)/m4/chdir-long.m4 $(top_srcdir)/m4/check-decl.m4 \
 	$(top_srcdir)/m4/chown.m4 $(top_srcdir)/m4/clock_time.m4 \
@@ -174,8 +175,8 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/afs.m4 \
 	$(top_srcdir)/m4/setenv.m4 $(top_srcdir)/m4/settime.m4 \
 	$(top_srcdir)/m4/sha1.m4 $(top_srcdir)/m4/sig2str.m4 \
 	$(top_srcdir)/m4/signed.m4 $(top_srcdir)/m4/ssize_t.m4 \
-	$(top_srcdir)/m4/st_dm_mode.m4 $(top_srcdir)/m4/st_mtim.m4 \
-	$(top_srcdir)/m4/stat-macros.m4 $(top_srcdir)/m4/stat-prog.m4 \
+	$(top_srcdir)/m4/st_dm_mode.m4 $(top_srcdir)/m4/stat-macros.m4 \
+	$(top_srcdir)/m4/stat-prog.m4 $(top_srcdir)/m4/stat-time.m4 \
 	$(top_srcdir)/m4/stdbool.m4 $(top_srcdir)/m4/stdint_h.m4 \
 	$(top_srcdir)/m4/stdio-safer.m4 \
 	$(top_srcdir)/m4/stdlib-safer.m4 $(top_srcdir)/m4/stpcpy.m4 \
@@ -218,8 +219,9 @@ ARFLAGS = cru
 libcoreutils_a_AR = $(AR) $(ARFLAGS)
 am__DEPENDENCIES_1 = @LIBOBJS@
 am__DEPENDENCIES_2 = @ALLOCA@
-am_libcoreutils_a_OBJECTS = allocsa.$(OBJEXT) full-read.$(OBJEXT) \
-	full-write.$(OBJEXT) localcharset.$(OBJEXT) mbswidth.$(OBJEXT) \
+am_libcoreutils_a_OBJECTS = allocsa.$(OBJEXT) fprintftime.$(OBJEXT) \
+	full-read.$(OBJEXT) full-write.$(OBJEXT) \
+	localcharset.$(OBJEXT) mbswidth.$(OBJEXT) \
 	readtokens0.$(OBJEXT) time_r.$(OBJEXT) unicodeio.$(OBJEXT) \
 	xalloc-die.$(OBJEXT) xgethostname.$(OBJEXT) xmemcoll.$(OBJEXT) \
 	xstrndup.$(OBJEXT) xstrtoimax.$(OBJEXT) xstrtoumax.$(OBJEXT)
@@ -275,7 +277,6 @@ GETOPT_H = @GETOPT_H@
 GLIBC21 = @GLIBC21@
 GMSGFMT = @GMSGFMT@
 GNU_PACKAGE = @GNU_PACKAGE@
-GREP = @GREP@
 HAVE__BOOL = @HAVE__BOOL@
 HELP2MAN = @HELP2MAN@
 INSTALL_DATA = @INSTALL_DATA@
@@ -346,30 +347,23 @@ build_cpu = @build_cpu@
 build_os = @build_os@
 build_vendor = @build_vendor@
 datadir = @datadir@
-datarootdir = @datarootdir@
-docdir = @docdir@
-dvidir = @dvidir@
 exec_prefix = @exec_prefix@
 host = @host@
 host_alias = @host_alias@
 host_cpu = @host_cpu@
 host_os = @host_os@
 host_vendor = @host_vendor@
-htmldir = @htmldir@
 includedir = @includedir@
 infodir = @infodir@
 install_sh = @install_sh@
 libdir = @libdir@
 libexecdir = @libexecdir@
-localedir = @localedir@
 localstatedir = @localstatedir@
 mandir = @mandir@
 mkdir_p = @mkdir_p@
 oldincludedir = @oldincludedir@
-pdfdir = @pdfdir@
 prefix = @prefix@
 program_transform_name = @program_transform_name@
-psdir = @psdir@
 sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
@@ -378,13 +372,13 @@ noinst_LIBRARIES = libcoreutils.a
 LDADD = $(noinst_LIBRARIES)
 AM_CPPFLAGS = -I.. -I$(srcdir)
 libcoreutils_a_SOURCES = allocsa.c allocsa.h euidaccess.h exit.h \
-	full-read.c full-read.h full-write.c full-write.h gettext.h \
-	localcharset.c localcharset.h mbswidth.c mbswidth.h \
-	readtokens0.c readtokens0.h time_r.c time_r.h unicodeio.c \
-	unicodeio.h verify.h xalloc-die.c xgethostname.c \
-	xgethostname.h xmemcoll.c xmemcoll.h xstrndup.c xstrndup.h \
-	xstrtoimax.c xstrtoumax.c printf-args.h printf-parse.h \
-	vasprintf.h vasnprintf.h
+	fprintftime.c fprintftime.h full-read.c full-read.h \
+	full-write.c full-write.h gettext.h localcharset.c \
+	localcharset.h mbswidth.c mbswidth.h readtokens0.c \
+	readtokens0.h time_r.c time_r.h unicodeio.c unicodeio.h \
+	verify.h xalloc-die.c xgethostname.c xgethostname.h xmemcoll.c \
+	xmemcoll.h xstrndup.c xstrndup.h xstrtoimax.c xstrtoumax.c \
+	printf-args.h printf-parse.h vasprintf.h vasnprintf.h
 libcoreutils_a_LIBADD = $(LIBOBJS) $(ALLOCA)
 libcoreutils_a_DEPENDENCIES = $(libcoreutils_a_LIBADD)
 lib_OBJECTS = $(libcoreutils_a_OBJECTS)
@@ -625,6 +619,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/xstrtoul.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/yesno.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/allocsa.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fprintftime.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/full-read.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/full-write.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/localcharset.Po@am__quote@

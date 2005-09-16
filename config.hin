@@ -370,10 +370,6 @@
    don't. */
 #undef HAVE_DECL_TTYNAME
 
-/* Define to 1 if you have the declaration of `tzname', and to 0 if you don't.
-   */
-#undef HAVE_DECL_TZNAME
-
 /* Define to 1 if you have the declaration of wcwidth(), and to 0 otherwise.
    */
 #undef HAVE_DECL_WCWIDTH
@@ -917,6 +913,18 @@
 /* Define to 1 if `f_type' is member of `struct statvfs'. */
 #undef HAVE_STRUCT_STATVFS_F_TYPE
 
+/* Define to 1 if `st_atimensec' is member of `struct stat'. */
+#undef HAVE_STRUCT_STAT_ST_ATIMENSEC
+
+/* Define to 1 if `st_atimespec.tv_nsec' is member of `struct stat'. */
+#undef HAVE_STRUCT_STAT_ST_ATIMESPEC_TV_NSEC
+
+/* Define to 1 if `st_atim.st__tim.tv_nsec' is member of `struct stat'. */
+#undef HAVE_STRUCT_STAT_ST_ATIM_ST__TIM_TV_NSEC
+
+/* Define to 1 if `st_atim.tv_nsec' is member of `struct stat'. */
+#undef HAVE_STRUCT_STAT_ST_ATIM_TV_NSEC
+
 /* Define to 1 if `st_author' is member of `struct stat'. */
 #undef HAVE_STRUCT_STAT_ST_AUTHOR
 
@@ -925,6 +933,9 @@
 
 /* Define to 1 if `st_blocks' is member of `struct stat'. */
 #undef HAVE_STRUCT_STAT_ST_BLOCKS
+
+/* Define to 1 if `st_spare1' is member of `struct stat'. */
+#undef HAVE_STRUCT_STAT_ST_SPARE1
 
 /* Define if struct timespec is declared in <time.h>. */
 #undef HAVE_STRUCT_TIMESPEC
@@ -1410,10 +1421,6 @@
 /* Define to 1 if strerror_r returns char *. */
 #undef STRERROR_R_CHAR_P
 
-/* Define to be the nanoseconds member of struct stat's st_mtim, if it exists.
-   */
-#undef ST_MTIM_NSEC
-
 /* Define to 1 on System V Release 4. */
 #undef SVR4
 
@@ -1607,7 +1614,7 @@
 /* Define to rpl_nanosleep if the replacement function should be used. */
 #undef nanosleep
 
-/* Define to `long int' if <sys/types.h> does not define. */
+/* Define to `long' if <sys/types.h> does not define. */
 #undef off_t
 
 /* Define to `int' if <sys/types.h> does not define. */
@@ -1629,7 +1636,7 @@
 /* Define to empty if the C compiler doesn't support this keyword. */
 #undef signed
 
-/* Define to `unsigned int' if <sys/types.h> does not define. */
+/* Define to `unsigned' if <sys/types.h> does not define. */
 #undef size_t
 
 /* Define as a signed type of the same size as size_t. */
