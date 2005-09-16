@@ -45,6 +45,7 @@
 #include "euidaccess.h"
 #include "inttostr.h"
 #include "quote.h"
+#include "stat-time.h"
 #include "strnumcmp.h"
 
 #if HAVE_SYS_PARAM_H
@@ -159,20 +160,19 @@ find_int (char const *string)
   test_syntax_error (_("invalid integer %s\n"), quote (string));
 }
 
-/* Find the modification time of FILE, and stuff it into *AGE.
-   If the timestamp has a nonoseconds part, stuff that into *NS;
-   otherwise stuff zero into *NS.
+/* Find the modification time of FILE, and stuff it into *MTIME.
    Return true if successful.  */
 static bool
-age_of (char const *filename, time_t *age, long *ns)
+get_mtime (char const *filename, struct timespec *mtime)
 {
   struct stat finfo;
   bool ok = (stat (filename, &finfo) == 0);
+#ifdef lint
+  static struct timespec const zero;
+  *mtime = zero;
+#endif
   if (ok)
-    {
-      *age = finfo.st_mtime;
-      *ns = TIMESPEC_NS (finfo.st_mtim);
-    }
+    *mtime = get_stat_mtime (&finfo);
   return ok;
 }
 
@@ -322,20 +322,14 @@ binary_operator (bool l_is_l)
 	  if (argv[op][2] == 't' && !argv[op][3])
 	    {
 	      /* nt - newer than */
-	      time_t lt IF_LINT (= 0);
-	      time_t rt IF_LINT (= 0);
-	      long l_ns IF_LINT (= 0);
-	      long r_ns IF_LINT (= 0);
+	      struct timespec lt, rt;
 	      bool le, re;
 	      pos += 3;
 	      if (l_is_l | r_is_l)
 		test_syntax_error (_("-nt does not accept -l\n"), NULL);
-	      le = age_of (argv[op - 1], &lt, &l_ns);
-	      re = age_of (argv[op + 1], &rt, &r_ns);
-	      if (le && re && (rt == lt))
-		return l_ns > r_ns;
-	      else
-		return le > re || (le && lt > rt);
+	      le = get_mtime (argv[op - 1], &lt);
+	      re = get_mtime (argv[op + 1], &rt);
+	      return le && (!re || timespec_cmp (lt, rt) > 0);
 	    }
 	  break;
 
@@ -357,20 +351,14 @@ binary_operator (bool l_is_l)
 	  if ('t' == argv[op][2] && '\000' == argv[op][3])
 	    {
 	      /* ot - older than */
-	      time_t lt IF_LINT (= 0);
-	      time_t rt IF_LINT (= 0);
-	      long l_ns IF_LINT (= 0);
-	      long r_ns IF_LINT (= 0);
+	      struct timespec lt, rt;
 	      bool le, re;
 	      pos += 3;
 	      if (l_is_l | r_is_l)
 		test_syntax_error (_("-ot does not accept -l\n"), NULL);
-	      le = age_of (argv[op - 1], &lt, &l_ns);
-	      re = age_of (argv[op + 1], &rt, &r_ns);
-	      if (le && re && (lt == rt))
-		return l_ns < r_ns;
-	      else
-		return le < re || (re && lt < rt);
+	      le = get_mtime (argv[op - 1], &lt);
+	      re = get_mtime (argv[op + 1], &rt);
+	      return re && (!le || timespec_cmp (lt, rt) < 0);
 	    }
 	  break;
 	}
