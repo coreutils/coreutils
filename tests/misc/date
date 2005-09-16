@@ -239,6 +239,11 @@ my @Tests =
 
      ['fill-1', '-d 1999-12-08 +%_3d', {OUT=>'  8'}],
      ['fill-2', '-d 1999-12-08 +%03d', {OUT=>'008'}],
+
+     # Test the combination of the to-upper-case modifier (^) and a conversion
+     # specifier that expands to a string containing lower case characters.
+     ['subfmt-up1', '-d "1999-12-08 7:30" +%^c',
+      {OUT=>'WED DEC  8 07:30:00 1999'}],
     );
 
 # Repeat the cross-dst test, using Jan 1, 2005 and every interval from 1..364.
