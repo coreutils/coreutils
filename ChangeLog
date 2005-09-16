@@ -2,9 +2,11 @@
 
 	* Version 5.3.1-cvs.
 
+	Date no longer allocates virtual memory to do its job,
+	so it can no longer fail due to an out-of-memory condition.
 	* src/date.c: Include fprintftime.h.
 	Don't include strftime.h or xanstrftime.h -- no longer needed.
-	(show_date): Use fprintftime rather than xanstrftime.
+	(show_date): Use new fprintftime function rather than xanstrftime.
 
 	* tests/misc/date (subfmt-up1): Test the combination of the
 	to-upper-case modifier (^) and a conversion specifier that
