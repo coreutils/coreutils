@@ -1654,7 +1654,11 @@ main (int argc, char **argv)
 	  uintmax_t size = seek_records * output_blocksize;
 
 	  if (OFF_T_MAX / output_blocksize < seek_records)
-	    error (EXIT_FAILURE, EOVERFLOW, "seek=%"PRIuMAX"", seek_records);
+	    error (EXIT_FAILURE, 0,
+		   _("offset too large: "
+		     "cannot truncate to a length of seek=%"PRIuMAX""
+		     " (%lu-byte) blocks"),
+		   seek_records, output_blocksize);
 
 	  if (ftruncate (STDOUT_FILENO, size) != 0)
 	    {
