@@ -161,6 +161,12 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   "pr -D FORMAT" now accepts the same formats that "date +FORMAT" does.
 
+** Improved robustness
+
+  Date no longer needs to allocate virtual memory to do its job,
+  so it can no longer fail due to an out-of-memory condition,
+  no matter how large the result.
+
 ** Improved portability
 
   hostid now prints exactly 8 hexadecimal digits, possibly with leading zeros,
