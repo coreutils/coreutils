@@ -246,7 +246,7 @@ my @Tests =
       # Solaris 5.9 prints 'WED DEC 08 07:30:00 1999', while
       # most others print  'WED DEC  8 07:30:00 1999'.
       {OUT_SUBST => 's/ [ 0]8.*//'},
-      {OUT=>'WED DEC  8 07:30:00 1999'}],
+      {OUT=>'WED DEC'}],
     );
 
 # Repeat the cross-dst test, using Jan 1, 2005 and every interval from 1..364.
