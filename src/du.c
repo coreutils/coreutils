@@ -34,6 +34,7 @@
 #include "dirname.h" /* for strip_trailing_slashes */
 #include "error.h"
 #include "exclude.h"
+#include "fprintftime.h"
 #include "hash.h"
 #include "human.h"
 #include "inttostr.h"
@@ -42,8 +43,6 @@
 #include "readtokens0.h"
 #include "same.h"
 #include "stat-time.h"
-#include "strftime.h"
-#include "xanstrftime.h"
 #include "xfts.h"
 #include "xstrtol.h"
 
@@ -402,13 +401,11 @@ hash_init (void)
 
 /* FIXME: this code is nearly identical to code in date.c  */
 /* Display the date and time in WHEN according to the format specified
-   in TIME_FORMAT.  If TIME_FORMAT is NULL, use the standard output format.
-   Return zero if successful.  */
+   in FORMAT.  */
 
 static void
 show_date (const char *format, struct timespec when)
 {
-  char *out;
   struct tm *tm = localtime (&when.tv_sec);
   if (! tm)
     {
@@ -421,9 +418,7 @@ show_date (const char *format, struct timespec when)
       return;
     }
 
-  out = xanstrftime (format, tm, 0, when.tv_nsec);
-  fputs (out, stdout);
-  free (out);
+  fprintftime (stdout, format, tm, 0, when.tv_nsec);
 }
 
 /* Print N_BYTES.  Convert it to a readable value before printing.  */
