@@ -23,6 +23,7 @@ regex.c
 regex.h
 regex_internal.c
 regex_internal.h
+stat-time.h
 stdbool_.h
 strdup.h
 strndup.h
