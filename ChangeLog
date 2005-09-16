@@ -1,6 +1,25 @@
-2005-09-16  Jim Meyering  <jim@meyering.net>
+2005-09-16  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1-cvs.
+
+	* src/copy.c: Include stat-time.h.
+	(copy_internal): Use its functions instead of the obsolete
+	TIMESPEC_NS macro.
+	* src/cp.c (re_protect): Likewise.
+	* src/date.c (main): Likewise.
+	* src/du.c (struct duinfo, duinfo_init, duinfo_set, duinfo_add):
+	(show_date, print_size, process_file): Likewise.
+	* src/install.c (change_timestamps): Likewise.
+	* src/ls.c (cmp_ctime, cmp_mtime, cmp_atime, print_long_format):
+	Likewise.
+	* src/pr.c (init_header): Likewise.
+	* src/stat.c (human_time, print_stat): Likewise.
+	* src/tail.c (record_open_fd, tail_forever): Likewise.
+	* src/test.c (get_mtime, binary_operator): Likewise.
+	* src/touch.c (touch, main): Likewise.
+	* src/test.c (get_mtime): Renamed from age_of.  All uses changed.
+
+2005-09-16  Jim Meyering  <jim@meyering.net>
 
 	Date no longer needs to allocate virtual memory to do its job,
 	so it can no longer fail due to an out-of-memory condition.

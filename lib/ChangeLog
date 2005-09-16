@@ -1,3 +1,18 @@
+2005-09-16  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Import from gnulib.
+	* stat-time.h: New file.
+	* timespec.h (ST_TIME_CMP_NS, ST_TIME_CMP, ATIME_CMP, CTIME_CMP):
+	(MTIME_CMP, TIMESPEC_NS): Remove.  Now done by stat-time.h,
+	in a different way.
+	(timespec_cmp): New function.
+	* utimecmp.c: Include stat-time.h.
+	(SYSCALL_RESOLUTION): Depend on whether various struct stat
+	members exist, not on the obsolescent ST_MTIM_NSEC.
+	(utimecmp): Use the new stat-time functions rater than TIMESPEC_NS.
+
+	* .cppi-disable: Add stat-time.h.
+
 2005-09-16  Jim Meyering  <jim@meyering.net>
 
 	* strftime.c [FPRINTFTIME] (fprintftime): Provide a new interface:

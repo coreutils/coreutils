@@ -1,3 +1,15 @@
+2005-09-16  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* jm-macros.m4 (gl_CHECK_ALL_TYPES): Do not require
+	AC_STRUCT_ST_MTIM_NSEC; it's obsolete.
+	* prereq.m4 (gl_PREREQ): Require gl_STAT_TIME.
+
+	Import from gnulib.
+	* st_mtim.m4: Remove.  Superseded by...
+	* stat-time.m4: New file.
+	* timespec.m4 (gl_TIMESPEC): Require AC_C_INLINE.
+	Do not invoke AC_STRUCT_ST_MTIM_NSEC; no longer needed.
+
 2005-09-13  Jim Meyering  <jim@meyering.net>
 
 	* autobuild.m4: New file, from autobuild.
