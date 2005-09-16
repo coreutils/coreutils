@@ -1,6 +1,12 @@
-2005-09-16  Paul Eggert  <eggert@cs.ucla.edu>
+2005-09-16  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1-cvs.
+
+	* src/dd.c (main): When failing to truncate, mention both the seek
+	block count and the block size, in case the block size is very large.
+	Now `make distcheck' should pass, once again.
+
+2005-09-16  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/copy.c: Include stat-time.h.
 	(copy_internal): Use its functions instead of the obsolete
