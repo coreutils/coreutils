@@ -42,22 +42,15 @@ struct timespec
 };
 # endif
 
-# ifdef ST_MTIM_NSEC
-#  define ST_TIME_CMP_NS(a, b, ns) ((a).ns < (b).ns ? -1 : (a).ns > (b).ns)
-# else
-#  define ST_TIME_CMP_NS(a, b, ns) 0
-# endif
-# define ST_TIME_CMP(a, b, s, ns) \
-   ((a).s < (b).s ? -1 : (a).s > (b).s ? 1 : ST_TIME_CMP_NS(a, b, ns))
-# define ATIME_CMP(a, b) ST_TIME_CMP (a, b, st_atime, st_atim.ST_MTIM_NSEC)
-# define CTIME_CMP(a, b) ST_TIME_CMP (a, b, st_ctime, st_ctim.ST_MTIM_NSEC)
-# define MTIME_CMP(a, b) ST_TIME_CMP (a, b, st_mtime, st_mtim.ST_MTIM_NSEC)
-
-# ifdef ST_MTIM_NSEC
-#  define TIMESPEC_NS(timespec) ((timespec).ST_MTIM_NSEC)
-# else
-#  define TIMESPEC_NS(timespec) 0
-# endif
+/* Return negative, zero, positive if A < B, A == B, A > B, respectively.
+   Assume the nanosecond components are in range, or close to it.  */
+static inline int
+timespec_cmp (struct timespec a, struct timespec b)
+{
+  return (a.tv_sec < b.tv_sec ? -1
+	  : a.tv_sec > b.tv_sec ? 1
+	  : a.tv_nsec - b.tv_nsec);
+}
 
 # if ! HAVE_DECL_NANOSLEEP
 /* Don't specify a prototype here.  Some systems (e.g., OSF) declare
