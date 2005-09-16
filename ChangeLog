@@ -27,6 +27,8 @@
 	* src/date.c: Include fprintftime.h.
 	Don't include strftime.h or xanstrftime.h -- no longer needed.
 	(show_date): Use new fprintftime function rather than xanstrftime.
+	Correct comment: this function no longer handles a NULL format string.
+	* src/du.c: Likewise.
 
 	* tests/misc/date (subfmt-up1): Test the combination of the
 	to-upper-case modifier (^) and a conversion specifier that
