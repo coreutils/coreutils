@@ -2,6 +2,10 @@
 
 	* Version 5.3.1-cvs.
 
+	* src/date.c: Include fprintftime.h.
+	Don't include strftime.h or xanstrftime.h -- no longer needed.
+	(show_date): Use fprintftime rather than xanstrftime.
+
 	* tests/misc/date (subfmt-up1): Test the combination of the
 	to-upper-case modifier (^) and a conversion specifier that
 	expands to a string containing lower case characters.
