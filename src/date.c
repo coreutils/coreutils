@@ -33,8 +33,7 @@
 #include "inttostr.h"
 #include "posixtm.h"
 #include "quote.h"
-#include "strftime.h"
-#include "xanstrftime.h"
+#include "fprintftime.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "date"
@@ -549,16 +548,12 @@ show_date (const char *format, struct timespec when)
     }
 
   {
-    char *out;
-
     if (format == rfc_2822_format)
       setlocale (LC_TIME, "C");
-    out = xanstrftime (format, tm, 0, when.tv_nsec);
+    fprintftime (stdout, format, tm, 0, when.tv_nsec);
+    fputc ('\n', stdout);
     if (format == rfc_2822_format)
       setlocale (LC_TIME, "");
-
-    puts (out);
-    free (out);
   }
   return true;
 }
