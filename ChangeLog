@@ -1,6 +1,12 @@
-2005-09-15  Paul Eggert  <eggert@cs.ucla.edu>
+2005-09-16  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1-cvs.
+
+	* tests/misc/date (subfmt-up1): Test the combination of the
+	to-upper-case modifier (^) and a conversion specifier that
+	expands to a string containing lower case characters.
+
+2005-09-15  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: uname -a no longer generates the -p and -i outputs if they
 	are unknown.
