@@ -1,3 +1,18 @@
+2005-09-16  Jim Meyering  <jim@meyering.net>
+
+	* strftime.c [FPRINTFTIME] (fprintftime): Provide a new interface:
+	size_t fprintftime (FILE *fp, char const *fmt, struct tm const *tm,
+			    int utc, int nanoseconds);
+	Background:
+	date should not have to allocate a megabyte of virtual memory to
+	handle a format argument like +%1048575T.  When implemented with
+	strftime, it must allocate such a buffer, use strftime to fill it
+	in, print it, then free it.
+
+	With fprintftime, it simply prints everything and exits.
+	With no need for memory allocation, that's one fewer way to fail.
+	* fprintftime.c, fprintftime.h: New files.
+
 2005-09-15  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* strftime.c (my_strftime): Rewrite the previous change slightly,
