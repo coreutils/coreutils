@@ -527,9 +527,7 @@ main (int argc, char **argv)
 }
 
 /* Display the date and/or time in WHEN according to the format specified
-   in FORMAT, followed by a newline.  If FORMAT is NULL, use the
-   standard output format (ctime style but with a timezone inserted).
-   Return true if successful.  */
+   in FORMAT, followed by a newline.  Return true if successful.  */
 
 static bool
 show_date (const char *format, struct timespec when)
