@@ -2,6 +2,10 @@
 
 	* Version 5.3.1-cvs.
 
+	* tests/misc/date (rfc822-1): Compensate for Solaris 5.9's /bin/sh,
+	which emits a diagnostic to stderr when this test's LC_ALL=de_DE
+	cannot be honored.
+
 	* tests/misc/date (subfmt-up1): Put quotes around format string
 	to protect `^' from interpretation by some shells.
 	Add a use of OUT_SUBST to compensate for Solaris strftime's slightly
