@@ -1,4 +1,4 @@
-#serial 10
+#serial 11
 
 # Copyright (C) 2000, 2001, 2003, 2004, 2005 Free Software Foundation, Inc.
 # This file is free software; the Free Software Foundation
@@ -12,10 +12,10 @@ AC_DEFUN([gl_TIMESPEC],
   AC_LIBSOURCES([timespec.h])
 
   dnl Prerequisites of lib/timespec.h.
+  AC_REQUIRE([AC_C_INLINE])
   AC_REQUIRE([AC_HEADER_TIME])
   AC_CHECK_HEADERS_ONCE(sys/time.h)
   gl_CHECK_TYPE_STRUCT_TIMESPEC
-  AC_STRUCT_ST_MTIM_NSEC
 
   dnl Persuade glibc <time.h> to declare nanosleep().
   AC_REQUIRE([AC_GNU_SOURCE])
