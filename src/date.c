@@ -547,13 +547,12 @@ show_date (const char *format, struct timespec when)
       return false;
     }
 
-  {
-    if (format == rfc_2822_format)
-      setlocale (LC_TIME, "C");
-    fprintftime (stdout, format, tm, 0, when.tv_nsec);
-    fputc ('\n', stdout);
-    if (format == rfc_2822_format)
-      setlocale (LC_TIME, "");
-  }
+  if (format == rfc_2822_format)
+    setlocale (LC_TIME, "C");
+  fprintftime (stdout, format, tm, 0, when.tv_nsec);
+  fputc ('\n', stdout);
+  if (format == rfc_2822_format)
+    setlocale (LC_TIME, "");
+
   return true;
 }
