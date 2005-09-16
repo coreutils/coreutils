@@ -242,7 +242,10 @@ my @Tests =
 
      # Test the combination of the to-upper-case modifier (^) and a conversion
      # specifier that expands to a string containing lower case characters.
-     ['subfmt-up1', '-d "1999-12-08 7:30" +%^c',
+     ['subfmt-up1', '-d "1999-12-08 7:30" "+%^c"',
+      # Solaris 5.9 prints 'WED DEC 08 07:30:00 1999', while
+      # most others print  'WED DEC  8 07:30:00 1999'.
+      {OUT_SUBST => 's/ [ 0]8.*//'},
       {OUT=>'WED DEC  8 07:30:00 1999'}],
     );
 
