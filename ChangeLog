@@ -2,6 +2,11 @@
 
 	* Version 5.3.1-cvs.
 
+	* tests/misc/date (subfmt-up1): Put quotes around format string
+	to protect `^' from interpretation by some shells.
+	Add a use of OUT_SUBST to compensate for Solaris strftime's slightly
+	different formatting of %c.
+
 	* src/dd.c (main): When failing to truncate, mention both the seek
 	block count and the block size, in case the block size is very large.
 	Now `make distcheck' should pass, once again.
