@@ -41,6 +41,7 @@
 #include "quotearg.h"
 #include "readtokens0.h"
 #include "same.h"
+#include "stat-time.h"
 #include "strftime.h"
 #include "xanstrftime.h"
 #include "xfts.h"
@@ -84,10 +85,9 @@ struct duinfo
   /* Size of files in directory.  */
   uintmax_t size;
 
-  /* Latest time stamp found.  If dmax == TYPE_MINIMUM (time_t) && nsec < 0,
-     no time stamp has been found.  */
-  time_t dmax;
-  int nsec;
+  /* Latest time stamp found.  If tmax.tv_sec == TYPE_MINIMUM (time_t)
+     && tmax.tv_nsec < 0, no time stamp has been found.  */
+  struct timespec tmax;
 };
 
 /* Initialize directory data.  */
@@ -95,17 +95,16 @@ static inline void
 duinfo_init (struct duinfo *a)
 {
   a->size = 0;
-  a->dmax = TYPE_MINIMUM (time_t);
-  a->nsec = -1;
+  a->tmax.tv_sec = TYPE_MINIMUM (time_t);
+  a->tmax.tv_nsec = -1;
 }
 
 /* Set directory data.  */
 static inline void
-duinfo_set (struct duinfo *a, uintmax_t size, time_t dmax, int nsec)
+duinfo_set (struct duinfo *a, uintmax_t size, struct timespec tmax)
 {
   a->size = size;
-  a->dmax = dmax;
-  a->nsec = nsec;
+  a->tmax = tmax;
 }
 
 /* Accumulate directory data.  */
@@ -113,12 +112,8 @@ static inline void
 duinfo_add (struct duinfo *a, struct duinfo const *b)
 {
   a->size += b->size;
-  if (a->dmax < b->dmax
-      || (a->dmax == b->dmax && a->nsec < b->nsec))
-    {
-      a->dmax = b->dmax;
-      a->nsec = b->nsec;
-    }
+  if (timespec_cmp (a->tmax, b->tmax) < 0)
+    a->tmax = b->tmax;
 }
 
 /* A structure for per-directory level information.  */
@@ -406,27 +401,27 @@ hash_init (void)
 }
 
 /* FIXME: this code is nearly identical to code in date.c  */
-/* Display the date and time in WHEN/NSEC according to the format specified
+/* Display the date and time in WHEN according to the format specified
    in TIME_FORMAT.  If TIME_FORMAT is NULL, use the standard output format.
    Return zero if successful.  */
 
 static void
-show_date (const char *format, time_t when, int nsec)
+show_date (const char *format, struct timespec when)
 {
   char *out;
-  struct tm *tm = localtime (&when);
+  struct tm *tm = localtime (&when.tv_sec);
   if (! tm)
     {
       char buf[INT_BUFSIZE_BOUND (intmax_t)];
       error (0, 0, _("time %s is out of range"),
 	     (TYPE_SIGNED (time_t)
-	      ? imaxtostr (when, buf)
-	      : umaxtostr (when, buf)));
+	      ? imaxtostr (when.tv_sec, buf)
+	      : umaxtostr (when.tv_sec, buf)));
       fputs (buf, stdout);
       return;
     }
 
-  out = xanstrftime (format, tm, 0, nsec);
+  out = xanstrftime (format, tm, 0, when.tv_nsec);
   fputs (out, stdout);
   free (out);
 }
@@ -450,7 +445,7 @@ print_size (const struct duinfo *pdui, const char *string)
   if (opt_time)
     {
       putchar ('\t');
-      show_date (time_format, pdui->dmax, pdui->nsec);
+      show_date (time_format, pdui->tmax);
     }
   printf ("\t%s%c", string, opt_nul_terminate_output ? '\0' : '\n');
   fflush (stdout);
@@ -539,12 +534,9 @@ process_file (FTS *fts, FTSENT *ent)
 		  (apparent_size
 		   ? sb->st_size
 		   : ST_NBLOCKS (*sb) * ST_NBLOCKSIZE),
-		  (time_type == time_ctime ? sb->st_ctime
-		   : time_type == time_atime ? sb->st_atime
-		   : sb->st_mtime),
-		  (time_type == time_ctime ? TIMESPEC_NS (sb->st_ctim)
-		   : time_type == time_atime ? TIMESPEC_NS (sb->st_atim)
-		   : TIMESPEC_NS (sb->st_mtim)));
+		  (time_type == time_mtime ? get_stat_mtime (sb)
+		   : time_type == time_atime ? get_stat_atime (sb)
+		   : get_stat_ctime (sb)));
     }
 
   level = ent->fts_level;

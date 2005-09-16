@@ -33,6 +33,7 @@
 #include "inttostr.h"
 #include "posixtm.h"
 #include "quote.h"
+#include "stat-time.h"
 #include "fprintftime.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -493,10 +494,9 @@ main (int argc, char **argv)
 	  /* (option_specified_date || set_date) */
 	  if (reference != NULL)
 	    {
-	      if (stat (reference, &refstats))
+	      if (stat (reference, &refstats) != 0)
 		error (EXIT_FAILURE, errno, "%s", reference);
-	      when.tv_sec = refstats.st_mtime;
-	      when.tv_nsec = TIMESPEC_NS (refstats.st_mtim);
+	      when = get_stat_mtime (&refstats);
 	    }
 	  else
 	    {

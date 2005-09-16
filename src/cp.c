@@ -33,6 +33,7 @@
 #include "filenamecat.h"
 #include "quote.h"
 #include "quotearg.h"
+#include "stat-time.h"
 #include "utimens.h"
 
 #define ASSIGN_BASENAME_STRDUPA(Dest, File_name)	\
@@ -304,10 +305,8 @@ re_protect (char const *const_dst_name, size_t src_offset,
 	{
 	  struct timespec timespec[2];
 
-	  timespec[0].tv_sec = src_sb.st_atime;
-	  timespec[0].tv_nsec = TIMESPEC_NS (src_sb.st_atim);
-	  timespec[1].tv_sec = src_sb.st_mtime;
-	  timespec[1].tv_nsec = TIMESPEC_NS (src_sb.st_mtim);
+	  timespec[0] = get_stat_atime (&src_sb);
+	  timespec[1] = get_stat_mtime (&src_sb);
 
 	  if (utimens (dst_name, timespec))
 	    {

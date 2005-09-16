@@ -123,6 +123,7 @@ int wcwidth ();
 #include "quote.h"
 #include "quotearg.h"
 #include "same.h"
+#include "stat-time.h"
 #include "strftime.h"
 #include "strverscmp.h"
 #include "xstrtol.h"
@@ -2855,7 +2856,8 @@ static inline int
 cmp_ctime (struct fileinfo const *a, struct fileinfo const *b,
 	   int (*cmp) (char const *, char const *))
 {
-  int diff = CTIME_CMP (b->stat, a->stat);
+  int diff = timespec_cmp (get_stat_ctime (&b->stat),
+			   get_stat_ctime (&a->stat));
   return diff ? diff : cmp (a->name, b->name);
 }
 static int compare_ctime (V a, V b) { return cmp_ctime (a, b, xstrcoll); }
@@ -2867,7 +2869,8 @@ static inline int
 cmp_mtime (struct fileinfo const *a, struct fileinfo const *b,
 	   int (*cmp) (char const *, char const *))
 {
-  int diff = MTIME_CMP (b->stat, a->stat);
+  int diff = timespec_cmp (get_stat_mtime (&b->stat),
+			   get_stat_mtime (&a->stat));
   return diff ? diff : cmp (a->name, b->name);
 }
 static int compare_mtime (V a, V b) { return cmp_mtime (a, b, xstrcoll); }
@@ -2879,7 +2882,8 @@ static inline int
 cmp_atime (struct fileinfo const *a, struct fileinfo const *b,
 	   int (*cmp) (char const *, char const *))
 {
-  int diff = ATIME_CMP (b->stat, a->stat);
+  int diff = timespec_cmp (get_stat_atime (&b->stat),
+			   get_stat_atime (&a->stat));
   return diff ? diff : cmp (a->name, b->name);
 }
 static int compare_atime (V a, V b) { return cmp_atime (a, b, xstrcoll); }
@@ -3231,7 +3235,8 @@ print_long_format (const struct fileinfo *f)
   size_t s;
   char *p;
   time_t when;
-  int when_ns IF_LINT (= 0);
+  int when_ns;
+  struct timespec when_timespec;
   struct tm *when_local;
 
   /* Compute mode string.  On most systems, it's based on st_mode.
@@ -3245,18 +3250,18 @@ print_long_format (const struct fileinfo *f)
   switch (time_type)
     {
     case time_ctime:
-      when = f->stat.st_ctime;
-      when_ns = TIMESPEC_NS (f->stat.st_ctim);
+      when_timespec = get_stat_ctime (&f->stat);
       break;
     case time_mtime:
-      when = f->stat.st_mtime;
-      when_ns = TIMESPEC_NS (f->stat.st_mtim);
+      when_timespec = get_stat_mtime (&f->stat);
       break;
     case time_atime:
-      when = f->stat.st_atime;
-      when_ns = TIMESPEC_NS (f->stat.st_atim);
+      when_timespec = get_stat_atime (&f->stat);
       break;
     }
+
+  when = when_timespec.tv_sec;
+  when_ns = when_timespec.tv_nsec;
 
   p = buf;
 
@@ -3337,7 +3342,7 @@ print_long_format (const struct fileinfo *f)
       p[-1] = ' ';
     }
 
-  when_local = localtime (&when);
+  when_local = localtime (&when_timespec.tv_sec);
   s = 0;
   *p = '\1';
 

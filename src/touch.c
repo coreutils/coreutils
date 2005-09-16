@@ -32,6 +32,7 @@
 #include "posixver.h"
 #include "quote.h"
 #include "safe-read.h"
+#include "stat-time.h"
 #include "utimens.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -170,22 +171,12 @@ touch (const char *file)
     }
   else
     {
-      if (change_times & CH_ATIME)
-	timespec[0] = newtime[0];
-      else
-	{
-	  timespec[0].tv_sec = sbuf.st_atime;
-	  timespec[0].tv_nsec = TIMESPEC_NS (sbuf.st_atim);
-	}
-
-      if (change_times & CH_MTIME)
-	timespec[1] = newtime[1];
-      else
-	{
-	  timespec[1].tv_sec = sbuf.st_mtime;
-	  timespec[1].tv_nsec = TIMESPEC_NS (sbuf.st_mtim);
-	}
-
+      timespec[0] = (change_times & CH_ATIME
+		     ? newtime[0]
+		     : get_stat_atime (&sbuf));
+      timespec[1] = (change_times & CH_MTIME
+		     ? newtime[1]
+		     : get_stat_mtime (&sbuf));
       t = timespec;
     }
 
@@ -342,10 +333,8 @@ main (int argc, char **argv)
       if (stat (ref_file, &ref_stats))
 	error (EXIT_FAILURE, errno,
 	       _("failed to get attributes of %s"), quote (ref_file));
-      newtime[0].tv_sec = ref_stats.st_atime;
-      newtime[0].tv_nsec = TIMESPEC_NS (ref_stats.st_atim);
-      newtime[1].tv_sec = ref_stats.st_mtime;
-      newtime[1].tv_nsec = TIMESPEC_NS (ref_stats.st_mtim);
+      newtime[0] = get_stat_atime (&ref_stats);
+      newtime[1] = get_stat_mtime (&ref_stats);
       date_set = true;
       if (flex_date)
 	{

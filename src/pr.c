@@ -319,6 +319,7 @@
 #include "inttostr.h"
 #include "mbswidth.h"
 #include "quote.h"
+#include "stat-time.h"
 #include "stdio--.h"
 #include "strftime.h"
 #include "xstrtol.h"
@@ -1656,7 +1657,7 @@ init_header (char *filename, int desc)
 {
   char *buf = NULL;
   struct stat st;
-  time_t s;
+  struct timespec t;
   int ns;
   struct tm *tm;
 
@@ -1664,25 +1665,22 @@ init_header (char *filename, int desc)
   if (STREQ (filename, "-"))
     desc = -1;
   if (0 <= desc && fstat (desc, &st) == 0)
-    {
-      s = st.st_mtime;
-      ns = TIMESPEC_NS (st.st_mtim);
-    }
+    t = get_stat_mtime (&st);
   else
     {
       static struct timespec timespec;
       if (! timespec.tv_sec)
 	gettime (&timespec);
-      s = timespec.tv_sec;
-      ns = timespec.tv_nsec;
+      t = timespec;
     }
 
-  tm = localtime (&s);
+  ns = t.tv_nsec;
+  tm = localtime (&t.tv_sec);
   if (tm == NULL)
     {
       buf = xmalloc (INT_BUFSIZE_BOUND (long int)
 		     + MAX (10, INT_BUFSIZE_BOUND (int)));
-      sprintf (buf, "%ld.%09d", (long int) s, ns);
+      sprintf (buf, "%ld.%09d", (long int) t.tv_sec, ns);
     }
   else
     {

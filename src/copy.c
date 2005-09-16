@@ -45,6 +45,7 @@
 #include "quote.h"
 #include "same.h"
 #include "savedir.h"
+#include "stat-time.h"
 #include "utimecmp.h"
 #include "utimens.h"
 #include "xreadlink.h"
@@ -1567,10 +1568,8 @@ copy_internal (char const *src_name, char const *dst_name,
     {
       struct timespec timespec[2];
 
-      timespec[0].tv_sec = src_sb.st_atime;
-      timespec[0].tv_nsec = TIMESPEC_NS (src_sb.st_atim);
-      timespec[1].tv_sec = src_sb.st_mtime;
-      timespec[1].tv_nsec = TIMESPEC_NS (src_sb.st_mtim);
+      timespec[0] = get_stat_atime (&src_sb);
+      timespec[1] = get_stat_mtime (&src_sb);
 
       if (utimens (dst_name, timespec) != 0)
 	{

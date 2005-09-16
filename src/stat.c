@@ -52,6 +52,7 @@
 #include "inttostr.h"
 #include "quote.h"
 #include "quotearg.h"
+#include "stat-time.h"
 #include "strftime.h"
 #include "xreadlink.h"
 
@@ -280,18 +281,18 @@ human_access (struct stat const *statbuf)
 }
 
 static char *
-human_time (time_t t, int t_ns)
+human_time (struct timespec t)
 {
   static char str[MAX (INT_BUFSIZE_BOUND (intmax_t),
 		       (INT_STRLEN_BOUND (int) /* YYYY */
 			+ 1 /* because YYYY might equal INT_MAX + 1900 */
 			+ sizeof "-MM-DD HH:MM:SS.NNNNNNNNN +ZZZZ"))];
-  struct tm const *tm = localtime (&t);
+  struct tm const *tm = localtime (&t.tv_sec);
   if (tm == NULL)
     return (TYPE_SIGNED (time_t)
-	    ? imaxtostr (t, str)
-	    : umaxtostr (t, str));
-  nstrftime (str, sizeof str, "%Y-%m-%d %H:%M:%S.%N %z", tm, 0, t_ns);
+	    ? imaxtostr (t.tv_sec, str)
+	    : umaxtostr (t.tv_sec, str));
+  nstrftime (str, sizeof str, "%Y-%m-%d %H:%M:%S.%N %z", tm, 0, t.tv_nsec);
   return str;
 }
 
@@ -506,8 +507,7 @@ print_stat (char *pformat, size_t buf_len, char m,
       break;
     case 'x':
       xstrcat (pformat, buf_len, "s");
-      printf (pformat, human_time (statbuf->st_atime,
-				   TIMESPEC_NS (statbuf->st_atim)));
+      printf (pformat, human_time (get_stat_atime (statbuf)));
       break;
     case 'X':
       xstrcat (pformat, buf_len, TYPE_SIGNED (time_t) ? "ld" : "lu");
@@ -515,8 +515,7 @@ print_stat (char *pformat, size_t buf_len, char m,
       break;
     case 'y':
       xstrcat (pformat, buf_len, "s");
-      printf (pformat, human_time (statbuf->st_mtime,
-				   TIMESPEC_NS (statbuf->st_mtim)));
+      printf (pformat, human_time (get_stat_mtime (statbuf)));
       break;
     case 'Y':
       xstrcat (pformat, buf_len, TYPE_SIGNED (time_t) ? "ld" : "lu");
@@ -524,8 +523,7 @@ print_stat (char *pformat, size_t buf_len, char m,
       break;
     case 'z':
       xstrcat (pformat, buf_len, "s");
-      printf (pformat, human_time (statbuf->st_ctime,
-				   TIMESPEC_NS (statbuf->st_ctim)));
+      printf (pformat, human_time (get_stat_ctime (statbuf)));
       break;
     case 'Z':
       xstrcat (pformat, buf_len, TYPE_SIGNED (time_t) ? "ld" : "lu");

@@ -35,6 +35,7 @@
 #include "mkdir-p.h"
 #include "modechange.h"
 #include "quote.h"
+#include "stat-time.h"
 #include "utimens.h"
 #include "xstrtol.h"
 
@@ -536,10 +537,8 @@ change_timestamps (const char *from, const char *to)
       return false;
     }
 
-  timespec[0].tv_sec = stb.st_atime;
-  timespec[0].tv_nsec = TIMESPEC_NS (stb.st_atim);
-  timespec[1].tv_sec = stb.st_mtime;
-  timespec[1].tv_nsec = TIMESPEC_NS (stb.st_mtim);
+  timespec[0] = get_stat_atime (&stb);
+  timespec[1] = get_stat_mtime (&stb);
   if (utimens (to, timespec))
     {
       error (0, errno, _("cannot set time stamps for %s"), quote (to));

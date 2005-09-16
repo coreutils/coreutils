@@ -40,6 +40,7 @@
 #include "posixver.h"
 #include "quote.h"
 #include "safe-read.h"
+#include "stat-time.h"
 #include "xnanosleep.h"
 #include "xstrtol.h"
 #include "xstrtod.h"
@@ -327,8 +328,7 @@ record_open_fd (struct File_spec *f, int fd,
 {
   f->fd = fd;
   f->size = size;
-  f->mtime.tv_sec = st->st_mtime;
-  f->mtime.tv_nsec = TIMESPEC_NS (st->st_mtim);
+  f->mtime = get_stat_mtime (st);
   f->dev = st->st_dev;
   f->ino = st->st_ino;
   f->mode = st->st_mode;
@@ -1039,10 +1039,9 @@ tail_forever (struct File_spec *f, int nfiles, double sleep_interval)
 		  continue;
 		}
 
-	      if ((! S_ISREG (stats.st_mode) || f[i].size == stats.st_size)
-		  && f[i].mtime.tv_sec == stats.st_mtime
-		  && f[i].mtime.tv_nsec == TIMESPEC_NS (stats.st_mtim)
-		  && f[i].mode == stats.st_mode)
+	      if (f[i].mode == stats.st_mode
+		  && (! S_ISREG (stats.st_mode) || f[i].size == stats.st_size)
+		  && timespec_cmp (f[i].mtime, get_stat_mtime (&stats)) == 0)
 		{
 		  if ((max_n_unchanged_stats_between_opens
 		       <= f[i].n_unchanged_stats++)
@@ -1057,8 +1056,7 @@ tail_forever (struct File_spec *f, int nfiles, double sleep_interval)
 	      /* This file has changed.  Print out what we can, and
 		 then keep looping.  */
 
-	      f[i].mtime.tv_sec = stats.st_mtime;
-	      f[i].mtime.tv_nsec = TIMESPEC_NS (stats.st_mtim);
+	      f[i].mtime = get_stat_mtime (&stats);
 	      f[i].mode = stats.st_mode;
 
 	      /* reset counter */
