@@ -1,6 +1,11 @@
-2005-09-16  Jim Meyering  <jim@meyering.net>
+2005-09-17  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1-cvs.
+
+	* src/extract-magic (usage): Request that additions be sent to
+	bug-coreutils@gnu.org, too.
+
+2005-09-16  Jim Meyering  <jim@meyering.net>
 
 	* tests/misc/date (rfc822-1): Compensate for Solaris 5.9's /bin/sh,
 	which emits a diagnostic to stderr when this test's LC_ALL=de_DE
