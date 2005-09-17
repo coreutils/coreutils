@@ -4,7 +4,7 @@ use strict;
 
 use Getopt::Long;
 
-(my $VERSION = '$Revision: 1.3 $ ') =~ tr/[0-9].//cd;
+(my $VERSION = '$Revision: 1.4 $ ') =~ tr/[0-9].//cd;
 (my $ME = $0) =~ s|.*/||;
 
 END
@@ -89,7 +89,7 @@ EOF
 
   print <<EOF;
 /* Define the magic numbers as given by statfs(2).
-   Please send additions to meskes\@debian.org.
+   Please send additions to bug-coreutils\@gnu.org and meskes\@debian.org.
    This file is generated automatically from $file. */
 
 #if defined __linux__
