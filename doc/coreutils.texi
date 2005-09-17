@@ -11422,7 +11422,7 @@ line, login time, and remote hostname or X display.
 @flindex wtmp
 If given one non-option argument, @command{who} uses that instead of
 a default system-maintained file (often @file{/var/run/utmp} or
-+@file{/etc/utmp}) as the name of the file containing the record of
+@file{/etc/utmp}) as the name of the file containing the record of
 users logged on.  @file{/var/log/wtmp} is commonly given as an argument
 to @command{who} to look at who has previously logged on.
 
