@@ -2,6 +2,9 @@
 
 	* Version 5.3.1-cvs.
 
+	* src/remove.c (remove_dir): Return RM_ERROR, not `1',
+	when attempting to remove `/' with --preserve-root.
+
 	* src/remove.c (remove_cwd_entries): Syntactic tweak: move an
 	assignment out of an if-expression.
 
