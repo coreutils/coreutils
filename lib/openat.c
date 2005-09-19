@@ -170,3 +170,43 @@ fstatat (int fd, char const *file, struct stat *st, int flag)
   errno = saved_errno;
   return err;
 }
+
+/* Replacement for Solaris' function by the same name.
+   <http://www.google.com/search?q=unlinkat+site:docs.sun.com>
+   Simulate it by doing save_cwd/fchdir/(unlink|rmdir)/restore_cwd.
+   If either the save_cwd or the restore_cwd fails (relatively unlikely,
+   and usually indicative of a problem that deserves close attention),
+   then give a diagnostic and exit nonzero.
+   Otherwise, this function works just like Solaris' unlinkat.  */
+int
+unlinkat (int fd, char const *file, int flag)
+{
+  struct saved_cwd saved_cwd;
+  int saved_errno;
+  int err;
+
+  if (fd == AT_FDCWD)
+    return (flag == AT_REMOVEDIR ? rmdir (file) : unlink (file));
+
+  if (save_cwd (&saved_cwd) != 0)
+    openat_save_fail (errno);
+
+  if (fchdir (fd) != 0)
+    {
+      saved_errno = errno;
+      free_cwd (&saved_cwd);
+      errno = saved_errno;
+      return -1;
+    }
+
+  err = (flag == AT_REMOVEDIR ? rmdir (file) : unlink (file));
+  saved_errno = errno;
+
+  if (restore_cwd (&saved_cwd) != 0)
+    openat_restore_fail (errno);
+
+  free_cwd (&saved_cwd);
+
+  errno = saved_errno;
+  return err;
+}
