@@ -1,3 +1,8 @@
+2005-09-19  Jim Meyering  <jim@meyering.net>
+
+	* openat.c (unlinkat): New function.
+	* openat.h (unlinkat): Add prototype.
+
 2005-09-16  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Import from gnulib.
