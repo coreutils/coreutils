@@ -867,7 +867,8 @@ remove_cwd_entries (Dirstack_state *ds, char **subdir, struct stat *subdir_sb,
       /* Set errno to zero so we can distinguish between a readdir failure
 	 and when readdir simply finds that there are no more entries.  */
       errno = 0;
-      if ((dp = readdir_ignoring_dot_and_dotdot (dirp)) == NULL)
+      dp = readdir_ignoring_dot_and_dotdot (dirp);
+      if (dp == NULL)
 	{
 	  if (errno)
 	    {
