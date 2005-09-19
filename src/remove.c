@@ -1084,7 +1084,7 @@ remove_dir (Dirstack_state *ds, char const *dir, struct cwd_state **cwd_state,
   if (ROOT_DEV_INO_CHECK (x->root_dev_ino, &dir_sb))
     {
       ROOT_DEV_INO_WARN (full_filename (dir));
-      return 1;
+      return RM_ERROR;
     }
 
   AD_push (ds, dir, &dir_sb);
