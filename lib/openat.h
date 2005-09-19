@@ -35,8 +35,9 @@
 #endif
 
 #ifndef AT_FDCWD
-# define AT_FDCWD (-3041965) /* same value as Solaris 9 */
-# define AT_SYMLINK_NOFOLLOW 4096 /* same value as Solaris 9 */
+# define AT_FDCWD (-3041965)		/* same value as Solaris 9 */
+# define AT_SYMLINK_NOFOLLOW 4096	/* same value as Solaris 9 */
+# define AT_REMOVEDIR (0x1)		/* same value as Solaris 9 */
 
 # ifdef __OPENAT_PREFIX
 #  undef openat
@@ -49,6 +50,8 @@ int openat (int fd, char const *file, int flags, /* mode_t mode */ ...);
 DIR *fdopendir (int fd);
 #  define fstatat __OPENAT_ID (fstatat)
 int fstatat (int fd, char const *file, struct stat *st, int flag);
+#  define unlinkat __OPENAT_ID (unlinkat)
+int unlinkat (int fd, char const *file, int flag);
 void openat_restore_fail (int) ATTRIBUTE_NORETURN;
 void openat_save_fail (int) ATTRIBUTE_NORETURN;
 # else
