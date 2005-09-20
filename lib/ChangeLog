@@ -1,3 +1,10 @@
+2005-09-20  Jim Meyering  <jim@meyering.net>
+
+	* openat.c (fdopendir): Be sure to close the supplied
+	file descriptor before returning.  This makes our replacement
+	implementation a little closer to Solaris's, where fdopendir
+	ties the file descriptor to the returned DIR* pointer.
+
 2005-09-19  Jim Meyering  <jim@meyering.net>
 
 	* openat.c (unlinkat): New function.
