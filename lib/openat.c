@@ -93,7 +93,12 @@ rpl_openat (int fd, char const *file, int flags, ...)
    If either the save_cwd or the restore_cwd fails (relatively unlikely,
    and usually indicative of a problem that deserves close attention),
    then give a diagnostic and exit nonzero.
-   Otherwise, this function works just like Solaris' fdopendir.  */
+   Otherwise, this function works just like Solaris' fdopendir.
+
+   W A R N I N G:
+   Unlike the other fd-related functions here, this one
+   effectively consumes its FD parameter.  The caller should not
+   close or otherwise manipulate FD after calling this function.  */
 DIR *
 fdopendir (int fd)
 {
@@ -111,6 +116,7 @@ fdopendir (int fd)
     {
       saved_errno = errno;
       free_cwd (&saved_cwd);
+      close (fd);
       errno = saved_errno;
       return NULL;
     }
@@ -122,6 +128,7 @@ fdopendir (int fd)
     openat_restore_fail (errno);
 
   free_cwd (&saved_cwd);
+  close (fd);
 
   errno = saved_errno;
   return dir;
