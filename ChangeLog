@@ -1,6 +1,11 @@
-2005-09-19  Jim Meyering  <jim@meyering.net>
+2005-09-20  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1-cvs.
+
+	* src/remove.c (write_protected_non_symlink): Change comment to
+	agree with the code.
+
+2005-09-19  Jim Meyering  <jim@meyering.net>
 
 	* src/remove.c (remove_dir): Return RM_ERROR, not `1',
 	when attempting to remove `/' with --preserve-root.
