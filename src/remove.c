@@ -544,8 +544,8 @@ is_empty_dir (char const *dir)
   return saved_errno == 0 ? true : false;
 }
 
-/* Return true if FILE is not a symbolic link and it is not writable.
-   Also return true if FILE cannot be lstat'ed.  Otherwise, return false.
+/* Return true if FILE is determined to be an unwritable non-symlink.
+   Otherwise, return false (including when lstat'ing it fails).
    If lstat succeeds, set *BUF_P to BUF.
    This is to avoid calling euidaccess when FILE is a symlink.  */
 static bool
