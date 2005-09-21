@@ -5,6 +5,9 @@ if test "$VERBOSE" = yes; then
   ginstall --version
 fi
 
+. $srcdir/../envvar-check
+PRIV_CHECK_ARG=require-non-root . $srcdir/../priv-check
+
 dir=dir
 file=file
 
