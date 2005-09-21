@@ -1,5 +1,5 @@
 /* Define the magic numbers as given by statfs(2).
-   Please send additions to meskes@debian.org.
+   Please send additions to bug-coreutils@gnu.org and meskes@debian.org.
    This file is generated automatically from ./stat.c. */
 
 #if defined __linux__
