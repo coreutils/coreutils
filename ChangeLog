@@ -1,6 +1,12 @@
-2005-09-20  Jim Meyering  <jim@meyering.net>
+2005-09-21  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1-cvs.
+
+	* tests/install/basic-1: Require that this test be run as non-root.
+	Otherwise, it fails due to the fact that the chmod 0 . doesn't
+	affect root.
+
+2005-09-20  Jim Meyering  <jim@meyering.net>
 
 	* src/remove.c (write_protected_non_symlink): Change comment to
 	agree with the code.
