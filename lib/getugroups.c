@@ -1,6 +1,6 @@
 /* getugroups.c -- return a list of the groups a user is in
 
-   Copyright (C) 1990, 1991, 1998, 1999, 2000, 2003, 2004 Free
+   Copyright (C) 1990, 1991, 1998, 1999, 2000, 2003, 2004, 2005 Free
    Software Foundation.
 
    This program is free software; you can redistribute it and/or modify

@@ -19,7 +19,7 @@
 
 /* Written by Paul Eggert <eggert@twinsun.com> */
 
-#if HAVE_CONFIG_H
+#ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
 
@@ -222,7 +222,8 @@ quotearg_buffer_restyled (char *buffer, size_t buffersize,
     case locale_quoting_style:
     case clocale_quoting_style:
       {
-	/* Get translations for open and closing quotation marks.
+	/* TRANSLATORS:
+	   Get translations for open and closing quotation marks.
 
 	   The message catalog should translate "`" to a left
 	   quotation mark suitable for the locale, and similarly for
@@ -235,7 +236,11 @@ quotearg_buffer_restyled (char *buffer, size_t buffersize,
 	   should translate "'" to U+201D (RIGHT DOUBLE QUOTATION
 	   MARK).  A British English Unicode locale should instead
 	   translate these to U+2018 (LEFT SINGLE QUOTATION MARK) and
-	   U+2019 (RIGHT SINGLE QUOTATION MARK), respectively.  */
+	   U+2019 (RIGHT SINGLE QUOTATION MARK), respectively.
+
+	   If you don't know what to put here, please see
+	   <http://en.wikipedia.org/wiki/Quotation_mark#Glyphs>
+	   and use glyphs suitable for your language.  */
 
 	char const *left = gettext_quote (N_("`"), quoting_style);
 	char const *right = gettext_quote (N_("'"), quoting_style);

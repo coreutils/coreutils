@@ -20,7 +20,7 @@
 
 /* Written by Paul Eggert <eggert@twinsun.com>  */
 
-#if HAVE_CONFIG_H
+#ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
 
@@ -35,6 +35,7 @@
 
 #include "exclude.h"
 #include "fnmatch.h"
+#include "strcase.h"
 #include "xalloc.h"
 
 #if USE_UNLOCKED_IO

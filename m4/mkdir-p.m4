@@ -1,4 +1,4 @@
-# mkdir-p.m4 serial 8
+# mkdir-p.m4 serial 9
 dnl Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
@@ -11,6 +11,5 @@ AC_DEFUN([gl_MKDIR_PARENTS],
 
   dnl Prerequisites of lib/mkdir-p.c.
   AC_REQUIRE([AC_FUNC_ALLOCA])
-  AC_CHECK_HEADERS_ONCE(unistd.h)
   AC_REQUIRE([gl_AFS])
 ])

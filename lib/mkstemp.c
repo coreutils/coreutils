@@ -15,7 +15,9 @@
    with this program; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
 
 /* Disable the definition of mkstemp to rpl_mkstemp (from config.h) in this
    file.  Otherwise, we'd get conflicting prototypes for rpl_mkstemp on

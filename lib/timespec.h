@@ -19,8 +19,6 @@
 #if ! defined TIMESPEC_H
 # define TIMESPEC_H
 
-/* You must include config.h before including this file.  */
-
 # include <sys/types.h>
 # if TIME_WITH_SYS_TIME
 #  include <sys/time.h>

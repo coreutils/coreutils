@@ -18,6 +18,9 @@
 
 /* Written by Paul Eggert */
 
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
 #include "inttostr.h"
 
 /* Convert I to a printable string in BUF, which must be at least

@@ -20,7 +20,9 @@
 
 /* written by Jim Meyering */
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
 
 /* Disable the definitions of these functions (from config.h)
    so we can use the library versions here.  */

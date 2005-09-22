@@ -1,4 +1,4 @@
-#serial 11
+#serial 12
 
 # Copyright (C) 2001, 2003, 2004, 2005 Free Software Foundation, Inc.
 # This file is free software; the Free Software Foundation
@@ -65,7 +65,7 @@ AC_DEFUN([gl_PREREQ_MKSTEMP],
 # Prerequisites of lib/tempname.c.
 AC_DEFUN([gl_PREREQ_TEMPNAME],
 [
-  AC_CHECK_HEADERS_ONCE(sys/time.h stdint.h unistd.h)
+  AC_CHECK_HEADERS_ONCE(sys/time.h)
   AC_CHECK_FUNCS(__secure_getenv gettimeofday)
   AC_CHECK_DECLS_ONCE(getenv)
   AC_REQUIRE([gl_AC_TYPE_UINTMAX_T])

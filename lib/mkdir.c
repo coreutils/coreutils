@@ -19,7 +19,9 @@
 
 /* written by Jim Meyering */
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
 
 /* Disable the definition of mkdir to rpl_mkdir (from config.h) in this
    file.  Otherwise, we'd get conflicting prototypes for rpl_mkdir on

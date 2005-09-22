@@ -17,7 +17,9 @@
 
 /* written by Jim Meyering */
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
 
 /* Undefine nanosleep here so any prototype is not redefined to be a
    prototype for rpl_nanosleep. (they'd conflict e.g., on alpha-dec-osf3.2)  */

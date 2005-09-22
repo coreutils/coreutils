@@ -1,4 +1,4 @@
-#serial 2
+#serial 3
 
 # Copyright (C) 2005 Free Software Foundation, Inc.
 #
@@ -11,7 +11,7 @@
 AC_DEFUN([gl_UNLINKDIR],
 [
   AC_REQUIRE([AC_CANONICAL_HOST])
-  AC_CHECK_HEADERS_ONCE(priv.h unistd.h)
+  AC_CHECK_HEADERS_ONCE(priv.h)
 
   AC_LIBSOURCES([unlinkdir.c, unlinkdir.h])
   AC_LIBOBJ([unlinkdir])

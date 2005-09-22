@@ -18,10 +18,6 @@
 
 /* Written by Paul Eggert */
 
-#if HAVE_CONFIG_H
-# include <config.h>
-#endif
-
 #if HAVE_INTTYPES_H
 # include <inttypes.h>
 #endif
@@ -29,9 +25,7 @@
 # include <stdint.h>
 #endif
 
-#if HAVE_SYS_TYPES_H
-# include <sys/types.h>
-#endif
+#include <sys/types.h>
 
 #include "intprops.h"
 

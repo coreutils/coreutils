@@ -35,7 +35,7 @@ AC_DEFUN([gl_FUNC_GETPASS_GNU],
 
 # Prerequisites of lib/getpass.c.
 AC_DEFUN([gl_PREREQ_GETPASS], [
-  AC_CHECK_HEADERS_ONCE(stdio_ext.h)
+  AC_CHECK_HEADERS_ONCE(stdio_ext.h termios.h)
+  AC_CHECK_FUNCS_ONCE(__fsetlocking tcgetattr tcsetattr)
   AC_CHECK_DECLS_ONCE([fflush_unlocked flockfile fputs_unlocked funlockfile putc_unlocked])
-  :
 ])

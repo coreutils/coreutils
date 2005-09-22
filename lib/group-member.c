@@ -1,5 +1,5 @@
 /* group-member.c -- determine whether group id is in calling user's group list
-   Copyright (C) 1994, 1997, 1998, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1994, 1997, 1998, 2003, 2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 
-#if HAVE_CONFIG_H
+#ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
 

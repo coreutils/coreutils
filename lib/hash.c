@@ -24,7 +24,7 @@
 /* Define USE_OBSTACK to 1 if you want the allocator to use obstacks instead
    of malloc.  If you change USE_OBSTACK, you have to recompile!  */
 
-#if HAVE_CONFIG_H
+#ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
 

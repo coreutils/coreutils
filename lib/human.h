@@ -22,10 +22,6 @@
 #ifndef HUMAN_H_
 # define HUMAN_H_ 1
 
-# if HAVE_CONFIG_H
-#  include <config.h>
-# endif
-
 # include <limits.h>
 # include <stdbool.h>
 

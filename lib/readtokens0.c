@@ -17,7 +17,9 @@
 
    Written by Jim Meyering. */
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
 #include <stdlib.h>
 
 #include "readtokens0.h"

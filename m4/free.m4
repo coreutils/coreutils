@@ -16,7 +16,6 @@
 
 AC_DEFUN([gl_FUNC_FREE],
 [
-  AC_CHECK_HEADERS_ONCE(unistd.h)
   AC_CACHE_CHECK([whether free (NULL) is known to work],
     [gl_cv_func_free],
     [AC_COMPILE_IFELSE(

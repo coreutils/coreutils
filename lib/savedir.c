@@ -19,7 +19,7 @@
 
 /* Written by David MacKenzie <djm@gnu.ai.mit.edu>. */
 
-#if HAVE_CONFIG_H
+#ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
 

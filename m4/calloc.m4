@@ -1,6 +1,6 @@
-# calloc.m4 serial 4
+# calloc.m4 serial 5
 
-# Copyright (C) 2004 Free Software Foundation, Inc.
+# Copyright (C) 2004, 2005 Free Software Foundation, Inc.
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
 # with or without modifications, as long as this notice is preserved.
@@ -18,7 +18,6 @@
 AC_DEFUN([_AC_FUNC_CALLOC_IF],
 [AC_REQUIRE([AC_HEADER_STDC])dnl
 AC_REQUIRE([AC_TYPE_SIZE_T])dnl
-AC_CHECK_HEADERS(stdlib.h)
 AC_CACHE_CHECK([for GNU libc compatible calloc], ac_cv_func_calloc_0_nonnull,
 [AC_RUN_IFELSE([AC_LANG_PROGRAM([AC_INCLUDES_DEFAULT],
 		  [exit (!calloc (0, 0) || calloc ((size_t) -1 / 8 + 1, 8));])],

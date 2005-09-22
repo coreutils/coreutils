@@ -1,7 +1,7 @@
 /* ftruncate emulations that work on some System V's.
    This file is in the public domain.  */
 
-#if HAVE_CONFIG_H
+#ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
 

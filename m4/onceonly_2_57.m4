@@ -1,5 +1,5 @@
 # onceonly_2_57.m4 serial 3
-dnl Copyright (C) 2002-2003 Free Software Foundation, Inc.
+dnl Copyright (C) 2002-2003, 2005 Free Software Foundation, Inc.
 dnl This file is free software, distributed under the terms of the GNU
 dnl General Public License.  As a special exception to the GNU General
 dnl Public License, this file may be distributed as part of a program
@@ -27,7 +27,7 @@ dnl thus reducing the size of 'configure'. Works with autoconf-2.57. The
 dnl size reduction is ca. 9%.
 
 dnl Autoconf version 2.57 or newer is recommended.
-AC_PREREQ(2.54)
+AC_PREREQ(2.57)
 
 # AC_CHECK_HEADERS_ONCE(HEADER1 HEADER2 ...) is a once-only variant of
 # AC_CHECK_HEADERS(HEADER1 HEADER2 ...).

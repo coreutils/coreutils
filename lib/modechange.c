@@ -26,7 +26,7 @@
    changing the mode of many files, this probably results in a
    performance gain.  */
 
-#if HAVE_CONFIG_H
+#ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
 

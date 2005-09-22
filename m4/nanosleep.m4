@@ -1,4 +1,4 @@
-#serial 13
+#serial 14
 
 dnl From Jim Meyering.
 dnl Check for the nanosleep function.
@@ -67,6 +67,5 @@ AC_DEFUN([gl_FUNC_NANOSLEEP],
 # Prerequisites of lib/nanosleep.c.
 AC_DEFUN([gl_PREREQ_NANOSLEEP],
 [
-  AC_CHECK_HEADERS_ONCE(unistd.h)
   AC_CHECK_FUNCS_ONCE(siginterrupt)
 ])

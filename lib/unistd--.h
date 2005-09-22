@@ -23,3 +23,6 @@
 
 #undef dup
 #define dup dup_safer
+
+#undef pipe
+#define pipe pipe_safer

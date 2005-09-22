@@ -1,6 +1,7 @@
 /* Convert file size to number of blocks on System V-like machines.
 
-   Copyright (C) 1990, 1997, 1998, 1999, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1990, 1997, 1998, 1999, 2004, 2005 Free Software
+   Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -18,7 +19,7 @@
 
 /* Written by Brian L. Matthews, blm@6sceng.UUCP. */
 
-#if HAVE_CONFIG_H
+#ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
 

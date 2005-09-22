@@ -19,7 +19,7 @@
 
 /* Written by Jim Meyering <jim@meyering.net>  */
 
-#if HAVE_CONFIG_H
+#ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
 

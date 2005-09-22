@@ -1,4 +1,4 @@
-#serial 6
+#serial 7
 dnl Run a program to determine whether whether link(2) follows symlinks.
 dnl Set LINK_FOLLOWS_SYMLINKS accordingly.
 
@@ -13,11 +13,6 @@ AC_DEFUN([gl_AC_FUNC_LINK_FOLLOWS_SYMLINK],
     [whether link(2) dereferences a symlink specified with a trailing slash],
 		 jm_ac_cv_func_link_follows_symlink,
   [
-    dnl poor-man's AC_REQUIRE: FIXME: repair this once autoconf-3 provides
-    dnl the appropriate framework.
-    test -z "$ac_cv_header_unistd_h" \
-      && AC_CHECK_HEADERS(unistd.h)
-
     # Create a regular file.
     echo > conftest.file
     AC_TRY_RUN(

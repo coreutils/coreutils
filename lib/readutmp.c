@@ -17,7 +17,9 @@
 
 /* Written by jla; revised by djm */
 
-#include <config.h>
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
 
 #include "readutmp.h"
 

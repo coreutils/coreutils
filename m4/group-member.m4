@@ -1,4 +1,4 @@
-#serial 8
+#serial 9
 
 # Copyright (C) 1999, 2000, 2001, 2003, 2004, 2005 Free Software Foundation, Inc.
 # This file is free software; the Free Software Foundation
@@ -25,6 +25,5 @@ AC_DEFUN([gl_FUNC_GROUP_MEMBER],
 # Prerequisites of lib/group-member.c.
 AC_DEFUN([gl_PREREQ_GROUP_MEMBER],
 [
-  AC_CHECK_HEADERS_ONCE(unistd.h)
   AC_REQUIRE([AC_FUNC_GETGROUPS])
 ])

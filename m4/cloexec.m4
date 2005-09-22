@@ -1,4 +1,4 @@
-# serial 4
+#serial 5
 dnl Copyright (C) 2004, 2005 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
@@ -8,7 +8,4 @@ AC_DEFUN([gl_CLOEXEC],
 [
   AC_LIBSOURCES([cloexec.c, cloexec.h])
   AC_LIBOBJ([cloexec])
-
-  dnl Prerequisites of lib/cloexec.c.
-  AC_CHECK_HEADERS_ONCE(unistd.h)
 ])

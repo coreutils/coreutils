@@ -1,4 +1,4 @@
-# strndup.m4 serial 4
+# strndup.m4 serial 5
 dnl Copyright (C) 2002, 2003, 2005 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
@@ -18,6 +18,4 @@ AC_DEFUN([gl_FUNC_STRNDUP],
 ])
 
 # Prerequisites of lib/strndup.c.
-AC_DEFUN([gl_PREREQ_STRNDUP], [
-  AC_CHECK_DECLS(strnlen)
-])
+AC_DEFUN([gl_PREREQ_STRNDUP], [:])
