@@ -25,6 +25,7 @@
 #include <sys/types.h>
 #include "system.h"
 
+#include "canon-host.h"
 #include "error.h"
 #include "hard-locale.h"
 #include "inttostr.h"
@@ -286,7 +287,6 @@ print_entry (const STRUCT_UTMP *utmp_ent)
 #ifdef HAVE_UT_HOST
   if (include_where && utmp_ent->ut_host[0])
     {
-      extern char *canon_host ();
       char ut_host[sizeof (utmp_ent->ut_host) + 1];
       char *host = NULL;
       char *display = NULL;
