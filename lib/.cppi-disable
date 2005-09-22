@@ -5,6 +5,8 @@ exit.h
 fnmatch_.h
 fts.c
 fts_.h
+getaddrinfo.h
+getdelim.h
 getndelim2.h
 getopt.c
 getopt.h
@@ -14,6 +16,8 @@ getopt_int.h
 getpagesize.h
 gettext.h
 localcharset.h
+mbchar.h
+mbuiter.h
 md5.h
 obstack.h
 printf-args.h
@@ -25,8 +29,11 @@ regex_internal.c
 regex_internal.h
 stat-time.h
 stdbool_.h
+strcase.h
 strdup.h
 strndup.h
+strnlen.h
+strnlen1.h
 strtoul.c
 time_r.h
 utimecmp.h
