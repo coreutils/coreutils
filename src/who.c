@@ -31,6 +31,7 @@
 #include <sys/types.h>
 #include "system.h"
 
+#include "canon-host.h"
 #include "readutmp.h"
 #include "error.h"
 #include "hard-locale.h"
@@ -99,7 +100,6 @@
 #endif
 
 char *ttyname ();
-char *canon_host ();
 
 /* The name this program was run with. */
 char *program_name;
