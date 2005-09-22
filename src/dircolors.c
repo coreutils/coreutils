@@ -31,6 +31,7 @@
 #include "getline.h"
 #include "obstack.h"
 #include "quote.h"
+#include "strcase.h"
 #include "xstrndup.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
