@@ -19,7 +19,7 @@
 
 /* Written by David MacKenzie <djm@gnu.ai.mit.edu> and Jim Meyering.  */
 
-#if HAVE_CONFIG_H
+#ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
 
@@ -44,6 +44,10 @@
 #include "error.h"
 #include "quote.h"
 #include "stat-macros.h"
+
+#ifndef ENOSYS
+# define ENOSYS EEXIST
+#endif
 
 #define WX_USR (S_IWUSR | S_IXUSR)
 
@@ -211,10 +215,14 @@ make_dir_parents (char const *arg,
 		  leading_dirs = new;
 		}
 	    }
-	  else if (errno == EEXIST)
+	  else if (errno == EEXIST || errno == ENOSYS)
 	    {
 	      /* A file is already there.  Perhaps it is a directory.
-		 If not, it will be diagnosed later.  */
+		 If not, it will be diagnosed later.
+
+		 The ENOSYS is for Solaris 8 NFS clients, which can
+		 fail with errno == ENOSYS if mkdir is invoked on an
+		 NFS mount point.  */
 	    }
 	  else
 	    {
