@@ -1,3 +1,39 @@
+2005-09-21  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* check-decl.m4 (_gl_DECL_HEADERS): Don't bother checking for
+	standard C headers, or for headers we no longer use.
+	* jm-macros.m4 (gl_MACROS): Don't require gl_FUNC_XANSTRFTIME;
+	no longer needed.
+	(gl_CHECK_ALL_HEADERS): Don't check for memory.h, mntent.h, mnttab.h,
+	netdb.h, stdlib.h, stdint.h, string.h, sys/filsys.h, sys/fs/s5param.h,
+	sys/fs_types.h, sys/fstyp.h, sys/mntent.h, sys/socket.h, sys/stafs.h,
+	sys/timeb.h, unistd.h.  No longer needed.
+	* prereq.m4 (gl_PREREQ): Require gl_FUNC_GETLINE rather than
+	AM_FUNC_GETLINE.  Require gl_FUNC_GETPASS_GNU rather than
+	gl_FUNC_GETPASS.  Require gl_MBCHAR and gl_MBITER.
+
+	* xanstrftime.m4: Remove; no longer used.
+
+	* getaddrinfo.m4, getdelim.m4, mbchar.m4, mbiter.m4, sockpfaf.m4:
+	New files, from gnulib.
+
+	* backupfile.m4, bison.m4, calloc.m4:
+	* canonicalize.m4, chown.m4, cloexec.m4, dup2.m4:
+	* fileblocks.m4, free.m4, ftruncate.m4, fts.m4:
+	* getcwd.m4, getopt.m4, getpagesize.m4, getpass.m4:
+	* getugroups.m4, group-member.m4, idcache.m4:
+	* lib-link.m4, lib-prefix.m4, link-follow.m4:
+	* mkdir-p.m4, mkstemp.m4, mktime.m4, mountlist.m4:
+	* nanosleep.m4, onceonly_2_57.m4, pathmax.m4:
+	* physmem.m4, posixver.m4, putenv.m4, safe-read.m4:
+	* same.m4, save-cwd.m4, stdio-safer.m4, strndup.m4:
+	* strnlen.m4, unistd-safer.m4, unlinkdir.m4:
+	* userspec.m4, xreadlink.m4, xstrtod.m4:
+	Sync from gnulib.
+
+	* canon-host.m4, getline.m4, mbrtowc.m4, strcase.m4, strstr.m4:
+	Nontrivial sync from gnulib.
+
 2005-09-16  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* jm-macros.m4 (gl_CHECK_ALL_TYPES): Do not require

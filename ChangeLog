@@ -1,3 +1,18 @@
+2005-09-21  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/rmdir.c (EEXIST, ENOTEMPTY): Remove unused macros.
+
+	Sync from gnulib.
+
+	* src/dircolors.c: Include strcase.h.
+	* src/pinky.c: Include canon-host.h rather than declaring
+	canon_host ourselves.
+	* src/who.c: Likewise.
+
+	* src/system.h (X2NREALLOC, X2REALLOC): Moved here from
+	../lib/xalloc.h, with args properly parenthesized, and using
+	verify_expr rather than the old VERIFY_EXPR.
+
 2005-09-21  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1-cvs.

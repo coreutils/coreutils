@@ -1,3 +1,68 @@
+2005-09-21  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Sync from gnulib.
+
+	* Makefile.am (libcoreutils_a_SOURCES): Add getaddrinfo.h,
+	mbchar.c, mbchar.h, mbuiter.h, strcase.h, strlen1.c, strnlen1.h,
+	strstr.h.
+
+	* argmatch.h (GL_CONCAT): Remove.
+	Include "verify.h" instead.
+	(ARGMATCH_CONSTRAINT, ARGMATCH_ASSERT): Remove.
+	(ARGMATCH_VERIFY): Rewrite in terms of new verify macros.
+
+	* xalloc.h (VERIFY_EXPR, X2NREALLOC, X2REALLOC): Remove.
+	The latter two macros are moving to ../src/system.h for now.
+	This reverts this file to the gnulib version.
+
+	* xanstrftime.c, xanstrftime.h: Remove; no longer used.
+
+	* .cppi-disable: Add getaddrinfo.h, getdelim.h, mbchar.h,
+	mbuiter.h, strcase.h, strnlen.h, strnlen1.h.
+
+	* canon-host.h, gai_strerror.c, getaddrinfo.c, getaddrinfo.h:
+	* getdelim.c, getdelim.h, mbchar.c, mbchar.h, mbuiter.h:
+	* strcase.h, strnlen.h, strnlen1.c, strnlen1.h, strstr.h:
+	New files, from gnulib.
+
+	* __fpending.c, __fpending.h, acl.c, argmatch.c, atexit.c:
+	* backupfile.c, basename.c, calloc.c, canonicalize.c:
+	* chdir-long.c, chown.c, cloexec.c, closeout.c, creat-safer.c:
+	* cycle-check.c, dirfd.c, dirfd.h, dirname.c, dup-safer.c:
+	* dup2.c, euidaccess.c, exclude.c, exitfail.c, fchown-stub.c:
+	* fd-safer.c, file-type.c, fileblocks.c, filemode.c:
+	* filenamecat.c, fnmatch.c, fopen-safer.c, free.c, fsusage.c:
+	* ftruncate.c, full-write.c, getcwd.c, getcwd.h, getdate.h:
+	* getgroups.c, getndelim2.c, getopt1.c, getopt_.h:
+	* gettimeofday.c, getugroups.c, group-member.c, hard-locale.c:
+	* hash-pjw.c, hash.c, human.c, human.h, idcache.c, inttostr.c:
+	* inttostr.h, lchown.c, long-options.c, lstat.c, malloc.c:
+	* memcasecmp.c, memchr.c, memcmp.c, memcoll.c, memcpy.c:
+	* memmove.c, mkdir.c, mkstemp.c, mktime.c, modechange.c:
+	* mountlist.c, nanosleep.c, open-safer.c, openat.c, physmem.c:
+	* pipe-safer.c, posixtm.c, posixver.c, putenv.c, quote.c:
+	* quotearg.c, raise.c, readlink.c, readtokens0.c, readutmp.c:
+	* realloc.c, regex.c, regex_internal.h, rename.c, rmdir.c:
+	* rpmatch.c, safe-read.c, same.c, save-cwd.c, savedir.c:
+	* settime.c, sig2str.c, strcspn.c, stripslash.c, strndup.c:
+	* strnlen.c, strtod.c, strtoimax.c, strtol.c, strverscmp.c:
+	* tempname.c, time_r.c, time_r.h, timespec.h, unicodeio.h:
+	* unistd--.h, unlinkdir.c, userspec.c, utimecmp.c:
+	* version-etc-fsf.c, version-etc.c, xalloc-die.c, xgetcwd.c:
+	* xgethostname.c, xmalloc.c, xmemcoll.c, xnanosleep.c:
+	* xreadlink.c, xstrndup.c, xstrtoimax.c, xstrtol.c:
+	* xstrtoumax.c, yesno.c:
+	Sync from gnulib.
+
+	* canon-host.c, getline.c, getline.h, getpass.c, strcasecmp.c:
+	* strncasecmp.c, strstr.c:
+	Nontrivial sync from gnulib.
+
+	* .cvsignore: Sort entries.
+
+	* mkdir-p.c (ENOSYS): Define to EEXIST if not defined.
+	(make_dir_parents): Treat ENOSYS like EEXIST.
+
 2005-09-20  Jim Meyering  <jim@meyering.net>
 
 	* openat.c (fdopendir): Be sure to close the supplied
