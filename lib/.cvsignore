@@ -2,11 +2,11 @@
 Makefile
 alloca.h
 charset.alias
+fnmatch.h
+fts.h
 getdate.c
 getdate.tab.c
 getopt.h
-fnmatch.h
-fts.h
 lstat.c
 poll.h
 ref-add.sed
