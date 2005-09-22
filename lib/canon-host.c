@@ -1,9 +1,8 @@
 /* Host name canonicalization
 
-   Copyright (C) 1995, 1999, 2000, 2002, 2003, 2004, 2005 Free Software
-   Foundation, Inc.
+   Copyright (C) 2005 Free Software Foundation, Inc.
 
-   Written by Miles Bader <miles@gnu.ai.mit.edu>
+   Written by Derek Price <derek@ximbiot.com>.
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License as
@@ -23,103 +22,69 @@
 # include <config.h>
 #endif
 
-#include <sys/types.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <string.h>
-#ifdef HAVE_NETDB_H
-# include <netdb.h>
-#endif
-#ifdef HAVE_SYS_SOCKET_H
-# include <sys/socket.h>
-#endif
+#include "canon-host.h"
 
-#ifdef HAVE_NETINET_IN_H
-# include <netinet/in.h>
-#endif
-#ifdef HAVE_ARPA_INET_H
-# include <arpa/inet.h>
-#endif
-
+#include "getaddrinfo.h"
 #include "strdup.h"
 
-/* Returns the canonical hostname associated with HOST (allocated in a static
-   buffer), or NULL if it can't be determined.  */
+/* Store the last error for the single-threaded version of this function.  */
+static int last_cherror;
+
+/* Single-threaded of wrapper for canon_host_r.  After a NULL return, error
+   messages may be retrieved via ch_strerror().  */
 char *
-canon_host (char const *host)
+canon_host (const char *host)
 {
-  char *h_addr_copy = NULL;
-
-#if HAVE_GETADDRINFO
-  {
-    struct addrinfo hint = { 0, };
-    struct addrinfo *res = NULL;
-    hint.ai_flags = AI_CANONNAME;
-    if (getaddrinfo (host, NULL, &hint, &res) == 0)
-      {
-	h_addr_copy = strdup (res->ai_canonname);
-	freeaddrinfo (res);
-      }
-  }
-#elif HAVE_GETHOSTBYNAME
-  {
-    struct hostent *he = gethostbyname (host);
-
-    if (he)
-      {
-# ifdef HAVE_GETHOSTBYADDR
-	char *addr = NULL;
-
-	/* Try and get an ascii version of the numeric host address.  */
-	switch (he->h_addrtype)
-	  {
-#  ifdef HAVE_INET_NTOA
-	  case AF_INET:
-	    addr = inet_ntoa (*(struct in_addr *) he->h_addr);
-	    break;
-#  endif /* HAVE_INET_NTOA */
-	  }
-
-	if (addr && strcmp (he->h_name, addr) == 0)
-	  {
-	    /* gethostbyname has returned a string representation of the IP
-	       address, for example, "127.0.0.1".  So now, look up the host
-	       name via the address.  Although it may seem reasonable to look
-	       up the host name via the address, we must not pass `he->h_addr'
-	       directly to gethostbyaddr because on some systems he->h_addr
-	       is located in a static library buffer that is reused in the
-	       gethostbyaddr call.  Make a copy and use that instead.  */
-	    h_addr_copy = (char *) malloc (he->h_length);
-	    if (h_addr_copy == NULL)
-	      he = NULL;
-	    else
-	      {
-		memcpy (h_addr_copy, he->h_addr, he->h_length);
-		he = gethostbyaddr (h_addr_copy, he->h_length, he->h_addrtype);
-		free (h_addr_copy);
-	      }
-	  }
-# endif /* HAVE_GETHOSTBYADDR */
-
-	if (he)
-	  h_addr_copy = strdup (he->h_name);
-      }
-  }
-#endif /* HAVE_GETHOSTBYNAME */
-
-  return h_addr_copy;
+  return canon_host_r (host, &last_cherror);
 }
 
-#ifdef TEST_CANON_HOST
-int
-main (int argc, char **argv)
+/* Return a malloc'd string containing the canonical hostname associated with
+   HOST, or NULL if a canonical name cannot be determined.  On NULL return,
+   if CHERROR is not NULL, set *CHERROR to an error code as returned by
+   getaddrinfo().  Use ch_strerror_r() or gai_strerror() to convert a *CHERROR
+   value to a string suitable for error messages.
+
+   WARNINGS
+     HOST must be a string representation of a resolvable name for this host.
+     Strings containing an IP address in dotted decimal notation will be
+     returned as-is, without further resolution.
+
+     The use of the word "canonical" in this context is unfortunate but
+     entrenched.  The value returned by this function will be the end result
+     of the resolution of any CNAME chains in the DNS.  There may only be one
+     such value for any given hostname, though the actual IP address
+     referenced by this value and the device using that IP address may each
+     actually have any number of such "canonical" hostnames.  See the POSIX
+     getaddrinfo spec <http://www.opengroup.org/susv3xsh/getaddrinfo.html">,
+     RFC 1034 <http://www.faqs.org/rfcs/rfc1034.html>, & RFC 2181
+     <http://www.faqs.org/rfcs/rfc2181.html> for more on what this confusing
+     term really refers to. */
+char *
+canon_host_r (char const *host, int *cherror)
 {
-  int i;
-  for (i = 1; i < argc; i++)
+  char *retval = NULL;
+  static struct addrinfo hints;
+  struct addrinfo *res = NULL;
+  int status;
+
+  hints.ai_flags = AI_CANONNAME;
+  status = getaddrinfo (host, NULL, &hints, &res);
+  if (!status)
     {
-      char *s = canon_host (argv[i]);
-      printf ("%s: %s\n", argv[i], (s ? s : "<undef>"));
+      retval = strdup (res->ai_canonname);
+      if (!retval && cherror)
+	*cherror = EAI_MEMORY;
+      freeaddrinfo (res);
     }
-  exit (0);
+  else if (cherror)
+    *cherror = status;
+
+  return retval;
 }
-#endif /* TEST_CANON_HOST */
+
+/* Return a string describing the last error encountered by canon_host.  */
+const char *
+ch_strerror (void)
+{
+  return gai_strerror (last_cherror);
+}

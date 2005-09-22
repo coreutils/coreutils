@@ -1,5 +1,7 @@
-/* strcasecmp.c -- case insensitive string comparator
-   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+/* Case-insensitive string comparison function.
+   Copyright (C) 1998, 1999, 2005 Free Software Foundation, Inc.
+   Written by Bruno Haible <bruno@clisp.org>, 2005,
+   based on earlier glibc code.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -15,52 +17,82 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 
-#if HAVE_CONFIG_H
+#ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
 
-#ifdef LENGTH_LIMIT
-# define STRXCASECMP_FUNCTION strncasecmp
-# define STRXCASECMP_DECLARE_N , size_t n
-# define LENGTH_LIMIT_EXPR(Expr) Expr
-#else
-# define STRXCASECMP_FUNCTION strcasecmp
-# define STRXCASECMP_DECLARE_N /* empty */
-# define LENGTH_LIMIT_EXPR(Expr) 0
-#endif
+/* Specification.  */
+#include "strcase.h"
 
-#include <stddef.h>
 #include <ctype.h>
+
+#if HAVE_MBRTOWC
+# include "mbuiter.h"
+#endif
 
 #define TOLOWER(Ch) (isupper (Ch) ? tolower (Ch) : (Ch))
 
-/* Compare {{no more than N characters of }}strings S1 and S2,
-   ignoring case, returning less than, equal to or
-   greater than zero if S1 is lexicographically less
-   than, equal to or greater than S2.  */
-
+/* Compare strings S1 and S2, ignoring case, returning less than, equal to or
+   greater than zero if S1 is lexicographically less than, equal to or greater
+   than S2.
+   Note: This function may, in multibyte locales, return 0 for strings of
+   different lengths!  */
 int
-STRXCASECMP_FUNCTION (const char *s1, const char *s2 STRXCASECMP_DECLARE_N)
+strcasecmp (const char *s1, const char *s2)
 {
-  register const unsigned char *p1 = (const unsigned char *) s1;
-  register const unsigned char *p2 = (const unsigned char *) s2;
-  unsigned char c1, c2;
-
-  if (p1 == p2 || LENGTH_LIMIT_EXPR (n == 0))
+  if (s1 == s2)
     return 0;
 
-  do
+  /* Be careful not to look at the entire extent of s1 or s2 until needed.
+     This is useful because when two strings differ, the difference is
+     most often already in the very few first characters.  */
+#if HAVE_MBRTOWC
+  if (MB_CUR_MAX > 1)
     {
-      c1 = TOLOWER (*p1);
-      c2 = TOLOWER (*p2);
+      mbui_iterator_t iter1;
+      mbui_iterator_t iter2;
 
-      if (LENGTH_LIMIT_EXPR (--n == 0) || c1 == '\0')
-	break;
+      mbui_init (iter1, s1);
+      mbui_init (iter2, s2);
 
-      ++p1;
-      ++p2;
+      while (mbui_avail (iter1) && mbui_avail (iter2))
+	{
+	  int cmp = mb_casecmp (mbui_cur (iter1), mbui_cur (iter2));
+
+	  if (cmp != 0)
+	    return cmp;
+
+	  mbui_advance (iter1);
+	  mbui_advance (iter2);
+	}
+      if (mbui_avail (iter1))
+	/* s2 terminated before s1.  */
+	return 1;
+      if (mbui_avail (iter2))
+	/* s1 terminated before s2.  */
+	return -1;
+      return 0;
     }
-  while (c1 == c2);
+  else
+#endif
+    {
+      const unsigned char *p1 = (const unsigned char *) s1;
+      const unsigned char *p2 = (const unsigned char *) s2;
+      unsigned char c1, c2;
 
-  return c1 - c2;
+      do
+	{
+	  c1 = TOLOWER (*p1);
+	  c2 = TOLOWER (*p2);
+
+	  if (c1 == '\0')
+	    break;
+
+	  ++p1;
+	  ++p2;
+	}
+      while (c1 == c2);
+
+      return c1 - c2;
+    }
 }

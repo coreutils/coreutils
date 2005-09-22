@@ -1,44 +1,32 @@
-/* getline.c -- Replacement for GNU C library function getline
+/* getline.c --- Implementation of replacement getline function.
+   Copyright (C) 2005 Free Software Foundation, Inc.
 
-   Copyright (C) 1993, 1996, 1997, 1998, 2000, 2003, 2004 Free
-   Software Foundation, Inc.
+   This program is free software; you can redistribute it and/or
+   modify it under the terms of the GNU General Public License as
+   published by the Free Software Foundation; either version 2, or (at
+   your option) any later version.
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+   This program is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
+   along with this program; if not, write to the Free Software
+   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+   02110-1301, USA.  */
 
-/* Written by Jan Brittenson, bson@gnu.ai.mit.edu.  */
+/* Written by Simon Josefsson. */
 
-#if HAVE_CONFIG_H
+#ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
 
+#include "getdelim.h"
 #include "getline.h"
 
-#if ! (defined __GNU_LIBRARY__ && HAVE_GETDELIM)
-
-# include "getndelim2.h"
-
 ssize_t
-getdelim (char **lineptr, size_t *linesize, int delimiter, FILE *stream)
+getline (char **lineptr, size_t *n, FILE *stream)
 {
-  return getndelim2 (lineptr, linesize, 0, GETNLINE_NO_LIMIT, delimiter, EOF,
-                     stream);
-}
-#endif
-
-ssize_t
-getline (char **lineptr, size_t *linesize, FILE *stream)
-{
-  return getdelim (lineptr, linesize, '\n', stream);
+  return getdelim (lineptr, n, '\n', stream);
 }

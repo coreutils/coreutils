@@ -1,4 +1,4 @@
-# getline.m4 serial 12
+# getline.m4 serial 13
 
 dnl Copyright (C) 1998, 1999, 2000, 2001, 2002, 2003, 2005 Free Software
 dnl Foundation, Inc.
@@ -13,19 +13,21 @@ dnl See if there's a working, system-supplied version of the getline function.
 dnl We can't just do AC_REPLACE_FUNCS(getline) because some systems
 dnl have a function by that name in -linet that doesn't have anything
 dnl to do with the function we need.
-AC_DEFUN([AM_FUNC_GETLINE],
+AC_DEFUN([gl_FUNC_GETLINE],
 [
   AC_LIBSOURCES([getline.c, getline.h])
 
-  dnl Persuade glibc <stdio.h> to declare getline() and getdelim().
+  dnl Persuade glibc <stdio.h> to declare getline().
   AC_REQUIRE([AC_GNU_SOURCE])
 
-  am_getline_needs_run_time_check=no
+  AC_CHECK_DECLS([getline])
+
+  gl_getline_needs_run_time_check=no
   AC_CHECK_FUNC(getline,
 		dnl Found it in some library.  Verify that it works.
-		am_getline_needs_run_time_check=yes,
+		gl_getline_needs_run_time_check=yes,
 		am_cv_func_working_getline=no)
-  if test $am_getline_needs_run_time_check = yes; then
+  if test $gl_getline_needs_run_time_check = yes; then
     AC_CACHE_CHECK([for working getline function], am_cv_func_working_getline,
     [echo fooN |tr -d '\012'|tr N '\012' > conftest.data
     AC_TRY_RUN([
@@ -57,20 +59,12 @@ AC_DEFUN([AM_FUNC_GETLINE],
       [Define to a replacement function name for getline().])
     AC_LIBOBJ(getline)
 
-    # Avoid multiple inclusions of getndelim2.o into LIBOBJS.
-    # This hack won't be needed after gnulib requires Autoconf 2.58 or later.
-    case " $LIB@&t@OBJS " in
-    *" getndelim2.$ac_objext "* ) ;;
-    *) AC_LIBOBJ(getndelim2);;
-    esac
-
     gl_PREREQ_GETLINE
-    gl_PREREQ_GETNDELIM2
   fi
 ])
 
 # Prerequisites of lib/getline.c.
 AC_DEFUN([gl_PREREQ_GETLINE],
 [
-  AC_CHECK_FUNCS(getdelim)
+  gl_FUNC_GETDELIM
 ])
