@@ -37,14 +37,6 @@
 
 #define AUTHORS "David MacKenzie"
 
-#ifndef EEXIST
-# define EEXIST 0
-#endif
-
-#ifndef ENOTEMPTY
-# define ENOTEMPTY 0
-#endif
-
 /* The name this program was run with. */
 char *program_name;
 
