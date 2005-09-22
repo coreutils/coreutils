@@ -1,4 +1,4 @@
-#serial 92   -*- autoconf -*-
+#serial 93   -*- autoconf -*-
 
 dnl Misc type-related macros for coreutils.
 
@@ -177,45 +177,25 @@ AC_DEFUN([gl_MACROS],
   AC_REQUIRE([gl_ROOT_DEV_INO])
   AC_REQUIRE([gl_VERSION_ETC])
   AC_REQUIRE([gl_DIACRIT])
-  AC_REQUIRE([gl_FUNC_XANSTRFTIME])
 ])
 
-# These tests must be run before any use of AC_CHECK_TYPE,
-# because that macro compiles code that tests e.g., HAVE_UNISTD_H.
-# See the definition of ac_includes_default in `configure'.
 AC_DEFUN([gl_CHECK_ALL_HEADERS],
 [
   AC_CHECK_HEADERS_ONCE( \
     hurd.h \
-    memory.h \
-    mntent.h \
-    mnttab.h \
-    netdb.h \
     paths.h \
     priv.h \
-    stdlib.h \
-    stdint.h \
-    string.h \
     stropts.h \
-    sys/filsys.h \
-    sys/fs/s5param.h \
-    sys/fs_types.h \
-    sys/fstyp.h \
     sys/ioctl.h \
-    sys/mntent.h \
     sys/param.h \
     sys/resource.h \
-    sys/socket.h \
-    sys/statfs.h \
     sys/statvfs.h \
     sys/systeminfo.h \
     sys/time.h \
-    sys/timeb.h \
     sys/vfs.h \
     sys/wait.h \
     syslog.h \
     termios.h \
-    unistd.h \
     utime.h \
   )
   AC_CHECK_HEADERS(sys/mount.h sys/sysctl.h, [], [],
