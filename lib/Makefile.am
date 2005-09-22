@@ -32,10 +32,16 @@ libcoreutils_a_SOURCES = \
   fprintftime.c fprintftime.h \
   full-read.c full-read.h \
   full-write.c full-write.h \
+  getaddrinfo.h \
   gettext.h \
   localcharset.c localcharset.h \
+  mbchar.c mbchar.h \
   mbswidth.c mbswidth.h \
+  mbuiter.h \
   readtokens0.c readtokens0.h \
+  strcase.h \
+  strnlen1.c strnlen1.h \
+  strstr.h \
   time_r.c time_r.h \
   unicodeio.c unicodeio.h \
   verify.h \
