@@ -7,6 +7,7 @@ fts.c
 fts_.h
 getaddrinfo.h
 getdelim.h
+getline.h
 getndelim2.h
 getopt.c
 getopt.h
@@ -14,6 +15,7 @@ getopt1.c
 getopt_.h
 getopt_int.h
 getpagesize.h
+getpass.c
 gettext.h
 localcharset.h
 mbchar.h
