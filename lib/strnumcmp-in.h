@@ -19,6 +19,10 @@
 
 /* Written by Mike Haertel.  */
 
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
+
 #include "strnumcmp.h"
 
 #include <stddef.h>
