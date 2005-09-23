@@ -1,3 +1,7 @@
+2005-09-24  Jim Meyering  <jim@meyering.net>
+
+	* POTFILES.in: Add lib/gai_strerror.c.
+
 2005-06-14  Jim Meyering  <jim@meyering.net>
 
 	* POTFILES.in: Change openat.c to openat-die.c.
