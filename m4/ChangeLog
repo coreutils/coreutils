@@ -1,3 +1,7 @@
+2005-09-22  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* getaddrinfo.m4 (gl_PREREQ_GETADDRINFO): Check for netinet/in.h.
+
 2005-09-21  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* check-decl.m4 (_gl_DECL_HEADERS): Don't bother checking for
