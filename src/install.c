@@ -440,7 +440,7 @@ install_file_in_file (const char *from, const char *to,
 		      const struct cp_options *x)
 {
   struct stat from_sb;
-  if (strip_files && x->preserve_timestamps && stat (from, &from_sb) != 0)
+  if (x->preserve_timestamps && stat (from, &from_sb) != 0)
     {
       error (0, errno, _("cannot stat %s"), quote (from));
       return false;
@@ -451,7 +451,7 @@ install_file_in_file (const char *from, const char *to,
     strip (to);
   if (! change_attributes (to))
     return false;
-  if (strip_files && x->preserve_timestamps)
+  if (x->preserve_timestamps && (strip_files || ! S_ISREG (from_sb.st_mode)))
     return change_timestamps (&from_sb, to);
   return true;
 }
