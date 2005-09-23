@@ -1,3 +1,15 @@
+2005-09-23  Jim Meyering  <jim@meyering.net>
+
+	* Version 5.3.1-cvs.
+
+	* src/od.c: Use `verify' to ensure that our hard-coded
+	bytes_to_*_digits arrays are long enough.  Of course, 17+-byte
+	integral types aren't on the near horizon, but just in case...
+	(MAX_INTEGRAL_TYPE_SIZE): Move definition to precede new first use.
+	(bytes_to_oct_digits, bytes_to_signed_dec_digits):
+	(bytes_to_unsigned_dec_digits, bytes_to_hex_digits): Change base
+	type from `char' to the clearer `unsigned int'.
+
 2005-09-21  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/rmdir.c (EEXIST, ENOTEMPTY): Remove unused macros.
@@ -14,8 +26,6 @@
 	verify_expr rather than the old VERIFY_EXPR.
 
 2005-09-21  Jim Meyering  <jim@meyering.net>
-
-	* Version 5.3.1-cvs.
 
 	* tests/install/basic-1: Require that this test be run as non-root.
 	Otherwise, it fails due to the fact that the chmod 0 . doesn't
