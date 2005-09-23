@@ -30,7 +30,7 @@
    private to this header file.  */
 
 # define verify_type__(R) \
-    struct { int verify_error_if_negative_size__ : (R) ? 2 : -1; }
+    struct { unsigned int verify_error_if_negative_size__ : (R) ? 1 : -1; }
 
 /* Verify requirement R at compile-time, as a declaration.  */
 
