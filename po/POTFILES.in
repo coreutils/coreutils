@@ -6,6 +6,7 @@ lib/argmatch.c
 lib/closeout.c
 lib/error.c
 lib/file-type.c
+lib/gai_strerror.c
 lib/getopt.c
 lib/human.c
 lib/mkdir-p.c
