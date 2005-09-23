@@ -132,17 +132,30 @@ char *program_name;
    10	unsigned decimal
    8	unsigned hexadecimal  */
 
-static char const bytes_to_oct_digits[] =
+static unsigned int const bytes_to_oct_digits[] =
 {0, 3, 6, 8, 11, 14, 16, 19, 22, 25, 27, 30, 32, 35, 38, 41, 43};
 
-static char const bytes_to_signed_dec_digits[] =
+static unsigned int const bytes_to_signed_dec_digits[] =
 {1, 4, 6, 8, 11, 13, 16, 18, 20, 23, 25, 28, 30, 33, 35, 37, 40};
 
-static char const bytes_to_unsigned_dec_digits[] =
+static unsigned int const bytes_to_unsigned_dec_digits[] =
 {0, 3, 5, 8, 10, 13, 15, 17, 20, 22, 25, 27, 29, 32, 34, 37, 39};
 
-static char const bytes_to_hex_digits[] =
+static unsigned int const bytes_to_hex_digits[] =
 {0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32};
+
+#define MAX_INTEGRAL_TYPE_SIZE sizeof (ulonglong_t)
+
+/* It'll be a while before we see integral types wider than 16 bytes,
+   but if/when it happens, this check will catch it.  Without this check,
+   a wider type would provoke a buffer overrun.  */
+verify (MAX_INTEGRAL_TYPE_SIZE
+	< sizeof bytes_to_hex_digits / sizeof *bytes_to_hex_digits);
+
+/* Make sure the other arrays have the same length.  */
+verify (sizeof bytes_to_oct_digits == sizeof bytes_to_signed_dec_digits);
+verify (sizeof bytes_to_oct_digits == sizeof bytes_to_unsigned_dec_digits);
+verify (sizeof bytes_to_oct_digits == sizeof bytes_to_hex_digits);
 
 /* Convert enum size_spec to the size of the named type.  */
 static const int width_bytes[] =
@@ -252,7 +265,7 @@ static FILE *in_stream;
 /* If true, at least one of the files we read was standard input.  */
 static bool have_read_stdin;
 
-#define MAX_INTEGRAL_TYPE_SIZE sizeof (ulonglong_t)
+/* Map the size in bytes to a type identifier.  */
 static enum size_spec integral_type_size[MAX_INTEGRAL_TYPE_SIZE + 1];
 
 #define MAX_FP_TYPE_SIZE sizeof (LONG_DOUBLE)
