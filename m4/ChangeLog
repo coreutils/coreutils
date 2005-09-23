@@ -1,7 +1,17 @@
 2005-09-23  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* regex.m4 (gl_REGEX): If replacing, define regcomp to rpl_regcomp,
+	and similarly for the other external symbols.  Problem reported
+	by James Gallager.
+
 	* fnmatch.m4 (_AC_FUNC_FNMATCH_IF): Catch Sun Studio 10u1 on Linux
 	bug reported by Jim Meyering.
+
+	* jm-macros.m4 (gl_MACROS): Don't require gl_CHECK_TYPE_STRUCT_UTIMBUF.
+	(gl_CHECK_ALL_HEADERS): Don't check for utime.h.
+	* utimens.m4 (gl_UTIMENS): Check for futimesat (Solaris 10).
+	* getaddrinfo.m4 (gl_PREREQ_GETADDRINFO): Undo previous change;
+	not needed, since socklen is a prerequisite module.
 
 2005-09-23  Jim Meyering  <jim@meyering.net>
 

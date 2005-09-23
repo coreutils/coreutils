@@ -1,6 +1,20 @@
-2005-09-23  Jim Meyering  <jim@meyering.net>
+2005-09-23  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1-cvs.
+
+	* src/copy.c (copy_reg): Preserve time stamps if
+	x->preserve_timestamps is set, using futimens so that
+	we needn't resolve the path again.
+	(copy_internal): Don't preserve time stamps if copy_reg did it
+	already.
+	* src/install.c (change_timestamps): First arg is source
+	struct stat, not file name.  All uses changed.
+	(install_file_in_file): Stat the source file.
+	Don't try to change time stamps if copy_file did it.
+	* src/system.h: Don't include utime.h; not needed.
+	(struct utimbuf) [!defined HAVE_STRUCT_UTIMBUF]: Remove; not needed.
+
+2005-09-23  Jim Meyering  <jim@meyering.net>
 
 	* src/od.c: Use `verify' to ensure that our hard-coded
 	bytes_to_*_digits arrays are long enough.  Of course, 17+-byte

@@ -1,3 +1,14 @@
+2005-09-23  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* utimens.c (futimens): Use futimesat if available.
+	Prefer it to futimes since it doesn't have the futimes bug.
+
+	* verify.h (GL_CONCAT0, GL_CONCAT): Remove.
+	(verify): Don't use the __LINE__ trick, as it doesn't work in general.
+	Instead, declare a function that returns a pointer to an array,
+	and use verify_type__ to declare the size of the array.
+	Problem and germ of a solution reported by Bruno Haible.
+
 2005-09-23  Jim Meyering  <jim@meyering.net>
 
 	* strnumcmp-in.h: Include <config.h>.  Otherwise builds with strict
