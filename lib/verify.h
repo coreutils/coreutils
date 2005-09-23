@@ -21,34 +21,24 @@
 #ifndef VERIFY_H
 # define VERIFY_H 1
 
-# define GL_CONCAT0(x, y) x##y
-# define GL_CONCAT(x, y) GL_CONCAT0 (x, y)
+/* Each of these macros macros verifies that its argument R is a
+   nonzero constant expression.  To be portable, R's type must be
+   integer (or boolean).  Unlike assert, there is no run-time
+   overhead.  */
 
-/* A type that is valid if and only if R is nonzero.
-   R should be an integer constant expression.
-   verify_type__ and verify_error_if_negative_size__ are symbols that
-   are private to this header file.  */
+/* A type that is valid if and only if R is a nonzero constant expression.
+   The symbols verify_type__ and verify_error_if_negative_size__ are
+   private to this header file.  */
 
 # define verify_type__(R) \
     struct { int verify_error_if_negative_size__ : (R) ? 1 : -1; }
 
-/* Verify requirement R at compile-time, as a declaration.
-   R should be an integer constant expression.
-   Unlike assert, there is no run-time overhead.
-
-   The implementation uses __LINE__ to lessen the probability of
-   generating a warning that verify_function_NNN is multiply declared.
-   However, even if two declarations in different files have the same
-   __LINE__, the multiple declarations are still valid C89 and C99
-   code because they simply redeclare the same external function, so
-   no conforming compiler will reject them outright.  */
+/* Verify requirement R at compile-time, as a declaration.  */
 
 # define verify(R) \
-    extern verify_type__ (R) GL_CONCAT (verify_function_, __LINE__) (void)
+    extern int (* verify_function__ (void)) [sizeof (verify_type__ (R))]
 
 /* Verify requirement R at compile-time, as an expression.
-   R should be an integer constant expression.
-   Unlike assert, there is no run-time overhead.
    This macro can be used in some contexts where verify cannot, and vice versa.
    Return void.  */
 
