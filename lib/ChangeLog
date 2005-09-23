@@ -1,6 +1,7 @@
 2005-09-24  Jim Meyering  <jim@meyering.net>
 
-	sync from gnulib
+	Sync from gnulib.
+
 	* verify.h (verify_type__): Use `unsigned int' as the bitfield type
 	so we can once again use a positive bitfield width of 1 -- now we
 	don't have to explain why we were using a bitfield width of 2.
