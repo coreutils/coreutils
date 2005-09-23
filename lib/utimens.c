@@ -25,6 +25,7 @@
 #include "utimens.h"
 
 #include <errno.h>
+#include <fcntl.h>
 
 #if HAVE_UTIME_H
 # include <utime.h>
@@ -61,7 +62,7 @@ futimens (int fd ATTRIBUTE_UNUSED,
   /* There's currently no interface to set file timestamps with
      nanosecond resolution, so do the best we can, discarding any
      fractional part of the timestamp.  */
-#if HAVE_WORKING_UTIMES
+#if HAVE_FUTIMESAT || HAVE_WORKING_UTIMES
   struct timeval timeval[2];
   struct timeval const *t;
   if (timespec)
@@ -74,7 +75,11 @@ futimens (int fd ATTRIBUTE_UNUSED,
     }
   else
     t = NULL;
-# if HAVE_FUTIMES
+
+# if HAVE_FUTIMESAT
+  return fd < 0 ? futimesat (AT_FDCWD, file, t) : futimesat (fd, NULL, t);
+# else
+#  if HAVE_FUTIMES
   if (0 <= fd)
     {
       if (futimes (fd, t) == 0)
@@ -92,8 +97,9 @@ futimens (int fd ATTRIBUTE_UNUSED,
 	  return -1;
 	}
     }
-# endif
+#  endif
   return utimes (file, t);
+# endif
 
 #else
 
