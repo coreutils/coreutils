@@ -1,3 +1,9 @@
+2005-09-23  Jim Meyering  <jim@meyering.net>
+
+	* strnumcmp-in.h: Include <config.h>.  Otherwise builds with strict
+	C89 (e.g., Sun's /opt/SUNWspro/bin/c89) would fail due to the use
+	of `inline'.
+
 2005-09-22  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* getaddrinfo.c [HAVE_NETINET_IN_H]: Include <netinet/in.h>.
