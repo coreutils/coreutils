@@ -8,6 +8,8 @@
 	Instead, declare a function that returns a pointer to an array,
 	and use verify_type__ to declare the size of the array.
 	Problem and germ of a solution reported by Bruno Haible.
+	(verify_type__): Use 2, not 1, for bitfield size, to avoid
+	a warning with Irix 6.5 cc.  Problem reported by Bruno Haible.
 
 2005-09-23  Jim Meyering  <jim@meyering.net>
 
