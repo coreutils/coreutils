@@ -1,3 +1,8 @@
+2005-09-23  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* fnmatch.m4 (_AC_FUNC_FNMATCH_IF): Catch Sun Studio 10u1 on Linux
+	bug reported by Jim Meyering.
+
 2005-09-23  Jim Meyering  <jim@meyering.net>
 
 	* jm-macros.m4 (gl_MACROS): AC_REQUIRE([gl_SOCKLEN_T]) here,
