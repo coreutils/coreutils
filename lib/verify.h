@@ -21,10 +21,9 @@
 #ifndef VERIFY_H
 # define VERIFY_H 1
 
-/* Each of these macros macros verifies that its argument R is a
-   nonzero constant expression.  To be portable, R's type must be
-   integer (or boolean).  Unlike assert, there is no run-time
-   overhead.  */
+/* Each of these macros verifies that its argument R is a nonzero
+   constant expression.  To be portable, R's type must be integer (or
+   boolean).  Unlike assert, there is no run-time overhead.  */
 
 /* A type that is valid if and only if R is a nonzero constant expression.
    The symbols verify_type__ and verify_error_if_negative_size__ are
