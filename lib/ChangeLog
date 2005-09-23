@@ -1,3 +1,10 @@
+2005-09-24  Jim Meyering  <jim@meyering.net>
+
+	sync from gnulib
+	* verify.h (verify_type__): Use `unsigned int' as the bitfield type
+	so we can once again use a positive bitfield width of 1 -- now we
+	don't have to explain why we were using a bitfield width of 2.
+
 2005-09-23  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* utimens.c (futimens): Use futimesat if available.
