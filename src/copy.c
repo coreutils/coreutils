@@ -403,6 +403,20 @@ copy_reg (char const *src_name, char const *dst_name,
 	}
     }
 
+  if (x->preserve_timestamps)
+    {
+      struct timespec timespec[2];
+      timespec[0] = get_stat_atime (src_sb);
+      timespec[1] = get_stat_mtime (src_sb);
+
+      if (futimens (dest_desc, dst_name, timespec) != 0)
+	{
+	  error (0, errno, _("preserving times for %s"), quote (dst_name));
+	  if (x->require_preserve)
+	    return_val = false;
+	}
+    }
+
 close_src_and_dst_desc:
   if (close (dest_desc) < 0)
     {
@@ -1564,10 +1578,9 @@ copy_internal (char const *src_name, char const *dst_name,
      chown turns off set[ug]id bits for non-root,
      so do the chmod last.  */
 
-  if (x->preserve_timestamps)
+  if (!copied_as_regular && x->preserve_timestamps)
     {
       struct timespec timespec[2];
-
       timespec[0] = get_stat_atime (&src_sb);
       timespec[1] = get_stat_mtime (&src_sb);
 
