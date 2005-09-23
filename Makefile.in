@@ -126,11 +126,12 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/afs.m4 \
 	$(top_srcdir)/m4/save-cwd.m4 $(top_srcdir)/m4/savedir.m4 \
 	$(top_srcdir)/m4/setenv.m4 $(top_srcdir)/m4/settime.m4 \
 	$(top_srcdir)/m4/sha1.m4 $(top_srcdir)/m4/sig2str.m4 \
-	$(top_srcdir)/m4/signed.m4 $(top_srcdir)/m4/sockpfaf.m4 \
-	$(top_srcdir)/m4/ssize_t.m4 $(top_srcdir)/m4/st_dm_mode.m4 \
-	$(top_srcdir)/m4/stat-macros.m4 $(top_srcdir)/m4/stat-prog.m4 \
-	$(top_srcdir)/m4/stat-time.m4 $(top_srcdir)/m4/stdbool.m4 \
-	$(top_srcdir)/m4/stdint_h.m4 $(top_srcdir)/m4/stdio-safer.m4 \
+	$(top_srcdir)/m4/signed.m4 $(top_srcdir)/m4/socklen.m4 \
+	$(top_srcdir)/m4/sockpfaf.m4 $(top_srcdir)/m4/ssize_t.m4 \
+	$(top_srcdir)/m4/st_dm_mode.m4 $(top_srcdir)/m4/stat-macros.m4 \
+	$(top_srcdir)/m4/stat-prog.m4 $(top_srcdir)/m4/stat-time.m4 \
+	$(top_srcdir)/m4/stdbool.m4 $(top_srcdir)/m4/stdint_h.m4 \
+	$(top_srcdir)/m4/stdio-safer.m4 \
 	$(top_srcdir)/m4/stdlib-safer.m4 $(top_srcdir)/m4/stpcpy.m4 \
 	$(top_srcdir)/m4/strcase.m4 $(top_srcdir)/m4/strcspn.m4 \
 	$(top_srcdir)/m4/strdup.m4 $(top_srcdir)/m4/strftime.m4 \

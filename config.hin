@@ -459,6 +459,9 @@
 /* Define to 1 if you have the `futimes' function. */
 #undef HAVE_FUTIMES
 
+/* Define to 1 if you have the `futimesat' function. */
+#undef HAVE_FUTIMESAT
+
 /* Define if struct statfs has the f_fstypename member. */
 #undef HAVE_F_FSTYPENAME_IN_STATFS
 
@@ -1070,6 +1073,9 @@
 /* Define to 1 if you have the <sys/resource.h> header file. */
 #undef HAVE_SYS_RESOURCE_H
 
+/* Define to 1 if you have the <sys/socket.h> header file. */
+#undef HAVE_SYS_SOCKET_H
+
 /* Define to 1 if you have the <sys/statfs.h> header file. */
 #undef HAVE_SYS_STATFS_H
 
@@ -1641,6 +1647,9 @@
 
 /* Define to `unsigned int' if <sys/types.h> does not define. */
 #undef size_t
+
+/* Map `socklen_t' to `int' if it is missing. */
+#undef socklen_t
 
 /* Define as a signed type of the same size as size_t. */
 #undef ssize_t
