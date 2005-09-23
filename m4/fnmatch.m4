@@ -27,9 +27,15 @@ AC_DEFUN([_AC_FUNC_FNMATCH_IF],
 #	   include <fnmatch.h>
 #	   define y(a, b, c) (fnmatch (a, b, c) == 0)
 #	   define n(a, b, c) (fnmatch (a, b, c) == FNM_NOMATCH)
+	   static int
+	   fnm (char const *pattern, char const *string, int flags)
+	   {
+	     return fnmatch (pattern, string, flags);
+	   }
          ],
 	 [exit
-	   (!(y ("a*", "abc", 0)
+	   (!((fnm ? fnm : fnmatch) ("a*", "", 0) == FNM_NOMATCH
+	      && y ("a*", "abc", 0)
 	      && n ("d*/*1", "d/s/1", FNM_PATHNAME)
 	      && y ("a\\\\bc", "abc", 0)
 	      && n ("a\\\\bc", "abc", FNM_NOESCAPE)
