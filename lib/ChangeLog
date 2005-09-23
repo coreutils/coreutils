@@ -1,3 +1,12 @@
+2005-09-22  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* getaddrinfo.c [HAVE_NETINET_IN_H]: Include <netinet/in.h>.
+	Problem reported by Eric Blake.
+	(getaddrinfo): Initialize se so that it's not garbage.
+	Redo internal storage allocation so that it doesn't make unportable
+	assumptions about alignment.
+	Fix a memory leak.
+
 2005-09-21  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Sync from gnulib.
