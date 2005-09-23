@@ -65,7 +65,7 @@
 /* Number of bytes of a file to copy at a time. */
 #define READ_SIZE (32 * 1024)
 
-static bool change_timestamps (const char *from, const char *to);
+static bool change_timestamps (struct stat const *from_sb, char const *to);
 static bool change_attributes (char const *name);
 static bool copy_file (const char *from, const char *to,
 		       const struct cp_options *x);
@@ -439,14 +439,20 @@ static bool
 install_file_in_file (const char *from, const char *to,
 		      const struct cp_options *x)
 {
+  struct stat from_sb;
+  if (strip_files && x->preserve_timestamps && stat (from, &from_sb) != 0)
+    {
+      error (0, errno, _("cannot stat %s"), quote (from));
+      return false;
+    }
   if (! copy_file (from, to, x))
     return false;
   if (strip_files)
     strip (to);
   if (! change_attributes (to))
     return false;
-  if (x->preserve_timestamps)
-    return change_timestamps (from, to);
+  if (strip_files && x->preserve_timestamps)
+    return change_timestamps (&from_sb, to);
   return true;
 }
 
@@ -526,19 +532,12 @@ change_attributes (char const *name)
    Return true if successful.  */
 
 static bool
-change_timestamps (const char *from, const char *to)
+change_timestamps (struct stat const *from_sb, char const *to)
 {
-  struct stat stb;
   struct timespec timespec[2];
+  timespec[0] = get_stat_atime (from_sb);
+  timespec[1] = get_stat_mtime (from_sb);
 
-  if (stat (from, &stb))
-    {
-      error (0, errno, _("cannot obtain time stamps for %s"), quote (from));
-      return false;
-    }
-
-  timespec[0] = get_stat_atime (&stb);
-  timespec[1] = get_stat_mtime (&stb);
   if (utimens (to, timespec))
     {
       error (0, errno, _("cannot set time stamps for %s"), quote (to));
