@@ -1,4 +1,4 @@
-#serial 93   -*- autoconf -*-
+#serial 94   -*- autoconf -*-
 
 dnl Misc type-related macros for coreutils.
 
@@ -42,7 +42,6 @@ AC_DEFUN([gl_MACROS],
 
   AC_REQUIRE([gl_HOST_OS])
   AC_REQUIRE([gl_ASSERT])
-  AC_REQUIRE([gl_CHECK_TYPE_STRUCT_UTIMBUF])
   AC_REQUIRE([gl_CHECK_TYPE_STRUCT_DIRENT_D_TYPE])
   AC_REQUIRE([gl_CHECK_TYPE_STRUCT_DIRENT_D_INO])
   AC_REQUIRE([gl_CHECK_DECLS])
@@ -197,7 +196,6 @@ AC_DEFUN([gl_CHECK_ALL_HEADERS],
     sys/wait.h \
     syslog.h \
     termios.h \
-    utime.h \
   )
   AC_CHECK_HEADERS(sys/mount.h sys/sysctl.h, [], [],
     [AC_INCLUDES_DEFAULT
