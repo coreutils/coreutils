@@ -3,7 +3,8 @@
 # This is a modified version of autoconf's AC_FUNC_FNMATCH.
 # This file should be simplified after Autoconf 2.57 is required.
 
-# Copyright (C) 2000, 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+# Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005 Free Software
+# Foundation, Inc.
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
 # with or without modifications, as long as this notice is preserved.
