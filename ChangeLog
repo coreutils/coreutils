@@ -9,6 +9,7 @@
 	* Makefile.maint (sc_no_if_have_config_h): New rule.
 	(syntax-check-rules): Add it.
 	.x-sc_no_if_have_config_h: New file.
+	* Makefile.am (EXTRA_DIST): Add it.
 
 	* tests/seq/basic (eq-wid-1, eq-wid-2): Disable these tests for now.
 	They fail with non-gcc compilers and some combinations
