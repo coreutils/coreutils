@@ -18,6 +18,10 @@
 
 /* Written by Paul Eggert.  */
 
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
+
 #include "strnumcmp-in.h"
 
 /* Compare strings A and B as integers without explicitly converting
