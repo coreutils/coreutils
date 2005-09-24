@@ -2,6 +2,10 @@
 
 	* Version 5.3.1-cvs.
 
+	* tests/seq/basic (eq-wid-1, eq-wid-2): Disable these tests for now.
+	They fail with non-gcc compilers and some combinations
+	of options and libraries on Solaris systems.
+
 	* tests/misc/date (uninit-64): Restore this test.
 	Add start-up code to detect, and work around, the cases in
 	which the test might fail.
