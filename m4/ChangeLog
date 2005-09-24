@@ -1,3 +1,8 @@
+2005-09-24  Jim Meyering  <jim@meyering.net>
+
+	* getaddrinfo.m4 (gl_GETADDRINFO): Check for gethostbyname
+	in the inet and nsl libraries.  Required on Solaris 5.7.
+
 2005-09-23  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* regex.m4 (gl_REGEX): If replacing, define regcomp to rpl_regcomp,
