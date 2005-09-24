@@ -1,5 +1,9 @@
 2005-09-24  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* Makefile.am (libcoreutils_a_SOURCES): Remove mbchar.c, since
+	it doesn't build in OpenBSD 3.4.  See
+	<http://lists.gnu.org/archive/html/bug-gnulib/2005-09/msg00242.html>.
+
 	* regex_internal.h (__attribute): Define to nothing for GCC 2.
 	This works around a core dump on OpenBSD 3.4, which has GCC
 	2.95.3, which dumps core when given __attribute__(()).
