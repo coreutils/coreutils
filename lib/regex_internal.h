@@ -131,7 +131,7 @@
 # define attribute_hidden
 #endif /* not _LIBC */
 
-#ifdef __GNUC__
+#if __GNUC__ >= 3
 # define __attribute(arg) __attribute__ (arg)
 #else
 # define __attribute(arg)
