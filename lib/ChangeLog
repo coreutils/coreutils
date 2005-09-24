@@ -1,5 +1,9 @@
 2005-09-24  Jim Meyering  <jim@meyering.net>
 
+	* openat-die.c, root-dev-ino.c, setenv.c, stdopen.c:
+	* tsearch.c, unsetenv.c, xfts.c: Use `#ifdef HAVE_CONFIG_H',
+	not `#if HAVE_CONFIG_H', for consistency with gnulib.
+
 	* strintcmp.c: Include <config.h> here, ...
 	* strnumcmp-in.h: ..., not here.
 
