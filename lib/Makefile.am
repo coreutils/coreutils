@@ -35,7 +35,7 @@ libcoreutils_a_SOURCES = \
   getaddrinfo.h \
   gettext.h \
   localcharset.c localcharset.h \
-  mbchar.c mbchar.h \
+  mbchar.h \
   mbswidth.c mbswidth.h \
   mbuiter.h \
   readtokens0.c readtokens0.h \
