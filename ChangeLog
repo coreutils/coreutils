@@ -1,6 +1,14 @@
-2005-09-23  Paul Eggert  <eggert@cs.ucla.edu>
+2005-09-24  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1-cvs.
+
+	* tests/misc/date (uninit-64): Remove this test.  It wasn't
+	portable in theory (it doesn't work on hosts where 'int' is 64
+	bits, example) or in practice (Solaris 8 localtime returns garbage
+	in tm_year for the specified date, but that's not coreutils's
+	fault).
+
+2005-09-23  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/copy.c (copy_reg): Preserve time stamps if
 	x->preserve_timestamps is set, using futimens so that
