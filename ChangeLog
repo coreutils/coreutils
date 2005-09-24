@@ -1,6 +1,12 @@
-2005-09-24  Paul Eggert  <eggert@cs.ucla.edu>
+2005-09-24  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1-cvs.
+
+	* tests/misc/date (uninit-64): Restore this test.
+	Add start-up code to detect, and work around, the cases in
+	which the test might fail.
+
+2005-09-24  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* tests/misc/date (uninit-64): Remove this test.  It wasn't
 	portable in theory (it doesn't work on hosts where 'int' is 64
