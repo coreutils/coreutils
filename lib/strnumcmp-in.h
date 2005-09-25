@@ -19,12 +19,15 @@
 
 /* Written by Mike Haertel.  */
 
-#include "strnumcmp.h"
+#ifndef STRNUMCMP_IN_H
+# define STRNUMCMP_IN_H 1
 
-#include <stddef.h>
+# include "strnumcmp.h"
 
-#define NEGATION_SIGN   '-'
-#define NUMERIC_ZERO    '0'
+# include <stddef.h>
+
+# define NEGATION_SIGN   '-'
+# define NUMERIC_ZERO    '0'
 
 /* ISDIGIT differs from isdigit, as follows:
    - Its arg may be any int or unsigned int; it need not be an unsigned char.
@@ -33,7 +36,7 @@
    POSIX says that only '0' through '9' are digits.  Prefer ISDIGIT to
    ISDIGIT_LOCALE unless it's important to use the locale's definition
    of `digit' even when the host does not conform to POSIX.  */
-#define ISDIGIT(c) ((unsigned int) (c) - '0' <= 9)
+# define ISDIGIT(c) ((unsigned int) (c) - '0' <= 9)
 
 
 /* Compare strings A and B containing decimal fractions < 1.
@@ -239,3 +242,5 @@ numcompare (char const *a, char const *b,
       return tmp;
     }
 }
+
+#endif
