@@ -8541,6 +8541,9 @@ touch [@var{option}]@dots{} @var{file}@dots{}
 @cindex empty files, creating
 Any @var{file} that does not exist is created empty.
 
+A @var{file} of @samp{-} causes @command{touch} to change the
+times of the file associated with standard output.
+
 @cindex permissions, for changing file timestamps
 If changing both the access and modification times to the current
 time, @command{touch} can change the timestamps for files that the user
