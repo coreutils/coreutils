@@ -432,6 +432,12 @@
 /* Define to 1 if you have the `fchdir' function. */
 #undef HAVE_FCHDIR
 
+/* Define to 1 if you have the `fchmod' function. */
+#undef HAVE_FCHMOD
+
+/* Define to 1 if you have the `fchown' function. */
+#undef HAVE_FCHOWN
+
 /* Define to 1 if you have the `fdatasync' function. */
 #undef HAVE_FDATASYNC
 
