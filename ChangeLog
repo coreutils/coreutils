@@ -2,6 +2,9 @@
 
 	* Version 5.3.1-cvs.
 
+	* tests/ls-2/tests (setuid-etc): Work around output mismatch when
+	a just-created test file cannot be made set-group-ID.
+
 	Avoid test failures on alpha-linux-1.sf.net.
 	* tests/chmod/usage: Use newer trap and tmpdir-creation framework.
 	Fix apparent typos (s/files/file/) in inner loop.
