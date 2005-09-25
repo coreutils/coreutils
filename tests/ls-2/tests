@@ -107,6 +107,14 @@ my @Tests =
 	    . "\e[37;44msticky\e[0m\n"
 	    . "\e[m"
 	 },
+
+	# This is a kludge to work around the fact that on some systems
+	# the files we've just created have a `group ID' that is not one
+	# of those associated with the current user.  Hence, attempting
+	# to do `chmod g+s setgid' fails.  This substitution maps the
+	# non-highlight 0m code to the expected one.
+	{OUT_SUBST => 's/\[0msetgid/[30;43msetgid/'},
+
 	{PRE => sub {
 	 system
 	   "touch setuid && chmod u+s setuid;"
