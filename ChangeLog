@@ -2,7 +2,7 @@
 
 	* Version 5.3.1-cvs.
 
-	Avoid build failures on alpha-linux-1.sf.net.
+	Avoid test failures on alpha-linux-1.sf.net.
 	* tests/chmod/usage: Use newer trap and tmpdir-creation framework.
 	Fix apparent typos (s/files/file/) in inner loop.
 
