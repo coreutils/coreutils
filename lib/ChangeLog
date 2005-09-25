@@ -4,9 +4,15 @@
 	it doesn't build in OpenBSD 3.4.  See
 	<http://lists.gnu.org/archive/html/bug-gnulib/2005-09/msg00242.html>.
 
-	* regex_internal.h (__attribute): Define to nothing for GCC 2.
+	* regex_internal.h (__GNUC_PREREQ, always_inline, inline, pure):
+	Remove.
+	(__attribute): Define to empty unless GCC 3.1 or later.
 	This works around a core dump on OpenBSD 3.4, which has GCC
-	2.95.3, which dumps core when given __attribute__(()).
+	2.95.3, which dumps core when given __attribute__(()).  It also
+	simplifies other tests, since we really don't want to bother with
+	worrying about which ancient version of GCC supported what.
+	Original problem reported by Yoann Vandoorselaere, with part of
+	the fix suggested by Derek Price.
 
 2005-09-24  Jim Meyering  <jim@meyering.net>
 
