@@ -1,3 +1,8 @@
+2005-09-24  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (touch invocation):
+	"touch -" now touches standard output.
+
 2005-09-17  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (who invocation): Remove a stray '+'.
