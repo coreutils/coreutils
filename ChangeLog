@@ -2,6 +2,10 @@
 
 	* Version 5.3.1-cvs.
 
+	* NEWS: "touch -" now touches standard output.
+	* src/touch.c (touch): Implement this.
+	(usage): Document this.
+
 	* src/copy.c (HAVE_FCHMOD, HAVE_FCHOWN): Define to 0 if not defined.
 	(copy_reg): New args CHOWN_SUCCEDED and DST_SB.  All callers changed.
 	Add a "goto close_src_and_dst_desc;" that was missing in the
