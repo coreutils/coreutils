@@ -102,6 +102,8 @@ AC_DEFUN([gl_MACROS],
   AC_CHECK_FUNCS_ONCE( \
     endgrent \
     endpwent \
+    fchmod \
+    fchown \
     ftruncate \
     hasmntopt \
     isascii \
