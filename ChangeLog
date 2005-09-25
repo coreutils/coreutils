@@ -1,6 +1,17 @@
-2005-09-24  Jim Meyering  <jim@meyering.net>
+2005-09-24  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1-cvs.
+
+	* src/copy.c (HAVE_FCHMOD, HAVE_FCHOWN): Define to 0 if not defined.
+	(copy_reg): New args CHOWN_SUCCEDED and DST_SB.  All callers changed.
+	Add a "goto close_src_and_dst_desc;" that was missing in the
+	previous patch.
+	(copy_reg) [HAVE_FCHOWN]: Prefer fchown to chown.
+	(copy_reg) [HAVE_FCHMOD]: Prefer fchmod to chmod.
+	(copy_internal): Don't invoke chown if fchown worked,
+	and likewise for chmod and fchmod.
+
+2005-09-24  Jim Meyering  <jim@meyering.net>
 
 	* src/shred.c: Use `#ifdef HAVE_CONFIG_H', not `#if HAVE_CONFIG_H',
 	for consistency with gnulib.
