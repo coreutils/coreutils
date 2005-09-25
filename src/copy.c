@@ -51,6 +51,13 @@
 #include "xreadlink.h"
 #include "yesno.h"
 
+#ifndef HAVE_FCHMOD
+# define HAVE_FCHMOD false
+#endif
+#ifndef HAVE_FCHOWN
+# define HAVE_FCHOWN false
+#endif
+
 #define SAME_OWNER(A, B) ((A).st_uid == (B).st_uid)
 #define SAME_GROUP(A, B) ((A).st_gid == (B).st_gid)
 #define SAME_OWNER_AND_GROUP(A, B) (SAME_OWNER (A, B) && SAME_GROUP (A, B))
@@ -191,13 +198,16 @@ copy_dir (char const *src_name_in, char const *dst_name_in, bool new_dst,
    Use DST_MODE as the 3rd argument in the call to open.
    X provides many option settings.
    Return true if successful.
-   *NEW_DST is as in copy_internal.  SRC_SB is the result
-   of calling xstat (aka stat in this case) on SRC_NAME.  */
+   *NEW_DST and *CHOWN_SUCCEEDED are as in copy_internal.
+   SRC_SB and DST_SB are the results of calling XSTAT (aka stat for
+   SRC_SB) on SRC_NAME and DST_NAME.  */
 
 static bool
 copy_reg (char const *src_name, char const *dst_name,
 	  const struct cp_options *x, mode_t dst_mode, bool *new_dst,
-	  struct stat const *src_sb)
+	  bool *chown_succeeded,
+	  struct stat const *src_sb,
+	  struct stat const *dst_sb)
 {
   char *buf;
   size_t buf_size;
@@ -400,6 +410,7 @@ copy_reg (char const *src_name, char const *dst_name,
 	{
 	  error (0, errno, _("writing %s"), quote (dst_name));
 	  return_val = false;
+	  goto close_src_and_dst_desc;
 	}
     }
 
@@ -413,9 +424,56 @@ copy_reg (char const *src_name, char const *dst_name,
 	{
 	  error (0, errno, _("preserving times for %s"), quote (dst_name));
 	  if (x->require_preserve)
-	    return_val = false;
+	    {
+	      return_val = false;
+	      goto close_src_and_dst_desc;
+	    }
 	}
     }
+
+#if HAVE_FCHOWN
+  if (x->preserve_ownership
+      && (*new_dst || !SAME_OWNER_AND_GROUP (*src_sb, *dst_sb)))
+    {
+      if (fchown (dest_desc, src_sb->st_uid, src_sb->st_gid) == 0)
+	*chown_succeeded = true;
+      else if (! chown_failure_ok (x))
+	{
+	  error (0, errno, _("failed to preserve ownership for %s"),
+		 quote (dst_name));
+	  if (x->require_preserve)
+	    {
+	      return_val = false;
+	      goto close_src_and_dst_desc;
+	    }
+	}
+    }
+#endif
+
+#if HAVE_STRUCT_STAT_ST_AUTHOR
+  /* FIXME: Preserve the st_author field via the file descriptor dest_desc.  */
+#endif
+
+#if HAVE_FCHMOD
+  /* Permissions of newly-created regular files were set upon `open'.
+     But don't return early if there were any special bits and chown
+     succeeded, because the chown must have reset those bits.  */
+  if (!(*new_dst
+	&& !(*chown_succeeded && (src_sb->st_mode & ~S_IRWXUGO)))
+      && (x->preserve_mode || *new_dst)
+      && (x->copy_as_regular || S_ISREG (src_sb->st_mode)))
+    {
+      if (fchmod (dest_desc, get_dest_mode (x, src_sb->st_mode)) != 0)
+	{
+	  error (0, errno, _("setting permissions for %s"), quote (dst_name));
+	  if (x->set_mode || x->require_preserve)
+	    {
+	      return_val = false;
+	      goto close_src_and_dst_desc;
+	    }
+	}
+    }
+#endif
 
 close_src_and_dst_desc:
   if (close (dest_desc) < 0)
@@ -1458,15 +1516,15 @@ copy_internal (char const *src_name, char const *dst_name,
 	}
     }
   else if (S_ISREG (src_type)
-	   || (x->copy_as_regular && !S_ISDIR (src_type)
-	       && !S_ISLNK (src_type)))
+	   || (x->copy_as_regular && !S_ISLNK (src_type)))
     {
       copied_as_regular = true;
       /* POSIX says the permission bits of the source file must be
 	 used as the 3rd argument in the open call, but that's not consistent
 	 with historical practice.  */
       if (! copy_reg (src_name, dst_name, x,
-		      get_dest_mode (x, src_mode), &new_dst, &src_sb))
+		      get_dest_mode (x, src_mode), &new_dst, &chown_succeeded,
+		      &src_sb, &dst_sb))
 	goto un_backup;
     }
   else
@@ -1593,7 +1651,7 @@ copy_internal (char const *src_name, char const *dst_name,
     }
 
   /* Avoid calling chown if we know it's not necessary.  */
-  if (x->preserve_ownership
+  if (!(copied_as_regular && HAVE_FCHOWN) && x->preserve_ownership
       && (new_dst || !SAME_OWNER_AND_GROUP (src_sb, dst_sb)))
     {
       if (chown (dst_name, src_sb.st_uid, src_sb.st_gid) == 0)
@@ -1624,11 +1682,12 @@ copy_internal (char const *src_name, char const *dst_name,
   }
 #endif
 
-  /* Permissions of newly-created regular files were set upon `open' in
-     copy_reg.  But don't return early if there were any special bits and
+  /* Permissions of newly-created regular files are set by open and/or fchmod
+     in copy_reg.  But don't return early if there were any special bits and
      chown succeeded, because the chown must have reset those bits.  */
-  if ((new_dst && copied_as_regular)
-      && !(chown_succeeded && (src_mode & ~S_IRWXUGO)))
+  if (copied_as_regular
+      && (HAVE_FCHMOD
+	  || (new_dst && !(chown_succeeded && (src_mode & ~S_IRWXUGO)))))
     return delayed_ok;
 
   if ((x->preserve_mode || new_dst)
