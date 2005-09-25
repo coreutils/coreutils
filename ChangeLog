@@ -1,6 +1,11 @@
-2005-09-24  Paul Eggert  <eggert@cs.ucla.edu>
+2005-09-25  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1-cvs.
+
+	* tests/chmod/usage: Use newer trap and tmpdir-creation framework.
+	Fix apparent typos (s/files/file/) in inner loop.
+
+2005-09-24  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: "touch -" now touches standard output.
 	* src/touch.c (touch): Implement this.
