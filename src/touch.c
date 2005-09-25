@@ -125,7 +125,9 @@ touch (const char *file)
   struct timespec timespec[2];
   struct timespec const *t;
 
-  if (! no_create)
+  if (STREQ (file, "-"))
+    fd = STDOUT_FILENO;
+  else if (! no_create)
     {
       /* Try to open FILE, creating it if necessary.  */
       fd = fd_reopen (STDIN_FILENO, file,
@@ -157,7 +159,7 @@ touch (const char *file)
 	      error (0, errno, _("failed to get attributes of %s"),
 		     quote (file));
 	    }
-	  if (fd != -1)
+	  if (fd == STDIN_FILENO)
 	    close (fd);
 	  return false;
 	}
@@ -181,7 +183,7 @@ touch (const char *file)
     }
 
   ok = (futimens (fd, file, t) == 0);
-  if (fd != -1)
+  if (fd == STDIN_FILENO)
     ok &= (close (fd) == 0);
 
   if (!ok)
@@ -241,6 +243,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (_("\
 \n\
 Note that the -d and -t options accept different time-date formats.\n\
+\n\
+If a FILE is -, touch standard output.\n\
 "), stdout);
       printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
