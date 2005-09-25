@@ -41,6 +41,16 @@ struct utimbuf
 };
 #endif
 
+/* Some systems don't have ENOSYS.  */
+#ifndef ENOSYS
+# ifdef ENOTSUP
+#  define ENOSYS ENOTSUP
+# else
+/* Some systems don't have ENOTSUP either.  */
+#  define ENOSYS EINVAL
+# endif
+#endif
+
 #if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 8) || __STRICT_ANSI__
 # define __attribute__(x)
 #endif
@@ -53,7 +63,11 @@ struct utimbuf
    TIMESPEC[0] and TIMESPEC[1], respectively.
    FD must be either negative -- in which case it is ignored --
    or a file descriptor that is open on FILE.
-   If TIMESPEC is null, set the time stamps to the current time.  */
+   If FD is nonnegative, then FILE can be NULL, which means
+   use just futimes (or equivalent) instead of utimes (or equivalent),
+   and fail if on an old system without futimes (or equivalent).
+   If TIMESPEC is null, set the time stamps to the current time.
+   Return 0 on success, -1 (setting errno) on failure.  */
 
 int
 futimens (int fd ATTRIBUTE_UNUSED,
@@ -78,8 +92,7 @@ futimens (int fd ATTRIBUTE_UNUSED,
 
 # if HAVE_FUTIMESAT
   return fd < 0 ? futimesat (AT_FDCWD, file, t) : futimesat (fd, NULL, t);
-# else
-#  if HAVE_FUTIMES
+# elif HAVE_FUTIMES
   if (0 <= fd)
     {
       if (futimes (fd, t) == 0)
@@ -97,23 +110,35 @@ futimens (int fd ATTRIBUTE_UNUSED,
 	  return -1;
 	}
     }
-#  endif
-  return utimes (file, t);
 # endif
+#endif
 
-#else
+#if ! HAVE_FUTIMES_AT
 
-  struct utimbuf utimbuf;
-  struct utimbuf const *t;
-  if (timespec)
+  if (!file)
     {
-      utimbuf.actime = timespec[0].tv_sec;
-      utimbuf.modtime = timespec[1].tv_sec;
-      t = &utimbuf;
+      errno = ENOSYS;
+      return -1;
     }
-  else
-    t = NULL;
-  return utime (file, t);
+
+# if HAVE_WORKING_UTIMES
+  return utimes (file, t);
+# else
+  {
+    struct utimbuf utimbuf;
+    struct utimbuf const *ut;
+    if (timespec)
+      {
+	utimbuf.actime = timespec[0].tv_sec;
+	utimbuf.modtime = timespec[1].tv_sec;
+	ut = &utimbuf;
+      }
+    else
+      ut = NULL;
+
+    return utime (file, ut);
+  }
+# endif
 
 #endif
 }
