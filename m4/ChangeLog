@@ -1,5 +1,7 @@
 2005-09-24  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* jm-macros.m4 (gl_MACROS): Check for fchmod and fchown.
+
 	* mbchar.m4 (gl_MBCHAR): Check for wchar.h and wctype.h, and
 	don't compile mbchar.c unless both headers exist.  See
 	<http://lists.gnu.org/archive/html/bug-gnulib/2005-09/msg00242.html>.
