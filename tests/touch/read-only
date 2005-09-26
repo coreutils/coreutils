@@ -29,4 +29,6 @@ fail=0
 
 touch read-only || fail=1
 
+touch - 1< read-only 2> /dev/null && { test ! -f - || fail=1; }
+
 (exit $fail); exit $fail

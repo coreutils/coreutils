@@ -22,11 +22,13 @@ fail=0
 framework_failure=0
 
 for d in $TOUCH_DIR_LIST; do
-  rm -rf $d/a $d/b
+  rm -rf $d/a $d/b $d/c
   > $d/a || framework_failure=1
   test -f $d/a || framework_failure=1
   > $d/b || framework_failure=1
   test -f $d/b || framework_failure=1
+  > $d/c || framework_failure=1
+  test -f $d/c || framework_failure=1
 done
 
 if test $framework_failure = 1; then
@@ -49,7 +51,12 @@ for d in $TOUCH_DIR_LIST; do
   set x `ls -t $d/a $d/b`
   test "$*" = "x $d/b $d/a" || fail=1
 
-  rm -rf $d/a $d/b
+  if touch - 1< $d/c 2> /dev/null; then
+    set x `ls -t $d/a $d/c`
+    test "$*" = "x $d/c $d/a" || fail=1
+  fi
+
+  rm -rf $d/a $d/b $d/c
 done
 
 if test $fail != 0; then
