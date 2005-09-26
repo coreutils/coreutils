@@ -154,7 +154,7 @@ touch (const char *file)
 	    error (0, open_errno, _("creating %s"), quote (file));
 	  else
 	    {
-	      if (no_create && errno == ENOENT)
+	      if (no_create && (errno == ENOENT || errno == EBADF))
 		return true;
 	      error (0, errno, _("failed to get attributes of %s"),
 		     quote (file));
@@ -182,9 +182,23 @@ touch (const char *file)
       t = timespec;
     }
 
-  ok = (futimens (fd, file, t) == 0);
+  ok = (futimens (fd, (fd == STDOUT_FILENO ? NULL : file), t) == 0);
+
   if (fd == STDIN_FILENO)
-    ok &= (close (fd) == 0);
+    {
+      if (close (STDIN_FILENO) != 0)
+	{
+	  error (0, errno, _("closing %s"), quote (file));
+	  return false;
+	}
+    }
+  else if (fd == STDOUT_FILENO)
+    {
+      /* Do not diagnose "touch -c - >&-".  */
+      if (!ok && errno == EBADF && no_create
+	  && change_times == (CH_ATIME | CH_MTIME))
+	return true;
+    }
 
   if (!ok)
     {
