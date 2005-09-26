@@ -1,3 +1,8 @@
+2005-09-26  Jim Meyering  <jim@meyering.net>
+
+	* utimes.m4 (gl_FUNC_UTIMES): Detect the version of utimes
+	from glibc-2.2.5 that fails for read-only files.
+
 2005-09-24  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* jm-macros.m4 (gl_MACROS): Check for fchmod and fchown.
