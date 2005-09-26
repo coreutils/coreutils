@@ -1,6 +1,19 @@
-2005-09-25  Jim Meyering  <jim@meyering.net>
+2005-09-26  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.3.1-cvs.
+
+	Work around the root cause of alpha-linux-1.sf.net test failure.
+	* tests/chmod/usage: Remove all files in inner loop.
+	Otherwise, with a touch program that fails on unwritable files,
+	(this happens at least on linux-2.2.20) a -w file left behind
+	from a previous iteration could cause a spurious test failure.
+
+2005-09-25  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* tests/chmod/usage: Undo the s/files/file/ change, but add
+	comments about why the old version was desired.
+
+2005-09-25  Jim Meyering  <jim@meyering.net>
 
 	* tests/ls-2/tests (setuid-etc): Work around output mismatch when
 	a just-created test file cannot be made set-group-ID.
