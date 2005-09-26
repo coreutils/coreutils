@@ -26,6 +26,7 @@
 
 #include <errno.h>
 #include <fcntl.h>
+#include <unistd.h>
 
 #if HAVE_UTIME_H
 # include <utime.h>
@@ -113,11 +114,24 @@ futimens (int fd ATTRIBUTE_UNUSED,
 # endif
 #endif
 
-#if ! HAVE_FUTIMES_AT
+#if ! HAVE_FUTIMESAT
 
   if (!file)
     {
+# if ! (HAVE_WORKING_UTIMES && HAVE_FUTIMES)
       errno = ENOSYS;
+# endif
+
+      /* Prefer EBADF to ENOSYS if both error numbers apply.  */
+      if (errno == ENOSYS)
+	{
+	  int fd2 = dup (fd);
+	  int dup_errno = errno;
+	  if (0 <= fd2)
+	    close (fd2);
+	  errno = (fd2 < 0 && dup_errno == EBADF ? EBADF : ENOSYS);
+	}
+
       return -1;
     }
 
