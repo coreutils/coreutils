@@ -77,8 +77,10 @@ for case in $cases; do
     touch -- $files || framework_failure=1
     chmod $args || fail=1
     for file in $files; do
-      rm -f -- $file && touch -- $file && rm -- $file || framework_failure=1
-      chmod $args $file 2>/dev/null && fail=1
+      # Test for misparsing args by creating all $files but $file.
+      # chmod has a bug if it succeeds even though $file is absent.
+      rm -f -- $files && touch -- $files && rm -- $file || framework_failure=1
+      chmod $args 2>/dev/null && fail=1
     done
     ;;
   esac
