@@ -1,6 +1,17 @@
-2005-09-26  Jim Meyering  <jim@meyering.net>
+2005-09-26  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.3.1-cvs.
+
+	* src/touch.c (touch): Handle "touch -c - >&-" by checking for EBADF
+	and ENOSYS.
+	Do not pass "-" to futimens; pass NULL instead.
+	If close (STDIN_FILENO) fails, report the error separately instead
+	of letting the 'close' pollute errno.
+	* tests/touch/empty-file: Test "touch -" too.
+	* tests/touch/no-create-missing: Likewise.
+	* tests/touch/read-only: Likewise.
+
+2005-09-26  Jim Meyering  <jim@meyering.net>
 
 	* tests/touch/read-only: New test, for root of chmod/usage failure.
 	* tests/touch/Makefile.am (TESTS): Add read-only.
