@@ -79,7 +79,8 @@ for case in $cases; do
     for file in $files; do
       # Test for misparsing args by creating all $files but $file.
       # chmod has a bug if it succeeds even though $file is absent.
-      rm -f -- $files && touch -- $files && rm -- $file || framework_failure=1
+      rm -f -- $all_files && touch -- $files && rm -- $file \
+	  || framework_failure=1
       chmod $args 2>/dev/null && fail=1
     done
     ;;
