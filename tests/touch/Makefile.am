@@ -2,6 +2,7 @@
 AUTOMAKE_OPTIONS = 1.3 gnits
 
 TESTS = \
+  read-only \
   relative \
   not-owner \
   no-create-missing \
