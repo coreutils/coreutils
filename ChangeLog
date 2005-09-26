@@ -2,6 +2,9 @@
 
 	* Version 5.3.1-cvs.
 
+	* tests/touch/read-only: New test, for root of chmod/usage failure.
+	* tests/touch/Makefile.am (TESTS): Add read-only.
+
 	Work around the root cause of alpha-linux-1.sf.net test failure.
 	* tests/chmod/usage: Remove all files in inner loop.
 	Otherwise, with a touch program that fails on unwritable files,
