@@ -1,3 +1,9 @@
+2005-09-26  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* utimens.c: Include unistd.h, for dup2.
+	(futimens): Fix typo: HAVE_FUTIMESAT was misspelled in an #if.
+	(futimens) [! HAVE_FUTIMESAT]: If !file, set errno before returning -1.
+
 2005-09-25  Jim Meyering  <jim@meyering.net>
 
 	* strnumcmp-in.h: Protect against multiple inclusion.
