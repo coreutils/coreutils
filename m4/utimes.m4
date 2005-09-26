@@ -12,6 +12,8 @@ dnl with or without modifications, as long as this notice is preserved.
 # Then, there was code to round rather than truncate.
 # Then, there was an implementation (sparc64, Linux-2.4.28, glibc-2.3.3)
 # that didn't honor the NULL-means-set-to-current-time semantics.
+# Finally, there was also a version of utimes that failed on read-only
+# files, while utime worked fine (linux-2.2.20, glibc-2.2.5).
 #
 # From Jim Meyering, with suggestions from Paul Eggert.
 
@@ -23,6 +25,7 @@ AC_DEFUN([gl_FUNC_UTIMES],
   AC_RUN_IFELSE([AC_LANG_SOURCE([[
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <fcntl.h>
 #include <sys/time.h>
 #include <time.h>
 #include <unistd.h>
@@ -38,6 +41,7 @@ main ()
   char const *file = "conftest.utimes";
   FILE *f;
   time_t now;
+  int fd;
 
   int ok = ((f = fopen (file, "w"))
 	    && fclose (f) == 0
@@ -57,6 +61,13 @@ main ()
      && lstat (file, &sbuf) == 0
      && now - sbuf.st_atime <= 2
      && now - sbuf.st_mtime <= 2);
+  unlink (file);
+  if (!ok)
+    exit (1);
+
+  ok = (0 <= (fd = open (file, O_WRONLY|O_CREAT, 0444))
+	      && close (fd) == 0
+	      && utimes (file, NULL) == 0);
   unlink (file);
 
   exit (!ok);
