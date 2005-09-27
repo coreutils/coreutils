@@ -2,9 +2,7 @@
 
 	* fprintftime.c [HAVE_CONFIG_H]: Include <config.h> conditionally,
 	to be consistent with gnulib.
-
 	* getcwd.c: Change #ifdef<TAB>HAVE_CONFIG_H to #ifdef HAVE_CONFIG_H.
-
 	* fts-cycle.c [HAVE_CONFIG_H]: Include <config.h>.
 	* strnumcmp.c [HAVE_CONFIG_H]: Include <config.h> here, now that
 	strnumcmp-in.h no longer includes it.
