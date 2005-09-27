@@ -19,7 +19,7 @@ srcdir=$pwd/src
 path='export PATH='$srcdir':${PATH#*:}'
 pre='#!/bin/sh\n'"$path"'\n'
 n=9
-vg='exec /usr/bin/valgrind --logfile-fd=3 --leak-check=yes --track-fds=yes --quiet --num-callers='$n
+vg='exec /usr/bin/valgrind --log-fd=3 --leak-check=yes --track-fds=yes --quiet --num-callers='$n
 cat <<EOF > src/vg/gen
 for i in $coreutils; do
   printf "$pre$vg \$i"' "\$@"\n' > \$i
