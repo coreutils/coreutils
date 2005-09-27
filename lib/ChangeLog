@@ -1,3 +1,8 @@
+2005-09-27  Jim Meyering  <jim@meyering.net>
+
+	* strnumcmp.c: Include <config.h> here, now that strnumcmp-in.h
+	no longer includes it.
+
 2005-09-26  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* utimens.c: Include unistd.h, for dup2.
