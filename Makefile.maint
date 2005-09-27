@@ -99,6 +99,12 @@ syntax-check: $(syntax-check-rules)
 #	    exit 1; } || :
 # FIXME: don't allow `#include .strings\.h' anywhere
 
+# FIXME: add a check for this.
+# Nearly every lib/*.c file must include config.h, like this:
+#  #ifdef HAVE_CONFIG_H
+#  # include <config.h>
+#  #endif
+
 sc_cast_of_argument_to_free:
 	@grep -E '\<free \(\(' $(srcdir)/{lib,src}/*.[chly] &&		\
 	  { echo '$(ME): don'\''t cast free argument' 1>&2;		\
