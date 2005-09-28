@@ -2,13 +2,15 @@
 
 	* Version 5.3.1-cvs.
 
-	* README: Warn about a (now-)known problem on FreeBSD 5.0:
+	* README: Remove note about FreeBSD make test failure.
 
-	When building and running `make test' on a FreeBSD 5.0 system,
-	expect the tests/install/trap test to get stuck in an infinite
-	loop.  That appears to be due to a bug in /bin/sh.
-	When you change the first line of the tests/install/trap script
-	to be e.g., #!/usr/local/bin/bash, the test completes normally.
+2005-09-28  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* tests/install/trap: Work around a bug in FreeBSD 5.0.
+
+2005-09-28  Jim Meyering  <jim@meyering.net>
+
+	* README: Warn about a (now-)known problem on FreeBSD 5.0:
 
 2005-09-26  Paul Eggert  <eggert@cs.ucla.edu>
 
