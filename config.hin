@@ -1456,9 +1456,9 @@
    a pointer exists and the standard includes do not define UINTPTR_MAX. */
 #undef UINTPTR_MAX
 
-/* Define as the maximum value of the type 'unsigned long long int', if the
-   system doesn't define it, and if the system has that type. */
-#undef ULLONG_MAX
+/* Define if ULONG_MAX < ULLONG_MAX, even if your compiler does not support
+   ULLONG_MAX. */
+#undef ULONG_MAX_LT_ULLONG_MAX
 
 /* Define to 1 for Encore UMAX. */
 #undef UMAX
