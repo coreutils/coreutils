@@ -58,16 +58,6 @@ If you run the tests on a SunOS4.1.4 system, expect the ctime-part of
 the ls `time-1' test to fail.  I believe that is due to a bug in the
 way Sun implemented link(2) and chmod(2).
 
-***********************
-FreeBSD 5.0 `make test' infinite loop with /bin/sh
------------------------
-
-When building and running `make test' on a FreeBSD 5.0 system,
-expect the tests/install/trap test to get stuck in an infinite
-loop.  That appears to be due to a bug in /bin/sh.
-When you change the first line of tests/install/trap to be
-e.g., #!/usr/local/bin/bash, the test completes normally.
-
 
 ***********************
 HPUX 11.x build failure
