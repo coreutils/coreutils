@@ -1,6 +1,8 @@
 2005-09-28  Jim Meyering  <jim@meyering.net>
 
-	* Version 5.3.1-cvs.
+	* Version 5.90-cvs.
+	* configure.ac: Use 5.90-cvs as the version string, not 5.3.1-cvs.
+	* NEWS: Adjust accordingly.
 
 	* README: Remove note about FreeBSD make test failure.
 
