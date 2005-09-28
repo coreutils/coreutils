@@ -316,7 +316,7 @@ initialize_exit_failure (int status)
 # include <stdint.h>
 #endif
 
-#if ULONG_MAX < ULLONG_MAX
+#if ULONG_MAX_LT_ULLONG_MAX
 # define LONGEST_MODIFIER "ll"
 #else
 # define LONGEST_MODIFIER "l"
