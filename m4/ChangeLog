@@ -1,3 +1,9 @@
+2005-09-28  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* ullong_max.m4 (gl_ULLONG_MAX): Simplify so that it merely
+	defines ULONG_MAX_LT_ULLONG_MAX.  Thomas M.Ott reports that
+	ULLONG_MAX doesn't work with 2.7.2.1.
+
 2005-09-26  Jim Meyering  <jim@meyering.net>
 
 	* utimes.m4 (gl_FUNC_UTIMES): Detect the version of utimes
