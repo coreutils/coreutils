@@ -19,7 +19,7 @@ dnl Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
 dnl Written by Jim Meyering.
 
-AC_INIT([GNU coreutils],[5.3.1-cvs],[bug-coreutils@gnu.org])
+AC_INIT([GNU coreutils],[5.90-cvs],[bug-coreutils@gnu.org])
 AC_CONFIG_SRCDIR(src/ls.c)
 
 AC_CONFIG_AUX_DIR(build-aux)
