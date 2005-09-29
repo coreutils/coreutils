@@ -5,8 +5,8 @@
 	with GCC 2.7.2.1 reported by Thomas M.Ott.
 
 	* settime.c (settime): Fix { typo in previous patch.  Also, don't
-	bother returning ENOSYS; just let stime return whatever errno it
-	wants to return.
+	bother returning ENOSYS if settimeofday or stime fails; just let
+	them return whatever errno they wants to return.
 
 2005-09-29  Jim Meyering  <jim@meyering.net>
 
