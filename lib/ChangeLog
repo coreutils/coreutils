@@ -6,7 +6,7 @@
 
 	* settime.c (settime): Fix { typo in previous patch.  Also, don't
 	bother returning ENOSYS if settimeofday or stime fails; just let
-	them return whatever errno they wants to return.
+	them return whatever errno they want to return.
 
 2005-09-29  Jim Meyering  <jim@meyering.net>
 
