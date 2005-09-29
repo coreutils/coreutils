@@ -161,6 +161,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   "pr -D FORMAT" now accepts the same formats that "date +FORMAT" does.
 
+  stat now exits nonzero if a file operand does not exist
+
 ** Improved robustness
 
   Date no longer needs to allocate virtual memory to do its job,
