@@ -4,6 +4,10 @@
 	so that the code works even with ancient cpp.  Portability problem
 	with GCC 2.7.2.1 reported by Thomas M.Ott.
 
+	* settime.c (settime): Fix { typo in previous patch.  Also, don't
+	bother returning ENOSYS; just let stime return whatever errno it
+	wants to return.
+
 2005-09-29  Jim Meyering  <jim@meyering.net>
 
 	* settime.c (settime): Move the HAVE_STIME block `up' into an #elif
