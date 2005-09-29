@@ -61,12 +61,16 @@ settime (struct timespec const *ts)
     if (r == 0 || errno == EPERM)
       return r;
   }
+#elif HAVE_STIME
+  {
+    /* This fails to compile on OSF1 V5.1, due to stime requiring
+       a `long int*' and tv_sec is `int'.  But that system does provide
+       settimeofday.  */
+    int r = stime (&ts->tv_sec);
+    if (r == 0 || errno == EPERM)
+      return r;
 #endif
 
-#if HAVE_STIME
-  return stime (&ts->tv_sec);
-#else
   errno = ENOSYS;
   return -1;
-#endif
 }
