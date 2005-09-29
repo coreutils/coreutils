@@ -1,6 +1,11 @@
-2005-09-28  Paul Eggert  <eggert@cs.ucla.edu>
+2005-09-29  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.90-cvs.
+
+	* NEWS: Mention this bug fix:
+	stat now exits nonzero if a file operand does not exist
+
+2005-09-28  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/system.h (LONGEST_MODIFIER): Use ULONG_MAX_LT_ULLONG_MAX
 	instead of ULLONG_MAX, as the latter doesn't work with GCC 2.7.2.1.
