@@ -1,6 +1,9 @@
 2005-09-29  Jim Meyering  <jim@meyering.net>
 
-	* Version 5.90-cvs.
+	* Version 5.90.
+
+	* configure.ac: Remove -cvs suffix from version string.
+	* NEWS: Add today's date.
 
 	* NEWS: Mention this bug fix:
 	stat now exits nonzero if a file operand does not exist
