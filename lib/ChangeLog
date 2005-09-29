@@ -1,3 +1,10 @@
+2005-09-29  Jim Meyering  <jim@meyering.net>
+
+	* settime.c (settime): Move the HAVE_STIME block `up' into an #elif
+	block, so that we don't even try to compile it if settimeofday is
+	available.  This works around a compilation failure on OSF1 V5.1,
+	due to stime requiring a `long int*' while tv_sec is `int'.
+
 2005-09-27  Jim Meyering  <jim@meyering.net>
 
 	* fprintftime.c [HAVE_CONFIG_H]: Include <config.h> conditionally,
