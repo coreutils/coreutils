@@ -1,5 +1,8 @@
 2005-09-29  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* src/dd.c (main): Don't assume size_t has the same width
+	as unsigned long.  Problem reported by Eric Blake.
+
 	* NEWS: Clarify "tail - f" example.
 
 2005-09-29  Jim Meyering  <jim@meyering.net>
