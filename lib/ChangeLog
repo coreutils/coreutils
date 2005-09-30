@@ -1,5 +1,12 @@
 2005-09-29  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* openat.c (fdopendir): Do not define if HAVE_FDOPENDIR.
+	Remove AT_FDCWD test.
+	Do not consume the fd unless successful.
+	* openat.h (fdopendir): Do not define if HAVE_FDOPENDIR.
+
+2005-09-29  Paul Eggert  <eggert@cs.ucla.edu>
+
 	* xtime.h (XTIME_PRECISION): Now of type int, not long long int,
 	so that the code works even with ancient cpp.  Portability problem
 	with GCC 2.7.2.1 reported by Thomas M.Ott.
