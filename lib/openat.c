@@ -89,6 +89,8 @@ rpl_openat (int fd, char const *file, int flags, ...)
   return new_fd;
 }
 
+#if !HAVE_FDOPENDIR
+
 /* Replacement for Solaris' function by the same name.
    <http://www.google.com/search?q=fdopendir+site:docs.sun.com>
    Simulate it by doing save_cwd/fchdir/opendir(".")/restore_cwd.
@@ -100,16 +102,13 @@ rpl_openat (int fd, char const *file, int flags, ...)
    W A R N I N G:
    Unlike the other fd-related functions here, this one
    effectively consumes its FD parameter.  The caller should not
-   close or otherwise manipulate FD after calling this function.  */
+   close or otherwise manipulate FD if this function returns successfully.  */
 DIR *
 fdopendir (int fd)
 {
   struct saved_cwd saved_cwd;
   int saved_errno;
   DIR *dir;
-
-  if (fd == AT_FDCWD)
-    return opendir (".");
 
   if (save_cwd (&saved_cwd) != 0)
     openat_save_fail (errno);
@@ -118,7 +117,6 @@ fdopendir (int fd)
     {
       saved_errno = errno;
       free_cwd (&saved_cwd);
-      close (fd);
       errno = saved_errno;
       return NULL;
     }
@@ -130,11 +128,14 @@ fdopendir (int fd)
     openat_restore_fail (errno);
 
   free_cwd (&saved_cwd);
-  close (fd);
+  if (dir)
+    close (fd);
 
   errno = saved_errno;
   return dir;
 }
+
+#endif
 
 /* Replacement for Solaris' function by the same name.
    <http://www.google.com/search?q=fstatat+site:docs.sun.com>
