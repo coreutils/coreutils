@@ -1,4 +1,4 @@
-#serial 4
+#serial 6
 # See if we need to use our replacement for Solaris' openat function.
 
 dnl Copyright (C) 2004, 2005 Free Software Foundation, Inc.
@@ -13,6 +13,7 @@ AC_DEFUN([gl_FUNC_OPENAT],
   AC_LIBSOURCES([openat.c, openat.h, openat-die.c])
   AC_LIBOBJ([openat-die])
   AC_REQUIRE([gl_USE_SYSTEM_EXTENSIONS])
+  AC_CHECK_FUNCS_ONCE([fdopendir])
   AC_REPLACE_FUNCS(openat)
   case $ac_cv_func_openat in
   yes) ;;
