@@ -1,3 +1,7 @@
+2005-09-29  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* NEWS: Clarify "tail - f" example.
+
 2005-09-29  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.90.

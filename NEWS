@@ -38,10 +38,13 @@ GNU coreutils NEWS                                    -*- outline -*-
                       POSIX 1003.2-1992    POSIX 1003.1-2001
     sort +4           sort -k 5            sort ./+4
     tail +4           tail -n +4           tail ./+4
-    tail - main.c     tail main.c          tail -- - main.c
+    tail - f          tail f               [see (*) below]
     tail -c 4         tail -c 10 ./4       tail -c4
     touch 12312359 f  touch -t 12312359 f  touch ./12312359 f
     uniq +4           uniq -s 4            uniq ./+4
+
+    (*) "tail - f" does not conform to POSIX 1003.1-2001; to read
+    standard input and then "f", use the command "tail -- - f".
 
   These changes are in response to decisions taken in the January 2005
   Austin Group standardization meeting.  For more details, please see
