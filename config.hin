@@ -441,6 +441,9 @@
 /* Define to 1 if you have the `fdatasync' function. */
 #undef HAVE_FDATASYNC
 
+/* Define to 1 if you have the `fdopendir' function. */
+#undef HAVE_FDOPENDIR
+
 /* Define to 1 if you have the `flockfile' function. */
 #undef HAVE_FLOCKFILE
 

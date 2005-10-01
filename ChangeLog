@@ -1,3 +1,9 @@
+2005-09-30  Jim Meyering  <jim@meyering.net>
+
+	* Version 5.91-cvs.
+	* configure.ac: Use 5.91-cvs as the version string.
+	* NEWS: Adjust accordingly.
+
 2005-09-29  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/dd.c (main): Don't assume size_t has the same width
