@@ -211,10 +211,10 @@ main (int argc, char **argv)
   else
     {
       int i;
+      ok = true;
       for (i = optind; i < argc; i++)
 	if (! print_factors (argv[i]))
-	  usage (EXIT_FAILURE);
-      ok = true;
+	  ok = false;
     }
 
   exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
