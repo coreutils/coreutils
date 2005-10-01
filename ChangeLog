@@ -1,3 +1,9 @@
+2005-10-01  Jim Meyering  <jim@meyering.net>
+
+	* src/factor.c (main): Don't stop processing arguments upon
+	the first invalid one.  Suggestion from Eric Blake
+	* tests/factor/basic: Add a test for this.
+
 2005-09-30  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.91-cvs.
