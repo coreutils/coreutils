@@ -1,3 +1,9 @@
+2005-10-01  Simon Josefsson  <jas@extundo.com>
+
+	* getaddrinfo.h: Protect #include's of sys/socket.h and netdb.h.
+	Only define struct addrinfo if !HAVE_STRUCT_ADDRINFO.  Protect
+	AI_* and EAI_* definitions.  Protect function declarations.
+
 2005-09-29  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* openat.c (fdopendir): Do not define if HAVE_FDOPENDIR.
