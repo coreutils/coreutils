@@ -1,3 +1,13 @@
+2005-10-01  Simon Josefsson  <jas@extundo.com>
+
+	* getaddrinfo.m4 (gl_PREREQ_GETADDRINFO): Use AC_GNU_SOURCE,
+	GNU declares only getaddrinfo as an (POSIX) extension.
+	Check for sys/types.h, sys/socket.h, and netdb.h too,
+	needed by getaddrinfo.h.
+	Check if getaddrinfo, freeaddrinfo and gai_strerror are
+	declared by the POSIX headers.
+	Check if struct addrinfo is declared.
+
 2005-10-01  Jim Meyering  <jim@meyering.net>
 
 	* getaddrinfo.m4 (gl_GETADDRINFO): Look for getservbyname in these
