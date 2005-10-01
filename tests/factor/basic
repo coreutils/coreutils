@@ -58,19 +58,32 @@ my @Tests =
       {ERR => "$prog: invalid option -- 1\n"
        . "Try `$prog --help' for more information.\n"},
       {EXIT => 1}],
+     ['cont', 'a 4',
+      {OUT => "4: 2 2\n"},
+      {ERR => "$prog: `a' is not a valid positive integer\n"},
+      {EXIT => 1}],
     );
 
 # Prepend the command line argument and append a newline to end
 # of each expected `OUT' string.
 my $t;
+
+Test:
 foreach $t (@Tests)
   {
     my $arg1 = $t->[1];
-    my $e;
-    foreach $e (@$t)
+
+    # Don't fiddle with expected OUT string if there's a nonzero exit status.
+    foreach my $e (@$t)
       {
-	$e->{OUT} = "$arg1: $e->{OUT}\n"
-	  if ref $e eq 'HASH' and exists $e->{OUT};
+	ref $e eq 'HASH' && exists $e->{EXIT} && $e->{EXIT}
+	  and next Test;
+      }
+
+    foreach my $e (@$t)
+      {
+	ref $e eq 'HASH' && exists $e->{OUT}
+	  and $e->{OUT} = "$arg1: $e->{OUT}\n"
       }
   }
 
