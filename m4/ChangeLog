@@ -1,3 +1,9 @@
+2005-10-01  Jim Meyering  <jim@meyering.net>
+
+	* getaddrinfo.m4 (gl_GETADDRINFO): Look for getservbyname in these
+	libraries [inet nsl socket xnet].  Nelson Beebe reported that with
+	native cc on Solaris 7, getaddrinfo.c requires -lsocket.
+
 2005-09-29  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* openat.m4 (gl_FUNC_OPENAT): Check for fdopendir.
