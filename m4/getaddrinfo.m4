@@ -18,5 +18,22 @@ AC_DEFUN([gl_PREREQ_GETADDRINFO], [
   AC_REQUIRE([gl_C_RESTRICT])
   AC_REQUIRE([gl_SOCKET_FAMILIES])
   AC_REQUIRE([AC_C_INLINE])
-  AC_CHECK_HEADERS_ONCE([netinet/in.h])
+  AC_REQUIRE([AC_GNU_SOURCE])
+  AC_CHECK_HEADERS_ONCE(sys/socket.h netdb.h sys/types.h netinet/in.h)
+  AC_CHECK_DECLS([getaddrinfo, freeaddrinfo, gai_strerror],,,[
+#ifdef HAVE_SYS_SOCKET_H
+# include <sys/socket.h>
+#endif
+#ifdef HAVE_NETDB_H
+# include <netdb.h>
+#endif
+])
+  AC_CHECK_TYPES([struct addrinfo],,,[
+#ifdef HAVE_SYS_SOCKET_H
+# include <sys/socket.h>
+#endif
+#ifdef HAVE_NETDB_H
+# include <netdb.h>
+#endif
+])
 ])
