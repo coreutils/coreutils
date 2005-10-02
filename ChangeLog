@@ -2,6 +2,8 @@
 
 	* Version 5.91-cvs.
 
+	* Makefile.maint (sc_unmarked_diagnostics):
+	Search only cvs-controlled files.
 	* .x-sc_unmarked_diagnostics: New file.
 	* Makefile.am (EXTRA_DIST): Add it.
 
