@@ -1,3 +1,12 @@
+2005-10-02  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* getdelim.c: Import from gnulib (to fix unused var warnings) then
+	apply the following fixes:
+	Include getdelim.h first.  Include <limits.h>.
+	(SSIZE_MAX): New macro, if not already defined.
+	(getdelim): Fix buffer overrun on 64-bit hosts with lines longer
+	than 2 GiB.
+
 2005-10-01  Simon Josefsson  <jas@extundo.com>
 
 	* getaddrinfo.h: Protect #include's of sys/socket.h and netdb.h.
