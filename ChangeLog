@@ -1,6 +1,11 @@
-2005-10-01  Jim Meyering  <jim@meyering.net>
+2005-10-02  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.91-cvs.
+
+	* .x-sc_unmarked_diagnostics: New file.
+	* Makefile.am (EXTRA_DIST): Add it.
+
+2005-10-01  Jim Meyering  <jim@meyering.net>
 
 	* src/factor.c (main): Don't stop processing arguments upon
 	the first invalid one.  Suggestion from Eric Blake
