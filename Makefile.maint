@@ -257,8 +257,10 @@ sc_trailing_blank:
 # Look for diagnostics that aren't marked for translation.
 # This won't find any for which error's format string is on a separate line.
 sc_unmarked_diagnostics:
-	@grep -E							\
-	    '\<error \([^"]*"[^"]*[a-z]{3}' $(srcdir)/{lib,src}/*.c	\
+	@( $(CVS_LIST) ) > /dev/null 2>&1 || : &&			\
+	  grep -E							\
+	    '\<error \([^"]*"[^"]*[a-z]{3}'				\
+	     $$($(CVS_LIST) | grep -vEf .x-$@ )				\
 	  | grep -v '_(' &&						\
 	  { echo '$(ME): found unmarked diagnostic(s)' 1>&2;		\
 	    exit 1; } || :
