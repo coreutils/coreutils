@@ -1,4 +1,4 @@
-#serial 5
+#serial 6
 
 # Use Gnulib's robust chdir function.
 # It can handle arbitrarily long directory names, which means
@@ -27,7 +27,7 @@ have_path_max_definition
     gl_have_path_max_definition=yes,
     gl_have_path_max_definition=no)])
 
-  if test $gl_have_path_max_definition; then
+  if test $gl_have_path_max_definition = yes; then
     AC_LIBOBJ([chdir-long])
     gl_PREREQ_CHDIR_LONG
   fi
