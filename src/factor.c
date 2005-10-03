@@ -42,9 +42,8 @@
 /* Token delimiters when reading from a file.  */
 #define DELIM "\n\t "
 
-/* FIXME: if this program is ever modified to factor integers larger
-   than 2^128, this constant (and the algorithm :-) will have to change.  */
-#define MAX_N_FACTORS 128
+/* The maximum number of factors, including -1, for negative numbers.  */
+#define MAX_N_FACTORS (sizeof (uintmax_t) * CHAR_BIT)
 
 /* The trial divisor increment wheel.  Use it to skip over divisors that
    are composites of 2, 3, 5, 7, or 11.  The part from WHEEL_START up to
