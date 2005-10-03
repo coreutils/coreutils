@@ -1,6 +1,11 @@
-2005-10-02  Jim Meyering  <jim@meyering.net>
+2005-10-03  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.91-cvs.
+
+	* src/factor.c (MAX_N_FACTORS): Define in terms of sizeof (uintmax_t)
+	rather than hard-coding to 128.  From Thomas M.Ott.
+
+2005-10-02  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.maint (sc_unmarked_diagnostics):
 	Search only cvs-controlled files.
