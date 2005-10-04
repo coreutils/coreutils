@@ -1,3 +1,8 @@
+2005-10-04  Jim Meyering  <jim@meyering.net>
+
+	Merge from gnulib.
+	* getaddrinfo.h: Include sys/types.h before other headers.
+
 2005-10-02  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* getdelim.c: Import from gnulib (to fix unused var warnings) then
