@@ -20,6 +20,12 @@
 # define GETADDRINFO_H
 
 /* Get all getaddrinfo related declarations, if available.  */
+
+/* sys/socket.h in i386-unknown-freebsd4.10 and
+   powerpc-apple-darwin5.5 require sys/types.h, so include it first.
+   Then we'll also get 'socklen_t' and 'struct sockaddr' which are
+   used below. */
+# include <sys/types.h>
 # ifdef HAVE_SYS_SOCKET_H
 #  include <sys/socket.h>
 # endif
@@ -28,12 +34,6 @@
 # endif
 
 # ifndef HAVE_STRUCT_ADDRINFO
-
-/* Get 'socklen_t', and 'struct sockaddr' via sys/types.h which are
-   used below. */
-#  ifdef HAVE_SYS_TYPES_H
-#   include <sys/types.h>
-#  endif
 
 /* Structure to contain information about address of a service provider.  */
 struct addrinfo
