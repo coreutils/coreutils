@@ -59,7 +59,6 @@ libcoreutils_a_SOURCES += \
   vasnprintf.h
 
 libcoreutils_a_LIBADD = $(LIBOBJS) $(ALLOCA)
-libcoreutils_a_DEPENDENCIES = $(libcoreutils_a_LIBADD)
 
 lib_OBJECTS = $(libcoreutils_a_OBJECTS)
 
