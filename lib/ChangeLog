@@ -1,3 +1,7 @@
+2005-10-05  Jim Meyering  <jim@meyering.net>
+
+	* getaddrinfo.h: Merge from gnulib.
+
 2005-10-04  Jim Meyering  <jim@meyering.net>
 
 	Merge from gnulib.
