@@ -1,6 +1,12 @@
-2005-10-03  Jim Meyering  <jim@meyering.net>
+2005-10-05  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.91-cvs.
+
+	* src/sort.c (sortlines_temp): Declare temporary as `int' rather
+	than `bool' to work around AIX 5.3 compiler bug in 64-bit mode.
+	From James Lemley.
+
+2005-10-03  Jim Meyering  <jim@meyering.net>
 
 	* src/factor.c (MAX_N_FACTORS): Define in terms of sizeof (uintmax_t)
 	rather than hard-coding to 128.  From Thomas M.Ott.
