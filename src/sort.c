@@ -1720,9 +1720,7 @@ sortlines_temp (struct line *lines, size_t nlines, struct line *temp)
 {
   if (nlines == 2)
     {
-      /* Declare `swap' as int, not bool, to work around a bug in
-	 an AIX 5.3 compiler in 64-bit mode.  */
-      int swap = (0 < compare (&lines[-1], &lines[-2]));
+      bool swap = (0 < compare (&lines[-1], &lines[-2]));
       temp[-1] = lines[-1 - swap];
       temp[-2] = lines[-2 + swap];
     }
