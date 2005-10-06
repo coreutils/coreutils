@@ -1,6 +1,10 @@
-2005-10-05  Jim Meyering  <jim@meyering.net>
+2005-10-06  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.91-cvs.
+
+	* TODO: rm: add support for a -I option, like that from FreeBSD's.
+
+2005-10-05  Jim Meyering  <jim@meyering.net>
 
 	* src/sort.c (sortlines_temp): Declare temporary as `int' rather
 	than `bool' to work around AIX 5.3 compiler bug in 64-bit mode.
