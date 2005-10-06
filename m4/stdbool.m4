@@ -1,6 +1,6 @@
 # Check for stdbool.h that conforms to C99.
 
-dnl Copyright (C) 2002-2004 Free Software Foundation, Inc.
+dnl Copyright (C) 2002-2005 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
@@ -70,10 +70,11 @@ AC_DEFUN([AC_HEADER_STDBOOL],
 	  enum { j = false, k = true, l = false * true, m = true * 256 };
 	  _Bool n[m];
 	  char o[sizeof n == m * sizeof n[0] ? 1 : -1];
+	  char p[-1 - (_Bool) 0 < 0 && -1 - (bool) 0 < 0 ? 1 : -1];
 	],
 	[
 	  return (!a + !b + !c + !d + !e + !f + !g + !h + !i + !j + !k + !l
-		  + !m + !n + !o);
+		  + !m + !n + !o + !p);
 	],
 	[ac_cv_header_stdbool_h=yes],
 	[ac_cv_header_stdbool_h=no])])
