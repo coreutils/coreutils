@@ -218,3 +218,5 @@ Adapt tools like wc, tr, fmt, etc. (most of the textutils) to be
   (preferably `no') cost when operating in single-byte mode.
 
 Remove all uses of the `register' keyword
+
+rm: add support for a -I option, like that from FreeBSD's rm.
