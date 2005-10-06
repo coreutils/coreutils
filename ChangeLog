@@ -1,6 +1,11 @@
-2005-10-06  Jim Meyering  <jim@meyering.net>
+2005-10-06  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.91-cvs.
+
+	* src/sort.c (sortlines_temp): Undo previous change, since
+	today's change to m4/stdbool.m4 should catch it.
+
+2005-10-06  Jim Meyering  <jim@meyering.net>
 
 	* TODO: rm: add support for a -I option, like that from FreeBSD's.
 

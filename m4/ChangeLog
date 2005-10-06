@@ -1,3 +1,9 @@
+2005-10-06  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* stdbool.m4 (AC_HEADER_STDBOOL): Check that bool
+	promotes to int, not unsigned int, to catch the AIX 5.3
+	compiler bug.
+
 2005-10-02  Alfred M. Szmidt  <ams@gnu.org>
 
 	* chdir-long.m4 (gl_FUNC_CHDIR_LONG): Compare $gl_have_path...
