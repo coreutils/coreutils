@@ -71,6 +71,22 @@ AC_DEFUN([AC_HEADER_STDBOOL],
 	  _Bool n[m];
 	  char o[sizeof n == m * sizeof n[0] ? 1 : -1];
 	  char p[-1 - (_Bool) 0 < 0 && -1 - (bool) 0 < 0 ? 1 : -1];
+	  #if defined __xlc__ || __GNUC__
+	   /* Catch a bug in IBM AIX xlc compiler version 6.0.0.0
+	      reported by James Lemley on 2005-10-05; see
+	      <http://lists.gnu.org/archive/html/bug-coreutils/2005-10/msg00086.html>.
+	      This test is not quite right, since xlc is allowed to
+	      reject this program, as the initializer for xlcbug is
+	      not one of the forms that C requires support for.
+	      However, doing the test right would require a run-time
+	      test, and that would make crosss-compilation harder.
+	      Let us hope that IBM fixes the xlc bug, and also adds
+	      support for this kind of constant expression.  In the
+	      meantime, this test will reject xlc, which is OK, since
+	      our stdbool.h substitute should suffice.  */
+	   char digs[] = "0123456789";
+	   int xlcbug = 1 / (&(digs + 5)[-2 + (bool) 1] == &digs[4] ? 1 : -1);
+	  #endif
 	],
 	[
 	  return (!a + !b + !c + !d + !e + !f + !g + !h + !i + !j + !k + !l
