@@ -1,3 +1,8 @@
+2005-10-07  Jim Meyering  <jim@meyering.net>
+
+	* POTFILES.in: Remove the lib/euidaccess-stat.c line,
+	until I'm ready to add the corresponding file.
+
 2005-10-02  Jim Meyering  <jim@meyering.net>
 
 	* POTFILES.in: Add lib/euidaccess-stat.c.
