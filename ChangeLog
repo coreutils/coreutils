@@ -1,6 +1,11 @@
-2005-10-06  Paul Eggert  <eggert@cs.ucla.edu>
+2005-10-07  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.91-cvs.
+
+	* src/sort.c (sortlines_temp): Redo previous change, since I'm
+	no longer confident that the m4/stdbool.m4 patch suffices.
+
+2005-10-06  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/sort.c (sortlines_temp): Undo previous change, since
 	today's change to m4/stdbool.m4 should catch it.
