@@ -1,3 +1,8 @@
+2005-10-08  Jim Meyering  <jim@meyering.net>
+
+	Update from gnulib.
+	* getdelim.c: (SIZE_MAX): New macro, if not already defined.
+
 2005-10-05  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am (libcoreutils_a_DEPENDENCIES): Remove definition.
