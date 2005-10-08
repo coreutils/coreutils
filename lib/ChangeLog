@@ -1,5 +1,9 @@
 2005-10-08  Jim Meyering  <jim@meyering.net>
 
+	* openat.c (rpl_openat): Use the promoted type (int), not mode_t,
+	as second argument to va_arg.  Otherwise, some versions of gcc
+	warn that `if this code is reached, the program will abort'.
+
 	Update from gnulib.
 	* getdelim.c: (SIZE_MAX): New macro, if not already defined.
 
