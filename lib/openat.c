@@ -55,11 +55,8 @@ rpl_openat (int fd, char const *file, int flags, ...)
     {
       va_list arg;
       va_start (arg, flags);
-
-      /* Assume that mode_t is passed compatibly with mode_t's type
-	 after argument promotion.  */
-      mode = va_arg (arg, mode_t);
-
+      /* Use the promoted type (int), not mode_t, as second argument.  */
+      mode = (mode_t) va_arg (arg, int);
       va_end (arg);
     }
 
