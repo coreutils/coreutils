@@ -4497,8 +4497,8 @@ line that contains no delimiter character, unless the
 @itemx --delimiter=@var{input_delim_byte}
 @opindex -d
 @opindex --delimiter
-For @option{-f}, fields are separated in the input by the first character
-in @var{input_delim_byte} (default is TAB).
+With @option{-f}, use the first byte of @var{input_delim_byte} as
+the input fields separator (default is TAB).
 
 @item -n
 @opindex -n
@@ -5153,9 +5153,9 @@ If only one tab stop is given, set the tabs @var{tab1} spaces apart
 last tab stop given with single spaces.  Tab stops can be separated by
 blanks as well as by commas.
 
-For compatibility @command{expand} also supports an obsolete
-option syntax @option{-@var{tab1}[,@var{tab2}]@dots{}}.  New scripts
-should use @option{-t @var{tab1}[,@var{tab2}]@dots{}} instead.
+For compatibility, GNU @command{expand} also accepts the obsolete
+option syntax, @option{-@var{t1}[,@var{t2}]@dots{}}.  New scripts
+should use @option{-t @var{t1}[,@var{t2}]@dots{}} instead.
 
 @item -i
 @itemx --initial
@@ -5206,7 +5206,7 @@ instead of the default 8.  Otherwise, set the tabs at columns
 beyond the tab stops given unchanged.  Tab stops can be separated by
 blanks as well as by commas.  This option implies the @option{-a} option.
 
-For compatibility @command{unexpand} supports an obsolete option syntax
+For compatibility, GNU @command{unexpand} supports the obsolete option syntax,
 @option{-@var{tab1}[,@var{tab2}]@dots{}}, where tab stops must be
 separated by commas.  (Unlike @option{-t}, this obsolete option does
 not imply @option{-a}.)  New scripts should use @option{--first-only -t
