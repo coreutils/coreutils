@@ -1,3 +1,7 @@
+2005-10-13  Jim Meyering  <jim@meyering.net>
+
+	* texinfo.tex: Sync from gnulib.
+
 2005-09-21  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* install-sh, config.guess: Sync from gnulib.
