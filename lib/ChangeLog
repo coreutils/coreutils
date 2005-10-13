@@ -1,3 +1,9 @@
+2005-10-13  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* mkdir-p.c (make_dir_parents): Don't report an error if an
+	intermediate directory is in a read-only file system.  Problem
+	reported by Eric Blake.
+
 2005-10-08  Jim Meyering  <jim@meyering.net>
 
 	* openat.c (rpl_openat): Use the promoted type (int), not mode_t,
@@ -5480,7 +5486,7 @@
 	* exclude.c (bool): Declare, perhaps by including stdbool.h.
 	(<sys/types.h>): Include only if HAVE_SYS_TYPES_H.
 	(<stdlib.h>, <string.h>, <strings.h>, <inttypes.h>, <stdint.h>):
-	Include	if available.
+	Include if available.
 	(<xalloc.h>): Include
 	(SIZE_MAX): Define if <stdint.h> or <inttypes.h> doesn't.
 	(verify): New macro.  Use it to verify that EXCLUDE macros do not

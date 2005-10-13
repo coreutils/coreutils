@@ -45,10 +45,6 @@
 #include "quote.h"
 #include "stat-macros.h"
 
-#ifndef ENOSYS
-# define ENOSYS EEXIST
-#endif
-
 #define WX_USR (S_IWUSR | S_IXUSR)
 
 /* Ensure that the directory ARG exists.
@@ -175,6 +171,9 @@ make_dir_parents (char const *arg,
 
       while (true)
 	{
+	  bool dir_known_to_exist;
+	  int mkdir_errno;
+
 	  /* slash points to the leftmost unprocessed component of dir.  */
 	  basename_dir = slash;
 
@@ -188,7 +187,10 @@ make_dir_parents (char const *arg,
 	    basename_dir = dir;
 
 	  *slash = '\0';
-	  if (mkdir (basename_dir, tmp_mode) == 0)
+	  dir_known_to_exist = (mkdir (basename_dir, tmp_mode) == 0);
+	  mkdir_errno = errno;
+
+	  if (dir_known_to_exist)
 	    {
 	      if (verbose_fmt_string)
 		error (0, 0, verbose_fmt_string, quote (dir));
@@ -215,29 +217,30 @@ make_dir_parents (char const *arg,
 		  leading_dirs = new;
 		}
 	    }
-	  else if (errno == EEXIST || errno == ENOSYS)
-	    {
-	      /* A file is already there.  Perhaps it is a directory.
-		 If not, it will be diagnosed later.
-
-		 The ENOSYS is for Solaris 8 NFS clients, which can
-		 fail with errno == ENOSYS if mkdir is invoked on an
-		 NFS mount point.  */
-	    }
-	  else
-	    {
-	      error (0, errno, _("cannot create directory %s"), quote (dir));
-	      retval = false;
-	      break;
-	    }
 
 	  /* If we were able to save the initial working directory,
 	     then we can use chdir to change into each directory before
 	     creating an entry in that directory.  This avoids making
 	     mkdir process O(n^2) file name components.  */
-	  if (do_chdir && chdir (basename_dir) < 0)
+	  if (do_chdir)
 	    {
-	      error (0, errno, _("cannot chdir to directory %s"),
+	      if (chdir (basename_dir) == 0)
+		dir_known_to_exist = true;
+	      else if (dir_known_to_exist)
+		{
+		  error (0, errno, _("cannot chdir to directory %s"),
+			 quote (dir));
+		  retval = false;
+		  break;
+		}
+	    }
+	  else if (!dir_known_to_exist)
+	    dir_known_to_exist = (stat (basename_dir, &stats) == 0
+				  && S_ISDIR (stats.st_mode));
+
+	  if (!dir_known_to_exist)
+	    {
+	      error (0, mkdir_errno, _("cannot create directory %s"),
 		     quote (dir));
 	      retval = false;
 	      break;
