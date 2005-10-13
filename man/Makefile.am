@@ -127,6 +127,7 @@ mapped_name = `echo $*|sed 's/install/ginstall/; s/test/[/'`
 .x.1:
 	@rm -f $@
 	@echo "Updating man page $@";		\
+	rm -rf $t;				\
 	mkdir $t;				\
 	(cd $t && $(LN_S) ../../src/$(mapped_name) $*); \
 	$(PERL) -- $(srcdir)/help2man		\
