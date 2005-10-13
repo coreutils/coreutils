@@ -3,6 +3,7 @@
 	* Version 5.91-cvs.
 
 	* man/Makefile.am (.x.1): Remove temp directory first.
+	* NEWS: Document dircolors change of 2005-09-05.
 
 2005-10-07  Paul Eggert  <eggert@cs.ucla.edu>
 
