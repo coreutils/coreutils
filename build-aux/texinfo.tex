@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2005-08-15.08}
+\def\texinfoversion{2005-10-10.17}
 %
 % Copyright (C) 1985, 1986, 1988, 1990, 1991, 1992, 1993, 1994, 1995,
 % 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005 Free Software
@@ -7103,7 +7103,7 @@ should work if nowhere else does.}
 \def\otherifyactive{\catcode`+=\other \catcode`\_=\other}
 
 % Same as @turnoffactive below, but backslash retains it's normal definition.
-% (Before 2004-08-15, this macro explicitly assigned @let\=@normalbackslash,
+% (Before 2005-08-15, this macro explicitly assigned @let\=@normalbackslash,
 % but it doesn't seem to be necessary. --kasal)
 \def\normalturnoffactive{%
   \let"=\normaldoublequote
