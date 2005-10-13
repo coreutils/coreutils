@@ -203,6 +203,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   dd has new iflag= and oflag= flags "binary" and "text", which have an
   effect only on nonstandard platforms that distinguish text from binary I/O.
 
+  dircolors now supports SETUID, SETGID, STICKY_OTHER_WRITABLE,
+  OTHER_WRITABLE, and STICKY, with ls providing default colors for these
+  categories if not specified by dircolors.
+
   du accepts new options: --time[=TYPE] and --time-style=STYLE
 
   join now supports a NUL field separator, e.g., "join -t '\0'".
