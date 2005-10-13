@@ -1,6 +1,10 @@
-2005-10-07  Paul Eggert  <eggert@cs.ucla.edu>
+2005-09-30  Eric Blake  <ebb9@byu.net>  (tiny change)
 
 	* Version 5.91-cvs.
+
+	* man/Makefile.am (.x.1): Remove temp directory first.
+
+2005-10-07  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/sort.c (sortlines_temp): Redo previous change, since I'm
 	no longer confident that the m4/stdbool.m4 patch suffices.
