@@ -1,6 +1,19 @@
-2005-09-30  Eric Blake  <ebb9@byu.net>  (tiny change)
+2005-10-15  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.91-cvs.
+
+	* src/df.c (main): Warn about the deprecated --kilobytes option.
+	* src/ls.c (decode_switches): Likewise.
+
+	* src/du.c (usage): Document -m, once again.
+	(main): Warn about use of deprecated long options:
+	--kilobytes and --megabytes.
+	* src/tail.c (parse_options): Remove --allow-missing option.
+	You can use --retry instead.
+	* src/stat.c (main): Remove --link -l options.
+	You can use --dereference (-L) instead.
+
+2005-09-30  Eric Blake  <ebb9@byu.net>  (tiny change)
 
 	* man/Makefile.am (.x.1): Remove temp directory first.
 	* NEWS: Document dircolors change of 2005-09-05.
