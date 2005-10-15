@@ -114,8 +114,10 @@ static bool print_type;
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
 {
-  SYNC_OPTION = CHAR_MAX + 1,
-  NO_SYNC_OPTION
+  NO_SYNC_OPTION = CHAR_MAX + 1,
+  /* FIXME: --kilobytes is deprecated (but not -k); remove in late 2006 */
+  KILOBYTES_LONG_OPTION,
+  SYNC_OPTION
 };
 
 static struct option const long_options[] =
@@ -125,7 +127,7 @@ static struct option const long_options[] =
   {"inodes", no_argument, NULL, 'i'},
   {"human-readable", no_argument, NULL, 'h'},
   {"si", no_argument, NULL, 'H'},
-  {"kilobytes", no_argument, NULL, 'k'}, /* long form is obsolescent */
+  {"kilobytes", no_argument, NULL, KILOBYTES_LONG_OPTION},
   {"local", no_argument, NULL, 'l'},
   {"megabytes", no_argument, NULL, 'm'}, /* obsolescent */
   {"portability", no_argument, NULL, 'P'},
@@ -802,6 +804,10 @@ main (int argc, char **argv)
 	  human_output_opts = human_autoscale | human_SI;
 	  output_block_size = 1;
 	  break;
+	case KILOBYTES_LONG_OPTION:
+	  error (0, 0,
+		 _("the --kilobytes option is deprecated; use -k instead"));
+	  /* fall through */
 	case 'k':
 	  human_output_opts = 0;
 	  output_block_size = 1024;
