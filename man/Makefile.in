@@ -638,6 +638,7 @@ yes.1:		$(common_dep)	$(srcdir)/yes.x		../src/yes.c
 .x.1:
 	@rm -f $@
 	@echo "Updating man page $@";		\
+	rm -rf $t;				\
 	mkdir $t;				\
 	(cd $t && $(LN_S) ../../src/$(mapped_name) $*); \
 	$(PERL) -- $(srcdir)/help2man		\
