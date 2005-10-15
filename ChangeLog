@@ -2,6 +2,8 @@
 
 	* Version 5.91-cvs.
 
+	* src/who.c (usage): Undocument deprecated --idle (-i) option.
+
 	* src/df.c (main): Warn about the deprecated --kilobytes option.
 	* src/ls.c (decode_switches): Likewise.
 
