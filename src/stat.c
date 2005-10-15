@@ -101,7 +101,6 @@
 #define AUTHORS "Michael Meskes"
 
 static struct option const long_options[] = {
-  {"link", no_argument, NULL, 'l'}, /* deprecated.  FIXME: remove in 2003 */
   {"dereference", no_argument, NULL, 'L'},
   {"file-system", no_argument, NULL, 'f'},
   {"filesystem", no_argument, NULL, 'f'}, /* obsolete and undocumented alias */
@@ -768,7 +767,7 @@ main (int argc, char *argv[])
 
   atexit (close_stdout);
 
-  while ((c = getopt_long (argc, argv, "c:fLlt", long_options, NULL)) != -1)
+  while ((c = getopt_long (argc, argv, "c:fLt", long_options, NULL)) != -1)
     {
       switch (c)
 	{
@@ -776,9 +775,6 @@ main (int argc, char *argv[])
 	  format = optarg;
 	  break;
 
-	case 'l': /* deprecated */
-	  error (0, 0, _("Warning: `-l' is deprecated; use `-L' instead"));
-	  /* fall through */
 	case 'L':
 	  follow_links = true;
 	  break;
