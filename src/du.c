@@ -196,7 +196,15 @@ enum
   EXCLUDE_OPTION,
   FILES0_FROM_OPTION,
   HUMAN_SI_OPTION,
+
+  /* FIXME: --kilobytes is deprecated (but not -k); remove in late 2006 */
+  KILOBYTES_LONG_OPTION,
+
   MAX_DEPTH_OPTION,
+
+  /* FIXME: --megabytes is deprecated (but not -m); remove in late 2006 */
+  MEGABYTES_LONG_OPTION,
+
   TIME_OPTION,
   TIME_STYLE_OPTION
 };
@@ -215,10 +223,10 @@ static struct option const long_options[] =
   {"files0-from", required_argument, NULL, FILES0_FROM_OPTION},
   {"human-readable", no_argument, NULL, 'h'},
   {"si", no_argument, NULL, HUMAN_SI_OPTION},
-  {"kilobytes", no_argument, NULL, 'k'}, /* long form is obsolescent */
+  {"kilobytes", no_argument, NULL, KILOBYTES_LONG_OPTION},
   {"max-depth", required_argument, NULL, MAX_DEPTH_OPTION},
   {"null", no_argument, NULL, '0'},
-  {"megabytes", no_argument, NULL, 'm'}, /* obsolescent */
+  {"megabytes", no_argument, NULL, MEGABYTES_LONG_OPTION},
   {"no-dereference", no_argument, NULL, 'P'},
   {"one-file-system", no_argument, NULL, 'x'},
   {"separate-dirs", no_argument, NULL, 'S'},
@@ -300,6 +308,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       --si              like -h, but use powers of 1000 not 1024\n\
   -k                    like --block-size=1K\n\
   -l, --count-links     count sizes many times if hard linked\n\
+  -m                    like --block-size=1M\n\
 "), stdout);
       fputs (_("\
   -L, --dereference     dereference all symbolic links\n\
@@ -731,7 +740,8 @@ main (int argc, char **argv)
 	  output_block_size = 1;
 	  break;
 
-	case 'H':
+	case 'H':  /* FIXME: remove warning and move this "case 'H'" to
+		      precede --dereference-args in late 2006.  */
 	  error (0, 0, _("WARNING: use --si, not -H; the meaning of the -H\
  option will soon\nchange to be the same as that of --dereference-args (-D)"));
 	  /* fall through */
@@ -740,6 +750,10 @@ main (int argc, char **argv)
 	  output_block_size = 1;
 	  break;
 
+	case KILOBYTES_LONG_OPTION:
+	  error (0, 0,
+		 _("the --kilobytes option is deprecated; use -k instead"));
+	  /* fall through */
 	case 'k':
 	  human_output_opts = 0;
 	  output_block_size = 1024;
@@ -763,7 +777,11 @@ main (int argc, char **argv)
 	  }
 	  break;
 
-	case 'm': /* obsolescent: FIXME: remove in 2005. */
+	case MEGABYTES_LONG_OPTION:
+	  error (0, 0,
+		 _("the --megabytes option is deprecated; use -m instead"));
+	  /* fall through */
+	case 'm':
 	  human_output_opts = 0;
 	  output_block_size = 1024 * 1024;
 	  break;
