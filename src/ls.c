@@ -732,6 +732,10 @@ enum
   FULL_TIME_OPTION,
   HIDE_OPTION,
   INDICATOR_STYLE_OPTION,
+
+  /* FIXME: --kilobytes is deprecated (but not -k); remove in late 2006 */
+  KILOBYTES_LONG_OPTION,
+
   QUOTING_STYLE_OPTION,
   SHOW_CONTROL_CHARS_OPTION,
   SI_OPTION,
@@ -749,7 +753,7 @@ static struct option const long_options[] =
   {"full-time", no_argument, NULL, FULL_TIME_OPTION},
   {"human-readable", no_argument, NULL, 'h'},
   {"inode", no_argument, NULL, 'i'},
-  {"kilobytes", no_argument, NULL, 'k'}, /* long form is obsolescent */
+  {"kilobytes", no_argument, NULL, KILOBYTES_LONG_OPTION},
   {"numeric-uid-gid", no_argument, NULL, 'n'},
   {"no-group", no_argument, NULL, 'G'},
   {"hide-control-chars", no_argument, NULL, 'q'},
@@ -1532,6 +1536,10 @@ decode_switches (int argc, char **argv)
 	  print_inode = true;
 	  break;
 
+	case KILOBYTES_LONG_OPTION:
+	  error (0, 0,
+		 _("the --kilobytes option is deprecated; use -k instead"));
+	  /* fall through */
 	case 'k':
 	  human_output_opts = 0;
 	  file_output_block_size = output_block_size = 1024;
