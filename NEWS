@@ -2,6 +2,22 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Major changes in release 5.91-cvs (2005-??-??) [stable]
 
+** Removed options
+
+  tail's --allow-missing option has been removed.  Use --retry instead.
+
+  stat's --link and -l options have been removed.
+  Use --dereference (-L) instead.
+
+** Deprecated options
+
+  Using ls, du, or df with the --kilobytes option now evokes a warning
+  that the long-named option is deprecated.  Use `-k' instead.
+
+  du's long-named --megabytes option now evokes a warning.
+  Use -m instead.
+
+
 * Major changes in release 5.90 (2005-09-29) [unstable]
 
 ** Bring back support for `head -NUM', `tail -NUM', etc. even when
