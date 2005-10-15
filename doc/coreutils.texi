@@ -11477,13 +11477,6 @@ Print information corresponding to dead processes.
 @opindex --heading
 Print column headings.
 
-@item -i
-@itemx --idle
-@opindex -i
-@opindex --idle
-Include idle time in HOURS:MINUTES, @samp{.} (to indicate
-current process), or @samp{old}.
-
 @item -m
 @opindex -m
 Same as @samp{who am i}.
@@ -11499,16 +11492,12 @@ Overrides all other options.
 @opindex -s
 Ignored; for compatibility with other versions of @command{who}.
 
-@item -i
 @itemx -u
-@itemx --idle
-@opindex -i
 @opindex -u
-@opindex --idle
 @cindex idle time
 After the login time, print the number of hours and minutes that the
-user has been idle.  @samp{.} means the user was active in last minute.
-@samp{old} means the user was idle for more than 24 hours.
+user has been idle.  @samp{.} means the user was active in the last minute.
+@samp{old} means the user has been idle for more than 24 hours.
 
 @item -l
 @itemx --login
