@@ -2,6 +2,7 @@
 
 	* coreutils.texi (du invocation): Document du's -m option,
 	now that we've decided to keep it.
+	(who invocation): Remove documentation for deprecated --idle (-i).
 
 2005-10-13  Jim Meyering  <jim@meyering.net>
 
