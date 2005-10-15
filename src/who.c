@@ -171,7 +171,7 @@ static struct option const longopts[] = {
   {"count", no_argument, NULL, 'q'},
   {"dead", no_argument, NULL, 'd'},
   {"heading", no_argument, NULL, 'H'},
-  {"idle", no_argument, NULL, 'i'},
+  {"idle", no_argument, NULL, 'i'}, /* FIXME: deprecated: remove in late 2006 */
   {"login", no_argument, NULL, 'l'},
   {"lookup", no_argument, NULL, LOOKUP_OPTION},
   {"message", no_argument, NULL, 'T'},
@@ -641,8 +641,6 @@ usage (int status)
   -H, --heading     print line of column headings\n\
 "), stdout);
       fputs (_("\
-  -i, --idle        add idle time as HOURS:MINUTES, . or old\n\
-                    (deprecated, use -u)\n\
   -l, --login       print system login processes\n\
 "), stdout);
       fputs (_("\
