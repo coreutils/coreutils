@@ -9004,6 +9004,13 @@ Dereference symbolic links (show the disk space used by the file
 or directory that the link points to instead of the space used by
 the link).
 
+@item -m
+@opindex -m
+@cindex mebibytes for file sizes
+Print sizes in 1,048,576-byte blocks, overriding the default block size
+(@pxref{Block size}).
+This option is equivalent to @option{--block-size=1M}.
+
 @item -P
 @itemx --no-dereference
 @opindex -P
