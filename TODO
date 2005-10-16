@@ -144,9 +144,6 @@ Changes expected to go in, post-5.2.1:
   A more efficient version of factor, and possibly one that
   accepts inputs of size 2^64 and larger.
 
-  Re-add a separate test for du's stack space usage (like the one removed
-  from tests/rm/deep-1).
-
   dd: consider adding an option to suppress `bytes/block read/written'
   output to stderr.  Suggested here:
     http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=165045
