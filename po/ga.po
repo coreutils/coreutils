@@ -5,17 +5,17 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: coreutils 5.3.0\n"
+"Project-Id-Version: coreutils 5.90\n"
 "Report-Msgid-Bugs-To: bug-coreutils@gnu.org\n"
-"POT-Creation-Date: 2005-09-27 10:12+0200\n"
-"PO-Revision-Date: 2005-02-03 12:24-0600\n"
+"POT-Creation-Date: 2005-10-16 12:36+0200\n"
+"PO-Revision-Date: 2005-10-03 12:24-0600\n"
 "Last-Translator: Kevin Patrick Scannell <scannell@SLU.EDU>\n"
-"Language-Team: Irish <ga@li.org>\n"
+"Language-Team: Irish <gaeilge-gnulinux@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=n==1 ? 0 : (n>1 && n<7) ? 1 : (n>6 && n "
-"<11) ? 2 : 3;\n"
+"Plural-Forms: nplurals=5; plural=n==1 ? 0 : n==2 ? 1 : (n>2 && n<7) ? 2 :"
+"(n>6 && n<11) ? 3 : 4;\n"
 
 #: lib/argmatch.c:137
 #, c-format
@@ -34,11 +34,11 @@ msgstr "Na hargóintí bailí:"
 
 #: lib/closeout.c:94 src/cat.c:193 src/cat.c:277 src/cat.c:327 src/cksum.c:255
 #: src/expand.c:336 src/expand.c:361 src/head.c:300 src/head.c:350
-#: src/head.c:758 src/head.c:799 src/od.c:966 src/paste.c:143 src/tail.c:318
-#: src/tail.c:1095 src/tr.c:1561 src/tr.c:1784 src/tr.c:1887
+#: src/head.c:758 src/head.c:799 src/od.c:966 src/paste.c:143 src/tail.c:315
+#: src/tail.c:1092 src/tr.c:1561 src/tr.c:1784 src/tr.c:1887
 #: src/unexpand.c:435 src/unexpand.c:451
 msgid "write error"
-msgstr "earráid ag scríobh"
+msgstr "earráid sa scríobh"
 
 #: lib/error.c:121
 msgid "Unknown system error"
@@ -99,81 +99,76 @@ msgid "weird file"
 msgstr "comhad aisteach"
 
 #: lib/gai_strerror.c:45
-#, fuzzy
 msgid "Address family for hostname not supported"
-msgstr "níl comhaid FIFO ar fáil"
+msgstr "Aicme sheolta d'óstainm gan tacaíocht"
 
 #: lib/gai_strerror.c:46
 msgid "Temporary failure in name resolution"
-msgstr ""
+msgstr "Teip shealadach ar réiteach na n-ainmneacha"
 
 #: lib/gai_strerror.c:47
 msgid "Bad value for ai_flags"
-msgstr ""
+msgstr "Luach neamhbhailí do 'ai_flags'"
 
 #: lib/gai_strerror.c:48
 msgid "Non-recoverable failure in name resolution"
-msgstr ""
+msgstr "Teip dhocheartaithe ar réiteach na n-ainmneacha"
 
 #: lib/gai_strerror.c:49
-#, fuzzy
 msgid "ai_family not supported"
-msgstr "níl comhaid FIFO ar fáil"
+msgstr "ní thacaítear le 'ai_family'"
 
 #: lib/gai_strerror.c:50
 msgid "Memory allocation failure"
-msgstr ""
+msgstr "Theip ar dháil chuimhne"
 
 #: lib/gai_strerror.c:51
 msgid "No address associated with hostname"
-msgstr ""
+msgstr "Níl seoladh ar bith ceangailte leis an óstainm"
 
 #: lib/gai_strerror.c:52
 msgid "Name or service not known"
-msgstr ""
+msgstr "Ainm nó seirbhís anaithnid"
 
 #: lib/gai_strerror.c:53
 msgid "Servname not supported for ai_socktype"
-msgstr ""
+msgstr "Ní thacaítear le hainm freastalaithe do 'ai_socktype'"
 
 #: lib/gai_strerror.c:54
-#, fuzzy
 msgid "ai_socktype not supported"
-msgstr "níl comhaid FIFO ar fáil"
+msgstr "ní thacaítear le 'ai_socktype'"
 
 #: lib/gai_strerror.c:55
-#, fuzzy
 msgid "System error"
-msgstr "earráid ag scríobh"
+msgstr "Earráid chórais"
 
 #: lib/gai_strerror.c:57
 msgid "Processing request in progress"
-msgstr ""
+msgstr "Iarratas próiseála ar siúl"
 
 #: lib/gai_strerror.c:58
 msgid "Request canceled"
-msgstr ""
+msgstr "Cealaíodh an t-iarratas"
 
 #: lib/gai_strerror.c:59
 msgid "Request not canceled"
-msgstr ""
+msgstr "Níor cealaíodh an t-iarratas"
 
 #: lib/gai_strerror.c:60
 msgid "All requests done"
-msgstr ""
+msgstr "Cuireadh gach iarratas i gcrích"
 
 #: lib/gai_strerror.c:61
 msgid "Interrupted by a signal"
-msgstr ""
+msgstr "Idirbhriste ag comhartha"
 
 #: lib/gai_strerror.c:62
 msgid "Parameter string not correctly encoded"
-msgstr ""
+msgstr "Níl an teaghrán paraiméadair ionchódaithe i gceart"
 
 #: lib/gai_strerror.c:74
-#, fuzzy
 msgid "Unknown error"
-msgstr "Earráid chórais anaithnid"
+msgstr "Earráid anaithnid"
 
 #: lib/getopt.c:551 lib/getopt.c:570
 #, c-format
@@ -193,7 +188,7 @@ msgstr "%s: ní cheadaítear argóint i ndiaidh na rogha `%c%s'\n"
 #: lib/getopt.c:667 lib/getopt.c:689 lib/getopt.c:1020 lib/getopt.c:1042
 #, c-format
 msgid "%s: option `%s' requires an argument\n"
-msgstr "%s: ní foláir argóint don rogha `%s'\n"
+msgstr "%s: tá argóint de dhíth i ndiaidh na rogha `%s'\n"
 
 #: lib/getopt.c:727 lib/getopt.c:730
 #, c-format
@@ -218,7 +213,7 @@ msgstr "%s: rogha neamhbhailí -- %c\n"
 #: lib/getopt.c:863 lib/getopt.c:882 lib/getopt.c:1095 lib/getopt.c:1116
 #, c-format
 msgid "%s: option requires an argument -- %c\n"
-msgstr "%s: ní foláir argóint don rogha -- %c\n"
+msgstr "%s: tá argóint de dhíth i ndiaidh na rogha -- %c\n"
 
 #: lib/getopt.c:935 lib/getopt.c:954
 #, c-format
@@ -232,29 +227,29 @@ msgstr "%s: ní cheadaítear argóint i ndiaidh na rogha `-W %s'\n"
 
 #: lib/human.c:486
 msgid "block size"
-msgstr "tomhas bloc"
+msgstr "méid bloc"
 
-#: lib/mkdir-p.c:106 src/cp.c:430 src/cp.c:452
+#: lib/mkdir-p.c:102 src/cp.c:430 src/cp.c:452
 #, c-format
 msgid "%s exists but is not a directory"
 msgstr "Tá %s ann cheana, ach ní comhadlann é"
 
-#: lib/mkdir-p.c:203 lib/mkdir-p.c:294
+#: lib/mkdir-p.c:205 lib/mkdir-p.c:297
 #, c-format
 msgid "cannot change owner and/or group of %s"
 msgstr "ní féidir an t-úinéir agus/nó an grúpa de %s a athrú"
 
-#: lib/mkdir-p.c:229 lib/mkdir-p.c:266 src/copy.c:1438 src/mkdir.c:167
-#, c-format
-msgid "cannot create directory %s"
-msgstr "ní féidir an chomhadlann %s a chruthú"
-
-#: lib/mkdir-p.c:240
+#: lib/mkdir-p.c:231
 #, c-format
 msgid "cannot chdir to directory %s"
 msgstr "ní féidir chdir a dhéanamh go dtí an chomhadlann %s"
 
-#: lib/mkdir-p.c:307 lib/mkdir-p.c:332 src/install.c:524
+#: lib/mkdir-p.c:243 lib/mkdir-p.c:269 src/copy.c:1438 src/mkdir.c:167
+#, c-format
+msgid "cannot create directory %s"
+msgstr "ní féidir an chomhadlann %s a chruthú"
+
+#: lib/mkdir-p.c:310 lib/mkdir-p.c:335 src/install.c:524
 #, c-format
 msgid "cannot change permissions of %s"
 msgstr "ní féidir na ceadanna de %s a athrú"
@@ -264,11 +259,10 @@ msgid "memory exhausted"
 msgstr "cuimhne ídithe"
 
 #: lib/openat-die.c:36
-#, fuzzy
 msgid "unable to record current working directory"
-msgstr "openat: ní féidir an chomhadlann oibre a thaifead"
+msgstr "ní féidir an chomhadlann oibre a thaifead"
 
-#: lib/openat-die.c:49 src/df.c:517
+#: lib/openat-die.c:49 src/df.c:519
 msgid "failed to return to initial working directory"
 msgstr "níl aon fháil ar an chéad chomhadlann oibre"
 
@@ -379,10 +373,9 @@ msgstr "níl aon fháil ar an ghrúpa don UID uimhriúil seo"
 #. locale.  Otherwise, do not translate "(C)"; leave it as-is.
 #: lib/version-etc.c:72
 msgid "(C)"
-msgstr ""
+msgstr "©"
 
 #: lib/version-etc.c:74
-#, fuzzy
 msgid ""
 "\n"
 "This is free software.  You may redistribute copies of it under the terms "
@@ -391,10 +384,11 @@ msgid ""
 "There is NO WARRANTY, to the extent permitted by law.\n"
 "\n"
 msgstr ""
-"Is saorbhogearra an ríomhchlár seo; is féidir leat é a scaipeadh agus/nó\n"
-"a athrú de réir na gcoinníollacha den GNU General Public License mar atá\n"
-"foilsithe ag an Free Software Foundation; faoi leagan 2 den cheadúnas,\n"
-"nó (más mian leat) aon leagan níos déanaí.\n"
+"\n"
+"Is saorbhogearra é seo.  Is féidir leat cóipeanna a scaipeadh de réir na\n"
+"gcoinníollacha den GNU General Public License\n"
+"<http://www.gnu.org/licenses/gpl.html>.\n"
+"Níl baránta AR BITH ann, an oiread atá ceadaithe de réir dlí.\n"
 "\n"
 
 #. TRANSLATORS: %s denotes an author name.
@@ -525,19 +519,19 @@ msgstr "Rinneadh comparáid idir na teaghráin %s agus %s."
 
 #: src/basename.c:51 src/cat.c:91 src/chgrp.c:104 src/chmod.c:322
 #: src/chown.c:90 src/chroot.c:42 src/cksum.c:264 src/comm.c:69 src/cp.c:152
-#: src/csplit.c:1448 src/cut.c:184 src/date.c:128 src/dd.c:397 src/df.c:711
-#: src/dircolors.c:100 src/dirname.c:45 src/du.c:268 src/echo.c:60
-#: src/env.c:114 src/expand.c:107 src/expr.c:97 src/factor.c:71 src/fmt.c:269
+#: src/csplit.c:1448 src/cut.c:184 src/date.c:128 src/dd.c:397 src/df.c:713
+#: src/dircolors.c:100 src/dirname.c:45 src/du.c:276 src/echo.c:60
+#: src/env.c:114 src/expand.c:107 src/expr.c:97 src/factor.c:70 src/fmt.c:269
 #: src/fold.c:66 src/head.c:105 src/hostid.c:44 src/hostname.c:61 src/id.c:74
 #: src/install.c:629 src/join.c:130 src/kill.c:90 src/link.c:47 src/ln.c:332
-#: src/logname.c:40 src/ls.c:4088 src/md5sum.c:104 src/mkdir.c:54
+#: src/logname.c:40 src/ls.c:4096 src/md5sum.c:104 src/mkdir.c:54
 #: src/mkfifo.c:51 src/mknod.c:51 src/mv.c:294 src/nice.c:75 src/nl.c:168
 #: src/nohup.c:53 src/od.c:303 src/paste.c:413 src/pathchk.c:95
 #: src/pinky.c:510 src/pr.c:2764 src/printenv.c:57 src/printf.c:96
 #: src/ptx.c:1883 src/pwd.c:62 src/readlink.c:63 src/rm.c:131 src/rmdir.c:135
 #: src/seq.c:78 src/setuidgid.c:47 src/shred.c:151 src/sleep.c:44
-#: src/sort.c:277 src/split.c:103 src/stat.c:674 src/stty.c:507 src/su.c:404
-#: src/sum.c:55 src/sync.c:41 src/tac.c:128 src/tail.c:225 src/tee.c:58
+#: src/sort.c:277 src/split.c:103 src/stat.c:673 src/stty.c:507 src/su.c:404
+#: src/sum.c:55 src/sync.c:41 src/tac.c:128 src/tail.c:222 src/tee.c:58
 #: src/test.c:689 src/touch.c:229 src/tr.c:286 src/tsort.c:82 src/tty.c:65
 #: src/uname.c:113 src/unexpand.c:117 src/uniq.c:131 src/unlink.c:47
 #: src/uptime.c:176 src/users.c:104 src/wc.c:123 src/who.c:631 src/whoami.c:46
@@ -573,25 +567,29 @@ msgid ""
 "  %s /usr/bin/sort       Output \"sort\".\n"
 "  %s include/stdio.h .h  Output \"stdio\".\n"
 msgstr ""
+"\n"
+"Mar shampla:\n"
+"  %s /usr/bin/sort       Aschur: \"sort\".\n"
+"  %s include/stdio.h .h  Aschur: \"stdio\".\n"
 
 #: src/basename.c:74 src/cat.c:128 src/chgrp.c:159 src/chmod.c:353
 #: src/chown.c:159 src/chroot.c:60 src/cksum.c:279 src/comm.c:94 src/cp.c:251
-#: src/csplit.c:1490 src/cut.c:235 src/date.c:241 src/dd.c:499 src/df.c:750
-#: src/dircolors.c:121 src/dirname.c:68 src/du.c:335 src/echo.c:98
-#: src/env.c:133 src/expand.c:132 src/expr.c:165 src/factor.c:91 src/fmt.c:300
+#: src/csplit.c:1490 src/cut.c:235 src/date.c:241 src/dd.c:499 src/df.c:752
+#: src/dircolors.c:121 src/dirname.c:68 src/du.c:344 src/echo.c:98
+#: src/env.c:133 src/expand.c:132 src/expr.c:165 src/factor.c:90 src/fmt.c:300
 #: src/fold.c:89 src/head.c:140 src/hostid.c:57 src/hostname.c:74 src/id.c:95
 #: src/install.c:687 src/join.c:171 src/kill.c:121 src/link.c:59 src/ln.c:390
-#: src/logname.c:51 src/ls.c:4233 src/md5sum.c:152 src/mkdir.c:73
+#: src/logname.c:51 src/ls.c:4241 src/md5sum.c:152 src/mkdir.c:73
 #: src/mkfifo.c:68 src/mknod.c:82 src/mv.c:345 src/nice.c:91 src/nl.c:224
 #: src/nohup.c:70 src/od.c:393 src/paste.c:437 src/pathchk.c:109
 #: src/pinky.c:537 src/pr.c:2876 src/printenv.c:71 src/printf.c:145
 #: src/ptx.c:1930 src/pwd.c:74 src/readlink.c:87 src/rm.c:174 src/rmdir.c:154
 #: src/seq.c:106 src/setuidgid.c:67 src/shred.c:224 src/sleep.c:60
-#: src/sort.c:350 src/split.c:137 src/stat.c:747 src/stty.c:724 src/su.c:425
-#: src/sum.c:75 src/sync.c:52 src/tac.c:151 src/tail.c:296 src/tee.c:75
+#: src/sort.c:350 src/split.c:137 src/stat.c:746 src/stty.c:724 src/su.c:425
+#: src/sum.c:75 src/sync.c:52 src/tac.c:151 src/tail.c:293 src/tee.c:75
 #: src/test.c:776 src/touch.c:263 src/tr.c:359 src/true.c:54 src/tsort.c:94
 #: src/tty.c:77 src/uname.c:136 src/unexpand.c:141 src/uniq.c:170
-#: src/unlink.c:58 src/uptime.c:191 src/users.c:117 src/wc.c:145 src/who.c:672
+#: src/unlink.c:58 src/uptime.c:191 src/users.c:117 src/wc.c:145 src/who.c:670
 #: src/whoami.c:58 src/yes.c:58
 #, c-format
 msgid ""
@@ -607,19 +605,19 @@ msgstr ""
 #: src/expr.c:203 src/join.c:914 src/link.c:83 src/mkdir.c:120
 #: src/mkfifo.c:111 src/mknod.c:140 src/nohup.c:96 src/pathchk.c:158
 #: src/printf.c:669 src/readlink.c:146 src/rm.c:265 src/rmdir.c:197
-#: src/seq.c:367 src/setuidgid.c:95 src/sleep.c:122 src/stat.c:805
+#: src/seq.c:367 src/setuidgid.c:95 src/sleep.c:122 src/stat.c:801
 #: src/tr.c:1723 src/unlink.c:81
 msgid "missing operand"
 msgstr "oibreann ar iarraidh"
 
 #: src/basename.c:124 src/comm.c:278 src/cp.c:519 src/date.c:428
-#: src/dircolors.c:449 src/dirname.c:101 src/du.c:922 src/hostid.c:82
+#: src/dircolors.c:449 src/dirname.c:101 src/du.c:940 src/hostid.c:82
 #: src/hostname.c:120 src/id.c:160 src/install.c:326 src/join.c:748
 #: src/link.c:91 src/ln.c:510 src/logname.c:76 src/mknod.c:151 src/mv.c:458
 #: src/od.c:1840 src/ptx.c:2182 src/readlink.c:154 src/seq.c:373
 #: src/split.c:533 src/tr.c:1738 src/tsort.c:552 src/tty.c:117 src/uname.c:222
 #: src/uniq.c:435 src/uniq.c:452 src/unlink.c:87 src/uptime.c:223
-#: src/users.c:149 src/who.c:826 src/whoami.c:84
+#: src/users.c:149 src/who.c:824 src/whoami.c:84
 #, c-format
 msgid "extra operand %s"
 msgstr "oibreann breise %s"
@@ -677,11 +675,16 @@ msgid ""
 "  %s f - g  Output f's contents, then standard input, then g's contents.\n"
 "  %s        Copy standard input to standard output.\n"
 msgstr ""
+"\n"
+"Mar shampla:\n"
+"  %s f - g  Taispeáin f, ansin ionchur caighdeánach, agus g ina dhiaidh "
+"sin.\n"
+"  %s        Cóipeáil ionchur caighdeánach go haschur caighdeánach.\n"
 
 #: src/cat.c:316
-#, fuzzy, c-format
+#, c-format
 msgid "cannot do ioctl on %s"
-msgstr "ní féidir ioctl a dhéanamh ar `%s'"
+msgstr "ní féidir ioctl a dhéanamh ar %s"
 
 #: src/cat.c:625 src/dd.c:1630 src/sort.c:269 src/tee.c:163 src/yes.c:92
 msgid "standard output"
@@ -724,7 +727,7 @@ msgstr ""
 "Le --reference, athraigh an grúpa de gach COMHAD go dtí an grúpa de "
 "TCOMHAD.\n"
 "\n"
-"  -c, --changes          mar `verbose' ach ná tabhair tuairisc ach ar "
+"  -c, --changes          cosúil le `verbose' ach ná tabhair tuairisc ach ar "
 "athruithe\n"
 "      --dereference      téigh i bhfeidhm ar an tagraí de gach nasc "
 "siombalach\n"
@@ -795,6 +798,11 @@ msgid ""
 "  %s staff /u      Change the group of /u to \"staff\".\n"
 "  %s -hR staff /u  Change the group of /u and subfiles to \"staff\".\n"
 msgstr ""
+"\n"
+"Mar shampla:\n"
+"  %s foireann /u     Athraigh grúpa de /u go \"foireann\".\n"
+"  %s -hR foireann /u Athraigh grúpa de /u agus a fhochomhaid go \"foireann"
+"\".\n"
 
 #: src/chgrp.c:249 src/chown.c:276
 msgid "-R --dereference requires either -H or -L"
@@ -821,7 +829,7 @@ msgstr "níorbh fhéidir na saintréithe de %s a rochtain"
 #: src/chmod.c:128
 #, c-format
 msgid "getting new attributes of %s"
-msgstr "ag fáil saintréithe nua de %s"
+msgstr "saintréithe nua de %s á bhfáil"
 
 # tagraí is my coinage, analogue of tagróir=referer --KPS
 #: src/chmod.c:150 src/chown-core.c:111
@@ -844,17 +852,17 @@ msgstr "níorbh fhéidir an mód de %s a athrú go %04lo (%s)\n"
 msgid "mode of %s retained as %04lo (%s)\n"
 msgstr "coimeádadh an mód de %s mar %04lo (%s)\n"
 
-#: src/chmod.c:196 src/chown-core.c:273 src/copy.c:164 src/du.c:486
+#: src/chmod.c:196 src/chown-core.c:273 src/copy.c:164 src/du.c:495
 #, c-format
 msgid "cannot access %s"
-msgstr "níl %s ar fáil"
+msgstr "ní féidir %s a rochtain"
 
-#: src/chmod.c:201 src/chown-core.c:278 src/du.c:491
+#: src/chmod.c:201 src/chown-core.c:278 src/du.c:500
 #, c-format
 msgid "%s"
 msgstr "%s"
 
-#: src/chmod.c:206 src/chown-core.c:283 src/du.c:497
+#: src/chmod.c:206 src/chown-core.c:283 src/du.c:506
 #, c-format
 msgid "cannot read directory %s"
 msgstr "ní féidir an chomhadlann %s a léamh"
@@ -865,11 +873,11 @@ msgid "changing permissions of %s"
 msgstr "ceadanna %s á n-athrú"
 
 #: src/chmod.c:267
-#, fuzzy, c-format
+#, c-format
 msgid "%s: new permissions are %s, not %s"
-msgstr "ag socrú ceadanna ar %s"
+msgstr "%s: is %s na ceadanna nua, ní %s"
 
-#: src/chmod.c:301 src/chown-core.c:467 src/du.c:641
+#: src/chmod.c:301 src/chown-core.c:467 src/du.c:650
 msgid "fts_read failed"
 msgstr "theip ar fts_read"
 
@@ -893,7 +901,7 @@ msgid ""
 msgstr ""
 "Athraigh an mód de gach COMHAD go dtí MÓD.\n"
 "\n"
-"  -c, --changes           mar `verbose' ach ná tabhair tuairisc ach ar "
+"  -c, --changes           cosúil le `verbose' ach ná tabhair tuairisc ach ar "
 "athruithe\n"
 
 #: src/chmod.c:337
@@ -921,6 +929,8 @@ msgid ""
 "\n"
 "Each MODE is of the form `[ugoa]*([-+=]([rwxXst]*|[ugo]))+'.\n"
 msgstr ""
+"\n"
+"Tá gach MÓD den fhoirm `[ugoa]*([-+=]([rwxXst]*|[ugo]))+'.\n"
 
 #: src/chmod.c:460
 msgid "cannot combine mode and --reference options"
@@ -984,12 +994,12 @@ msgstr "ní féidir %s a dhí-thagairt"
 #: src/chown-core.c:400
 #, c-format
 msgid "changing ownership of %s"
-msgstr "ag athrú úinéireacht ar %s"
+msgstr "úinéireacht ar %s á hathrú"
 
 #: src/chown-core.c:401
 #, c-format
 msgid "changing group of %s"
-msgstr "ag athrú grúpa de %s"
+msgstr "grúpa de %s á athrú"
 
 #: src/chown.c:94
 #, c-format
@@ -1015,7 +1025,7 @@ msgstr ""
 "Le --reference, athraigh an t-úinéir agus an grúpa de gach COMHAD go dtí an\n"
 "t-úinéir agus an grúpa de TCOMHAD.\n"
 "\n"
-"  -c, --changes          mar `verbose' ach ná tabhair tuairisc ach ar "
+"  -c, --changes          cosúil le `verbose' ach ná tabhair tuairisc ach ar "
 "athruithe\n"
 "      --dereference      téigh i bhfeidhm ar an tagraí de gach nasc "
 "siombalach\n"
@@ -1038,7 +1048,7 @@ msgstr ""
 "                         agus na cinn atá ceaptha anseo.  Is féidir "
 "ceachtar\n"
 "                         acu a fhágáil ar lár, agus sa chás sin, ní gá\n"
-"                         don tréithe ar iarraidh a aontú\n"
+"                         don tréith ar iarraidh a aontú\n"
 
 #: src/chown.c:123
 msgid ""
@@ -1078,6 +1088,13 @@ msgid ""
 "  %s root:staff /u  Likewise, but also change its group to \"staff\".\n"
 "  %s -hR root /u    Change the owner of /u and subfiles to \"root\".\n"
 msgstr ""
+"\n"
+"Mar shampla:\n"
+"  %s root /u          Athraigh an t-úinéir de /u go \"root\".\n"
+"  %s root:foireann /u Mar an gcéanna, ach athraigh a ghrúpa go \"foireann\" "
+"freisin.\n"
+"  %s -hR root /u      Athraigh an t-úinéir de /u agus a fochomhaid go \"root"
+"\".\n"
 
 #: src/chroot.c:46
 #, c-format
@@ -1176,14 +1193,14 @@ msgstr ""
 "  -2              ceil línte atá i gCOMHAD2 ach nach i gCOMHAD1\n"
 "  -3              ceil línte atá sna comhaid araon\n"
 
-#: src/copy.c:229 src/csplit.c:647 src/du.c:929 src/fmt.c:431 src/head.c:849
-#: src/split.c:540 src/tac.c:543 src/tail.c:1293
+#: src/copy.c:229 src/csplit.c:647 src/du.c:947 src/fmt.c:431 src/head.c:849
+#: src/split.c:540 src/tac.c:543 src/tail.c:1290
 #, c-format
 msgid "cannot open %s for reading"
 msgstr "ní féidir %s a oscailt chun léamh"
 
-#: src/copy.c:235 src/copy.c:289 src/copy.c:309 src/dd.c:1673 src/tail.c:1129
-#: src/tail.c:1195
+#: src/copy.c:235 src/copy.c:289 src/copy.c:309 src/dd.c:1674 src/tail.c:1126
+#: src/tail.c:1192
 #, c-format
 msgid "cannot fstat %s"
 msgstr "ní féidir %s a `fstat'"
@@ -1208,7 +1225,7 @@ msgstr "ní féidir gnáthchomhad %s a chruthú"
 #: src/copy.c:338 src/dd.c:1153 src/dd.c:1432
 #, c-format
 msgid "reading %s"
-msgstr "ag léamh %s"
+msgstr "%s á léamh"
 
 #: src/copy.c:372 src/head.c:428
 #, c-format
@@ -1218,7 +1235,7 @@ msgstr "ní féidir %s a `lseek'"
 #: src/copy.c:387 src/copy.c:411 src/dd.c:1489 src/dd.c:1551
 #, c-format
 msgid "writing %s"
-msgstr "ag scríobh %s"
+msgstr "%s á scríobh"
 
 #: src/copy.c:425 src/copy.c:1647
 #, c-format
@@ -1233,12 +1250,12 @@ msgstr "níorbh fhéidir an úinéireacht de %s a chaomhnú"
 #: src/copy.c:468 src/copy.c:1698
 #, c-format
 msgid "setting permissions for %s"
-msgstr "ag socrú ceadanna ar %s"
+msgstr "ceadanna ar %s á socrú"
 
 #: src/copy.c:481 src/copy.c:487 src/head.c:857 src/touch.c:191
 #, c-format
 msgid "closing %s"
-msgstr "ag dúnadh %s"
+msgstr "%s á dhúnadh"
 
 #: src/copy.c:706
 #, c-format
@@ -1250,7 +1267,7 @@ msgstr "%s: forscríobh %s agus sáraigh mód %04lo? "
 msgid "%s: overwrite %s? "
 msgstr "%s: forscríobh %s? "
 
-#: src/copy.c:927 src/copy.c:965 src/df.c:494 src/install.c:445 src/stat.c:631
+#: src/copy.c:927 src/copy.c:965 src/df.c:496 src/install.c:445 src/stat.c:630
 #, c-format
 msgid "cannot stat %s"
 msgstr "ní féidir %s a `stat'"
@@ -1299,12 +1316,12 @@ msgstr "ní féidir comhadlann a aistriú go dtí gnáthchomhad: %s -> %s"
 #: src/copy.c:1131
 #, c-format
 msgid "backing up %s would destroy source;  %s not moved"
-msgstr "scriosfadh cúltaca de %s an comhad foinse;  níor aistríodh %s"
+msgstr "léirscriosfadh cúltaca de %s an comhad foinse;  níor aistríodh %s"
 
 #: src/copy.c:1132
 #, c-format
 msgid "backing up %s would destroy source;  %s not copied"
-msgstr "scriosfadh cúltaca de %s an comhad foinse;  níor cóipeáladh %s"
+msgstr "léirscriosfadh cúltaca de %s an comhad foinse;  níor cóipeáladh %s"
 
 #: src/copy.c:1151 src/ln.c:261
 #, c-format
@@ -1380,7 +1397,7 @@ msgstr "ní féidir an `fifo' %s a chruthú"
 msgid "cannot create special file %s"
 msgstr "ní féidir comhad speisialta %s a chruthú"
 
-#: src/copy.c:1559 src/ls.c:2725 src/stat.c:417
+#: src/copy.c:1559 src/ls.c:2733 src/stat.c:416
 #, c-format
 msgid "cannot read symbolic link %s"
 msgstr "ní féidir nasc siombalach %s a léamh"
@@ -1435,12 +1452,12 @@ msgstr ""
 "Cóipeáil FOINSE go SPRIOC, nó FOINSE/Í go COMHADLANN.\n"
 "\n"
 
-#: src/cp.c:166 src/csplit.c:1461 src/cut.c:196 src/df.c:721 src/du.c:280
+#: src/cp.c:166 src/csplit.c:1461 src/cut.c:196 src/df.c:723 src/du.c:288
 #: src/expand.c:120 src/fmt.c:279 src/fold.c:79 src/head.c:119
-#: src/install.c:646 src/kill.c:104 src/ln.c:351 src/ls.c:4098 src/mkdir.c:63
+#: src/install.c:646 src/kill.c:104 src/ln.c:351 src/ls.c:4106 src/mkdir.c:63
 #: src/mkfifo.c:60 src/mknod.c:61 src/mv.c:308 src/nl.c:181 src/paste.c:427
 #: src/pr.c:2777 src/ptx.c:1895 src/shred.c:161 src/sort.c:289 src/split.c:117
-#: src/tac.c:141 src/tail.c:239 src/touch.c:238 src/unexpand.c:130
+#: src/tac.c:141 src/tail.c:236 src/touch.c:238 src/unexpand.c:130
 #: src/uniq.c:144
 msgid ""
 "Mandatory arguments to long options are mandatory for short options too.\n"
@@ -1461,58 +1478,54 @@ msgid ""
 msgstr ""
 "  -a, --archive                is ionann é seo agus `-dpR'\n"
 "      --backup[=RIALÚ]         déan cúltaca de gach sprioc-chomhad atá ann\n"
-"  -b                           mar `--backup' ach gan argóint\n"
+"  -b                           cosúil le `--backup' ach gan argóint\n"
 "      --copy-contents          cóipeáil ábhar i gcomhaid más athchúrsach é\n"
 "  -d                           = `--no-dereference --preserve=link'\n"
 
 #: src/cp.c:176
-#, fuzzy
 msgid ""
 "  -f, --force                  if an existing destination file cannot be\n"
 "                                 opened, remove it and try again\n"
 "  -i, --interactive            prompt before overwrite\n"
 "  -H                           follow command-line symbolic links\n"
 msgstr ""
-"      --no-dereference         ná lean naisc shiombalacha\n"
 "  -f, --force                  mura féidir sprioc-chomhad a oscailt, scrios\n"
 "                                 é agus bain triail as arís\n"
 "  -i, --interactive            fiafraigh roimh fhorscríobh\n"
-"  -H                           lean naisc shiombalacha ar an líne ordaithe\n"
+"  -H                           lean naisc shiombalacha ar líne na n-"
+"orduithe\n"
 
 #: src/cp.c:182
 msgid ""
 "  -l, --link                   link files instead of copying\n"
 "  -L, --dereference            always follow symbolic links\n"
 msgstr ""
+"  -l, --link                   nasc comhaid in ionad iad a chóipeáil\n"
+"  -L, --dereference            lean naisc shiombalacha i gcónaí\n"
 
 #: src/cp.c:186
 msgid "  -P, --no-dereference         never follow symbolic links\n"
-msgstr ""
+msgstr "  -P, --no-dereference         ná lean naisc shiombalacha riamh\n"
 
 #: src/cp.c:189
-#, fuzzy
 msgid ""
 "  -p                           same as --preserve=mode,ownership,timestamps\n"
 "      --preserve[=ATTR_LIST]   preserve the specified attributes (default:\n"
 "                                 mode,ownership,timestamps), if possible\n"
 "                                 additional attributes: links, all\n"
 msgstr ""
-"  -l, --link                   nasc comhaid in ionad a gcóipeáil\n"
-"  -L, --dereference            lean naisc shiombalacha i gcónaí\n"
 "  -p                           = `--preserve=mode,ownership,timestamps'\n"
 "      --preserve[=TRÉITHE]     caomhnaigh na tréithe ceaptha (réamhshocrú:\n"
 "                                 mode,ownership,timestamps), más féidir\n"
 "                                 tréithe eile: links, all\n"
 
 #: src/cp.c:195
-#, fuzzy
 msgid ""
 "      --no-preserve=ATTR_LIST  don't preserve the specified attributes\n"
 "      --parents                use full source file name under DIRECTORY\n"
 msgstr ""
 "      --no-preserve=TRÉITHE    ná caomhnaigh na tréithe ceaptha\n"
-"      --parents                cuir an chonair fhoinse go dtí COMHADLANN\n"
-"  -P                           is ionann é seo agus `--no-dereference'\n"
+"      --parents                úsáid ainm lán an chomhaid faoi CHOMHADLANN\n"
 
 #: src/cp.c:199
 msgid ""
@@ -1526,16 +1539,15 @@ msgstr ""
 "                                 oscailt (i gcodarsnacht le `--force')\n"
 
 #: src/cp.c:204
-#, fuzzy
 msgid ""
 "      --sparse=WHEN            control creation of sparse files\n"
 "      --strip-trailing-slashes remove any trailing slashes from each SOURCE\n"
 "                                 argument\n"
 msgstr ""
-"      --reply={yes,no,query}   an modh chun déileáil leis an cheist faoi\n"
-"                                 sprioc-chomhad atá ann cheana\n"
-"      --sparse=CÉN             rialaigh an cruthú de chomhaid thanaí\n"
-"      --strip-trailing-slashes scrios slaiseanna sraoilleach ó gach FOINSE\n"
+"      --sparse=CÉN             rialaigh cruthú na gcomhad tanaí\n"
+"      --strip-trailing-slashes scrios slaiseanna sraoilleacha ó gach "
+"argóint\n"
+"                                 FOINSE\n"
 
 #: src/cp.c:209
 msgid ""
@@ -1579,9 +1591,9 @@ msgstr ""
 "\n"
 "Mar réamhshocrú, aimsítear comhaid FOINSE tanaí trí mhodh iúraisticiúil\n"
 "garbh agus beidh an comhad SPRIOC tanaí chomh maith.  Is í seo an mód atá\n"
-"roghnaithe le `--sparse=auto'.  Roghnaigh `--sparse=always' chun comhad "
+"roghnaithe ag `--sparse=auto'.  Roghnaigh `--sparse=always' chun comhad "
 "SPRIOC\n"
-"tanaí a chruthú i gcónaí nuair atá sraith nialasach fada go leor i "
+"tanaí a chruthú i gcónaí nuair atá sraith nialasach fhada go leor i "
 "bhFOINSE.\n"
 "Bain úsáid as `--sparse=never' chun an cruthú de chomhaid thanaí a chosc.\n"
 "\n"
@@ -1670,16 +1682,12 @@ msgstr ""
 "lena chéile"
 
 #: src/cp.c:634
-#, fuzzy
 msgid "with --parents, the destination must be a directory"
-msgstr ""
-"ní foláir an sprioc-chomhad a bheith ina chomhadlann agus conairí á gcaomhnú"
+msgstr "le --parents, caithfidh an sprioc-chomhad a bheith ina chomhadlann"
 
 #: src/cp.c:910 src/mv.c:398
-#, fuzzy
 msgid "the --reply option is deprecated; use -i or -f instead"
-msgstr ""
-"tá an rogha --allow-missing dulta i léig; bain úsáid as --retry ina áit"
+msgstr "tá an rogha --reply dulta i léig; bain úsáid as -i nó -f ina háit"
 
 #: src/cp.c:926 src/ln.c:453
 msgid "symbolic links are not supported on this system"
@@ -1712,9 +1720,9 @@ msgid "%s: line number out of range"
 msgstr "%s: líne-uimhir as raon"
 
 #: src/csplit.c:707
-#, fuzzy, c-format
+#, c-format
 msgid "%s: %s: line number out of range"
-msgstr "%s: `%s': líne-uimhir as raon"
+msgstr "%s: %s: líne-uimhir as raon"
 
 #: src/csplit.c:710 src/csplit.c:759
 #, c-format
@@ -1722,23 +1730,23 @@ msgid " on repetition %s\n"
 msgstr " le linn timthriall %s\n"
 
 #: src/csplit.c:753
-#, fuzzy, c-format
+#, c-format
 msgid "%s: %s: match not found"
-msgstr "%s: `%s': níl comhoiriúnú ar fáil"
+msgstr "%s: %s: níl a leithéid ann"
 
 #: src/csplit.c:817 src/csplit.c:857 src/nl.c:349 src/tac.c:274
 msgid "error in regular expression search"
 msgstr "earráid le linn cuardaigh ar shlonn ionadaíochta"
 
 #: src/csplit.c:982
-#, fuzzy, c-format
+#, c-format
 msgid "write error for %s"
-msgstr "earráid ag scríobh do `%s'"
+msgstr "earráid sa scríobh le haghaidh %s"
 
 #: src/csplit.c:1058
 #, c-format
 msgid "%s: integer expected after delimiter"
-msgstr "%s: ag súil le slánuimhir i ndiaidh teormharcóra"
+msgstr "%s: bhíothas ag súil le slánuimhir i ndiaidh teormharcóra"
 
 #: src/csplit.c:1074
 #, c-format
@@ -1771,23 +1779,23 @@ msgid "%s: line number must be greater than zero"
 msgstr "%s: ní foláir líne-uimhir dheimhneach"
 
 #: src/csplit.c:1169
-#, fuzzy, c-format
+#, c-format
 msgid "line number %s is smaller than preceding line number, %s"
-msgstr "líne-uimhir `%s' níos lú ná an líne-uimhir roimpi, %s"
+msgstr "líne-uimhir %s níos lú ná an líne-uimhir roimpi, %s"
 
 #: src/csplit.c:1175
-#, fuzzy, c-format
+#, c-format
 msgid "warning: line number %s is the same as preceding line number"
-msgstr "rabhadh: is ionann líne-uimhir `%s' agus an líne-uimhir roimpi"
+msgstr "rabhadh: is ionann líne-uimhir %s agus an líne-uimhir roimpi"
 
 # similar string for time format in ls.c -KPS
 #: src/csplit.c:1228
 msgid "invalid format width"
-msgstr "leithead neamhbhailí i leagan amach"
+msgstr "leithead neamhbhailí na formáide"
 
 #: src/csplit.c:1249
 msgid "invalid format precision"
-msgstr "cruinneas neamhbhailí i leagan amach"
+msgstr "beachtas neamhbhailí na formáide"
 
 #: src/csplit.c:1270
 msgid "missing conversion specifier in suffix"
@@ -1886,9 +1894,9 @@ msgstr ""
 "\n"
 "FRITHÁIREAMH = `+' nó `-' (riachtanach) agus ansin slánuimhir dheimhneach.\n"
 
-#: src/cut.c:188 src/df.c:715 src/expand.c:111 src/fold.c:70 src/head.c:109
-#: src/ls.c:4092 src/nl.c:172 src/paste.c:417 src/pr.c:2768 src/sort.c:281
-#: src/sum.c:59 src/tac.c:132 src/tail.c:229 src/tee.c:62 src/unexpand.c:121
+#: src/cut.c:188 src/df.c:717 src/expand.c:111 src/fold.c:70 src/head.c:109
+#: src/ls.c:4100 src/nl.c:172 src/paste.c:417 src/pr.c:2768 src/sort.c:281
+#: src/sum.c:59 src/tac.c:132 src/tail.c:226 src/tee.c:62 src/unexpand.c:121
 #: src/wc.c:127
 #, c-format
 msgid "Usage: %s [OPTION]... [FILE]...\n"
@@ -2018,7 +2026,7 @@ msgstr "liosta réimsí ar iarraidh"
 
 #: src/cut.c:850
 msgid "missing list of positions"
-msgstr "liosta suímh ar iarraidh"
+msgstr "liosta ionad ar iarraidh"
 
 #: src/date.c:132
 #, c-format
@@ -2036,9 +2044,12 @@ msgid ""
 "  -d, --date=STRING         display time described by STRING, not `now'\n"
 "  -f, --file=DATEFILE       like --date once for each line of DATEFILE\n"
 msgstr ""
+"Taispeáin an t-am anois i gcruth FORMÁID, nó socraigh dáta an chórais.\n"
+"\n"
+"  -d, --date=TEAGHRÁN       taispeáin am tugtha i dTEAGHRÁN, ní `now'\n"
+"  -f, --file=COMHADDÁTA     mar --date uair amháin sa líne de CHOMHADDÁTA\n"
 
 #: src/date.c:143
-#, fuzzy
 msgid ""
 "  -r, --reference=FILE      display the last modification time of FILE\n"
 "  -R, --rfc-2822            output date and time in RFC 2822 format\n"
@@ -2048,14 +2059,15 @@ msgid ""
 "  -s, --set=STRING          set time described by STRING\n"
 "  -u, --utc, --universal    print or set Coordinated Universal Time\n"
 msgstr ""
-"  -r, --reference=COMHAD    taispeáin an t-am modhnaithe is déanaí do "
-"COMHAD\n"
-"  -R, --rfc-822             taispeáin dáta de réir an chaighdeáin RFC-822\n"
-"  -s, --set=TEAGHRÁN        socraigh an t-am de réir an THEAGHRÁIN\n"
+"  -r, --reference=COMHAD    taispeáin am an athraithe is déanaí do COMHAD\n"
+"  -R, --rfc-2822            taispeáin dáta de réir an chaighdeáin RFC 2822\n"
+"      --rfc-3339[=AMCHÓD]   taispeáin dáta/am i gcruth RFC 3339.\n"
+"                            AMCHÓD=`date', `seconds', nó `ns' do dháta\n"
+"                            agus am leis an mbeachtas sonraithe.\n"
+"  -s, --set=TEAGHRÁN        socraigh an t-am de réir an TEAGHRÁIN\n"
 "  -u, --utc, --universal    taispeáin nó socraigh UTC\n"
 
 #: src/date.c:154
-#, fuzzy
 msgid ""
 "\n"
 "FORMAT controls the output.  The only valid option for the second form\n"
@@ -2065,48 +2077,45 @@ msgid ""
 "  %a   locale's abbreviated weekday name (e.g., Sun)\n"
 msgstr ""
 "\n"
-"Rialaíonn FORMÁID an t-aschur.  Sa dara leagan amach, níl aon rogha bhailí\n"
+"Rialaíonn FORMÁID an t-aschur.  Sa dara foirm, níl aon rogha bhailí\n"
 "ach an ceann a shocraíonn UTC.  Teaghráin léirmhínithe:\n"
 "\n"
-"  %%   '%' aonarach\n"
-"  %a   lá den tseachtain, giorraithe agus de réir an logánaithe\n"
+"  %%   '%' litriúil\n"
+"  %a   lá den tseachtain de réir an logchaighdeáin, giorraithe\n"
 
 #: src/date.c:162
-#, fuzzy
 msgid ""
 "  %A   locale's full weekday name (e.g., Sunday)\n"
 "  %b   locale's abbreviated month name (e.g., Jan)\n"
 "  %B   locale's full month name (e.g., January)\n"
 "  %c   locale's date and time (e.g., Thu Mar  3 23:05:25 2005)\n"
 msgstr ""
-"  %A   lá den tseachtain, go hiomlán, luainíonn an fad (Domhnach..Satharn)\n"
-"  %b   an mhí, giorraithe agus de réir an logánaithe\n"
-"  %B   an mhí, go hiomlán, luainíonn an fad (Eanáir..Nollaig)\n"
-"  %c   dáta agus am de réir an logánaithe (Aoi Lún 08 12:02:33 EST 1995)\n"
+"  %A   lá den tseachtain ina iomlán (m.sh., \"Dé Domhnaigh\")\n"
+"  %b   an mhí ghiorraithe (m.sh. \"Ean\")\n"
+"  %B   an mhí ina hiomlán (m.sh. \"Eanáir\")\n"
+"  %c   an dáta agus an t-am (m.sh., Aoine 30 MFómh 2005 14:23:52 UTC)\n"
 
 #: src/date.c:168
-#, fuzzy
 msgid ""
 "  %C   century; like %Y, except omit last two digits (e.g., 21)\n"
 "  %d   day of month (e.g, 01)\n"
 "  %D   date; same as %m/%d/%y\n"
 "  %e   day of month, space padded; same as %_d\n"
 msgstr ""
-"  %C   aois (an bhliain / 100, slánaithe anuas) [00-99]\n"
-"  %d   lá den mhí (01..31)\n"
-"  %D   dáta (mm/ll/bb)\n"
-"  %e   lá den mhí, stuáilte le spásanna ( 1..31)\n"
+"  %C   an aois; cosúil le %Y ach gan an dá dhigit deiridh (m.sh., 21)\n"
+"  %d   lá den mhí (m.sh., 01)\n"
+"  %D   dáta; ar comhbhrí le %m/%d/%y\n"
+"  %e   lá den mhí, stuáilte le spásanna; ar comhbhrí le %_d\n"
 
 #: src/date.c:174
-#, fuzzy
 msgid ""
 "  %F   full date; same as %Y-%m-%d\n"
 "  %g   the last two digits of the year corresponding to the %V week number\n"
 "  %G   the year corresponding to the %V week number\n"
 msgstr ""
-"  %F   = %Y-%m-%d\n"
-"  %g   an bhliain le dhá dhigit fhreagrach do %V\n"
-"  %G   an bhliain le ceithre dhigit, freagrach do %V\n"
+"  %F   an dáta iomlán; ar comhbhrí le %Y-%m-%d\n"
+"  %g   an bhliain freagrach do %V le dhá dhigit\n"
+"  %G   an bhliain freagrach do %V le ceithre dhigit\n"
 
 #: src/date.c:179
 msgid ""
@@ -2133,7 +2142,6 @@ msgstr ""
 "  %M   nóiméad (00..59)\n"
 
 #: src/date.c:191
-#, fuzzy
 msgid ""
 "  %n   a newline\n"
 "  %N   nanoseconds (000000000..999999999)\n"
@@ -2145,14 +2153,13 @@ msgid ""
 msgstr ""
 "  %n   líne nua\n"
 "  %N   nanashoicindí (000000000..999999999)\n"
-"  %p   AM/PM, ceannlitreacha, de réir an logánaithe (folamh go minic)\n"
-"  %P   am/pm, litreacha beaga, de réir an logánaithe (folamh go minic)\n"
-"  %r   an t-am, dhá uair déag (hh:mm:ss [AP]M)\n"
-"  %R   an t-am, cheithre huaire fichead (hh:mm)\n"
-"  %s   soicindí ó `00:00:00 1970-01-01 UTC' (biseach GNU)\n"
+"  %p   AM nó PM de réir an logchaighdeáin; (folamh más anaithnid é)\n"
+"  %P   cosúil le %p, ach le litreacha beaga\n"
+"  %r   an t-am, dhá uair déag (m.sh., 11:11:04 PM)\n"
+"  %R   an t-am, cheithre huaire fichead; ar comhbhrí le %H:%M\n"
+"  %s   soicindí ó `00:00:00 1970-01-01 UTC'\n"
 
 #: src/date.c:200
-#, fuzzy
 msgid ""
 "  %S   second (00..60)\n"
 "  %t   a tab\n"
@@ -2161,34 +2168,33 @@ msgid ""
 msgstr ""
 "  %S   soicind (00..60)\n"
 "  %t   táb cothrománach\n"
-"  %T   an t-am, cheithre huaire fichead (hh:mm:ss)\n"
-"  %u   lá den tseachtain (1..7); 1 = An Luain\n"
+"  %T   an t-am; ar comhbhrí le %H:%M:%S\n"
+"  %u   lá den tseachtain (1..7); 1 = Dé Luain\n"
 
 #: src/date.c:206
-#, fuzzy
 msgid ""
 "  %U   week number of year with Sunday as first day of week (00..53)\n"
 "  %V   week number of year with Monday as first day of week (01..53)\n"
 "  %w   day of week (0..6); 0 is Sunday\n"
 "  %W   week number of year with Monday as first day of week (00..53)\n"
 msgstr ""
-"  %U   uimhir den tseachtain sa bhliain (00..53); is Domhnach an chéad lá\n"
-"  %V   uimhir den tseachtain sa bhliain (01..53); is An Luain an chéad lá\n"
-"  %w   lá den tseachtain (0..6); 0=An Domhnach\n"
-"  %W   uimhir den tseachtain sa bhliain (00..53); is An Luain an chéad lá\n"
+"  %U   uimhir den tseachtain sa bhliain le Domhnach mar an chéad lá "
+"(00..53)\n"
+"  %V   uimhir den tseachtain sa bhliain le Luan mar an chéad lá (01..53)\n"
+"  %w   lá den tseachtain (0..6); 0=Dé Domhnaigh\n"
+"  %W   uimhir den tseachtain sa bhliain le Luan mar an chéad lá (00.53)\n"
 
 #: src/date.c:212
-#, fuzzy
 msgid ""
 "  %x   locale's date representation (e.g., 12/31/99)\n"
 "  %X   locale's time representation (e.g., 23:13:48)\n"
 "  %y   last two digits of year (00..99)\n"
 "  %Y   year\n"
 msgstr ""
-"  %x   léiriú den dáta de réir an logánaithe\n"
-"  %X   léiriú den am de réir an logánaithe (%H:%M:%S)\n"
+"  %x   léiriú den dáta de réir an logchaighdeáin (m.sh., 30.09.05)\n"
+"  %X   léiriú den am de réir an logchaighdeáin (m.sh., 14:34:58)\n"
 "  %y   dhá dhigit deiridh den bhliain (00..99)\n"
-"  %Y   an bhliain (1970...)\n"
+"  %Y   an bhliain\n"
 
 #: src/date.c:218
 msgid ""
@@ -2207,6 +2213,21 @@ msgid ""
 "  ^ use upper case if possible\n"
 "  # use opposite case if possible\n"
 msgstr ""
+"  %z   +uunn crios ama uimhriúil (m.sh., -0400)\n"
+"  %:z  +uu:nn crios ama uimhriúil (m.sh., -04:00)\n"
+"  %::z +uu:nn:ss crios ama uimhriúil (m.sh., -04:00:00)\n"
+"  %:::z crios ama uimhriúil le : go dtí an beachtas riachtanach\n"
+"          (m.sh., -04, +05:30)\n"
+"  %Z   giorrúchán aibítreach ar an chrios ama (m.sh., EDT)\n"
+"\n"
+"De réir réamhshocraithe, stuálann date réimsí uimhriúla le nialais.\n"
+"Is féidir na bratacha roghnacha a leanas a chur i ndiaidh `%':\n"
+"\n"
+"  - (fleiscín) ná stuáil an réimse\n"
+"  _ (fostríoc) stuáil le spásanna\n"
+"  0 (nialas) stuáil le nialais\n"
+"  ^ úsáid an cás uachtair más féidir\n"
+"  # úsáid an cás codarsnach más féidir\n"
 
 #: src/date.c:234
 msgid ""
@@ -2216,6 +2237,13 @@ msgid ""
 "E to use the locale's alternate representations if available, or\n"
 "O to use the locale's alternate numeric symbols if available.\n"
 msgstr ""
+"\n"
+"Tá leithead roghnach an réimse i ndiaidh na mbratach, mar uimhir "
+"dheachúlach;\n"
+"ansin mionathraitheoir roghnach atá ceann de:\n"
+"E, chun léirithe malartacha an logchaighdeán a úsáid, más féidir, nó\n"
+"O, chun siombalacha malartacha uimhriúla an logchaighdeán a úsáid, más "
+"féidir.\n"
 
 #: src/date.c:262 src/dd.c:1614 src/head.c:840 src/md5sum.c:392
 #: src/md5sum.c:674 src/od.c:910 src/od.c:1932 src/pr.c:1178 src/pr.c:1381
@@ -2225,14 +2253,13 @@ msgid "standard input"
 msgstr "ionchur caighdeánach"
 
 #: src/date.c:290 src/date.c:510
-#, fuzzy, c-format
+#, c-format
 msgid "invalid date %s"
-msgstr "dáta neamhbhailí `%s'"
+msgstr "dáta neamhbhailí %s"
 
 #: src/date.c:401 src/date.c:435
-#, fuzzy
 msgid "multiple output formats specified"
-msgstr "aschomhaid iomadúla"
+msgstr "sonraíodh formáidí iomadúla aschurtha"
 
 #: src/date.c:413
 msgid "the options to specify dates for printing are mutually exclusive"
@@ -2244,21 +2271,21 @@ msgstr ""
 "ní cheadaítear na roghanna chun an t-am a thaispeáint agus shocrú le chéile"
 
 #: src/date.c:441
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "the argument %s lacks a leading `+';\n"
 "When using an option to specify date(s), any non-option\n"
 "argument must be a format string beginning with `+'."
 msgstr ""
-"ní foláir `+' ar tosach leis an argóint `%s';\n"
+"tá `+' de dhíth ag tosach na hargóinte %s;\n"
 "Má tá tú ag baint úsáid as rogha chun dáta(í) a shocrú,\n"
-"ní foláir do gach rogha eile a bheith teaghrán formáide le `+' ar tosach."
+"ní foláir do gach rogha eile a bheith ina teaghrán formáide le `+' ar tosach."
 
 #: src/date.c:518
 msgid "cannot set date"
 msgstr "ní féidir an dáta a shocrú"
 
-#: src/date.c:541 src/du.c:413
+#: src/date.c:541 src/du.c:422
 #, c-format
 msgid "time %s is out of range"
 msgstr "is as raon an t-am %s"
@@ -2301,11 +2328,11 @@ msgid ""
 "  skip=BLOCKS     skip BLOCKS ibs-sized blocks at start of input\n"
 "  status=noxfer   suppress transfer statistics\n"
 msgstr ""
-"  if=COMHAD       léigh ó COMHAD in ionad ionchur caighdeánach\n"
-"  iflag=BRAT      léigh de réir an liosta siombailí, scartha le camóga\n"
+"  if=COMHAD       léigh ó CHOMHAD in ionad ionchur caighdeánach\n"
+"  iflag=BRATACH   léigh de réir an liosta siombailí, scartha le camóga\n"
 "  obs=BEARTA      scríobh BEARTA beart sa turas\n"
 "  of=COMHAD       scríobh chuig COMHAD in ionad aschur caighdeánach\n"
-"  oflag=BRAT      scríobh de réir an liosta siombailí, scartha le camóga\n"
+"  oflag=BRATACH   scríobh de réir an liosta siombailí, scartha le camóga\n"
 "  seek=BLOIC      gabh thar BLOIC bloc (den mhéid obs) ar tosach an aschuir\n"
 "  skip=BLOIC      gabh thar BLOIC bloc (den mhéid ibs) ar tosach an "
 "ionchuir\n"
@@ -2364,7 +2391,7 @@ msgstr ""
 "  excl      teip má tá an t-aschomhad ann cheana\n"
 "  notrunc   ná déan teascadh ar an aschomhad\n"
 "  ucase     athraigh litreacha beaga go dtí ceannlitreacha\n"
-"  swab      malartaigh gach cúpla beart san ionchur\n"
+"  swab      babhtáil gach cúpla beart san ionchur\n"
 "  noerror   lean i ndiaidh earráidí ag léamh\n"
 "  sync      stuáil gach bloc ionchuir le carachtair NUL go dtí ibs-size; "
 "nuair\n"
@@ -2381,9 +2408,9 @@ msgid ""
 "  append    append mode (makes sense only for output)\n"
 msgstr ""
 "\n"
-"Is féidir gach BRAT a bheith:\n"
+"Is féidir gach BRATACH a bheith:\n"
 "\n"
-"  append    cuir leis (ná húsáid ach le haschur)\n"
+"  append    mód iarcheangailte (ná húsáid ach le haschur)\n"
 
 #: src/dd.c:461
 msgid "  direct    use direct I/O for data\n"
@@ -2410,17 +2437,15 @@ msgid "  noctty    do not assign controlling terminal from file\n"
 msgstr "  noctty    ná ceap an teirminéal rialaithe ó chomhad\n"
 
 #: src/dd.c:474
-#, fuzzy
 msgid "  binary    use binary I/O for data\n"
-msgstr "  direct    úsáid I/A díreach le haghaidh sonraí\n"
+msgstr "  binary    úsáid I/A dénártha le haghaidh sonraí\n"
 
 #: src/dd.c:476
-#, fuzzy
 msgid "  text      use text I/O for data\n"
-msgstr "  direct    úsáid I/A díreach le haghaidh sonraí\n"
+msgstr "  text      úsáid I/A téacs le haghaidh sonraí\n"
 
 #: src/dd.c:480
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "\n"
 "Sending a %s signal to a running `dd' process makes it\n"
@@ -2436,11 +2461,12 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"Má sheoltar comhartha SIGUSR1 chuig próiseas beo `dd', scríobhfaidh sé,\n"
-"chuig earráid chaighdeánach, agus ansin atosóidh sé an chóipeáil.\n"
+"Má sheoltar comhartha %s chuig próiseas `dd' beo, scríobhfaidh sé "
+"staitistic\n"
+"I/A chuig earráid chaighdeánach, agus ansin atosóidh sé an chóipeáil.\n"
 "\n"
 "  $ dd if=/dev/zero of=/dev/null& pid=$!\n"
-"  $ kill -USR1 $pid; sleep 1; kill $pid\n"
+"  $ kill -%s $pid; sleep 1; kill $pid\n"
 "  18335302+0 taifead isteach\n"
 "  18335302+0 taifead amach\n"
 "  9387674624 beart (9.4 GB) cóipeáilte, 34.6279 soicind, 271 MB/s\n"
@@ -2454,29 +2480,32 @@ msgid ""
 "%<PRIuMAX>+%<PRIuMAX> records in\n"
 "%<PRIuMAX>+%<PRIuMAX> records out\n"
 msgstr ""
+"%<PRIuMAX>+%<PRIuMAX> taifead isteach\n"
+"%<PRIuMAX>+%<PRIuMAX> taifead amach\n"
 
 #: src/dd.c:542
-#, fuzzy, c-format
+#, c-format
 msgid "1 truncated record\n"
 msgid_plural "%<PRIuMAX> truncated records\n"
-msgstr[0] "taifead teasctha"
-msgstr[1] "taifead teasctha"
-msgstr[2] "taifead teasctha"
-msgstr[3] "taifead teasctha"
+msgstr[0] "%<PRIuMAX> taifead teasctha\n"
+msgstr[1] "%<PRIuMAX> thaifead teasctha\n"
+msgstr[2] "%<PRIuMAX> thaifead teasctha\n"
+msgstr[3] "%<PRIuMAX> dtaifead teasctha\n"
+msgstr[4] "%<PRIuMAX> taifead teasctha\n"
 
 #: src/dd.c:554
-#, fuzzy, c-format
+#, c-format
 msgid "1 byte (1 B) copied"
 msgid_plural "%<PRIuMAX> bytes (%s) copied"
-msgstr[0] "cóipeáladh %s bheart (%s)"
-msgstr[1] "cóipeáladh %s bheart (%s)"
-msgstr[2] "cóipeáladh %s mbeart (%s)"
-msgstr[3] "cóipeáladh %s beart (%s)"
+msgstr[0] "cóipeáladh %<PRIuMAX> bheart (%s)"
+msgstr[1] "cóipeáladh %<PRIuMAX> bheart (%s)"
+msgstr[2] "cóipeáladh %<PRIuMAX> bheart (%s)"
+msgstr[3] "cóipeáladh %<PRIuMAX> mbeart (%s)"
+msgstr[4] "cóipeáladh %<PRIuMAX> beart (%s)"
 
 #: src/dd.c:572
-#, fuzzy
 msgid "Infinity B"
-msgstr "Éigríoch"
+msgstr "Éigríoch B"
 
 #: src/dd.c:576
 #, c-format
@@ -2484,8 +2513,9 @@ msgid ", %g second, %s/s\n"
 msgid_plural ", %g seconds, %s/s\n"
 msgstr[0] ", %g shoicind, %s/s\n"
 msgstr[1] ", %g shoicind, %s/s\n"
-msgstr[2] ", %g soicind, %s/s\n"
+msgstr[2] ", %g shoicind, %s/s\n"
 msgstr[3] ", %g soicind, %s/s\n"
+msgstr[4] ", %g soicind, %s/s\n"
 
 #: src/dd.c:586
 #, c-format
@@ -2500,7 +2530,7 @@ msgstr "aschomhad %s á dhúnadh"
 #: src/dd.c:774 src/dd.c:1402
 #, c-format
 msgid "writing to %s"
-msgstr "ag scríobh chuig %s"
+msgstr "á scríobh i %s"
 
 #: src/dd.c:868
 #, c-format
@@ -2515,17 +2545,17 @@ msgstr "tiontú neamhbhailí: %s"
 #: src/dd.c:882
 #, c-format
 msgid "invalid input flag: %s"
-msgstr "brat neamhbhailí ionchuir: %s"
+msgstr "bratach neamhbhailí ionchurtha: %s"
 
 #: src/dd.c:885
 #, c-format
 msgid "invalid output flag: %s"
-msgstr "brat neamhbhailí aschuir: %s"
+msgstr "bratach neamhbhailí aschurtha: %s"
 
 #: src/dd.c:888
 #, c-format
 msgid "invalid status flag: %s"
-msgstr "brat neamhbhailí stádais: %s"
+msgstr "bratach neamhbhailí stádais: %s"
 
 #: src/dd.c:924
 #, c-format
@@ -2600,72 +2630,73 @@ msgstr "theip ar fsync i gcomhair %s"
 msgid "opening %s"
 msgstr "%s á oscailt"
 
-#: src/dd.c:1658
+#: src/dd.c:1659
 #, c-format
 msgid ""
 "offset too large: cannot truncate to a length of seek=%<PRIuMAX> (%lu-byte) "
 "blocks"
 msgstr ""
+"fritháireamh rómhór: ní féidir teascadh go fad %<PRIuMAX> (%lu beart) bloc"
 
-#: src/dd.c:1679
-#, fuzzy, c-format
+#: src/dd.c:1680
+#, c-format
 msgid "truncating at %<PRIuMAX> bytes in output file %s"
-msgstr "ag gabháil thar %s beart san aschomhad %s"
+msgstr "á theascadh ag %<PRIuMAX> beart san aschomhad %s"
 
-#: src/df.c:148
+#: src/df.c:150
 msgid "Filesystem    Type"
 msgstr "Córas comhaid Cineál"
 
-#: src/df.c:150
+#: src/df.c:152
 msgid "Filesystem        "
 msgstr "Córas comhaid       "
 
-#: src/df.c:153
+#: src/df.c:155
 #, c-format
 msgid "    Inodes   IUsed   IFree IUse%%"
 msgstr "    Inóid    Iídithe Isaor IÚsáid%%"
 
-#: src/df.c:157
+#: src/df.c:159
 #, c-format
 msgid "    Size  Used Avail Use%%"
 msgstr "    Méid ÍditheArFáilÚsáid%%"
 
-#: src/df.c:159
+#: src/df.c:161
 #, c-format
 msgid "     Size   Used  Avail Use%%"
 msgstr "     Méid   ÍditheArFáilÚsáid%%"
 
-#: src/df.c:162
+#: src/df.c:164
 #, c-format
 msgid " %4s-blocks      Used Available Capacity"
 msgstr " %4s bloc    Ídithe  Ar Fáil Iomlán"
 
-#: src/df.c:193
+#: src/df.c:195
 #, c-format
 msgid " %4s-blocks      Used Available Use%%"
 msgstr " %4s bloc    Ídithe  Ar Fáil Úsáid"
 
 # my coinage - cuir suas = mount in this sense --KPS
-#: src/df.c:197
+#: src/df.c:199
 #, c-format
 msgid " Mounted on\n"
 msgstr " Curtha suas ar\n"
 
-#: src/df.c:450
+#: src/df.c:452
 msgid "cannot get current directory"
 msgstr "níl an chomhadlann reatha ar fáil"
 
-#: src/df.c:460 src/df.c:474 src/df.c:502
+#: src/df.c:462 src/df.c:476 src/df.c:504
 #, c-format
 msgid "cannot change to directory %s"
 msgstr "ní féidir an chomhadlann oibre a athrú go %s"
 
-#: src/df.c:480
+#: src/df.c:482
 #, c-format
 msgid "cannot stat current directory (now %s)"
 msgstr "níl an chomhadlann oibre ar fáil (%s anois)"
 
-#: src/df.c:716
+#: src/df.c:718
 msgid ""
 "Show information about the file system on which each FILE resides,\n"
 "or all file systems by default.\n"
@@ -2675,7 +2706,7 @@ msgstr ""
 "nó faoi gach córas comhaid mar réamhshocrú.\n"
 "\n"
 
-#: src/df.c:724
+#: src/df.c:726
 msgid ""
 "  -a, --all             include file systems having 0 blocks\n"
 "  -B, --block-size=SIZE use SIZE-byte blocks\n"
@@ -2689,7 +2720,7 @@ msgstr ""
 "srl)\n"
 "  -H, --si              mar an gcéanna, ach le 1K=1000, ní 1024\n"
 
-#: src/df.c:730
+#: src/df.c:732
 msgid ""
 "  -i, --inodes          list inode information instead of block usage\n"
 "  -k                    like --block-size=1K\n"
@@ -2698,11 +2729,11 @@ msgid ""
 "(default)\n"
 msgstr ""
 "  -i, --inodes          taispeáin eolas inode in ionad úsáid na mbloc\n"
-"  -k                    mar `--block-size=1K'\n"
+"  -k                    ar comhbhrí le `--block-size=1K'\n"
 "  -l, --local           ná taispeáin ach córais chomhaid logánta\n"
 "      --no-sync         ná sync roimh eolas úsáide a fháil (réamhshocrú)\n"
 
-#: src/df.c:736
+#: src/df.c:738
 msgid ""
 "  -P, --portability     use the POSIX output format\n"
 "      --sync            invoke sync before getting usage info\n"
@@ -2718,7 +2749,7 @@ msgstr ""
 "  -x, --exclude-type=CINEÁL ná taispeáin córais chomhaid den chineál CINEÁL\n"
 "  -v                    (gan feidhm)\n"
 
-#: src/df.c:746 src/du.c:331 src/ls.c:4216
+#: src/df.c:748 src/du.c:340 src/ls.c:4224
 msgid ""
 "\n"
 "SIZE may be (or may be an integer optionally followed by) one of following:\n"
@@ -2729,19 +2760,24 @@ msgstr ""
 "ar tosach): kB 1000, K 1024, MB 1,000,000, M 1,048,576, srl. do G,T,P,E,Z,"
 "Y.\n"
 
-#: src/df.c:862
+#: src/df.c:809 src/du.c:755 src/ls.c:1541
+#, fuzzy
+msgid "the --kilobytes option is deprecated; use -k instead"
+msgstr "tá an rogha --reply dulta i léig; bain úsáid as -i nó -f ina háit"
+
+#: src/df.c:868
 #, c-format
 msgid "file system type %s both selected and excluded"
 msgstr "Tá an cineál %s roghnaithe agus fágtha as"
 
-#: src/df.c:906
+#: src/df.c:912
 msgid "Warning: "
 msgstr "Rabhadh: "
 
-#: src/df.c:909
+#: src/df.c:915
 #, c-format
 msgid "%scannot read table of mounted file systems"
-msgstr "ní féidir le %s an tábla de chórais comhaid atá feistithe"
+msgstr "ní féidir le %s an tábla de chórais chomhad feistithe a léamh"
 
 #: src/dircolors.c:104
 #, c-format
@@ -2759,7 +2795,7 @@ msgid ""
 msgstr ""
 "Taispeáin orduithe chun na hathróige thimpeallachta LS_COLORS a shocrú.\n"
 "\n"
-"Roghnaigh leagan amach den aschur:\n"
+"Roghnaigh an fhormáid aschurtha:\n"
 "  -b, --sh, --bourne-shell    taispeáin cód Bourne chun LS_COLORS a shocrú\n"
 "  -c, --csh, --c-shell        taispeáin cód C-shell chun LS_COLORS a shocrú\n"
 "  -p, --print-database        taispeáin réamhshocruithe\n"
@@ -2786,7 +2822,7 @@ msgstr "%s:%lu: líne neamhbhailí;  dara teaghrán ar iarraidh"
 #: src/dircolors.c:360
 #, c-format
 msgid "%s:%lu: unrecognized keyword %s"
-msgstr "%s:%lu: eochairfhocal anaithnid %s"
+msgstr "%s:%lu: lorgfhocal anaithnid %s"
 
 #: src/dircolors.c:361
 msgid "<internal>"
@@ -2839,8 +2875,12 @@ msgid ""
 "  %s /usr/bin/sort  Output \"/usr/bin\".\n"
 "  %s stdio.h        Output \".\".\n"
 msgstr ""
+"\n"
+"Mar shampla:\n"
+"  %s /usr/bin/sort  Aschur \"/usr/bin\".\n"
+"  %s stdio.h        Aschur \".\".\n"
 
-#: src/du.c:272
+#: src/du.c:280
 #, c-format
 msgid ""
 "Usage: %s [OPTION]... [FILE]...\n"
@@ -2849,15 +2889,15 @@ msgstr ""
 "Úsáid: %s [ROGHA]... [COMHAD]...\n"
 "  nó:  %s [ROGHA]... --files0-from=C\n"
 
-#: src/du.c:276
+#: src/du.c:284
 msgid ""
 "Summarize disk usage of each FILE, recursively for directories.\n"
 "\n"
 msgstr ""
-"Coimrigh úsáid dhiosca do gach COMHAD, go hathchúrsach do chomhadlanna.\n"
+"Coimrigh úsáid diosca do gach COMHAD, go hathchúrsach do chomhadlanna.\n"
 "\n"
 
-#: src/du.c:283
+#: src/du.c:291
 msgid ""
 "  -a, --all             write counts for all files, not just directories\n"
 "      --apparent-size   print apparent sizes, rather than disk usage; "
@@ -2871,8 +2911,8 @@ msgid ""
 "  -D, --dereference-args  dereference FILEs that are symbolic links\n"
 msgstr ""
 "  -a, --all             taispeáin gach comhad, nach comhadlanna amháin\n"
-"      --apparent-size   taispeáin tomhais dhealraitheacha, in ionad úsáid\n"
-"                        dhiosca; is níos lú an tomhas dealraitheach go "
+"      --apparent-size   taispeáin méideanna dealraitheacha, in ionad úsáid\n"
+"                        dhiosca; is níos lú an mhéid dealraitheach go "
 "minic,\n"
 "                        ach is féidir a bheith níos mó mar thoradh ar "
 "phoill\n"
@@ -2883,7 +2923,8 @@ msgstr ""
 "  -c, --total           taispeáin suim iomlán\n"
 "  -D, --dereference-args  dí-thagair COMHAID más nasc siombalach é\n"
 
-#: src/du.c:294
+#: src/du.c:302
+#, fuzzy
 msgid ""
 "      --files0-from=F   summarize disk usage of the NUL-terminated file\n"
 "                          names specified in file F\n"
@@ -2895,6 +2936,7 @@ msgid ""
 "      --si              like -h, but use powers of 1000 not 1024\n"
 "  -k                    like --block-size=1K\n"
 "  -l, --count-links     count sizes many times if hard linked\n"
+"  -m                    like --block-size=1M\n"
 msgstr ""
 "      --files0-from=C   achoimrigh spás diosca úsáidte ag na comhaid atá\n"
 "                          ainmnithe i gcomhad C, foirceanta le NULanna\n"
@@ -2905,10 +2947,10 @@ msgstr ""
 "  -h, --human-readable  taispeáin méideanna i gcruth inléite (m.sh, 1K 234M "
 "2G)\n"
 "      --si              mar -h, ach le 1K=1000, ní 1024\n"
-"  -k                    mar `--block-size=1K'\n"
+"  -k                    ar comhbhrí le `--block-size=1K'\n"
 "  -l, --count-links     cuir méid san áireamh gach uair más nasc crua é\n"
 
-#: src/du.c:304
+#: src/du.c:313
 msgid ""
 "  -L, --dereference     dereference all symbolic links\n"
 "  -P, --no-dereference  don't follow any symbolic links (this is the "
@@ -2924,7 +2966,7 @@ msgstr ""
 "  -S, --separate-dirs   ná cuir comhadlanna san áireamh\n"
 "  -s, --summarize       ná taispeáin ach an tsuim iomlán\n"
 
-#: src/du.c:311
+#: src/du.c:320
 msgid ""
 "  -x, --one-file-system  skip directories on different file systems\n"
 "  -X FILE, --exclude-from=FILE  Exclude files that match any pattern in "
@@ -2950,7 +2992,7 @@ msgstr ""
 "agus\n"
 "                          --summarize\n"
 
-#: src/du.c:320
+#: src/du.c:329
 msgid ""
 "      --time            show time of the last modification of any file in "
 "the\n"
@@ -2961,12 +3003,21 @@ msgid ""
 "                          full-iso, long-iso, iso, +FORMAT\n"
 "                          FORMAT is interpreted like `date'\n"
 msgstr ""
+"      --time            taispeáin am an mhionathraithe is déanaí d'aon "
+"chomhad\n"
+"                          sa chomhadlann, nó ina fochomhadlanna\n"
+"      --time=FOCAL      taispeáin an t-am mar FOCAL in ionad an ama "
+"mionathraithe:\n"
+"                          atime, access, use, ctime nó status\n"
+"      --time-style=STÍL  taispeáin an t-am de réir na STÍLE sonraithe:\n"
+"                          full-iso, long-iso, iso, +FORMÁID\n"
+"                          Parsáiltear FORMÁID cosúil le `date'\n"
 
-#: src/du.c:658 src/ls.c:2385 src/wc.c:657
+#: src/du.c:667 src/ls.c:2393 src/wc.c:657
 msgid "total"
 msgstr "iomlán"
 
-#: src/du.c:735
+#: src/du.c:745
 msgid ""
 "WARNING: use --si, not -H; the meaning of the -H option will soon\n"
 "change to be the same as that of --dereference-args (-D)"
@@ -2974,34 +3025,39 @@ msgstr ""
 "FAINIC: bain úsáid as --si in ionad -H; athrófar an rogha -H a bheith ar\n"
 "comhbhrí leis an rogha --dereference-args (-D)"
 
-#: src/du.c:759
+#: src/du.c:773
 #, c-format
 msgid "invalid maximum depth %s"
 msgstr "doimhneacht uasta neamhbhailí %s"
 
-#: src/du.c:846
+#: src/du.c:782
+#, fuzzy
+msgid "the --megabytes option is deprecated; use -m instead"
+msgstr "tá an rogha --reply dulta i léig; bain úsáid as -i nó -f ina háit"
+
+#: src/du.c:864
 msgid "cannot both summarize and show all entries"
 msgstr "ní féidir coimriú a dhéanamh agus gach iontráil a thaispeáint"
 
-#: src/du.c:853
+#: src/du.c:871
 msgid "warning: summarizing is the same as using --max-depth=0"
 msgstr "rabhadh: is ionann iad coimriú agus --max-depth=0"
 
-#: src/du.c:859
+#: src/du.c:877
 #, c-format
 msgid "warning: summarizing conflicts with --max-depth=%lu"
 msgstr "rabhadh: tagann an coimriú agus --max-depth=%lu salach ar a chéile"
 
-#: src/du.c:924
+#: src/du.c:942
 msgid "File operands cannot be combined with --files0-from."
 msgstr "Ní féidir oibrinn chomhaid a úsáid in éineacht le --files0-from."
 
-#: src/du.c:935
+#: src/du.c:953
 #, c-format
 msgid "cannot read file names from %s"
 msgstr "ní féidir ainmneacha comhaid a léamh ó %s"
 
-#: src/du.c:975 src/du.c:978
+#: src/du.c:993 src/du.c:996
 msgid "invalid zero-length file name"
 msgstr "ainm neamhbhailí comhaid: folamh"
 
@@ -3018,7 +3074,7 @@ msgid ""
 msgstr ""
 "Déan macalla ar an/na TEAGHRÁ(I)N chuig an aschur caighdeánach.\n"
 "\n"
-"  -n             ná haschuir an líne nua foirceanta\n"
+"  -n             ná haschuir an líne nua fhoirceanta\n"
 
 #: src/echo.c:71
 msgid ""
@@ -3063,7 +3119,7 @@ msgid ""
 "  \\t     horizontal tab\n"
 "  \\v     vertical tab\n"
 msgstr ""
-"  \\c     lig an líne nua foirceanta ar lár\n"
+"  \\c     lig an líne nua fhoirceanta ar lár\n"
 "  \\f     foirmfhotha\n"
 "  \\n     líne nua\n"
 "  \\r     aisfhilleadh\n"
@@ -3129,15 +3185,15 @@ msgstr "is rómhór an tábstop %s"
 #: src/expand.c:187 src/unexpand.c:208
 #, c-format
 msgid "tab size contains invalid character(s): %s"
-msgstr "tá carachta(i)r neamhbhailí i dtomhas táib: %s"
+msgstr "tá carachta(i)r neamhbhailí sa mhéid táib: %s"
 
 #: src/expand.c:213 src/unexpand.c:234
 msgid "tab size cannot be 0"
-msgstr "ní féidir tomhas táib nialasach"
+msgstr "ní féidir méid táib nialasach"
 
 #: src/expand.c:215 src/unexpand.c:236
 msgid "tab sizes must be ascending"
-msgstr "ní foláir na tomhais táib a bheith ardaitheach"
+msgstr "caithfidh na méideanna táib a bheith ardaitheach"
 
 #: src/expand.c:332 src/expand.c:351 src/unexpand.c:382 src/unexpand.c:429
 msgid "input line is too long"
@@ -3227,7 +3283,7 @@ msgstr ""
 "  match TEAGHRÁN SLONN       ar comhbhrí le `TEAGHRÁN : SLONN\n"
 "  substr TEAGHRÁN ÁIT FAD    fotheaghrán de TEAGHRÁN, tosaíonn ÁIT ag 1\n"
 "  index TEAGHRÁN CAR       áit i dTEAGHRÁN atá aon charachtar i CAR, nó 0\n"
-"  length TEAGHRÁN          fad an THEAGHRÁN\n"
+"  length TEAGHRÁN          fad an TEAGHRÁIN\n"
 
 #: src/expr.c:147
 msgid ""
@@ -3237,7 +3293,7 @@ msgid ""
 "  ( EXPRESSION )             value of EXPRESSION\n"
 msgstr ""
 "  + SIOMBAIL                 caith le SIOMBAIL mar theaghrán, fiú más\n"
-"                               eochairfhocal é, mar `match', nó oibreoir mar "
+"                               lorgfhocal é, mar `match', nó oibreoir mar "
 "`/'\n"
 "\n"
 "  ( SLONN )                  luach de SLONN\n"
@@ -3278,16 +3334,15 @@ msgid "syntax error"
 msgstr "earráid chomhréire"
 
 #: src/expr.c:424
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "warning: unportable BRE: %s: using `^' as the first character\n"
 "of the basic regular expression is not portable; it is being ignored"
 msgstr ""
-"rabhadh: slonn ionadaíochta do-iompartha: `%s': ní iniompartha é `^'\n"
-"a úsáid ar tosach slonn ionadaíochta bunúsach; ag déanamh neamhshuim air"
+"rabhadh: bunshlonn ionadaíochta do-iompartha: %s: ní iniompartha é `^'\n"
+"mar an chéad charachtar den slonn ionadaíochta; ag déanamh neamhshuim air"
 
 #: src/expr.c:464 src/ptx.c:288
-#, fuzzy
 msgid "error in regular expression matcher"
 msgstr "earráid le linn cuardaigh ar shlonn ionadaíochta"
 
@@ -3299,7 +3354,7 @@ msgstr "argóint neamhuimhriúil"
 msgid "division by zero"
 msgstr "roinnt le nialas"
 
-#: src/factor.c:75
+#: src/factor.c:74
 #, c-format
 msgid ""
 "Usage: %s [NUMBER]...\n"
@@ -3308,7 +3363,7 @@ msgstr ""
 "Úsáid: %s [UIMHIR]...\n"
 "  nó:  %s ROGHA\n"
 
-#: src/factor.c:80
+#: src/factor.c:79
 msgid ""
 "Print the prime factors of each NUMBER.\n"
 "\n"
@@ -3316,26 +3371,25 @@ msgstr ""
 "Taispeáin na fachtóirí príomha de gach UIMHIR.\n"
 "\n"
 
-#: src/factor.c:86
-#, fuzzy
+#: src/factor.c:85
 msgid ""
 "\n"
 "Print the prime factors of all specified integer NUMBERs.  If no arguments\n"
 "are specified on the command line, they are read from standard input.\n"
 msgstr ""
 "\n"
-"  Taispeáin na fachtóirí príomha de gach UIMHIR tugtha.  Mura bhfuil\n"
-"  argóintí ann, léigh ón ionchur caighdeánach.\n"
+"Taispeáin na fachtóirí príomha de gach UIMHIR sonraithe.  Mura bhfuil\n"
+"argóintí ann, léigh iad ón ionchur caighdeánach.\n"
 
-#: src/factor.c:157 src/od.c:1678 src/od.c:1747
+#: src/factor.c:156 src/od.c:1678 src/od.c:1747
 #, c-format
 msgid "%s is too large"
 msgstr "tá %s rómhór"
 
-#: src/factor.c:159
-#, fuzzy, c-format
+#: src/factor.c:158
+#, c-format
 msgid "%s is not a valid positive integer"
-msgstr "Ní slánuimhir dheimhneach bhailí é `%s'"
+msgstr "Ní slánuimhir dheimhneach bhailí é %s"
 
 #: src/fmt.c:273
 #, c-format
@@ -3348,7 +3402,7 @@ msgid ""
 "If no FILE or if FILE is `-', read standard input.\n"
 "\n"
 msgstr ""
-"Athdhéan an leagan amach de gach paragraf s(n)a COMHA(I)D, agus scríobh\n"
+"Athdhéan an fhormáid de gach paragraf s(n)a COMHA(I)D, agus scríobh\n"
 "an toradh chuig aschur caighdeánach.  Mura bhfuil COMHAD ann, nó más '-' é,\n"
 "léigh ón ionchur caighdeánach.\n"
 
@@ -3383,7 +3437,7 @@ msgid ""
 "option; use -w N instead"
 msgstr ""
 "rogha neamhbhailí -- %c; ní ghlactar le -LEITHEAD ach nuair atá sé an chéad\n"
-"rogha; úsáid -w N ina áit"
+"rogha; úsáid -w N ina háit"
 
 #: src/fmt.c:400
 #, c-format
@@ -3412,9 +3466,9 @@ msgstr ""
 "  -w, --width=LEITHEAD úsáid LEITHEAD colún in ionad 80\n"
 
 #: src/fold.c:291 src/pr.c:841
-#, fuzzy, c-format
+#, c-format
 msgid "invalid number of columns: %s"
-msgstr "líon na gcolún neamhbhailí: `%s'"
+msgstr "líon neamhbhailí na gcolún: %s"
 
 #: src/head.c:113
 msgid ""
@@ -3462,9 +3516,9 @@ msgstr ""
 "Is féidir iarmhír a chur le MÉID: b=512, k=1K, m=1 Meig.\n"
 
 #: src/head.c:151 src/head.c:264 src/head.c:336 src/head.c:540 src/head.c:622
-#: src/head.c:694 src/head.c:752 src/head.c:776 src/tail.c:380 src/tail.c:468
-#: src/tail.c:517 src/tail.c:610 src/tail.c:738 src/tail.c:786 src/tail.c:825
-#: src/tail.c:1319 src/tail.c:1348 src/uniq.c:377
+#: src/head.c:694 src/head.c:752 src/head.c:776 src/tail.c:377 src/tail.c:465
+#: src/tail.c:514 src/tail.c:607 src/tail.c:735 src/tail.c:783 src/tail.c:822
+#: src/tail.c:1316 src/tail.c:1345 src/uniq.c:377
 #, c-format
 msgid "error reading %s"
 msgstr "earráid agus %s á léamh"
@@ -3490,7 +3544,7 @@ msgid "%s: cannot lseek back to original position"
 msgstr ""
 "%s: ní féidir `lseek' a dhéanamh ar ais go dtí an láthair thionscantach"
 
-#: src/head.c:615 src/head.c:686 src/tail.c:418
+#: src/head.c:615 src/head.c:686 src/tail.c:415
 #, c-format
 msgid "%s: cannot seek to offset %s"
 msgstr "%s: ní féidir bogadh go fritháireamh %s"
@@ -3513,11 +3567,11 @@ msgstr "líon na línte"
 msgid "number of bytes"
 msgstr "líon na mbeart"
 
-#: src/head.c:888 src/tail.c:1480
+#: src/head.c:888 src/tail.c:1477
 msgid "invalid number of lines"
 msgstr "líon na línte neamhbhailí"
 
-#: src/head.c:889 src/tail.c:1481
+#: src/head.c:889 src/tail.c:1478
 msgid "invalid number of bytes"
 msgstr "líon neamhbhailí na mbeart"
 
@@ -3549,13 +3603,13 @@ msgid ""
 msgstr ""
 "Úsáid: %s [AINM]\n"
 "  nó:  %s ROGHA\n"
-"Taispeáin nó socraigh an t-óstainm den chórais seo.\n"
+"Taispeáin nó socraigh óstainm an chórais reatha.\n"
 "\n"
 
 #: src/hostname.c:103
-#, fuzzy, c-format
+#, c-format
 msgid "cannot set name to %s"
-msgstr "ní féidir an t-ainm a shocrú mar `%s'"
+msgstr "ní féidir an t-ainm a shocrú mar %s"
 
 #: src/hostname.c:106
 msgid "cannot set hostname; this system lacks the functionality"
@@ -3614,14 +3668,14 @@ msgid "%s: No such user"
 msgstr "%s: Níl a leithéid d'úsáideoir ann"
 
 #: src/id.c:205
-#, fuzzy, c-format
+#, c-format
 msgid "cannot find name for user ID %lu"
-msgstr "Níl aon fháil ar ainm don ID úsáideora %u"
+msgstr "níl aon fháil ar ainm don aitheantas úsáideora %lu"
 
 #: src/id.c:229
-#, fuzzy, c-format
+#, c-format
 msgid "cannot find name for group ID %lu"
-msgstr "Níl aon fháil ar ainm don ID grúpa %u"
+msgstr "níl aon fháil ar ainm don aitheantas grúpa %lu"
 
 #: src/id.c:271
 msgid "cannot get supplemental group list"
@@ -3645,19 +3699,17 @@ msgid "invalid mode %s"
 msgstr "mód neamhbhailí %s"
 
 #: src/install.c:358 src/mkdir.c:154
-#, fuzzy
 msgid "cannot return to working directory"
-msgstr "ní féidir an chomhadlann reatha a athchóiriú"
+msgstr "ní féidir dul ar ais go dtí an chomhadlann oibre"
 
 #: src/install.c:364 src/install.c:416
 #, c-format
 msgid "creating directory %s"
-msgstr "comhadlann %s á chruthú"
+msgstr "comhadlann %s á cruthú"
 
 #: src/install.c:421
-#, fuzzy
 msgid "cannot return to current directory"
-msgstr "níl an chomhadlann reatha ar fáil"
+msgstr "ní féidir dul ar ais go dtí an chomhadlann reatha"
 
 #: src/install.c:518
 #, c-format
@@ -3671,7 +3723,7 @@ msgstr "ní féidir an stampa ama a shocrú do %s"
 
 #: src/install.c:564
 msgid "fork system call failed"
-msgstr "theip ar ghlaoch córais fork()"
+msgstr "theip ar ghlao córais fork()"
 
 #: src/install.c:568
 msgid "cannot run strip"
@@ -3722,10 +3774,10 @@ msgid ""
 "                        components of the specified directories\n"
 msgstr ""
 "      --backup[=RIALÚ]   déan cúltaca de gach sprioc-chomhad atá ann\n"
-"  -b                  mar `--backup' ach gan argóint\n"
+"  -b                  cosúil le `--backup' ach gan argóint\n"
 "  -c                  (gan feidhm)\n"
-"  -d, --directory     is comhadlann gach argóint; cruthaigh gach ball den\n"
-"                        chomhadlanna tugtha\n"
+"  -d, --directory     is comhadlann gach argóint; cruthaigh gach ball de na\n"
+"                        comhadlanna tugtha\n"
 
 #: src/install.c:656
 msgid ""
@@ -3758,13 +3810,14 @@ msgid ""
 "  -T, --no-target-directory  treat DEST as a normal file\n"
 "  -v, --verbose       print the name of each directory as it is created\n"
 msgstr ""
-"  -p, --preserve-timestamps   caomhnaigh amanna rochtana/modhnaithe de na\n"
+"  -p, --preserve-timestamps   caomhnaigh amanna rochtana/mionathraithe de "
+"na\n"
 "                        FOINSÍ leis na sprioc-chomhaid faoi seach\n"
 "  -s, --strip         struipeáil siombailí\n"
 "  -S, --suffix=IARMHÍR sáraigh an iarmhír réamhshocraithe cúltaca\n"
 "  -t, --target-directory=CMDLANN  cóipeáil gach FOINSE go dtí an CMDLANN\n"
 "  -T, --no-target-directory  caith le SPRIOC mar ghnáthchomhad\n"
-"  -v, --verbose       taispeáin gach comhadlann agus á chruthú\n"
+"  -v, --verbose       taispeáin gach comhadlann agus á cruthú\n"
 
 #: src/install.c:674 src/ln.c:377 src/mv.c:332
 msgid ""
@@ -3854,37 +3907,37 @@ msgstr "tá %s chomh mór nach inléirithe é"
 #: src/join.c:627 src/join.c:822
 #, c-format
 msgid "invalid field number: %s"
-msgstr "uimhir réimse neamhbhailí: %s"
+msgstr "uimhir neamhbhailí réimse: %s"
 
 #: src/join.c:648 src/join.c:657
-#, fuzzy, c-format
+#, c-format
 msgid "invalid field specifier: %s"
-msgstr "sonraitheoir réimse neamhbhailí: `%s'"
+msgstr "sonraitheoir neamhbhailí réimse: %s"
 
 #: src/join.c:664
-#, fuzzy, c-format
+#, c-format
 msgid "invalid file number in field spec: %s"
-msgstr "uimhir chomhaid neamhbhailí i sonraitheoir réimse: `%s'"
+msgstr "uimhir neamhbhailí chomhaid i sonraitheoir réimse: %s"
 
 #: src/join.c:707
 #, c-format
 msgid "incompatible join fields %lu, %lu"
-msgstr ""
+msgstr "réimsí neamh-chomhoiriúnacha ceangail %lu, %lu"
 
 #: src/join.c:833
 msgid "conflicting empty-field replacement strings"
-msgstr ""
+msgstr "teaghrán ionaid le haghaidh réimsí folmha i gcoinbhleacht"
 
-#: src/join.c:874 src/sort.c:2351
+#: src/join.c:874 src/sort.c:2354
 msgid "empty tab"
 msgstr "táb folamh"
 
-#: src/join.c:880 src/sort.c:2362
-#, fuzzy, c-format
+#: src/join.c:880 src/sort.c:2365
+#, c-format
 msgid "multi-character tab %s"
-msgstr "táb ilcharachtair `%s'"
+msgstr "táb ilcharachtair %s"
 
-#: src/join.c:884 src/sort.c:2367
+#: src/join.c:884 src/sort.c:2370
 msgid "incompatible tabs"
 msgstr "táib éaguibhreannacha"
 
@@ -4075,7 +4128,7 @@ msgid ""
 "  -f, --force                 remove existing destination files\n"
 msgstr ""
 "      --backup[=RIALÚ]        déan cúltaca de gach sprioc-chomhad atá ann\n"
-"  -b                          mar `--backup' ach gan argóint\n"
+"  -b                          cosúil le `--backup' ach gan argóint\n"
 "  -d, -F, --directory         ceadaigh don fhorúsáideoir nasc crua do\n"
 "                               chomhadlanna a dhéanamh (ach is dóiche go\n"
 "                               dteipfear de bharr srianta córais, go fiú\n"
@@ -4139,73 +4192,73 @@ msgstr "%b %e  %Y"
 msgid "%b %e %H:%M"
 msgstr "%b %e %H:%M"
 
-#: src/ls.c:1424
+#: src/ls.c:1428
 #, c-format
 msgid "ignoring invalid value of environment variable QUOTING_STYLE: %s"
 msgstr ""
 "tá an athróg thimpeallachta QUOTING_STYLE neamhbhailí: %s; ag ligean thar"
 
-#: src/ls.c:1451
+#: src/ls.c:1455
 #, c-format
 msgid "ignoring invalid width in environment variable COLUMNS: %s"
 msgstr "tá an athróg thimpeallachta COLUMNS neamhbhailí: %s; ag ligean thar"
 
-#: src/ls.c:1481
+#: src/ls.c:1485
 #, c-format
 msgid "ignoring invalid tab size in environment variable TABSIZE: %s"
 msgstr "tá an athróg thimpeallachta TABSIZE neamhbhailí: %s; ag ligean thar"
 
-#: src/ls.c:1593 src/ptx.c:2071
+#: src/ls.c:1601 src/ptx.c:2071
 #, c-format
 msgid "invalid line width: %s"
 msgstr "leithead líne neamhbhailí: %s"
 
-#: src/ls.c:1667
+#: src/ls.c:1675
 #, c-format
 msgid "invalid tab size: %s"
-msgstr "tá an mhéid tháib neamhbhailí: %s"
+msgstr "méid neamhbhailí táib: %s"
 
-#: src/ls.c:1844
+#: src/ls.c:1852
 #, c-format
 msgid "invalid time style format %s"
-msgstr "leagan amach neamhbhailí don am: %s"
+msgstr "formáid neamhbhailí ar an am: %s"
 
-#: src/ls.c:2180
+#: src/ls.c:2188
 #, c-format
 msgid "unrecognized prefix: %s"
 msgstr "réimír anaithnid: %s"
 
-#: src/ls.c:2203
+#: src/ls.c:2211
 msgid "unparsable value for LS_COLORS environment variable"
 msgstr "tá an athróg thimpeallachta LS_COLORS neamhbhailí"
 
-#: src/ls.c:2295
+#: src/ls.c:2303
 #, c-format
 msgid "cannot determine device and inode of %s"
 msgstr "ní féidir an gléas agus inode de %s a dhéanamh amach"
 
-#: src/ls.c:2303
+#: src/ls.c:2311
 #, c-format
 msgid "%s: not listing already-listed directory"
 msgstr "%s: ní liostófar comhadlann atá liostaithe cheana"
 
-#: src/ls.c:2343 src/pwd.c:238 src/remove.c:982
+#: src/ls.c:2351 src/pwd.c:238 src/remove.c:982
 #, c-format
 msgid "reading directory %s"
 msgstr "comhadlann %s á léamh"
 
-#: src/ls.c:2353
+#: src/ls.c:2361
 #, c-format
 msgid "closing directory %s"
 msgstr "comhadlann %s á dúnadh"
 
-#: src/ls.c:2843
+#: src/ls.c:2851
 #, c-format
 msgid "cannot compare file names %s and %s"
 msgstr ""
 "ní féidir na hainmneacha comhaid %s agus %s a chur i gcomparáid le chéile"
 
-#: src/ls.c:4093
+#: src/ls.c:4101
 msgid ""
 "List information about the FILEs (the current directory by default).\n"
 "Sort entries alphabetically if none of -cftuSUX nor --sort.\n"
@@ -4215,7 +4268,7 @@ msgstr ""
 "Sórtáil san ord aibítre mura bhfuil --sort ná aon cheann de -cftuSUX.\n"
 "\n"
 
-#: src/ls.c:4101
+#: src/ls.c:4109
 msgid ""
 "  -a, --all                  do not ignore entries starting with .\n"
 "  -A, --almost-all           do not list implied . and ..\n"
@@ -4227,7 +4280,7 @@ msgstr ""
 "      --author               le -l, taispeáin an t-údar de gach comhad\n"
 "  -b, --escape               ochtnártha in ionad carachtair neamhghrafacha\n"
 
-#: src/ls.c:4107
+#: src/ls.c:4115
 msgid ""
 "      --block-size=SIZE      use SIZE-byte blocks\n"
 "  -B, --ignore-backups       do not list implied entries ending with ~\n"
@@ -4244,7 +4297,7 @@ msgstr ""
 "ainm\n"
 "                               i ngach cás eile: sórtáil de réir ctime\n"
 
-#: src/ls.c:4115
+#: src/ls.c:4123
 msgid ""
 "  -C                         list entries by columns\n"
 "      --color[=WHEN]         control whether color is used to distinguish "
@@ -4262,8 +4315,7 @@ msgstr ""
 "  -d, --directory            taispeáin comhadlanna in ionad a n-ábhar\n"
 "  -D, --dired                gin aschur chun an mhóid dired i Emacs\n"
 
-#: src/ls.c:4123
-#, fuzzy
+#: src/ls.c:4131
 msgid ""
 "  -f                         do not sort, enable -aU, disable -lst\n"
 "  -F, --classify             append indicator (one of */=>@|) to entries\n"
@@ -4274,11 +4326,12 @@ msgid ""
 msgstr ""
 "  -f                         ná sórtáil, úsáid -aU, ná húsáid -lst\n"
 "  -F, --classify             cuir ceann de */=@| leis na hiontrálacha\n"
+"      --file-type            mar an gcéanna, ach ná hiarcheangail `*'\n"
 "      --format=FOCAL         across -x, commas -m, horizontal -x, long -l,\n"
 "                               single-column -1, verbose -l, vertical -C\n"
-"      --full-time            mar `-l --time-style=full-iso\n"
+"      --full-time            ar comhbhrí le `-l --time-style=full-iso\n"
 
-#: src/ls.c:4131
+#: src/ls.c:4139
 msgid ""
 "  -g                         like -l, but do not list owner\n"
 "  -G, --no-group             like -l, but do not list group\n"
@@ -4309,8 +4362,7 @@ msgstr ""
 "leis\n"
 "                              an PATRÚN blaoisce (sáraithe ag -a nó -A)\n"
 
-#: src/ls.c:4145
-#, fuzzy
+#: src/ls.c:4153
 msgid ""
 "      --indicator-style=WORD append indicator with style WORD to entry "
 "names:\n"
@@ -4323,14 +4375,14 @@ msgid ""
 msgstr ""
 "      --indicator-style=FOCAL cuir táscaire den chineál FOCAL le "
 "hiontrálacha:\n"
-"                              none (réamhshocrú), classify (-F), file-type (-"
-"p)\n"
-"  -i, --inode                le -l, taispeáin treoiruimhir do gach comhad\n"
-"  -I, --ignore=PATRÚN        ná taispeáin iontrálacha comhoiriúnach le "
+"                               none (réamhshocrú), slash (-p),\n"
+"                               file-type (--file-type), classify (-F)\n"
+"  -i, --inode                le -l, taispeáin treoiruimhir de gach comhad\n"
+"  -I, --ignore=PATRÚN        ná taispeáin iontrálacha atá comhoiriúnach le "
 "PATRÚN\n"
-"  -k                         mar `--block-size=1K'\n"
+"  -k                         ar comhbhrí le `--block-size=1K'\n"
 
-#: src/ls.c:4153
+#: src/ls.c:4161
 msgid ""
 "  -l                         use a long listing format\n"
 "  -L, --dereference          when showing file information for a symbolic\n"
@@ -4339,13 +4391,12 @@ msgid ""
 "  -m                         fill width with a comma separated list of "
 "entries\n"
 msgstr ""
-"  -l                         bain úsáid as an mhód foclach\n"
+"  -l                         bain úsáid as an mhód fhoclach\n"
 "  -L, --dereference          nuair atá nasc siombalach ann, taispeáin an\n"
 "                               t-eolas faoin tagraí seachas an nasc féin\n"
 "  -m                         taispeáin iontrálacha scartha le camóga\n"
 
-#: src/ls.c:4160
-#, fuzzy
+#: src/ls.c:4168
 msgid ""
 "  -n, --numeric-uid-gid      like -l, but list numeric user and group IDs\n"
 "  -N, --literal              print raw entry names (don't treat e.g. "
@@ -4355,14 +4406,15 @@ msgid ""
 "  -p, --indicator-style=slash\n"
 "                             append / indicator to directories\n"
 msgstr ""
-"  -n, --numeric-uid-gid      mar `-l', ach taispeáin UID/GID uimhriúla\n"
-"  -N, --literal              taispeáin ainmneacha garbha (i.e. le "
+"  -n, --numeric-uid-gid      cosúil le -l, ach taispeáin UID/GID uimhriúla\n"
+"  -N, --literal              taispeáin ainmneacha amha (ná caith le "
 "carachtair\n"
-"                               éalúcháin nó neamhghrafacha san áireamh)\n"
-"  -o                         mar `-l', ach gan eolas faoin ghrúpa\n"
-"  -p, --file-type            cuir ceann de /=@| leis na hiontrálacha\n"
+"                               éalúcháin go speisialta)\n"
+"  -o                         cosúil le `-l', ach gan eolas faoin ghrúpa\n"
+"  -p, --indicator-style=slash\n"
+"                             cuir táscaire / le comhadlanna\n"
 
-#: src/ls.c:4168
+#: src/ls.c:4176
 msgid ""
 "  -q, --hide-control-chars   print ? instead of non graphic characters\n"
 "      --show-control-chars   show non graphic characters as-is (default\n"
@@ -4383,7 +4435,7 @@ msgstr ""
 "                               literal, locale, shell, shell-always, c, "
 "escape\n"
 
-#: src/ls.c:4176
+#: src/ls.c:4184
 msgid ""
 "  -r, --reverse              reverse order while sorting\n"
 "  -R, --recursive            list subdirectories recursively\n"
@@ -4394,7 +4446,7 @@ msgstr ""
 "  -s, --size                 le -l, taispeáin an mhéid de gach comhad "
 "(bloic)\n"
 
-#: src/ls.c:4181
+#: src/ls.c:4189
 msgid ""
 "  -S                         sort by file size\n"
 "      --sort=WORD            extension -X, none -U, size -S, time -t,\n"
@@ -4410,11 +4462,12 @@ msgstr ""
 "                             version -v, status -c, time -t, atime -u\n"
 "                             access -u, use -u\n"
 "      --time=FOCAL           le -l, taispeáin an t-am mar FOCAL in ionad\n"
-"                               am modhnaithe: atime, access, use, ctime, nó\n"
+"                               am mionathraithe: atime, access, use, ctime, "
+"nó\n"
 "                               status; úsáid an t-am sonraithe mar eochair\n"
 "                               shórtála más --sort=time\n"
 
-#: src/ls.c:4190
+#: src/ls.c:4198
 msgid ""
 "      --time-style=STYLE     with -l, show times using style STYLE:\n"
 "                             full-iso, long-iso, iso, locale, +FORMAT.\n"
@@ -4433,11 +4486,11 @@ msgstr ""
 "                             FORMÁID1<líne nua>FORMÁID2, úsáid FORMÁID1 le\n"
 "                             seanchomhaid agus FORMÁID2 le comhaid nua;\n"
 "                             má tá réimír `posix-' ar STÍL, bain úsáid as\n"
-"                             mura bhfuil an logánú POSIX socraithe\n"
-"  -t                         sórtáil de réir am modhnaithe\n"
+"                             mura bhfuil an logchaighdeán POSIX socraithe\n"
+"  -t                         sórtáil de réir am mionathraithe\n"
 "  -T, --tabsize=COLÚIN       cuir táb ar gach COLÚIN colún (réamhshocrú=8)\n"
 
-#: src/ls.c:4201
+#: src/ls.c:4209
 msgid ""
 "  -u                         with -lt: sort by, and show, access time\n"
 "                               with -l: show access time and sort by name\n"
@@ -4453,7 +4506,7 @@ msgstr ""
 "  -U                         ná sórtáil; taispeáin in ord na comhadlainne\n"
 "  -v                         sórtáil de réir leagan\n"
 
-#: src/ls.c:4208
+#: src/ls.c:4216
 msgid ""
 "  -w, --width=COLS           assume screen width instead of current value\n"
 "  -x                         list entries by lines instead of by columns\n"
@@ -4462,12 +4515,11 @@ msgid ""
 msgstr ""
 "  -w, --width=COLÚIN         socraigh leithead den scáileán\n"
 "  -x                         taispeáin ar línte in ionad colúin\n"
-"  -X                       sórtáil de réir na sínteán comhaid, san ord "
-"aibítre\n"
+"  -X                         sórtáil de réir iarmhíre an chomhaid,\n"
+"                                san ord aibítre\n"
 "  -1                         taispeáin aon chomhad sa líne\n"
 
-#: src/ls.c:4220
-#, fuzzy
+#: src/ls.c:4228
 msgid ""
 "\n"
 "By default, color is not used to distinguish types of files.  That is\n"
@@ -4481,10 +4533,11 @@ msgstr ""
 "Ní bhaintear úsáid as dathanna chun comhaid a dhealú, mar réamhshocrú.\n"
 "Tá sé sin ar comhbhrí le `--color=none'.  Má tá `--color' tugtha gan an\n"
 "argóint CÉN, tá sé sin ar comhbhrí le `--color=always'.  Le `--color=auto',\n"
-"Baintear úsáid as dathanna nuair atá aschur caighdeánach nasctha le\n"
-"teirminéal (tty).\n"
+"baintear úsáid as dathanna nuair atá aschur caighdeánach nasctha le\n"
+"teirminéal (tty).  Téann an athróg thimpeallachta LS_COLORS i bhfeidhm ar\n"
+"na dathanna, agus is féidir é a shocrú gan stró leis an ordú dircolors.\n"
 
-#: src/ls.c:4229
+#: src/ls.c:4237
 msgid ""
 "\n"
 "Exit status is 0 if OK, 1 if minor problems, 2 if serious trouble.\n"
@@ -4493,7 +4546,7 @@ msgstr ""
 "Stádas scortha = 0 (OK), 1 (deacrachtaí beaga), 2 (deacrachtaí troma).\n"
 
 #: src/md5sum.c:108
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Usage: %s [OPTION] [FILE]...\n"
 "Print or check %s (%d-bit) checksums.\n"
@@ -4501,7 +4554,6 @@ msgid ""
 "\n"
 msgstr ""
 "Úsáid: %s [ROGHA] [COMHAD]...\n"
-"  nó:  %s [ROGHA] --check [COMHAD]\n"
 "Taispeáin nó seiceáil suimeanna sheiceála %s (%d giotán).\n"
 "Mura bhfuil COMHAD ann, nó más '-' é, léigh ón ionchur caighdeánach.\n"
 
@@ -4510,31 +4562,31 @@ msgid ""
 "  -b, --binary            read in binary mode (default unless reading tty "
 "stdin)\n"
 msgstr ""
+"  -b, --binary            léigh sa mhód dénártha (réamhshocrú mura bhfuil sé "
+"ó stdin)\n"
 
 #: src/md5sum.c:122
-#, fuzzy
 msgid "  -b, --binary            read in binary mode\n"
-msgstr ""
-"\n"
-"  -B, --binary             úsáid dénárchódú leis an chonsól.\n"
-"\n"
+msgstr "  -b, --binary            léigh sa mhód dénártha\n"
 
 #: src/md5sum.c:125
 #, c-format
 msgid "  -c, --check             read %s sums from the FILEs and check them\n"
 msgstr ""
+"  -c, --check             léigh %s suim ó na COMHAID agus seiceáil iad\n"
 
 #: src/md5sum.c:129
 msgid ""
 "  -t, --text              read in text mode (default if reading tty stdin)\n"
 msgstr ""
+"  -t, --text              léigh sa mhód téacs (réamhshocrú mura bhfuil sé ó "
+"stdin)\n"
 
 #: src/md5sum.c:133
 msgid "  -t, --text              read in text mode (default)\n"
-msgstr ""
+msgstr "  -t, --text              léigh sa mhód téacs (réamhshocrú)\n"
 
 #: src/md5sum.c:136
-#, fuzzy
 msgid ""
 "\n"
 "The following two options are useful only when verifying checksums:\n"
@@ -4542,9 +4594,10 @@ msgid ""
 "  -w, --warn              warn about improperly formatted checksum lines\n"
 "\n"
 msgstr ""
-"Níl úsáideach an dá rogha a leanas ach nuair atáthar ag deimhniú\n"
+"\n"
+"Ní úsáidtear an dá rogha a leanas ach nuair atáthar ag fíorú\n"
 "suimeanna seiceála:\n"
-"      --status            ná taispeáin aon rud, comharthaítear bua le cód "
+"      --status            ná taispeáin dada, comharthaítear bua le cód "
 "scortha\n"
 "  -w, --warn              tabhair rabhadh má tá línte míchumtha ann\n"
 "\n"
@@ -4559,7 +4612,7 @@ msgid ""
 "text), and name for each FILE.\n"
 msgstr ""
 "\n"
-"Ríomhtar na suimeanna mar atá mínithe i %s.  Má táthar ag deimhniú, is gá\n"
+"Ríomhtar na suimeanna mar atá mínithe i %s.  Má táthar ag seiceáil, is gá\n"
 "an t-ionchur a bheith ina aschur den ríomhchlár seo.  Sa mhód "
 "réamhshocraithe,\n"
 "taispeáin líne le suim sheiceála, carachtar a chomharthaíonn an cineál\n"
@@ -4607,6 +4660,7 @@ msgstr[0] "RABHADH: ní féidir %<PRIuMAX> as %<PRIuMAX> comhaid a léamh"
 msgstr[1] "RABHADH: ní féidir %<PRIuMAX> as %<PRIuMAX> comhaid a léamh"
 msgstr[2] "RABHADH: ní féidir %<PRIuMAX> as %<PRIuMAX> comhaid a léamh"
 msgstr[3] "RABHADH: ní féidir %<PRIuMAX> as %<PRIuMAX> comhaid a léamh"
+msgstr[4] "RABHADH: ní féidir %<PRIuMAX> as %<PRIuMAX> comhaid a léamh"
 
 #: src/md5sum.c:532
 #, c-format
@@ -4615,26 +4669,27 @@ msgid_plural ""
 "WARNING: %<PRIuMAX> of %<PRIuMAX> computed checksums did NOT match"
 msgstr[0] "RABHADH: ní ceart %<PRIuMAX> as %<PRIuMAX> shuim ríofa seiceála"
 msgstr[1] "RABHADH: ní ceart %<PRIuMAX> as %<PRIuMAX> shuim ríofa seiceála"
-msgstr[2] "RABHADH: ní ceart %<PRIuMAX> as %<PRIuMAX> suim ríofa seiceála"
+msgstr[2] "RABHADH: ní ceart %<PRIuMAX> as %<PRIuMAX> shuim ríofa seiceála"
 msgstr[3] "RABHADH: ní ceart %<PRIuMAX> as %<PRIuMAX> suim ríofa seiceála"
+msgstr[4] "RABHADH: ní ceart %<PRIuMAX> as %<PRIuMAX> suim ríofa seiceála"
 
 #: src/md5sum.c:596
 msgid ""
 "the --binary and --text options are meaningless when verifying checksums"
 msgstr ""
 "tá na roghanna --binary agus --text gan bhrí agus suimeanna seiceála á "
-"ndeimhniú"
+"bhfíorú"
 
 #: src/md5sum.c:604
 msgid "the --status option is meaningful only when verifying checksums"
 msgstr ""
-"tá an rogha --status gan bhrí ach amháin nuair atáthar ag deimhniú suimeanna "
+"tá an rogha --status gan bhrí ach amháin nuair atáthar ag fíorú suimeanna "
 "seiceála"
 
 #: src/md5sum.c:611
 msgid "the --warn option is meaningful only when verifying checksums"
 msgstr ""
-"tá an rogha --warn gan bhrí ach amháin nuair atáthar ag deimhniú suimeanna "
+"tá an rogha --warn gan bhrí ach amháin nuair atáthar ag fíorú suimeanna "
 "seiceála"
 
 #: src/mkdir.c:58
@@ -4798,7 +4853,6 @@ msgstr ""
 
 # same stuff under cp, install, etc. --KPS
 #: src/mv.c:311
-#, fuzzy
 msgid ""
 "      --backup[=CONTROL]       make a backup of each existing destination "
 "file\n"
@@ -4808,11 +4862,9 @@ msgid ""
 "  -i, --interactive            prompt before overwrite\n"
 msgstr ""
 "      --backup[=RIALÚ]         déan cúltaca de gach sprioc-chomhad atá ann\n"
-"  -b                           mar `--backup' ach gan argóint\n"
+"  -b                           cosúil le `--backup' ach gan argóint\n"
 "  -f, --force                  ná fiafraigh roimh fhorscríobh\n"
-"                                 (ar comhbhrí le `--reply=yes')\n"
 "  -i, --interactive            fiafraigh roimh fhorscríobh\n"
-"                                 (ar comhbhrí le `--reply=query')\n"
 
 #: src/mv.c:317
 msgid ""
@@ -4820,6 +4872,10 @@ msgid ""
 "                                 argument\n"
 "  -S, --suffix=SUFFIX          override the usual backup suffix\n"
 msgstr ""
+"      --strip-trailing-slashes scrios slaiseanna sraoilleacha ó gach "
+"argóint\n"
+"                                 FOINSE\n"
+"  -S, --suffix=IARMHÍR         sáraigh an iarmhír réamhshocraithe cúltaca\n"
 
 #: src/mv.c:322
 msgid ""
@@ -4846,7 +4902,7 @@ msgid "Usage: %s [OPTION] [COMMAND [ARG]...]\n"
 msgstr "Úsáid: %s [ROGHA] [ORDÚ [ARG]...]\n"
 
 #: src/nice.c:80
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Run COMMAND with an adjusted niceness, which affects process scheduling.\n"
 "With no COMMAND, print the current niceness.  Nicenesses range from\n"
@@ -4854,7 +4910,7 @@ msgid ""
 "\n"
 "  -n, --adjustment=N   add integer N to the niceness (default 10)\n"
 msgstr ""
-"Rith ORDÚ le tosaíocht coigeartaithe.\n"
+"Rith ORDÚ le tosaíocht coigeartaithe chun sceidealadh na bpróiseas a athrú.\n"
 "Gan ORDÚ, taispeáin an tosaíocht reatha.  Is féidir luachanna idir %d\n"
 "(is mó tosaíocht) agus %d (is lú tosaíocht) a roghnú.\n"
 "\n"
@@ -4862,23 +4918,21 @@ msgstr ""
 "(réamhshocrú=10)\n"
 
 #: src/nice.c:158
-#, fuzzy, c-format
+#, c-format
 msgid "invalid adjustment %s"
-msgstr "coigeartú neamhbhailí `%s'"
+msgstr "coigeartú neamhbhailí %s"
 
 #: src/nice.c:167
 msgid "a command must be given with an adjustment"
 msgstr "ní foláir ordú a thabhairt le coigeartú"
 
 #: src/nice.c:174 src/nice.c:185
-#, fuzzy
 msgid "cannot get niceness"
-msgstr "níl aon fháil ar an ainm córais"
+msgstr "níl an tosaíocht ar fáil"
 
 #: src/nice.c:189
-#, fuzzy
 msgid "cannot set niceness"
-msgstr "ní féidir an dáta a shocrú"
+msgstr "ní féidir an tosaíocht a shocrú"
 
 #: src/nl.c:176
 msgid ""
@@ -5014,7 +5068,7 @@ msgstr "réimseleithead líne-uimhreach neamhbhailí: %s"
 #: src/nl.c:553
 #, c-format
 msgid "invalid line numbering format: %s"
-msgstr "incrimint líne-uimhreach neamhbhailí: %s"
+msgstr "formáid líne-uimhreach neamhbhailí: %s"
 
 #: src/nohup.c:57
 #, c-format
@@ -5041,7 +5095,7 @@ msgstr "Ní féidir %s a oscailt"
 #: src/nohup.c:139
 #, c-format
 msgid "appending output to %s"
-msgstr "ag ceangal aschur le %s"
+msgstr "aschur á iarcheangal le %s"
 
 #: src/nohup.c:155
 msgid "failed to set the copy of stderr to close on exec"
@@ -5202,7 +5256,7 @@ msgid ""
 "for sizeof(double) or L for sizeof(long double).\n"
 msgstr ""
 "\n"
-"Is uimhir MÉID.  Má tá CINEÁL as d,o,u,x, is féidir MÉID a bheith\n"
+"Is uimhir í MÉID.  Má tá CINEÁL as d,o,u,x, is féidir MÉID a bheith\n"
 "`C'=sizeof(char), `S'=sizeof(short), `I'=sizeof(int), nó `L'=sizeof(long).\n"
 "Más ionann CINEÁL agus f, is féidir MÉID a bheith `F'=sizeof(float),\n"
 "`D'=sizeof(double), nó `L'=sizeof(long double).\n"
@@ -5232,32 +5286,32 @@ msgstr ""
 "i ndiaidh --width mar an gcéanna.  Mar réamhshocrú, od = -A o -t d2 -w 16.\n"
 
 #: src/od.c:681 src/od.c:800
-#, fuzzy, c-format
+#, c-format
 msgid "invalid type string %s"
-msgstr "teaghrán cineáil neamhbhailí `%s'"
+msgstr "teaghrán neamhbhailí cineáil %s"
 
 #: src/od.c:691
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "invalid type string %s;\n"
 "this system doesn't provide a %lu-byte integral type"
 msgstr ""
-"teaghrán cineáil neamhbhailí `%s';\n"
+"teaghrán neamhbhailí cineáil %s;\n"
 "níl slánuimhreacha le %lu beart le fáil ar an gcóras seo"
 
 #: src/od.c:810
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "invalid type string %s;\n"
 "this system doesn't provide a %lu-byte floating point type"
 msgstr ""
-"teaghrán cineáil neamhbhailí `%s';\n"
+"teaghrán neamhbhailí cineáil %s;\n"
 "níl uimhreacha shnámhphointe le %lu beart le fáil ar an gcóras seo"
 
 #: src/od.c:869
-#, fuzzy, c-format
+#, c-format
 msgid "invalid character `%c' in type string %s"
-msgstr "carachtar neamhbhailí `%c' i dteaghrán cineáil `%s'"
+msgstr "carachtar neamhbhailí `%c' i dteaghrán cineáil %s"
 
 #: src/od.c:1094
 msgid "cannot skip past end of combined input"
@@ -5344,11 +5398,16 @@ msgid ""
 "  -P                  check for empty names and leading \"-\"\n"
 "      --portability   check for all POSIX systems (equivalent to -p -P)\n"
 msgstr ""
+"Aimsigh struchtúir dho-iompartha in AINM.\n"
+"\n"
+"  -p                  seiceáil ar fhormhór na gcóras POSIX\n"
+"  -P                  cuardaigh ar ainmneacha folmha agus \"-\" tosaigh\n"
+"      --portability   seiceáil ar gach córas POSIX (ar comhbhrí le -p -P)\n"
 
 #: src/pathchk.c:180
 #, c-format
 msgid "leading `-' in a component of file name %s"
-msgstr ""
+msgstr "tá `-' tosaigh i gcomhpháirt d'ainm comhaid %s"
 
 #: src/pathchk.c:206
 #, c-format
@@ -5356,9 +5415,8 @@ msgid "nonportable character %s in file name %s"
 msgstr "carachtar neamhiompartha %s in ainm comhaid %s"
 
 #: src/pathchk.c:282
-#, fuzzy
 msgid "empty file name"
-msgstr "gnáthchomhad folamh"
+msgstr "comhadainm folamh"
 
 #: src/pathchk.c:324
 #, c-format
@@ -5448,11 +5506,13 @@ msgid ""
 "  -s              do short format output, this is the default\n"
 msgstr ""
 "\n"
-"  -l              taispeáin eolas faoin ÚSÁIDEOIR i leagan amach fada\n"
-"  -b              ná taispeáin comhadlann bhaile agus blaosc i leagan fada\n"
-"  -h              ná taispeáin an comhad tionscadail i leagan amach fada\n"
-"  -p              ná taispeáin an comhad plean i leagan amach fada\n"
-"  -s              leagan amach achomair (réamhshocrú)\n"
+"  -l              taispeáin eolas faoin ÚSÁIDEOIR i bhformáid fhada "
+"aschurtha\n"
+"  -b              ná taispeáin comhadlann bhaile agus blaosc i bhformáid "
+"fhada\n"
+"  -h              ná taispeáin an comhad tionscadail i bhformáid fhada\n"
+"  -p              ná taispeáin an comhad plean i bhformáid fhada\n"
+"  -s              formáid achomair (réamhshocrú)\n"
 
 #: src/pinky.c:523
 msgid ""
@@ -5462,12 +5522,12 @@ msgid ""
 "  -q              omit the user's full name, remote host and idle time\n"
 "                  in short format\n"
 msgstr ""
-"  -f              ná taispeáin teidil na gcolún i leagan amach achomair\n"
-"  -w              ná taispeáin an t-ainm iomlán i leagan amach achomair\n"
-"  -i              ná taispeáin an t-ainm iomlán nó cianósta i leagan "
+"  -f              ná taispeáin teidil na gcolún i bhformáid achomair\n"
+"  -w              ná taispeáin an t-ainm iomlán i bhformáid achomair\n"
+"  -i              ná taispeáin an t-ainm iomlán nó cianósta i bhformáid "
 "achomair\n"
 "  -q              ná taispeáin ainm iomlán, cianósta, nó am díomhaoin\n"
-"                  i leagan amach achomair\n"
+"                  i bhformáid achomair\n"
 
 #: src/pinky.c:532
 #, c-format
@@ -5485,43 +5545,42 @@ msgid "no username specified; at least one must be specified when using -l"
 msgstr "is gá ainm úsáideora amháin a thabhairt ar a laghad le -l"
 
 #: src/pr.c:807 src/pr.c:817
-#, fuzzy
 msgid "page range"
-msgstr "Raon leathanach `%s'"
+msgstr "raon leathanach"
 
 #: src/pr.c:914
 msgid "`--pages=FIRST_PAGE[:LAST_PAGE]' missing argument"
 msgstr "`--pages=AONÚ[:DEIREADH]' argóint ar iarraidh"
 
 #: src/pr.c:916
-#, fuzzy, c-format
+#, c-format
 msgid "Invalid page range %s"
-msgstr "Raon neamhbhailí leathanach `%s'"
+msgstr "Raon neamhbhailí leathanach %s"
 
 #: src/pr.c:981
-#, fuzzy, c-format
+#, c-format
 msgid "`-l PAGE_LENGTH' invalid number of lines: %s"
-msgstr "`-l FAD' líon neamhbhailí na línte: `%s'"
+msgstr "`-l FAD' líon neamhbhailí na línte: %s"
 
 #: src/pr.c:1005
-#, fuzzy, c-format
+#, c-format
 msgid "`-N NUMBER' invalid starting line number: %s"
-msgstr "`-N UIMHIR' líne-uimhir neamhbhailí tosaigh: `%s'"
+msgstr "`-N UIMHIR' líne-uimhir neamhbhailí tosaigh: %s"
 
 #: src/pr.c:1017
-#, fuzzy, c-format
+#, c-format
 msgid "`-o MARGIN' invalid line offset: %s"
-msgstr "`-o CIUMHAIS' fritháireamh líne neamhbhailí: `%s'"
+msgstr "`-o CIUMHAIS' fritháireamh neamhbhailí líne: %s"
 
 #: src/pr.c:1058
-#, fuzzy, c-format
+#, c-format
 msgid "`-w PAGE_WIDTH' invalid number of characters: %s"
-msgstr "`-w LEITHEAD' líon carachtar neamhbhailí: `%s'"
+msgstr "`-w LEITHEAD' líon neamhbhailí carachtar: %s"
 
 #: src/pr.c:1072
-#, fuzzy, c-format
+#, c-format
 msgid "`-W PAGE_WIDTH' invalid number of characters: %s"
-msgstr "`-W LEITHEAD' líon carachtar neamhbhailí: `%s'"
+msgstr "`-W LEITHEAD' líon neamhbhailí carachtar: %s"
 
 #: src/pr.c:1102
 msgid "Cannot specify number of columns when printing in parallel."
@@ -5533,9 +5592,9 @@ msgid "Cannot specify both printing across and printing in parallel."
 msgstr "Ní cheadaítear priontáil trasna agus go comhuaineach araon."
 
 #: src/pr.c:1202
-#, fuzzy, c-format
+#, c-format
 msgid "`-%c' extra characters or invalid number in the argument: %s"
-msgstr "`-%c' carachtair breise, nó uimhir neamhbhailí san argóint: `%s'"
+msgstr "`-%c' carachtair breise, nó uimhir neamhbhailí san argóint: %s"
 
 #: src/pr.c:1313
 msgid "page width too narrow"
@@ -5874,7 +5933,7 @@ msgstr ""
 #: src/printf.c:161
 #, c-format
 msgid "%s: expected a numeric value"
-msgstr "%s: ag súil le luach uimhriúil"
+msgstr "%s: bhíothas ag súil le luach uimhriúil"
 
 #: src/printf.c:163
 #, c-format
@@ -5898,7 +5957,7 @@ msgstr "leithead líne neamhbhailí: %s"
 #: src/printf.c:589
 #, c-format
 msgid "invalid precision: %s"
-msgstr "cruinneas neamhbhailí: %s"
+msgstr "beachtas neamhbhailí: %s"
 
 #: src/printf.c:616
 #, c-format
@@ -5906,18 +5965,18 @@ msgid "%.*s: invalid conversion specification"
 msgstr "%.*s: tiontú neamhbhailí"
 
 #: src/printf.c:687
-#, fuzzy, c-format
+#, c-format
 msgid "warning: ignoring excess arguments, starting with %s"
-msgstr "rabhadh: ag déanamh neamhshuim ar argóintí breise, ó `%s' amach"
+msgstr "rabhadh: ag déanamh neamhshuim ar argóintí breise, ó %s amach"
 
 #: src/ptx.c:41
 msgid "F. Pinard"
 msgstr "F. Pinard"
 
 #: src/ptx.c:421
-#, fuzzy, c-format
+#, c-format
 msgid "%s (for regexp %s)"
-msgstr "%s (ar regexp `%s')"
+msgstr "%s (ar regexp %s)"
 
 #: src/ptx.c:1887
 #, c-format
@@ -6024,22 +6083,21 @@ msgid ""
 "\n"
 msgstr ""
 "Scaiptear an ríomhchlár seo le súil go mbeidh sé áisiúil,\n"
-"ach GAN AON BARÁNTA; go fiú gan an barántas intuigthe de\n"
-"INDÍOLTACHT nó FEILIÚNACHT DO FHEIDHM AR LEITH.  Féach ar an\n"
+"ach GAN AON BARÁNTA; go fiú gan an barántas intuigthe\n"
+"d'INDÍOLTACHT nó FEILIÚNACHT D'FHEIDHM AR LEITH.  Féach ar an\n"
 "GNU General Public License chun níos mó sonraí a fháil.\n"
 "\n"
 
 #: src/ptx.c:2019
-#, fuzzy
 msgid ""
 "You should have received a copy of the GNU General Public License\n"
 "along with this program; if not, write to the Free Software Foundation,\n"
 "Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.\n"
 msgstr ""
-"Ba chomhair go mbeifeá tar éis cóip den GNU General Public License a fháil\n"
+"Ba chóir go mbeifeá tar éis cóip den GNU General Public License a fháil\n"
 "in éineacht leis an ríomhchlár seo; mura bhfuair, scríobh chuig an\n"
-"Free Software Foundation, Inc., 59 Temple Place - Suite 330,\n"
-"Boston, MA 02111-1307, USA.\n"
+"Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,\n"
+"Boston, MA 02110-1301, USA.\n"
 
 #: src/ptx.c:2044
 #, c-format
@@ -6092,7 +6150,6 @@ msgstr ""
 "\n"
 
 #: src/readlink.c:70
-#, fuzzy
 msgid ""
 "  -f, --canonicalize            canonicalize by following every symlink in\n"
 "                                every component of the given name "
@@ -6125,7 +6182,7 @@ msgstr ""
 "siombalach\n"
 "                              i ngach ball den chonair, go hathchúrsach;\n"
 "                              cheadaítear comhpháirteanna ar iarraidh\n"
-"  -n, --no-newline            ná scríobh an líne nua foirceanta\n"
+"  -n, --no-newline            ná scríobh an líne nua fhoirceanta\n"
 "  -q, --quiet,\n"
 "  -s, --silent                múch an tromlach d'earráidí\n"
 "  -v, --verbose               taispeáin earráidí\n"
@@ -6187,9 +6244,9 @@ msgid "removed directory: %s\n"
 msgstr "scriosadh an chomhadlann %s\n"
 
 #: src/remove.c:949 src/remove.c:1078
-#, fuzzy, c-format
+#, c-format
 msgid "cannot chdir from %s to %s"
-msgstr "ní féidir an chomhadlann oibre a athrú ó %s go dtí .."
+msgstr "ní féidir an chomhadlann oibre a athrú ó %s go %s"
 
 #: src/remove.c:957
 #, c-format
@@ -6217,7 +6274,7 @@ msgstr "ní féidir an chomhadlann reatha a athchóiriú"
 #: src/rm.c:118
 #, c-format
 msgid "Try `%s ./%s' to remove the file %s.\n"
-msgstr ""
+msgstr "Bain triail as `%s ./%s' chun an comhad %s a bhaint.\n"
 
 #: src/rm.c:136 src/touch.c:233
 #, c-format
@@ -6246,7 +6303,6 @@ msgstr ""
 "  -i, --interactive     fiafraigh roimh scriosadh\n"
 
 #: src/rm.c:146
-#, fuzzy
 msgid ""
 "      --no-preserve-root do not treat `/' specially (the default)\n"
 "      --preserve-root   fail to operate recursively on `/'\n"
@@ -6265,6 +6321,11 @@ msgid ""
 "option to remove each listed directory, too, along with all of its "
 "contents.\n"
 msgstr ""
+"\n"
+"De réir réamhshocraithe, ní bhaineann rm comhadlanna.  Úsáid an rogha\n"
+"--recursive (-r nó -R) chun na comhadlanna uile a bhaint freisin, in "
+"éineacht\n"
+"le gach rud atá isteach iontu.\n"
 
 #: src/rm.c:159
 #, c-format
@@ -6321,7 +6382,6 @@ msgstr ""
 "                  folamh\n"
 
 #: src/rmdir.c:147
-#, fuzzy
 msgid ""
 "  -p, --parents   Remove DIRECTORY and its ancestors.  E.g., `rmdir -p a/b/"
 "c' is\n"
@@ -6331,7 +6391,7 @@ msgstr ""
 "  -p, --parents   scrios COMHADLANN, agus ansin a thuismitheoirí\n"
 "                  mar shampla, tá `rmdir -p a/b/c' ar comhbhrí le\n"
 "                  `rmdir a/b/c a/b a'.\n"
-"  -v, --verbose   taispeáin diagnóisic do gach comhadlann\n"
+"  -v, --verbose   taispeáin diagnóisic do gach comhadlann phróiseáilte\n"
 
 #: src/seq.c:82
 #, c-format
@@ -6389,12 +6449,12 @@ msgstr ""
 #: src/seq.c:121
 #, c-format
 msgid "invalid floating point argument: %s"
-msgstr "argóint shnámhphointe neamhbhailí: %s"
+msgstr "argóint neamhbhailí shnámhphointe: %s"
 
 #: src/seq.c:379
-#, fuzzy, c-format
+#, c-format
 msgid "invalid format string: %s"
-msgstr "teaghrán formáide neamhbhailí: `%s'"
+msgstr "teaghrán neamhbhailí formáide: %s"
 
 #: src/seq.c:399
 msgid "format string may not be specified when printing equal width strings"
@@ -6411,7 +6471,6 @@ msgstr ""
 "  nó:  %s ROGHA\n"
 
 #: src/setuidgid.c:57
-#, fuzzy
 msgid ""
 "Drop any supplemental groups, assume the user-ID and group-ID of\n"
 "the specified USERNAME, and run COMMAND with any specified ARGUMENTs.\n"
@@ -6424,7 +6483,7 @@ msgstr ""
 "tugtha, agus rith ORDÚ le ARGÓINTí, má tá ann.\n"
 "Scoir le stádas scortha 111 mura bhfuiltear in ann an UID/GID a ghlacadh.\n"
 "I ngach cás eile, scoir leis an stádas scortha den ORDÚ.\n"
-"Ní úsáideach an clár seo mura bhfuil sé rite leis an fhorúsáideoir (UID=0).\n"
+"Ní úsáideach an clár seo mura bhfuil sé rite ag an fhorúsáideoir (UID=0).\n"
 "\n"
 
 #: src/setuidgid.c:105
@@ -6470,7 +6529,7 @@ msgid ""
 msgstr ""
 "  -f, --force    más gá, athraigh ceadanna chun go bhfuil scríobh ceadaithe\n"
 "  -n, --iterations=N  Forscríobh N uaire in ionad an réamhshocraithe (%d)\n"
-"  -s, --size=N   mionghearr N beart (iarmhíreanna mar K, M, G glactha)\n"
+"  -s, --size=N   léirscrios N beart (iarmhíreanna mar K, M, G glactha)\n"
 
 #: src/shred.c:169
 msgid ""
@@ -6484,7 +6543,7 @@ msgstr ""
 "  -v, --verbose  taispeáin eolas faoin dul chun cinn\n"
 "  -x, --exact    ná slánaigh méideanna comhaid suas;\n"
 "                   is réamhshocraithe é seo le haghaidh comhad neamhghnách\n"
-"  -z, --zero     forscríobh deireanach le nialais, folaigh mionghearradh\n"
+"  -z, --zero     forscríobh deireanach le nialais, folaigh an léirscrios\n"
 
 #: src/shred.c:178
 msgid ""
@@ -6498,7 +6557,7 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"Más '-' é COMHAD, mionghearr an t-aschur caighdeánach.\n"
+"Más '-' é COMHAD, léirscrios an t-aschur caighdeánach.\n"
 "\n"
 "Scrios COMHA(I)D má tá --remove (-u) ceaptha. De réir an réamhshocraithe, "
 "ná\n"
@@ -6508,7 +6567,6 @@ msgstr ""
 "\n"
 
 #: src/shred.c:188
-#, fuzzy
 msgid ""
 "CAUTION: Note that shred relies on a very important assumption:\n"
 "that the file system overwrites data in place.  This is the traditional\n"
@@ -6518,10 +6576,11 @@ msgid ""
 "modes:\n"
 "\n"
 msgstr ""
-"FAINIC: Braitheann `shred' ar glacadh tromchúiseach:\n"
+"FAINIC: Braitheann `shred' ar ghlacadh tromchúiseach:\n"
 "go ndéanann an córas comhaid forscríobh ar shonraí ina n-ionad.\n"
 "Is é sin an sean-nós, ach níl an glacadh seo bailí ar mhórán córais\n"
-"nua-aimseartha.  Mar shampla, níl `shred' cumasach ar na córais a leanas:\n"
+"nua-aimseartha.  Níl `shred' cumasach, nó níl ráthaíocht ar bith go mbeidh\n"
+"sé cumasach i ngach mód ar na córais a leanas:\n"
 "\n"
 
 #: src/shred.c:196
@@ -6564,6 +6623,22 @@ msgid ""
 "of the file that cannot be removed, and that will allow a shredded file\n"
 "to be recovered later.\n"
 msgstr ""
+"* córais chomhad a chuireann sonraí i dtaisce i suímh shealadacha,\n"
+"mar shampla cliaint NFS leagan 3\n"
+"\n"
+"* córais chomhad comhbhrúite\n"
+"\n"
+"Má tá córas comhad ext3 agat, tá an séanadh thuasluaithe i bhfeidhm sa\n"
+"mhód data=journal amháin (agus sa chás seo is neamhéifeachtach é `shred').\n"
+"Scríobhann an mód seo sonraí comhaid in iriseán mar aon le meiteashonraí.\n"
+"Sna móid data=ordered (réamhshocrú) agus data=writeback, oibríonn `shred'\n"
+"mar is gnách.  Is féidir na móid iriseáin Ext3 a athrú trí chur na rogha\n"
+"data=something leis na roghanna feistithe sa chomhad /etc/fstab, mar a\n"
+"thuairiscítear sa leathanach lámhleabhair mount (`man mount').\n"
+"\n"
+"Is féidir freisin go bhfuil cóipeanna den chomhad i gcúltacaí an chórais\n"
+"comhad nó ar shúimh scáthánaithe, agus ní féidir na cóipeanna seo a bhaint.\n"
+"Dá bharr seo, b'fhéidir comhad léirscriosta a fháil ar ais amach anseo.\n"
 
 #: src/shred.c:685
 #, c-format
@@ -6578,7 +6653,7 @@ msgstr "%s: theip ar fsync"
 #: src/shred.c:764
 #, c-format
 msgid "%s: cannot rewind"
-msgstr "%s: ní féidir cúlchasadh a dhéanamh"
+msgstr "%s: ní féidir atochras"
 
 #: src/shred.c:790
 #, c-format
@@ -6640,12 +6715,12 @@ msgstr "%s: theip ar fcntl"
 #: src/shred.c:1279
 #, c-format
 msgid "%s: cannot shred append-only file descriptor"
-msgstr "%s: ní féidir tuarascálaí comhaid sínte amháin a mhionghearradh"
+msgstr "%s: ní féidir tuarascálaí comhaid sínte amháin a léirscriosadh"
 
 #: src/shred.c:1359
 #, c-format
 msgid "%s: removing"
-msgstr "%s: ag scriosadh"
+msgstr "%s: á scriosadh"
 
 #: src/shred.c:1383
 #, c-format
@@ -6703,23 +6778,21 @@ msgstr ""
 "\n"
 
 #: src/sleep.c:138
-#, fuzzy, c-format
+#, c-format
 msgid "invalid time interval %s"
-msgstr "tréimhse neamhbhailí `%s'"
+msgstr "tréimhse neamhbhailí %s"
 
-#: src/sleep.c:149 src/tail.c:1104
+#: src/sleep.c:149 src/tail.c:1101
 msgid "cannot read realtime clock"
-msgstr "ní féidir an clog am-beo a léamh"
+msgstr "ní féidir an clog fhíor-ama a léamh"
 
 #: src/sort.c:285
-#, fuzzy
 msgid ""
 "Write sorted concatenation of all FILE(s) to standard output.\n"
 "\n"
 msgstr ""
-"Scríobh gach COMHAD, ceangailte agus sórtáilte, chuig aschur caighdeánach.\n"
-"\n"
-"Roghanna sórtála:\n"
+"Scríobh gach COMHAD, comhchaitéinithe agus sórtáilte, go haschur "
+"caighdeánach.\n"
 "\n"
 
 #: src/sort.c:292
@@ -6727,18 +6800,19 @@ msgid ""
 "Ordering options:\n"
 "\n"
 msgstr ""
+"Roghanna sórtála:\n"
+"\n"
 
 #: src/sort.c:296
-#, fuzzy
 msgid ""
 "  -b, --ignore-leading-blanks  ignore leading blanks\n"
 "  -d, --dictionary-order      consider only blanks and alphanumeric "
 "characters\n"
 "  -f, --ignore-case           fold lower case to upper case characters\n"
 msgstr ""
-"  -b, --ignore-leading-blanks lig spásanna tosaigh thar\n"
+"  -b, --ignore-leading-blanks déan neamhshuim ar spásanna tosaigh\n"
 "  -d, --dictionary-order      ná húsáid ach spásanna agus carachtair alfa-"
-"uimhriúil\n"
+"uimhriúla\n"
 "  -f, --ignore-case           measc litreacha beaga is ceannlitreacha le "
 "chéile\n"
 
@@ -6758,7 +6832,6 @@ msgstr ""
 "  -r, --reverse               sórtáil bun os cionn\n"
 
 #: src/sort.c:309
-#, fuzzy
 msgid ""
 "Other options:\n"
 "\n"
@@ -6772,18 +6845,19 @@ msgid ""
 msgstr ""
 "Roghanna eile:\n"
 "\n"
-"  -c, --check               ná sórtáil, ach deimhnigh an tsórtáil\n"
+"  -c, --check               ná sórtáil; deimhnigh an bhfuil sé sórtáilte\n"
 "  -k, --key=ÁIT1[,ÁIT2]     tosaigh eochair ag ÁIT1, deireadh ag ÁIT 2 "
-"(clé=1)\n"
-"  -m, --merge               sórtáil le chéile comhaid atá sórtáilte cheana\n"
-"  -o, --output=COMHAD       cuir torthaí i gCOMHAD in ionad aschur "
+"(tosach=1)\n"
+"  -m, --merge               sórtáil le chéile comhaid atá sórtáilte cheana;\n"
+"                              ná sórtáil\n"
+"  -o, --output=COMHAD       scríobh na torthaí i gCOMHAD in ionad aschur "
 "caighdeánach\n"
-"  -s, --stable              caighdeánaigh an t-ord trí stopadh\n"
-"                              sórtáil den rogha dheireanach\n"
+"  -s, --stable              caighdeánaigh an t-ord trí dhíchumasú na\n"
+"                              sórtála den rogha dheireanach\n"
 "  -S, --buffer-size=MÉID    maolán príomhchuimhne = MÉID\n"
 
 #: src/sort.c:319
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "  -t, --field-separator=SEP  use SEP instead of non-blank to blank "
 "transition\n"
@@ -6797,10 +6871,10 @@ msgstr ""
 "  -t, --field-separator=CAR úsáid CAR in ionad athrú ó neamh- go spás bán\n"
 "  -T, --temporary-directory=COMHADLANN  cuir comhaid shealadacha i "
 "gCOMHADLANN\n"
-"                              in ionad $TMPDIR nó %s; comharthaíonn an "
+"                              in ionad $TMPDIR nó %s; comharthaíonn gach "
 "rogha\n"
-"                              seo go leor comhadlanna go leor\n"
-"  -u, --unique              le -c: deimhnigh sórtáil gan dúblaigh;\n"
+"                              comhadlann ar leith\n"
+"  -u, --unique              le -c, deimhnigh sórtáil gan dúblaigh;\n"
 "                              gan -c, ná taispeáin ach línte uathúla\n"
 
 #: src/sort.c:326
@@ -6844,7 +6918,7 @@ msgstr ""
 "Mura bhfuil COMHAD ann, nó más '-' é, léigh ón ionchur caighdeánach.\n"
 "\n"
 "*** RABHADH ***\n"
-"Athraíonn an logánú na torthaí a ghineann `sort'.\n"
+"Athraíonn an logchaighdeán na torthaí a ghineann `sort'.\n"
 "Cuir LC_ALL=C chun sórtáil de réir an oird traidisiúnta\n"
 "(.i. de réir luachanna dúchasacha de na bearta.\n"
 
@@ -6860,9 +6934,9 @@ msgstr "theip ar oscailt"
 msgid "fflush failed"
 msgstr "theip ar fflush"
 
-#: src/sort.c:496 src/sort.c:2468
+#: src/sort.c:496 src/sort.c:2471
 msgid "close failed"
-msgstr "theip ar dúnadh"
+msgstr "theip ar dhúnadh"
 
 #: src/sort.c:505
 msgid "write failed"
@@ -6894,54 +6968,54 @@ msgstr "%s: %s:%s: mí-eagar: "
 msgid "standard error"
 msgstr "earráid chaighdeánach"
 
-#: src/sort.c:1987
-#, fuzzy, c-format
+#: src/sort.c:1990
+#, c-format
 msgid "%s: invalid field specification %s"
-msgstr "%s: sonrú réimse neamhbhailí `%s'"
+msgstr "%s: sonraíocht neamhbhailí réimse %s"
 
-#: src/sort.c:2014
+#: src/sort.c:2017
 #, c-format
 msgid "%s: count `%.*s' too large"
 msgstr "%s: áireamh `%.*s' rómhór"
 
-#: src/sort.c:2020
-#, fuzzy, c-format
+#: src/sort.c:2023
+#, c-format
 msgid "%s: invalid count at start of %s"
-msgstr "%s: áireamh neamhbhailí ag tús `%s'"
+msgstr "%s: áireamh neamhbhailí ag tús %s"
 
-#: src/sort.c:2240
+#: src/sort.c:2243
 msgid "invalid number after `-'"
 msgstr "uimhir neamhbhailí i ndiaidh `-'"
 
-#: src/sort.c:2243 src/sort.c:2289 src/sort.c:2316
+#: src/sort.c:2246 src/sort.c:2292 src/sort.c:2319
 msgid "invalid number after `.'"
 msgstr "uimhir neamhbhailí i ndiaidh `.'"
 
-#: src/sort.c:2246 src/sort.c:2325
+#: src/sort.c:2249 src/sort.c:2328
 msgid "stray character in field spec"
 msgstr "carachtar ar seachrán i sonrú réimse"
 
-#: src/sort.c:2280
+#: src/sort.c:2283
 msgid "invalid number at field start"
 msgstr "uimhir neamhbhailí ag tús réimse"
 
-#: src/sort.c:2284 src/sort.c:2312
+#: src/sort.c:2287 src/sort.c:2315
 msgid "field number is zero"
 msgstr "is nialas an uimhir réimse"
 
-#: src/sort.c:2293
+#: src/sort.c:2296
 msgid "character offset is zero"
 msgstr "is nialas an fritháireamh carachtair"
 
-#: src/sort.c:2308
+#: src/sort.c:2311
 msgid "invalid number after `,'"
 msgstr "uimhir neamhbhailí i ndiaidh `,'"
 
-#: src/sort.c:2335
+#: src/sort.c:2338
 msgid "multiple output files specified"
 msgstr "aschomhaid iomadúla"
 
-#: src/sort.c:2452
+#: src/sort.c:2455
 #, c-format
 msgid "extra operand %s not allowed with -c"
 msgstr "ní cheadaítear oibreann breise `%s' le -c"
@@ -7001,9 +7075,9 @@ msgid "Output file suffixes exhausted"
 msgstr "Iarmhíreanna don aschomhad ídithe"
 
 #: src/split.c:212
-#, fuzzy, c-format
+#, c-format
 msgid "creating file %s\n"
-msgstr "comhad `%s' á chruthú\n"
+msgstr "comhad %s á chruthú\n"
 
 #: src/split.c:371
 msgid "cannot split in more than one way"
@@ -7033,17 +7107,17 @@ msgstr "is rómhór an rogha -%s%c... don áireamh línte"
 msgid "invalid number of lines: 0"
 msgstr "líon na línte neamhbhailí: 0"
 
-#: src/stat.c:602
+#: src/stat.c:601
 #, c-format
 msgid "cannot read file system information for %s"
 msgstr "ní féidir an t-eolas faoin chóras comhaid a léamh do %s"
 
-#: src/stat.c:678
+#: src/stat.c:677
 #, c-format
 msgid "Usage: %s [OPTION] FILE...\n"
 msgstr "Úsáid: %s [ROGHA] COMHAD...\n"
 
-#: src/stat.c:679
+#: src/stat.c:678
 msgid ""
 "Display file or file system status.\n"
 "\n"
@@ -7059,8 +7133,7 @@ msgstr ""
 "  -L, --dereference     lean naisc\n"
 "  -t, --terse           taispeáin an t-eolas go gonta\n"
 
-#: src/stat.c:690
-#, fuzzy
+#: src/stat.c:689
 msgid ""
 "\n"
 "The valid format sequences for files (without --file-system):\n"
@@ -7071,15 +7144,14 @@ msgid ""
 "  %B   The size in bytes of each block reported by %b\n"
 msgstr ""
 "\n"
-"Cóid formáide bailí do chomhaid (gan --file-system):\n"
+"Cóid bhailí fhormáide do chomhaid (gan --file-system):\n"
 "\n"
-"  %A   cearta rochtana i leagan amach inléite\n"
 "  %a   cearta rochtana, ochtnártha\n"
-"  %B   an mhéid, i mbearta, do gach bloc tugtha le `%b'\n"
-"  %b   bloic dáilte (féach ar %B)\n"
+"  %A   cearta rochtana i bhformáid inléite\n"
+"  %b   líon na mbloc dáilte (féach ar %B)\n"
+"  %B   an mhéid, i mbearta, de gach bloc tugtha ag %b\n"
 
-#: src/stat.c:698
-#, fuzzy
+#: src/stat.c:697
 msgid ""
 "  %d   Device number in decimal\n"
 "  %D   Device number in hex\n"
@@ -7088,15 +7160,14 @@ msgid ""
 "  %g   Group ID of owner\n"
 "  %G   Group name of owner\n"
 msgstr ""
-"  %D   Uimhir ghléis, heicsidheachúlach\n"
 "  %d   Uimhir ghléis, deachúil\n"
-"  %F   Cineál comhaid\n"
+"  %D   Uimhir ghléis, heicsidheachúlach\n"
 "  %f   mód amh, heicsidheachúlach\n"
-"  %G   Ainm grúpa don úinéir\n"
-"  %g   Uimhir ghrúpa den úinéir\n"
+"  %F   Cineál comhaid\n"
+"  %g   Aitheantas de grúpa an úinéara\n"
+"  %G   Ainm de grúpa an úinéara\n"
 
-#: src/stat.c:706
-#, fuzzy
+#: src/stat.c:705
 msgid ""
 "  %h   Number of hard links\n"
 "  %i   Inode number\n"
@@ -7109,15 +7180,14 @@ msgid ""
 msgstr ""
 "  %h   Líon na nasc crua\n"
 "  %i   Uimhir inode\n"
-"  %N   Ainm comhaid in athfhriotal, dí-thagartha más nasc siombalach é\n"
 "  %n   Ainm comhaid\n"
+"  %N   Ainm comhaid in athfhriotal, dí-thagartha más nasc siombalach é\n"
 "  %o   Méid bhloic I/A\n"
 "  %s   Méid iomlán, bearta\n"
-"  %T   Cineál gléis mion, heicsidheachúlach\n"
 "  %t   Cineál gléis príomha, heicsidheachúlach\n"
+"  %T   Cineál gléis mion, heicsidheachúlach\n"
 
-#: src/stat.c:716
-#, fuzzy
+#: src/stat.c:715
 msgid ""
 "  %u   User ID of owner\n"
 "  %U   User name of owner\n"
@@ -7129,17 +7199,17 @@ msgid ""
 "  %Z   Time of last change as seconds since Epoch\n"
 "\n"
 msgstr ""
+"  %u   Aitheantas an úinéara\n"
 "  %U   Ainm an úinéara\n"
-"  %u   ID den úinéir\n"
-"  %X   Am den rochtain is déanaí, soicindí ón tSainré\n"
 "  %x   Am den rochtain is déanaí\n"
-"  %Y   Am den mhodhnú is déanaí, soicindí ón tSainré\n"
+"  %X   Am den rochtain is déanaí, soicindí ón tSainré\n"
 "  %y   Am den mhodhnú is déanaí\n"
-"  %Z   Am den athrú is déanaí, soicindí ón tSainré\n"
+"  %Y   Am den mhodhnú is déanaí, soicindí ón tSainré\n"
 "  %z   Am den athrú is déanaí\n"
+"  %Z   Am den athrú is déanaí, soicindí ón tSainré\n"
 "\n"
 
-#: src/stat.c:728
+#: src/stat.c:727
 msgid ""
 "Valid format sequences for file systems:\n"
 "\n"
@@ -7149,7 +7219,7 @@ msgid ""
 "  %d   Free file nodes in file system\n"
 "  %f   Free blocks in file system\n"
 msgstr ""
-"Cóid formáide bailí do chórais comhaid:\n"
+"Cóid bhailí formáide do chórais chomhaid:\n"
 "\n"
 "  %a   Bloic ar fáil do ghnáthúsáideoir\n"
 "  %b   Bloic sa chóras comhaid, go hiomlán\n"
@@ -7157,8 +7227,7 @@ msgstr ""
 "  %d   Nóid atá saor\n"
 "  %f   Bloic ar fáil\n"
 
-#: src/stat.c:737
-#, fuzzy
+#: src/stat.c:736
 msgid ""
 "  %i   File System ID in hex\n"
 "  %l   Maximum length of filenames\n"
@@ -7171,13 +7240,10 @@ msgstr ""
 "  %i   ID den chóras comhaid, heicsidheachúlach\n"
 "  %l   Uasfhad d'ainmneacha comhaid\n"
 "  %n   Ainm comhaid\n"
-"  %s   Méid bloic d'aistriú go hoptamach\n"
-"  %T   Cineál i leagan amach inléite\n"
+"  %s   Méid bloic (d'aistriú go hoptamach)\n"
+"  %S   Bunmhéid bloc (le haghaidh áirithe na mbloc)\n"
 "  %t   Cineál, heicsidheachúlach\n"
-
-#: src/stat.c:780
-msgid "Warning: `-l' is deprecated; use `-L' instead"
-msgstr "Rabhadh: tá --l dulta i léig; bain úsáid as `-L' ina áit"
+"  %T   Cineál i bhformáid inléite\n"
 
 #: src/stty.c:511
 #, c-format
@@ -7250,7 +7316,7 @@ msgid ""
 "   start CHAR    CHAR will restart the output after stopping it\n"
 msgstr ""
 " * lnext CAR     iontrálfaidh CAR an chéad charachtar luaite eile\n"
-"   quit CAR      seolfaidh CAR comhartha fágtha\n"
+"   quit CAR      seolfaidh CAR comhartha scortha\n"
 " * rprnt CAR     priontálfaidh CAR an líne reatha arís\n"
 "   start CAR     atosóidh CAR an t-aschur i ndiaidh á stopadh\n"
 
@@ -7631,7 +7697,7 @@ msgstr ""
 
 #: src/stty.c:822
 msgid "when specifying an output style, modes may not be set"
-msgstr "ní cheadaítear móid a shocrú agus leagan amach aschuir a cheapadh"
+msgstr "ní cheadaítear móid a shocrú agus an fhormáid aschurtha a cheapadh"
 
 #: src/stty.c:837
 #, c-format
@@ -7639,20 +7705,20 @@ msgid "%s: couldn't reset non-blocking mode"
 msgstr "%s: ní féidir mód gan bacainní a athshocrú"
 
 #: src/stty.c:885 src/stty.c:995
-#, fuzzy, c-format
+#, c-format
 msgid "invalid argument %s"
-msgstr "argóint neamhbhailí: %s"
+msgstr "argóint neamhbhailí %s"
 
 #: src/stty.c:896 src/stty.c:913 src/stty.c:925 src/stty.c:938 src/stty.c:950
 #: src/stty.c:970
-#, fuzzy, c-format
+#, c-format
 msgid "missing argument to %s"
-msgstr "ní foláir argóint don rogha `%s'"
+msgstr "tá argóint de dhíth i ndiaidh na rogha %s"
 
 #: src/stty.c:976
-#, fuzzy, c-format
+#, c-format
 msgid "invalid line discipline %s"
-msgstr "disciplín líne neamhbhailí: `%s'"
+msgstr "disciplín neamhbhailí líne %s"
 
 #: src/stty.c:1047
 #, c-format
@@ -7671,9 +7737,9 @@ msgid "%s: no size information for this device"
 msgstr "%s: níl aon eolas ar fáil faoin mhéid den ghléas seo"
 
 #: src/stty.c:1889
-#, fuzzy, c-format
+#, c-format
 msgid "invalid integer argument %s"
-msgstr "argóint shlánuimhreach neamhbhailí `%s'"
+msgstr "argóint neamhbhailí shlánuimhreach %s"
 
 #: src/su.c:265
 msgid "Password:"
@@ -7727,8 +7793,8 @@ msgid ""
 "A mere - implies -l.   If USER not given, assume root.\n"
 msgstr ""
 "\n"
-"Ciallaíonn `-' lom an rogha `-l'.  Mura bhfuil ÚSÁIDEOIR ann, glactar le "
-"root.\n"
+"Úsáidtear -l go huathoibríoch nuair a shonraítear `-' lom.\n"
+"Mura bhfuil ÚSÁIDEOIR ann, glactar le root.\n"
 
 #: src/su.c:498
 #, c-format
@@ -7782,6 +7848,11 @@ msgid ""
 "the version described here.  Please refer to your shell's documentation\n"
 "for details about the options it supports.\n"
 msgstr ""
+"\n"
+"NÓTA: is féidir go bhfuil leagan eile de %s ag do bhlaosc féin, agus\n"
+"go hiondúil sháródh sé an leagan a ndéantar cur síos air anseo.  Féach ar\n"
+"dhoiciméadú do bhlaoisce chun tuilleadh eolais a fháil faoi na roghanna\n"
+"a dtacaíonn sé leo.\n"
 
 #: src/system.h:583
 msgid "      --help     display this help and exit\n"
@@ -7842,7 +7913,7 @@ msgstr "%s: earráid le linn scríofa"
 msgid "separator cannot be empty"
 msgstr "ní cheadaítear deighilteoir folamh"
 
-#: src/tail.c:233
+#: src/tail.c:230
 #, c-format
 msgid ""
 "Print the last %d lines of each FILE to standard output.\n"
@@ -7856,7 +7927,7 @@ msgstr ""
 "Mura bhfuil COMHAD ann, nó más '-' é, léigh ón ionchur caighdeánach.\n"
 "\n"
 
-#: src/tail.c:242
+#: src/tail.c:239
 msgid ""
 "      --retry              keep trying to open a file even if it is\n"
 "                           inaccessible when tail starts or if it becomes\n"
@@ -7874,7 +7945,7 @@ msgstr ""
 "                           --follow=name\n"
 "  -c, --bytes=N            taispeáin an N beart deireanach\n"
 
-#: src/tail.c:249
+#: src/tail.c:246
 msgid ""
 "  -f, --follow[={name|descriptor}]\n"
 "                           output appended data as the file grows;\n"
@@ -7889,7 +7960,7 @@ msgstr ""
 "comhbhrí\n"
 "  -F                     ar comhbhrí le --follow=name --retry\n"
 
-#: src/tail.c:256
+#: src/tail.c:253
 #, c-format
 msgid ""
 "  -n, --lines=N            output the last N lines, instead of the last %d\n"
@@ -7907,7 +7978,7 @@ msgstr ""
 "                           féachaint an raibh sé dínasctha nó athainmnithe\n"
 "                           (mar shampla do logchomhaid uainíochta go minic\n"
 
-#: src/tail.c:267
+#: src/tail.c:264
 msgid ""
 "      --pid=PID            with -f, terminate after process ID, PID dies\n"
 "  -q, --quiet, --silent    never output headers giving file names\n"
@@ -7922,7 +7993,7 @@ msgstr ""
 "  -v, --verbose            taispeáin ceanntásca le hainmneacha comhaid i "
 "gcónaí\n"
 
-#: src/tail.c:276
+#: src/tail.c:273
 msgid ""
 "\n"
 "If the first character of N (the number of bytes or lines) is a `+',\n"
@@ -7940,7 +8011,7 @@ msgstr ""
 "le N: b=512, k=1024, m=1048576 (1 Meig).\n"
 "\n"
 
-#: src/tail.c:284
+#: src/tail.c:281
 msgid ""
 "With --follow (-f), tail defaults to following the file descriptor, which\n"
 "means that even if a tail'ed file is renamed, tail will continue to track\n"
@@ -7951,7 +8022,7 @@ msgstr ""
 "sin, fiú má athainmnítear comhad idir lámha, leanfaidh tail ag próiseáil\n"
 "a chríoch.  "
 
-#: src/tail.c:289
+#: src/tail.c:286
 msgid ""
 "This default behavior is not desirable when you really want to\n"
 "track the actual name of the file, not the file descriptor (e.g., log\n"
@@ -7967,111 +8038,106 @@ msgstr ""
 "agus\n"
 "athchruthódh clár eile é.\n"
 
-#: src/tail.c:347
+#: src/tail.c:344
 #, c-format
 msgid "closing %s (fd=%d)"
 msgstr "%s (fd=%d) á dhúnadh"
 
-#: src/tail.c:422
+#: src/tail.c:419
 #, c-format
 msgid "%s: cannot seek to relative offset %s"
 msgstr "%s: ní féidir bogadh go fritháireamh coibhneasta %s"
 
-#: src/tail.c:426
+#: src/tail.c:423
 #, c-format
 msgid "%s: cannot seek to end-relative offset %s"
 msgstr "%s: ní féidir bogadh go fritháireamh coibhneasta ón chríoch %s"
 
-#: src/tail.c:878
-#, fuzzy, c-format
+#: src/tail.c:875
+#, c-format
 msgid "%s has become inaccessible"
-msgstr "tá `%s' dorochtana anois"
+msgstr "tá %s dorochtana anois"
 
-#: src/tail.c:895
-#, fuzzy, c-format
+#: src/tail.c:892
+#, c-format
 msgid "%s has been replaced with an untailable file; giving up on this name"
-msgstr "tá comhad nach féidir é a `tail' curtha in áit `%s'; ag tréigean"
+msgstr "cuireadh comhad nach féidir a `tail' in áit %s; á thréigean"
 
-#: src/tail.c:916
-#, fuzzy, c-format
+#: src/tail.c:913
+#, c-format
 msgid "%s has become accessible"
-msgstr "tá `%s' insroichte arís"
+msgstr "tá %s insroichte anois"
 
-#: src/tail.c:924
-#, fuzzy, c-format
+#: src/tail.c:921
+#, c-format
 msgid "%s has appeared;  following end of new file"
-msgstr "tá `%s' ann anois;  ag leanúint críoch an chomhaid nua"
+msgstr "tá %s ann anois;  críoch an chomhaid nua á leanúint"
 
-#: src/tail.c:935
-#, fuzzy, c-format
+#: src/tail.c:932
+#, c-format
 msgid "%s has been replaced;  following end of new file"
-msgstr "tá comhad nua in áit `%s' anois;  ag leanúint críoch an chomhaid nua"
+msgstr "tá comhad nua in áit %s anois;  críoch an chomhaid nua á leanúint"
 
-#: src/tail.c:1028
+#: src/tail.c:1025
 #, c-format
 msgid "%s: cannot change nonblocking mode"
 msgstr "%s: ní féidir mód gan bacainní a athshocrú"
 
-#: src/tail.c:1067
+#: src/tail.c:1064
 #, c-format
 msgid "%s: file truncated"
 msgstr "%s: comhad teasctha"
 
-#: src/tail.c:1090
+#: src/tail.c:1087
 msgid "no files remaining"
 msgstr "níl aon chomhad fágtha"
 
-#: src/tail.c:1323
+#: src/tail.c:1320
 #, c-format
 msgid "%s: cannot follow end of this type of file; giving up on this name"
 msgstr ""
 "%s: ní féidir an chríoch a lorg do chomhad den chineál seo; ag tréigean"
 
-#: src/tail.c:1437
-#, fuzzy, c-format
+#: src/tail.c:1434
+#, c-format
 msgid "number in %s is too large"
-msgstr "tá an uimhir i `%s' rómhór"
+msgstr "tá an uimhir i %s rómhór"
 
-#: src/tail.c:1498
-msgid "the --allow-missing option is deprecated; use --retry instead"
-msgstr ""
-"tá an rogha --allow-missing dulta i léig; bain úsáid as --retry ina áit"
-
-#: src/tail.c:1512
+#: src/tail.c:1505
 #, c-format
 msgid "%s: invalid maximum number of unchanged stats between opens"
 msgstr "%s: uasmhéid neamhbhailí de `stat' gan athrú idir oscailtí"
 
-#: src/tail.c:1524
+#: src/tail.c:1517
 #, c-format
 msgid "%s: invalid PID"
 msgstr "%s: PID neamhbhailí"
 
-#: src/tail.c:1543
+#: src/tail.c:1536
 #, c-format
 msgid "%s: invalid number of seconds"
 msgstr "%s: líon na soicindí neamhbhailí"
 
-#: src/tail.c:1562
+#: src/tail.c:1555
 msgid "warning: --retry is useful only when following by name"
 msgstr "rabhadh: níl --retry áisiúil ach amháin nuair atá ainm ina dhiaidh"
 
-#: src/tail.c:1566
+#: src/tail.c:1559
 msgid "warning: PID ignored; --pid=PID is useful only when following"
 msgstr ""
 "rabhadh: rinneadh neamhshuim ar PID; níl --pid=PID tairbheach\n"
 "mura bhfuiltear ag leanúint"
 
-#: src/tail.c:1569
+#: src/tail.c:1562
 msgid "warning: --pid=PID is not supported on this system"
 msgstr "rabhadh: níl --pid=PID ar fáil ar an gcóras seo"
 
-#: src/tail.c:1651
+#: src/tail.c:1644
 #, c-format
 msgid "cannot follow %s by name"
 msgstr "ní féidir %s a leanúint de réir a ainm"
 
-#: src/tail.c:1657
+#: src/tail.c:1650
 msgid "warning: following standard input indefinitely is ineffective"
 msgstr ""
 "rabhadh: níl maith ar bith i lorg ionchur caighdeánach gan teorainn ama"
@@ -8086,7 +8152,7 @@ msgstr ""
 "Cóipeáil ionchur caighdeánach chuig gach COMHAD, agus chuig aschur\n"
 "caighdeánach fosta.\n"
 "\n"
-"  -a, --append              cuir leis na COMHA(I)D, ná forscríobh\n"
+"  -a, --append              iarcheangail leis na COMHA(I)D, ná forscríobh\n"
 "  -i, --ignore-interrupts   déan neamhshuim ar chomharthaí idirbhriste\n"
 
 #: src/tee.c:71
@@ -8103,23 +8169,23 @@ msgid "missing argument after %s"
 msgstr "argóint ar iarraidh i ndiaidh %s"
 
 #: src/test.c:160
-#, fuzzy, c-format
+#, c-format
 msgid "invalid integer %s\n"
-msgstr "uimhir neamhbhailí %s"
+msgstr "slánuimhir neamhbhailí %s\n"
 
 #: src/test.c:241
 msgid "')' expected\n"
-msgstr "ag súil le ')'\n"
+msgstr "bhíothas ag súil le ')'\n"
 
 #: src/test.c:244
 #, c-format
 msgid "')' expected, found %s\n"
-msgstr "ag súil le ')', fuarthas %s\n"
+msgstr "bhíothas ag súil le ')', fuarthas %s\n"
 
 #: src/test.c:260 src/test.c:605
 #, c-format
 msgid "%s: unary operator expected\n"
-msgstr "%s: ag súil le hoibreoir aonártha\n"
+msgstr "%s: bhíothas ag súil le hoibreoir aonártha\n"
 
 #: src/test.c:329
 msgid "-nt does not accept -l\n"
@@ -8140,10 +8206,9 @@ msgstr "oibreoir dénártha anaithnid\n"
 #: src/test.c:633
 #, c-format
 msgid "%s: binary operator expected\n"
-msgstr "%s: ag súil le hoibreoir dénártha\n"
+msgstr "%s: bhíothas ag súil le hoibreoir dénártha\n"
 
 #: src/test.c:693
-#, fuzzy
 msgid ""
 "Usage: test EXPRESSION\n"
 "  or:  test\n"
@@ -8156,14 +8221,14 @@ msgstr ""
 "  nó:  [ SLONN ]\n"
 "  nó:  [ ]\n"
 "  nó:  [ ROGHA\n"
-"Scoir leis an stádas scortha tugtha le SLONN.\n"
-"\n"
 
 #: src/test.c:700
 msgid ""
 "Exit with the status determined by EXPRESSION.\n"
 "\n"
 msgstr ""
+"Scoir leis an stádas scortha tugtha ag SLONN.\n"
+"\n"
 
 #: src/test.c:706
 msgid ""
@@ -8235,7 +8300,7 @@ msgid ""
 msgstr ""
 "\n"
 "  COMHAD1 -ef COMHAD2 tá uimhreacha ghléis agus inode céanna acu\n"
-"  COMHAD1 -ef COMHAD2 tá COMHAD1 níos úire (modhnú) ná COMHAD2\n"
+"  COMHAD1 -ef COMHAD2 tá COMHAD1 níos úire (mionathrú) ná COMHAD2\n"
 "  COMHAD1 -ot COMHAD2 tá COMHAD2 níos úire ná COMHAD1\n"
 
 #: src/test.c:741
@@ -8310,7 +8375,7 @@ msgstr ""
 
 #: src/test.c:775
 msgid "test and/or ["
-msgstr ""
+msgstr "test agus/nó ["
 
 #: src/test.c:830
 msgid "missing `]'\n"
@@ -8325,7 +8390,7 @@ msgstr "argóint bhreise %s"
 #: src/touch.c:112 src/touch.c:318
 #, c-format
 msgid "invalid date format %s"
-msgstr "leagan amach neamhbhailí don dáta: %s"
+msgstr "formáid neamhbhailí ar an dáta: %s"
 
 #: src/touch.c:154
 #, c-format
@@ -8347,7 +8412,7 @@ msgid ""
 "Update the access and modification times of each FILE to the current time.\n"
 "\n"
 msgstr ""
-"Nuashonraigh na hamanna rochtana/modhnaithe do gach COMHAD chuig an am "
+"Nuashonraigh na hamanna rochtana/mionathraithe do gach COMHAD chuig an am "
 "anois.\n"
 "\n"
 
@@ -8363,7 +8428,7 @@ msgstr ""
 "  -c, --no-create        ná cruthaigh aon chomhad\n"
 "  -d, --date=TEAGHRÁN    parsáil TEAGHRÁN agus úsáid in ionad an ama anois\n"
 "  -f                     (gan feidhm)\n"
-"  -m                     ná hathraigh ach an t-am modhnaithe\n"
+"  -m                     ná hathraigh ach an t-am mionathraithe\n"
 
 #: src/touch.c:248
 msgid ""
@@ -8381,7 +8446,6 @@ msgstr ""
 "                           FOCAL = modify nó mtime: ar comhbhrí le -m\n"
 
 #: src/touch.c:257
-#, fuzzy
 msgid ""
 "\n"
 "Note that the -d and -t options accept different time-date formats.\n"
@@ -8389,7 +8453,10 @@ msgid ""
 "If a FILE is -, touch standard output.\n"
 msgstr ""
 "\n"
-"Tabhair faoi deara go bhfuil formáidí difriúla ag na roghanna -d agus -t.\n"
+"Tabhair faoi deara go bhfuil formáidí difriúla am-dáta\n"
+"ag na roghanna -d agus -t.\n"
+"\n"
+"Más `-' é an COMHAD, déan `touch' ar aschur caighdeánach.\n"
 
 #: src/touch.c:344
 msgid "cannot specify times from more than one source"
@@ -8536,13 +8603,13 @@ msgstr ""
 "tar éis aistriú nó scriosadh.\n"
 
 #: src/tr.c:518
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "warning: the ambiguous octal escape \\%c%c%c is being\n"
 "\tinterpreted as the 2-byte sequence \\0%c%c, %c"
 msgstr ""
-"rabhadh: léirmhíneofar an t-éalúchán ochtnártha débhríoch \\%c%c%c mar\n"
-"\tan seicheamh dhá bheart: \\0%c%c, `%c'"
+"rabhadh: léirmhíneofar an t-éalúchán débhríoch ochtnártha \\%c%c%c mar\n"
+"\tan seicheamh dhá bheart: \\0%c%c, %c"
 
 #: src/tr.c:681
 #, c-format
@@ -8550,9 +8617,9 @@ msgid "range-endpoints of `%s-%s' are in reverse collating sequence order"
 msgstr "tá na teorainneacha i `%s-%s' as ord"
 
 #: src/tr.c:837
-#, fuzzy, c-format
+#, c-format
 msgid "invalid repeat count %s in [c*n] construct"
-msgstr "líon na hathráite neamhbhailí `%s' i gcomhstruchtúr [c*n]"
+msgstr "líon neamhbhailí na hathráite %s i gcomhstruchtúr [c*n]"
 
 #: src/tr.c:918
 msgid "missing character class name `[::]'"
@@ -8564,9 +8631,9 @@ msgid "missing equivalence class character `[==]'"
 msgstr "carachtar ar iarraidh in aicme choibhéise `[==]'"
 
 #: src/tr.c:936
-#, fuzzy, c-format
+#, c-format
 msgid "invalid character class %s"
-msgstr "aicme charachtair neamhbhailí `%s'"
+msgstr "aicme neamhbhailí charachtair %s"
 
 #: src/tr.c:955
 #, c-format
@@ -8628,35 +8695,21 @@ msgid "misaligned [:upper:] and/or [:lower:] construct"
 msgstr "comhstruchtúr [:upper:] agus/nó [:lower:] mí-ailínithe"
 
 #: src/true.c:42
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Usage: %s [ignored command line arguments]\n"
 "  or:  %s OPTION\n"
 msgstr ""
-"Úsáid: %s AINM\n"
+"Úsáid: %s [argóintí gan úsáid]\n"
 "  nó:  %s ROGHA\n"
 
 #: src/true.c:49
-#, fuzzy
 msgid "Exit with a status code indicating success."
-msgstr ""
-"Úsáid: %s [déan neamhshuim ar argóintí]\n"
-"  nó:  %s ROGHA\n"
-"Scoir le cód stádais a chomharthaíonn bua.\n"
-"\n"
-"Ní cheadaítear na roghanna a ghiorrú.\n"
-"\n"
+msgstr "Scoir le cód scortha a chomharthaíonn bua."
 
 #: src/true.c:50
-#, fuzzy
 msgid "Exit with a status code indicating failure."
-msgstr ""
-"Úsáid: %s [déan neamhshuim ar argóintí]\n"
-"  nó:  %s ROGHA\n"
-"Scoir le cód stádais a chomharthaíonn teip.\n"
-"\n"
-"Ní cheadaítear na roghanna seo a ghiorrú.\n"
-"\n"
+msgstr "Scoir le cód scortha a chomharthaíonn teip."
 
 # partial and total ordering not in FE94; ordúil for ordered
 # seems not to have the force of a past participle
@@ -8705,7 +8758,6 @@ msgid "not a tty"
 msgstr "ní tty é"
 
 #: src/uname.c:118
-#, fuzzy
 msgid ""
 "Print certain system information.  With no OPTION, same as -s.\n"
 "\n"
@@ -8717,13 +8769,13 @@ msgid ""
 msgstr ""
 "Taispeáin eolas áirithe faoin gcóras.  Gan ROGHA, is ionann é agus `-s'.\n"
 "\n"
-"  -a, --all                taispeáin gach rud, san ord a leanas:\n"
+"  -a, --all                taispeáin gach rud, san ord a leanas,\n"
+"                             ach fág -p agus -i ar lár más anaithnid:\n"
 "  -s, --kernel-name        taispeáin ainm na heithne\n"
-"  -n, --nodename           taispeáin óstainm an nóid\n"
+"  -n, --nodename           taispeáin óstainm an nóid lín\n"
 "  -r, --kernel-release     taispeáin leagan na heithne\n"
 
 #: src/uname.c:127
-#, fuzzy
 msgid ""
 "  -v, --kernel-version     print the kernel version\n"
 "  -m, --machine            print the machine hardware name\n"
@@ -8733,8 +8785,8 @@ msgid ""
 msgstr ""
 "  -v, --kernel-version     taispeáin leagan na heithne\n"
 "  -m, --machine            taispeáin ainm na gcrua-earraí\n"
-"  -p, --processor          taispeáin an cineál den phróiseálaí\n"
-"  -i, --hardware-platform  taispeáin ardán na gcrua-earraí\n"
+"  -p, --processor          taispeáin cineál an phróiseálaí, nó \"unknown\"\n"
+"  -i, --hardware-platform  taispeáin ardán na gcrua-earraí nó \"unknown\"\n"
 "  -o, --operating-system   taispeáin an córas oibrithe\n"
 
 #: src/uname.c:236
@@ -8770,9 +8822,8 @@ msgid "tabs are too far apart"
 msgstr "táib rófhada ó chéile"
 
 #: src/unexpand.c:513
-#, fuzzy
 msgid "tab stop value is too large"
-msgstr "is rómhór an tábstop %s"
+msgstr "is rómhór an luach tábstoip"
 
 #: src/uniq.c:135
 #, c-format
@@ -8906,6 +8957,7 @@ msgstr[0] "%ld lá"
 msgstr[1] "%ld lá"
 msgstr[2] "%ld lá"
 msgstr[3] "%ld lá"
+msgstr[4] "%ld lá"
 
 #: src/uptime.c:132
 #, c-format
@@ -8913,8 +8965,9 @@ msgid "%lu user"
 msgid_plural "%lu users"
 msgstr[0] "%lu úsáideoir"
 msgstr[1] "%lu úsáideoir"
-msgstr[2] "%lu n-úsáideoir"
-msgstr[3] "%lu úsáideoir"
+msgstr[2] "%lu úsáideoir"
+msgstr[3] "%lu n-úsáideoir"
+msgstr[4] "%lu úsáideoir"
 
 #: src/uptime.c:146
 #, c-format
@@ -9037,11 +9090,11 @@ msgstr "PID"
 
 #: src/who.c:554
 msgid "COMMENT"
-msgstr "TRÁCHT "
+msgstr "NÓTA"
 
 #: src/who.c:554
 msgid "EXIT"
-msgstr "STÁDAS"
+msgstr "SCOIR"
 
 #: src/who.c:635
 #, c-format
@@ -9063,16 +9116,10 @@ msgstr ""
 "  -H, --heading     taispeáin teidil na gcolún\n"
 
 #: src/who.c:643
-msgid ""
-"  -i, --idle        add idle time as HOURS:MINUTES, . or old\n"
-"                    (deprecated, use -u)\n"
-"  -l, --login       print system login processes\n"
+msgid "  -l, --login       print system login processes\n"
 msgstr ""
-"  -i, --idle        taispeáin am díomhaoin mar UAIRE:NÓIMÉID, . nó old\n"
-"                    (i léig, bain úsáid as -u)\n"
-"      --login       taispeáin próisis logála isteach don chóras\n"
 
-#: src/who.c:648
+#: src/who.c:646
 msgid ""
 "      --lookup      attempt to canonicalize hostnames via DNS\n"
 "  -m                only hostname and user associated with stdin\n"
@@ -9082,7 +9129,7 @@ msgstr ""
 "  -m                níl ach óstainm agus úsáideoir nasctha le stdin\n"
 "  -p, --process     taispeáin próisis a chuir init ar bun\n"
 
-#: src/who.c:653
+#: src/who.c:651
 msgid ""
 "  -q, --count       all login names and number of users logged on\n"
 "  -r, --runlevel    print current runlevel\n"
@@ -9095,7 +9142,7 @@ msgstr ""
 "  -s, --short       ná taispeáin ach ainm, líne, agus am (réamhshocrú)\n"
 "  -t, --time        taispeáin athrú an chloig is déanaí\n"
 
-#: src/who.c:659
+#: src/who.c:657
 msgid ""
 "  -T, -w, --mesg    add user's message status as +, - or ?\n"
 "  -u, --users       list users logged in\n"
@@ -9107,7 +9154,7 @@ msgstr ""
 "      --message     ar comhbhrí le -T\n"
 "      --writable    ar comhbhrí le -T\n"
 
-#: src/who.c:667
+#: src/who.c:665
 #, c-format
 msgid ""
 "\n"
@@ -9118,27 +9165,26 @@ msgstr ""
 "Mura bhfuil COMHAD tugtha, úsáid %s.  Feictear %s mar CHOMHAD go minic.\n"
 "Má tá ARG1 agus ARG2 ann, glactar le -m: is gnách `am i' nó `mom likes'.\n"
 
-#: src/who.c:767
+#: src/who.c:765
 msgid "Warning: -i will be removed in a future release;   use -u instead"
 msgstr ""
 "rabhadh: tá --i dulta i léig agus beidh sé scriosta\n"
-"i leagan éigin amach anseo.  Bain úsáid as `-u' ina áit"
+"i leagan éigin amach anseo.  Bain úsáid as `-u' ina háit"
 
 #: src/whoami.c:51
-#, fuzzy
 msgid ""
 "Print the user name associated with the current effective user ID.\n"
 "Same as id -un.\n"
 "\n"
 msgstr ""
-"Taispeáin an t-ainm úsáideora nasctha leis an ID i bhfeidhm faoi láthair.\n"
-"Is ionann é seo agus `id -un'.\n"
+"Taispeáin an t-ainm úsáideora nasctha leis an aitheantas atá i bhfeidhm\n"
+"faoi láthair.  Ar comhbhrí le `id -un'.\n"
 "\n"
 
 #: src/whoami.c:95
-#, fuzzy, c-format
+#, c-format
 msgid "%s: cannot find name for user ID %lu\n"
-msgstr "Níl aon fháil ar ainm don ID úsáideora %u"
+msgstr "%s: níl aon fháil ar ainm don aitheantas úsáideora %lu\n"
 
 #: src/yes.c:46
 #, c-format
@@ -9157,47 +9203,72 @@ msgstr ""
 "Priontáil líne arís agus arís le gach TEAGHRÁN ceaptha, nó `y'.\n"
 "\n"
 
-#~ msgid "cannot obtain time stamps for %s"
-#~ msgstr "níl stampa ama ar fáil do %s"
-
-#, fuzzy
-#~ msgid "cannot open .. from %s"
-#~ msgstr "ní féidir an chomhadlann %s a oscailt"
-
-#, fuzzy
-#~ msgid "cannot open %s from %s"
-#~ msgstr "ní féidir an chomhadlann %s a oscailt"
-
-#, fuzzy
-#~ msgid "cannot open %s"
-#~ msgstr "ní féidir %s a scriosadh"
-
-#, fuzzy
-#~ msgid "cannot open from %s to %s"
-#~ msgstr "ní féidir an chomhadlann oibre a athrú ó %s go %s"
-
-#, fuzzy
 #~ msgid ""
-#~ "Display the current time in the given FORMAT, or set the system date.\n"
-#~ "\n"
-#~ "  -d, --date=STRING         display time described by STRING, not `now'\n"
-#~ "  -f, --file=DATEFILE       like --date once for each line of DATEFILE\n"
-#~ "  -I[TIMESPEC], --iso-8601[=TIMESPEC]  output date/time in ISO 8601 "
-#~ "format.\n"
-#~ "                            TIMESPEC=`date' for date only (the default),\n"
-#~ "                            `hours', `minutes', `seconds', or `ns' for "
-#~ "date and\n"
-#~ "                            time to the indicated precision.\n"
+#~ "  -i, --idle        add idle time as HOURS:MINUTES, . or old\n"
+#~ "                    (deprecated, use -u)\n"
+#~ "  -l, --login       print system login processes\n"
 #~ msgstr ""
-#~ "Taispeáin an t-am anois i gcruth FORMÁID, nó socraigh am an chórais.\n"
+#~ "  -i, --idle        taispeáin am díomhaoin mar UAIRE:NÓIMÉID, . nó old\n"
+#~ "                    (i léig, bain úsáid as -u)\n"
+#~ "      --login       taispeáin próisis logála isteach don chóras\n"
+
+#~ msgid "Warning: `-l' is deprecated; use `-L' instead"
+#~ msgstr "Rabhadh: tá --l dulta i léig; bain úsáid as `-L' ina háit"
+
+#~ msgid "the --allow-missing option is deprecated; use --retry instead"
+#~ msgstr ""
+#~ "tá an rogha --allow-missing dulta i léig; bain úsáid as --retry ina háit"
+
+#~ msgid "openat: unable to restore working directory"
+#~ msgstr "openat: ní féidir an chomhadlann oibre a athchóiriú"
+
+#~ msgid ""
+#~ "This is free software; see the source for copying conditions.  There is "
+#~ "NO\n"
+#~ "warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR "
+#~ "PURPOSE.\n"
+#~ msgstr ""
+#~ "Is saorbhogearra an ríomhchlár seo; féach ar an bhunchód le haghaidh\n"
+#~ "coinníollacha cóipeála.  Níl baránta ar bith ann; go fiú níl baránta ann\n"
+#~ "d'INDÍOLTACHT nó FEILIÚNACHT D'FHEIDHM AR LEITH.\n"
+
+#~ msgid "closing standard output"
+#~ msgstr "aschur caighdeánach á dhúnadh"
+
+#~ msgid ""
 #~ "\n"
-#~ "  -d, --date=TEAGHRÁN       taispeáin am tugtha i dTEAGHRÁN, ní `now'\n"
-#~ "  -f, --file=COMHAD         mar --date uair in aghaidh líne den COMHAD\n"
-#~ "      --iso-8601[=AMCHÓD]   taispeáin dáta/am i gcruth ISO 8601.\n"
-#~ "                            AMCHÓD=`date' do dháta amháin (réamhshocrú),\n"
-#~ "                            `hours', `minutes', `seconds', nó `ns' do "
-#~ "dháta\n"
-#~ "                            agus am leis an gcruinneas ceaptha.\n"
+#~ "Each MODE is one or more of the letters ugoa, one of the symbols +-= and\n"
+#~ "one or more of the letters rwxXstugo.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Is éard atá i ngach MÓD: litir amháin as `ugoa' ar a laghad, ceann de na\n"
+#~ "siombailí `+-=' agus litir amháin as `rwxXstugo' ar a laghad.\n"
+
+#~ msgid ""
+#~ "warning: --version-control (-V) is obsolete;  support for it\n"
+#~ "will be removed in some future release.  Use --backup=%s instead."
+#~ msgstr ""
+#~ "rabhadh: tá --version-control (-V) dulta i léig agus beidh sé scriosta\n"
+#~ "i leagan éigin amach anseo.  Bain úsáid as `--backup=%s' ina háit."
+
+#~ msgid ""
+#~ "  %z   RFC-2822 style numeric timezone (-0500) (a nonstandard extension)\n"
+#~ "  %Z   time zone (e.g., EDT), or nothing if no time zone is determinable\n"
+#~ "\n"
+#~ "By default, date pads numeric fields with zeroes.  GNU date recognizes\n"
+#~ "the following modifiers between `%' and a numeric directive.\n"
+#~ "\n"
+#~ "  `-' (hyphen) do not pad the field\n"
+#~ "  `_' (underscore) pad the field with spaces\n"
+#~ msgstr ""
+#~ "  %z   crios ama uimhriúil de réir RFC-822 (-0500) (neamhchaighdeánach)\n"
+#~ "  %Z   crios ama (m.sh., EDT), nó neamhní mura bhfuil crios ama ar fáil\n"
+#~ "\n"
+#~ "Mar réamhshocrú, stuáil réimsí uimhriúla le nialais.  Aithníonn\n"
+#~ "GNU date na mionathraitheoirí idir `%' agus treoir uimhriúil:\n"
+#~ "\n"
+#~ "  `-' (fleiscín) ná stuáil an réimse\n"
+#~ "  `_' (folíne) stuáil an réimse le spásanna\n"
 
 #~ msgid ""
 #~ "a format string may not be specified when using the --rfc-2822 (-R) option"
@@ -9207,17 +9278,30 @@ msgstr ""
 #~ msgid "undefined"
 #~ msgstr "gan sainmhíniú"
 
+#~ msgid "cannot get time of day"
+#~ msgstr "níl aon fháil ar an am lae"
+
+#~ msgid "%s+%s records in\n"
+#~ msgstr "%s+%s taifead isteach\n"
+
+#~ msgid "%s+%s records out\n"
+#~ msgstr "%s+%s taifead amach\n"
+
+#~ msgid "truncated records"
+#~ msgstr "taifid teasctha"
+
 #~ msgid "file offset out of range"
 #~ msgstr "fritháireamh comhaid as raon"
 
-#~ msgid "cannot get priority"
-#~ msgstr "níl an tosaíocht ar fáil"
+#~ msgid "`-LIST' option is obsolete; use `-t LIST'"
+#~ msgstr "tá an rogha `-LIOSTA' i léig; bain úsáid as `-t LIOSTA'"
 
-#~ msgid "cannot set priority"
-#~ msgstr "ní féidir an tosaíocht a shocrú"
+#~ msgid "`%s' is too large"
+#~ msgstr "tá `%s' rómhór"
 
-#, fuzzy
 #~ msgid ""
+#~ "Usage: %s [ignored command line arguments]\n"
+#~ "  or:  %s OPTION\n"
 #~ "Exit with a status code indicating failure.\n"
 #~ "\n"
 #~ "These option names may not be abbreviated.\n"
@@ -9230,18 +9314,26 @@ msgstr ""
 #~ "Ní cheadaítear na roghanna seo a ghiorrú.\n"
 #~ "\n"
 
-#~ msgid "Only one operand may be specified when using --check."
-#~ msgstr "Ní cheadaítear ach oibreann amháin leis an rogha --check."
+#~ msgid "`%s' option is obsolete; use `%s'"
+#~ msgstr "tá an rogha `%s' i léig; bain úsáid as `%s'"
 
-#~ msgid ""
-#~ "This is free software; see the source for copying conditions.  There is "
-#~ "NO\n"
-#~ "warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR "
-#~ "PURPOSE.\n"
-#~ msgstr ""
-#~ "Is saorbhogearra an ríomhchlár seo; féach ar an bhunchód le haghaidh\n"
-#~ "coinníollacha cóipeála.  Níl baránta ar bith ann; go fiú níl baránta ann\n"
-#~ "d'INDÍOLTACHT nó FEILIÚNACHT DO FHEIDHM AR LEITH.\n"
+#~ msgid "%s: number of bytes is large"
+#~ msgstr "%s: is mór líon na mbeart"
+
+#~ msgid "`-%s' option is obsolete; use `-%c %.*s%.*s%s'"
+#~ msgstr "tá an rogha `-%s' i léig; bain úsáid as `-%c %.*s%.*s%s'"
+
+#~ msgid "cannot obtain time stamps for %s"
+#~ msgstr "níl stampa ama ar fáil do %s"
+
+#~ msgid "invalid field number: `%s'"
+#~ msgstr "uimhir réimse neamhbhailí: `%s'"
+
+#~ msgid "invalid field number for file 1: `%s'"
+#~ msgstr "uimhir réimse neamhbhailí do chomhad 1: `%s'"
+
+#~ msgid "invalid field number for file 2: `%s'"
+#~ msgstr "uimhir réimse neamhbhailí do chomhad 2: `%s'"
 
 #~ msgid ""
 #~ "\n"
@@ -9258,43 +9350,33 @@ msgstr ""
 #~ "  -t, --text              léigh comhaid sa mhód téacs (réamhshocrú)\n"
 #~ "\n"
 
-#, fuzzy
-#~ msgid ""
-#~ "      --reply={yes,no,query}   specify how to handle the prompt about an\n"
-#~ "                                 existing destination file.  Note that\n"
-#~ "                                 --reply=no has an effect only when mv\n"
-#~ "                                 would prompt without -i or equivalent, i."
-#~ "e.,\n"
-#~ "                                 when a destination file exists and is "
-#~ "not\n"
-#~ "                                 writable, standard input is a terminal, "
-#~ "and\n"
-#~ "                                 no -f (or equivalent) option is "
-#~ "specified\n"
-#~ "      --strip-trailing-slashes remove any trailing slashes from each "
-#~ "SOURCE\n"
-#~ "                                 argument\n"
-#~ "  -S, --suffix=SUFFIX          override the usual backup suffix\n"
-#~ msgstr ""
-#~ "      --reply={yes,no,query}   an modh chun déileáil leis an cheist faoi\n"
-#~ "                                 sprioc-chomhad atá ann cheana\n"
-#~ "      --strip-trailing-slashes scrios slaiseanna sraoilleach ó gach "
-#~ "FOINSE\n"
-#~ "  -S, --suffix=IARMHÍR         sáraigh an iarmhír réamhshocraithe "
-#~ "cúltaca\n"
+#~ msgid "Only one operand may be specified when using --check."
+#~ msgstr "Ní cheadaítear ach oibreann amháin leis an rogha --check."
+
+#~ msgid "cannot get priority"
+#~ msgstr "níl an tosaíocht ar fáil"
+
+#~ msgid "cannot set priority"
+#~ msgstr "ní féidir an tosaíocht a shocrú"
 
 #~ msgid "failed to redirect standard output"
 #~ msgstr "níorbh fhéidir aschur caighdeánach a athsheoladh"
 
 #~ msgid ""
-#~ "warning: --version-control (-V) is obsolete;  support for it\n"
-#~ "will be removed in some future release.  Use --backup=%s instead."
+#~ "Diagnose unportable constructs in NAME.\n"
+#~ "\n"
+#~ "  -p, --portability   check for all POSIX systems, not only this one\n"
 #~ msgstr ""
-#~ "rabhadh: tá --version-control (-V) dulta i léig agus beidh sé scriosta\n"
-#~ "i leagan éigin amach anseo.  Bain úsáid as `--backup=%s' ina áit."
+#~ "Tar ar struchtúir do-iompartha in AINM.\n"
+#~ "\n"
+#~ "  -p, --portability   seiceáil do gach córas POSIX, ní an ceann seo "
+#~ "amháin\n"
 
-#~ msgid "`%s' is too large"
-#~ msgstr "tá `%s' rómhór"
+#~ msgid "column count too large"
+#~ msgstr "líon rómhór na gcolún"
+
+#~ msgid "`--columns=COLUMN' invalid number of columns: `%s'"
+#~ msgstr "`--columns=COLÚN' líon neamhbhailí na gcolún: `%s'"
 
 #~ msgid ""
 #~ "* file systems that cache in temporary locations, such as NFS\n"
@@ -9313,8 +9395,11 @@ msgstr ""
 #~ "* córais chomhaid comhbhrúite\n"
 #~ "\n"
 #~ "Sa bhreis, is féidir go bhfuil cóipeanna den chomhad i gcúltacaí\n"
-#~ "agus scátháin iargúlta agus ní féidir na comhaid seo a scriosadh,\n"
-#~ "ag ceadú an comhad a athghabháil níos déanaí.\n"
+#~ "agus ar scátháin iargúlta agus ní féidir na comhaid seo a scriosadh,\n"
+#~ "ag ceadú an comhad a bheith aisghafa níos déanaí.\n"
+
+#~ msgid "`-%s' option is obsolete; use `-l %s'"
+#~ msgstr "tá an rogha `-%s' i léig; bain úsáid as `-l %s'"
 
 #~ msgid "invalid argument `%s'"
 #~ msgstr "argóint neamhbhailí `%s'"
@@ -9322,35 +9407,11 @@ msgstr ""
 #~ msgid "stdin: read error"
 #~ msgstr "stdin: earráid ag léamh"
 
-#~ msgid "openat: unable to restore working directory"
-#~ msgstr "openat: ní féidir an chomhadlann oibre a athchóiriú"
-
-#, fuzzy
-#~ msgid "fdopendir: unable to record current working directory"
-#~ msgstr "openat: ní féidir an chomhadlann oibre a thaifead"
-
-#, fuzzy
-#~ msgid "fdopendir: unable to restore working directory"
-#~ msgstr "openat: ní féidir an chomhadlann oibre a athchóiriú"
-
-#, fuzzy
-#~ msgid "fstatat: unable to record current working directory"
-#~ msgstr "openat: ní féidir an chomhadlann oibre a thaifead"
-
-#, fuzzy
-#~ msgid "fstatat: unable to restore working directory"
-#~ msgstr "openat: ní féidir an chomhadlann oibre a athchóiriú"
-
-#, fuzzy
-#~ msgid "integer is too large: %s"
-#~ msgstr "is rómhór an tábstop %s"
+#~ msgid "`%s' option is obsolete; use `%s-%c %<PRIuMAX>'"
+#~ msgstr "tá an rogha `%s' i léig; úsáid `%s-%c %<PRIuMAX>'"
 
 #~ msgid "%s: integer expression expected\n"
-#~ msgstr "%s: ag súil le slonn slánuimhreach\n"
-
-#, fuzzy
-#~ msgid "integer is too large: %s\n"
-#~ msgstr "is rómhór an tábstop %s"
+#~ msgstr "%s: bhíothas ag súil le slonn slánuimhreach\n"
 
 #~ msgid "before -lt"
 #~ msgstr "roimh -lt"
@@ -9392,37 +9453,19 @@ msgstr ""
 #~ msgstr "i ndiaidh -t"
 
 #~ msgid ""
+#~ "Usage: %s [ignored command line arguments]\n"
+#~ "  or:  %s OPTION\n"
+#~ "Exit with a status code indicating success.\n"
 #~ "\n"
-#~ "Each MODE is one or more of the letters ugoa, one of the symbols +-= and\n"
-#~ "one or more of the letters rwxXstugo.\n"
+#~ "These option names may not be abbreviated.\n"
+#~ "\n"
 #~ msgstr ""
+#~ "Úsáid: %s [déan neamhshuim ar argóintí]\n"
+#~ "  nó:  %s ROGHA\n"
+#~ "Scoir le cód stádais a chomharthaíonn bua.\n"
 #~ "\n"
-#~ "Is éard atá i ngach MÓD: litir amháin as `ugoa' ar a laghad, ceann de na\n"
-#~ "siombailí `+-=' agus litir amháin as `rwxXstugo' ar a laghad.\n"
-
-#~ msgid "`-LIST' option is obsolete; use `-t LIST'"
-#~ msgstr "tá an rogha `-LIOSTA' i léig; bain úsáid as `-t LIOSTA'"
-
-#~ msgid "`%s' option is obsolete; use `%s'"
-#~ msgstr "tá an rogha `%s' i léig; bain úsáid as `%s'"
-
-#~ msgid "`-%s' option is obsolete; use `-%c %.*s%.*s%s'"
-#~ msgstr "tá an rogha `-%s' i léig; bain úsáid as `-%c %.*s%.*s%s'"
-
-#~ msgid "invalid field number: `%s'"
-#~ msgstr "uimhir réimse neamhbhailí: `%s'"
-
-#~ msgid "invalid field number for file 1: `%s'"
-#~ msgstr "uimhir réimse neamhbhailí do chomhad 1: `%s'"
-
-#~ msgid "invalid field number for file 2: `%s'"
-#~ msgstr "uimhir réimse neamhbhailí do chomhad 2: `%s'"
-
-#~ msgid "`-%s' option is obsolete; use `-l %s'"
-#~ msgstr "tá an rogha `-%s' i léig; bain úsáid as `-l %s'"
-
-#~ msgid "`%s' option is obsolete; use `%s-%c %<PRIuMAX>'"
-#~ msgstr "tá an rogha `%s' i léig; úsáid `%s-%c %<PRIuMAX>'"
+#~ "Ní cheadaítear na roghanna a ghiorrú.\n"
+#~ "\n"
 
 #~ msgid "`-LIST' option is obsolete; use `--first-only -t LIST'"
 #~ msgstr "tá an rogha `-LIST' i léig; bain úsáid as `--first-only -t LIST'"
@@ -9433,61 +9476,8 @@ msgstr ""
 #~ msgid "%s: cannot find username for UID %lu\n"
 #~ msgstr "%s: níl aon fháil ar ainm úsáideora don UID %lu\n"
 
-#~ msgid "closing standard output"
-#~ msgstr "aschur caighdeánach á dhúnadh"
-
-#~ msgid "%s+%s records in\n"
-#~ msgstr "%s+%s taifead isteach\n"
-
-#~ msgid "%s+%s records out\n"
-#~ msgstr "%s+%s taifead amach\n"
-
-#~ msgid "truncated records"
-#~ msgstr "taifid teasctha"
-
-#~ msgid "column count too large"
-#~ msgstr "líon rómhór na gcolún"
-
-#~ msgid ""
-#~ "  %z   RFC-2822 style numeric timezone (-0500) (a nonstandard extension)\n"
-#~ "  %Z   time zone (e.g., EDT), or nothing if no time zone is determinable\n"
-#~ "\n"
-#~ "By default, date pads numeric fields with zeroes.  GNU date recognizes\n"
-#~ "the following modifiers between `%' and a numeric directive.\n"
-#~ "\n"
-#~ "  `-' (hyphen) do not pad the field\n"
-#~ "  `_' (underscore) pad the field with spaces\n"
-#~ msgstr ""
-#~ "  %z   crios ama uimhriúil de réir RFC-822 (-0500) (neamhchaighdeánach)\n"
-#~ "  %Z   crios ama (m.sh., EDT), nó neamhní mura bhfuil crios ama ar fáil\n"
-#~ "\n"
-#~ "Mar réamhshocrú, stuáil réimsí uimhriúla le nialais.  Aithníonn\n"
-#~ "GNU date na bunathraitheoirí idir `%' agus treoir uimhriúil:\n"
-#~ "\n"
-#~ "  `-' (fleiscín) ná stuáil an réimse\n"
-#~ "  `_' (folíne) stuáil an réimse le spásanna\n"
-
-#~ msgid "cannot get time of day"
-#~ msgstr "níl aon fháil ar an am lae"
-
-#~ msgid "%s: number of bytes is large"
-#~ msgstr "%s: is mór líon na mbeart"
-
-#~ msgid ""
-#~ "Diagnose unportable constructs in NAME.\n"
-#~ "\n"
-#~ "  -p, --portability   check for all POSIX systems, not only this one\n"
-#~ msgstr ""
-#~ "Tar ar struchtúir do-iompartha in AINM.\n"
-#~ "\n"
-#~ "  -p, --portability   seiceáil do gach córas POSIX, ní an ceann seo "
-#~ "amháin\n"
-
-#~ msgid "`--columns=COLUMN' invalid number of columns: `%s'"
-#~ msgstr "`--columns=COLÚN' líon neamhbhailí na gcolún: `%s'"
-
 #~ msgid "too few arguments"
-#~ msgstr "níl go leor argóint ann"
+#~ msgstr "níl go leor argóintí ann"
 
 #~ msgid "cannot change to null group"
 #~ msgstr "ní féidir athrach a dhéanamh go dtí grúpa nialasach"
@@ -9499,7 +9489,7 @@ msgstr ""
 #~ msgstr "uimhir ghrúpa neamhbhailí %s"
 
 #~ msgid "invalid mode string: %s"
-#~ msgstr "teaghrán modha neamhbhailí: %s"
+#~ msgstr "teaghrán neamhbhailí móid: %s"
 
 #~ msgid ""
 #~ "Usage: %s [OPTION]... OWNER[:[GROUP]] FILE...\n"
@@ -9547,7 +9537,7 @@ msgstr ""
 #~ msgstr ""
 #~ "Déan macalla an/na TEAGHRÁ(I)N chuig an aschur caighdeánach.\n"
 #~ "\n"
-#~ "  -n              ná taispeáin an líne nua foirceanta\n"
+#~ "  -n              ná taispeáin an líne nua fhoirceanta\n"
 #~ "  -e              bain úsáid as na carachtair éalúcháin le cúlslaiseanna\n"
 #~ "                    a leanas\n"
 #~ "  -E              ná bain úsáid as na carachtair sin i dTEAGHRÁN\n"
@@ -9557,7 +9547,7 @@ msgstr ""
 
 #~ msgid "installing multiple files, but last argument, %s is not a directory"
 #~ msgstr ""
-#~ "ag suiteáil comhaid iomadúla, ach ní comhadlann an argóint deiridh, %s"
+#~ "comhaid iomadúla á suiteáil, ach ní comhadlann í an argóint deiridh, %s"
 
 #~ msgid "%s is a directory"
 #~ msgstr "is comhadlann %s"
@@ -9566,7 +9556,7 @@ msgstr ""
 #~ msgstr "an iomarca argóintí nach roghanna"
 
 #~ msgid "too few non-option arguments"
-#~ msgstr "níl go leor argóint nach roghanna"
+#~ msgstr "níl go leor argóintí nach roghanna"
 
 #~ msgid "%s: File exists"
 #~ msgstr "%s: Tá an comhad ann cheana"
@@ -9627,15 +9617,15 @@ msgstr ""
 #~ msgstr "fritháireamh ar an sean-nós"
 
 #~ msgid "invalid second operand in compatibility mode `%s'"
-#~ msgstr "tá an dara oibreann neamhbhailí i modh comhoiriúnachta `%s'"
+#~ msgstr "tá an dara hoibreann neamhbhailí sa mhód comhoiriúnachta `%s'"
 
 #~ msgid "in compatibility mode, the last two arguments must be offsets"
 #~ msgstr ""
-#~ "ní foláir an dá argóint deiridh a bheith fritháireamh i modh "
+#~ "caithfidh an dá argóint deiridh a bheith fritháireamh sa mhód "
 #~ "comhoiriúnachta"
 
 #~ msgid "path `%s' contains nonportable character `%c'"
-#~ msgstr "tá carachtar do-iompartha sa chosán `%s' (`%c')"
+#~ msgstr "tá carachtar do-iompartha sa chonair `%s' (`%c')"
 
 #~ msgid "`%s' is not a directory"
 #~ msgstr "Ní comhadlann `%s'"
@@ -9647,7 +9637,7 @@ msgstr ""
 #~ msgstr "tá fad an ainm `%s' = %ld; uasmhéid=%ld"
 
 #~ msgid "path `%s' has length %lu; exceeds limit of %ld"
-#~ msgstr "tá fad an chosáin `%s' = %lu; uasmhéid = %ld"
+#~ msgstr "tá fad na conaire `%s' = %lu; uasmhéid = %ld"
 
 #~ msgid "`--pages' invalid range of page numbers: `%s'"
 #~ msgstr "`--pages': raon leathanach neamhbhailí: `%s'"
@@ -9687,8 +9677,8 @@ msgstr ""
 #~ msgstr ""
 #~ "  -f, --canonicalize      caighdeánaigh trí leanúint gach nasc "
 #~ "siombalach\n"
-#~ "                          i ngach ball den chosán, go hathchúrsach\n"
-#~ "  -n, --no-newline        ná scríobh an líne nua foirceanta\n"
+#~ "                          i ngach ball den chonair, go hathchúrsach\n"
+#~ "  -n, --no-newline        ná scríobh an líne nua fhoirceanta\n"
 #~ "  -q, --quiet,\n"
 #~ "  -s, --silent            múch an tromlach d'earráidí\n"
 #~ "  -v, --verbose           taispeáin earráidí\n"
@@ -9704,7 +9694,8 @@ msgstr ""
 #~ msgstr ""
 #~ "an iomarca argóint; ní cheadaítear ach argóint chomhaid amháin agus ag "
 #~ "úsáid\n"
-#~ "an chomhréir i léig (%s) atá ag tail.  Bain úsáid as -n nó -c ina áit sin."
+#~ "an chomhréir i léig (%s) atá ag tail.  Bain úsáid as -n nó -c ina háit "
+#~ "sin."
 
 #~ msgid ""
 #~ "Warning: it is not portable to use two or more file arguments with\n"
@@ -9712,13 +9703,14 @@ msgstr ""
 #~ "option instead."
 #~ msgstr ""
 #~ "Rabhadh: ní iniompartha ach argóint chomhaid amháin a úsáid leis\n"
-#~ "an chomhréir i léig (%s) atá ag tail.  Bain úsáid as -n nó -c ina áit sin."
+#~ "an chomhréir i léig (%s) atá ag tail.  Bain úsáid as -n nó -c ina háit "
+#~ "sin."
 
 #~ msgid "%s: invalid maximum number of consecutive size changes"
 #~ msgstr "%s: uasmhéid neamhbhailí d'athruithe méide leantach"
 
 #~ msgid "argument expected\n"
-#~ msgstr "ag súil le hargóint\n"
+#~ msgstr "bhíothas ag súil le hargóint\n"
 
 #~ msgid "too many arguments\n"
 #~ msgstr "an iomarca argóintí\n"
@@ -9737,7 +9729,7 @@ msgstr ""
 #~ "ní foláir dhá theaghrán a thabhairt agus scriosadh agus fáisceadh araon"
 
 #~ msgid "at least one string must be given when squeezing repeats"
-#~ msgstr "ní foláir aon theaghrán a thabhairt, ar a laghad, agus fáisceadh"
+#~ msgstr "ní foláir aon teaghrán a thabhairt ar a laghad le linn fáiscthe"
 
 #~ msgid ""
 #~ "invalid identity mapping;  when translating, any [:lower:] or [:upper:]\n"
@@ -9753,7 +9745,7 @@ msgstr ""
 #~ msgstr "ní féidir níos mó ná argóint amháin a shonrú"
 
 #~ msgid "tab size contains an invalid character"
-#~ msgstr "tá carachtar neamhbhailí i dtomhas táib"
+#~ msgstr "tá carachtar neamhbhailí sa mhéid táib"
 
 #~ msgid "Usage: %s [OPTION]... LEFT_FILE RIGHT_FILE\n"
 #~ msgstr "Úsáid: %s [ROGHA]... COMHAD_AR_CLE COMHAD_AR_DHEIS\n"
