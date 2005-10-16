@@ -175,7 +175,7 @@ Free Documentation License''.
 * Operating on sorted files::          sort uniq comm ptx tsort
 * Operating on fields within a line::  cut paste join
 * Operating on characters::            tr expand unexpand
-* Directory listing::                  ls dir vdir d v dircolors
+* Directory listing::                  ls dir vdir dircolors
 * Basic operations::                   cp dd install mv rm shred
 * Special file types::                 ln mkdir rmdir mkfifo mknod
 * Changing file attributes::           chgrp chmod chown touch
@@ -5813,7 +5813,7 @@ output is not a terminal.
 @opindex vertical @r{sorted files in columns}
 List files in columns, sorted vertically.  This is the default for
 @command{ls} if standard output is a terminal.  It is always the default
-for the @command{dir} and @command{d} programs.
+for the @command{dir} program.
 @sc{gnu} @command{ls} uses variable width columns to display as many files as
 possible in the fewest lines.
 
@@ -6168,7 +6168,7 @@ This is the default unless the output is a terminal and the program is
 @pindex dir
 @cindex directory listing, brief
 
-@command{dir} (also installed as @command{d}) is equivalent to @code{ls -C
+@command{dir} is equivalent to @code{ls -C
 -b}; that is, by default files are listed in columns, sorted vertically,
 and special characters are represented by backslash escape sequences.
 
@@ -6181,7 +6181,7 @@ and special characters are represented by backslash escape sequences.
 @pindex vdir
 @cindex directory listing, verbose
 
-@command{vdir} (also installed as @command{v}) is equivalent to @code{ls -l
+@command{vdir} is equivalent to @code{ls -l
 -b}; that is, by default files are listed in long format and special
 characters are represented by backslash escape sequences.
 
