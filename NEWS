@@ -1,6 +1,11 @@
 GNU coreutils NEWS                                    -*- outline -*-
 
-* Major changes in release 5.91-cvs (2005-??-??) [stable]
+* Major changes in release 5.91-cvs (2005-10-16) [stable candidate]
+
+** Bug fixes
+
+  "mkdir -p /a/b/c" no longer fails merely because a leading prefix
+  directory (e.g., /a or /a/b) exists on a read-only file system.
 
 ** Removed options
 
