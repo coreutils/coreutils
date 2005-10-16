@@ -299,7 +299,7 @@ makefile-check:
 
 news-date-check: NEWS
 	today=`date +%Y-%m-%d`;	\
-	if head NEWS | grep '^\*.* $(VERSION_REGEXP) \($$today\)' \
+	if head NEWS | grep '^\*.* $(VERSION_REGEXP) ('$$today')' \
 	    >/dev/null; then \
 	  :; \
 	else \
