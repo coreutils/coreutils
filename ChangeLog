@@ -1,6 +1,10 @@
-2005-10-15  Jim Meyering  <jim@meyering.net>
+2005-10-16  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.91-cvs.
+
+	* NEWS: Mention the `mkdir -p' bug fix.
+
+2005-10-15  Jim Meyering  <jim@meyering.net>
 
 	* src/who.c (usage): Undocument deprecated --idle (-i) option.
 
