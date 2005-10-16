@@ -308,7 +308,7 @@ news-date-check: NEWS
 	fi
 
 changelog-check:
-	if head ChangeLog | grep 'Version $(VERSION_REGEXP)\.$' \
+	if head ChangeLog | grep 'Version $(VERSION_REGEXP)\.$$' \
 	    >/dev/null; then \
 	  :; \
 	else \
