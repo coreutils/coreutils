@@ -1,3 +1,8 @@
+2005-10-15  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* doc/coreutils.texi (Top, General output formatting, dir invocation):
+	(vdir invocation): Don't document the old v and d commands.
+
 2005-10-15  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (du invocation): Document du's -m option,
