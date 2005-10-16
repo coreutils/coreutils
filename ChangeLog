@@ -2,6 +2,9 @@
 
 	* Version 5.91.
 
+	* Makefile.maint (VERSION_REGEXP): New variable.
+	(news-date-check, changelog-check): Use tighter regular expressions.
+
 	* configure.ac: Remove -cvs suffix from version string.
 	* NEWS: Add today's date.
 
