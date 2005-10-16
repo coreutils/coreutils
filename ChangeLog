@@ -1,6 +1,9 @@
 2005-10-16  Jim Meyering  <jim@meyering.net>
 
-	* Version 5.91-cvs.
+	* Version 5.91.
+
+	* configure.ac: Remove -cvs suffix from version string.
+	* NEWS: Add today's date.
 
 	* NEWS: Mention the `mkdir -p' bug fix.
 
