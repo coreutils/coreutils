@@ -35,6 +35,7 @@ ifeq ($(origin prev_version_file), undefined)
 endif
 
 PREV_VERSION := $(shell cat $(prev_version_file))
+VERSION_REGEXP = $(subst .,\.,$(VERSION))
 
 tag-package = $(shell echo "$(PACKAGE)" | tr '[:lower:]' '[:upper:]')
 tag-this-version = $(subst .,_,$(VERSION))
@@ -298,15 +299,17 @@ makefile-check:
 
 news-date-check: NEWS
 	today=`date +%Y-%m-%d`;	\
-	if head NEWS | grep '^\*.*'$$today >/dev/null; then \
+	if head NEWS | grep '^\*.* $(VERSION_REGEXP) \($$today\)' \
+	    >/dev/null; then \
 	  :; \
 	else \
-	  echo "today's date is not in NEWS" 1>&2; \
+	  echo "version or today's date is not in NEWS" 1>&2; \
 	  exit 1; \
 	fi
 
 changelog-check:
-	if head ChangeLog | grep 'Version $(VERSION)' >/dev/null; then \
+	if head ChangeLog | grep 'Version $(VERSION_REGEXP)\.$' \
+	    >/dev/null; then \
 	  :; \
 	else \
 	  echo "$(VERSION) not in ChangeLog" 1>&2; \
