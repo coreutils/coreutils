@@ -1,3 +1,14 @@
+2005-10-17  Jim Meyering  <jim@meyering.net>
+
+	* Version 5.92-cvs.
+
+	* configure.ac: Use 5.92-cvs as the version string.
+	* NEWS: Adjust accordingly.
+
+	* Makefile.maint (my-distcheck): Depend on
+	$(release_archive_dir)/$(prev-tgz) here, so that if it's missing
+	we fail earlier.
+
 2005-10-16  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.91.
