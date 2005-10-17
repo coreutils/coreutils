@@ -435,7 +435,7 @@ null_AM_MAKEFLAGS = \
 # have to have a recent version of gcc and glibc headers.
 TMPDIR ?= /tmp
 t=$(TMPDIR)/$(PACKAGE)/test
-my-distcheck: $(local-check)
+my-distcheck: $(local-check) $(release_archive_dir)/$(prev-tgz)
 	-rm -rf $(t)
 	mkdir -p $(t)
 	GZIP=$(GZIP_ENV) $(AMTAR) -C $(t) -zxf $(distdir).tar.gz
