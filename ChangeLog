@@ -1,6 +1,11 @@
-2005-10-17  Jim Meyering  <jim@meyering.net>
+2005-10-18  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.92-cvs.
+
+	* tests/chgrp/basic: Add a comment explaining (probably) why this
+	test fails on OpenBSD 3.2 when run in an NFS-mounted directory.
+
+2005-10-17  Jim Meyering  <jim@meyering.net>
 
 	* configure.ac: Use 5.92-cvs as the version string.
 	* NEWS: Adjust accordingly.
