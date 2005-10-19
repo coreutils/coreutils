@@ -207,6 +207,13 @@ append_quoted (const char *str)
     {
       switch (*str)
 	{
+	case '\'':
+	  APPEND_CHAR ('\'');
+	  APPEND_CHAR ('\\');
+	  APPEND_CHAR ('\'');
+	  need_backslash = true;
+	  break;
+
 	case '\\':
 	case '^':
 	  need_backslash = !need_backslash;
