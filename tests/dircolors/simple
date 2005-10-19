@@ -23,6 +23,9 @@ my @Tests =
      ['a', {IN => {k => "exec\n"}},
       {ERR => "dircolors: k:1: invalid line;  missing second token\n"},
       {EXIT => 1}],
+     ['quote', {IN => "exec 'echo Hello;:'\n"},
+      {OUT => "LS_COLORS='ex='\\''echo Hello;\\:'\\'':';\n"
+      . "export LS_COLORS\n"}],
     );
 
 my $save_temps = $ENV{DEBUG};
