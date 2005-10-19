@@ -1,6 +1,11 @@
-2005-10-19  Jim Meyering  <jim@meyering.net>
+2005-10-18  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 5.92-cvs.
+
+	* src/dircolors.c (append_quoted): Quote ' correctly.
+	Problem reported by Eric Blake.
+
+2005-10-19  Jim Meyering  <jim@meyering.net>
 
 	* tests/dircolors/simple (quote): Add test for the above fix.
 
