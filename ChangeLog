@@ -1,6 +1,13 @@
-2005-10-18  Paul Eggert  <eggert@cs.ucla.edu>
+2005-10-20  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.92-cvs.
+
+	* tests/chmod/octal: New file, to exercise today's
+	lib/modechange.c fix.
+	* tests/chmod/Makefile.am (TESTS): Add octal.
+	* NEWS: Mention this chmod fix as well as the dircolors one.
+
+2005-10-18  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/dircolors.c (append_quoted): Quote ' correctly.
 	Problem reported by Eric Blake.
