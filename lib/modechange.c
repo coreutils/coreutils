@@ -124,6 +124,9 @@ mode_compile (char const *mode_string)
 	}
       while ('0' <= *mode_string && *mode_string < '8');
 
+      if (*mode_string)
+	return NULL;
+
       /* Help the compiler optimize the usual case where mode_t uses
 	 the traditional octal representation.  */
       mode = ((S_ISUID == SUID && S_ISGID == SGID && S_ISVTX == SVTX
