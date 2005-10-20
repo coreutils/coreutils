@@ -2,7 +2,7 @@
 
 	* Version 5.92-cvs.
 
-	* tests/chmod/octal: New file, to exercise today's
+	* tests/chmod/octal: New file/test, to exercise today's
 	lib/modechange.c fix.
 	* tests/chmod/Makefile.am (TESTS): Add octal.
 	* NEWS: Mention this chmod fix as well as the dircolors one.
