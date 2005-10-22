@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: coreutils 5.3.0\n"
 "Report-Msgid-Bugs-To: bug-coreutils@gnu.org\n"
-"POT-Creation-Date: 2005-10-16 12:36+0200\n"
+"POT-Creation-Date: 2005-10-22 20:15+0200\n"
 "PO-Revision-Date: 2005-02-13 03:39+0800\n"
 "Last-Translator: Funda Wang <fundawang@linux.net.cn>\n"
 "Language-Team: Chinese (simplified) <i18n-translation@lists.linux.net.cn>\n"
@@ -586,7 +586,7 @@ msgid "missing operand"
 msgstr "缺少了操作对象"
 
 #: src/basename.c:124 src/comm.c:278 src/cp.c:519 src/date.c:428
-#: src/dircolors.c:449 src/dirname.c:101 src/du.c:940 src/hostid.c:82
+#: src/dircolors.c:456 src/dirname.c:101 src/du.c:940 src/hostid.c:82
 #: src/hostname.c:120 src/id.c:160 src/install.c:326 src/join.c:748
 #: src/link.c:91 src/ln.c:510 src/logname.c:76 src/mknod.c:151 src/mv.c:458
 #: src/od.c:1840 src/ptx.c:2182 src/readlink.c:154 src/seq.c:373
@@ -2550,21 +2550,21 @@ msgstr ""
 "否则，会使用一个默认的数据库。如要了解此文件格式的细节，请执行\n"
 "“dircolors --print-database”。\n"
 
-#: src/dircolors.c:288
+#: src/dircolors.c:295
 #, c-format
 msgid "%s:%lu: invalid line;  missing second token"
 msgstr "%s：%lu：此行无效；缺少了第二栏数据"
 
-#: src/dircolors.c:360
+#: src/dircolors.c:367
 #, c-format
 msgid "%s:%lu: unrecognized keyword %s"
 msgstr "%s：%lu：无法识别的关键字 %s"
 
-#: src/dircolors.c:361
+#: src/dircolors.c:368
 msgid "<internal>"
 msgstr "<内部数据>"
 
-#: src/dircolors.c:442
+#: src/dircolors.c:449
 msgid ""
 "the options to output dircolors' internal database and\n"
 "to select a shell syntax are mutually exclusive"
@@ -2572,11 +2572,11 @@ msgstr ""
 "显示 dircolors 内部数据库的选项和选择 shell 语法的选项\n"
 "是互相抵触的"
 
-#: src/dircolors.c:452
+#: src/dircolors.c:459
 msgid "File operands cannot be combined with --print-database (-p)."
 msgstr ""
 
-#: src/dircolors.c:475
+#: src/dircolors.c:482
 msgid "no SHELL environment variable, and no shell type option given"
 msgstr "没有设定 SHELL 环境变量，也没有指定 shell 类型的选项"
 

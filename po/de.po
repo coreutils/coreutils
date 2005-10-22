@@ -39,7 +39,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GNU coreutils 5.3.0\n"
 "Report-Msgid-Bugs-To: bug-coreutils@gnu.org\n"
-"POT-Creation-Date: 2005-10-16 12:36+0200\n"
+"POT-Creation-Date: 2005-10-22 20:15+0200\n"
 "PO-Revision-Date: 2005-06-30 16:34+0200\n"
 "Last-Translator: Michael Piefel <piefel@informatik.hu-berlin.de>\n"
 "Language-Team: German <de@li.org>\n"
@@ -624,7 +624,7 @@ msgid "missing operand"
 msgstr "fehlender Operand"
 
 #: src/basename.c:124 src/comm.c:278 src/cp.c:519 src/date.c:428
-#: src/dircolors.c:449 src/dirname.c:101 src/du.c:940 src/hostid.c:82
+#: src/dircolors.c:456 src/dirname.c:101 src/du.c:940 src/hostid.c:82
 #: src/hostname.c:120 src/id.c:160 src/install.c:326 src/join.c:748
 #: src/link.c:91 src/ln.c:510 src/logname.c:76 src/mknod.c:151 src/mv.c:458
 #: src/od.c:1840 src/ptx.c:2182 src/readlink.c:154 src/seq.c:373
@@ -2823,21 +2823,21 @@ msgstr ""
 "Sonst wird eine vorkompilierte Datenbank verwendet. Für Einzelheiten rufen\n"
 "Sie „dircolors --print-database“ auf.\n"
 
-#: src/dircolors.c:288
+#: src/dircolors.c:295
 #, c-format
 msgid "%s:%lu: invalid line;  missing second token"
 msgstr "%s: %lu: ungültige Zeile, zweites Token fehlt"
 
-#: src/dircolors.c:360
+#: src/dircolors.c:367
 #, c-format
 msgid "%s:%lu: unrecognized keyword %s"
 msgstr "%s:%lu: unbekanntes Schlüsselwort %s"
 
-#: src/dircolors.c:361
+#: src/dircolors.c:368
 msgid "<internal>"
 msgstr "<intern>"
 
-#: src/dircolors.c:442
+#: src/dircolors.c:449
 msgid ""
 "the options to output dircolors' internal database and\n"
 "to select a shell syntax are mutually exclusive"
@@ -2846,11 +2846,11 @@ msgstr ""
 "Auswahl\n"
 "einer Shell-Syntax schließen sich gegenseitig aus"
 
-#: src/dircolors.c:452
+#: src/dircolors.c:459
 msgid "File operands cannot be combined with --print-database (-p)."
 msgstr ""
 
-#: src/dircolors.c:475
+#: src/dircolors.c:482
 msgid "no SHELL environment variable, and no shell type option given"
 msgstr "Keine SHELL Umgebungsvariable, und keine Shell-Typ Option angegeben"
 

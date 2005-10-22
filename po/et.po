@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: coreutils 5.90\n"
+"Project-Id-Version: coreutils 5.91\n"
 "Report-Msgid-Bugs-To: bug-coreutils@gnu.org\n"
-"POT-Creation-Date: 2005-10-16 12:36+0200\n"
-"PO-Revision-Date: 2005-10-04 22:02+0300\n"
+"POT-Creation-Date: 2005-10-22 20:15+0200\n"
+"PO-Revision-Date: 2005-10-17 17:42+0300\n"
 "Last-Translator: Toomas Soome <Toomas.Soome@microlink.ee>\n"
 "Language-Team: Estonian <et@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -588,7 +588,7 @@ msgid "missing operand"
 msgstr "puudub operand"
 
 #: src/basename.c:124 src/comm.c:278 src/cp.c:519 src/date.c:428
-#: src/dircolors.c:449 src/dirname.c:101 src/du.c:940 src/hostid.c:82
+#: src/dircolors.c:456 src/dirname.c:101 src/du.c:940 src/hostid.c:82
 #: src/hostname.c:120 src/id.c:160 src/install.c:326 src/join.c:748
 #: src/link.c:91 src/ln.c:510 src/logname.c:76 src/mknod.c:151 src/mv.c:458
 #: src/od.c:1840 src/ptx.c:2182 src/readlink.c:154 src/seq.c:373
@@ -2687,9 +2687,8 @@ msgstr ""
 "G, T, P, E, Z, Y.\n"
 
 #: src/df.c:809 src/du.c:755 src/ls.c:1541
-#, fuzzy
 msgid "the --kilobytes option is deprecated; use -k instead"
-msgstr "võti --reply on aegunud; kasutage selle asemel -i või -f"
+msgstr "võti --kilobytes on aegunud; kasutage selle asemel -k"
 
 #: src/df.c:868
 #, c-format
@@ -2739,21 +2738,21 @@ msgstr ""
 "värvid. Muidu kasuta vaikimisi andmebaasi. Infot failide vormingu kohta\n"
 "saate käsuga `dircolors --print-database'.\n"
 
-#: src/dircolors.c:288
+#: src/dircolors.c:295
 #, c-format
 msgid "%s:%lu: invalid line;  missing second token"
 msgstr "%s:%lu: vigane rida; teine märgis puudub"
 
-#: src/dircolors.c:360
+#: src/dircolors.c:367
 #, c-format
 msgid "%s:%lu: unrecognized keyword %s"
 msgstr "%s:%lu: tundmatu võtmesõna %s"
 
-#: src/dircolors.c:361
+#: src/dircolors.c:368
 msgid "<internal>"
 msgstr "<sisemine>"
 
-#: src/dircolors.c:442
+#: src/dircolors.c:449
 msgid ""
 "the options to output dircolors' internal database and\n"
 "to select a shell syntax are mutually exclusive"
@@ -2761,11 +2760,11 @@ msgstr ""
 "võtmed dircolor sisemise andmebaasi väljastamiseks ja shelli süntaksi\n"
 "valimiseks on üksteist välistavad"
 
-#: src/dircolors.c:452
+#: src/dircolors.c:459
 msgid "File operands cannot be combined with --print-database (-p)."
 msgstr "Faili operande ei saa võtmega --print-database (-p) kasutada."
 
-#: src/dircolors.c:475
+#: src/dircolors.c:482
 msgid "no SHELL environment variable, and no shell type option given"
 msgstr "puudub keskkonnamuutuja SHELL, samuti ei ole määratud shelli tüüpi"
 
@@ -2845,7 +2844,6 @@ msgstr ""
 "  -D, --dereference-args  kasuta nimeviidete korral viidatavaid\n"
 
 #: src/du.c:302
-#, fuzzy
 msgid ""
 "      --files0-from=F   summarize disk usage of the NUL-terminated file\n"
 "                          names specified in file F\n"
@@ -2870,6 +2868,7 @@ msgstr ""
 "(mittesoovitav)\n"
 "  -k, --kilobytes       sama, kui --block-size=1K\n"
 "  -l, --count-links     loenda viiteid eraldi failidena\n"
+"  -m                    sama, kui --block-size=1M\n"
 
 #: src/du.c:313
 msgid ""
@@ -2944,9 +2943,8 @@ msgid "invalid maximum depth %s"
 msgstr "vigane maksimaalne sügavus %s"
 
 #: src/du.c:782
-#, fuzzy
 msgid "the --megabytes option is deprecated; use -m instead"
-msgstr "võti --reply on aegunud; kasutage selle asemel -i või -f"
+msgstr "võti --megabytes on aegunud; kasutage selle asemel -m"
 
 #: src/du.c:864
 msgid "cannot both summarize and show all entries"
@@ -8920,7 +8918,7 @@ msgstr ""
 
 #: src/who.c:643
 msgid "  -l, --login       print system login processes\n"
-msgstr ""
+msgstr "  -l, --login       väljasta süsteemi meldimise protsessid\n"
 
 #: src/who.c:646
 msgid ""
@@ -9003,18 +9001,3 @@ msgid ""
 msgstr ""
 "Väljasta korduvalt rida antud sõnedega või `y'.\n"
 "\n"
-
-#~ msgid ""
-#~ "  -i, --idle        add idle time as HOURS:MINUTES, . or old\n"
-#~ "                    (deprecated, use -u)\n"
-#~ "  -l, --login       print system login processes\n"
-#~ msgstr ""
-#~ "  -i, --idle        lisa vaba aeg kujul TUNNID:MINUTID, . või vana\n"
-#~ "                    (mittesoovitatav, kasutage -u)\n"
-#~ "  -l, --login       väljasta süsteemi meldimise protsessid\n"
-
-#~ msgid "Warning: `-l' is deprecated; use `-L' instead"
-#~ msgstr "Hoiatus: -l eemaldatakse tulevikus; kasutage selle asemel -L"
-
-#~ msgid "the --allow-missing option is deprecated; use --retry instead"
-#~ msgstr "võti --allow-missing on aegunud; kasutage selle asemel --retry"

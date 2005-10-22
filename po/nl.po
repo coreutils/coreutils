@@ -1,4 +1,4 @@
-# translation of coreutils-5.90.po to Dutch
+# translation of coreutils-5.91.po to Dutch
 # Dutch messages for GNU coreutils
 # Copyright (C) 1996, 2000, 2004, 2005 Free Software Foundation, Inc.
 # Ivo Timmermans <ivo@o2w.nl>, 2000.
@@ -7,10 +7,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: coreutils 5.90\n"
+"Project-Id-Version: coreutils 5.91\n"
 "Report-Msgid-Bugs-To: bug-coreutils@gnu.org\n"
-"POT-Creation-Date: 2005-10-16 12:36+0200\n"
-"PO-Revision-Date: 2005-10-03 19:10+0200\n"
+"POT-Creation-Date: 2005-10-22 20:15+0200\n"
+"PO-Revision-Date: 2005-10-17 16:50+0200\n"
 "Last-Translator: Freek de Kruijf <f.de.kruijf@hetnet.nl>\n"
 "Language-Team: Dutch <vertaling@vrijschrift.org>\n"
 "MIME-Version: 1.0\n"
@@ -591,7 +591,7 @@ msgid "missing operand"
 msgstr "ontbrekende operand"
 
 #: src/basename.c:124 src/comm.c:278 src/cp.c:519 src/date.c:428
-#: src/dircolors.c:449 src/dirname.c:101 src/du.c:940 src/hostid.c:82
+#: src/dircolors.c:456 src/dirname.c:101 src/du.c:940 src/hostid.c:82
 #: src/hostname.c:120 src/id.c:160 src/install.c:326 src/join.c:748
 #: src/link.c:91 src/ln.c:510 src/logname.c:76 src/mknod.c:151 src/mv.c:458
 #: src/od.c:1840 src/ptx.c:2182 src/readlink.c:154 src/seq.c:373
@@ -2777,9 +2777,8 @@ msgstr ""
 "Y.\n"
 
 #: src/df.c:809 src/du.c:755 src/ls.c:1541
-#, fuzzy
 msgid "the --kilobytes option is deprecated; use -k instead"
-msgstr "de optie --reply is verouderd; gebruik -i of -f"
+msgstr "de optie --kilobytes is verouderd; gebruik -k"
 
 #: src/df.c:868
 #, c-format
@@ -2831,21 +2830,21 @@ msgstr ""
 "database gebruikt.  Geef `dircolors --print-database' voor details over de\n"
 "opmaak van deze bestanden.\n"
 
-#: src/dircolors.c:288
+#: src/dircolors.c:295
 #, c-format
 msgid "%s:%lu: invalid line;  missing second token"
 msgstr "%s:%lu: ongeldige regel;  tweede token ontbreekt"
 
-#: src/dircolors.c:360
+#: src/dircolors.c:367
 #, c-format
 msgid "%s:%lu: unrecognized keyword %s"
 msgstr "%s:%lu: niet-herkend sleutelwoord %s"
 
-#: src/dircolors.c:361
+#: src/dircolors.c:368
 msgid "<internal>"
 msgstr "<intern>"
 
-#: src/dircolors.c:442
+#: src/dircolors.c:449
 msgid ""
 "the options to output dircolors' internal database and\n"
 "to select a shell syntax are mutually exclusive"
@@ -2853,12 +2852,12 @@ msgstr ""
 "de opties voor de uitvoer van de interne database van 'dircolors' en \n"
 "het selecteren van de syntaxis van de shell sluiten elkaar onderling uit"
 
-#: src/dircolors.c:452
+#: src/dircolors.c:459
 msgid "File operands cannot be combined with --print-database (-p)."
 msgstr ""
 "BESTAND operand(en) kunnen niet samen met de --print-database (-p) optie."
 
-#: src/dircolors.c:475
+#: src/dircolors.c:482
 msgid "no SHELL environment variable, and no shell type option given"
 msgstr "geen SHELL omgevingsvariabele en geen shell-optietype gespecificeerd"
 
@@ -2940,7 +2939,6 @@ msgstr ""
 "  -D, --dereference-args  volg BESTANDen die symbolische koppelingen zijn\n"
 
 #: src/du.c:302
-#, fuzzy
 msgid ""
 "      --files0-from=F   summarize disk usage of the NUL-terminated file\n"
 "                          names specified in file F\n"
@@ -2960,13 +2958,14 @@ msgstr ""
 "  -H                    zoals --si, echter er komt ook een waarschuwing; "
 "verandert\n"
 "                        spoedig in --dereference-args (-D)\n"
-"  -h, --human-readable  toon groottes in gemakkelijk leesbare vorm (bijv. 1K "
+"  -h, --human-readable  toon grootte in gemakkelijk leesbare vorm (bijv. 1K "
 "234M 2G)\n"
 "      --si              zoals -h, echter gebruikt machten van 1000 niet "
 "1024\n"
 "  -k                    zoals --block-size=1K\n"
-"  -l, --count-links     telt groottes vele keren indien er een harde "
+"  -l, --count-links     telt grootte vele keren indien er een harde "
 "koppeling is\n"
+"  -m                    zoals --block-size=1M\n"
 
 #: src/du.c:313
 msgid ""
@@ -3049,9 +3048,8 @@ msgid "invalid maximum depth %s"
 msgstr "ongeldige maximum diepte %s"
 
 #: src/du.c:782
-#, fuzzy
 msgid "the --megabytes option is deprecated; use -m instead"
-msgstr "de optie --reply is verouderd; gebruik -i of -f"
+msgstr "de optie --megabytes is verouderd; gebruik -m"
 
 #: src/du.c:864
 msgid "cannot both summarize and show all entries"
@@ -9290,7 +9288,7 @@ msgstr ""
 
 #: src/who.c:643
 msgid "  -l, --login       print system login processes\n"
-msgstr ""
+msgstr "  -l, --login       toon de systeem-login-processen\n"
 
 #: src/who.c:646
 msgid ""
@@ -9379,19 +9377,3 @@ msgid ""
 msgstr ""
 "Schrijf herhaald een regel met alle gespecificeerde TEKSTen, of `y'.\n"
 "\n"
-
-#~ msgid ""
-#~ "  -i, --idle        add idle time as HOURS:MINUTES, . or old\n"
-#~ "                    (deprecated, use -u)\n"
-#~ "  -l, --login       print system login processes\n"
-#~ msgstr ""
-#~ "  -i, --idle        voegtoe de niet actieve tijd als UREN:MINUTEN, . of "
-#~ "oud\n"
-#~ "                    (verouderd, gebruik -u)\n"
-#~ "  -l, --login       toon de systeem login-processen\n"
-
-#~ msgid "Warning: `-l' is deprecated; use `-L' instead"
-#~ msgstr "Waarschuwing: `-l' is verouderd; gebruik `-L'"
-
-#~ msgid "the --allow-missing option is deprecated; use --retry instead"
-#~ msgstr "de optie --allow-missing is verouderd; gebruik --retry"

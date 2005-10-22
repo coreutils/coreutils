@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GNU textutils 2.0.22\n"
 "Report-Msgid-Bugs-To: bug-coreutils@gnu.org\n"
-"POT-Creation-Date: 2005-10-16 12:36+0200\n"
+"POT-Creation-Date: 2005-10-22 20:15+0200\n"
 "PO-Revision-Date: 2002-07-22 20:02+0900\n"
 "Last-Translator: Changwoo Ryu <cwryu@debian.org>\n"
 "Language-Team: Korean <translation-team-ko@lists.sourceforge.net>\n"
@@ -572,7 +572,7 @@ msgid "missing operand"
 msgstr "%s: `%c' 뒤에 정수가 와야함"
 
 #: src/basename.c:124 src/comm.c:278 src/cp.c:519 src/date.c:428
-#: src/dircolors.c:449 src/dirname.c:101 src/du.c:940 src/hostid.c:82
+#: src/dircolors.c:456 src/dirname.c:101 src/du.c:940 src/hostid.c:82
 #: src/hostname.c:120 src/id.c:160 src/install.c:326 src/join.c:748
 #: src/link.c:91 src/ln.c:510 src/logname.c:76 src/mknod.c:151 src/mv.c:458
 #: src/od.c:1840 src/ptx.c:2182 src/readlink.c:154 src/seq.c:373
@@ -2580,21 +2580,21 @@ msgid ""
 "For details on the format of these files, run `dircolors --print-database'.\n"
 msgstr ""
 
-#: src/dircolors.c:288
+#: src/dircolors.c:295
 #, fuzzy, c-format
 msgid "%s:%lu: invalid line;  missing second token"
 msgstr "%s: 부적절한 초"
 
-#: src/dircolors.c:360
+#: src/dircolors.c:367
 #, fuzzy, c-format
 msgid "%s:%lu: unrecognized keyword %s"
 msgstr "%s: 인식할 수 없는 옵션 `%c%s'\n"
 
-#: src/dircolors.c:361
+#: src/dircolors.c:368
 msgid "<internal>"
 msgstr "<내장>"
 
-#: src/dircolors.c:442
+#: src/dircolors.c:449
 msgid ""
 "the options to output dircolors' internal database and\n"
 "to select a shell syntax are mutually exclusive"
@@ -2602,11 +2602,11 @@ msgstr ""
 "dircolor의 내부 데이터베이스를 출력하는 옵션과 쉘 문법을\n"
 "선택하는 옵션은 같이 쓸 수 없습니다"
 
-#: src/dircolors.c:452
+#: src/dircolors.c:459
 msgid "File operands cannot be combined with --print-database (-p)."
 msgstr ""
 
-#: src/dircolors.c:475
+#: src/dircolors.c:482
 msgid "no SHELL environment variable, and no shell type option given"
 msgstr "SHELL환경변수가 없고 쉘 형태 옵션을 지정하지 않았습니다"
 

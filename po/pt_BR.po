@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: coreutils 5.0\n"
 "Report-Msgid-Bugs-To: bug-coreutils@gnu.org\n"
-"POT-Creation-Date: 2005-10-16 12:36+0200\n"
+"POT-Creation-Date: 2005-10-22 20:15+0200\n"
 "PO-Revision-Date: 2003-06-27 19:20-0300\n"
 "Last-Translator: Juan Carlos Castro y Castro <jcastro@vialink.com.br>\n"
 "Language-Team: Brazilian Portuguese <ldp-br@bazar.conectiva.com.br>\n"
@@ -589,7 +589,7 @@ msgid "missing operand"
 msgstr "%s: espera-se um número inteiro depois de `%c'"
 
 #: src/basename.c:124 src/comm.c:278 src/cp.c:519 src/date.c:428
-#: src/dircolors.c:449 src/dirname.c:101 src/du.c:940 src/hostid.c:82
+#: src/dircolors.c:456 src/dirname.c:101 src/du.c:940 src/hostid.c:82
 #: src/hostname.c:120 src/id.c:160 src/install.c:326 src/join.c:748
 #: src/link.c:91 src/ln.c:510 src/logname.c:76 src/mknod.c:151 src/mv.c:458
 #: src/od.c:1840 src/ptx.c:2182 src/readlink.c:154 src/seq.c:373
@@ -2598,22 +2598,22 @@ msgid ""
 msgstr ""
 
 # , c-format
-#: src/dircolors.c:288
+#: src/dircolors.c:295
 #, fuzzy, c-format
 msgid "%s:%lu: invalid line;  missing second token"
 msgstr "%s: número de segundos inválido"
 
 # , c-format
-#: src/dircolors.c:360
+#: src/dircolors.c:367
 #, fuzzy, c-format
 msgid "%s:%lu: unrecognized keyword %s"
 msgstr "%s: opção desconhecida `%c%s'\n"
 
-#: src/dircolors.c:361
+#: src/dircolors.c:368
 msgid "<internal>"
 msgstr "<interno>"
 
-#: src/dircolors.c:442
+#: src/dircolors.c:449
 #, fuzzy
 msgid ""
 "the options to output dircolors' internal database and\n"
@@ -2622,11 +2622,11 @@ msgstr ""
 "as opções para saída em modo detalhado e legível pelo stty são mutuamente\n"
 "exclusivas"
 
-#: src/dircolors.c:452
+#: src/dircolors.c:459
 msgid "File operands cannot be combined with --print-database (-p)."
 msgstr ""
 
-#: src/dircolors.c:475
+#: src/dircolors.c:482
 msgid "no SHELL environment variable, and no shell type option given"
 msgstr ""
 "variável de ambiente SHELL não existente e não se especificou nenhum\n"

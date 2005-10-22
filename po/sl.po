@@ -1,14 +1,14 @@
 # -*- mode: po; coding: utf-8; -*- Slovenian message catalog for GNU coreutils.
 # Copyright (C) 1996, 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
 # Primož Peterlin <primoz.peterlin@biofiz.mf.uni-lj.si>, 1996, 1999, 2000, 2001, 2002, 2003, 2005.
-# $Id: sl.po,v 1.212 2005/10/16 12:28:08 meyering Exp $
+# $Id: sl.po,v 1.214 2005/10/22 20:59:28 meyering Exp $
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: GNU coreutils 5.90\n"
+"Project-Id-Version: GNU coreutils 5.91\n"
 "Report-Msgid-Bugs-To: bug-coreutils@gnu.org\n"
-"POT-Creation-Date: 2005-10-16 12:36+0200\n"
-"PO-Revision-Date: 2005-10-04 11:04+0200\n"
+"POT-Creation-Date: 2005-10-22 20:15+0200\n"
+"PO-Revision-Date: 2005-10-17 17:09+0200\n"
 "Last-Translator: Primož Peterlin <primoz.peterlin@biofiz.mf.uni-lj.si>\n"
 "Language-Team: Slovenian <translation-team-sl@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -590,7 +590,7 @@ msgid "missing operand"
 msgstr "manjkajoč operand"
 
 #: src/basename.c:124 src/comm.c:278 src/cp.c:519 src/date.c:428
-#: src/dircolors.c:449 src/dirname.c:101 src/du.c:940 src/hostid.c:82
+#: src/dircolors.c:456 src/dirname.c:101 src/du.c:940 src/hostid.c:82
 #: src/hostname.c:120 src/id.c:160 src/install.c:326 src/join.c:748
 #: src/link.c:91 src/ln.c:510 src/logname.c:76 src/mknod.c:151 src/mv.c:458
 #: src/od.c:1840 src/ptx.c:2182 src/readlink.c:154 src/seq.c:373
@@ -2745,9 +2745,8 @@ msgstr ""
 "dalje za G, T, P, E, Z in Y.\n"
 
 #: src/df.c:809 src/du.c:755 src/ls.c:1541
-#, fuzzy
 msgid "the --kilobytes option is deprecated; use -k instead"
-msgstr "izbira --reply je odsvetovana; namesto nje uporabite -i ali -f"
+msgstr "izbira --kilobytes je odsvetovana; namesto nje uporabite -k"
 
 #: src/df.c:868
 #, c-format
@@ -2800,22 +2799,22 @@ msgstr ""
 "datotek oziroma pripon. Sicer se uporabi vgrajena tabela. Za podrobnosti o \n"
 "skladnji datoteke poženite »dircolors --print-database«.\n"
 
-#: src/dircolors.c:288
+#: src/dircolors.c:295
 #, c-format
 msgid "%s:%lu: invalid line;  missing second token"
 msgstr "%s:%lu: neveljavna vrstica;  manjka drugi element"
 
 # ! INEXACT
-#: src/dircolors.c:360
+#: src/dircolors.c:367
 #, c-format
 msgid "%s:%lu: unrecognized keyword %s"
 msgstr "%s:%lu: neprepoznana ključna beseda %s"
 
-#: src/dircolors.c:361
+#: src/dircolors.c:368
 msgid "<internal>"
 msgstr "<interno>"
 
-#: src/dircolors.c:442
+#: src/dircolors.c:449
 msgid ""
 "the options to output dircolors' internal database and\n"
 "to select a shell syntax are mutually exclusive"
@@ -2823,12 +2822,12 @@ msgstr ""
 "izpis privzetih vrednosti (izbira --print-data-base, -p) ni združljiv\n"
 "z izbiro sintakse ukazne lupine"
 
-#: src/dircolors.c:452
+#: src/dircolors.c:459
 msgid "File operands cannot be combined with --print-database (-p)."
 msgstr ""
 "Datotečnih operandov ne moremo kombinirati z izbiro --print-database (-p)."
 
-#: src/dircolors.c:475
+#: src/dircolors.c:482
 msgid "no SHELL environment variable, and no shell type option given"
 msgstr "spremenljivka SHELL ni nastavljena, niti ni podan tip ukazne lupine"
 
@@ -2906,7 +2905,6 @@ msgstr ""
 "  -D, --dereference-args  razrešimo poti, če so simbolne povezave\n"
 
 #: src/du.c:302
-#, fuzzy
 msgid ""
 "      --files0-from=F   summarize disk usage of the NUL-terminated file\n"
 "                          names specified in file F\n"
@@ -2930,8 +2928,9 @@ msgstr ""
 "  -h, --human-readable  velikosti v človeku berljivem zapisu (npr. 1K 234M "
 "2G)\n"
 "      --si              podobno kot -h, vendar v bazi 1000 namesto 1024\n"
-"  -k                    isto kot --block-size=1024\n"
+"  -k                    isto kot --block-size=1K\n"
 "  -l, --count-links     trde povezeva štejemo po večkrat\n"
+"  -m                    isto kot --block-size=1M\n"
 
 #: src/du.c:313
 msgid ""
@@ -3012,9 +3011,8 @@ msgid "invalid maximum depth %s"
 msgstr "neveljavna največja globina %s"
 
 #: src/du.c:782
-#, fuzzy
 msgid "the --megabytes option is deprecated; use -m instead"
-msgstr "izbira --reply je odsvetovana; namesto nje uporabite -i ali -f"
+msgstr "izbira --megabytes je odsvetovana; namesto nje uporabite -m"
 
 #: src/du.c:864
 msgid "cannot both summarize and show all entries"
@@ -9136,7 +9134,7 @@ msgstr ""
 
 #: src/who.c:643
 msgid "  -l, --login       print system login processes\n"
-msgstr ""
+msgstr "  -l, --login       izpiši prijavne procese sistema\n"
 
 #: src/who.c:646
 msgid ""
@@ -9224,6 +9222,13 @@ msgstr ""
 "Ponavljaje izpisujemo vrstico s podanim NIZOM (privzeto »y«).\n"
 "\n"
 
+#~ msgid "Warning: `-l' is deprecated; use `-L' instead"
+#~ msgstr "Opozorilo: izbira »-l« je odsvetovana; uporabite »-L«"
+
+#~ msgid "the --allow-missing option is deprecated; use --retry instead"
+#~ msgstr ""
+#~ "izbira --allow-missing je odsvetovana; namesto nje uporabite --retry"
+
 #~ msgid ""
 #~ "  -i, --idle        add idle time as HOURS:MINUTES, . or old\n"
 #~ "                    (deprecated, use -u)\n"
@@ -9234,13 +9239,6 @@ msgstr ""
 #~ "                    (opuščena oblika; uporabite -u)\n"
 #~ "  -l, --login       izpis sistemskih prijavnih procesov\n"
 #~ "                    (enakovredno SUS -l)\n"
-
-#~ msgid "Warning: `-l' is deprecated; use `-L' instead"
-#~ msgstr "Opozorilo: izbira »-l« je odsvetovana; uporabite »-L«"
-
-#~ msgid "the --allow-missing option is deprecated; use --retry instead"
-#~ msgstr ""
-#~ "izbira --allow-missing je odsvetovana; namesto nje uporabite --retry"
 
 #~ msgid "openat: unable to restore working directory"
 #~ msgstr "openat: povrnitev delovnega imenika ni mogoča"

@@ -6,10 +6,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: coreutils 5.90\n"
+"Project-Id-Version: coreutils 5.91\n"
 "Report-Msgid-Bugs-To: bug-coreutils@gnu.org\n"
-"POT-Creation-Date: 2005-10-16 12:36+0200\n"
-"PO-Revision-Date: 2005-10-12 21:41+0300\n"
+"POT-Creation-Date: 2005-10-22 20:15+0200\n"
+"PO-Revision-Date: 2005-10-20 14:54+0300\n"
 "Last-Translator: Anton Zinoviev <zinoviev@debian.org>\n"
 "Language-Team: Bulgarian <dict@fsa-bg.org>\n"
 "MIME-Version: 1.0\n"
@@ -591,7 +591,7 @@ msgid "missing operand"
 msgstr "липсващ операнд"
 
 #: src/basename.c:124 src/comm.c:278 src/cp.c:519 src/date.c:428
-#: src/dircolors.c:449 src/dirname.c:101 src/du.c:940 src/hostid.c:82
+#: src/dircolors.c:456 src/dirname.c:101 src/du.c:940 src/hostid.c:82
 #: src/hostname.c:120 src/id.c:160 src/install.c:326 src/join.c:748
 #: src/link.c:91 src/ln.c:510 src/logname.c:76 src/mknod.c:151 src/mv.c:458
 #: src/od.c:1840 src/ptx.c:2182 src/readlink.c:154 src/seq.c:373
@@ -671,7 +671,7 @@ msgstr "не може да се изпълни ioctl за \"%s\""
 
 #: src/cat.c:625 src/dd.c:1630 src/sort.c:269 src/tee.c:163 src/yes.c:92
 msgid "standard output"
-msgstr "стандартен изход"
+msgstr "стандартният изход"
 
 #: src/cat.c:702
 #, c-format
@@ -2249,7 +2249,7 @@ msgstr ""
 #: src/pr.c:1503 src/stty.c:841 src/tac.c:534 src/tee.c:126 src/tr.c:1893
 #: src/tsort.c:527 src/wc.c:204
 msgid "standard input"
-msgstr "стандартния вход"
+msgstr "стандартният вход"
 
 #: src/date.c:290 src/date.c:510
 #, c-format
@@ -2759,9 +2759,8 @@ msgstr ""
 "Y.\n"
 
 #: src/df.c:809 src/du.c:755 src/ls.c:1541
-#, fuzzy
 msgid "the --kilobytes option is deprecated; use -k instead"
-msgstr "опцията --reply е остаряла; ползвайте -i или -f вместо нея"
+msgstr "опцията --kilobytes е остаряла; ползвайте -k вместо нея"
 
 #: src/df.c:868
 #, c-format
@@ -2812,21 +2811,21 @@ msgstr ""
 "За подробности относно формата на ФАЙЛ, изпълнете \"dircolors --print-"
 "database\".\n"
 
-#: src/dircolors.c:288
+#: src/dircolors.c:295
 #, c-format
 msgid "%s:%lu: invalid line;  missing second token"
 msgstr "%s:%lu: неправилен ред; липсва втора лексема"
 
-#: src/dircolors.c:360
+#: src/dircolors.c:367
 #, c-format
 msgid "%s:%lu: unrecognized keyword %s"
 msgstr "%s:%lu: непозната ключова дума %s"
 
-#: src/dircolors.c:361
+#: src/dircolors.c:368
 msgid "<internal>"
 msgstr "<интервал>"
 
-#: src/dircolors.c:442
+#: src/dircolors.c:449
 msgid ""
 "the options to output dircolors' internal database and\n"
 "to select a shell syntax are mutually exclusive"
@@ -2834,11 +2833,11 @@ msgstr ""
 "опциите за извеждане на вътрешната база данни на dircolors и\n"
 "за избор на обвивка се изключват взаимно"
 
-#: src/dircolors.c:452
+#: src/dircolors.c:459
 msgid "File operands cannot be combined with --print-database (-p)."
 msgstr "Файлови операнди не може да се комбинират с --print-database (-p)."
 
-#: src/dircolors.c:475
+#: src/dircolors.c:482
 msgid "no SHELL environment variable, and no shell type option given"
 msgstr "променливата SHELL няма стойност, а не дадена и опция за тип обвивка"
 
@@ -2922,7 +2921,6 @@ msgstr ""
 "връзка\n"
 
 #: src/du.c:302
-#, fuzzy
 msgid ""
 "      --files0-from=F   summarize disk usage of the NUL-terminated file\n"
 "                          names specified in file F\n"
@@ -2948,6 +2946,7 @@ msgstr ""
 "      --si              подобно, но с множители 1000 вместо 1024\n"
 "  -k                    също като --block-size=1K\n"
 "  -l, --count-links     брои размерите многократно при твърди връзки\n"
+"  -m                    също като --block-size=1M\n"
 
 #: src/du.c:313
 msgid ""
@@ -3031,9 +3030,8 @@ msgid "invalid maximum depth %s"
 msgstr "неправилна максимална дълбочина %s"
 
 #: src/du.c:782
-#, fuzzy
 msgid "the --megabytes option is deprecated; use -m instead"
-msgstr "опцията --reply е остаряла; ползвайте -i или -f вместо нея"
+msgstr "опцията --megabytes е остаряла; ползвайте -m вместо нея"
 
 #: src/du.c:864
 msgid "cannot both summarize and show all entries"
@@ -3942,7 +3940,6 @@ msgid "incompatible join fields %lu, %lu"
 msgstr "неправилни свързващи полета %lu, %lu"
 
 #: src/join.c:833
-#, fuzzy
 msgid "conflicting empty-field replacement strings"
 msgstr "несъвместими заменящи низове за празно поле"
 
@@ -9217,7 +9214,7 @@ msgstr ""
 
 #: src/who.c:643
 msgid "  -l, --login       print system login processes\n"
-msgstr ""
+msgstr "  -l, --login       извежда процесите за влизане в системата\n"
 
 #: src/who.c:646
 msgid ""
@@ -9306,6 +9303,12 @@ msgstr ""
 "Непрекъснато извежда ред, състоящ се от посочените НИЗ(ове) или \"y\".\n"
 "\n"
 
+#~ msgid "Warning: `-l' is deprecated; use `-L' instead"
+#~ msgstr "Внимание: \"-l\" е остаряла опция; вместо нея ползвайте \"-L\""
+
+#~ msgid "the --allow-missing option is deprecated; use --retry instead"
+#~ msgstr "опцията --allow-missing е остаряла; ползвайте --retry вместо нея"
+
 #~ msgid ""
 #~ "  -i, --idle        add idle time as HOURS:MINUTES, . or old\n"
 #~ "                    (deprecated, use -u)\n"
@@ -9315,12 +9318,6 @@ msgstr ""
 #~ "или стар\n"
 #~ "                    (остаряла опция, използвайте -u)\n"
 #~ "      --login       извежда процесите за влизане в системата\n"
-
-#~ msgid "Warning: `-l' is deprecated; use `-L' instead"
-#~ msgstr "Внимание: \"-l\" е остаряла опция; вместо нея ползвайте \"-L\""
-
-#~ msgid "the --allow-missing option is deprecated; use --retry instead"
-#~ msgstr "опцията --allow-missing е остаряла; ползвайте --retry вместо нея"
 
 #~ msgid ""
 #~ "This is free software; see the source for copying conditions.  There is "
