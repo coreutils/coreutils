@@ -1,0 +1,29 @@
+#!/bin/sh
+# This is just for the record.
+# This test is not run.
+
+# Test for the 2005-10-13 patch to lib/mkdir-p.c that fixed this sort
+# of bug in mkdir:
+#
+#   "mkdir -p /a/b/c" no longer fails merely because a leading prefix
+#   directory (e.g., /a or /a/b) exists on a read-only file system.
+#
+# Demonstrate the problem, as root:
+
+mount='sudo mount'
+
+cd /tmp                                    \
+  && dd if=/dev/zero of=1 bs=8192 count=50 \
+  && dd if=/dev/zero of=2 bs=8192 count=50 \
+  && mkdir -p mnt-ro && mkfs -t ext2 1 && mkfs -t ext2 2 \
+  && $mount -o loop=/dev/loop3 1 mnt-ro    \
+  && mkdir -p mnt-ro/rw                    \
+  && $mount -o remount,ro mnt-ro           \
+  && $mount -o loop=/dev/loop4 2 mnt-ro/rw
+
+mkdir -p mnt-ro/rw/sub || fail=1
+
+# To clean up
+umount /tmp/2
+umount /tmp/1
+rm -rf /tmp/[12]

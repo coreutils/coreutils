@@ -1,6 +1,11 @@
-2005-10-20  Jim Meyering  <jim@meyering.net>
+2005-10-22  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.92-cvs.
+
+	* tests/mkdir/writable-under-readonly: New test, neither run
+	nor distributed via tarballs.
+
+2005-10-20  Jim Meyering  <jim@meyering.net>
 
 	* tests/chmod/octal: New file/test, to exercise today's
 	lib/modechange.c fix.
