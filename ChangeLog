@@ -1,6 +1,6 @@
 2005-10-22  Jim Meyering  <jim@meyering.net>
 
-	* Version 5.92-cvs.
+	* Version 5.92.
 
 	* tests/mkdir/writable-under-readonly: New test, neither run
 	nor distributed via tarballs.
