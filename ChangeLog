@@ -2,6 +2,9 @@
 
 	* Version 5.92.
 
+	* configure.ac: Remove -cvs suffix from version string.
+	* NEWS: Add today's date.
+
 	* tests/mkdir/writable-under-readonly: New test, neither run
 	nor distributed via tarballs.
 
