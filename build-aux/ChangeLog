@@ -1,3 +1,7 @@
+2005-10-23  Jim Meyering  <jim@meyering.net>
+
+	* compile: New file, used to build sha* programs from md5sum.c.
+
 2005-10-13  Jim Meyering  <jim@meyering.net>
 
 	* texinfo.tex: Sync from gnulib.
