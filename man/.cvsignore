@@ -59,6 +59,10 @@ rm.1
 rmdir.1
 seq.1
 sha1sum.1
+sha224sum.1
+sha256sum.1
+sha384sum.1
+sha512sum.1
 shred.1
 sleep.1
 sort.1
