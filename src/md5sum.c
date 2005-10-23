@@ -426,16 +426,13 @@ digest_check (const char *checkfile_name)
   uintmax_t n_properly_formatted_lines = 0;
   uintmax_t n_mismatched_checksums = 0;
   uintmax_t n_open_or_read_failures = 0;
-  unsigned char bin_buffer_unaligned[DIGEST_BIN_BYTES+DIGEST_ALIGN];
-  unsigned char *bin_buffer;
+  unsigned char bin_buffer_unaligned[DIGEST_BIN_BYTES + DIGEST_ALIGN];
+  /* Make sure bin_buffer is properly aligned. */
+  unsigned char *bin_buffer = ptr_align (bin_buffer_unaligned, DIGEST_ALIGN);
   uintmax_t line_number;
   char *line;
   size_t line_chars_allocated;
   bool is_stdin = STREQ (checkfile_name, "-");
-
-  /* Make sure bin_buffer is properly aligned. */
-  bin_buffer = bin_buffer_unaligned
-    + ((unsigned)DIGEST_ALIGN - ((unsigned)bin_buffer_unaligned))%DIGEST_ALIGN;
 
   if (is_stdin)
     {
@@ -599,7 +596,8 @@ int
 main (int argc, char **argv)
 {
   unsigned char bin_buffer_unaligned[DIGEST_BIN_BYTES+DIGEST_ALIGN];
-  unsigned char *bin_buffer;
+  /* Make sure bin_buffer is properly aligned. */
+  unsigned char *bin_buffer = ptr_align (bin_buffer_unaligned, DIGEST_ALIGN);
   bool do_check = false;
   int opt;
   bool ok = true;
@@ -642,10 +640,6 @@ main (int argc, char **argv)
 
   min_digest_line_length = MIN_DIGEST_LINE_LENGTH;
   digest_hex_bytes = DIGEST_HEX_BYTES;
-
-  /* Make sure bin_buffer is properly aligned. */
-  bin_buffer = bin_buffer_unaligned
-    + ((unsigned)DIGEST_ALIGN - ((unsigned)bin_buffer_unaligned))%DIGEST_ALIGN;
 
   if (0 <= binary && do_check)
     {
