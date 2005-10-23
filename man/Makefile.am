@@ -7,7 +7,8 @@ dist_man_MANS = \
   link.1 ln.1 logname.1 \
   ls.1 md5sum.1 mkdir.1 mkfifo.1 mknod.1 mv.1 nice.1 nl.1 nohup.1 od.1 \
   paste.1 pathchk.1 pinky.1 pr.1 printenv.1 printf.1 ptx.1 pwd.1 readlink.1 \
-  rm.1 rmdir.1 seq.1 sha1sum.1 shred.1 sleep.1 sort.1 split.1 stat.1 stty.1 \
+  rm.1 rmdir.1 seq.1 sha1sum.1 sha224sum.1 sha256sum.1 sha384sum.1 sha512sum.1 \
+  shred.1 sleep.1 sort.1 split.1 stat.1 stty.1 \
   su.1 sum.1 sync.1 tac.1 tail.1 tee.1 test.1 touch.1 tr.1 true.1 tsort.1 \
   tty.1 uname.1 unexpand.1 uniq.1 unlink.1 uptime.1 users.1 vdir.1 wc.1 \
   who.1 whoami.1 yes.1
@@ -83,6 +84,10 @@ rm.1:		$(common_dep)	$(srcdir)/rm.x		../src/rm.c
 rmdir.1:	$(common_dep)	$(srcdir)/rmdir.x	../src/rmdir.c
 seq.1:		$(common_dep)	$(srcdir)/seq.x		../src/seq.c
 sha1sum.1:	$(common_dep)	$(srcdir)/sha1sum.x	../src/md5sum.c
+sha224sum.1:	$(common_dep)	$(srcdir)/sha224sum.x	../src/md5sum.c
+sha256sum.1:	$(common_dep)	$(srcdir)/sha256sum.x	../src/md5sum.c
+sha384sum.1:	$(common_dep)	$(srcdir)/sha384sum.x	../src/md5sum.c
+sha512sum.1:	$(common_dep)	$(srcdir)/sha512sum.x	../src/md5sum.c
 shred.1:	$(common_dep)	$(srcdir)/shred.x	../src/shred.c
 sleep.1:	$(common_dep)	$(srcdir)/sleep.x	../src/sleep.c
 sort.1:		$(common_dep)	$(srcdir)/sort.x	../src/sort.c
