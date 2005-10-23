@@ -1,11 +1,36 @@
+2005-10-23  Jim Meyering  <jim@meyering.net>
+
+	* Version 6.0-cvs.
+
+	* src/md5sum.c (digest_check, main): Use ptr_align rather than
+	a dangerous pointer-value-to-`unsigned' cast.
+	* NEWS: mention the new sha* programs.
+	* AUTHORS: Add new sha* programs.
+
+2005-08-28  David Madore  <david.madore@ens.fr>
+
+	Add new programs: sha224sum, sha256sum, sha384sum, sha512sum.
+	* README: Add their names to the list.
+	* src/md5sum.c: Provide framework for computing sha-2 hashes.
+	* src/Makefile.am (sha224sum, sha256sum, sha384sum, sha512sum):
+	Rules for compiling sha-2 utilities
+	(noinst_HEADERS): Remove checksum.h.
+	* man/sha512sum.x, man/sha384sum.x, man/sha256sum.x, man/sha224sum.x:
+	New files.
+	* man/Makefile.am (dist_man_MANS): Add the corresponding .1 names.
+	(sha224sum.1, sha256sum.1, sha384sum.1, sha512sum.1): New dependencies.
+	* tests/misc/sha224sum, tests/misc/sha256sum: New files.
+	* tests/misc/sha384sum, tests/misc/sha512sum: New files.
+	* tests/misc/Makefile.am (TESTS): Add new sha224sum, sha256sum,
+	sha384sum, sha512sum test scripts here rather that each in its
+	own directory.
+
 2005-08-28  David Madore  <david.madore@ens.fr>
 
 	* tests/sha1sum/basic-1 (million-a): Add the "million a's" test (one
 	of the FIPS test vectors).
 
 2005-10-23  Jim Meyering  <jim@meyering.net>
-
-	* Version 6.0-cvs.
 
 	* configure.ac: Use 6.0-cvs as the version string.
 	* NEWS: Adjust accordingly.
