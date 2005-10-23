@@ -39,7 +39,7 @@ link: Michael Stone
 ln: Mike Parker, David MacKenzie
 logname: FIXME: unknown
 ls: Richard Stallman, David MacKenzie
-md5sum: Ulrich Drepper, Scott Miller
+md5sum: Ulrich Drepper, Scott Miller, David Madore
 mkdir: David MacKenzie
 mkfifo: David MacKenzie
 mknod: David MacKenzie
@@ -60,7 +60,11 @@ readlink: Dmitry V. Levin
 rm: Paul Rubin, David MacKenzie, Richard Stallman, Jim Meyering
 rmdir: David MacKenzie
 seq: Ulrich Drepper
-sha1sum: Ulrich Drepper, Scott Miller
+sha1sum: Ulrich Drepper, Scott Miller, David Madore
+sha224sum: Ulrich Drepper, Scott Miller, David Madore
+sha256sum: Ulrich Drepper, Scott Miller, David Madore
+sha384sum: Ulrich Drepper, Scott Miller, David Madore
+sha512sum: Ulrich Drepper, Scott Miller, David Madore
 shred: Colin Plumb
 sleep: Jim Meyering, Paul Eggert
 sort: Mike Haertel, Paul Eggert
