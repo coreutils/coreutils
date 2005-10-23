@@ -12,6 +12,10 @@ TESTS_ENVIRONMENT = \
   PROG=$$tst
 
 TESTS = \
+  sha224sum \
+  sha256sum \
+  sha384sum \
+  sha512sum \
   date \
   tac-continue \
   close-stdout \
