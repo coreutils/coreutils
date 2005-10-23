@@ -51,12 +51,13 @@ bin_PROGRAMS = [$(EXEEXT) chgrp$(EXEEXT) chown$(EXEEXT) chmod$(EXEEXT) \
 	expand$(EXEEXT) fmt$(EXEEXT) fold$(EXEEXT) head$(EXEEXT) \
 	join$(EXEEXT) md5sum$(EXEEXT) nl$(EXEEXT) od$(EXEEXT) \
 	paste$(EXEEXT) pr$(EXEEXT) ptx$(EXEEXT) sha1sum$(EXEEXT) \
-	sort$(EXEEXT) split$(EXEEXT) sum$(EXEEXT) tac$(EXEEXT) \
-	tail$(EXEEXT) tr$(EXEEXT) tsort$(EXEEXT) unexpand$(EXEEXT) \
-	uniq$(EXEEXT) wc$(EXEEXT) basename$(EXEEXT) date$(EXEEXT) \
-	dirname$(EXEEXT) echo$(EXEEXT) env$(EXEEXT) expr$(EXEEXT) \
-	factor$(EXEEXT) false$(EXEEXT) hostname$(EXEEXT) id$(EXEEXT) \
-	kill$(EXEEXT) logname$(EXEEXT) pathchk$(EXEEXT) \
+	sha224sum$(EXEEXT) sha256sum$(EXEEXT) sha384sum$(EXEEXT) \
+	sha512sum$(EXEEXT) sort$(EXEEXT) split$(EXEEXT) sum$(EXEEXT) \
+	tac$(EXEEXT) tail$(EXEEXT) tr$(EXEEXT) tsort$(EXEEXT) \
+	unexpand$(EXEEXT) uniq$(EXEEXT) wc$(EXEEXT) basename$(EXEEXT) \
+	date$(EXEEXT) dirname$(EXEEXT) echo$(EXEEXT) env$(EXEEXT) \
+	expr$(EXEEXT) factor$(EXEEXT) false$(EXEEXT) hostname$(EXEEXT) \
+	id$(EXEEXT) kill$(EXEEXT) logname$(EXEEXT) pathchk$(EXEEXT) \
 	printenv$(EXEEXT) printf$(EXEEXT) pwd$(EXEEXT) seq$(EXEEXT) \
 	sleep$(EXEEXT) tee$(EXEEXT) test$(EXEEXT) true$(EXEEXT) \
 	tty$(EXEEXT) whoami$(EXEEXT) yes$(EXEEXT) $(am__EXEEXT_1) \
@@ -146,7 +147,8 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/afs.m4 \
 	$(top_srcdir)/m4/safe-write.m4 $(top_srcdir)/m4/same.m4 \
 	$(top_srcdir)/m4/save-cwd.m4 $(top_srcdir)/m4/savedir.m4 \
 	$(top_srcdir)/m4/setenv.m4 $(top_srcdir)/m4/settime.m4 \
-	$(top_srcdir)/m4/sha1.m4 $(top_srcdir)/m4/sig2str.m4 \
+	$(top_srcdir)/m4/sha1.m4 $(top_srcdir)/m4/sha256.m4 \
+	$(top_srcdir)/m4/sha512.m4 $(top_srcdir)/m4/sig2str.m4 \
 	$(top_srcdir)/m4/signed.m4 $(top_srcdir)/m4/socklen.m4 \
 	$(top_srcdir)/m4/sockpfaf.m4 $(top_srcdir)/m4/ssize_t.m4 \
 	$(top_srcdir)/m4/st_dm_mode.m4 $(top_srcdir)/m4/stat-macros.m4 \
@@ -373,7 +375,7 @@ logname_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
 am_ls_OBJECTS = ls.$(OBJEXT) ls-ls.$(OBJEXT)
 ls_OBJECTS = $(am_ls_OBJECTS)
 ls_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1)
-am_md5sum_OBJECTS = md5sum.$(OBJEXT) md5.$(OBJEXT)
+am_md5sum_OBJECTS = md5sum-md5sum.$(OBJEXT)
 md5sum_OBJECTS = $(am_md5sum_OBJECTS)
 md5sum_LDADD = $(LDADD)
 md5sum_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
@@ -473,10 +475,30 @@ setuidgid_OBJECTS = setuidgid.$(OBJEXT)
 setuidgid_LDADD = $(LDADD)
 setuidgid_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
 	../lib/libcoreutils.a
-am_sha1sum_OBJECTS = md5sum.$(OBJEXT) sha1sum.$(OBJEXT)
+am_sha1sum_OBJECTS = sha1sum-md5sum.$(OBJEXT)
 sha1sum_OBJECTS = $(am_sha1sum_OBJECTS)
 sha1sum_LDADD = $(LDADD)
 sha1sum_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
+am_sha224sum_OBJECTS = sha224sum-md5sum.$(OBJEXT)
+sha224sum_OBJECTS = $(am_sha224sum_OBJECTS)
+sha224sum_LDADD = $(LDADD)
+sha224sum_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
+am_sha256sum_OBJECTS = sha256sum-md5sum.$(OBJEXT)
+sha256sum_OBJECTS = $(am_sha256sum_OBJECTS)
+sha256sum_LDADD = $(LDADD)
+sha256sum_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
+am_sha384sum_OBJECTS = sha384sum-md5sum.$(OBJEXT)
+sha384sum_OBJECTS = $(am_sha384sum_OBJECTS)
+sha384sum_LDADD = $(LDADD)
+sha384sum_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
+am_sha512sum_OBJECTS = sha512sum-md5sum.$(OBJEXT)
+sha512sum_OBJECTS = $(am_sha512sum_OBJECTS)
+sha512sum_LDADD = $(LDADD)
+sha512sum_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
 	../lib/libcoreutils.a
 shred_SOURCES = shred.c
 shred_OBJECTS = shred.$(OBJEXT)
@@ -626,11 +648,12 @@ SOURCES = $(__SOURCES) basename.c cat.c $(chgrp_SOURCES) chmod.c \
 	$(md5sum_SOURCES) mkdir.c mkfifo.c mknod.c $(mv_SOURCES) \
 	nice.c nl.c nohup.c od.c paste.c pathchk.c pinky.c pr.c \
 	printenv.c printf.c ptx.c pwd.c readlink.c $(rm_SOURCES) \
-	rmdir.c seq.c setuidgid.c $(sha1sum_SOURCES) shred.c sleep.c \
-	sort.c split.c stat.c stty.c su.c sum.c sync.c tac.c tail.c \
-	tee.c test.c touch.c tr.c true.c tsort.c tty.c uname.c \
-	unexpand.c uniq.c unlink.c uptime.c users.c $(vdir_SOURCES) \
-	wc.c who.c whoami.c yes.c
+	rmdir.c seq.c setuidgid.c $(sha1sum_SOURCES) \
+	$(sha224sum_SOURCES) $(sha256sum_SOURCES) $(sha384sum_SOURCES) \
+	$(sha512sum_SOURCES) shred.c sleep.c sort.c split.c stat.c \
+	stty.c su.c sum.c sync.c tac.c tail.c tee.c test.c touch.c \
+	tr.c true.c tsort.c tty.c uname.c unexpand.c uniq.c unlink.c \
+	uptime.c users.c $(vdir_SOURCES) wc.c who.c whoami.c yes.c
 DIST_SOURCES = $(__SOURCES) basename.c cat.c $(chgrp_SOURCES) chmod.c \
 	$(chown_SOURCES) chroot.c cksum.c comm.c $(cp_SOURCES) \
 	csplit.c cut.c date.c dd.c df.c $(dir_SOURCES) dircolors.c \
@@ -640,11 +663,12 @@ DIST_SOURCES = $(__SOURCES) basename.c cat.c $(chgrp_SOURCES) chmod.c \
 	$(md5sum_SOURCES) mkdir.c mkfifo.c mknod.c $(mv_SOURCES) \
 	nice.c nl.c nohup.c od.c paste.c pathchk.c pinky.c pr.c \
 	printenv.c printf.c ptx.c pwd.c readlink.c $(rm_SOURCES) \
-	rmdir.c seq.c setuidgid.c $(sha1sum_SOURCES) shred.c sleep.c \
-	sort.c split.c stat.c stty.c su.c sum.c sync.c tac.c tail.c \
-	tee.c test.c touch.c tr.c true.c tsort.c tty.c uname.c \
-	unexpand.c uniq.c unlink.c uptime.c users.c $(vdir_SOURCES) \
-	wc.c who.c whoami.c yes.c
+	rmdir.c seq.c setuidgid.c $(sha1sum_SOURCES) \
+	$(sha224sum_SOURCES) $(sha256sum_SOURCES) $(sha384sum_SOURCES) \
+	$(sha512sum_SOURCES) shred.c sleep.c sort.c split.c stat.c \
+	stty.c su.c sum.c sync.c tac.c tail.c tee.c test.c touch.c \
+	tr.c true.c tsort.c tty.c uname.c unexpand.c uniq.c unlink.c \
+	uptime.c users.c $(vdir_SOURCES) wc.c who.c whoami.c yes.c
 HEADERS = $(noinst_HEADERS)
 ETAGS = etags
 CTAGS = ctags
@@ -788,7 +812,7 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 bin_SCRIPTS = groups
 noinst_HEADERS = \
-  system.h checksum.h copy.h cp-hash.h ls.h dircolors.h remove.h \
+  system.h copy.h cp-hash.h ls.h dircolors.h remove.h \
   chown-core.h fs.h \
   wheel.h wheel-size.h
 
@@ -866,8 +890,18 @@ chown_SOURCES = chown.c chown-core.c
 chgrp_SOURCES = chgrp.c chown-core.c
 mv_SOURCES = mv.c copy.c cp-hash.c remove.c
 rm_SOURCES = rm.c remove.c
-md5sum_SOURCES = md5sum.c md5.c
-sha1sum_SOURCES = md5sum.c sha1sum.c
+md5sum_SOURCES = md5sum.c
+md5sum_CPPFLAGS = -DHASH_ALGO_MD5=1 $(AM_CPPFLAGS)
+sha1sum_SOURCES = md5sum.c
+sha1sum_CPPFLAGS = -DHASH_ALGO_SHA1=1 $(AM_CPPFLAGS)
+sha224sum_SOURCES = md5sum.c
+sha224sum_CPPFLAGS = -DHASH_ALGO_SHA224=1 $(AM_CPPFLAGS)
+sha256sum_SOURCES = md5sum.c
+sha256sum_CPPFLAGS = -DHASH_ALGO_SHA256=1 $(AM_CPPFLAGS)
+sha384sum_SOURCES = md5sum.c
+sha384sum_CPPFLAGS = -DHASH_ALGO_SHA384=1 $(AM_CPPFLAGS)
+sha512sum_SOURCES = md5sum.c
+sha512sum_CPPFLAGS = -DHASH_ALGO_SHA512=1 $(AM_CPPFLAGS)
 editpl = sed -e 's,@''PERL''@,$(PERL),g'
 BUILT_SOURCES = localedir.h dircolors.h wheel-size.h wheel.h fs.h
 DISTCLEANFILES = localedir.h
@@ -1160,6 +1194,18 @@ setuidgid$(EXEEXT): $(setuidgid_OBJECTS) $(setuidgid_DEPENDENCIES)
 sha1sum$(EXEEXT): $(sha1sum_OBJECTS) $(sha1sum_DEPENDENCIES) 
 	@rm -f sha1sum$(EXEEXT)
 	$(LINK) $(sha1sum_LDFLAGS) $(sha1sum_OBJECTS) $(sha1sum_LDADD) $(LIBS)
+sha224sum$(EXEEXT): $(sha224sum_OBJECTS) $(sha224sum_DEPENDENCIES) 
+	@rm -f sha224sum$(EXEEXT)
+	$(LINK) $(sha224sum_LDFLAGS) $(sha224sum_OBJECTS) $(sha224sum_LDADD) $(LIBS)
+sha256sum$(EXEEXT): $(sha256sum_OBJECTS) $(sha256sum_DEPENDENCIES) 
+	@rm -f sha256sum$(EXEEXT)
+	$(LINK) $(sha256sum_LDFLAGS) $(sha256sum_OBJECTS) $(sha256sum_LDADD) $(LIBS)
+sha384sum$(EXEEXT): $(sha384sum_OBJECTS) $(sha384sum_DEPENDENCIES) 
+	@rm -f sha384sum$(EXEEXT)
+	$(LINK) $(sha384sum_LDFLAGS) $(sha384sum_OBJECTS) $(sha384sum_LDADD) $(LIBS)
+sha512sum$(EXEEXT): $(sha512sum_OBJECTS) $(sha512sum_DEPENDENCIES) 
+	@rm -f sha512sum$(EXEEXT)
+	$(LINK) $(sha512sum_LDFLAGS) $(sha512sum_OBJECTS) $(sha512sum_LDADD) $(LIBS)
 shred$(EXEEXT): $(shred_OBJECTS) $(shred_DEPENDENCIES) 
 	@rm -f shred$(EXEEXT)
 	$(LINK) $(shred_LDFLAGS) $(shred_OBJECTS) $(shred_LDADD) $(LIBS)
@@ -1331,8 +1377,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ls-ls.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ls-vdir.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ls.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/md5.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/md5sum.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/md5sum-md5sum.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mkdir.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mkfifo.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mknod.Po@am__quote@
@@ -1355,7 +1400,11 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rmdir.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/seq.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/setuidgid.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sha1sum.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sha1sum-md5sum.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sha224sum-md5sum.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sha256sum-md5sum.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sha384sum-md5sum.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sha512sum-md5sum.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/shred.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sleep.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sort.Po@am__quote@
@@ -1398,6 +1447,90 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(COMPILE) -c `$(CYGPATH_W) '$<'`
+
+md5sum-md5sum.o: md5sum.c
+@am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(md5sum_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT md5sum-md5sum.o -MD -MP -MF "$(DEPDIR)/md5sum-md5sum.Tpo" -c -o md5sum-md5sum.o `test -f 'md5sum.c' || echo '$(srcdir)/'`md5sum.c; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/md5sum-md5sum.Tpo" "$(DEPDIR)/md5sum-md5sum.Po"; else rm -f "$(DEPDIR)/md5sum-md5sum.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='md5sum.c' object='md5sum-md5sum.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(md5sum_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o md5sum-md5sum.o `test -f 'md5sum.c' || echo '$(srcdir)/'`md5sum.c
+
+md5sum-md5sum.obj: md5sum.c
+@am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(md5sum_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT md5sum-md5sum.obj -MD -MP -MF "$(DEPDIR)/md5sum-md5sum.Tpo" -c -o md5sum-md5sum.obj `if test -f 'md5sum.c'; then $(CYGPATH_W) 'md5sum.c'; else $(CYGPATH_W) '$(srcdir)/md5sum.c'; fi`; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/md5sum-md5sum.Tpo" "$(DEPDIR)/md5sum-md5sum.Po"; else rm -f "$(DEPDIR)/md5sum-md5sum.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='md5sum.c' object='md5sum-md5sum.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(md5sum_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o md5sum-md5sum.obj `if test -f 'md5sum.c'; then $(CYGPATH_W) 'md5sum.c'; else $(CYGPATH_W) '$(srcdir)/md5sum.c'; fi`
+
+sha1sum-md5sum.o: md5sum.c
+@am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(sha1sum_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT sha1sum-md5sum.o -MD -MP -MF "$(DEPDIR)/sha1sum-md5sum.Tpo" -c -o sha1sum-md5sum.o `test -f 'md5sum.c' || echo '$(srcdir)/'`md5sum.c; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/sha1sum-md5sum.Tpo" "$(DEPDIR)/sha1sum-md5sum.Po"; else rm -f "$(DEPDIR)/sha1sum-md5sum.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='md5sum.c' object='sha1sum-md5sum.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(sha1sum_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o sha1sum-md5sum.o `test -f 'md5sum.c' || echo '$(srcdir)/'`md5sum.c
+
+sha1sum-md5sum.obj: md5sum.c
+@am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(sha1sum_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT sha1sum-md5sum.obj -MD -MP -MF "$(DEPDIR)/sha1sum-md5sum.Tpo" -c -o sha1sum-md5sum.obj `if test -f 'md5sum.c'; then $(CYGPATH_W) 'md5sum.c'; else $(CYGPATH_W) '$(srcdir)/md5sum.c'; fi`; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/sha1sum-md5sum.Tpo" "$(DEPDIR)/sha1sum-md5sum.Po"; else rm -f "$(DEPDIR)/sha1sum-md5sum.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='md5sum.c' object='sha1sum-md5sum.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(sha1sum_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o sha1sum-md5sum.obj `if test -f 'md5sum.c'; then $(CYGPATH_W) 'md5sum.c'; else $(CYGPATH_W) '$(srcdir)/md5sum.c'; fi`
+
+sha224sum-md5sum.o: md5sum.c
+@am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(sha224sum_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT sha224sum-md5sum.o -MD -MP -MF "$(DEPDIR)/sha224sum-md5sum.Tpo" -c -o sha224sum-md5sum.o `test -f 'md5sum.c' || echo '$(srcdir)/'`md5sum.c; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/sha224sum-md5sum.Tpo" "$(DEPDIR)/sha224sum-md5sum.Po"; else rm -f "$(DEPDIR)/sha224sum-md5sum.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='md5sum.c' object='sha224sum-md5sum.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(sha224sum_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o sha224sum-md5sum.o `test -f 'md5sum.c' || echo '$(srcdir)/'`md5sum.c
+
+sha224sum-md5sum.obj: md5sum.c
+@am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(sha224sum_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT sha224sum-md5sum.obj -MD -MP -MF "$(DEPDIR)/sha224sum-md5sum.Tpo" -c -o sha224sum-md5sum.obj `if test -f 'md5sum.c'; then $(CYGPATH_W) 'md5sum.c'; else $(CYGPATH_W) '$(srcdir)/md5sum.c'; fi`; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/sha224sum-md5sum.Tpo" "$(DEPDIR)/sha224sum-md5sum.Po"; else rm -f "$(DEPDIR)/sha224sum-md5sum.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='md5sum.c' object='sha224sum-md5sum.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(sha224sum_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o sha224sum-md5sum.obj `if test -f 'md5sum.c'; then $(CYGPATH_W) 'md5sum.c'; else $(CYGPATH_W) '$(srcdir)/md5sum.c'; fi`
+
+sha256sum-md5sum.o: md5sum.c
+@am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(sha256sum_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT sha256sum-md5sum.o -MD -MP -MF "$(DEPDIR)/sha256sum-md5sum.Tpo" -c -o sha256sum-md5sum.o `test -f 'md5sum.c' || echo '$(srcdir)/'`md5sum.c; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/sha256sum-md5sum.Tpo" "$(DEPDIR)/sha256sum-md5sum.Po"; else rm -f "$(DEPDIR)/sha256sum-md5sum.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='md5sum.c' object='sha256sum-md5sum.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(sha256sum_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o sha256sum-md5sum.o `test -f 'md5sum.c' || echo '$(srcdir)/'`md5sum.c
+
+sha256sum-md5sum.obj: md5sum.c
+@am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(sha256sum_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT sha256sum-md5sum.obj -MD -MP -MF "$(DEPDIR)/sha256sum-md5sum.Tpo" -c -o sha256sum-md5sum.obj `if test -f 'md5sum.c'; then $(CYGPATH_W) 'md5sum.c'; else $(CYGPATH_W) '$(srcdir)/md5sum.c'; fi`; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/sha256sum-md5sum.Tpo" "$(DEPDIR)/sha256sum-md5sum.Po"; else rm -f "$(DEPDIR)/sha256sum-md5sum.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='md5sum.c' object='sha256sum-md5sum.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(sha256sum_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o sha256sum-md5sum.obj `if test -f 'md5sum.c'; then $(CYGPATH_W) 'md5sum.c'; else $(CYGPATH_W) '$(srcdir)/md5sum.c'; fi`
+
+sha384sum-md5sum.o: md5sum.c
+@am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(sha384sum_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT sha384sum-md5sum.o -MD -MP -MF "$(DEPDIR)/sha384sum-md5sum.Tpo" -c -o sha384sum-md5sum.o `test -f 'md5sum.c' || echo '$(srcdir)/'`md5sum.c; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/sha384sum-md5sum.Tpo" "$(DEPDIR)/sha384sum-md5sum.Po"; else rm -f "$(DEPDIR)/sha384sum-md5sum.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='md5sum.c' object='sha384sum-md5sum.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(sha384sum_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o sha384sum-md5sum.o `test -f 'md5sum.c' || echo '$(srcdir)/'`md5sum.c
+
+sha384sum-md5sum.obj: md5sum.c
+@am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(sha384sum_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT sha384sum-md5sum.obj -MD -MP -MF "$(DEPDIR)/sha384sum-md5sum.Tpo" -c -o sha384sum-md5sum.obj `if test -f 'md5sum.c'; then $(CYGPATH_W) 'md5sum.c'; else $(CYGPATH_W) '$(srcdir)/md5sum.c'; fi`; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/sha384sum-md5sum.Tpo" "$(DEPDIR)/sha384sum-md5sum.Po"; else rm -f "$(DEPDIR)/sha384sum-md5sum.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='md5sum.c' object='sha384sum-md5sum.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(sha384sum_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o sha384sum-md5sum.obj `if test -f 'md5sum.c'; then $(CYGPATH_W) 'md5sum.c'; else $(CYGPATH_W) '$(srcdir)/md5sum.c'; fi`
+
+sha512sum-md5sum.o: md5sum.c
+@am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(sha512sum_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT sha512sum-md5sum.o -MD -MP -MF "$(DEPDIR)/sha512sum-md5sum.Tpo" -c -o sha512sum-md5sum.o `test -f 'md5sum.c' || echo '$(srcdir)/'`md5sum.c; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/sha512sum-md5sum.Tpo" "$(DEPDIR)/sha512sum-md5sum.Po"; else rm -f "$(DEPDIR)/sha512sum-md5sum.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='md5sum.c' object='sha512sum-md5sum.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(sha512sum_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o sha512sum-md5sum.o `test -f 'md5sum.c' || echo '$(srcdir)/'`md5sum.c
+
+sha512sum-md5sum.obj: md5sum.c
+@am__fastdepCC_TRUE@	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(sha512sum_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT sha512sum-md5sum.obj -MD -MP -MF "$(DEPDIR)/sha512sum-md5sum.Tpo" -c -o sha512sum-md5sum.obj `if test -f 'md5sum.c'; then $(CYGPATH_W) 'md5sum.c'; else $(CYGPATH_W) '$(srcdir)/md5sum.c'; fi`; \
+@am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/sha512sum-md5sum.Tpo" "$(DEPDIR)/sha512sum-md5sum.Po"; else rm -f "$(DEPDIR)/sha512sum-md5sum.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='md5sum.c' object='sha512sum-md5sum.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(sha512sum_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o sha512sum-md5sum.obj `if test -f 'md5sum.c'; then $(CYGPATH_W) 'md5sum.c'; else $(CYGPATH_W) '$(srcdir)/md5sum.c'; fi`
 uninstall-info-am:
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
