@@ -21,13 +21,6 @@
 
 # include <stdio.h>
 
-/* The following contortions are an attempt to use the C preprocessor
-   to determine an unsigned integral type that is 64 bits wide.  An
-   alternative approach is to use autoconf's AC_CHECK_SIZEOF macro, but
-   doing that would require that the configure script compile and *run*
-   the resulting executable.  Locally running cross-compiled executables
-   is usually not possible.  */
-
 # if HAVE_INTTYPES_H
 #  include <inttypes.h>
 # endif
