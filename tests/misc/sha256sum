@@ -1,0 +1,51 @@
+#!/bin/sh
+
+: ${PERL=perl}
+: ${srcdir=.}
+
+$PERL -e 1 > /dev/null 2>&1 || {
+  echo 1>&2 "$0: configure didn't find a usable version of Perl," \
+    "so can't run this test"
+  exit 77
+}
+
+exec $PERL -w -I$srcdir/.. -MCoreutils -- - <<\EOF
+require 5.003;
+use strict;
+
+(my $program_name = $0) =~ s|.*/||;
+
+# Turn off localisation of executable's ouput.
+@ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
+
+my $sha_degenerate = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855";
+
+my @Tests =
+    (
+     ['s1', {IN=> {f=> ''}},
+			{OUT=>"$sha_degenerate  f\n"}],
+     ['s2', {IN=> {f=> 'a'}},
+			{OUT=>"ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb  f\n"}],
+     ['s3', {IN=> {f=> 'abc'}},
+			{OUT=>"ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad  f\n"}],
+     ['s4',
+      {IN=> {f=> 'abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq'}},
+			{OUT=>"248d6a61d20638b8e5c026930c3e6039a33ce45964ff2167f6ecedd419db06c1  f\n"}],
+     ['s8', {IN=> {f=> 'a' x 1000000}},
+			{OUT=>"cdc76e5c9914fb9281a1c7e284d73e67f1809a48a497200e046d39ccc7112cd0  f\n"}],
+    );
+
+# Insert the `--text' argument for each test.
+my $t;
+foreach $t (@Tests)
+  {
+    splice @$t, 1, 0, '--text' unless @$t[1] =~ /--check/;
+  }
+
+my $save_temps = $ENV{DEBUG};
+my $verbose = $ENV{VERBOSE};
+
+my $prog = $ENV{PROG} || die "$0: \$PROG not specified in environment\n";
+my $fail = run_tests ($program_name, $prog, \@Tests, $save_temps, $verbose);
+exit $fail;
+EOF
