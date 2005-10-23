@@ -1,3 +1,12 @@
+2005-10-23  Jim Meyering  <jim@meyering.net>
+
+	* sha512.h: Remove no-longer-relevant comment.
+
+2005-08-27  David Madore  <david.madore@ens.fr>
+
+	* sha256.h, sha256.c, sha512.h, sha512.c: New files - sha-2
+	implementation.
+
 2005-10-20  Jim Meyering  <jim@meyering.net>
 
 	* modechange.c (mode_compile): Reject an invalid mode string
