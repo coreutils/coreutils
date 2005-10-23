@@ -1,3 +1,10 @@
+2005-10-23  Jim Meyering  <jim@meyering.net>
+
+	* Version 6.0-cvs.
+
+	* configure.ac: Use 6.0-cvs as the version string.
+	* NEWS: Adjust accordingly.
+
 2005-10-22  Jim Meyering  <jim@meyering.net>
 
 	* Version 5.92.
