@@ -2,6 +2,13 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Major changes in release 6.0 (????-??-??) [unstable]
 
+** New programs
+
+  sha224sum: print or check a SHA224 (224-bit) checksum
+  sha256sum: print or check a SHA256 (256-bit) checksum
+  sha384sum: print or check a SHA384 (384-bit) checksum
+  sha512sum: print or check a SHA512 (512-bit) checksum
+
 * Major changes in release 5.92 (2005-10-22) [stable]
 
 ** Bug fixes
