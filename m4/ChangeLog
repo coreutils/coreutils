@@ -1,3 +1,8 @@
+2005-08-27  David Madore  <david.madore@ens.fr>
+
+	* sha256.m4, sha512.m4: New files.
+	* prereq.m4: Add gl_SHA256 and gl_SHA512.
+
 2005-10-07  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* stdbool.m4 (AC_HEADER_STDBOOL): Add an "#ifdef __xlc__" test,
