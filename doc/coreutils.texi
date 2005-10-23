@@ -31,7 +31,6 @@
 @c FIXME: the following need documentation
 @c * [: (coreutils)[ invocation.                   File/string tests.
 @c * pinky: (coreutils)pinky invocation.           FIXME.
-@c * shasum: (coreutils)shasum invocation.         Print or check message-digests.
 @c * uptime: (coreutils)uptime invocation.         FIXME.
 
 @dircategory Individual utilities
@@ -74,7 +73,7 @@
 * ln: (coreutils)ln invocation.                 Make links between files.
 * logname: (coreutils)logname invocation.       Print current login name.
 * ls: (coreutils)ls invocation.                 List directory contents.
-* md5sum: (coreutils)md5sum invocation.         Print or check message-digests.
+* md5sum: (coreutils)md5sum invocation.         Print or check MD5 digests.
 * mkdir: (coreutils)mkdir invocation.           Create directories.
 * mkfifo: (coreutils)mkfifo invocation.         Create FIFOs (named pipes).
 * mknod: (coreutils)mknod invocation.           Create special files.
@@ -94,6 +93,8 @@
 * rm: (coreutils)rm invocation.                 Remove files.
 * rmdir: (coreutils)rmdir invocation.           Remove empty directories.
 * seq: (coreutils)seq invocation.               Print numeric sequences
+* sha1sum: (coreutils)sha1sum invocation.       Print or check SHA-1 digests.
+* sha2: (coreutils)sha2 utilities.              Print or check SHA-2 digests.
 * shred: (coreutils)shred invocation.           Remove files more securely.
 * sleep: (coreutils)sleep invocation.           Delay for a specified time.
 * sort: (coreutils)sort invocation.             Sort text files.
@@ -171,7 +172,7 @@ Free Documentation License''.
 * Output of entire files::             cat tac nl od
 * Formatting file contents::           fmt pr fold
 * Output of parts of files::           head tail split csplit
-* Summarizing files::                  wc sum cksum md5sum
+* Summarizing files::                  wc sum cksum md5sum sha1sum sha2
 * Operating on sorted files::          sort uniq comm ptx tsort
 * Operating on fields within a line::  cut paste join
 * Operating on characters::            tr expand unexpand
@@ -236,7 +237,9 @@ Summarizing files
 * wc invocation::               Print newline, word, and byte counts.
 * sum invocation::              Print checksum and block counts.
 * cksum invocation::            Print CRC checksum and byte counts.
-* md5sum invocation::           Print or check message-digests.
+* md5sum invocation::           Print or check MD5 digests.
+* sha1sum invocation::          Print or check SHA-1 digests.
+* sha2 utilities::              Print or check SHA-2 digests.
 
 Operating on sorted files
 
@@ -2796,7 +2799,9 @@ contents of files.
 * wc invocation::               Print newline, word, and byte counts.
 * sum invocation::              Print checksum and block counts.
 * cksum invocation::            Print CRC checksum and byte counts.
-* md5sum invocation::           Print or check message-digests.
+* md5sum invocation::           Print or check MD5 digests.
+* sha1sum invocation::          Print or check SHA-1 digests.
+* sha2 utilities::              Print or check SHA-2 digests.
 @end menu
 
 
@@ -2970,9 +2975,10 @@ options}.
 
 
 @node md5sum invocation
-@section @command{md5sum}: Print or check message-digests
+@section @command{md5sum}: Print or check MD5 digests
 
 @pindex md5sum
+@cindex MD5
 @cindex 128-bit checksum
 @cindex checksum, 128-bit
 @cindex fingerprint, 128-bit
@@ -2980,6 +2986,19 @@ options}.
 
 @command{md5sum} computes a 128-bit checksum (or @dfn{fingerprint} or
 @dfn{message-digest}) for each specified @var{file}.
+
+Note: The MD5 digest is more reliable than a simple CRC (provided by
+the @command{cksum} command) for detecting accidental file corruption,
+as the chances of accidentally having two files with indentical MD5
+are vanishingly small.  However, it should not be considered truly
+secure against malicious tampering: although finding a file with a
+given MD5 fingerprint, or modifying a file so as to retain its MD5 are
+considered infeasible at the moment, it is known how to produce
+different files with identical MD5 (a ``collision''), something which
+can be a security issue in certain contexts.  For more secure hashes,
+consider using SHA-1 or SHA-2.  @xref{sha1sum invocation}, and
+@ref{sha2 utilities}.
+
 If a @var{file} is specified as @samp{-} or if no files are given
 @command{md5sum} computes the checksum for the standard input.
 @command{md5sum} can also determine whether a file and checksum are
@@ -3070,6 +3089,64 @@ are valid.
 @end table
 
 @exitstatus
+
+
+@node sha1sum invocation
+@section @command{sha1sum}: Print or check SHA-1 digests
+
+@pindex sha1sum
+@cindex SHA-1
+@cindex 160-bit checksum
+@cindex checksum, 160-bit
+@cindex fingerprint, 160-bit
+@cindex message-digest, 160-bit
+
+@command{sha1sum} computes a 160-bit checksum for each specified
+@var{file}.  The usage and options of this command are precisely the
+same as for @command{md5sum}.  @xref{md5sum invocation}.
+
+Note: The SHA-1 digest is more secure than MD5, and no collisions of
+it are known (different files having the same fingerprint).  However,
+it is known that they can be produced with considerable, but not
+unreasonable, resources.  For this reason, it is generally considered
+that SHA-1 should be gradually phased out in favor of the more secure
+SHA-2 hash algorithms.  @xref{sha2 utilities}.
+
+
+@node sha2 utilities
+@section sha2 utilities: Print or check SHA-2 digests
+
+@pindex sha224sum
+@pindex sha256sum
+@pindex sha384sum
+@pindex sha512sum
+@cindex SHA-2
+@cindex 224-bit checksum
+@cindex 256-bit checksum
+@cindex 384-bit checksum
+@cindex 512-bit checksum
+@cindex checksum, 224-bit
+@cindex checksum, 256-bit
+@cindex checksum, 384-bit
+@cindex checksum, 512-bit
+@cindex fingerprint, 224-bit
+@cindex fingerprint, 256-bit
+@cindex fingerprint, 384-bit
+@cindex fingerprint, 512-bit
+@cindex message-digest, 224-bit
+@cindex message-digest, 256-bit
+@cindex message-digest, 384-bit
+@cindex message-digest, 512-bit
+
+The commands @command{sha224sum}, @command{sha256sum},
+@command{sha384sum} and @command{sha512sum} compute checksums of
+various lengths (respectively 224, 256, 384 and 512 bits),
+collectively known as the SHA-2 hashes.  The usage and options of
+these commands are precisely the same as for @command{md5sum}.
+@xref{md5sum invocation}.
+
+Note: The SHA384 and SHA512 digests are considerably slower to
+compute, especially on 32-bit computers, than SHA224 or SHA256.
 
 
 @node Operating on sorted files
