@@ -1,3 +1,7 @@
+2005-08-28  David Madore  <david.madore@ens.fr>
+
+	* coreutils.texi: Document SHA-1 and SHA-2 utilities.
+
 2005-10-15  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* doc/coreutils.texi (Top, General output formatting, dir invocation):
