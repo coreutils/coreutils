@@ -24,7 +24,8 @@ bin_PROGRAMS = [ chgrp chown chmod cp dd dircolors du \
   ginstall link ln dir vdir ls mkdir \
   mkfifo mknod mv nohup readlink rm rmdir shred stat sync touch unlink \
   cat cksum comm csplit cut expand fmt fold head join md5sum \
-  nl od paste pr ptx sha1sum sort split sum tac tail tr tsort unexpand uniq wc \
+  nl od paste pr ptx sha1sum sha224sum sha256sum sha384sum sha512sum \
+  sort split sum tac tail tr tsort unexpand uniq wc \
   basename date dirname echo env expr factor false \
   hostname id kill logname pathchk printenv printf pwd seq sleep tee \
   test true tty whoami yes \
@@ -33,7 +34,7 @@ bin_PROGRAMS = [ chgrp chown chmod cp dd dircolors du \
 noinst_PROGRAMS = setuidgid
 
 noinst_HEADERS = \
-  system.h checksum.h copy.h cp-hash.h ls.h dircolors.h remove.h \
+  system.h copy.h cp-hash.h ls.h dircolors.h remove.h \
   chown-core.h fs.h \
   wheel.h wheel-size.h
 EXTRA_DIST = dcgen dircolors.hin tac-pipe.c \
@@ -169,8 +170,18 @@ chgrp_SOURCES = chgrp.c chown-core.c
 mv_SOURCES = mv.c copy.c cp-hash.c remove.c
 rm_SOURCES = rm.c remove.c
 
-md5sum_SOURCES = md5sum.c md5.c
-sha1sum_SOURCES = md5sum.c sha1sum.c
+md5sum_SOURCES = md5sum.c
+md5sum_CPPFLAGS = -DHASH_ALGO_MD5=1 $(AM_CPPFLAGS)
+sha1sum_SOURCES = md5sum.c
+sha1sum_CPPFLAGS = -DHASH_ALGO_SHA1=1 $(AM_CPPFLAGS)
+sha224sum_SOURCES = md5sum.c
+sha224sum_CPPFLAGS = -DHASH_ALGO_SHA224=1 $(AM_CPPFLAGS)
+sha256sum_SOURCES = md5sum.c
+sha256sum_CPPFLAGS = -DHASH_ALGO_SHA256=1 $(AM_CPPFLAGS)
+sha384sum_SOURCES = md5sum.c
+sha384sum_CPPFLAGS = -DHASH_ALGO_SHA384=1 $(AM_CPPFLAGS)
+sha512sum_SOURCES = md5sum.c
+sha512sum_CPPFLAGS = -DHASH_ALGO_SHA512=1 $(AM_CPPFLAGS)
 
 editpl = sed -e 's,@''PERL''@,$(PERL),g'
 
