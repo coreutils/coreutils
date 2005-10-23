@@ -1,4 +1,4 @@
-/* Compute MD5 or SHA1 checksum of files or strings
+/* Compute MD5, SHA1, SHA224, SHA256, SHA384 or SHA512 checksum of files or strings
    Copyright (C) 1995-2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -24,34 +24,85 @@
 
 #include "system.h"
 
-#include "md5.h"
-#include "sha1.h"
-#include "checksum.h"
+#if HASH_ALGO_MD5
+# include "md5.h"
+#endif
+#if HASH_ALGO_SHA1
+# include "sha1.h"
+#endif
+#if HASH_ALGO_SHA256 || HASH_ALGO_SHA224
+# include "sha256.h"
+#endif
+#if HASH_ALGO_SHA512 || HASH_ALGO_SHA384
+# include "sha512.h"
+#endif
 #include "getline.h"
 #include "error.h"
 #include "quote.h"
 #include "stdio--.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
-#define PROGRAM_NAME (algorithm == ALG_MD5 ? "md5sum" : "sha1sum")
+#if HASH_ALGO_MD5
+# define PROGRAM_NAME "md5sum"
+# define DIGEST_TYPE_STRING "MD5"
+# define DIGEST_STREAM md5_stream
+# define DIGEST_BUFFER md5_buffer
+# define DIGEST_BITS 128
+# define DIGEST_REFERENCE "RFC 1321"
+# define DIGEST_ALIGN 4
+#elif HASH_ALGO_SHA1
+# define PROGRAM_NAME "sha1sum"
+# define DIGEST_TYPE_STRING "SHA1"
+# define DIGEST_STREAM sha1_stream
+# define DIGEST_BUFFER sha1_buffer
+# define DIGEST_BITS 160
+# define DIGEST_REFERENCE "FIPS-180-1"
+# define DIGEST_ALIGN 4
+#elif HASH_ALGO_SHA256
+# define PROGRAM_NAME "sha256sum"
+# define DIGEST_TYPE_STRING "SHA256"
+# define DIGEST_STREAM sha256_stream
+# define DIGEST_BUFFER sha256_buffer
+# define DIGEST_BITS 256
+# define DIGEST_REFERENCE "FIPS-180-2"
+# define DIGEST_ALIGN 4
+#elif HASH_ALGO_SHA224
+# define PROGRAM_NAME "sha224sum"
+# define DIGEST_TYPE_STRING "SHA224"
+# define DIGEST_STREAM sha224_stream
+# define DIGEST_BUFFER sha224_buffer
+# define DIGEST_BITS 224
+# define DIGEST_REFERENCE "RFC 3874"
+# define DIGEST_ALIGN 4
+#elif HASH_ALGO_SHA512
+# define PROGRAM_NAME "sha512sum"
+# define DIGEST_TYPE_STRING "SHA512"
+# define DIGEST_STREAM sha512_stream
+# define DIGEST_BUFFER sha512_buffer
+# define DIGEST_BITS 512
+# define DIGEST_REFERENCE "FIPS-180-2"
+# define DIGEST_ALIGN 8
+#elif HASH_ALGO_SHA384
+# define PROGRAM_NAME "sha384sum"
+# define DIGEST_TYPE_STRING "SHA384"
+# define DIGEST_STREAM sha384_stream
+# define DIGEST_BUFFER sha384_buffer
+# define DIGEST_BITS 384
+# define DIGEST_REFERENCE "FIPS-180-2"
+# define DIGEST_ALIGN 8
+#else
+# error "Can't decide which hash algorithm to compile."
+#endif
 
-#define AUTHORS "Ulrich Drepper", "Scott Miller"
+#define DIGEST_HEX_BYTES (DIGEST_BITS / 4)
+#define DIGEST_BIN_BYTES (DIGEST_BITS / 8)
 
-
-#define DIGEST_TYPE_STRING(Alg) ((Alg) == ALG_MD5 ? "MD5" : "SHA1")
-#define DIGEST_STREAM(Alg) ((Alg) == ALG_MD5 ? md5_stream : sha1_stream)
-
-#define DIGEST_BITS(Alg) ((Alg) == ALG_MD5 ? 128 : 160)
-#define DIGEST_HEX_BYTES(Alg) (DIGEST_BITS (Alg) / 4)
-#define DIGEST_BIN_BYTES(Alg) (DIGEST_BITS (Alg) / 8)
-
-#define MAX_DIGEST_BIN_BYTES MAX (DIGEST_BIN_BYTES (ALG_MD5), \
-				  DIGEST_BIN_BYTES (ALG_SHA1))
+#define AUTHORS "Ulrich Drepper", "Scott Miller", "David Madore"
 
 /* The minimum length of a valid digest line.  This length does
    not include any newline character at the end of a line.  */
-#define MIN_DIGEST_LINE_LENGTH(Alg) \
-  (DIGEST_HEX_BYTES (Alg) /* length of hexadecimal message digest */ \
+#define MIN_DIGEST_LINE_LENGTH \
+  (DIGEST_HEX_BYTES /* length of hexadecimal message digest */ \
    + 2 /* blank and binary indicator */ \
    + 1 /* minimum filename length */ )
 
@@ -71,9 +122,6 @@ static bool status_only = false;
 /* With --check, print a message to standard error warning about each
    improperly formatted checksum line.  */
 static bool warn = false;
-
-/* Declared and set via one of the wrapper .c files.  */
-/* int algorithm = ALG_UNSPECIFIED; */
 
 /* The name this program was run with.  */
 char *program_name;
@@ -112,8 +160,8 @@ With no FILE, or when FILE is -, read standard input.\n\
 \n\
 "),
 	      program_name,
-	      DIGEST_TYPE_STRING (algorithm),
-	      DIGEST_BITS (algorithm));
+	      DIGEST_TYPE_STRING,
+	      DIGEST_BITS);
       if (O_BINARY)
 	fputs (_("\
   -b, --binary            read in binary mode (default unless reading tty stdin)\n\
@@ -124,7 +172,7 @@ With no FILE, or when FILE is -, read standard input.\n\
 "), stdout);
       printf (_("\
   -c, --check             read %s sums from the FILEs and check them\n"),
-	      DIGEST_TYPE_STRING (algorithm));
+	      DIGEST_TYPE_STRING);
       if (O_BINARY)
 	fputs (_("\
   -t, --text              read in text mode (default if reading tty stdin)\n\
@@ -148,7 +196,7 @@ The sums are computed as described in %s.  When checking, the input\n\
 should be a former output of this program.  The default mode is to print\n\
 a line with checksum, a character indicating type (`*' for binary, ` ' for\n\
 text), and name for each FILE.\n"),
-	      (algorithm == ALG_MD5 ? "RFC 1321" : "FIPS-180-1"));
+	      DIGEST_REFERENCE);
       printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
 
@@ -211,8 +259,8 @@ split_3 (char *s, size_t s_len,
     ++i;
 
   /* Check for BSD-style checksum line. */
-  algo_name_len = strlen (DIGEST_TYPE_STRING (algorithm));
-  if (strncmp (s + i, DIGEST_TYPE_STRING (algorithm), algo_name_len) == 0)
+  algo_name_len = strlen (DIGEST_TYPE_STRING);
+  if (strncmp (s + i, DIGEST_TYPE_STRING, algo_name_len) == 0)
     {
       if (strncmp (s + i + algo_name_len, " (", 2) == 0)
 	{
@@ -313,8 +361,7 @@ hex_digits (unsigned char const *s)
   return true;
 }
 
-/* An interface to the function, DIGEST_STREAM,
-   (either md5_stream or sha1_stream).
+/* An interface to the function, DIGEST_STREAM.
    Operate on FILENAME (it may be "-").
 
    *BINARY indicates whether the file is binary.  BINARY < 0 means it
@@ -322,12 +369,11 @@ hex_digits (unsigned char const *s)
    a terminal; in that case, clear *BINARY if the file was treated as
    text because it was a terminal.
 
-   Put the checksum in *BIN_RESULT.
+   Put the checksum in *BIN_RESULT, which must be properly aligned.
    Return true if successful.  */
 
 static bool
-digest_file (const char *filename, int *binary, unsigned char *bin_result,
-	     int (*digest_stream) (FILE *, void *))
+digest_file (const char *filename, int *binary, unsigned char *bin_result)
 {
   FILE *fp;
   int err;
@@ -355,7 +401,7 @@ digest_file (const char *filename, int *binary, unsigned char *bin_result,
 	}
     }
 
-  err = (*digest_stream) (fp, bin_result);
+  err = DIGEST_STREAM (fp, bin_result);
   if (err)
     {
       error (0, errno, "%s", filename);
@@ -374,17 +420,22 @@ digest_file (const char *filename, int *binary, unsigned char *bin_result,
 }
 
 static bool
-digest_check (const char *checkfile_name, int (*digest_stream) (FILE *, void *))
+digest_check (const char *checkfile_name)
 {
   FILE *checkfile_stream;
   uintmax_t n_properly_formatted_lines = 0;
   uintmax_t n_mismatched_checksums = 0;
   uintmax_t n_open_or_read_failures = 0;
-  unsigned char bin_buffer[MAX_DIGEST_BIN_BYTES];
+  unsigned char bin_buffer_unaligned[DIGEST_BIN_BYTES+DIGEST_ALIGN];
+  unsigned char *bin_buffer;
   uintmax_t line_number;
   char *line;
   size_t line_chars_allocated;
   bool is_stdin = STREQ (checkfile_name, "-");
+
+  /* Make sure bin_buffer is properly aligned. */
+  bin_buffer = bin_buffer_unaligned
+    + ((unsigned)DIGEST_ALIGN - ((unsigned)bin_buffer_unaligned))%DIGEST_ALIGN;
 
   if (is_stdin)
     {
@@ -439,7 +490,7 @@ digest_check (const char *checkfile_name, int (*digest_stream) (FILE *, void *))
 		     _("%s: %" PRIuMAX
 		       ": improperly formatted %s checksum line"),
 		     checkfile_name, line_number,
-		     DIGEST_TYPE_STRING (algorithm));
+		     DIGEST_TYPE_STRING);
 	    }
 	}
       else
@@ -452,7 +503,7 @@ digest_check (const char *checkfile_name, int (*digest_stream) (FILE *, void *))
 
 	  ++n_properly_formatted_lines;
 
-	  ok = digest_file (filename, &binary, bin_buffer, digest_stream);
+	  ok = digest_file (filename, &binary, bin_buffer);
 
 	  if (!ok)
 	    {
@@ -509,7 +560,7 @@ digest_check (const char *checkfile_name, int (*digest_stream) (FILE *, void *))
     {
       /* Warn if no tests are found.  */
       error (0, 0, _("%s: no properly formatted %s checksum lines found"),
-	     checkfile_name, DIGEST_TYPE_STRING (algorithm));
+	     checkfile_name, DIGEST_TYPE_STRING);
     }
   else
     {
@@ -547,7 +598,8 @@ digest_check (const char *checkfile_name, int (*digest_stream) (FILE *, void *))
 int
 main (int argc, char **argv)
 {
-  unsigned char bin_buffer[MAX_DIGEST_BIN_BYTES];
+  unsigned char bin_buffer_unaligned[DIGEST_BIN_BYTES+DIGEST_ALIGN];
+  unsigned char *bin_buffer;
   bool do_check = false;
   int opt;
   bool ok = true;
@@ -588,8 +640,12 @@ main (int argc, char **argv)
 	usage (EXIT_FAILURE);
       }
 
-  min_digest_line_length = MIN_DIGEST_LINE_LENGTH (algorithm);
-  digest_hex_bytes = DIGEST_HEX_BYTES (algorithm);
+  min_digest_line_length = MIN_DIGEST_LINE_LENGTH;
+  digest_hex_bytes = DIGEST_HEX_BYTES;
+
+  /* Make sure bin_buffer is properly aligned. */
+  bin_buffer = bin_buffer_unaligned
+    + ((unsigned)DIGEST_ALIGN - ((unsigned)bin_buffer_unaligned))%DIGEST_ALIGN;
 
   if (0 <= binary && do_check)
     {
@@ -620,13 +676,12 @@ main (int argc, char **argv)
       char *file = argv[optind];
 
       if (do_check)
-	ok &= digest_check (file, DIGEST_STREAM (algorithm));
+	ok &= digest_check (file);
       else
 	{
 	  int file_is_binary = binary;
 
-	  if (! digest_file (file, &file_is_binary, bin_buffer,
-			     DIGEST_STREAM (algorithm)))
+	  if (! digest_file (file, &file_is_binary, bin_buffer))
 	    ok = false;
 	  else
 	    {
