@@ -264,41 +264,25 @@ make_dir_parents (char const *arg,
 	 Create the final component of the file name.  */
       if (retval)
 	{
-	  bool just_created = (mkdir (basename_dir, mode) == 0);
-	  if (just_created)
+	  bool dir_known_to_exist = (mkdir (basename_dir, mode) == 0);
+	  int mkdir_errno = errno;
+	  struct stat sbuf;
+
+	  if ( ! dir_known_to_exist)
+	    dir_known_to_exist = (stat (basename_dir, &sbuf) == 0
+				  && S_ISDIR (sbuf.st_mode));
+
+	  if ( ! dir_known_to_exist)
+	    {
+	      error (0, mkdir_errno,
+		     _("cannot create directory %s"), quote (dir));
+	      retval = false;
+	    }
+	  else
 	    {
 	      if (verbose_fmt_string)
 		error (0, 0, verbose_fmt_string, quote (dir));
 	      fixup_permissions_dir = basename_dir;
-	    }
-	  else
-	    {
-	      if (errno != EEXIST)
-		{
-		  error (0, errno, _("cannot create directory %s"), quote (dir));
-		  retval = false;
-		}
-	      else
-		{
-		  /* basename_dir exists.
-		     This is highly unlikely, but not impossible in a race.
-		     You can exercise this code by running a very slow
-		     mkdir -p a/nonexistent/c process and e.g., running
-		     touch a/nonexistent/c after a/nonexistent is created
-		     but before mkdir attempts to create `c'.
-
-		     If it's a directory, we're done.
-		     Otherwise, we must fail.  */
-		  struct stat sbuf;
-		  /* The stat may fail for a dangling link.  */
-		  if (stat (basename_dir, &sbuf) != 0
-		      || ! S_ISDIR (sbuf.st_mode))
-		    {
-		      error (0, 0, _("%s exists but is not a directory"),
-			     quote (basename_dir));
-		      retval = false;
-		    }
-		}
 	    }
 	}
     }
