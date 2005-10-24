@@ -1,5 +1,9 @@
 2005-10-24  Jim Meyering  <jim@meyering.net>
 
+	* mkdir-p.c (make_dir_parents): Like the code above, don't rely
+	on mkdir failing with a particular errno value (EEXIST).
+	Based on a patch by Dmitry V. Levin.
+
 	* mkdir-p.c (make_dir_parents): Make the preceding fix a little
 	more robust, e.g., when the final component is created as a non-
 	directory by another process just before `mkdir -p's final mkdir.
