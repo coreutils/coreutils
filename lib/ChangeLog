@@ -1,5 +1,9 @@
 2005-10-24  Jim Meyering  <jim@meyering.net>
 
+	* mkdir-p.c (make_dir_parents): Make the preceding fix a little
+	more robust, e.g., when the final component is created as a non-
+	directory by another process just before `mkdir -p's final mkdir.
+
 	A command like `mkdir -p nonexistent/.' would create the
 	directory but exit nonzero with a diagnostic.  This could also be
 	triggered with a non-`.' component, e.g., in a race with another
