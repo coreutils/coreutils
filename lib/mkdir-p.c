@@ -280,7 +280,24 @@ make_dir_parents (char const *arg,
 		}
 	      else
 		{
-		  /* The directory already exists.  Do nothing.  */
+		  /* basename_dir exists.
+		     This is highly unlikely, but not impossible in a race.
+		     You can exercise this code by running a very slow
+		     mkdir -p a/nonexistent/c process and e.g., running
+		     touch a/nonexistent/c after a/nonexistent is created
+		     but before mkdir attempts to create `c'.
+
+		     If it's a directory, we're done.
+		     Otherwise, we must fail.  */
+		  struct stat sbuf;
+		  /* The stat may fail for a dangling link.  */
+		  if (stat (basename_dir, &sbuf) != 0
+		      || ! S_ISDIR (sbuf.st_mode))
+		    {
+		      error (0, 0, _("%s exists but is not a directory"),
+			     quote (basename_dir));
+		      retval = false;
+		    }
 		}
 	    }
 	}
