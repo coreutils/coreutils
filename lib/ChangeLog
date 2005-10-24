@@ -1,3 +1,15 @@
+2005-10-24  Jim Meyering  <jim@meyering.net>
+
+	A command like `mkdir -p nonexistent/.' would create the
+	directory but exit nonzero with a diagnostic.  This could also be
+	triggered with a non-`.' component, e.g., in a race with another
+	process running the same `mkdir -p nonexistent/sub' command.
+
+	* mkdir-p.c (make_dir_parents): Handle the case of an
+	existing final component.
+	Reported by Matthias Andree here:
+	http://savannah.gnu.org/bugs/?func=detailitem&item_id=14848
+
 2005-10-23  Jim Meyering  <jim@meyering.net>
 
 	* sha512.h: Remove no-longer-relevant comment.
