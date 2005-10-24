@@ -375,7 +375,7 @@ update-gmo: Makefile $(GMOFILES)
 
 Makefile: Makefile.in.in Makevars $(top_builddir)/config.status @POMAKEFILEDEPS@
 	cd $(top_builddir) \
-	  && $(SHELL) ./config.status $(subdir)/$@.in po-directories
+	  && $(SHELL) ./config.status $(subdir)/$@.in
 
 force:
 
