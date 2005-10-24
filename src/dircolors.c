@@ -62,7 +62,6 @@ enum Shell_syntax
    variable.  */
 static struct obstack lsc_obstack;
 
-/* FIXME: associate with ls_codes? */
 static const char *const slack_codes[] =
 {
   "NORMAL", "NORM", "FILE", "DIR", "LNK", "LINK",
@@ -78,6 +77,8 @@ static const char *const ls_codes[] =
   "so", "bd", "bd", "cd", "cd", "do", "ex", "lc", "lc", "rc", "rc", "ec", "ec"
   "su", "su", "sg", "sg", "st", "ow", "ow", "tw", "tw", NULL
 };
+#define array_cardinality(Array) (sizeof (Array) / sizeof *(Array))
+verify (array_cardinality (slack_codes) == array_cardinality (ls_codes));
 
 static struct option const long_options[] =
   {
