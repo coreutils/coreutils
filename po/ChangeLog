@@ -1,3 +1,7 @@
+2005-10-24  Jim Meyering  <jim@meyering.net>
+
+	* Makefile.in.in: Update from gettext cvs (0.15).
+
 2005-10-07  Jim Meyering  <jim@meyering.net>
 
 	* POTFILES.in: Remove the lib/euidaccess-stat.c line,
