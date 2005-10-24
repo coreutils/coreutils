@@ -547,9 +547,9 @@ tac_file (const char *filename)
 
   file_size = lseek (fd, (off_t) 0, SEEK_END);
 
-  ok = (0 <= file_size
-	? tac_seekable (fd, filename)
-	: tac_nonseekable (fd, filename));
+  ok = (file_size < 0 || isatty (fd)
+	? tac_nonseekable (fd, filename)
+	: tac_seekable (fd, filename));
 
   if (!is_stdin && close (fd) != 0)
     {
