@@ -190,18 +190,17 @@ parse_tab_stops (char const *stops)
 	      have_tabval = true;
 	      num_start = stops;
 	    }
-	  {
-	    /* Detect overflow.  */
-	    if (!DECIMAL_DIGIT_ACCUMULATE (tabval, *stops - '0', uintmax_t))
-	      {
-		size_t len = strspn (num_start, "0123456789");
-		char *bad_num = xstrndup (num_start, len);
-		error (0, 0, _("tab stop is too large %s"), quote (bad_num));
-		free (bad_num);
-		ok = false;
-		stops = num_start + len - 1;
-	      }
-	  }
+
+	  /* Detect overflow.  */
+	  if (!DECIMAL_DIGIT_ACCUMULATE (tabval, *stops - '0', uintmax_t))
+	    {
+	      size_t len = strspn (num_start, "0123456789");
+	      char *bad_num = xstrndup (num_start, len);
+	      error (0, 0, _("tab stop is too large %s"), quote (bad_num));
+	      free (bad_num);
+	      ok = false;
+	      stops = num_start + len - 1;
+	    }
 	}
       else
 	{
