@@ -1,3 +1,10 @@
+2005-10-24  Dmitry V. Levin  <ldv@altlinux.org>
+
+	* tests/install/d-slashdot: New test, for "install -d" failure.
+	* tests/install/Makefile.am (TESTS): Add d-slashdot.
+	* tests/mkdir/p-slashdot: New test, for "mkdir -p" failure.
+	* tests/mkdir/Makefile.am (TESTS): Add p-slashdot.
+
 2005-10-24  Jim Meyering  <jim@meyering.net>
 
 	* src/dircolors.c (ls_codes): Add missing comma.
