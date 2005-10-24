@@ -264,16 +264,24 @@ make_dir_parents (char const *arg,
 	 Create the final component of the file name.  */
       if (retval)
 	{
-	  if (mkdir (basename_dir, mode) != 0)
-	    {
-	      error (0, errno, _("cannot create directory %s"), quote (dir));
-	      retval = false;
-	    }
-	  else
+	  bool just_created = (mkdir (basename_dir, mode) == 0);
+	  if (just_created)
 	    {
 	      if (verbose_fmt_string)
 		error (0, 0, verbose_fmt_string, quote (dir));
 	      fixup_permissions_dir = basename_dir;
+	    }
+	  else
+	    {
+	      if (errno != EEXIST)
+		{
+		  error (0, errno, _("cannot create directory %s"), quote (dir));
+		  retval = false;
+		}
+	      else
+		{
+		  /* The directory already exists.  Do nothing.  */
+		}
 	    }
 	}
     }
