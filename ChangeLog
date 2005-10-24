@@ -1,3 +1,9 @@
+2005-10-24  Jim Meyering  <jim@meyering.net>
+
+	* src/tac.c (tac_file): When determining whether a file is seekable,
+	also test whether it is a tty.  Using only the lseek-based test would
+	give a false positive on Solaris.  Reported by Peter Fales.
+
 2005-10-24  Dmitry V. Levin  <ldv@altlinux.org>
 
 	* tests/install/d-slashdot: New test, for "install -d" failure.
