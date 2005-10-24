@@ -1,8 +1,16 @@
 2005-10-24  Jim Meyering  <jim@meyering.net>
 
+	* src/dircolors.c (ls_codes): Add missing comma.
+	Anonymous report and patch from
+	http://savannah.gnu.org/bugs/?func=detailitem&item_id=14849
+
+	* src/dircolors.c: Add compile-time assertion that the slack_codes
+	and ls_codes arrays have the same number of elements.  This would
+	have prevented the above-fixed bug.
+
 	* Version 6.0-cvs.
 
-	* src/expand.c (parse_tab_stops): Add comment to make this function
+	* src/expand.c (parse_tab_stops): Add a comment to make this function
 	identical to the one in unexpand.c.
 	* src/unexpand.c (parse_tab_stops): Adjust syntax to make this function
 	identical to the one in expand.c.
