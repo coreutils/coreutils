@@ -2,6 +2,11 @@
 
 	* Version 6.0-cvs.
 
+	* src/expand.c (parse_tab_stops): Add comment to make this function
+	identical to the one in unexpand.c.
+	* src/unexpand.c (parse_tab_stops): Adjust syntax to make this function
+	identical to the one in expand.c.
+
 	* src/expand.c (next_file): Don't assume fopen cannot return stdin.
 
 2005-10-23  Jim Meyering  <jim@meyering.net>
