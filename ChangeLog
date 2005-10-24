@@ -1,6 +1,10 @@
-2005-10-23  Jim Meyering  <jim@meyering.net>
+2005-10-24  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* src/expand.c (next_file): Don't assume fopen cannot return stdin.
+
+2005-10-23  Jim Meyering  <jim@meyering.net>
 
 	* src/md5sum.c (digest_check, main): Use ptr_align rather than
 	a dangerous pointer-value-to-`unsigned' cast.
