@@ -77,8 +77,8 @@ static const char *const ls_codes[] =
   "so", "bd", "bd", "cd", "cd", "do", "ex", "lc", "lc", "rc", "rc", "ec", "ec",
   "su", "su", "sg", "sg", "st", "ow", "ow", "tw", "tw", NULL
 };
-#define array_cardinality(Array) (sizeof (Array) / sizeof *(Array))
-verify (array_cardinality (slack_codes) == array_cardinality (ls_codes));
+#define array_len(Array) (sizeof (Array) / sizeof *(Array))
+verify (array_len (slack_codes) == array_len (ls_codes));
 
 static struct option const long_options[] =
   {
