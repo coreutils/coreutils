@@ -235,7 +235,7 @@ next_file (FILE *fp)
 	  error (0, errno, "%s", prev_file);
 	  exit_status = EXIT_FAILURE;
 	}
-      if (fp == stdin)
+      if (STREQ (prev_file, "-"))
 	clearerr (fp);		/* Also clear EOF.  */
       else if (fclose (fp) != 0)
 	{
@@ -246,7 +246,7 @@ next_file (FILE *fp)
 
   while ((file = *file_list++) != NULL)
     {
-      if (file[0] == '-' && file[1] == '\0')
+      if (STREQ (file, "-"))
 	{
 	  have_read_stdin = true;
 	  prev_file = file;
