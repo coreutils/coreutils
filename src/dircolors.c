@@ -74,7 +74,7 @@ static const char *const slack_codes[] =
 static const char *const ls_codes[] =
 {
   "no", "no", "fi", "di", "ln", "ln", "ln", "or", "mi", "pi", "pi",
-  "so", "bd", "bd", "cd", "cd", "do", "ex", "lc", "lc", "rc", "rc", "ec", "ec"
+  "so", "bd", "bd", "cd", "cd", "do", "ex", "lc", "lc", "rc", "rc", "ec", "ec",
   "su", "su", "sg", "sg", "st", "ow", "ow", "tw", "tw", NULL
 };
 #define array_cardinality(Array) (sizeof (Array) / sizeof *(Array))
