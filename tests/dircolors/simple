@@ -26,6 +26,8 @@ my @Tests =
      ['quote', {IN => "exec 'echo Hello;:'\n"},
       {OUT => "LS_COLORS='ex='\\''echo Hello;\\:'\\'':';\n"
       . "export LS_COLORS\n"}],
+     ['other-wr', {IN => "owt 40;33\n"},
+      {OUT => "LS_COLORS='tw=40;33:';\nexport LS_COLORS\n"}],
     );
 
 my $save_temps = $ENV{DEBUG};
