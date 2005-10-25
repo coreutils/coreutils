@@ -9,6 +9,17 @@ GNU coreutils NEWS                                    -*- outline -*-
   sha384sum: print or check a SHA384 (384-bit) checksum
   sha512sum: print or check a SHA512 (512-bit) checksum
 
+** Bug fixes
+
+  dircolors no longer segfaults upon an attempt to use the new
+  STICKY_OTHER_WRITABLE (OWT) attribute
+
+  mkdir -p and install -d no longer exit nonzero when asked to create
+  a directory like `nonexistent/.'
+
+  tac now works when stdin is a tty, even on non-Linux systems
+
+
 * Major changes in release 5.92 (2005-10-22) [stable]
 
 ** Bug fixes
