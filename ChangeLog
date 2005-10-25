@@ -1,3 +1,8 @@
+2005-10-25  Jim Meyering  <jim@meyering.net>
+
+	* tests/dircolors/simple (other-wr): Add an explicit test for
+	the dircolors bug (NULL-dereference) fixed yesterday.
+
 2005-10-24  Jim Meyering  <jim@meyering.net>
 
 	* src/tac.c (tac_file): When determining whether a file is seekable,
