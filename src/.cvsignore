@@ -70,6 +70,10 @@ rmdir
 seq
 setuidgid
 sha1sum
+sha224sum
+sha256sum
+sha384sum
+sha512sum
 shred
 sleep
 sort
@@ -104,4 +108,3 @@ wheel.h
 who
 whoami
 yes
-.deps
