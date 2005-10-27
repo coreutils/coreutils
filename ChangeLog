@@ -1,3 +1,11 @@
+2005-10-26  Dmitry V. Levin  <ldv@altlinux.org>
+
+	* Version 6.0-cvs.
+
+	* src/md5sum.c (main) [!O_BINARY]: Changed default read mode
+	back to text, to sync with documentation and for backwards
+	compatibility.
+
 2005-10-25  Jim Meyering  <jim@meyering.net>
 
 	* tests/dircolors/simple (other-wr): Add an explicit test for
@@ -25,8 +33,6 @@
 	* src/dircolors.c: Add compile-time assertion that the slack_codes
 	and ls_codes arrays have the same number of elements.  This would
 	have prevented the above-fixed bug.
-
-	* Version 6.0-cvs.
 
 	* src/expand.c (parse_tab_stops): Add a comment to make this function
 	identical to the one in unexpand.c.
