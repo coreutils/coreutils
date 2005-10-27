@@ -662,6 +662,9 @@ main (int argc, char **argv)
       usage (EXIT_FAILURE);
     }
 
+  if (!O_BINARY && binary < 0)
+    binary = 0;
+
   if (optind == argc)
     argv[argc++] = "-";
 
