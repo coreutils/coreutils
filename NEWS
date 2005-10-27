@@ -14,10 +14,17 @@ GNU coreutils NEWS                                    -*- outline -*-
   dircolors no longer segfaults upon an attempt to use the new
   STICKY_OTHER_WRITABLE (OWT) attribute
 
+  md5sum once again defaults to using the ` ' non-binary marker
+  (rather than the `*' binary marker) by default on Unix-like systems.
+
   mkdir -p and install -d no longer exit nonzero when asked to create
   a directory like `nonexistent/.'
 
   tac now works when stdin is a tty, even on non-Linux systems
+
+** Build-related bug fixes
+
+  installing .mo files would fail
 
 
 * Major changes in release 5.92 (2005-10-22) [stable]
