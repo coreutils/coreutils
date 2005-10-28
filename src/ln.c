@@ -54,7 +54,10 @@
 #endif
 
 /* Construct a string NEW_DEST by concatenating DEST, a slash, and
-   basename(SOURCE) in alloca'd memory.  Don't modify DEST or SOURCE.  */
+   basename (SOURCE) in alloca'd memory.  Don't modify DEST or SOURCE.
+   Omit unnecessary slashes in the boundary between DEST and SOURCE in
+   the result; they can cause harm if "/" and "//" denote different
+   directories.  */
 
 #define FILE_BASENAME_CONCAT(new_dest, dest, source)			\
     do									\
@@ -62,15 +65,18 @@
 	const char *source_base;					\
 	char *tmp_source;						\
 	size_t buf_len = strlen (source) + 1;				\
+	size_t dest_len = strlen (dest);				\
 									\
 	tmp_source = alloca (buf_len);					\
 	memcpy (tmp_source, (source), buf_len);				\
 	strip_trailing_slashes (tmp_source);				\
 	source_base = base_name (tmp_source);				\
-									\
-	(new_dest) = alloca (strlen ((dest)) + 1			\
-				      + strlen (source_base) + 1);	\
-	stpcpy (stpcpy (stpcpy ((new_dest), (dest)), "/"), source_base);\
+	source_base += (source_base[0] == '/');				\
+	dest_len -= (dest_len != 0 && (dest)[dest_len - 1] == '/');	\
+	(new_dest) = alloca (dest_len + 1 + strlen (source_base) + 1);	\
+	memcpy (new_dest, dest, dest_len);				\
+	(new_dest)[dest_len] = '/';					\
+	strcpy ((new_dest) + dest_len + 1, source_base);		\
       }									\
     while (0)
 
