@@ -1,6 +1,11 @@
-2005-10-26  Dmitry V. Levin  <ldv@altlinux.org>
+2005-10-28  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 6.0-cvs.
+
+	* src/ln.c (FILE_BASENAME_CONCAT): Omit unnecessary slashes in the
+	boundary between DEST and SOURCE in the result.
+
+2005-10-26  Dmitry V. Levin  <ldv@altlinux.org>
 
 	* src/md5sum.c (main) [!O_BINARY]: Changed default read mode
 	back to text, to sync with documentation and for backwards
