@@ -1,3 +1,8 @@
+2005-10-28  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* savedir.c (savedir): Don't assume that xrealloc etc. leave
+	errno alone.  Problem reported by Frederic Jolliton.
+
 2005-10-24  Jim Meyering  <jim@meyering.net>
 
 	* mkdir-p.c (make_dir_parents): Like the code above, don't rely

@@ -70,7 +70,6 @@ char *
 savedir (const char *dir)
 {
   DIR *dirp;
-  struct dirent *dp;
   char *name_space;
   size_t allocated = NAME_SIZE_DEFAULT;
   size_t used = 0;
@@ -82,12 +81,19 @@ savedir (const char *dir)
 
   name_space = xmalloc (allocated);
 
-  errno = 0;
-  while ((dp = readdir (dirp)) != NULL)
+  for (;;)
     {
+      struct dirent const *dp;
+      char const *entry;
+
+      errno = 0;
+      dp = readdir (dirp);
+      if (! dp)
+	break;
+
       /* Skip "", ".", and "..".  "" is returned by at least one buggy
          implementation: Solaris 2.4 readdir on NFS file systems.  */
-      char const *entry = dp->d_name;
+      entry = dp->d_name;
       if (entry[entry[0] != '.' ? 0 : entry[1] != '.' ? 1 : 2] != '\0')
 	{
 	  size_t entry_size = strlen (entry) + 1;
