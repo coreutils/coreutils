@@ -1,4 +1,4 @@
-#serial 6
+#serial 7
 
 # Use Gnulib's robust chdir function.
 # It can handle arbitrarily long directory names, which means
@@ -16,18 +16,18 @@ dnl with or without modifications, as long as this notice is preserved.
 AC_DEFUN([gl_FUNC_CHDIR_LONG],
 [
   AC_LIBSOURCES([chdir-long.c, chdir-long.h])
-  AC_CACHE_CHECK([whether this system has a definition of PATH_MAX],
-    gl_have_path_max_definition,
-    [AC_EGREP_CPP([have_path_max_definition],
+  AC_CACHE_CHECK([whether this system has an arbitrary file name length limit],
+    gl_have_arbitrary_file_name_length_limit,
+    [AC_EGREP_CPP([have_arbitrary_file_name_length_limit],
                   [#include <unistd.h>
 #include <limits.h>
-#ifdef PATH_MAX
-have_path_max_definition
+#if defined PATH_MAX || defined MAXPATHLEN
+have_arbitrary_file_name_length_limit
 #endif],
-    gl_have_path_max_definition=yes,
-    gl_have_path_max_definition=no)])
+    gl_have_arbitrary_file_name_length_limit=yes,
+    gl_have_arbitrary_file_name_length_limit=no)])
 
-  if test $gl_have_path_max_definition = yes; then
+  if test $gl_have_arbitrary_file_name_length_limit = yes; then
     AC_LIBOBJ([chdir-long])
     gl_PREREQ_CHDIR_LONG
   fi
