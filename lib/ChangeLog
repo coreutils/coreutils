@@ -1,3 +1,8 @@
+2005-10-29  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* getcwd.c (__getcwd): Don't assume that system calls after readdir
+	leave errno alone.  Problem reported by Dmitry V. Levin.
+
 2005-10-28  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* savedir.c (savedir): Don't assume that xrealloc etc. leave
