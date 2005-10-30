@@ -1,6 +1,11 @@
-2005-10-28  Paul Eggert  <eggert@cs.ucla.edu>
+2005-10-30  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 6.0-cvs.
+
+	* tests/mkdir/p-3: Require that the test be run as non-root.
+	Problem and trivial fix reported by Theodoros V. Kalamatianos.
+
+2005-10-28  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/ln.c (FILE_BASENAME_CONCAT): Omit unnecessary slashes in the
 	boundary between DEST and SOURCE in the result.
