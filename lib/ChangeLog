@@ -1,3 +1,11 @@
+2005-10-30  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Fix porting problems reported by Theodoros V. Kalamatianos.
+	* fd-reopen.c [defined HAVE_CONFIG_H]: Include <config.h>,
+	so that large files can be opened.
+	* utimens.c (futimens) [HAVE_WORKING_UTIMES && HAVE_FUTIMES]:
+	Don't assume that futimes failing means we must fail.
+
 2005-10-29  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* getcwd.c (__getcwd): Don't assume that system calls after readdir
