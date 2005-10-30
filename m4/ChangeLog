@@ -1,3 +1,16 @@
+2005-10-30  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* chdir-long.m4 (gl_FUNC_CHDIR_LONG): Revamp wording and local
+	variables to suggest the intended function of the PATH_MAX check.
+
+2005-10-30  Kean Johnston  <jkj@sco.com>
+
+	Trivial changes to support SCO systems.
+	* chdir-long.m4 (gl_FUNC_CHDIR_LONG): Check for MAXPATHLEN as well
+	as PATH_MAX.
+	* fpending.m4 (gl_FUNC_FPENDING): Correct check for SCO systems,
+	where __ptr is null when no I/O is pending.
+
 2005-08-27  David Madore  <david.madore@ens.fr>
 
 	* sha256.m4, sha512.m4: New files.
