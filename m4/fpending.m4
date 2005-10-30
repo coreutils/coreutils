@@ -1,4 +1,4 @@
-#serial 6
+#serial 7
 
 # Copyright (C) 2000, 2001, 2004, 2005 Free Software Foundation, Inc.
 # This file is free software; the Free Software Foundation
@@ -42,7 +42,7 @@ AC_DEFUN([gl_FUNC_FPENDING],
 	    'fp->_p - fp->_bf._base'				\
 								\
 	    '# SCO, Unixware'					\
-	    'fp->__ptr - fp->__base'				\
+	    '(fp->__ptr ? fp->__ptr - fp->__base : 0)'		\
 								\
 	    '# old glibc?'					\
 	    'fp->__bufp - fp->__buffer'				\
