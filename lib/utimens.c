@@ -99,17 +99,15 @@ futimens (int fd ATTRIBUTE_UNUSED,
       if (futimes (fd, t) == 0)
 	return 0;
 
-      /* On GNU/Linux without the futimes syscall and without /proc
-	 mounted, glibc futimes fails with errno == ENOENT.  Fall back
-	 on utimes if we get a weird error number like that.  */
-      switch (errno)
-	{
-	case EACCES:
-	case EIO:
-	case EPERM:
-	case EROFS:
-	  return -1;
-	}
+      /* Don't worry about trying to speed things up by returning right
+	 away here.  glibc futimes can incorrectly fail with errno ==
+	 ENOENT if /proc isn't mounted.  Also, Mandrake 10.0 in high
+	 security mode doesn't allow ordinary users to read /proc/self, so
+	 glibc futimes incorrectly fails with errno == EACCES.  If futimes
+	 fails with errno == EIO, EPERM, or EROFS, it's probably safe to
+	 fail right away, but these cases are rare enough that they're not
+	 worth optimizing, and who knows what other messed-up systems are
+	 out there?  So play it safe and fall back on the code below.  */
     }
 # endif
 #endif
