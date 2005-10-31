@@ -1,6 +1,11 @@
-2005-10-30  Paul Eggert  <eggert@cs.ucla.edu>
+2005-10-31  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 6.0-cvs.
+
+	* src/dd.c (skip): Fix off-by-one error reported by
+	Theodoros V. Kalamatianos.
+
+2005-10-30  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* tests/mkdir/p-3: Require that the test be run as non-root.
 	Problem and trivial fix reported by Theodoros V. Kalamatianos.
