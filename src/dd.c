@@ -1167,7 +1167,7 @@ skip (int fdesc, char const *file, uintmax_t records, size_t blocksize,
 	  if (fdesc == STDIN_FILENO)
 	    advance_input_offset (nread);
 	}
-      while (records-- != 0);
+      while (--records != 0);
 
       return records;
     }
