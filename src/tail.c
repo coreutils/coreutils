@@ -1363,7 +1363,7 @@ tail_file (struct File_spec *f, uintmax_t n_units)
 static bool
 parse_obsolete_option (int argc, char * const *argv, uintmax_t *n_units)
 {
-  const char *p = argv[1];
+  const char *p;
   const char *n_string;
   const char *n_string_end;
   bool obsolete_usage;
@@ -1372,13 +1372,15 @@ parse_obsolete_option (int argc, char * const *argv, uintmax_t *n_units)
   bool t_count_lines = true;
   bool t_forever = false;
 
-  /* With the obsolete form, there is one option string and
-     (technically) at most one file argument.  But we allow two or more
-     by default.  */
-  if (argc < 2)
+  /* With the obsolete form, there is one option string and at most
+     one file argument.  Watch out for "-" and "--", though.  */
+  if (! (argc == 2
+	 || (argc == 3 && ! (argv[2][0] == '-' && argv[2][1]))
+	 || (3 <= argc && argc <= 4 && STREQ (argv[2], "--"))))
     return false;
 
   obsolete_usage = (posix2_version () < 200112);
+  p = argv[1];
 
   switch (*p++)
     {
