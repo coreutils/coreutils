@@ -1,6 +1,15 @@
-2005-10-31  Paul Eggert  <eggert@cs.ucla.edu>
+2005-11-01  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 6.0-cvs.
+
+	* NEWS: tail -c 2 FILE now operates as POSIX 1002.1-2001 requires.
+	* src/tail.c (parse_obsolete_option): Implement this.
+	Problem reported by Vincent Lefevre.
+	* tests/tail/Test.pm (c-2, c-2-minus, c2, c2-minus): New tests.
+	(test_vector): Add special cases for _POSIX2_VERSION, and
+	regularize the old ones a bit.
+
+2005-10-31  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/dd.c (skip): Fix off-by-one error reported by
 	Theodoros V. Kalamatianos.
