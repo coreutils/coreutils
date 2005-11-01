@@ -1,13 +1,18 @@
 2005-11-01  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* NEWS:
+
 	* Version 6.0-cvs.
 
-	* NEWS: tail -c 2 FILE now operates as POSIX 1002.1-2001 requires.
+	* NEWS: "tail -c 2 FILE" and "touch 0101000000" now operate as
+	POSIX 1002.1-2001 requires.
 	* src/tail.c (parse_obsolete_option): Implement this.
 	Problem reported by Vincent Lefevre.
+	* src/touch.c (main): Pass PDS_PRE_2000 to posixtime.
 	* tests/tail/Test.pm (c-2, c-2-minus, c2, c2-minus): New tests.
 	(test_vector): Add special cases for _POSIX2_VERSION, and
 	regularize the old ones a bit.
+	* tests/touch/obsolescent: Add y2000 test.
 
 2005-10-31  Paul Eggert  <eggert@cs.ucla.edu>
 

@@ -2,6 +2,7 @@
 
 	* coreutils.texi (tail invocation): Describe obsolete usages
 	like "tail -2" more precisely.
+	(touch invocation): The old usage works only for 1969-1999 now.
 
 2005-08-28  David Madore  <david.madore@ens.fr>
 

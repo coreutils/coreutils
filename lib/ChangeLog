@@ -1,3 +1,10 @@
+2005-11-01  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* posixtm.h (PDS_PRE_2000): New macro.
+	* posixtm.c (year): Arg is now syntax_bits rather than allow_century.
+	All usages changed.  Reject dates outside the range 1969-1999 if
+	PDS_PRE_2000 is used.
+
 2005-10-30  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Fix porting problems reported by Theodoros V. Kalamatianos.
