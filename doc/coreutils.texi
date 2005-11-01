@@ -8726,7 +8726,8 @@ If no timestamp is given with any of the @option{-d}, @option{-r}, or
 @option{-t} options, and if there are two or more @var{file}s and the
 first @var{file} is of the form @samp{@var{MMDDhhmm}[@var{YY}]} and this
 would be a valid argument to the @option{-t} option (if the @var{YY}, if
-any, were moved to the front), that argument is interpreted as the time
+any, were moved to the front), and if the represented year
+is in the range 1969--1999, that argument is interpreted as the time
 for the other files instead of as a file name.
 This obsolete behavior can be enabled or disabled with the
 @env{_POSIX2_VERSION} environment variable (@pxref{Standards
