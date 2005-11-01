@@ -58,6 +58,11 @@ my @tv = (
 ['minus-1', '-', '', '', 0],
 ['minus-2', '-', "x\n" . ("y\n" x 10) . 'z', ("y\n" x 9) . 'z', 0],
 
+['c-2', '-c 2', "abcd\n", "d\n", 0],
+['c-2-minus', '-c 2 --', "abcd\n", "d\n", 0],
+['c2', '-c2', "abcd\n", "d\n", 0],
+['c2-minus', '-c2 --', "abcd\n", "d\n", 0],
+
 ['n-1', '-n 10', "x\n" . ("y\n" x 10) . 'z', ("y\n" x 9) . 'z', 0],
 ['n-2', '-n -10', "x\n" . ("y\n" x 10) . 'z', ("y\n" x 9) . 'z', 0],
 ['n-3', '-n +10', "x\n" . ("y\n" x 10) . 'z', "y\ny\nz", 0],
@@ -78,17 +83,19 @@ my @tv = (
 
 sub test_vector
 {
-  # With _POSIX2_VERSION=199209, `tail -c' succeeds, but err-6 expects
-  # a failure, so set _POSIX2_VERSION to ensure it fails.
-  $Test::env{'err-6'} = ['_POSIX2_VERSION=200112'];
-
   my $t;
   foreach $t (@tv)
     {
       my ($test_name, $flags, $in, $exp, $ret) = @$t;
 
-      $test_name =~ /^(obs-plus-|minus-)/
-	and $Test::env{$test_name} = ['_POSIX2_VERSION=199209'];
+      if ($test_name =~ /^(obs-plus-|minus-)/)
+        {
+	  $Test::env{$test_name} = ['_POSIX2_VERSION=199209'];
+        }
+      if ($test_name =~ /^(err-6|c-2)$/)
+        {
+	  $Test::env{$test_name} = ['_POSIX2_VERSION=200112'];
+        }
 
       # If you run the minus* tests with a FILE arg they'd hang.
       # If you run the err-1 or err-3 tests with a FILE, they'd misinterpret
