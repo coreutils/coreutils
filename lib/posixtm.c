@@ -62,8 +62,8 @@ time_t mktime ();
     (PDS_LEADING_YEAR | PDS_CENTURY | PDS_SECONDS)
 
   touch mmddhhmm[YY] FILE... (obsoleted by POSIX 1003.1-2001)
-    8 or 10 digits
-    (PDS_TRAILING_YEAR)
+    8 or 10 digits, YY (if present) must be in the range 69-99
+    (PDS_TRAILING_YEAR | PDS_PRE_2000)
 
   date mmddhhmm[[CC]YY]
     8, 10, or 12 digits
@@ -72,7 +72,7 @@ time_t mktime ();
 */
 
 static int
-year (struct tm *tm, const int *digit_pair, size_t n, int allow_century)
+year (struct tm *tm, const int *digit_pair, size_t n, unsigned int syntax_bits)
 {
   switch (n)
     {
@@ -82,11 +82,15 @@ year (struct tm *tm, const int *digit_pair, size_t n, int allow_century)
 	 POSIX requires that 00-68 be interpreted as 2000-2068,
 	 and that 69-99 be interpreted as 1969-1999.  */
       if (digit_pair[0] <= 68)
-	tm->tm_year += 100;
+	{
+	  if (syntax_bits & PDS_PRE_2000)
+	    return 1;
+	  tm->tm_year += 100;
+	}
       break;
 
     case 2:
-      if (!allow_century)
+      if (! (syntax_bits & PDS_CENTURY))
 	return 1;
       tm->tm_year = digit_pair[0] * 100 + digit_pair[1] - 1900;
       break;
@@ -148,7 +152,7 @@ posix_time_parse (struct tm *tm, const char *s, unsigned int syntax_bits)
   p = pair;
   if (syntax_bits & PDS_LEADING_YEAR)
     {
-      if (year (tm, p, len - 4, syntax_bits & PDS_CENTURY))
+      if (year (tm, p, len - 4, syntax_bits))
 	return 1;
       p += len - 4;
       len = 4;
@@ -164,7 +168,7 @@ posix_time_parse (struct tm *tm, const char *s, unsigned int syntax_bits)
   /* Handle any trailing year.  */
   if (syntax_bits & PDS_TRAILING_YEAR)
     {
-      if (year (tm, p, len, syntax_bits & PDS_CENTURY))
+      if (year (tm, p, len, syntax_bits))
 	return 1;
     }
 
