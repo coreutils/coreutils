@@ -22,9 +22,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   tac now works when stdin is a tty, even on non-Linux systems
 
-  "tail -c 2 FILE" now operates as POSIX 1003.1-2001 requires, even
-  when "tail" is conforming to older POSIX standards, as the
-  newly-mandated behavior is upward-compatible with the old.
+  "tail -c 2 FILE" and "touch 0101000000" now operate as POSIX
+  1003.1-2001 requires, even when coreutils is conforming to older
+  POSIX standards, as the newly-required behavior is upward-compatible
+  with the old.
 
 ** Build-related bug fixes
 
