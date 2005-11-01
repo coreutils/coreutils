@@ -1,6 +1,6 @@
 /* Parse dates for touch and date.
 
-   Copyright (C) 1998, 2003 Free Software Foundation Inc.
+   Copyright (C) 1998, 2003, 2005 Free Software Foundation Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -27,6 +27,7 @@
 # define PDS_TRAILING_YEAR 2
 # define PDS_CENTURY 4
 # define PDS_SECONDS 8
+# define PDS_PRE_2000 16
 
 bool posixtime (time_t *p, const char *s, unsigned int syntax_bits);
 
