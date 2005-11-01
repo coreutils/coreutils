@@ -36,4 +36,8 @@ for ones in 11111111 1111111111; do
   done
 done
 
+y2000=0101000000
+rm -f $y2000 file || fail=1
+touch $y2000 file && test -f $y2000 && test -f file || fail=1
+
 (exit $fail); exit $fail
