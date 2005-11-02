@@ -2,6 +2,18 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Major changes in release 6.0-cvs (????-??-??) [unstable]
 
+** Scheduled for removal
+
+  rm's --directory (-d) option is scheduled for removal in 2006.  This
+  option has been silently ignored since coreutils 5.0.  On systems
+  that support unlinking of directories, you can use the "unlink"
+  command to unlink a directory.
+
+  Similarly, we are considering the removal of ln's --directory (-d,
+  -F) option in 2006.  Please write to <bug-coreutils@gnu.org> if this
+  would cause a problem for you.  On systems that support hard links
+  to directories, you can use the "link" command to create one.
+
 ** New programs
 
   sha224sum: print or check a SHA224 (224-bit) checksum
@@ -12,7 +24,7 @@ GNU coreutils NEWS                                    -*- outline -*-
 ** Bug fixes
 
   dircolors no longer segfaults upon an attempt to use the new
-  STICKY_OTHER_WRITABLE (OWT) attribute
+  STICKY_OTHER_WRITABLE (OWT) attribute.
 
   md5sum once again defaults to using the ` ' non-binary marker
   (rather than the `*' binary marker) by default on Unix-like systems.
@@ -23,7 +35,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   rm emits a better diagnostic when (without -r) it fails to remove
   a directory on e.g., Solaris 9/10 systems.
 
-  tac now works when stdin is a tty, even on non-Linux systems
+  The documentation no longer mentions rm's --directory (-d) option.
+
+  tac now works when stdin is a tty, even on non-Linux systems.
 
   "tail -c 2 FILE" and "touch 0101000000" now operate as POSIX
   1003.1-2001 requires, even when coreutils is conforming to older
