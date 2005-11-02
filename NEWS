@@ -20,6 +20,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   mkdir -p and install -d no longer exit nonzero when asked to create
   a directory like `nonexistent/.'
 
+  rm emits a better diagnostic when (without -r) it fails to remove
+  a directory on e.g., Solaris 9/10 systems.
+
   tac now works when stdin is a tty, even on non-Linux systems
 
   "tail -c 2 FILE" and "touch 0101000000" now operate as POSIX

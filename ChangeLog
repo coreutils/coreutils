@@ -1,8 +1,16 @@
-2005-11-01  Paul Eggert  <eggert@cs.ucla.edu>
-
-	* NEWS:
+2005-11-02  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* src/remove.c (remove_entry): Emit a better diagnostic when rm
+	(without -r) fails to remove a directory on a non-Linux system.
+	This change affects only newer Solaris systems (with priv_*
+	functions like priv_allocset).  Reported by Keith Thompson.
+
+	* tests/rm/dir-nonrecur: New file/test for the above fix.
+	* tests/rm/Makefile.am (TESTS): Add dir-nonrecur.
+
+2005-11-01  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: "tail -c 2 FILE" and "touch 0101000000" now operate as
 	POSIX 1002.1-2001 requires.
