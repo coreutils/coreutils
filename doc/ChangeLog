@@ -1,3 +1,7 @@
+2005-11-02  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (rm invocation): Don't mention --directory (-d).
+
 2005-11-01  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (tail invocation): Describe obsolete usages

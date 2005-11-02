@@ -1,6 +1,14 @@
-2005-11-02  Jim Meyering  <jim@meyering.net>
+2005-11-02  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 6.0-cvs.
+
+	* NEWS: Mention that rm -d and maybe ln -d are scheduled for
+	removal in 2006.
+	* src/remove.h (struct rm_options): Remove unlink_dirs.  All uses
+	removed.
+	* src/rm.c (usage): Don't mention rm -d.
+
+2005-11-02  Jim Meyering  <jim@meyering.net>
 
 	* tests/dd/skip-seek: Fix typo in comment: s/fileutils/coreutils.
 	From Andreas Schwab.
