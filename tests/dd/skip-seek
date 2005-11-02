@@ -61,6 +61,13 @@ my @Tests =
       {OUT=> "01234567  abcdefghij          "},
       {ERR=> "2+1 records in\n0+1 records out\n1 truncated record\n"},
      ],
+     [
+      # Before fileutils-5.93, this would output just "c\n".
+      'sk-seek4', qw(bs=1 skip=1 status=noxfer),
+      {IN_PIPE=> "abc\n"},
+      {OUT=> "bc\n"},
+      {ERR=> "3+0 records in\n3+0 records out\n"},
+     ],
     );
 
 my $save_temps = $ENV{DEBUG};
