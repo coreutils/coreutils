@@ -657,6 +657,19 @@ prompt (Dirstack_state const *ds, char const *filename,
   return RM_OK;
 }
 
+/* Return true if FILENAME is a directory (and not a symlink to a directory).
+   Otherwise, including the case in which lstat fails, return false.
+   Do not modify errno.  */
+static inline bool
+is_dir_lstat (char const *filename)
+{
+  struct stat sbuf;
+  int saved_errno = errno;
+  bool is_dir = lstat (filename, &sbuf) == 0 && S_ISDIR (sbuf.st_mode);
+  errno = saved_errno;
+  return is_dir;
+}
+
 #if HAVE_STRUCT_DIRENT_D_TYPE
 
 /* True if the type of the directory entry D is known.  */
@@ -759,6 +772,12 @@ remove_entry (Dirstack_state const *ds, char const *filename,
 	return RM_NONEMPTY_DIR;
 
       DO_UNLINK (filename, x);
+
+      /* Upon a failed attempt to unlink a directory, most non-Linux systems
+	 set errno to the POSIX-required value EPERM.  In that case, change
+	 errno to EISDIR so that we emit a better diagnostic.  */
+      if (! x->recursive && errno == EPERM && is_dir_lstat (filename))
+	errno = EISDIR;
 
       if (! x->recursive
 	  || errno == ENOENT || errno == ENOTDIR
