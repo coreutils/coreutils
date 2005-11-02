@@ -2,6 +2,9 @@
 
 	* Version 6.0-cvs.
 
+	* tests/dd/skip-seek: Fix typo in comment: s/fileutils/coreutils.
+	From Andreas Schwab.
+
 	* tests/dd/unblock-sync: Redirect stderr to /dev/null so the
 	`M+N records in/out' lines don't pollute `make check' output.
 
