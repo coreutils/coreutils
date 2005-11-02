@@ -137,9 +137,6 @@ usage (int status)
       fputs (_("\
 Remove (unlink) the FILE(s).\n\
 \n\
-  -d, --directory       unlink FILE, even if it is a non-empty directory\n\
-                          (super-user only; this works only if your system\n\
-                           supports `unlink' for nonempty directories)\n\
   -f, --force           ignore nonexistent files, never prompt\n\
   -i, --interactive     prompt before any removal\n\
 "), stdout);
@@ -179,7 +176,6 @@ truly unrecoverable, consider using shred.\n\
 static void
 rm_option_init (struct rm_options *x)
 {
-  x->unlink_dirs = false;
   x->ignore_missing_files = false;
   x->interactive = false;
   x->recursive = false;
@@ -214,7 +210,10 @@ main (int argc, char **argv)
       switch (c)
 	{
 	case 'd':
-	  x.unlink_dirs = true;
+	  /* Ignore this option, for backward compatibility with
+	     coreutils 5.92.  Some time after 2005, we'll change this
+	     to report an error (or perhaps behave like FreeBSD does)
+	     instead of ignoring the option.  */
 	  break;
 
 	case 'f':
