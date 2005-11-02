@@ -2,6 +2,7 @@
 AUTOMAKE_OPTIONS = 1.1 gnits
 
 TESTS = \
+  dir-nonrecur \
   dot-rel \
   inaccessible \
   unread3 \
