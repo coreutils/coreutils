@@ -1,6 +1,6 @@
 /* Remove directory entries.
 
-   Copyright (C) 1998, 2000, 2002, 2003, 2004 Free Software
+   Copyright (C) 1998, 2000, 2002, 2003, 2004, 2005 Free Software
    Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -39,11 +39,6 @@ struct rm_options
 
   /* If nonzero, stdin is a tty.  */
   bool stdin_tty;
-
-  /* If true, remove directories with unlink instead of rmdir, and don't
-     require a directory to be empty before trying to unlink it.
-     Only works for the super-user.  */
-  bool unlink_dirs;
 
   /* If true, display the name of each file removed.  */
   bool verbose;
