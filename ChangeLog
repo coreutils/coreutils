@@ -2,6 +2,9 @@
 
 	* Version 6.0-cvs.
 
+	* tests/dd/unblock-sync: Redirect stderr to /dev/null so the
+	`M+N records in/out' lines don't pollute `make check' output.
+
 	* tests/dd/skip-seek (sk-seek4): New test, to exercise the bug
 	fixed on 2005-10-31.  This test uses the new, IN_PIPE specifier.
 	* tests/Coreutils.pm: Accept a new type of input specifier: IN_PIPE,
