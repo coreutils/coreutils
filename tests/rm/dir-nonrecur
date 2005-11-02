@@ -1,0 +1,38 @@
+#!/bin/sh
+# Ensure that `rm dir' (i.e., without --recursive) gives a reasonable
+# diagnostic when failing.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  rm --version
+fi
+
+. $srcdir/../lang-default
+
+pwd=`pwd`
+t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
+trap 'status=$?; cd $pwd; chmod -R u+rwx $t0; rm -rf $t0 && exit $status' 0
+trap '(exit $?); exit $?' 1 2 13 15
+
+framework_failure=0
+mkdir -p $tmp || framework_failure=1
+cd $tmp || framework_failure=1
+mkdir d || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo "$0: failure in testing framework" 1>&2
+  (exit 1); exit 1
+fi
+
+fail=0
+
+rm d 2> out && fail=1
+cat <<\EOF > exp || fail=1
+rm: cannot remove `d': Is a directory
+EOF
+
+# Before coreutils-5.93 this test would fail on Solaris 9 and newer.
+cmp out exp || fail=1
+test $fail = 1 && diff out exp 2> /dev/null
+
+(exit $fail); exit $fail
