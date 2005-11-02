@@ -7283,23 +7283,6 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
-@item -d
-@itemx --directory
-@opindex -d
-@opindex --directory
-@cindex directories, removing with @code{unlink}
-@findex unlink
-@pindex fsck
-Use the @code{unlink} function unconditionally rather than attempting
-to check whether the file is a directory and using @code{rmdir} if it
-is a directory.  This can be useful on corrupted file systems where
-@code{unlink} works even though other, file-checking functions fail.
-For directories, this works
-only if you have appropriate privileges and if your operating system supports
-@code{unlink} for directories.  Because unlinking a directory causes any files
-in the deleted directory to become unreferenced, it is wise to @command{fsck}
-the file system afterwards.
-
 @item -f
 @itemx --force
 @opindex -f
