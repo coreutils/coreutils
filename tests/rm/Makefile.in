@@ -297,6 +297,7 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 AUTOMAKE_OPTIONS = 1.1 gnits
 TESTS = \
+  dir-nonrecur \
   dot-rel \
   inaccessible \
   unread3 \
