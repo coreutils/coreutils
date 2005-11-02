@@ -2,6 +2,12 @@
 
 	* Version 6.0-cvs.
 
+	* tests/dd/skip-seek (sk-seek4): New test, to exercise the bug
+	fixed on 2005-10-31.  This test uses the new, IN_PIPE specifier.
+	* tests/Coreutils.pm: Accept a new type of input specifier: IN_PIPE,
+	to indicate that the input file should be piped into the command
+	under test (via `cat FILE | $prog ...').
+
 	* src/remove.c (remove_entry): Emit a better diagnostic when rm
 	(without -r) fails to remove a directory on a non-Linux system.
 	This change affects only newer Solaris systems (with priv_*
