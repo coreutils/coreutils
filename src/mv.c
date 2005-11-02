@@ -92,7 +92,6 @@ static struct option const long_options[] =
 static void
 rm_option_init (struct rm_options *x)
 {
-  x->unlink_dirs = false;
   x->ignore_missing_files = false;
   x->root_dev_ino = NULL;
   x->recursive = true;
