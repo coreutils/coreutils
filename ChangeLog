@@ -7,6 +7,7 @@
 	This bug causes trouble on some AIX 5.1 systems.
 	Report and trivial patch from Paul Townsend:
 	<http://lists.gnu.org/archive/html/bug-coreutils/2005-11/msg00033.html>
+	* NEWS: Mention this.
 
 	* tests/du/2g: New (very-expensive) test for the above-fixed bug.
 	* tests/du/Makefile.am (TESTS): Add it here.
