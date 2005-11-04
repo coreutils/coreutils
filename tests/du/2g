@@ -1,0 +1,76 @@
+#!/bin/sh
+# Ensure that du can handle a 2GB file (i.e., a file of size 2^31 bytes)
+# Before coreutils-5.93, on systems with a signed, 32-bit stat.st_nblocks
+# one of du's computations would overflow.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  du --version
+fi
+
+. $srcdir/../envvar-check
+
+# Creating a 2GB file counts as `expensive'.
+. $srcdir/../expensive
+
+pwd=`pwd`
+t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
+trap 'status=$?; cd $pwd; chmod -R u+rwx $t0; rm -rf $t0 && exit $status' 0
+trap '(exit $?); exit $?' 1 2 13 15
+
+framework_failure=0
+mkdir -p $tmp || framework_failure=1
+cd $tmp || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo "$0: failure in testing framework" 1>&2
+  (exit 1); exit 1
+fi
+
+fail=0
+
+# Get number of free kilobytes on current partition, so we can
+# skip this test if there is insufficient free space.
+
+# This technique relies on the fact that the `Available' kilobyte
+# count is the number just before the one with a trailing `%'.
+free_kb=`df -kP .|tail -1|sed 's/ [0-9][0-9]*%.*//;s/ *$//;s/.* //'`
+case "$free_kb" in
+  [0-9]*) ;;
+  *) echo "invalid size from df: $free_kb" 1>&2; (exit 77); exit 77;;
+esac
+
+# Require about 3GB free.
+min_kb=3000000
+test $min_kb -lt $free_kb ||
+{
+  echo "$0: skipping this test:"
+  echo "too little free space on current partition: $free_kb (need $min_kb KB)" \
+    1>&2;
+  (exit 77); exit 77
+}
+
+big=big
+rm -f $big
+test -t 1 || printf 'creating a 2GB file...\n'
+for i in `seq 100`; do
+  # Note: 2147483648 == 2^31. Print floor(2^31/100) per iteration.
+  printf %21474836s x >> $big || fail=1
+  # On the final iteration, append the remaining 48 bytes.
+  test $i = 100 && { printf %48s x >> $big || fail=1; }
+  test -t 1 && printf 'creating a 2GB file: %d%% complete\r' $i
+done
+echo
+
+du -k $big > out1 || fail=1
+rm -f $big
+sed 's/^2[0-9][0-9][0-9][0-9][0-9][0-9]	'$big'$/~2M/' out1 > out
+
+cat <<\EOF > exp || fail=1
+~2M
+EOF
+
+cmp out exp || fail=1
+test $fail = 1 && diff out exp 2> /dev/null
+
+(exit $fail); exit $fail
