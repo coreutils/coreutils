@@ -11,7 +11,7 @@ fi
 . $srcdir/../envvar-check
 
 # Creating a 2GB file counts as `expensive'.
-. $srcdir/../expensive
+. $srcdir/../very-expensive
 
 pwd=`pwd`
 t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
