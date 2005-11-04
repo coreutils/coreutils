@@ -1,0 +1,11 @@
+if test "$RUN_VERY_EXPENSIVE_TESTS" != yes; then
+  cat <<EOF >&2
+$0: This test is very expensive, so it is disabled by default.
+To run it anyway, rerun make check with the RUN_VERY_EXPENSIVE_TESTS
+environment variable set to yes.  E.g.,
+
+  env RUN_VERY_EXPENSIVE_TESTS=yes make check
+
+EOF
+  (exit 77); exit 77
+fi
