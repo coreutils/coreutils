@@ -1,6 +1,14 @@
-2005-11-02  Paul Eggert  <eggert@cs.ucla.edu>
+2005-11-04  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* tests/du/2g: New (very-expensive) test for the above-fixed bug.
+	* tests/du/Makefile.am (TESTS): Add it here.
+	* tests/very-expensive: New file.
+	* tests/Makefile.am (EXTRA_DIST): Add it here.
+	* tests/cp/perm: Mark this test as `very-expensive', too.
+
+2005-11-02  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: Mention that rm -d and maybe ln -d are scheduled for
 	removal in 2006.
