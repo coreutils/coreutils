@@ -27,6 +27,7 @@
 #include "backupfile.h"
 #include "dirname.h"
 #include "error.h"
+#include "filenamecat.h"
 #include "quote.h"
 #include "yesno.h"
 
@@ -52,33 +53,6 @@
 # define STAT_LIKE_LINK(File, Stat_buf) \
   lstat (File, Stat_buf)
 #endif
-
-/* Construct a string NEW_DEST by concatenating DEST, a slash, and
-   basename (SOURCE) in alloca'd memory.  Don't modify DEST or SOURCE.
-   Omit unnecessary slashes in the boundary between DEST and SOURCE in
-   the result; they can cause harm if "/" and "//" denote different
-   directories.  */
-
-#define FILE_BASENAME_CONCAT(new_dest, dest, source)			\
-    do									\
-      {									\
-	const char *source_base;					\
-	char *tmp_source;						\
-	size_t buf_len = strlen (source) + 1;				\
-	size_t dest_len = strlen (dest);				\
-									\
-	tmp_source = alloca (buf_len);					\
-	memcpy (tmp_source, (source), buf_len);				\
-	strip_trailing_slashes (tmp_source);				\
-	source_base = base_name (tmp_source);				\
-	source_base += (source_base[0] == '/');				\
-	dest_len -= (dest_len != 0 && (dest)[dest_len - 1] == '/');	\
-	(new_dest) = alloca (dest_len + 1 + strlen (source_base) + 1);	\
-	memcpy (new_dest, dest, dest_len);				\
-	(new_dest)[dest_len] = '/';					\
-	strcpy ((new_dest) + dest_len + 1, source_base);		\
-      }									\
-    while (0)
 
 /* The name by which the program was run, for error messages.  */
 char *program_name;
@@ -155,11 +129,10 @@ target_directory_operand (char const *file)
 
 /* Make a link DEST to the (usually) existing file SOURCE.
    Symbolic links to nonexistent files are allowed.
-   If DEST_IS_DIR, put the link to SOURCE in the DEST directory.
    Return true if successful.  */
 
 static bool
-do_link (const char *source, const char *dest, bool dest_is_dir)
+do_link (const char *source, const char *dest)
 {
   struct stat source_stats;
   struct stat dest_stats;
@@ -192,14 +165,6 @@ do_link (const char *source, const char *dest, bool dest_is_dir)
 		 quote (source));
 	  return false;
 	}
-    }
-
-  if (dest_is_dir)
-    {
-      /* Treat DEST as a directory; build the full filename.  */
-      char *new_dest;
-      FILE_BASENAME_CONCAT (new_dest, dest, source);
-      dest = new_dest;
     }
 
   if (remove_existing_files || interactive || backup_type != no_backups)
@@ -545,10 +510,17 @@ main (int argc, char **argv)
       int i;
       ok = true;
       for (i = 0; i < n_files; ++i)
-	ok &= do_link (file[i], target_directory, true);
+	{
+	  char *dest_base;
+	  char *dest = file_name_concat (target_directory, base_name (file[i]),
+					 &dest_base);
+	  strip_trailing_slashes (dest_base);
+	  ok &= do_link (file[i], dest);
+	  free (dest);
+	}
     }
   else
-    ok = do_link (file[0], file[1], false);
+    ok = do_link (file[0], file[1]);
 
   exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
