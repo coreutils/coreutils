@@ -1,6 +1,15 @@
-2005-11-04  Jim Meyering  <jim@meyering.net>
+2005-11-04  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 6.0-cvs.
+
+	* src/ln.c: Include filenamecat.c.
+	(FILE_BASENAME_CONCAT): Remove.
+	(do_link): Remove last arg DEST_IS_DIR.  All callers changed.
+	(main): Use file_name_concat, base_name, and strip_trailing_slashes
+	instead of FILE_BASENAME_CONCAT.  This simplifies the code, and avoids
+	the use of alloca.
+
+2005-11-04  Jim Meyering  <jim@meyering.net>
 
 	* src/du.c (process_file): Don't overflow for files of size >= 2^31
 	on systems with stat.st_blocks of a signed 32-bit type.
