@@ -1,11 +1,11 @@
 2005-10-17  Eric Blake  <ebb9@byu.net>
 
+	* Version 6.0-cvs.
+
 	* src/ls.c (usage): Fix descriptions of --sort, --time.
 	Reported by Vitaly A. Ostanin.
 
 2005-11-04  Paul Eggert  <eggert@cs.ucla.edu>
-
-	* Version 6.0-cvs.
 
 	* src/ln.c: Include filenamecat.c.
 	(FILE_BASENAME_CONCAT): Remove.
