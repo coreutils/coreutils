@@ -4188,12 +4188,12 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
   -S                         sort by file size\n\
-      --sort=WORD            extension -X, none -U, size -S, time -t,\n\
-                             version -v, status -c, time -t, atime -u,\n\
-                             access -u, use -u\n\
+      --sort=WORD            sort by WORD instead of name: none -U,\n\
+                             extension -X, size -S, time -t, version -v\n\
       --time=WORD            with -l, show time as WORD instead of modification\n\
-                             time: atime, access, use, ctime or status; use\n\
-                             specified time as sort key if --sort=time\n\
+                             time: atime -u, access -u, use -u, ctime -c,\n\
+                             or status -c; use specified time as sort key\n\
+                             if --sort=time\n\
 "), stdout);
       fputs (_("\
       --time-style=STYLE     with -l, show times using style STYLE:\n\
