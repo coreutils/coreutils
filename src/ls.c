@@ -676,20 +676,20 @@ enum { TIME_STAMP_LEN_MAXIMUM = MAX (1000, INT_STRLEN_BOUND (time_t)) };
 static char const *long_time_format[2] =
   {
     /* strftime format for non-recent files (older than 6 months), in
-       -l output when --time-style=locale is specified.  This should
-       contain the year, month and day (at least), in an order that is
-       understood by people in your locale's territory.
-       Please try to keep the number of used screen columns small,
-       because many people work in windows with only 80 columns.  But
-       make this as wide as the other string below, for recent files.  */
+       -l output.  This should contain the year, month and day (at
+       least), in an order that is understood by people in your
+       locale's territory.  Please try to keep the number of used
+       screen columns small, because many people work in windows with
+       only 80 columns.  But make this as wide as the other string
+       below, for recent files.  */
     N_("%b %e  %Y"),
-    /* strftime format for recent files (younger than 6 months), in
-       -l output when --time-style=locale is specified.  This should
-       contain the month, day and time (at least), in an order that is
-       understood by people in your locale's territory.
-       Please try to keep the number of used screen columns small,
-       because many people work in windows with only 80 columns.  But
-       make this as wide as the other string above, for non-recent files.  */
+    /* strftime format for recent files (younger than 6 months), in -l
+       output.  This should contain the month, day and time (at
+       least), in an order that is understood by people in your
+       locale's territory.  Please try to keep the number of used
+       screen columns small, because many people work in windows with
+       only 80 columns.  But make this as wide as the other string
+       above, for non-recent files.  */
     N_("%b %e %H:%M")
   };
 
@@ -1831,7 +1831,7 @@ decode_switches (int argc, char **argv)
 
       if (! style)
 	if (! (style = getenv ("TIME_STYLE")))
-	  style = "posix-long-iso";
+	  style = "locale";
 
       while (strncmp (style, posix_prefix, sizeof posix_prefix - 1) == 0)
 	{
@@ -1867,6 +1867,7 @@ decode_switches (int argc, char **argv)
 	    break;
 
 	  case long_iso_time_style:
+	  case_long_iso_time_style:
 	    long_time_format[0] = long_time_format[1] = "%Y-%m-%d %H:%M";
 	    break;
 
@@ -1878,10 +1879,17 @@ decode_switches (int argc, char **argv)
 	  case locale_time_style:
 	    if (hard_locale (LC_TIME))
 	      {
+		/* Ensure that the locale has translations for both
+		   formats.  If not, fall back on long-iso format.  */
 		int i;
 		for (i = 0; i < 2; i++)
-		  long_time_format[i] =
-		    dcgettext (NULL, long_time_format[i], LC_TIME);
+		  {
+		    char const *locale_format =
+		      dcgettext (NULL, long_time_format[i], LC_TIME);
+		    if (locale_format == long_time_format[i])
+		      goto case_long_iso_time_style;
+		    long_time_format[i] = locale_format;
+		  }
 	      }
 	  }
     }
