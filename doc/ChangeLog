@@ -1,3 +1,9 @@
+2005-11-08  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (Formatting file timestamps): ls now defaults to
+	--time-style='locale', which in turn acts like
+	--time-style='posix-long-iso' if the locale settings are messed up.
+
 2005-11-02  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (rm invocation): Don't mention --directory (-d).

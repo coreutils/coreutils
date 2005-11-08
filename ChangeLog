@@ -1,6 +1,12 @@
-2005-11-08  Jim Meyering  <jim@meyering.net>
+2005-11-08  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 6.0-cvs.
+
+	* NEWS: ls now defaults to --time-style='locale', which in turn acts
+	like --time-style='posix-long-iso' if the locale settings are messed up.
+	* src/ls.c (decode_switches): Implement this.
+
+2005-11-08  Jim Meyering  <jim@meyering.net>
 
 	* tests/du/2g: s/expensive/very expensive/ in a comment.
 	From Paul Townsend.
