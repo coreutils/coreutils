@@ -30,6 +30,11 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+
+* Major changes in release 5.93 (2005-11-06) [stable]
+
+** Bug fixes
+
   dircolors no longer segfaults upon an attempt to use the new
   STICKY_OTHER_WRITABLE (OWT) attribute.
 
@@ -45,14 +50,14 @@ GNU coreutils NEWS                                    -*- outline -*-
   rm emits a better diagnostic when (without -r) it fails to remove
   a directory on e.g., Solaris 9/10 systems.
 
-  The documentation no longer mentions rm's --directory (-d) option.
-
   tac now works when stdin is a tty, even on non-Linux systems.
 
   "tail -c 2 FILE" and "touch 0101000000" now operate as POSIX
   1003.1-2001 requires, even when coreutils is conforming to older
   POSIX standards, as the newly-required behavior is upward-compatible
   with the old.
+
+  The documentation no longer mentions rm's --directory (-d) option.
 
 ** Build-related bug fixes
 
