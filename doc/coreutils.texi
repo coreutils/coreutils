@@ -6124,7 +6124,7 @@ and might generate timestamps like @samp{30. M@"ar 2002@ } and
 @vindex LC_TIME
 List @acronym{POSIX}-locale timestamps if the @env{LC_TIME} locale
 category is @acronym{POSIX}, @var{style} timestamps otherwise.  For
-example, the default style, which is @samp{posix-long-iso}, lists
+example, the @samp{posix-long-iso} style lists
 timestamps like @samp{Mar 30@ @ 2002} and @samp{Mar 30 23:45} when in
 the @acronym{POSIX} locale, and like @samp{2002-03-30 23:45} otherwise.
 @end table
@@ -6133,10 +6133,11 @@ the @acronym{POSIX} locale, and like @samp{2002-03-30 23:45} otherwise.
 @vindex TIME_STYLE
 You can specify the default value of the @option{--time-style} option
 with the environment variable @env{TIME_STYLE}; if @env{TIME_STYLE} is not set
-the default style is @samp{posix-long-iso}.  @acronym{GNU} Emacs 21 and
-later can parse @acronym{ISO} dates, but older Emacs versions do not, so if
-you are using an older version of Emacs and specify a non-@acronym{POSIX}
-locale, you may need to set @samp{TIME_STYLE="locale"}.
+the default style is @samp{locale}.  @acronym{GNU} Emacs 21.3 and
+later use the @option{--dired} option and therefore can parse any date
+format, but if you are using Emacs 21.1 or 21.2 and specify a
+non-@acronym{POSIX} locale you may need to set
+@samp{TIME_STYLE="posix-long-iso"}.
 
 To avoid certain denial-of-service attacks, timestamps that would be
 longer than 1000 bytes may be treated as errors.
