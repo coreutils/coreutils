@@ -2,6 +2,13 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Major changes in release 6.0-cvs (????-??-??) [unstable]
 
+** Changes in behavior
+
+  ls now defaults to --time-style='locale', not --time-style='posix-long-iso'.
+  However, the 'locale' time style now behaves like 'posix-long-iso'
+  if your locale settings appear to be messed up.  This change
+  attempts to have the default be the best of both worlds.
+
 ** Scheduled for removal
 
   rm's --directory (-d) option is scheduled for removal in 2006.  This
