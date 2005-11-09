@@ -52,7 +52,17 @@ stdopen (void)
 	    {
 	      static const int contrary_mode[]
 		= { O_WRONLY, O_RDONLY, O_RDONLY };
-	      int new_fd = open ("/dev/null", contrary_mode[fd]);
+	      int mode = contrary_mode[fd];
+	      int new_fd;
+	      /* Open /dev/null with the contrary mode so that the typical
+		 read (stdin) or write (stdout, stderr) operation will fail.
+		 With descriptor 0, we can do even better on systems that
+		 have /dev/full, by opening that write-only instead of
+		 /dev/null.  The only drawback is that a write-provoked
+		 failure comes with a misleading errno value, ENOSPC.  */
+	      if (mode == O_RDONLY
+		  || (new_fd = open ("/dev/full", mode) != fd))
+		new_fd = open ("/dev/null", mode);
 	      if (new_fd != fd)
 		{
 		  if (0 <= new_fd)
