@@ -148,7 +148,7 @@ fstatat (int fd, char const *file, struct stat *st, int flag)
   int saved_errno;
   int err;
 
-  if (fd == AT_FDCWD)
+  if (fd == AT_FDCWD || IS_ABSOLUTE_FILE_NAME (file))
     return (flag == AT_SYMLINK_NOFOLLOW
 	    ? lstat (file, st)
 	    : stat (file, st));
@@ -192,7 +192,7 @@ unlinkat (int fd, char const *file, int flag)
   int saved_errno;
   int err;
 
-  if (fd == AT_FDCWD)
+  if (fd == AT_FDCWD || IS_ABSOLUTE_FILE_NAME (file))
     return (flag == AT_REMOVEDIR ? rmdir (file) : unlink (file));
 
   if (save_cwd (&saved_cwd) != 0)
