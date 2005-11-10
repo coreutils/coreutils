@@ -24,8 +24,9 @@
 # include "xtime.h"
 
 /* Get the current time, as a count of the number of nanoseconds since
-   an arbitrary epoch (e.g., the system boot time).  This clock can't
-   be set, is always increasing, and is nearly linear.  */
+   an arbitrary epoch (e.g., the system boot time).  Prefer a
+   high-resolution clock that is not subject to resetting or
+   drifting.  */
 
 # if HAVE_ARITHMETIC_HRTIME_T && HAVE_DECL_GETHRTIME
 #  include <time.h>
