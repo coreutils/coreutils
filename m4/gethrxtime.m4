@@ -1,4 +1,4 @@
-# gethrxtime.m4 serial 2
+# gethrxtime.m4 serial 3
 dnl Copyright (C) 2005 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
@@ -50,10 +50,9 @@ AC_DEFUN([gl_XTIME],
 # Prerequisites of lib/gethrxtime.c.
 AC_DEFUN([gl_PREREQ_GETHRXTIME],
 [
-  AC_REQUIRE([AC_HEADER_TIME])
   AC_REQUIRE([gl_CLOCK_TIME])
   AC_REQUIRE([gl_USE_SYSTEM_EXTENSIONS])
-  AC_CHECK_FUNCS_ONCE(gettimeofday microuptime nanouptime)
+  AC_CHECK_FUNCS_ONCE(microuptime nanouptime)
 
   if test $ac_cv_func_nanouptime != yes; then
     LIB_GETHRXTIME=
