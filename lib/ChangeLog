@@ -1,3 +1,12 @@
+2005-11-10  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* gethrxtime.c: Include "timespec.h" rather than the sys/time / time
+	business.
+	(gethrxtime) [! (HAVE_NANOUPTIME
+	|| (defined CLOCK_MONOTONIC && HAVE_CLOCK_GETTIME)
+	|| HAVE_MICROUPTIME)]: Fall back on gettime rather than rolling
+	our own approximation.
+
 2005-11-01  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* posixtm.h (PDS_PRE_2000): New macro.
