@@ -1,3 +1,8 @@
+2005-11-11  Jim Meyering  <jim@meyering.net>
+
+	* openat.c (fstatat, unlinkat): Perform the syscall directly,
+	skipping the save_cwd...restore_cwd overhead, if FILE is absolute.
+
 2005-11-10  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* gethrxtime.c: Include "timespec.h" rather than the sys/time / time
