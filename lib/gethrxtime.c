@@ -24,20 +24,12 @@
 
 #include "gethrxtime.h"
 
-#include <sys/types.h>
-#if TIME_WITH_SYS_TIME
-# include <sys/time.h>
-# include <time.h>
-#else
-# if HAVE_SYS_TIME_H
-#  include <sys/time.h>
-# else
-#  include <time.h>
-# endif
-#endif
+#include "timespec.h"
 
-/* Get the time of a high-resolution clock, preferably one that is not
-   subject to resetting or drifting.  */
+/* Get the current time, as a count of the number of nanoseconds since
+   an arbitrary epoch (e.g., the system boot time).  Prefer a
+   high-resolution clock that is not subject to resetting or
+   drifting.  */
 
 xtime_t
 gethrxtime (void)
@@ -65,16 +57,14 @@ gethrxtime (void)
     return xtime_make (tv.tv_sec, 1000 * tv.tv_usec);
   }
 
+# else
   /* No monotonically increasing clocks are available; fall back on a
      clock that might jump backwards, since it's the best we can do.  */
-# elif HAVE_GETTIMEOFDAY && XTIME_PRECISION != 1
   {
-    struct timeval tv;
-    gettimeofday (&tv, NULL);
-    return xtime_make (tv.tv_sec, 1000 * tv.tv_usec);
+    struct timespec ts;
+    gettime (&ts);
+    return xtime_make (ts.tv_sec, ts.tv_nsec);
   }
-# else
-  return xtime_make (time (NULL), 0);
 # endif
 #endif
 }
