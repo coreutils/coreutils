@@ -1,3 +1,8 @@
+2005-11-10  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* gethrxtime.m4 (gl_PREREQ_GETHRXTIME): Don't require AC_HEADER_TIME
+	or gettimeofday; no longer needed.
+
 2005-10-30  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* chdir-long.m4 (gl_FUNC_CHDIR_LONG): Revamp wording and local
