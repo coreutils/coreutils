@@ -437,6 +437,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   mv (when moving between partitions) no longer fails when
   operating on too many command-line-specified nonempty directories.
 
+  "readlink -f" is more compatible with prior implementations
+
   rm (without -f) no longer hangs when attempting to remove a symlink
   to a file on an off-line NFS-mounted partition.
 
@@ -619,6 +621,9 @@ GNU coreutils NEWS                                    -*- outline -*-
     The default output format is now -t oS, not -t o2, i.e., short int
     rather than two-byte int.  This makes a difference only on hosts like
     Cray systems where the C short int type requires more than two bytes.
+
+  readlink accepts new options: --canonicalize-existing (-e)
+  and --canonicalize-missing (-m).
 
   The stat option --filesystem has been renamed to --file-system, for
   consistency with POSIX "file system" and with cp and du --one-file-system.
