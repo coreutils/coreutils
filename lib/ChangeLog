@@ -1,3 +1,14 @@
+2005-11-12  Jim Meyering  <jim@meyering.net>
+
+	Emulate openat-family functions using Linux's procfs, if possible.
+	Idea and some code from Ulrich Drepper's glibc changes.
+
+	* openat.c: (BUILD_PROC_NAME): New macro.
+	Include <stdio.h>, <string.h>, "alloca.h" and "intprops.h".
+	(rpl_openat): Emulate by trying to open /proc/self/fd/%d/%s,
+	before falling back on save_cwd and restore_cwd.
+	(fdopendir, fstatat, unlinkat): Likewise.
+
 2005-11-11  Jim Meyering  <jim@meyering.net>
 
 	* openat.c (fstatat, unlinkat): Perform the syscall directly,
