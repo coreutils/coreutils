@@ -1,7 +1,7 @@
 2005-11-12  Jim Meyering  <jim@meyering.net>
 
 	Emulate openat-family functions using Linux's procfs, if possible.
-	Idea and some code from Ulrich Drepper's glibc changes.
+	Idea and some code based on Ulrich Drepper's glibc changes.
 
 	* openat.c: (BUILD_PROC_NAME): New macro.
 	Include <stdio.h>, <string.h>, "alloca.h" and "intprops.h".
