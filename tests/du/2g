@@ -10,7 +10,7 @@ fi
 
 . $srcdir/../envvar-check
 
-# Creating a 2GB file counts as `expensive'.
+# Creating a 2GB file counts as `very expensive'.
 . $srcdir/../very-expensive
 
 pwd=`pwd`
