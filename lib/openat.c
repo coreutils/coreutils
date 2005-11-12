@@ -25,15 +25,38 @@
 
 #include <stdlib.h>
 #include <stdarg.h>
+#include <stdio.h>
+#include <string.h>
 #include <unistd.h>
 #include <errno.h>
 #include <fcntl.h>
 
+#include "alloca.h"
 #include "dirname.h" /* solely for definition of IS_ABSOLUTE_FILE_NAME */
+#include "intprops.h"
 #include "save-cwd.h"
 
 #include "gettext.h"
 #define _(msgid) gettext (msgid)
+
+/* Set PROC_FD_FILENAME to the expansion of "/proc/self/fd/%d/%s" in
+   alloca'd memory, using FD and FILE, respectively for %d and %s. */
+#define BUILD_PROC_NAME(Proc_fd_filename, Fd, File)			\
+  do									\
+    {									\
+      size_t filelen = strlen (File);					\
+      static const char procfd[] = "/proc/self/fd/%d/%s";		\
+      /* Buffer for the file name we are going to use.  It consists of	\
+	 - the string /proc/self/fd/					\
+	 - the file descriptor number					\
+	 - the file name provided.					\
+	 The final NUL is included in the sizeof.			\
+	 Subtract 4 to account for %d and %s.  */			\
+      size_t buflen = sizeof (procfd) - 4 + INT_STRLEN_BOUND (Fd) + filelen; \
+      (Proc_fd_filename) = alloca (buflen);				\
+      snprintf ((Proc_fd_filename), buflen, procfd, (Fd), (File));	\
+    }									\
+  while (0)
 
 /* Replacement for Solaris' openat function.
    <http://www.google.com/search?q=openat+site:docs.sun.com>
@@ -48,7 +71,7 @@ rpl_openat (int fd, char const *file, int flags, ...)
 {
   struct saved_cwd saved_cwd;
   int saved_errno;
-  int new_fd;
+  int err;
   mode_t mode = 0;
 
   if (flags & O_CREAT)
@@ -63,6 +86,17 @@ rpl_openat (int fd, char const *file, int flags, ...)
   if (fd == AT_FDCWD || IS_ABSOLUTE_FILE_NAME (file))
     return open (file, flags, mode);
 
+  {
+    char *proc_file;
+    BUILD_PROC_NAME (proc_file, fd, file);
+    err = open (proc_file, flags, mode);
+    /* If the syscall succeeded, or if it failed for any reason other
+       than ENOTDIR (i.e., /proc is not mounted), then return right away.
+       Otherwise, fall through and resort to save_cwd/restore_cwd.  */
+    if (0 <= err || errno != ENOTDIR)
+      return err;
+  }
+
   if (save_cwd (&saved_cwd) != 0)
     openat_save_fail (errno);
 
@@ -74,7 +108,7 @@ rpl_openat (int fd, char const *file, int flags, ...)
       return -1;
     }
 
-  new_fd = open (file, flags, mode);
+  err = open (file, flags, mode);
   saved_errno = errno;
 
   if (restore_cwd (&saved_cwd) != 0)
@@ -83,7 +117,7 @@ rpl_openat (int fd, char const *file, int flags, ...)
   free_cwd (&saved_cwd);
 
   errno = saved_errno;
-  return new_fd;
+  return err;
 }
 
 #if !HAVE_FDOPENDIR
@@ -107,6 +141,18 @@ fdopendir (int fd)
   int saved_errno;
   DIR *dir;
 
+  {
+    char *proc_file;
+    BUILD_PROC_NAME (proc_file, fd, ".");
+    dir = opendir (proc_file);
+    saved_errno = errno;
+    /* If the syscall succeeded, or if it failed for any reason other
+       than ENOTDIR (i.e., /proc is not mounted), then return right away.
+       Otherwise, fall through and resort to save_cwd/restore_cwd.  */
+    if (dir != NULL || errno != ENOTDIR)
+      goto close_and_return;
+  }
+
   if (save_cwd (&saved_cwd) != 0)
     openat_save_fail (errno);
 
@@ -125,6 +171,8 @@ fdopendir (int fd)
     openat_restore_fail (errno);
 
   free_cwd (&saved_cwd);
+
+ close_and_return:;
   if (dir)
     close (fd);
 
@@ -152,6 +200,19 @@ fstatat (int fd, char const *file, struct stat *st, int flag)
     return (flag == AT_SYMLINK_NOFOLLOW
 	    ? lstat (file, st)
 	    : stat (file, st));
+
+  {
+    char *proc_file;
+    BUILD_PROC_NAME (proc_file, fd, file);
+    err = (flag == AT_SYMLINK_NOFOLLOW
+	   ? lstat (proc_file, st)
+	   : stat (proc_file, st));
+    /* If the syscall succeeded, or if it failed for any reason other
+       than ENOTDIR (i.e., /proc is not mounted), then return right away.
+       Otherwise, fall through and resort to save_cwd/restore_cwd.  */
+    if (0 <= err || errno != ENOTDIR)
+      return err;
+  }
 
   if (save_cwd (&saved_cwd) != 0)
     openat_save_fail (errno);
@@ -194,6 +255,17 @@ unlinkat (int fd, char const *file, int flag)
 
   if (fd == AT_FDCWD || IS_ABSOLUTE_FILE_NAME (file))
     return (flag == AT_REMOVEDIR ? rmdir (file) : unlink (file));
+
+  {
+    char *proc_file;
+    BUILD_PROC_NAME (proc_file, fd, file);
+    err = (flag == AT_REMOVEDIR ? rmdir (proc_file) : unlink (proc_file));
+    /* If the syscall succeeded, or if it failed for any reason other
+       than ENOTDIR (i.e., /proc is not mounted), then return right away.
+       Otherwise, fall through and resort to save_cwd/restore_cwd.  */
+    if (0 <= err || errno != ENOTDIR)
+      return err;
+  }
 
   if (save_cwd (&saved_cwd) != 0)
     openat_save_fail (errno);
