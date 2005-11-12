@@ -1,6 +1,10 @@
-2005-11-11  Jim Meyering  <jim@meyering.net>
+2005-11-12  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* src/sha1sum.c: Remove now-unused file.
+
+2005-11-11  Jim Meyering  <jim@meyering.net>
 
 	* NEWS: Mention `readlink -f' bug fix in 5.3.0 news.
 	Mention new readlink options in 5.3.0's `New features' section.
