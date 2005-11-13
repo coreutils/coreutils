@@ -79,6 +79,7 @@ syntax-check-rules = \
   sc_obsolete_symbols \
   sc_prohibit_atoi_atof \
   sc_prohibit_jm_in_m4 \
+  sc_require_config_h \
   sc_root_tests \
   sc_space_tab \
   sc_sun_os_names \
@@ -161,6 +162,15 @@ sc_no_if_have_config_h:
 	  grep '^# *if HAVE_CONFIG_H'					\
 	     $$($(CVS_LIST) | grep -vEf .x-$@ ) &&			\
 	  { echo '$(ME): found use of #if HAVE_CONFIG_H; use #ifdef'	\
+		1>&2; exit 1; } || :
+
+# Nearly all .c files must include <config.h>.
+sc_require_config_h:
+	@( $(CVS_LIST) ) > /dev/null 2>&1 || : &&			\
+	  grep -L '^# *include <config\.h>'				\
+	      $$($(CVS_LIST) | grep '\.c$$' | grep -vEf .x-$@ )		\
+	    | grep . &&							\
+	  { echo '$(ME): the above files do not include <config.h>'	\
 		1>&2; exit 1; } || :
 
 sc_obsolete_symbols:
@@ -487,6 +497,7 @@ announcement: NEWS ChangeLog $(rel-files)
 	    --prev=$(PREV_VERSION)					\
 	    --curr=$(VERSION)						\
 	    --release-archive-directory=$(release_archive_dir)		\
+	    --gpg-key-id=$(gpg_key_ID)					\
 	    --news=NEWS							\
 	    $(addprefix --url-dir=, $(url_dir_list))			\
 
