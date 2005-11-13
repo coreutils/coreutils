@@ -57,11 +57,11 @@ executable files (programs) and, on some systems, directories:
 @enumerate
 @item
 @cindex setuid
-set the process's effective user ID to that of the file upon execution
+Set the process's effective user ID to that of the file upon execution
 (called the @dfn{setuid bit}).  No effect on directories.
 @item
 @cindex setgid
-set the process's effective group ID to that of the file upon execution
+Set the process's effective group ID to that of the file upon execution
 (called the @dfn{setgid bit}).  For directories on some systems, put
 files created in the directory into the same group as the directory, no
 matter what group the user who creates them is in.
@@ -224,7 +224,7 @@ but not to execute it, use:
 a=rw
 @end example
 
-To remove write permission for from all users other than the file's
+To remove write permission for all users other than the file's
 owner, use:
 
 @example
