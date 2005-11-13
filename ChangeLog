@@ -2,6 +2,11 @@
 
 	* Version 6.0-cvs.
 
+	* announce-gen: Accept new option, --gpg-key-id=ID and
+	emit a blurb telling how to use the .sig files.
+	* Makefile.cfg (gpg_key_ID): Define.
+	* Makefile.maint (announcement): Use new option and key.
+
 	Require that most .c files include <config.h>.
 	* Makefile.maint (sc_require_config_h): New rule.
 	(syntax-check-rules): Add it.
