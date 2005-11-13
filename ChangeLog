@@ -1,8 +1,16 @@
-2005-11-12  Jim Meyering  <jim@meyering.net>
+2005-11-13  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
 
-	* src/sha1sum.c: Remove now-unused file.
+	Require that most .c files include <config.h>.
+	* Makefile.maint (sc_require_config_h): New rule.
+	(syntax-check-rules): Add it.
+	* .x-sc_require_config_h: New file listing exceptions to the
+	above rule.  Some are legit, others are simply grandfathered in.
+
+2005-11-12  Jim Meyering  <jim@meyering.net>
+
+	* src/checksum.h, src/md5.c, src/sha1sum.c: Remove now-unused files.
 
 2005-11-11  Jim Meyering  <jim@meyering.net>
 
