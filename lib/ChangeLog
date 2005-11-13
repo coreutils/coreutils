@@ -1,3 +1,8 @@
+2005-11-13  Jim Meyering  <jim@meyering.net>
+
+	* mkstemp-safer.c: Include <config.h>, required for possible
+	replacement of mkstemp.
+
 2005-11-12  Jim Meyering  <jim@meyering.net>
 
 	Emulate openat-family functions using Linux's procfs, if possible.
