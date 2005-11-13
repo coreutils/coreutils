@@ -6,7 +6,7 @@ use Getopt::Long;
 use Digest::MD5;
 use Digest::SHA1;
 
-(my $VERSION = '$Revision: 1.23 $ ') =~ tr/[0-9].//cd;
+(my $VERSION = '$Revision: 1.24 $ ') =~ tr/[0-9].//cd;
 (my $ME = $0) =~ s|.*/||;
 
 my %valid_release_types = map {$_ => 1} qw (alpha beta major);
@@ -60,6 +60,7 @@ OPTIONS:
    --package-name=PACKAGE_NAME
    --previous-version=VER
    --current-version=VER
+   --gpg-key-id=ID         The GnuPG ID of the key used to sign the tarballs
    --release-archive-directory=DIR
    --url-directory=URL_DIR
    --news=NEWS_FILE             optional
@@ -124,13 +125,13 @@ sub print_locations ($\@\%@)
   print "\n";
 }
 
-=item C<print_signatures (@file)
+=item C<print_checksums (@file)
 
 Print the MD5 and SHA1 signature section for each C<@file>.
 
 =cut
 
-sub print_signatures (@)
+sub print_checksums (@)
 {
   my (@file) = @_;
 
@@ -300,6 +301,7 @@ sub print_changelog_deltas ($$)
   my $prev_version;
   my $curr_version;
   my $release_archive_dir;
+  my $gpg_key_id;
   my @url_dir_list;
   my @news_file;
 
@@ -309,6 +311,7 @@ sub print_changelog_deltas ($$)
      'package-name=s'     => \$package_name,
      'previous-version=s' => \$prev_version,
      'current-version=s'  => \$curr_version,
+     'gpg-key-id=s'       => \$gpg_key_id,
      'release-archive-directory=s' => \$release_archive_dir,
      'url-directory=s'    => \@url_dir_list,
      'news=s'             => \@news_file,
@@ -365,10 +368,27 @@ EOF
 		   $tgz, $tbz);
   print_locations ("xdelta-style diffs", @url_dir_list, %size,
 		   $xd);
-  print_locations ("GPG detached signatures", @url_dir_list, %size,
+  print_locations ("GPG detached signatures[*]", @url_dir_list, %size,
 		   "$tgz.sig", "$tbz.sig");
 
-  print_signatures ($tgz, $tbz, $xd);
+  print_checksums ($tgz, $tbz, $xd);
+
+  print <<EOF;
+
+[*] You can use either of the above signature files to verify that
+the corresponding file (without the .sig suffix) is intact.  First,
+be sure to download both the .sig file and the corresponding tarball.
+Then, run a command like this:
+
+  gpg --verify $tgz.sig
+
+If that command fails because you don't have the required public key,
+then run this command to import it:
+
+  gpg --keyserver wwwkeys.pgp.net --recv-keys $gpg_key_id
+
+and rerun the \`gpg --verify' command.
+EOF
 
   print_news_deltas ($_, $prev_version, $curr_version)
     foreach @news_file;
