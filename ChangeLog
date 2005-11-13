@@ -7,6 +7,7 @@
 	(syntax-check-rules): Add it.
 	* .x-sc_require_config_h: New file listing exceptions to the
 	above rule.  Some are legit, others are simply grandfathered in.
+	* Makefile.am (EXTRA_DIST): Add .x-sc_require_config_h here, too.
 
 2005-11-12  Jim Meyering  <jim@meyering.net>
 
