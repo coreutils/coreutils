@@ -1,3 +1,8 @@
+2005-11-13  Jim Meyering  <jim@meyering.net>
+
+	* perm.texi (Mode Structure): Capitalize two sentences in an
+	enumerated list and fix a typo.  From Aaron Hawley.
+
 2005-11-08  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (Formatting file timestamps): ls now defaults to
