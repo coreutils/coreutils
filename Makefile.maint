@@ -497,6 +497,7 @@ announcement: NEWS ChangeLog $(rel-files)
 	    --prev=$(PREV_VERSION)					\
 	    --curr=$(VERSION)						\
 	    --release-archive-directory=$(release_archive_dir)		\
+	    --gpg-key-id=$(gpg_key_ID)					\
 	    --news=NEWS							\
 	    $(addprefix --url-dir=, $(url_dir_list))			\
 
