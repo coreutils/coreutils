@@ -30,6 +30,11 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  sort now uses the replacement mkstemp function, and hence is no longer
+  subject to limitations (of 26 or 32, on the maximum number of files
+  from a given template) on HP-UX 10.20, SunOS 4.1.4, Solaris 2.5.1
+  OSF1/Tru64 V4.0F.
+
 
 * Major changes in release 5.93 (2005-11-06) [stable]
 
