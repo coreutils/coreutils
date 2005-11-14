@@ -1,7 +1,12 @@
+2005-11-08  Eric Blake  <ebb9@byu.net>
+
+	* getaddrinfo.h: Use #if !, not #ifndef, for AC_CHECK_DECLS.
+
 2005-11-13  Jim Meyering  <jim@meyering.net>
 
 	* mkstemp-safer.c: Include <config.h>, required for possible
 	replacement of mkstemp.
+
 
 2005-11-12  Jim Meyering  <jim@meyering.net>
 
