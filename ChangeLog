@@ -1,6 +1,10 @@
-2005-11-13  Jim Meyering  <jim@meyering.net>
+2005-11-14  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* NEWS (sort): Mention consequences of today's mkstemp-safer.c fix.
+
+2005-11-13  Jim Meyering  <jim@meyering.net>
 
 	* announce-gen: Accept new option, --gpg-key-id=ID and
 	emit a blurb telling how to use the .sig files.
