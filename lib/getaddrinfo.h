@@ -82,7 +82,7 @@ struct addrinfo
 #  endif
 # endif
 
-# ifndef HAVE_DECL_GETADDRINFO
+# if !HAVE_DECL_GETADDRINFO
 /* Translate name of a service location and/or a service name to set of
    socket addresses.
    For more details, see the POSIX:2001 specification
@@ -93,14 +93,14 @@ extern int getaddrinfo (const char *restrict nodename,
 			struct addrinfo **restrict res);
 # endif
 
-# ifndef HAVE_DECL_FREEADDRINFO
+# if !HAVE_DECL_FREEADDRINFO
 /* Free `addrinfo' structure AI including associated storage.
    For more details, see the POSIX:2001 specification
    <http://www.opengroup.org/susv3xsh/getaddrinfo.html>.  */
 extern void freeaddrinfo (struct addrinfo *ai);
 # endif
 
-# ifndef HAVE_DECL_GAI_STRERROR
+# if !HAVE_DECL_GAI_STRERROR
 /* Convert error return from getaddrinfo() to a string.
    For more details, see the POSIX:2001 specification
    <http://www.opengroup.org/susv3xsh/gai_strerror.html>.  */
