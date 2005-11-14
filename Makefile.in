@@ -331,6 +331,7 @@ EXTRA_DIST = Makefile.cfg Makefile.maint GNUmakefile \
   .x-sc_unmarked_diagnostics \
   .x-sc_useless_cpp_parens \
   .x-sc_no_if_have_config_h \
+  .x-sc_require_config_h \
   announce-gen \
   m4/ChangeLog \
   old/fileutils/ChangeLog \
