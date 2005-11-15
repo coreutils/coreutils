@@ -1,6 +1,7 @@
 /* error-checking interface to strtod-like functions
 
-   Copyright (C) 1996, 1999, 2000, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1999, 2000, 2003, 2004, 2005 Free Software
+   Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -27,11 +28,6 @@
 #include <errno.h>
 #include <limits.h>
 #include <stdio.h>
-
-/* Tell the compiler that non-default rounding modes are used.  */
-#if 199901 <= __STDC_VERSION__
- #pragma STDC FENV_ACCESS ON
-#endif
 
 /* An interface to strtod that encapsulates all the error checking
    one should usually perform.  Like strtod, but upon successful
