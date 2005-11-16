@@ -45,9 +45,15 @@ cp: accessing `symlink': Permission denied
 EOF
 
 cp F symlink 2> out && fail=1
+# HPUX appears to fail with EACCES rather than EPERM.
+# Transform their diagnostic
+#   ...: The file access permissions do not allow the specified action.
+# to the expected one:
+sed 's/: The file access permissions.*/: Permission denied/'<out>o1;mv o1 out
 cmp out exp || { (diff -c out exp) 2> /dev/null; fail=1; }
 
 cp --target-directory=symlink F 2> out && fail=1
+sed 's/: The file access permissions.*/: Permission denied/'<out>o1;mv o1 out
 cmp out exp || { (diff -c out exp) 2> /dev/null; fail=1; }
 
 chmod 700 D
