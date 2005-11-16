@@ -2,6 +2,8 @@
 
 	* coreutils.texi (ln invocation): ln -v now outputs lines only for
 	successful links.
+	(tail invocation): Say that the obsolete form uses exactly one
+	option and at most one file.
 
 2005-11-13  Jim Meyering  <jim@meyering.net>
 

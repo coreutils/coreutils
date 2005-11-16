@@ -2552,7 +2552,8 @@ Always print file name headers.
 For compatibility @command{tail} also supports an obsolete usage
 @samp{tail -@var{count}[bcl][f] [@var{file}]}, which is recognized
 only if it does not conflict with the usage described
-above.  @var{count} is an optional decimal number optionally
+above.  This obsolete form uses exactly one option and at most one
+file.  In the option, @var{count} is an optional decimal number optionally
 followed by a size letter (@samp{b}, @samp{c}, @samp{l}) to mean count
 by 512-byte blocks, bytes, or lines, optionally followed by @samp{f}
 which has the same meaning as @option{-f}.
