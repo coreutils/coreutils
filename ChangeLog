@@ -1,6 +1,12 @@
-2005-11-14  Jim Meyering  <jim@meyering.net>
+2005-11-16  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* tests/cp/fail-perm: Accommodate HPUX.  It appears to fail
+	with EACCES rather than EPERM.  Reported by Peter O'Gorman here:
+	http://article.gmane.org/gmane.comp.gnu.core-utils.bugs/5766
+
+2005-11-14  Jim Meyering  <jim@meyering.net>
 
 	* NEWS (sort): Mention consequences of today's mkstemp-safer.c fix.
 
