@@ -7773,7 +7773,7 @@ an error message on systems that do not support symbolic links.
 @itemx --verbose
 @opindex -v
 @opindex --verbose
-Print the name of each file before linking it.
+Print the name of each file after linking it successfully.
 
 @end table
 
