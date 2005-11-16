@@ -138,6 +138,8 @@ do_link (const char *source, const char *dest)
   struct stat dest_stats;
   char *dest_backup = NULL;
   bool lstat_ok = false;
+  bool source_is_dir = false;
+  bool ok;
 
   /* Use stat here instead of lstat.
      On SVR4, link does not follow symlinks, so this check disallows
@@ -159,11 +161,15 @@ do_link (const char *source, const char *dest)
 		 quote (source));
 	}
 
-      if (!hard_dir_link && S_ISDIR (source_stats.st_mode))
+      if (S_ISDIR (source_stats.st_mode))
 	{
-	  error (0, 0, _("%s: hard link not allowed for directory"),
-		 quote (source));
-	  return false;
+	  source_is_dir = true;
+	  if (! hard_dir_link)
+	    {
+	      error (0, 0, _("%s: hard link not allowed for directory"),
+		     quote (source));
+	      return false;
+	    }
 	}
     }
 
@@ -220,37 +226,22 @@ do_link (const char *source, const char *dest)
 
       if (backup_type != no_backups)
 	{
-	  char *tmp_backup = find_backup_file_name (dest, backup_type);
-	  size_t buf_len = strlen (tmp_backup) + 1;
-	  dest_backup = alloca (buf_len);
-	  memcpy (dest_backup, tmp_backup, buf_len);
-	  free (tmp_backup);
-	  if (rename (dest, dest_backup))
+	  dest_backup = find_backup_file_name (dest, backup_type);
+	  if (rename (dest, dest_backup) != 0)
 	    {
-	      if (errno != ENOENT)
+	      int rename_errno = errno;
+	      free (dest_backup);
+	      dest_backup = NULL;
+	      if (rename_errno != ENOENT)
 		{
-		  error (0, errno, _("cannot backup %s"), quote (dest));
+		  error (0, rename_errno, _("cannot backup %s"), quote (dest));
 		  return false;
 		}
-	      else
-		dest_backup = NULL;
 	    }
 	}
     }
 
-  if (verbose)
-    {
-      printf ((symbolic_link
-	       ? _("create symbolic link %s to %s")
-	       : _("create hard link %s to %s")),
-	      quote_n (0, dest), quote_n (1, source));
-      if (dest_backup)
-	printf (_(" (backup: %s)"), quote (dest_backup));
-      putchar ('\n');
-    }
-
-  if ((*linkfunc) (source, dest) == 0)
-    return true;
+  ok = (linkfunc (source, dest) == 0);
 
   /* If the attempt to create a link failed and we are removing or
      backing up destinations, unlink the destination and try again.
@@ -270,30 +261,52 @@ do_link (const char *source, const char *dest)
      If we didn't remove DEST in that case, the subsequent LINKFUNC
      call would fail.  */
 
-  if (errno == EEXIST && (remove_existing_files || dest_backup))
+  if (!ok && errno == EEXIST && (remove_existing_files || dest_backup))
     {
       if (unlink (dest) != 0)
 	{
 	  error (0, errno, _("cannot remove %s"), quote (dest));
+	  free (dest_backup);
 	  return false;
 	}
 
-      if (linkfunc (source, dest) == 0)
-	return true;
+      ok = (linkfunc (source, dest) == 0);
     }
 
-  error (0, errno,
-	 (symbolic_link
-	  ? _("creating symbolic link %s to %s")
-	  : _("creating hard link %s to %s")),
-	 quote_n (0, dest), quote_n (1, source));
-
-  if (dest_backup)
+  if (ok)
     {
-      if (rename (dest_backup, dest))
-	error (0, errno, _("cannot un-backup %s"), quote (dest));
+      if (verbose)
+	{
+	  if (dest_backup)
+	    printf ("%s ~ ", quote (dest_backup));
+	  printf ("%s %c> %s\n", quote_n (0, dest), (symbolic_link ? '-' : '='),
+		  quote_n (1, source));
+	}
     }
-  return false;
+  else
+    {
+      error (0, errno,
+	     (symbolic_link
+	      ? (errno != ENAMETOOLONG && *source
+		 ? _("creating symbolic link %s")
+		 : _("creating symbolic link %s -> %s"))
+	      : (errno == EMLINK && !source_is_dir
+		 ? _("creating hard link to %.0s%s")
+		 : (errno == EDQUOT || errno == EEXIST || errno == ENOSPC
+		    || errno == EROFS)
+		 ? _("creating hard link %s")
+		 : _("creating hard link %s => %s"))),
+	     quote_n (0, dest), quote_n (1, source));
+
+      if (dest_backup)
+	{
+	  if (rename (dest_backup, dest) != 0)
+	    error (0, errno, _("cannot un-backup %s"), quote (dest));
+	}
+    }
+
+  free (dest_backup);
+  return ok;
 }
 
 void
@@ -341,7 +354,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -t, --target-directory=DIRECTORY  specify the DIRECTORY in which to create\n\
                                 the links\n\
   -T, --no-target-directory   treat LINK_NAME as a normal file\n\
-  -v, --verbose               print name of each file before linking\n\
+  -v, --verbose               print name of each linked file\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
