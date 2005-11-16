@@ -1,3 +1,8 @@
+2005-11-16  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (ln invocation): ln -v now outputs lines only for
+	successful links.
+
 2005-11-13  Jim Meyering  <jim@meyering.net>
 
 	* perm.texi (Mode Structure): Capitalize two sentences in an

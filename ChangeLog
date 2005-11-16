@@ -1,6 +1,12 @@
-2005-11-16  Jim Meyering  <jim@meyering.net>
+2005-11-16  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 6.0-cvs.
+
+	* NEWS: Improve quality of ln's diagnostics.
+	* src/ln.c (do_link, usage): Likewise.
+	(do_link): Don't use alloca on a buffer of unbounded size.
+
+2005-11-16  Jim Meyering  <jim@meyering.net>
 
 	* tests/cp/fail-perm: Accommodate HPUX.  It appears to fail
 	with EACCES rather than EPERM.  Reported by Peter O'Gorman here:
