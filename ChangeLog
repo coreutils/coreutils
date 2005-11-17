@@ -1,6 +1,10 @@
-2005-11-16  Paul Eggert  <eggert@cs.ucla.edu>
+2005-11-17  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* src/ls.c (basename_is_dot_or_dotdot): Correct wording in comment.
+
+2005-11-16  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: Improve quality of ln's diagnostics.
 	* src/ln.c (do_link, usage): Likewise.
