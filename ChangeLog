@@ -2,6 +2,8 @@
 
 	* Version 6.0-cvs.
 
+	* tests/mv/acl: Let traps handle removing temporary directories.
+
 	Expect acl-related tests to fail, until the corresponding
 	patches are committed.
 	* tests/mv/Makefile.am (XFAIL_TESTS): Add acl.
