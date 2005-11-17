@@ -1,5 +1,5 @@
 #!/bin/sh
-# move files/directories across filesystem boundaries
+# move files/directories across file system boundaries
 # and make sure acls are preserved
 
 . $srcdir/../acl
