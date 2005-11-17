@@ -1,0 +1,58 @@
+#!/bin/sh
+# copy files/directories across filesystem boundaries
+# and make sure acls are preserved appropriately
+
+. $srcdir/../acl
+##. $srcdir/setup
+##if test -z "$other_partition_tmpdir"; then
+##  exit 77
+##fi
+# Make sure we get English translations.
+. $srcdir/../lang-default
+
+if test "$VERBOSE" = yes; then
+  set -x
+  mv --version
+  getfacl --version
+  setfacl --version
+fi
+
+pwd=`pwd`
+t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
+trap 'status=$?; cd $pwd; chmod -R u+rwx $t0; rm -rf $t0 && exit $status' 0
+trap '(exit $?); exit $?' 1 2 13 15
+
+framework_failure=0
+mkdir -p $tmp/a $tmp/b || framework_failure=1
+cd $tmp || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo 'failure in testing framework'
+  (exit 1); exit 1
+fi
+
+# copy a file without preserving permissions
+touch a/file || framework_failure=1
+setfacl -m user:bin:rw a/file || framework_failure=1
+acl1=`cd a && getfacl file | grep -v ':bin:' | grep -v 'mask::'` || framework_failure=1
+cp a/file b/ || fail=1
+acl2=`cd b && getfacl file` || framework_failure=1
+test "$acl1" == "$acl2" || fail=1
+rm a/file || framework_failure=1
+
+# copy a file, preserving permissions
+touch a/file || framework_failure=1
+setfacl -m user:bin:rw a/file || framework_failure=1
+acl1=`cd a && getfacl file` || framework_failure=1
+cp -p a/file b/ || fail=1
+acl2=`cd b && getfacl file` || framework_failure=1
+test "$acl1" == "$acl2" || fail=1
+
+if test $framework_failure = 1; then
+  echo 'failure in testing framework'
+  (exit 1); exit 1
+fi
+
+cd $pwd
+rm -fr $tmp
+exit $fail
