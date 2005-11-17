@@ -1,6 +1,7 @@
 ## Process this file with automake to produce Makefile.in -*-Makefile-*-.
 AUTOMAKE_OPTIONS = 1.3 gnits
 
+XFAIL_TESTS = acl
 TESTS = \
   acl \
   reply-no \
