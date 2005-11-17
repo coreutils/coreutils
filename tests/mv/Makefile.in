@@ -296,7 +296,9 @@ sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 AUTOMAKE_OPTIONS = 1.3 gnits
+XFAIL_TESTS = acl
 TESTS = \
+  acl \
   reply-no \
   leak-fd \
   part-hardlink \
