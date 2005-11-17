@@ -2,6 +2,7 @@
 AUTOMAKE_OPTIONS = 1.3 gnits
 
 TESTS = \
+  acl \
   reply-no \
   leak-fd \
   part-hardlink \
