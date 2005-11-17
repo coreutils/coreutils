@@ -3,10 +3,6 @@
 # and make sure acls are preserved appropriately
 
 . $srcdir/../acl
-##. $srcdir/setup
-##if test -z "$other_partition_tmpdir"; then
-##  exit 77
-##fi
 # Make sure we get English translations.
 . $srcdir/../lang-default
 
