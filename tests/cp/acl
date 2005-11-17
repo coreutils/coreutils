@@ -34,7 +34,8 @@ fi
 # copy a file without preserving permissions
 touch a/file || framework_failure=1
 setfacl -m user:bin:rw a/file || framework_failure=1
-acl1=`cd a && getfacl file | grep -v ':bin:' | grep -v 'mask::'` || framework_failure=1
+acl1=`cd a && getfacl file | grep -v ':bin:' | grep -v 'mask::'` \
+  || framework_failure=1
 cp a/file b/ || fail=1
 acl2=`cd b && getfacl file` || framework_failure=1
 test "$acl1" == "$acl2" || fail=1
