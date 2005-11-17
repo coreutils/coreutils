@@ -4,9 +4,6 @@
 
 . $srcdir/../acl
 . $srcdir/setup
-if test -z "$other_partition_tmpdir"; then
-  exit 77
-fi
 # Make sure we get English translations.
 . $srcdir/../lang-default
 
@@ -21,6 +18,11 @@ pwd=`pwd`
 t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
 trap 'status=$?; cd $pwd; chmod -R u+rwx $t0; rm -rf $t0 && exit $status' 0
 trap '(exit $?); exit $?' 1 2 13 15
+
+if test -z "$other_partition_tmpdir"; then
+  (exit 77); exit 77
+fi
+t0="$t0 $other_partition_tmpdir"
 
 framework_failure=0
 mkdir -p $tmp || framework_failure=1
@@ -60,6 +62,4 @@ if test $framework_failure = 1; then
   (exit 1); exit 1
 fi
 
-cd $pwd
-rm -fr $tmp $other_partition_tmpdir
 exit $fail
