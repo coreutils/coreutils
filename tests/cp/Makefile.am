@@ -1,6 +1,7 @@
 ## Process this file with automake to produce Makefile.in -*-Makefile-*-.
 AUTOMAKE_OPTIONS = 1.1 gnits
 
+XFAIL_TESTS = acl
 TESTS = \
   acl \
   preserve-2 r-vs-symlink link-preserve \
