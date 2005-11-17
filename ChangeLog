@@ -2,6 +2,10 @@
 
 	* Version 6.0-cvs.
 
+	* src/remove.c (AD_mark_helper): Make a `char *' parameter `const'.
+	(AD_mark_current_as_unremovable): Likewise, but for a local.
+	(rm_1): Likewise.
+
 	* tests/mv/acl: Let traps handle removing temporary directories.
 
 	Expect acl-related tests to fail, until the corresponding
