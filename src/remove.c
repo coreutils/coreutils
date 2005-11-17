@@ -428,7 +428,7 @@ AD_pop_and_chdir (Dirstack_state *ds, char **prev_dir,
 /* Initialize *HT if it is NULL.
    Insert FILENAME into HT.  */
 static void
-AD_mark_helper (Hash_table **ht, char *filename)
+AD_mark_helper (Hash_table **ht, char const *filename)
 {
   if (*ht == NULL)
     {
@@ -456,7 +456,7 @@ static void
 AD_mark_current_as_unremovable (Dirstack_state *ds)
 {
   struct AD_ent *top = AD_stack_top (ds);
-  char *curr = top_dir (ds);
+  char const *curr = top_dir (ds);
 
   assert (1 < AD_stack_height (ds));
 
@@ -1195,7 +1195,7 @@ static enum RM_status
 rm_1 (Dirstack_state *ds, char const *filename,
       struct rm_options const *x, struct cwd_state **cwd_state)
 {
-  char *base = base_name (filename);
+  char const *base = base_name (filename);
   enum RM_status status;
 
   if (DOT_OR_DOTDOT (base))
