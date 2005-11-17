@@ -2773,7 +2773,7 @@ make_link_name (char const *name, char const *linkname)
 }
 #endif
 
-/* Return true if base_name (NAME) ends in `.' or `..'
+/* Return true if the last component of NAME is `.' or `..'
    This is so we don't try to recurse on `././././. ...' */
 
 static bool
