@@ -54,6 +54,4 @@ if test $framework_failure = 1; then
   (exit 1); exit 1
 fi
 
-cd $pwd
-rm -fr $tmp
 exit $fail
