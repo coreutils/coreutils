@@ -2,6 +2,16 @@
 
 	* Version 6.0-cvs.
 
+	Expect acl-related tests to fail, until the corresponding
+	patches are committed.
+	* tests/mv/Makefile.am (XFAIL_TESTS): Add acl.
+	* tests/cp/Makefile.am (XFAIL_TESTS): Likewise.
+
+	ACL tests, from Andreas Gruenbacher.
+	* tests/acl, tests/mv/acl, tests/cp/acl: New files.
+	* tests/mv/Makefile.am (TESTS): Add acl.
+	* tests/cp/Makefile.am (TESTS): Add acl.
+
 	* src/ls.c (basename_is_dot_or_dotdot): Correct wording in comment.
 
 2005-11-16  Paul Eggert  <eggert@cs.ucla.edu>
