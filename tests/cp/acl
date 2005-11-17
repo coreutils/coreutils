@@ -1,5 +1,5 @@
 #!/bin/sh
-# copy files/directories across filesystem boundaries
+# copy files/directories across file system boundaries
 # and make sure acls are preserved appropriately
 
 . $srcdir/../acl
