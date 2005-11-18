@@ -4,6 +4,11 @@
 
 	* configure.ac (AM_PROG_CC_C_O): Add.  Needed for CVS Automake.
 	Problem reported by Eric Blake.
+	(AC_PROG_CC_STDC): Use this instead of AC_PROG_CC, so that
+	we get a standard-conforming compiler.  This relies on the new
+	m4/c.m4 file.  Note that it's a bit tricky, since c.m4 doesn't
+	define AC_PROG_CC_STDC; we are relying on Autoconf 2.59 internals.
+	m4/c.m4 can go away with Autoconf 2.60 comes out.
 
 2005-11-17  Jim Meyering  <jim@meyering.net>
 
