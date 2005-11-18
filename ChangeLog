@@ -1,6 +1,11 @@
-2005-11-17  Jim Meyering  <jim@meyering.net>
+2005-11-18  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 6.0-cvs.
+
+	* configure.ac (AM_PROG_CC_C_O): Add.  Needed for CVS Automake.
+	Problem reported by Eric Blake.
+
+2005-11-17  Jim Meyering  <jim@meyering.net>
 
 	* src/remove.c (AD_mark_helper): Make a `char *' parameter `const'.
 	(AD_mark_current_as_unremovable): Likewise, but for a local.
