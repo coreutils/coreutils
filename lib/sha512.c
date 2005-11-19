@@ -100,7 +100,7 @@ sha384_init_ctx (struct sha512_ctx *ctx)
    must be in little endian byte order.
 
    IMPORTANT: On some systems it is required that RESBUF is correctly
-   aligned for a 64 bits value.  */
+   aligned for a 64-bit value.  */
 void *
 sha512_read_ctx (const struct sha512_ctx *ctx, void *resbuf)
 {
@@ -127,7 +127,7 @@ sha384_read_ctx (const struct sha512_ctx *ctx, void *resbuf)
    prolog according to the standard and write the result to RESBUF.
 
    IMPORTANT: On some systems it is required that RESBUF is correctly
-   aligned for a 64 bits value.  */
+   aligned for a 64-bit value.  */
 static void
 sha512_conclude_ctx (struct sha512_ctx *ctx)
 {

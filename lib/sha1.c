@@ -77,7 +77,7 @@ sha1_init_ctx (struct sha1_ctx *ctx)
    must be in little endian byte order.
 
    IMPORTANT: On some systems it is required that RESBUF is correctly
-   aligned for a 32 bits value.  */
+   aligned for a 32-bit value.  */
 void *
 sha1_read_ctx (const struct sha1_ctx *ctx, void *resbuf)
 {
@@ -94,7 +94,7 @@ sha1_read_ctx (const struct sha1_ctx *ctx, void *resbuf)
    prolog according to the standard and write the result to RESBUF.
 
    IMPORTANT: On some systems it is required that RESBUF is correctly
-   aligned for a 32 bits value.  */
+   aligned for a 32-bit value.  */
 void *
 sha1_finish_ctx (struct sha1_ctx *ctx, void *resbuf)
 {

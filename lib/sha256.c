@@ -98,7 +98,7 @@ sha224_init_ctx (struct sha256_ctx *ctx)
    must be in little endian byte order.
 
    IMPORTANT: On some systems it is required that RESBUF is correctly
-   aligned for a 32 bits value.  */
+   aligned for a 32-bit value.  */
 void *
 sha256_read_ctx (const struct sha256_ctx *ctx, void *resbuf)
 {
@@ -125,7 +125,7 @@ sha224_read_ctx (const struct sha256_ctx *ctx, void *resbuf)
    prolog according to the standard and write the result to RESBUF.
 
    IMPORTANT: On some systems it is required that RESBUF is correctly
-   aligned for a 32 bits value.  */
+   aligned for a 32-bit value.  */
 static void
 sha256_conclude_ctx (struct sha256_ctx *ctx)
 {
