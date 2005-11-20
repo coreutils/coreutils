@@ -50,51 +50,52 @@ DIST_COMMON = README $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	cloexec.h closeout.c closeout.h creat-safer.c cycle-check.c \
 	cycle-check.h dev-ino.h diacrit.c diacrit.h dirfd.c dirfd.h \
 	dirname.c dirname.h dup-safer.c dup2.c error.c error.h \
-	euidaccess.c exclude.c exclude.h exitfail.c exitfail.h \
-	fchdir-stub.c fchown-stub.c fcntl--.h fcntl-safer.h \
-	fd-reopen.c fd-reopen.h fd-safer.c file-type.c file-type.h \
-	fileblocks.c filemode.c filemode.h filenamecat.c filenamecat.h \
-	fnmatch.c fopen-safer.c free.c fsusage.c fsusage.h ftruncate.c \
-	fts-cycle.c fts.c fts_.h gai_strerror.c getaddrinfo.c getcwd.c \
-	getcwd.h getdate.h getdate.y getdelim.c getdelim.h getgroups.c \
-	gethostname.c gethrxtime.c gethrxtime.h getline.c getline.h \
-	getloadavg.c getndelim2.c getopt.c getopt1.c getpagesize.h \
-	getpass.c getpass.h gettime.c gettimeofday.c getugroups.c \
-	getusershell.c group-member.c group-member.h hard-locale.c \
-	hard-locale.h hash-pjw.c hash-pjw.h hash.c hash.h human.c \
-	human.h idcache.c imaxtostr.c intprops.h inttostr.c inttostr.h \
-	lchown.c lchown.h linebuffer.c linebuffer.h long-options.c \
-	long-options.h lstat.c lstat.h malloc.c mbchar.c md5.c md5.h \
-	memcasecmp.c memcasecmp.h memchr.c memcmp.c memcoll.c \
-	memcoll.h memcpy.c memmove.c mempcpy.c mempcpy.h memrchr.c \
-	memrchr.h memset.c mkdir-p.c mkdir-p.h mkdir.c mkstemp-safer.c \
-	mkstemp.c mktime.c modechange.c modechange.h mountlist.c \
-	mountlist.h nanosleep.c obstack.c obstack.h offtostr.c \
-	open-safer.c openat-die.c openat.c openat.h pathmax.h \
-	physmem.c physmem.h pipe-safer.c posixtm.c posixtm.h \
-	posixver.c posixver.h printf-args.c printf-parse.c putenv.c \
-	quote.c quote.h quotearg.c quotearg.h raise.c readlink.c \
-	readtokens.c readtokens.h readutmp.c readutmp.h realloc.c \
-	regcomp.c regex.c regex.h regex_internal.c regex_internal.h \
-	regexec.c rename.c rmdir.c root-dev-ino.c root-dev-ino.h \
-	rpmatch.c safe-read.c safe-read.h safe-write.c safe-write.h \
-	same.c same.h save-cwd.c save-cwd.h savedir.c savedir.h \
-	setenv.c setenv.h settime.c sha1.c sha1.h sha256.c sha256.h \
-	sha512.c sha512.h sig2str.c sig2str.h stat-macros.h \
-	stat-time.h stdio--.h stdio-safer.h stdlib--.h stdlib-safer.h \
-	stpcpy.c strcasecmp.c strcspn.c strdup.c strdup.h strftime.c \
-	strftime.h strintcmp.c stripslash.c strncasecmp.c strndup.c \
-	strndup.h strnlen.c strnlen.h strnumcmp-in.h strnumcmp.c \
-	strnumcmp.h strpbrk.c strstr.c strtod.c strtoimax.c strtol.c \
-	strtoll.c strtoul.c strtoull.c strtoumax.c strverscmp.c \
-	strverscmp.h tempname.c timespec.h umaxtostr.c unistd--.h \
-	unistd-safer.h unlinkdir.c unlinkdir.h unlocked-io.h \
-	unsetenv.c userspec.c userspec.h utime.c utimecmp.c utimecmp.h \
-	utimens.c utimens.h vasnprintf.c vasprintf.c version-etc-fsf.c \
-	version-etc.c version-etc.h xalloc.h xfts.c xfts.h xgetcwd.c \
-	xgetcwd.h xmalloc.c xnanosleep.c xnanosleep.h xreadlink.c \
-	xreadlink.h xstrtod.c xstrtod.h xstrtol.c xstrtol.h xstrtoul.c \
-	xtime.h yesno.c yesno.h
+	euidaccess-stat.c euidaccess-stat.h euidaccess.c exclude.c \
+	exclude.h exitfail.c exitfail.h fchdir-stub.c fchown-stub.c \
+	fcntl--.h fcntl-safer.h fd-reopen.c fd-reopen.h fd-safer.c \
+	file-type.c file-type.h fileblocks.c filemode.c filemode.h \
+	filenamecat.c filenamecat.h fnmatch.c fopen-safer.c free.c \
+	fsusage.c fsusage.h ftruncate.c fts-cycle.c fts.c fts_.h \
+	gai_strerror.c getaddrinfo.c getcwd.c getcwd.h getdate.h \
+	getdate.y getdelim.c getdelim.h getgroups.c gethostname.c \
+	gethrxtime.c gethrxtime.h getline.c getline.h getloadavg.c \
+	getndelim2.c getopt.c getopt1.c getpagesize.h getpass.c \
+	getpass.h gettime.c gettimeofday.c getugroups.c getusershell.c \
+	group-member.c group-member.h hard-locale.c hard-locale.h \
+	hash-pjw.c hash-pjw.h hash.c hash.h human.c human.h idcache.c \
+	imaxtostr.c intprops.h inttostr.c inttostr.h lchown.c lchown.h \
+	linebuffer.c linebuffer.h long-options.c long-options.h \
+	lstat.c lstat.h malloc.c mbchar.c md5.c md5.h memcasecmp.c \
+	memcasecmp.h memchr.c memcmp.c memcoll.c memcoll.h memcpy.c \
+	memmove.c mempcpy.c mempcpy.h memrchr.c memrchr.h memset.c \
+	mkdir-p.c mkdir-p.h mkdir.c mkstemp-safer.c mkstemp.c mktime.c \
+	modechange.c modechange.h mountlist.c mountlist.h nanosleep.c \
+	obstack.c obstack.h offtostr.c open-safer.c openat-die.c \
+	openat.c openat.h pathmax.h physmem.c physmem.h pipe-safer.c \
+	posixtm.c posixtm.h posixver.c posixver.h printf-args.c \
+	printf-parse.c putenv.c quote.c quote.h quotearg.c quotearg.h \
+	raise.c readlink.c readtokens.c readtokens.h readutmp.c \
+	readutmp.h realloc.c regcomp.c regex.c regex.h \
+	regex_internal.c regex_internal.h regexec.c rename.c rmdir.c \
+	root-dev-ino.c root-dev-ino.h rpmatch.c safe-read.c \
+	safe-read.h safe-write.c safe-write.h same.c same.h save-cwd.c \
+	save-cwd.h savedir.c savedir.h setenv.c setenv.h settime.c \
+	sha1.c sha1.h sha256.c sha256.h sha512.c sha512.h sig2str.c \
+	sig2str.h stat-macros.h stat-time.h stdio--.h stdio-safer.h \
+	stdlib--.h stdlib-safer.h stpcpy.c strcasecmp.c strcspn.c \
+	strdup.c strdup.h strftime.c strftime.h strintcmp.c \
+	stripslash.c strncasecmp.c strndup.c strndup.h strnlen.c \
+	strnlen.h strnumcmp-in.h strnumcmp.c strnumcmp.h strpbrk.c \
+	strstr.c strtod.c strtoimax.c strtol.c strtoll.c strtoul.c \
+	strtoull.c strtoumax.c strverscmp.c strverscmp.h tempname.c \
+	timespec.h umaxtostr.c unistd--.h unistd-safer.h unlinkdir.c \
+	unlinkdir.h unlocked-io.h unsetenv.c userspec.c userspec.h \
+	utime.c utimecmp.c utimecmp.h utimens.c utimens.h vasnprintf.c \
+	vasprintf.c version-etc-fsf.c version-etc.c version-etc.h \
+	xalloc.h xfts.c xfts.h xgetcwd.c xgetcwd.h xmalloc.c \
+	xnanosleep.c xnanosleep.h xreadlink.c xreadlink.h xstrtod.c \
+	xstrtod.h xstrtol.c xstrtol.h xstrtoul.c xtime.h yesno.c \
+	yesno.h
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/afs.m4 \
 	$(top_srcdir)/m4/alloca.m4 $(top_srcdir)/m4/allocsa.m4 \
@@ -102,8 +103,8 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/afs.m4 \
 	$(top_srcdir)/m4/atexit.m4 $(top_srcdir)/m4/autobuild.m4 \
 	$(top_srcdir)/m4/backupfile.m4 $(top_srcdir)/m4/basename.m4 \
 	$(top_srcdir)/m4/bison.m4 $(top_srcdir)/m4/boottime.m4 \
-	$(top_srcdir)/m4/c-strtod.m4 $(top_srcdir)/m4/calloc.m4 \
-	$(top_srcdir)/m4/canon-host.m4 \
+	$(top_srcdir)/m4/c-strtod.m4 $(top_srcdir)/m4/c.m4 \
+	$(top_srcdir)/m4/calloc.m4 $(top_srcdir)/m4/canon-host.m4 \
 	$(top_srcdir)/m4/canonicalize.m4 \
 	$(top_srcdir)/m4/chdir-long.m4 $(top_srcdir)/m4/check-decl.m4 \
 	$(top_srcdir)/m4/chown.m4 $(top_srcdir)/m4/clock_time.m4 \
@@ -114,6 +115,7 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/afs.m4 \
 	$(top_srcdir)/m4/dirname.m4 $(top_srcdir)/m4/dos.m4 \
 	$(top_srcdir)/m4/dup2.m4 $(top_srcdir)/m4/eealloc.m4 \
 	$(top_srcdir)/m4/eoverflow.m4 $(top_srcdir)/m4/error.m4 \
+	$(top_srcdir)/m4/euidaccess-stat.m4 \
 	$(top_srcdir)/m4/euidaccess.m4 $(top_srcdir)/m4/exclude.m4 \
 	$(top_srcdir)/m4/exitfail.m4 $(top_srcdir)/m4/extensions.m4 \
 	$(top_srcdir)/m4/fcntl-safer.m4 $(top_srcdir)/m4/fd-reopen.m4 \
@@ -491,6 +493,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/dup-safer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/dup2.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/error.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/euidaccess-stat.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/euidaccess.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/exclude.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/exitfail.Po@am__quote@
