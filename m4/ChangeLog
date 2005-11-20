@@ -1,3 +1,7 @@
+2005-11-20  Jim Meyering  <jim@meyering.net>
+
+	* prereq.m4: Require gl_EUIDACCESS_STAT.
+
 2005-11-18  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* c.m4: New file, to work around bugs in AIX cc.
