@@ -61,7 +61,7 @@ char **argv;]],
 [[return f (e, argv, 0) != argv[0]  ||  f (e, argv, 1) != argv[1];]],
 dnl Don't try gcc -ansi; that turns off useful extensions and
 dnl breaks some systems' header files.
-dnl AIX circa 2003 	-qlanglvl=extc89
+dnl AIX circa 2003	-qlanglvl=extc89
 dnl old AIX		-qlanglvl=ansi
 dnl Ultrix, OSF/1, Tru64	-std
 dnl HP-UX 10.20 and later	-Ae
