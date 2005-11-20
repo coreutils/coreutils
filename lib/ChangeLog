@@ -1,3 +1,8 @@
+2005-11-20  Jim Meyering  <jim@meyering.net>
+
+	* euidaccess-stat.c: New file, mostly from euidaccess.c.
+	* euidaccess-stat.h: New file.
+
 2005-11-15  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* xstrtod.c: Don't bother with #pragma STDC FENV_ACCESS ON, as
