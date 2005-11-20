@@ -1,5 +1,7 @@
 2005-11-20  Jim Meyering  <jim@meyering.net>
 
+	* c.m4: Remove spurious space-before-TAB.
+
 	* euidaccess-stat.m4 (gl_EUIDACCESS_STAT): New file/macro.
 	* prereq.m4: Require gl_EUIDACCESS_STAT.
 
