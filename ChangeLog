@@ -13,6 +13,7 @@
 	where our openat emulation code is reentrant.  This also fixes a
 	few low-probability leaks and eliminates some code that could,
 	in very unusual circumstances, cause rm() (via a callee) to exit.
+	* NEWS: Mention this.
 
 	* configure.ac: Put copyright dates all on one line so the
 	emacs function that updates them works properly.
