@@ -1,3 +1,7 @@
+2005-11-22  Jim Meyering  <jim@meyering.net>
+
+	* POTFILES.in: Add lib/euidaccess-stat.c.
+
 2005-10-24  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.in.in: Update from gettext cvs (0.15).
