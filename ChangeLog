@@ -1,6 +1,14 @@
-2005-11-18  Paul Eggert  <eggert@cs.ucla.edu>
+2005-11-22  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* src/remove.c: Rewrite.  Now, this module is reentrant on systems
+	that provide openat (Solaris), and on systems like Linux+procfs
+	where our openat emulation code is reentrant.  This also fixes a
+	few low-probability leaks and eliminates some code that could,
+	in very unusual circumstances, cause rm() (via a callee) to exit.
+
+2005-11-18  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* configure.ac (AM_PROG_CC_C_O): Add.  Needed for CVS Automake.
 	Problem reported by Eric Blake.
