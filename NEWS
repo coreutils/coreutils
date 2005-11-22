@@ -2,6 +2,11 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Major changes in release 6.0-cvs (????-??-??) [unstable]
 
+** Improved robustness
+
+  rm's core is now reentrant: rm --recursive (-r) now processes
+  hierarchies without changing the working directory at all.
+
 ** Changes in behavior
 
   ln now uses different (and we hope clearer) diagnostics when it fails.
@@ -81,6 +86,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   chmod now diagnoses an invalid mode string starting with an octal digit
 
   dircolors now properly quotes single-quote characters
+
 
 * Major changes in release 5.91 (2005-10-17) [stable candidate]
 
