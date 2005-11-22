@@ -1,3 +1,14 @@
+2005-11-22  Jim Meyering  <jim@meyering.net>
+
+	* openat.h (openat_permissive): Declare.
+	(openat_ro): Define.
+
+	* openat.c (EXPECTED_ERRNO): New macro.
+	(openat_permissive): New function -- used in remove.c rewrite.
+	(all functions): Set errno just before returning, only if there
+	was an actual failure.
+	Use EXPECTED_ERRNO rather than comparing against only ENOTDIR.
+
 2005-11-20  Jim Meyering  <jim@meyering.net>
 
 	* euidaccess-stat.c: New file, mostly from euidaccess.c.
