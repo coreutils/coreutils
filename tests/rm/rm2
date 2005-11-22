@@ -18,7 +18,9 @@ trap '(exit $?); exit' 1 2 13 15
 framework_failure=0
 mkdir -p $tmp || framework_failure=1
 cd $tmp || framework_failure=1
+mkdir -p a/0 || framework_failure=1
 mkdir -p a/1/2 b/3 || framework_failure=1
+mkdir a/2 a/3 || framework_failure=1
 chmod u-x a/1 b || framework_failure=1
 
 if test $framework_failure = 1; then
@@ -32,15 +34,24 @@ fail=0
 # in the same sort of diagnostic.
 # Both of these should fail.
 rm -rf a b > out 2>&1 && fail=1
-cat <<EOF > exp
-rm: cannot chdir from \`a' to \`1': Permission denied
-rm: cannot chdir from \`.' to \`b': Permission denied
+cat <<\EOF > exp
+rm: cannot open directory `a/1': Permission denied
+rm: cannot open directory `b': Permission denied
 EOF
 
-cmp out exp || fail=1
+cat <<\EOF > exp-solaris
+rm: cannot remove `a/1/2': Permission denied
+rm: cannot remove `b/3': Permission denied
+EOF
+
+cmp out exp > /dev/null 2>&1 || { cmp out exp-solaris > /dev/null 2>&1 || fail=1; }
 test $fail = 1 && diff out exp 2> /dev/null
 
+test -d a/0 && fail=1
 test -d a/1 || fail=1
+test -d a/2 && fail=1
+test -d a/3 && fail=1
+
 chmod u+x b
 test -d b/3 || fail=1
 
