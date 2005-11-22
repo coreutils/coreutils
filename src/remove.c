@@ -52,7 +52,7 @@
 
 /* Define to the options that make open (or openat) fail to open
    a symlink.  Define to 0 if there are no such options.
-   This is useful because it permits us to skip the `fstatat (".",...'
+   This is useful because it permits us to skip the `fstat'
    and dev/ino comparison in AD_push.  */
 #if defined O_NOFOLLOW
 # define OPEN_NO_FOLLOW_SYMLINK O_NOFOLLOW
@@ -540,9 +540,9 @@ AD_push_initial (Dirstack_state *ds)
    active directory stack.  DIR is the ./-relative name through
    which we've just `chdir'd to this directory.  DIR_SB_FROM_PARENT
    is the result of calling lstat on DIR from the parent of DIR.
-   Return true upon success, false if fstatat "." fails, and longjump
-   (skipping the entire command line argument we're dealing with) if
-   someone has replaced DIR with e.g., a symlink to some other directory.  */
+   Longjump out (skipping the entire command line argument we're
+   dealing with) if `fstat (FD_CWD, ...' fails or if someone has
+   replaced DIR with e.g., a symlink to some other directory.  */
 static void
 AD_push (int fd_cwd, Dirstack_state *ds, char const *dir,
 	 struct stat const *dir_sb_from_parent)
@@ -1206,7 +1206,7 @@ remove_dir (int fd_cwd, Dirstack_state *ds, char const *dir,
      (unlinkat, in our caller) and fd_to_subdirp's openat call.  But on most
      systems, even those without openat, this isn't a problem, since we ensure
      that opening a symlink will fail, when that is possible.  Otherwise,
-     fd_to_subdirp's fstat, along with the `fstatat (".",...' and the dev/ino
+     fd_to_subdirp's fstat, along with the `fstat' and the dev/ino
      comparison in AD_push ensure that we detect it and fail.  */
 
   DIR *dirp = fd_to_subdirp (fd_cwd, dir, x, 0, &dir_sb, ds,
