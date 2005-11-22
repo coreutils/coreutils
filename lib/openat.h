@@ -23,6 +23,7 @@
 #include <sys/stat.h>
 #include <dirent.h>
 #include <unistd.h>
+#include <stdbool.h>
 
 #ifndef __attribute__
 # if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 8) || __STRICT_ANSI__
@@ -46,6 +47,7 @@
 #  define __OPENAT_ID(y) __OPENAT_XCONCAT (__OPENAT_PREFIX, y)
 #  define openat __OPENAT_ID (openat)
 int openat (int fd, char const *file, int flags, /* mode_t mode */ ...);
+int openat_permissive (int fd, char const *file, int flags, bool *restore_failed, ...);
 #  if ! HAVE_FDOPENDIR
 #   define fdopendir __OPENAT_ID (fdopendir)
 #  endif
@@ -56,9 +58,14 @@ int fstatat (int fd, char const *file, struct stat *st, int flag);
 int unlinkat (int fd, char const *file, int flag);
 void openat_restore_fail (int) ATTRIBUTE_NORETURN;
 void openat_save_fail (int) ATTRIBUTE_NORETURN;
+#  define openat_ro(Fd, File, Flags, RF) openat_permissive (Fd, File, Flags, RF)
 # else
 #  define openat_restore_fail(Errno) /* empty */
 #  define openat_save_fail(Errno) /* empty */
 # endif
 
+#endif
+
+#ifndef openat_ro
+# define openat_ro(Fd, File, Flags, RF) openat (Fd, File, Flags)
 #endif
