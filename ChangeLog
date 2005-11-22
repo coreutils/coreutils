@@ -14,6 +14,9 @@
 	few low-probability leaks and eliminates some code that could,
 	in very unusual circumstances, cause rm() (via a callee) to exit.
 
+	* configure.ac: Put copyright dates all on one line so the
+	emacs function that updates them works properly.
+
 2005-11-18  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* configure.ac (AM_PROG_CC_C_O): Add.  Needed for CVS Automake.
