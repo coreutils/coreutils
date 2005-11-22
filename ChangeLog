@@ -2,6 +2,8 @@
 
 	* Version 6.0-cvs.
 
+	* src/remove.c (AD_push): Remove debugging cruft.
+
 	* tests/rm/unread2 (rm): Change expected diagnostic,
 	`cannot open directory' to `cannot remove', to align with
 	new version of rm.
