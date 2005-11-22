@@ -2,6 +2,9 @@
 
 	* Version 6.0-cvs.
 
+	* tests/rm/rm2: Ensure that rm now continues removing entries
+	even after certain types of failure.
+
 	* src/remove.c: Rewrite.  Now, this module is reentrant on systems
 	that provide openat (Solaris), and on systems like Linux+procfs
 	where our openat emulation code is reentrant.  This also fixes a
