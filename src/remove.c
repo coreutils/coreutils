@@ -574,14 +574,7 @@ AD_push (int fd_cwd, Dirstack_state *ds, char const *dir,
 
   /* Extend the stack.  */
   obstack_blank (&ds->Active_dir, sizeof (struct AD_ent));
-
-  {
-    size_t n_lengths = obstack_object_size (&ds->len_stack) / sizeof (size_t);
-    if (AD_stack_height (ds) != n_lengths + 1)
-      error (0, 0, "%lu %lu", (unsigned long) AD_stack_height (ds),
-	     (unsigned long) n_lengths);
-    assert (AD_stack_height (ds) == n_lengths + 1);
-  }
+  assert (AD_stack_height (ds) == n_lengths + 1);
 
   /* Fill in the new values.  */
   top = AD_stack_top (ds);
