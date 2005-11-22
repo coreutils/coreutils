@@ -2,6 +2,9 @@
 
 	* Version 6.0-cvs.
 
+	* tests/rm/unread2 (rm): Change expected diagnostic,
+	`cannot open directory' to `cannot remove', to align with
+	new version of rm.
 	* tests/rm/rm2: Ensure that rm now continues removing entries
 	even after certain types of failure.
 
