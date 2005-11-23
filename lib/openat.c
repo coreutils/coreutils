@@ -99,7 +99,7 @@ rpl_openat (int fd, char const *file, int flags, ...)
     char *proc_file;
     BUILD_PROC_NAME (proc_file, fd, file);
     err = open (proc_file, flags, mode);
-    /* If the syscall succeeded, or if it failed with an unexpected
+    /* If the syscall succeeds, or if it fails with an unexpected
        errno value, then return right away.  Otherwise, fall through
        and resort to using save_cwd/restore_cwd.  */
     if (0 <= err || ! EXPECTED_ERRNO (errno))
@@ -166,7 +166,7 @@ openat_permissive (int fd, char const *file, int flags,
     char *proc_file;
     BUILD_PROC_NAME (proc_file, fd, file);
     err = open (proc_file, flags, mode);
-    /* If the syscall succeeded, or if it failed with an unexpected
+    /* If the syscall succeeds, or if it fails with an unexpected
        errno value, then return right away.  Otherwise, fall through
        and resort to using save_cwd/restore_cwd.  */
     if (0 <= err || ! EXPECTED_ERRNO (errno))
@@ -233,7 +233,7 @@ fdopendir (int fd)
     BUILD_PROC_NAME (proc_file, fd, ".");
     dir = opendir (proc_file);
     saved_errno = (dir == NULL ? errno : 0);
-    /* If the syscall succeeded, or if it failed with an unexpected
+    /* If the syscall succeeds, or if it fails with an unexpected
        errno value, then return right away.  Otherwise, fall through
        and resort to using save_cwd/restore_cwd.  */
     if (dir != NULL || ! EXPECTED_ERRNO (errno))
@@ -295,7 +295,7 @@ fstatat (int fd, char const *file, struct stat *st, int flag)
     err = (flag == AT_SYMLINK_NOFOLLOW
 	   ? lstat (proc_file, st)
 	   : stat (proc_file, st));
-    /* If the syscall succeeded, or if it failed with an unexpected
+    /* If the syscall succeeds, or if it fails with an unexpected
        errno value, then return right away.  Otherwise, fall through
        and resort to using save_cwd/restore_cwd.  */
     if (0 <= err || ! EXPECTED_ERRNO (errno))
@@ -349,7 +349,7 @@ unlinkat (int fd, char const *file, int flag)
     char *proc_file;
     BUILD_PROC_NAME (proc_file, fd, file);
     err = (flag == AT_REMOVEDIR ? rmdir (proc_file) : unlink (proc_file));
-    /* If the syscall succeeded, or if it failed with an unexpected
+    /* If the syscall succeeds, or if it fails with an unexpected
        errno value, then return right away.  Otherwise, fall through
        and resort to using save_cwd/restore_cwd.  */
     if (0 <= err || ! EXPECTED_ERRNO (errno))
