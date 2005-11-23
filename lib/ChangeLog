@@ -1,3 +1,7 @@
+2005-11-23  Jim Meyering  <jim@meyering.net>
+
+	* openat.c (fdopendir): Don't change errno when returning non-NULL.
+
 2005-11-22  Jim Meyering  <jim@meyering.net>
 
 	* openat.h (openat_permissive): Declare.
