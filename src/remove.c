@@ -1365,8 +1365,9 @@ rm (size_t n_files, char const *const *file, struct rm_options const *x)
   enum RM_status status = RM_OK;
   Dirstack_state *ds = ds_init ();
   bool cwd_restore_failed = false;
+  size_t i;
 
-  for (size_t i = 0; i < n_files; i++)
+  for (i = 0; i < n_files; i++)
     {
       if (cwd_restore_failed && IS_RELATIVE_FILE_NAME (file[i]))
 	{
