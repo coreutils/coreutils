@@ -232,7 +232,7 @@ fdopendir (int fd)
     char *proc_file;
     BUILD_PROC_NAME (proc_file, fd, ".");
     dir = opendir (proc_file);
-    saved_errno = errno;
+    saved_errno = (dir == NULL ? errno : 0);
     /* If the syscall succeeded, or if it failed with an unexpected
        errno value, then return right away.  Otherwise, fall through
        and resort to using save_cwd/restore_cwd.  */
