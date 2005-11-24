@@ -1,3 +1,8 @@
+2005-11-23  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* Makefile.am (libcoreutils_a_SOURCES): Add buffer-lcm.c, buffer-lcm.h.
+	* buffer-lcm.c, buffer-lcm.h: New files, from diffutils.
+
 2005-11-23  Jim Meyering  <jim@meyering.net>
 
 	* openat.c (fdopendir): Don't change errno when returning non-NULL.
