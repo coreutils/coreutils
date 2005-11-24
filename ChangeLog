@@ -1,3 +1,7 @@
+2005-11-24  Jim Meyering  <jim@meyering.net>
+
+	* .x-sc_require_config_h: Add lib/buffer-lcm.c to the list.
+
 2005-11-23  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 6.0-cvs.
