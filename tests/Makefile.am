@@ -14,7 +14,7 @@ TESTS_ENVIRONMENT = \
   PATH="`pwd`/../src$(PATH_SEPARATOR)$$PATH"
 
 EXTRA_DIST = \
-  $(TESTS) .env-warn Coreutils.pm Makefile.am.in README envvar-check \
+  $(TESTS) .env-warn Coreutils.pm Makefile.am.in README acl envvar-check \
   expensive group-names input-tty lang-default mk-script priv-check \
   rwx-to-mode sample-test setgid-check umask-check very-expensive
 
