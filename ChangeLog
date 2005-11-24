@@ -1,6 +1,31 @@
-2005-11-22  Jim Meyering  <jim@meyering.net>
+2005-11-23  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 6.0-cvs.
+
+	* src/copy.c: Improve performance a bit by optimizing away
+	unnecessary system calls and going to a block size of at least
+	8192 (on normal hosts, anyway).  This improved performance 5% on my
+	Debian stable host (2.4.27 kernel, x86, copying from root
+	ext3 file system to itself).
+	Include "buffer-lcm.h".
+	(copy_reg): Omit last argument.  All callers changed.
+	Use xmalloc to allocate rather than trusting alloca
+	(which is unwise with large block sizes).
+	Declare locals more locally, if possible.
+	Use uintptr_t words instead of int words, for a bit more speed
+	when looking for null blocks on 64-bit hosts.
+	Optimize away reads of zero bytes on regular files.
+	In the typical case, insist on 8 KiB buffers, at least.
+	Avoid unnecessary extra call to fstat when checking for sparse files.
+	Avoid now-unnecessary cast to off_t, and "0L".
+	Avoid unnecessary test of *new_dst when checking for same owner
+	and group.
+
+2005-11-22  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/remove.c (rm): Don't assume C99 for-loop syntax.
+
+2005-11-22  Jim Meyering  <jim@meyering.net>
 
 	* src/remove.c (AD_push): Remove debugging cruft.
 
