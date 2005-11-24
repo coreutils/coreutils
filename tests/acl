@@ -2,7 +2,7 @@ if ! getfacl --version 2> /dev/null 1>&2 || \
    ! setfacl --version 2> /dev/null 1>&2 ; then
   cat <<EOF 1>&2
 **************************************
-This test requires getfacl and setfacl.
+$0: This test requires getfacl and setfacl.
 **************************************
 EOF
   (exit 77); exit 77
@@ -11,7 +11,7 @@ fi
 if ! grep '^bin:' /etc/passwd 2> /dev/null 1>&2 ; then
   cat <<EOF 1>&2
 **************************************
-This test requires a local user named bin.
+$0: This test requires a local user named bin.
 **************************************
 EOF
   (exit 77); exit 77
