@@ -1,4 +1,5 @@
 ^lib/bcopy\.c$
+^lib/buffer-lcm\.c$
 ^lib/c-strtold\.c$
 ^lib/fnmatch_loop\.c$
 ^lib/full-read\.c$
