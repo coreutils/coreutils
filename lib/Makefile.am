@@ -27,6 +27,7 @@ DEFS += -DLIBDIR=\"$(libdir)\"
 
 libcoreutils_a_SOURCES = \
   allocsa.c allocsa.h \
+  buffer-lcm.c buffer-lcm.h \
   euidaccess.h \
   exit.h \
   fprintftime.c fprintftime.h \
