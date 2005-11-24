@@ -2,6 +2,9 @@
 
 	* Version 6.0-cvs.
 
+	* tests/Makefile.am (EXTRA_DIST): Add acl to the list.
+	* tests/acl: Add `$0: ' prefix to diagnostics.
+
 	* .x-sc_require_config_h: Add lib/buffer-lcm.c to the list.
 
 2005-11-23  Paul Eggert  <eggert@cs.ucla.edu>
