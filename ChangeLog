@@ -1,10 +1,10 @@
 2005-11-24  Jim Meyering  <jim@meyering.net>
 
+	* Version 6.0-cvs.
+
 	* .x-sc_require_config_h: Add lib/buffer-lcm.c to the list.
 
 2005-11-23  Paul Eggert  <eggert@cs.ucla.edu>
-
-	* Version 6.0-cvs.
 
 	* src/copy.c: Improve performance a bit by optimizing away
 	unnecessary system calls and going to a block size of at least
