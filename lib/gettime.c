@@ -45,8 +45,14 @@ gettime (struct timespec *ts)
     ts->tv_nsec = tv.tv_usec * 1000;
   }
 # else
+
+#  ifndef OK_TO_USE_1S_CLOCK
+#   error "Only 1-second nominal clock resolution found.  Is that intended?" \
+          "If so, compile with the -DOK_TO_USE_1S_CLOCK option."
+#  endif
   ts->tv_sec = time (NULL);
   ts->tv_nsec = 0;
+
 # endif
 
 #endif
