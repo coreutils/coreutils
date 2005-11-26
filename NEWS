@@ -9,6 +9,11 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Changes in behavior
 
+  df now considers "none" and "proc" file systems to be dummies and
+  therefore does not normally display them.  Also, inaccessible file
+  systems (which can be caused by shadowed mount points or by chrooted
+  bind mounts) are now dummies, too.
+
   ln now uses different (and we hope clearer) diagnostics when it fails.
   ln -v now acts more like FreeBSD, so it generates output only when
   successful and the output is easier to parse.
