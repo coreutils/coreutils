@@ -60,11 +60,11 @@ typedef double LONG_DOUBLE;
 #endif
 
 #if HAVE_UNSIGNED_LONG_LONG
-typedef unsigned long long int ulonglong_t;
+typedef unsigned long long int unsigned_long_long_int;
 #else
 /* This is just a place-holder to avoid a few `#if' directives.
    In this case, the type isn't actually used.  */
-typedef unsigned long int ulonglong_t;
+typedef unsigned long int unsigned_long_long_int;
 #endif
 
 enum size_spec
@@ -144,7 +144,7 @@ static unsigned int const bytes_to_unsigned_dec_digits[] =
 static unsigned int const bytes_to_hex_digits[] =
 {0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32};
 
-#define MAX_INTEGRAL_TYPE_SIZE sizeof (ulonglong_t)
+#define MAX_INTEGRAL_TYPE_SIZE sizeof (unsigned_long_long_int)
 
 /* It'll be a while before we see integral types wider than 16 bytes,
    but if/when it happens, this check will catch it.  Without this check,
@@ -165,7 +165,7 @@ static const int width_bytes[] =
   sizeof (short int),
   sizeof (int),
   sizeof (long int),
-  sizeof (ulonglong_t),
+  sizeof (unsigned_long_long_int),
   sizeof (float),
   sizeof (double),
   sizeof (LONG_DOUBLE)
@@ -454,7 +454,7 @@ print_long (size_t n_bytes, void const *block, char const *fmt_string)
 static void
 print_long_long (size_t n_bytes, void const *block, char const *fmt_string)
 {
-  ulonglong_t const *p = block;
+  unsigned_long_long_int const *p = block;
   size_t i;
   for (i = n_bytes / sizeof *p; i != 0; i--)
     printf (fmt_string, *p++);
@@ -1584,7 +1584,7 @@ main (int argc, char **argv)
 #if HAVE_UNSIGNED_LONG_LONG
   /* If `long int' and `long long int' have the same size, it's fine
      to overwrite the entry for `long' with this one.  */
-  integral_type_size[sizeof (ulonglong_t)] = LONG_LONG;
+  integral_type_size[sizeof (unsigned_long_long_int)] = LONG_LONG;
 #endif
 
   for (i = 0; i <= MAX_FP_TYPE_SIZE; i++)
