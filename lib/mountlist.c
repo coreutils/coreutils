@@ -144,6 +144,8 @@ char *strstr ();
 #ifndef ME_DUMMY
 # define ME_DUMMY(Fs_name, Fs_type)		\
     (strcmp (Fs_type, "autofs") == 0		\
+     || strcmp (Fs_type, "none") == 0		\
+     || strcmp (Fs_type, "proc") == 0		\
      || strcmp (Fs_type, "subfs") == 0		\
      /* for Irix 6.5 */				\
      || strcmp (Fs_type, "ignore") == 0)
