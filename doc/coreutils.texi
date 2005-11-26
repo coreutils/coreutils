@@ -8785,11 +8785,9 @@ The program accepts the following options.  Also see @ref{Common options}.
 @opindex --all
 @cindex automounter file systems
 @cindex ignore file systems
-Include in the listing file systems that have a size of 0 blocks, which
+Include in the listing dummy file systems, which
 are omitted by default.  Such file systems are typically special-purpose
-pseudo-file-systems, such as automounter entries.  Also, file systems of
-type ``ignore'' or ``auto'', supported by some operating systems, are
-only included if this option is specified.
+pseudo-file-systems, such as automounter entries.
 
 @item -B @var{size}
 @itemx --block-size=@var{size}
