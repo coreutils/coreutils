@@ -1,4 +1,4 @@
-/* Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2002, 2003, 2005 Free Software Foundation, Inc.
    Written by Bruno Haible <haible@clisp.cons.org>, 2001.
 
    This program is free software; you can redistribute it and/or modify
@@ -54,35 +54,45 @@
 /* 7.16. Boolean type and values */
 
 /* BeOS <sys/socket.h> already #defines false 0, true 1.  We use the same
-   definitions below, but temporarily we have to #undef them.  */
+   definitions below, which is OK.  */
 #ifdef __BEOS__
 # include <OS.h> /* defines bool but not _Bool */
-# undef false
-# undef true
 #endif
 
-/* For the sake of symbolic names in gdb, we define true and false as
-   enum constants, not only as macros.
-   It is tempting to write
-      typedef enum { false = 0, true = 1 } _Bool;
-   so that gdb prints values of type 'bool' symbolically. But if we do
+/* C++ and BeOS have a reliable _Bool.  Otherwise, since this file is
+   being compiled, the system <stdbool.h> is not reliable so assume
+   that the system _Bool is not reliable either.  Under that
+   assumption, it is tempting to write
+
+      typedef enum { false, true } _Bool;
+
+   so that gdb prints values of type 'bool' symbolically.  But if we do
    this, values of type '_Bool' may promote to 'int' or 'unsigned int'
    (see ISO C 99 6.7.2.2.(4)); however, '_Bool' must promote to 'int'
-   (see ISO C 99 6.3.1.1.(2)).  So we add a negative value to the
-   enum; this ensures that '_Bool' promotes to 'int'.  */
-#if !(defined __cplusplus || defined __BEOS__)
-# if !@HAVE__BOOL@
-#  if defined __SUNPRO_C && (__SUNPRO_C < 0x550 || __STDC__ == 1)
-    /* Avoid stupid "warning: _Bool is a keyword in ISO C99".  */
-#   define _Bool signed char
-enum { false = 0, true = 1 };
-#  else
-typedef enum { _Bool_must_promote_to_int = -1, false = 0, true = 1 } _Bool;
-#  endif
-# endif
-#else
+   (see ISO C 99 6.3.1.1.(2)).  We could instead try this:
+
+      typedef enum { _Bool_dummy = -1, false, true } _Bool;
+
+   as the negative value ensures that '_Bool' promotes to 'int'.
+   However, this runs into some other problems.  First, Sun's C
+   compiler when (__SUNPRO_C < 0x550 || __STDC__ == 1) issues a stupid
+   "warning: _Bool is a keyword in ISO C99".  Second, IBM's AIX cc
+   compiler 6.0.0.0 (and presumably other versions) mishandles
+   subscripts involving _Bool (effectively, _Bool promotes to unsigned
+   int in this case), and we need to redefine _Bool in that case.
+   Third, HP-UX 10.20's C compiler lacks <stdbool.h> but has _Bool and
+   mishandles comparisons of _Bool to int (it promotes _Bool to
+   unsigned int).
+
+   The simplest way to work around these problems is to ignore any
+   existing definition of _Bool and use our own.  */
+
+#if defined __cplusplus || defined __BEOS__
 typedef bool _Bool;
+#else
+# define _Bool signed char
 #endif
+
 #define bool _Bool
 
 /* The other macros must be usable in preprocessor directives.  */
