@@ -123,7 +123,7 @@ CLEANFILES += charset.alias ref-add.sed ref-del.sed
 
 BUILT_SOURCES += $(STDBOOL_H)
 EXTRA_DIST += stdbool_.h
-MOSTLYCLEANFILES += stdbool.h stdbool.ht
+MOSTLYCLEANFILES += stdbool.h stdbool.h-t
 # Create stdbool.h on systems that lack a working one.
 stdbool.h: stdbool_.h
 	cp $(srcdir)/stdbool_.h $@-t
