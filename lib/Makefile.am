@@ -127,7 +127,7 @@ MOSTLYCLEANFILES += stdbool.h stdbool.ht
 # Create stdbool.h on systems that lack a working one.
 stdbool.h: stdbool_.h
 	cp $(srcdir)/stdbool_.h $@-t
-	mv $@t $@
+	mv $@-t $@
 
 BUILT_SOURCES += $(ALLOCA_H)
 EXTRA_DIST += alloca_.h
