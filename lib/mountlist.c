@@ -23,6 +23,7 @@
 
 #include "mountlist.h"
 
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -283,6 +284,44 @@ fstype_to_string (int t)
 }
 #endif /* MOUNTED_VMOUNT */
 
+
+#if defined MOUNTED_GETMNTENT1 || defined MOUNTED_GETMNTENT2
+
+/* Return the device number from MOUNT_OPTIONS, if possible.
+   Otherwise return (dev_t) -1.  */
+
+static dev_t
+dev_from_mount_options (char const *mount_options)
+{
+  /* GNU/Linux allows file system implementations to define their own
+     meaning for "dev=" mount options, so don't trust the meaning
+     here.  */
+# ifndef __linux__
+
+  static char const dev_pattern[] = ",dev=";
+  char const *devopt = strstr (mount_options, dev_pattern);
+
+  if (devopt)
+    {
+      char const *optval = devopt + sizeof dev_pattern - 1;
+      char *optvalend;
+      unsigned long int dev;
+      errno = 0;
+      dev = strtoul (optval, &optvalend, 16);
+      if (optval != optvalend
+	  && (*optvalend == '\0' || *optvalend == ',')
+	  && ! (dev == ULONG_MAX && errno == ERANGE)
+	  && dev == (dev_t) dev)
+	return dev;
+    }
+
+# endif
+
+  return -1;
+}
+
+#endif
+
 /* Return a list of the currently mounted file systems, or NULL on error.
    Add each entry to the tail of the list so that they stay in order.
    If NEED_FS_TYPE is true, ensure that the file system type fields in
@@ -325,12 +364,11 @@ read_file_system_list (bool need_fs_type)
   }
 #endif
 
-#ifdef MOUNTED_GETMNTENT1	/* 4.3BSD, SunOS, HP-UX, Dynix, Irix.  */
+#ifdef MOUNTED_GETMNTENT1 /* GNU/Linux, 4.3BSD, SunOS, HP-UX, Dynix, Irix.  */
   {
     struct mntent *mnt;
     char *table = MOUNTED;
     FILE *fp;
-    char *devopt;
 
     fp = setmntent (table, "r");
     if (fp == NULL)
@@ -345,11 +383,7 @@ read_file_system_list (bool need_fs_type)
 	me->me_type_malloced = 1;
 	me->me_dummy = ME_DUMMY (me->me_devname, me->me_type);
 	me->me_remote = ME_REMOTE (me->me_devname, me->me_type);
-	devopt = strstr (mnt->mnt_opts, "dev=");
-	if (devopt)
-	  me->me_dev = strtoul (devopt + 4, NULL, 16);
-	else
-	  me->me_dev = (dev_t) -1;	/* Magic; means not known yet. */
+	me->me_dev = dev_from_mount_options (mnt->mnt_opts);
 
 	/* Add to the linked list. */
 	*mtail = me;
@@ -623,7 +657,7 @@ read_file_system_list (bool need_fs_type)
   }
 #endif /* MOUNTED_FREAD || MOUNTED_FREAD_FSTYP.  */
 
-#ifdef MOUNTED_GETMNTTBL	/* DolphinOS goes it's own way */
+#ifdef MOUNTED_GETMNTTBL	/* DolphinOS goes its own way.  */
   {
     struct mntent **mnttbl = getmnttbl (), **ent;
     for (ent=mnttbl;*ent;ent++)
@@ -697,7 +731,7 @@ read_file_system_list (bool need_fs_type)
 	    me->me_type_malloced = 1;
 	    me->me_dummy = MNT_IGNORE (&mnt) != 0;
 	    me->me_remote = ME_REMOTE (me->me_devname, me->me_type);
-	    me->me_dev = (dev_t) -1;	/* Magic; means not known yet. */
+	    me->me_dev = dev_from_mount_options (mnt.mnt_mntopts);
 
 	    /* Add to the linked list. */
 	    *mtail = me;
