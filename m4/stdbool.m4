@@ -11,7 +11,7 @@ AC_DEFUN([AM_STDBOOL_H],
 [
   AC_REQUIRE([AC_HEADER_STDBOOL])
 
-  # Define two additional variables used in the Makefile substitution.
+  # Define an additional variable used in the Makefile substitution.
 
   if test "$ac_cv_header_stdbool_h" = yes; then
     STDBOOL_H=''
@@ -19,14 +19,10 @@ AC_DEFUN([AM_STDBOOL_H],
     STDBOOL_H='stdbool.h'
   fi
   AC_SUBST([STDBOOL_H])
-
-  if test "$ac_cv_type__Bool" = yes; then
-    HAVE__BOOL=1
-  else
-    HAVE__BOOL=0
-  fi
-  AC_SUBST([HAVE__BOOL])
 ])
+
+# AM_STDBOOL_H will be renamed to gl_STDBOOL_H in the future.
+AC_DEFUN([gl_STDBOOL_H], [AM_STDBOOL_H])
 
 # This macro is only needed in autoconf <= 2.59.  Newer versions of autoconf
 # have this macro built-in.
@@ -79,7 +75,7 @@ AC_DEFUN([AC_HEADER_STDBOOL],
 	      reject this program, as the initializer for xlcbug is
 	      not one of the forms that C requires support for.
 	      However, doing the test right would require a run-time
-	      test, and that would make crosss-compilation harder.
+	      test, and that would make cross-compilation harder.
 	      Let us hope that IBM fixes the xlc bug, and also adds
 	      support for this kind of constant expression.  In the
 	      meantime, this test will reject xlc, which is OK, since
@@ -89,7 +85,8 @@ AC_DEFUN([AC_HEADER_STDBOOL],
 	  #endif
 	],
 	[
-	  return (!a + !b + !c + !d + !e + !f + !g + !h + !i + !j + !k + !l
+	  /* Refer to every declared value, to avoid compiler optimizations.  */
+	  return (!a + !b + !c + !d + !e + !f + !g + !h + !i + !!j + !k + !!l
 		  + !m + !n + !o + !p);
 	],
 	[ac_cv_header_stdbool_h=yes],
