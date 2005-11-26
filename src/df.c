@@ -615,8 +615,15 @@ show_point (const char *point, const struct stat *statp)
 	      me->me_dev = disk_stats.st_dev;
 	    else
 	      {
-		error (0, errno, "%s", quote (me->me_mountdir));
-		exit_status = EXIT_FAILURE;
+		/* Report only I/O errors.  Other errors might be
+		   caused by shadowed mount points, which means POINT
+		   can't possibly be on this file system.  */
+		if (errno == EIO)
+		  {
+		    error (0, errno, "%s", quote (me->me_mountdir));
+		    exit_status = EXIT_FAILURE;
+		  }
+
 		/* So we won't try and fail repeatedly. */
 		me->me_dev = (dev_t) -2;
 	      }
@@ -724,7 +731,7 @@ or all file systems by default.\n\
 Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
-  -a, --all             include file systems having 0 blocks\n\
+  -a, --all             include dummy file systems\n\
   -B, --block-size=SIZE use SIZE-byte blocks\n\
   -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\n\
   -H, --si              likewise, but use powers of 1000 not 1024\n\
