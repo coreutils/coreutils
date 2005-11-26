@@ -1,3 +1,33 @@
+2005-11-25  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* mountlist.c (ME_DUMMY): "none" and "proc" file systems are dummies
+	too.
+
+	* mountlist.c: Include <limits.h>.
+	(dev_from_mount_options)
+	[defined MOUNTED_GETMNTENT1 || defined MOUNTED_GETMNTENT2]:
+	New function.  It no longer assumes "dev=" has the System V meaning
+	on Linux (since it doesn't).  It also parses "dev=" more carefully.
+	(read_file_system_list)
+	[defined MOUNTED_GETMNTENT1 || defined MOUNTED_GETMNTENT2]: Use it.
+	MOUNTED_GETMNTENT2 is new here; the code didn't used to look for
+	dev= in that case.
+
+	* Makefile.am (stdbool.h): Just copy stdbool_.h; no need to sed
+	any more.
+
+	* stdbool_.h: Simplify greatly, under the assumption that these
+	days most people use C99-compatible compilers to debug, so it's
+	not worth worrying about catering to older compilers for that.
+	This works around some porting problems with HP-UX compilers.
+	(false, true) [defined __BEOS__]: Don't #undef; no longer needed.
+	(_Bool): typedef to bool if C++ or BeOS, and #define to signed char
+	otherwise.
+
+	* gettime.c (gettime) [!defined OK_TO_USE_1S_CLOCK]:
+	Report an error at compile-time if only a 1-second nominal clock
+	resolution is found.
+
 2005-11-23  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Makefile.am (libcoreutils_a_SOURCES): Add buffer-lcm.c, buffer-lcm.h.

@@ -1,6 +1,15 @@
-2005-11-24  Jim Meyering  <jim@meyering.net>
+2005-11-25  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 6.0-cvs.
+
+	* NEWS: df updates for "none", "proc", inaccessible file systems.
+	* src/df.c (show_point): Ignore inaccessible file systems.
+	(usage): -a includes dummy file systems, not size-0 file systems.
+
+	* src/od.c (unsigned_long_long_int): Renamed from ulonglong_t,
+	to avoid collision with POSIX name space.  All uses changed.
+
+2005-11-24  Jim Meyering  <jim@meyering.net>
 
 	* tests/Makefile.am (EXTRA_DIST): Add acl to the list.
 	* tests/acl: Add `$0: ' prefix to diagnostics.

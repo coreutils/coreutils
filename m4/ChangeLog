@@ -1,3 +1,10 @@
+2005-11-25  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* stdbool.m4 (AM_STDBOOL_H): Don't bother substituting HAVE__BOOL;
+	no longer needed.
+	(gl_STDBOOL_H): New macro, from gnulib.
+	(AC_HEADER_STDBOOL): Sync with gnulib.
+
 2005-11-20  Jim Meyering  <jim@meyering.net>
 
 	* c.m4: Remove spurious space-before-TAB.
