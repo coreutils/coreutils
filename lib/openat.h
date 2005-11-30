@@ -69,3 +69,5 @@ void openat_save_fail (int) ATTRIBUTE_NORETURN;
 #ifndef openat_ro
 # define openat_ro(Fd, File, Flags, RF) openat (Fd, File, Flags)
 #endif
+
+int mkdirat (int fd, char const *file, mode_t mode);
