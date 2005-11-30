@@ -25,47 +25,17 @@
 
 #include <stdlib.h>
 #include <stdarg.h>
-#include <stdio.h>
-#include <string.h>
 #include <unistd.h>
 #include <errno.h>
 #include <fcntl.h>
 
-#include "alloca.h"
 #include "dirname.h" /* solely for definition of IS_ABSOLUTE_FILE_NAME */
-#include "intprops.h"
 #include "save-cwd.h"
 
 #include "gettext.h"
 #define _(msgid) gettext (msgid)
 
-/* Set PROC_FD_FILENAME to the expansion of "/proc/self/fd/%d/%s" in
-   alloca'd memory, using FD and FILE, respectively for %d and %s. */
-#define BUILD_PROC_NAME(Proc_fd_filename, Fd, File)			\
-  do									\
-    {									\
-      size_t filelen = strlen (File);					\
-      static const char procfd[] = "/proc/self/fd/%d/%s";		\
-      /* Buffer for the file name we are going to use.  It consists of	\
-	 - the string /proc/self/fd/					\
-	 - the file descriptor number					\
-	 - the file name provided.					\
-	 The final NUL is included in the sizeof.			\
-	 Subtract 4 to account for %d and %s.  */			\
-      size_t buflen = sizeof (procfd) - 4 + INT_STRLEN_BOUND (Fd) + filelen; \
-      (Proc_fd_filename) = alloca (buflen);				\
-      snprintf ((Proc_fd_filename), buflen, procfd, (Fd), (File));	\
-    }									\
-  while (0)
-
-/* Trying to access a BUILD_PROC_NAME file will fail on systems without
-   /proc support, and even on systems *with* ProcFS support.  Return
-   nonzero if the failure may be legitimate, e.g., because /proc is not
-   readable, or the particular .../fd/N directory is not present.  */
-#define EXPECTED_ERRNO(Errno) \
-  ((Errno) == ENOTDIR || (Errno) == ENOENT \
-   || (Errno) == EPERM || (Errno) == EACCES \
-   || (Errno) == EOPNOTSUPP /* FreeBSD */)
+#include "openat-priv.h"
 
 /* Replacement for Solaris' openat function.
    <http://www.google.com/search?q=openat+site:docs.sun.com>
