@@ -1,3 +1,7 @@
+2005-11-30  Jim Meyering  <jim@meyering.net>
+
+	* mkdirat.c (mkdirat): New file and function.
+
 2005-11-25  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* mountlist.c (ME_DUMMY): "none" and "proc" file systems are dummies
