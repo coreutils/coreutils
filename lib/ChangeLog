@@ -1,6 +1,7 @@
 2005-11-30  Jim Meyering  <jim@meyering.net>
 
 	* mkdirat.c (mkdirat): New file and function.
+	* openat.h (mkdirat): Declare.
 
 2005-11-25  Paul Eggert  <eggert@cs.ucla.edu>
 
