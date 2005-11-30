@@ -28,6 +28,7 @@ GZIP_ENV = '--no-name --best --rsyncable'
 
 CVS = cvs
 
+# cvsu is part of the cvsutils package: http://www.red-bean.com/cvsutils/
 CVS_LIST = cvsu --find --types=AFGM
 
 ifeq ($(origin prev_version_file), undefined)
