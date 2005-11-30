@@ -1,4 +1,4 @@
-#serial 6
+#serial 7
 # See if we need to use our replacement for Solaris' openat function.
 
 dnl Copyright (C) 2004, 2005 Free Software Foundation, Inc.
@@ -11,6 +11,11 @@ dnl with or without modifications, as long as this notice is preserved.
 AC_DEFUN([gl_FUNC_OPENAT],
 [
   AC_LIBSOURCES([openat.c, openat.h, openat-die.c])
+  AC_LIBSOURCES([mkdirat.c])
+
+  # No system provides a mkdirat function; compile it unconditionally.
+  AC_LIBOBJ([mkdirat])
+
   AC_LIBOBJ([openat-die])
   AC_REQUIRE([gl_USE_SYSTEM_EXTENSIONS])
   AC_CHECK_FUNCS_ONCE([fdopendir])
