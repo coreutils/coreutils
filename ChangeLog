@@ -1,6 +1,10 @@
-2005-11-25  Paul Eggert  <eggert@cs.ucla.edu>
+2005-11-30  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* Makefile.maint: Add a comment about cvsu.
+
+2005-11-25  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: df updates for "none", "proc", inaccessible file systems.
 	* src/df.c (show_point): Ignore inaccessible file systems.
