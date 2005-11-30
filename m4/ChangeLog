@@ -1,6 +1,7 @@
 2005-11-30  Jim Meyering  <jim@meyering.net>
 
 	* openat.m4 (gl_FUNC_OPENAT): Require and compile mkdirat.c.
+	Require openat-priv.h.
 
 2005-11-25  Paul Eggert  <eggert@cs.ucla.edu>
 

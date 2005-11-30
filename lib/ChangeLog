@@ -1,5 +1,11 @@
 2005-11-30  Jim Meyering  <jim@meyering.net>
 
+	* openat-priv.h: New file, defining macros used by mkdirat.c
+	and openat.c.
+	* mkdirat.c: Include openat-priv.h.
+	Remove definitions of macros defined therein.
+	* openat.c: Likewise.
+
 	* mkdirat.c (mkdirat): New file and function.
 	* openat.h (mkdirat): Declare.
 
