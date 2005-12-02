@@ -51,10 +51,6 @@
 # endif
 #endif
 
-#if defined _LIBC && defined USE_IN_LIBIO
-# include <wchar.h>
-#endif
-
 #include <stddef.h>
 
 #ifndef ELIDE_CODE
@@ -433,12 +429,11 @@ print_and_abort (void)
      happen because the "memory exhausted" message appears in other places
      like this and the translation should be reused instead of creating
      a very similar string which requires a separate translation.  */
-# if defined _LIBC && defined USE_IN_LIBIO
-  if (_IO_fwide (stderr, 0) > 0)
-    __fwprintf (stderr, L"%s\n", _("memory exhausted"));
-  else
+# ifdef _LIBC
+  (void) __fxprintf (NULL, "%s\n", _("memory exhausted"));
+# else
+  fprintf (stderr, "%s\n", _("memory exhausted"));
 # endif
-    fprintf (stderr, "%s\n", _("memory exhausted"));
   exit (obstack_exit_failure);
 }
 

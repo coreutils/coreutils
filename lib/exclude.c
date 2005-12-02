@@ -37,6 +37,7 @@
 #include "fnmatch.h"
 #include "strcase.h"
 #include "xalloc.h"
+#include "verify.h"
 
 #if USE_UNLOCKED_IO
 # include "unlocked-io.h"
@@ -54,9 +55,6 @@ is_space (unsigned char c)
   return IN_CTYPE_DOMAIN (c) && isspace (c);
 }
 
-/* Verify a requirement at compile-time (unlike assert, which is runtime).  */
-#define verify(name, assertion) struct name { char a[(assertion) ? 1 : -1]; }
-
 /* Non-GNU systems lack these options, so we don't need to check them.  */
 #ifndef FNM_CASEFOLD
 # define FNM_CASEFOLD 0
@@ -65,11 +63,10 @@ is_space (unsigned char c)
 # define FNM_LEADING_DIR 0
 #endif
 
-verify (EXCLUDE_macros_do_not_collide_with_FNM_macros,
-	(((EXCLUDE_ANCHORED | EXCLUDE_INCLUDE | EXCLUDE_WILDCARDS)
-	  & (FNM_PATHNAME | FNM_NOESCAPE | FNM_PERIOD | FNM_LEADING_DIR
-	     | FNM_CASEFOLD))
-	 == 0));
+verify (((EXCLUDE_ANCHORED | EXCLUDE_INCLUDE | EXCLUDE_WILDCARDS)
+	 & (FNM_PATHNAME | FNM_NOESCAPE | FNM_PERIOD | FNM_LEADING_DIR
+	    | FNM_CASEFOLD))
+	== 0);
 
 /* An exclude pattern-options pair.  The options are fnmatch options
    ORed with EXCLUDE_* options.  */

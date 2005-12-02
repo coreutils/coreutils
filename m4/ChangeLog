@@ -1,3 +1,18 @@
+2005-12-01  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* regex.m4 (gl_REGEX): Check whether off_t can be used in a switch
+	statement, to work around an HP-UX 10.20 compiler bug reported by
+	Peter O'Gorman.
+
+2005-12-01  Bruno Haible  <bruno@clisp.org>
+
+	Import from gnulib.
+	* mbchar.m4 (gl_MBCHAR): Check for wchar.h and wctype.h. Don't compile
+	mbchar.c if they are not both present.
+	* mbiter.m4 (gl_MBITER): Likewise.
+	* strstr.m4 (gl_PREREQ_STRSTR): Use AC_REQUIRE.
+	* strcase.m4 (gl_PREREQ_STRCASECMP): Likewise.
+
 2005-11-30  Jim Meyering  <jim@meyering.net>
 
 	* openat.m4 (gl_FUNC_OPENAT): Require and compile mkdirat.c.

@@ -1,4 +1,4 @@
-# strcase.m4 serial 2
+# strcase.m4 serial 3
 dnl Copyright (C) 2002, 2005 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
@@ -29,7 +29,8 @@ AC_DEFUN([gl_FUNC_STRNCASECMP],
 
 # Prerequisites of lib/strcasecmp.c.
 AC_DEFUN([gl_PREREQ_STRCASECMP], [
-  gl_FUNC_MBRTOWC
+  AC_REQUIRE([gl_FUNC_MBRTOWC])
+  :
 ])
 
 # Prerequisites of lib/strncasecmp.c.

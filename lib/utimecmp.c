@@ -39,10 +39,8 @@
 #include "stat-time.h"
 #include "timespec.h"
 #include "utimens.h"
+#include "verify.h"
 #include "xalloc.h"
-
-/* Verify a requirement at compile-time (unlike assert, which is runtime).  */
-#define verify(name, assertion) struct name { char a[(assertion) ? 1 : -1]; }
 
 #ifndef MAX
 # define MAX(a, b) ((a) > (b) ? (a) : (b))
@@ -139,8 +137,8 @@ utimecmp (char const *dst_name,
 
      time_t might be unsigned.  */
 
-  verify (time_t_is_integer, TYPE_IS_INTEGER (time_t));
-  verify (twos_complement_arithmetic, TYPE_TWOS_COMPLEMENT (int));
+  verify (TYPE_IS_INTEGER (time_t));
+  verify (TYPE_TWOS_COMPLEMENT (int));
 
   /* Destination and source time stamps.  */
   time_t dst_s = dst_stat->st_mtime;

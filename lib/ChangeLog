@@ -1,3 +1,38 @@
+2005-12-01  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Sync from gnulib.
+
+	* exclude.c: Include verify.h.
+	(verify): Remove.  All callers changed to use verify.h's version.
+	* strtoimax.c: Likewise.
+	* utimecmp.c: Likewis.e
+
+	* obstack.c [defined _LIBC && defined USE_IN_LIBIO]: Don't
+	include <wchar.h>; no longer needed.
+
+2005-12-01  Jim Meyering  <jim@meyering.net>
+
+	Sync from gnulib.
+
+	* intprops.h (signed_type_or_expr__): Define.
+	(INT_STRLEN_BOUND) [__GNUC__]: Use a slightly tighter bound
+	for unsigned types.
+
+2005-12-01  Jakub Jelinek  <jakub@redhat.com>
+       and  Ulrich Drepper  <drepper@redhat.com>
+
+	Import from libc via gnulib.
+	* obstack.c (print_and_abort) [defined _LIBC]: Use __fxprintf
+	instead of inline stream orientation test and two separate
+	function calls.  Pay no attention to USE_IN_LIBIO.
+
+2005-12-01  Roland McGrath  <roland@redhat.com>
+
+	Import from libc via gnulib.  [BZ #1331]
+	* obstack.h [!__STDC__] (obstack_int_grow_fast): Fix misnamed
+	macro argument.
+	Reported by Matej Vela <vela@debian.org>.
+
 2005-11-30  Jim Meyering  <jim@meyering.net>
 
 	* openat-priv.h: New file, defining macros used by mkdirat.c

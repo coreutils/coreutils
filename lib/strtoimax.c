@@ -32,8 +32,7 @@
 
 #include <stdlib.h>
 
-/* Verify a requirement at compile-time (unlike assert, which is runtime).  */
-#define verify(name, assertion) struct name { char a[(assertion) ? 1 : -1]; }
+#include "verify.h"
 
 #ifdef UNSIGNED
 # ifndef HAVE_DECL_STRTOULL
@@ -68,15 +67,13 @@ INT
 strtoimax (char const *ptr, char **endptr, int base)
 {
 #if HAVE_LONG_LONG
-  verify (size_is_that_of_long_or_long_long,
-	  (sizeof (INT) == sizeof (long int)
-	   || sizeof (INT) == sizeof (long long int)));
+  verify (sizeof (INT) == sizeof (long int)
+	  || sizeof (INT) == sizeof (long long int));
 
   if (sizeof (INT) != sizeof (long int))
     return strtoll (ptr, endptr, base);
 #else
-  verify (size_is_that_of_long,
-	  sizeof (INT) == sizeof (long int));
+  verify (sizeof (INT) == sizeof (long int));
 #endif
 
   return strtol (ptr, endptr, base);
