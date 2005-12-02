@@ -1,4 +1,4 @@
-#serial 30
+#serial 31
 
 # Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2003, 2004, 2005 Free
 # Software Foundation, Inc.
@@ -15,8 +15,29 @@ AC_PREREQ([2.50])
 AC_DEFUN([gl_REGEX],
 [
   AC_REQUIRE([AC_SYS_LARGEFILE]) dnl for a sufficently-wide off_t
-  AC_DEFINE([_REGEX_LARGE_OFFSETS], 1,
-    [Define if you want regoff_t to be at least as wide POSIX requires.])
+
+  AC_CACHE_CHECK([whether off_t can be used in a switch statement],
+    [gl_cv_type_off_t_switch],
+    [AC_COMPILE_IFELSE(
+      [AC_LANG_PROGRAM(
+         [AC_INCLUDES_DEFAULT],
+	 [[off_t o = -1;
+	   switch (o)
+	     {
+	     case -2:
+	       return 1;
+	     case -1:
+	       return 2;
+	     default:
+	       return 0;
+	     }
+	 ]])],
+      [gl_cv_type_off_t_switch=yes],
+      [gl_cv_type_off_t_switch=no])])
+  if test $gl_cv_type_off_t_switch = yes; then
+    AC_DEFINE([_REGEX_LARGE_OFFSETS], 1,
+      [Define if you want regoff_t to be at least as wide POSIX requires.])
+  fi
 
   AC_LIBSOURCES(
     [regcomp.c, regex.c, regex.h,
