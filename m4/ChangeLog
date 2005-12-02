@@ -3,6 +3,7 @@
 	* socklen.m4 (gl_TYPE_SOCKLEN_T): Renamed from gl_SOCKLEN_T.
 	Use implementation from Albert Chin, with some
 	comments/corrections by Stepan Kasal and myself.
+	* jm-macros.m4 (gl_MACROS): Adjust to renaming.
 
 2005-12-01  Paul Eggert  <eggert@cs.ucla.edu>
 
