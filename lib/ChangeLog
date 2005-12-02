@@ -19,7 +19,7 @@
 	for unsigned types.
 
 2005-12-01  Jakub Jelinek  <jakub@redhat.com>
-       and  Ulrich Drepper  <drepper@redhat.com>
+	and  Ulrich Drepper  <drepper@redhat.com>
 
 	Import from libc via gnulib.
 	* obstack.c (print_and_abort) [defined _LIBC]: Use __fxprintf
