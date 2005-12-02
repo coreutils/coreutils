@@ -1,3 +1,9 @@
+2005-12-02  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* (gl_TYPE_SOCKLEN_T): Renamed from gl_SOCKLEN_T.
+	Use implementation from Albert Chin, with some
+	comments/corrections by Stepan Kasal and myself.
+
 2005-12-01  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* regex.m4 (gl_REGEX): Check whether off_t can be used in a switch
