@@ -70,9 +70,9 @@ if ($ENV{RUN_EXPENSIVE_TESTS})
 		     {IN=>$input}, {OUT=>$output}];
 	    push @Tests, $t;
 	    my @u = @$t;
-	    # Insert the --presume-input-pipe option.
+	    # Insert the ---presume-input-pipe option.
 	    $u[0] .= 'p';
-	    $u[1] .= ' --presume-input-pipe';
+	    $u[1] .= ' ---presume-input-pipe';
 	    push @Tests, \@u;
 	  }
       }
@@ -89,9 +89,9 @@ if ($ENV{RUN_EXPENSIVE_TESTS})
 		     {IN=>$input}, {OUT=>$output}];
 	    push @Tests, $t;
 	    my @u = @$t;
-	    # Insert the --presume-input-pipe option.
+	    # Insert the ---presume-input-pipe option.
 	    $u[0] .= 'p';
-	    $u[1] .= ' --presume-input-pipe';
+	    $u[1] .= ' ---presume-input-pipe';
 	    push @Tests, \@u;
 	  }
       }

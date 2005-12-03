@@ -31,7 +31,7 @@ ls /dev/stdin >/dev/null 2>&1 \
 
 touch f
 chmod 0 f
-rm --presume-input-tty f > out 2>&1 &
+rm ---presume-input-tty f > out 2>&1 &
 pid=$!
 
 # Wait a second, to give a buggy rm (as in fileutils-4.0.40)

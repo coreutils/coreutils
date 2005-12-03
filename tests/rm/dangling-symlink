@@ -27,7 +27,7 @@ fi
 
 fail=0
 
-rm --presume-input-tty dangle symlink &
+rm ---presume-input-tty dangle symlink &
 pid=$!
 # The buggy rm (fileutils-4.1.9) would hang here, waiting for input.
 
