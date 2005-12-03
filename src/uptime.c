@@ -59,7 +59,6 @@ print_uptime (size_t n, const STRUCT_UTMP *this)
   int loads;
 #ifdef HAVE_PROC_UPTIME
   FILE *fp;
-  double upsecs;
 
   fp = fopen ("/proc/uptime", "r");
   if (fp != NULL)
@@ -69,7 +68,7 @@ print_uptime (size_t n, const STRUCT_UTMP *this)
       if (b == buf)
 	{
 	  char *end_ptr;
-	  upsecs = c_strtod (buf, &end_ptr);
+	  double upsecs = c_strtod (buf, &end_ptr);
 	  if (buf != end_ptr)
 	    uptime = (0 <= upsecs && upsecs < TYPE_MAXIMUM (time_t)
 		      ? upsecs : -1);
