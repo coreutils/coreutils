@@ -1,6 +1,20 @@
-2005-11-30  Jim Meyering  <jim@meyering.net>
+2005-12-03  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* src/rm.c (long_opts): Change the name of each undocumented, for-
+	testing-only option to start with `-', so that it cannot render
+	ambiguous any prefix it happens to share with some other option name.
+	* src/head.c (long_options): Likewise.
+	* src/tail.c (long_options): Likewise.
+
+	* tests/misc/head-elide-tail: Update uses of undocumented, for-
+	testing-only --presume* options to start with `---'.
+	* tests/rm/dangling-symlink: Likewise.
+	* tests/rm/dir-no-w: Likewise.
+	* tests/rm/isatty: Likewise.
+
+2005-11-30  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.maint: Add a comment about cvsu.
 
