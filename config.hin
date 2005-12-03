@@ -642,7 +642,7 @@
 /* Define to 1 if you have the `mbrlen' function. */
 #undef HAVE_MBRLEN
 
-/* Define to 1 if mbrtowc and mbstate_t are properly declared. */
+/* Define to 1 if you have the `mbrtowc' function. */
 #undef HAVE_MBRTOWC
 
 /* Define to 1 if you have the `mbsinit' function. */
@@ -1723,7 +1723,7 @@
 /* Define to `unsigned int' if <sys/types.h> does not define. */
 #undef size_t
 
-/* Map `socklen_t' to `int' if it is missing. */
+/* type to use in place of socklen_t if not defined */
 #undef socklen_t
 
 /* Define as a signed type of the same size as size_t. */
