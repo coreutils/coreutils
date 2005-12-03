@@ -5,6 +5,7 @@
 	* src/rm.c (long_opts): Change the name of each undocumented, for-
 	testing-only option to start with `-', so that it cannot render
 	ambiguous any prefix it happens to share with some other option name.
+	Problem reported by Eric Blake.
 	* src/head.c (long_options): Likewise.
 	* src/tail.c (long_options): Likewise.
 
