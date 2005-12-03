@@ -88,7 +88,7 @@ static struct option const long_options[] =
 {
   {"bytes", required_argument, NULL, 'c'},
   {"lines", required_argument, NULL, 'n'},
-  {"presume-input-pipe", no_argument, NULL,
+  {"-presume-input-pipe", no_argument, NULL,
    PRESUME_INPUT_PIPE_OPTION}, /* do not document */
   {"quiet", no_argument, NULL, 'q'},
   {"silent", no_argument, NULL, 'q'},

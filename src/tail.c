@@ -203,7 +203,7 @@ static struct option const long_options[] =
   {"lines", required_argument, NULL, 'n'},
   {"max-unchanged-stats", required_argument, NULL, MAX_UNCHANGED_STATS_OPTION},
   {"pid", required_argument, NULL, PID_OPTION},
-  {"presume-input-pipe", no_argument, NULL,
+  {"-presume-input-pipe", no_argument, NULL,
    PRESUME_INPUT_PIPE_OPTION}, /* do not document */
   {"quiet", no_argument, NULL, 'q'},
   {"retry", no_argument, NULL, RETRY_OPTION},
