@@ -1,6 +1,13 @@
-2005-12-04  Jim Meyering  <jim@meyering.net>
+2005-12-05  Andreas Gruenbacher
 
 	* Version 6.0-cvs.
+
+	* src/copy.c (fchown) [!HAVE_FCHOWN]: Define fchown(...) to -1.
+	(set_owner, preserve_author): New functions, factored out of copy_reg.
+	(copy_reg): Use them.
+	(copy_internal): Use them here, too.
+
+2005-12-04  Jim Meyering  <jim@meyering.net>
 
 	* src/sleep.c (usage): Say what happens with two or more arguments.
 	Suggested by Justin Pryzby.
