@@ -1,3 +1,10 @@
+2005-12-04  Jim Meyering  <jim@meyering.net>
+
+	* openat-priv.h (EXPECTED_ERRNO): Add ENOSYS, for Solaris 8.
+	Paul Eggert reported that unlink/rmdir vs. e.g., /proc/self/fd/N/FILE
+	fails with ENOSYS.  This makes openat revert to using save-cwd.c
+	functions in that case.
+
 2005-12-01  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Sync from gnulib.
