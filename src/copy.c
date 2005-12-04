@@ -57,6 +57,7 @@
 #endif
 #ifndef HAVE_FCHOWN
 # define HAVE_FCHOWN false
+# define fchown(fd, uid, gid) (-1)
 #endif
 
 #define SAME_OWNER(A, B) ((A).st_uid == (B).st_uid)
@@ -190,6 +191,67 @@ copy_dir (char const *src_name_in, char const *dst_name_in, bool new_dst,
     }
   free (name_space);
   return ok;
+}
+
+/* Set the owner and owning group of DEST_DESC to the st_uid and
+   st_gid fields of SRC_SB.  If DEST_DESC is undefined (-1), set
+   the owner and owning group of DST_NAME instead.  DEST_DESC must
+   refer to the same file as DEST_NAME if defined.
+   Return true if successful.  */
+
+static bool
+set_owner (const struct cp_options *x, char const *dst_name, int dest_desc,
+	   uid_t uid, gid_t gid, bool *chown_succeeded)
+{
+  if (HAVE_FCHOWN && dest_desc != -1)
+    {
+      if (fchown (dest_desc, uid, gid) == 0)
+	{
+	  *chown_succeeded = true;
+	  return true;
+	}
+    }
+  else
+    {
+      if (chown (dst_name, uid, gid) == 0)
+	{
+	  *chown_succeeded = true;
+	  return true;
+	}
+    }
+  if (! chown_failure_ok (x))
+    {
+      error (0, errno, _("failed to preserve ownership for %s"),
+	     quote (dst_name));
+      if (x->require_preserve)
+	return false;
+    }
+  return true;
+}
+
+/* Set the st_author field of DEST_DESC to the st_author field of
+   SRC_SB. If DEST_DESC is undefined (-1), set the st_author field
+   of DST_NAME instead.  DEST_DESC must refer to the same file as
+   DEST_NAME if defined.  */
+
+static void
+preserve_author (const char *dst_name, int dest_desc, const struct stat *src_sb)
+{
+  /* FIXME: Preserve the st_author field via the file descriptor dest_desc.  */
+#if HAVE_STRUCT_STAT_ST_AUTHOR
+  /* Preserve the st_author field.  */
+  file_t file = file_name_lookup (dst_name, 0, 0);
+  if (file == MACH_PORT_NULL)
+    error (0, errno, _("failed to lookup file %s"), quote (dst_name));
+  else
+    {
+      error_t err = file_chauthor (file, src_sb.st_author);
+      if (err)
+	error (0, err, _("failed to preserve authorship for %s"),
+	       quote (dst_name));
+      mach_port_deallocate (mach_task_self (), file);
+    }
+#endif
 }
 
 /* Copy a regular file from SRC_NAME to DST_NAME.
@@ -463,29 +525,18 @@ copy_reg (char const *src_name, char const *dst_name,
 	}
     }
 
-#if HAVE_FCHOWN
   if (x->preserve_ownership && ! SAME_OWNER_AND_GROUP (*src_sb, sb))
     {
-      if (fchown (dest_desc, src_sb->st_uid, src_sb->st_gid) == 0)
-	*chown_succeeded = true;
-      else if (! chown_failure_ok (x))
-	{
-	  error (0, errno, _("failed to preserve ownership for %s"),
-		 quote (dst_name));
-	  if (x->require_preserve)
-	    {
-	      return_val = false;
-	      goto close_src_and_dst_desc;
-	    }
+      if (! set_owner (x, dst_name, dest_desc, src_sb->st_uid, src_sb->st_gid,
+		       chown_succeeded))
+        {
+	  return_val = false;
+	  goto close_src_and_dst_desc;
 	}
     }
-#endif
 
-#if HAVE_STRUCT_STAT_ST_AUTHOR
-  /* FIXME: Preserve the st_author field via the file descriptor dest_desc.  */
-#endif
+  preserve_author (dst_name, dest_desc, src_sb);
 
-#if HAVE_FCHMOD
   /* Permissions of newly-created regular files were set upon `open'.
      But don't return early if there were any special bits and chown
      succeeded, because the chown must have reset those bits.  */
@@ -494,17 +545,18 @@ copy_reg (char const *src_name, char const *dst_name,
       && (x->preserve_mode || *new_dst)
       && (x->copy_as_regular || S_ISREG (src_sb->st_mode)))
     {
-      if (fchmod (dest_desc, get_dest_mode (x, src_sb->st_mode)) != 0)
+      if ((HAVE_FCHMOD
+	   ? fchmod (dest_desc, get_dest_mode (x, src_sb->st_mode))
+	   : chmod  (dst_name,  get_dest_mode (x, src_sb->st_mode))) == 0)
+	goto close_src_and_dst_desc;
+
+      error (0, errno, _("setting permissions for %s"), quote (dst_name));
+      if (x->set_mode || x->require_preserve)
 	{
-	  error (0, errno, _("setting permissions for %s"), quote (dst_name));
-	  if (x->set_mode || x->require_preserve)
-	    {
-	      return_val = false;
-	      goto close_src_and_dst_desc;
-	    }
+	  return_val = false;
+	  goto close_src_and_dst_desc;
 	}
     }
-#endif
 
 close_src_and_dst_desc:
   if (close (dest_desc) < 0)
@@ -1656,6 +1708,9 @@ copy_internal (char const *src_name, char const *dst_name,
   if ( ! preserve_metadata)
     return true;
 
+  if (copied_as_regular)
+    return delayed_ok;
+
   /* POSIX says that `cp -p' must restore the following:
      - permission bits
      - setuid, setgid bits
@@ -1668,7 +1723,7 @@ copy_internal (char const *src_name, char const *dst_name,
      chown turns off set[ug]id bits for non-root,
      so do the chmod last.  */
 
-  if (!copied_as_regular && x->preserve_timestamps)
+  if (x->preserve_timestamps)
     {
       struct timespec timespec[2];
       timespec[0] = get_stat_atime (&src_sb);
@@ -1683,44 +1738,15 @@ copy_internal (char const *src_name, char const *dst_name,
     }
 
   /* Avoid calling chown if we know it's not necessary.  */
-  if (!(copied_as_regular && HAVE_FCHOWN) && x->preserve_ownership
+  if (x->preserve_ownership
       && (new_dst || !SAME_OWNER_AND_GROUP (src_sb, dst_sb)))
     {
-      if (chown (dst_name, src_sb.st_uid, src_sb.st_gid) == 0)
-	chown_succeeded = true;
-      else if (! chown_failure_ok (x))
-	{
-	  error (0, errno, _("failed to preserve ownership for %s"),
-		 quote (dst_name));
-	  if (x->require_preserve)
-	    return false;
-	}
+      if (! set_owner (x, dst_name, -1, src_sb.st_uid, src_sb.st_gid,
+		       &chown_succeeded))
+	return false;
     }
 
-#if HAVE_STRUCT_STAT_ST_AUTHOR
-  /* Preserve the st_author field.  */
-  {
-    file_t file = file_name_lookup (dst_name, 0, 0);
-    if (file == MACH_PORT_NULL)
-      error (0, errno, _("failed to lookup file %s"), quote (dst_name));
-    else
-      {
-	error_t err = file_chauthor (file, src_sb.st_author);
-	if (err)
-	  error (0, err, _("failed to preserve authorship for %s"),
-		 quote (dst_name));
-	mach_port_deallocate (mach_task_self (), file);
-      }
-  }
-#endif
-
-  /* Permissions of newly-created regular files are set by open and/or fchmod
-     in copy_reg.  But don't return early if there were any special bits and
-     chown succeeded, because the chown must have reset those bits.  */
-  if (copied_as_regular
-      && (HAVE_FCHMOD
-	  || (new_dst && !(chown_succeeded && (src_mode & ~S_IRWXUGO)))))
-    return delayed_ok;
+  preserve_author (dst_name, -1, &src_sb);
 
   if ((x->preserve_mode || new_dst)
       && (x->copy_as_regular || S_ISREG (src_type) || S_ISDIR (src_type)))
