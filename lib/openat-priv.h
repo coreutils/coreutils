@@ -45,7 +45,8 @@
    /proc support, and even on systems *with* ProcFS support.  Return
    nonzero if the failure may be legitimate, e.g., because /proc is not
    readable, or the particular .../fd/N directory is not present.  */
-#define EXPECTED_ERRNO(Errno) \
-  ((Errno) == ENOTDIR || (Errno) == ENOENT \
-   || (Errno) == EPERM || (Errno) == EACCES \
+#define EXPECTED_ERRNO(Errno)			\
+  ((Errno) == ENOTDIR || (Errno) == ENOENT	\
+   || (Errno) == EPERM || (Errno) == EACCES	\
+   || (Errno) == ENOSYS /* Solaris 8 */		\
    || (Errno) == EOPNOTSUPP /* FreeBSD */)
