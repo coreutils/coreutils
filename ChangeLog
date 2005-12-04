@@ -2,6 +2,9 @@
 
 	* Version 6.0-cvs.
 
+	* src/sleep.c (usage): Say what happens with two or more arguments.
+	Suggested by Justin Pryzby.
+
 	* src/uptime.c (print_uptime): Move decl of `upsecs' into scope
 	where it's used.
 
