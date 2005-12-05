@@ -54,7 +54,8 @@
 2005-11-25  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* mountlist.c (ME_DUMMY): "none" and "proc" file systems are dummies
-	too.
+	too.  Problem with "none" reported by Bob Proulx.  Problem with
+	"proc" reported by n0dalus.
 
 	* mountlist.c: Include <limits.h>.
 	(dev_from_mount_options)
