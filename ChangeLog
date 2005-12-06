@@ -1,6 +1,11 @@
-2005-12-05  Andreas Gruenbacher
+2005-12-06  Tomas Pospisek  <tpo@sourcepole.ch>  (tiny change)
 
 	* Version 6.0-cvs.
+
+	* man/basename.x: Cross-reference to dirname and readlink.
+	* man/dirname.x: Cross-reference to basename and readlink.
+
+2005-12-05  Andreas Gruenbacher
 
 	* src/copy.c [!HAVE_FCHOWN]: Define fchown(...) to -1.
 	(set_owner, preserve_author): New functions, factored out of copy_reg.
