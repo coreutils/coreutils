@@ -2,6 +2,8 @@
 
 	* Version 6.0-cvs.
 
+	* .x-sc_unmarked_diagnostics: Add build-aux/cvsu.
+
 	* tests/mv/acl: exit-77 before the trap, not after, if we fail
 	to create a temporary directory on another partition.
 	From Andreas Gruenbacher.
