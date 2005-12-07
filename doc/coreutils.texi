@@ -6918,6 +6918,11 @@ Use synchronized I/O for both data and metadata.
 @cindex nonblocking I/O
 Use non-blocking I/O.
 
+@item noatime
+@opindex noatime
+@cindex access time
+Do not update the file's access time.
+
 @item nofollow
 @opindex nofollow
 @cindex symbolic links, following
