@@ -1,3 +1,7 @@
+2005-12-07  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (dd invocation): New noatime flag.
+
 2005-11-25  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (df invocation): Document treatment of dummy file
