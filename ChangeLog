@@ -2,6 +2,10 @@
 
 	* Version 6.0-cvs.
 
+	Distribute the cvsu script, used only by `make syntax-check'.
+	* Makefile.am (EXTRA_DIST): Add build-aux/cvsu.
+	* Makefile.maint (CVS_LIST): Use build-aux/cvsu, now that we
+	distribute a copy of this script.
 	* .x-sc_unmarked_diagnostics: Add build-aux/cvsu.
 
 	* tests/mv/acl: exit-77 before the trap, not after, if we fail
