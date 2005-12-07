@@ -1,3 +1,10 @@
+2005-12-07  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* stat-time.h (STATE_TIMESPEC, STAT_TIMESPEC_NS): Add check for
+	TYPEOF_STRUCT_STAT_ST_ATIM_IS_STRUCT_TIMESPEC, to fix IRIX 5.3
+	porting problem reported by Georg Schwarz in
+	<http://lists.gnu.org/archive/html/bug-coreutils/2005-12/msg00083.html>.
+
 2005-12-04  Jim Meyering  <jim@meyering.net>
 
 	* openat-priv.h (EXPECTED_ERRNO): Add ENOSYS, for Solaris 8.

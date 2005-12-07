@@ -31,7 +31,11 @@
 
    These macros are private to stat-time.h.  */
 #if defined HAVE_STRUCT_STAT_ST_ATIM_TV_NSEC
-# define STAT_TIMESPEC(st, st_xtim) ((st)->st_xtim)
+# ifdef TYPEOF_STRUCT_STAT_ST_ATIM_IS_STRUCT_TIMESPEC
+#  define STAT_TIMESPEC(st, st_xtim) ((st)->st_xtim)
+# else
+#  define STAT_TIMESPEC_NS(st, st_xtim) ((st)->st_xtim.tv_nsec)
+# endif
 #elif defined HAVE_STRUCT_STAT_ST_ATIMESPEC_TV_NSEC
 # define STAT_TIMESPEC(st, st_xtim) ((st)->st_xtim##espec)
 #elif defined HAVE_STRUCT_STAT_ST_ATIMENSEC

@@ -1,3 +1,10 @@
+2005-12-07  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* stat-time.m4 (gl_STAT_TIME): Add check for
+	TYPEOF_STRUCT_STAT_ST_ATIM_IS_STRUCT_TIMESPEC, to fix IRIX 5.3
+	porting problem reported by Georg Schwarz in
+	<http://lists.gnu.org/archive/html/bug-coreutils/2005-12/msg00083.html>.
+
 2005-12-02  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* socklen.m4 (gl_TYPE_SOCKLEN_T): Renamed from gl_SOCKLEN_T.
