@@ -264,6 +264,7 @@ static struct symbol_value const flags[] =
   {"binary",	O_BINARY},
   {"direct",	O_DIRECT},
   {"dsync",	O_DSYNC},
+  {"noatime",	O_NOATIME},
   {"noctty",	O_NOCTTY},
   {"nofollow",	O_NOFOLLOW},
   {"nonblock",	O_NONBLOCK},
@@ -465,6 +466,8 @@ Each FLAG symbol may be:\n\
 	fputs (_("  sync      likewise, but also for metadata\n"), stdout);
       if (O_NONBLOCK)
 	fputs (_("  nonblock  use non-blocking I/O\n"), stdout);
+      if (O_NOATIME)
+	fputs (_("  noatime   do not update access time\n"), stdout);
       if (O_NOFOLLOW)
 	fputs (_("  nofollow  do not follow symlinks\n"), stdout);
       if (O_NOCTTY)
