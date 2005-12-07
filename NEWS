@@ -42,6 +42,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   sha384sum: print or check a SHA384 (384-bit) checksum
   sha512sum: print or check a SHA512 (512-bit) checksum
 
+** New features
+
+  dd's new iflag=noatime option causes it to read a file without
+  updating its access time, on hosts that support this (currently only
+  Linux kernels, version 2.6.8 and later).
+
 ** Bug fixes
 
   rm (on systems with openat) can no longer exit before processing
