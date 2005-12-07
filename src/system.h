@@ -168,6 +168,10 @@ initialize_exit_failure (int status)
 # define O_NDELAY 0
 #endif
 
+#if !defined O_NOATIME
+# define O_NOATIME 0
+#endif
+
 #if !defined O_NONBLOCK
 # define O_NONBLOCK O_NDELAY
 #endif
