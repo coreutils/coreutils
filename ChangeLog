@@ -1,6 +1,12 @@
-2005-12-06  Tomas Pospisek  <tpo@sourcepole.ch>  (tiny change)
+2005-12-07  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* tests/mv/acl: exit-77 before the trap, not after, if we fail
+	to create a temporary directory on another partition.
+	From Andreas Gruenbacher.
+
+2005-12-06  Tomas Pospisek  <tpo@sourcepole.ch>  (tiny change)
 
 	* man/basename.x: Cross-reference to dirname and readlink.
 	* man/dirname.x: Cross-reference to basename and readlink.
