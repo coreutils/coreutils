@@ -22,6 +22,16 @@ rm $tmp_out
 dd -- if=$tmp_in of=$tmp_out > /dev/null 2>&1 || fail=1
 cmp $tmp_in $tmp_out || fail=1
 
+old_ls=`ls -u --full-time $tmp_in`
+sleep 1
+if dd iflags=noatime if=$tmp_in of=$tmp_out > /dev/null 2>&1; then
+  new_ls=`ls -u --full-time $tmp_in`
+  if test "x$old_ls" != "x$new_ls"; then
+    echo "dd iflags=noatime updated atime; O_NOATIME bug in your kernel?" >&2
+    fail=1
+  fi
+fi
+
 rm -f $tmp_in $tmp_out
 
 exit $fail

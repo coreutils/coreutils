@@ -1,6 +1,10 @@
-2005-12-09  Jim Meyering  <jim@meyering.net>
+2005-12-09  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 6.0-cvs.
+
+	* tests/dd/misc: Add test for dd iflags=noatime.
+
+2005-12-09  Jim Meyering  <jim@meyering.net>
 
 	* src/sort.c (usage): Mention white space vs -b and -t options.
 	From The Wanderer.
