@@ -822,7 +822,7 @@ main (int margc, char **margv)
 	 "[" form, and when the last argument is not "]".  POSIX
 	 allows "[ --help" and "[ --version" to have the usual GNU
 	 behavior, but it requires "test --help" and "test --version"
-	 to exit silently with status 1.  */
+	 to exit silently with status 0.  */
       if (margc < 2 || !STREQ (margv[margc - 1], "]"))
 	{
 	  parse_long_options (margc, margv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
