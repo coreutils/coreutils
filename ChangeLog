@@ -1,6 +1,11 @@
-2005-12-09  Eric Blake  <ebb9@byu.net>
+2005-12-09  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* src/sort.c (usage): Mention white space vs -b and -t options.
+	From The Wanderer.
+
+2005-12-09  Eric Blake  <ebb9@byu.net>
 
 	* src/test.c (main): Fix misleading comment.
 
