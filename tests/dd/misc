@@ -1,4 +1,6 @@
 #!/bin/sh
+# Ensure dd treats `--' properly.
+# Also ensure that iflags=noatime works.
 
 tmp_in=dd-in.$$
 tmp_out=dd-out.$$
