@@ -1,6 +1,25 @@
-2005-12-09  Paul Eggert  <eggert@cs.ucla.edu>
+2005-12-10  Frederik Eaton  <frederik@ofb.net>
 
 	* Version 6.0-cvs.
+
+	* src/Makefile.am (sort_LDADD): Add $(LIB_GETHRXTIME).
+	(shred_SOURCES, sort_SOURCES): New macros, so we compile rand-isaac.c.
+	* src/rand-isaac.c: New file, containing ISAAC code that was in shred.c.
+	Make state size runtime-configurable.
+	(isaac_new, isaac_copy): New functions.
+	* src/rand-isaac.h: New file.
+	* src/shred.c: Include rand-isaac.h.  Move ISAAC code to rand-isaac.c.
+	(fillrand, main): Adjust to the fact that the state size is now
+	runtime-configurable.
+	* src/sort.c (short_options, long_options, WORDS, keycompare, main):
+	(usage): Add options --random-sort and --seed to implement a random
+	shuffle.
+	Include md5.h and rand-isaac.h.
+	(get_hash): New function.
+	(rand_state): New var.
+	(HASH_WORDS, HASH_SIZE): New macros.
+
+2005-12-09  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* tests/dd/misc: Add test for dd iflags=noatime.
 
