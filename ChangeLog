@@ -2,6 +2,10 @@
 
 	* Version 6.0-cvs.
 
+	* src/sort.c (get_hash): Change position of `*' in parameter
+	type to conform with convention.
+	(main): Split a long line so it fits in 80 columns.
+
 	* src/shred.c: Don't include gethrxtime.h.  No longer needed.
 
 	* tests/misc/sort-rand: New file: basic tests for the new options.
