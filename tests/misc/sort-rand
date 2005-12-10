@@ -1,0 +1,37 @@
+#!/bin/sh
+# Ensure that sort --sort-random doesn't sort.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  sort --version
+fi
+
+pwd=`pwd`
+t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
+trap 'status=$?; cd $pwd; chmod -R u+rwx $t0; rm -rf $t0 && exit $status' 0
+trap '(exit $?); exit $?' 1 2 13 15
+
+framework_failure=0
+mkdir -p $tmp || framework_failure=1
+cd $tmp || framework_failure=1
+seq 100 > in || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo "$0: failure in testing framework" 1>&2
+  (exit 1); exit 1
+fi
+
+fail=0
+
+sort --seed=$$ --random-sort in > out || fail=1
+
+# Fail if the input is the same as the output.
+# This is a probabilistic test :-)
+# However, the odds of failure are very low: 1 in 100! (~ 1 in 10^158)
+cmp in out > /dev/null && { fail=1; echo "not random?" 1>&2; }
+
+# Fail if the sorted output is not the same as the input.
+sort -n out > out1
+cmp in out1 || { fail=1; echo "not a permutation" 1>&2; }
+
+(exit $fail); exit $fail
