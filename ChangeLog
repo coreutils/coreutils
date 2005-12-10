@@ -1,3 +1,7 @@
+2005-12-10  Jim Meyering  <jim@meyering.net>
+
+	* tests/misc/sort-rand: New file: basic tests for the new options.
+
 2005-12-10  Frederik Eaton  <frederik@ofb.net>
 
 	* Version 6.0-cvs.
