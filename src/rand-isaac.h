@@ -64,8 +64,6 @@ isaac_copy (struct isaac_state *dst, struct isaac_state *src);
 void
 isaac_refill (struct isaac_state *s, uint32_t r[/* s->words */]);
 void
-isaac_mix (struct isaac_state *s, uint32_t const seed[/* s->words */]);
-void
 isaac_init (struct isaac_state *s, uint32_t const *seed, size_t seedsize);
 void
 isaac_seed_start (struct isaac_state *s);
