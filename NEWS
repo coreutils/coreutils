@@ -48,6 +48,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   updating its access time, on hosts that support this (currently only
   Linux kernels, version 2.6.8 and later).
 
+  sort now accepts the --random-sort (-R) option and `R' ordering option,
+  as well as the --seed=STRING option.
+
 ** Bug fixes
 
   rm (on systems with openat) can no longer exit before processing
