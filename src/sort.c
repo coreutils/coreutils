@@ -1224,7 +1224,7 @@ keycompare (const struct line *a, const struct line *b)
           get_hash (texta, lena, diga);
           get_hash (textb, lenb, digb);
           diff = memcmp (diga, digb, sizeof (diga));
- 	  if (diff)
+	  if (diff)
 	    goto not_equal;
         }
 
