@@ -1172,7 +1172,7 @@ static struct isaac_state *rand_state;
 #define HASH_SIZE (HASH_WORDS * sizeof (uint32_t))
 
 static void
-get_hash (char const* text, size_t len, uint32_t resbuf[/*HASH_WORDS*/])
+get_hash (char const *text, size_t len, uint32_t resbuf[/*HASH_WORDS*/])
 {
   struct isaac_state s;
   int i;
@@ -2242,7 +2242,8 @@ main (int argc, char **argv)
   gkey.sword = gkey.eword = SIZE_MAX;
   gkey.ignore = NULL;
   gkey.translate = NULL;
-  gkey.numeric = gkey.general_numeric = gkey.random_hash = gkey.month = gkey.reverse = false;
+  gkey.numeric = gkey.general_numeric = gkey.random_hash = false;
+  gkey.month = gkey.reverse = false;
   gkey.skipsblanks = gkey.skipeblanks = false;
 
   files = xnmalloc (argc, sizeof *files);
