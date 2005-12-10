@@ -2,6 +2,11 @@
 
 	* Version 6.0-cvs.
 
+	* src/rand-isaac.c (isaac_mix): Declare to be static.
+	Mark all other functions as `extern' so the tight-scope
+	part of `make distcheck' passes once again.
+	* src/rand-isaac.h (isaac_mix): Remove declaration.
+
 	* src/sort.c (get_hash): Change position of `*' in parameter
 	type to conform with convention.
 	(main): Split a long line so it fits in 80 columns.
