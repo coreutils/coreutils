@@ -3396,6 +3396,15 @@ To compare such strings numerically, use the
 Reverse the result of comparison, so that lines with greater key values
 appear earlier in the output instead of later.
 
+@item -R
+@itemx --random-sort
+@opindex -R
+@opindex --random-sort
+@cindex random sort
+
+Sort by random hash, i.e. perform a shuffle. This is done by hashing
+the input keys and sorting based on the results.
+
 @end table
 
 Other options are:
@@ -3528,6 +3537,11 @@ This option can be useful in conjunction with @samp{perl -0} or
 @samp{find -print0} and @samp{xargs -0} which do the same in order to
 reliably handle arbitrary file names (even those containing blanks
 or other special characters).
+
+@itemx --seed @var{tempdir}
+@opindex --seed
+@cindex specify seed for random hash
+Specify a seed for the @option{--random-sort} option.
 
 @end table
 
@@ -3694,6 +3708,16 @@ by the sort operation.
 @c @example
 @c printf 'c\n\nb\n\na\n'|perl -0pe 's/\n\n/\n\0/g'|sort -z|perl -0pe 's/\0/\n/g'
 @c @end example
+
+@item
+Shuffle a list of directories, but preserve the order of files within
+each directory.  For instance, one could use this to generate a music
+playlist in which albums are shuffled but the songs of each album are
+played in order.
+
+@example
+find . -maxdepth 2 -type f | sort -t / -k2,2R -k3,3
+@end example
 
 @end itemize
 
