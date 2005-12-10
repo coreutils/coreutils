@@ -2,6 +2,8 @@
 
 	* Version 6.0-cvs.
 
+	* NEWS: Mention sort's new options.
+
 	* src/rand-isaac.c (isaac_mix): Declare to be static.
 	Mark all other functions as `extern' so the tight-scope
 	part of `make distcheck' passes once again.
