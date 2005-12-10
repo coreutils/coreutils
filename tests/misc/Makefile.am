@@ -12,6 +12,7 @@ TESTS_ENVIRONMENT = \
   PROG=$$tst
 
 TESTS = \
+  sort-rand \
   sha224sum \
   sha256sum \
   sha384sum \
