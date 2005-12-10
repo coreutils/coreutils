@@ -1,10 +1,11 @@
 2005-12-10  Jim Meyering  <jim@meyering.net>
 
+	* Version 6.0-cvs.
+
 	* tests/misc/sort-rand: New file: basic tests for the new options.
+	* tests/misc/Makefile.am (TESTS): Add sort-rand.
 
 2005-12-10  Frederik Eaton  <frederik@ofb.net>
-
-	* Version 6.0-cvs.
 
 	* src/Makefile.am (sort_LDADD): Add $(LIB_GETHRXTIME).
 	(shred_SOURCES, sort_SOURCES): New macros, so we compile rand-isaac.c.
