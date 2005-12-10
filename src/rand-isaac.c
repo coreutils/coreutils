@@ -56,7 +56,7 @@
  * must be a power of 2, and should be at least 8. Smaller values give
  * less security.
  */
-struct isaac_state *
+extern struct isaac_state *
 isaac_new (struct isaac_state *s, int words)
 {
   size_t w;
@@ -76,7 +76,7 @@ isaac_new (struct isaac_state *s, int words)
  * Copy a state. Destination block must be at least as large as
  * source.
  */
-void
+extern void
 isaac_copy (struct isaac_state *dst, struct isaac_state *src)
 {
   memcpy(dst, src, ISAAC_SIZE (src->words));
@@ -85,7 +85,7 @@ isaac_copy (struct isaac_state *dst, struct isaac_state *src)
 /*
  * Refill the entire R array, and update S.
  */
-void
+extern void
 isaac_refill (struct isaac_state *s, uint32_t r[/* s>-words */])
 {
   uint32_t a, b;		/* Caches of a and b */
@@ -134,7 +134,7 @@ isaac_refill (struct isaac_state *s, uint32_t r[/* s>-words */])
    a += b                        )
 
 /* The basic ISAAC initialization pass.  */
-void
+static void
 isaac_mix (struct isaac_state *s, uint32_t const seed[/* s->words */])
 {
   int i;
@@ -191,7 +191,7 @@ isaac_mix (struct isaac_state *s, uint32_t const seed[/* s->words */])
  * to support larger seed sizes. For seed sizes of 0 and s->words *
  * sizeof (uint32_t), it is identical.
  */
-void
+extern void
 isaac_init (struct isaac_state *s, uint32_t const *seed, size_t seedsize)
 {
   static uint32_t const iv[8] =
@@ -238,7 +238,7 @@ isaac_init (struct isaac_state *s, uint32_t const *seed, size_t seedsize)
 #endif
 
 /* Start seeding an ISAAC structire */
-void
+extern void
 isaac_seed_start (struct isaac_state *s)
 {
   static uint32_t const iv[8] =
@@ -266,7 +266,7 @@ isaac_seed_start (struct isaac_state *s)
 }
 
 /* Add a buffer of seed material */
-void
+extern void
 isaac_seed_data (struct isaac_state *s, void const *buffer, size_t size)
 {
   unsigned char const *buf = buffer;
@@ -298,7 +298,7 @@ isaac_seed_data (struct isaac_state *s, void const *buffer, size_t size)
 
 
 /* End of seeding phase; get everything ready to produce output. */
-void
+extern void
 isaac_seed_finish (struct isaac_state *s)
 {
   isaac_mix (s, s->mm);
@@ -312,7 +312,7 @@ isaac_seed_finish (struct isaac_state *s)
  * Get seed material.  16 bytes (128 bits) is plenty, but if we have
  * /dev/urandom, we get 32 bytes = 256 bits for complete overkill.
  */
-void
+extern void
 isaac_seed (struct isaac_state *s)
 {
   isaac_seed_start (s);
@@ -352,7 +352,7 @@ isaac_seed (struct isaac_state *s)
   isaac_seed_finish (s);
 }
 
-void
+extern void
 irand_init (struct irand_state *r, struct isaac_state *s)
 {
   r->numleft = 0;
@@ -365,7 +365,7 @@ irand_init (struct irand_state *r, struct isaac_state *s)
  * only a small number of values, we choose the final ones which are
  * marginally better mixed than the initial ones.
  */
-uint32_t
+extern uint32_t
 irand32 (struct irand_state *r)
 {
   if (!r->numleft)
@@ -387,7 +387,7 @@ irand32 (struct irand_state *r)
  * than 2^32 % n are disallowed, and if the RNG produces one, we ask
  * for a new value.
  */
-uint32_t
+extern uint32_t
 irand_mod (struct irand_state *r, uint32_t n)
 {
   uint32_t x;
