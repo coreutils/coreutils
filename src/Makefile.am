@@ -69,7 +69,7 @@ shred_LDADD = $(LDADD) $(LIB_GETHRXTIME) $(LIB_FDATASYNC)
 vdir_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME)
 
 ## If necessary, add -lm to resolve use of pow in lib/strtod.c.
-sort_LDADD = $(LDADD) $(POW_LIB)
+sort_LDADD = $(LDADD) $(POW_LIB) $(LIB_GETHRXTIME)
 
 # for get_date and gettime
 date_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME)
@@ -166,6 +166,8 @@ vdir_SOURCES = ls.c ls-vdir.c
 ls_SOURCES = ls.c ls-ls.c
 chown_SOURCES = chown.c chown-core.c
 chgrp_SOURCES = chgrp.c chown-core.c
+shred_SOURCES = shred.c rand-isaac.c
+sort_SOURCES = sort.c rand-isaac.c
 
 mv_SOURCES = mv.c copy.c cp-hash.c remove.c
 rm_SOURCES = rm.c remove.c
