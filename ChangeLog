@@ -5,6 +5,8 @@
 	* src/sort.c (get_hash): Change position of `*' in parameter
 	type to conform with convention.
 	(main): Split a long line so it fits in 80 columns.
+	(keycompare): Remove stray SPACE before TAB that was
+	causing `make distcheck' to fail.
 
 	* src/shred.c: Don't include gethrxtime.h.  No longer needed.
 
