@@ -34,9 +34,18 @@ bin_PROGRAMS = [ chgrp chown chmod cp dd dircolors du \
 noinst_PROGRAMS = setuidgid
 
 noinst_HEADERS = \
-  system.h copy.h cp-hash.h ls.h dircolors.h remove.h \
-  chown-core.h fs.h \
-  wheel.h wheel-size.h
+  chown-core.h \
+  copy.h \
+  cp-hash.h \
+  dircolors.h \
+  fs.h \
+  ls.h \
+  rand-isaac.h \
+  remove.h \
+  system.h \
+  wheel-size.h \
+  wheel.h
+
 EXTRA_DIST = dcgen dircolors.hin tac-pipe.c \
   groups.sh wheel-gen.pl extract-magic
 CLEANFILES = $(SCRIPTS) su
