@@ -4,7 +4,7 @@
 
 	Avoid shred segfault on 64-bit systems.
 	* src/rand-isaac.c (isaac_refill): Don't try to negate a
-	local of type uint32_t.  Convert it to int32_t first.
+	local of type uint32_t.  Make the local an `int' instead.
 
 	* NEWS: Mention sort's new options.
 
