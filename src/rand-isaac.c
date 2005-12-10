@@ -105,15 +105,18 @@ isaac_refill (struct isaac_state *s, uint32_t r[/* s>-words */])
       r += 4;
     }
   while ((m += 4) < s->mm + w / 2);
+
   do
     {
-      isaac_step (s, a << 13, a, b, m, -w / 2, r);
-      isaac_step (s, a >> 6, a, b, m + 1, -w / 2, r + 1);
-      isaac_step (s, a << 2, a, b, m + 2, -w / 2, r + 2);
-      isaac_step (s, a >> 16, a, b, m + 3, -w / 2, r + 3);
+      int32_t zz = w;
+      isaac_step (s, a << 13, a, b, m, -zz / 2, r);
+      isaac_step (s, a >> 6, a, b, m + 1, -zz / 2, r + 1);
+      isaac_step (s, a << 2, a, b, m + 2, -zz / 2, r + 2);
+      isaac_step (s, a >> 16, a, b, m + 3, -zz / 2, r + 3);
       r += 4;
     }
   while ((m += 4) < s->mm + w);
+
   s->a = a;
   s->b = b;
 }
