@@ -2,6 +2,8 @@
 
 	* Version 6.0-cvs.
 
+	* src/shred.c: Don't include gethrxtime.h.  No longer needed.
+
 	* tests/misc/sort-rand: New file: basic tests for the new options.
 	* tests/misc/Makefile.am (TESTS): Add sort-rand.
 
