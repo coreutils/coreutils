@@ -30,10 +30,8 @@
 #include "error.h"
 #include "hard-locale.h"
 #include "inttostr.h"
-#include "md5.h"
 #include "physmem.h"
 #include "posixver.h"
-#include "rand-isaac.h"
 #include "quote.h"
 #include "stdlib--.h"
 #include "stdio--.h"
@@ -79,7 +77,7 @@ double strtod ();
 # define DEFAULT_TMPDIR "/tmp"
 #endif
 
-#define SORT_ISAAC_WORDS 8
+#include "rand-isaac.c"
 
 /* Exit statuses.  */
 enum
@@ -151,7 +149,7 @@ struct keyfield
   bool numeric;			/* Flag for numeric comparison.  Handle
 				   strings of digits with optional decimal
 				   point, but no exponential notation. */
-  bool random_hash;		/* Shuffle by sorting on random hash of key */
+  bool random;			/* Sort by random hash of key.  */
   bool general_numeric;		/* Flag for general, numeric comparison.
 				   Handle numbers in exponential notation. */
   bool month;			/* Flag for comparison by month name. */
@@ -319,7 +317,7 @@ Other options:\n\
   -k, --key=POS1[,POS2]     start a key at POS1, end it at POS2 (origin 1)\n\
   -m, --merge               merge already sorted files; do not sort\n\
   -o, --output=FILE         write result to FILE instead of standard output\n\
-      --seed=STRING         use specified seed for random number generator\n\
+      --seed=STRING         seed random hash function with STRING\n\
   -s, --stable              stabilize sort by disabling last-resort comparison\n\
   -S, --buffer-size=SIZE    use SIZE for main memory buffer\n\
 "), stdout);
@@ -361,11 +359,14 @@ native byte values.\n\
   exit (status);
 }
 
-static char const short_options[] = "-bcdfgik:mMno:rRsS:t:T:uy:z";
+/* For long options that have no equivalent short option, use a
+   non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
 {
   SEED_OPTION = CHAR_MAX + 1
 };
+
+static char const short_options[] = "-bcdfgik:mMno:rRsS:t:T:uy:z";
 
 static struct option const long_options[] =
 {
@@ -1166,27 +1167,19 @@ getmonth (char const *month, size_t len)
   return 0;
 }
 
-static struct isaac_state *rand_state;
+/* The ISAAC state resulting from the user-specified seed, or from
+   random data taken from the environment.  */
+static struct isaac_state rand_state;
 
-#define HASH_WORDS 1
-#define HASH_SIZE (HASH_WORDS * sizeof (uint32_t))
-
+/* Set *RESULT to the ISAAC state resulting from applying TEXT (with
+   length LEN) to rand_state.  */
 static void
-get_hash (char const *text, size_t len, uint32_t resbuf[/*HASH_WORDS*/])
+get_hash (char const *text, size_t len, uint32_t resbuf[ISAAC_WORDS])
 {
-  struct isaac_state s;
-  int i;
-  isaac_copy (&s, rand_state);
+  struct isaac_state s = rand_state;
   isaac_seed_data (&s, text, len);
-  /* we can call isaac_seed_finish multiple times, but should only
-     call isaac_seed_start once */
   isaac_seed_finish (&s);
-
-  /* getting an irand_state and drawing random numbers would be more
-     kosher here, but also slower. so we just peek at the ISAAC state
-     array instead */
-  for (i = 0; i < HASH_WORDS; i++)
-    resbuf[i] = s.mm[s.words - 1 - i];
+  isaac_refill (&s, resbuf);
 }
 
 /* Compare two lines A and B trying every key in sequence until there
@@ -1217,15 +1210,27 @@ keycompare (const struct line *a, const struct line *b)
 
       /* Actually compare the fields. */
 
-      if (key->random_hash)
+      if (key->random)
         {
-          uint32_t diga[HASH_WORDS];
-          uint32_t digb[HASH_WORDS];
+	  int i;
+	  uint32_t diga[ISAAC_WORDS];
+	  uint32_t digb[ISAAC_WORDS];
           get_hash (texta, lena, diga);
           get_hash (textb, lenb, digb);
-          diff = memcmp (diga, digb, sizeof (diga));
-	  if (diff)
-	    goto not_equal;
+
+	  /* Go backwards, since the last words are marginally better
+	     mixed.  */
+	  for (i = ISAAC_WORDS - 1; 0 <= i; i--)
+	    if (diga[i] != digb[i])
+	      {
+		diff = (diga[i] < digb[i] ? -1 : 1);
+		goto not_equal;
+	      }
+
+	  /* FIXME: Should break ties by rehashing with a different
+	     random hashing function (and repeat until the tie is
+	     broken) unless --seed was specified.  The probability of
+	     this being needed should be infinitesimal.  */
         }
 
       if (key->numeric | key->general_numeric)
@@ -2038,7 +2043,6 @@ badfieldspec (char const *spec, char const *msgid)
 {
   error (SORT_FAILURE, 0, _("%s: invalid field specification %s"),
 	 _(msgid), quote (spec));
-  /* added to satisfy compiler for NORETURN: */
   abort ();
 }
 
@@ -2132,7 +2136,7 @@ set_ordering (const char *s, struct keyfield *key, enum blanktype blanktype)
 	  key->numeric = true;
 	  break;
 	case 'R':
-	  key->random_hash = true;
+	  key->random = true;
 	  break;
 	case 'r':
 	  key->reverse = true;
@@ -2162,8 +2166,8 @@ main (int argc, char **argv)
   int c = 0;
   bool checkonly = false;
   bool mergeonly = false;
-  char const *randseed = NULL;
-  bool need_rand = false;
+  char const *seed = NULL;
+  bool need_random = false;
   size_t nfiles = 0;
   bool posixly_correct = (getenv ("POSIXLY_CORRECT") != NULL);
   bool obsolete_usage = (posix2_version () < 200112);
@@ -2242,7 +2246,7 @@ main (int argc, char **argv)
   gkey.sword = gkey.eword = SIZE_MAX;
   gkey.ignore = NULL;
   gkey.translate = NULL;
-  gkey.numeric = gkey.general_numeric = gkey.random_hash = false;
+  gkey.numeric = gkey.general_numeric = gkey.random = false;
   gkey.month = gkey.reverse = false;
   gkey.skipsblanks = gkey.skipeblanks = false;
 
@@ -2397,7 +2401,7 @@ main (int argc, char **argv)
 	  break;
 
         case SEED_OPTION:
-          randseed = optarg;
+	  seed = optarg;
           break;
 
 	case 's':
@@ -2474,16 +2478,14 @@ main (int argc, char **argv)
 	}
     }
 
-  need_rand |= gkey.random_hash;
   /* Inheritance of global options to individual keys. */
   for (key = keylist; key; key = key->next)
     {
-      need_rand |= key->random_hash;
       if (! (key->ignore || key->translate
              || (key->skipsblanks | key->reverse
                  | key->skipeblanks | key->month | key->numeric
                  | key->general_numeric
-                 | key->random_hash)))
+                 | key->random)))
         {
           key->ignore = gkey.ignore;
           key->translate = gkey.translate;
@@ -2492,30 +2494,34 @@ main (int argc, char **argv)
           key->month = gkey.month;
           key->numeric = gkey.numeric;
           key->general_numeric = gkey.general_numeric;
-          key->random_hash = gkey.random_hash;
+          key->random = gkey.random;
           key->reverse = gkey.reverse;
         }
-    }
 
-  if (need_rand)
-    {
-      rand_state = isaac_new (NULL, SORT_ISAAC_WORDS);
-      if (randseed)
-        {
-          isaac_seed_start (rand_state);
-          isaac_seed_data (rand_state, randseed, strlen (randseed));
-          isaac_seed_finish (rand_state);
-        }
-      else
-        isaac_seed (rand_state);
+      need_random |= key->random;
     }
 
   if (!keylist && (gkey.ignore || gkey.translate
 		   || (gkey.skipsblanks | gkey.skipeblanks | gkey.month
 		       | gkey.numeric | gkey.general_numeric
-                       | gkey.random_hash)))
-    insertkey (&gkey);
+                       | gkey.random)))
+    {
+      insertkey (&gkey);
+      need_random |= gkey.random;
+    }
+
   reverse = gkey.reverse;
+
+  if (need_random)
+    {
+      if (seed)
+	{
+	  isaac_seed_start (&rand_state);
+	  isaac_seed_data (&rand_state, seed, strlen (seed));
+	}
+      else
+	isaac_seed (&rand_state);
+    }
 
   if (temp_dir_count == 0)
     {
