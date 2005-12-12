@@ -1,3 +1,8 @@
+2005-12-12  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (sort invocation): Clarify explanation of
+	--random-sort, and use a simpler example.
+
 2005-12-10  Frederik Eaton  <frederik@ofb.net>
 
 	* coreutils.texi (sort invocation): Add --random-sort (-R) and --seed.
