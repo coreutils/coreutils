@@ -3401,9 +3401,10 @@ appear earlier in the output instead of later.
 @opindex -R
 @opindex --random-sort
 @cindex random sort
-
-Sort by random hash, i.e. perform a shuffle. This is done by hashing
-the input keys and sorting based on the results.
+Sort by hashing the input keys and then sorting the hash values.  This
+is much like a random shuffle of the inputs, except that keys with the
+same value sort together.  Normally the hash function is chosen at
+random, but this can be overridden with the @option{--seed} option.
 
 @end table
 
@@ -3538,10 +3539,16 @@ This option can be useful in conjunction with @samp{perl -0} or
 reliably handle arbitrary file names (even those containing blanks
 or other special characters).
 
-@itemx --seed @var{tempdir}
+@item --seed=@var{string}
 @opindex --seed
-@cindex specify seed for random hash
-Specify a seed for the @option{--random-sort} option.
+@cindex seed for random hash
+Use data from @var{string} to choose the hash function used by the
+@option{--random-sort} option.  This option can be used to reproduce
+results of earlier invocations of @command{sort} with
+@option{--random-sort}.  However, results are not necessarily
+reproducible across different @command{sort} implementations (e.g.,
+@command{sort} on little-endian versus big-endian architectures, or
+from one version of @command{sort} to the next).
 
 @end table
 
@@ -3716,7 +3723,7 @@ playlist in which albums are shuffled but the songs of each album are
 played in order.
 
 @example
-find . -maxdepth 2 -type f | sort -t / -k2,2R -k3,3
+ls */* | sort -t / -k 1,1R -k 2,2
 @end example
 
 @end itemize
