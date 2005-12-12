@@ -2,14 +2,24 @@
 
 	* Version 6.0-cvs.
 
+	Install a more-conservative approach for sort -R.  It's the
+	same basic idea as the existing code, except it uses the full ISAAC
+	approach (called the "more kosher" approach in the existing comments).
+	This makes "sort -R" quite a bit slower (about a factor of 2 on my
+	little tests involving 10000 lines on a 2.4 GHz P4), but I think it's
+	better to be conservative here at first, and review any performance
+	improvements carefully.
+	* .x-sc_require_config_h: Add src/rand-isaac.c.
 	* src/rand-isaac.h: Remove.  All uses now simply include rand-isaac.c.
 	* src/Makefile.am (noinst_HEADERS): Remove rand-isaac.h.
 	(shred_SOURCES, sort_SOURCES): Remove.
+	(EXTRA_DIST): Add rand-isaac.c.
 	* src/rand-isaac.c: Revert to what used to be in shred.c, without
 	changing it to allow for varying numbers of words in the state.
 	Alter so that we include rand-isaac.c directly rather than
 	compiling it and linking to it.  Don't include config.h or
 	system.h; that's the includer's responsibility.
+	Omit functions that are specific to shred.
 	(ISAAC_LOG, ISAAC_WORDS, ISAAC_BYTES, struct isaac_state, ind):
 	(isaac_step, struct irand_state):
 	Resurrect these, with the same defns that used to be in shred.c.
@@ -20,9 +30,12 @@
 	(isaac_seed_start, isaac_seed_data, isaac_seed_finish, isaac_seed):
 	(irand_init, irand32, irand_mod):
 	Number of words is constant again.
+	(struct irand_state, irand_init, irand32, irand_mod): Move to shred.c.
 	* src/shred.c: Include rand-isaac.c rather than rand-isaac.h.
 	* src/sort.c: Likewise.
 	* src/shred.c (fillrand, dopass, main): Undo previous change.
+	(struct irand_state, irand_init, irand32, irand_mod): Moved back here,
+	from rand-isaac.c.
 	* src/sort.c: Don't include md5.h; it wasn't needed.
 	(struct keyfield): Rename random_hash to random, for consistency
 	with the other member names.  All uses changed.
