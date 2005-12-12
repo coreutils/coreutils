@@ -22,4 +22,5 @@
 ^src/ls-dir\.c$
 ^src/ls-ls\.c$
 ^src/ls-vdir\.c$
+^src/rand-isaac\.c$
 ^src/tac-pipe\.c$
