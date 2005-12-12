@@ -40,7 +40,6 @@ noinst_HEADERS = \
   dircolors.h \
   fs.h \
   ls.h \
-  rand-isaac.h \
   remove.h \
   system.h \
   wheel-size.h \
@@ -175,8 +174,6 @@ vdir_SOURCES = ls.c ls-vdir.c
 ls_SOURCES = ls.c ls-ls.c
 chown_SOURCES = chown.c chown-core.c
 chgrp_SOURCES = chgrp.c chown-core.c
-shred_SOURCES = shred.c rand-isaac.c
-sort_SOURCES = sort.c rand-isaac.c
 
 mv_SOURCES = mv.c copy.c cp-hash.c remove.c
 rm_SOURCES = rm.c remove.c
