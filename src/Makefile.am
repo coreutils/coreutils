@@ -45,7 +45,7 @@ noinst_HEADERS = \
   wheel-size.h \
   wheel.h
 
-EXTRA_DIST = dcgen dircolors.hin tac-pipe.c \
+EXTRA_DIST = dcgen dircolors.hin rand-isaac.c tac-pipe.c \
   groups.sh wheel-gen.pl extract-magic
 CLEANFILES = $(SCRIPTS) su
 
