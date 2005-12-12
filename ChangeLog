@@ -1,6 +1,44 @@
-2005-12-10  Jim Meyering  <jim@meyering.net>
+2005-12-12  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 6.0-cvs.
+
+	* src/rand-isaac.h: Remove.  All uses now simply include rand-isaac.c.
+	* src/Makefile.am (noinst_HEADERS): Remove rand-isaac.h.
+	* src/rand-isaac.c: Revert to what used to be in shred.c, without
+	changing it to allow for varying numbers of words in the state.
+	Alter so that we include rand-isaac.c directly rather than
+	compiling it and linking to it.  Don't include config.h or
+	system.h; that's the includer's responsibility.
+	(ISAAC_LOG, ISAAC_WORDS, ISAAC_BYTES, struct isaac_state, ind):
+	(isaac_step, struct irand_state):
+	Resurrect these, with the same defns that used to be in shred.c.
+	(ISAAC_SIZE, isaac_new, isaac_copy): Remove.
+	(isaac_refill, isaac_seed_start, isaac_seed_data, irand_init, irand32):
+	static again.
+	(struct isaac_state, isaac_refill, isaac_mix, isaac_init):
+	(isaac_seed_start, isaac_seed_data, isaac_seed_finish, isaac_seed):
+	(irand_init, irand32, irand_mod):
+	Number of words is constant again.
+	* src/shred.c: Include rand-isaac.c rather than rand-isaac.h.
+	* src/sort.c: Likewise.
+	* src/shred.c (fillrand, dopass, main): Undo previous change.
+	* src/sort.c: Don't include md5.h; it wasn't needed.
+	(struct keyfield): Rename random_hash to random, for consistency
+	with the other member names.  All uses changed.
+	(usage): Tweak wording to mention STRING for --seed option.
+	(short_options): Rorder for consistency with other programs.
+	(rand_state): Now a struct, not a pointer to one.  All uses changed.
+	(HASH_WORDS, HASH_SIZE): Remove.
+	(get_hash): Remove comments around resbuf size, since we can assume C89.
+	Use a "more-kosher" (but slower) approach of invoking isaac_refill.
+	(keycompare): Adjust to the new get_hash.
+	Add a FIXME.
+	(badfieldspec): Omit recently-introduced comment; it isn't needed.
+	(main): Don't set need_random simply because gkey has it set; that
+	doesn't necessarily mean we'll need random numbers.
+	Redo seeding to match new get_hash approach.
+
+2005-12-10  Jim Meyering  <jim@meyering.net>
 
 	* src/Makefile.am (noinst_HEADERS): Add rand-isaac.h.
 
