@@ -108,7 +108,8 @@
 #include "inttostr.h"
 #include "quotearg.h"		/* For quotearg_colon */
 #include "quote.h"		/* For quotearg_colon */
-#include "rand-isaac.h"              /* Random number stuff */
+
+#include "rand-isaac.c"
 
 #define DEFAULT_PASSES 25	/* Default */
 
@@ -255,19 +256,18 @@ fillpattern (int type, unsigned char *r, size_t size)
 
 /*
  * Fill a buffer, R (of size SIZE_MAX), with random data.
- * SIZE is rounded UP to a multiple of s->words * sizeof (uint32_t).
+ * SIZE is rounded UP to a multiple of ISAAC_BYTES.
  */
 static void
 fillrand (struct isaac_state *s, uint32_t *r, size_t size_max, size_t size)
 {
-  size_t bytes = s->words * sizeof (uint32_t);
-  size = (size + bytes - 1) / bytes;
+  size = (size + ISAAC_BYTES - 1) / ISAAC_BYTES;
   assert (size <= size_max);
 
   while (size--)
     {
       isaac_refill (s, r);
-      r += s->words;
+      r += ISAAC_WORDS;
     }
 }
 
@@ -369,7 +369,7 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
   size_t soff;			/* Offset into buffer for next write */
   ssize_t ssize;		/* Return value from write */
   uint32_t *r;			/* Fill pattern.  */
-  size_t rsize = 3 * MAX (s->words, 1024) * sizeof *r; /* Fill size.  */
+  size_t rsize = 3 * MAX (ISAAC_WORDS, 1024) * sizeof *r; /* Fill size.  */
   size_t ralign = lcm (getpagesize (), sizeof *r); /* Fill alignment.  */
   char pass_string[PASS_NAME_SIZE];	/* Name of current pass */
   bool write_error = false;
@@ -1103,7 +1103,6 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  isaac_new (&s, ISAAC_MAX_WORDS);
   isaac_seed (&s);
 
   memset (&flags, 0, sizeof flags);
