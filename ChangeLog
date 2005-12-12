@@ -4,6 +4,7 @@
 
 	* src/rand-isaac.h: Remove.  All uses now simply include rand-isaac.c.
 	* src/Makefile.am (noinst_HEADERS): Remove rand-isaac.h.
+	(shred_SOURCES, sort_SOURCES): Remove.
 	* src/rand-isaac.c: Revert to what used to be in shred.c, without
 	changing it to allow for varying numbers of words in the state.
 	Alter so that we include rand-isaac.c directly rather than
