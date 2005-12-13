@@ -83,11 +83,15 @@ AC_DEFUN([AC_HEADER_STDBOOL],
 	   char digs[] = "0123456789";
 	   int xlcbug = 1 / (&(digs + 5)[-2 + (bool) 1] == &digs[4] ? 1 : -1);
 	  #endif
+	  _Bool q = true;
+	  _Bool *pq = &q;
 	],
 	[
+	  *pq |= q;
+	  *pq |= ! q;
 	  /* Refer to every declared value, to avoid compiler optimizations.  */
 	  return (!a + !b + !c + !d + !e + !f + !g + !h + !i + !!j + !k + !!l
-		  + !m + !n + !o + !p);
+		  + !m + !n + !o + !p + !q + !pq);
 	],
 	[ac_cv_header_stdbool_h=yes],
 	[ac_cv_header_stdbool_h=no])])

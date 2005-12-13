@@ -1,3 +1,8 @@
+2005-12-13  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* stdbool.m4 (AC_HEADER_STDBOOL): Check for buggy compiler that
+	has _Bool but mishandles _Bool |= _Bool.
+
 2005-12-07  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* stat-time.m4 (gl_STAT_TIME): Add check for
