@@ -59,10 +59,10 @@
 # include <OS.h> /* defines bool but not _Bool */
 #endif
 
-/* C++ and BeOS have a reliable _Bool.  Otherwise, since this file is
-   being compiled, the system <stdbool.h> is not reliable so assume
-   that the system _Bool is not reliable either.  Under that
-   assumption, it is tempting to write
+/* C++ and BeOS have a reliable bool (and _Bool, if it exists).
+   Otherwise, since this file is being compiled, the system
+   <stdbool.h> is not reliable so assume that the system _Bool is not
+   reliable either.  Under that assumption, it is tempting to write
 
       typedef enum { false, true } _Bool;
 
@@ -88,7 +88,9 @@
    existing definition of _Bool and use our own.  */
 
 #if defined __cplusplus || defined __BEOS__
+# if !@HAVE__BOOL@
 typedef bool _Bool;
+# endif
 #else
 # define _Bool signed char
 #endif

@@ -1,3 +1,9 @@
+2005-12-13  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* stdbool_.h (_Bool): Resurrect the "#if !@HAVE__BOOL@" check, to
+	work around compilers that have a (possibly-broken) _Bool but lack
+	a working <stdbool.h>.
+
 2005-12-07  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* stat-time.h (STATE_TIMESPEC, STAT_TIMESPEC_NS): Add check for
