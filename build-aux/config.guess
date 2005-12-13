@@ -3,7 +3,7 @@
 #   Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
 #   2000, 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
 
-timestamp='2005-11-11'
+timestamp='2005-12-13'
 
 # This file is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by
@@ -851,7 +851,7 @@ EOF
 	#endif
 	#endif
 EOF
-	eval `$CC_FOR_BUILD -E $dummy.c 2>/dev/null | grep ^CPU=`
+	eval "`$CC_FOR_BUILD -E $dummy.c 2>/dev/null | sed -n '/^CPU/{s: ::g;p;}'`"
 	test x"${CPU}" != x && { echo "${CPU}-unknown-linux-gnu"; exit; }
 	;;
     mips64:Linux:*:*)
@@ -870,7 +870,7 @@ EOF
 	#endif
 	#endif
 EOF
-	eval `$CC_FOR_BUILD -E $dummy.c 2>/dev/null | grep ^CPU=`
+	eval "`$CC_FOR_BUILD -E $dummy.c 2>/dev/null | sed -n '/^CPU/{s: ::g;p;}'`"
 	test x"${CPU}" != x && { echo "${CPU}-unknown-linux-gnu"; exit; }
 	;;
     or32:Linux:*:*)
@@ -919,6 +919,9 @@ EOF
     sparc:Linux:*:* | sparc64:Linux:*:*)
 	echo ${UNAME_MACHINE}-unknown-linux-gnu
 	exit ;;
+    vax:Linux:*:*)
+	echo ${UNAME_MACHINE}-dec-linux-gnu
+	exit ;;
     x86_64:Linux:*:*)
 	echo x86_64-unknown-linux-gnu
 	exit ;;
@@ -964,7 +967,7 @@ EOF
 	LIBC=gnulibc1
 	# endif
 	#else
-	#ifdef __INTEL_COMPILER
+	#if defined(__INTEL_COMPILER) || defined(__PGI)
 	LIBC=gnu
 	#else
 	LIBC=gnuaout
@@ -974,7 +977,7 @@ EOF
 	LIBC=dietlibc
 	#endif
 EOF
-	eval `$CC_FOR_BUILD -E $dummy.c 2>/dev/null | grep ^LIBC=`
+	eval "`$CC_FOR_BUILD -E $dummy.c 2>/dev/null | sed -n '/^LIBC/{s: ::g;p;}'`"
 	test x"${LIBC}" != x && {
 		echo "${UNAME_MACHINE}-pc-linux-${LIBC}"
 		exit
@@ -1262,6 +1265,9 @@ EOF
 	exit ;;
     i*86:skyos:*:*)
 	echo ${UNAME_MACHINE}-pc-skyos`echo ${UNAME_RELEASE}` | sed -e 's/ .*$//'
+	exit ;;
+    i*86:rdos:*:*)
+	echo ${UNAME_MACHINE}-pc-rdos
 	exit ;;
 esac
 
