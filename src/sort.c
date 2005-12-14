@@ -2034,6 +2034,28 @@ insertkey (struct keyfield *key)
   key->next = NULL;
 }
 
+/* Report a bad field specification SPEC, with extra info MSGID.  */
+
+static void badfieldspec (char const *, char const *)
+     ATTRIBUTE_NORETURN;
+static void
+badfieldspec (char const *spec, char const *msgid)
+{
+  error (SORT_FAILURE, 0, _("%s: invalid field specification %s"),
+	 _(msgid), quote (spec));
+  abort ();
+}
+
+/* Report incompatible options.  */
+
+static void incompatible_options (char const *) ATTRIBUTE_NORETURN;
+static void
+incompatible_options (char const *opts)
+{
+  error (SORT_FAILURE, 0, _("options `-%s' are incompatible"), opts);
+  abort ();
+}
+
 /* Check compatibility of ordering options.  */
 
 static void
@@ -2063,20 +2085,8 @@ check_ordering_compatibility (void)
 	if (key->random)
 	  *p++ = 'R';
 	*p = '\0';
-	error (SORT_FAILURE, 0, _("options `-%s' are incompatible"), opts);
+	incompatible_options (opts);
       }
-}
-
-/* Report a bad field specification SPEC, with extra info MSGID.  */
-
-static void badfieldspec (char const *, char const *)
-     ATTRIBUTE_NORETURN;
-static void
-badfieldspec (char const *spec, char const *msgid)
-{
-  error (SORT_FAILURE, 0, _("%s: invalid field specification %s"),
-	 _(msgid), quote (spec));
-  abort ();
 }
 
 /* Parse the leading integer in STRING and store the resulting value
@@ -2573,11 +2583,11 @@ main (int argc, char **argv)
   if (checkonly)
     {
       if (nfiles > 1)
-	{
-	  error (0, 0, _("extra operand %s not allowed with -c"),
-		 quote (files[1]));
-	  usage (SORT_FAILURE);
-	}
+	error (SORT_FAILURE, 0, _("extra operand %s not allowed with -c"),
+	       quote (files[1]));
+
+      if (outfile)
+	incompatible_options ("co");
 
       /* POSIX requires that sort return 1 IFF invoked with -c and the
 	 input is not properly sorted.  */
