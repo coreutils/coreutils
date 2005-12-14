@@ -17,6 +17,8 @@
 ## Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 ## 02110-1301, USA.
 
+AM_CFLAGS = $(WARNING_CFLAGS) $(WERROR_CFLAGS)
+
 noinst_LIBRARIES = libcoreutils.a
 
 noinst_PROGRAMS = t-fpending
@@ -30,7 +32,6 @@ libcoreutils_a_SOURCES = \
   buffer-lcm.c buffer-lcm.h \
   euidaccess.h \
   exit.h \
-  fprintftime.c fprintftime.h \
   full-read.c full-read.h \
   full-write.c full-write.h \
   getaddrinfo.h \
