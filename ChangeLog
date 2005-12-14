@@ -2,6 +2,11 @@
 
 	* Version 6.0-cvs.
 
+	* NEWS: sort now reports incompatible options.
+	* src/sort.c (check_ordering_compatibility): New function.
+	(main): Use it.
+	* tests/sort/Test.pm (incompat1, incompat2, incompat3): New tests.
+
 	* src/cat.c (main): Undo previous change.  close_stdout already
 	does the check, so the previous change wasn't necessary.
 

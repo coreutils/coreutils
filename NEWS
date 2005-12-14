@@ -23,6 +23,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   if your locale settings appear to be messed up.  This change
   attempts to have the default be the best of both worlds.
 
+  sort now reports incompatible options (e.g., -i and -n) rather than
+  silently ignoring one of them.
+
 ** Scheduled for removal
 
   rm's --directory (-d) option is scheduled for removal in 2006.  This
