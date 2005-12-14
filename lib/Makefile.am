@@ -126,7 +126,7 @@ EXTRA_DIST += stdbool_.h
 MOSTLYCLEANFILES += stdbool.h stdbool.h-t
 # Create stdbool.h on systems that lack a working one.
 stdbool.h: stdbool_.h
-	cp $(srcdir)/stdbool_.h $@-t
+	sed -e 's/@''HAVE__BOOL''@/$(HAVE__BOOL)/g' < $(srcdir)/stdbool_.h > $@-t
 	mv $@-t $@
 
 BUILT_SOURCES += $(ALLOCA_H)
