@@ -1,6 +1,10 @@
-2005-12-12  Paul Eggert  <eggert@cs.ucla.edu>
+2005-12-13  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 6.0-cvs.
+
+	* src/cat.c (main): Check for close (STDOUT_FILENO) failure.
+
+2005-12-12  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Install a more-conservative approach for sort -R.  It's the
 	same basic idea as the existing code, except it uses the full ISAAC
