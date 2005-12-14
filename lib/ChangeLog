@@ -1,3 +1,8 @@
+2005-12-14  Jim Meyering  <jim@meyering.net>
+
+	* Makefile.am (libcoreutils_a_SOURCES): Remove fprintftime.c
+	and fprintftime.h.  Now they're pulled in via the .m4 file.
+
 2005-12-13  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Makefile.am (stdbool.h): Resurrect the 'sed' that goes along
