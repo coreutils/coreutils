@@ -555,7 +555,9 @@ main (int argc, char **argv)
   textdomain (PACKAGE);
 
   /* Arrange to close stdout if we exit via the
-     case_GETOPT_HELP_CHAR or case_GETOPT_VERSION_CHAR code.  */
+     case_GETOPT_HELP_CHAR or case_GETOPT_VERSION_CHAR code.
+     Normally STDOUT_FILENO is used rather than stdout, so
+     close_stdout does nothing.  */
   atexit (close_stdout);
 
   /* Parse command line options.  */
@@ -765,6 +767,9 @@ main (int argc, char **argv)
 
   if (have_read_stdin && close (STDIN_FILENO) < 0)
     error (EXIT_FAILURE, errno, _("closing standard input"));
+
+  if (close (STDOUT_FILENO) != 0)
+    error (EXIT_FAILURE, errno, _("write error"));
 
   exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
