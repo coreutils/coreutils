@@ -2034,6 +2034,39 @@ insertkey (struct keyfield *key)
   key->next = NULL;
 }
 
+/* Check compatibility of ordering options.  */
+
+static void
+check_ordering_compatibility (void)
+{
+  struct keyfield const *key;
+
+  for (key = keylist; key; key = key->next)
+    if ((1 < (key->random + key->numeric + key->general_numeric + key->month
+	      + !!key->ignore))
+	|| (key->random && key->translate))
+      {
+	char opts[7];
+	char *p = opts;
+	if (key->ignore == nondictionary)
+	  *p++ = 'd';
+	if (key->translate)
+	  *p++ = 'f';
+	if (key->general_numeric)
+	  *p++ = 'g';
+	if (key->ignore == nonprinting)
+	  *p++ = 'i';
+	if (key->month)
+	  *p++ = 'M';
+	if (key->numeric)
+	  *p++ = 'n';
+	if (key->random)
+	  *p++ = 'R';
+	*p = '\0';
+	error (SORT_FAILURE, 0, _("options `-%s' are incompatible"), opts);
+      }
+}
+
 /* Report a bad field specification SPEC, with extra info MSGID.  */
 
 static void badfieldspec (char const *, char const *)
@@ -2509,6 +2542,8 @@ main (int argc, char **argv)
       insertkey (&gkey);
       need_random |= gkey.random;
     }
+
+  check_ordering_compatibility ();
 
   reverse = gkey.reverse;
 
