@@ -11,7 +11,7 @@ AC_DEFUN([AM_STDBOOL_H],
 [
   AC_REQUIRE([AC_HEADER_STDBOOL])
 
-  # Define an additional variable used in the Makefile substitution.
+  # Define two additional variables used in the Makefile substitution.
 
   if test "$ac_cv_header_stdbool_h" = yes; then
     STDBOOL_H=''
@@ -19,6 +19,13 @@ AC_DEFUN([AM_STDBOOL_H],
     STDBOOL_H='stdbool.h'
   fi
   AC_SUBST([STDBOOL_H])
+
+  if test "$ac_cv_type__Bool" = yes; then
+    HAVE__BOOL=1
+  else
+    HAVE__BOOL=0
+  fi
+  AC_SUBST([HAVE__BOOL])
 ])
 
 # AM_STDBOOL_H will be renamed to gl_STDBOOL_H in the future.
