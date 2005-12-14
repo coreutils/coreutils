@@ -1,5 +1,7 @@
 2005-12-13  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* Makefile.am (stdbool.h): Resurrect the 'sed' that goes along
+	with '#if !@HAVE_BOOL@".
 	* stdbool_.h (_Bool): Resurrect the "#if !@HAVE__BOOL@" check, to
 	work around compilers that have a (possibly-broken) _Bool but lack
 	a working <stdbool.h>.
