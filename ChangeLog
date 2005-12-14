@@ -1,6 +1,11 @@
-2005-12-13  Paul Eggert  <eggert@cs.ucla.edu>
+2005-12-14  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 6.0-cvs.
+
+	* src/cat.c (main): Undo previous change.  close_stdout already
+	does the check, so the previous change wasn't necessary.
+
+2005-12-13  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/cat.c (main): Check for close (STDOUT_FILENO) failure.
 
