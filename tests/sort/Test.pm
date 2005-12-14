@@ -251,6 +251,7 @@ my @tv = (
 ["incompat1", '-in', '', '', 2],
 ["incompat2", '-fR', '', '', 2],
 ["incompat3", '-dfgiMnR', '', '', 2],
+["incompat4", '-c -o /dev/null', '', '', 2],
 
 # -t '\0' is accepted, as of coreutils-5.0.91
 ['nul-tab', "-k2,2 -t '\\0'", "a\0z\01\nb\0y\02\n", "b\0y\02\na\0z\01\n", 0],
