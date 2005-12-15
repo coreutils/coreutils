@@ -43,6 +43,8 @@ my @Tests =
 
      ['end-pct', "--printf=% .",       {OUT=>"%"}],
      ['pct-pct', "--printf=%% .",      {OUT=>"%"}],
+     ['end-bs',  "--printf='\\' .",    {OUT=>'\\'},
+	 {ERR=>"$prog: warning: backslash at end of format\n"}],
 
      ['err-1', "--printf=%9% .",       {EXIT => 1},
 	 {ERR=>"$prog: %9%: invalid directive\n"}],
