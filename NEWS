@@ -59,6 +59,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   rm (on systems with openat) can no longer exit before processing
   all command-line arguments.
 
+  rm is no longer susceptible to a few low-probability memory leaks.
+
   sort would fail for large inputs (~50MB) on systems with a buggy
   mkstemp function.  sort and tac now use the replacement mkstemp
   function, and hence are no longer subject to limitations (of 26 or 32,
