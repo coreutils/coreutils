@@ -1,6 +1,11 @@
-2005-12-15  Jim Meyering  <jim@meyering.net>
+2005-12-15  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 6.0-cvs.
+
+	* tests/acl: Port to pre-POSIX shells like Solaris 8 /bin/sh.
+	Don't assume /etc/passwd contains user names; use 'id' instead.
+
+2005-12-15  Jim Meyering  <jim@meyering.net>
 
 	stat: revert behavior of --format=FMT (-c)
 	stat: add new option: --printf=FMT
