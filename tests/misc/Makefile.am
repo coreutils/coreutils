@@ -12,6 +12,8 @@ TESTS_ENVIRONMENT = \
   PROG=$$tst
 
 TESTS = \
+  stat-printf \
+  stat-fmt \
   sort-rand \
   sha224sum \
   sha256sum \
@@ -23,7 +25,6 @@ TESTS = \
   pwd \
   date-sec \
   paste-no-nl \
-  stat-fmt \
   expand \
   fold \
   nohup \
