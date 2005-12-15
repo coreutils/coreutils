@@ -54,16 +54,17 @@ DIST_COMMON = README $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	exclude.h exitfail.c exitfail.h fchdir-stub.c fchown-stub.c \
 	fcntl--.h fcntl-safer.h fd-reopen.c fd-reopen.h fd-safer.c \
 	file-type.c file-type.h fileblocks.c filemode.c filemode.h \
-	filenamecat.c filenamecat.h fnmatch.c fopen-safer.c free.c \
-	fsusage.c fsusage.h ftruncate.c fts-cycle.c fts.c fts_.h \
-	gai_strerror.c getaddrinfo.c getcwd.c getcwd.h getdate.h \
-	getdate.y getdelim.c getdelim.h getgroups.c gethostname.c \
-	gethrxtime.c gethrxtime.h getline.c getline.h getloadavg.c \
-	getndelim2.c getopt.c getopt1.c getpagesize.h getpass.c \
-	getpass.h gettime.c gettimeofday.c getugroups.c getusershell.c \
-	group-member.c group-member.h hard-locale.c hard-locale.h \
-	hash-pjw.c hash-pjw.h hash.c hash.h human.c human.h idcache.c \
-	imaxtostr.c intprops.h inttostr.c inttostr.h lchown.c lchown.h \
+	filenamecat.c filenamecat.h fnmatch.c fopen-safer.c \
+	fprintftime.c fprintftime.h free.c fsusage.c fsusage.h \
+	ftruncate.c fts-cycle.c fts.c fts_.h gai_strerror.c \
+	getaddrinfo.c getcwd.c getcwd.h getdate.h getdate.y getdelim.c \
+	getdelim.h getgroups.c gethostname.c gethrxtime.c gethrxtime.h \
+	getline.c getline.h getloadavg.c getndelim2.c getopt.c \
+	getopt1.c getpagesize.h getpass.c getpass.h gettime.c \
+	gettimeofday.c getugroups.c getusershell.c group-member.c \
+	group-member.h hard-locale.c hard-locale.h hash-pjw.c \
+	hash-pjw.h hash.c hash.h human.c human.h idcache.c imaxtostr.c \
+	intprops.h inttostr.c inttostr.h lchown.c lchown.h \
 	linebuffer.c linebuffer.h long-options.c long-options.h \
 	lstat.c lstat.h malloc.c mbchar.c md5.c md5.h memcasecmp.c \
 	memcasecmp.h memchr.c memcmp.c memcoll.c memcoll.h memcpy.c \
@@ -122,9 +123,10 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/afs.m4 \
 	$(top_srcdir)/m4/file-type.m4 $(top_srcdir)/m4/fileblocks.m4 \
 	$(top_srcdir)/m4/filemode.m4 $(top_srcdir)/m4/filenamecat.m4 \
 	$(top_srcdir)/m4/fnmatch.m4 $(top_srcdir)/m4/fpending.m4 \
-	$(top_srcdir)/m4/free.m4 $(top_srcdir)/m4/fstypename.m4 \
-	$(top_srcdir)/m4/fsusage.m4 $(top_srcdir)/m4/ftruncate.m4 \
-	$(top_srcdir)/m4/fts.m4 $(top_srcdir)/m4/getaddrinfo.m4 \
+	$(top_srcdir)/m4/fprintftime.m4 $(top_srcdir)/m4/free.m4 \
+	$(top_srcdir)/m4/fstypename.m4 $(top_srcdir)/m4/fsusage.m4 \
+	$(top_srcdir)/m4/ftruncate.m4 $(top_srcdir)/m4/fts.m4 \
+	$(top_srcdir)/m4/getaddrinfo.m4 \
 	$(top_srcdir)/m4/getcwd-path-max.m4 $(top_srcdir)/m4/getcwd.m4 \
 	$(top_srcdir)/m4/getdate.m4 $(top_srcdir)/m4/getdelim.m4 \
 	$(top_srcdir)/m4/getgroups.m4 $(top_srcdir)/m4/gethostname.m4 \
@@ -229,7 +231,7 @@ am__DEPENDENCIES_2 = @ALLOCA@
 libcoreutils_a_DEPENDENCIES = $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_2)
 am_libcoreutils_a_OBJECTS = allocsa.$(OBJEXT) buffer-lcm.$(OBJEXT) \
-	fprintftime.$(OBJEXT) full-read.$(OBJEXT) full-write.$(OBJEXT) \
+	full-read.$(OBJEXT) full-write.$(OBJEXT) \
 	localcharset.$(OBJEXT) mbswidth.$(OBJEXT) \
 	readtokens0.$(OBJEXT) strnlen1.$(OBJEXT) time_r.$(OBJEXT) \
 	unicodeio.$(OBJEXT) xalloc-die.$(OBJEXT) \
@@ -288,6 +290,7 @@ GLIBC21 = @GLIBC21@
 GMSGFMT = @GMSGFMT@
 GNU_PACKAGE = @GNU_PACKAGE@
 GREP = @GREP@
+HAVE__BOOL = @HAVE__BOOL@
 HELP2MAN = @HELP2MAN@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
@@ -386,16 +389,17 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
+AM_CFLAGS = $(WARNING_CFLAGS) $(WERROR_CFLAGS)
 noinst_LIBRARIES = libcoreutils.a
 LDADD = $(noinst_LIBRARIES)
 AM_CPPFLAGS = -I.. -I$(srcdir)
 libcoreutils_a_SOURCES = allocsa.c allocsa.h buffer-lcm.c buffer-lcm.h \
-	euidaccess.h exit.h fprintftime.c fprintftime.h full-read.c \
-	full-read.h full-write.c full-write.h getaddrinfo.h gettext.h \
-	localcharset.c localcharset.h mbchar.h mbswidth.c mbswidth.h \
-	mbuiter.h readtokens0.c readtokens0.h strcase.h strnlen1.c \
-	strnlen1.h strstr.h time_r.c time_r.h unicodeio.c unicodeio.h \
-	verify.h xalloc-die.c xgethostname.c xgethostname.h xmemcoll.c \
+	euidaccess.h exit.h full-read.c full-read.h full-write.c \
+	full-write.h getaddrinfo.h gettext.h localcharset.c \
+	localcharset.h mbchar.h mbswidth.c mbswidth.h mbuiter.h \
+	readtokens0.c readtokens0.h strcase.h strnlen1.c strnlen1.h \
+	strstr.h time_r.c time_r.h unicodeio.c unicodeio.h verify.h \
+	xalloc-die.c xgethostname.c xgethostname.h xmemcoll.c \
 	xmemcoll.h xstrndup.c xstrndup.h xstrtoimax.c xstrtoumax.c \
 	printf-args.h printf-parse.h vasprintf.h vasnprintf.h
 libcoreutils_a_LIBADD = $(LIBOBJS) $(ALLOCA)
@@ -506,6 +510,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/filenamecat.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/fnmatch.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/fopen-safer.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/fprintftime.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/free.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/fsusage.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/ftruncate.Po@am__quote@
@@ -645,7 +650,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/yesno.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/allocsa.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/buffer-lcm.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/fprintftime.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/full-read.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/full-write.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/localcharset.Po@am__quote@
@@ -912,7 +916,7 @@ charset.alias: config.charset
 	mv t-$@ $@
 # Create stdbool.h on systems that lack a working one.
 stdbool.h: stdbool_.h
-	cp $(srcdir)/stdbool_.h $@-t
+	sed -e 's/@''HAVE__BOOL''@/$(HAVE__BOOL)/g' < $(srcdir)/stdbool_.h > $@-t
 	mv $@-t $@
 
 # We need the following in order to create an <alloca.h> when the system

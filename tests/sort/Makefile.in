@@ -64,9 +64,10 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/afs.m4 \
 	$(top_srcdir)/m4/file-type.m4 $(top_srcdir)/m4/fileblocks.m4 \
 	$(top_srcdir)/m4/filemode.m4 $(top_srcdir)/m4/filenamecat.m4 \
 	$(top_srcdir)/m4/fnmatch.m4 $(top_srcdir)/m4/fpending.m4 \
-	$(top_srcdir)/m4/free.m4 $(top_srcdir)/m4/fstypename.m4 \
-	$(top_srcdir)/m4/fsusage.m4 $(top_srcdir)/m4/ftruncate.m4 \
-	$(top_srcdir)/m4/fts.m4 $(top_srcdir)/m4/getaddrinfo.m4 \
+	$(top_srcdir)/m4/fprintftime.m4 $(top_srcdir)/m4/free.m4 \
+	$(top_srcdir)/m4/fstypename.m4 $(top_srcdir)/m4/fsusage.m4 \
+	$(top_srcdir)/m4/ftruncate.m4 $(top_srcdir)/m4/fts.m4 \
+	$(top_srcdir)/m4/getaddrinfo.m4 \
 	$(top_srcdir)/m4/getcwd-path-max.m4 $(top_srcdir)/m4/getcwd.m4 \
 	$(top_srcdir)/m4/getdate.m4 $(top_srcdir)/m4/getdelim.m4 \
 	$(top_srcdir)/m4/getgroups.m4 $(top_srcdir)/m4/gethostname.m4 \
@@ -199,6 +200,7 @@ GLIBC21 = @GLIBC21@
 GMSGFMT = @GMSGFMT@
 GNU_PACKAGE = @GNU_PACKAGE@
 GREP = @GREP@
+HAVE__BOOL = @HAVE__BOOL@
 HELP2MAN = @HELP2MAN@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
@@ -316,8 +318,9 @@ n10b.X n11a.I n11a.X n11b.I n11b.X 01a.I 01a.X 02a.I 02a.X 02b.I 02b.X 02c.I \
 18b.I 18b.X 18c.I 18c.X 18d.I 18d.X 18e.I 18e.X 19a.I 19a.X 19b.I 19b.X 20a.I \
 20a.X 21a.I 21a.X 21b.I 21b.X 21c.I 21c.X 21d.I 21d.X 21e.I 21e.X 21f.I 21f.X \
 21g.I 21g.X 22a.I 22a.X 22b.I 22b.X no-file1.X o-no-file1.X create-empty.X \
-neg-nls.I neg-nls.X nul-nls.I nul-nls.X use-nl.I use-nl.X o2.I o2.X nul-tab.I \
-nul-tab.X
+neg-nls.I neg-nls.X nul-nls.I nul-nls.X use-nl.I use-nl.X o2.I o2.X \
+incompat1.I incompat1.X incompat2.I incompat2.X incompat3.I incompat3.X \
+incompat4.I incompat4.X nul-tab.I nul-tab.X
 
 run_gen = n1.O n1.E n2.O n2.E n3.O n3.E n4.O n4.E n5.O n5.E n6.O n6.E n7.O \
 n7.E n8a.O n8a.E n8b.O n8b.E n9a.O n9a.E n9b.O n9b.E n10a.O n10a.E n10b.O \
@@ -337,7 +340,9 @@ n10b.E n11a.O n11a.E n11b.O n11b.E 01a.O 01a.E 02a.O 02a.E 02b.O 02b.E 02c.O \
 20a.E 21a.O 21a.E 21b.O 21b.E 21c.O 21c.E 21d.O 21d.E 21e.O 21e.E 21f.O 21f.E \
 21g.O 21g.E 22a.O 22a.E 22b.O 22b.E no-file1.O no-file1.E o-no-file1.O \
 o-no-file1.E create-empty.O create-empty.E neg-nls.O neg-nls.E nul-nls.O \
-nul-nls.E use-nl.O use-nl.E o2.O o2.E nul-tab.O nul-tab.E
+nul-nls.E use-nl.O use-nl.E o2.O o2.E incompat1.O incompat1.E incompat2.O \
+incompat2.E incompat3.O incompat3.E incompat4.O incompat4.E nul-tab.O \
+nul-tab.E
 
 EXTRA_DIST = Test.pm $x-tests $(explicit) $(maint_gen)
 noinst_SCRIPTS = $x-tests
