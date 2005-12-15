@@ -26,6 +26,20 @@ GNU coreutils NEWS                                    -*- outline -*-
   sort now reports incompatible options (e.g., -i and -n) rather than
   silently ignoring one of them.
 
+  stat's --format=FMT option now works the way it did before 5.3.0:
+  FMT is automatically newline terminated.  The first stable release
+  containing this change was 5.92.
+
+  stat accepts the new option --printf=FMT, where FMT is *not*
+  automatically newline terminated.
+  works, backslash escapes in FMT *are* interpreted.
+
+  stat: backslash escapes are interpreted in a format string specified
+  via --printf=FMT, but not one specified via --format=FMT.  That includes
+  octal (\ooo, at most three octal digits), hexadecimal (\xhh, one or
+  two hex digits), and the standard sequences (\a, \b, \f, \n, \r, \t,
+  \v, \", \\).
+
 ** Scheduled for removal
 
   rm's --directory (-d) option is scheduled for removal in 2006.  This
