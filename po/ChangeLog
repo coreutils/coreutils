@@ -1,3 +1,8 @@
+2005-12-13  Jim Meyering  <jim@meyering.net>
+
+	* LINGUAS: Add Kinyarwanda (rw).
+	Add Croatian (hr).
+
 2005-11-22  Jim Meyering  <jim@meyering.net>
 
 	* POTFILES.in: Add lib/euidaccess-stat.c.
