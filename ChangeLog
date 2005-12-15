@@ -1,6 +1,12 @@
-2005-12-15  Paul Eggert  <eggert@cs.ucla.edu>
+2005-12-15  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* src/stat.c (print_it): Properly handle a backslash at the
+	end of a --printf format string.  Reported by Paul Eggert.
+	* tests/misc/stat-printf (end-bs): Add a test for the above.
+
+2005-12-15  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* tests/acl: Port to pre-POSIX shells like Solaris 8 /bin/sh.
 	Don't assume /etc/passwd contains user names; use 'id' instead.
