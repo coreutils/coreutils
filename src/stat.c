@@ -96,15 +96,27 @@
 # endif
 #endif
 
+/* FIXME: these are used by printf.c, too */
+#define isodigit(c) ('0' <= (c) && (c) <= '7')
+#define octtobin(c) ((c) - '0')
+#define hextobin(c) ((c) >= 'a' && (c) <= 'f' ? (c) - 'a' + 10 : \
+		     (c) >= 'A' && (c) <= 'F' ? (c) - 'A' + 10 : (c) - '0')
+
 #define PROGRAM_NAME "stat"
 
 #define AUTHORS "Michael Meskes"
+
+enum
+{
+  PRINTF_OPTION = CHAR_MAX + 1,
+};
 
 static struct option const long_options[] = {
   {"dereference", no_argument, NULL, 'L'},
   {"file-system", no_argument, NULL, 'f'},
   {"filesystem", no_argument, NULL, 'f'}, /* obsolete and undocumented alias */
   {"format", required_argument, NULL, 'c'},
+  {"printf", required_argument, NULL, PRINTF_OPTION},
   {"terse", no_argument, NULL, 't'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
@@ -112,6 +124,14 @@ static struct option const long_options[] = {
 };
 
 char *program_name;
+
+/* Whether to interpret backslash-escape sequences.
+   True for --printf=FMT, not for --format=FMT (-c).  */
+static bool interpret_backslash_escapes;
+
+/* The trailing delimiter string:
+   "" for --printf=FMT, "\n" for --format=FMT (-c).  */
+static char const *trailing_delim = "";
 
 /* Return the type of the specified file system.
    Some systems have statfvs.f_basetype[FSTYPSZ]. (AIX, HP-UX, and Solaris)
@@ -535,59 +555,130 @@ print_stat (char *pformat, size_t buf_len, char m,
     }
 }
 
+/* Output a single-character \ escape.  */
+
 static void
-print_it (char const *masterformat, char const *filename,
+print_esc_char (char c)
+{
+  switch (c)
+    {
+    case 'a':			/* Alert. */
+      c ='\a';
+      break;
+    case 'b':			/* Backspace. */
+      c ='\b';
+      break;
+    case 'f':			/* Form feed. */
+      c ='\f';
+      break;
+    case 'n':			/* New line. */
+      c ='\n';
+      break;
+    case 'r':			/* Carriage return. */
+      c ='\r';
+      break;
+    case 't':			/* Horizontal tab. */
+      c ='\t';
+      break;
+    case 'v':			/* Vertical tab. */
+      c ='\v';
+      break;
+    case '"':
+    case '\\':
+      break;
+    default:
+      error (0, 0, _("warning: unrecognized escape `\\%c'"), c);
+      break;
+    }
+  putchar (c);
+}
+
+static void
+print_it (char const *format, char const *filename,
 	  void (*print_func) (char *, size_t, char, char const *, void const *),
 	  void const *data)
 {
-  char *b;
-
-  /* create a working copy of the format string */
-  char *format = xstrdup (masterformat);
-
   /* Add 2 to accommodate our conversion of the stat `%s' format string
-     to the printf `%llu' one.  */
+     to the longer printf `%llu' one.  */
   size_t n_alloc = strlen (format) + 2 + 1;
   char *dest = xmalloc (n_alloc);
-
-  b = format;
-  while (b)
+  char const *b;
+  for (b = format; *b; b++)
     {
-      char *p = strchr (b, '%');
-      if (p != NULL)
+      switch (*b)
 	{
-	  size_t len;
-	  *p++ = '\0';
-	  fputs (b, stdout);
+	case '%':
+	  {
+	    size_t len = strspn (b + 1, "#-+.I 0123456789");
+	    char const *fmt_char = b + 1 + len;
+	    memcpy (dest, b, 1 + len);
+	    dest[1 + len] = 0;
 
-	  len = strspn (p, "#-+.I 0123456789");
-	  dest[0] = '%';
-	  memcpy (dest + 1, p, len);
-	  dest[1 + len] = 0;
-	  p += len;
+	    b = fmt_char;
+	    switch (*fmt_char)
+	      {
+	      case '\0':
+		--b;
+		/* fall through */
+	      case '%':
+		if (0 < len)
+		  error (EXIT_FAILURE, 0, _("%s%s: invalid directive"),
+			 quotearg_colon (dest), *fmt_char ? "%" : "");
+		putchar ('%');
+		break;
+	      default:
+		print_func (dest, n_alloc, *fmt_char, filename, data);
+		break;
+	      }
+	    break;
+	  }
 
-	  b = p + 1;
-	  switch (*p)
+	case '\\':
+	  if ( ! interpret_backslash_escapes)
 	    {
-	    case '\0':
-	      b = NULL;
-	      /* fall through */
-	    case '%':
-	      putchar ('%');
-	      break;
-	    default:
-	      print_func (dest, n_alloc, *p, filename, data);
+	      putchar ('\\');
 	      break;
 	    }
-	}
-      else
-	{
-	  fputs (b, stdout);
-	  b = NULL;
+	  ++b;
+	  if (isodigit (*b))
+	    {
+	      int esc_value = octtobin (*b);
+	      int esc_length = 1;	/* number of octal digits */
+	      for (++b; esc_length < 3 && isodigit (*b);
+		   ++esc_length, ++b)
+		{
+		  esc_value = esc_value * 8 + octtobin (*b);
+		}
+	      putchar (esc_value);
+	      --b;
+	    }
+	  else if (*b == 'x' && ISXDIGIT (b[1]))
+	    {
+	      int esc_value = hextobin (b[1]);	/* Value of \xhh escape. */
+	      /* A hexadecimal \xhh escape sequence must have
+		 1 or 2 hex. digits.  */
+	      ++b;
+	      if (ISXDIGIT (b[1]))
+		{
+		  ++b;
+		  esc_value = esc_value * 16 + hextobin (*b);
+		}
+	      putchar (esc_value);
+	    }
+	  else
+	    {
+	      print_esc_char (*b);
+	    }
+	  break;
+
+	default:
+	  putchar (*b);
+	  break;
 	}
     }
-  free (format);
   free (dest);
+
+  fputs (trailing_delim, stdout);
 }
 
 /* Stat the file system and print what we find.  */
@@ -678,9 +769,15 @@ usage (int status)
       fputs (_("\
 Display file or file system status.\n\
 \n\
-  -f, --file-system     display file system status instead of file status\n\
-  -c  --format=FORMAT   use the specified FORMAT instead of the default\n\
   -L, --dereference     follow links\n\
+  -f, --file-system     display file system status instead of file status\n\
+"), stdout);
+      fputs (_("\
+  -c  --format=FORMAT   use the specified FORMAT instead of the default;\n\
+                          output a newline after each use of FORMAT\n\
+      --printf=FORMAT   like --format, but interpret backslash escapes,\n\
+                          and do not output a mandatory trailing newline.\n\
+                          If you want a newline, include \\n in FORMAT.\n\
   -t, --terse           print the information in terse form\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
@@ -771,8 +868,16 @@ main (int argc, char *argv[])
     {
       switch (c)
 	{
+	case PRINTF_OPTION:
+	  format = optarg;
+	  interpret_backslash_escapes = true;
+	  trailing_delim = "";
+	  break;
+
 	case 'c':
 	  format = optarg;
+	  interpret_backslash_escapes = false;
+	  trailing_delim = "\n";
 	  break;
 
 	case 'L':
