@@ -665,6 +665,13 @@ print_it (char const *format, char const *filename,
 		}
 	      putchar (esc_value);
 	    }
+	  else if (*b == '\0')
+	    {
+	      error (0, 0, _("warning: backslash at end of format"));
+	      putchar ('\\');
+	      /* Arrange to exit the loop.  */
+	      --b;
+	    }
 	  else
 	    {
 	      print_esc_char (*b);
