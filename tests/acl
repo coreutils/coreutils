@@ -13,4 +13,5 @@ id -u bin 2> /dev/null 1>&2 || {
 $0: This test requires a local user named bin.
 **************************************
 EOF
+  (exit 77); exit 77
 }
