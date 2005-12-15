@@ -1,6 +1,22 @@
-2005-12-14  Paul Eggert  <eggert@cs.ucla.edu>
+2005-12-15  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	stat: revert behavior of --format=FMT (-c)
+	stat: add new option: --printf=FMT
+	* NEWS: Mention this.
+	* src/stat.c (isodigit, octtobin, hextobin): Define.
+	(PRINTF_OPTION): Define.
+	(interpret_backslash_escapes, trailing_delim): New globals.
+	(usage): Document them.  Alphabetize on long option names.
+	(print_esc_char): New function.
+	(print_it): Rewrite, in order to handle backslash escapes.
+	(main): Handle new option.  Set globals for --format, too.
+
+	* tests/misc/stat-printf: Test --printf and --format.
+	* tests/misc/Makefile.am (TESTS): Add stat-printf.
+
+2005-12-14  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: sort now reports incompatible options.
 	* src/sort.c (incompatible_options, check_ordering_compatibility):
