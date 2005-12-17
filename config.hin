@@ -101,6 +101,42 @@
 /* Define to 1 if you have the `acl' function. */
 #undef HAVE_ACL
 
+/* Define to 1 if you have the `acl_delete_def_file' function. */
+#undef HAVE_ACL_DELETE_DEF_FILE
+
+/* Define to 1 if you have the `acl_entries' function. */
+#undef HAVE_ACL_ENTRIES
+
+/* Define to 1 if you have the `acl_extended_file' function. */
+#undef HAVE_ACL_EXTENDED_FILE
+
+/* Define to 1 if you have the `acl_free' function. */
+#undef HAVE_ACL_FREE
+
+/* Define to 1 if you have the `acl_from_mode' function. */
+#undef HAVE_ACL_FROM_MODE
+
+/* Define to 1 if you have the `acl_from_text' function. */
+#undef HAVE_ACL_FROM_TEXT
+
+/* Define to 1 if you have the `acl_get_fd' function. */
+#undef HAVE_ACL_GET_FD
+
+/* Define to 1 if you have the `acl_get_file' function. */
+#undef HAVE_ACL_GET_FILE
+
+/* Define to 1 if you have the <acl/libacl.h> header file. */
+#undef HAVE_ACL_LIBACL_H
+
+/* Define to 1 if you have the `acl_set_fd' function. */
+#undef HAVE_ACL_SET_FD
+
+/* Define to 1 if you have the `acl_set_file' function. */
+#undef HAVE_ACL_SET_FILE
+
+/* Define to 1 if you have the `acl_to_text' function. */
+#undef HAVE_ACL_TO_TEXT
+
 /* Define to 1 if you have the `alarm' function. */
 #undef HAVE_ALARM
 
@@ -1497,6 +1533,9 @@
 
 /* Define to 1 if unlink (dir) cannot possibly succeed. */
 #undef UNLINK_CANNOT_UNLINK_DIR
+
+/* Define if you want access control list support. */
+#undef USE_ACL
 
 /* Define to 1 if you want getc etc. to use unlocked I/O if available.
    Unlocked I/O can improve performance in unithreaded apps, but it is not

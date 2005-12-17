@@ -244,7 +244,8 @@ comm_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
 	../lib/libcoreutils.a
 am_cp_OBJECTS = cp.$(OBJEXT) copy.$(OBJEXT) cp-hash.$(OBJEXT)
 cp_OBJECTS = $(am_cp_OBJECTS)
-cp_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1)
+cp_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1)
 csplit_SOURCES = csplit.c
 csplit_OBJECTS = csplit.$(OBJEXT)
 csplit_LDADD = $(LDADD)
@@ -269,7 +270,8 @@ df_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
 	../lib/libcoreutils.a
 am_dir_OBJECTS = ls.$(OBJEXT) ls-dir.$(OBJEXT)
 dir_OBJECTS = $(am_dir_OBJECTS)
-dir_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1)
+dir_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1)
 dircolors_SOURCES = dircolors.c
 dircolors_OBJECTS = dircolors.$(OBJEXT)
 dircolors_LDADD = $(LDADD)
@@ -328,7 +330,8 @@ fold_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
 am_ginstall_OBJECTS = install.$(OBJEXT) copy.$(OBJEXT) \
 	cp-hash.$(OBJEXT)
 ginstall_OBJECTS = $(am_ginstall_OBJECTS)
-ginstall_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1)
+ginstall_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1)
 head_SOURCES = head.c
 head_OBJECTS = head.$(OBJEXT)
 head_LDADD = $(LDADD)
@@ -376,7 +379,8 @@ logname_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
 	../lib/libcoreutils.a
 am_ls_OBJECTS = ls.$(OBJEXT) ls-ls.$(OBJEXT)
 ls_OBJECTS = $(am_ls_OBJECTS)
-ls_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1)
+ls_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1)
 am_md5sum_OBJECTS = md5sum-md5sum.$(OBJEXT)
 md5sum_OBJECTS = $(am_md5sum_OBJECTS)
 md5sum_LDADD = $(LDADD)
@@ -400,7 +404,8 @@ mknod_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
 am_mv_OBJECTS = mv.$(OBJEXT) copy.$(OBJEXT) cp-hash.$(OBJEXT) \
 	remove.$(OBJEXT)
 mv_OBJECTS = $(am_mv_OBJECTS)
-mv_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1)
+mv_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1)
 nice_SOURCES = nice.c
 nice_OBJECTS = nice.$(OBJEXT)
 nice_LDADD = $(LDADD)
@@ -612,7 +617,8 @@ users_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
 	../lib/libcoreutils.a
 am_vdir_OBJECTS = ls.$(OBJEXT) ls-vdir.$(OBJEXT)
 vdir_OBJECTS = $(am_vdir_OBJECTS)
-vdir_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1)
+vdir_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1)
 wc_SOURCES = wc.c
 wc_OBJECTS = wc.$(OBJEXT)
 wc_LDADD = $(LDADD)
@@ -728,6 +734,7 @@ LIBICONV = @LIBICONV@
 LIBINTL = @LIBINTL@
 LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
+LIB_ACL = @LIB_ACL@
 LIB_CLOCK_GETTIME = @LIB_CLOCK_GETTIME@
 LIB_CRYPT = @LIB_CRYPT@
 LIB_EACCESS = @LIB_EACCESS@
@@ -840,9 +847,9 @@ AM_CPPFLAGS = -I.. -I$(srcdir) -I$(top_srcdir)/lib -I../lib
 LDADD = ../lib/libcoreutils.a $(LIBINTL) ../lib/libcoreutils.a
 
 # for eaccess in lib/euidaccess.c.
-cp_LDADD = $(LDADD) $(LIB_EACCESS)
-ginstall_LDADD = $(LDADD) $(LIB_EACCESS)
-mv_LDADD = $(LDADD) $(LIB_EACCESS)
+cp_LDADD = $(LDADD) $(LIB_EACCESS) $(LIB_ACL)
+ginstall_LDADD = $(LDADD) $(LIB_EACCESS) $(LIB_ACL)
+mv_LDADD = $(LDADD) $(LIB_EACCESS) $(LIB_ACL)
 pathchk_LDADD = $(LDADD) $(LIB_EACCESS)
 rm_LDADD = $(LDADD) $(LIB_EACCESS)
 test_LDADD = $(LDADD) $(LIB_EACCESS)
@@ -851,11 +858,11 @@ __LDADD = $(LDADD) $(LIB_EACCESS)
 
 # for clock_gettime and fdatasync
 dd_LDADD = $(LDADD) $(LIB_GETHRXTIME) $(LIB_FDATASYNC)
-dir_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME)
-ls_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME)
+dir_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME) $(LIB_ACL)
+ls_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME) $(LIB_ACL)
 pr_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME)
 shred_LDADD = $(LDADD) $(LIB_GETHRXTIME) $(LIB_FDATASYNC)
-vdir_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME)
+vdir_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME) $(LIB_ACL)
 sort_LDADD = $(LDADD) $(POW_LIB) $(LIB_GETHRXTIME)
 
 # for get_date and gettime
@@ -1001,7 +1008,7 @@ uninstall-binPROGRAMS:
 	done
 
 clean-binPROGRAMS:
-	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS) > /dev/null 2>&1 || /bin/rm -f $(bin_PROGRAMS) > /dev/null 2>&1 || /bin/rm -f $(bin_PROGRAMS)
+	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
 
 installcheck-binPROGRAMS: $(bin_PROGRAMS)
 	bad=0; pid=$$$$; list="$(bin_PROGRAMS)"; for p in $$list; do \
