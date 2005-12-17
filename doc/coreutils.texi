@@ -9281,14 +9281,6 @@ also give information about the files the links point to.
 
 @table @samp
 
-@item -f
-@itemx --file-system
-@opindex -f
-@opindex --file-system
-@cindex file systems
-Report information about the file systems where the given files are located
-instead of information about the files themselves.
-
 @item -L
 @itemx --dereference
 @opindex -L
@@ -9299,12 +9291,13 @@ With this option, @command{stat} acts on the file referenced
 by each symbolic link argument.
 Without it, @command{stat} acts on any symbolic link argument directly.
 
-@item -t
-@itemx --terse
-@opindex -t
-@opindex --terse
-@cindex terse output
-Print the information in terse form, suitable for parsing by other programs.
+@item -f
+@itemx --file-system
+@opindex -f
+@opindex --file-system
+@cindex file systems
+Report information about the file systems where the given files are located
+instead of information about the files themselves.
 
 @item -c
 @itemx --format=@var{format}
@@ -9312,6 +9305,36 @@ Print the information in terse form, suitable for parsing by other programs.
 @opindex --format=@var{format}
 @cindex output format
 Use @var{format} rather than the default format.
+@var{format} is automatically newline-terminated, so
+running a command like the following with two or more @var{file}
+operands produces a line of output for each operand:
+@example
+$ stat --format=%d:%i / /usr
+2050:2
+2057:2
+@end example
+
+@itemx --printf=@var{format}
+@opindex --printf=@var{format}
+@cindex output format
+Use @var{format} rather than the default format.
+Like like @option{--format}, but interpret backslash escapes,
+and do not output a mandatory trailing newline.
+If you want a newline, include @samp{\n} in the @var{format}.
+Here's how you would use @option{--printf} to print the device
+and inode numbers of @file{/} and @file{/usr}:
+@example
+$ stat --printf='%d:%i\n' / /usr
+2050:2
+2057:2
+@end example
+
+@item -t
+@itemx --terse
+@opindex -t
+@opindex --terse
+@cindex terse output
+Print the information in terse form, suitable for parsing by other programs.
 
 The valid format sequences for files are:
 
