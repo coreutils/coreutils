@@ -1,3 +1,30 @@
+2005-12-16  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* openat.c: Don't include <stdlib.h>, <unistd.h>, <fcntl.h>,
+	"gettext.h"; either no longer needed or are guaranteed by openat.h.
+	(_): Remove; no longer needed.
+	(openat): Renamed from rpl_openat; no need for rpl_openat
+	since openat.h renames openat for us.
+	Replace most of the body with a call to openat_permissive,
+	to avoid duplicate code.
+	Port to (probably hypothetical) environments were mode_t is
+	wider than int.
+	(openat_permissive): Require mode arg, so that we can check
+	types better.  Put it just after flags.  Change cwd failure
+	indicator from pointer-to-bool to pointer-to-errno-value.
+	All callers changed.
+	Invoke openat_save_fail and/or openat_restore_fail if
+	cwd_errno is null, so that openat can call us.
+	(openat_permissive, fdopendir, fstatat, unlinkat):
+	Simplify errno handling to avoid some duplicate code,
+	as it's OK to set errno on success.
+	* openat.h: Revamp code so that function macros depend on
+	__OPENAT_PREFIX only, not also on AT_FDCWD.
+	(openat_ro): Remove.  Caller changed to use openat_permissive.
+	(openat_permissive): Now a macro, if not a function.
+	(openat_restore_fail, openat_save_fail): Now always functions,
+	since mkdirat needs them even if __OPENAT_PREFIX is defined.
+
 2005-12-14  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am (libcoreutils_a_SOURCES): Remove fprintftime.c

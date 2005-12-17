@@ -1,6 +1,19 @@
-2005-12-15  Jim Meyering  <jim@meyering.net>
+2005-12-16  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 6.0-cvs.
+
+	* src/remove.c (OPENAT_CWD_RESTORE__REQUIRE): Remove.
+	(OPENAT_CWD_RESTORE__ALLOW_FAILURE): Likewise.
+	(fd_to_subdirp): Remove openat_cwd_restore_allow_failure arg; its
+	value is now signified by whether cwd_errno is null.
+	(fd_to_subdirp, remove_dir, rm_1); Change cwd failure indicator from
+	pointer-to-bool to pointer-to-errno-value.  All callers changed.
+	(rm_1): Don't bother setting a local cwd failure flag and then
+	ORing it into the caller's.  Just set the caller's.
+	(rm): Use cwd failure errno value to print a slightly-better
+	diagnostic.
+
+2005-12-15  Jim Meyering  <jim@meyering.net>
 
 	* src/stat.c (print_it): Properly handle a backslash at the
 	end of a --printf format string.  Reported by Paul Eggert.
