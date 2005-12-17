@@ -1,6 +1,25 @@
-2005-12-16  Paul Eggert  <eggert@cs.ucla.edu>
+2005-12-05  Andreas Gruenbacher  <agruen@suse.de>
 
 	* Version 6.0-cvs.
+
+	* src/ls.c: Switch back from HAVE_ACL to USE_ACL: The acl() syscall
+	  is no requirement for ACL support; particularly, it does not exist
+	  on systems that have POSIX ACLs.
+	* src/cp.c, src/mv.c, src/install.c (umask_kill): With default acls,
+	  the umask is not to be applied. Remove umask_kill, don't change the
+	  process umask, and let the kernel apply the umask where appropriate.
+	* src/cp.c (make_path_private): Fix logic for POSIX ACLs.
+	* src/copy.c (get_dest_mode): Remove; it is obsolete after removing
+	  umask_kill.
+	* src/copy.c (copy_reg, copy_internal): Use copy_acl and set_acl
+	  instead of fchown/chown. Fix the logic for POSIX ACLs.
+	* src/copy.c (chown_succeded): Remove; we now always copy acls and
+	  preserve S_ISUID, S_ISGID, and S_ISVTX when needed, no matter if we
+	  did a chown before or not.
+	* src/Makefile.am: On systems that have one, add the acl library to
+	  *_LDADD for the utilities that need it.
+
+2005-12-16  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/remove.c (OPENAT_CWD_RESTORE__REQUIRE): Remove.
 	(OPENAT_CWD_RESTORE__ALLOW_FAILURE): Likewise.
