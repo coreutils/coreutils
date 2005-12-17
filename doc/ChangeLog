@@ -1,3 +1,8 @@
+2005-12-05  Andreas Gruenbacher  <agruen@suse.de>
+
+	* coreutils.texi (ls): Clarify the Alternate Access Method description.
+	(cp): Clarify that --preserve=mode also preserves acls.
+
 2005-12-12  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (sort invocation): Clarify explanation of
