@@ -1,6 +1,13 @@
-2005-12-05  Andreas Gruenbacher  <agruen@suse.de>
+2005-12-17  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* src/remove.c (is_empty_dir): Open with O_NDELAY, so we don't hang,
+	e.g., on a named pipe.
+	(OPEN_NO_FOLLOW_SYMLINK): Remove definition.  Use O_NOFOLLOW in
+	place of all uses, since it is guaranteed (system.h) to be defined.
+
+2005-12-05  Andreas Gruenbacher  <agruen@suse.de>
 
 	Add POSIX ACL support
 	* src/ls.c: Switch back from HAVE_ACL to USE_ACL: The acl() syscall
