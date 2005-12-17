@@ -1,3 +1,20 @@
+2005-12-05  Andreas Gruenbacher  <agruen@suse.de>
+
+	Add POSIX ACL support
+	* acl.h (copy_acl, set_acl): Add declarations.
+	* acl.c (acl_entries): Add fallback implementation for POSIX ACL
+	systems other than Linux.
+	(chmod_or_fchmod): New function: use fchmod when possible,
+	and chmod otherwise.
+	(file_has_acl): Add a POSIX ACL implementation, with a
+	Linux-specific subcase.
+	(copy_acl): Add: copy an acl and S_ISUID, S_ISGID, and
+	S_ISVTX from one file to another.  Fall back to fchmod/chmod when
+	acls are unsupported.
+	(set_acl): Add: set a file's acl and S_ISUID, S_ISGID, and
+	S_ISVTX to a defined value.  Fall back to fchmod/chmod when acls
+	are unsupported.
+
 2005-12-16  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* openat.c: Don't include <stdlib.h>, <unistd.h>, <fcntl.h>,
