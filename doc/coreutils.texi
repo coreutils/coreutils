@@ -5719,9 +5719,14 @@ Otherwise.
 @end table
 
 Following the permission bits is a single character that specifies
-whether an alternate access method applies to the file.  When that
-character is a space, there is no alternate access method.  When it
-is a printing character (e.g., @samp{+}), then there is such a method.
+whether an alternate access method such as an access control list
+applies to the file. When the character following the permissions is a
+space, there is no alternate access method. When it is a printing
+character, then there is such a method.
+
+For a file with an extended access control list, a @samp{+} character is
+listed. Basic access control lists are equivalent to the permissions
+listed, and are not considered an alternate access method.
 
 @item -n
 @itemx --numeric-uid-gid
@@ -6558,7 +6563,7 @@ of one or more of the following strings:
 
 @table @samp
 @itemx mode
-Preserve the permission attributes.
+Preserve the permission attributes, including access control lists.
 @itemx ownership
 Preserve the owner and group.  On most modern systems,
 only the super-user may change the owner of a file, and regular users
@@ -6574,7 +6579,6 @@ any links between corresponding source files.
 @itemx all
 Preserve all file attributes.
 Equivalent to specifying all of the above.
-@c Mention ACLs here.
 @end table
 
 Using @option{--preserve} with no @var{attribute_list} is equivalent
