@@ -74,12 +74,6 @@ enum
     CONSECUTIVE_READDIR_UNLINK_THRESHOLD = 200
   };
 
-enum
-  {
-    OPENAT_CWD_RESTORE__REQUIRE = false,
-    OPENAT_CWD_RESTORE__ALLOW_FAILURE = true
-  };
-
 enum Ternary
   {
     T_UNKNOWN = 2,
@@ -991,30 +985,25 @@ remove_entry (int fd_cwd, Dirstack_state const *ds, char const *filename,
    unlink- or rmdir-like system call -- use that value instead of ENOTDIR
    if an opened file turns out not to be a directory.  This is important
    when the preceding non-dir-unlink failed due to e.g., EPERM or EACCES.
-   The caller must set OPENAT_CWD_RESTORE_ALLOW_FAILURE to true the first
+   The caller must use a nonnnull CWD_ERRNO the first
    time this function is called for each command-line-specified directory.
-   Set *CWD_RESTORE_FAILED if OPENAT_CWD_RESTORE_ALLOW_FAILURE is true
-   and openat_ro fails to restore the initial working directory.
-   CWD_RESTORE_FAILED may be NULL.  */
+   If CWD_ERRNO is not null, set *CWD_ERRNO to the appropriate error number
+   if this function fails to restore the initial working directory.
+   If it is null, report an error and exit if the working directory
+   isn't restored.  */
 static DIR *
 fd_to_subdirp (int fd_cwd, char const *f,
 	       struct rm_options const *x, int prev_errno,
 	       struct stat *subdir_sb, Dirstack_state *ds,
-	       bool openat_cwd_restore_allow_failure,
-	       bool *cwd_restore_failed)
+	       int *cwd_errno ATTRIBUTE_UNUSED)
 {
-  int fd_sub;
-  bool dummy;
+  int fd_sub = openat_permissive (fd_cwd, f, O_RDONLY | OPEN_NO_FOLLOW_SYMLINK,
+				  0, cwd_errno);
 
   /* Record dev/ino of F.  We may compare them against saved values
      to thwart any attempt to subvert the traversal.  They are also used
      to detect directory cycles.  */
-  if ((fd_sub = (openat_cwd_restore_allow_failure
-		 ? openat_ro (fd_cwd, f, O_RDONLY | OPEN_NO_FOLLOW_SYMLINK,
-			      (cwd_restore_failed
-			       ? cwd_restore_failed : &dummy))
-		 : openat (fd_cwd, f, O_RDONLY | OPEN_NO_FOLLOW_SYMLINK))) < 0
-      || fstat (fd_sub, subdir_sb) != 0)
+  if (fd_sub < 0 || fstat (fd_sub, subdir_sb) != 0)
     {
       if (errno != ENOENT || !x->ignore_missing_files)
 	error (0, errno,
@@ -1126,9 +1115,7 @@ remove_cwd_entries (DIR **dirp,
 	case RM_NONEMPTY_DIR:
 	  {
 	    DIR *subdir_dirp = fd_to_subdirp (dirfd (*dirp), f,
-					      x, errno, subdir_sb, ds,
-					      OPENAT_CWD_RESTORE__REQUIRE,
-					      NULL);
+					      x, errno, subdir_sb, ds, NULL);
 	    if (subdir_dirp == NULL)
 	      {
 		AD_mark_as_unremovable (ds, f);
@@ -1193,7 +1180,7 @@ The following directory is part of the cycle:\n  %s\n"),
 
 static enum RM_status
 remove_dir (int fd_cwd, Dirstack_state *ds, char const *dir,
-	    struct rm_options const *x, bool *cwd_restore_failed)
+	    struct rm_options const *x, int *cwd_errno)
 {
   enum RM_status status;
   struct stat dir_sb;
@@ -1206,9 +1193,7 @@ remove_dir (int fd_cwd, Dirstack_state *ds, char const *dir,
      fd_to_subdirp's fstat, along with the `fstat' and the dev/ino
      comparison in AD_push ensure that we detect it and fail.  */
 
-  DIR *dirp = fd_to_subdirp (fd_cwd, dir, x, 0, &dir_sb, ds,
-			     OPENAT_CWD_RESTORE__ALLOW_FAILURE,
-			     cwd_restore_failed);
+  DIR *dirp = fd_to_subdirp (fd_cwd, dir, x, 0, &dir_sb, ds, cwd_errno);
 
   if (dirp == NULL)
     return RM_ERROR;
@@ -1320,7 +1305,7 @@ remove_dir (int fd_cwd, Dirstack_state *ds, char const *dir,
 
 static enum RM_status
 rm_1 (Dirstack_state *ds, char const *filename,
-      struct rm_options const *x, bool *cwd_restore_failed)
+      struct rm_options const *x, int *cwd_errno)
 {
   char const *base = base_name (filename);
   if (DOT_OR_DOTDOT (base))
@@ -1345,11 +1330,7 @@ rm_1 (Dirstack_state *ds, char const *filename,
       if (setjmp (ds->current_arg_jumpbuf))
 	status = RM_ERROR;
       else
-	{
-	  bool t_cwd_restore_failed = false;
-	  status = remove_dir (fd_cwd, ds, filename, x, &t_cwd_restore_failed);
-	  *cwd_restore_failed |= t_cwd_restore_failed;
-	}
+	status = remove_dir (fd_cwd, ds, filename, x, cwd_errno);
     }
 
   ds_clear (ds);
@@ -1364,12 +1345,12 @@ rm (size_t n_files, char const *const *file, struct rm_options const *x)
 {
   enum RM_status status = RM_OK;
   Dirstack_state *ds = ds_init ();
-  bool cwd_restore_failed = false;
+  int cwd_errno = 0;
   size_t i;
 
   for (i = 0; i < n_files; i++)
     {
-      if (cwd_restore_failed && IS_RELATIVE_FILE_NAME (file[i]))
+      if (cwd_errno && IS_RELATIVE_FILE_NAME (file[i]))
 	{
 	  error (0, 0, _("cannot remove relative-named %s"), quote (file[i]));
 	  status = RM_ERROR;
@@ -1377,14 +1358,14 @@ rm (size_t n_files, char const *const *file, struct rm_options const *x)
 	}
 
       cycle_check_init (&ds->cycle_check_state);
-      enum RM_status s = rm_1 (ds, file[i], x, &cwd_restore_failed);
+      enum RM_status s = rm_1 (ds, file[i], x, &cwd_errno);
       assert (VALID_STATUS (s));
       UPDATE_STATUS (status, s);
     }
 
-  if (x->require_restore_cwd && cwd_restore_failed)
+  if (x->require_restore_cwd && cwd_errno)
     {
-      error (0, 0,
+      error (0, cwd_errno,
 	     _("cannot restore current working directory"));
       status = RM_ERROR;
     }
