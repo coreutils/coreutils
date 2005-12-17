@@ -193,13 +193,13 @@ struct fileinfo
 
     enum filetype filetype;
 
-#if HAVE_ACL
+#if USE_ACL
     /* For long listings, true if the file has an access control list.  */
     bool have_acl;
 #endif
   };
 
-#if HAVE_ACL
+#if USE_ACL
 # define FILE_HAS_ACL(F) ((F)->have_acl)
 #else
 # define FILE_HAS_ACL(F) 0
@@ -334,7 +334,7 @@ static int current_time_ns = -1;
 /* Whether any of the files has an ACL.  This affects the width of the
    mode column.  */
 
-#if HAVE_ACL
+#if USE_ACL
 static bool any_has_acl;
 #else
 enum { any_has_acl = false };
@@ -2477,7 +2477,7 @@ clear_files (void)
     }
 
   files_index = 0;
-#if HAVE_ACL
+#if USE_ACL
   any_has_acl = false;
 #endif
   inode_number_width = 0;
@@ -2588,7 +2588,7 @@ gobble_file (char const *name, enum filetype type, bool command_line_arg,
 	  return 0;
 	}
 
-#if HAVE_ACL
+#if USE_ACL
       if (format == long_format)
 	{
 	  int n = file_has_acl (absolute_name, &f->stat);
