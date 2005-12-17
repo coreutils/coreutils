@@ -30,6 +30,7 @@
 #endif
 
 #include "system.h"
+#include "acl.h"
 #include "backupfile.h"
 #include "buffer-lcm.h"
 #include "copy.h"
@@ -52,9 +53,6 @@
 #include "xreadlink.h"
 #include "yesno.h"
 
-#ifndef HAVE_FCHMOD
-# define HAVE_FCHMOD false
-#endif
 #ifndef HAVE_FCHOWN
 # define HAVE_FCHOWN false
 # define fchown(fd, uid, gid) (-1)
@@ -102,26 +100,6 @@ static char const *top_level_dst_name;
 
 /* The invocation name of this program.  */
 extern char *program_name;
-
-/* Encapsulate selection of the file mode to be applied to
-   new non-directories.  */
-
-static mode_t
-get_dest_mode (const struct cp_options *option, mode_t mode)
-{
-  /* In some applications (e.g., install), use precisely the
-     specified mode.  */
-  if (option->set_mode)
-    return option->mode;
-
-  /* Honor the umask for `cp', but not for `mv' or `cp -p'.
-     In addition, `cp' without -p must clear the set-user-ID and set-group-ID
-     bits.  POSIX requires it do that when creating new files.  */
-  if (!option->move_mode && !option->preserve_mode)
-    mode &= (option->umask_kill & ~(S_ISUID | S_ISGID));
-
-  return mode;
-}
 
 /* FIXME: describe */
 /* FIXME: rewrite this to use a hash table so we avoid the quadratic
@@ -201,23 +179,17 @@ copy_dir (char const *src_name_in, char const *dst_name_in, bool new_dst,
 
 static bool
 set_owner (const struct cp_options *x, char const *dst_name, int dest_desc,
-	   uid_t uid, gid_t gid, bool *chown_succeeded)
+	   uid_t uid, gid_t gid)
 {
   if (HAVE_FCHOWN && dest_desc != -1)
     {
       if (fchown (dest_desc, uid, gid) == 0)
-	{
-	  *chown_succeeded = true;
-	  return true;
-	}
+	return true;
     }
   else
     {
       if (chown (dst_name, uid, gid) == 0)
-	{
-	  *chown_succeeded = true;
-	  return true;
-	}
+	return true;
     }
   if (! chown_failure_ok (x))
     {
@@ -261,13 +233,12 @@ preserve_author (const char *dst_name, int dest_desc, const struct stat *src_sb)
    Use DST_MODE as the 3rd argument in the call to open.
    X provides many option settings.
    Return true if successful.
-   *NEW_DST and *CHOWN_SUCCEEDED are as in copy_internal.
+   *NEW_DST is as in copy_internal.
    SRC_SB is the result of calling XSTAT (aka stat) on SRC_NAME.  */
 
 static bool
 copy_reg (char const *src_name, char const *dst_name,
 	  const struct cp_options *x, mode_t dst_mode, bool *new_dst,
-	  bool *chown_succeeded,
 	  struct stat const *src_sb)
 {
   char *buf;
@@ -527,8 +498,7 @@ copy_reg (char const *src_name, char const *dst_name,
 
   if (x->preserve_ownership && ! SAME_OWNER_AND_GROUP (*src_sb, sb))
     {
-      if (! set_owner (x, dst_name, dest_desc, src_sb->st_uid, src_sb->st_gid,
-		       chown_succeeded))
+      if (! set_owner (x, dst_name, dest_desc, src_sb->st_uid, src_sb->st_gid))
         {
 	  return_val = false;
 	  goto close_src_and_dst_desc;
@@ -537,25 +507,16 @@ copy_reg (char const *src_name, char const *dst_name,
 
   preserve_author (dst_name, dest_desc, src_sb);
 
-  /* Permissions of newly-created regular files were set upon `open'.
-     But don't return early if there were any special bits and chown
-     succeeded, because the chown must have reset those bits.  */
-  if (!(*new_dst
-	&& !(*chown_succeeded && (src_sb->st_mode & ~S_IRWXUGO)))
-      && (x->preserve_mode || *new_dst)
-      && (x->copy_as_regular || S_ISREG (src_sb->st_mode)))
+  if (x->preserve_mode || x->move_mode)
     {
-      if ((HAVE_FCHMOD
-	   ? fchmod (dest_desc, get_dest_mode (x, src_sb->st_mode))
-	   : chmod  (dst_name,  get_dest_mode (x, src_sb->st_mode))) == 0)
-	goto close_src_and_dst_desc;
-
-      error (0, errno, _("setting permissions for %s"), quote (dst_name));
-      if (x->set_mode || x->require_preserve)
-	{
-	  return_val = false;
-	  goto close_src_and_dst_desc;
-	}
+      if (copy_acl (src_name, source_desc, dst_name, dest_desc,
+		    src_sb->st_mode) != 0 && x->require_preserve)
+	return_val = false;
+    }
+  else if (x->set_mode)
+    {
+      if (set_acl (dst_name, dest_desc, x->mode) != 0)
+	return_val = false;
     }
 
 close_src_and_dst_desc:
@@ -993,12 +954,13 @@ copy_internal (char const *src_name, char const *dst_name,
   struct stat dst_sb;
   mode_t src_mode;
   mode_t src_type;
+  mode_t dst_mode IF_LINT (= 0);
+  bool restore_dst_mode = false;
   char *earlier_file = NULL;
   char *dst_backup = NULL;
   bool backup_succeeded = false;
   bool delayed_ok;
   bool copied_as_regular = false;
-  bool chown_succeeded = false;
   bool preserve_metadata;
 
   if (x->move_mode && rename_succeeded)
@@ -1514,22 +1476,42 @@ copy_internal (char const *src_name, char const *dst_name,
 
       if (new_dst || !S_ISDIR (dst_sb.st_mode))
 	{
-	  /* Create the new directory writable and searchable, so
-             we can create new entries in it.  */
-
-	  if (mkdir (dst_name, (src_mode & x->umask_kill) | S_IRWXU) != 0)
+	  if (mkdir (dst_name, src_mode) != 0)
 	    {
 	      error (0, errno, _("cannot create directory %s"),
 		     quote (dst_name));
 	      goto un_backup;
 	    }
 
+	  /* We need search and write permissions to the new directory
+	     for writing the directory's contents. Check if these
+	     permissions are there.  */
+
+	  if (lstat (dst_name, &dst_sb) != 0)
+	    {
+	      error (0, errno, _("cannot stat %s"), quote (dst_name));
+	      goto un_backup;
+	    }
+	  else if ((dst_sb.st_mode & S_IRWXU) != S_IRWXU)
+	    {
+	      /* Make the new directory searchable and writable.  */
+
+	      dst_mode = dst_sb.st_mode;
+	      restore_dst_mode = true;
+
+	      if (chmod (dst_name, dst_mode | S_IRWXU))
+		{
+		  error (0, errno, _("setting permissions for %s"),
+			 quote (dst_name));
+		  goto un_backup;
+		}
+	    }
+
 	  /* Insert the created directory's inode and device
              numbers into the search structure, so that we can
              avoid copying it again.  */
 
-	  if (! remember_created (dst_name))
-	    goto un_backup;
+	  remember_copied (dst_name, dst_sb.st_ino, dst_sb.st_dev);
 
 	  if (x->verbose)
 	    printf ("%s -> %s\n", quote_n (0, src_name), quote_n (1, dst_name));
@@ -1606,16 +1588,14 @@ copy_internal (char const *src_name, char const *dst_name,
       /* POSIX says the permission bits of the source file must be
 	 used as the 3rd argument in the open call, but that's not consistent
 	 with historical practice.  */
-      if (! copy_reg (src_name, dst_name, x,
-		      get_dest_mode (x, src_mode), &new_dst, &chown_succeeded,
-		      &src_sb))
+      if (! copy_reg (src_name, dst_name, x, src_mode, &new_dst, &src_sb))
 	goto un_backup;
     }
   else
 #ifdef S_ISFIFO
   if (S_ISFIFO (src_type))
     {
-      if (mkfifo (dst_name, get_dest_mode (x, src_mode)))
+      if (mkfifo (dst_name, src_mode))
 	{
 	  error (0, errno, _("cannot create fifo %s"), quote (dst_name));
 	  goto un_backup;
@@ -1626,7 +1606,7 @@ copy_internal (char const *src_name, char const *dst_name,
     if (S_ISBLK (src_type) || S_ISCHR (src_type)
 	|| S_ISSOCK (src_type))
     {
-      if (mknod (dst_name, get_dest_mode (x, src_mode), src_sb.st_rdev))
+      if (mknod (dst_name, src_mode, src_sb.st_rdev))
 	{
 	  error (0, errno, _("cannot create special file %s"),
 		 quote (dst_name));
@@ -1741,20 +1721,30 @@ copy_internal (char const *src_name, char const *dst_name,
   if (x->preserve_ownership
       && (new_dst || !SAME_OWNER_AND_GROUP (src_sb, dst_sb)))
     {
-      if (! set_owner (x, dst_name, -1, src_sb.st_uid, src_sb.st_gid,
-		       &chown_succeeded))
+      if (! set_owner (x, dst_name, -1, src_sb.st_uid, src_sb.st_gid))
 	return false;
     }
 
   preserve_author (dst_name, -1, &src_sb);
 
-  if ((x->preserve_mode || new_dst)
-      && (x->copy_as_regular || S_ISREG (src_type) || S_ISDIR (src_type)))
+  if (x->preserve_mode || x->move_mode)
     {
-      if (chmod (dst_name, get_dest_mode (x, src_mode)) != 0)
+      if (copy_acl (src_name, -1, dst_name, -1, src_mode) != 0
+	  && x->require_preserve)
+	return false;
+    }
+  else if (x->set_mode)
+    {
+      if (set_acl (dst_name, -1, x->mode) != 0)
+	return false;
+    }
+  else if (restore_dst_mode)
+    {
+      if (chmod (dst_name, dst_mode))
 	{
-	  error (0, errno, _("setting permissions for %s"), quote (dst_name));
-	  if (x->set_mode || x->require_preserve)
+	  error (0, errno, _("preserving permissions for %s"),
+		 quote (dst_name));
+	  if (x->require_preserve)
 	    return false;
 	}
     }
