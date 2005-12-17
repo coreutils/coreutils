@@ -1,3 +1,7 @@
+2005-12-05  Andreas Gruenbacher  <agruen@suse.de>
+
+	* acl.m4 (AC_FUNC_ACL): Add POSIX ACL and Linux-specific acl tests.
+
 2005-12-14  Jim Meyering  <jim@meyering.net>
 
 	* fprintftime.m4: New file.
