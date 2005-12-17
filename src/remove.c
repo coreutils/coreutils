@@ -50,16 +50,6 @@
 #define obstack_chunk_alloc malloc
 #define obstack_chunk_free free
 
-/* Define to the options that make open (or openat) fail to open
-   a symlink.  Define to 0 if there are no such options.
-   This is useful because it permits us to skip the `fstat'
-   and dev/ino comparison in AD_push.  */
-#if defined O_NOFOLLOW
-# define OPEN_NO_FOLLOW_SYMLINK O_NOFOLLOW
-#else
-# define OPEN_NO_FOLLOW_SYMLINK 0
-#endif
-
 /* This is the maximum number of consecutive readdir/unlink calls that
    can be made (with no intervening rewinddir or closedir/opendir)
    before triggering a bug that makes readdir return NULL even though
@@ -547,7 +537,7 @@ AD_push (int fd_cwd, Dirstack_state *ds, char const *dir,
 
   /* If our uses of openat are guaranteed not to
      follow a symlink, then we can skip this check.  */
-  if ( ! OPEN_NO_FOLLOW_SYMLINK)
+  if ( ! O_NOFOLLOW)
     {
       struct stat sb;
       if (fstat (fd_cwd, &sb) != 0)
@@ -596,7 +586,7 @@ is_empty_dir (int fd_cwd, char const *dir)
   DIR *dirp;
   struct dirent const *dp;
   int saved_errno;
-  int fd = openat (fd_cwd, dir, O_RDONLY);
+  int fd = openat (fd_cwd, dir, O_RDONLY | O_NDELAY);
 
   if (fd < 0)
     return false;
@@ -997,7 +987,7 @@ fd_to_subdirp (int fd_cwd, char const *f,
 	       struct stat *subdir_sb, Dirstack_state *ds,
 	       int *cwd_errno ATTRIBUTE_UNUSED)
 {
-  int fd_sub = openat_permissive (fd_cwd, f, O_RDONLY | OPEN_NO_FOLLOW_SYMLINK,
+  int fd_sub = openat_permissive (fd_cwd, f, O_RDONLY | O_NOFOLLOW,
 				  0, cwd_errno);
 
   /* Record dev/ino of F.  We may compare them against saved values
