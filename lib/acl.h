@@ -18,11 +18,14 @@
 
    Written by Paul Eggert.  */
 
-#if HAVE_SYS_ACL_H && HAVE_ACL
+#if HAVE_SYS_ACL_H
 # include <sys/acl.h>
 #endif
-#if ! defined GETACLCNT && defined ACL_CNT
+#if defined HAVE_ACL && ! defined GETACLCNT && defined ACL_CNT
 # define GETACLCNT ACL_CNT
 #endif
 
 int file_has_acl (char const *, struct stat const *);
+int copy_acl (char const *, int, char const *, int, mode_t);
+int set_acl (char const *, int, mode_t);
+int chmod_or_fchmod (char const *, int, mode_t);
