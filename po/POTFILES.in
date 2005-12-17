@@ -2,6 +2,7 @@
 # Copyright (C) 1996-2005 Free Software Foundation, Inc.
 
 # These are nominally temporary...
+lib/acl.c
 lib/argmatch.c
 lib/closeout.c
 lib/error.c
