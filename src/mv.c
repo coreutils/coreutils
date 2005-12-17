@@ -134,12 +134,6 @@ cp_option_init (struct cp_options *x)
   x->mode = 0;
   x->stdin_tty = isatty (STDIN_FILENO);
 
-  /* Find out the current file creation mask, to knock the right bits
-     when using chmod.  The creation mask is set to be liberal, so
-     that created directories can be written, even if it would not
-     have been allowed with the mask this process was started with.  */
-  x->umask_kill = ~ umask (0);
-
   x->update = false;
   x->verbose = false;
   x->dest_info = NULL;
