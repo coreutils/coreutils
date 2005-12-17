@@ -165,9 +165,6 @@ struct cp_options
      Create destination directories as usual. */
   bool symbolic_link;
 
-  /* The bits to preserve in created files' modes. */
-  mode_t umask_kill;
-
   /* If true, do not copy a nondirectory that has an existing destination
      with the same or newer modification time. */
   bool update;
