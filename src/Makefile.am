@@ -101,6 +101,13 @@ uptime_LDADD = $(LDADD) $(GETLOADAVG_LIBS)
 
 su_LDADD = $(LDADD) $(LIB_CRYPT)
 
+dir_LDADD += $(LIB_ACL)
+ls_LDADD += $(LIB_ACL)
+vdir_LDADD += $(LIB_ACL)
+cp_LDADD += $(LIB_ACL)
+mv_LDADD += $(LIB_ACL)
+ginstall_LDADD += $(LIB_ACL)
+
 $(PROGRAMS): ../lib/libcoreutils.a
 
 SUFFIXES = .sh
