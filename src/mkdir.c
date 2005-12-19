@@ -23,6 +23,7 @@
 #include <sys/types.h>
 
 #include "system.h"
+#include "chmod-safer.h"
 #include "dirname.h"
 #include "error.h"
 #include "mkdir-p.h"
@@ -79,6 +80,7 @@ int
 main (int argc, char **argv)
 {
   mode_t newmode;
+  mode_t tmp_mode;
   mode_t parent_mode IF_LINT (= 0);
   const char *specified_mode = NULL;
   const char *verbose_fmt_string = NULL;
@@ -142,6 +144,11 @@ main (int argc, char **argv)
 	umask (umask_value);
     }
 
+  /* This is the mode we'll use in the mknod or mkfifo call.
+     If it doesn't include S_IRUSR, use S_IRUSR so the final
+     open-for-fchmod will succeed.  */
+  tmp_mode = (newmode & S_IRUSR) ? newmode : S_IRUSR;
+
   for (; optind < argc; ++optind)
     {
       char *dir = argv[optind];
@@ -161,7 +168,7 @@ main (int argc, char **argv)
 	}
       else
 	{
-	  ok = (mkdir (dir, newmode) == 0);
+	  ok = (mkdir (dir, tmp_mode) == 0);
 
 	  if (! ok)
 	    error (0, errno, _("cannot create directory %s"), quote (dir));
@@ -178,7 +185,7 @@ main (int argc, char **argv)
 	     been created.  */
 
 	  if (ok && specified_mode
-	      && chmod (dir, newmode) != 0)
+	      && chmod_safer (dir, newmode, 0, S_IFDIR) != 0)
 	    {
 	      error (0, errno, _("cannot set permissions of directory %s"),
 		     quote (dir));
