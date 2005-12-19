@@ -19,10 +19,12 @@
 
 #include <config.h>
 #include <stdio.h>
+#include <assert.h>
 #include <getopt.h>
 #include <sys/types.h>
 
 #include "system.h"
+#include "chmod-safer.h"
 #include "error.h"
 #include "modechange.h"
 #include "quote.h"
@@ -88,10 +90,12 @@ int
 main (int argc, char **argv)
 {
   mode_t newmode;
+  mode_t tmp_mode;
   const char *specified_mode;
   int optc;
   int expected_operands;
-  mode_t node_type;
+  mode_t node_type IF_LINT (= 0);
+  dev_t device = 0;
 
   initialize_main (&argc, &argv);
   program_name = argv[0];
@@ -126,6 +130,11 @@ main (int argc, char **argv)
       newmode = mode_adjust (newmode, change, umask (0));
       free (change);
     }
+
+  /* This is the mode we'll use in the mknod or mkfifo call.
+     If it doesn't include S_IRUSR, use S_IRUSR so the final
+     open-for-fchmod will succeed.  */
+  tmp_mode = (newmode & S_IRUSR) ? newmode : S_IRUSR;
 
   /* If the number of arguments is 0 or 1,
      or (if it's 2 or more and the second one starts with `p'), then there
@@ -183,7 +192,6 @@ main (int argc, char **argv)
 	char const *s_major = argv[optind + 2];
 	char const *s_minor = argv[optind + 3];
 	uintmax_t i_major, i_minor;
-	dev_t device;
 
 	if (xstrtoumax (s_major, NULL, 0, &i_major, NULL) != LONGINT_OK
 	    || i_major != (major_t) i_major)
@@ -201,7 +209,7 @@ main (int argc, char **argv)
 	  error (EXIT_FAILURE, 0, _("invalid device %s %s"), s_major, s_minor);
 #endif
 
-	if (mknod (argv[optind], newmode | node_type, device) != 0)
+	if (mknod (argv[optind], tmp_mode | node_type, device) != 0)
 	  error (EXIT_FAILURE, errno, "%s", quote (argv[optind]));
       }
       break;
@@ -210,7 +218,8 @@ main (int argc, char **argv)
 #ifndef S_ISFIFO
       error (EXIT_FAILURE, 0, _("fifo files not supported"));
 #else
-      if (mkfifo (argv[optind], newmode))
+      node_type = S_IFIFO;
+      if (mkfifo (argv[optind], tmp_mode))
 	error (EXIT_FAILURE, errno, "%s", quote (argv[optind]));
 #endif
       break;
@@ -226,9 +235,9 @@ main (int argc, char **argv)
 
   if (specified_mode)
     {
-      if (chmod (argv[optind], newmode))
-        error (0, errno, _("cannot set permissions of %s"),
-               quote (argv[optind]));
+      if (chmod_safer (argv[optind], newmode, device, node_type) != 0)
+	error (EXIT_FAILURE, errno, _("cannot set permissions of %s"),
+	       quote (argv[optind]));
     }
 
   exit (EXIT_SUCCESS);
