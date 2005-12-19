@@ -23,6 +23,7 @@
 #include <sys/types.h>
 
 #include "system.h"
+#include "chmod-safer.h"
 #include "error.h"
 #include "modechange.h"
 #include "quote.h"
@@ -75,6 +76,7 @@ int
 main (int argc, char **argv)
 {
   mode_t newmode;
+  mode_t tmp_mode;
   const char *specified_mode;
   int exit_status = EXIT_SUCCESS;
   int optc;
@@ -122,9 +124,14 @@ main (int argc, char **argv)
       free (change);
     }
 
+  /* This is the mode we'll use in the mknod or mkfifo call.
+     If it doesn't include S_IRUSR, use S_IRUSR so the final
+     open-for-fchmod will succeed.  */
+  tmp_mode = (newmode & S_IRUSR) ? newmode : S_IRUSR;
+
   for (; optind < argc; ++optind)
     {
-      int fail = mkfifo (argv[optind], newmode);
+      int fail = mkfifo (argv[optind], tmp_mode);
       if (fail)
 	error (0, errno, _("cannot create fifo %s"), quote (argv[optind]));
 
@@ -133,7 +140,7 @@ main (int argc, char **argv)
 
       if (fail == 0 && specified_mode)
 	{
-	  fail = chmod (argv[optind], newmode);
+	  fail = chmod_safer (argv[optind], newmode, 0, S_IFIFO);
 	  if (fail)
 	    error (0, errno, _("cannot set permissions of fifo %s"),
 		   quote (argv[optind]));
