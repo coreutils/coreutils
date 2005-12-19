@@ -1,3 +1,7 @@
+2005-12-19  Jim Meyering  <jim@meyering.net>
+
+	* chmod-safer.c, chmod-safer.h: New files.
+
 2005-12-05  Andreas Gruenbacher  <agruen@suse.de>
 
 	Add POSIX ACL support
