@@ -12,6 +12,7 @@ TESTS_ENVIRONMENT = \
   PROG=$$tst
 
 TESTS = \
+  mknod \
   stat-printf \
   stat-fmt \
   sort-rand \
