@@ -123,7 +123,7 @@ make_dir_parents (char const *arg,
       mode_t oldmask = umask (0);
 
       /* Make a copy of ARG that we can scribble NULs on.  */
-      dir = (char *) alloca (strlen (arg) + 1);
+      dir = alloca (strlen (arg) + 1);
       strcpy (dir, arg);
       strip_trailing_slashes (dir);
       full_dir = dir;
@@ -210,8 +210,7 @@ make_dir_parents (char const *arg,
 
 	      if (re_protect)
 		{
-		  struct ptr_list *new = (struct ptr_list *)
-		    alloca (sizeof *new);
+		  struct ptr_list *new = alloca (sizeof *new);
 		  new->dirname_end = slash;
 		  new->next = leading_dirs;
 		  leading_dirs = new;
