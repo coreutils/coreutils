@@ -39,13 +39,12 @@
 #include "gettext.h"
 #define _(msgid) gettext (msgid)
 
-#include "save-cwd.h"
+#include "chdir-safer.h"
 #include "dirname.h"
 #include "error.h"
 #include "quote.h"
+#include "save-cwd.h"
 #include "stat-macros.h"
-
-#define WX_USR (S_IWUSR | S_IXUSR)
 
 /* Ensure that the directory ARG exists.
 
@@ -128,10 +127,10 @@ make_dir_parents (char const *arg,
       strip_trailing_slashes (dir);
       full_dir = dir;
 
-      /* If leading directories shouldn't be writable or executable,
+      /* If leading directories shouldn't be readable, writable or executable,
 	 or should have set[ug]id or sticky bits set and we are setting
 	 their owners, we need to fix their permissions after making them.  */
-      if (((parent_mode & WX_USR) != WX_USR)
+      if (((parent_mode & S_IRWXU) != S_IRWXU)
 	  || ((owner != (uid_t) -1 || group != (gid_t) -1)
 	      && (parent_mode & (S_ISUID | S_ISGID | S_ISVTX)) != 0))
 	{
@@ -223,7 +222,7 @@ make_dir_parents (char const *arg,
 	     mkdir process O(n^2) file name components.  */
 	  if (do_chdir)
 	    {
-	      if (chdir (basename_dir) == 0)
+	      if (chdir_no_follow (basename_dir) == 0)
 		dir_known_to_exist = true;
 	      else if (dir_known_to_exist)
 		{
