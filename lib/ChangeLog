@@ -1,5 +1,8 @@
 2005-12-20  Jim Meyering  <jim@meyering.net>
 
+	* mkdir-p.c (make_dir_parents): Remove unnecessary casts of alloca,
+	since now it's guaranteed to be (void *).
+
 	* chmod-safer.c (fchmod_new): Don't try to close fd if it's < 0.
 
 2005-12-19  Jim Meyering  <jim@meyering.net>
