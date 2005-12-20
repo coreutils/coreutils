@@ -91,7 +91,7 @@ fchmod_new (char const *file, mode_t mode, dev_t device, mode_t file_type)
       saved_errno = errno;
     }
 
-  if (close (fd) != 0 && saved_errno == 0)
+  if (0 <= fd && close (fd) != 0 && saved_errno == 0)
     saved_errno = errno;
 
   errno = saved_errno;
