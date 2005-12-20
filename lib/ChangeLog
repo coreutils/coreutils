@@ -1,3 +1,7 @@
+2005-12-20  Jim Meyering  <jim@meyering.net>
+
+	* chmod-safer.c (fchmod_new): Don't try to close fd if it's < 0.
+
 2005-12-19  Jim Meyering  <jim@meyering.net>
 
 	* chmod-safer.c, chmod-safer.h: New files.
