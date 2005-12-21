@@ -8,6 +8,10 @@
 	* mkdir-p.c (RW_USR): Remove definition.
 	(make_dir_parents): Use S_IRWXU, now that read access is also required.
 
+	Avoid a race condition, on systems where open honors O_NOFOLLOW.
+	* mkdir-p.c (make_dir_parents): Include chdir-safer.h.
+	Use chdir_no_follow in place of chdir.
+
 	* mkdir-p.c (make_dir_parents): Remove unnecessary casts of alloca,
 	since now it's guaranteed to be (void *).
 
