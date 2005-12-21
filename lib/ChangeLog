@@ -1,3 +1,8 @@
+2005-12-21  Jim Meyering  <jim@meyering.net>
+
+	Like chdir(2), but safer, if possible.
+	* chdir-safer.c, chdir-safer.h: New files.
+
 2005-12-20  Jim Meyering  <jim@meyering.net>
 
 	* mkdir-p.c (RW_USR): Remove definition.
