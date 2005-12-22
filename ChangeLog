@@ -1,6 +1,11 @@
-2005-12-19  Jim Meyering  <jim@meyering.net>
+2005-12-22  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* tests/help-version: Redirect stderr to /dev/full, to suppress
+	write error diagnostic.
+
+2005-12-19  Jim Meyering  <jim@meyering.net>
 
 	* src/mkdir.c, src/mknod.c, src/mkfifo.c (main)
 	Avoid a minor race condition when `-m MODE' is specified, by using
