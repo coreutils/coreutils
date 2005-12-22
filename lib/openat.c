@@ -24,8 +24,10 @@
 #include "openat.h"
 
 #include "dirname.h" /* solely for definition of IS_ABSOLUTE_FILE_NAME */
+#include "fcntl--.h"
 #include "openat-priv.h"
 #include "save-cwd.h"
+#include "unistd--.h"
 
 #include <stdarg.h>
 #include <stddef.h>
@@ -71,7 +73,7 @@ openat (int fd, char const *file, int flags, ...)
 
    If a previous attempt to restore the current working directory
    failed, then we must not even try to access a `.'-relative name.
-   It is the caller's responsibility to not to call this function
+   It is the caller's responsibility not to call this function
    in that case.  */
 
 int
