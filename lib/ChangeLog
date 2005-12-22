@@ -1,3 +1,9 @@
+2005-12-22  Jim Meyering  <jim@meyering.net>
+
+	* openat.c: Include "fcntl--.h" and "unistd--.h", to map open
+	and dup to open_safer and dup_safer, respectively.
+	(openat_permissive): Fix typo in comment.
+
 2005-12-21  Jim Meyering  <jim@meyering.net>
 
 	Like chdir(2), but safer, if possible.
