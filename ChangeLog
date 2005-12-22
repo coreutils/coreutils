@@ -9,9 +9,9 @@
 
 	* src/mkdir.c, src/mknod.c, src/mkfifo.c (main)
 	Avoid a minor race condition when `-m MODE' is specified, by using
-	open, fchown, and close rather than just chown.  To do that reliably
-	(even with an overly restrictive umask), ensure that each
-	mkdir/mknod/mkfifo call uses a mode including at least owner-read access.
+	open, fchown, and close rather than just chown.  To do that reliably --
+	even with an overly restrictive umask -- ensure that each mkdir,
+	mknod and mkfifo call uses a mode including at least owner-read access.
 	* src/mknod.c (main): When `-m MODE' is specified, exit nonzero if
 	the subsequent chown (or equivalent open,fchown,close) fails.
 	* tests/misc/mknod: New tests.
