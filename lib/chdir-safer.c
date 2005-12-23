@@ -34,6 +34,10 @@
 
 #include "fcntl--.h" /* for the open->open_safer mapping */
 
+#if !defined O_NOFOLLOW
+# define O_NOFOLLOW 0
+#endif
+
 /* Assuming we can use open-with-O_NOFOLLOW, open DIR and fchdir into it --
    but fail (setting errno to EACCES) if anyone replaces it with a symlink,
    or otherwise changes its type.  Return zero upon success.  */
