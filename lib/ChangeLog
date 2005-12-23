@@ -1,3 +1,9 @@
+2005-12-23  Jim Meyering  <jim@meyering.net>
+
+	* chmod-safer.c (O_NOFOLLOW): Define, if necessary.
+	* chdir-safer.c (O_NOFOLLOW): Likewise.
+	Reported by Eric Blake.
+
 2005-12-22  Jim Meyering  <jim@meyering.net>
 
 	* openat.c: Include "fcntl--.h" and "unistd--.h", to map open
