@@ -38,27 +38,42 @@
 # define O_NOFOLLOW 0
 #endif
 
-/* Assuming we can use open-with-O_NOFOLLOW, open DIR and fchdir into it --
-   but fail (setting errno to EACCES) if anyone replaces it with a symlink,
-   or otherwise changes its type.  Return zero upon success.  */
-static int
-fchdir_new (char const *dir)
-{
-  int fail = 1;
-  struct stat sb;
-  int saved_errno = 0;
-  int fd = open (dir, O_NOFOLLOW | O_RDONLY | O_NDELAY);
+#define SAME_INODE(Stat_buf_1, Stat_buf_2) \
+  ((Stat_buf_1).st_ino == (Stat_buf_2).st_ino \
+   && (Stat_buf_1).st_dev == (Stat_buf_2).st_dev)
 
-  assert (O_NOFOLLOW);
+/* Just like chmod, but fail if DIR is a symbolic link.
+   This can avoid a minor race condition between when a
+   directory is created or stat'd and when we chdir into it. */
+int
+chdir_no_follow (char const *dir)
+{
+  int fail = -1;
+  struct stat sb;
+  struct stat sb_init;
+  int saved_errno = 0;
+  int fd;
+
+  bool open_dereferences_symlink = ! O_NOFOLLOW;
+
+  /* If open follows symlinks, lstat DIR first to ensure that it is
+     a directory and to get its device and inode numbers.  */
+  if (open_dereferences_symlink
+      && (lstat (dir, &sb_init) != 0 || ! S_ISDIR (sb_init.st_mode)))
+    return fail;
+
+  fd = open (dir, O_NOFOLLOW | O_RDONLY | O_NDELAY);
 
   if (0 <= fd
       && fstat (fd, &sb) == 0
-      /* Given the entry we've just created, if its type has changed, then
-	 someone may be trying to do something nasty.  However, the risk of
+      /* If DIR is a different directory, then someone is trying to do
+	 something nasty.  However, the risk of
 	 such an attack is so low that it isn't worth a special diagnostic.
-	 Simply skip the fchdir and set errno, so that the caller can
+	 Simply skip the fchdir and set errno (to the same value that open
+	 uses for symlinks with O_NOFOLLOW), so that the caller can
 	 report the failure.  */
-      && (S_ISDIR (sb.st_mode) || ((errno = EACCES), 0))
+      && ( ! open_dereferences_symlink || SAME_INODE (sb_init, sb)
+	  || ((errno = ELOOP), 0))
       && fchdir (fd) == 0)
     {
       fail = 0;
@@ -68,24 +83,9 @@ fchdir_new (char const *dir)
       saved_errno = errno;
     }
 
-  if (0 < fd && close (fd) != 0 && saved_errno == 0)
-    saved_errno = errno;
+  if (0 < fd)
+    close (fd); /* Ignore any failure.  */
 
   errno = saved_errno;
   return fail;
-}
-
-/* Just like chmod, but don't follow symlinks.
-   This can avoid a minor race condition between when a directory is created
-   and when we chdir into it.  If the open syscall honors the O_NOFOLLOW flag,
-   then use open,fchdir,close.  Otherwise, just call chdir.  */
-int
-chdir_no_follow (char const *file)
-{
-  /* Using open and fchmod is reliable only if open honors the O_NOFOLLOW
-     flag.  Otherwise, an attacker could simply replace the just-created
-     entry with a symlink, and open would follow it blindly.  */
-  return (O_NOFOLLOW
-	  ? fchdir_new (file)
-	  : chdir      (file));
 }
