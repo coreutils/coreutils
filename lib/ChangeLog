@@ -1,7 +1,7 @@
 2005-12-23  Jim Meyering  <jim@meyering.net>
 
 	* chdir-safer.c (chdir_no_follow): Rewrite to use fchdir even
-	when O_NOFOLLOW is not defined.  Suggested by Eric Blake.
+	when O_NOFOLLOW is not defined.  Suggested by James Youngman.
 
 	* chmod-safer.c (O_NOFOLLOW): Define, if necessary.
 	* chdir-safer.c (O_NOFOLLOW): Likewise.
