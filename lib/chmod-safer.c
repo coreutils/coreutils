@@ -32,6 +32,10 @@
 
 #include "fcntl--.h" /* for the open->open_safer mapping */
 
+#if !defined O_NOFOLLOW
+# define O_NOFOLLOW 0
+#endif
+
 #ifndef HAVE_FCHMOD
 # define HAVE_FCHMOD false
 # define fchmod(fd, mode) (-1)
