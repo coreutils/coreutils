@@ -222,7 +222,14 @@ make_dir_parents (char const *arg,
 	     mkdir process O(n^2) file name components.  */
 	  if (do_chdir)
 	    {
-	      if (chdir_no_follow (basename_dir) == 0)
+	      /* If we know that basename_dir is a directory (because we've
+		 just created it), then ensure that when we change to it,
+		 that final component is not a symlink.  Otherwise, we must
+		 accept the possibility that basename_dir is a preexisting
+		 symlink-to-directory and chdir through the symlink.  */
+	      if ((dir_known_to_exist
+		   ? chdir_no_follow (basename_dir)
+		   : chdir (basename_dir)) == 0)
 		dir_known_to_exist = true;
 	      else if (dir_known_to_exist)
 		{
