@@ -1,5 +1,8 @@
 2005-12-23  Jim Meyering  <jim@meyering.net>
 
+	* mkdir-p.c (make_dir_parents): Use chdir_no_follow only
+	if we've just created the directory.
+
 	* chdir-safer.c (chdir_no_follow): Rewrite to use fchdir even
 	when O_NOFOLLOW is not defined.  Suggested by James Youngman.
 
