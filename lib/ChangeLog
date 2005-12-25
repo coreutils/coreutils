@@ -3,7 +3,7 @@
 	* chdir-safer.h (FCHMOD_SAFER_H): Remove: it was misnamed, and
 	wasn't needed anyay.
 	* chdir-safer.c (chdir_no_follow): Don't include stdio.h, assert.h,
-	unistd.h, fcntl--.h; not needed.
+	fcntl--.h; not needed.
 	(O_DIRECTORY): Define if not already defined.
 	(chdir_no_follow): Revamp describing comment to match code more
 	closely.  Redo use of internal vars to avoid lint complaints.
