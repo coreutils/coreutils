@@ -44,7 +44,10 @@
 
 /* Just like chmod, but fail if DIR is a symbolic link.
    This can avoid a minor race condition between when a
-   directory is created or stat'd and when we chdir into it. */
+   directory is created or stat'd and when we chdir into it.
+
+   Note that this function fails (while chdir would succeed)
+   if DIR cannot be opened with O_RDONLY.  */
 int
 chdir_no_follow (char const *dir)
 {
@@ -56,10 +59,9 @@ chdir_no_follow (char const *dir)
 
   bool open_dereferences_symlink = ! O_NOFOLLOW;
 
-  /* If open follows symlinks, lstat DIR first to ensure that it is
-     a directory and to get its device and inode numbers.  */
-  if (open_dereferences_symlink
-      && (lstat (dir, &sb_init) != 0 || ! S_ISDIR (sb_init.st_mode)))
+  /* If open follows symlinks, lstat DIR, to get its device and
+     inode numbers.  */
+  if (open_dereferences_symlink && lstat (dir, &sb_init) != 0)
     return fail;
 
   fd = open (dir, O_NOFOLLOW | O_RDONLY | O_NDELAY);
@@ -67,11 +69,10 @@ chdir_no_follow (char const *dir)
   if (0 <= fd
       && fstat (fd, &sb) == 0
       /* If DIR is a different directory, then someone is trying to do
-	 something nasty.  However, the risk of
-	 such an attack is so low that it isn't worth a special diagnostic.
-	 Simply skip the fchdir and set errno (to the same value that open
-	 uses for symlinks with O_NOFOLLOW), so that the caller can
-	 report the failure.  */
+	 something nasty.  However, the risk of such an attack is so low
+	 that it isn't worth a special diagnostic.  Simply skip the fchdir
+	 and set errno (to the same value that open uses for symlinks with
+	 O_NOFOLLOW), so that the caller can report the failure.  */
       && ( ! open_dereferences_symlink || SAME_INODE (sb_init, sb)
 	  || ((errno = ELOOP), 0))
       && fchdir (fd) == 0)
