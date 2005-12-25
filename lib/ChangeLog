@@ -1,3 +1,21 @@
+2005-12-25  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* chdir-safer.h (FCHMOD_SAFER_H): Remove: it was misnamed, and
+	wasn't needed anyay.
+	* chdir-safer.c (chdir_no_follow): Don't include stdio.h, assert.h,
+	unistd.h, fcntl--.h; not needed.
+	(O_DIRECTORY): Define if not already defined.
+	(chdir_no_follow): Revamp describing comment to match code more
+	closely.  Redo use of internal vars to avoid lint complaints.
+	Work even if directory is writeable but not readable.
+	Open with O_DIRECTORY | O_NOCTTY, for benefit of hosts that
+	don't have O_NOFOLLOW.  Use O_NONBLOCK (POSIX spelling) rather
+	than O_NDELAY.  Don't bother invoking fstat if open does not
+	dereference symlink, since the result isn't used then.
+	Don't assume file descriptor is positive; it might be zero
+	now that we no longer include fcntl--.h (we don't need fcntl--.h
+	since we immediately close the descriptor).
+
 2005-12-25  Jim Meyering  <jim@meyering.net>
 
 	* chdir-safer.c (chdir_no_follow): Remove unnecessary
