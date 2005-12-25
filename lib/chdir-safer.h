@@ -1,4 +1,5 @@
-/* like chdir(2), but safer, if possible
+/* much like chdir(2), but safer
+
    Copyright (C) 2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -17,9 +18,4 @@
 
 /* Written by Jim Meyering.  */
 
-#ifndef FCHMOD_SAFER_H
-# define FCHMOD_SAFER_H 1
-
 int chdir_no_follow (char const *file);
-
-#endif /* FCHMOD_SAFER_H */
