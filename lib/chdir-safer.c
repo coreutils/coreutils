@@ -1,4 +1,5 @@
-/* like chdir(2), but safer, if possible
+/* much like chdir(2), but safer
+
    Copyright (C) 2005 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -24,17 +25,16 @@
 #include "chdir-safer.h"
 
 #include <stdbool.h>
-#include <stdio.h>
-#include <assert.h>
 #include <fcntl.h>
 #include <errno.h>
-#include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#include "fcntl--.h" /* for the open->open_safer mapping */
+#ifndef O_DIRECTORY
+# define O_DIRECTORY 0
+#endif
 
-#if !defined O_NOFOLLOW
+#ifndef O_NOFOLLOW
 # define O_NOFOLLOW 0
 #endif
 
@@ -42,51 +42,52 @@
   ((Stat_buf_1).st_ino == (Stat_buf_2).st_ino \
    && (Stat_buf_1).st_dev == (Stat_buf_2).st_dev)
 
-/* Just like chmod, but fail if DIR is a symbolic link.
-   This can avoid a minor race condition between when a
-   directory is created or stat'd and when we chdir into it.
-
-   Note that this function fails (while chdir would succeed)
-   if DIR cannot be opened with O_RDONLY.  */
+/* Like chdir, but fail if DIR is a symbolic link to a directory (or
+   similar funny business), or if DIR is neither readable nor
+   writeable.  This avoids a minor race condition between when a
+   directory is created or statted and when the process chdirs into
+   it.  */
 int
 chdir_no_follow (char const *dir)
 {
-  int fail = -1;
-  struct stat sb;
-  struct stat sb_init;
-  int saved_errno = 0;
-  int fd;
-
-  bool open_dereferences_symlink = ! O_NOFOLLOW;
-
-  /* If open follows symlinks, lstat DIR, to get its device and
-     inode numbers.  */
-  if (open_dereferences_symlink && lstat (dir, &sb_init) != 0)
-    return fail;
-
-  fd = open (dir, O_NOFOLLOW | O_RDONLY | O_NDELAY);
-
-  if (0 <= fd
-      && fstat (fd, &sb) == 0
-      /* If DIR is a different directory, then someone is trying to do
-	 something nasty.  However, the risk of such an attack is so low
-	 that it isn't worth a special diagnostic.  Simply skip the fchdir
-	 and set errno (to the same value that open uses for symlinks with
-	 O_NOFOLLOW), so that the caller can report the failure.  */
-      && ( ! open_dereferences_symlink || SAME_INODE (sb_init, sb)
-	  || ((errno = ELOOP), 0))
-      && fchdir (fd) == 0)
+  int result = 0;
+  int saved_errno;
+  int open_flags = O_DIRECTORY | O_NOCTTY | O_NOFOLLOW | O_NONBLOCK;
+  int fd = open (dir, O_RDONLY | open_flags);
+  if (fd < 0)
     {
-      fail = 0;
-    }
-  else
-    {
-      saved_errno = errno;
+      if (errno == EACCES)
+	fd = open (dir, O_WRONLY | open_flags);
+      if (fd < 0)
+	return fd;
     }
 
-  if (0 < fd)
-    close (fd); /* Ignore any failure.  */
+  /* If open follows symlinks, lstat DIR and fstat FD to ensure that
+     they are the same file; if they are different files, set errno to
+     ELOOP (the same value that open uses for symlinks with
+     O_NOFOLLOW) so the caller can report a failure.  */
+  if (! O_NOFOLLOW)
+    {
+      struct stat sb1;
+      struct stat sb2;
 
+      result = lstat (dir, &sb1);
+      if (result == 0)
+	{
+	  result = fstat (fd, &sb2);
+	  if (result == 0 && ! SAME_INODE (sb1, sb2))
+	    {
+	      errno = ELOOP;
+	      result = -1;
+	    }
+	}
+    }
+
+  if (result == 0)
+    result = fchdir (fd);
+
+  saved_errno = errno;
+  close (fd);
   errno = saved_errno;
-  return fail;
+  return result;
 }
