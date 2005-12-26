@@ -45,9 +45,12 @@
 
 /* Like chdir, but fail if DIR is a symbolic link to a directory (or
    similar funny business), or if DIR is neither readable nor
-   writeable.  This avoids a minor race condition between when a
-   directory is created or statted and when the process chdirs into
-   it.  */
+   writable.  This avoids a minor race condition between when a
+   directory is created or statted and when the process chdirs into it.
+
+   On some systems, a writable yet unreadable directory cannot be
+   opened via open with O_WRONLY.  For example, on Linux 2.6, the
+   open syscall fails with EISDIR.  */
 int
 chdir_no_follow (char const *dir)
 {
@@ -70,11 +73,10 @@ chdir_no_follow (char const *dir)
   if (! O_NOFOLLOW)
     {
       struct stat sb1;
-      struct stat sb2;
-
       result = lstat (dir, &sb1);
       if (result == 0)
 	{
+	  struct stat sb2;
 	  result = fstat (fd, &sb2);
 	  if (result == 0 && ! SAME_INODE (sb1, sb2))
 	    {
