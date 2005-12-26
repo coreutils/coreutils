@@ -1,3 +1,10 @@
+2005-12-26  Jim Meyering  <jim@meyering.net>
+
+	* chdir-safer.c (chdir_no_follow): Move declaration of local,
+	sb2, `down' into the scope where it is used.
+	Note that on some systems this function also fails when DIR
+	is a writable-yet-unreadable directory.
+
 2005-12-25  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* chdir-safer.h (FCHMOD_SAFER_H): Remove: it was misnamed, and
