@@ -1031,9 +1031,7 @@ wipename (char *oldname, char const *qoldname, struct Options const *flags)
   bool first = true;
   bool ok = true;
 
-  int dir_fd = open (dir, O_WRONLY | O_NOCTTY);
-  if (dir_fd < 0)
-    dir_fd = open (dir, O_RDONLY | O_NOCTTY);
+  int dir_fd = open (dir, O_RDONLY | O_DIRECTORY | O_NOCTTY | O_NONBLOCK);
 
   if (flags->verbose)
     error (0, 0, _("%s: removing"), qoldname);
