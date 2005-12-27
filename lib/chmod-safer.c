@@ -23,16 +23,21 @@
 
 #include "chmod-safer.h"
 
+#ifdef S_IFMT
+# define defined_S_IFMT true
+#else
+# define defined_S_IFMT false
+#endif
+
+#include "stat-macros.h"
+
 #include <stdbool.h>
-#include <stdio.h>
-#include <assert.h>
+#include <stdlib.h>
 #include <fcntl.h>
 #include <errno.h>
 #include <unistd.h>
 
-#include "fcntl--.h" /* for the open->open_safer mapping */
-
-#if !defined O_NOFOLLOW
+#ifndef O_NOFOLLOW
 # define O_NOFOLLOW 0
 #endif
 
@@ -48,12 +53,17 @@ static inline bool
 same_file_type (struct stat const *st, dev_t device, mode_t type)
 {
   /* The types must always match.  */
-  if ( ! (st->st_mode & type))
+  if (! (defined_S_IFMT ? (st->st_mode & S_IFMT) == type
+	 : type == S_IFDIR ? S_ISDIR (st->st_mode)
+	 : type == S_IFIFO ? S_ISFIFO (st->st_mode)
+	 : type == S_IFBLK ? S_ISBLK (st->st_mode)
+	 : type == S_IFCHR ? S_ISCHR (st->st_mode)
+	 : (abort (), false)))
     return false;
 
   /* For character and block devices, the major and minor device
      numbers must match, too.  */
-  if (type & (S_IFCHR | S_IFBLK))
+  if (S_ISBLK (type) || S_ISCHR (type))
     return st->st_rdev == device;
 
   return true;
@@ -66,40 +76,39 @@ same_file_type (struct stat const *st, dev_t device, mode_t type)
 static int
 fchmod_new (char const *file, mode_t mode, dev_t device, mode_t file_type)
 {
-  int fail = 1;
+  int result = 0;
   struct stat sb;
-  int saved_errno = 0;
-  int fd = open (file, O_NOFOLLOW | O_RDONLY | O_NDELAY);
+  int fd = open (file, O_RDONLY | O_NOCTTY | O_NOFOLLOW | O_NONBLOCK);
+  int saved_errno;
 
-  assert (O_NOFOLLOW);
+  if (fd < 0)
+    return -1;
 
-  if (0 <= fd
-      && fstat (fd, &sb) == 0
-      /* Given the entry we've just created, if its link count is
-	 not 1 or its type/device has changed, then someone may be
-	 trying to do something nasty.  However, the risk of such an
-	 attack is so low that it isn't worth a special diagnostic.
-	 Simply skip the fchmod and set errno, so that the
-	 code below reports the failure to set permissions.
-	 Note that we don't check the link count if the expected
-	 type is `directory'.  */
-      && (((sb.st_nlink == 1 || file_type == S_IFDIR)
-	   && same_file_type (&sb, device, file_type))
-	  || ((errno = EACCES), 0))
-      && fchmod (fd, mode) == 0)
+  /* Given the entry we've just created, if its link count is
+     not 1 or its type/device has changed, then someone may be
+     trying to do something nasty.  However, the risk of such an
+     attack is so low that it isn't worth a special diagnostic.
+     Simply skip the fchmod and set errno, so that the
+     code below reports the failure to set permissions.
+     Note that we don't check the link count if the expected
+     type is `directory'.  */
+  result = fstat (fd, &sb);
+  if (result == 0)
     {
-      fail = 0;
-    }
-  else
-    {
-      saved_errno = errno;
+      if ((sb.st_nlink == 1 || S_ISDIR (file_type))
+	  && same_file_type (&sb, device, file_type))
+	result = fchmod (fd, mode);
+      else
+	{
+	  errno = EACCES;
+	  result = -1;
+	}
     }
 
-  if (0 <= fd && close (fd) != 0 && saved_errno == 0)
-    saved_errno = errno;
-
+  saved_errno = errno;
+  close (fd);
   errno = saved_errno;
-  return fail;
+  return result;
 }
 
 /* Use a safer variant of chmod, if the underlying system facilities permit.
