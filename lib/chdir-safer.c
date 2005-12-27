@@ -44,27 +44,18 @@
    && (Stat_buf_1).st_dev == (Stat_buf_2).st_dev)
 
 /* Like chdir, but fail if DIR is a symbolic link to a directory (or
-   similar funny business), or if DIR is neither readable nor
-   writable.  This avoids a minor race condition between when a
-   directory is created or statted and when the process chdirs into it.
-
-   On some systems, a writable yet unreadable directory cannot be
-   opened via open with O_WRONLY.  For example, on Linux 2.6, the
-   open syscall fails with EISDIR.  */
+   similar funny business), or if DIR not readable.  This avoids a
+   minor race condition between when a directory is created or statted
+   and when the process chdirs into it.  */
 int
 chdir_no_follow (char const *dir)
 {
   int result = 0;
   int saved_errno;
-  int open_flags = O_DIRECTORY | O_NOCTTY | O_NOFOLLOW | O_NONBLOCK;
-  int fd = open (dir, O_RDONLY | open_flags);
+  int fd = open (dir,
+		 O_RDONLY | O_DIRECTORY | O_NOCTTY | O_NOFOLLOW | O_NONBLOCK);
   if (fd < 0)
-    {
-      if (errno == EACCES)
-	fd = open (dir, O_WRONLY | open_flags);
-      if (fd < 0)
-	return fd;
-    }
+    return -1;
 
   /* If open follows symlinks, lstat DIR and fstat FD to ensure that
      they are the same file; if they are different files, set errno to
