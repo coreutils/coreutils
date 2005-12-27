@@ -1,6 +1,17 @@
-2005-12-22  Jim Meyering  <jim@meyering.net>
+2005-12-26  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 6.0-cvs.
+
+	* src/chown-core.c (restricted_chown):
+	Don't try O_WRONLY unless O_RDONLY failed wth EACCES.
+	* src/remove.c (fd_to_subdirp): Open with O_DIRECTORY | O_NOCTTY
+	| O_NOFOLLOW too, for consistency with other dir-openers.
+	Use POSIX-preferred O_NONBLOCK rather than O_NDELAY.
+	(is_empty_dir): Likewise.
+	* src/shred.c (wipename): Likewise.  Don't bother trying to open
+	dir for writing, since POSIX prohibits it.
+
+2005-12-22  Jim Meyering  <jim@meyering.net>
 
 	* tests/help-version: Redirect stderr to /dev/full, to suppress
 	write error diagnostic.

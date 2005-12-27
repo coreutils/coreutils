@@ -1,3 +1,28 @@
+2005-12-26  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* chdir-long.c (cdb_free): Don't bother trying to open directory
+	for write access: POSIX says that must fail.
+	* chdir-safer.c (chdir_no_follow): Likewise.
+	* fts.c (diropen): Likewise.
+	* save-cwd.c (save_cwd): Likewise.
+	* chdir-long.c (cdb_free): Open with O_NOCTTY | O_NONBLOCK as
+	well, for minor improvements on hosts that lack O_DIRECTORY.
+	* chmod-safer.c (defined_S_IFMT): New macro.
+	Include stat-macros.h.
+	Include stdlib.h, for abort().
+	Don't include stdio.h or assert.h; no longer needed.
+	(same_file_type): Don't assume S_IFMT is defined, as POSIX
+	does not require this.  Don't assume S_IFCHR and S_IFBLK have
+	their usual sort of bit pattern.
+	(fchmod_new): Open with O_NOCTTY for as well, for minor
+	improvement on hosts where that matters.  Don't bother to assert,
+	since the caller (in this source file) checks the same thing.
+	Discard any errno from a close failure, for consistency with other
+	code.
+	* chown.c (rpl_chown) [CHOWN_MODIFIES_SYMLINK]:
+	Don't try O_WRONLY unless O_RDONLY failed wth EACCES.
+	Fall back on chown if open failed with EACCES.
+
 2005-12-26  Jim Meyering  <jim@meyering.net>
 
 	* chdir-safer.c (chdir_no_follow): Move declaration of local,
