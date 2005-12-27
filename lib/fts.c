@@ -203,10 +203,7 @@ static int
 internal_function
 diropen (char const *dir)
 {
-  int fd = open (dir, O_RDONLY | O_DIRECTORY);
-  if (fd < 0)
-    fd = open (dir, O_WRONLY | O_DIRECTORY);
-  return fd;
+  return open (dir, O_RDONLY | O_DIRECTORY | O_NOCTTY | O_NONBLOCK);
 }
 
 FTS *
