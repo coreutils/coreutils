@@ -191,15 +191,13 @@ restricted_chown (char const *file,
 {
   enum RCH_status status = RC_ok;
   struct stat st;
-  int o_flags = (O_NONBLOCK | O_NOCTTY);
+  int open_flags = O_NONBLOCK | O_NOCTTY;
 
-  int fd = open (file, O_RDONLY | o_flags);
-  if (fd < 0)
-    {
-      fd = open (file, O_WRONLY | o_flags);
-      if (fd < 0)
-	return RC_error;
-    }
+  int fd = open (file, O_RDONLY | open_flags);
+  if (! (0 <= fd
+	 || (errno == EACCES
+	     && 0 <= (fd = open (file, O_WRONLY | open_flags)))))
+    return RC_error;
 
   if (fstat (fd, &st) != 0)
     {
