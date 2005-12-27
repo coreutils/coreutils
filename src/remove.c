@@ -578,15 +578,16 @@ AD_is_removable (Dirstack_state const *ds, char const *file)
   return ! (top->unremovable && hash_lookup (top->unremovable, file));
 }
 
-/* Return true if DIR is determined to be an empty directory
-   or if fdopendir or readdir fails.  */
+/* Return true if DIR is determined to be an empty directory.  */
 static bool
 is_empty_dir (int fd_cwd, char const *dir)
 {
   DIR *dirp;
   struct dirent const *dp;
   int saved_errno;
-  int fd = openat (fd_cwd, dir, O_RDONLY | O_NDELAY);
+  int fd = openat (fd_cwd, dir,
+		   (O_RDONLY | O_DIRECTORY
+		    | O_NOCTTY | O_NOFOLLOW | O_NONBLOCK));
 
   if (fd < 0)
     return false;
@@ -987,8 +988,8 @@ fd_to_subdirp (int fd_cwd, char const *f,
 	       struct stat *subdir_sb, Dirstack_state *ds,
 	       int *cwd_errno ATTRIBUTE_UNUSED)
 {
-  int fd_sub = openat_permissive (fd_cwd, f, O_RDONLY | O_NOFOLLOW,
-				  0, cwd_errno);
+  int open_flags = O_RDONLY | O_NOCTTY | O_NOFOLLOW | O_NONBLOCK;
+  int fd_sub = openat_permissive (fd_cwd, f, open_flags, 0, cwd_errno);
 
   /* Record dev/ino of F.  We may compare them against saved values
      to thwart any attempt to subvert the traversal.  They are also used
