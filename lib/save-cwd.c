@@ -75,12 +75,8 @@ save_cwd (struct saved_cwd *cwd)
   cwd->desc = open (".", O_RDONLY);
   if (cwd->desc < 0)
     {
-      cwd->desc = open (".", O_WRONLY);
-      if (cwd->desc < 0)
-	{
-	  cwd->name = xgetcwd ();
-	  return cwd->name ? 0 : -1;
-	}
+      cwd->name = xgetcwd ();
+      return cwd->name ? 0 : -1;
     }
 
   return 0;
