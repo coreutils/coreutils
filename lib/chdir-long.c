@@ -77,13 +77,10 @@ cdb_free (struct cd_buf const *cdb)
 static int
 cdb_advance_fd (struct cd_buf *cdb, char const *dir)
 {
-  int new_fd = openat (cdb->fd, dir, O_RDONLY | O_DIRECTORY);
+  int new_fd = openat (cdb->fd, dir,
+		       O_RDONLY | O_DIRECTORY | O_NOCTTY | O_NONBLOCK);
   if (new_fd < 0)
-    {
-      new_fd = openat (cdb->fd, dir, O_WRONLY | O_DIRECTORY);
-      if (new_fd < 0)
-	return -1;
-    }
+    return -1;
 
   cdb_free (cdb);
   cdb->fd = new_fd;
