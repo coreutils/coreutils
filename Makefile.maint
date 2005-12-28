@@ -29,7 +29,7 @@ GZIP_ENV = '--no-name --best --rsyncable'
 CVS = cvs
 
 # cvsu is part of the cvsutils package: http://www.red-bean.com/cvsutils/
-CVS_LIST = build-aux/cvsu --find --types=AFGM
+CVS_LIST = $(srcdir)/build-aux/cvsu --find --types=AFGM
 
 ifeq ($(origin prev_version_file), undefined)
   prev_version_file = .prev-version
@@ -80,6 +80,7 @@ syntax-check-rules = \
   sc_obsolete_symbols \
   sc_prohibit_atoi_atof \
   sc_prohibit_jm_in_m4 \
+  sc_prohibit_assert_without_use \
   sc_require_config_h \
   sc_root_tests \
   sc_space_tab \
@@ -101,12 +102,6 @@ syntax-check: $(syntax-check-rules)
 #	  { echo '$(ME): FIXME' 1>&2;					\
 #	    exit 1; } || :
 # FIXME: don't allow `#include .strings\.h' anywhere
-
-# FIXME: add a check for this.
-# Nearly every lib/*.c file must include config.h, like this:
-#  #ifdef HAVE_CONFIG_H
-#  # include <config.h>
-#  #endif
 
 sc_cast_of_argument_to_free:
 	@grep -E '\<free \(\(' $(srcdir)/{lib,src}/*.[chly] &&		\
@@ -174,11 +169,21 @@ sc_require_config_h:
 	  { echo '$(ME): the above files do not include <config.h>'	\
 		1>&2; exit 1; } || :
 
+# Prohibit the inclusion of assert.h without an actual use of assert.
+sc_prohibit_assert_without_use:
+	@( $(CVS_LIST) ) > /dev/null 2>&1 || : &&			\
+	  grep -L '\<assert ('						\
+	    $$(grep -l '# *include <assert\.h>'				\
+	      $$($(CVS_LIST) | grep '\.c$$' | grep -vEf .x-$@ ))	\
+	    | grep . &&							\
+	  { echo "$(ME): the above files include <assert.h> but don't use it" \
+		1>&2; exit 1; } || :
+
 sc_obsolete_symbols:
 	@( $(CVS_LIST) ) > /dev/null 2>&1 || : &&			\
-	  grep -E '\<(HAVE_FCNTL_H)\>'					\
+	  grep -E '\<(HAVE_FCNTL_H|O_NDELAY)\>'				\
 	     $$($(CVS_LIST) | grep -vEf .x-$@ ) &&			\
-	  { echo '$(ME): do not use HAVE_FCNTL_H'			\
+	  { echo '$(ME): do not use HAVE_FCNTL_H or O_NDELAY'		\
 		1>&2; exit 1; } || :
 
 # FIXME: warn about definitions of EXIT_FAILURE, EXIT_SUCCESS, STREQ
