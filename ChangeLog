@@ -1,6 +1,19 @@
-2005-12-26  Paul Eggert  <eggert@cs.ucla.edu>
+2005-12-27  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* Makefile.maint (sc_obsolete_symbols): Prohibit use of O_NDELAY.
+	(sc_prohibit_assert_without_use): New rule.
+	(syntax-check-rules): Add it to the list.
+	* .x-sc_prohibit_assert_without_use: New empty file.
+	* Makefile.am (EXTRA_DIST): Add it.
+
+	* Makefile.maint (CVS_LIST): Define in terms of $(srcdir).
+
+	* cp.c, df.c, link.c, mknod.c, nice.c, sleep.c, unlink.c:
+	Don't include <assert.h>; it wasn't used.
+
+2005-12-26  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/chown-core.c (restricted_chown):
 	Don't try O_WRONLY unless O_RDONLY failed wth EACCES.
