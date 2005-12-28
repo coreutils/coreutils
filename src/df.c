@@ -23,7 +23,6 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <getopt.h>
-#include <assert.h>
 
 #include "system.h"
 #include "canonicalize.h"
