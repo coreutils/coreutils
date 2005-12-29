@@ -1,3 +1,8 @@
+2005-12-29  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (sort invocation): Clarify that a blank is a space
+	or a tab.
+
 2005-12-15  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (stat invocation) [--printf]: Describe new option.
