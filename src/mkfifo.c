@@ -23,7 +23,6 @@
 #include <sys/types.h>
 
 #include "system.h"
-#include "chmod-safer.h"
 #include "error.h"
 #include "modechange.h"
 #include "quote.h"
@@ -62,7 +61,7 @@ Create named pipes (FIFOs) with the given NAMEs.\n\
 Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
-  -m, --mode=MODE   set permission mode (as in chmod), not a=rw - umask\n\
+  -m, --mode=MODE   set file permission bits to MODE, not a=rw - umask\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
@@ -76,8 +75,7 @@ int
 main (int argc, char **argv)
 {
   mode_t newmode;
-  mode_t tmp_mode;
-  const char *specified_mode;
+  char const *specified_mode = NULL;
   int exit_status = EXIT_SUCCESS;
   int optc;
 
@@ -88,8 +86,6 @@ main (int argc, char **argv)
   textdomain (PACKAGE);
 
   atexit (close_stdout);
-
-  specified_mode = NULL;
 
 #ifndef S_ISFIFO
   error (EXIT_FAILURE, 0, _("fifo files not supported"));
@@ -122,33 +118,17 @@ main (int argc, char **argv)
 	error (EXIT_FAILURE, 0, _("invalid mode"));
       newmode = mode_adjust (newmode, change, umask (0));
       free (change);
+      if (newmode & ~S_IRWXUGO)
+	error (EXIT_FAILURE, 0,
+	       _("mode must specify only file permission bits"));
     }
-
-  /* This is the mode we'll use in the mknod or mkfifo call.
-     If it doesn't include S_IRUSR, use S_IRUSR so the final
-     open-for-fchmod will succeed.  */
-  tmp_mode = (newmode & S_IRUSR) ? newmode : S_IRUSR;
 
   for (; optind < argc; ++optind)
-    {
-      int fail = mkfifo (argv[optind], tmp_mode);
-      if (fail)
+    if (mkfifo (argv[optind], newmode) != 0)
+      {
 	error (0, errno, _("cannot create fifo %s"), quote (argv[optind]));
-
-      /* If the containing directory happens to have a default ACL, chmod
-	 ensures the file mode permission bits are still set as desired.  */
-
-      if (fail == 0 && specified_mode)
-	{
-	  fail = chmod_safer (argv[optind], newmode, 0, S_IFIFO);
-	  if (fail)
-	    error (0, errno, _("cannot set permissions of fifo %s"),
-		   quote (argv[optind]));
-	}
-
-      if (fail)
 	exit_status = EXIT_FAILURE;
-    }
+      }
 
   exit (exit_status);
 #endif
