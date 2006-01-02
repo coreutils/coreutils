@@ -1,3 +1,10 @@
+2006-01-01  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* chmod-safer.m4: Remove.
+	* lchmod.m4: New file.
+	* jm-macros.m4 (gl_MACROS): Require gl_FUNC_LCHMOD.
+	Don't require gl_CHDIR_SAFER.
+
 2005-12-21  Jim Meyering  <jim@meyering.net>
 
 	* chdir-safer.m4: New file.

@@ -1,6 +1,24 @@
-2005-12-27  Jim Meyering  <jim@meyering.net>
+2006-01-01  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 6.0-cvs.
+
+	* NEWS: Document that mkfifo and mknod -m no longer set special bits.
+	* src/copy.c: Include lchmod.h.
+	(copy_internal): Use lchmod rather than chmod.
+	* src/cp.c: Include lchmod.h.
+	(re_protect, make_dir_parents_private): Use lchmod rather than chmod.
+	* src/mkdir.c: Include lchmod.h.
+	(usage): Clarify -m's operation.
+	(main): Use lchmod rather than chmod.  Don't use lchmod unless the
+	new mode contains bits outside the 777 range.
+	* src/mkfifo.c (usage): Clarify -m's operation.
+	(main): If -m is given, don't invoke chmod; use umask 0 instead.
+	Report an error if -m asks for bits outside the 777 range.
+	* src/mknod.c (usage, main): Likewise.
+
+	* src/mkdir.c, src/mkfifo.c, src/mknod.c: Undo 2005-12-19 changes.
+
+2005-12-27  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.maint (sc_obsolete_symbols): Prohibit use of O_NDELAY.
 	(sc_prohibit_assert_without_use): New rule.

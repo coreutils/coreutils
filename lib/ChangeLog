@@ -1,3 +1,11 @@
+2006-01-01  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* chmod-safer.c, chmod-safer.h: Remove.
+	* lchmod.h: New file.
+	* mkdir-p.c: Include lchmod.h, lchown.h.
+	(make_dir_parents): Use lchown rather than chown, and
+	lchmod rather than chmod.
+
 2005-12-26  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* chdir-long.c (cdb_free): Don't bother trying to open directory
