@@ -1,8 +1,8 @@
-#serial 95   -*- autoconf -*-
+#serial 96   -*- autoconf -*-
 
 dnl Misc type-related macros for coreutils.
 
-# Copyright (C) 1998, 2000, 2001, 2002, 2003, 2004, 2005 Free Software
+# Copyright (C) 1998, 2000, 2001, 2002, 2003, 2004, 2005, 2006 Free Software
 # Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
@@ -50,6 +50,7 @@ AC_DEFUN([gl_MACROS],
 
   AC_REQUIRE([gl_FUNC_DIRFD])
   AC_REQUIRE([AC_FUNC_ACL])
+  AC_REQUIRE([gl_FUNC_LCHMOD])
   AC_REQUIRE([gl_FUNC_LCHOWN])
   AC_REQUIRE([gl_FUNC_RMDIR_NOTEMPTY])
   AC_REQUIRE([gl_FUNC_CHOWN])
@@ -180,7 +181,6 @@ AC_DEFUN([gl_MACROS],
   AC_REQUIRE([gl_DIACRIT])
   AC_REQUIRE([gl_TYPE_SOCKLEN_T])
   AC_REQUIRE([gl_FPRINTFTIME])
-  AC_REQUIRE([gl_CHMOD_SAFER])
   AC_REQUIRE([gl_CHDIR_SAFER])
 ])
 
