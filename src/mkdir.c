@@ -1,5 +1,5 @@
 /* mkdir -- make directories
-   Copyright (C) 90, 1995-2002, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 90, 1995-2002, 2004, 2005, 2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -23,9 +23,9 @@
 #include <sys/types.h>
 
 #include "system.h"
-#include "chmod-safer.h"
 #include "dirname.h"
 #include "error.h"
+#include "lchmod.h"
 #include "mkdir-p.h"
 #include "modechange.h"
 #include "quote.h"
@@ -65,7 +65,7 @@ Create the DIRECTORY(ies), if they do not already exist.\n\
 Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
-  -m, --mode=MODE   set permission mode (as in chmod), not rwxrwxrwx - umask\n\
+  -m, --mode=MODE   set file mode (as in chmod), not a=rwx - umask\n\
   -p, --parents     no error if existing, make parent directories as needed\n\
   -v, --verbose     print a message for each created directory\n\
 "), stdout);
@@ -80,7 +80,6 @@ int
 main (int argc, char **argv)
 {
   mode_t newmode;
-  mode_t tmp_mode;
   mode_t parent_mode IF_LINT (= 0);
   const char *specified_mode = NULL;
   const char *verbose_fmt_string = NULL;
@@ -144,11 +143,6 @@ main (int argc, char **argv)
 	umask (umask_value);
     }
 
-  /* This is the mode we'll use in the mknod or mkfifo call.
-     If it doesn't include S_IRUSR, use S_IRUSR so the final
-     open-for-fchmod will succeed.  */
-  tmp_mode = (newmode & S_IRUSR) ? newmode : S_IRUSR;
-
   for (; optind < argc; ++optind)
     {
       char *dir = argv[optind];
@@ -168,7 +162,7 @@ main (int argc, char **argv)
 	}
       else
 	{
-	  ok = (mkdir (dir, tmp_mode) == 0);
+	  ok = (mkdir (dir, newmode) == 0);
 
 	  if (! ok)
 	    error (0, errno, _("cannot create directory %s"), quote (dir));
@@ -177,15 +171,13 @@ main (int argc, char **argv)
 
 	  /* mkdir(2) is required to honor only the file permission bits.
 	     In particular, it needn't do anything about `special' bits,
-	     so if any were set in newmode, apply them with chmod.
-	     This extra step is necessary in some cases when the containing
-	     directory has a default ACL.  */
+	     so if any were set in newmode, apply them with lchmod.  */
 
 	  /* Set the permissions only if this directory has just
 	     been created.  */
 
-	  if (ok && specified_mode
-	      && chmod_safer (dir, newmode, 0, S_IFDIR) != 0)
+	  if (ok && specified_mode && (newmode & ~S_IRWXUGO)
+	      && lchmod (dir, newmode) != 0)
 	    {
 	      error (0, errno, _("cannot set permissions of directory %s"),
 		     quote (dir));
