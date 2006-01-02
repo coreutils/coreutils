@@ -1,6 +1,12 @@
-2006-01-01  Paul Eggert  <eggert@cs.ucla.edu>
+2006-01-02  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* src/tail.c (parse_options): Change warning to say that --retry
+	is useful `mainly' (not `only') when following by name.
+	Reported here: http://bugs.debian.org/273781
+
+2006-01-01  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: Document that mkfifo and mknod -m no longer set special bits.
 	* src/copy.c: Include lchmod.h.
