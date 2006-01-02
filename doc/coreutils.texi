@@ -2477,7 +2477,8 @@ will keep trying until it becomes accessible again.
 
 @itemx --retry
 @opindex --retry
-This option is meaningful only when following by name.
+This option is useful mainly when following by name (i.e., with
+@option{--follow=name}).
 Without this option, when tail encounters a file that doesn't
 exist or is otherwise inaccessible, it reports that fact and
 never checks it again.
