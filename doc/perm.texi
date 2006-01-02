@@ -1,6 +1,5 @@
-Each file has a set of @dfn{permissions} that control the kinds of
-access that users have to that file.  The permissions for a file are
-also called its @dfn{access mode}.  They can be represented either in
+Each file has a set of @dfn{file mode bits} that control the kinds of
+access that users have to that file.  They can be represented either in
 symbolic form or as an octal number.
 
 @menu
@@ -11,6 +10,10 @@ symbolic form or as an octal number.
 
 @node Mode Structure
 @section Structure of File Permissions
+
+The file mode bits have two parts: the @dfn{file permission bits},
+which control ordinary access to the file, and @dfn{special mode
+bits}, which affect only some files.
 
 There are three kinds of permissions that a user can have for a file:
 
@@ -50,8 +53,8 @@ file system the file is created on, and the way the file is created.  You
 can change the owner and group of a file by using the @command{chown} and
 @command{chgrp} commands.
 
-In addition to the three sets of three permissions listed above, a
-file's permissions have three special components, which affect only
+In addition to the three sets of three permissions listed above, the
+file mode bits have three special components, which affect only
 executable files (programs) and, on some systems, directories:
 
 @enumerate
@@ -78,9 +81,9 @@ swap device so it will load more quickly when run; this is called the
 @dfn{sticky bit}.
 @end enumerate
 
-In addition to the permissions listed above, there may be file attributes
-specific to the file system, e.g: access control lists (ACLs), whether a
-file is compressed, whether a file can be modified (immutability), whether
+In addition to the file mode bits listed above, there may be file attributes
+specific to the file system, e.g., access control lists (ACLs), whether a
+file is compressed, whether a file can be modified (immutability), and whether
 a file can be dumped.  These are usually set using programs
 specific to the file system.  For example:
 @c should probably say a lot more about ACLs... someday
@@ -96,7 +99,7 @@ On FreeBSD the file permissions (``flags'') specific to the FFS
 file system are set using @command{chrflags}.
 @end table
 
-Although a file's permission ``bits'' allow an operation on that file,
+Even if a file's permission bits allow an operation on that file,
 that operation may still fail, because:
 
 @itemize
@@ -115,9 +118,9 @@ may have just run @code{chmod a+w FILE}.
 @section Symbolic Modes
 
 @cindex symbolic modes
-@dfn{Symbolic modes} represent changes to files' permissions as
+@dfn{Symbolic modes} represent changes to files' mode bits as
 operations on single-character symbols.  They allow you to modify either
-all or selected parts of files' permissions, optionally based on
+all or selected parts of files' mode bits, optionally based on
 their previous values, and perhaps on the current @code{umask} as well
 (@pxref{Umask and Protection}).
 
@@ -137,7 +140,7 @@ symbolic modes.
 @menu
 * Setting Permissions::          Basic operations on permissions.
 * Copying Permissions::          Copying existing permissions.
-* Changing Special Permissions:: Special permissions.
+* Changing Special Mode Bits::   Special mode bits.
 * Conditional Executability::    Conditionally affecting executability.
 * Multiple Changes::             Making multiple changes.
 * Umask and Protection::              The effect of the umask.
@@ -275,34 +278,34 @@ it to mode 666 (@samp{rw-rw-rw-}).  If the file had started out as mode
 (@samp{rwxr--r-x}).  The @samp{-} and @samp{=} operations work
 analogously.
 
-@node Changing Special Permissions
-@subsection Changing Special Permissions
+@node Changing Special Mode Bits
+@subsection Changing Special Mode Bits
 
-@cindex changing special permissions
+@cindex changing special mode bits
 In addition to changing a file's read, write, and execute permissions,
-you can change its special permissions.  @xref{Mode Structure}, for a
-summary of these permissions.
+you can change its special mode bits.  @xref{Mode Structure}, for a
+summary of these special mode bits.
 
-To change a file's permission to set the user ID on execution, use
+To change a file's mode bit to set the user ID on execution, use
 @samp{u} in the @var{users} part of the symbolic mode and
-@samp{s} in the @var{permissions} part.
+@samp{s} instead of the @var{permissions} part.
 
-To change a file's permission to set the group ID on execution, use
+To change a file's mode bit to set the group ID on execution, use
 @samp{g} in the @var{users} part of the symbolic mode and
-@samp{s} in the @var{permissions} part.
+@samp{s} instead of the @var{permissions} part.
 
-To change a file's permission to set the restricted deletion flag or sticky bit,
-omit the @var{users} part of the symbolic mode (or use @samp{a}) and put
-@samp{t} in the @var{permissions} part.
+To change a file's mode bit to set the restricted deletion flag or sticky bit,
+omit the @var{users} part of the symbolic mode (or use @samp{a}) and use
+@samp{t} instead of the @var{permissions} part.
 
-For example, to add set-user-ID permission to a program,
+For example, to set the set-user-ID mode bit of a program,
 you can use the mode:
 
 @example
 u+s
 @end example
 
-To remove both set-user-ID and set-group-ID permission from
+To remove both set-user-ID and set-group-ID mode bits from
 it, you can use the mode:
 
 @example
@@ -320,7 +323,7 @@ The combination @samp{o+s} has no effect.  On @acronym{GNU} systems
 the combinations @samp{u+t} and @samp{g+t} have no effect, and
 @samp{o+t} acts like plain @samp{+t}.
 
-The @samp{=} operator is not very useful with special permissions; for
+The @samp{=} operator is not very useful with special mode bits; for
 example, the mode:
 
 @example
@@ -356,7 +359,7 @@ anyone could execute them before.
 @cindex multiple changes to permissions
 The format of symbolic modes is actually more complex than described
 above (@pxref{Setting Permissions}).  It provides two ways to make
-multiple changes to files' permissions.
+multiple changes to files' mode bits.
 
 The first way is to specify multiple @var{operation} and
 @var{permissions} parts after a @var{users} part in the symbolic mode.
@@ -396,7 +399,7 @@ u=rwx,g=rx,o=
 @end example
 
 @noindent
-sets all of the non-special permissions for the file explicitly.  (It
+sets all of the permission bits for the file explicitly.  (It
 gives users who are not in the file's group no permission at all for
 it.)
 
@@ -457,7 +460,7 @@ the file to all users.
 @section Numeric Modes
 
 @cindex numeric modes
-@cindex file permissions, numeric
+@cindex file mode bits, numeric
 @cindex octal numbers for file modes
 As an
 alternative to giving a symbolic mode, you can give an octal (base 8)
@@ -467,19 +470,19 @@ leading 0, as you do in C.  Mode 0055 is the same as mode 55.
 
 A numeric mode is usually shorter than the corresponding symbolic
 mode, but it is limited in that it cannot take into account a file's
-previous permissions; it can only set them absolutely.
+previous mode bits; it can only set them absolutely.
 
 The permissions granted to the user,
 to other users in the file's group,
 and to other users not in the file's group each require three
 bits, which are represented as one octal digit.  The three special
-permissions also require one bit each, and they are as a group
+mode bits also require one bit each, and they are as a group
 represented as another octal digit.  Here is how the bits are arranged,
 starting with the lowest valued bit:
 
 @example
 Value in  Corresponding
-Mode      Permission
+Mode      Mode Bit
 
           Other users not in the file's group:
    1      Execute
@@ -496,7 +499,7 @@ Mode      Permission
  200      Write
  400      Read
 
-          Special permissions:
+          Special mode bits:
 1000      Restricted deletion flag or sticky bit
 2000      Set group ID on execution
 4000      Set user ID on execution
