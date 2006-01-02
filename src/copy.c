@@ -176,7 +176,8 @@ copy_dir (char const *src_name_in, char const *dst_name_in, bool new_dst,
    st_gid fields of SRC_SB.  If DEST_DESC is undefined (-1), set
    the owner and owning group of DST_NAME instead.  DEST_DESC must
    refer to the same file as DEST_NAME if defined.
-   Return true if successful.  */
+   Return true if the syscall succeeds, or if it's ok not to
+   preserve ownership.  */
 
 static bool
 set_owner (const struct cp_options *x, char const *dst_name, int dest_desc,
@@ -192,6 +193,7 @@ set_owner (const struct cp_options *x, char const *dst_name, int dest_desc,
       if (chown (dst_name, uid, gid) == 0)
 	return true;
     }
+
   if (! chown_failure_ok (x))
     {
       error (0, errno, _("failed to preserve ownership for %s"),
@@ -199,6 +201,7 @@ set_owner (const struct cp_options *x, char const *dst_name, int dest_desc,
       if (x->require_preserve)
 	return false;
     }
+
   return true;
 }
 
