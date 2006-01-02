@@ -5683,7 +5683,7 @@ uniquely identifies each file within a particular file system.)
 @opindex --format
 @opindex long ls @r{format}
 @opindex verbose ls @r{format}
-In addition to the name of each file, print the file type, permissions,
+In addition to the name of each file, print the file type, file mode bits,
 number of hard links, owner name, group name, size, and
 timestamp (@pxref{Formatting file timestamps}), normally
 the modification time.
@@ -5702,7 +5702,7 @@ The @var{blocks} computed counts each hard link separately;
 this is arguably a deficiency.
 
 @cindex permissions, output by @command{ls}
-The permissions listed are similar to symbolic mode specifications
+The file mode bits listed are similar to symbolic mode specifications
 (@pxref{Symbolic Modes}).  But @command{ls} combines multiple bits into the
 third character of each set of permissions as follows:
 @table @samp
@@ -5727,14 +5727,14 @@ If the executable bit is set and none of the above apply.
 Otherwise.
 @end table
 
-Following the permission bits is a single character that specifies
+Following the file mode bits is a single character that specifies
 whether an alternate access method such as an access control list
-applies to the file. When the character following the permissions is a
-space, there is no alternate access method. When it is a printing
+applies to the file.  When the character following the file mode bits is a
+space, there is no alternate access method.  When it is a printing
 character, then there is such a method.
 
 For a file with an extended access control list, a @samp{+} character is
-listed. Basic access control lists are equivalent to the permissions
+listed.  Basic access control lists are equivalent to the permissions
 listed, and are not considered an alternate access method.
 
 @item -n
@@ -6572,7 +6572,7 @@ of one or more of the following strings:
 
 @table @samp
 @itemx mode
-Preserve the permission attributes, including access control lists.
+Preserve the file mode bits and access control lists.
 @itemx ownership
 Preserve the owner and group.  On most modern systems,
 only the super-user may change the owner of a file, and regular users
@@ -6594,7 +6594,7 @@ Using @option{--preserve} with no @var{attribute_list} is equivalent
 to @option{--preserve=mode,ownership,timestamps}.
 
 In the absence of this option, each destination file is created with the
-permissions of the corresponding source file, minus the bits set in the
+mode bits of the corresponding source file, minus the bits set in the
 umask and minus the set-user-ID and set-group-ID bits.
 @xref{File permissions}.
 
@@ -7057,7 +7057,7 @@ environment variable is set.
 @pindex install
 @cindex copying files and setting attributes
 
-@command{install} copies files while setting their permission modes and, if
+@command{install} copies files while setting their file mode bits and, if
 possible, their owner and group.  Synopses:
 
 @example
@@ -7128,7 +7128,7 @@ may be either a group name or a numeric group ID.
 @opindex -m
 @opindex --mode
 @cindex permissions of installed files, setting
-Set the permissions for the installed file or directory to @var{mode},
+Set the file mode bits for the installed file or directory to @var{mode},
 which can be either an octal number, or a symbolic mode as in
 @command{chmod}, with @samp{a=} (no access allowed to anyone) as the
 point of departure (@pxref{File permissions}).
@@ -7898,8 +7898,8 @@ everyone) for the point of the departure.  @xref{File permissions}.
 @opindex -p
 @opindex --parents
 @cindex parent directories, creating
-Make any missing parent directories for each argument.  The mode for parent
-directories is set to the umask modified by @samp{u+wx}.
+Make any missing parent directories for each argument.  The file permission
+bits of parent directories are set to the umask modified by @samp{u+wx}.
 Ignore arguments corresponding to existing directories.
 
 @item -v
@@ -7944,7 +7944,8 @@ The program accepts the following option.  Also see @ref{Common options}.
 @cindex modes of created FIFOs, setting
 Set the mode of created FIFOs to @var{mode}, which is symbolic as in
 @command{chmod} and uses @samp{a=rw} (read and write allowed for everyone)
-for the point of departure.  @xref{File permissions}.
+for the point of departure.  @var{mode} should specify only file
+permission bits.  @xref{File permissions}.
 
 @end table
 
@@ -8015,6 +8016,7 @@ The program accepts the following option.  Also see @ref{Common options}.
 @opindex --mode
 Set the mode of created files to @var{mode}, which is symbolic as in
 @command{chmod} and uses @samp{a=rw} as the point of departure.
+@var{mode} should specify only file permission bits.
 @xref{File permissions}.
 
 @end table
@@ -8567,7 +8569,7 @@ line, @command{chmod} changes the permissions of the pointed-to file.
 In contrast, @command{chmod} ignores symbolic links encountered during
 recursive directory traversals.
 
-If used, @var{mode} specifies the new permissions.
+If used, @var{mode} specifies the new file mode bits.
 For details, see the section on @ref{File permissions}.
 If you really want @var{mode} to have a leading @samp{-}, you should
 use @option{--} first, e.g., @samp{chmod -- -w file}.  Typically,
