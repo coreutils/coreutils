@@ -1,6 +1,6 @@
 /* mkdir-p.c -- Ensure that a directory and its parents exist.
 
-   Copyright (C) 1990, 1997, 1998, 1999, 2000, 2002, 2003, 2004, 2005
+   Copyright (C) 1990, 1997, 1998, 1999, 2000, 2002, 2003, 2004, 2005, 2006
    Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -42,6 +42,8 @@
 #include "chdir-safer.h"
 #include "dirname.h"
 #include "error.h"
+#include "lchmod.h"
+#include "lchown.h"
 #include "quote.h"
 #include "save-cwd.h"
 #include "stat-macros.h"
@@ -195,7 +197,7 @@ make_dir_parents (char const *arg,
 		error (0, 0, verbose_fmt_string, quote (dir));
 
 	      if ((owner != (uid_t) -1 || group != (gid_t) -1)
-		  && chown (basename_dir, owner, group)
+		  && lchown (basename_dir, owner, group)
 #if defined AFS && defined EPERM
 		  && errno != EPERM
 #endif
@@ -302,7 +304,7 @@ make_dir_parents (char const *arg,
 
       if (owner != (uid_t) -1 || group != (gid_t) -1)
 	{
-	  if (chown (fixup_permissions_dir, owner, group) != 0
+	  if (lchown (fixup_permissions_dir, owner, group) != 0
 #ifdef AFS
 	      && errno != EPERM
 #endif
@@ -319,7 +321,7 @@ make_dir_parents (char const *arg,
 	 required to honor only the file permission bits.  In particular,
 	 it need not honor the `special' bits, so if MODE includes any
 	 special bits, set them here.  */
-      if ((mode & ~S_IRWXUGO) && chmod (fixup_permissions_dir, mode) != 0)
+      if ((mode & ~S_IRWXUGO) && lchmod (fixup_permissions_dir, mode) != 0)
 	{
 	  error (0, errno, _("cannot change permissions of %s"),
 		 quote (full_dir));
@@ -343,7 +345,7 @@ make_dir_parents (char const *arg,
     {
       leading_dirs->dirname_end[0] = '\0';
       if ((cwd_problem && *full_dir != '/')
-	  || chmod (full_dir, parent_mode) != 0)
+	  || lchmod (full_dir, parent_mode) != 0)
 	{
 	  error (0, (cwd_problem ? 0 : errno),
 		 _("cannot change permissions of %s"), quote (full_dir));
