@@ -1,5 +1,5 @@
 /* cp.c  -- file copying (main routines)
-   Copyright (C) 89, 90, 91, 1995-2005 Free Software Foundation.
+   Copyright (C) 89, 90, 91, 1995-2006 Free Software Foundation.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -30,6 +30,7 @@
 #include "error.h"
 #include "dirname.h"
 #include "filenamecat.h"
+#include "lchmod.h"
 #include "quote.h"
 #include "quotearg.h"
 #include "stat-time.h"
@@ -335,7 +336,7 @@ re_protect (char const *const_dst_name, size_t src_offset,
 	}
       else if (p->restore_mode)
 	{
-	  if (chmod (dst_name, p->mode))
+	  if (lchmod (dst_name, p->mode) != 0)
 	    {
 	      error (0, errno, _("failed to preserve permissions for %s"),
 		     quote (dst_name));
@@ -466,7 +467,7 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
 		      new->mode = stats.st_mode;
 		      new->restore_mode = true;
 
-		      if (chmod (dir, stats.st_mode | S_IRWXU))
+		      if (lchmod (dir, stats.st_mode | S_IRWXU) != 0)
 			{
 			  error (0, errno, _("setting permissions for %s"),
 				 quote (dir));
