@@ -1,5 +1,5 @@
 /* copy.c -- core functions for copying files and directories
-   Copyright (C) 89, 90, 91, 1995-2005 Free Software Foundation.
+   Copyright (C) 89, 90, 91, 1995-2006 Free Software Foundation.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -44,6 +44,7 @@
 #include "getpagesize.h"
 #include "hash.h"
 #include "hash-pjw.h"
+#include "lchmod.h"
 #include "quote.h"
 #include "same.h"
 #include "savedir.h"
@@ -1499,7 +1500,7 @@ copy_internal (char const *src_name, char const *dst_name,
 	      dst_mode = dst_sb.st_mode;
 	      restore_dst_mode = true;
 
-	      if (chmod (dst_name, dst_mode | S_IRWXU))
+	      if (lchmod (dst_name, dst_mode | S_IRWXU) != 0)
 		{
 		  error (0, errno, _("setting permissions for %s"),
 			 quote (dst_name));
@@ -1740,7 +1741,7 @@ copy_internal (char const *src_name, char const *dst_name,
     }
   else if (restore_dst_mode)
     {
-      if (chmod (dst_name, dst_mode))
+      if (lchmod (dst_name, dst_mode) != 0)
 	{
 	  error (0, errno, _("preserving permissions for %s"),
 		 quote (dst_name));
