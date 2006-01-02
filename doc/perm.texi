@@ -286,15 +286,15 @@ In addition to changing a file's read, write, and execute permissions,
 you can change its special mode bits.  @xref{Mode Structure}, for a
 summary of these special mode bits.
 
-To change a file's mode bit to set the user ID on execution, use
+To change the file mode bits to set the user ID on execution, use
 @samp{u} in the @var{users} part of the symbolic mode and
 @samp{s} instead of the @var{permissions} part.
 
-To change a file's mode bit to set the group ID on execution, use
+To change the file mode bits to set the group ID on execution, use
 @samp{g} in the @var{users} part of the symbolic mode and
 @samp{s} instead of the @var{permissions} part.
 
-To change a file's mode bit to set the restricted deletion flag or sticky bit,
+To change the file mode bits to set the restricted deletion flag or sticky bit,
 omit the @var{users} part of the symbolic mode (or use @samp{a}) and use
 @samp{t} instead of the @var{permissions} part.
 
@@ -469,8 +469,8 @@ This number is always interpreted in octal; you do not have to add a
 leading 0, as you do in C.  Mode 0055 is the same as mode 55.
 
 A numeric mode is usually shorter than the corresponding symbolic
-mode, but it is limited in that it cannot take into account a file's
-previous mode bits; it can only set them absolutely.
+mode, but it is limited in that it cannot take into account the
+previous file mode bits; it can only set them absolutely.
 
 The permissions granted to the user,
 to other users in the file's group,
