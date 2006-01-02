@@ -1,5 +1,5 @@
 /* mknod -- make special files
-   Copyright (C) 90, 91, 1995-2005 Free Software Foundation, Inc.
+   Copyright (C) 90, 91, 1995-2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -23,7 +23,6 @@
 #include <sys/types.h>
 
 #include "system.h"
-#include "chmod-safer.h"
 #include "error.h"
 #include "modechange.h"
 #include "quote.h"
@@ -63,7 +62,7 @@ Create the special file NAME of the given TYPE.\n\
 Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
-  -m, --mode=MODE   set permission mode (as in chmod), not a=rw - umask\n\
+  -m, --mode=MODE   set file permission bits to MODE, not a=rw - umask\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
@@ -89,12 +88,10 @@ int
 main (int argc, char **argv)
 {
   mode_t newmode;
-  mode_t tmp_mode;
-  const char *specified_mode;
+  char const *specified_mode = NULL;
   int optc;
   int expected_operands;
-  mode_t node_type IF_LINT (= 0);
-  dev_t device = 0;
+  mode_t node_type;
 
   initialize_main (&argc, &argv);
   program_name = argv[0];
@@ -103,8 +100,6 @@ main (int argc, char **argv)
   textdomain (PACKAGE);
 
   atexit (close_stdout);
-
-  specified_mode = NULL;
 
   while ((optc = getopt_long (argc, argv, "m:", longopts, NULL)) != -1)
     {
@@ -128,12 +123,10 @@ main (int argc, char **argv)
 	error (EXIT_FAILURE, 0, _("invalid mode"));
       newmode = mode_adjust (newmode, change, umask (0));
       free (change);
+      if (newmode & ~S_IRWXUGO)
+	error (EXIT_FAILURE, 0,
+	       _("mode must specify only file permission bits"));
     }
-
-  /* This is the mode we'll use in the mknod or mkfifo call.
-     If it doesn't include S_IRUSR, use S_IRUSR so the final
-     open-for-fchmod will succeed.  */
-  tmp_mode = (newmode & S_IRUSR) ? newmode : S_IRUSR;
 
   /* If the number of arguments is 0 or 1,
      or (if it's 2 or more and the second one starts with `p'), then there
@@ -191,6 +184,7 @@ main (int argc, char **argv)
 	char const *s_major = argv[optind + 2];
 	char const *s_minor = argv[optind + 3];
 	uintmax_t i_major, i_minor;
+	dev_t device;
 
 	if (xstrtoumax (s_major, NULL, 0, &i_major, NULL) != LONGINT_OK
 	    || i_major != (major_t) i_major)
@@ -208,7 +202,7 @@ main (int argc, char **argv)
 	  error (EXIT_FAILURE, 0, _("invalid device %s %s"), s_major, s_minor);
 #endif
 
-	if (mknod (argv[optind], tmp_mode | node_type, device) != 0)
+	if (mknod (argv[optind], newmode | node_type, device) != 0)
 	  error (EXIT_FAILURE, errno, "%s", quote (argv[optind]));
       }
       break;
@@ -217,8 +211,7 @@ main (int argc, char **argv)
 #ifndef S_ISFIFO
       error (EXIT_FAILURE, 0, _("fifo files not supported"));
 #else
-      node_type = S_IFIFO;
-      if (mkfifo (argv[optind], tmp_mode))
+      if (mkfifo (argv[optind], newmode) != 0)
 	error (EXIT_FAILURE, errno, "%s", quote (argv[optind]));
 #endif
       break;
@@ -226,17 +219,6 @@ main (int argc, char **argv)
     default:
       error (0, 0, _("invalid device type %s"), quote (argv[optind + 1]));
       usage (EXIT_FAILURE);
-    }
-
-  /* Perform an explicit chmod to ensure the file mode permission bits
-     are set as specified.  This extra step is necessary in some cases
-     when the containing directory has a default ACL.  */
-
-  if (specified_mode)
-    {
-      if (chmod_safer (argv[optind], newmode, device, node_type) != 0)
-	error (EXIT_FAILURE, errno, _("cannot set permissions of %s"),
-	       quote (argv[optind]));
     }
 
   exit (EXIT_SUCCESS);
