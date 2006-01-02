@@ -1,5 +1,5 @@
 /* tail -- output the last part of file(s)
-   Copyright (C) 1989, 90, 91, 1995-2005 Free Software Foundation, Inc.
+   Copyright (C) 1989, 90, 91, 1995-2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -1554,7 +1554,7 @@ parse_options (int argc, char **argv,
     }
 
   if (reopen_inaccessible_files && follow_mode != Follow_name)
-    error (0, 0, _("warning: --retry is useful only when following by name"));
+    error (0, 0, _("warning: --retry is useful mainly when following by name"));
 
   if (pid && !forever)
     error (0, 0,
