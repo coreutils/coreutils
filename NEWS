@@ -23,6 +23,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   if your locale settings appear to be messed up.  This change
   attempts to have the default be the best of both worlds.
 
+  mkfifo and mknod no longer set special mode bits (setuid, setgid,
+  and sticky) with the -m option.
+
   sort now reports incompatible options (e.g., -i and -n) rather than
   silently ignoring one of them.
 
