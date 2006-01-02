@@ -2,6 +2,8 @@
 
 	* Version 6.0-cvs.
 
+	* src/copy.c (set_owner): Correct a comment.
+
 	* src/tail.c (parse_options): Change warning to say that --retry
 	is useful `mainly' (not `only') when following by name.
 	Reported here: http://bugs.debian.org/273781
