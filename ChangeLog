@@ -1,6 +1,10 @@
-2006-01-02  Paul Eggert  <eggert@cs.ucla.edu>
+2006-01-03  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* src/system.h (O_DIRECTORY) [!defined O_DIRECTORY]: Define.
+
+2006-01-02  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/chown-core.c (RC_do_ordinary_chown): New enum value.
 	(restricted_chown): Return it, if the file cannot be accessed due
