@@ -4,6 +4,7 @@
 
 	* tests/du/no-x: Also allow a slightly different diagnostic -- the
 	one you get when using openat-enabled fts.c and du (coming soon).
+	* tests/chmod/no-x: Likewise.
 
 	* src/system.h (O_DIRECTORY) [!defined O_DIRECTORY]: Define.
 
