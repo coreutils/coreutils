@@ -2,6 +2,15 @@
 
 	* Version 6.0-cvs.
 
+	* src/chown-core.c (RC_do_ordinary_chown): New enum value.
+	(restricted_chown): Return it, if the file cannot be accessed due
+	to EPERM, or if no uid or gid are required, or if the file is
+	neither a directory nor a regular file.  Rewrite to avoid gotos.
+	(change_file_owner): Handle RC_do_ordinary_chown case.
+	Rewrite to avoid gotos.
+	* tests/chgrp/basic: Make sure we can change the group of
+	inaccessible files.
+
 	* src/date.c (usage): Explain %g, %G, and %V a bit better.
 
 2006-01-02  Jim Meyering  <jim@meyering.net>

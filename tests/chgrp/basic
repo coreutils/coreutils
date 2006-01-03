@@ -74,8 +74,15 @@ test "$VERBOSE" = yes && set +x
   chgrp -R $g2 symlink
   chown --from=:$g1 -c :$g2 f
 
+  # Make sure we can change the group of inaccessible files.
+  chmod a-r f
+  chown --from=:$g2 -c :$g1 f
+  chmod 0 f
+  chown --from=:$g1 -c :$g2 f
+
   # chown() must not be optimized away even when
   # the file's owner and group already have the desired value.
+  rm -f f g
   touch f g
   chgrp $g1 f g
   chgrp $g2 g
@@ -114,6 +121,8 @@ changed group of `d' to G2
 changed ownership of `f' to :G2
 changed group of `symlink' to G1
 changed ownership of `f' to :G2
+changed ownership of `f' to :G2
+changed ownership of `f' to :G1
 changed ownership of `f' to :G2
 f
 g
