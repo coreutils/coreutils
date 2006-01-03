@@ -1,3 +1,8 @@
+2006-01-02  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi: Use @acronym around "ISO" uniformly.
+	(Date conversion specifiers): Explain %g, %G, and %V a bit better.
+
 2006-01-02  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (tail invocation): Say that --retry
