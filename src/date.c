@@ -1,5 +1,5 @@
 /* date - print or set the system date and time
-   Copyright (C) 1989-2005 Free Software Foundation, Inc.
+   Copyright (C) 1989-2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -173,8 +173,8 @@ specifies Coordinated Universal Time.  Interpreted sequences are:\n\
 "), stdout);
       fputs (_("\
   %F   full date; same as %Y-%m-%d\n\
-  %g   the last two digits of the year corresponding to the %V week number\n\
-  %G   the year corresponding to the %V week number\n\
+  %g   last two digits of year of ISO week number (see %G)\n\
+  %G   year of ISO week number (see %V); normally useful only with %V\n\
 "), stdout);
       fputs (_("\
   %h   same as %b\n\
@@ -204,10 +204,10 @@ specifies Coordinated Universal Time.  Interpreted sequences are:\n\
   %u   day of week (1..7); 1 is Monday\n\
 "), stdout);
       fputs (_("\
-  %U   week number of year with Sunday as first day of week (00..53)\n\
-  %V   week number of year with Monday as first day of week (01..53)\n\
+  %U   week number of year, with Sunday as first day of week (00..53)\n\
+  %V   ISO week number, with Monday as first day of week (01..53)\n\
   %w   day of week (0..6); 0 is Sunday\n\
-  %W   week number of year with Monday as first day of week (00..53)\n\
+  %W   week number of year, with Monday as first day of week (00..53)\n\
 "), stdout);
       fputs (_("\
   %x   locale's date representation (e.g., 12/31/99)\n\
