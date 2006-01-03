@@ -4171,7 +4171,7 @@ processing.
 
 @c FIXME:  People don't necessarily know what an IBM-PC was these days.
 As it is set up now, the program assumes that the input file is coded
-using 8-bit ISO 8859-1 code, also known as Latin-1 character set,
+using 8-bit @acronym{ISO} 8859-1 code, also known as Latin-1 character set,
 @emph{unless} it is compiled for MS-DOS, in which case it uses the
 character set of the IBM-PC@.  (@sc{gnu} @command{ptx} is not known to work on
 smaller MS-DOS machines anymore.)  Compared to 7-bit @acronym{ASCII}, the set
@@ -9621,8 +9621,10 @@ digits) specifying a character to print.
 @cindex Unicode
 @cindex ISO/IEC 10646
 @vindex LC_CTYPE
-@command{printf} interprets two character syntaxes introduced in ISO C 99:
-@samp{\u} for 16-bit Unicode (ISO/IEC 10646) characters, specified as
+@command{printf} interprets two character syntaxes introduced in
+@acronym{ISO} C 99:
+@samp{\u} for 16-bit Unicode (@acronym{ISO}/@acronym{IEC} 10646)
+characters, specified as
 four hexadecimal digits @var{hhhh}, and @samp{\U} for 32-bit Unicode
 characters, specified as eight hexadecimal digits @var{hhhhhhhh}.
 @command{printf} outputs the Unicode characters
@@ -9646,7 +9648,7 @@ $ /usr/local/bin/printf '\u20AC 14.95'
 
 @noindent
 will be output correctly in all locales supporting the Euro symbol
-(ISO-8859-15, UTF-8, and others).  Similarly, a Chinese string
+(@acronym{ISO}-8859-15, UTF-8, and others).  Similarly, a Chinese string
 
 @example
 $ /usr/local/bin/printf '\u4e2d\u6587'
@@ -11859,22 +11861,27 @@ date; same as @samp{%m/%d/%y}
 @item %e
 day of month, space padded; same as @samp{%_d}
 @item %F
-full date in @w{ISO 8601} format; same as @samp{%Y-%m-%d}.
+full date in @acronym{ISO} 8601 format; same as @samp{%Y-%m-%d}.
 This is a good choice for a date format, as it is standard and
 is easy to sort in the usual case where years are in the range
 0000@dots{}9999.
 This is a @acronym{GNU} extension.
 @item %g
-The year corresponding to the ISO week number, but without the century
+year corresponding to the @acronym{ISO} week number, but without the century
 (range @samp{00} through @samp{99}).  This has the same format and value
-as @samp{%y}, except that if the ISO week number (see @samp{%V}) belongs
+as @samp{%y}, except that if the @acronym{ISO} week number (see
+@samp{%V}) belongs
 to the previous or next year, that year is used instead.
 This is a @acronym{GNU} extension.
 @item %G
-The year corresponding to the ISO week number.  This has the same format
-and value as @samp{%Y}, except that if the ISO week number (see
+year corresponding to the @acronym{ISO} week number.  This has the
+same format and value as @samp{%Y}, except that if the @acronym{ISO}
+week number (see
 @samp{%V}) belongs to the previous or next year, that year is used
 instead.
+It is normally useful only if @samp{%V} is also used;
+for example, the format @samp{%G-%m-%d} is probably a mistake,
+since it combines the ISO week number year with the conventional month and day.
 This is a @acronym{GNU} extension.
 @item %h
 same as @samp{%b}
@@ -11885,11 +11892,12 @@ month (@samp{01}@dots{}@samp{12})
 @item %u
 day of week (@samp{1}@dots{}@samp{7}) with @samp{1} corresponding to Monday
 @item %U
-week number of year with Sunday as first day of week
+week number of year, with Sunday as the first day of the week
 (@samp{00}@dots{}@samp{53}).
 Days in a new year preceding the first Sunday are in week zero.
 @item %V
-week number of year with Monday as first day of the week as a decimal
+@acronym{ISO} week number, that is, the
+week number of year, with Monday as the first day of the week
 (@samp{01}@dots{}@samp{53}).
 If the week containing January 1 has four or more days in
 the new year, then it is considered week 1; otherwise, it is week 53 of
@@ -11898,7 +11906,7 @@ standard.)
 @item %w
 day of week (@samp{0}@dots{}@samp{6}) with 0 corresponding to Sunday
 @item %W
-week number of year with Monday as first day of week
+week number of year, with Monday as first day of week
 (@samp{00}@dots{}@samp{53}).
 Days in a new year preceding the first Monday are in week zero.
 @item %x
