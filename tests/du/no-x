@@ -30,11 +30,27 @@ fail=0
 
 # This must exit nonzero.
 du d >/dev/null 2>out && fail=1
+
 cat <<\EOF > exp
 du: `d/no-x': Permission denied
 EOF
 
-cmp out exp || fail=1
+# With native openat, du uses a different code path.
+cat <<\EOF > exp-native-openat
+du: cannot access `d/no-x/y': Permission denied
+du: fts_read failed: Permission denied
+EOF
+
+if cmp out exp >/dev/null 2>&1; then
+  :
+else
+  if cmp out exp-native-openat; then
+    :
+  else
+    fail=1
+  fi
+fi
+
 test $fail = 1 && diff out exp 2> /dev/null
 
 (exit $fail); exit $fail
