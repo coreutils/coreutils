@@ -1,7 +1,7 @@
 @c GNU date syntax documentation
 
 @c Copyright (C) 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002,
-@c 2003, 2004, 2005 Free Software Foundation, Inc.
+@c 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
 
 @c Permission is granted to copy, distribute and/or modify this document
 @c under the terms of the GNU Free Documentation License, Version 1.1 or
@@ -144,6 +144,11 @@ between round parentheses, as long as included parentheses are properly
 nested.  Hyphens not followed by a digit are currently ignored.  Leading
 zeros on numbers are ignored.
 
+Invalid dates like @samp{2005-02-29} or times like @samp{24:00} are
+rejected.  In the typical case of a host that does not support leap
+seconds, a time like @samp{23:59:60} is rejected even if it
+corresponds to a valid leap second.
+
 
 @node Calendar date items
 @section Calendar date items
@@ -238,7 +243,8 @@ a number between 0 and 23, @var{minute} is a number between 0 and
 @samp{.} or @samp{,} and a fraction containing one or more digits.
 Alternatively,
 @samp{:@var{second}} can be omitted, in which case it is taken to
-be zero.
+be zero.  On the rare hosts that support leap seconds, @var{second}
+may be 60.
 
 @findex am @r{in date strings}
 @findex pm @r{in date strings}
@@ -464,8 +470,8 @@ integers and can represent times from 1901-12-13 20:45:52 through
 of seconds with nanosecond subcounts, and can represent all the times
 in the known lifetime of the universe to a resolution of 1 nanosecond.
 
-On most systems, these counts ignore the presence of leap seconds.
-For example, on most systems @samp{@@915148799} represents 1998-12-31
+On most hosts, these counts ignore the presence of leap seconds.
+For example, on most hosts @samp{@@915148799} represents 1998-12-31
 23:59:59 @sc{utc}, @samp{@@915148800} represents 1999-01-01 00:00:00
 @sc{utc}, and there is no way to represent the intervening leap second
 1998-12-31 23:59:60 @sc{utc}.

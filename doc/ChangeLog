@@ -1,5 +1,9 @@
 2006-01-02  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* getdate.texi (General date syntax): Invalid dates are rejected.
+	(Time of day items): Mention the possibility of leap seconds.
+	Problem reported by Dr. David Alan Gilbert.
+
 	* coreutils.texi: Use @acronym around "ISO" uniformly.
 	(Date conversion specifiers): Explain %g, %G, and %V a bit better.
 
