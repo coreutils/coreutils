@@ -1,5 +1,5 @@
 /* system-dependent definitions for coreutils
-   Copyright (C) 1989, 1991-2005 Free Software Foundation, Inc.
+   Copyright (C) 1989, 1991-2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -158,6 +158,10 @@ initialize_exit_failure (int status)
 
 #if !defined O_DIRECT
 # define O_DIRECT 0
+#endif
+
+#if !defined O_DIRECTORY
+# define O_DIRECTORY 0
 #endif
 
 #if !defined O_DSYNC
