@@ -1,5 +1,5 @@
 /* chown-core.c -- core functions for changing ownership.
-   Copyright (C) 2000, 2002, 2003, 2004, 2005 Free Software Foundation.
+   Copyright (C) 2000, 2002, 2003, 2004, 2005, 2006 Free Software Foundation.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -42,6 +42,10 @@ enum RCH_status
 
     /* SAME_INODE check failed */
     RC_inode_changed,
+
+    /* open/fchown isn't needed, isn't safe, or doesn't work due to
+       permissions problems; fall back on chown */
+    RC_do_ordinary_chown,
 
     /* open, fstat, fchown, or close failed */
     RC_error
@@ -159,10 +163,7 @@ describe_change (const char *file, enum Change_status changed,
 
 /* Change the owner and/or group of the FILE to UID and/or GID (safely)
    only if REQUIRED_UID and REQUIRED_GID match the owner and group IDs
-   of FILE.  ORIG_ST must be the result of `stat'ing FILE.  If this
-   function ends up being called with a FILE that is a symlink and when
-   we are *not* dereferencing symlinks, we'll detect the problem via
-   the SAME_INODE test below.
+   of FILE.  ORIG_ST must be the result of `stat'ing FILE.
 
    The `safely' part above means that we can't simply use chown(2),
    since FILE might be replaced with some other file between the time
@@ -172,14 +173,9 @@ describe_change (const char *file, enum Change_status changed,
    the preceding stat call, and only then, if appropriate (given the
    required_uid and required_gid constraints) do we call fchown.
 
-   A minor problem:
-   This function fails when FILE cannot be opened, but chown/lchown have
-   no such limitation.  But this may not be a problem for chown(1),
-   since chown is useful mainly to root, and since root seems to have
-   no problem opening `unreadable' files (on Linux).  However, this can
-   cause trouble when non-root users apply chgrp to files they own but
-   to which they have neither read nor write access.  For now, that
-   isn't a problem since chgrp doesn't have a --from=O:G option.
+   Return RC_do_ordinary_chown if we can't open FILE, or if FILE is a
+   special file that might have undesirable side effects when opening.
+   In this case the caller can use the less-safe ordinary chown.
 
    Return one of the RCH_status values.  */
 
@@ -192,27 +188,31 @@ restricted_chown (char const *file,
   enum RCH_status status = RC_ok;
   struct stat st;
   int open_flags = O_NONBLOCK | O_NOCTTY;
+  int fd;
 
-  int fd = open (file, O_RDONLY | open_flags);
+  if (required_uid == (uid_t) -1 && required_gid == (gid_t) -1)
+    return RC_do_ordinary_chown;
+
+  if (! S_ISREG (orig_st->st_mode))
+    {
+      if (S_ISDIR (orig_st->st_mode))
+	open_flags |= O_DIRECTORY;
+      else
+	return RC_do_ordinary_chown;
+    }
+
+  fd = open (file, O_RDONLY | open_flags);
   if (! (0 <= fd
-	 || (errno == EACCES
+	 || (errno == EACCES && S_ISREG (orig_st->st_mode)
 	     && 0 <= (fd = open (file, O_WRONLY | open_flags)))))
-    return RC_error;
+    return (errno == EACCES ? RC_do_ordinary_chown : RC_error);
 
   if (fstat (fd, &st) != 0)
-    {
-      status = RC_error;
-      goto Lose;
-    }
-
-  if ( ! SAME_INODE (*orig_st, st))
-    {
-      status = RC_inode_changed;
-      goto Lose;
-    }
-
-  if ((required_uid == (uid_t) -1 || required_uid == st.st_uid)
-      && (required_gid == (gid_t) -1 || required_gid == st.st_gid))
+    status = RC_error;
+  else if (! SAME_INODE (*orig_st, st))
+    status = RC_inode_changed;
+  else if ((required_uid == (uid_t) -1 || required_uid == st.st_uid)
+	   && (required_gid == (gid_t) -1 || required_gid == st.st_gid))
     {
       if (fchown (fd, uid, gid) == 0)
 	{
@@ -226,7 +226,6 @@ restricted_chown (char const *file,
 	}
     }
 
- Lose:
   { /* FIXME: remove these curly braces when we assume C99.  */
     int saved_errno = errno;
     close (fd);
@@ -346,43 +345,41 @@ change_file_owner (FTS *fts, FTSENT *ent,
 	}
       else
 	{
-	  if ( required_uid == (uid_t) -1 && required_gid == (gid_t) -1)
+	  /* If possible, avoid a race condition with --from=O:G and without the
+	     (-h) --no-dereference option.  If fts's stat call determined
+	     that the uid/gid of FILE matched the --from=O:G-selected
+	     owner and group IDs, blindly using chown(2) here could lead
+	     chown(1) or chgrp(1) mistakenly to dereference a *symlink*
+	     to an arbitrary file that an attacker had moved into the
+	     place of FILE during the window between the stat and
+	     chown(2) calls.  If FILE is a regular file or a directory
+	     that can be opened, this race condition can be avoided safely.  */
+
+	  enum RCH_status err
+	    = restricted_chown (file, file_stats, uid, gid,
+				required_uid, required_gid);
+	  switch (err)
 	    {
+	    case RC_ok:
+	      break;
+
+	    case RC_do_ordinary_chown:
 	      ok = (chown (file, uid, gid) == 0);
-	    }
-	  else
-	    {
-	      /* Avoid a race condition with --from=O:G and without the
-		 (-h) --no-dereference option.  If fts' stat call determined
-		 that the uid/gid of FILE matched the --from=O:G-selected
-		 owner and group IDs, blindly using chown(2) here could lead
-		 chown(1) or chgrp(1) mistakenly to dereference a *symlink*
-		 to an arbitrary file that an attacker had moved into the
-		 place of FILE during the window between the stat and
-		 chown(2) calls. */
-	      enum RCH_status err
-		= restricted_chown (file, file_stats, uid, gid,
-				    required_uid, required_gid);
-	      switch (err)
-		{
-		case RC_ok:
-		  ok = true;
-		  break;
+	      break;
 
-		case RC_error:
-		  ok = false;
-		  break;
+	    case RC_error:
+	      ok = false;
+	      break;
 
-		case RC_inode_changed:
-		  /* FIXME: give a diagnostic in this case?  */
-		case RC_excluded:
-		  do_chown = false;
-		  ok = false;
-		  goto Skip_chown;
+	    case RC_inode_changed:
+	      /* FIXME: give a diagnostic in this case?  */
+	    case RC_excluded:
+	      do_chown = false;
+	      ok = false;
+	      break;
 
-		default:
-		  abort ();
-		}
+	    default:
+	      abort ();
 	    }
 	}
 
@@ -393,14 +390,12 @@ change_file_owner (FTS *fts, FTSENT *ent,
 	 by some other user and operating on files in a directory
 	 where M has write access.  */
 
-      if (!ok && ! chopt->force_silent)
+      if (do_chown && !ok && ! chopt->force_silent)
 	error (0, errno, (uid != (uid_t) -1
 			  ? _("changing ownership of %s")
 			  : _("changing group of %s")),
 	       quote (file_full_name));
     }
-
- Skip_chown:;
 
   if (chopt->verbosity != V_off)
     {
