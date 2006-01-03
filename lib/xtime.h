@@ -1,6 +1,6 @@
 /* xtime -- extended-resolution integer time stamps
 
-   Copyright (C) 2005 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -41,7 +41,7 @@ typedef long int xtime_t;
 /* Return an extended time value that contains S seconds and NS
    nanoseconds, without any overflow checking.  */
 static inline xtime_t
-xtime_make (xtime_t s, int ns)
+xtime_make (xtime_t s, long int ns)
 {
   if (XTIME_PRECISION == 1)
     return s;
@@ -68,17 +68,17 @@ xtime_sec (xtime_t t)
 }
 
 /* Return the number of nanoseconds in T, which must be nonnegative.  */
-static inline int
+static inline long int
 xtime_nonnegative_nsec (xtime_t t)
 {
   return t % XTIME_PRECISION;
 }
 
 /* Return the number of nanoseconds in T.  */
-static inline int
+static inline long int
 xtime_nsec (xtime_t t)
 {
-  int ns = t % XTIME_PRECISION;
+  long int ns = t % XTIME_PRECISION;
   if (ns < 0)
     ns += XTIME_PRECISION;
   return ns;

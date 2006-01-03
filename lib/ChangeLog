@@ -1,3 +1,10 @@
+2006-01-03  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* xtime.h (xtime_make, xtime_nonnegative_nsec, xtime_nsec): Use
+	long int, not int, for nanosecond counts, so that people who are
+	used to POSIX struct timespec won't be surprised.  Reported by Jim
+	Meyering.
+
 2006-01-01  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* chmod-safer.c, chmod-safer.h: Remove.
