@@ -1,6 +1,10 @@
-2006-01-02  Jim Meyering  <jim@meyering.net>
+2006-01-02  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 6.0-cvs.
+
+	* src/date.c (usage): Explain %g, %G, and %V a bit better.
+
+2006-01-02  Jim Meyering  <jim@meyering.net>
 
 	* src/copy.c (set_owner): Correct a comment.
 
