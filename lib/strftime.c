@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1999, 2000, 2001, 2003, 2004, 2005 Free Software
+/* Copyright (C) 1991-1999, 2000, 2001, 2003, 2004, 2005, 2006 Free Software
    Foundation, Inc.
 
    NOTE: The canonical source of this file is maintained with the GNU C Library.
@@ -47,7 +47,7 @@
 #  include <time.h>
 # endif
 #endif
-#if HAVE_TZNAME
+#if HAVE_TZNAME && ! defined tzname
 extern char *tzname[];
 #endif
 
