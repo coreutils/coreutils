@@ -1,3 +1,8 @@
+2006-01-04  Jim Meyering  <jim@meyering.net>
+
+	Merge from glibc.
+	* fts.c (fts_open): Avoid function call in MAX macro use.
+
 2006-01-03  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* xtime.h (xtime_make, xtime_nonnegative_nsec, xtime_nsec): Use
