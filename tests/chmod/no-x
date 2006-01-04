@@ -35,8 +35,8 @@ cat <<\EOF > exp
 chmod: `d/no-x': Permission denied
 EOF
 
-# With native openat, du uses a different code path.
-cat <<\EOF > exp-native-openat
+# With native fdopendir, du uses a different code path.
+cat <<\EOF > exp-native-fdopendir
 chmod: cannot access `d/no-x/y': Permission denied
 chmod: fts_read failed: Permission denied
 EOF
@@ -44,7 +44,7 @@ EOF
 if cmp out exp >/dev/null 2>&1; then
   :
 else
-  if cmp out exp-native-openat; then
+  if cmp out exp-native-fdopendir; then
     :
   else
     fail=1
