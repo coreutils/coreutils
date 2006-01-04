@@ -39,7 +39,22 @@ cat <<\EOF > exp
 chgrp: `d/no-x': Permission denied
 EOF
 
-cmp out exp || fail=1
+# With native fdopendir, du uses a different code path.
+cat <<\EOF > exp-native-fdopendir
+chmod: cannot access `d/no-x/y': Permission denied
+chmod: fts_read failed: Permission denied
+EOF
+
+if cmp out exp >/dev/null 2>&1; then
+  :
+else
+  if cmp out exp-native-fdopendir; then
+    :
+  else
+    fail=1
+  fi
+fi
+
 test $fail = 1 && diff out exp 2> /dev/null
 
 (exit $fail); exit $fail
