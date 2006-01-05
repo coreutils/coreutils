@@ -1,5 +1,5 @@
 /* remove.c -- core functions for removing files and directories
-   Copyright (C) 88, 90, 91, 1994-2005 Free Software Foundation, Inc.
+   Copyright (C) 88, 90, 91, 1994-2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -310,13 +310,13 @@ full_filename_ (Dirstack_state const *ds, const char *filename)
   return buf;
 }
 
-static size_t
+static inline size_t
 AD_stack_height (Dirstack_state const *ds)
 {
   return obstack_object_size (&ds->Active_dir) / sizeof (struct AD_ent);
 }
 
-static struct AD_ent *
+static inline struct AD_ent *
 AD_stack_top (Dirstack_state const *ds)
 {
   return (struct AD_ent *)
@@ -405,7 +405,7 @@ AD_pop_and_chdir (DIR **dirp, Dirstack_state *ds, char **prev_dir)
 	{
 	  error (0, errno, _("FATAL: failed to close directory %s"),
 		 quote (full_filename (*prev_dir)));
-	  longjmp (ds->current_arg_jumpbuf, 1);
+	  goto next_cmdline_arg;
 	}
 
       /* The above fails with EACCES when *DIRP is readable but not
@@ -418,7 +418,7 @@ AD_pop_and_chdir (DIR **dirp, Dirstack_state *ds, char **prev_dir)
 	{
 	  error (0, errno, _("FATAL: cannot open .. from %s"),
 		 quote (full_filename (*prev_dir)));
-	  longjmp (ds->current_arg_jumpbuf, 1);
+	  goto next_cmdline_arg;
 	}
 
       if (fstat (fd, &sb))
@@ -426,8 +426,7 @@ AD_pop_and_chdir (DIR **dirp, Dirstack_state *ds, char **prev_dir)
 	  error (0, errno,
 		 _("FATAL: cannot ensure %s (returned to via ..) is safe"),
 		 quote (full_filename (".")));
-	  close (fd);
-	  longjmp (ds->current_arg_jumpbuf, 1);
+	  goto close_and_next;
 	}
 
       /*  Ensure that post-chdir dev/ino match the stored ones.  */
@@ -435,8 +434,7 @@ AD_pop_and_chdir (DIR **dirp, Dirstack_state *ds, char **prev_dir)
 	{
 	  error (0, 0, _("FATAL: directory %s changed dev/ino"),
 		 quote (full_filename (".")));
-	  close (fd);
-	  longjmp (ds->current_arg_jumpbuf, 1);
+	  goto close_and_next;
 	}
 
       *dirp = fdopendir (fd);
@@ -444,7 +442,11 @@ AD_pop_and_chdir (DIR **dirp, Dirstack_state *ds, char **prev_dir)
 	{
 	  error (0, errno, _("FATAL: cannot return to .. from %s"),
 		 quote (full_filename (".")));
+
+	close_and_next:;
 	  close (fd);
+
+	next_cmdline_arg:;
 	  longjmp (ds->current_arg_jumpbuf, 1);
 	}
     }
@@ -454,7 +456,7 @@ AD_pop_and_chdir (DIR **dirp, Dirstack_state *ds, char **prev_dir)
 	{
 	  error (0, errno, _("FATAL: failed to close directory %s"),
 		 quote (full_filename (*prev_dir)));
-	  longjmp (ds->current_arg_jumpbuf, 1);
+	  goto next_cmdline_arg;
 	}
       *dirp = NULL;
     }
@@ -559,10 +561,9 @@ AD_push (int fd_cwd, Dirstack_state *ds, char const *dir,
   /* Extend the stack.  */
   obstack_blank (&ds->Active_dir, sizeof (struct AD_ent));
 
-  {
-    size_t n_lengths = obstack_object_size (&ds->len_stack) / sizeof (size_t);
-    assert (AD_stack_height (ds) == n_lengths + 1);
-  }
+  /* The active directory stack must be one larger than the length stack.  */
+  assert (AD_stack_height (ds) ==
+	  1 + obstack_object_size (&ds->len_stack) / sizeof (size_t));
 
   /* Fill in the new values.  */
   top = AD_stack_top (ds);
@@ -571,7 +572,7 @@ AD_push (int fd_cwd, Dirstack_state *ds, char const *dir,
   top->unremovable = NULL;
 }
 
-static bool
+static inline bool
 AD_is_removable (Dirstack_state const *ds, char const *file)
 {
   struct AD_ent *top = AD_stack_top (ds);
