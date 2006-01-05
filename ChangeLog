@@ -1,6 +1,11 @@
-2006-01-04  Jim Meyering  <jim@meyering.net>
+2006-01-05  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* src/tail.c (ENOSYS) [!defined ENOSYS]: Don't define here.
+	It's already defined in "system.h".
+
+2006-01-04  Jim Meyering  <jim@meyering.net>
 
 	* ChangeLog: Remove entries from 2005-10-22 and earlier.
 	* ChangeLog-2005: New file, for entries up to version 5.92.
