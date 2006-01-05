@@ -4,6 +4,7 @@
 
 	* src/tail.c (ENOSYS) [!defined ENOSYS]: Don't define here.
 	It's already defined in "system.h".
+	* Makefile.maint: Add a FIXME comment.
 
 2006-01-04  Jim Meyering  <jim@meyering.net>
 
