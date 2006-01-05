@@ -2,6 +2,11 @@
 
 	* Version 6.0-cvs.
 
+	* src/remove.c: Give a few functions the inline attribute.
+	(AD_pop_and_chdir): Use gotos to avoid some duplication.
+	(AD_push): Rewrite an assertion so that the entire computation
+	goes away when assertions are turned off.
+
 	* src/tail.c (ENOSYS) [!defined ENOSYS]: Don't define here.
 	It's already defined in "system.h".
 	* Makefile.maint: Add a FIXME comment.
