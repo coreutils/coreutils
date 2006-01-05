@@ -51,12 +51,6 @@
 #define AUTHORS \
   "Paul Rubin", "David MacKenzie, Ian Lance Taylor", "Jim Meyering"
 
-#ifndef ENOSYS
-  /* Some systems don't have ENOSYS -- this should be a big enough
-     value that no valid errno value will match it.  */
-# define ENOSYS 99999
-#endif
-
 /* Number of items to tail.  */
 #define DEFAULT_N_LINES 10
 
