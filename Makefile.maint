@@ -2,7 +2,7 @@
 # This Makefile fragment is shared between the coreutils,
 # CPPI, Bison, and Autoconf.
 
-## Copyright (C) 2001-2005 Free Software Foundation, Inc.
+## Copyright (C) 2001-2006 Free Software Foundation, Inc.
 ##
 ## This program is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -56,6 +56,10 @@ export LC_ALL = C
 ## --------------- ##
 ## Sanity checks.  ##
 ## --------------- ##
+
+# FIXME: add a check to prohibit definition in src/*.c of symbols defined
+# in system.h.  E.g. today I removed from tail.c a useless definition of
+# ENOSYS.  It was useless because system.h ensures it's defined.
 
 # Checks that don't require cvs.
 # Run `changelog-check' last, as previous test may reveal problems requiring
