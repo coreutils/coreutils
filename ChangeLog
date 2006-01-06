@@ -1,6 +1,14 @@
-2006-01-05  Jim Meyering  <jim@meyering.net>
+2006-01-06  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* src/remove.c (rm_1): Remove `static' attribute on local `status'.
+	First off, the attribute should have been `volatile' (not static)
+	to avoid longjmp-related risk of clobber.  Secondly, now there is
+	no longer any risk of a local variable being clobbered, so there's
+	no need for any attribute at all.
+
+2006-01-05  Jim Meyering  <jim@meyering.net>
 
 	* src/remove.c: Give a few functions the inline attribute.
 	(AD_pop_and_chdir): Use gotos to avoid some duplication.
