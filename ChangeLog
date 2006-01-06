@@ -2,6 +2,9 @@
 
 	* Version 6.0-cvs.
 
+	* Makefile.maint (copyright-check): Use date +%Y in place of
+	hard-coded 2005.
+
 	* src/remove.c (rm_1): Remove `static' attribute on local `status'.
 	First off, the attribute should have been `volatile' (not static)
 	to avoid longjmp-related risk of clobber.  Secondly, now there is
