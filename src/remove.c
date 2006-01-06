@@ -1309,11 +1309,8 @@ rm_1 (Dirstack_state *ds, char const *filename,
   AD_push_initial (ds);
   AD_INIT_OTHER_MEMBERS ();
 
-  /* Put `status' in static storage, so it can't be clobbered
-     by the potential longjmp into this function.  */
-  static enum RM_status status;
   int fd_cwd = AT_FDCWD;
-  status = remove_entry (fd_cwd, ds, filename, x, NULL);
+  enum RM_status status = remove_entry (fd_cwd, ds, filename, x, NULL);
   if (status == RM_NONEMPTY_DIR)
     {
       /* In the event that remove_dir->remove_cwd_entries detects
