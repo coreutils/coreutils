@@ -1,6 +1,10 @@
-2006-01-06  Jim Meyering  <jim@meyering.net>
+2006-01-06  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 6.0-cvs.
+
+	* configure.ac (gl_IGNORE_UNUSED_LIBRARIES): Add.
+
+2006-01-06  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.maint (copyright-check): Use date +%Y in place of
 	hard-coded 2005.
