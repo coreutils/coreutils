@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script. -*-m4-*-
 
-dnl Copyright (C) 1991, 1993-2005 Free Software Foundation, Inc.
+dnl Copyright (C) 1991, 1993-2006 Free Software Foundation, Inc.
 
 dnl This program is free software; you can redistribute it and/or modify
 dnl it under the terms of the GNU General Public License as published by
@@ -36,6 +36,7 @@ AC_PROG_CPP
 AC_PROG_GCC_TRADITIONAL
 AC_PROG_RANLIB
 AC_PROG_LN_S
+gl_IGNORE_UNUSED_LIBRARIES
 
 
 AC_CHECK_FUNCS(uname,
