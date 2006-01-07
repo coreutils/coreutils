@@ -1,3 +1,7 @@
+2006-01-06  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* lib-ignore.m4: New file.
+
 2006-01-01  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* chmod-safer.m4: Remove.
