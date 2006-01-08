@@ -218,8 +218,8 @@ specifies Coordinated Universal Time.  Interpreted sequences are:\n\
       fputs (_("\
   %z   +hhmm numeric timezone (e.g., -0400)\n\
   %:z  +hh:mm numeric timezone (e.g., -04:00)\n\
-  %::z +hh:mm:ss numeric time zone (e.g., -04:00:00)\n\
-  %:::z numeric time zone with : to necessary precision (e.g., -04, +05:30)\n\
+  %::z  +hh:mm:ss numeric time zone (e.g., -04:00:00)\n\
+  %:::z  numeric time zone with : to necessary precision (e.g., -04, +05:30)\n\
   %Z   alphabetic time zone abbreviation (e.g., EDT)\n\
 \n\
 By default, date pads numeric fields with zeroes.\n\
