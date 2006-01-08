@@ -1,6 +1,12 @@
-2006-01-06  Paul Eggert  <eggert@cs.ucla.edu>
+2006-01-08  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* src/date.c (usage): Adjust the formatting of the entries for
+	%::z and %:::z (separate with two spaces, not one) so that help2man
+	formats them properly.  Reported by Philip Rowlands.
+
+2006-01-06  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* configure.ac (gl_IGNORE_UNUSED_LIBRARIES): Add.
 
