@@ -1,6 +1,6 @@
 /* much like chdir(2), but safer
 
-   Copyright (C) 2005 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@
    && (Stat_buf_1).st_dev == (Stat_buf_2).st_dev)
 
 /* Like chdir, but fail if DIR is a symbolic link to a directory (or
-   similar funny business), or if DIR not readable.  This avoids a
+   similar funny business), or if DIR is not readable.  This avoids a
    minor race condition between when a directory is created or statted
    and when the process chdirs into it.  */
 int
