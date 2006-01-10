@@ -522,6 +522,7 @@ next:	tmp = p;
 		if (p->fts_level == FTS_ROOTLEVEL) {
 			if (FCHDIR(sp, sp->fts_rfd)) {
 				SET(FTS_STOP);
+				sp->fts_cur = p;
 				return (NULL);
 			}
 			fts_load(sp, p);
