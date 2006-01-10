@@ -81,11 +81,11 @@ sha1_init_ctx (struct sha1_ctx *ctx)
 void *
 sha1_read_ctx (const struct sha1_ctx *ctx, void *resbuf)
 {
-  ((md5_uint32 *) resbuf)[0] = SWAP (ctx->A);
-  ((md5_uint32 *) resbuf)[1] = SWAP (ctx->B);
-  ((md5_uint32 *) resbuf)[2] = SWAP (ctx->C);
-  ((md5_uint32 *) resbuf)[3] = SWAP (ctx->D);
-  ((md5_uint32 *) resbuf)[4] = SWAP (ctx->E);
+  ((uint32_t *) resbuf)[0] = SWAP (ctx->A);
+  ((uint32_t *) resbuf)[1] = SWAP (ctx->B);
+  ((uint32_t *) resbuf)[2] = SWAP (ctx->C);
+  ((uint32_t *) resbuf)[3] = SWAP (ctx->D);
+  ((uint32_t *) resbuf)[4] = SWAP (ctx->E);
 
   return resbuf;
 }
@@ -99,7 +99,7 @@ void *
 sha1_finish_ctx (struct sha1_ctx *ctx, void *resbuf)
 {
   /* Take yet unprocessed bytes into account.  */
-  md5_uint32 bytes = ctx->buflen;
+  uint32_t bytes = ctx->buflen;
   size_t pad;
 
   /* Now count remaining bytes.  */
@@ -111,8 +111,8 @@ sha1_finish_ctx (struct sha1_ctx *ctx, void *resbuf)
   memcpy (&ctx->buffer[bytes], fillbuf, pad);
 
   /* Put the 64-bit file length in *bits* at the end of the buffer.  */
-  *(md5_uint32 *) &ctx->buffer[bytes + pad + 4] = SWAP (ctx->total[0] << 3);
-  *(md5_uint32 *) &ctx->buffer[bytes + pad] = SWAP ((ctx->total[1] << 3) |
+  *(uint32_t *) &ctx->buffer[bytes + pad + 4] = SWAP (ctx->total[0] << 3);
+  *(uint32_t *) &ctx->buffer[bytes + pad] = SWAP ((ctx->total[1] << 3) |
 						    (ctx->total[0] >> 29));
 
   /* Process last bytes.  */
@@ -238,7 +238,7 @@ sha1_process_bytes (const void *buffer, size_t len, struct sha1_ctx *ctx)
     {
 #if !_STRING_ARCH_unaligned
 # define alignof(type) offsetof (struct { char c; type x; }, x)
-# define UNALIGNED_P(p) (((size_t) p) % alignof (md5_uint32) != 0)
+# define UNALIGNED_P(p) (((size_t) p) % alignof (uint32_t) != 0)
       if (UNALIGNED_P (buffer))
 	while (len > 64)
 	  {
@@ -293,15 +293,15 @@ sha1_process_bytes (const void *buffer, size_t len, struct sha1_ctx *ctx)
 void
 sha1_process_block (const void *buffer, size_t len, struct sha1_ctx *ctx)
 {
-  const md5_uint32 *words = buffer;
-  size_t nwords = len / sizeof (md5_uint32);
-  const md5_uint32 *endp = words + nwords;
-  md5_uint32 x[16];
-  md5_uint32 a = ctx->A;
-  md5_uint32 b = ctx->B;
-  md5_uint32 c = ctx->C;
-  md5_uint32 d = ctx->D;
-  md5_uint32 e = ctx->E;
+  const uint32_t *words = buffer;
+  size_t nwords = len / sizeof (uint32_t);
+  const uint32_t *endp = words + nwords;
+  uint32_t x[16];
+  uint32_t a = ctx->A;
+  uint32_t b = ctx->B;
+  uint32_t c = ctx->C;
+  uint32_t d = ctx->D;
+  uint32_t e = ctx->E;
 
   /* First increment the byte count.  RFC 1321 specifies the possible
      length of the file up to 2^64 bits.  Here we only compute the
@@ -325,7 +325,7 @@ sha1_process_block (const void *buffer, size_t len, struct sha1_ctx *ctx)
 
   while (words < endp)
     {
-      md5_uint32 tm;
+      uint32_t tm;
       int t;
       for (t = 0; t < 16; t++)
 	{

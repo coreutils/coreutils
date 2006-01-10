@@ -1,6 +1,6 @@
 /* Declarations of functions and data types used for SHA512 and SHA384 sum
    library functions.
-   Copyright (C) 2005 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by the
@@ -28,16 +28,13 @@
 #  include <stdint.h>
 # endif
 
-typedef uint64_t sha512_uint64;
-
-
 /* Structure to save state of computation between the single steps.  */
 struct sha512_ctx
 {
-  sha512_uint64 state[8];
+  uint64_t state[8];
 
-  sha512_uint64 total[2];
-  sha512_uint64 buflen;
+  uint64_t total[2];
+  uint64_t buflen;
   char buffer[256];
 };
 

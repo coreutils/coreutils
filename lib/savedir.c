@@ -55,27 +55,27 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "openat.h"
 #include "xalloc.h"
-
-/* Return a freshly allocated string containing the file names
-   in directory DIR, separated by '\0' characters;
-   the end is marked by two '\0' characters in a row.
-   Return NULL (setting errno) if DIR cannot be opened, read, or closed.  */
 
 #ifndef NAME_SIZE_DEFAULT
 # define NAME_SIZE_DEFAULT 512
 #endif
 
-char *
-savedir (const char *dir)
+/* Return a freshly allocated string containing the file names
+   in directory DIRP, separated by '\0' characters;
+   the end is marked by two '\0' characters in a row.
+   Return NULL (setting errno) if DIRP cannot be read or closed.
+   If DIRP is NULL, return NULL without affecting errno.  */
+
+static char *
+savedirstream (DIR *dirp)
 {
-  DIR *dirp;
   char *name_space;
   size_t allocated = NAME_SIZE_DEFAULT;
   size_t used = 0;
   int save_errno;
 
-  dirp = opendir (dir);
   if (dirp == NULL)
     return NULL;
 
@@ -126,4 +126,26 @@ savedir (const char *dir)
       return NULL;
     }
   return name_space;
+}
+
+/* Return a freshly allocated string containing the file names
+   in directory DIR, separated by '\0' characters;
+   the end is marked by two '\0' characters in a row.
+   Return NULL (setting errno) if DIR cannot be opened, read, or closed.  */
+
+char *
+savedir (char const *dir)
+{
+  return savedirstream (opendir (dir));
+}
+
+/* Return a freshly allocated string containing the file names
+   in directory FD, separated by '\0' characters;
+   the end is marked by two '\0' characters in a row.
+   Return NULL (setting errno) if FD cannot be read or closed.  */
+
+char *
+fdsavedir (int fd)
+{
+  return savedirstream (fdopendir (fd));
 }

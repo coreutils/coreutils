@@ -1,6 +1,6 @@
 /* Determine a canonical name for the current locale's character encoding.
 
-   Copyright (C) 2000-2004 Free Software Foundation, Inc.
+   Copyright (C) 2000-2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -248,6 +248,7 @@ get_charset_aliases (void)
 	   "CP1361" "\0" "JOHAB" "\0"
 	   "CP20127" "\0" "ASCII" "\0"
 	   "CP20866" "\0" "KOI8-R" "\0"
+	   "CP20936" "\0" "GB2312" "\0"
 	   "CP21866" "\0" "KOI8-RU" "\0"
 	   "CP28591" "\0" "ISO-8859-1" "\0"
 	   "CP28592" "\0" "ISO-8859-2" "\0"
@@ -258,7 +259,14 @@ get_charset_aliases (void)
 	   "CP28597" "\0" "ISO-8859-7" "\0"
 	   "CP28598" "\0" "ISO-8859-8" "\0"
 	   "CP28599" "\0" "ISO-8859-9" "\0"
-	   "CP28605" "\0" "ISO-8859-15" "\0";
+	   "CP28605" "\0" "ISO-8859-15" "\0"
+	   "CP38598" "\0" "ISO-8859-8" "\0"
+	   "CP51932" "\0" "EUC-JP" "\0"
+	   "CP51936" "\0" "GB2312" "\0"
+	   "CP51949" "\0" "EUC-KR" "\0"
+	   "CP51950" "\0" "EUC-TW" "\0"
+	   "CP54936" "\0" "GB18030" "\0"
+	   "CP65001" "\0" "UTF-8" "\0";
 # endif
 #endif
 
@@ -278,7 +286,7 @@ get_charset_aliases (void)
 STATIC
 #endif
 const char *
-locale_charset ()
+locale_charset (void)
 {
   const char *codeset;
   const char *aliases;

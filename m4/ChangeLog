@@ -1,3 +1,7 @@
+2006-01-10  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* getaddrinfo.m4, localcharset.m4, md5.m4: Sync from gnulib.
+
 2006-01-10  Jim Meyering  <jim@meyering.net>
 
 	* fpending.m4: Also include <stdio.h>, for Dragonfly.

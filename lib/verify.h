@@ -23,24 +23,33 @@
 
 /* Each of these macros verifies that its argument R is a nonzero
    constant expression.  To be portable, R's type must be integer (or
-   boolean).  Unlike assert, there is no run-time overhead.  */
+   boolean).  Unlike assert, there is no run-time overhead.
 
-/* A type that is valid if and only if R is a nonzero constant expression.
-   The symbols verify_type__ and verify_error_if_negative_size__ are
-   private to this header file.  */
+   There are two macros, since no single macro can be used in all
+   contexts in C.  verify_true (R) is for scalar contexts, where it
+   may be cast to void if need be.  verify (R) is for declaration
+   contexts, e.g., the top level.
 
-# define verify_type__(R) \
-    struct { unsigned int verify_error_if_negative_size__ : (R) ? 1 : -1; }
+   The symbols verify_error_if_negative_size__ and verify_function__
+   are private to this header.  */
 
-/* Verify requirement R at compile-time, as a declaration.  */
+/* Verify requirement R at compile-time, as an integer constant expression.
+   Return true.  */
 
-# define verify(R) \
-    extern int (* verify_function__ (void)) [sizeof (verify_type__ (R))]
+# ifdef __cplusplus
+template <int w>
+  struct verify_type__ { unsigned int verify_error_if_negative_size__: w; };
+#  define verify_true(R) \
+     (!!sizeof (verify_type__<(R) ? 1 : -1>))
+# else
+#  define verify_true(R) \
+     (!!sizeof \
+      (struct { unsigned int verify_error_if_negative_size__: (R) ? 1 : -1; }))
+# endif
 
-/* Verify requirement R at compile-time, as an expression.
-   This macro can be used in some contexts where verify cannot, and vice versa.
-   Return void.  */
+/* Verify requirement R at compile-time, as a declaration without a
+   trailing ';'.  */
 
-# define verify_expr(R) ((void) ((verify_type__ (R) *) 0))
+# define verify(R) extern int (* verify_function__ (void)) [verify_true (R)]
 
 #endif

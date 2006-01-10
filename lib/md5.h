@@ -1,9 +1,8 @@
 /* Declaration of functions and data types used for MD5 sum computing
    library functions.
-   Copyright (C) 1995-1997,1999-2005 Free Software Foundation, Inc.
-
-   NOTE: The canonical source of this file is maintained with the GNU C
-   Library.  Bugs can be reported to bug-glibc@prep.ai.mit.edu.
+   Copyright (C) 1995-1997,1999,2000,2001,2004,2005
+      Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
    This program is free software; you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by the
@@ -23,18 +22,15 @@
 #define _MD5_H 1
 
 #include <stdio.h>
+#include <stdint.h>
 
-#if HAVE_INTTYPES_H
-# include <inttypes.h>
-#endif
-#if HAVE_STDINT_H || _LIBC
-# include <stdint.h>
-#endif
+#define MD5_DIGEST_SIZE 16
+#define MD5_BLOCK_SIZE 64
 
 #ifndef __GNUC_PREREQ
 # if defined __GNUC__ && defined __GNUC_MINOR__
-#  define __GNUC_PREREQ(maj, min) \
-	((__GNUC__ << 16) + __GNUC_MINOR__ >= ((maj) << 16) + (min))
+#  define __GNUC_PREREQ(maj, min)					\
+  ((__GNUC__ << 16) + __GNUC_MINOR__ >= ((maj) << 16) + (min))
 # else
 #  define __GNUC_PREREQ(maj, min) 0
 # endif
@@ -64,19 +60,17 @@
 # define __md5_stream md5_stream
 #endif
 
-typedef uint32_t md5_uint32;
-
 /* Structure to save state of computation between the single steps.  */
 struct md5_ctx
 {
-  md5_uint32 A;
-  md5_uint32 B;
-  md5_uint32 C;
-  md5_uint32 D;
+  uint32_t A;
+  uint32_t B;
+  uint32_t C;
+  uint32_t D;
 
-  md5_uint32 total[2];
-  md5_uint32 buflen;
-  char buffer[128] __attribute__ ((__aligned__ (__alignof__ (md5_uint32))));
+  uint32_t total[2];
+  uint32_t buflen;
+  uint32_t buffer[32];
 };
 
 /*
@@ -107,8 +101,8 @@ extern void __md5_process_bytes (const void *buffer, size_t len,
    endian byte order, so that a byte-wise output yields to the wanted
    ASCII representation of the message digest.
 
-   IMPORTANT: On some systems it is required that RESBUF be correctly
-   aligned for a 32 bits value.  */
+   IMPORTANT: On some systems, RESBUF must be aligned to a 32-bit
+   boundary. */
 extern void *__md5_finish_ctx (struct md5_ctx *ctx, void *resbuf) __THROW;
 
 
@@ -116,8 +110,8 @@ extern void *__md5_finish_ctx (struct md5_ctx *ctx, void *resbuf) __THROW;
    always in little endian byte order, so that a byte-wise output yields
    to the wanted ASCII representation of the message digest.
 
-   IMPORTANT: On some systems it is required that RESBUF is correctly
-   aligned for a 32 bits value.  */
+   IMPORTANT: On some systems, RESBUF must be aligned to a 32-bit
+   boundary. */
 extern void *__md5_read_ctx (const struct md5_ctx *ctx, void *resbuf) __THROW;
 
 

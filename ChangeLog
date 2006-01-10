@@ -1,6 +1,11 @@
-2006-01-08  Jim Meyering  <jim@meyering.net>
+2006-01-10  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 6.0-cvs.
+
+	* src/system.h (X2NREALLOC, X2REALLOC, DECIMAL_DIGIT_ACCUMULATE):
+	Use verify_true instead of verify_expr, to sync with gnulib.
+
+2006-01-08  Jim Meyering  <jim@meyering.net>
 
 	* src/date.c (usage): Adjust the formatting of the entries for
 	%::z and %:::z (separate with two spaces, not one) so that help2man

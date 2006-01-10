@@ -105,7 +105,7 @@ sha256_read_ctx (const struct sha256_ctx *ctx, void *resbuf)
   int i;
 
   for ( i=0 ; i<8 ; i++ )
-    ((md5_uint32 *) resbuf)[i] = NOTSWAP (ctx->state[i]);
+    ((uint32_t *) resbuf)[i] = NOTSWAP (ctx->state[i]);
 
   return resbuf;
 }
@@ -116,7 +116,7 @@ sha224_read_ctx (const struct sha256_ctx *ctx, void *resbuf)
   int i;
 
   for ( i=0 ; i<7 ; i++ )
-    ((md5_uint32 *) resbuf)[i] = NOTSWAP (ctx->state[i]);
+    ((uint32_t *) resbuf)[i] = NOTSWAP (ctx->state[i]);
 
   return resbuf;
 }
@@ -130,7 +130,7 @@ static void
 sha256_conclude_ctx (struct sha256_ctx *ctx)
 {
   /* Take yet unprocessed bytes into account.  */
-  md5_uint32 bytes = ctx->buflen;
+  uint32_t bytes = ctx->buflen;
   size_t pad;
 
   /* Now count remaining bytes.  */
@@ -142,8 +142,8 @@ sha256_conclude_ctx (struct sha256_ctx *ctx)
   memcpy (&ctx->buffer[bytes], fillbuf, pad);
 
   /* Put the 64-bit file length in *bits* at the end of the buffer.  */
-  *(md5_uint32 *) &ctx->buffer[bytes + pad + 4] = NOTSWAP (ctx->total[0] << 3);
-  *(md5_uint32 *) &ctx->buffer[bytes + pad] = NOTSWAP ((ctx->total[1] << 3) |
+  *(uint32_t *) &ctx->buffer[bytes + pad + 4] = NOTSWAP (ctx->total[0] << 3);
+  *(uint32_t *) &ctx->buffer[bytes + pad] = NOTSWAP ((ctx->total[1] << 3) |
 						    (ctx->total[0] >> 29));
 
   /* Process last bytes.  */
@@ -360,7 +360,7 @@ sha256_process_bytes (const void *buffer, size_t len, struct sha256_ctx *ctx)
     {
 #if !_STRING_ARCH_unaligned
 # define alignof(type) offsetof (struct { char c; type x; }, x)
-# define UNALIGNED_P(p) (((size_t) p) % alignof (md5_uint32) != 0)
+# define UNALIGNED_P(p) (((size_t) p) % alignof (uint32_t) != 0)
       if (UNALIGNED_P (buffer))
 	while (len > 64)
 	  {
@@ -398,7 +398,7 @@ sha256_process_bytes (const void *buffer, size_t len, struct sha256_ctx *ctx)
 
 /* SHA256 round constants */
 #define K(I) sha256_round_constants[I]
-static const md5_uint32 sha256_round_constants[64] = {
+static const uint32_t sha256_round_constants[64] = {
   0x428a2f98UL, 0x71374491UL, 0xb5c0fbcfUL, 0xe9b5dba5UL,
   0x3956c25bUL, 0x59f111f1UL, 0x923f82a4UL, 0xab1c5ed5UL,
   0xd807aa98UL, 0x12835b01UL, 0x243185beUL, 0x550c7dc3UL,
@@ -428,18 +428,18 @@ static const md5_uint32 sha256_round_constants[64] = {
 void
 sha256_process_block (const void *buffer, size_t len, struct sha256_ctx *ctx)
 {
-  const md5_uint32 *words = buffer;
-  size_t nwords = len / sizeof (md5_uint32);
-  const md5_uint32 *endp = words + nwords;
-  md5_uint32 x[16];
-  md5_uint32 a = ctx->state[0];
-  md5_uint32 b = ctx->state[1];
-  md5_uint32 c = ctx->state[2];
-  md5_uint32 d = ctx->state[3];
-  md5_uint32 e = ctx->state[4];
-  md5_uint32 f = ctx->state[5];
-  md5_uint32 g = ctx->state[6];
-  md5_uint32 h = ctx->state[7];
+  const uint32_t *words = buffer;
+  size_t nwords = len / sizeof (uint32_t);
+  const uint32_t *endp = words + nwords;
+  uint32_t x[16];
+  uint32_t a = ctx->state[0];
+  uint32_t b = ctx->state[1];
+  uint32_t c = ctx->state[2];
+  uint32_t d = ctx->state[3];
+  uint32_t e = ctx->state[4];
+  uint32_t f = ctx->state[5];
+  uint32_t g = ctx->state[6];
+  uint32_t h = ctx->state[7];
 
   /* First increment the byte count.  FIPS PUB 180-2 specifies the possible
      length of the file up to 2^64 bits.  Here we only compute the
@@ -468,8 +468,8 @@ sha256_process_block (const void *buffer, size_t len, struct sha256_ctx *ctx)
 
   while (words < endp)
     {
-      md5_uint32 tm;
-      md5_uint32 t0, t1;
+      uint32_t tm;
+      uint32_t t0, t1;
       int t;
       /* FIXME: see sha1.c for a better implementation.  */
       for (t = 0; t < 16; t++)

@@ -1,7 +1,7 @@
 /* sha512.c - Functions to compute SHA512 and SHA384 message digest of files or
    memory blocks according to the NIST specification FIPS-180-2.
 
-   Copyright (C) 2005 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by the
@@ -107,7 +107,7 @@ sha512_read_ctx (const struct sha512_ctx *ctx, void *resbuf)
   int i;
 
   for ( i=0 ; i<8 ; i++ )
-    ((sha512_uint64 *) resbuf)[i] = NOTSWAP (ctx->state[i]);
+    ((uint64_t *) resbuf)[i] = NOTSWAP (ctx->state[i]);
 
   return resbuf;
 }
@@ -118,7 +118,7 @@ sha384_read_ctx (const struct sha512_ctx *ctx, void *resbuf)
   int i;
 
   for ( i=0 ; i<6 ; i++ )
-    ((sha512_uint64 *) resbuf)[i] = NOTSWAP (ctx->state[i]);
+    ((uint64_t *) resbuf)[i] = NOTSWAP (ctx->state[i]);
 
   return resbuf;
 }
@@ -132,7 +132,7 @@ static void
 sha512_conclude_ctx (struct sha512_ctx *ctx)
 {
   /* Take yet unprocessed bytes into account.  */
-  sha512_uint64 bytes = ctx->buflen;
+  uint64_t bytes = ctx->buflen;
   size_t pad;
 
   /* Now count remaining bytes.  */
@@ -144,8 +144,8 @@ sha512_conclude_ctx (struct sha512_ctx *ctx)
   memcpy (&ctx->buffer[bytes], fillbuf, pad);
 
   /* Put the 64-bit file length in *bits* at the end of the buffer.  */
-  *(sha512_uint64 *) &ctx->buffer[bytes + pad + 8] = NOTSWAP (ctx->total[0] << 3);
-  *(sha512_uint64 *) &ctx->buffer[bytes + pad] = NOTSWAP ((ctx->total[1] << 3) |
+  *(uint64_t *) &ctx->buffer[bytes + pad + 8] = NOTSWAP (ctx->total[0] << 3);
+  *(uint64_t *) &ctx->buffer[bytes + pad] = NOTSWAP ((ctx->total[1] << 3) |
 						    (ctx->total[0] >> 61));
 
   /* Process last bytes.  */
@@ -362,7 +362,7 @@ sha512_process_bytes (const void *buffer, size_t len, struct sha512_ctx *ctx)
     {
 #if !_STRING_ARCH_unaligned
 # define alignof(type) offsetof (struct { char c; type x; }, x)
-# define UNALIGNED_P(p) (((size_t) p) % alignof (sha512_uint64) != 0)
+# define UNALIGNED_P(p) (((size_t) p) % alignof (uint64_t) != 0)
       if (UNALIGNED_P (buffer))
 	while (len > 128)
 	  {
@@ -400,7 +400,7 @@ sha512_process_bytes (const void *buffer, size_t len, struct sha512_ctx *ctx)
 
 /* SHA512 round constants */
 #define K(I) sha512_round_constants[I]
-static const sha512_uint64 sha512_round_constants[80] = {
+static const uint64_t sha512_round_constants[80] = {
  0x428a2f98d728ae22ULL, 0x7137449123ef65cdULL, 0xb5c0fbcfec4d3b2fULL, 0xe9b5dba58189dbbcULL, 0x3956c25bf348b538ULL, 0x59f111f1b605d019ULL, 0x923f82a4af194f9bULL, 0xab1c5ed5da6d8118ULL,
  0xd807aa98a3030242ULL, 0x12835b0145706fbeULL, 0x243185be4ee4b28cULL, 0x550c7dc3d5ffb4e2ULL, 0x72be5d74f27b896fULL, 0x80deb1fe3b1696b1ULL, 0x9bdc06a725c71235ULL, 0xc19bf174cf692694ULL,
  0xe49b69c19ef14ad2ULL, 0xefbe4786384f25e3ULL, 0x0fc19dc68b8cd5b5ULL, 0x240ca1cc77ac9c65ULL, 0x2de92c6f592b0275ULL, 0x4a7484aa6ea6e483ULL, 0x5cb0a9dcbd41fbd4ULL, 0x76f988da831153b5ULL,
@@ -424,18 +424,18 @@ static const sha512_uint64 sha512_round_constants[80] = {
 void
 sha512_process_block (const void *buffer, size_t len, struct sha512_ctx *ctx)
 {
-  const sha512_uint64 *words = buffer;
-  size_t nwords = len / sizeof (sha512_uint64);
-  const sha512_uint64 *endp = words + nwords;
-  sha512_uint64 x[16];
-  sha512_uint64 a = ctx->state[0];
-  sha512_uint64 b = ctx->state[1];
-  sha512_uint64 c = ctx->state[2];
-  sha512_uint64 d = ctx->state[3];
-  sha512_uint64 e = ctx->state[4];
-  sha512_uint64 f = ctx->state[5];
-  sha512_uint64 g = ctx->state[6];
-  sha512_uint64 h = ctx->state[7];
+  const uint64_t *words = buffer;
+  size_t nwords = len / sizeof (uint64_t);
+  const uint64_t *endp = words + nwords;
+  uint64_t x[16];
+  uint64_t a = ctx->state[0];
+  uint64_t b = ctx->state[1];
+  uint64_t c = ctx->state[2];
+  uint64_t d = ctx->state[3];
+  uint64_t e = ctx->state[4];
+  uint64_t f = ctx->state[5];
+  uint64_t g = ctx->state[6];
+  uint64_t h = ctx->state[7];
 
   /* First increment the byte count.  FIPS PUB 180-2 specifies the possible
      length of the file up to 2^128 bits.  Here we only compute the
@@ -463,8 +463,8 @@ sha512_process_block (const void *buffer, size_t len, struct sha512_ctx *ctx)
 
   while (words < endp)
     {
-      sha512_uint64 tm;
-      sha512_uint64 t0, t1;
+      uint64_t tm;
+      uint64_t t0, t1;
       int t;
       /* FIXME: see sha1.c for a better implementation.  */
       for (t = 0; t < 16; t++)
