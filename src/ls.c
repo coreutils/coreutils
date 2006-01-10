@@ -1,5 +1,5 @@
 /* `dir', `vdir' and `ls' directory listing programs for GNU.
-   Copyright (C) 85, 88, 90, 91, 1995-2005 Free Software Foundation, Inc.
+   Copyright (C) 85, 88, 90, 91, 1995-2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -2715,7 +2715,7 @@ gobble_file (char const *name, enum filetype type, bool command_line_arg,
   else
     {
       f->filetype = type;
-#if HAVE_STRUCT_DIRENT_D_TYPE
+#if HAVE_STRUCT_DIRENT_D_TYPE && defined DTTOIF
       f->stat.st_mode = DTTOIF (type);
 #endif
       blocks = 0;
