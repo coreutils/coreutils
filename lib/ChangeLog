@@ -1,3 +1,13 @@
+2006-01-10  Jim Meyering  <jim@meyering.net>
+
+	Avoid the double-free (first in fts_read, second in fts_close) that
+	would occur when an `active' directory is made inaccessible (e.g.,
+	via chmod a-x) during a traversal.
+	* fts.c (fts_read): After a failed fchdir, update sp->fts_cur
+	before returning.  Reproduce this failure by
+	mkdir -p a/b; cd a; chmod a-x . b
+	Reported by Stavros Passas.
+
 2006-01-06  Jim Meyering  <jim@meyering.net>
 
 	* version-etc.c (COPYRIGHT_YEAR): Update to 2006.
