@@ -1,7 +1,7 @@
 2006-01-10  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* localcharset.c, md5.c, md5.h, savedir.c, savedir.h, sha1.c, sha1.h
-	* strcasecmp.c, strncasecmp.c, verify.h:
+	* strcasecmp.c, strncasecmp.c, verify.h, regex_internal.h:
 	Sync from gnulib.
 	* sha256.c, sha256.h, sha512.c, sha512.h:
 	Replace all instances of md5_uint32_t with uint32_t, to accommodate
