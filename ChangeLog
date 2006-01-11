@@ -3,6 +3,8 @@
 	* Version 6.0-cvs.
 
 	* tests/du/long-sloop: New file.  Test for today's fts.c bug fix.
+	That bug could make du -L, chgrp -L, or chown -L fail to diagnose
+	a very long sequence of symbolic links (not necessarily a loop).
 	* tests/du/Makefile.am (TESTS): Add long-sloop.
 
 2006-01-11  Paul Eggert  <eggert@cs.ucla.edu>
