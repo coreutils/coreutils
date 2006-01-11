@@ -1,3 +1,8 @@
+2006-01-11  Jim Meyering  <jim@meyering.net>
+
+	* openat.m4 (gl_FUNC_OPENAT): Require and compile fchmodat.c.
+	Check for the lchmod function.
+
 2006-01-10  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* argmatch.m4 (gl_ARGMATCH): Don't require gl_FUNC_MEMCMP, for the
