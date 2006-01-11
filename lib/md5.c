@@ -382,7 +382,7 @@ md5_process_block (const void *buffer, size_t len, struct md5_ctx *ctx)
          argument specifying the function to use.  */
 #undef OP
 #define OP(f, a, b, c, d, k, s, T)					\
-      do 								\
+      do								\
 	{								\
 	  a += f (b, c, d) + correct_words[k] + T;			\
 	  CYCLIC (a, s);						\
