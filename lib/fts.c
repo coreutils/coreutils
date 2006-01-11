@@ -73,6 +73,7 @@ static char sccsid[] = "@(#)fts.c	8.6 (Berkeley) 8/14/94";
 
 #if ! _LIBC
 # include "lstat.h"
+# include "fcntl--.h"
 #endif
 
 #if defined _LIBC
