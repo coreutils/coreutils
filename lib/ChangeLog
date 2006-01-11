@@ -1,3 +1,7 @@
+2006-01-11  Jim Meyering  <jim@meyering.net>
+
+	* md5.c (OP): Remove useless space-before-TAB.
+
 2006-01-10  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* localcharset.c, md5.c, md5.h, savedir.c, savedir.h, sha1.c, sha1.h
