@@ -1,0 +1,56 @@
+#!/bin/sh
+# Use du to exercise a corner of fts's FTS_LOGICAL code.
+# Show that du fails with ELOOP (Too many levels of symbolic links)
+# when it encounters that condition.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  du --version
+fi
+
+. $srcdir/../lang-default
+
+pwd=`pwd`
+t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
+#trap 'status=$?; cd $pwd; chmod -R u+rwx $t0; rm -rf $t0 && exit $status' 0
+#trap '(exit $?); exit $?' 1 2 13 15
+
+framework_failure=0
+mkdir -p $tmp || framework_failure=1
+cd $tmp || framework_failure=1
+
+# Create lots of directories, each containing a single symlink
+# pointing at the next directory in the list.
+
+# This number should be larger than the number of symlinks allowed in
+# file name resolution, but not too large as a number of entries
+# in a single directory.
+n=400
+
+dir_list=`seq $n`
+mkdir $dir_list || framework_failure=1
+for i in $dir_list; do
+  ip1=`expr $i + 1`
+  ln -s ../$ip1 $i/s || framework_failure=1
+done
+
+if test $framework_failure = 1; then
+  echo "$0: failure in testing framework" 1>&2
+  (exit 1); exit 1
+fi
+
+fail=0
+
+# With coreutils-5.93 there was no failure.
+# With coreutils-5.94 we get a diagnostic like this:
+# du: cannot access `1/s/s/s/.../s': Too many levels of symbolic links
+du -L 1 > /dev/null 2> out1 && fail=1
+sed "s,1/s/s/s/[/s]*','," out1 > out || fail=1
+cat <<\EOF > exp || fail=1
+du: cannot access `': Too many levels of symbolic links
+EOF
+
+cmp out exp || fail=1
+test $fail = 1 && diff out exp 2> /dev/null
+
+(exit $fail); exit $fail
