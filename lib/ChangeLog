@@ -4,6 +4,7 @@
 	don't interpret all stat-fails+lstat-succeeds as indicating a
 	dangling symlink.  That can also happen at least for ELOOP.
 	The fix: return FTS_SLNONE only when the stat errno is ENOENT.
+	FYI, this bug predates the inclusion of fts.c in coreutils.
 
 2006-01-11  Jim Meyering  <jim@meyering.net>
 
