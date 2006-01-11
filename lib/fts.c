@@ -1069,7 +1069,8 @@ fts_stat(FTS *sp, register FTSENT *p, bool follow)
 	if (ISSET(FTS_LOGICAL) || follow) {
 		if (stat(p->fts_accpath, sbp)) {
 			saved_errno = errno;
-			if (!lstat(p->fts_accpath, sbp)) {
+			if (errno == ENOENT
+			    && lstat(p->fts_accpath, sbp) == 0) {
 				__set_errno (0);
 				return (FTS_SLNONE);
 			}
