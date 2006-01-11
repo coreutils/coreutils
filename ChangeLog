@@ -17,6 +17,8 @@
 
 	* tests/chmod/no-x: Add a test for today's fts.c fix.
 
+2006-01-10  Jim Meyering  <jim@meyering.net>  (tiny change)
+
 	* src/ls.c (gobble_file): Use DTTOIF only if it's defined.
 	This is necessary for Dragonfly.  Patch by Joerg Sonnenberger.
 
