@@ -90,6 +90,7 @@ test_syntax_error (char const *format, char const *arg)
 {
   fprintf (stderr, "%s: ", argv[0]);
   fprintf (stderr, format, arg);
+  fputc ('\n', stderr);
   fflush (stderr);
   test_exit (TEST_FAILURE);
 }
@@ -157,7 +158,7 @@ find_int (char const *string)
 	return number_start;
     }
 
-  test_syntax_error (_("invalid integer %s\n"), quote (string));
+  test_syntax_error (_("invalid integer %s"), quote (string));
 }
 
 /* Find the modification time of FILE, and stuff it into *MTIME.
@@ -238,10 +239,10 @@ term (void)
 
       value = posixtest (nargs);
       if (argv[pos] == 0)
-	test_syntax_error (_("')' expected\n"), NULL);
+	test_syntax_error (_("')' expected"), NULL);
       else
         if (argv[pos][0] != ')' || argv[pos][1])
-	  test_syntax_error (_("')' expected, found %s\n"), argv[pos]);
+	  test_syntax_error (_("')' expected, found %s"), argv[pos]);
       advance (false);
     }
 
@@ -257,7 +258,7 @@ term (void)
       if (test_unop (argv[pos]))
 	value = unary_operator ();
       else
-	test_syntax_error (_("%s: unary operator expected\n"), argv[pos]);
+	test_syntax_error (_("%s: unary operator expected"), argv[pos]);
     }
   else
     {
@@ -326,7 +327,7 @@ binary_operator (bool l_is_l)
 	      bool le, re;
 	      pos += 3;
 	      if (l_is_l | r_is_l)
-		test_syntax_error (_("-nt does not accept -l\n"), NULL);
+		test_syntax_error (_("-nt does not accept -l"), NULL);
 	      le = get_mtime (argv[op - 1], &lt);
 	      re = get_mtime (argv[op + 1], &rt);
 	      return le && (!re || timespec_cmp (lt, rt) > 0);
@@ -339,7 +340,7 @@ binary_operator (bool l_is_l)
 	      /* ef - hard link? */
 	      pos += 3;
 	      if (l_is_l | r_is_l)
-		test_syntax_error (_("-ef does not accept -l\n"), NULL);
+		test_syntax_error (_("-ef does not accept -l"), NULL);
 	      return (stat (argv[op - 1], &stat_buf) == 0
 		      && stat (argv[op + 1], &stat_spare) == 0
 		      && stat_buf.st_dev == stat_spare.st_dev
@@ -355,7 +356,7 @@ binary_operator (bool l_is_l)
 	      bool le, re;
 	      pos += 3;
 	      if (l_is_l | r_is_l)
-		test_syntax_error (_("-ot does not accept -l\n"), NULL);
+		test_syntax_error (_("-ot does not accept -l"), NULL);
 	      le = get_mtime (argv[op - 1], &lt);
 	      re = get_mtime (argv[op + 1], &rt);
 	      return re && (!le || timespec_cmp (lt, rt) < 0);
@@ -364,7 +365,7 @@ binary_operator (bool l_is_l)
 	}
 
       /* FIXME: is this dead code? */
-      test_syntax_error (_("unknown binary operator\n"), argv[op]);
+      test_syntax_error (_("unknown binary operator"), argv[op]);
     }
 
   if (argv[op][0] == '=' && !argv[op][1])
@@ -602,7 +603,7 @@ two_arguments (void)
       if (test_unop (argv[pos]))
 	value = unary_operator ();
       else
-	test_syntax_error (_("%s: unary operator expected\n"), argv[pos]);
+	test_syntax_error (_("%s: unary operator expected"), argv[pos]);
     }
   else
     beyond ();
@@ -630,7 +631,7 @@ three_arguments (void)
   else if (STREQ (argv[pos + 1], "-a") || STREQ (argv[pos + 1], "-o"))
     value = expr ();
   else
-    test_syntax_error (_("%s: binary operator expected\n"), argv[pos+1]);
+    test_syntax_error (_("%s: binary operator expected"), argv[pos+1]);
   return (value);
 }
 
@@ -827,7 +828,7 @@ main (int margc, char **margv)
 	{
 	  parse_long_options (margc, margv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
 			      usage, AUTHORS, (char const *) NULL);
-	  test_syntax_error (_("missing `]'\n"), NULL);
+	  test_syntax_error (_("missing `]'"), NULL);
 	}
 
       --margc;
