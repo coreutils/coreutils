@@ -1,5 +1,5 @@
 /* provide a replacement openat function
-   Copyright (C) 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2005, 2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -72,3 +72,32 @@ int unlinkat (int fd, char const *file, int flag);
 int mkdirat (int fd, char const *file, mode_t mode);
 void openat_restore_fail (int) ATTRIBUTE_NORETURN;
 void openat_save_fail (int) ATTRIBUTE_NORETURN;
+int fchmodat (int fd, char const *file, mode_t mode, int flag);
+int fchownat (int fd, char const *file, uid_t owner, gid_t group, int flag);
+
+/* Using these function names makes application code
+   slightly more readable than it would be with
+   fchownat (..., 0) or fchownat (..., AT_SYMLINK_NOFOLLOW).  */
+static inline int
+chownat (int fd, char const *file, uid_t owner, gid_t group)
+{
+  return fchownat (fd, file, owner, group, 0);
+}
+
+static inline int
+lchownat (int fd, char const *file, uid_t owner, gid_t group)
+{
+  return fchownat (fd, file, owner, group, AT_SYMLINK_NOFOLLOW);
+}
+
+static inline int
+chmodat (int fd, char const *file, mode_t mode)
+{
+  return fchmodat (fd, file, mode, 0);
+}
+
+static inline int
+lchmodat (int fd, char const *file, mode_t mode)
+{
+  return fchmodat (fd, file, mode, AT_SYMLINK_NOFOLLOW);
+}
