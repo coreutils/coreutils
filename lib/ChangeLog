@@ -1,5 +1,12 @@
 2006-01-11  Jim Meyering  <jim@meyering.net>
 
+	* fts.c (fts_stat): When following a symlink-to-directory,
+	don't interpret all stat-fails+lstat-succeeds as indicating a
+	dangling symlink.  That can also happen at least for ELOOP.
+	The fix: return FTS_SLNONE only when the stat errno is ENOENT.
+
+2006-01-11  Jim Meyering  <jim@meyering.net>
+
 	* fts.c [!_LIBC]: Include "fcntl--.h", to map open to open_safer.
 	(fts_open): Put new (2006-01-04) maxarglen declaration and uses
 	in their own block, so pre-c99 compilers don't object.
