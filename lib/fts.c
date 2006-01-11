@@ -242,9 +242,11 @@ fts_open (char * const *argv,
 #ifndef MAXPATHLEN
 # define MAXPATHLEN 1024
 #endif
-	size_t maxarglen = fts_maxarglen(argv);
-	if (! fts_palloc(sp, MAX(maxarglen, MAXPATHLEN)))
-		goto mem1;
+	{
+	  size_t maxarglen = fts_maxarglen(argv);
+	  if (! fts_palloc(sp, MAX(maxarglen, MAXPATHLEN)))
+		  goto mem1;
+	}
 
 	/* Allocate/initialize root's parent. */
 	if ((parent = fts_alloc(sp, "", 0)) == NULL)
