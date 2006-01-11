@@ -1,6 +1,12 @@
-2006-01-11  Jim Meyering  <jim@meyering.net>
+2006-01-11  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 6.0-cvs.
+
+	* src/test.c (test_syntax_error): Append a newline.  All callers
+	changed, except for the ones that didn't already append a newline.
+	Bug reported by Eric Blake.
+
+2006-01-11  Jim Meyering  <jim@meyering.net>
 
 	* src/system.h (X2NREALLOC): Now that verify_true is no longer
 	void, cast its result to void, to avoid gcc's warning that
