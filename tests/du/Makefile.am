@@ -2,6 +2,7 @@
 AUTOMAKE_OPTIONS = 1.4 gnits
 
 TESTS = \
+  long-sloop \
   2g \
   files0-from \
   inaccessible-cwd \
