@@ -1,5 +1,7 @@
 2006-01-11  Jim Meyering  <jim@meyering.net>
 
+	* fts.c [!_LIBC]: Include "fcntl--.h", to map open to open_safer.
+
 	* openat.c (fchownat): New function.
 	* openat.h (fchmodat, fchownat): Declare.
 	(chmodat, lchmodat): Define convenience functions.
