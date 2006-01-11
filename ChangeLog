@@ -1,6 +1,13 @@
-2006-01-10  Jim Meyering  <jim@meyering.net>
+2006-01-11  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* src/system.h (X2NREALLOC): Now that verify_true is no longer
+	void, cast its result to void, to avoid gcc's warning that
+	``left-hand operand of comma expression has no effect''.
+	(DECIMAL_DIGIT_ACCUMULATE, X2REALLOC): Likewise.
+
+2006-01-10  Jim Meyering  <jim@meyering.net>
 
 	* tests/chmod/no-x: Add a test for today's fts.c fix.
 
