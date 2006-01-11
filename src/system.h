@@ -513,14 +513,15 @@ uid_t getuid ();
    the third argument to x2nrealloc would be `sizeof *(P)'.
    Ensure that sizeof *(P) is *not* 1.  In that case, it'd be
    better to use X2REALLOC, although not strictly necessary.  */
-#define X2NREALLOC(P, PN) (verify_true (sizeof *(P) != 1), \
+#define X2NREALLOC(P, PN) ((void) verify_true (sizeof *(P) != 1), \
 			   x2nrealloc (P, PN, sizeof *(P)))
 
 /* Using x2realloc (when appropriate) usually makes your code more
    readable than using x2nrealloc, but it also makes it so your
    code will malfunction if sizeof *(P) ever becomes 2 or greater.
    So use this macro instead of using x2realloc directly.  */
-#define X2REALLOC(P, PN) (verify_true (sizeof *(P) == 1), x2realloc (P, PN))
+#define X2REALLOC(P, PN) ((void) verify_true (sizeof *(P) == 1), \
+                          x2realloc (P, PN))
 
 #if ! defined HAVE_MEMPCPY && ! defined mempcpy
 /* Be CAREFUL that there are no side effects in N.  */
@@ -800,8 +801,8 @@ ptr_align (void const *ptr, size_t alignment)
 #define DECIMAL_DIGIT_ACCUMULATE(Accum, Digit_val, Type)		\
   (									\
    (void) (&(Accum) == (Type *) NULL),  /* The type matches.  */	\
-   verify_true (! TYPE_SIGNED (Type)),  /* The type is unsigned.  */	\
-   verify_true (sizeof (Accum) == sizeof (Type)),  /* Added check.  */	\
+   (void) verify_true (! TYPE_SIGNED (Type)), /* The type is unsigned.  */ \
+   (void) verify_true (sizeof (Accum) == sizeof (Type)), /* Added check.  */ \
    (((Type) -1 / 10 < (Accum)						\
      || (Type) ((Accum) * 10 + (Digit_val)) < (Accum))			\
     ? false : (((Accum) = (Accum) * 10 + (Digit_val)), true))		\
