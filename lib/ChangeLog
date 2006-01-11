@@ -1,5 +1,11 @@
 2006-01-11  Jim Meyering  <jim@meyering.net>
 
+	* openat.c (fchownat): New function.
+	* openat.h (fchmodat, fchownat): Declare.
+	(chmodat, lchmodat): Define convenience functions.
+	(chownat, lchownat): Likewise.
+	* fchmodat.c (fchmodat): New file and function.
+
 	* md5.c (OP): Remove useless space-before-TAB.
 
 2006-01-10  Paul Eggert  <eggert@cs.ucla.edu>
