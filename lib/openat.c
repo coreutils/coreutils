@@ -1,5 +1,5 @@
 /* provide a replacement openat function
-   Copyright (C) 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2005, 2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -23,15 +23,15 @@
 
 #include "openat.h"
 
+#include <stdarg.h>
+#include <stddef.h>
+#include <errno.h>
+
 #include "dirname.h" /* solely for definition of IS_ABSOLUTE_FILE_NAME */
 #include "fcntl--.h"
 #include "openat-priv.h"
 #include "save-cwd.h"
 #include "unistd--.h"
-
-#include <stdarg.h>
-#include <stddef.h>
-#include <errno.h>
 
 /* Replacement for Solaris' openat function.
    <http://www.google.com/search?q=openat+site:docs.sun.com>
@@ -276,6 +276,60 @@ unlinkat (int fd, char const *file, int flag)
   if (! err)
     {
       err = (flag == AT_REMOVEDIR ? rmdir (file) : unlink (file));
+      saved_errno = errno;
+
+      if (restore_cwd (&saved_cwd) != 0)
+	openat_restore_fail (errno);
+    }
+
+  free_cwd (&saved_cwd);
+  errno = saved_errno;
+  return err;
+}
+
+/* Replacement for Solaris' function by the same name.
+   Invoke chown or lchown on file, FILE, using OWNER and GROUP, in the
+   directory open on descriptor FD.  If FLAG is AT_SYMLINK_NOFOLLOW, then
+   use lchown, otherwise, use chown.  If possible, do it without changing
+   the working directory.  Otherwise, resort to using save_cwd/fchdir,
+   then mkdir/restore_cwd.  If either the save_cwd or the restore_cwd
+   fails, then give a diagnostic and exit nonzero.  */
+int
+fchownat (int fd, char const *file, uid_t owner, gid_t group, int flag)
+{
+  struct saved_cwd saved_cwd;
+  int saved_errno;
+  int err;
+
+  if (fd == AT_FDCWD || IS_ABSOLUTE_FILE_NAME (file))
+    return (flag == AT_SYMLINK_NOFOLLOW
+	    ? lchown (file, owner, group)
+	    : chown (file, owner, group));
+
+  {
+    char *proc_file;
+    BUILD_PROC_NAME (proc_file, fd, file);
+    err = (flag == AT_SYMLINK_NOFOLLOW
+	   ? lchown (proc_file, owner, group)
+	   : chown (proc_file, owner, group));
+    /* If the syscall succeeds, or if it fails with an unexpected
+       errno value, then return right away.  Otherwise, fall through
+       and resort to using save_cwd/restore_cwd.  */
+    if (0 <= err || ! EXPECTED_ERRNO (errno))
+      return err;
+  }
+
+  if (save_cwd (&saved_cwd) != 0)
+    openat_save_fail (errno);
+
+  err = fchdir (fd);
+  saved_errno = errno;
+
+  if (! err)
+    {
+      err = (flag == AT_SYMLINK_NOFOLLOW
+	     ? lchown (file, owner, group)
+	     : chown (file, owner, group));
       saved_errno = errno;
 
       if (restore_cwd (&saved_cwd) != 0)
