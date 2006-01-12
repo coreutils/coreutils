@@ -20,7 +20,7 @@
 # define SHA256_H 1
 
 # include <stdio.h>
-# include "md5.h"
+# include <stdint.h>
 
 /* Structure to save state of computation between the single steps.  */
 struct sha256_ctx
@@ -29,7 +29,7 @@ struct sha256_ctx
 
   uint32_t total[2];
   uint32_t buflen;
-  char buffer[128];
+  uint32_t buffer[32];
 };
 
 
