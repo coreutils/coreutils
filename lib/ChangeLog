@@ -1,3 +1,8 @@
+2006-01-12  Jim Meyering  <jim@meyering.net>
+
+	* stdint_.h: Remove useless parentheses in cpp directives, so that
+	this file passes coreutils' `make syntax-check' tests.
+
 2006-01-11  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* .cvsignore: Add stdint.h.
