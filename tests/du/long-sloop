@@ -42,8 +42,15 @@ fi
 
 # If a system can handle this many symlinks in a file name,
 # just skip this test.
+
+# The following also serves to record in `err' the string
+# corresponding to strerror (ELOOP).  This is necessary because while
+# Linux/libc gives `Too many levels of symbolic links', Solaris
+# renders it as `Number of symbolic links encountered during path
+# name traversal exceeds MAXSYMLINKS'.
+
 file=1`printf %${n}s ' '|sed 's, ,/s,g'`
-cat $file > /dev/null 2>&1 && \
+cat $file > /dev/null 2> err && \
   {
     cat <<EOF >&2
 $0: Your systems appears to be able to handle more than $n symlinks
@@ -51,6 +58,7 @@ in file name resolution, so skipping this test.
 EOF
     (exit 77); exit 77
   }
+too_many=`sed 's/.*: //' err`
 
 fail=0
 
@@ -58,10 +66,9 @@ fail=0
 # With coreutils-5.94 we get a diagnostic like this:
 # du: cannot access `1/s/s/s/.../s': Too many levels of symbolic links
 du -L 1 > /dev/null 2> out1 && fail=1
-sed "s,1/s/s/s/[/s]*','," out1 > out || fail=1
-cat <<\EOF > exp || fail=1
-du: cannot access `': Too many levels of symbolic links
-EOF
+sed "s, .1/s/s/s/[/s]*',," out1 > out || fail=1
+
+echo "du: cannot access: $too_many" > exp || fail=1
 
 cmp out exp || fail=1
 test $fail = 1 && diff out exp 2> /dev/null
