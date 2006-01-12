@@ -2,6 +2,12 @@
 
 	* Version 6.0-cvs.
 
+	* tests/du/long-sloop: Adjust not to hard-code the expected
+	diagnostic corresponding to ELOOP.  Solaris' diagnostic differs
+	from that of Linux/libc.  Reported by Paul Eggert.
+
+	* tests/du/long-sloop: Create file at end of symlink chain.
+
 	* tests/misc/test: New file, with a test for one of the
 	bugs fixed by yesterday's test.c changes.
 	* tests/misc/Makefile.am (TESTS): Add test.
