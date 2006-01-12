@@ -87,9 +87,9 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/afs.m4 \
 	$(top_srcdir)/m4/jm-macros.m4 $(top_srcdir)/m4/jm-winsz1.m4 \
 	$(top_srcdir)/m4/jm-winsz2.m4 $(top_srcdir)/m4/lchmod.m4 \
 	$(top_srcdir)/m4/lchown.m4 $(top_srcdir)/m4/lib-check.m4 \
-	$(top_srcdir)/m4/lib-ld.m4 $(top_srcdir)/m4/lib-link.m4 \
-	$(top_srcdir)/m4/lib-prefix.m4 $(top_srcdir)/m4/linebuffer.m4 \
-	$(top_srcdir)/m4/link-follow.m4 \
+	$(top_srcdir)/m4/lib-ignore.m4 $(top_srcdir)/m4/lib-ld.m4 \
+	$(top_srcdir)/m4/lib-link.m4 $(top_srcdir)/m4/lib-prefix.m4 \
+	$(top_srcdir)/m4/linebuffer.m4 $(top_srcdir)/m4/link-follow.m4 \
 	$(top_srcdir)/m4/localcharset.m4 \
 	$(top_srcdir)/m4/long-options.m4 \
 	$(top_srcdir)/m4/longdouble.m4 $(top_srcdir)/m4/longlong.m4 \
@@ -127,8 +127,8 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/afs.m4 \
 	$(top_srcdir)/m4/sockpfaf.m4 $(top_srcdir)/m4/ssize_t.m4 \
 	$(top_srcdir)/m4/st_dm_mode.m4 $(top_srcdir)/m4/stat-macros.m4 \
 	$(top_srcdir)/m4/stat-prog.m4 $(top_srcdir)/m4/stat-time.m4 \
-	$(top_srcdir)/m4/stdbool.m4 $(top_srcdir)/m4/stdint_h.m4 \
-	$(top_srcdir)/m4/stdio-safer.m4 \
+	$(top_srcdir)/m4/stdbool.m4 $(top_srcdir)/m4/stdint.m4 \
+	$(top_srcdir)/m4/stdint_h.m4 $(top_srcdir)/m4/stdio-safer.m4 \
 	$(top_srcdir)/m4/stdlib-safer.m4 $(top_srcdir)/m4/stpcpy.m4 \
 	$(top_srcdir)/m4/strcase.m4 $(top_srcdir)/m4/strcspn.m4 \
 	$(top_srcdir)/m4/strdup.m4 $(top_srcdir)/m4/strftime.m4 \
@@ -199,6 +199,8 @@ GLIBC21 = @GLIBC21@
 GMSGFMT = @GMSGFMT@
 GNU_PACKAGE = @GNU_PACKAGE@
 GREP = @GREP@
+HAVE_LONG_64BIT = @HAVE_LONG_64BIT@
+HAVE_LONG_LONG_64BIT = @HAVE_LONG_LONG_64BIT@
 HAVE__BOOL = @HAVE__BOOL@
 HELP2MAN = @HELP2MAN@
 INSTALL_DATA = @INSTALL_DATA@
@@ -247,6 +249,7 @@ SEQ_LIBM = @SEQ_LIBM@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STDBOOL_H = @STDBOOL_H@
+STDINT_H = @STDINT_H@
 STRIP = @STRIP@
 U = @U@
 USE_NLS = @USE_NLS@
@@ -310,6 +313,7 @@ TESTS_ENVIRONMENT = \
   PROG=$$tst
 
 TESTS = \
+  test \
   mknod \
   stat-printf \
   stat-fmt \
