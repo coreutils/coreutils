@@ -1,0 +1,33 @@
+#!/bin/sh
+
+: ${PERL=perl}
+: ${srcdir=.}
+
+$PERL -e 1 > /dev/null 2>&1 || {
+  echo 1>&2 "$0: configure didn't find a usable version of Perl," \
+    "so can't run this test"
+  exit 77
+}
+
+exec $PERL -w -I$srcdir/.. -MCoreutils -- - <<\EOF
+require 5.003;
+use strict;
+
+(my $program_name = $0) =~ s|.*/||;
+
+# Turn off localisation of executable's ouput.
+@ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
+
+my $prog = '../../src/test';
+my @Tests =
+    (
+     # In coreutils-5.93, this diagnostic lacked the newline.
+     ['o', '-o arg', {ERR => "$prog: extra argument `-o'\n"}, {EXIT => 2}],
+    );
+
+my $save_temps = $ENV{DEBUG};
+my $verbose = $ENV{VERBOSE};
+
+my $fail = run_tests ($program_name, $prog, \@Tests, $save_temps, $verbose);
+exit $fail;
+EOF
