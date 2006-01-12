@@ -34,26 +34,20 @@
 # include "unlocked-io.h"
 #endif
 
-/*
-  Not-swap is a macro that does an endian swap on architectures that are
-  big-endian, as SHA256 needs some data in a little-endian format
-*/
-
 #ifdef WORDS_BIGENDIAN
-# define NOTSWAP(n) (n)
+# define SWAP(n) (n)
 #else
-# define NOTSWAP(n)                                                         \
+# define SWAP(n) \
     (((n) << 24) | (((n) & 0xff00) << 8) | (((n) >> 8) & 0xff00) | ((n) >> 24))
 #endif
 
 #define BLOCKSIZE 4096
-/* Ensure that BLOCKSIZE is a multiple of 64.  */
 #if BLOCKSIZE % 64 != 0
 # error "invalid BLOCKSIZE"
 #endif
 
 /* This array contains the bytes used to pad the buffer to the next
-   64-byte boundary.   */
+   64-byte boundary.  */
 static const unsigned char fillbuf[64] = { 0x80, 0 /* , 0, 0, ...  */ };
 
 
@@ -104,8 +98,8 @@ sha256_read_ctx (const struct sha256_ctx *ctx, void *resbuf)
 {
   int i;
 
-  for ( i=0 ; i<8 ; i++ )
-    ((uint32_t *) resbuf)[i] = NOTSWAP (ctx->state[i]);
+  for (i = 0; i < 8; i++)
+    ((uint32_t *) resbuf)[i] = SWAP (ctx->state[i]);
 
   return resbuf;
 }
@@ -115,8 +109,8 @@ sha224_read_ctx (const struct sha256_ctx *ctx, void *resbuf)
 {
   int i;
 
-  for ( i=0 ; i<7 ; i++ )
-    ((uint32_t *) resbuf)[i] = NOTSWAP (ctx->state[i]);
+  for (i = 0; i < 7; i++)
+    ((uint32_t *) resbuf)[i] = SWAP (ctx->state[i]);
 
   return resbuf;
 }
@@ -131,23 +125,21 @@ sha256_conclude_ctx (struct sha256_ctx *ctx)
 {
   /* Take yet unprocessed bytes into account.  */
   uint32_t bytes = ctx->buflen;
-  size_t pad;
+  size_t size = (bytes < 56) ? 64 / 4 : 64 * 2 / 4;
 
   /* Now count remaining bytes.  */
   ctx->total[0] += bytes;
   if (ctx->total[0] < bytes)
     ++ctx->total[1];
 
-  pad = bytes >= 56 ? 64 + 56 - bytes : 56 - bytes;
-  memcpy (&ctx->buffer[bytes], fillbuf, pad);
-
   /* Put the 64-bit file length in *bits* at the end of the buffer.  */
-  *(uint32_t *) &ctx->buffer[bytes + pad + 4] = NOTSWAP (ctx->total[0] << 3);
-  *(uint32_t *) &ctx->buffer[bytes + pad] = NOTSWAP ((ctx->total[1] << 3) |
-						    (ctx->total[0] >> 29));
+  ctx->buffer[size - 2] = SWAP ((ctx->total[1] << 3) | (ctx->total[0] >> 29));
+  ctx->buffer[size - 1] = SWAP (ctx->total[0] << 3);
+
+  memcpy (&((char *) ctx->buffer)[bytes], fillbuf, (size - 2) * 4 - bytes);
 
   /* Process last bytes.  */
-  sha256_process_block (ctx->buffer, bytes + pad + 8, ctx);
+  sha256_process_block (ctx->buffer, size * 4, ctx);
 }
 
 void *
@@ -338,7 +330,7 @@ sha256_process_bytes (const void *buffer, size_t len, struct sha256_ctx *ctx)
       size_t left_over = ctx->buflen;
       size_t add = 128 - left_over > len ? len : 128 - left_over;
 
-      memcpy (&ctx->buffer[left_over], buffer, add);
+      memcpy (&((char *) ctx->buffer)[left_over], buffer, add);
       ctx->buflen += add;
 
       if (ctx->buflen > 64)
@@ -347,7 +339,8 @@ sha256_process_bytes (const void *buffer, size_t len, struct sha256_ctx *ctx)
 
 	  ctx->buflen &= 63;
 	  /* The regions in the following copy operation cannot overlap.  */
-	  memcpy (ctx->buffer, &ctx->buffer[(left_over + add) & ~63],
+	  memcpy (ctx->buffer,
+		  &((char *) ctx->buffer)[(left_over + add) & ~63],
 		  ctx->buflen);
 	}
 
@@ -382,13 +375,13 @@ sha256_process_bytes (const void *buffer, size_t len, struct sha256_ctx *ctx)
     {
       size_t left_over = ctx->buflen;
 
-      memcpy (&ctx->buffer[left_over], buffer, len);
+      memcpy (&((char *) ctx->buffer)[left_over], buffer, len);
       left_over += len;
       if (left_over >= 64)
 	{
 	  sha256_process_block (ctx->buffer, 64, ctx);
 	  left_over -= 64;
-	  memcpy (ctx->buffer, &ctx->buffer[64], left_over);
+	  memcpy (ctx->buffer, &ctx->buffer[16], left_over);
 	}
       ctx->buflen = left_over;
     }
@@ -474,7 +467,7 @@ sha256_process_block (const void *buffer, size_t len, struct sha256_ctx *ctx)
       /* FIXME: see sha1.c for a better implementation.  */
       for (t = 0; t < 16; t++)
 	{
-	  x[t] = NOTSWAP (*words);
+	  x[t] = SWAP (*words);
 	  words++;
 	}
 

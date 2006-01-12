@@ -1,7 +1,8 @@
 /* sha1.c - Functions to compute SHA1 message digest of files or
    memory blocks according to the NIST specification FIPS-180-1.
 
-   Copyright (C) 2000, 2001, 2003, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2003, 2004, 2005, 2006 Free Software
+   Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify it
    under the terms of the GNU General Public License as published by the
@@ -35,9 +36,6 @@
 # include "unlocked-io.h"
 #endif
 
-/* SWAP does an endian swap on architectures that are little-endian,
-   as SHA1 needs some data in a big-endian form.  */
-
 #ifdef WORDS_BIGENDIAN
 # define SWAP(n) (n)
 #else
@@ -55,11 +53,9 @@
 static const unsigned char fillbuf[64] = { 0x80, 0 /* , 0, 0, ...  */ };
 
 
-/*
-  Takes a pointer to a 160 bit block of data (five 32 bit ints) and
-  intializes it to the start constants of the SHA1 algorithm.  This
-  must be called before using hash in the call to sha1_hash.
-*/
+/* Take a pointer to a 160 bit block of data (five 32 bit ints) and
+   initialize it to the start constants of the SHA1 algorithm.  This
+   must be called before using hash in the call to sha1_hash.  */
 void
 sha1_init_ctx (struct sha1_ctx *ctx)
 {
@@ -100,23 +96,21 @@ sha1_finish_ctx (struct sha1_ctx *ctx, void *resbuf)
 {
   /* Take yet unprocessed bytes into account.  */
   uint32_t bytes = ctx->buflen;
-  size_t pad;
+  size_t size = (bytes < 56) ? 64 / 4 : 64 * 2 / 4;
 
   /* Now count remaining bytes.  */
   ctx->total[0] += bytes;
   if (ctx->total[0] < bytes)
     ++ctx->total[1];
 
-  pad = bytes >= 56 ? 64 + 56 - bytes : 56 - bytes;
-  memcpy (&ctx->buffer[bytes], fillbuf, pad);
-
   /* Put the 64-bit file length in *bits* at the end of the buffer.  */
-  *(uint32_t *) &ctx->buffer[bytes + pad + 4] = SWAP (ctx->total[0] << 3);
-  *(uint32_t *) &ctx->buffer[bytes + pad] = SWAP ((ctx->total[1] << 3) |
-						    (ctx->total[0] >> 29));
+  ctx->buffer[size - 2] = SWAP ((ctx->total[1] << 3) | (ctx->total[0] >> 29));
+  ctx->buffer[size - 1] = SWAP (ctx->total[0] << 3);
+
+  memcpy (&((char *) ctx->buffer)[bytes], fillbuf, (size - 2) * 4 - bytes);
 
   /* Process last bytes.  */
-  sha1_process_block (ctx->buffer, bytes + pad + 8, ctx);
+  sha1_process_block (ctx->buffer, size * 4, ctx);
 
   return sha1_read_ctx (ctx, resbuf);
 }
@@ -216,7 +210,7 @@ sha1_process_bytes (const void *buffer, size_t len, struct sha1_ctx *ctx)
       size_t left_over = ctx->buflen;
       size_t add = 128 - left_over > len ? len : 128 - left_over;
 
-      memcpy (&ctx->buffer[left_over], buffer, add);
+      memcpy (&((char *) ctx->buffer)[left_over], buffer, add);
       ctx->buflen += add;
 
       if (ctx->buflen > 64)
@@ -225,7 +219,8 @@ sha1_process_bytes (const void *buffer, size_t len, struct sha1_ctx *ctx)
 
 	  ctx->buflen &= 63;
 	  /* The regions in the following copy operation cannot overlap.  */
-	  memcpy (ctx->buffer, &ctx->buffer[(left_over + add) & ~63],
+	  memcpy (ctx->buffer,
+		  &((char *) ctx->buffer)[(left_over + add) & ~63],
 		  ctx->buflen);
 	}
 
@@ -260,13 +255,13 @@ sha1_process_bytes (const void *buffer, size_t len, struct sha1_ctx *ctx)
     {
       size_t left_over = ctx->buflen;
 
-      memcpy (&ctx->buffer[left_over], buffer, len);
+      memcpy (&((char *) ctx->buffer)[left_over], buffer, len);
       left_over += len;
       if (left_over >= 64)
 	{
 	  sha1_process_block (ctx->buffer, 64, ctx);
 	  left_over -= 64;
-	  memcpy (ctx->buffer, &ctx->buffer[64], left_over);
+	  memcpy (ctx->buffer, &ctx->buffer[16], left_over);
 	}
       ctx->buflen = left_over;
     }
