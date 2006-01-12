@@ -14,6 +14,7 @@ ref-del.sed
 search.h
 stat.c
 stdbool.h
+stdint.h
 sysexit.h
 t-fpending
 unlocked-io.h
