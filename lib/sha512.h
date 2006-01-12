@@ -20,13 +20,7 @@
 # define SHA512_H 1
 
 # include <stdio.h>
-
-# if HAVE_INTTYPES_H
-#  include <inttypes.h>
-# endif
-# if HAVE_STDINT_H || _LIBC
-#  include <stdint.h>
-# endif
+# include <stdint.h>
 
 /* Structure to save state of computation between the single steps.  */
 struct sha512_ctx
@@ -35,7 +29,7 @@ struct sha512_ctx
 
   uint64_t total[2];
   uint64_t buflen;
-  char buffer[256];
+  uint64_t buffer[32];
 };
 
 
