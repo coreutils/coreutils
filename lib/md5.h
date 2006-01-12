@@ -1,6 +1,6 @@
 /* Declaration of functions and data types used for MD5 sum computing
    library functions.
-   Copyright (C) 1995-1997,1999,2000,2001,2004,2005
+   Copyright (C) 1995-1997,1999,2000,2001,2004,2005,2006
       Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -41,12 +41,6 @@
 #  define __THROW	throw ()
 # else
 #  define __THROW
-# endif
-#endif
-
-#ifndef __attribute__
-# if ! __GNUC_PREREQ (2,8) || __STRICT_ANSI__
-#  define __attribute__(x)
 # endif
 #endif
 
