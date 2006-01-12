@@ -32,8 +32,8 @@ mkdir $dir_list || framework_failure=1
 for i in $dir_list; do
   ip1=`expr $i + 1`
   ln -s ../$ip1 $i/s || framework_failure=1
-  test -d $ip1 || echo foo > $ip1
 done
+echo foo > $ip1
 
 if test $framework_failure = 1; then
   echo "$0: failure in testing framework" 1>&2
