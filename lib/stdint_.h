@@ -30,23 +30,23 @@
 #include <limits.h>
 
 /* Get those types that are already defined in other system include files.  */
-#if defined(__FreeBSD__)
+#if defined __FreeBSD__
 # include <sys/inttypes.h>
 #endif
-#if defined(__linux__) && HAVE_SYS_BITYPES_H
+#if defined __linux__ && HAVE_SYS_BITYPES_H
   /* Linux libc4 >= 4.6.7 and libc5 have a <sys/bitypes.h> that defines
      int{8,16,32,64}_t and __BIT_TYPES_DEFINED__.  In libc5 >= 5.2.2 it is
      included by <sys/types.h>.  */
 # include <sys/bitypes.h>
 #endif
-#if defined(__sun) && HAVE_SYS_INTTYPES_H
+#if defined __sun && HAVE_SYS_INTTYPES_H
 # include <sys/inttypes.h>
   /* Solaris 7 <sys/inttypes.h> has the types except the *_fast*_t types, and
      the macros except for *_FAST*_*, INTPTR_MIN, PTRDIFF_MIN, PTRDIFF_MAX.
      But note that <sys/int_types.h> contains only the type definitions!  */
 # define _STDINT_H_HAVE_SYSTEM_INTTYPES
 #endif
-#if (defined(__hpux) || defined(_AIX)) && HAVE_INTTYPES_H
+#if (defined __hpux || defined _AIX) && HAVE_INTTYPES_H
 # include <inttypes.h>
   /* HP-UX 10 <inttypes.h> has nearly everything, except UINT_LEAST8_MAX,
      UINT_FAST8_MAX, PTRDIFF_MIN, PTRDIFF_MAX.  */
@@ -54,15 +54,15 @@
      UINTPTR_MAX, PTRDIFF_MIN, PTRDIFF_MAX.  */
 # define _STDINT_H_HAVE_SYSTEM_INTTYPES
 #endif
-#if !((defined(UNIX_CYGWIN32) || defined(__linux__)) && defined(__BIT_TYPES_DEFINED__))
+#if !((defined UNIX_CYGWIN32 || defined __linux__) && defined __BIT_TYPES_DEFINED__)
 # define _STDINT_H_NEED_SIGNED_INT_TYPES
 #endif
 
-#if !defined(_STDINT_H_HAVE_SYSTEM_INTTYPES)
+#if !defined _STDINT_H_HAVE_SYSTEM_INTTYPES
 
 /* 7.18.1.1. Exact-width integer types */
 
-#if !defined(__FreeBSD__)
+#if !defined __FreeBSD__
 
 #ifdef _STDINT_H_NEED_SIGNED_INT_TYPES
 typedef signed char    int8_t;
@@ -91,7 +91,7 @@ typedef long long          int64_t;
 #endif
 typedef unsigned long long uint64_t;
 #define _STDINT_H_HAVE_INT64
-#elif defined(_MSC_VER)
+#elif defined _MSC_VER
 typedef __int64          int64_t;
 typedef unsigned __int64 uint64_t;
 #define _STDINT_H_HAVE_INT64
@@ -127,7 +127,7 @@ typedef uint64_t uint_fast64_t;
 
 /* 7.18.1.4. Integer types capable of holding object pointers */
 
-#if !defined(__FreeBSD__)
+#if !defined __FreeBSD__
 
 /* On some platforms (like IRIX6 MIPS with -n32) sizeof(void*) < sizeof(long),
    but this doesn't matter here.  */
@@ -156,7 +156,7 @@ typedef uint32_t uintmax_t;
 
 /* 7.18.2. Limits of specified-width integer types */
 
-#if !defined(__cplusplus) || defined(__STDC_LIMIT_MACROS)
+#if !defined __cplusplus || defined __STDC_LIMIT_MACROS
 
 /* 7.18.2.1. Limits of exact-width integer types */
 
@@ -177,7 +177,7 @@ typedef uint32_t uintmax_t;
 #elif @HAVE_LONG_LONG_64BIT@
 #define INT64_MAX   9223372036854775807LL
 #define UINT64_MAX 18446744073709551615ULL
-#elif defined(_MSC_VER)
+#elif defined _MSC_VER
 #define INT64_MAX   9223372036854775807i64
 #define UINT64_MAX 18446744073709551615ui64
 #endif
@@ -255,7 +255,7 @@ typedef uint32_t uintmax_t;
 
 /* 7.18.4. Macros for integer constants */
 
-#if !defined(__cplusplus) || defined(__STDC_CONSTANT_MACROS)
+#if !defined __cplusplus || defined __STDC_CONSTANT_MACROS
 
 /* 7.18.4.1. Macros for minimum-width integer constants */
 
@@ -271,7 +271,7 @@ typedef uint32_t uintmax_t;
 #elif @HAVE_LONG_LONG_64BIT@
 #define INT64_C(x) x##LL
 #define UINT64_C(x) x##ULL
-#elif defined(_MSC_VER)
+#elif defined _MSC_VER
 #define INT64_C(x) x##i64
 #define UINT64_C(x) x##ui64
 #endif
@@ -284,7 +284,7 @@ typedef uint32_t uintmax_t;
 #elif @HAVE_LONG_LONG_64BIT@
 #define INTMAX_C(x) x##LL
 #define UINTMAX_C(x) x##ULL
-#elif defined(_MSC_VER)
+#elif defined _MSC_VER
 #define INTMAX_C(x) x##i64
 #define UINTMAX_C(x) x##ui64
 #else
