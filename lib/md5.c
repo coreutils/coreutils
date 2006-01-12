@@ -1,6 +1,6 @@
 /* Functions to compute MD5 message digest of files or memory blocks.
    according to the definition of MD5 in RFC 1321 from April 1992.
-   Copyright (C) 1995,1996,1997,1999,2000,2001,2005
+   Copyright (C) 1995,1996,1997,1999,2000,2001,2005,2006
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -86,7 +86,7 @@ md5_init_ctx (struct md5_ctx *ctx)
    must be in little endian byte order.
 
    IMPORTANT: On some systems it is required that RESBUF is correctly
-   aligned for a 32 bits value.  */
+   aligned for a 32-bit value.  */
 void *
 md5_read_ctx (const struct md5_ctx *ctx, void *resbuf)
 {
@@ -102,7 +102,7 @@ md5_read_ctx (const struct md5_ctx *ctx, void *resbuf)
    prolog according to the standard and write the result to RESBUF.
 
    IMPORTANT: On some systems it is required that RESBUF is correctly
-   aligned for a 32 bits value.  */
+   aligned for a 32-bit value.  */
 void *
 md5_finish_ctx (struct md5_ctx *ctx, void *resbuf)
 {
@@ -245,14 +245,8 @@ md5_process_bytes (const void *buffer, size_t len, struct md5_ctx *ctx)
   if (len >= 64)
     {
 #if !_STRING_ARCH_unaligned
-/* To check alignment gcc has an appropriate operator.  Other
-   compilers don't.  */
-# if __GNUC__ >= 2
-#  define UNALIGNED_P(p) (((uintptr_t) p) % __alignof__ (uint32_t) != 0)
-# else
-#  define alignof(type) offsetof (struct { char c; type x; }, x)
-#  define UNALIGNED_P(p) (((size_t) p) % alignof (uint32_t) != 0)
-# endif
+# define alignof(type) offsetof (struct { char c; type x; }, x)
+# define UNALIGNED_P(p) (((size_t) p) % alignof (uint32_t) != 0)
       if (UNALIGNED_P (buffer))
 	while (len > 64)
 	  {
