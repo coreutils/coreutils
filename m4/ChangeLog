@@ -1,7 +1,7 @@
 2006-01-11  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* prereq.m4 (gl_PREREQ): Require gl_STDINT_H.
-	* stdint_.h.m4: New file, from gnulib.
+	* stdint.m4: New file, from gnulib.
 
 2006-01-11  Jim Meyering  <jim@meyering.net>
 
