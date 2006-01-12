@@ -39,6 +39,18 @@ if test $framework_failure = 1; then
   (exit 1); exit 1
 fi
 
+# If a system can handle this many symlinks in a file name,
+# just skip this test.
+file=1`printf %${n}s ' '|sed 's, ,/s,g'`
+cat $file > /dev/null 2>&1 && \
+  {
+    cat <<EOF >&2
+$0: Your systems appears to be able to handle more than $n symlinks
+in file name resolution, so skipping this test.
+EOF
+    (exit 77); exit 77
+  }
+
 fail=0
 
 # With coreutils-5.93 there was no failure.
