@@ -1,3 +1,22 @@
+2006-01-11  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* .cvsignore: Add stdint.h.
+	* Makefile.am (BUILT_SOURCES, EXTRA_DIST, stdint.h, MOSTLYCLEANFILES):
+	Add gnulib snippet.
+	* md5.c: Fix commentary typos.
+	(alignof, UNALIGNED_P): No need for a GCC-specific version.
+	* md5.h (__attribute__): Remove; unused.
+	* sha1.c, sha256.c, sha256.c: Fix commentary to match md5 better.
+	* sha1.h (struct sha1_ctx): Use a word buffer, not a byte buffer,
+	so that we don't need to worry about alignment.  All uses changed.
+	This merges the 2005-10-28 md5 change into sha1.
+	* sha256.h (struct sha256_ctx): Likewise.
+	* sha512.h (struct sha512_ctx): Likewise.
+	* sha256.h: Include stdint.h rather than md5.h.
+	* sha512.h: Include stdint.h uniformly, since we now have the
+	stdint module.
+	* stdint_.h: New file, from gnulib.
+
 2006-01-11  Jim Meyering  <jim@meyering.net>
 
 	* fts.c (fts_stat): When following a symlink-to-directory,
