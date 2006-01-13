@@ -1,4 +1,5 @@
-getfacl --version 2> /dev/null 1>&2 && setfacl --version 2> /dev/null 1>&2 || {
+getfacl --version < /dev/null 2> /dev/null 1>&2 \
+  && setfacl --version < /dev/null 2> /dev/null 1>&2 || {
   cat <<EOF 1>&2
 **************************************
 $0: This test requires getfacl and setfacl.
