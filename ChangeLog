@@ -2,6 +2,9 @@
 
 	* Version 6.0-cvs.
 
+	* tests/Makefile.am (SUBDIRS): Add comments discouraging the
+	addition of new directories under tests/.
+
 	* tests/acl: Redirect stdin to /dev/null.  Otherwise, FreeBSD 5.0's
 	getfacl would hang.
 
