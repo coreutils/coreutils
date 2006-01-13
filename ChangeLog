@@ -1,6 +1,11 @@
-2006-01-12  Jim Meyering  <jim@meyering.net>
+2006-01-13  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* tests/acl: Redirect stdin to /dev/null.  Otherwise, FreeBSD 5.0's
+	getfacl would hang.
+
+2006-01-12  Jim Meyering  <jim@meyering.net>
 
 	* tests/du/long-sloop: Adjust not to hard-code the expected
 	diagnostic corresponding to ELOOP.  Solaris' diagnostic differs
