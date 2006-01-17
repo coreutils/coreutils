@@ -28,6 +28,7 @@
 #include "error.h"
 #include "filemode.h"
 #include "modechange.h"
+#include "openat.h"
 #include "quote.h"
 #include "quotearg.h"
 #include "root-dev-ino.h"
@@ -225,7 +226,7 @@ process_file (FTS *fts, FTSENT *ent)
 
       if (! S_ISLNK (old_mode))
 	{
-	  if (chmod (file, new_mode) == 0)
+	  if (chmodat (fts->fts_cwd_fd, file, new_mode) == 0)
 	    chmod_succeeded = true;
 	  else
 	    {
