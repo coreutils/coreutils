@@ -35,7 +35,8 @@
 
 /* Replacement for Solaris' openat function.
    <http://www.google.com/search?q=openat+site:docs.sun.com>
-   Simulate it by doing save_cwd/fchdir/open/restore_cwd.
+   First, try to simulate it via open ("/proc/self/fd/FD/FILE").
+   Failing that, simulate it by doing save_cwd/fchdir/open/restore_cwd.
    If either the save_cwd or the restore_cwd fails (relatively unlikely,
    and usually indicative of a problem that deserves close attention),
    then give a diagnostic and exit nonzero.
@@ -127,11 +128,32 @@ openat_permissive (int fd, char const *file, int flags, mode_t mode,
   return err;
 }
 
+/* Return true if our openat implementation must resort to
+   using save_cwd and restore_cwd.  */
+bool
+openat_needs_fchdir (void)
+{
+  int fd2;
+  int fd = open ("/", O_RDONLY);
+  char *proc_file;
+
+  if (fd < 0)
+    return true;
+  BUILD_PROC_NAME (proc_file, fd, ".");
+  fd2 = open (proc_file, O_RDONLY);
+  close (fd);
+  if (0 <= fd2)
+    close (fd2);
+
+  return fd2 < 0;
+}
+
 #if !HAVE_FDOPENDIR
 
 /* Replacement for Solaris' function by the same name.
    <http://www.google.com/search?q=fdopendir+site:docs.sun.com>
-   Simulate it by doing save_cwd/fchdir/opendir(".")/restore_cwd.
+   First, try to simulate it via opendir ("/proc/self/fd/FD").  Failing
+   that, simulate it by doing save_cwd/fchdir/opendir(".")/restore_cwd.
    If either the save_cwd or the restore_cwd fails (relatively unlikely,
    and usually indicative of a problem that deserves close attention),
    then give a diagnostic and exit nonzero.
@@ -187,7 +209,8 @@ fdopendir (int fd)
 
 /* Replacement for Solaris' function by the same name.
    <http://www.google.com/search?q=fstatat+site:docs.sun.com>
-   Simulate it by doing save_cwd/fchdir/(stat|lstat)/restore_cwd.
+   First, try to simulate it via l?stat ("/proc/self/fd/FD/FILE").
+   Failing that, simulate it via save_cwd/fchdir/(stat|lstat)/restore_cwd.
    If either the save_cwd or the restore_cwd fails (relatively unlikely,
    and usually indicative of a problem that deserves close attention),
    then give a diagnostic and exit nonzero.
@@ -241,7 +264,8 @@ fstatat (int fd, char const *file, struct stat *st, int flag)
 
 /* Replacement for Solaris' function by the same name.
    <http://www.google.com/search?q=unlinkat+site:docs.sun.com>
-   Simulate it by doing save_cwd/fchdir/(unlink|rmdir)/restore_cwd.
+   First, try to simulate it via (unlink|rmdir) ("/proc/self/fd/FD/FILE").
+   Failing that, simulate it via save_cwd/fchdir/(unlink|rmdir)/restore_cwd.
    If either the save_cwd or the restore_cwd fails (relatively unlikely,
    and usually indicative of a problem that deserves close attention),
    then give a diagnostic and exit nonzero.
