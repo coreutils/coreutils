@@ -101,3 +101,5 @@ lchmodat (int fd, char const *file, mode_t mode)
 {
   return fchmodat (fd, file, mode, AT_SYMLINK_NOFOLLOW);
 }
+
+bool openat_needs_fchdir (void);
