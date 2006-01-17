@@ -1,6 +1,6 @@
 /* Traverse a file hierarchy.
 
-   Copyright (C) 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2005, 2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -72,9 +72,10 @@ typedef struct {
 	struct _ftsent **fts_array;	/* sort array */
 	dev_t fts_dev;			/* starting device # */
 	char *fts_path;			/* file name for this descent */
-	int fts_rfd;			/* fd for root */
+	int fts_cwd_fd;			/* the file descriptor on which the
+					   virtual cwd is open, or AT_FDCWD */
 	size_t fts_pathlen;		/* sizeof(path) */
-	size_t fts_nitems;			/* elements in the sort array */
+	size_t fts_nitems;		/* elements in the sort array */
 	int (*fts_compar) (struct _ftsent const **, struct _ftsent const **);
 					/* compare fn */
 
@@ -134,9 +135,10 @@ typedef struct {
 		   of thousands.  */
 		struct hash_table *ht;
 
-		/* This data structure uses lazy checking, as done by rm via
-	           cycle-check.c.  It's the default, but it's not appropriate
-	           for programs like du.  */
+		/* FIXME: rename these two members to have the fts_ prefix */
+		/* This data structure uses a lazy cycle-detection algorithm,
+		   as done by rm via cycle-check.c.  It's the default,
+		   but it's not appropriate for programs like du.  */
 		struct cycle_check_state *state;
 	} fts_cycle;
 # endif
