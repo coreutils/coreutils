@@ -1,0 +1,70 @@
+#!/bin/sh
+# Show that fts (hence du, chmod, chgrp, chown) fails when all of the
+# following are true:
+#   - `.' is not readable
+#   - operating on a hierarchy containing a relative name longer than PATH_MAX
+#   - run on a system where gnulib's openat emulation must resort to using
+#       save_cwd and restore_cwd (which fail if `.' is not readable).
+# Thus, the following du invocation should succeed on newer Linux and
+# Solaris systems, yet it must fail on systems lacking both openat and
+# /proc support.  However, before coreutils-6.0 this test would fail even
+# on Linux+PROC_FS systems because its fts implementation would revert
+# unnecessarily to using FTS_NOCHDIR mode in this corner case.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  du --version
+fi
+
+. $srcdir/../envvar-check
+
+proc_file=/proc/self/fd
+if ! test -d $proc_file; then
+  cat <<EOF >&2
+$0: Skipping this test.
+It would fail, since your system lacks /proc support.
+EOF
+  (exit 77); exit 77
+fi
+
+pwd=`pwd`
+t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
+trap 'status=$?; cd $pwd; chmod -R u+rwx $t0; rm -rf $t0 && exit $status' 0
+trap '(exit $?); exit $?' 1 2 13 15
+
+framework_failure=0
+mkdir -p $tmp || framework_failure=1
+cd $tmp || framework_failure=1
+
+dir=`printf %200s ' '|sed 's/ /x/g'`
+
+# Construct a hierarchy containing a relative file with a name
+# longer than PATH_MAX.
+# for i in `seq 52`; do
+#   mkdir $dir || framework_failure=1
+#   cd $dir || framework_failure=1
+# done
+# cd $tmp || framework_failure=1
+
+# Sheesh.  Bash 3.1.5 can't create this hierarchy.  I get
+# cd: error retrieving current directory: getcwd: cannot access parent directories:
+# Use perl instead:
+: ${PERL=perl}
+$PERL \
+    -e 'my $d = '$dir'; foreach my $i (1..52)' \
+    -e '  { mkdir ($d, 0700) && chdir $d or die "$!" }' \
+  || framework_failure=1
+
+mkdir inaccessible || framework_failure=1
+cd inaccessible || framework_failure=1
+chmod 0 . || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo "$0: failure in testing framework" 1>&2
+  (exit 1); exit 1
+fi
+
+fail=0
+du -s $pwd/$tmp/$dir > /dev/null || fail=1
+
+(exit $fail); exit $fail
