@@ -12,31 +12,22 @@ AC_DEFUN([gl_IGNORE_UNUSED_LIBRARIES],
   AC_CACHE_CHECK([for flag to ignore unused libraries],
     [gl_cv_ignore_unused_libraries],
     [gl_cv_ignore_unused_libraries=none
-     AC_LINK_IFELSE([AC_LANG_PROGRAM()],
-       [gl_ldd_output0=`(ldd conftest$ac_exeext) 2>/dev/null` ||
-	  gl_ldd_output0=])
-     if test "$gl_ldd_output0"; then
-       gl_saved_ldflags=$LDFLAGS
-       gl_saved_libs=$LIBS
-       LIBS="$LIBS -lm"
+     gl_saved_ldflags=$LDFLAGS
+     # Use long option sequences like '-z ignore' to test for the feature,
+     # to forestall problems with linkers that have -z, -i, -g, -n, etc. flags.
+     for gl_flags in '-Xlinker -z -Xlinker ignore' '-z ignore'; do
+       LDFLAGS="$gl_flags $LDFLAGS"
        AC_LINK_IFELSE([AC_LANG_PROGRAM()],
-	 [gl_ldd_output1=`(ldd conftest$ac_exeext) 2>/dev/null` ||
-	    gl_ldd_output1=])
-       if test "$gl_ldd_output1" && test "$gl_ldd_output0" != "$gl_ldd_output1"
-       then
-	 for gl_flags in '-Xlinker -zignore' '-zignore'; do
-	   LDFLAGS="$gl_flags $LDFLAGS"
-	   AC_LINK_IFELSE([AC_LANG_PROGRAM()],
-	     [if gl_ldd_output2=`(ldd conftest$ac_exeext) 2>/dev/null` &&
-		 test "$gl_ldd_output0" = "$gl_ldd_output2"; then
-		gl_cv_ignore_unused_libraries=$gl_flags
-	      fi])
-	   LDFLAGS=$gl_saved_ldflags
-	   test "gl_cv_ignore_unused_libraries" != none && break
-	 done
-       fi
-       LIBS=$gl_saved_LIBS
-     fi])
+	 [case $gl_flags in
+	    '-Xlinker -z -Xlinker ignore')
+	      # Shorten this ugly thing, for prettier 'make' output.
+              gl_cv_ignore_unused_libraries='-Xlinker -zignore';;
+	    *)
+	      gl_cv_ignore_unused_libraries=$gl_flags;;
+          esac])
+       LDFLAGS=$gl_saved_ldflags
+       test "$gl_cv_ignore_unused_libraries" != none && break
+     done])
 
   test "$gl_cv_ignore_unused_libraries" != none &&
     LDFLAGS="$LDFLAGS $gl_cv_ignore_unused_libraries"

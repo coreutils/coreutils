@@ -1,3 +1,11 @@
+2006-01-16  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* lib-ignore.m4 (gl_IGNORE_UNUSED_LIBRARIES): Don't use ldd, as
+	it's not portable and it doesn't work with cross-compiles.
+	Problem reported by Bruno Haible.  Fix missing-$ typo in
+	'test "gl_cv_ignore_unused_libraries" ...' that prevented
+	-zignore from being used with Sun's C compiler.
+
 2006-01-13  Jim Meyering  <jim@meyering.net>
 
 	* ls-mntd-fs.m4 (AC_FUNC_GETMNTENT): Invoke AC_CHECK_FUNCS(getmntent)
