@@ -1,6 +1,24 @@
-2006-01-13  Jim Meyering  <jim@meyering.net>
+2006-01-17  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	Now that fts no longer changes the current working directory, adjust
+	its clients accordingly -- note that du.c uses fts but doesn't need
+	any adjustment, since it doesn't operate on the actual files,
+	but rather just uses the stat buffers provided by fts.
+
+	* src/chown-core.c: Include "openat.h".
+	Don't include "lchown.h".
+	(restricted_chown): Accept a new parameter, CWD_FD, and use it in
+	calling openat, lchownat, chownat, rather than open, lchown, chown.
+	Update caller.
+	* src/chmod.c: Include "openat.h".
+	(process_file): Use chmodat (fts->fts_cwd_fd,... in place of chmod (...
+
+	* tests/du/long-from-unreadable: New test, to exercise one small
+	corner of fts.c.
+
+2006-01-13  Jim Meyering  <jim@meyering.net>
 
 	* tests/Makefile.am (SUBDIRS): Add comments discouraging the
 	addition of new directories under tests/.
@@ -12,7 +30,7 @@
 
 	* tests/du/long-sloop: Adjust not to hard-code the expected
 	diagnostic corresponding to ELOOP.  Solaris' diagnostic differs
-	from that of Linux/libc.  Reported by Paul Eggert.
+	from that of GNU libc.  Reported by Paul Eggert.
 
 	* tests/du/long-sloop: Create file at end of symlink chain.
 
