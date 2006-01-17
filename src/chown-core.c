@@ -27,7 +27,7 @@
 #include "chown-core.h"
 #include "error.h"
 #include "inttostr.h"
-#include "lchown.h"
+#include "openat.h"
 #include "quote.h"
 #include "root-dev-ino.h"
 #include "xfts.h"
@@ -180,7 +180,7 @@ describe_change (const char *file, enum Change_status changed,
    Return one of the RCH_status values.  */
 
 static enum RCH_status
-restricted_chown (char const *file,
+restricted_chown (int cwd_fd, char const *file,
 		  struct stat const *orig_st,
 		  uid_t uid, gid_t gid,
 		  uid_t required_uid, gid_t required_gid)
@@ -201,10 +201,10 @@ restricted_chown (char const *file,
 	return RC_do_ordinary_chown;
     }
 
-  fd = open (file, O_RDONLY | open_flags);
+  fd = openat (cwd_fd, file, O_RDONLY | open_flags);
   if (! (0 <= fd
 	 || (errno == EACCES && S_ISREG (orig_st->st_mode)
-	     && 0 <= (fd = open (file, O_WRONLY | open_flags)))))
+	     && 0 <= (fd = openat (cwd_fd, file, O_WRONLY | open_flags)))))
     return (errno == EACCES ? RC_do_ordinary_chown : RC_error);
 
   if (fstat (fd, &st) != 0)
@@ -332,7 +332,7 @@ change_file_owner (FTS *fts, FTSENT *ent,
     {
       if ( ! chopt->affect_symlink_referent)
 	{
-	  ok = (lchown (file, uid, gid) == 0);
+	  ok = (lchownat (fts->fts_cwd_fd, file, uid, gid) == 0);
 
 	  /* Ignore any error due to lack of support; POSIX requires
 	     this behavior for top-level symbolic links with -h, and
@@ -356,7 +356,7 @@ change_file_owner (FTS *fts, FTSENT *ent,
 	     that can be opened, this race condition can be avoided safely.  */
 
 	  enum RCH_status err
-	    = restricted_chown (file, file_stats, uid, gid,
+	    = restricted_chown (fts->fts_cwd_fd, file, file_stats, uid, gid,
 				required_uid, required_gid);
 	  switch (err)
 	    {
@@ -364,7 +364,7 @@ change_file_owner (FTS *fts, FTSENT *ent,
 	      break;
 
 	    case RC_do_ordinary_chown:
-	      ok = (chown (file, uid, gid) == 0);
+	      ok = (chownat (fts->fts_cwd_fd, file, uid, gid) == 0);
 	      break;
 
 	    case RC_error:
