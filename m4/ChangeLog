@@ -1,3 +1,7 @@
+2006-01-17  Jim Meyering  <jim@meyering.net>
+
+	* fts.m4 (gl_FUNC_FTS_CORE): Depend on gl_FUNC_OPENAT.
+
 2006-01-16  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* lib-ignore.m4 (gl_IGNORE_UNUSED_LIBRARIES): Don't use ldd, as
