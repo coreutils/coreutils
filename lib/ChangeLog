@@ -1,3 +1,32 @@
+2006-01-17  Jim Meyering  <jim@meyering.net>
+
+	Rewrite fts.c not to change the current working directory,
+	by using openat, fstatat, fdopendir, etc..
+
+	* fts.c [! _LIBC]: Include "openat.h" and "unistd--.h".
+	(HAVE_OPENAT_SUPPORT): Define.
+	[_LIBC] (fchdir): Don't undef or define; no longer used.
+	(FCHDIR): Define in terms of cwd_advance_fd rather than fchdir.
+	Now, this `function' always succeeds, and consumes its file descriptor
+	parameter -- so callers must not close such FDs.  Update callers.
+	(diropen_fd, opendirat, cwd_advance_fd): New functions.
+	(diropen): Add parameter, SP.  Adjust all callers.
+	Implement using diropen_fd, rather than open.
+	(fts_open): Initialize new member, fts_cwd_fd.
+	Remove fts_rft-setting code.
+	(fts_close): Close fts_cwd_fd, if necessary.
+	(__opendir2): Define in terms of opendir or opendirat,
+	depending on whether the FST_NOCHDIR flag is set.
+	(fts_build): Since fts_safe_changedir consumes its FD, and since
+	this code must do `closedir(dirp)', dup the dirfd(dirp) argument,
+	and close the dup'd file descriptor upon failure.
+	(fts_stat): Use fstatat(...AT_SYMLINK_NOFOLLOW) in place of lstat.
+	(fts_safe_changedir): Tweak semantics to reflect that this function
+	now calls cwd_advance_fd and hence consumes its FD argument.
+	* fts_.h [struct FTS] (fts_cwd_fd): New member.
+	[struct FTS] (fts_rft): Remove now-unused member.
+	[struct FTS] (fts_cycle.state): Improve comment.
+
 2006-01-12  Jim Meyering  <jim@meyering.net>
 
 	* stdint_.h: Remove useless parentheses in cpp directives, so that
