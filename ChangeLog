@@ -1,6 +1,10 @@
-2006-01-17  Jim Meyering  <jim@meyering.net>
+2006-01-18  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* tests/du/Makefile.am (TESTS): Add long-from-unreadable.
+
+2006-01-17  Jim Meyering  <jim@meyering.net>
 
 	Now that fts no longer changes the current working directory, adjust
 	its clients accordingly -- note that du.c uses fts but doesn't need
