@@ -40,6 +40,23 @@ my @Tests =
       {ERR => "fmt: invalid option -- 7; -WIDTH is recognized only when it"
        . " is the first\noption; use -w N instead\n"
        . "Try `fmt --help' for more information.\n" }, {EXIT => 1}],
+
+     # With --prefix=P, Do not remove leading on lines without the prefix.
+     ['pfx-1', qw (-p '>'),
+      {IN=>  " 1\n  2\n\t3\n\t\t4\n> quoted\n> text\n"},
+      # This is the buggy output (leading white space removed),
+      # from coreutils-5.93.
+      {OUT=> "1\n2\n3\n4\n> quoted text\n"}],
+      # FIXME: this is the desired output
+      # {OUT=> " 1\n  2\n\t3\n\t\t4\n> quoted text\n"}],
+
+     # Like the above, but when two adjacent, non-prefixed lines have
+     # the same indentation, ensure that they are formatted.
+     ['pfx-2', qw (-p '>'),
+      {IN=>  " 1\n 2\n\t3\n\t4\n"},
+      {OUT=> "1\n2\n3\n4\n"}],
+      # FIXME: this is the desired output
+      # {OUT=> " 1 2\n\t3 4\n"}],
     );
 
 my $save_temps = $ENV{DEBUG};
