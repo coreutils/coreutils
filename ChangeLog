@@ -1,6 +1,11 @@
-2006-01-18  Jim Meyering  <jim@meyering.net>
+2006-01-19  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* tests/fmt/basic (pfx-1, pfx-2): New tests, to demonstrate the bug
+	reported as http://bugs.debian.org/147577.  Forwarded by Thomas Hood.
+
+2006-01-18  Jim Meyering  <jim@meyering.net>
 
 	* tests/du/Makefile.am (TESTS): Add long-from-unreadable.
 
