@@ -1,6 +1,5 @@
 2006-01-17  Jim Meyering  <jim@meyering.net>
 
-
 	Rewrite fts.c not to change the current working directory,
 	by using openat, fstatat, fdopendir, etc..
 
