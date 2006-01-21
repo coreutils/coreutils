@@ -7,6 +7,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   rm's core is now reentrant: rm --recursive (-r) now processes
   hierarchies without changing the working directory at all.
 
+  fts no longer changes the current working directory, so its clients
+  (chmod, chown, chgrp, du) no longer malfunction under extreme conditions.
+
 ** Changes in behavior
 
   df now considers "none" and "proc" file systems to be dummies and
@@ -72,6 +75,14 @@ GNU coreutils NEWS                                    -*- outline -*-
   as well as the --seed=STRING option.
 
 ** Bug fixes
+
+  fts-using tools (chmod, chown, chgrp, du) no longer fail due to
+  a double-free bug -- it could be triggered by making a directory
+  inaccessible while e.g., du is traversing the hierarchy under it.
+
+  fts-using tools (chmod, chown, chgrp, du) no longer misinterpret
+  a very long symlink chain as a dangling symlink.  Before, such a
+  misinterpretation would cause these tools not to diagnose an ELOOP error.
 
   rm (on systems with openat) can no longer exit before processing
   all command-line arguments.
