@@ -1,6 +1,10 @@
-2006-01-19  Jim Meyering  <jim@meyering.net>
+2006-01-21  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* NEWS: Mention fts-related improvements and bug fixes.
+
+2006-01-19  Jim Meyering  <jim@meyering.net>
 
 	* tests/fmt/basic (pfx-1, pfx-2): New tests, to demonstrate the bug
 	reported as http://bugs.debian.org/147577.  Forwarded by Thomas Hood.
