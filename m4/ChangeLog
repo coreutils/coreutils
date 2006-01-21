@@ -1,3 +1,9 @@
+2006-01-20  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* lib-ignore.m4 (gl_IGNORE_UNUSED_LIBRARIES): Use -Wl,-z,ignore
+	rather than -Xlinker -z -Xlinker ignore, as it's more portable.
+	Suggested by Bruno Haible.
+
 2006-01-17  Jim Meyering  <jim@meyering.net>
 
 	* fts.m4 (gl_FUNC_FTS_CORE): Depend on gl_FUNC_OPENAT.
