@@ -15,16 +15,10 @@ AC_DEFUN([gl_IGNORE_UNUSED_LIBRARIES],
      gl_saved_ldflags=$LDFLAGS
      # Use long option sequences like '-z ignore' to test for the feature,
      # to forestall problems with linkers that have -z, -i, -g, -n, etc. flags.
-     for gl_flags in '-Xlinker -z -Xlinker ignore' '-z ignore'; do
+     for gl_flags in '-Wl,-z,ignore' '-z ignore'; do
        LDFLAGS="$gl_flags $LDFLAGS"
        AC_LINK_IFELSE([AC_LANG_PROGRAM()],
-	 [case $gl_flags in
-	    '-Xlinker -z -Xlinker ignore')
-	      # Shorten this ugly thing, for prettier 'make' output.
-              gl_cv_ignore_unused_libraries='-Xlinker -zignore';;
-	    *)
-	      gl_cv_ignore_unused_libraries=$gl_flags;;
-          esac])
+	 [gl_cv_ignore_unused_libraries=$gl_flags])
        LDFLAGS=$gl_saved_ldflags
        test "$gl_cv_ignore_unused_libraries" != none && break
      done])
