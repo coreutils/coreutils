@@ -1,3 +1,7 @@
+2006-01-23  Jim Meyering  <jim@meyering.net>
+
+	* xalloc-die.c: Remove unused definition of N_.
+
 2006-01-22  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* quotearg.c (quotearg_buffer_restyled): Add "default: break;"
