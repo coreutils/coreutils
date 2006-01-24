@@ -1015,12 +1015,22 @@ tail_forever (struct File_spec *f, int nfiles, double sleep_interval)
 	      if (old_flags < 0
 		  || (new_flags != old_flags
 		      && fcntl (fd, F_SETFL, new_flags) == -1))
-		error (EXIT_FAILURE, errno,
-		       _("%s: cannot change nonblocking mode"), name);
-	      f[i].blocking = blocking;
+		{
+		  /* Don't update f[i].blocking if fcntl fails.  */
+		  if (S_ISREG (f[i].mode) && errno == EPERM)
+		    {
+		      /* This happens when using tail -f on a file with
+			 the append-only attribute.  */
+		    }
+		  else
+		    error (EXIT_FAILURE, errno,
+			   _("%s: cannot change nonblocking mode"), name);
+		}
+	      else
+		f[i].blocking = blocking;
 	    }
 
-	  if (!blocking)
+	  if (!f[i].blocking)
 	    {
 	      if (fstat (fd, &stats) != 0)
 		{
@@ -1038,7 +1048,7 @@ tail_forever (struct File_spec *f, int nfiles, double sleep_interval)
 		       <= f[i].n_unchanged_stats++)
 		      && follow_mode == Follow_name)
 		    {
-		      recheck (&f[i], blocking);
+		      recheck (&f[i], f[i].blocking);
 		      f[i].n_unchanged_stats = 0;
 		    }
 		  continue;
@@ -1071,7 +1081,8 @@ tail_forever (struct File_spec *f, int nfiles, double sleep_interval)
 	    }
 
 	  bytes_read = dump_remainder (name, fd,
-				       blocking ? COPY_A_BUFFER : COPY_TO_EOF);
+				       (f[i].blocking
+					? COPY_A_BUFFER : COPY_TO_EOF));
 	  any_input |= (bytes_read != 0);
 	  f[i].size += bytes_read;
 	}
