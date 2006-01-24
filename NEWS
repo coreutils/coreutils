@@ -95,6 +95,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   on the maximum number of files from a given template) on HP-UX 10.20,
   SunOS 4.1.4, Solaris 2.5.1 and OSF1/Tru64 V4.0F&V5.1.
 
+  tail -f once again works on a file with the append-only
+  attribute (affects at least Linux ext2, ext3, xfs file systems)
 
 * Major changes in release 5.93 (2005-11-06) [stable]
 
