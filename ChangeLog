@@ -1,6 +1,13 @@
-2006-01-24  Jim Meyering  <jim@meyering.net>
+2006-01-24  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 6.0-cvs.
+
+	* src/df.c (show_dev): If the file system claims to have
+	more available than total blocks, report the number of used
+	blocks as being total - available (a negative number) rather
+	than as garbage.  Problem reported by Toralf Foerster.
+
+2006-01-24  Jim Meyering  <jim@meyering.net>
 
 	* src/tail.c (tail_forever): Don't exit-nonzero when an attempt
 	to put a regular file in O_NONBLOCK mode fails with EPERM.

@@ -1,5 +1,5 @@
 /* df - summarize free disk space
-   Copyright (C) 91, 1995-2005 Free Software Foundation, Inc.
+   Copyright (C) 91, 1995-2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -231,15 +231,15 @@ excluded_fstype (const char *fstype)
 /* Like human_readable (N, BUF, human_output_opts, INPUT_UNITS, OUTPUT_UNITS),
    except:
 
-    - Return "-" if N is -1,
-    - If NEGATIVE is 1 then N represents a negative number,
-      expressed in two's complement.  */
+    - If NEGATIVE, then N represents a negative number,
+      expressed in two's complement.
+    - Otherwise, return "-" if N is UINTMAX_MAX.  */
 
 static char const *
 df_readable (bool negative, uintmax_t n, char *buf,
 	     uintmax_t input_units, uintmax_t output_units)
 {
-  if (n == UINTMAX_MAX)
+  if (n == UINTMAX_MAX && !negative)
     return "-";
   else
     {
@@ -357,20 +357,17 @@ show_dev (char const *disk, char const *mount_point,
       output_units = output_block_size;
       total = fsu.fsu_blocks;
       available = fsu.fsu_bavail;
-      negate_available = fsu.fsu_bavail_top_bit_set;
+      negate_available = (fsu.fsu_bavail_top_bit_set
+			  & (available != UINTMAX_MAX));
       available_to_root = fsu.fsu_bfree;
     }
 
-  used = -1;
+  used = UINTMAX_MAX;
   negate_used = false;
   if (total != UINTMAX_MAX && available_to_root != UINTMAX_MAX)
     {
       used = total - available_to_root;
-      if (total < available_to_root)
-	{
-	  negate_used = true;
-	  used = - used;
-	}
+      negate_used = (total < available_to_root);
     }
 
   printf (" %*s %*s %*s ",
