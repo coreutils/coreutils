@@ -1,0 +1,38 @@
+#!/bin/sh
+# Ensure that tail -f works on an append-only file
+# Requires root access to do chattr +a, as well as an ext[23] or xfs file system
+
+if test "$VERBOSE" = yes; then
+  set -x
+  tail --version
+fi
+
+PRIV_CHECK_ARG=require-root . $srcdir/../priv-check
+
+pwd=`pwd`
+t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
+trap 'status=$?; cd $pwd; chmod -R u+rwx $t0; rm -rf $t0 && exit $status' 0
+trap '(exit $?); exit $?' 1 2 13 15
+
+framework_failure=0
+mkdir -p $tmp || framework_failure=1
+cd $tmp || framework_failure=1
+
+touch f
+chattr +a f 2>/dev/null || framework_failure=1
+( echo x > f ) 2>/dev/null && framework_failure=1
+echo x >> f || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo "$0: failure in testing framework" 1>&2
+  (exit 1); exit 1
+fi
+
+fail=0
+
+sleep 1 &
+pid=$!
+tail --pid=$pid -f f > /dev/null 2>&1 || fail=1
+chattr -a f 2>/dev/null
+
+(exit $fail); exit $fail
