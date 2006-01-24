@@ -8,8 +8,9 @@
 	append-only attribute.  Reported by Dean Gaudet.  For details,
 	see http://savannah.gnu.org/bugs/?func=detailitem&item_id=15473.
 	* NEWS: Mention this fix.
-
-	FIXME: add a root-only test requiring ext[23] or xfs, and chattr.
+	* tests/tail-2/append-only: New file.  Test for the above.
+	* tests/tail-2/Makefile.am (TESTS): Add append-only.
+	* tests/Makefile.am (check-root): Add tail-2/append-only
 
 2006-01-21  Jim Meyering  <jim@meyering.net>
 
