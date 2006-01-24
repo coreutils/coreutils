@@ -1,4 +1,5 @@
-/* Copyright (C) 1996, 1997, 1998, 2000, 2003, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 2001, 2002, 2003, 2005, 2006 Free
+   Software Foundation, Inc.
 
    NOTE: The canonical source of this file is maintained with the GNU C Library.
    Bugs can be reported to bug-glibc@prep.ai.mit.edu.
@@ -20,12 +21,19 @@
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
+#if !_LIBC
+# include "strndup.h"
+#endif
 
 #include <stdlib.h>
 #include <string.h>
 
-/* Get strnlen. */
-#include "strnlen.h"
+#if !_LIBC
+# include "strnlen.h"
+# ifndef __strnlen
+#  define __strnlen strnlen
+# endif
+#endif
 
 #undef __strndup
 #undef strndup
@@ -35,9 +43,11 @@
 #endif
 
 char *
-__strndup (const char *s, size_t n)
+__strndup (s, n)
+     const char *s;
+     size_t n;
 {
-  size_t len = strnlen (s, n);
+  size_t len = __strnlen (s, n);
   char *new = malloc (len + 1);
 
   if (new == NULL)
@@ -46,6 +56,9 @@ __strndup (const char *s, size_t n)
   new[len] = '\0';
   return memcpy (new, s, len);
 }
+#ifdef libc_hidden_def
+libc_hidden_def (__strndup)
+#endif
 #ifdef weak_alias
 weak_alias (__strndup, strndup)
 #endif

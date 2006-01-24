@@ -1,3 +1,7 @@
+2006-01-23  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* getopt.m4 (gl_PREREQ_GETOPT): Check for getenv decl.
+
 2006-01-20  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* lib-ignore.m4 (gl_IGNORE_UNUSED_LIBRARIES): Use -Wl,-z,ignore

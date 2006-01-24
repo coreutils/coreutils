@@ -1,3 +1,27 @@
+2006-01-23  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Work around porting bugs reported by Dieter in
+	<http://lists.gnu.org/archive/html/bug-bison/2006-01/msg00049.html>.
+	* getopt.c (_NOPROTO): Remove; no longer needed.
+	Include <stdlib.h> and <unistd.h> in all environments; it's safe now.
+	Include "getopt.h" first, to check interface.
+	(getenv): Declare only if defined HAVE_DECL_GETENV &&
+	!HAVE_DECL_GETENV.
+	* strndup.c [!_LIBC]: Include "strndup.h" to get prototype.
+	(__strndup): Revert to K&R-style function dfns, the glibc style.
+	* strnlen.c: Don't claim it's taken from glibc; it's not.
+	(strnlen, __strnlen): Remove #defines and #undefs; not needed.
+	Include strnlen.h first, to get prototype properly.
+	(strnlen): Renamed from __strnlen.
+	Remove weak alias.
+
+2006-01-23  Ulrich Drepper  <drepper@redhat.com>
+
+	These changes imported from libc.
+	* getopt.c: Use __fxprintf instead of inline stream orientation
+	test and two separate function calls.
+	* strndup.c (__strndup): Add libc_hidden_def.
+
 2006-01-23  Jim Meyering  <jim@meyering.net>
 
 	* xalloc-die.c: Remove unused definition of N_.

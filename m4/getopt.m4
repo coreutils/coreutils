@@ -1,5 +1,5 @@
-# getopt.m4 serial 11
-dnl Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+# getopt.m4 serial 12
+dnl Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
@@ -77,4 +77,7 @@ AC_DEFUN([gl_GETOPT_IFELSE],
 AC_DEFUN([gl_GETOPT], [gl_GETOPT_IFELSE([gl_GETOPT_SUBSTITUTE])])
 
 # Prerequisites of lib/getopt*.
-AC_DEFUN([gl_PREREQ_GETOPT], [:])
+AC_DEFUN([gl_PREREQ_GETOPT],
+[
+  AC_CHECK_DECLS_ONCE([getenv])
+])
