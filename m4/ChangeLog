@@ -1,3 +1,8 @@
+2006-01-24  Jim Meyering  <jim@meyering.net>
+
+	* openat.m4 (gl_FUNC_OPENAT): Add AC_LIBSOURCES([intprops.h]).
+	Reported by Mark D. Baushke.
+
 2006-01-23  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* getopt.m4 (gl_PREREQ_GETOPT): Check for getenv decl.
