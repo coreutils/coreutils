@@ -1,4 +1,4 @@
-2006-01-23  Jim Meyering  <jim@meyering.net>
+2006-01-24  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
 
@@ -7,6 +7,7 @@
 	That happens on Linux when using tail -f on a file with the
 	append-only attribute.  Reported by Dean Gaudet.  For details,
 	see http://savannah.gnu.org/bugs/?func=detailitem&item_id=15473.
+	* NEWS: Mention this fix.
 
 	FIXME: add a root-only test requiring ext[23] or xfs, and chattr.
 
