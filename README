@@ -125,7 +125,7 @@ and then include the contents of the file `log' in your bug report.
 
 ***************************************
 
-There are pretty many tests, but nowhere near as many as we need.
+There are many tests, but nowhere near as many as we need.
 Additions and corrections are very welcome.
 
 If you see a problem that you've already reported, feel free to re-report
