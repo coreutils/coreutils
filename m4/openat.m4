@@ -11,6 +11,7 @@ dnl with or without modifications, as long as this notice is preserved.
 AC_DEFUN([gl_FUNC_OPENAT],
 [
   AC_LIBSOURCES([openat.c, openat.h, openat-priv.h, openat-die.c])
+  AC_LIBSOURCES([intprops.h])
   AC_LIBSOURCES([mkdirat.c])
   AC_LIBSOURCES([fchmodat.c])
 
