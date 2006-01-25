@@ -1,7 +1,6 @@
 ^build-aux/config.guess
 ^configure
 ^lib/alloca.c
-^lib/fileblocks.c
 ^lib/fts.c
 ^lib/getdate.c
 ^lib/getloadavg.c
