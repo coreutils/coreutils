@@ -1,6 +1,7 @@
 2006-01-25  Jim Meyering  <jim@meyering.net>
 
 	* fileblocks.c: Remove useless parentheses in cpp directive.
+	* readutmp.h: Likewise.
 
 2006-01-23  Paul Eggert  <eggert@cs.ucla.edu>
 
