@@ -1,3 +1,9 @@
+2006-01-25  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* stdbool.m4: Merge from gnulib; we still don't quite match
+	exactly, but we're getting closer.
+	(AC_HEADER_STDBOOL): Add some comments.
+
 2006-01-24  Jim Meyering  <jim@meyering.net>
 
 	* openat.m4 (gl_FUNC_OPENAT): Add AC_LIBSOURCES([intprops.h]).

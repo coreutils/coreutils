@@ -1,3 +1,11 @@
+2006-01-25  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* stdbool_.h: Merge from gnulib; we still don't quite match exactly,
+	but we're getting closer.
+	(true, false) [defined __BEOS__]: undef, as before.
+	(_Bool) [!@HAVE__BOOL@ && defined __GNUC__]: Use an enum
+	rather than a #define.
+
 2006-01-25  Jim Meyering  <jim@meyering.net>
 
 	* fileblocks.c: Remove useless parentheses in cpp directive.
