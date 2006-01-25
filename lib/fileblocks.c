@@ -1,6 +1,6 @@
 /* Convert file size to number of blocks on System V-like machines.
 
-   Copyright (C) 1990, 1997, 1998, 1999, 2004, 2005 Free Software
+   Copyright (C) 1990, 1997, 1998, 1999, 2004, 2005, 2006 Free Software
    Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -35,7 +35,7 @@
 
 # ifndef NINDIR
 
-#  if defined (__DJGPP__)
+#  if defined __DJGPP__
 typedef long daddr_t; /* for disk address */
 #  endif
 
