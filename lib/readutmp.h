@@ -1,7 +1,7 @@
 /* Declarations for GNU's read utmp module.
 
    Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000,
-   2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+   2001, 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -141,11 +141,11 @@ typedef struct UTMP_STRUCT_NAME STRUCT_UTMP;
 
 enum { UT_USER_SIZE = sizeof UT_USER ((STRUCT_UTMP *) 0) };
 
-# if !defined (UTMP_FILE) && defined (_PATH_UTMP)
+# if !defined UTMP_FILE && defined _PATH_UTMP
 #  define UTMP_FILE _PATH_UTMP
 # endif
 
-# if !defined (WTMP_FILE) && defined (_PATH_WTMP)
+# if !defined WTMP_FILE && defined _PATH_WTMP
 #  define WTMP_FILE _PATH_WTMP
 # endif
 
