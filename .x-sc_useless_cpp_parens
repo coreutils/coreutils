@@ -7,7 +7,6 @@
 ^lib/gettext.h
 ^lib/getusershell.c
 ^lib/mbswidth.c
-^lib/readutmp.h
 ^lib/strtod.c
 ^lib/xstrtol.c
 ^m4/
