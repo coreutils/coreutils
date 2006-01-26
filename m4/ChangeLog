@@ -1,3 +1,8 @@
+2006-01-26  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* stdbool.m4 (AC_HEADER_STDBOOL): Sync from gnulib.
+	Use 'defined __GNUC__' rather than __GNUC__.
+
 2006-01-25  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* stdbool.m4: Merge from gnulib; we still don't quite match

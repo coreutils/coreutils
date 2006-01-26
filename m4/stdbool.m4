@@ -74,7 +74,7 @@ AC_DEFUN([AC_HEADER_STDBOOL],
 	  _Bool n[m];
 	  char o[sizeof n == m * sizeof n[0] ? 1 : -1];
 	  char p[-1 - (_Bool) 0 < 0 && -1 - (bool) 0 < 0 ? 1 : -1];
-	  #if defined __xlc__ || __GNUC__
+	  #if defined __xlc__ || defined __GNUC__
 	   /* Catch a bug in IBM AIX xlc compiler version 6.0.0.0
 	      reported by James Lemley on 2005-10-05; see
 	      http://lists.gnu.org/archive/html/bug-coreutils/2005-10/msg00086.html

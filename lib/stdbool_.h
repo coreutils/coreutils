@@ -69,14 +69,7 @@
    this, values of type '_Bool' may promote to 'int' or 'unsigned int'
    (see ISO C 99 6.7.2.2.(4)); however, '_Bool' must promote to 'int'
    (see ISO C 99 6.3.1.1.(2)).  So we add a negative value to the
-   enum; this ensures that '_Bool' promotes to 'int'.  This works
-   with older GCC versions that do not have a working <stdbool.h>,
-   and it makes bool easier to to debug, so we use this with GCC.
-
-   This approach into problems on some non-GCC platforms; the simplest
-   way to work around them is to ignore any existing definition of
-   _Bool and use our own.  */
-
+   enum; this ensures that '_Bool' promotes to 'int'.  */
 #if defined __cplusplus || defined __BEOS__
   /* A compiler known to have 'bool'.  */
   /* If the compiler already has both 'bool' and '_Bool', we can assume they
@@ -85,27 +78,31 @@
 typedef bool _Bool;
 # endif
 #else
-# if @HAVE__BOOL@ || ! defined __GNUC__
-    /* The compiler has _Bool, or it is not GCC.  Recall that this
-       code is used only if <stdbool.h> does not work, so something is
-       odd if there is a _Bool.  */
-
-    /* Some HP-UX cc and AIX IBM C compiler versions have compiler bugs when
-       the built-in _Bool type is used.  See
-         http://gcc.gnu.org/ml/gcc-patches/2003-12/msg02303.html
-         http://lists.gnu.org/archive/html/bug-coreutils/2005-11/msg00161.html
-         http://lists.gnu.org/archive/html/bug-coreutils/2005-10/msg00086.html
-       With SunPRO C, avoid stupid
-         "warning: _Bool is a keyword in ISO C99".
-       With IRIX cc, avoid stupid
-         "warning(1185): enumerated type mixed with another type".
-       In general, there are enough problems with older compilers like
-       this that it's safer to avoid their _Bool entirely when
-       <stdbool.h> doesn't work.  */
+# if !defined __GNUC__
+   /* If @HAVE__BOOL@:
+        Some HP-UX cc and AIX IBM C compiler versions have compiler bugs when
+        the built-in _Bool type is used.  See
+          http://gcc.gnu.org/ml/gcc-patches/2003-12/msg02303.html
+          http://lists.gnu.org/archive/html/bug-coreutils/2005-11/msg00161.html
+          http://lists.gnu.org/archive/html/bug-coreutils/2005-10/msg00086.html
+        Similar bugs are likely with other compilers as well; this file
+        wouldn't be used if <stdbool.h> was working.
+        So we override the _Bool type.
+      If !@HAVE__BOOL@:
+        Need to define _Bool ourselves. As 'signed char' or as an enum type?
+        Use of a typedef, with SunPRO C, leads to a stupid
+          "warning: _Bool is a keyword in ISO C99".
+        Use of an enum type, with IRIX cc, leads to a stupid
+          "warning(1185): enumerated type mixed with another type".
+        The only benefit of the enum type, debuggability, is not important
+        with these compilers.  So use 'signed char' and no typedef.  */
 #  define _Bool signed char
 enum { false = 0, true = 1 };
 # else
+   /* With this compiler, trust the _Bool type if the compiler has it.  */
+#  if !@HAVE__BOOL@
 typedef enum { _Bool_must_promote_to_int = -1, false = 0, true = 1 } _Bool;
+#  endif
 # endif
 #endif
 #define bool _Bool
