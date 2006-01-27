@@ -1,3 +1,10 @@
+2006-01-27  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* fnmatch.c (L_): Renamed from L, to work around a bug in
+	Mac OS X 10.3.9 with GCC 3 reported by Claudio Fontana in
+	<http://lists.gnu.org/archive/html/bug-gnulib/2006-01/msg00074.html>.
+	All uses changed.
+
 2006-01-26  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* stdbool_.h: Sync from gnulib.

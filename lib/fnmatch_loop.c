@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,1992,1993,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005
+/* Copyright (C) 1991,1992,1993,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006
 	Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -39,14 +39,14 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 # endif
 #endif
 
-  while ((c = *p++) != L('\0'))
+  while ((c = *p++) != L_('\0'))
     {
       bool new_no_leading_period = false;
       c = FOLD (c);
 
       switch (c)
 	{
-	case L('?'):
+	case L_('?'):
 	  if (__builtin_expect (flags & FNM_EXTMATCH, 0) && *p == '(')
 	    {
 	      int res;
@@ -59,17 +59,17 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 
 	  if (n == string_end)
 	    return FNM_NOMATCH;
-	  else if (*n == L('/') && (flags & FNM_FILE_NAME))
+	  else if (*n == L_('/') && (flags & FNM_FILE_NAME))
 	    return FNM_NOMATCH;
-	  else if (*n == L('.') && no_leading_period)
+	  else if (*n == L_('.') && no_leading_period)
 	    return FNM_NOMATCH;
 	  break;
 
-	case L('\\'):
+	case L_('\\'):
 	  if (!(flags & FNM_NOESCAPE))
 	    {
 	      c = *p++;
-	      if (c == L('\0'))
+	      if (c == L_('\0'))
 		/* Trailing \ loses.  */
 		return FNM_NOMATCH;
 	      c = FOLD (c);
@@ -78,7 +78,7 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 	    return FNM_NOMATCH;
 	  break;
 
-	case L('*'):
+	case L_('*'):
 	  if (__builtin_expect (flags & FNM_EXTMATCH, 0) && *p == '(')
 	    {
 	      int res;
@@ -89,12 +89,12 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 		return res;
 	    }
 
-	  if (n != string_end && *n == L('.') && no_leading_period)
+	  if (n != string_end && *n == L_('.') && no_leading_period)
 	    return FNM_NOMATCH;
 
-	  for (c = *p++; c == L('?') || c == L('*'); c = *p++)
+	  for (c = *p++; c == L_('?') || c == L_('*'); c = *p++)
 	    {
-	      if (*p == L('(') && (flags & FNM_EXTMATCH) != 0)
+	      if (*p == L_('(') && (flags & FNM_EXTMATCH) != 0)
 		{
 		  const CHAR *endp = END (p);
 		  if (endp != p)
@@ -105,13 +105,13 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 		    }
 		}
 
-	      if (c == L('?'))
+	      if (c == L_('?'))
 		{
 		  /* A ? needs to match one character.  */
 		  if (n == string_end)
 		    /* There isn't another character; no match.  */
 		    return FNM_NOMATCH;
-		  else if (*n == L('/')
+		  else if (*n == L_('/')
 			   && __builtin_expect (flags & FNM_FILE_NAME, 0))
 		    /* A slash does not match a wildcard under
 		       FNM_FILE_NAME.  */
@@ -124,7 +124,7 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 		}
 	    }
 
-	  if (c == L('\0'))
+	  if (c == L_('\0'))
 	    /* The wildcard(s) is/are the last element of the pattern.
 	       If the name is a file name and contains another slash
 	       this means it cannot match, unless the FNM_LEADING_DIR
@@ -138,7 +138,7 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 		    result = 0;
 		  else
 		    {
-		      if (MEMCHR (n, L('/'), string_end - n) == NULL)
+		      if (MEMCHR (n, L_('/'), string_end - n) == NULL)
 			result = 0;
 		    }
 		}
@@ -149,15 +149,15 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 	    {
 	      const CHAR *endp;
 
-	      endp = MEMCHR (n, (flags & FNM_FILE_NAME) ? L('/') : L('\0'),
+	      endp = MEMCHR (n, (flags & FNM_FILE_NAME) ? L_('/') : L_('\0'),
 			     string_end - n);
 	      if (endp == NULL)
 		endp = string_end;
 
-	      if (c == L('[')
+	      if (c == L_('[')
 		  || (__builtin_expect (flags & FNM_EXTMATCH, 0) != 0
-		      && (c == L('@') || c == L('+') || c == L('!'))
-		      && *p == L('(')))
+		      && (c == L_('@') || c == L_('+') || c == L_('!'))
+		      && *p == L_('(')))
 		{
 		  int flags2 = ((flags & FNM_FILE_NAME)
 				? flags : (flags & ~FNM_PERIOD));
@@ -168,11 +168,11 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 			== 0)
 		      return 0;
 		}
-	      else if (c == L('/') && (flags & FNM_FILE_NAME))
+	      else if (c == L_('/') && (flags & FNM_FILE_NAME))
 		{
-		  while (n < string_end && *n != L('/'))
+		  while (n < string_end && *n != L_('/'))
 		    ++n;
-		  if (n < string_end && *n == L('/')
+		  if (n < string_end && *n == L_('/')
 		      && (FCT (p, n + 1, string_end, flags & FNM_PERIOD, flags)
 			  == 0))
 		    return 0;
@@ -183,7 +183,7 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 				? flags : (flags & ~FNM_PERIOD));
 		  int no_leading_period2 = no_leading_period;
 
-		  if (c == L('\\') && !(flags & FNM_NOESCAPE))
+		  if (c == L_('\\') && !(flags & FNM_NOESCAPE))
 		    c = *p;
 		  c = FOLD (c);
 		  for (--p; n < endp; ++n, no_leading_period2 = false)
@@ -197,7 +197,7 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 	  /* If we come here no match is possible with the wildcard.  */
 	  return FNM_NOMATCH;
 
-	case L('['):
+	case L_('['):
 	  {
 	    /* Nonzero if the sense of the character class is inverted.  */
 	    register bool not;
@@ -210,14 +210,14 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 	    if (n == string_end)
 	      return FNM_NOMATCH;
 
-	    if (*n == L('.') && no_leading_period)
+	    if (*n == L_('.') && no_leading_period)
 	      return FNM_NOMATCH;
 
-	    if (*n == L('/') && (flags & FNM_FILE_NAME))
+	    if (*n == L_('/') && (flags & FNM_FILE_NAME))
 	      /* `/' cannot be matched.  */
 	      return FNM_NOMATCH;
 
-	    not = (*p == L('!') || (posixly_correct < 0 && *p == L('^')));
+	    not = (*p == L_('!') || (posixly_correct < 0 && *p == L_('^')));
 	    if (not)
 	      ++p;
 
@@ -226,9 +226,9 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 	    c = *p++;
 	    for (;;)
 	      {
-		if (!(flags & FNM_NOESCAPE) && c == L('\\'))
+		if (!(flags & FNM_NOESCAPE) && c == L_('\\'))
 		  {
-		    if (*p == L('\0'))
+		    if (*p == L_('\0'))
 		      return FNM_NOMATCH;
 		    c = FOLD ((UCHAR) *p);
 		    ++p;
@@ -236,7 +236,7 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 		    if (c == fn)
 		      goto matched;
 		  }
-		else if (c == L('[') && *p == L(':'))
+		else if (c == L_('[') && *p == L_(':'))
 		  {
 		    /* Leave room for the null.  */
 		    CHAR str[CHAR_CLASS_MAX_LENGTH + 1];
@@ -254,22 +254,22 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 			  return FNM_NOMATCH;
 
 			c = *++p;
-			if (c == L(':') && p[1] == L(']'))
+			if (c == L_(':') && p[1] == L_(']'))
 			  {
 			    p += 2;
 			    break;
 			  }
-			if (c < L('a') || c >= L('z'))
+			if (c < L_('a') || c >= L_('z'))
 			  {
 			    /* This cannot possibly be a character class name.
 			       Match it as a normal range.  */
 			    p = startp;
-			    c = L('[');
+			    c = L_('[');
 			    goto normal_bracket;
 			  }
 			str[c1++] = c;
 		      }
-		    str[c1] = L('\0');
+		    str[c1] = L_('\0');
 
 #if defined _LIBC || WIDE_CHAR_SUPPORT
 		    wt = IS_CHAR_CLASS (str);
@@ -288,24 +288,24 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 		      goto matched;
 # endif
 #else
-		    if ((STREQ (str, L("alnum")) && ISALNUM ((UCHAR) *n))
-			|| (STREQ (str, L("alpha")) && ISALPHA ((UCHAR) *n))
-			|| (STREQ (str, L("blank")) && ISBLANK ((UCHAR) *n))
-			|| (STREQ (str, L("cntrl")) && ISCNTRL ((UCHAR) *n))
-			|| (STREQ (str, L("digit")) && ISDIGIT ((UCHAR) *n))
-			|| (STREQ (str, L("graph")) && ISGRAPH ((UCHAR) *n))
-			|| (STREQ (str, L("lower")) && ISLOWER ((UCHAR) *n))
-			|| (STREQ (str, L("print")) && ISPRINT ((UCHAR) *n))
-			|| (STREQ (str, L("punct")) && ISPUNCT ((UCHAR) *n))
-			|| (STREQ (str, L("space")) && ISSPACE ((UCHAR) *n))
-			|| (STREQ (str, L("upper")) && ISUPPER ((UCHAR) *n))
-			|| (STREQ (str, L("xdigit")) && ISXDIGIT ((UCHAR) *n)))
+		    if ((STREQ (str, L_("alnum")) && ISALNUM ((UCHAR) *n))
+			|| (STREQ (str, L_("alpha")) && ISALPHA ((UCHAR) *n))
+			|| (STREQ (str, L_("blank")) && ISBLANK ((UCHAR) *n))
+			|| (STREQ (str, L_("cntrl")) && ISCNTRL ((UCHAR) *n))
+			|| (STREQ (str, L_("digit")) && ISDIGIT ((UCHAR) *n))
+			|| (STREQ (str, L_("graph")) && ISGRAPH ((UCHAR) *n))
+			|| (STREQ (str, L_("lower")) && ISLOWER ((UCHAR) *n))
+			|| (STREQ (str, L_("print")) && ISPRINT ((UCHAR) *n))
+			|| (STREQ (str, L_("punct")) && ISPUNCT ((UCHAR) *n))
+			|| (STREQ (str, L_("space")) && ISSPACE ((UCHAR) *n))
+			|| (STREQ (str, L_("upper")) && ISUPPER ((UCHAR) *n))
+			|| (STREQ (str, L_("xdigit")) && ISXDIGIT ((UCHAR) *n)))
 		      goto matched;
 #endif
 		    c = *p++;
 		  }
 #ifdef _LIBC
-		else if (c == L('[') && *p == L('='))
+		else if (c == L_('[') && *p == L_('='))
 		  {
 		    UCHAR str[1];
 		    uint32_t nrules =
@@ -313,19 +313,19 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 		    const CHAR *startp = p;
 
 		    c = *++p;
-		    if (c == L('\0'))
+		    if (c == L_('\0'))
 		      {
 			p = startp;
-			c = L('[');
+			c = L_('[');
 			goto normal_bracket;
 		      }
 		    str[0] = c;
 
 		    c = *++p;
-		    if (c != L('=') || p[1] != L(']'))
+		    if (c != L_('=') || p[1] != L_(']'))
 		      {
 			p = startp;
-			c = L('[');
+			c = L_('[');
 			goto normal_bracket;
 		      }
 		    p += 2;
@@ -405,7 +405,7 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 		    c = *p++;
 		  }
 #endif
-		else if (c == L('\0'))
+		else if (c == L_('\0'))
 		  /* [ (unterminated) loses.  */
 		  return FNM_NOMATCH;
 		else
@@ -415,7 +415,7 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 #ifdef _LIBC
 		    bool is_seqval = false;
 
-		    if (c == L('[') && *p == L('.'))
+		    if (c == L_('[') && *p == L_('.'))
 		      {
 			uint32_t nrules =
 			  _NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_NRULES);
@@ -425,7 +425,7 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 			while (1)
 			  {
 			    c = *++p;
-			    if (c == L('.') && p[1] == L(']'))
+			    if (c == L_('.') && p[1] == L_(']'))
 			      {
 				p += 2;
 				break;
@@ -438,7 +438,7 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 			/* We have to handling the symbols differently in
 			   ranges since then the collation sequence is
 			   important.  */
-			is_range = *p == L('-') && p[1] != L('\0');
+			is_range = *p == L_('-') && p[1] != L_('\0');
 
 			if (nrules == 0)
 			  {
@@ -586,8 +586,8 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 			/* We have to handling the symbols differently in
 			   ranges since then the collation sequence is
 			   important.  */
-			is_range = (*p == L('-') && p[1] != L('\0')
-				    && p[1] != L(']'));
+			is_range = (*p == L_('-') && p[1] != L_('\0')
+				    && p[1] != L_(']'));
 
 			if (!is_range && c == fn)
 			  goto matched;
@@ -596,7 +596,7 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 			c = *p++;
 		      }
 
-		    if (c == L('-') && *p != L(']'))
+		    if (c == L_('-') && *p != L_(']'))
 		      {
 #if _LIBC
 			/* We have to find the collation sequence
@@ -630,7 +630,7 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 # endif
 
 			is_seqval = false;
-			if (cend == L('[') && *p == L('.'))
+			if (cend == L_('[') && *p == L_('.'))
 			  {
 			    uint32_t nrules =
 			      _NL_CURRENT_WORD (LC_COLLATE,
@@ -641,7 +641,7 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 			    while (1)
 			      {
 				c = *++p;
-				if (c == L('.') && p[1] == L(']'))
+				if (c == L_('.') && p[1] == L_(']'))
 				  {
 				    p += 2;
 				    break;
@@ -760,9 +760,9 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 			  }
 			else
 			  {
-			    if (!(flags & FNM_NOESCAPE) && cend == L('\\'))
+			    if (!(flags & FNM_NOESCAPE) && cend == L_('\\'))
 			      cend = *p++;
-			    if (cend == L('\0'))
+			    if (cend == L_('\0'))
 			      return FNM_NOMATCH;
 			    cend = FOLD (cend);
 			  }
@@ -814,9 +814,9 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 			   and sometimes fatal consequences.  */
 			UCHAR cend = *p++;
 
-			if (!(flags & FNM_NOESCAPE) && cend == L('\\'))
+			if (!(flags & FNM_NOESCAPE) && cend == L_('\\'))
 			  cend = *p++;
-			if (cend == L('\0'))
+			if (cend == L_('\0'))
 			  return FNM_NOMATCH;
 
 			/* It is a range.  */
@@ -828,7 +828,7 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 		      }
 		  }
 
-		if (c == L(']'))
+		if (c == L_(']'))
 		  break;
 	      }
 
@@ -843,18 +843,18 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 	      ignore_next:
 		c = *p++;
 
-		if (c == L('\0'))
+		if (c == L_('\0'))
 		  /* [... (unterminated) loses.  */
 		  return FNM_NOMATCH;
 
-		if (!(flags & FNM_NOESCAPE) && c == L('\\'))
+		if (!(flags & FNM_NOESCAPE) && c == L_('\\'))
 		  {
-		    if (*p == L('\0'))
+		    if (*p == L_('\0'))
 		      return FNM_NOMATCH;
 		    /* XXX 1003.2d11 is unclear if this is right.  */
 		    ++p;
 		  }
-		else if (c == L('[') && *p == L(':'))
+		else if (c == L_('[') && *p == L_(':'))
 		  {
 		    int c1 = 0;
 		    const CHAR *startp = p;
@@ -865,10 +865,10 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 			if (++c1 == CHAR_CLASS_MAX_LENGTH)
 			  return FNM_NOMATCH;
 
-			if (*p == L(':') && p[1] == L(']'))
+			if (*p == L_(':') && p[1] == L_(']'))
 			  break;
 
-			if (c < L('a') || c >= L('z'))
+			if (c < L_('a') || c >= L_('z'))
 			  {
 			    p = startp;
 			    goto ignore_next;
@@ -877,18 +877,18 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 		    p += 2;
 		    c = *p++;
 		  }
-		else if (c == L('[') && *p == L('='))
+		else if (c == L_('[') && *p == L_('='))
 		  {
 		    c = *++p;
-		    if (c == L('\0'))
+		    if (c == L_('\0'))
 		      return FNM_NOMATCH;
 		    c = *++p;
-		    if (c != L('=') || p[1] != L(']'))
+		    if (c != L_('=') || p[1] != L_(']'))
 		      return FNM_NOMATCH;
 		    p += 2;
 		    c = *p++;
 		  }
-		else if (c == L('[') && *p == L('.'))
+		else if (c == L_('[') && *p == L_('.'))
 		  {
 		    ++p;
 		    while (1)
@@ -897,22 +897,22 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 			if (c == '\0')
 			  return FNM_NOMATCH;
 
-			if (*p == L('.') && p[1] == L(']'))
+			if (*p == L_('.') && p[1] == L_(']'))
 			  break;
 		      }
 		    p += 2;
 		    c = *p++;
 		  }
 	      }
-	    while (c != L(']'));
+	    while (c != L_(']'));
 	    if (not)
 	      return FNM_NOMATCH;
 	  }
 	  break;
 
-	case L('+'):
-	case L('@'):
-	case L('!'):
+	case L_('+'):
+	case L_('@'):
+	case L_('!'):
 	  if (__builtin_expect (flags & FNM_EXTMATCH, 0) && *p == '(')
 	    {
 	      int res;
@@ -923,7 +923,7 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 	    }
 	  goto normal_match;
 
-	case L('/'):
+	case L_('/'):
 	  if (NO_LEADING_PERIOD (flags))
 	    {
 	      if (n == string_end || c != (UCHAR) *n)
@@ -946,7 +946,7 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
   if (n == string_end)
     return 0;
 
-  if ((flags & FNM_LEADING_DIR) && n != string_end && *n == L('/'))
+  if ((flags & FNM_LEADING_DIR) && n != string_end && *n == L_('/'))
     /* The FNM_LEADING_DIR flag says that "foo*" matches "foobar/frobozz".  */
     return 0;
 
@@ -961,10 +961,10 @@ END (const CHAR *pattern)
   const CHAR *p = pattern;
 
   while (1)
-    if (*++p == L('\0'))
+    if (*++p == L_('\0'))
       /* This is an invalid pattern.  */
       return pattern;
-    else if (*p == L('['))
+    else if (*p == L_('['))
       {
 	/* Handle brackets special.  */
 	if (posixly_correct == 0)
@@ -972,21 +972,21 @@ END (const CHAR *pattern)
 
 	/* Skip the not sign.  We have to recognize it because of a possibly
 	   following ']'.  */
-	if (*++p == L('!') || (posixly_correct < 0 && *p == L('^')))
+	if (*++p == L_('!') || (posixly_correct < 0 && *p == L_('^')))
 	  ++p;
 	/* A leading ']' is recognized as such.  */
-	if (*p == L(']'))
+	if (*p == L_(']'))
 	  ++p;
 	/* Skip over all characters of the list.  */
-	while (*p != L(']'))
-	  if (*p++ == L('\0'))
+	while (*p != L_(']'))
+	  if (*p++ == L_('\0'))
 	    /* This is no valid pattern.  */
 	    return pattern;
       }
-    else if ((*p == L('?') || *p == L('*') || *p == L('+') || *p == L('@')
-	      || *p == L('!')) && p[1] == L('('))
+    else if ((*p == L_('?') || *p == L_('*') || *p == L_('+') || *p == L_('@')
+	      || *p == L_('!')) && p[1] == L_('('))
       p = END (p + 1);
-    else if (*p == L(')'))
+    else if (*p == L_(')'))
       break;
 
   return p + 1;
@@ -1014,10 +1014,10 @@ EXT (INT opt, const CHAR *pattern, const CHAR *string, const CHAR *string_end,
   /* Parse the pattern.  Store the individual parts in the list.  */
   level = 0;
   for (startp = p = pattern + 1; ; ++p)
-    if (*p == L('\0'))
+    if (*p == L_('\0'))
       /* This is an invalid pattern.  */
       return -1;
-    else if (*p == L('['))
+    else if (*p == L_('['))
       {
 	/* Handle brackets special.  */
 	if (posixly_correct == 0)
@@ -1025,22 +1025,22 @@ EXT (INT opt, const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 
 	/* Skip the not sign.  We have to recognize it because of a possibly
 	   following ']'.  */
-	if (*++p == L('!') || (posixly_correct < 0 && *p == L('^')))
+	if (*++p == L_('!') || (posixly_correct < 0 && *p == L_('^')))
 	  ++p;
 	/* A leading ']' is recognized as such.  */
-	if (*p == L(']'))
+	if (*p == L_(']'))
 	  ++p;
 	/* Skip over all characters of the list.  */
-	while (*p != L(']'))
-	  if (*p++ == L('\0'))
+	while (*p != L_(']'))
+	  if (*p++ == L_('\0'))
 	    /* This is no valid pattern.  */
 	    return -1;
       }
-    else if ((*p == L('?') || *p == L('*') || *p == L('+') || *p == L('@')
-	      || *p == L('!')) && p[1] == L('('))
+    else if ((*p == L_('?') || *p == L_('*') || *p == L_('+') || *p == L_('@')
+	      || *p == L_('!')) && p[1] == L_('('))
       /* Remember the nesting level.  */
       ++level;
-    else if (*p == L(')'))
+    else if (*p == L_(')'))
       {
 	if (level-- == 0)
 	  {
@@ -1051,7 +1051,7 @@ EXT (INT opt, const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 	    size_t plensize;						      \
 	    size_t newpsize;						      \
 									      \
-	    plen = (opt == L('?') || opt == L('@')			      \
+	    plen = (opt == L_('?') || opt == L_('@')			      \
 		    ? pattern_len					      \
 		    : p - startp + 1);					      \
 	    plensize = plen * sizeof (CHAR);				      \
@@ -1061,7 +1061,7 @@ EXT (INT opt, const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 		|| ALLOCA_LIMIT <= newpsize)				      \
 	      return -1;						      \
 	    newp = (struct patternlist *) alloca (newpsize);		      \
-	    *((CHAR *) MEMPCPY (newp->str, startp, p - startp)) = L('\0');    \
+	    *((CHAR *) MEMPCPY (newp->str, startp, p - startp)) = L_('\0');    \
 	    newp->next = NULL;						      \
 	    *lastp = newp;						      \
 	    lastp = &newp->next
@@ -1069,7 +1069,7 @@ EXT (INT opt, const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 	    break;
 	  }
       }
-    else if (*p == L('|'))
+    else if (*p == L_('|'))
       {
 	if (level == 0)
 	  {
@@ -1078,17 +1078,17 @@ EXT (INT opt, const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 	  }
       }
   assert (list != NULL);
-  assert (p[-1] == L(')'));
+  assert (p[-1] == L_(')'));
 #undef NEW_PATTERN
 
   switch (opt)
     {
-    case L('*'):
+    case L_('*'):
       if (FCT (p, string, string_end, no_leading_period, flags) == 0)
 	return 0;
       /* FALLTHROUGH */
 
-    case L('+'):
+    case L_('+'):
       do
 	{
 	  for (rs = string; rs <= string_end; ++rs)
@@ -1120,12 +1120,12 @@ EXT (INT opt, const CHAR *pattern, const CHAR *string, const CHAR *string_end,
       /* None of the patterns lead to a match.  */
       return FNM_NOMATCH;
 
-    case L('?'):
+    case L_('?'):
       if (FCT (p, string, string_end, no_leading_period, flags) == 0)
 	return 0;
       /* FALLTHROUGH */
 
-    case L('@'):
+    case L_('@'):
       do
 	/* I cannot believe it but `strcat' is actually acceptable
 	   here.  Match the entire string with the prefix from the
@@ -1141,7 +1141,7 @@ EXT (INT opt, const CHAR *pattern, const CHAR *string, const CHAR *string_end,
       /* None of the patterns lead to a match.  */
       return FNM_NOMATCH;
 
-    case L('!'):
+    case L_('!'):
       for (rs = string; rs <= string_end; ++rs)
 	{
 	  struct patternlist *runp;
@@ -1188,5 +1188,5 @@ EXT (INT opt, const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 #undef STRCOLL
 #undef STRLEN
 #undef STRCAT
-#undef L
+#undef L_
 #undef BTOWC

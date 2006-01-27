@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,1992,1993,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005
+/* Copyright (C) 1991,1992,1993,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006
 	Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -180,7 +180,7 @@ static int posixly_correct;
 # define FCT	internal_fnmatch
 # define EXT	ext_match
 # define END	end_pattern
-# define L(CS)	CS
+# define L_(CS)	CS
 # ifdef _LIBC
 #  define BTOWC(C)	__btowc (C)
 # else
@@ -210,7 +210,7 @@ static int posixly_correct;
 #  define FCT	internal_fnwmatch
 #  define EXT	ext_wmatch
 #  define END	end_wpattern
-#  define L(CS)	L##CS
+#  define L_(CS)	L##CS
 #  define BTOWC(C)	(C)
 #  ifdef _LIBC
 #   define STRLEN(S) __wcslen (S)
