@@ -1,6 +1,11 @@
-2006-01-24  Paul Eggert  <eggert@cs.ucla.edu>
+2006-01-30  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* man/wc.x: Include `count' keyword in man page synopsis,
+	per suggestion from http://bugs.debian.org/181585.
+
+2006-01-24  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/df.c (show_dev): If the file system claims to have
 	more available than total blocks, report the number of used
