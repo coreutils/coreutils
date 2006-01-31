@@ -2551,7 +2551,7 @@ Always print file name headers.
 @end table
 
 For compatibility @command{tail} also supports an obsolete usage
-@samp{tail -@var{count}[bcl][f] [@var{file}]}, which is recognized
+@samp{tail -[@var{count}][bcl][f] [@var{file}]}, which is recognized
 only if it does not conflict with the usage described
 above.  This obsolete form uses exactly one option and at most one
 file.  In the option, @var{count} is an optional decimal number optionally

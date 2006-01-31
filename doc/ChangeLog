@@ -1,3 +1,8 @@
+2006-01-30  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (tail invocation): In the obsolete usage, the
+	count is optional, so put square brackets around it.
+
 2006-01-02  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* getdate.texi (General date syntax): Invalid dates are rejected.
