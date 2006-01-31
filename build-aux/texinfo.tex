@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2006-01-08.14}
+\def\texinfoversion{2006-01-27.14}
 %
 % Copyright (C) 1985, 1986, 1988, 1990, 1991, 1992, 1993, 1994, 1995,
 % 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006 Free
@@ -4504,12 +4504,20 @@ where each line of input produces a line of output.}
       \gdef\thissection{#1}%
     \fi\fi\fi
     %
-    % Write the toc entry (before \donoderef).  See comments in \chfplain.
+    % Write the toc entry (before \donoderef).  See comments in \chapmacro.
     \writetocentry{\toctype\sectionlevel}{#1}{#4}%
     %
     % Write the node reference (= pdf destination for pdftex).
-    % Again, see comments in \chfplain.
+    % Again, see comments in \chapmacro.
     \donoderef{#3}%
+    %
+    % Interline glue will be inserted when the vbox is completed.
+    % That glue will be a valid breakpoint for the page, since it'll be
+    % preceded by a whatsit (usually from the \donoderef, or from the
+    % \writetocentry if there was no node).  We don't want to allow that
+    % break, since then the whatsits could end up on page n while the
+    % section is on page n+1, thus toc/etc. are wrong.  Debian bug 276000.
+    \nobreak
     %
     % Output the actual section heading.
     \vbox{\hyphenpenalty=10000 \tolerance=5000 \parindent=0pt \raggedright
@@ -4573,7 +4581,7 @@ where each line of input produces a line of output.}
        \edef\temp{%
          \write\tocfile{@#1entry{#2}{#3}{\lastnode}{\noexpand\folio}}}%
        \temp
-      }
+      }%
     \fi
   \fi
   %

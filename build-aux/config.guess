@@ -3,7 +3,7 @@
 #   Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
 #   2000, 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
 
-timestamp='2006-01-02'
+timestamp='2006-01-30'
 
 # This file is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by
@@ -106,7 +106,7 @@ set_cc_for_build='
 trap "exitcode=\$?; (rm -f \$tmpfiles 2>/dev/null; rmdir \$tmp 2>/dev/null) && exit \$exitcode" 0 ;
 trap "rm -f \$tmpfiles 2>/dev/null; rmdir \$tmp 2>/dev/null; exit 1" 1 2 13 15 ;
 : ${TMPDIR=/tmp} ;
- { tmp=`(umask 077 && mktemp -d -q "$TMPDIR/cgXXXXXX") 2>/dev/null` && test -n "$tmp" && test -d "$tmp" ; } ||
+ { tmp=`(umask 077 && mktemp -d "$TMPDIR/cgXXXXXX") 2>/dev/null` && test -n "$tmp" && test -d "$tmp" ; } ||
  { test -n "$RANDOM" && tmp=$TMPDIR/cg$$-$RANDOM && (umask 077 && mkdir $tmp) ; } ||
  { tmp=$TMPDIR/cg-$$ && (umask 077 && mkdir $tmp) && echo "Warning: creating insecure temp directory" >&2 ; } ||
  { echo "$me: cannot create a temporary directory in $TMPDIR" >&2 ; exit 1 ; } ;
@@ -859,7 +859,11 @@ EOF
 	#endif
 	#endif
 EOF
-	eval "`$CC_FOR_BUILD -E $dummy.c 2>/dev/null | sed -n '/^CPU/{s: ::g;p;}'`"
+	eval "`$CC_FOR_BUILD -E $dummy.c 2>/dev/null | sed -n '
+	    /^CPU/{
+		s: ::g
+		p
+	    }'`"
 	test x"${CPU}" != x && { echo "${CPU}-unknown-linux-gnu"; exit; }
 	;;
     mips64:Linux:*:*)
@@ -878,7 +882,11 @@ EOF
 	#endif
 	#endif
 EOF
-	eval "`$CC_FOR_BUILD -E $dummy.c 2>/dev/null | sed -n '/^CPU/{s: ::g;p;}'`"
+	eval "`$CC_FOR_BUILD -E $dummy.c 2>/dev/null | sed -n '
+	    /^CPU/{
+		s: ::g
+		p
+	    }'`"
 	test x"${CPU}" != x && { echo "${CPU}-unknown-linux-gnu"; exit; }
 	;;
     or32:Linux:*:*)
@@ -985,7 +993,11 @@ EOF
 	LIBC=dietlibc
 	#endif
 EOF
-	eval "`$CC_FOR_BUILD -E $dummy.c 2>/dev/null | sed -n '/^LIBC/{s: ::g;p;}'`"
+	eval "`$CC_FOR_BUILD -E $dummy.c 2>/dev/null | sed -n '
+	    /^LIBC/{
+		s: ::g
+		p
+	    }'`"
 	test x"${LIBC}" != x && {
 		echo "${UNAME_MACHINE}-pc-linux-${LIBC}"
 		exit

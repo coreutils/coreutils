@@ -1,9 +1,9 @@
 #! /bin/sh
 # Common stub for a few missing GNU programs while installing.
 
-scriptversion=2005-06-08.21
+scriptversion=2006-01-12.21
 
-# Copyright (C) 1996, 1997, 1999, 2000, 2002, 2003, 2004, 2005
+# Copyright (C) 1996, 1997, 1999, 2000, 2002, 2003, 2004, 2005, 2006
 #   Free Software Foundation, Inc.
 # Originally by Fran,cois Pinard <pinard@iro.umontreal.ca>, 1996.
 
@@ -293,7 +293,12 @@ WARNING: \`$1' is $msg.  You should only need it if
     if test -z "$file"; then
       # ... or it is the one specified with @setfilename ...
       infile=`echo "$*" | sed 's/.* \([^ ]*\) *$/\1/'`
-      file=`sed -n '/^@setfilename/ { s/.* \([^ ]*\) *$/\1/; p; q; }' $infile`
+      file=`sed -n '
+	/^@setfilename/{
+	  s/.* \([^ ]*\) *$/\1/
+	  p
+	  q
+	}' $infile`
       # ... or it is derived from the source name (dir/f.texi becomes f.info)
       test -z "$file" && file=`echo "$infile" | sed 's,.*/,,;s,.[^.]*$,,'`.info
     fi
