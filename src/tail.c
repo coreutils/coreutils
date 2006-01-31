@@ -1455,7 +1455,8 @@ parse_options (int argc, char **argv,
 {
   int c;
 
-  while ((c = getopt_long (argc, argv, "c:n:fFqs:v", long_options, NULL))
+  while ((c = getopt_long (argc, argv, "c:n:fFqs:v0123456789",
+			   long_options, NULL))
 	 != -1)
     {
       switch (c)
@@ -1552,6 +1553,11 @@ parse_options (int argc, char **argv,
 	case_GETOPT_HELP_CHAR;
 
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+
+	case '0': case '1': case '2': case '3': case '4':
+	case '5': case '6': case '7': case '8': case '9':
+	  error (EXIT_FAILURE, 0,
+		 _("option used in invalid context -- %c"), c);
 
 	default:
 	  usage (EXIT_FAILURE);
