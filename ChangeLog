@@ -1,6 +1,13 @@
-2006-01-30  Jim Meyering  <jim@meyering.net>
+2006-01-30  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 6.0-cvs.
+
+	* src/head.c (main): Use a better diagnostic when someone uses a
+	trailing numeric option in an invalid way.  Problem reported by
+	Karl Berry.
+	* src/tail.c (parse_options): Likewise.
+
+2006-01-30  Jim Meyering  <jim@meyering.net>
 
 	* man/wc.x: Include `count' keyword in man page synopsis,
 	per suggestion from http://bugs.debian.org/181585.
