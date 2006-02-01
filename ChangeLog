@@ -1,6 +1,10 @@
-2006-01-30  Paul Eggert  <eggert@cs.ucla.edu>
+2006-02-01  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* src/pwd.c (find_dir_entry): Remove unused local, `ent_sb_valid'.
+
+2006-01-30  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/head.c (main): Use a better diagnostic when someone uses a
 	trailing numeric option in an invalid way.  Problem reported by
