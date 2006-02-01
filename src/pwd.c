@@ -1,5 +1,5 @@
 /* pwd - print current directory
-   Copyright (C) 1994-1997, 1999-2005 Free Software Foundation, Inc.
+   Copyright (C) 1994-1997, 1999-2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -186,7 +186,6 @@ find_dir_entry (struct stat *dot_sb, struct file_name *file_name,
       struct dirent const *dp;
       struct stat ent_sb;
       ino_t ino;
-      bool ent_sb_valid;
 
       errno = 0;
       if ((dp = readdir_ignoring_dot_and_dotdot (dirp)) == NULL)
@@ -206,7 +205,6 @@ find_dir_entry (struct stat *dot_sb, struct file_name *file_name,
 
       ino = D_INO (dp);
 
-      ent_sb_valid = false;
       if (ino == NOT_AN_INODE_NUMBER || use_lstat)
 	{
 	  if (lstat (dp->d_name, &ent_sb) < 0)
@@ -215,7 +213,6 @@ find_dir_entry (struct stat *dot_sb, struct file_name *file_name,
 	      continue;
 	    }
 	  ino = ent_sb.st_ino;
-	  ent_sb_valid = true;
 	}
 
       if (ino != dot_sb->st_ino)
