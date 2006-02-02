@@ -1,3 +1,10 @@
+2006-02-02  Jim Meyering  <jim@meyering.net>
+
+	Eliminate the unwelcome (albeit unlikely) possibility of xmalloc
+	failure on deficient systems, and simplify gnulib lgpl dependencies.
+	* lstat.c (rpl_lstat): Rewrite to use stat() in place of the
+	xmalloc/lstat combination.  Based on a patch from Bruno Haible.
+
 2006-01-27  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* fnmatch.c (L_): Renamed from L, to work around a bug in
