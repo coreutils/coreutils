@@ -1,3 +1,8 @@
+2006-02-01  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (od invocation): Warn that -t a ignores the high
+	order bit.
+
 2006-01-30  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (tail invocation): In the obsolete usage, the
