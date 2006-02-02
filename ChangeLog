@@ -1,6 +1,11 @@
-2006-02-01  Jim Meyering  <jim@meyering.net>
+2006-02-01  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 6.0-cvs.
+
+	* src/od.c (usage): Mention that -t a ignores high order bit.
+	Documentation problem reported by Ed Avis.
+
+2006-02-01  Jim Meyering  <jim@meyering.net>
 
 	* src/pwd.c (find_dir_entry): Remove unused local, `ent_sb_valid'.
 
