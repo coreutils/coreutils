@@ -1,6 +1,6 @@
 /* Work around a bug of lstat on some systems
 
-   Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005 Free
+   Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006 Free
    Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -30,28 +30,28 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <stdlib.h>
 #include <string.h>
+#include <errno.h>
 
 #include "stat-macros.h"
-#include "xalloc.h"
 
 /* lstat works differently on Linux and Solaris systems.  POSIX (see
-   `pathname resolution' in the glossary) requires that programs like `ls'
-   take into consideration the fact that FILE has a trailing slash when
-   FILE is a symbolic link.  On Linux systems, the lstat function already
-   has the desired semantics (in treating `lstat("symlink/",sbuf)' just like
-   `lstat("symlink/.",sbuf)', but on Solaris it does not.
+   `pathname resolution' in the glossary) requires that programs like
+   `ls' take into consideration the fact that FILE has a trailing slash
+   when FILE is a symbolic link.  On Linux and Solaris 10 systems, the
+   lstat function already has the desired semantics (in treating
+   `lstat ("symlink/", sbuf)' just like `lstat ("symlink/.", sbuf)',
+   but on Solaris 9 and earlier it does not.
 
    If FILE has a trailing slash and specifies a symbolic link,
-   then append a `.' to FILE and call lstat a second time.  */
+   then use stat() to get more info on the referent of FILE.
+   If the referent is a non-directory, then set errno to ENOTDIR
+   and return -1.  Otherwise, return stat's result.  */
 
 int
 rpl_lstat (const char *file, struct stat *sbuf)
 {
   size_t len;
-  char *new_file;
-
   int lstat_result = lstat (file, sbuf);
 
   if (lstat_result != 0 || !S_ISLNK (sbuf->st_mode))
@@ -59,19 +59,22 @@ rpl_lstat (const char *file, struct stat *sbuf)
 
   len = strlen (file);
   if (len == 0 || file[len - 1] != '/')
-    return lstat_result;
+    return 0;
 
   /* FILE refers to a symbolic link and the name ends with a slash.
-     Append a `.' to FILE and repeat the lstat call.  */
+     Call stat() to get info about the link's referent.  */
 
-  /* Add one for the `.' we'll append, and one more for the trailing NUL.  */
-  new_file = xmalloc (len + 1 + 1);
-  memcpy (new_file, file, len);
-  new_file[len] = '.';
-  new_file[len + 1] = 0;
+  /* If stat fails, then we do the same.  */
+  if (stat (file, sbuf) != 0)
+    return -1;
 
-  lstat_result = lstat (new_file, sbuf);
-  free (new_file);
+  /* If FILE references a directory, return 0.  */
+  if (S_ISDIR (sbuf->st_mode))
+    return 0;
 
-  return lstat_result;
+  /* Here, we know stat succeeded and FILE references a non-directory.
+     But it was specified via a name including a trailing slash.
+     Fail with errno set to ENOTDIR to indicate the contradiction.  */
+  errno = ENOTDIR;
+  return -1;
 }
