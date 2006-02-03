@@ -1,6 +1,10 @@
-2006-02-01  Paul Eggert  <eggert@cs.ucla.edu>
+2006-02-03  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* configure.ac: Require automake-1.9.6, not 1.8.3.
+
+2006-02-01  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/od.c (usage): Mention that -t a ignores high order bit.
 	Documentation problem reported by Ed Avis.
