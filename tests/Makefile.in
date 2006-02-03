@@ -713,6 +713,7 @@ check-root:
 	cd cp    && $(MAKE) check TESTS=special-bits
 	cd rm    && $(MAKE) check TESTS=no-give-up
 	cd rm    && $(MAKE) check TESTS=fail-2eperm
+	cd tail-2 && $(MAKE) check TESTS=append-only
 
 check-recursive: evar-check root-hint
 
