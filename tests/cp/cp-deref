@@ -1,6 +1,6 @@
 #!/bin/sh
-# cp -RL d1 d2' must handle the case in which d1 and d2 both contain
-# a symlink pointing to some third directory.
+# cp -RL dir1 dir2' must handle the case in which each of dir1 and dir2
+# contain a symlink pointing to some third directory.
 
 if test "$VERBOSE" = yes; then
   set -x
