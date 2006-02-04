@@ -26,6 +26,8 @@ fi
 
 fail=0
 
+# Before coreutils-5.94, the following would fail with this message:
+# cp: will not create hard link `d/b/c' to directory `d/a/c'
 cp -RL a b d || fail=1
 test -d a/c || fail=1
 test -d b/c || fail=1
