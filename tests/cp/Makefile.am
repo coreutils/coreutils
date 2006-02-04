@@ -3,6 +3,7 @@ AUTOMAKE_OPTIONS = 1.1 gnits
 
 XFAIL_TESTS = acl
 TESTS = \
+  cp-deref \
   acl \
   preserve-2 r-vs-symlink link-preserve \
   backup-1 no-deref-link1 no-deref-link2 no-deref-link3 backup-is-src \
