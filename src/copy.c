@@ -1302,40 +1302,49 @@ copy_internal (char const *src_name, char const *dst_name,
 		     quote_n (0, top_level_src_name),
 		     quote_n (1, top_level_dst_name));
 	      *copy_into_self = true;
+	      goto un_backup;
+	    }
+	  else if (x->dereference == DEREF_ALWAYS)
+	    {
+	      /* This happens when e.g., encountering a directory for the
+		 second or subsequent time via symlinks when cp is invoked
+		 with -R and -L.  E.g.,
+		 rm -rf a b c d; mkdir a b c d; ln -s ../c a; ln -s ../c b;
+		 cp -RL a b d
+	      */
 	    }
 	  else
 	    {
 	      error (0, 0, _("will not create hard link %s to directory %s"),
 		     quote_n (0, dst_name), quote_n (1, earlier_file));
+	      goto un_backup;
+	    }
+	}
+      else
+	{
+	  bool link_failed = (link (earlier_file, dst_name) != 0);
+
+	  /* If the link failed because of an existing destination,
+	     remove that file and then call link again.  */
+	  if (link_failed && errno == EEXIST)
+	    {
+	      if (unlink (dst_name) != 0)
+		{
+		  error (0, errno, _("cannot remove %s"), quote (dst_name));
+		  goto un_backup;
+		}
+	      link_failed = (link (earlier_file, dst_name) != 0);
 	    }
 
-	  goto un_backup;
+	  if (link_failed)
+	    {
+	      error (0, errno, _("cannot create hard link %s to %s"),
+		     quote_n (0, dst_name), quote_n (1, earlier_file));
+	      goto un_backup;
+	    }
+
+	  return true;
 	}
-
-      {
-	bool link_failed = (link (earlier_file, dst_name) != 0);
-
-	/* If the link failed because of an existing destination,
-	   remove that file and then call link again.  */
-	if (link_failed && errno == EEXIST)
-	  {
-	    if (unlink (dst_name) != 0)
-	      {
-		error (0, errno, _("cannot remove %s"), quote (dst_name));
-		goto un_backup;
-	      }
-	    link_failed = (link (earlier_file, dst_name) != 0);
-	  }
-
-	if (link_failed)
-	  {
-	    error (0, errno, _("cannot create hard link %s to %s"),
-		   quote_n (0, dst_name), quote_n (1, earlier_file));
-	    goto un_backup;
-	  }
-
-	return true;
-      }
     }
 
   if (x->move_mode)
