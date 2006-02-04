@@ -1,6 +1,16 @@
-2006-02-03  Jim Meyering  <jim@meyering.net>
+2006-02-04  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* src/copy.c (copy_internal): cp -RL no longer fails when encountering
+	the same directory more than once in the hierarchy beneath a single
+	command-line argument.  That is legitimate, e.g. when there are
+	two or more symbolic links, each pointing to some directory that
+	would not otherwise be copied.  Reported by Christophe LYON.
+	* tests/cp/cp-deref: New file.  Test for today's fix.
+	* tests/cp/Makefile.am (TESTS): Add cp-deref.
+
+2006-02-03  Jim Meyering  <jim@meyering.net>
 
 	* configure.ac: Require automake-1.9.6, not 1.8.3.
 
