@@ -1,5 +1,5 @@
 /* `rm' file deletion utility for GNU.
-   Copyright (C) 88, 90, 91, 1994-2005 Free Software Foundation, Inc.
+   Copyright (C) 88, 90, 91, 1994-2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -141,7 +141,7 @@ Remove (unlink) the FILE(s).\n\
   -i, --interactive     prompt before any removal\n\
 "), stdout);
       fputs (_("\
-      --no-preserve-root do not treat `/' specially (the default)\n\
+      --no-preserve-root  do not treat `/' specially (the default)\n\
       --preserve-root   fail to operate recursively on `/'\n\
   -r, -R, --recursive   remove directories and their contents recursively\n\
   -v, --verbose         explain what is being done\n\
