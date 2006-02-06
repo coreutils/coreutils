@@ -1,3 +1,10 @@
+2006-02-05  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* extensions.m4 (gl_USE_SYSTEM_EXTENSIONS): Don't #define
+	__EXTENSIONS__ if this causes compilation to fail.  Problem
+	reported by Nelson H. F. Beebe with Solaris 10 and Sun C 5.7
+	c89 -D_XOPEN_SOURCE -D_XOPEN_SOURCE_EXTENDED.
+
 2006-01-26  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* stdbool.m4 (AC_HEADER_STDBOOL): Sync from gnulib.
