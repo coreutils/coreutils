@@ -2,7 +2,22 @@
 
 	* Version 6.0-cvs.
 
-	* src/cp.c (usage): Use two spaces (not one) to separate the
+	* src/unexpand.c (usage): Use two spaces (not one) to separate the
+	--first-only option string from its description, so help2man formats
+	the derived man page properly.
+	* src/rm.c (usage): Likewise for --no-preserve-root.
+	* src/chown.c (usage): Likewise.
+	* src/chgrp.c (usage): Likewise.
+
+	Add a rule to ensure that the above doesn't happen again.
+	* Makefile.maint (sc_two_space_separator_in_usage): New rule.
+	(syntax-check-rules): Add it.
+	* .x-sc_two_space_separator_in_usage: New empty file.
+	* Makefile.am (EXTRA_DIST): Add .x-sc_two_space_separator_in_usage.
+
+2006-02-06  Jim Meyering  <jim@meyering.net>
+
+	* src/cp.c (usage): Use two spaces (not one) to separate each
 	option string from its description, so help2man formats the
 	derived man page properly.
 	* src/mv.c (usage): Likewise.
