@@ -25,7 +25,7 @@
 
 2006-02-04  Jim Meyering  <jim@meyering.net>
 
-	* src/copy.c (copy_internal): cp -RL no longer fails when encountering
+	* src/copy.c (copy_internal): cp -RL would fail when encountering
 	the same directory more than once in the hierarchy beneath a single
 	command-line argument.  That is legitimate, e.g. when there are
 	two or more symbolic links, each pointing to some directory that
