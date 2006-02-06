@@ -1,5 +1,5 @@
 /* mv -- move or rename files
-   Copyright (C) 86, 89, 90, 91, 1995-2005 Free Software Foundation, Inc.
+   Copyright (C) 86, 89, 90, 91, 1995-2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -308,7 +308,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -i, --interactive            prompt before overwrite\n\
 "), stdout);
       fputs (_("\
-      --strip-trailing-slashes remove any trailing slashes from each SOURCE\n\
+      --strip-trailing-slashes  remove any trailing slashes from each SOURCE\n\
                                  argument\n\
   -S, --suffix=SUFFIX          override the usual backup suffix\n\
 "), stdout);

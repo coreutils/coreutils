@@ -205,7 +205,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
       --sparse=WHEN            control creation of sparse files\n\
-      --strip-trailing-slashes remove any trailing slashes from each SOURCE\n\
+      --strip-trailing-slashes  remove any trailing slashes from each SOURCE\n\
                                  argument\n\
 "), stdout);
       fputs (_("\
