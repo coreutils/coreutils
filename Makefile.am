@@ -10,6 +10,7 @@ EXTRA_DIST = Makefile.cfg Makefile.maint GNUmakefile \
   .x-sc_no_if_have_config_h \
   .x-sc_require_config_h \
   .x-sc_prohibit_assert_without_use \
+  .x-sc_two_space_separator_in_usage \
   announce-gen \
   build-aux/cvsu \
   m4/ChangeLog \
