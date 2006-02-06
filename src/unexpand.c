@@ -1,5 +1,5 @@
 /* unexpand - convert blanks to tabs
-   Copyright (C) 89, 91, 1995-2005 Free Software Foundation, Inc.
+   Copyright (C) 89, 91, 1995-2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -132,7 +132,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
   -a, --all        convert all blanks, instead of just initial blanks\n\
-      --first-only convert only leading sequences of blanks (overrides -a)\n\
+      --first-only  convert only leading sequences of blanks (overrides -a)\n\
   -t, --tabs=N     have tabs N characters apart instead of 8 (enables -a)\n\
   -t, --tabs=LIST  use comma separated LIST of tab positions (enables -a)\n\
 "), stdout);
