@@ -32,6 +32,7 @@
 	would not otherwise be copied.  Reported by Christophe LYON.
 	* tests/cp/cp-deref: New file.  Test for today's fix.
 	* tests/cp/Makefile.am (TESTS): Add cp-deref.
+	* NEWS: Document this.
 
 2006-02-03  Jim Meyering  <jim@meyering.net>
 
