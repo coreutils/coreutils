@@ -1,6 +1,14 @@
-2006-02-04  Jim Meyering  <jim@meyering.net>
+2006-02-06  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* src/cp.c (usage): Use two spaces (not one) to separate the
+	option string from its description, so help2man formats the
+	derived man page properly.
+	* src/mv.c (usage): Likewise.
+	Patch from Nicolas François in http://bugs.debian.org/351601.
+
+2006-02-04  Jim Meyering  <jim@meyering.net>
 
 	* src/copy.c (copy_internal): cp -RL no longer fails when encountering
 	the same directory more than once in the hierarchy beneath a single
