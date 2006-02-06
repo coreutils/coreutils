@@ -76,6 +76,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  When `cp -RL' encounters the same directory more than once in the
+  hierarchy beneath a single command-line argument, it no longer confuses
+  them with hard-linked directories.
+
   fts-using tools (chmod, chown, chgrp, du) no longer fail due to
   a double-free bug -- it could be triggered by making a directory
   inaccessible while e.g., du is traversing the hierarchy under it.
