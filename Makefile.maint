@@ -92,6 +92,7 @@ syntax-check-rules = \
   sc_system_h_headers \
   sc_tight_scope \
   sc_trailing_blank \
+  sc_two_space_separator_in_usage \
   sc_unmarked_diagnostics \
   sc_useless_cpp_parens
 
@@ -273,6 +274,14 @@ sc_trailing_blank:
 	  grep '[	 ]$$'						\
 	     $$($(CVS_LIST) | grep -vEf .x-$@ ) &&			\
 	  { echo '$(ME): found trailing blank(s)'			\
+		1>&2; exit 1; } || :
+
+sc_two_space_separator_in_usage:
+	@( $(CVS_LIST) ) > /dev/null 2>&1 || : &&			\
+	  grep '^   *--[a-z][0-9A-Za-z-]* [^ ].*\\$$'			\
+	    $$($(CVS_LIST) | grep 'src/.*\.c$$' | grep -vEf .x-$@) &&	\
+	  { echo "$(ME): help2man requires at least two spaces between"; \
+	    echo "$(ME): an option and its description"; \
 		1>&2; exit 1; } || :
 
 # Look for diagnostics that aren't marked for translation.
