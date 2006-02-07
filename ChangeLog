@@ -1,6 +1,11 @@
-2006-02-06  Jim Meyering  <jim@meyering.net>
+2006-02-07  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* tests/help-version (expected_failure_status_vdir):
+	Redirect an expected disk-full diagnostic to /dev/null.
+
+2006-02-06  Jim Meyering  <jim@meyering.net>
 
 	* src/unexpand.c (usage): Use two spaces (not one) to separate the
 	--first-only option string from its description, so help2man formats
