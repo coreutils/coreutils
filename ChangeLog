@@ -70,8 +70,8 @@
 
 	* src/tail.c (tail_forever): Don't exit-nonzero when an attempt
 	to put a regular file in O_NONBLOCK mode fails with EPERM.
-	That happens on Linux when using tail -f on a file with the
-	append-only attribute.  Reported by Dean Gaudet.  For details,
+	That happens on Linux (up to 2.6.15) when using tail -f on a file with
+	the append-only attribute.  Reported by Dean Gaudet.  For details,
 	see http://savannah.gnu.org/bugs/?func=detailitem&item_id=15473.
 	* NEWS: Mention this fix.
 	* tests/tail-2/append-only: New file.  Test for the above.
