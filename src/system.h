@@ -156,6 +156,11 @@ initialize_exit_failure (int status)
 # define R_OK 4
 #endif
 
+#if !defined O_DIRECT && defined O_DIRECTIO
+/* Tru64 spells it `O_DIRECTIO'.  */
+# define O_DIRECT O_DIRECTIO
+#endif
+
 #if !defined O_DIRECT
 # define O_DIRECT 0
 #endif
