@@ -2,6 +2,9 @@
 
 	* Version 6.0-cvs.
 
+	* src/system.h (!defined O_DIRECT): If O_DIRECTIO is defined (as it
+	is on Tru64), define O_DIRECT to that.  Patch From James Lemley.
+
 	* tests/help-version (expected_failure_status_vdir):
 	Redirect an expected disk-full diagnostic to /dev/null.
 
