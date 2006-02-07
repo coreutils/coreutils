@@ -16,7 +16,8 @@ expected_failure_status_vdir=2
 
 case "$all_programs" in
   *groups*)
-    if test -w /dev/full && test -c /dev/full && echo > /dev/full 2>&1; then
+    if test -w /dev/full && test -c /dev/full \
+	&& echo > /dev/full 2>/dev/null; then
       cat 1>&2 <<\EOF
 ************************************************
 WARNING: On this system, the built-in echo function of /bin/sh
