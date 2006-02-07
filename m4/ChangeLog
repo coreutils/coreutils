@@ -47,9 +47,10 @@
 
 	* ls-mntd-fs.m4 (AC_FUNC_GETMNTENT): Invoke AC_CHECK_FUNCS(getmntent)
 	unconditionally so that tests of $ac_cv_func_getmntent (e.g., in
-	gl_LIST_MOUNTED_FILE_SYSTEMS) need not double-quote uses that variable,
-	to accommodate the rare case in which getmntent is available in none
-	of the libraries checked.  This happens at least on FreeBSD 5.0.
+	gl_LIST_MOUNTED_FILE_SYSTEMS) need not double-quote uses of that
+	variable, to accommodate the rare case in which getmntent is
+	available in none of the libraries checked.  This happens at
+	least on FreeBSD 5.0.
 
 2006-01-11  Paul Eggert  <eggert@cs.ucla.edu>
 
