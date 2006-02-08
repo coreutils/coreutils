@@ -1,4 +1,9 @@
-2006-02-02  Jim Meyering  <jim@meyering.net>
+2006-02-07  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* closeout.c (close_stdout): Don't assume 'bool' converts nonzero
+	ints to 0 or 1, as this isn't true for the stdbool.h substitute.
+
+006-02-02  Jim Meyering  <jim@meyering.net>
 
 	Eliminate the unwelcome (albeit unlikely) possibility of xmalloc
 	failure on deficient systems, and simplify gnulib lgpl dependencies.

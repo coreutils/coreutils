@@ -1,7 +1,7 @@
 /* closeout.c - close standard output
 
-   Copyright (C) 1998, 1999, 2000, 2001, 2002, 2004 Free Software
-   Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000, 2001, 2002, 2004, 2006 Free
+   Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -73,9 +73,9 @@ close_stdout_set_file_name (const char *file)
 void
 close_stdout (void)
 {
-  bool prev_fail = ferror (stdout);
-  bool none_pending = (0 == __fpending (stdout));
-  bool fclose_fail = fclose (stdout);
+  bool none_pending = (__fpending (stdout) == 0);
+  bool prev_fail = (ferror (stdout) != 0);
+  bool fclose_fail = (fclose (stdout) != 0);
 
   if (prev_fail || fclose_fail)
     {
