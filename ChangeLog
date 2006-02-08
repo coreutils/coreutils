@@ -1,6 +1,14 @@
-2006-02-07  Jim Meyering  <jim@meyering.net>
+2006-02-08  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* Makefile.maint (local-checks-available): Define in terms of
+	the expansion, $(syntax-check-rules), rather than the single,
+	top-level target `syntax-check', so that it's easier to exclude
+	individual rules (via $(local-checks-to-skip)).
+	(tgz-md5, tgz-sha1, ...): Remove now-unused definitions.
+
+2006-02-07  Jim Meyering  <jim@meyering.net>
 
 	* src/system.h (!defined O_DIRECT): If O_DIRECTIO is defined (as it
 	is on Tru64), define O_DIRECT to that.  Patch From James Lemley.
