@@ -24,7 +24,9 @@
 ME := Makefile.maint
 
 # Do not save the original name or timestamp in the .tar.gz file.
-GZIP_ENV = '--no-name --best --rsyncable'
+gzip_rsyncable := \
+  $(shell gzip --help|grep rsyncable >/dev/null && echo --rsyncable)
+GZIP_ENV = '--no-name --best $(gzip_rsyncable)'
 
 CVS = cvs
 
