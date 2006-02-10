@@ -1,6 +1,12 @@
-2006-02-08  Jim Meyering  <jim@meyering.net>
+2006-02-10  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	Use gzip's --rsyncable option only if it's available.
+	* Makefile.maint (gzip_rsyncable): New variable.
+	(GZIP_ENV): Use it.
+
+2006-02-08  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.maint (local-checks-available): Define in terms of
 	the expansion, $(syntax-check-rules), rather than the single,
