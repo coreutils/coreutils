@@ -1,6 +1,37 @@
-2006-02-10  Jim Meyering  <jim@meyering.net>
+2006-02-10  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 6.0-cvs.
+
+	* Makefile.maint (CVS_LIST): Don't assume cvsu is available.
+	(CVS_LIST_EXCEPT): New macro, to simplify exception-processing.
+	Most uses of CVS_LIST changed to use CVS_LIST_EXCEPT.
+	(syntax-check-rules): Bring back sc_changelong.  (Hmm, why did it
+	go away? was that an accident?)
+	(sc_cast_of_argument_to_free, sc_cast_of_x_alloc_return_value):
+	(sc_cast_of_alloca_return_value, sc_space_tab, sc_prohibit_atoi_atof):
+	(sc_error_exit_success, sc_file_system, sc_no_if_have_config_h):
+	(sc_system_h_headers, sc_sun_os_names, sc_trailing_blank):
+	(sc_two_space_separator_in_usage, sc_unmarked_diagnostics):
+	(sc_obsolete_symbols, sc_changelog, sc_prohibit_jm_in_m4):
+	(sc_useless_cpp_parens, makefile-check, m4-check, po-check):
+	(author_mark_check, makefile_path_separator_check):
+	Output line numbers, to simplify navigation of Emacs *compilation*
+	buffers.
+	(sc_prohibit_atoi_atof, sc_file_system):
+	Rework slightly so that Makefile.maint doesn't get reported as a
+	violation of its own syntax rules.
+	(sc_dd_max_sym_length): Use ifneq to do nothing, instead of doing
+	it at run-time (which didn't work with Bison).  Fix a makefile typo,
+	caught by Makefile.maint itself: spaces where a tab should be.
+	(po-check): Check lib/*.[ch] even if not in CVS; used by Bison,
+	which copies from ../gnulib/lib/*.[ch] to lib/*.[ch].
+	Ignore djgpp and man subdirectories, to avoid false matches with
+	Bison and coreutils, respectively.  Use sort -u to remove the
+	resulting duplicates.
+	* gnupload: Rework slightly to avoid bogus warning from
+	sc_two_space_separator_in_usage.
+
+2006-02-10  Jim Meyering  <jim@meyering.net>
 
 	Use gzip's --rsyncable option only if it's available.
 	* Makefile.maint (gzip_rsyncable): New variable.
