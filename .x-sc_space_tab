@@ -8,3 +8,4 @@ m4/lib-ld.m4
 m4/lib-prefix.m4
 m4/po.m4
 aclocal.m4
+src/c99-to-c98.diff
