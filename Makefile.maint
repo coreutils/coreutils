@@ -92,29 +92,7 @@ local-checks-available = \
 local-check = $(filter-out $(local-checks-to-skip), $(local-checks-available))
 
 .PHONY: $(syntax-check-rules)
-syntax-check-rules = \
-  sc_cast_of_argument_to_free \
-  sc_cast_of_x_alloc_return_value \
-  sc_cast_of_alloca_return_value \
-  sc_changelog \
-  sc_dd_max_sym_length \
-  sc_error_exit_success \
-  sc_file_system \
-  sc_no_if_have_config_h \
-  sc_obsolete_symbols \
-  sc_prohibit_atoi_atof \
-  sc_prohibit_jm_in_m4 \
-  sc_prohibit_assert_without_use \
-  sc_require_config_h \
-  sc_root_tests \
-  sc_space_tab \
-  sc_sun_os_names \
-  sc_system_h_headers \
-  sc_tight_scope \
-  sc_trailing_blank \
-  sc_two_space_separator_in_usage \
-  sc_unmarked_diagnostics \
-  sc_useless_cpp_parens
+syntax-check-rules := $(shell sed -n 's/^\(sc_[a-zA-Z0-9_-]*\):.*/\1/p' $(ME))
 
 syntax-check: $(syntax-check-rules)
 #	@grep -nE '#  *include <(limits|std(def|arg|bool))\.h>'		\
