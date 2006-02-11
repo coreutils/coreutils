@@ -4,6 +4,7 @@
 
 	* .x-po-check: New file, with exclusions so that `make distcheck'
 	passes once again.
+	* Makefile.am (EXTRA_DIST): Add .x-po-check.
 
 	rm -r must remove an empty directory, even if it is inaccessible.
 	* src/remove.c (close_preserve_errno): New function.
