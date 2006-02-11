@@ -1,6 +1,11 @@
-2006-02-10  Paul Eggert  <eggert@cs.ucla.edu>
+2006-02-11  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* Makefile.maint (syntax-check-rules): Automatically derive this
+	list of sc_-prefixed rule names.
+
+2006-02-10  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Makefile.maint (CVS_LIST): Don't assume cvsu is available.
 	(CVS_LIST_EXCEPT): New macro, to simplify exception-processing.
