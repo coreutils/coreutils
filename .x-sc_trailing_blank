@@ -3,4 +3,4 @@ Makefile\.in$
 ^config-log/
 ^build-aux/texinfo\.tex$
 \.gdb-history$
-src/c99-to-c89.diff
+^src/c99-to-c89\.diff
