@@ -2,6 +2,15 @@
 
 	* Version 6.0-cvs.
 
+	rm -r must remove an empty directory, even if it is inaccessible.
+	* src/remove.c (close_preserve_errno): New function.
+	(fd_to_subdirp): Don't print a diagnostic in this function.
+	Do it from the callers instead, unless rmdir succeeds.
+	(remove_cwd_entries, remove_dir): Adjust callers.
+	* tests/rm/empty-inacc: New test for the above.
+	* tests/rm/Makefile.am (TESTS): Add empty-inacc.
+	* NEWS: Mention this bug fix.
+
 	* Makefile.maint (syntax-check-rules): Automatically derive this
 	list of sc_-prefixed rule names.
 
