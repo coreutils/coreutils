@@ -2,6 +2,9 @@
 
 	* Version 6.0-cvs.
 
+	* .x-po-check: New file, with exclusions so that `make distcheck'
+	passes once again.
+
 	rm -r must remove an empty directory, even if it is inaccessible.
 	* src/remove.c (close_preserve_errno): New function.
 	(fd_to_subdirp): Don't print a diagnostic in this function.
