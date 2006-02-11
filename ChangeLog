@@ -3,7 +3,7 @@
 	* Version 6.0-cvs.
 
 	* src/c99-to-c89.diff: New file.
-	* src/Makefile.am (EXTRA_DIST): Add c99-to-c98.diff.
+	* src/Makefile.am (EXTRA_DIST): Add c99-to-c89.diff.
 
 	* .x-po-check: New file, with exclusions so that `make distcheck'
 	passes once again.
