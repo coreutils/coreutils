@@ -17,6 +17,9 @@
 	* tests/rm/empty-inacc: New test for the above.
 	* tests/rm/Makefile.am (TESTS): Add empty-inacc.
 	* NEWS: Mention this bug fix.
+	* tests/rm/rm2: Adjust two expected diagnostics, now that they're
+	a tiny bit less precise: cannot remove `a/1': ... instead of
+	cannot open directory `a/1': ...
 
 	* Makefile.maint (syntax-check-rules): Automatically derive this
 	list of sc_-prefixed rule names.
