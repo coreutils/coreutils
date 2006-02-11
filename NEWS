@@ -1,6 +1,6 @@
 GNU coreutils NEWS                                    -*- outline -*-
 
-* Major changes in release 6.0-cvs (????-??-??) [unstable]
+* Major changes in release 6.0-cvs (2006-??-??) [unstable]
 
 ** Improved robustness
 
@@ -92,6 +92,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   all command-line arguments.
 
   rm is no longer susceptible to a few low-probability memory leaks.
+
+  rm -r no longer fails to remove an inaccessible and empty directory
 
   sort would fail for large inputs (~50MB) on systems with a buggy
   mkstemp function.  sort and tac now use the replacement mkstemp
