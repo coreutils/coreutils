@@ -35,8 +35,8 @@ fail=0
 # Both of these should fail.
 rm -rf a b > out 2>&1 && fail=1
 cat <<\EOF > exp
-rm: cannot open directory `a/1': Permission denied
-rm: cannot open directory `b': Permission denied
+rm: cannot remove `a/1': Permission denied
+rm: cannot remove `b': Permission denied
 EOF
 
 cat <<\EOF > exp-solaris
