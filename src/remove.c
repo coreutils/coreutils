@@ -142,6 +142,16 @@ struct dirstack_state
 };
 typedef struct dirstack_state Dirstack_state;
 
+/* Just like close(fd), but don't modify errno. */
+static inline int
+close_preserve_errno (int fd)
+{
+  int saved_errno = errno;
+  int result = close (fd);
+  errno = saved_errno;
+  return result;
+}
+
 static void
 hash_freer (void *x)
 {
@@ -997,29 +1007,22 @@ fd_to_subdirp (int fd_cwd, char const *f,
      to detect directory cycles.  */
   if (fd_sub < 0 || fstat (fd_sub, subdir_sb) != 0)
     {
-      if (errno != ENOENT || !x->ignore_missing_files)
-	error (0, errno,
-	       _("cannot remove %s"), quote (full_filename (f)));
       if (0 <= fd_sub)
-	close (fd_sub);
+	close_preserve_errno (fd_sub);
       return NULL;
     }
 
   if (! S_ISDIR (subdir_sb->st_mode))
     {
-      error (0, prev_errno ? prev_errno : ENOTDIR, _("cannot remove %s"),
-	     quote (full_filename (f)));
-      close (fd_sub);
+      errno = prev_errno ? prev_errno : ENOTDIR;
+      close_preserve_errno (fd_sub);
       return NULL;
     }
 
   DIR *subdir_dirp = fdopendir (fd_sub);
   if (subdir_dirp == NULL)
     {
-      if (errno != ENOENT || !x->ignore_missing_files)
-	error (0, errno, _("cannot open directory %s"),
-	       quote (full_filename (f)));
-      close (fd_sub);
+      close_preserve_errno (fd_sub);
       return NULL;
     }
 
@@ -1110,6 +1113,11 @@ remove_cwd_entries (DIR **dirp,
 					      x, errno, subdir_sb, ds, NULL);
 	    if (subdir_dirp == NULL)
 	      {
+		/* CAUTION: this test and diagnostic are identical those
+		   following the other use of fd_to_subdirp.  */
+		if (errno != ENOENT || !x->ignore_missing_files)
+		  error (0, errno,
+			 _("cannot remove %s"), quote (full_filename (f)));
 		AD_mark_as_unremovable (ds, f);
 		status = RM_ERROR;
 		break;
@@ -1188,7 +1196,26 @@ remove_dir (int fd_cwd, Dirstack_state *ds, char const *dir,
   DIR *dirp = fd_to_subdirp (fd_cwd, dir, x, 0, &dir_sb, ds, cwd_errno);
 
   if (dirp == NULL)
-    return RM_ERROR;
+    {
+      int saved_errno = errno;
+      if (errno == EACCES)
+	{
+	  /* If fd_to_subdirp fails due to permissions, then try to
+	     remove DIR via rmdir, in case it's just an empty directory.  */
+	  if (rmdir (dir) == 0)
+	    return RM_OK;
+
+	  errno = saved_errno;
+	}
+
+      /* CAUTION: this test and diagnostic are identical those
+	 following the other use of fd_to_subdirp.  */
+      if (errno != ENOENT || !x->ignore_missing_files)
+	error (0, errno,
+	       _("cannot remove %s"), quote (full_filename (dir)));
+
+      return RM_ERROR;
+    }
 
   if (ROOT_DEV_INO_CHECK (x->root_dev_ino, &dir_sb))
     {
