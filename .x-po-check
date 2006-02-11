@@ -1,0 +1,3 @@
+ChangeLog(-[0-9]+)?$
+^old/
+^src/c99-to-c98\.diff$
