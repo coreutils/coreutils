@@ -1,6 +1,5 @@
 2006-02-11  Jim Meyering  <jim@meyering.net>
 
-
 	* Version 6.0-cvs.
 
 	* src/c99-to-c98.diff: New file.
