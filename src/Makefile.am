@@ -46,7 +46,7 @@ noinst_HEADERS = \
   wheel.h
 
 EXTRA_DIST = dcgen dircolors.hin rand-isaac.c tac-pipe.c \
-  groups.sh wheel-gen.pl extract-magic c99-to-c98.diff
+  groups.sh wheel-gen.pl extract-magic c99-to-c89.diff
 CLEANFILES = $(SCRIPTS) su
 
 AM_CPPFLAGS = -I.. -I$(srcdir) -I$(top_srcdir)/lib -I../lib
