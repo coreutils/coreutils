@@ -65,7 +65,7 @@ bin_PROGRAMS = [$(EXEEXT) chgrp$(EXEEXT) chown$(EXEEXT) chmod$(EXEEXT) \
 noinst_PROGRAMS = setuidgid$(EXEEXT)
 subdir = src
 DIST_COMMON = $(noinst_HEADERS) $(srcdir)/Makefile.am \
-	$(srcdir)/Makefile.in
+	$(srcdir)/Makefile.in TODO
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/afs.m4 \
 	$(top_srcdir)/m4/alloca.m4 $(top_srcdir)/m4/allocsa.m4 \
@@ -838,7 +838,7 @@ noinst_HEADERS = \
   wheel.h
 
 EXTRA_DIST = dcgen dircolors.hin rand-isaac.c tac-pipe.c \
-  groups.sh wheel-gen.pl extract-magic
+  groups.sh wheel-gen.pl extract-magic c99-to-c89.diff
 
 CLEANFILES = $(SCRIPTS) su
 AM_CPPFLAGS = -I.. -I$(srcdir) -I$(top_srcdir)/lib -I../lib
