@@ -1113,8 +1113,8 @@ remove_cwd_entries (DIR **dirp,
 					      x, errno, subdir_sb, ds, NULL);
 	    if (subdir_dirp == NULL)
 	      {
-		/* CAUTION: this test and diagnostic are identical those
-		   following the other use of fd_to_subdirp.  */
+		/* CAUTION: this test and diagnostic are identical to
+		   those following the other use of fd_to_subdirp.  */
 		if (errno != ENOENT || !x->ignore_missing_files)
 		  error (0, errno,
 			 _("cannot remove %s"), quote (full_filename (f)));
