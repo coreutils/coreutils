@@ -1,6 +1,11 @@
-2006-02-11  Jim Meyering  <jim@meyering.net>
+2006-02-12  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* Makefile.maint (patch-check): New target.
+	(local-checks-available): Add to the list.
+
+2006-02-11  Jim Meyering  <jim@meyering.net>
 
 	* src/c99-to-c89.diff: New file.
 	* src/Makefile.am (EXTRA_DIST): Add c99-to-c89.diff.
