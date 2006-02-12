@@ -1,3 +1,11 @@
+2006-02-12  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi (Character sets): Don't say that an unknown
+	backslash-escape causes an error message -- it doesn't.
+	Mention that `\' also removes any special significance, so
+	is useful for [, ], *, -.  Prompted by Richard Neill in
+	http://savannah.gnu.org/bugs/index.php?func=detailitem&item_id=14937
+
 2006-02-01  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (od invocation): Warn that -t a ignores the high
