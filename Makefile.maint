@@ -84,7 +84,7 @@ export LC_ALL = C
 # new ChangeLog entries.
 local-checks-available = \
   po-check copyright-check writable-files m4-check author_mark_check \
-  changelog-check strftime-check $(syntax-check-rules) \
+  changelog-check patch-check strftime-check $(syntax-check-rules) \
   makefile_path_separator_check \
   makefile-check
 .PHONY: $(local-checks-available)
@@ -284,6 +284,14 @@ sc_useless_cpp_parens:
 	@grep -n '^# *if .*defined *(' $$($(CVS_LIST_EXCEPT)) &&	\
 	  { echo '$(ME): found useless parentheses in cpp directive'	\
 		1>&2; exit 1; } || :
+
+# Ensure that the c99-to-c89 patch applies cleanly.
+# For now, it affects only remove.c.  Eventually, we'll probably
+# have to copy all of src/ before running patch.
+patch-check:
+	cp src/remove.c tmp-remove.c
+	patch -V never --fuzz=0 tmp-remove.c src/c99-to-c89.diff
+	rm -f tmp-remove.c
 
 # Ensure that date's --help output stays in sync with the info
 # documentation for GNU strftime.  The only exception is %N,
