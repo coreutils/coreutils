@@ -4934,8 +4934,7 @@ used only in @var{set1} or @var{set2}, as noted below.
 @item Backslash escapes
 @cindex backslash escapes
 
-A backslash followed by a character not listed below is interpreted
-as that character.
+The following backslash escape sequences are recognized:
 
 @table @samp
 @item \a
@@ -4958,6 +4957,11 @@ octal digits,
 @item \\
 A backslash.
 @end table
+
+While a backslash followed by a character not listed above is
+interpreted as that character, the backslash also effectively
+removes any special significance, so it is useful to escape
+@samp{[}, @samp{]}, @samp{*}, and @samp{-}.
 
 @item Ranges
 @cindex ranges
