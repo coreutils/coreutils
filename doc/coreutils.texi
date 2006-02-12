@@ -4934,8 +4934,8 @@ used only in @var{set1} or @var{set2}, as noted below.
 @item Backslash escapes
 @cindex backslash escapes
 
-A backslash followed by a character not listed below causes an error
-message.
+A backslash followed by a character not listed below is interpreted
+as that character.
 
 @table @samp
 @item \a
