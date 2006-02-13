@@ -12,7 +12,8 @@ Changes in release 2.1
   dependent.  Set _POSIX2_VERSION=199209 to cause the utilities to support
   obsolete usage like "sort +1".
 * The following obsolete usages are no longer supported when conforming
-  to POSIX 1003.1-2001, which prohibits most digit-string options:
+  to POSIX 1003.1-2001, which (at the time this change was made) was thought
+  to say that implementations must reject most digit-string options:
     expand -N	(instead, use expand -t N)
     head -N	(instead, use head -c N or head -n N)
     fold -N	(instead, use fold -w N)
@@ -21,16 +22,18 @@ Changes in release 2.1
     unexpand -N	(instead, use unexpand --first-only -t N)
     uniq -N	(instead, use uniq -f N)
   The following obsolete usages (options without arguments) are no
-  longer supported when conforming to POSIX 1003.1-2001, which
-  prohibits most options with optional arguments:
+  longer supported when conforming to POSIX 1003.1-2001, which (at the
+  time this change was made) was thought to say that implementations must
+  reject options with optional arguments:
     od -s	(instead, use od --strings)
     od -w	(instead, use od --width)
     pr -S	(instead, use pr --sep-string)
 [2.0.20]
 * tr no longer gets failed a assertion for [==] or [::]
 * The following obsolete usages are no longer supported when conforming
-  to POSIX 1003.1-2001, which prohibits most options with leading "+":
-    sort +POS1 -POS2	(instead, use sort -k)
+  to POSIX 1003.1-2001, which says that arguments with leading "+"
+  are file names in these contexts:
+    sort +POS1		(instead, use sort -k)
     tail +N		(instead, use tail -c +N or tail -n +N)
     uniq +N		(instead, use uniq -s N)
 * Warnings are issued for obsolete usages on older hosts,
