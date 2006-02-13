@@ -1,6 +1,10 @@
-2006-02-12  Jim Meyering  <jim@meyering.net>
+2006-02-13  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* GNUmakefile (all): Emit diagnostics to stderr, not stdout.
+
+2006-02-12  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.maint (patch-check): New target.
 	(local-checks-available): Add to the list.
