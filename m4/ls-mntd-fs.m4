@@ -1,4 +1,4 @@
-#serial 20
+#serial 21
 # How to list mounted file systems.
 
 # Copyright (C) 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2006 Free Software

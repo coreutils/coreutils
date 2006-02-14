@@ -1,3 +1,26 @@
+2006-02-14  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* vasnprintf.c (VASNPRINTF): Rewrite the computation so that we
+	need not use xsum.
+
+2006-02-14  Bruno Haible  <bruno@clisp.org>
+
+	Sync from gnulib.
+
+	* vasnprintf.c (VASNPRINTF): In the computation of the size of the
+	temporary buffer for sprintf, take into account the precision also
+	for 'd', 'i', 'u', 'o', 'x', 'X'.
+
+2006-02-14  Simon Josefsson  <jas@extundo.com>
+
+	Sync from gnulib.
+
+	* getaddrinfo.h: Define EAI_ADDRFAMILY and EAI_SYSTEM if not set,
+	for mingw32.
+
+	* gai_strerror.c, getaddrinfo.h: Protect netdb.h #include (for
+	mingw32).
+
 2006-02-07  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* closeout.c (close_stdout): Don't assume 'bool' converts nonzero

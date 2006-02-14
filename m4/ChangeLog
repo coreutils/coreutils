@@ -1,3 +1,11 @@
+2006-02-14  Simon Josefsson  <jas@extundo.com>
+
+	Sync from gnulib.
+	* getaddrinfo.m4: Look for getaddrinfo inside ws2tcip.h and
+	-lws2_32.  Protect sys/socket.h and netdb.h #include's.  Include
+	ws2tcpip.h with WINVER=0x0501.  All for mingw32.
+	* socklen.m4: Look in ws2tcpip.h too, for mingw32.
+
 2006-02-05  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* extensions.m4 (gl_USE_SYSTEM_EXTENSIONS): Don't #define

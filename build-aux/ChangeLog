@@ -1,3 +1,7 @@
+2006-02-14  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* install-sh: Update from gnulib.
+
 2006-01-31  Jim Meyering  <jim@meyering.net>
 
 	* config.guess, missing, texinfo.tex: Update from gnulib.
