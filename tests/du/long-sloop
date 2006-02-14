@@ -53,7 +53,7 @@ file=1`printf %${n}s ' '|sed 's, ,/s,g'`
 cat $file > /dev/null 2> err && \
   {
     cat <<EOF >&2
-$0: Your systems appears to be able to handle more than $n symlinks
+$0: Your system appears to be able to handle more than $n symlinks
 in file name resolution, so skipping this test.
 EOF
     (exit 77); exit 77
