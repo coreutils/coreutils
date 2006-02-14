@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2006-01-27.14}
+\def\texinfoversion{2006-02-13.16}
 %
 % Copyright (C) 1985, 1986, 1988, 1990, 1991, 1992, 1993, 1994, 1995,
 % 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006 Free
@@ -2957,6 +2957,7 @@ where each line of input produces a line of output.}
 
 \def\doignore#1{\begingroup
   % Scan in ``verbatim'' mode:
+  \obeylines
   \catcode`\@ = \other
   \catcode`\{ = \other
   \catcode`\} = \other
@@ -2977,19 +2978,16 @@ where each line of input produces a line of output.}
   \gdef\dodoignore#1{%
     % #1 contains the command name as a string, e.g., `ifinfo'.
     %
-    % Define a command to find the next `@end #1', which must be on a line
-    % by itself.  Ignore anything after the `#1'; this matters in
-    % verbatim environments, where otherwise the newline after an
-    % ignored conditional would result in a blank line in the output.
-    \long\def\doignoretext##1^^M@end #1##2^^M{%
+    % Define a command to find the next `@end #1'.
+    \long\def\doignoretext##1^^M@end #1{%
       \doignoretextyyy##1^^M@#1\_STOP_}%
+    %
     % And this command to find another #1 command, at the beginning of a
     % line.  (Otherwise, we would consider a line `@c @ifset', for
     % example, to count as an @ifset for nesting.)
     \long\def\doignoretextyyy##1^^M@#1##2\_STOP_{\doignoreyyy{##2}\_STOP_}%
     %
     % And now expand that command.
-    \obeylines %
     \doignoretext ^^M%
   }%
 }
@@ -3019,7 +3017,12 @@ where each line of input produces a line of output.}
 }
 
 % Finish off ignored text.
-\def\enddoignore{\endgroup\ignorespaces}
+{ \obeylines%
+  % Ignore anything after the last `@end #1'; this matters in verbatim
+  % environments, where otherwise the newline after an ignored conditional
+  % would result in a blank line in the output.
+  \gdef\enddoignore#1^^M{\endgroup\ignorespaces}%
+}
 
 
 % @set VAR sets the variable VAR to an empty value.
