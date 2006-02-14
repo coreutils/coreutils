@@ -1,6 +1,10 @@
-2006-02-13  Jim Meyering  <jim@meyering.net>
+2006-02-14  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* INSTALL: Update from gnulib.
+
+2006-02-13  Jim Meyering  <jim@meyering.net>
 
 	* GNUmakefile (all): Emit diagnostics to stderr, not stdout.
 
