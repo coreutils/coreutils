@@ -1,6 +1,11 @@
-2006-02-14  Jim Meyering  <jim@meyering.net>
+2006-02-15  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* Makefile.maint (alpha beta major): For `make major', ensure that the
+	version string is of the form N.N[.N]*, where N is one or more digits.
+
+2006-02-14  Jim Meyering  <jim@meyering.net>
 
 	* INSTALL: Update from gnulib.
 
