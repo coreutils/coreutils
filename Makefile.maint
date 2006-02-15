@@ -616,6 +616,10 @@ $(xd-delta): $(release_archive_dir)/$(prev-tgz) $(distdir).tar.gz
 
 .PHONY: alpha beta major
 alpha beta major: news-date-check $(local-check)
+	test $@ = major						\
+	  && { echo $(VERSION) | grep -E '^[0-9]+(\.[0-9]+)+$$'	\
+	       || { echo "invalid version string: $(VERSION)" 1>&2; exit 1; }}\
+	  || :
 	$(MAKE) cvs-dist
 	$(MAKE) $(xd-delta)
 	$(MAKE) -s announcement RELEASE_TYPE=$@ > /tmp/announce-$(my_distdir)
