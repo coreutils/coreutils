@@ -1,3 +1,11 @@
+2006-02-17  Jim Meyering  <jim@meyering.net>
+
+	* openat.c: Include lstat.h, so that uses of lstat are converted
+	to uses of rpl_lstat, e.g., on Solaris 9.  Otherwise, programs like
+	du (which now uses the openat-enabled fts and hence fstatat) would
+	mistakenly fail to dereference a symlink-to-directory specified
+	with a trailing slash.
+
 2006-02-14  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* vasnprintf.c (VASNPRINTF): Rewrite the computation so that we
