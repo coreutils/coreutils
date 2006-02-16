@@ -29,6 +29,7 @@
 
 #include "dirname.h" /* solely for definition of IS_ABSOLUTE_FILE_NAME */
 #include "fcntl--.h"
+#include "lstat.h"
 #include "openat-priv.h"
 #include "save-cwd.h"
 #include "unistd--.h"
