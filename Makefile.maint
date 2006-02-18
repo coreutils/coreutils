@@ -262,8 +262,12 @@ sc_trailing_blank:
 	  { echo '$(ME): found trailing blank(s)'			\
 		1>&2; exit 1; } || :
 
+# Match lines like the following, but where there is only one space
+# between the options and the description:
+#   -D, --all-repeated[=delimit-method]  print all duplicate lines\n
+longopt_re = --[a-z][0-9A-Za-z-]*(\[=[0-9A-Za-z-]*\])?
 sc_two_space_separator_in_usage:
-	@grep -n '^   *--[a-z][0-9A-Za-z-]* [^ ].*\\$$'			\
+	@grep -nE '^   *(-[A-Za-z],)? $(longopt_re) [^ ].*\\$$'		\
 	    $$($(CVS_LIST_EXCEPT)) &&					\
 	  { echo "$(ME): help2man requires at least two spaces between"; \
 	    echo "$(ME): an option and its description"; \
