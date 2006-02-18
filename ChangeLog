@@ -1,6 +1,20 @@
-2006-02-15  Jim Meyering  <jim@meyering.net>
+2006-02-18  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* Makefile.maint (sc_two_space_separator_in_usage): Make the regular
+	expression match more of the target lines, e.g., those that start with
+	`-S,' (short option followed by a comma) or that include `=[...]'.
+	Patch by Nicolas François.
+	Fix the four offenders thus exposed:
+	* src/join.c (usage): Use two spaces (not one) to separate the
+	--first-only option string from its description, so help2man formats
+	the derived man page properly.
+	* src/pr.c (usage): Likewise.
+	* src/uniq.c (usage): Likewise.
+	* src/install.c (usage): Likewise.
+
+2006-02-15  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.maint (alpha beta major): For `make major', ensure that the
 	version string is of the form N.N[.N]*, where N is one or more digits.
