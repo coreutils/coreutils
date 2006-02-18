@@ -1,5 +1,5 @@
 /* join - join lines of two files on a common field
-   Copyright (C) 91, 1995-2005 Free Software Foundation, Inc.
+   Copyright (C) 91, 1995-2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -145,7 +145,7 @@ by whitespace.  When FILE1 or FILE2 (not both) is -, read standard input.\n\
   -e EMPTY          replace missing input fields with EMPTY\n\
 "), stdout);
       fputs (_("\
-  -i, --ignore-case ignore differences in case when comparing fields\n\
+  -i, --ignore-case  ignore differences in case when comparing fields\n\
   -j FIELD          equivalent to `-1 FIELD -2 FIELD'\n\
   -o FORMAT         obey FORMAT while constructing output line\n\
   -t CHAR           use CHAR as input and output field separator\n\

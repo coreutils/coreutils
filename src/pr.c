@@ -1,5 +1,5 @@
 /* pr -- convert text files for printing.
-   Copyright (C) 88, 91, 1995-2005 Free Software Foundation, Inc.
+   Copyright (C) 88, 91, 1995-2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -2848,7 +2848,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
                     separate columns by STRING,\n\
                     without -S: Default separator <TAB> with -J and <space>\n\
                     otherwise (same as -S\" \"), no effect on column options\n\
-  -t, --omit-header omit page headers and trailers\n\
+  -t, --omit-header  omit page headers and trailers\n\
 "), stdout);
       fputs (_("\
   -T, --omit-pagination\n\
