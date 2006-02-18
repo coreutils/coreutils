@@ -1,5 +1,5 @@
 /* uniq -- remove duplicate lines from a sorted file
-   Copyright (C) 86, 91, 1995-2005 Free Software Foundation, Inc.
+   Copyright (C) 86, 91, 1995-2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -149,7 +149,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -d, --repeated        only print duplicate lines\n\
 "), stdout);
      fputs (_("\
-  -D, --all-repeated[=delimit-method] print all duplicate lines\n\
+  -D, --all-repeated[=delimit-method]  print all duplicate lines\n\
                         delimit-method={none(default),prepend,separate}\n\
                         Delimiting is done with blank lines.\n\
   -f, --skip-fields=N   avoid comparing the first N fields\n\
