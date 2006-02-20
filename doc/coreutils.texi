@@ -7327,10 +7327,16 @@ rm [@var{option}]@dots{} [@var{file}]@dots{}
 @end example
 
 @cindex prompting, and @command{rm}
-If a file is unwritable, standard input is a terminal, and the @option{-f}
-or @option{--force} option is not given, or the @option{-i} or
-@option{--interactive} option @emph{is} given, @command{rm} prompts the user
-for whether to remove the file.
+If the @option{-I} or @option{--interactive=once} option is given,
+and there are more than three files or the @option{-r}, @option{-R},
+or @option{--recursive} are given, then @command{rm} prompts the user
+for whether to proceed with the entire operation.  If the response is
+not affirmitive, the entire command is aborted.
+
+Otherwise, if a file is unwritable, standard input is a terminal, and
+the @option{-f} or @option{--force} option is not given, or the
+@option{-i} or @option{--interactive=always} option @emph{is} given,
+@command{rm} prompts the user for whether to remove the file.
 If the response is not affirmative, the file is skipped.
 
 @emph{Warning}: If you use @command{rm} to remove a file, it is usually
@@ -7349,12 +7355,37 @@ Ignore nonexistent files and never prompt the user.
 Ignore any previous @option{--interactive} (@option{-i}) option.
 
 @item -i
-@itemx --interactive
 @opindex -i
-@opindex --interactive
 Prompt whether to remove each file.
 If the response is not affirmative, the file is skipped.
 Ignore any previous @option{--force} (@option{-f}) option.
+Equivalent to @option{--interactive=always}.
+
+@item -I
+@opindex -I
+Prompt once whether to proceed with the command, if more than three
+files are named or if a recursive removal is requested.  Ignore any
+previous @option{--force} (@option{-f}) option.  Equivalent to
+@option{--interactive=once}.
+
+@itemx --interactive [=@var{when}]
+@opindex --interactive
+Specify when to issue an interactive prompt.  @var{when} may be
+omitted, or one of:
+@itemize @bullet
+@item never
+@vindex never @r{interactive option}
+- Do not prompt at all.
+@item once
+@vindex once @r{interactive option}
+- Prompt once if more than three files are named or if a recursive
+removal is requested.  Equivalent to @option{-I}.
+@item always
+@vindex always @r{interactive option}
+- Prompt for every file being removed.  Equivalent to @option{-i}.
+@end itemize
+Specifying @option{--interactive} and no @var{when} is equivalent to
+@option{--interactive=always}.
 
 @itemx --preserve-root
 @opindex --preserve-root
