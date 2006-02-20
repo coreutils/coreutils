@@ -49,6 +49,7 @@
 #include <assert.h>
 
 #include "system.h"
+#include "argmatch.h"
 #include "dirname.h"
 #include "error.h"
 #include "lstat.h"
@@ -56,6 +57,7 @@
 #include "quotearg.h"
 #include "remove.h"
 #include "root-dev-ino.h"
+#include "yesno.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "rm"
@@ -70,16 +72,24 @@ char *program_name;
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
 {
-  NO_PRESERVE_ROOT = CHAR_MAX + 1,
+  INTERACTIVE_OPTION = CHAR_MAX + 1,
+  NO_PRESERVE_ROOT,
   PRESERVE_ROOT,
   PRESUME_INPUT_TTY_OPTION
 };
+
+enum interactive_type
+  {
+    interactive_never,		/* 0: no option or --interactive=never */
+    interactive_once,		/* 1: -I or --interactive=once */
+    interactive_always		/* 2: default, -i or --interactive=always */
+  };
 
 static struct option const long_opts[] =
 {
   {"directory", no_argument, NULL, 'd'},
   {"force", no_argument, NULL, 'f'},
-  {"interactive", no_argument, NULL, 'i'},
+  {"interactive", optional_argument, NULL, INTERACTIVE_OPTION},
 
   {"no-preserve-root", no_argument, NULL, NO_PRESERVE_ROOT},
   {"preserve-root", no_argument, NULL, PRESERVE_ROOT},
@@ -96,6 +106,20 @@ static struct option const long_opts[] =
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
 };
+
+static char const *const interactive_args[] =
+{
+  "never", "no", "none",
+  "once",
+  "always", "yes", NULL
+};
+static enum interactive_type const interactive_types[] =
+{
+  interactive_never, interactive_never, interactive_never,
+  interactive_once,
+  interactive_always, interactive_always
+};
+ARGMATCH_VERIFY (interactive_args, interactive_types);
 
 /* Advise the user about invalid usages like "rm -foo" if the file
    "-foo" exists, assuming ARGC and ARGV are as with `main'.  */
@@ -132,13 +156,19 @@ usage (int status)
 	     program_name);
   else
     {
-      char *base = base_name (program_name);
       printf (_("Usage: %s [OPTION]... FILE...\n"), program_name);
       fputs (_("\
 Remove (unlink) the FILE(s).\n\
 \n\
   -f, --force           ignore nonexistent files, never prompt\n\
-  -i, --interactive     prompt before any removal\n\
+  -i                    prompt before every removal\n\
+"), stdout);
+      fputs (_("\
+  -I                    prompt once before removing more than three files, or\n\
+                          when removing recursively.  Less intrusive than -i,\n\
+                          while still giving protection against most mistakes\n\
+      --interactive[=WHEN]  prompt according to WHEN: never, once (-I), or\n\
+                          always (-i).  Without WHEN, prompt always\n\
 "), stdout);
       fputs (_("\
       --no-preserve-root  do not treat `/' specially (the default)\n\
@@ -161,7 +191,7 @@ use one of these commands:\n\
 \n\
   %s ./-foo\n\
 "),
-	      base, base);
+	      program_name, program_name);
       fputs (_("\
 \n\
 Note that if you use rm to remove a file, it is usually possible to recover\n\
@@ -193,6 +223,7 @@ main (int argc, char **argv)
 {
   bool preserve_root = false;
   struct rm_options x;
+  bool prompt_once = false;
   int c;
 
   initialize_main (&argc, &argv);
@@ -205,7 +236,7 @@ main (int argc, char **argv)
 
   rm_option_init (&x);
 
-  while ((c = getopt_long (argc, argv, "dfirvR", long_opts, NULL)) != -1)
+  while ((c = getopt_long (argc, argv, "dfirvIR", long_opts, NULL)) != -1)
     {
       switch (c)
 	{
@@ -219,17 +250,55 @@ main (int argc, char **argv)
 	case 'f':
 	  x.interactive = false;
 	  x.ignore_missing_files = true;
+	  prompt_once = false;
 	  break;
 
 	case 'i':
 	  x.interactive = true;
 	  x.ignore_missing_files = false;
+	  prompt_once = false;
+	  break;
+
+	case 'I':
+	  x.interactive = false;
+	  x.ignore_missing_files = false;
+	  prompt_once = true;
 	  break;
 
 	case 'r':
 	case 'R':
 	  x.recursive = true;
 	  break;
+
+	case INTERACTIVE_OPTION:
+	  {
+	    int i;
+	    if (optarg)
+	      i = XARGMATCH ("--interactive", optarg, interactive_args,
+			     interactive_types);
+	    else
+	      i = interactive_always;
+	    switch (i)
+	      {
+	      case interactive_never:
+		x.interactive = false;
+		prompt_once = false;
+		break;
+
+	      case interactive_once:
+		x.interactive = false;
+		x.ignore_missing_files = false;
+		prompt_once = true;
+		break;
+
+	      case interactive_always:
+		x.interactive = true;
+		x.ignore_missing_files = false;
+		prompt_once = false;
+		break;
+	      }
+	    break;
+	  }
 
 	case NO_PRESERVE_ROOT:
 	  preserve_root = false;
@@ -279,6 +348,16 @@ main (int argc, char **argv)
     size_t n_files = argc - optind;
     char const *const *file = (char const *const *) argv + optind;
 
+    if (prompt_once && (x.recursive || 3 < n_files))
+      {
+	fprintf (stderr,
+		 (x.recursive
+		  ? _("%s: remove all arguments recursively? ")
+		  : _("%s: remove all arguments? ")),
+		 program_name);
+	if (!yesno ())
+	  exit (EXIT_SUCCESS);
+      }
     enum RM_status status = rm (n_files, file, &x);
     assert (VALID_STATUS (status));
     exit (status == RM_ERROR ? EXIT_FAILURE : EXIT_SUCCESS);
