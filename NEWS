@@ -26,6 +26,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   if your locale settings appear to be messed up.  This change
   attempts to have the default be the best of both worlds.
 
+  rm --interactive now takes an optional argument, although the
+  default of using no argument still acts like -i.
+
   mkfifo and mknod no longer set special mode bits (setuid, setgid,
   and sticky) with the -m option.
 
@@ -70,6 +73,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   dd's new iflag=noatime option causes it to read a file without
   updating its access time, on hosts that support this (currently only
   Linux kernels, version 2.6.8 and later).
+
+  rm now accepts the -I (--interactive=once) option.  This new option
+  prompts once if rm is invoked recursively or if more than three
+  files are being deleted, which is less intrusive than -i prompting
+  for every file, but provides almost the same level of protection
+  against mistakes.
 
   sort now accepts the --random-sort (-R) option and `R' ordering option,
   as well as the --seed=STRING option.
