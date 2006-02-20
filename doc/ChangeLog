@@ -1,3 +1,8 @@
+2006-02-20  Eric Blake  <ebb9@byu.net>
+
+	* coreutils.texi (rm invocation): Fix typo in last patch.
+	(paste invocation): Fix whitespace.
+
 2006-02-18  Eric Blake  <ebb9@byu.net>
 
 	* coreutils.texi (rm invocation): Document new -I option, and new

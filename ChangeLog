@@ -1,6 +1,10 @@
-2006-02-18  Eric Blake  <ebb9@byu.net>
+2006-02-20  Eric Blake  <ebb9@byu.net>
 
 	* Version 6.0-cvs.
+
+	* man/rm.x: Update documentation to match previous patch.
+
+2006-02-18  Eric Blake  <ebb9@byu.net>
 
 	New option for rm: --interactive=once (-I).
 	* NEWS: Document it, along with change to rm --interactive.
