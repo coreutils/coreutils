@@ -215,9 +215,3 @@ Adapt tools like wc, tr, fmt, etc. (most of the textutils) to be
   (preferably `no') cost when operating in single-byte mode.
 
 Remove all uses of the `register' keyword
-
-rm: add support for a -I option, like that from FreeBSD's rm:
-   -I    Request confirmation once if more than three files are being
-         removed or if a directory is being recursively removed.  This
-         is a far less intrusive option than -i yet provides almost
-         the same level of protection against mistakes.
