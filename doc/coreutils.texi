@@ -4679,7 +4679,7 @@ c
 $ paste num2 let3
 1       a
 2       b
-        c
+       @ c
 @end example
 
 Synopsis:
@@ -7331,7 +7331,7 @@ If the @option{-I} or @option{--interactive=once} option is given,
 and there are more than three files or the @option{-r}, @option{-R},
 or @option{--recursive} are given, then @command{rm} prompts the user
 for whether to proceed with the entire operation.  If the response is
-not affirmitive, the entire command is aborted.
+not affirmative, the entire command is aborted.
 
 Otherwise, if a file is unwritable, standard input is a terminal, and
 the @option{-f} or @option{--force} option is not given, or the
