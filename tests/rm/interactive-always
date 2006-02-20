@@ -1,0 +1,96 @@
+#!/bin/sh
+# Test the --interactive[=WHEN] changes added to coreutils 6.0
+
+test=interactive-always
+
+if test "$VERBOSE" = yes; then
+  set -x
+  rm --version
+fi
+
+. $srcdir/../lang-default
+
+pwd=`pwd`
+t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
+trap 'status=$?; cd $pwd; chmod -R u+rwx $t0; rm -rf $t0 && exit $status' 0
+trap '(exit $?); exit $?' 1 2 13 15
+
+framework_failure=0
+mkdir -p $tmp || framework_failure=1
+cd $tmp || framework_failure=1
+
+touch file1-1 file1-2 file2-1 file2-2 file3-1 file3-2 file4-1 file4-2 \
+  || framework_failure=1
+# If asked, answer no to first question, then yes to second.
+echo 'n
+y' > $test.I || framework_failure=1
+rm -f out err || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo "$0: failure in testing framework" 1>&2
+  (exit 1); exit 1
+fi
+
+fail=0
+
+# The prompt has a trailing space, and no newline, so an extra
+# 'echo .' is inserted after each rm to make it obvious what was asked.
+
+echo 'no WHEN' > err || fail=1
+rm -R --interactive file1-* < $test.I >> out 2>> err || fail=1
+echo . >> err || fail=1
+test -f file1-1 || fail=1
+test -f file1-2 && fail=1
+
+echo 'WHEN=never' >> err || fail=1
+rm -R --interactive=never file2-* < $test.I >> out 2>> err || fail=1
+echo . >> err || fail=1
+test -f file2-1 && fail=1
+test -f file2-2 && fail=1
+
+echo 'WHEN=once' >> err || fail=1
+rm -R --interactive=once file3-* < $test.I >> out 2>> err || fail=1
+echo . >> err || fail=1
+test -f file3-1 || fail=1
+test -f file3-2 || fail=1
+
+echo 'WHEN=always' >> err || fail=1
+rm -R --interactive=always file4-* < $test.I >> out 2>> err || fail=1
+echo . >> err || fail=1
+test -f file4-1 || fail=1
+test -f file4-2 && fail=1
+
+echo '-f overrides --interactive' >> err || fail=1
+rm -R --interactive=once -f file1-* < $test.I >> out 2>> err || fail=1
+echo . >> err || fail=1
+test -f file1-1 && fail=1
+
+echo '--interactive overrides -f' >> err || fail=1
+rm -R -f --interactive=once file4-* < $test.I >> out 2>> err || fail=1
+echo . >> err || fail=1
+test -f file4-1 || fail=1
+
+cat <<\EOF > expout || fail=1
+EOF
+cat <<\EOF > experr || fail=1
+no WHEN
+rm: remove regular empty file `file1-1'? rm: remove regular empty file `file1-2'? .
+WHEN=never
+.
+WHEN=once
+rm: remove all arguments recursively? .
+WHEN=always
+rm: remove regular empty file `file4-1'? rm: remove regular empty file `file4-2'? .
+-f overrides --interactive
+.
+--interactive overrides -f
+rm: remove all arguments recursively? .
+EOF
+
+cmp out expout || fail=1
+cmp err experr || fail=1
+test $fail = 1 && {
+  diff out expout 2> /dev/null; diff err experr 2> /dev/null
+}
+
+(exit $fail); exit $fail

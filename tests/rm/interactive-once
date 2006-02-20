@@ -1,0 +1,116 @@
+#!/bin/sh
+# Test the -I option added to coreutils 6.0
+
+test=interactive-once
+
+if test "$VERBOSE" = yes; then
+  set -x
+  rm --version
+fi
+
+. $srcdir/../lang-default
+
+pwd=`pwd`
+t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
+trap 'status=$?; cd $pwd; chmod -R u+rwx $t0; rm -rf $t0 && exit $status' 0
+trap '(exit $?); exit $?' 1 2 13 15
+
+framework_failure=0
+mkdir -p $tmp || framework_failure=1
+cd $tmp || framework_failure=1
+
+mkdir -p dir1-1 dir2-1 dir2-2 || framework_failure=1
+touch file1-1 file2-1 file2-2 file2-3 file3-1 file3-2 file3-3 file3-4 \
+  || framework_failure=1
+echo y > $test.Iy || framework_failure=1
+echo n > $test.In || framework_failure=1
+rm -f out err || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo "$0: failure in testing framework" 1>&2
+  (exit 1); exit 1
+fi
+
+fail=0
+
+# The prompt has a trailing space, and no newline, so an extra
+# 'echo .' is inserted after each rm to make it obvious what was asked.
+
+echo 'one file, no recursion' > err || fail=1
+rm -I file1-* < $test.In >> out 2>> err || fail=1
+echo . >> err || fail=1
+test -f file1-1 && fail=1
+
+echo 'three files, no recursion' >> err || fail=1
+rm -I file2-* < $test.In >> out 2>> err || fail=1
+echo . >> err || fail=1
+test -f file2-1 && fail=1
+test -f file2-2 && fail=1
+test -f file2-3 && fail=1
+
+echo 'four files, no recursion, answer no' >> err || fail=1
+rm -I file3-* < $test.In >> out 2>> err || fail=1
+echo . >> err || fail=1
+test -f file3-1 || fail=1
+test -f file3-2 || fail=1
+test -f file3-3 || fail=1
+test -f file3-4 || fail=1
+
+echo 'four files, no recursion, answer yes' >> err || fail=1
+rm -I file3-* < $test.Iy >> out 2>> err || fail=1
+echo . >> err || fail=1
+test -f file3-1 && fail=1
+test -f file3-2 && fail=1
+test -f file3-3 && fail=1
+test -f file3-4 && fail=1
+
+echo 'one file, recursion, answer no' >> err || fail=1
+rm -I -R dir1-* < $test.In >> out 2>> err || fail=1
+echo . >> err || fail=1
+test -d dir1-1 || fail=1
+
+echo 'one file, recursion, answer yes' >> err || fail=1
+rm -I -R dir1-* < $test.Iy >> out 2>> err || fail=1
+echo . >> err || fail=1
+test -d dir1-1 && fail=1
+
+echo 'multiple files, recursion, answer no' >> err || fail=1
+rm -I -R dir2-* < $test.In >> out 2>> err || fail=1
+echo . >> err || fail=1
+test -d dir2-1 || fail=1
+test -d dir2-2 || fail=1
+
+echo 'multiple files, recursion, answer yes' >> err || fail=1
+rm -I -R dir2-* < $test.Iy >> out 2>> err || fail=1
+echo . >> err || fail=1
+test -d dir2-1 && fail=1
+test -d dir2-2 && fail=1
+
+cat <<\EOF > expout || fail=1
+EOF
+cat <<\EOF > experr || fail=1
+one file, no recursion
+.
+three files, no recursion
+.
+four files, no recursion, answer no
+rm: remove all arguments? .
+four files, no recursion, answer yes
+rm: remove all arguments? .
+one file, recursion, answer no
+rm: remove all arguments recursively? .
+one file, recursion, answer yes
+rm: remove all arguments recursively? .
+multiple files, recursion, answer no
+rm: remove all arguments recursively? .
+multiple files, recursion, answer yes
+rm: remove all arguments recursively? .
+EOF
+
+cmp out expout || fail=1
+cmp err experr || fail=1
+test $fail = 1 && {
+  diff out expout 2> /dev/null; diff err experr 2> /dev/null
+}
+
+(exit $fail); exit $fail
