@@ -1,3 +1,8 @@
+2006-02-18  Eric Blake  <ebb9@byu.net>
+
+	* coreutils.texi (rm invocation): Document new -I option, and new
+	--interactive behavior.
+
 2006-02-12  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (Character sets): Don't say that an unknown
