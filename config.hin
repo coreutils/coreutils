@@ -1291,6 +1291,9 @@
 /* Define to 1 if you have the `wcwidth' function. */
 #undef HAVE_WCWIDTH
 
+/* Define to 1 if you have the <winsock2.h> header file. */
+#undef HAVE_WINSOCK2_H
+
 /* Define if you have the 'wint_t' type. */
 #undef HAVE_WINT_T
 
