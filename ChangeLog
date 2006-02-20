@@ -1,6 +1,22 @@
-2006-02-18  Jim Meyering  <jim@meyering.net>
+2006-02-18  Eric Blake  <ebb9@byu.net>
 
 	* Version 6.0-cvs.
+
+	New option for rm: --interactive=once (-I).
+	* NEWS: Document it, along with change to rm --interactive.
+	* TODO: Remove entry for implementing rm -I
+	* src/rm.c (INTERACTIVE_OPTION): New enum value.
+	(interactive_type): New enum.
+	(long_opts): Let interactive take an optional argument.
+	(interactive_args, interactive_types): New option arguments.
+	(usage): Document -I, --interactive=WHEN.  Use program_name
+	instead of a basename.
+	(main): New -I option, new behavior to --interactive.
+	* tests/rm/interactive-once: New tests.
+	* tests/rm/interactive-always: Ditto.
+	* tests/rm/Makefile.am (TESTS): Run them.
+
+2006-02-18  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.maint (sc_two_space_separator_in_usage): Make the regular
 	expression match more of the target lines, e.g., those that start with
