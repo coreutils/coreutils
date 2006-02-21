@@ -1,6 +1,12 @@
-2006-02-20  Eric Blake  <ebb9@byu.net>
+2006-02-20  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 6.0-cvs.
+
+	* doc/coreutils.texi (join invocation): Mention `sort -k 1b,1'.
+	* src/join.c (usage): Likewise.
+	Documentation problem reported by Philip Kensche.
+
+2006-02-20  Eric Blake  <ebb9@byu.net>
 
 	* man/rm.x: Update documentation to match previous patch.
 
