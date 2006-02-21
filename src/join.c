@@ -167,6 +167,7 @@ the remaining fields from FILE1, the remaining fields from FILE2, all\n\
 separated by CHAR.\n\
 \n\
 Important: FILE1 and FILE2 must be sorted on the join fields.\n\
+E.g., use `sort -k 1b,1' if `join' has no options.\n\
 "), stdout);
       printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
