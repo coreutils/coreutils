@@ -35,10 +35,24 @@
 # define ATTRIBUTE_NORETURN __attribute__ ((__noreturn__))
 #endif
 
+/* Work around a bug in Solaris 9 and 10: AT_FDCWD is positive.  Its
+   value exceeds INT_MAX, so its use as an int doesn't conform to the
+   C standard, and GCC and Sun C complain in some cases.  If the bug
+   is present, undef AT_FDCWD here, so it can be redefined below.  */
+#if 0 < AT_FDCWD && AT_FDCWD == 0xffd19553
+# undef AT_FDCWD
+#endif
+
+/* Use the same bit pattern as Solaris 9, but with the proper
+   signedness.  The bit pattern is important, in case this actually is
+   Solaris with the above workaround.  */
 #ifndef AT_FDCWD
+# define AT_FDCWD (-3041965)
+#endif
+
 /* Use the same values as Solaris 9.  This shouldn't matter, but
    there's no real reason to differ.  */
-# define AT_FDCWD (-3041965)
+#ifndef AT_SYMLINK_NOFOLLOW
 # define AT_SYMLINK_NOFOLLOW 4096
 # define AT_REMOVEDIR 1
 #endif

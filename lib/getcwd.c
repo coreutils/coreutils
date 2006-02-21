@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,95,96,97,98,99,2004,2005 Free Software
+/* Copyright (C) 1991,92,93,94,95,96,97,98,99,2004,2005,2006 Free Software
    Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -73,6 +73,14 @@
 #endif
 
 #include <limits.h>
+
+/* Work around a bug in Solaris 9 and 10: AT_FDCWD is positive.  Its
+   value exceeds INT_MAX, so its use as an int doesn't conform to the
+   C standard, and GCC and Sun C complain in some cases.  */
+#if 0 < AT_FDCWD && AT_FDCWD == 0xffd19553
+# undef AT_FDCWD
+# define AT_FDCWD (-3041965)
+#endif
 
 #ifdef ENAMETOOLONG
 # define is_ENAMETOOLONG(x) ((x) == ENAMETOOLONG)

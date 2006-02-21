@@ -1,3 +1,9 @@
+2006-02-20  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* getcwd.c (AT_FDCWD): Work around a bug in Solaris 9 and 10, where
+	AT_FDCWD exceeds INT_MAX.
+	* openat.h (AT_FDCWD): Likewise.
+
 2006-02-17  Jim Meyering  <jim@meyering.net>
 
 	* openat.c: Include lstat.h, so that uses of lstat are converted
