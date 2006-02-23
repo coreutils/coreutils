@@ -1,6 +1,10 @@
-2006-02-20  Paul Eggert  <eggert@cs.ucla.edu>
+2006-02-23  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* TODO: Update/correct some obsolete entries.
+
+2006-02-20  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* doc/coreutils.texi (join invocation): Mention `sort -k 1b,1'.
 	* src/join.c (usage): Likewise.
