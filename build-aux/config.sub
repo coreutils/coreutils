@@ -3,7 +3,7 @@
 #   Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
 #   2000, 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
 
-timestamp='2006-01-02'
+timestamp='2006-02-23'
 
 # This file is (in principle) common to ALL GNU software.
 # The presence of a machine in this file suggests that SOME GNU software
@@ -268,6 +268,7 @@ case $basic_machine in
 	| mn10200 | mn10300 \
 	| mt \
 	| msp430 \
+	| nios | nios2 \
 	| ns16k | ns32k \
 	| or32 \
 	| pdp10 | pdp11 | pj | pjl \
@@ -350,6 +351,7 @@ case $basic_machine in
 	| mmix-* \
 	| mt-* \
 	| msp430-* \
+	| nios-* | nios2-* \
 	| none-* | np1-* | ns16k-* | ns32k-* \
 	| orion-* \
 	| pdp10-* | pdp11-* | pj-* | pjl-* | pn-* | power-* \
