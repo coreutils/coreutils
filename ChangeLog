@@ -1,6 +1,17 @@
-2006-02-23  Jim Meyering  <jim@meyering.net>
+2006-02-25  Eric Blake  <ebb9@byu.net>
 
 	* Version 6.0-cvs.
+
+	In ls, avoid calling stat for --inode (-i), when possible.
+	* src/pwd.c (NOT_AN_INODE_NUMBER, D_INO): Move to ...
+	* src/system.h: ... here, for use in ...
+	* src/ls.c (main): ... here.  Prefer dirent.d_ino to stat when
+	possible.
+	(gobble_file): Add inode argument.
+	(print_dir): Pass inode if available.
+	(usage): Remove inaccuracy.
+
+2006-02-23  Jim Meyering  <jim@meyering.net>
 
 	* TODO: Update/correct some obsolete entries.
 
