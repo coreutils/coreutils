@@ -40,18 +40,6 @@ struct file_name
   char *start;
 };
 
-enum
-{
-  NOT_AN_INODE_NUMBER = 0
-};
-
-#ifdef D_INO_IN_DIRENT
-# define D_INO(dp) ((dp)->d_ino)
-#else
-/* Some systems don't have inodes, so fake them to avoid lots of ifdefs.  */
-# define D_INO(dp) NOT_AN_INODE_NUMBER
-#endif
-
 /* The name this program was run with. */
 char *program_name;
 
