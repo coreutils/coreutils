@@ -1,6 +1,6 @@
 ## Makefile for gnulib/lib				-*-Makefile-*-
 
-# Copyright (C) 1995-2005 Free Software Foundation, Inc.
+# Copyright (C) 1995-2006 Free Software Foundation, Inc.
 
 ## This program is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -29,6 +29,7 @@ DEFS += -DLIBDIR=\"$(libdir)\"
 
 libcoreutils_a_SOURCES = \
   allocsa.c allocsa.h \
+  base64.c base64.h \
   buffer-lcm.c buffer-lcm.h \
   euidaccess.h \
   exit.h \
