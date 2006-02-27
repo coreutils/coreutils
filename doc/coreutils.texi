@@ -35,6 +35,7 @@
 
 @dircategory Individual utilities
 @direntry
+* base64: (coreutils)base64 invocation.         Base64 encode/decode data.
 * basename: (coreutils)basename invocation.     Strip directory and suffix.
 * cat: (coreutils)cat invocation.               Concatenate and write files.
 * chgrp: (coreutils)chgrp invocation.           Change file groups.
@@ -218,6 +219,7 @@ Output of entire files
 * tac invocation::              Concatenate and write files in reverse.
 * nl invocation::               Number lines and write files.
 * od invocation::               Write files in octal or other formats.
+* base64 invocation::           Transform data into printable data.
 
 Formatting file contents
 
@@ -1186,6 +1188,7 @@ in some way.
 * tac invocation::              Concatenate and write files in reverse.
 * nl invocation::               Number lines and write files.
 * od invocation::               Write files in octal or other formats.
+* base64 invocation::           Transform data into printable data.
 @end menu
 
 @node cat invocation
@@ -1744,6 +1747,63 @@ The @var{label} argument is interpreted
 just like @var{offset}, but it specifies an initial pseudo-address.  The
 pseudo-addresses are displayed in parentheses following any normal
 address.
+
+@end table
+
+@exitstatus
+
+@node base64 invocation
+@section @command{base64}: Transform data into printable data.
+
+@pindex base64
+@cindex base64 encoding
+
+@command{base64} transforms data read from a file, or standard input,
+into (or from) base64 encoded form.  The base64 encoded form uses
+printable @acronym{ASCII} characters to represent binary data, see
+@uref{ftp://ftp.rfc-editor.org/in-notes/rfc3548.txt, RFC 3548}.
+Synopses:
+
+@smallexample
+base64 [@var{option}]@dots{} [@var{file}]
+base64 --decode [@var{option}]@dots{} [@var{file}]
+@end smallexample
+
+The base64 encoding expands data to roughly 133% of the original.
+
+The program accepts the following options.  Also see @ref{Common options}.
+
+@table @samp
+
+@item -w @var{COLS}
+@itemx --wrap=@var{COLS}
+@opindex -w
+@opindex --wrap
+@cindex wrap data
+@cindex column to wrap data after
+During encoding, wrap lines after @var{COLS} characters.  This must be
+a positive number.
+
+The default is to wrap after 76 characters.  Use the value 0 to
+disable line wrapping altogether.
+
+@item -d
+@itemx --decode
+@opindex -d
+@opindex --decode
+@cindex Decode base64 data
+@cindex Base64 decoding
+Change the mode of operation, from the default of encoding data, to
+decoding data.  Input is expected to be base64 encoded data, and the
+output will be the original data.
+
+@item -i
+@itemx --ignore-garbage
+@opindex -i
+@opindex --ignore-garbage
+@cindex Ignore garbage in base64 stream
+During decoding, ignore unrecognized characters (including newline),
+to permit distorted data to be decoded.
 
 @end table
 
