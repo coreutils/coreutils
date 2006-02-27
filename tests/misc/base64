@@ -1,0 +1,49 @@
+#!/bin/sh
+# -*- perl -*-
+# Exercise base64.
+
+: ${PERL=perl}
+: ${srcdir=.}
+
+$PERL -e 1 > /dev/null 2>&1 || {
+  echo 1>&2 "$0: configure didn't find a usable version of Perl," \
+    "so can't run this test"
+  exit 77
+}
+
+exec $PERL -w -I$srcdir/.. -MCoreutils -- - <<\EOF
+require 5.003;
+use strict;
+
+(my $program_name = $0) =~ s|.*/||;
+
+# Turn off localisation of executable's ouput.
+@ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
+
+my @Tests =
+    (
+     ['empty', {IN=>''}, {OUT=>""}],
+     ['inout', {IN=>'a'}, {OUT=>"YQ==\n"}],
+     ['wrap', '--wrap 0', {IN=>'foo'}, {OUT=>'Zm9v'}],
+     ['wrap5-39', '--wrap 5', {IN=>'a' x 39}, {OUT=>"YWFhY\nWFhYW\nFhYWF\nhYWFh\nYWFhY\nWFhYW\nFhYWF\nhYWFh\nYWFhY\nWFhYW\nFh\n"}],
+     ['wrap5-40', '--wrap 5', {IN=>'a' x 40}, {OUT=>"YWFhY\nWFhYW\nFhYWF\nhYWFh\nYWFhY\nWFhYW\nFhYWF\nhYWFh\nYWFhY\nWFhYW\nFhYQ=\n=\n"}],
+     ['wrap5-41', '--wrap 5', {IN=>'a' x 41}, {OUT=>"YWFhY\nWFhYW\nFhYWF\nhYWFh\nYWFhY\nWFhYW\nFhYWF\nhYWFh\nYWFhY\nWFhYW\nFhYWE\n=\n"}],
+     ['wrap5-42', '--wrap 5', {IN=>'a' x 42}, {OUT=>"YWFhY\nWFhYW\nFhYWF\nhYWFh\nYWFhY\nWFhYW\nFhYWF\nhYWFh\nYWFhY\nWFhYW\nFhYWF\nh\n"}],
+     ['wrap5-43', '--wrap 5', {IN=>'a' x 43}, {OUT=>"YWFhY\nWFhYW\nFhYWF\nhYWFh\nYWFhY\nWFhYW\nFhYWF\nhYWFh\nYWFhY\nWFhYW\nFhYWF\nhYQ==\n"}],
+     ['wrap5-44', '--wrap 5', {IN=>'a' x 44}, {OUT=>"YWFhY\nWFhYW\nFhYWF\nhYWFh\nYWFhY\nWFhYW\nFhYWF\nhYWFh\nYWFhY\nWFhYW\nFhYWF\nhYWE=\n"}],
+     ['wrap5-45', '--wrap 5', {IN=>'a' x 45}, {OUT=>"YWFhY\nWFhYW\nFhYWF\nhYWFh\nYWFhY\nWFhYW\nFhYWF\nhYWFh\nYWFhY\nWFhYW\nFhYWF\nhYWFh\n"}],
+     ['wrap5-46', '--wrap 5', {IN=>'a' x 46}, {OUT=>"YWFhY\nWFhYW\nFhYWF\nhYWFh\nYWFhY\nWFhYW\nFhYWF\nhYWFh\nYWFhY\nWFhYW\nFhYWF\nhYWFh\nYQ==\n"}],
+     ['baddecode', '--decode', {IN=>'a'}, {OUT=>""}, {ERR_SUBST => 's/.*: invalid input//'}, {ERR => "\n"}, {EXIT => 1}],
+     ['baddecode2', '--decode', {IN=>'ab'}, {OUT=>"i"}, {ERR_SUBST => 's/.*: invalid input//'}, {ERR => "\n"}, {EXIT => 1}],
+     ['baddecode3', '--decode', {IN=>'Zzz'}, {OUT=>"g<"}, {ERR_SUBST => 's/.*: invalid input//'}, {ERR => "\n"}, {EXIT => 1}],
+     ['baddecode4', '--decode', {IN=>'Zz='}, {OUT=>"g"}, {ERR_SUBST => 's/.*: invalid input//'}, {ERR => "\n"}, {EXIT => 1}],
+     ['baddecode5', '--decode', {IN=>'Z==='}, {OUT=>""}, {ERR_SUBST => 's/.*: invalid input//'}, {ERR => "\n"}, {EXIT => 1}]
+    );
+
+my $save_temps = $ENV{DEBUG};
+my $verbose = $ENV{VERBOSE};
+
+my $prog = $ENV{PROG} || die "$0: \$PROG not specified in environment\n";
+my $fail = run_tests ($program_name, $prog, \@Tests, $save_temps, $verbose);
+exit $fail;
+EOF
