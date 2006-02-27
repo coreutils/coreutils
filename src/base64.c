@@ -179,7 +179,7 @@ do_encode (FILE *in, FILE *out, size_t wrap_column)
 }
 
 static void
-do_decode (FILE *in, FILE *out, size_t ignore_garbage)
+do_decode (FILE *in, FILE *out, bool ignore_garbage)
 {
   char inbuf[B64BLOCKSIZE];
   char outbuf[BLOCKSIZE];
