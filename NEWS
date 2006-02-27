@@ -63,6 +63,7 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New programs
 
+  base64: base64 encoding and decoding (RFC 3548) functionality.
   sha224sum: print or check a SHA224 (224-bit) checksum
   sha256sum: print or check a SHA256 (256-bit) checksum
   sha384sum: print or check a SHA384 (384-bit) checksum
