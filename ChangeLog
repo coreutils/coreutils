@@ -2,6 +2,12 @@
 
 	* Version 6.0-cvs.
 
+	* tests/misc/base64: Derive --decode-using tests from the
+	encode-based ones.
+
+	* tests/misc/base64: Factor out a long constant string.
+	Split lines to stay within 80 columns.
+
 	* tests/misc/Makefile.am (TESTS): Add base64.
 	* tests/misc/base64: Test base64.  From Simon Josefsson.
 
