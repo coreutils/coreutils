@@ -60,8 +60,8 @@ bin_PROGRAMS = [$(EXEEXT) chgrp$(EXEEXT) chown$(EXEEXT) chmod$(EXEEXT) \
 	id$(EXEEXT) kill$(EXEEXT) logname$(EXEEXT) pathchk$(EXEEXT) \
 	printenv$(EXEEXT) printf$(EXEEXT) pwd$(EXEEXT) seq$(EXEEXT) \
 	sleep$(EXEEXT) tee$(EXEEXT) test$(EXEEXT) true$(EXEEXT) \
-	tty$(EXEEXT) whoami$(EXEEXT) yes$(EXEEXT) $(am__EXEEXT_1) \
-	$(am__EXEEXT_2)
+	tty$(EXEEXT) whoami$(EXEEXT) yes$(EXEEXT) base64$(EXEEXT) \
+	$(am__EXEEXT_1) $(am__EXEEXT_2)
 noinst_PROGRAMS = setuidgid$(EXEEXT)
 subdir = src
 DIST_COMMON = $(noinst_HEADERS) $(srcdir)/Makefile.am \
@@ -204,6 +204,11 @@ am__DEPENDENCIES_1 =
 am__DEPENDENCIES_2 = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
 	../lib/libcoreutils.a
 __DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1)
+base64_SOURCES = base64.c
+base64_OBJECTS = base64.$(OBJEXT)
+base64_LDADD = $(LDADD)
+base64_DEPENDENCIES = ../lib/libcoreutils.a $(am__DEPENDENCIES_1) \
+	../lib/libcoreutils.a
 basename_SOURCES = basename.c
 basename_OBJECTS = basename.$(OBJEXT)
 basename_LDADD = $(LDADD)
@@ -650,8 +655,8 @@ COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
 LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
-SOURCES = $(__SOURCES) basename.c cat.c $(chgrp_SOURCES) chmod.c \
-	$(chown_SOURCES) chroot.c cksum.c comm.c $(cp_SOURCES) \
+SOURCES = $(__SOURCES) base64.c basename.c cat.c $(chgrp_SOURCES) \
+	chmod.c $(chown_SOURCES) chroot.c cksum.c comm.c $(cp_SOURCES) \
 	csplit.c cut.c date.c dd.c df.c $(dir_SOURCES) dircolors.c \
 	dirname.c du.c echo.c env.c expand.c expr.c factor.c false.c \
 	fmt.c fold.c $(ginstall_SOURCES) head.c hostid.c hostname.c \
@@ -665,8 +670,8 @@ SOURCES = $(__SOURCES) basename.c cat.c $(chgrp_SOURCES) chmod.c \
 	stty.c su.c sum.c sync.c tac.c tail.c tee.c test.c touch.c \
 	tr.c true.c tsort.c tty.c uname.c unexpand.c uniq.c unlink.c \
 	uptime.c users.c $(vdir_SOURCES) wc.c who.c whoami.c yes.c
-DIST_SOURCES = $(__SOURCES) basename.c cat.c $(chgrp_SOURCES) chmod.c \
-	$(chown_SOURCES) chroot.c cksum.c comm.c $(cp_SOURCES) \
+DIST_SOURCES = $(__SOURCES) base64.c basename.c cat.c $(chgrp_SOURCES) \
+	chmod.c $(chown_SOURCES) chroot.c cksum.c comm.c $(cp_SOURCES) \
 	csplit.c cut.c date.c dd.c df.c $(dir_SOURCES) dircolors.c \
 	dirname.c du.c echo.c env.c expand.c expr.c factor.c false.c \
 	fmt.c fold.c $(ginstall_SOURCES) head.c hostid.c hostname.c \
@@ -1014,7 +1019,7 @@ uninstall-binPROGRAMS:
 	done
 
 clean-binPROGRAMS:
-	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS) > /dev/null 2>&1 || /bin/rm -f $(bin_PROGRAMS)
+	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
 
 installcheck-binPROGRAMS: $(bin_PROGRAMS)
 	bad=0; pid=$$$$; list="$(bin_PROGRAMS)"; for p in $$list; do \
@@ -1037,6 +1042,9 @@ clean-noinstPROGRAMS:
 [$(EXEEXT): $(__OBJECTS) $(__DEPENDENCIES) 
 	@rm -f [$(EXEEXT)
 	$(LINK) $(__LDFLAGS) $(__OBJECTS) $(__LDADD) $(LIBS)
+base64$(EXEEXT): $(base64_OBJECTS) $(base64_DEPENDENCIES) 
+	@rm -f base64$(EXEEXT)
+	$(LINK) $(base64_LDFLAGS) $(base64_OBJECTS) $(base64_LDADD) $(LIBS)
 basename$(EXEEXT): $(basename_OBJECTS) $(basename_DEPENDENCIES) 
 	@rm -f basename$(EXEEXT)
 	$(LINK) $(basename_LDFLAGS) $(basename_OBJECTS) $(basename_LDADD) $(LIBS)
@@ -1357,6 +1365,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/base64.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/basename.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cat.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/chgrp.Po@am__quote@

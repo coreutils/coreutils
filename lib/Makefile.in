@@ -14,7 +14,7 @@
 
 @SET_MAKE@
 
-# Copyright (C) 1995-2005 Free Software Foundation, Inc.
+# Copyright (C) 1995-2006 Free Software Foundation, Inc.
 
 
 srcdir = @srcdir@
@@ -233,8 +233,8 @@ am__DEPENDENCIES_1 = @LIBOBJS@
 am__DEPENDENCIES_2 = @ALLOCA@
 libcoreutils_a_DEPENDENCIES = $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_2)
-am_libcoreutils_a_OBJECTS = allocsa.$(OBJEXT) buffer-lcm.$(OBJEXT) \
-	full-read.$(OBJEXT) full-write.$(OBJEXT) \
+am_libcoreutils_a_OBJECTS = allocsa.$(OBJEXT) base64.$(OBJEXT) \
+	buffer-lcm.$(OBJEXT) full-read.$(OBJEXT) full-write.$(OBJEXT) \
 	localcharset.$(OBJEXT) mbswidth.$(OBJEXT) \
 	readtokens0.$(OBJEXT) strnlen1.$(OBJEXT) time_r.$(OBJEXT) \
 	unicodeio.$(OBJEXT) xalloc-die.$(OBJEXT) \
@@ -401,13 +401,13 @@ AM_CFLAGS = $(WARNING_CFLAGS) $(WERROR_CFLAGS)
 noinst_LIBRARIES = libcoreutils.a
 LDADD = $(noinst_LIBRARIES)
 AM_CPPFLAGS = -I.. -I$(srcdir)
-libcoreutils_a_SOURCES = allocsa.c allocsa.h buffer-lcm.c buffer-lcm.h \
-	euidaccess.h exit.h full-read.c full-read.h full-write.c \
-	full-write.h getaddrinfo.h gettext.h localcharset.c \
-	localcharset.h mbchar.h mbswidth.c mbswidth.h mbuiter.h \
-	readtokens0.c readtokens0.h strcase.h strnlen1.c strnlen1.h \
-	strstr.h time_r.c time_r.h unicodeio.c unicodeio.h verify.h \
-	xalloc-die.c xgethostname.c xgethostname.h xmemcoll.c \
+libcoreutils_a_SOURCES = allocsa.c allocsa.h base64.c base64.h \
+	buffer-lcm.c buffer-lcm.h euidaccess.h exit.h full-read.c \
+	full-read.h full-write.c full-write.h getaddrinfo.h gettext.h \
+	localcharset.c localcharset.h mbchar.h mbswidth.c mbswidth.h \
+	mbuiter.h readtokens0.c readtokens0.h strcase.h strnlen1.c \
+	strnlen1.h strstr.h time_r.c time_r.h unicodeio.c unicodeio.h \
+	verify.h xalloc-die.c xgethostname.c xgethostname.h xmemcoll.c \
 	xmemcoll.h xstrndup.c xstrndup.h xstrtoimax.c xstrtoumax.c \
 	printf-args.h printf-parse.h vasprintf.h vasnprintf.h
 libcoreutils_a_LIBADD = $(LIBOBJS) $(ALLOCA)
@@ -659,6 +659,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/xstrtoul.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/yesno.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/allocsa.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/base64.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/buffer-lcm.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/full-read.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/full-write.Po@am__quote@
