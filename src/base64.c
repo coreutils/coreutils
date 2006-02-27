@@ -104,7 +104,7 @@ the encoded stream.\n"), stdout);
 
 static void
 wrap_write (const char *buffer, size_t len,
-	    size_t wrap_column, size_t * current_column, FILE *out)
+	    size_t wrap_column, size_t *current_column, FILE *out)
 {
   size_t written;
 
