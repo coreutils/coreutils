@@ -1,6 +1,27 @@
-2006-02-25  Eric Blake  <ebb9@byu.net>
+2006-02-27  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* src/base64.c: Don't include .h files already included by system.h:
+	<string.h>, <stdlib.h>, <stdbool.h>, <limits.h>, <errno.h>.
+	Include "system.h" before the other lib/*.h header files.
+	Include <sys/types.h> before "system.h".
+	(wrap_write): Remove declaration of unused local, initial_column.
+	(wrap_write): Correct declaration syntax: s/size_t * V/size_t *V/.
+
+	* README: Add base64 to the list.
+
+2006-02-17  Simon Josefsson  <jas@extundo.com>
+
+	New program: base64.
+	* AUTHORS: Mention base64.
+	* NEWS: Likewise.
+	* man/Makefile.am: Build base64.1.
+	* man/base64.x: New file.
+	* src/Makefile.am (bin_PROGRAMS): Add base64.
+	* src/base64.c: New file.
+
+2006-02-25  Eric Blake  <ebb9@byu.net>
 
 	In ls, avoid calling stat for --inode (-i), when possible.
 	* src/pwd.c (NOT_AN_INODE_NUMBER, D_INO): Move to ...
