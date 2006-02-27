@@ -1,6 +1,7 @@
 Here are the names of the programs in this package,
 each followed by the name(s) of its author(s).
 
+base64: Simon Josefsson
 basename: FIXME unknown
 cat: Torbjorn Granlund, Richard M. Stallman
 chgrp: David MacKenzie, Jim Meyering
