@@ -1,3 +1,7 @@
+2006-02-27  Jim Meyering  <jim@meyering.net>
+
+	* POTFILES.in: Add src/base64.c.
+
 2005-12-17  Jim Meyering  <jim@meyering.net>
 
 	* POTFILES.in: Add lib/acl.c.
