@@ -2,6 +2,9 @@
 
 	* Version 6.0-cvs.
 
+	* tests/misc/Makefile.am (TESTS): Add base64.
+	* tests/misc/base64: Test base64.  From Simon Josefsson.
+
 	* src/base64.c (do_decode): Use correct type for parameter,
 	ignore_garbage: s/size_t/bool/.
 
