@@ -12,6 +12,7 @@ TESTS_ENVIRONMENT = \
   PROG=$$tst
 
 TESTS = \
+  base64 \
   test \
   mknod \
   stat-printf \
