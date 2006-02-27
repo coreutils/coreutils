@@ -21,20 +21,16 @@
 /* Written by Simon Josefsson <simon@josefsson.org>.  */
 
 #include <config.h>
-#include <getopt.h>
 
-#include <string.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
-#include <limits.h>
-#include <errno.h>
+#include <getopt.h>
+#include <sys/types.h>
 
+#include "system.h"
 #include "error.h"
 #include "xstrtol.h"
 #include "quote.h"
 #include "quotearg.h"
-#include "system.h"
 
 #include "base64.h"
 
@@ -111,7 +107,6 @@ wrap_write (const char *buffer, size_t len,
 	    size_t wrap_column, size_t * current_column, FILE *out)
 {
   size_t written;
-  size_t initial_column = *current_column;
 
   if (wrap_column == 0)
     {
