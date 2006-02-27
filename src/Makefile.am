@@ -29,6 +29,7 @@ bin_PROGRAMS = [ chgrp chown chmod cp dd dircolors du \
   basename date dirname echo env expr factor false \
   hostname id kill logname pathchk printenv printf pwd seq sleep tee \
   test true tty whoami yes \
+  base64 \
   $(OPTIONAL_BIN_PROGS) $(DF_PROG)
 
 noinst_PROGRAMS = setuidgid
