@@ -2,6 +2,9 @@
 
 	* Version 6.0-cvs.
 
+	* src/base64.c (do_decode): Use correct type for parameter,
+	ignore_garbage: s/size_t/bool/.
+
 	* src/base64.c: Don't include .h files already included by system.h:
 	<string.h>, <stdlib.h>, <stdbool.h>, <limits.h>, <errno.h>.
 	Include "system.h" before the other lib/*.h header files.
