@@ -1,4 +1,5 @@
 Makefile
+base64.1
 basename.1
 cat.1
 chgrp.1

@@ -2,6 +2,7 @@
 .version
 Makefile
 [[]
+base64
 basename
 cat
 chgrp
