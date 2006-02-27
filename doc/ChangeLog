@@ -1,3 +1,7 @@
+2006-02-17  Simon Josefsson  <jas@extundo.com>
+
+	* coreutils.texi: Add base64 section.
+
 2006-02-20  Eric Blake  <ebb9@byu.net>
 
 	* coreutils.texi (rm invocation): Fix typo in last patch.
