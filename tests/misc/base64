@@ -28,14 +28,14 @@ my @Tests =
      ['empty', {IN=>''}, {OUT=>""}],
      ['inout', {IN=>'a'}, {OUT=>"YQ==\n"}],
      ['wrap', '--wrap 0', {IN=>'foo'}, {OUT=>'Zm9v'}],
-     ['wrap5-39', '--wrap 5', {IN=>'a' x 39}, {OUT=>"${a39}\n"}],
-     ['wrap5-40', '--wrap 5', {IN=>'a' x 40}, {OUT=>"${a39}YQ=\n=\n"}],
-     ['wrap5-41', '--wrap 5', {IN=>'a' x 41}, {OUT=>"${a39}YWE\n=\n"}],
-     ['wrap5-42', '--wrap 5', {IN=>'a' x 42}, {OUT=>"${a39}YWF\nh\n"}],
-     ['wrap5-43', '--wrap 5', {IN=>'a' x 43}, {OUT=>"${a39}YWF\nhYQ==\n"}],
-     ['wrap5-44', '--wrap 5', {IN=>'a' x 44}, {OUT=>"${a39}YWF\nhYWE=\n"}],
-     ['wrap5-45', '--wrap 5', {IN=>'a' x 45}, {OUT=>"${a39}YWF\nhYWFh\n"}],
-     ['wrap5-46', '--wrap 5', {IN=>'a' x 46}, {OUT=>"${a39}YWF\nhYWFh\nYQ==\n"}],
+     ['wrap5-39', '--wrap=5', {IN=>'a' x 39}, {OUT=>"${a39}\n"}],
+     ['wrap5-40', '--wrap=5', {IN=>'a' x 40}, {OUT=>"${a39}YQ=\n=\n"}],
+     ['wrap5-41', '--wrap=5', {IN=>'a' x 41}, {OUT=>"${a39}YWE\n=\n"}],
+     ['wrap5-42', '--wrap=5', {IN=>'a' x 42}, {OUT=>"${a39}YWF\nh\n"}],
+     ['wrap5-43', '--wrap=5', {IN=>'a' x 43}, {OUT=>"${a39}YWF\nhYQ==\n"}],
+     ['wrap5-44', '--wrap=5', {IN=>'a' x 44}, {OUT=>"${a39}YWF\nhYWE=\n"}],
+     ['wrap5-45', '--wrap=5', {IN=>'a' x 45}, {OUT=>"${a39}YWF\nhYWFh\n"}],
+     ['wrap5-46', '--wrap=5', {IN=>'a' x 46}, {OUT=>"${a39}YWF\nhYWFh\nYQ==\n"}],
      ['baddecode', '--decode', {IN=>'a'}, {OUT=>""},
       {ERR_SUBST => 's/.*: invalid input//'}, {ERR => "\n"}, {EXIT => 1}],
      ['baddecode2', '--decode', {IN=>'ab'}, {OUT=>"i"},
@@ -47,6 +47,30 @@ my @Tests =
      ['baddecode5', '--decode', {IN=>'Z==='}, {OUT=>""},
       {ERR_SUBST => 's/.*: invalid input//'}, {ERR => "\n"}, {EXIT => 1}]
     );
+
+# For each non-failing test, create a --decode test using the
+# expected output (with newlines removed) as input.
+my @new;
+foreach my $t (@Tests)
+  {
+    my $exit_val;
+    my $in;
+    my $out;
+    foreach my $e (@$t)
+      {
+        ref $e && ref $e eq 'HASH'
+	  or next;
+        defined $e->{EXIT}
+	  and $exit_val = $e->{EXIT};
+	defined $e->{IN}
+	  and $in = $e->{IN};
+	defined $e->{OUT}
+	  and ($out = $e->{OUT}) =~ tr/\n//d;
+      }
+    defined $out && ! $exit_val
+      and push @new, ["d-$t->[0]", '--decode', {IN => $out}, {OUT => $in}];
+  }
+push @Tests, @new;
 
 my $save_temps = $ENV{DEBUG};
 my $verbose = $ENV{VERBOSE};
