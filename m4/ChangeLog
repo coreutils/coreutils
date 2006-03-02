@@ -1,3 +1,8 @@
+2006-03-01  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* extensions.m4 (gl_USE_SYSTEM_EXTENSIONS): Use "=" with "test",
+	not "==".  Reported by Ralf Wildenhues.
+
 2006-02-22  Ralf Wildenhues  <Ralf.Wildenhues@gmx.de>
 
 	* mkdir-p.m4 (gl_MKDIR_PARENTS): Require gl_FUNC_LCHMOD and

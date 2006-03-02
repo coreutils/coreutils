@@ -33,7 +33,7 @@ AC_DEFUN([gl_USE_SYSTEM_EXTENSIONS], [
 	  AC_INCLUDES_DEFAULT])],
        [ac_cv_safe_to_define___extensions__=yes],
        [ac_cv_safe_to_define___extensions__=no])])
-  test $ac_cv_safe_to_define___extensions__ == yes &&
+  test $ac_cv_safe_to_define___extensions__ = yes &&
     AC_DEFINE([__EXTENSIONS__])
   AC_DEFINE([_POSIX_PTHREAD_SEMANTICS])
 ])
