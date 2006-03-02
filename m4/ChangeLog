@@ -1,5 +1,11 @@
 2006-03-01  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* clock_time.m4 (gl_CLOCK_TIME): Require gl_USE_SYSTEM_EXTENSIONS,
+	not merely AC_GNU_SOURCE, for the benefit of Solaris 10 when compiled
+	pedantically.
+	* nanosleep.m4 (gl_FUNC_NANOSLEEP): Likewise.
+	* timespec.m4 (gl_TIMESPEC): Likewise.
+
 	* extensions.m4 (gl_USE_SYSTEM_EXTENSIONS): Use "=" with "test",
 	not "==".  Reported by Ralf Wildenhues.
 
