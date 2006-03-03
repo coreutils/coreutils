@@ -28,6 +28,9 @@ my @Tests =
       . "export LS_COLORS\n"}],
      ['other-wr', '-b', {IN => "owt 40;33\n"},
       {OUT => "LS_COLORS='tw=40;33:';\nexport LS_COLORS\n"}],
+
+     # CAREFUL: always specify the -b option, unless explicitly testing
+     # for csh syntax output.
     );
 
 my $save_temps = $ENV{DEBUG};
