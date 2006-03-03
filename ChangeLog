@@ -1,6 +1,13 @@
-2006-02-27  Jim Meyering  <jim@meyering.net>
+2006-03-03  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	Don't fail when run from an environment with SHELL not a Bourne
+	shell, e.g. `env SHELL=/bin/csh make check' would fail this test.
+	* tests/dircolors/simple: Invoke each non-failing test with -b.
+	Reported by Michael Stone.
+
+2006-02-27  Jim Meyering  <jim@meyering.net>
 
 	* tests/misc/base64: Derive --decode-using tests from the
 	encode-based ones.
