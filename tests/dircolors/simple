@@ -23,10 +23,10 @@ my @Tests =
      ['a', {IN => {k => "exec\n"}},
       {ERR => "dircolors: k:1: invalid line;  missing second token\n"},
       {EXIT => 1}],
-     ['quote', {IN => "exec 'echo Hello;:'\n"},
+     ['quote', '-b', {IN => "exec 'echo Hello;:'\n"},
       {OUT => "LS_COLORS='ex='\\''echo Hello;\\:'\\'':';\n"
       . "export LS_COLORS\n"}],
-     ['other-wr', {IN => "owt 40;33\n"},
+     ['other-wr', '-b', {IN => "owt 40;33\n"},
       {OUT => "LS_COLORS='tw=40;33:';\nexport LS_COLORS\n"}],
     );
 
