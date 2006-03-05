@@ -1,6 +1,13 @@
-2006-03-03  Jim Meyering  <jim@meyering.net>
+2006-03-05  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	Make `base64 --wrap=N' work for N=0, and for N larger than SIZE_MAX.
+	* src/base64.c (wrap_write, do_encode, main): Change type of
+	parameters and locals, wrap_column, form size_t to uintmax_t.
+	(main): Adjust to use xstrtoumax, accordingly.
+
+2006-03-03  Jim Meyering  <jim@meyering.net>
 
 	Don't fail when run from an environment with SHELL not a Bourne
 	shell, e.g. `env SHELL=/bin/csh make check' would fail this test.
