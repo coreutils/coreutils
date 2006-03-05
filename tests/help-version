@@ -4,6 +4,14 @@
 
 test "$VERBOSE" = yes && set -x
 
+# Ensure that $SHELL is set to *some* value.
+# This is required for dircolors, which would fail e.g., when
+# invoked via debuild (which removes SHELL from the environment).
+if test "x$SHELL" = x; then
+  SHELL=/bin/sh
+  export SHELL
+fi
+
 expected_failure_status_nohup=127
 expected_failure_status_printenv=2
 expected_failure_status_tty=3
