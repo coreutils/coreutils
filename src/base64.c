@@ -104,7 +104,7 @@ the encoded stream.\n"), stdout);
 
 static void
 wrap_write (const char *buffer, size_t len,
-	    size_t wrap_column, size_t *current_column, FILE *out)
+	    uintmax_t wrap_column, size_t *current_column, FILE *out)
 {
   size_t written;
 
@@ -117,10 +117,9 @@ wrap_write (const char *buffer, size_t len,
   else
     for (written = 0; written < len;)
       {
-	size_t to_write = wrap_column - *current_column;
-
-	if (written + to_write > len)
-	  to_write = len - written;
+	uintmax_t cols_remaining = wrap_column - *current_column;
+	size_t to_write = MIN (cols_remaining, SIZE_MAX);
+	to_write = MIN (to_write, len - written);
 
 	if (to_write == 0)
 	  {
@@ -139,7 +138,7 @@ wrap_write (const char *buffer, size_t len,
 }
 
 static void
-do_encode (FILE *in, FILE *out, size_t wrap_column)
+do_encode (FILE *in, FILE *out, uintmax_t wrap_column)
 {
   size_t current_column = 0;
   char inbuf[BLOCKSIZE];
@@ -236,7 +235,7 @@ main (int argc, char **argv)
   /* True if we should ignore non-alphabetic characters. */
   bool ignore_garbage = false;
   /* Wrap encoded base64 data around the 76:th column, by default. */
-  size_t wrap_column = 76;
+  uintmax_t wrap_column = 76;
 
   initialize_main (&argc, &argv);
   program_name = argv[0];
@@ -254,14 +253,9 @@ main (int argc, char **argv)
 	break;
 
       case 'w':
-	{
-	  unsigned long int tmp_ulong;
-	  if (xstrtoul (optarg, NULL, 0, &tmp_ulong, NULL) != LONGINT_OK
-	      || SIZE_MAX < tmp_ulong || tmp_ulong == 0)
-	    error (EXIT_FAILURE, 0, _("invalid wrap size: %s"),
-		   quotearg (optarg));
-	  wrap_column = tmp_ulong;
-	}
+	if (xstrtoumax (optarg, NULL, 0, &wrap_column, NULL) != LONGINT_OK)
+	  error (EXIT_FAILURE, 0, _("invalid wrap size: %s"),
+		 quotearg (optarg));
 	break;
 
       case 'i':
