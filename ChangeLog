@@ -2,6 +2,10 @@
 
 	* Version 6.0-cvs.
 
+	* tests/help-version: Set SHELL, if not already set, in order to
+	avoid failure when `make check' is run through debuild;  dircolors
+	would fail due to lack of $SHELL.  Reported by Sven Joachim.
+
 	Make `base64 --wrap=N' work for N=0, and for N larger than SIZE_MAX.
 	* src/base64.c (wrap_write, do_encode, main): Change type of
 	parameters and locals, wrap_column, form size_t to uintmax_t.
