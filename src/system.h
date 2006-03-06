@@ -193,6 +193,10 @@ initialize_exit_failure (int status)
 # define O_NOFOLLOW 0
 #endif
 
+#if !defined O_NOLINKS
+# define O_NOLINKS 0
+#endif
+
 #if !defined O_RSYNC
 # define O_RSYNC 0
 #endif
