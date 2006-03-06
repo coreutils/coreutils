@@ -67,3 +67,5 @@ sticky bit, anyone able to write to the directory can delete or rename
 files.  The sticky bit is commonly found on directories, such as /tmp,
 that are world-writable.
 .SH OPTIONS
+[SEE ALSO]
+chmod(2)

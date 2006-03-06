@@ -21,3 +21,5 @@ performs the same function as
 If only a colon is given, or if the entire operand is empty, neither the
 owner nor the group is changed.
 .SH OPTIONS
+[SEE ALSO]
+chown(2)

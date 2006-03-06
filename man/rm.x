@@ -23,4 +23,4 @@ prompts the user for whether to remove the file.  If the response is
 not affirmative, the file is skipped.
 .SH OPTIONS
 [SEE ALSO]
-chattr(1), shred(1)
+unlink(1), unlink(2), chattr(1), shred(1)
