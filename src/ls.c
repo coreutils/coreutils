@@ -4152,7 +4152,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -D, --dired                generate output designed for Emacs' dired mode\n\
 "), stdout);
       fputs (_("\
-  -f                         do not sort, enable -aU, disable -lst\n\
+  -f                         do not sort, enable -aU, disable -ls --color\n\
   -F, --classify             append indicator (one of */=>@|) to entries\n\
       --file-type            likewise, except do not append `*'\n\
       --format=WORD          across -x, commas -m, horizontal -x, long -l,\n\
