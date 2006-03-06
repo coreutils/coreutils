@@ -1,5 +1,5 @@
 /* dd -- convert a file while copying it.
-   Copyright (C) 85, 90, 91, 1995-2005 Free Software Foundation, Inc.
+   Copyright (C) 85, 90, 91, 1995-2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -263,10 +263,12 @@ static struct symbol_value const flags[] =
   {"append",	O_APPEND},
   {"binary",	O_BINARY},
   {"direct",	O_DIRECT},
+  {"directory",	O_DIRECTORY},
   {"dsync",	O_DSYNC},
   {"noatime",	O_NOATIME},
   {"noctty",	O_NOCTTY},
   {"nofollow",	O_NOFOLLOW},
+  {"nolinks",	O_NOLINKS},
   {"nonblock",	O_NONBLOCK},
   {"sync",	O_SYNC},
   {"text",	O_TEXT},
@@ -460,6 +462,8 @@ Each FLAG symbol may be:\n\
 "), stdout);
       if (O_DIRECT)
 	fputs (_("  direct    use direct I/O for data\n"), stdout);
+      if (O_DIRECTORY)
+	fputs (_("  directory fail unless a directory\n"), stdout);
       if (O_DSYNC)
 	fputs (_("  dsync     use synchronized I/O for data\n"), stdout);
       if (O_SYNC)
@@ -468,11 +472,13 @@ Each FLAG symbol may be:\n\
 	fputs (_("  nonblock  use non-blocking I/O\n"), stdout);
       if (O_NOATIME)
 	fputs (_("  noatime   do not update access time\n"), stdout);
-      if (O_NOFOLLOW)
-	fputs (_("  nofollow  do not follow symlinks\n"), stdout);
       if (O_NOCTTY)
 	fputs (_("  noctty    do not assign controlling terminal from file\n"),
 	       stdout);
+      if (O_NOFOLLOW)
+	fputs (_("  nofollow  do not follow symlinks\n"), stdout);
+      if (O_NOLINKS)
+	fputs (_("  nolinks   fail if multiply-linked\n"), stdout);
       if (O_BINARY)
 	fputs (_("  binary    use binary I/O for data\n"), stdout);
       if (O_TEXT)
