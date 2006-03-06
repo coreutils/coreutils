@@ -1,3 +1,8 @@
+2006-03-05  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (dd invocation): New flags directory, nolinks.
+	Alphabetize nofollow.
+
 2006-02-17  Simon Josefsson  <jas@extundo.com>
 
 	* coreutils.texi: Add base64 section.

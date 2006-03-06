@@ -7003,7 +7003,8 @@ argument(s).  (No spaces around any comma(s).)
 Access the output file using the flags specified by the @var{flag}
 argument(s).  (No spaces around any comma(s).)
 
-Flags:
+Here are the flags.  Not every flag is supported on every operating
+system.
 
 @table @samp
 
@@ -7018,6 +7019,13 @@ contents of the file.  This flag makes sense only for output.
 @opindex direct
 @cindex direct I/O
 Use direct I/O for data, avoiding the buffer cache.
+
+@item directory
+@opindex directory
+@cindex directory I/O
+
+Fail unless the file is a directory.  Most operating systems do not
+allow I/O to a directory, so this flag has limited utility.
 
 @item dsync
 @opindex dsync
@@ -7043,11 +7051,6 @@ Use non-blocking I/O.
 @cindex access time
 Do not update the file's access time.
 
-@item nofollow
-@opindex nofollow
-@cindex symbolic links, following
-Do not follow symbolic links.
-
 @item noctty
 @opindex noctty
 @cindex controlling terminal
@@ -7055,6 +7058,16 @@ Do not assign the file to be a controlling terminal for @command{dd}.
 This has no effect when the file is not a terminal.
 On many hosts (e.g., @acronym{GNU}/Linux hosts), this option has no effect
 at all.
+
+@item nofollow
+@opindex nofollow
+@cindex symbolic links, following
+Do not follow symbolic links.
+
+@item nolinks
+@opindex nolinks
+@cindex hard links
+Fail if the file has multiple hard links.
 
 @item binary
 @opindex binary
