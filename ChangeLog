@@ -1,6 +1,14 @@
-2006-03-05  Jim Meyering  <jim@meyering.net>
+2006-03-05  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 6.0-cvs.
+
+	* src/dd.c (flags, usage): New flags directory, nolinks.
+	* src/system.h (O_NOLINKS): Define to 0 if not already defined.
+
+	* src/ls.c (usage): Mention that -f disables --color.
+	Problem reported by Niels MÃ¶ller.
+
+2006-03-05  Jim Meyering  <jim@meyering.net>
 
 	* tests/help-version: Set SHELL, if not already set, in order to
 	avoid failure when `make check' is run through debuild;  dircolors
@@ -97,7 +105,7 @@
 	* Makefile.maint (sc_two_space_separator_in_usage): Make the regular
 	expression match more of the target lines, e.g., those that start with
 	`-S,' (short option followed by a comma) or that include `=[...]'.
-	Patch by Nicolas François.
+	Patch by Nicolas FranÃ§ois.
 	Fix the four offenders thus exposed:
 	* src/join.c (usage): Use two spaces (not one) to separate the
 	--first-only option string from its description, so help2man formats
@@ -222,7 +230,7 @@
 	option string from its description, so help2man formats the
 	derived man page properly.
 	* src/mv.c (usage): Likewise.
-	Patch from Nicolas François in http://bugs.debian.org/351601.
+	Patch from Nicolas FranÃ§ois in http://bugs.debian.org/351601.
 
 2006-02-04  Jim Meyering  <jim@meyering.net>
 
