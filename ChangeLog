@@ -8,6 +8,10 @@
 	* src/ls.c (usage): Mention that -f disables --color.
 	Problem reported by Niels Möller.
 
+2006-03-03  Justin Pryzby  <pryzbyj@justinpryzby.com>
+
+	* man/*.x: Add references to syscalls from utilities of the same name.
+
 2006-03-05  Jim Meyering  <jim@meyering.net>
 
 	* tests/help-version: Set SHELL, if not already set, in order to
