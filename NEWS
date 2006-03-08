@@ -71,9 +71,18 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New features
 
-  dd's new iflag=noatime option causes it to read a file without
-  updating its access time, on hosts that support this (currently only
-  Linux kernels, version 2.6.8 and later).
+  New dd iflag= and oflag= flags:
+
+    'directory' causes dd to fail unless the file is a directory, on
+    hosts that support this (e.g., Linux kernels, version 2.1.126 and
+    later).  This has limited utility but is present for completeness.
+
+    'noatime' causes dd to read a file without updating its access
+    time, on hosts that support this (e.g., Linux kernels, version
+    2.6.8 and later).
+
+    'nolinks' causes dd to fail if the file has multiple hard links,
+    on hosts that support this (e.g., Solaris 10 and later).
 
   rm now accepts the -I (--interactive=once) option.  This new option
   prompts once if rm is invoked recursively or if more than three
