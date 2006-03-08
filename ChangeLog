@@ -2,6 +2,12 @@
 
 	* Version 6.0-cvs.
 
+	* NEWS: Document dd's new 'directory' and 'nolinks' flags.
+	* src/dd.c (set_fd_flags): Handle file-creation flags on file
+	descriptors, rather than ignoring them.
+	* tests/dd/misc: Add test cases for append, nofollow, directory,
+	and nolinks flags.  Simplify redirection to /dev/null in some cases.
+
 	* tests/dd/misc: iflags->iflag.  This fixes a typo that meant the
 	noatime test never tested anything.
 
