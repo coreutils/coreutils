@@ -1,6 +1,11 @@
-2006-03-05  Paul Eggert  <eggert@cs.ucla.edu>
+2006-03-08  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 6.0-cvs.
+
+	* tests/dd/misc: iflags->iflag.  This fixes a typo that meant the
+	noatime test never tested anything.
+
+2006-03-05  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/dd.c (flags, usage): New flags directory, nolinks.
 	* src/system.h (O_NOLINKS): Define to 0 if not already defined.
