@@ -1,8 +1,10 @@
 #!/bin/sh
 # Ensure dd treats `--' properly.
-# Also ensure that iflag=noatime works.
+# Also test some flag values.
 
 tmp_in=dd-in.$$
+tmp_in2=dd-in2.$$
+tmp_sym=dd-sym.$$
 tmp_out=dd-out.$$
 
 if test "$VERBOSE" = yes; then
@@ -12,21 +14,36 @@ fi
 
 test_failure=0
 echo data > $tmp_in || test_failure=1
+ln $tmp_in $tmp_in2 || test_failure=1
+ln -s $tmp_in $tmp_sym || test_failure=1
 if test $test_failure = 1; then
   echo 'failure in testing framework'
   exit 1
 fi
 
-dd if=$tmp_in of=$tmp_out > /dev/null 2>&1 || fail=1
+dd if=$tmp_in of=$tmp_out 2> /dev/null || fail=1
 cmp $tmp_in $tmp_out || fail=1
 
 rm $tmp_out
-dd -- if=$tmp_in of=$tmp_out > /dev/null 2>&1 || fail=1
+dd -- if=$tmp_in of=$tmp_out 2> /dev/null || fail=1
 cmp $tmp_in $tmp_out || fail=1
+
+if dd oflag=append if=$tmp_in of=$tmp_out 2> /dev/null; then
+  cmp $tmp_in $tmp_out || fail=1
+fi
+
+if dd iflag=nofollow if=$tmp_in count=0 2> /dev/null; then
+  dd iflag=nofollow if=$tmp_sym count=0 2> /dev/null && fail=1
+fi
+
+if dd iflag=directory if=. count=0 2> /dev/null; then
+  dd iflag=directory count=0 <. 2> /dev/null || fail=1
+  dd iflag=directory count=0 <$tmp_in 2> /dev/null && fail=1
+fi
 
 old_ls=`ls -u --full-time $tmp_in`
 sleep 1
-if dd iflag=noatime if=$tmp_in of=$tmp_out > /dev/null 2>&1; then
+if dd iflag=noatime if=$tmp_in of=$tmp_out 2> /dev/null; then
   new_ls=`ls -u --full-time $tmp_in`
   if test "x$old_ls" != "x$new_ls"; then
     echo "dd iflag=noatime updated atime; O_NOATIME bug in your kernel?" >&2
@@ -34,6 +51,12 @@ if dd iflag=noatime if=$tmp_in of=$tmp_out > /dev/null 2>&1; then
   fi
 fi
 
-rm -f $tmp_in $tmp_out
+if dd oflag=nolinks if=$tmp_in of=$tmp_out 2> /dev/null; then
+  dd iflag=nolinks if=$tmp_in > /dev/null 2>&1 && fail=1
+  dd iflag=nolinks < $tmp_in > /dev/null 2>&1 && fail=1
+  dd oflag=nolinks < $tmp_in > $tmp_out 2>&1 || fail=1
+fi
+
+rm -f $tmp_in $tmp_in2 $tmp_sym $tmp_out
 
 exit $fail
