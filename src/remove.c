@@ -391,7 +391,9 @@ ds_free (Dirstack_state *ds)
 static void
 AD_pop_and_chdir (DIR **dirp, Dirstack_state *ds, char **prev_dir)
 {
-  enum RM_status old_status = AD_stack_top(ds)->status;
+  struct AD_ent *leaf_dir_ent = AD_stack_top(ds);
+  struct dev_ino leaf_dev_ino = leaf_dir_ent->dev_ino;
+  enum RM_status old_status = leaf_dir_ent->status;
   struct AD_ent *top;
 
   /* Get the name of the current (but soon to be `previous') directory
@@ -401,6 +403,16 @@ AD_pop_and_chdir (DIR **dirp, Dirstack_state *ds, char **prev_dir)
   AD_stack_pop (ds);
   pop_dir (ds);
   top = AD_stack_top (ds);
+
+  /* If the directory we're about to leave (and try to rmdir)
+     is the one whose dev_ino is being used to detect a cycle,
+     reset cycle_check_state.dev_ino to that of the parent.
+     Otherwise, once that directory is removed, its dev_ino
+     could be reused in the creation (by some other process)
+     of a directory that this rm process would encounter,
+     which would result in a false-positive cycle indication.  */
+  if (SAME_INODE (ds->cycle_check_state.dev_ino, leaf_dev_ino))
+    ds->cycle_check_state.dev_ino = top->dev_ino;
 
   /* Propagate any failure to parent.  */
   UPDATE_STATUS (top->status, old_status);
