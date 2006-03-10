@@ -1,6 +1,17 @@
-2006-03-08  Paul Eggert  <eggert@cs.ucla.edu>
+2006-03-10  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	Fix a bug whereby a user with write access to a directory being removed
+	could cause the removal of that directory to fail with an erroneous
+	diagnostic about a directory cycle.  Reported by Vineet Chadha.
+
+	* NEWS: Mention this.
+	* src/remove.c (AD_pop_and_chdir): If the directory we're about to
+	leave (and try to rmdir) is the one whose dev_ino is being used to
+	detect a cycle, reset cycle_check_state.dev_ino to that of the parent.
+
+2006-03-08  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: Document dd's new 'directory' and 'nolinks' flags.
 	* src/dd.c (set_fd_flags): Handle file-creation flags on file

@@ -115,7 +115,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   rm -r no longer fails to remove an inaccessible and empty directory
 
   rm -r's cycle detection code can no longer be tricked into reporting
-  a false positive.
+  a false positive (introduced in fileutils-4.1.9).
 
   sort would fail for large inputs (~50MB) on systems with a buggy
   mkstemp function.  sort and tac now use the replacement mkstemp
