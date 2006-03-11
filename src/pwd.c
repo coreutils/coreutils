@@ -279,8 +279,9 @@ robust_getcwd (struct file_name *file_name)
       find_dir_entry (&dot_sb, file_name, height++);
     }
 
+  /* See if a leading slash is needed; file_name_prepend adds one.  */
   if (file_name->start[0] == '\0')
-    file_name_prepend (file_name, "/", 1);
+    file_name_prepend (file_name, "", 0);
 }
 
 int
