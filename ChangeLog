@@ -1,6 +1,10 @@
-2006-03-10  Jim Meyering  <jim@meyering.net>
+2006-03-11  Eric Blake  <ebb9@byu.net>
 
 	* Version 6.0-cvs.
+
+	* src/pwd.c (robust_getcwd): Prepend only one slash, not two.
+
+2006-03-10  Jim Meyering  <jim@meyering.net>
 
 	Fix a bug whereby a user with write access to a directory being removed
 	could cause the removal of that directory to fail with an erroneous
