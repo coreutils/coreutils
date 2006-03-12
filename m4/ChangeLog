@@ -1,3 +1,8 @@
+2006-03-12  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* prereq.m4 (gl_PREREQ): Require gl_TIME_R.
+	* time_r.m4: New file, from gnulib.
+
 2006-03-01  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* clock_time.m4 (gl_CLOCK_TIME): Require gl_USE_SYSTEM_EXTENSIONS,
