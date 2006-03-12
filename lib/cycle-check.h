@@ -1,6 +1,6 @@
 /* help detect directory cycles efficiently
 
-   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004, 2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -30,6 +30,7 @@
 # endif
 # include <stdbool.h>
 # include "dev-ino.h"
+# include "same-inode.h"
 
 struct cycle_check_state
 {
@@ -40,5 +41,16 @@ struct cycle_check_state
 
 void cycle_check_init (struct cycle_check_state *state);
 bool cycle_check (struct cycle_check_state *state, struct stat const *sb);
+
+# define CYCLE_CHECK_REFLECT_CHDIR_UP(State, SB_dir, SB_subdir)	\
+  do								\
+    {								\
+      if (SAME_INODE ((State)->dev_ino, SB_subdir))		\
+	{							\
+	  (State)->dev_ino.st_dev = (SB_dir).st_dev;		\
+	  (State)->dev_ino.st_ino = (SB_dir).st_ino;		\
+	}							\
+    }								\
+  while (0)
 
 #endif
