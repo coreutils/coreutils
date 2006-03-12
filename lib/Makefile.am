@@ -45,7 +45,6 @@ libcoreutils_a_SOURCES = \
   strcase.h \
   strnlen1.c strnlen1.h \
   strstr.h \
-  time_r.c time_r.h \
   unicodeio.c unicodeio.h \
   verify.h \
   xalloc-die.c \
