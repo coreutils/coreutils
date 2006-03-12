@@ -30,6 +30,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include "same-inode.h"
 
 #ifndef O_DIRECTORY
 # define O_DIRECTORY 0
@@ -38,10 +39,6 @@
 #ifndef O_NOFOLLOW
 # define O_NOFOLLOW 0
 #endif
-
-#define SAME_INODE(Stat_buf_1, Stat_buf_2) \
-  ((Stat_buf_1).st_ino == (Stat_buf_2).st_ino \
-   && (Stat_buf_1).st_dev == (Stat_buf_2).st_dev)
 
 /* Like chdir, but fail if DIR is a symbolic link to a directory (or
    similar funny business), or if DIR is not readable.  This avoids a
