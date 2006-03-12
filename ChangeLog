@@ -2,6 +2,8 @@
 
 	* Version 6.0-cvs.
 
+	* src/copy.c (set_author): Rename function, from preserve_author.
+
 	* src/remove.c (AD_pop_and_chdir): Use new macro,
 	CYCLE_CHECK_REFLECT_CHDIR_UP, rather than open-coding it.
 
