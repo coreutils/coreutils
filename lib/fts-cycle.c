@@ -1,6 +1,6 @@
 /* Detect cycles in file tree walks.
 
-   Copyright (C) 2003, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
 
    Written by Jim Meyering.
 
@@ -129,9 +129,9 @@ enter_dir (FTS *fts, FTSENT *ent)
 static void
 leave_dir (FTS *fts, FTSENT *ent)
 {
+  struct stat const *st = ent->fts_statp;
   if (fts->fts_options & (FTS_TIGHT_CYCLE_CHECK | FTS_LOGICAL))
     {
-      struct stat const *st = ent->fts_statp;
       struct Active_dir obj;
       void *found;
       obj.dev = st->st_dev;
@@ -140,6 +140,13 @@ leave_dir (FTS *fts, FTSENT *ent)
       if (!found)
 	abort ();
       free (found);
+    }
+  else
+    {
+      FTSENT *parent = ent->fts_parent;
+      if (parent != NULL)
+	CYCLE_CHECK_REFLECT_CHDIR_UP (fts->fts_cycle.state,
+				      *(parent->fts_statp), *st);
     }
 }
 
