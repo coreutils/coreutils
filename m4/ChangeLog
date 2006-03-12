@@ -3,6 +3,7 @@
 	* chdir-safer.m4 (gl_CHDIR_SAFER): Add same-inode.h to the list.
 	* cycle-check.m4 (gl_CYCLE_CHECK): Likewise.
 	* same.m4 (gl_SAME): Likewise.
+	* root-dev-ino.m4 (gl_ROOT_DEV_INO): Likewise.
 
 2006-03-12  Paul Eggert  <eggert@cs.ucla.edu>
 
