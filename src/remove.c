@@ -411,8 +411,8 @@ AD_pop_and_chdir (DIR **dirp, Dirstack_state *ds, char **prev_dir)
      could be reused in the creation (by some other process)
      of a directory that this rm process would encounter,
      which would result in a false-positive cycle indication.  */
-  if (SAME_INODE (ds->cycle_check_state.dev_ino, leaf_dev_ino))
-    ds->cycle_check_state.dev_ino = top->dev_ino;
+  CYCLE_CHECK_REFLECT_CHDIR_UP (&ds->cycle_check_state,
+				top->dev_ino, leaf_dev_ino);
 
   /* Propagate any failure to parent.  */
   UPDATE_STATUS (top->status, old_status);
