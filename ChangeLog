@@ -2,6 +2,9 @@
 
 	* Version 6.0-cvs.
 
+	* src/remove.c (AD_pop_and_chdir): Use new macro,
+	CYCLE_CHECK_REFLECT_CHDIR_UP, rather than open-coding it.
+
 	* src/system.h (SAME_INODE): Remove definition.
 	Include "same-inode.h", instead.
 
