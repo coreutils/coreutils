@@ -1,3 +1,12 @@
+2006-03-12  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* Makefile.am (libcoreutils_a_SOURCES): Remove time_r.c, time_r.h,
+	as this is now done in m4.
+	* time_r.h (asctime_r, ctime_r): Remove.  These functions can
+	overrun buffers and shouldn't be used (much as gets shouldn't be
+	used).
+	* time_r.c (asctime_r, ctime_r): Likewise.
+
 2006-02-17  Simon Josefsson  <jas@extundo.com>
 
 	* base64.h, base64.c: New files.
