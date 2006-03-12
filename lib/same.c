@@ -1,6 +1,6 @@
 /* Determine whether two file names refer to the same file.
 
-   Copyright (C) 1997, 1998, 1999, 2000, 2002, 2003, 2004, 2005 Free
+   Copyright (C) 1997, 1998, 1999, 2000, 2002, 2003, 2004, 2005, 2006 Free
    Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -42,15 +42,12 @@
 #include "same.h"
 #include "dirname.h"
 #include "error.h"
+#include "same-inode.h"
 #include "xalloc.h"
 
 #ifndef MIN
 # define MIN(a, b) ((a) < (b) ? (a) : (b))
 #endif
-
-#define SAME_INODE(Stat_buf_1, Stat_buf_2) \
-  ((Stat_buf_1).st_ino == (Stat_buf_2).st_ino \
-   && (Stat_buf_1).st_dev == (Stat_buf_2).st_dev)
 
 /* Return nonzero if SOURCE and DEST point to the same name in the same
    directory.  */
