@@ -211,7 +211,7 @@ set_owner (const struct cp_options *x, char const *dst_name, int dest_desc,
    DEST_NAME if defined.  */
 
 static void
-preserve_author (const char *dst_name, int dest_desc, const struct stat *src_sb)
+set_author (const char *dst_name, int dest_desc, const struct stat *src_sb)
 {
   /* FIXME: Preserve the st_author field via the file descriptor dest_desc.  */
 #if HAVE_STRUCT_STAT_ST_AUTHOR
@@ -509,7 +509,7 @@ copy_reg (char const *src_name, char const *dst_name,
 	}
     }
 
-  preserve_author (dst_name, dest_desc, src_sb);
+  set_author (dst_name, dest_desc, src_sb);
 
   if (x->preserve_mode || x->move_mode)
     {
@@ -1053,10 +1053,16 @@ copy_internal (char const *src_name, char const *dst_name,
 	    {
 	      if (S_ISDIR (src_type))
 		{
-		  error (0, 0,
-		     _("cannot overwrite non-directory %s with directory %s"),
-			 quote_n (0, dst_name), quote_n (1, src_name));
-		  return false;
+		  if (x->move_mode && x->backup_type != no_backups)
+		    {
+		    }
+		  else
+		    {
+		      error (0, 0,
+		       _("cannot overwrite non-directory %s with directory %s"),
+			     quote_n (0, dst_name), quote_n (1, src_name));
+		      return false;
+		    }
 		}
 
 	      /* Don't let the user destroy their data, even if they try hard:
@@ -1081,10 +1087,16 @@ copy_internal (char const *src_name, char const *dst_name,
 	    {
 	      if (S_ISDIR (dst_sb.st_mode))
 		{
-		  error (0, 0,
-		       _("cannot overwrite directory %s with non-directory"),
-			 quote (dst_name));
-		  return false;
+		  if (x->move_mode && x->backup_type != no_backups)
+		    {
+		    }
+		  else
+		    {
+		      error (0, 0,
+			 _("cannot overwrite directory %s with non-directory"),
+			     quote (dst_name));
+		      return false;
+		    }
 		}
 
 	      if (x->update)
@@ -1146,7 +1158,7 @@ copy_internal (char const *src_name, char const *dst_name,
 	  if (x->move_mode)
 	    {
 	      /* In move_mode, DEST may not be an existing directory.  */
-	      if (S_ISDIR (dst_sb.st_mode))
+	      if (S_ISDIR (dst_sb.st_mode) && x->backup_type == no_backups)
 		{
 		  error (0, 0, _("cannot overwrite directory %s"),
 			 quote (dst_name));
@@ -1154,7 +1166,8 @@ copy_internal (char const *src_name, char const *dst_name,
 		}
 
 	      /* Don't allow user to move a directory onto a non-directory.  */
-	      if (S_ISDIR (src_sb.st_mode) && !S_ISDIR (dst_sb.st_mode))
+	      if (S_ISDIR (src_sb.st_mode) && !S_ISDIR (dst_sb.st_mode)
+		  && x->backup_type == no_backups)
 		{
 		  error (0, 0,
 		       _("cannot move directory onto non-directory: %s -> %s"),
@@ -1163,7 +1176,9 @@ copy_internal (char const *src_name, char const *dst_name,
 		}
 	    }
 
-	  if (x->backup_type != no_backups && !S_ISDIR (dst_sb.st_mode))
+	  bool backup_directories = true;
+	  if (x->backup_type != no_backups
+	      && (!S_ISDIR (dst_sb.st_mode) || backup_directories))
 	    {
 	      char *tmp_backup = find_backup_file_name (dst_name,
 							x->backup_type);
@@ -1738,7 +1753,7 @@ copy_internal (char const *src_name, char const *dst_name,
 	return false;
     }
 
-  preserve_author (dst_name, -1, &src_sb);
+  set_author (dst_name, -1, &src_sb);
 
   if (x->preserve_mode || x->move_mode)
     {
