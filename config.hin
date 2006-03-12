@@ -1208,6 +1208,10 @@
 /* Define to 1 if you have the <termios.h> header file. */
 #undef HAVE_TERMIOS_H
 
+/* Define to 1 if localtime_r, etc. have the type signatures that POSIX
+   requires. */
+#undef HAVE_TIME_R_POSIX
+
 /* Define if struct tm has the tm_gmtoff member. */
 #undef HAVE_TM_GMTOFF
 

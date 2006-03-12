@@ -80,24 +80,24 @@ DIST_COMMON = README $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	readtokens.h readutmp.c readutmp.h realloc.c regcomp.c regex.c \
 	regex.h regex_internal.c regex_internal.h regexec.c rename.c \
 	rmdir.c root-dev-ino.c root-dev-ino.h rpmatch.c safe-read.c \
-	safe-read.h safe-write.c safe-write.h same.c same.h save-cwd.c \
-	save-cwd.h savedir.c savedir.h setenv.c setenv.h settime.c \
-	sha1.c sha1.h sha256.c sha256.h sha512.c sha512.h sig2str.c \
-	sig2str.h stat-macros.h stat-time.h stdio--.h stdio-safer.h \
-	stdlib--.h stdlib-safer.h stpcpy.c strcasecmp.c strcspn.c \
-	strdup.c strdup.h strftime.c strftime.h strintcmp.c \
-	stripslash.c strncasecmp.c strndup.c strndup.h strnlen.c \
-	strnlen.h strnumcmp-in.h strnumcmp.c strnumcmp.h strpbrk.c \
-	strstr.c strtod.c strtoimax.c strtol.c strtoll.c strtoul.c \
-	strtoull.c strtoumax.c strverscmp.c strverscmp.h tempname.c \
-	timespec.h umaxtostr.c unistd--.h unistd-safer.h unlinkdir.c \
-	unlinkdir.h unlocked-io.h unsetenv.c userspec.c userspec.h \
-	utime.c utimecmp.c utimecmp.h utimens.c utimens.h vasnprintf.c \
-	vasprintf.c version-etc-fsf.c version-etc.c version-etc.h \
-	xalloc.h xfts.c xfts.h xgetcwd.c xgetcwd.h xmalloc.c \
-	xnanosleep.c xnanosleep.h xreadlink.c xreadlink.h xstrtod.c \
-	xstrtod.h xstrtol.c xstrtol.h xstrtoul.c xtime.h yesno.c \
-	yesno.h
+	safe-read.h safe-write.c safe-write.h same-inode.h same.c \
+	same.h save-cwd.c save-cwd.h savedir.c savedir.h setenv.c \
+	setenv.h settime.c sha1.c sha1.h sha256.c sha256.h sha512.c \
+	sha512.h sig2str.c sig2str.h stat-macros.h stat-time.h \
+	stdio--.h stdio-safer.h stdlib--.h stdlib-safer.h stpcpy.c \
+	strcasecmp.c strcspn.c strdup.c strdup.h strftime.c strftime.h \
+	strintcmp.c stripslash.c strncasecmp.c strndup.c strndup.h \
+	strnlen.c strnlen.h strnumcmp-in.h strnumcmp.c strnumcmp.h \
+	strpbrk.c strstr.c strtod.c strtoimax.c strtol.c strtoll.c \
+	strtoul.c strtoull.c strtoumax.c strverscmp.c strverscmp.h \
+	tempname.c time_r.c timespec.h umaxtostr.c unistd--.h \
+	unistd-safer.h unlinkdir.c unlinkdir.h unlocked-io.h \
+	unsetenv.c userspec.c userspec.h utime.c utimecmp.c utimecmp.h \
+	utimens.c utimens.h vasnprintf.c vasprintf.c version-etc-fsf.c \
+	version-etc.c version-etc.h xalloc.h xfts.c xfts.h xgetcwd.c \
+	xgetcwd.h xmalloc.c xnanosleep.c xnanosleep.h xreadlink.c \
+	xreadlink.h xstrtod.c xstrtod.h xstrtol.c xstrtol.h xstrtoul.c \
+	xtime.h yesno.c yesno.h
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/afs.m4 \
 	$(top_srcdir)/m4/alloca.m4 $(top_srcdir)/m4/allocsa.m4 \
@@ -200,12 +200,12 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/afs.m4 \
 	$(top_srcdir)/m4/strtol.m4 $(top_srcdir)/m4/strtoll.m4 \
 	$(top_srcdir)/m4/strtoul.m4 $(top_srcdir)/m4/strtoull.m4 \
 	$(top_srcdir)/m4/strtoumax.m4 $(top_srcdir)/m4/strverscmp.m4 \
-	$(top_srcdir)/m4/sys_socket_h.m4 $(top_srcdir)/m4/timespec.m4 \
-	$(top_srcdir)/m4/tm_gmtoff.m4 $(top_srcdir)/m4/tzset.m4 \
-	$(top_srcdir)/m4/uint32_t.m4 $(top_srcdir)/m4/uintmax_t.m4 \
-	$(top_srcdir)/m4/uintptr_t.m4 $(top_srcdir)/m4/ullong_max.m4 \
-	$(top_srcdir)/m4/ulonglong.m4 $(top_srcdir)/m4/unicodeio.m4 \
-	$(top_srcdir)/m4/unistd-safer.m4 \
+	$(top_srcdir)/m4/sys_socket_h.m4 $(top_srcdir)/m4/time_r.m4 \
+	$(top_srcdir)/m4/timespec.m4 $(top_srcdir)/m4/tm_gmtoff.m4 \
+	$(top_srcdir)/m4/tzset.m4 $(top_srcdir)/m4/uint32_t.m4 \
+	$(top_srcdir)/m4/uintmax_t.m4 $(top_srcdir)/m4/uintptr_t.m4 \
+	$(top_srcdir)/m4/ullong_max.m4 $(top_srcdir)/m4/ulonglong.m4 \
+	$(top_srcdir)/m4/unicodeio.m4 $(top_srcdir)/m4/unistd-safer.m4 \
 	$(top_srcdir)/m4/unlink-busy.m4 $(top_srcdir)/m4/unlinkdir.m4 \
 	$(top_srcdir)/m4/unlocked-io.m4 $(top_srcdir)/m4/uptime.m4 \
 	$(top_srcdir)/m4/userspec.m4 $(top_srcdir)/m4/utimbuf.m4 \
@@ -236,10 +236,9 @@ libcoreutils_a_DEPENDENCIES = $(am__DEPENDENCIES_1) \
 am_libcoreutils_a_OBJECTS = allocsa.$(OBJEXT) base64.$(OBJEXT) \
 	buffer-lcm.$(OBJEXT) full-read.$(OBJEXT) full-write.$(OBJEXT) \
 	localcharset.$(OBJEXT) mbswidth.$(OBJEXT) \
-	readtokens0.$(OBJEXT) strnlen1.$(OBJEXT) time_r.$(OBJEXT) \
-	unicodeio.$(OBJEXT) xalloc-die.$(OBJEXT) \
-	xgethostname.$(OBJEXT) xmemcoll.$(OBJEXT) xstrndup.$(OBJEXT) \
-	xstrtoimax.$(OBJEXT) xstrtoumax.$(OBJEXT)
+	readtokens0.$(OBJEXT) strnlen1.$(OBJEXT) unicodeio.$(OBJEXT) \
+	xalloc-die.$(OBJEXT) xgethostname.$(OBJEXT) xmemcoll.$(OBJEXT) \
+	xstrndup.$(OBJEXT) xstrtoimax.$(OBJEXT) xstrtoumax.$(OBJEXT)
 libcoreutils_a_OBJECTS = $(am_libcoreutils_a_OBJECTS)
 PROGRAMS = $(noinst_PROGRAMS)
 t_fpending_SOURCES = t-fpending.c
@@ -406,8 +405,8 @@ libcoreutils_a_SOURCES = allocsa.c allocsa.h base64.c base64.h \
 	full-read.h full-write.c full-write.h getaddrinfo.h gettext.h \
 	localcharset.c localcharset.h mbchar.h mbswidth.c mbswidth.h \
 	mbuiter.h readtokens0.c readtokens0.h strcase.h strnlen1.c \
-	strnlen1.h strstr.h time_r.c time_r.h unicodeio.c unicodeio.h \
-	verify.h xalloc-die.c xgethostname.c xgethostname.h xmemcoll.c \
+	strnlen1.h strstr.h unicodeio.c unicodeio.h verify.h \
+	xalloc-die.c xgethostname.c xgethostname.h xmemcoll.c \
 	xmemcoll.h xstrndup.c xstrndup.h xstrtoimax.c xstrtoumax.c \
 	printf-args.h printf-parse.h vasprintf.h vasnprintf.h
 libcoreutils_a_LIBADD = $(LIBOBJS) $(ALLOCA)
@@ -638,6 +637,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/strtoumax.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/strverscmp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/tempname.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/time_r.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/umaxtostr.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/unlinkdir.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/unsetenv.Po@am__quote@
@@ -668,7 +668,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/readtokens0.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/strnlen1.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/t-fpending.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/time_r.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/unicodeio.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xalloc-die.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xgethostname.Po@am__quote@
