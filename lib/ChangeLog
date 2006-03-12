@@ -11,6 +11,7 @@
 	* cycle-check.h: Include "same-inode.h".
 	(CYCLE_CHECK_REFLECT_CHDIR_UP): Define.
 	* cycle-check.c (SAME_INODE): Remove definition.
+	* root-dev-ino.h: Include "same-inode.h".
 
 2006-03-12  Paul Eggert  <eggert@cs.ucla.edu>
 
