@@ -1,6 +1,6 @@
 /* Reentrant time functions like localtime_r.
 
-   Copyright (C) 2003, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2005, 2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -27,23 +27,18 @@
 #include <time.h>
 
 #if !HAVE_TIME_R_POSIX
-# undef asctime_r
-# undef ctime_r
+
+/* Don't bother with asctime_r and ctime_r, since these functions are
+   not safe (like asctime and ctime, they can overrun their 26-byte
+   output buffers when given outlandish struct tm values), and we
+   don't want to encourage applications to use unsafe functions.  Use
+   strftime or even sprintf instead.  */
+
 # undef gmtime_r
 # undef localtime_r
 
-# define asctime_r rpl_asctime_r
-# define ctime_r rpl_ctime_r
 # define gmtime_r rpl_gmtime_r
 # define localtime_r rpl_localtime_r
-
-/* See the POSIX:2001 specification
-   <http://www.opengroup.org/susv3xsh/asctime.html>.  */
-char *asctime_r (struct tm const * restrict, char * restrict);
-
-/* See the POSIX:2001 specification
-   <http://www.opengroup.org/susv3xsh/ctime.html>.  */
-char *ctime_r (time_t const *, char *);
 
 /* See the POSIX:2001 specification
    <http://www.opengroup.org/susv3xsh/gmtime.html>.  */

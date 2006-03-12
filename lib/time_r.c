@@ -1,6 +1,6 @@
 /* Reentrant time functions like localtime_r.
 
-   Copyright (C) 2003 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -43,18 +43,6 @@ copy_tm_result (struct tm *dest, struct tm const *src)
   return dest;
 }
 
-
-char *
-asctime_r (struct tm const * restrict tm, char * restrict buf)
-{
-  return copy_string_result (buf, asctime (tm));
-}
-
-char *
-ctime_r (time_t const *t, char *buf)
-{
-  return copy_string_result (buf, ctime (t));
-}
 
 struct tm *
 gmtime_r (time_t const * restrict t, struct tm * restrict tp)
