@@ -1,3 +1,9 @@
+2006-03-12  Jim Meyering  <jim@meyering.net>
+
+	* chdir-safer.m4 (gl_CHDIR_SAFER): Add same-inode.h to the list.
+	* cycle-check.m4 (gl_CYCLE_CHECK): Likewise.
+	* same.m4 (gl_SAME): Likewise.
+
 2006-03-12  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* prereq.m4 (gl_PREREQ): Require gl_TIME_R.
