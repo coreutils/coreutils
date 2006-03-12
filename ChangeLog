@@ -1,6 +1,11 @@
-2006-03-11  Eric Blake  <ebb9@byu.net>
+2006-03-12  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* src/system.h (SAME_INODE): Remove definition.
+	Include "same-inode.h", instead.
+
+2006-03-11  Eric Blake  <ebb9@byu.net>
 
 	* src/pwd.c (robust_getcwd): Prepend only one slash, not two.
 
