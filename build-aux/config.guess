@@ -1,9 +1,10 @@
 #! /bin/sh
 # Attempt to guess a canonical system name.
 #   Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999,
-#   2000, 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+#   2000, 2001, 2002, 2003, 2004, 2005, 2006 Free Software Foundation,
+#   Inc.
 
-timestamp='2006-02-23'
+timestamp='2006-03-13'
 
 # This file is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by
@@ -778,9 +779,6 @@ EOF
 	echo ${UNAME_MACHINE}-pc-cygwin
 	exit ;;
     i*:MINGW*:*)
-	echo ${UNAME_MACHINE}-pc-mingw32
-	exit ;;
-    i*:MSYS_NT-*:*:*)
 	echo ${UNAME_MACHINE}-pc-mingw32
 	exit ;;
     i*:windows32*:*)
