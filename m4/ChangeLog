@@ -1,3 +1,14 @@
+2006-03-16  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* regex.m4 (gl_REGEX): Don't check for off_t, since the code
+	no longer needs it.  Instead, check that regoff_t is as least
+	as wide as ptrdiff_t.
+
+	Don't define _REGEX_WIDE_OFFSETS unless using the included regex,
+	so that our regex.h stays compatible with the installed regex.
+	This is helpful for installers who configure --without-included-regex.
+	Problem reported by Emanuele Giaquinta.
+
 2006-03-12  Jim Meyering  <jim@meyering.net>
 
 	* chdir-safer.m4 (gl_CHDIR_SAFER): Add same-inode.h to the list.

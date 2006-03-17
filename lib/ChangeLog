@@ -1,3 +1,9 @@
+2006-03-16  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* regex.h (regoff_t) [defined _REGEX_LARGE_OFFSETS]:
+	Typedef to long int, not to off_, as POSIX will likely change
+	in that direction.
+
 2006-03-12  Jim Meyering  <jim@meyering.net>
 
 	* fts-cycle.c (leave_dir): If cycle-check's saved dev-ino pair matches
