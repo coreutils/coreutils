@@ -1,3 +1,8 @@
+2006-03-17  Jim Meyering  <jim@meyering.net>
+
+	* regex.m4 (gl_REGEX): Fix typo in last change:
+	s/_REGEX_WIDE_OFFSETS/_REGEX_LARGE_OFFSETS/.
+
 2006-03-16  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* regex.m4 (gl_REGEX): Don't check for off_t, since the code
