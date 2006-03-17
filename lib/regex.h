@@ -1,6 +1,6 @@
 /* Definitions for data structures and routines for the regular
    expression library.
-   Copyright (C) 1985,1989-93,1995-98,2000,2001,2002,2003,2005
+   Copyright (C) 1985,1989-93,1995-98,2000,2001,2002,2003,2005,2006
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -53,11 +53,13 @@ extern "C" {
 
 /* The type of the offset of a byte within a string.
    For historical reasons POSIX 1003.1-2004 requires that regoff_t be
-   at least as wide as off_t.  This is a bit odd (and many common
-   POSIX platforms set it to the more-sensible ssize_t) but we might
-   as well conform.  We don't know of any hosts where ssize_t is wider
-   than off_t, so off_t is safe.  */
-typedef off_t regoff_t;
+   at least as wide as off_t.  However, many common POSIX platforms set
+   regoff_t to the more-sensible ssize_t and the Open Group has
+   signalled its intention to change the requirement to be that
+   regoff_t be at least as wide as ptrdiff_t and ssize_t; see XBD ERN
+   60 (2005-08-25).  We don't know of any hosts where ssize_t or
+   ptrdiff_t is wider than long int, so long int is safe.  */
+typedef long int regoff_t;
 
 /* The type of nonnegative object indexes.  Traditionally, GNU regex
    uses 'int' for these.  Code that uses __re_idx_t should work
