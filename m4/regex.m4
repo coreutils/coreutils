@@ -1,7 +1,7 @@
-#serial 31
+#serial 32
 
-# Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2003, 2004, 2005 Free
-# Software Foundation, Inc.
+# Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2003, 2004, 2005,
+# 2006 Free Software Foundation, Inc.
 #
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
@@ -14,31 +14,6 @@ AC_PREREQ([2.50])
 
 AC_DEFUN([gl_REGEX],
 [
-  AC_REQUIRE([AC_SYS_LARGEFILE]) dnl for a sufficently-wide off_t
-
-  AC_CACHE_CHECK([whether off_t can be used in a switch statement],
-    [gl_cv_type_off_t_switch],
-    [AC_COMPILE_IFELSE(
-      [AC_LANG_PROGRAM(
-         [AC_INCLUDES_DEFAULT],
-	 [[off_t o = -1;
-	   switch (o)
-	     {
-	     case -2:
-	       return 1;
-	     case -1:
-	       return 2;
-	     default:
-	       return 0;
-	     }
-	 ]])],
-      [gl_cv_type_off_t_switch=yes],
-      [gl_cv_type_off_t_switch=no])])
-  if test $gl_cv_type_off_t_switch = yes; then
-    AC_DEFINE([_REGEX_LARGE_OFFSETS], 1,
-      [Define if you want regoff_t to be at least as wide POSIX requires.])
-  fi
-
   AC_LIBSOURCES(
     [regcomp.c, regex.c, regex.h,
      regex_internal.c, regex_internal.h, regexec.c])
@@ -123,10 +98,10 @@ AC_DEFUN([gl_REGEX],
 	      exit (1);
 
 	    /* Reject hosts whose regoff_t values are too narrow.
-	       These include glibc 2.3.5 on hosts with 64-bit off_t
-	       and 32-bit int, and Solaris 10 on hosts with 32-bit int
-	       and _FILE_OFFSET_BITS=64.  */
-	    if (sizeof (regoff_t) < sizeof (off_t))
+	       These include glibc 2.3.5 on hosts with 64-bit ptrdiff_t
+	       and 32-bit int.  */
+	    if (sizeof (regoff_t) < sizeof (ptrdiff_t)
+	        || sizeof (regoff_t) < sizeof (ssize_t))
 	      exit (1);
 
 	    exit (0);]])],
@@ -141,6 +116,8 @@ AC_DEFUN([gl_REGEX],
   esac
 
   if test $ac_use_included_regex = yes; then
+    AC_DEFINE([_REGEX_WIDE_OFFSETS], 1,
+      [Define if you want regoff_t to be at least as wide POSIX requires.])
     AC_DEFINE([re_syntax_options], [rpl_re_syntax_options],
       [Define to rpl_re_syntax_options if the replacement should be used.])
     AC_DEFINE([re_set_syntax], [rpl_re_set_syntax],
