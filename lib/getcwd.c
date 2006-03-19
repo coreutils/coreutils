@@ -211,6 +211,7 @@ __getcwd (char *buf, size_t size)
       int parent_status;
       size_t dirroom;
       size_t namlen;
+      bool use_d_ino = true;
 
       /* Look at the parent directory.  */
 #ifdef AT_FDCWD
@@ -257,6 +258,21 @@ __getcwd (char *buf, size_t size)
 	     NULL.  */
 	  __set_errno (0);
 	  d = __readdir (dirstream);
+
+	  /* When we've iterated through all directory entries without finding
+	     one with a matching d_ino, rewind the stream and consider each
+	     name again, but this time, using lstat.  This is necessary in a
+	     chroot on at least one system (glibc-2.3.6 + linux 2.6.12), where
+	     .., ../.., ../../.., etc. all had the same device number, yet the
+	     d_ino values for entries in / did not match those obtained
+	     via lstat.  */
+	  if (d == NULL && errno == 0 && use_d_ino)
+	    {
+	      use_d_ino = false;
+	      rewinddir (dirstream);
+	      d = __readdir (dirstream);
+	    }
+
 	  if (d == NULL)
 	    {
 	      if (errno == 0)
@@ -269,58 +285,65 @@ __getcwd (char *buf, size_t size)
 	      (d->d_name[1] == '\0' ||
 	       (d->d_name[1] == '.' && d->d_name[2] == '\0')))
 	    continue;
-	  if (MATCHING_INO (d, thisino) || mount_point)
+
+	  if (use_d_ino)
 	    {
-	      int entry_status;
-#ifdef AT_FDCWD
-	      entry_status = fstatat (fd, d->d_name, &st, AT_SYMLINK_NOFOLLOW);
-#else
-	      /* Compute size needed for this file name, or for the file
-		 name ".." in the same directory, whichever is larger.
-	         Room for ".." might be needed the next time through
-		 the outer loop.  */
-	      size_t name_alloc = _D_ALLOC_NAMLEN (d);
-	      size_t filesize = dotlen + MAX (sizeof "..", name_alloc);
-
-	      if (filesize < dotlen)
-		goto memory_exhausted;
-
-	      if (dotsize < filesize)
-		{
-		  /* My, what a deep directory tree you have, Grandma.  */
-		  size_t newsize = MAX (filesize, dotsize * 2);
-		  size_t i;
-		  if (newsize < dotsize)
-		    goto memory_exhausted;
-		  if (dotlist != dots)
-		    free (dotlist);
-		  dotlist = malloc (newsize);
-		  if (dotlist == NULL)
-		    goto lose;
-		  dotsize = newsize;
-
-		  i = 0;
-		  do
-		    {
-		      dotlist[i++] = '.';
-		      dotlist[i++] = '.';
-		      dotlist[i++] = '/';
-		    }
-		  while (i < dotlen);
-		}
-
-	      memcpy (dotlist + dotlen, d->d_name, _D_ALLOC_NAMLEN (d));
-	      entry_status = __lstat (dotlist, &st);
-#endif
-	      /* We don't fail here if we cannot stat() a directory entry.
-		 This can happen when (network) file systems fail.  If this
-		 entry is in fact the one we are looking for we will find
-		 out soon as we reach the end of the directory without
-		 having found anything.  */
-	      if (entry_status == 0 && S_ISDIR (st.st_mode)
-		  && st.st_dev == thisdev && st.st_ino == thisino)
-		break;
+	      bool match = (MATCHING_INO (d, thisino) || mount_point);
+	      if (! match)
+		continue;
 	    }
+
+	  {
+	    int entry_status;
+#ifdef AT_FDCWD
+	    entry_status = fstatat (fd, d->d_name, &st, AT_SYMLINK_NOFOLLOW);
+#else
+	    /* Compute size needed for this file name, or for the file
+	       name ".." in the same directory, whichever is larger.
+	       Room for ".." might be needed the next time through
+	       the outer loop.  */
+	    size_t name_alloc = _D_ALLOC_NAMLEN (d);
+	    size_t filesize = dotlen + MAX (sizeof "..", name_alloc);
+
+	    if (filesize < dotlen)
+	      goto memory_exhausted;
+
+	    if (dotsize < filesize)
+	      {
+		/* My, what a deep directory tree you have, Grandma.  */
+		size_t newsize = MAX (filesize, dotsize * 2);
+		size_t i;
+		if (newsize < dotsize)
+		  goto memory_exhausted;
+		if (dotlist != dots)
+		  free (dotlist);
+		dotlist = malloc (newsize);
+		if (dotlist == NULL)
+		  goto lose;
+		dotsize = newsize;
+
+		i = 0;
+		do
+		  {
+		    dotlist[i++] = '.';
+		    dotlist[i++] = '.';
+		    dotlist[i++] = '/';
+		  }
+		while (i < dotlen);
+	      }
+
+	    memcpy (dotlist + dotlen, d->d_name, _D_ALLOC_NAMLEN (d));
+	    entry_status = __lstat (dotlist, &st);
+#endif
+	    /* We don't fail here if we cannot stat() a directory entry.
+	       This can happen when (network) file systems fail.  If this
+	       entry is in fact the one we are looking for we will find
+	       out soon as we reach the end of the directory without
+	       having found anything.  */
+	    if (entry_status == 0 && S_ISDIR (st.st_mode)
+		&& st.st_dev == thisdev && st.st_ino == thisino)
+	      break;
+	  }
 	}
 
       dirroom = dirp - dir;
