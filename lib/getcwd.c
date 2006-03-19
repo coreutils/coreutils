@@ -260,8 +260,8 @@ __getcwd (char *buf, size_t size)
 	  if (d == NULL)
 	    {
 	      if (errno == 0)
-		/* EOF on dirstream, which means that the current directory
-		   has been removed.  */
+		/* EOF on dirstream, which can mean e.g., that the current
+		   directory has been removed.  */
 		__set_errno (ENOENT);
 	      goto lose;
 	    }
@@ -309,7 +309,7 @@ __getcwd (char *buf, size_t size)
 		  while (i < dotlen);
 		}
 
-	      strcpy (dotlist + dotlen, d->d_name);
+	      memcpy (dotlist + dotlen, d->d_name, _D_ALLOC_NAMLEN (d));
 	      entry_status = __lstat (dotlist, &st);
 #endif
 	      /* We don't fail here if we cannot stat() a directory entry.
