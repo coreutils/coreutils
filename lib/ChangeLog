@@ -1,3 +1,14 @@
+2006-03-19  Jim Meyering  <jim@meyering.net>
+
+	Work even in a chroot where d_ino values for entries in "/"
+	don't match the stat.st_ino values for the same names.
+	* getcwd.c (__getcwd): When no d_ino value matches the target inode
+	number, iterate through all entries again, using lstat instead.
+	Reported by Kenshi Muto in http://bugs.debian.org/355810.
+
+	* getcwd.c (__getcwd): Clarify a comment.
+	Use memcpy in place of a call to strcpy.
+
 2006-03-16  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* regex.h (regoff_t) [defined _REGEX_LARGE_OFFSETS]:
