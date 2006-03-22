@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2006-02-13.16}
+\def\texinfoversion{2006-03-21.13}
 %
 % Copyright (C) 1985, 1986, 1988, 1990, 1991, 1992, 1993, 1994, 1995,
 % 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006 Free
@@ -385,7 +385,7 @@
 %
 \def\parsearg{\parseargusing{}}
 \def\parseargusing#1#2{%
-  \def\next{#2}%
+  \def\argtorun{#2}%
   \begingroup
     \obeylines
     \spaceisspace
@@ -416,8 +416,7 @@
 \def\argcheckspacesY#1\^^M#2\^^M#3\ArgTerm{%
   \def\temp{#3}%
   \ifx\temp\empty
-    % We cannot use \next here, as it holds the macro to run;
-    % thus we reuse \temp.
+    % Do not use \next, perhaps the caller of \parsearg uses it; reuse \temp:
     \let\temp\finishparsearg
   \else
     \let\temp\argcheckspaces
@@ -429,14 +428,14 @@
 % If a _delimited_ argument is enclosed in braces, they get stripped; so
 % to get _exactly_ the rest of the line, we had to prevent such situation.
 % We prepended an \empty token at the very beginning and we expand it now,
-% just before passing the control to \next.
+% just before passing the control to \argtorun.
 % (Similarily, we have to think about #3 of \argcheckspacesY above: it is
 % either the null string, or it ends with \^^M---thus there is no danger
 % that a pair of braces would be stripped.
 %
 % But first, we have to remove the trailing space token.
 %
-\def\finishparsearg#1 \ArgTerm{\expandafter\next\expandafter{#1}}
+\def\finishparsearg#1 \ArgTerm{\expandafter\argtorun\expandafter{#1}}
 
 % \parseargdef\foo{...}
 %	is roughly equivalent to
@@ -5928,11 +5927,11 @@ where each line of input produces a line of output.}
 % {.  If so it reads up to the closing }, if not, it reads the whole
 % line.  Whatever was read is then fed to the next control sequence
 % as an argument (by \parsebrace or \parsearg)
-\def\braceorline#1{\let\next=#1\futurelet\nchar\braceorlinexxx}
+\def\braceorline#1{\let\macnamexxx=#1\futurelet\nchar\braceorlinexxx}
 \def\braceorlinexxx{%
   \ifx\nchar\bgroup\else
     \expandafter\parsearg
-  \fi \next}
+  \fi \macnamexxx}
 
 
 % @alias.
