@@ -12936,8 +12936,11 @@ Any @file{nohup.out} or @file{$HOME/nohup.out} file created by
 @command{nohup} is made readable and writable only to the user,
 regardless of the current umask settings.
 
-If standard error is a terminal, it is redirected to the same file
+If standard error is a terminal, it is normally redirected to the same file
 descriptor as the (possibly-redirected) standard output.
+However, if standard output is closed, standard error terminal output
+is instead appended to the file @file{nohup.out} or
+@file{$HOME/nohup.out} as above.
 
 @command{nohup} does not automatically put the command it runs in the
 background; you must do that explicitly, by ending the command line
