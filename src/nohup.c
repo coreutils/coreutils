@@ -75,7 +75,12 @@ Run COMMAND, ignoring hangup signals.\n\
 int
 main (int argc, char **argv)
 {
+  int out_fd = STDOUT_FILENO;
   int saved_stderr_fd = STDERR_FILENO;
+  bool ignoring_input;
+  bool redirecting_stdout;
+  bool stdout_is_closed;
+  bool redirecting_stderr;
 
   initialize_main (&argc, &argv);
   program_name = argv[0];
@@ -97,33 +102,48 @@ main (int argc, char **argv)
       usage (NOHUP_FAILURE);
     }
 
-  /* If standard input is a tty, replace it with /dev/null.
+  ignoring_input = isatty (STDIN_FILENO);
+  redirecting_stdout = isatty (STDOUT_FILENO);
+  stdout_is_closed = (!redirecting_stdout && errno == EBADF);
+  redirecting_stderr = isatty (STDERR_FILENO);
+
+  /* If standard input is a tty, replace it with /dev/null if possible.
      Note that it is deliberately opened for *writing*,
      to ensure any read evokes an error.  */
-  if (isatty (STDIN_FILENO))
-    fd_reopen (STDIN_FILENO, "/dev/null", O_WRONLY, 0);
+  if (ignoring_input)
+    {
+      if (0 <= fd_reopen (STDIN_FILENO, "/dev/null", O_WRONLY, 0)
+	  && !redirecting_stdout && !redirecting_stderr)
+	error (0, 0, _("ignoring input"));
+    }
 
   /* If standard output is a tty, redirect it (appending) to a file.
-     First try nohup.out, then $HOME/nohup.out.  */
-  if (isatty (STDOUT_FILENO))
+     First try nohup.out, then $HOME/nohup.out.  If standard error is
+     a tty and standard output is closed, open nohup.out or
+     $HOME/nohup.out without redirecting anything.  */
+  if (redirecting_stdout || (redirecting_stderr && stdout_is_closed))
     {
       char *in_home = NULL;
       char const *file = "nohup.out";
       int flags = O_CREAT | O_WRONLY | O_APPEND;
       mode_t mode = S_IRUSR | S_IWUSR;
       mode_t umask_value = umask (~mode);
-      int fd = fd_reopen (STDOUT_FILENO, file, flags, mode);
+      out_fd = (redirecting_stdout
+		? fd_reopen (STDOUT_FILENO, file, flags, mode)
+		: open (file, flags, mode));
 
-      if (fd < 0)
+      if (out_fd < 0)
 	{
 	  int saved_errno = errno;
 	  char const *home = getenv ("HOME");
 	  if (home)
 	    {
 	      in_home = file_name_concat (home, file, NULL);
-	      fd = fd_reopen (STDOUT_FILENO, in_home, flags, mode);
+	      out_fd = (redirecting_stdout
+			? fd_reopen (STDOUT_FILENO, in_home, flags, mode)
+			: open (in_home, flags, mode));
 	    }
-	  if (fd < 0)
+	  if (out_fd < 0)
 	    {
 	      int saved_errno2 = errno;
 	      error (0, saved_errno, _("failed to open %s"), quote (file));
@@ -136,12 +156,16 @@ main (int argc, char **argv)
 	}
 
       umask (umask_value);
-      error (0, 0, _("appending output to %s"), quote (file));
+      error (0, 0,
+	     _(ignoring_input
+	       ? "ignoring input and appending output to %s"
+	       : "appending output to %s"),
+	     quote (file));
       free (in_home);
     }
 
-  /* If standard error is a tty, redirect it to stdout.  */
-  if (isatty (STDERR_FILENO))
+  /* If standard error is a tty, redirect it.  */
+  if (redirecting_stderr)
     {
       /* Save a copy of stderr before redirecting, so we can use the original
 	 if execve fails.  It's no big deal if this dup fails.  It might
@@ -154,13 +178,17 @@ main (int argc, char **argv)
 	error (NOHUP_FAILURE, errno,
 	       _("failed to set the copy of stderr to close on exec"));
 
-      if (dup2 (STDOUT_FILENO, STDERR_FILENO) < 0)
-	{
-	  if (errno != EBADF)
-	    error (NOHUP_FAILURE, errno,
-		   _("failed to redirect standard error"));
-	  close (STDERR_FILENO);
-	}
+      if (!redirecting_stdout)
+	error (0, 0,
+	       _(ignoring_input
+		 ? "ignoring input and redirecting stderr to stdout"
+		 : "redirecting stderr to stdout"));
+
+      if (dup2 (out_fd, STDERR_FILENO) < 0)
+	error (NOHUP_FAILURE, errno, _("failed to redirect standard error"));
+
+      if (stdout_is_closed)
+	close (out_fd);
     }
 
   signal (SIGHUP, SIG_IGN);
