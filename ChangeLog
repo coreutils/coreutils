@@ -1,6 +1,13 @@
-2006-03-12  Jim Meyering  <jim@meyering.net>
+2006-03-23  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 6.0-cvs.
+
+	* NEWS: nohup diagnostics are now more precise, and nohup now
+	redirects stderr to nohup.out if stdout is closed and stderr is a tty.
+	* src/nohup.c (main): Implement this.
+	* tests/misc/nohup: Test the new behavior.
+
+2006-03-12  Jim Meyering  <jim@meyering.net>
 
 	* src/copy.c (set_author): Rename function, from preserve_author.
 
