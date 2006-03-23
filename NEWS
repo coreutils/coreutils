@@ -26,11 +26,17 @@ GNU coreutils NEWS                                    -*- outline -*-
   if your locale settings appear to be messed up.  This change
   attempts to have the default be the best of both worlds.
 
-  rm --interactive now takes an optional argument, although the
-  default of using no argument still acts like -i.
-
   mkfifo and mknod no longer set special mode bits (setuid, setgid,
   and sticky) with the -m option.
+
+  nohup's usual diagnostic now more precisely specifies the I/O
+  redirections, e.g., "ignoring input and appending output to
+  nohup.out".  Also, nohup now redirects stderr to nohup.out (or
+  $HOME/nohup.out) if stdout is closed and stderr is a tty; this is in
+  response to Open Group XCU ERN 71.
+
+  rm --interactive now takes an optional argument, although the
+  default of using no argument still acts like -i.
 
   sort now reports incompatible options (e.g., -i and -n) rather than
   silently ignoring one of them.
