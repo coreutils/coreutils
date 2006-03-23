@@ -28,20 +28,24 @@ fail=0
 nohup sh -c 'echo stdout; echo stderr 1>&2' 2>err || fail=1
 
 # Be careful.  The results of the above nohup command
-# change depending on whether stdout is redirected.
+# change depending on whether stdin and stdout are redirected.
 if test -t 1; then
   test "`cat nohup.out`" = stdout || fail=1
-  cat <<\EOF > exp || fail=1
-nohup: appending output to `nohup.out'
-stderr
-EOF
+  if test -t 0; then
+    echo 'nohup: ignoring input and appending output to `nohup.out'\'
+  else
+    echo 'nohup: appending output to `nohup.out'\'
+  fi >exp || fail=1
 else
   # Here it should not even exist.
   test -f nohup.out && fail=1
-  cat <<\EOF > exp || fail=1
-stderr
-EOF
+  if test -t 0; then
+    echo 'nohup: ignoring input' >exp
+  else
+    rm -f exp
+  fi || fail=1
 fi
+echo 'stderr' >> exp || fail=1
 
 cmp exp err || fail=1
 test $fail = 1 && diff exp err 2> /dev/null
