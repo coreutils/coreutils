@@ -112,8 +112,8 @@ main (int argc, char **argv)
      to ensure any read evokes an error.  */
   if (ignoring_input)
     {
-      if (0 <= fd_reopen (STDIN_FILENO, "/dev/null", O_WRONLY, 0)
-	  && !redirecting_stdout && !redirecting_stderr)
+      fd_reopen (STDIN_FILENO, "/dev/null", O_WRONLY, 0);
+      if (!redirecting_stdout && !redirecting_stderr)
 	error (0, 0, _("ignoring input"));
     }
 
