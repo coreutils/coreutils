@@ -1,4 +1,4 @@
-#serial 34
+#serial 35
 
 # Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2003, 2004, 2005,
 # 2006 Free Software Foundation, Inc.
@@ -24,7 +24,7 @@ AC_DEFUN([gl_REGEX],
 		     systems with recent-enough versions of the GNU C
 		     Library (use with caution on other systems)])])
 
-  case $with_included_regex in
+  case $with_included_regex in #(
   yes|no) ac_use_included_regex=$with_included_regex
 	;;
   '')
@@ -34,17 +34,18 @@ AC_DEFUN([gl_REGEX],
     # regex.c.  The first failing regular expression is from `Spencer ere
     # test #75' in grep-2.3.
     AC_CACHE_CHECK([for working re_compile_pattern],
-		   [gl_cv_func_re_compile_pattern_broken],
+		   [gl_cv_func_re_compile_pattern_working],
       [AC_RUN_IFELSE(
 	[AC_LANG_PROGRAM(
 	  [AC_INCLUDES_DEFAULT
-	   #include <regex.h>],
+	   #include <regex.h>
+	   ],
 	  [[static struct re_pattern_buffer regex;
 	    const char *s;
 	    struct re_registers regs;
 	    re_set_syntax (RE_SYNTAX_POSIX_EGREP);
 	    memset (&regex, 0, sizeof (regex));
-	    s = re_compile_pattern ("a[:@:>@:]b\n", 9, &regex);
+	    s = re_compile_pattern ("a[[:@:>@:]]b\n", 11, &regex);
 	    /* This should fail with _Invalid character class name_ error.  */
 	    if (!s)
 	      exit (1);
@@ -97,15 +98,18 @@ AC_DEFUN([gl_REGEX],
 	       These include glibc 2.3.5 on hosts with 64-bit ptrdiff_t
 	       and 32-bit int.  */
 	    if (sizeof (regoff_t) < sizeof (ptrdiff_t)
-	        || sizeof (regoff_t) < sizeof (ssize_t))
+		|| sizeof (regoff_t) < sizeof (ssize_t))
 	      exit (1);
 
 	    exit (0);]])],
-       [gl_cv_func_re_compile_pattern_broken=no],
-       [gl_cv_func_re_compile_pattern_broken=yes],
-       dnl When crosscompiling, assume it is broken.
-       [gl_cv_func_re_compile_pattern_broken=yes])])
-    ac_use_included_regex=$gl_cv_func_re_compile_pattern_broken
+       [gl_cv_func_re_compile_pattern_working=yes],
+       [gl_cv_func_re_compile_pattern_working=no],
+       dnl When crosscompiling, assume it is not working.
+       [gl_cv_func_re_compile_pattern_working=no])])
+    case $gl_cv_func_re_compile_pattern_working in #(
+    yes) ac_use_included_regex=no;; #(
+    no) ac_use_included_regex=yes;;
+    esac
     ;;
   *) AC_MSG_ERROR([Invalid value for --with-included-regex: $with_included_regex])
     ;;
