@@ -1,4 +1,4 @@
-#serial 33
+#serial 34
 
 # Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2003, 2004, 2005,
 # 2006 Free Software Foundation, Inc.
@@ -42,10 +42,7 @@ AC_DEFUN([gl_REGEX],
 	  [[static struct re_pattern_buffer regex;
 	    const char *s;
 	    struct re_registers regs;
-	    /* Use the POSIX-compliant spelling with leading REG_,
-	       rather than the traditional GNU spelling with leading RE_,
-	       so that we reject older libc implementations.  */
-	    re_set_syntax (REG_SYNTAX_POSIX_EGREP);
+	    re_set_syntax (RE_SYNTAX_POSIX_EGREP);
 	    memset (&regex, 0, sizeof (regex));
 	    s = re_compile_pattern ("a[:@:>@:]b\n", 9, &regex);
 	    /* This should fail with _Invalid character class name_ error.  */
@@ -81,10 +78,9 @@ AC_DEFUN([gl_REGEX],
 	      exit (1);
 
 	    /* The version of regex.c in older versions of gnulib
-	       ignored REG_IGNORE_CASE (which was then called RE_ICASE).
-	       Detect that problem too.  */
+	       ignored RE_ICASE.  Detect that problem too.  */
 	    memset (&regex, 0, sizeof (regex));
-	    re_set_syntax (REG_SYNTAX_EMACS | REG_IGNORE_CASE);
+	    re_set_syntax (RE_SYNTAX_EMACS | RE_ICASE);
 	    s = re_compile_pattern ("x", 1, &regex);
 	    if (s)
 	      exit (1);

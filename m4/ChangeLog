@@ -1,3 +1,11 @@
+2006-03-25  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* regex.m4 (gl_REGEX): Don't insist on REG_SYNTAX_POSIX_EGREP,
+	REG_SYNTAX_EMACS, and REG_IGNORE_CASE.  Settle for the traditional
+	glibc names.  Even if glibc is changed to conform to POSIX, the
+	traditional names will be available anyway, since regex depends on
+	the extensions module.  Problem reported by Emanuele Giaquinta.
+
 2006-03-17  Jim Meyering  <jim@meyering.net>
 
 	* regex.m4 (gl_REGEX): Fix typo in last change:
