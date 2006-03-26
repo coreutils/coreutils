@@ -42,8 +42,8 @@
     {							\
       char *tmp_abns_;					\
       ASSIGN_STRDUPA (tmp_abns_, (File_name));		\
-      strip_trailing_slashes (tmp_abns_);		\
-      Dest = base_name (tmp_abns_);			\
+      Dest = last_component (tmp_abns_);		\
+      strip_trailing_slashes (Dest);			\
     }							\
   while (0)
 
@@ -519,7 +519,7 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
 static bool
 target_directory_operand (char const *file, struct stat *st, bool *new_dst)
 {
-  char const *b = base_name (file);
+  char const *b = last_component (file);
   size_t blen = strlen (b);
   bool looks_like_a_dir = (blen == 0 || ISSLASH (b[blen - 1]));
   int err = (stat (file, st) == 0 ? 0 : errno);
