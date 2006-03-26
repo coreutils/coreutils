@@ -148,7 +148,7 @@ cp_option_init (struct cp_options *x)
 static bool
 target_directory_operand (char const *file)
 {
-  char const *b = base_name (file);
+  char const *b = last_component (file);
   size_t blen = strlen (b);
   bool looks_like_a_dir = (blen == 0 || ISSLASH (b[blen - 1]));
   struct stat st;
@@ -266,7 +266,7 @@ movefile (char *source, char *dest, bool dest_is_dir,
   if (dest_is_dir)
     {
       /* Treat DEST as a directory; build the full filename.  */
-      char const *src_basename = base_name (source);
+      char const *src_basename = last_component (source);
       char *new_dest = file_name_concat (dest, src_basename, NULL);
       strip_trailing_slashes (new_dest);
       ok = do_move (source, new_dest, x);
