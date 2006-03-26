@@ -1,7 +1,7 @@
 /* Concatenate two arbitrary file names.
 
-   Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005 Free
-   Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004,
+   2005, 2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -64,7 +64,7 @@ longest_relative_suffix (char const *f)
 char *
 file_name_concat (char const *dir, char const *abase, char **base_in_result)
 {
-  char const *dirbase = base_name (dir);
+  char const *dirbase = last_component (dir);
   size_t dirbaselen = base_len (dirbase);
   size_t dirlen = dirbase - dir + dirbaselen;
   size_t needs_separator = (dirbaselen && ! ISSLASH (dirbase[dirbaselen - 1]));
