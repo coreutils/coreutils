@@ -1,3 +1,30 @@
+2006-03-11  Eric Blake  <ebb9@byu.net>
+
+	* same.c (same_name): s/base_name/last_component/
+	* backupfile.c (check_extension, numbered_backup): Likewise.
+	* filenamecat.c (file_name_concat): Likewise.
+
+2006-03-11  Eric Blake  <ebb9@byu.net>,
+	    Paul Eggert  <eggert@cs.ucla.edu>
+
+	* dirname.h (FILE_SYSTEM_PREFIX_LEN): Move here from dos.m4.
+	[FILE_SYSTEM_ACCEPTS_DRIVE_LETTER_PREFIX]: Don't treat 1: as a
+	drive prefix.
+	(IS_ABSOLUTE_FILE_NAME): Treat all drive letters as absolute on
+	platforms like cygwin with FILE_SYSTEM_DRIVE_PREFIX_IS_ABSOLUTE.
+	(last_component): New method.
+	* dirname.c (dir_len): Determine when drive letters need a
+	subsequent slash.  Preserve // when it is special.
+	(dir_name): Don't append dot when drive letter is absolute.
+	[TEST_DIRNAME]: Move into a full-blown gnulib test.
+	* basename.c (base_name): New semantics - malloc the result.
+	Preserve // when it is special.  Preserve relative files that look
+	like drive letters.
+	(base_len): Preserve // when it is special.
+	(last_component): New method, similar to old base_name semantics.
+	* stripslash.c (strip_trailing_slashes): Use last_component, not
+	base_name.  Strip redundant slashes from ///.
+
 2006-03-19  Jim Meyering  <jim@meyering.net>
 
 	Work even in a chroot where d_ino values for entries in "/"
