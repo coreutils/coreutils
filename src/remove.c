@@ -1338,7 +1338,7 @@ static enum RM_status
 rm_1 (Dirstack_state *ds, char const *filename,
       struct rm_options const *x, int *cwd_errno)
 {
-  char const *base = base_name (filename);
+  char const *base = last_component (filename);
   if (DOT_OR_DOTDOT (base))
     {
       error (0, 0, _("cannot remove `.' or `..'"));
