@@ -56,8 +56,8 @@ bool
 same_name (const char *source, const char *dest)
 {
   /* Compare the basenames.  */
-  char const *source_basename = base_name (source);
-  char const *dest_basename = base_name (dest);
+  char const *source_basename = last_component (source);
+  char const *dest_basename = last_component (dest);
   size_t source_baselen = base_len (source_basename);
   size_t dest_baselen = base_len (dest_basename);
   bool identical_basenames =
