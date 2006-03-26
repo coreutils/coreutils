@@ -1,5 +1,5 @@
 /* dircolors - output commands to set the LS_COLOR environment variable
-   Copyright (C) 1996-2005 Free Software Foundation, Inc.
+   Copyright (C) 1996-2006 Free Software Foundation, Inc.
    Copyright (C) 1994, 1995, 1997, 1998, 1999, 2000 H. Peter Anvin
 
    This program is free software; you can redistribute it and/or modify
@@ -137,7 +137,7 @@ guess_shell_syntax (void)
   if (shell == NULL || *shell == '\0')
     return SHELL_SYNTAX_UNKNOWN;
 
-  shell = base_name (shell);
+  shell = last_component (shell);
 
   if (STREQ (shell, "csh") || STREQ (shell, "tcsh"))
     return SHELL_SYNTAX_C;
