@@ -1,3 +1,10 @@
+2006-03-11  Eric Blake  <ebb9@byu.net>
+
+	* double-slash-root.m4: New file, provides gl_DOUBLE_SLASH_ROOT.
+	* dirname.m4 (gl_DIRNAME): Use gl_DOUBLE_SLASH_ROOT.
+	* dos.m4 (FILE_SYSTEM_PREFIX_LEN): Move from here to dirname.h.
+	(FILE_SYSTEM_DRIVE_PREFIX_CAN_BE_RELATIVE): New define.
+
 2006-03-25  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* regex.m4 (gl_REGEX): Don't insist on REG_SYNTAX_POSIX_EGREP,
