@@ -2794,7 +2794,7 @@ make_link_name (char const *name, char const *linkname)
 static bool
 basename_is_dot_or_dotdot (const char *name)
 {
-  char const *base = base_name (name);
+  char const *base = last_component (name);
   return DOT_OR_DOTDOT (base);
 }
 
