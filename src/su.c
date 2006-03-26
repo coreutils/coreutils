@@ -1,5 +1,5 @@
 /* su for GNU.  Run a shell with substitute user and group IDs.
-   Copyright (C) 1992-2005 Free Software Foundation, Inc.
+   Copyright (C) 1992-2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -219,7 +219,7 @@ log_su (struct passwd const *pw, bool successful)
   if (!tty)
     tty = "none";
   /* 4.2BSD openlog doesn't have the third parameter.  */
-  openlog (base_name (program_name), 0
+  openlog (last_component (program_name), 0
 # ifdef LOG_AUTH
 	   , LOG_AUTH
 # endif
@@ -350,14 +350,14 @@ run_shell (char const *shell, char const *command, char **additional_args,
       char *arg0;
       char *shell_basename;
 
-      shell_basename = base_name (shell);
+      shell_basename = last_component (shell);
       arg0 = xmalloc (strlen (shell_basename) + 2);
       arg0[0] = '-';
       strcpy (arg0 + 1, shell_basename);
       args[0] = arg0;
     }
   else
-    args[0] = base_name (shell);
+    args[0] = last_component (shell);
   if (fast_startup)
     args[argno++] = "-f";
   if (command)
