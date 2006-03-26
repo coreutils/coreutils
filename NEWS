@@ -12,6 +12,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Changes in behavior
 
+  basename and dirname now treat // as different from / on platforms
+  where the two are distinct.
+
   df now considers "none" and "proc" file systems to be dummies and
   therefore does not normally display them.  Also, inaccessible file
   systems (which can be caused by shadowed mount points or by chrooted
