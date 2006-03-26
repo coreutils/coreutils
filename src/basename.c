@@ -1,5 +1,5 @@
 /* basename -- strip directory and suffix from file names
-   Copyright (C) 1990-1997, 1999-2005 Free Software Foundation, Inc.
+   Copyright (C) 1990-1997, 1999-2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -126,12 +126,20 @@ main (int argc, char **argv)
     }
 
   name = base_name (argv[optind]);
-  name[base_len (name)] = '\0';
+  strip_trailing_slashes (name);
 
-  if (argc == optind + 2)
+  /* Per POSIX, `basename // /' must return `//' on platforms with
+     distinct //.  On platforms with drive letters, this generalizes
+     to making `basename c: :' return `c:'.  This rule is captured by
+     skipping suffix stripping if base_name returned an absolute path
+     or a drive letter (only possible if name is a file-system
+     root).  */
+  if (argc == optind + 2 && IS_RELATIVE_FILE_NAME (name)
+      && ! FILE_SYSTEM_PREFIX_LEN (name))
     remove_suffix (name, argv[optind + 1]);
 
   puts (name);
+  free (name);
 
   exit (EXIT_SUCCESS);
 }
