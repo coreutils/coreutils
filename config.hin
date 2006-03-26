@@ -54,6 +54,9 @@
 #endif
 
 
+/* Define to 1 if // is a file system root distinct from /. */
+#undef DOUBLE_SLASH_IS_DISTINCT_ROOT
+
 /* Define if there is a member named d_ino in the struct describing directory
    headers. */
 #undef D_INO_IN_DIRENT
@@ -74,12 +77,9 @@
    separator. */
 #undef FILE_SYSTEM_BACKSLASH_IS_FILE_NAME_SEPARATOR
 
-#if FILE_SYSTEM_ACCEPTS_DRIVE_LETTER_PREFIX
-# define FILE_SYSTEM_PREFIX_LEN(Filename) \
-  ((Filename)[0] && (Filename)[1] == ':' ? 2 : 0)
-#else
-# define FILE_SYSTEM_PREFIX_LEN(Filename) 0
-#endif
+/* Define if a drive letter prefix denotes a relative path if it is not
+   followed by a file name component separator. */
+#undef FILE_SYSTEM_DRIVE_PREFIX_CAN_BE_RELATIVE
 
 /* Define to the type of elements in the array set by `getgroups'. Usually
    this is either `int' or `gid_t'. */

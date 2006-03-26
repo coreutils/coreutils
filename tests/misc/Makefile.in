@@ -54,9 +54,10 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/afs.m4 \
 	$(top_srcdir)/m4/cycle-check.m4 $(top_srcdir)/m4/d-ino.m4 \
 	$(top_srcdir)/m4/d-type.m4 $(top_srcdir)/m4/diacrit.m4 \
 	$(top_srcdir)/m4/dirfd.m4 $(top_srcdir)/m4/dirname.m4 \
-	$(top_srcdir)/m4/dos.m4 $(top_srcdir)/m4/dup2.m4 \
-	$(top_srcdir)/m4/eealloc.m4 $(top_srcdir)/m4/eoverflow.m4 \
-	$(top_srcdir)/m4/error.m4 $(top_srcdir)/m4/euidaccess-stat.m4 \
+	$(top_srcdir)/m4/dos.m4 $(top_srcdir)/m4/double-slash-root.m4 \
+	$(top_srcdir)/m4/dup2.m4 $(top_srcdir)/m4/eealloc.m4 \
+	$(top_srcdir)/m4/eoverflow.m4 $(top_srcdir)/m4/error.m4 \
+	$(top_srcdir)/m4/euidaccess-stat.m4 \
 	$(top_srcdir)/m4/euidaccess.m4 $(top_srcdir)/m4/exclude.m4 \
 	$(top_srcdir)/m4/exitfail.m4 $(top_srcdir)/m4/extensions.m4 \
 	$(top_srcdir)/m4/fcntl-safer.m4 $(top_srcdir)/m4/fd-reopen.m4 \
@@ -316,30 +317,41 @@ TESTS_ENVIRONMENT = \
 
 TESTS = \
   base64 \
-  test \
+  basename \
+  close-stdout \
+  csplit \
+  date \
+  date-sec \
+  dirname \
+  expand \
+  false \
+  fold \
+  head-c \
+  head-elide-tail \
+  head-pos \
   mknod \
-  stat-printf \
-  stat-fmt \
-  sort-rand \
+  nice \
+  nl \
+  nohup \
+  paste-no-nl \
+  pathchk1 \
+  printf \
+  printf-hex \
+  pwd \
   sha224sum \
   sha256sum \
   sha384sum \
   sha512sum \
-  date \
-  tac-continue \
-  close-stdout \
-  pwd \
-  date-sec \
-  paste-no-nl \
-  expand \
-  fold \
-  nohup \
-  head-elide-tail \
+  sort \
+  sort-rand \
+  split-a \
   split-fail \
-  false \
-  tty-eof \
-  printf-hex \
-  nl split-l printf split-a head-pos sort head-c csplit nice pathchk1
+  split-l \
+  stat-fmt \
+  stat-printf \
+  tac-continue \
+  test \
+  tty-eof
 
 all: all-am
 

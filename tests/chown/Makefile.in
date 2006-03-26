@@ -54,9 +54,10 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/afs.m4 \
 	$(top_srcdir)/m4/cycle-check.m4 $(top_srcdir)/m4/d-ino.m4 \
 	$(top_srcdir)/m4/d-type.m4 $(top_srcdir)/m4/diacrit.m4 \
 	$(top_srcdir)/m4/dirfd.m4 $(top_srcdir)/m4/dirname.m4 \
-	$(top_srcdir)/m4/dos.m4 $(top_srcdir)/m4/dup2.m4 \
-	$(top_srcdir)/m4/eealloc.m4 $(top_srcdir)/m4/eoverflow.m4 \
-	$(top_srcdir)/m4/error.m4 $(top_srcdir)/m4/euidaccess-stat.m4 \
+	$(top_srcdir)/m4/dos.m4 $(top_srcdir)/m4/double-slash-root.m4 \
+	$(top_srcdir)/m4/dup2.m4 $(top_srcdir)/m4/eealloc.m4 \
+	$(top_srcdir)/m4/eoverflow.m4 $(top_srcdir)/m4/error.m4 \
+	$(top_srcdir)/m4/euidaccess-stat.m4 \
 	$(top_srcdir)/m4/euidaccess.m4 $(top_srcdir)/m4/exclude.m4 \
 	$(top_srcdir)/m4/exitfail.m4 $(top_srcdir)/m4/extensions.m4 \
 	$(top_srcdir)/m4/fcntl-safer.m4 $(top_srcdir)/m4/fd-reopen.m4 \
