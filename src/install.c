@@ -167,7 +167,7 @@ cp_option_init (struct cp_options *x)
 static bool
 target_directory_operand (char const *file)
 {
-  char const *b = base_name (file);
+  char const *b = last_component (file);
   size_t blen = strlen (b);
   bool looks_like_a_dir = (blen == 0 || ISSLASH (b[blen - 1]));
   struct stat st;
@@ -463,7 +463,7 @@ static bool
 install_file_in_dir (const char *from, const char *to_dir,
 		     const struct cp_options *x)
 {
-  const char *from_base = base_name (from);
+  const char *from_base = last_component (from);
   char *to = file_name_concat (to_dir, from_base, NULL);
   bool ret = install_file_in_file (from, to, x);
   free (to);
