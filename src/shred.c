@@ -1,6 +1,6 @@
 /* shred.c - overwrite files and devices to make it harder to recover data
 
-   Copyright (C) 1999-2005 Free Software Foundation, Inc.
+   Copyright (C) 1999-2006 Free Software Foundation, Inc.
    Copyright (C) 1997, 1998, 1999 Colin Plumb.
 
    This program is free software; you can redistribute it and/or modify
@@ -1024,7 +1024,7 @@ static bool
 wipename (char *oldname, char const *qoldname, struct Options const *flags)
 {
   char *newname = xstrdup (oldname);
-  char *base = base_name (newname);
+  char *base = last_component (newname);
   size_t len = base_len (base);
   char *dir = dir_name (newname);
   char *qdir = xstrdup (quotearg_colon (dir));
