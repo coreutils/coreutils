@@ -13,27 +13,38 @@ TESTS_ENVIRONMENT = \
 
 TESTS = \
   base64 \
-  test \
+  basename \
+  close-stdout \
+  csplit \
+  date \
+  date-sec \
+  dirname \
+  expand \
+  false \
+  fold \
+  head-c \
+  head-elide-tail \
+  head-pos \
   mknod \
-  stat-printf \
-  stat-fmt \
-  sort-rand \
+  nice \
+  nl \
+  nohup \
+  paste-no-nl \
+  pathchk1 \
+  printf \
+  printf-hex \
+  pwd \
   sha224sum \
   sha256sum \
   sha384sum \
   sha512sum \
-  date \
-  tac-continue \
-  close-stdout \
-  pwd \
-  date-sec \
-  paste-no-nl \
-  expand \
-  fold \
-  nohup \
-  head-elide-tail \
+  sort \
+  sort-rand \
+  split-a \
   split-fail \
-  false \
-  tty-eof \
-  printf-hex \
-  nl split-l printf split-a head-pos sort head-c csplit nice pathchk1
+  split-l \
+  stat-fmt \
+  stat-printf \
+  tac-continue \
+  test \
+  tty-eof
