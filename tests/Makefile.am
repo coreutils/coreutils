@@ -22,10 +22,10 @@ EXTRA_DIST = \
 ## Some people feel that there are too many already.
 ## Put new tests in misc/.
 SUBDIRS = \
-  basename chgrp chmod chown cp cut dd dircolors du expr factor \
-  fmt head install join ln ls ls-2 md5sum misc mkdir mv od pr readlink \
-  rm rmdir seq sha1sum shred sort stty sum tac tail tail-2 tee test \
-  touch tr tsort unexpand uniq wc
+  chgrp chmod chown cp cut dd dircolors du expr factor fmt head \
+  install join ln ls ls-2 md5sum misc mkdir mv od pr readlink rm rmdir \
+  seq sha1sum shred sort stty sum tac tail tail-2 tee test touch tr \
+  tsort unexpand uniq wc
 ## N O T E :: Please do not add new directories.
 
 .PHONY: check-root
