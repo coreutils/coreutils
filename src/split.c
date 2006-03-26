@@ -1,5 +1,5 @@
 /* split.c -- split a file into pieces.
-   Copyright (C) 88, 91, 1995-2005 Free Software Foundation, Inc.
+   Copyright (C) 1988, 1991, 1995-2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -171,7 +171,7 @@ next_file_name (void)
       {
 	char *dir = dir_name (outfile);
 	long name_max = pathconf (dir, _PC_NAME_MAX);
-	if (0 <= name_max && name_max < base_len (base_name (outfile)))
+	if (0 <= name_max && name_max < base_len (last_component (outfile)))
 	  error (EXIT_FAILURE, ENAMETOOLONG, "%s", outfile);
 	free (dir);
       }
