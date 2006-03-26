@@ -1,6 +1,36 @@
-2006-03-23  Paul Eggert  <eggert@cs.ucla.edu>
+2006-03-11  Eric Blake  <ebb9@byu.net>
 
 	* Version 6.0-cvs.
+
+	* tests/misc/dirname: New file.
+	* tests/basename/Makefile.am: Delete.
+	* tests/basename/basic: Move to...
+	* tests/misc/basename: ... this new file.  Add some tests,
+	including fixed behavior for //.
+	* tests/misc/Makefile.am (TESTS): Sort.  Add basename, dirname.
+	* tests/Makefile.am (SUBDIRS): Remove basename.
+	* configure.ac (AC_CONFIG_FILES): Remove tests/basename.
+
+	Improvements to dirname/basename handling on platforms like
+	cygwin with distinct // and with drive letters.
+	* NEWS: Document new behavior.
+	* src/basename.c (main): Don't strip suffix from file system
+	roots.
+	* src/cp.c (target_directory_operand): Use new last_component.
+	(ASSIGN_BASENAME_STRDUPA): Likewise.  Reduce time spent
+	traversing the string.
+	* src/dircolors.c (guess_shell_syntax): Use new last_component.
+	* src/install.c (target_directory_operand, install_file_in_dir):
+	Likewise.
+	* src/ln.c (target_directory_operand, main): Likewise.
+	* src/ls.c (basename_is_dot_or_dotdot): Likewise.
+	* src/mv.c (target_directory_operand, movefile): Likewise.
+	* src/remove.c (rm_1): Likewise.
+	* src/shred.c (wipename): Likewise.
+	* src/split.c (next_file_name): Likewise.
+	* src/su.c (log_su, run_shell): Likewise.
+
+2006-03-23  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: nohup diagnostics are now more precise, and nohup now
 	redirects stderr to nohup.out if stdout is closed and stderr is a tty.
