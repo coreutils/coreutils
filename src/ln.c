@@ -1,5 +1,5 @@
 /* `ln' program to create links between files.
-   Copyright (C) 86, 89, 90, 91, 1995-2005 Free Software Foundation, Inc.
+   Copyright (C) 1986, 1989-1991, 1995-2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -113,7 +113,7 @@ static struct option const long_options[] =
 static bool
 target_directory_operand (char const *file)
 {
-  char const *b = base_name (file);
+  char const *b = last_component (file);
   size_t blen = strlen (b);
   bool looks_like_a_dir = (blen == 0 || ISSLASH (b[blen - 1]));
   struct stat st;
@@ -525,7 +525,8 @@ main (int argc, char **argv)
       for (i = 0; i < n_files; ++i)
 	{
 	  char *dest_base;
-	  char *dest = file_name_concat (target_directory, base_name (file[i]),
+	  char *dest = file_name_concat (target_directory,
+					 last_component (file[i]),
 					 &dest_base);
 	  strip_trailing_slashes (dest_base);
 	  ok &= do_link (file[i], dest);
