@@ -1,7 +1,8 @@
 /* backupfile.c -- make Emacs style backup file names
 
    Copyright (C) 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998,
-   1999, 2000, 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+   1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006 Free Software
+   Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -115,7 +116,7 @@ char const *simple_backup_suffix = "~";
 static void
 check_extension (char *file, size_t filelen, char e)
 {
-  char *base = base_name (file);
+  char *base = last_component (file);
   size_t baselen = base_len (base);
   size_t baselen_max = HAVE_LONG_FILE_NAMES ? 255 : NAME_MAX_MINIMUM;
 
@@ -202,7 +203,7 @@ numbered_backup (char **buffer, size_t buffer_size, size_t filelen)
   struct dirent *dp;
   char *buf = *buffer;
   size_t versionlenmax = 1;
-  char *base = base_name (buf);
+  char *base = last_component (buf);
   size_t base_offset = base - buf;
   size_t baselen = base_len (base);
 
