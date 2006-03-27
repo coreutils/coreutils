@@ -1,6 +1,11 @@
-2006-03-11  Eric Blake  <ebb9@byu.net>
+2006-03-27  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* src/Makefile.am (uptime_LDADD): Add $(POW_LIB), for uptime's
+	use of strtod.  Tiny patch from Nickolai Zeldovich.
+
+2006-03-11  Eric Blake  <ebb9@byu.net>
 
 	* tests/misc/dirname: New file.
 	* tests/basename/Makefile.am: Delete.
