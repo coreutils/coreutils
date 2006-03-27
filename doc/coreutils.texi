@@ -10599,14 +10599,14 @@ Together, @command{basename} and @command{dirname} are designed such
 that if @samp{ls "$name"} succeeds, then the command sequence @samp{cd
 "$(dirname "$name")"; ls "$(basename "$name")"} will, too.  This works
 for everything except file names containing a trailing newline.
+@end macro
+@basenameAndDirname
 
 @acronym{POSIX} allows the implementation to define the results if
 @var{name} is empty or @samp{//}.  In the former case, @acronym{GNU}
 @command{basename} returns the empty string.  In the latter case, the
 result is @samp{//} on platforms where @var{//} is distinct from
 @var{/}, and @samp{/} on platforms where there is no difference.
-@end macro
-@basenameAndDirname
 
 The only options are @option{--help} and @option{--version}.  @xref{Common
 options}.  Options must precede operands.
@@ -10643,6 +10643,11 @@ If @var{name} is a single component, @command{dirname} prints @samp{.}
 (meaning the current directory).
 
 @basenameAndDirname
+
+@acronym{POSIX} allows the implementation to define the results if
+@var{name} is @samp{//}.  With @acronym{GNU} @command{dirname}, the
+result is @samp{//} on platforms where @var{//} is distinct from
+@var{/}, and @samp{/} on platforms where there is no difference.
 
 The only options are @option{--help} and @option{--version}.  @xref{Common
 options}.
