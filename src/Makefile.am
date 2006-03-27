@@ -98,7 +98,8 @@ nanosec_libs = $(LDADD) $(POW_LIB) $(LIB_NANOSLEEP)
 sleep_LDADD = $(nanosec_libs)
 tail_LDADD = $(nanosec_libs)
 
-uptime_LDADD = $(LDADD) $(GETLOADAVG_LIBS)
+# If necessary, add -lm to resolve use of pow in lib/strtod.c.
+uptime_LDADD = $(LDADD) $(POW_LIB) $(GETLOADAVG_LIBS)
 
 su_LDADD = $(LDADD) $(LIB_CRYPT)
 
