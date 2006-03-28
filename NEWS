@@ -60,6 +60,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Scheduled for removal
 
+  ptx's --copyright (-C) option is scheduled for removal in 2007, and
+  now evokes a warning.  Use --version instead.
+
   rm's --directory (-d) option is scheduled for removal in 2006.  This
   option has been silently ignored since coreutils 5.0.  On systems
   that support unlinking of directories, you can use the "unlink"
