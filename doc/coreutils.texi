@@ -4205,11 +4205,6 @@ convention more than once per program invocation.
 
 @table @samp
 
-@item -C
-@itemx --copyright
-Print a short note about the copyright and copying conditions, then
-exit without further processing.
-
 @item -G
 @itemx --traditional
 As already explained, this option disables all @sc{gnu} extensions to
