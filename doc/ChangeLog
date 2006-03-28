@@ -1,3 +1,7 @@
+2006-03-22  Eric Blake  <ebb9@byu.net>
+
+	* coreutils.texi (General options in ptx): Undocument --copyright.
+
 2006-03-27  Eric Blake  <ebb9@byu.net>
 
 	* coreutils.texi (dirname invocation): Macro in previous patch
