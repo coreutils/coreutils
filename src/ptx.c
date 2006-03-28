@@ -1,5 +1,5 @@
 /* Permuted index for GNU, with keywords in their context.
-   Copyright (C) 1990, 1991, 1993, 1998-2005 Free Software Foundation, Inc.
+   Copyright (C) 1990, 1991, 1993, 1998-2006 Free Software Foundation, Inc.
    François Pinard <pinard@iro.umontreal.ca>, 1988.
 
    This program is free software; you can redistribute it and/or modify
@@ -1897,7 +1897,6 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
   -A, --auto-reference           output automatically generated references\n\
-  -C, --copyright                display Copyright and copying conditions\n\
   -G, --traditional              behave more like System V `ptx'\n\
   -F, --flag-truncation=STRING   use STRING for flagging line truncations\n\
 "), stdout);
@@ -1942,7 +1941,7 @@ static const struct option long_options[] =
 {
   {"auto-reference", no_argument, NULL, 'A'},
   {"break-file", required_argument, NULL, 'b'},
-  {"copyright", no_argument, NULL, 'C'},
+  {"copyright", no_argument, NULL, 'C'}, /* Deprecated, remove in 2007.  */
   {"flag-truncation", required_argument, NULL, 'F'},
   {"ignore-case", no_argument, NULL, 'f'},
   {"gap-size", required_argument, NULL, 'g'},
@@ -2000,29 +1999,6 @@ main (int argc, char **argv)
 	{
 	default:
 	  usage (EXIT_FAILURE);
-
-	case 'C':
-	  fputs (_("\
-This program is free software; you can redistribute it and/or modify\n\
-it under the terms of the GNU General Public License as published by\n\
-the Free Software Foundation; either version 2, or (at your option)\n\
-any later version.\n\
-\n\
-"), stdout);
-	  fputs (_("\
-This program is distributed in the hope that it will be useful,\n\
-but WITHOUT ANY WARRANTY; without even the implied warranty of\n\
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n\
-GNU General Public License for more details.\n\
-\n\
-"), stdout);
-	  fputs (_("\
-You should have received a copy of the GNU General Public License\n\
-along with this program; if not, write to the Free Software Foundation,\n\
-Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.\n"),
-		 stdout);
-
-	  exit (EXIT_SUCCESS);
 
 	case 'G':
 	  gnu_extensions = false;
@@ -2110,6 +2086,11 @@ Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.\n"),
 	  output_format = XARGMATCH ("--format", optarg,
 				     format_args, format_vals);
 	case_GETOPT_HELP_CHAR;
+
+	case 'C':
+	  error (0, 0, _("\
+the --copyright option is deprecated; use --version instead"));
+          /* fallthrough */
 
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 	}
