@@ -761,7 +761,6 @@ iwrite (int fd, char const *buf, size_t size)
 	     a device's end.  (Example: Linux 1.2.13 on /dev/fd0.)
 	     Set errno to ENOSPC so they get a sensible diagnostic.  */
 	  errno = ENOSPC;
-	  nwritten = -1;
 	  break;
 	}
       else
