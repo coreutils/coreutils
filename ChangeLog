@@ -1,6 +1,11 @@
-2006-03-22  Eric Blake  <ebb9@byu.net>
+2006-03-30  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* src/dd.c (iwrite): Remove assignment without effect.
+	Reported by Felix Rauch Valenti.
+
+2006-03-22  Eric Blake  <ebb9@byu.net>
 
 	* src/ptx.c (usage): Remove mention of --copyright/-C.
 	(main): Alias --copyright to --version plus a deprecation warning.
