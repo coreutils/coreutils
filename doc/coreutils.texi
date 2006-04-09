@@ -188,7 +188,7 @@ Free Documentation License''.
 * File name manipulation::             dirname basename pathchk
 * Working context::                    pwd stty printenv tty
 * User information::                   id logname whoami groups users who
-* System context::                     date uname hostname
+* System context::                     date uname hostname hostid
 * Modified command invocation::        chroot env nice nohup su
 * Process control::                    kill
 * Delaying::                           sleep
