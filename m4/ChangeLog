@@ -1,3 +1,8 @@
+2006-04-09  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* regex.m4 (gl_REGEX): Check for new glibc interface to
+	translation table.
+
 2006-03-11  Eric Blake  <ebb9@byu.net>
 
 	* double-slash-root.m4: New file, provides gl_DOUBLE_SLASH_ROOT.

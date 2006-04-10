@@ -1,3 +1,218 @@
+2006-04-09  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Merge regex changes from libc, removing some of our
+	POSIX-conformance changes that were rejected and redoing them in a
+	less-intrusive way.
+
+	* regcomp.c (re_compile_internal, init_dfa):
+	Length arg is now size_t, not Idx.  All uses changed.
+	(peek_token): Forward decl now says internal_function.
+	(__re_error_msgid, __re_error_msgid_idx):
+	Now static rather than extern with attribute_hidden.
+	(re_compile_pattern) [!defined _LIBC]: Use K&R-style defn.
+	For some reason libc prefers K&R style defns for external functions.
+	(regerror) [!defined _LIBC]: Likewise.
+	(re_set_syntax, re_compile_fastmap, regcomp, regfree, re_comp):
+	(seek_collating_symbol_entry, lookup_collation_sequence_value):
+	(build_range_exp, build_collating_symbol):
+	Use K&R-style defn.
+	(re_compile_fastmap): Use '\0' to memset, not 0.
+	(utf8_sb_map): Make the calculations more obvious.
+	(init_dfa, parse_bracket_exp, build_charclass_op):
+	Call calloc and cast result, as glibc does.
+	(init_word_char, fetch_token, peek_token, peek_token_bracket):
+	(build_range_exp, build_collating_symbol):
+	Now internal functions.
+
+	* regex.c [!defined _LIBC]: Allow compiling with C++ compilers.
+
+	* regex.h (__USE_GNU_REGEX): New macro.  Don't depend on
+	_REGEX_SOURCE any more; depend on _GNU_SOURCE instead.
+	Don't depend on VMS; depend on __VMS instead, for POSIX
+	namespace cleanness.
+	(regoff_t): Define to ssize_t, not long int.
+
+	Remove the REG_ macros named below.  Instead, make the old names
+	(e.g., RE_BACKSLASH_ESCAPE_IN_LISTS) visible only if
+	__USE_GNU_REGEX.
+	(REG_BACKSLASH_ESCAPE_IN_LISTS):
+	(REG_BK_PLUS_QM, REG_CHAR_CLASSES, REG_CONTEXT_INDEP_ANCHORS):
+	(REG_CONTEXT_INDEP_OPS, REG_CONTEXT_INVALID_OPS):
+	(REG_DOT_NEWLINE, REG_DOT_NOT_NULL, REG_HAT_LISTS_NOT_NEWLINE):
+	(REG_INTERVALS, REG_LIMITED_OPS, REG_NEWLINE_ALT):
+	(REG_NO_BK_BRACES, REG_NO_BK_PARENS, REG_NO_BK_REFS):
+	(REG_NO_BK_VBAR, REG_NO_EMPTY_RANGES):
+	(REG_UNMATCHED_RIGHT_PAREN_ORD, REG_NO_POSIX_BACKTRACKING):
+	(REG_NO_GNU_OPS, REG_DEBUG, REG_INVALID_INTERVAL_ORD):
+	(REG_IGNORE_CASE, REG_CARET_ANCHORS_HERE):
+	(REG_CONTEXT_INVALID_DUP, REG_NO_SUB, REG_SYNTAX_EMACS):
+	(REG_SYNTAX_AWK, REG_SYNTAX_GNU_AWK, REG_SYNTAX_POSIX_AWK):
+	(REG_SYNTAX_GREP, REG_SYNTAX_EGREP, REG_SYNTAX_POSIX_EGREP):
+	(REG_SYNTAX_ED, REG_SYNTAX_SED, _REG_SYNTAX_POSIX_COMMON):
+	(REG_SYNTAX_POSIX_BASIC, REG_SYNTAX_POSIX_MINIMAL_BASIC):
+	(REG_SYNTAX_POSIX_EXTENDED, REG_SYNTAX_POSIX_MINIMAL_EXTENDED):
+	(REG_DUP_MAX, REG_UNALLOCATED, REG_REALLOCATE, REG_FIXED):
+	(REG_NREGS):
+	Remove.  All uses replaced by the old RE_* names.
+	(RE_BACKSLASH_ESCAPE_IN_LISTS):
+	(RE_BK_PLUS_QM, RE_CHAR_CLASSES, RE_CONTEXT_INDEP_ANCHORS):
+	(RE_CONTEXT_INDEP_OPS, RE_CONTEXT_INVALID_OPS):
+	(RE_DOT_NEWLINE, RE_DOT_NOT_NULL, RE_HAT_LISTS_NOT_NEWLINE):
+	(RE_INTERVALS, RE_LIMITED_OPS, RE_NEWLINE_ALT):
+	(RE_NO_BK_BRACES, RE_NO_BK_PARENS, RE_NO_BK_REFS):
+	(RE_NO_BK_VBAR, RE_NO_EMPTY_RANGES):
+	(RE_UNMATCHED_RIGHT_PAREN_ORD, RE_NO_POSIX_BACKTRACKING):
+	(RE_NO_GNU_OPS, RE_DEBUG, RE_INVALID_INTERVAL_ORD):
+	(RE_IGNORE_CASE, RE_CARET_ANCHORS_HERE):
+	(RE_CONTEXT_INVALID_DUP, RE_NO_SUB):
+	Don't bother having these macros be independent of each others'
+	values, since they no longer exist in the POSIX name space.
+
+	Rename the following member names back to their old names,
+	unless !__USE_GNU_REGEX.  All uses changed back.
+	(buffer): Renamed from re_buffer.
+	(allocated): Renamed from re_allocated.
+	(used): Renamed from re_used.
+	(syntax): Renamed from re_syntax.
+	(fastmap): Renamed from re_fastmap.
+	(translate): Renamed from re_translate.
+	(can_be_null): Renamed from re_can_be_null.
+	(regs_allocated): Renamed from re_regs_allocated.
+	(fastmap_accurate): Renamed from re_fastmap_accurate.
+	(no_sub): Renamed from re_no_sub.
+	(not_bol): Renamed from re_not_bol.
+	(not_eol): Renamed from re_not_eol.
+	(newline_anchor): Renamed from re_newline_anchor.
+	(num_regs): Renamed from rm_num_regs.
+	(start): Renamed from rm_start.
+	(end): Renamed from rm_end.
+
+	(free_state): Move up a bit.
+
+	* regex_internal.h (inline) [__GNUC__ < 3 && defined _LIBC]:
+	#define to be empty.
+	(ASCII_CHARS): New macro, replacing all uses of 0x80 and/or SBC_MAX / 2
+	when that is what is intended.
+	(SBC_MAX): Define to UCHAR_MAX + 1, not 256.
+	(__re_error_msgid, __re_error_msgid_idx): Remove decls; not needed.
+	(MAX): New macro.
+	(re_xmalloc, re_calloc, re_xrealloc, re_x2realloc): Remove.
+	All uses changed back to re_malloc, etc.  It's now the caller's
+	responsibility to check for overflow; all callers changed.
+	(re_alloc_oversized, re_x2alloc_oversized, re_xnmalloc, re_xnrealloc):
+	(re_x2nrealloc): Remove.
+	(free_state): Remove decl.
+
+	* regexc.c (regexec, re_match, re_search, re_match_2, re_search_2):
+	(re_set_registers, re_exec):
+	Use K&R-style defn.
+
+	2006-01-31  Roland McGrath  <roland@redhat.com>
+
+	* regcomp.c (calc_eclosure_iter): Remove dead variables.
+	Reported by Mike Frysinger <vapier@gentoo.org>.
+
+	2006-01-15  Andreas Jaeger  <aj@suse.de>
+
+	[BZ #1950]
+	* regex_internal.c (re_string_reconstruct): Adjust for
+	build_wcs_upper_buffer change.
+	(build_wcs_upper_buffer): Change return type.
+
+	2005-12-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* regex_internal.h: Include <stdint.h> if available.
+
+	2005-12-06  Paolo Bonzini  <bonzini@gnu.org>
+
+	* regex_internal.h (SIZE_MAX): Provide a default definition.
+
+	2005-10-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* regcomp.c: Adjust for changed secondary hash function.
+
+	2005-09-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* regex.h: Pretty printing.
+	Clean up namespace a bit.
+
+	2005-09-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* regexec.c (update_cur_sifted_state, check_arrival,
+	check_arrival_add_next_nodes): Avoid using uninitialized variable.
+
+	2005-09-06  Paul Eggert  <eggert@cs.ucla.edu>
+		    Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #1302]
+	* regex_internal.h (bitset_t): Renamed from bitset.  All uses changed.
+	(bitset_word_t): Renamed from bitset_word.  All uses changed.
+
+	2005-09-22  Ulrich Drepper  <drepper@redhat.com>
+
+	[BZ #281]
+	* regex.h: Define RE_TRANSLATE_TYPE as unsigned char *.
+	* regcomp.c: Remove unnecessary uses of
+	unsigned RE_TRANSLATE_TYPE.
+	* regex_internal.h: Likewise.
+	* regex_internal.c: Likewise.
+	* regexec.c: Likewise.
+	Based on a patch by Stepan Kasal <kasal@ucw.cz>.
+
+	2005-09-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* regexec.c (find_recover_state): Remove unnecessary
+	initialization.
+	(transit_state_bkref): Make DFA a const pointer.
+	(get_subexp): Likewise.
+	(check_arrival): Likewise.
+	(update_cur_sifted_state): Likewise.
+	(re_search_internal): Likewise.
+	(prune_impossible_nodes): Likewise.
+	(acquire_init_state_context): Likewise.
+	(proceed_next_node): Likewise.
+	(set_regs): Likewise.
+	(free_fail_stack_return): Likewise.
+	(check_arrival_expand_ecl): Mark DFA parameter as const.
+	(check_arrival_expand_ecl_sub): Likewise.
+	(check_subexp_limits): Likewise.
+	(sub_epsilon_src_nodes):  Likewise.
+	(add_epsilon_src_nodes):  Likewise.
+	(merge_state_array): Likewise.
+	(update_regs): Likewise.
+	(build_trtable): Likewise.
+	(sift_states_backward): Mark MCTX parameter as const.
+	(build_sifted_states): Likewise.
+	(update_cur_sifted_state): Likewise.
+	(sift_states_mkref): Likewise.
+	(check_arrival_expand_ecl): Mark eclosure as const.
+	(check_dst_limits_calc_pos_1): Likewise.
+	* regex_internal.h (re_match_context_t): Make dfa a const
+	pointer.
+
+	2005-09-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* regexec.c (merge_state_with_log): Define dfa as const pointer.
+	(transit_state_sb): Likewise.
+	(transit_state_mb): Likewise.
+	(sift_states_iter_mb): Likewise.
+	(check_arrival_add_next_nodes): Likewise.
+	(check_node_accept_bytes): Change first parameter to pointer-to-const.
+	[_LIBC] (re_search_2_stub): Use mempcpy.
+
+	* regex_internal.c (re_string_reconstruct): Avoid calling
+	mbrtowc for very simple UTF-8 case.
+
+	* regex_internal.c (re_acquire_state): Make DFA pointer arg
+	a pointer-to-const.
+	(re_acquire_state_context): Likewise.
+	* regex_internal.h: Adjust prototypes.
+
+	* regex.c: Prevent using C++ compilers.
+
+	* regex_internal.c (re_acquire_state): Minor code rearrangement.
+	(re_acquire_state_context): Likewise.
+
 2006-03-11  Eric Blake  <ebb9@byu.net>
 
 	* same.c (same_name): s/base_name/last_component/

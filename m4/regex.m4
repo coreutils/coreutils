@@ -1,4 +1,4 @@
-#serial 35
+#serial 36
 
 # Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2003, 2004, 2005,
 # 2006 Free Software Foundation, Inc.
@@ -38,13 +38,19 @@ AC_DEFUN([gl_REGEX],
       [AC_RUN_IFELSE(
 	[AC_LANG_PROGRAM(
 	  [AC_INCLUDES_DEFAULT
+	   #include <limits.h>
 	   #include <regex.h>
 	   ],
 	  [[static struct re_pattern_buffer regex;
+	    unsigned char folded_chars[UCHAR_MAX + 1];
+	    int i;
 	    const char *s;
 	    struct re_registers regs;
 	    re_set_syntax (RE_SYNTAX_POSIX_EGREP);
 	    memset (&regex, 0, sizeof (regex));
+	    for (i = 0; i <= UCHAR_MAX; i++)
+	      folded_chars[i] = i;
+	    regex.translate = folded_chars;
 	    s = re_compile_pattern ("a[[:@:>@:]]b\n", 11, &regex);
 	    /* This should fail with _Invalid character class name_ error.  */
 	    if (!s)
