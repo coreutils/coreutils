@@ -3529,13 +3529,13 @@ build_charclass (RE_TRANSLATE_TYPE trans, bitset_t sbcset,
     if (BE (trans != NULL, 0))			\
       {						\
 	for (i = 0; i < SBC_MAX; ++i)		\
-  	  if (ctype_func (i))			\
+	  if (ctype_func (i))			\
 	    bitset_set (sbcset, trans[i]);	\
       }						\
     else					\
       {						\
 	for (i = 0; i < SBC_MAX; ++i)		\
-  	  if (ctype_func (i))			\
+	  if (ctype_func (i))			\
 	    bitset_set (sbcset, i);		\
       }						\
   } while (0)
