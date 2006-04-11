@@ -1,5 +1,5 @@
 /* expr -- evaluate expressions.
-   Copyright (C) 86, 1991-1997, 1999-2005 Free Software Foundation, Inc.
+   Copyright (C) 86, 1991-1997, 1999-2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -412,8 +412,8 @@ docolon (VALUE *sv, VALUE *pv)
   VALUE *v IF_LINT (= NULL);
   const char *errmsg;
   struct re_pattern_buffer re_buffer;
+  char fastmap[UCHAR_MAX + 1];
   struct re_registers re_regs;
-  size_t len;
   regoff_t matchlen;
 
   tostring (sv);
@@ -427,14 +427,12 @@ of the basic regular expression is not portable; it is being ignored"),
 	     quote (pv->u.s));
     }
 
-  len = strlen (pv->u.s);
-  memset (&re_buffer, 0, sizeof (re_buffer));
-  memset (&re_regs, 0, sizeof (re_regs));
-  re_buffer.buffer = xnmalloc (len, 2);
-  re_buffer.allocated = 2 * len;
+  re_buffer.buffer = NULL;
+  re_buffer.allocated = 0;
+  re_buffer.fastmap = fastmap;
   re_buffer.translate = NULL;
   re_syntax_options = RE_SYNTAX_POSIX_BASIC;
-  errmsg = re_compile_pattern (pv->u.s, len, &re_buffer);
+  errmsg = re_compile_pattern (pv->u.s, strlen (pv->u.s), &re_buffer);
   if (errmsg)
     error (EXPR_FAILURE, 0, "%s", errmsg);
 
@@ -442,7 +440,7 @@ of the basic regular expression is not portable; it is being ignored"),
   if (0 <= matchlen)
     {
       /* Were \(...\) used? */
-      if (re_buffer.re_nsub > 0)/* was (re_regs.start[1] >= 0) */
+      if (re_buffer.re_nsub > 0)
 	{
 	  sv->u.s[re_regs.end[1]] = '\0';
 	  v = str_value (sv->u.s + re_regs.start[1]);
