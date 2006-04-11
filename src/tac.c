@@ -1,5 +1,5 @@
 /* tac - concatenate and print files in reverse
-   Copyright (C) 1988-1991, 1995-2005 Free Software Foundation, Inc.
+   Copyright (C) 1988-1991, 1995-2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -110,6 +110,7 @@ static size_t G_buffer_size;
 
 /* The compiled regular expression representing `separator'. */
 static struct re_pattern_buffer compiled_separator;
+static char compiled_separator_fastmap[UCHAR_MAX + 1];
 
 static struct option const longopts[] =
 {
@@ -608,9 +609,9 @@ main (int argc, char **argv)
 
   if (sentinel_length == 0)
     {
-      compiled_separator.allocated = 100;
-      compiled_separator.buffer = xmalloc (compiled_separator.allocated);
-      compiled_separator.fastmap = xmalloc (256);
+      compiled_separator.buffer = NULL;
+      compiled_separator.allocated = 0;
+      compiled_separator.fastmap = compiled_separator_fastmap;
       compiled_separator.translate = NULL;
       error_message = re_compile_pattern (separator, strlen (separator),
 					  &compiled_separator);
