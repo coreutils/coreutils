@@ -1,5 +1,5 @@
 /* nl -- number lines of files
-   Copyright (C) 89, 92, 1995-2005 Free Software Foundation, Inc.
+   Copyright (C) 89, 92, 1995-2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -83,6 +83,11 @@ static struct re_pattern_buffer header_regex;
 
 /* Regex for footer lines to number (-fp).  */
 static struct re_pattern_buffer footer_regex;
+
+/* Fastmaps for the above.  */
+static char body_fastmap[UCHAR_MAX + 1];
+static char header_fastmap[UCHAR_MAX + 1];
+static char footer_fastmap[UCHAR_MAX + 1];
 
 /* Pointer to current regex, if any.  */
 static struct re_pattern_buffer *current_regex = NULL;
@@ -230,11 +235,10 @@ FORMAT is one of:\n\
    according to `optarg'.  */
 
 static bool
-build_type_arg (char **typep, struct re_pattern_buffer *regexp)
+build_type_arg (char **typep, struct re_pattern_buffer *regexp, char *fastmap)
 {
   const char *errmsg;
   bool rval = true;
-  size_t optlen;
 
   switch (*optarg)
     {
@@ -245,13 +249,11 @@ build_type_arg (char **typep, struct re_pattern_buffer *regexp)
       break;
     case 'p':
       *typep = optarg++;
-      optlen = strlen (optarg);
-      regexp->allocated = optlen * 2;
-      regexp->buffer = xnmalloc (optlen, 2);
+      regexp->buffer = NULL;
+      regexp->allocated = 0;
+      regexp->fastmap = fastmap;
       regexp->translate = NULL;
-      regexp->fastmap = xmalloc (256);
-      regexp->fastmap_accurate = 0;
-      errmsg = re_compile_pattern (optarg, optlen, regexp);
+      errmsg = re_compile_pattern (optarg, strlen (optarg), regexp);
       if (errmsg)
 	error (EXIT_FAILURE, 0, "%s", errmsg);
       break;
@@ -469,7 +471,7 @@ main (int argc, char **argv)
       switch (c)
 	{
 	case 'h':
-	  if (! build_type_arg (&header_type, &header_regex))
+	  if (! build_type_arg (&header_type, &header_regex, header_fastmap))
 	    {
 	      error (0, 0, _("invalid header numbering style: %s"),
 		     quote (optarg));
@@ -477,7 +479,7 @@ main (int argc, char **argv)
 	    }
 	  break;
 	case 'b':
-	  if (! build_type_arg (&body_type, &body_regex))
+	  if (! build_type_arg (&body_type, &body_regex, body_fastmap))
 	    {
 	      error (0, 0, _("invalid body numbering style: %s"),
 		     quote (optarg));
@@ -485,7 +487,7 @@ main (int argc, char **argv)
 	    }
 	  break;
 	case 'f':
-	  if (! build_type_arg (&footer_type, &footer_regex))
+	  if (! build_type_arg (&footer_type, &footer_regex, footer_fastmap))
 	    {
 	      error (0, 0, _("invalid footer numbering style: %s"),
 		     quote (optarg));
