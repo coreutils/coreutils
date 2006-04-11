@@ -1,6 +1,37 @@
-2006-03-30  Jim Meyering  <jim@meyering.net>
+2006-04-10  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 6.0-cvs.
+
+	Adjust to new regex.h API (with new fastmap type), and clean
+	up the regex storage allocation a bit.
+
+	* src/csplit.c (struct control): Put re_compiled member at the
+	end, since it's large.  Change regexpr member from char * to bool;
+	all uses changed.  Add new member fastmap.
+	(extract_regexp): regexp arg is now char const *, not char *.
+	Don't bother duplicating the regular expression; it's not needed.
+	Set fastmap from new fastmap member.  Don't bother allocating
+	a buffer, as the regexp code does a better job than we do.
+	* src/expr.c (docolon): Allocate and use a fastmap.
+	Don't bother allocating a buffer.
+	* src/nl.c (body_fastmap, header_fastmap, footer_fastmap):
+	New vars.
+	(build_type_arg): New fastmap arg.  All uses changed.
+	Don't bother allocating a buffer, but set a fastmap.
+	* src/ptx.c (context_regex_string, word_regex_string): Remove.
+	(context_regex, word_regex): New vars, replacing the above.
+	All uses changed.
+	(struct regex_data): New type.
+	(compile_regex): Renamed from alloc_and_compile_regex, since
+	we no longer allocate storage.  Arg is now a struct regex_data *,
+	not a const char *.  All uses changed.  Don't allocate the fastmap;
+	instead, take it from the caller.  Don't convert size_t to int,
+	to avoid arithmetic overflow problems.  Don't bother freeing
+	storage afterwards; it's not worth the aggravation.
+	* src/tac.c (compiled_separator_fastmap): New ver.
+	(main): Use it.  Don't bother allocating a buffer.
+
+2006-03-30  Jim Meyering  <jim@meyering.net>
 
 	* src/dd.c (iwrite): Remove assignment without effect.
 	Reported by Felix Rauch Valenti.
