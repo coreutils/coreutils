@@ -95,13 +95,23 @@ static enum Format output_format = UNKNOWN_FORMAT;
 				/* output format */
 
 static bool ignore_case = false;	/* fold lower to upper for sorting */
-static const char *context_regex_string = NULL;
-				/* raw regex for end of context */
-static const char *word_regex_string = NULL;
-				/* raw regex for a keyword */
 static const char *break_file = NULL;	/* name of the `Break characters' file */
 static const char *only_file = NULL;	/* name of the `Only words' file */
 static const char *ignore_file = NULL;	/* name of the `Ignore words' file */
+
+/* Options that use regular expressions.  */
+struct regex_data
+{
+  /* The original regular expression, as a string.  */
+  char const *string;
+
+  /* The compiled regular expression, and its fastmap.  */
+  struct re_pattern_buffer pattern;
+  char fastmap[UCHAR_MAX + 1];
+};
+
+static struct regex_data context_regex;	/* end of context */
+static struct regex_data word_regex;	/* keyword */
 
 /* A BLOCK delimit a region in memory of arbitrary size, like the copy of a
    whole file.  A WORD is something smaller, its length should fit in a
@@ -134,14 +144,8 @@ WORD_TABLE;
 /* For each character, provide its folded equivalent.  */
 static unsigned char folded_chars[CHAR_SET_SIZE];
 
-/* Compiled regex for end of context.  */
-static struct re_pattern_buffer *context_regex;
-
 /* End of context pattern register indices.  */
 static struct re_registers context_regs;
-
-/* Compiled regex for a keyword.  */
-static struct re_pattern_buffer *word_regex;
 
 /* Keyword pattern register indices.  */
 static struct re_registers word_regs;
@@ -188,10 +192,10 @@ static BLOCK text_buffer;	/* file to study */
     cursor--
 
 #define SKIP_SOMETHING(cursor, limit) \
-  if (word_regex_string)						\
+  if (word_regex.string)						\
     {									\
       regoff_t count;							\
-      count = re_match (word_regex, cursor, limit - cursor, 0, NULL);	\
+      count = re_match (&word_regex.pattern, cursor, limit - cursor, 0, NULL); \
       if (count == -2)							\
         matcher_error ();						\
       cursor += count == -1 ? 1 : count;				\
@@ -397,26 +401,23 @@ copy_unescaped_string (const char *string)
   return result;
 }
 
-/*-------------------------------------------------------------------.
-| Compile the regex represented by STRING, diagnose and abort if any |
-| error.  Returns the compiled regex structure.			     |
-`-------------------------------------------------------------------*/
+/*--------------------------------------------------------------------------.
+| Compile the regex represented by REGEX, diagnose and abort if any error.  |
+`--------------------------------------------------------------------------*/
 
-static struct re_pattern_buffer *
-alloc_and_compile_regex (const char *string)
+static void
+compile_regex (struct regex_data *regex)
 {
-  struct re_pattern_buffer *pattern; /* newly allocated structure */
-  const char *message;		/* error message returned by regex.c */
-
-  pattern = xmalloc (sizeof *pattern);
-  memset (pattern, 0, sizeof *pattern);
+  struct re_pattern_buffer *pattern = &regex->pattern;
+  char const *string = regex->string;
+  char const *message;
 
   pattern->buffer = NULL;
   pattern->allocated = 0;
-  pattern->translate = ignore_case ? (char *) folded_chars : NULL;
-  pattern->fastmap = xmalloc ((size_t) CHAR_SET_SIZE);
+  pattern->fastmap = regex->fastmap;
+  pattern->translate = ignore_case ? folded_chars : NULL;
 
-  message = re_compile_pattern (string, (int) strlen (string), pattern);
+  message = re_compile_pattern (string, strlen (string), pattern);
   if (message)
     error (EXIT_FAILURE, 0, _("%s (for regexp %s)"), message, quote (string));
 
@@ -425,13 +426,6 @@ alloc_and_compile_regex (const char *string)
      and it compiles the fastmap if this has not been done yet.  */
 
   re_compile_fastmap (pattern);
-
-  /* Do not waste extra allocated space.  */
-
-  pattern->buffer = xrealloc (pattern->buffer, pattern->used);
-  pattern->allocated = pattern->used;
-
-  return pattern;
 }
 
 /*------------------------------------------------------------------------.
@@ -457,18 +451,18 @@ initialize_regex (void)
      extensions are enabled, use end of sentence like in GNU emacs.  If
      disabled, use end of lines.  */
 
-  if (context_regex_string)
+  if (context_regex.string)
     {
-      if (!*context_regex_string)
-	context_regex_string = NULL;
+      if (!*context_regex.string)
+	context_regex.string = NULL;
     }
   else if (gnu_extensions & !input_reference)
-    context_regex_string = "[.?!][]\"')}]*\\($\\|\t\\|  \\)[ \t\n]*";
+    context_regex.string = "[.?!][]\"')}]*\\($\\|\t\\|  \\)[ \t\n]*";
   else
-    context_regex_string = "\n";
+    context_regex.string = "\n";
 
-  if (context_regex_string)
-    context_regex = alloc_and_compile_regex (context_regex_string);
+  if (context_regex.string)
+    compile_regex (&context_regex);
 
   /* If the user has already provided a non-empty regexp to describe
      words, compile it.  Else, unless this has already been done through
@@ -478,8 +472,8 @@ initialize_regex (void)
      include almost everything, even punctuations; stop only on white
      space.  */
 
-  if (word_regex_string && *word_regex_string)
-    word_regex = alloc_and_compile_regex (word_regex_string);
+  if (word_regex.string)
+    compile_regex (&word_regex);
   else if (!break_file)
     {
       if (gnu_extensions)
@@ -880,8 +874,9 @@ find_occurs_in_text (void)
 	 sentence at the end of the buffer.  */
 
       next_context_start = text_buffer.end;
-      if (context_regex_string)
-	switch (re_search (context_regex, cursor, text_buffer.end - cursor,
+      if (context_regex.string)
+	switch (re_search (&context_regex.pattern, cursor,
+			   text_buffer.end - cursor,
 			   0, text_buffer.end - cursor, &context_regs))
 	  {
 	  case -2:
@@ -907,14 +902,15 @@ find_occurs_in_text (void)
 
       while (1)
 	{
-	  if (word_regex)
+	  if (word_regex.string)
 
 	    /* If a word regexp has been compiled, use it to skip at the
 	       beginning of the next word.  If there is no such word, exit
 	       the loop.  */
 
 	    {
-	      regoff_t r = re_search (word_regex, cursor, context_end - cursor,
+	      regoff_t r = re_search (&word_regex.pattern, cursor,
+				      context_end - cursor,
 				      0, context_end - cursor, &word_regs);
 	      if (r == -2)
 		matcher_error ();
@@ -2071,7 +2067,7 @@ main (int argc, char **argv)
 	  break;
 
 	case 'S':
-	  context_regex_string = copy_unescaped_string (optarg);
+	  context_regex.string = copy_unescaped_string (optarg);
 	  break;
 
 	case 'T':
@@ -2079,7 +2075,9 @@ main (int argc, char **argv)
 	  break;
 
 	case 'W':
-	  word_regex_string = copy_unescaped_string (optarg);
+	  word_regex.string = copy_unescaped_string (optarg);
+	  if (!*word_regex.string)
+	    word_regex.string = NULL;
 	  break;
 
 	case 10:
