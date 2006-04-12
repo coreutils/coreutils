@@ -1,3 +1,12 @@
+2006-04-12  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* fsusage.c: Don't include <inttypes.h> or <stdint.h>, since
+	fsusage.h now does that.  Include fsusage.h first, to test interface.
+	Prefer statvfs if it works, since it's blessed by POSIX.  Attempt
+	at most one method (the old code could have generated decls that
+	didn't conform to C89, not that this was ever exercised).
+	* fsusage.h: Include <inttypes.h> and <stdint.h> if they exist.
+
 2006-04-09  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Merge regex changes from libc, removing some of our

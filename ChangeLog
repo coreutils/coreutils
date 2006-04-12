@@ -1,6 +1,17 @@
-2006-04-11  Paul Eggert  <eggert@cs.ucla.edu>
+2006-04-12  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 6.0-cvs.
+
+	* src/ln.c (linkfunc): Remove.  This method ran into a compiler/linker
+	bug in Interix.  Just call symlink or link directly.  All uses changed.
+	* src/setuidgid.c (main) [! HAVE_SETGROUPS]: Don't call setgroups.
+	* src/stat.c (USE_STATVFS): New macro.
+	Include <sys/statvfs.h> and use statvfs only if USE_STATVFS.
+	(NAMEMAX_FORMAT): define a bit more clearly, now that the
+	statvfs-using code is a bit more regular.
+	* src/system.h (sync) [!HAVE_SYNC]: New macro.
+
+2006-04-11  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: csplit, nl, expr now conform to POSIX better, and are
 	more-compatible with traditional Unix, with respect to regular
