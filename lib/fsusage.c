@@ -1,6 +1,6 @@
 /* fsusage.c -- return space usage of mounted file systems
 
-   Copyright (C) 1991, 1992, 1996, 1998, 1999, 2002, 2003, 2004, 2005
+   Copyright (C) 1991, 1992, 1996, 1998, 1999, 2002, 2003, 2004, 2005, 2006
    Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -21,58 +21,46 @@
 # include <config.h>
 #endif
 
-#if HAVE_INTTYPES_H
-# include <inttypes.h>
-#endif
-#if HAVE_STDINT_H
-# include <stdint.h>
-#endif
-#include <unistd.h>
-#ifndef UINTMAX_MAX
-# define UINTMAX_MAX ((uintmax_t) -1)
-#endif
-
-#include <sys/types.h>
-#include <sys/stat.h>
 #include "fsusage.h"
 
 #include <limits.h>
+#include <sys/types.h>
 
-#if HAVE_SYS_PARAM_H
-# include <sys/param.h>
-#endif
-
-#if HAVE_SYS_MOUNT_H
-# include <sys/mount.h>
-#endif
-
-#if HAVE_SYS_VFS_H
-# include <sys/vfs.h>
-#endif
-
-#if HAVE_SYS_FS_S5PARAM_H	/* Fujitsu UXP/V */
-# include <sys/fs/s5param.h>
-#endif
-
-#if defined HAVE_SYS_FILSYS_H && !defined _CRAY
-# include <sys/filsys.h>	/* SVR2 */
-#endif
-
-#include <fcntl.h>
-
-#if HAVE_SYS_STATFS_H
-# include <sys/statfs.h>
-#endif
-
-#if HAVE_DUSTAT_H		/* AIX PS/2 */
-# include <sys/dustat.h>
-#endif
-
-#if HAVE_SYS_STATVFS_H		/* SVR4 */
+#if STAT_STATVFS		/* POSIX 1003.1-2001 (and later) with XSI */
 # include <sys/statvfs.h>
+#else
+/* Don't include backward-compatibility files unless they're needed.
+   Eventually we'd like to remove all this cruft.  */
+# include <fcntl.h>
+# include <unistd.h>
+# include <sys/stat.h>
+# if HAVE_SYS_PARAM_H
+#  include <sys/param.h>
+# endif
+# if HAVE_SYS_MOUNT_H
+#  include <sys/mount.h>
+# endif
+# if HAVE_SYS_VFS_H
+#  include <sys/vfs.h>
+# endif
+# if HAVE_SYS_FS_S5PARAM_H	/* Fujitsu UXP/V */
+#  include <sys/fs/s5param.h>
+# endif
+# if defined HAVE_SYS_FILSYS_H && !defined _CRAY
+#  include <sys/filsys.h>	/* SVR2 */
+# endif
+# if HAVE_SYS_STATFS_H
+#  include <sys/statfs.h>
+# endif
+# if HAVE_DUSTAT_H		/* AIX PS/2 */
+#  include <sys/dustat.h>
+# endif
+# include "full-read.h"
 #endif
 
-#include "full-read.h"
+#ifndef UINTMAX_MAX
+# define UINTMAX_MAX ((uintmax_t) -1)
+#endif
 
 /* Many space usage primitives use all 1 bits to denote a value that is
    not applicable or unknown.  Propagate this information by returning
@@ -108,18 +96,19 @@
 int
 get_fs_usage (char const *file, char const *disk, struct fs_usage *fsp)
 {
-#ifdef STAT_STATFS3_OSF1
+#if defined STAT_STATVFS		/* POSIX */
 
-  struct statfs fsd;
+  struct statvfs fsd;
 
-  if (statfs (file, &fsd, sizeof (struct statfs)) != 0)
+  if (statvfs (file, &fsd) < 0)
     return -1;
 
-  fsp->fsu_blocksize = PROPAGATE_ALL_ONES (fsd.f_fsize);
+  /* f_frsize isn't guaranteed to be supported.  */
+  fsp->fsu_blocksize = (fsd.f_frsize
+			? PROPAGATE_ALL_ONES (fsd.f_frsize)
+			: PROPAGATE_ALL_ONES (fsd.f_bsize));
 
-#endif /* STAT_STATFS3_OSF1 */
-
-#ifdef STAT_STATFS2_FS_DATA	/* Ultrix */
+#elif defined STAT_STATFS2_FS_DATA	/* Ultrix */
 
   struct fs_data fsd;
 
@@ -134,9 +123,7 @@ get_fs_usage (char const *file, char const *disk, struct fs_usage *fsp)
   fsp->fsu_files = PROPAGATE_ALL_ONES (fsd.fd_req.gtot);
   fsp->fsu_ffree = PROPAGATE_ALL_ONES (fsd.fd_req.gfree);
 
-#endif /* STAT_STATFS2_FS_DATA */
-
-#ifdef STAT_READ_FILSYS		/* SVR2 */
+#elif defined STAT_READ_FILSYS		/* SVR2 */
 # ifndef SUPERBOFF
 #  define SUPERBOFF (SUPERB * 512)
 # endif
@@ -171,9 +158,16 @@ get_fs_usage (char const *file, char const *disk, struct fs_usage *fsp)
 		    : (fsd.s_isize - 2) * INOPB * (fsd.s_type == Fs2b ? 2 : 1));
   fsp->fsu_ffree = PROPAGATE_ALL_ONES (fsd.s_tinode);
 
-#endif /* STAT_READ_FILSYS */
+#elif defined STAT_STATFS3_OSF1
 
-#ifdef STAT_STATFS2_BSIZE	/* 4.3BSD, SunOS 4, HP-UX, AIX */
+  struct statfs fsd;
+
+  if (statfs (file, &fsd, sizeof (struct statfs)) != 0)
+    return -1;
+
+  fsp->fsu_blocksize = PROPAGATE_ALL_ONES (fsd.f_fsize);
+
+#elif defined STAT_STATFS2_BSIZE	/* 4.3BSD, SunOS 4, HP-UX, AIX */
 
   struct statfs fsd;
 
@@ -197,9 +191,7 @@ get_fs_usage (char const *file, char const *disk, struct fs_usage *fsp)
     }
 # endif /* STATFS_TRUNCATES_BLOCK_COUNTS */
 
-#endif /* STAT_STATFS2_BSIZE */
-
-#ifdef STAT_STATFS2_FSIZE	/* 4.4BSD */
+#elif defined STAT_STATFS2_FSIZE	/* 4.4BSD */
 
   struct statfs fsd;
 
@@ -208,9 +200,7 @@ get_fs_usage (char const *file, char const *disk, struct fs_usage *fsp)
 
   fsp->fsu_blocksize = PROPAGATE_ALL_ONES (fsd.f_fsize);
 
-#endif /* STAT_STATFS2_FSIZE */
-
-#ifdef STAT_STATFS4		/* SVR3, Dynix, Irix, AIX */
+#elif defined STAT_STATFS4		/* SVR3, Dynix, Irix, AIX */
 
 # if !_AIX && !defined _SEQUENT_ && !defined DOLPHIN
 #  define f_bavail f_bfree
@@ -230,24 +220,10 @@ get_fs_usage (char const *file, char const *disk, struct fs_usage *fsp)
    fsp->fsu_blocksize = 512;
 # endif
 
-#endif /* STAT_STATFS4 */
+#endif
 
-#ifdef STAT_STATVFS		/* SVR4 */
-
-  struct statvfs fsd;
-
-  if (statvfs (file, &fsd) < 0)
-    return -1;
-
-  /* f_frsize isn't guaranteed to be supported.  */
-  fsp->fsu_blocksize = (fsd.f_frsize
-			? PROPAGATE_ALL_ONES (fsd.f_frsize)
-			: PROPAGATE_ALL_ONES (fsd.f_bsize));
-
-#endif /* STAT_STATVFS */
-
-#if !defined STAT_STATFS2_FS_DATA && !defined STAT_READ_FILSYS
-				/* !Ultrix && !SVR2 */
+#if (defined STAT_STATVFS \
+     || (!defined STAT_STATFS2_FS_DATA && !defined STAT_READ_FILSYS))
 
   fsp->fsu_blocks = PROPAGATE_ALL_ONES (fsd.f_blocks);
   fsp->fsu_bfree = PROPAGATE_ALL_ONES (fsd.f_bfree);
@@ -256,7 +232,7 @@ get_fs_usage (char const *file, char const *disk, struct fs_usage *fsp)
   fsp->fsu_files = PROPAGATE_ALL_ONES (fsd.f_files);
   fsp->fsu_ffree = PROPAGATE_ALL_ONES (fsd.f_ffree);
 
-#endif /* not STAT_STATFS2_FS_DATA && not STAT_READ_FILSYS */
+#endif
 
   return 0;
 }
