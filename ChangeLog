@@ -1,6 +1,41 @@
-2006-04-10  Paul Eggert  <eggert@cs.ucla.edu>
+2006-04-11  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 6.0-cvs.
+
+	* src/csplit.c (extract_regexp): Set re_syntax_options to a
+	value that is compatible with what POSIX requires.
+	* src/nl.c (build_type_arg): Likewise.
+	* src/expr.c (docolon): Likewise.  Also, don't let anchors match
+	newline; this fixes an incompatibility with tradition and with POSIX.
+	Don't warn about leading ^.  POSIX says it is unspecified whether
+	^ is a special character, which means that implementations can
+	either treat it as special or not, but either way a warning is not
+	allowed (unless the regexp is otherwise invalid).  Instead, anchor
+	the expression but treat ^ as an anchor; this is the traditional
+	behavior (e.g., Solaris 10).
+	(eval4, eval3, eval2): Treat non-numeric args, division by zero,
+	and the like as invalid expressions (exit status 2), not as
+	failure of 'expr' (exit status 3).  This is more consistent with
+	how Solaris behaves.
+	* tests/expr/basic (fail-a): Adjust exit status to match new expr
+	behavior, for status 2 versus 3.
+	(anchor): New test.
+	(bre1, bre2, bre3, bre4, bre5, bre6, bre7, bre8, bre9, bre10):
+	(bre11, bre12, bre13, bre14, bre15, bre16, bre17, bre18, bre19, bre20):
+	(bre21, bre22, bre23, bre24, bre25, bre26, bre27, bre28, bre29, bre30):
+	(bre31, bre32, bre33, bre34, bre35, bre36, bre37, bre38, bre39, bre40):
+	(bre41, bre42, bre43, bre44, bre45, bre46, bre47, bre48, bre49, bre50):
+	(bre51, bre52, bre53, bre54, bre55, bre56, bre57, bre58, bre59, bre60):
+	(bre61, bre62): New tests.
+	* tests/misc/csplit: Use \{...\} in test RE, to test that we're
+	conforming to POSIX.
+
+	Port to Solaris 8.
+	* tests/du/long-from-unreachable: Solaris 8 sh doesn't understand
+	"if !".  Do not assume that 'sed' can handle long, newline-free input.
+	* tests/du/long-sloop: Likewise.  Evaluate expr once, not $n times.
+
+2006-04-10  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Adjust to new regex.h API (with new fastmap type), and clean
 	up the regex storage allocation a bit.
