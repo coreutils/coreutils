@@ -1,5 +1,5 @@
 /* stat.c -- display file or file system status
-   Copyright (C) 2001, 2002, 2003, 2004, 2005 Free Software Foundation.
+   Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006 Free Software Foundation.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -19,11 +19,18 @@
 
 #include <config.h>
 
+#if (STAT_STATVFS \
+     && (HAVE_STRUCT_STATVFS_F_BASETYPE || ! HAVE_STRUCT_STATFS_F_FSTYPENAME))
+# define USE_STATVFS 1
+#else
+# define USE_STATVFS 0
+#endif
+
 #include <stdio.h>
 #include <sys/types.h>
 #include <pwd.h>
 #include <grp.h>
-#if HAVE_SYS_STATVFS_H && HAVE_STRUCT_STATVFS_F_BASETYPE
+#if USE_STATVFS
 # include <sys/statvfs.h>
 #elif HAVE_SYS_VFS_H
 # include <sys/vfs.h>
@@ -56,35 +63,29 @@
 #include "strftime.h"
 #include "xreadlink.h"
 
-#define NAMEMAX_FORMAT PRIuMAX
-
-#if HAVE_STRUCT_STATVFS_F_BASETYPE
+#if USE_STATVFS
 # define STRUCT_STATVFS struct statvfs
 # define HAVE_STRUCT_STATXFS_F_TYPE HAVE_STRUCT_STATVFS_F_TYPE
 # if HAVE_STRUCT_STATVFS_F_NAMEMAX
 #  define SB_F_NAMEMAX(S) ((uintmax_t) ((S)->f_namemax))
 # endif
-# if STAT_STATVFS
-#  define STATFS statvfs
-#  define STATFS_FRSIZE(S) ((S)->f_frsize)
-# endif
+# define STATFS statvfs
+# define STATFS_FRSIZE(S) ((S)->f_frsize)
 #else
 # define STRUCT_STATVFS struct statfs
 # define HAVE_STRUCT_STATXFS_F_TYPE HAVE_STRUCT_STATFS_F_TYPE
 # if HAVE_STRUCT_STATFS_F_NAMELEN
 #  define SB_F_NAMEMAX(S) ((uintmax_t) ((S)->f_namelen))
 # endif
-#endif
-
-#ifndef STATFS
 # define STATFS statfs
 # define STATFS_FRSIZE(S) 0
 #endif
 
-#ifndef SB_F_NAMEMAX
+#ifdef SB_F_NAMEMAX
+# define NAMEMAX_FORMAT PRIuMAX
+#else
 /* NetBSD 1.5.2 has neither f_namemax nor f_namelen.  */
 # define SB_F_NAMEMAX(S) "*"
-# undef NAMEMAX_FORMAT
 # define NAMEMAX_FORMAT "s"
 #endif
 
