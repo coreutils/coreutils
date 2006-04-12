@@ -253,6 +253,7 @@ build_type_arg (char **typep, struct re_pattern_buffer *regexp, char *fastmap)
       regexp->allocated = 0;
       regexp->fastmap = fastmap;
       regexp->translate = NULL;
+      re_syntax_options = RE_SYNTAX_POSIX_BASIC & ~RE_CONTEXT_INVALID_DUP;
       errmsg = re_compile_pattern (optarg, strlen (optarg), regexp);
       if (errmsg)
 	error (EXIT_FAILURE, 0, "%s", errmsg);
