@@ -1,3 +1,8 @@
+2006-04-12  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (expr invocation): expr exit status is 3 only for
+	internal errors now; 2 is also for invalid values in expressions.
+
 2006-04-09  Ori Avtalion  <oavtal@bezeqint.net>
 
 	* coreutils.texi (Top): Add 'hostid' to System context menu line.
