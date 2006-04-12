@@ -2,6 +2,9 @@
 
 	* Version 6.0-cvs.
 
+	* NEWS: csplit, nl, expr now conform to POSIX better, and are
+	more-compatible with traditional Unix, with respect to regular
+	expressions.
 	* src/csplit.c (extract_regexp): Set re_syntax_options to a
 	value that is compatible with what POSIX requires.
 	* src/nl.c (build_type_arg): Likewise.
