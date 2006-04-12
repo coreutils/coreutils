@@ -1,3 +1,7 @@
+2006-04-11  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* time_r.m4 (gl_TIME_R): Add AC_LIBSOURCES for time_r.c and time_r.h.
+
 2006-04-09  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* regex.m4 (gl_REGEX): Check for new glibc interface to
