@@ -1,6 +1,6 @@
 /* fsusage.h -- declarations for file system space usage info
 
-   Copyright (C) 1991, 1992, 1997, 2003, 2004, 2005 Free Software
+   Copyright (C) 1991, 1992, 1997, 2003, 2004, 2005, 2006 Free Software
    Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -22,6 +22,12 @@
 #if !defined FSUSAGE_H_
 # define FSUSAGE_H_
 
+# if HAVE_INTTYPES_H
+#  include <inttypes.h>
+# endif
+# if HAVE_STDINT_H
+#  include <stdint.h>
+# endif
 # include <stdbool.h>
 
 struct fs_usage
