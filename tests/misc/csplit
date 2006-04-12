@@ -92,7 +92,7 @@ test $fail = 1 && diff err experr 2> /dev/null
 # in 5.3.1.
 rm -f in out exp err experr xx??
 printf 'x%8199s\nx\n%8199s\nx\n' x x > in
-csplit in '/x/' '{*}' > /dev/null || fail=1
+csplit in '/x\{1\}/' '{*}' > /dev/null || fail=1
 cat xx?? | cmp - in || fail=1
 
 (exit $fail); exit $fail
