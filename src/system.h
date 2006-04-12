@@ -765,6 +765,10 @@ enum
 			  : (errno = EOVERFLOW, -1))
 #endif
 
+#if ! HAVE_SYNC
+# define sync() /* empty */
+#endif
+
 /* Compute the greatest common divisor of U and V using Euclid's
    algorithm.  U and V must be nonzero.  */
 
