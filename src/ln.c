@@ -60,10 +60,6 @@ char *program_name;
 /* FIXME: document */
 static enum backup_type backup_type;
 
-/* A pointer to the function used to make links.  This will point to either
-   `link' or `symlink'. */
-static int (*linkfunc) ();
-
 /* If true, make symbolic links; otherwise, make hard links.  */
 static bool symbolic_link;
 
@@ -241,7 +237,8 @@ do_link (const char *source, const char *dest)
 	}
     }
 
-  ok = (linkfunc (source, dest) == 0);
+  ok = ((symbolic_link ? symlink (source, dest) : link (source, dest))
+	== 0);
 
   /* If the attempt to create a link failed and we are removing or
      backing up destinations, unlink the destination and try again.
@@ -270,7 +267,8 @@ do_link (const char *source, const char *dest)
 	  return false;
 	}
 
-      ok = (linkfunc (source, dest) == 0);
+      ok = ((symbolic_link ? symlink (source, dest) : link (source, dest))
+	    == 0);
     }
 
   if (ok)
@@ -505,11 +503,6 @@ main (int argc, char **argv)
 	error (EXIT_FAILURE, 0, _("target %s is not a directory"),
 	       quote (file[n_files - 1]));
     }
-
-  if (symbolic_link)
-    linkfunc = symlink;
-  else
-    linkfunc = link;
 
   if (backup_suffix_string)
     simple_backup_suffix = xstrdup (backup_suffix_string);
