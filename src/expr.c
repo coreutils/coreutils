@@ -50,12 +50,13 @@
 /* Exit statuses.  */
 enum
   {
-    /* Invalid expression: i.e., its form does not conform to the
+    /* Invalid expression: e.g., its form does not conform to the
        grammar for expressions.  Our grammar is an extension of the
        POSIX grammar.  */
     EXPR_INVALID = 2,
 
-    /* Some other error occurred.  */
+    /* An internal error occurred, e.g., arithmetic overflow, storage
+       exhaustion.  */
     EXPR_FAILURE
   };
 
@@ -419,22 +420,15 @@ docolon (VALUE *sv, VALUE *pv)
   tostring (sv);
   tostring (pv);
 
-  if (pv->u.s[0] == '^')
-    {
-      error (0, 0, _("\
-warning: unportable BRE: %s: using `^' as the first character\n\
-of the basic regular expression is not portable; it is being ignored"),
-	     quote (pv->u.s));
-    }
-
   re_buffer.buffer = NULL;
   re_buffer.allocated = 0;
   re_buffer.fastmap = fastmap;
   re_buffer.translate = NULL;
-  re_syntax_options = RE_SYNTAX_POSIX_BASIC;
+  re_syntax_options = RE_SYNTAX_POSIX_BASIC & ~RE_CONTEXT_INVALID_DUP;
   errmsg = re_compile_pattern (pv->u.s, strlen (pv->u.s), &re_buffer);
   if (errmsg)
-    error (EXPR_FAILURE, 0, "%s", errmsg);
+    error (EXPR_INVALID, 0, "%s", errmsg);
+  re_buffer.newline_anchor = 0;
 
   matchlen = re_match (&re_buffer, sv->u.s, strlen (sv->u.s), 0, &re_regs);
   if (0 <= matchlen)
@@ -634,13 +628,13 @@ eval4 (bool evaluate)
       if (evaluate)
 	{
 	  if (!toarith (l) || !toarith (r))
-	    error (EXPR_FAILURE, 0, _("non-numeric argument"));
+	    error (EXPR_INVALID, 0, _("non-numeric argument"));
 	  if (fxn == multiply)
 	    val = l->u.i * r->u.i;
 	  else
 	    {
 	      if (r->u.i == 0)
-		error (EXPR_FAILURE, 0, _("division by zero"));
+		error (EXPR_INVALID, 0, _("division by zero"));
 	      val = fxn == divide ? l->u.i / r->u.i : l->u.i % r->u.i;
 	    }
 	}
@@ -676,7 +670,7 @@ eval3 (bool evaluate)
       if (evaluate)
 	{
 	  if (!toarith (l) || !toarith (r))
-	    error (EXPR_FAILURE, 0, _("non-numeric argument"));
+	    error (EXPR_INVALID, 0, _("non-numeric argument"));
 	  val = fxn == plus ? l->u.i + r->u.i : l->u.i - r->u.i;
 	}
       freev (l);
@@ -738,7 +732,7 @@ eval2 (bool evaluate)
 		{
 		  error (0, errno, _("string comparison failed"));
 		  error (0, 0, _("Set LC_ALL='C' to work around the problem."));
-		  error (EXPR_FAILURE, 0,
+		  error (EXPR_INVALID, 0,
 			 _("The strings compared were %s and %s."),
 			 quotearg_n_style (0, locale_quoting_style, l->u.s),
 			 quotearg_n_style (1, locale_quoting_style, r->u.s));
