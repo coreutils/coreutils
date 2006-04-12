@@ -19,7 +19,7 @@ fi
 . $srcdir/../envvar-check
 
 proc_file=/proc/self/fd
-if ! test -d $proc_file; then
+if test ! -d $proc_file; then
   cat <<EOF >&2
 $0: Skipping this test.
 It would fail, since your system lacks /proc support.
@@ -36,7 +36,7 @@ framework_failure=0
 mkdir -p $tmp || framework_failure=1
 cd $tmp || framework_failure=1
 
-dir=`printf %200s ' '|sed 's/ /x/g'`
+dir=`printf '%200s\n' ' '|tr ' ' x`
 
 # Construct a hierarchy containing a relative file with a name
 # longer than PATH_MAX.
