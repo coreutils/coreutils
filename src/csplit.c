@@ -1121,7 +1121,8 @@ extract_regexp (int argnum, bool ignore, char const *str)
   p->re_compiled.allocated = 0;
   p->re_compiled.fastmap = p->fastmap;
   p->re_compiled.translate = NULL;
-  re_syntax_options = RE_SYNTAX_POSIX_BASIC & ~RE_CONTEXT_INVALID_DUP;
+  re_syntax_options =
+    RE_SYNTAX_POSIX_BASIC & ~RE_CONTEXT_INVALID_DUP & ~RE_NO_EMPTY_RANGES;
   err = re_compile_pattern (str + 1, len, &p->re_compiled);
   if (err)
     {

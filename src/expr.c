@@ -424,7 +424,8 @@ docolon (VALUE *sv, VALUE *pv)
   re_buffer.allocated = 0;
   re_buffer.fastmap = fastmap;
   re_buffer.translate = NULL;
-  re_syntax_options = RE_SYNTAX_POSIX_BASIC & ~RE_CONTEXT_INVALID_DUP;
+  re_syntax_options =
+    RE_SYNTAX_POSIX_BASIC & ~RE_CONTEXT_INVALID_DUP & ~RE_NO_EMPTY_RANGES;
   errmsg = re_compile_pattern (pv->u.s, strlen (pv->u.s), &re_buffer);
   if (errmsg)
     error (EXPR_INVALID, 0, "%s", errmsg);
