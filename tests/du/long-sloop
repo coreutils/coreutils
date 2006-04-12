@@ -29,9 +29,16 @@ n=400
 
 dir_list=`seq $n`
 mkdir $dir_list || framework_failure=1
-for i in $dir_list; do
-  ip1=`expr $i + 1`
-  ln -s ../$ip1 $i/s || framework_failure=1
+file=1
+i_minus_1=0
+for i in $dir_list `expr $n + 1`; do
+  case $i_minus_1 in
+  0) ;;
+  *)
+    ln -s ../$i $i_minus_1/s || framework_failure=1
+    file=$file/s;;
+  esac
+  i_minus_1=$i
 done
 echo foo > $ip1
 
@@ -49,7 +56,6 @@ fi
 # renders it as `Number of symbolic links encountered during path
 # name traversal exceeds MAXSYMLINKS'.
 
-file=1`printf %${n}s ' '|sed 's, ,/s,g'`
 cat $file > /dev/null 2> err && \
   {
     cat <<EOF >&2
