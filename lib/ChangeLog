@@ -1,3 +1,9 @@
+2006-04-13  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* regcomp.c (init_dfa): Don't use wchar_t or wctype_t if RE_ENABLE_I18N
+	is not defined.  Problem reported by Mark D. Baushke via Derek R. Price.
+	* regex.h (RE_DUP_MAX): Update comment to match current implementation.
+
 2006-04-12  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* fsusage.c: Don't include <inttypes.h> or <stdint.h>, since
