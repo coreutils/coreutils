@@ -322,7 +322,14 @@ extern reg_syntax_t re_syntax_options;
 # ifdef RE_DUP_MAX
 #  undef RE_DUP_MAX
 # endif
-/* If sizeof(int) == 2, then ((1 << 15) - 1) overflows.  */
+
+/* RE_DUP_MAX is 2**15 - 1 because an earlier implementation stored
+   the counter as a 2-byte signed integer.  This is no longer true, so
+   RE_DUP_MAX could be increased to (INT_MAX / 10 - 1), or to
+   ((SIZE_MAX - 2) / 10 - 1) if _REGEX_LARGE_OFFSETS is defined.
+   However, there would be a huge performance problem if someone
+   actually used a pattern like a\{214748363\}, so RE_DUP_MAX retains
+   its historical value.  */
 # define RE_DUP_MAX (0x7fff)
 
 #endif /* defined __USE_GNU_REGEX */
