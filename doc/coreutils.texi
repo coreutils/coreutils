@@ -5772,10 +5772,42 @@ bytes, but this can be overridden (@pxref{Block size}).
 The @var{blocks} computed counts each hard link separately;
 this is arguably a deficiency.
 
+The file type is one of the following characters:
+
+@table @samp
+@item -
+regular file
+@item b
+block special file
+@item c
+character special file
+@item C
+high performance (``contiguous data'') file
+@item d
+directory
+@item D
+door
+@item l
+symbolic link
+@c @item m
+@c multiplexed character special file (7th edition Unix; obsolete)
+@item M
+off-line (``migrated'') file (Cray DMF)
+@item n
+network special file (HP-UX)
+@item p
+FIFO (named pipe)
+@item s
+socket
+@item ?
+some other file type
+@end table
+
 @cindex permissions, output by @command{ls}
 The file mode bits listed are similar to symbolic mode specifications
 (@pxref{Symbolic Modes}).  But @command{ls} combines multiple bits into the
 third character of each set of permissions as follows:
+
 @table @samp
 @item s
 If the setuid or setgid bit and the corresponding executable bit
@@ -6065,6 +6097,7 @@ like @option{-F}, except that executables are not marked.
 @opindex --indicator-style
 Append a character indicator with style @var{word} to entry names,
 as follows:
+
 @table @samp
 @item none
 Do not append any character indicator; this is the default.
@@ -6311,6 +6344,7 @@ in C.
 Use style @var{word} to quote file names and other strings that may
 contain arbitrary characters.  The @var{word} should
 be one of the following:
+
 @table @samp
 @item literal
 Output strings as-is; this is the same as the @option{-N} or
@@ -6745,6 +6779,7 @@ heuristic and makes the corresponding output file sparse as well.
 Only regular files may be sparse.
 
 The @var{when} value can be one of the following:
+
 @table @samp
 @item auto
 The default behavior: if the input file is sparse, attempt to make
