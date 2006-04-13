@@ -836,15 +836,17 @@ init_dfa (re_dfa_t *dfa, size_t pat_len)
 #ifndef _LIBC
   char *codeset_name;
 #endif
+#ifdef RE_ENABLE_I18N
+  size_t max_i18n_object_size = MAX (sizeof (wchar_t), sizeof (wctype_t));
+#else
+  size_t max_i18n_object_size = 0;
+#endif
   size_t max_object_size =
     MAX (sizeof (struct re_state_table_entry),
 	 MAX (sizeof (re_token_t),
 	      MAX (sizeof (re_node_set),
 		   MAX (sizeof (regmatch_t),
-			MAX (sizeof (regoff_t),
-			     MAX (sizeof (wchar_t),
-				  MAX (sizeof (wctype_t),
-				       sizeof (Idx))))))));
+			max_i18n_object_size))));
 
   memset (dfa, '\0', sizeof (re_dfa_t));
 
