@@ -1,6 +1,6 @@
 2006-04-14  Jim Meyering  <jim@meyering.net>
 
-	Remove unreachable code and plug leaks in code to handle degenerate
+	Remove unreachable code and plug leaks in code that handles degenerate
 	input and some failure cases.
 	* fts.c (fts_build): #if-0-out a block of unused code. Patch from glibc.
 	(fts_build): Remove just-#if-0'd code and the code that
