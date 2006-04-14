@@ -273,8 +273,8 @@ fts_open (char * const *argv,
 	register FTS *sp;
 	register FTSENT *p, *root;
 	register size_t nitems;
- 	FTSENT *parent = NULL;
- 	FTSENT *tmp = NULL;	/* pacify gcc */
+	FTSENT *parent = NULL;
+	FTSENT *tmp = NULL;	/* pacify gcc */
 	size_t len;
 
 	/* Options check. */
