@@ -1,3 +1,14 @@
+2006-04-14  Jim Meyering  <jim@meyering.net>
+
+	Remove unreachable code and plug leaks in code to handle degenerate
+	input and some failure cases.
+	* fts.c (fts_build): #if-0-out a block of unused code. Patch from glibc.
+	(fts_build): Remove just-#if-0'd code and the code that
+	declares and sets cderrno.
+	(fts_build): Free `head' before returning NULL, in two places,
+	to avoid leaks.  Patch from glibc.
+	(fts_open): Don't allocate parent if *argv==NULL.  Patch from glibc.
+
 2006-04-13  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* regcomp.c (init_dfa): Don't use wchar_t or wctype_t if RE_ENABLE_I18N
