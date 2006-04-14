@@ -273,7 +273,8 @@ fts_open (char * const *argv,
 	register FTS *sp;
 	register FTSENT *p, *root;
 	register size_t nitems;
-	FTSENT *parent, *tmp = NULL;	/* pacify gcc */
+ 	FTSENT *parent = NULL;
+ 	FTSENT *tmp = NULL;	/* pacify gcc */
 	size_t len;
 
 	/* Options check. */
@@ -341,9 +342,11 @@ fts_open (char * const *argv,
 	}
 
 	/* Allocate/initialize root's parent. */
-	if ((parent = fts_alloc(sp, "", 0)) == NULL)
-		goto mem2;
-	parent->fts_level = FTS_ROOTPARENTLEVEL;
+	if (*argv != NULL) {
+		if ((parent = fts_alloc(sp, "", 0)) == NULL)
+			goto mem2;
+		parent->fts_level = FTS_ROOTPARENTLEVEL;
+	  }
 
 	/* Allocate/initialize root(s). */
 	for (root = NULL, nitems = 0; *argv != NULL; ++argv, ++nitems) {
