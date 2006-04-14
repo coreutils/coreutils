@@ -786,7 +786,6 @@ fts_build (register FTS *sp, int type)
 	FTSENT *cur, *tail;
 	DIR *dirp;
 	void *oldaddr;
-	int cderrno;
 	int saved_errno;
 	bool descend;
 	bool doadjust;
@@ -855,7 +854,6 @@ fts_build (register FTS *sp, int type)
 	 * needed sorted entries or stat information, they had better be
 	 * checking FTS_NS on the returned nodes.
 	 */
-	cderrno = 0;
 	if (nlinks || type == BREAD) {
 		int dir_fd = dup (dirfd(dirp));
 		if (dir_fd < 0 || fts_safe_changedir(sp, cur, dir_fd, NULL)) {
@@ -863,7 +861,6 @@ fts_build (register FTS *sp, int type)
 				cur->fts_errno = errno;
 			cur->fts_flags |= FTS_DONTCHDIR;
 			descend = false;
-			cderrno = errno;
 			closedir(dirp);
 			if (0 <= dir_fd)
 				close (dir_fd);
@@ -956,43 +953,19 @@ mem1:				saved_errno = errno;
 			p->fts_flags |= FTS_ISW;
 #endif
 
-#if 0
-		/* Unreachable code.  cderrno is only ever set to a nonnull
-		   value if dirp is closed at the same time.  But then we
-		   cannot enter this loop.  */
-		if (cderrno) {
-			if (nlinks) {
-				p->fts_info = FTS_NS;
-				p->fts_errno = cderrno;
-			} else
-				p->fts_info = FTS_NSOK;
-			p->fts_accpath = cur->fts_accpath;
-		} else if (nlinks == 0
-#if HAVE_STRUCT_DIRENT_D_TYPE
-			   || (nostat &&
-			       dp->d_type != DT_DIR && dp->d_type != DT_UNKNOWN)
-#endif
-		    ) {
-			p->fts_accpath =
-			    ISSET(FTS_NOCHDIR) ? p->fts_path : p->fts_name;
-			p->fts_info = FTS_NSOK;
+		/* Build a file name for fts_stat to stat. */
+		if (ISSET(FTS_NOCHDIR)) {
+			p->fts_accpath = p->fts_path;
+			memmove(cp, p->fts_name, p->fts_namelen + 1);
 		} else
-#endif
-		{
-			/* Build a file name for fts_stat to stat. */
-			if (ISSET(FTS_NOCHDIR)) {
-				p->fts_accpath = p->fts_path;
-				memmove(cp, p->fts_name, p->fts_namelen + 1);
-			} else
-				p->fts_accpath = p->fts_name;
-			/* Stat it. */
-			p->fts_info = fts_stat(sp, p, false);
+			p->fts_accpath = p->fts_name;
+		/* Stat it. */
+		p->fts_info = fts_stat(sp, p, false);
 
-			/* Decrement link count if applicable. */
-			if (nlinks > 0 && (p->fts_info == FTS_D ||
-			    p->fts_info == FTS_DC || p->fts_info == FTS_DOT))
-				nlinks -= nostat;
-		}
+		/* Decrement link count if applicable. */
+		if (nlinks > 0 && (p->fts_info == FTS_D ||
+		    p->fts_info == FTS_DC || p->fts_info == FTS_DOT))
+			nlinks -= nostat;
 
 		/* We walk in directory order so "ls -f" doesn't get upset. */
 		p->fts_link = NULL;
