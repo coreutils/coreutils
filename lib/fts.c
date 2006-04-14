@@ -956,6 +956,10 @@ mem1:				saved_errno = errno;
 			p->fts_flags |= FTS_ISW;
 #endif
 
+#if 0
+		/* Unreachable code.  cderrno is only ever set to a nonnull
+		   value if dirp is closed at the same time.  But then we
+		   cannot enter this loop.  */
 		if (cderrno) {
 			if (nlinks) {
 				p->fts_info = FTS_NS;
@@ -972,7 +976,9 @@ mem1:				saved_errno = errno;
 			p->fts_accpath =
 			    ISSET(FTS_NOCHDIR) ? p->fts_path : p->fts_name;
 			p->fts_info = FTS_NSOK;
-		} else {
+		} else
+#endif
+		{
 			/* Build a file name for fts_stat to stat. */
 			if (ISSET(FTS_NOCHDIR)) {
 				p->fts_accpath = p->fts_path;
