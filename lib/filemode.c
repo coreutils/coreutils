@@ -1,5 +1,7 @@
 /* filemode.c -- make a string describing file modes
-   Copyright (C) 1985, 1990, 1993, 1998-2000, 2004 Free Software Foundation, Inc.
+
+   Copyright (C) 1985, 1990, 1993, 1998-2000, 2004, 2006 Free Software
+   Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -19,12 +21,22 @@
 # include <config.h>
 #endif
 
-#include <sys/types.h>
-#include <sys/stat.h>
-
 #include "filemode.h"
+
 #include "stat-macros.h"
 
+/* The following is for Cray DMF (Data Migration Facility), which is a
+   HSM file system.  A migrated file has a `st_dm_mode' that is
+   different from the normal `st_mode', so any tests for migrated
+   files should use the former.  */
+#if HAVE_ST_DM_MODE
+# define IS_MIGRATED_FILE(statp) \
+    (S_ISOFD (statp->st_dm_mode) || S_ISOFL (statp->st_dm_mode))
+#else
+# define IS_MIGRATED_FILE(statp) 0
+#endif
+
+#if ! HAVE_DECL_STRMODE
 
 /* Set the 's' and 't' flags in file attributes string CHARS,
    according to the file mode BITS.  */
@@ -60,65 +72,65 @@ setst (mode_t bits, char *chars)
 
 /* Return a character indicating the type of file described by
    file mode BITS:
-   'd' for directories
-   'D' for doors
-   'b' for block special files
-   'c' for character special files
-   'n' for network special files
-   'm' for multiplexor files
-   'M' for an off-line (regular) file
-   'l' for symbolic links
-   's' for sockets
-   'p' for fifos
-   'C' for contigous data files
-   '-' for regular files
-   '?' for any other file type.  */
+   '-' regular file
+   'b' block special file
+   'c' character special file
+   'C' high performance ("contiguous data") file
+   'd' directory
+   'D' door
+   'l' symbolic link
+   'm' multiplexed file (7th edition Unix; obsolete)
+   'n' network special file (HP-UX)
+   'p' fifo (named pipe)
+   'P' port
+   's' socket
+   'w' whiteout (4.4BSD)
+   '?' some other file type  */
 
 static char
 ftypelet (mode_t bits)
 {
+  /* These are the most common, so test for them first.  */
+  if (S_ISREG (bits))
+    return '-';
+  if (S_ISDIR (bits))
+    return 'd';
+
+  /* Other letters standardized by POSIX 1003.1-2004.  */
   if (S_ISBLK (bits))
     return 'b';
   if (S_ISCHR (bits))
     return 'c';
-  if (S_ISDIR (bits))
-    return 'd';
-  if (S_ISREG (bits))
-    return '-';
-  if (S_ISFIFO (bits))
-    return 'p';
   if (S_ISLNK (bits))
     return 'l';
+  if (S_ISFIFO (bits))
+    return 'p';
+
+  /* Other file types (though not letters) standardized by POSIX.  */
   if (S_ISSOCK (bits))
     return 's';
-  if (S_ISMPC (bits))
+
+  /* Nonstandard file types.  */
+  if (S_ISCTG (bits))
+    return 'C';
+  if (S_ISDOOR (bits))
+    return 'D';
+  if (S_ISMPB (bits) || S_ISMPC (bits))
     return 'm';
   if (S_ISNWK (bits))
     return 'n';
-  if (S_ISDOOR (bits))
-    return 'D';
-  if (S_ISCTG (bits))
-    return 'C';
+  if (S_ISPORT (bits))
+    return 'P';
+  if (S_ISWHT (bits))
+    return 'w';
 
-  /* The following two tests are for Cray DMF (Data Migration
-     Facility), which is a HSM file system.  A migrated file has a
-     `st_dm_mode' that is different from the normal `st_mode', so any
-     tests for migrated files should use the former.  */
-
-  if (S_ISOFD (bits))
-    /* off line, with data  */
-    return 'M';
-  /* off line, with no data  */
-  if (S_ISOFL (bits))
-    return 'M';
   return '?';
 }
 
-/* Like filemodestring, but only the relevant part of the `struct stat'
-   is given as an argument.  */
+/* Like filemodestring, but rely only on MODE.  */
 
 void
-mode_string (mode_t mode, char *str)
+strmode (mode_t mode, char *str)
 {
   str[0] = ftypelet (mode);
   str[1] = mode & S_IRUSR ? 'r' : '-';
@@ -130,18 +142,26 @@ mode_string (mode_t mode, char *str)
   str[7] = mode & S_IROTH ? 'r' : '-';
   str[8] = mode & S_IWOTH ? 'w' : '-';
   str[9] = mode & S_IXOTH ? 'x' : '-';
+  str[10] = ' ';
+  str[11] = '\0';
   setst (mode, str);
 }
 
+#endif /* ! HAVE_DECL_STRMODE */
+
 /* filemodestring - fill in string STR with an ls-style ASCII
    representation of the st_mode field of file stats block STATP.
-   10 characters are stored in STR; no terminating null is added.
+   12 characters are stored in STR.
    The characters stored in STR are:
 
-   0	File type.  'd' for directory, 'c' for character
-	special, 'b' for block special, 'm' for multiplex,
-	'l' for symbolic link, 's' for socket, 'p' for fifo,
-	'-' for regular, '?' for any other file type
+   0	File type, as in ftypelet above, except that other letters are used
+        for files whose type cannot be determined solely from st_mode:
+
+	    'F' semaphore
+	    'M' migrated file (Cray DMF)
+	    'Q' message queue
+	    'S' shared memory object
+	    'T' typed memory object
 
    1	'r' if the owner may read, '-' otherwise.
 
@@ -167,10 +187,26 @@ mode_string (mode_t mode, char *str)
    9	'x' if any user may execute, 't' if the file is "sticky"
 	(will be retained in swap space after execution), '-'
 	otherwise.
-	'T' if the file is sticky but not executable.  */
+	'T' if the file is sticky but not executable.
+
+   10   ' ' for compatibility with 4.4BSD strmode,
+	since this interface does not support ACLs.
+
+   11   '\0'.  */
 
 void
-filemodestring (struct stat *statp, char *str)
+filemodestring (struct stat const *statp, char *str)
 {
-  mode_string (statp->st_mode, str);
+  strmode (statp->st_mode, str);
+
+  if (S_TYPEISSEM (statp))
+    str[0] = 'F';
+  else if (IS_MIGRATED_FILE (statp))
+    str[0] = 'M';
+  else if (S_TYPEISMQ (statp))
+    str[0] = 'Q';
+  else if (S_TYPEISSHM (statp))
+    str[0] = 'S';
+  else if (S_TYPEISTMO (statp))
+    str[0] = 'T';
 }
