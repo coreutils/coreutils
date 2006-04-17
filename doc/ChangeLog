@@ -1,3 +1,9 @@
+2006-04-18  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi (Input processing in ptx): Remove mention of the
+	default --ignore file, /usr/local/lib/eign.  That file has never
+	been used.  Reported by Eric Blake.
+
 2006-04-12  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (expr invocation): expr exit status is 3 only for
