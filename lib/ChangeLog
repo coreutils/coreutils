@@ -1,5 +1,23 @@
 2006-04-17  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* filemode.c: Include "filemode.h" first, to test the interface.
+	Assume that filemode.h includes sys/types.h and sys/stat.h.
+	(HAVE_ST_DM_MODE): New macro, moved here from ls.c.
+	(ftypelet): Reorder to put common cases first, for efficiency.
+	Add 'P', 'w'.  Remove 'M', since it's now the caller's responsibility
+	to do 'M'.
+	(strmode): Renamed from mode_string, and now stores 12 bytes instead
+	of 10, for compatibility with FreeBSD.  All callers changed.
+	(filemodestring): Now stores 12 bytes instead of 10, and sets file types
+	that can't be deduced solely from st_mode.  First arg is now a const
+	pointer.
+	* filemode.h (HAVE_DECL_STRMODE): Include <string.h> for strmode.
+	(strmode): Renamed from mode_string.
+	(filemodestring): New decl.
+	* stat-macros.h: Don't undef S_ISDOOR, since it's never buggy.
+	(S_ISDOOR): Don't bother with S_IFDOOR, since that code is never needed.
+	(S_ISPORT, S_ISWHT): New macros, if not already defined.
+
 	* openat.h (openat_needs_fchdir) [ ! defined __OPENAT_PREFIX]:
 	Turn this into a macro that always returns false.
 

@@ -1,3 +1,9 @@
+2006-04-17  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (What information is listed): Add P for Solaris
+	10 ports.  Add commented-out entries for other types that POSIX
+	says are possible, or that I observed in FreeBSD documentation.
+
 2006-04-18  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (Input processing in ptx): Remove mention of the

@@ -1,6 +1,15 @@
-2006-04-18  Jim Meyering  <jim@meyering.net>
+2006-04-17  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 6.0-cvs.
+
+	* src/chmod.c (describe_change): Adjust to filemode changes.
+	* src/ls.c (HAVE_ST_DM_MODE): Remove; moved to ../lib/filemode.c.
+	(print_long_format): Use (new) filemodestring rather than
+	(old) mode_string, so that we get more file types right, at least
+	in theory.  Adjust to filemode changes.
+	* src/stat.c (human_access): Likewise.
+
+2006-04-18  Jim Meyering  <jim@meyering.net>
 
 	* src/ptx.c (main) [DEFAULT_IGNORE_FILE]: Remove code to use a default
 	ignore file.  This has never been enabled.  Reported by Eric Blake.
