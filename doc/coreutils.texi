@@ -4278,11 +4278,6 @@ never be taken as keywords in concordance output.  It is called the
 end of line separation of words is not subject to the value of the
 @option{-S} option.
 
-There is a default Ignore file used by @command{ptx} when this option is
-not specified, usually found in @file{/usr/local/lib/eign} if this has
-not been changed at installation time.  If you want to deactivate the
-default Ignore file, specify @code{/dev/null} instead.
-
 @item -o @var{file}
 @itemx --only-file=@var{file}
 
