@@ -152,13 +152,6 @@ int wcwidth ();
 # define st_author st_uid
 #endif
 
-/* Cray/Unicos DMF: use the file's migrated, not real, status */
-#if HAVE_ST_DM_MODE
-# define ST_DM_MODE(Stat_buf) ((Stat_buf).st_dm_mode)
-#else
-# define ST_DM_MODE(Stat_buf) ((Stat_buf).st_mode)
-#endif
-
 enum filetype
   {
     unknown DT_INIT (DT_UNKNOWN),
@@ -3270,13 +3263,13 @@ print_long_format (const struct fileinfo *f)
   struct timespec when_timespec;
   struct tm *when_local;
 
-  /* Compute mode string.  On most systems, it's based on st_mode.
-     On systems with migration (via the stat.st_dm_mode field), use
-     the file's migrated status.  */
-  mode_string (ST_DM_MODE (f->stat), modebuf);
-
-  modebuf[10] = (FILE_HAS_ACL (f) ? '+' : ' ');
-  modebuf[10 + any_has_acl] = '\0';
+  /* Compute the mode string, except remove the trailing space if no
+     files in this directory have ACLs.  */
+  filemodestring (&f->stat, modebuf);
+  if (! any_has_acl)
+    modebuf[10] = '\0';
+  else if (FILE_HAS_ACL (f))
+    modebuf[10] = '+';
 
   switch (time_type)
     {
