@@ -1,6 +1,6 @@
 2006-04-17  Paul Eggert  <eggert@cs.ucla.edu>
 
-	* openat.h (openat_needs_fchdir) [defined __OPENAT_PREFIX]:
+	* openat.h (openat_needs_fchdir) [ ! defined __OPENAT_PREFIX]:
 	Turn this into a macro that always returns false.
 
 2006-04-15  Paul Eggert  <eggert@cs.ucla.edu>
