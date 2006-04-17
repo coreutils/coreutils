@@ -75,11 +75,13 @@ DIR *fdopendir (int fd);
 int fstatat (int fd, char const *file, struct stat *st, int flag);
 # define unlinkat __OPENAT_ID (unlinkat)
 int unlinkat (int fd, char const *file, int flag);
+bool openat_needs_fchdir (void);
 
 #else
 
 # define openat_permissive(Fd, File, Flags, Mode, Cwd_errno) \
     openat (Fd, File, Flags, Mode)
+# define openat_needs_fchdir() false
 
 #endif
 
@@ -115,5 +117,3 @@ lchmodat (int fd, char const *file, mode_t mode)
 {
   return fchmodat (fd, file, mode, AT_SYMLINK_NOFOLLOW);
 }
-
-bool openat_needs_fchdir (void);
