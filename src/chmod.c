@@ -1,5 +1,5 @@
 /* chmod -- change permission modes of files
-   Copyright (C) 89, 90, 91, 1995-2005 Free Software Foundation, Inc.
+   Copyright (C) 89, 90, 91, 1995-2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -143,7 +143,7 @@ static void
 describe_change (const char *file, mode_t mode,
 		 enum Change_status changed)
 {
-  char perms[11];		/* "-rwxrwxrwx" ls-style modes. */
+  char perms[12];		/* "-rwxrwxrwx" ls-style modes. */
   const char *fmt;
 
   if (changed == CH_NOT_APPLIED)
@@ -153,8 +153,8 @@ describe_change (const char *file, mode_t mode,
       return;
     }
 
-  mode_string (mode, perms);
-  perms[10] = '\0';		/* `mode_string' does not null terminate. */
+  strmode (mode, perms);
+  perms[10] = '\0';		/* Remove trailing space.  */
   switch (changed)
     {
     case CH_SUCCEEDED:
@@ -259,10 +259,10 @@ process_file (FTS *fts, FTSENT *ent)
       mode_t naively_expected_mode = mode_adjust (old_mode, change, 0);
       if (new_mode & ~naively_expected_mode)
 	{
-	  char new_perms[11];
-	  char naively_expected_perms[11];
-	  mode_string (new_mode, new_perms);
-	  mode_string (naively_expected_mode, naively_expected_perms);
+	  char new_perms[12];
+	  char naively_expected_perms[12];
+	  strmode (new_mode, new_perms);
+	  strmode (naively_expected_mode, naively_expected_perms);
 	  new_perms[10] = naively_expected_perms[10] = '\0';
 	  error (0, 0,
 		 _("%s: new permissions are %s, not %s"),
