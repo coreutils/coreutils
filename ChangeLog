@@ -1,6 +1,11 @@
-2006-04-12  Paul Eggert  <eggert@cs.ucla.edu>
+2006-04-18  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* src/ptx.c (main) [DEFAULT_IGNORE_FILE]: Remove code to use a default
+	ignore file.  This has never been enabled.  Reported by Eric Blake.
+
+2006-04-12  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/ln.c (linkfunc): Remove.  This method ran into a compiler/linker
 	bug in Interix.  Just call symlink or link directly.  All uses changed.
