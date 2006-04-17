@@ -294,8 +294,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
 static char *
 human_access (struct stat const *statbuf)
 {
-  static char modebuf[11];
-  mode_string (statbuf->st_mode, modebuf);
+  static char modebuf[12];
+  filemodestring (statbuf, modebuf);
   modebuf[10] = 0;
   return modebuf;
 }
