@@ -5769,6 +5769,8 @@ this is arguably a deficiency.
 
 The file type is one of the following characters:
 
+@c The commented-out entries are ones we're not sure about.
+
 @table @samp
 @item -
 regular file
@@ -5781,19 +5783,31 @@ high performance (``contiguous data'') file
 @item d
 directory
 @item D
-door
+door (Solaris 2.5 and up)
+@c @item F
+@c semaphore, if this is a distinct file type
 @item l
 symbolic link
 @c @item m
-@c multiplexed character special file (7th edition Unix; obsolete)
+@c multiplexed file (7th edition Unix; obsolete)
 @item M
 off-line (``migrated'') file (Cray DMF)
 @item n
 network special file (HP-UX)
 @item p
 FIFO (named pipe)
+@item P
+port (Solaris 10 and up)
+@c @item Q
+@c message queue, if this is a distinct file type
 @item s
 socket
+@c @item S
+@c shared memory object, if this is a distinct file type
+@c @item T
+@c typed memory object, if this is a distinct file type
+@c @item w
+@c whiteout (4.4BSD; not implemented)
 @item ?
 some other file type
 @end table
