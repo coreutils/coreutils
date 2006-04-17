@@ -1,6 +1,7 @@
 /* stat-related macros
 
-   Copyright (C) 1993, 1994, 2001, 2002, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1993, 1994, 2001, 2002, 2004, 2006 Free Software
+   Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -33,7 +34,6 @@
 #  undef S_ISBLK
 #  undef S_ISCHR
 #  undef S_ISDIR
-#  undef S_ISDOOR
 #  undef S_ISFIFO
 #  undef S_ISLNK
 #  undef S_ISNAM
@@ -70,11 +70,7 @@
 # endif
 
 # ifndef S_ISDOOR /* Solaris 2.5 and up */
-#  ifdef S_IFDOOR
-#   define S_ISDOOR(m) (((m) & S_IFMT) == S_IFDOOR)
-#  else
-#   define S_ISDOOR(m) 0
-#  endif
+#  define S_ISDOOR(m) 0
 # endif
 
 # ifndef S_ISFIFO
@@ -119,6 +115,10 @@
 #  endif
 # endif
 
+# ifndef S_ISPORT /* Solaris 10 and up */
+#  define S_ISPORT(m) 0
+# endif
+
 # ifndef S_ISREG
 #  ifdef S_IFREG
 #   define S_ISREG(m) (((m) & S_IFMT) == S_IFREG)
@@ -161,7 +161,7 @@
 #  endif
 # endif
 
-/* contiguous */
+/* high performance ("contiguous data") */
 # ifndef S_ISCTG
 #  define S_ISCTG(p) 0
 # endif
@@ -174,6 +174,11 @@
 /* Cray DMF (data migration facility): off line, with no data  */
 # ifndef S_ISOFL
 #  define S_ISOFL(p) 0
+# endif
+
+/* 4.4BSD whiteout */
+# ifndef S_ISWHT
+#  define S_ISWHT(m) 0
 # endif
 
 /* If any of the following are undefined,
