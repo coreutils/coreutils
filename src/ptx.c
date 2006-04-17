@@ -2094,13 +2094,6 @@ the --copyright option is deprecated; use --version instead"));
 	}
     }
 
-  /* Change the default Ignore file if one is defined.  */
-
-#ifdef DEFAULT_IGNORE_FILE
-  if (!ignore_file)
-    ignore_file = DEFAULT_IGNORE_FILE;
-#endif
-
   /* Process remaining arguments.  If GNU extensions are enabled, process
      all arguments as input parameters.  If disabled, accept at most two
      arguments, the second of which is an output parameter.  */
