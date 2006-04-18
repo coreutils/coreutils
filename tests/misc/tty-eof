@@ -28,9 +28,37 @@ $@ and (warn "$ME: this script requires Perl's Expect package >=1.11\n"),
 
 {
   my $fail = 0;
-  foreach my $cmd (qw( cat cksum dd expand fmt fold head md5sum nl od
-		       paste pr ptx sha1sum sort sum tac tee tail tsort
-		       unexpand uniq wc ), 'cut -f2')
+  my @stdin_reading_commands = qw(
+    base64
+    cat
+    cksum
+    dd
+    expand
+    fmt
+    fold
+    head
+    md5sum
+    nl
+    od
+    paste
+    pr
+    ptx
+    sha1sum
+    sha224sum
+    sha256sum
+    sha384sum
+    sha512sum
+    sort
+    sum
+    tac
+    tail
+    tee
+    tsort
+    unexpand
+    uniq
+    wc
+  );
+  foreach my $cmd ((@stdin_reading_commands), 'cut -f2')
     {
       my $exp = new Expect;
       $exp->log_user(0);
