@@ -1,6 +1,11 @@
-2006-04-17  Paul Eggert  <eggert@cs.ucla.edu>
+2006-04-18  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* tests/misc/tty-eof: Add new programs, base64, sha224sum, sha256sum,
+	sha384sum, sha512sum.
+
+2006-04-17  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/chmod.c (describe_change): Adjust to filemode changes.
 	* src/ls.c (HAVE_ST_DM_MODE): Remove; moved to ../lib/filemode.c.
