@@ -321,10 +321,10 @@ fillpattern (int type, unsigned char *r, size_t size)
 static void
 fillrand (struct isaac_state *s, uint32_t *r, size_t size_max, size_t size)
 {
-  size = (size + ISAAC_BYTES - 1) / ISAAC_BYTES;
-  assert (size <= size_max);
+  size_t refills = (size + ISAAC_BYTES - 1) / ISAAC_BYTES;
+  assert (refills * ISAAC_BYTES <= size_max);
 
-  while (size--)
+  while (refills--)
     {
       isaac_refill (s, r);
       r += ISAAC_WORDS;
@@ -428,9 +428,7 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
   size_t lim;			/* Amount of data to try writing */
   size_t soff;			/* Offset into buffer for next write */
   ssize_t ssize;		/* Return value from write */
-  uint32_t *r;			/* Fill pattern.  */
-  size_t rsize = 3 * MAX (ISAAC_WORDS, 1024) * sizeof *r; /* Fill size.  */
-  size_t ralign = lcm (getpagesize (), sizeof *r); /* Fill alignment.  */
+  uint32_t r[3 * MAX (ISAAC_WORDS, 1024)];  /* Fill pattern.  */
   char pass_string[PASS_NAME_SIZE];	/* Name of current pass */
   bool write_error = false;
   bool first_write = true;
@@ -445,13 +443,10 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
       return -1;
     }
 
-  r = alloca (rsize + ralign - 1);
-  r = ptr_align (r, ralign);
-
   /* Constant fill patterns need only be set up once. */
   if (type >= 0)
     {
-      lim = rsize;
+      lim = sizeof r;
       if ((off_t) lim > size && size != -1)
 	{
 	  lim = (size_t) size;
@@ -476,7 +471,7 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
   for (;;)
     {
       /* How much to write this time? */
-      lim = rsize;
+      lim = sizeof r;
       if ((off_t) lim > size - offset && size != -1)
 	{
 	  if (size < offset)
@@ -486,7 +481,7 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
 	    break;
 	}
       if (type < 0)
-	fillrand (s, r, rsize, lim);
+	fillrand (s, r, sizeof r, lim);
       /* Loop to retry partial writes. */
       for (soff = 0; soff < lim; soff += ssize, first_write = false)
 	{
