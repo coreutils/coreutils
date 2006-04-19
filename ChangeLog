@@ -1,6 +1,16 @@
-2006-04-18  Jim Meyering  <jim@meyering.net>
+2006-04-18  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 6.0-cvs.
+
+	* src/shred.c (fillrand): The assertion was way too weak, due to
+	what must be a typo.  Strengthen it to its intended value.
+	(dopass): Don't use alloca; it's not worth the aggravation here,
+	since it's used only to get a page-aligned buffer, and page
+	alignment doesn't buy us much here.  I'm suspicious that alloca
+	causes problems on some hosts, due to a recent bug report by Adam
+	Waltman.
+
+2006-04-18  Jim Meyering  <jim@meyering.net>
 
 	* tests/misc/tty-eof: Add new programs, base64, sha224sum, sha256sum,
 	sha384sum, sha512sum.
