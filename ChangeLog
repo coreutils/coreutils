@@ -1,6 +1,27 @@
-2006-04-18  Paul Eggert  <eggert@cs.ucla.edu>
+2006-04-23  Francesco Montorsi  <fr_m@hotmail.com>
 
 	* Version 6.0-cvs.
+
+	New option for ls: --group-directories-first.
+	It makes ls list directories before files.
+	* NEWS [New features]: Mention it.
+	* src/ls.c (sort_type): Rearrange to use as an array index when
+	choosing sort function; added new sort_numtypes member for
+	compile-time check.
+	(time_type): Add new time_numtypes member for compile-time check.
+	(directories_first): New global variable.
+	(GROUP_DIRECTORIES_FIRST_OPTION): New enum.
+	(long_options): Add --directories-first.
+	(main): Support new option.
+	(is_directory): New function.
+	(extract_dirs_from_files): Use it.
+	(DIRFIRST_CHECK, DEFINE_SORT_FUNCTIONS)
+	(LIST_SORTFUNCTION_VARIANTS): New macros.
+	(sort_functions): New global variable.
+	(sort_files): Use it.
+	(usage): Document new option.
+
+2006-04-18  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/shred.c (fillrand): The assertion was way too weak, due to
 	what must be a typo.  Strengthen it to its intended value.
