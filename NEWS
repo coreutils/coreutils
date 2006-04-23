@@ -108,6 +108,9 @@ GNU coreutils NEWS                                    -*- outline -*-
     'nolinks' causes dd to fail if the file has multiple hard links,
     on hosts that support this (e.g., Solaris 10 and later).
 
+  ls accepts the new option --group-directories-first, to make it
+  list directories before files.
+
   rm now accepts the -I (--interactive=once) option.  This new option
   prompts once if rm is invoked recursively or if more than three
   files are being deleted, which is less intrusive than -i prompting
