@@ -392,27 +392,33 @@ static enum time_style const time_style_types[] =
 };
 ARGMATCH_VERIFY (time_style_args, time_style_types);
 
-/* Type of time to print or sort by.  Controlled by -c and -u.  */
+/* Type of time to print or sort by.  Controlled by -c and -u.
+   The values of each item of this enum are important since they are
+   used as indices in the sort functions array (see sort_files()).  */
 
 enum time_type
   {
     time_mtime,			/* default */
     time_ctime,			/* -c */
-    time_atime			/* -u */
+    time_atime,			/* -u */
+    time_numtypes		/* the number of elements of this enum */
   };
 
 static enum time_type time_type;
 
-/* The file characteristic to sort by.  Controlled by -t, -S, -U, -X, -v.  */
+/* The file characteristic to sort by.  Controlled by -t, -S, -U, -X, -v.
+   The values of each item of this enum are important since they are
+   used as indices in the sort functions array (see sort_files()).  */
 
 enum sort_type
   {
-    sort_none,			/* -U */
+    sort_none = -1,		/* -U */
     sort_name,			/* default */
     sort_extension,		/* -X */
-    sort_time,			/* -t */
     sort_size,			/* -S */
-    sort_version		/* -v */
+    sort_version,		/* -v */
+    sort_time,			/* -t */
+    sort_numtypes		/* the number of elements of this enum */
   };
 
 static enum sort_type sort_type;
@@ -585,6 +591,10 @@ static bool recursive;
 
 static bool immediate_dirs;
 
+/* True means that directories are grouped before files. */
+
+static bool directories_first;
+
 /* Which files to ignore.  */
 
 static enum
@@ -724,6 +734,7 @@ enum
   DEREFERENCE_COMMAND_LINE_SYMLINK_TO_DIR_OPTION,
   FORMAT_OPTION,
   FULL_TIME_OPTION,
+  GROUP_DIRECTORIES_FIRST_OPTION,
   HIDE_OPTION,
   INDICATOR_STYLE_OPTION,
 
@@ -745,6 +756,8 @@ static struct option const long_options[] =
   {"directory", no_argument, NULL, 'd'},
   {"dired", no_argument, NULL, 'D'},
   {"full-time", no_argument, NULL, FULL_TIME_OPTION},
+  {"group-directories-first", no_argument, NULL,
+   GROUP_DIRECTORIES_FIRST_OPTION},
   {"human-readable", no_argument, NULL, 'h'},
   {"inode", no_argument, NULL, 'i'},
   {"kilobytes", no_argument, NULL, KILOBYTES_LONG_OPTION},
@@ -1216,7 +1229,8 @@ main (int argc, char **argv)
 
   format_needs_stat = sort_type == sort_time || sort_type == sort_size
     || format == long_format
-    || print_block_size;
+    || print_block_size
+    || directories_first;
   format_needs_type = (! format_needs_stat
 		       && (recursive || print_with_color
 			   || indicator_style != none));
@@ -1703,6 +1717,10 @@ decode_switches (int argc, char **argv)
 	case SORT_OPTION:
 	  sort_type = XARGMATCH ("--sort", optarg, sort_args, sort_types);
 	  sort_type_specified = true;
+	  break;
+
+	case GROUP_DIRECTORIES_FIRST_OPTION:
+	  directories_first = true;
 	  break;
 
 	case TIME_OPTION:
@@ -2735,6 +2753,14 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
   return blocks;
 }
 
+/* Return true if F refers to a directory.  */
+static bool
+is_directory (const struct fileinfo *f)
+{
+  return f->filetype == directory || f->filetype == arg_directory;
+}
+
+
 #ifdef S_ISLNK
 
 /* Put the name of the file that FILENAME is a symbolic link to
@@ -2817,9 +2843,9 @@ extract_dirs_from_files (char const *dirname, bool command_line_arg)
   /* Queue the directories last one first, because queueing reverses the
      order.  */
   for (i = files_index; i-- != 0; )
-    if ((files[i].filetype == directory || files[i].filetype == arg_directory)
-	&& (!ignore_dot_and_dot_dot
-	    || !basename_is_dot_or_dotdot (files[i].name)))
+    if (is_directory (&files[i])
+        && (! ignore_dot_and_dot_dot
+            || ! basename_is_dot_or_dotdot (files[i].name)))
       {
 	if (!dirname || files[i].name[0] == '/')
 	  {
@@ -2875,6 +2901,51 @@ xstrcoll (char const *a, char const *b)
 /* Comparison routines for sorting the files.  */
 
 typedef void const *V;
+typedef int (*qsortFunc)(V a, V b);
+
+/* Used below in DEFINE_SORT_FUNCTIONS for _df_ sort function variants.
+   The do { ... } while(0) makes it possible to use the macro more like
+   a statement, without violating C89 rules: */
+#define DIRFIRST_CHECK(a, b)						\
+  do									\
+    {									\
+      bool a_is_dir = is_directory ((struct fileinfo const *) a);	\
+      bool b_is_dir = is_directory ((struct fileinfo const *) b);	\
+      if (a_is_dir && !b_is_dir)					\
+	return -1;         /* a goes before b */			\
+      if (!a_is_dir && b_is_dir)					\
+	return 1;          /* b goes before a */			\
+    }									\
+  while (0)
+
+/* Define the 8 different sort function variants required for each sortkey.
+   The 'basefunc' should be an inline function so that compiler will be able
+   to optimize all these functions.  The 'basename' argument is prefixed with
+   the '[rev_][x]str{cmp|coll}[_df]_' string to create the function name. */
+#define DEFINE_SORT_FUNCTIONS(basename, basefunc)		\
+  /* direct, non-dirfirst versions */				\
+  static int xstrcoll_##basename (V a, V b)			\
+  { return basefunc (a, b, xstrcoll); }				\
+  static int strcmp_##basename (V a, V b)			\
+  { return basefunc (a, b, strcmp); }				\
+								\
+  /* reverse, non-dirfirst versions */				\
+  static int rev_xstrcoll_##basename (V a, V b)			\
+  { return basefunc (b, a, xstrcoll); }				\
+  static int rev_strcmp_##basename (V a, V b)			\
+  { return basefunc (b, a, strcmp); }				\
+								\
+  /* direct, dirfirst versions */				\
+  static int xstrcoll_df_##basename (V a, V b)			\
+  { DIRFIRST_CHECK (a, b); return basefunc (a, b, xstrcoll); }	\
+  static int strcmp_df_##basename (V a, V b)			\
+  { DIRFIRST_CHECK (a, b); return basefunc (a, b, strcmp); }	\
+								\
+  /* reverse, dirfirst versions */				\
+  static int rev_xstrcoll_df_##basename (V a, V b)		\
+  { DIRFIRST_CHECK (a, b); return basefunc (b, a, xstrcoll); }	\
+  static int rev_strcmp_df_##basename (V a, V b)		\
+  { DIRFIRST_CHECK (a, b); return basefunc (b, a, strcmp); }
 
 static inline int
 cmp_ctime (struct fileinfo const *a, struct fileinfo const *b,
@@ -2884,10 +2955,6 @@ cmp_ctime (struct fileinfo const *a, struct fileinfo const *b,
 			   get_stat_ctime (&a->stat));
   return diff ? diff : cmp (a->name, b->name);
 }
-static int compare_ctime (V a, V b) { return cmp_ctime (a, b, xstrcoll); }
-static int compstr_ctime (V a, V b) { return cmp_ctime (a, b, strcmp); }
-static int rev_cmp_ctime (V a, V b) { return compare_ctime (b, a); }
-static int rev_str_ctime (V a, V b) { return compstr_ctime (b, a); }
 
 static inline int
 cmp_mtime (struct fileinfo const *a, struct fileinfo const *b,
@@ -2897,10 +2964,6 @@ cmp_mtime (struct fileinfo const *a, struct fileinfo const *b,
 			   get_stat_mtime (&a->stat));
   return diff ? diff : cmp (a->name, b->name);
 }
-static int compare_mtime (V a, V b) { return cmp_mtime (a, b, xstrcoll); }
-static int compstr_mtime (V a, V b) { return cmp_mtime (a, b, strcmp); }
-static int rev_cmp_mtime (V a, V b) { return compare_mtime (b, a); }
-static int rev_str_mtime (V a, V b) { return compstr_mtime (b, a); }
 
 static inline int
 cmp_atime (struct fileinfo const *a, struct fileinfo const *b,
@@ -2910,10 +2973,6 @@ cmp_atime (struct fileinfo const *a, struct fileinfo const *b,
 			   get_stat_atime (&a->stat));
   return diff ? diff : cmp (a->name, b->name);
 }
-static int compare_atime (V a, V b) { return cmp_atime (a, b, xstrcoll); }
-static int compstr_atime (V a, V b) { return cmp_atime (a, b, strcmp); }
-static int rev_cmp_atime (V a, V b) { return compare_atime (b, a); }
-static int rev_str_atime (V a, V b) { return compstr_atime (b, a); }
 
 static inline int
 cmp_size (struct fileinfo const *a, struct fileinfo const *b,
@@ -2922,18 +2981,6 @@ cmp_size (struct fileinfo const *a, struct fileinfo const *b,
   int diff = longdiff (b->stat.st_size, a->stat.st_size);
   return diff ? diff : cmp (a->name, b->name);
 }
-static int compare_size (V a, V b) { return cmp_size (a, b, xstrcoll); }
-static int compstr_size (V a, V b) { return cmp_size (a, b, strcmp); }
-static int rev_cmp_size (V a, V b) { return compare_size (b, a); }
-static int rev_str_size (V a, V b) { return compstr_size (b, a); }
-
-static inline int
-cmp_version (struct fileinfo const *a, struct fileinfo const *b)
-{
-  return strverscmp (a->name, b->name);
-}
-static int compare_version (V a, V b) { return cmp_version (a, b); }
-static int rev_cmp_version (V a, V b) { return compare_version (b, a); }
 
 static inline int
 cmp_name (struct fileinfo const *a, struct fileinfo const *b,
@@ -2941,10 +2988,6 @@ cmp_name (struct fileinfo const *a, struct fileinfo const *b,
 {
   return cmp (a->name, b->name);
 }
-static int compare_name (V a, V b) { return cmp_name (a, b, xstrcoll); }
-static int compstr_name (V a, V b) { return cmp_name (a, b, strcmp); }
-static int rev_cmp_name (V a, V b) { return compare_name (b, a); }
-static int rev_str_name (V a, V b) { return compstr_name (b, a); }
 
 /* Compare file extensions.  Files with no extension are `smallest'.
    If extensions are the same, compare by filenames instead.  */
@@ -2958,17 +3001,110 @@ cmp_extension (struct fileinfo const *a, struct fileinfo const *b,
   int diff = cmp (base1 ? base1 : "", base2 ? base2 : "");
   return diff ? diff : cmp (a->name, b->name);
 }
-static int compare_extension (V a, V b) { return cmp_extension (a, b, xstrcoll); }
-static int compstr_extension (V a, V b) { return cmp_extension (a, b, strcmp); }
-static int rev_cmp_extension (V a, V b) { return compare_extension (b, a); }
-static int rev_str_extension (V a, V b) { return compstr_extension (b, a); }
+
+DEFINE_SORT_FUNCTIONS (ctime, cmp_ctime)
+DEFINE_SORT_FUNCTIONS (mtime, cmp_mtime)
+DEFINE_SORT_FUNCTIONS (atime, cmp_atime)
+DEFINE_SORT_FUNCTIONS (size, cmp_size)
+DEFINE_SORT_FUNCTIONS (name, cmp_name)
+DEFINE_SORT_FUNCTIONS (extension, cmp_extension)
+
+/* Compare file versions.
+   Unlike all other compare functions above, cmp_version depends only
+   on strverscmp, which does not fail (even for locale reasons), and does not
+   need a secondary sort key.
+   All the other sort options, in fact, need xstrcoll and strcmp variants,
+   because they all use a string comparison (either as the primary or secondary
+   sort key), and xstrcoll has the ability to do a longjmp if strcoll fails for
+   locale reasons.  Last, strverscmp is ALWAYS available in coreutils,
+   thanks to the gnulib library. */
+static inline int
+cmp_version (struct fileinfo const *a, struct fileinfo const *b)
+{
+  return strverscmp (a->name, b->name);
+}
+
+static int xstrcoll_version (V a, V b)
+{ return cmp_version (a, b); }
+static int rev_xstrcoll_version (V a, V b)
+{ return cmp_version (b, a); }
+static int xstrcoll_df_version (V a, V b)
+{ DIRFIRST_CHECK (a,b); return cmp_version (a, b); }
+static int rev_xstrcoll_df_version (V a, V b)
+{ DIRFIRST_CHECK (a,b); return cmp_version (b, a); }
+
+
+/* We have 2^3 different variants for each sortkey function
+   (for 3 indipendent sort modes).
+   The function pointers stored in this array must be dereferenced as:
+
+    sort_variants[sort_key][use_strcmp][reverse][dirs_first]
+
+   Note that the order in which sortkeys are listed in the function pointer
+   array below is defined by the order of the elements in the time_type and
+   sort_type enums!  */
+
+#define LIST_SORTFUNCTION_VARIANTS(basename)                        \
+  {                                                                 \
+    {                                                               \
+      { xstrcoll_##basename, xstrcoll_df_##basename },              \
+      { rev_xstrcoll_##basename, rev_xstrcoll_df_##basename },      \
+    },                                                              \
+    {                                                               \
+      { strcmp_##basename, strcmp_df_##basename },                  \
+      { rev_strcmp_##basename, rev_strcmp_df_##basename },          \
+    }                                                               \
+  }
+
+static qsortFunc sort_functions[][2][2][2] =
+  {
+    LIST_SORTFUNCTION_VARIANTS (name),
+    LIST_SORTFUNCTION_VARIANTS (extension),
+    LIST_SORTFUNCTION_VARIANTS (size),
+
+    {
+      {
+        { xstrcoll_version, xstrcoll_df_version },
+        { rev_xstrcoll_version, rev_xstrcoll_df_version },
+      },
+
+      /* We use NULL for the strcmp variants of version comparison
+         since as explained in cmp_version definition, version comparison
+         does not rely on xstrcoll, so it will never longjmp, and never
+         need to try the strcmp fallback. */
+      {
+        { NULL, NULL },
+        { NULL, NULL },
+      }
+    },
+
+    /* last are time sort functions */
+    LIST_SORTFUNCTION_VARIANTS (mtime),
+    LIST_SORTFUNCTION_VARIANTS (ctime),
+    LIST_SORTFUNCTION_VARIANTS (atime)
+  };
+
+/* The number of sortkeys is calculated as
+     the number of elements in the sort_type enum (i.e. sort_numtypes) +
+     the number of elements in the time_type enum (i.e. time_numtypes) - 1
+   This is because when sort_type==sort_time, we have up to
+   time_numtypes possible sortkeys.
+
+   This line verifies at compile-time that the array of sort functions has been
+   initialized for all possible sortkeys. */
+verify (ARRAY_CARDINALITY (sort_functions)
+	== sort_numtypes + time_numtypes - 1 );
+
 
 /* Sort the files now in the table.  */
 
 static void
 sort_files (void)
 {
-  int (*func) (V, V);
+  bool use_strcmp;
+
+  if (sort_type == sort_none)
+    return;
 
   /* Try strcoll.  If it fails, fall back on strcmp.  We can't safely
      ignore strcoll failures, as a failing strcoll might be a
@@ -2976,78 +3112,19 @@ sort_files (void)
      the failure this might cause qsort to dump core.  */
 
   if (! setjmp (failed_strcoll))
-    {
-      switch (sort_type)
-	{
-	case sort_none:
-	  return;
-	case sort_time:
-	  switch (time_type)
-	    {
-	    case time_ctime:
-	      func = sort_reverse ? rev_cmp_ctime : compare_ctime;
-	      break;
-	    case time_mtime:
-	      func = sort_reverse ? rev_cmp_mtime : compare_mtime;
-	      break;
-	    case time_atime:
-	      func = sort_reverse ? rev_cmp_atime : compare_atime;
-	      break;
-	    default:
-	      abort ();
-	    }
-	  break;
-	case sort_name:
-	  func = sort_reverse ? rev_cmp_name : compare_name;
-	  break;
-	case sort_extension:
-	  func = sort_reverse ? rev_cmp_extension : compare_extension;
-	  break;
-	case sort_size:
-	  func = sort_reverse ? rev_cmp_size : compare_size;
-	  break;
-	case sort_version:
-	  func = sort_reverse ? rev_cmp_version : compare_version;
-	  break;
-	default:
-	  abort ();
-	}
-    }
+    use_strcmp = false;      /* strcoll() succeeded */
   else
     {
-      switch (sort_type)
-	{
-	case sort_time:
-	  switch (time_type)
-	    {
-	    case time_ctime:
-	      func = sort_reverse ? rev_str_ctime : compstr_ctime;
-	      break;
-	    case time_mtime:
-	      func = sort_reverse ? rev_str_mtime : compstr_mtime;
-	      break;
-	    case time_atime:
-	      func = sort_reverse ? rev_str_atime : compstr_atime;
-	      break;
-	    default:
-	      abort ();
-	    }
-	  break;
-	case sort_name:
-	  func = sort_reverse ? rev_str_name : compstr_name;
-	  break;
-	case sort_extension:
-	  func = sort_reverse ? rev_str_extension : compstr_extension;
-	  break;
-	case sort_size:
-	  func = sort_reverse ? rev_str_size : compstr_size;
-	  break;
-	default:
-	  abort ();
-	}
+      use_strcmp = true;
+      assert (sort_type != sort_version);
     }
 
-  qsort (files, files_index, sizeof *files, func);
+  /* When sort_type == sort_time, use time_type as subindex.  */
+  int timeoffset = sort_type == sort_time ? time_type : 0;
+
+  qsort (files, files_index, sizeof *files,
+         sort_functions[sort_type + timeoffset][use_strcmp][sort_reverse]
+                       [directories_first]);
 }
 
 /* List all the files now in the table.  */
@@ -3282,6 +3359,8 @@ print_long_format (const struct fileinfo *f)
     case time_atime:
       when_timespec = get_stat_atime (&f->stat);
       break;
+    default:
+      abort ();
     }
 
   when = when_timespec.tv_sec;
@@ -4154,6 +4233,12 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
   -g                         like -l, but do not list owner\n\
+"), stdout);
+      fputs (_("\
+      --group-directories-first\n\
+                             group directories before files\n\
+"), stdout);
+      fputs (_("\
   -G, --no-group             like -l, but do not list group\n\
   -h, --human-readable       with -l, print sizes in human readable format\n\
                                (e.g., 1K 234M 2G)\n\
