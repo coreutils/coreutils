@@ -5544,6 +5544,14 @@ option has been specified (@option{--classify} (@option{-F}),
 @option{--dereference} (@option{-L}), or
 @option{--dereference-command-line} (@option{-H})).
 
+@item --group-directories-first
+@opindex --group-directories-first
+Group all the directories before the files and then sort the
+directories and the files separately using the selected sort key
+(see --sort option).
+That is, this option specifies a primary sort key,
+and the --sort option specifies a secondary key.
+
 @item --hide=PATTERN
 @opindex --hide=@var{pattern}
 In directories, ignore files whose names match the shell pattern
