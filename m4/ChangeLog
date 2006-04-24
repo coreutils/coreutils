@@ -1,3 +1,18 @@
+2006-04-24  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* fsusage.m4 (gl_FILE_SYSTEM_USAGE): Use return, not exit.
+	Don't assume that exit status -1 is valid.
+	* nanosleep.m4 (gl_FUNC_NANOSLEEP): Likewise.
+	* putenv.m4 (gl_FUNC_PUTENV): Likewise.
+	* rmdir-errno.m4 (gl_FUNC_RMDIR_NOTEMPTY): Likewise.
+	* readdir.m4 (GL_FUNC_READDIR): Include <stdlib.h>.
+	* rename.m4 (vb_FUNC_RENAME): Likewise.
+	* unlink-busy.m4 (gl_FUNC_UNLINK_BUSY_TEXT): Use AC_RUN_IFELSE,
+	not AC_TRY_RUN.  Use return, not exit.  Don't assume that
+	functions can be used without declaring them, or that you can
+	exit with status -1.
+	* utimes-null.m4 (gl_FUNC_UTIMES_NULL): Likewise.
+
 2006-04-17  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* filemode.m4 (gl_FILEMODE): Check for strmode declaration.

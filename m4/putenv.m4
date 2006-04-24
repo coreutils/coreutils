@@ -1,5 +1,5 @@
-# putenv.m4 serial 10
-dnl Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+# putenv.m4 serial 11
+dnl Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
@@ -17,17 +17,17 @@ AC_DEFUN([gl_FUNC_PUTENV],
     {
       /* Put it in env.  */
       if (putenv ("CONFTEST_putenv=val"))
-        exit (1);
+        return 1;
 
       /* Try to remove it.  */
       if (putenv ("CONFTEST_putenv"))
-        exit (1);
+        return 1;
 
       /* Make sure it was deleted.  */
       if (getenv ("CONFTEST_putenv") != 0)
-        exit (1);
+        return 1;
 
-      exit (0);
+      return 0;
     }
 	      ],
 	     jm_cv_func_svid_putenv=yes,

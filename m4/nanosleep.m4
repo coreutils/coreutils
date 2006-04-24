@@ -1,4 +1,4 @@
-#serial 15
+#serial 16
 
 dnl From Jim Meyering.
 dnl Check for the nanosleep function.
@@ -51,7 +51,7 @@ AC_DEFUN([gl_FUNC_NANOSLEEP],
       struct timespec ts_sleep, ts_remaining;
       ts_sleep.tv_sec = 0;
       ts_sleep.tv_nsec = 1;
-      exit (nanosleep (&ts_sleep, &ts_remaining) == 0 ? 0 : 1);
+      return nanosleep (&ts_sleep, &ts_remaining) != 0;
     }
 	  ],
 	 jm_cv_func_nanosleep_works=yes,

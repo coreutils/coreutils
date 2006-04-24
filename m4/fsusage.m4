@@ -1,7 +1,7 @@
-#serial 16
+#serial 17
 # Obtaining file system usage information.
 
-# Copyright (C) 1997, 1998, 2000, 2001, 2003, 2004, 2005 Free Software
+# Copyright (C) 1997, 1998, 2000, 2001, 2003, 2004, 2005, 2006 Free Software
 # Foundation, Inc.
 #
 # This file is free software; the Free Software Foundation
@@ -78,7 +78,7 @@ if test $ac_fsusage_space = no; then
   {
     struct statfs fsd;
     fsd.f_fsize = 0;
-    exit (statfs (".", &fsd, sizeof (struct statfs)));
+    return statfs (".", &fsd, sizeof (struct statfs)) != 0;
   }],
   fu_cv_sys_stat_statfs3_osf1=yes,
   fu_cv_sys_stat_statfs3_osf1=no,
@@ -110,7 +110,7 @@ member (AIX, 4.3BSD)])
   {
   struct statfs fsd;
   fsd.f_bsize = 0;
-  exit (statfs (".", &fsd));
+  return statfs (".", &fsd) != 0;
   }],
   fu_cv_sys_stat_statfs2_bsize=yes,
   fu_cv_sys_stat_statfs2_bsize=no,
@@ -133,7 +133,7 @@ if test $ac_fsusage_space = no; then
   main ()
   {
   struct statfs fsd;
-  exit (statfs (".", &fsd, sizeof fsd, 0));
+  return statfs (".", &fsd, sizeof fsd, 0) != 0;
   }],
     fu_cv_sys_stat_statfs4=yes,
     fu_cv_sys_stat_statfs4=no,
@@ -162,7 +162,7 @@ member (4.4BSD and NetBSD)])
   {
   struct statfs fsd;
   fsd.f_fsize = 0;
-  exit (statfs (".", &fsd));
+  return statfs (".", &fsd) != 0;
   }],
   fu_cv_sys_stat_statfs2_fsize=yes,
   fu_cv_sys_stat_statfs2_fsize=no,
@@ -195,7 +195,7 @@ if test $ac_fsusage_space = no; then
   struct fs_data fsd;
   /* Ultrix's statfs returns 1 for success,
      0 for not mounted, -1 for failure.  */
-  exit (statfs (".", &fsd) != 1);
+  return statfs (".", &fsd) != 1;
   }],
   fu_cv_sys_stat_fs_data=yes,
   fu_cv_sys_stat_fs_data=no,

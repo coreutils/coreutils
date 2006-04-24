@@ -1,6 +1,8 @@
-#serial 6
+#serial 7
 
-# Copyright (C) 1998, 1999, 2001, 2003, 2004 Free Software Foundation, Inc.
+# Copyright (C) 1998, 1999, 2001, 2003, 2004, 2006 Free Software
+# Foundation, Inc.
+
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
 # with or without modifications, as long as this notice is preserved.
@@ -16,13 +18,15 @@ AC_TRY_RUN([
 #undef stat
 #include <sys/types.h>
 #include <sys/stat.h>
-main() {
+#include <sys/time.h>
+int
+main () {
 struct stat s, t;
-exit(!(stat ("conftest.data", &s) == 0
-       && utimes("conftest.data", (long *)0) == 0
-       && stat("conftest.data", &t) == 0
-       && t.st_mtime >= s.st_mtime
-       && t.st_mtime - s.st_mtime < 120));
+return ! (stat ("conftest.data", &s) == 0
+	  && utimes ("conftest.data", 0) == 0
+	  && stat ("conftest.data", &t) == 0
+	  && t.st_mtime >= s.st_mtime
+	  && t.st_mtime - s.st_mtime < 120));
 }],
   ac_cv_func_utimes_null=yes,
   ac_cv_func_utimes_null=no,

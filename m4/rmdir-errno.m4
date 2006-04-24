@@ -1,6 +1,6 @@
-#serial 5
+#serial 6
 
-# Copyright (C) 2000, 2001, 2005 Free Software Foundation, Inc.
+# Copyright (C) 2000, 2001, 2005, 2006 Free Software Foundation, Inc.
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
 # with or without modifications, as long as this notice is preserved.
@@ -32,7 +32,7 @@ extern int errno;
 	  val = errno;
 	  s = fopen ("confdir2/errno", "w");
 	  fprintf (s, "%d\n", val);
-	  exit (0);
+	  return 0;
 	}
 	],
       gl_cv_func_rmdir_errno_not_empty=`cat confdir2/errno`,
