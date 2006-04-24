@@ -1,4 +1,4 @@
-#serial 9
+#serial 10
 
 dnl From J. David Anglin.
 
@@ -18,9 +18,7 @@ AC_DEFUN([gl_FUNC_UNLINK_BUSY_TEXT],
         [AC_LANG_SOURCE(
            [AC_INCLUDES_DEFAULT
 	    int
-	    main (argc, argv)
-	      int argc;
-	      char **argv;
+	    main (int argc, char **argv)
 	    {
 	      return !argc || unlink (argv[0]) != 0;
 	    }])],

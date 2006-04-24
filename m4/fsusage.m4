@@ -1,4 +1,4 @@
-#serial 17
+#serial 18
 # Obtaining file system usage information.
 
 # Copyright (C) 1997, 1998, 2000, 2001, 2003, 2004, 2005, 2006 Free Software
@@ -74,6 +74,7 @@ if test $ac_fsusage_space = no; then
 #include <sys/param.h>
 #include <sys/types.h>
 #include <sys/mount.h>
+  int
   main ()
   {
     struct statfs fsd;
@@ -106,6 +107,7 @@ member (AIX, 4.3BSD)])
 #ifdef HAVE_SYS_VFS_H
 #include <sys/vfs.h>
 #endif
+  int
   main ()
   {
   struct statfs fsd;
@@ -130,6 +132,7 @@ if test $ac_fsusage_space = no; then
   AC_CACHE_VAL(fu_cv_sys_stat_statfs4,
   [AC_TRY_RUN([#include <sys/types.h>
 #include <sys/statfs.h>
+  int
   main ()
   {
   struct statfs fsd;
@@ -158,6 +161,7 @@ member (4.4BSD and NetBSD)])
 #ifdef HAVE_SYS_MOUNT_H
 #include <sys/mount.h>
 #endif
+  int
   main ()
   {
   struct statfs fsd;
@@ -190,6 +194,7 @@ if test $ac_fsusage_space = no; then
 #ifdef HAVE_SYS_FS_TYPES_H
 #include <sys/fs_types.h>
 #endif
+  int
   main ()
   {
   struct fs_data fsd;
