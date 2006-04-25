@@ -1,7 +1,7 @@
 %{
 /* Parse a string into an internal time stamp.
 
-   Copyright (C) 1999, 2000, 2002, 2003, 2004, 2005 Free Software
+   Copyright (C) 1999, 2000, 2002, 2003, 2004, 2005, 2006 Free Software
    Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -1437,6 +1437,10 @@ get_date (struct timespec *result, char const *p, struct timespec const *now)
 	  tm.tm_year = year;
 	  tm.tm_mon = month;
 	  tm.tm_mday = day;
+	  tm.tm_hour = tm0.tm_hour;
+	  tm.tm_min = tm0.tm_min;
+	  tm.tm_sec = tm0.tm_sec;
+	  tm.tm_isdst = tm0.tm_isdst;
 	  Start = mktime (&tm);
 	  if (Start == (time_t) -1)
 	    goto fail;

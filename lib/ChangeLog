@@ -1,3 +1,8 @@
+2006-04-25  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* getdate.y (get_date): When adding relative date, start with the
+	initial time, not with the result of the first mktime call.
+
 2006-04-17  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* filemode.c: Include "filemode.h" first, to test the interface.
