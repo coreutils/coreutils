@@ -2435,8 +2435,11 @@ For compatibility @command{head} also supports an obsolete option syntax
 specified first.  @var{count} is a decimal number optionally followed
 by a size letter (@samp{b}, @samp{k}, @samp{m}) as in @option{-c}, or
 @samp{l} to mean count by lines, or other option letters (@samp{cqv}).
-New scripts should use @option{-c @var{count}} or @option{-n
-@var{count}} instead.
+Scripts intended for standard hosts should use @option{-c @var{count}}
+or @option{-n @var{count}} instead.  If your script must also run on
+hosts that support only the obsolete syntax, it is usually simpler to
+avoid @command{head}, e.g., by using @samp{sed 5q} instead of
+@samp{head -5}.
 
 @exitstatus
 
@@ -2620,8 +2623,6 @@ file.  In the option, @var{count} is an optional decimal number optionally
 followed by a size letter (@samp{b}, @samp{c}, @samp{l}) to mean count
 by 512-byte blocks, bytes, or lines, optionally followed by @samp{f}
 which has the same meaning as @option{-f}.
-New scripts should use @option{-c @var{count}[b]},
-@option{-n @var{count}}, and/or @option{-f} instead.
 
 @vindex _POSIX2_VERSION
 On older systems, the leading @samp{-} can be replaced by @samp{+} in
@@ -2629,12 +2630,24 @@ the obsolete option syntax with the same meaning as in counts, and
 obsolete usage overrides normal usage when the two conflict.
 This obsolete behavior can be enabled or disabled with the
 @env{_POSIX2_VERSION} environment variable (@pxref{Standards
-conformance}), but portable scripts should avoid commands whose
-behavior depends on this variable.
-For example, use @samp{tail -- - main.c} or @samp{tail main.c} rather than
-the ambiguous @samp{tail - main.c}, @samp{tail -c4} or @samp{tail -c 10
-4} rather than the ambiguous @samp{tail -c 4}, and @samp{tail ./+4}
-or @samp{tail -n +4} rather than the ambiguous @samp{tail +4}.
+conformance}).
+
+Scripts intended for use on standard hosts should avoid obsolete
+syntax and should use @option{-c @var{count}[b]}, @option{-n
+@var{count}}, and/or @option{-f} instead.  If your script must also
+run on hosts that support only the obsolete syntax, you can often
+rewrite it to avoid problematic usages, e.g., by using @samp{sed -n
+'$p'} rather than @samp{tail -1}.  If that's not possible, the script
+can use a test like @samp{if tail -c +1 </dev/null >/dev/null 2>&1;
+then @dots{}} to decide which syntax to use.
+
+Even if your script assumes the standard behavior, you should still
+beware usages whose behaviors differ depending on the @acronym{POSIX}
+version.  For example, avoid @samp{tail - main.c}, since it might be
+interpreted as either @samp{tail main.c} or as @samp{tail -- -
+main.c}; avoid @samp{tail -c 4}, since it might mean either @samp{tail
+-c4} or @samp{tail -c 10 4}; and avoid @samp{tail +4}, since it might
+mean either @samp{tail ./+4} or @samp{tail -n +4}.
 
 @exitstatus
 
@@ -3662,10 +3675,15 @@ On older systems, @command{sort} supports an obsolete origin-zero
 syntax @samp{+@var{pos1} [-@var{pos2}]} for specifying sort keys.
 This obsolete behavior can be enabled or disabled with the
 @env{_POSIX2_VERSION} environment variable (@pxref{Standards
-conformance}), but portable scripts should avoid commands whose
-behavior depends on this variable.
-For example, use @samp{sort ./+2} or @samp{sort -k 3} rather than
-the ambiguous @samp{sort +2}.
+conformance}).
+
+Scripts intended for use on standard hosts should avoid obsolete
+syntax and should use @option{-k} instead.  For example, avoid
+@samp{sort +2}, since it might be interpreted as either @samp{sort
+./+2} or @samp{sort -k 3}.  If your script must also run on hosts that
+support only the obsolete syntax, it can use a test like @samp{if sort
+-k 1 </dev/null >/dev/null 2>&1; then @dots{}} to decide which syntax
+to use.
 
 Here are some examples to illustrate various combinations of options.
 

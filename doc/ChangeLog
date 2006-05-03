@@ -1,3 +1,9 @@
+2006-05-03  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (head invocation, tail invocation, sort invocation):
+	Give advice about porting to hosts that support only obsolete syntax.
+	Problem reported by Zack Weinberg.
+
 2006-04-23  Francesco Montorsi  <fr_m@hotmail.com>
 
 	* coreutils.texi (Which files are listed): Describe new option:
