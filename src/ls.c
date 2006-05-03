@@ -2920,33 +2920,34 @@ typedef int (*qsortFunc)(V a, V b);
   while (0)
 
 /* Define the 8 different sort function variants required for each sortkey.
-   The 'basefunc' should be an inline function so that compiler will be able
-   to optimize all these functions.  The 'basename' argument is prefixed with
-   the '[rev_][x]str{cmp|coll}[_df]_' string to create the function name. */
-#define DEFINE_SORT_FUNCTIONS(basename, basefunc)		\
-  /* direct, non-dirfirst versions */				\
-  static int xstrcoll_##basename (V a, V b)			\
-  { return basefunc (a, b, xstrcoll); }				\
-  static int strcmp_##basename (V a, V b)			\
-  { return basefunc (a, b, strcmp); }				\
-								\
-  /* reverse, non-dirfirst versions */				\
-  static int rev_xstrcoll_##basename (V a, V b)			\
-  { return basefunc (b, a, xstrcoll); }				\
-  static int rev_strcmp_##basename (V a, V b)			\
-  { return basefunc (b, a, strcmp); }				\
-								\
-  /* direct, dirfirst versions */				\
-  static int xstrcoll_df_##basename (V a, V b)			\
-  { DIRFIRST_CHECK (a, b); return basefunc (a, b, xstrcoll); }	\
-  static int strcmp_df_##basename (V a, V b)			\
-  { DIRFIRST_CHECK (a, b); return basefunc (a, b, strcmp); }	\
-								\
-  /* reverse, dirfirst versions */				\
-  static int rev_xstrcoll_df_##basename (V a, V b)		\
-  { DIRFIRST_CHECK (a, b); return basefunc (b, a, xstrcoll); }	\
-  static int rev_strcmp_df_##basename (V a, V b)		\
-  { DIRFIRST_CHECK (a, b); return basefunc (b, a, strcmp); }
+   KEY_NAME is a string describing the sort key, e.g., ctime, atime, size.
+   KEY_CMP_FUNC is a function to compare records based on that key, e.g.,
+   ctime_cmp, atime_cmp, size_cmp.  Append KEY_NAME to the string,
+   '[rev_][x]str{cmp|coll}[_df]_', to create each function name.  */
+#define DEFINE_SORT_FUNCTIONS(key_name, key_cmp_func)			\
+  /* direct, non-dirfirst versions */					\
+  static int xstrcoll_##key_name (V a, V b)				\
+  { return key_cmp_func (a, b, xstrcoll); }				\
+  static int strcmp_##key_name (V a, V b)				\
+  { return key_cmp_func (a, b, strcmp); }				\
+									\
+  /* reverse, non-dirfirst versions */					\
+  static int rev_xstrcoll_##key_name (V a, V b)				\
+  { return key_cmp_func (b, a, xstrcoll); }				\
+  static int rev_strcmp_##key_name (V a, V b)				\
+  { return key_cmp_func (b, a, strcmp); }				\
+									\
+  /* direct, dirfirst versions */					\
+  static int xstrcoll_df_##key_name (V a, V b)				\
+  { DIRFIRST_CHECK (a, b); return key_cmp_func (a, b, xstrcoll); }	\
+  static int strcmp_df_##key_name (V a, V b)				\
+  { DIRFIRST_CHECK (a, b); return key_cmp_func (a, b, strcmp); }	\
+									\
+  /* reverse, dirfirst versions */					\
+  static int rev_xstrcoll_df_##key_name (V a, V b)			\
+  { DIRFIRST_CHECK (a, b); return key_cmp_func (b, a, xstrcoll); }	\
+  static int rev_strcmp_df_##key_name (V a, V b)			\
+  { DIRFIRST_CHECK (a, b); return key_cmp_func (b, a, strcmp); }
 
 static inline int
 cmp_ctime (struct fileinfo const *a, struct fileinfo const *b,
@@ -3036,7 +3037,7 @@ static int rev_xstrcoll_df_version (V a, V b)
 
 
 /* We have 2^3 different variants for each sortkey function
-   (for 3 indipendent sort modes).
+   (for 3 independent sort modes).
    The function pointers stored in this array must be dereferenced as:
 
     sort_variants[sort_key][use_strcmp][reverse][dirs_first]
@@ -3045,15 +3046,15 @@ static int rev_xstrcoll_df_version (V a, V b)
    array below is defined by the order of the elements in the time_type and
    sort_type enums!  */
 
-#define LIST_SORTFUNCTION_VARIANTS(basename)                        \
+#define LIST_SORTFUNCTION_VARIANTS(key_name)                        \
   {                                                                 \
     {                                                               \
-      { xstrcoll_##basename, xstrcoll_df_##basename },              \
-      { rev_xstrcoll_##basename, rev_xstrcoll_df_##basename },      \
+      { xstrcoll_##key_name, xstrcoll_df_##key_name },              \
+      { rev_xstrcoll_##key_name, rev_xstrcoll_df_##key_name },      \
     },                                                              \
     {                                                               \
-      { strcmp_##basename, strcmp_df_##basename },                  \
-      { rev_strcmp_##basename, rev_strcmp_df_##basename },          \
+      { strcmp_##key_name, strcmp_df_##key_name },                  \
+      { rev_strcmp_##key_name, rev_strcmp_df_##key_name },          \
     }                                                               \
   }
 
