@@ -1229,11 +1229,12 @@ main (int argc, char **argv)
 
   format_needs_stat = sort_type == sort_time || sort_type == sort_size
     || format == long_format
-    || print_block_size
-    || directories_first;
+    || print_block_size;
   format_needs_type = (! format_needs_stat
-		       && (recursive || print_with_color
-			   || indicator_style != none));
+		       && (recursive
+			   || print_with_color
+			   || indicator_style != none
+			   || directories_first));
 
   if (dired)
     {
