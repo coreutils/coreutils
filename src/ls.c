@@ -2920,7 +2920,7 @@ typedef int (*qsortFunc)(V a, V b);
   while (0)
 
 /* Define the 8 different sort function variants required for each sortkey.
-   KEY_NAME is a string describing the sort key, e.g., ctime, atime, size.
+   KEY_NAME is a token describing the sort key, e.g., ctime, atime, size.
    KEY_CMP_FUNC is a function to compare records based on that key, e.g.,
    ctime_cmp, atime_cmp, size_cmp.  Append KEY_NAME to the string,
    '[rev_][x]str{cmp|coll}[_df]_', to create each function name.  */
