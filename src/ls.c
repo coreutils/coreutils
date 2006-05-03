@@ -3029,9 +3029,9 @@ static int xstrcoll_version (V a, V b)
 static int rev_xstrcoll_version (V a, V b)
 { return cmp_version (b, a); }
 static int xstrcoll_df_version (V a, V b)
-{ DIRFIRST_CHECK (a,b); return cmp_version (a, b); }
+{ DIRFIRST_CHECK (a, b); return cmp_version (a, b); }
 static int rev_xstrcoll_df_version (V a, V b)
-{ DIRFIRST_CHECK (a,b); return cmp_version (b, a); }
+{ DIRFIRST_CHECK (a, b); return cmp_version (b, a); }
 
 
 /* We have 2^3 different variants for each sortkey function
