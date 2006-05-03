@@ -1,6 +1,22 @@
-2006-04-25  Paul Eggert  <eggert@cs.ucla.edu>
+2006-05-03  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* src/ls.c (DEFINE_SORT_FUNCTIONS, LIST_SORTFUNCTION_VARIANTS):
+	Use better macro parameter names: s/basename/key_name/,
+	s/basefunc/key_cmp_func.  Fix typo in comment.
+
+2006-04-29  Eric Blake  <ebb9@byu.net>
+
+	* src/ls.c (main): On systems with d_type, directories_first only
+	implies format_needs_type, not format_needs_stat.
+
+2006-05-03  Jim Meyering  <jim@meyering.net>
+
+	* src/ls.c (xstrcoll_df_version, rev_xstrcoll_df_version): Add space
+	after comma in arg list, from Eric Blake.
+
+2006-04-25  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* tests/misc/date (relative-3): New test, derived from a bug
 	report by John Thomas McDole.
