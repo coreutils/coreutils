@@ -10,6 +10,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   fts no longer changes the current working directory, so its clients
   (chmod, chown, chgrp, du) no longer malfunction under extreme conditions.
 
+  pwd and other programs using lib/getcwd.c work even on file systems
+  where dirent.d_ino values are inconsistent with those from stat.st_ino.
+
 ** Changes in behavior
 
   basename and dirname now treat // as different from / on platforms
