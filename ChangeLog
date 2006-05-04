@@ -1,6 +1,10 @@
-2006-05-03  Jim Meyering  <jim@meyering.net>
+2006-05-04  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* NEWS: Mention the 2006-03-19 pwd-related fix to lib/getcwd.c.
+
+2006-05-03  Jim Meyering  <jim@meyering.net>
 
 	* src/ls.c (DEFINE_SORT_FUNCTIONS, LIST_SORTFUNCTION_VARIANTS):
 	Use better macro parameter names: s/basename/key_name/,
