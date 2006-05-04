@@ -12514,6 +12514,14 @@ date -d '1970-01-01 UTC 946684800 seconds' +"%Y-%m-%d %T %z"
 1999-12-31 19:00:00 -0500
 @end smallexample
 
+Or if you do not mind depending on the @samp{@@} feature present since
+coreutils 5.3.0, you could shorten this to:
+
+@smallexample
+date -d @@946684800 +"%F %T %z"
+1999-12-31 19:00:00 -0500
+@end smallexample
+
 Often it is better to output UTC-relative date and time:
 
 @smallexample
