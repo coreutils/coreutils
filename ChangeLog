@@ -2,7 +2,8 @@
 
 	* Version 6.0-cvs.
 
-	* NEWS: Mention the 2006-03-19 pwd-related fix to lib/getcwd.c.
+	* NEWS: Mention the 2006-03-19 pwd-related change that makes
+	lib/getcwd.c work around inconsistent file system dirent.d_ino data.
 
 2006-05-03  Jim Meyering  <jim@meyering.net>
 
