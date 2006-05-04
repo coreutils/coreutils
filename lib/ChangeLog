@@ -305,7 +305,8 @@
 	don't match the stat.st_ino values for the same names.
 	* getcwd.c (__getcwd): When no d_ino value matches the target inode
 	number, iterate through all entries again, using lstat instead.
-	Reported by Kenshi Muto in http://bugs.debian.org/355810.
+	Reported by Kenshi Muto in http://bugs.debian.org/355810, and by
+	Zouhir Hafidi in https://bugzilla.redhat.com/bugzilla/190656.
 
 	* getcwd.c (__getcwd): Clarify a comment.
 	Use memcpy in place of a call to strcpy.
