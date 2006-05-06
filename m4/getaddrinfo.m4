@@ -1,4 +1,4 @@
-# getaddrinfo.m4 serial 8
+# getaddrinfo.m4 serial 9
 dnl Copyright (C) 2004, 2005, 2006 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
@@ -21,13 +21,13 @@ AC_DEFUN([gl_GETADDRINFO],
 #include <ws2tcpip.h>
 #endif
 ], [getaddrinfo(0, 0, 0, 0);], gl_cv_w32_getaddrinfo=yes)
-      LIBS="$am_save_LIBS"
-      if test "$gl_cv_w32_getaddrinfo" = "yes"; then
-	LIBS="$LIBS -lws2_32"
-      else
-	AC_LIBOBJ(getaddrinfo)
-      fi
-    ])])
+    LIBS="$am_save_LIBS"])
+    if test "$gl_cv_w32_getaddrinfo" = "yes"; then
+      LIBS="$LIBS -lws2_32"
+    else
+      AC_LIBOBJ(getaddrinfo)
+    fi
+    ])
 
   AC_REPLACE_FUNCS(gai_strerror)
   gl_PREREQ_GETADDRINFO
