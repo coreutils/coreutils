@@ -379,6 +379,10 @@
    don't. */
 #undef HAVE_DECL_STRERROR_R
 
+/* Define to 1 if you have the declaration of `strmode', and to 0 if you
+   don't. */
+#undef HAVE_DECL_STRMODE
+
 /* Define to 1 if you have the declaration of `strndup', and to 0 if you
    don't. */
 #undef HAVE_DECL_STRNDUP
@@ -655,6 +659,10 @@
 /* Define if you have the 'long double' type. */
 #undef HAVE_LONG_DOUBLE
 
+/* Define to 1 if the type `long double' works and has more range or precision
+   than `double'. */
+#undef HAVE_LONG_DOUBLE_WIDER
+
 /* Define to 1 if you support file names longer than 14 characters. */
 #undef HAVE_LONG_FILE_NAMES
 
@@ -831,6 +839,9 @@
 
 /* Define to 1 if you have the `setenv' function. */
 #undef HAVE_SETENV
+
+/* Define to 1 if you have the `setgroups' function. */
+#undef HAVE_SETGROUPS
 
 /* Define to 1 if you have the `sethostname' function. */
 #undef HAVE_SETHOSTNAME
@@ -1085,6 +1096,9 @@
 
 /* Define if struct stat has an st_dm_mode member. */
 #undef HAVE_ST_DM_MODE
+
+/* Define to 1 if you have the `sync' function. */
+#undef HAVE_SYNC
 
 /* Define to 1 if you have the `sysctl' function. */
 #undef HAVE_SYSCTL

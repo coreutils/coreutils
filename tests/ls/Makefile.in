@@ -261,8 +261,6 @@ XGETTEXT = @XGETTEXT@
 YACC = @YACC@
 YFLAGS = @YFLAGS@
 ac_ct_CC = @ac_ct_CC@
-ac_ct_RANLIB = @ac_ct_RANLIB@
-ac_ct_STRIP = @ac_ct_STRIP@
 am__fastdepCC_FALSE = @am__fastdepCC_FALSE@
 am__fastdepCC_TRUE = @am__fastdepCC_TRUE@
 am__include = @am__include@
@@ -308,7 +306,8 @@ target_alias = @target_alias@
 AUTOMAKE_OPTIONS = 1.2 gnits
 TESTS = \
   inode dangle file-type recursive dired infloop \
-  rt-1 time-1 symlink-slash follow-slink no-arg m-option
+  rt-1 time-1 symlink-slash follow-slink no-arg m-option \
+  stat-vs-dirent
 
 EXTRA_DIST = $(TESTS)
 TESTS_ENVIRONMENT = \

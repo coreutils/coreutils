@@ -90,7 +90,7 @@ DIST_COMMON = README $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	strnlen.c strnlen.h strnumcmp-in.h strnumcmp.c strnumcmp.h \
 	strpbrk.c strstr.c strtod.c strtoimax.c strtol.c strtoll.c \
 	strtoul.c strtoull.c strtoumax.c strverscmp.c strverscmp.h \
-	tempname.c time_r.c timespec.h umaxtostr.c unistd--.h \
+	tempname.c time_r.c time_r.h timespec.h umaxtostr.c unistd--.h \
 	unistd-safer.h unlinkdir.c unlinkdir.h unlocked-io.h \
 	unsetenv.c userspec.c userspec.h utime.c utimecmp.c utimecmp.h \
 	utimens.c utimens.h vasnprintf.c vasprintf.c version-etc-fsf.c \
@@ -353,8 +353,6 @@ XGETTEXT = @XGETTEXT@
 YACC = @YACC@
 YFLAGS = @YFLAGS@
 ac_ct_CC = @ac_ct_CC@
-ac_ct_RANLIB = @ac_ct_RANLIB@
-ac_ct_STRIP = @ac_ct_STRIP@
 am__fastdepCC_FALSE = @am__fastdepCC_FALSE@
 am__fastdepCC_TRUE = @am__fastdepCC_TRUE@
 am__include = @am__include@
