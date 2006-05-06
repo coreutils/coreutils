@@ -65,7 +65,6 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   stat accepts the new option --printf=FMT, where FMT is *not*
   automatically newline terminated.
-  works, backslash escapes in FMT *are* interpreted.
 
   stat: backslash escapes are interpreted in a format string specified
   via --printf=FMT, but not one specified via --format=FMT.  That includes
