@@ -6,6 +6,12 @@
 	system condition where dirent.d_ino != stat.st_ino.
 	* tests/ls/Makefile.am (TESTS): Add stat-vs-dirent.
 
+2006-05-06  Eric Blake  <address@hidden>
+
+	* tests/ls/inode: Expand to test inode from readdir case.
+	* tests/ls/follow-slink: Expand to test broken links encountered
+	implicitly, favoring Solaris 9 and OpenBSD 3.4 behavior.
+
 2006-05-06  Eric Blake  <ebb9@byu.net>
 
 	* tests/mv/leak-fd: Work even on case-insensitive file system.
