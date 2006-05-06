@@ -4,6 +4,7 @@
 
 	* tests/ls/stat-vs-dirent: New test, to detect the bogus file
 	system condition where dirent.d_ino != stat.st_ino.
+	* tests/ls/Makefile.am (TESTS): Add stat-vs-dirent.
 
 2006-05-06  Eric Blake  <ebb9@byu.net>
 
