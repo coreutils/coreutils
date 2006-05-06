@@ -157,6 +157,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   tail -f once again works on a file with the append-only
   attribute (affects at least Linux ext2, ext3, xfs file systems)
 
+* Major changes in release 5.94 (2006-02-13) [stable]
+
+[see branch for details]
+
 * Major changes in release 5.93 (2005-11-06) [stable]
 
 ** Bug fixes
