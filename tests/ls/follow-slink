@@ -14,6 +14,10 @@ trap '(exit $?); exit' 1 2 13 15
 framework_failure=0
 mkdir $tmp || framework_failure=1
 cd $tmp || framework_failure=1
+
+# Isolate output files from directory being listed
+mkdir dir || framework_failure=1
+cd dir || framework_failure=1
 ln -s link link || framework_failure=1
 
 # Make sure the symlink was created.
@@ -28,6 +32,22 @@ fi
 
 fail=0
 
+# When explicitly listing a broken link, the command must fail.
 ls -L link 2> /dev/null && fail=1
+
+# When encountering a broken link implicitly, Solaris 9 and OpenBSD 3.4
+# list the link, provided no further information about the link needed
+# to be printed.  Since POSIX does not specify one way or the other, we
+# opt for compatibility (this was broken in 5.3.0 through 5.94).
+ls -L > ../out || fail=1
+
+cd .. || fail=1
+
+cat <<\EOF > exp
+link
+EOF
+
+cmp out exp || fail=1
+test $fail = 1 && diff out exp 2> /dev/null
 
 (exit $fail); exit $fail
