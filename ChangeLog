@@ -1,6 +1,11 @@
-2006-05-06  Eric Blake  <ebb9@byu.net>
+2006-05-06  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* tests/ls/stat-vs-dirent: New test, to detect the bogus file
+	system condition where dirent.d_ino != stat.st_ino.
+
+2006-05-06  Eric Blake  <ebb9@byu.net>
 
 	* tests/mv/leak-fd: Work even on case-insensitive file system.
 
