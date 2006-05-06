@@ -1,6 +1,10 @@
-2006-05-04  Jim Meyering  <jim@meyering.net>
+2006-05-06  Eric Blake  <ebb9@byu.net>
 
 	* Version 6.0-cvs.
+
+	* tests/mv/leak-fd: Work even on case-insensitive file system.
+
+2006-05-04  Jim Meyering  <jim@meyering.net>
 
 	* NEWS: Mention the 2006-03-19 pwd-related change that makes
 	lib/getcwd.c work around inconsistent file system dirent.d_ino data.
