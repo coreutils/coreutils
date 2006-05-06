@@ -146,6 +146,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   rm -r's cycle detection code can no longer be tricked into reporting
   a false positive (introduced in fileutils-4.1.9).
 
+  shred --remove FILE no longer segfaults on Gentoo systems
+
   sort would fail for large inputs (~50MB) on systems with a buggy
   mkstemp function.  sort and tac now use the replacement mkstemp
   function, and hence are no longer subject to limitations (of 26 or 32,
