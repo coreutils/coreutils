@@ -71,7 +71,7 @@
 	since it's used only to get a page-aligned buffer, and page
 	alignment doesn't buy us much here.  I'm suspicious that alloca
 	causes problems on some hosts, due to a recent bug report by Adam
-	Waltman.
+	Waltman: http://bugs.gentoo.org/130246.
 
 2006-04-18  Jim Meyering  <jim@meyering.net>
 
