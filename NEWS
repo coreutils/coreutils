@@ -4,6 +4,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Improved robustness
 
+  df: if the file system claims to have more available than total blocks,
+  report the number of used blocks as being "total - available"
+  (a negative number) rather than as garbage.
+
   rm's core is now reentrant: rm --recursive (-r) now processes
   hierarchies without changing the working directory at all.
 
