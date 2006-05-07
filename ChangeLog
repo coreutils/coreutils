@@ -2,6 +2,9 @@
 
 	* Version 6.0-cvs.
 
+	* Makefile.maint (patch-check): Fail if patch generates any output,
+	even merely for changed offsets.
+
 	* src/c99-to-c89.diff: Adjust to reflect new offsets.
 
 	* NEWS: Mention changes affecting df, pwd, shred.
