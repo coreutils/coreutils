@@ -294,8 +294,11 @@ sc_useless_cpp_parens:
 # have to copy all of src/ before running patch.
 patch-check:
 	cp src/remove.c tmp-remove.c
-	patch -V never --fuzz=0 tmp-remove.c src/c99-to-c89.diff
-	rm -f tmp-remove.c
+	patch -V never --fuzz=0 tmp-remove.c src/c99-to-c89.diff \
+	  > $@.1 2>&1
+	sed -n '2p' $@.1 > $@.2
+	test -s $@.2 && exit 1 || :
+	rm -f tmp-remove.c $@.1 $@.2
 
 # Ensure that date's --help output stays in sync with the info
 # documentation for GNU strftime.  The only exception is %N,
