@@ -1,6 +1,10 @@
-2006-05-06  Jim Meyering  <jim@meyering.net>
+2006-05-07  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* NEWS: Mention changes affecting df, pwd, shred.
+
+2006-05-06  Jim Meyering  <jim@meyering.net>
 
 	* tests/ls/stat-vs-dirent: New test, to detect the bogus file
 	system condition where dirent.d_ino != stat.st_ino.
