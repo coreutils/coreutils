@@ -1,10 +1,5 @@
-Index: remove.c
-===================================================================
-RCS file: /fetish/cu/src/remove.c,v
-retrieving revision 1.145
-diff -u -p -r1.145 remove.c
---- remove.c	11 Feb 2006 19:25:02 -0000	1.145
-+++ remove.c	11 Feb 2006 20:28:15 -0000
+--- src/remove.c	2006-03-26 14:33:56.682770466 +0200
++++ tmp-remove.c	2006-05-07 19:11:13.294363284 +0200
 @@ -202,9 +202,10 @@ pop_dir (Dirstack_state *ds)
  {
    size_t n_lengths = obstack_object_size (&ds->len_stack) / sizeof (size_t);
@@ -30,7 +25,7 @@ diff -u -p -r1.145 remove.c
    if (top->unremovable)
      hash_free (top->unremovable);
    obstack_blank (&ds->Active_dir, -(int) sizeof (struct AD_ent));
-@@ -1019,6 +1021,7 @@ fd_to_subdirp (int fd_cwd, char const *f
+@@ -1031,6 +1033,7 @@ fd_to_subdirp (int fd_cwd, char const *f
        return NULL;
      }
  
@@ -38,7 +33,7 @@ diff -u -p -r1.145 remove.c
    DIR *subdir_dirp = fdopendir (fd_sub);
    if (subdir_dirp == NULL)
      {
-@@ -1027,6 +1030,7 @@ fd_to_subdirp (int fd_cwd, char const *f
+@@ -1039,6 +1042,7 @@ fd_to_subdirp (int fd_cwd, char const *f
      }
  
    return subdir_dirp;
@@ -46,7 +41,7 @@ diff -u -p -r1.145 remove.c
  }
  
  /* Remove entries in the directory open on DIRP
-@@ -1257,9 +1261,10 @@ remove_dir (int fd_cwd, Dirstack_state *
+@@ -1269,9 +1273,10 @@ remove_dir (int fd_cwd, Dirstack_state *
  	/* The name of the directory that we have just processed,
  	   nominally removing all of its contents.  */
  	char *empty_dir;
@@ -58,7 +53,7 @@ diff -u -p -r1.145 remove.c
  	assert (dirp != NULL || AD_stack_height (ds) == 1);
  
  	/* Try to remove EMPTY_DIR only if remove_cwd_entries succeeded.  */
-@@ -1336,6 +1341,7 @@ rm_1 (Dirstack_state *ds, char const *fi
+@@ -1348,6 +1353,7 @@ rm_1 (Dirstack_state *ds, char const *fi
    AD_push_initial (ds);
    AD_INIT_OTHER_MEMBERS ();
  
@@ -66,7 +61,7 @@ diff -u -p -r1.145 remove.c
    int fd_cwd = AT_FDCWD;
    enum RM_status status = remove_entry (fd_cwd, ds, filename, x, NULL);
    if (status == RM_NONEMPTY_DIR)
-@@ -1352,6 +1358,7 @@ rm_1 (Dirstack_state *ds, char const *fi
+@@ -1364,6 +1370,7 @@ rm_1 (Dirstack_state *ds, char const *fi
    ds_clear (ds);
  
    return status;
@@ -74,7 +69,7 @@ diff -u -p -r1.145 remove.c
  }
  
  /* Remove all files and/or directories specified by N_FILES and FILE.
-@@ -1374,9 +1381,11 @@ rm (size_t n_files, char const *const *f
+@@ -1386,9 +1393,11 @@ rm (size_t n_files, char const *const *f
  	}
  
        cycle_check_init (&ds->cycle_check_state);
