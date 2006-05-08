@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2006-05-05.09}
+\def\texinfoversion{2006-05-07.15}
 %
 % Copyright (C) 1985, 1986, 1988, 1990, 1991, 1992, 1993, 1994, 1995,
 % 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006 Free
@@ -1237,9 +1237,10 @@ where each line of input produces a line of output.}
 \ifpdf
   \input pdfcolor
   \pdfcatalog{/PageMode /UseOutlines}%
+  % #1 is image name, #2 width (might be empty/whitespace), #3 height (ditto).
   \def\dopdfimage#1#2#3{%
-    \def\imagewidth{#2}%
-    \def\imageheight{#3}%
+    \def\imagewidth{#2}\setbox0 = \hbox{\ignorespaces #2}%
+    \def\imageheight{#3}\setbox2 = \hbox{\ignorespaces #3}%
     % without \immediate, pdftex seg faults when the same image is
     % included twice.  (Version 3.14159-pre-1.0-unofficial-20010704.)
     \ifnum\pdftexversion < 14
@@ -1247,8 +1248,8 @@ where each line of input produces a line of output.}
     \else
       \immediate\pdfximage
     \fi
-      \ifx\empty\imagewidth\else width \imagewidth \fi
-      \ifx\empty\imageheight\else height \imageheight \fi
+      \ifdim \wd0 >0pt width \imagewidth \fi
+      \ifdim \wd2 >0pt height \imageheight \fi
       \ifnum\pdftexversion<13
          #1.pdf%
        \else
