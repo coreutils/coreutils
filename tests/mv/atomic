@@ -1,0 +1,50 @@
+#!/bin/sh
+# ensure that mv doesn't first unlink its destination in one particular case
+
+if test "$VERBOSE" = yes; then
+  set -x
+  mv --version
+fi
+
+pwd=`pwd`
+t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
+trap 'status=$?; cd $pwd; chmod -R u+rwx $t0; rm -rf $t0 && exit $status' 0
+trap '(exit $?); exit $?' 1 2 13 15
+
+framework_failure=0
+mkdir -p $tmp || framework_failure=1
+cd $tmp || framework_failure=1
+
+# Before the fix, mv would unnecessarily unlink the destination symlink:
+#   $ rm -rf s[12]; ln -s / s1; ln -s /tmp s2; strace -qe unlink /bin/mv -T s1 s2
+#   unlink("s2") = 0
+#
+# With the fix, it doesn't call unlink:
+#   $ rm -rf s[12]; ln -s / s1; ln -s /tmp s2; strace -qe unlink ./mv -T s1 s2
+#   $
+
+ln -s t1 s1 || framework_failure=1
+ln -s t2 s2 || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo "$0: failure in testing framework" 1>&2
+  (exit 1); exit 1
+fi
+
+# Skip this test on systems without strace.
+strace -V < /dev/null > ver 2>&1 || skip=1
+if test "$skip" = 1; then
+  echo "$0: no strace program, so skipping this test" 1>&2
+  (exit 77); exit 77
+fi
+
+fail=0
+
+strace -qe unlink mv -T s1 s2 > out 2>&1 || fail=1
+cat <<\EOF > exp || fail=1
+EOF
+
+cmp out exp || fail=1
+test $fail = 1 && diff out exp 2> /dev/null
+
+(exit $fail); exit $fail
