@@ -181,7 +181,7 @@ sha1_stream (FILE *stream, void *resblock)
   return 0;
 }
 
-/* Compute MD5 message digest for LEN bytes beginning at BUFFER.  The
+/* Compute SHA1 message digest for LEN bytes beginning at BUFFER.  The
    result is always in little endian byte order, so that a byte-wise
    output yields to the wanted ASCII representation of the message
    digest.  */
