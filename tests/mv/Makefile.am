@@ -3,6 +3,7 @@ AUTOMAKE_OPTIONS = 1.3 gnits
 
 XFAIL_TESTS = acl
 TESTS = \
+  atomic \
   acl \
   reply-no \
   leak-fd \
