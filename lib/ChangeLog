@@ -1,3 +1,7 @@
+2006-05-11  Jim Meyering  <jim@meyering.net>
+
+	* sha1.c (sha1_buffer): Correct comment: s/MD5/SHA1/.  From James Lemley.
+
 2006-04-25  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* getdate.y (get_date): When adding relative date, start with the
