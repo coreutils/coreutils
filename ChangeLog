@@ -2,6 +2,9 @@
 
 	* Version 6.0-cvs.
 
+	* tests/mv/atomic: New file/test for yesterday's fix.
+	* tests/mv/Makefile.am (TESTS): Add atomic.
+
 	* tests/du/long-sloop: Avoid harmless `ambiguous redirect' diagnostic.
 
 2006-05-10  Jim Meyering  <jim@meyering.net>
