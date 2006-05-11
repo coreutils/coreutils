@@ -3,6 +3,7 @@ AUTOMAKE_OPTIONS = 1.3 gnits
 
 XFAIL_TESTS = acl
 TESTS = \
+  no-target-dir \
   atomic \
   acl \
   reply-no \
