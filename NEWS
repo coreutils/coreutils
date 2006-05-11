@@ -143,6 +143,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   mv: moving a symlink into the place of an existing non-directory is
   now done atomically;  before, mv would first unlink the destination.
 
+  mv -T DIR EMPTY_DIR no longer fails unconditionally
+
   rm (on systems with openat) can no longer exit before processing
   all command-line arguments.
 
