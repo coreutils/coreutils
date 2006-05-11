@@ -1,6 +1,17 @@
-2006-05-07  Jim Meyering  <jim@meyering.net>
+2006-05-11  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* tests/du/long-sloop: Avoid harmless `ambiguous redirect' diagnostic.
+
+2006-05-10  Jim Meyering  <jim@meyering.net>
+
+	* src/copy.c (copy_internal): Don't explicitly unlink the destination
+	when moving a symlink into the place of an existing non-directory.
+	Reported by Joshua Hudson.
+	* NEWS: mention this.
+
+2006-05-07  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.maint (patch-check): Fail if patch generates any output,
 	even merely for changed offsets.
