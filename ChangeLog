@@ -2,6 +2,15 @@
 
 	* Version 6.0-cvs.
 
+	mv -T DIR EMPTY_DIR no longer fails
+	* src/copy.c (copy_internal): Don't manually prohibit a move where
+	the destination is an existing directory.  Sometimes doing that is
+	valid.  Let the rename system call enforce the rules.  That is
+	allowed only when the source is a directory and the destination
+	directory (to be replaced) is empty.  Reported by Eric Blake.
+	* tests/mv/no-target-dir: New file/test for this.
+	* tests/mv/Makefile.am (TESTS): Add no-target-dir.
+
 	* tests/mv/atomic: New file/test for yesterday's fix.
 	* tests/mv/Makefile.am (TESTS): Add atomic.
 
