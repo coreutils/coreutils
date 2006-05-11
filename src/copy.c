@@ -1157,14 +1157,6 @@ copy_internal (char const *src_name, char const *dst_name,
 
 	  if (x->move_mode)
 	    {
-	      /* In move_mode, DEST may not be an existing directory.  */
-	      if (S_ISDIR (dst_sb.st_mode) && x->backup_type == no_backups)
-		{
-		  error (0, 0, _("cannot overwrite directory %s"),
-			 quote (dst_name));
-		  return false;
-		}
-
 	      /* Don't allow user to move a directory onto a non-directory.  */
 	      if (S_ISDIR (src_sb.st_mode) && !S_ISDIR (dst_sb.st_mode)
 		  && x->backup_type == no_backups)
