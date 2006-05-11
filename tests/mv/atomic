@@ -44,6 +44,12 @@ strace -qe unlink mv -T s1 s2 > out 2>&1 || fail=1
 cat <<\EOF > exp || fail=1
 EOF
 
+# Ensure that the source, s1, is gone.
+ls -dl s1 > /dev/null 2>&1 && fail=1
+
+# Ensure that the destination, s2, contains the link from s1.
+test "`readlink s2`" = t1 || fail=1
+
 cmp out exp || fail=1
 test $fail = 1 && diff out exp 2> /dev/null
 
