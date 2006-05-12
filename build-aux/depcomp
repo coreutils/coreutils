@@ -1,7 +1,7 @@
 #! /bin/sh
 # depcomp - compile a program generating dependencies as side-effects
 
-scriptversion=2006-01-05.21
+scriptversion=2006-05-10.23
 
 # Copyright (C) 1999, 2000, 2003, 2004, 2005, 2006 Free Software
 # Foundation, Inc.
@@ -277,10 +277,10 @@ icc)
   rm -f "$tmpdepfile"
   ;;
 
-ia64hp)
-  # The "hp" stanza above does not work with HP's ia64 compilers,
-  # which have integrated preprocessors.  The correct option to use
-  # with these is +Maked; it writes dependencies to a file named
+hp2)
+  # The "hp" stanza above does not work with aCC (C++) and HP's ia64
+  # compilers, which have integrated preprocessors.  The correct option
+  # to use with these is +Maked; it writes dependencies to a file named
   # 'foo.d', which lands next to the object file, wherever that
   # happens to be.
   # Much of this is similar to the tru64 case; see comments there.
