@@ -1,6 +1,10 @@
-2006-05-11  Jim Meyering  <jim@meyering.net>
+2006-05-13  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* tests/mv/no-target-dir: Test two more cases.
+
+2006-05-11  Jim Meyering  <jim@meyering.net>
 
 	mv -T DIR EMPTY_DIR no longer fails unconditionally
 	* src/copy.c (copy_internal): Don't manually prohibit a move where
