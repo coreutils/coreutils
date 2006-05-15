@@ -1,6 +1,6 @@
 /* xfts.c -- a wrapper for fts_open
 
-   Copyright (C) 2003, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2005, 2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -40,7 +40,7 @@ FTS *
 xfts_open (char * const *argv, int options,
 	   int (*compar) (const FTSENT **, const FTSENT **))
 {
-  FTS *fts = fts_open (argv, options, compar);
+  FTS *fts = fts_open (argv, options | FTS_CWDFD, compar);
   if (fts == NULL)
     {
       /* This can fail in three ways: out of memory, invalid bit_flags,
