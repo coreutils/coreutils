@@ -132,6 +132,10 @@ static char sccsid[] = "@(#)fts.c	8.6 (Berkeley) 8/14/94";
 # define ATTRIBUTE_UNUSED __attribute__ ((__unused__))
 #endif
 
+#if !defined O_NOFOLLOW
+# define O_NOFOLLOW 0
+#endif
+
 /* If this host provides the openat function, then we can avoid
    attempting to open "." in some initialization code below.  */
 #ifdef HAVE_OPENAT
@@ -175,6 +179,7 @@ static void free_dir (FTS *fts) {}
 #endif
 
 #define ISDOT(a)	(a[0] == '.' && (!a[1] || (a[1] == '.' && !a[2])))
+#define STREQ(a, b)	(strcmp ((a), (b)) == 0)
 
 #define CLR(opt)	(sp->fts_options &= ~(opt))
 #define ISSET(opt)	(sp->fts_options & (opt))
@@ -212,19 +217,6 @@ bool fts_debug = false;
       leave_dir (Fts, Ent);					\
     }								\
   while (false)
-
-/* Open the directory DIR if possible, and return a file descriptor.
-   As with openat-like functions, if DIR is a relative name,
-   interpret it relative to the directory open on file descriptor FD.
-   Return -1 and set errno on failure.  */
-static int
-internal_function
-diropen_fd (int cwd_fd, char const *dir)
-{
-  int fd = openat (cwd_fd, dir,
-		   O_RDONLY | O_DIRECTORY | O_NOCTTY | O_NONBLOCK);
-  return fd;
-}
 
 /* file-descriptor-relative opendir.  */
 /* FIXME: if others need this function, move it into lib/openat.c */
@@ -270,9 +262,12 @@ static inline int
 internal_function
 diropen (FTS const *sp, char const *dir)
 {
-  return (ISSET(FTS_CWDFD)
-	  ? diropen_fd (sp->fts_cwd_fd, dir)
-	  : open (dir, O_RDONLY | O_DIRECTORY | O_NOCTTY | O_NONBLOCK));
+  int open_flags = (O_RDONLY | O_DIRECTORY | O_NOCTTY | O_NONBLOCK
+		    | (ISSET (FTS_PHYSICAL) ? O_NOFOLLOW : 0));
+
+  return (ISSET (FTS_CWDFD)
+	  ? openat (sp->fts_cwd_fd, dir, open_flags)
+	  : open (dir, open_flags));
 }
 
 FTS *
@@ -1432,7 +1427,6 @@ internal_function
 fts_safe_changedir (FTS *sp, FTSENT *p, int fd, char const *dir)
 {
 	int ret;
-	struct stat sb;
 
 	int newfd = fd;
 	if (ISSET(FTS_NOCHDIR)) {
@@ -1442,16 +1436,32 @@ fts_safe_changedir (FTS *sp, FTSENT *p, int fd, char const *dir)
 	}
 	if (fd < 0 && (newfd = diropen (sp, dir)) < 0)
 		return (-1);
-	if (fstat(newfd, &sb)) {
+
+	/* The following dev/inode check is necessary if we're doing
+	   a `logical' traversal (through symlinks, a la chown -L),
+	   if the system lacks O_NOFOLLOW support, or if we're changing
+	   to "..".  In the latter case, O_NOFOLLOW can't help.  In
+	   general (when the target is not ".."), diropen's use of
+	   O_NOFOLLOW ensures we don't mistakenly follow a symlink,
+	   so we can avoid the expense of this fstat.  */
+	if (ISSET(FTS_LOGICAL) || O_NOFOLLOW == 0
+	    || (dir && STREQ (dir, "..")))
+	  {
+	    struct stat sb;
+	    if (fstat(newfd, &sb))
+	      {
 		ret = -1;
 		goto bail;
-	}
-	if (p->fts_statp->st_dev != sb.st_dev
-	    || p->fts_statp->st_ino != sb.st_ino) {
+	      }
+	    if (p->fts_statp->st_dev != sb.st_dev
+		|| p->fts_statp->st_ino != sb.st_ino)
+	      {
 		__set_errno (ENOENT);		/* disinformation */
 		ret = -1;
 		goto bail;
-	}
+	      }
+	  }
+
 	if (ISSET(FTS_CWDFD))
 	  {
 	    cwd_advance_fd (sp, newfd);
