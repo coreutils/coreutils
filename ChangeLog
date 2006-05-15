@@ -1,6 +1,11 @@
-2006-05-13  Jim Meyering  <jim@meyering.net>
+2006-05-15  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* src/cp.c (usage): Correct description of -a: s/-dpR/-dpPR/.
+	From Tomas Pospisek.
+
+2006-05-13  Jim Meyering  <jim@meyering.net>
 
 	* tests/mv/no-target-dir: Test two more cases.
 
