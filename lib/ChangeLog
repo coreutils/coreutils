@@ -1,3 +1,12 @@
+2006-05-15  Jim Meyering  <jim@meyering.net>
+
+	Avoid the expense of an fstat, when possible.
+	* fts.c (O_NOFOLLOW, STREQ): Define.
+	(diropen_fd): Remove function.  Merge it into sole caller...
+	(diropen): ...here.  Use O_NOFOLLOW when appropriate.
+	(fts_safe_changedir): Call fstat for dev/inode check, only if the
+	previous open/openat call may have opened the wrong directory.
+
 2006-05-13  Jim Meyering  <jim@meyering.net>
 
 	Restore the parts of fts that were removed on 2006-01-17, so that
