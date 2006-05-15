@@ -1,3 +1,15 @@
+2006-05-13  Jim Meyering  <jim@meyering.net>
+
+	Restore the parts of fts that were removed on 2006-01-17, so that
+	it's easier for legacy applications designed for the version
+	of fts in glibc or BSD to convert to this more robust version.
+	Add a new mode, FTS_CWDFD, by which to enable the improved
+	(openat- based -- aka no-chdir) semantics.
+	* fts_.h (FTS_CWDFD): Define.  Callers must use this fts_open
+	option to enable the more robust behavior.
+	(FTS_OPTIONMASK): Widen accordingly.
+	* fts.c: Restore removed code, reverting the default behavior.
+
 2006-05-11  Jim Meyering  <jim@meyering.net>
 
 	* sha1.c (sha1_buffer): Correct comment: s/MD5/SHA1/.  From James Lemley.
