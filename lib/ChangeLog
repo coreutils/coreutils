@@ -9,6 +9,8 @@
 
 2006-05-13  Jim Meyering  <jim@meyering.net>
 
+	* xfts.c (xfts_open): Always use FTS_CWDFD.
+
 	Restore the parts of fts that were removed on 2006-01-17, so that
 	it's easier for legacy applications designed for the version
 	of fts in glibc or BSD to convert to this more robust version.
