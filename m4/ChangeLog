@@ -1,3 +1,10 @@
+2006-05-14  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* stdbool.m4 (AC_HEADER_STDBOOL): Fix overly-picky
+	test for C99 conformance; (bool) 0.5 is an integer constant
+	expression, but (bool) -0.5 is not.  Problem reported by Fedor
+	Sergeev in <http://forum.sun.com/jive/thread.jspa?threadID=96202>.
+
 2006-02-17  Eric Blake  <ebb9@byu.net>
 
 	Sync from gnulib.
