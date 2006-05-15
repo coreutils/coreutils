@@ -72,6 +72,7 @@ typedef struct {
 	struct _ftsent **fts_array;	/* sort array */
 	dev_t fts_dev;			/* starting device # */
 	char *fts_path;			/* file name for this descent */
+	int fts_rfd;			/* fd for root */
 	int fts_cwd_fd;			/* the file descriptor on which the
 					   virtual cwd is open, or AT_FDCWD */
 	size_t fts_pathlen;		/* sizeof(path) */
@@ -113,7 +114,16 @@ typedef struct {
      mode of cycle detection: FTS_TIGHT_CYCLE_CHECK.  */
 # define FTS_TIGHT_CYCLE_CHECK	0x0100
 
-# define FTS_OPTIONMASK	0x01ff		/* valid user option mask */
+  /* Use this flag to enable semantics with which the parent
+     application may be made both more efficient and more robust.
+     Whereas the default is to visit each directory in a recursive
+     traversal (via chdir), using this flag makes it so the initial
+     working directory is never changed.  Instead, these functions
+     perform the traversal via a virtual working directory, maintained
+     through the file descriptor member, fts_cwd_fd.  */
+# define FTS_CWDFD		0x0200
+
+# define FTS_OPTIONMASK	0x03ff		/* valid user option mask */
 
 # define FTS_NAMEONLY	0x1000		/* (private) child names only */
 # define FTS_STOP	0x2000		/* (private) unrecoverable error */

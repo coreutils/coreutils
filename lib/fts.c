@@ -105,6 +105,8 @@ static char sccsid[] = "@(#)fts.c	8.6 (Berkeley) 8/14/94";
 # define close __close
 # undef closedir
 # define closedir __closedir
+# undef fchdir
+# define fchdir __fchdir
 # undef open
 # define open __open
 # undef opendir
@@ -178,8 +180,14 @@ static void free_dir (FTS *fts) {}
 #define ISSET(opt)	(sp->fts_options & (opt))
 #define SET(opt)	(sp->fts_options |= (opt))
 
-#define FCHDIR(sp, fd)	(!ISSET(FTS_NOCHDIR) \
-			 && (cwd_advance_fd (sp, fd), 0))
+#define RESTORE_INITIAL_CWD(sp)	FCHDIR (sp, (ISSET (FTS_CWDFD) \
+					     ? AT_FDCWD	       \
+					     : sp->fts_rfd))
+
+#define FCHDIR(sp, fd)	(!ISSET(FTS_NOCHDIR)		    \
+			 && (ISSET(FTS_CWDFD)		    \
+                             ? (cwd_advance_fd (sp, fd), 0) \
+			     : fchdir(fd)))
 
 
 /* fts_build flags */
@@ -262,7 +270,9 @@ static inline int
 internal_function
 diropen (FTS const *sp, char const *dir)
 {
-  return diropen_fd (sp->fts_cwd_fd, dir);
+  return (ISSET(FTS_CWDFD)
+	  ? diropen_fd (sp->fts_cwd_fd, dir)
+	  : open (dir, O_RDONLY | O_DIRECTORY | O_NOCTTY | O_NONBLOCK));
 }
 
 FTS *
@@ -282,6 +292,10 @@ fts_open (char * const *argv,
 		__set_errno (EINVAL);
 		return (NULL);
 	}
+	if ((options & FTS_NOCHDIR) && (options & FTS_CWDFD)) {
+		__set_errno (EINVAL);
+		return (NULL);
+	}
 
 	/* Allocate/initialize the stream */
 	if ((sp = malloc(sizeof(FTS))) == NULL)
@@ -291,12 +305,14 @@ fts_open (char * const *argv,
 	sp->fts_options = options;
 
 	/* Logical walks turn on NOCHDIR; symbolic links are too hard. */
-	if (ISSET(FTS_LOGICAL))
+	if (ISSET(FTS_LOGICAL)) {
 		SET(FTS_NOCHDIR);
+		CLR(FTS_CWDFD);
+	}
 
 	/* Initialize fts_cwd_fd.  */
 	sp->fts_cwd_fd = AT_FDCWD;
-	if ( ! ISSET(FTS_NOCHDIR) && ! HAVE_OPENAT_SUPPORT)
+	if ( ISSET(FTS_CWDFD) && ! HAVE_OPENAT_SUPPORT)
 	  {
 	    /* While it isn't technically necessary to open "." this
 	       early, doing it here saves us the trouble of ensuring
@@ -319,7 +335,7 @@ fts_open (char * const *argv,
 		if ( openat_needs_fchdir ())
 		  {
 		    SET(FTS_NOCHDIR);
-		    sp->fts_cwd_fd = -1;
+		    CLR(FTS_CWDFD);
 		  }
 	      }
 	    else
@@ -399,6 +415,17 @@ fts_open (char * const *argv,
 	if (! setup_dir (sp))
 	  goto mem3;
 
+	/*
+	 * If using chdir(2), grab a file descriptor pointing to dot to ensure
+	 * that we can get back here; this could be avoided for some file names,
+	 * but almost certainly not worth the effort.  Slashes, symbolic links,
+	 * and ".." are all fairly nasty problems.  Note, if we can't get the
+	 * descriptor we run anyway, just more slowly.
+	 */
+	if (!ISSET(FTS_NOCHDIR) && !ISSET(FTS_CWDFD)
+	    && (sp->fts_rfd = diropen (sp, ".")) < 0)
+		SET(FTS_NOCHDIR);
+
 	return (sp);
 
 mem3:	fts_lfree(root);
@@ -460,8 +487,18 @@ fts_close (FTS *sp)
 		free(sp->fts_array);
 	free(sp->fts_path);
 
-	if (0 <= sp->fts_cwd_fd)
-	  close (sp->fts_cwd_fd);
+	if (ISSET(FTS_CWDFD))
+	  {
+	    if (0 <= sp->fts_cwd_fd)
+	      close (sp->fts_cwd_fd);
+	  }
+	else if (!ISSET(FTS_NOCHDIR))
+	  {
+	    /* Return to original directory, save errno if necessary. */
+	    if (fchdir(sp->fts_rfd))
+	      saved_errno = errno;
+	    close(sp->fts_rfd);
+	  }
 
 	free_dir (sp);
 
@@ -601,7 +638,11 @@ next:	tmp = p;
 		 * root.
 		 */
 		if (p->fts_level == FTS_ROOTLEVEL) {
-			FCHDIR(sp, AT_FDCWD);
+			if (RESTORE_INITIAL_CWD(sp)) {
+				SET(FTS_STOP);
+				sp->fts_cur = p;
+				return (NULL);
+			}
 			fts_load(sp, p);
 			goto check_for_dir;
 		}
@@ -660,15 +701,24 @@ check_for_dir:
 	sp->fts_path[p->fts_pathlen] = '\0';
 
 	/*
-	 * Return to the parent directory.  If at a root node, just set
-	 * sp->fts_cwd_fd to AT_FDCWD.  If we came through a symlink,
+	 * Return to the parent directory.  If at a root node, restore
+	 * the initial working directory.  If we came through a symlink,
 	 * go back through the file descriptor.  Otherwise, move up
 	 * one level, via "..".
 	 */
 	if (p->fts_level == FTS_ROOTLEVEL) {
-		FCHDIR(sp, AT_FDCWD);
+		if (RESTORE_INITIAL_CWD(sp)) {
+			p->fts_errno = errno;
+			SET(FTS_STOP);
+		}
 	} else if (p->fts_flags & FTS_SYMFOLLOW) {
-		FCHDIR(sp, p->fts_symfd);
+		if (FCHDIR(sp, p->fts_symfd)) {
+			int saved_errno = errno;
+			(void)close(p->fts_symfd);
+			__set_errno (saved_errno);
+			p->fts_errno = errno;
+			SET(FTS_STOP);
+		}
 		(void)close(p->fts_symfd);
 	} else if (!(p->fts_flags & FTS_DONTCHDIR) &&
 		   fts_safe_changedir(sp, p->fts_parent, -1, "..")) {
@@ -761,7 +811,22 @@ fts_children (register FTS *sp, int instr)
 	if ((fd = diropen (sp, ".")) < 0)
 		return (sp->fts_child = NULL);
 	sp->fts_child = fts_build(sp, instr);
-	cwd_advance_fd (sp, fd);
+	if (ISSET(FTS_CWDFD))
+	  {
+	    cwd_advance_fd (sp, fd);
+	  }
+	else
+	  {
+	    if (fchdir(fd))
+	      {
+		// FIXME: save/restore is a fix over prev. version
+		int saved_errno = errno;
+		close (fd);
+		__set_errno (saved_errno);
+		return NULL;
+	      }
+	    close (fd);
+	  }
 	return (sp->fts_child);
 }
 
@@ -812,9 +877,9 @@ fts_build (register FTS *sp, int type)
 		oflag = DTF_HIDEW|DTF_NODUP|DTF_REWIND;
 #else
 # define __opendir2(file, flag) \
-	(ISSET(FTS_NOCHDIR) \
-	 ? opendir(file) \
-	 : opendirat(sp->fts_cwd_fd, file))
+	( ! ISSET(FTS_NOCHDIR) && ISSET(FTS_CWDFD) \
+	  ? opendirat(sp->fts_cwd_fd, file)	   \
+	  : opendir(file))
 #endif
        if ((dirp = __opendir2(cur->fts_accpath, oflag)) == NULL) {
 		if (type == BREAD) {
@@ -858,14 +923,16 @@ fts_build (register FTS *sp, int type)
 	 * checking FTS_NS on the returned nodes.
 	 */
 	if (nlinks || type == BREAD) {
-		int dir_fd = dup (dirfd(dirp));
+		int dir_fd = dirfd(dirp);
+		if (ISSET(FTS_CWDFD) && 0 <= dir_fd)
+		  dir_fd = dup (dir_fd);
 		if (dir_fd < 0 || fts_safe_changedir(sp, cur, dir_fd, NULL)) {
 			if (nlinks && type == BREAD)
 				cur->fts_errno = errno;
 			cur->fts_flags |= FTS_DONTCHDIR;
 			descend = false;
 			closedir(dirp);
-			if (0 <= dir_fd)
+			if (ISSET(FTS_CWDFD) && 0 <= dir_fd)
 				close (dir_fd);
 			dirp = NULL;
 		} else
@@ -1008,9 +1075,9 @@ mem1:				saved_errno = errno;
 	 * can't get back, we're done.
 	 */
 	if (descend && (type == BCHILD || !nitems) &&
-	    (cur->fts_level == FTS_ROOTLEVEL ?
-	     FCHDIR(sp, AT_FDCWD) :
-	     fts_safe_changedir(sp, cur->fts_parent, -1, ".."))) {
+	    (cur->fts_level == FTS_ROOTLEVEL
+	     ? RESTORE_INITIAL_CWD(sp)
+	     : fts_safe_changedir(sp, cur->fts_parent, -1, ".."))) {
 		cur->fts_info = FTS_ERR;
 		SET(FTS_STOP);
 		fts_lfree(head);
@@ -1364,30 +1431,40 @@ static int
 internal_function
 fts_safe_changedir (FTS *sp, FTSENT *p, int fd, char const *dir)
 {
+	int ret;
 	struct stat sb;
+
 	int newfd = fd;
 	if (ISSET(FTS_NOCHDIR)) {
-		if (0 <= fd)
+		if (ISSET(FTS_CWDFD) && 0 <= fd)
 			close (fd);
 		return (0);
 	}
 	if (fd < 0 && (newfd = diropen (sp, dir)) < 0)
 		return (-1);
 	if (fstat(newfd, &sb)) {
-		if (0 <= fd) {
-			int saved_errno = errno;
-			close (fd);
-			errno = saved_errno;
-		}
-		return -1;
+		ret = -1;
+		goto bail;
 	}
 	if (p->fts_statp->st_dev != sb.st_dev
 	    || p->fts_statp->st_ino != sb.st_ino) {
-		if (0 <= fd)
-			close (fd);
 		__set_errno (ENOENT);		/* disinformation */
-		return -1;
+		ret = -1;
+		goto bail;
 	}
-	cwd_advance_fd (sp, newfd);
-	return 0;
+	if (ISSET(FTS_CWDFD))
+	  {
+	    cwd_advance_fd (sp, newfd);
+	    return 0;
+	  }
+
+	ret = fchdir(newfd);
+bail:
+	if (fd < 0)
+	  {
+	    int oerrno = errno;
+	    (void)close(newfd);
+	    __set_errno (oerrno);
+	  }
+	return (ret);
 }
