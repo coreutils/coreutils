@@ -128,6 +128,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  cp -p would fail in a /proc-less chroot, on some systems
+
   When `cp -RL' encounters the same directory more than once in the
   hierarchy beneath a single command-line argument, it no longer confuses
   them with hard-linked directories.
