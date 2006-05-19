@@ -1,5 +1,5 @@
 /* du -- summarize disk usage
-   Copyright (C) 1988-1991, 1995-2005 Free Software Foundation, Inc.
+   Copyright (C) 1988-1991, 1995-2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -681,7 +681,11 @@ main (int argc, char **argv)
   struct Tokens tok;
 
   /* Bit flags that control how fts works.  */
-  int bit_flags = FTS_PHYSICAL | FTS_TIGHT_CYCLE_CHECK;
+  int bit_flags = FTS_TIGHT_CYCLE_CHECK;
+
+  /* Select one of the three FTS_ options that control if/when
+     to follow a symlink.  */
+  int symlink_deref_bit = FTS_PHYSICAL;
 
   /* If true, display only a total for each argument. */
   bool opt_summarize_only = false;
@@ -803,15 +807,15 @@ main (int argc, char **argv)
 	  break;
 
 	case 'D': /* This will eventually be 'H' (-H), too.  */
-	  bit_flags = FTS_COMFOLLOW;
+	  symlink_deref_bit = FTS_COMFOLLOW;
 	  break;
 
 	case 'L': /* --dereference */
-	  bit_flags = FTS_LOGICAL;
+	  symlink_deref_bit = FTS_LOGICAL;
 	  break;
 
 	case 'P': /* --no-dereference */
-	  bit_flags = FTS_PHYSICAL;
+	  symlink_deref_bit = FTS_PHYSICAL;
 	  break;
 
 	case 'S':
@@ -1000,6 +1004,7 @@ main (int argc, char **argv)
     ok = (i == j);
   }
 
+  bit_flags |= symlink_deref_bit;
   ok &= du_files (files, bit_flags);
 
   /* This isn't really necessary, but it does ensure we
