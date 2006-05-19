@@ -1,6 +1,11 @@
-2006-05-19  Jim Meyering  <jim@meyering.net>
+2006-05-20  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* gnupload: Restore ""--to... kludge to placate overzealous
+	`make distcheck' check.
+
+2006-05-19  Jim Meyering  <jim@meyering.net>
 
 	* src/du.c (main): Don't let -D, -L, or -P turn off the internal
 	FTS_TIGHT_CYCLE_CHECK directory traversal option.
