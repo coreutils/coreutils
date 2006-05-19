@@ -1,9 +1,9 @@
 #!/bin/sh
 # Sign files and upload them.
 
-scriptversion=2006-02-10.21
+scriptversion=2006-05-20.00
 
-# Copyright (C) 2004, 2006 Free Software Foundation, Inc.
+# Copyright (C) 2004, 2005, 2006  Free Software Foundation, Inc.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -39,12 +39,15 @@ Options:
   --version                output version information and exit
 
 Recognized destinations are:
-  alpha.gnu.org:DIRECTORY  build directive files and upload files by FTP
-  ftp.gnu.org:DIRECTORY    build directive files and upload files by FTP
+  alpha.gnu.org:DIRECTORY
+  savannah.gnu.org:DIRECTORY
+  savannah.nongnu.org:DIRECTORY
+  ftp.gnu.org:DIRECTORY
+                           build directive files and upload files by FTP
   [user@]host:DIRECTORY    upload files with scp
 
 Example:
-  gnupload --to sources.redhat.com:~ftp/automake \\
+  gnupload --to sources.redhat.com:~ftp/pub/automake \\
            ""--to alpha.gnu.org:automake \\
            automake-1.8.2b.tar.gz automake-1.8.2b.tar.bz2
 
@@ -55,7 +58,7 @@ while test -n "$1"; do
   case $1 in
     --help)
       echo "$usage"
-      exit 0
+      exit $?
       ;;
     --to)
       if test -z "$2"; then
@@ -77,7 +80,7 @@ while test -n "$1"; do
       ;;
     --version)
       echo "gnupload $scriptversion"
-      exit 0
+      exit $?
       ;;
     -*)
       echo "$0: Unknown option \`$1', try \`$0 --help'" 1>&2
@@ -136,20 +139,27 @@ do
   do
     echo "Uploading $file to $dest..."
     files="$file $file.sig"
+    destdir=`echo $dest | sed 's/[^:]*://'`
     case $dest in
       alpha.gnu.org:*)
 	rm -f $file.directive $file.directive.asc
-	echo directory: `echo $dest | sed 's/[^:]*://'` >$file.directive
+	echo directory: $destdir >$file.directive
 	echo "$passphrase" | $GPG --passphrase-fd 0 --clearsign $file.directive
         ncftpput ftp-upload.gnu.org /incoming/alpha $files $file.directive.asc
 	rm -f $file.directive $file.directive.asc
 	;;
       ftp.gnu.org:*)
 	rm -f $file.directive $file.directive.asc
-	echo directory: `echo $dest | sed 's/[^:]*://'` >$file.directive
+	echo directory: $destdir >$file.directive
 	echo "$passphrase" | $GPG --passphrase-fd 0 --clearsign $file.directive
         ncftpput ftp-upload.gnu.org /incoming/ftp $files $file.directive.asc
 	rm -f $file.directive $file.directive.asc
+	;;
+      savannah.gnu.org:*)
+        ncftpput savannah.gnu.org /incoming/savannah/$destdir $files
+	;;
+      savannah.nongnu.org:*)
+        ncftpput savannah.nongnu.org /incoming/savannah/$destdir $files
 	;;
       *)
 	scp $files $dest
