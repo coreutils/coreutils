@@ -1,3 +1,9 @@
+2006-05-19  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* nanosleep.c [HAVE_SYS_SELECT_H]: Include <sys/select.h>.
+	Use the usual Autoconf way to include <time.h> and/or sys/time.h.
+	(my_usleep): Don't mishandle maximum value.
+
 2006-05-15  Jim Meyering  <jim@meyering.net>
 
 	Avoid the expense of an fstat, when possible.

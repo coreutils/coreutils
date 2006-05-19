@@ -1,4 +1,4 @@
-#serial 16
+#serial 17
 
 dnl From Jim Meyering.
 dnl Check for the nanosleep function.
@@ -16,6 +16,12 @@ AC_DEFUN([gl_FUNC_NANOSLEEP],
 [
  AC_LIBSOURCES([nanosleep.c])
 
+ dnl Persuade glibc and Solaris <time.h> to declare nanosleep.
+ AC_REQUIRE([gl_USE_SYSTEM_EXTENSIONS])
+
+ AC_REQUIRE([AC_HEADER_TIME])
+ AC_CHECK_HEADERS_ONCE(sys/time.h)
+
  nanosleep_save_libs=$LIBS
 
  # Solaris 2.5.1 needs -lposix4 to get the nanosleep function.
@@ -25,15 +31,10 @@ AC_DEFUN([gl_FUNC_NANOSLEEP],
 	         LIB_NANOSLEEP=$ac_cv_search_nanosleep])
  AC_SUBST([LIB_NANOSLEEP])
 
- AC_CACHE_CHECK([whether nanosleep works],
-  jm_cv_func_nanosleep_works,
+ AC_CACHE_CHECK([for nanosleep],
+  [gl_cv_func_nanosleep],
   [
-   dnl Persuade glibc and Solaris <time.h> to declare nanosleep.
-   AC_REQUIRE([gl_USE_SYSTEM_EXTENSIONS])
-
-   AC_REQUIRE([AC_HEADER_TIME])
-   AC_CHECK_HEADERS_ONCE(sys/time.h)
-   AC_TRY_RUN([
+   AC_LINK_IFELSE([AC_LANG_SOURCE([[
 #   if TIME_WITH_SYS_TIME
 #    include <sys/time.h>
 #    include <time.h>
@@ -51,15 +52,13 @@ AC_DEFUN([gl_FUNC_NANOSLEEP],
       struct timespec ts_sleep, ts_remaining;
       ts_sleep.tv_sec = 0;
       ts_sleep.tv_nsec = 1;
-      return nanosleep (&ts_sleep, &ts_remaining) != 0;
+      return nanosleep (&ts_sleep, &ts_remaining) < 0;
     }
-	  ],
-	 jm_cv_func_nanosleep_works=yes,
-	 jm_cv_func_nanosleep_works=no,
-	 dnl When crosscompiling, assume the worst.
-	 jm_cv_func_nanosleep_works=no)
+      ]])],
+     [gl_cv_func_nanosleep=yes],
+     [gl_cv_func_nanosleep=no])
   ])
-  if test $jm_cv_func_nanosleep_works = no; then
+  if test $gl_cv_func_nanosleep = no; then
     AC_LIBOBJ(nanosleep)
     AC_DEFINE(nanosleep, rpl_nanosleep,
       [Define to rpl_nanosleep if the replacement function should be used.])
@@ -73,4 +72,5 @@ AC_DEFUN([gl_FUNC_NANOSLEEP],
 AC_DEFUN([gl_PREREQ_NANOSLEEP],
 [
   AC_CHECK_FUNCS_ONCE(siginterrupt)
+  AC_CHECK_HEADERS_ONCE(sys/select.h)
 ])

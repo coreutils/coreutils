@@ -1,3 +1,12 @@
+2006-05-19  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* nanosleep.m4 (gl_FUNC_NANOSLEEP): Rename cache variables to use
+	gl_ rather than jm_.  Link, don't run, so that cross-compiles are
+	allowed.  Check that resulting type is arithmetic.  Move AC_REQUIRE
+	and AC_CHECK_HEADERS_ONCE outside of AC_CACHE_CHECK, since they're
+	not really conditional on the cache.
+	(gl_PREREQ_NANOSLEEP): Check for sys/select.h.
+
 2006-05-14  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* stdbool.m4 (AC_HEADER_STDBOOL): Fix overly-picky

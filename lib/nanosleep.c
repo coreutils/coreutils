@@ -1,5 +1,7 @@
 /* Provide a replacement for the POSIX nanosleep function.
-   Copyright (C) 1999, 2000, 2002, 2004, 2005 Free Software Foundation, Inc.
+
+   Copyright (C) 1999, 2000, 2002, 2004, 2005, 2006 Free Software
+   Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -27,8 +29,22 @@
 
 #include <stdbool.h>
 #include <stdio.h>
+#if HAVE_SYS_SELECT_H
+# include <sys/select.h>
+#endif
 #include <sys/types.h>
 #include <signal.h>
+
+#if TIME_WITH_SYS_TIME
+# include <sys/time.h>
+# include <time.h>
+#else
+# if HAVE_SYS_TIME_H
+#  include <sys/time.h>
+# else
+#  include <time.h>
+# endif
+#endif
 
 #include <errno.h>
 
@@ -57,7 +73,7 @@ sighandler (int sig)
   suspended = 1;
 }
 
-/* FIXME: comment */
+/* Suspend execution for at least *TS_DELAY seconds.  */
 
 static void
 my_usleep (const struct timespec *ts_delay)
@@ -67,13 +83,20 @@ my_usleep (const struct timespec *ts_delay)
   tv_delay.tv_usec = (ts_delay->tv_nsec + 999) / 1000;
   if (tv_delay.tv_usec == 1000000)
     {
-      tv_delay.tv_sec++;
-      tv_delay.tv_usec = 0;
+      time_t t1 = tv_delay.tv_sec + 1;
+      if (t1 < tv_delay.tv_sec)
+	tv_delay.tv_usec = 1000000 - 1; /* close enough */
+      else
+	{
+	  tv_delay.tv_sec = t1;
+	  tv_delay.tv_usec = 0;
+	}
     }
   select (0, NULL, NULL, NULL, &tv_delay);
 }
 
-/* FIXME: comment */
+/* Suspend execution for at least *REQUESTED_DELAY seconds.  The
+   *REMAINING_DELAY part isn't implemented yet.  */
 
 int
 rpl_nanosleep (const struct timespec *requested_delay,
