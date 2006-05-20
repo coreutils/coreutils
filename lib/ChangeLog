@@ -1,3 +1,9 @@
+2006-05-21  Jim Meyering  <jim@meyering.net>
+
+	* fts.c (fts_open): Fail with EINVAL if a caller violates this rule:
+	Either FTS_LOGICAL or FTS_PHYSICAL must be provided to the
+	fts_open() function.
+
 2006-05-19  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* nanosleep.c [HAVE_SYS_SELECT_H]: Include <sys/select.h>.
