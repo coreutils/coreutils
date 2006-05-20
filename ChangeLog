@@ -2,6 +2,8 @@
 
 	* Version 6.0-cvs.
 
+	* src/chmod.c (main): Use FTS_PHYSICAL here, too.
+
 	* src/du.c (main): Rename local, s/symlink_deref_bit/symlink_deref_bits/
 	and arrange for -D to set fts' FTS_PHYSICAL bit as well as
 	FTS_COMFOLLOW.  Spotted by Justin Pryzby.
