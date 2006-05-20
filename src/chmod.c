@@ -508,7 +508,7 @@ main (int argc, char **argv)
       root_dev_ino = NULL;
     }
 
-  ok = process_files (argv + optind, FTS_COMFOLLOW);
+  ok = process_files (argv + optind, FTS_COMFOLLOW | FTS_PHYSICAL);
 
   exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
