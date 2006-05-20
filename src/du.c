@@ -685,7 +685,7 @@ main (int argc, char **argv)
 
   /* Select one of the three FTS_ options that control if/when
      to follow a symlink.  */
-  int symlink_deref_bit = FTS_PHYSICAL;
+  int symlink_deref_bits = FTS_PHYSICAL;
 
   /* If true, display only a total for each argument. */
   bool opt_summarize_only = false;
@@ -807,15 +807,15 @@ main (int argc, char **argv)
 	  break;
 
 	case 'D': /* This will eventually be 'H' (-H), too.  */
-	  symlink_deref_bit = FTS_COMFOLLOW;
+	  symlink_deref_bits = FTS_COMFOLLOW | FTS_PHYSICAL;
 	  break;
 
 	case 'L': /* --dereference */
-	  symlink_deref_bit = FTS_LOGICAL;
+	  symlink_deref_bits = FTS_LOGICAL;
 	  break;
 
 	case 'P': /* --no-dereference */
-	  symlink_deref_bit = FTS_PHYSICAL;
+	  symlink_deref_bits = FTS_PHYSICAL;
 	  break;
 
 	case 'S':
@@ -1004,7 +1004,7 @@ main (int argc, char **argv)
     ok = (i == j);
   }
 
-  bit_flags |= symlink_deref_bit;
+  bit_flags |= symlink_deref_bits;
   ok &= du_files (files, bit_flags);
 
   /* This isn't really necessary, but it does ensure we
