@@ -291,6 +291,10 @@ fts_open (char * const *argv,
 		__set_errno (EINVAL);
 		return (NULL);
 	}
+	if ( ! (options & (FTS_LOGICAL | FTS_PHYSICAL))) {
+		__set_errno (EINVAL);
+		return (NULL);
+	}
 
 	/* Allocate/initialize the stream */
 	if ((sp = malloc(sizeof(FTS))) == NULL)
