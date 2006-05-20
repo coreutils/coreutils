@@ -2,8 +2,12 @@
 
 	* Version 6.0-cvs.
 
-	* gnupload: Restore ""--to... kludge to placate overzealous
-	`make distcheck' check.
+	* src/du.c (main): Rename local, s/symlink_deref_bit/symlink_deref_bits/
+	and arrange for -D to set fts' FTS_PHYSICAL bit as well as
+	FTS_COMFOLLOW.  Spotted by Justin Pryzby.
+
+	* gnupload: Merge changes from automake, retaining the ""--to...
+	kludge to placate overzealous `make distcheck' check.
 
 2006-05-19  Jim Meyering  <jim@meyering.net>
 
