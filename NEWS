@@ -28,6 +28,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   . no longer matches the null character, and \ must precede the + and
   ? operators.
 
+  date: a command like date -d '2006-04-23 21 days ago' would print
+  the wrong date in some time zones.  (see the test for an example)
+
   df now considers "none" and "proc" file systems to be dummies and
   therefore does not normally display them.  Also, inaccessible file
   systems (which can be caused by shadowed mount points or by chrooted
