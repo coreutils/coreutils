@@ -1,5 +1,10 @@
 2006-05-22  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* filemode.c (setst): Remove.
+	(strmode): Rewrite to avoid setst.  This makes the code shorter,
+	(arguably) clearer, and the generated code is a bit smaller on my
+	Debian GNU/Linux stable x86 host.
+
 	Import from gnulib.
 	* verify.h: Document the internals better.  Most of this change
 	was written by Bruno Haible.
