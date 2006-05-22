@@ -1,3 +1,9 @@
+2006-05-22  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Import from gnulib.
+	* verify.h: Document the internals better.  Most of this change
+	was written by Bruno Haible.
+
 2006-05-21  Jim Meyering  <jim@meyering.net>
 
 	* fts.c (fts_open): Fail with EINVAL if a caller violates this rule:
