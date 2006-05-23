@@ -1,7 +1,7 @@
 2006-05-23  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* filemode.c: Don't include <string.h>; this include was
-	inadvertantly put into the previous patch.  Problem noted
+	inadvertently put into the previous patch.  Problem noted
 	by Jim Meyering.
 
 2006-05-22  Paul Eggert  <eggert@cs.ucla.edu>
