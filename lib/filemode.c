@@ -38,8 +38,6 @@
 
 #if ! HAVE_DECL_STRMODE
 
-# include <string.h>
-
 /* Return a character indicating the type of file described by
    file mode BITS:
    '-' regular file
