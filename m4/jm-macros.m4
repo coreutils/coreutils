@@ -1,4 +1,4 @@
-#serial 97   -*- autoconf -*-
+#serial 98   -*- autoconf -*-
 
 dnl Misc type-related macros for coreutils.
 
@@ -23,7 +23,7 @@ dnl Misc type-related macros for coreutils.
 
 AC_DEFUN([gl_MACROS],
 [
-  AC_PREREQ(2.58)
+  AC_PREREQ(2.59d)
 
   GNU_PACKAGE="GNU $PACKAGE"
   AC_DEFINE_UNQUOTED(GNU_PACKAGE, "$GNU_PACKAGE",
