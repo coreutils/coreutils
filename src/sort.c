@@ -317,7 +317,6 @@ Other options:\n\
   -k, --key=POS1[,POS2]     start a key at POS1, end it at POS2 (origin 1)\n\
   -m, --merge               merge already sorted files; do not sort\n\
   -o, --output=FILE         write result to FILE instead of standard output\n\
-      --seed=STRING         seed random hash function with STRING\n\
   -s, --stable              stabilize sort by disabling last-resort comparison\n\
   -S, --buffer-size=SIZE    use SIZE for main memory buffer\n\
 "), stdout);
@@ -389,7 +388,7 @@ static struct option const long_options[] =
   {"temporary-directory", required_argument, NULL, 'T'},
   {"unique", no_argument, NULL, 'u'},
   {"zero-terminated", no_argument, NULL, 'z'},
-  {"seed", required_argument, NULL, SEED_OPTION},
+  {"seed", required_argument, NULL, SEED_OPTION}, /* This will go away soon.  */
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0},
