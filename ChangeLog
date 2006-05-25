@@ -1,6 +1,12 @@
-2006-05-20  Jim Meyering  <jim@meyering.net>
+2006-05-25  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 6.0-cvs.
+
+	* NEWS: Remove mention of --seed.  We'll replace it with something
+	better, and don't want to indicate that it is supported.
+	* src/sort.c (usage): Likewise.
+
+2006-05-20  Jim Meyering  <jim@meyering.net>
 
 	* src/chmod.c (main): Use FTS_PHYSICAL here, too.
 

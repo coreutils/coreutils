@@ -126,8 +126,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   for every file, but provides almost the same level of protection
   against mistakes.
 
-  sort now accepts the --random-sort (-R) option and `R' ordering option,
-  as well as the --seed=STRING option.
+  sort now accepts the --random-sort (-R) option and `R' ordering option.
 
 ** Bug fixes
 

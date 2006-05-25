@@ -1,3 +1,8 @@
+2006-05-25  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (sort invocation): Remove mention of --seed, since
+	it's going away.
+
 2006-05-04  Eric Blake  <ebb9@byu.net>
 
 	* coreutils.texi (Examples of date): Give example of @seconds.

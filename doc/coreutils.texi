@@ -3485,8 +3485,7 @@ appear earlier in the output instead of later.
 @cindex random sort
 Sort by hashing the input keys and then sorting the hash values.  This
 is much like a random shuffle of the inputs, except that keys with the
-same value sort together.  Normally the hash function is chosen at
-random, but this can be overridden with the @option{--seed} option.
+same value sort together.  The hash function is chosen at random.
 
 @end table
 
@@ -3623,17 +3622,6 @@ This option can be useful in conjunction with @samp{perl -0} or
 @samp{find -print0} and @samp{xargs -0} which do the same in order to
 reliably handle arbitrary file names (even those containing blanks
 or other special characters).
-
-@item --seed=@var{string}
-@opindex --seed
-@cindex seed for random hash
-Use data from @var{string} to choose the hash function used by the
-@option{--random-sort} option.  This option can be used to reproduce
-results of earlier invocations of @command{sort} with
-@option{--random-sort}.  However, results are not necessarily
-reproducible across different @command{sort} implementations (e.g.,
-@command{sort} on little-endian versus big-endian architectures, or
-from one version of @command{sort} to the next).
 
 @end table
 
