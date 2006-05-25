@@ -1,3 +1,12 @@
+2006-05-25  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* tempname.c (small_open, large_open): New macros.
+	(__open, __open64) [!_LIBC]: Remove.
+	(__gen_tempname): Use small_open and large_open instead of __open
+	and __open64.  This fixes a portability bug on HP-UX 11.11i
+	reported by Simon Wing-Tang in
+	<http://lists.gnu.org/archive/html/bug-coreutils/2006-05/msg00114.html>.
+
 2006-05-23  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* filemode.c: Don't include <string.h>; this include was
