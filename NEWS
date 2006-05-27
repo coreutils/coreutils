@@ -105,7 +105,7 @@ GNU coreutils NEWS                                    -*- outline -*-
 ** New features
 
   chgrp now supports --preserve-root, --no-preserve-root (default),
-  just as chmod, chown, and rm do.
+  as it was documented to do, and just as chmod, chown, and rm do.
 
   New dd iflag= and oflag= flags:
 
