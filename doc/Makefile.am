@@ -11,7 +11,7 @@ EXTRA_DIST = perm.texi getdate.texi constants.texi doclicense.texi
 # Otherwise, it would also generate files with names like <package>.info-[123],
 # and those names all map to one 14-byte name (<package>.info-) on some crufty
 # old systems.
-MAKEINFO = makeinfo --no-split
+AM_MAKEINFOFLAGS = --no-split
 
 constants.texi: $(top_srcdir)/src/tail.c
 	LC_ALL=C \
