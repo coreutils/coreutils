@@ -1,6 +1,8 @@
 2006-05-27  Ralf Wildenhues  <Ralf.Wildenhues@gmx.de>
 
-	* Makefile.am: Use `$(EGREP)' instead of `grep -E'.
+	* Makefile.am (check-texinfo): Use `$(EGREP)' instead of `grep -E'.
+	(check-texinfo): Use literal `{' only in brackets, i.e., [{] or [}],
+	to avoid triggering an error from Solaris 2.6's grep.
 
 2006-05-25  Paul Eggert  <eggert@cs.ucla.edu>
 
