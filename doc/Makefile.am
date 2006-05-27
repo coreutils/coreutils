@@ -40,14 +40,14 @@ check-texinfo:
 	$(EGREP) '$(_W)NUL$(W_)' $(srcdir)/*.texi && fail=1; \
 	grep '\$$@"' $(srcdir)/*.texi && fail=1; \
 	grep -n '[^[:punct:]]@footnote' $(srcdir)/*.texi && fail=1; \
-	grep -n filename $(srcdir)/*.texi|$(EGREP) -v 'setfilename|{filename}' \
+	grep -n filename $(srcdir)/*.texi|$(EGREP) -v 'setfilename|[{]filename[}]' \
 	  && fail=1; \
 	$(PERL) -e 1 2> /dev/null && { $(PERL) -ne \
 	  '/\bPOSIX\b/ && !/\@acronym{POSIX}/ && !/^\* / || /{posix}/ and print,exit 1' \
 	  $(srcdir)/*.texi 2> /dev/null || fail=1; }; \
 	$(EGREP) -iw 'builtins?' $(srcdir)/*.texi && fail=1; \
 	$(EGREP) -iw 'path(name)?s?' $(srcdir)/*.texi \
-	  | $(EGREP) -v '@vindex PATH$$|@env{PATH}' && fail=1; \
+	  | $(EGREP) -v '@vindex PATH$$|@env[{]PATH[}]' && fail=1; \
 	exit $$fail
 
 check: check-texinfo
