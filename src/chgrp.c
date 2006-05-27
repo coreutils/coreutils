@@ -30,6 +30,7 @@
 #include "group-member.h"
 #include "lchown.h"
 #include "quote.h"
+#include "root-dev-ino.h"
 #include "xstrtol.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -53,6 +54,8 @@ static char *reference_file;
 enum
 {
   DEREFERENCE_OPTION = CHAR_MAX + 1,
+  NO_PRESERVE_ROOT,
+  PRESERVE_ROOT,
   REFERENCE_FILE_OPTION
 };
 
@@ -62,6 +65,8 @@ static struct option const long_options[] =
   {"changes", no_argument, NULL, 'c'},
   {"dereference", no_argument, NULL, DEREFERENCE_OPTION},
   {"no-dereference", no_argument, NULL, 'h'},
+  {"no-preserve-root", no_argument, NULL, NO_PRESERVE_ROOT},
+  {"preserve-root", no_argument, NULL, PRESERVE_ROOT},
   {"quiet", no_argument, NULL, 'f'},
   {"silent", no_argument, NULL, 'f'},
   {"reference", required_argument, NULL, REFERENCE_FILE_OPTION},
@@ -164,6 +169,7 @@ Examples:\n\
 int
 main (int argc, char **argv)
 {
+  bool preserve_root = false;
   gid_t gid;
 
   /* Bit flags that control how fts works.  */
@@ -211,6 +217,14 @@ main (int argc, char **argv)
 	case DEREFERENCE_OPTION: /* --dereference: affect the referent
 				    of each symlink */
 	  dereference = 1;
+	  break;
+
+	case NO_PRESERVE_ROOT:
+	  preserve_root = false;
+	  break;
+
+	case PRESERVE_ROOT:
+	  preserve_root = true;
 	  break;
 
 	case REFERENCE_FILE_OPTION:
@@ -286,6 +300,15 @@ main (int argc, char **argv)
       char *group_name = argv[optind++];
       chopt.group_name = (*group_name ? group_name : NULL);
       gid = parse_group (group_name);
+    }
+
+  if (chopt.recurse & preserve_root)
+    {
+      static struct dev_ino dev_ino_buf;
+      chopt.root_dev_ino = get_root_dev_ino (&dev_ino_buf);
+      if (chopt.root_dev_ino == NULL)
+	error (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
+	       quote ("/"));
     }
 
   ok = chown_files (argv + optind, bit_flags,
