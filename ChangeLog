@@ -6,6 +6,7 @@
 	--no-preserve-root.  Somehow this program was skipped when those
 	options were added to chown, chmod, and rm.  Reported by
 	vaqflabuopac@spammotel.com in <http://bugs.debian.org/365656>.
+	* NEWS: Mention this.
 
 2006-05-25  Paul Eggert  <eggert@cs.ucla.edu>
 
