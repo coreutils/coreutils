@@ -1,6 +1,13 @@
-2006-05-25  Paul Eggert  <eggert@cs.ucla.edu>
+2006-05-27  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* src/chgrp.c: Support new options: --preserve-root and --no-preserve-root.
+	Somehow this program was skipped when those options were added to chown,
+	chmod, and rm.  Reported by vaqflabuopac@spammotel.com in
+	<http://bugs.debian.org/365656>.
+
+2006-05-25  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: Remove mention of --seed.  We'll replace it with something
 	better, and don't want to indicate that it is supported.
