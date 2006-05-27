@@ -1,3 +1,7 @@
+2006-05-27  Ralf Wildenhues  <Ralf.Wildenhues@gmx.de>
+
+	* Makefile.am: Use `$(EGREP)' instead of `grep -E'.
+
 2006-05-25  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (sort invocation): Remove mention of --seed, since
