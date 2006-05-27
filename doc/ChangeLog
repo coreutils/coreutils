@@ -1,5 +1,8 @@
 2006-05-27  Ralf Wildenhues  <Ralf.Wildenhues@gmx.de>
 
+	* Makefile.am: Use `AM_MAKEINFOFLAGS' rather than
+	overwriting `MAKEINFO', so that `missing' can do its job.
+
 	* Makefile.am (check-texinfo): Use `$(EGREP)' instead of `grep -E'.
 	(check-texinfo): Use literal `{' only in brackets, i.e., [{] or [}],
 	to avoid triggering an error from Solaris 2.6's grep.
