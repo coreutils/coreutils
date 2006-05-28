@@ -5,6 +5,7 @@ if test "$VERBOSE" = yes; then
   cp --version
 fi
 
+. $srcdir/../lang-default
 PRIV_CHECK_ARG=require-non-root . $srcdir/../priv-check
 
 pwd=`pwd`

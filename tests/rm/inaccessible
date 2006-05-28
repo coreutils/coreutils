@@ -8,6 +8,7 @@ if test "$VERBOSE" = yes; then
 fi
 
 PRIV_CHECK_ARG=require-non-root . $srcdir/../priv-check
+. $srcdir/../lang-default
 
 pwd=`pwd`
 t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
