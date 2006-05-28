@@ -1,6 +1,12 @@
-2006-05-27  Jim Meyering  <jim@meyering.net>
+2006-05-28  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* tests/rm/inaccessible: AIX 4.3.3 gives a different diagnostic.
+	Recognize it, too.  Reported by Ralf Wildenhues, in
+	http://lists.gnu.org/archive/html/bug-coreutils/2006-05/msg00192.html
+
+2006-05-27  Jim Meyering  <jim@meyering.net>
 
 	* src/chgrp.c: Support new options: --preserve-root and
 	--no-preserve-root.  Somehow this program was skipped when those
