@@ -1,6 +1,11 @@
-2006-05-28  Jim Meyering  <jim@meyering.net>
+2006-05-28  Ralf Wildenhues  <Ralf.Wildenhues@gmx.de>
 
 	* Version 6.0-cvs.
+
+	* tests/cp/fail-perm: source lang-default.
+	* tests/rm/inaccessible: Likewise.
+
+2006-05-28  Jim Meyering  <jim@meyering.net>
 
 	* tests/rm/inaccessible: AIX 4.3.3 gives a different diagnostic.
 	Recognize it, too.  Reported by Ralf Wildenhues, in
