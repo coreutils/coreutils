@@ -37,6 +37,12 @@ cat <<\EOF > exp || fail=1
 rm: cannot remove `rel': Permission denied
 EOF
 
+# AIX 4.3.3 fails with a different diagnostic.
+# Transform their diagnostic
+#   ...: The file access permissions do not allow the specified action.
+# to the expected one:
+sed 's/: The file access permissions.*/: Permission denied/'<out>o1;mv o1 out
+
 cmp out exp || fail=1
 test $fail = 1 && diff out exp 2> /dev/null
 
