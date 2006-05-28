@@ -1192,6 +1192,8 @@
 	* tests/cp/fail-perm: Accommodate HPUX.  It appears to fail
 	with EACCES rather than EPERM.  Reported by Peter O'Gorman here:
 	http://article.gmane.org/gmane.comp.gnu.core-utils.bugs/5766
+	This also affects AIX 4.3.3, according to Ralf Wildenhues, in
+	http://lists.gnu.org/archive/html/bug-coreutils/2006-05/msg00192.html
 
 2005-11-14  Jim Meyering  <jim@meyering.net>
 
