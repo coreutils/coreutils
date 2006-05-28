@@ -1,6 +1,6 @@
-# c-strtod.m4 serial 6
+# c-strtod.m4 serial 7
 
-# Copyright (C) 2004, 2005 Free Software Foundation, Inc.
+# Copyright (C) 2004, 2005, 2006 Free Software Foundation, Inc.
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
 # with or without modifications, as long as this notice is preserved.
@@ -11,7 +11,7 @@ AC_DEFUN([gl_C99_STRTOLD],
 [
   AC_CACHE_CHECK([whether strtold conforms to C99],
     [gl_cv_func_c99_strtold],
-    [AC_COMPILE_IFELSE(
+    [AC_LINK_IFELSE(
        [AC_LANG_PROGRAM(
           [[/* On HP-UX before 11.23, strtold returns a struct instead of
 		long double.  Reject implementations like that, by requiring
