@@ -4,7 +4,7 @@
 #   2000, 2001, 2002, 2003, 2004, 2005, 2006 Free Software Foundation,
 #   Inc.
 
-timestamp='2006-04-26'
+timestamp='2006-05-13'
 
 # This file is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by
@@ -989,7 +989,7 @@ EOF
 	LIBC=gnulibc1
 	# endif
 	#else
-	#if defined(__INTEL_COMPILER) || defined(__PGI) || defined(__sun)
+	#if defined(__INTEL_COMPILER) || defined(__PGI) || defined(__SUNPRO_C) || defined(__SUNPRO_CC)
 	LIBC=gnu
 	#else
 	LIBC=gnuaout

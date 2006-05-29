@@ -4,7 +4,7 @@
 #   2000, 2001, 2002, 2003, 2004, 2005, 2006 Free Software Foundation,
 #   Inc.
 
-timestamp='2006-03-07'
+timestamp='2006-05-13'
 
 # This file is (in principle) common to ALL GNU software.
 # The presence of a machine in this file suggests that SOME GNU software
@@ -249,7 +249,8 @@ case $basic_machine in
 	| h8300 | h8500 | hppa | hppa1.[01] | hppa2.0 | hppa2.0[nw] | hppa64 \
 	| i370 | i860 | i960 | ia64 \
 	| ip2k | iq2000 \
-	| m32r | m32rle | m68000 | m68k | m88k | maxq | mb | microblaze | mcore \
+	| m32c | m32r | m32rle | m68000 | m68k | m88k \
+	| maxq | mb | microblaze | mcore \
 	| mips | mipsbe | mipseb | mipsel | mipsle \
 	| mips16 \
 	| mips64 | mips64el \
@@ -279,15 +280,12 @@ case $basic_machine in
 	| sh64 | sh64le \
 	| sparc | sparc64 | sparc64b | sparc64v | sparc86x | sparclet | sparclite \
 	| sparcv8 | sparcv9 | sparcv9b | sparcv9v \
-	| strongarm \
+	| spu | strongarm \
 	| tahoe | thumb | tic4x | tic80 | tron \
 	| v850 | v850e \
 	| we32k \
 	| x86 | xscale | xscalee[bl] | xstormy16 | xtensa \
 	| z8k)
-		basic_machine=$basic_machine-unknown
-		;;
-	m32c)
 		basic_machine=$basic_machine-unknown
 		;;
 	m6811 | m68hc11 | m6812 | m68hc12)
@@ -330,7 +328,7 @@ case $basic_machine in
 	| hppa-* | hppa1.[01]-* | hppa2.0-* | hppa2.0[nw]-* | hppa64-* \
 	| i*86-* | i860-* | i960-* | ia64-* \
 	| ip2k-* | iq2000-* \
-	| m32r-* | m32rle-* \
+	| m32c-* | m32r-* | m32rle-* \
 	| m68000-* | m680[012346]0-* | m68360-* | m683?2-* | m68k-* \
 	| m88110-* | m88k-* | maxq-* | mcore-* \
 	| mips-* | mipsbe-* | mipseb-* | mipsel-* | mipsle-* \
@@ -373,8 +371,6 @@ case $basic_machine in
 	| xstormy16-* | xtensa-* \
 	| ymp-* \
 	| z8k-*)
-		;;
-	m32c-*)
 		;;
 	# Recognize the various machine names and aliases which stand
 	# for a CPU type and a company and sometimes even an OS.
@@ -1370,6 +1366,9 @@ else
 # system, and we'll never get to this point.
 
 case $basic_machine in
+        spu-*)
+		os=-elf
+		;;
 	*-acorn)
 		os=-riscix1.2
 		;;
@@ -1379,9 +1378,9 @@ case $basic_machine in
 	arm*-semi)
 		os=-aout
 		;;
-    c4x-* | tic4x-*)
-        os=-coff
-        ;;
+        c4x-* | tic4x-*)
+        	os=-coff
+		;;
 	# This must come before the *-dec entry.
 	pdp10-*)
 		os=-tops20

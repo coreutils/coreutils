@@ -1,3 +1,8 @@
+2006-05-29  Jim Meyering  <jim@meyering.net>
+
+	* config.guess, config.rpath, config.sub, install-sh:
+	* mkinstalldirs, texinfo.tex: Update from gnulib.
+
 2006-02-14  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* install-sh: Update from gnulib.

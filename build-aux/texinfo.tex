@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2006-05-07.15}
+\def\texinfoversion{2006-05-28.17}
 %
 % Copyright (C) 1985, 1986, 1988, 1990, 1991, 1992, 1993, 1994, 1995,
 % 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006 Free
@@ -1084,15 +1084,24 @@ where each line of input produces a line of output.}
 \def\minus{$-$}
 
 % @dots{} outputs an ellipsis using the current font.
-% We do .5em per period so that it has the same spacing in a typewriter
-% font as three actual period characters.
+% We do .5em per period so that it has the same spacing in the cm
+% typewriter fonts as three actual period characters; on the other hand,
+% in other typewriter fonts three periods are wider than 1.5em.  So do
+% whichever is larger.
 %
 \def\dots{%
   \leavevmode
-  \hbox to 1.5em{%
-    \hskip 0pt plus 0.25fil
-    .\hfil.\hfil.%
-    \hskip 0pt plus 0.5fil
+  \setbox0=\hbox{...}% get width of three periods
+  \ifdim\wd0 > 1.5em
+    \dimen0 = \wd0
+  \else
+    \dimen0 = 1.5em
+  \fi
+  \hbox to \dimen0{%
+    \hskip 0pt plus.25fil
+    .\hskip 0pt plus1fil
+    .\hskip 0pt plus1fil
+    .\hskip 0pt plus.5fil
   }%
 }
 
@@ -3391,11 +3400,38 @@ where each line of input produces a line of output.}
   \escapechar = `\\     % use backslash in output files.
   \def\@{@}% change to @@ when we switch to @ as escape char in index files.
   \def\ {\realbackslash\space }%
+  %
   % Need these in case \tex is in effect and \{ is a \delimiter again.
   % But can't use \lbracecmd and \rbracecmd because texindex assumes
   % braces and backslashes are used only as delimiters.
   \let\{ = \mylbrace
   \let\} = \myrbrace
+  %
+  % I don't entirely understand this, but when an index entry is
+  % generated from a macro call, the \endinput which \scanmacro inserts
+  % causes processing to be prematurely terminated.  This is,
+  % apparently, because \indexsorttmp is fully expanded, and \endinput
+  % is an expandable command.  The redefinition below makes \endinput
+  % disappear altogether for that purpose -- although logging shows that
+  % processing continues to some further point.  On the other hand, it
+  % seems \endinput does not hurt in the printed index arg, since that
+  % is still getting written without apparent harm.
+  % 
+  % Sample source (mac-idx3.tex, reported by Graham Percival to
+  % help-texinfo, 22may06):
+  % @macro funindex {WORD}
+  % @findex xyz
+  % @end macro
+  % ...
+  % @funindex commtest
+  % 
+  % The above is not enough to reproduce the bug, but it gives the flavor.
+  % 
+  % Sample whatsit resulting:
+  % .@write3{\entry{xyz}{@folio }{@code {xyz@endinput }}}
+  % 
+  % So:
+  \let\endinput = \empty
   %
   % Do the redefinitions.
   \commondummies
@@ -5827,7 +5863,6 @@ where each line of input produces a line of output.}
     \spaceisspace
     %
     % Append \endinput to make sure that TeX does not see the ending newline.
-    %
     % I've verified that it is necessary both for e-TeX and for ordinary TeX
     %							--kasal, 29nov03
     \scantokens{#1\endinput}%
