@@ -1,6 +1,11 @@
-2006-05-28  Ralf Wildenhues  <Ralf.Wildenhues@gmx.de>
+2006-05-30  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	* src/ls.c (usage): Add `v' to the list of sorting-related options.
+	From Justin Pryzby.
+
+2006-05-28  Ralf Wildenhues  <Ralf.Wildenhues@gmx.de>
 
 	* tests/cp/fail-perm: source lang-default.
 	* tests/rm/inaccessible: Likewise.
