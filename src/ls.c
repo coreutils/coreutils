@@ -4197,7 +4197,7 @@ usage (int status)
       printf (_("Usage: %s [OPTION]... [FILE]...\n"), program_name);
       fputs (_("\
 List information about the FILEs (the current directory by default).\n\
-Sort entries alphabetically if none of -cftuSUX nor --sort.\n\
+Sort entries alphabetically if none of -cftuvSUX nor --sort.\n\
 \n\
 "), stdout);
       fputs (_("\
