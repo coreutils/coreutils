@@ -1,6 +1,16 @@
-2006-05-30  Jim Meyering  <jim@meyering.net>
+2006-06-01  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 6.0-cvs.
+
+	Fix some porting problems in the test cases reported by
+	Ralf Wildenhues for HP-UX 11.23 in:
+	http://lists.gnu.org/archive/html/bug-coreutils/2006-05/msg00238.html
+	* tests/help-version: Don't assume that \< \> works in sed.
+	* tests/misc/close-stdout: Don't assume that >&- works.
+	Add a /dev/full test.
+	* tests/touch/no-create-missing: Don't assume that >&- works.
+
+2006-05-30  Jim Meyering  <jim@meyering.net>
 
 	* src/ls.c (usage): Add `v' to the list of sorting-related options.
 	From Justin Pryzby.
