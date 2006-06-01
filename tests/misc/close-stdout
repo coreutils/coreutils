@@ -42,9 +42,19 @@ sleep 0 >&- || fail=1
 $pwd/../../src/true >&- || fail=1
 $pwd/../../src/printf '' >&- || fail=1
 
-# Ensure these fail, because stdout is closed and they *do*
-# generate output.
-$pwd/../../src/printf 'foo' >&- 2>/dev/null && fail=1
-cp --verbose a b >&- 2>/dev/null && fail=1
+# If >&- works, ensure these fail, because stdout is closed and they
+# *do* generate output.  >&- apparently does not work in HP-UX 11.23.
+# This test is ineffective unless /dev/stdout also works.
+if $pwd/../../src/test -w /dev/stdout >/dev/null &&
+   $pwd/../../src/test ! -w /dev/stdout >&-; then
+  $pwd/../../src/printf 'foo' >&- 2>/dev/null && fail=1
+  cp --verbose a b >&- 2>/dev/null && fail=1
+fi
+
+# Likewise for /dev/full, if /dev/full works.
+if test -w /dev/full && test -c /dev/full; then
+  $pwd/../../src/printf 'foo' >/dev/full 2>/dev/null && fail=1
+  cp --verbose a b >/dev/full 2>/dev/null && fail=1
+fi
 
 (exit $fail); exit $fail
