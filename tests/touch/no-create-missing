@@ -25,8 +25,15 @@ fail=0
 touch -c no-file > /dev/null 2>&1 || fail=1
 touch -cm no-file > /dev/null 2>&1 || fail=1
 touch -ca no-file > /dev/null 2>&1 || fail=1
-touch -c - >&- 2> /dev/null || fail=1
-touch -cm - >&- 2> /dev/null || fail=1
-touch -ca - >&- 2> /dev/null || fail=1
+
+# If >&- works, test "touch -c -" etc.
+# >&- apparently does not work in HP-UX 11.23.
+# This test is ineffective unless /dev/stdout also works.
+if $pwd/../../src/test -w /dev/stdout >/dev/null &&
+   $pwd/../../src/test ! -w /dev/stdout >&-; then
+  touch -c - >&- 2> /dev/null || fail=1
+  touch -cm - >&- 2> /dev/null || fail=1
+  touch -ca - >&- 2> /dev/null || fail=1
+fi
 
 (exit $fail); exit $fail
