@@ -42,7 +42,7 @@ scripts to fail, so it is being removed from the list of
 programs checked by this test.
 ************************************************
 EOF
-      all_programs=`echo $all_programs|sed 's/\<groups\> *//'`
+      all_programs=`echo $all_programs | tr ' ' '\n' | grep -v '^groups$'`
     fi
   ;;
 esac
