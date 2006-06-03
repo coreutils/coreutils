@@ -22,6 +22,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   basename and dirname now treat // as different from / on platforms
   where the two are distinct.
 
+  `cp --link --no-dereference' now works also on systems where the
+  link system call cannot create a hard link to a symbolic link.
+  This change has no effect on systems with a Linux-based kernel.
+
   csplit and nl now use POSIX syntax for regular expressions, not
   Emacs syntax.  As a result, character classes like [[:print:]] and
   interval expressions like A\{1,9\} now have their usual meaning,
