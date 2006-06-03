@@ -1594,7 +1594,22 @@ copy_internal (char const *src_name, char const *dst_name,
 	}
     }
 #endif
-  else if (x->hard_link)
+
+  else if (x->hard_link
+#ifdef LINK_FOLLOWS_SYMLINKS
+  /* A POSIX-conforming link syscall dereferences a symlink, yet cp,
+     invoked with `--link --no-dereference', should not.  Thus, with
+     a POSIX-conforming link system call, we can't use link() here,
+     since that would create a hard link to the referent (effectively
+     dereferencing the symlink), rather than to the symlink itself.
+     We can approximate the desired behavior by skipping this hard-link
+     creating block and instead copying the symlink, via the `S_ISLNK'-
+     copying code below.
+     When link operates on the symlinks themselves, we use this block
+     and just call link().  */
+	   && !(S_ISLNK (src_mode) && x->dereference == DEREF_NEVER)
+#endif
+	   )
     {
       preserve_metadata = false;
       if (link (src_name, dst_name))
