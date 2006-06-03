@@ -1,6 +1,17 @@
-2006-06-01  Paul Eggert  <eggert@cs.ucla.edu>
+2006-06-03  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	Make `cp --link --no-dereference' work also on systems where the
+	link system call cannot create a hard link to a symbolic link.
+	* src/copy.c (copy_internal) [LINK_FOLLOWS_SYMLINKS]: Don't use
+	the link syscall on a symlink when it would do the wrong thing.
+	Based on the patch by Aurelien Jarno: <http://bugs.debian.org/329451>
+	* tests/cp/link-no-deref: New file/test for the above.
+	* tests/cp/Makefile.am (TESTS): Add link-no-deref.
+	* NEWS: Mention the change (doesn't affect Linux).
+
+2006-06-01  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Fix some porting problems in the test cases reported by
 	Ralf Wildenhues for HP-UX 11.23 in:
