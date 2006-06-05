@@ -26,7 +26,7 @@ my @Tests =
 my $save_temps = $ENV{DEBUG};
 my $verbose = $ENV{VERBOSE};
 
-my $prog = $ENV{PROG} || die "$0: \$PROG not specified in environment\n";
+my $prog = 'sort';
 my $fail = run_tests ($program_name, $prog, \@Tests, $save_temps, $verbose);
 exit $fail;
 EOF
