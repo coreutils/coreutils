@@ -1,6 +1,28 @@
-2006-06-03  Jim Meyering  <jim@meyering.net>
+2006-06-05  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 6.0-cvs.
+
+	Fix problems when building with Solaris/SVR4/etc. make, which uses a
+	different and somewhat bogus implementation of VPATH.  In the
+	directory tests/misc, rename tests whose names might appear in the
+	Automake-generated rules.  For example, we can't use a test named
+	'test', since Automake generates a rule that contains the text
+	"if test -f ./$$tst; ...", and this might expand to something like
+	"if ../../../coreutils-6.0/tests/misc/test -f ./$$test; ...",
+	which executes the 'test' script rather than the 'test' command.
+	* tests/misc/false-status: Renamed from tests/misc/false.
+	* tests/misc/pwd-long: Renamed from tests/misc/pwd.
+	* tests/misc/sort-merge: Renamed from tests/misc/sort.
+	($prog): Set to 'sort' rather than to $PROG.
+	* tests/misc/test-diag: Renamed from tests/misc/test.
+	* tests/misc/Makefile.am (PROG): Take the basename of $$tst,
+	in case Solaris make has prepended the directory.
+	(TESTS): Adjust to above renamings.
+	* tests/misc/expand: Don't assign to PROG; no longer needed
+	now that Makefile.am sets PROG to the basename.
+	* tests/misc/fold: Likewise.
+
+2006-06-03  Jim Meyering  <jim@meyering.net>
 
 	Make `cp --link --no-dereference' work also on systems where the
 	link system call cannot create a hard link to a symbolic link.
