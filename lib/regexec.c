@@ -1,5 +1,5 @@
 /* Extended regular expression matching and search library.
-   Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Isamu Hasegawa <isamu@yamato.ibm.com>.
 
@@ -3615,7 +3615,7 @@ group_nodes_into_DFAstates (const re_dfa_t *dfa, const re_dfastate_t *state,
       else if (type == OP_UTF8_PERIOD)
         {
 	  if (ASCII_CHARS % BITSET_WORD_BITS == 0)
-	    memset (accepts, -1, ASCII_CHARS);
+	    memset (accepts, -1, ASCII_CHARS / CHAR_BIT);
 	  else
 	    bitset_merge (accepts, utf8_sb_map);
 	  if (!(dfa->syntax & RE_DOT_NEWLINE))

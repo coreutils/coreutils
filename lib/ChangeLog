@@ -1,3 +1,8 @@
+2006-06-04  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* regexec.c (group_nodes_into_DFAstates): Fix a buffer overrun
+	reported by Andreas Schwab.
+
 2006-05-25  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* tempname.c (small_open, large_open): New macros.
