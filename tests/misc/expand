@@ -18,8 +18,6 @@ use strict;
 
 (my $program_name = $0) =~ s|.*/||;
 
-$ENV{PROG} = 'expand';
-
 # Turn off localization of executable's ouput.
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
 
