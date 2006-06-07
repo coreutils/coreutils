@@ -649,9 +649,9 @@ eval4 (bool evaluate)
 		error (EXPR_INVALID, 0, _("division by zero"));
 	      if (l->u.i < - INTMAX_MAX && r->u.i == -1)
 		{
-		  /* Some x86-style hosts erroneously raise an
-		     exception for INT_MIN / -1 and INT_MIN % -1, so
-		     handle these problematic cases specially.  */
+		  /* Some x86-style hosts raise an exception for
+		     INT_MIN / -1 and INT_MIN % -1, so handle these
+		     problematic cases specially.  */
 		  if (fxn == divide)
 		    integer_overflow ('/');
 		  val = 0;
