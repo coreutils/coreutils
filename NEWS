@@ -44,7 +44,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   (the anchor is ignored), or about regular expressions like A** (the
   second "*" is ignored).  expr now exits with status 2 (not 3) for
   errors it detects in the expression's values; exit status 3 is now
-  used only for internal errors like arithmetic overflow.
+  used only for internal errors (such as integer overflow, which expr
+  now checks for).
 
   ln now uses different (and we hope clearer) diagnostics when it fails.
   ln -v now acts more like FreeBSD, so it generates output only when
