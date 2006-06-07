@@ -175,6 +175,13 @@ syntax_error (void)
   error (EXPR_INVALID, 0, _("syntax error"));
 }
 
+/* Report an integer overflow for operation OP and exit.  */
+static void
+integer_overflow (char op)
+{
+  error (EXPR_FAILURE, ERANGE, "%c", op);
+}
+
 int
 main (int argc, char **argv)
 {
@@ -631,12 +638,26 @@ eval4 (bool evaluate)
 	  if (!toarith (l) || !toarith (r))
 	    error (EXPR_INVALID, 0, _("non-numeric argument"));
 	  if (fxn == multiply)
-	    val = l->u.i * r->u.i;
+	    {
+	      val = l->u.i * r->u.i;
+	      if (! (l->u.i == 0 || val / l->u.i == r->u.i))
+		integer_overflow ('*');
+	    }
 	  else
 	    {
 	      if (r->u.i == 0)
 		error (EXPR_INVALID, 0, _("division by zero"));
-	      val = fxn == divide ? l->u.i / r->u.i : l->u.i % r->u.i;
+	      if (l->u.i < - INTMAX_MAX && r->u.i == -1)
+		{
+		  /* Some x86-style hosts erroneously raise an
+		     exception for INT_MIN / -1 and INT_MIN % -1, so
+		     handle these problematic cases specially.  */
+		  if (fxn == divide)
+		    integer_overflow ('/');
+		  val = 0;
+		}
+	      else
+		val = fxn == divide ? l->u.i / r->u.i : l->u.i % r->u.i;
 	    }
 	}
       freev (l);
@@ -672,7 +693,18 @@ eval3 (bool evaluate)
 	{
 	  if (!toarith (l) || !toarith (r))
 	    error (EXPR_INVALID, 0, _("non-numeric argument"));
-	  val = fxn == plus ? l->u.i + r->u.i : l->u.i - r->u.i;
+	  if (fxn == plus)
+	    {
+	      val = l->u.i + r->u.i;
+	      if ((val < l->u.i) != (r->u.i < 0))
+		integer_overflow ('+');
+	    }
+	  else
+	    {
+	      val = l->u.i - r->u.i;
+	      if ((l->u.i < val) != (r->u.i < 0))
+		integer_overflow ('-');
+	    }
 	}
       freev (l);
       freev (r);
