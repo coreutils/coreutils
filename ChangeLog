@@ -1,6 +1,14 @@
-2006-06-05  Paul Eggert  <eggert@cs.ucla.edu>
+2006-06-06  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 6.0-cvs.
+
+	* NEWS: The 'expr' command now detects and reports integer overflow.
+	(It would be better to use extended precision instead, but that
+	would be more work.)
+	* src/expr.c (integer_overflow): New function.
+	(eval4, eval3): Check for integer overflow.
+
+2006-06-05  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Fix problems when building with Solaris/SVR4/etc. make, which uses a
 	different and somewhat bogus implementation of VPATH.  In the
