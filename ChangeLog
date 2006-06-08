@@ -1,6 +1,11 @@
-2006-06-06  Paul Eggert  <eggert@cs.ucla.edu>
+2006-06-07  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Version 6.0-cvs.
+
+	* src/expr.c (eval4): Detect overflow properly when multiplying
+	INTMAX_MIN * -1.
+
+2006-06-06  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: The 'expr' command now detects and reports integer overflow.
 	(It would be better to use extended precision instead, but that

@@ -640,7 +640,9 @@ eval4 (bool evaluate)
 	  if (fxn == multiply)
 	    {
 	      val = l->u.i * r->u.i;
-	      if (! (l->u.i == 0 || val / l->u.i == r->u.i))
+	      if (! (l->u.i == 0 || r->u.i == 0
+		     || ((val < 0) == ((l->u.i < 0) ^ (r->u.i < 0))
+			 && val / l->u.i == r->u.i)))
 		integer_overflow ('*');
 	    }
 	  else
