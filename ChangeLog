@@ -1,6 +1,22 @@
-2006-06-07  Paul Eggert  <eggert@cs.ucla.edu>
+2006-06-08  Jim Meyering  <jim@meyering.net>
 
 	* Version 6.0-cvs.
+
+	Ensure that cat works with any of the options, -A -v -e -E -T,
+	when applied to files in /proc and /sys, even when the FIONREAD
+	ioctl produces nonsensical results.  Before this change, cat would
+	produce no output (or truncated output), for some linux kernels.
+
+	* src/cat.c (write_pending): New function, factored out of cat.
+	(cat): Also interpret a negative ioctl/FIONREAD count as indicating
+	that there are bytes to read.  Some versions of linux-2.6.16 do that.
+	Write any pending output before returning.
+	Reported by Dan Jacobson in <http://bugs.debian.org/370583>.
+	* NEWS: Mention this bug fix.
+	* tests/misc/cat-proc: New file.  Test for the above.
+	* tests/misc/Makefile.am (TESTS): Add cat-proc.
+
+2006-06-07  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/expr.c (eval4): Detect overflow properly when multiplying
 	INTMAX_MIN * -1.

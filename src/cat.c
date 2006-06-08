@@ -1,5 +1,5 @@
 /* cat -- concatenate files and print on the standard output.
-   Copyright (C) 88, 90, 91, 1995-2005 Free Software Foundation, Inc.
+   Copyright (C) 88, 90, 91, 1995-2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -195,6 +195,22 @@ simple_cat (
     }
 }
 
+/* Write any pending output to STDOUT_FILENO.
+   Pending is defined to be the *BPOUT - OUTBUF bytes starting at OUTBUF.
+   Then set *BPOUT to OUTPUT if it's not already that value.  */
+
+static inline void
+write_pending (char *outbuf, char **bpout)
+{
+  size_t n_write = *bpout - outbuf;
+  if (0 < n_write)
+    {
+      if (full_write (STDOUT_FILENO, outbuf, n_write) != n_write)
+        error (EXIT_FAILURE, errno, _("write error"));
+      *bpout = outbuf;
+    }
+}
+
 /* Cat the file behind INPUT_DESC to the file behind OUTPUT_DESC.
    Return true if successful.
    Called if any option more than -u was specified.
@@ -291,6 +307,7 @@ cat (
 
 	  if (bpin > eob)
 	    {
+	      bool input_pending = false;
 #ifdef FIONREAD
 	      int n_to_read = 0;
 
@@ -318,15 +335,12 @@ cat (
 		      return false;
 		    }
 		}
-	      if (n_to_read == 0)
+	      if (n_to_read != 0)
+		input_pending = true;
 #endif
-		{
-		  size_t n_write = bpout - outbuf;
 
-		  if (full_write (STDOUT_FILENO, outbuf, n_write) != n_write)
-		    error (EXIT_FAILURE, errno, _("write error"));
-		  bpout = outbuf;
-		}
+	      if (input_pending)
+		write_pending (outbuf, &bpout);
 
 	      /* Read more input into INBUF.  */
 
@@ -334,11 +348,13 @@ cat (
 	      if (n_read == SAFE_READ_ERROR)
 		{
 		  error (0, errno, "%s", infile);
+		  write_pending (outbuf, &bpout);
 		  newlines2 = newlines;
 		  return false;
 		}
 	      if (n_read == 0)
 		{
+		  write_pending (outbuf, &bpout);
 		  newlines2 = newlines;
 		  return true;
 		}

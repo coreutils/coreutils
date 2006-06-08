@@ -138,6 +138,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  cat with any of the options, -A -v -e -E -T, when applied to a
+  file in /proc or /sys (linux-specific), would truncate its output,
+  usually printing nothing.
+
   cp -p would fail in a /proc-less chroot, on some systems
 
   When `cp -RL' encounters the same directory more than once in the

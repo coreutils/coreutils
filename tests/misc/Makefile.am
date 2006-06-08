@@ -18,6 +18,7 @@ TESTS_ENVIRONMENT = \
 # will execute the test script rather than the standard utility.
 
 TESTS = \
+  cat-proc \
   base64 \
   basename \
   close-stdout \
