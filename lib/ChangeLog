@@ -1,3 +1,12 @@
+2006-06-10  Jim Meyering  <jim@meyering.net>
+
+	Apply this change from gnulib:
+
+	2006-05-30  Ralf Wildenhues  <Ralf.Wildenhues@gmx.de>
+	            Bruno Haible  <bruno@clisp.org>
+
+	* strndup.c (strndup) [!_LIBC]: Don't undefine macro definition.
+
 2006-06-04  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* regexec.c (group_nodes_into_DFAstates): Fix a buffer overrun
