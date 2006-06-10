@@ -1,3 +1,15 @@
+2006-06-10  Jim Meyering  <jim@meyering.net>
+
+	Apply this change from gnulib:
+
+	2006-05-30  Ralf Wildenhues  <Ralf.Wildenhues@gmx.de>
+	            Bruno Haible  <bruno@clisp.org>
+
+	* strndup.m4 (gl_FUNC_STRNDUP): Replace the AC_REPLACE_FUNCS with a
+	check for the declaration of strnlen and a run test that exposes the
+	AIX 5.1 strnlen bug.  In the failure case, #define strndup to
+	rpl_strndup.
+
 2006-05-28  Ralf Wildenhues  <Ralf.Wildenhues@gmx.de>
 
 	* c-strtod.m4 (gl_C99_STRTOLD): Use a link test rather than a
