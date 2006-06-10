@@ -8,14 +8,18 @@ GNU coreutils NEWS                                    -*- outline -*-
   report the number of used blocks as being "total - available"
   (a negative number) rather than as garbage.
 
-  rm's core is now reentrant: rm --recursive (-r) now processes
-  hierarchies without changing the working directory at all.
+  dircolors: a new autoconf run-test for AIX's buggy strndup function
+  prevents malfunction on that system;  may also affect cut, expand,
+  and unexpand.
 
   fts no longer changes the current working directory, so its clients
   (chmod, chown, chgrp, du) no longer malfunction under extreme conditions.
 
   pwd and other programs using lib/getcwd.c work even on file systems
   where dirent.d_ino values are inconsistent with those from stat.st_ino.
+
+  rm's core is now reentrant: rm --recursive (-r) now processes
+  hierarchies without changing the working directory at all.
 
 ** Changes in behavior
 

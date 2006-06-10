@@ -1,5 +1,7 @@
 2006-06-10  Jim Meyering  <jim@meyering.net>
 
+	* NEWS: Mention the AIX-strndup-bug vs. dircolors workaround.
+
 	Require a "Version N.M" line at the top of the ChangeLog
 	file only when making the actual release, not when running
 	"make distcheck".
