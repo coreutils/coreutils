@@ -1,6 +1,13 @@
-2006-06-08  Jim Meyering  <jim@meyering.net>
+2006-06-10  Jim Meyering  <jim@meyering.net>
 
-	* Version 6.0-cvs.
+	Require a "Version N.M" line at the top of the ChangeLog
+	file only when making the actual release, not when running
+	"make distcheck".
+	* Makefile.maint (maintainer-distcheck): Don't depend on
+	changelog-check.
+	(alpha beta major): Depend on it here, instead.
+
+2006-06-08  Jim Meyering  <jim@meyering.net>
 
 	Ensure that cat works with any of the options, -A -v -e -E -T,
 	when applied to files in /proc and /sys, even when the FIONREAD
