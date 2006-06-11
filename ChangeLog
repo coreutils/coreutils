@@ -1,5 +1,7 @@
 2006-06-11  Jim Meyering  <jim@meyering.net>
 
+	* .gitignore: New file.
+
 	Setting TIME_STYLE=long-iso in the environment would make the
 	cp/same-file test fail.
 	* tests/envvar-check (vars): Add TIME_STYLE to the list.
