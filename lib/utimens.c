@@ -54,8 +54,10 @@ struct utimbuf
 # endif
 #endif
 
-#if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 8) || __STRICT_ANSI__
-# define __attribute__(x)
+#ifndef __attribute__
+# if __GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ < 8) || __STRICT_ANSI__
+#  define __attribute__(x)
+# endif
 #endif
 
 #ifndef ATTRIBUTE_UNUSED
