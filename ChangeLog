@@ -1,3 +1,9 @@
+2006-06-11  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* tests/cp/same-file: Execute 'ls' in the C locale, so that it
+	uses POSIX time stamp formats.  Problem reported by John Nixon in
+	<http://lists.gnu.org/archive/html/bug-coreutils/2006-06/msg00062.html>.
+
 2006-06-10  Jim Meyering  <jim@meyering.net>
 
 	* NEWS: Mention the AIX-strndup-bug vs. dircolors workaround.
