@@ -1,3 +1,12 @@
+2006-06-11  Jim Meyering  <jim@meyering.net>
+
+	Setting TIME_STYLE=long-iso in the environment would make the
+	cp/same-file test fail.
+	* tests/envvar-check (vars): Add TIME_STYLE to the list.
+	* tests/cp/same-file: Revert last change.
+	Source the envvar-check script, to ensure that TIME_STYLE
+	settings don't affect these tests.
+
 2006-06-11  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* tests/cp/same-file: Execute 'ls' in the C locale, so that it
