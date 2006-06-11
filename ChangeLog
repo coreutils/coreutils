@@ -1,6 +1,7 @@
 2006-06-11  Jim Meyering  <jim@meyering.net>
 
 	* .gitignore: New file.
+	* Makefile.am (EXTRA_DIST): Add .gitignore.
 
 	Setting TIME_STYLE=long-iso in the environment would make the
 	cp/same-file test fail.

@@ -2,6 +2,7 @@
 
 SUBDIRS = lib src doc man po tests
 EXTRA_DIST = Makefile.cfg Makefile.maint GNUmakefile \
+  .gitignore \
   .kludge-stamp .prev-version THANKS-to-translators THANKStt.in \
   .x-po-check \
   .x-sc_space_tab .x-sc_sun_os_names \
