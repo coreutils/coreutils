@@ -1,3 +1,8 @@
+2006-06-12  Ralf Wildenhues  <Ralf.Wildenhues@gmx.de>
+
+	* tests/du/Makefile.am (TESTS_ENVIRONMENT): Pass $(PERL), for
+	files0-from test.
+
 2006-06-11  Jim Meyering  <jim@meyering.net>
 
 	* .gitignore: New file.
