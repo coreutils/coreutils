@@ -45,8 +45,8 @@ check-texinfo:
 	$(PERL) -e 1 2> /dev/null && { $(PERL) -ne \
 	  '/\bPOSIX\b/ && !/\@acronym{POSIX}/ && !/^\* / || /{posix}/ and print,exit 1' \
 	  $(srcdir)/*.texi 2> /dev/null || fail=1; }; \
-	$(EGREP) -iw 'builtins?' $(srcdir)/*.texi && fail=1; \
-	$(EGREP) -iw 'path(name)?s?' $(srcdir)/*.texi \
+	$(EGREP) -i '$(_W)builtins?$(W_)' $(srcdir)/*.texi && fail=1; \
+	$(EGREP) -i '$(_W)path(name)?s?$(W_)' $(srcdir)/*.texi \
 	  | $(EGREP) -v '@vindex PATH$$|@env[{]PATH[}]' && fail=1; \
 	exit $$fail
 
