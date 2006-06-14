@@ -23,7 +23,7 @@ mkdir -p a/b d d/sub || framework_failure=1
 # Ensure that these files contain more than 64 bytes, so that we don't
 # immediately disqualify file systems (e.g., NetApp) on which smaller
 # files take up zero disk blocks.
-printf '%*s' 65 make-sure-the-file-is-non-empty > a/b/F || framework_failure=1
+printf '%*s' 257 make-sure-the-file-is-non-empty > a/b/F || framework_failure=1
 seq --format=%100g 1 90 | head --bytes=4k > d/1
 cp d/1 d/sub/2
 
@@ -32,53 +32,58 @@ if test $framework_failure = 1; then
   (exit 1); exit 1
 fi
 
-# Ensure that blocksize and block-count are what we expect for directories.
-if test "`stat --format=%bx%B a`" != 8x512; then
-  echo "$0: different block count/size, so skipping this test" 1>&2
-  (exit 77); exit 77
-fi
-
-# Ensure that blocksize and block-count are what we expect for files.
-if test "`stat --format=%bx%B d/1`" != 8x512; then
-  echo "$0: different block count/size, so skipping this test" 1>&2
-  (exit 77); exit 77
-fi
-
 fail=0
 
-du -a a > out || fail=1
+B=`stat --format=%B a/b/F`
+
+du --block-size=$B -a a > out || fail=1
 echo === >> out
-du -a -S a >> out || fail=1
+du --block-size=$B -a -S a >> out || fail=1
 echo === >> out
-du -s a >> out || fail=1
-cat <<\EOF | sed 's/ *#.*//' > exp
-4	a/b/F
-8	a/b
-12	a
+du --block-size=$B -s a >> out || fail=1
+
+f=`stat --format=%b a/b/F`
+b=`stat --format=%b a/b`
+a=`stat --format=%b a`
+bf=`expr $b + $f`
+tot=`expr $bf + $a`
+
+cat <<EOF | sed 's/ *#.*//' > exp
+$f	a/b/F
+$bf	a/b
+$tot	a
 ===
-4	a/b/F   # size of file, a/b/F
-8	a/b     # size of dir entry, a/b, + size of file, a/b/F
-4	a       # size of dir entry, a
+$f	a/b/F   # size of file, a/b/F
+$bf	a/b     # size of dir entry, a/b, + size of file, a/b/F
+$a	a       # size of dir entry, a
 ===
-12	a
+$tot	a
 EOF
 
 cmp out exp || fail=1
 test $fail = 1 && diff -u out exp 2> /dev/null
 
 rm -f out exp
-du -a d | sort -r -k2,2 > out || fail=1
+du --block-size=$B -a d | sort -r -k2,2 > out || fail=1
 echo === >> out
-du -S d | sort -r -k2,2 >> out || fail=1
+du --block-size=$B -S d | sort -r -k2,2 >> out || fail=1
 
-cat <<\EOF | sed 's/ *#.*//' > exp
-4	d/sub/2
-8	d/sub
-4	d/1
-16	d
+t2=`stat --format=%b d/sub/2`
+ts=`stat --format=%b d/sub`
+t1=`stat --format=%b d/1`
+td=`stat --format=%b d`
+tot=`expr $t1 + $t2 + $ts + $td`
+d1=`expr $td + $t1`
+s2=`expr $ts + $t2`
+
+cat <<EOF | sed 's/ *#.*//' > exp
+$t2	d/sub/2
+$s2	d/sub
+$t1	d/1
+$tot	d
 ===
-8	d/sub
-8	d           # d + d/1; don't count the dir. entry for d/sub
+$s2	d/sub
+$d1	d           # d + d/1; don't count the dir. entry for d/sub
 EOF
 
 cmp out exp || fail=1

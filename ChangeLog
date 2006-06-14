@@ -1,3 +1,7 @@
+2006-06-14  Jim Meyering  <jim@meyering.net>
+
+	* tests/du/basic: Revamp not to hard-code file system block sizes.
+
 2006-06-12  Ralf Wildenhues  <Ralf.Wildenhues@gmx.de>
 
 	* tests/du/Makefile.am (TESTS_ENVIRONMENT): Pass $(PERL), for
