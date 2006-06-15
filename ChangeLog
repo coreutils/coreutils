@@ -1,3 +1,8 @@
+2006-06-15  Bob Proulx  <bob@proulx.com>  (tiny change)
+
+	* tests/misc/mknod: Improve permission checks to handle
+	running mkdir test in set-gid directories.
+
 2006-06-14  Jim Meyering  <jim@meyering.net>
 
 	* tests/du/basic: Revamp not to hard-code file system block sizes.

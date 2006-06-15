@@ -34,6 +34,6 @@ test $mode = prwx-wxr-- || fail=1
 
 mkdir -m 734 f3   || fail=1
 set _ `ls -dgo f3`; shift; mode=$1
-test $mode = drwx-wxr-- || fail=1
+test $mode = drwx-wxr-- || test $mode = drwx-wsr-- || fail=1
 
 (exit $fail); exit $fail
