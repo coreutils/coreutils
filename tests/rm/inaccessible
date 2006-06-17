@@ -10,6 +10,16 @@ fi
 PRIV_CHECK_ARG=require-non-root . $srcdir/../priv-check
 . $srcdir/../lang-default
 
+# Skip this test if your system has neither the openat-style functions
+# nor /proc/self/fd support with which to emulate them.
+skip=yes
+grep '^#define HAVE_OPENAT' $top_srcdir/config.h > /dev/null && skip=no
+test -d /proc/self/fd && skip=no
+if test $skip = yes; then
+  echo 1>&2 "$0: no openat support, so skipping this test"
+  (exit 77); exit 77
+fi
+
 pwd=`pwd`
 t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
 trap 'status=$?; cd $pwd; chmod -R u+rwx $t0; rm -rf $t0 && exit $status' 0
@@ -30,7 +40,6 @@ fail=0
 p=$pwd/$tmp
 set +x
 (cd no-access; chmod 0 . && rm -r $p/abs1 rel $p/abs2) 2> out && fail=1
-test "$VERBOSE" = yes && set -x
 test -d $p/abs1 && fail=1
 test -d $p/abs2 && fail=1
 
