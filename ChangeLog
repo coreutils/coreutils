@@ -1,3 +1,11 @@
+2006-06-18  Bob Proulx  <bob@proulx.com>  (tiny change)
+
+	* tests/misc/pwd-long: Fix typo (s/neq/ne/) in previous change.
+
+2006-06-18  Jim Meyering  <jim@meyering.net>
+
+	* tests/misc/pwd-long: Make error output a little clearer.
+
 2006-06-17  Jim Meyering  <jim@meyering.net>
 
 	* tests/rm/inaccessible: Skip this test on systems without openat
