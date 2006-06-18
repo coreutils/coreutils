@@ -58,7 +58,7 @@ my $pwd_binary = "$build_src_dir/pwd";
 -x $pwd_binary
   or die "$ME: $pwd_binary is not an executable file\n";
 chomp (my $actual = `$pwd_binary`);
-if ($expected neq $actual)
+if ($expected ne $actual)
   {
     my $e_len = length $expected;
     my $a_len = length $actual;
