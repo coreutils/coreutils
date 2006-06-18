@@ -1,3 +1,8 @@
+2006-06-19  Jim Meyering  <jim@meyering.net>
+
+	* Makefile.cfg (local-checks-to-skip): Add changelog-check,
+	so this check is not run as part of "make distcheck".
+
 2006-06-18  Bob Proulx  <bob@proulx.com>  (tiny change)
 
 	* tests/misc/pwd-long: Fix typo (s/neq/ne/) in previous change.
