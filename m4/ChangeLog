@@ -1,5 +1,10 @@
 2006-06-18  Jim Meyering  <jim@meyering.net>
 
+	Test for a bug that causes glibc's getcwd to suffer a failed assertion.
+	* getcwd-abort-bug.m4 (gl_FUNC_GETCWD_ABORT_BUG): New file and macro.
+	* getcwd.m4 (gl_FUNC_GETCWD): If we detect support for getcwd_null,
+	also check for glibc-2.4's abort-inducing bug.
+
 	* getcwd-path-max.m4 (gl_FUNC_GETCWD_PATH_MAX): Fix typo.
 	Low-probability clean-up should be to use rmdir to get rid of
 	the just-created directory, not unlink.
