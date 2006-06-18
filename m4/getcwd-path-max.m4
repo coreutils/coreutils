@@ -1,4 +1,4 @@
-#serial 11
+#serial 12
 # Check for several getcwd bugs with long file names.
 # If so, arrange to compile the wrapper function.
 
@@ -157,8 +157,8 @@ main ()
   {
     size_t i;
 
-    /* Unlink first, in case the chdir failed.  */
-    unlink (DIR_NAME);
+    /* Try rmdir first, in case the chdir failed.  */
+    rmdir (DIR_NAME);
     for (i = 0; i <= n_chdirs; i++)
       {
 	if (chdir ("..") < 0)

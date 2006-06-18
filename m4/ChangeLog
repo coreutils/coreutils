@@ -1,5 +1,9 @@
 2006-06-18  Jim Meyering  <jim@meyering.net>
 
+	* getcwd-path-max.m4 (gl_FUNC_GETCWD_PATH_MAX): Fix typo.
+	Low-probability clean-up should be to use rmdir to get rid of
+	the just-created directory, not unlink.
+
 	* ftruncate.m4 (gl_FUNC_FTRUNCATE): If ftruncate is missing, make
 	configure fail, and request a bug report to inform us about it.
 	Add a comment that, barring reports to the contrary, in 2007 we'll
