@@ -1,3 +1,9 @@
+2006-06-19  Jim Meyering  <jim@meyering.net>
+
+	Apply this change from gnulib:
+	2006-06-16  Eric Blake  <ebb9@byu.net>
+	* unsetenv.c [!defined errno]: Assume errno.h declares errno.
+
 2006-06-11  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* getdate.y (__attribute__): Don't define if already defined.
