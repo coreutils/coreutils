@@ -54,7 +54,7 @@ openat (int fd, char const *file, int flags, ...)
       va_start (arg, flags);
 
       /* If mode_t is narrower than int, use the promoted type (int),
-         not mode_t.  Use sizeof to guess whether mode_t is nerrower;
+         not mode_t.  Use sizeof to guess whether mode_t is narrower;
          we don't know of any practical counterexamples.  */
       if (sizeof (mode_t) < sizeof (int))
 	mode = va_arg (arg, int);
