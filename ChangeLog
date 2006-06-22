@@ -1,3 +1,8 @@
+2006-06-22  Jim Meyering  <jim@meyering.net>
+
+	* src/tee.c (tee_files): Rename from tee, to avoid conflict with
+	the function in glibc's <fcntl.h>.  Reported by Andreas Schwab.
+
 2006-06-19  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.cfg (local-checks-to-skip): Add changelog-check,

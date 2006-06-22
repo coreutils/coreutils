@@ -1,5 +1,5 @@
 /* tee - read from standard input and write to standard output and files.
-   Copyright (C) 85,1990-2005 Free Software Foundation, Inc.
+   Copyright (C) 85,1990-2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -31,7 +31,7 @@
 
 #define AUTHORS "Mike Parker", "Richard M. Stallman", "David MacKenzie"
 
-static bool tee (int nfiles, const char **files);
+static bool tee_files (int nfiles, const char **files);
 
 /* If true, append to output files rather than truncating them. */
 static bool append;
@@ -121,7 +121,7 @@ main (int argc, char **argv)
   /* Do *not* warn if tee is given no file arguments.
      POSIX requires that it work when given no arguments.  */
 
-  ok = tee (argc - optind, (const char **) &argv[optind]);
+  ok = tee_files (argc - optind, (const char **) &argv[optind]);
   if (close (STDIN_FILENO) != 0)
     error (EXIT_FAILURE, errno, _("standard input"));
 
@@ -133,7 +133,7 @@ main (int argc, char **argv)
    Return true if successful.  */
 
 static bool
-tee (int nfiles, const char **files)
+tee_files (int nfiles, const char **files)
 {
   FILE **descriptors;
   char buffer[BUFSIZ];
