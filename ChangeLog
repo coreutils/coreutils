@@ -1,3 +1,7 @@
+2006-06-24  Jim Meyering  <jim@meyering.net>
+
+	* src/md5sum.c (DIGEST_BUFFER): Remove now-unused definitions.
+
 2006-06-22  Jim Meyering  <jim@meyering.net>
 
 	* src/tee.c (tee_files): Rename from tee, to avoid conflict with

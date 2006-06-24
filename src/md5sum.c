@@ -1,5 +1,5 @@
 /* Compute MD5, SHA1, SHA224, SHA256, SHA384 or SHA512 checksum of files or strings
-   Copyright (C) 1995-2005 Free Software Foundation, Inc.
+   Copyright (C) 1995-2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -46,7 +46,6 @@
 # define PROGRAM_NAME "md5sum"
 # define DIGEST_TYPE_STRING "MD5"
 # define DIGEST_STREAM md5_stream
-# define DIGEST_BUFFER md5_buffer
 # define DIGEST_BITS 128
 # define DIGEST_REFERENCE "RFC 1321"
 # define DIGEST_ALIGN 4
@@ -54,7 +53,6 @@
 # define PROGRAM_NAME "sha1sum"
 # define DIGEST_TYPE_STRING "SHA1"
 # define DIGEST_STREAM sha1_stream
-# define DIGEST_BUFFER sha1_buffer
 # define DIGEST_BITS 160
 # define DIGEST_REFERENCE "FIPS-180-1"
 # define DIGEST_ALIGN 4
@@ -62,7 +60,6 @@
 # define PROGRAM_NAME "sha256sum"
 # define DIGEST_TYPE_STRING "SHA256"
 # define DIGEST_STREAM sha256_stream
-# define DIGEST_BUFFER sha256_buffer
 # define DIGEST_BITS 256
 # define DIGEST_REFERENCE "FIPS-180-2"
 # define DIGEST_ALIGN 4
@@ -70,7 +67,6 @@
 # define PROGRAM_NAME "sha224sum"
 # define DIGEST_TYPE_STRING "SHA224"
 # define DIGEST_STREAM sha224_stream
-# define DIGEST_BUFFER sha224_buffer
 # define DIGEST_BITS 224
 # define DIGEST_REFERENCE "RFC 3874"
 # define DIGEST_ALIGN 4
@@ -78,7 +74,6 @@
 # define PROGRAM_NAME "sha512sum"
 # define DIGEST_TYPE_STRING "SHA512"
 # define DIGEST_STREAM sha512_stream
-# define DIGEST_BUFFER sha512_buffer
 # define DIGEST_BITS 512
 # define DIGEST_REFERENCE "FIPS-180-2"
 # define DIGEST_ALIGN 8
@@ -86,7 +81,6 @@
 # define PROGRAM_NAME "sha384sum"
 # define DIGEST_TYPE_STRING "SHA384"
 # define DIGEST_STREAM sha384_stream
-# define DIGEST_BUFFER sha384_buffer
 # define DIGEST_BITS 384
 # define DIGEST_REFERENCE "FIPS-180-2"
 # define DIGEST_ALIGN 8
@@ -595,7 +589,7 @@ digest_check (const char *checkfile_name)
 int
 main (int argc, char **argv)
 {
-  unsigned char bin_buffer_unaligned[DIGEST_BIN_BYTES+DIGEST_ALIGN];
+  unsigned char bin_buffer_unaligned[DIGEST_BIN_BYTES + DIGEST_ALIGN];
   /* Make sure bin_buffer is properly aligned. */
   unsigned char *bin_buffer = ptr_align (bin_buffer_unaligned, DIGEST_ALIGN);
   bool do_check = false;
