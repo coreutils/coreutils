@@ -43,8 +43,6 @@ seq: give better diagnostics for invalid formats:
    e.g. no or too many % directives
 seq: consider allowing format string to contain no %-directives
 
-m4: rename all macros that start with AC_ to start with another prefix
-
 resolve RH report on cp -a forwarded by Tim Waugh
 
 provide an ls option to do something like `--sort directory'
@@ -118,9 +116,6 @@ Adapt these contribution guidelines for coreutils:
 Changes expected to go in, someday.
 ======================================
 
-  wc: add an option, --files0-from [as for du] to make it read NUL-delimited
-    file name arguments from a file.
-
   dd patch from Olivier Delhomme
 
   Andreas Gruenbacher's xattr changes
@@ -184,3 +179,28 @@ Adapt tools like wc, tr, fmt, etc. (most of the textutils) to be
   (preferably `no') cost when operating in single-byte mode.
 
 Remove all uses of the `register' keyword
+
+pr's use of nstrftime can make it malloc a very large (up to SIZE_MAX) buffer
+
+ls.c: use gettime rather than clock_gettime, gettimeofday, time
+
+write rules to deal with c99->c89 patches and to automatically
+  check that they apply cleanly
+
+building 6.0-cvs fails on openbsd: tests/rm/inaccessible
+  1c1
+  < rm: unable to record current working directory: Permission denied
+  ---
+  > rm: cannot remove `rel': Permission denied
+  FAIL: inaccessible
+
+Use latest automake
+
+----------------
+The command:
+  mv dir new-name/
+should work the same way the underlying
+rename ("dir", "new-name/") call does.
+http://lists.gnu.org/archive/html/bug-coreutils/2005-11/msg00292.html
+
+----------------
