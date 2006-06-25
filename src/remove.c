@@ -1220,7 +1220,7 @@ remove_dir (int fd_cwd, Dirstack_state *ds, char const *dir,
 	  errno = saved_errno;
 	}
 
-      /* CAUTION: this test and diagnostic are identical those
+      /* CAUTION: this test and diagnostic are identical to those
 	 following the other use of fd_to_subdirp.  */
       if (errno != ENOENT || !x->ignore_missing_files)
 	error (0, errno,
