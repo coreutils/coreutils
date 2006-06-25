@@ -13410,7 +13410,8 @@ days
 @end table
 
 Historical implementations of @command{sleep} have required that
-@var{number} be an integer.  However, GNU @command{sleep} accepts
+@var{number} be an integer, and only accepted a single argument
+without a suffix.  However, GNU @command{sleep} accepts
 arbitrary floating point numbers (using a period before any fractional
 digits).
 

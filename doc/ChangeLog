@@ -1,3 +1,9 @@
+2006-06-20  Eric Blake  <ebb9@byu.net>
+
+	* coreutils.texi (sleep invocation): Document that accepting
+	multiple arguments and suffixes are extensions.
+	Reported by Dan Jacobson.
+
 2006-06-12  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Makefile.am (check-texinfo): Use $(_W) and $(W_) instead of
