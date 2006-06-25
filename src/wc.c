@@ -1,5 +1,5 @@
 /* wc - print the number of lines, words, and bytes in files
-   Copyright (C) 85, 91, 1995-2005 Free Software Foundation, Inc.
+   Copyright (C) 85, 91, 1995-2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -48,6 +48,8 @@
 
 #include "error.h"
 #include "inttostr.h"
+#include "quote.h"
+#include "readtokens0.h"
 #include "safe-read.h"
 
 #ifndef HAVE_DECL_WCWIDTH
@@ -103,6 +105,12 @@ struct fstatus
   struct stat st;
 };
 
+/* For long options that have no equivalent short option, use a
+   non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
+enum
+{
+  FILES0_FROM_OPTION = CHAR_MAX + 1
+};
 
 static struct option const longopts[] =
 {
@@ -110,6 +118,7 @@ static struct option const longopts[] =
   {"chars", no_argument, NULL, 'm'},
   {"lines", no_argument, NULL, 'l'},
   {"words", no_argument, NULL, 'w'},
+  {"files0-from", required_argument, NULL, FILES0_FROM_OPTION},
   {"max-line-length", no_argument, NULL, 'L'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
@@ -126,8 +135,9 @@ usage (int status)
     {
       printf (_("\
 Usage: %s [OPTION]... [FILE]...\n\
+  or:  %s [OPTION]... --files0-from=F\n\
 "),
-	      program_name);
+	      program_name, program_name);
       fputs (_("\
 Print newline, word, and byte counts for each FILE, and a total line if\n\
 more than one FILE is specified.  With no FILE, or when FILE is -,\n\
@@ -137,6 +147,8 @@ read standard input.\n\
   -l, --lines            print the newline counts\n\
 "), stdout);
       fputs (_("\
+      --files0-from=F    read input from the files specified by\n\
+                           NUL-terminated names in file F\n\
   -L, --max-line-length  print the length of the longest line\n\
   -w, --words            print the word counts\n\
 "), stdout);
@@ -593,7 +605,10 @@ main (int argc, char **argv)
   bool ok;
   int optc;
   int nfiles;
+  char **files;
+  char *files_from = NULL;
   struct fstatus *fstatus;
+  struct Tokens tok;
 
   initialize_main (&argc, &argv);
   program_name = argv[0];
@@ -630,6 +645,10 @@ main (int argc, char **argv)
 	print_linelength = true;
 	break;
 
+      case FILES0_FROM_OPTION:
+	files_from = optarg;
+	break;
+
       case_GETOPT_HELP_CHAR;
 
       case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
@@ -642,15 +661,64 @@ main (int argc, char **argv)
 	 | print_linelength))
     print_lines = print_words = print_bytes = true;
 
-  nfiles = argc - optind;
-  nfiles += (nfiles == 0);
+  if (files_from)
+    {
+      FILE *stream;
 
-  fstatus = get_input_fstatus (nfiles, argv + optind);
+      /* When using --files0-from=F, you may not specify any files
+	 on the command-line.  */
+      if (optind < argc)
+	{
+	  error (0, 0, _("extra operand %s"), quote (argv[optind]));
+	  fprintf (stderr, "%s\n",
+		   _("File operands cannot be combined with --files0-from."));
+	  usage (EXIT_FAILURE);
+	}
+
+      if (STREQ (files_from, "-"))
+	stream = stdin;
+      else
+	{
+	  stream = fopen (files_from, "r");
+	  if (stream == NULL)
+	    error (EXIT_FAILURE, errno, _("cannot open %s for reading"),
+		   quote (files_from));
+	}
+
+      readtokens0_init (&tok);
+
+      if (! readtokens0 (stream, &tok) || fclose (stream) != 0)
+	error (EXIT_FAILURE, 0, _("cannot read file names from %s"),
+	       quote (files_from));
+
+      files = tok.tok;
+      nfiles = tok.n_tok;
+    }
+  else
+    {
+      static char *stdin_only[2];
+      files = (optind < argc ? argv + optind : stdin_only);
+      nfiles = (optind < argc ? argc - optind : 1);
+      stdin_only[0] = NULL;
+    }
+
+  fstatus = get_input_fstatus (nfiles, files);
   number_width = compute_number_width (nfiles, fstatus);
 
   ok = true;
   for (i = 0; i < nfiles; i++)
-    ok &= wc_file (argv[optind + i], &fstatus[i]);
+    {
+      if (files_from && STREQ (files_from, "-") && STREQ (files[i], "-"))
+	{
+	  ok = false;
+	  error (0, 0,
+		 _("when reading file names from stdin, "
+		   "no file name of %s allowed"),
+		 quote ("-"));
+	  continue;
+	}
+      ok &= wc_file (files[i], &fstatus[i]);
+    }
 
   if (1 < nfiles)
     write_counts (total_lines, total_words, total_chars, total_bytes,

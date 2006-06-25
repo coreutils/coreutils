@@ -1,3 +1,16 @@
+2006-06-25  Jim Meyering  <jim@meyering.net>
+
+	* NEWS: wc accepts a new option --files0-from=FILE, where FILE
+	contains a list of NUL-separated file names.
+
+	* src/wc.c: Include "readtokens.h".
+	(usage): Describe the new option, and adjust the `Usage':
+	with this option, no FILE may be specified on the command line.
+	(main): Handle the new option.
+	* tests/misc/wc-files0: New tests, for the above.
+	* tests/misc/wc-files0-from: Likewise.
+	* tests/misc/Makefile.am (TESTS): Add wc-files0.
+
 2006-06-24  Jim Meyering  <jim@meyering.net>
 
 	* src/md5sum.c (DIGEST_BUFFER): Remove now-unused definitions.

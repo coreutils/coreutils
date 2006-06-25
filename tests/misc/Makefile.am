@@ -18,6 +18,8 @@ TESTS_ENVIRONMENT = \
 # will execute the test script rather than the standard utility.
 
 TESTS = \
+  wc-files0-from \
+  wc-files0 \
   cat-proc \
   base64 \
   basename \

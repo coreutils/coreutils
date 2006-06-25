@@ -1,0 +1,91 @@
+#!/bin/sh
+# -*- perl -*-
+# Exercise wc's --files0-from option.
+# This file bears a striking resemblance to tests/du/files0-from.
+
+: ${PERL=perl}
+: ${srcdir=.}
+
+. $srcdir/../envvar-check
+
+$PERL -e 1 > /dev/null 2>&1 || {
+  echo 1>&2 "$0: configure didn't find a usable version of Perl," \
+    "so can't run this test"
+  exit 77
+}
+
+exec $PERL -w -I$srcdir/.. -MCoreutils -- - <<\EOF
+#/
+require 5.003;
+use strict;
+
+(my $program_name = $0) =~ s|.*/||;
+
+$ENV{PROG} = 'wc';
+my $ME = $ENV{PROG};
+
+# Turn off localization of executable's ouput.
+@ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
+
+my @Tests =
+  (
+   # invalid extra command line argument
+   ['f-extra-arg', '--files0-from=- no-such', {IN=>"a"}, {EXIT=>1},
+    {ERR => "$ME: extra operand `no-such'\n"
+	. "File operands cannot be combined with --files0-from.\n"
+	. "Try `$ME --help' for more information.\n"}
+    ],
+
+   # missing input file
+   ['missing', '--files0-from=missing', {EXIT=>1},
+    {ERR => "$ME: cannot open `missing' for reading: "
+     . "No such file or directory\n"}],
+
+   # empty input
+   ['empty', '--files0-from=-'],
+
+   # empty input, from non-regular file
+   ['empty-nonreg', '--files0-from=/dev/null'],
+
+   # one NUL
+   ['nul-1', '--files0-from=-', '<', {IN=>"\0"}, {EXIT=>1},
+    {ERR => "$ME: : No such file or directory\n"}],
+
+   # two NULs
+   ['nul-2', '--files0-from=-', '<', {IN=>"\0\0"}, {EXIT=>1},
+    {OUT=>"0 0 0 total\n"},
+    {ERR => "$ME: : No such file or directory\n"
+          . "$ME: : No such file or directory\n"}],
+
+   # one file name, no NUL
+   ['1', '--files0-from=-', '<',
+    {IN=>{f=>"g"}}, {AUX=>{g=>''}}, {OUT=>"0 0 0 g\n"} ],
+
+   # one file name, with NUL
+   ['1a', '--files0-from=-', '<',
+    {IN=>{f=>"g\0"}}, {AUX=>{g=>''}}, {OUT=>"0 0 0 g\n"} ],
+
+   # two file names, no final NUL
+   ['2', '--files0-from=-', '<',
+    {IN=>{f=>"g\0g"}}, {AUX=>{g=>''}},
+     {OUT=>"0 0 0 g\n0 0 0 g\n0 0 0 total\n"} ],
+
+   # two file names, with final NUL
+   ['2a', '--files0-from=-', '<',
+    {IN=>{f=>"g\0g\0"}}, {AUX=>{g=>''}},
+     {OUT=>"0 0 0 g\n0 0 0 g\n0 0 0 total\n"} ],
+
+   # Ensure that wc processes FILEs following a zero-length name.
+   ['zero-len', '--files0-from=-', '<',
+    {IN=>{f=>"\0g\0"}}, {AUX=>{g=>''}},
+    {OUT=>"0 0 0 g\n0 0 0 total\n"},
+    {ERR => "$ME: : No such file or directory\n"}, {EXIT=>1} ],
+  );
+
+my $save_temps = $ENV{DEBUG};
+my $verbose = $ENV{VERBOSE};
+
+my $prog = $ENV{PROG} || die "$0: \$PROG not specified in environment\n";
+my $fail = run_tests ($program_name, $prog, \@Tests, $save_temps, $verbose);
+exit $fail;
+EOF

@@ -140,6 +140,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   sort now accepts the --random-sort (-R) option and `R' ordering option.
 
+  wc accepts a new option --files0-from=FILE, where FILE contains a
+  list of NUL-terminated file names.
+
 ** Bug fixes
 
   cat with any of the options, -A -v -e -E -T, when applied to a
@@ -186,9 +189,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   tail -f once again works on a file with the append-only
   attribute (affects at least Linux ext2, ext3, xfs file systems)
 
+* Major changes in release 5.97 (2006-06-24) [stable]
+* Major changes in release 5.96 (2006-05-22) [stable]
+* Major changes in release 5.95 (2006-05-12) [stable]
 * Major changes in release 5.94 (2006-02-13) [stable]
 
-[see branch for details]
+[see the b5_9x branch for details]
 
 * Major changes in release 5.93 (2005-11-06) [stable]
 
