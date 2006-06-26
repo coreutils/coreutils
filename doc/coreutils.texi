@@ -2961,6 +2961,28 @@ Print only the newline counts.
 @opindex --max-line-length
 Print only the maximum line lengths.
 
+@itemx --files0-from=@var{FILE}
+@opindex --files0-from=@var{FILE}
+@cindex including files from @command{du}
+Rather than processing files named on the command line, process those
+named in file @var{FILE}; each name is terminated by a null byte.
+This is useful when
+the list of file names is so long that it may exceed a command line
+length limitation.
+In such cases, running @command{wc} via @command{xargs} is undesirable
+because it splits the list into pieces and makes @command{wc} print a
+total for each sublist rather than for the entire list.
+One way to produce a list of null-byte-terminated file names is with @sc{gnu}
+@command{find}, using its @option{-print0} predicate.  For example, to find
+the length of the longest line in any @file{.c} or @file{.h} file in the
+current hierarchy, do this:
+
+@example
+find . -name '*.[ch]' -print0 | ./wc -L --files=- | tail -n1
+@end example
+
+Do not specify any @var{FILE} on the command line when using this option.
+
 @end table
 
 @exitstatus

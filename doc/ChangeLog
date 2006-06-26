@@ -1,3 +1,7 @@
+2006-06-26  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi (wc invocation): Document new --files0-from option.
+
 2006-06-20  Eric Blake  <ebb9@byu.net>
 
 	* coreutils.texi (sleep invocation): Document that accepting
