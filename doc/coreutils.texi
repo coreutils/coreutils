@@ -2978,7 +2978,7 @@ the length of the longest line in any @file{.c} or @file{.h} file in the
 current hierarchy, do this:
 
 @example
-find . -name '*.[ch]' -print0 | ./wc -L --files=- | tail -n1
+find . -name '*.[ch]' -print0 | ./wc -L --files0-from=- | tail -n1
 @end example
 
 Do not specify any @var{FILE} on the command line when using this option.
