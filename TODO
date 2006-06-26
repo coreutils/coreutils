@@ -187,13 +187,6 @@ ls.c: use gettime rather than clock_gettime, gettimeofday, time
 write rules to deal with c99->c89 patches and to automatically
   check that they apply cleanly
 
-building 6.0-cvs fails on openbsd: tests/rm/inaccessible
-  1c1
-  < rm: unable to record current working directory: Permission denied
-  ---
-  > rm: cannot remove `rel': Permission denied
-  FAIL: inaccessible
-
 Use latest automake
 
 ----------------
