@@ -1224,25 +1224,23 @@ remove_dir (int fd_cwd, Dirstack_state *ds, char const *dir,
 
   if (dirp == NULL)
     {
-      int saved_errno = errno;
-      if (errno == EACCES)
+      /* CAUTION: this test and diagnostic are identical to
+	 those following the other use of fd_to_subdirp.  */
+      if (errno == ENOENT && x->ignore_missing_files)
 	{
-	  /* If fd_to_subdirp fails due to permissions, then try to
-	     remove DIR via rmdir, in case it's just an empty directory.  */
-	  /* This use of rmdir just works, at least in the sole test I
-	     have that exercises this code, but it'll soon go, to be
-	     replaced by a use of unlinkat-with-AT_REMOVEDIR.  */
-	  if (rmdir (dir) == 0)
+	  /* With -f, don't report "file not found".  */
+	}
+      else
+	{
+	  /* Upon fd_to_subdirp failure, try to remove DIR directly,
+	     in case it's just an empty directory.  */
+	  int saved_errno = errno;
+	  if (unlinkat (fd_cwd, dir, AT_REMOVEDIR) == 0)
 	    return RM_OK;
 
-	  errno = saved_errno;
+	  error (0, saved_errno,
+		 _("cannot remove %s"), quote (full_filename (dir)));
 	}
-
-      /* CAUTION: this test and diagnostic are identical to those
-	 following the other use of fd_to_subdirp.  */
-      if (errno != ENOENT || !x->ignore_missing_files)
-	error (0, errno,
-	       _("cannot remove %s"), quote (full_filename (dir)));
 
       return RM_ERROR;
     }
