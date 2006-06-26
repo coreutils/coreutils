@@ -1,3 +1,8 @@
+2006-06-26  Jim Meyering  <jim@meyering.net>
+
+	Avoid a segfault for wc --files0=- < /dev/null.
+	* src/wc.c (compute_number_width): Return right away if nfiles == 0.
+
 2006-06-25  Jim Meyering  <jim@meyering.net>
 
 	* NEWS: wc accepts a new option --files0-from=FILE, where FILE

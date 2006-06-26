@@ -573,7 +573,7 @@ compute_number_width (int nfiles, struct fstatus const *fstatus)
 {
   int width = 1;
 
-  if (fstatus[0].failed <= 0)
+  if (0 < nfiles && fstatus[0].failed <= 0)
     {
       int minimum_width = 1;
       uintmax_t regular_total = 0;
