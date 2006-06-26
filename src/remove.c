@@ -1125,13 +1125,28 @@ remove_cwd_entries (DIR **dirp,
 					      x, errno, subdir_sb, ds, NULL);
 	    if (subdir_dirp == NULL)
 	      {
+		status = RM_ERROR;
+
 		/* CAUTION: this test and diagnostic are identical to
 		   those following the other use of fd_to_subdirp.  */
-		if (errno != ENOENT || !x->ignore_missing_files)
-		  error (0, errno,
-			 _("cannot remove %s"), quote (full_filename (f)));
-		AD_mark_as_unremovable (ds, f);
-		status = RM_ERROR;
+		if (errno == ENOENT && x->ignore_missing_files)
+		  {
+		    /* With -f, don't report "file not found".  */
+		  }
+		else
+		  {
+		    /* Upon fd_to_subdirp failure, try to remove F directly,
+		       in case it's just an empty directory.  */
+		    int saved_errno = errno;
+		    if (unlinkat (dirfd (*dirp), f, AT_REMOVEDIR) == 0)
+		      status = RM_OK;
+		    else
+		      error (0, saved_errno,
+			     _("cannot remove %s"), quote (full_filename (f)));
+		  }
+
+		if (status == RM_ERROR)
+		  AD_mark_as_unremovable (ds, f);
 		break;
 	      }
 
@@ -1214,6 +1229,9 @@ remove_dir (int fd_cwd, Dirstack_state *ds, char const *dir,
 	{
 	  /* If fd_to_subdirp fails due to permissions, then try to
 	     remove DIR via rmdir, in case it's just an empty directory.  */
+	  /* This use of rmdir just works, at least in the sole test I
+	     have that exercises this code, but it'll soon go, to be
+	     replaced by a use of unlinkat-with-AT_REMOVEDIR.  */
 	  if (rmdir (dir) == 0)
 	    return RM_OK;
 

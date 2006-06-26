@@ -1,5 +1,13 @@
 2006-06-26  Jim Meyering  <jim@meyering.net>
 
+	* NEWS: rm no longer fails to remove an empty, unreadable directory
+	* src/remove.c (remove_cwd_entries): If we can't open a directory,
+	and the failure is not being ignored, try to remove the directory
+	with rmdir (aka unlinkat-with-AT_REMOVEDIR), in case it's empty.
+	Problem report and test case from Paul Eggert in
+	<http://article.gmane.org/gmane.comp.gnu.core-utils.bugs/7425>.
+	* tests/rm/empty-inacc: New test, for the above.
+
 	Avoid a segfault for wc --files0=- < /dev/null.
 	* src/wc.c (compute_number_width): Return right away if nfiles == 0.
 

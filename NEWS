@@ -72,6 +72,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   rm --interactive now takes an optional argument, although the
   default of using no argument still acts like -i.
 
+  rm no longer fails to remove an empty, unreadable directory
+
   sort now reports incompatible options (e.g., -i and -n) rather than
   silently ignoring one of them.
 
