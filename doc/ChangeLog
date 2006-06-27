@@ -1,3 +1,8 @@
+2006-06-27  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi (wc invocation): Remove ./ prefix from example.
+	From Padraig Brady.
+
 2006-06-26  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (wc invocation): Spell out `--files0-from' in
