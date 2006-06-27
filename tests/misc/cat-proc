@@ -32,9 +32,10 @@ fail=0
 
 # Yes, parts of /proc/cpuinfo might change between cat runs.
 # If that happens, consider choosing a file that's less likely to change,
-# or just filter out the changing lines.
-cat -E $f | tr -d '$' > out || fail=1
-cat    $f | tr -d '$' > exp || fail=1
+# or just filter out the changing lines.  The sed filter should help
+# to avoid any spurious numeric differences.
+cat -E $f | sed 's/[0-9][0-9]*/D/g' | tr -d '$' > out || fail=1
+cat    $f | sed 's/[0-9][0-9]*/D/g' | tr -d '$' > exp || fail=1
 
 cmp out exp || fail=1
 test $fail = 1 && diff out exp 2> /dev/null

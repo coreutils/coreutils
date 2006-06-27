@@ -1,3 +1,9 @@
+2006-06-27  Jim Meyering  <jim@meyering.net>
+
+	* tests/misc/cat-proc: Try to avoid any spurious numeric
+	differences in frequently-changing /proc/cpuinfo.
+	Reported by Nelson Beebe.
+
 2006-06-26  Jim Meyering  <jim@meyering.net>
 
 	Attempt rmdir (actually, unlinkat-with-AT_REMOVEDIR) upon any
