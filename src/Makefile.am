@@ -345,6 +345,7 @@ s2 = '/^\#define AUTHORS \\\\/{;n;$(sed_filter);p;q;}'
 # don't need to be marked.
 #
 # The second nm|grep checks for file-scope variables with `extern' scope.
+.PHONY: sc_tight_scope
 sc_tight_scope: $(all_programs)
 	@t=exceptions-$$$$;						\
 	trap "s=$$?; rm -f $$t; exit $$s" 0 1 2 13 15;			\
