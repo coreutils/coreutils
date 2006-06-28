@@ -1,6 +1,6 @@
 /* savedir.c -- save the list of files in a directory in a string
 
-   Copyright 1990, 1997, 1998, 1999, 2000, 2001, 2003, 2004, 2005 Free
+   Copyright 1990, 1997, 1998, 1999, 2000, 2001, 2003, 2004, 2005, 2006 Free
    Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -42,13 +42,6 @@
 # if HAVE_NDIR_H
 #  include <ndir.h>
 # endif
-#endif
-
-#ifdef CLOSEDIR_VOID
-/* Fake a return value. */
-# define CLOSEDIR(d) (closedir (d), 0)
-#else
-# define CLOSEDIR(d) closedir (d)
 #endif
 
 #include <stddef.h>
@@ -117,7 +110,7 @@ savedirstream (DIR *dirp)
     }
   name_space[used] = '\0';
   save_errno = errno;
-  if (CLOSEDIR (dirp) != 0)
+  if (closedir (dirp) != 0)
     save_errno = errno;
   if (save_errno != 0)
     {
