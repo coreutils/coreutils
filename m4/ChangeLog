@@ -1,12 +1,13 @@
 2006-06-28  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* jm-macros.m4 (jl_MACROS): Require 2.60, not 2.59d.
+	* jm-macros.m4 (gl_CHECK_ALL_TYPES): Don't require AC_C_CONST, since
+	it's obsolete.
 
 2006-06-28  Derek Price  <derek@ximbiot.com>
 
 	* fnmatch.m4 (_AC_LIBOBJ_FNMATCH): Don't require AC_C_CONST, since
 	it's obsolete.
-	* jm-macros.m4 (gl_CHECK_ALL_TYPES): Likewise.
 	* strftime.m4 (gl_FUNC_GNU_STRFTIME): Likewise.
 
 2006-06-19  Paul Eggert  <eggert@cs.ucla.edu>
