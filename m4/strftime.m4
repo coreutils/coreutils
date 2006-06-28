@@ -1,6 +1,6 @@
-#serial 25
+#serial 26
 
-# Copyright (C) 1996, 1997, 1999, 2000, 2001, 2002, 2003, 2004, 2005
+# Copyright (C) 1996, 1997, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006
 # Free Software Foundation, Inc.
 #
 # This file is free software; the Free Software Foundation
@@ -11,7 +11,6 @@
 
 AC_DEFUN([gl_FUNC_GNU_STRFTIME],
 [AC_REQUIRE([gl_FUNC_STRFTIME])dnl
- AC_REQUIRE([AC_C_CONST])dnl
 ])
 
 # These are the prerequisite macros for GNU's strftime.c replacement.
