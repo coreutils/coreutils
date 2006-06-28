@@ -1,3 +1,9 @@
+2006-06-28  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (sort invocation): 'sort +1 -2' is now supported
+	even when conforming to POSIX 1003.1-2001, since this is a pure
+	extension to POSIX.
+
 2006-06-27  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (wc invocation): Remove ./ prefix from example.
