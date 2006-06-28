@@ -1,5 +1,5 @@
-getfacl --version < /dev/null 2> /dev/null 1>&2 \
-  && setfacl --version < /dev/null 2> /dev/null 1>&2 || {
+getfacl --version < /dev/null > /dev/null 2>&1 \
+  && setfacl --version < /dev/null > /dev/null 2>&1 || {
   cat <<EOF 1>&2
 **************************************
 $0: This test requires getfacl and setfacl.
@@ -8,7 +8,7 @@ EOF
   (exit 77); exit 77
 }
 
-id -u bin 2> /dev/null 1>&2 || {
+id -u bin > /dev/null 2>&1 || {
   cat <<EOF 1>&2
 **************************************
 $0: This test requires a local user named bin.

@@ -25,7 +25,7 @@ fi
 
 fail=0
 
-dd cbs=4 ibs=4 conv=unblock,sync < in 2>/dev/null > out || fail=1
+dd cbs=4 ibs=4 conv=unblock,sync < in > out 2> /dev/null || fail=1
 cat <<\EOF > exp || fail=1
 0001
 0002
