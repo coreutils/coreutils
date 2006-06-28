@@ -3,7 +3,7 @@
 # This is a modified version of autoconf's AC_FUNC_FNMATCH.
 # This file should be simplified after Autoconf 2.57 is required.
 
-# Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005 Free Software
+# Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005, 2006 Free Software
 # Foundation, Inc.
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
@@ -61,8 +61,7 @@ AS_IF([test $$2 = yes], [$3], [$4])
 # ------------------
 # Prepare the replacement of fnmatch.
 AC_DEFUN([_AC_LIBOBJ_FNMATCH],
-[AC_REQUIRE([AC_C_CONST])dnl
-AC_REQUIRE([AC_FUNC_ALLOCA])dnl
+[AC_REQUIRE([AC_FUNC_ALLOCA])dnl
 AC_REQUIRE([AC_TYPE_MBSTATE_T])dnl
 AC_CHECK_DECLS([getenv])
 AC_CHECK_FUNCS([btowc mbsrtowcs mempcpy wmemchr wmemcpy wmempcpy])
