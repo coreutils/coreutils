@@ -1,4 +1,4 @@
-#serial 98   -*- autoconf -*-
+#serial 99   -*- autoconf -*-
 
 dnl Misc type-related macros for coreutils.
 
@@ -23,7 +23,7 @@ dnl Misc type-related macros for coreutils.
 
 AC_DEFUN([gl_MACROS],
 [
-  AC_PREREQ(2.59d)
+  AC_PREREQ(2.60)
 
   GNU_PACKAGE="GNU $PACKAGE"
   AC_DEFINE_UNQUOTED(GNU_PACKAGE, "$GNU_PACKAGE",
@@ -226,7 +226,6 @@ AC_DEFUN([gl_CHECK_ALL_TYPES],
 
   dnl Checks for typedefs, structures, and compiler characteristics.
   AC_REQUIRE([AC_C_BIGENDIAN])
-  AC_REQUIRE([AC_C_CONST])
   AC_REQUIRE([AC_C_VOLATILE])
   AC_REQUIRE([AC_C_INLINE])
   AC_REQUIRE([AC_C_LONG_DOUBLE])
