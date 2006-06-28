@@ -1,3 +1,18 @@
+2006-06-28  Jim Meyering  <jim@meyering.net>
+
+	* src/c99-to-c89.diff: Regenerate, to remove fuzz.
+
+2006-06-28  Bob Proulx  <bob@proulx.com>  (tiny change)
+
+	* tests/mv/i-link-no: Work around HP-UX /bin/sh tracing problem
+	(set -x when VERBOSE=yes) when stderr is redirected before stdout
+	causing shell tracing of the stdout redirection to be written to
+	the stderr file.  Avoid problem and test failure on HP-UX by
+	redirecting stderr last.
+	* tests/dd/unblock-sync: Order shell file redirections for
+	stderr and stdout in the common style.
+	tests/acl: Likewise.
+
 2006-06-27  Jim Meyering  <jim@meyering.net>
 
 	* tests/misc/cat-proc: Try to avoid any spurious numeric

@@ -1,5 +1,5 @@
---- src/remove.c	2006-03-26 14:33:56.682770466 +0200
-+++ tmp-remove.c	2006-05-07 19:11:13.294363284 +0200
+--- remove.c	26 Jun 2006 13:29:48 -0000	1.152
++++ remove.c	28 Jun 2006 06:58:51 -0000
 @@ -202,9 +202,10 @@ pop_dir (Dirstack_state *ds)
  {
    size_t n_lengths = obstack_object_size (&ds->len_stack) / sizeof (size_t);
@@ -41,7 +41,7 @@
  }
  
  /* Remove entries in the directory open on DIRP
-@@ -1269,9 +1273,10 @@ remove_dir (int fd_cwd, Dirstack_state *
+@@ -1285,9 +1289,10 @@ remove_dir (int fd_cwd, Dirstack_state *
  	/* The name of the directory that we have just processed,
  	   nominally removing all of its contents.  */
  	char *empty_dir;
@@ -53,7 +53,7 @@
  	assert (dirp != NULL || AD_stack_height (ds) == 1);
  
  	/* Try to remove EMPTY_DIR only if remove_cwd_entries succeeded.  */
-@@ -1348,6 +1353,7 @@ rm_1 (Dirstack_state *ds, char const *fi
+@@ -1364,6 +1369,7 @@ rm_1 (Dirstack_state *ds, char const *fi
    AD_push_initial (ds);
    AD_INIT_OTHER_MEMBERS ();
  
@@ -61,7 +61,7 @@
    int fd_cwd = AT_FDCWD;
    enum RM_status status = remove_entry (fd_cwd, ds, filename, x, NULL);
    if (status == RM_NONEMPTY_DIR)
-@@ -1364,6 +1370,7 @@ rm_1 (Dirstack_state *ds, char const *fi
+@@ -1380,6 +1386,7 @@ rm_1 (Dirstack_state *ds, char const *fi
    ds_clear (ds);
  
    return status;
@@ -69,7 +69,7 @@
  }
  
  /* Remove all files and/or directories specified by N_FILES and FILE.
-@@ -1386,9 +1393,11 @@ rm (size_t n_files, char const *const *f
+@@ -1402,9 +1409,11 @@ rm (size_t n_files, char const *const *f
  	}
  
        cycle_check_init (&ds->cycle_check_state);
