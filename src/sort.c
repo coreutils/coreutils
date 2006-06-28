@@ -2320,37 +2320,42 @@ main (int argc, char **argv)
 	{
 	case 1:
 	  key = NULL;
-	  if (obsolete_usage && optarg[0] == '+')
+	  if (optarg[0] == '+')
 	    {
-	      /* Treat +POS1 [-POS2] as a key if possible; but silently
-		 treat an operand as a file if it is not a valid +POS1.  */
-	      key = new_key ();
-	      s = parse_field_count (optarg + 1, &key->sword, NULL);
-	      if (s && *s == '.')
-		s = parse_field_count (s + 1, &key->schar, NULL);
-	      if (! (key->sword | key->schar))
-		key->sword = SIZE_MAX;
-	      if (! s || *set_ordering (s, key, bl_start))
+	      bool minus_pos_usage = (optind != argc && argv[optind][0] == '-'
+				      && ISDIGIT (argv[optind][1]));
+	      obsolete_usage |= minus_pos_usage & ~posixly_correct;
+	      if (obsolete_usage)
 		{
-		  free (key);
-		  key = NULL;
-		}
-	      else
-		{
-		  if (optind != argc && argv[optind][0] == '-'
-		      && ISDIGIT (argv[optind][1]))
+		  /* Treat +POS1 [-POS2] as a key if possible; but silently
+		     treat an operand as a file if it is not a valid +POS1.  */
+		  key = new_key ();
+		  s = parse_field_count (optarg + 1, &key->sword, NULL);
+		  if (s && *s == '.')
+		    s = parse_field_count (s + 1, &key->schar, NULL);
+		  if (! (key->sword | key->schar))
+		    key->sword = SIZE_MAX;
+		  if (! s || *set_ordering (s, key, bl_start))
 		    {
-		      char const *optarg1 = argv[optind++];
-		      s = parse_field_count (optarg1 + 1, &key->eword,
-					     N_("invalid number after `-'"));
-		      if (*s == '.')
-			s = parse_field_count (s + 1, &key->echar,
-					       N_("invalid number after `.'"));
-		      if (*set_ordering (s, key, bl_end))
-			badfieldspec (optarg1,
-				      N_("stray character in field spec"));
+		      free (key);
+		      key = NULL;
 		    }
-		  insertkey (key);
+		  else
+		    {
+		      if (minus_pos_usage)
+			{
+			  char const *optarg1 = argv[optind++];
+			  s = parse_field_count (optarg1 + 1, &key->eword,
+					     N_("invalid number after `-'"));
+			  if (*s == '.')
+			    s = parse_field_count (s + 1, &key->echar,
+					       N_("invalid number after `.'"));
+			  if (*set_ordering (s, key, bl_end))
+			    badfieldspec (optarg1,
+				      N_("stray character in field spec"));
+			}
+		      insertkey (key);
+		    }
 		}
 	    }
 	  if (! key)
