@@ -1,5 +1,11 @@
 2006-06-28  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* NEWS: Support obsolete usages like "sort +1 -2" even when
+	conforming to POSIX 1003.1-2001, since this is a pure extension to
+	POSIX.  Problem reported by Christian in:
+	http://lists.gnu.org/archive/html/bug-coreutils/2006-06/msg00220.html
+	* src/sort.c (main): Implement this.
+
 	* src/system.h (CLOSEDIR): Remove.  All uses changed to closedir.
 	Autoconf 2.60 says this stuff was obsolete.
 

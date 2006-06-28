@@ -77,6 +77,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   sort now reports incompatible options (e.g., -i and -n) rather than
   silently ignoring one of them.
 
+  sort now supports obsolete usages like "sort +1 -2" when conforming
+  to POSIX 1003.1-2001, since this is a pure extension to POSIX.
+  However, "sort +1" still sorts the file named "+1".
+
   stat's --format=FMT option now works the way it did before 5.3.0:
   FMT is automatically newline terminated.  The first stable release
   containing this change was 5.92.
