@@ -4,11 +4,12 @@
 	* jm-macros.m4 (gl_CHECK_ALL_TYPES): Don't require AC_C_CONST, since
 	it's obsolete.
 
-2006-06-28  Derek Price  <derek@ximbiot.com>
+2006-06-28  Derek R. Price  <derek@ximbiot.com>
 
 	* fnmatch.m4 (_AC_LIBOBJ_FNMATCH): Don't require AC_C_CONST, since
 	it's obsolete.
 	* strftime.m4 (gl_FUNC_GNU_STRFTIME): Likewise.
+	* savedir.m4: Remove AC_FUNC_CLOSEDIR_VOID requirement.
 
 2006-06-19  Paul Eggert  <eggert@cs.ucla.edu>
 
