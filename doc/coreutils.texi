@@ -3681,11 +3681,13 @@ numbers of leading blanks in fields can cause confusing results.
 Keys can span multiple fields.
 
 @vindex _POSIX2_VERSION
+@vindex POSIXLY_CORRECT
 On older systems, @command{sort} supports an obsolete origin-zero
 syntax @samp{+@var{pos1} [-@var{pos2}]} for specifying sort keys.
 This obsolete behavior can be enabled or disabled with the
 @env{_POSIX2_VERSION} environment variable (@pxref{Standards
-conformance}).
+conformance}); it can also be enabled when @env{POSIXLY_CORRECT} is
+not set by using the obsolete syntax with @samp{-@var{pos2}} present.
 
 Scripts intended for use on standard hosts should avoid obsolete
 syntax and should use @option{-k} instead.  For example, avoid
