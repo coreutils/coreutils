@@ -423,7 +423,7 @@ AD_pop_and_chdir (DIR **dirp, Dirstack_state *ds, char **prev_dir)
     {
       struct stat sb;
       int fd = openat (dirfd (*dirp), "..", O_RDONLY);
-      if (CLOSEDIR (*dirp) != 0)
+      if (closedir (*dirp) != 0)
 	{
 	  error (0, errno, _("FATAL: failed to close directory %s"),
 		 quote (full_filename (*prev_dir)));
@@ -474,7 +474,7 @@ AD_pop_and_chdir (DIR **dirp, Dirstack_state *ds, char **prev_dir)
     }
   else
     {
-      if (CLOSEDIR (*dirp) != 0)
+      if (closedir (*dirp) != 0)
 	{
 	  error (0, errno, _("FATAL: failed to close directory %s"),
 		 quote (full_filename (*prev_dir)));
@@ -1162,7 +1162,7 @@ The following directory is part of the cycle:\n  %s\n"),
 	      }
 
 	    *subdir = xstrdup (f);
-	    if (CLOSEDIR (*dirp) != 0)
+	    if (closedir (*dirp) != 0)
 	      {
 		error (0, 0, _("failed to close directory %s"),
 		       quote (full_filename (".")));
@@ -1337,7 +1337,7 @@ remove_dir (int fd_cwd, Dirstack_state *ds, char const *dir,
   AD_stack_pop (ds);
 
  closedir_and_return:;
-  if (dirp != NULL && CLOSEDIR (dirp) != 0)
+  if (dirp != NULL && closedir (dirp) != 0)
     {
       error (0, 0, _("failed to close directory %s"),
 	     quote (full_filename (".")));

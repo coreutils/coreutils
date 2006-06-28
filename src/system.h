@@ -241,13 +241,6 @@ initialize_exit_failure (int status)
 # endif /* HAVE_NDIR_H */
 #endif /* HAVE_DIRENT_H */
 
-#if CLOSEDIR_VOID
-/* Fake a return value. */
-# define CLOSEDIR(d) (closedir (d), 0)
-#else
-# define CLOSEDIR(d) closedir (d)
-#endif
-
 enum
 {
   NOT_AN_INODE_NUMBER = 0

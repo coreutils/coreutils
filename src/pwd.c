@@ -216,7 +216,7 @@ find_dir_entry (struct stat *dot_sb, struct file_name *file_name,
 	}
     }
 
-  if (dirp == NULL || CLOSEDIR (dirp) != 0)
+  if (dirp == NULL || closedir (dirp) != 0)
     {
       /* Note that this diagnostic serves for both readdir
 	 and closedir failures.  */

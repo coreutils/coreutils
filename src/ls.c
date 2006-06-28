@@ -2377,7 +2377,7 @@ print_dir (char const *name, char const *realname, bool command_line_arg)
 	break;
     }
 
-  if (CLOSEDIR (dirp) != 0)
+  if (closedir (dirp) != 0)
     {
       file_failure (command_line_arg, _("closing directory %s"), name);
       /* Don't return; print whatever we got.  */

@@ -1,3 +1,8 @@
+2006-06-28  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/system.h (CLOSEDIR): Remove.  All uses changed to closedir.
+	Autoconf 2.60 says this stuff was obsolete.
+
 2006-06-28  Jim Meyering  <jim@meyering.net>
 
 	* src/c99-to-c89.diff: Regenerate, to remove fuzz.
