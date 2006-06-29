@@ -1,3 +1,7 @@
+2006-06-29  Derek R. Price  <derek@ximbiot.com>
+
+	* strftime.m4: Don't call AC_FUNC_STRFTIME.
+
 2006-06-28  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* jm-macros.m4 (jl_MACROS): Require 2.60, not 2.59d.

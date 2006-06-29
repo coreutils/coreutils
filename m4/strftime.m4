@@ -1,4 +1,4 @@
-#serial 26
+#serial 27
 
 # Copyright (C) 1996, 1997, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006
 # Free Software Foundation, Inc.
@@ -18,9 +18,6 @@ AC_DEFUN([gl_FUNC_STRFTIME],
 [
  AC_LIBSOURCES([strftime.c, strftime.h])
  AC_LIBOBJ([strftime])
-
- # strftime.c uses the underyling system strftime if it exists.
- AC_REQUIRE([AC_FUNC_STRFTIME])
 
  # This defines (or not) HAVE_TZNAME and HAVE_TM_ZONE.
  AC_REQUIRE([AC_STRUCT_TIMEZONE])

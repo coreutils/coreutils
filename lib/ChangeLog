@@ -1,3 +1,7 @@
+2006-06-29  Derek R. Price  <derek@ximbiot.com>
+
+	* strftime.c: Assume strftime exists.
+
 2006-06-28  Derek R. Price  <derek@ximbiot.com>
 
 	* savedir.c (CLOSEDIR): Remove.  All uses changed to closedir.
