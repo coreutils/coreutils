@@ -38,7 +38,10 @@ stty -raw -F no/such/file 2>/dev/null && fail=1
 stty -raw -a 2>/dev/null && fail=1
 
 # Build a list of all boolean options stty accepts on this system.
-options=`stty -a|tail -n +2|tr ';' '\n'|sed '/ = /d;s/^ //;s/-//g'`
+# Don't depend on terminal width.  Put each option on its own line,
+# remove all non-boolean ones, then remove any leading hyphens.
+sed_del='/^speed/d;/^rows/d;/^columns/d;/ = /d'
+options=`stty -a | tr -s ';' '\n' | sed "s/^ //;$sed_del;s/-//g"`
 
 # Take them one at a time, with and without the leading `-'.
 for opt in $options; do

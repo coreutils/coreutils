@@ -1,3 +1,9 @@
+2006-06-30  Jim Meyering  <jim@meyering.net>
+
+	* tests/stty/basic-1: Work around an intermittent test failure
+	on HP-UX 11.11.  Report and analysis from Bob Proulx.
+	http://article.gmane.org/gmane.comp.gnu.core-utils.bugs/7475
+
 2006-06-28  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: Support obsolete usages like "sort +1 -2" even when
