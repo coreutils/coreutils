@@ -2501,8 +2501,7 @@ by 1048576.
 @vindex name @r{follow option}
 @vindex descriptor @r{follow option}
 Loop forever trying to read more characters at the end of the file,
-presumably because the file is growing.  This option is ignored if
-no @var{file} operand is specified and standard input is a pipe.
+presumably because the file is growing.
 If more than one file is given, @command{tail} prints a header whenever it
 gets output from a different file, to indicate which file that output is
 from.
@@ -2533,6 +2532,10 @@ growing.
 
 The option values @samp{descriptor} and @samp{name} may be specified only
 with the long form of the option, not with @option{-f}.
+
+@vindex POSIXLY_CORRECT
+If @env{POSIXLY_CORRECT} is set, the @option{-f} option is ignored if
+no @var{file} operand is specified and standard input is a pipe.
 
 @item -F
 @opindex -F
