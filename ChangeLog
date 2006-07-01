@@ -1,3 +1,11 @@
+2006-07-01  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* NEWS: With no operand, 'tail -f' now silently ignores the '-f'
+	only if standard input is a FIFO or pipe and POSIXLY_CORRECT is set.
+	* src/tail.c (main): Implement this.
+	* tests/tail/Test.pm (f-pipe-1): Renamed from f-1.
+	(test_vector): Set POSIXLY_CORRECT for the f-pipe-* tests.
+
 2006-07-01  Jim Meyering  <jim@meyering.net>
 
 	* src/ln.c (do_link): Use new, shorter URL, for ag-review link.

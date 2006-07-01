@@ -105,6 +105,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   two hex digits), and the standard sequences (\a, \b, \f, \n, \r, \t,
   \v, \", \\).
 
+  With no operand, 'tail -f' now silently ignores the '-f' only if
+  standard input is a FIFO or pipe and POSIXLY_CORRECT is set.
+  Formerly, it ignored the '-f' when standard input was a FIFO, pipe,
+  or socket.
+
 ** Scheduled for removal
 
   ptx's --copyright (-C) option is scheduled for removal in 2007, and
