@@ -16,6 +16,7 @@
 ^lib/strtoull\.c$
 ^lib/strtoumax\.c$
 ^lib/umaxtostr\.c$
+^lib/xstrtold\.c$
 ^lib/xstrtoul\.c$
 ^src/false\.c$
 ^src/lbracket\.c$
