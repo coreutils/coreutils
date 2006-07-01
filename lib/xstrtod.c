@@ -1,7 +1,7 @@
 /* error-checking interface to strtod-like functions
 
-   Copyright (C) 1996, 1999, 2000, 2003, 2004, 2005 Free Software
-   Foundation, Inc.
+   Copyright (C) 1996, 1999, 2000, 2003, 2004, 2005, 2006 Free
+   Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -29,17 +29,26 @@
 #include <limits.h>
 #include <stdio.h>
 
-/* An interface to strtod that encapsulates all the error checking
-   one should usually perform.  Like strtod, but upon successful
+#if LONG
+# define XSTRTOD xstrtold
+# define DOUBLE long double
+#else
+# define XSTRTOD xstrtod
+# define DOUBLE double
+#endif
+
+/* An interface to a string-to-floating-point conversion function that
+   encapsulates all the error checking one should usually perform.
+   Like strtod/strtold, but upon successful
    conversion put the result in *RESULT and return true.  Return
    false and don't modify *RESULT upon any failure.  CONVERT
    specifies the conversion function, e.g., strtod itself.  */
 
 bool
-xstrtod (char const *str, char const **ptr, double *result,
-	 double (*convert) (char const *, char **))
+XSTRTOD (char const *str, char const **ptr, DOUBLE *result,
+	 DOUBLE (*convert) (char const *, char **))
 {
-  double val;
+  DOUBLE val;
   char *terminator;
   bool ok = true;
 
@@ -51,9 +60,9 @@ xstrtod (char const *str, char const **ptr, double *result,
     ok = false;
   else
     {
-      /* Allow underflow (in which case strtod returns zero),
+      /* Allow underflow (in which case CONVERT returns zero),
 	 but flag overflow as an error. */
-      if (val != 0.0 && errno == ERANGE)
+      if (val != 0 && errno == ERANGE)
 	ok = false;
     }
 
