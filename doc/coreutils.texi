@@ -13539,9 +13539,16 @@ Options must precede operands.
 @opindex -f @var{format}
 @opindex --format=@var{format}
 @cindex formatting of numbers in @command{seq}
-Print all numbers using @var{format}; default @samp{%g}.
-@var{format} must contain exactly one of the floating point
-output formats @samp{%e}, @samp{%f}, or @samp{%g}.
+Print all numbers using @var{format}.
+@var{format} must contain exactly one of the @samp{printf}-style
+floating point conversion specifications @samp{%a}, @samp{%e},
+@samp{%f}, @samp{%g}, @samp{%A}, @samp{%E}, @samp{%F}, @samp{%G}.
+
+The default format is derived from @var{first}, @var{step}, and
+@var{last}.  If these all use a fixed point decimal representation,
+the default format is @samp{%.@var{p}f}, where @var{p} is the minimum
+precision that can represent the output numbers exactly.  Otherwise,
+the default format is @samp{%g}.
 
 @item -s @var{string}
 @itemx --separator=@var{string}
@@ -13552,34 +13559,17 @@ The output always terminates with a newline.
 @item -w
 @itemx --equal-width
 Print all numbers with the same width, by padding with leading zeroes.
+@var{first}, @var{step}, and @var{last} should all use a fixed point
+decimal representation.
 (To have other kinds of padding, use @option{--format}).
 
 @end table
 
-If you want to use @command{seq} to print sequences of large integer values,
-don't use the default @samp{%g} format since it can result in
-loss of precision:
-
-@example
-$ seq 1000000 1000001
-1e+06
-1e+06
-@end example
-
-Instead, you can use the format, @samp{%1.f},
-to print large decimal numbers with no exponent and no decimal point.
-
-@example
-$ seq --format=%1.f 1000000 1000001
-1000000
-1000001
-@end example
-
-If you want hexadecimal output, you can use @command{printf}
+If you want hexadecimal integer output, you can use @command{printf}
 to perform the conversion:
 
 @example
-$ printf %x'\n' `seq -f %1.f 1048575 1024 1050623`
+$ printf '%x\n' `seq 1048575 1024 1050623`
 fffff
 1003ff
 1007ff
@@ -13589,55 +13579,49 @@ For very long lists of numbers, use xargs to avoid
 system limitations on the length of an argument list:
 
 @example
-$ seq -f %1.f 1000000 | xargs printf %x'\n' | tail -n 3
+$ seq 1000000 | xargs printf '%x\n' | tail -n 3
 f423e
 f423f
 f4240
 @end example
 
 To generate octal output, use the printf @code{%o} format instead
-of @code{%x}.  Note however that using printf might not work for numbers
-outside the usual 32-bit range:
-
-@example
-$ printf "%x\n" `seq -f %1.f 4294967295 4294967296`
-ffffffff
-bash: printf: 4294967296: Numerical result out of range
-@end example
+of @code{%x}.
 
 On most systems, seq can produce whole-number output for values up to
-@code{2^53}, so here's a more general approach to base conversion that
-also happens to be more robust for such large numbers.  It works by
-using @code{bc} and setting its output radix variable, @var{obase},
-to @samp{16} in this case to produce hexadecimal output.
+at least @code{2^53}.  Larger integers are approximated.  The details
+differ depending on your floating-point implementation, but a common
+case is that @command{seq} works with integers through @code{2^64},
+and larger integers may not be numerically correct:
 
 @example
-$ (echo obase=16; seq -f %1.f 4294967295 4294967296)|bc
-FFFFFFFF
-100000000
+$ seq 18446744073709551616 1 18446744073709551618
+18446744073709551616
+18446744073709551616
+18446744073709551618
 @end example
 
-Be careful when using @command{seq} with a fractional @var{increment},
+Be careful when using @command{seq} with a fractional @var{increment};
 otherwise you may see surprising results.  Most people would expect to
-see @code{0.3} printed as the last number in this example:
+see @code{0.000003} printed as the last number in this example:
 
 @example
-$ seq -s ' ' 0 .1 .3
-0 0.1 0.2
+$ seq -s ' ' 0 0.000001 0.000003
+0.000000 0.000001 0.000002
 @end example
 
-But that doesn't happen on most systems because @command{seq} is
+But that doesn't happen on many systems because @command{seq} is
 implemented using binary floating point arithmetic (via the C
-@code{double} type)---which means some decimal numbers like @code{.1}
+@code{long double} type)---which means decimal fractions like @code{0.000001}
 cannot be represented exactly.  That in turn means some nonintuitive
-conditions like @w{@code{.1 * 3 > .3}} will end up being true.
+conditions like @w{@code{0.000001 * 3 > 0.000003}} will end up being true.
 
 To work around that in the above example, use a slightly larger number as
 the @var{last} value:
 
 @example
-$ seq -s ' ' 0 .1 .31
-0 0.1 0.2 0.3
+$ seq -s ' ' 0 0.000001 0.0000031
+0.000000 0.000001 0.000002 0.000003
 @end example
 
 In general, when using an @var{increment} with a fractional part, where
