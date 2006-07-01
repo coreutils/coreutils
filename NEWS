@@ -74,6 +74,17 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   rm no longer fails to remove an empty, unreadable directory
 
+  seq changes:
+
+    seq defaults to a minimal fixed point format that does not lose
+    information if seq's operands are all fixed point decimal numbers.
+    You no longer need the `-f%.f' in `seq -f%.f 1048575 1024 1050623',
+    for example, since the default format now has the same effect.
+
+    seq now lets you use %a, %A, %E, %F, and %G formats.
+
+    seq now uses long double internally rather than double.
+
   sort now reports incompatible options (e.g., -i and -n) rather than
   silently ignoring one of them.
 

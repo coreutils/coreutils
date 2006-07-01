@@ -1,3 +1,11 @@
+2006-06-30  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* xstrtod.c (XSTRTOD, DOUBLE): New macros, so that we can support
+	both double and long double versions.
+	(XSTRTOD): Renamed from xstrtod.  Use DOUBLE internally.
+	* xstrtold.c: New file.
+	* xstrtod.h (xstrtold): New decl.
+
 2006-06-29  Derek R. Price  <derek@ximbiot.com>
 
 	* strftime.c: Assume strftime exists.

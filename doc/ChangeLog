@@ -1,3 +1,12 @@
+2006-06-30  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (seq invocation): seq now uses long double
+	internally rather than double.  It now defaults to a minimal fixed
+	point format if possible.  It lets you use %a, %A, %E, %F, %G.
+	Don't assume printf doesn't work for numbers that fit in 64 but
+	not 32 bits; typically they work these days.  Improve discussion
+	of large integers and update the rounding-error numbers.
+
 2006-06-28  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (sort invocation): 'sort +1 -2' is now supported

@@ -1,3 +1,13 @@
+2006-06-30  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* c-strtod.m4 (gl_C_STRTOLD): Add c-strtod.c to LIBSOURCES.
+	Require gl_USE_SYSTEM_EXTENSIONS, not gl_C_STRTOD, since we don't
+	want to require the building of c-strtod.o.
+	* lib-check.m4 (cu_LIB_CHECK): Remuve SEQ_LIBM, since seq no longer
+	needs -lm directly.
+	* prereq.m4 (gl_PREREQ): Require gl_C_STRTOD and gl_XSTRTOLD.
+	* xstrtod.m4 (gl_XSTRTOLD): New macro.
+
 2006-06-29  Derek R. Price  <derek@ximbiot.com>
 
 	* strftime.m4: Don't call AC_FUNC_STRFTIME.

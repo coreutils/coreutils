@@ -1,3 +1,32 @@
+2006-06-30  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* NEWS: seq now uses long double internally rather than double.
+	It now defaults to a minimal fixed point format if possible.
+	It lets you use %a, %A, %E, %F, %G.
+	* src/Makefile.am (seq_LDADD): Remove $(SEQ_LIBM); add $(POW_LIB).
+	* src/seq.c: Don't include <math.h> or <xstrtol.h>; no longer needed.
+	(isfinite) [!defined isfinite]: New macro.
+	(separator, terminator): Now points to const.
+	(first, step, last): Remove.
+	(usage): Update to match new behavior.
+	(struct operand, operand): New type.
+	(scan_arg): Renamed from scan_double_arg, since we no longer use double.
+	All uses changed.
+	Compute and return a value of type operand, not double.
+	(long_double_format): Renamed from valid_format, and now returns a
+	new format with an "L" added if needed, if the original format was
+	valid.  Allow %a, %A, %E, %F, and %G formats.
+	(print_numbers): Take numeric values as args rather than from globals.
+	Print long double, not double.
+	(get_width_format): Remove.
+	(get_default_format): New function.
+	(main): Implement new way of calculating default format.
+	Don't worry about locale's representation of the decimal point, since
+	the arguments are always processed in the C locale.
+	* tests/seq/basic (neg-2): Adjust to new default format.
+	(eq-wid-1, eq-wid-2): Resurrect these tests, since the new
+	implementation should do the right thing.
+
 2006-06-30  Jim Meyering  <jim@meyering.net>
 
 	* tests/stty/basic-1: Work around an intermittent test failure
