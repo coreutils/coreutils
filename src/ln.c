@@ -246,7 +246,7 @@ do_link (const char *source, const char *dest)
      POSIX 1003.1-2004 requires that ln -f A B must unlink B even on
      failure (e.g., when A does not exist).  This is counterintuitive,
      and we submitted a defect report
-     <http://www.opengroup.org/sophocles/show_mail.tpl?source=L&listname=austin-review-l&id=1795>
+     <http://www.opengroup.org/austin/mailarchives/ag-review/msg01794.html>
      (2004-06-24).  If the committee does not fix the standard we'll
      have to change the behavior of ln -f, at least if POSIXLY_CORRECT
      is set.  In the meantime ln -f A B will not unlink B unless the

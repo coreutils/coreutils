@@ -1,5 +1,7 @@
 2006-07-01  Jim Meyering  <jim@meyering.net>
 
+	* src/ln.c (do_link): Use new, shorter URL, for ag-review link.
+
 	* .x-sc_require_config_h: Add ^lib/xstrtold\.c$, so make distcheck
 	passes once again.
 
