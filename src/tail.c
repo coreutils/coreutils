@@ -1635,12 +1635,19 @@ main (int argc, char **argv)
       file = &dummy_stdin;
 
       /* POSIX says that -f is ignored if no file operand is specified
-	 and standard input is a pipe.  */
-      if (forever)
+	 and standard input is a pipe.  However, the GNU coding
+	 standards say that program behavior should not depend on
+	 device type, because device independence is an important
+	 principle of the system's design.
+
+	 Follow the POSIX requirement only if POSIXLY_CORRECT is set.
+	 Ideally this would ignore -f only for pipes, but S_ISFIFO
+	 succeeds for both FIFOs and pipes and we know of no portable,
+	 reliable way to distinguish them.  */
+      if (forever && getenv ("POSIXLY_CORRECT"))
 	{
 	  struct stat stats;
-	  if (fstat (STDIN_FILENO, &stats) == 0
-	      && IS_PIPE_LIKE_FILE_TYPE (stats.st_mode))
+	  if (fstat (STDIN_FILENO, &stats) == 0 && S_ISFIFO (stats.st_mode))
 	    forever = false;
 	}
     }
