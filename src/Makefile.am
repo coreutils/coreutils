@@ -88,8 +88,8 @@ touch_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME)
 # If necessary, add -liconv to resolve use of iconv in lib/unicodeio.c.
 printf_LDADD = $(LDADD) $(POW_LIB) $(LIBICONV)
 
-# If necessary, add -lm to resolve use of floor, rint, modf.
-seq_LDADD = $(LDADD) $(SEQ_LIBM)
+# If necessary, add -lm to resolve use of pow in lib/strtod.c.
+seq_LDADD = $(LDADD) $(POW_LIB)
 
 # If necessary, add libraries to resolve the `pow' reference in lib/strtod.c
 # and the `nanosleep' reference in lib/xnanosleep.c.
