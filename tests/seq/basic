@@ -27,18 +27,15 @@ my @Tests =
    ['onearg-1',	qw(10),		{OUT => [(1..10)]}],
    ['onearg-2',	qw(-1)],
    ['neg-1',	qw(-10 10 10),	{OUT => [qw(-10 0 10)]}],
-   ['neg-2',	qw(-.1 .1 .1),	{OUT => [qw(-0.1 0 0.1)]}],
+   ['neg-2',	qw(-.1 .1 .1),	{OUT => [qw(-0.1 0.0 0.1)]}],
    ['neg-3',	qw(1 -1 0),	{OUT => [qw(1 0)]}],
    ['neg-4',	qw(1 -1 -1),	{OUT => [qw(1 0 -1)]}],
 
-   # Disable these equal-width tests for now.
-   # They fail with non-gcc compilers and some combinations
-   # of options and libraries on Solaris systems.
-   # ['eq-wid-1',	qw(-w 1 -1 -1),	{OUT => [qw(01 00 -1)]}],
+   ['eq-wid-1',	qw(-w 1 -1 -1),	{OUT => [qw(01 00 -1)]}],
 
    # Prior to 2.0g, this test would fail on e.g., HPUX systems
    # because it'd end up using %3.1f as the format instead of %4.1f.
-   # ['eq-wid-2',	qw(-w -.1 .1 .1),{OUT => [qw(-0.1 00.0 00.1)]}],
+   ['eq-wid-2',	qw(-w -.1 .1 .1),{OUT => [qw(-0.1 00.0 00.1)]}],
 
    # Prior to coreutils-4.5.11, some of these were not accepted.
    ['fmt-1',	qw(-f %2.1f 1.5 .5 2),{OUT => [qw(1.5 2.0)]}],
