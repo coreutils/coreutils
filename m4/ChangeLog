@@ -3,7 +3,7 @@
 	* c-strtod.m4 (gl_C_STRTOLD): Add c-strtod.c to LIBSOURCES.
 	Require gl_USE_SYSTEM_EXTENSIONS, not gl_C_STRTOD, since we don't
 	want to require the building of c-strtod.o.
-	* lib-check.m4 (cu_LIB_CHECK): Remuve SEQ_LIBM, since seq no longer
+	* lib-check.m4 (cu_LIB_CHECK): Remove SEQ_LIBM, since seq no longer
 	needs -lm directly.
 	* prereq.m4 (gl_PREREQ): Require gl_C_STRTOD and gl_XSTRTOLD.
 	* xstrtod.m4 (gl_XSTRTOLD): New macro.
