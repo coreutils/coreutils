@@ -77,8 +77,7 @@ my @tv = (
 ['n-5b', '-n  0', "y\n" x 5, '', 0],
 
 # With textutils-1.22, this failed.
-['f-1', '-f -n 1', "a\nb\n", "b\n", 0],
-#['f-2', '-f -n 1 -', "a\nb\n", "b\n", 0],
+['f-pipe-1', '-f -n 1', "a\nb\n", "b\n", 0],
 );
 
 sub test_vector
@@ -95,6 +94,10 @@ sub test_vector
       if ($test_name =~ /^(err-6|c-2)$/)
         {
 	  $Test::env{$test_name} = ['_POSIX2_VERSION=200112'];
+        }
+      if ($test_name =~ /^f-pipe-/)
+        {
+	  $Test::env{$test_name} = ['POSIXLY_CORRECT=1'];
         }
 
       # If you run the minus* tests with a FILE arg they'd hang.
