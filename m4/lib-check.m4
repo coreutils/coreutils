@@ -1,9 +1,9 @@
-#serial 9
+#serial 10
 
 dnl Misc lib-related macros for coreutils.
 
 # Copyright (C) 1993, 1994, 1995, 1996, 1997, 2000, 2001, 2003, 2004,
-# 2005 Free Software Foundation, Inc.
+# 2005, 2006 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -29,20 +29,6 @@ AC_DEFUN([cu_LIB_CHECK],
 
   # m88k running dgux 5.4 needs this
   AC_CHECK_LIB(ldgc, main)
-
-  # Some programs need to link with -lm.  printf does if it uses
-  # lib/strtod.c which uses pow.  And seq uses the math functions,
-  # floor, modf, rint.
-
-  # Check for these math functions used by seq.
-  AC_SUBST([SEQ_LIBM])
-  cu_saved_libs=$LIBS
-  AC_SEARCH_LIBS([floor], [m])
-  AC_SEARCH_LIBS([modf], [m])
-  AC_SEARCH_LIBS([rint], [m])
-  AC_CHECK_FUNCS([floor modf rint])
-  test "X$LIBS" = "X$cu_saved_libs" || SEQ_LIBM=-lm
-  LIBS=$cu_saved_libs
 
   # The -lsun library is required for YP support on Irix-4.0.5 systems.
   # m88k/svr3 DolphinOS systems using YP need -lypsec for id.
