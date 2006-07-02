@@ -1,3 +1,9 @@
+2006-07-02  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* longlong.m4: Sync from gnulib.
+	* stdint.m4: Likewise.
+	* ulonglong.m4: Likewise.
+
 2006-06-30  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* c-strtod.m4 (gl_C_STRTOLD): Add c-strtod.c to LIBSOURCES.
