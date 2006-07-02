@@ -1,3 +1,8 @@
+2006-07-02  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* stdint.m4 (gl_STDINT_H): Use more-mnemonic identifiers for
+	test cases, so that config.log is a bit easier to follow.
+
 2006-07-02  Jim Meyering  <jim@meyering.net>
 
 	* full-header-path.m4: New file, from gnulib.  Required by stdint.m4.

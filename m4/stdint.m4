@@ -1,4 +1,4 @@
-# stdint.m4 serial 12
+# stdint.m4 serial 13
 dnl Copyright (C) 2001-2002, 2004-2006 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
@@ -122,39 +122,42 @@ uintptr_t h = UINTPTR_MAX;
 intmax_t i = INTMAX_MAX;
 uintmax_t j = UINTMAX_MAX;
 struct s {
-  int a: PTRDIFF_MIN < 0 && 0 < PTRDIFF_MAX ? 1 : -1;
-  int b: SIG_ATOMIC_MIN <= 0 && 0 < SIG_ATOMIC_MAX ? 1 : -1;
-  int c: 0 < SIZE_MAX ? 1 : -1;
-  int d: WCHAR_MIN <= 0 && 0 < WCHAR_MAX ? 1 : -1;
-  int e: WINT_MIN <= 0 && 0 < WINT_MAX ? 1 : -1;
+  int check_PTRDIFF: PTRDIFF_MIN < 0 && 0 < PTRDIFF_MAX ? 1 : -1;
+  int check_SIG_ATOMIC: SIG_ATOMIC_MIN <= 0 && 0 < SIG_ATOMIC_MAX ? 1 : -1;
+  int check_SIZE: 0 < SIZE_MAX ? 1 : -1;
+  int check_WCHAR: WCHAR_MIN <= 0 && 0 < WCHAR_MAX ? 1 : -1;
+  int check_WINT: WINT_MIN <= 0 && 0 < WINT_MAX ? 1 : -1;
+
   /* Detect bugs in glibc 2.4 and Solaris 10 stdint.h, among others.  */
-  int f: (-1 < UINT8_C (0)) == (-1 < (uint_least8_t) 0) ? 1 : -1;
-  int g: (-1 < UINT16_C (0)) == (-1 < (uint_least16_t) 0) ? 1 : -1;
+  int check_UINT8_C:
+	(-1 < UINT8_C (0)) == (-1 < (uint_least8_t) 0) ? 1 : -1;
+  int check_UINT16_C:
+	(-1 < UINT16_C (0)) == (-1 < (uint_least16_t) 0) ? 1 : -1;
 
   /* Detect bugs in OpenBSD 3.9 stdint.h.  */
 #ifdef UINT8_MAX
-  int uint8: (uint8_t) -1 == UINT8_MAX ? 1 : -1;
+  int check_uint8: (uint8_t) -1 == UINT8_MAX ? 1 : -1;
 #endif
 #ifdef UINT16_MAX
-  int uint16: (uint16_t) -1 == UINT16_MAX ? 1 : -1;
+  int check_uint16: (uint16_t) -1 == UINT16_MAX ? 1 : -1;
 #endif
 #ifdef UINT32_MAX
-  int uint32: (uint32_t) -1 == UINT32_MAX ? 1 : -1;
+  int check_uint32: (uint32_t) -1 == UINT32_MAX ? 1 : -1;
 #endif
 #ifdef UINT64_MAX
-  int uint64: (uint64_t) -1 == UINT64_MAX ? 1 : -1;
+  int check_uint64: (uint64_t) -1 == UINT64_MAX ? 1 : -1;
 #endif
-  int uint_least8: (uint_least8_t) -1 == UINT_LEAST8_MAX ? 1 : -1;
-  int uint_least16: (uint_least16_t) -1 == UINT_LEAST16_MAX ? 1 : -1;
-  int uint_least32: (uint_least32_t) -1 == UINT_LEAST32_MAX ? 1 : -1;
-  int uint_least64: (uint_least64_t) -1 == UINT_LEAST64_MAX ? 1 : -1;
-  int uint_fast8: (uint_fast8_t) -1 == UINT_FAST8_MAX ? 1 : -1;
-  int uint_fast16: (uint_fast16_t) -1 == UINT_FAST16_MAX ? 1 : -1;
-  int uint_fast32: (uint_fast32_t) -1 == UINT_FAST32_MAX ? 1 : -1;
-  int uint_fast64: (uint_fast64_t) -1 == UINT_FAST64_MAX ? 1 : -1;
-  int uintptr: (uintptr_t) -1 == UINTPTR_MAX ? 1 : -1;
-  int uintmax: (uintmax_t) -1 == UINTMAX_MAX ? 1 : -1;
-  int size: (size_t) -1 == SIZE_MAX ? 1 : -1;
+  int check_uint_least8: (uint_least8_t) -1 == UINT_LEAST8_MAX ? 1 : -1;
+  int check_uint_least16: (uint_least16_t) -1 == UINT_LEAST16_MAX ? 1 : -1;
+  int check_uint_least32: (uint_least32_t) -1 == UINT_LEAST32_MAX ? 1 : -1;
+  int check_uint_least64: (uint_least64_t) -1 == UINT_LEAST64_MAX ? 1 : -1;
+  int check_uint_fast8: (uint_fast8_t) -1 == UINT_FAST8_MAX ? 1 : -1;
+  int check_uint_fast16: (uint_fast16_t) -1 == UINT_FAST16_MAX ? 1 : -1;
+  int check_uint_fast32: (uint_fast32_t) -1 == UINT_FAST32_MAX ? 1 : -1;
+  int check_uint_fast64: (uint_fast64_t) -1 == UINT_FAST64_MAX ? 1 : -1;
+  int check_uintptr: (uintptr_t) -1 == UINTPTR_MAX ? 1 : -1;
+  int check_uintmax: (uintmax_t) -1 == UINTMAX_MAX ? 1 : -1;
+  int check_size: (size_t) -1 == SIZE_MAX ? 1 : -1;
 };
 	 ]])],
          [gl_cv_header_working_stdint_h=yes])])
