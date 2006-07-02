@@ -1,5 +1,14 @@
 2006-07-02  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* stdint_.h (intmax_t, uintmax_t): Prefer long to long long if
+	both are 64 bits, since this seems to be the tradition, and this
+	prevents gcc -Wformat from warning about usages with PRIuMAX.  If
+	we ever run into a host that prefers long long to long in this
+	case, we'll need another configure-time test.  Problem reported by
+	Jim Meyering.
+
+2006-07-02  Paul Eggert  <eggert@cs.ucla.edu>
+
 	* Makefile.am (stdint.h): Sync from gnulib.
 	* stdint_.h: Sync from gnulib.
 

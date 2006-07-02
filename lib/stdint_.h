@@ -208,7 +208,7 @@
 
 #undef intmax_t
 #undef uintmax_t
-#if @HAVE_LONG_LONG_INT@
+#if @HAVE_LONG_LONG_INT@ && LONG_MAX >> 30 == 1
 # define intmax_t long long int
 # define uintmax_t unsigned long long int
 #elif defined int64_t
@@ -434,7 +434,7 @@
 
 #undef INTMAX_C
 #undef UINTMAX_C
-#if @HAVE_LONG_LONG_INT@
+#if @HAVE_LONG_LONG_INT@ && LONG_MAX >> 30 == 1
 # define INTMAX_C(x)   x##LL
 # define UINTMAX_C(x)  x##ULL
 #elif defined int64_t
