@@ -1,3 +1,8 @@
+2006-07-02  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/system.h: Include <stdint.h> unconditionally, since we
+	now assume the stdint module.
+
 2006-07-01  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: With no operand, 'tail -f' now silently ignores the '-f'

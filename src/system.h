@@ -334,9 +334,7 @@ enum
 #if HAVE_INTTYPES_H
 # include <inttypes.h>
 #endif
-#if HAVE_STDINT_H
-# include <stdint.h>
-#endif
+#include <stdint.h>
 
 #if ULONG_MAX_LT_ULLONG_MAX
 # define LONGEST_MODIFIER "ll"
