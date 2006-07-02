@@ -1,3 +1,7 @@
+2006-07-02  Jim Meyering  <jim@meyering.net>
+
+	* full-header-path.m4: New file, from gnulib.  Required by stdint.m4.
+
 2006-07-02  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* longlong.m4: Sync from gnulib.
