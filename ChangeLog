@@ -1,5 +1,10 @@
 2006-07-03  Jim Meyering  <jim@meyering.net>
 
+	The dev/inode of the topmost directory in each hierarchy were not
+	being recorded.
+	* src/remove.c (remove_cwd_entries): Don't call cycle_check here.
+	(AD_push): Call it from here instead.
+
 	Fix two small leaks.
 	* src/remove.c (AD_stack_clear): New function.
 	(rm_1): Use it.

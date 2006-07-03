@@ -590,6 +590,17 @@ AD_push (int fd_cwd, Dirstack_state *ds, char const *dir,
 	}
     }
 
+  if (cycle_check (&ds->cycle_check_state, dir_sb_from_parent))
+    {
+      error (0, 0, _("\
+WARNING: Circular directory structure.\n\
+This almost certainly means that you have a corrupted file system.\n\
+NOTIFY YOUR SYSTEM MANAGER.\n\
+The following directory is part of the cycle:\n  %s\n"),
+	     quote (full_filename (".")));
+      longjmp (ds->current_arg_jumpbuf, 1);
+    }
+
   /* Extend the stack.  */
   obstack_blank (&ds->Active_dir, sizeof (struct AD_ent));
 
@@ -1158,17 +1169,6 @@ remove_cwd_entries (DIR **dirp,
 		if (status == RM_ERROR)
 		  AD_mark_as_unremovable (ds, f);
 		break;
-	      }
-
-	    if (cycle_check (&ds->cycle_check_state, subdir_sb))
-	      {
-		error (0, 0, _("\
-WARNING: Circular directory structure.\n\
-This almost certainly means that you have a corrupted file system.\n\
-NOTIFY YOUR SYSTEM MANAGER.\n\
-The following directory is part of the cycle:\n  %s\n"),
-		       quote (full_filename (".")));
-		longjmp (ds->current_arg_jumpbuf, 1);
 	      }
 
 	    *subdir = xstrdup (f);
