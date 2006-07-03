@@ -14,7 +14,7 @@ TESTS_ENVIRONMENT = \
   PATH="`pwd`/../src$(PATH_SEPARATOR)$$PATH"
 
 EXTRA_DIST = \
-  $(TESTS) .env-warn Coreutils.pm Makefile.am.in README acl envvar-check \
+  $(TESTS) Coreutils.pm Makefile.am.in README acl envvar-check \
   expensive group-names input-tty lang-default mk-script priv-check \
   rwx-to-mode sample-test setgid-check umask-check very-expensive
 
@@ -36,15 +36,7 @@ check-root:
 	cd rm    && $(MAKE) check TESTS=fail-2eperm
 	cd tail-2 && $(MAKE) check TESTS=append-only
 
-check-recursive: evar-check root-hint
-
-# Warn when `make check' is run with POSIXLY_CORRECT or CDPATH set.
-.PHONY: evar-check
-evar-check:
-	../src/printenv POSIXLY_CORRECT >/dev/null \
-	  && sed s/%%/POSIXLY_CORRECT/ $(srcdir)/.env-warn || :
-	test "$${CDPATH+set}" = set \
-	  && sed s/%%/CDPATH/ $(srcdir)/.env-warn || :
+check-recursive: root-hint
 
 # Advertise `check-root' target.
 .PHONY: root-hint
