@@ -345,6 +345,15 @@ AD_stack_pop (Dirstack_state *ds)
   obstack_blank (&ds->Active_dir, -(int) sizeof (struct AD_ent));
 }
 
+static void
+AD_stack_clear (Dirstack_state *ds)
+{
+  while (0 < AD_stack_height (ds))
+    {
+      AD_stack_pop (ds);
+    }
+}
+
 static Dirstack_state *
 ds_init (void)
 {
@@ -469,6 +478,7 @@ AD_pop_and_chdir (DIR **dirp, Dirstack_state *ds, char **prev_dir)
 	  close (fd);
 
 	next_cmdline_arg:;
+	  free (*prev_dir);
 	  longjmp (ds->current_arg_jumpbuf, 1);
 	}
     }
@@ -1375,6 +1385,8 @@ rm_1 (Dirstack_state *ds, char const *filename,
 	status = RM_ERROR;
       else
 	status = remove_dir (fd_cwd, ds, filename, x, cwd_errno);
+
+      AD_stack_clear (ds);
     }
 
   ds_clear (ds);

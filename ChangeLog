@@ -1,5 +1,10 @@
 2006-07-03  Jim Meyering  <jim@meyering.net>
 
+	Fix two small leaks.
+	* src/remove.c (AD_stack_clear): New function.
+	(rm_1): Use it.
+	(AD_pop_and_chdir): Free *prev_dir just before longjmp.
+
 	* tests/Makefile.am, tests/*/Makefile.am: (TESTS_ENVIRONMENT):
 	Add $VG_PATH_PREFIX as a prefix to $PATH
 
