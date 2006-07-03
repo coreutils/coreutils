@@ -1,4 +1,4 @@
-#serial 9
+#serial 10
 
 # See if we need to emulate a missing ftruncate function using fcntl or chsize.
 
@@ -21,8 +21,8 @@ AC_DEFUN([gl_FUNC_FTRUNCATE],
       AC_MSG_FAILURE([Your system lacks the ftruncate function.
 	  Please report this, along with the output of "uname -a", to the
 	  bug-coreutils@gnu.org mailing list.  To continue past this point,
-	  rerun configure with SKIP_FTRUNCATE_CHECK=yes set in the environment.
-	  E.g., env SKIP_FTRUNCATE_CHECK=yes ./configure])
+	  rerun configure with SKIP_FTRUNCATE_CHECK=yes.
+	  E.g., ./configure SKIP_FTRUNCATE_CHECK=yes])
     fi
   fi
 ])
