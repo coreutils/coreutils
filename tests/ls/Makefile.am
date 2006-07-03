@@ -11,5 +11,5 @@ EXTRA_DIST = $(TESTS)
 TESTS_ENVIRONMENT = \
   top_srcdir=$(top_srcdir) \
   srcdir=$(srcdir) \
-  PATH="`pwd`/../../src$(PATH_SEPARATOR)$$PATH" \
+  PATH="$(VG_PATH_PREFIX)`pwd`/../../src$(PATH_SEPARATOR)$$PATH" \
   PROG=ls

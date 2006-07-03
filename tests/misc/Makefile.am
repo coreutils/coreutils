@@ -8,7 +8,7 @@ TESTS_ENVIRONMENT = \
   PACKAGE_VERSION=$(PACKAGE_VERSION) \
   PERL="$(PERL)" \
   BUILD_SRC_DIR="`pwd`/../../src" \
-  PATH="`pwd`/../../src$(PATH_SEPARATOR)$$PATH" \
+  PATH="$(VG_PATH_PREFIX)`pwd`/../../src$(PATH_SEPARATOR)$$PATH" \
   PROG=`../../src/basename -- "$$tst"`
 
 # Do not choose a name that is a shell keyword like 'if', or a

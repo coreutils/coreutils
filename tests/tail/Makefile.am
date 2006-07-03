@@ -30,7 +30,7 @@ f-pipe-1.O f-pipe-1.E
 EXTRA_DIST = Test.pm $x-tests $(explicit) $(maint_gen)
 noinst_SCRIPTS = $x-tests
 TESTS_ENVIRONMENT = \
-  PATH="`pwd`/../../src$(PATH_SEPARATOR)$$PATH"
+  PATH="$(VG_PATH_PREFIX)`pwd`/../../src$(PATH_SEPARATOR)$$PATH"
 
 editpl = sed -e 's,@''PERL''@,$(PERL),g' -e 's,@''srcdir''@,$(srcdir),g'
 

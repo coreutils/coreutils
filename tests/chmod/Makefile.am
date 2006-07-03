@@ -4,4 +4,4 @@ AUTOMAKE_OPTIONS = 1.4 gnits
 TESTS = octal no-x equals equal-x c-option setgid umask-x usage
 EXTRA_DIST = $(TESTS)
 TESTS_ENVIRONMENT = \
-  PATH="`pwd`/../../src$(PATH_SEPARATOR)$$PATH"
+  PATH="$(VG_PATH_PREFIX)`pwd`/../../src$(PATH_SEPARATOR)$$PATH"

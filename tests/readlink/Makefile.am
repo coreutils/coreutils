@@ -4,4 +4,4 @@ AUTOMAKE_OPTIONS = 1.4 gnits
 TESTS = rl-1 can-e can-f can-m
 EXTRA_DIST = $(TESTS)
 TESTS_ENVIRONMENT = \
-  PATH="`pwd`/../../src$(PATH_SEPARATOR)$$PATH"
+  PATH="$(VG_PATH_PREFIX)`pwd`/../../src$(PATH_SEPARATOR)$$PATH"

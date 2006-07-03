@@ -11,7 +11,7 @@ TESTS = help-version
 TESTS_ENVIRONMENT = \
   all_programs="`$(all_programs)`" \
   PACKAGE_BUGREPORT=$(PACKAGE_BUGREPORT) \
-  PATH="`pwd`/../src$(PATH_SEPARATOR)$$PATH"
+  PATH="$(VG_PATH_PREFIX)`pwd`/../src$(PATH_SEPARATOR)$$PATH"
 
 EXTRA_DIST = \
   $(TESTS) Coreutils.pm Makefile.am.in README acl envvar-check \

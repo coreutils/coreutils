@@ -7,4 +7,4 @@ TESTS = \
   separator
 EXTRA_DIST = $(TESTS)
 TESTS_ENVIRONMENT = \
-  PATH="`pwd`/../../src$(PATH_SEPARATOR)$$PATH"
+  PATH="$(VG_PATH_PREFIX)`pwd`/../../src$(PATH_SEPARATOR)$$PATH"

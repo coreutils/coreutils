@@ -1,3 +1,14 @@
+2006-07-03  Jim Meyering  <jim@meyering.net>
+
+	* tests/Makefile.am, tests/*/Makefile.am: (TESTS_ENVIRONMENT):
+	Add $VG_PATH_PREFIX as a prefix to $PATH
+
+	* tests/envvar-check (vars): Add CDPATH and POSIXLY_CORRECT.
+	* tests/Makefile.am (evar-check): Remove rule.
+	(EXTRA_DIST): Remove .env-warn.
+	* tests/.env-warn: Remove file.  No longer used.
+	Suggestion from Eric Blake.
+
 2006-07-02  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/system.h: Include <stdint.h> unconditionally, since we

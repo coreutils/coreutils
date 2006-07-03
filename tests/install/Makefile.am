@@ -5,4 +5,4 @@ TESTS = trap basic-1 create-leading d-slashdot
 EXTRA_DIST = $(TESTS)
 TESTS_ENVIRONMENT = \
   EXEEXT='$(EXEEXT)' \
-  PATH="`pwd`/../../src$(PATH_SEPARATOR)$$PATH"
+  PATH="$(VG_PATH_PREFIX)`pwd`/../../src$(PATH_SEPARATOR)$$PATH"
