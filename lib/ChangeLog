@@ -1,3 +1,8 @@
+2006-07-03  Jim Meyering  <jim@meyering.net>
+
+	* cycle-check.h (CYCLE_CHECK_REFLECT_CHDIR_UP): Abort if this
+	macro is used before the first cycle_check call.
+
 2006-07-02  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* stdint_.h (intmax_t, uintmax_t): Prefer long to long long if
