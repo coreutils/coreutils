@@ -1,5 +1,9 @@
 2006-07-03  Jim Meyering  <jim@meyering.net>
 
+	Plug another unusual leak.
+	(AD_mark_helper): Free malloc'd filename if hash_insert says
+	that string is already in the hash table.
+
 	The dev/inode of the topmost directory in each hierarchy were not
 	being recorded.
 	* src/remove.c (remove_cwd_entries): Don't call cycle_check here.

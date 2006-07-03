@@ -497,7 +497,7 @@ AD_pop_and_chdir (DIR **dirp, Dirstack_state *ds, char **prev_dir)
 /* Initialize *HT if it is NULL.
    Insert FILENAME into HT.  */
 static void
-AD_mark_helper (Hash_table **ht, char const *filename)
+AD_mark_helper (Hash_table **ht, char *filename)
 {
   if (*ht == NULL)
     {
@@ -506,8 +506,15 @@ AD_mark_helper (Hash_table **ht, char const *filename)
       if (*ht == NULL)
 	xalloc_die ();
     }
-  if (! hash_insert (*ht, filename))
+  void *ent = hash_insert (*ht, filename);
+  if (ent == NULL)
     xalloc_die ();
+  else
+    {
+      if (ent != filename)
+	free (filename);
+    }
+
 }
 
 /* Mark FILENAME (in current directory) as unremovable.  */
@@ -525,7 +532,7 @@ static void
 AD_mark_current_as_unremovable (Dirstack_state *ds)
 {
   struct AD_ent *top = AD_stack_top (ds);
-  char const *curr = top_dir (ds);
+  char *curr = top_dir (ds);
 
   assert (1 < AD_stack_height (ds));
 
