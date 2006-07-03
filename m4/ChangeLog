@@ -1,3 +1,9 @@
+2006-07-03  Jim Meyering  <jim@meyering.net>
+
+	* ftruncate.m4 (gl_FUNC_FTRUNCATE): Adjust diagnostic to recommend
+	./configure SKIP_FTRUNCATE_CHECK=yes, rather than env ... ./configure.
+	Suggestion from Ralf Wildenhues.
+
 2006-07-02  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* stdint.m4 (gl_STDINT_H): Use more-mnemonic identifiers for
