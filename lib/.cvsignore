@@ -18,3 +18,4 @@ stdint.h
 sysexit.h
 t-fpending
 unlocked-io.h
+wcwidth.h
