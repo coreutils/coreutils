@@ -42,3 +42,4 @@ time_r.h
 utimecmp.h
 vasnprintf.h
 vasprintf.h
+wcwidth.h
