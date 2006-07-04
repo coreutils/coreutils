@@ -42,11 +42,13 @@ libcoreutils_a_SOURCES = \
   mbswidth.c mbswidth.h \
   mbuiter.h \
   readtokens0.c readtokens0.h \
+  setenv.h \
   strcase.h \
   strnlen1.c strnlen1.h \
   strstr.h \
   unicodeio.c unicodeio.h \
   verify.h \
+  wcwidth.h \
   xalloc-die.c \
   xgethostname.c xgethostname.h \
   xmemcoll.c xmemcoll.h \
