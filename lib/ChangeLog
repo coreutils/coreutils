@@ -1,5 +1,107 @@
 2006-07-03  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* Makefile.am (libcoreutils_a_SOURCES): Add setenv.h, wcwidth.h,
+	to accommodate sync from gnulib.
+
+	Sync from gnulib.
+
+	2006-06-30  Jim Hyslop <jhyslop@dreampossible.ca>  (tiny change)
+
+	* getaddrinfo.c: fixed typo
+
+	2006-06-28  Bruno Haible  <bruno@clisp.org>
+
+	* getaddrinfo.h: Fix POSIX URL.
+	* getaddrinfo.c (WIN32_NATIVE): New macro. Use it instead of _WIN32.
+	(use_win32_p): Make static.
+	(getaddrinfo): Reject service name if it is empty or does not consist
+	solely of decimal digits, or if its value is > 65535.
+	(getnameinfo): Remove useless casts.
+
+	2006-06-28  Eric Blake  <ebb9@byu.net>
+
+	* mbchar.h (wcwidth): Include wcwidth.h.
+	* mbswidth.c (wcwidth): Move from here...
+	* wcwidth.h: ...to this new file.
+
+	2006-06-28  Simon Josefsson  <jas@extundo.com>
+
+	* getaddrinfo.c: Try to load ws2_32.dll on Windows, to find the
+	functions there.  It will succeed on Windows XP, but on Windows
+	2000 and (presumably) earlier, it will fail, and use the internal
+	re-implementation.
+	(use_win32_p): New function.
+	(getaddrinfo): Use strtoul on servname, to support numeric ports.
+	Support AI_NUMERICSERV to disable getservbyname.
+	(getnameinfo): New function, only supports
+	NI_NUMERICHOST|NI_NUMERICSERV for now.
+
+	* getaddrinfo.h: Test and check for AI_* flags separately, MinGW
+	only have some of them.  Add AI_NUMERICSERV.  Add prototype for
+	getnameinfo.
+
+	2006-06-26  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* base64.c (B64): Use _ as the formal parameter, not x, to avoid
+	bug in IBM C V6 for AIX.  Problem reported by Larry Jones in
+	<http://lists.gnu.org/archive/html/bug-gnulib/2006-06/msg00181.html>.
+
+	2006-06-21  Simon Josefsson  <jas@extundo.com>
+
+	* getaddrinfo.c (getaddrinfo): Set ai_family in the return
+	variable.
+
+	2006-06-19  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* alloca_.h (alloca) [defined alloca]: Don't define or declare.
+
+	2006-06-16  Eric Blake  <ebb9@byu.net>
+
+	* unsetenv.c [!defined errno]: Assume errno.h declares errno.
+	* unicodeio.c [!defined errno]: Likewise.
+	* strtol.c [!defined errno]: Likewise.
+	* strtod.c [!defined errno]: Likewise.
+
+	2006-05-26  Martin Lambers  <marlam@marlam.de>
+
+	* getpass.c: Updates the test for the native W32 API, and adds
+	missing includes, thus fixing compilation warnings.
+
+	2006-05-25  Sergey Poznyakoff  <gray@gnu.org.ua>
+
+	* exclude.c (exclude_fnmatch): New function.
+	(excluded_file_name): Call exclude_fnmatch.
+	* exclude.h (excluded_file_name): New prototype
+
+	2006-05-19  Jim Meyering  <jim@meyering.net>
+
+	* getugroups.c: Correct an outdated comment.  From Bruno Haible.
+
+	2006-05-10  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* sha1.c (rol): Cast right-shift arg to uint32_t to prevent
+	unwanted sign propagation, e.g., on hosts with 64-bit int.
+	There still are some problems with reeelly weird theoretical hosts
+	(e.g., 33-bit int) but it's not worth worrying about now.
+	(K1, K2, K3, K4): Remove unnecessary L suffix.
+
+	2006-03-24  Simon Josefsson  <jas@extundo.com>
+
+	* base64.c: Fix problems reported by Eric Blake <ebb9@byu.net>,
+	including some doc fixes.
+	(base64_encode_alloc): Fix +1 bug on allocation failures.
+
+	2006-03-24  Ralf Wildenhues <Ralf.Wildenhues@gmx.de>
+
+	* base64.c (base64_encode): Do not read past end of array with
+	unsanitized input on systems with CHAR_BIT > 8.
+
+	2006-03-24  Eric Blake  <ebb9@byu.net>
+
+	* time_r.c (copy_string_result): Remove, as it is no longer used.
+
+2006-07-03  Paul Eggert  <eggert@cs.ucla.edu>
+
 	* stdint_.h: Include <sys/types.h> after @FULL_PATH_STDINT_H@, for
 	MacOS X 10.4.6.  Don't mention <sys/int_types.h>.  Problems
 	reported by Mark D. Baushke, one in

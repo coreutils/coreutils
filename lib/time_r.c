@@ -26,14 +26,6 @@
 
 #include <string.h>
 
-static char *
-copy_string_result (char *dest, char const *src)
-{
-  if (! src)
-    return 0;
-  return strcpy (dest, src);
-}
-
 static struct tm *
 copy_tm_result (struct tm *dest, struct tm const *src)
 {

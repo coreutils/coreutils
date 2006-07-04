@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1997, 1999, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1997, 1999, 2003, 2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -19,9 +19,6 @@
 #endif
 
 #include <errno.h>
-#ifndef errno
-extern int errno;
-#endif
 
 #include <ctype.h>
 

@@ -48,13 +48,26 @@ struct addrinfo
 
 /* Possible values for `ai_flags' field in `addrinfo' structure.  */
 # ifndef AI_PASSIVE
-#  define AI_PASSIVE	0x0001	/* Socket address is intended for `bind'.  */
-#  define AI_CANONNAME	0x0002	/* Request for canonical name.  */
+#  define AI_PASSIVE	 0x0001	/* Socket address is intended for `bind'.  */
+# endif
+# ifndef AI_CANONNAME
+#  define AI_CANONNAME	 0x0002	/* Request for canonical name.  */
+# endif
+# ifndef AI_NUMERICHOST
 #  define AI_NUMERICHOST 0x0004	/* Don't use name resolution.  */
-#  define AI_V4MAPPED	0x0008	/* IPv4 mapped addresses are acceptable.  */
-#  define AI_ALL	0x0010	/* Return IPv4 mapped and IPv6 addresses.  */
-#  define AI_ADDRCONFIG	0x0020	/* Use configuration of this host to choose
+# endif
+# ifndef AI_V4MAPPED
+#  define AI_V4MAPPED	 0x0008	/* IPv4 mapped addresses are acceptable.  */
+# endif
+# ifndef AI_ALL
+#  define AI_ALL	 0x0010	/* Return IPv4 mapped and IPv6 addresses.  */
+# endif
+# ifndef AI_ADDRCONFIG
+#  define AI_ADDRCONFIG	 0x0020	/* Use configuration of this host to choose
 				   returned address type..  */
+#endif
+#ifndef AI_NUMERICSERV
+#  define AI_NUMERICSERV 0x0400	/* Don't use name resolution.  */
 # endif
 
 /* Error values for `getaddrinfo' function.  */
@@ -68,16 +81,17 @@ struct addrinfo
 #  define EAI_SOCKTYPE	  -7	/* `ai_socktype' not supported.  */
 #  define EAI_SERVICE	  -8	/* SERVICE not supported for `ai_socktype'.  */
 #  define EAI_MEMORY	  -10	/* Memory allocation failure.  */
+#endif
+#ifndef EAI_OVERFLOW
+/* Not defined on mingw32. */
 #  define EAI_OVERFLOW	  -12	/* Argument buffer overflow.  */
 #endif
 # ifndef EAI_ADDRFAMILY
-/* Not defined on mingw32.  XXX May be incorrect? Perhaps it is never
-   returned? */
+/* Not defined on mingw32. */
 #  define EAI_ADDRFAMILY  -9	/* Address family for NAME not supported.  */
 # endif
 # ifndef EAI_SYSTEM
-/* Not defined on mingw32.  XXX May be incorrect? Perhaps it is never
-   returned? */
+/* Not defined on mingw32. */
 #  define EAI_SYSTEM	  -11	/* System error returned in `errno'.  */
 # endif
 
@@ -115,6 +129,17 @@ extern void freeaddrinfo (struct addrinfo *ai);
    For more details, see the POSIX:2001 specification
    <http://www.opengroup.org/susv3xsh/gai_strerror.html>.  */
 extern const char *gai_strerror (int ecode);
+# endif
+
+# if !HAVE_DECL_GETNAMEINFO
+/* Convert socket address to printable node and service names.
+   For more details, see the POSIX:2001 specification
+   <http://www.opengroup.org/susv3xsh/getnameinfo.html>.  */
+extern int getnameinfo(const struct sockaddr *restrict sa, socklen_t salen,
+		       char *restrict node, socklen_t nodelen,
+		       char *restrict service, socklen_t servicelen,
+		       int flags);
+
 # endif
 
 #endif /* GETADDRINFO_H */

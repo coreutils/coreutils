@@ -34,8 +34,7 @@
 # define EOVERFLOW EINVAL
 #endif
 
-/* setgrent, getgrent, and endgrent are not specified by POSIX.1,
-   so header files might not declare them.
+/* Some old header files might not declare setgrent, getgrent, and endgrent.
    If you don't have them at all, we can't implement this function.
    You lose!  */
 struct group *getgrent ();

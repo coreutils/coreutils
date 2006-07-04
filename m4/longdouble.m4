@@ -1,5 +1,5 @@
-# longdouble.m4 serial 1 (gettext-0.12)
-dnl Copyright (C) 2002-2003 Free Software Foundation, Inc.
+# longdouble.m4 serial 2 (gettext-0.15)
+dnl Copyright (C) 2002-2003, 2006 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
@@ -7,6 +7,9 @@ dnl with or without modifications, as long as this notice is preserved.
 dnl From Bruno Haible.
 dnl Test whether the compiler supports the 'long double' type.
 dnl Prerequisite: AC_PROG_CC
+
+dnl This file is only needed in autoconf <= 2.59.  Newer versions of autoconf
+dnl have a macro AC_TYPE_LONG_DOUBLE with identical semantics.
 
 AC_DEFUN([gt_TYPE_LONGDOUBLE],
 [

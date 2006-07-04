@@ -23,7 +23,7 @@
 
 #include <stdio.h>
 
-#if !defined _WIN32
+#if !((defined _WIN32 || defined __WIN32__) && !defined __CYGWIN__)
 
 #include <stdbool.h>
 
@@ -170,13 +170,17 @@ getpass (const char *prompt)
   return buf;
 }
 
-#else /* WIN32 */
+#else /* W32 native */
 
 /* Windows implementation by Martin Lambers <marlam@marlam.de>,
    improved by Simon Josefsson. */
 
 /* For PASS_MAX. */
 #include <limits.h>
+/* For _getch(). */
+#include <conio.h>
+/* For strdup(). */
+#include <string.h>
 
 #ifndef PASS_MAX
 # define PASS_MAX 512

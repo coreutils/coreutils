@@ -1,5 +1,5 @@
-# sockpfaf.m4 serial 2
-dnl Copyright (C) 2004 Free Software Foundation, Inc.
+# sockpfaf.m4 serial 3
+dnl Copyright (C) 2004, 2006 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
@@ -13,11 +13,20 @@ dnl From Bruno Haible.
 
 AC_DEFUN([gl_SOCKET_FAMILIES],
 [
+  AC_CHECK_HEADERS_ONCE(sys/socket.h netinet/in.h winsock2.h)
+
   AC_MSG_CHECKING(for IPv4 sockets)
   AC_CACHE_VAL(gl_cv_socket_ipv4,
     [AC_TRY_COMPILE([#include <sys/types.h>
+#ifdef HAVE_SYS_SOCKET_H
 #include <sys/socket.h>
-#include <netinet/in.h>],
+#endif
+#ifdef HAVE_NETINET_IN_H
+#include <netinet/in.h>
+#endif
+#ifdef HAVE_WINSOCK2_H
+#include <winsock2.h>
+#endif],
 [int x = AF_INET; struct in_addr y; struct sockaddr_in z;],
        gl_cv_socket_ipv4=yes, gl_cv_socket_ipv4=no)])
   AC_MSG_RESULT($gl_cv_socket_ipv4)
@@ -28,8 +37,15 @@ AC_DEFUN([gl_SOCKET_FAMILIES],
   AC_MSG_CHECKING(for IPv6 sockets)
   AC_CACHE_VAL(gl_cv_socket_ipv6,
     [AC_TRY_COMPILE([#include <sys/types.h>
+#ifdef HAVE_SYS_SOCKET_H
 #include <sys/socket.h>
-#include <netinet/in.h>],
+#endif
+#ifdef HAVE_NETINET_IN_H
+#include <netinet/in.h>
+#endif
+#ifdef HAVE_WINSOCK2_H
+#include <winsock2.h>
+#endif],
 [int x = AF_INET6; struct in6_addr y; struct sockaddr_in6 z;],
        gl_cv_socket_ipv6=yes, gl_cv_socket_ipv6=no)])
   AC_MSG_RESULT($gl_cv_socket_ipv6)

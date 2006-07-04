@@ -1,6 +1,6 @@
 /* Memory allocation on the stack.
 
-   Copyright (C) 1995, 1999, 2001, 2002, 2003, 2004 Free Software
+   Copyright (C) 1995, 1999, 2001, 2002, 2003, 2004, 2006 Free Software
    Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify it
@@ -34,19 +34,21 @@
        request, the program just crashes.
  */
 
-#ifdef __GNUC__
-# define alloca __builtin_alloca
-#elif defined _AIX
-# define alloca __alloca
-#elif defined _MSC_VER
-# include <malloc.h>
-# define alloca _alloca
-#else
-# include <stddef.h>
-# ifdef  __cplusplus
+#ifndef alloca
+# ifdef __GNUC__
+#  define alloca __builtin_alloca
+# elif defined _AIX
+#  define alloca __alloca
+# elif defined _MSC_VER
+#  include <malloc.h>
+#  define alloca _alloca
+# else
+#  include <stddef.h>
+#  ifdef  __cplusplus
 extern "C"
-# endif
+#  endif
 void *alloca (size_t);
+# endif
 #endif
 
 #endif /* _GNULIB_ALLOCA_H */

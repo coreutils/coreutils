@@ -5,6 +5,9 @@
 # gives unlimited permission to copy and/or distribute it,
 # with or without modifications, as long as this notice is preserved.
 
+# This file is only needed in autoconf <= 2.59.  Newer versions of autoconf
+# have a macro AC_USE_SYSTEM_EXTENSIONS with identical semantics.
+
 # gl_USE_SYSTEM_EXTENSIONS
 # ------------------------
 # Enable extensions on systems that normally disable them,

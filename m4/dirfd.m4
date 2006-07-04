@@ -1,8 +1,9 @@
-#serial 10
+#serial 11   -*- Autoconf -*-
 
 dnl Find out how to get the file descriptor associated with an open DIR*.
 
-# Copyright (C) 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+# Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006 Free Software
+# Foundation, Inc.
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
 # with or without modifications, as long as this notice is preserved.
@@ -16,8 +17,8 @@ AC_DEFUN([gl_FUNC_DIRFD],
   dnl Work around a bug of AC_EGREP_CPP in autoconf-2.57.
   AC_REQUIRE([AC_PROG_CPP])
   AC_REQUIRE([AC_PROG_EGREP])
+  AC_REQUIRE([AC_HEADER_DIRENT])
 
-  AC_HEADER_DIRENT
   dirfd_headers='
 #if HAVE_DIRENT_H
 # include <dirent.h>
@@ -55,7 +56,7 @@ AC_DEFUN([gl_FUNC_DIRFD],
 	      [how to get the file descriptor associated with an open DIR*],
 		   gl_cv_sys_dir_fd_member_name,
       [
-        dirfd_save_CFLAGS=$CFLAGS
+	dirfd_save_CFLAGS=$CFLAGS
 	for ac_expr in d_fd dd_fd; do
 
 	  CFLAGS="$CFLAGS -DDIR_FD_MEMBER_NAME=$ac_expr"

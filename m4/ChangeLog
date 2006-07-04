@@ -1,3 +1,58 @@
+2006-07-03  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* prereq.m4 (gl_PREREQ): Require gl_FUNC_WCWIDTH, to accommodate
+	changes mentioned below.
+	* setenv.m4 (gt_FUNC_SETENV): Undo private change that added an
+	AC_LIBSOURCES line here, since Bruno didn't buy it back.  Instead,
+	update ../lib/Makefile.am to mention the files explicitly.
+
+	Sync from gnulib.
+
+	2006-06-28  Simon Josefsson  <jas@extundo.com>
+
+	* getaddrinfo.m4: Look for getnameinfo prototypes too.
+
+	2006-06-28  Eric Blake  <ebb9@byu.net>
+
+	* mbswidth.m4 (gl_MBSDWIDTH): Move wcwidth from here...
+	* wcwidth.m4 (gl_FUNC_WCWIDTH): ...to this new file.
+
+	2006-06-22  Simon Josefsson  <jas@extundo.com>
+
+	* sockpfaf.m4: Include winsock2.h too, to make it work under
+	MinGW.
+
+	2006-06-21  Simon Josefsson  <jas@extundo.com>
+
+	* getaddrinfo.m4: Don't define WINVER.  Look for gethostbyname in
+	-lws2_32 too.  Fixes getaddrinfo on Windows 2000, with the price
+	of using the (limited) gnulib implementation on Windows XP.
+
+	2006-06-17  Bruno Haible  <bruno@clisp.org>
+
+	* setenv.m4 (gl_PREREQ_SETENV, gl_PREREQ_UNSETENV): Remove test
+	whether errno is declared. Assume <errno.h> declares errno.
+
+	2006-06-16  Eric Blake  <ebb9@byu.net>
+
+	* rmdir-errno.m4 (gl_FUNC_FMDIR_NOTEMPTY): Assume errno.h declares
+	errno.
+
+	2006-06-15  Eric Blake  <ebb9@byu.net>
+
+	* ssize_t.m4 (gt_TYPE_SSIZE_T): Work in spite of -Werror.
+
+	2006-04-20  Bruno Haible  <bruno@clisp.org>
+
+	* getpass.m4 (gl_PREREQ_GETPASS):
+	Don't call AC_CHECK_DECLS_ONCE with more than
+	one argument, so that the code will be portable to Autoconf 2.60.
+	* unlocked-io.m4 (gl_FUNC_GLIBC_UNLOCKED_IO): Likewise.
+
+	2006-03-15  Eric Blake  <ebb9@byu.net>
+
+	* dirfd.m4 (gl_FUNC_DIRFD): Use AC_REQUIRE for AC_HEADER_DIRENT.
+
 2006-07-03  Jim Meyering  <jim@meyering.net>
 
 	* ftruncate.m4 (gl_FUNC_FTRUNCATE): Adjust diagnostic to recommend

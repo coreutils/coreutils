@@ -1,7 +1,7 @@
 /* exclude.c -- exclude file names
 
    Copyright (C) 1992, 1993, 1994, 1997, 1999, 2000, 2001, 2002, 2003,
-   2004, 2005 Free Software Foundation, Inc.
+   2004, 2005, 2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -129,6 +129,24 @@ fnmatch_no_wildcards (char const *pattern, char const *f, int options)
     }
 }
 
+bool
+exclude_fnmatch (char const *pattern, char const *f, int options)
+{
+  int (*matcher) (char const *, char const *, int) =
+    (options & EXCLUDE_WILDCARDS
+     ? fnmatch
+     : fnmatch_no_wildcards);
+  bool matched = ((*matcher) (pattern, f, options) == 0);
+  char const *p;
+
+  if (! (options & EXCLUDE_ANCHORED))
+    for (p = f; *p && ! matched; p++)
+      if (*p == '/' && p[1] != '/')
+	matched = ((*matcher) (pattern, p + 1, options) == 0);
+
+  return matched;
+}
+
 /* Return true if EX excludes F.  */
 
 bool
@@ -154,21 +172,7 @@ excluded_file_name (struct exclude const *ex, char const *f)
 	  char const *pattern = exclude[i].pattern;
 	  int options = exclude[i].options;
 	  if (excluded == !! (options & EXCLUDE_INCLUDE))
-	    {
-	      int (*matcher) (char const *, char const *, int) =
-		(options & EXCLUDE_WILDCARDS
-		 ? fnmatch
-		 : fnmatch_no_wildcards);
-	      bool matched = ((*matcher) (pattern, f, options) == 0);
-	      char const *p;
-
-	      if (! (options & EXCLUDE_ANCHORED))
-		for (p = f; *p && ! matched; p++)
-		  if (*p == '/' && p[1] != '/')
-		    matched = ((*matcher) (pattern, p + 1, options) == 0);
-
-	      excluded ^= matched;
-	    }
+	    excluded ^= exclude_fnmatch (pattern, f, options);
 	}
 
       return excluded;

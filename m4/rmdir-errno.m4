@@ -1,4 +1,4 @@
-#serial 6
+#serial 7
 
 # Copyright (C) 2000, 2001, 2005, 2006 Free Software Foundation, Inc.
 # This file is free software; the Free Software Foundation
@@ -21,9 +21,6 @@ AC_DEFUN([gl_FUNC_RMDIR_NOTEMPTY],
       AC_TRY_RUN([
 #include <stdio.h>
 #include <errno.h>
-#ifndef errno
-extern int errno;
-#endif
 	int main ()
 	{
 	  FILE *s;

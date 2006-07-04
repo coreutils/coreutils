@@ -1,5 +1,6 @@
 /* base64.c -- Encode binary data using printable characters.
-   Copyright (C) 1999, 2000, 2001, 2004, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2001, 2004, 2005, 2006 Free Software
+   Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -73,7 +74,7 @@ base64_encode (const char *restrict in, size_t inlen,
 
   while (inlen && outlen)
     {
-      *out++ = b64str[to_uchar (in[0]) >> 2];
+      *out++ = b64str[(to_uchar (in[0]) >> 2) & 0x3f];
       if (!--outlen)
 	break;
       *out++ = b64str[((to_uchar (in[0]) << 4)
@@ -108,8 +109,8 @@ base64_encode (const char *restrict in, size_t inlen,
    return, the OUT variable will hold a pointer to newly allocated
    memory that must be deallocated by the caller.  If output string
    length would overflow, 0 is returned and OUT is set to NULL.  If
-   memory allocation fail, OUT is set to NULL, and the return value
-   indicate length of the requested memory block, i.e.,
+   memory allocation failed, OUT is set to NULL, and the return value
+   indicates length of the requested memory block, i.e.,
    BASE64_LENGTH(inlen) + 1. */
 size_t
 base64_encode_alloc (const char *in, size_t inlen, char **out)
@@ -135,8 +136,10 @@ base64_encode_alloc (const char *in, size_t inlen, char **out)
     }
 
   *out = malloc (outlen);
-  if (*out)
-    base64_encode (in, inlen, *out, outlen);
+  if (!*out)
+    return outlen;
+
+  base64_encode (in, inlen, *out, outlen);
 
   return outlen - 1;
 }
@@ -146,72 +149,75 @@ base64_encode_alloc (const char *in, size_t inlen, char **out)
    Base64 alphabet (A-Za-z0-9+/) are encoded in 0..255.  POSIX
    1003.1-2001 require that char and unsigned char are 8-bit
    quantities, though, taking care of that problem.  But this may be a
-   potential problem on non-POSIX C99 platforms.  */
-#define B64(x)					\
-  ((x) == 'A' ? 0				\
-   : (x) == 'B' ? 1				\
-   : (x) == 'C' ? 2				\
-   : (x) == 'D' ? 3				\
-   : (x) == 'E' ? 4				\
-   : (x) == 'F' ? 5				\
-   : (x) == 'G' ? 6				\
-   : (x) == 'H' ? 7				\
-   : (x) == 'I' ? 8				\
-   : (x) == 'J' ? 9				\
-   : (x) == 'K' ? 10				\
-   : (x) == 'L' ? 11				\
-   : (x) == 'M' ? 12				\
-   : (x) == 'N' ? 13				\
-   : (x) == 'O' ? 14				\
-   : (x) == 'P' ? 15				\
-   : (x) == 'Q' ? 16				\
-   : (x) == 'R' ? 17				\
-   : (x) == 'S' ? 18				\
-   : (x) == 'T' ? 19				\
-   : (x) == 'U' ? 20				\
-   : (x) == 'V' ? 21				\
-   : (x) == 'W' ? 22				\
-   : (x) == 'X' ? 23				\
-   : (x) == 'Y' ? 24				\
-   : (x) == 'Z' ? 25				\
-   : (x) == 'a' ? 26				\
-   : (x) == 'b' ? 27				\
-   : (x) == 'c' ? 28				\
-   : (x) == 'd' ? 29				\
-   : (x) == 'e' ? 30				\
-   : (x) == 'f' ? 31				\
-   : (x) == 'g' ? 32				\
-   : (x) == 'h' ? 33				\
-   : (x) == 'i' ? 34				\
-   : (x) == 'j' ? 35				\
-   : (x) == 'k' ? 36				\
-   : (x) == 'l' ? 37				\
-   : (x) == 'm' ? 38				\
-   : (x) == 'n' ? 39				\
-   : (x) == 'o' ? 40				\
-   : (x) == 'p' ? 41				\
-   : (x) == 'q' ? 42				\
-   : (x) == 'r' ? 43				\
-   : (x) == 's' ? 44				\
-   : (x) == 't' ? 45				\
-   : (x) == 'u' ? 46				\
-   : (x) == 'v' ? 47				\
-   : (x) == 'w' ? 48				\
-   : (x) == 'x' ? 49				\
-   : (x) == 'y' ? 50				\
-   : (x) == 'z' ? 51				\
-   : (x) == '0' ? 52				\
-   : (x) == '1' ? 53				\
-   : (x) == '2' ? 54				\
-   : (x) == '3' ? 55				\
-   : (x) == '4' ? 56				\
-   : (x) == '5' ? 57				\
-   : (x) == '6' ? 58				\
-   : (x) == '7' ? 59				\
-   : (x) == '8' ? 60				\
-   : (x) == '9' ? 61				\
-   : (x) == '+' ? 62				\
-   : (x) == '/' ? 63				\
+   potential problem on non-POSIX C99 platforms.
+
+   IBM C V6 for AIX mishandles "#define B64(x) ...'x'...", so use "_"
+   as the formal parameter rather than "x".  */
+#define B64(_)					\
+  ((_) == 'A' ? 0				\
+   : (_) == 'B' ? 1				\
+   : (_) == 'C' ? 2				\
+   : (_) == 'D' ? 3				\
+   : (_) == 'E' ? 4				\
+   : (_) == 'F' ? 5				\
+   : (_) == 'G' ? 6				\
+   : (_) == 'H' ? 7				\
+   : (_) == 'I' ? 8				\
+   : (_) == 'J' ? 9				\
+   : (_) == 'K' ? 10				\
+   : (_) == 'L' ? 11				\
+   : (_) == 'M' ? 12				\
+   : (_) == 'N' ? 13				\
+   : (_) == 'O' ? 14				\
+   : (_) == 'P' ? 15				\
+   : (_) == 'Q' ? 16				\
+   : (_) == 'R' ? 17				\
+   : (_) == 'S' ? 18				\
+   : (_) == 'T' ? 19				\
+   : (_) == 'U' ? 20				\
+   : (_) == 'V' ? 21				\
+   : (_) == 'W' ? 22				\
+   : (_) == 'X' ? 23				\
+   : (_) == 'Y' ? 24				\
+   : (_) == 'Z' ? 25				\
+   : (_) == 'a' ? 26				\
+   : (_) == 'b' ? 27				\
+   : (_) == 'c' ? 28				\
+   : (_) == 'd' ? 29				\
+   : (_) == 'e' ? 30				\
+   : (_) == 'f' ? 31				\
+   : (_) == 'g' ? 32				\
+   : (_) == 'h' ? 33				\
+   : (_) == 'i' ? 34				\
+   : (_) == 'j' ? 35				\
+   : (_) == 'k' ? 36				\
+   : (_) == 'l' ? 37				\
+   : (_) == 'm' ? 38				\
+   : (_) == 'n' ? 39				\
+   : (_) == 'o' ? 40				\
+   : (_) == 'p' ? 41				\
+   : (_) == 'q' ? 42				\
+   : (_) == 'r' ? 43				\
+   : (_) == 's' ? 44				\
+   : (_) == 't' ? 45				\
+   : (_) == 'u' ? 46				\
+   : (_) == 'v' ? 47				\
+   : (_) == 'w' ? 48				\
+   : (_) == 'x' ? 49				\
+   : (_) == 'y' ? 50				\
+   : (_) == 'z' ? 51				\
+   : (_) == '0' ? 52				\
+   : (_) == '1' ? 53				\
+   : (_) == '2' ? 54				\
+   : (_) == '3' ? 55				\
+   : (_) == '4' ? 56				\
+   : (_) == '5' ? 57				\
+   : (_) == '6' ? 58				\
+   : (_) == '7' ? 59				\
+   : (_) == '8' ? 60				\
+   : (_) == '9' ? 61				\
+   : (_) == '+' ? 62				\
+   : (_) == '/' ? 63				\
    : -1)
 
 static const signed char b64[0x100] = {
@@ -287,6 +293,9 @@ static const signed char b64[0x100] = {
 # define uchar_in_range(c) ((c) <= 255)
 #endif
 
+/* Return true if CH is a character from the Base64 alphabet, and
+   false otherwise.  Note that '=' is padding and not considered to be
+   part of the alphabet.  */
 bool
 isbase64 (char ch)
 {
@@ -299,7 +308,9 @@ isbase64 (char ch)
    otherwise.  If *OUTLEN is too small, as many bytes as possible will
    be written to OUT.  On return, *OUTLEN holds the length of decoded
    bytes in OUT.  Note that as soon as any non-alphabet characters are
-   encountered, decoding is stopped and false is returned. */
+   encountered, decoding is stopped and false is returned.  This means
+   that, when applicable, you must remove any line terminators that is
+   part of the data stream before calling this function.  */
 bool
 base64_decode (const char *restrict in, size_t inlen,
 	       char *restrict out, size_t *outlen)
@@ -381,11 +392,11 @@ base64_decode (const char *restrict in, size_t inlen,
    size of the decoded data is stored in *OUTLEN.  OUTLEN may be NULL,
    if the caller is not interested in the decoded length.  *OUT may be
    NULL to indicate an out of memory error, in which case *OUTLEN
-   contain the size of the memory block needed.  The function return
+   contains the size of the memory block needed.  The function returns
    true on successful decoding and memory allocation errors.  (Use the
    *OUT and *OUTLEN parameters to differentiate between successful
-   decoding and memory error.)  The function return false if the input
-   was invalid, in which case *OUT is NULL and *OUTLEN is
+   decoding and memory error.)  The function returns false if the
+   input was invalid, in which case *OUT is NULL and *OUTLEN is
    undefined. */
 bool
 base64_decode_alloc (const char *in, size_t inlen, char **out,

@@ -270,10 +270,10 @@ sha1_process_bytes (const void *buffer, size_t len, struct sha1_ctx *ctx)
 /* --- Code below is the primary difference between md5.c and sha1.c --- */
 
 /* SHA1 round constants */
-#define K1 0x5a827999L
-#define K2 0x6ed9eba1L
-#define K3 0x8f1bbcdcL
-#define K4 0xca62c1d6L
+#define K1 0x5a827999
+#define K2 0x6ed9eba1
+#define K3 0x8f1bbcdc
+#define K4 0xca62c1d6
 
 /* Round functions.  Note that F2 is the same as F4.  */
 #define F1(B,C,D) ( D ^ ( B & ( C ^ D ) ) )
@@ -305,7 +305,7 @@ sha1_process_block (const void *buffer, size_t len, struct sha1_ctx *ctx)
   if (ctx->total[0] < len)
     ++ctx->total[1];
 
-#define rol(x, n) (((x) << (n)) | ((x) >> (32 - (n))))
+#define rol(x, n) (((x) << (n)) | ((uint32_t) (x) >> (32 - (n))))
 
 #define M(I) ( tm =   x[I&0x0f] ^ x[(I-14)&0x0f] \
 		    ^ x[(I-8)&0x0f] ^ x[(I-3)&0x0f] \

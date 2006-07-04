@@ -1,7 +1,7 @@
 /* exclude.h -- declarations for excluding file names
 
-   Copyright (C) 1992, 1993, 1994, 1997, 1999, 2001, 2002, 2003, 2005
-   Free Software Foundation, Inc.
+   Copyright (C) 1992, 1993, 1994, 1997, 1999, 2001, 2002, 2003, 2005,
+   2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -41,3 +41,4 @@ void add_exclude (struct exclude *, char const *, int);
 int add_exclude_file (void (*) (struct exclude *, char const *, int),
 		      struct exclude *, char const *, int, char);
 bool excluded_file_name (struct exclude const *, char const *);
+bool exclude_fnmatch (char const *pattern, char const *f, int options);
