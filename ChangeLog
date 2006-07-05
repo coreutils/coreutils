@@ -1,5 +1,8 @@
 2006-07-05  Jim Meyering  <jim@meyering.net>
 
+	* man/chmod.x: Correct the description of the sticky bit.  Reported
+	by Chris Moore via Ian Jackson in <http://bugs.debian.org/376745>.
+
 	* src/copy.c (copy_internal): Don't work around old NFS clients like
 	SunOS-4.1.4 and Irix 5.3 that set errno to values like EIO and
 	ENOTEMPTY upon failed rename.  Otherwise, we risk misinterpreting

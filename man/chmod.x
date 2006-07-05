@@ -61,11 +61,11 @@ systems, and the Linux kernel ignores the sticky bit on files.  Other
 kernels may use the sticky bit on files for system-defined purposes.
 On some systems, only the superuser can set the sticky bit on files.
 .SH STICKY DIRECTORIES
-When the sticky bit is set on a directory, files in that directory may
-be unlinked or renamed only by root or their owner.  Without the
-sticky bit, anyone able to write to the directory can delete or rename
-files.  The sticky bit is commonly found on directories, such as /tmp,
-that are world-writable.
+When the sticky bit is set on a directory, a file in that directory may
+be unlinked or renamed only by the directory owner, the file owner, or root.
+Without the sticky bit, anyone able to write to the
+directory can delete or rename files.  The sticky bit is commonly found
+on directories, such as /tmp, that are world-writable.
 .SH OPTIONS
 [SEE ALSO]
 chmod(2)
