@@ -4241,7 +4241,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
                              group directories before files\n\
 "), stdout);
       fputs (_("\
-  -G, --no-group             like -l, but do not list group\n\
+  -G, --no-group             in a long listing, don't print group names\n\
   -h, --human-readable       with -l, print sizes in human readable format\n\
                                (e.g., 1K 234M 2G)\n\
       --si                   likewise, but use powers of 1000 not 1024\n\

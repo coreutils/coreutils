@@ -1,5 +1,9 @@
 2006-07-05  Jim Meyering  <jim@meyering.net>
 
+	* src/ls.c (usage): Correct the description of -G: it is useful
+	only in a long listing.  Reported by Martin Pool in
+	<https://launchpad.net/distros/ubuntu/+source/coreutils/+bug/51653>.
+
 	* man/chmod.x: Correct the description of the sticky bit.  Reported
 	by Chris Moore via Ian Jackson in <http://bugs.debian.org/376745>.
 
