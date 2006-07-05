@@ -1,5 +1,11 @@
 2006-07-05  Jim Meyering  <jim@meyering.net>
 
+	* src/copy.c (copy_internal): Don't work around old NFS clients like
+	SunOS-4.1.4 and Irix 5.3 that set errno to values like EIO and
+	ENOTEMPTY upon failed rename.  Otherwise, we risk misinterpreting
+	a banal failure as a recursive move-into-self failure.
+	Reported by Florent Bayle in <http://bugs.debian.org/376749>.
+
 	* src/c99-to-c89.diff: Regenerate, to remove fuzz.
 
 2006-07-03  Jim Meyering  <jim@meyering.net>

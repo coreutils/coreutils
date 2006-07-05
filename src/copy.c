@@ -1385,18 +1385,7 @@ copy_internal (char const *src_name, char const *dst_name,
 
       /* This happens when attempting to rename a directory to a
 	 subdirectory of itself.  */
-      if (errno == EINVAL
-
-	  /* When src_name is on an NFS file system, some types of
-	     clients, e.g., SunOS4.1.4 and IRIX-5.3, set errno to EIO
-	     instead.  Testing for this here risks misinterpreting a real
-	     I/O error as an attempt to move a directory into itself, so
-	     FIXME: consider not doing this.  */
-	  || errno == EIO
-
-	  /* And with SunOS-4.1.4 client and OpenBSD-2.3 server,
-	     we get ENOTEMPTY.  */
-	  || errno == ENOTEMPTY)
+      if (errno == EINVAL)
 	{
 	  /* FIXME: this is a little fragile in that it relies on rename(2)
 	     failing with a specific errno value.  Expect problems on
