@@ -1,5 +1,10 @@
---- remove.c	26 Jun 2006 13:29:48 -0000	1.152
-+++ remove.c	28 Jun 2006 06:58:51 -0000
+Index: src/remove.c
+===================================================================
+RCS file: /fetish/cu/src/remove.c,v
+retrieving revision 1.156
+diff -u -p -r1.156 remove.c
+--- src/remove.c	3 Jul 2006 17:38:20 -0000	1.156
++++ src/remove.c	5 Jul 2006 06:52:31 -0000
 @@ -202,9 +202,10 @@ pop_dir (Dirstack_state *ds)
  {
    size_t n_lengths = obstack_object_size (&ds->len_stack) / sizeof (size_t);
@@ -25,7 +30,7 @@
    if (top->unremovable)
      hash_free (top->unremovable);
    obstack_blank (&ds->Active_dir, -(int) sizeof (struct AD_ent));
-@@ -1031,6 +1033,7 @@ fd_to_subdirp (int fd_cwd, char const *f
+@@ -1059,6 +1061,7 @@ fd_to_subdirp (int fd_cwd, char const *f
        return NULL;
      }
  
@@ -33,7 +38,7 @@
    DIR *subdir_dirp = fdopendir (fd_sub);
    if (subdir_dirp == NULL)
      {
-@@ -1039,6 +1042,7 @@ fd_to_subdirp (int fd_cwd, char const *f
+@@ -1067,6 +1070,7 @@ fd_to_subdirp (int fd_cwd, char const *f
      }
  
    return subdir_dirp;
@@ -41,7 +46,7 @@
  }
  
  /* Remove entries in the directory open on DIRP
-@@ -1285,9 +1289,10 @@ remove_dir (int fd_cwd, Dirstack_state *
+@@ -1302,9 +1306,10 @@ remove_dir (int fd_cwd, Dirstack_state *
  	/* The name of the directory that we have just processed,
  	   nominally removing all of its contents.  */
  	char *empty_dir;
@@ -53,7 +58,7 @@
  	assert (dirp != NULL || AD_stack_height (ds) == 1);
  
  	/* Try to remove EMPTY_DIR only if remove_cwd_entries succeeded.  */
-@@ -1364,6 +1369,7 @@ rm_1 (Dirstack_state *ds, char const *fi
+@@ -1381,6 +1386,7 @@ rm_1 (Dirstack_state *ds, char const *fi
    AD_push_initial (ds);
    AD_INIT_OTHER_MEMBERS ();
  
@@ -61,7 +66,7 @@
    int fd_cwd = AT_FDCWD;
    enum RM_status status = remove_entry (fd_cwd, ds, filename, x, NULL);
    if (status == RM_NONEMPTY_DIR)
-@@ -1380,6 +1386,7 @@ rm_1 (Dirstack_state *ds, char const *fi
+@@ -1399,6 +1405,7 @@ rm_1 (Dirstack_state *ds, char const *fi
    ds_clear (ds);
  
    return status;
@@ -69,7 +74,7 @@
  }
  
  /* Remove all files and/or directories specified by N_FILES and FILE.
-@@ -1402,9 +1409,11 @@ rm (size_t n_files, char const *const *f
+@@ -1421,9 +1428,11 @@ rm (size_t n_files, char const *const *f
  	}
  
        cycle_check_init (&ds->cycle_check_state);
