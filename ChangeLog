@@ -1,3 +1,8 @@
+2006-07-07  Jim Meyering  <jim@meyering.net>
+
+	* NEWS: Mention that mv can now remove an empty destination directory,
+	and give an example.  Prompted by a report from Florent Bayle.
+
 2006-07-05  Jim Meyering  <jim@meyering.net>
 
 	* src/ls.c (usage): Correct the description of -G: it is useful
