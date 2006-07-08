@@ -5276,7 +5276,8 @@ tr -s '\n'
 
 @item
 Find doubled occurrences of words in a document.
-For example, people often write ``the the'' with the repeated words
+@c Separate the following two "the"s, so typo checkers don't complain.
+For example, people often write ``the @w{}the'' with the repeated words
 separated by a newline.  The Bourne shell script below works first
 by converting each sequence of punctuation and blank characters to a
 single newline.  That puts each ``word'' on a line by itself.

@@ -1,5 +1,8 @@
 2006-07-08  Jim Meyering  <jim@meyering.net>
 
+	* coreutils.texi (Squeezing): Separate doubled "the", so typo-checkers
+	don't complain.
+
 	* Makefile.am (check-texinfo): Enforce the zeros vs. zeroes consistency.
 
 2006-07-08  Ralf Wildenhues  <Ralf.Wildenhues@gmx.de>
