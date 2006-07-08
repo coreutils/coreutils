@@ -1,8 +1,8 @@
-#serial 7
-dnl Run a program to determine whether whether link(2) follows symlinks.
+#serial 8
+dnl Run a program to determine whether link(2) follows symlinks.
 dnl Set LINK_FOLLOWS_SYMLINKS accordingly.
 
-# Copyright (C) 1999, 2000, 2001, 2004, 2005 Free Software Foundation, Inc.
+# Copyright (C) 1999, 2000, 2001, 2004, 2005, 2006 Free Software Foundation, Inc.
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
 # with or without modifications, as long as this notice is preserved.
