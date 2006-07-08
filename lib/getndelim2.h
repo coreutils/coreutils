@@ -1,7 +1,7 @@
 /* getndelim2 - Read a line from a stream, stopping at one of 2 delimiters,
    with bounded memory allocation.
 
-   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004, 2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -31,8 +31,8 @@
    the buffer as necessary, but if NMAX is not GETNLINE_NO_LIMIT
    then do not allocate more than NMAX bytes; if the line is longer
    than that, read and discard the extra bytes.  Stop reading after
-   after the first occurrence of DELIM1 or DELIM2, whichever comes
-   first; a delimiter equal to EOF stands for no delimiter.  Read the
+   the first occurrence of DELIM1 or DELIM2, whichever comes first;
+   a delimiter equal to EOF stands for no delimiter.  Read the
    input bytes from STREAM.
    Return the number of bytes read and stored at *LINEPTR + OFFSET (not
    including the NUL terminator), or -1 on error or EOF.  */

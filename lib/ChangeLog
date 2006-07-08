@@ -1,3 +1,7 @@
+2006-07-08  Jim Meyering  <jim@meyering.net>
+
+	* getndelim2.h (getndelim2): Remove doubled "after" in comment.
+
 2006-07-03  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Makefile.am (libcoreutils_a_SOURCES): Add setenv.h, wcwidth.h,
