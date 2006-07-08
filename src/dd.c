@@ -1136,7 +1136,7 @@ skip (int fdesc, char const *file, uintmax_t records, size_t blocksize,
   uintmax_t offset = records * blocksize;
 
   /* Try lseek and if an error indicates it was an inappropriate operation --
-     or if the the file offset is not representable as an off_t --
+     or if the file offset is not representable as an off_t --
      fall back on using read.  */
 
   errno = 0;
