@@ -1,3 +1,7 @@
+2006-07-08  Jim Meyering  <jim@meyering.net>
+
+	* Makefile.am (check-texinfo): Enforce the zeros vs. zeroes consistency.
+
 2006-07-08  Ralf Wildenhues  <Ralf.Wildenhues@gmx.de>
 
 	* coreutils.texi: Fix some typos.  Use `zeros' consistently (both

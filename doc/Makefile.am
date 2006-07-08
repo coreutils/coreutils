@@ -30,7 +30,8 @@ W_ = ([^A-Za-z0-9_]|$$)
 
 # List words/regexps here that should not appear in the texinfo documentation.
 # E.g., use @sc{nul}, not `NUL'
-# and use `time zone', not `timezone'.
+# Use `time zone', not `timezone'.
+# Use `zeros', not `zeroes' (nothing wrong with `zeroes'. just be consistent).
 check-texinfo:
 	fail=0; \
 	grep timezone $(srcdir)/*.texi && fail=1; \
@@ -45,6 +46,7 @@ check-texinfo:
 	$(PERL) -e 1 2> /dev/null && { $(PERL) -ne \
 	  '/\bPOSIX\b/ && !/\@acronym{POSIX}/ && !/^\* / || /{posix}/ and print,exit 1' \
 	  $(srcdir)/*.texi 2> /dev/null || fail=1; }; \
+	$(EGREP) -i '$(_W)zeroes$(W_)' $(srcdir)/*.texi && fail=1; \
 	$(EGREP) -i '$(_W)builtins?$(W_)' $(srcdir)/*.texi && fail=1; \
 	$(EGREP) -i '$(_W)path(name)?s?$(W_)' $(srcdir)/*.texi \
 	  | $(EGREP) -v '@vindex PATH$$|@env[{]PATH[}]' && fail=1; \
