@@ -254,6 +254,11 @@ sc_sun_os_names:
 	  { echo '$(ME): found misuse of Sun OS version numbers' 1>&2;	\
 	    exit 1; } || :
 
+sc_the_the:
+	@grep -ni '\<the ''the\>' $$($(CVS_LIST_EXCEPT)) &&		\
+	  { echo '$(ME): found use of "the ''the";' 1>&2;		\
+	    exit 1; } || :
+
 sc_tight_scope:
 	$(MAKE) -C src $@
 
