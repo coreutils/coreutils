@@ -1,3 +1,9 @@
+2006-07-08  Jim Meyering  <jim@meyering.net>
+
+	* autobuild.m4: Remove one of two adjacent "can"s in a comment.
+
+	* regex.m4 (gl_REGEX): Remove one of two adjacent "the"s in a comment.
+
 2006-07-03  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* prereq.m4 (gl_PREREQ): Require gl_FUNC_WCWIDTH, to accommodate
