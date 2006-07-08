@@ -1,5 +1,7 @@
 2006-07-08  Jim Meyering  <jim@meyering.net>
 
+	* getopt.m4: Remove one of two adjacent "your"s in a comment.
+
 	* autobuild.m4: Remove one of two adjacent "can"s in a comment.
 
 	* regex.m4 (gl_REGEX): Remove one of two adjacent "the"s in a comment.
