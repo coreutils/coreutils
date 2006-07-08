@@ -1,0 +1,45 @@
+#!/bin/sh
+# Ensure that mv prints the right diagnostic for a dir->dir move
+# where the destination directory is not empty.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  mv --version
+fi
+
+. $srcdir/../envvar-check
+. $srcdir/../lang-default
+
+pwd=`pwd`
+t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
+trap 'status=$?; cd $pwd; chmod -R u+rwx $t0; rm -rf $t0 && exit $status' 0
+trap '(exit $?); exit $?' 1 2 13 15
+
+framework_failure=0
+mkdir -p $tmp || framework_failure=1
+cd $tmp || framework_failure=1
+
+mkdir -p a/t b/t || framework_failure=1
+touch a/t/f || framework_failure=1
+
+
+if test $framework_failure = 1; then
+  echo "$0: failure in testing framework" 1>&2
+  (exit 1); exit 1
+fi
+
+fail=0
+
+# Expect this to fail with the expected diagnostic.
+# For an interrim (pre-6.0) release, it would give an erroneous
+# diagnostic about moving one directory to a subdirectory of itself.
+mv b/t a 2> out && fail=1
+
+cat <<\EOF > exp || fail=1
+mv: cannot move `b/t' to `a/t': File exists
+EOF
+
+cmp out exp || fail=1
+test $fail = 1 && diff out exp 2> /dev/null
+
+(exit $fail); exit $fail

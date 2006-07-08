@@ -1,5 +1,7 @@
 2006-07-08  Jim Meyering  <jim@meyering.net>
 
+	* tests/mv/dir2dir: New file, test for 2006-07-05 fix in copy.c.
+
 	* Makefile.maint (sc_the_the): New rule.
 
 	* src/dd.c (skip): Remove one of two adjacent "the"s in a comment.
