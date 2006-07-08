@@ -9,7 +9,7 @@ use FileHandle;
 use File::Compare qw(compare);
 
 @ISA = qw(Exporter);
-($VERSION = '$Revision: 1.3 $ ') =~ tr/[0-9].//cd;
+($VERSION = '$Revision: 1.4 $ ') =~ tr/[0-9].//cd;
 @EXPORT = qw (run_tests);
 
 my $debug = $ENV{DEBUG};
@@ -470,7 +470,7 @@ sub run_tests ($$$$$)
 	      my $out = $actual{$eo};
 	      my $orig = "$out.orig";
 
-	      # Move $out aside (to $orig), then then recreate $out
+	      # Move $out aside (to $orig), then recreate $out
 	      # by transforming each line of $orig via $subst_expr.
 	      rename $out, $orig
 		or (warn "$program_name: cannot rename $out to $orig: $!\n"),
