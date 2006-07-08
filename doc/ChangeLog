@@ -1,3 +1,8 @@
+2006-07-08  Ralf Wildenhues  <Ralf.Wildenhues@gmx.de>
+
+	* coreutils.texi: Fix some typos.  Use `zeros' consistently (both
+	`zeros' and `zeroes' are correct).
+
 2006-07-01  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (tail invocation): With no operand, 'tail -f' now

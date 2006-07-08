@@ -403,7 +403,7 @@ System context
 * Time conversion specifiers::   %[HIklMNpPrRsSTXzZ]
 * Date conversion specifiers::   %[aAbBcCdDeFgGhjmuUVwWxyY]
 * Literal conversion specifiers:: %[%nt]
-* Padding and other flags::      Pad with zeroes, spaces, etc.
+* Padding and other flags::      Pad with zeros, spaces, etc.
 * Setting the time::             Changing the system clock.
 * Options for date::             Instead of the current time.
 * Examples of date::             Examples.
@@ -1528,7 +1528,7 @@ printed as a single octal number.
 If @var{offset} is given, it specifies how many input bytes to skip
 before formatting and writing.  By default, it is interpreted as an
 octal number, but the optional trailing decimal point causes it to be
-interpretated as decimal.  If no decimal is specified and the offset
+interpreted as decimal.  If no decimal is specified and the offset
 begins with @samp{0x} or @samp{0X} it is interpreted as a hexadecimal
 number.  If there is a trailing @samp{b}, the number of bytes skipped
 will be @var{offset} multiplied by 512.
@@ -2065,7 +2065,7 @@ Double space the output.
 @cindex time formats
 @cindex formatting times
 Format header dates using @var{format}, using the same conventions as
-for the the command @samp{date +@var{format}}; @xref{date invocation}.
+for the command @samp{date +@var{format}}; @xref{date invocation}.
 Except for directives, which start with
 @samp{%}, characters in @var{format} are printed unchanged.  You can use
 this option to specify an arbitrary string in place of the header date,
@@ -3091,7 +3091,7 @@ options}.
 
 Note: The MD5 digest is more reliable than a simple CRC (provided by
 the @command{cksum} command) for detecting accidental file corruption,
-as the chances of accidentally having two files with indentical MD5
+as the chances of accidentally having two files with identical MD5
 are vanishingly small.  However, it should not be considered truly
 secure against malicious tampering: although finding a file with a
 given MD5 fingerprint, or modifying a file so as to retain its MD5 are
@@ -5433,7 +5433,7 @@ not imply @option{-a}.)  New scripts should use @option{--first-only -t
 @itemx --all
 @opindex -a
 @opindex --all
-Also convert all sequences of two or more blanks just before a tab stop.
+Also convert all sequences of two or more blanks just before a tab stop,
 even if they occur after non-blank characters in a line.
 
 @end table
@@ -6051,7 +6051,7 @@ foo.zml-25.gz      foo.zml-25.gz
 foo.zml-6.gz       foo.zml-100.gz
 @end example
 
-Note also that numeric parts with leading zeroes are considered as
+Note also that numeric parts with leading zeros are considered as
 fractional one:
 
 @example
@@ -6822,7 +6822,7 @@ Remove each existing destination file before attempting to open it
 @findex read @r{system call, and holes}
 A @dfn{sparse file} contains @dfn{holes}---a sequence of zero bytes that
 does not occupy any physical disk blocks; the @samp{read} system call
-reads these as zeroes.  This can both save considerable disk space and
+reads these as zeros.  This can both save considerable disk space and
 increase speed, since many binary files contain lots of consecutive zero
 bytes.  By default, @command{cp} detects holes in input source files via a crude
 heuristic and makes the corresponding output file sparse as well.
@@ -11966,7 +11966,7 @@ described below.
 * Time conversion specifiers::     %[HIklMNpPrRsSTXzZ]
 * Date conversion specifiers::     %[aAbBcCdDeFgGhjmuUVwWxyY]
 * Literal conversion specifiers::  %[%nt]
-* Padding and other flags::        Pad with zeroes, spaces, etc.
+* Padding and other flags::        Pad with zeros, spaces, etc.
 * Setting the time::               Changing the system clock.
 * Options for date::               Instead of the current time.
 * Examples of date::               Examples.
@@ -12169,7 +12169,7 @@ a horizontal tab
 @cindex fields, padding numeric
 
 Unless otherwise specified, @command{date} normally pads numeric fields
-with zeroes, so that, for
+with zeros, so that, for
 example, numeric months are always output as two digits.
 Seconds since the epoch are not padded, though,
 since there is no natural width for them.
@@ -12183,7 +12183,7 @@ following optional flags after the @samp{%}:
 human consumption.
 @item _
 (underscore) Pad with spaces; useful if you need a fixed
-number of characters in the output, but zeroes are too distracting.
+number of characters in the output, but zeros are too distracting.
 @item 0
 (zero) Pad with zeros even if the conversion specifier
 would normally pad with spaces.
@@ -13561,7 +13561,7 @@ The output always terminates with a newline.
 
 @item -w
 @itemx --equal-width
-Print all numbers with the same width, by padding with leading zeroes.
+Print all numbers with the same width, by padding with leading zeros.
 @var{first}, @var{step}, and @var{last} should all use a fixed point
 decimal representation.
 (To have other kinds of padding, use @option{--format}).
