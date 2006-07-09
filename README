@@ -110,7 +110,7 @@ Reporting bugs:
 
 IMPORTANT: if you take the time to report a test failure,
 please be sure to include the output of running `make check'
-in verbose mode for each each failing test.  For example,
+in verbose mode for each failing test.  For example,
 if the test that fails is tests/mv/hard-link-1, then you
 would run this command:
 
