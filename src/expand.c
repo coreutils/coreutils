@@ -1,5 +1,5 @@
 /* expand - convert tabs to spaces
-   Copyright (C) 89, 91, 1995-2005 Free Software Foundation, Inc.
+   Copyright (C) 89, 91, 1995-2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -157,7 +157,7 @@ parse_tab_stops (char const *stops)
 
   for (; *stops; stops++)
     {
-      if (*stops == ',' || ISBLANK (to_uchar (*stops)))
+      if (*stops == ',' || isblank (to_uchar (*stops)))
 	{
 	  if (have_tabval)
 	    add_tab_stop (tabval);
@@ -352,7 +352,7 @@ expand (void)
 		    error (EXIT_FAILURE, 0, _("input line is too long"));
 		}
 
-	      convert &= convert_entire_line | ISBLANK (c);
+	      convert &= convert_entire_line | !! isblank (c);
 	    }
 
 	  if (c < 0)
