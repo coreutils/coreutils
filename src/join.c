@@ -174,14 +174,6 @@ E.g., use `sort -k 1b,1' if `join' has no options.\n\
   exit (status);
 }
 
-/* Return true if C is a blank (a default input field separator).  */
-
-static inline bool
-is_blank (unsigned char c)
-{
-  return ISBLANK (c) != 0;
-}
-
 /* Record a field in LINE, with location FIELD and size LEN.  */
 
 static void
@@ -216,19 +208,19 @@ xfields (struct line *line)
   else
     {
       /* Skip leading blanks before the first field.  */
-      while (is_blank (*ptr))
+      while (isblank (to_uchar (*ptr)))
 	if (++ptr == lim)
 	  return;
 
       do
 	{
 	  char *sep;
-	  for (sep = ptr + 1; sep != lim && ! is_blank (*sep); sep++)
+	  for (sep = ptr + 1; sep != lim && ! isblank (to_uchar (*sep)); sep++)
 	    continue;
 	  extract_field (line, ptr, sep - ptr);
 	  if (sep == lim)
 	    return;
-	  for (ptr = sep + 1; ptr != lim && is_blank (*ptr); ptr++)
+	  for (ptr = sep + 1; ptr != lim && isblank (to_uchar (*ptr)); ptr++)
 	    continue;
 	}
       while (ptr != lim);
