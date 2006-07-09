@@ -180,15 +180,15 @@ static BLOCK text_buffer;	/* file to study */
 /* SKIP_NON_WHITE used only for getting or skipping the reference.  */
 
 #define SKIP_NON_WHITE(cursor, limit) \
-  while (cursor < limit && !ISSPACE(*cursor))				\
+  while (cursor < limit && ! isspace (to_uchar (*cursor)))		\
     cursor++
 
 #define SKIP_WHITE(cursor, limit) \
-  while (cursor < limit && ISSPACE(*cursor))				\
+  while (cursor < limit && isspace (to_uchar (*cursor)))		\
     cursor++
 
 #define SKIP_WHITE_BACKWARDS(cursor, start) \
-  while (cursor > start && ISSPACE(cursor[-1]))				\
+  while (cursor > start && isspace (to_uchar (cursor[-1])))		\
     cursor--
 
 #define SKIP_SOMETHING(cursor, limit) \
@@ -319,7 +319,7 @@ copy_unescaped_string (const char *string)
 	  case 'x':		/* \xhhh escape, 3 chars maximum */
 	    value = 0;
 	    for (length = 0, string++;
-		 length < 3 && ISXDIGIT (*string);
+		 length < 3 && isxdigit (to_uchar (*string));
 		 length++, string++)
 	      value = value * 16 + HEXTOBIN (*string);
 	    if (length == 0)
@@ -442,7 +442,7 @@ initialize_regex (void)
 
   if (ignore_case)
     for (character = 0; character < CHAR_SET_SIZE; character++)
-      folded_chars[character] = TOUPPER (character);
+      folded_chars[character] = toupper (character);
 
   /* Unless the user already provided a description of the end of line or
      end of sentence sequence, select an end of line sequence to compile.
@@ -482,7 +482,7 @@ initialize_regex (void)
 	  /* Simulate \w+.  */
 
 	  for (character = 0; character < CHAR_SET_SIZE; character++)
-	    word_fastmap[character] = ISALPHA (character) ? 1 : 0;
+	    word_fastmap[character] = !! isalpha (character);
 	}
       else
 	{
@@ -1370,7 +1370,7 @@ fix_output_parameters (void)
      form feed as a space character, but we do.  */
 
   for (character = 0; character < CHAR_SET_SIZE; character++)
-    edited_flag[character] = ISSPACE (character) != 0;
+    edited_flag[character] = !! isspace (character);
   edited_flag['\f'] = 1;
 
   /* Complete the special character flagging according to selected output
