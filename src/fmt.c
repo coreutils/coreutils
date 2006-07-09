@@ -1,5 +1,5 @@
 /* GNU fmt -- simple text formatter.
-   Copyright (C) 1994-2005 Free Software Foundation, Inc.
+   Copyright (C) 1994-2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -668,7 +668,7 @@ get_line (FILE *f, int c)
 	  *wptr++ = c;
 	  c = getc (f);
 	}
-      while (c != EOF && !ISSPACE (c));
+      while (c != EOF && !isspace (c));
       in_column += word_limit->length = wptr - word_limit->text;
       check_punctuation (word_limit);
 
@@ -756,7 +756,7 @@ check_punctuation (WORD *w)
   unsigned char fin = *finish;
 
   w->paren = isopen (*start);
-  w->punct = ISPUNCT (fin);
+  w->punct = !! ispunct (fin);
   while (start < finish && isclose (*finish))
     finish--;
   w->period = isperiod (*finish);
