@@ -2326,7 +2326,7 @@ print_char (char c)
 	print_white_space ();
 
       /* Nonprintables are assumed to have width 0, except '\b'. */
-      if (!ISPRINT (to_uchar (c)))
+      if (! isprint (to_uchar (c)))
 	{
 	  if (c == '\b')
 	    --output_position;
@@ -2685,7 +2685,7 @@ char_to_clump (char c)
 	}
 
     }
-  else if (!ISPRINT (uc))
+  else if (! isprint (uc))
     {
       if (use_esc_sequence)
 	{

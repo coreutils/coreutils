@@ -38,14 +38,10 @@
 #endif
 #if !defined iswspace && !HAVE_ISWSPACE
 # define iswspace(wc) \
-    ((wc) == to_uchar (wc) && ISSPACE (to_uchar (wc)))
+    ((wc) == to_uchar (wc) && isspace (to_uchar (wc)))
 #endif
 
-/* Include this after wctype.h so that we `#undef' ISPRINT
-   (from Solaris's euc.h, from widec.h, from wctype.h) before
-   redefining and using it. */
 #include "system.h"
-
 #include "error.h"
 #include "inttostr.h"
 #include "quote.h"
@@ -474,10 +470,10 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
 		  in_word = false;
 		  break;
 		default:
-		  if (ISPRINT (to_uchar (p[-1])))
+		  if (isprint (to_uchar (p[-1])))
 		    {
 		      linepos++;
-		      if (ISSPACE (to_uchar (p[-1])))
+		      if (isspace (to_uchar (p[-1])))
 			goto word_separator;
 		      in_word = true;
 		    }

@@ -3659,7 +3659,7 @@ quote_name (FILE *out, const char *name, struct quoting_options const *options,
 
 	  while (p < plimit)
 	    {
-	      if (! ISPRINT (to_uchar (*p)))
+	      if (! isprint (to_uchar (*p)))
 		*p = '?';
 	      p++;
 	    }
@@ -3680,7 +3680,7 @@ quote_name (FILE *out, const char *name, struct quoting_options const *options,
 	  displayed_width = 0;
 	  while (p < plimit)
 	    {
-	      if (ISPRINT (to_uchar (*p)))
+	      if (isprint (to_uchar (*p)))
 		displayed_width++;
 	      p++;
 	    }

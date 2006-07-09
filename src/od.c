@@ -497,7 +497,7 @@ dump_hexl_mode_trailer (size_t n_bytes, const char *block)
   for (i = n_bytes; i > 0; i--)
     {
       unsigned char c = *block++;
-      unsigned char c2 = (ISPRINT(c) ? c : '.');
+      unsigned char c2 = (isprint (c) ? c : '.');
       putchar (c2);
     }
   putchar ('<');
@@ -576,7 +576,7 @@ print_ascii (size_t n_bytes, void const *block,
 	  break;
 
 	default:
-	  sprintf (buf, (ISPRINT (c) ? "  %c" : "%03o"), c);
+	  sprintf (buf, (isprint (c) ? "  %c" : "%03o"), c);
 	  s = buf;
 	}
 
@@ -1469,7 +1469,7 @@ dump_strings (void)
 	      free (buf);
 	      return ok;
 	    }
-	  if (!ISPRINT (c))
+	  if (! isprint (c))
 	    /* Found a non-printing.  Try again starting with next char.  */
 	    goto tryline;
 	  buf[i] = c;
@@ -1492,7 +1492,7 @@ dump_strings (void)
 	    }
 	  if (c == '\0')
 	    break;		/* It is; print this string.  */
-	  if (!ISPRINT (c))
+	  if (! isprint (c))
 	    goto tryline;	/* It isn't; give up on this string.  */
 	  buf[i++] = c;		/* String continues; store it all.  */
 	}

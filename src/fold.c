@@ -176,7 +176,7 @@ fold_file (char *filename, size_t width)
 	      while (logical_end)
 		{
 		  --logical_end;
-		  if (ISBLANK (line_out[logical_end]))
+		  if (isblank (to_uchar (line_out[logical_end])))
 		    {
 		      found_blank = true;
 		      break;

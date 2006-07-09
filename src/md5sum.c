@@ -348,7 +348,7 @@ hex_digits (unsigned char const *s)
 {
   while (*s)
     {
-      if (!ISXDIGIT (*s))
+      if (!isxdigit (*s))
         return false;
       ++s;
     }
@@ -513,9 +513,9 @@ digest_check (const char *checkfile_name)
 		 in check file.  Ignore case of hex digits.  */
 	      for (cnt = 0; cnt < digest_bin_bytes; ++cnt)
 		{
-		  if (TOLOWER (hex_digest[2 * cnt])
+		  if (tolower (hex_digest[2 * cnt])
 		      != bin2hex[bin_buffer[cnt] >> 4]
-		      || (TOLOWER (hex_digest[2 * cnt + 1])
+		      || (tolower (hex_digest[2 * cnt + 1])
 			  != (bin2hex[bin_buffer[cnt] & 0xf])))
 		    break;
 		}

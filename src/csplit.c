@@ -1273,7 +1273,7 @@ get_format_conv_type (char **format_ptr)
       break;
 
     default:
-      if (ISPRINT (ch))
+      if (isprint (ch))
         error (EXIT_FAILURE, 0,
 	       _("invalid conversion specifier in suffix: %c"), ch);
       else

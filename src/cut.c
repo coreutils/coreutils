@@ -372,7 +372,7 @@ set_fields (const char *fieldstr)
 	  else
 	    initial = 1;
 	}
-      else if (*fieldstr == ',' || ISBLANK (*fieldstr) || *fieldstr == '\0')
+      else if (*fieldstr == ',' || isblank (*fieldstr) || *fieldstr == '\0')
 	{
 	  in_digits = false;
 	  /* Ending the string, or this field/byte sublist. */

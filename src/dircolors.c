@@ -155,8 +155,8 @@ parse_line (char const *line, char **keyword, char **arg)
   *keyword = NULL;
   *arg = NULL;
 
-  for (p = line; ISSPACE (to_uchar (*p)); ++p)
-    ;
+  for (p = line; isspace (to_uchar (*p)); ++p)
+    continue;
 
   /* Ignore blank lines and shell-style comments.  */
   if (*p == '\0' || *p == '#')
@@ -164,7 +164,7 @@ parse_line (char const *line, char **keyword, char **arg)
 
   keyword_start = p;
 
-  while (!ISSPACE (to_uchar (*p)) && *p != '\0')
+  while (!isspace (to_uchar (*p)) && *p != '\0')
     {
       ++p;
     }
@@ -177,7 +177,7 @@ parse_line (char const *line, char **keyword, char **arg)
     {
       ++p;
     }
-  while (ISSPACE (to_uchar (*p)));
+  while (isspace (to_uchar (*p)));
 
   if (*p == '\0' || *p == '#')
     return;
@@ -187,10 +187,8 @@ parse_line (char const *line, char **keyword, char **arg)
   while (*p != '\0' && *p != '#')
     ++p;
 
-  for (--p; ISSPACE (to_uchar (*p)); --p)
-    {
-      /* empty */
-    }
+  for (--p; isspace (to_uchar (*p)); --p)
+    continue;
   ++p;
 
   *arg = xstrndup (arg_start, p - arg_start);

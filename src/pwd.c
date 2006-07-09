@@ -210,7 +210,7 @@ find_dir_entry (struct stat *dot_sb, struct file_name *file_name,
 	 match is enough.  */
       if ( ! use_lstat || ent_sb.st_dev == dot_sb->st_dev)
 	{
-	  file_name_prepend (file_name, dp->d_name, NLENGTH (dp));
+	  file_name_prepend (file_name, dp->d_name, _D_EXACT_NAMLEN (dp));
 	  found = true;
 	  break;
 	}

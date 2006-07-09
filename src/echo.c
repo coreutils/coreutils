@@ -218,12 +218,12 @@ just_echo:
 		    case 'x':
 		      {
 			unsigned char ch = *s;
-			if (! ISXDIGIT (ch))
+			if (! isxdigit (ch))
 			  goto not_an_escape;
 			s++;
 			c = hextobin (ch);
 			ch = *s;
-			if (ISXDIGIT (ch))
+			if (isxdigit (ch))
 			  {
 			    s++;
 			    c = c * 16 + hextobin (ch);

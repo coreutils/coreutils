@@ -134,7 +134,7 @@ find_int (char const *string)
   char const *p;
   char const *number_start;
 
-  for (p = string; ISBLANK (to_uchar (*p)); p++)
+  for (p = string; isblank (to_uchar (*p)); p++)
     continue;
 
   if (*p == '+')
@@ -152,7 +152,7 @@ find_int (char const *string)
     {
       while (ISDIGIT (*p))
 	p++;
-      while (ISBLANK (to_uchar (*p)))
+      while (isblank (to_uchar (*p)))
 	p++;
       if (!*p)
 	return number_start;
