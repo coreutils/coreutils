@@ -1,4 +1,4 @@
-# getpass.m4 serial 7
+# getpass.m4 serial 8
 dnl Copyright (C) 2002-2003, 2005-2006 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
@@ -42,4 +42,5 @@ AC_DEFUN([gl_PREREQ_GETPASS], [
   AC_CHECK_DECLS_ONCE([fputs_unlocked])
   AC_CHECK_DECLS_ONCE([funlockfile])
   AC_CHECK_DECLS_ONCE([putc_unlocked])
+  :
 ])

@@ -1,4 +1,4 @@
-# strndup.m4 serial 6
+# strndup.m4 serial 7
 dnl Copyright (C) 2002-2003, 2005-2006 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
@@ -27,13 +27,15 @@ AC_DEFUN([gl_FUNC_STRNDUP],
   return s[13] != '\0';]])],
        [gl_cv_func_strndup=yes],
        [gl_cv_func_strndup=no],
-       [AC_EGREP_CPP([too risky], [
+       [AC_CHECK_FUNC([strndup],
+          [AC_EGREP_CPP([too risky], [
 #ifdef _AIX
-            too risky
+               too risky
 #endif
-          ],
-          [gl_cv_func_strndup=no],
-          [gl_cv_func_strndup=yes])])])
+             ],
+             [gl_cv_func_strndup=no],
+             [gl_cv_func_strndup=yes])],
+          [gl_cv_func_strndup=no])])])
   if test $gl_cv_func_strndup = yes; then
     AC_DEFINE([HAVE_STRNDUP], 1,
       [Define if you have the strndup() function and it works.])

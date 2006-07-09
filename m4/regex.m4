@@ -166,5 +166,6 @@ AC_DEFUN([gl_PREREQ_REGEX],
   AC_REQUIRE([gl_C_RESTRICT])
   AC_REQUIRE([AM_LANGINFO_CODESET])
   AC_CHECK_HEADERS_ONCE([locale.h wchar.h wctype.h])
-  AC_CHECK_FUNCS_ONCE([isblank mbrtowc mempcpy wcrtomb wcscoll])
+  AC_CHECK_FUNCS_ONCE([mbrtowc mempcpy wcrtomb wcscoll])
+  AC_CHECK_DECLS([isblank], [], [], [#include <ctype.h>])
 ])

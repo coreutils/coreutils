@@ -1,4 +1,4 @@
-# sockpfaf.m4 serial 3
+# sockpfaf.m4 serial 4
 dnl Copyright (C) 2004, 2006 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
@@ -13,7 +13,8 @@ dnl From Bruno Haible.
 
 AC_DEFUN([gl_SOCKET_FAMILIES],
 [
-  AC_CHECK_HEADERS_ONCE(sys/socket.h netinet/in.h winsock2.h)
+  AC_REQUIRE([gl_HEADER_SYS_SOCKET])
+  AC_CHECK_HEADERS_ONCE([netinet/in.h])
 
   AC_MSG_CHECKING(for IPv4 sockets)
   AC_CACHE_VAL(gl_cv_socket_ipv4,

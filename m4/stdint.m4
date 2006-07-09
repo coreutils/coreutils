@@ -1,4 +1,4 @@
-# stdint.m4 serial 13
+# stdint.m4 serial 14
 dnl Copyright (C) 2001-2002, 2004-2006 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
@@ -49,9 +49,9 @@ AC_DEFUN([gl_STDINT_H],
 
   dnl AC_INCLUDES_DEFAULT defines $ac_cv_header_stdint_h.
   if test $ac_cv_header_stdint_h = yes; then
-    gl_FULL_HEADER_PATH([stdint.h])
-    FULL_PATH_STDINT_H="<$gl_cv_full_path_stdint_h>"
-    AC_SUBST([FULL_PATH_STDINT_H])
+    gl_ABSOLUTE_HEADER([stdint.h])
+    ABSOLUTE_STDINT_H="<$gl_cv_absolute_stdint_h>"
+    AC_SUBST([ABSOLUTE_STDINT_H])
     HAVE_STDINT_H=1
   else
     HAVE_STDINT_H=0
@@ -59,7 +59,7 @@ AC_DEFUN([gl_STDINT_H],
   AC_SUBST([HAVE_STDINT_H])
 
   dnl Now see whether we need a substitute <stdint.h>.  Use
-  dnl FULL_PATH_STDINT_H, not <stdint.h>, so that it also works during
+  dnl ABSOLUTE_STDINT_H, not <stdint.h>, so that it also works during
   dnl a "config.status --recheck" if a stdint.h has been
   dnl created in the build directory.
   if test $ac_cv_header_stdint_h = yes; then
@@ -70,7 +70,7 @@ AC_DEFUN([gl_STDINT_H],
 	 AC_LANG_PROGRAM([[
 #include <stddef.h>
 #define __STDC_LIMIT_MACROS 1 /* to make it work also in C++ mode */
-#include FULL_PATH_STDINT_H
+#include ABSOLUTE_STDINT_H
 #ifdef INT8_MAX
 int8_t a1 = INT8_MAX;
 #endif

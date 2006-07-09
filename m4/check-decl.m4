@@ -61,6 +61,8 @@ AC_DEFUN([gl_CHECK_DECLS],
     strtoul,
     strtoull,
     ttyname], , , $headers)
+
+  AC_CHECK_DECLS([isblank], [], [], [#include <ctype.h>])
 ])
 
 dnl FIXME: when autoconf has support for it.

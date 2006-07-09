@@ -1,3 +1,94 @@
+2006-07-09  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Update from gnulib, as follows:
+
+	2006-07-06  Derek R. Price  <derek@ximbiot.com>
+	and Paul Eggert  <eggert@cs.ucla.edu>
+
+	* backupfile.m4 (gl_BACKUPFILE): Check for dirent.h, instead
+	of invoking obsolescent AC_HEADER_DIRENT macro.
+	* d-ino.m4 (gl_CHECK_TYPE_STRUCT_DIRENT_D_INO): Likewise.
+	* d-type.m4 (gl_CHECK_TYPE_STRUCT_DIRENT_D_TYPE): Likewise.
+	* dirfd.m4 (gl_FUNC_DIRFD): Likewise.
+	* fts.m4 (gl_FUNC_FTS_CORE): Likewise.
+	* getcwd.m4 (gl_PREREQ_GETCWD): Likewise.
+	* savedir.m4 (gl_SAVEDIR): Likewise.
+
+	2006-07-06  Ralf Wildenhues  <Ralf.Wildenhues@gmx.de>
+
+	* fileblocks.m4 (gl_PREREQ_FILEBLOCKS): AC_CHECK_DECLS_ONCE may
+	expand to nothing, so add a shell command to avoid syntax error.
+	* getpass.m4 (gl_PREREQ_GETPASS): Likewise.
+
+	2006-07-06  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* fnmatch.m4 (_AC_LIBOBJ_FNMATCH): Don't check for getenv decl;
+	no longer needed.  Check for isblank decl.
+	* mkstemp.m4 (gl_PREREQ_TEMPNAME): Don't check for getenv decl.
+	* regex.m4 (gl_PREREQ_REGEX): Dheck for isblank decl instead
+	of existence.
+
+	2006-07-05  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* xstrtol.m4 (gl_PREREQ_XSTRTOL): Use AC_CHECK_DECLS_ONCE
+	rather than AC_CHECK_DECLS for strtoimax and strtoumax.
+	* getusershell.m4 (gl_PREREQ_GETUSERSHELL): Remove; no longer needed.
+	All uses removed.
+	* strtol.m4 (gl_PREREQ_STRTOL): Likewise.
+	* strtoul.m4 (gl_PREREQ_STRTOUL): Likewise.
+	* exclude.m4 (gl_EXCLUDE): Don't check for isascii; no longer needed.
+	* getdate.m4 (gl_GETDATE): Likewise.
+	* getusershell.m4 (gl_PREREQ_GETUSERSHELL): Likewise.
+	* memcasecmp.m4 (gl_MEMCASECMP): Likewise.
+	* strtod.m4 (gl_FUNC_STRTOD): Likewise.
+	* strtol.m4 (gl_PREREQ_STRTOL): Likewise.
+	* strtoul.m4 (gl_PREREQ_STRTOUL): Likewise.
+	* xstrtol.m4 (gl_PREREQ_XSTRTOL): Likewise.
+	* exclude.m4 (gl_EXCLUDE): Don't require AC_C_INLINE; no longer
+	needed.
+
+	2006-07-05  Derek R. Price  <derek@ximbiot.com>
+
+	* calloc.m4 (_AC_FUNC_CALLOC_IF): Don't require AC_HEADER_STDC;
+	no longer needed.
+	* exclude.m4 (gl_EXCLUDE): Likewise.
+	* getdate.m4 (gl_GETDATE): Likewise.
+	* getusershell.m4 (gl_PREREQ_GETUSERSHELL): Likewise.
+	* memcasecmp.m4 (gl_MEMCASECMP): Likewise.
+	* strtod.m4 (gl_FUNC_STRTOD): Likewise.
+	* strtol.m4 (gl_PREREQ_STRTOL): Likewise.
+	* xstrtol.m4 (gl_PREREQ_XSTRTOL): Likewise.
+
+	2006-07-05  Eric Blake  <ebb9@byu.net>
+
+	* sockpfaf.m4 (gl_SOCKET_FAMILIES): Use gl_HEADER_SYS_SOCKET
+	to avoid 'header present but could not be compiled' on cygwin.
+
+	2006-07-03  Bruno Haible  <bruno@clisp.org>
+
+	* strndup.m4 (gl_FUNC_STRNDUP): When cross-compiling, check whether
+	the function exists, before testing against AIX.
+	Reported by Martin Lambers <marlam@marlam.de>.
+
+	2006-07-04  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* absolute-header.m4 (gl_ABSOLUTE_HEADER): Prepend three slashes
+	to the absolute name, not just one, to bypass Sun C 5.8's
+	"warning: #include of /usr/include/... may be non-portable".
+
+	2006-07-03  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* absolute-header.m4: Renamed from full-header-path.m4.
+	This is to keep the terminology clean; POSIX talks about
+	"absolute pathnames", not "full pathnames", but the GNU
+	Coding Standards say to use "path" for something else;
+	so use "absolute" to keep both sides happy.
+	(gl_ABSOLUTE_HEADER): Renamed from gl_FULL_HEADER_PATH.
+	Set gl_absolute_header, not gl_full_header_path.
+	Set gl_cv_absolute_<header>, not gl_full_path_<header>.
+	Define ABSOLUTE_<HEADER>, not FULL_PATH_<HEADER>.
+	All uses changed.
+
 2006-07-08  Jim Meyering  <jim@meyering.net>
 
 	* link-follow.m4: Remove one of two adjacent "whether"s in a comment.

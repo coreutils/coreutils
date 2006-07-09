@@ -1,4 +1,4 @@
-#serial 99   -*- autoconf -*-
+#serial 100   -*- autoconf -*-
 
 dnl Misc type-related macros for coreutils.
 
@@ -231,8 +231,6 @@ AC_DEFUN([gl_CHECK_ALL_TYPES],
   AC_REQUIRE([AC_C_LONG_DOUBLE])
 
   AC_REQUIRE([gl_CHECK_ALL_HEADERS])
-  AC_REQUIRE([AC_HEADER_DIRENT])
-  AC_REQUIRE([AC_HEADER_STDC])
   AC_CHECK_MEMBERS(
     [struct stat.st_author,
      struct stat.st_blksize],,,
@@ -265,6 +263,4 @@ AC_DEFUN([gl_CHECK_ALL_TYPES],
   AC_REQUIRE([gl_AC_TYPE_UNSIGNED_LONG_LONG])
 
   AC_REQUIRE([AC_HEADER_MAJOR])
-  AC_REQUIRE([AC_HEADER_DIRENT])
-
 ])
