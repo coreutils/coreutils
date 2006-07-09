@@ -1,3 +1,35 @@
+2006-07-09  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Adjust to recent updates from gnulib.
+	* src/dd.c (apply_translations): Use toupper rather than
+	islower followed by toupper; it's simpler and typically
+	faster now that we assume at least C89 semantics.  Similarly
+	for tolower.
+	* src/sort.c (inittables): Likewise.
+	* src/expand.c (expand): Don't assume that isprint etc. return
+	booleans (needed for pre-C99 hosts).
+	* src/fmt.c (check_punctuation): Likewise.
+	* src/ptx.c (initialize_regex, fix_output_parameters): Likewise.
+	* src/tr.c (is_char_class_member): Likewise.
+	* src/unexpand.c (unexpand): Likewise.
+	* src/join.c (is_blank): Remove; no longer needed.  All uses
+	replaced by isblank (to_uchar (...)).
+	* src/pinky.c (create_fullname): Don't assume char is unsigned.
+	* src/printf.c (print_esc): Likewise.
+	* src/ptx.c (SKIP_NON_WHITE, SKIP_WHITE, SKIP_WHITE_BACKWARDS):
+	(copy_unescaped_string): Likewise.
+	* src/stat.c (print_it): Likewise.
+	* src/system.h (_D_EXACT_NAMELEN): Renamed from NLENGTH, for
+	convenience on GNU systems.  All uses changed.  Don't bother
+	looking for any dirent.h substitute other than ndir.h.
+	(D_INO): Remove unnecessary parentheses.
+	(IN_CTYPE_DOMAIN, ISGRAPH, ISPRINT, ISALNUM, ISALPHA):
+	(ISCNTRL, ISLOWER, ISPUNCT, ISSPACE, ISUPPER, ISXDIGIT):
+	(ISDIGIT_LOCALE, TOLOWER, TOUPPER): Remove.  All uses changed
+	to ctype.h equivalents.
+	(isblank): Renamed from ISBLANK.  Check for HAVE_DECL_ISBLANK too.
+	All uses changed.
+
 2006-07-08  Jim Meyering  <jim@meyering.net>
 
 	* tests/mv/dir2dir: New file, test for 2006-07-05 fix in copy.c.
