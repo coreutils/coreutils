@@ -176,7 +176,7 @@ parse_tab_stops (char const *stops)
 
   for (; *stops; stops++)
     {
-      if (*stops == ',' || ISBLANK (to_uchar (*stops)))
+      if (*stops == ',' || isblank (to_uchar (*stops)))
 	{
 	  if (have_tabval)
 	    add_tab_stop (tabval);
@@ -348,7 +348,7 @@ unexpand (void)
 
 	  if (convert)
 	    {
-	      bool blank = ISBLANK (c);
+	      bool blank = !! isblank (c);
 
 	      if (blank)
 		{
