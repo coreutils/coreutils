@@ -1,5 +1,5 @@
 /* sort - sort lines of text (with all kinds of options).
-   Copyright (C) 1988, 1991-2005 Free Software Foundation, Inc.
+   Copyright (C) 1988, 1991-2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -580,10 +580,10 @@ inittables (void)
 
   for (i = 0; i < UCHAR_LIM; ++i)
     {
-      blanks[i] = !!ISBLANK (i);
-      nonprinting[i] = !ISPRINT (i);
-      nondictionary[i] = !ISALNUM (i) && !ISBLANK (i);
-      fold_toupper[i] = (ISLOWER (i) ? toupper (i) : i);
+      blanks[i] = !! isblank (i);
+      nonprinting[i] = ! isprint (i);
+      nondictionary[i] = ! isalnum (i) && ! isblank (i);
+      fold_toupper[i] = toupper (i);
     }
 
 #if HAVE_NL_LANGINFO
