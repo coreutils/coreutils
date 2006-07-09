@@ -1,3 +1,8 @@
+2006-07-09  Jim Meyering  <jim@meyering.net>
+
+	* tests/mv/dir2dir: Adjust so failing with ENOTEMPTY is ok, too.
+	That happens with Linux/tmpfs.
+
 2006-07-09  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Adjust to recent updates from gnulib.
