@@ -1,5 +1,5 @@
 /* tr -- a filter to translate characters
-   Copyright (C) 91, 1995-2005 Free Software Foundation, Inc.
+   Copyright (C) 91, 1995-2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -376,51 +376,52 @@ is_equiv_class_member (unsigned char equiv_class, unsigned char c)
 static bool
 is_char_class_member (enum Char_class char_class, unsigned char c)
 {
-  bool result;
+  int result;
 
   switch (char_class)
     {
     case CC_ALNUM:
-      result = ISALNUM (c);
+      result = isalnum (c);
       break;
     case CC_ALPHA:
-      result = ISALPHA (c);
+      result = isalpha (c);
       break;
     case CC_BLANK:
-      result = ISBLANK (c);
+      result = isblank (c);
       break;
     case CC_CNTRL:
-      result = ISCNTRL (c);
+      result = iscntrl (c);
       break;
     case CC_DIGIT:
-      result = ISDIGIT_LOCALE (c);
+      result = isdigit (c);
       break;
     case CC_GRAPH:
-      result = ISGRAPH (c);
+      result = isgraph (c);
       break;
     case CC_LOWER:
-      result = ISLOWER (c);
+      result = islower (c);
       break;
     case CC_PRINT:
-      result = ISPRINT (c);
+      result = isprint (c);
       break;
     case CC_PUNCT:
-      result = ISPUNCT (c);
+      result = ispunct (c);
       break;
     case CC_SPACE:
-      result = ISSPACE (c);
+      result = isspace (c);
       break;
     case CC_UPPER:
-      result = ISUPPER (c);
+      result = isupper (c);
       break;
     case CC_XDIGIT:
-      result = ISXDIGIT (c);
+      result = isxdigit (c);
       break;
     default:
       abort ();
       break;
     }
-  return result;
+
+  return !! result;
 }
 
 static void
@@ -569,7 +570,7 @@ make_printable_char (unsigned char c)
 {
   char *buf = xmalloc (5);
 
-  if (ISPRINT (c))
+  if (isprint (c))
     {
       buf[0] = c;
       buf[1] = '\0';
@@ -630,7 +631,7 @@ make_printable_str (char const *s, size_t len)
 	  tmp = "\\v";
 	  break;
 	default:
-	  if (ISPRINT (c))
+	  if (isprint (c))
 	    {
 	      buf[0] = c;
 	      buf[1] = '\0';
@@ -1846,13 +1847,13 @@ main (int argc, char **argv)
 	      if (class_s1 == UL_LOWER && class_s2 == UL_UPPER)
 		{
 		  for (i = 0; i < N_CHARS; i++)
-		    if (ISLOWER (i))
+		    if (islower (i))
 		      xlate[i] = toupper (i);
 		}
 	      else if (class_s1 == UL_UPPER && class_s2 == UL_LOWER)
 		{
 		  for (i = 0; i < N_CHARS; i++)
-		    if (ISUPPER (i))
+		    if (isupper (i))
 		      xlate[i] = tolower (i);
 		}
 	      else if ((class_s1 == UL_LOWER && class_s2 == UL_LOWER)
