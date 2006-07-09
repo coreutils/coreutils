@@ -78,26 +78,17 @@ static char sccsid[] = "@(#)fts.c	8.6 (Berkeley) 8/14/94";
 # include "unistd--.h"
 #endif
 
-#if defined _LIBC
+#if HAVE_DIRENT_H || _LIBC
 # include <dirent.h>
-# define NAMLEN(dirent) _D_EXACT_NAMLEN (dirent)
-#else
-# if HAVE_DIRENT_H
-#  include <dirent.h>
-#  define NAMLEN(dirent) strlen ((dirent)->d_name)
+# ifdef _D_EXACT_NAMLEN
+#  define NAMLEN(dirent) _D_EXACT_NAMLEN (dirent)
 # else
-#  define dirent direct
-#  define NAMLEN(dirent) (dirent)->d_namlen
-#  if HAVE_SYS_NDIR_H
-#   include <sys/ndir.h>
-#  endif
-#  if HAVE_SYS_DIR_H
-#   include <sys/dir.h>
-#  endif
-#  if HAVE_NDIR_H
-#   include <ndir.h>
-#  endif
+#  define NAMLEN(dirent) strlen ((dirent)->d_name)
 # endif
+#else
+# define dirent direct
+# define NAMLEN(dirent) (dirent)->d_namlen
+# include <ndir.h>
 #endif
 
 #ifdef _LIBC

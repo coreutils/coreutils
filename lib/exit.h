@@ -21,7 +21,7 @@
 /* Get exit() declaration.  */
 #include <stdlib.h>
 
-/* Some systems do not define EXIT_*, even with STDC_HEADERS.  */
+/* Some systems do not define EXIT_*, despite otherwise supporting C89.  */
 #ifndef EXIT_SUCCESS
 # define EXIT_SUCCESS 0
 #endif

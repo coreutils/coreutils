@@ -21,12 +21,12 @@
 #include <unistd.h>
 
 #if !defined getpagesize && defined _SC_PAGESIZE
-# if !(defined VMS && __VMS_VER < 70000000)
+# if ! (defined __VMS && __VMS_VER < 70000000)
 #  define getpagesize() sysconf (_SC_PAGESIZE)
 # endif
 #endif
 
-#if !defined getpagesize && defined VMS
+#if !defined getpagesize && defined __VMS
 # ifdef __ALPHA
 #  define getpagesize() 8192
 # else

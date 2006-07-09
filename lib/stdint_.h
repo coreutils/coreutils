@@ -43,14 +43,14 @@
      Include it before <inttypes.h>, since any "#include <stdint.h>"
      in <inttypes.h> would reinclude us, skipping our contents because
      _GL_STDINT_H is defined.  */
-# include @FULL_PATH_STDINT_H@
+# include @ABSOLUTE_STDINT_H@
 #endif
 
 /* <sys/types.h> defines some of the stdint.h types as well, on glibc,
    IRIX 6.5, and OpenBSD 3.8 (via <machine/types.h>).
    MacOS X 10.4.6 <sys/types.h> includes <stdint.h> (which is us), but
    relies on the system <stdint.h> definitions, so include
-   <sys/types.h> after @FULL_PATH_STDINT_H@.  */
+   <sys/types.h> after @ABSOLUTE_STDINT_H@.  */
 #if @HAVE_SYS_TYPES_H@
 # include <sys/types.h>
 #endif

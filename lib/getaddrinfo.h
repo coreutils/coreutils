@@ -142,4 +142,12 @@ extern int getnameinfo(const struct sockaddr *restrict sa, socklen_t salen,
 
 # endif
 
+/* Possible flags for getnameinfo.  */
+# ifndef NI_NUMERICHOST
+#  define NI_NUMERICHOST 1
+# endif
+# ifndef NI_NUMERICSERV
+#  define NI_NUMERICSERV 2
+# endif
+
 #endif /* GETADDRINFO_H */

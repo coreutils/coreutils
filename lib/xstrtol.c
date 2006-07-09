@@ -1,6 +1,6 @@
 /* A more useful interface to strtol.
 
-   Copyright (C) 1995, 1996, 1998, 1999, 2000, 2001, 2003, 2004, 2005
+   Copyright (C) 1995, 1996, 1998, 1999, 2000, 2001, 2003, 2004, 2005, 2006
    Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -50,14 +50,6 @@
 # define STRTOL_T_MINIMUM TYPE_MINIMUM (__strtol_t)
 # define STRTOL_T_MAXIMUM TYPE_MAXIMUM (__strtol_t)
 #endif
-
-#if defined (STDC_HEADERS) || (!defined (isascii) && !defined (HAVE_ISASCII))
-# define IN_CTYPE_DOMAIN(c) 1
-#else
-# define IN_CTYPE_DOMAIN(c) isascii(c)
-#endif
-
-#define ISSPACE(c) (IN_CTYPE_DOMAIN (c) && isspace (c))
 
 #if !HAVE_DECL_STRTOIMAX && !defined strtoimax
 intmax_t strtoimax ();
@@ -112,7 +104,7 @@ __xstrtol (const char *s, char **ptr, int strtol_base,
     {
       const char *q = s;
       unsigned char ch = *q;
-      while (ISSPACE (ch))
+      while (isspace (ch))
 	ch = *++q;
       if (ch == '-')
 	return LONGINT_INVALID;

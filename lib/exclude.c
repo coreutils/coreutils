@@ -43,18 +43,6 @@
 # include "unlocked-io.h"
 #endif
 
-#if STDC_HEADERS || (! defined isascii && ! HAVE_ISASCII)
-# define IN_CTYPE_DOMAIN(c) true
-#else
-# define IN_CTYPE_DOMAIN(c) isascii (c)
-#endif
-
-static inline bool
-is_space (unsigned char c)
-{
-  return IN_CTYPE_DOMAIN (c) && isspace (c);
-}
-
 /* Non-GNU systems lack these options, so we don't need to check them.  */
 #ifndef FNM_CASEFOLD
 # define FNM_CASEFOLD 0
@@ -244,12 +232,12 @@ add_exclude_file (void (*add_func) (struct exclude *, char const *, int),
       {
 	char *pattern_end = p;
 
-	if (is_space (line_end))
+	if (isspace ((unsigned char) line_end))
 	  {
 	    for (; ; pattern_end--)
 	      if (pattern_end == pattern)
 		goto next_pattern;
-	      else if (! is_space (pattern_end[-1]))
+	      else if (! isspace ((unsigned char) pattern_end[-1]))
 		break;
 	  }
 

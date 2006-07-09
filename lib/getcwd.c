@@ -38,23 +38,13 @@
 
 #if HAVE_DIRENT_H || _LIBC
 # include <dirent.h>
-# ifndef _D_EXACT_NAMLEN
-#  define _D_EXACT_NAMLEN(d) strlen ((d)->d_name)
-# endif
 #else
 # define dirent direct
-# if HAVE_SYS_NDIR_H
-#  include <sys/ndir.h>
-# endif
-# if HAVE_SYS_DIR_H
-#  include <sys/dir.h>
-# endif
-# if HAVE_NDIR_H
-#  include <ndir.h>
-# endif
+# define _D_EXACT_NAMLEN(d) (d)->d_namlen
+# include <ndir.h>
 #endif
 #ifndef _D_EXACT_NAMLEN
-# define _D_EXACT_NAMLEN(d) ((d)->d_namlen)
+# define _D_EXACT_NAMLEN(d) strlen ((d)->d_name)
 #endif
 #ifndef _D_ALLOC_NAMLEN
 # define _D_ALLOC_NAMLEN(d) (_D_EXACT_NAMLEN (d) + 1)

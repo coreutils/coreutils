@@ -1,5 +1,5 @@
 /* Declare dirfd, if necessary.
-   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002, 2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -21,18 +21,10 @@
 
 #if HAVE_DIRENT_H
 # include <dirent.h>
-#else /* not HAVE_DIRENT_H */
+#else
 # define dirent direct
-# if HAVE_SYS_NDIR_H
-#  include <sys/ndir.h>
-# endif /* HAVE_SYS_NDIR_H */
-# if HAVE_SYS_DIR_H
-#  include <sys/dir.h>
-# endif /* HAVE_SYS_DIR_H */
-# if HAVE_NDIR_H
-#  include <ndir.h>
-# endif /* HAVE_NDIR_H */
-#endif /* HAVE_DIRENT_H */
+# include <ndir.h>
+#endif
 
 #ifndef HAVE_DECL_DIRFD
 "this configure-time declaration test was not run"

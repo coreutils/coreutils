@@ -31,7 +31,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#ifdef VMS
+#ifdef __VMS
 # include <unixlib.h>
 #endif
 

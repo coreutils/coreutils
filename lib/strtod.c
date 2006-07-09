@@ -22,16 +22,6 @@
 
 #include <ctype.h>
 
-#if defined (STDC_HEADERS) || (!defined (isascii) && !defined (HAVE_ISASCII))
-# define IN_CTYPE_DOMAIN(c) 1
-#else
-# define IN_CTYPE_DOMAIN(c) isascii(c)
-#endif
-
-#define ISSPACE(c) (IN_CTYPE_DOMAIN (c) && isspace (c))
-#define ISDIGIT(c) (IN_CTYPE_DOMAIN (c) && isdigit (c))
-#define TOLOWER(c) (IN_CTYPE_DOMAIN (c) ? tolower(c) : (c))
-
 #include <math.h>
 
 #include <float.h>
@@ -64,7 +54,7 @@ strtod (const char *nptr, char **endptr)
   s = nptr;
 
   /* Eat whitespace.  */
-  while (ISSPACE (*s))
+  while (isspace ((unsigned char) *s))
     ++s;
 
   /* Get the sign.  */
@@ -78,7 +68,7 @@ strtod (const char *nptr, char **endptr)
   exponent = 0;
   for (;; ++s)
     {
-      if (ISDIGIT (*s))
+      if ('0' <= *s && *s <= '9')
 	{
 	  got_digit = 1;
 
@@ -111,7 +101,7 @@ strtod (const char *nptr, char **endptr)
   if (!got_digit)
     goto noconv;
 
-  if (TOLOWER (*s) == 'e')
+  if (tolower ((unsigned char) *s) == 'e')
     {
       /* Get the exponent specified after the `e' or `E'.  */
       int save = errno;

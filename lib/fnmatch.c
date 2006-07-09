@@ -86,33 +86,9 @@ extern int fnmatch (const char *pattern, const char *string, int flags);
 #if defined _LIBC || !defined __GNU_LIBRARY__ || !HAVE_FNMATCH_GNU
 
 
-# if defined STDC_HEADERS || !defined isascii
-#  define ISASCII(c) 1
-# else
-#  define ISASCII(c) isascii(c)
+# if ! (defined isblank || HAVE_DECL_ISBLANK)
+#  define isblank(c) ((c) == ' ' || (c) == '\t')
 # endif
-
-# ifdef isblank
-#  define ISBLANK(c) (ISASCII (c) && isblank (c))
-# else
-#  define ISBLANK(c) ((c) == ' ' || (c) == '\t')
-# endif
-# ifdef isgraph
-#  define ISGRAPH(c) (ISASCII (c) && isgraph (c))
-# else
-#  define ISGRAPH(c) (ISASCII (c) && isprint (c) && !isspace (c))
-# endif
-
-# define ISPRINT(c) (ISASCII (c) && isprint (c))
-# define ISDIGIT(c) (ISASCII (c) && isdigit (c))
-# define ISALNUM(c) (ISASCII (c) && isalnum (c))
-# define ISALPHA(c) (ISASCII (c) && isalpha (c))
-# define ISCNTRL(c) (ISASCII (c) && iscntrl (c))
-# define ISLOWER(c) (ISASCII (c) && islower (c))
-# define ISPUNCT(c) (ISASCII (c) && ispunct (c))
-# define ISSPACE(c) (ISASCII (c) && isspace (c))
-# define ISUPPER(c) (ISASCII (c) && isupper (c))
-# define ISXDIGIT(c) (ISASCII (c) && isxdigit (c))
 
 # define STREQ(s1, s2) ((strcmp (s1, s2) == 0))
 
@@ -169,11 +145,7 @@ static int posixly_correct;
 # endif
 
 /* Note that this evaluates C many times.  */
-# ifdef _LIBC
-#  define FOLD(c) ((flags & FNM_CASEFOLD) ? tolower (c) : (c))
-# else
-#  define FOLD(c) ((flags & FNM_CASEFOLD) && ISUPPER (c) ? tolower (c) : (c))
-# endif
+# define FOLD(c) ((flags & FNM_CASEFOLD) ? tolower (c) : (c))
 # define CHAR	char
 # define UCHAR	unsigned char
 # define INT	int

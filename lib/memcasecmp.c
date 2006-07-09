@@ -1,5 +1,5 @@
 /* Case-insensitive buffer comparator.
-   Copyright (C) 1996, 1997, 2000, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 2000, 2003, 2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -21,22 +21,10 @@
 # include <config.h>
 #endif
 
-#include <ctype.h>
-
-#if defined STDC_HEADERS || (!defined isascii && !defined HAVE_ISASCII)
-# define IN_CTYPE_DOMAIN(Char) 1
-#else
-# define IN_CTYPE_DOMAIN(Char) isascii (Char)
-#endif
-#define ISLOWER(Char) (IN_CTYPE_DOMAIN (Char) && islower (Char))
-
-#if _LIBC || STDC_HEADERS
-# define TOUPPER(Char) toupper (Char)
-#else
-# define TOUPPER(Char) (ISLOWER (Char) ? toupper (Char) : (Char))
-#endif
-
 #include "memcasecmp.h"
+
+#include <ctype.h>
+#include <limits.h>
 
 /* Like memcmp, but ignore differences in case.
    Convert to upper case (not lower) before comparing so that
@@ -52,7 +40,10 @@ memcasecmp (const void *vs1, const void *vs2, size_t n)
     {
       unsigned char u1 = s1[i];
       unsigned char u2 = s2[i];
-      int diff = TOUPPER (u1) - TOUPPER (u2);
+      int U1 = toupper (u1);
+      int U2 = toupper (u2);
+      int diff = (UCHAR_MAX <= INT_MAX ? U1 - U2
+		  : U1 < U2 ? -1 : U2 < U1);
       if (diff)
 	return diff;
     }

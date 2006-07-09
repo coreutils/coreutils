@@ -1,3 +1,86 @@
+2006-07-08  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* Makefile.am (stdint.h): FULL_PATH_STDINT_H -> ABSOLUTE_STDINT_H,
+	to accommodate update from gnulib.
+
+	Update from gnulib, as follows:
+
+	2006-07-06  Jim Hyslop  <jhyslop@dreampossible.ca>  (tiny change)
+
+	* lib/getaddrinfo.c: Changes to compile under MSVC6: changed
+	'#if WIN32_NATIVE' to '#ifdef' & moved WSAAPI macro inside
+	brackets.  Other minor changes to suppress some compiler
+	warnings.
+
+	2006-07-06  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* getloadavg.c: Use __VMS, not VMS.
+	* getopt.c: Likewise.
+	* getpagesize.h: Likewise.
+
+	2006-07-06  Derek R. Price  <derek@ximbiot.com>
+	and Paul Eggert  <eggert@cs.ucla.edu>
+
+	* backupfile.c [HAVE_DIRENT_H && ! HAVE_NDIR_H]:
+	Don't worry about this obsolete case any more.
+	(HAVE_DIR): Remove.  All uses removed; we now assume you can read
+	directories.
+	* dirfd.h [HAVE_DIRENT_H && ! HAVE_NDIR_H]: Don't
+	worry about this obsolete case any more.
+	* fts.c: Likewise.
+	* getcwd.c: Likewise.
+	* savedir.c: Likewise.
+
+	2006-07-06  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* fnmatch.c (ISBLANK): Remove.  All uses changed to isblank.
+	(isblank) [! (defined isblank || HAVE_DECL_ISBLANK)]: New macro.
+	(ISGRAPH): Remove.  All uses changed to isgraph.
+	(FOLD) [!defined _LIBC]: Remove special case.
+	* getdate.y (lookup_word): Remove no-longer-needed call to islower.
+	* regext_internal.h (isblank): Depend on HAVE_DECL_ISBLANK, not
+	HAVE_ISBLANK.
+	* strftime.c (TOLOWER, TOUPPER) [!defined _LIBC]: Remove special case.
+
+	2006-07-06  Ralf Wildenhues  <Ralf.Wildenhues@gmx.de>
+
+	* strtod.c (strtod): cast the argument of tolower to unsigned char.
+
+	2006-07-05  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* memcasecmp.c: Include <limits.h>.
+	(memcasecmp): Don't assume UCHAR_MAX <= INT_MAX.
+	* strtod.c (strtod): Don't assume isspace works on negative chars.
+	Don't assume isdigit succeeds only on '0' through '9'.
+
+	2006-07-05  Derek R. Price  <derek@ximbiot.com>
+
+	* exclude.c (IN_CTYPE_DOMAIN, is_space): Remove; no longer needed.
+	All uses of is_space replaced by isspace.
+	* exit.h: Don't talk about STDC_HEADERS.
+	* fnmatch.c (ISASCII): Remove; no longer needed.  All uses removed.
+	(ISPRINT, ISDIGIT, ISALNUM, ISALPHA, ISCNTRL, ISLOWER, ISPUNCT):
+	(ISSPACE, ISUPPER, ISXDIGIT): Remove; no longer needed.  All uses
+	replaced by isprint etc.
+	* getdate.y (IN_CTYPE_DOMAIN, ISSPACE, ISALPHA, ISLOWER): Likewise.
+	* getusershell.c (IN_CTYPE_DOMAIN, ISSPACE): Likewise.
+	* memcasecmp.c (IN_CTYPE_DOMAIN, ISLOWER, TOUPPER): Likewise.
+	* strtod.c (IN_CTYPE_DOMAIN, ISSPACE, ISDIGIT, TOLOWER): Likewise.
+	* strtol.c (IN_CTYPE_DOMAIN): Likewise.
+	* xstrtol.c (IN_CTYPE_DOMAIN, ISSPACE): Likewise.
+
+	2006-07-05  Eric Blake  <ebb9@byu.net>
+
+	* getaddrinfo.h (NI_NUMERICHOST, NI_NUMERICSERV): Define if
+	missing from netdb.h.
+	* getaddrinfo.c (includes): Include inet_ntop and snprintf.
+
+	2006-06-27  Bruno Haible  <bruno@clisp.org>
+
+	Assume ANSI C header files and <ctype.h> functions.
+	* mbswidth.c (IN_CTYPE_DOMAIN, ISPRINT, ISCNTRL): Remove macros.
+	(mbsnwidth): Use isprint, iscntrl instead.
+
 2006-07-08  Jim Meyering  <jim@meyering.net>
 
 	* getndelim2.h (getndelim2): Remove doubled "after" in comment.

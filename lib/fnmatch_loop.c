@@ -288,18 +288,18 @@ FCT (const CHAR *pattern, const CHAR *string, const CHAR *string_end,
 		      goto matched;
 # endif
 #else
-		    if ((STREQ (str, L_("alnum")) && ISALNUM ((UCHAR) *n))
-			|| (STREQ (str, L_("alpha")) && ISALPHA ((UCHAR) *n))
-			|| (STREQ (str, L_("blank")) && ISBLANK ((UCHAR) *n))
-			|| (STREQ (str, L_("cntrl")) && ISCNTRL ((UCHAR) *n))
-			|| (STREQ (str, L_("digit")) && ISDIGIT ((UCHAR) *n))
-			|| (STREQ (str, L_("graph")) && ISGRAPH ((UCHAR) *n))
-			|| (STREQ (str, L_("lower")) && ISLOWER ((UCHAR) *n))
-			|| (STREQ (str, L_("print")) && ISPRINT ((UCHAR) *n))
-			|| (STREQ (str, L_("punct")) && ISPUNCT ((UCHAR) *n))
-			|| (STREQ (str, L_("space")) && ISSPACE ((UCHAR) *n))
-			|| (STREQ (str, L_("upper")) && ISUPPER ((UCHAR) *n))
-			|| (STREQ (str, L_("xdigit")) && ISXDIGIT ((UCHAR) *n)))
+		    if ((STREQ (str, L_("alnum")) && isalnum ((UCHAR) *n))
+			|| (STREQ (str, L_("alpha")) && isalpha ((UCHAR) *n))
+			|| (STREQ (str, L_("blank")) && isblank ((UCHAR) *n))
+			|| (STREQ (str, L_("cntrl")) && iscntrl ((UCHAR) *n))
+			|| (STREQ (str, L_("digit")) && isdigit ((UCHAR) *n))
+			|| (STREQ (str, L_("graph")) && isgraph ((UCHAR) *n))
+			|| (STREQ (str, L_("lower")) && islower ((UCHAR) *n))
+			|| (STREQ (str, L_("print")) && isprint ((UCHAR) *n))
+			|| (STREQ (str, L_("punct")) && ispunct ((UCHAR) *n))
+			|| (STREQ (str, L_("space")) && isspace ((UCHAR) *n))
+			|| (STREQ (str, L_("upper")) && isupper ((UCHAR) *n))
+			|| (STREQ (str, L_("xdigit")) && isxdigit ((UCHAR) *n)))
 		      goto matched;
 #endif
 		    c = *p++;

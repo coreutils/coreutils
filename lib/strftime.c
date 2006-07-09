@@ -278,17 +278,12 @@ extern char *tzname[];
 #  define TOLOWER(Ch, L) towlower (Ch)
 # endif
 #else
-# ifdef _LIBC
-#  ifdef USE_IN_EXTENDED_LOCALE_MODEL
-#   define TOUPPER(Ch, L) __toupper_l (Ch, L)
-#   define TOLOWER(Ch, L) __tolower_l (Ch, L)
-#  else
-#   define TOUPPER(Ch, L) toupper (Ch)
-#   define TOLOWER(Ch, L) tolower (Ch)
-#  endif
+# ifdef USE_IN_EXTENDED_LOCALE_MODEL
+#  define TOUPPER(Ch, L) __toupper_l (Ch, L)
+#  define TOLOWER(Ch, L) __tolower_l (Ch, L)
 # else
-#  define TOUPPER(Ch, L) (islower (Ch) ? toupper (Ch) : (Ch))
-#  define TOLOWER(Ch, L) (isupper (Ch) ? tolower (Ch) : (Ch))
+#  define TOUPPER(Ch, L) toupper (Ch)
+#  define TOLOWER(Ch, L) tolower (Ch)
 # endif
 #endif
 /* We don't use `isdigit' here since the locale dependent

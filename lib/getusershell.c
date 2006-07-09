@@ -1,7 +1,7 @@
 /* getusershell.c -- Return names of valid user shells.
 
-   Copyright (C) 1991, 1997, 2000, 2001, 2003, 2004, 2005 Free Software
-   Foundation, Inc.
+   Copyright (C) 1991, 1997, 2000, 2001, 2003, 2004, 2005, 2006 Free
+   Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -42,14 +42,6 @@
 #if USE_UNLOCKED_IO
 # include "unlocked-io.h"
 #endif
-
-#if defined (STDC_HEADERS) || (!defined (isascii) && !defined (HAVE_ISASCII))
-# define IN_CTYPE_DOMAIN(c) 1
-#else
-# define IN_CTYPE_DOMAIN(c) isascii(c)
-#endif
-
-#define ISSPACE(c) (IN_CTYPE_DOMAIN (c) && isspace (c))
 
 static size_t readname (char **, size_t *, FILE *);
 
@@ -152,14 +144,14 @@ readname (char **name, size_t *size, FILE *stream)
   size_t name_index = 0;
 
   /* Skip blank space.  */
-  while ((c = getc (stream)) != EOF && ISSPACE (c))
+  while ((c = getc (stream)) != EOF && isspace (c))
     /* Do nothing. */ ;
 
   for (;;)
     {
       if (*size <= name_index)
 	*name = x2nrealloc (*name, size, sizeof **name);
-      if (c == EOF || ISSPACE (c))
+      if (c == EOF || isspace (c))
 	break;
       (*name)[name_index++] = c;
       c = getc (stream);
