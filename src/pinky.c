@@ -1,5 +1,5 @@
 /* GNU's pinky.
-   Copyright (C) 1992-1997, 1999-2005 Free Software Foundation, Inc.
+   Copyright (C) 1992-1997, 1999-2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -134,8 +134,8 @@ create_fullname (const char *gecos_name, const char *user_name)
       if (*gecos_name == '&')
 	{
 	  const char *uname = user_name;
-	  if (ISLOWER (*uname))
-	    *r++ = TOUPPER (*uname++);
+	  if (islower (to_uchar (*uname)))
+	    *r++ = toupper (to_uchar (*uname++));
 	  while (*uname)
 	    *r++ = *uname++;
 	}
