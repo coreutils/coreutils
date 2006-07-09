@@ -39,8 +39,7 @@ scriptversion=2006-05-11.20
 # when there is no Makefile.
 #
 # This script is compatible with the BSD install script, but was written
-# from scratch.  It can only install one file at a time, a restriction
-# shared with many OS's install programs.
+# from scratch.
 
 nl='
 '
@@ -50,6 +49,11 @@ IFS=" ""	$nl"
 
 # Don't use :- since 4.3BSD and earlier shells don't like it.
 doit="${DOITPROG-}"
+if test -z "$doit"; then
+  doit_exec=exec
+else
+  doit_exec=$doit
+fi
 
 # Put in absolute file names if you don't have them in your path;
 # or use environment vars.
@@ -66,16 +70,8 @@ mkdirprog="${MKDIRPROG-mkdir}"
 posix_glob=
 posix_mkdir=
 
-# Symbolic mode for testing mkdir with directories.
-# It is the same as 755, but also tests that "u+" works.
-test_mode=u=rwx,g=rx,o=rx,u+wx
-
 # Desired mode of installed file.
 mode=0755
-
-# Desired mode of newly created intermediate directories.
-# It is empty if not known yet.
-intermediate_mode=
 
 chmodcmd=$chmodprog
 chowncmd=
@@ -133,6 +129,12 @@ while test $# -ne 0; do
     -m) mode=$2
         shift
         shift
+	case $mode in
+	  *' '* | *'	'* | *'
+'*	  | *'*'* | *'?'* | *'['*)
+	    echo "$0: invalid mode: $mode" >&2
+	    exit 1;;
+	esac
         continue;;
 
     -o) chowncmd="$chownprog $2"
@@ -191,7 +193,32 @@ if test $# -eq 0; then
   exit 0
 fi
 
-test -n "$dir_arg" || trap '(exit $?); exit' 1 2 13 15
+if test -z "$dir_arg"; then
+  trap '(exit $?); exit' 1 2 13 15
+
+  # Set umask so as not to create temps with too-generous modes.
+  # However, 'strip' requires both read and write access to temps.
+  case $mode in
+    # Optimize common cases.
+    *644) cp_umask=133;;
+    *755) cp_umask=22;;
+
+    *[0-7])
+      if test -z "$stripcmd"; then
+	u_plus_rw=
+      else
+	u_plus_rw='% 200'
+      fi
+      cp_umask=`expr '(' 777 - $mode % 1000 ')' $u_plus_rw`;;
+    *)
+      if test -z "$stripcmd"; then
+	u_plus_rw=
+      else
+	u_plus_rw=,u+rw
+      fi
+      cp_umask=$mode$u_plus_rw;;
+  esac
+fi
 
 for src
 do
@@ -274,46 +301,67 @@ do
   if test $dstdir_status != 0; then
     case $posix_mkdir in
       '')
-	posix_mkdir=false
-	if $mkdirprog -m $test_mode -p -- / >/dev/null 2>&1; then
-	  posix_mkdir=true
+	# Create intermediate dirs using mode 755 as modified by the umask.
+	# This is like FreeBSD 'install' as of 1997-10-28.
+	umask=`umask`
+	case $stripcmd.$umask in
+	  # Optimize common cases.
+	  *[2367][2367]) mkdir_umask=$umask;;
+	  .*0[02][02] | .[02][02] | .[02]) mkdir_umask=22;;
+
+	  *[0-7])
+	    mkdir_umask=`expr $umask + 22 \
+	      - $umask % 100 % 40 + $umask % 20 \
+	      - $umask % 10 % 4 + $umask % 2
+	    `;;
+	  *) mkdir_umask=$umask,go-w;;
+	esac
+
+	# With -d, create the new directory with the user-specified mode.
+	# Otherwise, rely on $mkdir_umask.
+	if test -n "$dir_arg"; then
+	  mkdir_mode=-m$mode
 	else
-	  # Remove any dirs left behind by ancient mkdir implementations.
-	  rmdir ./-m "$test_mode" ./-p ./-- 2>/dev/null
-	fi ;;
+	  mkdir_mode=
+	fi
+
+	posix_mkdir=false
+	case $umask in
+	  *[123567][0-7][0-7])
+	    # POSIX mkdir -p sets u+wx bits regardless of umask, which
+	    # is incompatible with FreeBSD 'install' when (umask & 300) != 0.
+	    ;;
+	  *)
+	    tmpdir=${TMPDIR-/tmp}/ins$RANDOM-$$
+	    trap 'ret=$?; rmdir "$tmpdir/d" "$tmpdir" 2>/dev/null; exit $ret' 0
+
+	    if (umask $mkdir_umask &&
+		exec $mkdirprog $mkdir_mode -p -- / "$tmpdir/d") >/dev/null 2>&1
+	    then
+	      # Check for bugs in HP-UX 11.23 and IRIX 6.5 mkdir.
+	      case `ls -ld "$tmpdir"` in
+		d????-??-* ) posix_mkdir=:;;
+	      esac
+	      rmdir "$tmpdir/d" "$tmpdir"
+	    else
+	      # Remove any dirs left behind by ancient mkdir implementations.
+	      rmdir ./$mkdir_mode ./-p ./-- 2>/dev/null
+	    fi
+	    trap '' 0;;
+	esac;;
     esac
 
     if
-      $posix_mkdir && {
-
-	# With -d, create the new directory with the user-specified mode.
-	# Otherwise, create it using the same intermediate mode that
-	# mkdir -p would use when creating intermediate directories.
-	# POSIX says that this mode is "$(umask -S),u+wx", so use that
-	# if umask -S works.
-
-	if test -n "$dir_arg"; then
-	  mkdir_mode=$mode
-	else
-	  case $intermediate_mode in
-	    '')
-	      if umask_S=`(umask -S) 2>/dev/null`; then
-		intermediate_mode=$umask_S,u+wx
-	      else
-		intermediate_mode=$test_mode
-	      fi ;;
-	  esac
-	  mkdir_mode=$intermediate_mode
-	fi
-
-	$mkdirprog -m "$mkdir_mode" -p -- "$dstdir"
-      }
+      $posix_mkdir && (
+	umask $mkdir_umask &&
+	$doit_exec $mkdirprog $mkdir_mode -p -- "$dstdir"
+      )
     then :
     else
 
-      # mkdir does not conform to POSIX, or it failed possibly due to
-      # a race condition.  Create the directory the slow way, step by
-      # step, checking for races as we go.
+      # The umask is ridiculous, or mkdir does not conform to POSIX,
+      # or it failed possibly due to a race condition.  Create the
+      # directory the slow way, step by step, checking for races as we go.
 
       case $dstdir in
 	/*) prefix=/ ;;
@@ -349,7 +397,8 @@ do
 	  prefixes=
 	else
 	  if $posix_mkdir; then
-	    $mkdirprog -m "$mkdir_mode" -p -- "$dstdir" && break
+	    (umask=$mkdir_umask &&
+	     $doit_exec $mkdirprog $mkdir_mode -p -- "$dstdir") && break
 	    # Don't fail if two instances are running concurrently.
 	    test -d "$prefix" || exit 1
 	  else
@@ -365,7 +414,9 @@ do
 
       if test -n "$prefixes"; then
 	# Don't fail if two instances are running concurrently.
-	eval "\$mkdirprog $prefixes" || test -d "$dstdir" || exit 1
+	(umask $mkdir_umask &&
+	 eval "\$doit_exec \$mkdirprog $prefixes") ||
+	  test -d "$dstdir" || exit 1
 	obsolete_mkdir_used=true
       fi
     fi
@@ -375,7 +426,7 @@ do
     { test -z "$chowncmd" || $doit $chowncmd "$dst"; } &&
     { test -z "$chgrpcmd" || $doit $chgrpcmd "$dst"; } &&
     { test "$obsolete_mkdir_used$chowncmd$chgrpcmd" = false ||
-      test -z "$chmodcmd" || $doit $chmodcmd "$mode" "$dst"; } || exit 1
+      test -z "$chmodcmd" || $doit $chmodcmd $mode "$dst"; } || exit 1
   else
 
     # Make a couple of temp file names in the proper directory.
@@ -386,7 +437,7 @@ do
     trap 'ret=$?; rm -f "$dsttmp" "$rmtmp" && exit $ret' 0
 
     # Copy the file name to the temp name.
-    $doit $cpprog "$src" "$dsttmp" &&
+    (umask $cp_umask && $doit_exec $cpprog "$src" "$dsttmp") &&
 
     # and set any options; do chmod last to preserve setuid bits.
     #
@@ -397,7 +448,7 @@ do
     { test -z "$chowncmd" || $doit $chowncmd "$dsttmp"; } \
       && { test -z "$chgrpcmd" || $doit $chgrpcmd "$dsttmp"; } \
       && { test -z "$stripcmd" || $doit $stripcmd "$dsttmp"; } \
-      && { test -z "$chmodcmd" || $doit $chmodcmd "$mode" "$dsttmp"; } &&
+      && { test -z "$chmodcmd" || $doit $chmodcmd $mode "$dsttmp"; } &&
 
     # Now rename the file to the real destination.
     { $doit $mvcmd -f "$dsttmp" "$dst" 2>/dev/null \

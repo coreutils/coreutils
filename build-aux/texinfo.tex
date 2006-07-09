@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2006-05-28.17}
+\def\texinfoversion{2006-06-19.13}
 %
 % Copyright (C) 1985, 1986, 1988, 1990, 1991, 1992, 1993, 1994, 1995,
 % 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006 Free
@@ -4005,9 +4005,9 @@ where each line of input produces a line of output.}
   \endgroup
 }
 
-% Like \dotfill except takes at least 1 em.
+% Like plain.tex's \dotfill, except uses up at least 1 em.
 \def\indexdotfill{\cleaders
-  \hbox{$\mathsurround=0pt \mkern1.5mu ${\it .}$ \mkern1.5mu$}\hskip 1em plus 1fill}
+  \hbox{$\mathsurround=0pt \mkern1.5mu.\mkern1.5mu$}\hskip 1em plus 1fill}
 
 \def\primary #1{\line{#1\hfil}}
 
@@ -4581,14 +4581,17 @@ where each line of input produces a line of output.}
     \ifx\temptype\Ynothingkeyword
       \setbox0 = \hbox{}%
       \def\toctype{unnchap}%
+      \gdef\thischapternum{}%
       \gdef\thischapter{#1}%
     \else\ifx\temptype\Yomitfromtockeyword
       \setbox0 = \hbox{}% contents like unnumbered, but no toc entry
       \def\toctype{omit}%
+      \gdef\thischapternum{}%
       \gdef\thischapter{}%
     \else\ifx\temptype\Yappendixkeyword
       \setbox0 = \hbox{\putwordAppendix{} #3\enspace}%
       \def\toctype{app}%
+      \xdef\thischapternum{\appendixletter}%
       % We don't substitute the actual chapter name into \thischapter
       % because we don't want its macros evaluated now.  And we don't
       % use \thissection because that changes with each section.
@@ -4598,6 +4601,7 @@ where each line of input produces a line of output.}
     \else
       \setbox0 = \hbox{#3\enspace}%
       \def\toctype{numchap}%
+      \xdef\thischapternum{\the\chapno}%
       \xdef\thischapter{\putwordChapter{} \the\chapno:
                         \noexpand\thischaptername}%
     \fi\fi\fi
