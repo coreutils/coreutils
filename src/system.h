@@ -226,20 +226,14 @@ initialize_exit_failure (int status)
 
 #if HAVE_DIRENT_H
 # include <dirent.h>
-# define NLENGTH(direct) (strlen((direct)->d_name))
-#else /* not HAVE_DIRENT_H */
+# ifndef _D_EXACT_NAMLEN
+#  define _D_EXACT_NAMLEN(dp) strlen ((dp)->d_name)
+# endif
+#else
 # define dirent direct
-# define NLENGTH(direct) ((direct)->d_namlen)
-# if HAVE_SYS_NDIR_H
-#  include <sys/ndir.h>
-# endif /* HAVE_SYS_NDIR_H */
-# if HAVE_SYS_DIR_H
-#  include <sys/dir.h>
-# endif /* HAVE_SYS_DIR_H */
-# if HAVE_NDIR_H
-#  include <ndir.h>
-# endif /* HAVE_NDIR_H */
-#endif /* HAVE_DIRENT_H */
+# define _D_EXACT_NAMLEN(dp) (dp)->d_namlen
+# include <ndir.h>
+#endif
 
 enum
 {
@@ -247,7 +241,7 @@ enum
 };
 
 #ifdef D_INO_IN_DIRENT
-# define D_INO(dp) ((dp)->d_ino)
+# define D_INO(dp) (dp)->d_ino
 #else
 /* Some systems don't have inodes, so fake them to avoid lots of ifdefs.  */
 # define D_INO(dp) NOT_AN_INODE_NUMBER
@@ -362,70 +356,16 @@ enum
 
 #include <ctype.h>
 
-/* Jim Meyering writes:
-
-   "... Some ctype macros are valid only for character codes that
-   isascii says are ASCII (SGI's IRIX-4.0.5 is one such system --when
-   using /bin/cc or gcc but without giving an ansi option).  So, all
-   ctype uses should be through macros like ISPRINT...  If
-   STDC_HEADERS is defined, then autoconf has verified that the ctype
-   macros don't need to be guarded with references to isascii. ...
-   Defining isascii to 1 should let any compiler worth its salt
-   eliminate the && through constant folding."
-
-   Bruno Haible adds:
-
-   "... Furthermore, isupper(c) etc. have an undefined result if c is
-   outside the range -1 <= c <= 255. One is tempted to write isupper(c)
-   with c being of type `char', but this is wrong if c is an 8-bit
-   character >= 128 which gets sign-extended to a negative value.
-   The macro ISUPPER protects against this as well."  */
-
-#if STDC_HEADERS || (!defined isascii && !HAVE_ISASCII)
-# define IN_CTYPE_DOMAIN(c) 1
-#else
-# define IN_CTYPE_DOMAIN(c) isascii(c)
+#if ! (defined isblank || HAVE_DECL_ISBLANK)
+# define isblank(c) ((c) == ' ' || (c) == '\t')
 #endif
 
-#ifdef isblank
-# define ISBLANK(c) (IN_CTYPE_DOMAIN (c) && isblank (c))
-#else
-# define ISBLANK(c) ((c) == ' ' || (c) == '\t')
-#endif
-#ifdef isgraph
-# define ISGRAPH(c) (IN_CTYPE_DOMAIN (c) && isgraph (c))
-#else
-# define ISGRAPH(c) (IN_CTYPE_DOMAIN (c) && isprint (c) && !isspace (c))
-#endif
-
-/* This is defined in <sys/euc.h> on at least Solaris2.6 systems.  */
-#undef ISPRINT
-
-#define ISPRINT(c) (IN_CTYPE_DOMAIN (c) && isprint (c))
-#define ISALNUM(c) (IN_CTYPE_DOMAIN (c) && isalnum (c))
-#define ISALPHA(c) (IN_CTYPE_DOMAIN (c) && isalpha (c))
-#define ISCNTRL(c) (IN_CTYPE_DOMAIN (c) && iscntrl (c))
-#define ISLOWER(c) (IN_CTYPE_DOMAIN (c) && islower (c))
-#define ISPUNCT(c) (IN_CTYPE_DOMAIN (c) && ispunct (c))
-#define ISSPACE(c) (IN_CTYPE_DOMAIN (c) && isspace (c))
-#define ISUPPER(c) (IN_CTYPE_DOMAIN (c) && isupper (c))
-#define ISXDIGIT(c) (IN_CTYPE_DOMAIN (c) && isxdigit (c))
-#define ISDIGIT_LOCALE(c) (IN_CTYPE_DOMAIN (c) && isdigit (c))
-
-#if STDC_HEADERS
-# define TOLOWER(Ch) tolower (Ch)
-# define TOUPPER(Ch) toupper (Ch)
-#else
-# define TOLOWER(Ch) (ISUPPER (Ch) ? tolower (Ch) : (Ch))
-# define TOUPPER(Ch) (ISLOWER (Ch) ? toupper (Ch) : (Ch))
-#endif
-
-/* ISDIGIT differs from ISDIGIT_LOCALE, as follows:
-   - Its arg may be any int or unsigned int; it need not be an unsigned char.
-   - It's guaranteed to evaluate its argument exactly once.
+/* ISDIGIT differs from isdigit, as follows:
+   - Its arg may be any int or unsigned int; it need not be an unsigned char
+     or EOF.
    - It's typically faster.
    POSIX says that only '0' through '9' are digits.  Prefer ISDIGIT to
-   ISDIGIT_LOCALE unless it's important to use the locale's definition
+   isdigit unless it's important to use the locale's definition
    of `digit' even when the host does not conform to POSIX.  */
 #define ISDIGIT(c) ((unsigned int) (c) - '0' <= 9)
 
