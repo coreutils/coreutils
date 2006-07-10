@@ -1,5 +1,9 @@
 2006-07-09  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* absolute-header.m4 (gl_ABSOLUTE_HEADER): Use "" rather than <>
+	around the absolute name, to work around a problem with the HP-UX
+	11.23 native C compiler, reported by Bob Proulx.
+
 	Update from gnulib, as follows:
 
 	2006-07-06  Derek R. Price  <derek@ximbiot.com>

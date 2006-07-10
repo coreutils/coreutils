@@ -1,4 +1,4 @@
-# absolute-header.m4 serial 4
+# absolute-header.m4 serial 5
 dnl Copyright (C) 2006 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
@@ -36,7 +36,7 @@ sed -n '\#/]m4_quote(m4_defn([gl_HEADER_NAME]))[#{s#.*"\(.*/]m4_quote(m4_defn([g
     AS_VAR_POPDEF([ac_header_exists])dnl
     ])dnl
   AC_DEFINE_UNQUOTED(AS_TR_CPP([ABSOLUTE_]m4_quote(m4_defn([gl_HEADER_NAME]))),
-                     [<AS_VAR_GET(gl_absolute_header)>],
+                     ["AS_VAR_GET(gl_absolute_header)"],
                      [Define this to an absolute name of <]m4_quote(m4_defn([gl_HEADER_NAME]))[>.])
   AS_VAR_POPDEF([gl_absolute_header])dnl
 ])dnl
