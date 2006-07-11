@@ -224,15 +224,9 @@ initialize_exit_failure (int status)
 # define O_TEXT 0
 #endif
 
-#if HAVE_DIRENT_H
-# include <dirent.h>
-# ifndef _D_EXACT_NAMLEN
-#  define _D_EXACT_NAMLEN(dp) strlen ((dp)->d_name)
-# endif
-#else
-# define dirent direct
-# define _D_EXACT_NAMLEN(dp) (dp)->d_namlen
-# include <ndir.h>
+#include <dirent.h>
+#ifndef _D_EXACT_NAMLEN
+# define _D_EXACT_NAMLEN(dp) strlen ((dp)->d_name)
 #endif
 
 enum
