@@ -1,3 +1,11 @@
+2006-07-10  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* stdint.m4 (gl_STDINT_H): Like yesterday's change to
+	absolute-header.m4.  Also, set ABSOLUTE_STDINT_H to a string
+	"no/such/file/stdint.h" when there is no such file, so that
+	the resulting C code can be parsed by dodgy compilers.
+	Problems reported by Bob Proulx.
+
 2006-07-09  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* absolute-header.m4 (gl_ABSOLUTE_HEADER): Use "" rather than <>

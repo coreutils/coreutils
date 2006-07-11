@@ -1,4 +1,4 @@
-# stdint.m4 serial 14
+# stdint.m4 serial 15
 dnl Copyright (C) 2001-2002, 2004-2006 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
@@ -50,12 +50,13 @@ AC_DEFUN([gl_STDINT_H],
   dnl AC_INCLUDES_DEFAULT defines $ac_cv_header_stdint_h.
   if test $ac_cv_header_stdint_h = yes; then
     gl_ABSOLUTE_HEADER([stdint.h])
-    ABSOLUTE_STDINT_H="<$gl_cv_absolute_stdint_h>"
-    AC_SUBST([ABSOLUTE_STDINT_H])
+    ABSOLUTE_STDINT_H=\"$gl_cv_absolute_stdint_h\"
     HAVE_STDINT_H=1
   else
+    ABSOLUTE_STDINT_H=\"no/such/file/stdint.h\"
     HAVE_STDINT_H=0
   fi
+  AC_SUBST([ABSOLUTE_STDINT_H])
   AC_SUBST([HAVE_STDINT_H])
 
   dnl Now see whether we need a substitute <stdint.h>.  Use
