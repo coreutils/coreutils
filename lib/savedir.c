@@ -29,11 +29,9 @@
 
 #include <errno.h>
 
-#if HAVE_DIRENT_H
-# include <dirent.h>
-#else
-# define dirent direct
-# include <ndir.h>
+#include <dirent.h>
+#ifndef _D_EXACT_NAMLEN
+# define _D_EXACT_NAMLEN(dp)	strlen ((dp)->d_name)
 #endif
 
 #include <stddef.h>
@@ -81,7 +79,7 @@ savedirstream (DIR *dirp)
       entry = dp->d_name;
       if (entry[entry[0] != '.' ? 0 : entry[1] != '.' ? 1 : 2] != '\0')
 	{
-	  size_t entry_size = strlen (entry) + 1;
+	  size_t entry_size = _D_EXACT_NAMLEN (dp) + 1;
 	  if (used + entry_size < used)
 	    xalloc_die ();
 	  if (allocated <= used + entry_size)

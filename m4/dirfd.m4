@@ -1,4 +1,4 @@
-#serial 12   -*- Autoconf -*-
+#serial 13   -*- Autoconf -*-
 
 dnl Find out how to get the file descriptor associated with an open DIR*.
 
@@ -17,22 +17,16 @@ AC_DEFUN([gl_FUNC_DIRFD],
   dnl Work around a bug of AC_EGREP_CPP in autoconf-2.57.
   AC_REQUIRE([AC_PROG_CPP])
   AC_REQUIRE([AC_PROG_EGREP])
-  AC_CHECK_HEADERS_ONCE([dirent.h])dnl
-
-  dirfd_headers='
-#if HAVE_DIRENT_H
-# include <dirent.h>
-#else
-# define dirent direct
-# include <ndir.h>
-#endif
-'
   AC_CHECK_FUNCS(dirfd)
-  AC_CHECK_DECLS([dirfd], , , $dirfd_headers)
+  AC_CHECK_DECLS([dirfd], , ,
+    [#include <sys/types.h>
+     #include <dirent.h>])
 
   AC_CACHE_CHECK([whether dirfd is a macro],
     gl_cv_func_dirfd_macro,
-    [AC_EGREP_CPP([dirent_header_defines_dirfd], [$dirfd_headers
+    [AC_EGREP_CPP([dirent_header_defines_dirfd], [
+#include <sys/types.h>
+#include <dirent.h>
 #ifdef dirfd
  dirent_header_defines_dirfd
 #endif],
@@ -53,8 +47,8 @@ AC_DEFUN([gl_FUNC_DIRFD],
 
 	  CFLAGS="$CFLAGS -DDIR_FD_MEMBER_NAME=$ac_expr"
 	  AC_TRY_COMPILE(
-	    [$dirfd_headers
-	    ],
+	    [#include <sys/types.h>
+	     #include <dirent.h>],
 	    [DIR *dir_p = opendir("."); (void) dir_p->DIR_FD_MEMBER_NAME;],
 	    dir_fd_found=yes
 	  )

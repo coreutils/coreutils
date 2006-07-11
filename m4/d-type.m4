@@ -13,18 +13,12 @@ dnl
 # with or without modifications, as long as this notice is preserved.
 
 AC_DEFUN([gl_CHECK_TYPE_STRUCT_DIRENT_D_TYPE],
-  [AC_CHECK_HEADERS_ONCE([dirent.h])dnl
-   AC_CACHE_CHECK([for d_type member in directory struct],
+  [AC_CACHE_CHECK([for d_type member in directory struct],
 		  jm_cv_struct_dirent_d_type,
      [AC_TRY_LINK(dnl
        [
 #include <sys/types.h>
-#ifdef HAVE_DIRENT_H
-# include <dirent.h>
-#else
-# define dirent direct
-# include <ndir.h>
-#endif
+#include <dirent.h>
        ],
        [struct dirent dp; dp.d_type = 0;],
 

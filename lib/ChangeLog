@@ -1,3 +1,11 @@
+2006-07-10  Derek R. Price  <derek@ximbiot.com>
+
+	* backupfile.c, dirfd.h, fts.c, getcwd.c:
+	Ignore the obsolescent !HAVE_DIRENT_H case.  Consolidate NAMLEN
+	macros into the GNU _D_EXACT_NAMLEN.
+	* savedir.c:  Likewise.
+	(savedirstream): Use _D_EXACT_NAMLEN in preference to strlen.
+
 2006-07-08  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Makefile.am (stdint.h): FULL_PATH_STDINT_H -> ABSOLUTE_STDINT_H,

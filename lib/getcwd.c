@@ -36,13 +36,7 @@
 # define __set_errno(val) (errno = (val))
 #endif
 
-#if HAVE_DIRENT_H || _LIBC
-# include <dirent.h>
-#else
-# define dirent direct
-# define _D_EXACT_NAMLEN(d) (d)->d_namlen
-# include <ndir.h>
-#endif
+#include <dirent.h>
 #ifndef _D_EXACT_NAMLEN
 # define _D_EXACT_NAMLEN(d) strlen ((d)->d_name)
 #endif

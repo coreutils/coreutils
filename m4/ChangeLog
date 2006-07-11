@@ -1,3 +1,15 @@
+2006-07-11  Eric Blake  <ebb9@byu.net>
+
+	* absolute-header.m4: Fix comments to match recent change.
+
+2006-07-10  Derek R. Price  <derek@ximbiot.com>
+	and Paul Eggert  <eggert@cs.ucla.edu>
+
+	* backupfile.m4, d-ino.m4, d-type.m4, dirfd.m4, fts.m4, getcwd.m4:
+	* savedir.m4:
+	Ignore the obsolescent !HAVE_DIRENT_H case.  Consolidate NAMLEN
+	macros into the GNU _D_EXACT_NAMLEN.
+
 2006-07-10  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* stdint.m4 (gl_STDINT_H): Like yesterday's change to

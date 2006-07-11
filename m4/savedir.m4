@@ -1,4 +1,4 @@
-# savedir.m4 serial 7
+# savedir.m4 serial 8
 dnl Copyright (C) 2002, 2003, 2005, 2006 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
@@ -8,7 +8,4 @@ AC_DEFUN([gl_SAVEDIR],
 [
   AC_LIBSOURCES([savedir.c, savedir.h])
   AC_LIBOBJ([savedir])
-
-  dnl Prerequisites of lib/savedir.c.
-  AC_CHECK_HEADERS_ONCE([dirent.h])dnl
 ])

@@ -1,4 +1,4 @@
-# absolute-header.m4 serial 5
+# absolute-header.m4 serial 6
 dnl Copyright (C) 2006 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
@@ -10,11 +10,12 @@ dnl From Derek Price.
 # ---------------------------------------
 # Find the absolute name of a header file, assuming the header exists.
 # If the header were sys/inttypes.h, this macro would define
-# ABSOLUTE_SYS_INTTYPES_H to the `<>' quoted absolute name of sys/inttypes.h
+# ABSOLUTE_SYS_INTTYPES_H to the `""' quoted absolute name of sys/inttypes.h
 # in config.h
-# (e.g. `#define ABSOLUTE_SYS_INTTYPES_H <///usr/include/sys/inttypes.h>').
+# (e.g. `#define ABSOLUTE_SYS_INTTYPES_H "///usr/include/sys/inttypes.h"').
 # The three "///" are to pacify Sun C 5.8, which otherwise would say
 # "warning: #include of /usr/include/... may be non-portable".
+# Use `""', not `<>', so that the /// cannot be confused with a C99 comment.
 AC_DEFUN([gl_ABSOLUTE_HEADER],
 [AC_LANG_PREPROC_REQUIRE()dnl
 AC_FOREACH([gl_HEADER_NAME], [$1],

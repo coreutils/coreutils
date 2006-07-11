@@ -78,17 +78,9 @@ static char sccsid[] = "@(#)fts.c	8.6 (Berkeley) 8/14/94";
 # include "unistd--.h"
 #endif
 
-#if HAVE_DIRENT_H || _LIBC
-# include <dirent.h>
-# ifdef _D_EXACT_NAMLEN
-#  define NAMLEN(dirent) _D_EXACT_NAMLEN (dirent)
-# else
-#  define NAMLEN(dirent) strlen ((dirent)->d_name)
-# endif
-#else
-# define dirent direct
-# define NAMLEN(dirent) (dirent)->d_namlen
-# include <ndir.h>
+#include <dirent.h>
+#ifndef _D_EXACT_NAMLEN
+# define _D_EXACT_NAMLEN(dirent) strlen ((dirent)->d_name)
 #endif
 
 #ifdef _LIBC
@@ -959,11 +951,13 @@ fts_build (register FTS *sp, int type)
 		if (!ISSET(FTS_SEEDOT) && ISDOT(dp->d_name))
 			continue;
 
-		if ((p = fts_alloc(sp, dp->d_name, NAMLEN (dp))) == NULL)
+		if ((p = fts_alloc (sp, dp->d_name,
+				    _D_EXACT_NAMLEN (dp))) == NULL)
 			goto mem1;
-		if (NAMLEN (dp) >= maxlen) {/* include space for NUL */
+		if (_D_EXACT_NAMLEN (dp) >= maxlen) {
+			/* include space for NUL */
 			oldaddr = sp->fts_path;
-			if (! fts_palloc(sp, NAMLEN (dp) + len + 1)) {
+			if (! fts_palloc(sp, _D_EXACT_NAMLEN (dp) + len + 1)) {
 				/*
 				 * No more memory.  Save
 				 * errno, free up the current structure and the
@@ -988,7 +982,7 @@ mem1:				saved_errno = errno;
 			maxlen = sp->fts_pathlen - len;
 		}
 
-		new_len = len + NAMLEN (dp);
+		new_len = len + _D_EXACT_NAMLEN (dp);
 		if (new_len < len) {
 			/*
 			 * In the unlikely even that we would end up

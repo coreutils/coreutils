@@ -19,12 +19,7 @@
 
 #include <sys/types.h>
 
-#if HAVE_DIRENT_H
-# include <dirent.h>
-#else
-# define dirent direct
-# include <ndir.h>
-#endif
+#include <dirent.h>
 
 #ifndef HAVE_DECL_DIRFD
 "this configure-time declaration test was not run"

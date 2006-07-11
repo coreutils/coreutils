@@ -41,15 +41,10 @@
 
 #include <unistd.h>
 
-#if HAVE_DIRENT_H
-# include <dirent.h>
-# define NLENGTH(direct) strlen ((direct)->d_name)
-#else
-# define dirent direct
-# define NLENGTH(direct) ((size_t) (direct)->d_namlen)
-# include <ndir.h>
+#include <dirent.h>
+#ifndef _D_EXACT_NAMLEN
+# define _D_EXACT_NAMLEN(dp) strlen ((dp)->d_name)
 #endif
-
 #if D_INO_IN_DIRENT
 # define REAL_DIR_ENTRY(dp) ((dp)->d_ino != 0)
 #else
@@ -211,7 +206,7 @@ numbered_backup (char **buffer, size_t buffer_size, size_t filelen)
       size_t versionlen;
       size_t new_buflen;
 
-      if (! REAL_DIR_ENTRY (dp) || NLENGTH (dp) < baselen + 4)
+      if (! REAL_DIR_ENTRY (dp) || _D_EXACT_NAMLEN (dp) < baselen + 4)
 	continue;
 
       if (memcmp (buf + base_offset, dp->d_name, baselen + 2) != 0)

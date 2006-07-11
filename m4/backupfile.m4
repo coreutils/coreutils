@@ -1,4 +1,4 @@
-# backupfile.m4 serial 10
+# backupfile.m4 serial 11
 dnl Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
@@ -10,7 +10,6 @@ AC_DEFUN([gl_BACKUPFILE],
   AC_LIBOBJ([backupfile])
 
   dnl Prerequisites of lib/backupfile.c.
-  AC_CHECK_HEADERS_ONCE([dirent.h])
   AC_REQUIRE([gl_CHECK_TYPE_STRUCT_DIRENT_D_INO])
   AC_REQUIRE([gl_AC_DOS])
   AC_REQUIRE([AC_SYS_LONG_FILE_NAMES])
