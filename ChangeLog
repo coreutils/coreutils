@@ -1,5 +1,12 @@
 2006-07-14  Jim Meyering  <jim@meyering.net>
 
+	* Makefile.maint (CVS_LIST): Use new file, build-aux/vc-list-files,
+	rather than open-coding it.  Now supports mercurial, too.
+	* .hgignore: New file.
+	* Makefile.am (EXTRA_DIST): Add .hgignore, which ignores nearly
+	all generated files, including ones like configure and po/*.po
+	that are currently version-controlled in cvs.
+
 	* Makefile.am (EXTRA_DIST): Add a few more .??* files.
 	They've been in CVS, just haven't been distributed before this.
 	Distribute ChangeLog-2005, too.

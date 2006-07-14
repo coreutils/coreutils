@@ -1,0 +1,34 @@
+#!/bin/sh
+# List the specified version-controlled files.
+# With no argument, list them all.
+# This script must be run solely from the top of a $srcdir build directory.
+
+# If there's an argument, it must be a single, "."-relative directory name,
+# with no trailing slashes.  In mercurial mode, it's used as part of a
+# "grep -v" pattern (prepend "^", append "/"), and in cvs mode, it's simply
+# used as an argument to the cvsu script.
+
+exclude_prefix=
+case $# in
+  0) ;;
+  1) exclude_prefix=$1 ;;
+  *) echo "$0: too many arguments" 1>&2; exit 1 ;;
+esac
+
+if test -d .hg; then
+  if test "x$exclude_prefix" = x; then
+    hg manifest | cut -d ' ' -f 3
+  else
+    hg manifest | cut -d ' ' -f 3 | grep -v "^$exclude_prefix/"
+  fi
+elif test -x build-aux/cvsu; then
+  build-aux/cvsu --find --types=AFGM $exclude_prefix
+else
+  awk -F/ '{				\
+      if (!$1 && $3 !~ /^-/) {		\
+	f=FILENAME;			\
+	sub(/CVS\/Entries/, "", f);	\
+	print f $2;			\
+      }}'				\
+    $(find ${*-*} -name Entries -print) /dev/null;
+fi

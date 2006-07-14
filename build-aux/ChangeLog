@@ -1,3 +1,7 @@
+2006-07-14  Jim Meyering  <jim@meyering.net>
+
+	* vc-list-files: New file.
+
 2006-07-08  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* config.guess, config.sub, install-sh, texinfo.tex:

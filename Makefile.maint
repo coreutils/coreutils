@@ -32,19 +32,7 @@ GZIP_ENV = '--no-name --best $(gzip_rsyncable)'
 CVS = cvs
 
 # cvsu is part of the cvsutils package: http://www.red-bean.com/cvsutils/
-CVS_LIST = sh -c ' \
-    if test -x $(srcdir)/build-aux/cvsu; then \
-      $(srcdir)/build-aux/cvsu --find --types=AFGM $$*; \
-    else \
-      awk -F/ '\''{ \
-	  if (!$$1 && $$3 !~ /^-/) { \
-	    f=FILENAME; \
-	    sub(/CVS\/Entries/, "", f); \
-	    print f $$2; \
-	  }}'\'' \
-	$$(find $${*-*} -name Entries -print) /dev/null; \
-    fi \
-  ' dummy
+CVS_LIST = build-aux/vc-list-files
 
 CVS_LIST_EXCEPT = \
   $(CVS_LIST) | if test -f .x-$@; then grep -vEf .x-$@; else grep -v ChangeLog; fi
@@ -210,7 +198,7 @@ endif
 # Make sure that none are inadvertently reintroduced.
 sc_prohibit_jm_in_m4:
 	@grep -nE 'jm_[A-Z]'						\
-		$$($(CVS_LIST) $(srcdir)/m4 |grep '\.m4$$') &&		\
+		$$($(CVS_LIST) m4 |grep '\.m4$$') &&		\
 	    { echo '$(ME): do not use jm_ in m4 macro names'		\
 	      1>&2; exit 1; } || :
 
