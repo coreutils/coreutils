@@ -4,6 +4,7 @@ SUBDIRS = lib src doc man po tests
 EXTRA_DIST = Makefile.cfg Makefile.maint GNUmakefile \
   .gitignore \
   .kludge-stamp .prev-version THANKS-to-translators THANKStt.in \
+  .vg-suppressions \
   .x-po-check \
   .x-sc_space_tab .x-sc_sun_os_names \
   .x-sc_file_system .x-sc_obsolete_symbols \
@@ -12,10 +13,13 @@ EXTRA_DIST = Makefile.cfg Makefile.maint GNUmakefile \
   .x-sc_no_if_have_config_h \
   .x-sc_require_config_h \
   .x-sc_prohibit_assert_without_use \
+  .x-sc_prohibit_atoi_atof \
+  .x-sc_trailing_blank \
   .x-sc_two_space_separator_in_usage \
   announce-gen \
   build-aux/cvsu \
   m4/ChangeLog \
+  ChangeLog-2005 \
   old/fileutils/ChangeLog \
   old/fileutils/ChangeLog-1997 \
   old/sh-utils/ChangeLog \
@@ -54,6 +58,8 @@ rm_subst = \
 	perl -pi -e '$(rm_subst)' $(srcdir)/src/Makefile.in
 	touch $@
 
+
+MAINTAINERCLEANFILES = THANKS-to-translators
 THANKS-to-translators: po/LINGUAS THANKStt.in
 	(								\
 	  cat $(srcdir)/THANKStt.in;					\

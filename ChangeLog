@@ -1,3 +1,10 @@
+2006-07-14  Jim Meyering  <jim@meyering.net>
+
+	* Makefile.am (EXTRA_DIST): Add a few more .??* files.
+	They've been in CVS, just haven't been distributed before this.
+	Distribute ChangeLog-2005, too.
+	(MAINTAINERCLEANFILES): Add THANKS-to-translators.
+
 2006-07-11  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/system.h: Assume <dirent.h> exists, since gnulib assumes
