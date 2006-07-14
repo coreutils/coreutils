@@ -214,7 +214,7 @@ do_decode (FILE *in, FILE *out, bool ignore_garbage)
       n = BLOCKSIZE;
       ok = base64_decode (inbuf, sum, outbuf, &n);
 
-      if (fwrite (outbuf, 1, n, stdout) < n)
+      if (fwrite (outbuf, 1, n, out) < n)
 	error (EXIT_FAILURE, errno, _("write error"));
 
       if (!ok)
