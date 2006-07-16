@@ -1,3 +1,10 @@
+2006-07-16  Jim Meyering  <jim@meyering.net>
+
+	* userspec.c (parse_with_separator): Say "invalid spec" rather than
+	the sometimes erroneous "cannot get the login group of a numeric UID"
+	for a spec like "not-a-username:" or "1:".  Reported by
+	suckfish@ihug.co.nz in https://bugzilla.redhat.com/bugzilla/199027.
+
 2006-07-10  Derek R. Price  <derek@ximbiot.com>
 
 	* backupfile.c, dirfd.h, fts.c, getcwd.c:

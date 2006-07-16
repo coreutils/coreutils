@@ -1,5 +1,5 @@
 /* userspec.c -- Parse a user and group string.
-   Copyright (C) 1989-1992, 1997-1998, 2000, 2002-2005 Free Software
+   Copyright (C) 1989-1992, 1997-1998, 2000, 2002-2006 Free Software
    Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -109,8 +109,7 @@ parse_with_separator (char const *spec, char const *separator,
 {
   static const char *E_invalid_user = N_("invalid user");
   static const char *E_invalid_group = N_("invalid group");
-  static const char *E_bad_spec =
-    N_("cannot get the login group of a numeric UID");
+  static const char *E_bad_spec = N_("invalid spec");
 
   const char *error_msg;
   struct passwd *pwd;
@@ -164,7 +163,11 @@ parse_with_separator (char const *spec, char const *separator,
 	{
 	  bool use_login_group = (separator != NULL && g == NULL);
 	  if (use_login_group)
-	    error_msg = E_bad_spec;
+	    {
+	      /* If there is no group,
+		 then there may not be a trailing ":", either.  */
+	      error_msg = E_bad_spec;
+	    }
 	  else
 	    {
 	      unsigned long int tmp;
