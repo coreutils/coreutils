@@ -257,7 +257,7 @@ Operating on sorted files
 * Charset selection in ptx::    Underlying character set considerations.
 * Input processing in ptx::     Input fields, contexts, and keyword selection.
 * Output formatting in ptx::    Types of output format, and sizing the fields.
-* Compatibility in ptx::        The GNU extensions to @command{ptx}
+* Compatibility in ptx::        The @acronym{GNU} extensions to @command{ptx}
 
 Operating on fields within a line
 
@@ -434,6 +434,7 @@ File permissions
 * Mode Structure::               Structure of File Permissions
 * Symbolic Modes::               Mnemonic permissions representation
 * Numeric Modes::                Permissions as octal numbers
+* Directory Setuid and Setgid::  Set-user-ID and set-group-ID on directories.
 
 Date input formats
 
@@ -895,14 +896,14 @@ zettabyte: @math{10^21 = 1,000,000,000,000,000,000,000}
 @item Z
 @itemx ZiB
 @math{2^70 = 1,180,591,620,717,411,303,424}.
-(@samp{Zi} is a GNU extension to IEC 60027-2.)
+(@samp{Zi} is a @acronym{GNU} extension to IEC 60027-2.)
 @item YB
 @cindex yottabyte, definition of
 yottabyte: @math{10^24 = 1,000,000,000,000,000,000,000,000}.
 @item Y
 @itemx YiB
 @math{2^80 = 1,208,925,819,614,629,174,706,176}.
-(@samp{Yi} is a GNU extension to IEC 60027-2.)
+(@samp{Yi} is a @acronym{GNU} extension to IEC 60027-2.)
 @end table
 
 @opindex -k
@@ -4726,7 +4727,7 @@ ranges of selected bytes.
 
 @item --complement
 @opindex --complement
-This option is a GNU extension.
+This option is a @acronym{GNU} extension.
 Select for printing the complement of the bytes, characters or fields
 selected with the @option{-b}, @option{-c} or @option{-f} options.
 In other words, do @emph{not} print the bytes, characters or fields
@@ -4840,7 +4841,7 @@ sort a file on its default join field, but if you select a non-default
 locale, join field, separator, or comparison options, then you should
 do so consistently between @command{join} and @command{sort}.
 
-As a GNU extension, if the input has no unpairable lines the
+As a @acronym{GNU} extension, if the input has no unpairable lines the
 sort order can be any order that considers two fields to be equal if and
 only if the sort comparison described above considers them to be equal.
 For example:
@@ -5861,12 +5862,12 @@ third character of each set of permissions as follows:
 
 @table @samp
 @item s
-If the setuid or setgid bit and the corresponding executable bit
+If the set-user-ID or set-group-ID bit and the corresponding executable bit
 are both set.
 
 @item S
-If the setuid or setgid bit is set but the corresponding executable bit
-is not set.
+If the set-user-ID or set-group-ID bit is set but the corresponding
+executable bit is not set.
 
 @item t
 If the sticky bit and the other-executable bit are both set.
@@ -6731,7 +6732,8 @@ of one or more of the following strings:
 Preserve the file mode bits and access control lists.
 @itemx ownership
 Preserve the owner and group.  On most modern systems,
-only the super-user may change the owner of a file, and regular users
+only users with appropriate privileges may change the owner of a file,
+and ordinary users
 may preserve the group ownership of a file only if they happen to be
 a member of the desired group.
 @itemx timestamps
@@ -7252,7 +7254,9 @@ directory, using the @var{source}s' names.
 @item
 If the @option{--directory} (@option{-d}) option is given,
 @command{install} creates each @var{directory} and any missing parent
-directories.
+directories.  Parent directories are created with mode
+@samp{u=rwx,go=rx} (755), regardless of the @option{-m} option or the
+current umask.
 @end itemize
 
 @cindex Makefiles, installing programs in
@@ -7278,11 +7282,9 @@ Ignored; for compatibility with old Unix versions of @command{install}.
 @cindex directories, creating with given attributes
 @cindex parent directories, creating missing
 @cindex leading directories, creating missing
-Create each given directory and any missing parent directories, setting
-the owner, group and mode as given on the command line or to the
-defaults.  It also gives any parent directories it creates those
-attributes.  (This is different from the SunOS 4.x @command{install}, which
-gives directories that it creates the default attributes.)
+Create any missing parent directories, giving them the default
+attributes.  Then create each given directory, setting their owner,
+group and mode as given on the command line or to the defaults.
 
 @item -g @var{group}
 @itemx --group=@var{group}
@@ -7302,8 +7304,9 @@ Set the file mode bits for the installed file or directory to @var{mode},
 which can be either an octal number, or a symbolic mode as in
 @command{chmod}, with @samp{a=} (no access allowed to anyone) as the
 point of departure (@pxref{File permissions}).
-The default mode is @samp{u=rwx,go=rx}---read, write,
-and execute for the owner, and read and execute for group and other.
+The default mode is @samp{u=rwx,go=rx,a-s} (0755)---read, write, and
+execute for the owner, read and execute for group and other, and with
+set-user-ID and set-group-ID disabled.
 
 @item -o @var{owner}
 @itemx --owner=@var{owner}
@@ -7969,7 +7972,8 @@ The program accepts the following options.  Also see @ref{Common options}.
 @opindex -F
 @opindex --directory
 @cindex hard links to directories
-Allow the super-user to attempt to make hard links to directories.
+Allow users with appropriate privileges to attempt to make hard links
+to directories.
 However, note that this will probably fail due to
 system restrictions, even for the super-user.
 
@@ -8072,14 +8076,9 @@ ln -s ../adir/afile yetanotherfile
 mkdir [@var{option}]@dots{} @var{name}@dots{}
 @end example
 
-If a @var{name} is an existing file but not a directory, @command{mkdir} prints
-a warning message on stderr and will exit with a status of 1 after
-processing any remaining @var{name}s.  The same is done when a @var{name} is an
-existing directory and the -p option is not given.  If a @var{name} is an
-existing directory and the -p option is given, @command{mkdir} will ignore it.
-That is, @command{mkdir} will not print a warning, raise an error, or change
-the mode of the directory (even if the -m option is given), and will
-move on to processing any remaining @var{name}s.
+@command{mkdir} creates each directory @var{name} in the order given.
+It reports an error if @var{name} already exists, unless the
+@option{-p} option is given and @var{name} is a directory.
 
 The program accepts the following options.  Also see @ref{Common options}.
 
@@ -8090,9 +8089,16 @@ The program accepts the following options.  Also see @ref{Common options}.
 @opindex -m
 @opindex --mode
 @cindex modes of created directories, setting
-Set the mode of created directories to @var{mode}, which is symbolic as
+Set the file permission bits of created directories to @var{mode},
+which uses the same syntax as
 in @command{chmod} and uses @samp{a=rwx} (read, write and execute allowed for
 everyone) for the point of the departure.  @xref{File permissions}.
+
+Normally the directory has the desired file mode bits at the moment it
+is created.  As a @acronym{GNU} extension, @var{mode} may also mention
+special mode bits, but in this case there may be a temporary window
+during which the directory exists but its special mode bits are
+incorrect.
 
 @item -p
 @itemx --parents
@@ -8101,7 +8107,8 @@ everyone) for the point of the departure.  @xref{File permissions}.
 @cindex parent directories, creating
 Make any missing parent directories for each argument.  The file permission
 bits of parent directories are set to the umask modified by @samp{u+wx}.
-Ignore arguments corresponding to existing directories.
+Ignore arguments corresponding to existing directories, and do not
+change their file mode bits.
 
 @item -v
 @item --verbose
@@ -8484,7 +8491,8 @@ set-group-ID permission bits.  This behavior depends on the policy and
 functionality of the underlying @code{chown} system call, which may
 make system-dependent file mode modifications outside the control of
 the @command{chown} command.  For example, the @command{chown} command
-might not affect those bits when operated as the superuser, or if the
+might not affect those bits when invoked by a user with appropriate
+privileges, or when the
 bits signify some function other than executable permission (e.g.,
 mandatory locking).
 When in doubt, check the underlying system behavior.
@@ -8769,6 +8777,15 @@ never used.  However, for each symbolic link listed on the command
 line, @command{chmod} changes the permissions of the pointed-to file.
 In contrast, @command{chmod} ignores symbolic links encountered during
 recursive directory traversals.
+
+A successful use of @command{chmod} clears the set-group-ID bit of a
+regular file if the file's group ID does not match the user's
+effective group ID or one of the user's supplementary group IDs,
+unless the user has appropriate privileges.  Additional restrictions
+may cause the set-user-ID and set-group-ID bits of @var{mode} or
+@var{ref_file} to be ignored.  This behavior depends on the policy and
+functionality of the underlying @code{chmod} system call.  When in
+doubt, check the underlying system behavior.
 
 If used, @var{mode} specifies the new file mode bits.
 For details, see the section on @ref{File permissions}.
@@ -9582,7 +9599,7 @@ The valid format sequences for files are:
 The valid format sequences for file systems are:
 
 @itemize @bullet
-@item %a - Free blocks available to non-superuser
+@item %a - Free blocks available to non-super-user
 @item %b - Total data blocks in file system
 @item %c - Total file nodes in file system
 @item %d - Free file nodes in file system
@@ -10446,7 +10463,7 @@ or an operator like @code{/}.
 This makes it possible to test @code{expr length + "$x"} or
 @code{expr + "$x" : '.*/\(.\)'} and have it do the right thing even if
 the value of @var{$x} happens to be (for example) @code{/} or @code{index}.
-This operator is a GNU extension.  Portable shell scripts should use
+This operator is a @acronym{GNU} extension.  Portable shell scripts should use
 @code{@w{" $token"} : @w{' \(.*\)'}} instead of @code{+ "$token"}.
 
 @end table
@@ -13181,7 +13198,7 @@ read its login startup file(s).
 Do not change the environment variables @env{HOME}, @env{USER},
 @env{LOGNAME}, or @env{SHELL}.  Run the shell given in the environment
 variable @env{SHELL} instead of the shell from @var{user}'s passwd
-entry, unless the user running @command{su} is not the superuser and
+entry, unless the user running @command{su} is not the super-user and
 @var{user}'s shell is restricted.  A @dfn{restricted shell} is one that
 is not listed in the file @file{/etc/shells}, or in a compiled-in list
 if that file does not exist.  Parts of what this option does can be
@@ -13192,7 +13209,7 @@ overridden by @option{--login} and @option{--shell}.
 @opindex -s
 @opindex --shell
 Run @var{shell} instead of the shell from @var{user}'s passwd entry,
-unless the user running @command{su} is not the superuser and @var{user}'s
+unless the user running @command{su} is not the super-user and @var{user}'s
 shell is restricted (see @option{-m} just above).
 
 @end table
