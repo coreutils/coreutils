@@ -26,6 +26,14 @@ GNU coreutils NEWS                                    -*- outline -*-
   basename and dirname now treat // as different from / on platforms
   where the two are distinct.
 
+  chmod, install, and mkdir now leave a directory's set-user-ID and
+  set-group-ID bits alone unless you explicitly request otherwise.
+  This is for compatibility with BSD and other systems.  For example,
+  `chmod 755 DIR' and `chmod u=rwx,go=rx DIR' now preserve DIR's
+  set-user-ID and set-group-ID bits instead of clearing them.  If
+  you want to clear the bits you can mention them explicitly, e.g.,
+  `chmod 0755 DIR' and `chmod a-s,u=rwx,go=rx DIR'.
+
   `cp --link --no-dereference' now works also on systems where the
   link system call cannot create a hard link to a symbolic link.
   This change has no effect on systems with a Linux-based kernel.
@@ -50,6 +58,14 @@ GNU coreutils NEWS                                    -*- outline -*-
   errors it detects in the expression's values; exit status 3 is now
   used only for internal errors (such as integer overflow, which expr
   now checks for).
+
+  install and mkdir now implement the X permission symbol correctly,
+  e.g., `mkdir -m a+X dir'; previously the X was ignored.
+
+  install now creates parent directories with mode u=rwx,go=rx (755)
+  instead of using the mode specified by the -m option; and it does
+  not change the owner or group of parent directories.  This is for
+  compatibility with BSD and closes some race conditions.
 
   ln now uses different (and we hope clearer) diagnostics when it fails.
   ln -v now acts more like FreeBSD, so it generates output only when
