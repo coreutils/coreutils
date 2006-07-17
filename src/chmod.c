@@ -222,7 +222,8 @@ process_file (FTS *fts, FTSENT *ent)
   if (ok)
     {
       old_mode = file_stats->st_mode;
-      new_mode = mode_adjust (old_mode, change, umask_value);
+      new_mode = mode_adjust (old_mode, S_ISDIR (old_mode) != 0, umask_value,
+			      change, NULL);
 
       if (! S_ISLNK (old_mode))
 	{
@@ -256,7 +257,8 @@ process_file (FTS *fts, FTSENT *ent)
 
   if (chmod_succeeded & diagnose_surprises)
     {
-      mode_t naively_expected_mode = mode_adjust (old_mode, change, 0);
+      mode_t naively_expected_mode =
+	mode_adjust (old_mode, S_ISDIR (old_mode) != 0, 0, change, NULL);
       if (new_mode & ~naively_expected_mode)
 	{
 	  char new_perms[12];
