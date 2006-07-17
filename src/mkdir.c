@@ -76,17 +76,47 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   exit (status);
 }
 
+/* Options for announce_mkdir and make_ancestor.  */
+struct mkdir_options
+{
+  /* Mode for ancestor directory.  */
+  mode_t ancestor_mode;
+
+  /* If not null, format to use when reporting newly made directories.  */
+  char const *created_directory_format;
+};
+
+/* Report that directory DIR was made, if OPTIONS requests this.  */
+static void
+announce_mkdir (char const *dir, void *options)
+{
+  struct mkdir_options const *o = options;
+  if (o->created_directory_format)
+    error (0, 0, o->created_directory_format, quote (dir));
+}
+
+/* Make ancestor directory DIR, with options OPTIONS.  */
+static int
+make_ancestor (char const *dir, void *options)
+{
+  struct mkdir_options const *o = options;
+  int r = mkdir (dir, o->ancestor_mode);
+  if (r == 0)
+    announce_mkdir (dir, options);
+  return r;
+}
+
 int
 main (int argc, char **argv)
 {
-  mode_t newmode;
-  mode_t parent_mode IF_LINT (= 0);
+  mode_t mode = S_IRWXUGO;
+  mode_t mode_bits = 0;
+  int (*make_ancestor_function) (char const *, void *) = NULL;
   const char *specified_mode = NULL;
-  const char *verbose_fmt_string = NULL;
-  bool create_parents = false;
   int exit_status = EXIT_SUCCESS;
   int optc;
-  int cwd_errno = 0;
+  struct mkdir_options options;
+  options.created_directory_format = NULL;
 
   initialize_main (&argc, &argv);
   program_name = argv[0];
@@ -101,13 +131,13 @@ main (int argc, char **argv)
       switch (optc)
 	{
 	case 'p':
-	  create_parents = true;
+	  make_ancestor_function = make_ancestor;
 	  break;
 	case 'm':
 	  specified_mode = optarg;
 	  break;
 	case 'v': /* --verbose  */
-	  verbose_fmt_string = _("created directory %s");
+	  options.created_directory_format = _("created directory %s");
 	  break;
 	case_GETOPT_HELP_CHAR;
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
@@ -122,13 +152,11 @@ main (int argc, char **argv)
       usage (EXIT_FAILURE);
     }
 
-  newmode = S_IRWXUGO;
-
-  if (specified_mode || create_parents)
+  if (make_ancestor_function || specified_mode)
     {
       mode_t umask_value = umask (0);
 
-      parent_mode = (S_IRWXUGO & ~umask_value) | (S_IWUSR | S_IXUSR);
+      options.ancestor_mode = (S_IRWXUGO & ~umask_value) | (S_IWUSR | S_IXUSR);
 
       if (specified_mode)
 	{
@@ -136,58 +164,19 @@ main (int argc, char **argv)
 	  if (!change)
 	    error (EXIT_FAILURE, 0, _("invalid mode %s"),
 		   quote (specified_mode));
-	  newmode = mode_adjust (S_IRWXUGO, change, umask_value);
+	  mode = mode_adjust (S_IRWXUGO, true, umask_value, change,
+			      &mode_bits);
 	  free (change);
 	}
       else
-	umask (umask_value);
+	mode &= ~umask_value;
     }
 
   for (; optind < argc; ++optind)
-    {
-      char *dir = argv[optind];
-      bool ok;
-
-      if (create_parents)
-	{
-	  if (cwd_errno != 0 && IS_RELATIVE_FILE_NAME (dir))
-	    {
-	      error (0, cwd_errno, _("cannot return to working directory"));
-	      ok = false;
-	    }
-	  else
-	    ok = make_dir_parents (dir, newmode, parent_mode,
-				   -1, -1, true, verbose_fmt_string,
-				   &cwd_errno);
-	}
-      else
-	{
-	  ok = (mkdir (dir, newmode) == 0);
-
-	  if (! ok)
-	    error (0, errno, _("cannot create directory %s"), quote (dir));
-	  else if (verbose_fmt_string)
-	    error (0, 0, verbose_fmt_string, quote (dir));
-
-	  /* mkdir(2) is required to honor only the file permission bits.
-	     In particular, it needn't do anything about `special' bits,
-	     so if any were set in newmode, apply them with lchmod.  */
-
-	  /* Set the permissions only if this directory has just
-	     been created.  */
-
-	  if (ok && specified_mode && (newmode & ~S_IRWXUGO)
-	      && lchmod (dir, newmode) != 0)
-	    {
-	      error (0, errno, _("cannot set permissions of directory %s"),
-		     quote (dir));
-	      ok = false;
-	    }
-	}
-
-      if (! ok)
-	exit_status = EXIT_FAILURE;
-    }
+    if (! make_dir_parents (argv[optind], make_ancestor_function, &options,
+			    mode, announce_mkdir,
+			    mode_bits, (uid_t) -1, (gid_t) -1, true))
+      exit_status = EXIT_FAILURE;
 
   exit (exit_status);
 }
