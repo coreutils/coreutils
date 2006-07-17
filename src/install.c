@@ -32,6 +32,7 @@
 #include "copy.h"
 #include "dirname.h"
 #include "filenamecat.h"
+#include "mkancesdirs.h"
 #include "mkdir-p.h"
 #include "modechange.h"
 #include "quote.h"
@@ -69,14 +70,16 @@ static bool change_timestamps (struct stat const *from_sb, char const *to);
 static bool change_attributes (char const *name);
 static bool copy_file (const char *from, const char *to,
 		       const struct cp_options *x);
-static bool install_file_in_file_parents (char const *from, char const *to,
-					  struct cp_options const *x);
+static bool install_file_in_file_parents (char const *from, char *to,
+					  struct cp_options *x);
 static bool install_file_in_dir (const char *from, const char *to_dir,
 				 const struct cp_options *x);
 static bool install_file_in_file (const char *from, const char *to,
 				  const struct cp_options *x);
 static void get_ids (void);
 static void strip (char const *name);
+static void announce_mkdir (char const *dir, void *options);
+static int make_ancestor (char const *dir, void *options);
 void usage (int status);
 
 /* The name this program was run with, for error messages. */
@@ -96,9 +99,20 @@ static char *group_name;
 /* The group ID corresponding to `group_name'. */
 static gid_t group_id;
 
-/* The permissions to which the files will be set.  The umask has
+#define DEFAULT_MODE (S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH)
+
+/* The file mode bits to which non-directory files will be set.  The umask has
    no effect. */
-static mode_t mode = S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH;
+static mode_t mode = DEFAULT_MODE;
+
+/* Similar, but for directories.  */
+static mode_t dir_mode = DEFAULT_MODE;
+
+/* The file mode bits that the user cares about.  This should be a
+   superset of DIR_MODE and a subset of CHMOD_MODE_BITS.  This matters
+   for directories, since otherwise directories may keep their S_ISUID
+   or S_ISGID bits.  */
+static mode_t dir_mode_bits = CHMOD_MODE_BITS;
 
 /* If true, strip executable files after copying them. */
 static bool strip_files;
@@ -340,7 +354,8 @@ main (int argc, char **argv)
       struct mode_change *change = mode_compile (specified_mode);
       if (!change)
 	error (EXIT_FAILURE, 0, _("invalid mode %s"), quote (specified_mode));
-      mode = mode_adjust (0, change, 0);
+      mode = mode_adjust (0, false, 0, change, NULL);
+      dir_mode = mode_adjust (0, true, 0, change, &dir_mode_bits);
       free (change);
     }
 
@@ -349,20 +364,10 @@ main (int argc, char **argv)
   if (dir_arg)
     {
       int i;
-      int cwd_errno = 0;
       for (i = 0; i < n_files; i++)
-	{
-	  if (cwd_errno != 0 && IS_RELATIVE_FILE_NAME (file[i]))
-	    {
-	      error (0, cwd_errno, _("cannot return to working directory"));
-	      ok = false;
-	    }
-	  else
-	    ok &=
-	      make_dir_parents (file[i], mode, mode, owner_id, group_id, false,
-				(x.verbose ? _("creating directory %s") : NULL),
-				&cwd_errno);
-	}
+	ok &= make_dir_parents (file[i], make_ancestor, &x,
+				dir_mode, announce_mkdir,
+				dir_mode_bits, owner_id, group_id, false);
     }
   else
     {
@@ -395,39 +400,16 @@ main (int argc, char **argv)
    Return true if successful.  */
 
 static bool
-install_file_in_file_parents (char const *from, char const *to,
-			      struct cp_options const *x)
+install_file_in_file_parents (char const *from, char *to,
+			      struct cp_options *x)
 {
-  char *dest_dir = dir_name (to);
-  bool ok = true;
-
-  /* Make sure that the parent of the destination is a directory.  */
-  if (! STREQ (dest_dir, "."))
+  if (mkancesdirs (to, make_ancestor, x) != 0)
     {
-      /* Someone will probably ask for a new option or three to specify
-	 owner, group, and permissions for parent directories.  Remember
-	 that this option is intended mainly to help installers when the
-	 distribution doesn't provide proper install rules.  */
-      mode_t dir_mode = S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH;
-      int cwd_errno = 0;
-      ok = make_dir_parents (dest_dir, dir_mode, dir_mode,
-			     owner_id, group_id, true,
-			     (x->verbose ? _("creating directory %s") : NULL),
-			     &cwd_errno);
-      if (ok && cwd_errno != 0
-	  && (IS_RELATIVE_FILE_NAME (from) || IS_RELATIVE_FILE_NAME (to)))
-	{
-	  error (0, cwd_errno, _("cannot return to current directory"));
-	  ok = false;
-	}
+      error (0, errno, _("cannot create directory %s"), to);
+      return false;
     }
 
-  free (dest_dir);
-
-  if (ok)
-    ok = install_file_in_file (from, to, x);
-
-  return ok;
+  return install_file_in_file (from, to, x);
 }
 
 /* Copy file FROM onto file TO and give TO the appropriate
@@ -493,8 +475,6 @@ copy_file (const char *from, const char *to, const struct cp_options *x)
 static bool
 change_attributes (char const *name)
 {
-  bool ok = true;
-
   /* chown must precede chmod because on some systems,
      chown clears the set[ug]id bits for non-superusers,
      resulting in incorrect permissions.
@@ -505,26 +485,17 @@ change_attributes (char const *name)
      the install command is that the file is supposed to end up with
      precisely the attributes that the user specified (or defaulted).
      If the file doesn't end up with the group they asked for, they'll
-     want to know.  But AFS returns EPERM when you try to change a
-     file's group; thus the kludge.  */
+     want to know.  */
 
-  if (chown (name, owner_id, group_id) != 0
-#ifdef AFS
-      && errno != EPERM
-#endif
-      )
-    {
-      error (0, errno, _("cannot change ownership of %s"), quote (name));
-      ok = false;
-    }
+  if (! (owner_id == (uid_t) -1 && group_id == (gid_t) -1)
+      && chown (name, owner_id, group_id) != 0)
+    error (0, errno, _("cannot change ownership of %s"), quote (name));
+  else if (chmod (name, mode) != 0)
+    error (0, errno, _("cannot change permissions of %s"), quote (name));
+  else
+    return true;
 
-  if (ok && chmod (name, mode) != 0)
-    {
-      error (0, errno, _("cannot change permissions of %s"), quote (name));
-      ok = false;
-    }
-
-  return ok;
+  return false;
 }
 
 /* Set the timestamps of file TO to match those of file FROM.
@@ -619,6 +590,25 @@ get_ids (void)
     }
   else
     group_id = (gid_t) -1;
+}
+
+/* Report that directory DIR was made, if OPTIONS requests this.  */
+static void
+announce_mkdir (char const *dir, void *options)
+{
+  struct cp_options const *x = options;
+  if (x->verbose)
+    error (0, 0, _("creating directory %s"), quote (dir));
+}
+
+/* Make ancestor directory DIR, with options OPTIONS.  */
+static int
+make_ancestor (char const *dir, void *options)
+{
+  int r = mkdir (dir, DEFAULT_MODE);
+  if (r == 0)
+    announce_mkdir (dir, options);
+  return r;
 }
 
 void
