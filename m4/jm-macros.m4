@@ -1,4 +1,4 @@
-#serial 100   -*- autoconf -*-
+#serial 102   -*- autoconf -*-
 
 dnl Misc type-related macros for coreutils.
 
@@ -57,7 +57,6 @@ AC_DEFUN([gl_MACROS],
   AC_REQUIRE([AC_FUNC_LSTAT])
   AC_REQUIRE([AC_FUNC_STRERROR_R])
   AC_REQUIRE([gl_FUNC_GROUP_MEMBER])
-  AC_REQUIRE([gl_AFS])
   AC_REQUIRE([gl_AC_FUNC_LINK_FOLLOWS_SYMLINK])
   AC_REQUIRE([gl_FUNC_FPENDING])
 
