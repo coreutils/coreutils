@@ -19,12 +19,12 @@
 	const *.  Use mkancesdirs instead of rolling our own code.
 	(change_attributes): Don't worry about AFS, since that kludge
 	should not be needed any more.
-	* mkdir.c (struct mkdir_options): New struct.
+	* src/mkdir.c (struct mkdir_options): New struct.
 	(announce_mkdir, make_ancestor): New functions.
 	(main): Use them.  Adjust to mode_adjust API change.  Stick with
 	umask 0.  Use make_dir_parents for all the work.
-	* mkfifo.c (main): Adjust to new mode_adjust API.
-	* mknod.c (main): Likewise.
+	* src/mkfifo.c (main): Adjust to new mode_adjust API.
+	* src/mknod.c (main): Likewise.
 	* tests/chmod/setgid: Do the setgid test instead of bailing.
 	* tests/mkdir/p-3: Remove re_protect case that no longer applies.
 	GNU chmod now behaves like other versions of chmod.
