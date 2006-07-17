@@ -17,7 +17,7 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 
-/* Written by David MacKenzie <djm@gnu.ai.mit.edu> and Jim Meyering.  */
+/* Written by Paul Eggert, David MacKenzie, and Jim Meyering.  */
 
 #ifdef HAVE_CONFIG_H
 # include <config.h>
@@ -25,333 +25,112 @@
 
 #include "mkdir-p.h"
 
-#include <alloca.h>
-
-#include <stdio.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
-
-#include <stdlib.h>
 #include <errno.h>
-#include <string.h>
+#include <sys/stat.h>
 
 #include "gettext.h"
 #define _(msgid) gettext (msgid)
 
-#include "chdir-safer.h"
-#include "dirname.h"
+#include "dirchownmod.c"
 #include "error.h"
-#include "lchmod.h"
-#include "lchown.h"
 #include "quote.h"
-#include "save-cwd.h"
+#include "mkancesdirs.h"
 #include "stat-macros.h"
 
-/* Ensure that the directory ARG exists.
+/* Ensure that the directory DIR exists.
 
-   Create any leading directories that don't already exist, with
-   permissions PARENT_MODE.
-   If the last element of ARG does not exist, create it as
-   a new directory with permissions MODE.
-   If OWNER and GROUP are non-negative, use them to set the UID and GID of
-   any created directories.
-   If VERBOSE_FMT_STRING is nonzero, use it as a printf format
-   string for printing a message after successfully making a directory,
-   with the name of the directory that was just made as an argument.
-   If PRESERVE_EXISTING is true and ARG is an existing directory,
-   then do not attempt to set its permissions and ownership.
+   If MAKE_ANCESTOR is not null, create any ancestor directories that
+   don't already exist, by invoking MAKE_ANCESTOR (ANCESTOR, OPTIONS).
+   This function should return zero if successful, -1 (setting errno)
+   otherwise.  In this case, DIR may be modified by storing '\0' bytes
+   into it, to access the ancestor directories, and this modification
+   is retained on return if the ancestor directories could not be
+   created.
 
-   Set *CWD_ERRNO to a (nonzero) error number if this
-   function has changed the current working directory and is unable to
-   restore it to its initial state.  Do not change
-   *CWD_ERRNO otherwise.
+   Create DIR as a new directory with using mkdir with permissions
+   MODE.  It is also OK if MAKE_ANCESTOR_DIR is not null and a
+   directory DIR already exists.
 
-   Return true iff ARG exists as a directory with the proper ownership
-   and permissions when done.  Note that this function returns true
-   even when it fails to return to the initial working directory.  */
+   Call ANNOUNCE (DIR, OPTIONS) just after successfully making DIR,
+   even if some of the following actions fail.
+
+   Set DIR's owner to OWNER and group to GROUP, but leave the owner
+   alone if OWNER is (uid_t) -1, and similarly for GROUP.
+
+   Set DIR's mode bits to MODE, except preserve any of the bits that
+   correspond to zero bits in MODE_BITS.  In other words, MODE_BITS is
+   a mask that specifies which of DIR's mode bits should be set or
+   cleared.  MODE should be a subset of MODE_BITS, which in turn
+   should be a subset of CHMOD_MODE_BITS.  Changing the mode in this
+   way is necessary if DIR already existed or if MODE and MODE_BITS
+   specify non-permissions bits like S_ISUID.
+
+   However, if PRESERVE_EXISTING is true and DIR already exists,
+   do not attempt to set DIR's ownership and file mode bits.
+
+   This implementation assumes the current umask is zero.
+
+   Return true if DIR exists as a directory with the proper ownership
+   and file mode bits when done.  Report a diagnostic and return false
+   on failure, storing '\0' into *DIR if an ancestor directory had
+   problems.  */
 
 bool
-make_dir_parents (char const *arg,
+make_dir_parents (char *dir,
+		  int (*make_ancestor) (char const *, void *),
+		  void *options,
 		  mode_t mode,
-		  mode_t parent_mode,
+		  void (*announce) (char const *, void *),
+		  mode_t mode_bits,
 		  uid_t owner,
 		  gid_t group,
-		  bool preserve_existing,
-		  char const *verbose_fmt_string,
-		  int *cwd_errno)
+		  bool preserve_existing)
 {
-  struct stat stats;
-  bool retval = true;
-  bool do_chdir = false;	/* Whether to chdir before each mkdir.  */
-  struct saved_cwd cwd;
-  bool cwd_problem = false;
-  char const *fixup_permissions_dir = NULL;
-  char const *full_dir = arg;
+  bool made_dir = (mkdir (dir, mode) == 0);
 
-  struct ptr_list
-  {
-    char *dirname_end;
-    struct ptr_list *next;
-  };
-  struct ptr_list *leading_dirs = NULL;
-
-  if (stat (arg, &stats) == 0)
+  if (!made_dir && make_ancestor && errno == ENOENT)
     {
-      if (! S_ISDIR (stats.st_mode))
+      if (mkancesdirs (dir, make_ancestor, options) == 0)
+	made_dir = (mkdir (dir, mode) == 0);
+      else
 	{
-	  error (0, 0, _("%s exists but is not a directory"), quote (arg));
-	  return false;
+	  /* mkancestdirs updated DIR for a better-looking
+	     diagnostic, so don't try to stat DIR below.  */
+	  make_ancestor = NULL;
 	}
-
-      if (!preserve_existing)
-	fixup_permissions_dir = arg;
     }
-  else if (errno != ENOENT || !*arg)
+
+  if (made_dir)
     {
-      error (0, errno, "%s", quote (arg));
-      return false;
+      announce (dir, options);
+      preserve_existing =
+	(owner == (uid_t) -1 && group == (gid_t) -1
+	 && ! ((mode_bits & (S_ISUID | S_ISGID)) | (mode & S_ISVTX)));
     }
   else
     {
-      char *slash;
-      mode_t tmp_mode;		/* Initial perms for leading dirs.  */
-      bool re_protect;		/* Should leading dirs be unwritable? */
-      char *basename_dir;
-      char *dir;
-
-      /* Temporarily relax umask in case it's overly restrictive.  */
-      mode_t oldmask = umask (0);
-
-      /* Make a copy of ARG that we can scribble NULs on.  */
-      dir = alloca (strlen (arg) + 1);
-      strcpy (dir, arg);
-      strip_trailing_slashes (dir);
-      full_dir = dir;
-
-      /* If leading directories shouldn't be readable, writable or executable,
-	 or should have set[ug]id or sticky bits set and we are setting
-	 their owners, we need to fix their permissions after making them.  */
-      if (((parent_mode & S_IRWXU) != S_IRWXU)
-	  || ((owner != (uid_t) -1 || group != (gid_t) -1)
-	      && (parent_mode & (S_ISUID | S_ISGID | S_ISVTX)) != 0))
+      int mkdir_errno = errno;
+      struct stat st;
+      if (! (make_ancestor && mkdir_errno != ENOENT
+	     && stat (dir, &st) == 0 && S_ISDIR (st.st_mode)))
 	{
-	  tmp_mode = S_IRWXU;
-	  re_protect = true;
-	}
-      else
-	{
-	  tmp_mode = parent_mode;
-	  re_protect = false;
-	}
-
-      /* If we can record the current working directory, we may be able
-	 to do the chdir optimization.  */
-      do_chdir = (save_cwd (&cwd) == 0);
-
-      /* If we've saved the cwd and DIR is an absolute file name,
-	 we must chdir to `/' in order to enable the chdir optimization.
-         So if chdir ("/") fails, turn off the optimization.  */
-      if (do_chdir && dir[0] == '/')
-	{
-	  /* POSIX says "//" might be special, so chdir to "//" if the
-	     file name starts with exactly two slashes.  */
-	  char const *root = "//" + (dir[1] != '/' || dir[2] == '/');
-	  if (chdir (root) != 0)
-	    {
-	      free_cwd (&cwd);
-	      do_chdir = false;
-	    }
-	}
-
-      slash = dir;
-
-      /* Skip over leading slashes.  */
-      while (*slash == '/')
-	slash++;
-
-      while (true)
-	{
-	  bool dir_known_to_exist;
-	  int mkdir_errno;
-
-	  /* slash points to the leftmost unprocessed component of dir.  */
-	  basename_dir = slash;
-
-	  slash = strchr (slash, '/');
-	  if (slash == NULL)
-	    break;
-
-	  /* If we're *not* doing chdir before each mkdir, then we have to refer
-	     to the target using the full (multi-component) directory name.  */
-	  if (!do_chdir)
-	    basename_dir = dir;
-
-	  *slash = '\0';
-	  dir_known_to_exist = (mkdir (basename_dir, tmp_mode) == 0);
-	  mkdir_errno = errno;
-
-	  if (dir_known_to_exist)
-	    {
-	      if (verbose_fmt_string)
-		error (0, 0, verbose_fmt_string, quote (dir));
-
-	      if ((owner != (uid_t) -1 || group != (gid_t) -1)
-		  && lchown (basename_dir, owner, group)
-#if defined AFS && defined EPERM
-		  && errno != EPERM
-#endif
-		  )
-		{
-		  error (0, errno, _("cannot change owner and/or group of %s"),
-			 quote (dir));
-		  retval = false;
-		  break;
-		}
-
-	      if (re_protect)
-		{
-		  struct ptr_list *new = alloca (sizeof *new);
-		  new->dirname_end = slash;
-		  new->next = leading_dirs;
-		  leading_dirs = new;
-		}
-	    }
-
-	  /* If we were able to save the initial working directory,
-	     then we can use chdir to change into each directory before
-	     creating an entry in that directory.  This avoids making
-	     mkdir process O(n^2) file name components.  */
-	  if (do_chdir)
-	    {
-	      /* If we know that basename_dir is a directory (because we've
-		 just created it), then ensure that when we change to it,
-		 that final component is not a symlink.  Otherwise, we must
-		 accept the possibility that basename_dir is a preexisting
-		 symlink-to-directory and chdir through the symlink.  */
-	      if ((dir_known_to_exist
-		   ? chdir_no_follow (basename_dir)
-		   : chdir (basename_dir)) == 0)
-		dir_known_to_exist = true;
-	      else if (dir_known_to_exist)
-		{
-		  error (0, errno, _("cannot chdir to directory %s"),
-			 quote (dir));
-		  retval = false;
-		  break;
-		}
-	    }
-	  else if (!dir_known_to_exist)
-	    dir_known_to_exist = (stat (basename_dir, &stats) == 0
-				  && S_ISDIR (stats.st_mode));
-
-	  if (!dir_known_to_exist)
-	    {
-	      error (0, mkdir_errno, _("cannot create directory %s"),
-		     quote (dir));
-	      retval = false;
-	      break;
-	    }
-
-	  *slash++ = '/';
-
-	  /* Avoid unnecessary calls to mkdir when given
-	     file names containing multiple adjacent slashes.  */
-	  while (*slash == '/')
-	    slash++;
-	}
-
-      if (!do_chdir)
-	basename_dir = dir;
-
-      /* Done creating leading directories.  Restore original umask.  */
-      umask (oldmask);
-
-      /* We're done making leading directories.
-	 Create the final component of the file name.  */
-      if (retval)
-	{
-	  bool dir_known_to_exist = (mkdir (basename_dir, mode) == 0);
-	  int mkdir_errno = errno;
-	  struct stat sbuf;
-
-	  if ( ! dir_known_to_exist)
-	    dir_known_to_exist = (stat (basename_dir, &sbuf) == 0
-				  && S_ISDIR (sbuf.st_mode));
-
-	  if ( ! dir_known_to_exist)
-	    {
-	      error (0, mkdir_errno,
-		     _("cannot create directory %s"), quote (dir));
-	      retval = false;
-	    }
-	  else
-	    {
-	      if (verbose_fmt_string)
-		error (0, 0, verbose_fmt_string, quote (dir));
-	      fixup_permissions_dir = basename_dir;
-	    }
+	  error (0, mkdir_errno, _("cannot create directory %s"), quote (dir));
+	  return false;
 	}
     }
 
-  if (fixup_permissions_dir)
+  if (! preserve_existing
+      && (dirchownmod (dir, (made_dir ? mode : (mode_t) -1),
+		       owner, group, mode, mode_bits)
+	  != 0))
     {
-      /* chown must precede chmod because on some systems,
-	 chown clears the set[ug]id bits for non-superusers,
-	 resulting in incorrect permissions.
-	 On System V, users can give away files with chown and then not
-	 be able to chmod them.  So don't give files away.  */
-
-      if (owner != (uid_t) -1 || group != (gid_t) -1)
-	{
-	  if (lchown (fixup_permissions_dir, owner, group) != 0
-#ifdef AFS
-	      && errno != EPERM
-#endif
-	      )
-	    {
-	      error (0, errno, _("cannot change owner and/or group of %s"),
-		     quote (full_dir));
-	      retval = false;
-	    }
-	}
-
-      /* The above chown may have turned off some permission bits in MODE.
-	 Another reason we may have to use chmod here is that mkdir(2) is
-	 required to honor only the file permission bits.  In particular,
-	 it need not honor the `special' bits, so if MODE includes any
-	 special bits, set them here.  */
-      if ((mode & ~S_IRWXUGO) && lchmod (fixup_permissions_dir, mode) != 0)
-	{
-	  error (0, errno, _("cannot change permissions of %s"),
-		 quote (full_dir));
-	  retval = false;
-	}
+      error (0, errno,
+	     _(owner == (uid_t) -1 && group == (gid_t) -1
+	       ? "cannot change permissions of %s"
+	       : "cannot change owner and permissions of %s"),
+	     quote (dir));
+      return false;
     }
 
-  if (do_chdir)
-    {
-      if (restore_cwd (&cwd) != 0)
-	{
-	  *cwd_errno = errno;
-	  cwd_problem = true;
-	}
-      free_cwd (&cwd);
-    }
-
-  /* If the mode for leading directories didn't include owner "wx"
-     privileges, reset their protections to the correct value.  */
-  for (; leading_dirs != NULL; leading_dirs = leading_dirs->next)
-    {
-      leading_dirs->dirname_end[0] = '\0';
-      if ((cwd_problem && *full_dir != '/')
-	  || lchmod (full_dir, parent_mode) != 0)
-	{
-	  error (0, (cwd_problem ? 0 : errno),
-		 _("cannot change permissions of %s"), quote (full_dir));
-	  retval = false;
-	}
-    }
-
-  return retval;
+  return true;
 }
