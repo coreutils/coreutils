@@ -6,6 +6,7 @@ symbolic form or as an octal number.
 * Mode Structure::              Structure of file permissions.
 * Symbolic Modes::              Mnemonic permissions representation.
 * Numeric Modes::               Permissions as octal numbers.
+* Directory Setuid and Setgid:: Set-user-ID and set-group-ID on directories.
 @end menu
 
 @node Mode Structure
@@ -55,25 +56,32 @@ can change the owner and group of a file by using the @command{chown} and
 
 In addition to the three sets of three permissions listed above, the
 file mode bits have three special components, which affect only
-executable files (programs) and, on some systems, directories:
+executable files (programs) and, on most systems, directories:
 
 @enumerate
 @item
+@cindex set-user-ID
 @cindex setuid
 Set the process's effective user ID to that of the file upon execution
-(called the @dfn{setuid bit}).  No effect on directories.
+(called the @dfn{set-user-ID bit}, or sometimes the @dfn{setgid bit}).
+For directories on a few systems, give files created in the directory
+the same owner as the directory, no matter who creates them, and set
+the set-user-ID bit of newly-created subdirectories.
 @item
+@cindex set-group-ID
 @cindex setgid
 Set the process's effective group ID to that of the file upon execution
-(called the @dfn{setgid bit}).  For directories on some systems, put
-files created in the directory into the same group as the directory, no
-matter what group the user who creates them is in.
+(called the @dfn{set-group-ID bit}, or sometimes the @dfn{setgid bit}).
+For directories on most systems, give files created in the directory
+the same group as the directory, no matter what group the user who
+creates them is in, and set the set-group-ID bit of newly-created
+subdirectories.
 @item
 @cindex sticky
 @cindex swap space, saving text image in
 @cindex text image, saving in swap space
 @cindex restricted deletion flag
-prevent users from removing or renaming a file in a directory
+Prevent users from removing or renaming a file in a directory
 unless they own the file or the directory; this is called the
 @dfn{restricted deletion flag} for the directory.
 For regular files on some systems, save the program's text image on the
@@ -287,16 +295,16 @@ you can change its special mode bits.  @xref{Mode Structure}, for a
 summary of these special mode bits.
 
 To change the file mode bits to set the user ID on execution, use
-@samp{u} in the @var{users} part of the symbolic mode and
-@samp{s} instead of the @var{permissions} part.
+@samp{u} or @samp{a} in the @var{users} part of the symbolic mode and
+@samp{s} in the @var{permissions} part.
 
 To change the file mode bits to set the group ID on execution, use
-@samp{g} in the @var{users} part of the symbolic mode and
-@samp{s} instead of the @var{permissions} part.
+@samp{g} or @samp{a} in the @var{users} part of the symbolic mode and
+@samp{s} in the @var{permissions} part.
 
 To change the file mode bits to set the restricted deletion flag or sticky bit,
 omit the @var{users} part of the symbolic mode (or use @samp{a}) and use
-@samp{t} instead of the @var{permissions} part.
+@samp{t} in the @var{permissions} part.
 
 For example, to set the set-user-ID mode bit of a program,
 you can use the mode:
@@ -309,7 +317,7 @@ To remove both set-user-ID and set-group-ID mode bits from
 it, you can use the mode:
 
 @example
-ug-s
+a-s
 @end example
 
 To set the restricted deletion flag or sticky bit, you can use
@@ -323,8 +331,8 @@ The combination @samp{o+s} has no effect.  On @acronym{GNU} systems
 the combinations @samp{u+t} and @samp{g+t} have no effect, and
 @samp{o+t} acts like plain @samp{+t}.
 
-The @samp{=} operator is not very useful with special mode bits; for
-example, the mode:
+The @samp{=} operator is not very useful with special mode bits.
+For example, the mode:
 
 @example
 o=t
@@ -334,6 +342,9 @@ o=t
 does set the restricted deletion flag or sticky bit, but it also
 removes all read, write, and execute permissions that users not in the
 file's group might have had for it.
+
+@xref{Directory Setuid and Setgid}, for additional rules concerning
+set-user-ID and set-group-ID bits and directories.
 
 @node Conditional Executability
 @subsection Conditional Executability
@@ -466,11 +477,13 @@ As an
 alternative to giving a symbolic mode, you can give an octal (base 8)
 number that represents the new mode.
 This number is always interpreted in octal; you do not have to add a
-leading 0, as you do in C.  Mode 0055 is the same as mode 55.
+leading @samp{0}, as you do in C.
 
 A numeric mode is usually shorter than the corresponding symbolic
-mode, but it is limited in that it cannot take into account the
+mode, but it is limited in that normally it cannot take into account the
 previous file mode bits; it can only set them absolutely.
+(As discussed in the next section, the set-user-ID and set-group-ID
+bits of directories are an exception to this general limitation.)
 
 The permissions granted to the user,
 to other users in the file's group,
@@ -506,6 +519,51 @@ Mode      Mode Bit
 @end example
 
 For example, numeric mode 4755 corresponds to symbolic mode
-@samp{u=rwxs,go=rx}, and numeric mode 664 corresponds to symbolic mode
+@samp{u=rwxs,go=rx,g-s}, and numeric mode 664 corresponds to symbolic mode
 @samp{ug=rw,o=r}.  Numeric mode 0 corresponds to symbolic mode
 @samp{a=}.
+
+@node Directory Setuid and Setgid
+@section Directories and the Set-User-ID and Set-Group-ID Bits
+
+On most systems, if a directory's set-group-ID bit is set, newly
+created subfiles inherit the same group as the directory, and newly
+created subdirectories inherit the set-group-ID bit of the parent
+directory.  On a few systems, a directory's set-user-ID bit has a
+similar effect on the ownership of new subfiles and the set-user-ID
+bits of new subdirectories.  These mechanisms let users share files
+more easily, by lessening the need to use @command{chmod} or
+@command{chown} to share new files.
+
+These convenience mechanisms rely on the set-group-ID and set-user-ID
+bits of directories.  If commands like @command{chmod} and
+@command{mkdir} routinely cleared these bits on directories, the
+mechanisms would be less convenient and it would be harder to share
+files.  Therefore, a command like @command{chmod} does not affect the
+set-user-ID or set-group-ID bits of a directory unless the user
+specifically mentions them.  For example, on systems that support
+set-group-ID inheritance:
+
+@example
+# These commands leave the set-user-ID and
+# set-group-ID bits of the subdirectories alone,
+# so that they retain their default values.
+mkdir a b
+chmod 755 a
+chmod u=rwx,go=rx b
+mkdir -m 755 c
+mkdir -m u=rwx,go=rx d
+@end example
+
+If you want to clear these bits, you must mention them explicitly in
+the symbolic or numeric modes, e.g.:
+
+@example
+# These commands clear the set-user-ID
+# and set-group-ID bits of the subdirectories.
+mkdir a b
+chmod 0755 a
+chmod a-s,u=rwx,go=rx b
+mkdir -m 0755 c
+mkdir -m a-s,u=rwx,go=rx d
+@end example
