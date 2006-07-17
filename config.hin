@@ -3,9 +3,6 @@
 /* Define this to an absolute name of <stdint.h>. */
 #undef ABSOLUTE_STDINT_H
 
-/* Define if you have the Andrew File System. */
-#undef AFS
-
 /* Define to the function xargmatch calls on failures. */
 #undef ARGMATCH_DIE
 

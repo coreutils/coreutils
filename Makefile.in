@@ -46,14 +46,13 @@ DIST_COMMON = README $(am__configure_deps) $(srcdir)/Makefile.am \
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/absolute-header.m4 \
-	$(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/afs.m4 \
-	$(top_srcdir)/m4/alloca.m4 $(top_srcdir)/m4/allocsa.m4 \
-	$(top_srcdir)/m4/argmatch.m4 $(top_srcdir)/m4/assert.m4 \
-	$(top_srcdir)/m4/atexit.m4 $(top_srcdir)/m4/autobuild.m4 \
-	$(top_srcdir)/m4/backupfile.m4 $(top_srcdir)/m4/basename.m4 \
-	$(top_srcdir)/m4/bison.m4 $(top_srcdir)/m4/boottime.m4 \
-	$(top_srcdir)/m4/c-strtod.m4 $(top_srcdir)/m4/calloc.m4 \
-	$(top_srcdir)/m4/canon-host.m4 \
+	$(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/alloca.m4 \
+	$(top_srcdir)/m4/allocsa.m4 $(top_srcdir)/m4/argmatch.m4 \
+	$(top_srcdir)/m4/assert.m4 $(top_srcdir)/m4/atexit.m4 \
+	$(top_srcdir)/m4/autobuild.m4 $(top_srcdir)/m4/backupfile.m4 \
+	$(top_srcdir)/m4/basename.m4 $(top_srcdir)/m4/bison.m4 \
+	$(top_srcdir)/m4/boottime.m4 $(top_srcdir)/m4/c-strtod.m4 \
+	$(top_srcdir)/m4/calloc.m4 $(top_srcdir)/m4/canon-host.m4 \
 	$(top_srcdir)/m4/canonicalize.m4 \
 	$(top_srcdir)/m4/chdir-long.m4 $(top_srcdir)/m4/chdir-safer.m4 \
 	$(top_srcdir)/m4/check-decl.m4 $(top_srcdir)/m4/chown.m4 \
@@ -112,34 +111,34 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/absolute-header.m4 \
 	$(top_srcdir)/m4/memcmp.m4 $(top_srcdir)/m4/memcoll.m4 \
 	$(top_srcdir)/m4/memcpy.m4 $(top_srcdir)/m4/memmove.m4 \
 	$(top_srcdir)/m4/mempcpy.m4 $(top_srcdir)/m4/memrchr.m4 \
-	$(top_srcdir)/m4/memset.m4 $(top_srcdir)/m4/mkdir-p.m4 \
-	$(top_srcdir)/m4/mkdir-slash.m4 $(top_srcdir)/m4/mkstemp.m4 \
-	$(top_srcdir)/m4/mktime.m4 $(top_srcdir)/m4/modechange.m4 \
-	$(top_srcdir)/m4/mountlist.m4 $(top_srcdir)/m4/nanosleep.m4 \
-	$(top_srcdir)/m4/nls.m4 $(top_srcdir)/m4/obstack.m4 \
-	$(top_srcdir)/m4/openat.m4 $(top_srcdir)/m4/pathmax.m4 \
-	$(top_srcdir)/m4/perl.m4 $(top_srcdir)/m4/physmem.m4 \
-	$(top_srcdir)/m4/po.m4 $(top_srcdir)/m4/posixtm.m4 \
-	$(top_srcdir)/m4/posixver.m4 $(top_srcdir)/m4/prereq.m4 \
-	$(top_srcdir)/m4/progtest.m4 $(top_srcdir)/m4/putenv.m4 \
-	$(top_srcdir)/m4/quote.m4 $(top_srcdir)/m4/quotearg.m4 \
-	$(top_srcdir)/m4/readlink.m4 $(top_srcdir)/m4/readtokens.m4 \
-	$(top_srcdir)/m4/readutmp.m4 $(top_srcdir)/m4/regex.m4 \
-	$(top_srcdir)/m4/rename.m4 $(top_srcdir)/m4/restrict.m4 \
-	$(top_srcdir)/m4/rmdir-errno.m4 $(top_srcdir)/m4/rmdir.m4 \
-	$(top_srcdir)/m4/root-dev-ino.m4 $(top_srcdir)/m4/rpmatch.m4 \
-	$(top_srcdir)/m4/safe-read.m4 $(top_srcdir)/m4/safe-write.m4 \
-	$(top_srcdir)/m4/same.m4 $(top_srcdir)/m4/save-cwd.m4 \
-	$(top_srcdir)/m4/savedir.m4 $(top_srcdir)/m4/setenv.m4 \
-	$(top_srcdir)/m4/settime.m4 $(top_srcdir)/m4/sha1.m4 \
-	$(top_srcdir)/m4/sha256.m4 $(top_srcdir)/m4/sha512.m4 \
-	$(top_srcdir)/m4/sig2str.m4 $(top_srcdir)/m4/signed.m4 \
-	$(top_srcdir)/m4/socklen.m4 $(top_srcdir)/m4/sockpfaf.m4 \
-	$(top_srcdir)/m4/ssize_t.m4 $(top_srcdir)/m4/st_dm_mode.m4 \
-	$(top_srcdir)/m4/stat-macros.m4 $(top_srcdir)/m4/stat-prog.m4 \
-	$(top_srcdir)/m4/stat-time.m4 $(top_srcdir)/m4/stdbool.m4 \
-	$(top_srcdir)/m4/stdint.m4 $(top_srcdir)/m4/stdint_h.m4 \
-	$(top_srcdir)/m4/stdio-safer.m4 \
+	$(top_srcdir)/m4/memset.m4 $(top_srcdir)/m4/mkancesdirs.m4 \
+	$(top_srcdir)/m4/mkdir-p.m4 $(top_srcdir)/m4/mkdir-slash.m4 \
+	$(top_srcdir)/m4/mkstemp.m4 $(top_srcdir)/m4/mktime.m4 \
+	$(top_srcdir)/m4/modechange.m4 $(top_srcdir)/m4/mountlist.m4 \
+	$(top_srcdir)/m4/nanosleep.m4 $(top_srcdir)/m4/nls.m4 \
+	$(top_srcdir)/m4/obstack.m4 $(top_srcdir)/m4/openat.m4 \
+	$(top_srcdir)/m4/pathmax.m4 $(top_srcdir)/m4/perl.m4 \
+	$(top_srcdir)/m4/physmem.m4 $(top_srcdir)/m4/po.m4 \
+	$(top_srcdir)/m4/posixtm.m4 $(top_srcdir)/m4/posixver.m4 \
+	$(top_srcdir)/m4/prereq.m4 $(top_srcdir)/m4/progtest.m4 \
+	$(top_srcdir)/m4/putenv.m4 $(top_srcdir)/m4/quote.m4 \
+	$(top_srcdir)/m4/quotearg.m4 $(top_srcdir)/m4/readlink.m4 \
+	$(top_srcdir)/m4/readtokens.m4 $(top_srcdir)/m4/readutmp.m4 \
+	$(top_srcdir)/m4/regex.m4 $(top_srcdir)/m4/rename.m4 \
+	$(top_srcdir)/m4/restrict.m4 $(top_srcdir)/m4/rmdir-errno.m4 \
+	$(top_srcdir)/m4/rmdir.m4 $(top_srcdir)/m4/root-dev-ino.m4 \
+	$(top_srcdir)/m4/rpmatch.m4 $(top_srcdir)/m4/safe-read.m4 \
+	$(top_srcdir)/m4/safe-write.m4 $(top_srcdir)/m4/same.m4 \
+	$(top_srcdir)/m4/save-cwd.m4 $(top_srcdir)/m4/savedir.m4 \
+	$(top_srcdir)/m4/setenv.m4 $(top_srcdir)/m4/settime.m4 \
+	$(top_srcdir)/m4/sha1.m4 $(top_srcdir)/m4/sha256.m4 \
+	$(top_srcdir)/m4/sha512.m4 $(top_srcdir)/m4/sig2str.m4 \
+	$(top_srcdir)/m4/signed.m4 $(top_srcdir)/m4/socklen.m4 \
+	$(top_srcdir)/m4/sockpfaf.m4 $(top_srcdir)/m4/ssize_t.m4 \
+	$(top_srcdir)/m4/st_dm_mode.m4 $(top_srcdir)/m4/stat-macros.m4 \
+	$(top_srcdir)/m4/stat-prog.m4 $(top_srcdir)/m4/stat-time.m4 \
+	$(top_srcdir)/m4/stdbool.m4 $(top_srcdir)/m4/stdint.m4 \
+	$(top_srcdir)/m4/stdint_h.m4 $(top_srcdir)/m4/stdio-safer.m4 \
 	$(top_srcdir)/m4/stdlib-safer.m4 $(top_srcdir)/m4/stpcpy.m4 \
 	$(top_srcdir)/m4/strcase.m4 $(top_srcdir)/m4/strcspn.m4 \
 	$(top_srcdir)/m4/strdup.m4 $(top_srcdir)/m4/strftime.m4 \
@@ -355,8 +354,10 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 SUBDIRS = lib src doc man po tests
 EXTRA_DIST = Makefile.cfg Makefile.maint GNUmakefile \
+  .hgignore \
   .gitignore \
   .kludge-stamp .prev-version THANKS-to-translators THANKStt.in \
+  .vg-suppressions \
   .x-po-check \
   .x-sc_space_tab .x-sc_sun_os_names \
   .x-sc_file_system .x-sc_obsolete_symbols \
@@ -365,10 +366,13 @@ EXTRA_DIST = Makefile.cfg Makefile.maint GNUmakefile \
   .x-sc_no_if_have_config_h \
   .x-sc_require_config_h \
   .x-sc_prohibit_assert_without_use \
+  .x-sc_prohibit_atoi_atof \
+  .x-sc_trailing_blank \
   .x-sc_two_space_separator_in_usage \
   announce-gen \
   build-aux/cvsu \
   m4/ChangeLog \
+  ChangeLog-2005 \
   old/fileutils/ChangeLog \
   old/fileutils/ChangeLog-1997 \
   old/sh-utils/ChangeLog \
@@ -390,6 +394,7 @@ ACLOCAL_AMFLAGS = -I m4
 rm_subst = \
   s!(rm -f (rm|\$$\(bin_PROGRAMS\)))$$!$$1 > /dev/null 2>&1 || /bin/$$1!
 
+MAINTAINERCLEANFILES = THANKS-to-translators
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 
@@ -759,6 +764,7 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
+	-test -z "$(MAINTAINERCLEANFILES)" || rm -f $(MAINTAINERCLEANFILES)
 clean: clean-recursive
 
 clean-am: clean-generic mostlyclean-am
@@ -841,7 +847,6 @@ distcheck-hook:
 .kludge-stamp: $(srcdir)/src/Makefile.in
 	perl -pi -e '$(rm_subst)' $(srcdir)/src/Makefile.in
 	touch $@
-
 THANKS-to-translators: po/LINGUAS THANKStt.in
 	(								\
 	  cat $(srcdir)/THANKStt.in;					\
