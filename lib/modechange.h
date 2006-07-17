@@ -1,7 +1,7 @@
 /* modechange.h -- definitions for file mode manipulation
 
-   Copyright (C) 1989, 1990, 1997, 2003, 2004, 2005 Free Software
-   Foundation, Inc.
+   Copyright (C) 1989, 1990, 1997, 2003, 2004, 2005, 2006 Free
+   Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -22,10 +22,12 @@
 #if ! defined MODECHANGE_H_
 # define MODECHANGE_H_
 
+# include <stdbool.h>
 # include <sys/types.h>
 
 struct mode_change *mode_compile (const char *);
 struct mode_change *mode_create_from_ref (const char *);
-mode_t mode_adjust (mode_t, struct mode_change const *, mode_t);
+mode_t mode_adjust (mode_t, bool, mode_t, struct mode_change const *,
+		    mode_t *);
 
 #endif
