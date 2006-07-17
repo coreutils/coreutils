@@ -1,3 +1,41 @@
+2006-07-16  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* NEWS: chmod, install, and mkdir now leave setgid and setuid bits
+	of directories alone unless you specify them explicitly.
+	install and mkdir now implement X correctly.
+	install now creates parent directories with mode 755, without
+	changing their owner or group.
+	* src/chmod.c (process_file): Adjust to mode_adjust API change.
+	* src/install.c: Include mkancesdirs.h.
+	(announce_mkdir, make_ancestor): New functions.
+	(DEFAULT_MODE): New macro, specifying initial value of 'mode'.
+	(mode): Use it.
+	(dir_mode, dir_mode_bits): New vars.
+	(main): Set dir modes separately from nondir, so that the X
+	op of -m works correctly.
+	(main): Remove cwd_errno cruft, since make_dir_parents no longer
+	affects cwd.  Adjust to new make_dir_parents API.
+	(install_file_in_file_parents): 2nd arg is now char *, not char
+	const *.  Use mkancesdirs instead of rolling our own code.
+	(change_attributes): Don't worry about AFS, since that kludge
+	should not be needed any more.
+	* mkdir.c (struct mkdir_options): New struct.
+	(announce_mkdir, make_ancestor): New functions.
+	(main): Use them.  Adjust to mode_adjust API change.  Stick with
+	umask 0.  Use make_dir_parents for all the work.
+	* mkfifo.c (main): Adjust to new mode_adjust API.
+	* mknod.c (main): Likewise.
+	* tests/chmod/setgid: Do the setgid test instead of bailing.
+	* tests/mkdir/p-3: Remove re_protect case that no longer applies.
+	GNU chmod now behaves like other versions of chmod.
+	* tests/mkdir/perm: Add a test for the X bug.
+
+2006-07-14  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/base64.c (do_decode): Output to parameter OUT, not to stdout.
+	This doesn't fix any bugs, since OUT always equals stdout, but it
+	makes the code easier to understand.
+
 2006-07-14  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.maint (CVS_LIST): Use new file, build-aux/vc-list-files,

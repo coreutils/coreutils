@@ -1,3 +1,30 @@
+2006-07-16  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* dirchownmod.c, dirchownmod.h, mkancesdirs.c, mkancesdirs.h:
+	New files.
+	* mkdir-p.c: Don't include alloca.h, stdio.h, sys/types.h,
+	unistd.h, string.h, chdir-safer.h, dirname.h, lchmod.h, lchown.h,
+	save-cwd.h.  Instead, include dirchownmod.h and mkancesdirs.h.
+	(make_dir_parents): New args MAKE_ANCESTOR, OPTIONS, ANNOUNCE,
+	MODE_BITS.  Remove options VERBOSE_FMT_STRING, CWD_ERRNO.  All
+	callers changed.  Revamp internals significantly, by not
+	attempting to create directories that are temporarily more
+	permissive than the final results.  Do not attempt to use
+	save_cwd/restore_cwd; it isn't worth it for mkdir and install.
+	This removes some race conditions, fixes some bugs, and simplifies
+	things.  Use new dirchownmod function to do owner and mode changes.
+	* mkdir-p.h: Likewise.
+	* modechange.c (octal_to_mode): New function.
+	(struct mode_change): New member mentioned.
+	(make_node_op_equals): New arg mentioned.  All callers changed.
+	(mode_compile): Keep track of which mode bits the user has explicitly
+	mentioned.
+	(mode_adjust): New arg DIR, so that we implement the X op correctly.
+	New arg PMODE_BITS, to keep track of which mode bits the user
+	mentioned; it treats S_ISUID and S_ISGID speciall.
+	All callers changed.
+	* lib/modechange.h: Likewise.
+
 2006-07-16  Jim Meyering  <jim@meyering.net>
 
 	* userspec.c (parse_with_separator): Say "invalid spec" rather than

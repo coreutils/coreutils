@@ -1,3 +1,13 @@
+2006-07-16  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* mkancesdirs.m4: New file.
+	* afs.m4: Remove; no longer needed.
+	* jm-macros.m4 (gl_MACROS): Remove gl_AFS.
+	* mkdir-p.m4 (gl_MKDIR_PARENTS): Mention dirchownmod.c, dirchownmod.h.
+	Don't require AC_FUNC_ALLOCA, gl_AFS, gl_CHDIR_SAFER; no longer needed.
+	Require gl_FUNC_LCHOWN, since dirchownmod.c needs it.
+	* prereq.m4 (gl_PREREQ): Require gl_MKANCESDIRS.
+
 2006-07-11  Eric Blake  <ebb9@byu.net>
 
 	* absolute-header.m4: Fix comments to match recent change.

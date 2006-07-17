@@ -1,3 +1,25 @@
+2006-07-16  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi: Change GNU to @acronym{GNU} in a few places.
+	Use "set-user-ID" and "set-group-ID" a bit more consistently.
+	Use "appropriate privileges" rather than "super-user" a bit
+	more consistently.
+	(install invocation): Parent directories are now 755 without uid
+	or gid changing.  The default mode is now 0755, not 755.
+	(mkdir invocation): Rewrite the top-level usage description, since
+	I couldn't easily follow the old one.  It's now 3 lines not 8.
+	For -m, describe file permission bits versus other bits, and note
+	that mkdir is atomic if you don't mention special bits.
+	(chmod invocation): Mention what chmod does to setgid and setuid bits.
+	* perm.texi (Mode Structure): Modernize the explanation of the
+	setuid and setgid bits on directories.
+	(Changing Special Mode Bits): Mention that a implies both u and g
+	for s.  Cross reference to new node.
+	(Numeric Modes): Don't claim that 0055 is the same as 55; this isn't
+	true any more.  Mention new node.
+	4755 is now like u=rwxs,go=rx,g-s, not like u=rwxs,go=rx.
+	(Directory Setuid and Setgid): New node.
+
 2006-07-08  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (Squeezing): Separate doubled "the", so typo-checkers
