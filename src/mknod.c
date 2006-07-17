@@ -121,7 +121,7 @@ main (int argc, char **argv)
       struct mode_change *change = mode_compile (specified_mode);
       if (!change)
 	error (EXIT_FAILURE, 0, _("invalid mode"));
-      newmode = mode_adjust (newmode, change, umask (0));
+      newmode = mode_adjust (newmode, false, umask (0), change, NULL);
       free (change);
       if (newmode & ~S_IRWXUGO)
 	error (EXIT_FAILURE, 0,
