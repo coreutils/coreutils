@@ -43,6 +43,7 @@ tests='
     160  :   empty    : drwx--xrwx : drw---xrwx :
     160  :   -m 743   : drwx--xrwx : drwxr---wx :
     027  :   -m =+x   : drwxr-x--- : d--x--x--- :
+    027  :   -m =+X   : drwxr-x--- : d--x--x--- :
     -    :   -        : last       : last       :
     '
 colon_tests=`echo $tests | sed 's/^ *//; s/ *: */:/g'`
