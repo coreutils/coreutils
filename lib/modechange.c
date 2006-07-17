@@ -295,7 +295,7 @@ mode_create_from_ref (const char *ref_file)
   return make_node_op_equals (ref_stats.st_mode, CHMOD_MODE_BITS);
 }
 
-/* Return the file mode bits bits of OLDMODE (which is the mode of a
+/* Return the file mode bits of OLDMODE (which is the mode of a
    directory if DIR), assuming the umask is UMASK_VALUE, adjusted as
    indicated by the list of change operations CHANGES.  If DIR, the
    type 'X' change affects the returned value even if no execute bits
