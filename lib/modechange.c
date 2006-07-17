@@ -1,7 +1,7 @@
 /* modechange.c -- file mode manipulation
 
-   Copyright (C) 1989, 1990, 1997, 1998, 1999, 2001, 2003, 2004, 2005
-   Free Software Foundation, Inc.
+   Copyright (C) 1989, 1990, 1997, 1998, 1999, 2001, 2003, 2004, 2005,
+   2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -51,6 +51,32 @@
 #define XOTH 00001
 #define ALLM 07777 /* all octal mode bits */
 
+/* Convert OCTAL, which uses one of the traditional octal values, to
+   an internal mode_t value.  */
+static mode_t
+octal_to_mode (unsigned int octal)
+{
+  /* Help the compiler optimize the usual case where mode_t uses
+     the traditional octal representation.  */
+  return ((S_ISUID == SUID && S_ISGID == SGID && S_ISVTX == SVTX
+	   && S_IRUSR == RUSR && S_IWUSR == WUSR && S_IXUSR == XUSR
+	   && S_IRGRP == RGRP && S_IWGRP == WGRP && S_IXGRP == XGRP
+	   && S_IROTH == ROTH && S_IWOTH == WOTH && S_IXOTH == XOTH)
+	  ? octal
+	  : (mode_t) ((octal & SUID ? S_ISUID : 0)
+		      | (octal & SGID ? S_ISGID : 0)
+		      | (octal & SVTX ? S_ISVTX : 0)
+		      | (octal & RUSR ? S_IRUSR : 0)
+		      | (octal & WUSR ? S_IWUSR : 0)
+		      | (octal & XUSR ? S_IXUSR : 0)
+		      | (octal & RGRP ? S_IRGRP : 0)
+		      | (octal & WGRP ? S_IWGRP : 0)
+		      | (octal & XGRP ? S_IXGRP : 0)
+		      | (octal & ROTH ? S_IROTH : 0)
+		      | (octal & WOTH ? S_IWOTH : 0)
+		      | (octal & XOTH ? S_IXOTH : 0)));
+}
+
 /* Special operations flags.  */
 enum
   {
@@ -78,19 +104,22 @@ struct mode_change
   char flag;			/* Special operations flag.  */
   mode_t affected;		/* Set for u, g, o, or a.  */
   mode_t value;			/* Bits to add/remove.  */
+  mode_t mentioned;		/* Bits explicitly mentioned.  */
 };
 
 /* Return a mode_change array with the specified `=ddd'-style
-   mode change operation, where NEW_MODE is `ddd'.  */
+   mode change operation, where NEW_MODE is `ddd' and MENTIONED
+   contains the bits explicitly mentioned in the mode are MENTIONED.  */
 
 static struct mode_change *
-make_node_op_equals (mode_t new_mode)
+make_node_op_equals (mode_t new_mode, mode_t mentioned)
 {
   struct mode_change *p = xmalloc (2 * sizeof *p);
   p->op = '=';
   p->flag = MODE_ORDINARY_CHANGE;
   p->affected = CHMOD_MODE_BITS;
   p->value = new_mode;
+  p->mentioned = mentioned;
   p[1].flag = MODE_DONE;
   return p;
 }
@@ -113,13 +142,14 @@ mode_compile (char const *mode_string)
 
   if ('0' <= *mode_string && *mode_string < '8')
     {
-      mode_t mode;
-      unsigned int octal_value = 0;
+      unsigned int octal_mode = 0;
+      unsigned int octal_mentioned = 0;
 
       do
 	{
-	  octal_value = 8 * octal_value + *mode_string++ - '0';
-	  if (ALLM < octal_value)
+	  octal_mode = 8 * octal_mode + *mode_string++ - '0';
+	  octal_mentioned = 8 * octal_mentioned + 7;
+	  if (ALLM < octal_mode)
 	    return NULL;
 	}
       while ('0' <= *mode_string && *mode_string < '8');
@@ -127,27 +157,8 @@ mode_compile (char const *mode_string)
       if (*mode_string)
 	return NULL;
 
-      /* Help the compiler optimize the usual case where mode_t uses
-	 the traditional octal representation.  */
-      mode = ((S_ISUID == SUID && S_ISGID == SGID && S_ISVTX == SVTX
-	       && S_IRUSR == RUSR && S_IWUSR == WUSR && S_IXUSR == XUSR
-	       && S_IRGRP == RGRP && S_IWGRP == WGRP && S_IXGRP == XGRP
-	       && S_IROTH == ROTH && S_IWOTH == WOTH && S_IXOTH == XOTH)
-	      ? octal_value
-	      : (mode_t) ((octal_value & SUID ? S_ISUID : 0)
-			  | (octal_value & SGID ? S_ISGID : 0)
-			  | (octal_value & SVTX ? S_ISVTX : 0)
-			  | (octal_value & RUSR ? S_IRUSR : 0)
-			  | (octal_value & WUSR ? S_IWUSR : 0)
-			  | (octal_value & XUSR ? S_IXUSR : 0)
-			  | (octal_value & RGRP ? S_IRGRP : 0)
-			  | (octal_value & WGRP ? S_IWGRP : 0)
-			  | (octal_value & XGRP ? S_IXGRP : 0)
-			  | (octal_value & ROTH ? S_IROTH : 0)
-			  | (octal_value & WOTH ? S_IWOTH : 0)
-			  | (octal_value & XOTH ? S_IXOTH : 0)));
-
-      return make_node_op_equals (mode);
+      return make_node_op_equals (octal_to_mode (octal_mode),
+				  octal_to_mode (octal_mentioned & ALLM));
     }
 
   /* Allocate enough space to hold the result.  */
@@ -251,6 +262,7 @@ mode_compile (char const *mode_string)
 	  change->flag = flag;
 	  change->affected = affected;
 	  change->value = value;
+	  change->mentioned = (affected ? affected & value : value);
 	}
       while (*mode_string == '=' || *mode_string == '+'
 	     || *mode_string == '-');
@@ -280,25 +292,36 @@ mode_create_from_ref (const char *ref_file)
 
   if (stat (ref_file, &ref_stats) != 0)
     return NULL;
-  return make_node_op_equals (ref_stats.st_mode);
+  return make_node_op_equals (ref_stats.st_mode, CHMOD_MODE_BITS);
 }
 
-/* Return file mode OLDMODE, adjusted as indicated by the list of change
-   operations CHANGES, which are interpreted assuming the umask is
-   UMASK_VALUE.  If OLDMODE is a directory, the type `X'
-   change affects it even if no execute bits were set in OLDMODE.
-   The returned value has the S_IFMT bits cleared.  */
+/* Return the file mode bits bits of OLDMODE (which is the mode of a
+   directory if DIR), assuming the umask is UMASK_VALUE, adjusted as
+   indicated by the list of change operations CHANGES.  If DIR, the
+   type 'X' change affects the returned value even if no execute bits
+   were set in OLDMODE.  If PMODE_BITS is not null, store into
+   *PMODE_BITS a mask denoting file mode bits that are affected by
+   CHANGES.
+
+   The returned value and *PMODE_BITS contain only file mode bits.
+   For example, they have the S_IFMT bits cleared on a standard
+   Unix-like host.  */
 
 mode_t
-mode_adjust (mode_t oldmode, struct mode_change const *changes,
-	     mode_t umask_value)
+mode_adjust (mode_t oldmode, bool dir, mode_t umask_value,
+	     struct mode_change const *changes, mode_t *pmode_bits)
 {
   /* The adjusted mode.  */
   mode_t newmode = oldmode & CHMOD_MODE_BITS;
 
+  /* File mode bits that CHANGES cares about.  */
+  mode_t mode_bits = 0;
+
   for (; changes->flag != MODE_DONE; changes++)
     {
       mode_t affected = changes->affected;
+      mode_t omit_change =
+	(dir ? S_ISUID | S_ISGID : 0) & ~ changes->mentioned;
       mode_t value = changes->value;
 
       switch (changes->flag)
@@ -322,14 +345,15 @@ mode_adjust (mode_t oldmode, struct mode_change const *changes,
 	case MODE_X_IF_ANY_X:
 	  /* Affect the execute bits if execute bits are already set
 	     or if the file is a directory.  */
-	  if ((newmode & (S_IXUSR | S_IXGRP | S_IXOTH)) || S_ISDIR (oldmode))
+	  if ((newmode & (S_IXUSR | S_IXGRP | S_IXOTH)) | dir)
 	    value |= S_IXUSR | S_IXGRP | S_IXOTH;
 	  break;
 	}
 
       /* If WHO was specified, limit the change to the affected bits.
-	 Otherwise, apply the umask.  */
-      value &= (affected ? affected : ~umask_value);
+	 Otherwise, apply the umask.  Either way, omit changes as
+	 requested.  */
+      value &= (affected ? affected : ~umask_value) & ~ omit_change;
 
       switch (changes->op)
 	{
@@ -337,17 +361,26 @@ mode_adjust (mode_t oldmode, struct mode_change const *changes,
 	  /* If WHO was specified, preserve the previous values of
 	     bits that are not affected by this change operation.
 	     Otherwise, clear all the bits.  */
-	  newmode = (affected ? newmode & ~affected : 0);
-	  /* Fall through.  */
+	  {
+	    mode_t preserved = (affected ? ~affected : 0) | omit_change;
+	    mode_bits |= CHMOD_MODE_BITS & ~preserved;
+	    newmode = (newmode & preserved) | value;
+	    break;
+	  }
+
 	case '+':
+	  mode_bits |= value;
 	  newmode |= value;
 	  break;
 
 	case '-':
+	  mode_bits |= value;
 	  newmode &= ~value;
 	  break;
 	}
     }
 
+  if (pmode_bits)
+    *pmode_bits = mode_bits;
   return newmode;
 }
