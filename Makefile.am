@@ -19,6 +19,7 @@ EXTRA_DIST = Makefile.cfg Makefile.maint GNUmakefile \
   .x-sc_two_space_separator_in_usage \
   announce-gen \
   build-aux/cvsu \
+  build-aux/vc-list-files \
   m4/ChangeLog \
   ChangeLog-2005 \
   old/fileutils/ChangeLog \
