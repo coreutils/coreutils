@@ -1,5 +1,7 @@
 2006-07-19  Jim Meyering  <jim@meyering.net>
 
+	* src/ls.c (print_dir): Give a better diagnostic for failed opendir.
+
 	* Makefile.am (EXTRA_DIST): Add build-aux/vc-list-files.
 
 2006-07-16  Paul Eggert  <eggert@cs.ucla.edu>

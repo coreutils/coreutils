@@ -2305,7 +2305,7 @@ print_dir (char const *name, char const *realname, bool command_line_arg)
   dirp = opendir (name);
   if (!dirp)
     {
-      file_failure (command_line_arg, "%s", name);
+      file_failure (command_line_arg, _("cannot open directory %s"), name);
       return;
     }
 
