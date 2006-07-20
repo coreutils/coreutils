@@ -153,12 +153,13 @@ char *strstr ();
 
 #ifndef ME_REMOTE
 /* A file system is `remote' if its Fs_name contains a `:'
-   or if (it is of type smbfs and its Fs_name starts with `//').  */
+   or if (it is of type (smbfs or cifs) and its Fs_name starts with `//').  */
 # define ME_REMOTE(Fs_name, Fs_type)		\
     (strchr (Fs_name, ':') != NULL		\
      || ((Fs_name)[0] == '/'			\
 	 && (Fs_name)[1] == '/'			\
-	 && strcmp (Fs_type, "smbfs") == 0))
+	 && (strcmp (Fs_type, "smbfs") == 0	\
+	     || strcmp (Fs_type, "cifs") == 0)))
 #endif
 
 #if MOUNTED_GETMNTINFO
