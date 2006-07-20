@@ -1,7 +1,7 @@
 /* mountlist.c -- return a list of mounted file systems
 
    Copyright (C) 1991, 1992, 1997, 1998, 1999, 2000, 2001, 2002, 2003,
-   2004, 2005 Free Software Foundation, Inc.
+   2004, 2005, 2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -155,7 +155,7 @@ char *strstr ();
 /* A file system is `remote' if its Fs_name contains a `:'
    or if (it is of type smbfs and its Fs_name starts with `//').  */
 # define ME_REMOTE(Fs_name, Fs_type)		\
-    (strchr (Fs_name, ':') != 0			\
+    (strchr (Fs_name, ':') != NULL		\
      || ((Fs_name)[0] == '/'			\
 	 && (Fs_name)[1] == '/'			\
 	 && strcmp (Fs_type, "smbfs") == 0))
