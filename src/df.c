@@ -68,6 +68,9 @@ static uintmax_t output_block_size;
 /* If true, use the POSIX output format.  */
 static bool posix_format;
 
+/* Count the number of valid arguments.  */
+unsigned int n_valid_args;
+
 /* If true, invoke the `sync' system call before getting any usage data.
    Using this option can make df very slow, especially with many or very
    busy disks.  Note that this may make a difference on some systems --
@@ -291,6 +294,8 @@ show_dev (char const *disk, char const *mount_point,
 
   if (!selected_fstype (fstype) || excluded_fstype (fstype))
     return;
+
+  ++n_valid_args;
 
   /* If MOUNT_POINT is NULL, then the file system is not mounted, and this
      program reports on the file system that the special file is on.
@@ -762,7 +767,6 @@ main (int argc, char **argv)
 {
   int c;
   struct stat *stats IF_LINT (= 0);
-  int n_valid_args = 0;
 
   initialize_main (&argc, &argv);
   program_name = argv[0];
@@ -894,10 +898,6 @@ main (int argc, char **argv)
 	      exit_status = EXIT_FAILURE;
 	      argv[i] = NULL;
 	    }
-	  else
-	    {
-	      ++n_valid_args;
-	    }
 	}
     }
 
@@ -940,6 +940,9 @@ main (int argc, char **argv)
       print_header ();
       show_all_entries ();
     }
+
+  if (n_valid_args == 0)
+    error (EXIT_FAILURE, 0, _("no file systems processed"));
 
   exit (exit_status);
 }

@@ -1,5 +1,11 @@
 2006-07-20  Jim Meyering  <jim@meyering.net>
 
+	* src/df.c (main): Fail and don't print the headers if no
+	file system is processed.  This makes it easy to test whether
+	a specified directory is on a file system of a given type or types.
+	Otherwise, applications would have had to parse df's output.
+	E.g., is "." either ext3 or reiserfs: df -t ext3 -t reiserfs .
+
 	Fix a bug: ls --file-type worked like --indicator-style=slash,
 	rather than like --indicator-style=file-type.
 	* src/ls.c (FILE_TYPE_INDICATOR_OPTION): New enum member.
