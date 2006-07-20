@@ -1,4 +1,5 @@
 #!/bin/sh
+# -*- perl -*-
 
 : ${PERL=perl}
 : ${srcdir=.}
@@ -30,6 +31,11 @@ my $slink_d = {PRE => sub {symlink '/', 'd' or die "d: $!\n";
                            $ENV{LS_COLORS}='ln=01;36:di=01;34:or=40;31;01'
                            }};
 my $unlink_d = {POST => sub {unlink 'd' or die "d: $!\n"}};
+
+my $mkdir_d_slink = {PRE => sub {mkdir 'd',0755 or die "d: $!\n";
+				 symlink '/', 'd/s' or die "d/s: $!\n" }};
+my $rmdir_d_slink = {POST => sub {unlink 'd/s' or die "d/s: $!\n";
+				  rmdir 'd' or die "d: $!\n" }};
 
 sub make_j_d ()
 {
@@ -126,6 +132,10 @@ my @Tests =
          unlink qw(setuid setgid);
 	 foreach my $dir (qw(owr owt sticky)) {rmdir $dir} }},
 	 ],
+
+     # For 5.97 and earlier, --file-type acted like --indicator-style=slash.
+     ['file-type', '--file-type d', {OUT => "s@\n"},
+      $mkdir_d_slink, $rmdir_d_slink],
     );
 
 my $save_temps = $ENV{SAVE_TEMPS};
