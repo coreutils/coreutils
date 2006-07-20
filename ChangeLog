@@ -1,3 +1,13 @@
+2006-07-20  Jim Meyering  <jim@meyering.net>
+
+	Fix a bug: ls --file-type worked like --indicator-style=slash,
+	rather than like --indicator-style=file-type.
+	* src/ls.c (FILE_TYPE_INDICATOR_OPTION): New enum member.
+	(long_options): Map "file-type" to FILE_TYPE_INDICATOR_OPTION,
+	not to 'p'.
+	(decode_switches): Handle new case: FILE_TYPE_INDICATOR_OPTION.
+	* tests/ls-2/tests (file-type): New test, for the above fix.
+
 2006-07-19  Jim Meyering  <jim@meyering.net>
 
 	* src/ls.c (print_dir): Give a better diagnostic for failed opendir.
