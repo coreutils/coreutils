@@ -737,6 +737,7 @@ enum
   GROUP_DIRECTORIES_FIRST_OPTION,
   HIDE_OPTION,
   INDICATOR_STYLE_OPTION,
+  FILE_TYPE_INDICATOR_OPTION,
 
   /* FIXME: --kilobytes is deprecated (but not -k); remove in late 2006 */
   KILOBYTES_LONG_OPTION,
@@ -770,7 +771,7 @@ static struct option const long_options[] =
   {"almost-all", no_argument, NULL, 'A'},
   {"ignore-backups", no_argument, NULL, 'B'},
   {"classify", no_argument, NULL, 'F'},
-  {"file-type", no_argument, NULL, 'p'},
+  {"file-type", no_argument, NULL, FILE_TYPE_INDICATOR_OPTION},
   {"si", no_argument, NULL, SI_OPTION},
   {"dereference-command-line", no_argument, NULL, 'H'},
   {"dereference-command-line-symlink-to-dir", no_argument, NULL,
@@ -1528,6 +1529,10 @@ decode_switches (int argc, char **argv)
 	    format = (isatty (STDOUT_FILENO) ? many_per_line : one_per_line);
 	  print_block_size = false;	/* disable -s */
 	  print_with_color = false;	/* disable --color */
+	  break;
+
+	case FILE_TYPE_INDICATOR_OPTION: /* --file-type */
+	  indicator_style = file_type;
 	  break;
 
 	case 'g':
