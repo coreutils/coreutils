@@ -1,10 +1,14 @@
 2006-07-21  Jim Meyering  <jim@meyering.net>
 
+	* src/ls.c (FILE_TYPE_INDICATOR_OPTION): Reposition this new
+	name so the list remains alphabetized.
+
 	Fix another bug: ls --indicator-style=file-type would call
 	stat for a symlink, even though it wasn't always needed.
 	In some cases, that unnecessary stat would cause ls to fail.
 	* src/ls.c (gobble_file): Don't treat symlinks specially (in
 	requiring a stat syscall).  Remove the offending exclusion.
+
 	* NEWS: Mention the fix.
 
 	* tests/ls/stat-dtype: New file/test, for the above fix.
