@@ -1,5 +1,9 @@
 2006-07-21  Jim Meyering  <jim@meyering.net>
 
+	* src/su.c (usage): Correct typo in --help output: s/commmand/command/
+	Reported by Tim Waugh.
+	Also remove the comment duplicating much of --help output.
+
 	* src/ls.c (FILE_TYPE_INDICATOR_OPTION): Reposition this new
 	name so the list remains alphabetized.
 

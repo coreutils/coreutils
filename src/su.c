@@ -38,28 +38,6 @@
    restricts who can su to UID 0 accounts.  RMS considers that to
    be fascist.
 
-   Options:
-   -, -l, --login	Make the subshell a login shell.
-			Unset all environment variables except
-			TERM, HOME and SHELL (set as above), and USER
-			and LOGNAME (set unconditionally as above), and
-			set PATH to a default value.
-			Change to USER's home directory.
-			Prepend "-" to the shell's name.
-   -c, --commmand=COMMAND
-			Pass COMMAND to the subshell with a -c option
-			instead of starting an interactive shell.
-   -f, --fast		Pass the -f option to the subshell.
-   -m, -p, --preserve-environment
-			Do not change HOME, USER, LOGNAME, SHELL.
-			Run $SHELL instead of USER's shell from /etc/passwd
-			unless not the superuser and USER's shell is
-			restricted.
-			Overridden by --login and --shell.
-   -s, --shell=shell	Run SHELL instead of USER's shell from /etc/passwd
-			unless not the superuser and USER's shell is
-			restricted.
-
    Compile-time options:
    -DSYSLOG_SUCCESS	Log successful su's (by default, to root) with syslog.
    -DSYSLOG_FAILURE	Log failed su's (by default, to root) with syslog.
@@ -410,7 +388,7 @@ usage (int status)
 Change the effective user id and group id to that of USER.\n\
 \n\
   -, -l, --login               make the shell a login shell\n\
-  -c, --commmand=COMMAND       pass a single COMMAND to the shell with -c\n\
+  -c, --command=COMMAND        pass a single COMMAND to the shell with -c\n\
   -f, --fast                   pass -f to the shell (for csh or tcsh)\n\
   -m, --preserve-environment   do not reset environment variables\n\
   -p                           same as -m\n\
