@@ -6,6 +6,7 @@
 	* src/ls.c (gobble_file): Don't treat symlinks specially (in
 	requiring a stat syscall).  Remove the offending exclusion.
 	* NEWS: Mention the fix.
+
 	* tests/ls/stat-dtype: New file/test, for the above fix.
 	Also exercises the new df feature, below.
 
@@ -21,6 +22,7 @@
 	(long_options): Map "file-type" to FILE_TYPE_INDICATOR_OPTION,
 	not to 'p'.
 	(decode_switches): Handle new case: FILE_TYPE_INDICATOR_OPTION.
+	* NEWS: Mention the fix.
 	* tests/ls-2/tests (file-type): New test, for the above fix.
 
 2006-07-19  Jim Meyering  <jim@meyering.net>
