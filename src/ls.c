@@ -2547,12 +2547,6 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
 		  && (type == symbolic_link || type == unknown))))
       || (format_needs_type
 	  && (type == unknown
-
-	      /* FIXME: remove this disjunct.
-		 I don't think we care about symlinks here, but for now
-		 this won't make a big performance difference.  */
-	      || type == symbolic_link
-
 	      /* --indicator-style=classify (aka -F)
 		 requires that we stat each regular file
 		 to see if it's executable.  */

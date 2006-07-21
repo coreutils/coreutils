@@ -1,4 +1,13 @@
-2006-07-20  Jim Meyering  <jim@meyering.net>
+2006-07-21  Jim Meyering  <jim@meyering.net>
+
+	Fix another bug: ls --indicator-style=file-type would call
+	stat for a symlink, even though it wasn't always needed.
+	In some cases, that unnecessary stat would cause ls to fail.
+	* src/ls.c (gobble_file): Don't treat symlinks specially (in
+	requiring a stat syscall).  Remove the offending exclusion.
+	* NEWS: Mention the fix.
+	* tests/ls/stat-dtype: New file/test, for the above fix.
+	Also exercises the new df feature, below.
 
 	* src/df.c (main): Fail and don't print the headers if no
 	file system is processed.  This makes it easy to test whether
