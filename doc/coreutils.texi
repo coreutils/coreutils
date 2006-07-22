@@ -5870,10 +5870,13 @@ If the set-user-ID or set-group-ID bit is set but the corresponding
 executable bit is not set.
 
 @item t
-If the sticky bit and the other-executable bit are both set.
+If the restricted deletion flag or sticky bit, and the
+other-executable bit, are both set.  The restricted deletion flag is
+another name for the sticky bit.  @xref{Mode Structure}.
 
 @item T
-If the sticky bit is set but the other-executable bit is not set.
+If the restricted deletion flag or sticky bit is set but the
+other-executable bit is not set.
 
 @item x
 If the executable bit is set and none of the above apply.
