@@ -1,3 +1,8 @@
+2006-07-22  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* close-stream.m4: New file.
+	* prereq.m4 (gl_PREREQ): Require gl_CLOSE_STREAM.
+
 2006-07-16  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* mkancesdirs.m4: New file.
