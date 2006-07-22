@@ -1,4 +1,4 @@
-/* closeout.c - close standard output
+/* Close standard output, exiting with a diagnostic on error.
 
    Copyright (C) 1998, 1999, 2000, 2001, 2002, 2004, 2006 Free
    Software Foundation, Inc.
@@ -23,21 +23,17 @@
 
 #include "closeout.h"
 
-#include <stdio.h>
-#include <stdbool.h>
 #include <errno.h>
+#include <stdio.h>
+#include <unistd.h>
 
 #include "gettext.h"
 #define _(msgid) gettext (msgid)
 
+#include "close-stream.h"
 #include "error.h"
 #include "exitfail.h"
 #include "quotearg.h"
-#include "__fpending.h"
-
-#if USE_UNLOCKED_IO
-# include "unlocked-io.h"
-#endif
 
 static const char *file_name;
 
@@ -49,22 +45,22 @@ close_stdout_set_file_name (const char *file)
   file_name = file;
 }
 
-/* Close standard output, exiting with status 'exit_failure' on failure.
-   If a program writes *anything* to stdout, that program should close
-   stdout and make sure that it succeeds before exiting.  Otherwise,
-   suppose that you go to the extreme of checking the return status
-   of every function that does an explicit write to stdout.  The last
-   printf can succeed in writing to the internal stream buffer, and yet
-   the fclose(stdout) could still fail (due e.g., to a disk full error)
-   when it tries to write out that buffered data.  Thus, you would be
-   left with an incomplete output file and the offending program would
-   exit successfully.  Even calling fflush is not always sufficient,
-   since some file systems (NFS and CODA) buffer written/flushed data
-   until an actual close call.
+/* Close standard output.  On error, issue a diagnostic and _exit
+   with status 'exit_failure'.
 
-   Besides, it's wasteful to check the return value from every call
-   that writes to stdout -- just let the internal stream state record
-   the failure.  That's what the ferror test is checking below.
+   Since close_stdout is commonly registered via 'atexit', POSIX
+   and the C standard both say that it should not call 'exit',
+   because the behavior is undefined if 'exit' is called more than
+   once.  So it calls '_exit' instead of 'exit'.  If close_stdout
+   is registered via atexit before other functions are registered,
+   the other functions can act before this _exit is invoked.
+
+   Applications that use close_stdout should flush any streams
+   other than stdout and stderr before exiting, since the call to
+   _exit will bypass other buffer flushing.  Applications should
+   be flushing and closing other streams anyway, to check for I/O
+   errors.  Also, applications should not use tmpfile, since _exit
+   can bypass the removal of these files.
 
    It's important to detect such failures and exit nonzero because many
    tools (most notably `make' and other build-management systems) depend
@@ -73,29 +69,15 @@ close_stdout_set_file_name (const char *file)
 void
 close_stdout (void)
 {
-  bool none_pending = (__fpending (stdout) == 0);
-  bool prev_fail = (ferror (stdout) != 0);
-  bool fclose_fail = (fclose (stdout) != 0);
-
-  if (prev_fail || fclose_fail)
+  if (close_stream (stdout) != 0)
     {
-      int e = fclose_fail ? errno : 0;
-      char const *write_error;
-
-      /* If ferror returned zero, no data remains to be flushed, and we'd
-	 otherwise fail with EBADF due to a failed fclose, then assume that
-	 it's ok to ignore the fclose failure.  That can happen when a
-	 program like cp is invoked like this `cp a b >&-' (i.e., with
-	 stdout closed) and doesn't generate any output (hence no previous
-	 error and nothing to be flushed).  */
-      if (e == EBADF && !prev_fail && none_pending)
-	return;
-
-      write_error = _("write error");
+      char const *write_error = _("write error");
       if (file_name)
-	error (exit_failure, e, "%s: %s", quotearg_colon (file_name),
+	error (0, errno, "%s: %s", quotearg_colon (file_name),
 	       write_error);
       else
-	error (exit_failure, e, "%s", write_error);
+	error (0, errno, "%s", write_error);
+
+      _exit (exit_failure);
     }
 }
