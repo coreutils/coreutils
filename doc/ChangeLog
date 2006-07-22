@@ -1,3 +1,10 @@
+2006-07-22  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (What information is listed): Clarify that the
+	restricted deletion flag is another name for the sticky bit.
+	* perm.texi (Mode Structure): The restricted deletion flag
+	restricts only unprivileged users.
+
 2006-07-16  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi: Change GNU to @acronym{GNU} in a few places.
