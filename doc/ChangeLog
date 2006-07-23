@@ -4,6 +4,10 @@
 	restricted deletion flag is another name for the sticky bit.
 	* perm.texi (Mode Structure): The restricted deletion flag
 	restricts only unprivileged users.
+	(Mode Structure, Symbolic Modes, Numeric Modes): Be more careful
+	about distinguishing file mode bits from permissions bits,
+	and about execute versus search permission.  The FreeBSD command
+	is chflags, not chrflags.
 
 2006-07-16  Paul Eggert  <eggert@cs.ucla.edu>
 

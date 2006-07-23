@@ -431,9 +431,9 @@ Numeric operations
 
 File permissions
 
-* Mode Structure::               Structure of File Permissions
-* Symbolic Modes::               Mnemonic permissions representation
-* Numeric Modes::                Permissions as octal numbers
+* Mode Structure::               Structure of file mode bits.
+* Symbolic Modes::               Mnemonic representation of file mode bits.
+* Numeric Modes::                File mode bits as octal numbers.
 * Directory Setuid and Setgid::  Set-user-ID and set-group-ID on directories.
 
 Date input formats
