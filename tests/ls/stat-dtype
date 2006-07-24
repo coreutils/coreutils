@@ -9,11 +9,10 @@ fi
 . $srcdir/../envvar-check
 
 # Skip this test unless "." is on a file system with useful d_type info.
-# FIXME: use a more dynamic test for this, since whether
-# d_type is useful depends on much more than the file system type.
-# For example, with linux-2.6.15, at least tmpfs, ext3 and reiserfs work,
-# but xfs doesn't.  Here's hoping that this kludge is enough for now.
-df -t tmpfs -t ext3 -t reiserfs . 2> /dev/null ||
+# FIXME: use a more dynamic test for this, since whether d_type is useful
+# depends on much more than the file system type.  For example, with
+# linux-2.6.15, at least tmpfs and ext3 work, but reiserfs and xfs don't.
+df -t tmpfs -t ext3 . 2> /dev/null ||
   {
     echo "$0: '.' is not on a suitable file system for this test" 1>&2
     echo "$0: skipping this test" 1>&2

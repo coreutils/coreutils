@@ -1,3 +1,8 @@
+2006-07-24  Jim Meyering  <jim@meyering.net>
+
+	* tests/ls/stat-dtype: Skip this test on reiserfs, since that file
+	system lacks d_type support.
+
 2006-07-22  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* man/chmod.x: Update to reflect recent changes to coreutils.texi.
