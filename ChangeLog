@@ -1,5 +1,9 @@
 2006-07-25  Jim Meyering  <jim@meyering.net>
 
+	* src/ls.c (gobble_file) [USE_ACL]: Don't use-uninitialized the
+	have_acl member.  That would happen for a directory with both a
+	non-stat'able entry and one with an ACL.
+
 	* src/ls.c (gobble_file): Make it so failure to stat a
 	non-command-line file provokes an exit status of 1, not 0.
 	Say "cannot access" rather than "cannot stat".
