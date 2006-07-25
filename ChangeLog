@@ -1,5 +1,7 @@
 2006-07-25  Jim Meyering  <jim@meyering.net>
 
+	* src/ls.c: Declare stat_failed to be "bool", not "int" everywhere.
+
 	* src/ls.c [enum filetype] (command_line): Remove member.  Not needed.
 	Replace all occurrences of "type == command_line" with the
 	equivalent, "command_line_arg".

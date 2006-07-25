@@ -172,7 +172,7 @@ struct fileinfo
     char *name;
 
     struct stat stat;
-    int stat_failed;
+    bool stat_failed;
 
     /* For symbolic link, name of the file linked to, otherwise zero.  */
     char *linkname;
@@ -228,7 +228,7 @@ static uintmax_t gobble_file (char const *name, enum filetype type,
 			      ino_t inode, bool command_line_arg,
 			      char const *dirname);
 static void print_color_indicator (const char *name, mode_t mode, int linkok,
-				   int stat_failed);
+				   bool stat_failed);
 static void put_indicator (const struct bin_str *ind);
 static void add_ignore_pattern (const char *pattern);
 static void attach (char *dest, const char *dirname, const char *name);
@@ -249,7 +249,7 @@ static int format_group_width (gid_t g);
 static void print_long_format (const struct fileinfo *f);
 static void print_many_per_line (void);
 static void print_name_with_quoting (const char *p, mode_t mode,
-				     int linkok, int stat_failed,
+				     int linkok, bool stat_failed,
 				     struct obstack *stack);
 static void prep_non_filename_text (void);
 static void print_type_indicator (mode_t mode);
@@ -3288,7 +3288,7 @@ format_user_or_group (char const *name, unsigned long int id, int width)
    WIDTH.  */
 
 static void
-format_user (uid_t u, int width, int stat_failed)
+format_user (uid_t u, int width, bool stat_failed)
 {
   format_user_or_group (stat_failed ? "?" :
 			(numeric_ids ? NULL : getuser (u)), u, width);
@@ -3297,7 +3297,7 @@ format_user (uid_t u, int width, int stat_failed)
 /* Likewise, for groups.  */
 
 static void
-format_group (gid_t g, int width, int stat_failed)
+format_group (gid_t g, int width, bool stat_failed)
 {
   format_user_or_group (stat_failed ? "?" :
 			(numeric_ids ? NULL : getgroup (g)), g, width);
@@ -3721,7 +3721,7 @@ quote_name (FILE *out, const char *name, struct quoting_options const *options,
 
 static void
 print_name_with_quoting (const char *p, mode_t mode, int linkok,
-			 int stat_failed, struct obstack *stack)
+			 bool stat_failed, struct obstack *stack)
 {
   if (print_with_color)
     print_color_indicator (p, mode, linkok, stat_failed);
@@ -3815,7 +3815,7 @@ print_type_indicator (mode_t mode)
 
 static void
 print_color_indicator (const char *name, mode_t mode, int linkok,
-		       int stat_failed)
+		       bool stat_failed)
 {
   int type = C_FILE;
   struct color_ext_type *ext;	/* Color extension */
