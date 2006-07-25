@@ -15,7 +15,13 @@ case $# in
   *) echo "$0: too many arguments" 1>&2; exit 1 ;;
 esac
 
-if test -d .hg; then
+if test -d .git; then
+  if test "x$include_prefix" = x; then
+    git-ls-files | cut -d ' ' -f 3
+  else
+    git-ls-files | cut -d ' ' -f 3 | grep "^$include_prefix/"
+  fi
+elif test -d .hg; then
   if test "x$include_prefix" = x; then
     hg manifest | cut -d ' ' -f 3
   else
