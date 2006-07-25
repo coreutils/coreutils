@@ -20,7 +20,7 @@ cd $tmp || framework_failure=1
 mkdir D D/D || framework_failure=1
 touch D/a || framework_failure=1
 chmod 0 D/a || framework_failure=1
-chmod 500 D || framework_failure=1
+chmod 0500 D || framework_failure=1
 
 if test $framework_failure = 1; then
   echo 'failure in testing framework'
