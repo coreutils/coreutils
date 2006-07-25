@@ -537,7 +537,7 @@ bits of new subdirectories.  These mechanisms let users share files
 more easily, by lessening the need to use @command{chmod} or
 @command{chown} to share new files.
 
-These convenience mechanisms rely on the set-group-ID and set-user-ID
+These convenience mechanisms rely on the set-user-ID and set-group-ID
 bits of directories.  If commands like @command{chmod} and
 @command{mkdir} routinely cleared these bits on directories, the
 mechanisms would be less convenient and it would be harder to share
@@ -557,11 +557,11 @@ mkdir -m 755 c
 mkdir -m u=rwx,go=rx d
 @end example
 
-If you want to clear these bits, you must mention them explicitly in
-the symbolic or numeric modes, e.g.:
+If you want to try to clear these bits, you must mention them
+explicitly in the symbolic or numeric modes, e.g.:
 
 @example
-# These commands clear the set-user-ID
+# These commands try to clear the set-user-ID
 # and set-group-ID bits of the subdirectories.
 mkdir a b
 chmod 0755 a
@@ -569,3 +569,7 @@ chmod a-s,u=rwx,go=rx b
 mkdir -m 0755 c
 mkdir -m a-s,u=rwx,go=rx d
 @end example
+
+This behavior is a @acronym{GNU} extension.  Portable scripts should
+not rely on requests to set or clear these bits on directories, as
+@acronym{POSIX} allows implementations to ignore these requests.
