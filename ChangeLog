@@ -1,6 +1,6 @@
 2006-07-25  Jim Meyering  <jim@meyering.net>
 
-	* src/ls.c: Add parens around most uses of ?: ternary operator.
+	* src/ls.c: Add parens around the new uses of ?: ternary operator.
 
 	* src/dircolors.hin: Mention that ORPHAN refers not just to dangling
 	symlinks.
