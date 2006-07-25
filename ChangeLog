@@ -20,6 +20,8 @@
 	Say "cannot access" rather than "cannot stat".
 	* tests/ls/stat-failed: New file/test, for the above.
 	* tests/ls/Makefile.am (TESTS): Add stat-failed.
+	* tests/ls-2/tests (no-a-isdir-b): Update to reflect addition
+	of "cannot access " to diagnostic.
 
 	* src/ls.c: Declare stat_failed to be "bool", not "int" everywhere.
 
