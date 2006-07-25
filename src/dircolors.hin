@@ -50,7 +50,7 @@ SOCK 01;35	# socket
 DOOR 01;35	# door
 BLK 40;33;01	# block device driver
 CHR 40;33;01	# character device driver
-ORPHAN 40;31;01 # symlink to nonexistent file
+ORPHAN 40;31;01 # symlink to nonexistent file, or non-stat'able file
 SETUID 37;41	# file that is setuid (u+s)
 SETGID 30;43	# file that is setgid (g+s)
 STICKY_OTHER_WRITABLE 30;42 # dir that is sticky and other-writable (+t,o+w)

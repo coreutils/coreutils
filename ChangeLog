@@ -1,5 +1,8 @@
 2006-07-25  Jim Meyering  <jim@meyering.net>
 
+	* src/dircolors.hin: Mention that ORPHAN refers not just to dangling
+	symlinks.
+
 	Get --dired offsets right when handling stat-failed entries.
 	* src/ls.c (print_long_format): Be careful to increment P by the
 	appropriate amount, even when inode_number_width and nlink_width
