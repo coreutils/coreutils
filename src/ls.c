@@ -2611,14 +2611,13 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
       f->stat_failed = (err < 0);
       if (f->stat_failed)
 	{
-	  /* We treat stat failures for files the user named special.
-	     There is no guarantee that these files really exist so
-	     we do not print any information.  */
+	  /* Failure to stat a command line argument leads to
+	     an exit status of 2.  For other files, stat failure
+	     provokes an exit status of 1.  */
+	  file_failure (command_line_arg,
+			_("cannot access %s"), absolute_name);
 	  if (command_line_arg)
-	    {
-	      file_failure (1, "%s", absolute_name);
-	      return 0;
-	    }
+	    return 0;
 
 	  f->filetype = type;
 	  memset (&f->stat, '\0', sizeof (f->stat));

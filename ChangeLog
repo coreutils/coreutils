@@ -1,5 +1,11 @@
 2006-07-25  Jim Meyering  <jim@meyering.net>
 
+	* src/ls.c (gobble_file): Make it so failure to stat a
+	non-command-line file provokes an exit status of 1, not 0.
+	Say "cannot access" rather than "cannot stat".
+	* tests/ls/stat-failed: New file/test, for the above.
+	* tests/ls/Makefile.am (TESTS): Add stat-failed.
+
 	* src/ls.c: Declare stat_failed to be "bool", not "int" everywhere.
 
 	* src/ls.c [enum filetype] (command_line): Remove member.  Not needed.
