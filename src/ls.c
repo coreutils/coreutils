@@ -3395,7 +3395,9 @@ print_long_format (const struct fileinfo *f)
       char hbuf[INT_BUFSIZE_BOUND (uintmax_t)];
       sprintf (p, "%*s ", inode_number_width,
 	       f->stat_failed ? "?" : umaxtostr (f->stat.st_ino, hbuf));
-      p += inode_number_width + 1;
+      /* Increment by strlen (p) here, rather than by inode_number_width + 1.
+	 The latter is wrong when inode_number_width is zero.  */
+      p += strlen (p);
     }
 
   if (print_block_size)
@@ -3421,7 +3423,10 @@ print_long_format (const struct fileinfo *f)
     sprintf (p, "%s %*s ", modebuf, nlink_width,
 	     f->stat_failed ? "?" : umaxtostr (f->stat.st_nlink, hbuf));
   }
-  p += sizeof modebuf - 2 + any_has_acl + 1 + nlink_width + 1;
+  /* Increment by strlen (p) here, rather than by, e.g.,
+     sizeof modebuf - 2 + any_has_acl + 1 + nlink_width + 1.
+     The latter is wrong when nlink_width is zero.  */
+  p += strlen (p);
 
   DIRED_INDENT ();
 

@@ -33,4 +33,26 @@ fail=0
 ls -Log d > out 2> err
 test $? = 1 || fail=1
 
+cat <<\EOF > exp || fail=1
+total 0
+?--------- ? ?            ? d/s
+EOF
+
+cmp out exp || fail=1
+test $fail = 1 && diff out exp 2> /dev/null
+
+# Ensure that the offsets in --dired output are accurate.
+rm -f out exp
+ls --dired -il d > out 2> /dev/null && fail=1
+
+cat <<\EOF > exp || fail=1
+  total 0
+  ? ?--------- ? ? ? ?            ? d/s
+//DIRED// 46 49
+//DIRED-OPTIONS// --quoting-style=literal
+EOF
+
+cmp out exp || fail=1
+test $fail = 1 && diff out exp 2> /dev/null
+
 (exit $fail); exit $fail

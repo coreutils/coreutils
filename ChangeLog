@@ -1,5 +1,11 @@
 2006-07-25  Jim Meyering  <jim@meyering.net>
 
+	Get --dired offsets right when handling stat-failed entries.
+	* src/ls.c (print_long_format): Be careful to increment P by the
+	appropriate amount, even when inode_number_width and nlink_width
+	are zero.
+	* tests/ls/stat-failed: Test for the above.
+
 	* src/ls.c (gobble_file) [USE_ACL]: Don't use-uninitialized the
 	have_acl member.  That would happen for a directory with both a
 	non-stat'able entry and one with an ACL.
