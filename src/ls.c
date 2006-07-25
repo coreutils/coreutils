@@ -163,7 +163,8 @@ enum filetype
     symbolic_link DT_INIT (DT_LNK),
     sock DT_INIT (DT_SOCK),
     arg_directory DT_INIT (2 * (DT_UNKNOWN | DT_FIFO | DT_CHR | DT_DIR | DT_BLK
-				| DT_REG | DT_LNK | DT_SOCK))
+				| DT_REG | DT_LNK | DT_SOCK)),
+    command_line
   };
 
 struct fileinfo
@@ -172,6 +173,7 @@ struct fileinfo
     char *name;
 
     struct stat stat;
+    int stat_failed;
 
     /* For symbolic link, name of the file linked to, otherwise zero.  */
     char *linkname;
@@ -226,7 +228,8 @@ static bool file_ignored (char const *name);
 static uintmax_t gobble_file (char const *name, enum filetype type,
 			      ino_t inode, bool command_line_arg,
 			      char const *dirname);
-static void print_color_indicator (const char *name, mode_t mode, int linkok);
+static void print_color_indicator (const char *name, mode_t mode, int linkok,
+				   int stat_failed);
 static void put_indicator (const struct bin_str *ind);
 static void add_ignore_pattern (const char *pattern);
 static void attach (char *dest, const char *dirname, const char *name);
@@ -247,7 +250,7 @@ static int format_group_width (gid_t g);
 static void print_long_format (const struct fileinfo *f);
 static void print_many_per_line (void);
 static void print_name_with_quoting (const char *p, mode_t mode,
-				     int linkok,
+				     int linkok, int stat_failed,
 				     struct obstack *stack);
 static void prep_non_filename_text (void);
 static void print_type_indicator (mode_t mode);
@@ -1260,7 +1263,7 @@ main (int argc, char **argv)
     }
   else
     do
-      gobble_file (argv[i++], unknown, NOT_AN_INODE_NUMBER, true, "");
+      gobble_file (argv[i++], command_line, NOT_AN_INODE_NUMBER, true, "");
     while (i < argc);
 
   if (files_index)
@@ -2546,7 +2549,7 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
 	      || (dereference == DEREF_ALWAYS
 		  && (type == symbolic_link || type == unknown))))
       || (format_needs_type
-	  && (type == unknown
+	  && (type == unknown || type == command_line
 	      /* --indicator-style=classify (aka -F)
 		 requires that we stat each regular file
 		 to see if it's executable.  */
@@ -2606,9 +2609,24 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
 	  break;
 	}
 
-      if (err < 0)
+      f->stat_failed = (err < 0);
+      if (f->stat_failed)
 	{
-	  file_failure (command_line_arg, "%s", absolute_name);
+	  /* We treat stat failures for files the user named special.
+	     There is no guarantee that these files really exist so
+	     we do not print any information.  */
+	  if (type == command_line)
+	    {
+	      file_failure (1, "%s", absolute_name);
+	      return 0;
+	    }
+
+	  f->filetype = type;
+	  memset (&f->stat, '\0', sizeof (f->stat));
+
+	  f->name = xstrdup (absolute_name);
+	  files_index++;
+
 	  return 0;
 	}
 
@@ -3271,17 +3289,19 @@ format_user_or_group (char const *name, unsigned long int id, int width)
    WIDTH.  */
 
 static void
-format_user (uid_t u, int width)
+format_user (uid_t u, int width, int stat_failed)
 {
-  format_user_or_group (numeric_ids ? NULL : getuser (u), u, width);
+  format_user_or_group (stat_failed ? "?" :
+			(numeric_ids ? NULL : getuser (u)), u, width);
 }
 
 /* Likewise, for groups.  */
 
 static void
-format_group (gid_t g, int width)
+format_group (gid_t g, int width, int stat_failed)
 {
-  format_user_or_group (numeric_ids ? NULL : getgroup (g), g, width);
+  format_user_or_group (stat_failed ? "?" :
+			(numeric_ids ? NULL : getgroup (g)), g, width);
 }
 
 /* Return the number of columns that format_user_or_group will print.  */
@@ -3373,7 +3393,7 @@ print_long_format (const struct fileinfo *f)
     {
       char hbuf[INT_BUFSIZE_BOUND (uintmax_t)];
       sprintf (p, "%*s ", inode_number_width,
-	       umaxtostr (f->stat.st_ino, hbuf));
+	       f->stat_failed ? "?" : umaxtostr (f->stat.st_ino, hbuf));
       p += inode_number_width + 1;
     }
 
@@ -3381,8 +3401,10 @@ print_long_format (const struct fileinfo *f)
     {
       char hbuf[LONGEST_HUMAN_READABLE + 1];
       char const *blocks =
-	human_readable (ST_NBLOCKS (f->stat), hbuf, human_output_opts,
-			ST_NBLOCKSIZE, output_block_size);
+	f->stat_failed
+	? "?"
+	: human_readable (ST_NBLOCKS (f->stat), hbuf, human_output_opts,
+			  ST_NBLOCKSIZE, output_block_size);
       int pad;
       for (pad = block_size_width - mbswidth (blocks, 0); 0 < pad; pad--)
 	*p++ = ' ';
@@ -3396,7 +3418,7 @@ print_long_format (const struct fileinfo *f)
   {
     char hbuf[INT_BUFSIZE_BOUND (uintmax_t)];
     sprintf (p, "%s %*s ", modebuf, nlink_width,
-	     umaxtostr (f->stat.st_nlink, hbuf));
+	     f->stat_failed ? "?" : umaxtostr (f->stat.st_nlink, hbuf));
   }
   p += sizeof modebuf - 2 + any_has_acl + 1 + nlink_width + 1;
 
@@ -3407,18 +3429,19 @@ print_long_format (const struct fileinfo *f)
       DIRED_FPUTS (buf, stdout, p - buf);
 
       if (print_owner)
-	format_user (f->stat.st_uid, owner_width);
+	format_user (f->stat.st_uid, owner_width, f->stat_failed);
 
       if (print_group)
-	format_group (f->stat.st_gid, group_width);
+	format_group (f->stat.st_gid, group_width, f->stat_failed);
 
       if (print_author)
-	format_user (f->stat.st_author, author_width);
+	format_user (f->stat.st_author, author_width, f->stat_failed);
 
       p = buf;
     }
 
-  if (S_ISCHR (f->stat.st_mode) || S_ISBLK (f->stat.st_mode))
+  if (!f->stat_failed
+      && (S_ISCHR (f->stat.st_mode) || S_ISBLK (f->stat.st_mode)))
     {
       char majorbuf[INT_BUFSIZE_BOUND (uintmax_t)];
       char minorbuf[INT_BUFSIZE_BOUND (uintmax_t)];
@@ -3436,8 +3459,10 @@ print_long_format (const struct fileinfo *f)
     {
       char hbuf[LONGEST_HUMAN_READABLE + 1];
       char const *size =
-	human_readable (unsigned_file_size (f->stat.st_size),
-			hbuf, human_output_opts, 1, file_output_block_size);
+	f->stat_failed
+	? "?"
+	: human_readable (unsigned_file_size (f->stat.st_size),
+			  hbuf, human_output_opts, 1, file_output_block_size);
       int pad;
       for (pad = file_size_width - mbswidth (size, 0); 0 < pad; pad--)
 	*p++ = ' ';
@@ -3450,7 +3475,7 @@ print_long_format (const struct fileinfo *f)
   s = 0;
   *p = '\1';
 
-  if (when_local)
+  if (!f->stat_failed && when_local)
     {
       time_t six_months_ago;
       bool recent;
@@ -3497,15 +3522,17 @@ print_long_format (const struct fileinfo *f)
 	 print it as a huge integer number of seconds.  */
       char hbuf[INT_BUFSIZE_BOUND (intmax_t)];
       sprintf (p, "%*s ", long_time_expected_width (),
-	       (TYPE_SIGNED (time_t)
-		? imaxtostr (when, hbuf)
-		: umaxtostr (when, hbuf)));
+	       f->stat_failed
+	       ? "?"
+	       : (TYPE_SIGNED (time_t)
+		  ? imaxtostr (when, hbuf)
+		  : umaxtostr (when, hbuf)));
       p += strlen (p);
     }
 
   DIRED_FPUTS (buf, stdout, p - buf);
   print_name_with_quoting (f->name, FILE_OR_LINK_MODE (f), f->linkok,
-			   &dired_obstack);
+			   f->stat_failed, &dired_obstack);
 
   if (f->filetype == symbolic_link)
     {
@@ -3513,7 +3540,7 @@ print_long_format (const struct fileinfo *f)
 	{
 	  DIRED_FPUTS_LITERAL (" -> ", stdout);
 	  print_name_with_quoting (f->linkname, f->linkmode, f->linkok - 1,
-				   NULL);
+				   f->stat_failed, NULL);
 	  if (indicator_style != none)
 	    print_type_indicator (f->linkmode);
 	}
@@ -3695,10 +3722,10 @@ quote_name (FILE *out, const char *name, struct quoting_options const *options,
 
 static void
 print_name_with_quoting (const char *p, mode_t mode, int linkok,
-			 struct obstack *stack)
+			 int stat_failed, struct obstack *stack)
 {
   if (print_with_color)
-    print_color_indicator (p, mode, linkok);
+    print_color_indicator (p, mode, linkok, stat_failed);
 
   if (stack)
     PUSH_CURRENT_DIRED_POS (stack);
@@ -3746,7 +3773,8 @@ print_file_name_and_frills (const struct fileinfo *f)
 	    human_readable (ST_NBLOCKS (f->stat), buf, human_output_opts,
 			    ST_NBLOCKSIZE, output_block_size));
 
-  print_name_with_quoting (f->name, FILE_OR_LINK_MODE (f), f->linkok, NULL);
+  print_name_with_quoting (f->name, FILE_OR_LINK_MODE (f), f->linkok,
+			   f->stat_failed, NULL);
 
   if (indicator_style != none)
     print_type_indicator (f->stat.st_mode);
@@ -3787,7 +3815,8 @@ print_type_indicator (mode_t mode)
 }
 
 static void
-print_color_indicator (const char *name, mode_t mode, int linkok)
+print_color_indicator (const char *name, mode_t mode, int linkok,
+		       int stat_failed)
 {
   int type = C_FILE;
   struct color_ext_type *ext;	/* Color extension */
@@ -3826,6 +3855,8 @@ print_color_indicator (const char *name, mode_t mode, int linkok)
 	type = C_CHR;
       else if (S_ISDOOR (mode))
 	type = C_DOOR;
+      else if (stat_failed)
+	type = C_ORPHAN;
 
       if (type == C_FILE)
 	{

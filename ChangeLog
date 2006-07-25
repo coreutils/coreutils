@@ -1,5 +1,12 @@
 2006-07-25  Jim Meyering  <jim@meyering.net>
 
+	* src/ls.c: Apply the stat-failed parts of Red Hat's
+	coreutils-selinux.patch.  From Ulrich Drepper.
+	This makes it so files not mentioned on the command line (e.g.,
+	names read from a directory that *is* mentioned on the command
+	line) for which stat fails are still listed.  With --color,
+	such files are colored just like ORPHANs (aka dangling symlinks).
+
 	* src/df.c (n_valid_args): Declare global to be static.
 
 2006-07-24  Jim Meyering  <jim@meyering.net>
