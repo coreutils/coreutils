@@ -69,7 +69,7 @@ static uintmax_t output_block_size;
 static bool posix_format;
 
 /* Count the number of valid arguments.  */
-unsigned int n_valid_args;
+static unsigned int n_valid_args;
 
 /* If true, invoke the `sync' system call before getting any usage data.
    Using this option can make df very slow, especially with many or very

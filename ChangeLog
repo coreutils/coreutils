@@ -1,3 +1,7 @@
+2006-07-25  Jim Meyering  <jim@meyering.net>
+
+	* src/df.c (n_valid_args): Declare global to be static.
+
 2006-07-24  Jim Meyering  <jim@meyering.net>
 
 	* tests/ls/stat-dtype: Skip this test on reiserfs, since that file
