@@ -163,8 +163,7 @@ enum filetype
     symbolic_link DT_INIT (DT_LNK),
     sock DT_INIT (DT_SOCK),
     arg_directory DT_INIT (2 * (DT_UNKNOWN | DT_FIFO | DT_CHR | DT_DIR | DT_BLK
-				| DT_REG | DT_LNK | DT_SOCK)),
-    command_line
+				| DT_REG | DT_LNK | DT_SOCK))
   };
 
 struct fileinfo
@@ -1263,7 +1262,7 @@ main (int argc, char **argv)
     }
   else
     do
-      gobble_file (argv[i++], command_line, NOT_AN_INODE_NUMBER, true, "");
+      gobble_file (argv[i++], unknown, NOT_AN_INODE_NUMBER, true, "");
     while (i < argc);
 
   if (files_index)
@@ -2549,7 +2548,7 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
 	      || (dereference == DEREF_ALWAYS
 		  && (type == symbolic_link || type == unknown))))
       || (format_needs_type
-	  && (type == unknown || type == command_line
+	  && (type == unknown || command_line_arg
 	      /* --indicator-style=classify (aka -F)
 		 requires that we stat each regular file
 		 to see if it's executable.  */
@@ -2615,7 +2614,7 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
 	  /* We treat stat failures for files the user named special.
 	     There is no guarantee that these files really exist so
 	     we do not print any information.  */
-	  if (type == command_line)
+	  if (command_line_arg)
 	    {
 	      file_failure (1, "%s", absolute_name);
 	      return 0;

@@ -1,5 +1,9 @@
 2006-07-25  Jim Meyering  <jim@meyering.net>
 
+	* src/ls.c [enum filetype] (command_line): Remove member.  Not needed.
+	Replace all occurrences of "type == command_line" with the
+	equivalent, "command_line_arg".
+
 	* src/ls.c: Apply the stat-failed parts of Red Hat's
 	coreutils-selinux.patch.  From Ulrich Drepper.
 	This makes it so files not mentioned on the command line (e.g.,
