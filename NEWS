@@ -26,13 +26,21 @@ GNU coreutils NEWS                                    -*- outline -*-
   basename and dirname now treat // as different from / on platforms
   where the two are distinct.
 
-  chmod, install, and mkdir now leave a directory's set-user-ID and
-  set-group-ID bits alone unless you explicitly request otherwise.
-  This is for compatibility with BSD and other systems.  For example,
+  chmod, install, and mkdir now preserve a directory's set-user-ID and
+  set-group-ID bits unless you explicitly request otherwise.  E.g.,
   `chmod 755 DIR' and `chmod u=rwx,go=rx DIR' now preserve DIR's
-  set-user-ID and set-group-ID bits instead of clearing them.  If
-  you want to clear the bits you can mention them explicitly, e.g.,
-  `chmod 0755 DIR' and `chmod a-s,u=rwx,go=rx DIR'.
+  set-user-ID and set-group-ID bits instead of clearing them, and
+  similarly for `mkdir -m 755 DIR' and `mkdir -m u=rwx,go=rx DIR'.  To
+  clear the bits, mention them explicitly, e.g., `chmod 0755 DIR' or
+  `mkdir -m a-s,u=rwx,go=rx DIR'.  This change is for convenience on
+  systems where these bits inherit from parents.  Unfortunately other
+  operating systems are not consistent here, and portable scripts
+  cannot assume the bits are set, cleared, or preserved, even when the
+  bits are explicitly mentioned.  For example, OpenBSD 3.9 `mkdir -m
+  777 D' preserves D's setgid bit but `chmod 777 D' clears it.
+  Conversely, Solaris 10 `mkdir -m 777 D', `mkdir -m g-s D', and
+  `chmod 0777 D' all preserve D's setgid bit, and you must use
+  something like `chmod g-s D' to clear it.
 
   `cp --link --no-dereference' now works also on systems where the
   link system call cannot create a hard link to a symbolic link.

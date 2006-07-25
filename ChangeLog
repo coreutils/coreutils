@@ -1,3 +1,10 @@
+2006-07-25  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* tests/cp/fail-perm: Use "chmod 0500" rather than "chmod 500".
+	Problem report and fix from Bob Proulx.
+	* NEWS: Clarify the "chmod 0500" news, and correct the vague
+	statements about compatibility with BSD.
+
 2006-07-25  Jim Meyering  <jim@meyering.net>
 
 	* src/ls.c (gobble_file): When handling a stat-failed entry,
