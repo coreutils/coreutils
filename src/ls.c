@@ -3404,10 +3404,10 @@ print_long_format (const struct fileinfo *f)
     {
       char hbuf[LONGEST_HUMAN_READABLE + 1];
       char const *blocks =
-	f->stat_failed
-	? "?"
-	: human_readable (ST_NBLOCKS (f->stat), hbuf, human_output_opts,
-			  ST_NBLOCKSIZE, output_block_size);
+	(f->stat_failed
+	 ? "?"
+	 : human_readable (ST_NBLOCKS (f->stat), hbuf, human_output_opts,
+			   ST_NBLOCKSIZE, output_block_size));
       int pad;
       for (pad = block_size_width - mbswidth (blocks, 0); 0 < pad; pad--)
 	*p++ = ' ';
@@ -3465,10 +3465,10 @@ print_long_format (const struct fileinfo *f)
     {
       char hbuf[LONGEST_HUMAN_READABLE + 1];
       char const *size =
-	f->stat_failed
-	? "?"
-	: human_readable (unsigned_file_size (f->stat.st_size),
-			  hbuf, human_output_opts, 1, file_output_block_size);
+	(f->stat_failed
+	 ? "?"
+	 : human_readable (unsigned_file_size (f->stat.st_size),
+			   hbuf, human_output_opts, 1, file_output_block_size));
       int pad;
       for (pad = file_size_width - mbswidth (size, 0); 0 < pad; pad--)
 	*p++ = ' ';
@@ -3528,11 +3528,11 @@ print_long_format (const struct fileinfo *f)
 	 print it as a huge integer number of seconds.  */
       char hbuf[INT_BUFSIZE_BOUND (intmax_t)];
       sprintf (p, "%*s ", long_time_expected_width (),
-	       f->stat_failed
-	       ? "?"
-	       : (TYPE_SIGNED (time_t)
-		  ? imaxtostr (when, hbuf)
-		  : umaxtostr (when, hbuf)));
+	       (f->stat_failed
+		? "?"
+		: (TYPE_SIGNED (time_t)
+		   ? imaxtostr (when, hbuf)
+		   : umaxtostr (when, hbuf))));
       p += strlen (p);
     }
 
