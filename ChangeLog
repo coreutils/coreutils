@@ -1,5 +1,10 @@
 2006-07-25  Jim Meyering  <jim@meyering.net>
 
+	* src/ls.c (gobble_file): When handling a stat-failed entry,
+	print the entry name not the absolute_name -- to be consistent
+	with the usual case.
+	* tests/ls/stat-failed: Update accordingly.
+
 	* src/ls.c: Add parens around the new uses of ?: ternary operator.
 
 	* src/dircolors.hin: Mention that ORPHAN refers not just to dangling

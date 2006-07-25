@@ -2625,7 +2625,7 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
 #if USE_ACL
 	  f->have_acl = false;
 #endif
-	  f->name = xstrdup (absolute_name);
+	  f->name = xstrdup (name);
 	  files_index++;
 
 	  return 0;
