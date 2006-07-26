@@ -1,3 +1,7 @@
+2006-07-26  Jim Meyering  <jim@meyering.net>
+
+	* src/ls.c: Correct indentation/formatting in a few places.
+
 2006-07-25  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* tests/cp/fail-perm: Use "chmod 0500" rather than "chmod 500".

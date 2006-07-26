@@ -934,7 +934,7 @@ dev_ino_pop (void)
 {
   assert (sizeof (struct dev_ino) <= obstack_object_size (&dev_ino_obstack));
   obstack_blank (&dev_ino_obstack, -(int) (sizeof (struct dev_ino)));
-  return *(struct dev_ino*) obstack_next_free (&dev_ino_obstack);
+  return *(struct dev_ino *) obstack_next_free (&dev_ino_obstack);
 }
 
 #define ASSERT_MATCHING_DEV_INO(Name, Di)	\
@@ -2214,7 +2214,7 @@ parse_ls_color (void)
 	      if (state == -1)
 		error (0, 0, _("unrecognized prefix: %s"), quotearg (label));
 	    }
-	 break;
+	  break;
 
 	case 4:		/* Equal sign after *.ext */
 	  if (*(p++) == '=')
@@ -2759,12 +2759,12 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
     }
 
   if (print_inode)
-      {
-	char buf[INT_BUFSIZE_BOUND (uintmax_t)];
-	int len = strlen (umaxtostr (f->stat.st_ino, buf));
-	if (inode_number_width < len)
-	  inode_number_width = len;
-      }
+    {
+      char buf[INT_BUFSIZE_BOUND (uintmax_t)];
+      int len = strlen (umaxtostr (f->stat.st_ino, buf));
+      if (inode_number_width < len)
+	inode_number_width = len;
+    }
 
   f->name = xstrdup (name);
   files_index++;
