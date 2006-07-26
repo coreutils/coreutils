@@ -142,29 +142,35 @@ int wcwidth ();
    Subtracting doesn't always work, due to overflow.  */
 #define longdiff(a, b) ((a) < (b) ? -1 : (a) > (b))
 
-#if HAVE_STRUCT_DIRENT_D_TYPE && defined DTTOIF
-# define DT_INIT(Val) = Val
-#else
-# define DT_INIT(Val) /* empty */
-#endif
-
 #if ! HAVE_STRUCT_STAT_ST_AUTHOR
 # define st_author st_uid
 #endif
 
 enum filetype
   {
-    unknown DT_INIT (DT_UNKNOWN),
-    fifo DT_INIT (DT_FIFO),
-    chardev DT_INIT (DT_CHR),
-    directory DT_INIT (DT_DIR),
-    blockdev DT_INIT (DT_BLK),
-    normal DT_INIT (DT_REG),
-    symbolic_link DT_INIT (DT_LNK),
-    sock DT_INIT (DT_SOCK),
-    arg_directory DT_INIT (2 * (DT_UNKNOWN | DT_FIFO | DT_CHR | DT_DIR | DT_BLK
-				| DT_REG | DT_LNK | DT_SOCK))
+    unknown,
+    fifo,
+    chardev,
+    directory,
+    blockdev,
+    normal,
+    symbolic_link,
+    sock,
+    whiteout,
+    arg_directory
   };
+
+/* Display letters and indicators for each filetype.
+   Keep these in sync with enum filetype.  */
+
+static char const filetype_letter[] = "?pcdb-lswd";
+
+#define FILETYPE_INDICATORS				\
+  {							\
+    C_ORPHAN, C_FIFO, C_CHR, C_DIR, C_BLK, C_FILE,	\
+    C_LINK, C_SOCK, C_FILE, C_DIR			\
+  }
+
 
 struct fileinfo
   {
@@ -228,7 +234,7 @@ static uintmax_t gobble_file (char const *name, enum filetype type,
 			      ino_t inode, bool command_line_arg,
 			      char const *dirname);
 static void print_color_indicator (const char *name, mode_t mode, int linkok,
-				   bool stat_ok);
+				   bool stat_ok, enum filetype type);
 static void put_indicator (const struct bin_str *ind);
 static void add_ignore_pattern (const char *pattern);
 static void attach (char *dest, const char *dirname, const char *name);
@@ -250,9 +256,11 @@ static void print_long_format (const struct fileinfo *f);
 static void print_many_per_line (void);
 static void print_name_with_quoting (const char *p, mode_t mode,
 				     int linkok, bool stat_ok,
+				     enum filetype type,
 				     struct obstack *stack);
 static void prep_non_filename_text (void);
-static void print_type_indicator (mode_t mode);
+static void print_type_indicator (bool stat_ok, mode_t mode,
+				  enum filetype type);
 static void print_with_commas (void);
 static void queue_directory (char const *name, char const *realname,
 			     bool command_line_arg);
@@ -2361,14 +2369,19 @@ print_dir (char const *name, char const *realname, bool command_line_arg)
 	      enum filetype type = unknown;
 
 #if HAVE_STRUCT_DIRENT_D_TYPE
-	      if (next->d_type == DT_BLK
-		  || next->d_type == DT_CHR
-		  || next->d_type == DT_DIR
-		  || next->d_type == DT_FIFO
-		  || next->d_type == DT_LNK
-		  || next->d_type == DT_REG
-		  || next->d_type == DT_SOCK)
-		type = next->d_type;
+	      switch (next->d_type)
+		{
+		case DT_BLK:  type = blockdev;		break;
+		case DT_CHR:  type = chardev;		break;
+		case DT_DIR:  type = directory;		break;
+		case DT_FIFO: type = fifo;		break;
+		case DT_LNK:  type = symbolic_link;	break;
+		case DT_REG:  type = normal;		break;
+		case DT_SOCK: type = sock;		break;
+# ifdef DT_WHT
+		case DT_WHT:  type = whiteout;		break;
+# endif
+		}
 #endif
 	      total_blocks += gobble_file (next->d_name, type, D_INO (next),
 					   false, name);
@@ -2519,7 +2532,7 @@ static uintmax_t
 gobble_file (char const *name, enum filetype type, ino_t inode,
 	     bool command_line_arg, char const *dirname)
 {
-  uintmax_t blocks;
+  uintmax_t blocks = 0;
   struct fileinfo *f;
 
   /* An inode value prior to gobble_file necessarily came from readdir,
@@ -2533,9 +2546,9 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
     }
 
   f = &files[files_index];
-  f->linkname = NULL;
-  f->linkmode = 0;
-  f->linkok = false;
+  memset (f, '\0', sizeof *f);
+  f->stat.st_ino = inode;
+  f->filetype = type;
 
   if (command_line_arg
       || format_needs_stat
@@ -2608,8 +2621,7 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
 	  break;
 	}
 
-      f->stat_ok = (err == 0);
-      if (! f->stat_ok)
+      if (err != 0)
 	{
 	  /* Failure to stat a command line argument leads to
 	     an exit status of 2.  For other files, stat failure
@@ -2619,17 +2631,13 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
 	  if (command_line_arg)
 	    return 0;
 
-	  f->filetype = type;
-	  memset (&f->stat, '\0', sizeof (f->stat));
-
-#if USE_ACL
-	  f->have_acl = false;
-#endif
 	  f->name = xstrdup (name);
 	  files_index++;
 
 	  return 0;
 	}
+
+      f->stat_ok = true;
 
 #if USE_ACL
       if (format == long_format)
@@ -2668,7 +2676,6 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
 		  /* Get the linked-to file's mode for the filetype indicator
 		     in long listings.  */
 		  f->linkmode = linkstats.st_mode;
-		  f->linkok = true;
 		}
 	    }
 	  free (linkname);
@@ -2747,15 +2754,6 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
 	  if (file_size_width < len)
 	    file_size_width = len;
 	}
-    }
-  else
-    {
-      f->filetype = type;
-      f->stat.st_ino = inode;
-#if HAVE_STRUCT_DIRENT_D_TYPE && defined DTTOIF
-      f->stat.st_mode = DTTOIF (type);
-#endif
-      blocks = 0;
     }
 
   if (print_inode)
@@ -3364,7 +3362,14 @@ print_long_format (const struct fileinfo *f)
 
   /* Compute the mode string, except remove the trailing space if no
      files in this directory have ACLs.  */
-  filemodestring (&f->stat, modebuf);
+  if (f->stat_ok)
+    filemodestring (&f->stat, modebuf);
+  else
+    {
+      modebuf[0] = filetype_letter[f->filetype];
+      memset (modebuf + 1, '?', 10);
+      modebuf[11] = '\0';
+    }
   if (! any_has_acl)
     modebuf[10] = '\0';
   else if (FILE_HAS_ACL (f))
@@ -3394,7 +3399,9 @@ print_long_format (const struct fileinfo *f)
     {
       char hbuf[INT_BUFSIZE_BOUND (uintmax_t)];
       sprintf (p, "%*s ", inode_number_width,
-	       ! f->stat_ok ? "?" : umaxtostr (f->stat.st_ino, hbuf));
+	       (f->stat.st_ino == NOT_AN_INODE_NUMBER
+		? "?"
+		: umaxtostr (f->stat.st_ino, hbuf)));
       /* Increment by strlen (p) here, rather than by inode_number_width + 1.
 	 The latter is wrong when inode_number_width is zero.  */
       p += strlen (p);
@@ -3538,7 +3545,7 @@ print_long_format (const struct fileinfo *f)
 
   DIRED_FPUTS (buf, stdout, p - buf);
   print_name_with_quoting (f->name, FILE_OR_LINK_MODE (f), f->linkok,
-			   f->stat_ok, &dired_obstack);
+			   f->stat_ok, f->filetype, &dired_obstack);
 
   if (f->filetype == symbolic_link)
     {
@@ -3546,13 +3553,13 @@ print_long_format (const struct fileinfo *f)
 	{
 	  DIRED_FPUTS_LITERAL (" -> ", stdout);
 	  print_name_with_quoting (f->linkname, f->linkmode, f->linkok - 1,
-				   f->stat_ok, NULL);
+				   f->stat_ok, f->filetype, NULL);
 	  if (indicator_style != none)
-	    print_type_indicator (f->linkmode);
+	    print_type_indicator (true, f->linkmode, unknown);
 	}
     }
   else if (indicator_style != none)
-    print_type_indicator (f->stat.st_mode);
+    print_type_indicator (f->stat_ok, f->stat.st_mode, f->filetype);
 }
 
 /* Output to OUT a quoted representation of the file name NAME,
@@ -3728,10 +3735,11 @@ quote_name (FILE *out, const char *name, struct quoting_options const *options,
 
 static void
 print_name_with_quoting (const char *p, mode_t mode, int linkok,
-			 bool stat_ok, struct obstack *stack)
+			 bool stat_ok, enum filetype type,
+			 struct obstack *stack)
 {
   if (print_with_color)
-    print_color_indicator (p, mode, linkok, stat_ok);
+    print_color_indicator (p, mode, linkok, stat_ok, type);
 
   if (stack)
     PUSH_CURRENT_DIRED_POS (stack);
@@ -3780,37 +3788,37 @@ print_file_name_and_frills (const struct fileinfo *f)
 			    ST_NBLOCKSIZE, output_block_size));
 
   print_name_with_quoting (f->name, FILE_OR_LINK_MODE (f), f->linkok,
-			   f->stat_ok, NULL);
+			   f->stat_ok, f->filetype, NULL);
 
   if (indicator_style != none)
-    print_type_indicator (f->stat.st_mode);
+    print_type_indicator (f->stat_ok, f->stat.st_mode, f->filetype);
 }
 
 static void
-print_type_indicator (mode_t mode)
+print_type_indicator (bool stat_ok, mode_t mode, enum filetype type)
 {
   char c;
 
-  if (S_ISREG (mode))
+  if (stat_ok ? S_ISREG (mode) : type == normal)
     {
-      if (indicator_style == classify && (mode & S_IXUGO))
+      if (stat_ok && indicator_style == classify && (mode & S_IXUGO))
 	c = '*';
       else
 	c = 0;
     }
   else
     {
-      if (S_ISDIR (mode))
+      if (stat_ok ? S_ISDIR (mode) : type == directory || type == arg_directory)
 	c = '/';
       else if (indicator_style == slash)
 	c = 0;
-      else if (S_ISLNK (mode))
+      else if (stat_ok ? S_ISLNK (mode) : type == symbolic_link)
 	c = '@';
-      else if (S_ISFIFO (mode))
+      else if (stat_ok ? S_ISFIFO (mode) : type == fifo)
 	c = '|';
-      else if (S_ISSOCK (mode))
+      else if (stat_ok ? S_ISSOCK (mode) : type == sock)
 	c = '=';
-      else if (S_ISDOOR (mode))
+      else if (stat_ok && S_ISDOOR (mode))
 	c = '>';
       else
 	c = 0;
@@ -3822,7 +3830,7 @@ print_type_indicator (mode_t mode)
 
 static void
 print_color_indicator (const char *name, mode_t mode, int linkok,
-		       bool stat_ok)
+		       bool stat_ok, enum filetype filetype)
 {
   int type = C_FILE;
   struct color_ext_type *ext;	/* Color extension */
@@ -3831,9 +3839,11 @@ print_color_indicator (const char *name, mode_t mode, int linkok,
   /* Is this a nonexistent file?  If so, linkok == -1.  */
 
   if (linkok == -1 && color_indicator[C_MISSING].string != NULL)
+    type = C_MISSING;
+  else if (! stat_ok)
     {
-      ext = NULL;
-      type = C_MISSING;
+      static enum indicator_no filetype_indicator[] = FILETYPE_INDICATORS;
+      type = filetype_indicator[filetype];
     }
   else
     {
@@ -3861,7 +3871,7 @@ print_color_indicator (const char *name, mode_t mode, int linkok,
 	type = C_CHR;
       else if (S_ISDOOR (mode))
 	type = C_DOOR;
-      else if (!stat_ok)
+      else
 	type = C_ORPHAN;
 
       if (type == C_FILE)
@@ -3873,22 +3883,22 @@ print_color_indicator (const char *name, mode_t mode, int linkok,
 	  else if ((mode & S_IXUGO) != 0)
 	    type = C_EXEC;
 	}
+    }
 
-      /* Check the file's suffix only if still classified as C_FILE.  */
-      ext = NULL;
-      if (type == C_FILE)
+  /* Check the file's suffix only if still classified as C_FILE.  */
+  ext = NULL;
+  if (type == C_FILE)
+    {
+      /* Test if NAME has a recognized suffix.  */
+
+      len = strlen (name);
+      name += len;		/* Pointer to final \0.  */
+      for (ext = color_ext_list; ext != NULL; ext = ext->next)
 	{
-	  /* Test if NAME has a recognized suffix.  */
-
-	  len = strlen (name);
-	  name += len;		/* Pointer to final \0.  */
-	  for (ext = color_ext_list; ext != NULL; ext = ext->next)
-	    {
-	      if (ext->ext.len <= len
-		  && strncmp (name - ext->ext.len, ext->ext.string,
-			      ext->ext.len) == 0)
-		break;
-	    }
+	  if (ext->ext.len <= len
+	      && strncmp (name - ext->ext.len, ext->ext.string,
+			  ext->ext.len) == 0)
+	    break;
 	}
     }
 

@@ -1,5 +1,30 @@
 2006-07-26  Jim Meyering  <jim@meyering.net>
 
+	Checking in a change from Paul.
+
+	2006-07-25  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/ls.c (DT_INIT): Remove.  All uses removed.
+	(enum filetype): Use an ordinary enum rather than trying to keep
+	the values in sync with DT_FIFO etc.  That way, we don't have
+	to make special assumptions about them.  All uses changed.
+	(whiteout): New constant member of enum filetype.
+	(filetype_letter): New constant, for use with enum filetype.
+	(FILETYPE_INDICATORS): New initializer list.
+	(print_dir): Add case for DT_WHT.
+	(gobble_file): If stat fails, don't discard information from
+	readdir; instead, preserve it so it can be printed.
+	(print_long_format): Fall back on readdir result if stat info
+	is not available.  Use "?" to denote each unknown mode char,
+	instead of an overall "?", since we now know some of the mode
+	typically.
+	(print_type_indicator): Now that MODE isn't necessarily
+	useful, guard all uses.
+	Now that two blocks in the type-checking tree can set "type = C_FILE",
+	move the suffix-handling code out and down.
+
+2006-07-26  Jim Meyering  <jim@meyering.net>
+
 	Prepare for the above change.
 	* src/ls.c [struct fileinfo] (stat_ok): Rename from stat_failed,
 	and adjust uses.  From a patch by Paul Eggert.
