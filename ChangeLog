@@ -1,5 +1,8 @@
 2006-07-26  Jim Meyering  <jim@meyering.net>
 
+	* tests/ls/stat-failed: Adapt to match new expected output.
+	From Paul Eggert.
+
 	* src/ls.c (print_color_indicator): Test for S_IFREG first, rather
 	than having the code test for all of the other types first.
 	Hoist the set-uid/gid-testing code "up" into this new block.

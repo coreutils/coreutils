@@ -35,24 +35,24 @@ test $? = 1 || fail=1
 
 cat <<\EOF > exp || fail=1
 total 0
-?--------- ? ?            ? s
+?????????? ? ?            ? s
 EOF
 
-cmp out exp || fail=1
+sed 's/^l/?/' out | cmp - exp || fail=1
 test $fail = 1 && diff out exp 2> /dev/null
 
 # Ensure that the offsets in --dired output are accurate.
 rm -f out exp
-ls --dired -il d > out 2> /dev/null && fail=1
+ls --dired -l d > out 2> /dev/null && fail=1
 
 cat <<\EOF > exp || fail=1
   total 0
-  ? ?--------- ? ? ? ?            ? s
-//DIRED// 46 47
+  ?????????? ? ? ? ?            ? s
+//DIRED// 44 45
 //DIRED-OPTIONS// --quoting-style=literal
 EOF
 
-cmp out exp || fail=1
+sed 's/^  l/  ?/' out | cmp - exp || fail=1
 test $fail = 1 && diff out exp 2> /dev/null
 
 (exit $fail); exit $fail
