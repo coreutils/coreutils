@@ -1,5 +1,11 @@
 2006-07-26  Jim Meyering  <jim@meyering.net>
 
+	Prepare for the above change.
+	* src/ls.c [struct fileinfo] (stat_ok): Rename from stat_failed,
+	and adjust uses.  From a patch by Paul Eggert.
+
+2006-07-26  Jim Meyering  <jim@meyering.net>
+
 	* src/ls.c: Correct indentation/formatting in a few places.
 
 2006-07-25  Paul Eggert  <eggert@cs.ucla.edu>
