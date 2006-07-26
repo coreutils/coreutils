@@ -3832,7 +3832,7 @@ static void
 print_color_indicator (const char *name, mode_t mode, int linkok,
 		       bool stat_ok, enum filetype filetype)
 {
-  int type = C_FILE;
+  int type;
   struct color_ext_type *ext;	/* Color extension */
   size_t len;			/* Length of name */
 
@@ -3847,7 +3847,17 @@ print_color_indicator (const char *name, mode_t mode, int linkok,
     }
   else
     {
-      if (S_ISDIR (mode))
+      if (S_ISREG (mode))
+	{
+	  type = C_FILE;
+	  if ((mode & S_ISUID) != 0)
+	    type = C_SETUID;
+	  else if ((mode & S_ISGID) != 0)
+	    type = C_SETGID;
+	  else if ((mode & S_IXUGO) != 0)
+	    type = C_EXEC;
+	}
+      else if (S_ISDIR (mode))
 	{
 	  if ((mode & S_ISVTX) && (mode & S_IWOTH))
 	    type = C_STICKY_OTHER_WRITABLE;
@@ -3872,16 +3882,9 @@ print_color_indicator (const char *name, mode_t mode, int linkok,
       else if (S_ISDOOR (mode))
 	type = C_DOOR;
       else
-	type = C_ORPHAN;
-
-      if (type == C_FILE)
 	{
-	  if ((mode & S_ISUID) != 0)
-	    type = C_SETUID;
-	  else if ((mode & S_ISGID) != 0)
-	    type = C_SETGID;
-	  else if ((mode & S_IXUGO) != 0)
-	    type = C_EXEC;
+	  /* Classify a file of some other type as C_ORPHAN.  */
+	  type = C_ORPHAN;
 	}
     }
 

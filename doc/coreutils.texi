@@ -5795,7 +5795,8 @@ uniquely identifies each file within a particular file system.)
 In addition to the name of each file, print the file type, file mode bits,
 number of hard links, owner name, group name, size, and
 timestamp (@pxref{Formatting file timestamps}), normally
-the modification time.
+the modification time.  Print question marks for information that
+cannot be determined.
 
 Normally the size is printed as a byte count without punctuation, but
 this can be overridden (@pxref{Block size}).  For example, @option{-h}

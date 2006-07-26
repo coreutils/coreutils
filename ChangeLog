@@ -1,5 +1,13 @@
 2006-07-26  Jim Meyering  <jim@meyering.net>
 
+	* src/ls.c (print_color_indicator): Test for S_IFREG first, rather
+	than having the code test for all of the other types first.
+	Hoist the set-uid/gid-testing code "up" into this new block.
+	Classify any other type of file (e.g., S_TYPEISSHM, etc.) as
+	C_ORPHAN, not as C_FILE.
+
+2006-07-26  Jim Meyering  <jim@meyering.net>
+
 	Checking in a change from Paul.
 
 	2006-07-25  Paul Eggert  <eggert@cs.ucla.edu>
