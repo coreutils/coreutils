@@ -134,7 +134,7 @@ With --reference, change the group of each FILE to that of RFILE.\n\
 "), stdout);
       fputs (_("\
   -f, --silent, --quiet  suppress most error messages\n\
-      --reference=RFILE  use RFILE's group rather than the specifying\n\
+      --reference=RFILE  use RFILE's group rather than specifying a\n\
                          GROUP value\n\
   -R, --recursive        operate on files and directories recursively\n\
   -v, --verbose          output a diagnostic for every file processed\n\

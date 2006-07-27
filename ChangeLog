@@ -1,3 +1,9 @@
+2006-07-27  Jim Meyering  <jim@meyering.net>
+
+	* src/chgrp.c (usage): Use correct grammar in description of the
+	--reference option
+	* src/chown.c (usage): Likewise.
+
 2006-07-26  Thomas Schwinge  <tschwinge@gnu.org>  (tiny change)
 
 	* src/copy.c (set_author) [HAVE_STRUCT_STAT_ST_AUTHOR]:
