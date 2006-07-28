@@ -143,12 +143,12 @@ mode_compile (char const *mode_string)
   if ('0' <= *mode_string && *mode_string < '8')
     {
       unsigned int octal_mode = 0;
-      unsigned int octal_mentioned = 0;
+      mode_t mode;
+      mode_t mentioned;
 
       do
 	{
 	  octal_mode = 8 * octal_mode + *mode_string++ - '0';
-	  octal_mentioned = 8 * octal_mentioned + 7;
 	  if (ALLM < octal_mode)
 	    return NULL;
 	}
@@ -157,8 +157,9 @@ mode_compile (char const *mode_string)
       if (*mode_string)
 	return NULL;
 
-      return make_node_op_equals (octal_to_mode (octal_mode),
-				  octal_to_mode (octal_mentioned & ALLM));
+      mode = octal_to_mode (octal_mode);
+      mentioned = (mode & (S_ISUID | S_ISGID)) | S_ISVTX | S_IRWXUGO;
+      return make_node_op_equals (mode, mentioned);
     }
 
   /* Allocate enough space to hold the result.  */
@@ -299,7 +300,8 @@ mode_create_from_ref (const char *ref_file)
    directory if DIR), assuming the umask is UMASK_VALUE, adjusted as
    indicated by the list of change operations CHANGES.  If DIR, the
    type 'X' change affects the returned value even if no execute bits
-   were set in OLDMODE.  If PMODE_BITS is not null, store into
+   were set in OLDMODE, and set user and group ID bits are preserved
+   unless CHANGES mentioned them.  If PMODE_BITS is not null, store into
    *PMODE_BITS a mask denoting file mode bits that are affected by
    CHANGES.
 
