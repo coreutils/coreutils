@@ -31,8 +31,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   `chmod 755 DIR' and `chmod u=rwx,go=rx DIR' now preserve DIR's
   set-user-ID and set-group-ID bits instead of clearing them, and
   similarly for `mkdir -m 755 DIR' and `mkdir -m u=rwx,go=rx DIR'.  To
-  clear the bits, mention them explicitly, e.g., `chmod 0755 DIR' or
-  `mkdir -m a-s,u=rwx,go=rx DIR'.  This change is for convenience on
+  clear the bits, mention them explicitly in a symbolic mode, e.g.,
+  `mkdir -m u=rwx,go=rx,-s DIR'.  To set them, mention them explicitly
+  in either a symbolic or a numeric mode, e.g., `mkdir -m 2755 DIR',
+  `mkdir -m u=rwx,go=rx,g+s' DIR.  This change is for convenience on
   systems where these bits inherit from parents.  Unfortunately other
   operating systems are not consistent here, and portable scripts
   cannot assume the bits are set, cleared, or preserved, even when the
