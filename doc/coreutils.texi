@@ -7260,7 +7260,8 @@ If the @option{--directory} (@option{-d}) option is given,
 @command{install} creates each @var{directory} and any missing parent
 directories.  Parent directories are created with mode
 @samp{u=rwx,go=rx} (755), regardless of the @option{-m} option or the
-current umask.
+current umask.  @xref{Directory Setuid and Setgid}, for how the
+set-user-ID and set-group-ID bits of parent directories are inherited.
 @end itemize
 
 @cindex Makefiles, installing programs in
@@ -7308,9 +7309,12 @@ Set the file mode bits for the installed file or directory to @var{mode},
 which can be either an octal number, or a symbolic mode as in
 @command{chmod}, with @samp{a=} (no access allowed to anyone) as the
 point of departure (@pxref{File permissions}).
-The default mode is @samp{u=rwx,go=rx,a-s} (0755)---read, write, and
+The default mode is @samp{u=rwx,go=rx,a-s}---read, write, and
 execute for the owner, read and execute for group and other, and with
 set-user-ID and set-group-ID disabled.
+This default is not quite the same as @samp{755}, since it disables
+instead of preserving set-user-ID and set-group-ID on directories.
+@xref{Directory Setuid and Setgid}.
 
 @item -o @var{owner}
 @itemx --owner=@var{owner}
@@ -8102,7 +8106,9 @@ Normally the directory has the desired file mode bits at the moment it
 is created.  As a @acronym{GNU} extension, @var{mode} may also mention
 special mode bits, but in this case there may be a temporary window
 during which the directory exists but its special mode bits are
-incorrect.
+incorrect.  @xref{Directory Setuid and Setgid}, for how the
+set-user-ID and set-group-ID bits of directories are inherited unless
+overridden in this way.
 
 @item -p
 @itemx --parents
@@ -8111,6 +8117,8 @@ incorrect.
 @cindex parent directories, creating
 Make any missing parent directories for each argument.  The file permission
 bits of parent directories are set to the umask modified by @samp{u+wx}.
+@xref{Directory Setuid and Setgid}, for how the set-user-ID and
+set-group-ID bits of parent directories are inherited.
 Ignore arguments corresponding to existing directories, and do not
 change their file mode bits.
 
