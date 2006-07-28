@@ -10,7 +10,7 @@ tmp=mkdir-sp-$$
 trap 'status=$?; rm -rf $tmp && exit $status' 0
 trap 'exit $?' 1 2 13 15
 
-set_mode_string=u=rwx,g=rx,o=w,go+t
+set_mode_string=u=rwx,g=rx,o=w,-s,+t
 output_mode_string=drwxr-x-wT
 
 mkdir -m$set_mode_string $tmp || fail=1
