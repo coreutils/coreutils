@@ -297,12 +297,16 @@ you can change its special mode bits.  @xref{Mode Structure}, for a
 summary of these special mode bits.
 
 To change the file mode bits to set the user ID on execution, use
-@samp{u} or @samp{a} in the @var{users} part of the symbolic mode and
+@samp{u} in the @var{users} part of the symbolic mode and
 @samp{s} in the @var{permissions} part.
 
 To change the file mode bits to set the group ID on execution, use
-@samp{g} or @samp{a} in the @var{users} part of the symbolic mode and
+@samp{g} in the @var{users} part of the symbolic mode and
 @samp{s} in the @var{permissions} part.
+
+To set both user and group ID on execution, omit the @var{users} part
+of the symbolic mode (or use @samp{a}) and use @samp{s} in the
+@var{permissions} part.
 
 To change the file mode bits to set the restricted deletion flag or sticky bit,
 omit the @var{users} part of the symbolic mode (or use @samp{a}) and use
@@ -479,7 +483,8 @@ As an
 alternative to giving a symbolic mode, you can give an octal (base 8)
 number that represents the mode.
 This number is always interpreted in octal; you do not have to add a
-leading @samp{0}, as you do in C.
+leading @samp{0}, as you do in C.  Mode @samp{0055} is the same as
+mode @samp{55}.
 
 A numeric mode is usually shorter than the corresponding symbolic
 mode, but it is limited in that normally it cannot take into account the
@@ -520,9 +525,9 @@ Mode      Mode Bit
 4000      Set user ID on execution
 @end example
 
-For example, numeric mode 4755 corresponds to symbolic mode
-@samp{u=rwxs,go=rx,g-s}, and numeric mode 664 corresponds to symbolic mode
-@samp{ug=rw,o=r}.  Numeric mode 0 corresponds to symbolic mode
+For example, numeric mode @samp{4755} corresponds to symbolic mode
+@samp{u=rwxs,go=rx}, and numeric mode @samp{664} corresponds to symbolic mode
+@samp{ug=rw,o=r}.  Numeric mode @samp{0} corresponds to symbolic mode
 @samp{a=}.
 
 @node Directory Setuid and Setgid
@@ -543,31 +548,43 @@ bits of directories.  If commands like @command{chmod} and
 mechanisms would be less convenient and it would be harder to share
 files.  Therefore, a command like @command{chmod} does not affect the
 set-user-ID or set-group-ID bits of a directory unless the user
-specifically mentions them.  For example, on systems that support
+specifically mentions them in a symbolic mode, or sets them in
+a numeric mode.  For example, on systems that support
 set-group-ID inheritance:
 
 @example
 # These commands leave the set-user-ID and
 # set-group-ID bits of the subdirectories alone,
 # so that they retain their default values.
-mkdir a b
-chmod 755 a
-chmod u=rwx,go=rx b
-mkdir -m 755 c
-mkdir -m u=rwx,go=rx d
+mkdir A B C
+chmod 755 A
+chmod 0755 B
+chmod u=rwx,go=rx C
+mkdir -m 755 D
+mkdir -m 0755 E
+mkdir -m u=rwx,go=rx F
 @end example
 
-If you want to try to clear these bits, you must mention them
+If you want to try to set these bits, you must mention them
 explicitly in the symbolic or numeric modes, e.g.:
 
 @example
-# These commands try to clear the set-user-ID
+# These commands try to set the set-user-ID
 # and set-group-ID bits of the subdirectories.
-mkdir a b
-chmod 0755 a
-chmod a-s,u=rwx,go=rx b
-mkdir -m 0755 c
-mkdir -m a-s,u=rwx,go=rx d
+mkdir G H
+chmod 6755 G
+chmod u=rwx,go=rx,a+s H
+mkdir -m 6755 I
+mkdir -m u=rwx,go=rx,a+s J
+@end example
+
+If you want to try to clear these bits, you must mention them
+explicitly in a symbolic mode, e.g.:
+
+@example
+# This command tries to clear the set-user-ID
+# and set-group-ID bits of the directory D.
+chmod a-s D
 @end example
 
 This behavior is a @acronym{GNU} extension.  Portable scripts should
