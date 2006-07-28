@@ -1,3 +1,16 @@
+2006-07-28  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (install invocation, mkdir invocation):
+	Add cross-references to Directory Setuid and Setgid.
+	(install-invocation): The default mode is no longer equivalent to 755.
+	* perm.texi (Changing Special Mode Bits): Clarify u+s versus
+	a+s versus +s, and likewise for g+s.
+	(Numeric Modes): Bring back example of 0055 == 55.  4755 no
+	longer clears setgid bit on directories.
+	(Directory Setuid and Setgid): Numeric modes now affect setuid
+	and setgid on directories only if they set these bits.  This
+	is so that leading 0 has no effect on numeric modes.
+
 2006-07-26  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (What information is listed): Mention that missing

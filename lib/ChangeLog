@@ -1,3 +1,9 @@
+2006-07-28  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* modechange.c (mode_compile): Numeric modes now affect setuid and
+	setgid on directories only if they set these bits.
+	* modechange.h: Remove obsolete comment about masks.
+
 2006-07-22  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* close-stream.c, close-stream.h: New files.

@@ -1,3 +1,13 @@
+2006-07-28  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* NEWS: chmod now preserves setuid and setgid bits on directories
+	if you use a numeric mode with them clear, e.g., "chmod 755 DIR".
+	Fix test case problems if working directory is setgid,
+	reported by Bob Proulx.
+	* tests/cp/fail-perm: Use symbolic mode so that we clear
+	setgid bit more reliably on directories.
+	* tests/mkdir/special-1 (set_mode_string): Likewise.
+
 2006-07-27  Jim Meyering  <jim@meyering.net>
 
 	* src/chgrp.c (usage): Use correct grammar in description of the
