@@ -213,10 +213,11 @@ set_owner (const struct cp_options *x, char const *dst_name, int dest_desc,
 static void
 set_author (const char *dst_name, int dest_desc, const struct stat *src_sb)
 {
-  /* FIXME: Preserve the st_author field via the file descriptor dest_desc.  */
 #if HAVE_STRUCT_STAT_ST_AUTHOR
   /* Preserve the st_author field.  */
-  file_t file = file_name_lookup (dst_name, 0, 0);
+  file_t file = (dest_desc < 0
+		 ? file_name_lookup (dst_name, 0, 0)
+		 : getdport (dest_desc));
   if (file == MACH_PORT_NULL)
     error (0, errno, _("failed to lookup file %s"), quote (dst_name));
   else

@@ -1,7 +1,13 @@
+2006-07-29  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/copy.c (set_author): Preserve the st_author field via the
+	file descriptor dest_desc.
+
 2006-07-28  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: chmod now preserves setuid and setgid bits on directories
 	if you use a numeric mode with them clear, e.g., "chmod 755 DIR".
+
 	Fix test case problems if working directory is setgid,
 	reported by Bob Proulx.
 	* tests/cp/fail-perm: Use symbolic mode so that we clear
