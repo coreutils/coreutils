@@ -60,9 +60,6 @@
  * If asked to wipe a file, this also unlinks it, renaming it to in a
  * clever way to try to leave no trace of the original filename.
  *
- * The ISAAC code still bears some resemblance to the code written
- * by Bob Jenkins, but he permits pretty unlimited use.
- *
  * This was inspired by a desire to improve on some code titled:
  * Wipe V1.0-- Overwrite and delete files.  S. 2/3/96
  * but I've rewritten everything here so completely that no trace of
@@ -108,8 +105,8 @@
 #include "inttostr.h"
 #include "quotearg.h"		/* For quotearg_colon */
 #include "quote.h"		/* For quotearg_colon */
-
-#include "rand-isaac.c"
+#include "randint.h"
+#include "randread.h"
 
 #define DEFAULT_PASSES 25	/* Default */
 
@@ -128,12 +125,20 @@ struct Options
   bool zero_fill;	/* -z flag: Add a final zero pass */
 };
 
+/* For long options that have no equivalent short option, use a
+   non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
+enum
+{
+  RANDOM_SOURCE_OPTION = CHAR_MAX + 1
+};
+
 static struct option const long_opts[] =
 {
   {"exact", no_argument, NULL, 'x'},
   {"force", no_argument, NULL, 'f'},
   {"iterations", required_argument, NULL, 'n'},
   {"size", required_argument, NULL, 's'},
+  {"random-source", required_argument, NULL, RANDOM_SOURCE_OPTION},
   {"remove", no_argument, NULL, 'u'},
   {"verbose", no_argument, NULL, 'v'},
   {"zero", no_argument, NULL, 'z'},
@@ -165,6 +170,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       printf (_("\
   -f, --force    change permissions to allow writing if necessary\n\
   -n, --iterations=N  Overwrite N times instead of the default (%d)\n\
+      --random-source=FILE  get random bytes from FILE (default /dev/urandom)\n\
   -s, --size=N   shred this many bytes (suffixes like K, M, G accepted)\n\
 "), DEFAULT_PASSES);
       fputs (_("\
@@ -227,65 +233,6 @@ to be recovered later.\n\
   exit (status);
 }
 
-/* Single-word RNG built on top of ISAAC */
-struct irand_state
-{
-  uint32_t r[ISAAC_WORDS];
-  unsigned int numleft;
-  struct isaac_state *s;
-};
-
-static void
-irand_init (struct irand_state *r, struct isaac_state *s)
-{
-  r->numleft = 0;
-  r->s = s;
-}
-
-/*
- * We take from the end of the block deliberately, so if we need
- * only a small number of values, we choose the final ones which are
- * marginally better mixed than the initial ones.
- */
-static uint32_t
-irand32 (struct irand_state *r)
-{
-  if (!r->numleft)
-    {
-      isaac_refill (r->s, r->r);
-      r->numleft = ISAAC_WORDS;
-    }
-  return r->r[--r->numleft];
-}
-
-/*
- * Return a uniformly distributed random number between 0 and n,
- * inclusive.  Thus, the result is modulo n+1.
- *
- * Theory of operation: as x steps through every possible 32-bit number,
- * x % n takes each value at least 2^32 / n times (rounded down), but
- * the values less than 2^32 % n are taken one additional time.  Thus,
- * x % n is not perfectly uniform.  To fix this, the values of x less
- * than 2^32 % n are disallowed, and if the RNG produces one, we ask
- * for a new value.
- */
-static uint32_t
-irand_mod (struct irand_state *r, uint32_t n)
-{
-  uint32_t x;
-  uint32_t lim;
-
-  if (!++n)
-    return irand32 (r);
-
-  lim = -n % n;			/* == (2**32-n) % n == 2**32 % n */
-  do
-    {
-      x = irand32 (r);
-    }
-  while (x < lim);
-  return x % n;
-}
 
 /*
  * Fill a buffer with a fixed pattern.
@@ -312,23 +259,6 @@ fillpattern (int type, unsigned char *r, size_t size)
   if (type & 0x1000)
     for (i = 0; i < size; i += 512)
       r[i] ^= 0x80;
-}
-
-/*
- * Fill a buffer, R (of size SIZE_MAX), with random data.
- * SIZE is rounded UP to a multiple of ISAAC_BYTES.
- */
-static void
-fillrand (struct isaac_state *s, uint32_t *r, size_t size_max, size_t size)
-{
-  size_t refills = (size + ISAAC_BYTES - 1) / ISAAC_BYTES;
-  assert (refills * ISAAC_BYTES <= size_max);
-
-  while (refills--)
-    {
-      isaac_refill (s, r);
-      r += ISAAC_WORDS;
-    }
 }
 
 /*
@@ -419,7 +349,7 @@ direct_mode (int fd, bool enable)
  */
 static int
 dopass (int fd, char const *qname, off_t *sizep, int type,
-	struct isaac_state *s, unsigned long int k, unsigned long int n)
+	struct randread_source *s, unsigned long int k, unsigned long int n)
 {
   off_t size = *sizep;
   off_t offset;			/* Current file posiiton */
@@ -428,7 +358,7 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
   size_t lim;			/* Amount of data to try writing */
   size_t soff;			/* Offset into buffer for next write */
   ssize_t ssize;		/* Return value from write */
-  uint32_t r[3 * MAX (ISAAC_WORDS, 1024)];  /* Fill pattern.  */
+  uint32_t r[3 * 1024];		/* Fill pattern.  */
   char pass_string[PASS_NAME_SIZE];	/* Name of current pass */
   bool write_error = false;
   bool first_write = true;
@@ -481,7 +411,7 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
 	    break;
 	}
       if (type < 0)
-	fillrand (s, r, sizeof r, lim);
+	randread (s, r, lim);
       /* Loop to retry partial writes. */
       for (soff = 0; soff < lim; soff += ssize, first_write = false)
 	{
@@ -700,9 +630,8 @@ static int const
  * order.
  */
 static void
-genpattern (int *dest, size_t num, struct isaac_state *s)
+genpattern (int *dest, size_t num, struct randint_source *s)
 {
-  struct irand_state r;
   size_t randpasses;
   int const *p;
   int *d;
@@ -712,8 +641,6 @@ genpattern (int *dest, size_t num, struct isaac_state *s)
 
   if (!num)
     return;
-
-  irand_init (&r, s);
 
   /* Stage 1: choose the passes to use */
   p = patterns;
@@ -756,7 +683,7 @@ genpattern (int *dest, size_t num, struct isaac_state *s)
 	{			/* Pad out with k of the n available */
 	  do
 	    {
-	      if (n == (size_t) k-- || irand_mod (&r, k) < n)
+	      if (n == (size_t) k || randint_choose (s, k) < n)
 		{
 		  *d++ = *p;
 		  n--;
@@ -802,7 +729,7 @@ genpattern (int *dest, size_t num, struct isaac_state *s)
 	}
       else
 	{
-	  swap = n + irand_mod (&r, top - n - 1);
+	  swap = n + randint_choose (s, top - n);
 	  k = dest[n];
 	  dest[n] = dest[swap];
 	  dest[swap] = k;
@@ -810,8 +737,6 @@ genpattern (int *dest, size_t num, struct isaac_state *s)
       accum -= randpasses;
     }
   /* assert (top == num); */
-
-  memset (&r, 0, sizeof r);	/* Wipe this on general principles */
 }
 
 /*
@@ -819,7 +744,7 @@ genpattern (int *dest, size_t num, struct isaac_state *s)
  * size bytes of the given fd.  Return true if successful.
  */
 static bool
-do_wipefd (int fd, char const *qname, struct isaac_state *s,
+do_wipefd (int fd, char const *qname, struct randint_source *s,
 	   struct Options const *flags)
 {
   size_t i;
@@ -828,6 +753,7 @@ do_wipefd (int fd, char const *qname, struct isaac_state *s,
   unsigned long int n;		/* Number of passes for printing purposes */
   int *passarray;
   bool ok = true;
+  struct randread_source *rs;
 
   n = 0;		/* dopass takes n -- 0 to mean "don't print progress" */
   if (flags->verbose)
@@ -894,10 +820,12 @@ do_wipefd (int fd, char const *qname, struct isaac_state *s,
   /* Schedule the passes in random order. */
   genpattern (passarray, flags->n_iterations, s);
 
+  rs = randint_get_source (s);
+
   /* Do the work */
   for (i = 0; i < flags->n_iterations; i++)
     {
-      int err = dopass (fd, qname, &size, passarray[i], s, i + 1, n);
+      int err = dopass (fd, qname, &size, passarray[i], rs, i + 1, n);
       if (err)
 	{
 	  if (err < 0)
@@ -915,7 +843,7 @@ do_wipefd (int fd, char const *qname, struct isaac_state *s,
 
   if (flags->zero_fill)
     {
-      int err = dopass (fd, qname, &size, 0, s, flags->n_iterations + 1, n);
+      int err = dopass (fd, qname, &size, 0, rs, flags->n_iterations + 1, n);
       if (err)
 	{
 	  if (err < 0)
@@ -939,7 +867,7 @@ do_wipefd (int fd, char const *qname, struct isaac_state *s,
 
 /* A wrapper with a little more checking for fds on the command line */
 static bool
-wipefd (int fd, char const *qname, struct isaac_state *s,
+wipefd (int fd, char const *qname, struct randint_source *s,
 	struct Options const *flags)
 {
   int fd_flags = fcntl (fd, F_GETFL);
@@ -1110,7 +1038,7 @@ wipename (char *oldname, char const *qoldname, struct Options const *flags)
  */
 static bool
 wipefile (char *name, char const *qname,
-	  struct isaac_state *s, struct Options const *flags)
+	  struct randint_source *s, struct Options const *flags)
 {
   bool ok;
   int fd;
@@ -1137,16 +1065,30 @@ wipefile (char *name, char const *qname,
   return ok;
 }
 
+
+/* Buffers for random data.  */
+static struct randint_source *randint_source;
+
+/* Just on general principles, wipe buffers containing information
+   that may be related to the possibly-pseudorandom values used during
+   shredding.  */
+static void
+clear_random_data (void)
+{
+  randint_all_free (randint_source);
+}
+
+
 int
 main (int argc, char **argv)
 {
-  struct isaac_state s;
   bool ok = true;
   struct Options flags;
   char **file;
   int n_files;
   int c;
   int i;
+  char const *random_source = NULL;
 
   initialize_main (&argc, &argv);
   program_name = argv[0];
@@ -1155,8 +1097,6 @@ main (int argc, char **argv)
   textdomain (PACKAGE);
 
   atexit (close_stdout);
-
-  isaac_seed (&s);
 
   memset (&flags, 0, sizeof flags);
 
@@ -1183,6 +1123,12 @@ main (int argc, char **argv)
 	      }
 	    flags.n_iterations = (size_t) tmp;
 	  }
+	  break;
+
+	case RANDOM_SOURCE_OPTION:
+	  if (random_source && !STREQ (random_source, optarg))
+	    error (EXIT_FAILURE, 0, _("multiple random sources specified"));
+	  random_source = optarg;
 	  break;
 
 	case 'u':
@@ -1232,23 +1178,25 @@ main (int argc, char **argv)
       usage (EXIT_FAILURE);
     }
 
+  randint_source = randint_all_new (random_source, SIZE_MAX);
+  if (! randint_source)
+    error (EXIT_FAILURE, errno, "%s", quotearg_colon (random_source));
+  atexit (clear_random_data);
+
   for (i = 0; i < n_files; i++)
     {
       char *qname = xstrdup (quotearg_colon (file[i]));
       if (STREQ (file[i], "-"))
 	{
-	  ok &= wipefd (STDOUT_FILENO, qname, &s, &flags);
+	  ok &= wipefd (STDOUT_FILENO, qname, randint_source, &flags);
 	}
       else
 	{
 	  /* Plain filename - Note that this overwrites *argv! */
-	  ok &= wipefile (file[i], qname, &s, &flags);
+	  ok &= wipefile (file[i], qname, randint_source, &flags);
 	}
       free (qname);
     }
-
-  /* Just on general principles, wipe s. */
-  memset (&s, 0, sizeof s);
 
   exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
