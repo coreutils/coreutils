@@ -1,0 +1,401 @@
+/* Shuffle lines of text.
+
+   Copyright (C) 2006 Free Software Foundation, Inc.
+
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2, or (at your option)
+   any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software
+   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
+   Written by Paul Eggert.  */
+
+#include <config.h>
+
+#include <stdio.h>
+#include <sys/types.h>
+#include "system.h"
+
+#include "error.h"
+#include "getopt.h"
+#include "quote.h"
+#include "quotearg.h"
+#include "randint.h"
+#include "randperm.h"
+#include "xstrtol.h"
+
+/* The official name of this program (e.g., no `g' prefix).  */
+#define PROGRAM_NAME "shuf"
+
+#define AUTHORS "Paul Eggert"
+
+/* The name this program was run with. */
+char *program_name;
+
+void
+usage (int status)
+{
+  if (status != EXIT_SUCCESS)
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
+	     program_name);
+  else
+    {
+      printf (_("\
+Usage: %s [OPTION]... [FILE]\n\
+  or:  %s -e [OPTION]... [ARG]...\n\
+  or:  %s -i LO-HI [OPTION]...\n\
+"),
+	      program_name, program_name, program_name);
+      fputs (_("\
+Write a random permutation of the input lines to standard output.\n\
+\n\
+"), stdout);
+      fputs (_("\
+Mandatory arguments to long options are mandatory for short options too.\n\
+"), stdout);
+      fputs (_("\
+  -e, --echo                treat each ARG as an input line\n\
+  -i, --input-range=LO-HI   treat each number LO through HI as an input line\n\
+  -n, --head-lines=LINES    output at most LINES lines\n\
+  -o, --output=FILE         write result to FILE instead of standard output\n\
+      --random-source=FILE  get random bytes from FILE (default /dev/urandom)\n\
+  -z, --zero-terminated     end lines with 0 byte, not newline\n\
+"), stdout);
+      fputs (HELP_OPTION_DESCRIPTION, stdout);
+      fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      fputs (_("\
+\n\
+With no FILE, or when FILE is -, read standard input.\n\
+"), stdout);
+      printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
+    }
+
+  exit (status);
+}
+
+/* For long options that have no equivalent short option, use a
+   non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
+enum
+{
+  RANDOM_SOURCE_OPTION = CHAR_MAX + 1
+};
+
+static struct option const long_opts[] =
+{
+  {"echo", no_argument, NULL, 'e'},
+  {"input-range", required_argument, NULL, 'i'},
+  {"head-count", required_argument, NULL, 'n'},
+  {"output", required_argument, NULL, 'o'},
+  {"random-source", required_argument, NULL, RANDOM_SOURCE_OPTION},
+  {"zero-terminated", no_argument, NULL, 'z'},
+  {GETOPT_HELP_OPTION_DECL},
+  {GETOPT_VERSION_OPTION_DECL},
+  {0, 0, 0, 0},
+};
+
+static bool
+input_numbers_option_used (size_t lo_input, size_t hi_input)
+{
+  return ! (lo_input == SIZE_MAX && hi_input == 0);
+}
+
+static void
+input_from_argv (char **operand, int n_operands, char eolbyte)
+{
+  char *p;
+  size_t size = n_operands;
+  int i;
+
+  for (i = 0; i < n_operands; i++)
+    size += strlen (operand[i]);
+  p = xmalloc (size);
+
+  for (i = 0; i < n_operands; i++)
+    {
+      char *p1 = stpcpy (p, operand[i]);
+      operand[i] = p;
+      p = p1;
+      *p++ = eolbyte;
+    }
+
+  operand[n_operands] = p;
+}
+
+/* Read data from file IN.  Input lines are delimited by EOLBYTE;
+   silently append a trailing EOLBYTE if the file ends in some other
+   byte.  Store a pointer to the resulting array of lines into *PLINE.
+   Return the number of lines read.  Report an error and exit on
+   failure.  */
+
+static size_t
+read_input (FILE *in, char eolbyte, char ***pline)
+{
+  char *p;
+  char *buf = NULL;
+  char *lim;
+  size_t alloc = 0;
+  size_t used = 0;
+  size_t next_alloc = (1 << 13) + 1;
+  size_t bytes_to_read;
+  size_t nread;
+  char **line;
+  size_t i;
+  size_t n_lines;
+  int fread_errno;
+  struct stat instat;
+
+  if (fstat (fileno (in), &instat) == 0 && S_ISREG (instat.st_mode))
+    {
+      off_t file_size = instat.st_size;
+      off_t current_offset = ftello (in);
+      if (0 <= current_offset)
+	{
+	  off_t remaining_size =
+	    (current_offset < file_size ? file_size - current_offset : 0);
+	  if (SIZE_MAX - 2 < remaining_size)
+	    xalloc_die ();
+	  next_alloc = remaining_size + 2;
+	}
+    }
+
+  do
+    {
+      if (alloc == used)
+	{
+	  if (alloc == SIZE_MAX)
+	    xalloc_die ();
+	  alloc = next_alloc;
+	  next_alloc = alloc * 2;
+	  if (next_alloc < alloc)
+	    next_alloc = SIZE_MAX;
+	  buf = xrealloc (buf, alloc);
+	}
+
+      bytes_to_read = alloc - used - 1;
+      nread = fread (buf + used, sizeof (char), bytes_to_read, in);
+      used += nread;
+    }
+  while (nread == bytes_to_read);
+
+  fread_errno = errno;
+
+  if (used && buf[used - 1] != eolbyte)
+    buf[used++] = eolbyte;
+
+  lim = buf + used;
+
+  n_lines = 0;
+  for (p = buf; p < lim; p = memchr (p, eolbyte, lim - p) + 1)
+    n_lines++;
+
+  *pline = line = xnmalloc (n_lines + 1, sizeof *line);
+
+  line[0] = p = buf;
+  for (i = 1; i <= n_lines; i++)
+    line[i] = p = memchr (p, eolbyte, lim - p) + 1;
+
+  errno = fread_errno;
+  return n_lines;
+}
+
+static int
+write_permuted_output (size_t n_lines, char * const *line, size_t lo_input,
+		       size_t const *permutation)
+{
+  size_t i;
+
+  if (line)
+    for (i = 0; i < n_lines; i++)
+      {
+	char * const *p = line + permutation[i];
+	size_t len = p[1] - p[0];
+	if (fwrite (p[0], sizeof *p[0], len, stdout) != len)
+	  return -1;
+      }
+  else
+    for (i = 0; i < n_lines; i++)
+      {
+	unsigned long int n = lo_input + permutation[i];
+	if (printf ("%lu\n", n) < 0)
+	  return -1;
+      }
+
+  return 0;
+}
+
+int
+main (int argc, char **argv)
+{
+  bool echo = false;
+  size_t lo_input = SIZE_MAX;
+  size_t hi_input = 0;
+  size_t head_lines = SIZE_MAX;
+  char const *outfile = NULL;
+  char *random_source = NULL;
+  char eolbyte = '\n';
+
+  int optc;
+  int n_operands;
+  char **operand;
+  size_t n_lines;
+  char **line;
+  struct randint_source *randint_source;
+  size_t const *permutation;
+
+  initialize_main (&argc, &argv);
+  program_name = argv[0];
+  setlocale (LC_ALL, "");
+  bindtextdomain (PACKAGE, LOCALEDIR);
+  textdomain (PACKAGE);
+
+  atexit (close_stdout);
+
+  while ((optc = getopt_long (argc, argv, "ei:n:o:z", long_opts, NULL)) != -1)
+    switch (optc)
+      {
+      case 'e':
+	echo = true;
+	break;
+
+      case 'i':
+	{
+	  unsigned long int argval = 0;
+	  char *p = strchr (optarg, '-');
+	  bool invalid = !p;
+
+	  if (input_numbers_option_used (lo_input, hi_input))
+	    error (EXIT_FAILURE, 0, _("multiple -i options specified"));
+
+	  if (p)
+	    {
+	      *p = '\0';
+	      invalid = ((xstrtoul (optarg, NULL, 10, &argval, NULL)
+			  != LONGINT_OK)
+			 || SIZE_MAX < argval);
+	      *p = '-';
+	      lo_input = argval;
+	      optarg = p + 1;
+	    }
+
+	  invalid |= ((xstrtoul (optarg, NULL, 10, &argval, NULL)
+		       != LONGINT_OK)
+		      || SIZE_MAX < argval);
+	  hi_input = argval;
+	  n_lines = hi_input - lo_input + 1;
+	  invalid |= ((lo_input <= hi_input) == (n_lines == 0));
+	  if (invalid)
+	    error (EXIT_FAILURE, 0, _("invalid input range %s"),
+		   quote (optarg));
+	}
+	break;
+
+      case 'n':
+	{
+	  unsigned long int argval;
+	  strtol_error e = xstrtoul (optarg, NULL, 10, &argval, NULL);
+
+	  if (e == LONGINT_OK)
+	    head_lines = MIN (head_lines, argval);
+	  else if (e != LONGINT_OVERFLOW)
+	    error (EXIT_FAILURE, 0, _("invalid line count %s"),
+		   quote (optarg));
+	}
+	break;
+
+      case 'o':
+	if (outfile && !STREQ (outfile, optarg))
+	  error (EXIT_FAILURE, 0, _("multiple output files specified"));
+	outfile = optarg;
+	break;
+
+      case RANDOM_SOURCE_OPTION:
+	if (random_source && !STREQ (random_source, optarg))
+	  error (EXIT_FAILURE, 0, _("multiple random sources specified"));
+	random_source = optarg;
+	break;
+
+      case 'z':
+	eolbyte = '\0';
+	break;
+
+      case_GETOPT_HELP_CHAR;
+      case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+      default:
+	usage (EXIT_FAILURE);
+      }
+
+  n_operands = argc - optind;
+  operand = argv + optind;
+
+  if (echo)
+    {
+      if (input_numbers_option_used (lo_input, hi_input))
+	error (EXIT_FAILURE, 0, _("cannot combine -e and -i options"));
+      input_from_argv (operand, n_operands, eolbyte);
+      n_lines = n_operands;
+      line = operand;
+    }
+  else if (input_numbers_option_used (lo_input, hi_input))
+    {
+      if (n_operands)
+	{
+	  error (0, 0, _("extra operand %s\n"), quote (operand[0]));
+	  usage (EXIT_FAILURE);
+	}
+      n_lines = hi_input - lo_input + 1;
+      line = NULL;
+    }
+  else
+    {
+      char **input_lines;
+
+      switch (n_operands)
+	{
+	case 0:
+	  break;
+
+	case 1:
+	  if (! (STREQ (operand[0], "-") || freopen (operand[0], "r", stdin)))
+	    error (EXIT_FAILURE, errno, "%s", operand[0]);
+	  break;
+
+	default:
+	  error (0, 0, _("extra operand %s"), quote (operand[1]));
+	  usage (EXIT_FAILURE);
+	}
+
+      n_lines = read_input (stdin, eolbyte, &input_lines);
+      line = input_lines;
+    }
+
+  head_lines = MIN (head_lines, n_lines);
+
+  randint_source = randint_all_new (random_source,
+				    randperm_bound (head_lines, n_lines));
+  if (! randint_source)
+    error (EXIT_FAILURE, errno, "%s", quotearg_colon (random_source));
+
+  /* Close stdin now, rather than earlier, so that randint_all_new
+     doesn't have to worry about opening something other than
+     stdin.  */
+  if (! (echo || input_numbers_option_used (lo_input, hi_input))
+      && (ferror (stdin) || fclose (stdin) != 0))
+    error (EXIT_FAILURE, errno, _("read error"));
+
+  permutation = randperm_new (randint_source, head_lines, n_lines);
+
+  if (outfile && ! freopen (outfile, "w", stdout))
+    error (EXIT_FAILURE, errno, "%s", quotearg_colon (outfile));
+  if (write_permuted_output (head_lines, line, lo_input, permutation) != 0)
+    error (EXIT_FAILURE, errno, _("write error"));
+
+  return EXIT_SUCCESS;
+}
