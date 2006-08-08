@@ -52,6 +52,7 @@ libcoreutils_a_SOURCES = \
   xalloc-die.c \
   xgethostname.c xgethostname.h \
   xmemcoll.c xmemcoll.h \
+  xmemxfrm.c xmemxfrm.h \
   xstrndup.c xstrndup.h \
   xstrtoimax.c \
   xstrtoumax.c
