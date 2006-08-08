@@ -11,7 +11,7 @@ AC_DEFUN([gl_TIME_R],
 [
   AC_LIBSOURCES([time_r.c, time_r.h])
   AC_REQUIRE([gl_USE_SYSTEM_EXTENSIONS])
-  AC_REQUIRE([gl_C_RESTRICT])
+  AC_REQUIRE([AC_C_RESTRICT])
 
   AC_CACHE_CHECK([whether localtime_r is compatible with its POSIX signature],
     [gl_cv_time_r_posix],
