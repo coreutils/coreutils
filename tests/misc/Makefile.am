@@ -47,6 +47,7 @@ TESTS = \
   sha256sum \
   sha384sum \
   sha512sum \
+  shuf \
   sort-merge \
   sort-rand \
   split-a \
