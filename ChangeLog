@@ -1,3 +1,48 @@
+2006-08-08  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Add a command 'shuf', and modify shred and sort to use the new
+	random number generator library of 'shuf'.
+
+	* AUTHORS: Add shuf.
+	* README: Likewise.
+	* NEWS: Likewise.  Mention new --random-source option for shred
+	and sort.  Move "sort +1 -2" notice to the appropriate section,
+	and clarify its role with respect to POSIXLY_CORRECT.
+	* man/.cvsignore: Add shuf.1.
+	* man/Makefile.am (dist_man_MANS): Add shuf.1.
+	(shuf.1): New dependency.
+	* man/shuf.x: New file.
+	* src/Makefile.am (bin_PROGRAMS): Add shuf.
+	(EXTRA_DIST): Remove rand-isaac.c.
+	(shuf_LDADD): New macro.
+	* src/rand-isaac.c: Remove, moving most of its contents to
+	lib/rand-isaac.c.
+	* src/shuf.c: New file.
+	* src/shred.c: Use new random-number interface rather than rand-isaac.c.
+	Don't include rand-isaac.c; include randint.h and randread.h instead.
+	(RANDOM_SOURCE_OPTION): New enum.
+	(long_opts, usage, main): New option --random-source.
+	* src/sort.c: Likewise.
+	* src/shred.c (struct irand_state, irand_init, irand32, irand_mod): Remove.
+	All callers changed to use randint interface.
+	(fillrand): Remove.  All callers changed to use randread interface.
+	(dopass): Remove dependency on ISAAC buffer size.
+	(genpattern): Don't wipe the random state here.
+	(randint_source): New static var.
+	(clear_random_data): New function.
+	(main): Allocate random source, and arrange to wipe it on exit.
+	* src/sort.c: Include md5.h, randread.h, xmemxfrm.h.
+	(longopts, usage, main): Remove undocumented --seed option;
+	it's now replaced by --random-source.
+	(rand_state, get_hash): Remove.
+	(randread_source): New static var.
+	(random_state, cmp_hashes, compare_random): New functions; they guarantee
+	no collisions in the random hash function.
+	(keycompare): Use compare_random for -R; don't fall back on comparing
+	via memcoll, since compare_random does the right thing.
+	* tests/misc/Makefile.am (TESTS): Add shuf.
+	* tests/misc/shuf: New file.
+
 2006-07-29  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/copy.c (set_author): Preserve the st_author field via the

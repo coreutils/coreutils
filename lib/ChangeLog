@@ -1,3 +1,11 @@
+2006-08-08  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* Makefile.am (libcoreutils_a_SOURCES): Add xmemxfrm.c, xmemxfrm.h.
+	* memxfrm.c, memxfrm.h, randint.c, randint.h, randperm.c, randperm.h: New files.
+	* randread.c, randread.h, xmemxfrm.c, xmemxfrm.h: New files.
+	* rand-isaac.h: New file.
+	* rand-isaac.c: New file, mostly taken from ../src/rand-isaac.c.
+
 2006-07-28  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* modechange.c (mode_compile): Numeric modes now affect setuid and

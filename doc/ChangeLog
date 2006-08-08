@@ -1,3 +1,10 @@
+2006-08-08  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (shuf invocation, Random sources): New sections.
+	(Operating on sorted files): Add shuf.
+	(sort invocation, shred invocation): New option --random-source.
+	(sort invocation): Fix typo: -R -> -r.
+
 2006-07-28  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (install invocation, mkdir invocation):
