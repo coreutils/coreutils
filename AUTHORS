@@ -67,6 +67,7 @@ sha256sum: Ulrich Drepper, Scott Miller, David Madore
 sha384sum: Ulrich Drepper, Scott Miller, David Madore
 sha512sum: Ulrich Drepper, Scott Miller, David Madore
 shred: Colin Plumb
+shuf: Paul Eggert
 sleep: Jim Meyering, Paul Eggert
 sort: Mike Haertel, Paul Eggert
 split: Torbjorn Granlund, Richard M. Stallman
