@@ -25,7 +25,7 @@ bin_PROGRAMS = [ chgrp chown chmod cp dd dircolors du \
   mkfifo mknod mv nohup readlink rm rmdir shred stat sync touch unlink \
   cat cksum comm csplit cut expand fmt fold head join md5sum \
   nl od paste pr ptx sha1sum sha224sum sha256sum sha384sum sha512sum \
-  sort split sum tac tail tr tsort unexpand uniq wc \
+  shuf sort split sum tac tail tr tsort unexpand uniq wc \
   basename date dirname echo env expr factor false \
   hostname id kill logname pathchk printenv printf pwd seq sleep tee \
   test true tty whoami yes \
@@ -46,7 +46,7 @@ noinst_HEADERS = \
   wheel-size.h \
   wheel.h
 
-EXTRA_DIST = dcgen dircolors.hin rand-isaac.c tac-pipe.c \
+EXTRA_DIST = dcgen dircolors.hin tac-pipe.c \
   groups.sh wheel-gen.pl extract-magic c99-to-c89.diff
 CLEANFILES = $(SCRIPTS) su
 
@@ -75,6 +75,7 @@ dir_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME)
 ls_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME)
 pr_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME)
 shred_LDADD = $(LDADD) $(LIB_GETHRXTIME) $(LIB_FDATASYNC)
+shuf_LDADD = $(LDADD) $(LIB_GETHRXTIME)
 vdir_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME)
 
 ## If necessary, add -lm to resolve use of pow in lib/strtod.c.
