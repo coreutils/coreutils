@@ -5,14 +5,6 @@
 	* prereq.m4 (gl_PREREQ): Require gl_MEMXFRM, gl_RANDINT, gl_RANDPERM,
 	gl_RANDREAD.
 
-	* restrict.m4: Remove, since we no longer need gl_RESTRICT.
-	* getaddrinfo.m4 (gl_PREREQ_GETADDRINFO): Use AC_C_RESTRICT, not
-	gl_C_RESTRICT, since we assume recent Autoconf.
-	* regex.m4 (gl_PREREQ_REGEX): Likewise.
-	* time_r.m4 (gl_TIME_R): Likewise.
-
-2006-08-06  Paul Eggert  <eggert@cs.ucla.edu>
-
 	* restrict.m4: Remove, now that we assume Autoconf 2.58 or later.
 	All uses of gl_C_RESTRICT changed to AC_C_RESTRICT.
 
