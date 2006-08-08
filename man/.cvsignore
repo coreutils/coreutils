@@ -65,6 +65,7 @@ sha256sum.1
 sha384sum.1
 sha512sum.1
 shred.1
+shuf.1
 sleep.1
 sort.1
 split.1
