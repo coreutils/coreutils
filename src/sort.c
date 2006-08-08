@@ -30,13 +30,16 @@
 #include "error.h"
 #include "hard-locale.h"
 #include "inttostr.h"
+#include "md5.h"
 #include "physmem.h"
 #include "posixver.h"
 #include "quote.h"
-#include "stdlib--.h"
+#include "randread.h"
 #include "stdio--.h"
+#include "stdlib--.h"
 #include "strnumcmp.h"
 #include "xmemcoll.h"
+#include "xmemxfrm.h"
 #include "xstrtol.h"
 
 #if HAVE_SYS_RESOURCE_H
@@ -76,8 +79,6 @@ double strtod ();
 #ifndef DEFAULT_TMPDIR
 # define DEFAULT_TMPDIR "/tmp"
 #endif
-
-#include "rand-isaac.c"
 
 /* Exit statuses.  */
 enum
@@ -307,6 +308,7 @@ Ordering options:\n\
   -M, --month-sort            compare (unknown) < `JAN' < ... < `DEC'\n\
   -n, --numeric-sort          compare according to string numerical value\n\
   -R, --random-sort           sort by random hash of keys\n\
+      --random-source=FILE    get random bytes from FILE (default /dev/urandom)\n\
   -r, --reverse               reverse the result of comparisons\n\
 \n\
 "), stdout);
@@ -362,7 +364,7 @@ native byte values.\n\
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
 {
-  SEED_OPTION = CHAR_MAX + 1
+  RANDOM_SOURCE_OPTION = CHAR_MAX + 1
 };
 
 static char const short_options[] = "-bcdfgik:mMno:rRsS:t:T:uy:z";
@@ -380,6 +382,7 @@ static struct option const long_options[] =
   {"month-sort", no_argument, NULL, 'M'},
   {"numeric-sort", no_argument, NULL, 'n'},
   {"random-sort", no_argument, NULL, 'R'},
+  {"random-source", required_argument, NULL, RANDOM_SOURCE_OPTION},
   {"output", required_argument, NULL, 'o'},
   {"reverse", no_argument, NULL, 'r'},
   {"stable", no_argument, NULL, 's'},
@@ -388,7 +391,6 @@ static struct option const long_options[] =
   {"temporary-directory", required_argument, NULL, 'T'},
   {"unique", no_argument, NULL, 'u'},
   {"zero-terminated", no_argument, NULL, 'z'},
-  {"seed", required_argument, NULL, SEED_OPTION}, /* This will go away soon.  */
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0},
@@ -1166,19 +1168,117 @@ getmonth (char const *month, size_t len)
   return 0;
 }
 
-/* The ISAAC state resulting from the user-specified seed, or from
-   random data taken from the environment.  */
-static struct isaac_state rand_state;
+/* A source of random data.  */
+static struct randread_source *randread_source;
 
-/* Set *RESULT to the ISAAC state resulting from applying TEXT (with
-   length LEN) to rand_state.  */
-static void
-get_hash (char const *text, size_t len, uint32_t resbuf[ISAAC_WORDS])
+/* Return the Ith randomly-generated state.  The caller must invoke
+   random_state (H) for all H less than I before invoking random_state
+   (I).  */
+
+static struct md5_ctx
+random_state (size_t i)
 {
-  struct isaac_state s = rand_state;
-  isaac_seed_data (&s, text, len);
-  isaac_seed_finish (&s);
-  isaac_refill (&s, resbuf);
+  /* An array of states resulting from the random data, and counts of
+     its used and allocated members.  */
+  static struct md5_ctx *state;
+  static size_t used;
+  static size_t allocated;
+
+  struct md5_ctx *s = &state[i];
+
+  if (used <= i)
+    {
+      unsigned char buf[MD5_DIGEST_SIZE];
+
+      used++;
+
+      if (allocated <= i)
+	{
+	  state = X2NREALLOC (state, &allocated);
+	  s = &state[i];
+	}
+
+      randread (randread_source, buf, sizeof buf);
+      md5_init_ctx (s);
+      md5_process_bytes (buf, sizeof buf, s);
+    }
+
+  return *s;
+}
+
+/* Compare the hashes of TEXTA with length LENGTHA to those of TEXTB
+   with length LENGTHB.  Return negative if less, zero if equal,
+   positive if greater.  */
+
+static int
+cmp_hashes (char const *texta, size_t lena,
+	    char const *textb, size_t lenb)
+{
+  /* Try random hashes until a pair of hashes disagree.  But if the
+     first pair of random hashes agree, check whether the keys are
+     identical and if so report no difference.  */
+  int diff;
+  size_t i;
+  for (i = 0; ; i++)
+    {
+      uint32_t dig[2][MD5_DIGEST_SIZE / sizeof (uint32_t)];
+      struct md5_ctx s[2];
+      s[0] = s[1] = random_state (i);
+      md5_process_bytes (texta, lena, &s[0]);  md5_finish_ctx (&s[0], dig[0]);
+      md5_process_bytes (textb, lenb, &s[1]);  md5_finish_ctx (&s[1], dig[1]);
+      diff = memcmp (dig[0], dig[1], sizeof dig[0]);
+      if (diff != 0)
+	break;
+      if (i == 0 && lena == lenb && memcmp (texta, textb, lena) == 0)
+	break;
+    }
+
+  return diff;
+}
+
+/* Compare the keys TEXTA (of length LENA) and TEXTB (of length LENB)
+   using one or more random hash functions.  */
+
+static int
+compare_random (char *restrict texta, size_t lena,
+		char *restrict textb, size_t lenb)
+{
+  int diff;
+
+  if (! hard_LC_COLLATE)
+    diff = cmp_hashes (texta, lena, textb, lenb);
+  else
+    {
+      /* Transform the text into the basis of comparison, so that byte
+	 strings that would otherwise considered to be equal are
+	 considered equal here even if their bytes differ.  */
+
+      char *buf = NULL;
+      char stackbuf[4000];
+      size_t tlena = xmemxfrm (stackbuf, sizeof stackbuf, texta, lena);
+      bool a_fits = tlena <= sizeof stackbuf;
+      size_t tlenb = xmemxfrm ((a_fits ? stackbuf + tlena : NULL),
+			       (a_fits ? sizeof stackbuf - tlena : 0),
+			       textb, lenb);
+
+      if (a_fits && tlena + tlenb <= sizeof stackbuf)
+	buf = stackbuf;
+      else
+	{
+	  /* Adding 1 to the buffer size lets xmemxfrm run a bit
+	     faster by avoiding the need for an extra buffer copy.  */
+	  buf = xmalloc (tlena + tlenb + 1);
+	  xmemxfrm (buf, tlena + 1, texta, lena);
+	  xmemxfrm (buf + tlena, tlenb + 1, textb, lenb);
+	}
+
+      diff = cmp_hashes (buf, tlena, buf + tlena, tlenb);
+
+      if (buf != stackbuf)
+	free (buf);
+    }
+
+  return diff;
 }
 
 /* Compare two lines A and B trying every key in sequence until there
@@ -1210,29 +1310,8 @@ keycompare (const struct line *a, const struct line *b)
       /* Actually compare the fields. */
 
       if (key->random)
-        {
-	  int i;
-	  uint32_t diga[ISAAC_WORDS];
-	  uint32_t digb[ISAAC_WORDS];
-          get_hash (texta, lena, diga);
-          get_hash (textb, lenb, digb);
-
-	  /* Go backwards, since the last words are marginally better
-	     mixed.  */
-	  for (i = ISAAC_WORDS - 1; 0 <= i; i--)
-	    if (diga[i] != digb[i])
-	      {
-		diff = (diga[i] < digb[i] ? -1 : 1);
-		goto not_equal;
-	      }
-
-	  /* FIXME: Should break ties by rehashing with a different
-	     random hashing function (and repeat until the tie is
-	     broken) unless --seed was specified.  The probability of
-	     this being needed should be infinitesimal.  */
-        }
-
-      if (key->numeric | key->general_numeric)
+	diff = compare_random (texta, lena, textb, lenb);
+      else if (key->numeric | key->general_numeric)
 	{
 	  char savea = *lima, saveb = *limb;
 
@@ -2208,7 +2287,7 @@ main (int argc, char **argv)
   int c = 0;
   bool checkonly = false;
   bool mergeonly = false;
-  char const *seed = NULL;
+  char *random_source = NULL;
   bool need_random = false;
   size_t nfiles = 0;
   bool posixly_correct = (getenv ("POSIXLY_CORRECT") != NULL);
@@ -2447,9 +2526,11 @@ main (int argc, char **argv)
 	  outfile = optarg;
 	  break;
 
-        case SEED_OPTION:
-	  seed = optarg;
-          break;
+	case RANDOM_SOURCE_OPTION:
+	  if (random_source && !STREQ (random_source, optarg))
+	    error (SORT_FAILURE, 0, _("multiple random sources specified"));
+	  random_source = optarg;
+	  break;
 
 	case 's':
 	  stable = true;
@@ -2563,13 +2644,9 @@ main (int argc, char **argv)
 
   if (need_random)
     {
-      if (seed)
-	{
-	  isaac_seed_start (&rand_state);
-	  isaac_seed_data (&rand_state, seed, strlen (seed));
-	}
-      else
-	isaac_seed (&rand_state);
+      randread_source = randread_new (random_source, MD5_DIGEST_SIZE);
+      if (! randread_source)
+	die (_("open failed"), random_source);
     }
 
   if (temp_dir_count == 0)
