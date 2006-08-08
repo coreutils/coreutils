@@ -97,6 +97,7 @@
 * sha1sum: (coreutils)sha1sum invocation.       Print or check SHA-1 digests.
 * sha2: (coreutils)sha2 utilities.              Print or check SHA-2 digests.
 * shred: (coreutils)shred invocation.           Remove files more securely.
+* shuf: (coreutils)shuf invocation.             Shuffling text files.
 * sleep: (coreutils)sleep invocation.           Delay for a specified time.
 * sort: (coreutils)sort invocation.             Sort text files.
 * split: (coreutils)split invocation.           Split into fixed-size pieces.
@@ -174,7 +175,7 @@ Free Documentation License''.
 * Formatting file contents::           fmt pr fold
 * Output of parts of files::           head tail split csplit
 * Summarizing files::                  wc sum cksum md5sum sha1sum sha2
-* Operating on sorted files::          sort uniq comm ptx tsort
+* Operating on sorted files::          sort shuf uniq comm ptx tsort
 * Operating on fields within a line::  cut paste join
 * Operating on characters::            tr expand unexpand
 * Directory listing::                  ls dir vdir dircolors
@@ -207,6 +208,7 @@ Common Options
 * Exit status::                 Indicating program success or failure.
 * Backup options::              Backup options
 * Block size::                  Block size
+* Random sources::              Sources of random data
 * Target directory::            Target directory
 * Trailing slashes::            Trailing slashes
 * Traversing symlinks::         Traversing symlinks to directories
@@ -246,6 +248,7 @@ Summarizing files
 Operating on sorted files
 
 * sort invocation::             Sort text files.
+* shuf invocation::             Shuffle text files.
 * uniq invocation::             Uniquify files.
 * comm invocation::             Compare two sorted files line by line.
 * ptx invocation::              Produce a permuted index of file contents.
@@ -641,6 +644,7 @@ name.
 * Exit status::                 Indicating program success or failure.
 * Backup options::              -b -S, in some programs.
 * Block size::                  BLOCK_SIZE and --block-size, in some programs.
+* Random sources::              --random-source, in some programs.
 * Target directory::            Specifying a target directory, in some programs.
 * Trailing slashes::            --strip-trailing-slashes, in some programs.
 * Traversing symlinks::         -H, -L, or -P, in some programs.
@@ -919,6 +923,44 @@ is the default unless the @env{POSIXLY_CORRECT} environment variable is
 set.  The @option{-h} or @option{--human-readable} option is equivalent to
 @option{--block-size=human-readable}.  The @option{--si} option is
 equivalent to @option{--block-size=si}.
+
+@node Random sources
+@section Sources of random data
+
+@cindex random sources
+
+The @command{shuf}, @command{shred}, and @command{sort} commands
+sometimes need random data to do their work.  For example, @samp{sort
+-R} must choose a hash function at random, and it needs random data to
+make this selection.
+
+Normally these commands use the device file @file{/dev/urandom} as the
+source of random data.  Typically, this device gathers environmental
+noise from device drivers and other sources into an entropy pool, and
+uses the pool to generate random bits.  If the pool is short of data,
+the device reuses the internal pool to produce more bits, using a
+cryptographically secure pseudorandom number generator.
+
+@file{/dev/urandom} suffices for most practical uses, but applications
+requiring high-value or long-term protection of private data may
+require an alternate data source like @file{/dev/random} or
+@file{/dev/arandom}.  The set of available sources depends on your
+operating system.
+
+To use such a source, specify the @option{--random-source=@var{file}}
+option, e.g., @samp{shuf --random-source=/dev/random}.  The contents
+of @var{file} should be as random as possible.  An error is reported
+if @var{file} does not contain enough bytes to randomize the input
+adequately.
+
+To reproduce the results of an earlier invocation of a command, you
+can save some random data into a file and then use that file as the
+random source in earlier and later invocations of the command.
+
+Some old-fashioned or stripped-down operating systems lack support for
+@command{/dev/urandom}.  On these systems commands like @command{shuf}
+by default fall back on an internal pseudorandom generator initialized
+by a small amount of entropy.
 
 @node Target directory
 @section Target directory
@@ -3262,6 +3304,7 @@ These commands work with (or produce) sorted files.
 
 @menu
 * sort invocation::             Sort text files.
+* shuf invocation::             Shuffle text files.
 * uniq invocation::             Uniquify files.
 * comm invocation::             Compare two sorted files line by line.
 * ptx invocation::              Produce a permuted index of file contents.
@@ -3509,9 +3552,19 @@ appear earlier in the output instead of later.
 @opindex -R
 @opindex --random-sort
 @cindex random sort
-Sort by hashing the input keys and then sorting the hash values.  This
-is much like a random shuffle of the inputs, except that keys with the
-same value sort together.  The hash function is chosen at random.
+Sort by hashing the input keys and then sorting the hash values.
+Choose the hash function at random, ensuring that it is free of
+collisions so that differing keys have differing hash values.  This is
+like a random permutation of the inputs (@pxref{shuf invocation}),
+except that keys with the same value sort together.
+
+If multiple random sort fields are specified, the same random hash
+function is used for all fields.  To use different random hash
+functions for different fields, you can invoke @command{sort} more
+than once.
+
+The choice of hash function is affected by the
+@option{--random-source} option.
 
 @end table
 
@@ -3550,6 +3603,13 @@ On newer systems, @option{-o} cannot appear after an input file if
 scripts should specify @option{-o @var{output-file}} before any input
 files.
 
+@item --random-source=@var{file}
+@opindex --random-source
+@cindex random source for sorting
+Use @var{file} as a source of random data used to determine which
+random hash function to use with the @option{-R} option.  @xref{Random
+sources}.
+
 @item -s
 @itemx --stable
 @opindex -s
@@ -3559,7 +3619,7 @@ files.
 
 Make @command{sort} stable by disabling its last-resort comparison.
 This option has no effect if no fields or global ordering options
-other than @option{--reverse} (@option{-R}) are specified.
+other than @option{--reverse} (@option{-r}) are specified.
 
 @item -S @var{size}
 @itemx --buffer-size=@var{size}
@@ -3833,6 +3893,147 @@ ls */* | sort -t / -k 1,1R -k 2,2
 @end example
 
 @end itemize
+
+
+@node shuf invocation
+@section @command{shuf}: Shuffling text
+
+@pindex shuf
+@cindex shuffling files
+
+@command{shuf} shuffles its input by outputting a random permutation
+of its input lines.  Each output permutation is equally likely.
+Synopses:
+
+@example
+shuf [@var{option}]@dots{} [@var{file}]
+shuf -e [@var{option}]@dots{} [@var{arg}]@dots{}
+shuf -i @var{lo}-@var{hi} [@var{option}]@dots{}
+@end example
+
+@command{shuf} has three modes of operation that affect where it
+obtains its input lines.  By default, it reads lines from standard
+input.  The following options change the operation mode:
+
+@table @samp
+
+@item -e
+@itemx --echo
+@opindex -c
+@opindex --echo
+@cindex command-line operands to shuffle
+Treat each command-line operand as an input line.
+
+@item -i @var{lo}-@var{hi}
+@itemx --input-range=@var{lo}-@var{hi}
+@opindex -i
+@opindex --input-range
+@cindex input range to shuffle
+Act as if input came from a file containing the range of unsigned
+decimal integers @var{lo}@dots{}@var{hi}, one per line.
+
+@end table
+
+@command{shuf}'s other options can affect its behavior in all
+operation modes:
+
+@table @samp
+
+@item -n @var{lines}
+@itemx --head-lines=@var{lines}
+@opindex -n
+@opindex --head-lines
+@cindex head of output
+Output at most @var{lines} lines.  By default, all input lines are
+output.
+
+@item -o @var{output-file}
+@itemx --output=@var{output-file}
+@opindex -o
+@opindex --output
+@cindex overwriting of input, allowed
+Write output to @var{output-file} instead of standard output.
+@command{shuf} reads all input before opening
+@var{output-file}, so you can safely shuffle a file in place by using
+commands like @code{shuf -o F <F} and @code{cat F | shuf -o F}.
+
+@item --random-source=@var{file}
+@opindex --random-source
+@cindex random source for shuffling
+Use @var{file} as a source of random data used to determine which
+permutation to generate.  @xref{Random sources}.
+
+@item -z
+@itemx --zero-terminated
+@opindex -z
+@opindex --zero-terminated
+@cindex sort zero-terminated lines
+Treat the input and output as a set of lines, each terminated by a zero byte
+(@acronym{ASCII} @sc{nul} (Null) character) instead of an
+@acronym{ASCII} @sc{lf} (Line Feed).
+This option can be useful in conjunction with @samp{perl -0} or
+@samp{find -print0} and @samp{xargs -0} which do the same in order to
+reliably handle arbitrary file names (even those containing blanks
+or other special characters).
+
+@end table
+
+For example:
+
+@example
+shuf <<EOF
+A man,
+a plan,
+a canal:
+Panama!
+EOF
+@end example
+
+@noindent
+might produce the output
+
+@example
+Panama!
+A man,
+a canal:
+a plan,
+@end example
+
+@noindent
+Similarly, the command:
+
+@example
+shuf -e clubs hearts diamonds spades
+@end example
+
+@noindent
+might output:
+
+@example
+clubs
+diamonds
+spades
+hearts
+@end example
+
+@noindent
+and the command @samp{shuf -i 1-4} might output:
+
+@example
+4
+2
+1
+3
+@end example
+
+@noindent
+These examples all have four input lines, so @command{shuf} might
+produce any of the twenty-four possible permutations of the input.  In
+general, if there are @var{N} input lines, there are @var{N}! (i.e.,
+@var{N} factorial, or @var{N} * (@var{N} - 1) * @dots{} * 1) possible
+output permutations.
+
+@exitstatus
 
 
 @node uniq invocation
@@ -7745,6 +7946,12 @@ By default, @command{shred} uses 25 passes of overwrite.  This is enough
 for all of the useful overwrite patterns to be used at least once.
 You can reduce this to save time, or increase it if you have a lot of
 time to waste.
+
+@item --random-source=@var{file}
+@opindex --random-source
+@cindex random source for shredding
+Use @var{file} as a source of random data used to overwrite and to
+choose pass ordering.  @xref{Random sources}.
 
 @item -s @var{BYTES}
 @itemx --size=@var{BYTES}
