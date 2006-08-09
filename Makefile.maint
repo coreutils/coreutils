@@ -450,7 +450,8 @@ null_AM_MAKEFLAGS = \
 # Detect format-string/arg-list mismatches that would normally be obscured
 # by the use of _().  The --disable-nls effectively defines away that macro,
 # and building with CFLAGS='-Wformat -Werror' causes any format warning to be
-# treated as a failure.  Also, check for shadowing problems with -Wshadow.
+# treated as a failure.  Also, check for shadowing problems with -Wshadow,
+# and for pointer arithmetic problems with -Wpointer-arith.
 # These CFLAGS are pretty strict.  If you build this target, you probably
 # have to have a recent version of gcc and glibc headers.
 TMPDIR ?= /tmp
@@ -461,7 +462,7 @@ my-distcheck: $(local-check) $(release_archive_dir)/$(prev-tgz)
 	GZIP=$(GZIP_ENV) $(AMTAR) -C $(t) -zxf $(distdir).tar.gz
 	cd $(t)/$(distdir)				\
 	  && ./configure --disable-nls			\
-	  && $(MAKE) CFLAGS='-Werror -Wall -Wformat -Wshadow' \
+	  && $(MAKE) CFLAGS='-Werror -Wall -Wformat -Wshadow -Wpointer-arith' \
 	      AM_MAKEFLAGS='$(null_AM_MAKEFLAGS)'	\
 	  && $(MAKE) dvi				\
 	  && $(MAKE) check				\
