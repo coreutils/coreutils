@@ -1,3 +1,12 @@
+2006-08-09  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* LINGUAS: Add ro, sr, uk, wa.
+	* ro.po, sr.po, uk,po, wa.po: New files,
+	gotten from the	following files relative to
+	<http://www.iro.umontreal.ca/translation/teams/PO/>:
+	ro/fileutils-4.1.11.ro.po, sr/sh-utils-2.0.15.sr.po,
+	uk/fileutils-4.1.11.uk.po, wa/fileutils-4.1.11.wa.po.
+
 2006-08-09  Jim Meyering  <jim@meyering.net>
 
 	* POTFILES.in: Add lib/randread.c, lib/xmemxfrm.c, and src/shuf.c.

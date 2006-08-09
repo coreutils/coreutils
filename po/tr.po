@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: coreutils 5.3.0\n"
 "Report-Msgid-Bugs-To: bug-coreutils@gnu.org\n"
-"POT-Creation-Date: 2006-03-12 23:43+0100\n"
+"POT-Creation-Date: 2006-08-09 12:26-0700\n"
 "PO-Revision-Date: 2005-03-14 04:17+0200\n"
 "Last-Translator: Deniz Akkus Kanca <deniz@arayan.com>\n"
 "Language-Team: Turkish <gnu-tr-u12a@lists.sourceforge.net>\n"
@@ -20,12 +20,12 @@ msgstr ""
 "X-Generator: KBabel 1.9.1\n"
 
 #: lib/acl.c:256 lib/acl.c:270 lib/acl.c:287 lib/acl.c:299 lib/acl.c:398
-#: src/copy.c:1758
+#: src/copy.c:1772
 #, fuzzy, c-format
 msgid "preserving permissions for %s"
 msgstr "%s'in izinleri ayarlanıyor"
 
-#: lib/acl.c:379 lib/acl.c:387 lib/acl.c:406 src/copy.c:1517 src/cp.c:472
+#: lib/acl.c:379 lib/acl.c:387 lib/acl.c:406 src/copy.c:1516 src/cp.c:472
 #, c-format
 msgid "setting permissions for %s"
 msgstr "%s'in izinleri ayarlanıyor"
@@ -45,12 +45,12 @@ msgstr "%s argümanı `%s' için belirsiz"
 msgid "Valid arguments are:"
 msgstr "Geçerli argümanlar:"
 
-#: lib/closeout.c:94 src/base64.c:115 src/base64.c:127 src/base64.c:133
-#: src/base64.c:174 src/base64.c:218 src/cat.c:193 src/cat.c:277 src/cat.c:327
+#: lib/closeout.c:74 src/base64.c:115 src/base64.c:127 src/base64.c:133
+#: src/base64.c:174 src/base64.c:218 src/cat.c:193 src/cat.c:209 src/cat.c:293
 #: src/cksum.c:255 src/expand.c:337 src/expand.c:362 src/head.c:300
 #: src/head.c:350 src/head.c:758 src/head.c:799 src/od.c:966 src/paste.c:143
-#: src/tail.c:309 src/tail.c:1097 src/tr.c:1561 src/tr.c:1784 src/tr.c:1887
-#: src/unexpand.c:434 src/unexpand.c:450
+#: src/shuf.c:408 src/tail.c:309 src/tail.c:1097 src/tr.c:1562 src/tr.c:1785
+#: src/tr.c:1888 src/unexpand.c:434 src/unexpand.c:450
 msgid "write error"
 msgstr "yazma hatası"
 
@@ -58,8 +58,8 @@ msgstr "yazma hatası"
 msgid "Unknown system error"
 msgstr "Bilinmeyen sistem hatası"
 
-#: lib/euidaccess-stat.c:139 src/copy.c:977 src/copy.c:1015 src/copy.c:1505
-#: src/df.c:492 src/install.c:444 src/stat.c:728
+#: lib/euidaccess-stat.c:139 src/copy.c:978 src/copy.c:1016 src/copy.c:1504
+#: src/df.c:497 src/install.c:426 src/stat.c:729
 #, c-format
 msgid "cannot stat %s"
 msgstr "%s durumlanamadı"
@@ -260,32 +260,17 @@ msgstr "%s: `-W %s' seçeneği argümansız kullanılır\n"
 msgid "block size"
 msgstr "blok uzunluğu"
 
-#: lib/mkdir-p.c:103 src/cp.c:481 src/cp.c:500
-#, c-format
-msgid "%s exists but is not a directory"
-msgstr "%s var ama bir dizin değil"
-
-#: lib/mkdir-p.c:206 lib/mkdir-p.c:313
-#, c-format
-msgid "cannot change owner and/or group of %s"
-msgstr "%s'in sahibi ve/veya grubu değiştirilemiyor"
-
-#: lib/mkdir-p.c:238
-#, c-format
-msgid "cannot chdir to directory %s"
-msgstr "%s dizinine geçilemedi"
-
-#: lib/mkdir-p.c:250 lib/mkdir-p.c:285 src/copy.c:1494 src/mkdir.c:168
+#: lib/mkdir-p.c:117 src/copy.c:1493 src/install.c:408
 #, c-format
 msgid "cannot create directory %s"
 msgstr "%s dizini oluşturulamıyor"
 
-#: lib/mkdir-p.c:326 lib/mkdir-p.c:351 src/install.c:523
+#: lib/mkdir-p.c:129 src/install.c:494
 #, c-format
 msgid "cannot change permissions of %s"
 msgstr "%s'in erişim izinleri değiştirilemiyor"
 
-#: lib/obstack.c:433 lib/obstack.c:435 lib/xalloc-die.c:37 src/csplit.c:237
+#: lib/obstack.c:433 lib/obstack.c:435 lib/xalloc-die.c:37 src/csplit.c:238
 msgid "memory exhausted"
 msgstr "bellek tükendi"
 
@@ -294,7 +279,7 @@ msgstr "bellek tükendi"
 msgid "unable to record current working directory"
 msgstr "openat: çalışılan dizini kaydedemedi"
 
-#: lib/openat-die.c:49 src/df.c:515
+#: lib/openat-die.c:49 src/df.c:520
 msgid "failed to return to initial working directory"
 msgstr "başlangıç çalışma dizinine geri dönülemedi"
 
@@ -325,17 +310,22 @@ msgstr "`"
 msgid "'"
 msgstr "'"
 
-#: lib/root-dev-ino.h:19
+#: lib/randread.c:125
+#, fuzzy, c-format
+msgid "%s: end of file"
+msgstr "%s: arama (seek) başarısız"
+
+#: lib/root-dev-ino.h:20
 #, c-format
 msgid "it is dangerous to operate recursively on %s"
 msgstr "%s üzerinde döngüsel işlem yapmak tehlikelidir"
 
-#: lib/root-dev-ino.h:23
+#: lib/root-dev-ino.h:24
 #, c-format
 msgid "it is dangerous to operate recursively on %s (same as %s)"
 msgstr "%s üzerinde döngüsel işlem yapmak tehlikelidir (%s gibi)"
 
-#: lib/root-dev-ino.h:25
+#: lib/root-dev-ino.h:26
 msgid "use --no-preserve-root to override this failsafe"
 msgstr "--no-preserver-root seçeneğini kullanarak bu güvenlik tedbirini aşın"
 
@@ -348,24 +338,24 @@ msgid "^[nN]"
 msgstr "^[hH]"
 
 #
-#: lib/unicodeio.c:157
+#: lib/unicodeio.c:153
 msgid "iconv function not usable"
 msgstr "iconv işlevi kullanılabilir değil"
 
-#: lib/unicodeio.c:159
+#: lib/unicodeio.c:155
 msgid "iconv function not available"
 msgstr "iconv işlevi yok"
 
-#: lib/unicodeio.c:166
+#: lib/unicodeio.c:162
 msgid "character out of range"
 msgstr "karakter kapsamdışı"
 
-#: lib/unicodeio.c:230
+#: lib/unicodeio.c:226
 #, c-format
 msgid "cannot convert U+%04X to local character set"
 msgstr "U+%04X yerel karakter kümesine dönüştürülemiyor"
 
-#: lib/unicodeio.c:232
+#: lib/unicodeio.c:228
 #, c-format
 msgid "cannot convert U+%04X to local character set: %s"
 msgstr "U+%04X yerel karakter kümesine dönüştürülemiyor: %s"
@@ -378,9 +368,10 @@ msgstr "kullanıcı geçersiz"
 msgid "invalid group"
 msgstr "grup geçersiz"
 
-#: lib/userspec.c:113
-msgid "cannot get the login group of a numeric UID"
-msgstr "bir sayısal kullanıcı-kimliğin grubu alınamıyor"
+#: lib/userspec.c:112
+#, fuzzy
+msgid "invalid spec"
+msgstr "kullanıcı geçersiz"
 
 #. TRANSLATORS: Translate "(C)" to the copyright symbol
 #. (C-in-a-circle), if this symbol is available in the user's
@@ -514,45 +505,56 @@ msgstr ""
 "%s, %s, %s, \n"
 "%s, %s, %s ve başkaları tarafından yazıldı.\n"
 
+#
+#: lib/xmemxfrm.c:57
+#, fuzzy
+msgid "string transformation failed"
+msgstr "dizge karşılaştırması başarısız"
+
+#
+#: lib/xmemxfrm.c:58 lib/xmemcoll.c:51 src/expr.c:769
+msgid "Set LC_ALL='C' to work around the problem."
+msgstr "Problemi devre dışı bırakmak için LC_ALL='C' tanımlayın."
+
+#: lib/xmemxfrm.c:60
+#, c-format
+msgid "The untransformed string was %s."
+msgstr ""
+
 #: lib/xfts.c:60
 #, c-format
 msgid "invalid argument: %s"
 msgstr "%s argümanı geçersiz"
 
 #
-#: lib/xmemcoll.c:50 src/expr.c:741
+#: lib/xmemcoll.c:50 src/expr.c:768
 msgid "string comparison failed"
 msgstr "dizge karşılaştırması başarısız"
 
-#
-#: lib/xmemcoll.c:51 src/expr.c:742
-msgid "Set LC_ALL='C' to work around the problem."
-msgstr "Problemi devre dışı bırakmak için LC_ALL='C' tanımlayın."
-
-#: lib/xmemcoll.c:53 src/expr.c:744
+#: lib/xmemcoll.c:53 src/expr.c:771
 #, c-format
 msgid "The strings compared were %s and %s."
 msgstr "Karşılaştırılan dizgeler %s ve %s idi."
 
-#: src/base64.c:61 src/basename.c:51 src/cat.c:91 src/chgrp.c:104
-#: src/chmod.c:323 src/chown.c:90 src/chroot.c:42 src/cksum.c:264
-#: src/comm.c:69 src/cp.c:154 src/csplit.c:1448 src/cut.c:184 src/date.c:128
-#: src/dd.c:400 src/df.c:716 src/dircolors.c:101 src/dirname.c:45 src/du.c:276
-#: src/echo.c:60 src/env.c:114 src/expand.c:107 src/expr.c:97 src/factor.c:70
+#: src/base64.c:61 src/basename.c:51 src/cat.c:91 src/chgrp.c:109
+#: src/chmod.c:325 src/chown.c:90 src/chroot.c:42 src/cksum.c:264
+#: src/comm.c:69 src/cp.c:154 src/csplit.c:1450 src/cut.c:184 src/date.c:128
+#: src/dd.c:400 src/df.c:721 src/dircolors.c:101 src/dirname.c:45 src/du.c:276
+#: src/echo.c:60 src/env.c:114 src/expand.c:107 src/expr.c:98 src/factor.c:70
 #: src/fmt.c:269 src/fold.c:66 src/head.c:105 src/hostid.c:44
-#: src/hostname.c:61 src/id.c:74 src/install.c:628 src/join.c:130
-#: src/kill.c:90 src/link.c:46 src/ln.c:316 src/logname.c:40 src/ls.c:4119
-#: src/md5sum.c:152 src/mkdir.c:55 src/mkfifo.c:51 src/mknod.c:51 src/mv.c:287
-#: src/nice.c:72 src/nl.c:168 src/nohup.c:53 src/od.c:303 src/paste.c:413
+#: src/hostname.c:61 src/id.c:74 src/install.c:618 src/join.c:130
+#: src/kill.c:90 src/link.c:46 src/ln.c:314 src/logname.c:40 src/ls.c:4245
+#: src/md5sum.c:146 src/mkdir.c:55 src/mkfifo.c:51 src/mknod.c:51 src/mv.c:287
+#: src/nice.c:72 src/nl.c:173 src/nohup.c:53 src/od.c:303 src/paste.c:413
 #: src/pathchk.c:95 src/pinky.c:510 src/pr.c:2764 src/printenv.c:57
-#: src/printf.c:96 src/ptx.c:1883 src/pwd.c:50 src/readlink.c:63 src/rm.c:155
-#: src/rmdir.c:135 src/seq.c:78 src/setuidgid.c:47 src/shred.c:152
-#: src/sleep.c:43 src/sort.c:280 src/split.c:103 src/stat.c:771 src/stty.c:507
-#: src/su.c:404 src/sum.c:55 src/sync.c:41 src/tac.c:128 src/tail.c:216
-#: src/tee.c:58 src/test.c:690 src/touch.c:229 src/tr.c:286 src/tsort.c:82
-#: src/tty.c:65 src/uname.c:113 src/unexpand.c:117 src/uniq.c:131
-#: src/unlink.c:46 src/uptime.c:175 src/users.c:104 src/wc.c:123 src/who.c:631
-#: src/whoami.c:46 src/yes.c:42
+#: src/printf.c:96 src/ptx.c:1879 src/pwd.c:50 src/readlink.c:63 src/rm.c:155
+#: src/rmdir.c:135 src/seq.c:70 src/setuidgid.c:47 src/shred.c:157
+#: src/shuf.c:47 src/sleep.c:43 src/sort.c:281 src/split.c:103 src/stat.c:772
+#: src/stty.c:507 src/su.c:382 src/sum.c:55 src/sync.c:41 src/tac.c:129
+#: src/tail.c:216 src/tee.c:58 src/test.c:690 src/touch.c:229 src/tr.c:286
+#: src/tsort.c:82 src/tty.c:65 src/uname.c:113 src/unexpand.c:117
+#: src/uniq.c:131 src/unlink.c:46 src/uptime.c:175 src/users.c:104
+#: src/wc.c:128 src/who.c:631 src/whoami.c:46 src/yes.c:42
 #, c-format
 msgid "Try `%s --help' for more information.\n"
 msgstr "Daha fazla bilgi için `%s --help' yazın.\n"
@@ -587,7 +589,7 @@ msgid ""
 "      --version         Output version information and exit.\n"
 msgstr "      --version  sürüm bilgisini gösterir ve çıkar\n"
 
-#: src/base64.c:80 src/cat.c:117 src/fmt.c:296 src/sum.c:71
+#: src/base64.c:80 src/cat.c:117 src/fmt.c:296 src/shuf.c:74 src/sum.c:71
 msgid ""
 "\n"
 "With no FILE, or when FILE is -, read standard input.\n"
@@ -604,25 +606,25 @@ msgid ""
 "the encoded stream.\n"
 msgstr ""
 
-#: src/base64.c:89 src/basename.c:74 src/cat.c:128 src/chgrp.c:159
-#: src/chmod.c:354 src/chown.c:159 src/chroot.c:60 src/cksum.c:279
-#: src/comm.c:94 src/cp.c:253 src/csplit.c:1490 src/cut.c:235 src/date.c:241
-#: src/dd.c:508 src/df.c:755 src/dircolors.c:122 src/dirname.c:68 src/du.c:344
-#: src/echo.c:98 src/env.c:133 src/expand.c:132 src/expr.c:165 src/factor.c:90
+#: src/base64.c:89 src/basename.c:74 src/cat.c:128 src/chgrp.c:164
+#: src/chmod.c:356 src/chown.c:159 src/chroot.c:60 src/cksum.c:279
+#: src/comm.c:94 src/cp.c:253 src/csplit.c:1492 src/cut.c:235 src/date.c:241
+#: src/dd.c:508 src/df.c:760 src/dircolors.c:122 src/dirname.c:68 src/du.c:344
+#: src/echo.c:98 src/env.c:133 src/expand.c:132 src/expr.c:166 src/factor.c:90
 #: src/fmt.c:300 src/fold.c:89 src/head.c:140 src/hostid.c:57
-#: src/hostname.c:74 src/id.c:95 src/install.c:686 src/join.c:172
-#: src/kill.c:121 src/link.c:58 src/ln.c:374 src/logname.c:51 src/ls.c:4264
-#: src/md5sum.c:200 src/mkdir.c:74 src/mkfifo.c:68 src/mknod.c:82 src/mv.c:338
-#: src/nice.c:88 src/nl.c:224 src/nohup.c:70 src/od.c:393 src/paste.c:437
+#: src/hostname.c:74 src/id.c:95 src/install.c:676 src/join.c:172
+#: src/kill.c:121 src/link.c:58 src/ln.c:372 src/logname.c:51 src/ls.c:4396
+#: src/md5sum.c:194 src/mkdir.c:74 src/mkfifo.c:68 src/mknod.c:82 src/mv.c:338
+#: src/nice.c:88 src/nl.c:229 src/nohup.c:70 src/od.c:393 src/paste.c:437
 #: src/pathchk.c:109 src/pinky.c:537 src/pr.c:2876 src/printenv.c:71
-#: src/printf.c:145 src/ptx.c:1930 src/pwd.c:62 src/readlink.c:87 src/rm.c:201
-#: src/rmdir.c:154 src/seq.c:106 src/setuidgid.c:67 src/shred.c:225
-#: src/sleep.c:60 src/sort.c:356 src/split.c:137 src/stat.c:850 src/stty.c:724
-#: src/su.c:425 src/sum.c:75 src/sync.c:52 src/tac.c:151 src/tail.c:287
-#: src/tee.c:75 src/test.c:777 src/touch.c:263 src/tr.c:359 src/true.c:54
-#: src/tsort.c:94 src/tty.c:77 src/uname.c:136 src/unexpand.c:141
-#: src/uniq.c:170 src/unlink.c:57 src/uptime.c:190 src/users.c:117
-#: src/wc.c:145 src/who.c:670 src/whoami.c:58 src/yes.c:58
+#: src/printf.c:145 src/ptx.c:1925 src/pwd.c:62 src/readlink.c:87 src/rm.c:201
+#: src/rmdir.c:154 src/seq.c:99 src/setuidgid.c:67 src/shred.c:231
+#: src/shuf.c:78 src/sleep.c:60 src/sort.c:357 src/split.c:137 src/stat.c:851
+#: src/stty.c:724 src/su.c:403 src/sum.c:75 src/sync.c:52 src/tac.c:152
+#: src/tail.c:287 src/tee.c:75 src/test.c:777 src/touch.c:263 src/tr.c:359
+#: src/true.c:54 src/tsort.c:94 src/tty.c:77 src/uname.c:136
+#: src/unexpand.c:141 src/uniq.c:170 src/unlink.c:57 src/uptime.c:190
+#: src/users.c:117 src/wc.c:153 src/who.c:670 src/whoami.c:58 src/yes.c:58
 #, c-format
 msgid ""
 "\n"
@@ -632,8 +634,8 @@ msgstr ""
 "Yazılım hatalarını <%s> adresine,\n"
 "çeviri hatalarını <gnu-tr@belgeler.org> adresine bildirin.\n"
 
-#: src/base64.c:177 src/base64.c:210 src/csplit.c:282 src/csplit.c:1437
-#: src/join.c:251 src/tac-pipe.c:57 src/tee.c:204 src/tr.c:1585
+#: src/base64.c:177 src/base64.c:210 src/csplit.c:283 src/csplit.c:1439
+#: src/join.c:243 src/shuf.c:401 src/tac-pipe.c:57 src/tee.c:204 src/tr.c:1586
 msgid "read error"
 msgstr "okuma hatası"
 
@@ -648,19 +650,19 @@ msgid "invalid wrap size: %s"
 msgstr "geçersiz sekme boyutu: %s"
 
 #: src/base64.c:276 src/basename.c:124 src/comm.c:278 src/cp.c:567
-#: src/date.c:428 src/dircolors.c:457 src/dirname.c:101 src/du.c:940
-#: src/hostid.c:82 src/hostname.c:120 src/id.c:160 src/install.c:325
-#: src/join.c:749 src/link.c:90 src/ln.c:494 src/logname.c:76 src/mknod.c:152
-#: src/mv.c:451 src/od.c:1840 src/ptx.c:2182 src/readlink.c:154 src/seq.c:373
-#: src/split.c:533 src/tr.c:1738 src/tsort.c:552 src/tty.c:117 src/uname.c:222
-#: src/uniq.c:435 src/uniq.c:452 src/unlink.c:86 src/uptime.c:222
-#: src/users.c:149 src/who.c:824 src/whoami.c:84
+#: src/date.c:428 src/dircolors.c:455 src/dirname.c:101 src/du.c:944
+#: src/hostid.c:82 src/hostname.c:120 src/id.c:160 src/install.c:339
+#: src/join.c:741 src/link.c:90 src/ln.c:492 src/logname.c:76 src/mknod.c:152
+#: src/mv.c:451 src/od.c:1840 src/ptx.c:2154 src/readlink.c:154 src/seq.c:331
+#: src/shuf.c:381 src/split.c:533 src/tr.c:1739 src/tsort.c:552 src/tty.c:117
+#: src/uname.c:222 src/uniq.c:435 src/uniq.c:452 src/unlink.c:86
+#: src/uptime.c:222 src/users.c:149 src/wc.c:668 src/who.c:824 src/whoami.c:84
 #, c-format
 msgid "extra operand %s"
 msgstr "`%s' operandı fazla"
 
 #
-#: src/base64.c:302 src/cat.c:769
+#: src/base64.c:302 src/cat.c:785
 msgid "closing standard input"
 msgstr "standart girdi kapatılıyor"
 
@@ -692,13 +694,13 @@ msgid ""
 "  %s include/stdio.h .h  Output \"stdio\".\n"
 msgstr ""
 
-#: src/basename.c:118 src/chgrp.c:268 src/chmod.c:474 src/chown.c:295
-#: src/chroot.c:84 src/comm.c:270 src/csplit.c:1385 src/dirname.c:95
-#: src/expr.c:203 src/join.c:915 src/link.c:82 src/mkdir.c:121
-#: src/mkfifo.c:109 src/mknod.c:141 src/nohup.c:96 src/pathchk.c:158
+#: src/basename.c:118 src/chgrp.c:282 src/chmod.c:476 src/chown.c:295
+#: src/chroot.c:84 src/comm.c:270 src/csplit.c:1387 src/dirname.c:95
+#: src/expr.c:211 src/join.c:907 src/link.c:82 src/mkdir.c:151
+#: src/mkfifo.c:109 src/mknod.c:141 src/nohup.c:101 src/pathchk.c:158
 #: src/printf.c:669 src/readlink.c:146 src/rm.c:333 src/rmdir.c:197
-#: src/seq.c:367 src/setuidgid.c:95 src/sleep.c:122 src/stat.c:913
-#: src/tr.c:1723 src/unlink.c:80
+#: src/seq.c:325 src/setuidgid.c:95 src/sleep.c:122 src/stat.c:914
+#: src/tr.c:1724 src/unlink.c:80
 msgid "missing operand"
 msgstr "eksik işlenen"
 
@@ -748,26 +750,26 @@ msgid ""
 "  %s        Copy standard input to standard output.\n"
 msgstr ""
 
-#: src/cat.c:316
+#: src/cat.c:333
 #, fuzzy, c-format
 msgid "cannot do ioctl on %s"
 msgstr "`%s  üzerinde ioctl başarısız"
 
-#: src/cat.c:627 src/dd.c:1671 src/sort.c:272 src/tee.c:163 src/yes.c:92
+#: src/cat.c:643 src/dd.c:1668 src/sort.c:273 src/tee.c:163 src/yes.c:92
 msgid "standard output"
 msgstr "standart çıktı"
 
-#: src/cat.c:704
+#: src/cat.c:720
 #, c-format
 msgid "%s: input file is output file"
 msgstr "%s: girdi dosyası çıktı dosyası ile aynı"
 
-#: src/chgrp.c:91 src/install.c:613
+#: src/chgrp.c:96 src/install.c:584
 #, c-format
 msgid "invalid group %s"
 msgstr "geçersiz grup %s"
 
-#: src/chgrp.c:108
+#: src/chgrp.c:113
 #, c-format
 msgid ""
 "Usage: %s [OPTION]... GROUP FILE...\n"
@@ -776,7 +778,7 @@ msgstr ""
 "Kullanım: %s [SEÇENEK]... GRUP DOSYASI\n"
 "  veya:  %s [SEÇENEK]... --reference=REFDOSYA DOSYA...\n"
 
-#: src/chgrp.c:113
+#: src/chgrp.c:118
 msgid ""
 "Change the group of each FILE to GROUP.\n"
 "With --reference, change the group of each FILE to that of RFILE.\n"
@@ -795,7 +797,7 @@ msgstr ""
 "      --dereference      her sembolik bağın imlediği dosyayı değiştirir,\n"
 "                         sembolik bağı değil (öntanımlı).\n"
 
-#: src/chgrp.c:121 src/chown.c:107
+#: src/chgrp.c:126 src/chown.c:107
 msgid ""
 "  -h, --no-dereference   affect each symbolic link instead of any "
 "referenced\n"
@@ -807,7 +809,7 @@ msgstr ""
 "                         dosyayı değil. (yalnızca sembolik bağ sahibiyetini\n"
 "                         değiştirebilen sistemlerde bulunur.\n"
 
-#: src/chgrp.c:126 src/chown.c:119
+#: src/chgrp.c:131 src/chown.c:119
 #, fuzzy
 msgid ""
 "      --no-preserve-root  do not treat `/' specially (the default)\n"
@@ -816,10 +818,11 @@ msgstr ""
 "      --no-preserve-root `/' için özel işlem yapma (öntanımlı)\n"
 "      --preserve-root    `/' üzerinde döngüsel işlem yapma\n"
 
-#: src/chgrp.c:130
+#: src/chgrp.c:135
+#, fuzzy
 msgid ""
 "  -f, --silent, --quiet  suppress most error messages\n"
-"      --reference=RFILE  use RFILE's group rather than the specifying\n"
+"      --reference=RFILE  use RFILE's group rather than specifying a\n"
 "                         GROUP value\n"
 "  -R, --recursive        operate on files and directories recursively\n"
 "  -v, --verbose          output a diagnostic for every file processed\n"
@@ -832,7 +835,7 @@ msgstr ""
 "  -v, --verbose          işlenen her dosya için bir durum iletisi gösterir.\n"
 "\n"
 
-#: src/chgrp.c:138 src/chown.c:131
+#: src/chgrp.c:143 src/chown.c:131
 msgid ""
 "The following options modify how a hierarchy is traversed when the -R\n"
 "option is also specified.  If more than one is specified, only the final\n"
@@ -855,7 +858,7 @@ msgstr ""
 "  -P                     hiç bir sembolik bağı gezmez (öntanımlı)\n"
 "\n"
 
-#: src/chgrp.c:152
+#: src/chgrp.c:157
 #, c-format
 msgid ""
 "\n"
@@ -864,24 +867,24 @@ msgid ""
 "  %s -hR staff /u  Change the group of /u and subfiles to \"staff\".\n"
 msgstr ""
 
-#: src/chgrp.c:249 src/chown.c:276
+#: src/chgrp.c:263 src/chown.c:276
 msgid "-R --dereference requires either -H or -L"
 msgstr "-R --dereference ile ya -H veya -L kullanılmalıdır"
 
-#: src/chgrp.c:255 src/chown.c:282
+#: src/chgrp.c:269 src/chown.c:282
 msgid "-R -h requires -P"
 msgstr "-R -h ile -P kullanılmalıdır"
 
-#: src/chgrp.c:270 src/chmod.c:476 src/chown.c:297 src/comm.c:272
-#: src/csplit.c:1387 src/join.c:917 src/link.c:84 src/mknod.c:143
-#: src/setuidgid.c:97 src/tr.c:1726
+#: src/chgrp.c:284 src/chmod.c:478 src/chown.c:297 src/comm.c:272
+#: src/csplit.c:1389 src/join.c:909 src/link.c:84 src/mknod.c:143
+#: src/setuidgid.c:97 src/tr.c:1727
 #, c-format
 msgid "missing operand after %s"
 msgstr "`%s'den sonra eksik işlenen"
 
-#: src/chgrp.c:278 src/chmod.c:484 src/chmod.c:503 src/chown.c:305
-#: src/chown.c:334 src/cp.c:297 src/cp.c:426 src/cp.c:450 src/pwd.c:267
-#: src/rm.c:343 src/touch.c:159 src/touch.c:353
+#: src/chgrp.c:292 src/chgrp.c:310 src/chmod.c:486 src/chmod.c:505
+#: src/chown.c:305 src/chown.c:334 src/cp.c:297 src/cp.c:426 src/cp.c:450
+#: src/pwd.c:267 src/rm.c:343 src/touch.c:159 src/touch.c:353
 #, c-format
 msgid "failed to get attributes of %s"
 msgstr "%s'nın öznitelikleri alınamadı"
@@ -912,6 +915,7 @@ msgid "mode of %s retained as %04lo (%s)\n"
 msgstr "%s'nin kipi %04lo (%s) olarak korundu\n"
 
 #: src/chmod.c:197 src/chown-core.c:270 src/copy.c:145 src/du.c:495
+#: src/ls.c:2633
 #, c-format
 msgid "cannot access %s"
 msgstr "%s'e erişilemedi"
@@ -926,21 +930,21 @@ msgstr "%s"
 msgid "cannot read directory %s"
 msgstr "%s dizini okunamıyor"
 
-#: src/chmod.c:234
+#: src/chmod.c:235
 #, c-format
 msgid "changing permissions of %s"
 msgstr "%s'nın erişim izinleri değiştiriliyor"
 
-#: src/chmod.c:268
+#: src/chmod.c:270
 #, fuzzy, c-format
 msgid "%s: new permissions are %s, not %s"
 msgstr "%s'in izinleri ayarlanıyor"
 
-#: src/chmod.c:302 src/chown-core.c:460 src/du.c:650
+#: src/chmod.c:304 src/chown-core.c:460 src/du.c:650
 msgid "fts_read failed"
 msgstr "fts_read başarısız oldu"
 
-#: src/chmod.c:327
+#: src/chmod.c:329
 #, c-format
 msgid ""
 "Usage: %s [OPTION]... MODE[,MODE]... FILE...\n"
@@ -951,7 +955,7 @@ msgstr ""
 "  veya:  %s [SEÇENEK]... SEKİZLİK-KİP DOSYA\n"
 "  veya:  %s [SEÇENEK]... --reference=REFDOSYA DOSYA...\n"
 
-#: src/chmod.c:333
+#: src/chmod.c:335
 msgid ""
 "Change the mode of each FILE to MODE.\n"
 "\n"
@@ -963,7 +967,7 @@ msgstr ""
 "  -c, --changes           verbose gibi, fakat yalnızca değişiklikleri "
 "bildirir\n"
 
-#: src/chmod.c:338
+#: src/chmod.c:340
 msgid ""
 "      --no-preserve-root  do not treat `/' specially (the default)\n"
 "      --preserve-root     fail to operate recursively on `/'\n"
@@ -971,7 +975,7 @@ msgstr ""
 "      --no-preserve-root `/' için özel işlem yapma (öntanımlı)\n"
 "      --preserve-root    `/' üzerinde döngüsel işlem yapma\n"
 
-#: src/chmod.c:342
+#: src/chmod.c:344
 msgid ""
 "  -f, --silent, --quiet   suppress most error messages\n"
 "  -v, --verbose           output a diagnostic for every file processed\n"
@@ -984,17 +988,17 @@ msgstr ""
 "                             REFDOSYA'nın kipini kullanır\n"
 "  -R, --recursive           Yinelemeli olarak dosya ve dizinleri işler\n"
 
-#: src/chmod.c:350
+#: src/chmod.c:352
 msgid ""
 "\n"
 "Each MODE is of the form `[ugoa]*([-+=]([rwxXst]*|[ugo]))+'.\n"
 msgstr ""
 
-#: src/chmod.c:461
+#: src/chmod.c:463
 msgid "cannot combine mode and --reference options"
 msgstr "kip ve --reference seçenekleri birleştirilemez"
 
-#: src/chmod.c:492
+#: src/chmod.c:494
 #, c-format
 msgid "invalid mode: %s"
 msgstr "geçersiz kip: %s"
@@ -1106,10 +1110,11 @@ msgstr ""
 "                         takdirde, verilmeyen değere eşleme yapılmaz.\n"
 
 #: src/chown.c:123
+#, fuzzy
 msgid ""
 "  -f, --silent, --quiet  suppress most error messages\n"
 "      --reference=RFILE  use RFILE's owner and group rather than\n"
-"                         the specifying OWNER:GROUP values\n"
+"                         specifying OWNER:GROUP values\n"
 "  -R, --recursive        operate on files and directories recursively\n"
 "  -v, --verbose          output a diagnostic for every file processed\n"
 "\n"
@@ -1179,7 +1184,7 @@ msgstr "kök dizini %s olarak değiştirilemedi"
 msgid "cannot chdir to root directory"
 msgstr "kök dizinine geçilemedi"
 
-#: src/chroot.c:115 src/nohup.c:184 src/setuidgid.c:124
+#: src/chroot.c:115 src/nohup.c:212 src/setuidgid.c:126
 #, c-format
 msgid "cannot run command %s"
 msgstr "%s komutu çalıştırılamadı"
@@ -1240,225 +1245,220 @@ msgstr ""
 "  -2              salt DOSYA2'de yer alan satırları yazmaz\n"
 "  -3              her iki dosyada da yer alan satırları yazmaz\n"
 
-#: src/copy.c:199 src/copy.c:1679 src/cp.c:326
+#: src/copy.c:199 src/copy.c:1693 src/cp.c:326
 #, c-format
 msgid "failed to preserve ownership for %s"
 msgstr "%s'nin sahiplik bilgileri korunamadı"
 
-#: src/copy.c:221
+#: src/copy.c:222
 #, c-format
 msgid "failed to lookup file %s"
 msgstr "%s dosyasına bakılamadı"
 
-#: src/copy.c:226
+#: src/copy.c:227
 #, c-format
 msgid "failed to preserve authorship for %s"
 msgstr "%s'nin yazar bilgileri korunamadı"
 
-#: src/copy.c:259 src/csplit.c:647 src/du.c:947 src/fmt.c:431 src/head.c:849
-#: src/split.c:540 src/tac.c:543 src/tail.c:1295
+#: src/copy.c:260 src/csplit.c:648 src/du.c:951 src/fmt.c:431 src/head.c:849
+#: src/split.c:540 src/tac.c:544 src/tail.c:1295 src/wc.c:680
 #, c-format
 msgid "cannot open %s for reading"
 msgstr "%s okumak için açılamadı"
 
-#: src/copy.c:265 src/copy.c:317 src/dd.c:1715 src/tail.c:1131 src/tail.c:1197
+#: src/copy.c:266 src/copy.c:318 src/dd.c:1712 src/tail.c:1131 src/tail.c:1197
 #, c-format
 msgid "cannot fstat %s"
 msgstr "%s'nin dosya durumu (fstat) alınamadı"
 
-#: src/copy.c:275
+#: src/copy.c:276
 #, c-format
 msgid "skipping file %s, as it was replaced while being copied"
 msgstr "kopyalandığı esnada değiştirildiği için %s dosyası atlandı"
 
-#: src/copy.c:295 src/copy.c:1034 src/copy.c:1223 src/copy.c:1333 src/ln.c:268
-#: src/remove.c:745 src/remove.c:933 src/remove.c:954 src/remove.c:970
-#: src/remove.c:1132 src/remove.c:1227
+#: src/copy.c:296 src/copy.c:1035 src/copy.c:1233 src/copy.c:1343 src/ln.c:265
+#: src/remove.c:773 src/remove.c:961 src/remove.c:982 src/remove.c:998
+#: src/remove.c:1173 src/remove.c:1259
 #, c-format
 msgid "cannot remove %s"
 msgstr "%s silinemedi"
 
-#: src/copy.c:310
+#: src/copy.c:311
 #, c-format
 msgid "cannot create regular file %s"
 msgstr "normal dosya %s oluşturulamadı"
 
-#: src/copy.c:402 src/dd.c:1162 src/dd.c:1473
+#: src/copy.c:403 src/dd.c:1159 src/dd.c:1470
 #, c-format
 msgid "reading %s"
 msgstr "%s okunuyor"
 
-#: src/copy.c:438 src/head.c:428
+#: src/copy.c:439 src/head.c:428
 #, c-format
 msgid "cannot lseek %s"
 msgstr "%s'de lseek yapılamadı"
 
-#: src/copy.c:451 src/copy.c:479 src/dd.c:1530 src/dd.c:1592
+#: src/copy.c:452 src/copy.c:480 src/dd.c:1527 src/dd.c:1589
 #, c-format
 msgid "writing %s"
 msgstr "%s yazılıyor"
 
-#: src/copy.c:494 src/copy.c:1727
+#: src/copy.c:495 src/copy.c:1741
 #, c-format
 msgid "preserving times for %s"
 msgstr "%s'in zaman damgaları korundu"
 
-#: src/copy.c:529 src/copy.c:535 src/head.c:857 src/touch.c:191
+#: src/copy.c:530 src/copy.c:536 src/head.c:857 src/touch.c:191
 #, c-format
 msgid "closing %s"
 msgstr "%s kapatılıyor "
 
-#: src/copy.c:755
+#: src/copy.c:756
 #, c-format
 msgid "%s: overwrite %s, overriding mode %04lo? "
 msgstr "%s: %s'ın, %04lo kipi gözardı edilerek, üzerine yazılsın mı?"
 
-#: src/copy.c:761
+#: src/copy.c:762
 #, c-format
 msgid "%s: overwrite %s? "
 msgstr "%s: %s'ın üzerine yazılsın mı?"
 
-#: src/copy.c:987
+#: src/copy.c:988
 #, c-format
 msgid "omitting directory %s"
 msgstr "%s dizini atlanıyor"
 
-#: src/copy.c:1001
+#: src/copy.c:1002
 #, c-format
 msgid "warning: source file %s specified more than once"
 msgstr "uyarı: %s kaynak dosyası bir defadan çok belirtilmiş"
 
-#: src/copy.c:1047 src/ln.c:207
+#: src/copy.c:1048 src/ln.c:203
 #, c-format
 msgid "%s and %s are the same file"
 msgstr "%s ve %s aynı dosya"
 
-#: src/copy.c:1057
+#: src/copy.c:1063
 #, c-format
 msgid "cannot overwrite non-directory %s with directory %s"
 msgstr "Dizin olmayan %s'un üzerine dizin %s yazılamaz"
 
-#: src/copy.c:1074
+#: src/copy.c:1081
 #, c-format
 msgid "will not overwrite just-created %s with %s"
 msgstr "yeni oluşturulmuş %s'un üzerine %s yazılamaz"
 
-#: src/copy.c:1085
+#: src/copy.c:1097
 #, c-format
 msgid "cannot overwrite directory %s with non-directory"
 msgstr "Dizin %s'ın üzerine dizin olmayan bir dosya yazılamaz"
 
-#: src/copy.c:1151
-#, c-format
-msgid "cannot overwrite directory %s"
-msgstr "%s dizininin üzerine yazılamaz"
-
-#: src/copy.c:1160
+#: src/copy.c:1166
 #, c-format
 msgid "cannot move directory onto non-directory: %s -> %s"
 msgstr "bir dizin, dizin olmayanın üzerine taşınamaz: %s -> %s"
 
-#: src/copy.c:1181
+#: src/copy.c:1189
 #, c-format
 msgid "backing up %s would destroy source;  %s not moved"
 msgstr "%s'ı yedeklemek kaynağı yok eder;  %s taşınmadı"
 
-#: src/copy.c:1182
+#: src/copy.c:1190
 #, c-format
 msgid "backing up %s would destroy source;  %s not copied"
 msgstr "%s'ı yedeklemek kaynağı yok eder;  %s kopyalanmadı"
 
-#: src/copy.c:1201 src/ln.c:237
+#: src/copy.c:1209 src/ln.c:233
 #, c-format
 msgid "cannot backup %s"
 msgstr "%s yedeklenemedi"
 
-#: src/copy.c:1238
+#: src/copy.c:1248
 #, c-format
 msgid " (backup: %s)"
 msgstr " (yedek: %s)"
 
-#: src/copy.c:1301
+#: src/copy.c:1311
 #, c-format
 msgid "cannot copy a directory, %s, into itself, %s"
 msgstr "bir dizin, %s, kendi içine kopyalanamaz, %s"
 
-#: src/copy.c:1318
+#: src/copy.c:1328
 #, c-format
 msgid "will not create hard link %s to directory %s"
 msgstr "Dizine sabit bağ oluşturulmayacak: sabit bağ %s, dizin %s"
 
-#: src/copy.c:1341
+#: src/copy.c:1351
 #, c-format
 msgid "cannot create hard link %s to %s"
 msgstr "%s sabit bağı %s'e bağlanamadı"
 
-#: src/copy.c:1395
+#: src/copy.c:1394
 #, c-format
 msgid "cannot move %s to a subdirectory of itself, %s"
 msgstr "%s kendi alt dizinine taşınamaz, %s"
 
-#: src/copy.c:1438
+#: src/copy.c:1437
 #, c-format
 msgid "cannot move %s to %s"
 msgstr "%s %s'e taşınamadı"
 
-#: src/copy.c:1450
+#: src/copy.c:1449
 #, c-format
 msgid "inter-device move failed: %s to %s; unable to remove target"
 msgstr "aygıt arası taşıma başarısız: %s'yı %s'a; hedef silinemedi"
 
-#: src/copy.c:1478
+#: src/copy.c:1477
 #, c-format
 msgid "cannot copy cyclic symbolic link %s"
 msgstr "çevrimli sembolik bağ %s kopyalanamaz"
 
-#: src/copy.c:1575
+#: src/copy.c:1574
 #, c-format
 msgid "%s: can make relative symbolic links only in current directory"
 msgstr "%s: göreceli sembolik bağlar yalnızca mevcut dizinde oluşturulabilir"
 
-#: src/copy.c:1582
+#: src/copy.c:1581
 #, c-format
 msgid "cannot create symbolic link %s to %s"
 msgstr "sembolik bağ %s, %s'e bağlanamadı"
 
-#: src/copy.c:1593
+#: src/copy.c:1607
 #, c-format
 msgid "cannot create link %s"
 msgstr "%s bağı oluşturulamadı"
 
-#: src/copy.c:1613 src/mkfifo.c:129
+#: src/copy.c:1627 src/mkfifo.c:129
 #, c-format
 msgid "cannot create fifo %s"
 msgstr "%s fifosu oluşturulamadı"
 
-#: src/copy.c:1624
+#: src/copy.c:1638
 #, c-format
 msgid "cannot create special file %s"
 msgstr "özel dosya %s oluşturulamadı"
 
-#: src/copy.c:1636 src/ls.c:2756 src/stat.c:436
+#: src/copy.c:1650 src/ls.c:2795 src/stat.c:437
 #, c-format
 msgid "cannot read symbolic link %s"
 msgstr "%s sembolik bağı okunamadı"
 
-#: src/copy.c:1662
+#: src/copy.c:1676
 #, c-format
 msgid "cannot create symbolic link %s"
 msgstr "%s sembolik bağı oluşturulamadı"
 
-#: src/copy.c:1694
+#: src/copy.c:1708
 #, c-format
 msgid "%s has unknown file type"
 msgstr "%s bilinmeyen dosya türüne sahip"
 
-#: src/copy.c:1781 src/ln.c:304
+#: src/copy.c:1795 src/ln.c:302
 #, c-format
 msgid "cannot un-backup %s"
 msgstr "%s yedeklemesi geri alınamadı"
 
-#: src/copy.c:1785
+#: src/copy.c:1799
 #, c-format
 msgid "%s -> %s (unbackup)\n"
 msgstr "%s -> %s (yedeklemeyi geri al)\n"
@@ -1483,13 +1483,13 @@ msgstr ""
 "\n"
 
 #
-#: src/cp.c:168 src/csplit.c:1461 src/cut.c:196 src/df.c:726 src/du.c:288
+#: src/cp.c:168 src/csplit.c:1463 src/cut.c:196 src/df.c:731 src/du.c:288
 #: src/expand.c:120 src/fmt.c:279 src/fold.c:79 src/head.c:119
-#: src/install.c:645 src/kill.c:104 src/ln.c:335 src/ls.c:4129 src/mkdir.c:64
-#: src/mkfifo.c:60 src/mknod.c:61 src/mv.c:301 src/nl.c:181 src/paste.c:427
-#: src/pr.c:2777 src/ptx.c:1895 src/shred.c:162 src/sort.c:292 src/split.c:117
-#: src/tac.c:141 src/tail.c:230 src/touch.c:238 src/unexpand.c:130
-#: src/uniq.c:144
+#: src/install.c:635 src/kill.c:104 src/ln.c:333 src/ls.c:4255 src/mkdir.c:64
+#: src/mkfifo.c:60 src/mknod.c:61 src/mv.c:301 src/nl.c:186 src/paste.c:427
+#: src/pr.c:2777 src/ptx.c:1891 src/shred.c:167 src/shuf.c:61 src/sort.c:293
+#: src/split.c:117 src/tac.c:142 src/tail.c:230 src/touch.c:238
+#: src/unexpand.c:130 src/uniq.c:144
 msgid ""
 "Mandatory arguments to long options are mandatory for short options too.\n"
 msgstr ""
@@ -1497,8 +1497,9 @@ msgstr ""
 "zorunludur.\n"
 
 #: src/cp.c:171
+#, fuzzy
 msgid ""
-"  -a, --archive                same as -dpR\n"
+"  -a, --archive                same as -dpPR\n"
 "      --backup[=CONTROL]       make a backup of each existing destination "
 "file\n"
 "  -b                           like --backup but does not accept an "
@@ -1665,7 +1666,7 @@ msgstr ""
 "VERSION_CONTROL çevre değişkeninden belirlenebilir. Geçerli değerler:\n"
 "\n"
 
-#: src/cp.c:241 src/install.c:680 src/ln.c:368 src/mv.c:332
+#: src/cp.c:241 src/install.c:670 src/ln.c:366 src/mv.c:332
 msgid ""
 "  none, off       never make backups (even if --backup is given)\n"
 "  numbered, t     make numbered backups\n"
@@ -1705,30 +1706,35 @@ msgstr "%s'in izinleri korunamadı"
 msgid "cannot make directory %s"
 msgstr "dizin %s oluşturulamadı"
 
-#: src/cp.c:530 src/cp.c:976 src/install.c:177 src/install.c:271 src/ln.c:124
-#: src/ln.c:152 src/ln.c:181 src/ln.c:447 src/mv.c:158 src/mv.c:403
+#: src/cp.c:481 src/cp.c:500
+#, c-format
+msgid "%s exists but is not a directory"
+msgstr "%s var ama bir dizin değil"
+
+#: src/cp.c:530 src/cp.c:976 src/install.c:191 src/install.c:285 src/ln.c:120
+#: src/ln.c:148 src/ln.c:177 src/ln.c:445 src/mv.c:158 src/mv.c:403
 #, c-format
 msgid "accessing %s"
 msgstr "%s'e erişiliyor"
 
-#: src/cp.c:534 src/cp.c:577 src/cp.c:978 src/install.c:179 src/install.c:273
-#: src/install.c:334 src/ln.c:126 src/ln.c:449 src/ln.c:505 src/mv.c:160
+#: src/cp.c:534 src/cp.c:577 src/cp.c:978 src/install.c:193 src/install.c:287
+#: src/install.c:348 src/ln.c:122 src/ln.c:447 src/ln.c:503 src/mv.c:160
 #: src/mv.c:405 src/mv.c:460
 #, c-format
 msgid "target %s is not a directory"
 msgstr "hedef %s bir dizin değil"
 
-#: src/cp.c:552 src/install.c:310 src/ln.c:477 src/mv.c:436 src/shred.c:1236
+#: src/cp.c:552 src/install.c:324 src/ln.c:475 src/mv.c:436 src/shred.c:1177
 #: src/touch.c:412
 msgid "missing file operand"
 msgstr "dosya işleyeni eksik"
 
-#: src/cp.c:554 src/install.c:312 src/ln.c:491 src/mv.c:438
+#: src/cp.c:554 src/install.c:326 src/ln.c:489 src/mv.c:438
 #, c-format
 msgid "missing destination file operand after %s"
 msgstr "%s sonrasında hedef dosya işleyeni eksik"
 
-#: src/cp.c:563 src/install.c:321 src/mv.c:447
+#: src/cp.c:563 src/install.c:335 src/mv.c:447
 msgid "Cannot combine --target-directory (-t) and --no-target-directory (-T)"
 msgstr "--target-directory (-t) ve --no-target-directory (-T) birleştirilemez"
 
@@ -1742,11 +1748,11 @@ msgstr "dosya yolları korunurken hedef bir dizin olmalı"
 msgid "the --reply option is deprecated; use -i or -f instead"
 msgstr "--allow-missing seçeneği kaldırılacaktır; yerine --retry kullanın"
 
-#: src/cp.c:964 src/ln.c:437
+#: src/cp.c:964 src/ln.c:435
 msgid "symbolic links are not supported on this system"
 msgstr "bu sistemde sembolik bağlar desteklenmiyor"
 
-#: src/cp.c:971 src/install.c:266 src/ln.c:442 src/mv.c:398
+#: src/cp.c:971 src/install.c:280 src/ln.c:440 src/mv.c:398
 msgid "multiple target directories specified"
 msgstr "birden fazla hedef dizin belirtilmiş"
 
@@ -1754,131 +1760,131 @@ msgstr "birden fazla hedef dizin belirtilmiş"
 msgid "cannot make both hard and symbolic links"
 msgstr "hem sabit hem sembolik bağ oluşturulamaz"
 
-#: src/cp.c:1024 src/install.c:300 src/ln.c:518 src/mv.c:468
+#: src/cp.c:1024 src/install.c:314 src/ln.c:511 src/mv.c:468
 msgid "backup type"
 msgstr "yedekleme türü"
 
-#: src/csplit.c:539
+#: src/csplit.c:540
 msgid "input disappeared"
 msgstr "girdi yok oldu"
 
-#: src/csplit.c:667 src/csplit.c:678
+#: src/csplit.c:668 src/csplit.c:679
 #, c-format
 msgid "%s: line number out of range"
 msgstr "%s: satır sayısı kapsam dışı"
 
-#: src/csplit.c:707
+#: src/csplit.c:708
 #, fuzzy, c-format
 msgid "%s: %s: line number out of range"
 msgstr "%s: `%s': satır sayısı kapsam dışı"
 
-#: src/csplit.c:710 src/csplit.c:759
+#: src/csplit.c:711 src/csplit.c:760
 #, c-format
 msgid " on repetition %s\n"
 msgstr " %s tekrarda\n"
 
-#: src/csplit.c:753
+#: src/csplit.c:754
 #, fuzzy, c-format
 msgid "%s: %s: match not found"
 msgstr "%s: `%s': eşleşme bulunamadı"
 
-#: src/csplit.c:817 src/csplit.c:857 src/nl.c:349 src/tac.c:274
+#: src/csplit.c:818 src/csplit.c:858 src/nl.c:353 src/tac.c:275
 msgid "error in regular expression search"
 msgstr "düzenli ifade (regular expression) aramasında hata oluştu"
 
-#: src/csplit.c:982
+#: src/csplit.c:983
 #, fuzzy, c-format
 msgid "write error for %s"
 msgstr "`%s' için yazım hatası"
 
-#: src/csplit.c:1058
+#: src/csplit.c:1059
 #, c-format
 msgid "%s: integer expected after delimiter"
 msgstr "%s: ayraçtan sonra tamsayı olmalı"
 
-#: src/csplit.c:1074
+#: src/csplit.c:1075
 #, c-format
 msgid "%s: `}' is required in repeat count"
 msgstr "%s: tekrar sayımında `}' gerekli"
 
-#: src/csplit.c:1084
+#: src/csplit.c:1085
 #, c-format
 msgid "%s}: integer required between `{' and `}'"
 msgstr "%s}: `{' ve `}' arasına tamsayı yazılmalı"
 
-#: src/csplit.c:1111
+#: src/csplit.c:1112
 #, c-format
 msgid "%s: closing delimiter `%c' missing"
 msgstr "%s: kapatan ayraç `%c' eksik"
 
-#: src/csplit.c:1127
+#: src/csplit.c:1129
 #, c-format
 msgid "%s: invalid regular expression: %s"
 msgstr "%s: geçersiz düzenli ifade(regular expression): %s"
 
-#: src/csplit.c:1160
+#: src/csplit.c:1162
 #, c-format
 msgid "%s: invalid pattern"
 msgstr "%s: geçersiz kalıp"
 
-#: src/csplit.c:1163
+#: src/csplit.c:1165
 #, c-format
 msgid "%s: line number must be greater than zero"
 msgstr "%s: satır sayısı 0'dan büyük olmalı"
 
-#: src/csplit.c:1169
+#: src/csplit.c:1171
 #, fuzzy, c-format
 msgid "line number %s is smaller than preceding line number, %s"
 msgstr "satır numarası `%s' bir önceki satır numarası %s den daha küçük"
 
-#: src/csplit.c:1175
+#: src/csplit.c:1177
 #, fuzzy, c-format
 msgid "warning: line number %s is the same as preceding line number"
 msgstr "uyarı: satır numarası `%s' bir önceki satır numarası ile aynı"
 
-#: src/csplit.c:1228
+#: src/csplit.c:1230
 msgid "invalid format width"
 msgstr "geçersiz biçem genişliği"
 
-#: src/csplit.c:1249
+#: src/csplit.c:1251
 msgid "invalid format precision"
 msgstr "geçersiz biçem kesinliği"
 
-#: src/csplit.c:1270
+#: src/csplit.c:1272
 msgid "missing conversion specifier in suffix"
 msgstr "sonekte dönüşüm belirleyicisi eksik"
 
-#: src/csplit.c:1276
+#: src/csplit.c:1278
 #, c-format
 msgid "invalid conversion specifier in suffix: %c"
 msgstr "sonekte geçersiz dönüşüm belirleyicisi: %c"
 
-#: src/csplit.c:1279
+#: src/csplit.c:1281
 #, c-format
 msgid "invalid conversion specifier in suffix: \\%.3o"
 msgstr "sonekte geçersiz dönüşüm belirleyicisi: \\%.3o"
 
-#: src/csplit.c:1302
+#: src/csplit.c:1304
 #, c-format
 msgid "too many %% conversion specifications in suffix"
 msgstr "sonekte gereğinden fazla %% dönüşüm belirleyicisi var"
 
-#: src/csplit.c:1317
+#: src/csplit.c:1319
 #, c-format
 msgid "missing %% conversion specification in suffix"
 msgstr "sonekte %% dönüşüm belirleyicisi eksik"
 
-#: src/csplit.c:1361
+#: src/csplit.c:1363
 #, c-format
 msgid "%s: invalid number"
 msgstr "%s: geçersiz sayı"
 
-#: src/csplit.c:1452
+#: src/csplit.c:1454
 #, c-format
 msgid "Usage: %s [OPTION]... FILE PATTERN...\n"
 msgstr "Kullanım: %s [SEÇENEK]... DOSYA KALIP...\n"
 
-#: src/csplit.c:1456
+#: src/csplit.c:1458
 msgid ""
 "Output pieces of FILE separated by PATTERN(s) to files `xx00', `xx01', ...,\n"
 "and output byte counts of each piece to standard output.\n"
@@ -1889,7 +1895,7 @@ msgstr ""
 "her parçanın bayt sayısını standart çıktıya yazar.\n"
 "\n"
 
-#: src/csplit.c:1464
+#: src/csplit.c:1466
 #, c-format
 msgid ""
 "  -b, --suffix-format=FORMAT use sprintf FORMAT instead of %02d\n"
@@ -1900,7 +1906,7 @@ msgstr ""
 "  -f, --prefix=ÖNEK          `xx' yerine ÖNEKi kullanır\n"
 "  -k, --keep-files           hata olduğunda çıktı dosyalarını silmez\n"
 
-#: src/csplit.c:1469
+#: src/csplit.c:1471
 msgid ""
 "  -n, --digits=DIGITS        use specified number of digits instead of 2\n"
 "  -s, --quiet, --silent      do not print counts of output file sizes\n"
@@ -1911,7 +1917,7 @@ msgstr ""
 "  -s, --quiet, --silent      çıktı dosyalarının bayt büyüklüklerini vermez\n"
 "  -z, --elide-empty-files    boş çıktı dosyalarını siler\n"
 
-#: src/csplit.c:1476
+#: src/csplit.c:1478
 msgid ""
 "\n"
 "Read standard input if FILE is -.  Each PATTERN may be:\n"
@@ -1920,7 +1926,7 @@ msgstr ""
 "Eğer DOSYA - olarak verilmişse, standart girdiyi okur. Her KALIP, aşağıdaki\n"
 "seçeneklerden olabilir:\n"
 
-#: src/csplit.c:1480
+#: src/csplit.c:1482
 msgid ""
 "\n"
 "  INTEGER            copy up to but not including specified line number\n"
@@ -1943,10 +1949,9 @@ msgstr ""
 "Bir satır GÖRELİ konumu, `+' veya `-' ve ardından bir pozitif sayıdan "
 "oluşur.\n"
 
-#: src/cut.c:188 src/df.c:720 src/expand.c:111 src/fold.c:70 src/head.c:109
-#: src/ls.c:4123 src/nl.c:172 src/paste.c:417 src/pr.c:2768 src/sort.c:284
-#: src/sum.c:59 src/tac.c:132 src/tail.c:220 src/tee.c:62 src/unexpand.c:121
-#: src/wc.c:127
+#: src/cut.c:188 src/df.c:725 src/expand.c:111 src/fold.c:70 src/head.c:109
+#: src/ls.c:4249 src/nl.c:177 src/paste.c:417 src/pr.c:2768 src/sort.c:285
+#: src/sum.c:59 src/tac.c:133 src/tail.c:220 src/tee.c:62 src/unexpand.c:121
 #, c-format
 msgid "Usage: %s [OPTION]... [FILE]...\n"
 msgstr "Kullanım: %s [SEÇENEK]... [DOSYA]...\n"
@@ -2083,12 +2088,25 @@ msgstr ""
 "    veya:  %s [-u|--utc|--universal] [MMDDhhmm[[CC]YY][.ss]]\n"
 
 #: src/date.c:137
+#, fuzzy
 msgid ""
 "Display the current time in the given FORMAT, or set the system date.\n"
 "\n"
 "  -d, --date=STRING         display time described by STRING, not `now'\n"
 "  -f, --file=DATEFILE       like --date once for each line of DATEFILE\n"
 msgstr ""
+"Verilen BİÇEMde zamanı gösterir, ya da sistem zamanını değiştirir.\n"
+"\n"
+"  -d, --date=DİZGE       DIZGE ile tanımlanan zamanı gösterir, şimdiki "
+"zamanı\n"
+"                         değil\n"
+"  -f, --file=DOSYA       DOSYAnın her satırı için  --date uygulanır\n"
+"      --iso-8601[=BİRİM] ISO-8601 uyumlu tarih/zaman dizgesi gösterir.\n"
+"                         BİRİM=`date' sadece tarihi (öntanımlı),\n"
+"                         `hours', `minutes', `seconds' veya `ns' ile tarih "
+"ve\n"
+"                         zaman 'saat', 'dakika', 'saniye' veya nanosaniye\n"
+"                         hassasiyetinde gösterilir.\n"
 
 #: src/date.c:143
 #, fuzzy
@@ -2152,15 +2170,11 @@ msgstr ""
 "  %e   boşlukla yastıklanmış ayın günü ( 1..31)\n"
 
 #: src/date.c:174
-#, fuzzy
 msgid ""
 "  %F   full date; same as %Y-%m-%d\n"
 "  %g   last two digits of year of ISO week number (see %G)\n"
 "  %G   year of ISO week number (see %V); normally useful only with %V\n"
 msgstr ""
-"  %F   %Y-%m-%d ile aynı\n"
-"  %g   %V hafta sayısıyla eşleşen 2 basamaklı yıl\n"
-"  %G   %V hafta sayısıyla eşleşen 4 basamaklı yıl\n"
 
 #: src/date.c:179
 msgid ""
@@ -2277,10 +2291,10 @@ msgid ""
 "O to use the locale's alternate numeric symbols if available.\n"
 msgstr ""
 
-#: src/date.c:262 src/dd.c:1655 src/head.c:840 src/md5sum.c:440
-#: src/md5sum.c:726 src/od.c:910 src/od.c:1932 src/pr.c:1178 src/pr.c:1381
-#: src/pr.c:1503 src/stty.c:841 src/tac.c:534 src/tee.c:126 src/tr.c:1893
-#: src/tsort.c:527 src/wc.c:204
+#: src/date.c:262 src/dd.c:1652 src/head.c:840 src/md5sum.c:434
+#: src/md5sum.c:720 src/od.c:910 src/od.c:1932 src/pr.c:1178 src/pr.c:1381
+#: src/pr.c:1503 src/stty.c:841 src/tac.c:535 src/tee.c:126 src/tr.c:1894
+#: src/tsort.c:527 src/wc.c:212
 msgid "standard input"
 msgstr "standart girdi"
 
@@ -2566,66 +2580,66 @@ msgstr "girdi dosyası %s kapatılıyor"
 msgid "closing output file %s"
 msgstr "çıktı dosyası %s kapatılıyor"
 
-#: src/dd.c:783 src/dd.c:1443
+#: src/dd.c:782 src/dd.c:1440
 #, c-format
 msgid "writing to %s"
 msgstr "%s'e yazılıyor"
 
-#: src/dd.c:877
+#: src/dd.c:876
 #, c-format
 msgid "unrecognized operand %s"
 msgstr "geçersiz işleyen %s"
 
-#: src/dd.c:888
+#: src/dd.c:887
 #, c-format
 msgid "invalid conversion: %s"
 msgstr "geçersiz dönüşüm: %s"
 
-#: src/dd.c:891
+#: src/dd.c:890
 #, c-format
 msgid "invalid input flag: %s"
 msgstr "geçersiz girdi bayrağı: %s"
 
-#: src/dd.c:894
+#: src/dd.c:893
 #, c-format
 msgid "invalid output flag: %s"
 msgstr "geçersiz çıktı bayrağı: %s"
 
-#: src/dd.c:897
+#: src/dd.c:896
 #, c-format
 msgid "invalid status flag: %s"
 msgstr "geçersiz durum bayrağı: %s"
 
-#: src/dd.c:933
+#: src/dd.c:932
 #, c-format
 msgid "unrecognized operand %s=%s"
 msgstr "geçersiz işleyen %s=%s"
 
-#: src/dd.c:939
+#: src/dd.c:938
 #, c-format
 msgid "invalid number %s"
 msgstr "geçersiz sayı %s"
 
-#: src/dd.c:959
+#: src/dd.c:958
 msgid "cannot combine any two of {ascii,ebcdic,ibm}"
 msgstr "{ascii, ebcdic, ibm} değerlerinin herhangi ikisi birleştirilemez"
 
 #
-#: src/dd.c:961
+#: src/dd.c:960
 msgid "cannot combine block and unblock"
 msgstr "`block' ve `unblock' seçenekleri aynı anda kullanılamaz"
 
-#: src/dd.c:963
+#: src/dd.c:962
 msgid "cannot combine lcase and ucase"
 msgstr ""
 "`lcase' (küçük harf) ve `ucase' (büyük harf) seçenekleri aynı anda "
 "kullanılamaz"
 
-#: src/dd.c:965
+#: src/dd.c:964
 msgid "cannot combine excl and nocreat"
 msgstr "`excl' ve `nocreat' seçenekleri birleştirilemez"
 
-#: src/dd.c:1113
+#: src/dd.c:1110
 #, c-format
 msgid ""
 "warning: working around lseek kernel bug for file (%s)\n"
@@ -2635,109 +2649,109 @@ msgstr ""
 "alternatifler\n"
 "  kullanılıyor -- tür listesi için <sys/mtio.h>'e bakın"
 
-#: src/dd.c:1170 src/dd.c:1227
+#: src/dd.c:1167 src/dd.c:1224
 #, c-format
 msgid "%s: cannot seek"
 msgstr "%s: aranamadı"
 
-#: src/dd.c:1207
+#: src/dd.c:1204
 #, c-format
 msgid "offset overflow while reading file %s"
 msgstr "%s dosya okunurken görece taşması"
 
-#: src/dd.c:1219
+#: src/dd.c:1216
 msgid "warning: screwy file offset after failed read"
 msgstr "uyarı: başarısız okumadan sonra garip dosya atlaması"
 
-#: src/dd.c:1223
+#: src/dd.c:1220
 msgid "cannot work around kernel bug after all"
 msgstr "çekirdek hatası bertaraf edilemedi"
 
-#: src/dd.c:1366
+#: src/dd.c:1363
 #, c-format
 msgid "setting flags for %s"
 msgstr "%s için seçenekler belirtiliyor"
 
-#: src/dd.c:1604
+#: src/dd.c:1601
 #, c-format
 msgid "fdatasync failed for %s"
 msgstr "%s için fdatasync başarısız"
 
-#: src/dd.c:1614
+#: src/dd.c:1611
 #, c-format
 msgid "fsync failed for %s"
 msgstr "%s için fsync başarısız"
 
-#: src/dd.c:1661 src/dd.c:1690
+#: src/dd.c:1658 src/dd.c:1687
 #, c-format
 msgid "opening %s"
 msgstr "%s açılıyor"
 
-#: src/dd.c:1700
+#: src/dd.c:1697
 #, c-format
 msgid ""
 "offset too large: cannot truncate to a length of seek=%<PRIuMAX> (%lu-byte) "
 "blocks"
 msgstr ""
 
-#: src/dd.c:1721
+#: src/dd.c:1718
 #, fuzzy, c-format
 msgid "truncating at %<PRIuMAX> bytes in output file %s"
 msgstr "çıktı dosyasında %s bayt ileriye gidildi %s"
 
-#: src/df.c:149
+#: src/df.c:152
 msgid "Filesystem    Type"
 msgstr "Dosyasistemi Türü"
 
-#: src/df.c:151
+#: src/df.c:154
 msgid "Filesystem        "
 msgstr "Dosyasistemi      "
 
-#: src/df.c:154
+#: src/df.c:157
 #, c-format
 msgid "    Inodes   IUsed   IFree IUse%%"
 msgstr "Dosyaindeksi Dolu    Boş   Kull%%"
 
-#: src/df.c:158
+#: src/df.c:161
 #, c-format
 msgid "    Size  Used Avail Use%%"
 msgstr "    Boy   Dolu Boş   Kull%%"
 
-#: src/df.c:160
+#: src/df.c:163
 #, c-format
 msgid "     Size   Used  Avail Use%%"
 msgstr "    Boy   Dolu Boş   Kull%%"
 
-#: src/df.c:163
+#: src/df.c:166
 #, c-format
 msgid " %4s-blocks      Used Available Capacity"
 msgstr " %4s-blok        Dolu Boş       Kapasite"
 
-#: src/df.c:194
+#: src/df.c:197
 #, c-format
 msgid " %4s-blocks      Used Available Use%%"
 msgstr " %4s-blok        Dolu Boş       Kull%%"
 
-#: src/df.c:198
+#: src/df.c:201
 #, c-format
 msgid " Mounted on\n"
 msgstr "Bağlanılan yer\n"
 
-#: src/df.c:448
+#: src/df.c:453
 msgid "cannot get current directory"
 msgstr "çalışılan dizin alınamadı"
 
-#: src/df.c:458 src/df.c:472 src/df.c:500
+#: src/df.c:463 src/df.c:477 src/df.c:505
 #, c-format
 msgid "cannot change to directory %s"
 msgstr "%s dizinine geçilemedi"
 
-#: src/df.c:478
+#: src/df.c:483
 #, c-format
 msgid "cannot stat current directory (now %s)"
 msgstr "şimdiki dizin durumlanamadı (şimdi %s)"
 
-#: src/df.c:721
+#: src/df.c:726
 msgid ""
 "Show information about the file system on which each FILE resides,\n"
 "or all file systems by default.\n"
@@ -2747,7 +2761,7 @@ msgstr ""
 "veya öntanımlı olarak bütün dosyasistemleri hakkında bilgi gösterir.\n"
 "\n"
 
-#: src/df.c:729
+#: src/df.c:734
 #, fuzzy
 msgid ""
 "  -a, --all             include dummy file systems\n"
@@ -2763,7 +2777,7 @@ msgstr ""
 "  -H, --si              yukarıdaki gibi fakat 1000'in katlarını kullanır,\n"
 "                        1024'ün değil.\n"
 
-#: src/df.c:735
+#: src/df.c:740
 msgid ""
 "  -i, --inodes          list inode information instead of block usage\n"
 "  -k                    like --block-size=1K\n"
@@ -2777,7 +2791,7 @@ msgstr ""
 "      --no-sync         (öntanımlı) kullanım bilgisini almadan önce sync\n"
 "                        yapmaz\n"
 
-#: src/df.c:741
+#: src/df.c:746
 msgid ""
 "  -P, --portability     use the POSIX output format\n"
 "      --sync            invoke sync before getting usage info\n"
@@ -2795,7 +2809,7 @@ msgstr ""
 "                        dosyasistemleri ile sınırlar\n"
 "  -v                    (yoksayılır)\n"
 
-#: src/df.c:751 src/du.c:340 src/ls.c:4247
+#: src/df.c:756 src/du.c:340 src/ls.c:4379
 msgid ""
 "\n"
 "SIZE may be (or may be an integer optionally followed by) one of following:\n"
@@ -2807,12 +2821,12 @@ msgstr ""
 "kB 1000, K 1024, MB 1000*1000, M 1024*1024, ve G, T, P, E, Z, Y için "
 "diğerleri.\n"
 
-#: src/df.c:812 src/du.c:755 src/ls.c:1541
+#: src/df.c:816 src/du.c:759 src/ls.c:1567
 #, fuzzy
 msgid "the --kilobytes option is deprecated; use -k instead"
 msgstr "--allow-missing seçeneği kaldırılacaktır; yerine --retry kullanın"
 
-#: src/df.c:871
+#: src/df.c:875
 #, c-format
 msgid "file system type %s both selected and excluded"
 msgstr "dosyasistem türü %s hem seçili hem dışarlanmış"
@@ -2825,6 +2839,10 @@ msgstr "Uyarı: "
 #, c-format
 msgid "%scannot read table of mounted file systems"
 msgstr "%s bağlanmış dosyasistemleri tablosu okunamadı"
+
+#: src/df.c:945
+msgid "no file systems processed"
+msgstr ""
 
 #: src/dircolors.c:105
 #, c-format
@@ -2865,21 +2883,21 @@ msgstr ""
 "bir veritabanı kullanılır.  Bu dosyaların biçemi için, \n"
 "'dircolors --print-database' komutunu çalıştırın.\n"
 
-#: src/dircolors.c:296
+#: src/dircolors.c:294
 #, c-format
 msgid "%s:%lu: invalid line;  missing second token"
 msgstr "%s: %lu geçersiz satır; ikinci dizgecik yok"
 
-#: src/dircolors.c:368
+#: src/dircolors.c:366
 #, c-format
 msgid "%s:%lu: unrecognized keyword %s"
 msgstr "%s: %lu: tanınmayan anahtar kelime %s"
 
-#: src/dircolors.c:369
+#: src/dircolors.c:367
 msgid "<internal>"
 msgstr "<içsel>"
 
-#: src/dircolors.c:450
+#: src/dircolors.c:448
 msgid ""
 "the options to output dircolors' internal database and\n"
 "to select a shell syntax are mutually exclusive"
@@ -2887,11 +2905,11 @@ msgstr ""
 "dircolors çıktısının hem içsel veritabanına, hem de bir kabuk sentaksına\n"
 "göre olması çelişkili"
 
-#: src/dircolors.c:460
+#: src/dircolors.c:458
 msgid "File operands cannot be combined with --print-database (-p)."
 msgstr "Dosya işleyenleri --print-database (-p) ile birleştirilemez"
 
-#: src/dircolors.c:483
+#: src/dircolors.c:481
 msgid "no SHELL environment variable, and no shell type option given"
 msgstr "SHELL çevre değişkeni yok ve kabuk türü seçeneği verilmemiş"
 
@@ -2925,7 +2943,7 @@ msgid ""
 "  %s stdio.h        Output \".\".\n"
 msgstr ""
 
-#: src/du.c:280
+#: src/du.c:280 src/wc.c:132
 #, c-format
 msgid ""
 "Usage: %s [OPTION]... [FILE]...\n"
@@ -3048,11 +3066,11 @@ msgid ""
 "                          FORMAT is interpreted like `date'\n"
 msgstr ""
 
-#: src/du.c:667 src/ls.c:2402 src/wc.c:657
+#: src/du.c:667 src/ls.c:2437 src/wc.c:721
 msgid "total"
 msgstr "toplam"
 
-#: src/du.c:745
+#: src/du.c:749
 msgid ""
 "WARNING: use --si, not -H; the meaning of the -H option will soon\n"
 "change to be the same as that of --dereference-args (-D)"
@@ -3060,39 +3078,39 @@ msgstr ""
 "UYARI: -H yerine -si seçeneğini kullanın; -H seçeneğinin anlamı yakında\n"
 "--dereference-args (-D) ile aynı hale gelecektir"
 
-#: src/du.c:773
+#: src/du.c:777
 #, c-format
 msgid "invalid maximum depth %s"
 msgstr "geçersiz maksimum derinlik %s"
 
-#: src/du.c:782
+#: src/du.c:786
 #, fuzzy
 msgid "the --megabytes option is deprecated; use -m instead"
 msgstr "--allow-missing seçeneği kaldırılacaktır; yerine --retry kullanın"
 
-#: src/du.c:864
+#: src/du.c:868
 msgid "cannot both summarize and show all entries"
 msgstr "hem özetleyip hem bütün girdiler gösterilemez"
 
-#: src/du.c:871
+#: src/du.c:875
 msgid "warning: summarizing is the same as using --max-depth=0"
 msgstr "uyarı: özetlemek --max-depth=0 ile aynı"
 
-#: src/du.c:877
+#: src/du.c:881
 #, c-format
 msgid "warning: summarizing conflicts with --max-depth=%lu"
 msgstr "uyarı: özetlemek --max-depth=%lu ile çakışıyor"
 
-#: src/du.c:942
+#: src/du.c:946 src/wc.c:670
 msgid "File operands cannot be combined with --files0-from."
 msgstr "Dosya işleyenleri --files0-from ile birleştirilemez"
 
-#: src/du.c:953
+#: src/du.c:957 src/wc.c:687
 #, c-format
 msgid "cannot read file names from %s"
 msgstr "%s'den dosya adları okunamadı"
 
-#: src/du.c:993 src/du.c:996
+#: src/du.c:997 src/du.c:1000
 msgid "invalid zero-length file name"
 msgstr "geçersiz sıfır uzunluklu dosya adı"
 
@@ -3118,14 +3136,6 @@ msgid ""
 msgstr ""
 "  -e             (öntanımlı) terskesme kaçışlarını yorumlar\n"
 "  -E             terskesme kaçışlarını yorumlamaz\n"
-
-#: src/echo.c:74
-msgid ""
-"  -e             enable interpretation of backslash escapes\n"
-"  -E             disable interpretation of backslash escapes (default)\n"
-msgstr ""
-"  -e             terskesme kaçışlarını yorumlar\n"
-"  -E             (öntanımlı) terskesme kaçışlarını yorumlamaz\n"
 
 #: src/echo.c:80
 msgid ""
@@ -3236,7 +3246,7 @@ msgstr "tab boyları küçükten büyüğe sıralı olmalı"
 msgid "input line is too long"
 msgstr "girdi satırı fazla uzun"
 
-#: src/expr.c:101
+#: src/expr.c:102
 #, c-format
 msgid ""
 "Usage: %s EXPRESSION\n"
@@ -3245,7 +3255,7 @@ msgstr ""
 "Kullanımı: %s İFADE\n"
 "    veya:  %s SEÇENEK\n"
 
-#: src/expr.c:109
+#: src/expr.c:110
 msgid ""
 "\n"
 "Print the value of EXPRESSION to standard output.  A blank line below\n"
@@ -3261,7 +3271,7 @@ msgstr ""
 "  ARG1 | ARG2       eğer ARG1 boş veya 0 ise ARG2, değil ise ARG1\n"
 "  ARG1 & ARG2       eğer iki argüman da 0 veya boş ise ARG2, değil ise ARG1\n"
 
-#: src/expr.c:118
+#: src/expr.c:119
 msgid ""
 "\n"
 "  ARG1 < ARG2       ARG1 is less than ARG2\n"
@@ -3279,7 +3289,7 @@ msgstr ""
 "  ARG1 >= ARG2      ARG1 büyük ya da eşittir ARG2\n"
 "  ARG1 > ARG2       ARG1 büyüktür ARG2\n"
 
-#: src/expr.c:127
+#: src/expr.c:128
 msgid ""
 "\n"
 "  ARG1 + ARG2       arithmetic sum of ARG1 and ARG2\n"
@@ -3289,7 +3299,7 @@ msgstr ""
 "  ARG1 + ARG2       aritmetik toplama işlemi\n"
 "  ARG1 - ARG2       aritmetik çıkarma işlemi\n"
 
-#: src/expr.c:132
+#: src/expr.c:133
 #, c-format
 msgid ""
 "\n"
@@ -3302,7 +3312,7 @@ msgstr ""
 "  ARG1 / ARG2       aritmetik bölme işleminde bölümü verir\n"
 "  ARG1 % ARG2      aritmetik bölme işleminde kalanı verir\n"
 
-#: src/expr.c:138
+#: src/expr.c:139
 msgid ""
 "\n"
 "  STRING : REGEXP   anchored pattern match of REGEXP in STRING\n"
@@ -3323,7 +3333,7 @@ msgstr ""
 "konum\n"
 "  length DİZGE               DİZGEnin karakter sayısı\n"
 
-#: src/expr.c:147
+#: src/expr.c:148
 msgid ""
 "  + TOKEN                    interpret TOKEN as a string, even if it is a\n"
 "                               keyword like `match' or an operator like `/'\n"
@@ -3337,7 +3347,7 @@ msgstr ""
 "\n"
 "  ( İFADE )                  İFADEnin değeri\n"
 
-#: src/expr.c:153
+#: src/expr.c:154
 msgid ""
 "\n"
 "Beware that many operators need to be escaped or quoted for shells.\n"
@@ -3355,7 +3365,7 @@ msgstr ""
 "arasındaki eşleşen dizge ile ya da null ile sonuçlanır; eğer \\(ve \\)\n"
 "kullanılmamışsa eşleşen karakter sayısıyla ya da 0 ile sonuçlanır.\n"
 
-#: src/expr.c:160
+#: src/expr.c:161
 msgid ""
 "\n"
 "Exit status is 0 if EXPRESSION is neither null nor 0, 1 if EXPRESSION is "
@@ -3367,29 +3377,20 @@ msgstr ""
 "1,\n"
 "eğer İFADE sözdizim hatası içeriyor ise 2, bir hata var ise 3 olur.\n"
 
-#: src/expr.c:174
+#: src/expr.c:175
 msgid "syntax error"
 msgstr "sözdizimi hatası"
 
-#: src/expr.c:424
-#, fuzzy, c-format
-msgid ""
-"warning: unportable BRE: %s: using `^' as the first character\n"
-"of the basic regular expression is not portable; it is being ignored"
-msgstr ""
-"uyarı: taşınamaz düzgün ifade: `%s':`^' ile başlayan temel düzenli\n"
-"ifadeler taşınamadığından`^' yoksayılıyor."
-
-#: src/expr.c:464 src/ptx.c:288
+#: src/expr.c:464 src/ptx.c:292
 #, fuzzy
 msgid "error in regular expression matcher"
 msgstr "düzenli ifade (regular expression) aramasında hata oluştu"
 
-#: src/expr.c:639 src/expr.c:681
+#: src/expr.c:639 src/expr.c:697
 msgid "non-numeric argument"
 msgstr "nümerik olmayan argüman"
 
-#: src/expr.c:645
+#: src/expr.c:651
 msgid "division by zero"
 msgstr "sıfırla bölüm"
 
@@ -3723,62 +3724,52 @@ msgstr "ek grup listesi alınamadı"
 msgid " groups="
 msgstr " gruplar="
 
-#: src/install.c:291
+#: src/install.c:305
 msgid "the strip option may not be used when installing a directory"
 msgstr "bir dizin kurulurken strip seçeneği kullanılamaz"
 
-#: src/install.c:294
+#: src/install.c:308
 msgid "target directory not allowed when installing a directory"
 msgstr "bir dizin kurulurken hedef dizin belirlenemez"
 
-#: src/install.c:342 src/mkdir.c:137
+#: src/install.c:356 src/mkdir.c:165
 #, c-format
 msgid "invalid mode %s"
 msgstr "geçersiz kip %s"
 
-#: src/install.c:357 src/mkdir.c:155
-#, fuzzy
-msgid "cannot return to working directory"
-msgstr "çalışılan dizine geri dönülemedi"
-
-#: src/install.c:363 src/install.c:415
-#, c-format
-msgid "creating directory %s"
-msgstr "dizin %s oluşturuluyor"
-
-#: src/install.c:420
-#, fuzzy
-msgid "cannot return to current directory"
-msgstr "çalışılan dizin alınamadı"
-
-#: src/install.c:517
+#: src/install.c:492
 #, c-format
 msgid "cannot change ownership of %s"
 msgstr "%s'in sahipliği değiştirilemiyor"
 
-#: src/install.c:542
+#: src/install.c:513
 #, c-format
 msgid "cannot set time stamps for %s"
 msgstr "%s için zaman damgalama yapılamadı"
 
-#: src/install.c:563
+#: src/install.c:534
 msgid "fork system call failed"
 msgstr "fork sistem çağrısı başarısız"
 
-#: src/install.c:567
+#: src/install.c:538
 msgid "cannot run strip"
 msgstr "strip çalıştırılamadı"
 
-#: src/install.c:574
+#: src/install.c:545
 msgid "strip failed"
 msgstr "strip başarısız"
 
-#: src/install.c:595
+#: src/install.c:566
 #, c-format
 msgid "invalid user %s"
 msgstr "geçersiz kullanıcı %s"
 
-#: src/install.c:632
+#: src/install.c:601
+#, c-format
+msgid "creating directory %s"
+msgstr "dizin %s oluşturuluyor"
+
+#: src/install.c:622
 #, c-format
 msgid ""
 "Usage: %s [OPTION]... [-T] SOURCE DEST\n"
@@ -3791,7 +3782,7 @@ msgstr ""
 "  veya:   %s [SEÇENEK]... -t DİZİN KAYNAK...\n"
 "  veya:   %s [SEÇENEK]... -d DİZİN...\n"
 
-#: src/install.c:639
+#: src/install.c:629
 msgid ""
 "In the first three forms, copy SOURCE to DEST or multiple SOURCE(s) to\n"
 "the existing DIRECTORY, while setting permission modes and owner/group.\n"
@@ -3803,7 +3794,7 @@ msgstr ""
 "Dördüncü biçemde, ilgili DİZİN(ler)in bütün öğelerini oluşturur.\n"
 "\n"
 
-#: src/install.c:648
+#: src/install.c:638
 #, fuzzy
 msgid ""
 "      --backup[=CONTROL]  make a backup of each existing destination file\n"
@@ -3818,7 +3809,7 @@ msgstr ""
 "  -d, --directory     bütün argümanları dizin adı olarak alır; belirtilen\n"
 "                        dizinlerin tüm öğelerini oluşturur\n"
 
-#: src/install.c:655
+#: src/install.c:645
 msgid ""
 "  -D                  create all leading components of DEST except the "
 "last,\n"
@@ -3837,7 +3828,7 @@ msgstr ""
 "                      gibi)\n"
 "  -o, --owner=SAHİP   sahibi atar (yalnızca süper-kullanıcı)\n"
 
-#: src/install.c:662
+#: src/install.c:652
 msgid ""
 "  -p, --preserve-timestamps   apply access/modification times of SOURCE "
 "files\n"
@@ -3857,7 +3848,7 @@ msgstr ""
 "-T, --no-target-directory  HEDEF'i normal bir dosya kabul eder\n"
 "  -v, --verbose       oluşturuldukça her dizinin adını gösterir\n"
 
-#: src/install.c:673 src/ln.c:361 src/mv.c:325
+#: src/install.c:663 src/ln.c:359 src/mv.c:325
 msgid ""
 "\n"
 "The backup suffix is `~', unless set with --suffix or SIMPLE_BACKUP_SUFFIX.\n"
@@ -3943,49 +3934,49 @@ msgstr ""
 "\n"
 "Önemli: DOSYA1 ve DOSYA2 birleştirme alanına göre sıralı olmalıdır.\n"
 
-#: src/join.c:623
+#: src/join.c:615
 #, c-format
 msgid "value %s is so large that it is not representable"
 msgstr "%s değeri gösterilemeyece kadar büyük"
 
-#: src/join.c:628 src/join.c:823
+#: src/join.c:620 src/join.c:815
 #, c-format
 msgid "invalid field number: %s"
 msgstr "geçersiz alan numarası: %s"
 
-#: src/join.c:649 src/join.c:658
+#: src/join.c:641 src/join.c:650
 #, fuzzy, c-format
 msgid "invalid field specifier: %s"
 msgstr "geçersiz alan belirleyicisi: `%s'"
 
-#: src/join.c:665
+#: src/join.c:657
 #, fuzzy, c-format
 msgid "invalid file number in field spec: %s"
 msgstr "alan tanımlamasında geçersiz dosya numarası: `%s'"
 
-#: src/join.c:708
+#: src/join.c:700
 #, c-format
 msgid "incompatible join fields %lu, %lu"
 msgstr ""
 
-#: src/join.c:834
+#: src/join.c:826
 msgid "conflicting empty-field replacement strings"
 msgstr ""
 
-#: src/join.c:875 src/sort.c:2462
+#: src/join.c:867 src/sort.c:2547
 msgid "empty tab"
 msgstr "boş sekme"
 
-#: src/join.c:881 src/sort.c:2473
+#: src/join.c:873 src/sort.c:2558
 #, fuzzy, c-format
 msgid "multi-character tab %s"
 msgstr "tab yerine kullanılacak `%s' bir karakterden oluşmalı"
 
-#: src/join.c:885 src/sort.c:2478
+#: src/join.c:877 src/sort.c:2563
 msgid "incompatible tabs"
 msgstr "uyumsuz sekme"
 
-#: src/join.c:942
+#: src/join.c:934
 msgid "both files cannot be standard input"
 msgstr "her iki dosya da standart girdi olamaz"
 
@@ -4090,52 +4081,52 @@ msgstr ""
 msgid "cannot create link %s to %s"
 msgstr "%s sabit bağı %s'e bağlanamadı"
 
-#: src/ln.c:159
+#: src/ln.c:155
 #, c-format
 msgid "%s: warning: making a hard link to a symbolic link is not portable"
 msgstr "%s: uyarı: sembolik bağa sabit bağ oluşturmak taşınabilirliği bozar"
 
-#: src/ln.c:169
+#: src/ln.c:165
 #, c-format
 msgid "%s: hard link not allowed for directory"
 msgstr "%s: dizinde sabit bağa izin verilmiyor"
 
-#: src/ln.c:216
+#: src/ln.c:212
 #, c-format
 msgid "%s: cannot overwrite directory"
 msgstr "%s: dizinin üzerine yazılamaz"
 
-#: src/ln.c:221
+#: src/ln.c:217
 #, c-format
 msgid "%s: replace %s? "
 msgstr "%s: %s'un üzerine yazılsın mı?"
 
-#: src/ln.c:291
+#: src/ln.c:289
 #, fuzzy, c-format
 msgid "creating symbolic link %s"
 msgstr "Sembolik bağ %s %s'e bağlanıyor"
 
-#: src/ln.c:292
+#: src/ln.c:290
 #, fuzzy, c-format
 msgid "creating symbolic link %s -> %s"
 msgstr "Sembolik bağ %s %s'e bağlanıyor"
 
-#: src/ln.c:294
+#: src/ln.c:292
 #, fuzzy, c-format
 msgid "creating hard link to %.0s%s"
 msgstr "Sabit bağ %s %s'e bağlanıyor"
 
-#: src/ln.c:297
+#: src/ln.c:295
 #, fuzzy, c-format
 msgid "creating hard link %s"
 msgstr "Sabit bağ %s %s'e bağlanıyor"
 
-#: src/ln.c:298
+#: src/ln.c:296
 #, fuzzy, c-format
 msgid "creating hard link %s => %s"
 msgstr "Sabit bağ %s %s'e bağlanıyor"
 
-#: src/ln.c:320
+#: src/ln.c:318
 #, c-format
 msgid ""
 "Usage: %s [OPTION]... [-T] TARGET LINK_NAME   (1st form)\n"
@@ -4148,7 +4139,7 @@ msgstr ""
 " veya:    %s [SEÇENEK]...  HEDEF...DİZİN          (3. biçem)\n"
 " veya:    %s [SEÇENEK]...  -t DİZİN HEDEF...      (4. biçem)\n"
 
-#: src/ln.c:327
+#: src/ln.c:325
 msgid ""
 "In the 1st form, create a link to TARGET with the name LINK_NAME.\n"
 "In the 2nd form, create a link to TARGET in the current directory.\n"
@@ -4165,7 +4156,7 @@ msgstr ""
 "mevcut olmak zorundadır.\n"
 "\n"
 
-#: src/ln.c:338
+#: src/ln.c:336
 msgid ""
 "      --backup[=CONTROL]      make a backup of each existing destination "
 "file\n"
@@ -4187,7 +4178,7 @@ msgstr ""
 "                              bu işlem başarısız olacaktır)\n"
 "  -f, --force                 önceden var olan hedef dosyaları siler\n"
 
-#: src/ln.c:346
+#: src/ln.c:344
 msgid ""
 "  -n, --no-dereference        treat destination that is a symlink to a\n"
 "                                directory as if it were a normal file\n"
@@ -4200,7 +4191,7 @@ msgstr ""
 "  -i, --interactive           hedefleri silmeden önce sorar\n"
 "  -s, --symbolic              sabit bağ yerine sembolik bağ oluşturur\n"
 
-#: src/ln.c:352
+#: src/ln.c:350
 #, fuzzy
 msgid ""
 "  -S, --suffix=SUFFIX         override the usual backup suffix\n"
@@ -4215,7 +4206,7 @@ msgstr ""
 "  -T, --no-target-directory   BAĞ_ADI'nı normal bir dosya gibi kullanır\n"
 "  -v, --verbose               bağlamadan önce her dosyanın adını gösterir\n"
 
-#: src/ln.c:485
+#: src/ln.c:483
 msgid "Cannot combine --target-directory and --no-target-directory"
 msgstr "--target-directory ve --no-target-directory birleştirilemez"
 
@@ -4236,84 +4227,90 @@ msgstr ""
 msgid "no login name"
 msgstr "kullanıcı ismi yok"
 
-#: src/ls.c:686
+#: src/ls.c:702
 msgid "%b %e  %Y"
 msgstr "%b %e  %Y"
 
-#: src/ls.c:694
+#: src/ls.c:710
 msgid "%b %e %H:%M"
 msgstr "%b %e %H:%M"
 
-#: src/ls.c:1428
+#: src/ls.c:1450
 #, c-format
 msgid "ignoring invalid value of environment variable QUOTING_STYLE: %s"
 msgstr "çevre değişkeni QUOTING_STYLE'da bulunan geçersiz değer yoksayıldı: %s"
 
-#: src/ls.c:1455
+#: src/ls.c:1477
 #, c-format
 msgid "ignoring invalid width in environment variable COLUMNS: %s"
 msgstr ""
 "çevre değişkeni COLUMNS'da belirtilen geçersiz genişlik değeri yoksayıldı: %s"
 
-#: src/ls.c:1485
+#: src/ls.c:1507
 #, c-format
 msgid "ignoring invalid tab size in environment variable TABSIZE: %s"
 msgstr ""
 "çevre değişkeni TABSIZE'da bulunan geçersiz sekme boyutu yoksayıldı: %s"
 
-#: src/ls.c:1601 src/ptx.c:2071
+#: src/ls.c:1627 src/ptx.c:2043
 #, c-format
 msgid "invalid line width: %s"
 msgstr "geçersiz satır genişliği: %s"
 
-#: src/ls.c:1675
+#: src/ls.c:1701
 #, c-format
 msgid "invalid tab size: %s"
 msgstr "geçersiz sekme boyutu: %s"
 
-#: src/ls.c:1852
+#: src/ls.c:1882
 #, c-format
 msgid "invalid time style format %s"
 msgstr "geçersiz tarih biçemi %s"
 
-#: src/ls.c:2196
+#: src/ls.c:2226
 #, c-format
 msgid "unrecognized prefix: %s"
 msgstr "tanımlanmamış önek: %s"
 
-#: src/ls.c:2219
+#: src/ls.c:2249
 msgid "unparsable value for LS_COLORS environment variable"
 msgstr "çevre değişkeni LS_COLORS'da taranamaz değer"
 
-#: src/ls.c:2311
+#: src/ls.c:2326 src/pwd.c:155
+#, c-format
+msgid "cannot open directory %s"
+msgstr "dizin %s açılamadı"
+
+#: src/ls.c:2341
 #, c-format
 msgid "cannot determine device and inode of %s"
 msgstr "%s'nın aygıtı ve i-düğümü belirlenemedi"
 
-#: src/ls.c:2319
+#: src/ls.c:2349
 #, c-format
 msgid "%s: not listing already-listed directory"
 msgstr "%s: önceden listelenmiş dizin tekrar listelenmedi"
 
-#: src/ls.c:2360 src/pwd.c:223
+#: src/ls.c:2395 src/pwd.c:223
 #, c-format
 msgid "reading directory %s"
 msgstr "dizin %s okunuyor"
 
-#: src/ls.c:2370
+#: src/ls.c:2405
 #, c-format
 msgid "closing directory %s"
 msgstr "%s dizini kapatılıyor"
 
-#: src/ls.c:2874
+#: src/ls.c:2913
 #, c-format
 msgid "cannot compare file names %s and %s"
 msgstr "%s ve %s dosya adları karşılaştırılamaz"
 
-#: src/ls.c:4124
+#: src/ls.c:4250
+#, fuzzy
 msgid ""
 "List information about the FILEs (the current directory by default).\n"
-"Sort entries alphabetically if none of -cftuSUX nor --sort.\n"
+"Sort entries alphabetically if none of -cftuvSUX nor --sort.\n"
 "\n"
 msgstr ""
 "DOSYA(lar) hakkında bilgileri listeler (öntanımlı olarak şimdiki dizinde).\n"
@@ -4321,7 +4318,7 @@ msgstr ""
 "sıralar.\n"
 "\n"
 
-#: src/ls.c:4132
+#: src/ls.c:4258
 msgid ""
 "  -a, --all                  do not ignore entries starting with .\n"
 "  -A, --almost-all           do not list implied . and ..\n"
@@ -4334,7 +4331,7 @@ msgstr ""
 "  -b, --escape               grafik olmayan karakterleri sekizlik\n"
 "                             değerlerle gösterir\n"
 
-#: src/ls.c:4138
+#: src/ls.c:4264
 msgid ""
 "      --block-size=SIZE      use SIZE-byte blocks\n"
 "  -B, --ignore-backups       do not list implied entries ending with ~\n"
@@ -4352,7 +4349,7 @@ msgstr ""
 "                             -l ile: ctime'ı göster ve isme göre sıralar\n"
 "                             tek başına: ctime'a göre sıralar\n"
 
-#: src/ls.c:4146
+#: src/ls.c:4272
 msgid ""
 "  -C                         list entries by columns\n"
 "      --color[=WHEN]         control whether color is used to distinguish "
@@ -4375,7 +4372,7 @@ msgstr ""
 "                             sembolik bağları izlemez.\n"
 "  -D, --dired                Emacs dired kipine uygun çıktı verir\n"
 
-#: src/ls.c:4154
+#: src/ls.c:4280
 #, fuzzy
 msgid ""
 "  -f                         do not sort, enable -aU, disable -ls --color\n"
@@ -4394,10 +4391,20 @@ msgstr ""
 "                               -1 tek sütun,  -l uzun,  -C dikey\n"
 "      --full-time            -l --time-style=full-iso gibi\n"
 
-#: src/ls.c:4162
+#: src/ls.c:4288
+msgid "  -g                         like -l, but do not list owner\n"
+msgstr ""
+
+#: src/ls.c:4291
 msgid ""
-"  -g                         like -l, but do not list owner\n"
-"  -G, --no-group             like -l, but do not list group\n"
+"      --group-directories-first\n"
+"                             group directories before files\n"
+msgstr ""
+
+#: src/ls.c:4295
+#, fuzzy
+msgid ""
+"  -G, --no-group             in a long listing, don't print group names\n"
 "  -h, --human-readable       with -l, print sizes in human readable format\n"
 "                               (e.g., 1K 234M 2G)\n"
 "      --si                   likewise, but use powers of 1000 not 1024\n"
@@ -4425,7 +4432,7 @@ msgstr ""
 "      --hide=KALIP           KALIP'a uyan örtük girdileri göstermez\n"
 "                             (-a veya -A ile etkisizleştirilir)\n"
 
-#: src/ls.c:4176
+#: src/ls.c:4308
 #, fuzzy
 msgid ""
 "      --indicator-style=WORD append indicator with style WORD to entry "
@@ -4446,7 +4453,7 @@ msgstr ""
 "                             göstermez\n"
 "  -k                         --block-size=1K gibi\n"
 
-#: src/ls.c:4184
+#: src/ls.c:4316
 msgid ""
 "  -l                         use a long listing format\n"
 "  -L, --dereference          when showing file information for a symbolic\n"
@@ -4463,7 +4470,7 @@ msgstr ""
 "                               bilgilerini değil\n"
 "  -m                         satırı virgül ayraçlı girdilerle doldurur\n"
 
-#: src/ls.c:4191
+#: src/ls.c:4323
 #, fuzzy
 msgid ""
 "  -n, --numeric-uid-gid      like -l, but list numeric user and group IDs\n"
@@ -4483,7 +4490,7 @@ msgstr ""
 "                               kullanır\n"
 "  -p, --file-type            bilgilere belirteç ekler ( /=@| dan biri) \n"
 
-#: src/ls.c:4199
+#: src/ls.c:4331
 msgid ""
 "  -q, --hide-control-chars   print ? instead of non graphic characters\n"
 "      --show-control-chars   show non graphic characters as-is (default\n"
@@ -4507,7 +4514,7 @@ msgstr ""
 "                               shell-always (her zaman kabuk), c (C dili), \n"
 "                               escape (kaçış karakterli)\n"
 
-#: src/ls.c:4207
+#: src/ls.c:4339
 msgid ""
 "  -r, --reverse              reverse order while sorting\n"
 "  -R, --recursive            list subdirectories recursively\n"
@@ -4518,7 +4525,7 @@ msgstr ""
 "  -s, --size                 -l ile her dosyanın boyutunu blok olarak\n"
 "                             gösterir\n"
 
-#: src/ls.c:4212
+#: src/ls.c:4344
 #, fuzzy
 msgid ""
 "  -S                         sort by file size\n"
@@ -4547,7 +4554,7 @@ msgstr ""
 "                            status (durum); eğer --sort=time belirtilmişse\n"
 "                            seçilen zaman değerine göre sıralar.\n"
 
-#: src/ls.c:4221
+#: src/ls.c:4353
 msgid ""
 "      --time-style=STYLE     with -l, show times using style STYLE:\n"
 "                             full-iso, long-iso, iso, locale, +FORMAT.\n"
@@ -4573,7 +4580,7 @@ msgstr ""
 "  -T, --tabsize=SÜT          öntanımlı 8 değeri yerine her SÜT değerinde\n"
 "                             sekme olduğunu varsayar.\n"
 
-#: src/ls.c:4232
+#: src/ls.c:4364
 msgid ""
 "  -u                         with -lt: sort by, and show, access time\n"
 "                               with -l: show access time and sort by name\n"
@@ -4590,7 +4597,7 @@ msgstr ""
 "gösterir\n"
 "  -v                         sürüme göre sıralar\n"
 
-#: src/ls.c:4239
+#: src/ls.c:4371
 msgid ""
 "  -w, --width=COLS           assume screen width instead of current value\n"
 "  -x                         list entries by lines instead of by columns\n"
@@ -4602,7 +4609,7 @@ msgstr ""
 "  -X                         girdi sonekine göre alfabetik sıralar\n"
 "  -1                         her satıra bir dosya olarak listeler\n"
 
-#: src/ls.c:4251
+#: src/ls.c:4383
 #, fuzzy
 msgid ""
 "\n"
@@ -4623,7 +4630,7 @@ msgstr ""
 "ayırdetmesi\n"
 "kullanılır.\n"
 
-#: src/ls.c:4260
+#: src/ls.c:4392
 msgid ""
 "\n"
 "Exit status is 0 if OK, 1 if minor problems, 2 if serious trouble.\n"
@@ -4632,7 +4639,7 @@ msgstr ""
 "Çıkış durumu, her şey normal ise 0, ufak problemler var ise 1, önemli\n"
 "problemler var ise 2 olur.\n"
 
-#: src/md5sum.c:156
+#: src/md5sum.c:150
 #, fuzzy, c-format
 msgid ""
 "Usage: %s [OPTION] [FILE]...\n"
@@ -4645,13 +4652,13 @@ msgstr ""
 "%s (%d-bit) sağlama toplamlarını kontrol eder veya yazar.\n"
 "DOSYA adı verilmediğinde veya - olduğunda standart girdiden okur.\n"
 
-#: src/md5sum.c:166
+#: src/md5sum.c:160
 msgid ""
 "  -b, --binary            read in binary mode (default unless reading tty "
 "stdin)\n"
 msgstr ""
 
-#: src/md5sum.c:170
+#: src/md5sum.c:164
 #, fuzzy
 msgid "  -b, --binary            read in binary mode\n"
 msgstr ""
@@ -4659,21 +4666,21 @@ msgstr ""
 "  -B, --binary             konsol aygıtına yazarken ikilik yazma kullanır.\n"
 "\n"
 
-#: src/md5sum.c:173
+#: src/md5sum.c:167
 #, c-format
 msgid "  -c, --check             read %s sums from the FILEs and check them\n"
 msgstr ""
 
-#: src/md5sum.c:177
+#: src/md5sum.c:171
 msgid ""
 "  -t, --text              read in text mode (default if reading tty stdin)\n"
 msgstr ""
 
-#: src/md5sum.c:181
+#: src/md5sum.c:175
 msgid "  -t, --text              read in text mode (default)\n"
 msgstr ""
 
-#: src/md5sum.c:184
+#: src/md5sum.c:178
 #, fuzzy
 msgid ""
 "\n"
@@ -4690,7 +4697,7 @@ msgstr ""
 "                          uyarı verir\n"
 "\n"
 
-#: src/md5sum.c:193
+#: src/md5sum.c:187
 #, c-format
 msgid ""
 "\n"
@@ -4705,48 +4712,48 @@ msgstr ""
 "olarak, her satırı bir sağlama toplamı ile yazdırır, tür belirtir (ikilik\n"
 "için `*' , metin için ` ') ve DOSYA'nın ismini yazar.\n"
 
-#: src/md5sum.c:465
+#: src/md5sum.c:459
 #, c-format
 msgid "%s: too many checksum lines"
 msgstr "%s: çok fazla sağlama satırı"
 
-#: src/md5sum.c:487
+#: src/md5sum.c:481
 #, c-format
 msgid "%s: %<PRIuMAX>: improperly formatted %s checksum line"
 msgstr "%s: %<PRIuMAX>: yanlış biçemlenmiş %s sağlama satırı"
 
-#: src/md5sum.c:510
+#: src/md5sum.c:504
 #, c-format
 msgid "%s: FAILED open or read\n"
 msgstr "%s:açma veya okuma BAŞARISIZ\n"
 
-#: src/md5sum.c:534
+#: src/md5sum.c:528
 msgid "FAILED"
 msgstr "BAŞARISIZ"
 
-#: src/md5sum.c:534
+#: src/md5sum.c:528
 msgid "OK"
 msgstr "Tamam"
 
-#: src/md5sum.c:546 src/od.c:950 src/tac.c:239 src/tac.c:350 src/tac.c:480
-#: src/tac.c:556
+#: src/md5sum.c:540 src/od.c:950 src/tac.c:240 src/tac.c:351 src/tac.c:481
+#: src/tac.c:557
 #, c-format
 msgid "%s: read error"
 msgstr "%s: okuma hatası"
 
-#: src/md5sum.c:559
+#: src/md5sum.c:553
 #, c-format
 msgid "%s: no properly formatted %s checksum lines found"
 msgstr "%s: doğru biçemlenmiş %s sağlama toplam satırı bulunamadı"
 
-#: src/md5sum.c:568
+#: src/md5sum.c:562
 #, c-format
 msgid "WARNING: %<PRIuMAX> of %<PRIuMAX> listed file could not be read"
 msgid_plural "WARNING: %<PRIuMAX> of %<PRIuMAX> listed files could not be read"
 msgstr[0] "Uyarı: listelenmiş dosyanın %<PRIuMAX> / %<PRIuMAX> kısmı okunamadı"
 msgstr[1] "Uyarı: listelenmiş dosyanın %<PRIuMAX> / %<PRIuMAX> kısmı okunamadı"
 
-#: src/md5sum.c:580
+#: src/md5sum.c:574
 #, c-format
 msgid "WARNING: %<PRIuMAX> of %<PRIuMAX> computed checksum did NOT match"
 msgid_plural ""
@@ -4756,17 +4763,17 @@ msgstr[0] ""
 msgstr[1] ""
 "UYARI: Hesaplanmış sağlamaların %<PRIuMAX> / %<PRIuMAX> kısmı eşleşmedi"
 
-#: src/md5sum.c:646
+#: src/md5sum.c:640
 msgid ""
 "the --binary and --text options are meaningless when verifying checksums"
 msgstr ""
 " --binary ve --text seçenekleri sağlama toplamlarını kontrol ederken geçersiz"
 
-#: src/md5sum.c:654
+#: src/md5sum.c:648
 msgid "the --status option is meaningful only when verifying checksums"
 msgstr "--status seçeneği yalnızca sağlama toplam kontrolü sırasında anlamlı"
 
-#: src/md5sum.c:661
+#: src/md5sum.c:655
 msgid "the --warn option is meaningful only when verifying checksums"
 msgstr "--warn seçeneği yalnızca sağlama toplam kontrolü sırasında anlamlı"
 
@@ -4796,15 +4803,10 @@ msgstr ""
 "                    gerektiği şekilde üst dizinleri oluşturur\n"
 "  -v, --verbose     oluşturulan her dizin için bir ileti çıktılar\n"
 
-#: src/mkdir.c:110
+#: src/mkdir.c:140
 #, c-format
 msgid "created directory %s"
 msgstr "dizin %s oluşturuldu"
-
-#: src/mkdir.c:182
-#, c-format
-msgid "cannot set permissions of directory %s"
-msgstr "%s dizininin izinleri değiştirilemedi"
 
 #: src/mkfifo.c:55
 #, c-format
@@ -4952,10 +4954,11 @@ msgstr ""
 "nasıl\n"
 "                                 yapılacağını ayarlar: \n"
 "                                 yes=evet, no=hayır, query=sor\n"
-"      --sparse=ZAMAN           seyrek dosyaların oluşumunu kontrol eder\n"
 "      --strip-trailing-slashes bütün KAYNAK argümanlarının sonundan "
 "kesmeleri\n"
 "                                 (/) kaldırır\n"
+"  -S, --suffix=SONEK           öntanımlı sonek yerine SONEK değerini "
+"kullanır.\n"
 
 #: src/mv.c:315
 msgid ""
@@ -5015,7 +5018,7 @@ msgstr "sistem ismi alınamadı"
 msgid "cannot set niceness"
 msgstr "tarih ayarlanamadı"
 
-#: src/nl.c:176
+#: src/nl.c:181
 msgid ""
 "Write each FILE to standard output, with line numbers added.\n"
 "With no FILE, or when FILE is -, read standard input.\n"
@@ -5026,7 +5029,7 @@ msgstr ""
 "DOSYA adı verilmemişse, veya - olarak verilmişse, standart girdiden okur.\n"
 "\n"
 
-#: src/nl.c:184
+#: src/nl.c:189
 msgid ""
 "  -b, --body-numbering=STYLE      use STYLE for numbering body lines\n"
 "  -d, --section-delimiter=CC      use CC for separating logical pages\n"
@@ -5037,7 +5040,7 @@ msgstr ""
 "kullanır\n"
 "  -f, --footer-numbering=TARZ    altyazıları TARZ tarzında numaralandırır\n"
 
-#: src/nl.c:189
+#: src/nl.c:194
 msgid ""
 "  -h, --header-numbering=STYLE    use STYLE for numbering header lines\n"
 "  -i, --page-increment=NUMBER     line number increment at each line\n"
@@ -5058,7 +5061,7 @@ msgstr ""
 "                                 numaralarını baştan başlatmaz\n"
 "  -s, --number-separator=DİZGE   satır numarasından sonra DİZGE yazdırır\n"
 
-#: src/nl.c:197
+#: src/nl.c:202
 msgid ""
 "  -v, --first-page=NUMBER         first line number on each logical page\n"
 "  -w, --number-width=NUMBER       use NUMBER columns for line numbers\n"
@@ -5066,7 +5069,7 @@ msgstr ""
 "  -v, --first-page=SAYI          her mantıksal sayfanın ilk satır numarası\n"
 "  -w, --number-width=SAYI        satır numarası  genişliğini SAYI yapar\n"
 
-#: src/nl.c:203
+#: src/nl.c:208
 msgid ""
 "\n"
 "By default, selects -v1 -i1 -l1 -sTAB -w6 -nrn -hn -bt -fn.  CC are\n"
@@ -5081,7 +5084,7 @@ msgstr ""
 "karakter verilmemişse :. kabul edilir. \\. elde etmek için \\\\ yazılır. \n"
 "TARZ, aşağıdaki değerlerden biri olarak belirtilmelidir: \n"
 
-#: src/nl.c:209
+#: src/nl.c:214
 msgid ""
 "\n"
 "  a         number all lines\n"
@@ -5112,46 +5115,46 @@ msgstr ""
 "  rz   sağa dayalı yazdırır, numaraların başlarına sıfır koyar\n"
 "\n"
 
-#: src/nl.c:276
+#: src/nl.c:280
 msgid "line number overflow"
 msgstr "satır numarası taşması"
 
-#: src/nl.c:474
+#: src/nl.c:478
 #, c-format
 msgid "invalid header numbering style: %s"
 msgstr "geçersiz başlık numaralama tarzı: %s"
 
-#: src/nl.c:482
+#: src/nl.c:486
 #, c-format
 msgid "invalid body numbering style: %s"
 msgstr "geçersiz gövde numaralama tarzı: %s"
 
-#: src/nl.c:490
+#: src/nl.c:494
 #, c-format
 msgid "invalid footer numbering style: %s"
 msgstr "geçersiz altbilgi numaralama tarzı: %s"
 
-#: src/nl.c:499
+#: src/nl.c:503
 #, c-format
 msgid "invalid starting line number: %s"
 msgstr "geçersiz başlangıç satır numarası: %s"
 
-#: src/nl.c:508
+#: src/nl.c:512
 #, c-format
 msgid "invalid line number increment: %s"
 msgstr "geçersiz satır numarası artışı: %s"
 
-#: src/nl.c:520
+#: src/nl.c:524
 #, c-format
 msgid "invalid number of blank lines: %s"
 msgstr "geçersiz boş satır sayısı: %s"
 
-#: src/nl.c:534
+#: src/nl.c:538
 #, c-format
 msgid "invalid line number field width: %s"
 msgstr "geçersiz satır numarası alan genişliği: %s"
 
-#: src/nl.c:553
+#: src/nl.c:557
 #, c-format
 msgid "invalid line numbering format: %s"
 msgstr "geçersiz satır numaralama biçemi: %s"
@@ -5173,21 +5176,30 @@ msgstr ""
 "KOMUTu çalıştırır, ve bitir sinyallerini yoksayar.\n"
 "\n"
 
-#: src/nohup.c:129 src/nohup.c:131
+#: src/nohup.c:117
+#, fuzzy
+msgid "ignoring input"
+msgstr "argümanların tamamı yoksayılıyor"
+
+#: src/nohup.c:149 src/nohup.c:151
 #, c-format
 msgid "failed to open %s"
 msgstr "%s açılamadı"
 
-#: src/nohup.c:139
-#, c-format
-msgid "appending output to %s"
+#: src/nohup.c:161
+#, fuzzy, c-format
+msgid "ignoring input and appending output to %s"
 msgstr "çıktı, %s'nin sonuna ekleniyor"
 
-#: src/nohup.c:155
+#: src/nohup.c:179
 msgid "failed to set the copy of stderr to close on exec"
 msgstr "standart hatanın kopyası, exec sonunda kapanmaya ayarlanamadı"
 
-#: src/nohup.c:161
+#: src/nohup.c:184
+msgid "ignoring input and redirecting stderr to stdout"
+msgstr ""
+
+#: src/nohup.c:188
 msgid "failed to redirect standard error"
 msgstr "standart hata yeniden yönlendirilemedi"
 
@@ -6096,12 +6108,12 @@ msgstr "uyarı: `%s'den başlayarak fazladan argümanlar yoksayıldı"
 msgid "F. Pinard"
 msgstr "F. Pinard"
 
-#: src/ptx.c:421
+#: src/ptx.c:422
 #, fuzzy, c-format
 msgid "%s (for regexp %s)"
 msgstr "%s (`%s' düzenli ifadesi için)"
 
-#: src/ptx.c:1887
+#: src/ptx.c:1883
 #, c-format
 msgid ""
 "Usage: %s [OPTION]... [INPUT]...   (without -G)\n"
@@ -6110,7 +6122,7 @@ msgstr ""
 "Kullanım: %s [SEÇENEK]... [GİRDİ]...   (-G olmaksızın)\n"
 "    veya: %s -G [SEÇENEK]... [GİRDİ [ÇIKTI]]\n"
 
-#: src/ptx.c:1891
+#: src/ptx.c:1887
 msgid ""
 "Output a permuted index, including context, of the words in the input "
 "files.\n"
@@ -6119,10 +6131,10 @@ msgstr ""
 "girdi dosyasındaki kelimelerin (contextleriyle beraber),bir permutasyonunu \n"
 " oluşturur.\n"
 
-#: src/ptx.c:1898
+#: src/ptx.c:1894
+#, fuzzy
 msgid ""
 "  -A, --auto-reference           output automatically generated references\n"
-"  -C, --copyright                display Copyright and copying conditions\n"
 "  -G, --traditional              behave more like System V `ptx'\n"
 "  -F, --flag-truncation=STRING   use STRING for flagging line truncations\n"
 msgstr ""
@@ -6133,7 +6145,7 @@ msgstr ""
 " -F, --flag-truncation=DİZGE     Satırları kesmesi gerektiğinde satırı \n"
 "                                 kestiği yeri  DİZGE (string) ile belirtir\n"
 
-#: src/ptx.c:1904
+#: src/ptx.c:1899
 msgid ""
 "  -M, --macro-name=STRING        macro name to use instead of `xx'\n"
 "  -O, --format=roff              generate output as roff directives\n"
@@ -6153,7 +6165,7 @@ msgstr ""
 "                                 expression (düzenli ifade) ) \n"
 " -T, --format=tex                TeX formatında çıktı oluştur\n"
 
-#: src/ptx.c:1911
+#: src/ptx.c:1906
 msgid ""
 "  -W, --word-regexp=REGEXP       use REGEXP to match each keyword\n"
 "  -b, --break-file=FILE          word break characters in this FILE\n"
@@ -6175,7 +6187,7 @@ msgstr ""
 " -o, --only-file=DOSYA           girdide sadece DOSYA'daki kelimeleri\n"
 "                                 dikkate alır\n"
 
-#: src/ptx.c:1919
+#: src/ptx.c:1914
 msgid ""
 "  -r, --references               first field of each line is a reference\n"
 "  -t, --typeset-mode               - not implemented -\n"
@@ -6188,7 +6200,7 @@ msgstr ""
 " -w, --width=SAYI                çıktıdaki kolon sayısı SAYI olur \n"
 "                                 (referans hariç)\n"
 
-#: src/ptx.c:1926
+#: src/ptx.c:1921
 msgid ""
 "\n"
 "With no FILE or if FILE is -, read Standard Input.  `-F /' by default.\n"
@@ -6197,50 +6209,15 @@ msgstr ""
 "DOSYA belirtilmediğinde veya - olduğunda standart girdiden okur. \n"
 "`-F /' seçeneği verilmiş gibi çalışır\n"
 
-#: src/ptx.c:2005
-msgid ""
-"This program is free software; you can redistribute it and/or modify\n"
-"it under the terms of the GNU General Public License as published by\n"
-"the Free Software Foundation; either version 2, or (at your option)\n"
-"any later version.\n"
-"\n"
-msgstr ""
-"Bu, bir serbest yazılımdır; Free Software Foundation tarafından yayınlanan\n"
-"GNU Genel Kamu Lisansı, 2. sürüm (veya sizin seçiminize bağlı olarak) daha "
-"üst \n"
-"sürüm koşulları altında değişiklik yapabilir ve/veya yeniden "
-"dağıtabilirsiniz. \n"
-"\n"
-
-#: src/ptx.c:2012
-msgid ""
-"This program is distributed in the hope that it will be useful,\n"
-"but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
-"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
-"GNU General Public License for more details.\n"
-"\n"
-msgstr ""
-"Bu program kullanışlı olabileceği umularak dağıtılmaktadır. Ancak,\n"
-"hiçbir GARANTİSİ YOKTUR; hatta SATILABİLİRLİĞİ veya HERHANGİ BİR\n"
-"AMACA UYGUNLUĞU için bile garanti verilmez. Daha ayrıntılı bilgi\n"
-"edinmek için GNU Genel Kamu Lisansına bakınız.\n"
-"\n"
-
-#: src/ptx.c:2019
-#, fuzzy
-msgid ""
-"You should have received a copy of the GNU General Public License\n"
-"along with this program; if not, write to the Free Software Foundation,\n"
-"Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.\n"
-msgstr ""
-"GNU Genel Kamu Lisansının bir kopyasını bu yazılımla birlikte almış\n"
-"olacaksınız; yoksa Free Software Foundation, Inc., 59 Temple Place\n"
-"Suite 330, Boston, MA  02111-1307, USA. adresinden isteyebilirsiniz.\n"
-
-#: src/ptx.c:2044
+#: src/ptx.c:2016
 #, c-format
 msgid "invalid gap width: %s"
 msgstr "geçersiz boşluk genişliği: %s"
+
+#: src/ptx.c:2089
+#, fuzzy
+msgid "the --copyright option is deprecated; use --version instead"
+msgstr "--allow-missing seçeneği kaldırılacaktır; yerine --retry kullanın"
 
 #: src/pwd.c:55
 msgid ""
@@ -6249,11 +6226,6 @@ msgid ""
 msgstr ""
 "Çalışılan dizinin tam dosya yolunu gösterir.\n"
 "\n"
-
-#: src/pwd.c:155
-#, c-format
-msgid "cannot open directory %s"
-msgstr "dizin %s açılamadı"
 
 #: src/pwd.c:160
 #, c-format
@@ -6323,77 +6295,42 @@ msgstr ""
 "  -s, --silent                  çoğu hata iletisini bastırır\n"
 "  -v, --verbose                 hata iletilerini verir\n"
 
-#: src/remove.c:428 src/remove.c:479
+#: src/remove.c:437 src/remove.c:489
 #, fuzzy, c-format
 msgid "FATAL: failed to close directory %s"
 msgstr "%s dizinine chdir başarısız"
 
-#: src/remove.c:441
+#: src/remove.c:450
 #, fuzzy, c-format
 msgid "FATAL: cannot open .. from %s"
 msgstr "dizin %s açılamadı"
 
-#: src/remove.c:449
+#: src/remove.c:458
 #, c-format
 msgid "FATAL: cannot ensure %s (returned to via ..) is safe"
 msgstr ""
 
-#: src/remove.c:457
+#: src/remove.c:466
 #, fuzzy, c-format
 msgid "FATAL: directory %s changed dev/ino"
 msgstr "%s dev/ino'yu değiştirdi"
 
-#: src/remove.c:465
+#: src/remove.c:474
 #, fuzzy, c-format
 msgid "FATAL: cannot return to .. from %s"
-msgstr "dizin %s açılamadı"
+msgstr "'..''e %s dizininden çıkılamaz"
 
-#: src/remove.c:569
+#: src/remove.c:586
 #, fuzzy, c-format
 msgid "FATAL: cannot enter directory %s"
 msgstr "%s dizini oluşturulamıyor"
 
-#: src/remove.c:577
+#: src/remove.c:594
 #, c-format
 msgid "FATAL: just-changed-to directory %s changed dev/ino"
 msgstr ""
 
-#: src/remove.c:753 src/remove.c:899 src/remove.c:977 src/remove.c:1304
-#, c-format
-msgid "cannot remove directory %s"
-msgstr "dizin %s silinemiyor"
-
-#: src/remove.c:782
-#, c-format
-msgid "%s: descend into write-protected directory %s? "
-msgstr "%s: korumalı dizin %s'nin içine inilsin mi?"
-
-#: src/remove.c:783
-#, c-format
-msgid "%s: descend into directory %s? "
-msgstr "%s: %s dizininin içine inilsin mi?"
-
-#: src/remove.c:793
-#, c-format
-msgid "%s: remove write-protected %s %s? "
-msgstr "%s: korumalı %s %s silinsin mi?"
-
-#: src/remove.c:794
-#, c-format
-msgid "%s: remove %s %s? "
-msgstr "%s: %s %s silinsin mi?"
-
-#: src/remove.c:837
-#, c-format
-msgid "removed %s\n"
-msgstr "%s silindi\n"
-
-#: src/remove.c:852 src/remove.c:1299
-#, c-format
-msgid "removed directory: %s\n"
-msgstr "%s dizini silindi\n"
-
-#: src/remove.c:1140
+#: src/remove.c:602
 #, c-format
 msgid ""
 "WARNING: Circular directory structure.\n"
@@ -6408,21 +6345,56 @@ msgstr ""
 "Aşağıdaki dizin bu çevrimin bir parçası:\n"
 "  %s\n"
 
-#: src/remove.c:1152 src/remove.c:1326
+#: src/remove.c:781 src/remove.c:927 src/remove.c:1005 src/remove.c:1337
+#, c-format
+msgid "cannot remove directory %s"
+msgstr "dizin %s silinemiyor"
+
+#: src/remove.c:810
+#, c-format
+msgid "%s: descend into write-protected directory %s? "
+msgstr "%s: korumalı dizin %s'nin içine inilsin mi?"
+
+#: src/remove.c:811
+#, c-format
+msgid "%s: descend into directory %s? "
+msgstr "%s: %s dizininin içine inilsin mi?"
+
+#: src/remove.c:821
+#, c-format
+msgid "%s: remove write-protected %s %s? "
+msgstr "%s: korumalı %s %s silinsin mi?"
+
+#: src/remove.c:822
+#, c-format
+msgid "%s: remove %s %s? "
+msgstr "%s: %s %s silinsin mi?"
+
+#: src/remove.c:865
+#, c-format
+msgid "removed %s\n"
+msgstr "%s silindi\n"
+
+#: src/remove.c:880 src/remove.c:1332
+#, c-format
+msgid "removed directory: %s\n"
+msgstr "%s dizini silindi\n"
+
+#: src/remove.c:1184 src/remove.c:1359
 #, fuzzy, c-format
 msgid "failed to close directory %s"
 msgstr "%s dizinine chdir başarısız"
 
-#: src/remove.c:1344
+#: src/remove.c:1377
 msgid "cannot remove `.' or `..'"
 msgstr "'.' veya '..' silinemiyor"
 
-#: src/remove.c:1383
+#: src/remove.c:1418
 #, fuzzy, c-format
 msgid "cannot remove relative-named %s"
 msgstr "dizin %s silinemiyor"
 
-#: src/remove.c:1397
+#: src/remove.c:1432
 msgid "cannot restore current working directory"
 msgstr "çalışılan dizine geri dönülemedi"
 
@@ -6554,7 +6526,7 @@ msgstr ""
 "                  rmdir a/b/c a/b a' komutuna eşittir.\n"
 "  -v, --verbose   işlenen her dizin için durum çıktılar\n"
 
-#: src/seq.c:82
+#: src/seq.c:74
 #, c-format
 msgid ""
 "Usage: %s [OPTION]... LAST\n"
@@ -6565,13 +6537,12 @@ msgstr ""
 "    veya:  %s [SEÇENEK]... İLK SON\n"
 "   ya da:  %s [SEÇENEK]... İLK ARTIŞ SON\n"
 
-#: src/seq.c:87
-#, c-format
+#: src/seq.c:79
+#, fuzzy
 msgid ""
 "Print numbers from FIRST to LAST, in steps of INCREMENT.\n"
 "\n"
-"  -f, --format=FORMAT      use printf style floating-point FORMAT (default: %"
-"g)\n"
+"  -f, --format=FORMAT      use printf style floating-point FORMAT\n"
 "  -s, --separator=STRING   use STRING to separate numbers (default: \\n)\n"
 "  -w, --equal-width        equalize width by padding with leading zeroes\n"
 msgstr ""
@@ -6583,8 +6554,8 @@ msgstr ""
 "  -w, --equal-width        rakamları sıfırla yastıklayarak eşit genişliğe "
 "getirir\n"
 
-#: src/seq.c:96
-#, c-format
+#: src/seq.c:88
+#, fuzzy
 msgid ""
 "\n"
 "If FIRST or INCREMENT is omitted, it defaults to 1.  That is, an\n"
@@ -6592,8 +6563,9 @@ msgid ""
 "FIRST, INCREMENT, and LAST are interpreted as floating point values.\n"
 "INCREMENT is usually positive if FIRST is smaller than LAST, and\n"
 "INCREMENT is usually negative if FIRST is greater than LAST.\n"
-"When given, the FORMAT argument must contain exactly one of\n"
-"the printf-style, floating point output formats %e, %f, %g\n"
+"FORMAT must be suitable for printing one argument of type `double';\n"
+"it defaults to %.PRECf if FIRST, INCREMENT, and LAST are all fixed point\n"
+"decimal numbers with maximum precision PREC, and to %g otherwise.\n"
 msgstr ""
 "\n"
 "İLK ve ARTIŞ belirtilmemişse öntanımlı olarak 1 kabul edilir.\n"
@@ -6604,17 +6576,17 @@ msgstr ""
 "Belirtildiği takdirde BİÇEM en azından bir tane printf tarzı gerçel\n"
 "sayı çıktı biçemi (%e, %f, %g den birini) içermelidir.\n"
 
-#: src/seq.c:121
+#: src/seq.c:132
 #, c-format
 msgid "invalid floating point argument: %s"
 msgstr "gerçel sayı argüman geçersiz: %s"
 
-#: src/seq.c:379
+#: src/seq.c:340
 #, fuzzy, c-format
 msgid "invalid format string: %s"
 msgstr "biçem dizgesi geçersiz: `%s'"
 
-#: src/seq.c:399
+#: src/seq.c:362
 msgid "format string may not be specified when printing equal width strings"
 msgstr "eş genişlikli dizgeler için biçem dizgesi belirtilmeyebilir"
 
@@ -6650,26 +6622,26 @@ msgstr ""
 msgid "unknown user-ID: %s"
 msgstr "bilinmeyen kullanıcı kimliği: %s"
 
-#: src/setuidgid.c:108
+#: src/setuidgid.c:109
 msgid "cannot set supplemental group"
 msgstr "ek grup atanamadı"
 
-#: src/setuidgid.c:112
+#: src/setuidgid.c:114
 #, c-format
 msgid "cannot set group-ID to %lu"
 msgstr "grup kimliği %lu olarak atanamıyor"
 
-#: src/setuidgid.c:116
+#: src/setuidgid.c:118
 #, c-format
 msgid "cannot set user-ID to %lu"
 msgstr "kullanıcı kimliği %lu olarak atanamıyor"
 
-#: src/shred.c:156
+#: src/shred.c:161
 #, c-format
 msgid "Usage: %s [OPTIONS] FILE [...]\n"
 msgstr "Kullanım: %s [SEÇENEK] DOSYA [...]\n"
 
-#: src/shred.c:157
+#: src/shred.c:162
 msgid ""
 "Overwrite the specified FILE(s) repeatedly, in order to make it harder\n"
 "for even very expensive hardware probing to recover the data.\n"
@@ -6679,11 +6651,13 @@ msgstr ""
 "çözümleri ile bile dosya içeriğinin kurtarılabilmesini zorlaştırır.\n"
 "\n"
 
-#: src/shred.c:165
-#, c-format
+#: src/shred.c:170
+#, fuzzy, c-format
 msgid ""
 "  -f, --force    change permissions to allow writing if necessary\n"
 "  -n, --iterations=N  Overwrite N times instead of the default (%d)\n"
+"      --random-source=FILE  get random bytes from FILE (default /dev/"
+"urandom)\n"
 "  -s, --size=N   shred this many bytes (suffixes like K, M, G accepted)\n"
 msgstr ""
 "  -f, --force    eğer gerekli olursa yazma izni verir\n"
@@ -6693,7 +6667,7 @@ msgstr ""
 "  -s, --size=N   N sayıda baytı bu işlemden geçirir\n"
 "                (k, M, G gibi sonekler kabul edilir)\n"
 
-#: src/shred.c:170
+#: src/shred.c:176
 msgid ""
 "  -u, --remove   truncate and remove file after overwriting\n"
 "  -v, --verbose  show progress\n"
@@ -6708,7 +6682,7 @@ msgstr ""
 "  -z, --zero     işlemi gizlemek için en son olarak üzerine sıfırlarla "
 "yazar\n"
 
-#: src/shred.c:179
+#: src/shred.c:185
 msgid ""
 "\n"
 "If FILE is -, shred standard output.\n"
@@ -6730,7 +6704,7 @@ msgstr ""
 "çalıştırıldığı zaman genelde --remove seçeneği kullanılır.\n"
 "\n"
 
-#: src/shred.c:189
+#: src/shred.c:195
 #, fuzzy
 msgid ""
 "CAUTION: Note that shred relies on a very important assumption:\n"
@@ -6747,7 +6721,7 @@ msgstr ""
 "komutunun işe yaramadığı dosya sistemleri örneklenmiştir:\n"
 "\n"
 
-#: src/shred.c:197
+#: src/shred.c:203
 msgid ""
 "* log-structured or journaled file systems, such as those supplied with\n"
 "  AIX and Solaris (and JFS, ReiserFS, XFS, Ext3, etc.)\n"
@@ -6770,7 +6744,7 @@ msgstr ""
 "  kaydeden dosya sistemleri\n"
 "\n"
 
-#: src/shred.c:207
+#: src/shred.c:213
 msgid ""
 "* file systems that cache in temporary locations, such as NFS\n"
 "  version 3 clients\n"
@@ -6790,120 +6764,192 @@ msgid ""
 "to be recovered later.\n"
 msgstr ""
 
-#: src/shred.c:365
+#: src/shred.c:295
 #, c-format
 msgid "%s: fdatasync failed"
 msgstr "%s: fdatasync başarısız"
 
-#: src/shred.c:376
+#: src/shred.c:306
 #, c-format
 msgid "%s: fsync failed"
 msgstr "%s: fsync başarısız"
 
-#: src/shred.c:444
+#: src/shred.c:372
 #, c-format
 msgid "%s: cannot rewind"
 msgstr "%s: geri gelinemiyor"
 
-#: src/shred.c:470
+#: src/shred.c:395
 #, c-format
 msgid "%s: pass %lu/%lu (%s)..."
 msgstr "%s: geçiş %lu/%lu (%s)"
 
-#: src/shred.c:521
+#: src/shred.c:446
 #, c-format
 msgid "%s: error writing at offset %s"
 msgstr "%s %s göreli konumunda yazdırma hatası"
 
-#: src/shred.c:541
+#: src/shred.c:466
 #, c-format
 msgid "%s: lseek failed"
 msgstr "%s: arama (lseek) başarısız"
 
-#: src/shred.c:552
+#: src/shred.c:477
 #, c-format
 msgid "%s: file too large"
 msgstr "%s: dosya çok büyük"
 
-#: src/shred.c:575
+#: src/shred.c:500
 #, c-format
 msgid "%s: pass %lu/%lu (%s)...%s"
 msgstr "%s: geçiş %lu/%lu (%s)...%s"
 
-#: src/shred.c:591
+#: src/shred.c:516
 #, c-format
 msgid "%s: pass %lu/%lu (%s)...%s/%s %d%%"
 msgstr "%s: geçiş %lu/%lu (%s)...%s/%s %d%%"
 
-#: src/shred.c:843
+#: src/shred.c:764
 #, c-format
 msgid "%s: fstat failed"
 msgstr "%s: fstat başarısız"
 
-#: src/shred.c:854
+#: src/shred.c:775
 #, c-format
 msgid "%s: invalid file type"
 msgstr "%s: geçersiz dosya tipi"
 
-#: src/shred.c:873
+#: src/shred.c:794
 #, c-format
 msgid "%s: file has negative size"
 msgstr "%s: dosya büyüklüğü negatif"
 
-#: src/shred.c:938
+#: src/shred.c:861
 #, c-format
 msgid "%s: error truncating"
 msgstr "%s: kısaltmada hata"
 
-#: src/shred.c:954
+#: src/shred.c:877
 #, c-format
 msgid "%s: fcntl failed"
 msgstr "%s: fcntl başarısız"
 
-#: src/shred.c:959
+#: src/shred.c:882
 #, c-format
 msgid "%s: cannot shred append-only file descriptor"
 msgstr "%s: yalnızca eklenebilir kipte dosya belirteçine shred uygulanamaz"
 
-#: src/shred.c:1037
+#: src/shred.c:960
 #, c-format
 msgid "%s: removing"
 msgstr "%s: siliniyor"
 
-#: src/shred.c:1061
+#: src/shred.c:984
 #, c-format
 msgid "%s: renamed to %s"
 msgstr "%s: %s olarak yeniden adlandırıldı"
 
-#: src/shred.c:1083
+#: src/shred.c:1006
 #, c-format
 msgid "%s: failed to remove"
 msgstr "%s: silinemedi"
 
-#: src/shred.c:1087
+#: src/shred.c:1010
 #, c-format
 msgid "%s: removed"
 msgstr "%s: silindi"
 
-#: src/shred.c:1094 src/shred.c:1137
+#: src/shred.c:1017 src/shred.c:1060
 #, c-format
 msgid "%s: failed to close"
 msgstr "%s: kapatılamadı"
 
-#: src/shred.c:1130
+#: src/shred.c:1053
 #, c-format
 msgid "%s: failed to open for writing"
 msgstr "%s: yazmak için açılamadı"
 
-#: src/shred.c:1186
+#: src/shred.c:1121
 #, c-format
 msgid "%s: invalid number of passes"
 msgstr "%s geçersiz sayıda geçiş"
 
-#: src/shred.c:1203
+#: src/shred.c:1130 src/shuf.c:331 src/sort.c:2531
+#, fuzzy
+msgid "multiple random sources specified"
+msgstr "birden fazla çıktı dosyası belirtilmiş"
+
+#: src/shred.c:1144
 #, c-format
 msgid "%s: invalid file size"
 msgstr "%s: geçersiz dosya büyüklüğü"
+
+#: src/shuf.c:51
+#, fuzzy, c-format
+msgid ""
+"Usage: %s [OPTION]... [FILE]\n"
+"  or:  %s -e [OPTION]... [ARG]...\n"
+"  or:  %s -i LO-HI [OPTION]...\n"
+msgstr ""
+"Kullanımı: %s [SEÇENEK]... SON\n"
+"    veya:  %s [SEÇENEK]... İLK SON\n"
+"   ya da:  %s [SEÇENEK]... İLK ARTIŞ SON\n"
+
+#: src/shuf.c:57
+#, fuzzy
+msgid ""
+"Write a random permutation of the input lines to standard output.\n"
+"\n"
+msgstr ""
+"DOSYA(ların)nın sıralanmış halini standart çıktıya yazar.\n"
+"sort sıralama yaparken her satırın belli bir bölümune bakarak sıralama\n"
+"yapar. Baktığı bölüme sıralama anahtarı denir. Bu anahtarı aşağıdaki\n"
+"seçenekleri kullanarak belirtebilirsiniz. Seçeneklerden sonra anahtarların\n"
+"nasıl oluşturulduğuyla ilgili bilgi bulabilirsiniz.\n"
+"\n"
+"Sıralama seçenekleri:\n"
+"\n"
+
+#: src/shuf.c:64
+msgid ""
+"  -e, --echo                treat each ARG as an input line\n"
+"  -i, --input-range=LO-HI   treat each number LO through HI as an input "
+"line\n"
+"  -n, --head-lines=LINES    output at most LINES lines\n"
+"  -o, --output=FILE         write result to FILE instead of standard output\n"
+"      --random-source=FILE  get random bytes from FILE (default /dev/"
+"urandom)\n"
+"  -z, --zero-terminated     end lines with 0 byte, not newline\n"
+msgstr ""
+
+#: src/shuf.c:285
+#, fuzzy
+msgid "multiple -i options specified"
+msgstr "birden fazla -l veya -t seçeneği belirtilmiş"
+
+#: src/shuf.c:305
+#, fuzzy, c-format
+msgid "invalid input range %s"
+msgstr "geçersiz girdi bayrağı: %s"
+
+#: src/shuf.c:318
+#, fuzzy, c-format
+msgid "invalid line count %s"
+msgstr "geçersiz satır genişliği: %s"
+
+#: src/shuf.c:325 src/sort.c:2525
+msgid "multiple output files specified"
+msgstr "birden fazla çıktı dosyası belirtilmiş"
+
+#: src/shuf.c:351
+#, fuzzy
+msgid "cannot combine -e and -i options"
+msgstr "kip ve --reference seçenekleri birleştirilemez"
+
+#: src/shuf.c:360
+#, fuzzy, c-format
+msgid "extra operand %s\n"
+msgstr "`%s' operandı fazla"
 
 #: src/sleep.c:47
 #, fuzzy, c-format
@@ -6935,7 +6981,7 @@ msgstr "`%s' zaman aralığı geçersiz"
 msgid "cannot read realtime clock"
 msgstr "gerçekzaman saati okunamıyor"
 
-#: src/sort.c:288
+#: src/sort.c:289
 #, fuzzy
 msgid ""
 "Write sorted concatenation of all FILE(s) to standard output.\n"
@@ -6950,13 +6996,13 @@ msgstr ""
 "Sıralama seçenekleri:\n"
 "\n"
 
-#: src/sort.c:295
+#: src/sort.c:296
 msgid ""
 "Ordering options:\n"
 "\n"
 msgstr ""
 
-#: src/sort.c:299
+#: src/sort.c:300
 #, fuzzy
 msgid ""
 "  -b, --ignore-leading-blanks  ignore leading blanks\n"
@@ -6974,7 +7020,7 @@ msgstr ""
 "  -f, --ignore-case           sıralarken büyük/küçük harf farklılıklarını \n"
 "                              dikkate almaz \n"
 
-#: src/sort.c:304
+#: src/sort.c:305
 #, fuzzy
 msgid ""
 "  -g, --general-numeric-sort  compare according to general numerical value\n"
@@ -6982,6 +7028,8 @@ msgid ""
 "  -M, --month-sort            compare (unknown) < `JAN' < ... < `DEC'\n"
 "  -n, --numeric-sort          compare according to string numerical value\n"
 "  -R, --random-sort           sort by random hash of keys\n"
+"      --random-source=FILE    get random bytes from FILE (default /dev/"
+"urandom)\n"
 "  -r, --reverse               reverse the result of comparisons\n"
 "\n"
 msgstr ""
@@ -7005,7 +7053,7 @@ msgstr ""
 "  -r, --reverse               tersine sıralar\n"
 "\n"
 
-#: src/sort.c:313
+#: src/sort.c:315
 #, fuzzy
 msgid ""
 "Other options:\n"
@@ -7014,7 +7062,6 @@ msgid ""
 "  -k, --key=POS1[,POS2]     start a key at POS1, end it at POS2 (origin 1)\n"
 "  -m, --merge               merge already sorted files; do not sort\n"
 "  -o, --output=FILE         write result to FILE instead of standard output\n"
-"      --seed=STRING         seed random hash function with STRING\n"
 "  -s, --stable              stabilize sort by disabling last-resort "
 "comparison\n"
 "  -S, --buffer-size=SIZE    use SIZE for main memory buffer\n"
@@ -7037,7 +7084,7 @@ msgstr ""
 "                            baştan sona bayt bayt karşılaştırır)\n"
 "  -S, --buffer-size=SAYI    ana bellekten SAYI genişliğinde alan kullanır\n"
 
-#: src/sort.c:324
+#: src/sort.c:325
 #, fuzzy, c-format
 msgid ""
 "  -t, --field-separator=SEP  use SEP instead of non-blank to blank "
@@ -7059,13 +7106,13 @@ msgstr ""
 "                            kullanılmadığında sıralama yaparken aynı olan \n"
 "                            satırlardan sadece birini yazar \n"
 
-#: src/sort.c:331
+#: src/sort.c:332
 msgid "  -z, --zero-terminated     end lines with 0 byte, not newline\n"
 msgstr ""
 " -z, --zero-terminated     satırları  satır-sonu karakteri (\\n) \n"
 "                          yerine 0'la (0 baytı) bitirir\n"
 
-#: src/sort.c:336
+#: src/sort.c:337
 #, fuzzy
 msgid ""
 "\n"
@@ -7093,8 +7140,7 @@ msgstr ""
 "\n"
 "SAYI'dan sonra aşağıdaki soneklerden biri gelebilir:\n"
 
-#: src/sort.c:346
-#, c-format
+#: src/sort.c:347
 msgid ""
 "% 1% of memory, b 1, K 1024 (default), and so on for M, G, T, P, E, Z, Y.\n"
 "\n"
@@ -7115,105 +7161,101 @@ msgstr ""
 "bayt değerlerine göre sıralama için LC_ALL çevre değişkenine C değerini "
 "atayın.\n"
 
-#: src/sort.c:457
+#: src/sort.c:458
 msgid "cannot create temporary file"
 msgstr "geçici dosya oluşturulamadı"
 
-#: src/sort.c:484
+#: src/sort.c:485 src/sort.c:2649
 msgid "open failed"
 msgstr "açma işlemi başarısız"
 
-#: src/sort.c:506
+#: src/sort.c:507
 msgid "fflush failed"
 msgstr "fflush başarısız"
 
-#: src/sort.c:511 src/sort.c:2603
+#: src/sort.c:512 src/sort.c:2684
 msgid "close failed"
 msgstr "kapatma işlemi başarısız"
 
-#: src/sort.c:520
+#: src/sort.c:521
 msgid "write failed"
 msgstr "yazma başarısız oldu"
 
-#: src/sort.c:557
+#: src/sort.c:558
 #, c-format
 msgid "warning: cannot remove: %s"
 msgstr "uyarı: %s silinemedi"
 
-#: src/sort.c:674
+#: src/sort.c:675
 msgid "sort size"
 msgstr "sıralama boyu"
 
-#: src/sort.c:753
+#: src/sort.c:754
 msgid "stat failed"
 msgstr "stat başarısız"
 
-#: src/sort.c:1017
+#: src/sort.c:1018
 msgid "read failed"
 msgstr "okuma başarısız oldu"
 
-#: src/sort.c:1454
+#: src/sort.c:1532
 #, c-format
 msgid "%s: %s:%s: disorder: "
 msgstr "%s: %s:%s: sırasız: "
 
-#: src/sort.c:1458
+#: src/sort.c:1536
 msgid "standard error"
 msgstr "standart hata"
 
-#: src/sort.c:2044
+#: src/sort.c:2122
 #, fuzzy, c-format
 msgid "%s: invalid field specification %s"
 msgstr "%s: geçersiz alan tanımı `%s'"
 
-#: src/sort.c:2055
+#: src/sort.c:2133
 #, c-format
 msgid "options `-%s' are incompatible"
 msgstr ""
 
-#: src/sort.c:2114
+#: src/sort.c:2192
 #, c-format
 msgid "%s: count `%.*s' too large"
 msgstr "%s: `%.*s' sayımı fazla büyük"
 
-#: src/sort.c:2120
+#: src/sort.c:2198
 #, fuzzy, c-format
 msgid "%s: invalid count at start of %s"
 msgstr "%s: `%s' başlangıcında geçersiz sayım"
 
-#: src/sort.c:2346
+#: src/sort.c:2428
 msgid "invalid number after `-'"
 msgstr "`-' den sonra geçersiz sayı"
 
-#: src/sort.c:2349 src/sort.c:2396 src/sort.c:2423
+#: src/sort.c:2431 src/sort.c:2479 src/sort.c:2506
 msgid "invalid number after `.'"
 msgstr "`.' dan sonra geçersiz sayı"
 
-#: src/sort.c:2352 src/sort.c:2432
+#: src/sort.c:2434 src/sort.c:2515
 msgid "stray character in field spec"
 msgstr "alan tanımında fazla harf"
 
-#: src/sort.c:2387
+#: src/sort.c:2470
 msgid "invalid number at field start"
 msgstr "alan başlangıcında geçersiz sayı"
 
-#: src/sort.c:2391 src/sort.c:2419
+#: src/sort.c:2474 src/sort.c:2502
 msgid "field number is zero"
 msgstr "alan numarası sıfır"
 
-#: src/sort.c:2400
+#: src/sort.c:2483
 msgid "character offset is zero"
 msgstr "sıralama anahtarında belirtilen karakter yeri sıfır"
 
-#: src/sort.c:2415
+#: src/sort.c:2498
 msgid "invalid number after `,'"
 msgstr "`,' den sonra geçersiz sayı"
 
-#: src/sort.c:2442
-msgid "multiple output files specified"
-msgstr "birden fazla çıktı dosyası belirtilmiş"
-
-#: src/sort.c:2586
+#: src/sort.c:2667
 #, c-format
 msgid "extra operand %s not allowed with -c"
 msgstr "-c seçeneği ile ekstra işlenen %s kullanılamaz"
@@ -7307,32 +7349,32 @@ msgstr "satır sayma seçeneği -%s%c... fazla büyük"
 msgid "invalid number of lines: 0"
 msgstr "geçersiz satır sayısı: 0"
 
-#: src/stat.c:590
+#: src/stat.c:591
 #, fuzzy, c-format
 msgid "warning: unrecognized escape `\\%c'"
 msgstr "%s: `%c%s' seçeneği bilinmiyor\n"
 
-#: src/stat.c:625
+#: src/stat.c:626
 #, fuzzy, c-format
 msgid "%s%s: invalid directive"
 msgstr "%%%c: yönerge geçersiz"
 
-#: src/stat.c:670
+#: src/stat.c:671
 #, fuzzy
 msgid "warning: backslash at end of format"
 msgstr "dizge sonunda geçersiz terskesik gösterimi"
 
-#: src/stat.c:699
+#: src/stat.c:700
 #, c-format
 msgid "cannot read file system information for %s"
 msgstr "%s için dosyasistem bilgisi okunamadı"
 
-#: src/stat.c:775
+#: src/stat.c:776
 #, c-format
 msgid "Usage: %s [OPTION] FILE...\n"
 msgstr "Kullanım: %s [SEÇENEK] DOSYA...\n"
 
-#: src/stat.c:776
+#: src/stat.c:777
 msgid ""
 "Display file or file system status.\n"
 "\n"
@@ -7340,7 +7382,7 @@ msgid ""
 "  -f, --file-system     display file system status instead of file status\n"
 msgstr ""
 
-#: src/stat.c:782
+#: src/stat.c:783
 msgid ""
 "  -c  --format=FORMAT   use the specified FORMAT instead of the default;\n"
 "                          output a newline after each use of FORMAT\n"
@@ -7350,7 +7392,7 @@ msgid ""
 "  -t, --terse           print the information in terse form\n"
 msgstr ""
 
-#: src/stat.c:793
+#: src/stat.c:794
 #, fuzzy
 msgid ""
 "\n"
@@ -7369,7 +7411,7 @@ msgstr ""
 "  %B   `%b' ile verilen her bloğun bayt cinsinden boyu\n"
 "  %b   Ayrılan blok sayısı (bkz. %B)\n"
 
-#: src/stat.c:801
+#: src/stat.c:802
 #, fuzzy
 msgid ""
 "  %d   Device number in decimal\n"
@@ -7386,7 +7428,7 @@ msgstr ""
 "  %G   Sahibin grup adı\n"
 "  %g   Sahibin grup kimlik no'su\n"
 
-#: src/stat.c:809
+#: src/stat.c:810
 #, fuzzy
 msgid ""
 "  %h   Number of hard links\n"
@@ -7407,7 +7449,7 @@ msgstr ""
 "  %T   Onaltılık minör aygıt türü\n"
 "  %t   Onaltılık majör aygıt türü\n"
 
-#: src/stat.c:819
+#: src/stat.c:820
 #, fuzzy
 msgid ""
 "  %u   User ID of owner\n"
@@ -7430,7 +7472,7 @@ msgstr ""
 "  %z   Son dosya değişim zamanı\n"
 "\n"
 
-#: src/stat.c:831
+#: src/stat.c:832
 msgid ""
 "Valid format sequences for file systems:\n"
 "\n"
@@ -7448,7 +7490,7 @@ msgstr ""
 "  %d   Dosya sisteminde boş dosya düğümleri\n"
 "  %f   Dosya sisteminde boş bloklar\n"
 
-#: src/stat.c:840
+#: src/stat.c:841
 #, fuzzy
 msgid ""
 "  %i   File System ID in hex\n"
@@ -7963,37 +8005,38 @@ msgstr "%s: bu aygıt için boyut bilgileri yok"
 msgid "invalid integer argument %s"
 msgstr "tamsayı argüman olarak `%s' geçersiz"
 
-#: src/su.c:265
+#: src/su.c:243
 msgid "Password:"
 msgstr "Parola:"
 
-#: src/su.c:268
+#: src/su.c:246
 msgid "getpass: cannot open /dev/tty"
 msgstr "getpass: dev/tty açılamıyor"
 
-#: src/su.c:326
+#: src/su.c:304
 msgid "cannot set groups"
 msgstr "gruplar atanamıyor"
 
-#: src/su.c:330
+#: src/su.c:308
 msgid "cannot set group id"
 msgstr "grup kimliği atanamıyor"
 
-#: src/su.c:332
+#: src/su.c:310
 msgid "cannot set user id"
 msgstr "kullanıcı kimliği atanamıyor"
 
-#: src/su.c:408
+#: src/su.c:386
 #, c-format
 msgid "Usage: %s [OPTION]... [-] [USER [ARG]...]\n"
 msgstr "Kullanımı: %s [SEÇENEK]... [-] [KULLANICI [ARG]...]\n"
 
-#: src/su.c:409
+#: src/su.c:387
+#, fuzzy
 msgid ""
 "Change the effective user id and group id to that of USER.\n"
 "\n"
 "  -, -l, --login               make the shell a login shell\n"
-"  -c, --commmand=COMMAND       pass a single COMMAND to the shell with -c\n"
+"  -c, --command=COMMAND        pass a single COMMAND to the shell with -c\n"
 "  -f, --fast                   pass -f to the shell (for csh or tcsh)\n"
 "  -m, --preserve-environment   do not reset environment variables\n"
 "  -p                           same as -m\n"
@@ -8010,7 +8053,7 @@ msgstr ""
 "  -s, --shell=KABUK            /etc/shells dosyasında varsa KABUĞU "
 "çalıştırır\n"
 
-#: src/su.c:421
+#: src/su.c:399
 msgid ""
 "\n"
 "A mere - implies -l.   If USER not given, assume root.\n"
@@ -8018,21 +8061,21 @@ msgstr ""
 "\n"
 "Sadece - ile -l uygulanır.   KULLANICI verilmezse root varsayılır.\n"
 
-#: src/su.c:498
+#: src/su.c:476
 #, c-format
 msgid "user %s does not exist"
 msgstr "%s diye bir kullanıcı yok"
 
-#: src/su.c:521
+#: src/su.c:499
 msgid "incorrect password"
 msgstr "parola yanlış"
 
-#: src/su.c:538
+#: src/su.c:516
 #, c-format
 msgid "using restricted shell %s"
 msgstr "kısıtlı kabuk %s kullanılıyor"
 
-#: src/su.c:546
+#: src/su.c:524
 #, c-format
 msgid "warning: cannot change directory to %s"
 msgstr "uyarı: %s dizinine geçilemiyor"
@@ -8063,7 +8106,7 @@ msgstr ""
 msgid "ignoring all arguments"
 msgstr "argümanların tamamı yoksayılıyor"
 
-#: src/system.h:604
+#: src/system.h:529
 #, c-format
 msgid ""
 "\n"
@@ -8072,15 +8115,15 @@ msgid ""
 "for details about the options it supports.\n"
 msgstr ""
 
-#: src/system.h:610
+#: src/system.h:535
 msgid "      --help     display this help and exit\n"
 msgstr "      --help     bu yardımı gösterir ve çıkar\n"
 
-#: src/system.h:612
+#: src/system.h:537
 msgid "      --version  output version information and exit\n"
 msgstr "      --version  sürüm bilgisini gösterir ve çıkar\n"
 
-#: src/tac.c:136
+#: src/tac.c:137
 msgid ""
 "Write each FILE to standard output, last line first.\n"
 "With no FILE, or when FILE is -, read standard input.\n"
@@ -8090,7 +8133,7 @@ msgstr ""
 "DOSYA belirtilmediğinde veya - olduğunda standart girdiden okur.\n"
 "\n"
 
-#: src/tac.c:144
+#: src/tac.c:145
 msgid ""
 "  -b, --before             attach the separator before instead of after\n"
 "  -r, --regex              interpret the separator as a regular expression\n"
@@ -8101,31 +8144,31 @@ msgstr ""
 "                         (regex = regular expression (düzenli ifade))\n"
 "  -s, --seperator=AYRAC  satırları `\\n' yerine AYRAC ile ayır\n"
 
-#: src/tac.c:235 src/tac.c:336
+#: src/tac.c:236 src/tac.c:337
 #, c-format
 msgid "%s: seek failed"
 msgstr "%s: arama (seek) başarısız"
 
-#: src/tac.c:264
+#: src/tac.c:265
 msgid "record too large"
 msgstr "kayıt çok büyük"
 
-#: src/tac.c:458
+#: src/tac.c:459
 #, c-format
 msgid "cannot create temporary file %s"
 msgstr "geçici dosya %s oluşturulamadı"
 
-#: src/tac.c:465
+#: src/tac.c:466
 #, c-format
 msgid "cannot open %s for writing"
 msgstr "%s yazmak için açılamadı"
 
-#: src/tac.c:486 src/tac.c:493
+#: src/tac.c:487 src/tac.c:494
 #, c-format
 msgid "%s: write error"
 msgstr "%s: yazma hatası"
 
-#: src/tac.c:600
+#: src/tac.c:601
 msgid "separator cannot be empty"
 msgstr "-s 'ten sonra AYRAC belirtilmeli"
 
@@ -8354,12 +8397,12 @@ msgstr "uyarı: --pid=PID sadece -f seçeneğiyle kullanıldığında bir anlam 
 msgid "warning: --pid=PID is not supported on this system"
 msgstr "uyarı: --pid=PID bu sistemde desteklenmiyor"
 
-#: src/tail.c:1657
+#: src/tail.c:1664
 #, c-format
 msgid "cannot follow %s by name"
 msgstr "%s adı ile takip edilemiyor"
 
-#: src/tail.c:1663
+#: src/tail.c:1670
 msgid "warning: following standard input indefinitely is ineffective"
 msgstr "uyarı: standart girdiyi sonsuza dek takip etmek verimli değildir"
 
@@ -8833,7 +8876,7 @@ msgstr ""
 "-s sadece çeviri veya sıkıştırmayla beraber çalışıyorsa\n"
 "KUME2 yi kullanır ve çeviri veya sıkıştırma bittikten sonra devreye girer.\n"
 
-#: src/tr.c:518
+#: src/tr.c:519
 #, fuzzy, c-format
 msgid ""
 "warning: the ambiguous octal escape \\%c%c%c is being\n"
@@ -8842,56 +8885,56 @@ msgstr ""
 "uyarı: net olmayan \\%c%c%c sekizlik ters kesik gösteririmi \n"
 "\t  \\0%c%c,`%c' sırası olarak algılanıyor "
 
-#: src/tr.c:681
+#: src/tr.c:682
 #, c-format
 msgid "range-endpoints of `%s-%s' are in reverse collating sequence order"
 msgstr "alan sınırları '%s-%s' ters sıralılar"
 
-#: src/tr.c:837
+#: src/tr.c:838
 #, fuzzy, c-format
 msgid "invalid repeat count %s in [c*n] construct"
 msgstr "'%s' de geçersiz [c*n] tekrar yapısı"
 
-#: src/tr.c:918
+#: src/tr.c:919
 msgid "missing character class name `[::]'"
 msgstr "`[:' ile `:]' arasında  bir eşitlik sınıfı belirtilmeli"
 
-#: src/tr.c:921
+#: src/tr.c:922
 msgid "missing equivalence class character `[==]'"
 msgstr "`[=' ile `=]' arasında  bir eşitlik sınıfı belirtilmeli"
 
-#: src/tr.c:936
+#: src/tr.c:937
 #, fuzzy, c-format
 msgid "invalid character class %s"
 msgstr "geçersiz karakter sınıfı `%s'"
 
-#: src/tr.c:955
+#: src/tr.c:956
 #, c-format
 msgid "%s: equivalence class operand must be a single character"
 msgstr ""
 "%s: eşitlik sınıfı (equivalance class)operandı tek karakterden oluşmalıdır"
 
-#: src/tr.c:1275
+#: src/tr.c:1276
 msgid "too many characters in set"
 msgstr "kümede çok fazla karakter"
 
-#: src/tr.c:1423
+#: src/tr.c:1424
 msgid "the [c*] repeat construct may not appear in string1"
 msgstr "[c*] tekrar yapısı KUME1'de bulunamaz"
 
-#: src/tr.c:1433
+#: src/tr.c:1434
 msgid "only one [c*] repeat construct may appear in string2"
 msgstr "KUME2'de yalnızca bir [c*] tekrar yapısı olabilir"
 
-#: src/tr.c:1441
+#: src/tr.c:1442
 msgid "[=c=] expressions may not appear in string2 when translating"
 msgstr "KUME2'de çeviri yaparken [=c=] ifadeleri yer alamaz"
 
-#: src/tr.c:1454
+#: src/tr.c:1455
 msgid "when not truncating set1, string2 must be non-empty"
 msgstr "KUME1 kısaltılmıyorsa KUME2 boş olamaz"
 
-#: src/tr.c:1463
+#: src/tr.c:1464
 msgid ""
 "when translating with complemented character classes,\n"
 "string2 must map all characters in the domain to one"
@@ -8899,7 +8942,7 @@ msgstr ""
 "karakter sınıflarının tümleyicileri (küme tümleyen=set complement)\n"
 "kullanıldığında KUME2 sadece bir karakter kullanan ifadeler içerebilir"
 
-#: src/tr.c:1470
+#: src/tr.c:1471
 msgid ""
 "when translating, the only character classes that may appear in\n"
 "string2 are `upper' and `lower'"
@@ -8907,21 +8950,21 @@ msgstr ""
 "çeviri yaparken, KUME2'de kullanılabilecek karakter sınıfları:\n"
 " upper, lower"
 
-#: src/tr.c:1479
+#: src/tr.c:1480
 msgid "the [c*] construct may appear in string2 only when translating"
 msgstr "[c*] ifadesi KUME2'de sadece çeviri yaparken kullanılabilir"
 
-#: src/tr.c:1731
+#: src/tr.c:1732
 msgid "Two strings must be given when translating."
 msgstr "çevrim için iki dizge verilmelidir."
 
-#: src/tr.c:1741
+#: src/tr.c:1742
 msgid "Only one string may be given when deleting without squeezing repeats."
 msgstr ""
 "tekrar edilen karakterler bire indirgenMEden silme yapılıyorsa\n"
 "sadece bir dizge verilmeli."
 
-#: src/tr.c:1844
+#: src/tr.c:1845
 msgid "misaligned [:upper:] and/or [:lower:] construct"
 msgstr "ayarlanmamış veya uymayan [:upper:] ve/veya [:lower:] ifadesi"
 
@@ -8935,26 +8978,8 @@ msgstr ""
 "    veya:  %s SEÇENEK\n"
 
 #: src/true.c:49
-#, fuzzy
 msgid "Exit with a status code indicating success."
 msgstr ""
-"Kullanımı: %s [argümanlar yoksayılır]\n"
-"    veya:  %s SEÇENEK\n"
-"Başarılı durum kodu ile çıkar.\n"
-"\n"
-"Bu seçenek isimleri kısaltılamaz.\n"
-"\n"
-
-#: src/true.c:50
-#, fuzzy
-msgid "Exit with a status code indicating failure."
-msgstr ""
-"Kullanımı: %s [yoksayılan komut satırı argümanları]\n"
-"    veya:  %s SEÇENEK\n"
-"Saptanan bozukluk ile ilgili durum kodunu göstererek çıkar.\n"
-"\n"
-"Bu seçenek isimleri kısaltılmış olarak kullanılamaz.\n"
-"\n"
 
 #: src/tsort.c:86
 #, c-format
@@ -9258,7 +9283,7 @@ msgstr ""
 "DOSYA verilmezse %s kullanılır. DOSYA olarak %s kullanımı yaygındır.\n"
 "\n"
 
-#: src/wc.c:131
+#: src/wc.c:137
 msgid ""
 "Print newline, word, and byte counts for each FILE, and a total line if\n"
 "more than one FILE is specified.  With no FILE, or when FILE is -,\n"
@@ -9274,13 +9299,21 @@ msgstr ""
 "  -m, --chars            karakter sayısını yazar\n"
 "  -l, --lines            satır sayısını (\\n sayısı) yazar\n"
 
-#: src/wc.c:139
+#: src/wc.c:145
+#, fuzzy
 msgid ""
+"      --files0-from=F    read input from the files specified by\n"
+"                           NUL-terminated names in file F\n"
 "  -L, --max-line-length  print the length of the longest line\n"
 "  -w, --words            print the word counts\n"
 msgstr ""
 "  -L, --max-line-length  en uzun satırın uzunluğunu yazar\n"
 "  -w, --words            kelime sayısını yazar\n"
+
+#: src/wc.c:711
+#, c-format
+msgid "when reading file names from stdin, no file name of %s allowed"
+msgstr ""
 
 #: src/who.c:216
 msgid " old "
@@ -9452,6 +9485,15 @@ msgid ""
 msgstr ""
 "Belirtilmişse DİZGE(ler)den, yoksa `y'den oluşan satırları sürekli üretir.\n"
 
+#~ msgid "cannot change owner and/or group of %s"
+#~ msgstr "%s'in sahibi ve/veya grubu değiştirilemiyor"
+
+#~ msgid "cannot chdir to directory %s"
+#~ msgstr "%s dizinine geçilemedi"
+
+#~ msgid "cannot get the login group of a numeric UID"
+#~ msgstr "bir sayısal kullanıcı-kimliğin grubu alınamıyor"
+
 #~ msgid ""
 #~ "      --no-preserve-root do not treat `/' specially (the default)\n"
 #~ "      --preserve-root    fail to operate recursively on `/'\n"
@@ -9459,8 +9501,40 @@ msgstr ""
 #~ "      --no-preserve-root `/' için özel işlem yapma (öntanımlı)\n"
 #~ "      --preserve-root    `/' üzerinde döngüsel işlem yapma\n"
 
+#~ msgid ""
+#~ "  -e             enable interpretation of backslash escapes\n"
+#~ "  -E             disable interpretation of backslash escapes (default)\n"
+#~ msgstr ""
+#~ "  -e             terskesme kaçışlarını yorumlar\n"
+#~ "  -E             (öntanımlı) terskesme kaçışlarını yorumlamaz\n"
+
+#, fuzzy
+#~ msgid ""
+#~ "warning: unportable BRE: %s: using `^' as the first character\n"
+#~ "of the basic regular expression is not portable; it is being ignored"
+#~ msgstr ""
+#~ "uyarı: taşınamaz düzgün ifade: `%s':`^' ile başlayan temel düzenli\n"
+#~ "ifadeler taşınamadığından`^' yoksayılıyor."
+
 #~ msgid "unrecognized option `-%c'"
 #~ msgstr "bilinmeyen seçenek `-%c'"
+
+#, fuzzy
+#~ msgid "cannot return to working directory"
+#~ msgstr "çalışılan dizine geri dönülemedi"
+
+#, fuzzy
+#~ msgid "cannot return to current directory"
+#~ msgstr "çalışılan dizin alınamadı"
+
+#~ msgid "create symbolic link %s to %s"
+#~ msgstr "%s -> %s sembolik bağı oluştur"
+
+#~ msgid "create hard link %s to %s"
+#~ msgstr "%s -> %s sabit bağı oluştur"
+
+#~ msgid "cannot set permissions of directory %s"
+#~ msgstr "%s dizininin izinleri değiştirilemedi"
 
 #~ msgid "cannot set permissions of fifo %s"
 #~ msgstr "'%s' fifosunun izinleri değiştirilemedi"
@@ -9469,22 +9543,42 @@ msgstr ""
 #~ msgstr "'%s'nın izinleri belirtilemedi"
 
 #~ msgid ""
-#~ "Display file or file system status.\n"
+#~ "This program is free software; you can redistribute it and/or modify\n"
+#~ "it under the terms of the GNU General Public License as published by\n"
+#~ "the Free Software Foundation; either version 2, or (at your option)\n"
+#~ "any later version.\n"
 #~ "\n"
-#~ "  -f, --file-system     display file system status instead of file "
-#~ "status\n"
-#~ "  -c  --format=FORMAT   use the specified FORMAT instead of the default\n"
-#~ "  -L, --dereference     follow links\n"
-#~ "  -t, --terse           print the information in terse form\n"
 #~ msgstr ""
-#~ "Dosya veya dosya sistemi durumunu gösterir.\n"
+#~ "Bu, bir serbest yazılımdır; Free Software Foundation tarafından "
+#~ "yayınlanan\n"
+#~ "GNU Genel Kamu Lisansı, 2. sürüm (veya sizin seçiminize bağlı olarak) "
+#~ "daha üst \n"
+#~ "sürüm koşulları altında değişiklik yapabilir ve/veya yeniden "
+#~ "dağıtabilirsiniz. \n"
 #~ "\n"
-#~ "  -f, --filesystem      dosya durumu yerine dosya sistemi durumunu "
-#~ "gösterir\n"
-#~ "  -c  --format=BİÇEM    öntanımlı biçem yerine belirtilen BİÇEM'i "
-#~ "kullanır\n"
-#~ "  -L, --dereference     bağları takip eder\n"
-#~ "  -t, --terse           bilgileri kısa biçemde gösterir\n"
+
+#~ msgid ""
+#~ "This program is distributed in the hope that it will be useful,\n"
+#~ "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+#~ "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+#~ "GNU General Public License for more details.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "Bu program kullanışlı olabileceği umularak dağıtılmaktadır. Ancak,\n"
+#~ "hiçbir GARANTİSİ YOKTUR; hatta SATILABİLİRLİĞİ veya HERHANGİ BİR\n"
+#~ "AMACA UYGUNLUĞU için bile garanti verilmez. Daha ayrıntılı bilgi\n"
+#~ "edinmek için GNU Genel Kamu Lisansına bakınız.\n"
+#~ "\n"
+
+#, fuzzy
+#~ msgid ""
+#~ "You should have received a copy of the GNU General Public License\n"
+#~ "along with this program; if not, write to the Free Software Foundation,\n"
+#~ "Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.\n"
+#~ msgstr ""
+#~ "GNU Genel Kamu Lisansının bir kopyasını bu yazılımla birlikte almış\n"
+#~ "olacaksınız; yoksa Free Software Foundation, Inc., 59 Temple Place\n"
+#~ "Suite 330, Boston, MA  02111-1307, USA. adresinden isteyebilirsiniz.\n"
 
 #~ msgid "cannot chdir from %s to .."
 #~ msgstr "%s dizininden ..'ye geçilemedi"
@@ -9495,15 +9589,8 @@ msgstr ""
 #~ msgid "cannot lstat %s"
 #~ msgstr "%s durumlanamadı"
 
-#, fuzzy
 #~ msgid "cannot chdir from %s to %s"
-#~ msgstr "%s dizininden ..'ye geçilemedi"
-
-#~ msgid "create symbolic link %s to %s"
-#~ msgstr "%s -> %s sembolik bağı oluştur"
-
-#~ msgid "create hard link %s to %s"
-#~ msgstr "%s -> %s sabit bağı oluştur"
+#~ msgstr "%s dizininden %s dizinine geçilemedi"
 
 #~ msgid ""
 #~ "Remove (unlink) the FILE(s).\n"
@@ -9528,95 +9615,8 @@ msgstr ""
 #~ "sormaz\n"
 #~ "  -i, --interactive     silmeden önce sorar\n"
 
-#~ msgid ""
-#~ "  -i, --idle        add idle time as HOURS:MINUTES, . or old\n"
-#~ "                    (deprecated, use -u)\n"
-#~ "  -l, --login       print system login processes\n"
-#~ msgstr ""
-#~ "  -i, --idle        atıl zamanı SAAT:DAKİKA, . veya eski olarak\n"
-#~ "                    ekler (kullanımdan kalkacak, -u kullanın)\n"
-#~ "  -l, --login       sisteme giriş işlemlerini yazdırır\n"
-
-#~ msgid "Warning: `-l' is deprecated; use `-L' instead"
-#~ msgstr "Uyarı: `-l' sonraki sürümlerde kaldırılacaktır; `-L' kullanın"
-
-#~ msgid "the --allow-missing option is deprecated; use --retry instead"
-#~ msgstr "--allow-missing seçeneği kaldırılacaktır; yerine --retry kullanın"
-
-#~ msgid "cannot obtain time stamps for %s"
-#~ msgstr "%s için zaman damgaları alınamadı"
-
-#, fuzzy
-#~ msgid "cannot open %s from %s"
-#~ msgstr "dizin %s açılamadı"
-
-#, fuzzy
-#~ msgid "cannot open %s"
-#~ msgstr "%s silinemedi"
-
-#, fuzzy
-#~ msgid "cannot open from %s to %s"
-#~ msgstr "%s dizininden %s dizinine geçilemedi"
-
-#, fuzzy
-#~ msgid ""
-#~ "Display the current time in the given FORMAT, or set the system date.\n"
-#~ "\n"
-#~ "  -d, --date=STRING         display time described by STRING, not `now'\n"
-#~ "  -f, --file=DATEFILE       like --date once for each line of DATEFILE\n"
-#~ "  -I[TIMESPEC], --iso-8601[=TIMESPEC]  output date/time in ISO 8601 "
-#~ "format.\n"
-#~ "                            TIMESPEC=`date' for date only (the default),\n"
-#~ "                            `hours', `minutes', `seconds', or `ns' for "
-#~ "date and\n"
-#~ "                            time to the indicated precision.\n"
-#~ msgstr ""
-#~ "Verilen BİÇEMde zamanı gösterir, ya da sistem zamanını değiştirir.\n"
-#~ "\n"
-#~ "  -d, --date=DİZGE       DIZGE ile tanımlanan zamanı gösterir, şimdiki "
-#~ "zamanı\n"
-#~ "                         değil\n"
-#~ "  -f, --file=DOSYA       DOSYAnın her satırı için  --date uygulanır\n"
-#~ "      --iso-8601[=BİRİM] ISO-8601 uyumlu tarih/zaman dizgesi gösterir.\n"
-#~ "                         BİRİM=`date' sadece tarihi (öntanımlı),\n"
-#~ "                         `hours', `minutes', `seconds' veya `ns' ile "
-#~ "tarih ve\n"
-#~ "                         zaman 'saat', 'dakika', 'saniye' veya "
-#~ "nanosaniye\n"
-#~ "                         hassasiyetinde gösterilir.\n"
-
-#~ msgid ""
-#~ "a format string may not be specified when using the --rfc-2822 (-R) option"
-#~ msgstr "--rfc-822 (-R) seçeneği ile birlikte bir biçem dizgisi belirtilemez"
-
-#~ msgid "undefined"
-#~ msgstr "atanmamış"
-
-#~ msgid "file offset out of range"
-#~ msgstr "dosya göreli konumu aralık dışı"
-
-#~ msgid "cannot get priority"
-#~ msgstr "öncelik alınamadı"
-
-#~ msgid "cannot set priority"
-#~ msgstr "öncelik ayarlanamadı"
-
-#, fuzzy
-#~ msgid ""
-#~ "Exit with a status code indicating failure.\n"
-#~ "\n"
-#~ "These option names may not be abbreviated.\n"
-#~ "\n"
-#~ msgstr ""
-#~ "Kullanımı: %s [yoksayılan komut satırı argümanları]\n"
-#~ "    veya:  %s SEÇENEK\n"
-#~ "Saptanan bozukluk ile ilgili durum kodunu göstererek çıkar.\n"
-#~ "\n"
-#~ "Bu seçenek isimleri kısaltılmış olarak kullanılamaz.\n"
-#~ "\n"
-
-#~ msgid "Only one operand may be specified when using --check."
-#~ msgstr "--check seçeneği kullanılırken sadece bir işleyen verilebilir"
+#~ msgid "openat: unable to restore working directory"
+#~ msgstr "openat: çalışma dizinine geri dönülemedi"
 
 #
 #~ msgid ""
@@ -9629,6 +9629,125 @@ msgstr ""
 #~ "bakınız.\n"
 #~ "Hiçbir garantisi yoktur; hatta SATILABİLİRLİĞİ veya HERHANGİ BİR AMACA\n"
 #~ "UYGUNLUĞU için bile garanti verilmez.\n"
+
+#
+#~ msgid "closing standard output"
+#~ msgstr "standart çıktı kapatılıyor"
+
+#~ msgid ""
+#~ "\n"
+#~ "Each MODE is one or more of the letters ugoa, one of the symbols +-= and\n"
+#~ "one or more of the letters rwxXstugo.\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Her KİP ugoa harflerinden biri veya bir kaçından, +-= sembollerinden "
+#~ "birinden\n"
+#~ "ve rwxXstugo harflerinden biri veya bir kaçından oluşur.\n"
+
+#~ msgid "cannot overwrite directory %s"
+#~ msgstr "%s dizininin üzerine yazılamaz"
+
+#~ msgid ""
+#~ "warning: --version-control (-V) is obsolete;  support for it\n"
+#~ "will be removed in some future release.  Use --backup=%s instead."
+#~ msgstr ""
+#~ "uyarı: --version-control (-V) artık kullanılmıyor; ileride \n"
+#~ "bunun desteği kaldırılacak.   --backup=%s seçeneğini kullanın"
+
+#~ msgid ""
+#~ "  %F   same as %Y-%m-%d\n"
+#~ "  %g   the 2-digit year corresponding to the %V week number\n"
+#~ "  %G   the 4-digit year corresponding to the %V week number\n"
+#~ msgstr ""
+#~ "  %F   %Y-%m-%d ile aynı\n"
+#~ "  %g   %V hafta sayısıyla eşleşen 2 basamaklı yıl\n"
+#~ "  %G   %V hafta sayısıyla eşleşen 4 basamaklı yıl\n"
+
+#~ msgid ""
+#~ "  %z   RFC-2822 style numeric timezone (-0500) (a nonstandard extension)\n"
+#~ "  %Z   time zone (e.g., EDT), or nothing if no time zone is determinable\n"
+#~ "\n"
+#~ "By default, date pads numeric fields with zeroes.  GNU date recognizes\n"
+#~ "the following modifiers between `%' and a numeric directive.\n"
+#~ "\n"
+#~ "  `-' (hyphen) do not pad the field\n"
+#~ "  `_' (underscore) pad the field with spaces\n"
+#~ msgstr ""
+#~ "  %z   RFC-822 tarzı nümerik zaman dilimi (-0500) (standart dışı "
+#~ "eklenti)\n"
+#~ "  %Z   zaman dilimi (örn. EEST), veya eğer zaman dilimi "
+#~ "belirlenebiliyorsa, hiç bir şey\n"
+#~ "\n"
+#~ "Öntanımlı olarak `date', nümerik alanları sıfırla yastıklar. GNU date `%' "
+#~ "ile nümerik\n"
+#~ "yönergeler arasında aşağıdaki belirteçleri kabul eder.\n"
+#~ "\n"
+#~ "  `-' (tire) alanı yastıklamaz\n"
+#~ "  `_' (alt tire) alanı boşlukla yastıklar\n"
+
+#~ msgid ""
+#~ "a format string may not be specified when using the --rfc-2822 (-R) option"
+#~ msgstr "--rfc-822 (-R) seçeneği ile birlikte bir biçem dizgisi belirtilemez"
+
+#~ msgid "undefined"
+#~ msgstr "atanmamış"
+
+#~ msgid "cannot get time of day"
+#~ msgstr "günün zamanı belirlenemedi"
+
+#~ msgid "%s+%s records in\n"
+#~ msgstr "%s+%s kayıt girdi\n"
+
+#~ msgid "%s+%s records out\n"
+#~ msgstr "%s+%s kayıt çıktı\n"
+
+#~ msgid "truncated records"
+#~ msgstr "budanmış kayıtlar"
+
+#~ msgid "file offset out of range"
+#~ msgstr "dosya göreli konumu aralık dışı"
+
+#~ msgid "`-LIST' option is obsolete; use `-t LIST'"
+#~ msgstr "`-LİSTE' seçeneği eski; yerine `-t LİSTE' kullanın"
+
+#~ msgid "`%s' is too large"
+#~ msgstr "`%s' çok büyük"
+
+#~ msgid ""
+#~ "Usage: %s [ignored command line arguments]\n"
+#~ "  or:  %s OPTION\n"
+#~ "Exit with a status code indicating failure.\n"
+#~ "\n"
+#~ "These option names may not be abbreviated.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "Kullanımı: %s [yoksayılan komut satırı argümanları]\n"
+#~ "    veya:  %s SEÇENEK\n"
+#~ "Saptanan bozukluk ile ilgili durum kodunu göstererek çıkar.\n"
+#~ "\n"
+#~ "Bu seçenek isimleri kısaltılmış olarak kullanılamaz.\n"
+#~ "\n"
+
+#~ msgid "`%s' option is obsolete; use `%s'"
+#~ msgstr "`%s' seçeneği eski: yerine `%s' kullanın"
+
+#~ msgid "%s: number of bytes is large"
+#~ msgstr "%s: bayt sayısı büyük"
+
+#~ msgid "`-%s' option is obsolete; use `-%c %.*s%.*s%s'"
+#~ msgstr "`-%s' seçeneği eski; yerine `-%c %.*s%.*s%s' kullanın"
+
+#~ msgid "cannot obtain time stamps for %s"
+#~ msgstr "%s için zaman damgaları alınamadı"
+
+#~ msgid "invalid field number: `%s'"
+#~ msgstr "geçersiz alan numarası: `%s'"
+
+#~ msgid "invalid field number for file 1: `%s'"
+#~ msgstr "dosya 1 icin geçersiz alan numarası : `%s'"
+
+#~ msgid "invalid field number for file 2: `%s'"
+#~ msgstr "dosya 2 için geçersiz alan numarası: `%s'"
 
 #~ msgid ""
 #~ "\n"
@@ -9649,47 +9768,34 @@ msgstr ""
 #~ "                          çalıştırır)\n"
 #~ "\n"
 
-#, fuzzy
-#~ msgid ""
-#~ "      --reply={yes,no,query}   specify how to handle the prompt about an\n"
-#~ "                                 existing destination file.  Note that\n"
-#~ "                                 --reply=no has an effect only when mv\n"
-#~ "                                 would prompt without -i or equivalent, i."
-#~ "e.,\n"
-#~ "                                 when a destination file exists and is "
-#~ "not\n"
-#~ "                                 writable, standard input is a terminal, "
-#~ "and\n"
-#~ "                                 no -f (or equivalent) option is "
-#~ "specified\n"
-#~ "      --strip-trailing-slashes remove any trailing slashes from each "
-#~ "SOURCE\n"
-#~ "                                 argument\n"
-#~ "  -S, --suffix=SUFFIX          override the usual backup suffix\n"
-#~ msgstr ""
-#~ "      --reply={yes,no,query}   mevcut bir hedef dosya için sorgulamanın "
-#~ "nasıl\n"
-#~ "                                 yapılacağını ayarlar: \n"
-#~ "                                 yes=evet, no=hayır, query=sor\n"
-#~ "      --strip-trailing-slashes bütün KAYNAK argümanlarının sonundan "
-#~ "kesmeleri\n"
-#~ "                                 (/) kaldırır\n"
-#~ "  -S, --suffix=SONEK           öntanımlı sonek yerine SONEK değerini "
-#~ "kullanır.\n"
+#~ msgid "Only one operand may be specified when using --check."
+#~ msgstr "--check seçeneği kullanılırken sadece bir işleyen verilebilir"
+
+#~ msgid "cannot get priority"
+#~ msgstr "öncelik alınamadı"
+
+#~ msgid "cannot set priority"
+#~ msgstr "öncelik ayarlanamadı"
 
 #
 #~ msgid "failed to redirect standard output"
 #~ msgstr "standart çıktı yeniden yönlendirilemedi"
 
 #~ msgid ""
-#~ "warning: --version-control (-V) is obsolete;  support for it\n"
-#~ "will be removed in some future release.  Use --backup=%s instead."
+#~ "Diagnose unportable constructs in NAME.\n"
+#~ "\n"
+#~ "  -p, --portability   check for all POSIX systems, not only this one\n"
 #~ msgstr ""
-#~ "uyarı: --version-control (-V) artık kullanılmıyor; ileride \n"
-#~ "bunun desteği kaldırılacak.   --backup=%s seçeneğini kullanın"
+#~ "Dosya İSİMlerinin geçerliliğini ve taşınabilirliğini denetler.\n"
+#~ "\n"
+#~ "  -p, --portability      yalnız bu sistem için değil tüm POSIX\n"
+#~ "                         sistemler için denetler\n"
 
-#~ msgid "`%s' is too large"
-#~ msgstr "`%s' çok büyük"
+#~ msgid "column count too large"
+#~ msgstr "sütun sayısı fazla büyük"
+
+#~ msgid "`--columns=COLUMN' invalid number of columns: `%s'"
+#~ msgstr "`--columns=SÜTUN' geçersiz sütun sayısı: `%s'"
 
 #~ msgid ""
 #~ "* file systems that cache in temporary locations, such as NFS\n"
@@ -9710,41 +9816,41 @@ msgstr ""
 #~ "silinemeyen kopyalarını taşıyabilir ve bu shred işleminden geçirilmiş\n"
 #~ "bir dosyanın tekrar oluşturulabilmesini sağlayabilir.\n"
 
+#~ msgid "`-%s' option is obsolete; use `-l %s'"
+#~ msgstr "`-%s' seçeneği eski; yerine `-l %s' kullanın"
+
+#~ msgid ""
+#~ "Display file or file system status.\n"
+#~ "\n"
+#~ "  -f, --file-system     display file system status instead of file "
+#~ "status\n"
+#~ "  -c  --format=FORMAT   use the specified FORMAT instead of the default\n"
+#~ "  -L, --dereference     follow links\n"
+#~ "  -t, --terse           print the information in terse form\n"
+#~ msgstr ""
+#~ "Dosya veya dosya sistemi durumunu gösterir.\n"
+#~ "\n"
+#~ "  -f, --filesystem      dosya durumu yerine dosya sistemi durumunu "
+#~ "gösterir\n"
+#~ "  -c  --format=BİÇEM    öntanımlı biçem yerine belirtilen BİÇEM'i "
+#~ "kullanır\n"
+#~ "  -L, --dereference     bağları takip eder\n"
+#~ "  -t, --terse           bilgileri kısa biçemde gösterir\n"
+
+#~ msgid "Warning: `-l' is deprecated; use `-L' instead"
+#~ msgstr "Uyarı: `-l' sonraki sürümlerde kaldırılacaktır; `-L' kullanın"
+
 #~ msgid "invalid argument `%s'"
 #~ msgstr "`%s' argümanı geçersiz"
 
 #~ msgid "stdin: read error"
 #~ msgstr "standart girdi: okuma hatası"
 
-#~ msgid "openat: unable to restore working directory"
-#~ msgstr "openat: çalışma dizinine geri dönülemedi"
-
-#, fuzzy
-#~ msgid "fdopendir: unable to record current working directory"
-#~ msgstr "openat: çalışılan dizini kaydedemedi"
-
-#, fuzzy
-#~ msgid "fdopendir: unable to restore working directory"
-#~ msgstr "openat: çalışma dizinine geri dönülemedi"
-
-#, fuzzy
-#~ msgid "fstatat: unable to record current working directory"
-#~ msgstr "openat: çalışılan dizini kaydedemedi"
-
-#, fuzzy
-#~ msgid "fstatat: unable to restore working directory"
-#~ msgstr "openat: çalışma dizinine geri dönülemedi"
-
-#, fuzzy
-#~ msgid "integer is too large: %s"
-#~ msgstr "sekme boyu %s çok büyük"
+#~ msgid "`%s' option is obsolete; use `%s-%c %<PRIuMAX>'"
+#~ msgstr "`%s' seçeneği eski: yerine `%s -%c %<PRIuMAX>' kullanın"
 
 #~ msgid "%s: integer expression expected\n"
 #~ msgstr "%s: tamsayı ifade beklendi\n"
-
-#, fuzzy
-#~ msgid "integer is too large: %s\n"
-#~ msgstr "sekme boyu %s çok büyük"
 
 #~ msgid "before -lt"
 #~ msgstr "-lt öncesinde"
@@ -9786,38 +9892,19 @@ msgstr ""
 #~ msgstr "-t sonrasında"
 
 #~ msgid ""
+#~ "Usage: %s [ignored command line arguments]\n"
+#~ "  or:  %s OPTION\n"
+#~ "Exit with a status code indicating success.\n"
 #~ "\n"
-#~ "Each MODE is one or more of the letters ugoa, one of the symbols +-= and\n"
-#~ "one or more of the letters rwxXstugo.\n"
+#~ "These option names may not be abbreviated.\n"
+#~ "\n"
 #~ msgstr ""
+#~ "Kullanımı: %s [argümanlar yoksayılır]\n"
+#~ "    veya:  %s SEÇENEK\n"
+#~ "Başarılı durum kodu ile çıkar.\n"
 #~ "\n"
-#~ "Her KİP ugoa harflerinden biri veya bir kaçından, +-= sembollerinden "
-#~ "birinden\n"
-#~ "ve rwxXstugo harflerinden biri veya bir kaçından oluşur.\n"
-
-#~ msgid "`-LIST' option is obsolete; use `-t LIST'"
-#~ msgstr "`-LİSTE' seçeneği eski; yerine `-t LİSTE' kullanın"
-
-#~ msgid "`%s' option is obsolete; use `%s'"
-#~ msgstr "`%s' seçeneği eski: yerine `%s' kullanın"
-
-#~ msgid "`-%s' option is obsolete; use `-%c %.*s%.*s%s'"
-#~ msgstr "`-%s' seçeneği eski; yerine `-%c %.*s%.*s%s' kullanın"
-
-#~ msgid "invalid field number: `%s'"
-#~ msgstr "geçersiz alan numarası: `%s'"
-
-#~ msgid "invalid field number for file 1: `%s'"
-#~ msgstr "dosya 1 icin geçersiz alan numarası : `%s'"
-
-#~ msgid "invalid field number for file 2: `%s'"
-#~ msgstr "dosya 2 için geçersiz alan numarası: `%s'"
-
-#~ msgid "`-%s' option is obsolete; use `-l %s'"
-#~ msgstr "`-%s' seçeneği eski; yerine `-l %s' kullanın"
-
-#~ msgid "`%s' option is obsolete; use `%s-%c %<PRIuMAX>'"
-#~ msgstr "`%s' seçeneği eski: yerine `%s -%c %<PRIuMAX>' kullanın"
+#~ "Bu seçenek isimleri kısaltılamaz.\n"
+#~ "\n"
 
 #~ msgid "`-LIST' option is obsolete; use `--first-only -t LIST'"
 #~ msgstr "`-LISTE' seçeneği eski; yerine `--first-only -t LISTE' kullanın"
@@ -9825,65 +9912,17 @@ msgstr ""
 #~ msgid "`-%lu' option is obsolete; use `-f %lu'"
 #~ msgstr "`-%lu' seçeneği eski; yerine  `-f %lu' kullanın"
 
+#~ msgid ""
+#~ "  -i, --idle        add idle time as HOURS:MINUTES, . or old\n"
+#~ "                    (deprecated, use -u)\n"
+#~ "  -l, --login       print system login processes\n"
+#~ msgstr ""
+#~ "  -i, --idle        atıl zamanı SAAT:DAKİKA, . veya eski olarak\n"
+#~ "                    ekler (kullanımdan kalkacak, -u kullanın)\n"
+#~ "  -l, --login       sisteme giriş işlemlerini yazdırır\n"
+
 #~ msgid "%s: cannot find username for UID %lu\n"
 #~ msgstr "%s: kullanıcı-kimlik %lu için kullanıcı ismi bulunamadı\n"
-
-#
-#~ msgid "closing standard output"
-#~ msgstr "standart çıktı kapatılıyor"
-
-#~ msgid "%s+%s records in\n"
-#~ msgstr "%s+%s kayıt girdi\n"
-
-#~ msgid "%s+%s records out\n"
-#~ msgstr "%s+%s kayıt çıktı\n"
-
-#~ msgid "truncated records"
-#~ msgstr "budanmış kayıtlar"
-
-#~ msgid ""
-#~ "  %z   RFC-2822 style numeric timezone (-0500) (a nonstandard extension)\n"
-#~ "  %Z   time zone (e.g., EDT), or nothing if no time zone is determinable\n"
-#~ "\n"
-#~ "By default, date pads numeric fields with zeroes.  GNU date recognizes\n"
-#~ "the following modifiers between `%' and a numeric directive.\n"
-#~ "\n"
-#~ "  `-' (hyphen) do not pad the field\n"
-#~ "  `_' (underscore) pad the field with spaces\n"
-#~ msgstr ""
-#~ "  %z   RFC-822 tarzı nümerik zaman dilimi (-0500) (standart dışı "
-#~ "eklenti)\n"
-#~ "  %Z   zaman dilimi (örn. EEST), veya eğer zaman dilimi "
-#~ "belirlenebiliyorsa, hiç bir şey\n"
-#~ "\n"
-#~ "Öntanımlı olarak `date', nümerik alanları sıfırla yastıklar. GNU date `%' "
-#~ "ile nümerik\n"
-#~ "yönergeler arasında aşağıdaki belirteçleri kabul eder.\n"
-#~ "\n"
-#~ "  `-' (tire) alanı yastıklamaz\n"
-#~ "  `_' (alt tire) alanı boşlukla yastıklar\n"
-
-#~ msgid "cannot get time of day"
-#~ msgstr "günün zamanı belirlenemedi"
-
-#~ msgid "%s: number of bytes is large"
-#~ msgstr "%s: bayt sayısı büyük"
-
-#~ msgid ""
-#~ "Diagnose unportable constructs in NAME.\n"
-#~ "\n"
-#~ "  -p, --portability   check for all POSIX systems, not only this one\n"
-#~ msgstr ""
-#~ "Dosya İSİMlerinin geçerliliğini ve taşınabilirliğini denetler.\n"
-#~ "\n"
-#~ "  -p, --portability      yalnız bu sistem için değil tüm POSIX\n"
-#~ "                         sistemler için denetler\n"
-
-#~ msgid "column count too large"
-#~ msgstr "sütun sayısı fazla büyük"
-
-#~ msgid "`--columns=COLUMN' invalid number of columns: `%s'"
-#~ msgstr "`--columns=SÜTUN' geçersiz sütun sayısı: `%s'"
 
 #~ msgid "too few arguments"
 #~ msgstr "argüman sayısı yetersiz"
@@ -10319,9 +10358,6 @@ msgstr ""
 
 #~ msgid "   Type"
 #~ msgstr "   Tür"
-
-#~ msgid "cannot change to `..' from directory %s"
-#~ msgstr "'..''e %s dizininden çıkılamaz"
 
 #~ msgid "\\%c: invalid escape"
 #~ msgstr "\\%c: öncelem geçersiz"
