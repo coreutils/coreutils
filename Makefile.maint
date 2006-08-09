@@ -519,30 +519,9 @@ move_if_change ?= move-if-change
 # --------------------- #
 
 .PHONY: update
-local_updates ?= wget-update cvs-update po-update
+local_updates ?= wget-update cvs-update
 update: $(local_updates)
 
-
-# ------------------- #
-# Updating PO files.  #
-# ------------------- #
-
-po_repo = http://www.iro.umontreal.ca/contrib/po/maint/$(PACKAGE)
-.PHONY: do-po-update po-update
-do-po-update:
-	tmppo=/tmp/$(PACKAGE)-$(VERSION)-po &&\
-	rm -rf $$tmppo && \
-	mkdir $$tmppo && \
-	(cd $$tmppo && \
-	  $(WGET) $(WGETFLAGS) -r -l1 -nd --no-parent -A '*.po' $(po_repo)) &&\
-	cp $$tmppo/*.po po
-	cd po && $(MAKE) update-po
-	$(MAKE) po-check
-
-po-update:
-	if test -d "po"; then \
-	  $(MAKE) do-po-update; \
-	fi
 
 # -------------------------- #
 # Updating GNU build tools.  #
