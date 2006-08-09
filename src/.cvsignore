@@ -75,6 +75,7 @@ sha224sum
 sha256sum
 sha384sum
 sha512sum
+shuf
 shred
 sleep
 sort

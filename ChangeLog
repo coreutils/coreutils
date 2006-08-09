@@ -1,3 +1,18 @@
+2006-08-09  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/.cvsignore: Add shuf.
+
+	* Makefile.maint: Remove the po-update procedure; it doesn't
+	work with the new repository on http://www.iro.umontreal.ca/.
+	For now I guess we'll have to fix things by hand.
+	(do-po-update, po-update): Remove.  All references removed.
+
+	* src/shuf.c (next_line): New function.
+	(read_input): Use it, to avoid relying on GCC-specific behavior
+	with void * arithmetic.  Problem reported by Bob Proulx.
+	* Makefile.maint (my-distcheck): Compile with -Wpointer-arith
+	to detect this sort of problem automatically in the future.
+
 2006-08-09  Jim Meyering  <jim@meyering.net>
 
 	* src/ls.c: Add a compile-time check to ensure that filetype
