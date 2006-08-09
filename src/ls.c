@@ -162,8 +162,11 @@ enum filetype
 
 /* Display letters and indicators for each filetype.
    Keep these in sync with enum filetype.  */
-
 static char const filetype_letter[] = "?pcdb-lswd";
+
+/* Ensure that filetype and filetype_letter have the same
+   number of elements.  */
+verify (sizeof filetype_letter - 1 == arg_directory + 1);
 
 #define FILETYPE_INDICATORS				\
   {							\
