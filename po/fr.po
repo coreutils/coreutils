@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GNU coreutils 5.97\n"
 "Report-Msgid-Bugs-To: bug-coreutils@gnu.org\n"
-"POT-Creation-Date: 2006-08-09 12:26-0700\n"
+"POT-Creation-Date: 2006-08-09 16:21-0700\n"
 "PO-Revision-Date: 2006-07-10 08:00-0500\n"
 "Last-Translator: Michel Robitaille <robitail@IRO.UMontreal.CA>\n"
 "Language-Team: French <traduc@traduc.org>\n"
@@ -50,7 +50,7 @@ msgstr "Arguments valides sont:"
 msgid "write error"
 msgstr "Erreur d'écriture."
 
-#: lib/error.c:121
+#: lib/error.c:125
 msgid "Unknown system error"
 msgstr "Erreur système inconnue"
 
@@ -357,11 +357,11 @@ msgstr "usager invalide"
 #. TRANSLATORS: Translate "(C)" to the copyright symbol
 #. (C-in-a-circle), if this symbol is available in the user's
 #. locale.  Otherwise, do not translate "(C)"; leave it as-is.
-#: lib/version-etc.c:72
+#: lib/version-etc.c:68
 msgid "(C)"
 msgstr "©"
 
-#: lib/version-etc.c:74
+#: lib/version-etc.c:70
 msgid ""
 "\n"
 "This is free software.  You may redistribute copies of it under the terms "
@@ -378,19 +378,19 @@ msgstr ""
 "\n"
 
 #. TRANSLATORS: %s denotes an author name.
-#: lib/version-etc.c:90
+#: lib/version-etc.c:86
 #, c-format
 msgid "Written by %s.\n"
 msgstr "Écrit par %s.\n"
 
 #. TRANSLATORS: Each %s denotes an author name.
-#: lib/version-etc.c:94
+#: lib/version-etc.c:90
 #, c-format
 msgid "Written by %s and %s.\n"
 msgstr "Écrit par %s et %s.\n"
 
 #. TRANSLATORS: Each %s denotes an author name.
-#: lib/version-etc.c:98
+#: lib/version-etc.c:94
 #, c-format
 msgid "Written by %s, %s, and %s.\n"
 msgstr "Écrit par %s, %s et %s.\n"
@@ -398,7 +398,7 @@ msgstr "Écrit par %s, %s et %s.\n"
 #. TRANSLATORS: Each %s denotes an author name.
 #. You can use line breaks, estimating that each author name occupies
 #. ca. 16 screen columns and that a screen line has ca. 80 columns.
-#: lib/version-etc.c:104
+#: lib/version-etc.c:100
 #, c-format
 msgid ""
 "Written by %s, %s, %s,\n"
@@ -410,7 +410,7 @@ msgstr ""
 #. TRANSLATORS: Each %s denotes an author name.
 #. You can use line breaks, estimating that each author name occupies
 #. ca. 16 screen columns and that a screen line has ca. 80 columns.
-#: lib/version-etc.c:110
+#: lib/version-etc.c:106
 #, c-format
 msgid ""
 "Written by %s, %s, %s,\n"
@@ -422,7 +422,7 @@ msgstr ""
 #. TRANSLATORS: Each %s denotes an author name.
 #. You can use line breaks, estimating that each author name occupies
 #. ca. 16 screen columns and that a screen line has ca. 80 columns.
-#: lib/version-etc.c:116
+#: lib/version-etc.c:112
 #, c-format
 msgid ""
 "Written by %s, %s, %s,\n"
@@ -434,7 +434,7 @@ msgstr ""
 #. TRANSLATORS: Each %s denotes an author name.
 #. You can use line breaks, estimating that each author name occupies
 #. ca. 16 screen columns and that a screen line has ca. 80 columns.
-#: lib/version-etc.c:123
+#: lib/version-etc.c:119
 #, c-format
 msgid ""
 "Written by %s, %s, %s,\n"
@@ -446,7 +446,7 @@ msgstr ""
 #. TRANSLATORS: Each %s denotes an author name.
 #. You can use line breaks, estimating that each author name occupies
 #. ca. 16 screen columns and that a screen line has ca. 80 columns.
-#: lib/version-etc.c:130
+#: lib/version-etc.c:126
 #, c-format
 msgid ""
 "Written by %s, %s, %s,\n"
@@ -460,7 +460,7 @@ msgstr ""
 #. TRANSLATORS: Each %s denotes an author name.
 #. You can use line breaks, estimating that each author name occupies
 #. ca. 16 screen columns and that a screen line has ca. 80 columns.
-#: lib/version-etc.c:138
+#: lib/version-etc.c:134
 #, c-format
 msgid ""
 "Written by %s, %s, %s,\n"
@@ -474,7 +474,7 @@ msgstr ""
 #. TRANSLATORS: Each %s denotes an author name.
 #. You can use line breaks, estimating that each author name occupies
 #. ca. 16 screen columns and that a screen line has ca. 80 columns.
-#: lib/version-etc.c:148
+#: lib/version-etc.c:144
 #, c-format
 msgid ""
 "Written by %s, %s, %s,\n"
@@ -2500,11 +2500,13 @@ msgstr ""
 "  fsync     identique mais écrit les métadonnées\n"
 
 #: src/dd.c:457
+#, fuzzy
 msgid ""
 "\n"
 "Each FLAG symbol may be:\n"
 "\n"
-"  append    append mode (makes sense only for output)\n"
+"  append    append mode (makes sense only for output; conv=notrunc "
+"suggested)\n"
 msgstr ""
 "\n"
 "Chaque symbole de FANIONE peut être:\n"

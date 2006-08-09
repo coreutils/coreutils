@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fileutils 4.1.11\n"
 "Report-Msgid-Bugs-To: bug-coreutils@gnu.org\n"
-"POT-Creation-Date: 2006-08-09 12:26-0700\n"
+"POT-Creation-Date: 2006-08-09 16:21-0700\n"
 "PO-Revision-Date: 2003-11-29 08:20+0200\n"
 "Last-Translator: Eugen Hoanca <eugenh@urban-grafx.ro>\n"
 "Language-Team: Romanian <translation-team-ro@lists.sourceforge.net>\n"
@@ -50,7 +50,7 @@ msgstr "Argumente valide sunt:"
 msgid "write error"
 msgstr "eroare de scriere"
 
-#: lib/error.c:121
+#: lib/error.c:125
 msgid "Unknown system error"
 msgstr "Eroare de sistem necunoscutã"
 
@@ -363,11 +363,11 @@ msgstr "user invalid"
 #. TRANSLATORS: Translate "(C)" to the copyright symbol
 #. (C-in-a-circle), if this symbol is available in the user's
 #. locale.  Otherwise, do not translate "(C)"; leave it as-is.
-#: lib/version-etc.c:72
+#: lib/version-etc.c:68
 msgid "(C)"
 msgstr ""
 
-#: lib/version-etc.c:74
+#: lib/version-etc.c:70
 msgid ""
 "\n"
 "This is free software.  You may redistribute copies of it under the terms "
@@ -378,19 +378,19 @@ msgid ""
 msgstr ""
 
 #. TRANSLATORS: %s denotes an author name.
-#: lib/version-etc.c:90
+#: lib/version-etc.c:86
 #, c-format
 msgid "Written by %s.\n"
 msgstr "Scris de %s.\n"
 
 #. TRANSLATORS: Each %s denotes an author name.
-#: lib/version-etc.c:94
+#: lib/version-etc.c:90
 #, fuzzy, c-format
 msgid "Written by %s and %s.\n"
 msgstr "Scris de %s.\n"
 
 #. TRANSLATORS: Each %s denotes an author name.
-#: lib/version-etc.c:98
+#: lib/version-etc.c:94
 #, fuzzy, c-format
 msgid "Written by %s, %s, and %s.\n"
 msgstr "Scris de %s.\n"
@@ -398,7 +398,7 @@ msgstr "Scris de %s.\n"
 #. TRANSLATORS: Each %s denotes an author name.
 #. You can use line breaks, estimating that each author name occupies
 #. ca. 16 screen columns and that a screen line has ca. 80 columns.
-#: lib/version-etc.c:104
+#: lib/version-etc.c:100
 #, fuzzy, c-format
 msgid ""
 "Written by %s, %s, %s,\n"
@@ -408,7 +408,7 @@ msgstr "Scris de %s.\n"
 #. TRANSLATORS: Each %s denotes an author name.
 #. You can use line breaks, estimating that each author name occupies
 #. ca. 16 screen columns and that a screen line has ca. 80 columns.
-#: lib/version-etc.c:110
+#: lib/version-etc.c:106
 #, fuzzy, c-format
 msgid ""
 "Written by %s, %s, %s,\n"
@@ -418,7 +418,7 @@ msgstr "Scris de %s.\n"
 #. TRANSLATORS: Each %s denotes an author name.
 #. You can use line breaks, estimating that each author name occupies
 #. ca. 16 screen columns and that a screen line has ca. 80 columns.
-#: lib/version-etc.c:116
+#: lib/version-etc.c:112
 #, c-format
 msgid ""
 "Written by %s, %s, %s,\n"
@@ -428,7 +428,7 @@ msgstr ""
 #. TRANSLATORS: Each %s denotes an author name.
 #. You can use line breaks, estimating that each author name occupies
 #. ca. 16 screen columns and that a screen line has ca. 80 columns.
-#: lib/version-etc.c:123
+#: lib/version-etc.c:119
 #, c-format
 msgid ""
 "Written by %s, %s, %s,\n"
@@ -438,7 +438,7 @@ msgstr ""
 #. TRANSLATORS: Each %s denotes an author name.
 #. You can use line breaks, estimating that each author name occupies
 #. ca. 16 screen columns and that a screen line has ca. 80 columns.
-#: lib/version-etc.c:130
+#: lib/version-etc.c:126
 #, c-format
 msgid ""
 "Written by %s, %s, %s,\n"
@@ -449,7 +449,7 @@ msgstr ""
 #. TRANSLATORS: Each %s denotes an author name.
 #. You can use line breaks, estimating that each author name occupies
 #. ca. 16 screen columns and that a screen line has ca. 80 columns.
-#: lib/version-etc.c:138
+#: lib/version-etc.c:134
 #, c-format
 msgid ""
 "Written by %s, %s, %s,\n"
@@ -460,7 +460,7 @@ msgstr ""
 #. TRANSLATORS: Each %s denotes an author name.
 #. You can use line breaks, estimating that each author name occupies
 #. ca. 16 screen columns and that a screen line has ca. 80 columns.
-#: lib/version-etc.c:148
+#: lib/version-etc.c:144
 #, c-format
 msgid ""
 "Written by %s, %s, %s,\n"
@@ -2254,7 +2254,8 @@ msgid ""
 "\n"
 "Each FLAG symbol may be:\n"
 "\n"
-"  append    append mode (makes sense only for output)\n"
+"  append    append mode (makes sense only for output; conv=notrunc "
+"suggested)\n"
 msgstr ""
 
 #: src/dd.c:464

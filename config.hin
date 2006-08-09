@@ -805,6 +805,9 @@
 /* Define to 1 if you have the <paths.h> header file. */
 #undef HAVE_PATHS_H
 
+/* Define to 1 if you have the `pipe' function. */
+#undef HAVE_PIPE
+
 /* Define to 1 if you have the <priv.h> header file. */
 #undef HAVE_PRIV_H
 
@@ -892,9 +895,6 @@
 
 /* Define to 1 if stdbool.h conforms to C99. */
 #undef HAVE_STDBOOL_H
-
-/* Define to 1 if you have the <stddef.h> header file. */
-#undef HAVE_STDDEF_H
 
 /* Define to 1 if you have the <stdint.h> header file. */
 #undef HAVE_STDINT_H
@@ -1724,6 +1724,9 @@
 /* Define to `int' if <sys/types.h> doesn't define. */
 #undef gid_t
 
+/* A replacement for va_copy, if needed.  */
+#define gl_va_copy(a,b) ((a) = (b))
+
 /* Define to rpl_gmtime if the replacement function should be used. */
 #undef gmtime
 
@@ -1883,6 +1886,9 @@
 
 /* Define to rpl_utime if the replacement function should be used. */
 #undef utime
+
+/* Define as a macro for copying va_list variables. */
+#undef va_copy
 
 /* Define to empty if the keyword `volatile' does not work. Warning: valid
    code using `volatile' can become incorrect without. Disable with care. */
