@@ -31,6 +31,9 @@
  * and fast, and because the author did good work analyzing it.
  * --------------------------------------------------------------------
  */
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
 
 #include "rand-isaac.h"
 

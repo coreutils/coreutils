@@ -1,3 +1,7 @@
+2006-08-09  Jim Meyering  <jim@meyering.net>
+
+	* rand-isaac.c: Include <config.h>.
+
 2006-08-08  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Makefile.am (libcoreutils_a_SOURCES): Add xmemxfrm.c, xmemxfrm.h.
