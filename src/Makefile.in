@@ -52,16 +52,16 @@ bin_PROGRAMS = [$(EXEEXT) chgrp$(EXEEXT) chown$(EXEEXT) chmod$(EXEEXT) \
 	join$(EXEEXT) md5sum$(EXEEXT) nl$(EXEEXT) od$(EXEEXT) \
 	paste$(EXEEXT) pr$(EXEEXT) ptx$(EXEEXT) sha1sum$(EXEEXT) \
 	sha224sum$(EXEEXT) sha256sum$(EXEEXT) sha384sum$(EXEEXT) \
-	sha512sum$(EXEEXT) sort$(EXEEXT) split$(EXEEXT) sum$(EXEEXT) \
-	tac$(EXEEXT) tail$(EXEEXT) tr$(EXEEXT) tsort$(EXEEXT) \
-	unexpand$(EXEEXT) uniq$(EXEEXT) wc$(EXEEXT) basename$(EXEEXT) \
-	date$(EXEEXT) dirname$(EXEEXT) echo$(EXEEXT) env$(EXEEXT) \
-	expr$(EXEEXT) factor$(EXEEXT) false$(EXEEXT) hostname$(EXEEXT) \
-	id$(EXEEXT) kill$(EXEEXT) logname$(EXEEXT) pathchk$(EXEEXT) \
-	printenv$(EXEEXT) printf$(EXEEXT) pwd$(EXEEXT) seq$(EXEEXT) \
-	sleep$(EXEEXT) tee$(EXEEXT) test$(EXEEXT) true$(EXEEXT) \
-	tty$(EXEEXT) whoami$(EXEEXT) yes$(EXEEXT) base64$(EXEEXT) \
-	$(am__EXEEXT_1) $(am__EXEEXT_2)
+	sha512sum$(EXEEXT) shuf$(EXEEXT) sort$(EXEEXT) split$(EXEEXT) \
+	sum$(EXEEXT) tac$(EXEEXT) tail$(EXEEXT) tr$(EXEEXT) \
+	tsort$(EXEEXT) unexpand$(EXEEXT) uniq$(EXEEXT) wc$(EXEEXT) \
+	basename$(EXEEXT) date$(EXEEXT) dirname$(EXEEXT) echo$(EXEEXT) \
+	env$(EXEEXT) expr$(EXEEXT) factor$(EXEEXT) false$(EXEEXT) \
+	hostname$(EXEEXT) id$(EXEEXT) kill$(EXEEXT) logname$(EXEEXT) \
+	pathchk$(EXEEXT) printenv$(EXEEXT) printf$(EXEEXT) \
+	pwd$(EXEEXT) seq$(EXEEXT) sleep$(EXEEXT) tee$(EXEEXT) \
+	test$(EXEEXT) true$(EXEEXT) tty$(EXEEXT) whoami$(EXEEXT) \
+	yes$(EXEEXT) base64$(EXEEXT) $(am__EXEEXT_1) $(am__EXEEXT_2)
 noinst_PROGRAMS = setuidgid$(EXEEXT)
 subdir = src
 DIST_COMMON = $(noinst_HEADERS) $(srcdir)/Makefile.am \
@@ -79,14 +79,14 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/absolute-header.m4 \
 	$(top_srcdir)/m4/chdir-long.m4 $(top_srcdir)/m4/chdir-safer.m4 \
 	$(top_srcdir)/m4/check-decl.m4 $(top_srcdir)/m4/chown.m4 \
 	$(top_srcdir)/m4/clock_time.m4 $(top_srcdir)/m4/cloexec.m4 \
-	$(top_srcdir)/m4/closeout.m4 $(top_srcdir)/m4/codeset.m4 \
-	$(top_srcdir)/m4/cycle-check.m4 $(top_srcdir)/m4/d-ino.m4 \
-	$(top_srcdir)/m4/d-type.m4 $(top_srcdir)/m4/diacrit.m4 \
-	$(top_srcdir)/m4/dirfd.m4 $(top_srcdir)/m4/dirname.m4 \
-	$(top_srcdir)/m4/dos.m4 $(top_srcdir)/m4/double-slash-root.m4 \
-	$(top_srcdir)/m4/dup2.m4 $(top_srcdir)/m4/eealloc.m4 \
-	$(top_srcdir)/m4/eoverflow.m4 $(top_srcdir)/m4/error.m4 \
-	$(top_srcdir)/m4/euidaccess-stat.m4 \
+	$(top_srcdir)/m4/close-stream.m4 $(top_srcdir)/m4/closeout.m4 \
+	$(top_srcdir)/m4/codeset.m4 $(top_srcdir)/m4/cycle-check.m4 \
+	$(top_srcdir)/m4/d-ino.m4 $(top_srcdir)/m4/d-type.m4 \
+	$(top_srcdir)/m4/diacrit.m4 $(top_srcdir)/m4/dirfd.m4 \
+	$(top_srcdir)/m4/dirname.m4 $(top_srcdir)/m4/dos.m4 \
+	$(top_srcdir)/m4/double-slash-root.m4 $(top_srcdir)/m4/dup2.m4 \
+	$(top_srcdir)/m4/eealloc.m4 $(top_srcdir)/m4/eoverflow.m4 \
+	$(top_srcdir)/m4/error.m4 $(top_srcdir)/m4/euidaccess-stat.m4 \
 	$(top_srcdir)/m4/euidaccess.m4 $(top_srcdir)/m4/exclude.m4 \
 	$(top_srcdir)/m4/exitfail.m4 $(top_srcdir)/m4/extensions.m4 \
 	$(top_srcdir)/m4/fcntl-safer.m4 $(top_srcdir)/m4/fd-reopen.m4 \
@@ -133,34 +133,36 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/absolute-header.m4 \
 	$(top_srcdir)/m4/memcmp.m4 $(top_srcdir)/m4/memcoll.m4 \
 	$(top_srcdir)/m4/memcpy.m4 $(top_srcdir)/m4/memmove.m4 \
 	$(top_srcdir)/m4/mempcpy.m4 $(top_srcdir)/m4/memrchr.m4 \
-	$(top_srcdir)/m4/memset.m4 $(top_srcdir)/m4/mkancesdirs.m4 \
-	$(top_srcdir)/m4/mkdir-p.m4 $(top_srcdir)/m4/mkdir-slash.m4 \
-	$(top_srcdir)/m4/mkstemp.m4 $(top_srcdir)/m4/mktime.m4 \
-	$(top_srcdir)/m4/modechange.m4 $(top_srcdir)/m4/mountlist.m4 \
-	$(top_srcdir)/m4/nanosleep.m4 $(top_srcdir)/m4/nls.m4 \
-	$(top_srcdir)/m4/obstack.m4 $(top_srcdir)/m4/openat.m4 \
-	$(top_srcdir)/m4/pathmax.m4 $(top_srcdir)/m4/perl.m4 \
-	$(top_srcdir)/m4/physmem.m4 $(top_srcdir)/m4/po.m4 \
-	$(top_srcdir)/m4/posixtm.m4 $(top_srcdir)/m4/posixver.m4 \
-	$(top_srcdir)/m4/prereq.m4 $(top_srcdir)/m4/progtest.m4 \
-	$(top_srcdir)/m4/putenv.m4 $(top_srcdir)/m4/quote.m4 \
-	$(top_srcdir)/m4/quotearg.m4 $(top_srcdir)/m4/readlink.m4 \
+	$(top_srcdir)/m4/memset.m4 $(top_srcdir)/m4/memxfrm.m4 \
+	$(top_srcdir)/m4/mkancesdirs.m4 $(top_srcdir)/m4/mkdir-p.m4 \
+	$(top_srcdir)/m4/mkdir-slash.m4 $(top_srcdir)/m4/mkstemp.m4 \
+	$(top_srcdir)/m4/mktime.m4 $(top_srcdir)/m4/modechange.m4 \
+	$(top_srcdir)/m4/mountlist.m4 $(top_srcdir)/m4/nanosleep.m4 \
+	$(top_srcdir)/m4/nls.m4 $(top_srcdir)/m4/obstack.m4 \
+	$(top_srcdir)/m4/openat.m4 $(top_srcdir)/m4/pathmax.m4 \
+	$(top_srcdir)/m4/perl.m4 $(top_srcdir)/m4/physmem.m4 \
+	$(top_srcdir)/m4/po.m4 $(top_srcdir)/m4/posixtm.m4 \
+	$(top_srcdir)/m4/posixver.m4 $(top_srcdir)/m4/prereq.m4 \
+	$(top_srcdir)/m4/progtest.m4 $(top_srcdir)/m4/putenv.m4 \
+	$(top_srcdir)/m4/quote.m4 $(top_srcdir)/m4/quotearg.m4 \
+	$(top_srcdir)/m4/randint.m4 $(top_srcdir)/m4/randperm.m4 \
+	$(top_srcdir)/m4/randread.m4 $(top_srcdir)/m4/readlink.m4 \
 	$(top_srcdir)/m4/readtokens.m4 $(top_srcdir)/m4/readutmp.m4 \
 	$(top_srcdir)/m4/regex.m4 $(top_srcdir)/m4/rename.m4 \
-	$(top_srcdir)/m4/restrict.m4 $(top_srcdir)/m4/rmdir-errno.m4 \
-	$(top_srcdir)/m4/rmdir.m4 $(top_srcdir)/m4/root-dev-ino.m4 \
-	$(top_srcdir)/m4/rpmatch.m4 $(top_srcdir)/m4/safe-read.m4 \
-	$(top_srcdir)/m4/safe-write.m4 $(top_srcdir)/m4/same.m4 \
-	$(top_srcdir)/m4/save-cwd.m4 $(top_srcdir)/m4/savedir.m4 \
-	$(top_srcdir)/m4/setenv.m4 $(top_srcdir)/m4/settime.m4 \
-	$(top_srcdir)/m4/sha1.m4 $(top_srcdir)/m4/sha256.m4 \
-	$(top_srcdir)/m4/sha512.m4 $(top_srcdir)/m4/sig2str.m4 \
-	$(top_srcdir)/m4/signed.m4 $(top_srcdir)/m4/socklen.m4 \
-	$(top_srcdir)/m4/sockpfaf.m4 $(top_srcdir)/m4/ssize_t.m4 \
-	$(top_srcdir)/m4/st_dm_mode.m4 $(top_srcdir)/m4/stat-macros.m4 \
-	$(top_srcdir)/m4/stat-prog.m4 $(top_srcdir)/m4/stat-time.m4 \
-	$(top_srcdir)/m4/stdbool.m4 $(top_srcdir)/m4/stdint.m4 \
-	$(top_srcdir)/m4/stdint_h.m4 $(top_srcdir)/m4/stdio-safer.m4 \
+	$(top_srcdir)/m4/rmdir-errno.m4 $(top_srcdir)/m4/rmdir.m4 \
+	$(top_srcdir)/m4/root-dev-ino.m4 $(top_srcdir)/m4/rpmatch.m4 \
+	$(top_srcdir)/m4/safe-read.m4 $(top_srcdir)/m4/safe-write.m4 \
+	$(top_srcdir)/m4/same.m4 $(top_srcdir)/m4/save-cwd.m4 \
+	$(top_srcdir)/m4/savedir.m4 $(top_srcdir)/m4/setenv.m4 \
+	$(top_srcdir)/m4/settime.m4 $(top_srcdir)/m4/sha1.m4 \
+	$(top_srcdir)/m4/sha256.m4 $(top_srcdir)/m4/sha512.m4 \
+	$(top_srcdir)/m4/sig2str.m4 $(top_srcdir)/m4/signed.m4 \
+	$(top_srcdir)/m4/socklen.m4 $(top_srcdir)/m4/sockpfaf.m4 \
+	$(top_srcdir)/m4/ssize_t.m4 $(top_srcdir)/m4/st_dm_mode.m4 \
+	$(top_srcdir)/m4/stat-macros.m4 $(top_srcdir)/m4/stat-prog.m4 \
+	$(top_srcdir)/m4/stat-time.m4 $(top_srcdir)/m4/stdbool.m4 \
+	$(top_srcdir)/m4/stdint.m4 $(top_srcdir)/m4/stdint_h.m4 \
+	$(top_srcdir)/m4/stdio-safer.m4 \
 	$(top_srcdir)/m4/stdlib-safer.m4 $(top_srcdir)/m4/stpcpy.m4 \
 	$(top_srcdir)/m4/strcase.m4 $(top_srcdir)/m4/strcspn.m4 \
 	$(top_srcdir)/m4/strdup.m4 $(top_srcdir)/m4/strftime.m4 \
@@ -521,6 +523,9 @@ shred_SOURCES = shred.c
 shred_OBJECTS = shred.$(OBJEXT)
 shred_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_1)
+shuf_SOURCES = shuf.c
+shuf_OBJECTS = shuf.$(OBJEXT)
+shuf_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1)
 sleep_SOURCES = sleep.c
 sleep_OBJECTS = sleep.$(OBJEXT)
 am__DEPENDENCIES_3 = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1) \
@@ -670,10 +675,11 @@ SOURCES = $(__SOURCES) base64.c basename.c cat.c $(chgrp_SOURCES) \
 	printenv.c printf.c ptx.c pwd.c readlink.c $(rm_SOURCES) \
 	rmdir.c seq.c setuidgid.c $(sha1sum_SOURCES) \
 	$(sha224sum_SOURCES) $(sha256sum_SOURCES) $(sha384sum_SOURCES) \
-	$(sha512sum_SOURCES) shred.c sleep.c sort.c split.c stat.c \
-	stty.c su.c sum.c sync.c tac.c tail.c tee.c test.c touch.c \
-	tr.c true.c tsort.c tty.c uname.c unexpand.c uniq.c unlink.c \
-	uptime.c users.c $(vdir_SOURCES) wc.c who.c whoami.c yes.c
+	$(sha512sum_SOURCES) shred.c shuf.c sleep.c sort.c split.c \
+	stat.c stty.c su.c sum.c sync.c tac.c tail.c tee.c test.c \
+	touch.c tr.c true.c tsort.c tty.c uname.c unexpand.c uniq.c \
+	unlink.c uptime.c users.c $(vdir_SOURCES) wc.c who.c whoami.c \
+	yes.c
 DIST_SOURCES = $(__SOURCES) base64.c basename.c cat.c $(chgrp_SOURCES) \
 	chmod.c $(chown_SOURCES) chroot.c cksum.c comm.c $(cp_SOURCES) \
 	csplit.c cut.c date.c dd.c df.c $(dir_SOURCES) dircolors.c \
@@ -685,10 +691,11 @@ DIST_SOURCES = $(__SOURCES) base64.c basename.c cat.c $(chgrp_SOURCES) \
 	printenv.c printf.c ptx.c pwd.c readlink.c $(rm_SOURCES) \
 	rmdir.c seq.c setuidgid.c $(sha1sum_SOURCES) \
 	$(sha224sum_SOURCES) $(sha256sum_SOURCES) $(sha384sum_SOURCES) \
-	$(sha512sum_SOURCES) shred.c sleep.c sort.c split.c stat.c \
-	stty.c su.c sum.c sync.c tac.c tail.c tee.c test.c touch.c \
-	tr.c true.c tsort.c tty.c uname.c unexpand.c uniq.c unlink.c \
-	uptime.c users.c $(vdir_SOURCES) wc.c who.c whoami.c yes.c
+	$(sha512sum_SOURCES) shred.c shuf.c sleep.c sort.c split.c \
+	stat.c stty.c su.c sum.c sync.c tac.c tail.c tee.c test.c \
+	touch.c tr.c true.c tsort.c tty.c uname.c unexpand.c uniq.c \
+	unlink.c uptime.c users.c $(vdir_SOURCES) wc.c who.c whoami.c \
+	yes.c
 HEADERS = $(noinst_HEADERS)
 ETAGS = etags
 CTAGS = ctags
@@ -865,7 +872,7 @@ noinst_HEADERS = \
   wheel-size.h \
   wheel.h
 
-EXTRA_DIST = dcgen dircolors.hin rand-isaac.c tac-pipe.c \
+EXTRA_DIST = dcgen dircolors.hin tac-pipe.c \
   groups.sh wheel-gen.pl extract-magic c99-to-c89.diff
 
 CLEANFILES = $(SCRIPTS) su
@@ -894,6 +901,7 @@ dir_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME) $(LIB_ACL)
 ls_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME) $(LIB_ACL)
 pr_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME)
 shred_LDADD = $(LDADD) $(LIB_GETHRXTIME) $(LIB_FDATASYNC)
+shuf_LDADD = $(LDADD) $(LIB_GETHRXTIME)
 vdir_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME) $(LIB_ACL)
 sort_LDADD = $(LDADD) $(POW_LIB) $(LIB_GETHRXTIME)
 
@@ -1042,7 +1050,7 @@ uninstall-binPROGRAMS:
 	done
 
 clean-binPROGRAMS:
-	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
+	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS) > /dev/null 2>&1 || /bin/rm -f $(bin_PROGRAMS)
 
 installcheck-binPROGRAMS: $(bin_PROGRAMS)
 	bad=0; pid=$$$$; list="$(bin_PROGRAMS)"; for p in $$list; do \
@@ -1263,6 +1271,9 @@ sha512sum$(EXEEXT): $(sha512sum_OBJECTS) $(sha512sum_DEPENDENCIES)
 shred$(EXEEXT): $(shred_OBJECTS) $(shred_DEPENDENCIES) 
 	@rm -f shred$(EXEEXT)
 	$(LINK) $(shred_LDFLAGS) $(shred_OBJECTS) $(shred_LDADD) $(LIBS)
+shuf$(EXEEXT): $(shuf_OBJECTS) $(shuf_DEPENDENCIES) 
+	@rm -f shuf$(EXEEXT)
+	$(LINK) $(shuf_LDFLAGS) $(shuf_OBJECTS) $(shuf_LDADD) $(LIBS)
 sleep$(EXEEXT): $(sleep_OBJECTS) $(sleep_DEPENDENCIES) 
 	@rm -f sleep$(EXEEXT)
 	$(LINK) $(sleep_LDFLAGS) $(sleep_OBJECTS) $(sleep_LDADD) $(LIBS)
@@ -1461,6 +1472,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sha384sum-md5sum.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sha512sum-md5sum.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/shred.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/shuf.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sleep.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sort.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/split.Po@am__quote@

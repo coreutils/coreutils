@@ -1110,6 +1110,9 @@
 /* Define to 1 if you have the `strverscmp' function. */
 #undef HAVE_STRVERSCMP
 
+/* Define to 1 if you have the `strxfrm' function. */
+#undef HAVE_STRXFRM
+
 /* Define to 1 if your `struct stat' has `st_blocks'. Deprecated, use
    `HAVE_STRUCT_STAT_ST_BLOCKS' instead. */
 #undef HAVE_ST_BLOCKS

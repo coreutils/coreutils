@@ -47,29 +47,30 @@ DIST_COMMON = README $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	backupfile.c backupfile.h basename.c c-strtod.c c-strtod.h \
 	c-strtold.c calloc.c canon-host.c canon-host.h canonicalize.c \
 	canonicalize.h chdir-long.c chdir-long.h chdir-safer.c \
-	chdir-safer.h chown.c cloexec.c cloexec.h closeout.c \
-	closeout.h creat-safer.c cycle-check.c cycle-check.h dev-ino.h \
-	diacrit.c diacrit.h dirchownmod.c dirchownmod.h dirfd.c \
-	dirfd.h dirname.c dirname.h dup-safer.c dup2.c error.c error.h \
-	euidaccess-stat.c euidaccess-stat.h euidaccess.c exclude.c \
-	exclude.h exitfail.c exitfail.h fchdir-stub.c fchmodat.c \
-	fchown-stub.c fcntl--.h fcntl-safer.h fd-reopen.c fd-reopen.h \
-	fd-safer.c file-type.c file-type.h fileblocks.c filemode.c \
-	filemode.h filenamecat.c filenamecat.h fnmatch.c fopen-safer.c \
-	fprintftime.c fprintftime.h free.c fsusage.c fsusage.h \
-	ftruncate.c fts-cycle.c fts.c fts_.h gai_strerror.c \
-	getaddrinfo.c getcwd.c getcwd.h getdate.h getdate.y getdelim.c \
-	getdelim.h getgroups.c gethostname.c gethrxtime.c gethrxtime.h \
-	getline.c getline.h getloadavg.c getndelim2.c getopt.c \
-	getopt1.c getpagesize.h getpass.c getpass.h gettime.c \
-	gettimeofday.c getugroups.c getusershell.c group-member.c \
-	group-member.h hard-locale.c hard-locale.h hash-pjw.c \
-	hash-pjw.h hash.c hash.h human.c human.h idcache.c imaxtostr.c \
-	intprops.h inttostr.c inttostr.h lchmod.h lchown.c lchown.h \
-	linebuffer.c linebuffer.h long-options.c long-options.h \
-	lstat.c lstat.h malloc.c mbchar.c md5.c md5.h memcasecmp.c \
-	memcasecmp.h memchr.c memcmp.c memcoll.c memcoll.h memcpy.c \
-	memmove.c mempcpy.c mempcpy.h memrchr.c memrchr.h memset.c \
+	chdir-safer.h chown.c cloexec.c cloexec.h close-stream.c \
+	close-stream.h closeout.c closeout.h creat-safer.c \
+	cycle-check.c cycle-check.h dev-ino.h diacrit.c diacrit.h \
+	dirchownmod.c dirchownmod.h dirfd.c dirfd.h dirname.c \
+	dirname.h dup-safer.c dup2.c error.c error.h euidaccess-stat.c \
+	euidaccess-stat.h euidaccess.c exclude.c exclude.h exitfail.c \
+	exitfail.h fchdir-stub.c fchmodat.c fchown-stub.c fcntl--.h \
+	fcntl-safer.h fd-reopen.c fd-reopen.h fd-safer.c file-type.c \
+	file-type.h fileblocks.c filemode.c filemode.h filenamecat.c \
+	filenamecat.h fnmatch.c fopen-safer.c fprintftime.c \
+	fprintftime.h free.c fsusage.c fsusage.h ftruncate.c \
+	fts-cycle.c fts.c fts_.h gai_strerror.c getaddrinfo.c getcwd.c \
+	getcwd.h getdate.h getdate.y getdelim.c getdelim.h getgroups.c \
+	gethostname.c gethrxtime.c gethrxtime.h getline.c getline.h \
+	getloadavg.c getndelim2.c getopt.c getopt1.c getpagesize.h \
+	getpass.c getpass.h gettime.c gettimeofday.c getugroups.c \
+	getusershell.c group-member.c group-member.h hard-locale.c \
+	hard-locale.h hash-pjw.c hash-pjw.h hash.c hash.h human.c \
+	human.h idcache.c imaxtostr.c intprops.h inttostr.c inttostr.h \
+	lchmod.h lchown.c lchown.h linebuffer.c linebuffer.h \
+	long-options.c long-options.h lstat.c lstat.h malloc.c \
+	mbchar.c md5.c md5.h memcasecmp.c memcasecmp.h memchr.c \
+	memcmp.c memcoll.c memcoll.h memcpy.c memmove.c mempcpy.c \
+	mempcpy.h memrchr.c memrchr.h memset.c memxfrm.c memxfrm.h \
 	mkancesdirs.c mkancesdirs.h mkdir-p.c mkdir-p.h mkdir.c \
 	mkdirat.c mkstemp-safer.c mkstemp.c mktime.c modechange.c \
 	modechange.h mountlist.c mountlist.h nanosleep.c obstack.c \
@@ -77,28 +78,30 @@ DIST_COMMON = README $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	openat.c openat.h pathmax.h physmem.c physmem.h pipe-safer.c \
 	posixtm.c posixtm.h posixver.c posixver.h printf-args.c \
 	printf-parse.c putenv.c quote.c quote.h quotearg.c quotearg.h \
-	raise.c readlink.c readtokens.c readtokens.h readutmp.c \
-	readutmp.h realloc.c regcomp.c regex.c regex.h \
-	regex_internal.c regex_internal.h regexec.c rename.c rmdir.c \
-	root-dev-ino.c root-dev-ino.h rpmatch.c safe-read.c \
-	safe-read.h safe-write.c safe-write.h same-inode.h same.c \
-	same.h save-cwd.c save-cwd.h savedir.c savedir.h setenv.c \
-	settime.c sha1.c sha1.h sha256.c sha256.h sha512.c sha512.h \
-	sig2str.c sig2str.h stat-macros.h stat-time.h stdio--.h \
-	stdio-safer.h stdlib--.h stdlib-safer.h stpcpy.c strcasecmp.c \
-	strcspn.c strdup.c strdup.h strftime.c strftime.h strintcmp.c \
-	stripslash.c strncasecmp.c strndup.c strndup.h strnlen.c \
-	strnlen.h strnumcmp-in.h strnumcmp.c strnumcmp.h strpbrk.c \
-	strstr.c strtod.c strtoimax.c strtol.c strtoll.c strtoul.c \
-	strtoull.c strtoumax.c strverscmp.c strverscmp.h tempname.c \
-	time_r.c time_r.h timespec.h umaxtostr.c unistd--.h \
-	unistd-safer.h unlinkdir.c unlinkdir.h unlocked-io.h \
-	unsetenv.c userspec.c userspec.h utime.c utimecmp.c utimecmp.h \
-	utimens.c utimens.h vasnprintf.c vasprintf.c version-etc-fsf.c \
-	version-etc.c version-etc.h xalloc.h xfts.c xfts.h xgetcwd.c \
-	xgetcwd.h xmalloc.c xnanosleep.c xnanosleep.h xreadlink.c \
-	xreadlink.h xstrtod.c xstrtod.h xstrtol.c xstrtol.h xstrtold.c \
-	xstrtoul.c xtime.h yesno.c yesno.h
+	raise.c rand-isaac.c rand-isaac.h randint.c randint.h \
+	randperm.c randperm.h randread.c randread.h readlink.c \
+	readtokens.c readtokens.h readutmp.c readutmp.h realloc.c \
+	regcomp.c regex.c regex.h regex_internal.c regex_internal.h \
+	regexec.c rename.c rmdir.c root-dev-ino.c root-dev-ino.h \
+	rpmatch.c safe-read.c safe-read.h safe-write.c safe-write.h \
+	same-inode.h same.c same.h save-cwd.c save-cwd.h savedir.c \
+	savedir.h setenv.c settime.c sha1.c sha1.h sha256.c sha256.h \
+	sha512.c sha512.h sig2str.c sig2str.h stat-macros.h \
+	stat-time.h stdio--.h stdio-safer.h stdlib--.h stdlib-safer.h \
+	stpcpy.c strcasecmp.c strcspn.c strdup.c strdup.h strftime.c \
+	strftime.h strintcmp.c stripslash.c strncasecmp.c strndup.c \
+	strndup.h strnlen.c strnlen.h strnumcmp-in.h strnumcmp.c \
+	strnumcmp.h strpbrk.c strstr.c strtod.c strtoimax.c strtol.c \
+	strtoll.c strtoul.c strtoull.c strtoumax.c strverscmp.c \
+	strverscmp.h tempname.c time_r.c time_r.h timespec.h \
+	umaxtostr.c unistd--.h unistd-safer.h unlinkdir.c unlinkdir.h \
+	unlocked-io.h unsetenv.c userspec.c userspec.h utime.c \
+	utimecmp.c utimecmp.h utimens.c utimens.h vasnprintf.c \
+	vasprintf.c version-etc-fsf.c version-etc.c version-etc.h \
+	xalloc.h xfts.c xfts.h xgetcwd.c xgetcwd.h xmalloc.c \
+	xnanosleep.c xnanosleep.h xreadlink.c xreadlink.h xstrtod.c \
+	xstrtod.h xstrtol.c xstrtol.h xstrtold.c xstrtoul.c xtime.h \
+	yesno.c yesno.h
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/absolute-header.m4 \
 	$(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/alloca.m4 \
@@ -112,14 +115,14 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/absolute-header.m4 \
 	$(top_srcdir)/m4/chdir-long.m4 $(top_srcdir)/m4/chdir-safer.m4 \
 	$(top_srcdir)/m4/check-decl.m4 $(top_srcdir)/m4/chown.m4 \
 	$(top_srcdir)/m4/clock_time.m4 $(top_srcdir)/m4/cloexec.m4 \
-	$(top_srcdir)/m4/closeout.m4 $(top_srcdir)/m4/codeset.m4 \
-	$(top_srcdir)/m4/cycle-check.m4 $(top_srcdir)/m4/d-ino.m4 \
-	$(top_srcdir)/m4/d-type.m4 $(top_srcdir)/m4/diacrit.m4 \
-	$(top_srcdir)/m4/dirfd.m4 $(top_srcdir)/m4/dirname.m4 \
-	$(top_srcdir)/m4/dos.m4 $(top_srcdir)/m4/double-slash-root.m4 \
-	$(top_srcdir)/m4/dup2.m4 $(top_srcdir)/m4/eealloc.m4 \
-	$(top_srcdir)/m4/eoverflow.m4 $(top_srcdir)/m4/error.m4 \
-	$(top_srcdir)/m4/euidaccess-stat.m4 \
+	$(top_srcdir)/m4/close-stream.m4 $(top_srcdir)/m4/closeout.m4 \
+	$(top_srcdir)/m4/codeset.m4 $(top_srcdir)/m4/cycle-check.m4 \
+	$(top_srcdir)/m4/d-ino.m4 $(top_srcdir)/m4/d-type.m4 \
+	$(top_srcdir)/m4/diacrit.m4 $(top_srcdir)/m4/dirfd.m4 \
+	$(top_srcdir)/m4/dirname.m4 $(top_srcdir)/m4/dos.m4 \
+	$(top_srcdir)/m4/double-slash-root.m4 $(top_srcdir)/m4/dup2.m4 \
+	$(top_srcdir)/m4/eealloc.m4 $(top_srcdir)/m4/eoverflow.m4 \
+	$(top_srcdir)/m4/error.m4 $(top_srcdir)/m4/euidaccess-stat.m4 \
 	$(top_srcdir)/m4/euidaccess.m4 $(top_srcdir)/m4/exclude.m4 \
 	$(top_srcdir)/m4/exitfail.m4 $(top_srcdir)/m4/extensions.m4 \
 	$(top_srcdir)/m4/fcntl-safer.m4 $(top_srcdir)/m4/fd-reopen.m4 \
@@ -166,34 +169,36 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/absolute-header.m4 \
 	$(top_srcdir)/m4/memcmp.m4 $(top_srcdir)/m4/memcoll.m4 \
 	$(top_srcdir)/m4/memcpy.m4 $(top_srcdir)/m4/memmove.m4 \
 	$(top_srcdir)/m4/mempcpy.m4 $(top_srcdir)/m4/memrchr.m4 \
-	$(top_srcdir)/m4/memset.m4 $(top_srcdir)/m4/mkancesdirs.m4 \
-	$(top_srcdir)/m4/mkdir-p.m4 $(top_srcdir)/m4/mkdir-slash.m4 \
-	$(top_srcdir)/m4/mkstemp.m4 $(top_srcdir)/m4/mktime.m4 \
-	$(top_srcdir)/m4/modechange.m4 $(top_srcdir)/m4/mountlist.m4 \
-	$(top_srcdir)/m4/nanosleep.m4 $(top_srcdir)/m4/nls.m4 \
-	$(top_srcdir)/m4/obstack.m4 $(top_srcdir)/m4/openat.m4 \
-	$(top_srcdir)/m4/pathmax.m4 $(top_srcdir)/m4/perl.m4 \
-	$(top_srcdir)/m4/physmem.m4 $(top_srcdir)/m4/po.m4 \
-	$(top_srcdir)/m4/posixtm.m4 $(top_srcdir)/m4/posixver.m4 \
-	$(top_srcdir)/m4/prereq.m4 $(top_srcdir)/m4/progtest.m4 \
-	$(top_srcdir)/m4/putenv.m4 $(top_srcdir)/m4/quote.m4 \
-	$(top_srcdir)/m4/quotearg.m4 $(top_srcdir)/m4/readlink.m4 \
+	$(top_srcdir)/m4/memset.m4 $(top_srcdir)/m4/memxfrm.m4 \
+	$(top_srcdir)/m4/mkancesdirs.m4 $(top_srcdir)/m4/mkdir-p.m4 \
+	$(top_srcdir)/m4/mkdir-slash.m4 $(top_srcdir)/m4/mkstemp.m4 \
+	$(top_srcdir)/m4/mktime.m4 $(top_srcdir)/m4/modechange.m4 \
+	$(top_srcdir)/m4/mountlist.m4 $(top_srcdir)/m4/nanosleep.m4 \
+	$(top_srcdir)/m4/nls.m4 $(top_srcdir)/m4/obstack.m4 \
+	$(top_srcdir)/m4/openat.m4 $(top_srcdir)/m4/pathmax.m4 \
+	$(top_srcdir)/m4/perl.m4 $(top_srcdir)/m4/physmem.m4 \
+	$(top_srcdir)/m4/po.m4 $(top_srcdir)/m4/posixtm.m4 \
+	$(top_srcdir)/m4/posixver.m4 $(top_srcdir)/m4/prereq.m4 \
+	$(top_srcdir)/m4/progtest.m4 $(top_srcdir)/m4/putenv.m4 \
+	$(top_srcdir)/m4/quote.m4 $(top_srcdir)/m4/quotearg.m4 \
+	$(top_srcdir)/m4/randint.m4 $(top_srcdir)/m4/randperm.m4 \
+	$(top_srcdir)/m4/randread.m4 $(top_srcdir)/m4/readlink.m4 \
 	$(top_srcdir)/m4/readtokens.m4 $(top_srcdir)/m4/readutmp.m4 \
 	$(top_srcdir)/m4/regex.m4 $(top_srcdir)/m4/rename.m4 \
-	$(top_srcdir)/m4/restrict.m4 $(top_srcdir)/m4/rmdir-errno.m4 \
-	$(top_srcdir)/m4/rmdir.m4 $(top_srcdir)/m4/root-dev-ino.m4 \
-	$(top_srcdir)/m4/rpmatch.m4 $(top_srcdir)/m4/safe-read.m4 \
-	$(top_srcdir)/m4/safe-write.m4 $(top_srcdir)/m4/same.m4 \
-	$(top_srcdir)/m4/save-cwd.m4 $(top_srcdir)/m4/savedir.m4 \
-	$(top_srcdir)/m4/setenv.m4 $(top_srcdir)/m4/settime.m4 \
-	$(top_srcdir)/m4/sha1.m4 $(top_srcdir)/m4/sha256.m4 \
-	$(top_srcdir)/m4/sha512.m4 $(top_srcdir)/m4/sig2str.m4 \
-	$(top_srcdir)/m4/signed.m4 $(top_srcdir)/m4/socklen.m4 \
-	$(top_srcdir)/m4/sockpfaf.m4 $(top_srcdir)/m4/ssize_t.m4 \
-	$(top_srcdir)/m4/st_dm_mode.m4 $(top_srcdir)/m4/stat-macros.m4 \
-	$(top_srcdir)/m4/stat-prog.m4 $(top_srcdir)/m4/stat-time.m4 \
-	$(top_srcdir)/m4/stdbool.m4 $(top_srcdir)/m4/stdint.m4 \
-	$(top_srcdir)/m4/stdint_h.m4 $(top_srcdir)/m4/stdio-safer.m4 \
+	$(top_srcdir)/m4/rmdir-errno.m4 $(top_srcdir)/m4/rmdir.m4 \
+	$(top_srcdir)/m4/root-dev-ino.m4 $(top_srcdir)/m4/rpmatch.m4 \
+	$(top_srcdir)/m4/safe-read.m4 $(top_srcdir)/m4/safe-write.m4 \
+	$(top_srcdir)/m4/same.m4 $(top_srcdir)/m4/save-cwd.m4 \
+	$(top_srcdir)/m4/savedir.m4 $(top_srcdir)/m4/setenv.m4 \
+	$(top_srcdir)/m4/settime.m4 $(top_srcdir)/m4/sha1.m4 \
+	$(top_srcdir)/m4/sha256.m4 $(top_srcdir)/m4/sha512.m4 \
+	$(top_srcdir)/m4/sig2str.m4 $(top_srcdir)/m4/signed.m4 \
+	$(top_srcdir)/m4/socklen.m4 $(top_srcdir)/m4/sockpfaf.m4 \
+	$(top_srcdir)/m4/ssize_t.m4 $(top_srcdir)/m4/st_dm_mode.m4 \
+	$(top_srcdir)/m4/stat-macros.m4 $(top_srcdir)/m4/stat-prog.m4 \
+	$(top_srcdir)/m4/stat-time.m4 $(top_srcdir)/m4/stdbool.m4 \
+	$(top_srcdir)/m4/stdint.m4 $(top_srcdir)/m4/stdint_h.m4 \
+	$(top_srcdir)/m4/stdio-safer.m4 \
 	$(top_srcdir)/m4/stdlib-safer.m4 $(top_srcdir)/m4/stpcpy.m4 \
 	$(top_srcdir)/m4/strcase.m4 $(top_srcdir)/m4/strcspn.m4 \
 	$(top_srcdir)/m4/strdup.m4 $(top_srcdir)/m4/strftime.m4 \
@@ -242,7 +247,8 @@ am_libcoreutils_a_OBJECTS = allocsa.$(OBJEXT) base64.$(OBJEXT) \
 	localcharset.$(OBJEXT) mbswidth.$(OBJEXT) \
 	readtokens0.$(OBJEXT) strnlen1.$(OBJEXT) unicodeio.$(OBJEXT) \
 	xalloc-die.$(OBJEXT) xgethostname.$(OBJEXT) xmemcoll.$(OBJEXT) \
-	xstrndup.$(OBJEXT) xstrtoimax.$(OBJEXT) xstrtoumax.$(OBJEXT)
+	xmemxfrm.$(OBJEXT) xstrndup.$(OBJEXT) xstrtoimax.$(OBJEXT) \
+	xstrtoumax.$(OBJEXT)
 libcoreutils_a_OBJECTS = $(am_libcoreutils_a_OBJECTS)
 PROGRAMS = $(noinst_PROGRAMS)
 t_fpending_SOURCES = t-fpending.c
@@ -428,9 +434,9 @@ libcoreutils_a_SOURCES = allocsa.c allocsa.h base64.c base64.h \
 	mbuiter.h readtokens0.c readtokens0.h setenv.h strcase.h \
 	strnlen1.c strnlen1.h strstr.h unicodeio.c unicodeio.h \
 	verify.h wcwidth.h xalloc-die.c xgethostname.c xgethostname.h \
-	xmemcoll.c xmemcoll.h xstrndup.c xstrndup.h xstrtoimax.c \
-	xstrtoumax.c printf-args.h printf-parse.h vasprintf.h \
-	vasnprintf.h
+	xmemcoll.c xmemcoll.h xmemxfrm.c xmemxfrm.h xstrndup.c \
+	xstrndup.h xstrtoimax.c xstrtoumax.c printf-args.h \
+	printf-parse.h vasprintf.h vasnprintf.h
 libcoreutils_a_LIBADD = $(LIBOBJS) $(ALLOCA)
 lib_OBJECTS = $(libcoreutils_a_OBJECTS)
 BUILT_SOURCES = getdate.c $(STDBOOL_H) $(STDINT_H) $(ALLOCA_H) \
@@ -517,6 +523,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/chdir-safer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/chown.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/cloexec.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/close-stream.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/closeout.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/creat-safer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/cycle-check.Po@am__quote@
@@ -591,6 +598,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/mempcpy.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/memrchr.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/memset.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/memxfrm.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/mkancesdirs.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/mkdir-p.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/mkdir.Po@am__quote@
@@ -616,6 +624,10 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/quote.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/quotearg.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/raise.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/rand-isaac.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/randint.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/randperm.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/randread.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/readlink.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/readtokens.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/readutmp.Po@am__quote@
@@ -697,6 +709,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xalloc-die.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xgethostname.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xmemcoll.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xmemxfrm.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xstrndup.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xstrtoimax.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xstrtoumax.Po@am__quote@

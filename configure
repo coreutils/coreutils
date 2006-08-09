@@ -1783,6 +1783,7 @@ ac_header_list="$ac_header_list string.h"
 ac_func_list="$ac_func_list setlocale"
 ac_func_list="$ac_func_list isascii"
 ac_func_list="$ac_func_list mbsinit"
+ac_func_list="$ac_func_list strxfrm"
 ac_func_list="$ac_func_list lchmod"
 ac_header_list="$ac_header_list utmpx.h"
 ac_func_list="$ac_func_list utmpname"
@@ -13255,10 +13256,10 @@ esac
 
 { echo "$as_me:$LINENO: checking for C/C++ restrict keyword" >&5
 echo $ECHO_N "checking for C/C++ restrict keyword... $ECHO_C" >&6; }
-if test "${gl_cv_c_restrict+set}" = set; then
+if test "${ac_cv_c_restrict+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
-  gl_cv_c_restrict=no
+  ac_cv_c_restrict=no
    # Try the official restrict keyword, then gcc's __restrict, and
    # the less common variants.
    for ac_kw in restrict __restrict __restrict__ _Restrict; do
@@ -13268,7 +13269,20 @@ _ACEOF
 cat confdefs.h >>conftest.$ac_ext
 cat >>conftest.$ac_ext <<_ACEOF
 /* end confdefs.h.  */
-float * $ac_kw x;
+typedef int * int_ptr;
+        int foo (int_ptr $ac_kw ip) {
+        return ip[0];
+       }
+int
+main ()
+{
+int s[1];
+        int * $ac_kw t = s;
+        t[0] = 0;
+        return foo(t)
+  ;
+  return 0;
+}
 _ACEOF
 rm -f conftest.$ac_objext
 if { (ac_try="$ac_compile"
@@ -13304,7 +13318,7 @@ eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
   ac_status=$?
   echo "$as_me:$LINENO: \$? = $ac_status" >&5
   (exit $ac_status); }; }; then
-  gl_cv_c_restrict=$ac_kw; break
+  ac_cv_c_restrict=$ac_kw
 else
   echo "$as_me: failed program was:" >&5
 sed 's/^/| /' conftest.$ac_ext >&5
@@ -13313,12 +13327,13 @@ sed 's/^/| /' conftest.$ac_ext >&5
 fi
 
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+     test "$ac_cv_c_restrict" != no && break
    done
 
 fi
-{ echo "$as_me:$LINENO: result: $gl_cv_c_restrict" >&5
-echo "${ECHO_T}$gl_cv_c_restrict" >&6; }
- case $gl_cv_c_restrict in
+{ echo "$as_me:$LINENO: result: $ac_cv_c_restrict" >&5
+echo "${ECHO_T}$ac_cv_c_restrict" >&6; }
+ case $ac_cv_c_restrict in
    restrict) ;;
    no)
 cat >>confdefs.h <<\_ACEOF
@@ -13326,7 +13341,7 @@ cat >>confdefs.h <<\_ACEOF
 _ACEOF
  ;;
    *)  cat >>confdefs.h <<_ACEOF
-#define restrict $gl_cv_c_restrict
+#define restrict $ac_cv_c_restrict
 _ACEOF
  ;;
  esac
@@ -15034,6 +15049,17 @@ esac
  ;;
 esac
 
+
+
+
+  case " $LIBOBJS " in
+  *" close-stream.$ac_objext "* ) ;;
+  *) LIBOBJS="$LIBOBJS close-stream.$ac_objext"
+ ;;
+esac
+
+
+    :
 
 
 
@@ -32348,6 +32374,26 @@ fi
 
 
 
+
+
+  case " $LIBOBJS " in
+  *" memxfrm.$ac_objext "* ) ;;
+  *) LIBOBJS="$LIBOBJS memxfrm.$ac_objext"
+ ;;
+esac
+
+
+
+
+
+
+
+
+
+
+
+
+
   case " $LIBOBJS " in
   *" mkancesdirs.$ac_objext "* ) ;;
   *) LIBOBJS="$LIBOBJS mkancesdirs.$ac_objext"
@@ -35705,6 +35751,41 @@ _ACEOF
  ;;
 esac
 
+
+
+
+
+  case " $LIBOBJS " in
+  *" randint.$ac_objext "* ) ;;
+  *) LIBOBJS="$LIBOBJS randint.$ac_objext"
+ ;;
+esac
+
+
+
+
+
+
+  case " $LIBOBJS " in
+  *" randperm.$ac_objext "* ) ;;
+  *) LIBOBJS="$LIBOBJS randperm.$ac_objext"
+ ;;
+esac
+
+
+
+
+  case " $LIBOBJS " in
+  *" randread.$ac_objext "* ) ;;
+  *) LIBOBJS="$LIBOBJS randread.$ac_objext"
+ ;;
+esac
+
+  case " $LIBOBJS " in
+  *" rand-isaac.$ac_objext "* ) ;;
+  *) LIBOBJS="$LIBOBJS rand-isaac.$ac_objext"
+ ;;
+esac
 
 
 
@@ -45217,6 +45298,11 @@ esac
 
   # We don't yet use c-stack.c.
   # AC_REQUIRE([gl_C_STACK])
+
+
+
+
+
 
 
 
