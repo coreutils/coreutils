@@ -129,6 +129,16 @@ input_from_argv (char **operand, int n_operands, char eolbyte)
   operand[n_operands] = p;
 }
 
+/* Return the start of the next line after LINE.  The current line
+   ends in EOLBYTE, and is guaranteed to end before LINE + N.  */
+
+static char *
+next_line (char *line, char eolbyte, size_t n)
+{
+  char *p = memchr (line, eolbyte, n);
+  return p + 1;
+}
+
 /* Read data from file IN.  Input lines are delimited by EOLBYTE;
    silently append a trailing EOLBYTE if the file ends in some other
    byte.  Store a pointer to the resulting array of lines into *PLINE.
@@ -193,14 +203,14 @@ read_input (FILE *in, char eolbyte, char ***pline)
   lim = buf + used;
 
   n_lines = 0;
-  for (p = buf; p < lim; p = memchr (p, eolbyte, lim - p) + 1)
+  for (p = buf; p < lim; p = next_line (p, eolbyte, lim - p))
     n_lines++;
 
   *pline = line = xnmalloc (n_lines + 1, sizeof *line);
 
   line[0] = p = buf;
   for (i = 1; i <= n_lines; i++)
-    line[i] = p = memchr (p, eolbyte, lim - p) + 1;
+    line[i] = p = next_line (p, eolbyte, lim - p);
 
   errno = fread_errno;
   return n_lines;
