@@ -1,3 +1,8 @@
+2006-08-09  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (dd invocation): Warn about oflag=append without
+	conv=notrunc.  See Debian bug 373736.
+
 2006-08-08  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (shuf invocation, Random sources): New sections.

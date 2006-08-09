@@ -7302,6 +7302,9 @@ system.
 Write in append mode, so that even if some other process is writing to
 this file, every @command{dd} write will append to the current
 contents of the file.  This flag makes sense only for output.
+If you combine this flag with the @samp{of=@var{file}} operand,
+you should also specify @samp{conv=notrunc} unless you want the
+output file to be truncated before being appended to.
 
 @item direct
 @opindex direct

@@ -458,7 +458,7 @@ Each CONV symbol may be:\n\
 \n\
 Each FLAG symbol may be:\n\
 \n\
-  append    append mode (makes sense only for output)\n\
+  append    append mode (makes sense only for output; conv=notrunc suggested)\n\
 "), stdout);
       if (O_DIRECT)
 	fputs (_("  direct    use direct I/O for data\n"), stdout);
