@@ -1,6 +1,6 @@
 /* Invoke mkstemp, but avoid some glitches.
 
-   Copyright (C) 2005 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -26,6 +26,10 @@
 
 #include <stdlib.h>
 #include "unistd-safer.h"
+
+#if ! HAVE_MKSTEMP
+int mkstemp (char *);
+#endif
 
 /* Like mkstemp, but do not return STDIN_FILENO, STDOUT_FILENO, or
    STDERR_FILENO.  */

@@ -1,5 +1,5 @@
 /* Safe automatic memory allocation.
-   Copyright (C) 2003-2004 Free Software Foundation, Inc.
+   Copyright (C) 2003-2006 Free Software Foundation, Inc.
    Written by Bruno Haible <bruno@clisp.org>, 2003.
 
    This program is free software; you can redistribute it and/or modify
@@ -22,6 +22,12 @@
 #include <alloca.h>
 #include <stddef.h>
 #include <stdlib.h>
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 /* safe_alloca(N) is equivalent to alloca(N) when it is safe to call
    alloca(N); otherwise it returns NULL.  It either returns N bytes of
@@ -69,6 +75,11 @@ extern void freesa (void *p);
    If this would be useful in your application. please speak up.  */
 
 
+#ifdef __cplusplus
+}
+#endif
+
+
 /* ------------------- Auxiliary, non-public definitions ------------------- */
 
 /* Determine the alignment of a type at compile time.  */
@@ -79,6 +90,10 @@ extern void freesa (void *p);
 # define sa_alignof(type) offsetof (sa_alignof_helper<type>, __slot2)
 #elif defined __hpux
   /* Work around a HP-UX 10.20 cc bug with enums constants defined as offsetof
+     values.  */
+# define sa_alignof(type) (sizeof (type) <= 4 ? 4 : 8)
+#elif defined _AIX
+  /* Work around an AIX 3.2.5 xlc bug with enums constants defined as offsetof
      values.  */
 # define sa_alignof(type) (sizeof (type) <= 4 ? 4 : 8)
 #else

@@ -1,5 +1,7 @@
 2006-08-09  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* Makefile.in.in: Sync from gettext 0.15.
+
 	* LINGUAS: Add ro, sr, uk, wa.
 	* ro.po, sr.po, uk,po, wa.po: New files,
 	gotten from the	following files relative to

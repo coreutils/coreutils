@@ -51,7 +51,7 @@
 # include <wctype.h>
 #endif
 #if !defined iswcntrl && !HAVE_ISWCNTRL
-# define iswcntrl(wc) 0
+# define iswcntrl(wc) (((wc) & ~0x1f) == 0 || (wc) == 0x7f)
 #endif
 
 #ifndef mbsinit

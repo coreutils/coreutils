@@ -1,4 +1,4 @@
-# stdint.m4 serial 15
+# stdint.m4 serial 18
 dnl Copyright (C) 2001-2002, 2004-2006 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
@@ -71,18 +71,23 @@ AC_DEFUN([gl_STDINT_H],
 	 AC_LANG_PROGRAM([[
 #include <stddef.h>
 #define __STDC_LIMIT_MACROS 1 /* to make it work also in C++ mode */
+#define __STDC_CONSTANT_MACROS 1 /* to make it work also in C++ mode */
 #include ABSOLUTE_STDINT_H
 #ifdef INT8_MAX
 int8_t a1 = INT8_MAX;
+int8_t a1min = INT8_MIN;
 #endif
 #ifdef INT16_MAX
 int16_t a2 = INT16_MAX;
+int16_t a2min = INT16_MIN;
 #endif
 #ifdef INT32_MAX
 int32_t a3 = INT32_MAX;
+int32_t a3min = INT32_MIN;
 #endif
 #ifdef INT64_MAX
 int64_t a4 = INT64_MAX;
+int64_t a4min = INT64_MIN;
 #endif
 #ifdef UINT8_MAX
 uint8_t b1 = UINT8_MAX;
@@ -99,23 +104,40 @@ uint32_t b3 = UINT32_MAX;
 uint64_t b4 = UINT64_MAX;
 #endif
 int_least8_t c1 = INT8_C (0x7f);
+int_least8_t c1max = INT_LEAST8_MAX;
+int_least8_t c1min = INT_LEAST8_MIN;
 int_least16_t c2 = INT16_C (0x7fff);
+int_least16_t c2max = INT_LEAST16_MAX;
+int_least16_t c2min = INT_LEAST16_MIN;
 int_least32_t c3 = INT32_C (0x7fffffff);
+int_least32_t c3max = INT_LEAST32_MAX;
+int_least32_t c3min = INT_LEAST32_MIN;
 int_least64_t c4 = INT64_C (0x7fffffffffffffff);
+int_least64_t c4max = INT_LEAST64_MAX;
+int_least64_t c4min = INT_LEAST64_MIN;
 uint_least8_t d1 = UINT8_C (0xff);
+uint_least8_t d1max = UINT_LEAST8_MAX;
 uint_least16_t d2 = UINT16_C (0xffff);
+uint_least16_t d2max = UINT_LEAST16_MAX;
 uint_least32_t d3 = UINT32_C (0xffffffff);
+uint_least32_t d3max = UINT_LEAST32_MAX;
 uint_least64_t d4 = UINT64_C (0xffffffffffffffff);
+uint_least64_t d4max = UINT_LEAST64_MAX;
 int_fast8_t e1 = INT_FAST8_MAX;
+int_fast8_t e1min = INT_FAST8_MIN;
 int_fast16_t e2 = INT_FAST16_MAX;
+int_fast16_t e2min = INT_FAST16_MIN;
 int_fast32_t e3 = INT_FAST32_MAX;
+int_fast32_t e3min = INT_FAST32_MIN;
 int_fast64_t e4 = INT_FAST64_MAX;
+int_fast64_t e4min = INT_FAST64_MIN;
 uint_fast8_t f1 = UINT_FAST8_MAX;
 uint_fast16_t f2 = UINT_FAST16_MAX;
 uint_fast32_t f3 = UINT_FAST32_MAX;
 uint_fast64_t f4 = UINT_FAST64_MAX;
 #ifdef INTPTR_MAX
 intptr_t g = INTPTR_MAX;
+intptr_t gmin = INTPTR_MIN;
 #endif
 #ifdef UINTPTR_MAX
 uintptr_t h = UINTPTR_MAX;
@@ -296,7 +318,8 @@ AC_DEFUN([gl_INTEGER_TYPE_SUFFIX],
 	      extern $gltype foo;
 	      extern $gltype1 foo;])],
 	   [eval gl_cv_type_${gltype}_suffix=\$glsuf])
-	 eval test \"\$gl_cv_type_${gltype}_suffix\" != no && break
+	 eval result=\$gl_cv_type_${gltype}_suffix
+	 test "$result" != no && break
        done])
     GLTYPE=`echo $gltype | tr 'abcdefghijklmnopqrstuvwxyz ' 'ABCDEFGHIJKLMNOPQRSTUVWXYZ_'`
     eval result=\$gl_cv_type_${gltype}_suffix

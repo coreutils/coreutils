@@ -1,5 +1,5 @@
-# gettext.m4 serial 37 (gettext-0.14.4)
-dnl Copyright (C) 1995-2005 Free Software Foundation, Inc.
+# gettext.m4 serial 53 (gettext-0.15)
+dnl Copyright (C) 1995-2006 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
@@ -15,7 +15,7 @@ dnl They are *not* in the public domain.
 
 dnl Authors:
 dnl   Ulrich Drepper <drepper@cygnus.com>, 1995-2000.
-dnl   Bruno Haible <haible@clisp.cons.org>, 2000-2003.
+dnl   Bruno Haible <haible@clisp.cons.org>, 2000-2005.
 
 dnl Macro to add for using GNU gettext.
 
@@ -94,7 +94,7 @@ AC_DEFUN([AM_GNU_GETTEXT],
   gt_INTL_MACOSX
 
   dnl Set USE_NLS.
-  AM_NLS
+  AC_REQUIRE([AM_NLS])
 
   ifelse(gt_included_intl, yes, [
     BUILD_INCLUDED_LIBINTL=no
@@ -130,13 +130,11 @@ AC_DEFUN([AM_GNU_GETTEXT],
         AC_CACHE_CHECK([for GNU gettext in libc], gt_cv_func_gnugettext_libc,
          [AC_TRY_LINK([#include <libintl.h>
 ]ifelse([$2], [need-formatstring-macros],
-[#ifndef __GNU_GETTEXT_SUPPORTED_REVISION
+[[#ifndef __GNU_GETTEXT_SUPPORTED_REVISION
 #define __GNU_GETTEXT_SUPPORTED_REVISION(major) ((major) == 0 ? 0 : -1)
 #endif
-changequote(,)dnl
 typedef int array [2 * (__GNU_GETTEXT_SUPPORTED_REVISION(0) >= 1) - 1];
-changequote([,])dnl
-], [])[extern int _nl_msg_cat_cntr;
+]], [])[extern int _nl_msg_cat_cntr;
 extern int *_nl_domain_bindings;],
             [bindtextdomain ("", "");
 return * gettext ("")]ifelse([$2], [need-ngettext], [ + * ngettext ("", "", 0)], [])[ + _nl_msg_cat_cntr + *_nl_domain_bindings],
@@ -162,13 +160,11 @@ return * gettext ("")]ifelse([$2], [need-ngettext], [ + * ngettext ("", "", 0)],
             dnl Now see whether libintl exists and does not depend on libiconv.
             AC_TRY_LINK([#include <libintl.h>
 ]ifelse([$2], [need-formatstring-macros],
-[#ifndef __GNU_GETTEXT_SUPPORTED_REVISION
+[[#ifndef __GNU_GETTEXT_SUPPORTED_REVISION
 #define __GNU_GETTEXT_SUPPORTED_REVISION(major) ((major) == 0 ? 0 : -1)
 #endif
-changequote(,)dnl
 typedef int array [2 * (__GNU_GETTEXT_SUPPORTED_REVISION(0) >= 1) - 1];
-changequote([,])dnl
-], [])[extern int _nl_msg_cat_cntr;
+]], [])[extern int _nl_msg_cat_cntr;
 extern
 #ifdef __cplusplus
 "C"
@@ -183,13 +179,11 @@ return * gettext ("")]ifelse([$2], [need-ngettext], [ + * ngettext ("", "", 0)],
               LIBS="$LIBS $LIBICONV"
               AC_TRY_LINK([#include <libintl.h>
 ]ifelse([$2], [need-formatstring-macros],
-[#ifndef __GNU_GETTEXT_SUPPORTED_REVISION
+[[#ifndef __GNU_GETTEXT_SUPPORTED_REVISION
 #define __GNU_GETTEXT_SUPPORTED_REVISION(major) ((major) == 0 ? 0 : -1)
 #endif
-changequote(,)dnl
 typedef int array [2 * (__GNU_GETTEXT_SUPPORTED_REVISION(0) >= 1) - 1];
-changequote([,])dnl
-], [])[extern int _nl_msg_cat_cntr;
+]], [])[extern int _nl_msg_cat_cntr;
 extern
 #ifdef __cplusplus
 "C"
@@ -234,8 +228,8 @@ return * gettext ("")]ifelse([$2], [need-ngettext], [ + * ngettext ("", "", 0)],
         dnl Mark actions used to generate GNU NLS library.
         BUILD_INCLUDED_LIBINTL=yes
         USE_INCLUDED_LIBINTL=yes
-        LIBINTL="ifelse([$3],[],\${top_builddir}/intl,[$3])/libintl.[]gt_libtool_suffix_prefix[]a $LIBICONV"
-        LTLIBINTL="ifelse([$3],[],\${top_builddir}/intl,[$3])/libintl.[]gt_libtool_suffix_prefix[]a $LTLIBICONV"
+        LIBINTL="ifelse([$3],[],\${top_builddir}/intl,[$3])/libintl.[]gt_libtool_suffix_prefix[]a $LIBICONV $LIBTHREAD"
+        LTLIBINTL="ifelse([$3],[],\${top_builddir}/intl,[$3])/libintl.[]gt_libtool_suffix_prefix[]a $LTLIBICONV $LTLIBTHREAD"
         LIBS=`echo " $LIBS " | sed -e 's/ -lintl / /' -e 's/^ //' -e 's/ $//'`
       fi
 
@@ -359,33 +353,22 @@ dnl            USE_INCLUDED_LIBINTL, BUILD_INCLUDED_LIBINTL.
 AC_DEFUN([AM_INTL_SUBDIR],
 [
   AC_REQUIRE([AC_PROG_INSTALL])dnl
-  AC_REQUIRE([AM_MKINSTALLDIRS])dnl
+  AC_REQUIRE([AM_PROG_MKDIR_P])dnl defined by automake
   AC_REQUIRE([AC_PROG_CC])dnl
   AC_REQUIRE([AC_CANONICAL_HOST])dnl
   AC_REQUIRE([gt_GLIBC2])dnl
   AC_REQUIRE([AC_PROG_RANLIB])dnl
-  AC_REQUIRE([AC_ISC_POSIX])dnl
-  AC_REQUIRE([AC_HEADER_STDC])dnl
-  AC_REQUIRE([AC_C_CONST])dnl
+  AC_REQUIRE([gl_VISIBILITY])dnl
+  AC_REQUIRE([gt_INTL_SUBDIR_CORE])dnl
   AC_REQUIRE([bh_C_SIGNED])dnl
-  AC_REQUIRE([AC_C_INLINE])dnl
-  AC_REQUIRE([AC_TYPE_OFF_T])dnl
-  AC_REQUIRE([AC_TYPE_SIZE_T])dnl
   AC_REQUIRE([gl_AC_TYPE_LONG_LONG])dnl
   AC_REQUIRE([gt_TYPE_LONGDOUBLE])dnl
   AC_REQUIRE([gt_TYPE_WCHAR_T])dnl
   AC_REQUIRE([gt_TYPE_WINT_T])dnl
   AC_REQUIRE([gl_AC_HEADER_INTTYPES_H])
-  AC_REQUIRE([gl_AC_HEADER_STDINT_H])
   AC_REQUIRE([gt_TYPE_INTMAX_T])
   AC_REQUIRE([gt_PRINTF_POSIX])
-  AC_REQUIRE([AC_FUNC_ALLOCA])dnl
-  AC_REQUIRE([AC_FUNC_MMAP])dnl
   AC_REQUIRE([gl_GLIBC21])dnl
-  AC_REQUIRE([gt_INTDIV0])dnl
-  AC_REQUIRE([gl_AC_TYPE_UINTMAX_T])dnl
-  AC_REQUIRE([gt_HEADER_INTTYPES_H])dnl
-  AC_REQUIRE([gt_INTTYPES_PRI])dnl
   AC_REQUIRE([gl_XSIZE])dnl
   AC_REQUIRE([gt_INTL_MACOSX])dnl
 
@@ -393,12 +376,8 @@ AC_DEFUN([AM_INTL_SUBDIR],
     [AC_DEFINE([ptrdiff_t], [long],
        [Define as the type of the result of subtracting two pointers, if the system doesn't define it.])
     ])
-  AC_CHECK_HEADERS([argz.h limits.h locale.h nl_types.h malloc.h stddef.h \
-stdlib.h string.h unistd.h sys/param.h])
-  AC_CHECK_FUNCS([asprintf fwprintf getcwd getegid geteuid getgid getuid \
-mempcpy munmap putenv setenv setlocale snprintf stpcpy strcasecmp strdup \
-strtoul tsearch wcslen __argz_count __argz_stringify __argz_next \
-__fsetlocking])
+  AC_CHECK_HEADERS([stddef.h stdlib.h string.h])
+  AC_CHECK_FUNCS([asprintf fwprintf putenv setenv setlocale snprintf wcslen])
 
   dnl Use the _snprintf function only if it is declared (because on NetBSD it
   dnl is defined as a weak alias of snprintf; we prefer to use the latter).
@@ -410,8 +389,6 @@ __fsetlocking])
   dnl 2.5.1 but were removed in Solaris 2.6, whereas we want binaries built
   dnl on Solaris 2.5.1 to run on Solaris 2.6).
   dnl Don't use AC_CHECK_DECLS because it isn't supported in autoconf-2.13.
-  gt_CHECK_DECL(feof_unlocked, [#include <stdio.h>])
-  gt_CHECK_DECL(fgets_unlocked, [#include <stdio.h>])
   gt_CHECK_DECL(getc_unlocked, [#include <stdio.h>])
 
   case $gt_cv_func_printf_posix in
@@ -438,14 +415,125 @@ __fsetlocking])
   fi
   AC_SUBST([HAVE_WPRINTF])
 
-  AM_ICONV
   AM_LANGINFO_CODESET
-  if test $ac_cv_header_locale_h = yes; then
-    gt_LC_MESSAGES
-  fi
+  gt_LC_MESSAGES
 
-  if test -n "$INTL_MACOSX_LIBS"; then
-    CPPFLAGS="$CPPFLAGS -I/System/Library/Frameworks/CoreFoundation.framework/Headers"
+  dnl Compilation on mingw and Cygwin needs special Makefile rules, because
+  dnl 1. when we install a shared library, we must arrange to export
+  dnl    auxiliary pointer variables for every exported variable,
+  dnl 2. when we install a shared library and a static library simultaneously,
+  dnl    the include file specifies __declspec(dllimport) and therefore we
+  dnl    must arrange to define the auxiliary pointer variables for the
+  dnl    exported variables _also_ in the static library.
+  if test "$enable_shared" = yes; then
+    case "$host_os" in
+      cygwin*) is_woe32dll=yes ;;
+      *) is_woe32dll=no ;;
+    esac
+  else
+    is_woe32dll=no
+  fi
+  WOE32DLL=$is_woe32dll
+  AC_SUBST([WOE32DLL])
+
+  dnl Rename some macros and functions used for locking.
+  AH_BOTTOM([
+#define __libc_lock_t                   gl_lock_t
+#define __libc_lock_define              gl_lock_define
+#define __libc_lock_define_initialized  gl_lock_define_initialized
+#define __libc_lock_init                gl_lock_init
+#define __libc_lock_lock                gl_lock_lock
+#define __libc_lock_unlock              gl_lock_unlock
+#define __libc_lock_recursive_t                   gl_recursive_lock_t
+#define __libc_lock_define_recursive              gl_recursive_lock_define
+#define __libc_lock_define_initialized_recursive  gl_recursive_lock_define_initialized
+#define __libc_lock_init_recursive                gl_recursive_lock_init
+#define __libc_lock_lock_recursive                gl_recursive_lock_lock
+#define __libc_lock_unlock_recursive              gl_recursive_lock_unlock
+#define glthread_in_use  libintl_thread_in_use
+#define glthread_lock_init     libintl_lock_init
+#define glthread_lock_lock     libintl_lock_lock
+#define glthread_lock_unlock   libintl_lock_unlock
+#define glthread_lock_destroy  libintl_lock_destroy
+#define glthread_rwlock_init     libintl_rwlock_init
+#define glthread_rwlock_rdlock   libintl_rwlock_rdlock
+#define glthread_rwlock_wrlock   libintl_rwlock_wrlock
+#define glthread_rwlock_unlock   libintl_rwlock_unlock
+#define glthread_rwlock_destroy  libintl_rwlock_destroy
+#define glthread_recursive_lock_init     libintl_recursive_lock_init
+#define glthread_recursive_lock_lock     libintl_recursive_lock_lock
+#define glthread_recursive_lock_unlock   libintl_recursive_lock_unlock
+#define glthread_recursive_lock_destroy  libintl_recursive_lock_destroy
+#define glthread_once                 libintl_once
+#define glthread_once_call            libintl_once_call
+#define glthread_once_singlethreaded  libintl_once_singlethreaded
+])
+])
+
+
+dnl Checks for the core files of the intl subdirectory:
+dnl   dcigettext.c
+dnl   eval-plural.h
+dnl   explodename.c
+dnl   finddomain.c
+dnl   gettextP.h
+dnl   gmo.h
+dnl   hash-string.h hash-string.c
+dnl   l10nflist.c
+dnl   libgnuintl.h.in (except the *printf stuff)
+dnl   loadinfo.h
+dnl   loadmsgcat.c
+dnl   localealias.c
+dnl   log.c
+dnl   plural-exp.h plural-exp.c
+dnl   plural.y
+dnl Used by libglocale.
+AC_DEFUN([gt_INTL_SUBDIR_CORE],
+[
+  AC_REQUIRE([AC_C_INLINE])dnl
+  AC_REQUIRE([AC_TYPE_SIZE_T])dnl
+  AC_REQUIRE([gl_AC_HEADER_STDINT_H])
+  AC_REQUIRE([AC_FUNC_ALLOCA])dnl
+  AC_REQUIRE([AC_FUNC_MMAP])dnl
+  AC_REQUIRE([gt_INTDIV0])dnl
+  AC_REQUIRE([gl_AC_TYPE_UINTMAX_T])dnl
+  AC_REQUIRE([gl_HEADER_INTTYPES_H])dnl
+  AC_REQUIRE([gt_INTTYPES_PRI])dnl
+  AC_REQUIRE([gl_LOCK])dnl
+
+  AC_TRY_LINK(
+    [int foo (int a) { a = __builtin_expect (a, 10); return a == 10 ? 0 : 1; }],
+    [],
+    [AC_DEFINE([HAVE_BUILTIN_EXPECT], 1,
+       [Define to 1 if the compiler understands __builtin_expect.])])
+
+  AC_CHECK_HEADERS([argz.h limits.h unistd.h sys/param.h])
+  AC_CHECK_FUNCS([getcwd getegid geteuid getgid getuid mempcpy munmap \
+    stpcpy strcasecmp strdup strtoul tsearch argz_count argz_stringify \
+    argz_next __fsetlocking])
+
+  dnl Use the *_unlocked functions only if they are declared.
+  dnl (because some of them were defined without being declared in Solaris
+  dnl 2.5.1 but were removed in Solaris 2.6, whereas we want binaries built
+  dnl on Solaris 2.5.1 to run on Solaris 2.6).
+  dnl Don't use AC_CHECK_DECLS because it isn't supported in autoconf-2.13.
+  gt_CHECK_DECL(feof_unlocked, [#include <stdio.h>])
+  gt_CHECK_DECL(fgets_unlocked, [#include <stdio.h>])
+
+  AM_ICONV
+
+  dnl glibc >= 2.4 has a NL_LOCALE_NAME macro when _GNU_SOURCE is defined,
+  dnl and a _NL_LOCALE_NAME macro always.
+  AC_CACHE_CHECK([for NL_LOCALE_NAME macro], gt_cv_nl_locale_name,
+    [AC_TRY_LINK([#include <langinfo.h>
+#include <locale.h>],
+      [char* cs = nl_langinfo(_NL_LOCALE_NAME(LC_MESSAGES));],
+      gt_cv_nl_locale_name=yes,
+      gt_cv_nl_locale_name=no)
+    ])
+  if test $gt_cv_nl_locale_name = yes; then
+    AC_DEFINE(HAVE_NL_LOCALE_NAME, 1,
+      [Define if you have <langinfo.h> and it defines the NL_LOCALE_NAME macro if _GNU_SOURCE is defined.])
   fi
 
   dnl intl/plural.c is generated from intl/plural.y. It requires bison,
@@ -488,15 +576,12 @@ AC_DEFUN([gt_INTL_MACOSX],
   dnl Check for API introduced in MacOS X 10.2.
   AC_CACHE_CHECK([for CFPreferencesCopyAppValue],
     gt_cv_func_CFPreferencesCopyAppValue,
-    [gt_save_CPPFLAGS="$CPPFLAGS"
-     CPPFLAGS="$CPPFLAGS -I/System/Library/Frameworks/CoreFoundation.framework/Headers"
-     gt_save_LIBS="$LIBS"
-     LIBS="$LIBS -framework CoreFoundation"
-     AC_TRY_LINK([#include <CFPreferences.h>],
+    [gt_save_LIBS="$LIBS"
+     LIBS="$LIBS -Wl,-framework -Wl,CoreFoundation"
+     AC_TRY_LINK([#include <CoreFoundation/CFPreferences.h>],
        [CFPreferencesCopyAppValue(NULL, NULL)],
        [gt_cv_func_CFPreferencesCopyAppValue=yes],
        [gt_cv_func_CFPreferencesCopyAppValue=no])
-     CPPFLAGS="$gt_save_CPPFLAGS"
      LIBS="$gt_save_LIBS"])
   if test $gt_cv_func_CFPreferencesCopyAppValue = yes; then
     AC_DEFINE([HAVE_CFPREFERENCESCOPYAPPVALUE], 1,
@@ -504,14 +589,11 @@ AC_DEFUN([gt_INTL_MACOSX],
   fi
   dnl Check for API introduced in MacOS X 10.3.
   AC_CACHE_CHECK([for CFLocaleCopyCurrent], gt_cv_func_CFLocaleCopyCurrent,
-    [gt_save_CPPFLAGS="$CPPFLAGS"
-     CPPFLAGS="$CPPFLAGS -I/System/Library/Frameworks/CoreFoundation.framework/Headers"
-     gt_save_LIBS="$LIBS"
-     LIBS="$LIBS -framework CoreFoundation"
-     AC_TRY_LINK([#include <CFLocale.h>], [CFLocaleCopyCurrent();],
+    [gt_save_LIBS="$LIBS"
+     LIBS="$LIBS -Wl,-framework -Wl,CoreFoundation"
+     AC_TRY_LINK([#include <CoreFoundation/CFLocale.h>], [CFLocaleCopyCurrent();],
        [gt_cv_func_CFLocaleCopyCurrent=yes],
        [gt_cv_func_CFLocaleCopyCurrent=no])
-     CPPFLAGS="$gt_save_CPPFLAGS"
      LIBS="$gt_save_LIBS"])
   if test $gt_cv_func_CFLocaleCopyCurrent = yes; then
     AC_DEFINE([HAVE_CFLOCALECOPYCURRENT], 1,

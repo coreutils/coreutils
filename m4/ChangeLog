@@ -1,3 +1,13 @@
+2006-08-09  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* inttypes-h.m4, stdarg.m4: New files, from gnulib.
+	* prereq.m4 (gl_PREREQ): Require gl_STDARG_H.
+	Require gl_FOPEN_SAFER rather than gl_STDIO_SAFER (due to renaming).
+	* getline.m4, gettext.m4, inttypes-pri.m4, lib-link.m4, localcharset.m4:
+	* mbchar.m4, nls.m4, po.m4, stdint.m4, stdio-safer.m4, unistd-safer.m4:
+	* wcwidth.m4:
+	Update from gnulib.
+
 2006-08-08  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* memxfrm.m4, randint.m4, randperm.m4, randread.m4: New files.

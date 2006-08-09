@@ -50,11 +50,7 @@ version_etc_va (FILE *stream,
   {
     va_list tmp_authors;
 
-#ifdef __va_copy
-    __va_copy (tmp_authors, authors);
-#else
-    tmp_authors = authors;
-#endif
+    va_copy (tmp_authors, authors);
 
     n_authors = 0;
     while (va_arg (tmp_authors, const char *) != NULL)

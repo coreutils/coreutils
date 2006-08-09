@@ -1,4 +1,4 @@
-# wcwidth.m4 serial 3
+# wcwidth.m4 serial 4
 dnl Copyright (C) 2006 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
@@ -17,9 +17,7 @@ AC_DEFUN([gl_FUNC_WCWIDTH],
 
   AC_CHECK_DECLS([wcwidth], [], [], [
 /* AIX 3.2.5 declares wcwidth in <string.h>. */
-#if HAVE_STRING_H
-# include <string.h>
-#endif
+#include <string.h>
 #if HAVE_WCHAR_H
 # include <wchar.h>
 #endif

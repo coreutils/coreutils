@@ -13,7 +13,7 @@
 
    You should have received a copy of the GNU General Public License along
    with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. */
 
 #ifdef HAVE_CONFIG_H
 # include <config.h>
@@ -27,7 +27,9 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
+#if _LIBC || HAVE_UNISTD_H
+# include <unistd.h>
+#endif
 
 #if !_LIBC
 # include "allocsa.h"

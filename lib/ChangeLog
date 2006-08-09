@@ -1,3 +1,13 @@
+2006-08-09  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* allocsa.h, config.charset, error.c, error.h, exitfail.c, full-write.c:
+	* getaddrinfo.c, getaddrinfo.h, gettext.h, localcharset.c, mbchar.h:
+	* mbswidth.c, mkstemp-safer.c, pipe-safer.c, printf-args.c, quote.c:
+	* readlink.c, regex_internal.h, setenv.c, stdint_.h, stdio--.h:
+	* stdio-safer.h, stpcpy.c, strcspn.c, strtoimax.c, vasnprintf.h:
+	* version-etc.c, wcwidth.h:
+	Update from gnulib.
+
 2006-08-09  Jim Meyering  <jim@meyering.net>
 
 	* rand-isaac.c: Include <config.h>.

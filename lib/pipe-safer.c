@@ -1,5 +1,5 @@
 /* Invoke pipe, but avoid some glitches.
-   Copyright (C) 2005 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -24,13 +24,16 @@
 #include "unistd-safer.h"
 
 #include <unistd.h>
+#include <errno.h>
 
 /* Like pipe, but ensure that neither of the file descriptors is
-   STDIN_FILENO, STDOUT_FILENO, or STDERR_FILENO.  */
+   STDIN_FILENO, STDOUT_FILENO, or STDERR_FILENO.  Fail with ENOSYS on
+   platforms that lack pipe.  */
 
 int
 pipe_safer (int fd[2])
 {
+#if HAVE_FUNC_PIPE
   int fail = pipe (fd);
   if (fail)
     return fail;
@@ -47,4 +50,8 @@ pipe_safer (int fd[2])
   }
 
   return 0;
+#else /* ! HAVE_FUNC_PIPE */
+  errno = ENOSYS;
+  return -1;
+#endif
 }

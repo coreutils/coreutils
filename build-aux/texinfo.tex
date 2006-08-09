@@ -3,7 +3,7 @@
 % Load plain if necessary, i.e., if running under initex.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 %
-\def\texinfoversion{2006-06-19.13}
+\def\texinfoversion{2006-07-17.16}
 %
 % Copyright (C) 1985, 1986, 1988, 1990, 1991, 1992, 1993, 1994, 1995,
 % 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006 Free
@@ -327,9 +327,9 @@
       \pagebody{#1}%
       \ifdim\ht\footlinebox > 0pt
         % Only leave this space if the footline is nonempty.
-        % (We lessened \vsize for it in \oddfootingxxx.)
+        % (We lessened \vsize for it in \oddfootingyyy.)
         % The \baselineskip=24pt in plain's \makefootline has no effect.
-        \vskip 2\baselineskip
+        \vskip 24pt
         \unvbox\footlinebox
       \fi
       %
@@ -2051,11 +2051,11 @@ where each line of input produces a line of output.}
 % and arrange explicitly to hyphenate at a dash.
 %  -- rms.
 {
-  \catcode`\-=\active
-  \catcode`\_=\active
+  \catcode`\-=\active \catcode`\_=\active \catcode`\'=\active
   %
   \global\def\code{\begingroup
-    \catcode`\-=\active  \catcode`\_=\active
+    \catcode`\-=\active  \catcode`\_=\active \catcode`\'=\active
+    \let'\singlequotechar
     \ifallowcodebreaks
      \let-\codedash
      \let_\codeunder
@@ -2472,8 +2472,8 @@ where each line of input produces a line of output.}
   %
   % Leave some space for the footline.  Hopefully ok to assume
   % @evenfooting will not be used by itself.
-  \global\advance\pageheight by -\baselineskip
-  \global\advance\vsize by -\baselineskip
+  \global\advance\pageheight by -12pt
+  \global\advance\vsize by -12pt
 }
 
 \parseargdef\everyfooting{\oddfootingxxx{#1}\evenfootingxxx{#1}}
@@ -5042,7 +5042,7 @@ where each line of input produces a line of output.}
 {\tentt \global\dimen0 = 3em}% Width of the box.
 \dimen2 = .55pt % Thickness of rules
 % The text. (`r' is open on the right, `e' somewhat less so on the left.)
-\setbox0 = \hbox{\kern-.75pt \tensf error\kern-1.5pt}
+\setbox0 = \hbox{\kern-.75pt \reducedsf error\kern-1.5pt}
 %
 \setbox\errorbox=\hbox to \dimen0{\hfil
    \hsize = \dimen0 \advance\hsize by -5.8pt % Space to left+right.
@@ -5265,11 +5265,10 @@ where each line of input produces a line of output.}
 %
 \maketwodispenvs {lisp}{example}{%
   \nonfillstart
-  \tt
+  \tt\quoteexpand
   \let\kbdfont = \kbdexamplefont % Allow @kbd to do something special.
   \gobble       % eat return
 }
-
 % @display/@smalldisplay: same as @lisp except keep current font.
 %
 \makedispenv {display}{%
@@ -5397,6 +5396,22 @@ where each line of input produces a line of output.}
 \newdimen\tabw \setbox0=\hbox{\tt\space} \tabw=8\wd0 % tab amount
 %
 \def\starttabbox{\setbox0=\hbox\bgroup}
+
+% Allow an option to not replace quotes with a regular directed right
+% quote/apostrophe (char 0x27), but instead use the undirected quote
+% from cmtt (char 0x0d).  The undirected quote is ugly, so don't make it
+% the default, but it works for pasting with more pdf viewers (at least
+% evince), the lilypond developers report.  xpdf does work with the
+% regular 0x27.  
+% 
+\def\singlequotechar{%
+  \expandafter\ifx\csname SETcodequoteundirected\endcsname\relax
+    '%
+  \else
+    \char'15
+  \fi
+}
+%
 \begingroup
   \catcode`\^^I=\active
   \gdef\tabexpand{%
@@ -5409,7 +5424,13 @@ where each line of input produces a line of output.}
       \wd0=\dimen0 \box0 \starttabbox
     }%
   }
+  \catcode`\'=\active
+  \gdef\quoteexpand{%
+    \catcode`\'=\active
+    \def'{\singlequotechar}
+  }%
 \endgroup
+%
 \def\setupverbatim{%
   \let\nonarrowing = t%
   \nonfillstart
@@ -5418,6 +5439,7 @@ where each line of input produces a line of output.}
   \def\par{\leavevmode\egroup\box0\endgraf}%
   \catcode`\`=\active
   \tabexpand
+  \quoteexpand
   % Respect line breaks,
   % print special symbols as themselves, and
   % make each space count

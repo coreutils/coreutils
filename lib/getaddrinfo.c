@@ -140,7 +140,7 @@ getaddrinfo (const char *restrict nodename,
     return getaddrinfo_ptr (nodename, servname, hints, res);
 #endif
 
-  if (hints && (hints->ai_flags & ~AI_CANONNAME))
+  if (hints && (hints->ai_flags & ~(AI_CANONNAME|AI_PASSIVE)))
     /* FIXME: Support more flags. */
     return EAI_BADFLAGS;
 
@@ -153,8 +153,16 @@ getaddrinfo (const char *restrict nodename,
     return EAI_SOCKTYPE; /* FIXME: Better return code? */
 
   if (!nodename)
-    /* FIXME: Support server bind mode. */
-    return EAI_NONAME;
+    {
+      if (!(hints->ai_flags & AI_PASSIVE))
+	return EAI_NONAME;
+
+#ifdef HAVE_IPV6
+      nodename = (hint->ai_family == AF_INET6) ? "::" : "0.0.0.0";
+#else
+      nodename = "0.0.0.0";
+#endif
+    }
 
   if (servname)
     {

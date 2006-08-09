@@ -1,3 +1,7 @@
+2006-08-09  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* texinfo.tex: Update from gnulib.
+
 2006-07-25  Jim Meyering  <jim@meyering.net>
 
 	* vc-list-files: Handle git repositories, too.
