@@ -1,3 +1,7 @@
+2006-08-09  Jim Meyering  <jim@meyering.net>
+
+	* tests/misc/sort-rand: Remove use of --seed=S.
+
 2006-08-08  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Add a command 'shuf', and modify shred and sort to use the new

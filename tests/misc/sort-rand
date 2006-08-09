@@ -23,7 +23,7 @@ fi
 
 fail=0
 
-sort --seed=$$ --random-sort in > out || fail=1
+sort --random-sort in > out || fail=1
 
 # Fail if the input is the same as the output.
 # This is a probabilistic test :-)
