@@ -21,11 +21,13 @@ TERM con80x50
 TERM con80x60
 TERM cygwin
 TERM dtterm
+TERM mlterm
 TERM putty
 TERM xterm
 TERM xterm-color
 TERM xterm-debian
 TERM rxvt
+TERM rxvt-unicode
 TERM screen
 TERM screen-bce
 TERM screen-w
