@@ -1,3 +1,7 @@
+2006-08-09  Jim Meyering  <jim@meyering.net>
+
+	* POTFILES.in: Add lib/randread.c, lib/xmemxfrm.c, and src/shuf.c.
+
 2006-02-27  Jim Meyering  <jim@meyering.net>
 
 	* POTFILES.in: Add src/base64.c.

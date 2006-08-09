@@ -15,12 +15,14 @@ lib/mkdir-p.c
 lib/obstack.c
 lib/openat-die.c
 lib/quotearg.c
+lib/randread.c
 lib/root-dev-ino.h
 lib/rpmatch.c
 lib/unicodeio.c
 lib/userspec.c
 lib/version-etc.c
 lib/xalloc-die.c
+lib/xmemxfrm.c
 lib/xfts.c
 lib/xmemcoll.c
 
@@ -89,6 +91,7 @@ src/rmdir.c
 src/seq.c
 src/setuidgid.c
 src/shred.c
+src/shuf.c
 src/sleep.c
 src/sort.c
 src/split.c
