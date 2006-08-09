@@ -5,7 +5,7 @@
 2006-08-08  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Makefile.am (libcoreutils_a_SOURCES): Add xmemxfrm.c, xmemxfrm.h.
-	* memxfrm.c, memxfrm.h, randint.c, randint.h, randperm.c, randperm.h: New files.
+	* memxfrm.c, memxfrm.h, randint.c, randint.h, randperm.c, randperm.h:
 	* randread.c, randread.h, xmemxfrm.c, xmemxfrm.h: New files.
 	* rand-isaac.h: New file.
 	* rand-isaac.c: New file, mostly taken from ../src/rand-isaac.c.
@@ -24,7 +24,7 @@
 2006-07-19  Mike Frysinger  <vapier@gentoo.org>
 
 	* lib/mountlist.c [ME_REMOTE]: Filter out cifs.
-	Reported by Toralf Förster in <http://bugs.gentoo.org/141012>.
+	Reported by Toralf FÃ¶rster in <http://bugs.gentoo.org/141012>.
 
 2006-07-20  Jim Meyering  <jim@meyering.net>
 
