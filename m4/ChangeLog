@@ -1,3 +1,12 @@
+2006-08-10  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Accommodate new getaddrinfo implementation in gnulib.
+	* arpa_inet_h.m4, inet_ntop.m4, netinet_in_h.m4, snprintf.m4:
+	New files, from gnulib.
+	* prereq.m4 (gl_PREREQ): Require gl_FUNC_SNPRINTF, gl_GETADDRINFO,
+	gl_HEADER_ARPA_INET, gl_HEADER_NETINET_IN, gl_HEADER_SYS_SOCKET,
+	gl_INET_NTOP, gl_TYPE_SOCKEN_T.
+
 2006-08-09  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* inttypes-h.m4, stdarg.m4: New files, from gnulib.
