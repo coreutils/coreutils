@@ -1,5 +1,24 @@
 2006-08-10  Paul Eggert  <eggert@cs.ucla.edu>
 
+	Import the following changes from libc:
+
+	2006-06-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/regex_internal.c (re_string_skip_chars): If no character has
+	been converted at all, set *last_wc to WEOF.  If mbrtowc failed, set wc
+	to the byte which couldn't be converted.
+	(re_string_reconstruct): Don't clear valid_raw_len before calling
+	re_string_skip_chars.  If wc is WEOF after re_string_skip_chars, set
+	tip_context using re_string_context_at.
+
+	2006-05-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/regex.h: g++ still cannot handled [restrict].
+
+	2006-04-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/regex.h: Remove special handling for VMS.
+
 	Accommodate new getaddrinfo implementation in gnulib.
 	* inet_ntop.c, inet_ntop.h, snprintf.c, snprintf.h, socket_.h:
 	New files, from gnulib.

@@ -37,12 +37,6 @@ extern "C" {
 # define __USE_GNU_REGEX 1
 #endif
 
-#ifdef __VMS
-/* VMS doesn't have `size_t' in <sys/types.h>, even though POSIX says it
-   should be there.  */
-# include <stddef.h>
-#endif
-
 #ifdef _REGEX_LARGE_OFFSETS
 
 /* Use types and values that are wide enough to represent signed and
@@ -641,9 +635,10 @@ extern int re_exec (const char *);
 #  endif
 # endif
 #endif
-/* gcc 3.1 and up support the [restrict] syntax, but g++ doesn't.  */
+/* gcc 3.1 and up support the [restrict] syntax.  */
 #ifndef __restrict_arr
-# if (__GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 1)) && !defined __cplusplus
+# if (__GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 1)) \
+     && !defined __GNUG__
 #  define __restrict_arr __restrict
 # else
 #  define __restrict_arr
