@@ -251,7 +251,7 @@ AC_CHECK_DECLS([strtoimax, strtoumax])
 cu_LIB_CHECK
 
 AM_GNU_GETTEXT([external], [need-ngettext])
-AM_GNU_GETTEXT_VERSION(0.13.1)
+AM_GNU_GETTEXT_VERSION([0.15])
 
 AC_CONFIG_FILES(
   Makefile
