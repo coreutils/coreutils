@@ -29,6 +29,8 @@ regex.c
 regex.h
 regex_internal.c
 regex_internal.h
+snprintf.h
+socket_.h
 stat-time.h
 stdbool_.h
 stdint_.h
