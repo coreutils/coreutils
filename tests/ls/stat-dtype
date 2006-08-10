@@ -14,7 +14,11 @@ fi
 # FIXME: use a more dynamic test for this, since whether d_type is useful
 # depends on much more than the file system type.  For example, with
 # linux-2.6.15, at least tmpfs and ext3 work, but reiserfs and xfs don't.
-df -t tmpfs -t ext3 . 2> /dev/null ||
+# Also, tmpfs on Solaris 10 lacks d_type support.
+skip=yes
+test `uname -s` = Linux && df -t tmpfs . > /dev/null 2>&1 && skip=no
+df -t ext3 . > /dev/null 2>&1 && skip=no
+test $skip = yes &&
   {
     echo "$0: '.' is not on a suitable file system for this test" 1>&2
     echo "$0: skipping this test" 1>&2

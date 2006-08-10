@@ -1,5 +1,9 @@
 2006-08-10  Jim Meyering  <jim@meyering.net>
 
+	* tests/ls/stat-dtype: If "." is tmpfs, skip this test unless uname -s
+	reports "Linux".  This avoids a failure on Solaris 10's tmpfs.
+	Redirect both stdout and stderr of df invocations.
+
 	* src/dircolors.hin: Add a TERM directive for each of the following:
 	ansi, color-xterm, gnome, konsole, kterm, rxvt-cygwin,
 	rxvt-cygwin-native, screen.linux, xterm-256color.
