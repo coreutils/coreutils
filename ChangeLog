@@ -1,3 +1,11 @@
+2006-08-10  Jim Meyering  <jim@meyering.net>
+
+	* src/dircolors.hin: Add a TERM directive for each of the following:
+	ansi, color-xterm, gnome, konsole, kterm, rxvt-cygwin,
+	rxvt-cygwin-native, screen.linux, xterm-256color.
+	Sort the TERM directives.
+	From Mike Frysinger.
+
 2006-08-09  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/dd.c (usage): Warn about oflag=append without conv=notrunc.

@@ -5,10 +5,9 @@
 # slackware version of dircolors) are recognized but ignored.
 
 # Below, there should be one TERM entry for each termtype that is colorizable
-TERM linux
-TERM linux-c
-TERM mach-color
-TERM console
+TERM Eterm
+TERM ansi
+TERM color-xterm
 TERM con132x25
 TERM con132x30
 TERM con132x43
@@ -19,20 +18,30 @@ TERM con80x30
 TERM con80x43
 TERM con80x50
 TERM con80x60
+TERM console
 TERM cygwin
 TERM dtterm
+TERM gnome
+TERM konsole
+TERM kterm
+TERM linux
+TERM linux-c
+TERM mach-color
 TERM mlterm
 TERM putty
-TERM xterm
-TERM xterm-color
-TERM xterm-debian
 TERM rxvt
+TERM rxvt-cygwin
+TERM rxvt-cygwin-native
 TERM rxvt-unicode
 TERM screen
 TERM screen-bce
 TERM screen-w
+TERM screen.linux
 TERM vt100
-TERM Eterm
+TERM xterm
+TERM xterm-256color
+TERM xterm-color
+TERM xterm-debian
 
 # Below are the color init strings for the basic file types. A color init
 # string consists of one or more of the following numeric codes:
