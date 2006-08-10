@@ -37,12 +37,14 @@ libcoreutils_a_SOURCES = \
   full-write.c full-write.h \
   getaddrinfo.h \
   gettext.h \
+  inet_ntop.h \
   localcharset.c localcharset.h \
   mbchar.h \
   mbswidth.c mbswidth.h \
   mbuiter.h \
   readtokens0.c readtokens0.h \
   setenv.h \
+  snprintf.h \
   strcase.h \
   strnlen1.c strnlen1.h \
   strstr.h \
@@ -71,6 +73,7 @@ lib_OBJECTS = $(libcoreutils_a_OBJECTS)
 BUILT_SOURCES = getdate.c
 CLEANFILES =
 MAINTAINERCLEANFILES = $(BUILT_SOURCES)
+MOSTLYCLEANDIRS =
 MOSTLYCLEANFILES =
 SUFFIXES =
 
@@ -188,6 +191,40 @@ MOSTLYCLEANFILES += fnmatch.h fnmatch.h-t
 
 BUILT_SOURCES += $(GETOPT_H)
 EXTRA_DIST += getopt_.h getopt_int.h
+
+BUILT_SOURCES += $(ARPA_INET_H)
+
+# We need the following in order to create <arpa/inet.h> when the system
+# doesn't have one.
+arpa/inet.h:
+	test -d arpa || mkdir arpa
+	echo '#include <sys/socket.h>' >$@-t
+	mv $@-t $@
+MOSTLYCLEANFILES += arpa/inet.h arpa/inet.h-t
+MOSTLYCLEANDIRS += arpa
+
+BUILT_SOURCES += $(SYS_SOCKET_H)
+EXTRA_DIST += socket_.h
+
+BUILT_SOURCES += $(NETINET_IN_H)
+
+# We need the following in order to create <netinet/in.h> when the system
+# doesn't have one.
+netinet/in.h:
+	test -d netinet || mkdir netinet
+	echo '#include <sys/socket.h>' >$@-t
+	mv $@-t $@
+MOSTLYCLEANFILES += netinet/in.h netinet/in.h-t
+MOSTLYCLEANDIRS += netinet
+
+# We need the following in order to create <sys/socket.h> when the system
+# doesn't have one that works with the given compiler.
+sys/socket.h: socket_.h
+	test -d sys || mkdir sys
+	cp $(srcdir)/socket_.h $@-t
+	mv $@-t $@
+MOSTLYCLEANFILES += sys/socket.h sys/socket.h-t
+MOSTLYCLEANDIRS += sys
 
 check: unit-test
 

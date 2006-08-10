@@ -1,3 +1,17 @@
+2006-08-10  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Accommodate new getaddrinfo implementation in gnulib.
+	* inet_ntop.c, inet_ntop.h, snprintf.c, snprintf.h, socket_.h:
+	New files, from gnulib.
+	* .cppi-disable: Add snprintf.h, socket_.h.
+	* Makefile.am (libcoreutils_a_SOURCES): Add inet_ntop.h, snprintf.h.
+	(MOSTLYCLEANDIRS): New macro.
+	(BUILT_SOURCES): Add $(ARPA_INET_H), $(SYS_SOCKET_H), $(NETINET_IN_H).
+	(arpa/inet.h, netinet/in.h, sys/socket.h): New rules.
+	(MOSTLYCLEANFILES): Add arpa/inet.h, arpa/inet.h-t, netinet/in.h,
+	netinet/in.h-t, sys/socket.h, sys/socket.h-t.
+	(EXTRA_DIST): Add socket_.h.
+
 2006-08-09  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* allocsa.h, config.charset, error.c, error.h, exitfail.c, full-write.c:
