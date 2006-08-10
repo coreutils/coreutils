@@ -1,5 +1,7 @@
 #!/bin/sh
 # Ensure that ls --file-type does not call stat unnecessarily.
+# The trick is to create an un-stat'able symlink and to see if ls
+# can report its type nonetheless, using dirent.d_type.
 
 if test "$VERBOSE" = yes; then
   set -x
