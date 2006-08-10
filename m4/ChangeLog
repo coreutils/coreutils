@@ -1,3 +1,10 @@
+2006-08-10  Jim Meyering  <jim@meyering.net>
+
+	Update from gnulib.
+	* cycle-check.m4 (gl_CYCLE_CHECK): Don't mention same-inode.h.
+	Require gl_STRUCT_DEV_INO and gl_SAME_INODE.
+	* dev-ino.m4, same-inode.m4: New files.
+
 2006-08-10  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Accommodate new getaddrinfo implementation in gnulib.
