@@ -69,7 +69,6 @@ struct control
   bool ignore;			/* If true, produce no output (for regexp). */
   bool regexpr;			/* True if regular expression was used. */
   struct re_pattern_buffer re_compiled;	/* Compiled regular expression. */
-  char fastmap[UCHAR_MAX + 1];	/* Fastmap for RE_COMPILED.  */
 };
 
 /* Initial size of data area in buffers. */
@@ -1119,7 +1118,7 @@ extract_regexp (int argnum, bool ignore, char const *str)
   p->regexpr = true;
   p->re_compiled.buffer = NULL;
   p->re_compiled.allocated = 0;
-  p->re_compiled.fastmap = p->fastmap;
+  p->re_compiled.fastmap = xmalloc (UCHAR_MAX + 1);
   p->re_compiled.translate = NULL;
   re_syntax_options =
     RE_SYNTAX_POSIX_BASIC & ~RE_CONTEXT_INVALID_DUP & ~RE_NO_EMPTY_RANGES;

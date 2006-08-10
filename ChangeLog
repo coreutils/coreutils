@@ -1,3 +1,10 @@
+2006-08-10  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/csplit.c (struct control): Remove fastmap member.
+	(extract_regexp): Allocate fastmap separately, since otherwise
+	it might move due to a realloc.  This fixes a bug that led
+	to a core dump on 64-bit sparc Solaris 10 (Sun Studio 10).
+
 2006-08-10  Jim Meyering  <jim@meyering.net>
 
 	* tests/ls/stat-dtype: If "." is tmpfs, skip this test unless uname -s
