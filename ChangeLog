@@ -1,5 +1,10 @@
 2006-08-10  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* ABOUT-NLS: Update from gettext 0.15.
+	* configure.ac (AM_GNU_GETTEXT_VERSION): Update from 0.13.1 to 0.15.
+	* Makefile.maint (my-distcheck): Don't bother with --disable-nls,
+	as it shouldn't be needed with gettext 0.15.
+
 	* src/csplit.c (struct control): Remove fastmap member.
 	(extract_regexp): Allocate fastmap separately, since otherwise
 	it might move due to a realloc.  This fixes a bug that led
