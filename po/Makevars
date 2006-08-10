@@ -8,7 +8,14 @@ subdir = po
 top_builddir = ..
 
 # These options get passed to xgettext.
-XGETTEXT_OPTIONS = --keyword=_ --keyword=N_ --from-code=UTF-8
+XGETTEXT_OPTIONS = \
+  --from-code=UTF-8 \
+  --keyword=_ --flag=_:1:pass-c-format \
+  --keyword=N_ --flag=N_:1:pass-c-format \
+  --flag=error:3:c-format --flag=error_at_line:5:c-format \
+  --flag=asprintf:2:c-format --flag=vasprintf:2:c-format \
+  --flag=asnprintf:3:c-format --flag=vasnprintf:3:c-format \
+  --flag=wrapf:1:c-format
 
 # This is the copyright holder that gets inserted into the header of the
 # $(DOMAIN).pot file.  Set this to the copyright holder of the surrounding
@@ -39,3 +46,9 @@ MSGID_BUGS_ADDRESS = bug-coreutils@gnu.org
 # This is the list of locale categories, beyond LC_MESSAGES, for which the
 # message catalogs shall be used.  It is usually empty.
 EXTRA_LOCALE_CATEGORIES = LC_TIME
+
+# This tells whether the $(DOMAIN).pot file contains messages with an 'msgctxt'
+# context.  Possible values are "yes" and "no".  Set this to yes if the
+# package uses functions taking also a message context, like pgettext(), or
+# if in $(XGETTEXT_OPTIONS) you define keywords with a context argument.
+USE_MSGCTXT = no
