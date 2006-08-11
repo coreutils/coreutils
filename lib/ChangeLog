@@ -1,3 +1,9 @@
+2006-08-11  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* snprintf.c (snprintf): memcpy LEN bytes, not SIZE - 1, when
+	LEN is smaller than SIZE.  Suggested by Bruno Haible.
+	Also, help the compiler to keep LEN in a register.
+
 2006-08-10  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Import the following changes from libc:
