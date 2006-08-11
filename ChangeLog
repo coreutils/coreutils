@@ -1,3 +1,10 @@
+2006-08-11  Jim Meyering  <jim@meyering.net>
+
+	* tests/ls/stat-vs-dirent: Too many (losing) systems trigger the
+	failure that this test checks for (stat/dirent inode mismatch at
+	a mount point), so continue to give a diagnostic about the failure,
+	but don't actually count it as a failure.
+
 2006-08-10  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* ABOUT-NLS: Update from gettext 0.15.
