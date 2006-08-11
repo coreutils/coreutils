@@ -49,7 +49,7 @@ snprintf (char *str, size_t size, const char *format, ...)
   va_list args;
 
   va_start (args, format);
-  output = vasnprintf (str, &len, format, args);
+  output = vasnprintf (str, &lenbuf, format, args);
   len = lenbuf;
   va_end (args);
 
