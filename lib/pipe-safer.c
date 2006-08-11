@@ -33,25 +33,27 @@
 int
 pipe_safer (int fd[2])
 {
-#if HAVE_FUNC_PIPE
-  int fail = pipe (fd);
-  if (fail)
-    return fail;
+#if HAVE_PIPE
+  if (pipe (fd) == 0)
+    {
+      int i;
+      for (i = 0; i < 2; i++)
+	{
+	  fd[i] = fd_safer (fd[i]);
+	  if (fd[i] < 0)
+	    {
+	      int e = errno;
+	      close (fd[1 - i]);
+	      errno = e;
+	      return -1;
+	    }
+	}
 
-  {
-    int i;
-    for (i = 0; i < 2; i++)
-      {
-	int f = fd_safer (fd[i]);
-	if (f < 0)
-	  return -1;
-	fd[i] = f;
-      }
-  }
-
-  return 0;
-#else /* ! HAVE_FUNC_PIPE */
+      return 0;
+    }
+#else
   errno = ENOSYS;
-  return -1;
 #endif
+
+  return -1;
 }

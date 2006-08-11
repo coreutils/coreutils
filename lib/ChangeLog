@@ -1,5 +1,8 @@
 2006-08-11  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* pipe-safer.c (pipe_safer): Fix misspelling: HAVE_FUNC_PIPE ->
+	HAVE_PIPE.  Fix a file descriptor leak when fd_safer fails.
+
 	* regex_internal.c (re_string_skip_chars): Don't assume WEOF fits
 	in wchar_t.  Problem reported by Eric Blake.
 
