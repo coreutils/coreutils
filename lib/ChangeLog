@@ -1,5 +1,8 @@
 2006-08-11  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* regex_internal.c (re_string_skip_chars): Don't assume WEOF fits
+	in wchar_t.  Problem reported by Eric Blake.
+
 	* snprintf.c (snprintf): memcpy LEN bytes, not SIZE - 1, when
 	LEN is smaller than SIZE.  Suggested by Bruno Haible.
 	Also, help the compiler to keep LEN in a register.
