@@ -1,3 +1,9 @@
+2006-08-11  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* configure.ac (AM_GNU_GETTEXT): Upgrade to need-formatstring-macros.
+	Suggested by Eric Blake to avoid problems like
+	<http://lists.gnu.org/archive/html/bug-coreutils/2006-07/msg00087.html>.
+
 2006-08-11  Jim Meyering  <jim@meyering.net>
 
 	* tests/ls/stat-vs-dirent: Too many (losing) systems trigger the

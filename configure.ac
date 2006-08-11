@@ -250,7 +250,7 @@ AC_CHECK_DECLS([strtoimax, strtoumax])
 
 cu_LIB_CHECK
 
-AM_GNU_GETTEXT([external], [need-ngettext])
+AM_GNU_GETTEXT([external], [need-formatstring-macros])
 AM_GNU_GETTEXT_VERSION([0.15])
 
 AC_CONFIG_FILES(
