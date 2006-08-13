@@ -202,17 +202,17 @@ not effective, or is not guaranteed to be effective in all file system modes:\n\
 "), stdout);
       fputs (_("\
 * log-structured or journaled file systems, such as those supplied with\n\
-  AIX and Solaris (and JFS, ReiserFS, XFS, Ext3, etc.)\n\
+AIX and Solaris (and JFS, ReiserFS, XFS, Ext3, etc.)\n\
 \n\
 * file systems that write redundant data and carry on even if some writes\n\
-  fail, such as RAID-based file systems\n\
+fail, such as RAID-based file systems\n\
 \n\
 * file systems that make snapshots, such as Network Appliance's NFS server\n\
 \n\
 "), stdout);
       fputs (_("\
 * file systems that cache in temporary locations, such as NFS\n\
-  version 3 clients\n\
+version 3 clients\n\
 \n\
 * compressed file systems\n\
 \n\

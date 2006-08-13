@@ -1,3 +1,9 @@
+2006-08-13  Jim Meyering  <jim@meyering.net>
+
+	* src/shred.c (usage): Don't indent the second line of an item.
+	Otherwise, help2man would misformat the output.
+	Reported by Adam Buchbinder in <https://launchpad.net/bugs/48917>.
+
 2006-08-11  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* configure.ac (AM_GNU_GETTEXT): Upgrade to need-formatstring-macros.
