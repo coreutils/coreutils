@@ -1,3 +1,8 @@
+2006-08-14  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* memcoll.c (memcoll): Optimize for the common case where the
+	arguments are bytewise equal.
+
 2006-08-11  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* pipe-safer.c (pipe_safer): Fix misspelling: HAVE_FUNC_PIPE ->

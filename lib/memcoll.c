@@ -38,39 +38,48 @@ memcoll (char *s1, size_t s1len, char *s2, size_t s2len)
 
 #if HAVE_STRCOLL
 
-  char n1 = s1[s1len];
-  char n2 = s2[s2len];
+  /* strcoll is slow on many platforms, so check for the common case
+     where the arguments are bytewise equal.  Otherwise, walk through
+     the buffers using strcoll on each substring.  */
 
-  s1[s1len++] = '\0';
-  s2[s2len++] = '\0';
-
-  while (! (errno = 0, (diff = strcoll (s1, s2)) || errno))
+  if (s1len == s2len && memcmp (s1, s2, s1len) == 0)
+    diff = 0;
+  else
     {
-      /* strcoll found no difference, but perhaps it was fooled by NUL
-	 characters in the data.  Work around this problem by advancing
-	 past the NUL chars.  */
-      size_t size1 = strlen (s1) + 1;
-      size_t size2 = strlen (s2) + 1;
-      s1 += size1;
-      s2 += size2;
-      s1len -= size1;
-      s2len -= size2;
+      char n1 = s1[s1len];
+      char n2 = s2[s2len];
 
-      if (s1len == 0)
+      s1[s1len++] = '\0';
+      s2[s2len++] = '\0';
+
+      while (! (errno = 0, (diff = strcoll (s1, s2)) || errno))
 	{
-	  if (s2len != 0)
-	    diff = -1;
-	  break;
+	  /* strcoll found no difference, but perhaps it was fooled by NUL
+	     characters in the data.  Work around this problem by advancing
+	     past the NUL chars.  */
+	  size_t size1 = strlen (s1) + 1;
+	  size_t size2 = strlen (s2) + 1;
+	  s1 += size1;
+	  s2 += size2;
+	  s1len -= size1;
+	  s2len -= size2;
+
+	  if (s1len == 0)
+	    {
+	      if (s2len != 0)
+		diff = -1;
+	      break;
+	    }
+	  else if (s2len == 0)
+	    {
+	      diff = 1;
+	      break;
+	    }
 	}
-      else if (s2len == 0)
-	{
-	  diff = 1;
-	  break;
-	}
+
+      s1[s1len - 1] = n1;
+      s2[s2len - 1] = n2;
     }
-
-  s1[s1len - 1] = n1;
-  s2[s2len - 1] = n2;
 
 #else
 
