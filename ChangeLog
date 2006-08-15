@@ -1,5 +1,10 @@
 2006-08-15  Jim Meyering  <jim@meyering.net>
 
+	* NEWS: Add a line for 6.1-cvs.
+	* configure.ac (AC_INIT): Bump to 6.1 and add "-cvs" suffix.
+
+2006-08-15  Jim Meyering  <jim@meyering.net>
+
 	* Version 6.0.
 	* NEWS: Record the 6.0 release date.
 	* configure.ac (AC_INIT): Remove "-cvs" suffix from version string.
