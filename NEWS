@@ -59,10 +59,16 @@ GNU coreutils NEWS                                    -*- outline -*-
   date: a command like date -d '2006-04-23 21 days ago' would print
   the wrong date in some time zones.  (see the test for an example)
 
-  df now considers "none" and "proc" file systems to be dummies and
-  therefore does not normally display them.  Also, inaccessible file
-  systems (which can be caused by shadowed mount points or by chrooted
-  bind mounts) are now dummies, too.
+  df changes:
+
+    df now considers "none" and "proc" file systems to be dummies and
+    therefore does not normally display them.  Also, inaccessible file
+    systems (which can be caused by shadowed mount points or by
+    chrooted bind mounts) are now dummies, too.
+
+    df now fails if it generates no output, so you can inspect the
+    exit status of a command like "df -t ext3 -t reiserfs DIR" to test
+    whether DIR is on a file system of type "ext3" or "reiserfs".
 
   expr no longer complains about leading ^ in a regular expression
   (the anchor is ignored), or about regular expressions like A** (the

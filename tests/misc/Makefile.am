@@ -27,6 +27,7 @@ TESTS = \
   csplit \
   date \
   date-sec \
+  df \
   dirname \
   expand \
   false-status \

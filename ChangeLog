@@ -1,5 +1,23 @@
 2006-08-15  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* NEWS: Mention that df exits with nonzero status if it generates
+	no output.  This change was in 6.0 but inadvertently unmentioned.
+	* src/df.c (file_systems_processed): Renamed from n_valid_args, and now
+	a boolean.
+	(show_dev): Don't set it until we actually output something.
+	Print the header if this is the first output.
+	(main): Don't print a header, as that is now show_dev's job.
+	* tests/misc/Makefile.am (TESTS): Add df.
+	* tests/misc/df: New file.
+
+2006-08-15 Eric Blake <ebb9@byu.net>
+
+	* src/stat.c (USE_STATVFS): Define to 0 if f_type is needed, but
+	statvfs.f_type not present.  See
+	<http://savannah.gnu.org/bugs/?func=detailitem&item_id=16325>.
+
+2006-08-15  Paul Eggert  <eggert@cs.ucla.edu>
+
 	* src/dd.c (print_stats): Don't substitute "1" for number, as this
 	causes confusion for the Hungarian translators.  Problem reported
 	by Egmont Koblinger.

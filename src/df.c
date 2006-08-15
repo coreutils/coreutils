@@ -68,8 +68,8 @@ static uintmax_t output_block_size;
 /* If true, use the POSIX output format.  */
 static bool posix_format;
 
-/* Count the number of valid arguments.  */
-static unsigned int n_valid_args;
+/* True if a file system has been processed for output.  */
+static bool file_systems_processed;
 
 /* If true, invoke the `sync' system call before getting any usage data.
    Using this option can make df very slow, especially with many or very
@@ -295,8 +295,6 @@ show_dev (char const *disk, char const *mount_point,
   if (!selected_fstype (fstype) || excluded_fstype (fstype))
     return;
 
-  ++n_valid_args;
-
   /* If MOUNT_POINT is NULL, then the file system is not mounted, and this
      program reports on the file system that the special file is on.
      It would be better to report on the unmounted file system,
@@ -313,6 +311,12 @@ show_dev (char const *disk, char const *mount_point,
 
   if (fsu.fsu_blocks == 0 && !show_all_fs && !show_listed_fs)
     return;
+
+  if (! file_systems_processed)
+    {
+      file_systems_processed = true;
+      print_header ();
+    }
 
   if (! disk)
     disk = "-";			/* unknown */
@@ -786,6 +790,7 @@ main (int argc, char **argv)
 				     &output_block_size);
 
   print_type = false;
+  file_systems_processed = false;
   posix_format = false;
   exit_status = EXIT_SUCCESS;
 
@@ -928,20 +933,14 @@ main (int argc, char **argv)
       /* Display explicitly requested empty file systems. */
       show_listed_fs = true;
 
-      if (n_valid_args > 0)
-	print_header ();
-
       for (i = optind; i < argc; ++i)
 	if (argv[i])
 	  show_entry (argv[i], &stats[i - optind]);
     }
   else
-    {
-      print_header ();
-      show_all_entries ();
-    }
+    show_all_entries ();
 
-  if (n_valid_args == 0)
+  if (! file_systems_processed)
     error (EXIT_FAILURE, 0, _("no file systems processed"));
 
   exit (exit_status);

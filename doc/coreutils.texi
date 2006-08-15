@@ -9426,6 +9426,10 @@ Ignored; for compatibility with System V versions of @command{df}.
 @end table
 
 @exitstatus
+Failure includes the case where no output is generated, so you can
+inspect the exit status of a command like @samp{df -t ext3 -t reiserfs
+@var{dir}} to test whether @var{dir} is on a file system of type
+@samp{ext3} or @samp{reiserfs}.
 
 
 @node du invocation
