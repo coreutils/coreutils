@@ -65,52 +65,53 @@ DIST_COMMON = README $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	getpass.c getpass.h gettime.c gettimeofday.c getugroups.c \
 	getusershell.c group-member.c group-member.h hard-locale.c \
 	hard-locale.h hash-pjw.c hash-pjw.h hash.c hash.h human.c \
-	human.h idcache.c imaxtostr.c intprops.h inttostr.c inttostr.h \
-	lchmod.h lchown.c lchown.h linebuffer.c linebuffer.h \
-	long-options.c long-options.h lstat.c lstat.h malloc.c \
-	mbchar.c md5.c md5.h memcasecmp.c memcasecmp.h memchr.c \
-	memcmp.c memcoll.c memcoll.h memcpy.c memmove.c mempcpy.c \
-	mempcpy.h memrchr.c memrchr.h memset.c memxfrm.c memxfrm.h \
-	mkancesdirs.c mkancesdirs.h mkdir-p.c mkdir-p.h mkdir.c \
-	mkdirat.c mkstemp-safer.c mkstemp.c mktime.c modechange.c \
-	modechange.h mountlist.c mountlist.h nanosleep.c obstack.c \
-	obstack.h offtostr.c open-safer.c openat-die.c openat-priv.h \
-	openat.c openat.h pathmax.h physmem.c physmem.h pipe-safer.c \
-	posixtm.c posixtm.h posixver.c posixver.h printf-args.c \
-	printf-parse.c putenv.c quote.c quote.h quotearg.c quotearg.h \
-	raise.c rand-isaac.c rand-isaac.h randint.c randint.h \
-	randperm.c randperm.h randread.c randread.h readlink.c \
-	readtokens.c readtokens.h readutmp.c readutmp.h realloc.c \
-	regcomp.c regex.c regex.h regex_internal.c regex_internal.h \
-	regexec.c rename.c rmdir.c root-dev-ino.c root-dev-ino.h \
-	rpmatch.c safe-read.c safe-read.h safe-write.c safe-write.h \
-	same-inode.h same.c same.h save-cwd.c save-cwd.h savedir.c \
-	savedir.h setenv.c settime.c sha1.c sha1.h sha256.c sha256.h \
-	sha512.c sha512.h sig2str.c sig2str.h stat-macros.h \
-	stat-time.h stdio--.h stdio-safer.h stdlib--.h stdlib-safer.h \
-	stpcpy.c strcasecmp.c strcspn.c strdup.c strdup.h strftime.c \
-	strftime.h strintcmp.c stripslash.c strncasecmp.c strndup.c \
-	strndup.h strnlen.c strnlen.h strnumcmp-in.h strnumcmp.c \
-	strnumcmp.h strpbrk.c strstr.c strtod.c strtoimax.c strtol.c \
-	strtoll.c strtoul.c strtoull.c strtoumax.c strverscmp.c \
-	strverscmp.h tempname.c time_r.c time_r.h timespec.h \
-	umaxtostr.c unistd--.h unistd-safer.h unlinkdir.c unlinkdir.h \
-	unlocked-io.h unsetenv.c userspec.c userspec.h utime.c \
-	utimecmp.c utimecmp.h utimens.c utimens.h vasnprintf.c \
-	vasprintf.c version-etc-fsf.c version-etc.c version-etc.h \
-	xalloc.h xfts.c xfts.h xgetcwd.c xgetcwd.h xmalloc.c \
-	xnanosleep.c xnanosleep.h xreadlink.c xreadlink.h xstrtod.c \
-	xstrtod.h xstrtol.c xstrtol.h xstrtold.c xstrtoul.c xtime.h \
-	yesno.c yesno.h
+	human.h idcache.c imaxtostr.c inet_ntop.c intprops.h \
+	inttostr.c inttostr.h lchmod.h lchown.c lchown.h linebuffer.c \
+	linebuffer.h long-options.c long-options.h lstat.c lstat.h \
+	malloc.c mbchar.c md5.c md5.h memcasecmp.c memcasecmp.h \
+	memchr.c memcmp.c memcoll.c memcoll.h memcpy.c memmove.c \
+	mempcpy.c mempcpy.h memrchr.c memrchr.h memset.c memxfrm.c \
+	memxfrm.h mkancesdirs.c mkancesdirs.h mkdir-p.c mkdir-p.h \
+	mkdir.c mkdirat.c mkstemp-safer.c mkstemp.c mktime.c \
+	modechange.c modechange.h mountlist.c mountlist.h nanosleep.c \
+	obstack.c obstack.h offtostr.c open-safer.c openat-die.c \
+	openat-priv.h openat.c openat.h pathmax.h physmem.c physmem.h \
+	pipe-safer.c posixtm.c posixtm.h posixver.c posixver.h \
+	printf-args.c printf-parse.c putenv.c quote.c quote.h \
+	quotearg.c quotearg.h raise.c rand-isaac.c rand-isaac.h \
+	randint.c randint.h randperm.c randperm.h randread.c \
+	randread.h readlink.c readtokens.c readtokens.h readutmp.c \
+	readutmp.h realloc.c regcomp.c regex.c regex.h \
+	regex_internal.c regex_internal.h regexec.c rename.c rmdir.c \
+	root-dev-ino.c root-dev-ino.h rpmatch.c safe-read.c \
+	safe-read.h safe-write.c safe-write.h same-inode.h same.c \
+	same.h save-cwd.c save-cwd.h savedir.c savedir.h setenv.c \
+	settime.c sha1.c sha1.h sha256.c sha256.h sha512.c sha512.h \
+	sig2str.c sig2str.h snprintf.c stat-macros.h stat-time.h \
+	stdio--.h stdio-safer.h stdlib--.h stdlib-safer.h stpcpy.c \
+	strcasecmp.c strcspn.c strdup.c strdup.h strftime.c strftime.h \
+	strintcmp.c stripslash.c strncasecmp.c strndup.c strndup.h \
+	strnlen.c strnlen.h strnumcmp-in.h strnumcmp.c strnumcmp.h \
+	strpbrk.c strstr.c strtod.c strtoimax.c strtol.c strtoll.c \
+	strtoul.c strtoull.c strtoumax.c strverscmp.c strverscmp.h \
+	tempname.c time_r.c time_r.h timespec.h umaxtostr.c unistd--.h \
+	unistd-safer.h unlinkdir.c unlinkdir.h unlocked-io.h \
+	unsetenv.c userspec.c userspec.h utime.c utimecmp.c utimecmp.h \
+	utimens.c utimens.h vasnprintf.c vasprintf.c version-etc-fsf.c \
+	version-etc.c version-etc.h xalloc.h xfts.c xfts.h xgetcwd.c \
+	xgetcwd.h xmalloc.c xnanosleep.c xnanosleep.h xreadlink.c \
+	xreadlink.h xstrtod.c xstrtod.h xstrtol.c xstrtol.h xstrtold.c \
+	xstrtoul.c xtime.h yesno.c yesno.h
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/absolute-header.m4 \
 	$(top_srcdir)/m4/acl.m4 $(top_srcdir)/m4/alloca.m4 \
 	$(top_srcdir)/m4/allocsa.m4 $(top_srcdir)/m4/argmatch.m4 \
-	$(top_srcdir)/m4/assert.m4 $(top_srcdir)/m4/atexit.m4 \
-	$(top_srcdir)/m4/autobuild.m4 $(top_srcdir)/m4/backupfile.m4 \
-	$(top_srcdir)/m4/basename.m4 $(top_srcdir)/m4/bison.m4 \
-	$(top_srcdir)/m4/boottime.m4 $(top_srcdir)/m4/c-strtod.m4 \
-	$(top_srcdir)/m4/calloc.m4 $(top_srcdir)/m4/canon-host.m4 \
+	$(top_srcdir)/m4/arpa_inet_h.m4 $(top_srcdir)/m4/assert.m4 \
+	$(top_srcdir)/m4/atexit.m4 $(top_srcdir)/m4/autobuild.m4 \
+	$(top_srcdir)/m4/backupfile.m4 $(top_srcdir)/m4/basename.m4 \
+	$(top_srcdir)/m4/bison.m4 $(top_srcdir)/m4/boottime.m4 \
+	$(top_srcdir)/m4/c-strtod.m4 $(top_srcdir)/m4/calloc.m4 \
+	$(top_srcdir)/m4/canon-host.m4 \
 	$(top_srcdir)/m4/canonicalize.m4 \
 	$(top_srcdir)/m4/chdir-long.m4 $(top_srcdir)/m4/chdir-safer.m4 \
 	$(top_srcdir)/m4/check-decl.m4 $(top_srcdir)/m4/chown.m4 \
@@ -118,11 +119,12 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/absolute-header.m4 \
 	$(top_srcdir)/m4/close-stream.m4 $(top_srcdir)/m4/closeout.m4 \
 	$(top_srcdir)/m4/codeset.m4 $(top_srcdir)/m4/cycle-check.m4 \
 	$(top_srcdir)/m4/d-ino.m4 $(top_srcdir)/m4/d-type.m4 \
-	$(top_srcdir)/m4/diacrit.m4 $(top_srcdir)/m4/dirfd.m4 \
-	$(top_srcdir)/m4/dirname.m4 $(top_srcdir)/m4/dos.m4 \
-	$(top_srcdir)/m4/double-slash-root.m4 $(top_srcdir)/m4/dup2.m4 \
-	$(top_srcdir)/m4/eealloc.m4 $(top_srcdir)/m4/eoverflow.m4 \
-	$(top_srcdir)/m4/error.m4 $(top_srcdir)/m4/euidaccess-stat.m4 \
+	$(top_srcdir)/m4/dev-ino.m4 $(top_srcdir)/m4/diacrit.m4 \
+	$(top_srcdir)/m4/dirfd.m4 $(top_srcdir)/m4/dirname.m4 \
+	$(top_srcdir)/m4/dos.m4 $(top_srcdir)/m4/double-slash-root.m4 \
+	$(top_srcdir)/m4/dup2.m4 $(top_srcdir)/m4/eealloc.m4 \
+	$(top_srcdir)/m4/eoverflow.m4 $(top_srcdir)/m4/error.m4 \
+	$(top_srcdir)/m4/euidaccess-stat.m4 \
 	$(top_srcdir)/m4/euidaccess.m4 $(top_srcdir)/m4/exclude.m4 \
 	$(top_srcdir)/m4/exitfail.m4 $(top_srcdir)/m4/extensions.m4 \
 	$(top_srcdir)/m4/fcntl-safer.m4 $(top_srcdir)/m4/fd-reopen.m4 \
@@ -148,16 +150,17 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/absolute-header.m4 \
 	$(top_srcdir)/m4/hard-locale.m4 $(top_srcdir)/m4/hash-pjw.m4 \
 	$(top_srcdir)/m4/hash.m4 $(top_srcdir)/m4/host-os.m4 \
 	$(top_srcdir)/m4/human.m4 $(top_srcdir)/m4/iconv.m4 \
-	$(top_srcdir)/m4/idcache.m4 $(top_srcdir)/m4/intmax_t.m4 \
-	$(top_srcdir)/m4/inttostr.m4 $(top_srcdir)/m4/inttypes-h.m4 \
+	$(top_srcdir)/m4/idcache.m4 $(top_srcdir)/m4/inet_ntop.m4 \
+	$(top_srcdir)/m4/intmax_t.m4 $(top_srcdir)/m4/inttostr.m4 \
+	$(top_srcdir)/m4/inttypes-h.m4 \
 	$(top_srcdir)/m4/inttypes-pri.m4 $(top_srcdir)/m4/inttypes.m4 \
-	$(top_srcdir)/m4/inttypes_h.m4 $(top_srcdir)/m4/isc-posix.m4 \
-	$(top_srcdir)/m4/jm-macros.m4 $(top_srcdir)/m4/jm-winsz1.m4 \
-	$(top_srcdir)/m4/jm-winsz2.m4 $(top_srcdir)/m4/lchmod.m4 \
-	$(top_srcdir)/m4/lchown.m4 $(top_srcdir)/m4/lib-check.m4 \
-	$(top_srcdir)/m4/lib-ignore.m4 $(top_srcdir)/m4/lib-ld.m4 \
-	$(top_srcdir)/m4/lib-link.m4 $(top_srcdir)/m4/lib-prefix.m4 \
-	$(top_srcdir)/m4/linebuffer.m4 $(top_srcdir)/m4/link-follow.m4 \
+	$(top_srcdir)/m4/inttypes_h.m4 $(top_srcdir)/m4/jm-macros.m4 \
+	$(top_srcdir)/m4/jm-winsz1.m4 $(top_srcdir)/m4/jm-winsz2.m4 \
+	$(top_srcdir)/m4/lchmod.m4 $(top_srcdir)/m4/lchown.m4 \
+	$(top_srcdir)/m4/lib-check.m4 $(top_srcdir)/m4/lib-ignore.m4 \
+	$(top_srcdir)/m4/lib-ld.m4 $(top_srcdir)/m4/lib-link.m4 \
+	$(top_srcdir)/m4/lib-prefix.m4 $(top_srcdir)/m4/linebuffer.m4 \
+	$(top_srcdir)/m4/link-follow.m4 \
 	$(top_srcdir)/m4/localcharset.m4 \
 	$(top_srcdir)/m4/long-options.m4 \
 	$(top_srcdir)/m4/longdouble.m4 $(top_srcdir)/m4/longlong.m4 \
@@ -174,31 +177,33 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/absolute-header.m4 \
 	$(top_srcdir)/m4/mkdir-slash.m4 $(top_srcdir)/m4/mkstemp.m4 \
 	$(top_srcdir)/m4/mktime.m4 $(top_srcdir)/m4/modechange.m4 \
 	$(top_srcdir)/m4/mountlist.m4 $(top_srcdir)/m4/nanosleep.m4 \
-	$(top_srcdir)/m4/nls.m4 $(top_srcdir)/m4/obstack.m4 \
-	$(top_srcdir)/m4/openat.m4 $(top_srcdir)/m4/pathmax.m4 \
-	$(top_srcdir)/m4/perl.m4 $(top_srcdir)/m4/physmem.m4 \
-	$(top_srcdir)/m4/po.m4 $(top_srcdir)/m4/posixtm.m4 \
-	$(top_srcdir)/m4/posixver.m4 $(top_srcdir)/m4/prereq.m4 \
-	$(top_srcdir)/m4/progtest.m4 $(top_srcdir)/m4/putenv.m4 \
-	$(top_srcdir)/m4/quote.m4 $(top_srcdir)/m4/quotearg.m4 \
-	$(top_srcdir)/m4/randint.m4 $(top_srcdir)/m4/randperm.m4 \
-	$(top_srcdir)/m4/randread.m4 $(top_srcdir)/m4/readlink.m4 \
-	$(top_srcdir)/m4/readtokens.m4 $(top_srcdir)/m4/readutmp.m4 \
-	$(top_srcdir)/m4/regex.m4 $(top_srcdir)/m4/rename.m4 \
-	$(top_srcdir)/m4/rmdir-errno.m4 $(top_srcdir)/m4/rmdir.m4 \
-	$(top_srcdir)/m4/root-dev-ino.m4 $(top_srcdir)/m4/rpmatch.m4 \
-	$(top_srcdir)/m4/safe-read.m4 $(top_srcdir)/m4/safe-write.m4 \
+	$(top_srcdir)/m4/netinet_in_h.m4 $(top_srcdir)/m4/nls.m4 \
+	$(top_srcdir)/m4/obstack.m4 $(top_srcdir)/m4/openat.m4 \
+	$(top_srcdir)/m4/pathmax.m4 $(top_srcdir)/m4/perl.m4 \
+	$(top_srcdir)/m4/physmem.m4 $(top_srcdir)/m4/po.m4 \
+	$(top_srcdir)/m4/posixtm.m4 $(top_srcdir)/m4/posixver.m4 \
+	$(top_srcdir)/m4/prereq.m4 $(top_srcdir)/m4/progtest.m4 \
+	$(top_srcdir)/m4/putenv.m4 $(top_srcdir)/m4/quote.m4 \
+	$(top_srcdir)/m4/quotearg.m4 $(top_srcdir)/m4/randint.m4 \
+	$(top_srcdir)/m4/randperm.m4 $(top_srcdir)/m4/randread.m4 \
+	$(top_srcdir)/m4/readlink.m4 $(top_srcdir)/m4/readtokens.m4 \
+	$(top_srcdir)/m4/readutmp.m4 $(top_srcdir)/m4/regex.m4 \
+	$(top_srcdir)/m4/rename.m4 $(top_srcdir)/m4/rmdir-errno.m4 \
+	$(top_srcdir)/m4/rmdir.m4 $(top_srcdir)/m4/root-dev-ino.m4 \
+	$(top_srcdir)/m4/rpmatch.m4 $(top_srcdir)/m4/safe-read.m4 \
+	$(top_srcdir)/m4/safe-write.m4 $(top_srcdir)/m4/same-inode.m4 \
 	$(top_srcdir)/m4/same.m4 $(top_srcdir)/m4/save-cwd.m4 \
 	$(top_srcdir)/m4/savedir.m4 $(top_srcdir)/m4/setenv.m4 \
 	$(top_srcdir)/m4/settime.m4 $(top_srcdir)/m4/sha1.m4 \
 	$(top_srcdir)/m4/sha256.m4 $(top_srcdir)/m4/sha512.m4 \
 	$(top_srcdir)/m4/sig2str.m4 $(top_srcdir)/m4/signed.m4 \
-	$(top_srcdir)/m4/socklen.m4 $(top_srcdir)/m4/sockpfaf.m4 \
-	$(top_srcdir)/m4/ssize_t.m4 $(top_srcdir)/m4/st_dm_mode.m4 \
-	$(top_srcdir)/m4/stat-macros.m4 $(top_srcdir)/m4/stat-prog.m4 \
-	$(top_srcdir)/m4/stat-time.m4 $(top_srcdir)/m4/stdarg.m4 \
-	$(top_srcdir)/m4/stdbool.m4 $(top_srcdir)/m4/stdint.m4 \
-	$(top_srcdir)/m4/stdint_h.m4 $(top_srcdir)/m4/stdio-safer.m4 \
+	$(top_srcdir)/m4/snprintf.m4 $(top_srcdir)/m4/socklen.m4 \
+	$(top_srcdir)/m4/sockpfaf.m4 $(top_srcdir)/m4/ssize_t.m4 \
+	$(top_srcdir)/m4/st_dm_mode.m4 $(top_srcdir)/m4/stat-macros.m4 \
+	$(top_srcdir)/m4/stat-prog.m4 $(top_srcdir)/m4/stat-time.m4 \
+	$(top_srcdir)/m4/stdarg.m4 $(top_srcdir)/m4/stdbool.m4 \
+	$(top_srcdir)/m4/stdint.m4 $(top_srcdir)/m4/stdint_h.m4 \
+	$(top_srcdir)/m4/stdio-safer.m4 \
 	$(top_srcdir)/m4/stdlib-safer.m4 $(top_srcdir)/m4/stpcpy.m4 \
 	$(top_srcdir)/m4/strcase.m4 $(top_srcdir)/m4/strcspn.m4 \
 	$(top_srcdir)/m4/strdup.m4 $(top_srcdir)/m4/strftime.m4 \
@@ -276,6 +281,7 @@ ALLOCA_H = @ALLOCA_H@
 AMDEP_FALSE = @AMDEP_FALSE@
 AMDEP_TRUE = @AMDEP_TRUE@
 AMTAR = @AMTAR@
+ARPA_INET_H = @ARPA_INET_H@
 AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
@@ -350,6 +356,7 @@ MSGFMT = @MSGFMT@
 MSGFMT_015 = @MSGFMT_015@
 MSGMERGE = @MSGMERGE@
 NEED_SETGID = @NEED_SETGID@
+NETINET_IN_H = @NETINET_IN_H@
 OBJEXT = @OBJEXT@
 OPTIONAL_BIN_PROGS = @OPTIONAL_BIN_PROGS@
 PACKAGE = @PACKAGE@
@@ -432,25 +439,29 @@ AM_CPPFLAGS = -I.. -I$(srcdir)
 libcoreutils_a_SOURCES = allocsa.c allocsa.h base64.c base64.h \
 	buffer-lcm.c buffer-lcm.h euidaccess.h exit.h full-read.c \
 	full-read.h full-write.c full-write.h getaddrinfo.h gettext.h \
-	localcharset.c localcharset.h mbchar.h mbswidth.c mbswidth.h \
-	mbuiter.h readtokens0.c readtokens0.h setenv.h strcase.h \
-	strnlen1.c strnlen1.h strstr.h unicodeio.c unicodeio.h \
-	verify.h wcwidth.h xalloc-die.c xgethostname.c xgethostname.h \
-	xmemcoll.c xmemcoll.h xmemxfrm.c xmemxfrm.h xstrndup.c \
-	xstrndup.h xstrtoimax.c xstrtoumax.c printf-args.h \
-	printf-parse.h vasprintf.h vasnprintf.h
+	inet_ntop.h localcharset.c localcharset.h mbchar.h mbswidth.c \
+	mbswidth.h mbuiter.h readtokens0.c readtokens0.h setenv.h \
+	snprintf.h strcase.h strnlen1.c strnlen1.h strstr.h \
+	unicodeio.c unicodeio.h verify.h wcwidth.h xalloc-die.c \
+	xgethostname.c xgethostname.h xmemcoll.c xmemcoll.h xmemxfrm.c \
+	xmemxfrm.h xstrndup.c xstrndup.h xstrtoimax.c xstrtoumax.c \
+	printf-args.h printf-parse.h vasprintf.h vasnprintf.h
 libcoreutils_a_LIBADD = $(LIBOBJS) $(ALLOCA)
 lib_OBJECTS = $(libcoreutils_a_OBJECTS)
 BUILT_SOURCES = getdate.c $(STDBOOL_H) $(STDINT_H) $(ALLOCA_H) \
-	$(FNMATCH_H) $(GETOPT_H)
+	$(FNMATCH_H) $(GETOPT_H) $(ARPA_INET_H) $(SYS_SOCKET_H) \
+	$(NETINET_IN_H)
 CLEANFILES = charset.alias ref-add.sed ref-del.sed
 MAINTAINERCLEANFILES = $(BUILT_SOURCES)
+MOSTLYCLEANDIRS = arpa netinet sys
 MOSTLYCLEANFILES = stdbool.h stdbool.h-t stdint.h stdint.h-t alloca.h \
-	alloca.h-t fnmatch.h fnmatch.h-t getopt.h getopt.h-t
+	alloca.h-t fnmatch.h fnmatch.h-t arpa/inet.h arpa/inet.h-t \
+	netinet/in.h netinet/in.h-t sys/socket.h sys/socket.h-t \
+	getopt.h getopt.h-t
 SUFFIXES = .sed .sin
 EXTRA_DIST = getdate.c config.charset ref-add.sin ref-del.sin \
 	getndelim2.c getndelim2.h stdbool_.h stdint_.h alloca_.h \
-	fnmatch_.h fnmatch_loop.c getopt_.h getopt_int.h
+	fnmatch_.h fnmatch_loop.c getopt_.h getopt_int.h socket_.h
 charset_alias = $(DESTDIR)$(libdir)/charset.alias
 charset_tmp = $(DESTDIR)$(libdir)/charset.tmp
 all: $(BUILT_SOURCES)
@@ -583,6 +594,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/human.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/idcache.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/imaxtostr.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/inet_ntop.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/inttostr.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/lchown.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/linebuffer.Po@am__quote@
@@ -653,6 +665,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/sha256.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/sha512.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/sig2str.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/snprintf.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/stpcpy.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/strcasecmp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/strcspn.Po@am__quote@
@@ -1008,6 +1021,27 @@ alloca.h: alloca_.h
 all-local $(lib_OBJECTS): $(FNMATCH_H)
 fnmatch.h: fnmatch_.h
 	cp $(srcdir)/fnmatch_.h $@-t
+	mv $@-t $@
+
+# We need the following in order to create <arpa/inet.h> when the system
+# doesn't have one.
+arpa/inet.h:
+	test -d arpa || mkdir arpa
+	echo '#include <sys/socket.h>' >$@-t
+	mv $@-t $@
+
+# We need the following in order to create <netinet/in.h> when the system
+# doesn't have one.
+netinet/in.h:
+	test -d netinet || mkdir netinet
+	echo '#include <sys/socket.h>' >$@-t
+	mv $@-t $@
+
+# We need the following in order to create <sys/socket.h> when the system
+# doesn't have one that works with the given compiler.
+sys/socket.h: socket_.h
+	test -d sys || mkdir sys
+	cp $(srcdir)/socket_.h $@-t
 	mv $@-t $@
 
 check: unit-test

@@ -166,6 +166,9 @@
 /* Define if you have an arithmetic hrtime_t type. */
 #undef HAVE_ARITHMETIC_HRTIME_T
 
+/* Define to 1 if you have the <arpa/inet.h> header file. */
+#undef HAVE_ARPA_INET_H
+
 /* Define to 1 if you have the `atexit' function. */
 #undef HAVE_ATEXIT
 
@@ -346,6 +349,10 @@
    don't. */
 #undef HAVE_DECL_GETUTENT
 
+/* Define to 1 if you have the declaration of `inet_ntop', and to 0 if you
+   don't. */
+#undef HAVE_DECL_INET_NTOP
+
 /* Define to 1 if you have the declaration of `isblank', and to 0 if you
    don't. */
 #undef HAVE_DECL_ISBLANK
@@ -389,6 +396,10 @@
 /* Define to 1 if you have the declaration of `setregid', and to 0 if you
    don't. */
 #undef HAVE_DECL_SETREGID
+
+/* Define to 1 if you have the declaration of `snprintf', and to 0 if you
+   don't. */
+#undef HAVE_DECL_SNPRINTF
 
 /* Define to 1 if you have the declaration of `stpcpy', and to 0 if you don't.
    */
@@ -608,6 +619,9 @@
 
 /* Define if you have the iconv() function. */
 #undef HAVE_ICONV
+
+/* Define to 1 if you have the `inet_ntop' function. */
+#undef HAVE_INET_NTOP
 
 /* Define to 1 if you have the `initgroups' function. */
 #undef HAVE_INITGROUPS
