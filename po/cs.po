@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: textutils 2.0.14\n"
 "Report-Msgid-Bugs-To: bug-coreutils@gnu.org\n"
-"POT-Creation-Date: 2006-08-09 16:21-0700\n"
+"POT-Creation-Date: 2006-08-15 13:26+0200\n"
 "PO-Revision-Date: 2001-08-18 15:01+0200\n"
 "Last-Translator: Vladimir Michl <Vladimir.Michl@seznam.cz>\n"
 "Language-Team: Czech <cs@li.org>\n"
@@ -46,6 +46,7 @@ msgstr "Platné argumenty jsou:"
 #: src/head.c:350 src/head.c:758 src/head.c:799 src/od.c:966 src/paste.c:143
 #: src/shuf.c:408 src/tail.c:309 src/tail.c:1097 src/tr.c:1562 src/tr.c:1785
 #: src/tr.c:1888 src/unexpand.c:434 src/unexpand.c:450
+#, c-format
 msgid "write error"
 msgstr "chyba pøi zápisu"
 
@@ -261,16 +262,17 @@ msgstr "adresáø %s nelze vytvoøit"
 msgid "cannot change permissions of %s"
 msgstr "práva %s nelze zmìnit"
 
-#: lib/obstack.c:433 lib/obstack.c:435 lib/xalloc-die.c:37 src/csplit.c:238
+#: lib/obstack.c:433 lib/obstack.c:435 lib/xalloc-die.c:37 src/csplit.c:237
 msgid "memory exhausted"
 msgstr "pamì» vyèerpána"
 
 #: lib/openat-die.c:36
-#, fuzzy
+#, fuzzy, c-format
 msgid "unable to record current working directory"
 msgstr "adresáø %s nelze vytvoøit"
 
 #: lib/openat-die.c:49 src/df.c:520
+#, c-format
 msgid "failed to return to initial working directory"
 msgstr ""
 
@@ -317,6 +319,7 @@ msgid "it is dangerous to operate recursively on %s (same as %s)"
 msgstr ""
 
 #: lib/root-dev-ino.h:26
+#, c-format
 msgid "use --no-preserve-root to override this failsafe"
 msgstr ""
 
@@ -491,10 +494,12 @@ msgid ""
 msgstr ""
 
 #: lib/xmemxfrm.c:57
+#, c-format
 msgid "string transformation failed"
 msgstr ""
 
 #: lib/xmemxfrm.c:58 lib/xmemcoll.c:51 src/expr.c:769
+#, c-format
 msgid "Set LC_ALL='C' to work around the problem."
 msgstr ""
 
@@ -509,6 +514,7 @@ msgid "invalid argument: %s"
 msgstr "argument %s je pro `%s' neplatný"
 
 #: lib/xmemcoll.c:50 src/expr.c:768
+#, c-format
 msgid "string comparison failed"
 msgstr ""
 
@@ -519,7 +525,7 @@ msgstr ""
 
 #: src/base64.c:61 src/basename.c:51 src/cat.c:91 src/chgrp.c:109
 #: src/chmod.c:325 src/chown.c:90 src/chroot.c:42 src/cksum.c:264
-#: src/comm.c:69 src/cp.c:154 src/csplit.c:1450 src/cut.c:184 src/date.c:128
+#: src/comm.c:69 src/cp.c:154 src/csplit.c:1449 src/cut.c:184 src/date.c:128
 #: src/dd.c:400 src/df.c:721 src/dircolors.c:101 src/dirname.c:45 src/du.c:276
 #: src/echo.c:60 src/env.c:114 src/expand.c:107 src/expr.c:98 src/factor.c:70
 #: src/fmt.c:269 src/fold.c:66 src/head.c:105 src/hostid.c:44
@@ -597,7 +603,7 @@ msgstr ""
 
 #: src/base64.c:89 src/basename.c:74 src/cat.c:128 src/chgrp.c:164
 #: src/chmod.c:356 src/chown.c:159 src/chroot.c:60 src/cksum.c:279
-#: src/comm.c:94 src/cp.c:253 src/csplit.c:1492 src/cut.c:235 src/date.c:241
+#: src/comm.c:94 src/cp.c:253 src/csplit.c:1491 src/cut.c:235 src/date.c:241
 #: src/dd.c:508 src/df.c:760 src/dircolors.c:122 src/dirname.c:68 src/du.c:344
 #: src/echo.c:98 src/env.c:133 src/expand.c:132 src/expr.c:166 src/factor.c:90
 #: src/fmt.c:300 src/fold.c:89 src/head.c:140 src/hostid.c:57
@@ -623,13 +629,14 @@ msgstr ""
 "  Chyby v programu oznamujte na adrese <bug-textutils@gnu.org> (pouze\n"
 "anglicky), pøipomínky k pøekladu zasílejte na adresu <cs@li.org> (èesky)."
 
-#: src/base64.c:177 src/base64.c:210 src/csplit.c:283 src/csplit.c:1439
+#: src/base64.c:177 src/base64.c:210 src/csplit.c:282 src/csplit.c:1438
 #: src/join.c:243 src/shuf.c:401 src/tac-pipe.c:57 src/tee.c:204 src/tr.c:1586
+#, c-format
 msgid "read error"
 msgstr "chyba pøi ètení"
 
 #: src/base64.c:221
-#, fuzzy
+#, fuzzy, c-format
 msgid "invalid input"
 msgstr "chybné èíslo polo¾ky: `%s'"
 
@@ -651,7 +658,7 @@ msgid "extra operand %s"
 msgstr "extra argument `%s' není s -c dovolen"
 
 #: src/base64.c:302 src/cat.c:785
-#, fuzzy
+#, fuzzy, c-format
 msgid "closing standard input"
 msgstr "standardní vstup"
 
@@ -688,13 +695,13 @@ msgid ""
 msgstr ""
 
 #: src/basename.c:118 src/chgrp.c:282 src/chmod.c:476 src/chown.c:295
-#: src/chroot.c:84 src/comm.c:270 src/csplit.c:1387 src/dirname.c:95
+#: src/chroot.c:84 src/comm.c:270 src/csplit.c:1386 src/dirname.c:95
 #: src/expr.c:211 src/join.c:907 src/link.c:82 src/mkdir.c:151
 #: src/mkfifo.c:109 src/mknod.c:141 src/nohup.c:101 src/pathchk.c:158
 #: src/printf.c:669 src/readlink.c:146 src/rm.c:333 src/rmdir.c:197
 #: src/seq.c:325 src/setuidgid.c:95 src/sleep.c:122 src/stat.c:914
 #: src/tr.c:1724 src/unlink.c:80
-#, fuzzy
+#, fuzzy, c-format
 msgid "missing operand"
 msgstr "%s: po `%c' je oèekáváno celé èíslo"
 
@@ -774,6 +781,7 @@ msgid "cannot do ioctl on %s"
 msgstr "ioctl na `%s' není mo¾né vykonat"
 
 #: src/cat.c:643 src/dd.c:1668 src/sort.c:273 src/tee.c:163 src/yes.c:92
+#, c-format
 msgid "standard output"
 msgstr "standardní výstup"
 
@@ -870,15 +878,17 @@ msgid ""
 msgstr ""
 
 #: src/chgrp.c:263 src/chown.c:276
+#, c-format
 msgid "-R --dereference requires either -H or -L"
 msgstr ""
 
 #: src/chgrp.c:269 src/chown.c:282
+#, c-format
 msgid "-R -h requires -P"
 msgstr ""
 
 #: src/chgrp.c:284 src/chmod.c:478 src/chown.c:297 src/comm.c:272
-#: src/csplit.c:1389 src/join.c:909 src/link.c:84 src/mknod.c:143
+#: src/csplit.c:1388 src/join.c:909 src/link.c:84 src/mknod.c:143
 #: src/setuidgid.c:97 src/tr.c:1727
 #, fuzzy, c-format
 msgid "missing operand after %s"
@@ -943,7 +953,7 @@ msgid "%s: new permissions are %s, not %s"
 msgstr "práva %s nelze zmìnit"
 
 #: src/chmod.c:304 src/chown-core.c:460 src/du.c:650
-#, fuzzy
+#, fuzzy, c-format
 msgid "fts_read failed"
 msgstr "ètení ze souboru se nezdaøilo"
 
@@ -1002,6 +1012,7 @@ msgid ""
 msgstr ""
 
 #: src/chmod.c:463
+#, c-format
 msgid "cannot combine mode and --reference options"
 msgstr ""
 
@@ -1172,7 +1183,7 @@ msgid "cannot change root directory to %s"
 msgstr "do adresáøe `%s' nelze vejít"
 
 #: src/chroot.c:92
-#, fuzzy
+#, fuzzy, c-format
 msgid "cannot chdir to root directory"
 msgstr "do adresáøe `%s' nelze vejít"
 
@@ -1255,7 +1266,7 @@ msgstr "zachování èasù souboru %s"
 msgid "failed to preserve authorship for %s"
 msgstr "zachování vlastnictví souboru %s"
 
-#: src/copy.c:260 src/csplit.c:648 src/du.c:951 src/fmt.c:431 src/head.c:849
+#: src/copy.c:260 src/csplit.c:647 src/du.c:951 src/fmt.c:431 src/head.c:849
 #: src/split.c:540 src/tac.c:544 src/tail.c:1295 src/wc.c:680
 #, fuzzy, c-format
 msgid "cannot open %s for reading"
@@ -1475,7 +1486,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: src/cp.c:168 src/csplit.c:1463 src/cut.c:196 src/df.c:731 src/du.c:288
+#: src/cp.c:168 src/csplit.c:1462 src/cut.c:196 src/df.c:731 src/du.c:288
 #: src/expand.c:120 src/fmt.c:279 src/fold.c:79 src/head.c:119
 #: src/install.c:635 src/kill.c:104 src/ln.c:333 src/ls.c:4255 src/mkdir.c:64
 #: src/mkfifo.c:60 src/mknod.c:61 src/mv.c:301 src/nl.c:186 src/paste.c:427
@@ -1770,7 +1781,7 @@ msgstr "%s exituje, ale není adresáøem"
 
 #: src/cp.c:552 src/install.c:324 src/ln.c:475 src/mv.c:436 src/shred.c:1177
 #: src/touch.c:412
-#, fuzzy
+#, fuzzy, c-format
 msgid "missing file operand"
 msgstr "pøeskakuji argument"
 
@@ -1780,29 +1791,32 @@ msgid "missing destination file operand after %s"
 msgstr "chybí seznam polo¾ek"
 
 #: src/cp.c:563 src/install.c:335 src/mv.c:447
+#, c-format
 msgid "Cannot combine --target-directory (-t) and --no-target-directory (-T)"
 msgstr ""
 
 #: src/cp.c:678
-#, fuzzy
+#, fuzzy, c-format
 msgid "with --parents, the destination must be a directory"
 msgstr "jestli¾e mají být zachovány cesty, cílem musí být adresáø"
 
 #: src/cp.c:948 src/mv.c:391
+#, c-format
 msgid "the --reply option is deprecated; use -i or -f instead"
 msgstr ""
 
 #: src/cp.c:964 src/ln.c:435
-#, fuzzy
+#, fuzzy, c-format
 msgid "symbolic links are not supported on this system"
 msgstr "varování: --pid=PID není na tomto systému podporován"
 
 #: src/cp.c:971 src/install.c:280 src/ln.c:440 src/mv.c:398
-#, fuzzy
+#, fuzzy, c-format
 msgid "multiple target directories specified"
 msgstr "\\%c: chybná escape sekvence"
 
 #: src/cp.c:1016
+#, c-format
 msgid "cannot make both hard and symbolic links"
 msgstr "symbolický a pevný odkaz nelze vytvoøit zároveò"
 
@@ -1810,136 +1824,139 @@ msgstr "symbolický a pevný odkaz nelze vytvoøit zároveò"
 msgid "backup type"
 msgstr "typ zálohy"
 
-#: src/csplit.c:540
+#: src/csplit.c:539
+#, c-format
 msgid "input disappeared"
 msgstr "vstup se ztratil"
 
-#: src/csplit.c:668 src/csplit.c:679
+#: src/csplit.c:667 src/csplit.c:678
 #, c-format
 msgid "%s: line number out of range"
 msgstr "%s: èíslo øádku je mimo rozsah"
 
-#: src/csplit.c:708
+#: src/csplit.c:707
 #, fuzzy, c-format
 msgid "%s: %s: line number out of range"
 msgstr "%s: `%s': èíslo øádku je mimo rozsah"
 
-#: src/csplit.c:711 src/csplit.c:760
+#: src/csplit.c:710 src/csplit.c:759
 #, fuzzy, c-format
 msgid " on repetition %s\n"
 msgstr " v %d. opakování\n"
 
-#: src/csplit.c:754
+#: src/csplit.c:753
 #, fuzzy, c-format
 msgid "%s: %s: match not found"
 msgstr "%s: `%s': nenalezeno"
 
-#: src/csplit.c:818 src/csplit.c:858 src/nl.c:353 src/tac.c:275
+#: src/csplit.c:817 src/csplit.c:857 src/nl.c:353 src/tac.c:275
+#, c-format
 msgid "error in regular expression search"
 msgstr "chyba pøi vyhledávání pomocí regulárního výrazu"
 
-#: src/csplit.c:983
+#: src/csplit.c:982
 #, fuzzy, c-format
 msgid "write error for %s"
 msgstr "chyba pøi zápisu do `%s'"
 
-#: src/csplit.c:1059
+#: src/csplit.c:1058
 #, fuzzy, c-format
 msgid "%s: integer expected after delimiter"
 msgstr "%s: po `%c' je oèekáváno celé èíslo"
 
-#: src/csplit.c:1075
+#: src/csplit.c:1074
 #, c-format
 msgid "%s: `}' is required in repeat count"
 msgstr "%s: '}' je po¾adována v poèítadle opakování"
 
-#: src/csplit.c:1085
+#: src/csplit.c:1084
 #, c-format
 msgid "%s}: integer required between `{' and `}'"
 msgstr "%s}: mezi `{' a `}' musí být celé èíslo"
 
-#: src/csplit.c:1112
+#: src/csplit.c:1111
 #, fuzzy, c-format
 msgid "%s: closing delimiter `%c' missing"
 msgstr "%s: postrádán koncový oddìlovaè `%c'"
 
-#: src/csplit.c:1129
+#: src/csplit.c:1128
 #, c-format
 msgid "%s: invalid regular expression: %s"
 msgstr "%s: chybný regulární výraz: %s"
 
-#: src/csplit.c:1162
+#: src/csplit.c:1161
 #, c-format
 msgid "%s: invalid pattern"
 msgstr "%s: chybný vzorek"
 
-#: src/csplit.c:1165
+#: src/csplit.c:1164
 #, c-format
 msgid "%s: line number must be greater than zero"
 msgstr "%s: èíslo øádku musí být vìt¹í ne¾ nula"
 
-#: src/csplit.c:1171
+#: src/csplit.c:1170
 #, fuzzy, c-format
 msgid "line number %s is smaller than preceding line number, %s"
 msgstr "èíslo øádku `%s' je men¹í ne¾ èíslo pøedcházejícího øádku, %s"
 
-#: src/csplit.c:1177
+#: src/csplit.c:1176
 #, fuzzy, c-format
 msgid "warning: line number %s is the same as preceding line number"
 msgstr "varování: èíslo øádku `%s' je stejné s èíslem pøedcházejícího øádku"
 
-#: src/csplit.c:1230
-#, fuzzy
+#: src/csplit.c:1229
+#, fuzzy, c-format
 msgid "invalid format width"
 msgstr "argument %s je pro `%s' neplatný"
 
-#: src/csplit.c:1251
-#, fuzzy
+#: src/csplit.c:1250
+#, fuzzy, c-format
 msgid "invalid format precision"
 msgstr "chybný typ øetìzce `%s'"
 
-#: src/csplit.c:1272
+#: src/csplit.c:1271
+#, c-format
 msgid "missing conversion specifier in suffix"
 msgstr "v parametru pøepínaèe chybí urèení typu konverze"
 
-#: src/csplit.c:1278
+#: src/csplit.c:1277
 #, c-format
 msgid "invalid conversion specifier in suffix: %c"
 msgstr "chybnì zadaný typ konverze v parametru pøepínaèe: %c"
 
-#: src/csplit.c:1281
+#: src/csplit.c:1280
 #, c-format
 msgid "invalid conversion specifier in suffix: \\%.3o"
 msgstr "chybnì zadaný typ konverze v parametru pøepínaèe: \\%.3o"
 
-#: src/csplit.c:1304
+#: src/csplit.c:1303
 #, c-format
 msgid "too many %% conversion specifications in suffix"
 msgstr "pøíli¹ mnoho typù konverze %% v parametru pøepínaèe"
 
-#: src/csplit.c:1319
+#: src/csplit.c:1318
 #, c-format
 msgid "missing %% conversion specification in suffix"
 msgstr "v parametru pøepínaèe chybí zadání typu konverze pomocí %%"
 
-#: src/csplit.c:1363
+#: src/csplit.c:1362
 #, c-format
 msgid "%s: invalid number"
 msgstr "%s: chybné èíslo"
 
-#: src/csplit.c:1454
+#: src/csplit.c:1453
 #, c-format
 msgid "Usage: %s [OPTION]... FILE PATTERN...\n"
 msgstr "Pou¾ití: %s [PØEPÍNAÈ]... SOUBOR VZOREK...\n"
 
-#: src/csplit.c:1458
+#: src/csplit.c:1457
 msgid ""
 "Output pieces of FILE separated by PATTERN(s) to files `xx00', `xx01', ...,\n"
 "and output byte counts of each piece to standard output.\n"
 "\n"
 msgstr ""
 
-#: src/csplit.c:1466
+#: src/csplit.c:1465
 #, c-format
 msgid ""
 "  -b, --suffix-format=FORMAT use sprintf FORMAT instead of %02d\n"
@@ -1947,20 +1964,20 @@ msgid ""
 "  -k, --keep-files           do not remove output files on errors\n"
 msgstr ""
 
-#: src/csplit.c:1471
+#: src/csplit.c:1470
 msgid ""
 "  -n, --digits=DIGITS        use specified number of digits instead of 2\n"
 "  -s, --quiet, --silent      do not print counts of output file sizes\n"
 "  -z, --elide-empty-files    remove empty output files\n"
 msgstr ""
 
-#: src/csplit.c:1478
+#: src/csplit.c:1477
 msgid ""
 "\n"
 "Read standard input if FILE is -.  Each PATTERN may be:\n"
 msgstr ""
 
-#: src/csplit.c:1482
+#: src/csplit.c:1481
 msgid ""
 "\n"
 "  INTEGER            copy up to but not including specified line number\n"
@@ -2249,6 +2266,7 @@ msgstr ""
 #: src/md5sum.c:720 src/od.c:910 src/od.c:1932 src/pr.c:1178 src/pr.c:1381
 #: src/pr.c:1503 src/stty.c:841 src/tac.c:535 src/tee.c:126 src/tr.c:1894
 #: src/tsort.c:527 src/wc.c:212
+#, c-format
 msgid "standard input"
 msgstr "standardní vstup"
 
@@ -2258,16 +2276,17 @@ msgid "invalid date %s"
 msgstr "chybné èíslo polo¾ky: `%s'"
 
 #: src/date.c:401 src/date.c:435
-#, fuzzy
+#, fuzzy, c-format
 msgid "multiple output formats specified"
 msgstr "\\%c: chybná escape sekvence"
 
 #: src/date.c:413
-#, fuzzy
+#, fuzzy, c-format
 msgid "the options to specify dates for printing are mutually exclusive"
 msgstr "pøepínaèe --string a --check se vzájemnì vyluèují"
 
 #: src/date.c:420
+#, c-format
 msgid "the options to print and set the time may not be used together"
 msgstr "pøepínaèe pro výpis a nastavení èasu nemohou být u¾ity souèasnì"
 
@@ -2283,6 +2302,7 @@ msgstr ""
 "pøepínaèem) musí být formátovací øetìzec uvozený '+'"
 
 #: src/date.c:518
+#, c-format
 msgid "cannot set date"
 msgstr "datum nelze nastavit"
 
@@ -2513,21 +2533,22 @@ msgid "invalid number %s"
 msgstr "neplatné èíslo"
 
 #: src/dd.c:958
+#, c-format
 msgid "cannot combine any two of {ascii,ebcdic,ibm}"
 msgstr ""
 
 #: src/dd.c:960
-#, fuzzy
+#, fuzzy, c-format
 msgid "cannot combine block and unblock"
 msgstr "nemù¾ete vynechat jak u¾ivatele tak skupinu"
 
 #: src/dd.c:962
-#, fuzzy
+#, fuzzy, c-format
 msgid "cannot combine lcase and ucase"
 msgstr "odkaz `%s' nelze vytvoøit"
 
 #: src/dd.c:964
-#, fuzzy
+#, fuzzy, c-format
 msgid "cannot combine excl and nocreat"
 msgstr "adresáø %s nelze vytvoøit"
 
@@ -2549,10 +2570,12 @@ msgid "offset overflow while reading file %s"
 msgstr ""
 
 #: src/dd.c:1216
+#, c-format
 msgid "warning: screwy file offset after failed read"
 msgstr ""
 
 #: src/dd.c:1220
+#, c-format
 msgid "cannot work around kernel bug after all"
 msgstr ""
 
@@ -2627,7 +2650,7 @@ msgid " Mounted on\n"
 msgstr ""
 
 #: src/df.c:453
-#, fuzzy
+#, fuzzy, c-format
 msgid "cannot get current directory"
 msgstr "adresáø %s nelze vytvoøit"
 
@@ -2684,6 +2707,7 @@ msgid ""
 msgstr ""
 
 #: src/df.c:816 src/du.c:759 src/ls.c:1567
+#, c-format
 msgid "the --kilobytes option is deprecated; use -k instead"
 msgstr ""
 
@@ -2702,6 +2726,7 @@ msgid "%scannot read table of mounted file systems"
 msgstr "%stabulku pøipojených souborových systémù nelze pøeèíst"
 
 #: src/df.c:945
+#, c-format
 msgid "no file systems processed"
 msgstr ""
 
@@ -2754,7 +2779,7 @@ msgid "<internal>"
 msgstr "<interní>"
 
 #: src/dircolors.c:448
-#, fuzzy
+#, fuzzy, c-format
 msgid ""
 "the options to output dircolors' internal database and\n"
 "to select a shell syntax are mutually exclusive"
@@ -2765,6 +2790,7 @@ msgid "File operands cannot be combined with --print-database (-p)."
 msgstr ""
 
 #: src/dircolors.c:481
+#, c-format
 msgid "no SHELL environment variable, and no shell type option given"
 msgstr "promìnná prostøedí SHELL neexistuje a není zadáb typ shellu"
 
@@ -2884,6 +2910,7 @@ msgid "total"
 msgstr "celkem"
 
 #: src/du.c:749
+#, c-format
 msgid ""
 "WARNING: use --si, not -H; the meaning of the -H option will soon\n"
 "change to be the same as that of --dereference-args (-D)"
@@ -2895,16 +2922,19 @@ msgid "invalid maximum depth %s"
 msgstr "chybné èíslo polo¾ky: `%s'"
 
 #: src/du.c:786
+#, c-format
 msgid "the --megabytes option is deprecated; use -m instead"
 msgstr ""
 
 #: src/du.c:868
+#, c-format
 msgid "cannot both summarize and show all entries"
 msgstr ""
 "není mo¾né oboje, poèítat celkové souèty pro ka¾dý argument a ukázat\n"
 "v¹echny polo¾ky"
 
 #: src/du.c:875
+#, c-format
 msgid "warning: summarizing is the same as using --max-depth=0"
 msgstr "varování: sumarizace je stejná jako pou¾ití --max-depth=0"
 
@@ -3024,16 +3054,18 @@ msgid "tab size contains invalid character(s): %s"
 msgstr "velikost tabelátoru obsahuje neplatný znak"
 
 #: src/expand.c:214 src/unexpand.c:233
+#, c-format
 msgid "tab size cannot be 0"
 msgstr "velikost tabelátoru nemù¾e být 0"
 
 # sizes or positions? - rzm
 #: src/expand.c:216 src/unexpand.c:235
+#, c-format
 msgid "tab sizes must be ascending"
 msgstr "posloupnost pozic tabelátorù musí být rostoucí"
 
 #: src/expand.c:333 src/expand.c:352 src/unexpand.c:381 src/unexpand.c:428
-#, fuzzy
+#, fuzzy, c-format
 msgid "input line is too long"
 msgstr "%s: soubor je pøíli¹ dlouhý"
 
@@ -3133,21 +3165,22 @@ msgid ""
 msgstr ""
 
 #: src/expr.c:175
-#, fuzzy
+#, fuzzy, c-format
 msgid "syntax error"
 msgstr "standardní chybový výstup"
 
 #: src/expr.c:464 src/ptx.c:292
-#, fuzzy
+#, fuzzy, c-format
 msgid "error in regular expression matcher"
 msgstr "chyba pøi vyhledávání pomocí regulárního výrazu"
 
 #: src/expr.c:639 src/expr.c:697
-#, fuzzy
+#, fuzzy, c-format
 msgid "non-numeric argument"
 msgstr "argument oøezán"
 
 #: src/expr.c:651
+#, c-format
 msgid "division by zero"
 msgstr ""
 
@@ -3436,10 +3469,12 @@ msgid "cannot set name to %s"
 msgstr "ioctl na `%s' není mo¾né vykonat"
 
 #: src/hostname.c:106
+#, c-format
 msgid "cannot set hostname; this system lacks the functionality"
 msgstr "jméno poèítaèe nelze nastavit; systém tuto funkci neposkytuje"
 
 #: src/hostname.c:114
+#, c-format
 msgid "cannot determine hostname"
 msgstr "jméno poèítaèe nelze zjistit"
 
@@ -3480,11 +3515,12 @@ msgid ""
 msgstr ""
 
 #: src/id.c:152
-#, fuzzy
+#, fuzzy, c-format
 msgid "cannot print only user and only group"
 msgstr "nemù¾ete vynechat jak u¾ivatele tak skupinu"
 
 #: src/id.c:156
+#, c-format
 msgid "cannot print only names or real IDs in default format"
 msgstr "pouze jména nebo skuteèné ID nelze v implicitním formátu vypsat"
 
@@ -3504,6 +3540,7 @@ msgid "cannot find name for group ID %lu"
 msgstr "vlastníka a/nebo skupinu %s nelze zmìnit"
 
 #: src/id.c:271
+#, c-format
 msgid "cannot get supplemental group list"
 msgstr "seznam doplòkových skupin nelze získat"
 
@@ -3512,13 +3549,13 @@ msgid " groups="
 msgstr " skupiny="
 
 #: src/install.c:305
-#, fuzzy
+#, fuzzy, c-format
 msgid "the strip option may not be used when installing a directory"
 msgstr ""
 "formátovací øetìzec nesmí být zadán pøi zarovnávání øetìzcù (--equal-width)"
 
 #: src/install.c:308
-#, fuzzy
+#, fuzzy, c-format
 msgid "target directory not allowed when installing a directory"
 msgstr ""
 "formátovací øetìzec nesmí být zadán pøi zarovnávání øetìzcù (--equal-width)"
@@ -3539,17 +3576,17 @@ msgid "cannot set time stamps for %s"
 msgstr "adresáø %s nelze vytvoøit"
 
 #: src/install.c:534
-#, fuzzy
+#, fuzzy, c-format
 msgid "fork system call failed"
 msgstr "velikost bloku"
 
 #: src/install.c:538
-#, fuzzy
+#, fuzzy, c-format
 msgid "cannot run strip"
 msgstr "pøíkaz %s nelze provést"
 
 #: src/install.c:545
-#, fuzzy
+#, fuzzy, c-format
 msgid "strip failed"
 msgstr "funkce stat selhala"
 
@@ -3720,10 +3757,12 @@ msgid "incompatible join fields %lu, %lu"
 msgstr ""
 
 #: src/join.c:826
+#, c-format
 msgid "conflicting empty-field replacement strings"
 msgstr ""
 
 #: src/join.c:867 src/sort.c:2547
+#, c-format
 msgid "empty tab"
 msgstr ""
 
@@ -3733,10 +3772,12 @@ msgid "multi-character tab %s"
 msgstr "vízeznakový tabulátor `%s'"
 
 #: src/join.c:877 src/sort.c:2563
+#, c-format
 msgid "incompatible tabs"
 msgstr ""
 
 #: src/join.c:934
+#, c-format
 msgid "both files cannot be standard input"
 msgstr "oba dva soubory nemohou být standardním vstupem"
 
@@ -3799,14 +3840,17 @@ msgid "%s: multiple signals specified"
 msgstr "\\%c: chybná escape sekvence"
 
 #: src/kill.c:347
+#, c-format
 msgid "multiple -l or -t options specified"
 msgstr ""
 
 #: src/kill.c:364
+#, c-format
 msgid "cannot combine signal with -l or -t"
 msgstr ""
 
 #: src/kill.c:370
+#, c-format
 msgid "no process ID specified"
 msgstr ""
 
@@ -3931,7 +3975,7 @@ msgid ""
 msgstr ""
 
 #: src/ln.c:483
-#, fuzzy
+#, fuzzy, c-format
 msgid "Cannot combine --target-directory and --no-target-directory"
 msgstr "%s exituje, ale není adresáøem"
 
@@ -3947,7 +3991,7 @@ msgid ""
 msgstr ""
 
 #: src/logname.c:89
-#, fuzzy
+#, fuzzy, c-format
 msgid "no login name"
 msgstr "%s: chybné èíslo"
 
@@ -3998,6 +4042,7 @@ msgid "unrecognized prefix: %s"
 msgstr "neznámý pøepínaè `-%c'"
 
 #: src/ls.c:2249
+#, c-format
 msgid "unparsable value for LS_COLORS environment variable"
 msgstr "nesrozumitelná hodnota v promìnné prostøedí LS_COLORS"
 
@@ -4393,16 +4438,19 @@ msgstr[0] "UPOZORNÌNÍ: %d z %d %s NEBYLY vyhodnoceny"
 msgstr[1] "UPOZORNÌNÍ: %d z %d %s NEBYLY vyhodnoceny"
 
 #: src/md5sum.c:640
+#, c-format
 msgid ""
 "the --binary and --text options are meaningless when verifying checksums"
 msgstr ""
 "pøepínaèe --binary a --text jsou bezvýznamné pøi ovìøování kontrolních souètù"
 
 #: src/md5sum.c:648
+#, c-format
 msgid "the --status option is meaningful only when verifying checksums"
 msgstr "pøepínaè --status má význam pouze pøi ovìøování kontrolních souètù"
 
 #: src/md5sum.c:655
+#, c-format
 msgid "the --warn option is meaningful only when verifying checksums"
 msgstr "pøepínaè --warn má význam pouze pøi ovìøování kontrolních souètù"
 
@@ -4464,15 +4512,17 @@ msgstr ""
 "      --version     vypí¹e oznaèení verze a skonèí\n"
 
 #: src/mkfifo.c:91 src/mknod.c:212
+#, c-format
 msgid "fifo files not supported"
 msgstr "tento systém nepodporuje roury"
 
 #: src/mkfifo.c:118 src/mknod.c:123
-#, fuzzy
+#, fuzzy, c-format
 msgid "invalid mode"
 msgstr "neplatné èíslo"
 
 #: src/mkfifo.c:123 src/mknod.c:128
+#, c-format
 msgid "mode must specify only file permission bits"
 msgstr ""
 
@@ -4531,12 +4581,12 @@ msgid "Fifos do not have major and minor device numbers."
 msgstr "chybné poèáteèní èíslo øádku: `%s'"
 
 #: src/mknod.c:167
-#, fuzzy
+#, fuzzy, c-format
 msgid "block special files not supported"
 msgstr "velikost bloku"
 
 #: src/mknod.c:176
-#, fuzzy
+#, fuzzy, c-format
 msgid "character special files not supported"
 msgstr "posun znaku je nula"
 
@@ -4676,16 +4726,17 @@ msgid "invalid adjustment %s"
 msgstr "argument %s je pro `%s' neplatný"
 
 #: src/nice.c:164
+#, c-format
 msgid "a command must be given with an adjustment"
 msgstr "pøíkaz musí být zadán s èíslem, o kolik zmìnit prioritu"
 
 #: src/nice.c:171 src/nice.c:182
-#, fuzzy
+#, fuzzy, c-format
 msgid "cannot get niceness"
 msgstr "nelze vytvoøit doèasný soubor"
 
 #: src/nice.c:186
-#, fuzzy
+#, fuzzy, c-format
 msgid "cannot set niceness"
 msgstr "datum nelze nastavit"
 
@@ -4757,7 +4808,7 @@ msgid ""
 msgstr ""
 
 #: src/nl.c:280
-#, fuzzy
+#, fuzzy, c-format
 msgid "line number overflow"
 msgstr "èíslo polo¾ky je nula"
 
@@ -4817,7 +4868,7 @@ msgid ""
 msgstr ""
 
 #: src/nohup.c:117
-#, fuzzy
+#, fuzzy, c-format
 msgid "ignoring input"
 msgstr "pøíli¹ mnoho argumentù"
 
@@ -4832,14 +4883,17 @@ msgid "ignoring input and appending output to %s"
 msgstr "vlastníka a/nebo skupinu %s nelze zmìnit"
 
 #: src/nohup.c:179
+#, c-format
 msgid "failed to set the copy of stderr to close on exec"
 msgstr ""
 
 #: src/nohup.c:184
+#, c-format
 msgid "ignoring input and redirecting stderr to stdout"
 msgstr ""
 
 #: src/nohup.c:188
+#, c-format
 msgid "failed to redirect standard error"
 msgstr ""
 
@@ -4982,6 +5036,7 @@ msgid "invalid character `%c' in type string %s"
 msgstr "znak `%c' v øetìzci typu `%s' je chybný"
 
 #: src/od.c:1094
+#, c-format
 msgid "cannot skip past end of combined input"
 msgstr ""
 "více bajtù, ne¾ kolik obsahují v¹echny vstupní soubory, nelze pøeskoèit"
@@ -5008,6 +5063,7 @@ msgid "width specification"
 msgstr "specifikace ¹íøky"
 
 #: src/od.c:1767
+#, c-format
 msgid "no type may be specified when dumping strings"
 msgstr "pøi vypisování øetìzcù nelze zadat typ"
 
@@ -5017,6 +5073,7 @@ msgid "Compatibility mode supports at most one file."
 msgstr "v kompatibilním módu nemù¾ou být více jak tøi argumenty"
 
 #: src/od.c:1863
+#, c-format
 msgid "skip-bytes + read-bytes is too large"
 msgstr ""
 
@@ -5032,6 +5089,7 @@ msgid "%d: fmt=\"%s\" width=%d\n"
 msgstr "%d: formát='%s' ¹íøka=%d\n"
 
 #: src/paste.c:202
+#, c-format
 msgid "standard input is closed"
 msgstr "standardní vstup je uzavøen"
 
@@ -5074,6 +5132,7 @@ msgid "nonportable character %s in file name %s"
 msgstr "znak `%c' v øetìzci typu `%s' je chybný"
 
 #: src/pathchk.c:282
+#, c-format
 msgid "empty file name"
 msgstr ""
 
@@ -5185,7 +5244,7 @@ msgid ""
 msgstr ""
 
 #: src/pinky.c:616
-#, fuzzy
+#, fuzzy, c-format
 msgid "no username specified; at least one must be specified when using -l"
 msgstr "pøi pou¾ití pøepínaèe --string nemohou být zadány soubory"
 
@@ -5194,6 +5253,7 @@ msgid "page range"
 msgstr ""
 
 #: src/pr.c:914
+#, c-format
 msgid "`--pages=FIRST_PAGE[:LAST_PAGE]' missing argument"
 msgstr "`--pages=PRVNÍ_STRÁNKA[:POSLEDNÍ_STRÁNKA]' postrádá argument"
 
@@ -5228,11 +5288,13 @@ msgid "`-W PAGE_WIDTH' invalid number of characters: %s"
 msgstr "`-w ©ÍØKA_STRÁNKY' chybný poèet øádkù na stránku: `%s'"
 
 #: src/pr.c:1102
+#, c-format
 msgid "Cannot specify number of columns when printing in parallel."
 msgstr "Pøi výpisu vedle sebe, není mo¾né zadat poèet sloupcù."
 
 # wzdluz? - rzm
 #: src/pr.c:1106
+#, c-format
 msgid "Cannot specify both printing across and printing in parallel."
 msgstr "Není mo¾né zadat výpis souborù po sobì a vedle sebe."
 
@@ -5242,6 +5304,7 @@ msgid "`-%c' extra characters or invalid number in the argument: %s"
 msgstr "`-%c` nadbyteèné znaky nebo ¹patné èíslo v argumentu: `%s'"
 
 #: src/pr.c:1313
+#, c-format
 msgid "page width too narrow"
 msgstr "¹íøka stránky je pøíli¹ malá"
 
@@ -5251,7 +5314,7 @@ msgid "starting page number %<PRIuMAX> exceeds page count %<PRIuMAX>"
 msgstr ""
 
 #: src/pr.c:2407
-#, fuzzy
+#, fuzzy, c-format
 msgid "Page number overflow"
 msgstr "èíslo polo¾ky je nula"
 
@@ -5499,6 +5562,7 @@ msgid "%s: value not completely converted"
 msgstr "%s: hodnota nebyla zcela pøevedena"
 
 #: src/printf.c:257 src/printf.c:284
+#, c-format
 msgid "missing hexadecimal number in escape"
 msgstr "v escape sekvenci oèekáváno ¹estnáctkové èíslo"
 
@@ -5598,6 +5662,7 @@ msgid "invalid gap width: %s"
 msgstr "chybné èíslo polo¾ky: `%s'"
 
 #: src/ptx.c:2089
+#, c-format
 msgid "the --copyright option is deprecated; use --version instead"
 msgstr ""
 
@@ -5623,7 +5688,7 @@ msgid "couldn't find directory entry in %s with matching i-node"
 msgstr ""
 
 #: src/pwd.c:306
-#, fuzzy
+#, fuzzy, c-format
 msgid "ignoring non-option arguments"
 msgstr "pøíli¹ mnoho argumentù, které nejsou pøepínaèi"
 
@@ -5749,6 +5814,7 @@ msgid "failed to close directory %s"
 msgstr "skupinu souboru %s se nepodaøilo zmìnit na %s\n"
 
 #: src/remove.c:1377
+#, c-format
 msgid "cannot remove `.' or `..'"
 msgstr "`.' nebo `..' nelze smazat"
 
@@ -5758,7 +5824,7 @@ msgid "cannot remove relative-named %s"
 msgstr "adresáø %s nelze vytvoøit"
 
 #: src/remove.c:1432
-#, fuzzy
+#, fuzzy, c-format
 msgid "cannot restore current working directory"
 msgstr "adresáø %s nelze vytvoøit"
 
@@ -5936,7 +6002,7 @@ msgid "invalid format string: %s"
 msgstr "chybný typ øetìzce `%s'"
 
 #: src/seq.c:362
-#, fuzzy
+#, fuzzy, c-format
 msgid "format string may not be specified when printing equal width strings"
 msgstr "pøi vypisování øetìzcù nelze zadat typ"
 
@@ -5965,7 +6031,7 @@ msgid "unknown user-ID: %s"
 msgstr ""
 
 #: src/setuidgid.c:109
-#, fuzzy
+#, fuzzy, c-format
 msgid "cannot set supplemental group"
 msgstr "seznam doplòkových skupin nelze získat"
 
@@ -6036,10 +6102,10 @@ msgstr ""
 #: src/shred.c:203
 msgid ""
 "* log-structured or journaled file systems, such as those supplied with\n"
-"  AIX and Solaris (and JFS, ReiserFS, XFS, Ext3, etc.)\n"
+"AIX and Solaris (and JFS, ReiserFS, XFS, Ext3, etc.)\n"
 "\n"
 "* file systems that write redundant data and carry on even if some writes\n"
-"  fail, such as RAID-based file systems\n"
+"fail, such as RAID-based file systems\n"
 "\n"
 "* file systems that make snapshots, such as Network Appliance's NFS server\n"
 "\n"
@@ -6048,7 +6114,7 @@ msgstr ""
 #: src/shred.c:213
 msgid ""
 "* file systems that cache in temporary locations, such as NFS\n"
-"  version 3 clients\n"
+"version 3 clients\n"
 "\n"
 "* compressed file systems\n"
 "\n"
@@ -6176,7 +6242,7 @@ msgid "%s: invalid number of passes"
 msgstr "%s: neplatný poèet sekund"
 
 #: src/shred.c:1130 src/shuf.c:331 src/sort.c:2531
-#, fuzzy
+#, fuzzy, c-format
 msgid "multiple random sources specified"
 msgstr "\\%c: chybná escape sekvence"
 
@@ -6214,7 +6280,7 @@ msgid ""
 msgstr ""
 
 #: src/shuf.c:285
-#, fuzzy
+#, fuzzy, c-format
 msgid "multiple -i options specified"
 msgstr "\\%c: chybná escape sekvence"
 
@@ -6229,12 +6295,12 @@ msgid "invalid line count %s"
 msgstr "chybné èíslo polo¾ky: `%s'"
 
 #: src/shuf.c:325 src/sort.c:2525
-#, fuzzy
+#, fuzzy, c-format
 msgid "multiple output files specified"
 msgstr "\\%c: chybná escape sekvence"
 
 #: src/shuf.c:351
-#, fuzzy
+#, fuzzy, c-format
 msgid "cannot combine -e and -i options"
 msgstr "adresáø %s nelze vytvoøit"
 
@@ -6271,6 +6337,7 @@ msgid "invalid time interval %s"
 msgstr "chybné èíslo polo¾ky: `%s'"
 
 #: src/sleep.c:149 src/tail.c:1106
+#, c-format
 msgid "cannot read realtime clock"
 msgstr "z hodin reálného èasu nelze èíst"
 
@@ -6573,6 +6640,7 @@ msgid ""
 msgstr ""
 
 #: src/split.c:194
+#, c-format
 msgid "Output file suffixes exhausted"
 msgstr ""
 
@@ -6582,6 +6650,7 @@ msgid "creating file %s\n"
 msgstr "vytváøím soubor `%s'\n"
 
 #: src/split.c:371
+#, c-format
 msgid "cannot split in more than one way"
 msgstr "soubor nelze rozdìlit více zpùsoby"
 
@@ -6606,7 +6675,7 @@ msgid "line count option -%s%c... is too large"
 msgstr "%s: poèet `%.*s' je pøíli¹ velký"
 
 #: src/split.c:519
-#, fuzzy
+#, fuzzy, c-format
 msgid "invalid number of lines: 0"
 msgstr "chybný poèet øádkù"
 
@@ -6621,7 +6690,7 @@ msgid "%s%s: invalid directive"
 msgstr "%s: chybný vzorek"
 
 #: src/stat.c:671
-#, fuzzy
+#, fuzzy, c-format
 msgid "warning: backslash at end of format"
 msgstr "chybnì pou¾ité zpìtné lomítko na konci øetìzce"
 
@@ -7051,18 +7120,19 @@ msgstr ""
 "znakù.\n"
 
 #: src/stty.c:786
-#, fuzzy
+#, fuzzy, c-format
 msgid "only one device may be specified"
 msgstr "mù¾e být zadán pouze jeden argument"
 
 #: src/stty.c:816
-#, fuzzy
+#, fuzzy, c-format
 msgid ""
 "the options for verbose and stty-readable output styles are\n"
 "mutually exclusive"
 msgstr "pøepínaèe --string a --check se vzájemnì vyluèují"
 
 #: src/stty.c:822
+#, c-format
 msgid "when specifying an output style, modes may not be set"
 msgstr "pøi zadávání výstupního stylu, nemohou být nastavovány re¾imy"
 
@@ -7112,21 +7182,22 @@ msgid "Password:"
 msgstr "Heslo:"
 
 #: src/su.c:246
+#, c-format
 msgid "getpass: cannot open /dev/tty"
 msgstr "getpass: /dev/tty nelze otevøít"
 
 #: src/su.c:304
-#, fuzzy
+#, fuzzy, c-format
 msgid "cannot set groups"
 msgstr "nemù¾ete vynechat jak u¾ivatele tak skupinu"
 
 #: src/su.c:308
-#, fuzzy
+#, fuzzy, c-format
 msgid "cannot set group id"
 msgstr "nemù¾ete vynechat jak u¾ivatele tak skupinu"
 
 #: src/su.c:310
-#, fuzzy
+#, fuzzy, c-format
 msgid "cannot set user id"
 msgstr "nemù¾ete vynechat jak u¾ivatele tak skupinu"
 
@@ -7175,6 +7246,7 @@ msgid "user %s does not exist"
 msgstr "u¾ivatel %s neexistuje"
 
 #: src/su.c:499
+#, c-format
 msgid "incorrect password"
 msgstr "chybné heslo"
 
@@ -7212,7 +7284,7 @@ msgid ""
 msgstr ""
 
 #: src/sync.c:74
-#, fuzzy
+#, fuzzy, c-format
 msgid "ignoring all arguments"
 msgstr "pøíli¹ mnoho argumentù"
 
@@ -7273,7 +7345,7 @@ msgid "%s: seek failed"
 msgstr "uzavøení souboru selhalo"
 
 #: src/tac.c:265
-#, fuzzy
+#, fuzzy, c-format
 msgid "record too large"
 msgstr "%s: soubor je pøíli¹ dlouhý"
 
@@ -7293,6 +7365,7 @@ msgid "%s: write error"
 msgstr "chyba pøi zápisu"
 
 #: src/tac.c:601
+#, c-format
 msgid "separator cannot be empty"
 msgstr "oddìlovaè nemù¾e být prázdný"
 
@@ -7441,6 +7514,7 @@ msgid "%s: file truncated"
 msgstr "%s: soubor byl zkrácen"
 
 #: src/tail.c:1092
+#, c-format
 msgid "no files remaining"
 msgstr "ji¾ nezbývají ¾ádné soubory"
 
@@ -7477,17 +7551,19 @@ msgid "option used in invalid context -- %c"
 msgstr ""
 
 #: src/tail.c:1568
-#, fuzzy
+#, fuzzy, c-format
 msgid "warning: --retry is useful mainly when following by name"
 msgstr "varování: --retry je u¾iteèný pouze v pøípadì --follow=name"
 
 #: src/tail.c:1572
+#, c-format
 msgid "warning: PID ignored; --pid=PID is useful only when following"
 msgstr ""
 "varování: PID ignorován; --pid=PID je u¾iteèný pouze v pøípadì sledování "
 "konce"
 
 #: src/tail.c:1575
+#, c-format
 msgid "warning: --pid=PID is not supported on this system"
 msgstr "varování: --pid=PID není na tomto systému podporován"
 
@@ -7497,6 +7573,7 @@ msgid "cannot follow %s by name"
 msgstr "nelze vytvoøit doèasný soubor"
 
 #: src/tail.c:1670
+#, c-format
 msgid "warning: following standard input indefinitely is ineffective"
 msgstr ""
 
@@ -7776,7 +7853,7 @@ msgid ""
 msgstr ""
 
 #: src/touch.c:344
-#, fuzzy
+#, fuzzy, c-format
 msgid "cannot specify times from more than one source"
 msgstr "soubor nelze rozdìlit více zpùsoby"
 
@@ -7925,11 +8002,12 @@ msgid "invalid repeat count %s in [c*n] construct"
 msgstr "chybný èítaè opakování `%s' v konstrukci [c*n]"
 
 #: src/tr.c:919
-#, fuzzy
+#, fuzzy, c-format
 msgid "missing character class name `[::]'"
 msgstr "chybná tøída znaku `%s'"
 
 #: src/tr.c:922
+#, c-format
 msgid "missing equivalence class character `[==]'"
 msgstr ""
 
@@ -7944,30 +8022,35 @@ msgid "%s: equivalence class operand must be a single character"
 msgstr "%s: operand ve tøídì [=c=] musí být jediný znak"
 
 #: src/tr.c:1276
-#, fuzzy
+#, fuzzy, c-format
 msgid "too many characters in set"
 msgstr "zbloudilý znak v zadání øadící polo¾ky"
 
 # should it be string1 or SET1?
 #: src/tr.c:1424
+#, c-format
 msgid "the [c*] repeat construct may not appear in string1"
 msgstr "zadání opakování [c*] nemù¾e být v MNO®INÌ1"
 
 # string2 or SET2?
 #: src/tr.c:1434
+#, c-format
 msgid "only one [c*] repeat construct may appear in string2"
 msgstr "opakování znaku [c*] mù¾e být v MNO®INÌ2 pouze jednou"
 
 #: src/tr.c:1442
+#, c-format
 msgid "[=c=] expressions may not appear in string2 when translating"
 msgstr "výraz [=c=] nemù¾e být v MNO®INÌ2 pøi nahrazování"
 
 #: src/tr.c:1455
+#, c-format
 msgid "when not truncating set1, string2 must be non-empty"
 msgstr "jestli¾e MNO®INA1 není zkracována, pak MNO®INA2 nesmí být prázdná"
 
 # ? - rzm
 #: src/tr.c:1464
+#, c-format
 msgid ""
 "when translating with complemented character classes,\n"
 "string2 must map all characters in the domain to one"
@@ -7976,6 +8059,7 @@ msgstr ""
 "znaky z této oblasti do jednoho"
 
 #: src/tr.c:1471
+#, c-format
 msgid ""
 "when translating, the only character classes that may appear in\n"
 "string2 are `upper' and `lower'"
@@ -7984,6 +8068,7 @@ msgstr ""
 "a [:lower:]"
 
 #: src/tr.c:1480
+#, c-format
 msgid "the [c*] construct may appear in string2 only when translating"
 msgstr "výraz [c*] mù¾e být v MNO®INÌ2 pouze pøi nahrazování"
 
@@ -8001,6 +8086,7 @@ msgstr ""
 
 # ? - rzm
 #: src/tr.c:1845
+#, c-format
 msgid "misaligned [:upper:] and/or [:lower:] construct"
 msgstr "nezarovnané(á) konstrukce [:upper:] a/nebo [:lower:]"
 
@@ -8103,7 +8189,7 @@ msgid ""
 msgstr ""
 
 #: src/uname.c:236
-#, fuzzy
+#, fuzzy, c-format
 msgid "cannot get system name"
 msgstr "nelze vytvoøit doèasný soubor"
 
@@ -8135,11 +8221,12 @@ msgid ""
 msgstr ""
 
 #: src/unexpand.c:161
+#, c-format
 msgid "tabs are too far apart"
 msgstr ""
 
 #: src/unexpand.c:512
-#, fuzzy
+#, fuzzy, c-format
 msgid "tab stop value is too large"
 msgstr "%s je pøíli¹ velké"
 
@@ -8184,7 +8271,7 @@ msgid ""
 msgstr ""
 
 #: src/uniq.c:341
-#, fuzzy
+#, fuzzy, c-format
 msgid "too many repeated lines"
 msgstr "pøíli¹ mnoho argumentù"
 
@@ -8205,6 +8292,7 @@ msgid "invalid number of bytes to compare"
 msgstr "chybný poèet bajtù pro porovnání: `%s'"
 
 #: src/uniq.c:536
+#, c-format
 msgid "printing all duplicated lines and repeat counts is meaningless"
 msgstr "výpis v¹ech opakujících se øádkù a poèítadla opakování nemá smysl"
 
@@ -8229,6 +8317,7 @@ msgid "cannot unlink %s"
 msgstr "ioctl na `%s' není mo¾né vykonat"
 
 #: src/uptime.c:108
+#, c-format
 msgid "couldn't get boot time"
 msgstr "èas startu OS nelze zjistit"
 
@@ -8467,6 +8556,7 @@ msgid ""
 msgstr ""
 
 #: src/who.c:765
+#, c-format
 msgid "Warning: -i will be removed in a future release;   use -u instead"
 msgstr ""
 
@@ -8501,6 +8591,14 @@ msgid ""
 "Repeatedly output a line with all specified STRING(s), or `y'.\n"
 "\n"
 msgstr ""
+
+#, fuzzy
+#~ msgid "cannot change owner and permissions of %s"
+#~ msgstr "práva %s nelze zmìnit"
+
+#, fuzzy
+#~ msgid "appending output to %s"
+#~ msgstr "vlastníka a/nebo skupinu %s nelze zmìnit"
 
 #~ msgid "cannot change owner and/or group of %s"
 #~ msgstr "vlastníka a/nebo skupinu %s nelze zmìnit"
