@@ -1,6 +1,6 @@
 2006-08-15  Jim Meyering  <jim@meyering.net>
 
-	* Version 6.0. [unstable]
+	* Version 6.0.
 	* NEWS: Record the 6.0 release date.
 	* configure.ac (AC_INIT): Remove "-cvs" suffix from version string.
 
