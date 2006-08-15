@@ -1,4 +1,4 @@
-add unit tests for lib/*.c
+convert to use gnulib-tool
 
 strip: add an option to specify the program used to strip binaries.
   suggestion from Karl Berry
@@ -45,8 +45,6 @@ seq: consider allowing format string to contain no %-directives
 
 resolve RH report on cp -a forwarded by Tim Waugh
 
-provide an ls option to do something like `--sort directory'
-
 tail: don't use xlseek; it *exits*.
   Instead, maybe use a macro and return nonzero.
 
@@ -66,16 +64,6 @@ sort: Compress temporary files when doing large external sort/merges.
   This improves performance when you can compress/uncompress faster than
   you can read/write, which is common in these days of fast CPUs.
   suggestion from Charles Randall on 2001-08-10
-
-sort: Add an ordering option -R that causes 'sort' to sort according
-  to a random permutation of the correct sort order.  Also, add an
-  option --random-seed=SEED that causes 'sort' to use an arbitrary
-  string SEED to select which permutations to use, in a deterministic
-  manner: that is, if you sort a permutation of the same input file
-  with the same --random-seed=SEED option twice, you'll get the same
-  output.  The default SEED is chosen at random, and contains enough
-  information to ensure that the output permutation is random.
-  suggestion from Feth AREZKI, Stephan Kasal, and Paul Eggert on 2003-07-17
 
 unexpand: [http://www.opengroup.org/onlinepubs/007908799/xcu/unexpand.html]
   printf 'x\t \t y\n'|unexpand -t 8,9 should print its input, unmodified.
@@ -152,7 +140,7 @@ Have euidaccess.m4 check for eaccess as well as euidaccess
 If found, then do `#define euidaccess eaccess'.
 
 Remove long-deprecated options.  Search case-insensitive for
-`deprecated' and `remove in '.
+`deprecated' and `remove in '.  Automate this.
 
 Add a distcheck-time test to ensure that every distributed
 file is either read-only(indicating generated) or is
@@ -165,7 +153,9 @@ Implement Ulrich Drepper's suggestion to use getgrouplist rather
   But first we'll need a run-test (either in an autoconf macro or at
   run time) to avoid the segfault bug in libc-2.3.2's getgrouplist.
   In that case, we'd revert to using a new (to-be-written) getgrouplist
-  module that does most of what `id' already does.
+  module that does most of what `id' already does.  Or just avoid the
+  buggy use of getgrouplist by never passing it a buffer of length zero.
+  See https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=200327
 
 remove `%s' notation:
   grep -E "\`%.{,4}s'" src/*.c
@@ -183,17 +173,3 @@ Remove all uses of the `register' keyword
 pr's use of nstrftime can make it malloc a very large (up to SIZE_MAX) buffer
 
 ls.c: use gettime rather than clock_gettime, gettimeofday, time
-
-write rules to deal with c99->c89 patches and to automatically
-  check that they apply cleanly
-
-Use latest automake
-
-----------------
-The command:
-  mv dir new-name/
-should work the same way the underlying
-rename ("dir", "new-name/") call does.
-http://lists.gnu.org/archive/html/bug-coreutils/2005-11/msg00292.html
-
-----------------

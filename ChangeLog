@@ -4,6 +4,9 @@
 	* NEWS: Record the 6.0 release date.
 	* configure.ac (AC_INIT): Remove "-cvs" suffix from version string.
 
+	* TODO: Add an item (convert to use gnulib-tool), add to the plan
+	for id-vs-getgrouplist, and remove a few completed items.
+
 2006-08-13  Jim Meyering  <jim@meyering.net>
 
 	* src/shred.c (usage): Don't indent the second line of an item.
