@@ -548,7 +548,7 @@ print_stats (void)
 
   if (r_truncate != 0)
     fprintf (stderr,
-	     ngettext ("1 truncated record\n",
+	     ngettext ("%"PRIuMAX" truncated record\n",
 		       "%"PRIuMAX" truncated records\n",
 		       MIN (r_truncate, ULONG_MAX)),
 	     r_truncate);
@@ -560,7 +560,7 @@ print_stats (void)
      since that makes it easy to use SI abbreviations.  */
 
   fprintf (stderr,
-	   ngettext ("1 byte (1 B) copied",
+	   ngettext ("%"PRIuMAX" byte (%s) copied",
 		     "%"PRIuMAX" bytes (%s) copied",
 		     MIN (w_bytes, ULONG_MAX)),
 	   w_bytes,

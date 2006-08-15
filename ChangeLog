@@ -1,3 +1,9 @@
+2006-08-15  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/dd.c (print_stats): Don't substitute "1" for number, as this
+	causes confusion for the Hungarian translators.  Problem reported
+	by Egmont Koblinger.
+
 2006-08-15  Jim Meyering  <jim@meyering.net>
 
 	* .x-sc_require_config_h: Add lib/at-func.c.
