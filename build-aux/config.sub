@@ -4,7 +4,7 @@
 #   2000, 2001, 2002, 2003, 2004, 2005, 2006 Free Software Foundation,
 #   Inc.
 
-timestamp='2006-07-02'
+timestamp='2006-08-14'
 
 # This file is (in principle) common to ALL GNU software.
 # The presence of a machine in this file suggests that SOME GNU software
@@ -284,7 +284,7 @@ case $basic_machine in
 	| tahoe | thumb | tic4x | tic80 | tron \
 	| v850 | v850e \
 	| we32k \
-	| x86 | xscale | xscalee[bl] | xstormy16 | xtensa \
+	| x86 | xc16x | xscale | xscalee[bl] | xstormy16 | xtensa \
 	| z8k)
 		basic_machine=$basic_machine-unknown
 		;;
@@ -367,7 +367,7 @@ case $basic_machine in
 	| tron-* \
 	| v850-* | v850e-* | vax-* \
 	| we32k-* \
-	| x86-* | x86_64-* | xps100-* | xscale-* | xscalee[bl]-* \
+	| x86-* | x86_64-* | xc16x-* | xps100-* | xscale-* | xscalee[bl]-* \
 	| xstormy16-* | xtensa-* \
 	| ymp-* \
 	| z8k-*)
@@ -908,6 +908,10 @@ case $basic_machine in
 		;;
 	sb1el)
 		basic_machine=mipsisa64sb1el-unknown
+		;;
+	sde)
+		basic_machine=mipsisa32-sde
+		os=-elf
 		;;
 	sei)
 		basic_machine=mips-sei
