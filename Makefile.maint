@@ -598,7 +598,7 @@ $(xd-delta): $(release_archive_dir)/$(prev-tgz) $(distdir).tar.gz
 alpha beta major: news-date-check changelog-check $(local-check)
 	test $@ = major						\
 	  && { echo $(VERSION) | grep -E '^[0-9]+(\.[0-9]+)+$$'	\
-	       || { echo "invalid version string: $(VERSION)" 1>&2; exit 1; }}\
+	       || { echo "invalid version string: $(VERSION)" 1>&2; exit 1;};}\
 	  || :
 	$(MAKE) cvs-dist
 	$(MAKE) $(xd-delta)
