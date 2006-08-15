@@ -1,3 +1,9 @@
+2006-08-15  Jim Meyering  <jim@meyering.net>
+
+	* Version 6.0 [unstable].
+	* NEWS: Record the 6.0 release date.
+	* configure.ac (AC_INIT): Remove "-cvs" suffix from version string.
+
 2006-08-13  Jim Meyering  <jim@meyering.net>
 
 	* src/shred.c (usage): Don't indent the second line of an item.
