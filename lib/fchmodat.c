@@ -22,30 +22,16 @@
 #endif
 
 #include "openat.h"
-
-#include <errno.h>
-
 #include "dirname.h" /* solely for definition of IS_ABSOLUTE_FILE_NAME */
 #include "save-cwd.h"
-
-#include "gettext.h"
-#define _(msgid) gettext (msgid)
-
 #include "openat-priv.h"
 
-/* Some systems don't have ENOSYS.  */
-#ifndef ENOSYS
-# ifdef ENOTSUP
-#  define ENOSYS ENOTSUP
-# else
-/* Some systems don't have ENOTSUP either.  */
-#  define ENOSYS EINVAL
-# endif
-#endif
-
 #ifndef HAVE_LCHMOD
+/* Use a different name, to avoid conflicting with any
+   system-supplied declaration.  */
 # undef lchmod
-# define lchmod(f,m) (errno = ENOSYS, -1)
+# define lchmod lchmod_rpl
+static int lchmod (char const *f, mode_t m) { errno = ENOSYS; return -1; }
 #endif
 
 /* Solaris 10 has no function like this.
@@ -56,49 +42,11 @@
    fails, then give a diagnostic and exit nonzero.
    Note that an attempt to use a FLAG value of AT_SYMLINK_NOFOLLOW
    on a system without lchmod support causes this function to fail.  */
-int
-fchmodat (int fd, char const *file, mode_t mode, int flag)
-{
-  struct saved_cwd saved_cwd;
-  int saved_errno;
-  int err;
 
-  if (fd == AT_FDCWD || IS_ABSOLUTE_FILE_NAME (file))
-    return (flag == AT_SYMLINK_NOFOLLOW
-	    ? lchmod (file, mode)
-	    : chmod (file, mode));
-
-  {
-    char *proc_file;
-    BUILD_PROC_NAME (proc_file, fd, file);
-    err = (flag == AT_SYMLINK_NOFOLLOW
-	   ? lchmod (proc_file, mode)
-	   : chmod (proc_file, mode));
-    /* If the syscall succeeds, or if it fails with an unexpected
-       errno value, then return right away.  Otherwise, fall through
-       and resort to using save_cwd/restore_cwd.  */
-    if (0 <= err || ! EXPECTED_ERRNO (errno))
-      return err;
-  }
-
-  if (save_cwd (&saved_cwd) != 0)
-    openat_save_fail (errno);
-
-  err = fchdir (fd);
-  saved_errno = errno;
-
-  if (! err)
-    {
-      err = (flag == AT_SYMLINK_NOFOLLOW
-	     ? lchmod (file, mode)
-	     : chmod (file, mode));
-      saved_errno = errno;
-
-      if (restore_cwd (&saved_cwd) != 0)
-	openat_restore_fail (errno);
-    }
-
-  free_cwd (&saved_cwd);
-  errno = saved_errno;
-  return err;
-}
+#define AT_FUNC_NAME fchmodat
+#define AT_FUNC_F1 lchmod
+#define AT_FUNC_F2 chmod
+#define AT_FUNC_USE_F1_COND flag == AT_SYMLINK_NOFOLLOW
+#define AT_FUNC_POST_FILE_PARAM_DECLS , mode_t mode, int flag
+#define AT_FUNC_POST_FILE_ARGS        , mode
+#include "at-func.c"

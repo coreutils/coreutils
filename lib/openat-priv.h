@@ -19,6 +19,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <errno.h>
 #include "alloca.h"
 #include "intprops.h"
 
@@ -40,6 +41,16 @@
       snprintf ((Proc_fd_filename), buflen, procfd, (Fd), (File));	\
     }									\
   while (0)
+
+/* Some systems don't have ENOSYS.  */
+#ifndef ENOSYS
+# ifdef ENOTSUP
+#  define ENOSYS ENOTSUP
+# else
+/* Some systems don't have ENOTSUP either.  */
+#  define ENOSYS EINVAL
+# endif
+#endif
 
 /* Trying to access a BUILD_PROC_NAME file will fail on systems without
    /proc support, and even on systems *with* ProcFS support.  Return

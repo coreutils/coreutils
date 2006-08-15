@@ -1,5 +1,7 @@
 2006-08-15  Jim Meyering  <jim@meyering.net>
 
+	* .x-sc_require_config_h: Add lib/at-func.c.
+
 	* NEWS: Add a line for 6.1-cvs.
 	* configure.ac (AC_INIT): Bump to 6.1 and add "-cvs" suffix.
 

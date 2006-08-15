@@ -23,17 +23,10 @@
 
 #include "openat.h"
 
-#include <stdlib.h>
 #include <unistd.h>
-#include <errno.h>
-#include <fcntl.h>
 
 #include "dirname.h" /* solely for definition of IS_ABSOLUTE_FILE_NAME */
 #include "save-cwd.h"
-
-#include "gettext.h"
-#define _(msgid) gettext (msgid)
-
 #include "openat-priv.h"
 
 /* Solaris 10 has no function like this.
@@ -42,47 +35,11 @@
    working directory.  Otherwise, resort to using save_cwd/fchdir,
    then mkdir/restore_cwd.  If either the save_cwd or the restore_cwd
    fails, then give a diagnostic and exit nonzero.  */
-int
-mkdirat (int fd, char const *file, mode_t mode)
-{
-  struct saved_cwd saved_cwd;
-  int saved_errno;
-  int err;
 
-  if (fd == AT_FDCWD || IS_ABSOLUTE_FILE_NAME (file))
-    return mkdir (file, mode);
-
-  {
-    char *proc_file;
-    BUILD_PROC_NAME (proc_file, fd, file);
-    err = mkdir (proc_file, mode);
-    /* If the syscall succeeds, or if it fails with an unexpected
-       errno value, then return right away.  Otherwise, fall through
-       and resort to using save_cwd/restore_cwd.  */
-    if (0 <= err || ! EXPECTED_ERRNO (errno))
-      return err;
-  }
-
-  if (save_cwd (&saved_cwd) != 0)
-    openat_save_fail (errno);
-
-  if (fchdir (fd) != 0)
-    {
-      saved_errno = errno;
-      free_cwd (&saved_cwd);
-      errno = saved_errno;
-      return -1;
-    }
-
-  err = mkdir (file, mode);
-  saved_errno = (err < 0 ? errno : 0);
-
-  if (restore_cwd (&saved_cwd) != 0)
-    openat_restore_fail (errno);
-
-  free_cwd (&saved_cwd);
-
-  if (saved_errno)
-    errno = saved_errno;
-  return err;
-}
+#define AT_FUNC_NAME mkdirat
+#define AT_FUNC_F1 mkdir
+#define AT_FUNC_F2 mkdir
+#define AT_FUNC_USE_F1_COND 1
+#define AT_FUNC_POST_FILE_PARAM_DECLS , mode_t mode
+#define AT_FUNC_POST_FILE_ARGS        , mode
+#include "at-func.c"

@@ -1,3 +1,4 @@
+^lib/at-func\.c$
 ^lib/bcopy\.c$
 ^lib/buffer-lcm\.c$
 ^lib/c-strtold\.c$

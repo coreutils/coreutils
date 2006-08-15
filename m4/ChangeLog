@@ -1,3 +1,7 @@
+2006-08-15  Jim Meyering  <jim@meyering.net>
+
+	* openat.m4 (gl_FUNC_OPENAT): Add at-func.c via AC_LIBSOURCES.
+
 2006-08-10  Jim Meyering  <jim@meyering.net>
 
 	Update from gnulib.

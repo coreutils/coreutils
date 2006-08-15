@@ -1,3 +1,16 @@
+2006-08-15  Jim Meyering  <jim@meyering.net>
+
+	* at-func.c: New file, with the logic of all emulated at-functions.
+	* openat-priv.h: Include <errno.h> and define ENOSYS,
+	in support of the EXPECTED_ERRNO macro.
+	* openat.c (fstatat, unlinkat, fchownat): Remove function definitions.
+	Instead, define the appropriate symbols and include "at-func.c".
+	* mkdirat.c (mkdirat): Likewise.
+	* fchmodat.c (fchmodat): Likewise.
+	(ENOSYS): Remove definition.
+	* openat.c: Don't include <errno.h>, now that "openat-priv.h" does it.
+	Don't include "unistd--.h" -- it wasn't ever used.
+
 2006-08-14  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* memcoll.c (memcoll): Optimize for the common case where the
