@@ -1,3 +1,8 @@
+2006-08-16  Jim Meyering  <jim@meyering.net>
+
+	* fts.c (fts_children): Remove obsolete "// FIXME ..." comment.
+	Reported by Bruno Haible.
+
 2006-08-15  Jim Meyering  <jim@meyering.net>
 
 	* at-func.c: New file, with the logic of all emulated at-functions.

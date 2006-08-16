@@ -801,7 +801,6 @@ fts_children (register FTS *sp, int instr)
 	  {
 	    if (fchdir(fd))
 	      {
-		// FIXME: save/restore is a fix over prev. version
 		int saved_errno = errno;
 		close (fd);
 		__set_errno (saved_errno);
