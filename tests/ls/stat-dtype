@@ -16,8 +16,9 @@ fi
 # linux-2.6.15, at least tmpfs and ext3 work, but reiserfs and xfs don't.
 # Also, tmpfs on Solaris 10 lacks d_type support.
 skip=yes
-test `uname -s` = Linux && df -t tmpfs . > /dev/null 2>&1 && skip=no
-df -t ext3 . > /dev/null 2>&1 && skip=no
+fs_type=`stat -f --printf %T .`
+test `uname -s` = Linux && test $fs_type = tmpfs && skip=no
+test $fs_type = ext2/ext3 && skip=no
 test $skip = yes &&
   {
     echo "$0: '.' is not on a suitable file system for this test" 1>&2
