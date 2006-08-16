@@ -34,7 +34,7 @@ acl1=`cd a && getfacl file | grep -v ':bin:' | grep -v 'mask::'` \
   || framework_failure=1
 cp a/file b/ || fail=1
 acl2=`cd b && getfacl file` || framework_failure=1
-test "$acl1" == "$acl2" || fail=1
+test "$acl1" = "$acl2" || fail=1
 rm a/file || framework_failure=1
 
 # copy a file, preserving permissions
@@ -43,7 +43,7 @@ setfacl -m user:bin:rw a/file || framework_failure=1
 acl1=`cd a && getfacl file` || framework_failure=1
 cp -p a/file b/ || fail=1
 acl2=`cd b && getfacl file` || framework_failure=1
-test "$acl1" == "$acl2" || fail=1
+test "$acl1" = "$acl2" || fail=1
 
 if test $framework_failure = 1; then
   echo 'failure in testing framework'

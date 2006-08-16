@@ -1,3 +1,7 @@
+2006-08-16  Andreas Schwab  <schwab@suse.de>
+
+	* tests/cp/acl: Don't use non-portable == operator for test.
+
 2006-08-16  Jim Meyering  <jim@meyering.net>
 
 	* tests/ls/stat-dtype: Use stat to test file system type, rather
