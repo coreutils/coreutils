@@ -1,3 +1,12 @@
+2006-08-16  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Fix some problems reported by Bruno Haible.
+	* tests/chmod/setgid (abs_srcdir): Remove; not used or needed.
+	Skip this test if "chmod g+s d" silently does nothing.
+	* tests/ls-2/tests: Skip this test suite if we can't set up files
+	properly for the setuid-etc test.  This simplifies some of the
+	hacks we were using to work around porting problems.
+
 2006-08-16  Jim Meyering  <jim@meyering.net>
 
 	* tests/cp/Makefile.am: Don't mark "acl" as XFAIL.
@@ -6,10 +15,6 @@
 	Reported by Michael Stone.
 
 2006-08-16  Paul Eggert  <eggert@cs.ucla.edu>
-
-	* tests/ls-2/tests: Skip this test suite if we can't set up files
-	properly for the setuid-etc test.  This simplifies some of the
-	hacks we were using to work around porting problems.
 
 	* tests/lang-default (LC_ALL): Set to "C", so we get
 	English-language diagnostics.  Unset the other variables; it

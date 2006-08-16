@@ -17,18 +17,15 @@ trap '(exit $?); exit' 1 2 13 15
 
 framework_failure=0
 
-# Record absolute path of srcdir and cd back to current dir.
-cd $srcdir || framework_failure=1
-abs_srcdir=`pwd`
-cd $pwd || framework_failure=1
-
 mkdir $tmp || framework_failure=1
 cd $tmp || framework_failure=1
+
+test=../../../src/test
 
 umask 0
 mkdir d || framework_failure=1
 
-chmod g+s d 2> /dev/null ||
+chmod g+s d 2> /dev/null && $test -g d ||
   {
     # This is required because on some systems (at least NetBSD 1.4.2A),
     # it may happen that when you create a directory, its group isn't one
@@ -45,6 +42,13 @@ if test $framework_failure = 1; then
   echo 'failure in testing framework' 1>&2
   (exit 1); exit 1
 fi
+
+# "chmod g+s d" does nothing on some NFS file systems.
+$test -g d || {
+  echo 1>&2 "$0: cannot create setgid directories," \
+    "so can't run this test"
+  exit 77
+}
 
 fail=0
 
