@@ -20,7 +20,8 @@
 
 	* src/dd.c (print_stats): Don't substitute "1" for number, as this
 	causes confusion for the Hungarian translators.  Problem reported
-	by Egmont Koblinger.
+	by Egmont Koblinger here:
+	http://article.gmane.org/gmane.comp.gnu.core-utils.bugs/7726
 
 2006-08-15  Jim Meyering  <jim@meyering.net>
 
