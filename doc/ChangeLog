@@ -1,6 +1,6 @@
 2006-08-15  Paul Eggert  <eggert@cs.ucla.edu>
 
-	* coreutils.texi (df invocation): df exits nonzero if it outpus
+	* coreutils.texi (df invocation): df exits nonzero if it outputs
 	nothing.
 
 2006-08-09  Paul Eggert  <eggert@cs.ucla.edu>
