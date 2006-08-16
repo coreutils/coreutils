@@ -1,7 +1,6 @@
 ## Process this file with automake to produce Makefile.in -*-Makefile-*-.
 AUTOMAKE_OPTIONS = 1.1 gnits
 
-XFAIL_TESTS = acl
 TESTS = \
   link-no-deref \
   cp-deref \

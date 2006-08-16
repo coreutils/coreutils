@@ -1,3 +1,10 @@
+2006-08-16  Jim Meyering  <jim@meyering.net>
+
+	* tests/cp/Makefile.am: Don't mark "acl" as XFAIL.
+	* tests/cp/acl: Instead, skip the test if either setfacl
+	or getfacl fails.
+	Reported by Michael Stone.
+
 2006-08-16  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* tests/ls-2/tests: Skip this test suite if we can't set up files

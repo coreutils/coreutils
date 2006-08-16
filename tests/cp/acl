@@ -19,20 +19,33 @@ trap 'status=$?; cd $pwd; chmod -R u+rwx $t0; rm -rf $t0 && exit $status' 0
 trap '(exit $?); exit $?' 1 2 13 15
 
 framework_failure=0
-mkdir -p $tmp/a $tmp/b || framework_failure=1
+mkdir -p $tmp || framework_failure=1
 cd $tmp || framework_failure=1
+
+mkdir -p a b || framework_failure=1
+touch a/file || framework_failure=1
 
 if test $framework_failure = 1; then
   echo 'failure in testing framework'
   (exit 1); exit 1
 fi
 
-# copy a file without preserving permissions
-touch a/file || framework_failure=1
-setfacl -m user:bin:rw a/file || framework_failure=1
+skip=no
+# Ensure that setfacl and getfacl work on this file system.
+setfacl -m user:bin:rw a/file 2> /dev/null || skip=yes
 acl1=`cd a && getfacl file | grep -v ':bin:' | grep -v 'mask::'` \
-  || framework_failure=1
+  || skip=yes
+
+test $skip = yes &&
+  {
+    echo "$0: '.' is not on a suitable file system for this test" 1>&2
+    echo "$0: skipping this test" 1>&2
+    (exit 77); exit 77
+  }
+
+# copy a file without preserving permissions
 cp a/file b/ || fail=1
+
 acl2=`cd b && getfacl file` || framework_failure=1
 test "$acl1" = "$acl2" || fail=1
 rm a/file || framework_failure=1
