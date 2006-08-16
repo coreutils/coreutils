@@ -563,7 +563,7 @@ digest_check (const char *checkfile_name)
 			     " listed file could not be read",
 			     "WARNING: %" PRIuMAX " of %" PRIuMAX
 			     " listed files could not be read",
-			     n_properly_formatted_lines),
+			     select_plural (n_properly_formatted_lines)),
 		   n_open_or_read_failures, n_properly_formatted_lines);
 
 	  if (n_mismatched_checksums != 0)
@@ -575,7 +575,7 @@ digest_check (const char *checkfile_name)
 			       " computed checksum did NOT match",
 			       "WARNING: %" PRIuMAX " of %" PRIuMAX
 			       " computed checksums did NOT match",
-			       n_computed_checksums),
+			       select_plural (n_computed_checksums)),
 		     n_mismatched_checksums, n_computed_checksums);
 	    }
 	}

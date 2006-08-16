@@ -125,7 +125,8 @@ print_uptime (size_t n, const STRUCT_UTMP *this)
   else
     {
       if (0 < updays)
-	printf (ngettext ("%ld day", "%ld days", updays), updays);
+	printf (ngettext ("%ld day", "%ld days", select_plural (updays)),
+		updays);
       printf (" %2d:%02d,  ", uphours, upmins);
     }
   printf (ngettext ("%lu user", "%lu users", entries),

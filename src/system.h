@@ -383,6 +383,14 @@ static inline unsigned char to_uchar (char ch) { return ch; }
 #define _(msgid) gettext (msgid)
 #define N_(msgid) msgid
 
+/* Return a value that pluralizes the same way that N does, in all
+   languages we know of.  */
+static inline unsigned long int
+select_plural (uintmax_t n)
+{
+  return (n <= ULONG_MAX ? n : n % 1000 + 1000);
+}
+
 #define STREQ(a, b) (strcmp ((a), (b)) == 0)
 
 #if !HAVE_DECL_FREE

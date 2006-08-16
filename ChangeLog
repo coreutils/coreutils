@@ -1,3 +1,15 @@
+2006-08-16  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Fix bugs when printing plurals of numbers that are not
+	unsigned long int values.
+	* src/system.h (select_plural): New function.
+	* src/md5sum.c (digest_check): Use select_plural to avoid bug.
+	* src/uptime.c (print_uptime): Likewise.
+	* src/dd.c (print_stats): Likewise.  Also, don't use ngettext to
+	print a floating point number, as reducing to 0 or 1 doesn't work
+	for some languages.  Instead, just use "s" for seconds since it
+	doesn't need a plural form.
+
 2006-08-16  Bruno Haible  <bruno@clisp.org>
 
 	Old versions of gzip would write --help output to stderr, and it

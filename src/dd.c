@@ -550,7 +550,7 @@ print_stats (void)
     fprintf (stderr,
 	     ngettext ("%"PRIuMAX" truncated record\n",
 		       "%"PRIuMAX" truncated records\n",
-		       MIN (r_truncate, ULONG_MAX)),
+		       select_plural (r_truncate)),
 	     r_truncate);
 
   if (status_flags & STATUS_NOXFER)
@@ -562,7 +562,7 @@ print_stats (void)
   fprintf (stderr,
 	   ngettext ("%"PRIuMAX" byte (%s) copied",
 		     "%"PRIuMAX" bytes (%s) copied",
-		     MIN (w_bytes, ULONG_MAX)),
+		     select_plural (w_bytes)),
 	   w_bytes,
 	   human_readable (w_bytes, hbuf, human_opts, 1, 1));
 
@@ -581,10 +581,17 @@ print_stats (void)
       bytes_per_second = _("Infinity B");
     }
 
-  fprintf (stderr,
-	   ngettext (", %g second, %s/s\n",
-		     ", %g seconds, %s/s\n", delta_s == 1),
-	   delta_s, bytes_per_second);
+  /* TRANSLATORS: The two instances of "s" in this string are the SI
+     symbol "s" (meaning second), and should not be translated.
+
+     This format used to be:
+
+     ngettext (", %g second, %s/s\n", ", %g seconds, %s/s\n", delta_s == 1)
+
+     but that was incorrect for languages like Polish.  To fix this
+     bug we now use SI symbols even though they're a bit more
+     confusing in English.  */
+  fprintf (stderr, _(", %g s, %s/s\n"), delta_s, bytes_per_second);
 }
 
 static void
