@@ -1,5 +1,11 @@
 2006-08-16  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* tests/lang-default (LC_ALL): Set to "C", so we get
+	English-language diagnostics.  Unset the other variables; it
+	should be portable to use 'unset' for this stuff nowadays.
+	Problem reported by Bruno Haible.  Using "C" reverses the
+	2000-10-22 change to fileutils in this area.
+
 	Fix bugs when printing plurals of numbers that are not
 	unsigned long int values.
 	* src/system.h (select_plural): New function.
