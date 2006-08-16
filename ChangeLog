@@ -1,5 +1,7 @@
 2006-08-16  Bruno Haible  <bruno@clisp.org>
 
+	Old versions of gzip would write --help output to stderr, and it
+	would be annoying to see that in the output of every "make" command.
 	* Makefile.maint (gzip_rsyncable): Throw away stderr output of
 	"gzip --help".
 
