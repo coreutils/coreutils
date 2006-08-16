@@ -1,3 +1,9 @@
+2006-08-16  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* memcoll.c (memcoll): Set errno = 0 in the shortcut case, too.
+	Problem and fix reported by Pádraig Brady in
+	<http://lists.gnu.org/archive/html/bug-coreutils/2006-08/msg00099.html>.
+
 2006-08-16  Jim Meyering  <jim@meyering.net>
 
 	* fts.c (fts_children): Remove obsolete "// FIXME ..." comment.

@@ -43,7 +43,10 @@ memcoll (char *s1, size_t s1len, char *s2, size_t s2len)
      the buffers using strcoll on each substring.  */
 
   if (s1len == s2len && memcmp (s1, s2, s1len) == 0)
-    diff = 0;
+    {
+      errno = 0;
+      diff = 0;
+    }
   else
     {
       char n1 = s1[s1len];
