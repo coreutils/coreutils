@@ -1,5 +1,9 @@
 2006-08-16  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* tests/ls-2/tests: Skip this test suite if we can't set up files
+	properly for the setuid-etc test.  This simplifies some of the
+	hacks we were using to work around porting problems.
+
 	* tests/lang-default (LC_ALL): Set to "C", so we get
 	English-language diagnostics.  Unset the other variables; it
 	should be portable to use 'unset' for this stuff nowadays.
