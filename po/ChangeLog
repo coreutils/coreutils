@@ -1,3 +1,8 @@
+2006-08-17  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* po/ChangeLog: Add copyright notice.
+	* po/Makevars: Likewise.
+
 2006-08-10  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* Makevars (XGETTEXT_OPTIONS): Add pass-c-format flags for
@@ -182,3 +187,13 @@
 2002-09-02  Jim Meyering  <jim@meyering.net>
 
 	* LINGUAS: Add lg (Luganda).
+
+
+	-----
+
+	Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software
+	Foundation, Inc.
+
+	Copying and distribution of this file, with or without
+	modification, are permitted provided the copyright notice
+	and this notice are preserved.

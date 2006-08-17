@@ -136,7 +136,7 @@ Copyright @copyright{} 1994, 1995, 1996, 2000, 2001, 2002, 2003, 2004,
 
 @quotation
 Permission is granted to copy, distribute and/or modify this document
-under the terms of the GNU Free Documentation License, Version 1.1 or
+under the terms of the GNU Free Documentation License, Version 1.2 or
 any later version published by the Free Software Foundation; with no
 Invariant Sections, with no Front-Cover Texts, and with no Back-Cover
 Texts.  A copy of the license is included in the section entitled ``GNU
@@ -197,7 +197,7 @@ Free Documentation License''.
 * File permissions::                   Access modes.
 * Date input formats::                 Specifying date strings.
 * Opening the software toolbox::       The software tools philosophy.
-* GNU Free Documentation License::     The license for this documentation.
+* Copying This Manual::                License for copying this manual.
 * Index::                              General index.
 
 @detailmenu
@@ -462,9 +462,9 @@ Opening the software toolbox
 * The uniq command::             The @command{uniq} command
 * Putting the tools together::   Putting the tools together
 
-GNU Free Documentation License
+Copying This Manual
 
-* How to use this License for your documents::
+* GNU Free Documentation License::  License for copying this manual.
 
 @end detailmenu
 @end menu
@@ -14457,7 +14457,14 @@ philosophy, these books are unparalleled, and I recommend them highly.
 Acknowledgment: I would like to express my gratitude to Brian Kernighan
 of Bell Labs, the original Software Toolsmith, for reviewing this column.
 
-@include doclicense.texi
+@node Copying This Manual
+@appendix Copying This Manual
+
+@menu
+* GNU Free Documentation License::  License for copying this manual.
+@end menu
+
+@include fdl.texi
 
 @node Index
 @unnumbered Index

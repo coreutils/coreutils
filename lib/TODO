@@ -30,3 +30,11 @@ Mention fragmentation.
 assert (bucket_limit - bucket == n_buckets) ?
 
 remove.c: s/done/successful or ok
+
+
+-----
+Copyright (C) 1998 Free Software Foundation, Inc.
+
+Copying and distribution of this file, with or without
+modification, are permitted provided the copyright notice
+and this notice are preserved.

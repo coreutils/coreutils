@@ -1,3 +1,8 @@
+2006-08-17  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* ChangeLog: Add copyright notice.
+	* NEWS: Likewise.
+
 2002-07-29  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.1.
@@ -8736,3 +8741,13 @@ Sat Dec 16 15:15:50 1989  David J. MacKenzie  (djm at hobbes.ai.mit.edu)
 	(error): Print to stderr, not stdout.
 	(xmalloc, xrealloc): Return char * instead of int.
 	Returning 0 is ok if 0 bytes requested (ANSI C).
+
+
+	-----
+
+	Copyright (C) 1998, 1999, 2000, 2001, 2002, 2006 Free Software
+	Foundation, Inc.
+
+	Copying and distribution of this file, with or without
+	modification, are permitted provided the copyright notice
+	and this notice are preserved.

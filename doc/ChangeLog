@@ -1,3 +1,16 @@
+2006-08-17  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* ChangeLog: Add copyright notice.
+	* Makefile.am: Likewise.
+	* getdate.texi: Likewise.
+	* perm.texi: Likewise.
+	* getdate.texi: Update to version 1.2 of the GNU FDL.
+	* coreutils.texi: Likewise.
+	(Copying This Manual): Renamed from GNU Free Documentation License.
+	Now an appendix.  Include fdl.texi rather than doclicense.texi.
+	* fdl.tex: Renamed from doclicense.texi.  Latest version from FSF.
+	* perm.texi: Add copyright notice.
+
 2006-08-15  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (df invocation): df exits nonzero if it outputs
@@ -1812,3 +1825,13 @@
 	(DISABLED_constants.texi): New rule -- disabled for now.
 
 	This directory is now shared by fileutils, textutils, and sh-utils.
+
+
+	-----
+
+	Copyright (C) 2001, 2003, 2004, 2005, 2006 Free Software
+	Foundation, Inc.
+
+	Copying and distribution of this file, with or without
+	modification, are permitted provided the copyright notice
+	and this notice are preserved.

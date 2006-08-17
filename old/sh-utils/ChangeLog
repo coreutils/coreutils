@@ -1,3 +1,9 @@
+2006-08-17  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* ChangeLog: Add copyright notice.
+	* ChangeLog.0: Likewise.
+	* NEWS: Likewise.
+
 2002-08-08  Jim Meyering  <meyering@lucent.com>
 
 	* Version 2.0.15.
@@ -4848,3 +4854,13 @@ Thu Nov 17 23:47:26 1994  Jim Meyering  (meyering@comco.com)
 	(list_entries_users): Sort the user names.  Reported by
 	Michael I Bushnell.
 	Topologically sort the functions and remove fwd declarations.
+
+
+	-----
+
+	Copyright (C) 1994, 1995, 1996, 1997, 1999, 2000, 2001, 2002, 2006
+	Free Software Foundation, Inc.
+
+	Copying and distribution of this file, with or without
+	modification, are permitted provided the copyright notice
+	and this notice are preserved.

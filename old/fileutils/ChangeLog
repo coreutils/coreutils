@@ -1,3 +1,9 @@
+2006-08-17  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* ChangeLog: Add copyright notice.
+	* ChangeLog-1997: Likewise.
+	* NEWS: Likewise.
+
 2002-07-28  Jim Meyering  <meyering@lucent.com>
 
 	* Version 4.1.12.
@@ -8380,3 +8386,13 @@
 
 	* src/rm.c (remove_cwd_entries): Initialize the entry-name obstack
 	only once and never free it.
+
+
+	-----
+
+	Copyright (C) 1998, 1999, 2000, 2001, 2002, 2006 Free Software
+	Foundation, Inc.
+
+	Copying and distribution of this file, with or without
+	modification, are permitted provided the copyright notice
+	and this notice are preserved.

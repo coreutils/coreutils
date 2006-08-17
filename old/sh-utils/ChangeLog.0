@@ -1702,6 +1702,16 @@ Sat Oct 28 13:20:43 1989  David J. MacKenzie  (djm at spiff)
 	(program_name, long_options): New variables.
 	(main): Support long options.
 	(usage): Add long options summary to message.
+
+
+	-----
+
+	Copyright (C) 1989, 1990, 1991, 1992, 1993, 1994 Free Software
+	Foundation, Inc.
+
+	Copying and distribution of this file, with or without
+	modification, are permitted provided the copyright notice
+	and this notice are preserved.
 
 Local Variables:
 mode: indented-text

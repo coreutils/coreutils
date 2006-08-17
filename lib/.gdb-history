@@ -1,3 +1,22 @@
+# GDB history for debugging coreutils.
+#
+# Copyright (C) 1999, 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2, or (at your option)
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+# 02110-1301, USA.
+#
 r 206.65.212.10
 b main
 r
@@ -9,7 +28,7 @@ p addr
 p he->h_name
 n
 q
-b canon_host 
+b canon_host
 r 206.65.212.10
 n
 p he
@@ -103,7 +122,7 @@ p *old_vec@10
 p *old_vec@13
 b hash_insert_item
 r
-b hash_insert_item_at 
+b hash_insert_item_at
 r
 n
 p fail
@@ -111,7 +130,7 @@ p *(ht->vec)@13
 p *(ht->ht_vec)@13
 p ((struct item*)(ht->ht_vec)[10])->key
 b hash_delete_item
-b hash_delete_item_at 
+b hash_delete_item_at
 c
 n
 p slot
@@ -147,7 +166,7 @@ p *old_vec@13
 p &dummy
 q
 r 444444444444 44444444444
-b human_readable 
+b human_readable
 r
 n
 q
@@ -166,7 +185,7 @@ p b
 r 343434343 343434343
 c
 q
-b posixtime 
+b posixtime
 r
 n
 s
@@ -187,7 +206,7 @@ q
 complete b user
 complete b user
 complete b pars
-b parse_user_spec 
+b parse_user_spec
 r a.b
 n
 n
@@ -291,7 +310,7 @@ p allocated
 n 20
 n
 complete p alloca
-p allocated 
+p allocated
 p length
 n
 p maxlen
@@ -303,7 +322,7 @@ n
 p result
 q
 complete b vasnp
-b vasnprintf 
+b vasnprintf
 r
 n 30
 n

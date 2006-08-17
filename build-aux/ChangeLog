@@ -1,3 +1,9 @@
+2006-08-15  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* ChangeLog: Add copyright notice.
+	* vc-list-files: Likewise.
+	* mkinstalldirs: Remove; no longer needed.
+
 2006-08-09  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* texinfo.tex: Update from gnulib.
@@ -194,3 +200,13 @@
 
 	* config.guess (main): Don't use `head -1'; it's no longer portable.
 	Use `sed 1q' instead.
+
+
+	-----
+
+	Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software
+	Foundation, Inc.
+
+	Copying and distribution of this file, with or without
+	modification, are permitted provided the copyright notice
+	and this notice are preserved.

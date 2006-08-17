@@ -11000,3 +11000,12 @@
 	textutils, and sh-utils.
 	* Makefile.am: Likewise.
 	* src/Makefile.am: Likewise.
+
+
+	-----
+
+	Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+
+	Copying and distribution of this file, with or without
+	modification, are permitted provided the copyright notice
+	and this notice are preserved.

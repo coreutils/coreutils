@@ -1,3 +1,18 @@
+2006-08-17  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* ChangeLog: Add copyright notice.
+	* .gdb-history: Likewise.
+	* TODO: Likewise.
+	* __fpending.h: Likewise.
+	* fdopendir-glibc.c: Likewise.
+	* fprintftime.h: Likewise.
+	* root-dev-ino.h: Likewise.
+	* search_.h: Likewise.
+	* t-chdir-long: Likewise.
+	* t-fpending.c: Likewise.
+	* savedir.c: Use (C) in copyright notice.
+	* savedir.h: Likewise.
+
 2006-08-16  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* memcoll.c (memcoll): Set errno = 0 in the shortcut case, too.
@@ -8465,3 +8480,13 @@
 	* quotearg.c (quotearg_buffer_restyled): Do not quote
 	alert, backslash, formfeed, and vertical tab unnecessarily in
 	shell quoting style.
+
+
+	-----
+
+	Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005, 2006 Free
+	Software Foundation, Inc.
+
+	Copying and distribution of this file, with or without
+	modification, are permitted provided the copyright notice
+	and this notice are preserved.

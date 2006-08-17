@@ -1,3 +1,8 @@
+2006-08-17  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* ChangeLog: Add copyright notice.
+	* check-decl.m4: Likewise.
+
 2006-08-15  Jim Meyering  <jim@meyering.net>
 
 	* openat.m4 (gl_FUNC_OPENAT): Add at-func.c via AC_LIBSOURCES.
@@ -4749,3 +4754,13 @@
 	* inttypes_h.m4: New file.
 	* uintmax_t.m4: New file.
 	* Makefile.am (EXTRA_DIST): Add inttypes_h.m4 and uintmax_t.m4.
+
+
+	-----
+
+	Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004,
+	2005, 2006 Free Software Foundation, Inc.
+
+	Copying and distribution of this file, with or without
+	modification, are permitted provided the copyright notice
+	and this notice are preserved.
