@@ -1,10 +1,57 @@
+Index: src/copy.c
+===================================================================
+RCS file: /fetish/cu/src/copy.c,v
+retrieving revision 1.203
+diff -u -p -r1.203 copy.c
+--- src/copy.c	29 Jul 2006 17:13:28 -0000	1.203
++++ src/copy.c	17 Aug 2006 09:18:52 -0000
+@@ -1168,7 +1168,7 @@ copy_internal (char const *src_name, cha
+ 		  return false;
+ 		}
+ 	    }
+-
++	  {
+ 	  bool backup_directories = true;
+ 	  if (x->backup_type != no_backups
+ 	      && (!S_ISDIR (dst_sb.st_mode) || backup_directories))
+@@ -1235,6 +1235,7 @@ copy_internal (char const *src_name, cha
+ 		}
+ 	      new_dst = true;
+ 	    }
++	  }
+ 	}
+     }
+ 
+Index: src/ls.c
+===================================================================
+RCS file: /fetish/cu/src/ls.c,v
+retrieving revision 1.435
+diff -u -p -r1.435 ls.c
+--- src/ls.c	9 Aug 2006 09:45:17 -0000	1.435
++++ src/ls.c	17 Aug 2006 09:18:52 -0000
+@@ -3139,13 +3139,14 @@ sort_files (void)
+       use_strcmp = true;
+       assert (sort_type != sort_version);
+     }
+-
++  {
+   /* When sort_type == sort_time, use time_type as subindex.  */
+   int timeoffset = sort_type == sort_time ? time_type : 0;
+ 
+   qsort (files, files_index, sizeof *files,
+          sort_functions[sort_type + timeoffset][use_strcmp][sort_reverse]
+                        [directories_first]);
++  }
+ }
+ 
+ /* List all the files now in the table.  */
 Index: src/remove.c
 ===================================================================
 RCS file: /fetish/cu/src/remove.c,v
 retrieving revision 1.156
 diff -u -p -r1.156 remove.c
 --- src/remove.c	3 Jul 2006 17:38:20 -0000	1.156
-+++ src/remove.c	5 Jul 2006 06:52:31 -0000
++++ src/remove.c	17 Aug 2006 09:18:52 -0000
 @@ -202,9 +202,10 @@ pop_dir (Dirstack_state *ds)
  {
    size_t n_lengths = obstack_object_size (&ds->len_stack) / sizeof (size_t);
@@ -30,7 +77,24 @@ diff -u -p -r1.156 remove.c
    if (top->unremovable)
      hash_free (top->unremovable);
    obstack_blank (&ds->Active_dir, -(int) sizeof (struct AD_ent));
-@@ -1059,6 +1061,7 @@ fd_to_subdirp (int fd_cwd, char const *f
+@@ -506,6 +508,7 @@ AD_mark_helper (Hash_table **ht, char *f
+       if (*ht == NULL)
+ 	xalloc_die ();
+     }
++  {
+   void *ent = hash_insert (*ht, filename);
+   if (ent == NULL)
+     xalloc_die ();
+@@ -514,7 +517,7 @@ AD_mark_helper (Hash_table **ht, char *f
+       if (ent != filename)
+ 	free (filename);
+     }
+-
++  }
+ }
+ 
+ /* Mark FILENAME (in current directory) as unremovable.  */
+@@ -1059,6 +1062,7 @@ fd_to_subdirp (int fd_cwd, char const *f
        return NULL;
      }
  
@@ -38,7 +102,7 @@ diff -u -p -r1.156 remove.c
    DIR *subdir_dirp = fdopendir (fd_sub);
    if (subdir_dirp == NULL)
      {
-@@ -1067,6 +1070,7 @@ fd_to_subdirp (int fd_cwd, char const *f
+@@ -1067,6 +1071,7 @@ fd_to_subdirp (int fd_cwd, char const *f
      }
  
    return subdir_dirp;
@@ -46,7 +110,7 @@ diff -u -p -r1.156 remove.c
  }
  
  /* Remove entries in the directory open on DIRP
-@@ -1302,9 +1306,10 @@ remove_dir (int fd_cwd, Dirstack_state *
+@@ -1302,9 +1307,10 @@ remove_dir (int fd_cwd, Dirstack_state *
  	/* The name of the directory that we have just processed,
  	   nominally removing all of its contents.  */
  	char *empty_dir;
@@ -58,7 +122,7 @@ diff -u -p -r1.156 remove.c
  	assert (dirp != NULL || AD_stack_height (ds) == 1);
  
  	/* Try to remove EMPTY_DIR only if remove_cwd_entries succeeded.  */
-@@ -1381,6 +1386,7 @@ rm_1 (Dirstack_state *ds, char const *fi
+@@ -1381,6 +1387,7 @@ rm_1 (Dirstack_state *ds, char const *fi
    AD_push_initial (ds);
    AD_INIT_OTHER_MEMBERS ();
  
@@ -66,7 +130,7 @@ diff -u -p -r1.156 remove.c
    int fd_cwd = AT_FDCWD;
    enum RM_status status = remove_entry (fd_cwd, ds, filename, x, NULL);
    if (status == RM_NONEMPTY_DIR)
-@@ -1399,6 +1405,7 @@ rm_1 (Dirstack_state *ds, char const *fi
+@@ -1399,6 +1406,7 @@ rm_1 (Dirstack_state *ds, char const *fi
    ds_clear (ds);
  
    return status;
@@ -74,7 +138,7 @@ diff -u -p -r1.156 remove.c
  }
  
  /* Remove all files and/or directories specified by N_FILES and FILE.
-@@ -1421,9 +1428,11 @@ rm (size_t n_files, char const *const *f
+@@ -1421,9 +1429,11 @@ rm (size_t n_files, char const *const *f
  	}
  
        cycle_check_init (&ds->cycle_check_state);
@@ -86,3 +150,21 @@ diff -u -p -r1.156 remove.c
      }
  
    if (x->require_restore_cwd && cwd_errno)
+Index: src/rm.c
+===================================================================
+RCS file: /fetish/cu/src/rm.c,v
+retrieving revision 1.139
+diff -u -p -r1.139 rm.c
+--- src/rm.c	20 Feb 2006 12:48:11 -0000	1.139
++++ src/rm.c	17 Aug 2006 09:18:52 -0000
+@@ -358,8 +358,10 @@ main (int argc, char **argv)
+ 	if (!yesno ())
+ 	  exit (EXIT_SUCCESS);
+       }
++   {
+     enum RM_status status = rm (n_files, file, &x);
+     assert (VALID_STATUS (status));
+     exit (status == RM_ERROR ? EXIT_FAILURE : EXIT_SUCCESS);
++   }
+   }
+ }
