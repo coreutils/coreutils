@@ -1,5 +1,8 @@
 2006-08-17  Jim Meyering  <jim@meyering.net>
 
+	* Makefile.maint (patch-check): Adapt to work now that the patch
+	modifies more than one file in src/.
+
 	With this patch, permit building with Solaris cc on Solaris 7.
 	* src/c99-to-c89.diff: Add diffs to convert more c99-isms.
 	This integrates patches from Bruno Haible.
