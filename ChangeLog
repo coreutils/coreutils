@@ -1,5 +1,8 @@
 2006-08-17  Jim Meyering  <jim@meyering.net>
 
+	* src/copy.c (copy_internal, same_file_ok): Adjust comments not
+	to mention the now-removed cp_options.xstat member.
+
 	* Makefile.maint (patch-check): Adapt to work now that the patch
 	modifies more than one file in src/.
 

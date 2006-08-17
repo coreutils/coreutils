@@ -590,8 +590,8 @@ same_file_ok (char const *src_name, struct stat const *src_sb,
       same_link = same;
 
       /* If both the source and destination files are symlinks (and we'll
-	 know this here IFF preserving symlinks (aka xstat == lstat),
-	 then it's ok -- as long as they are distinct.  */
+	 know this here IFF preserving symlinks), then it's ok -- as long
+	 as they are distinct.  */
       if (S_ISLNK (src_sb->st_mode) && S_ISLNK (dst_sb->st_mode))
 	return ! same_name (src_name, dst_name);
 
@@ -1424,7 +1424,7 @@ copy_internal (char const *src_name, char const *dst_name,
       if (errno != EXDEV)
 	{
 	  /* There are many ways this can happen due to a race condition.
-	     When something happens between the initial xstat and the
+	     When something happens between the initial XSTAT and the
 	     subsequent rename, we can get many different types of errors.
 	     For example, if the destination is initially a non-directory
 	     or non-existent, but it is created as a directory, the rename
