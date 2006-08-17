@@ -3797,8 +3797,10 @@ print_file_name_and_frills (const struct fileinfo *f)
     print_type_indicator (f->stat_ok, f->stat.st_mode, f->filetype);
 }
 
-static void
-print_type_indicator (bool stat_ok, mode_t mode, enum filetype type)
+/* Given these arguments describing a file, return the single-byte
+   type indicator, or 0.  */
+static char
+get_type_indicator (bool stat_ok, mode_t mode, enum filetype type)
 {
   char c;
 
@@ -3826,7 +3828,13 @@ print_type_indicator (bool stat_ok, mode_t mode, enum filetype type)
       else
 	c = 0;
     }
+  return c;
+}
 
+static void
+print_type_indicator (bool stat_ok, mode_t mode, enum filetype type)
+{
+  char c = get_type_indicator (stat_ok, mode, type);
   if (c)
     DIRED_PUTCHAR (c);
 }
@@ -3950,16 +3958,8 @@ length_of_file_name_and_frills (const struct fileinfo *f)
 
   if (indicator_style != none)
     {
-      mode_t mode = f->stat.st_mode;
-
-      len += (S_ISREG (mode)
-	      ? (indicator_style == classify && (mode & S_IXUGO))
-	      : (S_ISDIR (mode)
-		 || (indicator_style != slash
-		     && (S_ISLNK (mode)
-			 || S_ISFIFO (mode)
-			 || S_ISSOCK (mode)
-			 || S_ISDOOR (mode)))));
+      char c = get_type_indicator (f->stat_ok, f->stat.st_mode, f->filetype);
+      len += (c != 0);
     }
 
   return len;

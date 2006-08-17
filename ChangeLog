@@ -1,5 +1,15 @@
 2006-08-17  Jim Meyering  <jim@meyering.net>
 
+	ls -CF would misalign columns in some cases.
+	* src/ls.c (get_type_indicator): New function.  extracted from...
+	(print_type_indicator): ...here.  Use it.
+	(length_of_file_name_and_frills): Use it here, too, rather than
+	assuming stat.st_mode is valid.
+	Reported by Andreas Schwab, here:
+	<http://article.gmane.org/gmane.comp.gnu.core-utils.bugs/7774>
+	FIXME: add a test for this: FYI, I did ls -CF /proc and visually
+	inspected the result.
+
 	* src/copy.c (copy_internal, same_file_ok): Adjust comments not
 	to mention the now-removed cp_options.xstat member.
 
