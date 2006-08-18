@@ -20,8 +20,8 @@
 #include <config.h>
 
 #if (STAT_STATVFS \
-     && (HAVE_STRUCT_STATVFS_F_BASETYPE \
-         || (! HAVE_STRUCT_STATFS_F_FSTYPENAME && HAVE_STRUCT_STATVFS_F_TYPE)))
+     && (HAVE_STRUCT_STATVFS_F_BASETYPE || HAVE_STRUCT_STATVFS_F_FSTYPENAME \
+	 || ! HAVE_STRUCT_STATFS_F_FSTYPENAME))
 # define USE_STATVFS 1
 #else
 # define USE_STATVFS 0
@@ -93,7 +93,7 @@
 #if HAVE_STRUCT_STATVFS_F_BASETYPE
 # define STATXFS_FILE_SYSTEM_TYPE_MEMBER_NAME f_basetype
 #else
-# if HAVE_STRUCT_STATFS_F_FSTYPENAME
+# if HAVE_STRUCT_STATVFS_F_FSTYPENAME || HAVE_STRUCT_STATFS_F_FSTYPENAME
 #  define STATXFS_FILE_SYSTEM_TYPE_MEMBER_NAME f_fstypename
 # endif
 #endif
@@ -136,8 +136,9 @@ static bool interpret_backslash_escapes;
 static char const *trailing_delim = "";
 
 /* Return the type of the specified file system.
-   Some systems have statfvs.f_basetype[FSTYPSZ]. (AIX, HP-UX, and Solaris)
-   Others have statfs.f_fstypename[MFSNAMELEN]. (NetBSD 1.5.2)
+   Some systems have statfvs.f_basetype[FSTYPSZ] (AIX, HP-UX, and Solaris).
+   Others have statvfs.f_fstypename[_VFS_NAMELEN] (NetBSD 3.0).
+   Others have statfs.f_fstypename[MFSNAMELEN] (NetBSD 1.5.2).
    Still others have neither and have to get by with f_type (Linux).  */
 static char const *
 human_fstype (STRUCT_STATVFS const *statfsbuf)

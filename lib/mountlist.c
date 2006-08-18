@@ -82,6 +82,10 @@ char *strstr ();
 # include <sys/mount.h>
 #endif
 
+#ifdef MOUNTED_GETMNTINFO2	/* NetBSD 3.0.  */
+# include <sys/statvfs.h>
+#endif
+
 #ifdef MOUNTED_GETMNT		/* Ultrix.  */
 # include <sys/mount.h>
 # include <sys/fs_types.h>
@@ -147,6 +151,8 @@ char *strstr ();
      || strcmp (Fs_type, "none") == 0		\
      || strcmp (Fs_type, "proc") == 0		\
      || strcmp (Fs_type, "subfs") == 0		\
+     /* for NetBSD 3.0 */			\
+     || strcmp (Fs_type, "kernfs") == 0		\
      /* for Irix 6.5 */				\
      || strcmp (Fs_type, "ignore") == 0)
 #endif
@@ -260,7 +266,6 @@ fstype_to_string (short int t)
 }
 # endif /* ! HAVE_F_FSTYPENAME_IN_STATFS */
 
-/* __NetBSD__ || BSD_NET2 || __OpenBSD__ */
 static char *
 fsp_to_string (const struct statfs *fsp)
 {
@@ -425,6 +430,32 @@ read_file_system_list (bool need_fs_type)
       }
   }
 #endif /* MOUNTED_GETMNTINFO */
+
+#ifdef MOUNTED_GETMNTINFO2	/* NetBSD 3.0.  */
+  {
+    struct statvfs *fsp;
+    int entries;
+
+    entries = getmntinfo (&fsp, MNT_NOWAIT);
+    if (entries < 0)
+      return NULL;
+    for (; entries-- > 0; fsp++)
+      {
+	me = xmalloc (sizeof *me);
+	me->me_devname = xstrdup (fsp->f_mntfromname);
+	me->me_mountdir = xstrdup (fsp->f_mntonname);
+	me->me_type = xstrdup (fsp->f_fstypename);
+	me->me_type_malloced = 1;
+	me->me_dummy = ME_DUMMY (me->me_devname, me->me_type);
+	me->me_remote = ME_REMOTE (me->me_devname, me->me_type);
+	me->me_dev = (dev_t) -1;	/* Magic; means not known yet. */
+
+	/* Add to the linked list. */
+	*mtail = me;
+	mtail = &me->me_next;
+      }
+  }
+#endif /* MOUNTED_GETMNTINFO2 */
 
 #ifdef MOUNTED_GETMNT		/* Ultrix.  */
   {

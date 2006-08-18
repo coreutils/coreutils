@@ -1,3 +1,11 @@
+2006-08-18  Bruno Haible  <bruno@clisp.org>
+
+	* ls-mntd-fs.m4 (gl_LIST_MOUNTED_FILE_SYSTEMS): Also check for
+	sys/statvfs.h. When getmntinfo was found, check its declaration and
+	set either MOUNTED_GETMNTINFO or MOUNTED_GETMNTINFO2 depending on it.
+	* stat-prog.m4 (cu_PREREQ_STAT_PROG): Test also for f_fstypename
+	in struct statvfs.
+
 2006-08-18  Jim Meyering  <jim@meyering.net>
 
 	* gethrxtime.m4 (gl_PREREQ_GETHRXTIME): Also check for CLOCK_REALTIME,

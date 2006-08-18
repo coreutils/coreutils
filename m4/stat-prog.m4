@@ -1,7 +1,7 @@
-# stat-prog.m4 serial 2
+# stat-prog.m4 serial 3
 # Record the prerequisites of src/stat.c from the coreutils package.
 
-# Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+# Copyright (C) 2002, 2003, 2004, 2006 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -60,6 +60,7 @@ $ac_includes_default
   AC_CHECK_MEMBERS([struct statfs.f_basetype],,,[$statxfs_includes])
   AC_CHECK_MEMBERS([struct statvfs.f_basetype],,,[$statxfs_includes])
   AC_CHECK_MEMBERS([struct statfs.f_fstypename],,,[$statxfs_includes])
+  AC_CHECK_MEMBERS([struct statvfs.f_fstypename],,,[$statxfs_includes])
   AC_CHECK_MEMBERS([struct statfs.f_type],,,[$statxfs_includes])
   AC_CHECK_MEMBERS([struct statvfs.f_type],,,[$statxfs_includes])
   AC_CHECK_MEMBERS([struct statfs.f_fsid.__val],,,[$statxfs_includes])

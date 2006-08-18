@@ -1,4 +1,4 @@
-#serial 21
+#serial 22
 # How to list mounted file systems.
 
 # Copyright (C) 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2006 Free Software
@@ -28,7 +28,7 @@ AC_CHECK_FUNCS(getmntent)
 AC_DEFUN([gl_LIST_MOUNTED_FILE_SYSTEMS],
   [
 AC_CHECK_FUNCS(listmntent getmntinfo)
-AC_CHECK_HEADERS_ONCE(sys/param.h)
+AC_CHECK_HEADERS_ONCE(sys/param.h sys/statvfs.h)
 
 # We must include grp.h before ucred.h on OSF V4.0, since ucred.h uses
 # NGROUPS (as the array dimension for a struct member) without a definition.
@@ -232,10 +232,36 @@ if test -z "$ac_list_mounted_fs"; then
     ])
   AC_MSG_RESULT($fu_cv_sys_mounted_getmntinfo)
   if test $fu_cv_sys_mounted_getmntinfo = yes; then
-    ac_list_mounted_fs=found
-    AC_DEFINE(MOUNTED_GETMNTINFO, 1,
-	      [Define if there is a function named getmntinfo for reading the
-               list of mounted file systems.  (4.4BSD, Darwin)])
+    AC_MSG_CHECKING([whether getmntinfo returns statvfs structures])
+    AC_CACHE_VAL(fu_cv_sys_mounted_getmntinfo2,
+      [
+        AC_TRY_COMPILE([
+#include <sys/types.h>
+#if HAVE_SYS_MOUNT_H
+# include <sys/mount.h>
+#endif
+#if HAVE_SYS_STATVFS_H
+# include <sys/statvfs.h>
+#endif
+extern int getmntinfo (struct statfs **, int);
+          ], [],
+          [fu_cv_sys_mounted_getmntinfo2=no],
+          [fu_cv_sys_mounted_getmntinfo2=yes])
+      ])
+    AC_MSG_RESULT([$fu_cv_sys_mounted_getmntinfo2])
+    if test $fu_cv_sys_mounted_getmntinfo2 = no; then
+      ac_list_mounted_fs=found
+      AC_DEFINE(MOUNTED_GETMNTINFO, 1,
+	        [Define if there is a function named getmntinfo for reading the
+                 list of mounted file systems and it returns an array of
+                 'struct statfs'.  (4.4BSD, Darwin)])
+    else
+      ac_list_mounted_fs=found
+      AC_DEFINE(MOUNTED_GETMNTINFO2, 1,
+	        [Define if there is a function named getmntinfo for reading the
+                 list of mounted file systems and it returns an array of
+                 'struct statvfs'.  (NetBSD 3.0)])
+    fi
   fi
 fi
 

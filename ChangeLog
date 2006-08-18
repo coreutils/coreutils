@@ -1,3 +1,17 @@
+2006-08-18  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/system.h (select_plural): Reduce by 1000000, not 1000, since
+	the CVS gettext manual now suggests 1000000.
+
+2006-08-18  Bruno Haible  <bruno@clisp.org>
+
+	Add support for NetBSD 3.0.
+	* src/stat.c (USE_STATVFS): Set to 1 if 'struct statvfs' has a field
+	f_fstypename.
+	(STATXFS_FILE_SYSTEM_TYPE_MEMBER_NAME): Define also if 'struct statvfs'
+	has a field f_fstypename.
+	This undoes the 2006-08-15 to src/stat.c.
+
 2006-08-17  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Copyright notice fixes.
@@ -420,7 +434,7 @@
 	* tests/misc/Makefile.am (TESTS): Add df.
 	* tests/misc/df: New file.
 
-2006-08-15 Eric Blake <ebb9@byu.net>
+2006-08-15  Eric Blake  <ebb9@byu.net>
 
 	* src/stat.c (USE_STATVFS): Define to 0 if f_type is needed, but
 	statvfs.f_type not present.  See
