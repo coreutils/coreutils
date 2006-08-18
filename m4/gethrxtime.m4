@@ -1,5 +1,5 @@
-# gethrxtime.m4 serial 3
-dnl Copyright (C) 2005 Free Software Foundation, Inc.
+# gethrxtime.m4 serial 4
+dnl Copyright (C) 2005, 2006 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
 dnl with or without modifications, as long as this notice is preserved.
@@ -56,18 +56,18 @@ AC_DEFUN([gl_PREREQ_GETHRXTIME],
 
   if test $ac_cv_func_nanouptime != yes; then
     LIB_GETHRXTIME=
-    AC_CACHE_CHECK([whether CLOCK_MONOTONIC is defined],
-      gl_cv_have_CLOCK_MONOTONIC,
-      [AC_EGREP_CPP([have_CLOCK_MONOTONIC],
+    AC_CACHE_CHECK([whether CLOCK_MONOTONIC or CLOCK_REALTIME is defined],
+      gl_cv_have_clock_gettime_macro,
+      [AC_EGREP_CPP([have_clock_gettime_macro],
 	[
 #        include <time.h>
-#        ifdef CLOCK_MONOTONIC
-	  have_CLOCK_MONOTONIC
+#        if defined CLOCK_MONOTONIC || defined CLOCK_REALTIME
+	  have_clock_gettime_macro
 #        endif
 	],
-	gl_cv_have_CLOCK_MONOTONIC=yes,
-	gl_cv_have_CLOCK_MONOTONIC=no)])
-    if test $gl_cv_have_CLOCK_MONOTONIC = yes; then
+	gl_cv_have_clock_gettime_macro=yes,
+	gl_cv_have_clock_gettime_macro=no)])
+    if test $gl_cv_have_clock_gettime_macro = yes; then
       LIB_GETHRXTIME=$LIB_CLOCK_GETTIME
     fi
     AC_SUBST([LIB_GETHRXTIME])

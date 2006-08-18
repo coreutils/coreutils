@@ -1,9 +1,9 @@
 2006-08-18  Jim Meyering  <jim@meyering.net>
 
-	* gethrxtime.m4 (gl_PREREQ_GETHRXTIME): Reverse sense of test for
-	CLOCK_MONOTONIC.  Otherwise, linking a gethrxtime-using program
-	with $(LIB_GETHRXTIME) could fail due to unresolved clock_gettime.
-	Reported by Gabor Z. Papp.
+	* gethrxtime.m4 (gl_PREREQ_GETHRXTIME): Also check for CLOCK_REALTIME,
+	since gethrxtime may revert to using clock_gettime via gettime.c.
+	Gabor Z. Papp reported that gethrxtime-using programs failed to
+	link due to unresolved clock_gettime on a linux-2.4.x system.
 
 2006-08-17  Paul Eggert  <eggert@cs.ucla.edu>
 
