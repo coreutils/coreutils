@@ -388,7 +388,10 @@ static inline unsigned char to_uchar (char ch) { return ch; }
 static inline unsigned long int
 select_plural (uintmax_t n)
 {
-  return (n <= ULONG_MAX ? n : n % 1000 + 1000);
+  /* Reduce by a power of ten, but keep it away from zero.  The
+     gettext manual says 1000000 should be safe.  */
+  enum { PLURAL_REDUCER = 1000000 };
+  return (n <= ULONG_MAX ? n : n % PLURAL_REDUCER + PLURAL_REDUCER);
 }
 
 #define STREQ(a, b) (strcmp ((a), (b)) == 0)
