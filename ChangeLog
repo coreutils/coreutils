@@ -1,5 +1,7 @@
 2006-08-19  Jim Meyering  <jim@meyering.net>
 
+	* tests/ls/stat-dtype: Test for the 2006-08-17 `ls -CF' fix.
+
 	* README: Describe potential "pre-C99 build failure", and work-around.
 
 	Some of my 2006-07-03 changes to tests/*/Makefile.am were being
