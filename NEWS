@@ -2,6 +2,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Major changes in release 6.1-cvs (2006-??-??) [unstable]
 
+** Changes in behavior
+
+  df now considers BSD "kernfs" file systems to be dummies
+
 ** Bug fixes
 
   cp --sparse preserves sparseness at the end of a file, even when
@@ -11,6 +15,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   df (with a command line argument) once again prints its header
   [introduced in coreutils-6.0]
 
+  ls -CF would misalign columns in some cases involving non-stat'able files
+  [introduced in coreutils-6.0]
 
 * Major changes in release 6.0 (2006-08-15) [unstable]
 
