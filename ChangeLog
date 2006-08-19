@@ -1,5 +1,10 @@
 2006-08-19  Jim Meyering  <jim@meyering.net>
 
+	Avoid test failure when `make check' is run through debuild.
+	* tests/help-version: Ensure that $SHELL is set to some value
+	and exported.  Patch from Sven Joachim.  For details, see
+	<http://bugs.debian.org/355368>.
+
 	* tests/ls/stat-dtype: Test for the 2006-08-17 `ls -CF' fix.
 
 	* README: Describe potential "pre-C99 build failure", and work-around.
