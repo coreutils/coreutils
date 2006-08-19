@@ -359,7 +359,8 @@ TESTS_ENVIRONMENT = \
 EXTRA_DIST = \
   $(TESTS) Coreutils.pm Makefile.am.in README acl envvar-check \
   expensive group-names input-tty lang-default mk-script priv-check \
-  rwx-to-mode sample-test setgid-check umask-check very-expensive
+  rwx-to-mode sample-test setgid-check sparse-file \
+  umask-check very-expensive
 
 SUBDIRS = \
   chgrp chmod chown cp cut dd dircolors du expr factor fmt head \
