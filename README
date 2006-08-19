@@ -61,7 +61,7 @@ way Sun implemented link(2) and chmod(2).
 
 
 ***********************
-pre-C99 build failure
+Pre-C99 build failure
 -----------------------
 
 There is a new, implicit build requirement:
