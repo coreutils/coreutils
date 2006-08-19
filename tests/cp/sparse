@@ -1,8 +1,7 @@
 #!/bin/sh
-# Ensure that du does not rely on narrow types like size_t for
-# file sizes or sums.
+# Test cp --sparse=always
 
-# Copyright (C) 2003, 2005, 2006 Free Software Foundation, Inc.
+# Copyright (C) 2006 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,7 +20,7 @@
 
 if test "$VERBOSE" = yes; then
   set -x
-  du --version
+  cp --version
 fi
 
 . $srcdir/../envvar-check
@@ -36,42 +35,23 @@ framework_failure=0
 mkdir -p $tmp || framework_failure=1
 cd $tmp || framework_failure=1
 
+# Create a sparse file.
+# It has to be at least 128K in order to be sparse on some systems.
+# Make its size one larger than 128K, in order to tickle the
+# bug in coreutils-6.0.
+size=`expr 128 \* 1024 + 1`
+dd bs=1 seek=$size of=sparse < /dev/null 2> /dev/null || framework_failure=1
+
 if test $framework_failure = 1; then
   echo "$0: failure in testing framework" 1>&2
   (exit 1); exit 1
 fi
 
-dd bs=1 seek=8G of=big < /dev/null 2> /dev/null
-if test $? != 0; then
-  echo "$0: cannot create a file large enough for this test; possibly" 1>&2
-  echo "$0: because file offsets are only 32 bits on this file system" 1>&2
-  (exit 77); exit 77
-fi
-
-# FIXME: this should be a test of dd.
-# On some systems (at least linux-2.4.18 + NFS to disks on a Solaris system)
-# the `dd' command above mistakenly creates a file of length `0', yet
-# doesn't fail.  The root of that failure is that the ftruncate call
-# returns zero but doesn't do its job.  Detect this failure.
-set x `ls -gG big`
-size=$4
-if test "$size" = 0; then
-  echo "$0: cannot create a file large enough for this test;" 1>&2
-  echo "$0: possibly because this system's NFS support is buggy;" 1>&2
-  echo "$0: Consider rerunning this test on a different file system." 1>&2
-  (exit 77); exit 77
-fi
-
 fail=0
 
-# This would print `0	big' with coreutils-4.5.8.
-du -ab big > out || fail=1
+cp --sparse=always sparse copy || fail=1
 
-cat <<\EOF > exp
-8589934592	big
-EOF
-
-cmp out exp || fail=1
-test $fail = 1 && diff out exp 2> /dev/null
+# Ensure that the copy has the same block count as the original.
+test `stat --printf %b sparse` = `stat --printf %b copy` || fail=1
 
 (exit $fail); exit $fail

@@ -1,7 +1,7 @@
-# Make coreutils tests for cp.				-*-Makefile-*-
+# -*- sh -*-
+# Does the current (working-dir.) file system support sparse files?
 
-# Copyright (C) 1997, 1998, 1999, 2000, 2001, 2003, 2005, 2006 Free
-# Software Foundation, Inc.
+# Copyright (C) 2006 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,19 +18,16 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 # 02110-1301, USA.
 
-AUTOMAKE_OPTIONS = 1.1 gnits
-
-TESTS = \
-  sparse \
-  link-no-deref \
-  cp-deref \
-  acl \
-  preserve-2 r-vs-symlink link-preserve \
-  backup-1 no-deref-link1 no-deref-link2 no-deref-link3 backup-is-src \
-  same-file cp-mv-backup symlink-slash slink-2-slink fail-perm dir-slash \
-  perm cp-HL special-bits link dir-rm-dest cp-parents deref-slink \
-  dir-vs-file into-self
-EXTRA_DIST = $(TESTS)
-TESTS_ENVIRONMENT = \
-  MAKE=$(MAKE) \
-  PATH="$(VG_PATH_PREFIX)`pwd`/../../src$(PATH_SEPARATOR)$$PATH"
+# Test whether we can create a sparse file.
+# For example, on Darwin6.5 with a file system of type hfs, it's not possible.
+# NTFS requires 128K before a hole appears in a sparse file.
+t=sparse.$$
+dd bs=1 seek=128K of=$t < /dev/null 2> /dev/null
+set x `du -sk $t`
+kb_size=$2
+rm -f $t
+if test $kb_size -ge 128; then
+  echo "$0: skipping this test, since this file system doesn't support" \
+    sparse files 1>&2
+  (exit 77); exit 77
+fi

@@ -1,3 +1,18 @@
+2006-08-19  Jim Meyering  <jim@meyering.net>
+
+	* NEWS: Fix cp --sparse so that it preserves tail-end sparseness, even
+	when the file's apparent size is not a multiple of its block size.
+	* src/copy.c (copy_reg): Don't write a NUL before calling ftruncate.
+	For some file sizes, writing that single byte would unnecessarily
+	waste a few file blocks.  That write may have been necessary in the
+	early days of Linux, but now, removing it should be safe.
+	Based on a patch by Alan Curry: <http://bugs.debian.org/370792>
+	* tests/cp/sparse: New test for the above.
+	* tests/cp/Makefile.am (TESTS): Add sparse.
+
+	* tests/sparse-file: New file, essence factored out of...
+	* tests/du/8gb: ... here.  Use the new script.
+
 2006-08-18  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/system.h (select_plural): Reduce by 1000000, not 1000, since

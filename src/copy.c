@@ -461,21 +461,21 @@ copy_reg (char const *src_name, char const *dst_name,
 	    }
 	}
 
-      /* If the file ends with a `hole', something needs to be written at
-	 the end.  Otherwise the kernel would truncate the file at the end
-	 of the last write operation.  */
+      /* If the file ends with a `hole', we need to do something to record
+	 the length of the file.  On modern systems, calling ftruncate does
+	 the job.  On systems without native ftruncate support, we have to
+	 write a byte at the ending position.  Otherwise the kernel would
+	 truncate the file at the end of the last write operation.  */
 
       if (last_write_made_hole)
 	{
-#if HAVE_FTRUNCATE
-	  /* Write a null character and truncate it again.  */
-	  if (full_write (dest_desc, "", 1) != 1
-	      || ftruncate (dest_desc, n_read_total) < 0)
-#else
-	  /* Seek backwards one character and write a null.  */
-	  if (lseek (dest_desc, (off_t) -1, SEEK_CUR) < 0L
-	      || full_write (dest_desc, "", 1) != 1)
-#endif
+	  if (HAVE_FTRUNCATE
+	      ? /* ftruncate sets the file size,
+		   so there is no need for a write.  */
+	      ftruncate (dest_desc, n_read_total) < 0
+	      : /* Seek backwards one character and write a null.  */
+	      (lseek (dest_desc, (off_t) -1, SEEK_CUR) < 0L
+	       || full_write (dest_desc, "", 1) != 1))
 	    {
 	      error (0, errno, _("writing %s"), quote (dst_name));
 	      return_val = false;
