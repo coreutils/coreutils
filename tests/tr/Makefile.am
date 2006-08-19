@@ -1,7 +1,7 @@
-# Make coreutils tests for "tr".		-*-Makefile-*-
+# Make coreutils tests.					-*-Makefile-*-
 
-# Copyright (C) 1996, 1997, 1998, 2000, 2002, 2003, 2004, 2005, 2006
-# Free Software Foundation, Inc.
+# Copyright (C) 1997, 1998, 2000, 2003, 2004, 2006 Free Software
+# Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -77,4 +77,5 @@ $(srcdir)/Makefile.am: ../Makefile.am.in Test.pm $(mk_script)
 	  echo "x = $$tool" >> $@t
 	$(PERL) -I$(srcdir) -w -- $(mk_script) $(srcdir) --list >> $@t
 	sed -n '/^##test-files-end/,$$p' $(srcdir)/../Makefile.am.in >> $@t
+	chmod -w $@t
 	mv $@t $@

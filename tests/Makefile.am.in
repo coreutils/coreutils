@@ -1,6 +1,6 @@
 # Make coreutils tests.					-*-Makefile-*-
 
-# Copyright (C) 1997, 1998, 2000, 2003, 2004 Free Software
+# Copyright (C) 1997, 1998, 2000, 2003, 2004, 2006 Free Software
 # Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
@@ -24,7 +24,7 @@
 EXTRA_DIST = Test.pm $x-tests $(explicit) $(maint_gen)
 noinst_SCRIPTS = $x-tests
 TESTS_ENVIRONMENT = \
-  PATH="`pwd`/../../src$(PATH_SEPARATOR)$$PATH"
+  PATH="$(VG_PATH_PREFIX)`pwd`/../../src$(PATH_SEPARATOR)$$PATH"
 
 editpl = sed -e 's,@''PERL''@,$(PERL),g' -e 's,@''srcdir''@,$(srcdir),g'
 
@@ -49,4 +49,5 @@ $(srcdir)/Makefile.am: ../Makefile.am.in Test.pm $(mk_script)
 	  echo "x = $$tool" >> $@t
 	$(PERL) -I$(srcdir) -w -- $(mk_script) $(srcdir) --list >> $@t
 	sed -n '/^##test-files-end/,$$p' $(srcdir)/../Makefile.am.in >> $@t
+	chmod -w $@t
 	mv $@t $@

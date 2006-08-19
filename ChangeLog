@@ -1,5 +1,23 @@
 2006-08-19  Jim Meyering  <jim@meyering.net>
 
+	Some of my 2006-07-03 changes to tests/*/Makefile.am were being
+	backed out due to updates provoked by the copyright changes.
+	* tests/Makefile.am.in (PATH): Prepend $(VG_PATH_PREFIX), so that
+	it propagates to the derived Makefile.am files.
+	($(srcdir)/Makefile.am): Mark generated .am files as read-only,
+	so we don't mistakenly edit them again.
+	* tests/cut/Makefile.am: Regenerate.
+	* tests/head/Makefile.am: Likewise.
+	* tests/join/Makefile.am: Likewise.
+	* tests/pr/Makefile.am: Likewise.
+	* tests/sort/Makefile.am: Likewise.
+	* tests/tac/Makefile.am: Likewise.
+	* tests/tail/Makefile.am: Likewise.
+	* tests/test/Makefile.am: Likewise.
+	* tests/tr/Makefile.am: Likewise.
+	* tests/uniq/Makefile.am: Likewise.
+	* tests/wc/Makefile.am: Likewise.
+
 	* NEWS: Fix cp --sparse so that it preserves tail-end sparseness, even
 	when the file's apparent size is not a multiple of its block size.
 	* src/copy.c (copy_reg): Don't write a NUL before calling ftruncate.

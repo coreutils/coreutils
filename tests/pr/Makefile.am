@@ -1,7 +1,7 @@
-# Make coreutils tests for "pr".			-*-Makefile-*-
+# Make coreutils tests.					-*-Makefile-*-
 
-# Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004,
-# 2005, 2006 Free Software Foundation, Inc.
+# Copyright (C) 1997, 1998, 2000, 2003, 2004, 2006 Free Software
+# Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,8 +17,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 # 02110-1301, USA.
-
-## Process this file with automake to produce Makefile.in -*-Makefile-*-.
 
 ##test-files-begin
 x = pr
@@ -154,4 +152,5 @@ $(srcdir)/Makefile.am: ../Makefile.am.in Test.pm $(mk_script)
 	  echo "x = $$tool" >> $@t
 	$(PERL) -I$(srcdir) -w -- $(mk_script) $(srcdir) --list >> $@t
 	sed -n '/^##test-files-end/,$$p' $(srcdir)/../Makefile.am.in >> $@t
+	chmod -w $@t
 	mv $@t $@
