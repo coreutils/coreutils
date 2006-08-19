@@ -9,7 +9,7 @@
 # Look at the CHECK string.
 #
 # This file should be sent to translation@iro.umontreal.ca with the
-# following subject line: TP-Robot coreutils-5.97.bg.po 
+# following subject line: TP-Robot coreutils-5.97.bg.po
 msgid ""
 msgstr ""
 "Project-Id-Version: coreutils 5.97\n"
