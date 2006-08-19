@@ -394,7 +394,7 @@
 	assuming stat.st_mode is valid.
 	Reported by Andreas Schwab, here:
 	<http://article.gmane.org/gmane.comp.gnu.core-utils.bugs/7774>
-	FIXME: add a test for this: FYI, I did ls -CF /proc and visually
+	See the test for this above. FYI, I did ls -CF /proc and visually
 	inspected the result.
 
 	* src/copy.c (copy_internal, same_file_ok): Adjust comments not
