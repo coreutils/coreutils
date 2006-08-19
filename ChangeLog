@@ -4,6 +4,8 @@
 	* NEWS: Record the 6.1 release date.
 	* configure.ac (AC_INIT): Remove "-cvs" suffix from version string.
 
+	* tests/Makefile.am (EXTRA_DIST): Add sparse-file.
+
 	Avoid test failure when `make check' is run through debuild.
 	* tests/help-version: Ensure that $SHELL is set to some value
 	and exported.  Patch from Sven Joachim.  For details, see

@@ -16,7 +16,8 @@ TESTS_ENVIRONMENT = \
 EXTRA_DIST = \
   $(TESTS) Coreutils.pm Makefile.am.in README acl envvar-check \
   expensive group-names input-tty lang-default mk-script priv-check \
-  rwx-to-mode sample-test setgid-check umask-check very-expensive
+  rwx-to-mode sample-test setgid-check sparse-file \
+  umask-check very-expensive
 
 ## N O T E :: Please do not add new tests/ directories.
 ## Some people feel that there are too many already.
