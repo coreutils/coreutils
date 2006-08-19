@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: coreutils 5.97\n"
 "Report-Msgid-Bugs-To: bug-coreutils@gnu.org\n"
-"POT-Creation-Date: 2006-08-15 13:26+0200\n"
+"POT-Creation-Date: 2006-08-19 20:53+0200\n"
 "PO-Revision-Date: 2006-06-26 15:00+0200\n"
 "Last-Translator: Rafa³ Maszkowski <rzm@icm.edu.pl>\n"
 "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
@@ -63,7 +63,7 @@ msgid "Unknown system error"
 msgstr "Nieznany b³±d systemu"
 
 #: lib/euidaccess-stat.c:139 src/copy.c:978 src/copy.c:1016 src/copy.c:1504
-#: src/df.c:497 src/install.c:426 src/stat.c:729
+#: src/df.c:501 src/install.c:426 src/stat.c:731
 #, c-format
 msgid "cannot stat %s"
 msgstr "nie mo¿na wykonaæ stat na %s"
@@ -270,7 +270,7 @@ msgstr "brak pamiêci"
 msgid "unable to record current working directory"
 msgstr "nie uda³o siê zapisaæ bie¿±cego katalogu roboczego"
 
-#: lib/openat-die.c:49 src/df.c:520
+#: lib/openat-die.c:49 src/df.c:524
 #, c-format
 msgid "failed to return to initial working directory"
 msgstr "nie uda³o siê wróciæ do pocz±tkowego katalogu roboczego"
@@ -307,17 +307,17 @@ msgstr "'"
 msgid "%s: end of file"
 msgstr "%s: nie uda³o siê ustawienie pozycji"
 
-#: lib/root-dev-ino.h:20
+#: lib/root-dev-ino.h:38
 #, c-format
 msgid "it is dangerous to operate recursively on %s"
 msgstr "dzia³anie rekurencyjne na %s jest niebezpieczne"
 
-#: lib/root-dev-ino.h:24
+#: lib/root-dev-ino.h:42
 #, c-format
 msgid "it is dangerous to operate recursively on %s (same as %s)"
 msgstr "dzia³anie rekurencyjne na %s jest niebezpieczne (to samo co %s)"
 
-#: lib/root-dev-ino.h:26
+#: lib/root-dev-ino.h:44
 #, c-format
 msgid "use --no-preserve-root to override this failsafe"
 msgstr "u¿yj --no-preserve-root do wy³±czenia tego zabezpieczenia"
@@ -530,7 +530,7 @@ msgstr "Porównywane ³añcuchy znaków do %s i %s."
 #: src/base64.c:61 src/basename.c:51 src/cat.c:91 src/chgrp.c:109
 #: src/chmod.c:325 src/chown.c:90 src/chroot.c:42 src/cksum.c:264
 #: src/comm.c:69 src/cp.c:154 src/csplit.c:1449 src/cut.c:184 src/date.c:128
-#: src/dd.c:400 src/df.c:721 src/dircolors.c:101 src/dirname.c:45 src/du.c:276
+#: src/dd.c:400 src/df.c:725 src/dircolors.c:101 src/dirname.c:45 src/du.c:276
 #: src/echo.c:60 src/env.c:114 src/expand.c:107 src/expr.c:98 src/factor.c:70
 #: src/fmt.c:269 src/fold.c:66 src/head.c:105 src/hostid.c:44
 #: src/hostname.c:61 src/id.c:74 src/install.c:618 src/join.c:130
@@ -540,11 +540,11 @@ msgstr "Porównywane ³añcuchy znaków do %s i %s."
 #: src/pathchk.c:95 src/pinky.c:510 src/pr.c:2764 src/printenv.c:57
 #: src/printf.c:96 src/ptx.c:1879 src/pwd.c:50 src/readlink.c:63 src/rm.c:155
 #: src/rmdir.c:135 src/seq.c:70 src/setuidgid.c:47 src/shred.c:157
-#: src/shuf.c:47 src/sleep.c:43 src/sort.c:281 src/split.c:103 src/stat.c:772
+#: src/shuf.c:47 src/sleep.c:43 src/sort.c:281 src/split.c:103 src/stat.c:774
 #: src/stty.c:507 src/su.c:382 src/sum.c:55 src/sync.c:41 src/tac.c:129
 #: src/tail.c:216 src/tee.c:58 src/test.c:690 src/touch.c:229 src/tr.c:286
 #: src/tsort.c:82 src/tty.c:65 src/uname.c:113 src/unexpand.c:117
-#: src/uniq.c:131 src/unlink.c:46 src/uptime.c:175 src/users.c:104
+#: src/uniq.c:131 src/unlink.c:46 src/uptime.c:176 src/users.c:104
 #: src/wc.c:128 src/who.c:631 src/whoami.c:46 src/yes.c:42
 #, c-format
 msgid "Try `%s --help' for more information.\n"
@@ -600,7 +600,7 @@ msgstr ""
 #: src/base64.c:89 src/basename.c:74 src/cat.c:128 src/chgrp.c:164
 #: src/chmod.c:356 src/chown.c:159 src/chroot.c:60 src/cksum.c:279
 #: src/comm.c:94 src/cp.c:253 src/csplit.c:1491 src/cut.c:235 src/date.c:241
-#: src/dd.c:508 src/df.c:760 src/dircolors.c:122 src/dirname.c:68 src/du.c:344
+#: src/dd.c:508 src/df.c:764 src/dircolors.c:122 src/dirname.c:68 src/du.c:344
 #: src/echo.c:98 src/env.c:133 src/expand.c:132 src/expr.c:166 src/factor.c:90
 #: src/fmt.c:300 src/fold.c:89 src/head.c:140 src/hostid.c:57
 #: src/hostname.c:74 src/id.c:95 src/install.c:676 src/join.c:172
@@ -610,11 +610,11 @@ msgstr ""
 #: src/pathchk.c:109 src/pinky.c:537 src/pr.c:2876 src/printenv.c:71
 #: src/printf.c:145 src/ptx.c:1925 src/pwd.c:62 src/readlink.c:87 src/rm.c:201
 #: src/rmdir.c:154 src/seq.c:99 src/setuidgid.c:67 src/shred.c:231
-#: src/shuf.c:78 src/sleep.c:60 src/sort.c:357 src/split.c:137 src/stat.c:851
+#: src/shuf.c:78 src/sleep.c:60 src/sort.c:357 src/split.c:137 src/stat.c:853
 #: src/stty.c:724 src/su.c:403 src/sum.c:75 src/sync.c:52 src/tac.c:152
 #: src/tail.c:287 src/tee.c:75 src/test.c:777 src/touch.c:263 src/tr.c:359
 #: src/true.c:54 src/tsort.c:94 src/tty.c:77 src/uname.c:136
-#: src/unexpand.c:141 src/uniq.c:170 src/unlink.c:57 src/uptime.c:190
+#: src/unexpand.c:141 src/uniq.c:170 src/unlink.c:57 src/uptime.c:191
 #: src/users.c:117 src/wc.c:153 src/who.c:670 src/whoami.c:58 src/yes.c:58
 #, c-format
 msgid ""
@@ -625,7 +625,7 @@ msgstr ""
 "Raporty o b³êdach wysy³aj do %s .\n"
 
 #: src/base64.c:177 src/base64.c:210 src/csplit.c:282 src/csplit.c:1438
-#: src/join.c:243 src/shuf.c:401 src/tac-pipe.c:57 src/tee.c:204 src/tr.c:1586
+#: src/join.c:243 src/shuf.c:401 src/tac-pipe.c:75 src/tee.c:204 src/tr.c:1586
 #, c-format
 msgid "read error"
 msgstr "b³±d czytania"
@@ -647,7 +647,7 @@ msgstr "b³êdny rozmiar TAB-a: %s"
 #: src/mv.c:451 src/od.c:1840 src/ptx.c:2154 src/readlink.c:154 src/seq.c:331
 #: src/shuf.c:381 src/split.c:533 src/tr.c:1739 src/tsort.c:552 src/tty.c:117
 #: src/uname.c:222 src/uniq.c:435 src/uniq.c:452 src/unlink.c:86
-#: src/uptime.c:222 src/users.c:149 src/wc.c:668 src/who.c:824 src/whoami.c:84
+#: src/uptime.c:223 src/users.c:149 src/wc.c:668 src/who.c:824 src/whoami.c:84
 #, c-format
 msgid "extra operand %s"
 msgstr "nadmiarowy argument %s"
@@ -694,7 +694,7 @@ msgstr ""
 #: src/expr.c:211 src/join.c:907 src/link.c:82 src/mkdir.c:151
 #: src/mkfifo.c:109 src/mknod.c:141 src/nohup.c:101 src/pathchk.c:158
 #: src/printf.c:669 src/readlink.c:146 src/rm.c:333 src/rmdir.c:197
-#: src/seq.c:325 src/setuidgid.c:95 src/sleep.c:122 src/stat.c:914
+#: src/seq.c:325 src/setuidgid.c:95 src/sleep.c:122 src/stat.c:916
 #: src/tr.c:1724 src/unlink.c:80
 #, c-format
 msgid "missing operand"
@@ -756,7 +756,7 @@ msgstr ""
 msgid "cannot do ioctl on %s"
 msgstr "nie mo¿na wykonaæ ioctl na %s"
 
-#: src/cat.c:643 src/dd.c:1668 src/sort.c:273 src/tee.c:163 src/yes.c:92
+#: src/cat.c:643 src/dd.c:1675 src/sort.c:273 src/tee.c:163 src/yes.c:92
 #, c-format
 msgid "standard output"
 msgstr "standardowe wyj¶cie"
@@ -1288,7 +1288,7 @@ msgstr "nie uda³o siê zachowaæ autorstwa %s"
 msgid "cannot open %s for reading"
 msgstr "nie mo¿na otworzyæ %s do czytania"
 
-#: src/copy.c:266 src/copy.c:318 src/dd.c:1712 src/tail.c:1131 src/tail.c:1197
+#: src/copy.c:266 src/copy.c:318 src/dd.c:1719 src/tail.c:1131 src/tail.c:1197
 #, c-format
 msgid "cannot fstat %s"
 msgstr "nie mo¿na wykonaæ fstat na %s"
@@ -1310,7 +1310,7 @@ msgstr "nie mo¿na usun±æ %s"
 msgid "cannot create regular file %s"
 msgstr "nie mo¿na utworzyæ zwyk³ego pliku %s"
 
-#: src/copy.c:403 src/dd.c:1159 src/dd.c:1470
+#: src/copy.c:403 src/dd.c:1166 src/dd.c:1477
 #, c-format
 msgid "reading %s"
 msgstr "czytanie %s"
@@ -1320,7 +1320,7 @@ msgstr "czytanie %s"
 msgid "cannot lseek %s"
 msgstr "nie mo¿na wykonaæ lseek na %s"
 
-#: src/copy.c:452 src/copy.c:480 src/dd.c:1527 src/dd.c:1589
+#: src/copy.c:452 src/copy.c:480 src/dd.c:1534 src/dd.c:1596
 #, c-format
 msgid "writing %s"
 msgstr "zapis %s"
@@ -1466,7 +1466,7 @@ msgstr "nie mo¿na utworzyæ potoku %s"
 msgid "cannot create special file %s"
 msgstr "nie mo¿na utworzyæ pliku specjalnego %s"
 
-#: src/copy.c:1650 src/ls.c:2795 src/stat.c:437
+#: src/copy.c:1650 src/ls.c:2795 src/stat.c:439
 #, c-format
 msgid "cannot read symbolic link %s"
 msgstr "nie mo¿na przeczytaæ dowi±zania symbolicznego %s"
@@ -1510,7 +1510,7 @@ msgstr ""
 "Skopiowanie ¬RÓD£A do CELU lub ¬RÓD£A/¬RÓDE£ do KATALOGU.\n"
 "\n"
 
-#: src/cp.c:168 src/csplit.c:1462 src/cut.c:196 src/df.c:731 src/du.c:288
+#: src/cp.c:168 src/csplit.c:1462 src/cut.c:196 src/df.c:735 src/du.c:288
 #: src/expand.c:120 src/fmt.c:279 src/fold.c:79 src/head.c:119
 #: src/install.c:635 src/kill.c:104 src/ln.c:333 src/ls.c:4255 src/mkdir.c:64
 #: src/mkfifo.c:60 src/mknod.c:61 src/mv.c:301 src/nl.c:186 src/paste.c:427
@@ -1977,7 +1977,7 @@ msgstr ""
 "\n"
 "PRZESUNIÊCIE linii musi siê sk³adaæ z `+' albo `-' oraz liczby ca³kowitej.\n"
 
-#: src/cut.c:188 src/df.c:725 src/expand.c:111 src/fold.c:70 src/head.c:109
+#: src/cut.c:188 src/df.c:729 src/expand.c:111 src/fold.c:70 src/head.c:109
 #: src/ls.c:4249 src/nl.c:177 src/paste.c:417 src/pr.c:2768 src/sort.c:285
 #: src/sum.c:59 src/tac.c:133 src/tail.c:220 src/tee.c:62 src/unexpand.c:121
 #, c-format
@@ -2333,7 +2333,7 @@ msgstr ""
 "E - ¿eby u¿yæ alternatywnej reprezentacji lokalnej albo\n"
 "O - ¿eby u¿yæ alternatywnych symboli numerycznych, je¿eli s± dostepne\n"
 
-#: src/date.c:262 src/dd.c:1652 src/head.c:840 src/md5sum.c:434
+#: src/date.c:262 src/dd.c:1659 src/head.c:840 src/md5sum.c:434
 #: src/md5sum.c:720 src/od.c:910 src/od.c:1932 src/pr.c:1178 src/pr.c:1381
 #: src/pr.c:1503 src/stty.c:841 src/tac.c:535 src/tee.c:126 src/tr.c:1894
 #: src/tsort.c:527 src/wc.c:212
@@ -2587,16 +2587,16 @@ msgstr ""
 "%<PRIuMAX>+%<PRIuMAX> zapisanych recordów\n"
 
 #: src/dd.c:551
-#, c-format
-msgid "1 truncated record\n"
+#, fuzzy, c-format
+msgid "%<PRIuMAX> truncated record\n"
 msgid_plural "%<PRIuMAX> truncated records\n"
 msgstr[0] "1 obciêty rekord\n"
 msgstr[1] "%<PRIuMAX> obciête rekordy\n"
 msgstr[2] "%<PRIuMAX> obciêtych rekordów\n"
 
 #: src/dd.c:563
-#, c-format
-msgid "1 byte (1 B) copied"
+#, fuzzy, c-format
+msgid "%<PRIuMAX> byte (%s) copied"
 msgid_plural "%<PRIuMAX> bytes (%s) copied"
 msgstr[0] "skopiowany 1 bajt (1 B)"
 msgstr[1] "skopiowane %<PRIuMAX> bajty (%s)"
@@ -2606,85 +2606,92 @@ msgstr[2] "skopiowane %<PRIuMAX> bajtów (%s)"
 msgid "Infinity B"
 msgstr "nieskoñczenie wiele B"
 
-#: src/dd.c:585
-#, c-format
-msgid ", %g second, %s/s\n"
-msgid_plural ", %g seconds, %s/s\n"
-msgstr[0] ", %g sekunda, %s/s\n"
-msgstr[1] ", %g sekundy, %s/s\n"
-msgstr[2] ", %g sekund, %s/s\n"
+#. TRANSLATORS: The two instances of "s" in this string are the SI
+#. symbol "s" (meaning second), and should not be translated.
+#.
+#. This format used to be:
+#.
+#. ngettext (", %g second, %s/s\n", ", %g seconds, %s/s\n", delta_s == 1)
+#.
+#. but that was incorrect for languages like Polish.  To fix this
+#. bug we now use SI symbols even though they're a bit more
+#. confusing in English.
+#: src/dd.c:594
+#, fuzzy, c-format
+msgid ", %g s, %s/s\n"
+msgstr ", %g sekunda, %s/s\n"
 
-#: src/dd.c:595
+#: src/dd.c:602
 #, c-format
 msgid "closing input file %s"
 msgstr "zamykanie pliku wej¶ciowego %s"
 
-#: src/dd.c:602
+#: src/dd.c:609
 #, c-format
 msgid "closing output file %s"
 msgstr "zamkniêcie pliku wyj¶ciowego %s"
 
-#: src/dd.c:782 src/dd.c:1440
+#: src/dd.c:789 src/dd.c:1447
 #, c-format
 msgid "writing to %s"
 msgstr "zapis do %s"
 
-#: src/dd.c:876
+#: src/dd.c:883
 #, c-format
 msgid "unrecognized operand %s"
 msgstr "nierozpoznany argument %s"
 
-#: src/dd.c:887
+#: src/dd.c:894
 #, c-format
 msgid "invalid conversion: %s"
 msgstr "b³êdna konwersja: %s"
 
-#: src/dd.c:890
+#: src/dd.c:897
 #, c-format
 msgid "invalid input flag: %s"
 msgstr "b³êdna flaga wej¶ciowa: %s"
 
-#: src/dd.c:893
+#: src/dd.c:900
 #, c-format
 msgid "invalid output flag: %s"
 msgstr "b³êdna flaga wyj¶ciowa: %s"
 
-#: src/dd.c:896
+#: src/dd.c:903
 #, c-format
 msgid "invalid status flag: %s"
 msgstr "b³êdna flaga stanu: %s"
 
-#: src/dd.c:932
+#: src/dd.c:939
 #, c-format
 msgid "unrecognized operand %s=%s"
 msgstr "nierozpoznany argument %s=%s"
 
-#: src/dd.c:938
+#: src/dd.c:945
 #, c-format
 msgid "invalid number %s"
 msgstr "b³êdna liczba %s"
 
-#: src/dd.c:958
+#: src/dd.c:965
 #, c-format
 msgid "cannot combine any two of {ascii,ebcdic,ibm}"
 msgstr "nie mo¿na podawaæ równocze¶nie ascii, ebcdic, ibm"
 
-#: src/dd.c:960
+#: src/dd.c:967
 #, c-format
 msgid "cannot combine block and unblock"
 msgstr "nie mo¿na u¿yæ block i unblock równocze¶nie"
 
-#: src/dd.c:962
+#: src/dd.c:969
 #, c-format
 msgid "cannot combine lcase and ucase"
 msgstr "nie mo¿na u¿yæ razem lcase i ucase"
 
-#: src/dd.c:964
+#: src/dd.c:971
 #, c-format
 msgid "cannot combine excl and nocreat"
 msgstr "nie mo¿na u¿yæ razem excl i nocreat"
 
-#: src/dd.c:1110
+#: src/dd.c:1117
 #, c-format
 msgid ""
 "warning: working around lseek kernel bug for file (%s)\n"
@@ -2693,47 +2700,47 @@ msgstr ""
 "uwaga: ominiêcie b³êdu dzia³ania lseek w j±drze dla pliku (%s)\n"
 "  o mt_type=0x%0lx - zobacz listê typów w <sys/mtio.h>"
 
-#: src/dd.c:1167 src/dd.c:1224
+#: src/dd.c:1174 src/dd.c:1231
 #, c-format
 msgid "%s: cannot seek"
 msgstr "%s: nie mo¿na ustawiæ pozycji"
 
-#: src/dd.c:1204
+#: src/dd.c:1211
 #, c-format
 msgid "offset overflow while reading file %s"
 msgstr "przepe³nienie licznika pozycji w czasie czytanie pliku %s"
 
-#: src/dd.c:1216
+#: src/dd.c:1223
 #, c-format
 msgid "warning: screwy file offset after failed read"
 msgstr "uwaga: zepsuta pozycja pliku po nieudanym czytaniu"
 
-#: src/dd.c:1220
+#: src/dd.c:1227
 #, c-format
 msgid "cannot work around kernel bug after all"
 msgstr "nie uda³o siê obej¶æ b³êdu j±dra"
 
-#: src/dd.c:1363
+#: src/dd.c:1370
 #, c-format
 msgid "setting flags for %s"
 msgstr "ustawienie flag dla %s"
 
-#: src/dd.c:1601
+#: src/dd.c:1608
 #, c-format
 msgid "fdatasync failed for %s"
 msgstr "nieudany fdatasync dla %s"
 
-#: src/dd.c:1611
+#: src/dd.c:1618
 #, c-format
 msgid "fsync failed for %s"
 msgstr "nieudany fsync dla %s"
 
-#: src/dd.c:1658 src/dd.c:1687
+#: src/dd.c:1665 src/dd.c:1694
 #, c-format
 msgid "opening %s"
 msgstr "otwieranie %s"
 
-#: src/dd.c:1697
+#: src/dd.c:1704
 #, c-format
 msgid ""
 "offset too large: cannot truncate to a length of seek=%<PRIuMAX> (%lu-byte) "
@@ -2742,7 +2749,7 @@ msgstr ""
 "za du¿a warto¶c pozycji w pliku: nie mo¿na obci±æ pliku do d³ugo¶ci seek=%"
 "<PRIuMAX> (%lu bajtowych) bloków"
 
-#: src/dd.c:1718
+#: src/dd.c:1725
 #, c-format
 msgid "truncating at %<PRIuMAX> bytes in output file %s"
 msgstr "obciêcie pliku do %<PRIuMAX> bajtów w pliku wyj¶ciowym %s"
@@ -2785,22 +2792,22 @@ msgstr " bl.%4s B        u¿yte dostêpne %%u¿."
 msgid " Mounted on\n"
 msgstr " zamont. na\n"
 
-#: src/df.c:453
+#: src/df.c:457
 #, c-format
 msgid "cannot get current directory"
 msgstr "nie mo¿na odczytaæ bie¿±cego katalogu"
 
-#: src/df.c:463 src/df.c:477 src/df.c:505
+#: src/df.c:467 src/df.c:481 src/df.c:509
 #, c-format
 msgid "cannot change to directory %s"
 msgstr "nie mo¿na przej¶æ do katalogu %s"
 
-#: src/df.c:483
+#: src/df.c:487
 #, c-format
 msgid "cannot stat current directory (now %s)"
 msgstr "nie mo¿na odczytaæ danych bie¿±cego katalogu (obecnie %s)"
 
-#: src/df.c:726
+#: src/df.c:730
 msgid ""
 "Show information about the file system on which each FILE resides,\n"
 "or all file systems by default.\n"
@@ -2811,7 +2818,7 @@ msgstr ""
 "o wszystkich systemach plików.\n"
 "\n"
 
-#: src/df.c:734
+#: src/df.c:738
 msgid ""
 "  -a, --all             include dummy file systems\n"
 "  -B, --block-size=SIZE use SIZE-byte blocks\n"
@@ -2825,7 +2832,7 @@ msgstr ""
 "2G)\n"
 "  -H, --si              podobnie, ale z u¿yciem potêg 1000, nie 1024\n"
 
-#: src/df.c:740
+#: src/df.c:744
 msgid ""
 "  -i, --inodes          list inode information instead of block usage\n"
 "  -k                    like --block-size=1K\n"
@@ -2839,7 +2846,7 @@ msgstr ""
 "      --no-sync         bez wywo³ania sync przed pobraniem informacji o\n"
 "                        systemach plików (domy¶lnie)\n"
 
-#: src/df.c:746
+#: src/df.c:750
 msgid ""
 "  -P, --portability     use the POSIX output format\n"
 "      --sync            invoke sync before getting usage info\n"
@@ -2855,7 +2862,7 @@ msgstr ""
 "  -x, --exclude-type=TYP   pokazanie tylko systemów plików nie tego TYPU\n"
 "  -v                    (ignorowane)\n"
 
-#: src/df.c:756 src/du.c:340 src/ls.c:4379
+#: src/df.c:760 src/du.c:340 src/ls.c:4379
 msgid ""
 "\n"
 "SIZE may be (or may be an integer optionally followed by) one of following:\n"
@@ -2866,26 +2873,26 @@ msgstr ""
 "przyrostkiem): kB 1000, K 1024, MB 1000*1000, M 1024*1024 itd. dla G, T, P,\n"
 "E, Z, Y.\n"
 
-#: src/df.c:816 src/du.c:759 src/ls.c:1567
+#: src/df.c:821 src/du.c:759 src/ls.c:1567
 #, c-format
 msgid "the --kilobytes option is deprecated; use -k instead"
 msgstr "opcja --kilobytes jest przestarza³a; u¿ywaj -k"
 
-#: src/df.c:875
+#: src/df.c:880
 #, c-format
 msgid "file system type %s both selected and excluded"
 msgstr "typ systemu plików %s równocze¶nie wybrany i wykluczony"
 
-#: src/df.c:915
+#: src/df.c:920
 msgid "Warning: "
 msgstr "Uwaga: "
 
-#: src/df.c:918
+#: src/df.c:923
 #, c-format
 msgid "%scannot read table of mounted file systems"
 msgstr "%snie mo¿e przeczytaæ tablicy zamontowanych systemów plików"
 
-#: src/df.c:945
+#: src/df.c:944
 #, c-format
 msgid "no file systems processed"
 msgstr ""
@@ -7459,32 +7466,32 @@ msgstr "za du¿a ilo¶æ linii w opcji -%s%c..."
 msgid "invalid number of lines: 0"
 msgstr "b³êdna liczba linii: 0"
 
-#: src/stat.c:591
+#: src/stat.c:593
 #, c-format
 msgid "warning: unrecognized escape `\\%c'"
 msgstr "uwaga: nierozpoznana sekwencja `\\%c'"
 
-#: src/stat.c:626
+#: src/stat.c:628
 #, c-format
 msgid "%s%s: invalid directive"
 msgstr "%s%s: b³êdna dyrektywa"
 
-#: src/stat.c:671
+#: src/stat.c:673
 #, c-format
 msgid "warning: backslash at end of format"
 msgstr "uwaga: uko¶nik odwrotny na koñcu formatu"
 
-#: src/stat.c:700
+#: src/stat.c:702
 #, c-format
 msgid "cannot read file system information for %s"
 msgstr "nie mo¿na przeczytaæ informacji systemowych o %s"
 
-#: src/stat.c:776
+#: src/stat.c:778
 #, c-format
 msgid "Usage: %s [OPTION] FILE...\n"
 msgstr "Sk³adnia: %s [OPCJA] PLIK...\n"
 
-#: src/stat.c:777
+#: src/stat.c:779
 msgid ""
 "Display file or file system status.\n"
 "\n"
@@ -7496,7 +7503,7 @@ msgstr ""
 "  -L, --dereference     rozwi±zywanie dowi±zañ symbolicznych\n"
 "  -f, --file-system     pokazanie danych systemu plików, a nie pliku\n"
 
-#: src/stat.c:783
+#: src/stat.c:785
 msgid ""
 "  -c  --format=FORMAT   use the specified FORMAT instead of the default;\n"
 "                          output a newline after each use of FORMAT\n"
@@ -7515,7 +7522,7 @@ msgstr ""
 "                          linii. ¯eby go wypisaæ u¿yj \\n w FORMACIE.\n"
 "  -t, --terse           wypisywanie informacji w skróconej formie\n"
 
-#: src/stat.c:794
+#: src/stat.c:796
 msgid ""
 "\n"
 "The valid format sequences for files (without --file-system):\n"
@@ -7533,7 +7540,7 @@ msgstr ""
 "  %b   liczba zajêtych bloków (zobacz %B)\n"
 "  %B   rozmiar w bajtach ka¿dego bloku podanego przez `%b'\n"
 
-#: src/stat.c:802
+#: src/stat.c:804
 msgid ""
 "  %d   Device number in decimal\n"
 "  %D   Device number in hex\n"
@@ -7549,7 +7556,7 @@ msgstr ""
 "  %g   numer grupy w³a¶ciciela pliku\n"
 "  %G   nazwa grupy w³a¶ciciela pliku\n"
 
-#: src/stat.c:810
+#: src/stat.c:812
 msgid ""
 "  %h   Number of hard links\n"
 "  %i   Inode number\n"
@@ -7569,7 +7576,7 @@ msgstr ""
 "  %t   wiêkszy numer urz±dzenia szesnastkowo\n"
 "  %T   mniejszy numer urz±dzenia szesnastkowo\n"
 
-#: src/stat.c:820
+#: src/stat.c:822
 msgid ""
 "  %u   User ID of owner\n"
 "  %U   User name of owner\n"
@@ -7591,7 +7598,7 @@ msgstr ""
 "  %Z   czas ostatniej zmiany czasu w sekundach od Epoki\n"
 "\n"
 
-#: src/stat.c:832
+#: src/stat.c:834
 msgid ""
 "Valid format sequences for file systems:\n"
 "\n"
@@ -7609,7 +7616,7 @@ msgstr ""
 "  %d   liczba wolnych i-wêz³ów w systemie plików\n"
 "  %f   liczba wolnych bloków w systemie plików\n"
 
-#: src/stat.c:841
+#: src/stat.c:843
 msgid ""
 "  %i   File System ID in hex\n"
 "  %l   Maximum length of filenames\n"
@@ -8227,7 +8234,7 @@ msgstr ""
 msgid "ignoring all arguments"
 msgstr "wszystkie argumenty zosta³y zignorowane"
 
-#: src/system.h:529
+#: src/system.h:540
 #, c-format
 msgid ""
 "\n"
@@ -8240,11 +8247,11 @@ msgstr ""
 "która zwykle zas³ania wersjê tu opisan±. Szczegó³y opcji tego polecenia\n"
 "opisuje dokumentacja.\n"
 
-#: src/system.h:535
+#: src/system.h:546
 msgid "      --help     display this help and exit\n"
 msgstr "      --help     wy¶wietlenie tego opisu i zakoñczenie\n"
 
-#: src/system.h:537
+#: src/system.h:548
 msgid "      --version  output version information and exit\n"
 msgstr "      --version  wy¶wietlenie informacji o wersji i zakoñczenie\n"
 
@@ -9381,7 +9388,7 @@ msgstr[0] "%ld dzieñ"
 msgstr[1] "%ld dni"
 msgstr[2] "%ld dni"
 
-#: src/uptime.c:131
+#: src/uptime.c:132
 #, c-format
 msgid "%lu user"
 msgid_plural "%lu users"
@@ -9389,17 +9396,17 @@ msgstr[0] "%lu u¿ytkownik"
 msgstr[1] "%lu u¿ytkownicy"
 msgstr[2] "%lu u¿ytkowników"
 
-#: src/uptime.c:145
+#: src/uptime.c:146
 #, c-format
 msgid ",  load average: %.2f"
 msgstr ",  ¶rednie obci±¿enie: %.2f"
 
-#: src/uptime.c:179 src/users.c:108
+#: src/uptime.c:180 src/users.c:108
 #, c-format
 msgid "Usage: %s [OPTION]... [ FILE ]\n"
 msgstr "Sk³adnia: %s [OPCJA]... [ PLIK ]\n"
 
-#: src/uptime.c:180
+#: src/uptime.c:181
 #, c-format
 msgid ""
 "Print the current time, the length of time the system has been up,\n"
@@ -9632,27 +9639,6 @@ msgstr ""
 "Powtarzanie na wyj¶ciu linii ze wszystkimi podanymi £AÑCUCH(AMI) albo `y'\n"
 "\n"
 
-#, fuzzy
-#~ msgid "cannot change owner and permissions of %s"
-#~ msgstr "nie mo¿na zmieniæ uprawnieñ do %s"
-
-#~ msgid ""
-#~ "  -e             enable interpretation of backslash escapes\n"
-#~ "  -E             disable interpretation of backslash escapes (default)\n"
-#~ msgstr ""
-#~ "  -e             w³±czenie interpretacji sekwencji z uko¶nikiem "
-#~ "odwrotnym\n"
-#~ "  -E             wy³±czenie interpretacji sekwencji z uko¶nikiem "
-#~ "odwrotnym\n"
-#~ "                   (domy¶lnie)\n"
-
-#, fuzzy
-#~ msgid "appending output to %s"
-#~ msgstr "do³±czanie wyników do %s"
-
-#~ msgid "Exit with a status code indicating failure."
-#~ msgstr "Wyj¶cie z kodem oznaczaj±cym niepowodzenie."
-
 #~ msgid "cannot change owner and/or group of %s"
 #~ msgstr "nie mo¿na zmieniæ u¿ytkownika i/lub grupy %s"
 
@@ -9669,6 +9655,16 @@ msgstr ""
 #~ "      --no-preserve-root bez traktowania katalogu '/' w specjalny sposób\n"
 #~ "                           (domy¶lnie)\n"
 #~ "      --preserve-root    odmowa rekusywnego dzia³ania na '/'\n"
+
+#~ msgid ""
+#~ "  -e             enable interpretation of backslash escapes\n"
+#~ "  -E             disable interpretation of backslash escapes (default)\n"
+#~ msgstr ""
+#~ "  -e             w³±czenie interpretacji sekwencji z uko¶nikiem "
+#~ "odwrotnym\n"
+#~ "  -E             wy³±czenie interpretacji sekwencji z uko¶nikiem "
+#~ "odwrotnym\n"
+#~ "                   (domy¶lnie)\n"
 
 # trochê niezrêczne -pk
 #~ msgid ""
@@ -9773,3 +9769,6 @@ msgstr ""
 #~ "  -f, --force           zignorowanie nieistniej±cych plików, wy³±czenie "
 #~ "pytañ\n"
 #~ "  -i, --interactive     pytanie przed ka¿dym usuniêciem pliku\n"
+
+#~ msgid "Exit with a status code indicating failure."
+#~ msgstr "Wyj¶cie z kodem oznaczaj±cym niepowodzenie."

@@ -45,7 +45,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: coreutils 5.97\n"
 "Report-Msgid-Bugs-To: bug-coreutils@gnu.org\n"
-"POT-Creation-Date: 2006-08-15 13:26+0200\n"
+"POT-Creation-Date: 2006-08-19 20:53+0200\n"
 "PO-Revision-Date: 2006-06-26 14:15+0200\n"
 "Last-Translator: Ivan Vilata i Balaguer <ivan@selidor.net>\n"
 "Language-Team: Catalan <ca@dodds.net>\n"
@@ -103,7 +103,7 @@ msgstr "Error desconegut del sistema"
 
 # Els 3 usen quote().  ivb
 #: lib/euidaccess-stat.c:139 src/copy.c:978 src/copy.c:1016 src/copy.c:1504
-#: src/df.c:497 src/install.c:426 src/stat.c:729
+#: src/df.c:501 src/install.c:426 src/stat.c:731
 #, c-format
 msgid "cannot stat %s"
 msgstr "ha fallat stat() sobre %s"
@@ -314,7 +314,7 @@ msgstr "la memòria s’ha exhaurit"
 msgid "unable to record current working directory"
 msgstr "no s’ha pogut registrar el directori de treball actual"
 
-#: lib/openat-die.c:49 src/df.c:520
+#: lib/openat-die.c:49 src/df.c:524
 #, c-format
 msgid "failed to return to initial working directory"
 msgstr "no s’ha pogut tornar al directori inicial de treball"
@@ -352,18 +352,18 @@ msgid "%s: end of file"
 msgstr "%s: ha fallat el desplaçament"
 
 # Usa quote().  ivb
-#: lib/root-dev-ino.h:20
+#: lib/root-dev-ino.h:38
 #, c-format
 msgid "it is dangerous to operate recursively on %s"
 msgstr "és perillós operar recursivament sobre %s"
 
 # Els 2 usen quote().  ivb
-#: lib/root-dev-ino.h:24
+#: lib/root-dev-ino.h:42
 #, c-format
 msgid "it is dangerous to operate recursively on %s (same as %s)"
 msgstr "és perillós operar recursivament sobre %s (com sobre %s)"
 
-#: lib/root-dev-ino.h:26
+#: lib/root-dev-ino.h:44
 #, c-format
 msgid "use --no-preserve-root to override this failsafe"
 msgstr "useu «--no-preserve-root» per a evitar aquesta comprovació"
@@ -576,7 +576,7 @@ msgstr "Les cadenes comparades eren %s i %s."
 #: src/base64.c:61 src/basename.c:51 src/cat.c:91 src/chgrp.c:109
 #: src/chmod.c:325 src/chown.c:90 src/chroot.c:42 src/cksum.c:264
 #: src/comm.c:69 src/cp.c:154 src/csplit.c:1449 src/cut.c:184 src/date.c:128
-#: src/dd.c:400 src/df.c:721 src/dircolors.c:101 src/dirname.c:45 src/du.c:276
+#: src/dd.c:400 src/df.c:725 src/dircolors.c:101 src/dirname.c:45 src/du.c:276
 #: src/echo.c:60 src/env.c:114 src/expand.c:107 src/expr.c:98 src/factor.c:70
 #: src/fmt.c:269 src/fold.c:66 src/head.c:105 src/hostid.c:44
 #: src/hostname.c:61 src/id.c:74 src/install.c:618 src/join.c:130
@@ -586,11 +586,11 @@ msgstr "Les cadenes comparades eren %s i %s."
 #: src/pathchk.c:95 src/pinky.c:510 src/pr.c:2764 src/printenv.c:57
 #: src/printf.c:96 src/ptx.c:1879 src/pwd.c:50 src/readlink.c:63 src/rm.c:155
 #: src/rmdir.c:135 src/seq.c:70 src/setuidgid.c:47 src/shred.c:157
-#: src/shuf.c:47 src/sleep.c:43 src/sort.c:281 src/split.c:103 src/stat.c:772
+#: src/shuf.c:47 src/sleep.c:43 src/sort.c:281 src/split.c:103 src/stat.c:774
 #: src/stty.c:507 src/su.c:382 src/sum.c:55 src/sync.c:41 src/tac.c:129
 #: src/tail.c:216 src/tee.c:58 src/test.c:690 src/touch.c:229 src/tr.c:286
 #: src/tsort.c:82 src/tty.c:65 src/uname.c:113 src/unexpand.c:117
-#: src/uniq.c:131 src/unlink.c:46 src/uptime.c:175 src/users.c:104
+#: src/uniq.c:131 src/unlink.c:46 src/uptime.c:176 src/users.c:104
 #: src/wc.c:128 src/who.c:631 src/whoami.c:46 src/yes.c:42
 #, c-format
 msgid "Try `%s --help' for more information.\n"
@@ -646,7 +646,7 @@ msgstr ""
 #: src/base64.c:89 src/basename.c:74 src/cat.c:128 src/chgrp.c:164
 #: src/chmod.c:356 src/chown.c:159 src/chroot.c:60 src/cksum.c:279
 #: src/comm.c:94 src/cp.c:253 src/csplit.c:1491 src/cut.c:235 src/date.c:241
-#: src/dd.c:508 src/df.c:760 src/dircolors.c:122 src/dirname.c:68 src/du.c:344
+#: src/dd.c:508 src/df.c:764 src/dircolors.c:122 src/dirname.c:68 src/du.c:344
 #: src/echo.c:98 src/env.c:133 src/expand.c:132 src/expr.c:166 src/factor.c:90
 #: src/fmt.c:300 src/fold.c:89 src/head.c:140 src/hostid.c:57
 #: src/hostname.c:74 src/id.c:95 src/install.c:676 src/join.c:172
@@ -656,11 +656,11 @@ msgstr ""
 #: src/pathchk.c:109 src/pinky.c:537 src/pr.c:2876 src/printenv.c:71
 #: src/printf.c:145 src/ptx.c:1925 src/pwd.c:62 src/readlink.c:87 src/rm.c:201
 #: src/rmdir.c:154 src/seq.c:99 src/setuidgid.c:67 src/shred.c:231
-#: src/shuf.c:78 src/sleep.c:60 src/sort.c:357 src/split.c:137 src/stat.c:851
+#: src/shuf.c:78 src/sleep.c:60 src/sort.c:357 src/split.c:137 src/stat.c:853
 #: src/stty.c:724 src/su.c:403 src/sum.c:75 src/sync.c:52 src/tac.c:152
 #: src/tail.c:287 src/tee.c:75 src/test.c:777 src/touch.c:263 src/tr.c:359
 #: src/true.c:54 src/tsort.c:94 src/tty.c:77 src/uname.c:136
-#: src/unexpand.c:141 src/uniq.c:170 src/unlink.c:57 src/uptime.c:190
+#: src/unexpand.c:141 src/uniq.c:170 src/unlink.c:57 src/uptime.c:191
 #: src/users.c:117 src/wc.c:153 src/who.c:670 src/whoami.c:58 src/yes.c:58
 #, c-format
 msgid ""
@@ -671,7 +671,7 @@ msgstr ""
 "Informeu dels errors a <%s>.\n"
 
 #: src/base64.c:177 src/base64.c:210 src/csplit.c:282 src/csplit.c:1438
-#: src/join.c:243 src/shuf.c:401 src/tac-pipe.c:57 src/tee.c:204 src/tr.c:1586
+#: src/join.c:243 src/shuf.c:401 src/tac-pipe.c:75 src/tee.c:204 src/tr.c:1586
 #, c-format
 msgid "read error"
 msgstr "error de lectura"
@@ -694,7 +694,7 @@ msgstr "l’amplària de tabulació no és vàlida: %s"
 #: src/mv.c:451 src/od.c:1840 src/ptx.c:2154 src/readlink.c:154 src/seq.c:331
 #: src/shuf.c:381 src/split.c:533 src/tr.c:1739 src/tsort.c:552 src/tty.c:117
 #: src/uname.c:222 src/uniq.c:435 src/uniq.c:452 src/unlink.c:86
-#: src/uptime.c:222 src/users.c:149 src/wc.c:668 src/who.c:824 src/whoami.c:84
+#: src/uptime.c:223 src/users.c:149 src/wc.c:668 src/who.c:824 src/whoami.c:84
 #, c-format
 msgid "extra operand %s"
 msgstr "sobra l’operand %s"
@@ -743,7 +743,7 @@ msgstr ""
 #: src/expr.c:211 src/join.c:907 src/link.c:82 src/mkdir.c:151
 #: src/mkfifo.c:109 src/mknod.c:141 src/nohup.c:101 src/pathchk.c:158
 #: src/printf.c:669 src/readlink.c:146 src/rm.c:333 src/rmdir.c:197
-#: src/seq.c:325 src/setuidgid.c:95 src/sleep.c:122 src/stat.c:914
+#: src/seq.c:325 src/setuidgid.c:95 src/sleep.c:122 src/stat.c:916
 #: src/tr.c:1724 src/unlink.c:80
 #, c-format
 msgid "missing operand"
@@ -811,7 +811,7 @@ msgstr ""
 msgid "cannot do ioctl on %s"
 msgstr "ha fallat ioctl() sobre %s"
 
-#: src/cat.c:643 src/dd.c:1668 src/sort.c:273 src/tee.c:163 src/yes.c:92
+#: src/cat.c:643 src/dd.c:1675 src/sort.c:273 src/tee.c:163 src/yes.c:92
 #, c-format
 msgid "standard output"
 msgstr "eixida estàndard"
@@ -1393,7 +1393,7 @@ msgid "cannot open %s for reading"
 msgstr "no s’ha pogut obrir %s per a llegir"
 
 # Els 4 usen quote().  ivb
-#: src/copy.c:266 src/copy.c:318 src/dd.c:1712 src/tail.c:1131 src/tail.c:1197
+#: src/copy.c:266 src/copy.c:318 src/dd.c:1719 src/tail.c:1131 src/tail.c:1197
 #, c-format
 msgid "cannot fstat %s"
 msgstr "ha fallat fstat() sobre %s"
@@ -1419,7 +1419,7 @@ msgid "cannot create regular file %s"
 msgstr "no s’ha pogut crear el fitxer ordinari %s"
 
 # Els 3 usen quote().  ivb
-#: src/copy.c:403 src/dd.c:1159 src/dd.c:1470
+#: src/copy.c:403 src/dd.c:1166 src/dd.c:1477
 #, c-format
 msgid "reading %s"
 msgstr "s’està llegint %s"
@@ -1432,7 +1432,7 @@ msgstr "ha fallat lseek() sobre %s"
 
 # Els 4 usen quote().  ivb
 # En els 4 indica condició d'error.  ivb
-#: src/copy.c:452 src/copy.c:480 src/dd.c:1527 src/dd.c:1589
+#: src/copy.c:452 src/copy.c:480 src/dd.c:1534 src/dd.c:1596
 #, c-format
 msgid "writing %s"
 msgstr "en escriure %s"
@@ -1612,7 +1612,7 @@ msgid "cannot create special file %s"
 msgstr "no s’ha pogut crear el fitxer especial %s"
 
 # Els 3 usen quote().  ivb
-#: src/copy.c:1650 src/ls.c:2795 src/stat.c:437
+#: src/copy.c:1650 src/ls.c:2795 src/stat.c:439
 #, c-format
 msgid "cannot read symbolic link %s"
 msgstr "no s’ha pogut llegir l’enllaç simbòlic %s"
@@ -1662,7 +1662,7 @@ msgstr ""
 "\n"
 
 # Agafat més o menys de libc.  ivb
-#: src/cp.c:168 src/csplit.c:1462 src/cut.c:196 src/df.c:731 src/du.c:288
+#: src/cp.c:168 src/csplit.c:1462 src/cut.c:196 src/df.c:735 src/du.c:288
 #: src/expand.c:120 src/fmt.c:279 src/fold.c:79 src/head.c:119
 #: src/install.c:635 src/kill.c:104 src/ln.c:333 src/ls.c:4255 src/mkdir.c:64
 #: src/mkfifo.c:60 src/mknod.c:61 src/mv.c:301 src/nl.c:186 src/paste.c:427
@@ -2163,7 +2163,7 @@ msgstr ""
 "Un desplaçament de línia (DESPL) és un «+» o «-» seguit d’un número enter\n"
 "positiu.\n"
 
-#: src/cut.c:188 src/df.c:725 src/expand.c:111 src/fold.c:70 src/head.c:109
+#: src/cut.c:188 src/df.c:729 src/expand.c:111 src/fold.c:70 src/head.c:109
 #: src/ls.c:4249 src/nl.c:177 src/paste.c:417 src/pr.c:2768 src/sort.c:285
 #: src/sum.c:59 src/tac.c:133 src/tail.c:220 src/tee.c:62 src/unexpand.c:121
 #, c-format
@@ -2554,7 +2554,7 @@ msgstr ""
 "representacions alternatives del locale (si n’hi ha), o «O», per a usar els\n"
 "símbols numèrics alternatius del locale (si n’hi ha).\n"
 
-#: src/date.c:262 src/dd.c:1652 src/head.c:840 src/md5sum.c:434
+#: src/date.c:262 src/dd.c:1659 src/head.c:840 src/md5sum.c:434
 #: src/md5sum.c:720 src/od.c:910 src/od.c:1932 src/pr.c:1178 src/pr.c:1381
 #: src/pr.c:1503 src/stty.c:841 src/tac.c:535 src/tee.c:126 src/tr.c:1894
 #: src/tsort.c:527 src/wc.c:212
@@ -2831,15 +2831,15 @@ msgstr ""
 "%<PRIuMAX>+%<PRIuMAX> registres escrits\n"
 
 #: src/dd.c:551
-#, c-format
-msgid "1 truncated record\n"
+#, fuzzy, c-format
+msgid "%<PRIuMAX> truncated record\n"
 msgid_plural "%<PRIuMAX> truncated records\n"
 msgstr[0] "1 registre truncat\n"
 msgstr[1] "%<PRIuMAX> registres truncats\n"
 
 #: src/dd.c:563
-#, c-format
-msgid "1 byte (1 B) copied"
+#, fuzzy, c-format
+msgid "%<PRIuMAX> byte (%s) copied"
 msgid_plural "%<PRIuMAX> bytes (%s) copied"
 msgstr[0] "1 octet (1 B) copiat"
 msgstr[1] "%<PRIuMAX> octets (%s) copiats"
@@ -2849,96 +2849,104 @@ msgstr[1] "%<PRIuMAX> octets (%s) copiats"
 msgid "Infinity B"
 msgstr "Infinits B"
 
-#: src/dd.c:585
-#, c-format
-msgid ", %g second, %s/s\n"
-msgid_plural ", %g seconds, %s/s\n"
-msgstr[0] ", %g segon, %s/s\n"
-msgstr[1] ", %g segons, %s/s\n"
+#. TRANSLATORS: The two instances of "s" in this string are the SI
+#. symbol "s" (meaning second), and should not be translated.
+#.
+#. This format used to be:
+#.
+#. ngettext (", %g second, %s/s\n", ", %g seconds, %s/s\n", delta_s == 1)
+#.
+#. but that was incorrect for languages like Polish.  To fix this
+#. bug we now use SI symbols even though they're a bit more
+#. confusing in English.
+#: src/dd.c:594
+#, fuzzy, c-format
+msgid ", %g s, %s/s\n"
+msgstr ", %g segon, %s/s\n"
 
 # Usa quote().  ivb
 # Condició d'error.  ivb
-#: src/dd.c:595
+#: src/dd.c:602
 #, c-format
 msgid "closing input file %s"
 msgstr "en tancar el fitxer d’entrada %s"
 
 # Usa quote().  ivb
 # Condició d'error.  ivb
-#: src/dd.c:602
+#: src/dd.c:609
 #, c-format
 msgid "closing output file %s"
 msgstr "en tancar el fitxer d’eixida %s"
 
 # Usa quote().  ivb
 # Condició d'error.  ivb
-#: src/dd.c:782 src/dd.c:1440
+#: src/dd.c:789 src/dd.c:1447
 #, c-format
 msgid "writing to %s"
 msgstr "en escriure %s"
 
 # Usa quote().  ivb
-#: src/dd.c:876
+#: src/dd.c:883
 #, c-format
 msgid "unrecognized operand %s"
 msgstr "l’operand %s no és reconegut"
 
-#: src/dd.c:887
+#: src/dd.c:894
 #, c-format
 msgid "invalid conversion: %s"
 msgstr "la conversió no és vàlida: %s"
 
-#: src/dd.c:890
+#: src/dd.c:897
 #, c-format
 msgid "invalid input flag: %s"
 msgstr "el senyalador d’entrada no és vàlid: %s"
 
-#: src/dd.c:893
+#: src/dd.c:900
 #, c-format
 msgid "invalid output flag: %s"
 msgstr "el senyalador d’eixida no és vàlid: %s"
 
-#: src/dd.c:896
+#: src/dd.c:903
 #, c-format
 msgid "invalid status flag: %s"
 msgstr "el senyalador d’estat no és vàlid: %s"
 
 # Usa quote() en els 2 args.  ivb
-#: src/dd.c:932
+#: src/dd.c:939
 #, c-format
 msgid "unrecognized operand %s=%s"
 msgstr "l’operand %s=%s no és reconegut"
 
 # Usa quote().  ivb
-#: src/dd.c:938
+#: src/dd.c:945
 #, c-format
 msgid "invalid number %s"
 msgstr "el número %s no és vàlid"
 
-#: src/dd.c:958
+#: src/dd.c:965
 #, c-format
 msgid "cannot combine any two of {ascii,ebcdic,ibm}"
 msgstr "no es poden combinar «ascii», «ebcdic» o «ibm»"
 
 # Són noms de senyaladors.  ivb
-#: src/dd.c:960
+#: src/dd.c:967
 #, c-format
 msgid "cannot combine block and unblock"
 msgstr "no es poden combinar «block» i «unblock»"
 
 # Són noms de senyaladors.  ivb
-#: src/dd.c:962
+#: src/dd.c:969
 #, c-format
 msgid "cannot combine lcase and ucase"
 msgstr "no es poden combinar «lcase» i «ucase»"
 
 # Són noms de senyaladors.  ivb
-#: src/dd.c:964
+#: src/dd.c:971
 #, c-format
 msgid "cannot combine excl and nocreat"
 msgstr "no es poden combinar «excl» i «nocreat»"
 
-#: src/dd.c:1110
+#: src/dd.c:1117
 #, c-format
 msgid ""
 "warning: working around lseek kernel bug for file (%s)\n"
@@ -2948,56 +2956,56 @@ msgstr ""
 "mt_type=0x%0lx —vegeu <sys/mtio.h> per a la llista de tipus"
 
 # El primer hauria de ser «no *es pot* desplaçar».  ivb
-#: src/dd.c:1167 src/dd.c:1224
+#: src/dd.c:1174 src/dd.c:1231
 #, c-format
 msgid "%s: cannot seek"
 msgstr "%s: no s’ha pogut desplaçar"
 
 # Usa quote().  ivb
-#: src/dd.c:1204
+#: src/dd.c:1211
 #, c-format
 msgid "offset overflow while reading file %s"
 msgstr "s’ha desbordat el desplaçament en llegir el fitxer %s"
 
-#: src/dd.c:1216
+#: src/dd.c:1223
 #, c-format
 msgid "warning: screwy file offset after failed read"
 msgstr ""
 "avís: després de la lectura fallada el desplaçament de fitxer no és "
 "acceptable"
 
-#: src/dd.c:1220
+#: src/dd.c:1227
 #, c-format
 msgid "cannot work around kernel bug after all"
 msgstr "al final no s’ha pogut evitar l’error del nucli"
 
 # Usa quote().  ivb
 # Condició d'error.  ivb
-#: src/dd.c:1363
+#: src/dd.c:1370
 #, c-format
 msgid "setting flags for %s"
 msgstr "en establir els senyaladors de %s"
 
 # Usa quote.  ivb
-#: src/dd.c:1601
+#: src/dd.c:1608
 #, c-format
 msgid "fdatasync failed for %s"
 msgstr "ha fallat fdatasync() sobre %s"
 
 # Usa quote().  ivb
-#: src/dd.c:1611
+#: src/dd.c:1618
 #, c-format
 msgid "fsync failed for %s"
 msgstr "ha fallat fsync() sobre %s"
 
 # Usa quote().  ivb
 # Condició d'error.  ivb
-#: src/dd.c:1658 src/dd.c:1687
+#: src/dd.c:1665 src/dd.c:1694
 #, c-format
 msgid "opening %s"
 msgstr "en obrir %s"
 
-#: src/dd.c:1697
+#: src/dd.c:1704
 #, c-format
 msgid ""
 "offset too large: cannot truncate to a length of seek=%<PRIuMAX> (%lu-byte) "
@@ -3008,7 +3016,7 @@ msgstr ""
 
 # Usa quote().  ivb
 # Condició d'error.  ivb
-#: src/dd.c:1718
+#: src/dd.c:1725
 #, c-format
 msgid "truncating at %<PRIuMAX> bytes in output file %s"
 msgstr "en truncar a %<PRIuMAX> octets en el fitxer d’eixida %s"
@@ -3058,23 +3066,23 @@ msgstr "  Blocs %4s     Usats   Lliures  %%Ús"
 msgid " Mounted on\n"
 msgstr " Muntat en\n"
 
-#: src/df.c:453
+#: src/df.c:457
 #, c-format
 msgid "cannot get current directory"
 msgstr "no s’ha pogut obtenir el directori actual"
 
-#: src/df.c:463 src/df.c:477 src/df.c:505
+#: src/df.c:467 src/df.c:481 src/df.c:509
 #, c-format
 msgid "cannot change to directory %s"
 msgstr "no s’ha pogut canviar al directori %s"
 
 # Usa quote().  ivb
-#: src/df.c:483
+#: src/df.c:487
 #, c-format
 msgid "cannot stat current directory (now %s)"
 msgstr "ha fallat stat() sobre el directori actual (ara %s)"
 
-#: src/df.c:726
+#: src/df.c:730
 msgid ""
 "Show information about the file system on which each FILE resides,\n"
 "or all file systems by default.\n"
@@ -3086,7 +3094,7 @@ msgstr ""
 "\n"
 
 # Crec que «virtual» capta millor el significat de «dummy».  ivb
-#: src/df.c:734
+#: src/df.c:738
 msgid ""
 "  -a, --all             include dummy file systems\n"
 "  -B, --block-size=SIZE use SIZE-byte blocks\n"
@@ -3101,7 +3109,7 @@ msgstr ""
 "                       (per exemple: 1K 234M 2G).\n"
 "  -H, --si             El mateix, però usa potències de 1000, no de 1024.\n"
 
-#: src/df.c:740
+#: src/df.c:744
 msgid ""
 "  -i, --inodes          list inode information instead of block usage\n"
 "  -k                    like --block-size=1K\n"
@@ -3116,7 +3124,7 @@ msgstr ""
 "      --no-sync        No invoca sync() abans d’obtenir la informació sobre\n"
 "                       l’ús (per defecte).\n"
 
-#: src/df.c:746
+#: src/df.c:750
 msgid ""
 "  -P, --portability     use the POSIX output format\n"
 "      --sync            invoke sync before getting usage info\n"
@@ -3137,7 +3145,7 @@ msgstr ""
 "                       del TIPUS especificat.\n"
 "  -v                   (No es té en compte.)\n"
 
-#: src/df.c:756 src/du.c:340 src/ls.c:4379
+#: src/df.c:760 src/du.c:340 src/ls.c:4379
 msgid ""
 "\n"
 "SIZE may be (or may be an integer optionally followed by) one of following:\n"
@@ -3149,27 +3157,27 @@ msgstr ""
 "i així per a G, T, P, E, Z, Y.  També poden anar precedides d’un número "
 "enter.\n"
 
-#: src/df.c:816 src/du.c:759 src/ls.c:1567
+#: src/df.c:821 src/du.c:759 src/ls.c:1567
 #, c-format
 msgid "the --kilobytes option is deprecated; use -k instead"
 msgstr "l’opció «--kilobytes» està desaprovada; useu «-k» en el seu lloc"
 
 # Usa quote().  ivb
-#: src/df.c:875
+#: src/df.c:880
 #, c-format
 msgid "file system type %s both selected and excluded"
 msgstr "s’ha seleccionat i exclós alhora el tipus de sistema de fitxers %s"
 
-#: src/df.c:915
+#: src/df.c:920
 msgid "Warning: "
 msgstr "avís: "
 
-#: src/df.c:918
+#: src/df.c:923
 #, c-format
 msgid "%scannot read table of mounted file systems"
 msgstr "%sno es pot llegir la taula de sistemes de fitxers muntats"
 
-#: src/df.c:945
+#: src/df.c:944
 #, c-format
 msgid "no file systems processed"
 msgstr ""
@@ -8108,33 +8116,33 @@ msgstr "l’opció de nombre de línies «-%s%c…» és massa gran"
 msgid "invalid number of lines: 0"
 msgstr "el nombre de línies no és vàlid: 0"
 
-#: src/stat.c:591
+#: src/stat.c:593
 #, c-format
 msgid "warning: unrecognized escape `\\%c'"
 msgstr "avís: la seqüència d’escapada «\\%c» no és reconeguda"
 
-#: src/stat.c:626
+#: src/stat.c:628
 #, c-format
 msgid "%s%s: invalid directive"
 msgstr "%s%s: la directiva no és vàlida"
 
-#: src/stat.c:671
+#: src/stat.c:673
 #, c-format
 msgid "warning: backslash at end of format"
 msgstr "avís: hi ha una barra invertida al final de la línia"
 
 # Usa quote().  ivb
-#: src/stat.c:700
+#: src/stat.c:702
 #, c-format
 msgid "cannot read file system information for %s"
 msgstr "no s’ha pogut llegir la informació de sistema de fitxers de %s"
 
-#: src/stat.c:776
+#: src/stat.c:778
 #, c-format
 msgid "Usage: %s [OPTION] FILE...\n"
 msgstr "Forma d’ús: %s [OPCIÓ] FITXER…\n"
 
-#: src/stat.c:777
+#: src/stat.c:779
 msgid ""
 "Display file or file system status.\n"
 "\n"
@@ -8147,7 +8155,7 @@ msgstr ""
 "  -f, --file-system    Mostra l’estat del sistema de fitxers en lloc de\n"
 "                       l’estat del fitxer.\n"
 
-#: src/stat.c:783
+#: src/stat.c:785
 msgid ""
 "  -c  --format=FORMAT   use the specified FORMAT instead of the default;\n"
 "                          output a newline after each use of FORMAT\n"
@@ -8167,7 +8175,7 @@ msgstr ""
 "                       en el FORMAT.\n"
 "  -t, --terse          Mostra la informació de forma pelada.\n"
 
-#: src/stat.c:794
+#: src/stat.c:796
 msgid ""
 "\n"
 "The valid format sequences for files (without --file-system):\n"
@@ -8186,7 +8194,7 @@ msgstr ""
 "  %b    Nombre de blocs reservats (vegeu «%B»).\n"
 "  %B    Mida en octets de cada bloc mostrat per «%b».\n"
 
-#: src/stat.c:802
+#: src/stat.c:804
 msgid ""
 "  %d   Device number in decimal\n"
 "  %D   Device number in hex\n"
@@ -8202,7 +8210,7 @@ msgstr ""
 "  %g    Identificador del grup del propietari.\n"
 "  %G    Nom del grup del propietari.\n"
 
-#: src/stat.c:810
+#: src/stat.c:812
 msgid ""
 "  %h   Number of hard links\n"
 "  %i   Inode number\n"
@@ -8224,7 +8232,7 @@ msgstr ""
 "  %T    Número menor de dispositiu, en hexadecimal.\n"
 
 # Indique «de les dades» i «del node índex», queda més clar.  ivb
-#: src/stat.c:820
+#: src/stat.c:822
 msgid ""
 "  %u   User ID of owner\n"
 "  %U   User name of owner\n"
@@ -8247,7 +8255,7 @@ msgstr ""
 "  %Z    Data de l’últim canvi en el node índex, en segons des de l’Època.\n"
 "\n"
 
-#: src/stat.c:832
+#: src/stat.c:834
 msgid ""
 "Valid format sequences for file systems:\n"
 "\n"
@@ -8265,7 +8273,7 @@ msgstr ""
 "  %d    Nombre de nodes índex lliures del sistema de fitxers.\n"
 "  %f    Nombre de blocs de dades lliures del sistema de fitxers.\n"
 
-#: src/stat.c:841
+#: src/stat.c:843
 msgid ""
 "  %i   File System ID in hex\n"
 "  %l   Maximum length of filenames\n"
@@ -8920,7 +8928,7 @@ msgstr ""
 msgid "ignoring all arguments"
 msgstr "es descarten tots els arguments"
 
-#: src/system.h:529
+#: src/system.h:540
 #, c-format
 msgid ""
 "\n"
@@ -8934,11 +8942,11 @@ msgstr ""
 "del\n"
 "vostre intèrpret quines opcions admet.\n"
 
-#: src/system.h:535
+#: src/system.h:546
 msgid "      --help     display this help and exit\n"
 msgstr "      --help           Mostra aquesta ajuda i surt.\n"
 
-#: src/system.h:537
+#: src/system.h:548
 msgid "      --version  output version information and exit\n"
 msgstr "      --version        Mostra informació sobre la versió i surt.\n"
 
@@ -10174,19 +10182,19 @@ msgid_plural "%ld days"
 msgstr[0] "%ld dia"
 msgstr[1] "%ld dies"
 
-#: src/uptime.c:131
+#: src/uptime.c:132
 #, c-format
 msgid "%lu user"
 msgid_plural "%lu users"
 msgstr[0] "%lu usuari"
 msgstr[1] "%lu usuaris"
 
-#: src/uptime.c:145
+#: src/uptime.c:146
 #, c-format
 msgid ",  load average: %.2f"
 msgstr ",  càrrega mitjana: %.2f"
 
-#: src/uptime.c:179 src/users.c:108
+#: src/uptime.c:180 src/users.c:108
 #, c-format
 msgid "Usage: %s [OPTION]... [ FILE ]\n"
 msgstr "Forma d’ús: %s [OPCIÓ]… [FITXER]\n"
@@ -10194,7 +10202,7 @@ msgstr "Forma d’ús: %s [OPCIÓ]… [FITXER]\n"
 # Dubte sobre lo de uptime. jm
 # Ein?  ivb
 # No usa quote() en cap dels 2 args.  ivb
-#: src/uptime.c:180
+#: src/uptime.c:181
 #, c-format
 msgid ""
 "Print the current time, the length of time the system has been up,\n"
@@ -10454,31 +10462,6 @@ msgstr ""
 "Mostra repetidament una línia amb totes les cadenes indicades, o «y».\n"
 "\n"
 
-# Els 2 usen quote().  ivb
-#, fuzzy
-#~ msgid "cannot change owner and permissions of %s"
-#~ msgstr "no s’han pogut canviar els permisos de %s"
-
-#~ msgid ""
-#~ "  -e             enable interpretation of backslash escapes\n"
-#~ "  -E             disable interpretation of backslash escapes (default)\n"
-#~ msgstr ""
-#~ "  -e                   Habilita la interpretació de seqüències d’escapada "
-#~ "amb\n"
-#~ "                       barra invertida.\n"
-#~ "  -E                   Inhabilita la interpretació de seqüències "
-#~ "d’escapada\n"
-#~ "                       amb barra invertida (per defecte).\n"
-
-# Missatge informatiu.  ivb
-# Usa quote().  ivb
-#, fuzzy
-#~ msgid "appending output to %s"
-#~ msgstr "s’afegeix l’eixida a %s"
-
-#~ msgid "Exit with a status code indicating failure."
-#~ msgstr "Ix amb un codi d’estat que indica error."
-
 # Els 3 usen quote().  ivb
 #~ msgid "cannot change owner and/or group of %s"
 #~ msgstr "no s’ha pogut canviar el propietari o grup de %s"
@@ -10497,6 +10480,17 @@ msgstr ""
 #~ "      --no-preserve-root\n"
 #~ "                       No tracta «/» de forma especial (per defecte).\n"
 #~ "      --preserve-root    Falla en operar recursivament sobre «/».\n"
+
+#~ msgid ""
+#~ "  -e             enable interpretation of backslash escapes\n"
+#~ "  -E             disable interpretation of backslash escapes (default)\n"
+#~ msgstr ""
+#~ "  -e                   Habilita la interpretació de seqüències d’escapada "
+#~ "amb\n"
+#~ "                       barra invertida.\n"
+#~ "  -E                   Inhabilita la interpretació de seqüències "
+#~ "d’escapada\n"
+#~ "                       amb barra invertida (per defecte).\n"
 
 # Usa quote().  ivb
 #~ msgid ""
@@ -10616,3 +10610,6 @@ msgstr ""
 #~ "  -f, --force          Descarta els fitxers inexistents, i mai no "
 #~ "pregunta.\n"
 #~ "  -i, --interactive    Pregunta abans d’esborrar.\n"
+
+#~ msgid "Exit with a status code indicating failure."
+#~ msgstr "Ix amb un codi d’estat que indica error."

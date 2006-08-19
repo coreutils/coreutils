@@ -1018,6 +1018,9 @@
 /* Define to 1 if `f_fsid.__val' is member of `struct statvfs'. */
 #undef HAVE_STRUCT_STATVFS_F_FSID___VAL
 
+/* Define to 1 if `f_fstypename' is member of `struct statvfs'. */
+#undef HAVE_STRUCT_STATVFS_F_FSTYPENAME
+
 /* Define to 1 if `f_namelen' is member of `struct statvfs'. */
 #undef HAVE_STRUCT_STATVFS_F_NAMELEN
 
@@ -1453,8 +1456,14 @@
 #undef MOUNTED_GETMNTENT2
 
 /* Define if there is a function named getmntinfo for reading the list of
-   mounted file systems. (4.4BSD, Darwin) */
+   mounted file systems and it returns an array of 'struct statfs'. (4.4BSD,
+   Darwin) */
 #undef MOUNTED_GETMNTINFO
+
+/* Define if there is a function named getmntinfo for reading the list of
+   mounted file systems and it returns an array of 'struct statvfs'. (NetBSD
+   3.0) */
+#undef MOUNTED_GETMNTINFO2
 
 /* Define if there is a function named listmntent that can be used to list all
    mounted file systems. (UNICOS) */

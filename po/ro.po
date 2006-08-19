@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fileutils 4.1.11\n"
 "Report-Msgid-Bugs-To: bug-coreutils@gnu.org\n"
-"POT-Creation-Date: 2006-08-15 13:26+0200\n"
+"POT-Creation-Date: 2006-08-19 20:53+0200\n"
 "PO-Revision-Date: 2003-11-29 08:20+0200\n"
 "Last-Translator: Eugen Hoanca <eugenh@urban-grafx.ro>\n"
 "Language-Team: Romanian <translation-team-ro@lists.sourceforge.net>\n"
@@ -56,7 +56,7 @@ msgid "Unknown system error"
 msgstr "Eroare de sistem necunoscutã"
 
 #: lib/euidaccess-stat.c:139 src/copy.c:978 src/copy.c:1016 src/copy.c:1504
-#: src/df.c:497 src/install.c:426 src/stat.c:729
+#: src/df.c:501 src/install.c:426 src/stat.c:731
 #, c-format
 msgid "cannot stat %s"
 msgstr "nu se poate face stat %s"
@@ -269,7 +269,7 @@ msgstr "memorie plinã"
 msgid "unable to record current working directory"
 msgstr ""
 
-#: lib/openat-die.c:49 src/df.c:520
+#: lib/openat-die.c:49 src/df.c:524
 #, c-format
 msgid "failed to return to initial working directory"
 msgstr ""
@@ -306,17 +306,17 @@ msgstr "'"
 msgid "%s: end of file"
 msgstr "%s: redenumit în %s"
 
-#: lib/root-dev-ino.h:20
+#: lib/root-dev-ino.h:38
 #, c-format
 msgid "it is dangerous to operate recursively on %s"
 msgstr ""
 
-#: lib/root-dev-ino.h:24
+#: lib/root-dev-ino.h:42
 #, c-format
 msgid "it is dangerous to operate recursively on %s (same as %s)"
 msgstr ""
 
-#: lib/root-dev-ino.h:26
+#: lib/root-dev-ino.h:44
 #, c-format
 msgid "use --no-preserve-root to override this failsafe"
 msgstr ""
@@ -505,7 +505,7 @@ msgstr "ªirurile comparate au fost %s ºi %s."
 #: src/base64.c:61 src/basename.c:51 src/cat.c:91 src/chgrp.c:109
 #: src/chmod.c:325 src/chown.c:90 src/chroot.c:42 src/cksum.c:264
 #: src/comm.c:69 src/cp.c:154 src/csplit.c:1449 src/cut.c:184 src/date.c:128
-#: src/dd.c:400 src/df.c:721 src/dircolors.c:101 src/dirname.c:45 src/du.c:276
+#: src/dd.c:400 src/df.c:725 src/dircolors.c:101 src/dirname.c:45 src/du.c:276
 #: src/echo.c:60 src/env.c:114 src/expand.c:107 src/expr.c:98 src/factor.c:70
 #: src/fmt.c:269 src/fold.c:66 src/head.c:105 src/hostid.c:44
 #: src/hostname.c:61 src/id.c:74 src/install.c:618 src/join.c:130
@@ -515,11 +515,11 @@ msgstr "ªirurile comparate au fost %s ºi %s."
 #: src/pathchk.c:95 src/pinky.c:510 src/pr.c:2764 src/printenv.c:57
 #: src/printf.c:96 src/ptx.c:1879 src/pwd.c:50 src/readlink.c:63 src/rm.c:155
 #: src/rmdir.c:135 src/seq.c:70 src/setuidgid.c:47 src/shred.c:157
-#: src/shuf.c:47 src/sleep.c:43 src/sort.c:281 src/split.c:103 src/stat.c:772
+#: src/shuf.c:47 src/sleep.c:43 src/sort.c:281 src/split.c:103 src/stat.c:774
 #: src/stty.c:507 src/su.c:382 src/sum.c:55 src/sync.c:41 src/tac.c:129
 #: src/tail.c:216 src/tee.c:58 src/test.c:690 src/touch.c:229 src/tr.c:286
 #: src/tsort.c:82 src/tty.c:65 src/uname.c:113 src/unexpand.c:117
-#: src/uniq.c:131 src/unlink.c:46 src/uptime.c:175 src/users.c:104
+#: src/uniq.c:131 src/unlink.c:46 src/uptime.c:176 src/users.c:104
 #: src/wc.c:128 src/who.c:631 src/whoami.c:46 src/yes.c:42
 #, c-format
 msgid "Try `%s --help' for more information.\n"
@@ -569,7 +569,7 @@ msgstr ""
 #: src/base64.c:89 src/basename.c:74 src/cat.c:128 src/chgrp.c:164
 #: src/chmod.c:356 src/chown.c:159 src/chroot.c:60 src/cksum.c:279
 #: src/comm.c:94 src/cp.c:253 src/csplit.c:1491 src/cut.c:235 src/date.c:241
-#: src/dd.c:508 src/df.c:760 src/dircolors.c:122 src/dirname.c:68 src/du.c:344
+#: src/dd.c:508 src/df.c:764 src/dircolors.c:122 src/dirname.c:68 src/du.c:344
 #: src/echo.c:98 src/env.c:133 src/expand.c:132 src/expr.c:166 src/factor.c:90
 #: src/fmt.c:300 src/fold.c:89 src/head.c:140 src/hostid.c:57
 #: src/hostname.c:74 src/id.c:95 src/install.c:676 src/join.c:172
@@ -579,11 +579,11 @@ msgstr ""
 #: src/pathchk.c:109 src/pinky.c:537 src/pr.c:2876 src/printenv.c:71
 #: src/printf.c:145 src/ptx.c:1925 src/pwd.c:62 src/readlink.c:87 src/rm.c:201
 #: src/rmdir.c:154 src/seq.c:99 src/setuidgid.c:67 src/shred.c:231
-#: src/shuf.c:78 src/sleep.c:60 src/sort.c:357 src/split.c:137 src/stat.c:851
+#: src/shuf.c:78 src/sleep.c:60 src/sort.c:357 src/split.c:137 src/stat.c:853
 #: src/stty.c:724 src/su.c:403 src/sum.c:75 src/sync.c:52 src/tac.c:152
 #: src/tail.c:287 src/tee.c:75 src/test.c:777 src/touch.c:263 src/tr.c:359
 #: src/true.c:54 src/tsort.c:94 src/tty.c:77 src/uname.c:136
-#: src/unexpand.c:141 src/uniq.c:170 src/unlink.c:57 src/uptime.c:190
+#: src/unexpand.c:141 src/uniq.c:170 src/unlink.c:57 src/uptime.c:191
 #: src/users.c:117 src/wc.c:153 src/who.c:670 src/whoami.c:58 src/yes.c:58
 #, c-format
 msgid ""
@@ -594,7 +594,7 @@ msgstr ""
 "Raportaþi bug-urile la <%s>.\n"
 
 #: src/base64.c:177 src/base64.c:210 src/csplit.c:282 src/csplit.c:1438
-#: src/join.c:243 src/shuf.c:401 src/tac-pipe.c:57 src/tee.c:204 src/tr.c:1586
+#: src/join.c:243 src/shuf.c:401 src/tac-pipe.c:75 src/tee.c:204 src/tr.c:1586
 #, fuzzy, c-format
 msgid "read error"
 msgstr "eroare de scriere"
@@ -616,7 +616,7 @@ msgstr "mãrime tab invalidã: %s"
 #: src/mv.c:451 src/od.c:1840 src/ptx.c:2154 src/readlink.c:154 src/seq.c:331
 #: src/shuf.c:381 src/split.c:533 src/tr.c:1739 src/tsort.c:552 src/tty.c:117
 #: src/uname.c:222 src/uniq.c:435 src/uniq.c:452 src/unlink.c:86
-#: src/uptime.c:222 src/users.c:149 src/wc.c:668 src/who.c:824 src/whoami.c:84
+#: src/uptime.c:223 src/users.c:149 src/wc.c:668 src/who.c:824 src/whoami.c:84
 #, c-format
 msgid "extra operand %s"
 msgstr ""
@@ -656,7 +656,7 @@ msgstr ""
 #: src/expr.c:211 src/join.c:907 src/link.c:82 src/mkdir.c:151
 #: src/mkfifo.c:109 src/mknod.c:141 src/nohup.c:101 src/pathchk.c:158
 #: src/printf.c:669 src/readlink.c:146 src/rm.c:333 src/rmdir.c:197
-#: src/seq.c:325 src/setuidgid.c:95 src/sleep.c:122 src/stat.c:914
+#: src/seq.c:325 src/setuidgid.c:95 src/sleep.c:122 src/stat.c:916
 #: src/tr.c:1724 src/unlink.c:80
 #, fuzzy, c-format
 msgid "missing operand"
@@ -701,7 +701,7 @@ msgstr ""
 msgid "cannot do ioctl on %s"
 msgstr "nu se poate deschide directorul %s"
 
-#: src/cat.c:643 src/dd.c:1668 src/sort.c:273 src/tee.c:163 src/yes.c:92
+#: src/cat.c:643 src/dd.c:1675 src/sort.c:273 src/tee.c:163 src/yes.c:92
 #, c-format
 msgid "standard output"
 msgstr "ieºire(output) standard"
@@ -1196,7 +1196,7 @@ msgstr "eroare în pãstrarea authorship pentru %s"
 msgid "cannot open %s for reading"
 msgstr "nu se poate deschide %s pentru citire"
 
-#: src/copy.c:266 src/copy.c:318 src/dd.c:1712 src/tail.c:1131 src/tail.c:1197
+#: src/copy.c:266 src/copy.c:318 src/dd.c:1719 src/tail.c:1131 src/tail.c:1197
 #, c-format
 msgid "cannot fstat %s"
 msgstr "nu se poate face fstat %s"
@@ -1218,7 +1218,7 @@ msgstr "nu se poate ºterge %s"
 msgid "cannot create regular file %s"
 msgstr "nu se poate crea fiºierul regulat %s"
 
-#: src/copy.c:403 src/dd.c:1159 src/dd.c:1470
+#: src/copy.c:403 src/dd.c:1166 src/dd.c:1477
 #, c-format
 msgid "reading %s"
 msgstr "se citeºte %s"
@@ -1228,7 +1228,7 @@ msgstr "se citeºte %s"
 msgid "cannot lseek %s"
 msgstr "nu se poate face lseek %s"
 
-#: src/copy.c:452 src/copy.c:480 src/dd.c:1527 src/dd.c:1589
+#: src/copy.c:452 src/copy.c:480 src/dd.c:1534 src/dd.c:1596
 #, c-format
 msgid "writing %s"
 msgstr "se scrie %s"
@@ -1368,7 +1368,7 @@ msgstr "nu se poate crea fifo %s"
 msgid "cannot create special file %s"
 msgstr "nu se poate crea fiºierul special %s"
 
-#: src/copy.c:1650 src/ls.c:2795 src/stat.c:437
+#: src/copy.c:1650 src/ls.c:2795 src/stat.c:439
 #, c-format
 msgid "cannot read symbolic link %s"
 msgstr "nu se poate cifi legãtura simbolicã %s"
@@ -1412,7 +1412,7 @@ msgstr ""
 "Copiazã SURSÃ în DEST, sau multiple SURSE în DIRECTOR.\n"
 "\n"
 
-#: src/cp.c:168 src/csplit.c:1462 src/cut.c:196 src/df.c:731 src/du.c:288
+#: src/cp.c:168 src/csplit.c:1462 src/cut.c:196 src/df.c:735 src/du.c:288
 #: src/expand.c:120 src/fmt.c:279 src/fold.c:79 src/head.c:119
 #: src/install.c:635 src/kill.c:104 src/ln.c:333 src/ls.c:4255 src/mkdir.c:64
 #: src/mkfifo.c:60 src/mknod.c:61 src/mv.c:301 src/nl.c:186 src/paste.c:427
@@ -1864,7 +1864,7 @@ msgid ""
 "A line OFFSET is a required `+' or `-' followed by a positive integer.\n"
 msgstr ""
 
-#: src/cut.c:188 src/df.c:725 src/expand.c:111 src/fold.c:70 src/head.c:109
+#: src/cut.c:188 src/df.c:729 src/expand.c:111 src/fold.c:70 src/head.c:109
 #: src/ls.c:4249 src/nl.c:177 src/paste.c:417 src/pr.c:2768 src/sort.c:285
 #: src/sum.c:59 src/tac.c:133 src/tail.c:220 src/tee.c:62 src/unexpand.c:121
 #, c-format
@@ -2113,7 +2113,7 @@ msgid ""
 "O to use the locale's alternate numeric symbols if available.\n"
 msgstr ""
 
-#: src/date.c:262 src/dd.c:1652 src/head.c:840 src/md5sum.c:434
+#: src/date.c:262 src/dd.c:1659 src/head.c:840 src/md5sum.c:434
 #: src/md5sum.c:720 src/od.c:910 src/od.c:1932 src/pr.c:1178 src/pr.c:1381
 #: src/pr.c:1503 src/stty.c:841 src/tac.c:535 src/tee.c:126 src/tr.c:1894
 #: src/tsort.c:527 src/wc.c:212
@@ -2350,14 +2350,14 @@ msgstr ""
 
 #: src/dd.c:551
 #, fuzzy, c-format
-msgid "1 truncated record\n"
+msgid "%<PRIuMAX> truncated record\n"
 msgid_plural "%<PRIuMAX> truncated records\n"
 msgstr[0] "înregistrare trunchiatã"
 msgstr[1] "înregistrare trunchiatã"
 
 #: src/dd.c:563
 #, c-format
-msgid "1 byte (1 B) copied"
+msgid "%<PRIuMAX> byte (%s) copied"
 msgid_plural "%<PRIuMAX> bytes (%s) copied"
 msgstr[0] ""
 msgstr[1] ""
@@ -2366,84 +2366,92 @@ msgstr[1] ""
 msgid "Infinity B"
 msgstr ""
 
-#: src/dd.c:585
+#. TRANSLATORS: The two instances of "s" in this string are the SI
+#. symbol "s" (meaning second), and should not be translated.
+#.
+#. This format used to be:
+#.
+#. ngettext (", %g second, %s/s\n", ", %g seconds, %s/s\n", delta_s == 1)
+#.
+#. but that was incorrect for languages like Polish.  To fix this
+#. bug we now use SI symbols even though they're a bit more
+#. confusing in English.
+#: src/dd.c:594
 #, c-format
-msgid ", %g second, %s/s\n"
-msgid_plural ", %g seconds, %s/s\n"
-msgstr[0] ""
-msgstr[1] ""
+msgid ", %g s, %s/s\n"
+msgstr ""
 
-#: src/dd.c:595
+#: src/dd.c:602
 #, c-format
 msgid "closing input file %s"
 msgstr "se închide fiºierul de intrare(input) %s"
 
-#: src/dd.c:602
+#: src/dd.c:609
 #, c-format
 msgid "closing output file %s"
 msgstr "se închide fiºierul de ieºire(output) %s"
 
-#: src/dd.c:782 src/dd.c:1440
+#: src/dd.c:789 src/dd.c:1447
 #, c-format
 msgid "writing to %s"
 msgstr "se scrie în %s"
 
-#: src/dd.c:876
+#: src/dd.c:883
 #, fuzzy, c-format
 msgid "unrecognized operand %s"
 msgstr "opþiune necunoscutã %s"
 
-#: src/dd.c:887
+#: src/dd.c:894
 #, c-format
 msgid "invalid conversion: %s"
 msgstr "conversie invalidã: %s"
 
-#: src/dd.c:890
+#: src/dd.c:897
 #, fuzzy, c-format
 msgid "invalid input flag: %s"
 msgstr "lungime de linie invalidã: %s"
 
-#: src/dd.c:893
+#: src/dd.c:900
 #, fuzzy, c-format
 msgid "invalid output flag: %s"
 msgstr "numele de grup %s este invalid"
 
-#: src/dd.c:896
+#: src/dd.c:903
 #, fuzzy, c-format
 msgid "invalid status flag: %s"
 msgstr "format de datã invalid %s"
 
-#: src/dd.c:932
+#: src/dd.c:939
 #, fuzzy, c-format
 msgid "unrecognized operand %s=%s"
 msgstr "opþiune necunoscutã %s=%s"
 
-#: src/dd.c:938
+#: src/dd.c:945
 #, c-format
 msgid "invalid number %s"
 msgstr "numãr invalid %s"
 
-#: src/dd.c:958
+#: src/dd.c:965
 #, c-format
 msgid "cannot combine any two of {ascii,ebcdic,ibm}"
 msgstr ""
 
-#: src/dd.c:960
+#: src/dd.c:967
 #, fuzzy, c-format
 msgid "cannot combine block and unblock"
 msgstr "nu se pot omite atât userul cât ºi grupul"
 
-#: src/dd.c:962
+#: src/dd.c:969
 #, fuzzy, c-format
 msgid "cannot combine lcase and ucase"
 msgstr "nu se pot compara numele de fiºiere %s ºi %s"
 
-#: src/dd.c:964
+#: src/dd.c:971
 #, fuzzy, c-format
 msgid "cannot combine excl and nocreat"
 msgstr "nu se poate determina device-ul ºi inode-ul lui %s"
 
-#: src/dd.c:1110
+#: src/dd.c:1117
 #, c-format
 msgid ""
 "warning: working around lseek kernel bug for file (%s)\n"
@@ -2453,54 +2461,54 @@ msgstr ""
 "fiºierul\n"
 " (%s)de tip mt_type=0x%0lx -- vedeþi <sys/mtio.h> pentru o listã de tipuri"
 
-#: src/dd.c:1167 src/dd.c:1224
+#: src/dd.c:1174 src/dd.c:1231
 #, fuzzy, c-format
 msgid "%s: cannot seek"
 msgstr "%s: nu se poate ºterge"
 
-#: src/dd.c:1204
+#: src/dd.c:1211
 #, c-format
 msgid "offset overflow while reading file %s"
 msgstr ""
 
-#: src/dd.c:1216
+#: src/dd.c:1223
 #, fuzzy, c-format
 msgid "warning: screwy file offset after failed read"
 msgstr "avertisment: fiºierul sursã %s este specificat mai mult de o datã"
 
-#: src/dd.c:1220
+#: src/dd.c:1227
 #, c-format
 msgid "cannot work around kernel bug after all"
 msgstr ""
 
-#: src/dd.c:1363
+#: src/dd.c:1370
 #, fuzzy, c-format
 msgid "setting flags for %s"
 msgstr "seteazã datele lui %s"
 
-#: src/dd.c:1601
+#: src/dd.c:1608
 #, c-format
 msgid "fdatasync failed for %s"
 msgstr ""
 
-#: src/dd.c:1611
+#: src/dd.c:1618
 #, c-format
 msgid "fsync failed for %s"
 msgstr ""
 
-#: src/dd.c:1658 src/dd.c:1687
+#: src/dd.c:1665 src/dd.c:1694
 #, c-format
 msgid "opening %s"
 msgstr "se deschide %s"
 
-#: src/dd.c:1697
+#: src/dd.c:1704
 #, c-format
 msgid ""
 "offset too large: cannot truncate to a length of seek=%<PRIuMAX> (%lu-byte) "
 "blocks"
 msgstr ""
 
-#: src/dd.c:1718
+#: src/dd.c:1725
 #, fuzzy, c-format
 msgid "truncating at %<PRIuMAX> bytes in output file %s"
 msgstr "se trec %s în fiºierul de output %s"
@@ -2545,22 +2553,22 @@ msgstr "blocuri %4s    Folosite Disponibile Uz%%"
 msgid " Mounted on\n"
 msgstr " Montat în\n"
 
-#: src/df.c:453
+#: src/df.c:457
 #, fuzzy, c-format
 msgid "cannot get current directory"
 msgstr "nu se poate crea directorul %s"
 
-#: src/df.c:463 src/df.c:477 src/df.c:505
+#: src/df.c:467 src/df.c:481 src/df.c:509
 #, c-format
 msgid "cannot change to directory %s"
 msgstr "nu se poate trece în directorul %s"
 
-#: src/df.c:483
+#: src/df.c:487
 #, fuzzy, c-format
 msgid "cannot stat current directory (now %s)"
 msgstr "nu se poate crea directorul %s"
 
-#: src/df.c:726
+#: src/df.c:730
 #, fuzzy
 msgid ""
 "Show information about the file system on which each FILE resides,\n"
@@ -2572,7 +2580,7 @@ msgstr ""
 "FIªIER sau implicit toate sistemele de fiºiere.\n"
 "\n"
 
-#: src/df.c:734
+#: src/df.c:738
 #, fuzzy
 msgid ""
 "  -a, --all             include dummy file systems\n"
@@ -2587,7 +2595,7 @@ msgstr ""
 "234M 2G)\n"
 "  -H, --si              la fel, dar foloseºte puteri ale lui 1000 nu 1024\n"
 
-#: src/df.c:740
+#: src/df.c:744
 #, fuzzy
 msgid ""
 "  -i, --inodes          list inode information instead of block usage\n"
@@ -2603,7 +2611,7 @@ msgstr ""
 "      --no-sync         nu invocã sync înainte de a primi informaþii despre "
 "folosire(implicit)\n"
 
-#: src/df.c:746
+#: src/df.c:750
 #, fuzzy
 msgid ""
 "  -P, --portability     use the POSIX output format\n"
@@ -2623,7 +2631,7 @@ msgstr ""
 "diferite de tipul TIP\n"
 "  -v                    (ignorat)\n"
 
-#: src/df.c:756 src/du.c:340 src/ls.c:4379
+#: src/df.c:760 src/du.c:340 src/ls.c:4379
 #, fuzzy
 msgid ""
 "\n"
@@ -2636,26 +2644,26 @@ msgstr ""
 "kB 1000, K 1024, MB 1,000,000, M 1,048,576, ºi aºa mai departe pentru\n"
 "G, T, P, E, Z, Y.\n"
 
-#: src/df.c:816 src/du.c:759 src/ls.c:1567
+#: src/df.c:821 src/du.c:759 src/ls.c:1567
 #, c-format
 msgid "the --kilobytes option is deprecated; use -k instead"
 msgstr ""
 
-#: src/df.c:875
+#: src/df.c:880
 #, c-format
 msgid "file system type %s both selected and excluded"
 msgstr "sistemul de fiºiere tipul %s este atât selectat cât ºi exclus"
 
-#: src/df.c:915
+#: src/df.c:920
 msgid "Warning: "
 msgstr "Avertisment: "
 
-#: src/df.c:918
+#: src/df.c:923
 #, fuzzy, c-format
 msgid "%scannot read table of mounted file systems"
 msgstr "%snu se poate citi tabela sistemelor de fiºiere montate"
 
-#: src/df.c:945
+#: src/df.c:944
 #, c-format
 msgid "no file systems processed"
 msgstr ""
@@ -6503,32 +6511,32 @@ msgstr ""
 msgid "invalid number of lines: 0"
 msgstr "numãr invalid %s"
 
-#: src/stat.c:591
+#: src/stat.c:593
 #, fuzzy, c-format
 msgid "warning: unrecognized escape `\\%c'"
 msgstr "%s: opþiune necunoscutã `%c%s'\n"
 
-#: src/stat.c:626
+#: src/stat.c:628
 #, fuzzy, c-format
 msgid "%s%s: invalid directive"
 msgstr "%s: tip de fiºier invalid"
 
-#: src/stat.c:671
+#: src/stat.c:673
 #, c-format
 msgid "warning: backslash at end of format"
 msgstr ""
 
-#: src/stat.c:700
+#: src/stat.c:702
 #, c-format
 msgid "cannot read file system information for %s"
 msgstr "nu se poate citi informaþia despre sistemul de fiºiere pentru %s"
 
-#: src/stat.c:776
+#: src/stat.c:778
 #, c-format
 msgid "Usage: %s [OPTION] FILE...\n"
 msgstr "Folosire: %s [OPÞIUNE] FIªIER...\n"
 
-#: src/stat.c:777
+#: src/stat.c:779
 msgid ""
 "Display file or file system status.\n"
 "\n"
@@ -6536,7 +6544,7 @@ msgid ""
 "  -f, --file-system     display file system status instead of file status\n"
 msgstr ""
 
-#: src/stat.c:783
+#: src/stat.c:785
 msgid ""
 "  -c  --format=FORMAT   use the specified FORMAT instead of the default;\n"
 "                          output a newline after each use of FORMAT\n"
@@ -6546,7 +6554,7 @@ msgid ""
 "  -t, --terse           print the information in terse form\n"
 msgstr ""
 
-#: src/stat.c:794
+#: src/stat.c:796
 #, fuzzy
 msgid ""
 "\n"
@@ -6564,7 +6572,7 @@ msgstr ""
 "  %a - Accesare drepturi în octal\n"
 "  %b - Numãr de blocuri alocate\n"
 
-#: src/stat.c:802
+#: src/stat.c:804
 #, fuzzy
 msgid ""
 "  %d   Device number in decimal\n"
@@ -6581,7 +6589,7 @@ msgstr ""
 "  %G - nume grup al owner-ului\n"
 "  %g - ID grup al owner-ului\n"
 
-#: src/stat.c:810
+#: src/stat.c:812
 #, fuzzy
 msgid ""
 "  %h   Number of hard links\n"
@@ -6603,7 +6611,7 @@ msgstr ""
 "  %T - Tip device minor în hex\n"
 "  %t - Tip device major în hex\n"
 
-#: src/stat.c:820
+#: src/stat.c:822
 #, fuzzy
 msgid ""
 "  %u   User ID of owner\n"
@@ -6626,7 +6634,7 @@ msgstr ""
 "  %z - Data ultimei schimbãri\n"
 "\n"
 
-#: src/stat.c:832
+#: src/stat.c:834
 #, fuzzy
 msgid ""
 "Valid format sequences for file systems:\n"
@@ -6645,7 +6653,7 @@ msgstr ""
 "  %d - Noduri de fiºiere libere în sistemul de fiºiere\n"
 "  %f - Blocuri libere în sistemul de fiºiere\n"
 
-#: src/stat.c:841
+#: src/stat.c:843
 #, fuzzy
 msgid ""
 "  %i   File System ID in hex\n"
@@ -7087,7 +7095,7 @@ msgstr ""
 msgid "ignoring all arguments"
 msgstr "ignorã toate argumentele"
 
-#: src/system.h:529
+#: src/system.h:540
 #, c-format
 msgid ""
 "\n"
@@ -7096,11 +7104,11 @@ msgid ""
 "for details about the options it supports.\n"
 msgstr ""
 
-#: src/system.h:535
+#: src/system.h:546
 msgid "      --help     display this help and exit\n"
 msgstr "      --help     afiºeazã acest ajutor ºi iese\n"
 
-#: src/system.h:537
+#: src/system.h:548
 msgid "      --version  output version information and exit\n"
 msgstr "      --version  afiºeazã informaþii despre versiune ºi iese\n"
 
@@ -7993,24 +8001,24 @@ msgid_plural "%ld days"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/uptime.c:131
+#: src/uptime.c:132
 #, fuzzy, c-format
 msgid "%lu user"
 msgid_plural "%lu users"
 msgstr[0] "user invalid"
 msgstr[1] "user invalid"
 
-#: src/uptime.c:145
+#: src/uptime.c:146
 #, c-format
 msgid ",  load average: %.2f"
 msgstr ""
 
-#: src/uptime.c:179 src/users.c:108
+#: src/uptime.c:180 src/users.c:108
 #, fuzzy, c-format
 msgid "Usage: %s [OPTION]... [ FILE ]\n"
 msgstr "Folosire: %s [OPÞIUNE]... [FIªIER]\n"
 
-#: src/uptime.c:180
+#: src/uptime.c:181
 #, c-format
 msgid ""
 "Print the current time, the length of time the system has been up,\n"

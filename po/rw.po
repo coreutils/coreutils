@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: coreutils 5.3.0\n"
 "Report-Msgid-Bugs-To: bug-coreutils@gnu.org\n"
-"POT-Creation-Date: 2006-08-15 13:26+0200\n"
+"POT-Creation-Date: 2006-08-19 20:53+0200\n"
 "PO-Revision-Date: 2005-04-04 10:55-0700\n"
 "Last-Translator: Steven Michael Murphy <murf@e-tools.com>\n"
 "Language-Team: Kinyarwanda <translation-team-rw@lists.sourceforge.net>\n"
@@ -68,7 +68,7 @@ msgid "Unknown system error"
 msgstr "Sisitemu Ikosa"
 
 #: lib/euidaccess-stat.c:139 src/copy.c:978 src/copy.c:1016 src/copy.c:1504
-#: src/df.c:497 src/install.c:426 src/stat.c:729
+#: src/df.c:501 src/install.c:426 src/stat.c:731
 #, c-format
 msgid "cannot stat %s"
 msgstr ""
@@ -294,7 +294,7 @@ msgstr "Ububiko"
 msgid "unable to record current working directory"
 msgstr "Kuri Icyabitswe KIGEZWEHO bushyinguro"
 
-#: lib/openat-die.c:49 src/df.c:520
+#: lib/openat-die.c:49 src/df.c:524
 #, fuzzy, c-format
 msgid "failed to return to initial working directory"
 msgstr "Byanze Kuri Garuka Kuri bushyinguro"
@@ -333,17 +333,17 @@ msgstr "'"
 msgid "%s: end of file"
 msgstr "%s:Byanze"
 
-#: lib/root-dev-ino.h:20
+#: lib/root-dev-ino.h:38
 #, fuzzy, c-format
 msgid "it is dangerous to operate recursively on %s"
 msgstr "ni Kuri ku"
 
-#: lib/root-dev-ino.h:24
+#: lib/root-dev-ino.h:42
 #, fuzzy, c-format
 msgid "it is dangerous to operate recursively on %s (same as %s)"
 msgstr "ni Kuri ku Nka"
 
-#: lib/root-dev-ino.h:26
+#: lib/root-dev-ino.h:44
 #, fuzzy, c-format
 msgid "use --no-preserve-root to override this failsafe"
 msgstr "Gukoresha Oya Imizi Kuri iyi"
@@ -540,7 +540,7 @@ msgstr "Ikurikiranyanyuguti Na"
 #: src/base64.c:61 src/basename.c:51 src/cat.c:91 src/chgrp.c:109
 #: src/chmod.c:325 src/chown.c:90 src/chroot.c:42 src/cksum.c:264
 #: src/comm.c:69 src/cp.c:154 src/csplit.c:1449 src/cut.c:184 src/date.c:128
-#: src/dd.c:400 src/df.c:721 src/dircolors.c:101 src/dirname.c:45 src/du.c:276
+#: src/dd.c:400 src/df.c:725 src/dircolors.c:101 src/dirname.c:45 src/du.c:276
 #: src/echo.c:60 src/env.c:114 src/expand.c:107 src/expr.c:98 src/factor.c:70
 #: src/fmt.c:269 src/fold.c:66 src/head.c:105 src/hostid.c:44
 #: src/hostname.c:61 src/id.c:74 src/install.c:618 src/join.c:130
@@ -550,11 +550,11 @@ msgstr "Ikurikiranyanyuguti Na"
 #: src/pathchk.c:95 src/pinky.c:510 src/pr.c:2764 src/printenv.c:57
 #: src/printf.c:96 src/ptx.c:1879 src/pwd.c:50 src/readlink.c:63 src/rm.c:155
 #: src/rmdir.c:135 src/seq.c:70 src/setuidgid.c:47 src/shred.c:157
-#: src/shuf.c:47 src/sleep.c:43 src/sort.c:281 src/split.c:103 src/stat.c:772
+#: src/shuf.c:47 src/sleep.c:43 src/sort.c:281 src/split.c:103 src/stat.c:774
 #: src/stty.c:507 src/su.c:382 src/sum.c:55 src/sync.c:41 src/tac.c:129
 #: src/tail.c:216 src/tee.c:58 src/test.c:690 src/touch.c:229 src/tr.c:286
 #: src/tsort.c:82 src/tty.c:65 src/uname.c:113 src/unexpand.c:117
-#: src/uniq.c:131 src/unlink.c:46 src/uptime.c:175 src/users.c:104
+#: src/uniq.c:131 src/unlink.c:46 src/uptime.c:176 src/users.c:104
 #: src/wc.c:128 src/who.c:631 src/whoami.c:46 src/yes.c:42
 #, fuzzy, c-format
 msgid "Try `%s --help' for more information.\n"
@@ -607,7 +607,7 @@ msgstr ""
 #: src/base64.c:89 src/basename.c:74 src/cat.c:128 src/chgrp.c:164
 #: src/chmod.c:356 src/chown.c:159 src/chroot.c:60 src/cksum.c:279
 #: src/comm.c:94 src/cp.c:253 src/csplit.c:1491 src/cut.c:235 src/date.c:241
-#: src/dd.c:508 src/df.c:760 src/dircolors.c:122 src/dirname.c:68 src/du.c:344
+#: src/dd.c:508 src/df.c:764 src/dircolors.c:122 src/dirname.c:68 src/du.c:344
 #: src/echo.c:98 src/env.c:133 src/expand.c:132 src/expr.c:166 src/factor.c:90
 #: src/fmt.c:300 src/fold.c:89 src/head.c:140 src/hostid.c:57
 #: src/hostname.c:74 src/id.c:95 src/install.c:676 src/join.c:172
@@ -617,11 +617,11 @@ msgstr ""
 #: src/pathchk.c:109 src/pinky.c:537 src/pr.c:2876 src/printenv.c:71
 #: src/printf.c:145 src/ptx.c:1925 src/pwd.c:62 src/readlink.c:87 src/rm.c:201
 #: src/rmdir.c:154 src/seq.c:99 src/setuidgid.c:67 src/shred.c:231
-#: src/shuf.c:78 src/sleep.c:60 src/sort.c:357 src/split.c:137 src/stat.c:851
+#: src/shuf.c:78 src/sleep.c:60 src/sort.c:357 src/split.c:137 src/stat.c:853
 #: src/stty.c:724 src/su.c:403 src/sum.c:75 src/sync.c:52 src/tac.c:152
 #: src/tail.c:287 src/tee.c:75 src/test.c:777 src/touch.c:263 src/tr.c:359
 #: src/true.c:54 src/tsort.c:94 src/tty.c:77 src/uname.c:136
-#: src/unexpand.c:141 src/uniq.c:170 src/unlink.c:57 src/uptime.c:190
+#: src/unexpand.c:141 src/uniq.c:170 src/unlink.c:57 src/uptime.c:191
 #: src/users.c:117 src/wc.c:153 src/who.c:670 src/whoami.c:58 src/yes.c:58
 #, fuzzy, c-format
 msgid ""
@@ -631,7 +631,7 @@ msgstr "Kuri"
 
 # 4952
 #: src/base64.c:177 src/base64.c:210 src/csplit.c:282 src/csplit.c:1438
-#: src/join.c:243 src/shuf.c:401 src/tac-pipe.c:57 src/tee.c:204 src/tr.c:1586
+#: src/join.c:243 src/shuf.c:401 src/tac-pipe.c:75 src/tee.c:204 src/tr.c:1586
 #, fuzzy, c-format
 msgid "read error"
 msgstr "Ikosa ryo mu Isoma"
@@ -653,7 +653,7 @@ msgstr "Sibyo Isunika Ingano"
 #: src/mv.c:451 src/od.c:1840 src/ptx.c:2154 src/readlink.c:154 src/seq.c:331
 #: src/shuf.c:381 src/split.c:533 src/tr.c:1739 src/tsort.c:552 src/tty.c:117
 #: src/uname.c:222 src/uniq.c:435 src/uniq.c:452 src/unlink.c:86
-#: src/uptime.c:222 src/users.c:149 src/wc.c:668 src/who.c:824 src/whoami.c:84
+#: src/uptime.c:223 src/users.c:149 src/wc.c:668 src/who.c:824 src/whoami.c:84
 #, fuzzy, c-format
 msgid "extra operand %s"
 msgstr "Birenga"
@@ -692,7 +692,7 @@ msgstr ""
 #: src/expr.c:211 src/join.c:907 src/link.c:82 src/mkdir.c:151
 #: src/mkfifo.c:109 src/mknod.c:141 src/nohup.c:101 src/pathchk.c:158
 #: src/printf.c:669 src/readlink.c:146 src/rm.c:333 src/rmdir.c:197
-#: src/seq.c:325 src/setuidgid.c:95 src/sleep.c:122 src/stat.c:914
+#: src/seq.c:325 src/setuidgid.c:95 src/sleep.c:122 src/stat.c:916
 #: src/tr.c:1724 src/unlink.c:80
 #, fuzzy, c-format
 msgid "missing operand"
@@ -745,7 +745,7 @@ msgstr ""
 msgid "cannot do ioctl on %s"
 msgstr "ku"
 
-#: src/cat.c:643 src/dd.c:1668 src/sort.c:273 src/tee.c:163 src/yes.c:92
+#: src/cat.c:643 src/dd.c:1675 src/sort.c:273 src/tee.c:163 src/yes.c:92
 #, fuzzy, c-format
 msgid "standard output"
 msgstr "Bisanzwe Ibisohoka"
@@ -1209,7 +1209,7 @@ msgstr "Byanze Kuri kugirango"
 msgid "cannot open %s for reading"
 msgstr "Gufungura kugirango"
 
-#: src/copy.c:266 src/copy.c:318 src/dd.c:1712 src/tail.c:1131 src/tail.c:1197
+#: src/copy.c:266 src/copy.c:318 src/dd.c:1719 src/tail.c:1131 src/tail.c:1197
 #, c-format
 msgid "cannot fstat %s"
 msgstr ""
@@ -1231,7 +1231,7 @@ msgstr "Gukuraho..."
 msgid "cannot create regular file %s"
 msgstr "Kurema Ibisanzwe IDOSIYE"
 
-#: src/copy.c:403 src/dd.c:1159 src/dd.c:1470
+#: src/copy.c:403 src/dd.c:1166 src/dd.c:1477
 #, c-format
 msgid "reading %s"
 msgstr ""
@@ -1241,7 +1241,7 @@ msgstr ""
 msgid "cannot lseek %s"
 msgstr ""
 
-#: src/copy.c:452 src/copy.c:480 src/dd.c:1527 src/dd.c:1589
+#: src/copy.c:452 src/copy.c:480 src/dd.c:1534 src/dd.c:1596
 #, c-format
 msgid "writing %s"
 msgstr ""
@@ -1381,7 +1381,7 @@ msgstr "Kurema"
 msgid "cannot create special file %s"
 msgstr "Kurema Bidasanzwe IDOSIYE"
 
-#: src/copy.c:1650 src/ls.c:2795 src/stat.c:437
+#: src/copy.c:1650 src/ls.c:2795 src/stat.c:439
 #, fuzzy, c-format
 msgid "cannot read symbolic link %s"
 msgstr "Gusoma Ihuza"
@@ -1421,7 +1421,7 @@ msgid ""
 "\n"
 msgstr "Kuri Cyangwa Igikubo S Kuri"
 
-#: src/cp.c:168 src/csplit.c:1462 src/cut.c:196 src/df.c:731 src/du.c:288
+#: src/cp.c:168 src/csplit.c:1462 src/cut.c:196 src/df.c:735 src/du.c:288
 #: src/expand.c:120 src/fmt.c:279 src/fold.c:79 src/head.c:119
 #: src/install.c:635 src/kill.c:104 src/ln.c:333 src/ls.c:4255 src/mkdir.c:64
 #: src/mkfifo.c:60 src/mknod.c:61 src/mv.c:301 src/nl.c:186 src/paste.c:427
@@ -1840,7 +1840,7 @@ msgstr ""
 "Gusubiramo i Ibanjirije Ishusho Umubare Bya Gusubiramo i Ibanjirije Ishusho "
 "Nka Times Nka Umurongo ni a Bya ngombwa Cyangwa ku a Umubare wuzuye"
 
-#: src/cut.c:188 src/df.c:725 src/expand.c:111 src/fold.c:70 src/head.c:109
+#: src/cut.c:188 src/df.c:729 src/expand.c:111 src/fold.c:70 src/head.c:109
 #: src/ls.c:4249 src/nl.c:177 src/paste.c:417 src/pr.c:2768 src/sort.c:285
 #: src/sum.c:59 src/tac.c:133 src/tail.c:220 src/tee.c:62 src/unexpand.c:121
 #, c-format
@@ -2275,7 +2275,7 @@ msgid ""
 "O to use the locale's alternate numeric symbols if available.\n"
 msgstr ""
 
-#: src/date.c:262 src/dd.c:1652 src/head.c:840 src/md5sum.c:434
+#: src/date.c:262 src/dd.c:1659 src/head.c:840 src/md5sum.c:434
 #: src/md5sum.c:720 src/od.c:910 src/od.c:1932 src/pr.c:1178 src/pr.c:1381
 #: src/pr.c:1503 src/stty.c:841 src/tac.c:535 src/tee.c:126 src/tr.c:1894
 #: src/tsort.c:527 src/wc.c:212
@@ -2499,14 +2499,14 @@ msgstr ""
 
 #: src/dd.c:551
 #, fuzzy, c-format
-msgid "1 truncated record\n"
+msgid "%<PRIuMAX> truncated record\n"
 msgid_plural "%<PRIuMAX> truncated records\n"
 msgstr[0] "Icyabitswe"
 msgstr[1] "Icyabitswe"
 
 #: src/dd.c:563
 #, fuzzy, c-format
-msgid "1 byte (1 B) copied"
+msgid "%<PRIuMAX> byte (%s) copied"
 msgid_plural "%<PRIuMAX> bytes (%s) copied"
 msgstr[0] "%sBayite"
 
@@ -2515,138 +2515,147 @@ msgstr[0] "%sBayite"
 msgid "Infinity B"
 msgstr "iherezo "
 
-#: src/dd.c:585
+#. TRANSLATORS: The two instances of "s" in this string are the SI
+#. symbol "s" (meaning second), and should not be translated.
+#.
+#. This format used to be:
+#.
+#. ngettext (", %g second, %s/s\n", ", %g seconds, %s/s\n", delta_s == 1)
+#.
+#. but that was incorrect for languages like Polish.  To fix this
+#. bug we now use SI symbols even though they're a bit more
+#. confusing in English.
+#: src/dd.c:594
 #, fuzzy, c-format
-msgid ", %g second, %s/s\n"
-msgid_plural ", %g seconds, %s/s\n"
-msgstr[0] ",%gISEGONDA"
+msgid ", %g s, %s/s\n"
+msgstr ",%gISEGONDA"
 
-#: src/dd.c:595
+#: src/dd.c:602
 #, fuzzy, c-format
 msgid "closing input file %s"
 msgstr "Iyinjiza IDOSIYE"
 
-#: src/dd.c:602
+#: src/dd.c:609
 #, fuzzy, c-format
 msgid "closing output file %s"
 msgstr "Ibisohoka IDOSIYE"
 
-#: src/dd.c:782 src/dd.c:1440
+#: src/dd.c:789 src/dd.c:1447
 #, fuzzy, c-format
 msgid "writing to %s"
 msgstr "Kuri"
 
-#: src/dd.c:876
+#: src/dd.c:883
 #, c-format
 msgid "unrecognized operand %s"
 msgstr ""
 
-#: src/dd.c:887
+#: src/dd.c:894
 #, fuzzy, c-format
 msgid "invalid conversion: %s"
 msgstr "Sibyo Ihindurangero"
 
-#: src/dd.c:890
+#: src/dd.c:897
 #, fuzzy, c-format
 msgid "invalid input flag: %s"
 msgstr "Sibyo Iyinjiza Ibendera"
 
-#: src/dd.c:893
+#: src/dd.c:900
 #, fuzzy, c-format
 msgid "invalid output flag: %s"
 msgstr "Sibyo Ibisohoka Ibendera"
 
-#: src/dd.c:896
+#: src/dd.c:903
 #, fuzzy, c-format
 msgid "invalid status flag: %s"
 msgstr "Sibyo Imimerere Ibendera"
 
-#: src/dd.c:932
+#: src/dd.c:939
 #, c-format
 msgid "unrecognized operand %s=%s"
 msgstr ""
 
 # sch/source\ui\app\strings.src:STR_INVALID_NUMBER.text
-#: src/dd.c:938
+#: src/dd.c:945
 #, fuzzy, c-format
 msgid "invalid number %s"
 msgstr "Umubare utari wo"
 
-#: src/dd.c:958
+#: src/dd.c:965
 #, fuzzy, c-format
 msgid "cannot combine any two of {ascii,ebcdic,ibm}"
 msgstr "Kuvanga Bya ASCII"
 
-#: src/dd.c:960
+#: src/dd.c:967
 #, fuzzy, c-format
 msgid "cannot combine block and unblock"
 msgstr "Kuvanga Funga Na"
 
-#: src/dd.c:962
+#: src/dd.c:969
 #, fuzzy, c-format
 msgid "cannot combine lcase and ucase"
 msgstr "Kuvanga Na"
 
-#: src/dd.c:964
+#: src/dd.c:971
 #, fuzzy, c-format
 msgid "cannot combine excl and nocreat"
 msgstr "Kuvanga Na"
 
-#: src/dd.c:1110
+#: src/dd.c:1117
 #, fuzzy, c-format
 msgid ""
 "warning: working around lseek kernel bug for file (%s)\n"
 "  of mt_type=0x%0lx -- see <sys/mtio.h> for the list of types"
 msgstr "Iburira kugirango IDOSIYE Bya sys h kugirango i Urutonde Bya"
 
-#: src/dd.c:1167 src/dd.c:1224
+#: src/dd.c:1174 src/dd.c:1231
 #, c-format
 msgid "%s: cannot seek"
 msgstr ""
 
-#: src/dd.c:1204
+#: src/dd.c:1211
 #, fuzzy, c-format
 msgid "offset overflow while reading file %s"
 msgstr "Nta- boneza Byarenze urugero IDOSIYE"
 
-#: src/dd.c:1216
+#: src/dd.c:1223
 #, fuzzy, c-format
 msgid "warning: screwy file offset after failed read"
 msgstr "Iburira IDOSIYE Nta- boneza Nyuma Byanze Gusoma"
 
-#: src/dd.c:1220
+#: src/dd.c:1227
 #, fuzzy, c-format
 msgid "cannot work around kernel bug after all"
 msgstr "Akazi Nyuma Byose"
 
-#: src/dd.c:1363
+#: src/dd.c:1370
 #, fuzzy, c-format
 msgid "setting flags for %s"
 msgstr "Igenamiterere Amabendera kugirango"
 
-#: src/dd.c:1601
+#: src/dd.c:1608
 #, fuzzy, c-format
 msgid "fdatasync failed for %s"
 msgstr "Byanze kugirango"
 
-#: src/dd.c:1611
+#: src/dd.c:1618
 #, fuzzy, c-format
 msgid "fsync failed for %s"
 msgstr "Byanze kugirango"
 
-#: src/dd.c:1658 src/dd.c:1687
+#: src/dd.c:1665 src/dd.c:1694
 #, fuzzy, c-format
 msgid "opening %s"
 msgstr "Gufungura %s%S"
 
-#: src/dd.c:1697
+#: src/dd.c:1704
 #, c-format
 msgid ""
 "offset too large: cannot truncate to a length of seek=%<PRIuMAX> (%lu-byte) "
 "blocks"
 msgstr ""
 
-#: src/dd.c:1718
+#: src/dd.c:1725
 #, fuzzy, c-format
 msgid "truncating at %<PRIuMAX> bytes in output file %s"
 msgstr "Bayite in Ibisohoka IDOSIYE"
@@ -2689,23 +2698,23 @@ msgstr ""
 msgid " Mounted on\n"
 msgstr ""
 
-#: src/df.c:453
+#: src/df.c:457
 #, fuzzy, c-format
 msgid "cannot get current directory"
 msgstr "Kubona KIGEZWEHO bushyinguro"
 
 # svtools/source\dialogs\filedlg2.src:STR_FILEDLG_CANTCHDIR.text
-#: src/df.c:463 src/df.c:477 src/df.c:505
+#: src/df.c:467 src/df.c:481 src/df.c:509
 #, fuzzy, c-format
 msgid "cannot change to directory %s"
 msgstr "Gufungura ububiko ntibishoboka"
 
-#: src/df.c:483
+#: src/df.c:487
 #, fuzzy, c-format
 msgid "cannot stat current directory (now %s)"
 msgstr "KIGEZWEHO bushyinguro NONEAHA"
 
-#: src/df.c:726
+#: src/df.c:730
 #, fuzzy
 msgid ""
 "Show information about the file system on which each FILE resides,\n"
@@ -2715,7 +2724,7 @@ msgstr ""
 "Ibisobanuro Ibyerekeye i IDOSIYE Sisitemu ku Cyangwa Byose IDOSIYE ku "
 "Mburabuzi"
 
-#: src/df.c:734
+#: src/df.c:738
 #, fuzzy
 msgid ""
 "  -a, --all             include dummy file systems\n"
@@ -2725,7 +2734,7 @@ msgid ""
 "  -H, --si              likewise, but use powers of 1000 not 1024\n"
 msgstr "-g."
 
-#: src/df.c:740
+#: src/df.c:744
 #, fuzzy
 msgid ""
 "  -i, --inodes          list inode information instead of block usage\n"
@@ -2737,7 +2746,7 @@ msgstr ""
 "-i Urutonde Ibisobanuro Bya Funga K nka Funga Ingano L Kuri IDOSIYE Oya OYA "
 "Mbere Ikoresha: Ibisobanuro Mburabuzi"
 
-#: src/df.c:746
+#: src/df.c:750
 #, fuzzy
 msgid ""
 "  -P, --portability     use the POSIX output format\n"
@@ -2750,7 +2759,7 @@ msgstr ""
 "-Gukoresha i Ibisohoka Mbere Ikoresha: T Ubwoko Kuri IDOSIYE Bya Ubwoko "
 "Gucapa Ubwoko Gucapa IDOSIYE Sisitemu X Ubwoko Kuri IDOSIYE OYA Bya Ubwoko v"
 
-#: src/df.c:756 src/du.c:340 src/ls.c:4379
+#: src/df.c:760 src/du.c:340 src/ls.c:4379
 #, fuzzy
 msgid ""
 "\n"
@@ -2760,26 +2769,26 @@ msgstr ""
 "Gicurasi Cyangwa Gicurasi Umubare wuzuye ku Bya 1000 1000 1000 Na ku "
 "kugirango E"
 
-#: src/df.c:816 src/du.c:759 src/ls.c:1567
+#: src/df.c:821 src/du.c:759 src/ls.c:1567
 #, fuzzy, c-format
 msgid "the --kilobytes option is deprecated; use -k instead"
 msgstr "i Kwemerera Ibuze Ihitamo ni Bitemewe. Gukoresha Ongera ugerageze"
 
-#: src/df.c:875
+#: src/df.c:880
 #, fuzzy, c-format
 msgid "file system type %s both selected and excluded"
 msgstr "IDOSIYE Sisitemu Ubwoko Byombi Byahiswemo Na"
 
-#: src/df.c:915
+#: src/df.c:920
 msgid "Warning: "
 msgstr "Iburira:"
 
-#: src/df.c:918
+#: src/df.c:923
 #, fuzzy, c-format
 msgid "%scannot read table of mounted file systems"
 msgstr "%scannotGusoma imbonerahamwe# Bya IDOSIYE"
 
-#: src/df.c:945
+#: src/df.c:944
 #, c-format
 msgid "no file systems processed"
 msgstr ""
@@ -6743,32 +6752,32 @@ msgstr "Umurongo IBARA Ihitamo ni Binini"
 msgid "invalid number of lines: 0"
 msgstr "Sibyo Umubare Bya Imirongo 0"
 
-#: src/stat.c:591
+#: src/stat.c:593
 #, fuzzy, c-format
 msgid "warning: unrecognized escape `\\%c'"
 msgstr "%s:Ihitamo"
 
-#: src/stat.c:626
+#: src/stat.c:628
 #, fuzzy, c-format
 msgid "%s%s: invalid directive"
 msgstr "%s:Sibyo IDOSIYE Ubwoko"
 
-#: src/stat.c:671
+#: src/stat.c:673
 #, c-format
 msgid "warning: backslash at end of format"
 msgstr ""
 
-#: src/stat.c:700
+#: src/stat.c:702
 #, fuzzy, c-format
 msgid "cannot read file system information for %s"
 msgstr "Gusoma IDOSIYE Sisitemu Ibisobanuro kugirango"
 
-#: src/stat.c:776
+#: src/stat.c:778
 #, c-format
 msgid "Usage: %s [OPTION] FILE...\n"
 msgstr ""
 
-#: src/stat.c:777
+#: src/stat.c:779
 msgid ""
 "Display file or file system status.\n"
 "\n"
@@ -6776,7 +6785,7 @@ msgid ""
 "  -f, --file-system     display file system status instead of file status\n"
 msgstr ""
 
-#: src/stat.c:783
+#: src/stat.c:785
 msgid ""
 "  -c  --format=FORMAT   use the specified FORMAT instead of the default;\n"
 "                          output a newline after each use of FORMAT\n"
@@ -6786,7 +6795,7 @@ msgid ""
 "  -t, --terse           print the information in terse form\n"
 msgstr ""
 
-#: src/stat.c:794
+#: src/stat.c:796
 #, fuzzy
 msgid ""
 "\n"
@@ -6800,7 +6809,7 @@ msgstr ""
 "Byemewe Imiterere kugirango Idosiye IDOSIYE Sisitemu in in Ingano in Bayite "
 "Bya Funga ku Bya"
 
-#: src/stat.c:802
+#: src/stat.c:804
 #, fuzzy
 msgid ""
 "  %d   Device number in decimal\n"
@@ -6811,7 +6820,7 @@ msgid ""
 "  %G   Group name of owner\n"
 msgstr "%DUmubare in Umubare in Idosiye Ubwoko in Izina: Bya Bya"
 
-#: src/stat.c:810
+#: src/stat.c:812
 #, fuzzy
 msgid ""
 "  %h   Number of hard links\n"
@@ -6826,7 +6835,7 @@ msgstr ""
 "%hBya Ikomeye Idosiye Izina: Na: NIBA Idosiye Funga Ingano in APAREYE Ubwoko "
 "in APAREYE Ubwoko in"
 
-#: src/stat.c:820
+#: src/stat.c:822
 #, fuzzy
 msgid ""
 "  %u   User ID of owner\n"
@@ -6843,7 +6852,7 @@ msgstr ""
 "Nka amasogonda guhera Bya Iheruka Bya Iheruka Guhindura>> Nka amasogonda "
 "guhera Bya Iheruka"
 
-#: src/stat.c:832
+#: src/stat.c:834
 #, fuzzy
 msgid ""
 "Valid format sequences for file systems:\n"
@@ -6857,7 +6866,7 @@ msgstr ""
 "Imiterere kugirango IDOSIYE Bihari Kuri Ibyatanzwe in IDOSIYE IDOSIYE in "
 "IDOSIYE IDOSIYE in IDOSIYE in IDOSIYE"
 
-#: src/stat.c:841
+#: src/stat.c:843
 #, fuzzy
 msgid ""
 "  %i   File System ID in hex\n"
@@ -7417,7 +7426,7 @@ msgstr "Byahinduwe Kuri Kuvugurura i hejuru Funga"
 msgid "ignoring all arguments"
 msgstr "Byose ingingo"
 
-#: src/system.h:529
+#: src/system.h:540
 #, c-format
 msgid ""
 "\n"
@@ -7426,12 +7435,12 @@ msgid ""
 "for details about the options it supports.\n"
 msgstr ""
 
-#: src/system.h:535
+#: src/system.h:546
 #, fuzzy
 msgid "      --help     display this help and exit\n"
 msgstr "--Ifashayobora Kugaragaza iyi Ifashayobora Na"
 
-#: src/system.h:537
+#: src/system.h:548
 #, fuzzy
 msgid "      --version  output version information and exit\n"
 msgstr "--Verisiyo Ibisohoka Verisiyo Ibisobanuro Na"
@@ -8459,24 +8468,24 @@ msgid_plural "%ld days"
 msgstr[0] "%ldUMUNSI"
 
 # sw/source\ui\envelp\label.src:STR_CUSTOM.text
-#: src/uptime.c:131
+#: src/uptime.c:132
 #, fuzzy, c-format
 msgid "%lu user"
 msgid_plural "%lu users"
 msgstr[0] "%luUkoresha]"
 msgstr[1] "%luUkoresha]"
 
-#: src/uptime.c:145
+#: src/uptime.c:146
 #, fuzzy, c-format
 msgid ",  load average: %.2f"
 msgstr ",Ibirimo Impuzandengo"
 
-#: src/uptime.c:179 src/users.c:108
+#: src/uptime.c:180 src/users.c:108
 #, c-format
 msgid "Usage: %s [OPTION]... [ FILE ]\n"
 msgstr ""
 
-#: src/uptime.c:180
+#: src/uptime.c:181
 #, fuzzy, c-format
 msgid ""
 "Print the current time, the length of time the system has been up,\n"
@@ -8716,20 +8725,6 @@ msgid ""
 msgstr "Ibisohoka a Umurongo Na: Byose S Cyangwa"
 
 #, fuzzy
-#~ msgid "cannot change owner and permissions of %s"
-#~ msgstr "Guhindura>> Uruhushya Bya"
-
-#, fuzzy
-#~ msgid ""
-#~ "  -e             enable interpretation of backslash escapes\n"
-#~ "  -E             disable interpretation of backslash escapes (default)\n"
-#~ msgstr "-E Gushoboza Bya E Bya Mburabuzi"
-
-#, fuzzy
-#~ msgid "appending output to %s"
-#~ msgstr "Ibisohoka Kuri"
-
-#, fuzzy
 #~ msgid "cannot change owner and/or group of %s"
 #~ msgstr "Guhindura>> Na Cyangwa Itsinda Bya"
 
@@ -8746,6 +8741,12 @@ msgstr "Ibisohoka a Umurongo Na: Byose S Cyangwa"
 #~ "      --no-preserve-root do not treat `/' specially (the default)\n"
 #~ "      --preserve-root    fail to operate recursively on `/'\n"
 #~ msgstr "--Oya Imizi OYA i Mburabuzi Imizi Kuri ku"
+
+#, fuzzy
+#~ msgid ""
+#~ "  -e             enable interpretation of backslash escapes\n"
+#~ "  -E             disable interpretation of backslash escapes (default)\n"
+#~ msgstr "-E Gushoboza Bya E Bya Mburabuzi"
 
 #, fuzzy
 #~ msgid ""

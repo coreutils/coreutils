@@ -43,47 +43,47 @@ noinst_PROGRAMS = t-fpending$(EXEEXT)
 subdir = lib
 DIST_COMMON = README $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	ChangeLog TODO __fpending.c __fpending.h acl.c acl.h alloca.c \
-	argmatch.c argmatch.h asnprintf.c asprintf.c atexit.c \
-	backupfile.c backupfile.h basename.c c-strtod.c c-strtod.h \
-	c-strtold.c calloc.c canon-host.c canon-host.h canonicalize.c \
-	canonicalize.h chdir-long.c chdir-long.h chdir-safer.c \
-	chdir-safer.h chown.c cloexec.c cloexec.h close-stream.c \
-	close-stream.h closeout.c closeout.h creat-safer.c \
-	cycle-check.c cycle-check.h dev-ino.h diacrit.c diacrit.h \
-	dirchownmod.c dirchownmod.h dirfd.c dirfd.h dirname.c \
-	dirname.h dup-safer.c dup2.c error.c error.h euidaccess-stat.c \
-	euidaccess-stat.h euidaccess.c exclude.c exclude.h exitfail.c \
-	exitfail.h fchdir-stub.c fchmodat.c fchown-stub.c fcntl--.h \
-	fcntl-safer.h fd-reopen.c fd-reopen.h fd-safer.c file-type.c \
-	file-type.h fileblocks.c filemode.c filemode.h filenamecat.c \
-	filenamecat.h fnmatch.c fopen-safer.c fprintftime.c \
-	fprintftime.h free.c fsusage.c fsusage.h ftruncate.c \
-	fts-cycle.c fts.c fts_.h gai_strerror.c getaddrinfo.c getcwd.c \
-	getcwd.h getdate.h getdate.y getdelim.c getdelim.h getgroups.c \
-	gethostname.c gethrxtime.c gethrxtime.h getline.c getline.h \
-	getloadavg.c getndelim2.c getopt.c getopt1.c getpagesize.h \
-	getpass.c getpass.h gettime.c gettimeofday.c getugroups.c \
-	getusershell.c group-member.c group-member.h hard-locale.c \
-	hard-locale.h hash-pjw.c hash-pjw.h hash.c hash.h human.c \
-	human.h idcache.c imaxtostr.c inet_ntop.c intprops.h \
-	inttostr.c inttostr.h lchmod.h lchown.c lchown.h linebuffer.c \
-	linebuffer.h long-options.c long-options.h lstat.c lstat.h \
-	malloc.c mbchar.c md5.c md5.h memcasecmp.c memcasecmp.h \
-	memchr.c memcmp.c memcoll.c memcoll.h memcpy.c memmove.c \
-	mempcpy.c mempcpy.h memrchr.c memrchr.h memset.c memxfrm.c \
-	memxfrm.h mkancesdirs.c mkancesdirs.h mkdir-p.c mkdir-p.h \
-	mkdir.c mkdirat.c mkstemp-safer.c mkstemp.c mktime.c \
-	modechange.c modechange.h mountlist.c mountlist.h nanosleep.c \
-	obstack.c obstack.h offtostr.c open-safer.c openat-die.c \
-	openat-priv.h openat.c openat.h pathmax.h physmem.c physmem.h \
-	pipe-safer.c posixtm.c posixtm.h posixver.c posixver.h \
-	printf-args.c printf-parse.c putenv.c quote.c quote.h \
-	quotearg.c quotearg.h raise.c rand-isaac.c rand-isaac.h \
-	randint.c randint.h randperm.c randperm.h randread.c \
-	randread.h readlink.c readtokens.c readtokens.h readutmp.c \
-	readutmp.h realloc.c regcomp.c regex.c regex.h \
-	regex_internal.c regex_internal.h regexec.c rename.c rmdir.c \
-	root-dev-ino.c root-dev-ino.h rpmatch.c safe-read.c \
+	argmatch.c argmatch.h asnprintf.c asprintf.c at-func.c \
+	atexit.c backupfile.c backupfile.h basename.c c-strtod.c \
+	c-strtod.h c-strtold.c calloc.c canon-host.c canon-host.h \
+	canonicalize.c canonicalize.h chdir-long.c chdir-long.h \
+	chdir-safer.c chdir-safer.h chown.c cloexec.c cloexec.h \
+	close-stream.c close-stream.h closeout.c closeout.h \
+	creat-safer.c cycle-check.c cycle-check.h dev-ino.h diacrit.c \
+	diacrit.h dirchownmod.c dirchownmod.h dirfd.c dirfd.h \
+	dirname.c dirname.h dup-safer.c dup2.c error.c error.h \
+	euidaccess-stat.c euidaccess-stat.h euidaccess.c exclude.c \
+	exclude.h exitfail.c exitfail.h fchdir-stub.c fchmodat.c \
+	fchown-stub.c fcntl--.h fcntl-safer.h fd-reopen.c fd-reopen.h \
+	fd-safer.c file-type.c file-type.h fileblocks.c filemode.c \
+	filemode.h filenamecat.c filenamecat.h fnmatch.c fopen-safer.c \
+	fprintftime.c fprintftime.h free.c fsusage.c fsusage.h \
+	ftruncate.c fts-cycle.c fts.c fts_.h gai_strerror.c \
+	getaddrinfo.c getcwd.c getcwd.h getdate.h getdate.y getdelim.c \
+	getdelim.h getgroups.c gethostname.c gethrxtime.c gethrxtime.h \
+	getline.c getline.h getloadavg.c getndelim2.c getopt.c \
+	getopt1.c getpagesize.h getpass.c getpass.h gettime.c \
+	gettimeofday.c getugroups.c getusershell.c group-member.c \
+	group-member.h hard-locale.c hard-locale.h hash-pjw.c \
+	hash-pjw.h hash.c hash.h human.c human.h idcache.c imaxtostr.c \
+	inet_ntop.c intprops.h inttostr.c inttostr.h lchmod.h lchown.c \
+	lchown.h linebuffer.c linebuffer.h long-options.c \
+	long-options.h lstat.c lstat.h malloc.c mbchar.c md5.c md5.h \
+	memcasecmp.c memcasecmp.h memchr.c memcmp.c memcoll.c \
+	memcoll.h memcpy.c memmove.c mempcpy.c mempcpy.h memrchr.c \
+	memrchr.h memset.c memxfrm.c memxfrm.h mkancesdirs.c \
+	mkancesdirs.h mkdir-p.c mkdir-p.h mkdir.c mkdirat.c \
+	mkstemp-safer.c mkstemp.c mktime.c modechange.c modechange.h \
+	mountlist.c mountlist.h nanosleep.c obstack.c obstack.h \
+	offtostr.c open-safer.c openat-die.c openat-priv.h openat.c \
+	openat.h pathmax.h physmem.c physmem.h pipe-safer.c posixtm.c \
+	posixtm.h posixver.c posixver.h printf-args.c printf-parse.c \
+	putenv.c quote.c quote.h quotearg.c quotearg.h raise.c \
+	rand-isaac.c rand-isaac.h randint.c randint.h randperm.c \
+	randperm.h randread.c randread.h readlink.c readtokens.c \
+	readtokens.h readutmp.c readutmp.h realloc.c regcomp.c regex.c \
+	regex.h regex_internal.c regex_internal.h regexec.c rename.c \
+	rmdir.c root-dev-ino.c root-dev-ino.h rpmatch.c safe-read.c \
 	safe-read.h safe-write.c safe-write.h same-inode.h same.c \
 	same.h save-cwd.c save-cwd.h savedir.c savedir.h setenv.c \
 	settime.c sha1.c sha1.h sha256.c sha256.h sha512.c sha512.h \
@@ -236,7 +236,7 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/absolute-header.m4 \
 	$(top_srcdir)/m4/yesno.m4 $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
-mkinstalldirs = $(SHELL) $(top_srcdir)/build-aux/mkinstalldirs
+mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 LIBRARIES = $(noinst_LIBRARIES)
@@ -524,6 +524,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/argmatch.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/asnprintf.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/asprintf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/at-func.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/atexit.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/backupfile.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/basename.Po@am__quote@
