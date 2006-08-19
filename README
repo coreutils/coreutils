@@ -61,6 +61,22 @@ way Sun implemented link(2) and chmod(2).
 
 
 ***********************
+pre-C99 build failure
+-----------------------
+
+There is a new, implicit build requirement:
+To build the coreutils from source, you should have a C99-conforming
+compiler, due to the use of declarations after non-declaration statements
+in several files in src/.  There is code in configure to find and, if
+possible, enable an appropriate compiler.  However, if configure doesn't
+find a C99 compiler, it continues nonetheless, and your build will fail.
+If that happens, simply apply the included patch using the following
+command, and then run make again:
+
+  cd src && patch < c99-to-c89.diff
+
+
+***********************
 HPUX 11.x build failure
 -----------------------
 

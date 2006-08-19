@@ -1,5 +1,7 @@
 2006-08-19  Jim Meyering  <jim@meyering.net>
 
+	* README: Describe potential "pre-C99 build failure", and work-around.
+
 	Some of my 2006-07-03 changes to tests/*/Makefile.am were being
 	backed out due to updates provoked by the copyright changes.
 	* tests/Makefile.am.in (PATH): Prepend $(VG_PATH_PREFIX), so that
