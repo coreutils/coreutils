@@ -19,7 +19,7 @@
 
 dnl Written by Jim Meyering.
 
-AC_INIT([GNU coreutils],[6.1],[bug-coreutils@gnu.org])
+AC_INIT([GNU coreutils],[6.2-cvs],[bug-coreutils@gnu.org])
 AC_CONFIG_SRCDIR(src/ls.c)
 
 AC_CONFIG_AUX_DIR(build-aux)
