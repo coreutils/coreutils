@@ -1,5 +1,3 @@
-convert to use gnulib-tool
-
 strip: add an option to specify the program used to strip binaries.
   suggestion from Karl Berry
 
