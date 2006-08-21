@@ -1,6 +1,5 @@
-^tests/pr/
 Makefile\.in$
-^config-log/
+\.po$
 ^build-aux/texinfo\.tex$
-\.gdb-history$
 ^src/c99-to-c89\.diff
+^tests/pr/

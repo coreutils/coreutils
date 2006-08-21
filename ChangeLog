@@ -1,3 +1,60 @@
+2006-08-20  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Add a bootstrap procedure, so that the CVS version contains fewer
+	files and we bootstrap the rest from gnulib, gettext, etc.
+	* README-cvs: New file.
+	* bootstrap: New file.
+	* bootstrap.conf: New file.
+	* .x-sc_trailing_blank: Remove config-log, .gdb-history.  Add .po.
+	* configure.ac (AC_PREREQ): Move here from m4/*.m4, for benefit
+	of gnulib-tool.
+	(gl_DEFAULT_POSIX2_VERSION, gl_USE_SYSTEM_EXTENSIONS, gl_PERL):
+	(gl_IGNORE_UNUSED_LIBRARIES): Remove; now done by gnulib.
+	(gl_EARLY): Add.
+	(gl_MACROS): Call just after gl_EARLY, just for clarity.
+	* src/c99-to-c98.diff: Remove patch to ls.c; no longer needed.
+	* src/kill.c (strtoimax): Remove decl.
+	* src/ls.c: Include "wcwidth.h" instead of rolling it ourselves.
+	* src/wc.c: Likewise.
+	* src/ls.c (sort_files): Rewrite to avoid need for C99-style
+	declaration, so that we don't need to patch this file.
+	* src/printf.c (strtoimax, strtoumax): Remove decls.
+	* src/su.c: Include getpass.h.
+	(getpass): remove.
+	* src/system.h: Include mempcpy.h, stpcpy.h, strpbrk.h.
+	Include inttypes.h unconditionally.
+	(LONGEST_MODIFIER, PRIdMAX, PRIoMAX, PRIuMAX, PRIxMAX): Remove.
+	(stpcpy, strndup, strstr, strtoul, mempcpy, CHAR_MIN, CHAR_MAX):
+	(SCHAR_MIN, SCHAR_MAX, UCHAR_MAX, SHRT_MIN, SHRT_MAX, INT_MAX):
+	(INT_MIN, INTMAX_MAX, INTMAX_MIN, UINT_MAX, LONG_MAX, ULONG_MAX):
+	(SIZE_MAX, SSIZE_MAX, UINTMAX_MAX): Remove.
+
+	* ABOUT-NLS, INSTALL, Makefile.in, man/Makefile.in:
+	* src/Makefile.in, tests/Makefile.in, tests/chgrp/Makefile.in:
+	* tests/chmod/Makefile.in, tests/chown/Makefile.in:
+	* tests/cp/Makefile.in, tests/cut/Makefile.in:
+	* tests/dd/Makefile.in, tests/dircolors/Makefile.in:
+	* tests/du/Makefile.in, tests/expr/Makefile.in:
+	* tests/factor/Makefile.in, tests/fmt/Makefile.in:
+	* tests/general/Makefile.in, tests/head/Makefile.in:
+	* tests/install/Makefile.in, tests/join/Makefile.in:
+	* tests/ln/Makefile.in, tests/ls/Makefile.in:
+	* tests/ls-2/Makefile.in, tests/md5sum/Makefile.in:
+	* tests/misc/Makefile.in, tests/mkdir/Makefile.in:
+	* tests/mv/Makefile.in, tests/od/Makefile.in:
+	* tests/pr/Makefile.in, tests/readlink/Makefile.in:
+	* tests/rm/Makefile.in, tests/rmdir/Makefile.in:
+	* tests/seq/Makefile.in, tests/sha1sum/Makefile.in:
+	* tests/shred/Makefile.in, tests/sort/Makefile.in:
+	* tests/stty/Makefile.in, tests/sum/Makefile.in:
+	* tests/tac/Makefile.in, tests/tail/Makefile.in:
+	* tests/tail-2/Makefile.in, tests/tee/Makefile.in:
+	* tests/test/Makefile.in, tests/touch/Makefile.in:
+	* tests/tr/Makefile.in, tests/tsort/Makefile.in:
+	* tests/unexpand/Makefile.in, tests/uniq/Makefile.in:
+	* tests/wc/Makefile.in:
+	Remove from CVS, since ./bootstrap generates them automatically.
+
 2006-08-20  Eric Blake  <ebb9@byu.net>
 
 	* src/stat.c (USE_STATVFS): Reinstate the patch from 2006-08-15;

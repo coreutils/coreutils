@@ -42,10 +42,6 @@
 
 #define AUTHORS "Paul Eggert"
 
-#if ! (HAVE_DECL_STRTOIMAX || defined strtoimax)
-intmax_t strtoimax ();
-#endif
-
 #if ! (HAVE_DECL_STRSIGNAL || defined strsignal)
 # if ! (HAVE_DECL_SYS_SIGLIST || defined sys_siglist)
 #  if HAVE_DECL__SYS_SIGLIST || defined _sys_siglist

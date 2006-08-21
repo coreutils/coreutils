@@ -1,4 +1,4 @@
-# stat-prog.m4 serial 3
+# stat-prog.m4 serial 4
 # Record the prerequisites of src/stat.c from the coreutils package.
 
 # Copyright (C) 2002, 2003, 2004, 2006 Free Software Foundation, Inc.
@@ -21,20 +21,15 @@
 
 AC_DEFUN([cu_PREREQ_STAT_PROG],
 [
-  AC_CHECK_HEADERS_ONCE(sys/param.h sys/sysmacros.h sys/statvfs.h sys/vfs.h)
+  AC_CHECK_HEADERS_ONCE(sys/param.h sys/statvfs.h sys/vfs.h)
   AC_CHECK_HEADERS(sys/mount.h, [], [],
     [AC_INCLUDES_DEFAULT
      [#if HAVE_SYS_PARAM_H
        #include <sys/param.h>
       #endif]])
-  AC_CHECK_FUNCS_ONCE(statvfs)
 
   # For `struct statfs' on Ultrix 4.4.
-  AC_CHECK_HEADERS([netinet/in.h nfs/nfs_clnt.h nfs/vfs.h],,,
-    [AC_INCLUDES_DEFAULT])
-
-  AC_REQUIRE([gl_AC_TYPE_LONG_LONG])
-  AC_REQUIRE([gt_HEADER_INTTYPES_H])
+  AC_CHECK_HEADERS_ONCE([netinet/in.h nfs/nfs_clnt.h nfs/vfs.h])
 
   statxfs_includes="\
 $ac_includes_default

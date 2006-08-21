@@ -61,6 +61,7 @@
 
 #include "system.h"
 #include "dirname.h"
+#include "getpass.h"
 
 #undef getusershell
 
@@ -120,7 +121,6 @@
 #define DEFAULT_USER "root"
 
 char *crypt ();
-char *getpass ();
 char *getusershell ();
 void endusershell ();
 void setusershell ();

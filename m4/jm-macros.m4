@@ -1,4 +1,4 @@
-#serial 102   -*- autoconf -*-
+#serial 103   -*- autoconf -*-
 
 dnl Misc type-related macros for coreutils.
 
@@ -23,7 +23,7 @@ dnl Misc type-related macros for coreutils.
 
 AC_DEFUN([gl_MACROS],
 [
-  AC_PREREQ(2.60)
+  gl_INIT
 
   GNU_PACKAGE="GNU $PACKAGE"
   AC_DEFINE_UNQUOTED(GNU_PACKAGE, "$GNU_PACKAGE",
@@ -40,44 +40,13 @@ AC_DEFUN([gl_MACROS],
 
   gl_CHECK_ALL_TYPES
 
-  AC_REQUIRE([gl_HOST_OS])
-  AC_REQUIRE([gl_ASSERT])
-  AC_REQUIRE([gl_CHECK_TYPE_STRUCT_DIRENT_D_TYPE])
-  AC_REQUIRE([gl_CHECK_TYPE_STRUCT_DIRENT_D_INO])
   AC_REQUIRE([gl_CHECK_DECLS])
 
   AC_REQUIRE([gl_PREREQ])
 
-  AC_REQUIRE([gl_FUNC_DIRFD])
-  AC_REQUIRE([AC_FUNC_ACL])
-  AC_REQUIRE([gl_FUNC_LCHMOD])
-  AC_REQUIRE([gl_FUNC_LCHOWN])
-  AC_REQUIRE([gl_FUNC_RMDIR_NOTEMPTY])
-  AC_REQUIRE([gl_FUNC_CHOWN])
-  AC_REQUIRE([AC_FUNC_LSTAT])
-  AC_REQUIRE([AC_FUNC_STRERROR_R])
-  AC_REQUIRE([gl_FUNC_GROUP_MEMBER])
-  AC_REQUIRE([gl_AC_FUNC_LINK_FOLLOWS_SYMLINK])
-  AC_REQUIRE([gl_FUNC_FPENDING])
-
-  # This is for od and stat, and any other program that
-  # uses the PRI.MAX macros from inttypes.h.
-  AC_REQUIRE([gt_INTTYPES_PRI])
-  AC_REQUIRE([gl_ULLONG_MAX])
-
-  AC_REQUIRE([gl_FUNC_GETGROUPS])
-
   AC_REQUIRE([AC_FUNC_FSEEKO])
-  AC_REQUIRE([AC_FUNC_ALLOCA])
 
   AC_CONFIG_LIBOBJ_DIR([lib])
-  AC_FUNC_GETLOADAVG([lib])
-
-  AC_REQUIRE([gl_SYS_PROC_UPTIME])
-  AC_REQUIRE([gl_FUNC_FTRUNCATE])
-
-  # raise is used by at least sort and ls.
-  AC_REPLACE_FUNCS(raise)
 
   # By default, argmatch should fail calling usage (1).
   AC_DEFINE(ARGMATCH_DIE, [usage (1)],
@@ -85,35 +54,22 @@ AC_DEFUN([gl_MACROS],
   AC_DEFINE(ARGMATCH_DIE_DECL, [extern void usage ()],
 	    [Define to the declaration of the xargmatch failure function.])
 
-  dnl Used to define SETVBUF in sys2.h.
-  dnl This evokes the following warning from autoconf:
-  dnl ...: warning: AC_TRY_RUN called without default to allow cross compiling
+  dnl Used to define SETVBUF in ../src/system.h.
   AC_FUNC_SETVBUF_REVERSED
 
-  # used by sleep and shred
+  # used by ls
   AC_REQUIRE([gl_CLOCK_TIME])
-  AC_CHECK_FUNCS_ONCE(gettimeofday)
-  AC_FUNC_GETTIMEOFDAY_CLOBBER
   # used by shred
   AC_CHECK_FUNCS_ONCE(directio)
-
-  AC_REQUIRE([AC_FUNC_CLOSEDIR_VOID])
 
   AC_CHECK_FUNCS_ONCE( \
     endgrent \
     endpwent \
-    fchmod \
     fchown \
     ftruncate \
-    hasmntopt \
-    isascii \
     iswspace \
-    lchown \
-    listmntent \
-    mempcpy \
     mkfifo \
     mbrlen \
-    realpath \
     setgroups \
     sethostname \
     siginterrupt \
@@ -121,11 +77,7 @@ AC_DEFUN([gl_MACROS],
     sysctl \
     sysinfo \
     tcgetpgrp \
-    wcrtomb \
-    tzset \
   )
-
-  AC_FUNC_STRTOD
 
   AC_REQUIRE([cu_PREREQ_STAT_PROG])
 
@@ -157,32 +109,15 @@ AC_DEFUN([gl_MACROS],
     ])
 
   AC_REQUIRE([AM_LANGINFO_CODESET])
-  AC_REQUIRE([gl_GLIBC21])
-  AM_ICONV
-  gl_FUNC_UNLINK_BUSY_TEXT
 
-  # These tests are for df.
-  AC_REQUIRE([gl_FSUSAGE])
-  AC_REQUIRE([gl_MOUNTLIST])
+  # Build df only if there's a point to it.
   if test $gl_cv_list_mounted_fs = yes && test $gl_cv_fs_space = yes; then
     DF_PROG='df$(EXEEXT)'
   fi
-  AC_REQUIRE([gl_AC_DOS])
-  AC_REQUIRE([AC_FUNC_CANONICALIZE_FILE_NAME])
 
   # If any of these functions don't exist (e.g. DJGPP 2.03),
   # use the corresponding stub.
   AC_CHECK_FUNC([fchdir], , [AC_LIBOBJ(fchdir-stub)])
-
-  AC_REQUIRE([gl_FUNC_FREE])
-  AC_REQUIRE([gl_FUNC_CHDIR_LONG])
-  AC_REQUIRE([gl_FUNC_XFTS])
-  AC_REQUIRE([gl_ROOT_DEV_INO])
-  AC_REQUIRE([gl_VERSION_ETC])
-  AC_REQUIRE([gl_DIACRIT])
-  AC_REQUIRE([gl_TYPE_SOCKLEN_T])
-  AC_REQUIRE([gl_FPRINTFTIME])
-  AC_REQUIRE([gl_CHDIR_SAFER])
 ])
 
 AC_DEFUN([gl_CHECK_ALL_HEADERS],
@@ -195,15 +130,13 @@ AC_DEFUN([gl_CHECK_ALL_HEADERS],
     sys/ioctl.h \
     sys/param.h \
     sys/resource.h \
-    sys/statvfs.h \
     sys/systeminfo.h \
     sys/time.h \
-    sys/vfs.h \
     sys/wait.h \
     syslog.h \
     termios.h \
   )
-  AC_CHECK_HEADERS(sys/mount.h sys/sysctl.h, [], [],
+  AC_CHECK_HEADERS(sys/sysctl.h, [], [],
     [AC_INCLUDES_DEFAULT
      [#if HAVE_SYS_PARAM_H
        #include <sys/param.h>
@@ -228,17 +161,15 @@ AC_DEFUN([gl_CHECK_ALL_TYPES],
   AC_REQUIRE([AC_C_VOLATILE])
   AC_REQUIRE([AC_C_INLINE])
   AC_REQUIRE([AC_C_LONG_DOUBLE])
+  AC_REQUIRE([AC_TYPE_UNSIGNED_LONG_LONG_INT])
 
   AC_REQUIRE([gl_CHECK_ALL_HEADERS])
   AC_CHECK_MEMBERS(
-    [struct stat.st_author,
-     struct stat.st_blksize],,,
+    [struct stat.st_author],,,
     [$ac_includes_default
 #include <sys/stat.h>
   ])
   AC_REQUIRE([AC_STRUCT_ST_BLOCKS])
-
-  AC_REQUIRE([AC_STRUCT_ST_DM_MODE])
 
   AC_REQUIRE([AC_TYPE_GETGROUPS])
   AC_REQUIRE([AC_TYPE_MBSTATE_T])
@@ -249,17 +180,10 @@ AC_DEFUN([gl_CHECK_ALL_TYPES],
   AC_REQUIRE([AC_TYPE_UID_T])
   AC_CHECK_TYPE(ino_t, unsigned long int)
 
-  gt_TYPE_SSIZE_T
-
-  dnl This relies on the fact that autoconf 2.14a's implementation of
+  dnl This relies on the fact that Autoconf's implementation of
   dnl AC_CHECK_TYPE checks includes unistd.h.
   AC_CHECK_TYPE(major_t, unsigned int)
   AC_CHECK_TYPE(minor_t, unsigned int)
-
-  AC_REQUIRE([gl_AC_TYPE_UINT32_T])
-  AC_REQUIRE([gl_AC_TYPE_UINTMAX_T])
-  AC_REQUIRE([gl_AC_TYPE_UINTPTR_T])
-  AC_REQUIRE([gl_AC_TYPE_UNSIGNED_LONG_LONG])
 
   AC_REQUIRE([AC_HEADER_MAJOR])
 ])

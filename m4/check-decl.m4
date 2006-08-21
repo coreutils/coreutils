@@ -1,4 +1,4 @@
-#serial 22
+#serial 23
 # Check declarations for this package.
 
 dnl Copyright (C) 1997, 1998, 1999, 2000, 2001, 2003, 2004, 2005, 2006
@@ -14,30 +14,13 @@ dnl Putting it in a separate file like this helps share it between
 dnl different packages.
 AC_DEFUN([gl_CHECK_DECLS],
 [
-  AC_REQUIRE([_gl_DECL_HEADERS])
   AC_REQUIRE([AC_HEADER_TIME])
+
+  AC_CHECK_HEADERS_ONCE(grp.h pwd.h)
   headers='
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
+#include <sys/types.h>
 
 #include <unistd.h>
-
-#include <sys/types.h>
-#if TIME_WITH_SYS_TIME
-# include <sys/time.h>
-# include <time.h>
-#else
-# if HAVE_SYS_TIME_H
-#  include <sys/time.h>
-# else
-#  include <time.h>
-# endif
-#endif
-
-#if HAVE_UTMP_H
-# include <utmp.h>
-#endif
 
 #if HAVE_GRP_H
 # include <grp.h>
@@ -47,36 +30,20 @@ AC_DEFUN([gl_CHECK_DECLS],
 # include <pwd.h>
 #endif
 '
-
   AC_CHECK_DECLS([
-    free,
-    getenv,
-    geteuid,
     getgrgid,
-    getlogin,
     getpwuid,
-    getuid,
-    getutent,
-    lseek,
-    malloc,
-    memchr,
-    memrchr,
-    nanosleep,
-    realloc,
-    stpcpy,
-    strndup,
-    strnlen,
-    strstr,
-    strtoul,
-    strtoull,
     ttyname], , , $headers)
 
   AC_CHECK_DECLS([isblank], [], [], [#include <ctype.h>])
-])
 
-dnl FIXME: when autoconf has support for it.
-dnl This is a little helper so we can require these header checks.
-AC_DEFUN([_gl_DECL_HEADERS],
-[
-  AC_CHECK_HEADERS_ONCE(grp.h pwd.h sys/time.h utmp.h)
+  AC_CHECK_DECLS_ONCE([free])
+  AC_CHECK_DECLS_ONCE([getenv])
+  AC_CHECK_DECLS_ONCE([geteuid])
+  AC_CHECK_DECLS_ONCE([getlogin])
+  AC_CHECK_DECLS_ONCE([getuid])
+  AC_CHECK_DECLS_ONCE([lseek])
+  AC_CHECK_DECLS_ONCE([malloc])
+  AC_CHECK_DECLS_ONCE([memchr])
+  AC_CHECK_DECLS_ONCE([realloc])
 ])

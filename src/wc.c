@@ -24,41 +24,17 @@
 #include <getopt.h>
 #include <sys/types.h>
 
-/* Get mbstate_t, mbrtowc(), wcwidth().  */
-#if HAVE_WCHAR_H
-# include <wchar.h>
-#endif
-
-/* Get iswprint(), iswspace().  */
-#if HAVE_WCTYPE_H
-# include <wctype.h>
-#endif
-#if !defined iswprint && !HAVE_ISWPRINT
-# define iswprint(wc) 1
-#endif
-#if !defined iswspace && !HAVE_ISWSPACE
-# define iswspace(wc) \
-    ((wc) == to_uchar (wc) && isspace (to_uchar (wc)))
-#endif
-
 #include "system.h"
 #include "error.h"
 #include "inttostr.h"
 #include "quote.h"
 #include "readtokens0.h"
 #include "safe-read.h"
+#include "wcwidth.h"
 
-#ifndef HAVE_DECL_WCWIDTH
-"this configure-time declaration test was not run"
-#endif
-#if !HAVE_DECL_WCWIDTH
-extern int wcwidth ();
-#endif
-
-/* If wcwidth() doesn't exist, assume all printable characters have
-   width 1.  */
-#if !defined wcwidth && !HAVE_WCWIDTH
-# define wcwidth(wc) ((wc) == 0 ? 0 : iswprint (wc) ? 1 : -1)
+#if !defined iswspace && !HAVE_ISWSPACE
+# define iswspace(wc) \
+    ((wc) == to_uchar (wc) && isspace (to_uchar (wc)))
 #endif
 
 /* The official name of this program (e.g., no `g' prefix).  */

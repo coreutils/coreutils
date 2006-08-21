@@ -22,29 +22,6 @@ diff -u -p -r1.203 copy.c
  	}
      }
  
-Index: src/ls.c
-===================================================================
-RCS file: /fetish/cu/src/ls.c,v
-retrieving revision 1.435
-diff -u -p -r1.435 ls.c
---- src/ls.c	9 Aug 2006 09:45:17 -0000	1.435
-+++ src/ls.c	17 Aug 2006 09:18:52 -0000
-@@ -3139,13 +3139,14 @@ sort_files (void)
-       use_strcmp = true;
-       assert (sort_type != sort_version);
-     }
--
-+  {
-   /* When sort_type == sort_time, use time_type as subindex.  */
-   int timeoffset = sort_type == sort_time ? time_type : 0;
- 
-   qsort (files, files_index, sizeof *files,
-          sort_functions[sort_type + timeoffset][use_strcmp][sort_reverse]
-                        [directories_first]);
-+  }
- }
- 
- /* List all the files now in the table.  */
 Index: src/remove.c
 ===================================================================
 RCS file: /fetish/cu/src/remove.c,v

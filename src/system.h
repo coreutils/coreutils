@@ -96,7 +96,10 @@ you must include <sys/types.h> before including this file
    memcpy otherwise.  */
 
 #include <string.h>
+#include "mempcpy.h"
 #include "memrchr.h"
+#include "stpcpy.h"
+#include "strpbrk.h"
 
 #include <errno.h>
 
@@ -319,34 +322,8 @@ enum
 
 #include "timespec.h"
 
-#if HAVE_INTTYPES_H
-# include <inttypes.h>
-#endif
+#include <inttypes.h>
 #include <stdint.h>
-
-#if ULONG_MAX_LT_ULLONG_MAX
-# define LONGEST_MODIFIER "ll"
-#else
-# define LONGEST_MODIFIER "l"
-#endif
-#if PRI_MACROS_BROKEN
-# undef PRIdMAX
-# undef PRIoMAX
-# undef PRIuMAX
-# undef PRIxMAX
-#endif
-#ifndef PRIdMAX
-# define PRIdMAX LONGEST_MODIFIER "d"
-#endif
-#ifndef PRIoMAX
-# define PRIoMAX LONGEST_MODIFIER "o"
-#endif
-#ifndef PRIuMAX
-# define PRIuMAX LONGEST_MODIFIER "u"
-#endif
-#ifndef PRIxMAX
-# define PRIxMAX LONGEST_MODIFIER "x"
-#endif
 
 #include <ctype.h>
 
@@ -412,31 +389,12 @@ char *memchr ();
 char *realloc ();
 #endif
 
-#if !HAVE_DECL_STPCPY
-# ifndef stpcpy
-char *stpcpy ();
-# endif
-#endif
-
-#if !HAVE_DECL_STRNDUP
-char *strndup ();
-#endif
-
-#if !HAVE_DECL_STRSTR
-char *strstr ();
-#endif
-
 #if !HAVE_DECL_GETENV
 char *getenv ();
 #endif
 
 #if !HAVE_DECL_LSEEK
 off_t lseek ();
-#endif
-
-/* This is needed on some AIX systems.  */
-#if !HAVE_DECL_STRTOUL
-unsigned long strtoul ();
 #endif
 
 #if !HAVE_DECL_GETLOGIN
@@ -479,11 +437,6 @@ uid_t getuid ();
    So use this macro instead of using x2realloc directly.  */
 #define X2REALLOC(P, PN) ((void) verify_true (sizeof *(P) == 1), \
                           x2realloc (P, PN))
-
-#if ! defined HAVE_MEMPCPY && ! defined mempcpy
-/* Be CAREFUL that there are no side effects in N.  */
-# define mempcpy(D, S, N) ((void *) ((char *) memcpy (D, S, N) + (N)))
-#endif
 
 /* Include automatically-generated macros for unlocked I/O.  */
 #include "unlocked-io.h"
@@ -567,72 +520,8 @@ enum
 
 #include "intprops.h"
 
-#ifndef CHAR_MIN
-# define CHAR_MIN TYPE_MINIMUM (char)
-#endif
-
-#ifndef CHAR_MAX
-# define CHAR_MAX TYPE_MAXIMUM (char)
-#endif
-
-#ifndef SCHAR_MIN
-# define SCHAR_MIN (-1 - SCHAR_MAX)
-#endif
-
-#ifndef SCHAR_MAX
-# define SCHAR_MAX (CHAR_MAX == UCHAR_MAX ? CHAR_MAX / 2 : CHAR_MAX)
-#endif
-
-#ifndef UCHAR_MAX
-# define UCHAR_MAX TYPE_MAXIMUM (unsigned char)
-#endif
-
-#ifndef SHRT_MIN
-# define SHRT_MIN TYPE_MINIMUM (short int)
-#endif
-
-#ifndef SHRT_MAX
-# define SHRT_MAX TYPE_MAXIMUM (short int)
-#endif
-
-#ifndef INT_MAX
-# define INT_MAX TYPE_MAXIMUM (int)
-#endif
-
-#ifndef INT_MIN
-# define INT_MIN TYPE_MINIMUM (int)
-#endif
-
-#ifndef INTMAX_MAX
-# define INTMAX_MAX TYPE_MAXIMUM (intmax_t)
-#endif
-
-#ifndef INTMAX_MIN
-# define INTMAX_MIN TYPE_MINIMUM (intmax_t)
-#endif
-
-#ifndef UINT_MAX
-# define UINT_MAX TYPE_MAXIMUM (unsigned int)
-#endif
-
-#ifndef LONG_MAX
-# define LONG_MAX TYPE_MAXIMUM (long int)
-#endif
-
-#ifndef ULONG_MAX
-# define ULONG_MAX TYPE_MAXIMUM (unsigned long int)
-#endif
-
-#ifndef SIZE_MAX
-# define SIZE_MAX TYPE_MAXIMUM (size_t)
-#endif
-
 #ifndef SSIZE_MAX
 # define SSIZE_MAX TYPE_MAXIMUM (ssize_t)
-#endif
-
-#ifndef UINTMAX_MAX
-# define UINTMAX_MAX TYPE_MAXIMUM (uintmax_t)
 #endif
 
 #ifndef OFF_T_MIN

@@ -1,0 +1,338 @@
+#! /bin/sh
+
+# Bootstrap this package from CVS.
+
+# Copyright (C) 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2, or (at your option)
+# any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+# 02110-1301, USA.
+
+# Written by Paul Eggert.
+
+nl='
+'
+
+# Ensure file names are sorted consistently across platforms.
+# Also, ensure diagnostics are in English, e.g., "wget --help" below.
+LC_ALL=C
+export LC_ALL
+
+
+# Configuration.
+
+# List of gnulib modules needed.
+gnulib_modules=
+
+# Any extra gnulib files needed.
+gnulib_files=
+
+# Translation Project URL, for the registry of all projects
+# and for the translation-team master directory.
+TP_URL='http://www.iro.umontreal.ca/translation/registry.cgi?domain='
+TP_PO_URL='http://www.iro.umontreal.ca/translation/teams/PO/'
+
+extract_package_name='
+  /^AC_INIT(/{
+     /.*,.*,.*,/{
+       s///
+       s/[][]//g
+       p
+       q
+     }
+     s/AC_INIT(\[*//
+     s/]*,.*//
+     s/^GNU //
+     y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/
+     s/[^A-Za-z0-9_]/-/g
+     p
+  }
+'
+package=`sed -n "$extract_package_name" configure.ac` || exit
+
+# Extra files from gnulib, which are not part of any module yet.
+gnulib_extra_files='
+	build-aux/install-sh
+	build-aux/missing
+	build-aux/mdate-sh
+	build-aux/texinfo.tex
+	build-aux/depcomp
+	build-aux/config.guess
+	build-aux/config.sub
+	doc/INSTALL
+'
+
+# Other locale categories that need message catalogs.
+EXTRA_LOCALE_CATEGORIES=
+
+# Additional xgettext options to use.  Use "\\\newline" to break lines.
+XGETTEXT_OPTIONS='\\\
+ --flag=_:1:pass-c-format\\\
+ --flag=N_:1:pass-c-format\\\
+ --flag=error:3:c-format --flag=error_at_line:5:c-format\\\
+'
+
+# Clean up after getting gnulib and gettext files.
+bootstrap_conf_cleanup() { :; }
+
+# Override the default configuration, if necessary.
+test -r bootstrap.conf && . ./bootstrap.conf
+
+# Translate configuration into internal form.
+
+# Parse options.
+
+for option
+do
+  case $option in
+  --help)
+    echo "$0: usage: $0 [--gnulib-srcdir=DIR] [--cvs-user=USERNAME] [--skip-po]"
+    exit;;
+  --gnulib-srcdir=*)
+    GNULIB_SRCDIR=`expr "$option" : '--gnulib-srcdir=\(.*\)'`;;
+  --cvs-user=*)
+    CVS_USER=`expr "$option" : '--cvs-user=\(.*\)'`;;
+  --skip-po)
+    SKIP_PO=t;;
+  *)
+    echo >&2 "$0: $option: unknown option"
+    exit 1;;
+  esac
+done
+
+echo "$0: Bootstrapping CVS $package..."
+
+cleanup_gnulib() {
+  status=$?
+  rm -fr gnulib
+  exit $status
+}
+
+# Get gnulib files.
+
+case ${GNULIB_SRCDIR--} in
+-)
+  if [ ! -d gnulib ]; then
+    echo "$0: getting gnulib files..."
+
+    case ${CVS_AUTH-pserver} in
+    pserver)
+      CVS_PREFIX=':pserver:anonymous@';;
+    ssh)
+      CVS_PREFIX="$CVS_USER${CVS_USER+@}";;
+    *)
+      echo "$0: $CVS_AUTH: Unknown CVS access method" >&2
+      exit 1;;
+    esac
+
+    case $CVS_RSH in
+    '') export CVS_RSH=ssh;;
+    esac
+
+    trap cleanup_gnulib 1 2 13 15
+
+    cvs -z3 -q -d ${CVS_PREFIX}cvs.savannah.gnu.org:/cvsroot/gnulib co gnulib ||
+      cleanup_gnulib
+
+    trap - 1 2 13 15
+  fi
+  GNULIB_SRCDIR=gnulib
+esac
+
+gnulib_tool=$GNULIB_SRCDIR/gnulib-tool
+<$gnulib_tool || exit
+
+# Get translations.
+
+get_translations() {
+  subdir=$1
+  domain=$2
+
+  echo "$0: getting translations into $subdir for $domain..."
+  (cd $subdir && rm -f dummy `ls | sed -n '/\.gmo$/p; /\.po/p'`) &&
+
+  $WGET_COMMAND -O "$subdir/$domain.html" "$TP_URL$domain" &&
+
+  sed -n 's|.*"http://[^"]*/translation/teams/PO/\([^/"]*\)/'"$domain"'-\([^/"]*\)\.[^."]*\.po".*|\1.\2|p' <"$subdir/$domain.html" |
+  sort -k 1,1 -k 2,2n -k2,2 -k3,3n -k3,3 -k4,4n -k4,4 -k5,5n -k5.5 |
+  awk -F. '
+    { if (lang && $1 != lang) print lang, ver }
+    { lang = $1; ver = substr($0, index($0, ".") + 1) }
+    END { if (lang) print lang, ver }
+  ' | awk -v domain="$domain" -v subdir="$subdir" '
+    {
+      lang = $1
+      ver = $2
+      urlfmt = ""
+      printf "{ $WGET_COMMAND -O %s/%s.po '\'"$TP_PO_URL"'/%s/%s-%s.%s.po'\'' &&\n", subdir, lang, lang, domain, ver, lang
+      printf "  msgfmt -c -o /dev/null %s/%s.po || {\n", subdir, lang
+      printf "    echo >&2 '\'"$0"': omitting translation for %s'\''\n", lang
+      printf "    rm -f %s/%s.po; }; } &&\n", subdir, lang
+    }
+    END { print ":" }
+  ' | sh &&
+  ls "$subdir"/*.po | sed 's|.*/||; s|\.po$||' >"$subdir/LINGUAS" &&
+  rm "$subdir/$domain.html"
+}
+
+case $SKIP_PO in
+'')
+  case `wget --help` in
+  *'--no-cache'*)
+    no_cache='--no-cache';;
+  *'--cache=on/off'*)
+    no_cache='--cache=off';;
+  *)
+    no_cache='';;
+  esac
+
+  WGET_COMMAND="wget -nv $no_cache"
+  export WGET_COMMAND
+
+  get_translations po $package || exit
+
+  if test -d runtime-po; then
+    get_translations runtime-po $package-runtime || exit
+  fi;;
+esac
+
+
+slurp() {
+  for dir in . `(cd $1 && find * -type d -print)`; do
+    copied=
+    sep=
+    for file in `ls $1/$dir`; do
+      test -d $1/$dir/$file && continue
+      if test $file = Makefile.am; then
+	copied=$copied${sep}gnulib.mk; sep=$nl
+	echo "$0: Copying $1/$dir/$file to $dir/gnulib.mk ..." &&
+	sed '/^[^#].*\/intl/s/^/#/' $1/$dir/$file >$dir/gnulib.mk
+      elif test -r ${2-no/such/dir}/$dir/$file ||
+	   grep -F "/$file/" $dir/CVS/Entries 2>/dev/null |
+	     grep -q '^/[^/]*/[0-9]'; then
+	echo "$0: $dir/$file overrides $1/$dir/$file"
+      else
+	copied=$copied$sep$file; sep=$nl
+	if test $file = gettext.m4; then
+	  echo "$0: patching m4/gettext.m4 to remove need for intl/* ..."
+	  sed '
+	    /^AC_DEFUN(\[AM_INTL_SUBDIR],/,/^]/c\
+	      AC_DEFUN([AM_INTL_SUBDIR], [
+	    /^AC_DEFUN(\[gt_INTL_SUBDIR_CORE],/,/^]/c\
+	      AC_DEFUN([gt_INTL_SUBDIR_CORE], [])
+	    $a\
+	      AC_DEFUN([gl_LOCK], [])
+	  ' $1/$dir/$file >$dir/$file
+	else
+	  cp $1/$dir/$file $dir/$file
+	fi
+      fi || exit
+    done
+
+    ig=$dir/.cvsignore
+    if test -n "$copied" && test -f $ig; then
+      echo "$copied" | sort -u - $ig | cmp -s - $ig ||
+      echo "$copied" | sort -u - $ig -o $ig || exit
+    fi
+  done
+}
+
+
+# Create boot temporary directories to import from gnulib and gettext.
+
+bt='.#bootmp'
+bt2=${bt}2
+rm -fr $bt $bt2 &&
+mkdir $bt $bt2 || exit
+
+# Import from gnulib.
+
+gnulib_tool_options="\
+ --import\
+ --no-changelog\
+ --aux-dir $bt/build-aux\
+ --doc-base $bt/doc\
+ --lib lib$package\
+ --m4-base $bt/m4/\
+ --source-base $bt/lib/\
+ --tests-base $bt/tests\
+"
+echo "$0: $gnulib_tool $gnulib_tool_options --import ..."
+$gnulib_tool $gnulib_tool_options --import $gnulib_modules &&
+slurp $bt || exit
+
+
+# Import from gettext.
+
+echo "$0: (cd $bt2; autopoint) ..."
+cp configure.ac $bt2 &&
+(cd $bt2 && autopoint && rm configure.ac) &&
+slurp $bt2 $bt || exit
+
+rm -fr $bt $bt2 || exit
+
+bootstrap_conf_cleanup || exit
+
+
+# Reconfigure, getting other files.
+
+for command in \
+  'aclocal --force -I m4' \
+  'autoconf --force' \
+  'autoheader --force' \
+  'automake --add-missing --copy --force-missing';
+do
+  echo "$0: $command ..."
+  $command || exit
+done
+
+
+# Get some extra files from gnulib, overriding existing files.
+
+for file in $gnulib_extra_files; do
+  src=$GNULIB_SRCDIR/$file
+  case $file in
+  */INSTALL) dest=.;;
+  *) dest=$file;;
+  esac
+  echo "$0: cp -fp $GNULIB_SRCDIR/$file $dest" &&
+  cp -fp $GNULIB_SRCDIR/$file $dest || exit
+done
+
+
+# Create gettext configuration.
+echo "$0: Creating po/Makevars from po/Makevars.template ..."
+sed '
+  /^EXTRA_LOCALE_CATEGORIES *=/s/=.*/= '"$EXTRA_LOCALE_CATEGORIES"'/
+  /^MSGID_BUGS_ADDRESS *=/s/=.*/= bug-'"$package"'@gnu.org/
+  /^XGETTEXT_OPTIONS *=/{
+    s/$/ \\/
+    a\
+	'"$XGETTEXT_OPTIONS"' $${end_of_xgettext_options+}
+  }
+' po/Makevars.template >po/Makevars
+
+if test -d runtime-po; then
+  # Likewise for runtime-po/Makevars, except also change a few other parameters.
+  sed '
+    s/^\(DOMAIN\) *=.*/\1 = '"$package"'-runtime/
+    s/^\(subdir\) *=.*/\1 = runtime-po/
+    s/^\(XGETTEXT_OPTIONS\) *=.*/\1 = '"$XGETTEXT_OPTIONS_RUNTIME"'/
+  ' <po/Makevars >runtime-po/Makevars
+
+  # Copy identical files from po to runtime-po.
+  (cd po && cp -p Makefile.in.in *-quot *.header *.sed *.sin ../runtime-po)
+fi
+
+echo "$0: done.  Now you can run './configure'."

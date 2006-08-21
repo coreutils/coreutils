@@ -1,3 +1,15 @@
+2006-08-20  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* LINGUAS, Makefile.in.in, Makevars, Rules-quot, af.po, be.po:
+	* bg.po, boldquot.sed, ca.po, cs.po, da.po, de.po, el.po:
+	* en@boldquot.header, en@quot.header, es.po, et.po, eu.po:
+	* fi.po, fr.po, ga.po, gl.po, hr.po, hu.po, insert-header.sin:
+	* it.po, ja.po, ko.po, lg.po, ms.po, nb.po, nl.po, no.po, pl.po:
+	* pt.po, pt_BR.po, quot.sed, remove-potcdate.sin, ro.po, ru.po:
+	* rw.po, sk.po, sl.po, sr.po, sv.po, tr.po, uk.po, vi.po, wa.po:
+	* zh_CN.po, zh_TW.po:
+	Remove from CVS, since ../bootstrap generates them automatically.
+
 2006-08-17  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* po/ChangeLog: Add copyright notice.

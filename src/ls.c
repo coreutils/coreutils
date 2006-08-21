@@ -73,34 +73,6 @@
 # endif
 #endif
 
-/* Get mbstate_t, mbrtowc(), mbsinit(), wcwidth().  */
-#if HAVE_WCHAR_H
-# include <wchar.h>
-#endif
-
-/* Get iswprint().  */
-#if HAVE_WCTYPE_H
-# include <wctype.h>
-#endif
-#if !defined iswprint && !HAVE_ISWPRINT
-# define iswprint(wc) 1
-#endif
-
-#ifndef HAVE_DECL_WCWIDTH
-"this configure-time declaration test was not run"
-#endif
-#if !HAVE_DECL_WCWIDTH
-int wcwidth ();
-#endif
-
-/* If wcwidth() doesn't exist, assume all printable characters have
-   width 1.  */
-#ifndef wcwidth
-# if !HAVE_WCWIDTH
-#  define wcwidth(wc) ((wc) == 0 ? 0 : iswprint (wc) ? 1 : -1)
-# endif
-#endif
-
 #include "system.h"
 #include <fnmatch.h>
 
@@ -126,6 +98,7 @@ int wcwidth ();
 #include "stat-time.h"
 #include "strftime.h"
 #include "strverscmp.h"
+#include "wcwidth.h"
 #include "xstrtol.h"
 #include "xreadlink.h"
 
@@ -3141,10 +3114,9 @@ sort_files (void)
     }
 
   /* When sort_type == sort_time, use time_type as subindex.  */
-  int timeoffset = sort_type == sort_time ? time_type : 0;
-
   qsort (files, files_index, sizeof *files,
-         sort_functions[sort_type + timeoffset][use_strcmp][sort_reverse]
+         sort_functions[sort_type + (sort_type == sort_time ? time_type : 0)]
+		       [use_strcmp][sort_reverse]
                        [directories_first]);
 }
 

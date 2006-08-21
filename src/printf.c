@@ -58,13 +58,6 @@
 #include "quote.h"
 #include "unicodeio.h"
 
-#if ! (HAVE_DECL_STRTOIMAX || defined strtoimax)
-intmax_t strtoimax ();
-#endif
-#if ! (HAVE_DECL_STRTOUMAX || defined strtoumax)
-uintmax_t strtoumax ();
-#endif
-
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "printf"
 
