@@ -1,5 +1,5 @@
 /* od -- dump files in octal and other formats
-   Copyright (C) 92, 1995-2005 Free Software Foundation, Inc.
+   Copyright (C) 92, 1995-2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -59,7 +59,7 @@ typedef double LONG_DOUBLE;
 # define LDBL_DIG DBL_DIG
 #endif
 
-#if HAVE_UNSIGNED_LONG_LONG
+#if HAVE_UNSIGNED_LONG_LONG_INT
 typedef unsigned long long int unsigned_long_long_int;
 #else
 /* This is just a place-holder to avoid a few `#if' directives.
@@ -1581,7 +1581,7 @@ main (int argc, char **argv)
   integral_type_size[sizeof (short int)] = SHORT;
   integral_type_size[sizeof (int)] = INT;
   integral_type_size[sizeof (long int)] = LONG;
-#if HAVE_UNSIGNED_LONG_LONG
+#if HAVE_UNSIGNED_LONG_LONG_INT
   /* If `long int' and `long long int' have the same size, it's fine
      to overwrite the entry for `long' with this one.  */
   integral_type_size[sizeof (unsigned_long_long_int)] = LONG_LONG;

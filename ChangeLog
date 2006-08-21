@@ -1,3 +1,12 @@
+2006-08-21  Jim Meyering  <jim@meyering.net>
+
+	* src/od.c: Now that HAVE_UNSIGNED_LONG_LONG is no longer defined
+	in config.h, change the uses to HAVE_UNSIGNED_LONG_LONG_INT.
+	Otherwise, on a system with 4-byte longs, "od -t u8" fails with this:
+	od: invalid type string `u8';
+	this system doesn't provide a 8-byte integral type
+	FIXME: add a test for this, but skip it when sizeof uintmax < 8.
+
 2006-08-20  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Add a bootstrap procedure, so that the CVS version contains fewer
