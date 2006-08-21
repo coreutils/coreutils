@@ -1,3 +1,8 @@
+2006-08-21  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* argmatch.m4:
+	Remove from CVS, since ../bootstrap generates it automatically.
+
 2006-08-20  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Add a bootstrap procedure, so that the CVS version contains fewer
