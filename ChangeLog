@@ -1,5 +1,7 @@
 2006-08-22  Jim Meyering  <jim@meyering.net>
 
+	* .cvsignore: Add ABOUT-NLS.
+
 	Move the check-AUTHORS rule to be run as part of "make distcheck",
 	rather than "make check".
 	* src/Makefile.am (check): Don't depend on check-AUTHORS; it would
