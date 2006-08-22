@@ -587,7 +587,7 @@ cvs-update:
 emit_upload_commands:
 	@echo =====================================
 	@echo =====================================
-	@echo "$(srcdir)/gnupload $(GNUPLOADFLAGS) \\"
+	@echo "$(srcdir)/build-aux/gnupload $(GNUPLOADFLAGS) \\"
 	@echo "    --to $(gnu_rel_host):coreutils \\"
 	@echo "  $(rel-files)"
 	@echo '# send the /tmp/announcement e-mail'

@@ -1,5 +1,10 @@
 2006-08-22  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* bootstrap.conf (gnulib_modules): Add gnupload.
+	* Makefile.maint (emit_upload_commands): gnupload is now
+	in build-aux.
+	* gnupload: Remove from CVS, since it's now a gnulib module.
+
 	* bootstrap (bootstrap_conf_cleanup): Remove.
 	(excluded_files): New var.
 	* bootstrap.conf: Likewise.
