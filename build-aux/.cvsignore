@@ -1,0 +1,10 @@
+compile
+config.guess
+config.rpath
+config.sub
+depcomp
+install-sh
+mdate-sh
+missing
+texinfo.tex
+ylwrap

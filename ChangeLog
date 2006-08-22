@@ -1,3 +1,61 @@
+2006-08-22  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* aclocal.m4, config.hin, configure:
+	Remove from CVS, since ./bootstrap generates them automatically.
+	* .cvsignore: Add INSTALL, Makefile.in, *.cache, *.lineno, *.log.
+	Remove more-specific entries.  This catches files like configure.lineno.
+	* man/.cvsignore: Add Makefile.in.
+	* src/.cvsignore: Add Makefile.in.
+	Remove .version, dir.c, install, mvdir, stamp-v, vdir.c, version.c.
+
+	* tests/.cvsignore:
+	* tests/chgrp/.cvsignore:
+	* tests/chmod/.cvsignore:
+	* tests/chown/.cvsignore:
+	* tests/cp/.cvsignore:
+	* tests/cut/.cvsignore:
+	* tests/dd/.cvsignore:
+	* tests/dircolors/.cvsignore:
+	* tests/du/.cvsignore:
+	* tests/expr/.cvsignore:
+	* tests/factor/.cvsignore:
+	* tests/fmt/.cvsignore:
+	* tests/head/.cvsignore:
+	* tests/install/.cvsignore:
+	* tests/join/.cvsignore:
+	* tests/ln/.cvsignore:
+	* tests/ls/.cvsignore:
+	* tests/ls-2/.cvsignore:
+	* tests/md5sum/.cvsignore:
+	* tests/misc/.cvsignore:
+	* tests/mkdir/.cvsignore:
+	* tests/mv/.cvsignore:
+	* tests/od/.cvsignore:
+	* tests/pr/.cvsignore:
+	* tests/readlink/.cvsignore:
+	* tests/rm/.cvsignore:
+	* tests/rmdir/.cvsignore:
+	* tests/seq/.cvsignore:
+	* tests/sha1sum/.cvsignore:
+	* tests/shred/.cvsignore:
+	* tests/sort/.cvsignore:
+	* tests/stty/.cvsignore:
+	* tests/sum/.cvsignore:
+	* tests/tac/.cvsignore:
+	* tests/tail/.cvsignore:
+	* tests/tail-2/.cvsignore:
+	* tests/tee/.cvsignore:
+	* tests/test/.cvsignore:
+	* tests/touch/.cvsignore:
+	* tests/tr/.cvsignore:
+	* tests/tsort/.cvsignore:
+	* tests/unexpand/.cvsignore:
+	* tests/uniq/.cvsignore:
+	* tests/wc/.cvsignore:
+	Add Makefile.in.  Sort entries if necessary.  Remove *.I, *.E,
+	*.X, *.O, *-tests, build-script, mk-script if they're never
+	created in this directory.
+
 2006-08-22  Bruno Haible  <bruno@clisp.org>
 
 	BeOS portability.

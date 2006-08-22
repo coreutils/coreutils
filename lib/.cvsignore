@@ -1,5 +1,6 @@
 .deps
 Makefile
+Makefile.in
 __fpending.c
 __fpending.h
 acl.c
@@ -101,6 +102,7 @@ getcwd.h
 getdate.c
 getdate.h
 getdate.tab.c
+getdate.tab.h
 getdate.y
 getdelim.c
 getdelim.h
@@ -262,7 +264,6 @@ snprintf.h
 socket_.h
 stat-macros.h
 stat-time.h
-stat.c
 stat_.h
 stdbool.h
 stdbool_.h
@@ -300,7 +301,6 @@ strtoull.c
 strtoumax.c
 strverscmp.c
 strverscmp.h
-sysexit.h
 t-fpending
 tempname.c
 time_r.c

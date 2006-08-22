@@ -1,8 +1,6 @@
-*.I
-*.E
-*.X
-*.O
 *-tests
-build-script
+*.E
+*.O
+*.X
 Makefile
-mk-script
+Makefile.in

@@ -1,6 +1,6 @@
 .deps
-.version
 Makefile
+Makefile.in
 [[]
 base64
 basename
@@ -19,7 +19,6 @@ dcgen
 dd
 df
 dir
-dir.c
 dircolors
 dircolors.h
 dirname
@@ -39,7 +38,6 @@ head
 hostid
 hostname
 id
-install
 join
 kill
 link
@@ -52,7 +50,6 @@ mkdir
 mkfifo
 mknod
 mv
-mvdir
 nice
 nl
 nohup
@@ -75,12 +72,11 @@ sha224sum
 sha256sum
 sha384sum
 sha512sum
-shuf
 shred
+shuf
 sleep
 sort
 split
-stamp-v
 stat
 stty
 su
@@ -102,8 +98,6 @@ unlink
 uptime
 users
 vdir
-vdir.c
-version.c
 wc
 wheel-size.h
 wheel.h

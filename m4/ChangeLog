@@ -1,3 +1,12 @@
+2006-08-22  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* .cvsignore: Remove Makefile, dev-ino.m4, glibc2.m4, intdiv0.m4,
+	inttypes-h.m4, inttypes-pri.m4, jm-glibc-io.m4, lcmessage.m4,
+	lock.m4, printf-posix.m4, same-inode.m4, size_max.m4,
+	uintmax_t.m4, ulonglong.m4, visibility.m4, xsize.m4.  Many of
+	these are put in automatically by ../bootstrap, but that's a
+	bootstrap bug that I plan to fix shortly.
+
 2006-08-22  Bruno Haible  <bruno@clisp.org>
 
 	BeOS portability.

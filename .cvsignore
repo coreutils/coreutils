@@ -1,11 +1,12 @@
+*.cache
+*.lineno
+*.log
 .kludge-stamp
 ABOUT-NLS
+INSTALL
 Makefile
+Makefile.in
 THANKS-to-translators
-autom4te.cache
-config.cache
 config.h
-config.log
 config.status
-config.status.lineno
 stamp-h1
