@@ -12,9 +12,11 @@ coreutils.ky
 coreutils.log
 coreutils.op
 coreutils.pg
+coreutils.tmp
 coreutils.toc
 coreutils.tp
 coreutils.vr
+fdl.texi
+getdate.texi
 stamp-vti
 version.texi
-coreutils.tmp
