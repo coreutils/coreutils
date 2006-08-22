@@ -48,9 +48,6 @@ tail: don't use xlseek; it *exits*.
 
 add mktemp?  Suggested by Nelson Beebe
 
-df: alignment problem of `Used' heading with e.g., -mP
-  reported by Karl Berry
-
 tr: support nontrivial equivalence classes, e.g. [=e=] with LC_COLLATE=fr_FR
 
 lib/strftime.c: Since %N is the only format that we need but that
