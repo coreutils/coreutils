@@ -1,5 +1,12 @@
 2006-08-22  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* bootstrap (bootstrap_conf_cleanup): Remove.
+	(excluded_files): New var.
+	* bootstrap.conf: Likewise.
+	* bootstrap (slurp): Exclude files early if they're in the
+	excluded_files list.  That way, their names don't get put into
+	.cvsignore.
+
 	* aclocal.m4, config.hin, configure:
 	Remove from CVS, since ./bootstrap generates them automatically.
 	* .cvsignore: Add INSTALL, Makefile.in, aclocal.m4, config.hin,

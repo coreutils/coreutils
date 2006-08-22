@@ -83,8 +83,8 @@ XGETTEXT_OPTIONS='\\\
  --flag=error:3:c-format --flag=error_at_line:5:c-format\\\
 '
 
-# Clean up after getting gnulib and gettext files.
-bootstrap_conf_cleanup() { :; }
+# Files we don't want to import.
+excluded_files=
 
 # Override the default configuration, if necessary.
 test -r bootstrap.conf && . ./bootstrap.conf
@@ -214,6 +214,9 @@ slurp() {
     sep=
     for file in `ls $1/$dir`; do
       test -d $1/$dir/$file && continue
+      for excluded_file in $excluded_files; do
+	test "$dir/$file" = "$excluded_file" && continue 2
+      done
       if test $file = Makefile.am; then
 	copied=$copied${sep}gnulib.mk; sep=$nl
 	echo "$0: Copying $1/$dir/$file to $dir/gnulib.mk ..." &&
@@ -281,8 +284,6 @@ cp configure.ac $bt2 &&
 slurp $bt2 $bt || exit
 
 rm -fr $bt $bt2 || exit
-
-bootstrap_conf_cleanup || exit
 
 
 # Reconfigure, getting other files.
