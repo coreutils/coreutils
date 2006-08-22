@@ -163,7 +163,7 @@ print_header (void)
 	printf (_("     Size   Used  Avail Use%%"));
     }
   else if (posix_format)
-    printf (_(" %4s-blocks      Used Available Capacity"),
+    printf (_(" %s-blocks      Used Available Capacity"),
 	    umaxtostr (output_block_size, buf));
   else
     {
@@ -275,6 +275,7 @@ show_dev (char const *disk, char const *mount_point,
   struct fs_usage fsu;
   char buf[3][LONGEST_HUMAN_READABLE + 2];
   int width;
+  int col1_adjustment = 0;
   int use_width;
   uintmax_t input_units;
   uintmax_t output_units;
@@ -356,9 +357,19 @@ show_dev (char const *disk, char const *mount_point,
     }
   else
     {
-      width = (human_output_opts & human_autoscale
-	       ? 5 + ! (human_output_opts & human_base_1024)
-	       : 9);
+      if (human_output_opts & human_autoscale)
+	width = 5 + ! (human_output_opts & human_base_1024);
+      else
+	{
+	  width = 9;
+	  if (posix_format)
+	    {
+	      uintmax_t b;
+	      col1_adjustment = -3;
+	      for (b = output_block_size; 9 < b; b /= 10)
+		col1_adjustment++;
+	    }
+	}
       use_width = ((posix_format
 		    && ! (human_output_opts & human_autoscale))
 		   ? 8 : 4);
@@ -380,8 +391,9 @@ show_dev (char const *disk, char const *mount_point,
     }
 
   printf (" %*s %*s %*s ",
-	  width, df_readable (false, total,
-			      buf[0], input_units, output_units),
+	  width + col1_adjustment,
+	  df_readable (false, total,
+		       buf[0], input_units, output_units),
 	  width, df_readable (negate_used, used,
 			      buf[1], input_units, output_units),
 	  width, df_readable (negate_available, available,
