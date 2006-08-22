@@ -1,3 +1,11 @@
+2006-08-22  Bruno Haible  <bruno@clisp.org>
+
+	BeOS portability.
+	* src/uptime.c: Include OS.h if it exists.
+	(print_uptime): On BeOS, use the get_system_info function (actually a
+	macro). Loop through utmp entries only if utmp.h or utmpx.h exists.
+	(uptime): Call read_utmp only if utmp.h or utmpx.h exists.
+
 2006-08-22  Jim Meyering  <jim@meyering.net>
 
 	* .cvsignore: Add ABOUT-NLS.

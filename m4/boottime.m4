@@ -1,7 +1,7 @@
-# boottime.m4 serial 2
+# boottime.m4 serial 3
 # Determine whether this system has infrastructure for obtaining the boot time.
 
-# Copyright (C) 1996, 2000, 2002, 2003, 2004 Free Software Foundation, Inc.
+# Copyright (C) 1996, 2000, 2002, 2003, 2004, 2006 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@ AC_DEFUN([GNULIB_BOOT_TIME],
      [#if HAVE_SYS_PARAM_H
        #include <sys/param.h>
       #endif]])
+  AC_CHECK_HEADERS_ONCE(utmp.h utmpx.h OS.h)
   AC_CACHE_CHECK(
     [whether we can get the system boot time],
     [gnulib_cv_have_boot_time],
@@ -41,14 +42,17 @@ AC_DEFUN([GNULIB_BOOT_TIME],
 # endif
 # include <sys/sysctl.h>
 #endif
-#ifdef HAVE_UTMPX_H
+#if HAVE_UTMPX_H
 # include <utmpx.h>
-#else
+#elif HAVE_UTMP_H
 # include <utmp.h>
+#endif
+#if HAVE_OS_H
+# include <OS.h>
 #endif
 ],
 [[
-#if defined BOOT_TIME || (defined CTL_KERN && defined KERN_BOOTTIME)
+#if defined BOOT_TIME || (defined CTL_KERN && defined KERN_BOOTTIME) || HAVE_OS_H
 /* your system *does* have the infrastructure to determine boot time */
 #else
 please_tell_us_how_to_determine_boot_time_on_your_system

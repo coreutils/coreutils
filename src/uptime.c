@@ -1,5 +1,5 @@
 /* GNU's uptime.
-   Copyright (C) 1992-2002, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1992-2002, 2004, 2005, 2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -26,6 +26,10 @@
 
 #if HAVE_SYSCTL && HAVE_SYS_SYSCTL_H
 # include <sys/sysctl.h>
+#endif
+
+#if HAVE_OS_H
+# include <OS.h>
 #endif
 
 #include "c-strtod.h"
@@ -90,6 +94,16 @@ print_uptime (size_t n, const STRUCT_UTMP *this)
   }
 #endif
 
+#if HAVE_OS_H /* BeOS */
+  {
+    system_info si;
+
+    get_system_info (&si);
+    boot_time = si.boot_time / 1000000;
+  }
+#endif
+
+#if HAVE_UTMPX_H || HAVE_UTMP_H
   /* Loop through all the utmp entries we just read and count up the valid
      ones, also in the process possibly gleaning boottime. */
   while (n--)
@@ -99,6 +113,7 @@ print_uptime (size_t n, const STRUCT_UTMP *this)
 	boot_time = UT_TIME_MEMBER (this);
       ++this;
     }
+#endif
   time_now = time (NULL);
 #if defined HAVE_PROC_UPTIME
   if (uptime == 0)
@@ -163,8 +178,10 @@ uptime (const char *filename, int options)
   size_t n_users;
   STRUCT_UTMP *utmp_buf;
 
+#if HAVE_UTMPX_H || HAVE_UTMP_H
   if (read_utmp (filename, &n_users, &utmp_buf, options) != 0)
     error (EXIT_FAILURE, errno, "%s", filename);
+#endif
 
   print_uptime (n_users, utmp_buf);
 }
