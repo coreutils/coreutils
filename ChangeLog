@@ -2,7 +2,8 @@
 
 	* aclocal.m4, config.hin, configure:
 	Remove from CVS, since ./bootstrap generates them automatically.
-	* .cvsignore: Add INSTALL, Makefile.in, *.cache, *.lineno, *.log.
+	* .cvsignore: Add INSTALL, Makefile.in, aclocal.m4, config.hin,
+	configure, *.cache, *.lineno, *.log.
 	Remove more-specific entries.  This catches files like configure.lineno.
 	* man/.cvsignore: Add Makefile.in.
 	* src/.cvsignore: Add Makefile.in.
