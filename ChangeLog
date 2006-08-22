@@ -1,3 +1,13 @@
+2006-08-22  Jim Meyering  <jim@meyering.net>
+
+	Move the check-AUTHORS rule to be run as part of "make distcheck",
+	rather than "make check".
+	* src/Makefile.am (check): Don't depend on check-AUTHORS; it would
+	cause "make check" to fail on systems unable to build all binaries.
+	* Makefile.maint (check-AUTHORS): New rule.
+	(local-checks-available): Add it here.
+	Reported by Bruno Haible.  Needed for BeOS.
+
 2006-08-21  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/df.c (print_header, show_dev): Use a column width that

@@ -267,7 +267,7 @@ pm = progs-makefile
 pr = progs-readme
 # Ensure that the list of programs in README matches the list
 # of programs we can build.
-check: check-README check-misc check-AUTHORS
+check: check-README check-misc
 .PHONY: check-README
 check-README:
 	rm -rf $(pr) $(pm)

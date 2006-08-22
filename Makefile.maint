@@ -74,7 +74,7 @@ local-checks-available = \
   po-check copyright-check writable-files m4-check author_mark_check \
   changelog-check patch-check strftime-check $(syntax-check-rules) \
   makefile_path_separator_check \
-  makefile-check
+  makefile-check check-AUTHORS
 .PHONY: $(local-checks-available)
 
 local-check = $(filter-out $(local-checks-to-skip), $(local-checks-available))
@@ -307,6 +307,9 @@ strftime-check:
 	  diff -u $@-src $@-info || exit 1;				\
 	  rm -f $@-src $@-info;						\
 	fi
+
+check-AUTHORS:
+	$(MAKE) -C src $@
 
 # Ensure that we use only the standard $(VAR) notation,
 # not @...@ in Makefile.am, now that we can rely on automake
