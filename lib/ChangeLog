@@ -1,3 +1,8 @@
+2006-08-21  Eric Blake  <ebb9@byu.net>
+
+	* Makefile.am (LDADD): Restore this line; it is still needed for
+	t-fpending on platforms without __fpending.
+
 2006-08-20  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Add a bootstrap procedure, so that the CVS version contains fewer

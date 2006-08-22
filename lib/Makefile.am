@@ -23,6 +23,7 @@ AM_CPPFLAGS += -I..
 AM_CFLAGS = $(WARNING_CFLAGS) $(WERROR_CFLAGS)
 
 noinst_PROGRAMS = t-fpending
+LDADD = $(noinst_LIBRARIES)
 
 libcoreutils_a_SOURCES += \
   buffer-lcm.c buffer-lcm.h \
