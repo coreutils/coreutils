@@ -235,7 +235,8 @@ slurp() {
 	    /^AC_DEFUN(\[gt_INTL_SUBDIR_CORE],/,/^]/c\
 	      AC_DEFUN([gt_INTL_SUBDIR_CORE], [])
 	    $a\
-	      AC_DEFUN([gl_LOCK], [])
+	      AC_DEFUN([gl_LOCK], [])\
+	      AC_DEFUN([gl_LOCK_EARLY], [])
 	  ' $1/$dir/$file >$dir/$file
 	else
 	  cp $1/$dir/$file $dir/$file
