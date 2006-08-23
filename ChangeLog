@@ -1,5 +1,8 @@
 2006-08-23  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* src/system.h (EDQUOT): Define if not already defined.
+	Problem reported by Bruno Haible for BeOS.
+
 	* .cvsignore: Remove config.h, config.hin, as they are now
 	in lib.
 	* configure.ac (AC_CONFIG_HEADERS): Move config.h and config.hin

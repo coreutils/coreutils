@@ -104,11 +104,14 @@ you must include <sys/types.h> before including this file
 #include <errno.h>
 
 /* Some systems don't define the following symbols.  */
-#ifndef ENOSYS
-# define ENOSYS (-1)
+#ifndef EDQUOT
+# define EDQUOT (-1)
 #endif
 #ifndef EISDIR
 # define EISDIR (-1)
+#endif
+#ifndef ENOSYS
+# define ENOSYS (-1)
 #endif
 
 #include <stdbool.h>
