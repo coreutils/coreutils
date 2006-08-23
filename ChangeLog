@@ -1,7 +1,7 @@
 2006-08-23  Paul Eggert  <eggert@cs.ucla.edu>
 
-	* bootstrap (slurp): Also put in a dummy definition for
-	gl_LOCK_EARLY, introduced recently into gnulib.
+	* bootstrap (slurp): Define gl_LOCK_EARLY instead of gl_LOCK,
+	to accommodate today's gnulib change.
 
 2006-08-23  Jim Meyering  <jim@meyering.net>
 
