@@ -3,6 +3,7 @@ config.guess
 config.rpath
 config.sub
 depcomp
+gnupload
 install-sh
 mdate-sh
 missing
