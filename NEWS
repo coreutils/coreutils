@@ -15,6 +15,11 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   df now considers BSD "kernfs" file systems to be dummies
 
+** New features
+
+  printf now supports the 'I' flag on hosts whose underlying printf
+  implementations support 'I', e.g., "printf %Id 2".
+
 ** Bug fixes
 
   cp --sparse preserves sparseness at the end of a file, even when

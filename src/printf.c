@@ -517,6 +517,9 @@ print_formatted (const char *format, int argc, char **argv)
 	  for (;; f++, direc_length++)
 	    switch (*f)
 	      {
+#if (__GLIBC__ == 2 && 2 <= __GLIBC_MINOR__) || 3 <= __GLIBC__
+	      case 'I':
+#endif
 	      case '\'':
 		ok['a'] = ok['A'] = ok['c'] = ok['e'] = ok['E'] =
 		  ok['o'] = ok['s'] = ok['x'] = ok['X'] = 0;
