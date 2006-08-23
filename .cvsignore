@@ -8,8 +8,6 @@ Makefile
 Makefile.in
 THANKS-to-translators
 aclocal.m4
-config.h
-config.hin
 config.status
 configure
 stamp-h1

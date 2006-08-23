@@ -19,7 +19,6 @@
 
 include gnulib.mk
 
-AM_CPPFLAGS += -I..
 AM_CFLAGS = $(WARNING_CFLAGS) $(WERROR_CFLAGS)
 
 noinst_PROGRAMS = t-fpending

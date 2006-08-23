@@ -1,5 +1,11 @@
 2006-08-23  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* .cvsignore: Remove config.h, config.hin, as they are now
+	in lib.
+	* configure.ac (AC_CONFIG_HEADERS): Move config.h and config.hin
+	to lib.
+	* src/Makefile.am (AM_CPPFLAGS): Remove '-I..'; no longer needed.
+
 	* bootstrap (slurp): Define gl_LOCK_EARLY instead of gl_LOCK,
 	to accommodate today's gnulib change.
 

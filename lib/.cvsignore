@@ -41,6 +41,8 @@ close-stream.h
 closeout.c
 closeout.h
 config.charset
+config.h
+config.hin
 creat-safer.c
 cycle-check.c
 cycle-check.h
