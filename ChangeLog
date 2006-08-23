@@ -1,4 +1,30 @@
+2006-08-23  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/stat.c (HAVE_STRUCT_STATXFS_F_FSID___VAL): Define.  This
+	macro was being used without being defined.
+	(SB_F_NAMEMAX): Remove cast.
+	(f_fsid) [BeOS]: Likewise.
+	(OUT_NAMEMAX): Renamed from NAMEMAX_FORMAT, with a new meaning.
+	All uses changed.
+	(out_string, out_int, out_uint, out_uint_o, out_uint_x): New
+	functions.
+	(xstrcat): Remove.  All uses changed to use the above functions.
+	(print_statfs, print_stat): 2nd arg is now the prefix len, not the
+	buffer len.  All uses changed.  Output '?', not '*', for unknown
+	data or errors.  Do not assume signed values can be interchanged
+	with unsigned when printing.
+	(print_statfs): For %i, print the fsid as a single int, not as a
+	pair.
+	(print_it): Quote invalid format better.
+
+	* NEWS: printf supports the I flag.
+	* src/printf.c (print_formatted) [glibc 2.2 or later]: Likewise.
+
 2006-08-23  Bruno Haible  <bruno@clisp.org>
+
+	* src/stat.c (STRUCT_STATVFS, statfs, f_fsid, f_blocks, f_bfree) [BeOS]:
+	(f_bavail, f_bsize, STATFS_FRSIZE, f_files, f_ffree) [BeOS]:
+	(STATXFS_FILE_SYSTEM_TYPE_MEMBER_NAME) [BeOS]: Define.
 
 	* src/ls.c (SA_RESTART): Fallback define.
 
