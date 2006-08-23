@@ -72,6 +72,9 @@
 #  define siginterrupt(sig, flag) /* empty */
 # endif
 #endif
+#ifndef SA_RESTART
+# define SA_RESTART 0
+#endif
 
 #include "system.h"
 #include <fnmatch.h>

@@ -1,3 +1,7 @@
+2006-08-23  Bruno Haible  <bruno@clisp.org>
+
+	* src/ls.c (SA_RESTART): Fallback define.
+
 2006-08-23  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/system.h (EDQUOT): Define if not already defined.
