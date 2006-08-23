@@ -1,3 +1,7 @@
+2006-08-23  Jim Meyering  <jim@meyering.net>
+
+	* NEWS: Mention the sweeping infrastructure changes.
+
 2006-08-22  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* bootstrap.conf (gnulib_modules): Add gnupload.

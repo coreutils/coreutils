@@ -2,6 +2,12 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Major changes in release 6.2-cvs (2006-??-??) [unstable]
 
+** Infrastructure changes
+
+  Coreutils now uses gnulib via the gnulib-tool script.
+  If you check the source out from CVS, then follow the instructions
+  in README-cvs.  Although this represents a large change to the
+  infrastructure, it should cause no change in the actual tools.
 
 * Major changes in release 6.1 (2006-08-19) [unstable]
 
