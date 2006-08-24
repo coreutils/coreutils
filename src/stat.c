@@ -410,7 +410,7 @@ print_statfs (char *pformat, size_t prefix_len, char m, char const *filename,
 	uintmax_t fsid =
 	  (val1
 	   + (sizeof statfsbuf->f_fsid.__val[1] < sizeof fsid
-	      ? val0 << (CHAR_BIT * sizeof sizeof statfsbuf->f_fsid.__val[1])
+	      ? val0 << (CHAR_BIT * sizeof statfsbuf->f_fsid.__val[1])
 	      : 0));
 #else
 	uintmax_t fsid = statfsbuf->f_fsid;

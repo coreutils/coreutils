@@ -1,3 +1,7 @@
+2006-08-24  Jim Meyering  <jim@meyering.net>
+
+	* src/stat.c (print_statfs): Fix typo: remove extra "sizeof".
+
 2006-08-23  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/stat.c (HAVE_STRUCT_STATXFS_F_FSID___VAL): Define.  This
