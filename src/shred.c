@@ -425,7 +425,7 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
 	    break;
 	}
       if (type < 0)
-	randread (s, r, lim);
+	randread (s, &r, lim);
       /* Loop to retry partial writes. */
       for (soff = 0; soff < lim; soff += ssize, first_write = false)
 	{
