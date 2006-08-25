@@ -108,11 +108,18 @@
 #include "randint.h"
 #include "randread.h"
 
-#define DEFAULT_PASSES 25	/* Default */
+/* Default number of times to overwrite.  */
+enum { DEFAULT_PASSES = 25 };
 
 /* How many seconds to wait before checking whether to output another
    verbose output line.  */
-#define VERBOSE_UPDATE 5
+enum { VERBOSE_UPDATE = 5 };
+
+/* Sector size and corresponding mask, for recovering after write failures.
+   The size must be a power of 2.  */
+enum { SECTOR_SIZE = 512 };
+enum { SECTOR_MASK = SECTOR_SIZE - 1 };
+verify (0 < SECTOR_SIZE && (SECTOR_SIZE & SECTOR_MASK) == 0);
 
 struct Options
 {
@@ -251,13 +258,13 @@ fillpattern (int type, unsigned char *r, size_t size)
   r[1] = (bits >> 8) & 255;
   r[2] = bits & 255;
   for (i = 3; i < size / 2; i *= 2)
-    memcpy ((char *) r + i, (char *) r, i);
+    memcpy (r + i, r, i);
   if (i < size)
-    memcpy ((char *) r + i, (char *) r, size - i);
+    memcpy (r + i, r, size - i);
 
-  /* Invert the first bit of every 512-byte sector. */
+  /* Invert the first bit of every sector. */
   if (type & 0x1000)
-    for (i = 0; i < size; i += 512)
+    for (i = 0; i < size; i += SECTOR_SIZE)
       r[i] ^= 0x80;
 }
 
@@ -358,7 +365,18 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
   size_t lim;			/* Amount of data to try writing */
   size_t soff;			/* Offset into buffer for next write */
   ssize_t ssize;		/* Return value from write */
-  uint32_t r[3 * 1024];		/* Fill pattern.  */
+
+  /* Fill pattern buffer.  Aligning it to a 32-bit boundary speeds up randread
+     in some cases.  */
+  typedef uint32_t fill_pattern_buffer[3 * 1024];
+  union
+  {
+    fill_pattern_buffer buffer;
+    char c[sizeof (fill_pattern_buffer)];
+    unsigned char u[sizeof (fill_pattern_buffer)];
+  } r;
+
+  off_t sizeof_r = sizeof r;
   char pass_string[PASS_NAME_SIZE];	/* Name of current pass */
   bool write_error = false;
   bool first_write = true;
@@ -367,7 +385,7 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
   char previous_offset_buf[LONGEST_HUMAN_READABLE + 1];
   char const *previous_human_offset IF_LINT (= 0);
 
-  if (lseek (fd, (off_t) 0, SEEK_SET) == -1)
+  if (lseek (fd, 0, SEEK_SET) == -1)
     {
       error (0, errno, _("%s: cannot rewind"), qname);
       return -1;
@@ -376,13 +394,9 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
   /* Constant fill patterns need only be set up once. */
   if (type >= 0)
     {
-      lim = sizeof r;
-      if ((off_t) lim > size && size != -1)
-	{
-	  lim = (size_t) size;
-	}
-      fillpattern (type, (unsigned char *) r, lim);
-      passname ((unsigned char *) r, pass_string);
+      lim = (0 <= size && size < sizeof_r ? size : sizeof r);
+      fillpattern (type, r.u, lim);
+      passname (r.u, pass_string);
     }
   else
     {
@@ -402,11 +416,11 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
     {
       /* How much to write this time? */
       lim = sizeof r;
-      if ((off_t) lim > size - offset && size != -1)
+      if (0 <= size && size - offset < sizeof_r)
 	{
 	  if (size < offset)
 	    break;
-	  lim = (size_t) (size - offset);
+	  lim = size - offset;
 	  if (!lim)
 	    break;
 	}
@@ -415,11 +429,10 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
       /* Loop to retry partial writes. */
       for (soff = 0; soff < lim; soff += ssize, first_write = false)
 	{
-	  ssize = write (fd, (char *) r + soff, lim - soff);
+	  ssize = write (fd, r.c + soff, lim - soff);
 	  if (ssize <= 0)
 	    {
-	      if ((ssize == 0 || errno == ENOSPC)
-		  && size == -1)
+	      if (size < 0 && (ssize == 0 || errno == ENOSPC))
 		{
 		  /* Ah, we have found the end of the file */
 		  *sizep = size = offset + soff;
@@ -444,22 +457,20 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
 		      continue;
 		    }
 		  error (0, errnum, _("%s: error writing at offset %s"),
-			 qname, umaxtostr ((uintmax_t) offset + soff, buf));
-		  /*
-		   * I sometimes use shred on bad media, before throwing it
-		   * out.  Thus, I don't want it to give up on bad blocks.
-		   * This code assumes 512-byte blocks and tries to skip
-		   * over them.  It works because lim is always a multiple
-		   * of 512, except at the end.
-		   */
-		  if (errnum == EIO && soff % 512 == 0 && lim >= soff + 512
-		      && size != -1)
+			 qname, umaxtostr (offset + soff, buf));
+
+		  /* 'shred' is often used on bad media, before throwing it
+		     out.  Thus, it shouldn't give up on bad blocks.  This
+		     code works because lim is always a multiple of
+		     SECTOR_SIZE, except at the end.  */
+		  verify (sizeof r % SECTOR_SIZE == 0);
+		  if (errnum == EIO && 0 <= size && (soff | SECTOR_MASK) < lim)
 		    {
-		      if (lseek (fd, (off_t) (offset + soff + 512), SEEK_SET)
-			  != -1)
+		      size_t soff1 = (soff | SECTOR_MASK) + 1;
+		      if (lseek (fd, offset + soff1, SEEK_SET) != -1)
 			{
 			  /* Arrange to skip this block. */
-			  ssize = 512;
+			  ssize = soff1 - soff;
 			  write_error = true;
 			  continue;
 			}
@@ -496,7 +507,7 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
 	  if (offset == size
 	      || !STREQ (previous_human_offset, human_offset))
 	    {
-	      if (size == -1)
+	      if (size < 0)
 		error (0, 0, _("%s: pass %lu/%lu (%s)...%s"),
 		       qname, k, n, pass_string, human_offset);
 	      else
@@ -797,7 +808,7 @@ do_wipefd (int fd, char const *qname, struct randint_source *s,
 	}
       else
 	{
-	  size = lseek (fd, (off_t) 0, SEEK_END);
+	  size = lseek (fd, 0, SEEK_END);
 	  if (size <= 0)
 	    {
 	      /* We are unable to determine the length, up front.
@@ -855,7 +866,7 @@ do_wipefd (int fd, char const *qname, struct randint_source *s,
   /* Okay, now deallocate the data.  The effect of ftruncate on
      non-regular files is unspecified, so don't worry about any
      errors reported for them.  */
-  if (flags->remove_file && ftruncate (fd, (off_t) 0) != 0
+  if (flags->remove_file && ftruncate (fd, 0) != 0
       && S_ISREG (st.st_mode))
     {
       error (0, errno, _("%s: error truncating"), qname);
@@ -1115,13 +1126,12 @@ main (int argc, char **argv)
 	  {
 	    uintmax_t tmp;
 	    if (xstrtoumax (optarg, NULL, 10, &tmp, NULL) != LONGINT_OK
-		|| (uint32_t) tmp != tmp
-		|| ((size_t) (tmp * sizeof (int)) / sizeof (int) != tmp))
+		|| MIN (UINT32_MAX, SIZE_MAX / sizeof (int)) < tmp)
 	      {
 		error (EXIT_FAILURE, 0, _("%s: invalid number of passes"),
 		       quotearg_colon (optarg));
 	      }
-	    flags.n_iterations = (size_t) tmp;
+	    flags.n_iterations = tmp;
 	  }
 	  break;
 
