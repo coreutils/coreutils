@@ -10,4 +10,4 @@ THANKS-to-translators
 aclocal.m4
 config.status
 configure
-stamp-h1
+coreutils-*

@@ -1,3 +1,28 @@
+2006-08-25  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* .cvsignore: Remove stamp-h1.  Add coreutils-*, to ignore
+	tarballs.
+	* bootstrap.conf: Add configmake, verify.
+	* src/.cvsignore: Remove localedir.h.
+	* src/Makefile.am (localedir, DISTCLEANFILES, localedir.h): Remove;
+	subsumed by configmake.
+	* src/system.h: Include configmake.h rather than localedir.h
+	(LOCALEDIR): New macro.
+
+	Rewrite to avoid some unnecessary casts, macros, literals.
+	* src/shred.c (DEFAULT_PASSES, VERBOSE_UPDATE): Now constants,
+	not macros.
+	(SECTOR_SIZE, SECTOR_MASK): New constants.
+	(fillpattern, dopass, do_wipefd, main): Remove unnecessary casts,
+	and use the SECTOR_* constants when applicable.  Check for size <
+	0 rather than size == -1, since negative-size files are a sign of
+	trouble anyway.
+
+2006-08-25  Bruno Haible  <bruno@clisp.org>
+
+	* src/shred.c (dopass): Assume a continuable error if EIO even
+	if the current position is not a multiple of 512.
+
 2006-08-24  Jim Meyering  <jim@meyering.net>
 
 	* src/stat.c (print_statfs): Fix typo: remove extra "sizeof".

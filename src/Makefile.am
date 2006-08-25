@@ -48,6 +48,7 @@ noinst_HEADERS = \
 
 EXTRA_DIST = dcgen dircolors.hin tac-pipe.c \
   groups.sh wheel-gen.pl extract-magic c99-to-c89.diff
+BUILT_SOURCES =
 CLEANFILES = $(SCRIPTS) su
 
 AM_CPPFLAGS = -I$(srcdir) -I$(top_srcdir)/lib -I../lib
@@ -202,15 +203,6 @@ sha512sum_SOURCES = md5sum.c
 sha512sum_CPPFLAGS = -DHASH_ALGO_SHA512=1 $(AM_CPPFLAGS)
 
 editpl = sed -e 's,@''PERL''@,$(PERL),g'
-
-localedir = $(datadir)/locale
-BUILT_SOURCES = localedir.h
-DISTCLEANFILES = localedir.h
-localedir.h:
-	@rm -f $@ $@-t
-	echo '#define LOCALEDIR "$(localedir)"' >$@-t
-	@chmod a-w $@-t
-	mv $@-t $@
 
 BUILT_SOURCES += dircolors.h
 dircolors.h: dcgen dircolors.hin
