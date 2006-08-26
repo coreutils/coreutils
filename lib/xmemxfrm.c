@@ -18,9 +18,7 @@
 
 /* Written by Paul Eggert <eggert@cs.ucla.edu>.  */
 
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
+#include <config.h>
 
 #include "xmemxfrm.h"
 

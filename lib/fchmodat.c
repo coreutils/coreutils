@@ -17,9 +17,7 @@
 
 /* written by Jim Meyering */
 
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
+#include <config.h>
 
 #include "openat.h"
 #include "dirname.h" /* solely for definition of IS_ABSOLUTE_FILE_NAME */

@@ -1,3 +1,16 @@
+2006-08-25  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* .x-sc_no_if_have_config_h: Remove; no longer needed.
+	* .x-sc_prohibit_assert_without_use: Remove; it was empty.
+	* .x-sc_two_space_separator_in_usage: Likewise.
+	* Makefile.maint (sc_no_have_config_h): Renamed from
+	sc_no_if_have_config_h, since it now checks that HAVE_CONFIG_H
+	is absent everywhere.
+	* bootstrap.conf (gnulib_modules): Add config-h.
+	* src/shred.c: Include <config.h> unconditionally, since
+	we now assume config.h exists.
+	* src/dircolors.c: Likewise.
+
 2006-08-26  Jim Meyering  <jim@meyering.net>
 
 	"ls --color" would highlight other-writable and sticky directories

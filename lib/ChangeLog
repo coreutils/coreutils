@@ -1,5 +1,29 @@
 2006-08-25  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* euidaccess-stat.c: Include <config.h> unconditionally, since
+	we now assume config.h exists.
+	* fchmodat.c: Likewise.
+	* fd-reopen.c: Likewise.
+	* fdopendir-glibc.c: Likewise.
+	* memxfrm.c: Likewise.
+	* printf-parse.c: Likewise.
+	* rand-isaac.c: Likewise.
+	* randint.c: Likewise.
+	* randperm.c: Likewise.
+	* randread.c: Likewise.
+	* root-dev-ino.c: Likewise.
+	* sha256.c: Likewise.
+	* sha512.c: Likewise.
+	* stdopen.c: Likewise.
+	* strintcmp.c: Likewise.
+	* strnumcmp.c: Likewise.
+	* t-chdir-long: Likewise.
+	* tsearch.c: Likewise.
+	* unicodeio.c: Likewise.
+	* vasnprintf.c: Likewise.
+	* xfts.c: Likewise.
+	* xmemxfrm.c: Likewise.
+
 	* .cvsignore: Add configmake.h, stamp-h1.
 
 2006-08-23  Paul Eggert  <eggert@cs.ucla.edu>

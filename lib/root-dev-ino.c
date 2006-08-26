@@ -1,5 +1,5 @@
 /* root-dev-ino.c -- get the device and inode numbers for `/'.
-   Copyright (C) 2003, 2005 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2005, 2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -17,12 +17,11 @@
 
 /* Written by Jim Meyering. */
 
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
+#include <config.h>
+
+#include "root-dev-ino.h"
 
 #include <stdlib.h>
-#include "root-dev-ino.h"
 
 /* Call lstat to get the device and inode numbers for `/'.
    Upon failure, return NULL.  Otherwise, set the members of

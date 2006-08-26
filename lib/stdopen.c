@@ -1,6 +1,6 @@
 /* stdopen.c - ensure that the three standard file descriptors are in use
 
-   Copyright (C) 2005 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -18,9 +18,7 @@
 
 /* Written by Paul Eggert and Jim Meyering.  */
 
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
+#include <config.h>
 
 #include "stdopen.h"
 

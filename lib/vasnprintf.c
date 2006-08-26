@@ -22,9 +22,8 @@
 # define _GNU_SOURCE    1
 #endif
 
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
+#include <config.h>
+
 #ifndef IN_LIBINTL
 # include <alloca.h>
 #endif

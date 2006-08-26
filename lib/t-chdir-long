@@ -1,7 +1,7 @@
 #!/bin/sh
 # Exercise chdir-long's sample main program.
 
-# Copyright (C) 2005 Free Software Foundation, Inc.
+# Copyright (C) 2005, 2006 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 # temporary directories are easier to remove.
 # FIXME: don't clobber a.out
 
-gcc -DTEST_CHDIR=1 -DHAVE_CONFIG_H -I.. -g -O -W -Wall \
+gcc -DTEST_CHDIR -g -O -W -Wall \
   chdir-long.c libcoreutils.a
 
 vg='valgrind --track-fds=yes --leak-check=yes --quiet --num-callers=9'

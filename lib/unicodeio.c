@@ -21,9 +21,7 @@
 /* Note: This file requires the locale_charset() function.  See in
    libiconv-1.8/libcharset/INTEGRATE for how to obtain it.  */
 
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
+#include <config.h>
 
 /* Specification.  */
 #include "unicodeio.h"

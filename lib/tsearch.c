@@ -1,4 +1,6 @@
-/* Copyright (C) 1995, 1996, 1997, 2000, 2005 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 2000, 2005, 2006 Free Software
+   Foundation, Inc.
+
    This file is part of the GNU C Library.
    Contributed by Bernd Schmidt <crux@Pool.Informatik.RWTH-Aachen.DE>, 1997.
 
@@ -84,9 +86,7 @@
    In this case, A has been rotated left.  This preserves the ordering of the
    binary tree.  */
 
-#ifdef HAVE_CONFIG_H
-# include <config.h>
-#endif
+#include <config.h>
 
 #if __GNUC__
 # define alloca __builtin_alloca

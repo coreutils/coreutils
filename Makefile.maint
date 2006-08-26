@@ -140,9 +140,9 @@ sc_file_system:
 	    'rewrite to use "file system"' 1>&2;			\
 	    exit 1; } || :
 
-sc_no_if_have_config_h:
-	@grep -n '^# *if HAVE_CONFIG_H' $$($(CVS_LIST_EXCEPT)) &&	\
-	  { echo '$(ME): found use of #if HAVE_CONFIG_H; use #ifdef'	\
+sc_no_have_config_h:
+	@grep -n 'HAVE''_CONFIG_H' $$($(CVS_LIST_EXCEPT)) &&		\
+	  { echo '$(ME): found use of HAVE''_CONFIG_H; remove'		\
 		1>&2; exit 1; } || :
 
 # Nearly all .c files must include <config.h>.
