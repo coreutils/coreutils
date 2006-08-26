@@ -48,19 +48,16 @@ fi
 
 fail=0
 
-# Ensure that LS_COLORS is set to known values.
-eval "`dircolors -b`"
-
 ls --color=always > out || fail=1
 cat -A out > o1 || fail=1
 echo >> o1 || fail=1
 mv o1 out || fail=1
 
 cat <<\EOF > exp || fail=1
-^[[00m^[[01;34md^[[00m$
-^[[34;42mother-writable^[[00m$
-^[[00mout^[[00m$
-^[[37;44msticky^[[00m$
+^[[0m^[[01;34md^[[0m$
+^[[34;42mother-writable^[[0m$
+^[[0mout^[[0m$
+^[[37;44msticky^[[0m$
 ^[[m
 EOF
 

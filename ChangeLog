@@ -8,6 +8,12 @@
 
 2006-08-26  Jim Meyering  <jim@meyering.net>
 
+	This test was failing in some environments.
+	* tests/ls/color-dtype-dir: Don't rely on eval "`dircolors -b`"
+	to set LS_COLORS in the environment.
+	* tests/envvar-check: Instead, ensure that LS_COLORS is not set.
+	Reported by Bob Proulx.
+
 	* src/c99-to-c89.diff: Remove hunk for copy.c; no longer needed.
 
 	* Makefile.am (EXTRA_DIST): Remove these files here, too:
