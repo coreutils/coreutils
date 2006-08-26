@@ -15,6 +15,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   no differently than regular directories on a file system with
   dirent.d_type support.
 
+  "mv -T --verbose --backup=t A B" now prints the " (backup: B.~1~)"
+  suffix when A and B are directories as well as when they are not.
+
 
 * Major changes in release 6.1 (2006-08-19) [unstable]
 

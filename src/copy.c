@@ -933,6 +933,18 @@ abandon_move (const struct cp_options *x,
               && ! yesno ()));
 }
 
+/* Print --verbose output on standard output, e.g. `new' -> `old'.
+   If BACKUP_DST_NAME is non-NULL, then also indicate that it is
+   the name of a backup file.  */
+static void
+emit_verbose (char const *src, char const *dst, char const *backup_dst_name)
+{
+  printf ("%s -> %s", quote_n (0, src), quote_n (1, dst));
+  if (backup_dst_name)
+    printf (_(" (backup: %s)"), quote (backup_dst_name));
+  putchar ('\n');
+}
+
 /* Copy the file SRC_NAME to the file DST_NAME.  The files may be of
    any type.  NEW_DST should be true if the file DST_NAME cannot
    exist because its parent directory was just created; NEW_DST should
@@ -944,7 +956,6 @@ abandon_move (const struct cp_options *x,
    Set *COPY_INTO_SELF if SRC_NAME is a parent of (or the
    same as) DST_NAME; otherwise, clear it.
    Return true if successful.  */
-
 static bool
 copy_internal (char const *src_name, char const *dst_name,
 	       bool new_dst,
@@ -1169,9 +1180,7 @@ copy_internal (char const *src_name, char const *dst_name,
 		}
 	    }
 
-	  bool backup_directories = true;
-	  if (x->backup_type != no_backups
-	      && (!S_ISDIR (dst_sb.st_mode) || backup_directories))
+	  if (x->backup_type != no_backups)
 	    {
 	      char *tmp_backup = find_backup_file_name (dst_name,
 							x->backup_type);
@@ -1242,12 +1251,7 @@ copy_internal (char const *src_name, char const *dst_name,
      directory.  So --verbose should not announce anything until we're
      sure we'll create a directory. */
   if (x->verbose && !S_ISDIR (src_type))
-    {
-      printf ("%s -> %s", quote_n (0, src_name), quote_n (1, dst_name));
-      if (backup_succeeded)
-	printf (_(" (backup: %s)"), quote (dst_backup));
-      putchar ('\n');
-    }
+    emit_verbose (src_name, dst_name, backup_succeeded ? dst_backup : NULL);
 
   /* Associate the destination file name with the source device and inode
      so that if we encounter a matching dev/ino pair in the source tree
@@ -1362,7 +1366,9 @@ copy_internal (char const *src_name, char const *dst_name,
       if (rename (src_name, dst_name) == 0)
 	{
 	  if (x->verbose && S_ISDIR (src_type))
-	    printf ("%s -> %s\n", quote_n (0, src_name), quote_n (1, dst_name));
+	    emit_verbose (src_name, dst_name,
+			  backup_succeeded ? dst_backup : NULL);
+
 	  if (rename_succeeded)
 	    *rename_succeeded = true;
 
@@ -1526,7 +1532,7 @@ copy_internal (char const *src_name, char const *dst_name,
 	  remember_copied (dst_name, dst_sb.st_ino, dst_sb.st_dev);
 
 	  if (x->verbose)
-	    printf ("%s -> %s\n", quote_n (0, src_name), quote_n (1, dst_name));
+	    emit_verbose (src_name, dst_name, NULL);
 	}
 
       /* Are we crossing a file system boundary?  */

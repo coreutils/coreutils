@@ -1,3 +1,12 @@
+2006-08-26  Jim Meyering  <jim@meyering.net>
+
+	Fix "mv --verbose --backup" so its output includes the
+	" (backup: foo.~1~)" suffix also when backing up a directory.
+	* NEWS: Report this bug fix.
+	* src/copy.c (emit_verbose): New function, factored out of...
+	(copy_internal): ...here.  Use the new function.
+	* tests/mv/backup-dir: Test for the above fix.
+
 2006-08-25  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* .x-sc_no_if_have_config_h: Remove; no longer needed.
