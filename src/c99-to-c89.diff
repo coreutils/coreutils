@@ -1,27 +1,3 @@
-Index: src/copy.c
-===================================================================
-RCS file: /fetish/cu/src/copy.c,v
-retrieving revision 1.203
-diff -u -p -r1.203 copy.c
---- src/copy.c	29 Jul 2006 17:13:28 -0000	1.203
-+++ src/copy.c	17 Aug 2006 09:18:52 -0000
-@@ -1168,7 +1168,7 @@ copy_internal (char const *src_name, cha
- 		  return false;
- 		}
- 	    }
--
-+	  {
- 	  bool backup_directories = true;
- 	  if (x->backup_type != no_backups
- 	      && (!S_ISDIR (dst_sb.st_mode) || backup_directories))
-@@ -1235,6 +1235,7 @@ copy_internal (char const *src_name, cha
- 		}
- 	      new_dst = true;
- 	    }
-+	  }
- 	}
-     }
- 
 Index: src/remove.c
 ===================================================================
 RCS file: /fetish/cu/src/remove.c,v

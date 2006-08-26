@@ -1,5 +1,7 @@
 2006-08-26  Jim Meyering  <jim@meyering.net>
 
+	* src/c99-to-c89.diff: Remove hunk for copy.c; no longer needed.
+
 	* Makefile.am (EXTRA_DIST): Remove these files here, too:
 	.x-sc_no_if_have_config_h, .x-sc_prohibit_assert_without_use,
 	.x-sc_two_space_separator_in_usage.
