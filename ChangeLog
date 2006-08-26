@@ -1,3 +1,11 @@
+2006-08-26  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* bootstrap (get_translations): Skip this if WGET_COMMAND is empty.
+	Fail if the first "echo" fails.  Suppress diagnostics from "ls po/*.po"
+	since there might not be any .po files.
+	(WGET_COMMAND): Set to empty if wget doesn't
+	seem to be available.  Don't export; shouldn't be needed.
+
 2006-08-26  Jim Meyering  <jim@meyering.net>
 
 	* src/c99-to-c89.diff: Remove hunk for copy.c; no longer needed.
