@@ -1,5 +1,9 @@
 2006-08-26  Jim Meyering  <jim@meyering.net>
 
+	* Makefile.am (EXTRA_DIST): Remove these files here, too:
+	.x-sc_no_if_have_config_h, .x-sc_prohibit_assert_without_use,
+	.x-sc_two_space_separator_in_usage.
+
 	Fix "mv --verbose --backup" so its output includes the
 	" (backup: foo.~1~)" suffix also when backing up a directory.
 	* NEWS: Report this bug fix.

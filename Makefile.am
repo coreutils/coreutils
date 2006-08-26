@@ -29,12 +29,9 @@ EXTRA_DIST = Makefile.cfg Makefile.maint GNUmakefile \
   .x-sc_file_system .x-sc_obsolete_symbols \
   .x-sc_unmarked_diagnostics \
   .x-sc_useless_cpp_parens \
-  .x-sc_no_if_have_config_h \
   .x-sc_require_config_h \
-  .x-sc_prohibit_assert_without_use \
   .x-sc_prohibit_atoi_atof \
   .x-sc_trailing_blank \
-  .x-sc_two_space_separator_in_usage \
   announce-gen \
   build-aux/cvsu \
   build-aux/vc-list-files \
