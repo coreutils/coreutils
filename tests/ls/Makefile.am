@@ -21,6 +21,7 @@
 AUTOMAKE_OPTIONS = 1.2 gnits
 
 TESTS = \
+  color-dtype-dir \
   stat-failed \
   stat-dtype \
   inode dangle file-type recursive dired infloop \

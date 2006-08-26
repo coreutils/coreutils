@@ -1,3 +1,16 @@
+2006-08-26  Jim Meyering  <jim@meyering.net>
+
+	"ls --color" would highlight other-writable and sticky directories
+	no differently than regular directories on a file system with
+	dirent.d_type support.
+	* NEWS: Say the above.
+	* src/ls.c (gobble_file): With --color, also stat the file when
+	we know it is a directory.
+	Derived from an anonymous one-line fix and bug report:
+	<https://savannah.gnu.org/bugs/?15043>.
+	* tests/ls/color-dtype-dir: New file.  Test for the above fix.
+	* tests/ls/Makefile.am (TESTS): Add color-dtype-dir.
+
 2006-08-25  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* .cvsignore: Remove stamp-h1.  Add coreutils-*, to ignore

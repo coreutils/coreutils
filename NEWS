@@ -9,6 +9,13 @@ GNU coreutils NEWS                                    -*- outline -*-
   in README-cvs.  Although this represents a large change to the
   infrastructure, it should cause no change in the actual tools.
 
+** Bug fixes
+
+  "ls --color" would highlight other-writable and sticky directories
+  no differently than regular directories on a file system with
+  dirent.d_type support.
+
+
 * Major changes in release 6.1 (2006-08-19) [unstable]
 
 ** Changes in behavior

@@ -2531,6 +2531,10 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
 
   if (command_line_arg
       || format_needs_stat
+      /* When coloring a directory (we may know the type from
+	 direct.d_type), we have to stat it in order to indicate
+	 sticky and/or other-writable attributes.  */
+      || (type == directory && print_with_color)
       || (print_inode
 	  && (inode == NOT_AN_INODE_NUMBER
 	      /* When dereferencing symlinks, the inode must come from
