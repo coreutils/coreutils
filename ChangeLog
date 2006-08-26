@@ -12,6 +12,7 @@
 	* src/copy.c (emit_verbose): New function, factored out of...
 	(copy_internal): ...here.  Use the new function.
 	* tests/mv/backup-dir: Test for the above fix.
+	* tests/mv/Makefile.am (TESTS): Add backup-dir.
 
 2006-08-25  Paul Eggert  <eggert@cs.ucla.edu>
 

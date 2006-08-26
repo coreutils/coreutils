@@ -22,6 +22,7 @@ AUTOMAKE_OPTIONS = 1.3 gnits
 
 XFAIL_TESTS = acl
 TESTS = \
+  backup-dir \
   dir2dir \
   no-target-dir \
   atomic \
