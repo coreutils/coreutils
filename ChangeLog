@@ -240,7 +240,7 @@
 	(gl_IGNORE_UNUSED_LIBRARIES): Remove; now done by gnulib.
 	(gl_EARLY): Add.
 	(gl_MACROS): Call just after gl_EARLY, just for clarity.
-	* src/c99-to-c98.diff: Remove patch to ls.c; no longer needed.
+	* src/c99-to-c89.diff: Remove patch to ls.c; no longer needed.
 	* src/kill.c (strtoimax): Remove decl.
 	* src/ls.c: Include "wcwidth.h" instead of rolling it ourselves.
 	* src/wc.c: Likewise.
