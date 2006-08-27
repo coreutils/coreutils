@@ -1033,7 +1033,8 @@ copy_internal (char const *src_name, char const *dst_name,
 	    }
 	}
       else
-	{
+	{ /* Here, we know that dst_name exists, at least to the point
+	     that it is XSTAT'able.  */
 	  bool return_now;
 	  bool unlink_src;
 	  bool ok = same_file_ok (src_name, &src_sb, dst_name, &dst_sb,
@@ -1067,6 +1068,8 @@ copy_internal (char const *src_name, char const *dst_name,
 		{
 		  if (x->move_mode && x->backup_type != no_backups)
 		    {
+		      /* Moving/copying a directory onto an existing
+			 non-directory is ok only with --backup.  */
 		    }
 		  else
 		    {
@@ -1101,6 +1104,8 @@ copy_internal (char const *src_name, char const *dst_name,
 		{
 		  if (x->move_mode && x->backup_type != no_backups)
 		    {
+		      /* Moving/copying a non-directory onto an existing
+			 directory is ok only with --backup.  */
 		    }
 		  else
 		    {

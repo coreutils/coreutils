@@ -1,3 +1,7 @@
+2006-08-27  Jim Meyering  <jim@meyering.net>
+
+	* src/copy.c (copy_internal): Add comments.
+
 2006-08-26  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/Makefile.am (AM_CPPFLAGS): Remove -I$(srcdir) and -I../lib,
