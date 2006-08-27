@@ -4,7 +4,7 @@
 	Fail if the first "echo" fails.  Suppress diagnostics from "ls po/*.po"
 	since there might not be any .po files.
 	(WGET_COMMAND): Set to empty if wget doesn't
-	seem to be available.  Don't export; shouldn't be needed.
+	seem to be available.
 
 2006-08-26  Jim Meyering  <jim@meyering.net>
 

@@ -185,7 +185,7 @@ get_translations() {
 	printf "    rm -f %s/%s.po; }; } &&\n", subdir, lang
       }
       END { print ":" }
-    ' | sh;;
+    ' | WGET_COMMAND="$WGET_COMMAND" sh;;
   esac &&
   ls "$subdir"/*.po 2>/dev/null |
     sed 's|.*/||; s|\.po$||' >"$subdir/LINGUAS" &&
