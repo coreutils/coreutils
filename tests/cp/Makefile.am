@@ -21,6 +21,7 @@
 AUTOMAKE_OPTIONS = 1.1 gnits
 
 TESTS = \
+  src-base-dot \
   sparse \
   link-no-deref \
   cp-deref \

@@ -1,5 +1,11 @@
 2006-08-27  Jim Meyering  <jim@meyering.net>
 
+	* src/copy.c (copy_internal): Don't make a backup if the last
+	component of the source name is "." or "..".
+	Reported by Andreas Schwab in https://savannah.gnu.org/bugs/?17540.
+	* tests/cp/src-base-dot: New file.  Test for the above fix.
+	* tests/cp/Makefile.am (TESTS): Add src-base-dot.
+
 	* src/system.h (DOT_OR_DOTDOT): Remove macro.  Rewrite as a...
 	(dot_or_dotdot): ...new static inline function.
 	* src/remove.c (rm_1): Reflect this renaming.
