@@ -2814,7 +2814,7 @@ static bool
 basename_is_dot_or_dotdot (const char *name)
 {
   char const *base = last_component (name);
-  return DOT_OR_DOTDOT (base);
+  return dot_or_dotdot (base);
 }
 
 /* Remove any entries from FILES that are for directories,

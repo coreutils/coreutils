@@ -1372,7 +1372,7 @@ rm_1 (Dirstack_state *ds, char const *filename,
       struct rm_options const *x, int *cwd_errno)
 {
   char const *base = last_component (filename);
-  if (DOT_OR_DOTDOT (base))
+  if (dot_or_dotdot (base))
     {
       error (0, 0, _("cannot remove `.' or `..'"));
       return RM_ERROR;

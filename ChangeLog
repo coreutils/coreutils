@@ -1,5 +1,10 @@
 2006-08-27  Jim Meyering  <jim@meyering.net>
 
+	* src/system.h (DOT_OR_DOTDOT): Remove macro.  Rewrite as a...
+	(dot_or_dotdot): ...new static inline function.
+	* src/remove.c (rm_1): Reflect this renaming.
+	* src/ls.c (basename_is_dot_or_dotdot): Likewise.
+
 	* src/copy.c (copy_internal): Add comments.
 
 2006-08-26  Paul Eggert  <eggert@cs.ucla.edu>

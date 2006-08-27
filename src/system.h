@@ -447,9 +447,14 @@ uid_t getuid ();
 #include "unlocked-io.h"
 #include "same-inode.h"
 
-#define DOT_OR_DOTDOT(Basename) \
-  (Basename[0] == '.' && (Basename[1] == '\0' \
-			  || (Basename[1] == '.' && Basename[2] == '\0')))
+static inline bool
+dot_or_dotdot (char const *file_name)
+{
+  return (file_name[0] == '.'
+	  && (file_name[1] == '\0'
+	      || (file_name[1] == '.'
+		  && file_name[2] == '\0')));
+}
 
 /* A wrapper for readdir so that callers don't see entries for `.' or `..'.  */
 static inline struct dirent const *
@@ -458,7 +463,7 @@ readdir_ignoring_dot_and_dotdot (DIR *dirp)
   while (1)
     {
       struct dirent const *dp = readdir (dirp);
-      if (dp == NULL || ! DOT_OR_DOTDOT (dp->d_name))
+      if (dp == NULL || ! dot_or_dotdot (dp->d_name))
 	return dp;
     }
 }
