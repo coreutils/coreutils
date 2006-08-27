@@ -1068,7 +1068,7 @@ copy_internal (char const *src_name, char const *dst_name,
 		{
 		  if (x->move_mode && x->backup_type != no_backups)
 		    {
-		      /* Moving/copying a directory onto an existing
+		      /* Moving a directory onto an existing
 			 non-directory is ok only with --backup.  */
 		    }
 		  else
@@ -1104,7 +1104,7 @@ copy_internal (char const *src_name, char const *dst_name,
 		{
 		  if (x->move_mode && x->backup_type != no_backups)
 		    {
-		      /* Moving/copying a non-directory onto an existing
+		      /* Moving a non-directory onto an existing
 			 directory is ok only with --backup.  */
 		    }
 		  else
