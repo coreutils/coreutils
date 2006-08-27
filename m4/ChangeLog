@@ -1,3 +1,7 @@
+2006-08-26  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* .cvsignore: Add config-h.m4.
+
 2006-08-22  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* .cvsignore: Remove Makefile, dev-ino.m4, glibc2.m4, intdiv0.m4,

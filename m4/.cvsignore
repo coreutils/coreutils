@@ -21,6 +21,7 @@ cloexec.m4
 close-stream.m4
 closeout.m4
 codeset.m4
+config-h.m4
 cycle-check.m4
 d-ino.m4
 d-type.m4
