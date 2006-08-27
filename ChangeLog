@@ -3,6 +3,7 @@
 	* src/copy.c (copy_internal): Don't make a backup if the last
 	component of the source name is "." or "..".
 	Reported by Andreas Schwab in https://savannah.gnu.org/bugs/?17540.
+	* NEWS: Mention this.
 	* tests/cp/src-base-dot: New file.  Test for the above fix.
 	* tests/cp/Makefile.am (TESTS): Add src-base-dot.
 

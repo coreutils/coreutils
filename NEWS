@@ -11,6 +11,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  cp --backup no longer fails when the last component of a source file
+  name is "." or "..".
+
   "ls --color" would highlight other-writable and sticky directories
   no differently than regular directories on a file system with
   dirent.d_type support.
