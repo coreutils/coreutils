@@ -1,5 +1,10 @@
 2006-08-26  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* src/Makefile.am (AM_CPPFLAGS): Remove -I$(srcdir) and -I../lib,
+	since Automake supplies them for us.  It always did -I$(srcdir),
+	and with the recent change to AC_CONFIG_HEADERS in configure.ac it
+	is now also doing -I../lib.
+
 	* bootstrap (get_translations): Skip this if WGET_COMMAND is empty.
 	Fail if the first "echo" fails.  Suppress diagnostics from "ls po/*.po"
 	since there might not be any .po files.

@@ -51,7 +51,7 @@ EXTRA_DIST = dcgen dircolors.hin tac-pipe.c \
 BUILT_SOURCES =
 CLEANFILES = $(SCRIPTS) su
 
-AM_CPPFLAGS = -I$(srcdir) -I$(top_srcdir)/lib -I../lib
+AM_CPPFLAGS = -I$(top_srcdir)/lib
 
 # Sometimes, the expansion of $(LIBINTL) includes -lc which may
 # include modules defining variables like `optind', so libcoreutils.a
