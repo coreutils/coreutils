@@ -2,7 +2,7 @@
 
 	* src/copy.c (copy_internal): Don't make a backup if the last
 	component of the source name is "." or "..".
-	Reported by Andreas Schwab in https://savannah.gnu.org/bugs/?17540.
+	Reported by Andreas Schwab in http://savannah.gnu.org/bugs/?17540.
 	* NEWS: Mention this.
 	* tests/cp/src-base-dot: New file.  Test for the above fix.
 	* tests/cp/Makefile.am (TESTS): Add src-base-dot.
@@ -71,7 +71,7 @@
 	* src/ls.c (gobble_file): With --color, also stat the file when
 	we know it is a directory.
 	Derived from an anonymous one-line fix and bug report:
-	<https://savannah.gnu.org/bugs/?15043>.
+	<http://savannah.gnu.org/bugs/?15043>.
 	* tests/ls/color-dtype-dir: New file.  Test for the above fix.
 	* tests/ls/Makefile.am (TESTS): Add color-dtype-dir.
 
