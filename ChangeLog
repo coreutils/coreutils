@@ -1,3 +1,11 @@
+2006-08-28  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Adjust to recent gnulib changes for the inttypes module.
+	* bootstrap.conf (gnulib_modules): Remove stdint; add inttypes.
+	(excluded_files): Don't exclude m4/inttypes-h.m4 or m4/inttypes-pri.m4.
+	* src/system.h: Don't bother to include <stdint.h>, since we can
+	now assume inttypes.h does the equivalent of including stdint.h.
+
 2006-08-27  Jim Meyering  <jim@meyering.net>
 
 	* src/copy.c (copy_internal): Don't make a backup if the last
