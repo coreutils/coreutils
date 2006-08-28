@@ -43,7 +43,6 @@ static struct option const longopts[] =
   {NULL, 0, NULL, 0}
 };
 
-#ifdef S_ISFIFO
 void
 usage (int status)
 {
@@ -69,7 +68,6 @@ Mandatory arguments to long options are mandatory for short options too.\n\
     }
   exit (status);
 }
-#endif
 
 int
 main (int argc, char **argv)
@@ -87,9 +85,6 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-#ifndef S_ISFIFO
-  error (EXIT_FAILURE, 0, _("fifo files not supported"));
-#else
   while ((optc = getopt_long (argc, argv, "m:", longopts, NULL)) != -1)
     {
       switch (optc)
@@ -131,5 +126,4 @@ main (int argc, char **argv)
       }
 
   exit (exit_status);
-#endif
 }

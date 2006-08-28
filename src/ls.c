@@ -2760,9 +2760,6 @@ is_directory (const struct fileinfo *f)
   return f->filetype == directory || f->filetype == arg_directory;
 }
 
-
-#ifdef S_ISLNK
-
 /* Put the name of the file that FILENAME is a symbolic link to
    into the LINKNAME field of `f'.  COMMAND_LINE_ARG indicates whether
    FILENAME is a command-line argument.  */
@@ -2805,7 +2802,6 @@ make_link_name (char const *name, char const *linkname)
   strcpy (linkbuf + bufsiz, linkname);
   return linkbuf;
 }
-#endif
 
 /* Return true if the last component of NAME is `.' or `..'
    This is so we don't try to recurse on `././././. ...' */

@@ -1,5 +1,13 @@
 2006-08-28  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* src/copy.c (copy_internal): Don't test whether macros like
+	S_ISLNK are defined, since they're always defined now.
+	* src/cp.c (main): Likewise.
+	* src/ln.c (main): Likewise.
+	* src/ls.c (get_link_name, make_link_name): Likewise.
+	* src/mkfifo.c (usage): Likewise.
+	* src/who.c (S_IWGRP): Likewise.
+
 	Adjust to recent gnulib changes for the gnulib module.
 	* bootstrap.conf (gnulib_modules): Add fcntl.
 	* src/system.h (SEEK_SET, SEEK_CUR, SEEK_END): Remove.  Other code

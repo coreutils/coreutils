@@ -428,12 +428,7 @@ main (int argc, char **argv)
 	  dereference_dest_dir_symlinks = false;
 	  break;
 	case 's':
-#ifdef S_ISLNK
 	  symbolic_link = true;
-#else
-	  error (EXIT_FAILURE, 0,
-		 _("symbolic links are not supported on this system"));
-#endif
 	  break;
 	case 't':
 	  if (target_directory)

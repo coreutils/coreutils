@@ -1558,7 +1558,6 @@ copy_internal (char const *src_name, char const *dst_name,
 	  delayed_ok = false;
 	}
     }
-#ifdef S_ISLNK
   else if (x->symbolic_link)
     {
       preserve_metadata = false;
@@ -1597,7 +1596,6 @@ copy_internal (char const *src_name, char const *dst_name,
 	  goto un_backup;
 	}
     }
-#endif
 
   else if (x->hard_link
 #ifdef LINK_FOLLOWS_SYMLINKS
@@ -1632,9 +1630,7 @@ copy_internal (char const *src_name, char const *dst_name,
       if (! copy_reg (src_name, dst_name, x, src_mode, &new_dst, &src_sb))
 	goto un_backup;
     }
-  else
-#ifdef S_ISFIFO
-  if (S_ISFIFO (src_type))
+  else if (S_ISFIFO (src_type))
     {
       if (mkfifo (dst_name, src_mode))
 	{
@@ -1642,10 +1638,7 @@ copy_internal (char const *src_name, char const *dst_name,
 	  goto un_backup;
 	}
     }
-  else
-#endif
-    if (S_ISBLK (src_type) || S_ISCHR (src_type)
-	|| S_ISSOCK (src_type))
+  else if (S_ISBLK (src_type) || S_ISCHR (src_type) || S_ISSOCK (src_type))
     {
       if (mknod (dst_name, src_mode, src_sb.st_rdev))
 	{
@@ -1654,9 +1647,7 @@ copy_internal (char const *src_name, char const *dst_name,
 	  goto un_backup;
 	}
     }
-  else
-#ifdef S_ISLNK
-  if (S_ISLNK (src_type))
+  else if (S_ISLNK (src_type))
     {
       char *src_link_val = xreadlink (src_name, src_sb.st_size);
       if (src_link_val == NULL)
@@ -1700,7 +1691,7 @@ copy_internal (char const *src_name, char const *dst_name,
 	{
 	  /* Preserve the owner and group of the just-`copied'
 	     symbolic link, if possible.  */
-# if HAVE_LCHOWN
+#if HAVE_LCHOWN
 	  if (lchown (dst_name, src_sb.st_uid, src_sb.st_gid) != 0
 	      && ! chown_failure_ok (x))
 	    {
@@ -1708,16 +1699,15 @@ copy_internal (char const *src_name, char const *dst_name,
 		     dst_name);
 	      goto un_backup;
 	    }
-# else
+#else
 	  /* Can't preserve ownership of symlinks.
 	     FIXME: maybe give a warning or even error for symlinks
 	     in directories with the sticky bit set -- there, not
 	     preserving owner/group is a potential security problem.  */
-# endif
+#endif
 	}
     }
   else
-#endif
     {
       error (0, 0, _("%s has unknown file type"), quote (src_name));
       goto un_backup;
