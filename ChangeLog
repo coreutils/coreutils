@@ -1,8 +1,17 @@
 2006-08-28  Paul Eggert  <eggert@cs.ucla.edu>
 
+	Adjust to recent gnulib changes for the gnulib module.
+	* bootstrap.conf (gnulib_modules): Add fcntl.
+	* src/system.h (SEEK_SET, SEEK_CUR, SEEK_END): Remove.  Other code
+	is already assuming these macros are defined.
+	(O_DIRECT, O_DIRECTORY, O_DSYNC, O_NDELAY, O_NOATIME, O_NONBLOCK):
+	(O_NOCTTY, O_NOFOLLOW, O_NOLINKS, O_RSYNC, O_SYNC, O_BINARY, O_TEXT):
+	Remove; the fcntl module now handles these.
+
 	Adjust to recent gnulib changes for the inttypes module.
 	* bootstrap.conf (gnulib_modules): Remove stdint; add inttypes.
 	(excluded_files): Don't exclude m4/inttypes-h.m4 or m4/inttypes-pri.m4.
+
 	* src/system.h: Don't bother to include <stdint.h>, since we can
 	now assume inttypes.h does the equivalent of including stdint.h.
 

@@ -152,84 +152,11 @@ initialize_exit_failure (int status)
 
 #include <fcntl.h>
 
-#if !defined SEEK_SET
-# define SEEK_SET 0
-# define SEEK_CUR 1
-# define SEEK_END 2
-#endif
 #ifndef F_OK
 # define F_OK 0
 # define X_OK 1
 # define W_OK 2
 # define R_OK 4
-#endif
-
-#if !defined O_DIRECT && defined O_DIRECTIO
-/* Tru64 spells it `O_DIRECTIO'.  */
-# define O_DIRECT O_DIRECTIO
-#endif
-
-#if !defined O_DIRECT
-# define O_DIRECT 0
-#endif
-
-#if !defined O_DIRECTORY
-# define O_DIRECTORY 0
-#endif
-
-#if !defined O_DSYNC
-# define O_DSYNC 0
-#endif
-
-#if !defined O_NDELAY
-# define O_NDELAY 0
-#endif
-
-#if !defined O_NOATIME
-# define O_NOATIME 0
-#endif
-
-#if !defined O_NONBLOCK
-# define O_NONBLOCK O_NDELAY
-#endif
-
-#if !defined O_NOCTTY
-# define O_NOCTTY 0
-#endif
-
-#if !defined O_NOFOLLOW
-# define O_NOFOLLOW 0
-#endif
-
-#if !defined O_NOLINKS
-# define O_NOLINKS 0
-#endif
-
-#if !defined O_RSYNC
-# define O_RSYNC 0
-#endif
-
-#if !defined O_SYNC
-# define O_SYNC 0
-#endif
-
-/* For systems that distinguish between text and binary I/O.
-   O_BINARY is usually declared in fcntl.h  */
-#if !defined O_BINARY && defined _O_BINARY
-  /* For MSC-compatible compilers.  */
-# define O_BINARY _O_BINARY
-# define O_TEXT _O_TEXT
-#endif
-
-#ifdef __BEOS__
-  /* BeOS 5 has O_BINARY and O_TEXT, but they have no effect.  */
-# undef O_BINARY
-# undef O_TEXT
-#endif
-
-#ifndef O_BINARY
-# define O_BINARY 0
-# define O_TEXT 0
 #endif
 
 #include <dirent.h>
