@@ -1,3 +1,8 @@
+2006-08-29  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/system.h (LOCALEDIR): Remove, since configmake.h now defines
+	it for us.
+
 2006-08-28  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/copy.c (copy_internal): Don't test whether macros like

@@ -57,7 +57,6 @@ you must include <sys/types.h> before including this file
 #include "pathmax.h"
 
 #include "configmake.h"
-#define LOCALEDIR CONFIGMAKE_LOCALEDIR
 
 #if TIME_WITH_SYS_TIME
 # include <sys/time.h>
