@@ -208,12 +208,8 @@ main (int argc, char **argv)
       break;
 
     case 'p':			/* `pipe' */
-#ifndef S_ISFIFO
-      error (EXIT_FAILURE, 0, _("fifo files not supported"));
-#else
       if (mkfifo (argv[optind], newmode) != 0)
 	error (EXIT_FAILURE, errno, "%s", quote (argv[optind]));
-#endif
       break;
 
     default:

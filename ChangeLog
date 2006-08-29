@@ -5,6 +5,7 @@
 	* src/cp.c (main): Likewise.
 	* src/ln.c (main): Likewise.
 	* src/ls.c (get_link_name, make_link_name): Likewise.
+	* src/mknod.c (main): Likewise.
 	* src/mkfifo.c (usage): Likewise.
 	* src/who.c (S_IWGRP): Likewise.
 
