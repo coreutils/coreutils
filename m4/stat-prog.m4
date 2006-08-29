@@ -52,16 +52,28 @@ $ac_includes_default
 # endif
 #endif
 "
-  AC_CHECK_MEMBERS([struct statfs.f_basetype],,,[$statxfs_includes])
-  AC_CHECK_MEMBERS([struct statvfs.f_basetype],,,[$statxfs_includes])
   AC_CHECK_MEMBERS([struct statfs.f_fstypename],,,[$statxfs_includes])
-  AC_CHECK_MEMBERS([struct statvfs.f_fstypename],,,[$statxfs_includes])
-  AC_CHECK_MEMBERS([struct statfs.f_type],,,[$statxfs_includes])
-  AC_CHECK_MEMBERS([struct statvfs.f_type],,,[$statxfs_includes])
-  AC_CHECK_MEMBERS([struct statfs.f_fsid.__val],,,[$statxfs_includes])
-  AC_CHECK_MEMBERS([struct statvfs.f_fsid.__val],,,[$statxfs_includes])
-  AC_CHECK_MEMBERS([struct statfs.f_namemax],,,[$statxfs_includes])
-  AC_CHECK_MEMBERS([struct statvfs.f_namemax],,,[$statxfs_includes])
-  AC_CHECK_MEMBERS([struct statfs.f_namelen],,,[$statxfs_includes])
-  AC_CHECK_MEMBERS([struct statvfs.f_namelen],,,[$statxfs_includes])
+  dnl Keep this long conditional in sync with the USE_STATVFS conditional
+  dnl in ../src/stat.c.
+  if test $ac_cv_header_sys_statvfs_h = yes &&
+    { AC_CHECK_MEMBERS(
+	[struct statvfs.f_basetype,
+	 struct statvfs.f_fstypename,
+	 struct statvfs.f_type],,,
+	[$statxfs_includes])
+      test $ac_cv_member_struct_statvfs_f_basetype = yes ||
+      test $ac_cv_member_struct_statvfs_f_fstypename = yes ||
+      { test $ac_cv_member_struct_statvfs_f_type = yes &&
+	test $ac_cv_member_struct_statfs_f_fstypename != yes; }; }; then
+    AC_CHECK_MEMBERS(
+      [struct statvfs.f_fsid.__val, struct statvfs.f_fsid.val,
+       struct statvfs.f_namelen, struct statvfs.f_namemax],,,
+      [$statxfs_includes])
+  else
+    AC_CHECK_MEMBERS(
+      [struct statfs.f_basetype, struct statfs.f_fsid.__val,
+       struct statfs.f_fsid.val, struct statfs.f_namelen,
+       struct statfs.f_namemax, struct statfs.f_type],,,
+      [$statxfs_includes])
+  fi
 ])

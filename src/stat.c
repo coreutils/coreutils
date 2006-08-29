@@ -19,6 +19,8 @@
 
 #include <config.h>
 
+/* Keep this conditional in sync with the similar conditional in
+   ../m4/stat-prog.m4.  */
 #if (STAT_STATVFS \
      && (HAVE_STRUCT_STATVFS_F_BASETYPE || HAVE_STRUCT_STATVFS_F_FSTYPENAME \
 	 || (! HAVE_STRUCT_STATFS_F_FSTYPENAME && HAVE_STRUCT_STATVFS_F_TYPE)))
@@ -69,6 +71,7 @@
 #if USE_STATVFS
 # define STRUCT_STATVFS struct statvfs
 # define HAVE_STRUCT_STATXFS_F_FSID___VAL HAVE_STRUCT_STATVFS_F_FSID___VAL
+# define HAVE_STRUCT_STATXFS_F_FSID_VAL HAVE_STRUCT_STATVFS_F_FSID_VAL
 # define HAVE_STRUCT_STATXFS_F_TYPE HAVE_STRUCT_STATVFS_F_TYPE
 # if HAVE_STRUCT_STATVFS_F_NAMEMAX
 #  define SB_F_NAMEMAX(S) ((S)->f_namemax)
@@ -111,12 +114,20 @@ statfs (char const *filename, struct fs_info *buf)
 #  define f_ffree free_nodes
 #  define STRUCT_STATVFS struct fs_info
 #  define HAVE_STRUCT_STATXFS_F_FSID___VAL 0
+#  define HAVE_STRUCT_STATXFS_F_FSID_VAL 0
 #  define STATFS_FRSIZE(S) ((S)->block_size)
 # else
 #  define STRUCT_STATVFS struct statfs
 #  define HAVE_STRUCT_STATXFS_F_FSID___VAL HAVE_STRUCT_STATFS_F_FSID___VAL
+#  define HAVE_STRUCT_STATXFS_F_FSID_VAL HAVE_STRUCT_STATFS_F_FSID_VAL
 #  define STATFS_FRSIZE(S) 0
 # endif
+#endif
+
+#if HAVE_STRUCT_STATXFS_F_FSID___VAL
+# define FSID_VAL __val
+#elif HAVE_STRUCT_STATXFS_F_FSID_VAL
+# define FSID_VAL val
 #endif
 
 #ifdef SB_F_NAMEMAX
@@ -404,13 +415,13 @@ print_statfs (char *pformat, size_t prefix_len, char m, char const *filename,
 
     case 'i':
       {
-#if HAVE_STRUCT_STATXFS_F_FSID___VAL
-	uintmax_t val0 = statfsbuf->f_fsid.__val[0];
-	uintmax_t val1 = statfsbuf->f_fsid.__val[1];
+#ifdef FSID_VAL
+	uintmax_t val0 = statfsbuf->f_fsid.FSID_VAL[0];
+	uintmax_t val1 = statfsbuf->f_fsid.FSID_VAL[1];
 	uintmax_t fsid =
 	  (val1
-	   + (sizeof statfsbuf->f_fsid.__val[1] < sizeof fsid
-	      ? val0 << (CHAR_BIT * sizeof statfsbuf->f_fsid.__val[1])
+	   + (sizeof statfsbuf->f_fsid.FSID_VAL[1] < sizeof fsid
+	      ? val0 << (CHAR_BIT * sizeof statfsbuf->f_fsid.FSID_VAL[1])
 	      : 0));
 #else
 	uintmax_t fsid = statfsbuf->f_fsid;

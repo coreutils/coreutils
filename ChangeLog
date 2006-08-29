@@ -1,5 +1,10 @@
 2006-08-29  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* src/stat.c (HAVE_STRUCT_STATXFS_F_FSID_VAL, FSID_VAL): New macros, to
+	work around a Mac OS X porting problem reported by Bruno Haible in
+	<http://lists.gnu.org/archive/html/bug-coreutils/2006-08/msg00308.html>.
+	(print_statfs): Use them.
+
 	* bootstrap.conf (gnulib_modules): Add isapipe.
 	* src/tail.c: Include isapipe.h.
 	(IS_PIPE_LIKE_FILE_TYPE): Remove.

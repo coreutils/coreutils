@@ -1,3 +1,9 @@
+2006-08-29  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* stat-prog.m4 (cu_PREREQ_STAT_PROG): Check for __val versus val
+	components of fsid.  Omit some checks that stat.c doesn't care
+	about.
+
 2006-08-26  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* .cvsignore: Add config-h.m4.
