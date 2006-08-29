@@ -37,6 +37,7 @@
 #include "error.h"
 #include "fcntl--.h"
 #include "inttostr.h"
+#include "isapipe.h"
 #include "posixver.h"
 #include "quote.h"
 #include "safe-read.h"
@@ -74,14 +75,9 @@ enum Follow_mode
   Follow_descriptor = 2
 };
 
-/* On Darwin 7.7, when reading from a command-line pipe, standard
-   input is of type S_ISSOCK.  Everywhere else it's S_ISFIFO.  */
-#define IS_PIPE_LIKE_FILE_TYPE(Mode) \
-  (S_ISFIFO (Mode) || S_ISSOCK (Mode))
-
 /* The types of files for which tail works.  */
 #define IS_TAILABLE_FILE_TYPE(Mode) \
-  (S_ISREG (Mode) || IS_PIPE_LIKE_FILE_TYPE (Mode) || S_ISCHR (Mode))
+  (S_ISREG (Mode) || S_ISFIFO (Mode) || S_ISSOCK (Mode) || S_ISCHR (Mode))
 
 static char const *const follow_mode_string[] =
 {
@@ -1640,14 +1636,14 @@ main (int argc, char **argv)
 	 device type, because device independence is an important
 	 principle of the system's design.
 
-	 Follow the POSIX requirement only if POSIXLY_CORRECT is set.
-	 Ideally this would ignore -f only for pipes, but S_ISFIFO
-	 succeeds for both FIFOs and pipes and we know of no portable,
-	 reliable way to distinguish them.  */
+	 Follow the POSIX requirement only if POSIXLY_CORRECT is set.  */
+
       if (forever && getenv ("POSIXLY_CORRECT"))
 	{
-	  struct stat stats;
-	  if (fstat (STDIN_FILENO, &stats) == 0 && S_ISFIFO (stats.st_mode))
+	  int is_a_pipe = isapipe (STDIN_FILENO);
+	  if (is_a_pipe < 0)
+	    error (EXIT_FAILURE, errno, _("standard input"));
+	  if (is_a_pipe)
 	    forever = false;
 	}
     }
