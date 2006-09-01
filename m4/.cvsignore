@@ -38,6 +38,7 @@ exclude.m4
 exitfail.m4
 extensions.m4
 fcntl-safer.m4
+fcntl_h.m4
 file-type.m4
 fileblocks.m4
 filemode.m4
@@ -60,6 +61,7 @@ getgroups.m4
 gethostname.m4
 gethrxtime.m4
 getline.m4
+getloadavg.m4
 getndelim2.m4
 getopt.m4
 getpagesize.m4
@@ -85,7 +87,11 @@ inet_ntop.m4
 intmax.m4
 intmax_t.m4
 inttostr.m4
+inttypes-h.m4
+inttypes-pri.m4
+inttypes.m4
 inttypes_h.m4
+isapipe.m4
 jm-winsz1.m4
 jm-winsz2.m4
 lchmod.m4

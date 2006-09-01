@@ -70,6 +70,8 @@ exitfail.h
 fchown-stub.c
 fcntl--.h
 fcntl-safer.h
+fcntl.h
+fcntl_.h
 fd-safer.c
 file-type.c
 file-type.h
@@ -150,6 +152,9 @@ intprops.h
 inttostr.c
 inttostr.h
 inttypes.h
+inttypes_.h
+isapipe.c
+isapipe.h
 lchmod.h
 lchown.c
 lchown.h
