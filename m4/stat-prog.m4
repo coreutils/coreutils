@@ -1,4 +1,4 @@
-# stat-prog.m4 serial 4
+# stat-prog.m4 serial 5
 # Record the prerequisites of src/stat.c from the coreutils package.
 
 # Copyright (C) 2002, 2003, 2004, 2006 Free Software Foundation, Inc.
@@ -21,59 +21,67 @@
 
 AC_DEFUN([cu_PREREQ_STAT_PROG],
 [
-  AC_CHECK_HEADERS_ONCE(sys/param.h sys/statvfs.h sys/vfs.h)
-  AC_CHECK_HEADERS(sys/mount.h, [], [],
-    [AC_INCLUDES_DEFAULT
-     [#if HAVE_SYS_PARAM_H
-       #include <sys/param.h>
-      #endif]])
+  AC_REQUIRE([gl_FSUSAGE])
+  AC_REQUIRE([gl_FSTYPENAME])
+  AC_CHECK_HEADERS_ONCE([OS.h netinet/in.h sys/param.h sys/vfs.h])
 
-  # For `struct statfs' on Ultrix 4.4.
-  AC_CHECK_HEADERS_ONCE([netinet/in.h nfs/nfs_clnt.h nfs/vfs.h])
+  dnl Check for vfs.h first, since this avoids a warning with nfs_client.h
+  dnl on Solaris 8.
+  test $ac_cv_header_sys_param_h = yes &&
+  test $ac_cv_header_sys_mount_h = yes &&
+  AC_CHECK_HEADERS([nfs/vfs.h],
+    [AC_CHECK_HEADERS([nfs/nfs_client.h])])
 
-  statxfs_includes="\
-$ac_includes_default
-#if HAVE_SYS_STATVFS_H
-# include <sys/statvfs.h>
-#endif
+  statvfs_includes="\
+AC_INCLUDES_DEFAULT
+#include <sys/statvfs.h>
+"
+  statfs_includes="\
+AC_INCLUDES_DEFAULT
 #if HAVE_SYS_VFS_H
 # include <sys/vfs.h>
-#endif
-#if !HAVE_SYS_STATVFS_H && !HAVE_SYS_VFS_H
-# if HAVE_SYS_MOUNT_H && HAVE_SYS_PARAM_H
-/* NetBSD 1.5.2 needs these, for the declaration of struct statfs. */
-#  include <sys/param.h>
-#  include <sys/mount.h>
-# elif HAVE_NETINET_IN_H && HAVE_NFS_NFS_CLNT_H && HAVE_NFS_VFS_H
-/* Ultrix 4.4 needs these for the declaration of struct statfs.  */
+#elif HAVE_SYS_MOUNT_H && HAVE_SYS_PARAM_H
+# include <sys/param.h>
+# include <sys/mount.h>
+# if HAVE_NETINET_IN_H && HAVE_NFS_NFS_CLNT_H && HAVE_NFS_VFS_H
 #  include <netinet/in.h>
 #  include <nfs/nfs_clnt.h>
 #  include <nfs/vfs.h>
 # endif
+#elif HAVE_OS_H
+# include <fs_info.h>
 #endif
 "
-  AC_CHECK_MEMBERS([struct statfs.f_fstypename],,,[$statxfs_includes])
   dnl Keep this long conditional in sync with the USE_STATVFS conditional
   dnl in ../src/stat.c.
-  if test $ac_cv_header_sys_statvfs_h = yes &&
-    { AC_CHECK_MEMBERS(
-	[struct statvfs.f_basetype,
-	 struct statvfs.f_fstypename,
-	 struct statvfs.f_type],,,
-	[$statxfs_includes])
-      test $ac_cv_member_struct_statvfs_f_basetype = yes ||
-      test $ac_cv_member_struct_statvfs_f_fstypename = yes ||
-      { test $ac_cv_member_struct_statvfs_f_type = yes &&
-	test $ac_cv_member_struct_statfs_f_fstypename != yes; }; }; then
-    AC_CHECK_MEMBERS(
-      [struct statvfs.f_fsid.__val, struct statvfs.f_fsid.val,
-       struct statvfs.f_namelen, struct statvfs.f_namemax],,,
-      [$statxfs_includes])
+  if test "$fu_cv_sys_stat_statvfs" = yes &&
+     { AC_CHECK_MEMBERS([struct statvfs.f_basetype],,, [$statvfs_includes])
+       test $ac_cv_member_struct_statvfs_f_basetype = yes ||
+       { AC_CHECK_MEMBERS([struct statvfs.f_fstypename],,, [$statvfs_includes])
+	 test $ac_cv_member_struct_statvfs_f_fstypename = yes ||
+	 { test $ac_cv_member_struct_statfs_f_fstypename != yes &&
+	   { AC_CHECK_MEMBERS([struct statvfs.f_type],,, [$statvfs_includes])
+	     test $ac_cv_member_struct_statvfs_f_type = yes; }; }; }; }
+  then
+    AC_CHECK_MEMBERS([struct statvfs.f_namemax],,, [$statvfs_includes])
+    AC_COMPILE_IFELSE(
+      [AC_LANG_PROGRAM(
+	 [$statvfs_includes],
+	 [static statvfs s;
+	  return (s.s_fsid ^ 0) == 0;])],
+      [AC_DEFINE([STRUCT_STATVFS_F_FSID_IS_INTEGER], 1,
+	 [Define to 1 if the f_fsid member of struct statvfs is an integer.])])
   else
-    AC_CHECK_MEMBERS(
-      [struct statfs.f_basetype, struct statfs.f_fsid.__val,
-       struct statfs.f_fsid.val, struct statfs.f_namelen,
-       struct statfs.f_namemax, struct statfs.f_type],,,
-      [$statxfs_includes])
+    AC_CHECK_MEMBERS([struct statfs.f_namelen, struct statfs.f_type],,,
+      [$statfs_includes])
+    if test $ac_cv_header_OS_h != yes; then
+      AC_COMPILE_IFELSE(
+	[AC_LANG_PROGRAM(
+	   [$statfs_includes],
+	   [static statfs s;
+	    return (s.s_fsid ^ 0) == 0;])],
+	[AC_DEFINE([STRUCT_STATFS_F_FSID_IS_INTEGER], 1,
+	   [Define to 1 if the f_fsid member of struct statfs is an integer.])])
+    fi
   fi
 ])

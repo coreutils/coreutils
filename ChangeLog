@@ -1,3 +1,16 @@
+2006-09-01  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/stat.c: Include <stddef.h>
+	(alignof): New macro.
+	(HAVE_STRUCT_STATXFS_F_FSID___VAL, HAVE_STRUCT_STATXFS_F_FSID_VAL):
+	Remove.
+	(STRUCT_STATXFS_F_FSID_IS_INTEGER): New macro.
+	(FSID_VAL): Remove.
+	(print_statfs): If f_fsid isn't an integer, grab its words one
+	at a time in little-endian order.  This is a bit easier to configure
+	and should avoid a compilation failure on MacOS reported by Bruno
+	Haible.
+
 2006-08-29  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/stat.c (HAVE_STRUCT_STATXFS_F_FSID_VAL, FSID_VAL): New macros, to

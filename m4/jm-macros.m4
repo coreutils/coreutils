@@ -79,7 +79,8 @@ AC_DEFUN([gl_MACROS],
     tcgetpgrp \
   )
 
-  AC_REQUIRE([cu_PREREQ_STAT_PROG])
+  dnl This can't use AC_REQUIRE; I'm not quite sure why.
+  cu_PREREQ_STAT_PROG
 
   # for dd.c and shred.c
   coreutils_saved_libs=$LIBS

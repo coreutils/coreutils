@@ -1,3 +1,15 @@
+2006-09-01  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* .cvsignore: Add fcntl_h.m4, getloadavg.m4, inttypes-h.m4,
+	inttypes-prio.m4, inttypes.m,4 isapipe.m4.
+
+	* jm-macros.m4 (gl_MACROS): Call cu_PREREQ_STAT_PROG rather
+	than AC_REQUIREing, so that sys/mount.h isn't tested for after
+	the test result.  I'm not sure why this fix is needed, but it
+	works.
+	* stat-prog.m4 (cu_PREREQ_STAT_PROG): Revamp to reflect better
+	what stat.c actually needs.
+
 2006-08-29  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* stat-prog.m4 (cu_PREREQ_STAT_PROG): Check for __val versus val

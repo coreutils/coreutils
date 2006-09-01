@@ -29,6 +29,7 @@
 # define USE_STATVFS 0
 #endif
 
+#include <stddef.h>
 #include <stdio.h>
 #include <sys/types.h>
 #include <pwd.h>
@@ -68,10 +69,11 @@
 #include "strftime.h"
 #include "xreadlink.h"
 
+#define alignof(type) offsetof (struct { char c; type x; }, x)
+
 #if USE_STATVFS
 # define STRUCT_STATVFS struct statvfs
-# define HAVE_STRUCT_STATXFS_F_FSID___VAL HAVE_STRUCT_STATVFS_F_FSID___VAL
-# define HAVE_STRUCT_STATXFS_F_FSID_VAL HAVE_STRUCT_STATVFS_F_FSID_VAL
+# define STRUCT_STATXFS_F_FSID_IS_INTEGER STRUCT_STATVFS_F_FSID_IS_INTEGER
 # define HAVE_STRUCT_STATXFS_F_TYPE HAVE_STRUCT_STATVFS_F_TYPE
 # if HAVE_STRUCT_STATVFS_F_NAMEMAX
 #  define SB_F_NAMEMAX(S) ((S)->f_namemax)
@@ -113,21 +115,13 @@ statfs (char const *filename, struct fs_info *buf)
 #  define f_files total_nodes
 #  define f_ffree free_nodes
 #  define STRUCT_STATVFS struct fs_info
-#  define HAVE_STRUCT_STATXFS_F_FSID___VAL 0
-#  define HAVE_STRUCT_STATXFS_F_FSID_VAL 0
+#  define STRUCT_STATXFS_F_FSID_IS_INTEGER true
 #  define STATFS_FRSIZE(S) ((S)->block_size)
 # else
 #  define STRUCT_STATVFS struct statfs
-#  define HAVE_STRUCT_STATXFS_F_FSID___VAL HAVE_STRUCT_STATFS_F_FSID___VAL
-#  define HAVE_STRUCT_STATXFS_F_FSID_VAL HAVE_STRUCT_STATFS_F_FSID_VAL
+#  define STRUCT_STATXFS_F_FSID_IS_INTEGER STRUCT_STATFS_F_FSID_IS_INTEGER
 #  define STATFS_FRSIZE(S) 0
 # endif
-#endif
-
-#if HAVE_STRUCT_STATXFS_F_FSID___VAL
-# define FSID_VAL __val
-#elif HAVE_STRUCT_STATXFS_F_FSID_VAL
-# define FSID_VAL val
 #endif
 
 #ifdef SB_F_NAMEMAX
@@ -415,16 +409,22 @@ print_statfs (char *pformat, size_t prefix_len, char m, char const *filename,
 
     case 'i':
       {
-#ifdef FSID_VAL
-	uintmax_t val0 = statfsbuf->f_fsid.FSID_VAL[0];
-	uintmax_t val1 = statfsbuf->f_fsid.FSID_VAL[1];
-	uintmax_t fsid =
-	  (val1
-	   + (sizeof statfsbuf->f_fsid.FSID_VAL[1] < sizeof fsid
-	      ? val0 << (CHAR_BIT * sizeof statfsbuf->f_fsid.FSID_VAL[1])
-	      : 0));
-#else
+#if STRUCT_STATXFS_F_FSID_IS_INTEGER
 	uintmax_t fsid = statfsbuf->f_fsid;
+#else
+	typedef unsigned int fsid_word;
+	verify (alignof (STRUCT_STATVFS) % alignof (fsid_word) == 0);
+	verify (offsetof (STRUCT_STATVFS, f_fsid) % alignof (fsid_word) == 0);
+	verify (sizeof statfsbuf->f_fsid % alignof (fsid_word) == 0);
+	fsid_word const *p = (fsid_word *) &statfsbuf->f_fsid;
+
+	/* Assume a little-endian word order, as that is compatible
+	   with glibc's statvfs implementation.  */
+	uintmax_t fsid = 0;
+	int words = sizeof statfsbuf->f_fsid / sizeof *p;
+	int i;
+	for (i = 0; i < words && i * sizeof *p < sizeof fsid; i++)
+	  fsid |= p[words - 1 - i] << (i * CHAR_BIT * sizeof *p);
 #endif
 	out_uint_x (pformat, prefix_len, fsid);
       }
