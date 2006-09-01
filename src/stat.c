@@ -424,7 +424,10 @@ print_statfs (char *pformat, size_t prefix_len, char m, char const *filename,
 	int words = sizeof statfsbuf->f_fsid / sizeof *p;
 	int i;
 	for (i = 0; i < words && i * sizeof *p < sizeof fsid; i++)
-	  fsid |= p[words - 1 - i] << (i * CHAR_BIT * sizeof *p);
+	  {
+	    uintmax_t u = p[words - 1 - i];
+	    fsid |= u << (i * CHAR_BIT * sizeof *p);
+	  }
 #endif
 	out_uint_x (pformat, prefix_len, fsid);
       }
