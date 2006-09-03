@@ -31,7 +31,7 @@ TESTS = \
   fail-2eperm \
   cycle i-no-r fail-eperm \
   dangling-symlink rm1 rm2 rm3 rm4 rm5 \
-  unread2 r-1 r-2 r-3 i-1 ir-1 f-1 sunos-1 deep-1 hash \
+  unread2 r-1 r-2 r-3 r-4 i-1 ir-1 f-1 sunos-1 deep-1 hash \
   interactive-always interactive-once \
   isatty # unreadable empty-name
 EXTRA_DIST = $(TESTS)
