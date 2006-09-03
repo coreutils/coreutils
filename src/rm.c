@@ -50,7 +50,6 @@
 
 #include "system.h"
 #include "argmatch.h"
-#include "dirname.h"
 #include "error.h"
 #include "lstat.h"
 #include "quote.h"
@@ -171,8 +170,8 @@ Remove (unlink) the FILE(s).\n\
                           always (-i).  Without WHEN, prompt always\n\
 "), stdout);
       fputs (_("\
-      --no-preserve-root  do not treat `/' specially (the default)\n\
-      --preserve-root   fail to operate recursively on `/'\n\
+      --no-preserve-root  do not treat `/' specially\n\
+      --preserve-root   do not remove `/' (default)\n\
   -r, -R, --recursive   remove directories and their contents recursively\n\
   -v, --verbose         explain what is being done\n\
 "), stdout);
@@ -221,7 +220,7 @@ rm_option_init (struct rm_options *x)
 int
 main (int argc, char **argv)
 {
-  bool preserve_root = false;
+  bool preserve_root = true;
   struct rm_options x;
   bool prompt_once = false;
   int c;
