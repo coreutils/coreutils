@@ -1,3 +1,51 @@
+2006-09-02  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* NEWS: rm now rejects attempts to remove /, ./, and ../.
+	* src/basename.c: Don't include dirname.h, since system.h does it now.
+	* src/chmod.c: Likewise.
+	* src/copy.c: Likewise.
+	* src/cp.c: Likewise.
+	* src/df.c: Likewise.
+	* src/dircolors.c: Likewise.
+	* src/dirname.c: Likewise.
+	* src/du.c: Likewise.
+	* src/install.c: Likewise.
+	* src/ln.c: Likewise.
+	* src/ls.c: Likewise.
+	* src/mkdir.c: Likewise.
+	* src/mv.c: Likewise.
+	* src/remove.c: Likewise.
+	* src/rm.c: Likewise.
+	* src/rmdir.c: Likewise.
+	* src/shred.c: Likewise.
+	* src/split.c: Likewise.
+	* src/su.c: Likewise.
+	* src/system.h: Include "dirname.h", since dot_or_dotdot needs it
+	now.
+	(dot_or_dotdot): Succeed even if "." or ".." is followed by a
+	slash.
+	* src/rm.c (usage, main): --preserve-root is now the default.
+	* src/remove.h: Fix comment.
+	* src/remove.c (cache_fstatat, cache_stat_init): New functions.
+	(cache_statted, cache_stat_ok): New functions.
+	(write_protected_non_symlink): Remove struct stat ** buf_p arg,
+	which is no longer needed with the new functions.  All callers
+	changed.
+	(prompt, is_dir_lstat, remove_entry, remove_dir):
+	New struct stat * arg.  All callers changed.
+	(write_protected_non_symlink, prompt, is_dir_lstat, remove_entry):
+	(remove_cwd_entries, remove_dir, rm_1):
+	Use and maintain the file status cache.
+	(prompt, remove_entry): Omit the first "directory" in the diagnostic
+	"Cannot remove directory `foo': is a directory".  This causes "rm"
+	to pass a test case that it would otherwise fail now that it
+	"knows" more about its argument.  I think the diagnostic is better
+	without the first "directory" anyway.
+	(prompt): Remove the no-longer-needed IS_DIR arg; all callers changed.
+	(rm_1): Reject attempts to remove /, ./, or ../.
+	* tests/rm/Makefile.am (TESTS): Add r-4.
+	* tests/rm/r-4: New file.
+
 2006-09-01  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/stat.c: Include <stddef.h>
