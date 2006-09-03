@@ -1,7 +1,7 @@
 /* Remove directory entries.
 
-   Copyright (C) 1998, 2000, 2002, 2003, 2004, 2005 Free Software
-   Foundation, Inc.
+   Copyright (C) 1998, 2000, 2002, 2003, 2004, 2005, 2006 Free
+   Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -33,8 +33,8 @@ struct rm_options
   /* If true, recursively remove directories.  */
   bool recursive;
 
-  /* Pointer to the device and inode numbers of `/', when --recursive.
-     Otherwise NULL.  */
+  /* Pointer to the device and inode numbers of `/', when --recursive
+     and preserving `/'.  Otherwise NULL.  */
   struct dev_ino *root_dev_ino;
 
   /* If nonzero, stdin is a tty.  */
