@@ -1,3 +1,7 @@
+2006-09-03  Jim Meyering  <jim@meyering.net>
+
+	* tests/rm/inaccessible: Adjust for movement of config.h to lib/.
+
 2006-09-02  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: rm now rejects attempts to remove /, ./, and ../.
