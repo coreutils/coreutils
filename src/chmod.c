@@ -24,7 +24,6 @@
 
 #include "system.h"
 #include "dev-ino.h"
-#include "dirname.h"
 #include "error.h"
 #include "filemode.h"
 #include "modechange.h"

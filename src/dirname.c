@@ -1,6 +1,6 @@
 /* dirname -- strip suffix from file name
 
-   Copyright (C) 1990-1997, 1999-2002, 2004, 2005 Free Software
+   Copyright (C) 1990-1997, 1999-2002, 2004, 2005, 2006 Free Software
    Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -27,7 +27,6 @@
 #include "system.h"
 #include "long-options.h"
 #include "error.h"
-#include "dirname.h"
 #include "quote.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */

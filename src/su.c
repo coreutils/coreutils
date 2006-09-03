@@ -60,7 +60,6 @@
 #define getusershell _getusershell_sys_proto_
 
 #include "system.h"
-#include "dirname.h"
 #include "getpass.h"
 
 #undef getusershell

@@ -1,5 +1,7 @@
 /* rmdir -- remove directories
-   Copyright (C) 90, 91, 1995-2002, 2004, 2005 Free Software Foundation, Inc.
+
+   Copyright (C) 90, 91, 1995-2002, 2004, 2005, 2006 Free Software
+   Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -28,7 +30,6 @@
 #include <sys/types.h>
 
 #include "system.h"
-#include "dirname.h"
 #include "error.h"
 #include "quotearg.h"
 

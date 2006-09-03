@@ -95,7 +95,6 @@
 
 #include "system.h"
 #include "xstrtol.h"
-#include "dirname.h"
 #include "error.h"
 #include "fcntl--.h"
 #include "getpagesize.h"

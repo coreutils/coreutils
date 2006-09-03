@@ -24,7 +24,6 @@
 
 #include "system.h"
 #include "dircolors.h"
-#include "dirname.h"
 #include "error.h"
 #include "getline.h"
 #include "obstack.h"

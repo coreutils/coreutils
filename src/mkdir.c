@@ -23,7 +23,6 @@
 #include <sys/types.h>
 
 #include "system.h"
-#include "dirname.h"
 #include "error.h"
 #include "lchmod.h"
 #include "mkdir-p.h"

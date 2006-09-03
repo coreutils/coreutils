@@ -35,7 +35,6 @@
 #include "buffer-lcm.h"
 #include "copy.h"
 #include "cp-hash.h"
-#include "dirname.h"
 #include "euidaccess.h"
 #include "error.h"
 #include "fcntl--.h"

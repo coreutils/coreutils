@@ -25,7 +25,6 @@
 #include "system.h"
 #include "same.h"
 #include "backupfile.h"
-#include "dirname.h"
 #include "error.h"
 #include "filenamecat.h"
 #include "quote.h"

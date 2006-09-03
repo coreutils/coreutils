@@ -28,7 +28,6 @@
 #include "backupfile.h"
 #include "copy.h"
 #include "cp-hash.h"
-#include "dirname.h"
 #include "error.h"
 #include "filenamecat.h"
 #include "quote.h"

@@ -28,7 +28,6 @@
 #include "copy.h"
 #include "cp-hash.h"
 #include "error.h"
-#include "dirname.h"
 #include "filenamecat.h"
 #include "lchmod.h"
 #include "quote.h"

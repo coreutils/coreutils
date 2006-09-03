@@ -31,7 +31,6 @@
 #include <assert.h>
 #include "system.h"
 #include "argmatch.h"
-#include "dirname.h" /* for strip_trailing_slashes */
 #include "error.h"
 #include "exclude.h"
 #include "fprintftime.h"

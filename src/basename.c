@@ -32,7 +32,6 @@
 
 #include "system.h"
 #include "long-options.h"
-#include "dirname.h"
 #include "error.h"
 #include "quote.h"
 

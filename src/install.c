@@ -30,7 +30,6 @@
 #include "error.h"
 #include "cp-hash.h"
 #include "copy.h"
-#include "dirname.h"
 #include "filenamecat.h"
 #include "mkancesdirs.h"
 #include "mkdir-p.h"
