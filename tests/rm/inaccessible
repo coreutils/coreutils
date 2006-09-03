@@ -30,7 +30,7 @@ PRIV_CHECK_ARG=require-non-root . $srcdir/../priv-check
 # Skip this test if your system has neither the openat-style functions
 # nor /proc/self/fd support with which to emulate them.
 skip=yes
-grep '^#define HAVE_OPENAT' $top_srcdir/lib/config.h > /dev/null && skip=no
+grep '^#define HAVE_OPENAT' $CONFIG_HEADER > /dev/null && skip=no
 test -d /proc/self/fd && skip=no
 if test $skip = yes; then
   echo 1>&2 "$0: no openat support, so skipping this test"

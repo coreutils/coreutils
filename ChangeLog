@@ -1,6 +1,8 @@
 2006-09-03  Jim Meyering  <jim@meyering.net>
 
 	* tests/rm/inaccessible: Adjust for movement of config.h to lib/.
+	Use $CONFIG_HEADER, rather than hard-coding it.
+	* tests/rm/Makefile.am (TESTS_ENVIRONMENT): Set $CONFIG_HEADER.
 
 2006-09-02  Paul Eggert  <eggert@cs.ucla.edu>
 

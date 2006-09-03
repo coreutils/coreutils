@@ -38,6 +38,7 @@ EXTRA_DIST = $(TESTS)
 TESTS_ENVIRONMENT = \
   RM=../../src/rm \
   MKDIR=../../src/mkdir \
+  CONFIG_HEADER=$(CONFIG_HEADER) \
   top_srcdir=$(top_srcdir) \
   srcdir=$(srcdir) \
   PERL="$(PERL)" \
