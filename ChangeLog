@@ -1,5 +1,8 @@
 2006-09-03  Jim Meyering  <jim@meyering.net>
 
+	* NEWS: Tweak the wording in the new change description so that
+	no one can think this change causes e.g., `rm -fr foo../' to fail.
+
 	* tests/rm/inaccessible: Adjust for movement of config.h to lib/.
 	Use $CONFIG_HEADER, rather than hard-coding it.
 	* tests/rm/Makefile.am (TESTS_ENVIRONMENT): Set $CONFIG_HEADER.

@@ -5,8 +5,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 ** Changes in behavior
 
   rm now rejects attempts to remove the root directory, e.g., `rm -fr /'
-  now fails without removing anything.  Likewise for file names ending
-  in `./' and `../'.
+  now fails without removing anything.  Likewise for any file name with
+  a final `./' or `../' component.
 
 ** Infrastructure changes
 
