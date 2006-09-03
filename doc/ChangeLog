@@ -1,3 +1,11 @@
+2006-09-02  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (Treating / specially): --preserve-root is
+	now the default for rm.
+	(rm invocation): Likewise.  Also, document that you can't
+	remove `.' or `..'.  Use the POSIX term "root directory"
+	rather than the more-ambiguous "file system root".
+
 2006-08-22  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* .cvsignore: Add Makefile.in, coreutils.html, coreutils.pdf,

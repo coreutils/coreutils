@@ -1137,18 +1137,14 @@ or @option{-P} is specified.
 
 Certain commands can operate destructively on entire hierarchies.
 For example, if a user with appropriate privileges mistakenly runs
-@samp{rm -rf / tmp/junk} or @samp{cd /bin; rm -rf ../}, that may remove
+@samp{rm -rf / tmp/junk}, that may remove
 all files on the entire system.  Since there are so few
-@footnote{If you know of one, please write to @email{bug-coreutils@@gnu.org}.}
 legitimate uses for such a command,
-@sc{gnu} @command{rm} provides the @option{--preserve-root} option
-to make it so @command{rm} declines to operate on any directory
-that resolves to @file{/}.  The default is still to allow
-@samp{rm -rf /} to operate unimpeded.
-Another new option, @option{--no-preserve-root}, cancels the
-effect of any preceding @option{--preserve-root} option.
-Note that the @option{--preserve-root} behavior may become the default
-for @command{rm}.
+@sc{gnu} @command{rm} normally declines to operate on any directory
+that resolves to @file{/}.  If you really want to try to remove all
+the files on your system, you can use the @option{--no-preserve-root}
+option, but the default behavior, specified by the
+@option{--preserve-option}, is safer for most purposes.
 
 The commands @command{chgrp}, @command{chmod} and @command{chown}
 can also operate destructively on entire hierarchies, so they too
@@ -1156,7 +1152,11 @@ support these options.  Although, unlike @command{rm}, they don't
 actually unlink files, these commands are arguably more dangerous
 when operating recursively on @file{/}, since they often work much
 more quickly, and hence damage more files before an alert user can
-interrupt them.
+interrupt them.  Tradition and @acronym{POSIX} require these commands
+to operate recursively on @file{/}, so they default to
+@option{--no-preserve-root}, but using the @option{--preserve-root}
+option makes them safer for most purposes.  For convenience you can
+specify @option{--preserve-root} in an alias or in a shell function.
 
 @node Special built-in utilities
 @section Special built-in utilities
@@ -7717,6 +7717,9 @@ the @option{-f} or @option{--force} option is not given, or the
 @command{rm} prompts the user for whether to remove the file.
 If the response is not affirmative, the file is skipped.
 
+Any attempt to remove a file whose last file name component is
+@file{.} or @file{..} is rejected without any prompting.
+
 @emph{Warning}: If you use @command{rm} to remove a file, it is usually
 possible to recover the contents of that file.  If you want more assurance
 that the contents are truly unrecoverable, consider using @command{shred}.
@@ -7768,15 +7771,17 @@ Specifying @option{--interactive} and no @var{when} is equivalent to
 @itemx --preserve-root
 @opindex --preserve-root
 @cindex root directory, disallow recursive destruction
-Fail upon any attempt to remove the file system root, @file{/},
+Fail upon any attempt to remove the root directory, @file{/},
 when used with the @option{--recursive} option.
-Without @option{--recursive}, this option has no effect.
+This is the default behavior.
 @xref{Treating / specially}.
 
 @itemx --no-preserve-root
 @opindex --no-preserve-root
 @cindex root directory, allow recursive destruction
-Cancel the effect of any preceding @option{--preserve-root} option.
+Do not treat @file{/} specially when removing recursively.
+This option is not recommended unless you really want to
+remove all the files on your computer.
 @xref{Treating / specially}.
 
 @item -r
@@ -8798,7 +8803,7 @@ during a recursive traversal, but see @option{--verbose}.
 @itemx --preserve-root
 @opindex --preserve-root
 @cindex root directory, disallow recursive modification
-Fail upon any attempt to recursively change the file system root, @file{/}.
+Fail upon any attempt to recursively change the root directory, @file{/}.
 Without @option{--recursive}, this option has no effect.
 @xref{Treating / specially}.
 
@@ -8920,7 +8925,7 @@ during a recursive traversal, but see @option{--verbose}.
 @itemx --preserve-root
 @opindex --preserve-root
 @cindex root directory, disallow recursive modification
-Fail upon any attempt to recursively change the file system root, @file{/}.
+Fail upon any attempt to recursively change the root directory, @file{/}.
 Without @option{--recursive}, this option has no effect.
 @xref{Treating / specially}.
 
@@ -9041,7 +9046,7 @@ changed.
 @itemx --preserve-root
 @opindex --preserve-root
 @cindex root directory, disallow recursive modification
-Fail upon any attempt to recursively change the file system root, @file{/}.
+Fail upon any attempt to recursively change the root directory, @file{/}.
 Without @option{--recursive}, this option has no effect.
 @xref{Treating / specially}.
 
