@@ -368,17 +368,21 @@ uid_t getuid ();
 #define X2REALLOC(P, PN) ((void) verify_true (sizeof *(P) == 1), \
                           x2realloc (P, PN))
 
-/* Include automatically-generated macros for unlocked I/O.  */
 #include "unlocked-io.h"
 #include "same-inode.h"
+
+#include "dirname.h"
 
 static inline bool
 dot_or_dotdot (char const *file_name)
 {
-  return (file_name[0] == '.'
-	  && (file_name[1] == '\0'
-	      || (file_name[1] == '.'
-		  && file_name[2] == '\0')));
+  if (file_name[0] == '.')
+    {
+      char sep = file_name[(file_name[1] == '.') + 1];
+      return (! sep || ISSLASH (sep));
+    }
+  else
+    return false;
 }
 
 /* A wrapper for readdir so that callers don't see entries for `.' or `..'.  */
