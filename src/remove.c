@@ -26,7 +26,6 @@
 #include "system.h"
 #include "cycle-check.h"
 #include "dirfd.h"
-#include "dirname.h"
 #include "error.h"
 #include "euidaccess.h"
 #include "euidaccess-stat.h"
@@ -151,6 +150,43 @@ close_preserve_errno (int fd)
   errno = saved_errno;
   return result;
 }
+
+/* Like fstatat, but cache the result.  If ST->st_size is -1, the
+   status has not been gotten yet.  If less than -1, fstatat failed
+   with errno == -1 - ST->st_size.  Otherwise, the status has already
+   been gotten, so return 0.  */
+static int
+cache_fstatat (int fd, char const *file, struct stat *st, int flag)
+{
+  if (st->st_size == -1 && fstatat (fd, file, st, flag) != 0)
+    st->st_size = -1 - errno;
+  if (0 <= st->st_size)
+    return 0;
+  errno = -1 - st->st_size;
+  return -1;
+}
+
+/* Initialize a fstatat cache *ST.  */
+static inline void
+cache_stat_init (struct stat *st)
+{
+  st->st_size = -1;
+}
+
+/* Return true if *ST has been statted.  */
+static inline bool
+cache_statted (struct stat *st)
+{
+  return (st->st_size != -1);
+}
+
+/* Return true if *ST has been statted successfully.  */
+static inline bool
+cache_stat_ok (struct stat *st)
+{
+  return (0 <= st->st_size);
+}
+
 
 static void
 hash_freer (void *x)
@@ -661,18 +697,16 @@ is_empty_dir (int fd_cwd, char const *dir)
 
 /* Return true if FILE is determined to be an unwritable non-symlink.
    Otherwise, return false (including when lstat'ing it fails).
-   If lstat (aka fstatat) succeeds, set *BUF_P to BUF.
+   Set *BUF to the file status.
    This is to avoid calling euidaccess when FILE is a symlink.  */
 static bool
 write_protected_non_symlink (int fd_cwd,
 			     char const *file,
 			     Dirstack_state const *ds,
-			     struct stat **buf_p,
 			     struct stat *buf)
 {
-  if (fstatat (fd_cwd, file, buf, AT_SYMLINK_NOFOLLOW) != 0)
+  if (cache_fstatat (fd_cwd, file, buf, AT_SYMLINK_NOFOLLOW) != 0)
     return false;
-  *buf_p = buf;
   if (S_ISLNK (buf->st_mode))
     return false;
   /* Here, we know FILE is not a symbolic link.  */
@@ -744,41 +778,33 @@ write_protected_non_symlink (int fd_cwd,
    directory FILENAME.  MODE is ignored when FILENAME is not a directory.
    Set *IS_EMPTY to T_YES if FILENAME is an empty directory, and it is
    appropriate to try to remove it with rmdir (e.g. recursive mode).
-   Don't even try to set *IS_EMPTY when MODE == PA_REMOVE_DIR.
-   Set *IS_DIR to T_YES or T_NO if we happen to determine whether
-   FILENAME is a directory.  */
+   Don't even try to set *IS_EMPTY when MODE == PA_REMOVE_DIR.  */
 static enum RM_status
 prompt (int fd_cwd, Dirstack_state const *ds, char const *filename,
+	struct stat *sbuf,
 	struct rm_options const *x, enum Prompt_action mode,
-	Ternary *is_dir, Ternary *is_empty)
+	Ternary *is_empty)
 {
   bool write_protected = false;
-  struct stat *sbuf = NULL;
-  struct stat buf;
 
   *is_empty = T_UNKNOWN;
-  *is_dir = T_UNKNOWN;
 
   if (((!x->ignore_missing_files & (x->interactive | x->stdin_tty))
        && (write_protected = write_protected_non_symlink (fd_cwd, filename,
-							  ds, &sbuf, &buf)))
+							  ds, sbuf)))
       || x->interactive)
     {
-      if (sbuf == NULL)
+      if (cache_fstatat (fd_cwd, filename, sbuf, AT_SYMLINK_NOFOLLOW) != 0)
 	{
-	  sbuf = &buf;
-	  if (fstatat (fd_cwd, filename, sbuf, AT_SYMLINK_NOFOLLOW))
-	    {
-	      /* lstat failed.  This happens e.g., with `rm '''.  */
-	      error (0, errno, _("cannot remove %s"),
-		     quote (full_filename (filename)));
-	      return RM_ERROR;
-	    }
+	  /* This happens, e.g., with `rm '''.  */
+	  error (0, errno, _("cannot remove %s"),
+		 quote (full_filename (filename)));
+	  return RM_ERROR;
 	}
 
       if (S_ISDIR (sbuf->st_mode) && !x->recursive)
 	{
-	  error (0, EISDIR, _("cannot remove directory %s"),
+	  error (0, EISDIR, _("cannot remove %s"),
 		 quote (full_filename (filename)));
 	  return RM_ERROR;
 	}
@@ -794,8 +820,6 @@ prompt (int fd_cwd, Dirstack_state const *ds, char const *filename,
       /* Issue the prompt.  */
       {
 	char const *quoted_name = quote (full_filename (filename));
-
-	*is_dir = (S_ISDIR (sbuf->st_mode) ? T_YES : T_NO);
 
 	/* FIXME: use a variant of error (instead of fprintf) that doesn't
 	   append a newline.  Then we won't have to declare program_name in
@@ -832,13 +856,15 @@ prompt (int fd_cwd, Dirstack_state const *ds, char const *filename,
 
 /* Return true if FILENAME is a directory (and not a symlink to a directory).
    Otherwise, including the case in which lstat fails, return false.
+   *ST is FILENAME's tstatus.
    Do not modify errno.  */
 static inline bool
-is_dir_lstat (char const *filename)
+is_dir_lstat (char const *filename, struct stat *st)
 {
-  struct stat sbuf;
   int saved_errno = errno;
-  bool is_dir = lstat (filename, &sbuf) == 0 && S_ISDIR (sbuf.st_mode);
+  bool is_dir =
+    (cache_fstatat (AT_FDCWD, filename, st, AT_SYMLINK_NOFOLLOW) == 0
+     && S_ISDIR (st->st_mode));
   errno = saved_errno;
   return is_dir;
 }
@@ -896,12 +922,13 @@ is_dir_lstat (char const *filename)
 
 static enum RM_status
 remove_entry (int fd_cwd, Dirstack_state const *ds, char const *filename,
+	      struct stat *st,
 	      struct rm_options const *x, struct dirent const *dp)
 {
-  Ternary is_dir;
   Ternary is_empty_directory;
-  enum RM_status s = prompt (fd_cwd, ds, filename, x, PA_DESCEND_INTO_DIR,
-			     &is_dir, &is_empty_directory);
+  enum RM_status s = prompt (fd_cwd, ds, filename, st, x, PA_DESCEND_INTO_DIR,
+			     &is_empty_directory);
+  bool known_to_be_dir = (cache_stat_ok (st) && S_ISDIR (st->st_mode));
 
   if (s != RM_OK)
     return s;
@@ -922,9 +949,9 @@ remove_entry (int fd_cwd, Dirstack_state const *ds, char const *filename,
 
   if (cannot_unlink_dir ())
     {
-      if (is_dir == T_YES && ! x->recursive)
+      if (known_to_be_dir && ! x->recursive)
 	{
-	  error (0, EISDIR, _("cannot remove directory %s"),
+	  error (0, EISDIR, _("cannot remove %s"),
 		 quote (full_filename (filename)));
 	  return RM_ERROR;
 	}
@@ -941,7 +968,7 @@ remove_entry (int fd_cwd, Dirstack_state const *ds, char const *filename,
 	 unlink call.  If FILENAME is a command-line argument, then dp is NULL,
 	 so we'll first try to unlink it.  Using unlink here is ok, because it
 	 cannot remove a directory.  */
-      if ((dp && DT_MUST_BE (dp, DT_DIR)) || is_dir == T_YES)
+      if ((dp && DT_MUST_BE (dp, DT_DIR)) || known_to_be_dir)
 	return RM_NONEMPTY_DIR;
 
       DO_UNLINK (fd_cwd, filename, x);
@@ -949,7 +976,7 @@ remove_entry (int fd_cwd, Dirstack_state const *ds, char const *filename,
       /* Upon a failed attempt to unlink a directory, most non-Linux systems
 	 set errno to the POSIX-required value EPERM.  In that case, change
 	 errno to EISDIR so that we emit a better diagnostic.  */
-      if (! x->recursive && errno == EPERM && is_dir_lstat (filename))
+      if (! x->recursive && errno == EPERM && is_dir_lstat (filename, st))
 	errno = EISDIR;
 
       if (! x->recursive
@@ -965,16 +992,20 @@ remove_entry (int fd_cwd, Dirstack_state const *ds, char const *filename,
     }
   else
     {
-      /* If we don't already know whether FILENAME is a directory, find out now.
-	 Then, if it's a non-directory, we can use unlink on it.  */
-      if (is_dir == T_UNKNOWN)
+      /* If we don't already know whether FILENAME is a directory,
+	 find out now.  Then, if it's a non-directory, we can use
+	 unlink on it.  */
+      bool is_dir;
+
+      if (cache_statted (st))
+	is_dir = known_to_be_dir;
+      else
 	{
 	  if (dp && DT_IS_KNOWN (dp))
-	    is_dir = DT_MUST_BE (dp, DT_DIR) ? T_YES : T_NO;
+	    is_dir = DT_MUST_BE (dp, DT_DIR);
 	  else
 	    {
-	      struct stat sbuf;
-	      if (fstatat (fd_cwd, filename, &sbuf, AT_SYMLINK_NOFOLLOW))
+	      if (fstatat (fd_cwd, filename, st, AT_SYMLINK_NOFOLLOW))
 		{
 		  if (errno == ENOENT && x->ignore_missing_files)
 		    return RM_OK;
@@ -984,11 +1015,11 @@ remove_entry (int fd_cwd, Dirstack_state const *ds, char const *filename,
 		  return RM_ERROR;
 		}
 
-	      is_dir = S_ISDIR (sbuf.st_mode) ? T_YES : T_NO;
+	      is_dir = !! S_ISDIR (st->st_mode);
 	    }
 	}
 
-      if (is_dir == T_NO)
+      if (! is_dir)
 	{
 	  /* At this point, barring race conditions, FILENAME is known
 	     to be a non-directory, so it's ok to try to unlink it.  */
@@ -1002,7 +1033,7 @@ remove_entry (int fd_cwd, Dirstack_state const *ds, char const *filename,
 
       if (! x->recursive)
 	{
-	  error (0, EISDIR, _("cannot remove directory %s"),
+	  error (0, EISDIR, _("cannot remove %s"),
 		 quote (full_filename (filename)));
 	  return RM_ERROR;
 	}
@@ -1130,7 +1161,8 @@ remove_cwd_entries (DIR **dirp,
 	 case can decide whether to use unlink or chdir.
 	 Systems without the d_type member will have to endure
 	 the performance hit of first calling lstat F. */
-      tmp_status = remove_entry (dirfd (*dirp), ds, f, x, dp);
+      cache_stat_init (subdir_sb);
+      tmp_status = remove_entry (dirfd (*dirp), ds, f, subdir_sb, x, dp);
       switch (tmp_status)
 	{
 	case RM_OK:
@@ -1224,10 +1256,10 @@ remove_cwd_entries (DIR **dirp,
 
 static enum RM_status
 remove_dir (int fd_cwd, Dirstack_state *ds, char const *dir,
+	    struct stat *dir_st,
 	    struct rm_options const *x, int *cwd_errno)
 {
   enum RM_status status;
-  struct stat dir_sb;
 
   /* There is a race condition in that an attacker could replace the nonempty
      directory, DIR, with a symlink between the preceding call to rmdir
@@ -1237,7 +1269,7 @@ remove_dir (int fd_cwd, Dirstack_state *ds, char const *dir,
      fd_to_subdirp's fstat, along with the `fstat' and the dev/ino
      comparison in AD_push ensure that we detect it and fail.  */
 
-  DIR *dirp = fd_to_subdirp (fd_cwd, dir, x, 0, &dir_sb, ds, cwd_errno);
+  DIR *dirp = fd_to_subdirp (fd_cwd, dir, x, 0, dir_st, ds, cwd_errno);
 
   if (dirp == NULL)
     {
@@ -1262,14 +1294,14 @@ remove_dir (int fd_cwd, Dirstack_state *ds, char const *dir,
       return RM_ERROR;
     }
 
-  if (ROOT_DEV_INO_CHECK (x->root_dev_ino, &dir_sb))
+  if (ROOT_DEV_INO_CHECK (x->root_dev_ino, dir_st))
     {
       ROOT_DEV_INO_WARN (full_filename (dir));
       status = RM_ERROR;
       goto closedir_and_return;
     }
 
-  AD_push (dirfd (dirp), ds, dir, &dir_sb);
+  AD_push (dirfd (dirp), ds, dir, dir_st);
   AD_INIT_OTHER_MEMBERS ();
 
   status = RM_OK;
@@ -1314,10 +1346,10 @@ remove_dir (int fd_cwd, Dirstack_state *ds, char const *dir,
 	       prompts the user.  E.g., we already know that D is a directory
 	       and that it's almost certainly empty, yet we lstat it.
 	       But that's no big deal since we're interactive.  */
-	    Ternary is_dir;
+	    struct stat empty_st;  cache_stat_init (&empty_st);
 	    Ternary is_empty;
-	    enum RM_status s = prompt (fd, ds, empty_dir, x,
-				       PA_REMOVE_DIR, &is_dir, &is_empty);
+	    enum RM_status s = prompt (fd, ds, empty_dir, &empty_st, x,
+				       PA_REMOVE_DIR, &is_empty);
 
 	    if (s != RM_OK)
 	      {
@@ -1371,18 +1403,39 @@ static enum RM_status
 rm_1 (Dirstack_state *ds, char const *filename,
       struct rm_options const *x, int *cwd_errno)
 {
+  struct stat st;
+  cache_stat_init (&st);
+
   char const *base = last_component (filename);
   if (dot_or_dotdot (base))
     {
-      error (0, 0, _("cannot remove `.' or `..'"));
+      error (0, 0, _(base == filename
+		     ? "cannot remove directory %s"
+		     : "cannot remove %s directory %s"),
+	     quote_n (0, base), quote_n (1, filename));
       return RM_ERROR;
+    }
+  if (x->root_dev_ino)
+    {
+      if (cache_fstatat (AT_FDCWD, filename, &st, AT_SYMLINK_NOFOLLOW) != 0)
+	{
+	  if (errno == ENOENT && x->ignore_missing_files)
+	    return RM_OK;
+	  error (0, errno, _("cannot remove %s"), quote (filename));
+	  return RM_ERROR;
+	}
+      if (SAME_INODE (st, *(x->root_dev_ino)))
+	{
+	  error (0, 0, _("cannot remove root directory %s"), quote (filename));
+	  return RM_ERROR;
+	}
     }
 
   AD_push_initial (ds);
   AD_INIT_OTHER_MEMBERS ();
 
   int fd_cwd = AT_FDCWD;
-  enum RM_status status = remove_entry (fd_cwd, ds, filename, x, NULL);
+  enum RM_status status = remove_entry (fd_cwd, ds, filename, &st, x, NULL);
   if (status == RM_NONEMPTY_DIR)
     {
       /* In the event that remove_dir->remove_cwd_entries detects
@@ -1391,7 +1444,7 @@ rm_1 (Dirstack_state *ds, char const *filename,
       if (setjmp (ds->current_arg_jumpbuf))
 	status = RM_ERROR;
       else
-	status = remove_dir (fd_cwd, ds, filename, x, cwd_errno);
+	status = remove_dir (fd_cwd, ds, filename, &st, x, cwd_errno);
 
       AD_stack_clear (ds);
     }
