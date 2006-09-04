@@ -23,7 +23,7 @@ Valgrind <http://valgrind.org/> is also highly recommended, if
 Valgrind supports your architecture.
 
 Only building the initial full source tree will be a bit painful,
-later, a plain `cvs update -P & make' should be sufficient.
+later, a plain `cvs update -P && make' should be sufficient.
 
 * First CVS checkout
 

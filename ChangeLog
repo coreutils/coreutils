@@ -1,3 +1,7 @@
+2006-09-04  Jim Meyering  <jim@meyering.net>
+
+	* README-cvs: Fix typo in update command.
+
 2006-09-03  Jim Meyering  <jim@meyering.net>
 
 	* NEWS: Tweak the wording in the new change description so that
