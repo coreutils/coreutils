@@ -23,6 +23,13 @@
 # Make sure we get English translations.
 . $srcdir/../lang-default
 
+# Skip this test if cp was built without ACL support:
+grep '^#define USE_ACL 0' $CONFIG_HEADER > /dev/null && \
+  {
+    echo 1>&2 "$0: insufficient ACL support, so skipping this test"
+    (exit 77); exit 77
+  }
+
 if test "$VERBOSE" = yes; then
   set -x
   mv --version

@@ -1,5 +1,8 @@
 2006-09-05  Jim Meyering  <jim@meyering.net>
 
+	* tests/cp/acl: Skip this test when cp lacks ACL support.
+	* tests/cp/Makefile.am (TESTS_ENVIRONMENT): Set $(CONFIG_HEADER).
+
 	* src/c99-to-c89.diff (remove.c): Adapt one hunk to match the new
 	context from change of 2006-09-02.
 
