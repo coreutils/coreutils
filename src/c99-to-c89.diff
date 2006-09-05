@@ -81,7 +81,7 @@ diff -u -p -r1.156 remove.c
  
 +  {
    int fd_cwd = AT_FDCWD;
-   enum RM_status status = remove_entry (fd_cwd, ds, filename, x, NULL);
+   enum RM_status status = remove_entry (fd_cwd, ds, filename, &st, x, NULL);
    if (status == RM_NONEMPTY_DIR)
 @@ -1399,6 +1406,7 @@ rm_1 (Dirstack_state *ds, char const *fi
    ds_clear (ds);

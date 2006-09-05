@@ -1,3 +1,8 @@
+2006-09-05  Jim Meyering  <jim@meyering.net>
+
+	* src/c99-to-c89.diff (remove.c): Adapt one hunk to match the new
+	context from change of 2006-09-02.
+
 2006-09-04  Jim Meyering  <jim@meyering.net>
 
 	* README-cvs: Fix typo in update command.
