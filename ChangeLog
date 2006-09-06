@@ -1,3 +1,11 @@
+2006-09-06  Jim Meyering  <jim@meyering.net>
+
+	Ensure that some gnulib-tool-generated files are read-only.
+	* bootstrap (slurp): Put the body of this function in a sub-shell,
+	with "umask a-w" so that all new files are read-only.  Remove each
+	file before we write to it, in case it's read-only.
+	Make po/Makevars and runtime-po/Makevars read-only, too.
+
 2006-09-05  Jim Meyering  <jim@meyering.net>
 
 	* tests/cp/acl: Skip this test when cp lacks ACL support.

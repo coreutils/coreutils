@@ -214,6 +214,10 @@ esac
 
 
 slurp() {
+ (
+  # Ensure that files created herein are read-only, to indicate that
+  # they are generated, and hence should not be modified directly.
+  umask a-w
   for dir in . `(cd $1 && find * -type d -print)`; do
     copied=
     sep=
@@ -225,6 +229,7 @@ slurp() {
       if test $file = Makefile.am; then
 	copied=$copied${sep}gnulib.mk; sep=$nl
 	echo "$0: Copying $1/$dir/$file to $dir/gnulib.mk ..." &&
+	rm -f $dir/gnulib.mk
 	sed '/^[^#].*\/intl/s/^/#/' $1/$dir/$file >$dir/gnulib.mk
       elif test -r ${2-no/such/dir}/$dir/$file ||
 	   grep -F "/$file/" $dir/CVS/Entries 2>/dev/null |
@@ -234,6 +239,7 @@ slurp() {
 	copied=$copied$sep$file; sep=$nl
 	if test $file = gettext.m4; then
 	  echo "$0: patching m4/gettext.m4 to remove need for intl/* ..."
+	  rm -f $dir/$file
 	  sed '
 	    /^AC_DEFUN(\[AM_INTL_SUBDIR],/,/^]/c\
 	      AC_DEFUN([AM_INTL_SUBDIR], [
@@ -243,6 +249,7 @@ slurp() {
 	      AC_DEFUN([gl_LOCK_EARLY], [])
 	  ' $1/$dir/$file >$dir/$file
 	else
+	  rm -f $dir/$file
 	  cp $1/$dir/$file $dir/$file
 	fi
       fi || exit
@@ -254,6 +261,7 @@ slurp() {
       echo "$copied" | sort -u - $ig -o $ig || exit
     fi
   done
+ )
 }
 
 
@@ -319,6 +327,7 @@ done
 
 # Create gettext configuration.
 echo "$0: Creating po/Makevars from po/Makevars.template ..."
+rm -f po/Makevars
 sed '
   /^EXTRA_LOCALE_CATEGORIES *=/s/=.*/= '"$EXTRA_LOCALE_CATEGORIES"'/
   /^MSGID_BUGS_ADDRESS *=/s/=.*/= bug-'"$package"'@gnu.org/
@@ -328,14 +337,17 @@ sed '
 	'"$XGETTEXT_OPTIONS"' $${end_of_xgettext_options+}
   }
 ' po/Makevars.template >po/Makevars
+chmod a-w po/Makevars
 
 if test -d runtime-po; then
   # Likewise for runtime-po/Makevars, except also change a few other parameters.
+  rm -f runtime-po/Makevars
   sed '
     s/^\(DOMAIN\) *=.*/\1 = '"$package"'-runtime/
     s/^\(subdir\) *=.*/\1 = runtime-po/
     s/^\(XGETTEXT_OPTIONS\) *=.*/\1 = '"$XGETTEXT_OPTIONS_RUNTIME"'/
   ' <po/Makevars >runtime-po/Makevars
+  chmod a-w runtime-po/Makevars
 
   # Copy identical files from po to runtime-po.
   (cd po && cp -p Makefile.in.in *-quot *.header *.sed *.sin ../runtime-po)
