@@ -1,5 +1,8 @@
 2006-09-07  Jim Meyering  <jim@meyering.net>
 
+	* bootstrap: Revert last change.  There are less disruptive ways
+	to mark these generated files as read-only.
+
 	* src/c99-to-c89.diff: Update to have proper offsets.
 
 2006-09-06  Jim Meyering  <jim@meyering.net>
