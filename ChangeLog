@@ -1,3 +1,7 @@
+2006-09-07  Jim Meyering  <jim@meyering.net>
+
+	* src/c99-to-c89.diff: Update to have proper offsets.
+
 2006-09-06  Jim Meyering  <jim@meyering.net>
 
 	Ensure that some gnulib-tool-generated files are read-only.

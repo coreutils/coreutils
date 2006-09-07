@@ -1,11 +1,11 @@
 Index: src/remove.c
 ===================================================================
 RCS file: /fetish/cu/src/remove.c,v
-retrieving revision 1.156
-diff -u -p -r1.156 remove.c
---- src/remove.c	3 Jul 2006 17:38:20 -0000	1.156
-+++ src/remove.c	17 Aug 2006 09:18:52 -0000
-@@ -202,9 +202,10 @@ pop_dir (Dirstack_state *ds)
+retrieving revision 1.158
+diff -u -p -u -r1.158 remove.c
+--- src/remove.c	3 Sep 2006 02:54:51 -0000	1.158
++++ src/remove.c	6 Sep 2006 18:57:46 -0000
+@@ -238,9 +238,10 @@ pop_dir (Dirstack_state *ds)
  {
    size_t n_lengths = obstack_object_size (&ds->len_stack) / sizeof (size_t);
    size_t *length = obstack_base (&ds->len_stack);
@@ -17,7 +17,7 @@ diff -u -p -r1.156 remove.c
    assert (top_len >= 2);
  
    /* Pop the specified length of file name.  */
-@@ -336,10 +337,11 @@ AD_stack_top (Dirstack_state const *ds)
+@@ -372,10 +373,11 @@ AD_stack_top (Dirstack_state const *ds)
  static void
  AD_stack_pop (Dirstack_state *ds)
  {
@@ -30,7 +30,7 @@ diff -u -p -r1.156 remove.c
    if (top->unremovable)
      hash_free (top->unremovable);
    obstack_blank (&ds->Active_dir, -(int) sizeof (struct AD_ent));
-@@ -506,6 +508,7 @@ AD_mark_helper (Hash_table **ht, char *f
+@@ -542,6 +544,7 @@ AD_mark_helper (Hash_table **ht, char *f
        if (*ht == NULL)
  	xalloc_die ();
      }
@@ -38,7 +38,7 @@ diff -u -p -r1.156 remove.c
    void *ent = hash_insert (*ht, filename);
    if (ent == NULL)
      xalloc_die ();
-@@ -514,7 +517,7 @@ AD_mark_helper (Hash_table **ht, char *f
+@@ -550,7 +553,7 @@ AD_mark_helper (Hash_table **ht, char *f
        if (ent != filename)
  	free (filename);
      }
@@ -47,7 +47,7 @@ diff -u -p -r1.156 remove.c
  }
  
  /* Mark FILENAME (in current directory) as unremovable.  */
-@@ -1059,6 +1062,7 @@ fd_to_subdirp (int fd_cwd, char const *f
+@@ -1090,6 +1093,7 @@ fd_to_subdirp (int fd_cwd, char const *f
        return NULL;
      }
  
@@ -55,7 +55,7 @@ diff -u -p -r1.156 remove.c
    DIR *subdir_dirp = fdopendir (fd_sub);
    if (subdir_dirp == NULL)
      {
-@@ -1067,6 +1071,7 @@ fd_to_subdirp (int fd_cwd, char const *f
+@@ -1098,6 +1102,7 @@ fd_to_subdirp (int fd_cwd, char const *f
      }
  
    return subdir_dirp;
@@ -63,7 +63,7 @@ diff -u -p -r1.156 remove.c
  }
  
  /* Remove entries in the directory open on DIRP
-@@ -1302,9 +1307,10 @@ remove_dir (int fd_cwd, Dirstack_state *
+@@ -1334,9 +1339,10 @@ remove_dir (int fd_cwd, Dirstack_state *
  	/* The name of the directory that we have just processed,
  	   nominally removing all of its contents.  */
  	char *empty_dir;
@@ -75,7 +75,7 @@ diff -u -p -r1.156 remove.c
  	assert (dirp != NULL || AD_stack_height (ds) == 1);
  
  	/* Try to remove EMPTY_DIR only if remove_cwd_entries succeeded.  */
-@@ -1381,6 +1387,7 @@ rm_1 (Dirstack_state *ds, char const *fi
+@@ -1434,6 +1440,7 @@ rm_1 (Dirstack_state *ds, char const *fi
    AD_push_initial (ds);
    AD_INIT_OTHER_MEMBERS ();
  
@@ -83,7 +83,7 @@ diff -u -p -r1.156 remove.c
    int fd_cwd = AT_FDCWD;
    enum RM_status status = remove_entry (fd_cwd, ds, filename, &st, x, NULL);
    if (status == RM_NONEMPTY_DIR)
-@@ -1399,6 +1406,7 @@ rm_1 (Dirstack_state *ds, char const *fi
+@@ -1452,6 +1459,7 @@ rm_1 (Dirstack_state *ds, char const *fi
    ds_clear (ds);
  
    return status;
@@ -91,7 +91,7 @@ diff -u -p -r1.156 remove.c
  }
  
  /* Remove all files and/or directories specified by N_FILES and FILE.
-@@ -1421,9 +1429,11 @@ rm (size_t n_files, char const *const *f
+@@ -1474,9 +1482,11 @@ rm (size_t n_files, char const *const *f
  	}
  
        cycle_check_init (&ds->cycle_check_state);
@@ -106,11 +106,11 @@ diff -u -p -r1.156 remove.c
 Index: src/rm.c
 ===================================================================
 RCS file: /fetish/cu/src/rm.c,v
-retrieving revision 1.139
-diff -u -p -r1.139 rm.c
---- src/rm.c	20 Feb 2006 12:48:11 -0000	1.139
-+++ src/rm.c	17 Aug 2006 09:18:52 -0000
-@@ -358,8 +358,10 @@ main (int argc, char **argv)
+retrieving revision 1.140
+diff -u -p -u -r1.140 rm.c
+--- src/rm.c	3 Sep 2006 02:53:58 -0000	1.140
++++ src/rm.c	6 Sep 2006 18:57:46 -0000
+@@ -357,8 +357,10 @@ main (int argc, char **argv)
  	if (!yesno ())
  	  exit (EXIT_SUCCESS);
        }
