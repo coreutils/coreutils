@@ -1,3 +1,8 @@
+2006-09-08  Jim Meyering  <jim@meyering.net>
+
+	* bootstrap: Export CVS_RSH separate from its assignment, to work
+	even with Solaris 10's /bin/sh.  Suggestion from Mark D. Baushke.
+
 2006-09-08  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: tail now ignores the -f option if POSIXLY_CORRECT is set,
