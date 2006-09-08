@@ -337,8 +337,8 @@ for file in $gnulib_extra_files; do
   */INSTALL) dest=.;;
   *) dest=$file;;
   esac
-  echo "$0: cp -fp $GNULIB_SRCDIR/$file $dest" &&
-  cp -fp $GNULIB_SRCDIR/$file $dest || exit
+  echo "$0: cp -fp $src $dest" &&
+  cp -fp $src $dest || exit
 done
 
 
