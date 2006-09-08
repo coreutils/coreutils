@@ -218,7 +218,7 @@ cp_mark_as_generated()
   local dst=$2
   local c1 c2
   case $dst in
-    *.[chly])           c1='/* '; c2=' */';;
+    *.[ch])             c1='/* '; c2=' */';;
     *.texi)             c1='@c '; c2=     ;;
     *.m4|*/Make*|Make*) c1='# ';  c2=     ;;
     *)                                    ;;
