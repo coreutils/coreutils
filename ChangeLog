@@ -1,3 +1,10 @@
+2006-09-08  Jim Meyering  <jim@meyering.net>
+
+	* bootstrap (cp_mark_as_generated): New function.
+	(slurp): Use it to prepend editor hints and a warning that
+	the file we're copying is generated.
+	Suggestion from Bruce Korb.
+
 2006-09-07  Jim Meyering  <jim@meyering.net>
 
 	* bootstrap: Revert last change.  There are less disruptive ways

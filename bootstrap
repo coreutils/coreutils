@@ -212,6 +212,29 @@ case $SKIP_PO in
   fi;;
 esac
 
+cp_mark_as_generated()
+{
+  local src=$1
+  local dst=$2
+  local c1 c2
+  case $dst in
+    *.[chly])           c1='/* '; c2=' */';;
+    *.texi)             c1='@c '; c2=     ;;
+    *.m4|*/Make*|Make*) c1='# ';  c2=     ;;
+    *)                                    ;;
+  esac
+
+  if test -z "$c1"; then
+    cp "$src" "$dst"
+    return
+  fi
+
+  (
+    echo "$c1-*- buffer-read-only: t -*- vi: set ro:$c2"
+    echo "$c1DO NOT EDIT! GENERATED AUTOMATICALLY!$c2"
+    cat "$src"
+  ) >> "$dst"
+}
 
 slurp() {
   for dir in . `(cd $1 && find * -type d -print)`; do
@@ -225,6 +248,7 @@ slurp() {
       if test $file = Makefile.am; then
 	copied=$copied${sep}gnulib.mk; sep=$nl
 	echo "$0: Copying $1/$dir/$file to $dir/gnulib.mk ..." &&
+	rm -f $dir/gnulib.mk
 	sed '/^[^#].*\/intl/s/^/#/' $1/$dir/$file >$dir/gnulib.mk
       elif test -r ${2-no/such/dir}/$dir/$file ||
 	   grep -F "/$file/" $dir/CVS/Entries 2>/dev/null |
@@ -234,6 +258,7 @@ slurp() {
 	copied=$copied$sep$file; sep=$nl
 	if test $file = gettext.m4; then
 	  echo "$0: patching m4/gettext.m4 to remove need for intl/* ..."
+	  rm -f $dir/$file
 	  sed '
 	    /^AC_DEFUN(\[AM_INTL_SUBDIR],/,/^]/c\
 	      AC_DEFUN([AM_INTL_SUBDIR], [
@@ -243,7 +268,8 @@ slurp() {
 	      AC_DEFUN([gl_LOCK_EARLY], [])
 	  ' $1/$dir/$file >$dir/$file
 	else
-	  cp $1/$dir/$file $dir/$file
+	  rm -f $dir/$file
+	  cp_mark_as_generated $1/$dir/$file $dir/$file
 	fi
       fi || exit
     done
@@ -319,6 +345,7 @@ done
 
 # Create gettext configuration.
 echo "$0: Creating po/Makevars from po/Makevars.template ..."
+rm -f po/Makevars
 sed '
   /^EXTRA_LOCALE_CATEGORIES *=/s/=.*/= '"$EXTRA_LOCALE_CATEGORIES"'/
   /^MSGID_BUGS_ADDRESS *=/s/=.*/= bug-'"$package"'@gnu.org/
@@ -331,6 +358,7 @@ sed '
 
 if test -d runtime-po; then
   # Likewise for runtime-po/Makevars, except also change a few other parameters.
+  rm -f runtime-po/Makevars
   sed '
     s/^\(DOMAIN\) *=.*/\1 = '"$package"'-runtime/
     s/^\(subdir\) *=.*/\1 = runtime-po/
