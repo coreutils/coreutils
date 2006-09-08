@@ -231,7 +231,7 @@ cp_mark_as_generated()
 
   (
     echo "$c1-*- buffer-read-only: t -*- vi: set ro:$c2"
-    echo "$c1DO NOT EDIT! GENERATED AUTOMATICALLY!$c2"
+    echo "${c1}DO NOT EDIT! GENERATED AUTOMATICALLY!$c2"
     cat "$src"
   ) >> "$dst"
 }

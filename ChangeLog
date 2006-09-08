@@ -5,6 +5,7 @@
 	the file we're copying is generated.
 	Suggestion from Bruce Korb.
 	(cp_mark_as_generated): Don't add C-style comments for .l or .y files.
+	Fix last-minute typo.
 
 2006-09-07  Jim Meyering  <jim@meyering.net>
 
