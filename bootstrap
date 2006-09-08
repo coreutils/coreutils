@@ -214,26 +214,25 @@ esac
 
 cp_mark_as_generated()
 {
-  local src=$1
-  local dst=$2
-  local c1 c2
-  case $dst in
+  cp_src=$1
+  cp_dst=$2
+  case $cp_dst in
     *.[ch])             c1='/* '; c2=' */';;
     *.texi)             c1='@c '; c2=     ;;
-    *.m4|*/Make*|Make*) c1='# ';  c2=     ;;
-    *)                                    ;;
+    *.m4|*/Make*|Make*) c1='# ' ; c2=     ;;
+    *)                  c1=     ; c2=     ;;
   esac
 
   if test -z "$c1"; then
-    cp "$src" "$dst"
+    cp "$cp_src" "$cp_dst"
     return
   fi
 
   (
     echo "$c1-*- buffer-read-only: t -*- vi: set ro:$c2"
     echo "${c1}DO NOT EDIT! GENERATED AUTOMATICALLY!$c2"
-    cat "$src"
-  ) >> "$dst"
+    cat "$cp_src"
+  ) >> "$cp_dst"
 }
 
 slurp() {

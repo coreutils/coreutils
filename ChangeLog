@@ -1,5 +1,10 @@
 2006-09-08  Jim Meyering  <jim@meyering.net>
 
+	* bootstrap (cp_mark_as_generated): Don't use "local", to
+	accommodate ancient "/bin/sh".  Suggested by Ralf Wildenhues.
+	Rename now-global "$src" and "$dst" to have cp_ prefix.
+	Safer, and avoids confusion.
+
 	* bootstrap (cp_mark_as_generated): New function.
 	(slurp): Use it to prepend editor hints and a warning that
 	the file we're copying is generated.
