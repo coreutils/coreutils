@@ -1,3 +1,10 @@
+2006-09-08  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* NEWS: tail now ignores the -f option if POSIXLY_CORRECT is set,
+	no file operand is given, and standard input is any FIFO.
+	This is in response to Open Group XCU ERN 114.
+	* src/tail.c (main): Likewise.
+
 2006-09-08  Jim Meyering  <jim@meyering.net>
 
 	mv and "cp -r" no longer fail when invoked with two arguments

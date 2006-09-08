@@ -8,6 +8,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   now fails without removing anything.  Likewise for any file name with
   a final `./' or `../' component.
 
+  tail now ignores the -f option if POSIXLY_CORRECT is set, no file
+  operand is given, and standard input is any FIFO; formerly it did
+  this only for pipes.
+
 ** Infrastructure changes
 
   Coreutils now uses gnulib via the gnulib-tool script.

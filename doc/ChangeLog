@@ -1,3 +1,8 @@
+2006-09-08  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (tail invocation): Ignore -f when standard input
+	is a FIFO, too.
+
 2006-09-02  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (Treating / specially): --preserve-root is

@@ -1640,10 +1640,15 @@ main (int argc, char **argv)
 
       if (forever && getenv ("POSIXLY_CORRECT"))
 	{
-	  int is_a_pipe = isapipe (STDIN_FILENO);
-	  if (is_a_pipe < 0)
+	  struct stat st;
+	  int is_a_fifo_or_pipe =
+	    (fstat (STDIN_FILENO, &st) != 0 ? -1
+	     : S_ISFIFO (st.st_mode) ? 1
+	     : HAVE_FIFO_PIPES == 1 ? 0
+	     : isapipe (STDIN_FILENO));
+	  if (is_a_fifo_or_pipe < 0)
 	    error (EXIT_FAILURE, errno, _("standard input"));
-	  if (is_a_pipe)
+	  if (is_a_fifo_or_pipe)
 	    forever = false;
 	}
     }
