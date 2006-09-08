@@ -1,8 +1,10 @@
 #!/bin/sh
 # On some operating systems, e.g. SunOS-4.1.1_U1 on sun3x,
 # rename() doesn't accept trailing slashes.
+# Also, ensure that "mv dir non-exist-dir/" works.
+# Also, ensure that "cp dir non-exist-dir/" works.
 
-# Copyright (C) 2004 Free Software Foundation, Inc.
+# Copyright (C) 2004, 2006 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -37,12 +39,39 @@ cd $tmp || framework_failure=1
 mkdir foo || framework_failure=1
 
 if test $framework_failure = 1; then
-  echo 'failure in testing framework'
+  echo 'failure in testing framework' 1>&2
   exit 1
 fi
 
 fail=0
 
 mv foo/ bar || fail=1
+
+# mv and cp would misbehave for coreutils versions [5.3.0..5.97], 6.0 and 6.1
+for cmd in mv 'cp -r'; do
+  for opt in '' -T -u; do
+    rm -rf d e || framework_failure=1
+    mkdir d    || framework_failure=1
+    if test $framework_failure = 1; then
+      echo 'failure in testing framework'
+      (exit 1); exit 1
+    fi
+
+    $cmd $opt d e/ || fail=1
+    if test "$cmd" = mv; then
+      test -d d && fail=1
+    else
+      test -d d || fail=1
+    fi
+    test -d e || fail=1
+  done
+done
+
+# We would like the erroneous-looking "mv any non-dir/" to fail,
+# but with the current implementation, it depends on how the
+# underlying rename syscall handles the trailing slash.
+# It does fail, as desired, on recent Linux and Solaris systems.
+#touch a a2
+#mv a a2/ && fail=1
 
 (exit $fail); exit $fail

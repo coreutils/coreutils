@@ -518,9 +518,6 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
 static bool
 target_directory_operand (char const *file, struct stat *st, bool *new_dst)
 {
-  char const *b = last_component (file);
-  size_t blen = strlen (b);
-  bool looks_like_a_dir = (blen == 0 || ISSLASH (b[blen - 1]));
   int err = (stat (file, st) == 0 ? 0 : errno);
   bool is_a_dir = !err && S_ISDIR (st->st_mode);
   if (err)
@@ -529,8 +526,6 @@ target_directory_operand (char const *file, struct stat *st, bool *new_dst)
 	error (EXIT_FAILURE, err, _("accessing %s"), quote (file));
       *new_dst = true;
     }
-  if (is_a_dir < looks_like_a_dir)
-    error (EXIT_FAILURE, err, _("target %s is not a directory"), quote (file));
   return is_a_dir;
 }
 

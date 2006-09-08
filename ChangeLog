@@ -1,5 +1,21 @@
 2006-09-08  Jim Meyering  <jim@meyering.net>
 
+	mv and "cp -r" no longer fail when invoked with two arguments
+	where the first one names a directory and the second name ends in
+	a slash and doesn't exist.  E.g., "mv dir B/", for nonexistent B,
+	now succeeds, once more. This reverts part of the 2004-06-27
+	change for 5.3.0.
+	* NEWS: Say the above.
+	* src/mv.c (target_directory_operand): Don't require (here)
+	that the target operand "look like" a directory.  This change
+	pushes the test down to the rename syscall level, where a
+	"mv dir existing-non-dir/" will mistakenly succeed on older systems
+	that ignore trailing slashes in the rename destination argument.
+	* src/cp.c (target_directory_operand): Likewise, but for cp.
+	* tests/mv/trailing-slash: Exercise the above fixes.
+	* tests/cp/trailing-slash: New file.
+	* tests/cp/Makefile.am (EXTRA_DIST): Add trailing-slash.
+
 	* bootstrap: Use the previously unused variable, $src,
 	to avoid repeating "$GNULIB_SRCDIR/$file".
 

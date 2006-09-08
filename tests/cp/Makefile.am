@@ -31,7 +31,7 @@ TESTS = \
   same-file cp-mv-backup symlink-slash slink-2-slink fail-perm dir-slash \
   perm cp-HL special-bits link dir-rm-dest cp-parents deref-slink \
   dir-vs-file into-self
-EXTRA_DIST = $(TESTS)
+EXTRA_DIST = $(TESTS) trailing-slash
 TESTS_ENVIRONMENT = \
   MAKE=$(MAKE) \
   CONFIG_HEADER=$(CONFIG_HEADER) \

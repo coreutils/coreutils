@@ -27,6 +27,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   "mv -T --verbose --backup=t A B" now prints the " (backup: B.~1~)"
   suffix when A and B are directories as well as when they are not.
 
+  mv and "cp -r" no longer fail when invoked with two arguments
+  where the first one names a directory and the second name ends in
+  a slash and doesn't exist.  E.g., "mv dir B/", for nonexistent B,
+  now succeeds, once more.  This bug was introduced in coreutils-5.3.0.
+
 
 * Major changes in release 6.1 (2006-08-19) [unstable]
 
