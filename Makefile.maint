@@ -158,12 +158,15 @@ sc_require_config_h:
 
 # Prohibit the inclusion of assert.h without an actual use of assert.
 sc_prohibit_assert_without_use:
-	@files=$$(grep -l '# *include <assert\.h>'			\
+	@if $(CVS_LIST_EXCEPT) | grep '\.c$$'; then			\
+	  files=$$(grep -l '# *include <assert\.h>'			\
 		    $$($(CVS_LIST_EXCEPT) | grep '\.c$$')) &&		\
-	grep -L '\<assert (' $$files					\
-	    | grep . &&							\
-	  { echo "$(ME): the above files include <assert.h> but don't use it" \
-		1>&2; exit 1; } || :
+	  grep -L '\<assert (' $$files					\
+	      | grep . &&						\
+	    { echo "$(ME): the above files include <assert.h> but don't use it" \
+		  1>&2; exit 1; } || :;					\
+	else :;								\
+	fi
 
 sc_obsolete_symbols:
 	@grep -nE '\<(HAVE''_FCNTL_H|O''_NDELAY)\>'			\
