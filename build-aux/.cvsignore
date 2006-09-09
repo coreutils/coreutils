@@ -7,5 +7,6 @@ gnupload
 install-sh
 mdate-sh
 missing
+mkinstalldirs
 texinfo.tex
 ylwrap
