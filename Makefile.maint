@@ -197,8 +197,8 @@ endif
 # On 2004-04-13, they were all changed to start with gl_ instead.
 # Make sure that none are inadvertently reintroduced.
 sc_prohibit_jm_in_m4:
-	@grep -nE 'jm_[A-Z]'					\
-		$$($(CVS_LIST) m4 |grep '\.m4$$') &&		\
+	grep -nE 'jm_[A-Z]'					\
+		$$($(CVS_LIST) m4 |grep '\.m4$$'; echo /dev/null) && \
 	    { echo '$(ME): do not use jm_ in m4 macro names'	\
 	      1>&2; exit 1; } || :
 
