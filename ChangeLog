@@ -2,6 +2,8 @@
 
 	* Makefile.maint (sc_prohibit_jm_in_m4): Don't hang when there
 	are no .m4 files.
+	(sc_require_config_h): Skip this test if there are no version-
+	controlled .c files.
 
 2006-09-08  Jim Meyering  <jim@meyering.net>
 
