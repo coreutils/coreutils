@@ -1346,8 +1346,9 @@ remove_dir (int fd_cwd, Dirstack_state *ds, char const *dir,
 	       prompts the user.  E.g., we already know that D is a directory
 	       and that it's almost certainly empty, yet we lstat it.
 	       But that's no big deal since we're interactive.  */
-	    struct stat empty_st;  cache_stat_init (&empty_st);
+	    struct stat empty_st;
 	    Ternary is_empty;
+	    cache_stat_init (&empty_st);
 	    enum RM_status s = prompt (fd, ds, empty_dir, &empty_st, x,
 				       PA_REMOVE_DIR, &is_empty);
 
@@ -1403,9 +1404,6 @@ static enum RM_status
 rm_1 (Dirstack_state *ds, char const *filename,
       struct rm_options const *x, int *cwd_errno)
 {
-  struct stat st;
-  cache_stat_init (&st);
-
   char const *base = last_component (filename);
   if (dot_or_dotdot (base))
     {
@@ -1415,6 +1413,9 @@ rm_1 (Dirstack_state *ds, char const *filename,
 	     quote_n (0, base), quote_n (1, filename));
       return RM_ERROR;
     }
+
+  struct stat st;
+  cache_stat_init (&st);
   if (x->root_dev_ino)
     {
       if (cache_fstatat (AT_FDCWD, filename, &st, AT_SYMLINK_NOFOLLOW) != 0)

@@ -1,3 +1,10 @@
+2006-09-11  Jim Meyering  <jim@meyering.net>
+
+	* src/remove.c (remove_dir): Move new cache_stat_init call onto
+	it's own line.
+	(rm_1): Move declaration of "st" and new cache_stat_init call
+	"down" to nearer where they're used.
+
 2006-09-10  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/expr.c (eval6): Fix buffer overrun, or bad performance, if
