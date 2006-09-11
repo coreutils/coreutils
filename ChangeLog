@@ -4,6 +4,7 @@
 	it's own line.
 	(rm_1): Move declaration of "st" and new cache_stat_init call
 	"down" to nearer where they're used.
+	* src/c99-to-c89.diff: Add another set of curly braces.
 
 2006-09-10  Paul Eggert  <eggert@cs.ucla.edu>
 

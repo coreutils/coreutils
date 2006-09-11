@@ -75,7 +75,15 @@ diff -u -p -u -r1.158 remove.c
  	assert (dirp != NULL || AD_stack_height (ds) == 1);
  
  	/* Try to remove EMPTY_DIR only if remove_cwd_entries succeeded.  */
-@@ -1434,6 +1440,7 @@ rm_1 (Dirstack_state *ds, char const *fi
+@@ -1414,6 +1420,7 @@ rm_1 (Dirstack_state *ds, char const *fi
+       return RM_ERROR;
+     }
+
++  {
+   struct stat st;
+   cache_stat_init (&st);
+   if (x->root_dev_ino)
+@@ -1435,6 +1442,7 @@ rm_1 (Dirstack_state *ds, char const *fi
    AD_push_initial (ds);
    AD_INIT_OTHER_MEMBERS ();
  
@@ -83,15 +91,16 @@ diff -u -p -u -r1.158 remove.c
    int fd_cwd = AT_FDCWD;
    enum RM_status status = remove_entry (fd_cwd, ds, filename, &st, x, NULL);
    if (status == RM_NONEMPTY_DIR)
-@@ -1452,6 +1459,7 @@ rm_1 (Dirstack_state *ds, char const *fi
+@@ -1453,6 +1461,8 @@ rm_1 (Dirstack_state *ds, char const *fi
    ds_clear (ds);
  
    return status;
 +  }
++  }
  }
  
  /* Remove all files and/or directories specified by N_FILES and FILE.
-@@ -1474,9 +1482,11 @@ rm (size_t n_files, char const *const *f
+@@ -1475,9 +1485,11 @@ rm (size_t n_files, char const *const *f
  	}
  
        cycle_check_init (&ds->cycle_check_state);
