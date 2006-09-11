@@ -1,3 +1,9 @@
+2006-09-10  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/expr.c (eval6): Fix buffer overrun, or bad performance, if
+	substr's last operand is very large.  Performance problem reported
+	by Sebastian Kreft.
+
 2006-09-09  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.maint (sc_prohibit_jm_in_m4): Don't hang when there

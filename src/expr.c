@@ -551,21 +551,25 @@ eval6 (bool evaluate)
     }
   else if (nextarg ("substr"))
     {
+      size_t llen;
       l = eval6 (evaluate);
       i1 = eval6 (evaluate);
       i2 = eval6 (evaluate);
       tostring (l);
+      llen = strlen (l->u.s);
       if (!toarith (i1) || !toarith (i2)
-	  || strlen (l->u.s) < i1->u.i
+	  || llen < i1->u.i
 	  || i1->u.i <= 0 || i2->u.i <= 0)
 	v = str_value ("");
       else
 	{
+	  size_t vlen = MIN (i2->u.i, llen - i1->u.i + 1);
+	  char *vlim;
 	  v = xmalloc (sizeof *v);
 	  v->type = string;
-	  v->u.s = strncpy (xmalloc (i2->u.i + 1),
-			    l->u.s + i1->u.i - 1, i2->u.i);
-	  v->u.s[i2->u.i] = 0;
+	  v->u.s = xmalloc (vlen + 1);
+	  vlim = mempcpy (v->u.s, l->u.s + i1->u.i - 1, vlen);
+	  *vlim = '\0';
 	}
       freev (l);
       freev (i1);
