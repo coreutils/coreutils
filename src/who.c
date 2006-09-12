@@ -414,7 +414,7 @@ print_user (const STRUCT_UTMP *utmp_ent, time_t boottime)
 	  hostlen = 1;
 	  hoststr = xrealloc (hoststr, hostlen);
 	}
-      stpcpy (hoststr, "");
+      *hoststr = '\0';
     }
 #endif
 
