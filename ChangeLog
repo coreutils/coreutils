@@ -1,3 +1,10 @@
+2006-09-12  Jim Meyering  <jim@meyering.net>
+
+	* tests/mv/atomic: Check for specific strace output, rather than
+	simply nonempty.  RHEL AS 4 would fail this test due to strace
+	generating "[ Process PID=14434 runs in 32 bit mode. ]".
+	Reported by Nelson Beebe.
+
 2006-09-11  Jim Meyering  <jim@meyering.net>
 
 	* src/remove.c (remove_dir): Move new cache_stat_init call onto
