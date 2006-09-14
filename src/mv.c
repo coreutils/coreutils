@@ -140,9 +140,8 @@ cp_option_init (struct cp_options *x)
 }
 
 /* FILE is the last operand of this command.  Return true if FILE is a
-   directory.  But report an error there is a problem accessing FILE,
-   or if FILE does not exist but would have to refer to an existing
-   directory if it referred to anything at all.  */
+   directory.  But report an error if there is a problem accessing FILE, other
+   than nonexistence (errno == ENOENT).  */
 
 static bool
 target_directory_operand (char const *file)
@@ -447,7 +446,8 @@ main (int argc, char **argv)
     }
   else if (!target_directory)
     {
-      if (2 <= n_files && target_directory_operand (file[n_files - 1]))
+      assert (2 <= n_files);
+      if (target_directory_operand (file[n_files - 1]))
 	target_directory = file[--n_files];
       else if (2 < n_files)
 	error (EXIT_FAILURE, 0, _("target %s is not a directory"),

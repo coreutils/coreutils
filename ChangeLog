@@ -1,3 +1,9 @@
+2006-09-14  Jim Meyering  <jim@meyering.net>
+
+	* src/mv.c (main): Remove unnecessary (always-true) test for 2 <= n.
+	Instead, since it's a little fragile, assert the condition.
+	(target_directory_operand): Update comment to reflect latest change.
+
 2006-09-12  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/who.c (print_user): Rewrite to avoid warning from
