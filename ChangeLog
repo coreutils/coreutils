@@ -1,3 +1,9 @@
+2006-09-15  Jim Meyering  <jim@meyering.net>
+
+	* bootstrap.conf (gnulib_modules): Add rename-dest-slash.
+	The 2006-09-08 changes made it so "mv dir new-name/" would
+	fail on NetBSD 1.6.  This makes it work once again.
+
 2006-09-14  Jim Meyering  <jim@meyering.net>
 
 	* src/mv.c (main): Remove unnecessary (always-true) test for 2 <= n.
