@@ -1,3 +1,8 @@
+2006-09-16  Jim Meyering  <jim@meyering.net>
+
+	* Makefile.maint (sc_require_config_h, sc_prohibit_assert_without_use):
+	Discard stdout from the new use of grep.
+
 2006-09-15  Jim Meyering  <jim@meyering.net>
 
 	* bootstrap.conf (gnulib_modules): Add rename-dest-slash.

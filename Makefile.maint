@@ -147,7 +147,7 @@ sc_no_have_config_h:
 
 # Nearly all .c files must include <config.h>.
 sc_require_config_h:
-	@if $(CVS_LIST_EXCEPT) | grep '\.c$$'; then			\
+	@if $(CVS_LIST_EXCEPT) | grep '\.c$$' > /dev/null; then		\
 	  grep -L '^# *include <config\.h>'				\
 		$$($(CVS_LIST_EXCEPT) | grep '\.c$$')			\
 	      | grep . &&						\
@@ -158,7 +158,7 @@ sc_require_config_h:
 
 # Prohibit the inclusion of assert.h without an actual use of assert.
 sc_prohibit_assert_without_use:
-	@if $(CVS_LIST_EXCEPT) | grep '\.c$$'; then			\
+	@if $(CVS_LIST_EXCEPT) | grep '\.c$$' > /dev/null; then		\
 	  files=$$(grep -l '# *include <assert\.h>'			\
 		    $$($(CVS_LIST_EXCEPT) | grep '\.c$$')) &&		\
 	  grep -L '\<assert (' $$files					\
