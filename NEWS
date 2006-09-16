@@ -4,6 +4,11 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Changes in behavior
 
+  mkdir -p and install -d (or -D) now use a method that forks a child
+  process if the working directory is unreadable and a later argument
+  uses a relative file name.  This avoids some race conditions, but it
+  means you may need to kill two processes to stop these programs.
+
   rm now rejects attempts to remove the root directory, e.g., `rm -fr /'
   now fails without removing anything.  Likewise for any file name with
   a final `./' or `../' component.

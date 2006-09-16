@@ -1,7 +1,23 @@
-2006-09-16  Jim Meyering  <jim@meyering.net>
+2006-09-16  Paul Eggert  <eggert@cs.ucla.edu>
 
-	* Makefile.maint (sc_require_config_h, sc_prohibit_assert_without_use):
-	Discard stdout from the new use of grep.
+	* NEWS: Document that mkdir -p and install -d now fork on occasion.
+	* bootstrap.conf (gnulib_modules): Add savewd.
+	* src/install.c: Include savewd.h.
+	(process_dir): New function.
+	(main, install_file_in_file_parents): Use it, along with the new
+	savewd module, to avoid some race conditions.
+	* src/mkdir.c: Include savewd.h.
+	(struct mkdir_options): New members make_ancestor_function, mode,
+	mode_bits.
+	(make_ancestor): Return 1 if the resulting directory is not readable.
+	(process_dir): New function.
+	(main): Use it, along with new savewd module, to avoid some
+	race conditions.  Fill in new slots of struct mkdir_options, so
+	that callees get the values.
+	* tests/install/basic-1: Test for coreutils 5.97 bug that was
+	fixed in coreutils 6.0, and which should still be fixed with
+	this change.
+	* tests/mkdir/p-3: Likewise.
 
 2006-09-15  Jim Meyering  <jim@meyering.net>
 

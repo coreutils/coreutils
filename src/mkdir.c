@@ -28,6 +28,7 @@
 #include "mkdir-p.h"
 #include "modechange.h"
 #include "quote.h"
+#include "savewd.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "mkdir"
@@ -75,11 +76,21 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   exit (status);
 }
 
-/* Options for announce_mkdir and make_ancestor.  */
+/* Options passed to subsidiary functions.  */
 struct mkdir_options
 {
+  /* Function to make an ancestor, or NULL if ancestors should not be
+     made.  */
+  int (*make_ancestor_function) (char const *, void *);
+
   /* Mode for ancestor directory.  */
   mode_t ancestor_mode;
+
+  /* Mode for directory itself.  */
+  mode_t mode;
+
+  /* File mode bits affected by MODE.  */
+  mode_t mode_bits;
 
   /* If not null, format to use when reporting newly made directories.  */
   char const *created_directory_format;
@@ -94,27 +105,44 @@ announce_mkdir (char const *dir, void *options)
     error (0, 0, o->created_directory_format, quote (dir));
 }
 
-/* Make ancestor directory DIR, with options OPTIONS.  */
+/* Make ancestor directory DIR, with options OPTIONS.  Return 0 if
+   successful and the resulting directory is readable, 1 if successful
+   but the resulting directory is not readable, -1 (setting errno)
+   otherwise.  */
 static int
 make_ancestor (char const *dir, void *options)
 {
   struct mkdir_options const *o = options;
   int r = mkdir (dir, o->ancestor_mode);
   if (r == 0)
-    announce_mkdir (dir, options);
+    {
+      r = ! (o->ancestor_mode & S_IRUSR);
+      announce_mkdir (dir, options);
+    }
   return r;
+}
+
+/* Process a command-line file name.  */
+static int
+process_dir (char *dir, struct savewd *wd, void *options)
+{
+  struct mkdir_options const *o = options;
+  return (make_dir_parents (dir, wd, o->make_ancestor_function, options,
+			    o->mode, announce_mkdir,
+			    o->mode_bits, (uid_t) -1, (gid_t) -1, true)
+	  ? EXIT_SUCCESS
+	  : EXIT_FAILURE);
 }
 
 int
 main (int argc, char **argv)
 {
-  mode_t mode = S_IRWXUGO;
-  mode_t mode_bits = 0;
-  int (*make_ancestor_function) (char const *, void *) = NULL;
   const char *specified_mode = NULL;
-  int exit_status = EXIT_SUCCESS;
   int optc;
   struct mkdir_options options;
+  options.make_ancestor_function = NULL;
+  options.mode = S_IRWXUGO;
+  options.mode_bits = 0;
   options.created_directory_format = NULL;
 
   initialize_main (&argc, &argv);
@@ -130,7 +158,7 @@ main (int argc, char **argv)
       switch (optc)
 	{
 	case 'p':
-	  make_ancestor_function = make_ancestor;
+	  options.make_ancestor_function = make_ancestor;
 	  break;
 	case 'm':
 	  specified_mode = optarg;
@@ -151,7 +179,7 @@ main (int argc, char **argv)
       usage (EXIT_FAILURE);
     }
 
-  if (make_ancestor_function || specified_mode)
+  if (options.make_ancestor_function || specified_mode)
     {
       mode_t umask_value = umask (0);
 
@@ -163,19 +191,14 @@ main (int argc, char **argv)
 	  if (!change)
 	    error (EXIT_FAILURE, 0, _("invalid mode %s"),
 		   quote (specified_mode));
-	  mode = mode_adjust (S_IRWXUGO, true, umask_value, change,
-			      &mode_bits);
+	  options.mode = mode_adjust (S_IRWXUGO, true, umask_value, change,
+				      &options.mode_bits);
 	  free (change);
 	}
       else
-	mode &= ~umask_value;
+	options.mode = S_IRWXUGO & ~umask_value;
     }
 
-  for (; optind < argc; ++optind)
-    if (! make_dir_parents (argv[optind], make_ancestor_function, &options,
-			    mode, announce_mkdir,
-			    mode_bits, (uid_t) -1, (gid_t) -1, true))
-      exit_status = EXIT_FAILURE;
-
-  exit (exit_status);
+  exit (savewd_process_files (argc - optind, argv + optind,
+			      process_dir, &options));
 }

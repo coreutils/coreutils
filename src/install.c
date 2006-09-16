@@ -35,6 +35,7 @@
 #include "mkdir-p.h"
 #include "modechange.h"
 #include "quote.h"
+#include "savewd.h"
 #include "stat-time.h"
 #include "utimens.h"
 #include "xstrtol.h"
@@ -193,11 +194,23 @@ target_directory_operand (char const *file)
   return is_a_dir;
 }
 
+/* Process a command-line file name, for the -d option.  */
+static int
+process_dir (char *dir, struct savewd *wd, void *options)
+{
+  return (make_dir_parents (dir, wd,
+			    make_ancestor, options,
+			    dir_mode, announce_mkdir,
+			    dir_mode_bits, owner_id, group_id, false)
+	  ? EXIT_SUCCESS
+	  : EXIT_FAILURE);
+}
+
 int
 main (int argc, char **argv)
 {
   int optc;
-  bool ok = true;
+  int exit_status = EXIT_SUCCESS;
   const char *specified_mode = NULL;
   bool make_backups = false;
   char *backup_suffix_string;
@@ -361,13 +374,7 @@ main (int argc, char **argv)
   get_ids ();
 
   if (dir_arg)
-    {
-      int i;
-      for (i = 0; i < n_files; i++)
-	ok &= make_dir_parents (file[i], make_ancestor, &x,
-				dir_mode, announce_mkdir,
-				dir_mode_bits, owner_id, group_id, false);
-    }
+    exit_status = savewd_process_files (n_files, file, process_dir, &x);
   else
     {
       /* FIXME: it's a little gross that this initialization is
@@ -376,23 +383,22 @@ main (int argc, char **argv)
 
       if (!target_directory)
         {
-          if (mkdir_and_install)
-	    ok = install_file_in_file_parents (file[0], file[1], &x);
-	  else
-	    ok = install_file_in_file (file[0], file[1], &x);
+          if (! (mkdir_and_install
+		 ? install_file_in_file_parents (file[0], file[1], &x)
+		 : install_file_in_file (file[0], file[1], &x)))
+	    exit_status = EXIT_FAILURE;
 	}
       else
 	{
 	  int i;
 	  dest_info_init (&x);
 	  for (i = 0; i < n_files; i++)
-	    {
-	      ok &= install_file_in_dir (file[i], target_directory, &x);
-	    }
+	    if (! install_file_in_dir (file[i], target_directory, &x))
+	      exit_status = EXIT_FAILURE;
 	}
     }
 
-  exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
+  exit (exit_status);
 }
 
 /* Copy file FROM onto file TO, creating any missing parent directories of TO.
@@ -402,13 +408,36 @@ static bool
 install_file_in_file_parents (char const *from, char *to,
 			      struct cp_options *x)
 {
-  if (mkancesdirs (to, make_ancestor, x) != 0)
+  bool save_working_directory =
+    ! (IS_ABSOLUTE_FILE_NAME (from) && IS_ABSOLUTE_FILE_NAME (to));
+  int status = EXIT_SUCCESS;
+
+  struct savewd wd;
+  savewd_init (&wd);
+  if (! save_working_directory)
+    savewd_finish (&wd);
+
+  if (mkancesdirs (to, &wd, make_ancestor, x) == -1)
     {
       error (0, errno, _("cannot create directory %s"), to);
-      return false;
+      status = EXIT_FAILURE;
     }
 
-  return install_file_in_file (from, to, x);
+  if (save_working_directory)
+    {
+      int restore_result = savewd_restore (&wd, status);
+      int restore_errno = errno;
+      savewd_finish (&wd);
+      if (EXIT_SUCCESS < restore_result)
+	return false;
+      if (restore_result < 0 && status == EXIT_SUCCESS)
+	{
+	  error (0, restore_errno, _("cannot create directory %s"), to);
+	  return false;
+	}
+    }
+
+  return (status == EXIT_SUCCESS && install_file_in_file (from, to, x));
 }
 
 /* Copy file FROM onto file TO and give TO the appropriate

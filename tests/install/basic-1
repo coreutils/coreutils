@@ -1,7 +1,7 @@
 #! /bin/sh
 # Basic tests for "install".
 
-# Copyright (C) 1998, 2000, 2001, 2002, 2004, 2005 Free Software
+# Copyright (C) 1998, 2000, 2001, 2002, 2004, 2005, 2006 Free Software
 # Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
@@ -95,16 +95,27 @@ test -d newdir3 || fail=1
 # initial working directory ($abs) after creating the first argument, and
 # hence cannot do anything meaningful with the following relative-named dirs.
 abs=$pwd/$tmp
-mkdir sub && cd sub
-chmod 0 .; ginstall -d $abs/xx/yy rel/sub1 rel/sub2 2> /dev/null && fail=1
-chmod 755 $abs/sub
+mkdir sub || fail=1
+(cd sub && chmod 0 . && ginstall -d $abs/xx/yy rel/sub1 rel/sub2 2> /dev/null) && fail=1
+chmod 755 sub
 
 # Ensure that the first argument-dir has been created.
-test -d $abs/xx/yy || fail=1
+test -d xx/yy || fail=1
 
 # Make sure that the `rel' directory was not created...
-test -d $abs/sub/rel && fail=1
+test -d sub/rel && fail=1
 # and make sure it was not created in the wrong place.
-test -d $abs/xx/rel && fail=1
+test -d xx/rel && fail=1
+
+# Test that we can install from an unreadable directory with an
+# inaccessible parent.  coreutils 5.97 fails this test.
+mkdir -p sub1/d || fail=1
+(cd sub1/d && chmod a-rx .. && chmod a-r . &&
+ ginstall -d $abs/xx/zz rel/a rel/b 2> /dev/null) || fail=1
+chmod 755 sub1 || fail=1
+chmod 755 sub1/d || fail=1
+test -d xx/zz || fail=1
+test -d sub1/d/rel/a || fail=1
+test -d sub1/d/rel/b || fail=1
 
 (exit $fail); exit $fail
