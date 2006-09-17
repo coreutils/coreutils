@@ -54,99 +54,73 @@ chgrp $g2 f || fail=1
 chgrp $g2 f2 || fail=1
 chgrp -R $g1 d || fail=1
 
-# Don't let verbose output interfere.
-test "$VERBOSE" = yes && set +x
+d_files='d d/f3'
 
-(
-  chgrp -c $g1 f
-  chgrp -c $g2 f
-  chgrp -c $g2 f
-  chgrp --verbose '' f
-  chgrp --verbose $g1 f
-  chgrp --verbose $g1 f
-  chgrp --verbose --reference=f2 f
-  chgrp -R --verbose $g2 d
-  chgrp -R --verbose $g1 d
-  chgrp -R -c $g2 d
-  chgrp -R -c $g1 d
-  chgrp -c $g2 d
+chgrp $g1 f || fail=1  ; test `stat --p=%g f` = $g1 || fail=1
+chgrp $g2 f || fail=1  ; test `stat --p=%g f` = $g2 || fail=1
+chgrp $g2 f || fail=1  ; test `stat --p=%g f` = $g2 || fail=1
+chgrp '' f  || fail=1  ; test `stat --p=%g f` = $g2 || fail=1
+chgrp $g1 f || fail=1  ; test `stat --p=%g f` = $g1 || fail=1
+chgrp $g1 f || fail=1  ; test `stat --p=%g f` = $g1 || fail=1
+chgrp --reference=f2 f ; test `stat --p=%g f` = $g2 || fail=1
 
-  rm -f f
-  touch f
-  ln -s f symlink
-  chgrp $g1 f
-  chgrp -h $g2 symlink
+chgrp -R $g2 d ||fail=1; test `stat --p=%g: $d_files` = "$g2:$g2:" || fail=1
+chgrp -R $g1 d ||fail=1; test `stat --p=%g: $d_files` = "$g1:$g1:" || fail=1
+chgrp -R $g2 d ||fail=1; test `stat --p=%g: $d_files` = "$g2:$g2:" || fail=1
+chgrp -R $g1 d ||fail=1; test `stat --p=%g: $d_files` = "$g1:$g1:" || fail=1
+chgrp $g2 d    ||fail=1; test `stat --p=%g: $d_files` = "$g2:$g1:" || fail=1
 
-  # This should not change the group of f.
-  chgrp -h -c $g2 symlink
-  chown --from=:$g1 -c :$g2 f
+rm -f f
+touch f
+ln -s f symlink
+chgrp $g1 f; test `stat --printf=%g f` = $g1 || fail=1
 
-  # This *should* change the group of f.
-  # Though note that the diagnostic is misleading in that
-  # it says the `group of `symlink'' has been changed.
-  chgrp -c $g1 symlink
-  chown --from=:$g1 -c :$g2 f
+# This should not change the group of f.
+test `stat --printf=%g f` = $g1 || fail=1
+test `stat --printf=%g symlink` = $g1 || fail=1
+chgrp -h $g2 symlink
+test `stat --printf=%g f` = $g1 || fail=1
+test `stat --printf=%g symlink` = $g2 || fail=1
 
-  # If -R is specified without -H or L, -h is assumed.
-  chgrp -h $g1 f symlink
-  chgrp -R $g2 symlink
-  chown --from=:$g1 -c :$g2 f
+chown --from=:$g1 :$g2 f; test `stat --printf=%g f` = $g2 || fail=1
 
-  # Make sure we can change the group of inaccessible files.
-  chmod a-r f
-  chown --from=:$g2 -c :$g1 f
-  chmod 0 f
-  chown --from=:$g1 -c :$g2 f
+# This *should* change the group of f.
+# Though note that the diagnostic is misleading in that
+# it says the `group of `symlink'' has been changed.
+chgrp $g1 symlink; test `stat --printf=%g f` = $g1 || fail=1
+chown --from=:$g1 :$g2 f; test `stat --printf=%g f` = $g2 || fail=1
 
-  # chown() must not be optimized away even when
-  # the file's owner and group already have the desired value.
-  rm -f f g
-  touch f g
-  chgrp $g1 f g
-  chgrp $g2 g
-  sleep 1
-  chgrp $g1 f
+# If -R is specified without -H or L, -h is assumed.
+chgrp -h $g1 f symlink; test `stat --printf=%g symlink` = $g1 || fail=1
+chgrp -R $g2 symlink
+chown --from=:$g1 :$g2 f; test `stat --printf=%g f` = $g2 || fail=1
 
-  # The following no-change chgrp command is supposed to update f's ctime,
-  # but on OpenBSD, it appears to be a no-op for some file system types
-  # (at least NFS) so g's ctime is more recent.  This is not a big deal;
-  # this test works fine when the files are on a local file system (/tmp).
-  chgrp '' f
-  ls -c -t f g
+# Make sure we can change the group of inaccessible files.
+chmod a-r f
+chown --from=:$g2 :$g1 f; test `stat --printf=%g f` = $g1 || fail=1
+chmod 0 f
+chown --from=:$g1 :$g2 f; test `stat --printf=%g f` = $g2 || fail=1
 
-) 2>&1 | sed "
-  s/' to .*[^0-9:].*/' to SOMENAME/
-  s/\([ :]\)$g1$/\1G1/
-  s/\([ :]\)$g2$/\1G2/
-" > actual
+# chown() must not be optimized away even when
+# the file's owner and group already have the desired value.
+rm -f f g
+touch f g
+chgrp $g1 f g
+chgrp $g2 g
+sleep 1
+chgrp $g1 f
 
-cat <<\EOF > expected
-changed group of `f' to G1
-changed group of `f' to G2
-ownership of `f' retained
-changed group of `f' to G1
-group of `f' retained as G1
-changed group of `f' to SOMENAME
-changed group of `d/f3' to G2
-changed group of `d' to G2
-changed group of `d/f3' to G1
-changed group of `d' to G1
-changed group of `d/f3' to G2
-changed group of `d' to G2
-changed group of `d/f3' to G1
-changed group of `d' to G1
-changed group of `d' to G2
-changed ownership of `f' to :G2
-changed group of `symlink' to G1
-changed ownership of `f' to :G2
-changed ownership of `f' to :G2
-changed ownership of `f' to :G1
-changed ownership of `f' to :G2
-f
-g
-EOF
-
-cmp expected actual \
-  || { diff expected actual 1>&2; fail=1; }
+# The following no-change chgrp command is supposed to update f's ctime,
+# but on OpenBSD, it appears to be a no-op for some file system types
+# (at least NFS) so g's ctime is more recent.  This is not a big deal;
+# this test works fine when the files are on a local file system (/tmp).
+chgrp '' f
+test "`ls -C -c -t f g`" = 'f  g' || \
+  {
+    case $host_triplet in
+      *openbsd*) echo ignoring known OpenBSD-specific chgrp failure 1>&2  ;;
+      *)         echo no-change chgrp failed to update ctime 1>&2; fail=1 ;;
+    esac
+  }
 
 (exit $fail); exit $fail
