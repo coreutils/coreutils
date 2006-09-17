@@ -245,6 +245,7 @@ regex.h
 regex_internal.c
 regex_internal.h
 regexec.c
+rename-dest-slash.c
 rename.c
 rmdir.c
 rpmatch.c
@@ -259,6 +260,8 @@ save-cwd.c
 save-cwd.h
 savedir.c
 savedir.h
+savewd.c
+savewd.h
 search.h
 setenv.c
 setenv.h

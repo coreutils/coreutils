@@ -71,6 +71,7 @@ gettime.m4
 gettimeofday.m4
 getugroups.m4
 getusershell.m4
+glibc2.m4
 glibc21.m4
 gnulib-cache.m4
 gnulib-comp.m4
@@ -84,6 +85,7 @@ iconv.m4
 idcache.m4
 include_next.m4
 inet_ntop.m4
+intdiv0.m4
 intmax.m4
 intmax_t.m4
 inttostr.m4
@@ -96,12 +98,14 @@ jm-winsz1.m4
 jm-winsz2.m4
 lchmod.m4
 lchown.m4
+lcmessage.m4
 lib-ignore.m4
 lib-ld.m4
 lib-link.m4
 lib-prefix.m4
 link-follow.m4
 localcharset.m4
+lock.m4
 long-options.m4
 longdouble.m4
 longlong.m4
@@ -139,6 +143,7 @@ physmem.m4
 po.m4
 posixtm.m4
 posixver.m4
+printf-posix.m4
 progtest.m4
 putenv.m4
 quote.m4
@@ -147,6 +152,7 @@ readlink.m4
 readtokens.m4
 readutmp.m4
 regex.m4
+rename-dest-slash.m4
 rename.m4
 rmdir-errno.m4
 rmdir.m4
@@ -156,11 +162,13 @@ safe-write.m4
 same.m4
 save-cwd.m4
 savedir.m4
+savewd.m4
 setenv.m4
 settime.m4
 sha1.m4
 sig2str.m4
 signed.m4
+size_max.m4
 snprintf.m4
 socklen.m4
 sockpfaf.m4
@@ -196,6 +204,8 @@ time_r.m4
 timespec.m4
 tm_gmtoff.m4
 tzset.m4
+uintmax_t.m4
+ulonglong.m4
 unicodeio.m4
 unistd-safer.m4
 unistd_h.m4
@@ -212,6 +222,7 @@ utimes-null.m4
 utimes.m4
 vasnprintf.m4
 vasprintf.m4
+visibility.m4
 wchar_t.m4
 wcwidth.m4
 wint_t.m4
@@ -219,6 +230,7 @@ xalloc.m4
 xgetcwd.m4
 xnanosleep.m4
 xreadlink.m4
+xsize.m4
 xstrndup.m4
 xstrtod.m4
 xstrtol.m4
