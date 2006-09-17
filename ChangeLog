@@ -1,3 +1,9 @@
+2006-09-17  Jim Meyering  <jim@meyering.net>
+
+	* tests/envvar-check: Add more variable names to the list of those
+	that can affect these programs and tests: _POSIX2_VERSION, COLUMNS,
+	QUOTING_STYLE, TABSIZE, TERM, TMPDIR.
+
 2006-09-16  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: Document that mkdir -p and install -d now fork on occasion.
