@@ -73,11 +73,10 @@ chgrp $g2 d    ||fail=1; test `stat --p=%g: $d_files` = "$g2:$g1:" || fail=1
 rm -f f
 touch f
 ln -s f symlink
-chgrp $g1 f; test `stat --printf=%g f` = $g1 || fail=1
+chgrp $g1 f
+test `stat --printf=%g f` = $g1 || fail=1
 
 # This should not change the group of f.
-test `stat --printf=%g f` = $g1 || fail=1
-test `stat --printf=%g symlink` = $g1 || fail=1
 chgrp -h $g2 symlink
 test `stat --printf=%g f` = $g1 || fail=1
 test `stat --printf=%g symlink` = $g2 || fail=1
