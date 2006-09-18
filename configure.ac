@@ -20,7 +20,7 @@
 dnl Written by Jim Meyering.
 
 AC_PREREQ(2.60)
-AC_INIT([GNU coreutils],[6.2],[bug-coreutils@gnu.org])
+AC_INIT([GNU coreutils],[6.3-cvs],[bug-coreutils@gnu.org])
 AC_CONFIG_SRCDIR(src/ls.c)
 
 AC_CONFIG_AUX_DIR(build-aux)
