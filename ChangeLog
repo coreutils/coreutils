@@ -1,3 +1,9 @@
+2006-09-18  Jim Meyering  <jim@meyering.net>
+
+	Version 6.2.
+	* NEWS: Record the 6.2 release date.
+	* configure.ac (AC_INIT): Remove "-cvs" suffix from version string.
+
 2006-09-17  Jim Meyering  <jim@meyering.net>
 
 	* tests/chgrp/basic: On an OpenBSD system, rather than failing
