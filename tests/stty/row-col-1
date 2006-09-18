@@ -59,9 +59,7 @@ NA LAST NA
 '
 set $tests
 
-saved_size=.saved-size
-
-stty size > $saved_size \
+saved_size=`stty size` && test -n "$saved_size" \
   || { echo "$0: skipping this test: can't get window size" 1>&2;
        exit 77; exit; }
 
@@ -84,7 +82,7 @@ while :; do
   shift; shift; shift
 done
 
-stty `cat $saved_size|sed 's/ / columns /;s/^/rows /'` || exit 1
-rm -f $saved_size
+set x $saved_size
+stty rows $2 columns $3 || exit 1
 
 exit $fail
