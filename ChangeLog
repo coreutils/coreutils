@@ -1,5 +1,12 @@
 2006-09-18  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* bootstrap (symlink_to_gnulib): New function.
+	(cp_mark_as_generated): Use it, to prefer symlinks-to-gnulib
+	to copies-of-gnulib.
+	(cp_mark_as_generated, slurp, gnulib_files):
+	Avoid making a copy if it's the same as the old version.
+	(gnulib_files): Add support for this variable (used by Bison).
+
 	* tests/ls/stat-vs-dirent: Fix quoting problem in diagnostic
 	indicating flaw in kernel.  Reword to say that the flaw isn't
 	serious for coreutils, since the flaw does affect ls -i.
