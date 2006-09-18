@@ -1,5 +1,8 @@
 2006-09-18  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* src/shuf.c (main): Quote the entire range when reporting an
+	invalid one, rather than just the part that contained the error.
+
 	* tests/stty/row-col-1: Rewrite to avoid temporary file that is
 	sometimes left behind if the test is skipped or interrupted.
 

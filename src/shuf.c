@@ -279,6 +279,7 @@ main (int argc, char **argv)
 	{
 	  unsigned long int argval = 0;
 	  char *p = strchr (optarg, '-');
+	  char const *hi_optarg = optarg;
 	  bool invalid = !p;
 
 	  if (input_numbers_option_used (lo_input, hi_input))
@@ -292,10 +293,10 @@ main (int argc, char **argv)
 			 || SIZE_MAX < argval);
 	      *p = '-';
 	      lo_input = argval;
-	      optarg = p + 1;
+	      hi_optarg = p + 1;
 	    }
 
-	  invalid |= ((xstrtoul (optarg, NULL, 10, &argval, NULL)
+	  invalid |= ((xstrtoul (hi_optarg, NULL, 10, &argval, NULL)
 		       != LONGINT_OK)
 		      || SIZE_MAX < argval);
 	  hi_input = argval;
