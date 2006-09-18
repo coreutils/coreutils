@@ -51,6 +51,10 @@ enum RCH_status
     RC_error
   };
 
+/* Error number associated with the working directory, or 0 if no
+   error has been found.  */
+static int wd_errno;
+
 extern void
 chopt_init (struct Chown_option *chopt)
 {
@@ -422,7 +426,7 @@ change_file_owner (FTS *fts, FTSENT *ent,
   return ok;
 }
 
-/* Change the owner and/or group of the specified FILES.
+/* Change the owner and/or group of the specified FILE.
    BIT_FLAGS specifies how to treat each symlink-to-directory
    that is encountered during a recursive traversal.
    CHOPT specifies additional options.
@@ -431,11 +435,11 @@ change_file_owner (FTS *fts, FTSENT *ent,
    If REQUIRED_UID and/or REQUIRED_GID is not -1, then change only
    files with user ID and group ID that match the non-(-1) value(s).
    Return true if successful.  */
-extern bool
-chown_files (char **files, int bit_flags,
-	     uid_t uid, gid_t gid,
-	     uid_t required_uid, gid_t required_gid,
-	     struct Chown_option const *chopt)
+static bool
+chown_file (char *file, int bit_flags,
+	    uid_t uid, gid_t gid,
+	    uid_t required_uid, gid_t required_gid,
+	    struct Chown_option const *chopt)
 {
   bool ok = true;
 
@@ -445,7 +449,11 @@ chown_files (char **files, int bit_flags,
 		    ? 0
 		    : FTS_NOSTAT);
 
-  FTS *fts = xfts_open (files, bit_flags | stat_flags, NULL);
+  FTS *fts;
+  char *files[2];
+  files[0] = file;
+  files[1] = NULL;
+  fts = xfts_open (files, bit_flags | stat_flags, NULL);
 
   while (1)
     {
@@ -467,10 +475,40 @@ chown_files (char **files, int bit_flags,
 			       required_uid, required_gid, chopt);
     }
 
-  /* Ignore failure, since the only way it can do so is in failing to
-     return to the original directory, and since we're about to exit,
-     that doesn't matter.  */
-  fts_close (fts);
+  if (fts_close (fts) != 0)
+    wd_errno = errno;
+
+  return ok;
+}
+
+/* Change the owner and/or group of the specified FILES.
+   BIT_FLAGS specifies how to treat each symlink-to-directory
+   that is encountered during a recursive traversal.
+   CHOPT specifies additional options.
+   If UID is not -1, then change the owner id of each file to UID.
+   If GID is not -1, then change the group id of each file to GID.
+   If REQUIRED_UID and/or REQUIRED_GID is not -1, then change only
+   files with user ID and group ID that match the non-(-1) value(s).
+   Return true if successful.  */
+extern bool
+chown_files (char **files, int bit_flags,
+	     uid_t uid, gid_t gid,
+	     uid_t required_uid, gid_t required_gid,
+	     struct Chown_option const *chopt)
+{
+  bool ok = true;
+
+  for (; *files; files++)
+    {
+      if (! IS_ABSOLUTE_FILE_NAME (*files) && wd_errno)
+	{
+	  error (0, wd_errno, ".");
+	  ok = false;
+	}
+      else
+	ok &= chown_file (*files, bit_flags, uid, gid,
+			  required_uid, required_gid, chopt);
+    }
 
   return ok;
 }

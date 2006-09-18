@@ -85,6 +85,10 @@ static enum Verbosity verbosity = V_off;
    Otherwise NULL.  */
 static struct dev_ino *root_dev_ino;
 
+/* Error number associated with the working directory, or 0 if no
+   error has been found.  */
+static int wd_errno;
+
 /* For long options that have no equivalent short option, use a
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
@@ -279,16 +283,19 @@ process_file (FTS *fts, FTSENT *ent)
   return ok;
 }
 
-/* Recursively change the modes of the specified FILES (the last entry
-   of which is NULL).  BIT_FLAGS controls how fts works.
+/* Recursively change the modes of the command-line operand FILE.
+   BIT_FLAGS controls how fts works.
    Return true if successful.  */
 
 static bool
-process_files (char **files, int bit_flags)
+chmod_file (char *file, int bit_flags)
 {
+  char *files[2];
   bool ok = true;
-
-  FTS *fts = xfts_open (files, bit_flags, NULL);
+  FTS *fts;
+  files[0] = file;
+  files[1] = NULL;
+  fts = xfts_open (files, bit_flags, NULL);
 
   while (1)
     {
@@ -309,10 +316,31 @@ process_files (char **files, int bit_flags)
       ok &= process_file (fts, ent);
     }
 
-  /* Ignore failure, since the only way it can do so is in failing to
-     return to the original directory, and since we're about to exit,
-     that doesn't matter.  */
-  fts_close (fts);
+  if (fts_close (fts) != 0)
+    wd_errno = errno;
+
+  return ok;
+}
+
+/* Recursively change the modes of the specified FILES (the last entry
+   of which is NULL).  BIT_FLAGS controls how fts works.
+   Return true if successful.  */
+static bool
+process_files (char **files, int bit_flags)
+{
+  bool ok = true;
+  wd_errno = 0;
+
+  for (; *files; files++)
+    {
+      if (! IS_ABSOLUTE_FILE_NAME (*files) && wd_errno)
+	{
+	  error (0, wd_errno, ".");
+	  ok = false;
+	}
+      else
+	ok &= chmod_file (*files, bit_flags);
+    }
 
   return ok;
 }

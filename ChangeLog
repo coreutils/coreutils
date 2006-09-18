@@ -1,5 +1,18 @@
 2006-09-18  Paul Eggert  <eggert@cs.ucla.edu>
 
+	Fix bug where chmod, chown, and chgrp did not process operands
+	left-to-right in some cases.
+	* src/chmod.c (wd_errno): New var.
+	(chmod_file): New function, with most of the contents of the
+	old prcess_file function.
+	(process_files): Use it.  This gives file names to fts one
+	at a time, so that they are processed left-to-right as POSIX
+	requires.
+	* src/chown-core.c (wd_errno, chown_files): Likewise.
+	(chown_file): New function.
+	* tests/install/basic-1: Redo test so as to not workaround
+	the chmod bug, thereby testing for it.
+
 	* src/shuf.c (main): Quote the entire range when reporting an
 	invalid one, rather than just the part that contained the error.
 
