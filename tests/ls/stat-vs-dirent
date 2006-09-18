@@ -60,12 +60,10 @@ while :; do
     # We know from experience that there may be mismatches on some
     # buggy file systems, at mount points.
     if test "$d_ino" != "$st_ino"; then
-      echo "$0: test failed: $t/$file: d_ino($d_ino) != st_ino($st_ino)" 1>&2
-      echo "$0: This may indicate a flaw in your kernel or" \
-	     "file system implementation." 1>&2
-      echo "$0: This flaw won't impact coreutils, but it may well"
-	     "affect other tools,"
-      echo "$0: so you should report it to your operating system vendor." 1>&2
+      echo "$0: test failed: $t/$file: d_ino($d_ino) != st_ino($st_ino)
+	This may indicate a flaw in your kernel or file system implementation.
+	The flaw isn't serious for coreutils, but it might break other tools,
+	so you should report it to your operating system vendor." 1>&2
 
       # This test fails too often, and we don't want to be distracted
       # with reports, since the code that could be affected by the losing

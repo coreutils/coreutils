@@ -1,5 +1,9 @@
 2006-09-18  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* tests/ls/stat-vs-dirent: Fix quoting problem in diagnostic
+	indicating flaw in kernel.  Reword to say that the flaw isn't
+	serious for coreutils, since the flaw does affect ls -i.
+
 	* tests/chgrp/basic: Fix bug in test case exposed by building on
 	Solaris 8 in a setgid directory.  The test case incorrectly
 	assumed that 'symlink' would be in group $g1.
