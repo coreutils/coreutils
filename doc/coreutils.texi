@@ -6904,8 +6904,8 @@ via recursive traversal.
 @itemx --interactive
 @opindex -i
 @opindex --interactive
-When copying a regular file, prompt whether to overwrite an existing
-destination file.
+When copying a file other than a directory, prompt whether to
+overwrite an existing destination file.
 
 @item -l
 @itemx --link
