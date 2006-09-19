@@ -9229,11 +9229,9 @@ For example, use @samp{touch ./12312359 main.c} or @samp{touch -t
 
 @cindex disk usage
 
-No disk can hold an infinite amount of data.  These commands report on
-how much disk storage is in use or available.  (This has nothing much to
-do with how much @emph{main memory}, i.e., RAM, a program is using when
-it runs; for that, you want @command{ps} or @command{pstat} or @command{swap}
-or some such command.)
+No disk can hold an infinite amount of data.  These commands report
+how much disk storage is in use or available, report other file and
+file status information, and write buffers to disk.
 
 @menu
 * df invocation::               Report file system disk space usage.

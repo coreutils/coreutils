@@ -2,6 +2,7 @@
 
 	* coreutils.texi (cp invocation): Say that -i and -f are
 	independent.  Clarify -i's behavior.
+	(Disk usage): Clarify intro.  Problem reported by Van Ly.
 
 2006-09-08  Paul Eggert  <eggert@cs.ucla.edu>
 
