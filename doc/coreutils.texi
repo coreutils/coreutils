@@ -6890,6 +6890,9 @@ tries to open it again.  Contrast this behavior with that enabled by
 is never opened but rather is unlinked unconditionally.  Also see the
 description of @option{--remove-destination}.
 
+This option is independent of the @option{--interactive} or
+@option{-i} option: neither cancels the effect of the other.
+
 @item -H
 @opindex -H
 If a command line argument specifies a symbolic link, then copy the
@@ -6901,7 +6904,8 @@ via recursive traversal.
 @itemx --interactive
 @opindex -i
 @opindex --interactive
-Prompt whether to overwrite existing regular destination files.
+When copying a regular file, prompt whether to overwrite an existing
+destination file.
 
 @item -l
 @itemx --link

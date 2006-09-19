@@ -1,3 +1,8 @@
+2006-09-19  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (cp invocation): Say that -i and -f are
+	independent.  Clarify -i's behavior.
+
 2006-09-08  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* coreutils.texi (tail invocation): Ignore -f when standard input
