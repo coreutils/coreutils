@@ -1,3 +1,9 @@
+2006-09-19  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/ln.c (target_directory_operand): Rewrite to avoid porting
+	problem on Tandem reported by Matthew Woehlke in
+	<https://savannah.gnu.org/bugs/?17172>.
+
 2006-09-18  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Fix bug where chmod, chown, and chgrp did not process operands

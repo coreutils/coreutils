@@ -112,8 +112,9 @@ target_directory_operand (char const *file)
   size_t blen = strlen (b);
   bool looks_like_a_dir = (blen == 0 || ISSLASH (b[blen - 1]));
   struct stat st;
-  int err = ((dereference_dest_dir_symlinks ? stat : lstat) (file, &st) == 0
-	     ? 0 : errno);
+  int stat_result =
+    (dereference_dest_dir_symlinks ? stat (file, &st) : lstat (file, &st));
+  int err = (stat_result == 0 ? 0 : errno);
   bool is_a_dir = !err && S_ISDIR (st.st_mode);
   if (err && err != ENOENT)
     error (EXIT_FAILURE, err, _("accessing %s"), quote (file));
@@ -254,7 +255,7 @@ do_link (const char *source, const char *dest)
      Try to unlink DEST even if we may have backed it up successfully.
      In some unusual cases (when DEST and DEST_BACKUP are hard-links
      that refer to the same file), rename succeeds and DEST remains.
-     If we didn't remove DEST in that case, the subsequent LINKFUNC
+     If we didn't remove DEST in that case, the subsequent symlink or link
      call would fail.  */
 
   if (!ok && errno == EEXIST && (remove_existing_files || dest_backup))
