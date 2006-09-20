@@ -1,5 +1,7 @@
 2006-09-20  Jim Meyering  <jim@meyering.net>
 
+	* NEWS: Mention the chmod bug fix.
+
 	* tests/chmod/inaccessible: New test, specifically for this bug.
 	Based on a test case from Paul Eggert.
 	* tests/chmod/Makefile.am (TESTS): Add inaccessible.

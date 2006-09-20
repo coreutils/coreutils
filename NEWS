@@ -1,6 +1,13 @@
 GNU coreutils NEWS                                    -*- outline -*-
 
-* Major changes in release 6.3 (2006-??-??) [stable]
+* Major changes in release 6.3-cvs (2006-??-??) [stable]
+
+** Bug fixes
+
+  chmod would fail unnecessarily in an unusual case: when an initially-
+  inaccessible argument is rendered accessible by chmod's action on a
+  preceding command line argument.  This bug also affects chgrp, but
+  it is harder to demonstrate.  It does not affect chown.
 
 
 * Major changes in release 6.2 (2006-09-18) [stable candidate]
