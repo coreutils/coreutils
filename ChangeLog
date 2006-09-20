@@ -1,5 +1,8 @@
 2006-09-20  Jim Meyering  <jim@meyering.net>
 
+	* tests/chmod/inaccessible: New test.
+	* tests/chmod/Makefile.am (TESTS): Add inaccessible.
+
 	Fix the 2006-09-18 bug differently.
 	* src/chmod.c: (process_file): Upon FTS_NS for a top-level file,
 	tell fts_read to stat the file again, in case it has become
