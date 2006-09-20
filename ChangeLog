@@ -1,5 +1,9 @@
 2006-09-20  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* bootstrap: Add support for --force.
+	(usage): New function.  Describe usage less tersely.
+	(CVS_only_file): New var.
+
 	* NEWS: Document fix for cp -i and mv -i.
 	* src/copy.c (copy_internal): With -i, prompt even if the source
 	is a directory and the destination is not.  This is required by

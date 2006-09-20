@@ -29,6 +29,28 @@ nl='
 LC_ALL=C
 export LC_ALL
 
+usage() {
+  echo >&2 "\
+Usage: $0 [OPTION]...
+Bootstrap this package from the CVS sources.
+
+Options:
+ --gnulib-srcdir=DIRNAME  Specify the local directory where gnulib
+                          sources reside.  Use this if you already
+                          have gnulib sources on your machine, and
+                          do not want to waste your bandwidth dowloading
+                          them again.
+ --force                  Bootstrap even if the sources didn't come from CVS.
+ --skip-po                Do not download po files.
+ --cvs-user=USERNAME      Set the CVS username to be used when accessing
+                          the gnulib repository.
+
+If the file .bootstrap.conf exists in the current working directory, its
+contents are read as shell variables to configure the bootstrap.
+
+Running without arguments will suffice in most cases.
+"
+}
 
 # Configuration.
 
@@ -86,6 +108,10 @@ XGETTEXT_OPTIONS='\\\
 # Files we don't want to import.
 excluded_files=
 
+# File that should exist with CVS checkout, but not with
+# the distributed version.
+CVS_only_file=CVS
+
 # Override the default configuration, if necessary.
 test -r bootstrap.conf && . ./bootstrap.conf
 
@@ -97,7 +123,7 @@ for option
 do
   case $option in
   --help)
-    echo "$0: usage: $0 [--gnulib-srcdir=DIR] [--cvs-user=USERNAME] [--skip-po]"
+    usage
     exit;;
   --gnulib-srcdir=*)
     GNULIB_SRCDIR=`expr "$option" : '--gnulib-srcdir=\(.*\)'`;;
@@ -105,11 +131,18 @@ do
     CVS_USER=`expr "$option" : '--cvs-user=\(.*\)'`;;
   --skip-po)
     SKIP_PO=t;;
+  --force)
+    CVS_only_file=;;
   *)
     echo >&2 "$0: $option: unknown option"
     exit 1;;
   esac
 done
+
+if test -n "$CVS_only_file" && test ! -r "$CVS_only_file"; then
+  echo "$0: Bootstrapping from a non-CVS distribution is a bit risky." >&2
+  exit 1
+fi
 
 echo "$0: Bootstrapping CVS $package..."
 
