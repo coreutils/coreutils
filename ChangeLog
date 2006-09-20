@@ -1,5 +1,11 @@
 2006-09-20  Jim Meyering  <jim@meyering.net>
 
+	Fix the 2006-09-18 bug differently.
+	* src/chmod.c: (process_file): Upon FTS_NS for a top-level file,
+	tell fts_read to stat the file again, in case it has become
+	accessible since the initial fts_open call.
+	* src/chown-core.c (change_file_owner): Likewise.
+
 	* src/chmod.c: Revert last change.  There is a better way.
 	* src/chown-core.c: Likewise.
 

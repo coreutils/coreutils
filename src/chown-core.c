@@ -267,6 +267,19 @@ change_file_owner (FTS *fts, FTSENT *ent,
       break;
 
     case FTS_NS:
+      /* For a top-level file or directory, this FTS_NS (stat failed)
+	 indicator is determined at the time of the initial fts_open call.
+	 With programs like chmod, chown, and chgrp, that modify
+	 permissions, it is possible that the file in question is
+	 accessible when control reaches this point.  So, if this is
+	 the first time we've seen the FTS_NS for this file, tell
+	 fts_read to stat it "again".  */
+      if (ent->fts_level == 0 && ent->fts_number == 0)
+	{
+	  ent->fts_number = 1;
+	  fts_set (fts, ent, FTS_AGAIN);
+	  return true;
+	}
       error (0, ent->fts_errno, _("cannot access %s"), quote (file_full_name));
       ok = false;
       break;
