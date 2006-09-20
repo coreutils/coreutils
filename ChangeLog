@@ -1,3 +1,8 @@
+2006-09-20  Jim Meyering  <jim@meyering.net>
+
+	* src/chmod.c: Revert last change.  There is a better way.
+	* src/chown-core.c: Likewise.
+
 2006-09-19  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/ln.c (target_directory_operand): Rewrite to avoid porting
