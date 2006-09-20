@@ -1036,30 +1036,51 @@ copy_internal (char const *src_name, char const *dst_name,
 	     that it is XSTAT'able.  */
 	  bool return_now;
 	  bool unlink_src;
-	  bool ok = same_file_ok (src_name, &src_sb, dst_name, &dst_sb,
-				  x, &return_now, &unlink_src);
-	  if (unlink_src)
-	    {
-	      if (!abandon_move (x, dst_name, &dst_sb)
-		  && unlink (src_name) != 0)
-		{
-		  error (0, errno, _("cannot remove %s"), quote (src_name));
-		  return false;
-		}
-	      /* Tell the caller that there's no need to remove src_name.  */
-	      if (rename_succeeded)
-		*rename_succeeded = true;
-	    }
 
-	  if (return_now)
-	    return true;
-
-	  if (! ok)
+	  if (! same_file_ok (src_name, &src_sb, dst_name, &dst_sb,
+			      x, &return_now, &unlink_src))
 	    {
 	      error (0, 0, _("%s and %s are the same file"),
 		     quote_n (0, src_name), quote_n (1, dst_name));
 	      return false;
 	    }
+
+	  /* When there is an existing destination file, we may end up
+	     returning early, and hence not copying/moving the file.
+	     This may be due to an interactive `negative' reply to the
+	     prompt about the existing file.  It may also be due to the
+	     use of the --reply=no option.
+
+	     cp and mv treat -i and -f differently.  */
+	  if (x->move_mode)
+	    {
+	      if (abandon_move (x, dst_name, &dst_sb)
+		  || (unlink_src && unlink (src_name) == 0))
+		{
+		  /* Pretend the rename succeeded, so the caller (mv)
+		     doesn't end up removing the source file.  */
+		  if (rename_succeeded)
+		    *rename_succeeded = true;
+		  return true;
+		}
+	      if (unlink_src)
+		{
+		  error (0, errno, _("cannot remove %s"), quote (src_name));
+		  return false;
+		}
+	    }
+	  else
+	    {
+	      if (! S_ISDIR (src_mode)
+		  && (x->interactive == I_ALWAYS_NO
+		      || (x->interactive == I_ASK_USER
+			  && (overwrite_prompt (dst_name, &dst_sb), 1)
+			  && ! yesno ())))
+		return true;
+	    }
+
+	  if (return_now)
+	    return true;
 
 	  if (!S_ISDIR (dst_sb.st_mode))
 	    {
@@ -1135,37 +1156,6 @@ copy_internal (char const *src_name, char const *dst_name,
 			 end up removing the source file.  */
 		      if (rename_succeeded)
 			*rename_succeeded = true;
-		      return true;
-		    }
-		}
-	    }
-
-	  /* When there is an existing destination file, we may end up
-	     returning early, and hence not copying/moving the file.
-	     This may be due to an interactive `negative' reply to the
-	     prompt about the existing file.  It may also be due to the
-	     use of the --reply=no option.  */
-	  if (!S_ISDIR (src_type))
-	    {
-	      /* cp and mv treat -i and -f differently.  */
-	      if (x->move_mode)
-		{
-		  if (abandon_move (x, dst_name, &dst_sb))
-		    {
-		      /* Pretend the rename succeeded, so the caller (mv)
-			 doesn't end up removing the source file.  */
-		      if (rename_succeeded)
-			*rename_succeeded = true;
-		      return true;
-		    }
-		}
-	      else
-		{
-		  if (x->interactive == I_ALWAYS_NO
-		      || (x->interactive == I_ASK_USER
-			  && (overwrite_prompt (dst_name, &dst_sb), 1)
-			  && ! yesno ()))
-		    {
 		      return true;
 		    }
 		}

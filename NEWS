@@ -9,6 +9,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   preceding command line argument.  This bug also affects chgrp, but
   it is harder to demonstrate.  It does not affect chown.
 
+  cp -i and mv -i occasionally neglected to prompt when the copy or
+  move action was bound to fail.
 
 * Major changes in release 6.2 (2006-09-18) [stable candidate]
 

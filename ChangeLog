@@ -1,3 +1,14 @@
+2006-09-20  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* NEWS: Document fix for cp -i and mv -i.
+	* src/copy.c (copy_internal): With -i, prompt even if the source
+	is a directory and the destination is not.  This is required by
+	POSIX and gives the user a chance to bail out before failing.
+	* tests/cp/Makefile.am (TESTS): Add cp-i.
+	* tests/cp/cp-i: New file.
+	* tests/mv/Makefile.am (TESTS): Add i-5.
+	* tests/mv/i-5: New file.
+
 2006-09-20  Jim Meyering  <jim@meyering.net>
 
 	* NEWS: Mention the chmod bug fix.
