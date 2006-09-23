@@ -20,30 +20,32 @@
 
 SUBDIRS = lib src doc man po tests
 EXTRA_DIST = Makefile.cfg Makefile.maint GNUmakefile \
-  .hgignore \
   .gitignore \
+  .hgignore \
   .kludge-stamp .prev-version THANKS-to-translators THANKStt.in \
   .vg-suppressions \
   .x-po-check \
-  .x-sc_space_tab .x-sc_sun_os_names \
   .x-sc_file_system .x-sc_obsolete_symbols \
+  .x-sc_prohibit_atoi_atof \
+  .x-sc_require_config_h \
+  .x-sc_space_tab .x-sc_sun_os_names \
+  .x-sc_trailing_blank \
   .x-sc_unmarked_diagnostics \
   .x-sc_useless_cpp_parens \
-  .x-sc_require_config_h \
-  .x-sc_prohibit_atoi_atof \
-  .x-sc_trailing_blank \
+  ChangeLog-2005 \
   announce-gen \
+  bootstrap \
   build-aux/cvsu \
   build-aux/vc-list-files \
+  gl/modules/getloadavg.diff \
   m4/ChangeLog \
-  ChangeLog-2005 \
   old/fileutils/ChangeLog \
   old/fileutils/ChangeLog-1997 \
+  old/fileutils/NEWS \
   old/sh-utils/ChangeLog \
   old/sh-utils/ChangeLog.0 \
-  old/textutils/ChangeLog \
-  old/fileutils/NEWS \
   old/sh-utils/NEWS \
+  old/textutils/ChangeLog \
   old/textutils/NEWS
 
 install-root:

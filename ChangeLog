@@ -3,6 +3,8 @@
 	* gl/modules/getloadavg.diff: New file.  Work around the way the latest
 	version of the getloadavg module interacts with our bootstrap script.
 	* bootstrap (gnulib_tool_options): Add "--local-dir gl".
+	* Makefile.am (EXTRA_DIST): Sort file names.
+	Add bootstrap and gl/modules/getloadavg.diff
 
 2006-09-20  Paul Eggert  <eggert@cs.ucla.edu>
 
