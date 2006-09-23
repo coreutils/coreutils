@@ -7,10 +7,10 @@ diff -u -p -r1.13 getloadavg
 +++ modules/getloadavg	23 Sep 2006 16:41:36 -0000
 @@ -14,7 +14,7 @@ stdbool
  fcntl-safer
- 
+
  configure.ac:
 -gl_GETLOADAVG([$gl_source_base])
 +gl_GETLOADAVG([lib])
- 
+
  Makefile.am:
- 
+
