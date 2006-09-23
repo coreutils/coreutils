@@ -381,6 +381,7 @@ gnulib_tool_options="\
  --m4-base $bt/m4/\
  --source-base $bt/lib/\
  --tests-base $bt/tests\
+ --local-dir gl\
 "
 echo "$0: $gnulib_tool $gnulib_tool_options --import ..."
 $gnulib_tool $gnulib_tool_options --import $gnulib_modules &&

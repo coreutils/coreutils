@@ -1,3 +1,9 @@
+2006-09-23  Jim Meyering  <jim@meyering.net>
+
+	* gl/modules/getloadavg.diff: New file.  Work around the way the latest
+	version of the getloadavg module interacts with our bootstrap script.
+	* bootstrap (gnulib_tool_options): Add "--local-dir gl".
+
 2006-09-20  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* bootstrap: Add support for --force.
