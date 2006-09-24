@@ -296,6 +296,8 @@ copy_reg (char const *src_name, char const *dst_name,
 	      return_val = false;
 	      goto close_src_desc;
 	    }
+	  if (x->verbose)
+	    printf (_("removed %s\n"), quote (dst_name));
 
 	  /* Tell caller that the destination file was unlinked.  */
 	  *new_dst = true;
@@ -1061,6 +1063,8 @@ copy_internal (char const *src_name, char const *dst_name,
 		     doesn't end up removing the source file.  */
 		  if (rename_succeeded)
 		    *rename_succeeded = true;
+		  if (unlink_src && x->verbose)
+		    printf (_("removed %s\n"), quote (src_name));
 		  return true;
 		}
 	      if (unlink_src)
@@ -1240,6 +1244,8 @@ copy_internal (char const *src_name, char const *dst_name,
 		  return false;
 		}
 	      new_dst = true;
+	      if (x->verbose)
+		printf (_("removed %s\n"), quote (dst_name));
 	    }
 	}
     }
@@ -1344,6 +1350,8 @@ copy_internal (char const *src_name, char const *dst_name,
 		  error (0, errno, _("cannot remove %s"), quote (dst_name));
 		  goto un_backup;
 		}
+	      if (x->verbose)
+		printf (_("removed %s\n"), quote (dst_name));
 	      link_failed = (link (earlier_file, dst_name) != 0);
 	    }
 

@@ -19,6 +19,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   cp -i and mv -i occasionally neglected to prompt when the copy or move
   action was bound to fail.  This bug dates back to before fileutils-4.0.
 
+  With --verbose (-v), cp and mv would sometimes generate no output,
+  or neglect to report file removal.
+
 * Major changes in release 6.2 (2006-09-18) [stable candidate]
 
 ** Changes in behavior

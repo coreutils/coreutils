@@ -1,5 +1,10 @@
 2006-09-24  Jim Meyering  <jim@meyering.net>
 
+	* NEWS: Mention these fixes.
+	* src/copy.c (copy_reg): With --verbose (-v), print
+	"removed `file_name'" just after unlinking a file.
+	(copy_internal): Likewise, in three more places.
+	Marc Lehman reported that "touch x; ln x y; mv -v x y" was silent.
 	* tests/mv/hard-verbose: New file.  Test for the above fix.
 	* tests/mv/Makefile.am (TESTS): Add hard-verbose.
 
