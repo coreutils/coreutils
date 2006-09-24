@@ -1,5 +1,8 @@
 2006-09-24  Jim Meyering  <jim@meyering.net>
 
+	* tests/help-version (sync_args): Don't call sync, since it spins up
+	disks that I've deliberately caused to spin down (but not unmounted).
+
 	* NEWS: Mention the improvement to sort.
 
 	* tests/tail-2/proc-ksyms: Require that /proc/ksyms be readable

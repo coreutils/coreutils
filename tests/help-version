@@ -161,6 +161,11 @@ printf_args=foo
 seq_args=10
 sleep_args=0
 su_args=--version
+
+# I'd rather not run sync, since it spins up disks that I've
+# deliberately caused to spin down (but not unmounted).
+sync_args=--version
+
 test_args=foo
 
 # This is necessary in the unusual event that there is
