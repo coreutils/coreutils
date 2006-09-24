@@ -2,15 +2,22 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Major changes in release 6.3-cvs (2006-??-??) [stable]
 
+** Improved robustness
+
+  sort would fail to handle very large input (around 40GB) on systems with a
+  mkstemp function that returns a file descriptor limited to 32-bit offsets.
+
 ** Bug fixes
 
   chmod would fail unnecessarily in an unusual case: when an initially-
   inaccessible argument is rendered accessible by chmod's action on a
   preceding command line argument.  This bug also affects chgrp, but
-  it is harder to demonstrate.  It does not affect chown.
+  it is harder to demonstrate.  It does not affect chown.  The bug was
+  introduced with the switch from explicit recursion to the use of fts
+  in coreutils-5.1.0 (2003-10-15).
 
-  cp -i and mv -i occasionally neglected to prompt when the copy or
-  move action was bound to fail.
+  cp -i and mv -i occasionally neglected to prompt when the copy or move
+  action was bound to fail.  This bug dates back to before fileutils-4.0.
 
 * Major changes in release 6.2 (2006-09-18) [stable candidate]
 

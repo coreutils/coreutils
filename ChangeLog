@@ -1,5 +1,7 @@
 2006-09-24  Jim Meyering  <jim@meyering.net>
 
+	* NEWS: Mention the improvement to sort.
+
 	* tests/tail-2/proc-ksyms: Require that /proc/ksyms be readable
 	as well as existing.
 
