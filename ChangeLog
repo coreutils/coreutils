@@ -1,5 +1,8 @@
 2006-09-24  Jim Meyering  <jim@meyering.net>
 
+	* tests/tail-2/proc-ksyms: Require that /proc/ksyms be readable
+	as well as existing.
+
 	* tests/ls/stat-dtype: Don't use tmpfs on linux-2.4 or older,
 	since that predated addition of d_type support.
 
