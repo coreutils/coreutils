@@ -195,6 +195,7 @@ mkdir.c
 mkdirat.c
 mkstemp-safer.c
 mkstemp.c
+mkstemp.h
 mktime.c
 modechange.c
 modechange.h
