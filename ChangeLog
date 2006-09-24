@@ -1,5 +1,8 @@
 2006-09-24  Jim Meyering  <jim@meyering.net>
 
+	* tests/mv/hard-verbose: New file.  Test for the above fix.
+	* tests/mv/Makefile.am (TESTS): Add hard-verbose.
+
 	* tests/help-version (sync_args): Don't call sync, since it spins up
 	disks that I've deliberately caused to spin down (but not unmounted).
 
