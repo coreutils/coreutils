@@ -37,7 +37,18 @@ fi
 # Also, tmpfs on Solaris 10 lacks d_type support.
 skip=yes
 fs_type=`stat -f --printf %T .`
-test `uname -s` = Linux && test $fs_type = tmpfs && skip=no
+
+linux_2_6_or_newer=0
+case `uname -r` in
+  [01].*) ;;
+  2.[0-5]*) ;;
+  *) linux_2_6_or_newer=1 ;;
+esac
+
+test `uname -s` = Linux \
+  && test $linux_2_6_or_newer = 1 \
+  && test $fs_type = tmpfs \
+  && skip=no
 test $fs_type = ext2/ext3 && skip=no
 test $skip = yes &&
   {
