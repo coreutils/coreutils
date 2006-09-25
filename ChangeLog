@@ -1,3 +1,8 @@
+2006-09-25  Jim Meyering  <jim@meyering.net>
+
+	* src/chown.c (usage): Clarify --dereference description.
+	* src/chgrp.c (usage): Likewise.  Suggestion from Jamie McClelland.
+
 2006-09-24  Jim Meyering  <jim@meyering.net>
 
 	* NEWS: Mention these fixes.

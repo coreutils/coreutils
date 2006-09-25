@@ -101,8 +101,8 @@ Change the owner and/or group of each FILE to OWNER and/or GROUP.\n\
 With --reference, change the owner and group of each FILE to those of RFILE.\n\
 \n\
   -c, --changes          like verbose but report only when a change is made\n\
-      --dereference      affect the referent of each symbolic link, rather\n\
-                         than the symbolic link itself (this is the default)\n\
+      --dereference      affect the referent of each symbolic link (this is\n\
+                         the default), rather than the symbolic link itself\n\
 "), stdout);
       fputs (_("\
   -h, --no-dereference   affect each symbolic link instead of any referenced\n\
