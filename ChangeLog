@@ -1,3 +1,9 @@
+2006-09-26  Jim Meyering  <jim@meyering.net>
+
+	* NEWS: Mention the bug fix.
+	* src/groups.sh: Don't hide a write failure.
+	Reported by Iain Calder <ic56@rogers.com>.
+
 2006-09-25  Jim Meyering  <jim@meyering.net>
 
 	* src/chown.c (usage): Clarify --dereference description.

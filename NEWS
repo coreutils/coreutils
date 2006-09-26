@@ -22,6 +22,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   With --verbose (-v), cp and mv would sometimes generate no output,
   or neglect to report file removal.
 
+  "groups user" now exits nonzero when it gets a write error.
+
+
 * Major changes in release 6.2 (2006-09-18) [stable candidate]
 
 ** Changes in behavior
