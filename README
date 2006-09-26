@@ -167,6 +167,12 @@ as you can.  Based on the feedback that generates, you may be able to
 convince us that it's worth adding.
 
 
+WARNING:  Now that we use the ./bootstrap script, you should not run
+autoreconf manually.  Doing that will overwrite essential source files
+with older versions, which may make the package unbuildable or introduce
+subtle bugs.
+
+
 WARNING:  If you modify files like configure.in, m4/*.m4, aclocal.m4,
 or any Makefile.am, then don't be surprised if what gets regenerated no
 longer works.  To make things work, you'll have to be using appropriate

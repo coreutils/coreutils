@@ -1,5 +1,7 @@
 2006-09-26  Jim Meyering  <jim@meyering.net>
 
+	* README: Warn not to run autoreconf manually.  Use bootstrap instead.
+
 	* src/groups.sh: When invoked with 0 or 1 argument, just exec "id".
 	Rewrite to avoid using temporary, $status.
 
