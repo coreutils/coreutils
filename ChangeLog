@@ -1,3 +1,11 @@
+2006-09-26  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* NEWS: "groups user" no longer outputs "user :"; you need at least
+	two users.  "groups" now processes options like --help more compatibly.
+	* src/groups.sh: Implement the option-processing change.
+	Handle user and group names with special characters more robustly.
+	Report write errors instead of exiting silently with status 1.
+
 2006-09-26  Jim Meyering  <jim@meyering.net>
 
 	* README: Warn not to run autoreconf manually.  Use bootstrap instead.

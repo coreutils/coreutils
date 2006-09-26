@@ -11973,7 +11973,8 @@ options}.
 
 @command{groups} prints the names of the primary and any supplementary
 groups for each given @var{username}, or the current process if no names
-are given.  If names are given, the name of each user is printed before
+are given.  If more than one name is given, the name of each user is
+printed before
 the list of that user's groups.  Synopsis:
 
 @example

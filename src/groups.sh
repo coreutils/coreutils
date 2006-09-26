@@ -34,36 +34,49 @@ Report bugs to <@PACKAGE_BUGREPORT@>."
 version='groups (@GNU_PACKAGE@) @VERSION@
 Written by David MacKenzie.
 
-Copyright (C) 2004 Free Software Foundation, Inc.
+Copyright (C) 2006 Free Software Foundation, Inc.
 This is free software; see the source for copying conditions.  There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.'
 
 
-fail=0
-case $# in
-  1 )
-    case "z${1}" in
-      z--help )
-	 echo "$usage" || fail=1; exit $fail;;
-      z--version )
-	 echo "$version" || fail=1; exit $fail;;
-      * ) ;;
-    esac
-    ;;
-  * ) ;;
-esac
+for arg
+do
+  case $arg in
+    --help | --hel | --he | --h)
+      exec echo "$usage" ;;
+    --version | --versio | --versi | --vers | --ver | --ve | --v)
+      exec echo "$version" ;;
+    --)
+      shift
+      break ;;
+    -*)
+      echo "$0: invalid option: $arg" >&2
+      exit 1 ;;
+  esac
+done
 
 # With fewer than two arguments, simply exec "id".
 case $# in
-  0|1) exec id -Gn "$@" ;;
+  0|1) exec id -Gn -- "$@" ;;
 esac
 
 # With more, we need a loop, and be sure to exit nonzero upon failure.
-for name in "$@"; do
-  if groups=`id -Gn -- $name`; then
-    echo $name : $groups || fail=1
+status=0
+write_error=0
+
+for name
+do
+  if groups=`id -Gn -- "$name"`; then
+    echo "$name : $groups" || {
+      status=$?
+      if test $write_error = 0; then
+	echo "$0: write error" >&2
+	write_error=1
+      fi
+    }
   else
-    fail=1
+    status=$?
   fi
 done
-exit $fail
+
+exit $status
