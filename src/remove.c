@@ -56,11 +56,12 @@
    SunOS's readdir when applied to ufs file systems and Darwin 6.5's
    (and OSX v.10.3.8's) HFS+.  This maximum is conservative in that
    demonstrating the problem seems to require a directory containing
-   at least 254 deletable entries (which doesn't count . and ..), so
-   we could conceivably increase the maximum value to 254.  */
+   at least 254 deletable entries (which doesn't count . and ..).
+   However, in 2006, we see that Darwin 8.6.1, using NFS has an even
+   lower limit: 188.  */
 enum
   {
-    CONSECUTIVE_READDIR_UNLINK_THRESHOLD = 200
+    CONSECUTIVE_READDIR_UNLINK_THRESHOLD = 180
   };
 
 enum Ternary

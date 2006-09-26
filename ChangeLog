@@ -1,3 +1,11 @@
+2006-09-26  Jim Meyering  <jim@meyering.net>
+
+	* NEWS: rm works around a bug in Darwin 8.6.1 w/NFS that kept
+	it from removing a directory containing 188 or more entries.
+	* src/remove.c (CONSECUTIVE_READDIR_UNLINK_THRESHOLD): Decrease by
+	20, go work around the buggy readdir on Darwin 8.6.1 with NFS.
+	Reported by Matthew Woehlke.
+
 2006-09-26  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: "groups user" no longer outputs "user :"; you need at least

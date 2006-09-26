@@ -4,6 +4,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Improved robustness
 
+  rm works around a bug in Darwin 8.6.1 w/NFS that kept it from removing
+  a directory containing 188 or more entries.
+
   sort would fail to handle very large input (around 40GB) on systems with a
   mkstemp function that returns a file descriptor limited to 32-bit offsets.
 
