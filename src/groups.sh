@@ -53,18 +53,17 @@ case $# in
   * ) ;;
 esac
 
-if [ $# -eq 0 ]; then
-  id -Gn
-  fail=$?
-else
-  for name in "$@"; do
-    groups=`id -Gn -- $name`
-    status=$?
-    if test $status = 0; then
-      echo $name : $groups || fail=1
-    else
-      fail=$status
-    fi
-  done
-fi
+# With fewer than two arguments, simply exec "id".
+case $# in
+  0|1) exec id -Gn "$@" ;;
+esac
+
+# With more, we need a loop, and be sure to exit nonzero upon failure.
+for name in "$@"; do
+  if groups=`id -Gn -- $name`; then
+    echo $name : $groups || fail=1
+  else
+    fail=1
+  fi
+done
 exit $fail

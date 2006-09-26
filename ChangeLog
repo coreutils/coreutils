@@ -1,5 +1,8 @@
 2006-09-26  Jim Meyering  <jim@meyering.net>
 
+	* src/groups.sh: When invoked with 0 or 1 argument, just exec "id".
+	Rewrite to avoid using temporary, $status.
+
 	* NEWS: Mention the bug fix.
 	* src/groups.sh: Don't hide a write failure.
 	Reported by Iain Calder <ic56@rogers.com>.
