@@ -5,7 +5,7 @@ retrieving revision 1.158
 diff -u -p -u -r1.158 remove.c
 --- src/remove.c	3 Sep 2006 02:54:51 -0000	1.158
 +++ src/remove.c	6 Sep 2006 18:57:46 -0000
-@@ -238,9 +238,10 @@ pop_dir (Dirstack_state *ds)
+@@ -239,9 +239,10 @@ pop_dir (Dirstack_state *ds)
  {
    size_t n_lengths = obstack_object_size (&ds->len_stack) / sizeof (size_t);
    size_t *length = obstack_base (&ds->len_stack);
@@ -17,7 +17,7 @@ diff -u -p -u -r1.158 remove.c
    assert (top_len >= 2);
  
    /* Pop the specified length of file name.  */
-@@ -372,10 +373,11 @@ AD_stack_top (Dirstack_state const *ds)
+@@ -373,10 +374,11 @@ AD_stack_top (Dirstack_state const *ds)
  static void
  AD_stack_pop (Dirstack_state *ds)
  {
@@ -30,7 +30,7 @@ diff -u -p -u -r1.158 remove.c
    if (top->unremovable)
      hash_free (top->unremovable);
    obstack_blank (&ds->Active_dir, -(int) sizeof (struct AD_ent));
-@@ -542,6 +544,7 @@ AD_mark_helper (Hash_table **ht, char *f
+@@ -543,6 +545,7 @@ AD_mark_helper (Hash_table **ht, char *f
        if (*ht == NULL)
  	xalloc_die ();
      }
@@ -38,7 +38,7 @@ diff -u -p -u -r1.158 remove.c
    void *ent = hash_insert (*ht, filename);
    if (ent == NULL)
      xalloc_die ();
-@@ -550,7 +553,7 @@ AD_mark_helper (Hash_table **ht, char *f
+@@ -551,7 +554,7 @@ AD_mark_helper (Hash_table **ht, char *f
        if (ent != filename)
  	free (filename);
      }
@@ -47,7 +47,7 @@ diff -u -p -u -r1.158 remove.c
  }
  
  /* Mark FILENAME (in current directory) as unremovable.  */
-@@ -1090,6 +1093,7 @@ fd_to_subdirp (int fd_cwd, char const *f
+@@ -1091,6 +1094,7 @@ fd_to_subdirp (int fd_cwd, char const *f
        return NULL;
      }
  
@@ -55,7 +55,7 @@ diff -u -p -u -r1.158 remove.c
    DIR *subdir_dirp = fdopendir (fd_sub);
    if (subdir_dirp == NULL)
      {
-@@ -1098,6 +1102,7 @@ fd_to_subdirp (int fd_cwd, char const *f
+@@ -1099,6 +1103,7 @@ fd_to_subdirp (int fd_cwd, char const *f
      }
  
    return subdir_dirp;
@@ -63,7 +63,7 @@ diff -u -p -u -r1.158 remove.c
  }
  
  /* Remove entries in the directory open on DIRP
-@@ -1334,9 +1339,10 @@ remove_dir (int fd_cwd, Dirstack_state *
+@@ -1335,9 +1340,10 @@ remove_dir (int fd_cwd, Dirstack_state *
  	/* The name of the directory that we have just processed,
  	   nominally removing all of its contents.  */
  	char *empty_dir;
@@ -75,7 +75,7 @@ diff -u -p -u -r1.158 remove.c
  	assert (dirp != NULL || AD_stack_height (ds) == 1);
  
  	/* Try to remove EMPTY_DIR only if remove_cwd_entries succeeded.  */
-@@ -1414,6 +1420,7 @@ rm_1 (Dirstack_state *ds, char const *fi
+@@ -1415,6 +1421,7 @@ rm_1 (Dirstack_state *ds, char const *fi
        return RM_ERROR;
      }
 
@@ -83,7 +83,7 @@ diff -u -p -u -r1.158 remove.c
    struct stat st;
    cache_stat_init (&st);
    if (x->root_dev_ino)
-@@ -1435,6 +1442,7 @@ rm_1 (Dirstack_state *ds, char const *fi
+@@ -1436,6 +1443,7 @@ rm_1 (Dirstack_state *ds, char const *fi
    AD_push_initial (ds);
    AD_INIT_OTHER_MEMBERS ();
  
@@ -91,7 +91,7 @@ diff -u -p -u -r1.158 remove.c
    int fd_cwd = AT_FDCWD;
    enum RM_status status = remove_entry (fd_cwd, ds, filename, &st, x, NULL);
    if (status == RM_NONEMPTY_DIR)
-@@ -1453,6 +1461,8 @@ rm_1 (Dirstack_state *ds, char const *fi
+@@ -1454,6 +1462,8 @@ rm_1 (Dirstack_state *ds, char const *fi
    ds_clear (ds);
  
    return status;
@@ -100,7 +100,7 @@ diff -u -p -u -r1.158 remove.c
  }
  
  /* Remove all files and/or directories specified by N_FILES and FILE.
-@@ -1475,9 +1485,11 @@ rm (size_t n_files, char const *const *f
+@@ -1476,9 +1486,11 @@ rm (size_t n_files, char const *const *f
  	}
  
        cycle_check_init (&ds->cycle_check_state);
