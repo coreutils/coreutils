@@ -67,6 +67,7 @@ exclude.h
 exit.h
 exitfail.c
 exitfail.h
+fchmodat.c
 fchown-stub.c
 fcntl--.h
 fcntl-safer.h

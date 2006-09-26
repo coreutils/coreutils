@@ -1,3 +1,7 @@
+2006-09-25  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* .cvsignore: Add fchmodat.c.
+
 2006-09-25  Jim Meyering  <jim@meyering.net>
 
 	* fchmodat.c: Remove file.  gnulib's copy is identical.
