@@ -1,5 +1,10 @@
 2006-09-28  Jim Meyering  <jim@meyering.net>
 
+	Automatically generated dependencies are important even
+	when all of the sources in a directory come from gnulib.
+	* bootstrap (gnulib_tool): Remove the "no-dependencies" automake
+	option that gnulib-tool adds to what becomes our lib/gnulib.mk.
+
 	* tests/rm/fail-eperm: Enable Perl's (-T) taint checking.
 	Ensure that IFS is set properly and unset PATH.
 	Sanitize inputs.
