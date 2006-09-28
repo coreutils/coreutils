@@ -1,5 +1,12 @@
 2006-09-28  Jim Meyering  <jim@meyering.net>
 
+	* tests/rm/fail-eperm: Enable Perl's (-T) taint checking.
+	Ensure that IFS is set properly and unset PATH.
+	Sanitize inputs.
+	Work properly even when the name of the selected file starts with "-".
+	Invoke rm via "../../src/rm", and adjust expected output.
+	Prompted by a patch from Tim Waugh.
+
 	* README-cvs: Add Bison to the list of required packages.
 
 2006-09-26  Jim Meyering  <jim@meyering.net>

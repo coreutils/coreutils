@@ -3,7 +3,7 @@
 # Ensure that rm gives the expected diagnostic when failing to remove a file
 # owned by some other user in a directory with the sticky bit set.
 
-# Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
+# Copyright (C) 2002, 2003, 2004, 2006 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -43,7 +43,7 @@ $PERL -e 1 > /dev/null 2>&1 || {
 ARGV_0=$0
 export ARGV_0
 
-exec $PERL -w -- - << \EOP
+exec $PERL -Tw -- - << \EOP
 require 5.003;
 use strict;
 
@@ -54,7 +54,12 @@ my $verbose = $ENV{VERBOSE} && $ENV{VERBOSE} eq 'yes';
 # Ensure that the diagnostics are in English.
 $ENV{LC_ALL} = 'C';
 
+# Set up a safe, well-known environment
+delete $ENV{PATH};
+$ENV{IFS}  = '';
+
 my @dir_list = qw(/tmp /var/tmp /usr/tmp);
+my $rm = '../../src/rm';
 
 # Find a directory with the sticky bit set.
 my $found_dir;
@@ -71,6 +76,11 @@ foreach my $dir (@dir_list)
 
 	foreach my $f (readdir DIR_HANDLE)
 	  {
+	    # Consider only names containing "safe" characters.
+	    $f =~ /^([-\@\w.]+)$/
+	      or next;
+	    $f = $1;    # untaint $f
+
 	    my $target_file = "$dir/$f";
 	    $verbose
 	      and warn "$ME: considering $target_file\n";
@@ -86,7 +96,7 @@ foreach my $dir (@dir_list)
 
 	    # Invoke rm on this file and ensure that we get the
 	    # expected exit code and diagnostic.
-	    my $cmd = "rm -f $target_file";
+	    my $cmd = "$rm -f -- $target_file";
 	    open RM, "$cmd 2>&1 |"
 	      or die "$ME: cannot execute `$cmd'\n";
 
@@ -98,7 +108,7 @@ foreach my $dir (@dir_list)
 	      or die "$ME: unexpected exit status from `$cmd';\n"
 		. "  got $status, expected 1\n";
 
-	    my $exp = "rm: cannot remove `$target_file':";
+	    my $exp = "$rm: cannot remove `$target_file':";
 	    $line
 	      or die "$ME: no output from `$cmd';\n"
 		. "expected something like `$exp ...'\n";
