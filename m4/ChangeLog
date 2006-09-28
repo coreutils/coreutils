@@ -2,6 +2,7 @@
 
 	* jm-macros.m4: Require the new macro.
 	* readdir.m4 (gl_FUNC_READDIR): Rename from GL_FUNC_READDIR.
+	Increment serial number.
 	* readdir.m4: Revivify this file.
 	We need it to work around a bug on Darwin 0.7.x.
 
