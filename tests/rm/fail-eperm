@@ -115,7 +115,7 @@ foreach my $dir (@dir_list)
 
 	    my $regex = quotemeta $exp;
 	    $line =~ /^$regex/
-	      or die "$ME: unexpected dignostic from `$cmd';\n"
+	      or die "$ME: unexpected diagnostic from `$cmd';\n"
 		. "  got      $line"
 		. "  expected $exp ...\n";
 
