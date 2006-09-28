@@ -1,3 +1,8 @@
+2006-09-28  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* tests/rm/fail-eperm: Unset BASH_ENV, CDPATH, and ENV, too;
+	suggested for Debian stable, which uses Perl 5.8.4.
+
 2006-09-28  Jim Meyering  <jim@meyering.net>
 
 	Automatically generated dependencies are important even

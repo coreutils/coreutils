@@ -55,7 +55,7 @@ my $verbose = $ENV{VERBOSE} && $ENV{VERBOSE} eq 'yes';
 $ENV{LC_ALL} = 'C';
 
 # Set up a safe, well-known environment
-delete $ENV{PATH};
+delete @ENV{qw(BASH_ENV CDPATH ENV PATH)};
 $ENV{IFS}  = '';
 
 my @dir_list = qw(/tmp /var/tmp /usr/tmp);
