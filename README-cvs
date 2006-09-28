@@ -11,6 +11,7 @@ stable versions of the maintainer tools we depend upon, including:
 
 - Automake <http://www.gnu.org/software/automake/>
 - Autoconf <http://www.gnu.org/software/autoconf/>
+- Bison <http://www.gnu.org/software/bison/>
 - Gettext <http://www.gnu.org/software/gettext/>
 - Gzip <http://www.gnu.org/software/gzip/>
 - Tar <http://www.gnu.org/software/tar/>

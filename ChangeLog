@@ -1,3 +1,7 @@
+2006-09-28  Jim Meyering  <jim@meyering.net>
+
+	* README-cvs: Add Bison to the list of required packages.
+
 2006-09-26  Jim Meyering  <jim@meyering.net>
 
 	* src/c99-to-c89.diff: Update offsets.
