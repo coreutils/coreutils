@@ -1,6 +1,6 @@
 #serial 8
 
-# Copyright (C) 1997, 1999, 2000, 2001, 2002, 2003 Free Software
+# Copyright (C) 1997, 1999, 2000, 2001, 2002, 2003, 2006 Free Software
 # Foundation, Inc.
 #
 # This file is free software; the Free Software Foundation
@@ -22,7 +22,7 @@ dnl Define HAVE_WORKING_READDIR if readdir does *not* have this problem.
 
 dnl Written by Jim Meyering.
 
-AC_DEFUN([GL_FUNC_READDIR],
+AC_DEFUN([gl_FUNC_READDIR],
 [dnl
 AC_REQUIRE([AC_HEADER_DIRENT])
 AC_CACHE_CHECK([for working readdir], gl_cv_func_working_readdir,
