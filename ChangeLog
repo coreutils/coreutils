@@ -1,5 +1,10 @@
 2006-09-29  Jim Meyering  <jim@meyering.net>
 
+	* tests/seq/basic: Use .11 as the upper bound, in case the ".1"
+	increment translates to a slightly larger value.
+	This corrects a test failure on FreeBSD 6.1 reported by Nelson Beebe.
+	The final expected value wasn't being printed.
+
 	Work around a readdir bug in Darwin 7.9.0 (MacOS X 10.3.9) on HFS+
 	and NFS, whereby rm would not remove all files in a directory.
 	* src/remove.c (CONSECUTIVE_READDIR_UNLINK_THRESHOLD): Reduce to 10.
