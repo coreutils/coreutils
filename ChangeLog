@@ -1,3 +1,16 @@
+2006-09-29  Jim Meyering  <jim@meyering.net>
+
+	Work around a readdir bug in Darwin 7.9.0 (MacOS X 10.3.9) on HFS+
+	and NFS, whereby rm would not remove all files in a directory.
+	* src/remove.c (CONSECUTIVE_READDIR_UNLINK_THRESHOLD): Reduce to 10.
+	(NEED_REWIND): New macro, so that we incur the cost of the work-around
+	rewinddir only on afflicted systems.
+	* NEWS: Clarify and correct.
+	* tests/rm/readdir-bug: New file.  Test for the above fix.
+	* tests/rm/Makefile.am (TESTS): Add it.
+	Prompted by testing and analysis from Bruno Haible:
+	http://lists.gnu.org/archive/html/bug-coreutils/2006-09/msg00326.html
+
 2006-09-28  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* tests/rm/fail-eperm: Unset BASH_ENV, CDPATH, and ENV, too;

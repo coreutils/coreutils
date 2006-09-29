@@ -50,19 +50,26 @@
 #define obstack_chunk_free free
 
 /* This is the maximum number of consecutive readdir/unlink calls that
-   can be made (with no intervening rewinddir or closedir/opendir)
-   before triggering a bug that makes readdir return NULL even though
-   some directory entries have not been processed.  The bug afflicts
-   SunOS's readdir when applied to ufs file systems and Darwin 6.5's
-   (and OSX v.10.3.8's) HFS+.  This maximum is conservative in that
-   demonstrating the problem seems to require a directory containing
-   at least 254 deletable entries (which doesn't count . and ..).
-   However, in 2006, we see that Darwin 8.6.1, using NFS has an even
-   lower limit: 188.  */
+   can be made (with no intervening rewinddir or closedir/opendir) before
+   triggering a bug that makes readdir return NULL even though some
+   directory entries have not been processed.  The bug afflicts SunOS's
+   readdir when applied to ufs file systems and Darwin 6.5's (and OSX
+   v.10.3.8's) HFS+.  This maximum is conservative in that demonstrating
+   the problem requires a directory containing at least 16 deletable
+   entries (which doesn't count . and ..).
+   This problem also affects Darwin 7.9.0 (aka MacOS X 10.3.9) on HFS+
+   and NFS-mounted file systems, but not vfat ones.  */
 enum
   {
-    CONSECUTIVE_READDIR_UNLINK_THRESHOLD = 180
+    CONSECUTIVE_READDIR_UNLINK_THRESHOLD = 10
   };
+
+#ifdef HAVE_WORKING_READDIR
+# define NEED_REWIND(readdir_unlink_count) 0
+#else
+# define NEED_REWIND(readdir_unlink_count) \
+  (CONSECUTIVE_READDIR_UNLINK_THRESHOLD <= (readdir_unlink_count))
+#endif
 
 enum Ternary
   {
@@ -1139,8 +1146,7 @@ remove_cwd_entries (DIR **dirp,
 	    {
 	      /* fall through */
 	    }
-	  else if (CONSECUTIVE_READDIR_UNLINK_THRESHOLD
-		   < n_unlinked_since_opendir_or_last_rewind)
+	  else if (NEED_REWIND (n_unlinked_since_opendir_or_last_rewind))
 	    {
 	      /* Call rewinddir if we've called unlink or rmdir so many times
 		 (since the opendir or the previous rewinddir) that this
