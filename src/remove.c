@@ -64,12 +64,11 @@ enum
     CONSECUTIVE_READDIR_UNLINK_THRESHOLD = 10
   };
 
-#ifdef HAVE_WORKING_READDIR
-# define NEED_REWIND(readdir_unlink_count) 0
-#else
-# define NEED_REWIND(readdir_unlink_count) \
+/* FIXME: in 2009, or whenever Darwin 7.9.0 (aka MacOS X 10.3.9) is no
+   longer relevant, remove this work-around code.  Then, there will be
+   no need to perform the extra rewinddir call, ever.  */
+#define NEED_REWIND(readdir_unlink_count) \
   (CONSECUTIVE_READDIR_UNLINK_THRESHOLD <= (readdir_unlink_count))
-#endif
 
 enum Ternary
   {

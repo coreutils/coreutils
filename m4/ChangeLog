@@ -1,3 +1,8 @@
+2006-09-29  Jim Meyering  <jim@meyering.net>
+
+	* readdir.m4: Remove file once again.
+	* jm-macros.m4: Remove reference to gl_FUNC_READDIR.
+
 2006-09-28  Jim Meyering  <jim@meyering.net>
 
 	* jm-macros.m4: Require the new macro.
