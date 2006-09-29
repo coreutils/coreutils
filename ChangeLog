@@ -1,5 +1,10 @@
 2006-09-29  Jim Meyering  <jim@meyering.net>
 
+	* src/shuf.c (read_input): Fix an off-by-one error that
+	would cause an infloop for piped input of 8KB or more.
+	* NEWS: Mention the fix.
+	* tests/misc/shuf: Test for the above fix.
+
 	Since any system may be affected by the Darwin readdir bug,
 	perform the extra rewinddir unconditionally.  The performance
 	impact of rewinding a directory is negligible.

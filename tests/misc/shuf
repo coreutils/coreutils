@@ -51,4 +51,8 @@ cmp in out > /dev/null && { fail=1; echo "not random?" 1>&2; }
 sort -n out > out1
 cmp in out1 || { fail=1; echo "not a permutation" 1>&2; }
 
+# Before coreutils-6.3, this would infloop.
+# "seq 1860" produces 8193 bytes of output.
+seq 1860 | shuf > /dev/null || fail=1
+
 (exit $fail); exit $fail

@@ -178,7 +178,7 @@ read_input (FILE *in, char eolbyte, char ***pline)
 
   do
     {
-      if (alloc == used)
+      if (alloc <= used + 1)
 	{
 	  if (alloc == SIZE_MAX)
 	    xalloc_die ();

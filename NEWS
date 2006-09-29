@@ -35,6 +35,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
     "groups" now processes options like --help more compatibly.
 
+  shuf would infloop, given 8KB or more of piped input
+
+
 * Major changes in release 6.2 (2006-09-18) [stable candidate]
 
 ** Changes in behavior
