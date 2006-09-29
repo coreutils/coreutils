@@ -4,6 +4,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Improved robustness
 
+  pinky no longer segfaults on Darwin 7.9.0 (MacOS X 10.3.9) due to a
+  buggy native getaddrinfo function.
+
   rm works around a bug in Darwin 7.9.0 (MacOS X 10.3.9) that would
   sometimes keep it from removing all entries in a directory on an HFS+
   or NFS-mounted partition.

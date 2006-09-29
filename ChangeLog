@@ -1,5 +1,8 @@
 2006-09-29  Jim Meyering  <jim@meyering.net>
 
+	* NEWS: Mention Paul's fix (to gnulib's canon-host.c) for
+	the pinky segfault.
+
 	* tests/seq/basic [neg-2, eq-wid-2]: Comment out tests that
 	use .1 as the increment.  Actual output varies too much.
 	[eq-wid-3]: New, commented out test.
