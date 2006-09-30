@@ -209,6 +209,7 @@ offtostr.c
 open-safer.c
 openat-die.c
 openat-priv.h
+openat-proc.c
 openat.c
 openat.h
 pathmax.h

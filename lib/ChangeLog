@@ -1,3 +1,7 @@
+2006-09-29  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* .cvsignore: Add openat-proc.c.
+
 2006-09-25  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* .cvsignore: Add fchmodat.c.
