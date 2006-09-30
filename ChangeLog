@@ -1,5 +1,11 @@
 2006-09-30  Jim Meyering  <jim@meyering.net>
 
+	Version 6.3.
+	* NEWS: Record the 6.3 release date.
+	* configure.ac (AC_INIT): Remove "-cvs" suffix from version string.
+
+	* NEWS: Mention Paul's Solaris 8 vs. 10 work-around.
+
 	* src/c99-to-c89.diff: Update offsets.
 
 2006-09-29  Paul Eggert  <eggert@cs.ucla.edu>

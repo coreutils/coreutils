@@ -1,6 +1,6 @@
 GNU coreutils NEWS                                    -*- outline -*-
 
-* Major changes in release 6.3-cvs (2006-??-??) [stable]
+* Major changes in release 6.3 (2006-09-30) [stable]
 
 ** Improved robustness
 
@@ -39,6 +39,11 @@ GNU coreutils NEWS                                    -*- outline -*-
     "groups" now processes options like --help more compatibly.
 
   shuf would infloop, given 8KB or more of piped input
+
+** Portability
+
+  Versions of chmod, chown, chgrp, du, and rm (tools that use openat etc.)
+  compiled for Solaris 8 now also work when run on Solaris 10.
 
 
 * Major changes in release 6.2 (2006-09-18) [stable candidate]
