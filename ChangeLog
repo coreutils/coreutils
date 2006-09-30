@@ -1,3 +1,7 @@
+2006-09-30  Jim Meyering  <jim@meyering.net>
+
+	* src/c99-to-c89.diff: Update offsets.
+
 2006-09-29  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* tests/rm/readdir-bug: Don't use $(...) in a shell script,

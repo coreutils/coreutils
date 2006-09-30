@@ -5,32 +5,32 @@ retrieving revision 1.158
 diff -u -p -u -r1.158 remove.c
 --- src/remove.c	3 Sep 2006 02:54:51 -0000	1.158
 +++ src/remove.c	6 Sep 2006 18:57:46 -0000
-@@ -239,9 +239,10 @@ pop_dir (Dirstack_state *ds)
+@@ -245,9 +245,10 @@ pop_dir (Dirstack_state *ds)
  {
    size_t n_lengths = obstack_object_size (&ds->len_stack) / sizeof (size_t);
    size_t *length = obstack_base (&ds->len_stack);
 +  size_t top_len;
- 
+
    assert (n_lengths > 0);
 -  size_t top_len = length[n_lengths - 1];
 +  top_len = length[n_lengths - 1];
    assert (top_len >= 2);
- 
+
    /* Pop the specified length of file name.  */
-@@ -373,10 +374,11 @@ AD_stack_top (Dirstack_state const *ds)
+@@ -379,10 +380,11 @@ AD_stack_top (Dirstack_state const *ds)
  static void
  AD_stack_pop (Dirstack_state *ds)
  {
 +  struct AD_ent *top;
    assert (0 < AD_stack_height (ds));
- 
+
    /* operate on Active_dir.  pop and free top entry */
 -  struct AD_ent *top = AD_stack_top (ds);
 +  top = AD_stack_top (ds);
    if (top->unremovable)
      hash_free (top->unremovable);
    obstack_blank (&ds->Active_dir, -(int) sizeof (struct AD_ent));
-@@ -543,6 +545,7 @@ AD_mark_helper (Hash_table **ht, char *f
+@@ -549,6 +551,7 @@ AD_mark_helper (Hash_table **ht, char *f
        if (*ht == NULL)
  	xalloc_die ();
      }
@@ -38,44 +38,44 @@ diff -u -p -u -r1.158 remove.c
    void *ent = hash_insert (*ht, filename);
    if (ent == NULL)
      xalloc_die ();
-@@ -551,7 +554,7 @@ AD_mark_helper (Hash_table **ht, char *f
+@@ -557,7 +560,7 @@ AD_mark_helper (Hash_table **ht, char *f
        if (ent != filename)
  	free (filename);
      }
 -
 +  }
  }
- 
+
  /* Mark FILENAME (in current directory) as unremovable.  */
-@@ -1091,6 +1094,7 @@ fd_to_subdirp (int fd_cwd, char const *f
+@@ -1097,6 +1100,7 @@ fd_to_subdirp (int fd_cwd, char const *f
        return NULL;
      }
- 
+
 +  {
    DIR *subdir_dirp = fdopendir (fd_sub);
    if (subdir_dirp == NULL)
      {
-@@ -1099,6 +1103,7 @@ fd_to_subdirp (int fd_cwd, char const *f
+@@ -1105,6 +1109,7 @@ fd_to_subdirp (int fd_cwd, char const *f
      }
- 
+
    return subdir_dirp;
 +  }
  }
- 
+
  /* Remove entries in the directory open on DIRP
-@@ -1335,9 +1340,10 @@ remove_dir (int fd_cwd, Dirstack_state *
+@@ -1340,9 +1345,10 @@ remove_dir (int fd_cwd, Dirstack_state *
  	/* The name of the directory that we have just processed,
  	   nominally removing all of its contents.  */
  	char *empty_dir;
 +	int fd;
- 
+
  	AD_pop_and_chdir (&dirp, ds, &empty_dir);
 -	int fd = (dirp != NULL ? dirfd (dirp) : AT_FDCWD);
 +	fd = (dirp != NULL ? dirfd (dirp) : AT_FDCWD);
  	assert (dirp != NULL || AD_stack_height (ds) == 1);
- 
+
  	/* Try to remove EMPTY_DIR only if remove_cwd_entries succeeded.  */
-@@ -1415,6 +1421,7 @@ rm_1 (Dirstack_state *ds, char const *fi
+@@ -1420,6 +1426,7 @@ rm_1 (Dirstack_state *ds, char const *fi
        return RM_ERROR;
      }
 
@@ -83,26 +83,26 @@ diff -u -p -u -r1.158 remove.c
    struct stat st;
    cache_stat_init (&st);
    if (x->root_dev_ino)
-@@ -1436,6 +1443,7 @@ rm_1 (Dirstack_state *ds, char const *fi
+@@ -1441,6 +1448,7 @@ rm_1 (Dirstack_state *ds, char const *fi
    AD_push_initial (ds);
    AD_INIT_OTHER_MEMBERS ();
- 
+
 +  {
    int fd_cwd = AT_FDCWD;
    enum RM_status status = remove_entry (fd_cwd, ds, filename, &st, x, NULL);
    if (status == RM_NONEMPTY_DIR)
-@@ -1454,6 +1462,8 @@ rm_1 (Dirstack_state *ds, char const *fi
+@@ -1459,6 +1467,8 @@ rm_1 (Dirstack_state *ds, char const *fi
    ds_clear (ds);
- 
+
    return status;
 +  }
 +  }
  }
- 
+
  /* Remove all files and/or directories specified by N_FILES and FILE.
-@@ -1476,9 +1486,11 @@ rm (size_t n_files, char const *const *f
+@@ -1481,9 +1491,11 @@ rm (size_t n_files, char const *const *f
  	}
- 
+
        cycle_check_init (&ds->cycle_check_state);
 +      {
        enum RM_status s = rm_1 (ds, file[i], x, &cwd_errno);
@@ -110,7 +110,7 @@ diff -u -p -u -r1.158 remove.c
        UPDATE_STATUS (status, s);
 +      }
      }
- 
+
    if (x->require_restore_cwd && cwd_errno)
 Index: src/rm.c
 ===================================================================
