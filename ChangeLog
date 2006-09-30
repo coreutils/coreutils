@@ -1,3 +1,8 @@
+2006-09-29  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* tests/rm/readdir-bug: Don't use $(...) in a shell script,
+	as it doesn't work with Solaris /bin/sh.
+
 2006-09-29  Jim Meyering  <jim@meyering.net>
 
 	* NEWS: Mention Paul's fix (to gnulib's canon-host.c) for
