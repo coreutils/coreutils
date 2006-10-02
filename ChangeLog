@@ -3,6 +3,9 @@
 	* bootstrap: Undo last change to this file, since now gnulib-tool
 	sticks with the automake default in generating dependencies.
 
+	* NEWS: Add a line for 6.4-cvs.
+	* configure.ac (AC_INIT): Bump to 6.4 and add "-cvs" suffix.
+
 2006-09-30  Jim Meyering  <jim@meyering.net>
 
 	Version 6.3.
