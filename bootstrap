@@ -326,13 +326,10 @@ slurp() {
       if test $file = Makefile.am; then
         copied=$copied${sep}gnulib.mk; sep=$nl
 	remove_intl='/^[^#].*\/intl/s/^/#/'
-	no_dep=no-dependencies
-	remove_no_dep="/^AUTOMAKE_OPTIONS =.* $no_dep/s/ $no_dep//"
-	sed_xform="$remove_intl;$remove_no_dep"
-        sed "$sed_xform" $1/$dir/$file | cmp -s - $dir/gnulib.mk || {
+        sed "$remove_intl" $1/$dir/$file | cmp -s - $dir/gnulib.mk || {
 	  echo "$0: Copying $1/$dir/$file to $dir/gnulib.mk ..." &&
 	  rm -f $dir/gnulib.mk &&
-	  sed "$sed_xform" $1/$dir/$file >$dir/gnulib.mk
+	  sed "$remove_intl" $1/$dir/$file >$dir/gnulib.mk
 	}
       elif { test "${2+set}" = set && test -r $2/$dir/$file; } ||
 	   grep -F "/$file/" $dir/CVS/Entries 2>/dev/null |
