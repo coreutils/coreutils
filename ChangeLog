@@ -1,3 +1,10 @@
+2006-10-03  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/system.h (ST_BLKSIZE): Ceiling at SIZE_MAX / 8 + 1, not at 4
+	MiB, since XFS hosts can legitimately have large values of
+	st_blksize.  Problem reported by Tony Ernst in
+	<http://savannah.gnu.org/bugs/?17903>.
+
 2006-10-04  Jim Meyering  <jim@meyering.net>
 
 	* src/remove.c (nonexistent_file_errno): Remove ENAMETOOLONG.
