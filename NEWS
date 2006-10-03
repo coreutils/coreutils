@@ -2,6 +2,12 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Major changes in release 6.4-cvs (2006-??-??) [?????]
 
+** Bug fixes
+
+  With --force (-f), rm no longer fails for ENOTDIR or ENAMETOOLONG.
+  For example, "rm -f existing-non-directory/anything" now exits
+  successfully, ignoring the error about a nonexistent file.
+
 
 * Major changes in release 6.3 (2006-09-30) [stable]
 
