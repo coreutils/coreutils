@@ -1,5 +1,7 @@
 2006-10-03  Jim Meyering  <jim@meyering.net>
 
+	* src/c99-to-c89.diff: Update to reflect new offsets.
+
 	* src/remove.c (remove_entry): With -f, exit successfully in spite
 	of a missing file under some very unusual conditions (with errno
 	being any of ENOENT, ENOTDIR, ENAMETOOLONG).
