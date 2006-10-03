@@ -21,7 +21,6 @@
 AUTOMAKE_OPTIONS = 1.1 gnits
 
 TESTS = \
-  ignore-name-too-long \
   ignorable \
   readdir-bug \
   empty-inacc \

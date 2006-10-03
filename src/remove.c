@@ -930,10 +930,13 @@ static inline bool
 nonexistent_file_errno (int errnum)
 {
   /* Do not include ELOOP here, since the specified file may indeed
-     exist, but be (in)accessible only via too long a symlink chain.  */
+     exist, but be (in)accessible only via too long a symlink chain.
+     Likewise for ENAMETOOLONG, since rm -f ./././.../foo may fail
+     if the "..." part expands to a long enough sequence of "./"s,
+     even though ./foo does indeed exist.  */
+
   switch (errnum)
     {
-    case ENAMETOOLONG:
     case ENOENT:
     case ENOTDIR:
       return true;

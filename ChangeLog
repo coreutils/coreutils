@@ -1,3 +1,11 @@
+2006-10-04  Jim Meyering  <jim@meyering.net>
+
+	* src/remove.c (nonexistent_file_errno): Remove ENAMETOOLONG.
+	Paul Eggert pointed out that the specified file may exist,
+	in spite of such an errno value.
+	* tests/rm/Makefile.am (TESTS): Remove ignore-name-too-long.
+	* tests/rm/ignore-name-too-long: Remove file.
+
 2006-10-03  Jim Meyering  <jim@meyering.net>
 
 	* tests/rm/fail-eperm: Report failure also if rm is terminated by
