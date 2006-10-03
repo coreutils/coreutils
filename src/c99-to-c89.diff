@@ -75,7 +75,18 @@ diff -u -p -u -r1.158 remove.c
  	assert (dirp != NULL || AD_stack_height (ds) == 1);
 
  	/* Try to remove EMPTY_DIR only if remove_cwd_entries succeeded.  */
-@@ -1449,6 +1455,7 @@ rm_1 (Dirstack_state *ds, char const *fi
+@@ -1383,8 +1389,9 @@ remove_dir (int fd_cwd, Dirstack_state *
+ 	       But that's no big deal since we're interactive.  */
+ 	    struct stat empty_st;
+ 	    Ternary is_empty;
++	    enum RM_status s;
+ 	    cache_stat_init (&empty_st);
+-	    enum RM_status s = prompt (fd, ds, empty_dir, &empty_st, x,
++	    s = prompt (fd, ds, empty_dir, &empty_st, x,
+ 				       PA_REMOVE_DIR, &is_empty);
+
+ 	    if (s != RM_OK)
+@@ -1449,6 +1456,7 @@ rm_1 (Dirstack_state *ds, char const *fi
        return RM_ERROR;
      }
 
@@ -83,7 +94,7 @@ diff -u -p -u -r1.158 remove.c
    struct stat st;
    cache_stat_init (&st);
    if (x->root_dev_ino)
-@@ -1470,6 +1477,7 @@ rm_1 (Dirstack_state *ds, char const *fi
+@@ -1470,6 +1478,7 @@ rm_1 (Dirstack_state *ds, char const *fi
    AD_push_initial (ds);
    AD_INIT_OTHER_MEMBERS ();
 
@@ -91,7 +102,7 @@ diff -u -p -u -r1.158 remove.c
    int fd_cwd = AT_FDCWD;
    enum RM_status status = remove_entry (fd_cwd, ds, filename, &st, x, NULL);
    if (status == RM_NONEMPTY_DIR)
-@@ -1488,6 +1496,8 @@ rm_1 (Dirstack_state *ds, char const *fi
+@@ -1488,6 +1497,8 @@ rm_1 (Dirstack_state *ds, char const *fi
    ds_clear (ds);
 
    return status;
@@ -100,7 +111,7 @@ diff -u -p -u -r1.158 remove.c
  }
 
  /* Remove all files and/or directories specified by N_FILES and FILE.
-@@ -1510,9 +1520,11 @@ rm (size_t n_files, char const *const *f
+@@ -1510,9 +1521,11 @@ rm (size_t n_files, char const *const *f
  	}
 
        cycle_check_init (&ds->cycle_check_state);
@@ -130,3 +141,19 @@ diff -u -p -u -r1.140 rm.c
 +   }
    }
  }
+Index: shred.c
+===================================================================
+RCS file: /fetish/cu/src/shred.c,v
+retrieving revision 1.130
+diff -u -p -r1.130 shred.c
+--- shred.c     3 Sep 2006 02:53:16 -0000       1.130
++++ shred.c     3 Oct 2006 13:48:24 -0000
+@@ -460,7 +460,7 @@ dopass (int fd, char const *qname, off_t
+ 		     out.  Thus, it shouldn't give up on bad blocks.  This
+ 		     code works because lim is always a multiple of
+ 		     SECTOR_SIZE, except at the end.  */
+-		  verify (sizeof r % SECTOR_SIZE == 0);
++		  { verify (sizeof r % SECTOR_SIZE == 0); }
+ 		  if (errnum == EIO && 0 <= size && (soff | SECTOR_MASK) < lim)
+ 		    {
+ 		      size_t soff1 = (soff | SECTOR_MASK) + 1;

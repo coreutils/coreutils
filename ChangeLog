@@ -1,5 +1,9 @@
 2006-10-03  Jim Meyering  <jim@meyering.net>
 
+	* src/c99-to-c89.diff: Convert two c99'isms -- one in remove.c
+	and one in shred.c -- that were added before coreutils-6.3.
+	Reported by Michael Deutschmann.
+
 	* src/c99-to-c89.diff: Update to reflect new offsets.
 
 	* src/remove.c (remove_entry): With -f, exit successfully in spite
