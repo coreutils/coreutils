@@ -103,10 +103,20 @@ foreach my $dir (@dir_list)
 	    my $line = <RM>;
 
 	    close RM;
-	    my $status = $? >> 8;
-	    $status == 1
-	      or die "$ME: unexpected exit status from `$cmd';\n"
-		. "  got $status, expected 1\n";
+	    my $rc = $?;
+	    if (0x80 < $rc)
+	      {
+		my $status = $rc >> 8;
+		$status == 1
+		  or die "$ME: unexpected exit status from `$cmd';\n"
+		    . "  got $status, expected 1\n";
+	      }
+	    else
+	      {
+		# Terminated by a signal.
+		my $sig_num = $rc & 0x7F;
+		die "$ME: command `$cmd' died with signal $sig_num\n";
+	      }
 
 	    my $exp = "$rm: cannot remove `$target_file':";
 	    $line
