@@ -4,7 +4,7 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
-  With --force (-f), rm no longer fails for ENOTDIR or ENAMETOOLONG.
+  With --force (-f), rm no longer fails for ENOTDIR.
   For example, "rm -f existing-non-directory/anything" now exits
   successfully, ignoring the error about a nonexistent file.
 

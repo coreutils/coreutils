@@ -5,6 +5,7 @@
 	in spite of such an errno value.
 	* tests/rm/Makefile.am (TESTS): Remove ignore-name-too-long.
 	* tests/rm/ignore-name-too-long: Remove file.
+	* NEWS: Update here, too.
 
 2006-10-03  Jim Meyering  <jim@meyering.net>
 
