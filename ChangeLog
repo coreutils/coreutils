@@ -1,10 +1,15 @@
 2006-10-03  Jim Meyering  <jim@meyering.net>
 
+	* src/remove.c (remove_entry): With -f, exit successfully in spite
+	of a missing file under some very unusual conditions (with errno
+	being any of ENOENT, ENOTDIR, ENAMETOOLONG).
+
 	With --force (-f), rm no longer fails for ENOTDIR.
 	* src/remove.c (ignorable_missing): New function.
 	Use it everywhere, rather than open-coding the test.
 	Andreas Schwab reported the ENOTDIR problem.
 	(ignorable_missing): Similarly, don't fail for ENAMETOOLONG.
+
 	* NEWS: Mention the bug fix.
 	* tests/rm/ignorable: New file.  Test for the ENOTDIR case.
 	* tests/rm/ignore-name-too-long: New file. Test for ENAMETOOLONG.

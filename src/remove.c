@@ -1016,6 +1016,9 @@ remove_entry (int fd_cwd, Dirstack_state const *ds, char const *filename,
 	  || errno == ENOENT || errno == ENOTDIR
 	  || errno == ELOOP || errno == ENAMETOOLONG)
 	{
+	  if (ignorable_missing (x, errno))
+	    return RM_OK;
+
 	  /* Either --recursive is not in effect, or the file cannot be a
 	     directory.  Report the unlink problem and fail.  */
 	  error (0, errno, _("cannot remove %s"),
