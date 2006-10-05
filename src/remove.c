@@ -621,7 +621,7 @@ AD_push (int fd_cwd, Dirstack_state *ds, char const *dir,
 
   /* If our uses of openat are guaranteed not to
      follow a symlink, then we can skip this check.  */
-  if ( ! O_NOFOLLOW)
+  if (! HAVE_WORKING_O_NOFOLLOW)
     {
       struct stat sb;
       if (fstat (fd_cwd, &sb) != 0)

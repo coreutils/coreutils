@@ -265,9 +265,9 @@ static struct symbol_value const flags[] =
   {"direct",	O_DIRECT},
   {"directory",	O_DIRECTORY},
   {"dsync",	O_DSYNC},
-  {"noatime",	O_NOATIME},
+  {"noatime",	HAVE_WORKING_O_NOATIME ? O_NOATIME : 0},
   {"noctty",	O_NOCTTY},
-  {"nofollow",	O_NOFOLLOW},
+  {"nofollow",	HAVE_WORKING_O_NOFOLLOW ? O_NOFOLLOW : 0},
   {"nolinks",	O_NOLINKS},
   {"nonblock",	O_NONBLOCK},
   {"sync",	O_SYNC},
@@ -470,12 +470,12 @@ Each FLAG symbol may be:\n\
 	fputs (_("  sync      likewise, but also for metadata\n"), stdout);
       if (O_NONBLOCK)
 	fputs (_("  nonblock  use non-blocking I/O\n"), stdout);
-      if (O_NOATIME)
+      if (HAVE_WORKING_O_NOATIME)
 	fputs (_("  noatime   do not update access time\n"), stdout);
       if (O_NOCTTY)
 	fputs (_("  noctty    do not assign controlling terminal from file\n"),
 	       stdout);
-      if (O_NOFOLLOW)
+      if (HAVE_WORKING_O_NOFOLLOW)
 	fputs (_("  nofollow  do not follow symlinks\n"), stdout);
       if (O_NOLINKS)
 	fputs (_("  nolinks   fail if multiply-linked\n"), stdout);

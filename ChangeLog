@@ -1,3 +1,13 @@
+2006-10-05  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/dd.c (flags): noatime and nofollow now depend on
+	HAVE_WORKING_O_NOATIME and HAVE_WORKING_O_NOFOLLOW, too.
+	(usage): Output info about noatime and nofollow only if
+	they are known to work.
+	* src/remove.c (AD_push): Inspect HAVE_WORKING_O_NOFOLLOW rather
+	than O_NOFOLLOW, when testing whether it's possible to avoid a
+	race condition reliably.
+
 2006-10-05  Jim Meyering  <jim@meyering.net>
 
 	* tests/install/basic-1: Skip the latter part of this test if the
