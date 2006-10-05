@@ -37,7 +37,6 @@
 #include "chown-core.h"
 #include "error.h"
 #include "fts_.h"
-#include "lchown.h"
 #include "quote.h"
 #include "root-dev-ino.h"
 #include "userspec.h"

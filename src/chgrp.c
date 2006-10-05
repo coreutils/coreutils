@@ -28,7 +28,6 @@
 #include "error.h"
 #include "fts_.h"
 #include "group-member.h"
-#include "lchown.h"
 #include "quote.h"
 #include "root-dev-ino.h"
 #include "xstrtol.h"
