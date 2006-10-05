@@ -58,7 +58,20 @@ test -f $dir/$file || fail=1
 # Make sure strip works.
 dd=dd$EXEEXT
 dd2=dd2$EXEEXT
-cp $pwd/../../src/$dd . || fail=1
+
+just_built_dd=$pwd/../../src/$dd
+
+test -r $just_built_dd || \
+  {
+    cat 1>&2 <<EOF
+$0: WARNING!!!
+Your just-built dd binary, $just_built_dd
+is not readable, so skipping the remaining tests in this file.
+EOF
+    exit 77
+  }
+
+cp $just_built_dd . || fail=1
 cp $dd $dd2 || fail=1
 
 strip $dd2 || \
