@@ -27,8 +27,8 @@ struct randread_source;
 
 struct randread_source *randread_new (char const *, size_t);
 void randread (struct randread_source *, void *, size_t);
-void randread_set_handler (struct randread_source *, void (*) (void *));
-void randread_set_handler_arg (struct randread_source *, void *);
+void randread_set_handler (struct randread_source *, void (*) (void const *));
+void randread_set_handler_arg (struct randread_source *, void const *);
 int randread_free (struct randread_source *);
 
 #endif

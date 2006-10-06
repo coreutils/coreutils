@@ -1,3 +1,13 @@
+2006-10-06  Jim Meyering  <jim@meyering.net>
+
+	Avoid a compiler warning: const'ify and remove a cast.
+	* randread.c (struct randread_source) [handler]: Make parameter "const".
+	[handler_arg]: Add "const" attribute.
+	(randread_error): Make parameter "const".
+	(simple_new, randread_set_handler, randread_set_handler_arg): Likewise.
+	(randread_new): Remove now-unnecessary cast.
+	* randread.h: Adjust prototypes.
+
 2006-09-29  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* .cvsignore: Add openat-proc.c.

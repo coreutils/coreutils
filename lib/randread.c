@@ -82,8 +82,8 @@ struct randread_source
      there was an error.  If this function returns, it should fix the
      problem before returning.  The default handler assumes that
      handler_arg is the file name of the source.  */
-  void (*handler) (void *);
-  void *handler_arg;
+  void (*handler) (void const *);
+  void const *handler_arg;
 
   /* The buffer for SOURCE.  It's kept here to simplify storage
      allocation and to make it easier to clear out buffered random
@@ -116,7 +116,7 @@ struct randread_source
 /* The default error handler.  */
 
 static void
-randread_error (void *file_name)
+randread_error (void const *file_name)
 {
   if (file_name)
     error (exit_failure, errno,
@@ -129,7 +129,7 @@ randread_error (void *file_name)
    handler.  */
 
 static struct randread_source *
-simple_new (FILE *source, void *handler_arg)
+simple_new (FILE *source, void const *handler_arg)
 {
   struct randread_source *s = xmalloc (sizeof *s);
   s->source = source;
@@ -167,7 +167,7 @@ randread_new (char const *name, size_t bytes_bound)
 	  file_name = NULL;
 	}
 
-      s = simple_new (source, (void *) file_name);
+      s = simple_new (source, file_name);
 
       if (source)
 	setvbuf (source, s->buf.c, _IOFBF, MIN (sizeof s->buf.c, bytes_bound));
@@ -190,13 +190,13 @@ randread_new (char const *name, size_t bytes_bound)
    does not return.  */
 
 void
-randread_set_handler (struct randread_source *s, void (*handler) (void *))
+randread_set_handler (struct randread_source *s, void (*handler) (void const *))
 {
   s->handler = handler;
 }
 
 void
-randread_set_handler_arg (struct randread_source *s, void *handler_arg)
+randread_set_handler_arg (struct randread_source *s, void const *handler_arg)
 {
   s->handler_arg = handler_arg;
 }
