@@ -79,6 +79,9 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 /* Options passed to subsidiary functions.  */
 struct mkdir_options
 {
+  /* Full name of directory that we are making.  */
+  char const *full_name;
+
   /* Function to make an ancestor, or NULL if ancestors should not be
      made.  */
   int (*make_ancestor_function) (char const *, void *);
@@ -117,7 +120,7 @@ make_ancestor (char const *dir, void *options)
   if (r == 0)
     {
       r = ! (o->ancestor_mode & S_IRUSR);
-      announce_mkdir (dir, options);
+      announce_mkdir (o->full_name, options);
     }
   return r;
 }
@@ -126,7 +129,8 @@ make_ancestor (char const *dir, void *options)
 static int
 process_dir (char *dir, struct savewd *wd, void *options)
 {
-  struct mkdir_options const *o = options;
+  struct mkdir_options *o = options;
+  o->full_name = dir;
   return (make_dir_parents (dir, wd, o->make_ancestor_function, options,
 			    o->mode, announce_mkdir,
 			    o->mode_bits, (uid_t) -1, (gid_t) -1, true)

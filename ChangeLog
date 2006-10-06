@@ -1,3 +1,18 @@
+2006-10-06  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Fix bug reported today by Mike Frysinger: mkdir -pv is logging the
+	wrong file name in some cases.
+	* src/install.c (struct install_options): New type.
+	(install_file_in_file_parents, main):
+	Use it instead of struct cp_options.
+	(process_dir): Remember the full name.
+	(announce_mkdir, make_ancestor): Use the full name in announcements.
+	* src/mkdir.c (struct mkdir_options): Add full_name member.
+	(make_ancestor): Use the full name in announcements.
+	(process_dir): Remember the full name.
+	* tests/mkdir/Makefile.am (TESTS): Add p-v.
+	* tests/mkdir/p-v: New file, to test this bug.
+
 2006-10-05  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/chgrp.c: Don't include lchown.h; no longer needed.
