@@ -47,7 +47,7 @@ diff -u -p -u -r1.158 remove.c
  }
 
  /* Mark FILENAME (in current directory) as unremovable.  */
-@@ -1126,6 +1129,7 @@ fd_to_subdirp (int fd_cwd, char const *f
+@@ -1129,6 +1132,7 @@ fd_to_subdirp (int fd_cwd, char const *f
        return NULL;
      }
 
@@ -55,7 +55,7 @@ diff -u -p -u -r1.158 remove.c
    DIR *subdir_dirp = fdopendir (fd_sub);
    if (subdir_dirp == NULL)
      {
-@@ -1134,6 +1138,7 @@ fd_to_subdirp (int fd_cwd, char const *f
+@@ -1137,6 +1141,7 @@ fd_to_subdirp (int fd_cwd, char const *f
      }
 
    return subdir_dirp;
@@ -63,7 +63,7 @@ diff -u -p -u -r1.158 remove.c
  }
 
  /* Remove entries in the directory open on DIRP
-@@ -1369,9 +1374,10 @@ remove_dir (int fd_cwd, Dirstack_state *
+@@ -1372,9 +1377,10 @@ remove_dir (int fd_cwd, Dirstack_state *
  	/* The name of the directory that we have just processed,
  	   nominally removing all of its contents.  */
  	char *empty_dir;
@@ -75,7 +75,7 @@ diff -u -p -u -r1.158 remove.c
  	assert (dirp != NULL || AD_stack_height (ds) == 1);
 
  	/* Try to remove EMPTY_DIR only if remove_cwd_entries succeeded.  */
-@@ -1383,8 +1389,9 @@ remove_dir (int fd_cwd, Dirstack_state *
+@@ -1386,8 +1392,9 @@ remove_dir (int fd_cwd, Dirstack_state *
  	       But that's no big deal since we're interactive.  */
  	    struct stat empty_st;
  	    Ternary is_empty;
@@ -86,7 +86,7 @@ diff -u -p -u -r1.158 remove.c
  				       PA_REMOVE_DIR, &is_empty);
 
  	    if (s != RM_OK)
-@@ -1449,6 +1456,7 @@ rm_1 (Dirstack_state *ds, char const *fi
+@@ -1452,6 +1459,7 @@ rm_1 (Dirstack_state *ds, char const *fi
        return RM_ERROR;
      }
 
@@ -94,7 +94,7 @@ diff -u -p -u -r1.158 remove.c
    struct stat st;
    cache_stat_init (&st);
    if (x->root_dev_ino)
-@@ -1470,6 +1478,7 @@ rm_1 (Dirstack_state *ds, char const *fi
+@@ -1473,6 +1481,7 @@ rm_1 (Dirstack_state *ds, char const *fi
    AD_push_initial (ds);
    AD_INIT_OTHER_MEMBERS ();
 
@@ -102,7 +102,7 @@ diff -u -p -u -r1.158 remove.c
    int fd_cwd = AT_FDCWD;
    enum RM_status status = remove_entry (fd_cwd, ds, filename, &st, x, NULL);
    if (status == RM_NONEMPTY_DIR)
-@@ -1488,6 +1497,8 @@ rm_1 (Dirstack_state *ds, char const *fi
+@@ -1491,6 +1500,8 @@ rm_1 (Dirstack_state *ds, char const *fi
    ds_clear (ds);
 
    return status;
@@ -111,7 +111,7 @@ diff -u -p -u -r1.158 remove.c
  }
 
  /* Remove all files and/or directories specified by N_FILES and FILE.
-@@ -1510,9 +1521,11 @@ rm (size_t n_files, char const *const *f
+@@ -1513,9 +1524,11 @@ rm (size_t n_files, char const *const *f
  	}
 
        cycle_check_init (&ds->cycle_check_state);
