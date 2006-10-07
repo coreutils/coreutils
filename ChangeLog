@@ -1,7 +1,8 @@
 2006-10-06  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Fix bug reported today by Mike Frysinger: mkdir -pv is logging the
-	wrong file name in some cases.
+	wrong file name in some cases.  Lars Wendler reported a bug in
+	my original fix.
 	* src/install.c (make_ancestor): New arg COMPONENT.
 	* src/mkdir.c (make_ancestor): Likewise.
 	* tests/install/basic-1: Check for install -Dv bug.
