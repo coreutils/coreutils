@@ -1,3 +1,9 @@
+2006-10-07  Jim Meyering  <jim@meyering.net>
+
+	* jm-macros.m4 (gl_MACROS): Remove use of AC_CONFIG_LIBOBJ_DIR(lib).
+	It is no longer needed, and was causing dependencies to appear
+	in lib/lib/.deps, which provoked a "make distcheck" failure.
+
 2006-09-29  Jim Meyering  <jim@meyering.net>
 
 	* readdir.m4: Remove file once again.

@@ -46,8 +46,6 @@ AC_DEFUN([gl_MACROS],
 
   AC_REQUIRE([AC_FUNC_FSEEKO])
 
-  AC_CONFIG_LIBOBJ_DIR([lib])
-
   # By default, argmatch should fail calling usage (1).
   AC_DEFINE(ARGMATCH_DIE, [usage (1)],
 	    [Define to the function xargmatch calls on failures.])
