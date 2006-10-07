@@ -79,12 +79,9 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 /* Options passed to subsidiary functions.  */
 struct mkdir_options
 {
-  /* Full name of directory that we are making.  */
-  char const *full_name;
-
   /* Function to make an ancestor, or NULL if ancestors should not be
      made.  */
-  int (*make_ancestor_function) (char const *, void *);
+  int (*make_ancestor_function) (char const *, char const *, void *);
 
   /* Mode for ancestor directory.  */
   mode_t ancestor_mode;
@@ -108,19 +105,20 @@ announce_mkdir (char const *dir, void *options)
     error (0, 0, o->created_directory_format, quote (dir));
 }
 
-/* Make ancestor directory DIR, with options OPTIONS.  Return 0 if
-   successful and the resulting directory is readable, 1 if successful
-   but the resulting directory is not readable, -1 (setting errno)
-   otherwise.  */
+/* Make ancestor directory DIR, whose last component is COMPONENT,
+   with options OPTIONS.  Assume the working directory is COMPONENT's
+   parent.  Return 0 if successful and the resulting directory is
+   readable, 1 if successful but the resulting directory is not
+   readable, -1 (setting errno) otherwise.  */
 static int
-make_ancestor (char const *dir, void *options)
+make_ancestor (char const *dir, char const *component, void *options)
 {
   struct mkdir_options const *o = options;
-  int r = mkdir (dir, o->ancestor_mode);
+  int r = mkdir (component, o->ancestor_mode);
   if (r == 0)
     {
       r = ! (o->ancestor_mode & S_IRUSR);
-      announce_mkdir (o->full_name, options);
+      announce_mkdir (dir, options);
     }
   return r;
 }
@@ -129,8 +127,7 @@ make_ancestor (char const *dir, void *options)
 static int
 process_dir (char *dir, struct savewd *wd, void *options)
 {
-  struct mkdir_options *o = options;
-  o->full_name = dir;
+  struct mkdir_options const *o = options;
   return (make_dir_parents (dir, wd, o->make_ancestor_function, options,
 			    o->mode, announce_mkdir,
 			    o->mode_bits, (uid_t) -1, (gid_t) -1, true)

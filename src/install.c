@@ -66,22 +66,12 @@
 /* Number of bytes of a file to copy at a time. */
 #define READ_SIZE (32 * 1024)
 
-/* Options passed to subsidiary functions.  */
-struct install_options
-{
-  /* Full name of file being installed.  */
-  char const *full_name;
-
-  /* Options for cp-related code.  */
-  struct cp_options cp;
-};
-
 static bool change_timestamps (struct stat const *from_sb, char const *to);
 static bool change_attributes (char const *name);
 static bool copy_file (const char *from, const char *to,
 		       const struct cp_options *x);
 static bool install_file_in_file_parents (char const *from, char *to,
-					  struct install_options *x);
+					  struct cp_options *x);
 static bool install_file_in_dir (const char *from, const char *to_dir,
 				 const struct cp_options *x);
 static bool install_file_in_file (const char *from, const char *to,
@@ -89,7 +79,8 @@ static bool install_file_in_file (const char *from, const char *to,
 static void get_ids (void);
 static void strip (char const *name);
 static void announce_mkdir (char const *dir, void *options);
-static int make_ancestor (char const *dir, void *options);
+static int make_ancestor (char const *dir, char const *component,
+			  void *options);
 void usage (int status);
 
 /* The name this program was run with, for error messages. */
@@ -208,8 +199,6 @@ target_directory_operand (char const *file)
 static int
 process_dir (char *dir, struct savewd *wd, void *options)
 {
-  struct install_options *o = options;
-  o->full_name = dir;
   return (make_dir_parents (dir, wd,
 			    make_ancestor, options,
 			    dir_mode, announce_mkdir,
@@ -228,7 +217,7 @@ main (int argc, char **argv)
   char *backup_suffix_string;
   char *version_control_string = NULL;
   bool mkdir_and_install = false;
-  struct install_options x;
+  struct cp_options x;
   char const *target_directory = NULL;
   bool no_target_directory = false;
   int n_files;
@@ -242,7 +231,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  cp_option_init (&x.cp);
+  cp_option_init (&x);
 
   owner_name = NULL;
   group_name = NULL;
@@ -280,7 +269,7 @@ main (int argc, char **argv)
 	  mkdir_and_install = true;
 	  break;
 	case 'v':
-	  x.cp.verbose = true;
+	  x.verbose = true;
 	  break;
 	case 'g':
 	  group_name = optarg;
@@ -292,7 +281,7 @@ main (int argc, char **argv)
 	  owner_name = optarg;
 	  break;
 	case 'p':
-	  x.cp.preserve_timestamps = true;
+	  x.preserve_timestamps = true;
 	  break;
 	case 'S':
 	  make_backups = true;
@@ -334,10 +323,10 @@ main (int argc, char **argv)
   if (backup_suffix_string)
     simple_backup_suffix = xstrdup (backup_suffix_string);
 
-  x.cp.backup_type = (make_backups
-		      ? xget_version (_("backup type"),
-				      version_control_string)
-		      : no_backups);
+  x.backup_type = (make_backups
+		   ? xget_version (_("backup type"),
+				   version_control_string)
+		   : no_backups);
 
   n_files = argc - optind;
   file = argv + optind;
@@ -397,15 +386,15 @@ main (int argc, char **argv)
         {
           if (! (mkdir_and_install
 		 ? install_file_in_file_parents (file[0], file[1], &x)
-		 : install_file_in_file (file[0], file[1], &x.cp)))
+		 : install_file_in_file (file[0], file[1], &x)))
 	    exit_status = EXIT_FAILURE;
 	}
       else
 	{
 	  int i;
-	  dest_info_init (&x.cp);
+	  dest_info_init (&x);
 	  for (i = 0; i < n_files; i++)
-	    if (! install_file_in_dir (file[i], target_directory, &x.cp))
+	    if (! install_file_in_dir (file[i], target_directory, &x))
 	      exit_status = EXIT_FAILURE;
 	}
     }
@@ -418,7 +407,7 @@ main (int argc, char **argv)
 
 static bool
 install_file_in_file_parents (char const *from, char *to,
-			      struct install_options *x)
+			      struct cp_options *x)
 {
   bool save_working_directory =
     ! (IS_ABSOLUTE_FILE_NAME (from) && IS_ABSOLUTE_FILE_NAME (to));
@@ -449,7 +438,7 @@ install_file_in_file_parents (char const *from, char *to,
 	}
     }
 
-  return (status == EXIT_SUCCESS && install_file_in_file (from, to, &x->cp));
+  return (status == EXIT_SUCCESS && install_file_in_file (from, to, x));
 }
 
 /* Copy file FROM onto file TO and give TO the appropriate
@@ -636,19 +625,20 @@ get_ids (void)
 static void
 announce_mkdir (char const *dir, void *options)
 {
-  struct install_options const *x = options;
-  if (x->cp.verbose)
+  struct cp_options const *x = options;
+  if (x->verbose)
     error (0, 0, _("creating directory %s"), quote (dir));
 }
 
-/* Make ancestor directory DIR, with options OPTIONS.  */
+/* Make ancestor directory DIR, whose last file name component is
+   COMPONENT, with options OPTIONS.  Assume the working directory is
+   COMPONENT's parent.  */
 static int
-make_ancestor (char const *dir, void *options)
+make_ancestor (char const *dir, char const *component, void *options)
 {
-  struct install_options const *x = options;
-  int r = mkdir (dir, DEFAULT_MODE);
+  int r = mkdir (component, DEFAULT_MODE);
   if (r == 0)
-    announce_mkdir (x->full_name, options);
+    announce_mkdir (dir, options);
   return r;
 }
 

@@ -24,6 +24,14 @@ if test "$VERBOSE" = yes; then
   ginstall --version
 fi
 
+# Make sure we get English translations.
+LANGUAGE=C
+export LANGUAGE
+LC_ALL=C
+export LC_ALL
+LANG=C
+export LANG
+
 . $srcdir/../envvar-check
 PRIV_CHECK_ARG=require-non-root . $srcdir/../priv-check
 
@@ -129,5 +137,15 @@ chmod 755 sub1 sub1/d || fail=1
 test -d xx/zz || fail=1
 test -d sub1/d/rel/a || fail=1
 test -d sub1/d/rel/b || fail=1
+
+touch file || fail=1
+ginstall -Dv file sub3/a/b/c/file >out 2>&1 || fail=1
+diff - out <<\EOF || fail=1
+ginstall: creating directory `sub3'
+ginstall: creating directory `sub3/a'
+ginstall: creating directory `sub3/a/b'
+ginstall: creating directory `sub3/a/b/c'
+`file' -> `sub3/a/b/c/file'
+EOF
 
 (exit $fail); exit $fail
