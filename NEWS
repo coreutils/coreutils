@@ -638,7 +638,7 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   cp and mv: the --reply=X option is deprecated
 
-  date accepts the new option --rfc-3339=TIMESPEC.  The old --iso-8602 (-I)
+  date accepts the new option --rfc-3339=TIMESPEC.  The old --iso-8601 (-I)
   option is deprecated; it still works, but new applications should avoid it.
   date, du, ls, and pr's time formats now support new %:z, %::z, %:::z
   specifiers for numeric time zone offsets like -07:00, -07:00:00, and -07.
