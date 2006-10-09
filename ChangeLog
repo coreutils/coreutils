@@ -1,3 +1,9 @@
+2006-10-09  Jim Meyering  <jim@meyering.net>
+
+	Avoid a compiler warning.
+	* src/pathchk.c (portable_chars_only): Initialize variable of type
+	mbstate_t via memset, rather than via '{0}'.  Patch from Bruno Haible.
+
 2006-10-06  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Fix bug reported today by Mike Frysinger: mkdir -pv is logging the

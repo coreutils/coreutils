@@ -1,5 +1,5 @@
 /* pathchk -- check whether file names are valid or portable
-   Copyright (C) 1991-2005 Free Software Foundation, Inc.
+   Copyright (C) 1991-2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -200,8 +200,11 @@ portable_chars_only (char const *file, size_t filelen)
 
   if (*invalid)
     {
-      mbstate_t mbstate = {0};
-      size_t charlen = mbrlen (invalid, filelen - validlen, &mbstate);
+      mbstate_t mbstate;
+      size_t charlen;
+
+      memset (&mbstate, 0, sizeof mbstate);
+      charlen = mbrlen (invalid, filelen - validlen, &mbstate);
       error (0, 0,
 	     _("nonportable character %s in file name %s"),
 	     quotearg_n_style_mem (1, locale_quoting_style, invalid,
