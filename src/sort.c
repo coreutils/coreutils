@@ -337,7 +337,7 @@ Other options:\n\
       fputs (_("\
 \n\
 POS is F[.C][OPTS], where F is the field number and C the character position\n\
-in the field.  If neither the -t nor the -b option is in effect, the characters\n\
+in the field; both are origin 1.  If neither -t nor -b is in effect, characters\n\
 in a field are counted from the beginning of the preceding whitespace.  OPTS is\n\
 one or more single-letter ordering options, which override global ordering\n\
 options for that key.  If no key is given, use the entire line as the key.\n\

@@ -1,5 +1,7 @@
 2006-10-09  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* src/sort.c (usage): Mention again that sort fields are origin 1.
+
 	* NEWS: Fix typo: iso-8602 -> iso-8601.  Problem reported by
 	Bob Proulx.
 
