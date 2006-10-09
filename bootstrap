@@ -40,6 +40,7 @@ Options:
                           have gnulib sources on your machine, and
                           do not want to waste your bandwidth dowloading
                           them again.
+ --copy                   Copy files instead of creating symbolic links.
  --force                  Bootstrap even if the sources didn't come from CVS.
  --skip-po                Do not download po files.
  --cvs-user=USERNAME      Set the CVS username to be used when accessing
@@ -112,6 +113,9 @@ excluded_files=
 # the distributed version.
 CVS_only_file=CVS
 
+# Whether to use copies instead of symlinks.
+copy=false
+
 # Override the default configuration, if necessary.
 test -r bootstrap.conf && . ./bootstrap.conf
 
@@ -133,6 +137,8 @@ do
     SKIP_PO=t;;
   --force)
     CVS_only_file=;;
+  --copy)
+    copy=true;;
   *)
     echo >&2 "$0: $option: unknown option"
     exit 1;;
@@ -249,29 +255,42 @@ symlink_to_gnulib()
 {
   src=$GNULIB_SRCDIR/$1
   dst=${2-$1}
-  dot_dots=
-
-  case $src in
-  /*) ;;
-  *)
-    case /$dst/ in
-    *//* | */../* | */./* | /*/*/*/*/*/)
-       echo >&2 "$0: invalid symlink calculation: $src -> $dst"
-       exit 1;;
-    /*/*/*/*/)	dot_dots=../../../;;
-    /*/*/*/)	dot_dots=../../;;
-    /*/*/)	dot_dots=../;;
-    esac;;
-  esac
 
   test -f "$src" && {
-    test -h "$dst" &&
-    src_ls=`ls -diL "$src" 2>/dev/null` && set $src_ls && src_i=$1 &&
-    dst_ls=`ls -diL "$dst" 2>/dev/null` && set $dst_ls && dst_i=$1 &&
-    test "$src_i" = "$dst_i" || {
-      echo "$0: ln -fs $dot_dots$src $dst" &&
-      ln -fs "$dot_dots$src" "$dst"
-    }
+    if $copy; then
+      {
+	test ! -h "$dst" || {
+	  echo "$0: rm -f $dst" &&
+	  rm -f "$dst"
+	}
+      } &&
+      test -f "$dst" &&
+      cmp -s "$src" "$dst" || {
+	echo "$0: cp -fp $src $dst" &&
+	cp -fp "$src" "$dst"
+      }
+    else
+      test -h "$dst" &&
+      src_ls=`ls -diL "$src" 2>/dev/null` && set $src_ls && src_i=$1 &&
+      dst_ls=`ls -diL "$dst" 2>/dev/null` && set $dst_ls && dst_i=$1 &&
+      test "$src_i" = "$dst_i" || {
+	case $src in
+	/*) dot_dots=;;
+	*)
+	  case /$dst/ in
+	  *//* | */../* | */./* | /*/*/*/*/*/)
+	     echo >&2 "$0: invalid symlink calculation: $src -> $dst"
+	     exit 1;;
+	  /*/*/*/*/)	dot_dots=../../../;;
+	  /*/*/*/)	dot_dots=../../;;
+	  /*/*/)	dot_dots=../;;
+	  esac;;
+	esac
+
+	echo "$0: ln -fs $dot_dots$src $dst" &&
+	ln -fs "$dot_dots$src" "$dst"
+      }
+    fi
   }
 }
 

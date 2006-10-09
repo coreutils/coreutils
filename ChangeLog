@@ -1,3 +1,8 @@
+2006-10-09  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* bootstrap (usage, main program, symlink_to_gnulib): Add option
+	--copy.  Inspired by a suggestion from Bruno Haible.
+
 2006-10-09  Jim Meyering  <jim@meyering.net>
 
 	Avoid a compiler warning.
