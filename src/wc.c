@@ -273,7 +273,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
     {
       bool in_word = false;
       uintmax_t linepos = 0;
-      mbstate_t state;
+      mbstate_t state = { 0, };
       uintmax_t last_error_line = 0;
       int last_error_errno = 0;
 # if SUPPORT_OLD_MBRTOWC
@@ -289,7 +289,6 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
       const size_t prev = 0;
 # endif
 
-      memset (&state, 0, sizeof (mbstate_t));
       while ((bytes_read = safe_read (fd, buf + prev, BUFFER_SIZE - prev)) > 0)
 	{
 	  const char *p;

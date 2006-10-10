@@ -3604,8 +3604,7 @@ quote_name (FILE *out, const char *name, struct quoting_options const *options,
 		     reach its end, replacing each non-printable multibyte
 		     character with a single question mark.  */
 		  {
-		    mbstate_t mbstate;
-		    memset (&mbstate, 0, sizeof mbstate);
+		    mbstate_t mbstate = { 0, };
 		    do
 		      {
 			wchar_t wc;

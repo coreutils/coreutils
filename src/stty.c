@@ -729,7 +729,10 @@ settings, CHAR is taken literally, or coded as in ^c, 0x37, 0177 or\n\
 int
 main (int argc, char **argv)
 {
-  struct termios mode;
+  /* Initialize to all zeroes so there is no risk memcmp will report a
+     spurious difference in an uninitialized portion of the structure.  */
+  struct termios mode = { 0, };
+
   enum output_type output_type;
   int optc;
   int argi = 0;
@@ -840,9 +843,6 @@ main (int argc, char **argv)
   else
     device_name = _("standard input");
 
-  /* Initialize to all zeroes so there is no risk memcmp will report a
-     spurious difference in an uninitialized portion of the structure.  */
-  memset (&mode, 0, sizeof (mode));
   if (tcgetattr (STDIN_FILENO, &mode))
     error (EXIT_FAILURE, errno, "%s", device_name);
 
@@ -1002,7 +1002,9 @@ main (int argc, char **argv)
 
   if (require_set_attr)
     {
-      struct termios new_mode;
+      /* Initialize to all zeroes so there is no risk memcmp will report a
+	 spurious difference in an uninitialized portion of the structure.  */
+      struct termios new_mode = { 0, };
 
       if (tcsetattr (STDIN_FILENO, TCSADRAIN, &mode))
 	error (EXIT_FAILURE, errno, "%s", device_name);
@@ -1014,9 +1016,6 @@ main (int argc, char **argv)
 	 this partial failure, get the current terminal attributes and
 	 compare them to the requested ones.  */
 
-      /* Initialize to all zeroes so there is no risk memcmp will report a
-	 spurious difference in an uninitialized portion of the structure.  */
-      memset (&new_mode, 0, sizeof (new_mode));
       if (tcgetattr (STDIN_FILENO, &new_mode))
 	error (EXIT_FAILURE, errno, "%s", device_name);
 

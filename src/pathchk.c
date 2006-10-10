@@ -200,11 +200,8 @@ portable_chars_only (char const *file, size_t filelen)
 
   if (*invalid)
     {
-      mbstate_t mbstate;
-      size_t charlen;
-
-      memset (&mbstate, 0, sizeof mbstate);
-      charlen = mbrlen (invalid, filelen - validlen, &mbstate);
+      mbstate_t mbstate = { 0, };
+      size_t charlen = mbrlen (invalid, filelen - validlen, &mbstate);
       error (0, 0,
 	     _("nonportable character %s in file name %s"),
 	     quotearg_n_style_mem (1, locale_quoting_style, invalid,

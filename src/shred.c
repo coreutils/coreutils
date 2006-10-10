@@ -1091,7 +1091,7 @@ int
 main (int argc, char **argv)
 {
   bool ok = true;
-  struct Options flags;
+  struct Options flags = { 0, };
   char **file;
   int n_files;
   int c;
@@ -1105,8 +1105,6 @@ main (int argc, char **argv)
   textdomain (PACKAGE);
 
   atexit (close_stdout);
-
-  memset (&flags, 0, sizeof flags);
 
   flags.n_iterations = DEFAULT_PASSES;
   flags.size = -1;
