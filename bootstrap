@@ -274,8 +274,9 @@ symlink_to_gnulib()
       src_ls=`ls -diL "$src" 2>/dev/null` && set $src_ls && src_i=$1 &&
       dst_ls=`ls -diL "$dst" 2>/dev/null` && set $dst_ls && dst_i=$1 &&
       test "$src_i" = "$dst_i" || {
+	dot_dots=
 	case $src in
-	/*) dot_dots=;;
+	/*) ;;
 	*)
 	  case /$dst/ in
 	  *//* | */../* | */./* | /*/*/*/*/*/)

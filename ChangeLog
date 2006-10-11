@@ -1,3 +1,9 @@
+2006-10-11  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* bootstrap (symlink_to_gnulib): Fix bug: the dot_dots shell
+	variable was sometimes used without being initialized.  This
+	messed up the installation of the INSTALL file in some cases.
+
 2006-10-11  Jim Meyering  <jim@meyering.net>
 
 	* src/ls.c (usage): Correct description of -s, --size.
