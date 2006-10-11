@@ -4312,7 +4312,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (_("\
   -r, --reverse              reverse order while sorting\n\
   -R, --recursive            list subdirectories recursively\n\
-  -s, --size                 with -l, print size of each file, in blocks\n\
+  -s, --size                 print the size of each file, in blocks\n\
 "), stdout);
       fputs (_("\
   -S                         sort by file size\n\
