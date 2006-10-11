@@ -7,7 +7,7 @@
 
 	* src/ls.c (quote_name): Use initializer rather than memset to
 	initialize an object to zero.  This is easier to read and is less
-	likely to introduce an runtime error due to a mixup.  It causes
+	likely to introduce a runtime error due to a mixup.  It causes
 	gcc -W to issue a warning, but you can work around this by
 	appending -Wno-missing-field-initializers.
 	* src/pathchk.c (portable_chars_only): Likewise.
