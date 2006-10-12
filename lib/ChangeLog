@@ -1,3 +1,10 @@
+2006-10-12  Jim Meyering  <jim@meyering.net>
+
+	* Makefile.am (libcoreutils_a_LIBADD): Append $(LIBOBJS),
+	to accommodate the latest version of gnulib-tool.
+	(libcoreutils_a_DEPENDENCIES): Likewise.
+	From Bruno Haible.
+
 2006-10-06  Jim Meyering  <jim@meyering.net>
 
 	Avoid a compiler warning: const'ify and remove a cast.

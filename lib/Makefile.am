@@ -29,6 +29,9 @@ libcoreutils_a_SOURCES += \
   xmemcoll.c xmemcoll.h \
   xmemxfrm.c xmemxfrm.h
 
+libcoreutils_a_LIBADD += $(LIBOBJS)
+libcoreutils_a_DEPENDENCIES += $(LIBOBJS)
+
 check: unit-test
 
 .PHONY: unit-test
