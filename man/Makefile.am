@@ -35,7 +35,7 @@ dist_man_MANS = \
 man_aux = $(dist_man_MANS:.1=.x)
 
 EXTRA_DIST = $(man_aux) help2man
-MAINTAINERCLEANFILES = $(man_MANS)
+MAINTAINERCLEANFILES = $(dist_man_MANS)
 
 # Depend on configure.ac to get version number changes.
 common_dep = $(top_srcdir)/configure.ac

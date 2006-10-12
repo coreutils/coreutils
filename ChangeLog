@@ -1,5 +1,12 @@
 2006-10-12  Ralf Wildenhues  <Ralf.Wildenhues@gmx.de>
 
+	* Makefile.am (THANKS-to-translators): Add missing $(srcdir).
+	(MAINTAINERCLEANFILES): Add .kludge-stamp.
+	* man/Makefile.am (MAINTAINERCLEANFILES): Typo $(dist_man_MANS)
+	instead of $(man_MANS).
+
+2006-10-12  Ralf Wildenhues  <Ralf.Wildenhues@gmx.de>
+
 	* configure.ac: Avoid compiler warnings about default return
 	type in function definitions and unused variables in tests.
 	* src/who.c (print_user) [HAVE_UT_HOST]: hostlen is only needed
