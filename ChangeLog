@@ -1,3 +1,10 @@
+2006-10-12  Ralf Wildenhues  <Ralf.Wildenhues@gmx.de>
+
+	* configure.ac: Avoid compiler warnings about default return
+	type in function definitions and unused variables in tests.
+	* src/who.c (print_user) [HAVE_UT_HOST]: hostlen is only needed
+	if this is #defined.
+
 2006-10-12  Jim Meyering  <jim@meyering.net>
 
 	* configure.ac: Reflect s/gl_MACROS/coreutils_MACROS/ renaming.

@@ -320,7 +320,9 @@ print_user (const STRUCT_UTMP *utmp_ent, time_t boottime)
   char mesg;
   char idlestr[IDLESTR_LEN + 1];
   static char *hoststr;
+#if HAVE_UT_HOST
   static size_t hostlen;
+#endif
 
 #define DEV_DIR_WITH_TRAILING_SLASH "/dev/"
 #define DEV_DIR_LEN (sizeof (DEV_DIR_WITH_TRAILING_SLASH) - 1)
