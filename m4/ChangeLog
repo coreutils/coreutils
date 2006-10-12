@@ -1,3 +1,9 @@
+2006-10-12  Jim Meyering  <jim@meyering.net>
+
+	* jm-macros.m4 (coreutils_MACROS): Rename from gl_MACROS, now that
+	most of the gnulib macros have migrated into gnulib.
+	Don't call gl_INIT here (now it's called from configure.ac, directly).
+
 2006-10-07  Jim Meyering  <jim@meyering.net>
 
 	* jm-macros.m4 (gl_MACROS): Remove use of AC_CONFIG_LIBOBJ_DIR(lib).

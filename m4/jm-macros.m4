@@ -1,4 +1,4 @@
-#serial 103   -*- autoconf -*-
+#serial 104   -*- autoconf -*-
 
 dnl Misc type-related macros for coreutils.
 
@@ -21,10 +21,8 @@ dnl Misc type-related macros for coreutils.
 
 # Written by Jim Meyering.
 
-AC_DEFUN([gl_MACROS],
+AC_DEFUN([coreutils_MACROS],
 [
-  gl_INIT
-
   GNU_PACKAGE="GNU $PACKAGE"
   AC_DEFINE_UNQUOTED(GNU_PACKAGE, "$GNU_PACKAGE",
     [The concatenation of the strings `GNU ', and PACKAGE.])
