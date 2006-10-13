@@ -1,7 +1,8 @@
 2006-10-13  Jim Meyering  <jim@meyering.net>
 
+	* tests/ls/Test.pm: Remove long-unused file.
 	* Makefile.am (EXTRA_DIST): Add bootstrap.conf.
-	Suggestion from Bruno Haible.
+	Suggestions from Bruno Haible.
 
 2006-10-12  Ralf Wildenhues  <Ralf.Wildenhues@gmx.de>
 
