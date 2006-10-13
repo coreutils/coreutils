@@ -1,3 +1,14 @@
+2006-10-13  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Sync from Bison, as follows:
+
+	2006-10-01  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Fix problems with translating English-language diagnostics.
+	* bootstrap: Fix bug introduced in recent bootstrap changes, with
+	respect to bison-runtime pot generation.  The YY_ stuff
+	wasn't being captured.
+
 2006-10-13  Jim Meyering  <jim@meyering.net>
 
 	* src/chown-core.c (change_file_owner): Use fstatat, not stat,

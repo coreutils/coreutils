@@ -460,13 +460,18 @@ sed '
 ' po/Makevars.template >po/Makevars
 
 if test -d runtime-po; then
-  # Likewise for runtime-po/Makevars, except also change a few other parameters.
+  # Similarly for runtime-po/Makevars, but not quite the same.
   rm -f runtime-po/Makevars
   sed '
-    s/^\(DOMAIN\) *=.*/\1 = '"$package"'-runtime/
-    s/^\(subdir\) *=.*/\1 = runtime-po/
-    s/^\(XGETTEXT_OPTIONS\) *=.*/\1 = '"$XGETTEXT_OPTIONS_RUNTIME"'/
-  ' <po/Makevars >runtime-po/Makevars
+    /^DOMAIN *=.*/s/=.*/= '"$package"'-runtime/
+    /^subdir *=.*/s/=.*/= runtime-po/
+    /^MSGID_BUGS_ADDRESS *=/s/=.*/= bug-'"$package"'@gnu.org/
+    /^XGETTEXT_OPTIONS *=/{
+      s/$/ \\/
+      a\
+	  '"$XGETTEXT_OPTIONS_RUNTIME"' $${end_of_xgettext_options+}
+    }
+  ' <po/Makevars.template >runtime-po/Makevars
 
   # Copy identical files from po to runtime-po.
   (cd po && cp -p Makefile.in.in *-quot *.header *.sed *.sin ../runtime-po)
