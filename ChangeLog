@@ -4,6 +4,7 @@
 	now that we're using fts_open with FTS_CWDFD.
 	* tests/chgrp/posix-H: Add --preserve-root to an invocation of
 	chgrp, to exercise the above fix.
+	* NEWS: Mention the above.
 
 	* src/du-tests: Clean up a little, though it's still not portable.
 

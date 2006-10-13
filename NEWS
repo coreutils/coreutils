@@ -4,6 +4,11 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  chgrp and chown would malfunction when invoked with both -R and -H and
+  with one or more of the following: --preserve-root, --verbose, --changes,
+  --from=o:g (chown only).  This bug was introduced with the switch to
+  gnulib's openat-based variant of fts, for coreutils-6.0.
+
   With --force (-f), rm no longer fails for ENOTDIR.
   For example, "rm -f existing-non-directory/anything" now exits
   successfully, ignoring the error about a nonexistent file.
