@@ -318,7 +318,7 @@ change_file_owner (FTS *fts, FTSENT *ent,
 	 stat it to get info on the referent.  */
       if (S_ISLNK (file_stats->st_mode) && chopt->affect_symlink_referent)
 	{
-	  if (stat (file, &stat_buf) != 0)
+	  if (fstatat (fts->fts_cwd_fd, file, &stat_buf, 0) != 0)
 	    {
 	      error (0, errno, _("cannot dereference %s"),
 		     quote (file_full_name));

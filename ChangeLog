@@ -1,5 +1,10 @@
 2006-10-13  Jim Meyering  <jim@meyering.net>
 
+	* src/chown-core.c (change_file_owner): Use fstatat, not stat,
+	now that we're using fts_open with FTS_CWDFD.
+	* tests/chgrp/posix-H: Add --preserve-root to an invocation of
+	chgrp, to exercise the above fix.
+
 	* src/du-tests: Clean up a little, though it's still not portable.
 
 	* .vg-suppressions: Add 3 more for debian unstable.
