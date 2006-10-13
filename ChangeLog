@@ -1,5 +1,7 @@
 2006-10-13  Jim Meyering  <jim@meyering.net>
 
+	* .vg-suppressions: Add 3 more for debian unstable.
+
 	* tests/ls/Test.pm: Remove long-unused file.
 	* Makefile.am (EXTRA_DIST): Add bootstrap.conf.
 	Suggestions from Bruno Haible.
