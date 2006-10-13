@@ -35,6 +35,7 @@ EXTRA_DIST = Makefile.cfg Makefile.maint GNUmakefile \
   ChangeLog-2005 \
   announce-gen \
   bootstrap \
+  bootstrap.conf \
   build-aux/cvsu \
   build-aux/vc-list-files \
   gl/modules/getloadavg.diff \
