@@ -1,5 +1,7 @@
 2006-10-13  Jim Meyering  <jim@meyering.net>
 
+	* src/du-tests: Clean up a little, though it's still not portable.
+
 	* .vg-suppressions: Add 3 more for debian unstable.
 
 	* tests/ls/Test.pm: Remove long-unused file.

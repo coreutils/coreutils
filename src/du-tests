@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Copyright (C) 2003 Free Software Foundation, Inc.
+# Copyright (C) 2003, 2006 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,11 +18,17 @@
 
 cat - <<\EOF > /dev/null
 Invoke e.g., like this
-DU1=du-4.5.2 DU2=du ./du-tests
+VG_PATH_PREFIX=/cu/src/vg: DU1=/cu/src/du DU2=/usr/bin/du ./du-tests
+Where /cu/src/vg/du is a valgrind wrapper around du,
+and DU1 refers to the just-built du binary you want to test.
 EOF
 
-test -x "$DU1" || { echo DU1 envvar not set; exit 1; }
-test -x "$DU2" || { echo DU2 envvar not set; exit 1; }
+test -z "$DU1" && { echo DU1 envvar not set 1>&2; exit 1; }
+test -z "$DU2" && { echo DU2 envvar not set 1>&2; exit 1; }
+
+test -x "$DU1" || { echo $DU1 not executable 1>&2; exit 1; }
+test -x "$DU2" || { echo $DU2 not executable 1>&2; exit 1; }
+
 # Expects $DU1 and $DU2 to be the binaries to compare.
 d1=$(mktemp -d)
 cp -a $DU1 $d1/du
@@ -47,6 +53,6 @@ for args in  \
   ; do
   echo Args: $args ======================
   diff -u --label=$DU1 --label=$DU2 \
-    <(PATH=$d1 du $args 2>&1) <(PATH=$d2 du $args 2>&1)
+    <(PATH=$VG_PATH_PREFIX$d1 du $args 2>&1) <(PATH=$d2 du $args 2>&1)
 done
 rm -rf $d1 $d2
