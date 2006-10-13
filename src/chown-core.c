@@ -305,7 +305,9 @@ change_file_owner (FTS *fts, FTSENT *ent,
       file_stats = NULL;
     }
   else if (required_uid == (uid_t) -1 && required_gid == (gid_t) -1
-	   && chopt->verbosity == V_off && ! chopt->root_dev_ino)
+	   && chopt->verbosity == V_off
+	   && ! chopt->root_dev_ino
+	   && ! chopt->affect_symlink_referent)
     {
       do_chown = true;
       file_stats = ent->fts_statp;
@@ -316,7 +318,7 @@ change_file_owner (FTS *fts, FTSENT *ent,
 
       /* If this is a symlink and we're dereferencing them,
 	 stat it to get info on the referent.  */
-      if (S_ISLNK (file_stats->st_mode) && chopt->affect_symlink_referent)
+      if (chopt->affect_symlink_referent && S_ISLNK (file_stats->st_mode))
 	{
 	  if (fstatat (fts->fts_cwd_fd, file, &stat_buf, 0) != 0)
 	    {
@@ -454,6 +456,7 @@ chown_files (char **files, int bit_flags,
 
   /* Use lstat and stat only if they're needed.  */
   int stat_flags = ((required_uid != (uid_t) -1 || required_gid != (gid_t) -1
+		     || chopt->affect_symlink_referent
 		     || chopt->verbosity != V_off || chopt->root_dev_ino)
 		    ? 0
 		    : FTS_NOSTAT);

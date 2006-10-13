@@ -1,3 +1,17 @@
+2006-10-13  Jim Meyering  <jim@meyering.net>
+
+	More chown/chgrp dereferencing-related fixes.
+	* src/chown-core.c (change_file_owner): Don't use fts_statp if
+	we're dereferencing symlinks.
+	Reverse conjuncts, so that we use dereference file_stats
+	(aka ent->fts_statp) only *after* we've confirmed that
+	chopt->affect_symlink_referent is true.  Otherwise, we might
+	use ent->fts_statp uninitialized.
+	Don't turn on FTS_NOSTAT when dereferencing symlinks.
+	* tests/chown/deref: Update the expected diagnostic, now that
+	this test case (trying to use "chown --dereference ..." on a
+	dangling symlink) takes a different code path.
+
 2006-10-13  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Sync from Bison, as follows:
