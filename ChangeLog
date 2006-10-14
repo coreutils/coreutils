@@ -1,5 +1,8 @@
 2006-10-14  Jim Meyering  <jim@meyering.net>
 
+	* src/cksum.c (uint_fast32_t): Don't define.
+	Instead, include <stdint.h>.
+
 	* src/pinky.c (S_IWGRP): Don't define.
 	It's already defined by "stat-macros.h" (included via system.h).
 

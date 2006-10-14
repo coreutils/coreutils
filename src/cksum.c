@@ -1,5 +1,5 @@
 /* cksum -- calculate and print POSIX checksums and sizes of files
-   Copyright (C) 92, 1995-2005 Free Software Foundation, Inc.
+   Copyright (C) 92, 1995-2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -42,11 +42,8 @@
 
 #include <stdio.h>
 #include <sys/types.h>
+#include <stdint.h>
 #include "system.h"
-
-#if !defined UINT_FAST32_MAX && !defined uint_fast32_t
-# define uint_fast32_t unsigned int
-#endif
 
 #ifdef CRCTAB
 
