@@ -1,5 +1,7 @@
 2006-10-14  Jim Meyering  <jim@meyering.net>
 
+	* Makefile.maint (cvs-update): Use $(CVS), not "cvs".
+
 	Work also when the working directory (with e.g. coreutils sources)
 	is version controlled with git, rather than CVS.
 	* bootstrap (CVS_only_file): Test for the existence of README-cvs,

@@ -580,7 +580,7 @@ cvs-update:
 	fail=;								\
 	for f in $(cvs_files); do					\
 	  test -f $$f || { echo "*** skipping $$f" 1>&2; continue; };	\
-	  cvs diff $$f > /dev/null					\
+	  $(CVS) diff $$f > /dev/null					\
 	    || { echo "*** $$f is locally modified; skipping it" 1>&2;	\
 		 fail=yes; continue; };					\
 	  file=$$(basename $$f);					\
