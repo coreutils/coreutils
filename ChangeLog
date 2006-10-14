@@ -1,5 +1,9 @@
 2006-10-14  Jim Meyering  <jim@meyering.net>
 
+	* src/system.h (EXIT_FAILURE, EXIT_SUCCESS): Remove definitions.
+	Instead, include "exit.h".  This hereby retires the work-around for
+	"Sony NEWS-OS Release 4.0C"'s bug due to "#define EXIT_FAILURE 0".
+
 	* src/cksum.c (uint_fast32_t): Don't define.
 	Instead, include <stdint.h>.
 
