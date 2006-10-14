@@ -30,6 +30,7 @@
 #include "hard-locale.h"
 #include "inttostr.h"
 #include "readutmp.h"
+#include "stat-macros.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "pinky"
@@ -38,10 +39,6 @@
 
 #ifndef MAXHOSTNAMELEN
 # define MAXHOSTNAMELEN 64
-#endif
-
-#ifndef S_IWGRP
-# define S_IWGRP 020
 #endif
 
 char *ttyname ();

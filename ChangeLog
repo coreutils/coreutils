@@ -1,5 +1,8 @@
 2006-10-14  Jim Meyering  <jim@meyering.net>
 
+	* src/pinky.c (S_IWGRP): Don't define.
+	Instead, include "stat-macros.h".
+
 	* Makefile.cfg: Remove cruft that's now handled via bootstrap.
 	* Makefile.maint: Likewise, remove these targets/rules/variables:
 	(local_updates, update, cvs-update, wget_files, get-targets): Remove.
