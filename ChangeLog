@@ -1,5 +1,15 @@
 2006-10-14  Jim Meyering  <jim@meyering.net>
 
+	Work also when the working directory (with e.g. coreutils sources)
+	is version controlled with git, rather than CVS.
+	* bootstrap (CVS_only_file): Test for the existence of README-cvs,
+	rather than CVS.
+	In messages and comments, say e.g., "checked-out sources",
+	rather than "CVS sources".
+	(version_controlled_file): New function.  Work for git as well as
+	for CVS.  Don't use grep's -q option.
+	(slurp): Call it here, in place of CVS-specific code.
+
 	* NEWS: cp -r --backup dir1 dir2, would rename an existing dir1/dir2
 	to dir1/dir2~.
 	* src/copy.c (copy_internal): Although we do create a backup of each

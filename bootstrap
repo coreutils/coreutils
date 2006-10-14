@@ -32,7 +32,7 @@ export LC_ALL
 usage() {
   echo >&2 "\
 Usage: $0 [OPTION]...
-Bootstrap this package from the CVS sources.
+Bootstrap this package from the checked-out sources.
 
 Options:
  --gnulib-srcdir=DIRNAME  Specify the local directory where gnulib
@@ -41,7 +41,8 @@ Options:
                           do not want to waste your bandwidth dowloading
                           them again.
  --copy                   Copy files instead of creating symbolic links.
- --force                  Bootstrap even if the sources didn't come from CVS.
+ --force                  Attempt to bootstrap even if the sources seem
+                          not to have been checked out.
  --skip-po                Do not download po files.
  --cvs-user=USERNAME      Set the CVS username to be used when accessing
                           the gnulib repository.
@@ -109,9 +110,9 @@ XGETTEXT_OPTIONS='\\\
 # Files we don't want to import.
 excluded_files=
 
-# File that should exist with CVS checkout, but not with
-# the distributed version.
-CVS_only_file=CVS
+# File that should exist in the top directory of a checked out hierarchy,
+# but not in a distribution tarball.
+CVS_only_file=README-cvs
 
 # Whether to use copies instead of symlinks.
 copy=false
@@ -146,7 +147,7 @@ do
 done
 
 if test -n "$CVS_only_file" && test ! -r "$CVS_only_file"; then
-  echo "$0: Bootstrapping from a non-CVS distribution is a bit risky." >&2
+  echo "$0: Bootstrapping from a non-checked-out distribution is risky." >&2
   exit 1
 fi
 
@@ -334,6 +335,21 @@ cp_mark_as_generated()
   fi
 }
 
+version_controlled_file() {
+  dir=$1
+  file=$2
+  found=no
+  if test -d CVS; then
+    grep -F "/$file/" $dir/CVS/Entries 2>/dev/null |
+	     grep '^/[^/]*/[0-9]' > /dev/null && found=yes
+  elif test -d .git; then
+    git-rm -n "$dir/$file" > /dev/null 2>&1 && found=yes
+  else
+    echo "$0: no version control for $dir/$file?" >&2
+  fi
+  test $found = yes
+}
+
 slurp() {
   for dir in . `(cd $1 && find * -type d -print)`; do
     copied=
@@ -352,8 +368,7 @@ slurp() {
 	  sed "$remove_intl" $1/$dir/$file >$dir/gnulib.mk
 	}
       elif { test "${2+set}" = set && test -r $2/$dir/$file; } ||
-	   grep -F "/$file/" $dir/CVS/Entries 2>/dev/null |
-	     grep -q '^/[^/]*/[0-9]'; then
+	   version_controlled_file $dir $file; then
 	echo "$0: $dir/$file overrides $1/$dir/$file"
       else
 	copied=$copied$sep$file; sep=$nl
