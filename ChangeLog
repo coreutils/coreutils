@@ -1,5 +1,8 @@
 2006-10-14  Jim Meyering  <jim@meyering.net>
 
+	* Makefile.maint (headers_with_interesting_macro_defs): Define.
+	(.re-defmac, sc_always_defined_macros): New rules.
+
 	* src/system.h (EXIT_FAILURE, EXIT_SUCCESS): Remove definitions.
 	Instead, include "exit.h".  This hereby retires the work-around for
 	"Sony NEWS-OS Release 4.0C"'s bug due to "#define EXIT_FAILURE 0".

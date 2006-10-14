@@ -219,6 +219,40 @@ sc_root_tests:
 	  && { echo 'tests/Makefile.am: missing check-root action'>&2;	\
 	       exit 1; } || :
 
+headers_with_interesting_macro_defs = \
+  exit.h	\
+  fcntl_.h	\
+  fnmatch_.h	\
+  intprops.h	\
+  inttypes_.h	\
+  lchown.h	\
+  openat.h	\
+  stat-macros.h	\
+  stdint_.h
+
+# Create a list of regular expressions matching the names
+# of macros that are guaranteed by parts of gnulib to be defined.
+.re-defmac:
+	@(cd $(srcdir)/lib;						\
+	  for f in $(headers_with_interesting_macro_defs); do		\
+	    test -f $$f &&						\
+	      sed -n '/^# *define \([^_ (][^ (]*\)[ (].*/s//\1/p' $$f;	\
+	   done;							\
+	 ) | sort -u							\
+	   | grep -Ev 'ATTRIBUTE_NORETURN|SIZE_MAX'			\
+	   | sed 's/^/^# *define /'					\
+	  > $@-t
+	@mv $@-t $@
+
+# Don't define macros that we already get from gnulib header files.
+sc_always_defined_macros: .re-defmac
+	@if test -f $(srcdir)/src/system.h; then			\
+	  trap 'rc=$$?; rm -f .re-defmac; exit $$rc' 0 1 2 3 15;	\
+	  grep -f .re-defmac $$($(CVS_LIST))				\
+	    && { echo '$(ME): define the above via some gnulib .h file'	\
+		  1>&2;  exit 1; } || :;				\
+	fi
+
 # Create a list of regular expressions matching the names
 # of files included from system.h.  Exclude a couple.
 .re-list:
