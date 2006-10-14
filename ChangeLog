@@ -1,9 +1,7 @@
 2006-10-14  Jim Meyering  <jim@meyering.net>
 
-	* src/pinky.c: Don't include stat-macros.h; system.h already does it.
-
 	* src/pinky.c (S_IWGRP): Don't define.
-	Instead, include "stat-macros.h".
+	It's already defined by "stat-macros.h" (included via system.h).
 
 	* Makefile.cfg: Remove cruft that's now handled via bootstrap.
 	* Makefile.maint: Likewise, remove these targets/rules/variables:
