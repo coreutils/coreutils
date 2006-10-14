@@ -21,6 +21,7 @@
 AUTOMAKE_OPTIONS = 1.1 gnits
 
 TESTS = \
+  backup-dir \
   src-base-dot \
   sparse \
   link-no-deref \
