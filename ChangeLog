@@ -1,5 +1,7 @@
 2006-10-14  Jim Meyering  <jim@meyering.net>
 
+	* src/pinky.c: Don't include stat-macros.h; system.h already does it.
+
 	* src/pinky.c (S_IWGRP): Don't define.
 	Instead, include "stat-macros.h".
 

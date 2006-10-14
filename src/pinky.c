@@ -30,7 +30,6 @@
 #include "hard-locale.h"
 #include "inttostr.h"
 #include "readutmp.h"
-#include "stat-macros.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "pinky"
