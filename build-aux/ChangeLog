@@ -1,6 +1,7 @@
 2006-10-14  Jim Meyering  <jim@meyering.net>
 
 	* vc-list-files: Don't filter git-ls-files output through cut.
+	Add a comment about cvsu.
 
 2006-08-22  Paul Eggert  <eggert@cs.ucla.edu>
 

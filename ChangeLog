@@ -1,5 +1,12 @@
 2006-10-14  Jim Meyering  <jim@meyering.net>
 
+	* Makefile.cfg: Remove cruft that's now handled via bootstrap.
+	* Makefile.maint: Likewise, remove these targets/rules/variables:
+	(local_updates, update, cvs-update, wget_files, get-targets): Remove.
+	(cvs_files, wget-update, automake_repo): Likewise.
+	Move the comment about cvsu to build-aux/vc-list-files,
+	where cvsu is actually used.
+
 	* Makefile.maint (cvs-update): Use $(CVS), not "cvs".
 
 	Work also when the working directory (with e.g. coreutils sources)

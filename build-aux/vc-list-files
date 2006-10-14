@@ -26,6 +26,7 @@
 # with no trailing slashes.  In mercurial mode, it's used as part of a
 # "grep" pattern (prepend "^", append "/"), and in cvs mode, it's simply
 # used as an argument to the cvsu script.
+# cvsu is part of the cvsutils package: http://www.red-bean.com/cvsutils/
 
 include_prefix=
 case $# in
