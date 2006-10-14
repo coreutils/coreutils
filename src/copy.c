@@ -1181,7 +1181,13 @@ copy_internal (char const *src_name, char const *dst_name,
 	  if (x->backup_type != no_backups
 	      /* Don't try to back up a destination if the last
 		 component of src_name is "." or "..".  */
-	      && ! dot_or_dotdot (last_component (src_name)))
+	      && ! dot_or_dotdot (last_component (src_name))
+	      /* Create a backup of each destination directory in move mode,
+		 but not in copy mode.  FIXME: it might make sense to add an
+		 option to suppress backup creation also for move mode.
+		 That would let one use mv to merge new content into an
+		 existing hierarchy.  */
+	      && (x->move_mode || ! S_ISDIR (dst_sb.st_mode)))
 	    {
 	      char *tmp_backup = find_backup_file_name (dst_name,
 							x->backup_type);

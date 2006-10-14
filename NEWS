@@ -9,6 +9,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   --from=o:g (chown only).  This bug was introduced with the switch to
   gnulib's openat-based variant of fts, for coreutils-6.0.
 
+  cp --backup dir1 dir2, would rename an existing dir1/dir2 to dir1/dir2~.
+  This bug was introduced in coreutils-6.0.
+
   With --force (-f), rm no longer fails for ENOTDIR.
   For example, "rm -f existing-non-directory/anything" now exits
   successfully, ignoring the error about a nonexistent file.

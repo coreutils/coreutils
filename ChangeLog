@@ -1,3 +1,13 @@
+2006-10-14  Jim Meyering  <jim@meyering.net>
+
+	* NEWS: cp -r --backup dir1 dir2, would rename an existing dir1/dir2
+	to dir1/dir2~.
+	* src/copy.c (copy_internal): Although we do create a backup of each
+	destination directory when in move mode, don't do that when copying.
+	Reported by Peter Breitenlohner, in
+	<http://article.gmane.org/gmane.comp.gnu.core-utils.bugs/8616>.
+	* tests/cp/backup-dir: New file.  Test for the above.
+
 2006-10-13  Jim Meyering  <jim@meyering.net>
 
 	More chown/chgrp dereferencing-related fixes.
