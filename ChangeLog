@@ -1,7 +1,5 @@
 2006-10-14  Jim Meyering  <jim@meyering.net>
 
-	* tests/cp/Makefile.am (TESTS): Add backup-dir.
-
 	* src/system.h (EXIT_FAILURE, EXIT_SUCCESS): Remove definitions.
 	Instead, include "exit.h".  This hereby retires the work-around for
 	"Sony NEWS-OS Release 4.0C"'s bug due to "#define EXIT_FAILURE 0".
@@ -38,6 +36,7 @@
 	Reported by Peter Breitenlohner, in
 	<http://article.gmane.org/gmane.comp.gnu.core-utils.bugs/8616>.
 	* tests/cp/backup-dir: New file.  Test for the above.
+	* tests/cp/Makefile.am (TESTS): Add backup-dir.
 
 2006-10-13  Jim Meyering  <jim@meyering.net>
 
