@@ -20,16 +20,17 @@
 # define SHA512_H 1
 
 # include <stdio.h>
-# include <stdint.h>
+
+# include "u64.h"
 
 /* Structure to save state of computation between the single steps.  */
 struct sha512_ctx
 {
-  uint64_t state[8];
+  u64 state[8];
 
-  uint64_t total[2];
-  uint64_t buflen;
-  uint64_t buffer[32];
+  u64 total[2];
+  size_t buflen;
+  u64 buffer[32];
 };
 
 
@@ -84,7 +85,5 @@ extern int sha384_stream (FILE *stream, void *resblock);
    digest.  */
 extern void *sha512_buffer (const char *buffer, size_t len, void *resblock);
 extern void *sha384_buffer (const char *buffer, size_t len, void *resblock);
-
-# define rol64(x,n) ( ((x) << (n)) | ((x) >> (64-(n))) )
 
 #endif

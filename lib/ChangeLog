@@ -1,3 +1,16 @@
+2006-10-14  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Port sha512sum to hosts where uintmax_t is only 32 bits, e.g.,
+	HP/Tandom NonStop OSS circa 2005 has 32-bit uintmax_t, 64-bit intmax_t.
+	* u64.h: New file.
+	* sha512.c (SWAP, sha512_init_ctx, sha384_init_ctx, sha512_read_ctx):
+	(sha384_read_ctx, sha512_conclude_ctx, sha512_process_bytes):
+	(sha512_round_constants, F2, F1, sha512_process_block):
+	(S0, S1, SS0, SS1, M, R):
+	Rewrite to use u64.h instead of assuming uint64_t.
+	* sha512.h: Include u64.h rather than stdint.h.
+	(rol64): Remove; moved to u64.h and renamed to u64rol.
+
 2006-10-12  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am (libcoreutils_a_LIBADD): Append $(LIBOBJS),
