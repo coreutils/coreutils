@@ -1,3 +1,8 @@
+2006-10-16  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/groups.sh (version): Reword message to match the other programs.
+	Problem reported by Eric Blake.
+
 2006-10-14  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.maint (headers_with_interesting_macro_defs): Define.
