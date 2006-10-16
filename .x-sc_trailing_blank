@@ -1,5 +1,1 @@
-Makefile\.in$
-\.po$
-^build-aux/texinfo\.tex$
-^src/c99-to-c89\.diff
 ^tests/pr/
