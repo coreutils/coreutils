@@ -451,7 +451,7 @@ Each CONV symbol may be:\n\
   noerror   continue after read errors\n\
   sync      pad every input block with NULs to ibs-size; when used\n\
               with block or unblock, pad with spaces rather than NULs\n\
-  fdatasync physically write output file data before finishing\n\
+  fdatasync  physically write output file data before finishing\n\
   fsync     likewise, but also write metadata\n\
 "), stdout);
       fputs (_("\
