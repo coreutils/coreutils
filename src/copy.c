@@ -1638,7 +1638,7 @@ copy_internal (char const *src_name, char const *dst_name,
     }
   else if (S_ISFIFO (src_mode))
     {
-      if (mkfifo (dst_name, src_mode))
+      if (mknod (dst_name, src_mode, 0) != 0)
 	{
 	  error (0, errno, _("cannot create fifo %s"), quote (dst_name));
 	  goto un_backup;
@@ -1646,7 +1646,7 @@ copy_internal (char const *src_name, char const *dst_name,
     }
   else if (S_ISBLK (src_mode) || S_ISCHR (src_mode) || S_ISSOCK (src_mode))
     {
-      if (mknod (dst_name, src_mode, src_sb.st_rdev))
+      if (mknod (dst_name, src_mode, src_sb.st_rdev) != 0)
 	{
 	  error (0, errno, _("cannot create special file %s"),
 		 quote (dst_name));
