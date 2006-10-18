@@ -428,7 +428,11 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
 		}
 	      src_mode = stats.st_mode;
 
-	      if (mkdir (dir, src_mode))
+	      /* POSIX says mkdir's behavior is implementation-defined when
+		 (src_mode & ~S_IRWXUGO) != 0.  However, common practice is
+		 to ask mkdir to copy all the CHMOD_MODE_BITS, letting mkdir
+		 decide what to do with S_ISUID | S_ISGID | S_ISVTX.  */
+	      if (mkdir (dir, src_mode & CHMOD_MODE_BITS) != 0)
 		{
 		  error (0, errno, _("cannot make directory %s"),
 			 quote (dir));

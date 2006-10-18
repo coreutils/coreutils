@@ -1505,7 +1505,11 @@ copy_internal (char const *src_name, char const *dst_name,
 
       if (new_dst || !S_ISDIR (dst_sb.st_mode))
 	{
-	  if (mkdir (dst_name, src_mode) != 0)
+	  /* POSIX says mkdir's behavior is implementation-defined when
+	     (src_mode & ~S_IRWXUGO) != 0.  However, common practice is
+	     to ask mkdir to copy all the CHMOD_MODE_BITS, letting mkdir
+	     decide what to do with S_ISUID | S_ISGID | S_ISVTX.  */
+	  if (mkdir (dst_name, src_mode & CHMOD_MODE_BITS) != 0)
 	    {
 	      error (0, errno, _("cannot create directory %s"),
 		     quote (dst_name));
@@ -1628,9 +1632,11 @@ copy_internal (char const *src_name, char const *dst_name,
     {
       copied_as_regular = true;
       /* POSIX says the permission bits of the source file must be
-	 used as the 3rd argument in the open call, but that's not consistent
-	 with historical practice.  */
-      if (! copy_reg (src_name, dst_name, x, src_mode, &new_dst, &src_sb))
+	 used as the 3rd argument in the open call.  Historical
+	 practice passed all the source mode bits to 'open', but the extra
+	 bits were ignored, so it should be the same either way.  */
+      if (! copy_reg (src_name, dst_name, x, src_mode & S_IRWXUGO,
+		      &new_dst, &src_sb))
 	goto un_backup;
     }
   else if (S_ISFIFO (src_type))
