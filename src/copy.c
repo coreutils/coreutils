@@ -970,7 +970,6 @@ copy_internal (char const *src_name, char const *dst_name,
   struct stat src_sb;
   struct stat dst_sb;
   mode_t src_mode;
-  mode_t src_type;
   mode_t dst_mode IF_LINT (= 0);
   bool restore_dst_mode = false;
   char *earlier_file = NULL;
@@ -991,11 +990,9 @@ copy_internal (char const *src_name, char const *dst_name,
       return false;
     }
 
-  src_type = src_sb.st_mode;
-
   src_mode = src_sb.st_mode;
 
-  if (S_ISDIR (src_type) && !x->recursive)
+  if (S_ISDIR (src_mode) && !x->recursive)
     {
       error (0, 0, _("omitting directory %s"), quote (src_name));
       return false;
@@ -1088,7 +1085,7 @@ copy_internal (char const *src_name, char const *dst_name,
 
 	  if (!S_ISDIR (dst_sb.st_mode))
 	    {
-	      if (S_ISDIR (src_type))
+	      if (S_ISDIR (src_mode))
 		{
 		  if (x->move_mode && x->backup_type != no_backups)
 		    {
@@ -1122,7 +1119,7 @@ copy_internal (char const *src_name, char const *dst_name,
 		}
 	    }
 
-	  if (!S_ISDIR (src_type))
+	  if (!S_ISDIR (src_mode))
 	    {
 	      if (S_ISDIR (dst_sb.st_mode))
 		{
@@ -1259,7 +1256,7 @@ copy_internal (char const *src_name, char const *dst_name,
   /* If the source is a directory, we don't always create the destination
      directory.  So --verbose should not announce anything until we're
      sure we'll create a directory. */
-  if (x->verbose && !S_ISDIR (src_type))
+  if (x->verbose && !S_ISDIR (src_mode))
     emit_verbose (src_name, dst_name, backup_succeeded ? dst_backup : NULL);
 
   /* Associate the destination file name with the source device and inode
@@ -1302,7 +1299,7 @@ copy_internal (char const *src_name, char const *dst_name,
 		|| (command_line_arg
 		    && x->dereference == DEREF_COMMAND_LINE_ARGUMENTS)
 		|| x->dereference == DEREF_ALWAYS))
-	   || (x->recursive && S_ISDIR (src_type)))
+	   || (x->recursive && S_ISDIR (src_mode)))
     {
       earlier_file = remember_copied (dst_name, src_sb.st_ino, src_sb.st_dev);
     }
@@ -1315,7 +1312,7 @@ copy_internal (char const *src_name, char const *dst_name,
       /* Avoid damaging the destination file system by refusing to preserve
 	 hard-linked directories (which are found at least in Netapp snapshot
 	 directories).  */
-      if (S_ISDIR (src_type))
+      if (S_ISDIR (src_mode))
 	{
 	  /* If src_name and earlier_file refer to the same directory entry,
 	     then warn about copying a directory into itself.  */
@@ -1376,7 +1373,7 @@ copy_internal (char const *src_name, char const *dst_name,
     {
       if (rename (src_name, dst_name) == 0)
 	{
-	  if (x->verbose && S_ISDIR (src_type))
+	  if (x->verbose && S_ISDIR (src_mode))
 	    emit_verbose (src_name, dst_name,
 			  backup_succeeded ? dst_backup : NULL);
 
@@ -1480,7 +1477,7 @@ copy_internal (char const *src_name, char const *dst_name,
      In such cases, set this variable to zero.  */
   preserve_metadata = true;
 
-  if (S_ISDIR (src_type))
+  if (S_ISDIR (src_mode))
     {
       struct dir_list *dir;
 
@@ -1627,8 +1624,8 @@ copy_internal (char const *src_name, char const *dst_name,
 	  goto un_backup;
 	}
     }
-  else if (S_ISREG (src_type)
-	   || (x->copy_as_regular && !S_ISLNK (src_type)))
+  else if (S_ISREG (src_mode)
+	   || (x->copy_as_regular && !S_ISLNK (src_mode)))
     {
       copied_as_regular = true;
       /* POSIX says the permission bits of the source file must be
@@ -1639,7 +1636,7 @@ copy_internal (char const *src_name, char const *dst_name,
 		      &new_dst, &src_sb))
 	goto un_backup;
     }
-  else if (S_ISFIFO (src_type))
+  else if (S_ISFIFO (src_mode))
     {
       if (mkfifo (dst_name, src_mode))
 	{
@@ -1647,7 +1644,7 @@ copy_internal (char const *src_name, char const *dst_name,
 	  goto un_backup;
 	}
     }
-  else if (S_ISBLK (src_type) || S_ISCHR (src_type) || S_ISSOCK (src_type))
+  else if (S_ISBLK (src_mode) || S_ISCHR (src_mode) || S_ISSOCK (src_mode))
     {
       if (mknod (dst_name, src_mode, src_sb.st_rdev))
 	{
@@ -1656,7 +1653,7 @@ copy_internal (char const *src_name, char const *dst_name,
 	  goto un_backup;
 	}
     }
-  else if (S_ISLNK (src_type))
+  else if (S_ISLNK (src_mode))
     {
       char *src_link_val = xreadlink (src_name, src_sb.st_size);
       if (src_link_val == NULL)

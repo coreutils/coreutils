@@ -1,5 +1,8 @@
 2006-10-18  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* src/copy.c (copy_internal): Remove redundant and confusing local
+	variable src_type.
+
 	* src/copy.c (copy_internal): Don't pass mkdir a mode greater than
 	7777.  This matches historical 'cp' behavior and avoids some
 	(though not all) implementation-defined behavior of mkdir.
