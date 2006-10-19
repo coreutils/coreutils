@@ -1,6 +1,6 @@
 2006-10-18  Paul Eggert  <eggert@cs.ucla.edu>
 
-	* src/copy.c (copy_reg): Rewrite slightly to avoid duplicte code
+	* src/copy.c (copy_reg): Rewrite slightly to avoid duplicate code
 	when opening dst_name.
 	(copy_reg, copy_internal): Use (SYSCALL != 0) rather than plain
 	(SYSCALL) to test for failure in a system call.
