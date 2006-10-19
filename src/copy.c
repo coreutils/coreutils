@@ -260,7 +260,7 @@ copy_reg (char const *src_name, char const *dst_name,
       return false;
     }
 
-  if (fstat (source_desc, &src_open_sb))
+  if (fstat (source_desc, &src_open_sb) != 0)
     {
       error (0, errno, _("cannot fstat %s"), quote (src_name));
       return_val = false;
@@ -280,11 +280,7 @@ copy_reg (char const *src_name, char const *dst_name,
 
   /* These semantics are required for cp.
      The if-block will be taken in move_mode.  */
-  if (*new_dst)
-    {
-      dest_desc = open (dst_name, O_WRONLY | O_CREAT | O_BINARY, dst_mode);
-    }
-  else
+  if (! *new_dst)
     {
       dest_desc = open (dst_name, O_WRONLY | O_TRUNC | O_BINARY, dst_mode);
 
@@ -301,11 +297,11 @@ copy_reg (char const *src_name, char const *dst_name,
 
 	  /* Tell caller that the destination file was unlinked.  */
 	  *new_dst = true;
-
-	  /* Try the open again, but this time with different flags.  */
-	  dest_desc = open (dst_name, O_WRONLY | O_CREAT | O_BINARY, dst_mode);
 	}
     }
+
+  if (*new_dst)
+    dest_desc = open (dst_name, O_WRONLY | O_CREAT | O_BINARY, dst_mode);
 
   if (dest_desc < 0)
     {
@@ -314,7 +310,7 @@ copy_reg (char const *src_name, char const *dst_name,
       goto close_src_desc;
     }
 
-  if (fstat (dest_desc, &sb))
+  if (fstat (dest_desc, &sb) != 0)
     {
       error (0, errno, _("cannot fstat %s"), quote (dst_name));
       return_val = false;
@@ -1580,8 +1576,8 @@ copy_internal (char const *src_name, char const *dst_name,
 			    /* If either stat call fails, it's ok not to report
 			       the failure and say dst_name is in the current
 			       directory.  Other things will fail later.  */
-			    || stat (".", &dot_sb)
-			    || stat (dst_parent, &dst_parent_sb)
+			    || stat (".", &dot_sb) != 0
+			    || stat (dst_parent, &dst_parent_sb) != 0
 			    || SAME_INODE (dot_sb, dst_parent_sb));
 	  free (dst_parent);
 

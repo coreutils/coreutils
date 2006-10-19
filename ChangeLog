@@ -1,5 +1,10 @@
 2006-10-18  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* src/copy.c (copy_reg): Rewrite slightly to avoid duplicte code
+	when opening dst_name.
+	(copy_reg, copy_internal): Use (SYSCALL != 0) rather than plain
+	(SYSCALL) to test for failure in a system call.
+
 	* src/copy.c (copy_internal): Use mknod rather than mkfifo to copy
 	a fifo.  This preserves the special mode bits on Solaris 10, which
 	is compatible with what Solaris 10 cp -R does.
