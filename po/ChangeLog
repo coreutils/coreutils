@@ -1,3 +1,7 @@
+2006-10-19  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* POTFILES.in: Add lib/xstrtol.h.
+
 2006-08-22  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* .cvsignore: More ../bootstrap-related fixes, plus remove old
