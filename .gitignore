@@ -6,6 +6,7 @@
 */.deps
 *~
 .kludge-stamp
+ABOUT-NLS
 Makefile
 Makefile.in
 THANKS-to-translators
