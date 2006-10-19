@@ -1,3 +1,9 @@
+2006-10-19  Jim Meyering  <jim@meyering.net>
+
+	* Makefile.maint (po-check): This rule didn't detect the new use
+	of "gettext" (as opposed to the use of "_" everywhere else) in
+	lib/xstrtol.h.  Adjust the grep regexp so that now it does.
+
 2006-10-18  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/copy.c (copy_reg): Rewrite slightly to avoid duplicate code

@@ -399,7 +399,8 @@ po-check:
 	    esac;							\
 	    files="$$files $$file";					\
 	  done;								\
-	  grep -E -l '\bN?_\([^)"]*("|$$)' $$files | sort -u > $@-2;	\
+	  grep -E -l '\b(N?_|gettext *)\([^)"]*("|$$)' $$files		\
+	    | sort -u > $@-2;						\
 	  diff -u $@-1 $@-2 || exit 1;					\
 	  rm -f $@-1 $@-2;						\
 	fi
