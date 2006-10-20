@@ -1,3 +1,13 @@
+2006-10-21  Jim Meyering  <jim@meyering.net>
+
+	Enable an fts optimization (call lstat only for directories,
+	on some file system types) also with the --preserve-root option
+	of chown or chgrp.
+	* src/chown-core.c (change_file_owner): Compare fts_statp-based
+	dev/ino against root dev/ino only for directories.
+	(chown_files): Don't let the root_dev_ino setting influence whether
+	we use FTS_NOSTAT: fts always sets *fts_statp for a directory.
+
 2006-10-20  Jim Meyering  <jim@meyering.net>
 
 	* src/od.c (usage): Change description of default to use "-w16",
