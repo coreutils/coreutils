@@ -389,11 +389,13 @@ slurp() {
       fi || exit
     done
 
-    ig=$dir/.cvsignore
-    if test -n "$copied" && test -f $ig; then
-      echo "$copied" | sort -u - $ig | cmp -s - $ig ||
-      echo "$copied" | sort -u - $ig -o $ig || exit
-    fi
+    for dot_ig in .cvsignore .gitignore; do
+      ig=$dir/$dot_ig
+      if test -n "$copied" && test -f $ig; then
+	echo "$copied" | sort -u - $ig | cmp -s - $ig ||
+	echo "$copied" | sort -u - $ig -o $ig || exit
+      fi
+    done
   done
 }
 
