@@ -388,7 +388,7 @@ of output.  \
 "), stdout);
       fputs (_("\
 --string without a number implies 3.  --width without a number\n\
-implies 32.  By default, od uses -A o -t d2 -w 16.\n\
+implies 32.  By default, od uses -A o -t d2 -w16.\n\
 "), stdout);
       printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }

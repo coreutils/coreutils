@@ -1,3 +1,8 @@
+2006-10-20  Jim Meyering  <jim@meyering.net>
+
+	* src/od.c (usage): Change description of default to use "-w16",
+	not the now-invalid "-w 16" syntax.  From Dan Jacobson.
+
 2006-10-19  Jim Meyering  <jim@meyering.net>
 
 	* bootstrap: Add names to each .gitignore file (if it exists)
