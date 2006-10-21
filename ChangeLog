@@ -1,5 +1,8 @@
 2006-10-21  Jim Meyering  <jim@meyering.net>
 
+	* src/copy.c (copy_internal): Add a comment saying why we prefer
+	mknod over mkfifo.
+
 	Enable an fts optimization (call lstat only for directories,
 	on some file system types) also with the --preserve-root option
 	of chown or chgrp.

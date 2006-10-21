@@ -1634,6 +1634,9 @@ copy_internal (char const *src_name, char const *dst_name,
     }
   else if (S_ISFIFO (src_mode))
     {
+      /* Use mknod, rather than mkfifo, because the former preserves
+	 the special mode bits of a fifo on Solaris 10, while mkfifo
+	 does not.  */
       if (mknod (dst_name, src_mode, 0) != 0)
 	{
 	  error (0, errno, _("cannot create fifo %s"), quote (dst_name));
