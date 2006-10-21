@@ -1,5 +1,9 @@
 2006-10-21  Jim Meyering  <jim@meyering.net>
 
+	* .gitignore: Remove some references to files in subdirectories.
+	* build-aux/.gitignore, doc/.gitignore, lib/.gitignore: New files.
+	* m4/.gitignore, po/.gitignore, src/.gitignore: Likewise.
+
 	* src/copy.c (copy_internal): Add a comment saying why we prefer
 	mknod over mkfifo.
 
