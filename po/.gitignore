@@ -1,3 +1,5 @@
+*.po
+LINGUAS
 Makefile.in
 Makefile.in.in
 Makevars

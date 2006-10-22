@@ -7,6 +7,7 @@
 *~
 .kludge-stamp
 ABOUT-NLS
+INSTALL
 Makefile
 Makefile.in
 THANKS-to-translators
@@ -36,4 +37,3 @@ tests/test/test-tests
 tests/tr/tr-tests
 tests/uniq/uniq-tests
 tests/wc/wc-tests
-INSTALL
