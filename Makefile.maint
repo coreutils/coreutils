@@ -30,6 +30,8 @@ gzip_rsyncable := \
 GZIP_ENV = '--no-name --best $(gzip_rsyncable)'
 
 CVS = cvs
+GIT = git
+VC = $(GIT)
 
 CVS_LIST = build-aux/vc-list-files
 
@@ -45,7 +47,7 @@ VERSION_REGEXP = $(subst .,\.,$(VERSION))
 
 tag-package = $(shell echo "$(PACKAGE)" | tr '[:lower:]' '[:upper:]')
 tag-this-version = $(subst .,_,$(VERSION))
-this-cvs-tag = $(tag-package)-$(tag-this-version)
+this-vc-tag = $(tag-package)-$(tag-this-version)
 my_distdir = $(PACKAGE)-$(VERSION)
 
 # Old releases are stored here.
@@ -449,24 +451,32 @@ copyright-check:
 	fi
 
 
-# Sanity checks with the CVS repository.
-cvs-tag-check:
-	echo $(this-cvs-tag); \
-	if $(CVS) -n log -h README | grep -e $(this-cvs-tag): >/dev/null; then \
-	  echo "$(this-cvs-tag) as already been used; not tagging" 1>&2; \
-	  exit 1; \
-	else :; fi
-
-cvs-diff-check:
-	if $(CVS) diff >cvs-diffs; then				\
-	  rm cvs-diffs;						\
-	else							\
-	  echo "Some files are locally modified:" 1>&2;		\
-	  cat cvs-diffs;					\
-	  exit 1;						\
+# Sanity checks with the repository.
+# Abort early if this tag has already been used.
+vc-tag-check:
+	used=no;							\
+	if $(VC) --help | grep CVS; then					\
+	  $(CVS) -n log -h README|grep -e $(this-vc-tag): >/dev/null	\
+	    && used=yes;						\
+	else								\
+	  $(GIT) tag -l '^$(this-vc-tag)$$' && used=yes;		\
+	fi;								\
+	if test "$$used" = yes; then					\
+	  echo "$(this-vc-tag) has already been used; not tagging" 1>&2; \
+	  exit 1;							\
 	fi
 
-cvs-check: cvs-diff-check cvs-tag-check
+vc-diff-check:
+	$(VC) diff > vc-diffs || :
+	if test -s vc-diffs; then				\
+	  cat vc-diffs;						\
+	  echo "Some files are locally modified:" 1>&2;		\
+	  exit 1;						\
+	else							\
+	  rm vc-diffs;						\
+	fi
+
+cvs-check: vc-diff-check vc-tag-check
 
 maintainer-distcheck:
 	$(MAKE) distcheck
@@ -476,9 +486,8 @@ maintainer-distcheck:
 # Tag before making distribution.  Also, don't make a distribution if
 # checks fail.  Also, make sure the NEWS file is up-to-date.
 # FIXME: use dist-hook/my-dist like distcheck-hook/my-distcheck.
-cvs-dist: $(local-check) cvs-check maintainer-distcheck
-	$(CVS) update po
-	$(CVS) tag -c $(this-cvs-tag)
+vc-dist: $(local-check) cvs-check maintainer-distcheck
+	$(VC) tag $(this-vc-tag)
 	$(MAKE) dist
 
 # Use this to make sure we don't run these programs when building
@@ -575,11 +584,11 @@ alpha beta major: news-date-check changelog-check $(local-check)
 	  && { echo $(VERSION) | grep -E '^[0-9]+(\.[0-9]+)+$$'	\
 	       || { echo "invalid version string: $(VERSION)" 1>&2; exit 1;};}\
 	  || :
-	$(MAKE) cvs-dist
+	$(MAKE) vc-dist
 	$(MAKE) $(xd-delta)
 	$(MAKE) -s announcement RELEASE_TYPE=$@ > /tmp/announce-$(my_distdir)
 	ln $(rel-files) $(release_archive_dir)
 	chmod a-w $(rel-files)
 	$(MAKE) -s emit_upload_commands RELEASE_TYPE=$@
 	echo $(VERSION) > $(prev_version_file)
-	$(CVS) ci -m. $(prev_version_file)
+	$(VC) commit -m. $(prev_version_file)

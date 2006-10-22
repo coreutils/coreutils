@@ -1,3 +1,8 @@
+2006-10-22  Jim Meyering  <jim@meyering.net>
+
+	* Makefile.maint: Complete the adaptation to function with a working
+	directory that is using git (rather than cvs) for version control.
+
 2006-10-22  Ralf Wildenhues  <Ralf.Wildenhues@gmx.de>
 
 	* tests/chmod/c-option: Double-quote instances of `$abs_srcdir'.
