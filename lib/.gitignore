@@ -262,6 +262,8 @@ sha1.c
 sha1.h
 sig2str.c
 sig2str.h
+snprintf.c
+snprintf.h
 socket_.h
 stat-macros.h
 stat-time.h

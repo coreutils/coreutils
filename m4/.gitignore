@@ -161,6 +161,7 @@ settime.m4
 sha1.m4
 sig2str.m4
 signed.m4
+snprintf.m4
 socklen.m4
 sockpfaf.m4
 ssize_t.m4
