@@ -1,5 +1,10 @@
 2006-10-22  Jim Meyering  <jim@meyering.net>
 
+	Version 6.4.
+
+	* NEWS: Record the 6.4 release date.
+	* configure.ac (AC_INIT): Remove "-cvs" suffix from version string.
+
 	* Makefile.maint: Complete the adaptation to function with a working
 	directory that is using git (rather than cvs) for version control.
 
