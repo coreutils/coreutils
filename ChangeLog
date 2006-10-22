@@ -1,5 +1,7 @@
 2006-10-21  Jim Meyering  <jim@meyering.net>
 
+	* NEWS: (cp --backup fix): Fix a typo.
+
 	* .gitignore: Remove some references to files in subdirectories.
 	* build-aux/.gitignore, doc/.gitignore, lib/.gitignore: New files.
 	* m4/.gitignore, po/.gitignore, src/.gitignore: Likewise.
