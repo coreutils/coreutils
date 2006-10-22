@@ -1,5 +1,10 @@
 2006-10-22  Ralf Wildenhues  <Ralf.Wildenhues@gmx.de>
 
+	* tests/chmod/c-option: Double-quote instances of `$abs_srcdir'.
+	* tests/cp/cp-parents: Likewise.
+	* tests/mkdir/parents: Likewise.
+	* tests/mkdir/perm: Likewise.
+
 	* tests/sample-test: Quote variables containing absolute build
 	tree paths.  In the cleanup trap, make sure `cd' succeeds before
 	`chmod'ing and `rm'ing the temporary files.
