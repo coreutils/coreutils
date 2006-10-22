@@ -1,7 +1,7 @@
 #!/bin/sh
 # Create and remove a directory with more than 254 files.
 
-# Copyright (C) 1997, 2001, 2002, 2003, 2004 Free Software Foundation,
+# Copyright (C) 1997, 2001, 2002, 2003, 2004, 2006 Free Software Foundation,
 # Inc.
 
 # This program is free software; you can redistribute it and/or modify
@@ -33,7 +33,7 @@ fi
 
 pwd=`pwd`
 t0=`echo "$0"|sed 's,.*/,,'`.tmp;tmp=$t0/$$
-trap 'status=$?; cd $pwd; rm -rf $t0 && exit $status' 0
+trap 'status=$?; cd "$pwd" && rm -rf $t0 && exit $status' 0
 trap '(exit $?); exit' 1 2 13 15
 
 framework_fail=0
@@ -51,7 +51,7 @@ done
 
 test -f 0a || framework_fail=1
 test -f by || framework_fail=1
-cd $pwd || framework_fail=1
+cd "$pwd" || framework_fail=1
 
 if test $framework_fail = 1; then
   echo 'failure in testing framework'

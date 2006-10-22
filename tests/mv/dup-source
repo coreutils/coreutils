@@ -4,7 +4,7 @@
 # made this fail:  cp a a d/
 # Ensure that mv fails with a similar command.
 
-# Copyright (C) 2001, 2002, 2004 Free Software Foundation, Inc.
+# Copyright (C) 2001, 2002, 2004, 2006 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@ PRIV_CHECK_ARG=require-non-root . $srcdir/../priv-check
 
 pwd=`pwd`
 tmp=dup-src.$$
-trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
+trap 'status=$?; cd "$pwd" && rm -rf $tmp && exit $status' 0
 trap '(exit $?); exit' 1 2 13 15
 
 framework_failure=0

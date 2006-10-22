@@ -1,7 +1,7 @@
 #!/bin/sh
 # Test whether "mkdir -p" works concurrently.
 
-# Copyright (C) 1999, 2000, 2002 Free Software Foundation, Inc.
+# Copyright (C) 1999, 2000, 2002, 2006 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -29,10 +29,10 @@ fi
 
 pwd=`pwd`
 tmp=`echo "$0"|sed 's,.*/,,'`.tmp
-trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
+trap 'status=$?; cd "$pwd" && rm -rf $tmp && exit $status' 0
 trap '(exit $?); exit' 1 2 13 15
 
-mkdir --parents $pwd/$tmp/a/b/c || fail=1
+mkdir --parents "$pwd"/$tmp/a/b/c || fail=1
 
 test -d $tmp || fail=1
 

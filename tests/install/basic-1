@@ -40,7 +40,7 @@ file=file
 
 pwd=`pwd`
 t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
-trap 'status=$?; cd $pwd; chmod -R u+rwx $t0; rm -rf $t0 && exit $status' 0
+trap 'status=$?; cd "$pwd" && chmod -R u+rwx $t0 && rm -rf $t0 && exit $status' 0
 trap '(exit $?); exit $?' 1 2 13 15
 
 framework_failure=0
@@ -69,7 +69,7 @@ dd2=dd2$EXEEXT
 
 just_built_dd=$pwd/../../src/$dd
 
-test -r $just_built_dd || \
+test -r "$just_built_dd" || \
   {
     cat 1>&2 <<EOF
 $0: WARNING!!!
@@ -79,7 +79,7 @@ EOF
     exit 77
   }
 
-cp $just_built_dd . || fail=1
+cp "$just_built_dd" . || fail=1
 cp $dd $dd2 || fail=1
 
 strip $dd2 || \
@@ -117,7 +117,7 @@ test -d newdir3 || fail=1
 # hence cannot do anything meaningful with the following relative-named dirs.
 abs=$pwd/$tmp
 mkdir sub || fail=1
-(cd sub && chmod 0 . && ginstall -d $abs/xx/yy rel/sub1 rel/sub2 2> /dev/null) && fail=1
+(cd sub && chmod 0 . && ginstall -d "$abs"/xx/yy rel/sub1 rel/sub2 2> /dev/null) && fail=1
 chmod 755 sub
 
 # Ensure that the first argument-dir has been created.
@@ -132,7 +132,7 @@ test -d xx/rel && fail=1
 # inaccessible parent.  coreutils 5.97 fails this test.
 mkdir -p sub1/d || fail=1
 (cd sub1/d && chmod a-rx .. && chmod a-r . &&
- ginstall -d $abs/xx/zz rel/a rel/b 2> /dev/null) || fail=1
+ ginstall -d "$abs"/xx/zz rel/a rel/b 2> /dev/null) || fail=1
 chmod 755 sub1 sub1/d || fail=1
 test -d xx/zz || fail=1
 test -d sub1/d/rel/a || fail=1

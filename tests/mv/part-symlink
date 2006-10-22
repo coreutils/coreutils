@@ -2,7 +2,7 @@
 # make sure cp and mv can handle many combinations of local and
 # other-partition regular/symlink'd files.
 
-# Copyright (C) 2000, 2003, 2004 Free Software Foundation, Inc.
+# Copyright (C) 2000, 2003, 2004, 2006 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@ fi
 
 pwd=`pwd`
 tmp=part-sl.$$
-trap 'status=$?; cd $pwd; exec 1>&2; rm -rf $tmp $other_partition_tmpdir && exit $status' 0
+trap 'status=$?; cd "$pwd" && exec 1>&2; rm -rf $tmp $other_partition_tmpdir && exit $status' 0
 trap '(exit $?); exit' 1 2 13 15
 
 pwd_tmp=$pwd/$tmp
@@ -98,8 +98,8 @@ for copy in cp mv; do
       case "$args" in *loc_sl*) slink=$loc_sl ;; esac
       case "$args" in *rem_sl*) slink=$rem_sl ;; esac
 
-      echo $contents > $reg_abs || fail=1
-      ln -nsf $reg_abs $slink || fail=1
+      echo $contents > "$reg_abs" || fail=1
+      ln -nsf "$reg_abs" $slink || fail=1
       actual_args=`echo $args|sed 's,^,$,;s/ / $/'`
       actual_args=`eval echo $actual_args`
 
@@ -124,13 +124,13 @@ for copy in cp mv; do
 	      | sed \
 		  -e '/^total /d' \
 		  -e s,$other_partition_tmpdir/,, \
-		  -e s,$pwd_tmp/,, \
+		  -e "s,$pwd_tmp/,," \
 		  -e 's/^[^ ]*  *[^ ]*  *[^ ]*  *[^ ]*  *[^ ]*  *[^ ]*  *//'`"
 	  ls2="`cd $other_partition_tmpdir && ls -gG --ignore=.err . \
 	      | sed \
 		  -e '/^total /d' \
 		  -e s,$other_partition_tmpdir/,, \
-		  -e s,$pwd_tmp/,, \
+		  -e "s,$pwd_tmp/,," \
 		  -e 's/^[^ ]*  *[^ ]*  *[^ ]*  *[^ ]*  *[^ ]*  *[^ ]*  *//'`"
 	  echo "($ls) ($ls2)"
 

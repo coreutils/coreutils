@@ -2,7 +2,7 @@
 # Make sure `du d/1 d/2' works.
 # That command failed with du from fileutils-4.0q.
 
-# Copyright (C) 2000, 2004 Free Software Foundation, Inc.
+# Copyright (C) 2000, 2004, 2006 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ fi
 
 pwd=`pwd`
 tmp=du2-$$
-trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
+trap 'status=$?; cd "$pwd" && rm -rf $tmp && exit $status' 0
 trap '(exit $?); exit' 1 2 13 15
 
 framework_failure=0

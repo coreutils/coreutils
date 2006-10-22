@@ -28,7 +28,7 @@ fi
 
 pwd=`pwd`
 tmp=mv-tslash.$$
-trap 'status=$?; cd $pwd; exec 1>&2; rm -rf $tmp && exit $status' 0
+trap 'status=$?; cd "$pwd" && exec 1>&2; rm -rf $tmp && exit $status' 0
 trap '(exit $?); exit' 1 2 13 15
 
 . $srcdir/../envvar-check

@@ -2,7 +2,7 @@
 # cp -R --parents dir-specified-with-trailing-slash/ other-dir
 # would get a failed assertion.
 
-# Copyright (C) 2000, 2002, 2004, 2005 Free Software Foundation, Inc.
+# Copyright (C) 2000, 2002, 2004, 2005, 2006 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@ umask 022
 
 pwd=`pwd`
 t0=`echo "$0"|sed 's,.*/,,'`.tmp;tmp=$t0/$$
-trap 'status=$?; cd $pwd; exec 1>&2; rm -rf $t0 && exit $status' 0
+trap 'status=$?; cd "$pwd" && exec 1>&2; rm -rf $t0 && exit $status' 0
 trap '(exit $?); exit' 1 2 13 15
 
 framework_failure=0
@@ -36,7 +36,7 @@ framework_failure=0
 # Record absolute path of srcdir and cd back to current dir.
 cd $srcdir || framework_failure=1
 abs_srcdir=`pwd`
-cd $pwd || framework_failure=1
+cd "$pwd" || framework_failure=1
 
 . $srcdir/../envvar-check
 . $srcdir/../umask-check

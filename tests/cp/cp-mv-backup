@@ -1,7 +1,7 @@
 #!/bin/sh
 # Test basic --backup functionality for both cp and mv.
 
-# Copyright (C) 1999, 2000, 2002, 2004 Free Software Foundation, Inc.
+# Copyright (C) 1999, 2000, 2002, 2004, 2006 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -36,7 +36,7 @@ umask 022
 
 pwd=`pwd`
 t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
-trap 'status=$?; cd $pwd; exec 1>&2; rm -rf $t0 && exit $status' 0
+trap 'status=$?; cd "$pwd" && exec 1>&2; rm -rf $t0 && exit $status' 0
 trap '(exit $?); exit' 1 2 13 15
 
 framework_failure=0

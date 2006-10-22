@@ -3,7 +3,7 @@
 # The problem was that using the solaris5.7 setvbuf function to turn off
 # buffering doesn't flush stdout.
 
-# Copyright (C) 1999, 2000, 2003 Free Software Foundation, Inc.
+# Copyright (C) 1999, 2000, 2003, 2006 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -33,7 +33,7 @@ fi
 
 tmp=tail-flush.$$
 pwd=`pwd`
-trap "cd $pwd; rm -rf $tmp" 0 1 2 3 15
+trap 'cd "$pwd" && rm -rf $tmp' 0 1 2 3 15
 
 test_failure=0
 mkdir $tmp || test_failure=1

@@ -25,7 +25,7 @@ fi
 
 pwd=`pwd`
 tmp=`echo "$0"|sed 's,.*/,,'`.tmp
-trap 'status=$?; cd $pwd; rm -rf $tmp && exit $status' 0
+trap 'status=$?; cd "$pwd" && rm -rf $tmp && exit $status' 0
 trap '(exit $?); exit' 1 2 13 15
 
 framework_failure=0
@@ -46,8 +46,8 @@ touch -ca no-file > /dev/null 2>&1 || fail=1
 # If >&- works, test "touch -c -" etc.
 # >&- apparently does not work in HP-UX 11.23.
 # This test is ineffective unless /dev/stdout also works.
-if $pwd/../../src/test -w /dev/stdout >/dev/null &&
-   $pwd/../../src/test ! -w /dev/stdout >&-; then
+if "$pwd"/../../src/test -w /dev/stdout >/dev/null &&
+   "$pwd"/../../src/test ! -w /dev/stdout >&-; then
   touch -c - >&- 2> /dev/null || fail=1
   touch -cm - >&- 2> /dev/null || fail=1
   touch -ca - >&- 2> /dev/null || fail=1
