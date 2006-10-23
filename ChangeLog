@@ -1,5 +1,9 @@
 2006-10-23  Jim Meyering  <jim@meyering.net>
 
+	* tests/misc/pwd-long: Undo last change, since it made Perl invoke
+	pwd via a shell.  Instead, ensure that the absolute name of the
+	pwd binary consists solely of reasonable characters.
+
 	* NEWS: Add a line for 6.5-cvs.
 	* configure.ac (AC_INIT): Bump to 6.5 and add "-cvs" suffix.
 

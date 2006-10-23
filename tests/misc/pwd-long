@@ -1,5 +1,5 @@
 #!/bin/sh
-# Check "printf" with long arguments.
+# Ensure that pwd works even when run from a very deep directory.
 
 # Copyright (C) 2006 Free Software Foundation, Inc.
 
@@ -46,7 +46,7 @@ export ARGV_0
 CWD=$pwd/$tmp
 export CWD
 
-$PERL -w -- - <<\EOF
+exec $PERL -Tw -- - <<\EOF
 
 # Show that pwd works even when the length of the resulting
 # directory name is longer than PATH_MAX.
@@ -54,6 +54,10 @@ use strict;
 use Cwd;
 
 (my $ME = $ENV{ARGV_0}) =~ s|.*/||;
+
+# Set up a safe, well-known environment
+delete @ENV{qw(BASH_ENV CDPATH ENV PATH)};
+$ENV{IFS}  = '';
 
 my $cwd = $ENV{CWD};
 my $z = 'z' x 31;
@@ -72,10 +76,19 @@ until (++$i == $n);
 my $build_src_dir = $ENV{BUILD_SRC_DIR};
 $build_src_dir
   or die "$ME: envvar BUILD_SRC_DIR not defined\n";
+if ($build_src_dir !~ m!^([-.:/\w]+)$!)
+  {
+    warn "$0: skipping this test; odd build source directory name:\n"
+      . "$build_src_dir\n";
+    exit 77;
+  }
+$build_src_dir = $1;
+
 my $pwd_binary = "$build_src_dir/pwd";
+
 -x $pwd_binary
   or die "$ME: $pwd_binary is not an executable file\n";
-chomp (my $actual = `"$pwd_binary"`);
+chomp (my $actual = `$pwd_binary`);
 if ($expected ne $actual)
   {
     my $e_len = length $expected;
