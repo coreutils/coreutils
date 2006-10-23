@@ -46,7 +46,7 @@ export ARGV_0
 CWD=$pwd/$tmp
 export CWD
 
-exec $PERL -Tw -- - <<\EOF
+$PERL -Tw -- - <<\EOF
 
 # Show that pwd works even when the length of the resulting
 # directory name is longer than PATH_MAX.

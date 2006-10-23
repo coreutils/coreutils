@@ -3,6 +3,8 @@
 	* tests/misc/pwd-long: Undo last change, since it made Perl invoke
 	pwd via a shell.  Instead, ensure that the absolute name of the
 	pwd binary consists solely of reasonable characters.
+	Whoops.  Don't exec the perl script.  Otherwise, the sh-trap-based
+	clean-up code isn't run.
 
 	* NEWS: Add a line for 6.5-cvs.
 	* configure.ac (AC_INIT): Bump to 6.5 and add "-cvs" suffix.
