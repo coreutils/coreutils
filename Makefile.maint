@@ -591,4 +591,6 @@ alpha beta major: news-date-check changelog-check $(local-check)
 	chmod a-w $(rel-files)
 	$(MAKE) -s emit_upload_commands RELEASE_TYPE=$@
 	echo $(VERSION) > $(prev_version_file)
-	$(VC) commit -m. $(prev_version_file)
+	$(VC) commit -m \
+	  '$(prev_version_file): Record previous version: $(VERSION).' \
+	  $(prev_version_file)
