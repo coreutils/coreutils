@@ -26,7 +26,7 @@ if test "$VERBOSE" = yes; then
   mv --version
 fi
 
-. $srcdir/setup
+. $srcdir/../other-fs-tmpdir
 . $srcdir/../envvar-check
 . $srcdir/../lang-default
 PRIV_CHECK_ARG=require-non-root . $srcdir/../priv-check

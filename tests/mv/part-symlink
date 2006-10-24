@@ -32,7 +32,7 @@ trap '(exit $?); exit' 1 2 13 15
 
 pwd_tmp=$pwd/$tmp
 
-. $srcdir/setup
+. $srcdir/../other-fs-tmpdir
 . $srcdir/../envvar-check
 # Make sure the programs use C-locale formats/translations.
 . $srcdir/../lang-default

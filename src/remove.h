@@ -30,6 +30,14 @@ struct rm_options
   /* If true, query the user about whether to remove each file.  */
   bool interactive;
 
+  /* If true, do not traverse into (or remove) any directory that is
+     on a file system (i.e., that has a different device number) other
+     than that of the corresponding command line argument.  Note that
+     even without this option, rm will fail in the end, due to its
+     probable inability to remove the mount point.  But there, the
+     diagnostic comes too late -- after removing all contents.  */
+  bool one_file_system;
+
   /* If true, recursively remove directories.  */
   bool recursive;
 

@@ -7772,6 +7772,24 @@ removal is requested.  Equivalent to @option{-I}.
 Specifying @option{--interactive} and no @var{when} is equivalent to
 @option{--interactive=always}.
 
+@itemx --one-file-system
+@opindex --one-file-system
+@cindex one file system, restricting @command{rm} to
+When removing a hierarchy recursively, skip any directory that is on a
+file system different from that of the corresponding command line argument.
+
+This option is useful when removing a build ``chroot'' hierarchy,
+which normally contains no valuable data.  However, it is not uncommon
+to bind-mount @file{/home} into such a hierarchy, to make it easier to
+use one's start-up file.  The catch is that it's easy to forget to
+unmount @file{/home}.  Then, when you use @command{rm -rf} to remove
+your normally throw-away chroot, that command will remove everything
+under @file{/home}, too.
+Use the @option{--one-file-system} option, and it will
+warn about and skip directories on other file systems.
+Of course, this will not save your @file{/home} if it and your
+chroot happen to be on the same file system.
+
 @itemx --preserve-root
 @opindex --preserve-root
 @cindex root directory, disallow recursive destruction

@@ -1298,6 +1298,7 @@ remove_dir (int fd_cwd, Dirstack_state *ds, char const *dir,
 	    struct rm_options const *x, int *cwd_errno)
 {
   enum RM_status status;
+  dev_t current_dev = dir_st->st_dev;
 
   /* There is a race condition in that an attacker could replace the nonempty
      directory, DIR, with a symlink between the preceding call to rmdir
@@ -1359,15 +1360,31 @@ remove_dir (int fd_cwd, Dirstack_state *ds, char const *dir,
 	}
       if (subdir)
 	{
-	  AD_push (dirfd (dirp), ds, subdir, &subdir_sb);
-	  AD_INIT_OTHER_MEMBERS ();
+	  if ( ! x->one_file_system
+	       || subdir_sb.st_dev == current_dev)
+	    {
+	      AD_push (dirfd (dirp), ds, subdir, &subdir_sb);
+	      AD_INIT_OTHER_MEMBERS ();
+	      free (subdir);
+	      continue;
+	    }
 
+	  /* Here, --one-file-system is in effect, and with remove_cwd_entries'
+	     traversal into the current directory, (known as SUBDIR, from ..),
+	     DIRP's device number is different from CURRENT_DEV.  Arrange not
+	     to do anything more with this hierarchy.  */
+	  error (0, errno, _("skipping %s, since it's on a different device"),
+		 quote (full_filename (subdir)));
 	  free (subdir);
-	  continue;
+	  AD_mark_current_as_unremovable (ds);
+	  tmp_status = RM_ERROR;
+	  UPDATE_STATUS (status, tmp_status);
 	}
 
       /* Execution reaches this point when we've removed the last
-	 removable entry from the current directory.  */
+	 removable entry from the current directory -- or, with
+	 --one-file-system, when the current directory is on a
+	 different file system.  */
       {
 	/* The name of the directory that we have just processed,
 	   nominally removing all of its contents.  */

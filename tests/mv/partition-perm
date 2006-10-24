@@ -23,7 +23,7 @@ if test "$VERBOSE" = yes; then
   mv --version
 fi
 
-. $srcdir/setup
+. $srcdir/../other-fs-tmpdir
 . $srcdir/../envvar-check
 . $srcdir/../lang-default
 

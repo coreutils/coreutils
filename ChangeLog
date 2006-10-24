@@ -1,5 +1,38 @@
 2006-10-24  Jim Meyering  <jim@meyering.net>
 
+	* NEWS: new feature: rm accepts new option: --one-file-system
+	Suggested by Steve McIntyre in <http://bugs.debian.org/392925>.
+	* src/remove.h (struct rm_options) [one_file_system]: New member.
+	* src/rm.c (rm_option_init): Initialize it.
+	(usage): Document the option.
+	* src/mv.c (rm_option_init): Likewise.
+	* src/remove.c (remove_dir): With --one-file-system and --recursive,
+	for each directory command line argument, do not affect a file system
+	different from that of the starting directory.  And give a diagnostic.
+	* src/rm.c (ONE_FILE_SYSTEM): New enum.
+	(main): Handle new option.
+	* tests/rm/one-file-system: Test the above.
+	* tests/rm/Makefile.am (TESTS): Add one-file-system.
+	* tests/Makefile.am (check-root): Add the rm/one-file-system
+	test to the list.
+	(EXTRA_DIST): Add other-fs-tmpdir.
+
+	* tests/mv/setup: Removed.  Renamed to...
+	* tests/other-fs-tmpdir: ...this new file.
+	* tests/mv/Makefile.am (EXTRA_DIST): Remove setup.
+	* tests/mv/acl: Reflect renaming: use ../other-fs-tmpdir.
+	* tests/mv/backup-is-src: Likewise.
+	* tests/mv/hard-link-1: Likewise.
+	* tests/mv/leak-fd: Likewise.
+	* tests/mv/mv-special-1: Likewise.
+	* tests/mv/part-fail: Likewise.
+	* tests/mv/part-hardlink: Likewise.
+	* tests/mv/part-rename: Likewise.
+	* tests/mv/part-symlink: Likewise.
+	* tests/mv/partition-perm: Likewise.
+	* tests/mv/to-symlink: Likewise.
+	* tests/mv/into-self-2: Likewise.
+
 	Don't let a failure in one test stop "make -k" from running the others.
 	* tests/Makefile.am (t1 t2 t3 t4 t5): New targets.
 	(check-root): Depend on them, rather than executing the five

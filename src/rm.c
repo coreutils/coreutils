@@ -72,6 +72,7 @@ char *program_name;
 enum
 {
   INTERACTIVE_OPTION = CHAR_MAX + 1,
+  ONE_FILE_SYSTEM,
   NO_PRESERVE_ROOT,
   PRESERVE_ROOT,
   PRESUME_INPUT_TTY_OPTION
@@ -90,6 +91,7 @@ static struct option const long_opts[] =
   {"force", no_argument, NULL, 'f'},
   {"interactive", optional_argument, NULL, INTERACTIVE_OPTION},
 
+  {"one-file-system", no_argument, NULL, ONE_FILE_SYSTEM},
   {"no-preserve-root", no_argument, NULL, NO_PRESERVE_ROOT},
   {"preserve-root", no_argument, NULL, PRESERVE_ROOT},
 
@@ -170,6 +172,11 @@ Remove (unlink) the FILE(s).\n\
                           always (-i).  Without WHEN, prompt always\n\
 "), stdout);
       fputs (_("\
+      --one-file-system  when removing a hierarchy recursively, skip any\n\
+                          directory that is on a file system different from\n\
+                          that of the corresponding command line argument\n\
+"), stdout);
+      fputs (_("\
       --no-preserve-root  do not treat `/' specially\n\
       --preserve-root   do not remove `/' (default)\n\
   -r, -R, --recursive   remove directories and their contents recursively\n\
@@ -207,6 +214,7 @@ rm_option_init (struct rm_options *x)
 {
   x->ignore_missing_files = false;
   x->interactive = false;
+  x->one_file_system = false;
   x->recursive = false;
   x->root_dev_ino = NULL;
   x->stdin_tty = isatty (STDIN_FILENO);
@@ -298,6 +306,10 @@ main (int argc, char **argv)
 	      }
 	    break;
 	  }
+
+	case ONE_FILE_SYSTEM:
+	  x.one_file_system = true;
+	  break;
 
 	case NO_PRESERVE_ROOT:
 	  preserve_root = false;

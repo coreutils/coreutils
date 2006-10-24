@@ -94,6 +94,7 @@ rm_option_init (struct rm_options *x)
   x->ignore_missing_files = false;
   x->root_dev_ino = NULL;
   x->recursive = true;
+  x->one_file_system = false;
 
   /* Should we prompt for removal, too?  No.  Prompting for the `move'
      part is enough.  It implies removal.  */

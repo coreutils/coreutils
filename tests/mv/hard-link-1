@@ -24,7 +24,7 @@ if test "$VERBOSE" = yes; then
   mv --version
 fi
 
-. $srcdir/setup
+. $srcdir/../other-fs-tmpdir
 # Make sure we get English translations.
 . $srcdir/../lang-default
 

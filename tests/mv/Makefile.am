@@ -43,7 +43,7 @@ TESTS = \
   i-1 hard-link-1 force partition-perm to-symlink dir-file diag \
   part-symlink part-rename trailing-slash
 
-EXTRA_DIST = $(TESTS) setup vfat
+EXTRA_DIST = $(TESTS) vfat
 TESTS_ENVIRONMENT = \
   PERL="$(PERL)" \
   PATH="$(VG_PATH_PREFIX)`pwd`/../../src$(PATH_SEPARATOR)$$PATH" \

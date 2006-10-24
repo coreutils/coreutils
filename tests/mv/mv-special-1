@@ -29,7 +29,7 @@ tmp=mv-spec.$$
 trap 'status=$?; cd "$pwd" && exec 1>&2; rm -rf $tmp $other_partition_tmpdir && exit $status' 0
 trap '(exit $?); exit' 1 2 13 15
 
-. $srcdir/setup
+. $srcdir/../other-fs-tmpdir
 . $srcdir/../envvar-check
 # Make sure we get English translations.
 . $srcdir/../lang-default
