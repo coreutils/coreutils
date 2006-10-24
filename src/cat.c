@@ -55,7 +55,7 @@
 char *program_name;
 
 /* Name of input file.  May be "-".  */
-static char *infile;
+static char const *infile;
 
 /* Descriptor on which input file is open.  */
 static int input_desc;

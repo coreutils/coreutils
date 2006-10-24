@@ -236,7 +236,7 @@ int_value (intmax_t i)
 /* Return a VALUE for S.  */
 
 static VALUE *
-str_value (char *s)
+str_value (char const *s)
 {
   VALUE *v = xmalloc (sizeof *v);
   v->type = string;

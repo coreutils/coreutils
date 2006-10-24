@@ -1,5 +1,5 @@
 /* fold -- wrap each input line to fit in specified width.
-   Copyright (C) 91, 1995-2005 Free Software Foundation, Inc.
+   Copyright (C) 91, 1995-2006 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -122,7 +122,7 @@ adjust_column (size_t column, char c)
    Return true if successful.  */
 
 static bool
-fold_file (char *filename, size_t width)
+fold_file (char const *filename, size_t width)
 {
   FILE *istream;
   int c;

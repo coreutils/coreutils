@@ -246,7 +246,7 @@ dc_parse_stream (FILE *fp, const char *filename)
   char *input_line = NULL;
   size_t input_line_size = 0;
   char const *line;
-  char *term;
+  char const *term;
   bool ok = true;
 
   /* State for the parser.  */

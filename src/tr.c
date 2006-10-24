@@ -601,7 +601,7 @@ make_printable_str (char const *s, size_t len)
   for (i = 0; i < len; i++)
     {
       char buf[5];
-      char *tmp = NULL;
+      char const *tmp = NULL;
       unsigned char c = s[i];
 
       switch (c)

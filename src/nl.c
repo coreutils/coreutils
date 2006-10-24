@@ -64,16 +64,16 @@ enum section
 char *program_name;
 
 /* Format of body lines (-b).  */
-static char *body_type = "t";
+static char const *body_type = "t";
 
 /* Format of header lines (-h).  */
-static char *header_type = "n";
+static char const *header_type = "n";
 
 /* Format of footer lines (-f).  */
-static char *footer_type = "n";
+static char const *footer_type = "n";
 
 /* Format currently being used (body, header, or footer).  */
-static char *current_type;
+static char const *current_type;
 
 /* Regex for body lines to number (-bp).  */
 static struct re_pattern_buffer body_regex;
@@ -93,7 +93,7 @@ static char footer_fastmap[UCHAR_MAX + 1];
 static struct re_pattern_buffer *current_regex = NULL;
 
 /* Separator string to print after line number (-s).  */
-static char *separator_str = "\t";
+static char const *separator_str = "\t";
 
 /* Input section delimiter string (-d).  */
 static char const *section_del = DEFAULT_SECTION_DELIMITERS;
@@ -235,9 +235,10 @@ FORMAT is one of:\n\
    according to `optarg'.  */
 
 static bool
-build_type_arg (char **typep, struct re_pattern_buffer *regexp, char *fastmap)
+build_type_arg (char const **typep,
+		struct re_pattern_buffer *regexp, char *fastmap)
 {
-  const char *errmsg;
+  char const *errmsg;
   bool rval = true;
 
   switch (*optarg)
@@ -414,7 +415,7 @@ process_file (FILE *fp)
    Return true if successful.  */
 
 static bool
-nl_file (const char *file)
+nl_file (char const *file)
 {
   FILE *stream;
 

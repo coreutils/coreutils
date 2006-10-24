@@ -463,9 +463,7 @@ main (int argc, char **argv)
 	{
 	case 'd':
 	  /* Delimiter character(s). */
-	  if (optarg[0] == '\0')
-	    optarg = "\\0";
-	  delim_arg = optarg;
+	  delim_arg = (optarg[0] == '\0' ? "\\0" : optarg);
 	  break;
 
 	case 's':

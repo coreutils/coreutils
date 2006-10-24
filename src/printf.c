@@ -76,7 +76,7 @@ static bool posixly_correct;
 
 /* This message appears in N_() here rather than just in _() below because
    the sole use would have been in a #define.  */
-static char *const cfcc_msg =
+static char const *const cfcc_msg =
  N_("warning: %s: character(s) following character constant have been ignored");
 
 /* The name this program was run with. */

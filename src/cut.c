@@ -1,5 +1,5 @@
 /* cut - remove parts of lines of files
-   Copyright (C) 1997-2005 Free Software Foundation, Inc.
+   Copyright (C) 1997-2006 Free Software Foundation, Inc.
    Copyright (C) 1984 David M. Ihnat
 
    This program is free software; you can redistribute it and/or modify
@@ -702,7 +702,7 @@ cut_stream (FILE *stream)
    Return true if successful.  */
 
 static bool
-cut_file (char *file)
+cut_file (char const *file)
 {
   FILE *stream;
 

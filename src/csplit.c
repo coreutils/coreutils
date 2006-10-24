@@ -149,13 +149,13 @@ static uintmax_t current_line = 0;
 static bool have_read_eof = false;
 
 /* Name of output files. */
-static char * volatile filename_space = NULL;
+static char *volatile filename_space = NULL;
 
 /* Prefix part of output file names. */
-static char * volatile prefix = NULL;
+static char const *volatile prefix = NULL;
 
 /* Suffix part of output file names. */
-static char * volatile suffix = NULL;
+static char *volatile suffix = NULL;
 
 /* Number of digits to use in output file names. */
 static int volatile digits = 2;

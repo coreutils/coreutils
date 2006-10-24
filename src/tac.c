@@ -78,7 +78,7 @@ tac -r -s '.\|
 char *program_name;
 
 /* The string that separates the records of the file. */
-static char *separator;
+static char const *separator;
 
 /* True if we have ever read standard input.  */
 static bool have_read_stdin = false;
@@ -211,7 +211,7 @@ tac_seekable (int input_fd, const char *file)
      Only used when the separator is attached to the preceding record. */
   bool first_time = true;
   char first_char = *separator;	/* Speed optimization, non-regexp. */
-  char *separator1 = separator + 1; /* Speed optimization, non-regexp. */
+  char const *separator1 = separator + 1; /* Speed optimization, non-regexp. */
   size_t match_length1 = match_length - 1; /* Speed optimization, non-regexp. */
   struct re_registers regs;
 
@@ -426,7 +426,7 @@ static bool
 copy_to_temp (FILE **g_tmp, char **g_tempfile, int input_fd, char const *file)
 {
   static char *template = NULL;
-  static char *tempdir;
+  static char const *tempdir;
   char *tempfile;
   FILE *tmp;
   int fd;

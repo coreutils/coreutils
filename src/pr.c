@@ -430,7 +430,7 @@ static void getoptarg (char *arg, char switch_char, char *character,
 void usage (int status);
 static void print_files (int number_of_files, char **av);
 static void init_parameters (int number_of_files);
-static void init_header (char *filename, int desc);
+static void init_header (char const *filename, int desc);
 static bool init_fps (int number_of_files, char **av);
 static void init_funcs (void);
 static void init_store_cols (void);
@@ -1653,7 +1653,7 @@ print_files (int number_of_files, char **av)
    FILENAME for reading.  */
 
 static void
-init_header (char *filename, int desc)
+init_header (char const *filename, int desc)
 {
   char *buf = NULL;
   struct stat st;

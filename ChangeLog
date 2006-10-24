@@ -1,3 +1,20 @@
+2006-10-25  Bruno Haible  <bruno@clisp.org>
+
+	* src/cat.c (infile): Add "const" to declaration.
+	* src/csplit.c (prefix): Likewise.
+	* src/printf.c (cfcc_msg): Likewise.
+	* src/tail.c (valid_file_spec): Likewise.
+	* src/cut.c (cut_file): Likewise, for a parameter.
+	* src/expr.c (str_value): Likewise.
+	* src/fold.c (fold_file): Likewise.
+	* src/pr.c (init_header): Likewise.
+	* src/dircolors.c (dc_parse_stream): Likewise, for a local.
+	* src/tr.c (make_printable_str): Likewise.
+	* src/nl.c (body_type, header_type, footer_type, current_type):
+	(separator_str, build_type_arg, nl_file): Likewise, for many.
+	* src/paste.c (main): Don't assign a read-only string to 'optarg'.
+	* src/tac.c (separator, tac_seekable, copy_to_temp): Likewise.
+
 2006-10-25  Jim Meyering  <jim@meyering.net>
 
 	* tests/sample-test: Update copyright year list to include only
