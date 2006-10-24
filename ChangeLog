@@ -1,3 +1,10 @@
+2006-10-24  Jim Meyering  <jim@meyering.net>
+
+	Don't let a failure in one test stop "make -k" from running the others.
+	* tests/Makefile.am (t1 t2 t3 t4 t5): New targets.
+	(check-root): Depend on them, rather than executing the five
+	commands in a single rule.  Reported by Greg Schafer.
+
 2006-10-23  Bob Proulx  <bob@proulx.com>  (tiny change)
 
 	* Makefile.maint (alpha beta major): Use a better log message for

@@ -20,8 +20,7 @@ EXTRA_DIST = \
   umask-check very-expensive
 
 ## N O T E :: Please do not add new tests/ directories.
-## Some people feel that there are too many already.
-## Put new tests in misc/.
+## There are too many already.  Put new tests in misc/.
 SUBDIRS = \
   chgrp chmod chown cp cut dd dircolors du expr factor fmt head \
   install join ln ls ls-2 md5sum misc mkdir mv od pr readlink rm rmdir \
@@ -29,12 +28,18 @@ SUBDIRS = \
   tsort unexpand uniq wc
 ## N O T E :: Please do not add new directories.
 
-.PHONY: check-root
-check-root:
+.PHONY: check-root t1 t2 t3 t4 t5
+check-root: t1 t2 t3 t4 t5
+
+t1:
 	cd chown && $(MAKE) check TESTS=basic
+t2:
 	cd cp    && $(MAKE) check TESTS=special-bits
+t3:
 	cd rm    && $(MAKE) check TESTS=no-give-up
+t4:
 	cd rm    && $(MAKE) check TESTS=fail-2eperm
+t5:
 	cd tail-2 && $(MAKE) check TESTS=append-only
 
 check-recursive: root-hint
