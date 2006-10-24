@@ -1,5 +1,7 @@
 2006-10-24  Jim Meyering  <jim@meyering.net>
 
+	* src/c99-to-c89.diff: Update to reflect new offsets.
+
 	* NEWS: new feature: rm accepts new option: --one-file-system
 	Suggested by Steve McIntyre in <http://bugs.debian.org/392925>.
 	* src/remove.h (struct rm_options) [one_file_system]: New member.

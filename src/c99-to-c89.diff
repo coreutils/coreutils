@@ -63,7 +63,7 @@ diff -u -p -u -r1.158 remove.c
  }
 
  /* Remove entries in the directory open on DIRP
-@@ -1372,9 +1377,10 @@ remove_dir (int fd_cwd, Dirstack_state *
+@@ -1389,9 +1394,10 @@ remove_dir (int fd_cwd, Dirstack_state *
  	/* The name of the directory that we have just processed,
  	   nominally removing all of its contents.  */
  	char *empty_dir;
@@ -75,7 +75,7 @@ diff -u -p -u -r1.158 remove.c
  	assert (dirp != NULL || AD_stack_height (ds) == 1);
 
  	/* Try to remove EMPTY_DIR only if remove_cwd_entries succeeded.  */
-@@ -1386,8 +1392,9 @@ remove_dir (int fd_cwd, Dirstack_state *
+@@ -1403,8 +1409,9 @@ remove_dir (int fd_cwd, Dirstack_state *
  	       But that's no big deal since we're interactive.  */
  	    struct stat empty_st;
  	    Ternary is_empty;
@@ -86,7 +86,7 @@ diff -u -p -u -r1.158 remove.c
  				       PA_REMOVE_DIR, &is_empty);
 
  	    if (s != RM_OK)
-@@ -1452,6 +1459,7 @@ rm_1 (Dirstack_state *ds, char const *fi
+@@ -1469,6 +1476,7 @@ rm_1 (Dirstack_state *ds, char const *fi
        return RM_ERROR;
      }
 
@@ -94,7 +94,7 @@ diff -u -p -u -r1.158 remove.c
    struct stat st;
    cache_stat_init (&st);
    if (x->root_dev_ino)
-@@ -1473,6 +1481,7 @@ rm_1 (Dirstack_state *ds, char const *fi
+@@ -1490,6 +1498,7 @@ rm_1 (Dirstack_state *ds, char const *fi
    AD_push_initial (ds);
    AD_INIT_OTHER_MEMBERS ();
 
@@ -102,7 +102,7 @@ diff -u -p -u -r1.158 remove.c
    int fd_cwd = AT_FDCWD;
    enum RM_status status = remove_entry (fd_cwd, ds, filename, &st, x, NULL);
    if (status == RM_NONEMPTY_DIR)
-@@ -1491,6 +1500,8 @@ rm_1 (Dirstack_state *ds, char const *fi
+@@ -1508,6 +1517,8 @@ rm_1 (Dirstack_state *ds, char const *fi
    ds_clear (ds);
 
    return status;
@@ -111,7 +111,7 @@ diff -u -p -u -r1.158 remove.c
  }
 
  /* Remove all files and/or directories specified by N_FILES and FILE.
-@@ -1513,9 +1524,11 @@ rm (size_t n_files, char const *const *f
+@@ -1530,9 +1541,11 @@ rm (size_t n_files, char const *const *f
  	}
 
        cycle_check_init (&ds->cycle_check_state);
@@ -130,7 +130,7 @@ retrieving revision 1.140
 diff -u -p -u -r1.140 rm.c
 --- src/rm.c	3 Sep 2006 02:53:58 -0000	1.140
 +++ src/rm.c	6 Sep 2006 18:57:46 -0000
-@@ -357,8 +357,10 @@ main (int argc, char **argv)
+@@ -364,8 +364,10 @@ main (int argc, char **argv)
  	if (!yesno ())
  	  exit (EXIT_SUCCESS);
        }
