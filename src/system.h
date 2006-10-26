@@ -524,15 +524,8 @@ enum
 # if ! defined ftello
 static inline off_t ftello (FILE *stream)
 {
-  off_t off = ftell (stream);
-  if (off < 0)
-    return off;
-  if (off != (long int) off)
-    {
-      errno = EOVERFLOW;
-      return -1;
-    }
-  return off;
+  verify (sizeof (long int) <= sizeof (off_t));
+  return ftell (stream);
 }
 # endif
 #endif
