@@ -84,6 +84,6 @@ if test $framework_failure = 1; then
 fi
 
 fail=0
-du -s "$pwd"/$tmp/$dir > /dev/null || fail=1
+du -s "$pwd/$tmp/$dir" > /dev/null || fail=1
 
 (exit $fail); exit $fail

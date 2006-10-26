@@ -44,7 +44,7 @@ if test $framework_failure = 1; then
   (exit 1); exit 1
 fi
 
-. "$abs_srcdir"/../setgid-check
+. "$abs_srcdir/../setgid-check"
 
 fail=0
 
@@ -56,12 +56,12 @@ mkdir e-dir > /dev/null 2>&1 && fail=1
 # Create an existing directory.
 umask 077
 mode_str=drwxr-x-wx
-mode_arg=`"$abs_srcdir"/../rwx-to-mode $mode_str`
+mode_arg=`"$abs_srcdir/../rwx-to-mode" $mode_str`
 mkdir -m $mode_arg a || fail=1
 
 # this `mkdir -p ...' shouldn't change perms of existing dir `a'.
 d_mode_str=drwx-w--wx
-d_mode_arg=`"$abs_srcdir"/../rwx-to-mode $d_mode_str`
+d_mode_arg=`"$abs_srcdir/../rwx-to-mode" $d_mode_str`
 mkdir -p -m $d_mode_arg a/b/c/d
 
 # Make sure the permissions of `a' haven't been changed.

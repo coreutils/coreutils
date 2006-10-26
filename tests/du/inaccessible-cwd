@@ -48,6 +48,6 @@ fi
 
 fail=0
 
-du "$pwd"/$tmp/a > /dev/null || fail=1
+du "$pwd/$tmp/a" > /dev/null || fail=1
 
 (exit $fail); exit $fail

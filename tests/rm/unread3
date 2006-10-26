@@ -47,16 +47,16 @@ chmod u=x,go= .
 t=$pwd/$tmp
 
 # With coreutils-5.2.1, this would get a failed assertion.
-rm -r "$t"/a "$t"/b || fail=1
+rm -r "$t/a" "$t/b" || fail=1
 
 # With coreutils-5.2.1, this would get the following:
 #   rm: cannot get current directory: Permission denied
 #   rm: failed to return to initial working directory: Bad file descriptor
-rm -r "$t"/d "$t"/e || fail=1
+rm -r "$t/d" "$t/e" || fail=1
 
-test -d "$t"/a && fail=1
-test -d "$t"/b && fail=1
-test -d "$t"/d && fail=1
-test -d "$t"/e && fail=1
+test -d "$t/a" && fail=1
+test -d "$t/b" && fail=1
+test -d "$t/d" && fail=1
+test -d "$t/e" && fail=1
 
 (exit $fail); exit $fail

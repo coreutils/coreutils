@@ -1,3 +1,31 @@
+2006-10-25  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* tests/chmod/c-option: When double-quoting part of a word, prefer
+	to double-quote the whole word.  This is a bit easier to read (at
+	least for me), and in some cases it avoids a shell bug with Tru64
+	4.0 sh reported by Nelson H. F. Beebe.  For example, instead of
+	"$abs_srcdir"/../setgid-check we now write
+	"$abs_srcdir/../setgid-check".
+	* tests/cp/cp-parents: Likewise.
+	* tests/du/inaccessible-cwd: Likewise.
+	* tests/du/long-from-unreadable: Likewise.
+	* tests/install/basic-1: Likewise.
+	* tests/install/trap: Likewise.
+	* tests/misc/close-stdout: Likewise.
+	* tests/mkdir/concurrent-1: Likewise.
+	* tests/mkdir/p-1: Likewise.
+	* tests/mkdir/p-3: Likewise.
+	* tests/mkdir/parents: Likewise.
+	* tests/mkdir/perm: Likewise.
+	* tests/readlink/can-e: Likewise.
+	* tests/readlink/can-f: Likewise.
+	* tests/readlink/can-m: Likewise.
+	* tests/rm/inaccessible: Likewise.
+	* tests/rm/unread3: Likewise.
+	* tests/touch/no-create-missing: Likewise.
+
+	* lib/.cvsignore: Add uinttostr.c.
+
 2006-10-25  Jim Meyering  <jim@meyering.net>
 
 	Portability to Tru64 V4.0.

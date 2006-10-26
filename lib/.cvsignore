@@ -321,6 +321,7 @@ tempname.c
 time_r.c
 time_r.h
 timespec.h
+uinttostr.c
 umaxtostr.c
 unicodeio.h
 unistd--.h

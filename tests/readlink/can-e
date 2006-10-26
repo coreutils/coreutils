@@ -31,7 +31,7 @@ trap 'status=$?; (exit $status); exit $status' 1 2 13 15
 fail=1
 while :; do
   bindir=`cd ../../src && pwd`|| break
-  my_pwd=`"$bindir"/pwd` || break
+  my_pwd=`"$bindir/pwd"` || break
 
   mkdir -p $tmp || break
   cd $tmp || break
