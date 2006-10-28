@@ -130,7 +130,7 @@ retrieving revision 1.140
 diff -u -p -u -r1.140 rm.c
 --- src/rm.c	3 Sep 2006 02:53:58 -0000	1.140
 +++ src/rm.c	6 Sep 2006 18:57:46 -0000
-@@ -364,8 +364,10 @@ main (int argc, char **argv)
+@@ -369,8 +369,10 @@ main (int argc, char **argv)
  	if (!yesno ())
  	  exit (EXIT_SUCCESS);
        }

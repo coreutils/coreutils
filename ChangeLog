@@ -1,3 +1,7 @@
+2006-10-28  Jim Meyering  <jim@meyering.net>
+
+	* src/c99-to-c89.diff: Update to reflect new offsets in rm.c.
+
 2006-10-26  Jim Meyering  <jim@meyering.net>
 
 	* src/system.h (ftello): Add a compile-time check for the highly
