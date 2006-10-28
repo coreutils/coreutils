@@ -2950,7 +2950,8 @@ wc [@var{option}]@dots{} [@var{file}]@dots{}
 given as an argument, it prints the file name following the counts.  If
 more than one @var{file} is given, @command{wc} prints a final line
 containing the cumulative counts, with the file name @file{total}.  The
-counts are printed in this order: newlines, words, characters, bytes.
+counts are printed in this order: newlines, words, characters, bytes,
+maximum line length.
 Each count is printed right-justified in a field with at least one
 space between fields so that the numbers and file names normally line
 up nicely in columns.  The width of the count fields varies depending
