@@ -330,6 +330,8 @@ patch-check:
 	(cd src-c89; patch -V never --fuzz=0) < src/c99-to-c89.diff \
 	  > $@.1 2>&1
 	grep -v '^patching file ' $@.1 > $@.2 || :
+	if test "$${REGEN_PATCH+set}" = set; then \
+	  diff -upr src src-c89 > new-diff || : ; fi
 	fail=0; test -s $@.2 && fail=1 || : ; \
 	rm -rf src-c89 $@.1 $@.2; \
 	test $$fail = 0
