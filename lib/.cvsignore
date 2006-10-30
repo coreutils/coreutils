@@ -318,6 +318,7 @@ strverscmp.c
 strverscmp.h
 t-fpending
 tempname.c
+tempname.h
 time_r.c
 time_r.h
 timespec.h

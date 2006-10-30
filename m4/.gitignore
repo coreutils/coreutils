@@ -82,6 +82,8 @@ human.m4
 iconv.m4
 idcache.m4
 inet_ntop.m4
+intl.m4
+intldir.m4
 intmax.m4
 intmax_t.m4
 inttostr.m4
@@ -192,6 +194,7 @@ strtoumax.m4
 strverscmp.m4
 sys_socket_h.m4
 sys_stat_h.m4
+tempname.m4
 time_r.m4
 timespec.m4
 tm_gmtoff.m4
