@@ -58,7 +58,7 @@ fi
 fail=0
 
 strace -qe unlink mv -T s1 s2 > out 2>&1 || fail=1
-grep unlink out && fail=1
+$EGREP 'unlink.*"s1"' out && fail=1
 
 # Ensure that the source, s1, is gone.
 ls -dl s1 > /dev/null 2>&1 && fail=1

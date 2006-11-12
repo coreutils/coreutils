@@ -46,5 +46,6 @@ TESTS = \
 EXTRA_DIST = $(TESTS) vfat
 TESTS_ENVIRONMENT = \
   PERL="$(PERL)" \
+  EGREP="$(EGREP)" \
   PATH="$(VG_PATH_PREFIX)`pwd`/../../src$(PATH_SEPARATOR)$$PATH" \
   PROG=mv

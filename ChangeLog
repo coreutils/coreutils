@@ -1,3 +1,11 @@
+2006-11-12  Jim Meyering  <jim@meyering.net>
+
+	Avoid false-positive when testing via valgrind.
+	* tests/mv/atomic: Grep strace output for a more specific pattern
+	than just "unlink", since that got a false positive when testing
+	under valgrind: unlink("/tmp/valgrind_proc_9657_cmdline_A51E9991") = 0
+	* tests/mv/Makefile.am (TESTS_ENVIRONMENT): Define EGREP.
+
 2006-10-28  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.maint (patch-check): Make it easier to regenerate
