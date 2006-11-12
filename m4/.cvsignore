@@ -43,6 +43,7 @@ file-type.m4
 fileblocks.m4
 filemode.m4
 filenamecat.m4
+flexmember.m4
 fnmatch.m4
 fpending.m4
 fprintftime.m4
@@ -81,10 +82,12 @@ hard-locale.m4
 hash.m4
 host-os.m4
 human.m4
+i-ring.m4
 iconv.m4
 idcache.m4
 include_next.m4
 inet_ntop.m4
+inline.m4
 intdiv0.m4
 intl.m4
 intldir.m4

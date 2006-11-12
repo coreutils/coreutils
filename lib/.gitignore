@@ -135,6 +135,8 @@ hash.c
 hash.h
 human.c
 human.h
+i-ring.c
+i-ring.h
 idcache.c
 imaxtostr.c
 inet_ntop.c
