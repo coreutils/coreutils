@@ -8,6 +8,7 @@
 	diagnostic from the expected output when using native fdopendir.
 	* tests/chmod/no-x: Likewise.
 	* tests/du/no-x: Likewise.
+	* NEWS: Mention this bug fix.
 
 	* Makefile.maint (sc_cast_of_x_alloc_return_value): Add an exclusion
 	for xalloc.h itself.

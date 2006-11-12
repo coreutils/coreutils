@@ -2,6 +2,14 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Major changes in release 6.5-cvs (2006-??-??)
 
+** Bug fixes
+
+  du (and the other fts clients: chmod, chgrp, chown) would exit early
+  when encountering an inaccessible directory on a system with native
+  openat support (i.e., linux-2.6.16 or newer along with glibc-2.4
+  or newer).  This bug was introduced with the switch to gnulib's
+  openat-based variant of fts, for coreutils-6.0.
+
 ** New features
 
   rm accepts a new option: --one-file-system
