@@ -9,6 +9,7 @@
 	* tests/chmod/no-x: Likewise.
 	* tests/du/no-x: Likewise.
 	* NEWS: Mention this bug fix.
+	* tests/du/Makefile.am (TESTS): Add inacc-dest.
 
 	* Makefile.maint (sc_cast_of_x_alloc_return_value): Add an exclusion
 	for xalloc.h itself.
