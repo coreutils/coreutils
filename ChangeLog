@@ -1,5 +1,8 @@
 2006-11-12  Jim Meyering  <jim@meyering.net>
 
+	* Makefile.maint (sc_cast_of_x_alloc_return_value): Add an exclusion
+	for xalloc.h itself.
+
 	Avoid false-positive when testing via valgrind.
 	* tests/mv/atomic: Grep strace output for a more specific pattern
 	than just "unlink", since that got a false positive when testing

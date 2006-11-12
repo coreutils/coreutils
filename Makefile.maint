@@ -102,7 +102,8 @@ sc_cast_of_argument_to_free:
 	    exit 1; } || :
 
 sc_cast_of_x_alloc_return_value:
-	@grep -nE --exclude=$(srcdir)/lib/regex.c			\
+	@grep -nE --exclude=$(srcdir)/lib/xalloc.h			\
+		--exclude=$(srcdir)/lib/regex.c				\
 	    '\*\) *x(m|c|re)alloc\>'					\
 	    $(srcdir)/{lib,src}/*.[chy] &&				\
 	  { echo '$(ME): don'\''t cast x*alloc return value' 1>&2;	\
