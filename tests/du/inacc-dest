@@ -1,8 +1,8 @@
 #!/bin/sh
-# Make sure chmod gives the right diagnostic for a readable,
-# but inaccessible directory.
+# Prior to coreutils-6.5, an inaccessible destination dir (chmod a-x)
+# would cause du to exit prematurely on systems with native openat support.
 
-# Copyright (C) 2003, 2006 Free Software Foundation, Inc.
+# Copyright (C) 2006 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,11 +21,11 @@
 
 if test "$VERBOSE" = yes; then
   set -x
-  chmod --version
+  du --version
 fi
 
+. $srcdir/../envvar-check
 . $srcdir/../lang-default
-PRIV_CHECK_ARG=require-non-root . $srcdir/../priv-check
 
 pwd=`pwd`
 t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
@@ -35,8 +35,9 @@ trap '(exit $?); exit $?' 1 2 13 15
 framework_failure=0
 mkdir -p $tmp || framework_failure=1
 cd $tmp || framework_failure=1
-mkdir -p d/no-x/y || framework_failure=1
-chmod u=rw d/no-x || framework_failure=1
+
+mkdir f && cd f && mkdir a b c d e && touch c/j && chmod a-x c \
+    || framework_failure=1
 
 if test $framework_failure = 1; then
   echo "$0: failure in testing framework" 1>&2
@@ -45,37 +46,37 @@ fi
 
 fail=0
 
-# This must exit nonzero.
-chmod -R o=r d >/dev/null 2>out && fail=1
+du > ../t 2>&1 && fail=1
 
-cat <<\EOF > exp
-chmod: `d/no-x': Permission denied
+# Accept either of the following outputs.
+# You get the first from a system with openat _emulation_ (via /proc),
+# the second from a system with native openat support.
+# FIXME: there may well be a third output, for systems with neither
+# /proc support, nor native openat support.
+
+sed 's/^[0-9][0-9]*	//' ../t | sort -u > out
+cat <<\EOF > exp || fail=1
+.
+./a
+./b
+./d
+./e
+du: `./c': Permission denied
 EOF
 
-# With native fdopendir, du uses a different code path.
-cat <<\EOF > exp-native-fdopendir
-chmod: cannot access `d/no-x/y': Permission denied
+cat <<\EOF > exp2 || fail=1
+.
+./a
+./b
+./c
+./d
+./e
+du: cannot access `./c/j': Permission denied
 EOF
 
-if cmp out exp >/dev/null 2>&1; then
-  :
-else
-  if cmp out exp-native-fdopendir; then
-    :
-  else
-    fail=1
-  fi
-fi
-
+cmp out exp > /dev/null 2>&1 || {
+  cmp out exp2 || fail=1
+  }
 test $fail = 1 && diff out exp 2> /dev/null
-
-mkdir -p a/b
-cd a
-# This will fail with ``chmod: fts_read failed: Permission denied''
-chmod a-x . b 2> /dev/null && fail=1
-# chmod must exit with status 1.
-# Due to a bug in coreutils-5.93's fts.c, chmod would provoke
-# an abort (exit with status 134) on recent glibc-based systems.
-test $? = 1 || fail=1
 
 (exit $fail); exit $fail

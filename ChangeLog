@@ -1,5 +1,14 @@
 2006-11-12  Jim Meyering  <jim@meyering.net>
 
+	du would exit early, when encountering an inaccessible directory
+	Reported by Mike Frysinger, in
+	http://article.gmane.org/gmane.comp.gnu.core-utils.bugs/8831
+	* tests/du/inacc-dest: New test, based on an example from Mike Frysinger.
+	* tests/chgrp/no-x: Remove the "fts_read failed: ..."
+	diagnostic from the expected output when using native fdopendir.
+	* tests/chmod/no-x: Likewise.
+	* tests/du/no-x: Likewise.
+
 	* Makefile.maint (sc_cast_of_x_alloc_return_value): Add an exclusion
 	for xalloc.h itself.
 

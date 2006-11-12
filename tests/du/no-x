@@ -55,7 +55,6 @@ EOF
 # With native fdopendir, du uses a different code path.
 cat <<\EOF > exp-native-fdopendir
 du: cannot access `d/no-x/y': Permission denied
-du: fts_read failed: Permission denied
 EOF
 
 if cmp out exp >/dev/null 2>&1; then

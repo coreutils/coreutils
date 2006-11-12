@@ -59,7 +59,6 @@ EOF
 # With native fdopendir, du uses a different code path.
 cat <<\EOF > exp-native-fdopendir
 chgrp: cannot access `d/no-x/y': Permission denied
-chgrp: fts_read failed: Permission denied
 EOF
 
 if cmp out exp >/dev/null 2>&1; then
