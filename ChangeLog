@@ -1,3 +1,8 @@
+2006-11-13  Jim Meyering  <jim@meyering.net>
+
+	* src/sort.c (main): Plug a tiny memory leak.
+	Move declaration of local "minus" down to be nearer point of use.
+
 2006-11-12  Jim Meyering  <jim@meyering.net>
 
 	du would exit early, when encountering an inaccessible directory

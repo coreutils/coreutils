@@ -2292,7 +2292,7 @@ main (int argc, char **argv)
   size_t nfiles = 0;
   bool posixly_correct = (getenv ("POSIXLY_CORRECT") != NULL);
   bool obsolete_usage = (posix2_version () < 200112);
-  char *minus = "-", **files;
+  char **files;
   char const *outfile = NULL;
 
   initialize_main (&argc, &argv);
@@ -2657,7 +2657,9 @@ main (int argc, char **argv)
 
   if (nfiles == 0)
     {
+      static char *minus = "-";
       nfiles = 1;
+      free (files);
       files = &minus;
     }
 
