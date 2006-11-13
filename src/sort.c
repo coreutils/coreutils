@@ -2105,9 +2105,8 @@ static void
 insertkey (struct keyfield *key_arg)
 {
   struct keyfield **p;
-  struct keyfield *key = xmalloc (sizeof *key);
+  struct keyfield *key = xmemdup (key_arg, sizeof *key);
 
-  *key = *key_arg;
   for (p = &keylist; *p; p = &(*p)->next)
     continue;
   *p = key;

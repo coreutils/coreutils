@@ -1,5 +1,8 @@
 2006-11-13  Jim Meyering  <jim@meyering.net>
 
+	* src/sort.c (insertkey): Use xmemdup, rather than xmalloc+assignment.
+	From Paul Eggert.
+
 	Plug another technically-unimportant leak in sort.
 	* src/sort.c (main): Don't allocate memory for each new key here.
 	(insertkey): Allocate memory for each key here, instead.
