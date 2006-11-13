@@ -2099,13 +2099,15 @@ sort (char * const *files, size_t nfiles, char const *output_file)
     }
 }
 
-/* Insert key KEY at the end of the key list.  */
+/* Insert a malloc'd copy of key KEY_ARG at the end of the key list.  */
 
 static void
-insertkey (struct keyfield *key)
+insertkey (struct keyfield *key_arg)
 {
   struct keyfield **p;
+  struct keyfield *key = xmalloc (sizeof *key);
 
+  *key = *key_arg;
   for (p = &keylist; *p; p = &(*p)->next)
     continue;
   *p = key;
@@ -2271,9 +2273,9 @@ set_ordering (const char *s, struct keyfield *key, enum blanktype blanktype)
 }
 
 static struct keyfield *
-new_key (void)
+key_init (struct keyfield *key)
 {
-  struct keyfield *key = xzalloc (sizeof *key);
+  memset (key, 0, sizeof *key);
   key->eword = SIZE_MAX;
   return key;
 }
@@ -2282,6 +2284,7 @@ int
 main (int argc, char **argv)
 {
   struct keyfield *key;
+  struct keyfield key_buf;
   struct keyfield gkey;
   char const *s;
   int c = 0;
@@ -2408,7 +2411,7 @@ main (int argc, char **argv)
 		{
 		  /* Treat +POS1 [-POS2] as a key if possible; but silently
 		     treat an operand as a file if it is not a valid +POS1.  */
-		  key = new_key ();
+		  key = key_init (&key_buf);
 		  s = parse_field_count (optarg + 1, &key->sword, NULL);
 		  if (s && *s == '.')
 		    s = parse_field_count (s + 1, &key->schar, NULL);
@@ -2463,7 +2466,7 @@ main (int argc, char **argv)
 	  break;
 
 	case 'k':
-	  key = new_key ();
+	  key = key_init (&key_buf);
 
 	  /* Get POS1. */
 	  s = parse_field_count (optarg, &key->sword,

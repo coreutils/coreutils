@@ -1,5 +1,10 @@
 2006-11-13  Jim Meyering  <jim@meyering.net>
 
+	Plug another technically-unimportant leak in sort.
+	* src/sort.c (main): Don't allocate memory for each new key here.
+	(insertkey): Allocate memory for each key here, instead.
+	(key_init): Rename from new_key.  Don't allocate.
+
 	* src/sort.c (main): Plug a tiny memory leak.
 	Move declaration of local "minus" down to be nearer point of use.
 
