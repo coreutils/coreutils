@@ -1,11 +1,15 @@
 2006-11-14  Jim Meyering  <jim@meyering.net>
 
+	* gl/m4/root-dev-ino.m4: Now that this is part of a real "module",
+	remove the now-unnecessary use of AC_LIBSOURCES.
+
 	Adapt to new version of gnulib-tool.
 	* gl/modules/root-dev-ino: New file.
 	* lib/root-dev-ino.c, lib/root-dev-ino.h: Move these files ...
 	* gl/lib/root-dev-ino.c, gl/lib/root-dev-ino.h: ... to here.
 	* m4/root-dev-ino.m4: Move this file ...
 	* gl/m4/root-dev-ino.m4: ... to here.
+
 	* bootstrap.conf (gnulib_modules): Add root-dev-ino.
 
 2006-11-13  Jim Meyering  <jim@meyering.net>
