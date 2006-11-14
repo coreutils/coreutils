@@ -1,3 +1,7 @@
+2006-11-14  Jim Meyering  <jim@meyering.net>
+
+	* readlink-stub.c, lstat-stub.c: Remove now-unused files.
+
 2006-10-14  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Port sha512sum to hosts where uintmax_t is only 32 bits, e.g.,
