@@ -1,0 +1,25 @@
+Description:
+Root device and inode number checking.
+
+Files:
+lib/root-dev-ino.h
+lib/root-dev-ino.c
+m4/root-dev-ino.m4
+
+Depends-on:
+dev-ino
+same-inode
+
+configure.ac:
+gl_ROOT_DEV_INO
+
+Makefile.am:
+
+Include:
+"root-dev-ino.h"
+
+License:
+GPL
+
+Maintainer:
+Jim Meyering
