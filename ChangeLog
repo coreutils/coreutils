@@ -1,3 +1,8 @@
+2006-11-15  Jim Meyering  <jim@meyering.net>
+
+	* .x-po-check: Exclude gl/ files.  Otherwise, po-check would
+	complain that some of gl/lib/*.[ch] are not listed in POTFILES.in.
+
 2006-11-14  Jim Meyering  <jim@meyering.net>
 
 	* gl/m4/root-dev-ino.m4: Now that this is part of a real "module",
