@@ -526,6 +526,8 @@ load_buffer (void)
 
   if (lines_found)
     save_buffer (b);
+  else
+    free (b);
 
   return lines_found != 0;
 }

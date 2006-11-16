@@ -5,6 +5,8 @@
 	so we need not free them at all.  This is easier than freeing
 	both buffers at each of the early "return"s.
 
+	* src/csplit.c (load_buffer): Plug an inconsequential leak.
+
 2006-11-15  Jim Meyering  <jim@meyering.net>
 
 	* .x-po-check: Exclude gl/ files.  Otherwise, po-check would
