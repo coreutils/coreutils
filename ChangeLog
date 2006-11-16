@@ -1,4 +1,4 @@
-2006-11-15  Ralf Wildenhues  <Ralf.Wildenhues@gmx.de>
+2006-11-16  Ralf Wildenhues  <Ralf.Wildenhues@gmx.de>
 
 	* man/Makefile.am (dist_man_MANS): Replace all optional manpages
 	with `$(MAN)', computed at configure time; also, list them ...
