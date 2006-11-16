@@ -1377,8 +1377,10 @@ static int
 dd_copy (void)
 {
   char *ibuf, *bufstart;	/* Input buffer. */
-  char *real_buf;		/* real buffer address before alignment */
-  char *real_obuf;
+  /* These are declared static so that even though we don't free the
+     buffers, valgrind will recognize that there is no "real" leak.  */
+  static char *real_buf;	/* real buffer address before alignment */
+  static char *real_obuf;
   ssize_t nread;		/* Bytes read in the current block.  */
 
   /* If nonzero, then the previously read block was partial and
@@ -1597,9 +1599,6 @@ dd_copy (void)
 	  return EXIT_FAILURE;
 	}
     }
-
-  free (real_buf);
-  free (real_obuf);
 
   if ((conversions_mask & C_FDATASYNC) && fdatasync (STDOUT_FILENO) != 0)
     {

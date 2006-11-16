@@ -1,3 +1,10 @@
+2006-11-16  Jim Meyering  <jim@meyering.net>
+
+	Help valgrind see that there is no leak in dd.c.
+	* src/dd.c (dd_copy): Declare real_buf and real_obuf to be static,
+	so we need not free them at all.  This is easier than freeing
+	both buffers at each of the early "return"s.
+
 2006-11-15  Jim Meyering  <jim@meyering.net>
 
 	* .x-po-check: Exclude gl/ files.  Otherwise, po-check would
