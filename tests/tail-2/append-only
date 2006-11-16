@@ -41,8 +41,8 @@ chattr +a f 2>/dev/null || framework_failure=1
 echo x >> f || framework_failure=1
 
 if test $framework_failure = 1; then
-  echo "$0: failure in testing framework" 1>&2
-  (exit 1); exit 1
+  echo "$0: chattr +a doesn't work on this file system; skipping this test " 1>&2
+  (exit 77); exit 77
 fi
 
 fail=0

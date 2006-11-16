@@ -1,3 +1,9 @@
+2006-11-16  Jim Meyering  <jim@meyering.net>
+
+	* tests/tail-2/append-only: If chattr +a fails, exit 77 (to tell
+	automake we're skipping this test), and give a diagnostic to tell
+	the user the same thing.  Reported by Mike Grayson.
+
 2006-11-16  Ralf Wildenhues  <Ralf.Wildenhues@gmx.de>
 
 	* man/Makefile.am (dist_man_MANS): Replace all optional manpages
