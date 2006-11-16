@@ -243,6 +243,8 @@ regexec.c
 rename-dest-slash.c
 rename.c
 rmdir.c
+root-dev-ino.c
+root-dev-ino.h
 rpmatch.c
 safe-read.c
 safe-read.h

@@ -863,11 +863,11 @@ static size_t dired_pos;
 
 /* Write S to STREAM and increment DIRED_POS by S_LEN.  */
 #define DIRED_FPUTS(s, stream, s_len) \
-    do {fputs ((s), (stream)); dired_pos += s_len;} while (0)
+    do {fputs (s, stream); dired_pos += s_len;} while (0)
 
 /* Like DIRED_FPUTS, but for use when S is a literal string.  */
 #define DIRED_FPUTS_LITERAL(s, stream) \
-    do {fputs ((s), (stream)); dired_pos += sizeof((s)) - 1;} while (0)
+    do {fputs (s, stream); dired_pos += sizeof (s) - 1;} while (0)
 
 #define DIRED_INDENT()							\
     do									\
@@ -892,7 +892,7 @@ static struct obstack subdired_obstack;
   do									\
     {									\
       if (dired)							\
-	obstack_grow ((obs), &dired_pos, sizeof (dired_pos));		\
+	obstack_grow (obs, &dired_pos, sizeof (dired_pos));		\
     }									\
   while (0)
 

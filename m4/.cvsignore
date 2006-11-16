@@ -161,6 +161,7 @@ rename-dest-slash.m4
 rename.m4
 rmdir-errno.m4
 rmdir.m4
+root-dev-ino.m4
 rpmatch.m4
 safe-read.m4
 safe-write.m4

@@ -1,3 +1,14 @@
+2006-11-16  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* bootstrap.conf (gnulib_modules): Add sys_stat, since we use it
+	directly too.
+	* lib/.cvsignore, lib/.gitignore: Add root-dev-ino.c, root-dev-ino.h.
+	* m4/.cvsignore, m4/.gitignore: Add root-dev-ino.m4.
+	* src/ls.c (DIRED_FPUTS_LITERAL, PUSH_CURRENT_DIRED_POS):
+	Omit unnecessary parenthesization of args.
+	* src/od.c (EQUAL_BLOCKS): Likewise.
+	* src/system.h (STREQ, ASSIGN_STRDUPA): Likewise.
+
 2006-11-16  Jim Meyering  <jim@meyering.net>
 
 	* tests/tail-2/append-only: If chattr +a fails, exit 77 (to tell

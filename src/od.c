@@ -1175,7 +1175,7 @@ write_block (uintmax_t current_offset, size_t n_bytes,
   static bool first = true;
   static bool prev_pair_equal = false;
 
-#define EQUAL_BLOCKS(b1, b2) (memcmp ((b1), (b2), bytes_per_block) == 0)
+#define EQUAL_BLOCKS(b1, b2) (memcmp (b1, b2, bytes_per_block) == 0)
 
   if (abbreviate_duplicate_blocks
       && !first && n_bytes == bytes_per_block
