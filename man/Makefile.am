@@ -19,22 +19,25 @@
 # 02110-1301, USA.
 
 dist_man_MANS = \
-  base64.1 basename.1 cat.1 chgrp.1 chmod.1 chown.1 chroot.1 cksum.1 comm.1 \
+  base64.1 basename.1 cat.1 chgrp.1 chmod.1 chown.1 cksum.1 comm.1 \
   cp.1 csplit.1 cut.1 date.1 dd.1 df.1 dir.1 dircolors.1 dirname.1 du.1 \
   echo.1 env.1 expand.1 expr.1 factor.1 false.1 fmt.1 fold.1 groups.1 \
-  head.1 hostid.1 hostname.1 id.1 install.1 join.1 kill.1 \
+  head.1 hostname.1 id.1 install.1 join.1 kill.1 \
   link.1 ln.1 logname.1 \
-  ls.1 md5sum.1 mkdir.1 mkfifo.1 mknod.1 mv.1 nice.1 nl.1 nohup.1 od.1 \
-  paste.1 pathchk.1 pinky.1 pr.1 printenv.1 printf.1 ptx.1 pwd.1 readlink.1 \
+  ls.1 md5sum.1 mkdir.1 mkfifo.1 mknod.1 mv.1 nl.1 nohup.1 od.1 \
+  paste.1 pathchk.1 pr.1 printenv.1 printf.1 ptx.1 pwd.1 readlink.1 \
   rm.1 rmdir.1 seq.1 sha1sum.1 sha224sum.1 sha256sum.1 sha384sum.1 sha512sum.1 \
-  shred.1 shuf.1 sleep.1 sort.1 split.1 stat.1 stty.1 \
+  shred.1 shuf.1 sleep.1 sort.1 split.1 stat.1 \
   su.1 sum.1 sync.1 tac.1 tail.1 tee.1 test.1 touch.1 tr.1 true.1 tsort.1 \
-  tty.1 uname.1 unexpand.1 uniq.1 unlink.1 uptime.1 users.1 vdir.1 wc.1 \
-  who.1 whoami.1 yes.1
+  tty.1 unexpand.1 uniq.1 unlink.1 vdir.1 wc.1 \
+  whoami.1 yes.1 $(MAN)
+optional_mans = \
+  chroot.1 hostid.1 nice.1 pinky.1 stty.1 uname.1 uptime.1 users.1 who.1
 
-man_aux = $(dist_man_MANS:.1=.x)
 
-EXTRA_DIST = $(man_aux) help2man
+man_aux = $(dist_man_MANS:.1=.x) $(optional_mans:.1=.x)
+
+EXTRA_DIST = $(man_aux) help2man $(optional_mans)
 MAINTAINERCLEANFILES = $(dist_man_MANS)
 
 # Depend on configure.ac to get version number changes.

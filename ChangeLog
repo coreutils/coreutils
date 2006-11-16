@@ -1,3 +1,10 @@
+2006-11-15  Ralf Wildenhues  <Ralf.Wildenhues@gmx.de>
+
+	* man/Makefile.am (dist_man_MANS): Replace all optional manpages
+	with `$(MAN)', computed at configure time; also, list them ...
+	(optional_mans): ... in this new variable.
+	(max_aux, EXTRA_DIST): Ensure that we distribute all manpages.
+
 2006-11-16  Jim Meyering  <jim@meyering.net>
 
 	Help valgrind see that there is no leak in dd.c.
