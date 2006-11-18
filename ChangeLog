@@ -1,3 +1,12 @@
+2006-11-18  Jim Meyering  <jim@meyering.net>
+
+	"ln --backup f f" produces a misleading diagnostic:
+	ln: creating hard link `f' => `f': No such file or directory
+	* src/ln.c (do_link): Give a better diagnostic in this unusual case.
+	(do_link): Rename local: s/lstat_ok/dest_lstat_ok/.
+	* tests/ln/Makefile.am (TESTS): Add hard-backup.
+	* tests/ln/hard-backup: New test for the above.
+
 2006-11-16  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* bootstrap.conf (gnulib_modules): Add sys_stat, since we use it

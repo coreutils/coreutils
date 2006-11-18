@@ -133,7 +133,7 @@ do_link (const char *source, const char *dest)
   struct stat source_stats;
   struct stat dest_stats;
   char *dest_backup = NULL;
-  bool lstat_ok = false;
+  bool dest_lstat_ok = false;
   bool source_is_dir = false;
   bool ok;
 
@@ -171,8 +171,8 @@ do_link (const char *source, const char *dest)
 
   if (remove_existing_files || interactive || backup_type != no_backups)
     {
-      lstat_ok = (lstat (dest, &dest_stats) == 0);
-      if (!lstat_ok && errno != ENOENT)
+      dest_lstat_ok = (lstat (dest, &dest_stats) == 0);
+      if (!dest_lstat_ok && errno != ENOENT)
 	{
 	  error (0, errno, _("accessing %s"), quote (dest));
 	  return false;
@@ -184,8 +184,14 @@ do_link (const char *source, const char *dest)
      (with --backup, it just renames any existing destination file)
      But if the source and destination are the same, don't remove
      anything and fail right here.  */
-  if (remove_existing_files
-      && lstat_ok
+  if ((remove_existing_files
+       /* Ensure that "ln --backup f f" fails here, with the
+	  "... same file" diagnostic, below.  Otherwise, subsequent
+	  code would give a misleading "file not found" diagnostic.
+	  This case is different than the others handled here, since
+	  the command in question doesn't use --force.  */
+       || (!symbolic_link && backup_type != no_backups))
+      && dest_lstat_ok
       /* Allow `ln -sf --backup k k' to succeed in creating the
 	 self-referential symlink, but don't allow the hard-linking
 	 equivalent: `ln -f k k' (with or without --backup) to get
@@ -205,7 +211,7 @@ do_link (const char *source, const char *dest)
       return false;
     }
 
-  if (lstat_ok)
+  if (dest_lstat_ok)
     {
       if (S_ISDIR (dest_stats.st_mode))
 	{
