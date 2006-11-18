@@ -6,6 +6,7 @@
 	(do_link): Rename local: s/lstat_ok/dest_lstat_ok/.
 	* tests/ln/Makefile.am (TESTS): Add hard-backup.
 	* tests/ln/hard-backup: New test for the above.
+	* NEWS: Mention this fix.
 
 2006-11-16  Paul Eggert  <eggert@cs.ucla.edu>
 

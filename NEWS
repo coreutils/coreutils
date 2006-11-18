@@ -10,6 +10,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   or newer).  This bug was introduced with the switch to gnulib's
   openat-based variant of fts, for coreutils-6.0.
 
+  "ln --backup f f" now produces a sensible diagnostic
+
 ** New features
 
   rm accepts a new option: --one-file-system
