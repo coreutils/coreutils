@@ -1,5 +1,10 @@
 2006-11-19  Jim Meyering  <jim@meyering.net>
 
+	* tests/tail-2/assert-2: Mark as a very-expensive test, because I
+	find the 7-second sleep annoyingly long.  Besides, this test is
+	probably far too specific and timing sensitive ever to trigger again.
+	* tests/tail-2/assert: Likewise.
+
 	Post-release version change.
 	* NEWS: Add a line for 6.6-pre.
 	* configure.ac (AC_INIT): Bump to 6.6 and add "-pre" suffix.

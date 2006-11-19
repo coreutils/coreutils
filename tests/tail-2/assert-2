@@ -25,6 +25,9 @@ if test "$VERBOSE" = yes; then
   tail --version
 fi
 
+# Not "expensive" per se, but sleeping for so long is annoying.
+. $srcdir/../very-expensive
+
 tmp=tail-as2.$$
 pwd=`pwd`
 trap 'cd "$pwd" && rm -rf $tmp' 0 1 2 3 15
