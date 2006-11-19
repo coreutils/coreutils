@@ -1,5 +1,9 @@
 2006-11-19  Jim Meyering  <jim@meyering.net>
 
+	Post-release version change.
+	* NEWS: Add a line for 6.6-pre.
+	* configure.ac (AC_INIT): Bump to 6.6 and add "-pre" suffix.
+
 	Version 6.5.
 	* NEWS: Record release date.  Remove "-cvs" suffix.
 	* configure.ac (AC_INIT): Remove "-cvs" suffix from version string.
