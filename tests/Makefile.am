@@ -29,7 +29,7 @@ SUBDIRS = \
   tsort unexpand uniq wc
 ## N O T E :: Please do not add new directories.
 
-all_t = t1 t2 t3 t4 t5 t6
+all_t = t1 t2 t3 t4 t5 t6 t7
 .PHONY: check-root $(all_t)
 check-root: $(all_t)
 
@@ -45,6 +45,8 @@ t5:
 	cd tail-2 && $(MAKE) check TESTS=append-only
 t6:
 	cd rm    && $(MAKE) check TESTS=one-file-system
+t7:
+	cd ls    && $(MAKE) check TESTS=nameless-uid
 
 check-recursive: root-hint
 
