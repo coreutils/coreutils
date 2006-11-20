@@ -21,6 +21,7 @@
 AUTOMAKE_OPTIONS = 1.2 gnits
 
 TESTS = \
+  nameless-uid \
   color-dtype-dir \
   stat-failed \
   stat-dtype \
@@ -33,4 +34,5 @@ TESTS_ENVIRONMENT = \
   top_srcdir=$(top_srcdir) \
   srcdir=$(srcdir) \
   PATH="$(VG_PATH_PREFIX)`pwd`/../../src$(PATH_SEPARATOR)$$PATH" \
+  PERL="$(PERL)" \
   PROG=ls

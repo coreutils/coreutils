@@ -1,3 +1,10 @@
+2006-11-20  Jim Meyering  <jim@meyering.net>
+
+	Add a root-only test for today's lib/idcache.c fix.
+	* tests/ls/nameless-uid: New file.
+	* tests/ls/Makefile.am (TESTS): Add nameless-uid.
+	(TESTS_ENVIRONMENT): Add PERL to the list.
+
 2006-11-19  Jim Meyering  <jim@meyering.net>
 
 	* tests/tail-2/assert-2: Mark as a very-expensive test, because I
