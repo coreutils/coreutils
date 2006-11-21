@@ -1,5 +1,8 @@
 2006-11-21  Jim Meyering  <jim@meyering.net>
 
+	* tests/rm/fail-eperm: Use the "(exit N); exit N" idiom,
+	rather than just "exit N".
+
 	Arrange for "make check-root" to run the new root-only test.
 	* tests/Makefile.am (t7): New target, to run tests/ls/nameless-uid.
 	(all_t): Add t7.
