@@ -1,5 +1,8 @@
 2006-11-21  Jim Meyering  <jim@meyering.net>
 
+	* tests/rm/one-file-system: Upon setup failure (e.g., mount failure),
+	skip the test rather than failing.  Reported by Michael Deutschmann.
+
 	* tests/rm/fail-eperm: Use the "(exit N); exit N" idiom,
 	rather than just "exit N".
 
