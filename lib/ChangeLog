@@ -1,3 +1,7 @@
+2006-11-22  Jim Meyering  <jim@meyering.net>
+
+	* .cvsignore, .gitignore: Add fstat.c.
+
 2006-11-14  Jim Meyering  <jim@meyering.net>
 
 	* readlink-stub.c, lstat-stub.c: Remove now-unused files.

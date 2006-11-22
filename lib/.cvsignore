@@ -89,6 +89,7 @@ fopen-safer.c
 fprintftime.c
 fprintftime.h
 free.c
+fstatat.c
 fsusage.c
 fsusage.h
 ftruncate.c
