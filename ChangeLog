@@ -1,3 +1,7 @@
+2006-11-22  Jim Meyering  <jim@meyering.net>
+
+	* NEWS: Mention the three noteworthy changes, all fixed via gnulib.
+
 2006-11-21  Jim Meyering  <jim@meyering.net>
 
 	* tests/rm/one-file-system: Upon setup failure (e.g., mount failure),

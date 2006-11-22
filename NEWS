@@ -2,6 +2,21 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release 6.6-pre (????-??-??)
 
+** Bug fixes
+
+  ls would segfault (dereference a NULL pointer) for a file with a
+  nameless group or owner.  This bug was introduced in coreutils-6.5.
+
+  A bug in the latest official m4/gettext.m4 (from gettext-0.15)
+  made configure fail to detect gettext support, due to the unusual
+  way in which coreutils uses AM_GNU_GETTEXT.
+
+** Improved robustness
+
+  Now, du (and the other fts clients: chmod, chgrp, chown) honor a
+  trailing slash in the name of a symlink-to-directory even on
+  Solaris 9, by working around its buggy fstatat implementation.
+
 
 * Major changes in release 6.5 (2006-11-19) [stable]
 
