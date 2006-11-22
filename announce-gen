@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 # Generate an announcement message.
 
-# Copyright (C) 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
+# Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -78,7 +78,6 @@ OPTIONS:
    --previous-version=VER
    --current-version=VER
    --gpg-key-id=ID         The GnuPG ID of the key used to sign the tarballs
-   --release-archive-directory=DIR
    --url-directory=URL_DIR
    --news=NEWS_FILE             optional
 
@@ -192,26 +191,28 @@ sub print_news_deltas ($$$)
   # the first occurrence of $prev_version.
   my $in_items;
 
+  my $re_prefix = qr/\* (:?Noteworthy|Major) change/;
+
   open NEWS, '<', $news_file
     or die "$ME: $news_file: cannot open for reading: $!\n";
   while (defined (my $line = <NEWS>))
     {
       if ( ! $in_items)
 	{
-	  # Match lines like this one:
+	  # Match lines like these:
 	  # * Major changes in release 5.0.1:
-	  # but not any other line that starts with a space, *, or -.
-	  $line =~ /^(\* Major changes.*|[^ *-].*)\Q$curr_version\E/o
+	  # * Noteworthy changes in release 6.6 (2006-11-22) [stable]
+	  $line =~ /^$re_prefix.*(:?[^\d.]|$)\Q$curr_version\E(:?[^\d.]|$)/o
 	    or next;
 	  $in_items = 1;
 	  print $line;
 	}
       else
 	{
-	  # Be careful that this regexp cannot match version numbers
-	  # in NEWS items -- they might well say `introduced in 4.5.5',
+	  # This regexp must not match version numbers in NEWS items.
+	  # For example, they might well say `introduced in 4.5.5',
 	  # and we don't want that to match.
-	  $line =~ /^(\* Major changes.*|[^ *-].*)\Q$prev_version\E/o
+	  $line =~ /^$re_prefix.*(:?[^\d.]|$)\Q$prev_version\E(:?[^\d.]|$)/o
 	    and last;
 	  print $line;
 	}
@@ -317,7 +318,6 @@ sub print_changelog_deltas ($$)
   my $package_name;
   my $prev_version;
   my $curr_version;
-  my $release_archive_dir;
   my $gpg_key_id;
   my @url_dir_list;
   my @news_file;
@@ -329,7 +329,6 @@ sub print_changelog_deltas ($$)
      'previous-version=s' => \$prev_version,
      'current-version=s'  => \$curr_version,
      'gpg-key-id=s'       => \$gpg_key_id,
-     'release-archive-directory=s' => \$release_archive_dir,
      'url-directory=s'    => \@url_dir_list,
      'news=s'             => \@news_file,
 
@@ -347,8 +346,8 @@ sub print_changelog_deltas ($$)
     or (warn "$ME: previous version string not specified\n"), $fail = 1;
   $curr_version
     or (warn "$ME: current version string not specified\n"), $fail = 1;
-  $release_archive_dir
-    or (warn "$ME: release directory name not specified\n"), $fail = 1;
+  $gpg_key_id
+    or (warn "$ME: GnuPG key ID not specified\n"), $fail = 1;
   @url_dir_list
     or (warn "$ME: URL directory name(s) not specified\n"), $fail = 1;
 

@@ -1,5 +1,11 @@
 2006-11-22  Jim Meyering  <jim@meyering.net>
 
+	* announce-gen: Remove unused --release-archive-directory option.
+	(print_news_deltas): Accept new adjective, "Noteworthy", in addition
+	to the old "Major".
+	Match version numbers in NEWS using tighter regular expressions.
+	(main): Require the --gpg-key-id=ID option.
+
 	* NEWS: Mention the three noteworthy changes, all fixed via gnulib.
 
 2006-11-21  Jim Meyering  <jim@meyering.net>
