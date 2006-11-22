@@ -191,7 +191,7 @@ sub print_news_deltas ($$$)
   # the first occurrence of $prev_version.
   my $in_items;
 
-  my $re_prefix = qr/\* (:?Noteworthy|Major) change/;
+  my $re_prefix = qr/\* (?:Noteworthy|Major) change/;
 
   open NEWS, '<', $news_file
     or die "$ME: $news_file: cannot open for reading: $!\n";
@@ -202,7 +202,7 @@ sub print_news_deltas ($$$)
 	  # Match lines like these:
 	  # * Major changes in release 5.0.1:
 	  # * Noteworthy changes in release 6.6 (2006-11-22) [stable]
-	  $line =~ /^$re_prefix.*(:?[^\d.]|$)\Q$curr_version\E(:?[^\d.]|$)/o
+	  $line =~ /^$re_prefix.*(?:[^\d.]|$)\Q$curr_version\E(?:[^\d.]|$)/o
 	    or next;
 	  $in_items = 1;
 	  print $line;
@@ -212,7 +212,7 @@ sub print_news_deltas ($$$)
 	  # This regexp must not match version numbers in NEWS items.
 	  # For example, they might well say `introduced in 4.5.5',
 	  # and we don't want that to match.
-	  $line =~ /^$re_prefix.*(:?[^\d.]|$)\Q$prev_version\E(:?[^\d.]|$)/o
+	  $line =~ /^$re_prefix.*(?:[^\d.]|$)\Q$prev_version\E(?:[^\d.]|$)/o
 	    and last;
 	  print $line;
 	}
