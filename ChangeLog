@@ -1,5 +1,9 @@
 2006-11-22  Jim Meyering  <jim@meyering.net>
 
+	Version 6.6.
+	* NEWS: Record release date.  Remove "-pre" suffix.
+	* configure.ac (AC_INIT): Remove "-pre" suffix from version string.
+
 	* announce-gen: Remove unused --release-archive-directory option.
 	(print_news_deltas): Accept new adjective, "Noteworthy", in addition
 	to the old "Major".
