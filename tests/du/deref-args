@@ -36,7 +36,7 @@ mkdir -p $tmp || framework_failure=1
 cd $tmp || framework_failure=1
 mkdir -p dir/a
 ln -s dir slink
-seq --format=%100g 900 | head --bytes=64k > 64k
+printf %65536s x > 64k
 ln -s 64k slink-to-64k
 
 if test $framework_failure = 1; then

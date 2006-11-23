@@ -1,5 +1,9 @@
 2006-11-23  Jim Meyering  <jim@meyering.net>
 
+	* tests/du/deref-args: Use "printf %65536s x" to create a 64KB file,
+	rather than a pipeline that would sometimes evoke a diagnostic
+	like "seq: write error: Broken pipe".
+
 	* tests/help-version: Suppress dd transfer rate output.
 
 	* configure.ac (AC_INIT): Bump to 6.7-pre, not 6.6-pre.
