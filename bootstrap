@@ -87,6 +87,7 @@ package=`sed -n "$extract_package_name" configure.ac` || exit
 
 # Extra files from gnulib, which override files from other sources.
 gnulib_extra_files='
+	build-aux/announce-gen
 	build-aux/install-sh
 	build-aux/missing
 	build-aux/mdate-sh

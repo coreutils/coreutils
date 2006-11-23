@@ -1,5 +1,9 @@
 2006-11-23  Jim Meyering  <jim@meyering.net>
 
+	* announce-gen: Remove file.  It's moving to gnulib.
+	* bootstrap: Pull it from gnulib/build-aux instead.
+	* Makefile.maint (announcement): Reflect move to ./build-aux.
+
 	* tests/du/deref-args: Use "printf %65536s x" to create a 64KB file,
 	rather than a pipeline that would sometimes evoke a diagnostic
 	like "seq: write error: Broken pipe".
