@@ -133,6 +133,11 @@ mknod_args=--version
 uptime_args=--version
 
 cmp_args="$tmp_in $tmp_in2"
+
+# Tell dd not to print the line with transfer rate and total.
+# The transfer rate would vary between runs.
+dd_args=status=noxfer
+
 diff_args="$tmp_in $tmp_in2"
 sdiff_args="$tmp_in $tmp_in2"
 diff3_args="$tmp_in $tmp_in2 $tmp_in2"

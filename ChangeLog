@@ -1,5 +1,7 @@
 2006-11-23  Jim Meyering  <jim@meyering.net>
 
+	* tests/help-version: Suppress dd transfer rate output.
+
 	* configure.ac (AC_INIT): Bump to 6.7-pre, not 6.6-pre.
 
 2006-11-22  Jim Meyering  <jim@meyering.net>
