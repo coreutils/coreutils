@@ -1,3 +1,7 @@
+2006-11-23  Jim Meyering  <jim@meyering.net>
+
+	* configure.ac (AC_INIT): Bump to 6.7-pre, not 6.6-pre.
+
 2006-11-22  Jim Meyering  <jim@meyering.net>
 
 	* announce-gen (print_news_deltas): Fix silly, but harmless typo:
