@@ -1,3 +1,7 @@
+2006-11-24  Theodoros V. Kalamatianos  <thkala@softlab.ece.ntua.gr> (tiny change)
+
+	* tests/du/inacc-dest: Skip this test when running as root.
+
 2006-11-23  Jim Meyering  <jim@meyering.net>
 
 	* announce-gen: Remove file.  It's moving to gnulib.
