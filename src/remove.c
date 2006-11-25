@@ -540,10 +540,9 @@ AD_pop_and_chdir (DIR **dirp, Dirstack_state *ds)
   return prev_dir;
 }
 
-/* Initialize *HT if it is NULL.
-   Insert FILENAME into HT.  */
-static void
-AD_mark_helper (Hash_table **ht, char *filename)
+/* Initialize *HT if it is NULL.  Return *HT.  */
+static Hash_table *
+AD_ensure_initialized (Hash_table **ht)
 {
   if (*ht == NULL)
     {
@@ -552,7 +551,16 @@ AD_mark_helper (Hash_table **ht, char *filename)
       if (*ht == NULL)
 	xalloc_die ();
     }
-  void *ent = hash_insert (*ht, filename);
+
+  return *ht;
+}
+
+/* Initialize *HT if it is NULL.
+   Insert FILENAME into HT.  */
+static void
+AD_mark_helper (Hash_table **ht, char *filename)
+{
+  void *ent = hash_insert (AD_ensure_initialized (ht), filename);
   if (ent == NULL)
     xalloc_die ();
   else
@@ -560,7 +568,6 @@ AD_mark_helper (Hash_table **ht, char *filename)
       if (ent != filename)
 	free (filename);
     }
-
 }
 
 /* Mark FILENAME (in current directory) as unremovable.  */

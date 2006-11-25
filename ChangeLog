@@ -6,6 +6,9 @@
 	Update the caller in remove_dir.
 	(AD_pop_and_chdir): Return prev_dir rather than storing through
 	a pointer argument.  All uses changed.
+	(AD_ensure_initialized): New function.
+	(AD_mark_helper): Use it, to avoid the need for declaration
+	after statement.
 
 2006-11-25  Jim Meyering  <jim@meyering.net>
 
