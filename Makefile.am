@@ -33,7 +33,6 @@ EXTRA_DIST = Makefile.cfg Makefile.maint GNUmakefile \
   .x-sc_unmarked_diagnostics \
   .x-sc_useless_cpp_parens \
   ChangeLog-2005 \
-  announce-gen \
   bootstrap \
   bootstrap.conf \
   build-aux/cvsu \

@@ -1,3 +1,7 @@
+2006-11-25  Jim Meyering  <jim@meyering.net>
+
+	* Makefile.am (EXTRA_DIST): Remove announce-gen from here, too.
+
 2006-11-24  Theodoros V. Kalamatianos  <thkala@softlab.ece.ntua.gr> (tiny change)
 
 	* tests/du/inacc-dest: Skip this test when running as root.
