@@ -1,3 +1,8 @@
+2006-11-25  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/remove.c (rm_1): Remove decl of local, fd_cwd.
+	Replace each of two uses with literal AT_FDCWD.
+
 2006-11-25  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am (EXTRA_DIST): Remove announce-gen from here, too.

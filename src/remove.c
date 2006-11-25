@@ -1490,8 +1490,7 @@ rm_1 (Dirstack_state *ds, char const *filename,
   AD_push_initial (ds);
   AD_INIT_OTHER_MEMBERS ();
 
-  int fd_cwd = AT_FDCWD;
-  enum RM_status status = remove_entry (fd_cwd, ds, filename, &st, x, NULL);
+  enum RM_status status = remove_entry (AT_FDCWD, ds, filename, &st, x, NULL);
   if (status == RM_NONEMPTY_DIR)
     {
       /* In the event that remove_dir->remove_cwd_entries detects
@@ -1500,7 +1499,7 @@ rm_1 (Dirstack_state *ds, char const *filename,
       if (setjmp (ds->current_arg_jumpbuf))
 	status = RM_ERROR;
       else
-	status = remove_dir (fd_cwd, ds, filename, &st, x, cwd_errno);
+	status = remove_dir (AT_FDCWD, ds, filename, &st, x, cwd_errno);
 
       AD_stack_clear (ds);
     }
