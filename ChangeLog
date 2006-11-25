@@ -9,6 +9,9 @@
 	(AD_ensure_initialized): New function.
 	(AD_mark_helper): Use it, to avoid the need for declaration
 	after statement.
+	(rm): Move cycle_check_init call into callee...
+	(rm_1): ...here.
+	Use an else clause in place of a "continue" statement.
 
 2006-11-25  Jim Meyering  <jim@meyering.net>
 

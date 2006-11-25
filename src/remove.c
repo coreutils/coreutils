@@ -1479,6 +1479,7 @@ rm_1 (Dirstack_state *ds, char const *filename,
 
   struct stat st;
   cache_stat_init (&st);
+  cycle_check_init (&ds->cycle_check_state);
   if (x->root_dev_ino)
     {
       if (cache_fstatat (AT_FDCWD, filename, &st, AT_SYMLINK_NOFOLLOW) != 0)
@@ -1532,13 +1533,13 @@ rm (size_t n_files, char const *const *file, struct rm_options const *x)
 	{
 	  error (0, 0, _("cannot remove relative-named %s"), quote (file[i]));
 	  status = RM_ERROR;
-	  continue;
 	}
-
-      cycle_check_init (&ds->cycle_check_state);
-      enum RM_status s = rm_1 (ds, file[i], x, &cwd_errno);
-      assert (VALID_STATUS (s));
-      UPDATE_STATUS (status, s);
+      else
+	{
+	  enum RM_status s = rm_1 (ds, file[i], x, &cwd_errno);
+	  assert (VALID_STATUS (s));
+	  UPDATE_STATUS (status, s);
+	}
     }
 
   if (x->require_restore_cwd && cwd_errno)
