@@ -173,11 +173,12 @@ cache_fstatat (int fd, char const *file, struct stat *st, int flag)
   return -1;
 }
 
-/* Initialize a fstatat cache *ST.  */
-static inline void
+/* Initialize a fstatat cache *ST.  Return ST for convenience.  */
+static inline struct stat *
 cache_stat_init (struct stat *st)
 {
   st->st_size = -1;
+  return st;
 }
 
 /* Return true if *ST has been statted.  */
@@ -1403,8 +1404,8 @@ remove_dir (int fd_cwd, Dirstack_state *ds, char const *dir,
 	       But that's no big deal since we're interactive.  */
 	    struct stat empty_st;
 	    Ternary is_empty;
-	    cache_stat_init (&empty_st);
-	    enum RM_status s = prompt (fd, ds, empty_dir, &empty_st, x,
+	    enum RM_status s = prompt (fd, ds, empty_dir,
+				       cache_stat_init (&empty_st), x,
 				       PA_REMOVE_DIR, &is_empty);
 
 	    if (s != RM_OK)
@@ -1505,7 +1506,6 @@ rm_1 (Dirstack_state *ds, char const *filename,
     }
 
   ds_clear (ds);
-
   return status;
 }
 
