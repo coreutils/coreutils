@@ -438,11 +438,11 @@ ds_free (Dirstack_state *ds)
    that the post-chdir dev/ino numbers for `.' match the saved ones.
    If any system call fails or if dev/ino don't match then give a
    diagnostic and longjump out.
-   Set *PREV_DIR to the name (in malloc'd storage) of the
+   Return the name (in malloc'd storage) of the
    directory (usually now empty) from which we're coming, and which
    corresponds to the input value of *DIRP.  */
-static void
-AD_pop_and_chdir (DIR **dirp, Dirstack_state *ds, char **prev_dir)
+static char *
+AD_pop_and_chdir (DIR **dirp, Dirstack_state *ds)
 {
   struct AD_ent *leaf_dir_ent = AD_stack_top(ds);
   struct dev_ino leaf_dev_ino = leaf_dir_ent->dev_ino;
@@ -451,7 +451,7 @@ AD_pop_and_chdir (DIR **dirp, Dirstack_state *ds, char **prev_dir)
 
   /* Get the name of the current (but soon to be `previous') directory
      from the top of the stack.  */
-  *prev_dir = top_dir (ds);
+  char *prev_dir = top_dir (ds);
 
   AD_stack_pop (ds);
   pop_dir (ds);
@@ -479,7 +479,7 @@ AD_pop_and_chdir (DIR **dirp, Dirstack_state *ds, char **prev_dir)
       if (closedir (*dirp) != 0)
 	{
 	  error (0, errno, _("FATAL: failed to close directory %s"),
-		 quote (full_filename (*prev_dir)));
+		 quote (full_filename (prev_dir)));
 	  goto next_cmdline_arg;
 	}
 
@@ -492,7 +492,7 @@ AD_pop_and_chdir (DIR **dirp, Dirstack_state *ds, char **prev_dir)
       if (fd < 0)
 	{
 	  error (0, errno, _("FATAL: cannot open .. from %s"),
-		 quote (full_filename (*prev_dir)));
+		 quote (full_filename (prev_dir)));
 	  goto next_cmdline_arg;
 	}
 
@@ -522,7 +522,7 @@ AD_pop_and_chdir (DIR **dirp, Dirstack_state *ds, char **prev_dir)
 	  close (fd);
 
 	next_cmdline_arg:;
-	  free (*prev_dir);
+	  free (prev_dir);
 	  longjmp (ds->current_arg_jumpbuf, 1);
 	}
     }
@@ -531,11 +531,13 @@ AD_pop_and_chdir (DIR **dirp, Dirstack_state *ds, char **prev_dir)
       if (closedir (*dirp) != 0)
 	{
 	  error (0, errno, _("FATAL: failed to close directory %s"),
-		 quote (full_filename (*prev_dir)));
+		 quote (full_filename (prev_dir)));
 	  goto next_cmdline_arg;
 	}
       *dirp = NULL;
     }
+
+  return prev_dir;
 }
 
 /* Initialize *HT if it is NULL.
@@ -1389,9 +1391,7 @@ remove_dir (int fd_cwd, Dirstack_state *ds, char const *dir,
       {
 	/* The name of the directory that we have just processed,
 	   nominally removing all of its contents.  */
-	char *empty_dir;
-
-	AD_pop_and_chdir (&dirp, ds, &empty_dir);
+	char *empty_dir = AD_pop_and_chdir (&dirp, ds);
 	int fd = (dirp != NULL ? dirfd (dirp) : AT_FDCWD);
 	assert (dirp != NULL || AD_stack_height (ds) == 1);
 

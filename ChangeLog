@@ -4,6 +4,8 @@
 	Replace each of two uses with literal AT_FDCWD.
 	(cache_stat_init): Return its argument, for convenience.
 	Update the caller in remove_dir.
+	(AD_pop_and_chdir): Return prev_dir rather than storing through
+	a pointer argument.  All uses changed.
 
 2006-11-25  Jim Meyering  <jim@meyering.net>
 
