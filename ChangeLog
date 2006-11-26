@@ -2,11 +2,6 @@
 
 	Port parts of the code to C89 to minimize the need for c99-to-c89.diff,
 	while trying to retain the readability of C99 as much as possible.
-	* src/remove.c (close_preserve_errno): Remove.
-	(fd_to_subdirp): Rewrite to avoid the need for decl after statement.
-
-2006-11-25  Paul Eggert  <eggert@cs.ucla.edu>
-
 	* src/remove.c (rm_1): Remove decl of local, fd_cwd.
 	Replace each of two uses with literal AT_FDCWD.
 	(cache_stat_init): Return its argument, for convenience.
@@ -19,6 +14,8 @@
 	(rm): Move cycle_check_init call into callee...
 	(rm_1): ...here.
 	Use an else clause in place of a "continue" statement.
+	(close_preserve_errno): Remove.
+	(fd_to_subdirp): Rewrite to avoid the need for decl after statement.
 
 2006-11-25  Jim Meyering  <jim@meyering.net>
 
