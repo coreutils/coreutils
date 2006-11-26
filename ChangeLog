@@ -1,5 +1,7 @@
 2006-11-26  Jim Meyering  <jim@meyering.net>
 
+	* src/c99-to-c89.diff: Adjust for changes in rm.c and in remove.c.
+
 	* src/rm.c (main): Remove unnecessary (assuming C99) braces.
 
 2006-11-26  Paul Eggert  <eggert@cs.ucla.edu>

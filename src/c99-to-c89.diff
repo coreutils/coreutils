@@ -2,10 +2,11 @@ Index: src/remove.c
 ===================================================================
 RCS file: /fetish/cu/src/remove.c,v
 retrieving revision 1.158
-diff -u -p -u -r1.158 remove.c
---- src/remove.c	3 Sep 2006 02:54:51 -0000	1.158
-+++ src/remove.c	6 Sep 2006 18:57:46 -0000
-@@ -245,9 +245,10 @@ pop_dir (Dirstack_state *ds)
+diff --git a/src/remove.c b/src/remove.c
+index 4728bdd..7477da5 100644
+--- a/src/remove.c
++++ b/src/remove.c
+@@ -236,9 +236,10 @@ pop_dir (Dirstack_state *ds)
  {
    size_t n_lengths = obstack_object_size (&ds->len_stack) / sizeof (size_t);
    size_t *length = obstack_base (&ds->len_stack);
@@ -17,7 +18,7 @@ diff -u -p -u -r1.158 remove.c
    assert (top_len >= 2);
 
    /* Pop the specified length of file name.  */
-@@ -379,10 +380,11 @@ AD_stack_top (Dirstack_state const *ds)
+@@ -370,10 +371,11 @@ AD_stack_top (Dirstack_state const *ds)
  static void
  AD_stack_pop (Dirstack_state *ds)
  {
@@ -30,116 +31,84 @@ diff -u -p -u -r1.158 remove.c
    if (top->unremovable)
      hash_free (top->unremovable);
    obstack_blank (&ds->Active_dir, -(int) sizeof (struct AD_ent));
-@@ -549,6 +551,7 @@ AD_mark_helper (Hash_table **ht, char *f
-       if (*ht == NULL)
- 	xalloc_die ();
-     }
-+  {
-   void *ent = hash_insert (*ht, filename);
-   if (ent == NULL)
-     xalloc_die ();
-@@ -557,7 +560,7 @@ AD_mark_helper (Hash_table **ht, char *f
-       if (ent != filename)
- 	free (filename);
-     }
--
-+  }
- }
+@@ -1106,7 +1108,7 @@ remove_entry (int fd_cwd, Dirstack_state
+ static DIR *
+ fd_to_subdirp (int fd_cwd, char const *f,
+ 	       struct rm_options const *x, int prev_errno,
+-	       struct stat *subdir_sb, Dirstack_state *ds,
++	       struct stat *subdir_sb,
+ 	       int *cwd_errno ATTRIBUTE_UNUSED)
+ {
+   int open_flags = O_RDONLY | O_NOCTTY | O_NOFOLLOW | O_NONBLOCK;
+@@ -1216,7 +1218,7 @@ remove_cwd_entries (DIR **dirp,
+ 	case RM_NONEMPTY_DIR:
+ 	  {
+ 	    DIR *subdir_dirp = fd_to_subdirp (dirfd (*dirp), f,
+-					      x, errno, subdir_sb, ds, NULL);
++					      x, errno, subdir_sb, NULL);
+ 	    if (subdir_dirp == NULL)
+ 	      {
+ 		status = RM_ERROR;
+@@ -1304,7 +1306,7 @@ remove_dir (int fd_cwd, Dirstack_state *
+      fd_to_subdirp's fstat, along with the `fstat' and the dev/ino
+      comparison in AD_push ensure that we detect it and fail.  */
 
- /* Mark FILENAME (in current directory) as unremovable.  */
-@@ -1129,6 +1132,7 @@ fd_to_subdirp (int fd_cwd, char const *f
-       return NULL;
-     }
+-  DIR *dirp = fd_to_subdirp (fd_cwd, dir, x, 0, dir_st, ds, cwd_errno);
++  DIR *dirp = fd_to_subdirp (fd_cwd, dir, x, 0, dir_st, cwd_errno);
 
-+  {
-   DIR *subdir_dirp = fdopendir (fd_sub);
-   if (subdir_dirp == NULL)
+   if (dirp == NULL)
      {
-@@ -1137,6 +1141,7 @@ fd_to_subdirp (int fd_cwd, char const *f
-     }
-
-   return subdir_dirp;
-+  }
- }
-
- /* Remove entries in the directory open on DIRP
-@@ -1389,9 +1394,10 @@ remove_dir (int fd_cwd, Dirstack_state *
- 	/* The name of the directory that we have just processed,
- 	   nominally removing all of its contents.  */
- 	char *empty_dir;
-+	int fd;
-
- 	AD_pop_and_chdir (&dirp, ds, &empty_dir);
--	int fd = (dirp != NULL ? dirfd (dirp) : AT_FDCWD);
-+	fd = (dirp != NULL ? dirfd (dirp) : AT_FDCWD);
- 	assert (dirp != NULL || AD_stack_height (ds) == 1);
-
- 	/* Try to remove EMPTY_DIR only if remove_cwd_entries succeeded.  */
-@@ -1403,8 +1409,9 @@ remove_dir (int fd_cwd, Dirstack_state *
- 	       But that's no big deal since we're interactive.  */
- 	    struct stat empty_st;
- 	    Ternary is_empty;
-+	    enum RM_status s;
- 	    cache_stat_init (&empty_st);
--	    enum RM_status s = prompt (fd, ds, empty_dir, &empty_st, x,
-+	    s = prompt (fd, ds, empty_dir, &empty_st, x,
- 				       PA_REMOVE_DIR, &is_empty);
-
- 	    if (s != RM_OK)
-@@ -1469,6 +1476,7 @@ rm_1 (Dirstack_state *ds, char const *fi
+@@ -1463,6 +1465,7 @@ rm_1 (Dirstack_state *ds, char const *fi
        return RM_ERROR;
      }
 
 +  {
    struct stat st;
    cache_stat_init (&st);
-   if (x->root_dev_ino)
-@@ -1490,6 +1498,7 @@ rm_1 (Dirstack_state *ds, char const *fi
+   cycle_check_init (&ds->cycle_check_state);
+@@ -1485,6 +1488,7 @@ rm_1 (Dirstack_state *ds, char const *fi
    AD_push_initial (ds);
    AD_INIT_OTHER_MEMBERS ();
 
 +  {
-   int fd_cwd = AT_FDCWD;
-   enum RM_status status = remove_entry (fd_cwd, ds, filename, &st, x, NULL);
+   enum RM_status status = remove_entry (AT_FDCWD, ds, filename, &st, x, NULL);
    if (status == RM_NONEMPTY_DIR)
-@@ -1508,6 +1517,8 @@ rm_1 (Dirstack_state *ds, char const *fi
-   ds_clear (ds);
+     {
+@@ -1501,6 +1505,8 @@ rm_1 (Dirstack_state *ds, char const *fi
 
+   ds_clear (ds);
    return status;
 +  }
 +  }
  }
 
  /* Remove all files and/or directories specified by N_FILES and FILE.
-@@ -1530,9 +1541,11 @@ rm (size_t n_files, char const *const *f
- 	}
-
-       cycle_check_init (&ds->cycle_check_state);
-+      {
-       enum RM_status s = rm_1 (ds, file[i], x, &cwd_errno);
-       assert (VALID_STATUS (s));
-       UPDATE_STATUS (status, s);
-+      }
-     }
-
-   if (x->require_restore_cwd && cwd_errno)
 Index: src/rm.c
 ===================================================================
 RCS file: /fetish/cu/src/rm.c,v
 retrieving revision 1.140
-diff -u -p -u -r1.140 rm.c
---- src/rm.c	3 Sep 2006 02:53:58 -0000	1.140
-+++ src/rm.c	6 Sep 2006 18:57:46 -0000
-@@ -369,8 +369,10 @@ main (int argc, char **argv)
- 	if (!yesno ())
- 	  exit (EXIT_SUCCESS);
-       }
-+   {
-     enum RM_status status = rm (n_files, file, &x);
-     assert (VALID_STATUS (status));
-     exit (status == RM_ERROR ? EXIT_FAILURE : EXIT_SUCCESS);
-+   }
-   }
+diff --git a/src/rm.c b/src/rm.c
+index 364a21c..7a24014 100644
+--- a/src/rm.c
++++ b/src/rm.c
+@@ -355,6 +355,7 @@ main (int argc, char **argv)
+ 	       quote ("/"));
+     }
+
++  {
+   size_t n_files = argc - optind;
+   char const *const *file = (char const *const *) argv + optind;
+
+@@ -368,7 +369,10 @@ main (int argc, char **argv)
+       if (!yesno ())
+ 	exit (EXIT_SUCCESS);
+     }
++  {
+   enum RM_status status = rm (n_files, file, &x);
+   assert (VALID_STATUS (status));
+   exit (status == RM_ERROR ? EXIT_FAILURE : EXIT_SUCCESS);
++  }
++  }
  }
 Index: shred.c
 ===================================================================
