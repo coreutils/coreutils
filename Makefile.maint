@@ -334,6 +334,9 @@ patch-check:
 	if test "$${REGEN_PATCH+set}" = set; then \
 	  diff -upr src src-c89 > new-diff || : ; fi
 	fail=0; test -s $@.2 && fail=1 || : ; \
+	rm -f src-c89/*.o || fail=1; \
+	$(MAKE) -C src-c89 CFLAGS='-g -Wdeclaration-after-statement -Werror' \
+	  || fail=1; \
 	rm -rf src-c89 $@.1 $@.2; \
 	test $$fail = 0
 
