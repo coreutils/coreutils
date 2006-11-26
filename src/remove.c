@@ -148,16 +148,6 @@ struct dirstack_state
 };
 typedef struct dirstack_state Dirstack_state;
 
-/* Just like close(fd), but don't modify errno. */
-static inline int
-close_preserve_errno (int fd)
-{
-  int saved_errno = errno;
-  int result = close (fd);
-  errno = saved_errno;
-  return result;
-}
-
 /* Like fstatat, but cache the result.  If ST->st_size is -1, the
    status has not been gotten yet.  If less than -1, fstatat failed
    with errno == -1 - ST->st_size.  Otherwise, the status has already
@@ -1121,32 +1111,28 @@ fd_to_subdirp (int fd_cwd, char const *f,
 {
   int open_flags = O_RDONLY | O_NOCTTY | O_NOFOLLOW | O_NONBLOCK;
   int fd_sub = openat_permissive (fd_cwd, f, open_flags, 0, cwd_errno);
+  int saved_errno;
 
   /* Record dev/ino of F.  We may compare them against saved values
      to thwart any attempt to subvert the traversal.  They are also used
      to detect directory cycles.  */
-  if (fd_sub < 0 || fstat (fd_sub, subdir_sb) != 0)
+  if (fd_sub < 0)
+    return NULL;
+  else if (fstat (fd_sub, subdir_sb) != 0)
+    saved_errno = errno;
+  else if (S_ISDIR (subdir_sb->st_mode))
     {
-      if (0 <= fd_sub)
-	close_preserve_errno (fd_sub);
-      return NULL;
+      DIR *subdir_dirp = fdopendir (fd_sub);
+      if (subdir_dirp)
+	return subdir_dirp;
+      saved_errno = errno;
     }
+  else
+    saved_errno = (prev_errno ? prev_errno : ENOTDIR);
 
-  if (! S_ISDIR (subdir_sb->st_mode))
-    {
-      errno = prev_errno ? prev_errno : ENOTDIR;
-      close_preserve_errno (fd_sub);
-      return NULL;
-    }
-
-  DIR *subdir_dirp = fdopendir (fd_sub);
-  if (subdir_dirp == NULL)
-    {
-      close_preserve_errno (fd_sub);
-      return NULL;
-    }
-
-  return subdir_dirp;
+  close (fd_sub);
+  errno = saved_errno;
+  return NULL;
 }
 
 /* Remove entries in the directory open on DIRP

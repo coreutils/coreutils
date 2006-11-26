@@ -1,3 +1,10 @@
+2006-11-26  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Port parts of the code to C89 to minimize the need for c99-to-c89.diff,
+	while trying to retain the readability of C99 as much as possible.
+	* src/remove.c (close_preserve_errno): Remove.
+	(fd_to_subdirp): Rewrite to avoid the need for decl after statement.
+
 2006-11-25  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/remove.c (rm_1): Remove decl of local, fd_cwd.
