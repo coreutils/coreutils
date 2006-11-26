@@ -1106,7 +1106,7 @@ remove_entry (int fd_cwd, Dirstack_state const *ds, char const *filename,
 static DIR *
 fd_to_subdirp (int fd_cwd, char const *f,
 	       struct rm_options const *x, int prev_errno,
-	       struct stat *subdir_sb, Dirstack_state *ds,
+	       struct stat *subdir_sb,
 	       int *cwd_errno ATTRIBUTE_UNUSED)
 {
   int open_flags = O_RDONLY | O_NOCTTY | O_NOFOLLOW | O_NONBLOCK;
@@ -1216,7 +1216,7 @@ remove_cwd_entries (DIR **dirp,
 	case RM_NONEMPTY_DIR:
 	  {
 	    DIR *subdir_dirp = fd_to_subdirp (dirfd (*dirp), f,
-					      x, errno, subdir_sb, ds, NULL);
+					      x, errno, subdir_sb, NULL);
 	    if (subdir_dirp == NULL)
 	      {
 		status = RM_ERROR;
@@ -1304,7 +1304,7 @@ remove_dir (int fd_cwd, Dirstack_state *ds, char const *dir,
      fd_to_subdirp's fstat, along with the `fstat' and the dev/ino
      comparison in AD_push ensure that we detect it and fail.  */
 
-  DIR *dirp = fd_to_subdirp (fd_cwd, dir, x, 0, dir_st, ds, cwd_errno);
+  DIR *dirp = fd_to_subdirp (fd_cwd, dir, x, 0, dir_st, cwd_errno);
 
   if (dirp == NULL)
     {
