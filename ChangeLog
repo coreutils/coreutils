@@ -1,5 +1,7 @@
 2006-11-26  Jim Meyering  <jim@meyering.net>
 
+	* src/c99-to-c89.diff: Remove 3 bogus hunks.
+
 	* src/remove.c (fd_to_subdirp): Remove unused parameter, ds.
 	Update callers.
 
