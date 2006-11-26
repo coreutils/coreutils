@@ -1,3 +1,7 @@
+2006-11-26  Jim Meyering  <jim@meyering.net>
+
+	* src/rm.c (main): Remove unnecessary (assuming C99) braces.
+
 2006-11-26  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Port parts of the code to C89 to minimize the need for c99-to-c89.diff,

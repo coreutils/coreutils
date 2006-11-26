@@ -355,22 +355,20 @@ main (int argc, char **argv)
 	       quote ("/"));
     }
 
-  {
-    size_t n_files = argc - optind;
-    char const *const *file = (char const *const *) argv + optind;
+  size_t n_files = argc - optind;
+  char const *const *file = (char const *const *) argv + optind;
 
-    if (prompt_once && (x.recursive || 3 < n_files))
-      {
-	fprintf (stderr,
-		 (x.recursive
-		  ? _("%s: remove all arguments recursively? ")
-		  : _("%s: remove all arguments? ")),
-		 program_name);
-	if (!yesno ())
-	  exit (EXIT_SUCCESS);
-      }
-    enum RM_status status = rm (n_files, file, &x);
-    assert (VALID_STATUS (status));
-    exit (status == RM_ERROR ? EXIT_FAILURE : EXIT_SUCCESS);
-  }
+  if (prompt_once && (x.recursive || 3 < n_files))
+    {
+      fprintf (stderr,
+	       (x.recursive
+		? _("%s: remove all arguments recursively? ")
+		: _("%s: remove all arguments? ")),
+	       program_name);
+      if (!yesno ())
+	exit (EXIT_SUCCESS);
+    }
+  enum RM_status status = rm (n_files, file, &x);
+  assert (VALID_STATUS (status));
+  exit (status == RM_ERROR ? EXIT_FAILURE : EXIT_SUCCESS);
 }
