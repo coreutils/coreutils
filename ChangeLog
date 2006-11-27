@@ -1,3 +1,14 @@
+2006-11-26  Mike Frysinger  <vapier@gentoo.org>
+
+	Recognize new archive, audio and image formats.
+	Give audio files a separate color.
+	* src/dircolors.hin: Add comments for common .sh and .csh scripts.
+	Add .bz2, .tbz2, .tz, .rar, .ace, .zoo, .cpio, .7z, .rz as archive
+	suffixes.  Add .mng, .pcx, .m2v, .mkv, .ogm, .mp4, .m4v, .mp4v, .vob,
+	.qt, .nuv, .wmv, .asf, .rm, .rmvb, .flc, .yuv as image formats.
+	Add .aac, .au, .mid, .midi, .mka, .ra as audio suffixes.  Change
+	audio color to 00;36 to differentiate from image/video color.
+
 2006-11-26  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.maint (patch-check): Compile patched sources with
