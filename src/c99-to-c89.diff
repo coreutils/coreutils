@@ -90,7 +90,7 @@ retrieving revision 1.130
 diff -u -p -r1.130 shred.c
 --- shred.c     3 Sep 2006 02:53:16 -0000       1.130
 +++ shred.c     3 Oct 2006 13:48:24 -0000
-@@ -460,7 +460,7 @@ dopass (int fd, char const *qname, off_t
+@@ -464,7 +464,7 @@ dopass (int fd, char const *qname, off_t
  		     out.  Thus, it shouldn't give up on bad blocks.  This
  		     code works because lim is always a multiple of
  		     SECTOR_SIZE, except at the end.  */

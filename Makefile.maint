@@ -330,15 +330,16 @@ patch-check:
 	cp -a src src-c89
 	(cd src-c89; patch -V never --fuzz=0) < src/c99-to-c89.diff \
 	  > $@.1 2>&1
-	grep -v '^patching file ' $@.1 > $@.2 || :
 	if test "$${REGEN_PATCH+set}" = set; then \
 	  diff -upr src src-c89 > new-diff || : ; fi
-	fail=0; test -s $@.2 && fail=1 || : ; \
-	rm -f src-c89/*.o || fail=1; \
+	grep -v '^patching file ' $@.1 > $@.2 || :
+	msg=ok; test -s $@.2 && msg='fuzzy patch' || : ;	\
+	rm -f src-c89/*.o || msg='rm failed';			\
 	$(MAKE) -C src-c89 CFLAGS='-Wdeclaration-after-statement -Werror' \
-	  || fail=1; \
-	rm -rf src-c89 $@.1 $@.2; \
-	test $$fail = 0
+	  || msg='compile failure with extra options';		\
+	rm -rf src-c89 $@.1 $@.2;				\
+	test $$msg = ok && : || echo "$$msg" 1>&2;		\
+	test $$msg = ok
 
 # Ensure that date's --help output stays in sync with the info
 # documentation for GNU strftime.  The only exception is %N,
