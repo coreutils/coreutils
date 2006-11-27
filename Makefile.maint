@@ -335,7 +335,7 @@ patch-check:
 	  diff -upr src src-c89 > new-diff || : ; fi
 	fail=0; test -s $@.2 && fail=1 || : ; \
 	rm -f src-c89/*.o || fail=1; \
-	$(MAKE) -C src-c89 CFLAGS='-g -Wdeclaration-after-statement -Werror' \
+	$(MAKE) -C src-c89 CFLAGS='-Wdeclaration-after-statement -Werror' \
 	  || fail=1; \
 	rm -rf src-c89 $@.1 $@.2; \
 	test $$fail = 0
@@ -528,6 +528,11 @@ my-distcheck: $(local-check) $(release_archive_dir)/$(prev-tgz)
 	(cd $(t) && mv $(distdir) $(distdir).old	\
 	  && $(AMTAR) -zxf - ) < $(distdir).tar.gz
 	diff -ur $(t)/$(distdir).old $(t)/$(distdir)
+	cd $(t)/$(distdir)				\
+	  && (cd src && patch -V never --fuzz=0 <c99-to-c89.diff) \
+	  && ./configure --disable-largefile		\
+	      CFLAGS='-Werror -ansi -pedantic -Wno-long-long' \
+	  && $(MAKE)
 	-rm -rf $(t)
 	@echo "========================"; \
 	echo "$(distdir).tar.gz is ready for distribution"; \

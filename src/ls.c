@@ -4270,6 +4270,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -h, --human-readable       with -l, print sizes in human readable format\n\
                                (e.g., 1K 234M 2G)\n\
       --si                   likewise, but use powers of 1000 not 1024\n\
+"), stdout);
+      fputs (_("\
   -H, --dereference-command-line\n\
                              follow symbolic links listed on the command line\n\
       --dereference-command-line-symlink-to-dir\n\
@@ -4331,6 +4333,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
                              non-recent files and FORMAT2 to recent files;\n\
                              if STYLE is prefixed with `posix-', STYLE\n\
                              takes effect only outside the POSIX locale\n\
+"), stdout);
+      fputs (_("\
   -t                         sort by modification time\n\
   -T, --tabsize=COLS         assume tab stops at each COLS instead of 8\n\
 "), stdout);

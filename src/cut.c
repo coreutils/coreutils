@@ -223,6 +223,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 Use one, and only one of -b, -c or -f.  Each LIST is made up of one\n\
 range, or many ranges separated by commas.  Selected input is written\n\
 in the same order that it is read, and is written exactly once.\n\
+"), stdout);
+      fputs (_("\
 Each range is one of:\n\
 \n\
   N     N'th byte, character or field, counted from 1\n\

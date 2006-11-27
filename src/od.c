@@ -358,6 +358,8 @@ An OFFSET operand means -j OFFSET.  LABEL is the pseudo-address\n\
 at first byte printed, incremented when dump is progressing.\n\
 For OFFSET and LABEL, a 0x or 0X prefix indicates hexadecimal;\n\
 suffixes may be . for octal and b for multiply by 512.\n\
+"), stdout);
+      fputs (_("\
 \n\
 TYPE is made up of one or more of these specifications:\n\
 \n\

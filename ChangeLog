@@ -1,3 +1,24 @@
+2006-11-26  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Improve the check for departures from C89, and fix the departures
+	I found.
+	* Makefile.maint (my-distcheck): Also check for C89 compatibility
+	as best we can with GCC.
+	* src/stat.c (PRINTF_OPTION): Omit comma before } in enum
+	declaration; C89 doesn't allow this.
+	* src/dcgen: Don't generate string literals longer than
+	what C89 requires support for.
+	* src/cut.c (usage): Don't use string literals longer than
+	what C89 requires support for.
+	* src/date.c (usage): Likewise.
+	* src/dd.c (usage): Likewise.
+	* src/du.c (usage): Likewise.
+	* src/ls.c (usage): Likewise.
+	* src/od.c (usage): Likewise.
+	* src/readlink.c (usage): Likewise.
+	* src/seq.c (usage): Likewise.
+	* src/shred.c (usage): Likewise.
+
 2006-11-26  Mike Frysinger  <vapier@gentoo.org>
 
 	Recognize new archive, audio and image formats.

@@ -223,6 +223,8 @@ specifies Coordinated Universal Time.  Interpreted sequences are:\n\
   %Z   alphabetic time zone abbreviation (e.g., EDT)\n\
 \n\
 By default, date pads numeric fields with zeroes.\n\
+"), stdout);
+      fputs (_("\
 The following optional flags may follow `%':\n\
 \n\
   - (hyphen) do not pad the field\n\

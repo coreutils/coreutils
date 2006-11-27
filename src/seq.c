@@ -92,6 +92,8 @@ omitted INCREMENT defaults to 1 even when LAST is smaller than FIRST.\n\
 FIRST, INCREMENT, and LAST are interpreted as floating point values.\n\
 INCREMENT is usually positive if FIRST is smaller than LAST, and\n\
 INCREMENT is usually negative if FIRST is greater than LAST.\n\
+"), stdout);
+      fputs (_("\
 FORMAT must be suitable for printing one argument of type `double';\n\
 it defaults to %.PRECf if FIRST, INCREMENT, and LAST are all fixed point\n\
 decimal numbers with maximum precision PREC, and to %g otherwise.\n\

@@ -293,6 +293,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
                           the apparent size is usually smaller, it may be\n\
                           larger due to holes in (`sparse') files, internal\n\
                           fragmentation, indirect blocks, and the like\n\
+"), stdout);
+      fputs (_("\
   -B, --block-size=SIZE use SIZE-byte blocks\n\
   -b, --bytes           equivalent to `--apparent-size --block-size=1'\n\
   -c, --total           produce a grand total\n\
@@ -305,6 +307,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
                           change to be equivalent to --dereference-args (-D)\n\
   -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\n\
       --si              like -h, but use powers of 1000 not 1024\n\
+"), stdout);
+      fputs (_("\
   -k                    like --block-size=1K\n\
   -l, --count-links     count sizes many times if hard linked\n\
   -m                    like --block-size=1M\n\

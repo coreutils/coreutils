@@ -154,7 +154,7 @@ statfs (char const *filename, struct fs_info *buf)
 
 enum
 {
-  PRINTF_OPTION = CHAR_MAX + 1,
+  PRINTF_OPTION = CHAR_MAX + 1
 };
 
 static struct option const long_options[] = {

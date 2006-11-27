@@ -220,6 +220,8 @@ version 3 clients\n\
 \n\
 * compressed file systems\n\
 \n\
+"), stdout);
+      fputs (_("\
 In the case of ext3 file systems, the above disclaimer applies\n\
 (and shred is thus of limited effectiveness) only in data=journal mode,\n\
 which journals file data in addition to just metadata.  In both the\n\
@@ -228,6 +230,8 @@ Ext3 journaling modes can be changed by adding the data=something option\n\
 to the mount options for a particular file system in the /etc/fstab file,\n\
 as documented in the mount man page (man mount).\n\
 \n\
+"), stdout);
+      fputs (_("\
 In addition, file system backups and remote mirrors may contain copies\n\
 of the file that cannot be removed, and that will allow a shredded file\n\
 to be recovered later.\n\
