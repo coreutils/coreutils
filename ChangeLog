@@ -1,5 +1,9 @@
 2006-11-28  Jim Meyering  <jim@meyering.net>
 
+	* tests/mv/no-target-dir: Detect a buggy rename syscall.  If found,
+	skip this test.  This happens at least on ia64 linux-2.4.19 w/ext3.
+	Reported by Matthew Woehlke.
+
 	* tests/mv/dir2dir: Also accept EBUSY.
 	Reported by Matthew Woehlke.
 

@@ -35,10 +35,18 @@ cd $tmp || framework_failure=1
 mkdir -p d/sub empty src d2/sub e2 || framework_failure=1
 touch f || framework_failure=1
 
+# Skip this test if there's an underlying kernel bug.
+mkdir a b b/a || framework_failure=1
+
 if test $framework_failure = 1; then
   echo "$0: failure in testing framework" 1>&2
   (exit 1); exit 1
 fi
+
+mv a b || {
+  echo "$0: skipping this test: your kernel's rename syscall is buggy" 1>&2
+  (exit 77); exit 77
+}
 
 fail=0
 
