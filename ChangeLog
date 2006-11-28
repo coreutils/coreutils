@@ -1,3 +1,8 @@
+2006-11-28  Jim Meyering  <jim@meyering.net>
+
+	* tests/mv/dir2dir: Also accept EBUSY.
+	Reported by Matthew Woehlke.
+
 2006-11-27  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.maint (patch-check): Rewrite to diagnose failure.

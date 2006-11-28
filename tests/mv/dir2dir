@@ -52,8 +52,9 @@ fail=0
 # diagnostic about moving one directory to a subdirectory of itself.
 mv b/t a 2> out && fail=1
 
-# Accept either EEXIST or ENOTEMPTY.
-sed 's/: File exists/: Directory not empty/'<out>o1;mv o1 out
+# Accept any of these: EEXIST, ENOTEMPTY, EBUSY.
+sed             's/: File exists/: Directory not empty/'<out>o1;mv o1 out
+sed 's/: Device or resource busy/: Directory not empty/'<out>o1;mv o1 out
 
 cat <<\EOF > exp || fail=1
 mv: cannot move `b/t' to `a/t': Directory not empty
