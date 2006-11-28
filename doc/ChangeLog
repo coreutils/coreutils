@@ -1,3 +1,8 @@
+2006-11-28  Jim Meyering  <jim@meyering.net>
+
+	* perm.texi (Mode Structure): Fix typo: s/setgid/setuid/.
+	Reported by Georg Neis as Debian bug 400778.
+
 2006-10-27  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (wc invocation): When giving the order in which

@@ -75,7 +75,7 @@ executable files (programs) and, on most systems, directories:
 @cindex set-user-ID
 @cindex setuid
 Set the process's effective user ID to that of the file upon execution
-(called the @dfn{set-user-ID bit}, or sometimes the @dfn{setgid bit}).
+(called the @dfn{set-user-ID bit}, or sometimes the @dfn{setuid bit}).
 For directories on a few systems, give files created in the directory
 the same owner as the directory, no matter who creates them, and set
 the set-user-ID bit of newly-created subdirectories.
