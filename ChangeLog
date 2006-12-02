@@ -1,3 +1,8 @@
+2006-12-02  Jim Meyering  <jim@meyering.net>
+
+	* tests/du/basic: Generate 4KB file simply using printf, rather than
+	seq+head.  This avoids a spurious "Broken pipe" diagnostic from seq.
+
 2006-11-28  Jim Meyering  <jim@meyering.net>
 
 	* tests/mv/no-target-dir: Detect a buggy rename syscall.  If found,

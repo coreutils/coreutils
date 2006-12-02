@@ -41,7 +41,7 @@ mkdir -p a/b d d/sub || framework_failure=1
 # immediately disqualify file systems (e.g., NetApp) on which smaller
 # files take up zero disk blocks.
 printf '%*s' 257 make-sure-the-file-is-non-empty > a/b/F || framework_failure=1
-seq --format=%100g 1 90 | head --bytes=4k > d/1
+printf %4096s x > d/1
 cp d/1 d/sub/2
 
 if test $framework_failure = 1; then
