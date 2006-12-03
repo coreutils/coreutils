@@ -4,6 +4,7 @@
 	directory listed as second or subsequent command line argument.
 	* tests/du/one-file-system: New file.  Test for today's fts.c fix.
 	* tests/du/Makefile.am (TESTS): Add one-file-system.
+	Reported by Mike Frysinger.
 
 2006-12-02  Jim Meyering  <jim@meyering.net>
 
