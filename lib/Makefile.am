@@ -26,7 +26,6 @@ LDADD = $(noinst_LIBRARIES)
 
 libcoreutils_a_SOURCES += \
   buffer-lcm.c buffer-lcm.h \
-  xmemcoll.c xmemcoll.h \
   xmemxfrm.c xmemxfrm.h
 
 libcoreutils_a_LIBADD += $(LIBOBJS)
