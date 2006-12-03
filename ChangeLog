@@ -1,3 +1,10 @@
+2006-12-03  Jim Meyering  <jim@meyering.net>
+
+	* NEWS: du --one-file-system (-x) would skip subdirectories of any
+	directory listed as second or subsequent command line argument.
+	* tests/du/one-file-system: New file.  Test for today's fts.c fix.
+	* tests/du/Makefile.am (TESTS): Add one-file-system.
+
 2006-12-02  Jim Meyering  <jim@meyering.net>
 
 	* tests/du/basic: Generate 4KB file simply using printf, rather than

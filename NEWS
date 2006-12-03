@@ -2,6 +2,11 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release 6.7-pre (????-??-??) [?]
 
+** Bug fixes
+
+  du --one-file-system (-x) would skip subdirectories of any directory
+  listed as second or subsequent command line argument.
+
 
 * Noteworthy changes in release 6.6 (2006-11-22) [stable]
 

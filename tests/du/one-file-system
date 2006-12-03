@@ -1,0 +1,61 @@
+#!/bin/sh
+# Test for a bug in fts's handling of FTS_XDEV, the flag behind
+# du's --one-file-system (-x) option.
+
+# Copyright (C) 2006 Free Software Foundation, Inc.
+
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+# 02110-1301, USA.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  du --version
+fi
+
+. $srcdir/../envvar-check
+
+pwd=`pwd`
+t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
+trap 'status=$?; cd "$pwd" && chmod -R u+rwx $t0 && rm -rf $t0 && exit $status' 0
+trap '(exit $?); exit $?' 1 2 13 15
+
+framework_failure=0
+mkdir -p $tmp || framework_failure=1
+cd $tmp || framework_failure=1
+mkdir -p b/c y/z || framework_failure=1
+
+if test $framework_failure = 1; then
+  echo "$0: failure in testing framework" 1>&2
+  (exit 1); exit 1
+fi
+
+fail=0
+
+# Due to a used-uninitialized variable, the "du -x" from coreutils-6.6
+# would not traverse into second and subsequent directories listed
+# on the command line.
+du -ax b y > t || fail=1
+sed 's/^[0-9][0-9]*	//' t > out
+cat <<\EOF > exp || fail=1
+b/c
+b
+y/z
+y
+EOF
+
+cmp out exp || fail=1
+test $fail = 1 && diff out exp 2> /dev/null
+
+(exit $fail); exit $fail

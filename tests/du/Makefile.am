@@ -21,6 +21,7 @@
 AUTOMAKE_OPTIONS = 1.4 gnits
 
 TESTS = \
+  one-file-system \
   inacc-dest \
   long-from-unreadable \
   long-sloop \
