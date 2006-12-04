@@ -1,3 +1,9 @@
+2006-12-03  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/install.c (install_file_in_file): Preserve time stamps
+	before changing owner or file mode bits, for consistency with
+	other coreutils programs.
+
 2006-12-03  Jim Meyering  <jim@meyering.net>
 
 	* tests/misc/date-sec: Output a fixed string.

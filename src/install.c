@@ -459,11 +459,10 @@ install_file_in_file (const char *from, const char *to,
     return false;
   if (strip_files)
     strip (to);
-  if (! change_attributes (to))
+  if (x->preserve_timestamps && (strip_files || ! S_ISREG (from_sb.st_mode))
+      && ! change_timestamps (&from_sb, to))
     return false;
-  if (x->preserve_timestamps && (strip_files || ! S_ISREG (from_sb.st_mode)))
-    return change_timestamps (&from_sb, to);
-  return true;
+  return change_attributes (to);
 }
 
 /* Copy file FROM into directory TO_DIR, keeping its same name,
