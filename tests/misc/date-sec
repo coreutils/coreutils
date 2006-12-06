@@ -56,7 +56,7 @@ case "$s" in
 esac
 
 # If necessary, wait for the system clock to pass the minute mark.
-test $n = 0 || { echo sleeping for 1-3 seconds...; sleep $n; }
+test $n = 0 || sleep $n
 
 s=`date --date="21:04 +0100" +%S`
 case "$s" in
