@@ -213,5 +213,6 @@ void src_info_init (struct cp_options *);
 
 bool chown_privileges (void);
 bool chown_failure_ok (struct cp_options const *);
+mode_t cached_umask (void);
 
 #endif

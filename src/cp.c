@@ -413,6 +413,8 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
 	  if (XSTAT (x, dir, &stats))
 	    {
 	      mode_t src_mode;
+	      mode_t omitted_permissions;
+	      mode_t mkdir_mode;
 
 	      /* This component does not exist.  We must set
 		 *new_dst and new->mode inside this loop because,
@@ -427,12 +429,15 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
 		  return false;
 		}
 	      src_mode = stats.st_mode;
+	      omitted_permissions =
+		x->preserve_ownership ? src_mode & (S_IRWXG | S_IRWXO) : 0;
 
 	      /* POSIX says mkdir's behavior is implementation-defined when
 		 (src_mode & ~S_IRWXUGO) != 0.  However, common practice is
 		 to ask mkdir to copy all the CHMOD_MODE_BITS, letting mkdir
 		 decide what to do with S_ISUID | S_ISGID | S_ISVTX.  */
-	      if (mkdir (dir, src_mode & CHMOD_MODE_BITS) != 0)
+	      mkdir_mode = src_mode & CHMOD_MODE_BITS & ~omitted_permissions;
+	      if (mkdir (dir, mkdir_mode) != 0)
 		{
 		  error (0, errno, _("cannot make directory %s"),
 			 quote (dir));
@@ -454,28 +459,30 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
 			 quote (dir));
 		  return false;
 		}
-	      else
-	        {
-		  if (x->preserve_mode)
-		    {
-		      new->mode = src_mode;
-		      new->restore_mode = (src_mode != stats.st_mode);
-		    }
 
-		  if ((stats.st_mode & S_IRWXU) != S_IRWXU)
-		    {
-		      /* Make the new directory searchable and writable. The
-			 original permissions will be restored later.  */
 
-		      new->mode = stats.st_mode;
+	      if (! x->preserve_mode)
+		{
+		  if (omitted_permissions & ~stats.st_mode)
+		    omitted_permissions &= ~ cached_umask ();
+		  if (omitted_permissions & ~stats.st_mode
+		      || (stats.st_mode & S_IRWXU) != S_IRWXU)
+		    {
+		      new->mode = stats.st_mode | omitted_permissions;
 		      new->restore_mode = true;
+		    }
+		}
 
-		      if (lchmod (dir, stats.st_mode | S_IRWXU) != 0)
-			{
-			  error (0, errno, _("setting permissions for %s"),
-				 quote (dir));
-			  return false;
-			}
+	      if ((stats.st_mode & S_IRWXU) != S_IRWXU)
+		{
+		  /* Make the new directory searchable and writable.
+		     The original permissions will be restored later.  */
+
+		  if (lchmod (dir, stats.st_mode | S_IRWXU) != 0)
+		    {
+		      error (0, errno, _("setting permissions for %s"),
+			     quote (dir));
+		      return false;
 		    }
 		}
 	    }

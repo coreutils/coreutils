@@ -1,3 +1,19 @@
+2006-12-06  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* NEWS: Document the cp --preserve=ownership fix.
+	* m4/jm-macros.m4 (coreutils_MACROS): Check for fchmod.
+	* src/copy.c (fchmod_or_lchmod): New function.
+	(copy_reg): New arg OMITTED_PERMISSIONS.  All uses changed.
+	Omit confusing and unused ", dst_mode" arg to 'open' without O_CREAT.
+	When creating a file, use O_EXCL, so we're more likely to detect
+	funny business by other processes.  At the end, if permissions
+	were omitted, chmod them back in.
+	(copy_internal): If the ownership might change, omit some permissions
+	at first, then restore them after chowning the file.
+	* src/cp.c (make_dir_parents_private): Likewise.
+	* src/copy.c (cached_umask): New function.
+	* src/copy.h (cached_umask): New decl.
+
 2006-12-06  Jim Meyering  <jim@meyering.net>
 
 	Make the output of "make check" more reproducible.

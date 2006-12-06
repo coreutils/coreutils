@@ -62,6 +62,7 @@ AC_DEFUN([coreutils_MACROS],
     endgrent \
     endpwent \
     fchown \
+    fchmod \
     ftruncate \
     iswspace \
     mkfifo \
