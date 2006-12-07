@@ -1,6 +1,11 @@
 2006-12-07  Jim Meyering  <jim@meyering.net>
 
 	Make the output of "make check" more reproducible.
+	* tests/touch/empty-file: Use envvar-check, so "make check" doesn't
+	evoke diagnostics like this when COLUMNS=0 in the environment:
+	ls: ignoring invalid width in environment variable COLUMNS: 0
+	* tests/touch/no-rights: Likewise.
+	* tests/help-version: Likewise.
 	* tests/uniq/Test.pm: Don't perform the pipe-reading version of test
 	118, since it emits "cat: write error: Broken pipe" on some systems.
 
