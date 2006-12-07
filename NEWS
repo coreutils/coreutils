@@ -4,6 +4,14 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  When cp -p copied a file with special mode bits set, the same bits
+  were set on the copy even when ownership could not be preserved.
+  This could result in files that were setuid to the wrong user.
+  To fix this, special mode bits are now set in the copy only if its
+  ownership is successfully preserved.  Similar problems were fixed
+  with mv when copying across file system boundaries.  This problem
+  affects all versions of coreutils through 6.6.
+
   cp --preserve=ownership would create output files that temporarily
   had too-generous permissions in some cases.  For example, when
   copying a file with group A and mode 644 into a group-B sticky

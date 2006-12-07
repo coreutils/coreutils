@@ -38,9 +38,12 @@ framework_failure=0
 mkdir -p $tmp || framework_failure=1
 cd $tmp || framework_failure=1
 
-touch a b || framework_failure=1
+touch a b c || framework_failure=1
 chmod u+sx,go= a || framework_failure=1
 chmod u=rwx,g=sx,o= b || framework_failure=1
+chmod a=r,ug+sx c || framework_failure=1
+chown $NON_ROOT_USERNAME . || framework_failure=1
+chmod u=rwx,g=rx,o=rx . || framework_failure=1
 
 if test $framework_failure = 1; then
   echo 'failure in testing framework'
@@ -58,5 +61,10 @@ cp -p b b2 || fail=1
 set _ `ls -l b`; shift; p1=$1
 set _ `ls -l b2`; shift; p2=$1
 test $p1 = $p2 || fail=1
+
+setuidgid $NON_ROOT_USERNAME env PATH="$PATH" cp -p c c2 || fail=1
+set _ `ls -l c`; shift; p1=$1
+set _ `ls -l c2`; shift; p2=$1
+test $p1 = $p2 && fail=1
 
 (exit $fail); exit $fail

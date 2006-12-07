@@ -175,22 +175,22 @@ copy_dir (char const *src_name_in, char const *dst_name_in, bool new_dst,
    st_gid fields of SRC_SB.  If DEST_DESC is undefined (-1), set
    the owner and owning group of DST_NAME instead.  DEST_DESC must
    refer to the same file as DEST_NAME if defined.
-   Return true if the syscall succeeds, or if it's ok not to
-   preserve ownership.  */
+   Return 1 if the syscall succeeds, 0 if it fails but it's OK
+   not to preserve ownership, -1 otherwise.  */
 
-static bool
+static int
 set_owner (const struct cp_options *x, char const *dst_name, int dest_desc,
 	   uid_t uid, gid_t gid)
 {
   if (HAVE_FCHOWN && dest_desc != -1)
     {
       if (fchown (dest_desc, uid, gid) == 0)
-	return true;
+	return 1;
     }
   else
     {
       if (chown (dst_name, uid, gid) == 0)
-	return true;
+	return 1;
     }
 
   if (! chown_failure_ok (x))
@@ -198,10 +198,10 @@ set_owner (const struct cp_options *x, char const *dst_name, int dest_desc,
       error (0, errno, _("failed to preserve ownership for %s"),
 	     quote (dst_name));
       if (x->require_preserve)
-	return false;
+	return -1;
     }
 
-  return true;
+  return 0;
 }
 
 /* Set the st_author field of DEST_DESC to the st_author field of
@@ -265,6 +265,7 @@ copy_reg (char const *src_name, char const *dst_name,
   char *buf_alloc = NULL;
   int dest_desc;
   int source_desc;
+  mode_t src_mode = src_sb->st_mode;
   struct stat sb;
   struct stat src_open_sb;
   bool return_val = true;
@@ -519,10 +520,16 @@ copy_reg (char const *src_name, char const *dst_name,
 
   if (x->preserve_ownership && ! SAME_OWNER_AND_GROUP (*src_sb, sb))
     {
-      if (! set_owner (x, dst_name, dest_desc, src_sb->st_uid, src_sb->st_gid))
-        {
+      switch (set_owner (x, dst_name, dest_desc,
+			 src_sb->st_uid, src_sb->st_gid))
+	{
+	case -1:
 	  return_val = false;
 	  goto close_src_and_dst_desc;
+
+	case 0:
+	  src_mode &= ~ (S_ISUID | S_ISGID | S_ISVTX);
+	  break;
 	}
     }
 
@@ -530,8 +537,8 @@ copy_reg (char const *src_name, char const *dst_name,
 
   if (x->preserve_mode || x->move_mode)
     {
-      if (copy_acl (src_name, source_desc, dst_name, dest_desc,
-		    src_sb->st_mode) != 0 && x->require_preserve)
+      if (copy_acl (src_name, source_desc, dst_name, dest_desc, src_mode) != 0
+	  && x->require_preserve)
 	return_val = false;
     }
   else if (x->set_mode)
@@ -1801,8 +1808,15 @@ copy_internal (char const *src_name, char const *dst_name,
   if (x->preserve_ownership
       && (new_dst || !SAME_OWNER_AND_GROUP (src_sb, dst_sb)))
     {
-      if (! set_owner (x, dst_name, -1, src_sb.st_uid, src_sb.st_gid))
-	return false;
+      switch (set_owner (x, dst_name, -1, src_sb.st_uid, src_sb.st_gid))
+	{
+	case -1:
+	  return false;
+
+	case 0:
+	  src_mode &= ~ (S_ISUID | S_ISGID | S_ISVTX);
+	  break;
+	}
     }
 
   set_author (dst_name, -1, &src_sb);

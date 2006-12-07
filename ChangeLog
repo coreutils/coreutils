@@ -1,5 +1,14 @@
 2006-12-06  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* NEWS: Document the cp -p fix for special bits.
+	* src/copy.c (set_owner): Now returns a three-way result, so
+	that the caller can clear the special bits.  All callers changed.
+	(copy_reg): Don't set the special bits if chown failed.
+	(copy_internal): Likewise.
+	* tests/cp/special-bits: Test this fix.
+
+2006-12-06  Paul Eggert  <eggert@cs.ucla.edu>
+
 	* NEWS: Document the cp --preserve=ownership fix.
 	* m4/jm-macros.m4 (coreutils_MACROS): Check for fchmod.
 	* src/copy.c (fchmod_or_lchmod): New function.
