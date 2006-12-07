@@ -117,6 +117,9 @@ sub test_vector
 
       $test_name =~ /^obs-plus/
 	and $Test::env{$test_name} = ['_POSIX2_VERSION=199209'];
+
+      $flags =~ /badoption/
+	and $Test::input_via{$test_name} = {REDIR => 0};
     }
 
   return @tv;
