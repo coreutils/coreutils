@@ -555,6 +555,11 @@ prev-tgz = $(PACKAGE)-$(PREV_VERSION).tar.gz
 xd-delta = $(PACKAGE)-$(PREV_VERSION)-$(VERSION).xdelta
 
 rel-files = $(xd-delta) $(DIST_ARCHIVES)
+
+# Approximate date of last "update" by the date on the ChangeLog file.
+gnulib_snapshot_date = \
+  $$(date -u --date $$(stat --printf @%Y $(gnulib_dir)/ChangeLog) \
+     '+%Y-%m-%d %T %z')
 announcement: NEWS ChangeLog $(rel-files)
 	@./build-aux/announce-gen					\
 	    --release-type=$(RELEASE_TYPE)				\
@@ -563,8 +568,9 @@ announcement: NEWS ChangeLog $(rel-files)
 	    --curr=$(VERSION)						\
 	    --gpg-key-id=$(gpg_key_ID)					\
 	    --news=NEWS							\
-	    $(addprefix --url-dir=, $(url_dir_list))			\
-
+	    --bootstrap-tools=autoconf,automake,bison,gnulib		\
+            --gnulib-snapshot-date=$(gnulib_snapshot_date)		\
+	    $(addprefix --url-dir=, $(url_dir_list))
 
 ## ---------------- ##
 ## Updating files.  ##

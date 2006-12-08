@@ -1,5 +1,11 @@
 2006-12-08  Jim Meyering  <jim@meyering.net>
 
+	Include bootstrap tool version info in the announcement form.
+	* Makefile.maint (gnulib_snapshot_date): Define.
+	(announcement): Use two new announce-gen options,
+	--bootstrap-tools and --gnulib-snapshot-date.
+	* Makefile.cfg (gnulib_dir): Set.
+
 	Post-release version change.
 	* NEWS: Add a line for 6.8-dirty.
 	* configure.ac (AC_INIT): Set new version string.
