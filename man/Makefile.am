@@ -160,6 +160,7 @@ mapped_name = `echo $*|sed 's/install/ginstall/; s/test/[/'`
 	mkdir $t;				\
 	(cd $t && $(LN_S) ../../src/$(mapped_name) $*); \
 	$(PERL) -- $(srcdir)/help2man		\
+	    --source='$(PACKAGE_STRING)'	\
 	    --include=$(srcdir)/$*.x		\
 	    --output=$t/$@ $t/$*
 	@sed 's|$*\.td/||g' $t/$@ > $@
