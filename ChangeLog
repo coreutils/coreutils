@@ -1,5 +1,9 @@
 2006-12-09  Jim Meyering  <jim@meyering.net>
 
+	* NEWS: With the change from "-pre" to "-dirty" suffix, also change
+	from NEXT_VER-pre to CUR_VER-dirty.  So, this is 6.7-dirty.
+	* configure.ac (AC_INIT): s/6.8-dirty/6.7-dirty/.
+
 	* tests/uniq/Test.pm (test_vector): Skip the pipe-reading test
 	whenever uniq is expected to fail.  This should catch the other case
 	[test #112] in which uniq emits "cat: write error: Broken pipe" on
