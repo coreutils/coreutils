@@ -1,3 +1,10 @@
+2006-12-09  Jim Meyering  <jim@meyering.net>
+
+	* tests/uniq/Test.pm (test_vector): Skip the pipe-reading test
+	whenever uniq is expected to fail.  This should catch the other case
+	[test #112] in which uniq emits "cat: write error: Broken pipe" on
+	some systems.
+
 2006-12-08  Jim Meyering  <jim@meyering.net>
 
 	Include bootstrap tool version info in the announcement form.
