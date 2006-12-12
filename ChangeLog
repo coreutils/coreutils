@@ -1,3 +1,10 @@
+2006-12-12  Jim Meyering  <jim@meyering.net>
+
+	* src/system.h (SETVBUF): Remove definition, now that the
+	autoconf macro, AC_FUNC_SETVBUF_REVERSED, does nothing.
+	* src/tee.c (tee_files): s/SETVBUF/setvbuf/.
+	* src/od.c (open_next_file): Likewise.
+
 2006-12-09  Jim Meyering  <jim@meyering.net>
 
 	* man/Makefile.am (.x.1): Make help2man use $(PACKAGE_STRING) as the

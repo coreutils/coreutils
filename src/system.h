@@ -389,14 +389,6 @@ readdir_ignoring_dot_and_dotdot (DIR *dirp)
     }
 }
 
-#if SETVBUF_REVERSED
-# define SETVBUF(Stream, Buffer, Type, Size) \
-    setvbuf (Stream, Type, Buffer, Size)
-#else
-# define SETVBUF(Stream, Buffer, Type, Size) \
-    setvbuf (Stream, Buffer, Type, Size)
-#endif
-
 /* Factor out some of the common --help and --version processing code.  */
 
 /* These enum values cannot possibly conflict with the option values

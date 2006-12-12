@@ -161,7 +161,7 @@ tee_files (int nfiles, const char **files)
      the first one correspond to standard output.   */
   descriptors[0] = stdout;
   files[0] = _("standard output");
-  SETVBUF (stdout, NULL, _IONBF, 0);
+  setvbuf (stdout, NULL, _IONBF, 0);
 
   for (i = 1; i <= nfiles; i++)
     {
@@ -174,7 +174,7 @@ tee_files (int nfiles, const char **files)
 	  ok = false;
 	}
       else
-	SETVBUF (descriptors[i], NULL, _IONBF, 0);
+	setvbuf (descriptors[i], NULL, _IONBF, 0);
     }
 
   while (1)
