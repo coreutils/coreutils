@@ -1,4 +1,4 @@
-#serial 104   -*- autoconf -*-
+#serial 105   -*- autoconf -*-
 
 dnl Misc type-related macros for coreutils.
 
@@ -49,9 +49,6 @@ AC_DEFUN([coreutils_MACROS],
 	    [Define to the function xargmatch calls on failures.])
   AC_DEFINE(ARGMATCH_DIE_DECL, [extern void usage ()],
 	    [Define to the declaration of the xargmatch failure function.])
-
-  dnl Used to define SETVBUF in ../src/system.h.
-  AC_FUNC_SETVBUF_REVERSED
 
   # used by ls
   AC_REQUIRE([gl_CLOCK_TIME])

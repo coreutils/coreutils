@@ -1,3 +1,7 @@
+2006-12-12  Jim Meyering  <jim@meyering.net>
+
+	* jm-macros.m4: Remove AC_FUNC_SETVBUF_REVERSED, now that it's a no-op.
+
 2006-10-14  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* sha512.m4 (gl_SHA512): Add u64.h to AC_LIBSOURCES.
