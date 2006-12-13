@@ -1,3 +1,10 @@
+2006-12-13  Andreas Schwab  <schwab@suse.de>
+
+	Don't fail if mv/acl test succeeds.
+	* tests/mv/acl (skip): Check for acl support in the file system.
+	* tests/mv/Makefile.am (XFAIL_TESTS): Remove.
+	(TESTS_ENVIRONMENT): Pass CONFIG_HEADER.
+
 2006-12-13  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Remove some arbitrary restrictions on size fields, so that

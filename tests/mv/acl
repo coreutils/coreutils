@@ -24,6 +24,13 @@
 # Make sure we get English translations.
 . $srcdir/../lang-default
 
+# Skip this test if cp was built without ACL support:
+grep '^#define USE_ACL 0' $CONFIG_HEADER > /dev/null && \
+  {
+    echo 1>&2 "$0: insufficient ACL support, so skipping this test"
+    (exit 77); exit 77
+  }
+
 if test "$VERBOSE" = yes; then
   set -x
   mv --version
@@ -46,15 +53,26 @@ framework_failure=0
 mkdir -p $tmp || framework_failure=1
 cd $tmp || framework_failure=1
 
+touch file || framework_failure=1
+
 if test $framework_failure = 1; then
   echo 'failure in testing framework'
   (exit 1); exit 1
 fi
 
+skip=no
+# Ensure that setfacl and getfacl work on this file system.
+setfacl -m user:bin:rw file 2> /dev/null || skip=yes
+acl1=`getfacl file` || skip=yes
+
+test $skip = yes &&
+  {
+    echo "$0: '.' is not on a suitable file system for this test" 1>&2
+    echo "$0: skipping this test" 1>&2
+    (exit 77); exit 77
+  }
+
 # move the access acl of a file
-touch file || framework_failure=1
-setfacl -m user:bin:rw file || framework_failure=1
-acl1=`getfacl file` || framework_failure=1
 mv file $other_partition_tmpdir || fail=1
 acl2=`cd $other_partition_tmpdir && getfacl file` || framework_failure=1
 test "$acl1" = "$acl2" || fail=1

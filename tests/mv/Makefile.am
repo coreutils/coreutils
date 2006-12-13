@@ -20,7 +20,6 @@
 
 AUTOMAKE_OPTIONS = 1.3 gnits
 
-XFAIL_TESTS = acl
 TESTS = \
   hard-verbose \
   backup-dir \
@@ -48,4 +47,5 @@ TESTS_ENVIRONMENT = \
   PERL="$(PERL)" \
   EGREP="$(EGREP)" \
   PATH="$(VG_PATH_PREFIX)`pwd`/../../src$(PATH_SEPARATOR)$$PATH" \
+  CONFIG_HEADER=$(CONFIG_HEADER) \
   PROG=mv
