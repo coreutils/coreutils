@@ -275,6 +275,9 @@ my @tv = (
 
 # -t '\0' is accepted, as of coreutils-5.0.91
 ['nul-tab', "-k2,2 -t '\\0'", "a\0z\01\nb\0y\02\n", "b\0y\02\na\0z\01\n", 0],
+
+["bigfield", '-k 340282366920938463463374607431768211456',
+ "2\n1\n", "1\n2\n", 0],
 );
 
 sub test_vector

@@ -105,6 +105,8 @@ my @tv = (
 ['119', '--all-repeated=badoption', "a\n",           "",                 1],
 # Check that -d and -u suppress all output, as POSIX requires.
 ['120', '-d -u', "a\na\n\b",        "",                         0],
+['121', '-d -u -w340282366920938463463374607431768211456',
+		 "a\na\n\b",        "",                         0],
 );
 
 sub test_vector

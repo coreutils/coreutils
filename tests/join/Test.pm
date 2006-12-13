@@ -136,6 +136,9 @@ my @tv = (
  [t_subst "a:1\nb:1\n", t_subst "a:2:\nb:2:\n"],
  t_subst "a:1:2:\nb:1:2:\n", 0],
 
+['bigfield', '-1 340282366920938463463374607431768211456 -2 2',
+ ["a\n", "b\n"], " a b\n", 0],
+
 # FIXME: change this to ensure the diagnostic makes sense
 ['invalid-j', '-j x', {}, "", 1],
 

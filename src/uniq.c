@@ -172,17 +172,26 @@ Fields are skipped before chars.\n\
   exit (status);
 }
 
-/* Convert OPT to size_t, reporting an error using MSGID if it does
-   not fit.  */
+/* Convert OPT to size_t, reporting an error using MSGID if OPT is
+   invalid.  Silently convert too-large values to SIZE_MAX.  */
 
 static size_t
 size_opt (char const *opt, char const *msgid)
 {
   unsigned long int size;
-  if (xstrtoul (opt, NULL, 10, &size, "") != LONGINT_OK
-      || SIZE_MAX < size)
-    error (EXIT_FAILURE, 0, "%s: %s", opt, _(msgid));
-  return size;
+  verify (SIZE_MAX <= ULONG_MAX);
+
+  switch (xstrtoul (opt, NULL, 10, &size, ""))
+    {
+    case LONGINT_OK:
+    case LONGINT_OVERFLOW:
+      break;
+
+    default:
+      error (EXIT_FAILURE, 0, "%s: %s", opt, _(msgid));
+    }
+
+  return MIN (size, SIZE_MAX);
 }
 
 /* Given a linebuffer LINE,
@@ -472,8 +481,8 @@ main (int argc, char **argv)
 	      skip_fields = 0;
 
 	    if (!DECIMAL_DIGIT_ACCUMULATE (skip_fields, optc - '0', size_t))
-	      error (EXIT_FAILURE, 0, "%s",
-		     _("invalid number of fields to skip"));
+	      skip_fields = SIZE_MAX;
+
 	    skip_field_option_type = SFO_OBSOLETE;
 	  }
 	  break;
