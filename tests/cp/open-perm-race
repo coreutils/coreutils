@@ -26,6 +26,7 @@ if test "$VERBOSE" = yes; then
   cp --version
 fi
 
+. $srcdir/../input-tty
 . $srcdir/../envvar-check
 . $srcdir/../group-names
 PRIV_CHECK_ARG=require-non-root . $srcdir/../priv-check

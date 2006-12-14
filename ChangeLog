@@ -1,8 +1,13 @@
 2006-12-14  Jim Meyering  <jim@meyering.net>
 
+	Don't hang when there's no input tty.
+	* tests/cp/open-perm-race: Skip this test if there is no
+	controlling input `terminal'.
+
 	Test for a hard-to-detect race fix, using gdb.
 	* tests/cp/open-perm-race: New file, to test for the
 	cp --preserve=ownership fix of 2006-12-06.
+
 	* tests/cp/Makefile.am (TESTS_ENVIRONMENT): Define abs_top_builddir.
 	(TESTS): Add open-perm-race.
 
