@@ -21,6 +21,7 @@
 AUTOMAKE_OPTIONS = 1.1 gnits
 
 TESTS = \
+  open-perm-race \
   backup-dir \
   src-base-dot \
   sparse \
@@ -33,7 +34,8 @@ TESTS = \
   perm cp-HL cp-i special-bits link dir-rm-dest cp-parents deref-slink \
   dir-vs-file into-self
 EXTRA_DIST = $(TESTS) trailing-slash
-TESTS_ENVIRONMENT = \
-  MAKE=$(MAKE) \
-  CONFIG_HEADER=$(CONFIG_HEADER) \
+TESTS_ENVIRONMENT =			\
+  MAKE=$(MAKE)				\
+  abs_top_builddir=$(abs_top_builddir)	\
+  CONFIG_HEADER=$(CONFIG_HEADER)	\
   PATH="$(VG_PATH_PREFIX)`pwd`/../../src$(PATH_SEPARATOR)$$PATH"
