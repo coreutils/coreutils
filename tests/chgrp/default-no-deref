@@ -25,7 +25,6 @@ fi
 
 . $srcdir/../group-names
 set _ $groups; shift
-g1=$1
 g2=$2
 
 pwd=`pwd`
@@ -45,7 +44,8 @@ fi
 
 fail=0
 
+g_init=`stat --printf=%g f`
 chgrp -R $g2 d || fail=1
-test `stat --printf=%g f` = $g1 || fail=1
+test `stat --printf=%g f` = $g_init || fail=1
 
 (exit $fail); exit $fail

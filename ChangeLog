@@ -1,5 +1,9 @@
 2006-12-14  Jim Meyering  <jim@meyering.net>
 
+	* tests/chgrp/default-no-deref: Don't assume that files are created
+	with the primary group by default.  That's not true in a directory
+	with the set-GID bit set.
+
 	Don't hang when there's no input tty.
 	* tests/cp/open-perm-race: Skip this test if there is no
 	controlling input `terminal'.
