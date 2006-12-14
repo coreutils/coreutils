@@ -9151,7 +9151,7 @@ operations, for a user to change the ctime field to a user-specified value.
 Time stamps assume the time zone rules specified by the @env{TZ}
 environment variable, or by the system default rules if @env{TZ} is
 not set.  @xref{TZ Variable,, Specifying the Time Zone with @env{TZ},
-libc, The GNU C Library}.  You can avoid avoid ambiguities during
+libc, The GNU C Library}.  You can avoid ambiguities during
 daylight saving transitions by using @sc{utc} time stamps.
 
 The program accepts the following options.  Also see @ref{Common options}.
@@ -9799,7 +9799,7 @@ $ stat --format=%d:%i / /usr
 @opindex --printf=@var{format}
 @cindex output format
 Use @var{format} rather than the default format.
-Like like @option{--format}, but interpret backslash escapes,
+Like @option{--format}, but interpret backslash escapes,
 and do not output a mandatory trailing newline.
 If you want a newline, include @samp{\n} in the @var{format}.
 Here's how you would use @option{--printf} to print the device
