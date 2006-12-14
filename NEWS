@@ -4,9 +4,11 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  chgrp, chmod, and chown now honor the --preserve-root option.
+  Before, they would warn, yet continuing traversing and operating on /.
+
   chmod no longer fails in an environment (e.g., a chroot) with openat
   support but with insufficient /proc support.
-
 
 * Noteworthy changes in release 6.7 (2006-12-08) [stable]
 

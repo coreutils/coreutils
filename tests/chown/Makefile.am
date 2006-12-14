@@ -2,6 +2,7 @@
 AUTOMAKE_OPTIONS = 1.4 gnits
 
 TESTS = \
+  preserve-root \
   basic \
   deref \
   separator

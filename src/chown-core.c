@@ -258,7 +258,19 @@ change_file_owner (FTS *fts, FTSENT *ent,
     {
     case FTS_D:
       if (chopt->recurse)
-	return true;
+	{
+	  if (ROOT_DEV_INO_CHECK (chopt->root_dev_ino, ent->fts_statp))
+	    {
+	      /* This happens e.g., with "chown -R --preserve-root /".  */
+	      ROOT_DEV_INO_WARN (file_full_name);
+	      /* Tell fts not to traverse into this hierarchy.  */
+	      fts_set (fts, ent, FTS_SKIP);
+	      /* Ensure that we do not process "/" on the second visit.  */
+	      ent = fts_read (fts);
+	      return false;
+	    }
+	  return true;
+	}
       break;
 
     case FTS_DP:
@@ -337,15 +349,11 @@ change_file_owner (FTS *fts, FTSENT *ent,
 		      || required_gid == file_stats->st_gid));
     }
 
-  if (do_chown
-      /* With FTS_NOSTAT, file_stats is valid only for directories.
-	 Don't need to check for FTS_D, since it is handled above,
-	 and same for FTS_DNR, since then do_chown is false.  */
-      && (ent->fts_info == FTS_DP || ent->fts_info == FTS_DC)
-      && ROOT_DEV_INO_CHECK (chopt->root_dev_ino, file_stats))
+  /* This happens when chown -LR --preserve-root encounters a symlink-to-/.  */
+  if (ROOT_DEV_INO_CHECK (chopt->root_dev_ino, file_stats))
     {
       ROOT_DEV_INO_WARN (file_full_name);
-      ok = do_chown = false;
+      return false;
     }
 
   if (do_chown)

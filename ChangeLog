@@ -1,5 +1,13 @@
 2006-12-14  Jim Meyering  <jim@meyering.net>
 
+	* NEWS: --preserve-root now works with chgrp, chmod, and chown.
+	* src/chmod.c (process_file): Do honor the --preserve-root option.
+	* src/chown-core.c (change_file_owner): Likewise, but here, also
+	handle the case in which a traversal would go "through" a symlink
+	to root.  Reported by Matthew M. Boedicker
+	* tests/chown/preserve-root: Test for the above.
+	* tests/chown/Makefile.am (TESTS): Add preserve-root.
+
 	* NEWS: Mention the chmod fix induced by the 2006-12-11 change
 	to gnulib's m4/openat.m4.
 
