@@ -1158,6 +1158,10 @@ to operate recursively on @file{/}, so they default to
 option makes them safer for most purposes.  For convenience you can
 specify @option{--preserve-root} in an alias or in a shell function.
 
+Note that the @option{--preserve-root} option also ensures
+that @command{chgrp} and @command{chown} do not modify @file{/}
+even when dereferencing a symlink pointing to @file{/}.
+
 @node Special built-in utilities
 @section Special built-in utilities
 

@@ -260,20 +260,14 @@ main (int argc, char **argv)
 	  if (dereference == 1)
 	    error (EXIT_FAILURE, 0,
 		   _("-R --dereference requires either -H or -L"));
-	  chopt.affect_symlink_referent = false;
-	}
-      else
-	{
-	  if (dereference == 0)
-	    error (EXIT_FAILURE, 0, _("-R -h requires -P"));
-	  chopt.affect_symlink_referent = true;
+	  dereference = 0;
 	}
     }
   else
     {
       bit_flags = FTS_PHYSICAL;
-      chopt.affect_symlink_referent = (dereference != 0);
     }
+  chopt.affect_symlink_referent = (dereference != 0);
 
   if (argc - optind < (reference_file ? 1 : 2))
     {

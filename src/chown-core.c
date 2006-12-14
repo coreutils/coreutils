@@ -261,7 +261,8 @@ change_file_owner (FTS *fts, FTSENT *ent,
 	{
 	  if (ROOT_DEV_INO_CHECK (chopt->root_dev_ino, ent->fts_statp))
 	    {
-	      /* This happens e.g., with "chown -R --preserve-root /".  */
+	      /* This happens e.g., with "chown -R --preserve-root 0 /"
+		 and with "chown -RH --preserve-root 0 symlink-to-root".  */
 	      ROOT_DEV_INO_WARN (file_full_name);
 	      /* Tell fts not to traverse into this hierarchy.  */
 	      fts_set (fts, ent, FTS_SKIP);
