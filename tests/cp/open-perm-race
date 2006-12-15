@@ -48,16 +48,17 @@ mkdir d && chgrp $group_2 d && chmod g+s,g-w d || framework_failure=1
 touch file && chmod go+w file                  || framework_failure=1
 
 ( gdb --version ) > gdb.out 2>&1
-if test ! -s gdb.out; then
-  echo "$0: can't run gdb.  Skipping this test." 1>&2
-  (exit 77); exit 77
-fi
+case `cat gdb.out` in
+  'GNU gdb'*) ;;
+  *) echo "$0: can't run gdb.  Skipping this test." 1>&2;
+     (exit 77); exit 77;;
+esac
 
-( gdb -nx --batch-silent		\
+gdb -nx --batch-silent			\
     --eval-command='break copy_reg'	\
     --eval-command='break open_safer'	\
     --eval-command='quit'		\
-    $abs_top_builddir/src/cp < /dev/null ) > gdb.out 2>&1
+    $abs_top_builddir/src/cp < /dev/null > gdb.out 2>&1
 if test -s gdb.out; then
   cat <<EOF 1>&2
 $0: can't set breakpoints in cp.  Skipping this test.
@@ -80,8 +81,8 @@ if test $framework_failure = 1; then
   (exit 1); exit 1
 fi
 
-( gdb -nx --batch-silent --command=gdb-cmd --args \
-    $abs_top_builddir/src/cp -p file d ) > gdb.out 2>&1
+gdb -nx --batch-silent --command=gdb-cmd --args \
+    $abs_top_builddir/src/cp -p file d > gdb.out 2>&1
 # Expect no output.
 
 if test -s gdb.out; then

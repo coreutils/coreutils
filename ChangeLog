@@ -1,3 +1,10 @@
+2006-12-15  Jim Meyering  <jim@meyering.net>
+
+	* tests/cp/open-perm-race: Correct the gdb-existence check.
+	Don't run either subsequent gdb command in a sub-shell.
+	Reported by Thomas Schwinge.
+	* THANKS: bring up to date.
+
 2006-12-14  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Make sure cp -p isn't too generous with file permissions.
