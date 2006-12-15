@@ -1,0 +1,71 @@
+#!/bin/sh
+# Make sure cp -p isn't too generous with file permissions.
+
+# Copyright (C) 2006 Free Software Foundation, Inc.
+
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+# 02110-1301, USA.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  cp --version
+fi
+
+pwd=`pwd`
+t0=`echo "$0"|sed 's,.*/,,'`.tmp;tmp=$t0/$$
+trap 'status=$?; cd "$pwd" && rm -rf $t0 && exit $status' 0
+trap '(exit $?); exit' 1 2 13 15
+
+framework_failure=0
+mkdir -p $tmp || framework_failure=1
+cd $tmp || framework_failure=1
+
+umask 022
+mkfifo fifo || {
+  echo "$0: fifos not supported; skipping this test." 1>&2
+  (exit 77); exit 77
+}
+
+# Copy a fifo's contents.  That way, we can examine the
+# destination permissions before they're finalized.
+cp -p --copy-contents fifo fifo-copy &
+cp_pid=$!
+
+(
+  # Now 'cp' is reading the fifo.  Wait for the destination file to
+  # be created, encouraging things along by echoing to the fifo.
+  while test ! -f fifo-copy; do
+    echo foo
+  done
+
+  # Check the permissions of the destination.
+  ls -l fifo-copy >ls.out
+
+  # Close the fifo so that "cp" can continue.  But output first,
+  # before exiting, otherwise some shells would optimize away the file
+  # descriptor that holds the fifo open.
+  echo foo
+) >fifo
+
+case `cat ls.out` in
+-???------*)
+  fail=0;;
+*)
+  fail=1;;
+esac
+
+wait $cp_pid || fail=1
+
+(exit $fail); exit $fail

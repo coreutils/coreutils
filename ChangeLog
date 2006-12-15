@@ -1,5 +1,9 @@
 2006-12-14  Paul Eggert  <eggert@cs.ucla.edu>
 
+	Make sure cp -p isn't too generous with file permissions.
+	* tests/cp/Makefile.am (TESTS): Add file-perm-race.
+	* tests/cp/file-perm-race: New file.
+
 	Ensure cp -pR --parents isn't too generous with parent permissions.
 	* tests/cp/Makefile.am (TESTS): Add parent-perm-race.
 	* tests/cp/parent-perm-race: New file.

@@ -21,7 +21,7 @@
 AUTOMAKE_OPTIONS = 1.1 gnits
 
 TESTS = \
-  open-perm-race parent-perm-race \
+  file-perm-race open-perm-race parent-perm-race \
   backup-dir \
   src-base-dot \
   sparse \
