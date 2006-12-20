@@ -36,6 +36,7 @@ TESTS_ENVIRONMENT = \
 # will execute the test script rather than the standard utility.
 
 TESTS = \
+  cut \
   wc-files0-from \
   wc-files0 \
   cat-proc \
