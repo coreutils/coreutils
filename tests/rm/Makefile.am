@@ -21,6 +21,7 @@
 AUTOMAKE_OPTIONS = 1.1 gnits
 
 TESTS = \
+  fail-eacces \
   one-file-system \
   ignorable \
   readdir-bug \

@@ -1016,8 +1016,7 @@ remove_entry (int fd_cwd, Dirstack_state const *ds, char const *filename,
 	errno = EISDIR;
 
       if (! x->recursive
-	  || errno == ENOENT || errno == ENOTDIR
-	  || errno == ELOOP || errno == ENAMETOOLONG)
+	  || (cache_stat_ok (st) && !S_ISDIR (st->st_mode)))
 	{
 	  if (ignorable_missing (x, errno))
 	    return RM_OK;
@@ -1028,6 +1027,7 @@ remove_entry (int fd_cwd, Dirstack_state const *ds, char const *filename,
 		 quote (full_filename (filename)));
 	  return RM_ERROR;
 	}
+      assert (!cache_stat_ok (st) || S_ISDIR (st->st_mode));
     }
   else
     {

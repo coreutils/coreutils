@@ -1,5 +1,17 @@
 2006-12-20  Jim Meyering  <jim@meyering.net>
 
+	"rm -rf /etc/motd" (run by non-root) now prints a diagnostic.
+	* src/remove.c (remove_entry): Handle EACCES for a non-directory, too.
+	Don't let a non-directory get by with errno == EPERM, either.
+	Check the file type directly (using cached stat value), rather
+	than trying to guess it from errno values.
+	Karl Berry reported that a cross-partition "mv /etc/issue ~"
+	failed with the um,... suboptimal diagnostic,
+	"mv: cannot remove `/etc/issue': Not a directory".
+	* tests/rm/Makefile.am (TESTS): Add fail-eacces.
+	* tests/rm/fail-eacces: New file.
+	* NEWS: Mention that both mv and rm are affected.
+
 	"cut -f 2- A B" no longer triggers a double-free bug
 	* src/cut.c (cut_fields): Set file-scoped global to NULL after
 	freeing it.  This avoids a double-free (and core dump on some systems)
