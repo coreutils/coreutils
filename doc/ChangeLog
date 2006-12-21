@@ -1,3 +1,9 @@
+2006-12-21  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi (dd invocation): Improve the documentation
+	for bs, ibs, obs, and cbs.  Suggestion from Dan Jacobson.
+	Patch by Olivier Delhomme.
+
 2006-12-14  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi: Remove two doubled words.

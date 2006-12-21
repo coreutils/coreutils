@@ -7155,25 +7155,28 @@ bytes (or the size specified with @samp{seek=}).
 @opindex ibs
 @cindex block size of input
 @cindex input block size
-Read @var{bytes} bytes at a time.
+Set the input block size to @var{bytes}.
+This makes @command{dd} read @var{bytes} per block.
 
 @item obs=@var{bytes}
 @opindex obs
 @cindex block size of output
 @cindex output block size
-Write @var{bytes} bytes at a time.
+Set the output block size to @var{bytes}.
+This makes @command{dd} write @var{bytes} per block.
 
 @item bs=@var{bytes}
 @opindex bs
 @cindex block size
-Both read and write @var{bytes} bytes at a time.  This overrides
-@samp{ibs} and @samp{obs}.
+Set both input and output block sizes to @var{bytes}.
+This makes @command{dd} read and write @var{bytes} per block,
+overriding @samp{ibs} and @samp{obs}.
 
 @item cbs=@var{bytes}
 @opindex cbs
 @cindex block size of conversion
 @cindex conversion block size
-Convert @var{bytes} bytes at a time.
+Set the conversion block size to @var{bytes}.
 
 @item skip=@var{blocks}
 @opindex skip
