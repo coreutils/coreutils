@@ -3,6 +3,7 @@
 	* coreutils.texi (dd invocation): Improve the documentation
 	for bs, ibs, obs, and cbs.  Suggestion from Dan Jacobson.
 	Patch by Olivier Delhomme.
+	(dd invocation): Add to the description of cbs.
 
 2006-12-14  Jim Meyering  <jim@meyering.net>
 

@@ -7176,7 +7176,12 @@ overriding @samp{ibs} and @samp{obs}.
 @opindex cbs
 @cindex block size of conversion
 @cindex conversion block size
+@cindex fixed-length records, converting to variable-length
+@cindex variable-length records, converting to fixed-length
 Set the conversion block size to @var{bytes}.
+When converting variable-length records to fixed-length ones
+(@option{conv=block}) or the reverse (@option{conv=unblock}),
+use @var{bytes} as the fixed record length.
 
 @item skip=@var{blocks}
 @opindex skip
