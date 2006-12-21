@@ -1,3 +1,7 @@
+2006-12-21  Jim Meyering  <jim@meyering.net>
+
+	* Makefile.maint (patch-check): Fix shell quoting.
+
 2006-12-20  Jim Meyering  <jim@meyering.net>
 
 	"rm -rf /etc/motd" (run by non-root) now prints a diagnostic.

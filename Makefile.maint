@@ -338,8 +338,8 @@ patch-check:
 	$(MAKE) -C src-c89 CFLAGS='-Wdeclaration-after-statement -Werror' \
 	  || msg='compile failure with extra options';		\
 	rm -rf src-c89 $@.1 $@.2;				\
-	test $$msg = ok && : || echo "$$msg" 1>&2;		\
-	test $$msg = ok
+	test "$$msg" = ok && : || echo "$$msg" 1>&2;		\
+	test "$$msg" = ok
 
 # Ensure that date's --help output stays in sync with the info
 # documentation for GNU strftime.  The only exception is %N,
