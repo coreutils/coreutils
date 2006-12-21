@@ -4,6 +4,8 @@
 	for bs, ibs, obs, and cbs.  Suggestion from Dan Jacobson.
 	Patch by Olivier Delhomme.
 	(dd invocation): Add to the description of cbs.
+	(dd invocation): Specify that bs=N overrides only any
+	_preceding_ ibs and obs settings.  Spotted by Andreas Schwab.
 
 2006-12-14  Jim Meyering  <jim@meyering.net>
 

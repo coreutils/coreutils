@@ -7170,7 +7170,7 @@ This makes @command{dd} write @var{bytes} per block.
 @cindex block size
 Set both input and output block sizes to @var{bytes}.
 This makes @command{dd} read and write @var{bytes} per block,
-overriding @samp{ibs} and @samp{obs}.
+overriding any preceding @samp{ibs} and @samp{obs} settings.
 
 @item cbs=@var{bytes}
 @opindex cbs
