@@ -74,6 +74,9 @@ if dd oflag=nolinks if=$tmp_in of=$tmp_out 2> /dev/null; then
   dd oflag=nolinks < $tmp_in > $tmp_out 2>&1 || fail=1
 fi
 
+outbytes=`echo x | dd bs=3 ibs=10 obs=10 conv=sync 2>/dev/null | wc -c`
+test "$outbytes" -eq 3 || fail=1
+
 rm -f $tmp_in $tmp_in2 $tmp_sym $tmp_out
 
 exit $fail

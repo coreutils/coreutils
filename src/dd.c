@@ -873,6 +873,7 @@ static void
 scanargs (int argc, char **argv)
 {
   int i;
+  size_t blocksize = 0;
 
   for (i = optind; i < argc; i++)
     {
@@ -923,7 +924,7 @@ scanargs (int argc, char **argv)
 	  else if (STREQ (name, "bs"))
 	    {
 	      invalid |= ! (0 < n && n <= MAX_BLOCKSIZE (INPUT_BLOCK_SLOP));
-	      output_blocksize = input_blocksize = n;
+	      blocksize = n;
 	    }
 	  else if (STREQ (name, "cbs"))
 	    {
@@ -947,6 +948,9 @@ scanargs (int argc, char **argv)
 	    error (EXIT_FAILURE, 0, _("invalid number %s"), quote (val));
 	}
     }
+
+  if (blocksize)
+    input_blocksize = output_blocksize = blocksize;
 
   /* If bs= was given, both `input_blocksize' and `output_blocksize' will
      have been set to positive values.  If either has not been set,
