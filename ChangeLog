@@ -1,3 +1,19 @@
+2006-12-26  Jim Meyering  <jim@meyering.net>
+
+	* Makefile.maint (VC-tag): Define, so as to gpg-sign each release
+	tag, using the release version number as the message.
+	(vc-dist): Use $(VC-tag), rather than "$(VC) tag".
+
+2006-12-24  Jim Meyering  <jim@meyering.net>
+
+	* Makefile.maint (my-distcheck): Don't *configure* with
+	restrictive CFLAGS ('-Werror -ansi -pedantic -Wno-long-long'),
+	since it ends up provoking errors in generation of inttypes.h
+	on an Ubuntu edgy-based system.  That leads to compilation
+	failure due to e.g., imaxabs redefinition.
+	Instead, configure with default CFLAGS, and compile the
+	package with restrictive CFLAGS.
+
 2006-12-21  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: dd bs= operands now silently override later ibs= and obs=,

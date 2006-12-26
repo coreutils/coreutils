@@ -32,6 +32,7 @@ GZIP_ENV = '--no-name --best $(gzip_rsyncable)'
 CVS = cvs
 GIT = git
 VC = $(GIT)
+VC-tag = git-tag -s -m '$(VERSION)'
 
 CVS_LIST = build-aux/vc-list-files
 
@@ -494,7 +495,7 @@ maintainer-distcheck:
 # checks fail.  Also, make sure the NEWS file is up-to-date.
 # FIXME: use dist-hook/my-dist like distcheck-hook/my-distcheck.
 vc-dist: $(local-check) cvs-check maintainer-distcheck
-	$(VC) tag $(this-vc-tag)
+	$(VC-tag) $(this-vc-tag)
 	$(MAKE) dist
 
 # Use this to make sure we don't run these programs when building
@@ -532,7 +533,7 @@ my-distcheck: $(local-check) $(release_archive_dir)/$(prev-tgz)
 	cd $(t)/$(distdir)				\
 	  && (cd src && patch -V never --fuzz=0 <c99-to-c89.diff) \
 	  && ./configure --disable-largefile		\
-	      CFLAGS='-Werror -ansi -pedantic -Wno-long-long' \
+	       CFLAGS='-Werror -ansi -pedantic -Wno-long-long' \
 	  && $(MAKE)
 	-rm -rf $(t)
 	@echo "========================"; \
