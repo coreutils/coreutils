@@ -19,7 +19,7 @@
 
 dnl Written by Jim Meyering.
 
-AC_PREREQ(2.60)
+AC_PREREQ(2.61)
 AC_INIT([GNU coreutils],[6.7-dirty],[bug-coreutils@gnu.org])
 AC_CONFIG_SRCDIR(src/ls.c)
 
@@ -27,7 +27,7 @@ AC_CONFIG_AUX_DIR(build-aux)
 AC_CONFIG_HEADERS([lib/config.h:lib/config.hin])
 
 AB_INIT()
-AM_INIT_AUTOMAKE([1.9.6 gnits dist-bzip2])
+AM_INIT_AUTOMAKE([1.10 gnits dist-bzip2])
 
 AC_PROG_CC_STDC
 AM_PROG_CC_C_O
