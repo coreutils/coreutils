@@ -1,3 +1,8 @@
+2006-12-27  Jim Meyering  <jim@meyering.net>
+
+	* src/tail.c (usage): Mention +N for --bytes and --lines.
+	Suggestion from Evan Hunt.
+
 2006-12-26  Jim Meyering  <jim@meyering.net>
 
 	* configure.ac: Require autoconf-2.61 and automake-1.10.

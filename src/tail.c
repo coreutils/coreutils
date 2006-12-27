@@ -231,7 +231,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
                            inaccessible when tail starts or if it becomes\n\
                            inaccessible later; useful when following by name,\n\
                            i.e., with --follow=name\n\
-  -c, --bytes=N            output the last N bytes\n\
+  -c, --bytes=N            output the last N bytes; alternatively, use +N to\n\
+                           output bytes starting with the Nth of each file\n\
 "), stdout);
      fputs (_("\
   -f, --follow[={name|descriptor}]\n\
@@ -241,7 +242,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -F                       same as --follow=name --retry\n\
 "), stdout);
      printf (_("\
-  -n, --lines=N            output the last N lines, instead of the last %d\n\
+  -n, --lines=N            output the last N lines, instead of the last %d;\n\
+                           or use +N to output lines starting with the Nth\n\
       --max-unchanged-stats=N\n\
                            with --follow=name, reopen a FILE which has not\n\
                            changed size after N (default %d) iterations\n\
