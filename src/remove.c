@@ -432,7 +432,7 @@ ds_free (Dirstack_state *ds)
    directory (usually now empty) from which we're coming, and which
    corresponds to the input value of *DIRP.  */
 static char *
-AD_pop_and_chdir (DIR **dirp, Dirstack_state *ds)
+AD_pop_and_chdir (DIR **dirp, int *fdp, Dirstack_state *ds)
 {
   struct AD_ent *leaf_dir_ent = AD_stack_top(ds);
   struct dev_ino leaf_dev_ino = leaf_dir_ent->dev_ino;
@@ -499,15 +499,6 @@ AD_pop_and_chdir (DIR **dirp, Dirstack_state *ds)
 	{
 	  error (0, 0, _("FATAL: directory %s changed dev/ino"),
 		 quote (full_filename (".")));
-	  goto close_and_next;
-	}
-
-      *dirp = fdopendir (fd);
-      if (*dirp == NULL)
-	{
-	  error (0, errno, _("FATAL: cannot return to .. from %s"),
-		 quote (full_filename (".")));
-
 	close_and_next:;
 	  close (fd);
 
@@ -515,6 +506,7 @@ AD_pop_and_chdir (DIR **dirp, Dirstack_state *ds)
 	  free (prev_dir);
 	  longjmp (ds->current_arg_jumpbuf, 1);
 	}
+      *fdp = fd;
     }
   else
     {
@@ -524,9 +516,10 @@ AD_pop_and_chdir (DIR **dirp, Dirstack_state *ds)
 		 quote (full_filename (prev_dir)));
 	  goto next_cmdline_arg;
 	}
-      *dirp = NULL;
+      *fdp = AT_FDCWD;
     }
 
+  *dirp = NULL;
   return prev_dir;
 }
 
@@ -1384,9 +1377,9 @@ remove_dir (int fd_cwd, Dirstack_state *ds, char const *dir,
       {
 	/* The name of the directory that we have just processed,
 	   nominally removing all of its contents.  */
-	char *empty_dir = AD_pop_and_chdir (&dirp, ds);
-	int fd = (dirp != NULL ? dirfd (dirp) : AT_FDCWD);
-	assert (dirp != NULL || AD_stack_height (ds) == 1);
+	int fd;
+	char *empty_dir = AD_pop_and_chdir (&dirp, &fd, ds);
+	assert (fd != AT_FDCWD || AD_stack_height (ds) == 1);
 
 	/* Try to remove EMPTY_DIR only if remove_cwd_entries succeeded.  */
 	if (tmp_status == RM_OK)
@@ -1405,6 +1398,8 @@ remove_dir (int fd_cwd, Dirstack_state *ds, char const *dir,
 	      {
 		free (empty_dir);
 		status = s;
+		if (fd != AT_FDCWD)
+		  close (fd);
 		goto closedir_and_return;
 	      }
 
@@ -1426,7 +1421,18 @@ remove_dir (int fd_cwd, Dirstack_state *ds, char const *dir,
 
 	free (empty_dir);
 
-	if (AD_stack_height (ds) == 1)
+	if (fd != AT_FDCWD)
+	  {
+	    dirp = fdopendir (fd);
+	    if (dirp == NULL)
+	      {
+		error (0, errno, _("FATAL: cannot return to .. from %s"),
+		  quote (full_filename (".")));
+		close (fd);
+		longjmp (ds->current_arg_jumpbuf, 1);
+	      }
+	  }
+	else
 	  break;
       }
     }
