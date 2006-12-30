@@ -417,22 +417,32 @@ ds_free (Dirstack_state *ds)
   free (ds);
 }
 
-/* Pop the active directory (AD) stack and move *DIRP `up' one level,
+/* Pop the active directory (AD) stack and prepare to move `up' one level,
    safely.  Moving `up' usually means opening `..', but when we've just
    finished recursively processing a command-line directory argument,
-   there's nothing left on the stack, so set *DIRP to NULL in that case.
-   The idea is to return with *DIRP opened on the parent directory,
+   there's nothing left on the stack, so set *FDP to AT_FDCWD in that case.
+   The idea is to return with *FDP opened on the parent directory,
    assuming there are entries in that directory that we need to remove.
+
+   Note that we must not call opendir (or fdopendir) just yet, since
+   the caller must first remove the directory we're coming from.
+   That is because some file system implementations cache readdir
+   results at opendir time; so calling opendir, rmdir, readdir would
+   return an entry for the just-removed directory.
 
    Whenever using chdir '..' (virtually, now, via openat), verify
    that the post-chdir dev/ino numbers for `.' match the saved ones.
-   If any system call fails or if dev/ino don't match then give a
+   If any system call fails or if dev/ino don't match, then give a
    diagnostic and longjump out.
    Return the name (in malloc'd storage) of the
    directory (usually now empty) from which we're coming, and which
-   corresponds to the input value of *DIRP.  */
+   corresponds to the input value of DIRP.
+
+   Finally, note that while this function's name is no longer as
+   accurate as it once was (it no longer calls chdir), it does open
+   the destination directory.  */
 static char *
-AD_pop_and_chdir (DIR **dirp, int *fdp, Dirstack_state *ds)
+AD_pop_and_chdir (DIR *dirp, int *fdp, Dirstack_state *ds)
 {
   struct AD_ent *leaf_dir_ent = AD_stack_top(ds);
   struct dev_ino leaf_dev_ino = leaf_dir_ent->dev_ino;
@@ -465,15 +475,15 @@ AD_pop_and_chdir (DIR **dirp, int *fdp, Dirstack_state *ds)
   if (1 < AD_stack_height (ds))
     {
       struct stat sb;
-      int fd = openat (dirfd (*dirp), "..", O_RDONLY);
-      if (closedir (*dirp) != 0)
+      int fd = openat (dirfd (dirp), "..", O_RDONLY);
+      if (closedir (dirp) != 0)
 	{
 	  error (0, errno, _("FATAL: failed to close directory %s"),
 		 quote (full_filename (prev_dir)));
 	  goto next_cmdline_arg;
 	}
 
-      /* The above fails with EACCES when *DIRP is readable but not
+      /* The above fails with EACCES when DIRP is readable but not
 	 searchable, when using Solaris' openat.  Without this openat
 	 call, tests/rm2 would fail to remove directories a/2 and a/3.  */
       if (fd < 0)
@@ -510,7 +520,7 @@ AD_pop_and_chdir (DIR **dirp, int *fdp, Dirstack_state *ds)
     }
   else
     {
-      if (closedir (*dirp) != 0)
+      if (closedir (dirp) != 0)
 	{
 	  error (0, errno, _("FATAL: failed to close directory %s"),
 		 quote (full_filename (prev_dir)));
@@ -519,7 +529,6 @@ AD_pop_and_chdir (DIR **dirp, int *fdp, Dirstack_state *ds)
       *fdp = AT_FDCWD;
     }
 
-  *dirp = NULL;
   return prev_dir;
 }
 
@@ -1375,10 +1384,11 @@ remove_dir (int fd_cwd, Dirstack_state *ds, char const *dir,
 	 --one-file-system, when the current directory is on a
 	 different file system.  */
       {
+	int fd;
 	/* The name of the directory that we have just processed,
 	   nominally removing all of its contents.  */
-	int fd;
-	char *empty_dir = AD_pop_and_chdir (&dirp, &fd, ds);
+	char *empty_dir = AD_pop_and_chdir (dirp, &fd, ds);
+	dirp = NULL;
 	assert (fd != AT_FDCWD || AD_stack_height (ds) == 1);
 
 	/* Try to remove EMPTY_DIR only if remove_cwd_entries succeeded.  */
@@ -1421,19 +1431,17 @@ remove_dir (int fd_cwd, Dirstack_state *ds, char const *dir,
 
 	free (empty_dir);
 
-	if (fd != AT_FDCWD)
-	  {
-	    dirp = fdopendir (fd);
-	    if (dirp == NULL)
-	      {
-		error (0, errno, _("FATAL: cannot return to .. from %s"),
-		  quote (full_filename (".")));
-		close (fd);
-		longjmp (ds->current_arg_jumpbuf, 1);
-	      }
-	  }
-	else
+	if (fd == AT_FDCWD)
 	  break;
+
+	dirp = fdopendir (fd);
+	if (dirp == NULL)
+	  {
+	    error (0, errno, _("FATAL: cannot return to .. from %s"),
+		   quote (full_filename (".")));
+	    close (fd);
+	    longjmp (ds->current_arg_jumpbuf, 1);
+	  }
       }
     }
 
