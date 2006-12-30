@@ -295,8 +295,8 @@ copy_reg (char const *src_name, char const *dst_name,
       goto close_src_desc;
     }
 
-  /* These semantics are required for cp.
-     The if-block will be taken in move_mode.  */
+  /* The semantics of the following open calls are mandated
+     by the specs for both cp and mv.  */
   if (! *new_dst)
     {
       dest_desc = open (dst_name, O_WRONLY | O_TRUNC | O_BINARY);
