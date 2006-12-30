@@ -1,5 +1,7 @@
 2006-12-30  Jim Meyering  <jim@meyering.net>
 
+	* tests/misc/base64: Factor a long, repetitive string.
+
 	* src/c99-to-c89.diff: Adjust remove.c offsets.
 
 	Clean up after the change of 2006-12-28.

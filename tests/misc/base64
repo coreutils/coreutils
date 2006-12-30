@@ -37,8 +37,7 @@ use strict;
 # Turn off localisation of executable's ouput.
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
 
-my $a39 = "YWFhY\nWFhYW\nFhYWF\nhYWFh\nYWFhY\nWFhYW\nFhYWF\n"
-  . "hYWFh\nYWFhY\nWFhYW\nFh";
+(my $a39 = 'YWFh' x 13) =~ s/(.{5})/$1\n/g;
 
 my @Tests =
     (
