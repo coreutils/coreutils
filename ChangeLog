@@ -1,5 +1,9 @@
 2006-12-30  Jim Meyering  <jim@meyering.net>
 
+	* tests/rm/fail-eperm: Avoid spurious differences (the error function
+	from latest glibc no longer prints the full program_name): so don't
+	invoke rm via ../../src/rm.  Instead, invoke it via "PATH=../../src rm".
+
 	* tests/mv/acl (skip): Skip this test also if the destination
 	directory, which is on a different file system, lacks ACL support.
 
