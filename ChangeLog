@@ -1,5 +1,9 @@
 2006-12-30  Jim Meyering  <jim@meyering.net>
 
+	* bootstrap (gnulib_extra_files): Remove announce-gen.
+	* bootstrap.conf (gnulib_modules): Add it here instead, now that
+	it's a module.
+
 	* tests/misc/base64: Factor a long, repetitive string.
 
 	* src/c99-to-c89.diff: Adjust remove.c offsets.
