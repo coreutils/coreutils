@@ -1,3 +1,8 @@
+2007-01-01  Jim Meyering  <jim@meyering.net>
+
+	* tests/rm/fail-eperm: Revert last change.  The PATH=... setting
+	is not honored at least on HP-UX 11.23 systems.
+
 2006-12-30  Jim Meyering  <jim@meyering.net>
 
 	* bootstrap (gnulib_extra_files): Remove announce-gen.

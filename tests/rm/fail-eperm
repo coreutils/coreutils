@@ -59,6 +59,7 @@ delete @ENV{qw(BASH_ENV CDPATH ENV PATH)};
 $ENV{IFS}  = '';
 
 my @dir_list = qw(/tmp /var/tmp /usr/tmp);
+my $rm = '../../src/rm';
 
 # Find a directory with the sticky bit set.
 my $found_dir;
@@ -95,8 +96,8 @@ foreach my $dir (@dir_list)
 
 	    # Invoke rm on this file and ensure that we get the
 	    # expected exit code and diagnostic.
-	    my $cmd = "rm -f -- $target_file";
-	    open RM, "PATH=../../src $cmd 2>&1 |"
+	    my $cmd = "$rm -f -- $target_file";
+	    open RM, "$cmd 2>&1 |"
 	      or die "$ME: cannot execute `$cmd'\n";
 
 	    my $line = <RM>;
@@ -117,7 +118,7 @@ foreach my $dir (@dir_list)
 		die "$ME: command `$cmd' died with signal $sig_num\n";
 	      }
 
-	    my $exp = "rm: cannot remove `$target_file':";
+	    my $exp = "$rm: cannot remove `$target_file':";
 	    $line
 	      or die "$ME: no output from `$cmd';\n"
 		. "expected something like `$exp ...'\n";
