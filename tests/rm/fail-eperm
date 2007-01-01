@@ -3,7 +3,7 @@
 # Ensure that rm gives the expected diagnostic when failing to remove a file
 # owned by some other user in a directory with the sticky bit set.
 
-# Copyright (C) 2002, 2003, 2004, 2006 Free Software Foundation, Inc.
+# Copyright (C) 2002, 2003, 2004, 2006, 2007 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -118,10 +118,15 @@ foreach my $dir (@dir_list)
 		die "$ME: command `$cmd' died with signal $sig_num\n";
 	      }
 
-	    my $exp = "$rm: cannot remove `$target_file':";
+	    my $exp = "rm: cannot remove `$target_file':";
 	    $line
 	      or die "$ME: no output from `$cmd';\n"
 		. "expected something like `$exp ...'\n";
+
+	    # Transform the actual diagnostic so that it starts with "rm:".
+	    # Depending on your system, it might be "rm:" already, or
+	    # "../../src/rm:".
+	    $line =~ s,^\Q$rm\E:,rm:,;
 
 	    my $regex = quotemeta $exp;
 	    $line =~ /^$regex/

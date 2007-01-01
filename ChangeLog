@@ -2,6 +2,8 @@
 
 	* tests/rm/fail-eperm: Revert last change.  The PATH=... setting
 	is not honored at least on HP-UX 11.23 systems.
+	Instead, simply transform the actual output diagnostic.
+	Test failure reported by Bob Proulx.
 
 2006-12-30  Jim Meyering  <jim@meyering.net>
 
