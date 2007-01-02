@@ -1,5 +1,5 @@
 /* `dir', `vdir' and `ls' directory listing programs for GNU.
-   Copyright (C) 85, 88, 90, 91, 1995-2006 Free Software Foundation, Inc.
+   Copyright (C) 85, 88, 90, 91, 1995-2007 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -2534,14 +2534,15 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
 	 direct.d_type), we have to stat it in order to indicate
 	 sticky and/or other-writable attributes.  */
       || (type == directory && print_with_color)
-      || (print_inode
-	  && (inode == NOT_AN_INODE_NUMBER
-	      /* When dereferencing symlinks, the inode must come from
-		 stat, but readdir provides the inode of lstat.  Command
-		 line dereferences are already taken care of by the above
-		 assertion that the inode number is not yet known.  */
-	      || (dereference == DEREF_ALWAYS
-		  && (type == symbolic_link || type == unknown))))
+      /* When dereferencing symlinks, the inode and type must come from
+	 stat, but readdir provides the inode and type of lstat.  */
+      || ((print_inode || format_needs_type)
+	  && (type == symbolic_link || type == unknown)
+	  && (dereference == DEREF_ALWAYS
+	      || (command_line_arg && dereference != DEREF_NEVER)))
+      /* Command line dereferences are already taken care of by the above
+	 assertion that the inode number is not yet known.  */
+      || (print_inode && inode == NOT_AN_INODE_NUMBER)
       || (format_needs_type
 	  && (type == unknown || command_line_arg
 	      /* --indicator-style=classify (aka -F)

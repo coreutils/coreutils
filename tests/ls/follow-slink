@@ -1,7 +1,7 @@
 #!/bin/sh
 # make sure ls -L always follows symlinks
 
-# Copyright (C) 2000, 2002, 2004, 2006 Free Software Foundation, Inc.
+# Copyright (C) 2000, 2002, 2004, 2006, 2007 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -33,9 +33,10 @@ mkdir $tmp || framework_failure=1
 cd $tmp || framework_failure=1
 
 # Isolate output files from directory being listed
-mkdir dir || framework_failure=1
+mkdir dir dir/sub dir1 || framework_failure=1
 cd dir || framework_failure=1
 ln -s link link || framework_failure=1
+ln -s ../../dir1 sub/link-to-dir || framework_failure=1
 
 # Make sure the symlink was created.
 # `ln -s link link' succeeds, but creates no file on
@@ -56,15 +57,30 @@ ls -L link 2> /dev/null && fail=1
 # list the link, provided no further information about the link needed
 # to be printed.  Since POSIX does not specify one way or the other, we
 # opt for compatibility (this was broken in 5.3.0 through 5.94).
-ls -L > ../out || fail=1
+LC_ALL=C ls -L > ../out-L || fail=1
+LC_ALL=C ls -FLR sub > ../out-FLR-sub || fail=1
 
 cd .. || fail=1
 
-cat <<\EOF > exp
+cat <<\EOF > exp-L
 link
+sub
 EOF
 
-cmp out exp || fail=1
-test $fail = 1 && diff out exp 2> /dev/null
+cat <<\EOF > exp-FLR-sub
+sub:
+link-to-dir/
+
+sub/link-to-dir:
+EOF
+
+cmp out-L exp-L || {
+  fail=1
+  diff out-L exp-L
+}
+cmp out-FLR-sub exp-FLR-sub || {
+  fail=1
+  diff out-FLR-sub exp-FLR-sub
+}
 
 (exit $fail); exit $fail

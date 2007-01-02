@@ -17,12 +17,16 @@ GNU coreutils NEWS                                    -*- outline -*-
   dd bs= operands now silently override any later ibs= and obs=
   operands, as POSIX and tradition require.
 
+  "ls -FRL" always follows symbolic links on Linux.  Introduced in
+  coreutils-6.0.
+
   A cross-partition "mv /etc/passwd ~" (by non-root) now prints
   a reasonable diagnostic.  Before, it would print this:
   "mv: cannot remove `/etc/passwd': Not a directory".
 
   "rm -rf /etc/passwd" (run by non-root) now prints a diagnostic.
   Before it would print nothing.
+
 
 * Noteworthy changes in release 6.7 (2006-12-08) [stable]
 
