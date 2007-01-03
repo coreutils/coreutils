@@ -1,3 +1,8 @@
+2007-01-03  Bruno Haible  <bruno@clisp.org>
+
+	* src/copy.c (copy_internal): Use mkfifo as a fallback if mknod fails.
+	Needed on MacOS X.
+
 2007-01-02  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Now, "ls -FRL" always follows symbolic links on Linux.
