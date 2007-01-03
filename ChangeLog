@@ -1,3 +1,7 @@
+2007-01-03  Jim Meyering  <jim@meyering.net>
+
+	* THANKS: Add Evan Hunt.
+
 2007-01-03  Bruno Haible  <bruno@clisp.org>
 
 	Avoid spurious test failures on MacOS X 10.3.9, in a German locale.

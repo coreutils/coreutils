@@ -1,3 +1,9 @@
+2007-01-03  Jim Meyering  <jim@meyering.net>
+
+	Document what the ".0" in e.g., "-k 2,3.0" means, and...
+	* coreutils.texi (sort invocation): ... that it can be applied to the
+	field-end spec, but not the field-start one.  Patch from Evan Hunt.
+
 2006-12-21  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (dd invocation): Improve the documentation
