@@ -1,5 +1,10 @@
 2007-01-03  Bruno Haible  <bruno@clisp.org>
 
+	Avoid spurious test failures on MacOS X 10.3.9, in a German locale.
+	* tests/chown/deref: Apply lang-default.
+	* tests/misc/split-a: Likewise.
+	* tests/mv/reply-no: Likewise.
+
 	* src/copy.c (copy_internal): Use mkfifo as a fallback if mknod fails.
 	Needed on MacOS X.
 

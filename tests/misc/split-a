@@ -23,6 +23,8 @@ if test "$VERBOSE" = yes; then
   split --version
 fi
 
+. $srcdir/../lang-default
+
 pwd=`pwd`
 tmp=split-a.$$
 trap 'status=$?; cd "$pwd" && rm -rf $tmp && exit $status' 0
