@@ -11,3 +11,4 @@ aclocal.m4
 config.status
 configure
 coreutils-*
+chcon

@@ -279,6 +279,11 @@ savedir.c
 savedir.h
 savewd.c
 savewd.h
+se-context_.h
+se-selinux_.h
+selinux
+selinux-at.c
+selinux-at.h
 setenv.c
 setenv.h
 settime.c
