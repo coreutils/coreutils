@@ -1,5 +1,11 @@
 2007-01-04  Jim Meyering  <jim@meyering.net>
 
+	Use the release year, not the current year.
+	* src/groups.sh (version): Use a better name: @RELEASE_YEAR@.
+	* src/Makefile.am (RELEASE_YEAR): Define it.
+	(.sh): Use it.
+	Thanks to a prod from Eric Blake.
+
 	Ensure that "group --version" always prints the current year.
 	* src/groups.sh (version): Use @CURRENT_YEAR@, rather than 2006.
 	* src/Makefile.am (.sh): Also substitute for @CURRENT_YEAR@.

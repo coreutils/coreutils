@@ -115,11 +115,16 @@ $(PROGRAMS): ../lib/libcoreutils.a
 
 SUFFIXES = .sh
 
+# Get the release year from ../lib/version-etc.c.
+RELEASE_YEAR = \
+  `sed -n '/.*COPYRIGHT_YEAR = \([0-9][0-9][0-9][0-9]\) };/s//\1/p' \
+    $(top_srcdir)/lib/version-etc.c`
+
 .sh:
 	rm -f $@ $@-t
 	sed \
 	  -e 's!@''bindir''@!$(bindir)!' \
-	  -e 's/@''CURRENT_YEAR'@/`date +%Y`/ \
+	  -e 's/@''RELEASE_YEAR'@/$(RELEASE_YEAR)/ \
 	  -e 's/@''GNU_PACKAGE''@/$(GNU_PACKAGE)/' \
 	  -e 's/@''PACKAGE_BUGREPORT''@/$(PACKAGE_BUGREPORT)/' \
 	  -e 's/@''VERSION''@/$(VERSION)/' $< > $@-t
