@@ -789,6 +789,9 @@
 
 2007-01-04  Jim Meyering  <jim@meyering.net>
 
+	* man/chcon.x: New file.
+	* man/Makefile.am: Build chcon.1.
+
 	New program: chcon
 	* gl/modules/selinux-at: New module.  Check for libselinux and set
 	LIB_SELINUX here, unconditionally, rather than depending on
