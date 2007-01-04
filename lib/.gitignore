@@ -64,6 +64,7 @@ exitfail.c
 exitfail.h
 fchmodat.c
 fchown-stub.c
+fchownat.c
 fcntl--.h
 fcntl-safer.h
 fcntl.h
@@ -337,6 +338,7 @@ verify.h
 version-etc-fsf.c
 version-etc.c
 version-etc.h
+wctype_.h
 wcwidth.h
 xalloc-die.c
 xalloc.h

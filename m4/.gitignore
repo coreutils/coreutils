@@ -220,6 +220,7 @@ utimes.m4
 vasnprintf.m4
 vasprintf.m4
 wchar_t.m4
+wctype.m4
 wcwidth.m4
 wint_t.m4
 xalloc.m4
