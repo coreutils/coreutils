@@ -1,5 +1,10 @@
 2007-01-04  Jim Meyering  <jim@meyering.net>
 
+	Ensure that "group --version" always prints the current year.
+	* src/groups.sh (version): Use @CURRENT_YEAR@, rather than 2006.
+	* src/Makefile.am (.sh): Also substitute for @CURRENT_YEAR@.
+	Suggestion from Eric Blake.
+
 	When decoding, always allow newlines in input, with almost no
 	performance impact.
 	* src/base64.c (do_decode): Initialize decode context.
