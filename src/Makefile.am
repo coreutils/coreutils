@@ -19,7 +19,7 @@
 EXTRA_PROGRAMS = chroot df hostid nice pinky stty su uname uptime users who
 
 bin_SCRIPTS = groups
-bin_PROGRAMS = [ chgrp chown chmod cp dd dircolors du \
+bin_PROGRAMS = [ chcon chgrp chown chmod cp dd dircolors du \
   ginstall link ln dir vdir ls mkdir \
   mkfifo mknod mv nohup readlink rm rmdir shred stat sync touch unlink \
   cat cksum comm csplit cut expand fmt fold head join md5sum \
@@ -60,6 +60,7 @@ AM_CPPFLAGS = -I$(top_srcdir)/lib
 LDADD = ../lib/libcoreutils.a $(LIBINTL) ../lib/libcoreutils.a
 
 # for eaccess in lib/euidaccess.c.
+chcon_LDADD = $(LDADD) $(LIB_SELINUX)
 cp_LDADD = $(LDADD) $(LIB_EACCESS)
 ginstall_LDADD = $(LDADD) $(LIB_EACCESS)
 mv_LDADD = $(LDADD) $(LIB_EACCESS)
