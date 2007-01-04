@@ -168,6 +168,8 @@ same.m4
 save-cwd.m4
 savedir.m4
 savewd.m4
+selinux-context-h.m4
+selinux-selinux-h.m4
 setenv.m4
 settime.m4
 sha1.m4

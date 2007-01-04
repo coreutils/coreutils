@@ -37,3 +37,4 @@ tests/test/test-tests
 tests/tr/tr-tests
 tests/uniq/uniq-tests
 tests/wc/wc-tests
+chcon
