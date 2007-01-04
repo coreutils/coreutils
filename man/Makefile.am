@@ -18,7 +18,7 @@
 # 02110-1301, USA.
 
 dist_man_MANS = \
-  base64.1 basename.1 cat.1 chgrp.1 chmod.1 chown.1 cksum.1 comm.1 \
+  base64.1 basename.1 cat.1 chcon.1 chgrp.1 chmod.1 chown.1 cksum.1 comm.1 \
   cp.1 csplit.1 cut.1 date.1 dd.1 df.1 dir.1 dircolors.1 dirname.1 du.1 \
   echo.1 env.1 expand.1 expr.1 factor.1 false.1 fmt.1 fold.1 groups.1 \
   head.1 hostname.1 id.1 install.1 join.1 kill.1 \
@@ -45,6 +45,7 @@ common_dep = $(top_srcdir)/configure.ac
 base64.1:	$(common_dep)	$(srcdir)/base64.x	../src/base64.c
 basename.1:	$(common_dep)	$(srcdir)/basename.x	../src/basename.c
 cat.1:		$(common_dep)	$(srcdir)/cat.x		../src/cat.c
+chcon.1:	$(common_dep)	$(srcdir)/chcon.x	../src/chcon.c
 chgrp.1:	$(common_dep)	$(srcdir)/chgrp.x	../src/chgrp.c
 chmod.1:	$(common_dep)	$(srcdir)/chmod.x	../src/chmod.c
 chown.1:	$(common_dep)	$(srcdir)/chown.x	../src/chown.c
