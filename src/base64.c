@@ -1,5 +1,5 @@
 /* Base64 encode/decode strings or files.
-   Copyright (C) 2004, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2004, 2005, 2006, 2007 Free Software Foundation, Inc.
 
    This file is part of Base64.
 
@@ -83,9 +83,10 @@ With no FILE, or when FILE is -, read standard input.\n"), stdout);
       fputs (_("\
 \n\
 The data are encoded as described for the base64 alphabet in RFC 3548.\n\
-Decoding require compliant input by default, use --ignore-garbage to\n\
-attempt to recover from non-alphabet characters (such as newlines) in\n\
-the encoded stream.\n"), stdout);
+When decoding, the input may contain newlines in addition to the bytes of\n\
+the formal base64 alphabet.  Use --ignore-garbage to attempt to recover\n\
+from any other non-alphabet bytes in the encoded stream.\n"),
+	     stdout);
       printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
     }
 
@@ -183,11 +184,15 @@ do_decode (FILE *in, FILE *out, bool ignore_garbage)
   char inbuf[B64BLOCKSIZE];
   char outbuf[BLOCKSIZE];
   size_t sum;
+  struct base64_decode_context ctx;
+
+  base64_decode_ctx_init (&ctx);
 
   do
     {
       bool ok;
       size_t n;
+      unsigned int k;
 
       sum = 0;
       do
@@ -211,14 +216,23 @@ do_decode (FILE *in, FILE *out, bool ignore_garbage)
 	}
       while (sum < B64BLOCKSIZE && !feof (in));
 
-      n = BLOCKSIZE;
-      ok = base64_decode (inbuf, sum, outbuf, &n);
+      /* The following "loop" is usually iterated just once.
+	 However, when it processes the final input buffer, we want
+	 to iterate it one additional time, but with an indicator
+	 telling it to flush what is in CTX.  */
+      for (k = 0; k < 1 + feof (in); k++)
+	{
+	  if (k == 1 && ctx.i == 0)
+	    break;
+	  n = BLOCKSIZE;
+	  ok = base64_decode (&ctx, inbuf, (k == 0 ? sum : 0), outbuf, &n);
 
-      if (fwrite (outbuf, 1, n, out) < n)
-	error (EXIT_FAILURE, errno, _("write error"));
+	  if (fwrite (outbuf, 1, n, out) < n)
+	    error (EXIT_FAILURE, errno, _("write error"));
 
-      if (!ok)
-	error (EXIT_FAILURE, 0, _("invalid input"));
+	  if (!ok)
+	    error (EXIT_FAILURE, 0, _("invalid input"));
+	}
     }
   while (!feof (in));
 }

@@ -1849,7 +1849,8 @@ output will be the original data.
 @opindex -i
 @opindex --ignore-garbage
 @cindex Ignore garbage in base64 stream
-During decoding, ignore unrecognized characters (including newline),
+When decoding, newlines are always accepted.
+During decoding, ignore unrecognized bytes,
 to permit distorted data to be decoded.
 
 @end table

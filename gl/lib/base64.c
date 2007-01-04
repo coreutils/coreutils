@@ -1,5 +1,5 @@
 /* base64.c -- Encode binary data using printable characters.
-   Copyright (C) 1999, 2000, 2001, 2004, 2005, 2006 Free Software
+   Copyright (C) 1999, 2000, 2001, 2004, 2005, 2006, 2007 Free Software
    Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -51,6 +51,8 @@
 
 /* Get UCHAR_MAX. */
 #include <limits.h>
+
+#include <string.h>
 
 /* C89 compliant way to cast 'char' to 'unsigned char'. */
 static inline unsigned char
@@ -300,89 +302,220 @@ isbase64 (char ch)
   return uchar_in_range (to_uchar (ch)) && 0 <= b64[to_uchar (ch)];
 }
 
-/* Decode base64 encoded input array IN of length INLEN to output
-   array OUT that can hold *OUTLEN bytes.  Return true if decoding was
-   successful, i.e. if the input was valid base64 data, false
-   otherwise.  If *OUTLEN is too small, as many bytes as possible will
-   be written to OUT.  On return, *OUTLEN holds the length of decoded
-   bytes in OUT.  Note that as soon as any non-alphabet characters are
-   encountered, decoding is stopped and false is returned.  This means
-   that, when applicable, you must remove any line terminators that is
-   part of the data stream before calling this function.  */
-bool
-base64_decode (const char *restrict in, size_t inlen,
-	       char *restrict out, size_t *outlen)
+/* Initialize decode-context buffer, CTX.  */
+void
+base64_decode_ctx_init (struct base64_decode_context *ctx)
 {
-  size_t outleft = *outlen;
+  ctx->i = 0;
+}
 
-  while (inlen >= 2)
+/* If CTX->i is 0 or 4, there are four or more bytes in [*IN..IN_END), and
+   none of those four is a newline, then return *IN.  Otherwise, copy up to
+   4 - CTX->i non-newline bytes from that range into CTX->buf, starting at
+   index CTX->i and setting CTX->i to reflect the number of bytes copied,
+   and return CTX->buf.  In either case, advance *IN to point to the byte
+   after the last one processed, and set *N_NON_NEWLINE to the number of
+   verified non-newline bytes accessible through the returned pointer.  */
+static inline char *
+get_4 (struct base64_decode_context *ctx,
+       char const *restrict *in, char const *restrict in_end,
+       size_t *n_non_newline)
+{
+  if (ctx->i == 4)
+    ctx->i = 0;
+
+  if (ctx->i == 0)
     {
-      if (!isbase64 (in[0]) || !isbase64 (in[1]))
-	break;
-
-      if (outleft)
+      char const *t = *in;
+      if (4 <= in_end - *in && memchr (t, '\n', 4) == NULL)
 	{
-	  *out++ = ((b64[to_uchar (in[0])] << 2)
-		    | (b64[to_uchar (in[1])] >> 4));
-	  outleft--;
+	  /* This is the common case: no newline.  */
+	  *in += 4;
+	  *n_non_newline = 4;
+	  return (char *) t;
+	}
+    }
+
+  {
+    /* Copy non-newline bytes into BUF.  */
+    char const *p = *in;
+    while (p < in_end)
+      {
+	char c = *p++;
+	if (c != '\n')
+	  {
+	    ctx->buf[ctx->i++] = c;
+	    if (ctx->i == 4)
+	      break;
+	  }
+      }
+
+    *in = p;
+    *n_non_newline = ctx->i;
+    return ctx->buf;
+  }
+}
+
+#define return_false				\
+  do						\
+    {						\
+      *outp = out;				\
+      return false;				\
+    }						\
+  while (false)
+
+/* Decode up to four bytes of base64-encoded data, IN, of length INLEN
+   into the output buffer, *OUT, of size *OUTLEN bytes.  Return true if
+   decoding is successful, false otherwise.  If *OUTLEN is too small,
+   as many bytes as possible are written to *OUT.  On return, advance
+   *OUT to point to the byte after the last one written, and decrement
+   *OUTLEN to reflect the number of bytes remaining in *OUT.  */
+static inline bool
+decode_4 (char const *restrict in, size_t inlen,
+	  char *restrict *outp, size_t *outleft)
+{
+  char *out = *outp;
+  if (inlen < 2)
+    return false;
+
+  if (!isbase64 (in[0]) || !isbase64 (in[1]))
+    return false;
+
+  if (*outleft)
+    {
+      *out++ = ((b64[to_uchar (in[0])] << 2)
+		| (b64[to_uchar (in[1])] >> 4));
+      --*outleft;
+    }
+
+  if (inlen == 2)
+    return_false;
+
+  if (in[2] == '=')
+    {
+      if (inlen != 4)
+	return_false;
+
+      if (in[3] != '=')
+	return_false;
+    }
+  else
+    {
+      if (!isbase64 (in[2]))
+	return_false;
+
+      if (*outleft)
+	{
+	  *out++ = (((b64[to_uchar (in[1])] << 4) & 0xf0)
+		    | (b64[to_uchar (in[2])] >> 2));
+	  --*outleft;
 	}
 
-      if (inlen == 2)
-	break;
+      if (inlen == 3)
+	return_false;
 
-      if (in[2] == '=')
+      if (in[3] == '=')
 	{
 	  if (inlen != 4)
-	    break;
-
-	  if (in[3] != '=')
-	    break;
-
+	    return_false;
 	}
       else
 	{
-	  if (!isbase64 (in[2]))
-	    break;
+	  if (!isbase64 (in[3]))
+	    return_false;
 
-	  if (outleft)
+	  if (*outleft)
 	    {
-	      *out++ = (((b64[to_uchar (in[1])] << 4) & 0xf0)
-			| (b64[to_uchar (in[2])] >> 2));
-	      outleft--;
+	      *out++ = (((b64[to_uchar (in[2])] << 6) & 0xc0)
+			| b64[to_uchar (in[3])]);
+	      --*outleft;
 	    }
+	}
+    }
 
-	  if (inlen == 3)
-	    break;
+  *outp = out;
+  return true;
+}
 
-	  if (in[3] == '=')
+/* Decode base64-encoded input array IN of length INLEN to output array
+   OUT that can hold *OUTLEN bytes.  The input data may be interspersed
+   with newlines.  Return true if decoding was successful, i.e. if the
+   input was valid base64 data, false otherwise.  If *OUTLEN is too
+   small, as many bytes as possible will be written to OUT.  On return,
+   *OUTLEN holds the length of decoded bytes in OUT.  Note that as soon
+   as any non-alphabet, non-newline character is encountered, decoding
+   is stopped and false is returned.  If INLEN is zero, then process
+   only whatever data is stored in CTX.
+
+   Initially, CTX must have been initialized via base64_decode_ctx_init.
+   Subsequent calls to this function must reuse whatever state is recorded
+   in that buffer.  It is necessary for when a quadruple of base64 input
+   bytes spans two input buffers.  */
+
+bool
+base64_decode (struct base64_decode_context *ctx,
+	       const char *restrict in, size_t inlen,
+	       char *restrict out, size_t *outlen)
+{
+  size_t outleft = *outlen;
+  bool flush_ctx = inlen == 0;
+
+  while (true)
+    {
+      size_t outleft_save = outleft;
+      if (ctx->i == 0 && !flush_ctx)
+	{
+	  while (true)
 	    {
-	      if (inlen != 4)
-		break;
-	    }
-	  else
-	    {
-	      if (!isbase64 (in[3]))
+	      /* Save a copy of outleft, in case we need to re-parse this
+		 block of four bytes.  */
+	      outleft_save = outleft;
+	      if (!decode_4 (in, inlen, &out, &outleft))
 		break;
 
-	      if (outleft)
-		{
-		  *out++ = (((b64[to_uchar (in[2])] << 6) & 0xc0)
-			    | b64[to_uchar (in[3])]);
-		  outleft--;
-		}
+	      in += 4;
+	      inlen -= 4;
 	    }
 	}
 
-      in += 4;
-      inlen -= 4;
+      if (inlen == 0 && !flush_ctx)
+	break;
+
+      /* Handle the common case of 72-byte wrapped lines.
+	 This also handles any other multiple-of-4-byte wrapping.  */
+      if (inlen && *in == '\n')
+	{
+	  ++in;
+	  --inlen;
+	  continue;
+	}
+
+      /* Restore OUT and OUTLEFT.  */
+      out -= outleft_save - outleft;
+      outleft = outleft_save;
+
+      {
+	char const *in_end = in + inlen;
+	char const *non_nl = get_4 (ctx, &in, in_end, &inlen);
+
+	/* If the input is empty or consists solely of newlines (0 non-newlines),
+	   then we're done.  Likewise if there are fewer than 4 bytes when not
+	   flushing context.  */
+	if (inlen == 0 || (inlen < 4 && !flush_ctx))
+	  {
+	    inlen = 0;
+	    break;
+	  }
+	if (!decode_4 (non_nl, 4, &out, &outleft))
+	  break;
+
+	inlen = in_end - in;
+      }
     }
 
   *outlen -= outleft;
 
-  if (inlen != 0)
-    return false;
-
-  return true;
+  return inlen == 0;
 }
 
 /* Allocate an output buffer in *OUT, and decode the base64 encoded
@@ -397,12 +530,13 @@ base64_decode (const char *restrict in, size_t inlen,
    input was invalid, in which case *OUT is NULL and *OUTLEN is
    undefined. */
 bool
-base64_decode_alloc (const char *in, size_t inlen, char **out,
+base64_decode_alloc (struct base64_decode_context *ctx,
+		     const char *in, size_t inlen, char **out,
 		     size_t *outlen)
 {
-  /* This may allocate a few bytes too much, depending on input,
-     but it's not worth the extra CPU time to compute the exact amount.
-     The exact amount is 3 * inlen / 4, minus 1 if the input ends
+  /* This may allocate a few bytes too many, depending on input,
+     but it's not worth the extra CPU time to compute the exact size.
+     The exact size is 3 * inlen / 4, minus 1 if the input ends
      with "=" and minus another 1 if the input ends with "==".
      Dividing before multiplying avoids the possibility of overflow.  */
   size_t needlen = 3 * (inlen / 4) + 2;
@@ -411,7 +545,7 @@ base64_decode_alloc (const char *in, size_t inlen, char **out,
   if (!*out)
     return true;
 
-  if (!base64_decode (in, inlen, *out, &needlen))
+  if (!base64_decode (ctx, in, inlen, *out, &needlen))
     {
       free (*out);
       *out = NULL;

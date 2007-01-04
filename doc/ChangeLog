@@ -1,3 +1,8 @@
+2007-01-04  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi (base64 invocation): When decoding, newlines
+	are always accepted.
+
 2007-01-03  Jim Meyering  <jim@meyering.net>
 
 	Document what the ".0" in e.g., "-k 2,3.0" means, and...

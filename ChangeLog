@@ -1,5 +1,20 @@
 2007-01-04  Jim Meyering  <jim@meyering.net>
 
+	When decoding, always allow newlines in input, with almost no
+	performance impact.
+	* src/base64.c (do_decode): Initialize decode context.
+	Call base64_decode one more time, after all input is processed.
+	(usage): When decoding, newlines are always accepted.
+
+	* tests/misc/base64: Add a bunch of tests, for the above.
+	* gl/lib/base64.c: Include <string.h>.
+	(base64_decode_ctx_init, get_4, decode_4): New functions.
+	(base64_decode): Efficiently handle interspersed newlines.
+	(base64_decode_alloc): Update signature.
+	* gl/lib/base64.h (struct base64_decode_context): Define.
+	(base64_decode_ctx_init): Add prototype.
+	(base64_decode, base64_decode_alloc): Update prototypes.
+
 	* gl/lib/base64.c: Copied from gnulib.
 	* gl/lib/base64.h: Likewise.
 
