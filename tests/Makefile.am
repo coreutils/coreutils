@@ -30,7 +30,7 @@ SUBDIRS = \
   tsort unexpand uniq wc
 ## N O T E :: Please do not add new directories.
 
-all_t = t1 t2 t3 t4 t5 t6 t7
+all_t = t1 t2 t3 t4 t5 t6 t7 t8
 .PHONY: check-root $(all_t)
 check-root: $(all_t)
 
@@ -48,6 +48,8 @@ t6:
 	cd rm    && $(MAKE) check TESTS=one-file-system
 t7:
 	cd ls    && $(MAKE) check TESTS=nameless-uid
+t8:
+	cd misc  && $(MAKE) check TESTS=chcon
 
 check-recursive: root-hint
 

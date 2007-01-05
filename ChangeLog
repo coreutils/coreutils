@@ -917,25 +917,6 @@
 
 2007-01-04  Jim Meyering  <jim@meyering.net>
 
-	* man/chcon.x: New file.
-	* man/Makefile.am: Build chcon.1.
-
-	New program: chcon
-	* gl/modules/selinux-at: New module.  Check for libselinux and set
-	LIB_SELINUX here, unconditionally, rather than depending on
-	the configure-time --enable-selinux option.
-	* gl/modules/selinux-h: New module.
-	* bootstrap.conf (gnulib_modules): Add selinux-at.
-	* gl/lib/selinux-at.c, gl/lib/selinux-at.h: New files.
-	* gl/lib/se-selinux_.h: New file.
-	* gl/lib/se-context_.h: New file.
-	* gl/m4/selinux-selinux-h.m4: New file.
-	* gl/m4/selinux-context-h.m4: New file.
-	* src/Makefile.am (bin_PROGRAMS): Add chcon.
-	(chcon_LDADD): Define.
-	* README: Add chcon to the list of programs.
-	* src/chcon.c: Rewrite the original (Red Hat) chcon to use fts.
-
 	* Makefile.cfg (local-checks-to-skip): Skip strftime-check, in
 	case you don't have convenient access to glibc info documentation.
 
