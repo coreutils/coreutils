@@ -1,3 +1,7 @@
+2007-01-05  Mike Frysinger  <vapier@gentoo.org>
+
+	* src/dircolors.hin: Add a TERM directive for cons25.
+
 2007-01-04  Jim Meyering  <jim@meyering.net>
 
 	Use the release year, not the current year.
