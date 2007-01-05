@@ -1,3 +1,10 @@
+2007-01-05  Jim Meyering  <jim@meyering.net>
+
+	Avoid a used-uninitialized bug for invalid input, i.e., when the size
+	of the input, not counting newlines, is 1 % 4.
+	* gl/lib/base64.c (base64_decode): Don't hard-code inlen==4.
+	It may be smaller when flushing.
+
 2007-01-05  Mike Frysinger  <vapier@gentoo.org>
 
 	* src/dircolors.hin: Add a TERM directive for cons25.

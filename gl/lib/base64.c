@@ -506,7 +506,7 @@ base64_decode (struct base64_decode_context *ctx,
 	    inlen = 0;
 	    break;
 	  }
-	if (!decode_4 (non_nl, 4, &out, &outleft))
+	if (!decode_4 (non_nl, inlen, &out, &outleft))
 	  break;
 
 	inlen = in_end - in;
