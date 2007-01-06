@@ -1,3 +1,11 @@
+2007-01-06  G.P. Halkes  <buscom@ghalkes.nl>
+
+	* src/fmt.c (copy_rest): Correct prefix handling.
+	Don't elide a line with the prefix followed by only white space.
+	(get_line): Move EOF-check to loop-termination condition.
+	* tests/fmt/basic (pfx-1): Adjust test to expect desired result.
+	(pfx-2): Remove test; its premise was contrary to the documentation.
+
 2007-01-05  Jim Meyering  <jim@meyering.net>
 
 	Avoid a used-uninitialized bug for invalid input, i.e., when the size

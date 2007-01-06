@@ -607,12 +607,15 @@ copy_rest (FILE *f, int c)
   const char *s;
 
   out_column = 0;
-  if (in_column > next_prefix_indent && c != '\n' && c != EOF)
+  if (in_column > next_prefix_indent || (c != '\n' && c != EOF))
     {
       put_space (next_prefix_indent);
       for (s = prefix; out_column != in_column && *s; out_column++)
 	putchar (*s++);
-      put_space (in_column - out_column);
+      if (c != EOF && c != '\n')
+	put_space (in_column - out_column);
+      if (c == EOF && in_column >= next_prefix_indent + prefix_length)
+	putchar ('\n');
     }
   while (c != '\n' && c != EOF)
     {
@@ -688,10 +691,8 @@ get_line (FILE *f, int c)
 	  flush_paragraph ();
 	}
       word_limit++;
-      if (c == EOF)
-	return EOF;
     }
-  while (c != '\n');
+  while (c != '\n' && c != EOF);
   return get_prefix (f);
 }
 
