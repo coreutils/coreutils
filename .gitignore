@@ -13,6 +13,7 @@ Makefile.in
 THANKS-to-translators
 aclocal.m4
 autom4te.cache
+chcon
 config.cache
 config.h
 config.hin
@@ -37,4 +38,3 @@ tests/test/test-tests
 tests/tr/tr-tests
 tests/uniq/uniq-tests
 tests/wc/wc-tests
-chcon
