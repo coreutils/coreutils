@@ -1,3 +1,9 @@
+2007-01-06  Jim Meyering  <jim@meyering.net>
+
+	* tests/fmt/basic (pfx-only, pfx-of-pfx): New tests,
+	based on examples from G.P. Halkes in
+	<http://article.gmane.org/gmane.comp.gnu.core-utils.bugs/9388>.
+
 2007-01-06  G.P. Halkes  <buscom@ghalkes.nl>
 
 	* src/fmt.c (copy_rest): Correct prefix handling.

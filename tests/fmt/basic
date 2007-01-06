@@ -64,6 +64,18 @@ my @Tests =
      ['pfx-1', qw (-p '>'),
       {IN=>  " 1\n  2\n\t3\n\t\t4\n> quoted\n> text\n"},
       {OUT=> " 1\n  2\n\t3\n\t\t4\n> quoted text\n"}],
+
+     # Don't remove prefix from a prefix-only line.
+     ['pfx-only', qw (-p '>'),
+      {IN=>  ">\n"},
+      {OUT=> ">\n"}],
+
+     # With a multi-byte prefix, say, "foo", don't empty a line that
+     # starts with a strict prefix (e.g. "fo") of that prefix.
+     # With fmt from coreutils-6.7, it would mistakenly output an empty line.
+     ['pfx-of-pfx', qw (-p 'foo'),
+      {IN=>  "fo\n"},
+      {OUT=> "fo\n"}],
 );
 
 my $save_temps = $ENV{DEBUG};
