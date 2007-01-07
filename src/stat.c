@@ -54,6 +54,7 @@
 #elif HAVE_OS_H /* BeOS */
 # include <fs_info.h>
 #endif
+#include <selinux/selinux.h>
 
 #include "system.h"
 
@@ -158,6 +159,7 @@ enum
 };
 
 static struct option const long_options[] = {
+  {"context", no_argument, 0, 'Z'},
   {"dereference", no_argument, NULL, 'L'},
   {"file-system", no_argument, NULL, 'f'},
   {"filesystem", no_argument, NULL, 'f'}, /* obsolete and undocumented alias */
@@ -170,6 +172,9 @@ static struct option const long_options[] = {
 };
 
 char *program_name;
+
+/* Whether to follow symbolic links;  True for --dereference (-L).  */
+static bool follow_links;
 
 /* Whether to interpret backslash-escape sequences.
    True for --printf=FMT, not for --format=FMT (-c).  */
@@ -394,6 +399,26 @@ out_uint_x (char *pformat, size_t prefix_len, uintmax_t arg)
   printf (pformat, arg);
 }
 
+/* Very specialized function (modifies FORMAT), just so as to avoid
+   duplicating this code between both print_statfs and print_stat.  */
+static void
+out_file_context (char const *filename, char *pformat, size_t prefix_len)
+{
+  char *scontext;
+  if ((follow_links
+       ? getfilecon (filename, &scontext)
+       : lgetfilecon (filename, &scontext)) < 0)
+    {
+      error (0, errno, _("failed to get security context of %s"),
+	     quote (filename));
+      scontext = NULL;
+    }
+  strcpy (pformat + prefix_len, "s");
+  printf (pformat, (scontext ? scontext : "?"));
+  if (scontext)
+    freecon (scontext);
+}
+
 /* print statfs info */
 static void
 print_statfs (char *pformat, size_t prefix_len, char m, char const *filename,
@@ -472,7 +497,9 @@ print_statfs (char *pformat, size_t prefix_len, char m, char const *filename,
     case 'd':
       out_int (pformat, prefix_len, statfsbuf->f_ffree);
       break;
-
+    case 'C':
+      out_file_context (filename, pformat, prefix_len);
+      break;
     default:
       fputc ('?', stdout);
       break;
@@ -594,6 +621,9 @@ print_stat (char *pformat, size_t prefix_len, char m,
 	out_int (pformat, prefix_len, statbuf->st_ctime);
       else
 	out_uint (pformat, prefix_len, statbuf->st_ctime);
+      break;
+    case 'C':
+      out_file_context (filename, pformat, prefix_len);
       break;
     default:
       fputc ('?', stdout);
@@ -774,8 +804,7 @@ do_statfs (char const *filename, bool terse, char const *format)
 
 /* stat the file and print what we find */
 static bool
-do_stat (char const *filename, bool follow_links, bool terse,
-	 char const *format)
+do_stat (char const *filename, bool terse, char const *format)
 {
   struct stat statbuf;
 
@@ -853,6 +882,7 @@ The valid format sequences for files (without --file-system):\n\
   %A   Access rights in human readable form\n\
   %b   Number of blocks allocated (see %B)\n\
   %B   The size in bytes of each block reported by %b\n\
+  %C   SELinux security context string\n\
 "), stdout);
       fputs (_("\
   %d   Device number in decimal\n\
@@ -892,6 +922,7 @@ Valid format sequences for file systems:\n\
   %c   Total file nodes in file system\n\
   %d   Free file nodes in file system\n\
   %f   Free blocks in file system\n\
+  %C   SELinux security context string\n\
 "), stdout);
       fputs (_("\
   %i   File System ID in hex\n\
@@ -913,7 +944,6 @@ main (int argc, char *argv[])
 {
   int c;
   int i;
-  bool follow_links = false;
   bool fs = false;
   bool terse = false;
   char *format = NULL;
@@ -927,7 +957,7 @@ main (int argc, char *argv[])
 
   atexit (close_stdout);
 
-  while ((c = getopt_long (argc, argv, "c:fLt", long_options, NULL)) != -1)
+  while ((c = getopt_long (argc, argv, "c:fLtZ", long_options, NULL)) != -1)
     {
       switch (c)
 	{
@@ -955,6 +985,11 @@ main (int argc, char *argv[])
 	  terse = true;
 	  break;
 
+	case 'Z':  /* FIXME: remove in 2008, warn in 2007 */
+	  /* Ignored, for compatibility with distributions
+	     that implemented this before upstream.  */
+	  break;
+
 	case_GETOPT_HELP_CHAR;
 
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
@@ -973,7 +1008,7 @@ main (int argc, char *argv[])
   for (i = optind; i < argc; i++)
     ok &= (fs
 	   ? do_statfs (argv[i], terse, format)
-	   : do_stat (argv[i], follow_links, terse, format));
+	   : do_stat (argv[i], terse, format));
 
   exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }

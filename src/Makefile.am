@@ -112,6 +112,8 @@ cp_LDADD += $(LIB_ACL)
 mv_LDADD += $(LIB_ACL)
 ginstall_LDADD += $(LIB_ACL)
 
+stat_LDADD = $(LDADD) $(LIB_SELINUX)
+
 $(PROGRAMS): ../lib/libcoreutils.a
 
 SUFFIXES = .sh
