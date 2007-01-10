@@ -1,5 +1,5 @@
 /* chown-core.c -- core functions for changing ownership.
-   Copyright (C) 2000, 2002, 2003, 2004, 2005, 2006 Free Software Foundation.
+   Copyright (C) 2000, 2002, 2003, 2004, 2005, 2006, 2007 Free Software Foundation.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -31,6 +31,12 @@
 #include "quote.h"
 #include "root-dev-ino.h"
 #include "xfts.h"
+
+#define FTSENT_IS_DIRECTORY(E)	\
+  ((E)->fts_info == FTS_D	\
+   || (E)->fts_info == FTS_DC	\
+   || (E)->fts_info == FTS_DP	\
+   || (E)->fts_info == FTS_DNR)
 
 enum RCH_status
   {
@@ -351,7 +357,9 @@ change_file_owner (FTS *fts, FTSENT *ent,
     }
 
   /* This happens when chown -LR --preserve-root encounters a symlink-to-/.  */
-  if (ROOT_DEV_INO_CHECK (chopt->root_dev_ino, file_stats))
+  if (ok
+      && FTSENT_IS_DIRECTORY (ent)
+      && ROOT_DEV_INO_CHECK (chopt->root_dev_ino, file_stats))
     {
       ROOT_DEV_INO_WARN (file_full_name);
       return false;

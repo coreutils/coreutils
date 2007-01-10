@@ -1,3 +1,11 @@
+2007-01-10  Jim Meyering  <jim@meyering.net>
+
+	Don't use fts_statp uninitialized for "chown -RLh --preserve-root ...".
+	* src/chown-core.c (FTSENT_IS_DIRECTORY): New macro.
+	(change_file_owner): Perform the ROOT_DEV_INO_CHECK only for a
+	directory.  Non-directory entries lack fts_statp data when using
+	the FTS_NOSTAT option.
+
 2007-01-07  Jim Meyering  <jim@meyering.net>
 
 	* tests/sample-test: Update copyright date to 2007.
