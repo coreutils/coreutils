@@ -23,6 +23,7 @@ TERM con80x30
 TERM con80x43
 TERM con80x50
 TERM con80x60
+TERM cons25
 TERM console
 TERM cygwin
 TERM dtterm

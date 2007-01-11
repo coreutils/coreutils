@@ -1,7 +1,49 @@
+2007-01-07  Jim Meyering  <jim@meyering.net>
+
+	* tests/sample-test: Update copyright date to 2007.
+	* Makefile.maint (copyright-check): Also check the copyright date
+	in tests/sample-test.
+
+2007-01-06  Jim Meyering  <jim@meyering.net>
+
+	* tests/fmt/basic (pfx-only, pfx-of-pfx): New tests,
+	based on examples from G.P. Halkes in
+	<http://article.gmane.org/gmane.comp.gnu.core-utils.bugs/9388>.
+
+2007-01-06  G.P. Halkes  <buscom@ghalkes.nl>
+
+	* src/fmt.c (copy_rest): Correct prefix handling.
+	Don't elide a line with the prefix followed by only white space.
+	(get_line): Move EOF-check to loop-termination condition.
+	* tests/fmt/basic (pfx-1): Adjust test to expect desired result.
+	(pfx-2): Remove test; its premise was contrary to the documentation.
+
+2007-01-05  Jim Meyering  <jim@meyering.net>
+
+	Avoid a used-uninitialized bug for invalid input, i.e., when the size
+	of the input, not counting newlines, is 1 % 4.
+	* gl/lib/base64.c (base64_decode): Don't hard-code inlen==4.
+	It may be smaller when flushing.
+
+2007-01-05  Mike Frysinger  <vapier@gentoo.org>
+
+	* src/dircolors.hin: Add a TERM directive for cons25.
+
 2007-01-04  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.cfg (local-checks-to-skip): Skip strftime-check, in
 	case you don't have convenient access to glibc info documentation.
+
+	Use the release year, not the current year.
+	* src/groups.sh (version): Use a better name: @RELEASE_YEAR@.
+	* src/Makefile.am (RELEASE_YEAR): Define it.
+	(.sh): Use it.
+	Thanks to a prod from Eric Blake.
+
+	Ensure that "group --version" always prints the current year.
+	* src/groups.sh (version): Use @CURRENT_YEAR@, rather than 2006.
+	* src/Makefile.am (.sh): Also substitute for @CURRENT_YEAR@.
+	Suggestion from Eric Blake.
 
 	When decoding, always allow newlines in input, with almost no
 	performance impact.
