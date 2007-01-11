@@ -427,6 +427,10 @@ docolon (VALUE *sv, VALUE *pv)
   tostring (sv);
   tostring (pv);
 
+  re_regs.num_regs = 0;
+  re_regs.start = NULL;
+  re_regs.end = NULL;
+
   re_buffer.buffer = NULL;
   re_buffer.allocated = 0;
   re_buffer.fastmap = fastmap;
@@ -463,7 +467,13 @@ docolon (VALUE *sv, VALUE *pv)
 	   (matchlen == -2 ? errno : EOVERFLOW),
 	   _("error in regular expression matcher"));
 
-  free (re_buffer.buffer);
+  if (0 < re_regs.num_regs)
+    {
+      free (re_regs.start);
+      free (re_regs.end);
+    }
+  re_buffer.fastmap = NULL;
+  regfree (&re_buffer);
   return v;
 }
 

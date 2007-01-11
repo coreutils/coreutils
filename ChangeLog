@@ -1,5 +1,10 @@
 2007-01-11  Jim Meyering  <jim@meyering.net>
 
+	Avoid a leak in expr's implementation of the ":" (match) operator.
+	* src/expr.c (docolon): Free the regexp buffer using regfree, rather
+	than doing it manually, being careful to set fastmap to NULL first.
+	Free any re_regs.start and .end members, if necessary.
+
 	* tests/misc/test-diag: Work also when libc's error function
 	reports the entire program name ("../../src/test"), rather than
 	just the final component.
