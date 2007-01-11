@@ -1,3 +1,9 @@
+2007-01-11  Jim Meyering  <jim@meyering.net>
+
+	* tests/misc/test-diag: Work also when libc's error function
+	reports the entire program name ("../../src/test"), rather than
+	just the final component.
+
 2007-01-10  Jim Meyering  <jim@meyering.net>
 
 	Don't use fts_statp uninitialized for "chown -RLh --preserve-root ...".

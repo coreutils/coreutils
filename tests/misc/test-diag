@@ -1,7 +1,7 @@
 #!/bin/sh
 # Test the diagnostics of "test".
 
-# Copyright (C) 2006 Free Software Foundation, Inc.
+# Copyright (C) 2006, 2007 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -40,7 +40,9 @@ my $prog = '../../src/test';
 my @Tests =
     (
      # In coreutils-5.93, this diagnostic lacked the newline.
-     ['o', '-o arg', {ERR => "$prog: extra argument `-o'\n"}, {EXIT => 2}],
+     ['o', '-o arg', {ERR => "test: extra argument `-o'\n"},
+      {ERR_SUBST => 's!^$prog:!test:!'},
+      {EXIT => 2}],
     );
 
 my $save_temps = $ENV{DEBUG};
