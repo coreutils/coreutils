@@ -1,5 +1,7 @@
 2007-01-13  Jim Meyering  <jim@meyering.net>
 
+	* AUTHORS: Add chcon.
+
 	* src/c99-to-c89.diff: Remove trailing blanks.
 
 	* src/chcon.c: Don't include "dirname.h".  system.h already includes it.
