@@ -1,5 +1,7 @@
 2007-01-13  Jim Meyering  <jim@meyering.net>
 
+	* src/chcon.c: Don't include "dirname.h".  system.h already includes it.
+
 	* gl/lib/selinux-at.c: Remove a use of HAVE_CONFIG_H.
 
 	* src/c99-to-c89.diff: Handle a new c99'ism in ls.c.

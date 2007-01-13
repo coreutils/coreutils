@@ -22,7 +22,6 @@
 
 #include "system.h"
 #include "dev-ino.h"
-#include "dirname.h"
 #include "error.h"
 #include "openat.h"
 #include "quote.h"
