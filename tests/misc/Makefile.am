@@ -26,6 +26,7 @@ TESTS_ENVIRONMENT = \
   PACKAGE_VERSION=$(PACKAGE_VERSION) \
   PERL="$(PERL)" \
   BUILD_SRC_DIR="`pwd`/../../src" \
+  CU_TEST_NAME=`basename $(abs_srcdir)`,$$tst \
   PATH="$(VG_PATH_PREFIX)`pwd`/../../src$(PATH_SEPARATOR)$$PATH" \
   PROG=`../../src/basename -- "$$tst"`
 

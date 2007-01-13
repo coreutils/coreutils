@@ -1,3 +1,15 @@
+2007-01-13  Jim Meyering  <jim@meyering.net>
+
+	* Transform all Makefile.am files so that when running "make check",
+	CU_TEST_NAME is set to the name of the test.  This is so that when I
+	run valgrind-enabled (--log-file-qualifier=CU_TEST_NAME) "make check"
+	on the entire package it is more convenient to map a leak or error
+	found in a valgrind log file back to the offending test.
+	Use this command:
+	(echo tests/Makefile.am.in; find tests -name Makefile.am) \
+	 |xargs perl -pi -e '/^(\s*)PATH=...VG_PATH_PREFIX/ and ' \
+	   -e 'print $1,q|CU_TEST_NAME=`basename $(abs_srcdir)`,$$tst |,"\\\n"'
+
 2007-01-11  Jim Meyering  <jim@meyering.net>
 
 	Avoid a leak in expr's implementation of the ":" (match) operator.

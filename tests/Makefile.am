@@ -11,6 +11,7 @@ TESTS = help-version
 TESTS_ENVIRONMENT = \
   all_programs="`$(all_programs)`" \
   PACKAGE_BUGREPORT=$(PACKAGE_BUGREPORT) \
+  CU_TEST_NAME=`basename $(abs_srcdir)`,$$tst \
   PATH="$(VG_PATH_PREFIX)`pwd`/../src$(PATH_SEPARATOR)$$PATH"
 
 EXTRA_DIST = \

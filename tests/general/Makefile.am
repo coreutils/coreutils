@@ -25,6 +25,7 @@ SUITE = suite.at dd.at m4sh.at
 EXTRA_DIST = $(SUITE) testsuite
 
 TESTS_ENVIRONMENT = \
+  CU_TEST_NAME=`basename $(abs_srcdir)`,$$tst \
   PATH="$(VG_PATH_PREFIX)`pwd`/../../src$(PATH_SEPARATOR)$$PATH"
 
 TESTS = testsuite
