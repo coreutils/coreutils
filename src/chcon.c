@@ -375,6 +375,8 @@ With --reference, change the security context of each FILE to that of RFILE.\n\
   -c, --changes          like verbose but report only when a change is made\n\
   -h, --no-dereference   affect symbolic links instead of any referenced file\n\
                          (available only on systems with lchown system call)\n\
+"), stdout);
+      fputs (_("\
       --reference=RFILE  use RFILE's security context rather than specifying\n\
                          a CONTEXT value\n\
   -R, --recursive        operate on files and directories recursively\n\
