@@ -1,5 +1,7 @@
 2007-01-13  Jim Meyering  <jim@meyering.net>
 
+	* src/chcon.c (usage): Split a string literal that was longer than 509.
+
 	* src/ls.c (gobble_file): Don't call getfilecon unless print_scontext.
 	Upon failed getfilecon, accept not just ENOTSUP, but also ENODATA.
 
