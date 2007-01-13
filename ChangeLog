@@ -1,5 +1,10 @@
 2007-01-13  Jim Meyering  <jim@meyering.net>
 
+	* tests/cp/open-perm-race: Remove gdb-based test.
+	It would run only when compiled with -g, and besides is now
+	subsumed by file-perm-race.
+	* tests/cp/Makefile.am (TESTS): Remove open-perm-race.
+
 	* Transform all Makefile.am files so that when running "make check",
 	CU_TEST_NAME is set to the name of the test.  This is so that when I
 	run valgrind-enabled (--log-file-qualifier=CU_TEST_NAME) "make check"
