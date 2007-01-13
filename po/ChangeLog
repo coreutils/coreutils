@@ -1,3 +1,7 @@
+2007-01-13  Jim Meyering  <jim@meyering.net>
+
+	* POTFILES.in: Add src/chcon.c.
+
 2006-10-19  Jim Meyering  <jim@meyering.net>
 
 	* POTFILES.in: Also include lib/regcomp.c, since it too uses gettext.
