@@ -3,7 +3,11 @@
 
 if test "$VERBOSE" = yes; then
   set -x
+  chcon --version
+  cp --version
   ls --version
+  mv --version
+  stat --version
 fi
 
 . $srcdir/../envvar-check
