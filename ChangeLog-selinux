@@ -1,5 +1,7 @@
 2007-01-13  Jim Meyering  <jim@meyering.net>
 
+	* src/id.c (main): Tweak id -Z diagnostic.
+
 	id: Add SELinux support: -Z option.
 	* src/id.c (main): Apply patches from Fedora, with these changes:
 	Remove #ifdef WITH_SELINUX.

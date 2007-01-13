@@ -141,8 +141,8 @@ main (int argc, char **argv)
         case 'Z':
 	  /* politely decline if we're not on a selinux-enabled kernel. */
 	  if (!selinux_enabled)
-	    error (EXIT_FAILURE, 0, _("--context (-Z) can be used only on "
-				      "an SELinux-enabled kernel"));
+	    error (EXIT_FAILURE, 0,
+		   _("--context (-Z) works only on an SELinux-enabled kernel"));
           just_context = 1;
           break;
 
