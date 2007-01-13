@@ -1,5 +1,7 @@
 2007-01-13  Jim Meyering  <jim@meyering.net>
 
+	* src/c99-to-c89.diff: Handle a new c99'ism in ls.c.
+
 	* src/id.c (main): Tweak id -Z diagnostic.
 
 	id: Add SELinux support: -Z option.
