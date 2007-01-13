@@ -1,5 +1,8 @@
 2007-01-13  Jim Meyering  <jim@meyering.net>
 
+	* tests/misc/selinux [VERBOSE]: Print version info for each
+	of the tested tools, not just ls.
+
 	* src/c99-to-c89.diff: Remove the ls.c patch, now that I've
 	temporarily removed the offending c99'ism.
 
