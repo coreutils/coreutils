@@ -351,6 +351,7 @@ verify.h
 version-etc-fsf.c
 version-etc.c
 version-etc.h
+wchar_.h
 wctype_.h
 wcwidth.h
 xalloc-die.c

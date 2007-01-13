@@ -75,6 +75,7 @@ getusershell.m4
 glibc2.m4
 glibc21.m4
 gnulib-cache.m4
+gnulib-common.m4
 gnulib-comp.m4
 gnulib-tool.m4
 group-member.m4
@@ -230,6 +231,7 @@ utimes.m4
 vasnprintf.m4
 vasprintf.m4
 visibility.m4
+wchar.m4
 wchar_t.m4
 wctype.m4
 wcwidth.m4
