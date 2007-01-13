@@ -115,23 +115,3 @@ diff -u -p -r1.130 shred.c
  		  if (errnum == EIO && 0 <= size && (soff | SECTOR_MASK) < lim)
  		    {
  		      size_t soff1 = (soff | SECTOR_MASK) + 1;
-diff --git a/src/ls.c b/src/ls.c
-index b1c0f9a..7d51a61 100644
---- a/src/ls.c
-+++ b/src/ls.c
-@@ -2565,6 +2565,7 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
- 				     )))))
-
-     {
-+      bool file_has_security_context = false;
-       /* Absolute name of this file.  */
-       char *absolute_name;
-       bool do_deref;
-@@ -2614,7 +2615,6 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
- 	  break;
- 	}
-
--      bool file_has_security_context = false;
-       if (err == 0 && (format == long_format || print_scontext))
- 	{
- 	  int attr_len = (do_deref

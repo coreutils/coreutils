@@ -1,5 +1,8 @@
 2007-01-13  Jim Meyering  <jim@meyering.net>
 
+	* src/c99-to-c89.diff: Remove the ls.c patch, now that I've
+	temporarily removed the offending c99'ism.
+
 	* src/chcon.c (usage): Split a string literal that was longer than 509.
 
 	* src/ls.c (gobble_file): Don't call getfilecon unless print_scontext.
