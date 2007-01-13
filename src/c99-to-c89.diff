@@ -120,7 +120,7 @@ diff --git a/src/ls.c b/src/ls.c
 index b1c0f9a..7d51a61 100644
 --- a/src/ls.c
 +++ b/src/ls.c
-@@ -2565,1 +2565,1 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
+@@ -2565,6 +2565,7 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
  				     )))))
 
      {
@@ -128,7 +128,7 @@ index b1c0f9a..7d51a61 100644
        /* Absolute name of this file.  */
        char *absolute_name;
        bool do_deref;
-@@ -2614,2 +2615,2 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
+@@ -2614,7 +2615,6 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
  	  break;
  	}
 
