@@ -2596,6 +2596,8 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
 				     )))))
 
     {
+      /* FIXME-c99: move this decl "down", once ls.c stabilizes.  */
+      bool file_has_security_context = false;
       /* Absolute name of this file.  */
       char *absolute_name;
       bool do_deref;
@@ -2645,8 +2647,7 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
 	  break;
 	}
 
-      bool file_has_security_context = false;
-      if (err == 0 && (format == long_format || print_scontext))
+      if (err == 0 && print_scontext)
 	{
 	  int attr_len = (do_deref
 			  ?  getfilecon (absolute_name, &f->scontext)
@@ -2658,7 +2659,7 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
 	     ls fail just because the file (even a command line argument)
 	     isn't on the right type of file system.  I.e., a getfilecon
 	     failure isn't in the same class as a stat failure.  */
-	  if (err && errno == ENOTSUP)
+	  if (err && (errno == ENOTSUP || errno == ENODATA))
 	    err = 0;
 	}
 
