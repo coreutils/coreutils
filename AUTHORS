@@ -4,6 +4,7 @@ each followed by the name(s) of its author(s).
 base64: Simon Josefsson
 basename: FIXME unknown
 cat: Torbjorn Granlund, Richard M. Stallman
+chcon: Russell Coker, Jim Meyering
 chgrp: David MacKenzie, Jim Meyering
 chmod: David MacKenzie, Jim Meyering
 chown: David MacKenzie, Jim Meyering
