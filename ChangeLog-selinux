@@ -1,3 +1,11 @@
+2007-01-13  Jim Meyering  <jim@meyering.net>
+
+	id: Add SELinux support: -Z option.
+	* src/id.c (main): Apply patches from Fedora, with these changes:
+	Remove #ifdef WITH_SELINUX.
+	Use error (EXIT_FAILURE, not fprintf+exit(1).
+	* src/Makefile.am (id_LDADD): Define, so as to add $(LIB_SELINUX).
+
 2007-01-06  Jim Meyering  <jim@meyering.net>
 
 	stat: Add support for SELinux in the form of a %C format directive.
