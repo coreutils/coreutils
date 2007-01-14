@@ -1,3 +1,7 @@
+2007-01-14  Jim Meyering  <jim@meyering.net>
+
+	* fchdir-stub.c: Remove file.  No longer needed.
+
 2006-12-03  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.am (libcoreutils_a_SOURCES): Remove xmemcoll.c and
