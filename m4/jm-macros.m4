@@ -109,10 +109,6 @@ AC_DEFUN([coreutils_MACROS],
   if test $gl_cv_list_mounted_fs = yes && test $gl_cv_fs_space = yes; then
     DF_PROG='df$(EXEEXT)'
   fi
-
-  # If any of these functions don't exist (e.g. DJGPP 2.03),
-  # use the corresponding stub.
-  AC_CHECK_FUNC([fchdir], , [AC_LIBOBJ(fchdir-stub)])
 ])
 
 AC_DEFUN([gl_CHECK_ALL_HEADERS],
