@@ -1,5 +1,9 @@
 2007-01-15  Jim Meyering  <jim@meyering.net>
 
+	* src/remove.c (remove_dir): Don't use errno in diagnostic.
+	Root-only test failure reported by Alex van Hout and Jon Grosshart in
+	<http://thread.gmane.org/gmane.comp.gnu.coreutils.bugs/9415/focus=9415>.
+
 	* bootstrap.conf (avoided_gnulib_modules): Fix my typo:
 	s/--avoid=canonicalize-lgpl/--avoid=canonicalize-gpl/
 

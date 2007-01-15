@@ -1,5 +1,5 @@
 /* remove.c -- core functions for removing files and directories
-   Copyright (C) 88, 90, 91, 1994-2006 Free Software Foundation, Inc.
+   Copyright (C) 88, 90, 91, 1994-2007 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -1371,7 +1371,7 @@ remove_dir (int fd_cwd, Dirstack_state *ds, char const *dir,
 	     traversal into the current directory, (known as SUBDIR, from ..),
 	     DIRP's device number is different from CURRENT_DEV.  Arrange not
 	     to do anything more with this hierarchy.  */
-	  error (0, errno, _("skipping %s, since it's on a different device"),
+	  error (0, 0, _("skipping %s, since it's on a different device"),
 		 quote (full_filename (subdir)));
 	  free (subdir);
 	  AD_mark_current_as_unremovable (ds);
