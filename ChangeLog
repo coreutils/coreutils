@@ -1,3 +1,8 @@
+2007-01-15  Jim Meyering  <jim@meyering.net>
+
+	* bootstrap.conf (avoided_gnulib_modules): Fix my typo:
+	s/--avoid=canonicalize-lgpl/--avoid=canonicalize-gpl/
+
 2007-01-14  Bruno Haible  <bruno@clisp.org>
 
 	Enable use of gnulib's new fchdir module.
