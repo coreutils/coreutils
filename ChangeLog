@@ -1,5 +1,9 @@
 2007-01-15  Jim Meyering  <jim@meyering.net>
 
+	* bootstrap (gnulib_tool): When adding to .cvsignore and .gitignore,
+	emit foo.h, for each foo_.h.  This yields one false-positive, fts.h,
+	but that's ok, since fts_.h will eventually be renamed.
+
 	* src/remove.c (remove_dir): Don't use errno in diagnostic.
 	Root-only test failure reported by Alex van Hout and Jon Grosshart in
 	<http://thread.gmane.org/gmane.comp.gnu.coreutils.bugs/9415/focus=9415>.
