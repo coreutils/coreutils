@@ -798,10 +798,14 @@ prompt (int fd_cwd, Dirstack_state const *ds, char const *filename,
 
   *is_empty = T_UNKNOWN;
 
-  if (((!x->ignore_missing_files & (x->interactive | x->stdin_tty))
+  if (x->interactive == RMI_NEVER)
+    return RM_OK;
+
+  if (((!x->ignore_missing_files & ((x->interactive == RMI_ALWAYS)
+				    | x->stdin_tty))
        && (write_protected = write_protected_non_symlink (fd_cwd, filename,
 							  ds, sbuf)))
-      || x->interactive)
+      || x->interactive == RMI_ALWAYS)
     {
       if (cache_fstatat (fd_cwd, filename, sbuf, AT_SYMLINK_NOFOLLOW) != 0)
 	{
@@ -821,7 +825,7 @@ prompt (int fd_cwd, Dirstack_state const *ds, char const *filename,
       /* Using permissions doesn't make sense for symlinks.  */
       if (S_ISLNK (sbuf->st_mode))
 	{
-	  if ( ! x->interactive)
+	  if (x->interactive != RMI_ALWAYS)
 	    return RM_OK;
 	  write_protected = false;
 	}

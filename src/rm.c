@@ -1,5 +1,5 @@
 /* `rm' file deletion utility for GNU.
-   Copyright (C) 88, 90, 91, 1994-2006 Free Software Foundation, Inc.
+   Copyright (C) 88, 90, 91, 1994-2007 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -213,7 +213,7 @@ static void
 rm_option_init (struct rm_options *x)
 {
   x->ignore_missing_files = false;
-  x->interactive = false;
+  x->interactive = RMI_SOMETIMES;
   x->one_file_system = false;
   x->recursive = false;
   x->root_dev_ino = NULL;
@@ -249,25 +249,25 @@ main (int argc, char **argv)
 	{
 	case 'd':
 	  /* Ignore this option, for backward compatibility with
-	     coreutils 5.92.  Some time after 2005, we'll change this
+	     coreutils 5.92.  FIXME: Some time after 2005, change this
 	     to report an error (or perhaps behave like FreeBSD does)
 	     instead of ignoring the option.  */
 	  break;
 
 	case 'f':
-	  x.interactive = false;
+	  x.interactive = RMI_NEVER;
 	  x.ignore_missing_files = true;
 	  prompt_once = false;
 	  break;
 
 	case 'i':
-	  x.interactive = true;
+	  x.interactive = RMI_ALWAYS;
 	  x.ignore_missing_files = false;
 	  prompt_once = false;
 	  break;
 
 	case 'I':
-	  x.interactive = false;
+	  x.interactive = RMI_NEVER;
 	  x.ignore_missing_files = false;
 	  prompt_once = true;
 	  break;
@@ -288,18 +288,18 @@ main (int argc, char **argv)
 	    switch (i)
 	      {
 	      case interactive_never:
-		x.interactive = false;
+		x.interactive = RMI_NEVER;
 		prompt_once = false;
 		break;
 
 	      case interactive_once:
-		x.interactive = false;
+		x.interactive = RMI_SOMETIMES;
 		x.ignore_missing_files = false;
 		prompt_once = true;
 		break;
 
 	      case interactive_always:
-		x.interactive = true;
+		x.interactive = RMI_ALWAYS;
 		x.ignore_missing_files = false;
 		prompt_once = false;
 		break;

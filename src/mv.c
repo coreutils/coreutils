@@ -1,5 +1,5 @@
 /* mv -- move or rename files
-   Copyright (C) 86, 89, 90, 91, 1995-2006 Free Software Foundation, Inc.
+   Copyright (C) 86, 89, 90, 91, 1995-2007 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -98,7 +98,7 @@ rm_option_init (struct rm_options *x)
 
   /* Should we prompt for removal, too?  No.  Prompting for the `move'
      part is enough.  It implies removal.  */
-  x->interactive = 0;
+  x->interactive = RMI_NEVER;
   x->stdin_tty = false;
 
   x->verbose = false;
