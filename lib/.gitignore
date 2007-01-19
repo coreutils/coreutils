@@ -47,6 +47,8 @@ diacrit.c
 diacrit.h
 dirchownmod.c
 dirchownmod.h
+dirent.h
+dirent_.h
 dirfd.c
 dirfd.h
 dirname.c
@@ -62,6 +64,7 @@ exclude.h
 exit.h
 exitfail.c
 exitfail.h
+fchdir.c
 fchmodat.c
 fchown-stub.c
 fchownat.c
@@ -78,6 +81,7 @@ filemode.h
 filenamecat.c
 filenamecat.h
 fnmatch.c
+fnmatch.h
 fnmatch_.h
 fnmatch_loop.c
 fopen-safer.c
@@ -90,6 +94,7 @@ fsusage.h
 ftruncate.c
 fts-cycle.c
 fts.c
+fts.h
 fts_.h
 full-read.c
 full-read.h
@@ -115,6 +120,7 @@ getloadavg.c
 getndelim2.c
 getndelim2.h
 getopt.c
+getopt.h
 getopt1.c
 getopt_.h
 getopt_int.h
@@ -270,10 +276,13 @@ sig2str.c
 sig2str.h
 snprintf.c
 snprintf.h
+socket.h
 socket_.h
 stat-macros.h
 stat-time.h
+stat.h
 stat_.h
+stdbool.h
 stdbool_.h
 stdint.h
 stdint_.h
@@ -309,6 +318,9 @@ strtoull.c
 strtoumax.c
 strverscmp.c
 strverscmp.h
+sys
+sys_time.h
+sys_time_.h
 t-fpending
 tempname.c
 tempname.h
@@ -320,6 +332,8 @@ umaxtostr.c
 unicodeio.h
 unistd--.h
 unistd-safer.h
+unistd.h
+unistd_.h
 unlinkdir.c
 unlinkdir.h
 unlocked-io.h
@@ -338,7 +352,9 @@ verify.h
 version-etc-fsf.c
 version-etc.c
 version-etc.h
+wchar.h
 wchar_.h
+wctype.h
 wctype_.h
 wcwidth.h
 xalloc-die.c

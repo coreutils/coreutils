@@ -1,3 +1,7 @@
+2007-01-19  Jim Meyering  <jim@meyering.net>
+
+	* .cvsignore, .gitignore: Add more bootstrap-inserted file names.
+
 2006-12-12  Jim Meyering  <jim@meyering.net>
 
 	* jm-macros.m4: Remove AC_FUNC_SETVBUF_REVERSED, now that it's a no-op.
