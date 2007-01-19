@@ -1,3 +1,13 @@
+2007-01-19  Dan Hipschman  <dsh@linux.ucla.edu>
+	and Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/sort.c (cleanup): Clear temphead at the end.
+	(exit_cleanup): New function.
+	(main): Don't invoke atexit until we're ready.
+	Invoke it with exit_cleanup, not with cleanup and close_stdout,
+	to avoid a race condition with cleanup and signal handling.  More
+	details: http://thread.gmane.org/gmane.comp.gnu.coreutils.bugs/9508
+
 2007-01-18  Jim Meyering  <jim@meyering.net>
 
 	* src/c99-to-c89.diff: Adjust remove.c offsets.

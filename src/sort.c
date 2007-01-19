@@ -417,6 +417,25 @@ cleanup (void)
 
   for (node = temphead; node; node = node->next)
     unlink (node->name);
+  temphead = NULL;
+}
+
+/* Cleanup actions to take when exiting.  */
+
+static void
+exit_cleanup (void)
+{
+  if (temphead)
+    {
+      /* Clean up any remaining temporary files in a critical section so
+	 that a signal handler does not try to clean them too.  */
+      sigset_t oldset;
+      sigprocmask (SIG_BLOCK, &caught_signals, &oldset);
+      cleanup ();
+      sigprocmask (SIG_SETMASK, &oldset, NULL);
+    }
+
+  close_stdout ();
 }
 
 /* Create a new temporary file, returning its newly allocated name.
@@ -2302,10 +2321,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  atexit (cleanup);
-
   initialize_exit_failure (SORT_FAILURE);
-  atexit (close_stdout);
 
   hard_LC_COLLATE = hard_locale (LC_COLLATE);
 #if HAVE_NL_LANGINFO
@@ -2364,6 +2380,9 @@ main (int argc, char **argv)
 	}
 #endif
   }
+
+  /* The signal mask is known, so it is safe to invoke exit_cleanup.  */
+  atexit (exit_cleanup);
 
   gkey.sword = gkey.eword = SIZE_MAX;
   gkey.ignore = NULL;
