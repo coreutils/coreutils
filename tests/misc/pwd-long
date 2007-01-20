@@ -1,7 +1,7 @@
 #!/bin/sh
 # Ensure that pwd works even when run from a very deep directory.
 
-# Copyright (C) 2006 Free Software Foundation, Inc.
+# Copyright (C) 2006-2007 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -51,18 +51,39 @@ $PERL -Tw -- - <<\EOF
 # Show that pwd works even when the length of the resulting
 # directory name is longer than PATH_MAX.
 use strict;
-use Cwd;
 
 (my $ME = $ENV{ARGV_0}) =~ s|.*/||;
+
+sub normalize_to_cwd_relative ($$$)
+{
+  my ($dir, $dev, $ino) = @_;
+  my $slash = -1;
+  my $next_slash;
+  while (1)
+    {
+      $slash = index $dir, '/', $slash + 1;
+      $slash <= -1
+	and die "$ME: $dir does not contain old CWD\n";
+      my $dir_prefix = $slash ? substr ($dir, 0, $slash) : '/';
+      my ($d, $i) = (stat $dir_prefix)[0, 1];
+      $d == $dev && $i == $ino
+	and return substr $dir, $slash + 1;
+    }
+}
 
 # Set up a safe, well-known environment
 delete @ENV{qw(BASH_ENV CDPATH ENV PATH)};
 $ENV{IFS}  = '';
 
-my $cwd = $ENV{CWD};
+# Save CWD's device and inode numbers.
+my ($dev, $ino) = (stat '.')[0, 1];
+
+# Construct the expected "."-relative part of pwd's output.
 my $z = 'z' x 31;
 my $n = 256;
-my $expected = $cwd . ("/$z" x $n);
+my $expected = "/$z" x $n;
+# Remove the leading "/".
+substr ($expected, 0, 1) = '';
 
 my $i = 0;
 do
@@ -89,6 +110,15 @@ my $pwd_binary = "$build_src_dir/pwd";
 -x $pwd_binary
   or die "$ME: $pwd_binary is not an executable file\n";
 chomp (my $actual = `$pwd_binary`);
+
+# Convert the absolute name from pwd into a $CWD-relative name.
+# This is necessary in order to avoid a spurious failure when run
+# from a directory in a bind-mounted partition.  What happens is
+# pwd reads a ".." that contains two or more entries with identical
+# dev,ino that match the ones we're looking for, and it chooses a
+# name that does not correspond to the one already recorded in $CWD.
+$actual = normalize_to_cwd_relative $actual, $dev, $ino;
+
 if ($expected ne $actual)
   {
     my $e_len = length $expected;

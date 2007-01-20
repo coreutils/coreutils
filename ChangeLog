@@ -1,3 +1,9 @@
+2007-01-20  Jim Meyering  <jim@meyering.net>
+
+	* tests/misc/pwd-long: Work properly even when run from the
+	wrong one of two or more bind-mounted sibling directories.
+	Suggestion from Mike Stone in <http://bugs.debian.org/380552>.
+
 2007-01-20  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Standardize on list of signals when an app catches signals.
