@@ -28,6 +28,7 @@
 	(main): Honor new options.
 	* src/Makefile.am (mv_LDADD, cp_LDADD, ginstall_LDADD):
 	Add $(LIB_SELINUX).
+	* src/system.h (GETOPT_SELINUX_CONTEXT_OPTION_DECL): Define.
 
 	* tests/misc/selinux [VERBOSE]: Print version info for each
 	of the tested tools, not just ls.
