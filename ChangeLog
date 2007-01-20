@@ -1,3 +1,13 @@
+2007-01-20  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Standardize on list of signals when an app catches signals.
+	* src/csplit.c (main): Also catch SIGALRM, SIGPIPE, SIGPOLL,
+	SIGPROF, SIGVTALRM, SIGXCPU, SIGXFSZ.
+	* src/ls.c (main): Likewise (except SIGPIPE was already caught).
+	Note that ls.c is special, as it also catches SIGTSTP.
+	* src/sort.c (main): Likewise.  Also catch SIGQUIT.  More details in
+	<http://thread.gmane.org/gmane.comp.gnu.coreutils.bugs/9510>.
+
 2007-01-19  Dan Hipschman  <dsh@linux.ucla.edu>
 	and Paul Eggert  <eggert@cs.ucla.edu>
 

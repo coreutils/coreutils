@@ -2350,7 +2350,26 @@ main (int argc, char **argv)
 
   {
     size_t i;
-    static int const sig[] = { SIGHUP, SIGINT, SIGPIPE, SIGTERM };
+    static int const sig[] =
+      {
+	/* The usual suspects.  */
+	SIGALRM, SIGHUP, SIGINT, SIGPIPE, SIGQUIT, SIGTERM,
+#ifdef SIGPOLL
+	SIGPOLL,
+#endif
+#ifdef SIGPROF
+	SIGPROF,
+#endif
+#ifdef SIGVTALRM
+	SIGVTALRM,
+#endif
+#ifdef SIGXCPU
+	SIGXCPU,
+#endif
+#ifdef SIGXFSZ
+	SIGXFSZ,
+#endif
+      };
     enum { nsigs = sizeof sig / sizeof sig[0] };
 
 #if SA_NOCLDSTOP
