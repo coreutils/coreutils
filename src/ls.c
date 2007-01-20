@@ -1113,8 +1113,29 @@ main (int argc, char **argv)
   int n_files;
 
   /* The signals that are trapped, and the number of such signals.  */
-  static int const sig[] = { SIGHUP, SIGINT, SIGPIPE,
-			     SIGQUIT, SIGTERM, SIGTSTP };
+  static int const sig[] =
+    {
+      /* This one is handled specially.  */
+      SIGTSTP,
+
+      /* The usual suspects.  */
+      SIGALRM, SIGHUP, SIGINT, SIGPIPE, SIGQUIT, SIGTERM,
+#ifdef SIGPOLL
+      SIGPOLL,
+#endif
+#ifdef SIGPROF
+      SIGPROF,
+#endif
+#ifdef SIGVTALRM
+      SIGVTALRM,
+#endif
+#ifdef SIGXCPU
+      SIGXCPU,
+#endif
+#ifdef SIGXFSZ
+      SIGXFSZ,
+#endif
+    };
   enum { nsigs = sizeof sig / sizeof sig[0] };
 
 #if ! SA_NOCLDSTOP

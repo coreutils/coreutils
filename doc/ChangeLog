@@ -1,3 +1,8 @@
+2007-01-19  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi (ls: General output formatting): Mention the
+	workarounds to accommodate the Apple Terminal bug.
+
 2007-01-04  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (base64 invocation): When decoding, newlines

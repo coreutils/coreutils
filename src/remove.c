@@ -1,5 +1,5 @@
 /* remove.c -- core functions for removing files and directories
-   Copyright (C) 88, 90, 91, 1994-2006 Free Software Foundation, Inc.
+   Copyright (C) 88, 90, 91, 1994-2007 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -798,10 +798,14 @@ prompt (int fd_cwd, Dirstack_state const *ds, char const *filename,
 
   *is_empty = T_UNKNOWN;
 
-  if (((!x->ignore_missing_files & (x->interactive | x->stdin_tty))
+  if (x->interactive == RMI_NEVER)
+    return RM_OK;
+
+  if (((!x->ignore_missing_files & ((x->interactive == RMI_ALWAYS)
+				    | x->stdin_tty))
        && (write_protected = write_protected_non_symlink (fd_cwd, filename,
 							  ds, sbuf)))
-      || x->interactive)
+      || x->interactive == RMI_ALWAYS)
     {
       if (cache_fstatat (fd_cwd, filename, sbuf, AT_SYMLINK_NOFOLLOW) != 0)
 	{
@@ -821,7 +825,7 @@ prompt (int fd_cwd, Dirstack_state const *ds, char const *filename,
       /* Using permissions doesn't make sense for symlinks.  */
       if (S_ISLNK (sbuf->st_mode))
 	{
-	  if ( ! x->interactive)
+	  if (x->interactive != RMI_ALWAYS)
 	    return RM_OK;
 	  write_protected = false;
 	}
@@ -1371,7 +1375,7 @@ remove_dir (int fd_cwd, Dirstack_state *ds, char const *dir,
 	     traversal into the current directory, (known as SUBDIR, from ..),
 	     DIRP's device number is different from CURRENT_DEV.  Arrange not
 	     to do anything more with this hierarchy.  */
-	  error (0, errno, _("skipping %s, since it's on a different device"),
+	  error (0, 0, _("skipping %s, since it's on a different device"),
 		 quote (full_filename (subdir)));
 	  free (subdir);
 	  AD_mark_current_as_unremovable (ds);

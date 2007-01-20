@@ -1,6 +1,6 @@
 /* Remove directory entries.
 
-   Copyright (C) 1998, 2000, 2002, 2003, 2004, 2005, 2006 Free
+   Copyright (C) 1998, 2000, 2002, 2003, 2004, 2005, 2006, 2007 Free
    Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -22,13 +22,22 @@
 
 # include "dev-ino.h"
 
+enum rm_interactive
+{
+  /* Start with any number larger than 1, so that any legacy tests
+     against values of 0 or 1 will fail.  */
+  RMI_ALWAYS = 3,
+  RMI_SOMETIMES,
+  RMI_NEVER
+};
+
 struct rm_options
 {
   /* If true, ignore nonexistent files.  */
   bool ignore_missing_files;
 
   /* If true, query the user about whether to remove each file.  */
-  bool interactive;
+  enum rm_interactive interactive;
 
   /* If true, do not traverse into (or remove) any directory that is
      on a file system (i.e., that has a different device number) other

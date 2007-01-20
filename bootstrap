@@ -2,7 +2,7 @@
 
 # Bootstrap this package from CVS.
 
-# Copyright (C) 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+# Copyright (C) 2003, 2004, 2005, 2006, 2007 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -350,6 +350,16 @@ version_controlled_file() {
   test $found = yes
 }
 
+# If $STR is not already on a line by itself in $FILE, insert it,
+# sorting the new contents of the file and replacing $FILE with the result.
+insert_sorted_if_absent() {
+  file=$1
+  str=$2
+  echo "$str" | sort -u - $file | cmp -s - $file \
+    || echo "$str" | sort -u - $file -o $file \
+    || exit
+}
+
 slurp() {
   for dir in . `(cd $1 && find * -type d -print)`; do
     copied=
@@ -392,8 +402,12 @@ slurp() {
     for dot_ig in .cvsignore .gitignore; do
       ig=$dir/$dot_ig
       if test -n "$copied" && test -f $ig; then
-	echo "$copied" | sort -u - $ig | cmp -s - $ig ||
-	echo "$copied" | sort -u - $ig -o $ig || exit
+	insert_sorted_if_absent $ig "$copied"
+	# If an ignored file name ends with _.h, then also add
+	# the name with just ".h".  Many gnulib headers are generated,
+	# e.g., stdint_.h -> stdint.h, dirent_.h ->..., etc.
+	f=`echo "$copied"|sed 's/_\.h$/.h/'`
+	insert_sorted_if_absent $ig "$f"
       fi
     done
   done

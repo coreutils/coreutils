@@ -1,3 +1,62 @@
+2007-01-20  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Standardize on list of signals when an app catches signals.
+	* src/csplit.c (main): Also catch SIGALRM, SIGPIPE, SIGPOLL,
+	SIGPROF, SIGVTALRM, SIGXCPU, SIGXFSZ.
+	* src/ls.c (main): Likewise (except SIGPIPE was already caught).
+	Note that ls.c is special, as it also catches SIGTSTP.
+	* src/sort.c (main): Likewise.  Also catch SIGQUIT.  More details in
+	<http://thread.gmane.org/gmane.comp.gnu.coreutils.bugs/9510>.
+
+2007-01-19  Dan Hipschman  <dsh@linux.ucla.edu>
+	and Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/sort.c (cleanup): Clear temphead at the end.
+	(exit_cleanup): New function.
+	(main): Don't invoke atexit until we're ready.
+	Invoke it with exit_cleanup, not with cleanup and close_stdout,
+	to avoid a race condition with cleanup and signal handling.  More
+	details: http://thread.gmane.org/gmane.comp.gnu.coreutils.bugs/9508
+
+2007-01-18  Jim Meyering  <jim@meyering.net>
+
+	* src/c99-to-c89.diff: Adjust remove.c offsets.
+
+2007-01-17  Jim Meyering  <jim@meyering.net>
+
+	Make "rm --interactive=never ..." never prompt.
+	* NEWS: Mention this.
+	* src/remove.h (enum rm_interactive): New ternary type.
+	(struct rm_options) [interactive]: Use it, here -- rather than bool.
+	* src/remove.c (prompt): Reflect type change.
+	* src/mv.c (rm_option_init): Initialize to RMI_NEVER now.
+	* src/rm.c (main): Add a FIXME comment for '-d' option.
+	Adapt to type change of rm_options.interactive.
+
+	* tests/rm/i-never: New file.  Test for the above fix.
+	* tests/rm/Makefile.am (TESTS): Add i-never.
+
+2007-01-15  Jim Meyering  <jim@meyering.net>
+
+	* bootstrap (gnulib_tool): When adding to .cvsignore and .gitignore,
+	emit foo.h, for each foo_.h.  This yields one false-positive, fts.h,
+	but that's ok, since fts_.h will eventually be renamed.
+
+	* src/remove.c (remove_dir): Don't use errno in diagnostic.
+	Root-only test failure reported by Alex van Hout and Jon Grosshart in
+	<http://thread.gmane.org/gmane.comp.gnu.coreutils.bugs/9415/focus=9415>.
+
+	* bootstrap.conf (avoided_gnulib_modules): Fix my typo:
+	s/--avoid=canonicalize-lgpl/--avoid=canonicalize-gpl/
+
+2007-01-14  Bruno Haible  <bruno@clisp.org>
+
+	Enable use of gnulib's new fchdir module.
+	* bootstrap.conf (avoided_gnulib_modules): Avoid canonicalize-lgpl,
+	since we use canonicalize.
+	(gnulib_modules): Add fchdir.
+	* m4/jm-macros.m4 (coreutils_MACROS): Remove fchdir-stub.
+
 2007-01-13  Jim Meyering  <jim@meyering.net>
 
 	* tests/cp/open-perm-race: Remove gdb-based test.
