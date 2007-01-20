@@ -1,5 +1,5 @@
 /* core functions for copying files and directories
-   Copyright (C) 89, 90, 91, 1995-2005 Free Software Foundation.
+   Copyright (C) 89, 90, 91, 1995-2007 Free Software Foundation.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -127,6 +127,9 @@ struct cp_options
   bool preserve_ownership;
   bool preserve_mode;
   bool preserve_timestamps;
+  /* If true, attempt to preserve the SELinux security context, too.
+     Set this only if the kernel is SELinux enabled.  */
+  bool preserve_security_context;
 
   /* Enabled for mv, and for cp by the --preserve=links option.
      If true, attempt to preserve in the destination files any

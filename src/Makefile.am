@@ -61,9 +61,9 @@ LDADD = ../lib/libcoreutils.a $(LIBINTL) ../lib/libcoreutils.a
 
 # for eaccess in lib/euidaccess.c.
 chcon_LDADD = $(LDADD) $(LIB_SELINUX)
-cp_LDADD = $(LDADD) $(LIB_EACCESS)
-ginstall_LDADD = $(LDADD) $(LIB_EACCESS)
-mv_LDADD = $(LDADD) $(LIB_EACCESS)
+cp_LDADD = $(LDADD) $(LIB_EACCESS) $(LIB_SELINUX)
+ginstall_LDADD = $(LDADD) $(LIB_EACCESS) $(LIB_SELINUX)
+mv_LDADD = $(LDADD) $(LIB_EACCESS) $(LIB_SELINUX)
 pathchk_LDADD = $(LDADD) $(LIB_EACCESS)
 rm_LDADD = $(LDADD) $(LIB_EACCESS)
 test_LDADD = $(LDADD) $(LIB_EACCESS)

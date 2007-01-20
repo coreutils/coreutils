@@ -24,6 +24,7 @@
 #include <signal.h>
 #include <pwd.h>
 #include <grp.h>
+#include <selinux/selinux.h>
 
 #include "system.h"
 #include "backupfile.h"
@@ -35,6 +36,7 @@
 #include "mkdir-p.h"
 #include "modechange.h"
 #include "quote.h"
+#include "quotearg.h"
 #include "savewd.h"
 #include "stat-time.h"
 #include "utimens.h"
@@ -48,6 +50,9 @@
 #if HAVE_SYS_WAIT_H
 # include <sys/wait.h>
 #endif
+
+static int selinux_enabled = 0;
+static bool use_default_selinux_context = true;
 
 #if ! HAVE_ENDGRENT
 # define endgrent() ((void) 0)
@@ -121,15 +126,28 @@ static bool strip_files;
 /* If true, install a directory instead of a regular file. */
 static bool dir_arg;
 
+/* For long options that have no equivalent short option, use a
+   non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
+enum
+{
+  PRESERVE_CONTEXT_OPTION = CHAR_MAX + 1
+};
+
 static struct option const long_options[] =
 {
   {"backup", optional_argument, NULL, 'b'},
+  {GETOPT_SELINUX_CONTEXT_OPTION_DECL},
   {"directory", no_argument, NULL, 'd'},
   {"group", required_argument, NULL, 'g'},
   {"mode", required_argument, NULL, 'm'},
   {"no-target-directory", no_argument, NULL, 'T'},
   {"owner", required_argument, NULL, 'o'},
   {"preserve-timestamps", no_argument, NULL, 'p'},
+  {"preserve-context", no_argument, NULL, PRESERVE_CONTEXT_OPTION},
+  /* Continue silent support for --preserve_context until Jan 2008. FIXME-obs
+     After that, FIXME-obs: warn in, say, late 2008, and disable altogether
+     a year or two later.  */
+  {"preserve_context", no_argument, NULL, PRESERVE_CONTEXT_OPTION},
   {"strip", no_argument, NULL, 's'},
   {"suffix", required_argument, NULL, 'S'},
   {"target-directory", required_argument, NULL, 't'},
@@ -169,9 +187,45 @@ cp_option_init (struct cp_options *x)
   x->stdin_tty = false;
 
   x->update = false;
+  x->preserve_security_context = false;
   x->verbose = false;
   x->dest_info = NULL;
   x->src_info = NULL;
+}
+
+/* Modify file context to match the specified policy.
+   If an error occurs the file will remain with the default directory
+   context.  */
+static void
+setdefaultfilecon (char const *file)
+{
+  struct stat st;
+  security_context_t scontext = NULL;
+  if (selinux_enabled != 1)
+    {
+      /* Indicate no context found. */
+      return;
+    }
+  if (lstat (file, &st) != 0)
+    return;
+
+  /* If there's an error determining the context, or it has none,
+     return to allow default context */
+  if ((matchpathcon (file, st.st_mode, &scontext) != 0) ||
+      (strcmp (scontext, "<<none>>") == 0))
+    {
+      if (scontext != NULL)
+	freecon (scontext);
+      return;
+    }
+
+  if (lsetfilecon (file, scontext) < 0 && errno != ENOTSUP)
+    error (0, errno,
+	   _("warning: %s: failed to change context to %s"),
+	   quotearg_colon (file), scontext);
+
+  freecon (scontext);
+  return;
 }
 
 /* FILE is the last operand of this command.  Return true if FILE is a
@@ -222,6 +276,9 @@ main (int argc, char **argv)
   bool no_target_directory = false;
   int n_files;
   char **file;
+  security_context_t scontext = NULL;
+  /* set iff kernel has extra selinux system calls */
+  selinux_enabled = (0 < is_selinux_enabled ());
 
   initialize_main (&argc, &argv);
   program_name = argv[0];
@@ -243,7 +300,7 @@ main (int argc, char **argv)
      we'll actually use backup_suffix_string.  */
   backup_suffix_string = getenv ("SIMPLE_BACKUP_SUFFIX");
 
-  while ((optc = getopt_long (argc, argv, "bcsDdg:m:o:pt:TvS:", long_options,
+  while ((optc = getopt_long (argc, argv, "bcsDdg:m:o:pt:TvS:Z:", long_options,
 			      NULL)) != -1)
     {
       switch (optc)
@@ -305,6 +362,27 @@ main (int argc, char **argv)
 	case 'T':
 	  no_target_directory = true;
 	  break;
+
+	case PRESERVE_CONTEXT_OPTION:
+	  if ( ! selinux_enabled)
+	    {
+	      error (0, 0, _("Warning: ignoring --preserve-context; "
+			     "this kernel is not SELinux-enabled."));
+	      break;
+	    }
+	  x.preserve_security_context = true;
+	  use_default_selinux_context = false;
+	  break;
+	case 'Z':
+	  if ( ! selinux_enabled)
+	    {
+	      error (0, 0, _("Warning: ignoring --context (-Z); "
+			     "this kernel is not SELinux-enabled."));
+	      break;
+	    }
+	  scontext = optarg;
+	  use_default_selinux_context = false;
+	  break;
 	case_GETOPT_HELP_CHAR;
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 	default:
@@ -320,6 +398,11 @@ main (int argc, char **argv)
     error (EXIT_FAILURE, 0,
 	   _("target directory not allowed when installing a directory"));
 
+  if (x.preserve_security_context && scontext != NULL)
+    error (EXIT_FAILURE, 0,
+	   _("cannot force target context to %s and preserve it"),
+	   quote (scontext));
+
   if (backup_suffix_string)
     simple_backup_suffix = xstrdup (backup_suffix_string);
 
@@ -327,6 +410,11 @@ main (int argc, char **argv)
 		   ? xget_version (_("backup type"),
 				   version_control_string)
 		   : no_backups);
+
+  if (scontext && setfscreatecon (scontext) < 0)
+    error (EXIT_FAILURE, errno,
+	   _("failed to set default file creation context to %s"),
+	   quote (scontext));
 
   n_files = argc - optind;
   file = argv + optind;
@@ -503,6 +591,7 @@ copy_file (const char *from, const char *to, const struct cp_options *x)
 static bool
 change_attributes (char const *name)
 {
+  bool ok = false;
   /* chown must precede chmod because on some systems,
      chown clears the set[ug]id bits for non-superusers,
      resulting in incorrect permissions.
@@ -521,9 +610,12 @@ change_attributes (char const *name)
   else if (chmod (name, mode) != 0)
     error (0, errno, _("cannot change permissions of %s"), quote (name));
   else
-    return true;
+    ok = true;
 
-  return false;
+  if (use_default_selinux_context)
+    setdefaultfilecon (name);
+
+  return ok;
 }
 
 /* Set the timestamps of file TO to match those of file FROM.
@@ -687,6 +779,11 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -T, --no-target-directory  treat DEST as a normal file\n\
   -v, --verbose       print the name of each directory as it is created\n\
 "), stdout);
+      fputs (_("\
+      --preserve-context  preserve SELinux security context\n\
+  -Z, --context=CONTEXT  set SELinux security context of files and directories\n\
+"), stdout);
+
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
