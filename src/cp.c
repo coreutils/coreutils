@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <getopt.h>
+#include <selinux/selinux.h>
 
 #include "system.h"
 #include "argmatch.h"
@@ -84,6 +85,9 @@ enum
 
 /* The invocation name of this program.  */
 char *program_name;
+
+/* True if the kernel is SELinux enabled.  */
+static bool selinux_enabled;
 
 /* If true, the command "cp x/e_file e_dir" uses "e_dir/x/e_file"
    as its destination instead of the usual "e_dir/e_file." */
@@ -191,7 +195,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -p                           same as --preserve=mode,ownership,timestamps\n\
       --preserve[=ATTR_LIST]   preserve the specified attributes (default:\n\
                                  mode,ownership,timestamps), if possible\n\
-                                 additional attributes: links, all\n\
+                                 additional attributes: context, links, all\n\
 "), stdout);
       fputs (_("\
       --no-preserve=ATTR_LIST  don't preserve the specified attributes\n\
@@ -749,6 +753,7 @@ cp_option_init (struct cp_options *x)
   x->preserve_links = false;
   x->preserve_mode = false;
   x->preserve_timestamps = false;
+  x->preserve_security_context = false;
 
   x->require_preserve = false;
   x->recursive = false;
@@ -777,18 +782,19 @@ decode_preserve_arg (char const *arg, struct cp_options *x, bool on_off)
       PRESERVE_TIMESTAMPS,
       PRESERVE_OWNERSHIP,
       PRESERVE_LINK,
+      PRESERVE_CONTEXT,
       PRESERVE_ALL
     };
   static enum File_attribute const preserve_vals[] =
     {
       PRESERVE_MODE, PRESERVE_TIMESTAMPS,
-      PRESERVE_OWNERSHIP, PRESERVE_LINK, PRESERVE_ALL
+      PRESERVE_OWNERSHIP, PRESERVE_LINK, PRESERVE_CONTEXT, PRESERVE_ALL
     };
   /* Valid arguments to the `--preserve' option. */
   static char const* const preserve_args[] =
     {
       "mode", "timestamps",
-      "ownership", "links", "all", NULL
+      "ownership", "links", "context", "all", NULL
     };
   ARGMATCH_VERIFY (preserve_args, preserve_vals);
 
@@ -824,11 +830,17 @@ decode_preserve_arg (char const *arg, struct cp_options *x, bool on_off)
 	  x->preserve_links = on_off;
 	  break;
 
+	case PRESERVE_CONTEXT:
+	  x->preserve_security_context = on_off;
+	  break;
+
 	case PRESERVE_ALL:
 	  x->preserve_mode = on_off;
 	  x->preserve_timestamps = on_off;
 	  x->preserve_ownership = on_off;
 	  x->preserve_links = on_off;
+	  if (selinux_enabled)
+	    x->preserve_security_context = on_off;
 	  break;
 
 	default:
@@ -862,6 +874,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
+  selinux_enabled = (0 < is_selinux_enabled ());
   cp_option_init (&x);
 
   /* FIXME: consider not calling getenv for SIMPLE_BACKUP_SUFFIX unless
@@ -1048,9 +1061,6 @@ main (int argc, char **argv)
 	x.dereference = DEREF_ALWAYS;
     }
 
-  /* The key difference between -d (--no-dereference) and not is the version
-     of `stat' to call.  */
-
   if (x.recursive)
     x.copy_as_regular = copy_contents;
 
@@ -1058,6 +1068,14 @@ main (int argc, char **argv)
      first remove any existing destination file.  */
   if (x.unlink_dest_after_failed_open & (x.hard_link | x.symbolic_link))
     x.unlink_dest_before_opening = true;
+
+  if (x.preserve_security_context)
+    {
+      if (!selinux_enabled)
+	error (EXIT_FAILURE, 0,
+	       _("cannot preserve security context "
+		 "without an SELinux-enabled kernel"));
+    }
 
   /* Allocate space for remembering copied and created files.  */
 

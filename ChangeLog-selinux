@@ -1,4 +1,33 @@
-2007-01-13  Jim Meyering  <jim@meyering.net>
+2007-01-20  Jim Meyering  <jim@meyering.net>
+
+	cp, mv, install: add SELinux support, but unlike with the Red Hat
+	patch, mv and cp do not provide the "-Z context" option.
+	* src/copy.c: Include <selinux/selinux.h>.
+	(restore_default_fscreatecon): New function.
+	(copy_reg): Make cp --preserve=context work for existing destination.
+	(copy_internal): Likewise for new destinations.
+	* src/copy.h (cp_options) [preserve_security_context]: New member.
+	* src/cp.c: Include <selinux/selinux.h>.
+	(selinux_enabled): New global.
+	(usage): Mention new --preserve=context option.
+	(PRESERVE_CONTEXT): Define/use.
+	(decode_preserve_arg): Handle PRESERVE_CONTEXT.
+	(main): Remove an obsolete comment.
+	If --preserve=context is specified on a system without SELinux
+	enabled, give a diagnostic and fail.
+	* src/mv.c: Include <selinux/selinux.h>.
+	Set x->preserve_security_context if SELinux is enabled.
+	* src/install.c: Accept new "-Z, --context=C" option.
+	Accept --preserve-context option (but not -P option).
+	Accept alternate spelling: --preserve_context, for now.
+	Include <selinux/selinux.h> and "quotearg.h".
+	(selinux_enabled, use_default_selinux_context): New globals.
+	(PRESERVE_CONTEXT_OPTION): Define.
+	(cp_option_init): Default: do not preserve security context.
+	(setdefaultfilecon): New function.
+	(main): Honor new options.
+	* src/Makefile.am (mv_LDADD, cp_LDADD, ginstall_LDADD):
+	Add $(LIB_SELINUX).
 
 	* tests/misc/selinux [VERBOSE]: Print version info for each
 	of the tested tools, not just ls.

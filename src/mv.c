@@ -22,6 +22,7 @@
 #include <getopt.h>
 #include <sys/types.h>
 #include <assert.h>
+#include <selinux/selinux.h>
 
 #include "system.h"
 #include "argmatch.h"
@@ -113,6 +114,8 @@ rm_option_init (struct rm_options *x)
 static void
 cp_option_init (struct cp_options *x)
 {
+  bool selinux_enabled = (0 < is_selinux_enabled ());
+
   x->copy_as_regular = false;  /* FIXME: maybe make this an option */
   x->dereference = DEREF_NEVER;
   x->unlink_dest_before_opening = false;
@@ -126,6 +129,7 @@ cp_option_init (struct cp_options *x)
   x->preserve_links = true;
   x->preserve_mode = true;
   x->preserve_timestamps = true;
+  x->preserve_security_context = selinux_enabled;
   x->require_preserve = false;  /* FIXME: maybe make this an option */
   x->recursive = true;
   x->sparse_mode = SPARSE_AUTO;  /* FIXME: maybe make this an option */

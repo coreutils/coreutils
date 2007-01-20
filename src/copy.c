@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include <sys/types.h>
+#include <selinux/selinux.h>
 
 #if HAVE_HURD_H
 # include <hurd.h>
@@ -301,6 +302,36 @@ copy_reg (char const *src_name, char const *dst_name,
   if (! *new_dst)
     {
       dest_desc = open (dst_name, O_WRONLY | O_TRUNC | O_BINARY);
+
+      /* When using cp --preserve=context to copy to an existing destination,
+	 use the default context rather than that of the source.  Why?
+	 1) the src context may prohibit writing, and
+	 2) because it's more consistent to use the same context
+	 that is used when the destination file doesn't already exist.  */
+      if (x->preserve_security_context && 0 <= dest_desc)
+	{
+	  security_context_t con;
+	  if (getfscreatecon (&con) < 0)
+	    {
+	      error (0, errno, _("failed to get file system create context"));
+	      return_val = false;
+	      goto close_src_desc;
+	    }
+
+	  if (con)
+	    {
+	      if (fsetfilecon (dest_desc, con) < 0)
+		{
+		  error (0, errno,
+			 _("failed to set the security context of %s to %s"),
+			 quote_n (0, dst_name), quote_n (1, con));
+		  return_val = false;
+		  freecon (con);
+		  goto close_src_desc;
+		}
+	      freecon(con);
+	    }
+	}
 
       if (dest_desc < 0 && x->unlink_dest_after_failed_open)
 	{
@@ -995,6 +1026,15 @@ emit_verbose (char const *src, char const *dst, char const *backup_dst_name)
   putchar ('\n');
 }
 
+/* A wrapper around "setfscreatecon (NULL)" that exits upon failure.  */
+static void
+restore_default_fscreatecon_or_die (void)
+{
+  if (setfscreatecon (NULL) != 0)
+    error (EXIT_FAILURE, errno,
+	   _("failed to restore the default file creation context"));
+}
+
 /* Copy the file SRC_NAME to the file DST_NAME.  The files may be of
    any type.  NEW_DST should be true if the file DST_NAME cannot
    exist because its parent directory was just created; NEW_DST should
@@ -1343,7 +1383,7 @@ copy_internal (char const *src_name, char const *dst_name,
 
   if (x->move_mode && src_sb.st_nlink == 1)
     {
-	earlier_file = src_to_dest_lookup (src_sb.st_ino, src_sb.st_dev);
+      earlier_file = src_to_dest_lookup (src_sb.st_ino, src_sb.st_dev);
     }
   else if ((x->preserve_links
 	    && (1 < src_sb.st_nlink
@@ -1532,6 +1572,37 @@ copy_internal (char const *src_name, char const *dst_name,
 	: 0));
 
   delayed_ok = true;
+
+  if (x->preserve_security_context)
+    {
+      security_context_t con;
+
+      if (0 <= lgetfilecon (src_name, &con))
+	{
+	  if (setfscreatecon (con) < 0)
+	    {
+	      error (0, errno,
+		     _("failed to set default file creation context to %s"),
+		     quote (con));
+	      if (x->require_preserve)
+		{
+		  freecon (con);
+		  return false;
+		}
+	    }
+	  freecon (con);
+	}
+      else
+	{
+	  if (errno != ENOTSUP && errno != ENODATA)
+	    {
+	      error (0, errno,
+		     _("failed to get security context of %s"),
+		     quote (src_name));
+	      return false;
+	    }
+	}
+    }
 
   /* In certain modes (cp's --symbolic-link), and for certain file types
      (symlinks and hard links) it doesn't make sense to preserve metadata,
@@ -1762,6 +1833,9 @@ copy_internal (char const *src_name, char const *dst_name,
 	    }
 	}
 
+      if (x->preserve_security_context)
+	restore_default_fscreatecon_or_die ();
+
       /* There's no need to preserve timestamps or permissions.  */
       preserve_metadata = false;
 
@@ -1894,6 +1968,9 @@ copy_internal (char const *src_name, char const *dst_name,
   return delayed_ok;
 
 un_backup:
+
+  if (x->preserve_security_context)
+    restore_default_fscreatecon_or_die ();
 
   /* We have failed to create the destination file.
      If we've just added a dev/ino entry via the remember_copied
