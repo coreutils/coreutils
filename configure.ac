@@ -39,6 +39,8 @@ gl_EARLY
 gl_INIT
 coreutils_MACROS
 
+AC_FUNC_FORK
+
 AC_CHECK_FUNCS(uname,
 	OPTIONAL_BIN_PROGS="$OPTIONAL_BIN_PROGS uname\$(EXEEXT)"
 	MAN="$MAN uname.1")

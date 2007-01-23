@@ -1,3 +1,57 @@
+2007-01-21  Jim Meyering  <jim@meyering.net>
+
+	* src/sort.c (MAX_FORK_RETRIES_COMPRESS, MAX_FORK_RETRIES_DECOMPRESS):
+	In pipe_fork callers, use these named constants, not "2" and "8".
+	(proctab, nprocs): Declare to be "static".
+	(pipe_fork) [lint]: Initialize local, pid,
+	to avoid unwarranted may-be-used-uninitialized warning.
+	(create_temp): Use the active voice.  Describe parameters, too.
+
+2007-01-21  James Youngman  <jay@gnu.org>
+
+	Centralize all the uses of sigprocmask().  Don't restore an invalid
+	saved mask.
+	* src/sort.c (enter_cs, leave_cs): New functions for protecting
+	code sequences against signal delivery.
+	* (exit_cleanup): Use enter_cs and leave_cs instead of
+	calling sigprocmask directly.
+	(create_temp_file, pipe_fork, zaptemp): Likewise
+
+2007-01-21  Dan Hipschman  <dsh@linux.ucla.edu>
+
+	Add compression of temp files to sort.
+	* NEWS: Mention this.
+	* bootstrap.conf: Import findprog.
+	* configure.ac: Add AC_FUNC_FORK.
+	* doc/coreutils.texi: Document GNUSORT_COMPRESSOR environment
+	variable.
+	* src/sort.c (compress_program): New global, holds the name of the
+	external compression program.
+	(struct sortfile): New type used by mergepfs and friends instead
+	of filenames to hold PIDs of compressor processes.
+	(proctab): New global, holds compressor PIDs on which to wait.
+	(enum procstate, struct procnode): New types used by proctab.
+	(proctab_hasher, proctab_comparator): New functions for proctab.
+	(nprocs): New global, number of forked but unreaped children.
+	(reap, reap_some): New function, wait for/cleanup forked processes.
+	(register_proc, update_proc, wait_proc): New functions for adding,
+	modifying and removing proctab entries.
+	(create_temp_file): Change parameter type to pointer to file
+	descriptor, and return type to pointer to struct tempnode.
+	(dup2_or_die): New function used in create_temp and open_temp.
+	(pipe_fork): New function, creates a pipe and child process.
+	(create_temp): Creates a temp file and possibly a compression
+	program to which we filter output.
+	(open_temp): Opens a compressed temp file and creates a
+	decompression process through which to filter the input.
+	(mergefps): Change FILES parameter type to struct sortfile array
+	and update access accordingly.  Use open_temp and reap_some.
+	(avoid_trashing_input, merge): Change FILES parameter like
+	mergefps and call create_temp instead of create_temp_file.
+	(sort): Call create_temp instead of create_temp_file.
+	Use reap_some.
+	(avoid_trashing_input, merge, sort, main): Adapt to mergefps.
+
 2007-01-20  Jim Meyering  <jim@meyering.net>
 
 	* tests/misc/pwd-long: Work properly even when run from the

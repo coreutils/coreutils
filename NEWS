@@ -29,6 +29,11 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   "rm --interactive=never F" no longer prompts for an unwritable F
 
+** New features
+
+  sort can now compresses temporary files to improve performance of
+  very large sorts.
+
 
 * Noteworthy changes in release 6.7 (2006-12-08) [stable]
 
