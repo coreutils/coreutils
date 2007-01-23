@@ -1,3 +1,9 @@
+2007-01-24  Jim Meyering  <jim@meyering.net>
+
+	Don't depend on "which".
+	* tests/misc/sort-compress (SORT): Use $abs_builddir, now which.
+	* tests/misc/Makefile.am (TESTS_ENVIRONMENT): Export top_builddir.
+
 2007-01-24  Dan Hipschman  <dsh@linux.ucla.edu>
 
 	Test sort compression.

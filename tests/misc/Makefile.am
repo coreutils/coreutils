@@ -1,7 +1,6 @@
 # Make miscellaneous coreutils tests.			-*-Makefile-*-
 
-# Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006 Free Software
-# Foundation, Inc.
+# Copyright (C) 200-2007 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,6 +21,7 @@ EXTRA_DIST = $(TESTS)
 
 TESTS_ENVIRONMENT = \
   top_srcdir=$(top_srcdir) \
+  top_builddir=$(top_builddir) \
   srcdir=$(srcdir) \
   PACKAGE_VERSION=$(PACKAGE_VERSION) \
   PERL="$(PERL)" \
