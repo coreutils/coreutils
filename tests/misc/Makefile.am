@@ -69,6 +69,7 @@ TESTS = \
   sha384sum \
   sha512sum \
   shuf \
+  sort-compress \
   sort-merge \
   sort-rand \
   split-a \

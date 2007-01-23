@@ -1,3 +1,9 @@
+2007-01-24  Dan Hipschman  <dsh@linux.ucla.edu>
+
+	Test sort compression.
+	* tests/misc/Makefile.am: Add the test.
+	* tests/misc/sort-compress: New file containing the tests.
+
 2007-01-24  Jim Meyering  <jim@meyering.net>
 
 	* NEWS: sort temp file compression: tweak wording.
