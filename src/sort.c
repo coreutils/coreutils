@@ -459,7 +459,7 @@ static struct tempnode *volatile *temptail = &temphead;
 
 struct sortfile
 {
-  char *name;
+  char const *name;
   pid_t pid;     /* If compressed, the pid of compressor, else zero */
 };
 

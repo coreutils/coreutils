@@ -1,3 +1,8 @@
+2007-01-24  Jim Meyering  <jim@meyering.net>
+
+	* NEWS: sort temp file compression: tweak wording.
+	* src/sort.c (struct sortfile) [name]: Declare member to be const.
+
 2007-01-21  Jim Meyering  <jim@meyering.net>
 
 	* src/sort.c (MAX_FORK_RETRIES_COMPRESS, MAX_FORK_RETRIES_DECOMPRESS):
