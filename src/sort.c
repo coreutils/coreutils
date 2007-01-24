@@ -341,6 +341,8 @@ Other options:\n\
   -C, --check=quiet, --check=silent  like -c, but do not report first bad line\n\
   -k, --key=POS1[,POS2]     start a key at POS1, end it at POS2 (origin 1)\n\
   -m, --merge               merge already sorted files; do not sort\n\
+"), stdout);
+      fputs (_("\
   -o, --output=FILE         write result to FILE instead of standard output\n\
   -s, --stable              stabilize sort by disabling last-resort comparison\n\
   -S, --buffer-size=SIZE    use SIZE for main memory buffer\n\

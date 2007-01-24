@@ -1,3 +1,16 @@
+2007-01-24  Jim Meyering  <jim@meyering.net>
+
+	Pass "make distcheck" again.
+	* src/sort.c (usage): Split a diagnostic that had grown to be
+	longer than the C89 maximum of 509 bytes.
+	* .x-sc_cast_of_argument_to_free: New file.  Allow a cast in sort.c.
+	FIXME: this is just temporary, while we wait to remove the offending
+	access-calling code.
+	* Makefile.am (EXTRA_DIST): Add .x-sc_cast_of_argument_to_free.
+	* Makefile.maint (sc_cast_of_argument_to_free): Use the
+	canonical, $$($(CVS_LIST_EXCEPT)).
+	* m4/.gitignore, m4/.cvsignore, lib/.gitignore, lib/.cvsignore: Update.
+
 2007-01-24  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: New option sort -C, proposed by XCU ERN 127, which looks
