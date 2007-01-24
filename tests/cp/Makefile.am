@@ -1,7 +1,6 @@
 # Make coreutils tests for cp.				-*-Makefile-*-
 
-# Copyright (C) 1997, 1998, 1999, 2000, 2001, 2003, 2005, 2006 Free
-# Software Foundation, Inc.
+# Copyright (C) 1997-2001, 2003, 2005-2007 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,7 +20,7 @@
 AUTOMAKE_OPTIONS = 1.1 gnits
 
 TESTS = \
-  file-perm-race open-perm-race parent-perm-race \
+  file-perm-race parent-perm-race \
   backup-dir \
   src-base-dot \
   sparse \

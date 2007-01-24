@@ -1,5 +1,11 @@
 2007-01-24  Jim Meyering  <jim@meyering.net>
 
+	Remove usually-skipped test.
+	* tests/cp/open-perm-race: Remove this file.  It is subsumed
+	by parent-perm-race.
+	* tests/cp/Makefile.am (TESTS): Remove open-perm-race.
+	* tests/sort/Makefile.am: Regenerate.
+
 	Pass "make distcheck" again.
 	* src/sort.c (usage): Split a diagnostic that had grown to be
 	longer than the C89 maximum of 509 bytes.
