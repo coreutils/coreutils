@@ -1,3 +1,22 @@
+2007-01-24  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* NEWS: New option sort -C, proposed by XCU ERN 127, which looks
+	like it will be approved.  Also add --check=quiet, --check=silent
+	as long aliases, and --check=diagnose-first as an alias for -c.
+	* doc/coreutils.texi (sort invocation): Document this.
+	Also, mention that sort -c can take at most one file.
+	* src/sort.c: Implement this.
+	Include argmatch.h.
+	(usage): Document the change.
+	(CHECK_OPTION): New constant.
+	(long_options): --check now takes an optional argument, and is now
+	treated differently from 'c'.
+	(check_args, check_types): New constant arrays.
+	(check): New arg CHECKONLY, which suppresses diagnostic if -C.
+	(main): Parse the new options.
+	* tests/sort/Test.pm (02d, 02d, incompat5, incompat6):
+	New tests for -C.
+
 2007-01-24  Jim Meyering  <jim@meyering.net>
 
 	Fix a typo.

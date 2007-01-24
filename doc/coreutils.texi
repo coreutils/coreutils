@@ -3342,12 +3342,26 @@ mode:
 
 @item -c
 @itemx --check
+@itemx --check=diagnose-first
 @opindex -c
 @opindex --check
 @cindex checking for sortedness
-Check whether the given files are already sorted: if they are not all
-sorted, print an error message and exit with a status of 1.
+Check whether the given file is already sorted: if it is not all
+sorted, print a diagnostic containing the first out-of-order line and
+exit with a status of 1.
 Otherwise, exit successfully.
+At most one input file can be given.
+
+@item -C
+@itemx --check=quiet
+@itemx --check=silent
+@opindex -c
+@opindex --check
+@cindex checking for sortedness
+Exit successfully if the given file is already sorted, and
+exit with status 1 otherwise.
+At most one input file can be given.
+This is like @option{-c}, except it does not print a diagnostic.
 
 @item -m
 @itemx --merge
@@ -3401,7 +3415,7 @@ Exit status:
 
 @display
 0 if no error occurred
-1 if invoked with @option{-c} and the input is not properly sorted
+1 if invoked with @option{-c} or @option{-C} and the input is not sorted
 2 if an error occurred
 @end display
 
@@ -3716,7 +3730,7 @@ disks and controllers.
 @cindex uniquifying output
 
 Normally, output only the first of a sequence of lines that compare
-equal.  For the @option{--check} (@option{-c}) option,
+equal.  For the @option{--check} (@option{-c} or @option{-C}) option,
 check that no pair of consecutive lines compares equal.
 
 This option also disables the default last-resort comparison.

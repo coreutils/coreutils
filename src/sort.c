@@ -28,6 +28,7 @@
 #include <sys/wait.h>
 #include <signal.h>
 #include "system.h"
+#include "argmatch.h"
 #include "error.h"
 #include "findprog.h"
 #include "hard-locale.h"
@@ -336,7 +337,8 @@ Ordering options:\n\
       fputs (_("\
 Other options:\n\
 \n\
-  -c, --check               check whether input is sorted; do not sort\n\
+  -c, --check, --check=diagnose-first  check for sorted input; do not sort\n\
+  -C, --check=quiet, --check=silent  like -c, but do not report first bad line\n\
   -k, --key=POS1[,POS2]     start a key at POS1, end it at POS2 (origin 1)\n\
   -m, --merge               merge already sorted files; do not sort\n\
   -o, --output=FILE         write result to FILE instead of standard output\n\
@@ -385,15 +387,16 @@ native byte values.\n\
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
 {
-  RANDOM_SOURCE_OPTION = CHAR_MAX + 1
+  CHECK_OPTION = CHAR_MAX + 1,
+  RANDOM_SOURCE_OPTION
 };
 
-static char const short_options[] = "-bcdfgik:mMno:rRsS:t:T:uy:z";
+static char const short_options[] = "-bcCdfgik:mMno:rRsS:t:T:uy:z";
 
 static struct option const long_options[] =
 {
   {"ignore-leading-blanks", no_argument, NULL, 'b'},
-  {"check", no_argument, NULL, 'c'},
+  {"check", optional_argument, NULL, CHECK_OPTION},
   {"dictionary-order", no_argument, NULL, 'd'},
   {"ignore-case", no_argument, NULL, 'f'},
   {"general-numeric-sort", no_argument, NULL, 'g'},
@@ -416,6 +419,16 @@ static struct option const long_options[] =
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0},
 };
+
+static char const *const check_args[] =
+{
+  "quiet", "silent", "diagnose-first", NULL
+};
+static char const check_types[] =
+{
+  'C', 'C', 'c'
+};
+ARGMATCH_VERIFY (check_args, check_types);
 
 /* The set of signals that are caught.  */
 static sigset_t caught_signals;
@@ -1917,13 +1930,13 @@ compare (const struct line *a, const struct line *b)
   return reverse ? -diff : diff;
 }
 
-/* Check that the lines read from FILE_NAME come in order.  Print a
-   diagnostic (FILE_NAME, line number, contents of line) to stderr and return
-   false if they are not in order.  Otherwise, print no diagnostic
-   and return true.  */
+/* Check that the lines read from FILE_NAME come in order.  Return
+   true if they are in order.  If CHECKONLY == 'c', also print a
+   diagnostic (FILE_NAME, line number, contents of line) to stderr if
+   they are not in order.  */
 
 static bool
-check (char const *file_name)
+check (char const *file_name, char checkonly)
 {
   FILE *fp = xfopen (file_name, "r");
   struct buffer buf;		/* Input buffer. */
@@ -1949,15 +1962,19 @@ check (char const *file_name)
 	{
 	found_disorder:
 	  {
-	    struct line const *disorder_line = line - 1;
-	    uintmax_t disorder_line_number =
-	      buffer_linelim (&buf) - disorder_line + line_number;
-	    char hr_buf[INT_BUFSIZE_BOUND (uintmax_t)];
-	    fprintf (stderr, _("%s: %s:%s: disorder: "),
-		     program_name, file_name,
-		     umaxtostr (disorder_line_number, hr_buf));
-	    write_bytes (disorder_line->text, disorder_line->length, stderr,
-			 _("standard error"));
+	    if (checkonly == 'c')
+	      {
+		struct line const *disorder_line = line - 1;
+		uintmax_t disorder_line_number =
+		  buffer_linelim (&buf) - disorder_line + line_number;
+		char hr_buf[INT_BUFSIZE_BOUND (uintmax_t)];
+		fprintf (stderr, _("%s: %s:%s: disorder: "),
+			 program_name, file_name,
+			 umaxtostr (disorder_line_number, hr_buf));
+		write_bytes (disorder_line->text, disorder_line->length,
+			     stderr, _("standard error"));
+	      }
+
 	    ordered = false;
 	    break;
 	  }
@@ -2728,7 +2745,7 @@ main (int argc, char **argv)
   struct keyfield gkey;
   char const *s;
   int c = 0;
-  bool checkonly = false;
+  char checkonly = 0;
   bool mergeonly = false;
   char *random_source = NULL;
   bool need_random = false;
@@ -2920,8 +2937,16 @@ main (int argc, char **argv)
 	  }
 	  break;
 
+	case CHECK_OPTION:
+	  c = (optarg
+	       ? XARGMATCH ("--check", optarg, check_args, check_types)
+	       : 'c');
+	  /* Fall through.  */
 	case 'c':
-	  checkonly = true;
+	case 'C':
+	  if (checkonly && checkonly != c)
+	    incompatible_options ("cC");
+	  checkonly = c;
 	  break;
 
 	case 'k':
@@ -3128,15 +3153,19 @@ main (int argc, char **argv)
   if (checkonly)
     {
       if (nfiles > 1)
-	error (SORT_FAILURE, 0, _("extra operand %s not allowed with -c"),
-	       quote (files[1]));
+	error (SORT_FAILURE, 0, _("extra operand %s not allowed with -%c"),
+	       quote (files[1]), checkonly);
 
       if (outfile)
-	incompatible_options ("co");
+	{
+	  static char opts[] = {0, 'o', 0};
+	  opts[0] = checkonly;
+	  incompatible_options (opts);
+	}
 
-      /* POSIX requires that sort return 1 IFF invoked with -c and the
+      /* POSIX requires that sort return 1 IFF invoked with -c or -C and the
 	 input is not properly sorted.  */
-      exit (check (files[0]) ? EXIT_SUCCESS : SORT_OUT_OF_ORDER);
+      exit (check (files[0], checkonly) ? EXIT_SUCCESS : SORT_OUT_OF_ORDER);
     }
 
   if (mergeonly)

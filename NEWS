@@ -35,6 +35,13 @@ GNU coreutils NEWS                                    -*- outline -*-
   When sorting very large inputs, this can result in sort using far
   less temporary disk space and in improved performance.
 
+** New features
+
+  sort accepts the new option -C, which acts like -c except no diagnostic
+  is printed.  Its --check option now accepts an optional argument, and
+  --check=quiet and --check=silent are now aliases for -C, while
+  --check=diagnose-first is an alias for -c or plain --check.
+
 
 * Noteworthy changes in release 6.7 (2006-12-08) [stable]
 
