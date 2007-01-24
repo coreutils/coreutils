@@ -21,7 +21,7 @@ EXTRA_DIST = $(TESTS)
 
 TESTS_ENVIRONMENT = \
   top_srcdir=$(top_srcdir) \
-  top_builddir=$(top_builddir) \
+  abs_top_builddir=$(abs_top_builddir) \
   srcdir=$(srcdir) \
   PACKAGE_VERSION=$(PACKAGE_VERSION) \
   PERL="$(PERL)" \

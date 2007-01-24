@@ -33,7 +33,7 @@ mkdir -p $tmp || framework_failure=1
 cd $tmp || framework_failure=1
 seq -w 2000 > exp || framework_failure=1
 tac exp > in || framework_failure=1
-SORT=$top_builddir/src/sort
+SORT=$abs_top_builddir/src/sort
 
 if test $framework_failure = 1; then
   echo "$0: failure in testing framework" 1>&2
