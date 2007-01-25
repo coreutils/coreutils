@@ -1,3 +1,8 @@
+2007-01-25  Dan Hipschman  <dsh@linux.ucla.edu>
+
+	* src/sort.c (create_temp): Remove superfluous access-X_OK
+	check.  find_in_path does this for us.
+
 2007-01-24  Jim Meyering  <jim@meyering.net>
 
 	Remove usually-skipped test.

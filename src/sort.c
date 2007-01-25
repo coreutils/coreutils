@@ -853,12 +853,7 @@ create_temp (FILE **pfp, pid_t *ppid)
 	  const char *path_program = find_in_path (default_program);
 
 	  if (path_program != default_program)
-	    {
-	      if (access (path_program, X_OK) == 0)
-		compress_program = path_program;
-	      else
-		free ((char *) path_program);
-	    }
+	    compress_program = path_program;
 	}
       else if (*compress_program == '\0')
 	compress_program = NULL;
