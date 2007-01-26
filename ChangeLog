@@ -1,5 +1,8 @@
 2007-01-26  Jim Meyering  <jim@meyering.net>
 
+	* src/dd.c (advance_input_after_read_error): Change diagnostic to
+	say "invalid file offset" rather than "screwy file offset".
+
 	* .x-sc_cast_of_argument_to_free: Remove this file.
 	* Makefile.am (EXTRA_DIST): Likewise.
 

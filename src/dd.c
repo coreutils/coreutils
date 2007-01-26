@@ -1,5 +1,5 @@
 /* dd -- convert a file while copying it.
-   Copyright (C) 85, 90, 91, 1995-2006 Free Software Foundation, Inc.
+   Copyright (C) 85, 90, 91, 1995-2007 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -1226,7 +1226,7 @@ advance_input_after_read_error (size_t nbytes)
 	    return true;
 	  diff = input_offset - offset;
 	  if (! (0 <= diff && diff <= nbytes))
-	    error (0, 0, _("warning: screwy file offset after failed read"));
+	    error (0, 0, _("warning: invalid file offset after failed read"));
 	  if (0 <= skip_via_lseek (input_file, STDIN_FILENO, diff, SEEK_CUR))
 	    return true;
 	  if (errno == 0)
