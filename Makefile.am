@@ -26,7 +26,6 @@ EXTRA_DIST = Makefile.cfg Makefile.maint GNUmakefile \
   .x-po-check \
   .x-sc_file_system .x-sc_obsolete_symbols \
   .x-sc_prohibit_atoi_atof \
-  .x-sc_cast_of_argument_to_free \
   .x-sc_require_config_h \
   .x-sc_space_tab .x-sc_sun_os_names \
   .x-sc_trailing_blank \

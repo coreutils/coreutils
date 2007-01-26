@@ -1,3 +1,8 @@
+2007-01-26  Jim Meyering  <jim@meyering.net>
+
+	* .x-sc_cast_of_argument_to_free: Remove this file.
+	* Makefile.am (EXTRA_DIST): Likewise.
+
 2007-01-25  Dan Hipschman  <dsh@linux.ucla.edu>
 
 	* src/sort.c (create_temp): Remove superfluous access-X_OK
