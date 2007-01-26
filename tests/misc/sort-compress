@@ -1,0 +1,92 @@
+#!/bin/sh
+# Test use of compression by sort
+
+# Copyright (C) 2007 Free Software Foundation, Inc.
+
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+# 02110-1301, USA.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  sort --version
+fi
+
+pwd=`pwd`
+t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
+trap 'status=$?; cd "$pwd" && chmod -R u+rwx $t0 && rm -rf $t0 && exit $status' 0
+trap '(exit $?); exit $?' 1 2 13 15
+
+framework_failure=0
+mkdir -p $tmp || framework_failure=1
+cd $tmp || framework_failure=1
+seq -w 2000 > exp || framework_failure=1
+tac exp > in || framework_failure=1
+SORT=$abs_top_builddir/src/sort
+
+if test $framework_failure = 1; then
+  echo "$0: failure in testing framework" 1>&2
+  (exit 1); exit 1
+fi
+
+fail=0
+
+# This should force the use of temp files compressed with the default gzip
+sort -S 1k in > out || fail=1
+cmp exp out || fail=1
+test $fail = 1 && diff out exp 2> /dev/null
+
+# Create our own gzip program that will be used as the default
+cat <<\EOF > gzip || fail=1
+#!/bin/sh
+tr 41 14
+touch ok
+EOF
+
+chmod +x gzip
+
+# This will find our new gzip in PATH
+PATH=.:$PATH sort -S 1k in > out || fail=1
+cmp exp out || fail=1
+test $fail = 1 && diff out exp 2> /dev/null
+test -f ok || fail=1
+rm -f ok
+
+# This is to make sure we can disable compression
+PATH=.:$PATH GNUSORT_COMPRESSOR= sort -S 1k in > out || fail=1
+cmp exp out || fail=1
+test $fail = 1 && diff out exp 2> /dev/null
+test -f ok && fail=1
+
+# This is to make sure we can use something other than gzip
+mv gzip dzip || fail=1
+GNUSORT_COMPRESSOR=./dzip sort -S 1k in > out || fail=1
+cmp exp out || fail=1
+test $fail = 1 && diff out exp 2> /dev/null
+test -f ok || fail=1
+rm -f ok
+
+# Make sure it can find other programs in PATH correctly
+PATH=.:$PATH GNUSORT_COMPRESSOR=dzip sort -S 1k in > out || fail=1
+cmp exp out || fail=1
+test $fail = 1 && diff out exp 2> /dev/null
+test -f ok || fail=1
+rm -f dzip ok
+
+# This is to make sure sort functions if it can't find the default gzip
+PATH=. "$SORT" -S 1k in > out || fail=1
+cmp exp out || fail=1
+test $fail = 1 && diff out exp 2> /dev/null
+
+(exit $fail); exit $fail

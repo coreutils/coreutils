@@ -37,6 +37,7 @@ close-stream.c
 close-stream.h
 closeout.c
 closeout.h
+concatpath.c
 config.charset
 configmake.h
 creat-safer.c
@@ -80,6 +81,8 @@ filemode.c
 filemode.h
 filenamecat.c
 filenamecat.h
+findprog.c
+findprog.h
 fnmatch.c
 fnmatch.h
 fnmatch_.h
@@ -214,6 +217,7 @@ openat-proc.c
 openat.c
 openat.h
 pathmax.h
+pathname.h
 physmem.c
 physmem.h
 pipe-safer.c

@@ -51,6 +51,8 @@ my @tv = (
 ["02a", '-c', "A\nB\nC\n", '', 0],
 ["02b", '-c', "A\nC\nB\n", '', 1],
 ["02c", '-c -k1,1', "a\na b\n", '', 0],
+["02d", '-C', "A\nB\nC\n", '', 0],
+["02e", '-C', "A\nC\nB\n", '', 1],
 # This should fail because there are duplicate keys
 ["02m", '-cu', "A\nA\n", '', 1],
 ["02n", '-cu', "A\nB\n", '', 0],
@@ -272,6 +274,8 @@ my @tv = (
 ["incompat2", '-fR', '', '', 2],
 ["incompat3", '-dfgiMnR', '', '', 2],
 ["incompat4", '-c -o /dev/null', '', '', 2],
+["incompat5", '-C -o /dev/null', '', '', 2],
+["incompat6", '-cC', '', '', 2],
 
 # -t '\0' is accepted, as of coreutils-5.0.91
 ['nul-tab', "-k2,2 -t '\\0'", "a\0z\01\nb\0y\02\n", "b\0y\02\na\0z\01\n", 0],

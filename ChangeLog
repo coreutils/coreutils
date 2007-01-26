@@ -1,3 +1,132 @@
+2007-01-26  Jim Meyering  <jim@meyering.net>
+
+	* .x-sc_cast_of_argument_to_free: Remove this file.
+	* Makefile.am (EXTRA_DIST): Likewise.
+
+2007-01-25  Dan Hipschman  <dsh@linux.ucla.edu>
+
+	* src/sort.c (create_temp): Remove superfluous access-X_OK
+	check.  find_in_path does this for us.
+
+2007-01-24  Jim Meyering  <jim@meyering.net>
+
+	Remove usually-skipped test.
+	* tests/cp/open-perm-race: Remove this file.  It is subsumed
+	by parent-perm-race.
+	* tests/cp/Makefile.am (TESTS): Remove open-perm-race.
+	* tests/sort/Makefile.am: Regenerate.
+
+	Pass "make distcheck" again.
+	* src/sort.c (usage): Split a diagnostic that had grown to be
+	longer than the C89 maximum of 509 bytes.
+	* .x-sc_cast_of_argument_to_free: New file.  Allow a cast in sort.c.
+	FIXME: this is just temporary, while we wait to remove the offending
+	access-calling code.
+	* Makefile.am (EXTRA_DIST): Add .x-sc_cast_of_argument_to_free.
+	* Makefile.maint (sc_cast_of_argument_to_free): Use the
+	canonical, $$($(CVS_LIST_EXCEPT)).
+	* m4/.gitignore, m4/.cvsignore, lib/.gitignore, lib/.cvsignore: Update.
+
+2007-01-24  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* NEWS: New option sort -C, proposed by XCU ERN 127, which looks
+	like it will be approved.  Also add --check=quiet, --check=silent
+	as long aliases, and --check=diagnose-first as an alias for -c.
+	* doc/coreutils.texi (sort invocation): Document this.
+	Also, mention that sort -c can take at most one file.
+	* src/sort.c: Implement this.
+	Include argmatch.h.
+	(usage): Document the change.
+	(CHECK_OPTION): New constant.
+	(long_options): --check now takes an optional argument, and is now
+	treated differently from 'c'.
+	(check_args, check_types): New constant arrays.
+	(check): New arg CHECKONLY, which suppresses diagnostic if -C.
+	(main): Parse the new options.
+	* tests/sort/Test.pm (02d, 02d, incompat5, incompat6):
+	New tests for -C.
+
+2007-01-24  Jim Meyering  <jim@meyering.net>
+
+	Fix a typo.
+	* tests/misc/sort-compress: Use $abs_top_builddir, not $top_builddir.
+	* tests/misc/Makefile.am (TESTS_ENVIRONMENT): Likewise.
+
+	Don't depend on "which".
+	* tests/misc/sort-compress (SORT): Use $abs_builddir, now which.
+	* tests/misc/Makefile.am (TESTS_ENVIRONMENT): Export top_builddir.
+
+2007-01-24  Dan Hipschman  <dsh@linux.ucla.edu>
+
+	Test sort compression.
+	* tests/misc/Makefile.am: Add the test.
+	* tests/misc/sort-compress: New file containing the tests.
+
+2007-01-24  Jim Meyering  <jim@meyering.net>
+
+	* NEWS: sort temp file compression: tweak wording.
+	* src/sort.c (struct sortfile) [name]: Declare member to be const.
+
+2007-01-21  Jim Meyering  <jim@meyering.net>
+
+	* src/sort.c (MAX_FORK_RETRIES_COMPRESS, MAX_FORK_RETRIES_DECOMPRESS):
+	In pipe_fork callers, use these named constants, not "2" and "8".
+	(proctab, nprocs): Declare to be "static".
+	(pipe_fork) [lint]: Initialize local, pid,
+	to avoid unwarranted may-be-used-uninitialized warning.
+	(create_temp): Use the active voice.  Describe parameters, too.
+
+2007-01-21  James Youngman  <jay@gnu.org>
+
+	Centralize all the uses of sigprocmask().  Don't restore an invalid
+	saved mask.
+	* src/sort.c (enter_cs, leave_cs): New functions for protecting
+	code sequences against signal delivery.
+	* (exit_cleanup): Use enter_cs and leave_cs instead of
+	calling sigprocmask directly.
+	(create_temp_file, pipe_fork, zaptemp): Likewise
+
+2007-01-21  Dan Hipschman  <dsh@linux.ucla.edu>
+
+	Add compression of temp files to sort.
+	* NEWS: Mention this.
+	* bootstrap.conf: Import findprog.
+	* configure.ac: Add AC_FUNC_FORK.
+	* doc/coreutils.texi: Document GNUSORT_COMPRESSOR environment
+	variable.
+	* src/sort.c (compress_program): New global, holds the name of the
+	external compression program.
+	(struct sortfile): New type used by mergepfs and friends instead
+	of filenames to hold PIDs of compressor processes.
+	(proctab): New global, holds compressor PIDs on which to wait.
+	(enum procstate, struct procnode): New types used by proctab.
+	(proctab_hasher, proctab_comparator): New functions for proctab.
+	(nprocs): New global, number of forked but unreaped children.
+	(reap, reap_some): New function, wait for/cleanup forked processes.
+	(register_proc, update_proc, wait_proc): New functions for adding,
+	modifying and removing proctab entries.
+	(create_temp_file): Change parameter type to pointer to file
+	descriptor, and return type to pointer to struct tempnode.
+	(dup2_or_die): New function used in create_temp and open_temp.
+	(pipe_fork): New function, creates a pipe and child process.
+	(create_temp): Creates a temp file and possibly a compression
+	program to which we filter output.
+	(open_temp): Opens a compressed temp file and creates a
+	decompression process through which to filter the input.
+	(mergefps): Change FILES parameter type to struct sortfile array
+	and update access accordingly.  Use open_temp and reap_some.
+	(avoid_trashing_input, merge): Change FILES parameter like
+	mergefps and call create_temp instead of create_temp_file.
+	(sort): Call create_temp instead of create_temp_file.
+	Use reap_some.
+	(avoid_trashing_input, merge, sort, main): Adapt to mergefps.
+
+2007-01-20  Jim Meyering  <jim@meyering.net>
+
+	* tests/misc/pwd-long: Work properly even when run from the
+	wrong one of two or more bind-mounted sibling directories.
+	Suggestion from Mike Stone in <http://bugs.debian.org/380552>.
+
 2007-01-20  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Standardize on list of signals when an app catches signals.

@@ -98,7 +98,7 @@ syntax-check: $(syntax-check-rules)
 # FIXME: don't allow `#include .strings\.h' anywhere
 
 sc_cast_of_argument_to_free:
-	@grep -nE '\<free \(\(' $(srcdir)/{lib,src}/*.[chly] &&		\
+	@grep -nE '\<free \(\(' $$($(CVS_LIST_EXCEPT)) &&		\
 	  { echo '$(ME): don'\''t cast free argument' 1>&2;		\
 	    exit 1; } || :
 

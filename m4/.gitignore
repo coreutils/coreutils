@@ -29,6 +29,7 @@ dirname.m4
 dos.m4
 double-slash-root.m4
 dup2.m4
+eaccess.m4
 eealloc.m4
 eoverflow.m4
 error.m4
@@ -43,6 +44,7 @@ file-type.m4
 fileblocks.m4
 filemode.m4
 filenamecat.m4
+findprog.m4
 flexmember.m4
 fnmatch.m4
 fpending.m4
