@@ -1,3 +1,10 @@
+2007-01-26  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Adjust to today's change to gnulib, which added a module for
+	string.h to replace the little include files like strcase.h.
+	* src/dircolors.c: Don't include strcase.h.
+	* src/system.h: Don't include mempcpy.h, memrchr.h, stpcpy.h, strpbrk.h.
+
 2007-01-26  Jim Meyering  <jim@meyering.net>
 
 	* src/dd.c (advance_input_after_read_error): Change diagnostic to
