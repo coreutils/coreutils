@@ -1,5 +1,10 @@
 2007-01-29  Jim Meyering  <jim@meyering.net>
 
+	* src/ls.c: Rename three global variables.
+	(cwd_file): Rename from 'files'.
+	(cwd_n_alloc): Rename from 'nfiles'.
+	(cwd_n_used): Rename from 'files_index'.
+
 	Shave 8 bytes off the size of "struct fileinfo".
 	* src/ls.c (fileinfo): Put all members of type "bool" together.
 
