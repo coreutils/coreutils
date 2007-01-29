@@ -210,6 +210,8 @@ modechange.c
 modechange.h
 mountlist.c
 mountlist.h
+mpsort.c
+mpsort.h
 nanosleep.c
 obstack.c
 obstack.h
