@@ -1,5 +1,9 @@
 2007-01-29  Jim Meyering  <jim@meyering.net>
 
+	Plug a leak in ls.
+	* src/ls.c (print_dir): Don't leak a "DIR"+fd upon failure to
+	determine dev/inode or upon detecting a symlink loop.
+
 	* src/ls.c: Rename three global variables.
 	(cwd_file): Rename from 'files'.
 	(cwd_n_alloc): Rename from 'nfiles'.

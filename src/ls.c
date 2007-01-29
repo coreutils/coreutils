@@ -2342,6 +2342,7 @@ print_dir (char const *name, char const *realname, bool command_line_arg)
 	{
 	  file_failure (command_line_arg,
 			_("cannot determine device and inode of %s"), name);
+	  closedir (dirp);
 	  return;
 	}
 
@@ -2351,6 +2352,7 @@ print_dir (char const *name, char const *realname, bool command_line_arg)
 	{
 	  error (0, 0, _("%s: not listing already-listed directory"),
 		 quotearg_colon (name));
+	  closedir (dirp);
 	  return;
 	}
 
