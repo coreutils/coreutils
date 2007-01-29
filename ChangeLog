@@ -1,3 +1,8 @@
+2007-01-29  Jim Meyering  <jim@meyering.net>
+
+	Shave 8 bytes off the size of "struct fileinfo".
+	* src/ls.c (fileinfo): Put all members of type "bool" together.
+
 2007-01-28  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Modify "ls" to sort its data faster, using the new gnulib mpsort

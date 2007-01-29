@@ -156,21 +156,22 @@ struct fileinfo
     /* The file name.  */
     char *name;
 
-    struct stat stat;
-    bool stat_ok;
-
     /* For symbolic link, name of the file linked to, otherwise zero.  */
     char *linkname;
+
+    struct stat stat;
+
+    enum filetype filetype;
 
     /* For symbolic link and long listing, st_mode of file linked to, otherwise
        zero.  */
     mode_t linkmode;
 
+    bool stat_ok;
+
     /* For symbolic link and color printing, true if linked-to file
        exists, otherwise false.  */
     bool linkok;
-
-    enum filetype filetype;
 
 #if USE_ACL
     /* For long listings, true if the file has an access control list.  */
