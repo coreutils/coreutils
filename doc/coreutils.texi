@@ -208,6 +208,7 @@ Common Options
 * Exit status::                 Indicating program success or failure.
 * Backup options::              Backup options
 * Block size::                  Block size
+* Disambiguating names and IDs:: chgrp and chown owner and group syntax
 * Random sources::              Sources of random data
 * Target directory::            Target directory
 * Trailing slashes::            Trailing slashes
@@ -644,6 +645,7 @@ name.
 * Exit status::                 Indicating program success or failure.
 * Backup options::              -b -S, in some programs.
 * Block size::                  BLOCK_SIZE and --block-size, in some programs.
+* Disambiguating names and IDs:: chgrp and chown owner and group syntax
 * Random sources::              --random-source, in some programs.
 * Target directory::            Specifying a target directory, in some programs.
 * Trailing slashes::            --strip-trailing-slashes, in some programs.
@@ -923,6 +925,46 @@ is the default unless the @env{POSIXLY_CORRECT} environment variable is
 set.  The @option{-h} or @option{--human-readable} option is equivalent to
 @option{--block-size=human-readable}.  The @option{--si} option is
 equivalent to @option{--block-size=si}.
+
+@node Disambiguating names and IDs
+@section chown and chgrp: Disambiguating user names and IDs
+@cindex user names, disambiguating
+@cindex user IDs, disambiguating
+@cindex group names, disambiguating
+@cindex group IDs, disambiguating
+@cindex disambiguating group names and IDs
+
+Since the @var{owner} and @var{group} arguments to @command{chown} and
+@command{chgrp} may be specified as names or numeric IDs, there is an
+apparent ambiguity.
+What if a user or group @emph{name} is a string of digits?
+@footnote{Using a number as a user name is common in some environments.}
+Should the command interpret it as a user name or as an ID?
+@acronym{POSIX} requires that @command{chown} and @command{chgrp}
+first attempt to resolve the specified string as a name, and
+only once that fails, then try to interpret it as an ID.
+This is troublesome when you want to specify a numeric ID, say 42,
+and it must work even in a pathological situation where
+@samp{42} is a user name that maps to some other user ID, say 1000.
+Simply invoking @code{chown 42 F}, will set @file{F}s owner ID to
+1000---not what you intended.
+
+GNU @command{chown} and @command{chgrp} provide a way to work around this,
+that at the same time may result in a significant performance improvement
+by eliminating a database look-up.
+Simply precede each numeric user ID and/or group ID with a @samp{+},
+in order to force its interpretation as an integer:
+
+@example
+chown +42 F
+chgrp +$numeric_group_id another-file
+chown +0:+0 /
+@end example
+
+GNU @command{chown} and @command{chgrp}
+skip the name look-up process for each @samp{+}-prefixed string,
+because a string containing @samp{+} is never a valid user or group name.
+This syntax is accepted on most common Unix systems, but not on Solaris 10.
 
 @node Random sources
 @section Sources of random data
@@ -8778,6 +8820,10 @@ owner nor the group is changed.
 
 @end table
 
+If @var{owner} or @var{group} is intended to represent a numeric user
+or group ID, then you may specify it with a leading @samp{+}.
+@xref{Disambiguating names and IDs}.
+
 Some older scripts may still use @samp{.} in place of the @samp{:} separator.
 @acronym{POSIX} 1003.1-2001 (@pxref{Standards conformance}) does not
 require support for that, but for backward compatibility @acronym{GNU}
@@ -8952,6 +8998,10 @@ or to the group of an existing reference file.  Synopsis:
 @example
 chgrp [@var{option}]@dots{} @{@var{group} | --reference=@var{ref_file}@} @var{file}@dots{}
 @end example
+
+If @var{group} is intended to represent a
+numeric group ID, then you may specify it with a leading @samp{+}.
+@xref{Disambiguating names and IDs}.
 
 The program accepts the following options.  Also see @ref{Common options}.
 
