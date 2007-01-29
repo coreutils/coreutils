@@ -93,6 +93,7 @@
 #include "ls.h"
 #include "lstat.h"
 #include "mbswidth.h"
+#include "mpsort.h"
 #include "obstack.h"
 #include "quote.h"
 #include "quotearg.h"
@@ -278,6 +279,11 @@ static size_t nfiles;  /* FIXME: rename this to e.g. cwd_n_alloc */
 
 /* Index of first unused in `files'.  */
 static size_t files_index;  /* FIXME: rename this to e.g. cwd_n_used */
+
+/* Vector of pointers to files, in proper sorted order, and the number
+   of entries allocated for it.  */
+static void **sorted_file;
+static size_t sorted_file_alloc;
 
 /* When true, in a color listing, color each symlink name according to the
    type of file it points to.  Otherwise, color them according to the `ln'
@@ -2504,8 +2510,9 @@ clear_files (void)
 
   for (i = 0; i < files_index; i++)
     {
-      free (files[i].name);
-      free (files[i].linkname);
+      struct fileinfo *f = sorted_file[i];
+      free (f->name);
+      free (f->linkname);
     }
 
   files_index = 0;
@@ -2860,36 +2867,34 @@ extract_dirs_from_files (char const *dirname, bool command_line_arg)
   /* Queue the directories last one first, because queueing reverses the
      order.  */
   for (i = files_index; i-- != 0; )
-    if (is_directory (&files[i])
-        && (! ignore_dot_and_dot_dot
-            || ! basename_is_dot_or_dotdot (files[i].name)))
-      {
-	if (!dirname || files[i].name[0] == '/')
-	  {
-	    queue_directory (files[i].name, files[i].linkname,
-			     command_line_arg);
-	  }
-	else
-	  {
-	    char *name = file_name_concat (dirname, files[i].name, NULL);
-	    queue_directory (name, files[i].linkname, command_line_arg);
-	    free (name);
-	  }
-	if (files[i].filetype == arg_directory)
-	  free (files[i].name);
-      }
+    {
+      struct fileinfo *f = sorted_file[i];
+
+      if (is_directory (f)
+	  && (! ignore_dot_and_dot_dot
+	      || ! basename_is_dot_or_dotdot (f->name)))
+	{
+	  if (!dirname || f->name[0] == '/')
+	    queue_directory (f->name, f->linkname, command_line_arg);
+	  else
+	    {
+	      char *name = file_name_concat (dirname, f->name, NULL);
+	      queue_directory (name, f->linkname, command_line_arg);
+	      free (name);
+	    }
+	  if (f->filetype == arg_directory)
+	    free (f->name);
+	}
+    }
 
   /* Now delete the directories from the table, compacting all the remaining
      entries.  */
 
   for (i = 0, j = 0; i < files_index; i++)
     {
-      if (files[i].filetype != arg_directory)
-	{
-	  if (j < i)
-	    files[j] = files[i];
-	  ++j;
-	}
+      struct fileinfo *f = sorted_file[i];
+      sorted_file[j] = f;
+      j += (f->filetype != arg_directory);
     }
   files_index = j;
 }
@@ -3113,6 +3118,15 @@ static qsortFunc sort_functions[][2][2][2] =
 verify (ARRAY_CARDINALITY (sort_functions)
 	== sort_numtypes + time_numtypes - 1 );
 
+/* Set up SORTED_FILE to point to the in-use entries in FILES, in order.  */
+
+static void
+initialize_ordering_vector (void)
+{
+  size_t i;
+  for (i = 0; i < files_index; i++)
+    sorted_file[i] = &files[i];
+}
 
 /* Sort the files now in the table.  */
 
@@ -3120,6 +3134,15 @@ static void
 sort_files (void)
 {
   bool use_strcmp;
+
+  if (sorted_file_alloc < files_index + files_index / 2)
+    {
+      free (sorted_file);
+      sorted_file = xnmalloc (files_index, 3 * sizeof *sorted_file);
+      sorted_file_alloc = 3 * files_index;
+    }
+
+  initialize_ordering_vector ();
 
   if (sort_type == sort_none)
     return;
@@ -3135,13 +3158,14 @@ sort_files (void)
     {
       use_strcmp = true;
       assert (sort_type != sort_version);
+      initialize_ordering_vector ();
     }
 
   /* When sort_type == sort_time, use time_type as subindex.  */
-  qsort (files, files_index, sizeof *files,
-         sort_functions[sort_type + (sort_type == sort_time ? time_type : 0)]
-		       [use_strcmp][sort_reverse]
-                       [directories_first]);
+  mpsort ((void const **) sorted_file, files_index,
+	  sort_functions[sort_type + (sort_type == sort_time ? time_type : 0)]
+			[use_strcmp][sort_reverse]
+			[directories_first]);
 }
 
 /* List all the files now in the table.  */
@@ -3156,7 +3180,7 @@ print_current_files (void)
     case one_per_line:
       for (i = 0; i < files_index; i++)
 	{
-	  print_file_name_and_frills (files + i);
+	  print_file_name_and_frills (sorted_file[i]);
 	  putchar ('\n');
 	}
       break;
@@ -3176,7 +3200,7 @@ print_current_files (void)
     case long_format:
       for (i = 0; i < files_index; i++)
 	{
-	  print_long_format (files + i);
+	  print_long_format (sorted_file[i]);
 	  DIRED_PUTCHAR ('\n');
 	}
       break;
@@ -3980,9 +4004,10 @@ print_many_per_line (void)
       /* Print the next row.  */
       while (1)
 	{
-	  size_t name_length = length_of_file_name_and_frills (files + filesno);
+	  struct fileinfo const *f = sorted_file[filesno];
+	  size_t name_length = length_of_file_name_and_frills (f);
 	  size_t max_name_length = line_fmt->col_arr[col++];
-	  print_file_name_and_frills (files + filesno);
+	  print_file_name_and_frills (f);
 
 	  filesno += rows;
 	  if (filesno >= files_index)
@@ -4011,6 +4036,7 @@ print_horizontal (void)
   /* Now the rest.  */
   for (filesno = 1; filesno < files_index; ++filesno)
     {
+      struct fileinfo const *f;
       size_t col = filesno % cols;
 
       if (col == 0)
@@ -4024,9 +4050,10 @@ print_horizontal (void)
 	  pos += max_name_length;
 	}
 
-      print_file_name_and_frills (files + filesno);
+      f = sorted_file[filesno];
+      print_file_name_and_frills (f);
 
-      name_length = length_of_file_name_and_frills (files + filesno);
+      name_length = length_of_file_name_and_frills (f);
       max_name_length = line_fmt->col_arr[col];
     }
   putchar ('\n');
@@ -4040,7 +4067,8 @@ print_with_commas (void)
 
   for (filesno = 0; filesno < files_index; filesno++)
     {
-      size_t len = length_of_file_name_and_frills (files + filesno);
+      struct fileinfo const *f = sorted_file[filesno];
+      size_t len = length_of_file_name_and_frills (f);
 
       if (filesno != 0)
 	{
@@ -4061,7 +4089,7 @@ print_with_commas (void)
 	  putchar (separator);
 	}
 
-      print_file_name_and_frills (files + filesno);
+      print_file_name_and_frills (f);
       pos += len;
     }
   putchar ('\n');
@@ -4199,7 +4227,8 @@ calculate_columns (bool by_columns)
   /* Compute the maximum number of possible columns.  */
   for (filesno = 0; filesno < files_index; ++filesno)
     {
-      size_t name_length = length_of_file_name_and_frills (files + filesno);
+      struct fileinfo const *f = sorted_file[filesno];
+      size_t name_length = length_of_file_name_and_frills (f);
       size_t i;
 
       for (i = 0; i < max_cols; ++i)
