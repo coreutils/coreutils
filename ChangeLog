@@ -1,3 +1,39 @@
+2007-01-29  Jim Meyering  <jim@meyering.net>
+
+	Plug a leak in ls.
+	* src/ls.c (print_dir): Don't leak a "DIR"+fd upon failure to
+	determine dev/inode or upon detecting a symlink loop.
+
+	* src/ls.c: Rename three global variables.
+	(cwd_file): Rename from 'files'.
+	(cwd_n_alloc): Rename from 'nfiles'.
+	(cwd_n_used): Rename from 'files_index'.
+
+	Shave 8 bytes off the size of "struct fileinfo".
+	* src/ls.c (fileinfo): Put all members of type "bool" together.
+
+2007-01-28  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Modify "ls" to sort its data faster, using the new gnulib mpsort
+	module rather than qsort.  This is particularly a win in
+	environments where strcoll is slow, since mpsort typically calls
+	strcoll less often than qsort does.
+	* bootstrap.conf (gnulib_modules): Add mpsort.
+	* src/ls.c: Include mpsort.h.
+	(sorted_file, sorted_file_alloc): New vars, for a new vector of
+	pointers to the file info, for speed.
+	(clear_files, extract_dirs_from_files, sort_files, print_current_files):
+	(print_many_per_line, print_horizontal, print_with_commas):
+	(calculate_columns): Set and use new vector.
+	(initialize_ordering_vector): New function.
+
+2007-01-26  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Adjust to today's change to gnulib, which added a module for
+	string.h to replace the little include files like strcase.h.
+	* src/dircolors.c: Don't include strcase.h.
+	* src/system.h: Don't include mempcpy.h, memrchr.h, stpcpy.h, strpbrk.h.
+
 2007-01-26  Jim Meyering  <jim@meyering.net>
 
 	* src/dd.c (advance_input_after_read_error): Change diagnostic to

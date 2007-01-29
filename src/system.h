@@ -97,10 +97,6 @@ you must include <sys/types.h> before including this file
    memcpy otherwise.  */
 
 #include <string.h>
-#include "mempcpy.h"
-#include "memrchr.h"
-#include "stpcpy.h"
-#include "strpbrk.h"
 
 #include <errno.h>
 

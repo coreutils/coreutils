@@ -189,6 +189,7 @@ strcase.m4
 strcspn.m4
 strdup.m4
 strftime.m4
+string_h.m4
 strndup.m4
 strnlen.m4
 strpbrk.m4
