@@ -4567,7 +4567,7 @@ Fold lower case letters to upper case for sorting.
 @table @samp
 
 @item -b @var{file}
-@item --break-file=@var{file}
+@itemx --break-file=@var{file}
 
 This option provides an alternative (to @option{-W}) method of describing
 which characters make up words.  It introduces the name of a
@@ -8462,7 +8462,7 @@ Setgid}, for how the set-user-ID and set-group-ID bits of
 newly-created parent directories are inherited.
 
 @item -v
-@item --verbose
+@itemx --verbose
 @opindex -v
 @opindex --verbose
 Print a message for each created directory.  This is most useful with
@@ -8709,7 +8709,7 @@ a failure does not evoke a diagnostic and does not cause @command{rmdir} to
 exit unsuccessfully.
 
 @item -v
-@item --verbose
+@itemx --verbose
 @opindex -v
 @opindex --verbose
 @cindex directory deletion, reporting

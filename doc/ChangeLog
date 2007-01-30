@@ -1,5 +1,11 @@
 2007-01-30  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* coreutils.texi
+	(Input processing in ptx, mkdir invocation, rmdir invocation):
+	@item -> @itemx to fix some typos.
+
+2007-01-30  Paul Eggert  <eggert@cs.ucla.edu>
+
 	* coreutils.texi (mkdir invocation): Say how to set the file
 	permission bits of a parent directory with mkdir -p.
 
