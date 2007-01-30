@@ -8446,12 +8446,20 @@ overridden in this way.
 @opindex -p
 @opindex --parents
 @cindex parent directories, creating
-Make any missing parent directories for each argument.  The file permission
-bits of parent directories are set to the umask modified by @samp{u+wx}.
-@xref{Directory Setuid and Setgid}, for how the set-user-ID and
-set-group-ID bits of parent directories are inherited.
-Ignore arguments corresponding to existing directories, and do not
-change their file mode bits.
+Make any missing parent directories for each argument, setting their
+file permission bits to the umask modified by @samp{u+wx}.  Ignore
+existing parent directories, and do not change their file permission
+bits.
+
+To set the file permission bits of any newly-created parent
+directories to a value that includes @samp{u+wx}, you can set the
+umask before invoking @command{mkdir}.  For example, if the shell
+command @samp{(umask u=rwx,go=rx; mkdir -p P/Q)} creates the parent
+@file{P} it sets the parent's permission bits to @samp{u=rwx,go=rx}.
+To set a parent's special mode bits as well, you can invoke
+@command{chmod} after @command{mkdir}.  @xref{Directory Setuid and
+Setgid}, for how the set-user-ID and set-group-ID bits of
+newly-created parent directories are inherited.
 
 @item -v
 @item --verbose
