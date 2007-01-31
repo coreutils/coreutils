@@ -1,5 +1,5 @@
 /* mkdir -- make directories
-   Copyright (C) 90, 1995-2002, 2004, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 90, 1995-2002, 2004-2007 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
+#include <selinux/selinux.h>
 
 #include "system.h"
 #include "error.h"
@@ -40,6 +41,7 @@ char *program_name;
 
 static struct option const longopts[] =
 {
+  {GETOPT_SELINUX_CONTEXT_OPTION_DECL},
   {"mode", required_argument, NULL, 'm'},
   {"parents", no_argument, NULL, 'p'},
   {"verbose", no_argument, NULL, 'v'},
@@ -68,6 +70,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -m, --mode=MODE   set file mode (as in chmod), not a=rwx - umask\n\
   -p, --parents     no error if existing, make parent directories as needed\n\
   -v, --verbose     print a message for each created directory\n\
+  -Z, --context=CTX  set the SELinux security context of each created\n\
+                      directory to CTX\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
@@ -140,7 +144,9 @@ main (int argc, char **argv)
 {
   const char *specified_mode = NULL;
   int optc;
+  security_context_t scontext = NULL;
   struct mkdir_options options;
+
   options.make_ancestor_function = NULL;
   options.mode = S_IRWXUGO;
   options.mode_bits = 0;
@@ -154,7 +160,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  while ((optc = getopt_long (argc, argv, "pm:v", longopts, NULL)) != -1)
+  while ((optc = getopt_long (argc, argv, "pm:vZ:", longopts, NULL)) != -1)
     {
       switch (optc)
 	{
@@ -166,6 +172,9 @@ main (int argc, char **argv)
 	  break;
 	case 'v': /* --verbose  */
 	  options.created_directory_format = _("created directory %s");
+	  break;
+	case 'Z':
+	  scontext = optarg;
 	  break;
 	case_GETOPT_HELP_CHAR;
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
@@ -179,6 +188,11 @@ main (int argc, char **argv)
       error (0, 0, _("missing operand"));
       usage (EXIT_FAILURE);
     }
+
+  if (scontext && setfscreatecon (scontext) < 0)
+    error (EXIT_FAILURE, errno,
+	   _("failed to set default file creation context to %s"),
+	   quote (optarg));
 
   if (options.make_ancestor_function || specified_mode)
     {

@@ -1,5 +1,10 @@
 2007-01-31  Jim Meyering  <jim@meyering.net>
 
+	mkdir: Accept new "-Z, --context=C" option.
+	* src/mkdir.c: Include <selinux/selinux.h>.
+	(main): Honor it.
+	* src/Makefile.am (mkdir_LDADD): Use $(LIB_SELINUX).
+
 	* tests/cp/cp-a-selinux: New file.  Test for the bug reported in
 	<http://bugzilla.redhat.com/219900>.
 	* tests/cp/Makefile.am (TESTS): Add cp-a-selinux.
