@@ -18,6 +18,7 @@
 # 02110-1301, USA.
 
 TESTS = \
+  cp-a-selinux \
   file-perm-race parent-perm-race \
   backup-dir \
   src-base-dot \

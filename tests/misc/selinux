@@ -12,13 +12,8 @@ fi
 
 . $srcdir/../envvar-check
 . $srcdir/../lang-default
+. $srcdir/../selinux
 PRIV_CHECK_ARG=require-non-root . $srcdir/../priv-check
-
-test "`ls -Zd .`" = '? .' &&
-  {
-    echo "$0: skipping this test; this system lacks SELinux support" 1>&2
-    exit 77
-  }
 
 pwd=`pwd`
 t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$

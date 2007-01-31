@@ -310,8 +310,11 @@ copy_reg (char const *src_name, char const *dst_name,
 	  if (getfscreatecon (&con) < 0)
 	    {
 	      error (0, errno, _("failed to get file system create context"));
-	      return_val = false;
-	      goto close_src_desc;
+	      if (x->require_preserve_context)
+		{
+		  return_val = false;
+		  goto close_src_desc;
+		}
 	    }
 
 	  if (con)
@@ -321,9 +324,12 @@ copy_reg (char const *src_name, char const *dst_name,
 		  error (0, errno,
 			 _("failed to set the security context of %s to %s"),
 			 quote_n (0, dst_name), quote_n (1, con));
-		  return_val = false;
-		  freecon (con);
-		  goto close_src_desc;
+		  if (x->require_preserve_context)
+		    {
+		      return_val = false;
+		      freecon (con);
+		      goto close_src_desc;
+		    }
 		}
 	      freecon(con);
 	    }
@@ -1590,7 +1596,7 @@ copy_internal (char const *src_name, char const *dst_name,
 	      error (0, errno,
 		     _("failed to set default file creation context to %s"),
 		     quote (con));
-	      if (x->require_preserve)
+	      if (x->require_preserve_context)
 		{
 		  freecon (con);
 		  return false;
@@ -1605,7 +1611,8 @@ copy_internal (char const *src_name, char const *dst_name,
 	      error (0, errno,
 		     _("failed to get security context of %s"),
 		     quote (src_name));
-	      return false;
+	      if (x->require_preserve_context)
+		return false;
 	    }
 	}
     }
