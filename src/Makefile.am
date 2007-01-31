@@ -63,6 +63,7 @@ LDADD = ../lib/libcoreutils.a $(LIBINTL) ../lib/libcoreutils.a
 chcon_LDADD = $(LDADD) $(LIB_SELINUX)
 cp_LDADD = $(LDADD) $(LIB_EACCESS) $(LIB_SELINUX)
 ginstall_LDADD = $(LDADD) $(LIB_EACCESS) $(LIB_SELINUX)
+mkdir_LDADD = $(LDADD) $(LIB_SELINUX)
 mv_LDADD = $(LDADD) $(LIB_EACCESS) $(LIB_SELINUX)
 pathchk_LDADD = $(LDADD) $(LIB_EACCESS)
 rm_LDADD = $(LDADD) $(LIB_EACCESS)
