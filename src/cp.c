@@ -754,6 +754,7 @@ cp_option_init (struct cp_options *x)
   x->preserve_mode = false;
   x->preserve_timestamps = false;
   x->preserve_security_context = false;
+  x->require_preserve_context = false;
 
   x->require_preserve = false;
   x->recursive = false;
@@ -832,6 +833,7 @@ decode_preserve_arg (char const *arg, struct cp_options *x, bool on_off)
 
 	case PRESERVE_CONTEXT:
 	  x->preserve_security_context = on_off;
+	  x->require_preserve_context = on_off;
 	  break;
 
 	case PRESERVE_ALL:

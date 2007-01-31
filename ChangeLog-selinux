@@ -1,3 +1,26 @@
+2007-01-31  Jim Meyering  <jim@meyering.net>
+
+	* tests/cp/cp-a-selinux: New file.  Test for the bug reported in
+	<http://bugzilla.redhat.com/219900>.
+	* tests/cp/Makefile.am (TESTS): Add cp-a-selinux.
+
+	* tests/selinux: New file.
+	* tests/Makefile.am (EXTRA_DIST): Add selinux.
+	* tests/misc/selinux: Source the new script, rather than open coding it.
+
+	Change how "cp -a" and "cp --preserve=context" work with SELinux.
+	Now, cp -a attempts to preserve context, but failure to do so does
+	not change cp's exit status.  However "cp --preserve=context" is
+	similar, but failure *does* cause cp to exit with nonzero status.
+	* src/copy.h (struct cp_options) [require_preserve_context]: New member.
+	* src/copy.c (copy_reg, copy_internal): Implement the above.
+	* src/mv.c (cp_option_init): Initialize the new member.
+	* src/install.c (cp_option_init): Likewise.
+	* src/cp.c (cp_option_init): Likewise.
+	(decode_preserve_arg): Set it or reset it.
+
+	FIXME: add an on-writable-NFS-only test
+
 2007-01-20  Jim Meyering  <jim@meyering.net>
 
 	cp, mv, install: add SELinux support, but unlike with the Red Hat

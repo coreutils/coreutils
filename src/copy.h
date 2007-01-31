@@ -127,9 +127,6 @@ struct cp_options
   bool preserve_ownership;
   bool preserve_mode;
   bool preserve_timestamps;
-  /* If true, attempt to preserve the SELinux security context, too.
-     Set this only if the kernel is SELinux enabled.  */
-  bool preserve_security_context;
 
   /* Enabled for mv, and for cp by the --preserve=links option.
      If true, attempt to preserve in the destination files any
@@ -145,9 +142,24 @@ struct cp_options
 
   /* If true and any of the above (for preserve) file attributes cannot
      be applied to a destination file, treat it as a failure and return
-     nonzero immediately.  E.g. cp -p requires this be nonzero, mv requires
-     it be zero.  */
+     nonzero immediately.  E.g. for cp -p this must be true, for mv it
+     must be false.  */
   bool require_preserve;
+
+  /* If true, attempt to preserve the SELinux security context, too.
+     Set this only if the kernel is SELinux enabled.  */
+  bool preserve_security_context;
+
+  /* Useful only when preserve_security_context is true.
+     If true, a failed attempt to preserve a file's security context
+     propagates failure "out" to the caller.  If false, a failure to
+     preserve a file's security context does not change the invoking
+     application's exit status.  Give diagnostics for failed syscalls
+     regardless of this setting.  For example, with "cp --preserve=context"
+     this flag is "true", while with "cp -a", it is false.  That means
+     "cp -a" attempts to preserve any security context, but does not
+     fail if it is unable to do so.  */
+  bool require_preserve_context;
 
   /* If true, copy directories recursively and copy special files
      as themselves rather than copying their contents. */
