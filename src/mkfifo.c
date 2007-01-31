@@ -1,5 +1,5 @@
 /* mkfifo -- make fifo's (named pipes)
-   Copyright (C) 90, 91, 1995-2006 Free Software Foundation, Inc.
+   Copyright (C) 90, 91, 1995-2007 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
+#include <selinux/selinux.h>
 
 #include "system.h"
 #include "error.h"
@@ -37,6 +38,7 @@ char *program_name;
 
 static struct option const longopts[] =
 {
+  {GETOPT_SELINUX_CONTEXT_OPTION_DECL},
   {"mode", required_argument, NULL, 'm'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
@@ -55,6 +57,9 @@ usage (int status)
       fputs (_("\
 Create named pipes (FIFOs) with the given NAMEs.\n\
 \n\
+"), stdout);
+      fputs (_("\
+  -Z, --context=CTX  set the SELinux security context of each NAME to CTX\n\
 "), stdout);
       fputs (_("\
 Mandatory arguments to long options are mandatory for short options too.\n\
@@ -76,6 +81,7 @@ main (int argc, char **argv)
   char const *specified_mode = NULL;
   int exit_status = EXIT_SUCCESS;
   int optc;
+  security_context_t scontext = NULL;
 
   initialize_main (&argc, &argv);
   program_name = argv[0];
@@ -85,12 +91,15 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  while ((optc = getopt_long (argc, argv, "m:", longopts, NULL)) != -1)
+  while ((optc = getopt_long (argc, argv, "m:Z:", longopts, NULL)) != -1)
     {
       switch (optc)
 	{
 	case 'm':
 	  specified_mode = optarg;
+	  break;
+	case 'Z':
+	  scontext = optarg;
 	  break;
 	case_GETOPT_HELP_CHAR;
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
@@ -104,6 +113,11 @@ main (int argc, char **argv)
       error (0, 0, _("missing operand"));
       usage (EXIT_FAILURE);
     }
+
+  if (scontext && setfscreatecon (scontext) < 0)
+    error (EXIT_FAILURE, errno,
+	   _("failed to set default file creation context to %s"),
+	   quote (optarg));
 
   newmode = (S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
   if (specified_mode)

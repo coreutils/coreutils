@@ -1,5 +1,10 @@
 2007-01-31  Jim Meyering  <jim@meyering.net>
 
+	mkfifo, mknod: Accept new "-Z, --context=C" option.
+	* src/mkfifo.c, src/mknod.c: Include <selinux/selinux.h>.
+	(main): Honor it.
+	* src/Makefile.am (mkfifo_LDADD, mknod_LDADD): Use $(LIB_SELINUX).
+
 	mkdir: Accept new "-Z, --context=C" option.
 	* src/mkdir.c: Include <selinux/selinux.h>.
 	(main): Honor it.
