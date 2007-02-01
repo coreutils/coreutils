@@ -283,7 +283,9 @@ savedir.c
 savedir.h
 savewd.c
 savewd.h
+se-context.h
 se-context_.h
+se-selinux.h
 se-selinux_.h
 selinux
 selinux-at.c
