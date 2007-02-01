@@ -208,6 +208,7 @@ Common Options
 * Exit status::                 Indicating program success or failure.
 * Backup options::              Backup options
 * Block size::                  Block size
+* Disambiguating names and IDs:: chgrp and chown owner and group syntax
 * Random sources::              Sources of random data
 * Target directory::            Target directory
 * Trailing slashes::            Trailing slashes
@@ -644,6 +645,7 @@ name.
 * Exit status::                 Indicating program success or failure.
 * Backup options::              -b -S, in some programs.
 * Block size::                  BLOCK_SIZE and --block-size, in some programs.
+* Disambiguating names and IDs:: chgrp and chown owner and group syntax
 * Random sources::              --random-source, in some programs.
 * Target directory::            Specifying a target directory, in some programs.
 * Trailing slashes::            --strip-trailing-slashes, in some programs.
@@ -923,6 +925,46 @@ is the default unless the @env{POSIXLY_CORRECT} environment variable is
 set.  The @option{-h} or @option{--human-readable} option is equivalent to
 @option{--block-size=human-readable}.  The @option{--si} option is
 equivalent to @option{--block-size=si}.
+
+@node Disambiguating names and IDs
+@section chown and chgrp: Disambiguating user names and IDs
+@cindex user names, disambiguating
+@cindex user IDs, disambiguating
+@cindex group names, disambiguating
+@cindex group IDs, disambiguating
+@cindex disambiguating group names and IDs
+
+Since the @var{owner} and @var{group} arguments to @command{chown} and
+@command{chgrp} may be specified as names or numeric IDs, there is an
+apparent ambiguity.
+What if a user or group @emph{name} is a string of digits?
+@footnote{Using a number as a user name is common in some environments.}
+Should the command interpret it as a user name or as an ID?
+@acronym{POSIX} requires that @command{chown} and @command{chgrp}
+first attempt to resolve the specified string as a name, and
+only once that fails, then try to interpret it as an ID.
+This is troublesome when you want to specify a numeric ID, say 42,
+and it must work even in a pathological situation where
+@samp{42} is a user name that maps to some other user ID, say 1000.
+Simply invoking @code{chown 42 F}, will set @file{F}s owner ID to
+1000---not what you intended.
+
+GNU @command{chown} and @command{chgrp} provide a way to work around this,
+that at the same time may result in a significant performance improvement
+by eliminating a database look-up.
+Simply precede each numeric user ID and/or group ID with a @samp{+},
+in order to force its interpretation as an integer:
+
+@example
+chown +42 F
+chgrp +$numeric_group_id another-file
+chown +0:+0 /
+@end example
+
+GNU @command{chown} and @command{chgrp}
+skip the name look-up process for each @samp{+}-prefixed string,
+because a string containing @samp{+} is never a valid user or group name.
+This syntax is accepted on most common Unix systems, but not on Solaris 10.
 
 @node Random sources
 @section Sources of random data
@@ -4525,7 +4567,7 @@ Fold lower case letters to upper case for sorting.
 @table @samp
 
 @item -b @var{file}
-@item --break-file=@var{file}
+@itemx --break-file=@var{file}
 
 This option provides an alternative (to @option{-W}) method of describing
 which characters make up words.  It introduces the name of a
@@ -8404,15 +8446,23 @@ overridden in this way.
 @opindex -p
 @opindex --parents
 @cindex parent directories, creating
-Make any missing parent directories for each argument.  The file permission
-bits of parent directories are set to the umask modified by @samp{u+wx}.
-@xref{Directory Setuid and Setgid}, for how the set-user-ID and
-set-group-ID bits of parent directories are inherited.
-Ignore arguments corresponding to existing directories, and do not
-change their file mode bits.
+Make any missing parent directories for each argument, setting their
+file permission bits to the umask modified by @samp{u+wx}.  Ignore
+existing parent directories, and do not change their file permission
+bits.
+
+To set the file permission bits of any newly-created parent
+directories to a value that includes @samp{u+wx}, you can set the
+umask before invoking @command{mkdir}.  For example, if the shell
+command @samp{(umask u=rwx,go=rx; mkdir -p P/Q)} creates the parent
+@file{P} it sets the parent's permission bits to @samp{u=rwx,go=rx}.
+To set a parent's special mode bits as well, you can invoke
+@command{chmod} after @command{mkdir}.  @xref{Directory Setuid and
+Setgid}, for how the set-user-ID and set-group-ID bits of
+newly-created parent directories are inherited.
 
 @item -v
-@item --verbose
+@itemx --verbose
 @opindex -v
 @opindex --verbose
 Print a message for each created directory.  This is most useful with
@@ -8659,7 +8709,7 @@ a failure does not evoke a diagnostic and does not cause @command{rmdir} to
 exit unsuccessfully.
 
 @item -v
-@item --verbose
+@itemx --verbose
 @opindex -v
 @opindex --verbose
 @cindex directory deletion, reporting
@@ -8777,6 +8827,10 @@ If only a colon is given, or if @var{new-owner} is empty, neither the
 owner nor the group is changed.
 
 @end table
+
+If @var{owner} or @var{group} is intended to represent a numeric user
+or group ID, then you may specify it with a leading @samp{+}.
+@xref{Disambiguating names and IDs}.
 
 Some older scripts may still use @samp{.} in place of the @samp{:} separator.
 @acronym{POSIX} 1003.1-2001 (@pxref{Standards conformance}) does not
@@ -8952,6 +9006,10 @@ or to the group of an existing reference file.  Synopsis:
 @example
 chgrp [@var{option}]@dots{} @{@var{group} | --reference=@var{ref_file}@} @var{file}@dots{}
 @end example
+
+If @var{group} is intended to represent a
+numeric group ID, then you may specify it with a leading @samp{+}.
+@xref{Disambiguating names and IDs}.
 
 The program accepts the following options.  Also see @ref{Common options}.
 

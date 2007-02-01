@@ -1,3 +1,21 @@
+2007-01-30  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi
+	(Input processing in ptx, mkdir invocation, rmdir invocation):
+	@item -> @itemx to fix some typos.
+
+2007-01-30  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (mkdir invocation): Say how to set the file
+	permission bits of a parent directory with mkdir -p.
+
+2007-01-29  Jim Meyering  <jim@meyering.net>
+
+	Document new syntax: "chown +0:+287 file", "chgrp +99 file"
+	* coreutils.texi (Disambiguating names and IDs): New section.
+	(chown invocation, chgrp invocation): Mention the new syntax
+	with an xref to the new section.
+
 2007-01-19  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (ls: General output formatting): Mention the

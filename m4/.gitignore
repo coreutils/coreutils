@@ -136,6 +136,7 @@ mkstemp.m4
 mktime.m4
 modechange.m4
 mountlist.m4
+mpsort.m4
 nanosleep.m4
 netinet_in_h.m4
 nls.m4

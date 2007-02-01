@@ -1,3 +1,8 @@
+2007-01-30  Jim Meyering  <jim@meyering.net>
+
+	* vc-list-files: Select column 2, not 3 (hg-0.9.3's manifest format
+	now has only two columns).
+
 2006-10-14  Jim Meyering  <jim@meyering.net>
 
 	* vc-list-files: Don't filter git-ls-files output through cut.
