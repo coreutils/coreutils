@@ -91,6 +91,7 @@ src/readlink.c
 src/remove.c
 src/rm.c
 src/rmdir.c
+src/runcon.c
 src/seq.c
 src/setuidgid.c
 src/shred.c
