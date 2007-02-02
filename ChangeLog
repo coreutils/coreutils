@@ -1,5 +1,7 @@
 2007-02-02  Jim Meyering  <jim@meyering.net>
 
+	* src/nl.c (proc_text): Use "NULL", not "(struct re_registers *) 0".
+
 	* src/c99-to-c89.diff: Make shred.c Index: and a/b prefixes
 	consistent, so this can be applied with patch -p0.
 	Reported by Matthew Woehlke.
