@@ -61,6 +61,7 @@ pwd: Jim Meyering
 readlink: Dmitry V. Levin
 rm: Paul Rubin, David MacKenzie, Richard Stallman, Jim Meyering
 rmdir: David MacKenzie
+runcon: Russell Coker
 seq: Ulrich Drepper
 sha1sum: Ulrich Drepper, Scott Miller, David Madore
 sha224sum: Ulrich Drepper, Scott Miller, David Madore

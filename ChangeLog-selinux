@@ -1,3 +1,14 @@
+2007-02-02  Jim Meyering  <jim@meyering.net>
+
+	* src/runcon.c: New program.
+	* src/Makefile.am (bin_PROGRAMS): Add runcon.
+	(runcon_LDADD): Define.
+	* README: Add runcon to the list of programs.
+	* AUTHORS: Add this: runcon: Russell Coker
+	* tests/help-version: Add runcon as an exception.
+	* man/Makefile.am (dist_man_MANS): Add runcon.1.
+	(runcon.1): New dependency.
+
 2007-01-31  Jim Meyering  <jim@meyering.net>
 
 	mkfifo, mknod: Accept new "-Z, --context=C" option.

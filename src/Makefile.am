@@ -26,7 +26,8 @@ bin_PROGRAMS = [ chcon chgrp chown chmod cp dd dircolors du \
   nl od paste pr ptx sha1sum sha224sum sha256sum sha384sum sha512sum \
   shuf sort split sum tac tail tr tsort unexpand uniq wc \
   basename date dirname echo env expr factor false \
-  hostname id kill logname pathchk printenv printf pwd seq sleep tee \
+  hostname id kill logname pathchk printenv printf pwd \
+  runcon seq sleep tee \
   test true tty whoami yes \
   base64 \
   $(OPTIONAL_BIN_PROGS) $(DF_PROG)
@@ -67,6 +68,7 @@ mkdir_LDADD = $(LDADD) $(LIB_SELINUX)
 mkfifo_LDADD = $(LDADD) $(LIB_SELINUX)
 mknod_LDADD = $(LDADD) $(LIB_SELINUX)
 mv_LDADD = $(LDADD) $(LIB_EACCESS) $(LIB_SELINUX)
+runcon_LDADD = $(LDADD) $(LIB_SELINUX)
 pathchk_LDADD = $(LDADD) $(LIB_EACCESS)
 rm_LDADD = $(LDADD) $(LIB_EACCESS)
 test_LDADD = $(LDADD) $(LIB_EACCESS)
