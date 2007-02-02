@@ -1,3 +1,12 @@
+2007-02-02  Jim Meyering  <jim@meyering.net>
+
+	* src/c99-to-c89.diff: Make shred.c Index: and a/b prefixes
+	consistent, so this can be applied with patch -p0.
+	Reported by Matthew Woehlke.
+
+	* Makefile.maint (patch-check): Use patch with its -p2 option,
+	since that makes this check slightly more strict.
+
 2007-01-29  Jim Meyering  <jim@meyering.net>
 
 	Plug a leak in ls.

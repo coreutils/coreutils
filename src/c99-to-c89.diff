@@ -83,13 +83,13 @@ index 364a21c..7a24014 100644
 +  }
 +  }
  }
-Index: shred.c
+Index: src/shred.c
 ===================================================================
 RCS file: /fetish/cu/src/shred.c,v
 retrieving revision 1.130
 diff -u -p -r1.130 shred.c
---- shred.c     3 Sep 2006 02:53:16 -0000       1.130
-+++ shred.c     3 Oct 2006 13:48:24 -0000
+--- a/src/shred.c     3 Sep 2006 02:53:16 -0000       1.130
++++ b/src/shred.c     3 Oct 2006 13:48:24 -0000
 @@ -464,7 +464,7 @@ dopass (int fd, char const *qname, off_t
  		     out.  Thus, it shouldn't give up on bad blocks.  This
  		     code works because lim is always a multiple of

@@ -329,7 +329,7 @@ sc_useless_cpp_parens:
 patch-check:
 	rm -rf src-c89 $@.1 $@.2
 	cp -a src src-c89
-	(cd src-c89; patch -V never --fuzz=0) < src/c99-to-c89.diff \
+	(cd src-c89; patch -p2 -V never --fuzz=0) < src/c99-to-c89.diff \
 	  > $@.1 2>&1
 	if test "$${REGEN_PATCH+set}" = set; then \
 	  diff -upr src src-c89 > new-diff || : ; fi
