@@ -435,8 +435,16 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
 		  return false;
 		}
 	      src_mode = stats.st_mode;
-	      omitted_permissions =
-		x->preserve_ownership ? src_mode & (S_IRWXG | S_IRWXO) : 0;
+
+	      /* If the ownership or special mode bits might change,
+		 omit some permissions at first, so unauthorized users
+		 cannot nip in before the file is ready.  */
+	      omitted_permissions = (src_mode
+				     & (x->preserve_ownership
+					? S_IRWXG | S_IRWXO
+					: x->preserve_mode
+					? S_IWGRP | S_IWOTH
+					: 0));
 
 	      /* POSIX says mkdir's behavior is implementation-defined when
 		 (src_mode & ~S_IRWXUGO) != 0.  However, common practice is

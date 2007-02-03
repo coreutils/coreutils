@@ -13,6 +13,13 @@ GNU coreutils NEWS                                    -*- outline -*-
   "cp --parents F/G D" no longer creates a directory D/F when F is not
   a directory (and F/G is therefore invalid).
 
+  "cp --preserve=mode" would create directories that briefly had
+  too-generous permissions in some cases.  For example, when copying a
+  directory with permissions 777 the destination directory might
+  temporarily be setgid on some file systems, which would allow other
+  users to create subfiles with the same group as the directory.  Fix
+  similar problems with 'install' and 'mv'.
+
   cut no longer dumps core for usage like "cut -f2- f1 f2" with two or
   more file arguments.  This was due to a double-free bug, introduced
   in coreutils-5.3.0.

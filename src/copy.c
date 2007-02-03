@@ -1,5 +1,5 @@
 /* copy.c -- core functions for copying files and directories
-   Copyright (C) 89, 90, 91, 1995-2006 Free Software Foundation.
+   Copyright (C) 89, 90, 91, 1995-2007 Free Software Foundation.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -1005,6 +1005,7 @@ copy_internal (char const *src_name, char const *dst_name,
   struct stat dst_sb;
   mode_t src_mode;
   mode_t dst_mode IF_LINT (= 0);
+  mode_t dst_mode_bits;
   mode_t omitted_permissions;
   bool restore_dst_mode = false;
   char *earlier_file = NULL;
@@ -1504,13 +1505,16 @@ copy_internal (char const *src_name, char const *dst_name,
       new_dst = true;
     }
 
-  /* If the ownership might change, omit some permissions at first, so
-     unauthorized users cannot nip in before the file has the right
-     ownership.  */
+  /* If the ownership might change, or if it is a directory (whose
+     special mode bits may change after the directory is created),
+     omit some permissions at first, so unauthorized users cannot nip
+     in before the file is ready.  */
+  dst_mode_bits = (x->set_mode ? x->mode : src_mode) & CHMOD_MODE_BITS;
   omitted_permissions =
-    (x->preserve_ownership
-     ? (x->set_mode ? x->mode : src_mode) & (S_IRWXG | S_IRWXO)
-     : 0);
+    (dst_mode_bits
+     & (x->preserve_ownership ? S_IRWXG | S_IRWXO
+	: S_ISDIR (src_mode) ? S_IWGRP | S_IWOTH
+	: 0));
 
   delayed_ok = true;
 
@@ -1549,10 +1553,7 @@ copy_internal (char const *src_name, char const *dst_name,
 	     (src_mode & ~S_IRWXUGO) != 0.  However, common practice is
 	     to ask mkdir to copy all the CHMOD_MODE_BITS, letting mkdir
 	     decide what to do with S_ISUID | S_ISGID | S_ISVTX.  */
-	  mode_t mkdir_mode =
-	    ((x->set_mode ? x->mode : src_mode)
-	     & CHMOD_MODE_BITS & ~omitted_permissions);
-	  if (mkdir (dst_name, mkdir_mode) != 0)
+	  if (mkdir (dst_name, dst_mode_bits & ~omitted_permissions) != 0)
 	    {
 	      error (0, errno, _("cannot create directory %s"),
 		     quote (dst_name));

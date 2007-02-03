@@ -1,5 +1,14 @@
 2007-02-02  Paul Eggert  <eggert@cs.ucla.edu>
 
+	* NEWS: Document fix for cp --preserve=mode.
+	* src/copy.c (copy_internal): Omit the group- or other-writeable
+	permissions when creating a directory, to avoid a race condition
+	if the special mode bits aren't right just after the directory is
+	created.
+	* src/cp.c (make_dir_parents_private): Likewise.
+	* tests/cp/parent-perm-race: Test for the "cp --preserve=mode"
+	race fix in copy.c.
+
 	* NEWS: Document fix for cp --parents.
 	* src/cp.c (make_dir_parents_private): Report the error sooner with
 	"cp --parents DIR/FILE DEST" when DIR is a non-directory, thus not
