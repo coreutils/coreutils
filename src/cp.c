@@ -1,5 +1,5 @@
 /* cp.c  -- file copying (main routines)
-   Copyright (C) 89, 90, 91, 1995-2006 Free Software Foundation.
+   Copyright (C) 89, 90, 91, 1995-2007 Free Software Foundation.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -415,6 +415,7 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
 	      mode_t src_mode;
 	      mode_t omitted_permissions;
 	      mode_t mkdir_mode;
+	      int src_errno;
 
 	      /* This component does not exist.  We must set
 		 *new_dst and new->mode inside this loop because,
@@ -422,9 +423,14 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
 		 make_dir_parents_private creates only e_dir/../a if
 		 ./b already exists. */
 	      *new_dst = true;
-	      if (XSTAT (x, src, &stats))
+	      src_errno = (XSTAT (x, src, &stats) != 0
+			   ? errno
+			   : S_ISDIR (stats.st_mode)
+			   ? 0
+			   : ENOTDIR);
+	      if (src_errno)
 		{
-		  error (0, errno, _("failed to get attributes of %s"),
+		  error (0, src_errno, _("failed to get attributes of %s"),
 			 quote (src));
 		  return false;
 		}
