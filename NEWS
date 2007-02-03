@@ -34,6 +34,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   a reasonable diagnostic.  Before, it would print this:
   "mv: cannot remove `/etc/passwd': Not a directory".
 
+  pwd and "readlink -e ." no longer fail unnecessarily when a parent
+  directory is unreadable.
+
   "rm -rf /etc/passwd" (run by non-root) now prints a diagnostic.
   Before it would print nothing.
 

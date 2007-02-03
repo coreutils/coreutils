@@ -37,6 +37,7 @@ TESTS_ENVIRONMENT = \
 # will execute the test script rather than the standard utility.
 
 TESTS = \
+  pwd-unreadable-parent \
   cut \
   wc-files0-from \
   wc-files0 \
