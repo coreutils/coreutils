@@ -217,7 +217,7 @@ second character implies :.  Type \\\\ for \\.  STYLE is one of:\n\
   t         number only nonempty lines\n\
   n         number no lines\n\
   pBRE      number only lines that contain a match for the basic regular\n\
-              expression, BRE\n\
+            expression, BRE\n\
 \n\
 FORMAT is one of:\n\
 \n\

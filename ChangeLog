@@ -1,5 +1,12 @@
 2007-02-10  Jim Meyering  <jim@meyering.net>
 
+	Remove excess leading spaces that would make help2man misbehave.
+	* src/printf.c (usage): Remove excess spaces on 2nd line of %b desc.
+	* src/nl.c (usage): Remove excess spaces on 2nd line of pBRE desc.
+	* src/dd.c (usage): Remove excess spaces on 2nd line of sync desc.
+	* src/date.c (usage): Use two spaces after each optional flag, not one.
+	Reported by Thomas Huriaux in <http://bugs.debian.org/410407>.
+
 	* Makefile.maint (longopt_re): Relax the regexp, making square
 	brackets optional, so it matches the newly reported violations, too.
 

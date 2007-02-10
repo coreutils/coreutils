@@ -1,5 +1,5 @@
 /* date - print or set the system date and time
-   Copyright (C) 1989-2006 Free Software Foundation, Inc.
+   Copyright (C) 1989-2007 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -227,11 +227,11 @@ By default, date pads numeric fields with zeroes.\n\
       fputs (_("\
 The following optional flags may follow `%':\n\
 \n\
-  - (hyphen) do not pad the field\n\
-  _ (underscore) pad with spaces\n\
-  0 (zero) pad with zeros\n\
-  ^ use upper case if possible\n\
-  # use opposite case if possible\n\
+  -  (hyphen) do not pad the field\n\
+  _  (underscore) pad with spaces\n\
+  0  (zero) pad with zeros\n\
+  ^  use upper case if possible\n\
+  #  use opposite case if possible\n\
 "), stdout);
       fputs (_("\
 \n\
