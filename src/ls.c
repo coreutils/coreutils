@@ -4335,7 +4335,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
                                (overridden by -a or -A)\n\
 "), stdout);
       fputs (_("\
-      --indicator-style=WORD append indicator with style WORD to entry names:\n\
+      --indicator-style=WORD  append indicator with style WORD to entry names:\n\
                                none (default), slash (-p),\n\
                                file-type (--file-type), classify (-F)\n\
   -i, --inode                print the index number of each file\n\
