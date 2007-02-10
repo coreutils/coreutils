@@ -1,4 +1,7 @@
-2007-02-10  Jim Meyering  <meyering@rho.meyering.net>
+2007-02-10  Jim Meyering  <jim@meyering.net>
+
+	* Makefile.maint (longopt_re): Relax the regexp, making square
+	brackets optional, so it matches the newly reported violations, too.
 
 	* src/csplit.c (usage): Use two spaces (not one) to separate
 	each option string from its description, so help2man formats
