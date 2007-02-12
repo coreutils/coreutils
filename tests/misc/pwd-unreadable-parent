@@ -26,6 +26,21 @@ if test "$VERBOSE" = yes; then
   readlink --version
 fi
 
+skip=1
+# Run this test IFF:
+# if __GETCWD_PREFIX is not defined (system getcwd is good enough)
+#   or HAVE_PARTLY_WORKING_GETCWD is defined
+grep '^/\* #undef __GETCWD_PREFIX ' $CONFIG_HEADER > /dev/null &&
+  skip=0
+test $skip = 1 &&
+  grep '^#define HAVE_PARTLY_WORKING_GETCWD ' $CONFIG_HEADER > /dev/null &&
+    skip=0
+test $skip = 1 &&
+  {
+    echo 1>&2 "$0: inadequate system getcwd; skipping this test"
+    (exit 77); exit 77
+  }
+
 pwd=`pwd`
 t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
 trap 'status=$?; cd "$pwd" && chmod -R u+rwx $t0 && rm -rf $t0 && exit $status' 0

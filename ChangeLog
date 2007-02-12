@@ -1,3 +1,9 @@
+2007-02-12  Jim Meyering  <jim@meyering.net>
+
+	* tests/misc/pwd-unreadable-parent: Skip the test if we're
+	definitely using the replacement.
+	* tests/misc/Makefile.am (TESTS_ENVIRONMENT): Define CONFIG_HEADER.
+
 2007-02-10  Jim Meyering  <jim@meyering.net>
 
 	Remove excess leading spaces that would make help2man misbehave.
