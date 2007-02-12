@@ -1,5 +1,7 @@
 2007-02-12  Jim Meyering  <jim@meyering.net>
 
+	* .x-sc_useless_cpp_parens: Ignore a false-positive in a shell script.
+
 	* tests/misc/pwd-unreadable-parent: Skip the test if we're
 	definitely using the replacement.
 	* tests/misc/Makefile.am (TESTS_ENVIRONMENT): Define CONFIG_HEADER.

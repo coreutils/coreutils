@@ -10,3 +10,4 @@
 ^lib/strtod.c
 ^lib/xstrtol.c
 ^m4/
+^tests/misc/pwd-unreadable-parent
