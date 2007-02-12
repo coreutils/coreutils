@@ -486,8 +486,16 @@
 	consistent, so this can be applied with patch -p0.
 	Reported by Matthew Woehlke.
 
+	Arrange for "make check-root" to run the new root-only test.
+	* tests/Makefile.am (t9): New target, to run tests/cp/cp-a-selinux.
+	(all_t): Add t9.
+
 	* Makefile.maint (patch-check): Use patch with its -p2 option,
 	since that makes this check slightly more strict.
+
+	Use a directory on a loopback device mounted with -o context=...
+	* tests/cp/cp-a-selinux: Since this test now runs mount and umount,
+	it is a root-only one.
 
 2007-01-29  Jim Meyering  <jim@meyering.net>
 
