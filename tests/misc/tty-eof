@@ -1,7 +1,8 @@
 #!/bin/sh
+# -*- perl -*-
 # Test whether programs exit upon a single EOF from a tty.
 
-# Copyright (C) 2003, 2006 Free Software Foundation, Inc.
+# Copyright (C) 2003, 2006, 2007 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -76,11 +77,12 @@ $@ and (warn "$ME: this script requires Perl's Expect package >=1.11\n"),
     uniq
     wc
   );
+  my $stderr = 'tty-eof.err';
   foreach my $cmd ((@stdin_reading_commands), 'cut -f2')
     {
       my $exp = new Expect;
       $exp->log_user(0);
-      $exp->spawn($cmd)
+      $exp->spawn("$cmd 2> $stderr")
 	or (warn "$ME: cannot run `$cmd': $!\n"), $fail=1, next;
       # No input for cut -f2.
       $cmd =~ /^cut/
@@ -94,7 +96,7 @@ $@ and (warn "$ME: this script requires Perl's Expect package >=1.11\n"),
       defined $found || $cmd =~ /^cut/
 	or (warn "$ME: $cmd didn't produce expected output\n"),
 	  $fail=1, next;
-      defined defined $exp->exitstatus
+      defined $exp->exitstatus
 	or (warn "$ME: $cmd didn't exit after ^D from standard input\n"),
 	  $fail=1, next;
       my $s = $exp->exitstatus;
@@ -102,6 +104,22 @@ $@ and (warn "$ME: this script requires Perl's Expect package >=1.11\n"),
 	or (warn "$ME: $cmd exited with status $s (expected 0)\n"),
 	  $fail=1;
       $exp->hard_close();
+
+      # dd normally writes to stderr.  If it exits successfully, we're done.
+      $cmd eq 'dd' && $s == 0
+	and next;
+
+      if (-s $stderr)
+	{
+	  warn "$ME: $cmd wrote to stderr:\n";
+	  system "cat $stderr";
+	  $fail = 1;
+	}
+    }
+  continue
+    {
+      unlink $stderr
+	or warn "$ME: failed to remove stderr file from $cmd, $stderr: $!\n";
     }
 
   exit $fail

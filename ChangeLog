@@ -1,3 +1,11 @@
+2007-02-13  Jim Meyering  <jim@meyering.net>
+
+	Also check for and print stderr output, in case a program fails.
+	* tests/misc/tty-eof: Occasionally (not reproducible), this
+	test would fail, with one or more programs exiting nonzero, e.g.,
+	tty-eof: sha224sum exited with status 1 (expected 0)
+	Now, maybe we'll get a clue, the next time that happens.
+
 2007-02-12  Jim Meyering  <jim@meyering.net>
 
 	* .x-sc_useless_cpp_parens: Ignore a false-positive in a shell script.
