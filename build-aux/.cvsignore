@@ -6,6 +6,7 @@ config.sub
 depcomp
 gnupload
 install-sh
+link-warning.h
 mdate-sh
 missing
 mkinstalldirs
