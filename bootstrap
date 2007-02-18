@@ -416,7 +416,7 @@ slurp() {
 
 # Create boot temporary directories to import from gnulib and gettext.
 
-bt='.#bootmp'
+bt='._bootmp'
 bt2=${bt}2
 rm -fr $bt $bt2 &&
 mkdir $bt $bt2 || exit
