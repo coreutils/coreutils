@@ -1,5 +1,8 @@
 2007-02-18  Jim Meyering  <jim@meyering.net>
 
+	* tests/rm/fail-eacces: Skip this test when running as root.
+	Reported by Matthew Woehlke.
+
 	* bootstrap: Use "._bootmp" as the temporary directory name,
 	not ".#bootmp".  The latter's "#" caused trouble with the new,
 	gnulib-added "LINK_WARNING_H = $(top_srcdir)/.#bootmp/..." line.
