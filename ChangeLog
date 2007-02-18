@@ -1,5 +1,8 @@
 2007-02-18  Jim Meyering  <jim@meyering.net>
 
+	* src/system.h: Don't include exit.h, now that it's subsumed
+	by the gnulib-generated stdlib.h.
+
 	* tests/rm/fail-eacces: Skip this test when running as root.
 	Reported by Matthew Woehlke.
 

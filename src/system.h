@@ -1,5 +1,5 @@
 /* system-dependent definitions for coreutils
-   Copyright (C) 1989, 1991-2006 Free Software Foundation, Inc.
+   Copyright (C) 1989, 1991-2007 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -113,7 +113,6 @@ you must include <sys/types.h> before including this file
 
 #include <stdbool.h>
 #include <stdlib.h>
-#include <exit.h>
 
 /* Exit statuses for programs like 'env' that exec other programs.
    EXIT_FAILURE might not be 1, so use EXIT_FAIL in such programs.  */
