@@ -281,7 +281,7 @@ static bool have_read_stdin;
 static struct keyfield *keylist;
 
 /* Program used to (de)compress temp files.  Must accept -d.  */
-static const char *compress_program;
+static char const *compress_program;
 
 static void sortlines_temp (struct line *, size_t, struct line *);
 
@@ -339,6 +339,8 @@ Other options:\n\
 \n\
   -c, --check, --check=diagnose-first  check for sorted input; do not sort\n\
   -C, --check=quiet, --check=silent  like -c, but do not report first bad line\n\
+      --compress-program=PROG  compress temporaries with PROG;\n\
+                              decompress them with PROG -d\n\
   -k, --key=POS1[,POS2]     start a key at POS1, end it at POS2 (origin 1)\n\
   -m, --merge               merge already sorted files; do not sort\n\
 "), stdout);
@@ -390,6 +392,7 @@ native byte values.\n\
 enum
 {
   CHECK_OPTION = CHAR_MAX + 1,
+  COMPRESS_PROGRAM_OPTION,
   RANDOM_SOURCE_OPTION
 };
 
@@ -399,6 +402,7 @@ static struct option const long_options[] =
 {
   {"ignore-leading-blanks", no_argument, NULL, 'b'},
   {"check", optional_argument, NULL, CHECK_OPTION},
+  {"compress-program", required_argument, NULL, COMPRESS_PROGRAM_OPTION},
   {"dictionary-order", no_argument, NULL, 'd'},
   {"ignore-case", no_argument, NULL, 'f'},
   {"general-numeric-sort", no_argument, NULL, 'g'},
@@ -839,29 +843,18 @@ pipe_fork (int pipefds[2], size_t tries)
 static char *
 create_temp (FILE **pfp, pid_t *ppid)
 {
-  static bool compress_program_known;
   int tempfd;
   struct tempnode *node = create_temp_file (&tempfd);
   char *name = node->name;
 
-  if (! compress_program_known)
+  if (! compress_program)
     {
-      compress_program = getenv ("GNUSORT_COMPRESSOR");
-      if (compress_program == NULL)
-	{
-	  static const char *default_program = "gzip";
-	  const char *path_program = find_in_path (default_program);
-
-	  if (path_program != default_program)
-	    compress_program = path_program;
-	}
-      else if (*compress_program == '\0')
-	compress_program = NULL;
-
-      compress_program_known = true;
+      static char const default_compress_program[] = "gzip";
+      char const *prog = find_in_path (default_compress_program);
+      compress_program = (prog == default_compress_program ? "" : prog);
     }
 
-  if (compress_program)
+  if (*compress_program)
     {
       int pipefds[2];
 
@@ -2944,6 +2937,12 @@ main (int argc, char **argv)
 	  if (checkonly && checkonly != c)
 	    incompatible_options ("cC");
 	  checkonly = c;
+	  break;
+
+	case COMPRESS_PROGRAM_OPTION:
+	  if (compress_program && strcmp (compress_program, optarg) != 0)
+	    error (SORT_FAILURE, 0, _("multiple compress programs specified"));
+	  compress_program = optarg;
 	  break;
 
 	case 'k':

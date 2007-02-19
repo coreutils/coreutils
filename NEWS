@@ -1,6 +1,6 @@
 GNU coreutils NEWS                                    -*- outline -*-
 
-* Noteworthy changes in release 6.7-dirty (????-??-??) [stable]
+* Noteworthy changes in release 6.7-dirty (????-??-??) [not-unstable]
 
 ** Bug fixes
 
@@ -45,8 +45,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 ** New features
 
   By default, sort usually compresses each temporary file it writes.
-  When sorting very large inputs, this can result in sort using far
-  less temporary disk space and in improved performance.
+  This can help save both time and disk space when sorting large inputs.
+  The default compression program is gzip, but this can be overridden
+  with sort's new --compress-program=PROG option.
 
 ** New features
 
