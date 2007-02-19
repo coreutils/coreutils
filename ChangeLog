@@ -1,3 +1,7 @@
+2007-02-19  Jim Meyering  <jim@meyering.net>
+
+	* bootstrap: Fix typo s/dowloading/downloading/ in --help output.
+
 2007-02-18  Jim Meyering  <jim@meyering.net>
 
 	* src/system.h: Don't include exit.h, now that it's subsumed

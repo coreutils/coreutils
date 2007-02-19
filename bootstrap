@@ -38,7 +38,7 @@ Options:
  --gnulib-srcdir=DIRNAME  Specify the local directory where gnulib
                           sources reside.  Use this if you already
                           have gnulib sources on your machine, and
-                          do not want to waste your bandwidth dowloading
+                          do not want to waste your bandwidth downloading
                           them again.
  --copy                   Copy files instead of creating symbolic links.
  --force                  Attempt to bootstrap even if the sources seem
