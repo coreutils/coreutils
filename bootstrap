@@ -117,7 +117,7 @@ excluded_files=
 
 # File that should exist in the top directory of a checked out hierarchy,
 # but not in a distribution tarball.
-CVS_only_file=README-cvs
+CVS_only_file=README-hacking
 
 # Whether to use copies instead of symlinks.
 copy=false

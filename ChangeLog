@@ -1,5 +1,7 @@
 2007-02-20  Jim Meyering  <jim@meyering.net>
 
+	* bootstrap (CVS_only_file): Use README-hacking.
+
 	Now that we use GIT, not cvs, rename README-cvs.
 	* README-hacking: Renamed from...
 	Update to reflect that we now use git.
