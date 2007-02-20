@@ -1,5 +1,10 @@
 2007-02-20  Jim Meyering  <jim@meyering.net>
 
+	* bootstrap: Move definitions of temporary directory names and the
+	new bt_regex "up" to precede all uses, so it's clearer what their
+	scope is.  Also, use [.], rather than \\., since the former works
+	even if eval'd.
+
 	* bootstrap: Remove occurrences of $bt (._bootmp) from lib/Makefile.
 	Based on the bison 2007-02-19 change by Joel E. Denny.
 

@@ -29,6 +29,11 @@ nl='
 LC_ALL=C
 export LC_ALL
 
+# Temporary directory names.
+bt='._bootmp'
+bt_regex=`echo "$bt"| sed 's/\./[.]/g'`
+bt2=${bt}2
+
 usage() {
   echo >&2 "\
 Usage: $0 [OPTION]...
@@ -416,10 +421,6 @@ slurp() {
 
 
 # Create boot temporary directories to import from gnulib and gettext.
-
-bt='._bootmp'
-bt_regex=`echo "$bt"| sed 's/\./\\./g'`
-bt2=${bt}2
 rm -fr $bt $bt2 &&
 mkdir $bt $bt2 || exit
 
