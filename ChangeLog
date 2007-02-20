@@ -1,5 +1,9 @@
 2007-02-20  Jim Meyering  <jim@meyering.net>
 
+	Now that we use GIT, not cvs, rename README-cvs.
+	* README-hacking: Renamed from...
+	* README-cvs: ...this.
+
 	* src/env.c (main): When invoked with no arguments (i.e. when printing
 	the environment), use a local variable to iterate through the global
 	"environ" array, rather than "environ" itself.  This is solely to
