@@ -314,7 +314,8 @@ cp_mark_as_generated()
     if test -z "$c1"; then
       cmp -s "$cp_src" "$cp_dst" || {
 	echo "$0: cp -f $cp_src $cp_dst" &&
-	cp -f "$cp_src" "$cp_dst"
+	rm -f "$cp_dst" &&
+	sed "s!$bt_regex/!!g" "$cp_src" > "$cp_dst"
       }
     else
       # Copy the file first to get proper permissions if it
@@ -323,7 +324,7 @@ cp_mark_as_generated()
       (
 	echo "$c1-*- buffer-read-only: t -*- vi: set ro:$c2" &&
 	echo "${c1}DO NOT EDIT! GENERATED AUTOMATICALLY!$c2" &&
-	cat "$cp_src"
+	sed "s!$bt_regex/!!g" "$cp_src"
       ) > $cp_dst-t &&
       if cmp -s "$cp_dst-t" "$cp_dst"; then
 	rm -f "$cp_dst-t"
@@ -371,7 +372,7 @@ slurp() {
       done
       if test $file = Makefile.am; then
         copied=$copied${sep}gnulib.mk; sep=$nl
-	remove_intl='/^[^#].*\/intl/s/^/#/'
+	remove_intl='/^[^#].*\/intl/s/^/#/;'"s!$bt_regex/!!g"
         sed "$remove_intl" $1/$dir/$file | cmp -s - $dir/gnulib.mk || {
 	  echo "$0: Copying $1/$dir/$file to $dir/gnulib.mk ..." &&
 	  rm -f $dir/gnulib.mk &&
@@ -417,6 +418,7 @@ slurp() {
 # Create boot temporary directories to import from gnulib and gettext.
 
 bt='._bootmp'
+bt_regex=`echo "$bt"| sed 's/\./\\./g'`
 bt2=${bt}2
 rm -fr $bt $bt2 &&
 mkdir $bt $bt2 || exit
