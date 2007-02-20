@@ -1,13 +1,15 @@
 -*- outline -*-
 
-These notes intend to help people working on the CVS version of
-this package.
+These notes intend to help people working on the checked-out sources.
+These requirements do not apply when building from a distribution tarball.
 
 * Requirements
 
-Only the sources are installed in the CVS repository (to ease the
-maintenance, merges etc.), therefore you will have to get the latest
-stable versions of the maintainer tools we depend upon, including:
+We've opted to keep only the highest-level sources in the GIT repository.
+This eases our maintenance burden, (fewer merges etc.), but imposes more
+requirements on anyone wishing to build from the just-checked-out sources.
+For example, you have to use the latest stable versions of the maintainer
+tools we depend upon, including:
 
 - Automake <http://www.gnu.org/software/automake/>
 - Autoconf <http://www.gnu.org/software/autoconf/>
@@ -23,13 +25,13 @@ suggest using test version 1.3.5 (or later, if one becomes available).
 Valgrind <http://valgrind.org/> is also highly recommended, if
 Valgrind supports your architecture.
 
-Only building the initial full source tree will be a bit painful,
-later, a plain `cvs update -P && make' should be sufficient.
+Only building the initial full source tree will be a bit painful.
+Later, a plain `git-pull && make' should be sufficient.
 
-* First CVS checkout
+* First GIT checkout
 
 Obviously, if you are reading these notes, you did manage to check out
-this package from CVS.  The next step is to get other files needed to
+this package from GIT.  The next step is to get other files needed to
 build, which are extracted from other source packages:
 
 	$ ./bootstrap
@@ -41,9 +43,9 @@ And there you are!  Just
 	$ make check
 
 At this point, there should be no difference between your local copy,
-and the CVS master copy:
+and the GIT master copy:
 
-	$ cvs diff
+	$ git-diff
 
 should output no difference.
 
@@ -51,8 +53,7 @@ Enjoy!
 
 -----
 
-Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software Foundation,
-Inc.
+Copyright (C) 2002-2007 Free Software Foundation, Inc.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

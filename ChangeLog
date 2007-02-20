@@ -2,6 +2,8 @@
 
 	Now that we use GIT, not cvs, rename README-cvs.
 	* README-hacking: Renamed from...
+	Update to reflect that we now use git.
+
 	* README-cvs: ...this.
 
 	* src/env.c (main): When invoked with no arguments (i.e. when printing
