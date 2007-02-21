@@ -298,6 +298,8 @@ stdint.h
 stdint_.h
 stdio--.h
 stdio-safer.h
+stdio.h
+stdio_.h
 stdlib--.h
 stdlib-safer.h
 stdlib.h

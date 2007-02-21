@@ -193,6 +193,7 @@ stdbool.m4
 stdint.m4
 stdint_h.m4
 stdio-safer.m4
+stdio_h.m4
 stdlib-safer.m4
 stdlib_h.m4
 stpcpy.m4
