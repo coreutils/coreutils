@@ -1,3 +1,7 @@
+2007-02-21  Jim Meyering  <jim@meyering.net>
+
+	* tests/misc/date: Remove vestigial use of Data::Dumper.
+
 2007-02-20  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/copy.c (cached_umask): Cast -1 to mode_t to avoid a warning
