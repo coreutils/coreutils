@@ -1980,7 +1980,7 @@ chown_failure_ok (struct cp_options const *x)
 extern mode_t
 cached_umask (void)
 {
-  static mode_t mask = -1;
+  static mode_t mask = (mode_t) -1;
   if (mask == (mode_t) -1)
     {
       mask = umask (0);

@@ -1,3 +1,8 @@
+2007-02-20  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/copy.c (cached_umask): Cast -1 to mode_t to avoid a warning
+	about out-of-range initializer with Sun C 5.8.
+
 2007-02-20  Jim Meyering  <jim@meyering.net>
 
 	* bootstrap (CVS_only_file): Use README-hacking.
