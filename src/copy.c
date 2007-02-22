@@ -430,7 +430,8 @@ copy_reg (char const *src_name, char const *dst_name,
 	    {
 	      char *cp;
 
-	      buf[n_read] = 1;	/* Sentinel to stop loop.  */
+	      wp = (word *) (buf + n_read);
+	      *wp = 1;	/* Sentinel to stop loop.  */
 
 	      /* Find first nonzero *word*, or the word with the sentinel.  */
 

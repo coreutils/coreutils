@@ -1,3 +1,11 @@
+2007-02-22  Jim Meyering  <jim@meyering.net>
+
+	Placate valgrind, wrt ./cp --sparse=always
+	* src/copy.c (copy_reg): Place the sentinel by setting a
+	full word's worth of bits, not just a single byte's worth.
+	This avoids a harmless (but distracting) case of memory being
+	used-uninitialized.
+
 2007-02-21  Jim Meyering  <jim@meyering.net>
 
 	* tests/misc/date: Remove vestigial use of Data::Dumper.
