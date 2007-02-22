@@ -430,8 +430,17 @@ copy_reg (char const *src_name, char const *dst_name,
 	    {
 	      char *cp;
 
-	      wp = (word *) (buf + n_read);
-	      *wp = 1;	/* Sentinel to stop loop.  */
+	      /* Sentinel to stop loop.  */
+	      buf[n_read] = '\1';
+#ifdef lint
+	      /* Usually, buf[n_read] is not the byte just before a "word"
+		 (aka uintptr_t) boundary.  In that case, the word-oriented
+		 test below (*wp++ == 0) would read some uninitialized bytes
+		 after the sentinel.  To avoid false-positive reports about
+		 this condition (e.g., from a tool like valgrind), set the
+		 remaining bytes -- to any value.  */
+	      memset (buf + n_read + 1, 0, sizeof (word) - 1);
+#endif
 
 	      /* Find first nonzero *word*, or the word with the sentinel.  */
 

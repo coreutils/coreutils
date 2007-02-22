@@ -1,5 +1,11 @@
 2007-02-22  Jim Meyering  <jim@meyering.net>
 
+	Adjust preceding change not to perform an unaligned access.
+	* src/copy.c (copy_reg): Undo previous change.  Instead, make
+	it clearer that we're using a single-byte sentinel, and
+	[lint]: Initialize uintptr_t-1 bytes after the sentinel.
+	Reported by Andreas Schwab.
+
 	Placate valgrind, wrt ./cp --sparse=always
 	* src/copy.c (copy_reg): Place the sentinel by setting a
 	full word's worth of bits, not just a single byte's worth.
