@@ -250,7 +250,9 @@ case $SKIP_PO in
     WGET_COMMAND='';;
   esac
 
-  get_translations po $package || exit
+  if test -d po; then
+    get_translations po $package || exit
+  fi
 
   if test -d runtime-po; then
     get_translations runtime-po $package-runtime || exit

@@ -1,5 +1,8 @@
 2007-02-22  Jim Meyering  <jim@meyering.net>
 
+	Merge in a change from some other incarnation of this file (gzip?)
+	* bootstrap (gnulib_tool): Skip get_translations if there is no po/ dir.
+
 	Adjust preceding change not to perform an unaligned access.
 	* src/copy.c (copy_reg): Undo previous change.  Instead, make
 	it clearer that we're using a single-byte sentinel, and
