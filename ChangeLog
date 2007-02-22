@@ -12,6 +12,19 @@
 	This avoids a harmless (but distracting) case of memory being
 	used-uninitialized.
 
+2007-02-21  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Honor dd's noatime flag if possible, even if not supported on build fs
+	* doc/coreutils.texi (dd invocation): Warn that noatime might not be
+	reliable.
+	* src/dd.c (flags, usage): Look at O_NOATIME, not
+	HAVE_WORKING_O_NOATIME, to decide whether to support the noatime
+	flag, so that dd attempts O_NOATIME even if the build file system
+	does not support it.  Problem reported by Jim Meyering today in
+	bug-coreutils.
+	* tests/dd/misc: Generate a warning, not a failure, if noatime
+	exists but fails.
+
 2007-02-21  Jim Meyering  <jim@meyering.net>
 
 	* tests/misc/date: Remove vestigial use of Data::Dumper.

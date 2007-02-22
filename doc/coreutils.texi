@@ -7442,6 +7442,8 @@ Use non-blocking I/O.
 @opindex noatime
 @cindex access time
 Do not update the file's access time.
+Some older file systems silently ignore this flag, so it is a good
+idea to test it on your files before relying on it.
 
 @item noctty
 @opindex noctty
