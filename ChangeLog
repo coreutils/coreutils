@@ -6,7 +6,7 @@
 	Adjust preceding change not to perform an unaligned access.
 	* src/copy.c (copy_reg): Undo previous change.  Instead, make
 	it clearer that we're using a single-byte sentinel, and
-	[lint]: Initialize uintptr_t-1 bytes after the sentinel.
+	[lint]: Initialize sizeof (uintptr_t) - 1 bytes after the sentinel.
 	Reported by Andreas Schwab.
 
 	Placate valgrind, wrt ./cp --sparse=always
