@@ -1,3 +1,8 @@
+2007-02-23  Jim Meyering  <jim@meyering.net>
+
+	* randperm.c (randperm_new): Comment: say that this function
+	returns a pointer to malloc'd storage.
+
 2007-02-18  Jim Meyering  <jim@meyering.net>
 
 	* xfts.c: Include <stdlib.h> rather than exit.h, now that stdlib.h
