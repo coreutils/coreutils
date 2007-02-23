@@ -1,3 +1,11 @@
+2007-02-23  Jim Meyering  <jim@meyering.net>
+
+	With -Dlint, make shuf free all heap-allocated storage.
+	* src/shuf.c (main): Move declaration of input_lines to
+	function scope, and initialize to NULL, so we can free it.
+	[lint]: Free all malloc'd memory.
+	* tests/misc/shuf: Also test shuf's -e and -i options.
+
 2007-02-22  Jim Meyering  <jim@meyering.net>
 
 	Merge in a change from some other incarnation of this file (gzip?)
