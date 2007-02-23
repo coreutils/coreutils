@@ -144,6 +144,8 @@ Display the current time in the given FORMAT, or set the system date.\n\
   -r, --reference=FILE      display the last modification time of FILE\n\
   -R, --rfc-2822            output date and time in RFC 2822 format.\n\
                             Example: Mon, 07 Aug 2006 12:34:56 -0600\n\
+"), stdout);
+      fputs (_("\
       --rfc-3339=TIMESPEC   output date and time in RFC 3339 format.\n\
                             TIMESPEC=`date', `seconds', or `ns' for\n\
                             date and time to the indicated precision.\n\

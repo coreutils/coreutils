@@ -1,3 +1,8 @@
+2007-02-23  Jim Meyering  <jim@meyering.net>
+
+	* src/date.c (usage): Split a diagnostic that had grown to be
+	longer than the C89 maximum of 509 bytes.
+
 2007-02-23  Ed Santiago <ed@edsantiago.com>
 
 	* src/date.c (usage): Mention that --rfc-3339 uses space, not 'T',
