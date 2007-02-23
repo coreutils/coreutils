@@ -1,3 +1,8 @@
+2007-02-23  Ed Santiago <ed@edsantiago.com>
+
+	* src/date.c (usage): Mention that --rfc-3339 uses space, not 'T',
+	for a separator.  Include sample RFC 2822 and 3339 output.
+
 2007-02-23  Jim Meyering  <jim@meyering.net>
 
 	With -Dlint, make shuf free all heap-allocated storage.
