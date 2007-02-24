@@ -44,10 +44,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New features
 
-  By default, sort usually compresses each temporary file it writes.
+  sort's new --compress-program=PROG option specifies a compression
+  program to use when writing and reading temporary files.
   This can help save both time and disk space when sorting large inputs.
-  The default compression program is gzip, but this can be overridden
-  with sort's new --compress-program=PROG option.
 
 ** New features
 

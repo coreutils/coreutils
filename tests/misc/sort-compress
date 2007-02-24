@@ -57,14 +57,14 @@ EOF
 chmod +x gzip
 
 # This will find our new gzip in PATH
-PATH=.:$PATH sort -S 1k in > out || fail=1
+PATH=.:$PATH sort -S 1k --compress-program=gzip in > out || fail=1
 cmp exp out || fail=1
 test $fail = 1 && diff out exp 2> /dev/null
 test -f ok || fail=1
 rm -f ok
 
-# This is to make sure we can disable compression
-PATH=.:$PATH sort --compress-program= -S 1k in > out || fail=1
+# This is to make sure it works with no compression.
+PATH=.:$PATH sort -S 1k in > out || fail=1
 cmp exp out || fail=1
 test $fail = 1 && diff out exp 2> /dev/null
 test -f ok && fail=1

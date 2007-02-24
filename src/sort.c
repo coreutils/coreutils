@@ -30,7 +30,6 @@
 #include "system.h"
 #include "argmatch.h"
 #include "error.h"
-#include "findprog.h"
 #include "hard-locale.h"
 #include "hash.h"
 #include "inttostr.h"
@@ -847,14 +846,7 @@ create_temp (FILE **pfp, pid_t *ppid)
   struct tempnode *node = create_temp_file (&tempfd);
   char *name = node->name;
 
-  if (! compress_program)
-    {
-      static char const default_compress_program[] = "gzip";
-      char const *prog = find_in_path (default_compress_program);
-      compress_program = (prog == default_compress_program ? "" : prog);
-    }
-
-  if (*compress_program)
+  if (compress_program)
     {
       int pipefds[2];
 
@@ -875,8 +867,7 @@ create_temp (FILE **pfp, pid_t *ppid)
 	  dup2_or_die (pipefds[0], STDIN_FILENO);
 	  close (pipefds[0]);
 
-	  if (execlp (compress_program, compress_program,
-		      (char *) NULL) < 0)
+	  if (execlp (compress_program, compress_program, (char *) NULL) < 0)
 	    error (SORT_FAILURE, errno, _("couldn't execute %s"),
 		   compress_program);
 	}
@@ -925,8 +916,7 @@ open_temp (const char *name, pid_t pid)
       dup2_or_die (pipefds[1], STDOUT_FILENO);
       close (pipefds[1]);
 
-      if (execlp (compress_program, compress_program,
-		  "-d", (char *) NULL) < 0)
+      if (execlp (compress_program, compress_program, "-d", (char *) NULL) < 0)
 	error (SORT_FAILURE, errno, _("couldn't execute %s -d"),
 	       compress_program);
     }

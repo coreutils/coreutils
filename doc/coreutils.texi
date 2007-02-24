@@ -3634,9 +3634,7 @@ Other options are:
 @table @samp
 
 @item --compress-program=@var{prog}
-If @var{prog} is not the empty string, compress any temporary files
-with the program @var{prog} rather than with the default compression
-method.  The default is currently @command{gzip} but this may change.
+Compress any temporary files with the program @var{prog}.
 
 With no arguments, @var{prog} must compress standard input to standard
 output, and when given the @option{-d} option it must decompress
@@ -3646,9 +3644,6 @@ Terminate with an error if @var{prog} exits with nonzero status.
 
 Whitespace and the backslash character should not appear in
 @var{prog}; they are reserved for future use.
-
-If @var{prog} is the empty string, do not compress temporary
-files.
 
 @item -k @var{pos1}[,@var{pos2}]
 @itemx --key=@var{pos1}[,@var{pos2}]
