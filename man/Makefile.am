@@ -154,7 +154,10 @@ mapped_name = `echo $*|sed 's/install/ginstall/; s/test/[/'`
 # functions like echo, false, printf, pwd.
 .x.1:
 	@case $(PERL) in					\
-	  *"/missing "*) ;;					\
+	  *"/missing "*)					\
+	    echo 'WARNING: cannot update man page $@ since perl is missing' \
+	      'or inadequate' 1>&2 \
+	    ;;							\
 	  *)							\
 	    rm -f $@						\
 	    && { echo "Updating man page $@";			\
