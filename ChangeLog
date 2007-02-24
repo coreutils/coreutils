@@ -1,5 +1,9 @@
 2007-02-24  Jim Meyering  <jim@meyering.net>
 
+	Avoid a shell syntax error, when building with an inadequate Perl.
+	* man/Makefile.am (.x.1): Add quotes around $(PERL) in case, since
+	it can expand to "/.../missing perl".
+
 	* man/Makefile.am (.x.1): Warn when unable to update a man page.
 	Suggestion from Bruno Haible.
 
