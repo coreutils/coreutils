@@ -17,8 +17,6 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 # 02110-1301, USA.
 
-AUTOMAKE_OPTIONS = 1.1 gnits
-
 TESTS = \
   file-perm-race parent-perm-race \
   backup-dir \

@@ -1,5 +1,22 @@
 2007-02-24  Jim Meyering  <jim@meyering.net>
 
+	Remove the "gnits" option; it prohibits my using "+" as a version
+	string suffix, and all it does (beyond the default "gnu" option)
+	is to _require_ the THANKS file.
+	* configure.ac (AM_INIT_AUTOMAKE): Remove it.
+
+	Remove all AUTOMAKE_OPTIONS settings in Makefile.am files.
+	* tests/chgrp/Makefile.am, tests/chmod/Makefile.am:
+	* tests/chown/Makefile.am, tests/cp/Makefile.am:
+	* tests/du/Makefile.am, tests/expr/Makefile.am:
+	* tests/factor/Makefile.am, tests/general/Makefile.am:
+	* tests/install/Makefile.am, tests/ln/Makefile.am:
+	* tests/ls/Makefile.am, tests/mkdir/Makefile.am:
+	* tests/mv/Makefile.am, tests/readlink/Makefile.am:
+	* tests/rm/Makefile.am, tests/rmdir/Makefile.am:
+	* tests/seq/Makefile.am, tests/stty/Makefile.am:
+	* tests/tee/Makefile.am, tests/touch/Makefile.am:
+
 	* README: Document the OSF/1 4.0d build failure and work-around.
 	Reported by Bruno Haible.
 
