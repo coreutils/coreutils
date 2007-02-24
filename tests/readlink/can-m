@@ -1,7 +1,7 @@
 #!/bin/sh
 # tests for canonicalize-missing mode (readlink -m).
 
-# Copyright (C) 2004, 2006 Free Software Foundation, Inc.
+# Copyright (C) 2004, 2006, 2007 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -76,94 +76,94 @@ fi
 for p in "" "$pwd/$tmp/"; do
   fail=1
 
-  v=`readlink -m "${p}"regfile` || break
+  v=`readlink -m "${p}regfile"` || break
   test "$v" = "$my_pwd/$tmp/regfile" || break
 
-  v=`readlink -m "${p}"./regfile/` || break
+  v=`readlink -m "${p}./regfile/"` || break
   test "$v" = "$my_pwd/$tmp/regfile" || break
 
-  v=`readlink -m "${p}"regfile/more` || break
+  v=`readlink -m "${p}regfile/more"` || break
   test "$v" = "$my_pwd/$tmp/regfile/more" || break
 
-  v=`readlink -m "${p}"./regfile/more/` || break
+  v=`readlink -m "${p}./regfile/more/"` || break
   test "$v" = "$my_pwd/$tmp/regfile/more" || break
 
-  v=`readlink -m "${p}"subdir` || break
+  v=`readlink -m "${p}subdir"` || break
   test "$v" = "$my_pwd/$tmp/subdir" || break
 
-  v=`readlink -m "${p}"./subdir/` || break
+  v=`readlink -m "${p}./subdir/"` || break
   test "$v" = "$my_pwd/$tmp/subdir" || break
 
-  v=`readlink -m "${p}"subdir/more` || break
+  v=`readlink -m "${p}subdir/more"` || break
   test "$v" = "$my_pwd/$tmp/subdir/more" || break
 
-  v=`readlink -m "${p}"./subdir/more/` || break
+  v=`readlink -m "${p}./subdir/more/"` || break
   test "$v" = "$my_pwd/$tmp/subdir/more" || break
 
-  v=`readlink -m "${p}"missing` || break
+  v=`readlink -m "${p}missing"` || break
   test "$v" = "$my_pwd/$tmp/missing" || break
 
-  v=`readlink -m "${p}"./missing/` || break
+  v=`readlink -m "${p}./missing/"` || break
   test "$v" = "$my_pwd/$tmp/missing" || break
 
-  v=`readlink -m "${p}"missing/more` || break
+  v=`readlink -m "${p}missing/more"` || break
   test "$v" = "$my_pwd/$tmp/missing/more" || break
 
-  v=`readlink -m "${p}"./missing/more/` || break
+  v=`readlink -m "${p}./missing/more/"` || break
   test "$v" = "$my_pwd/$tmp/missing/more" || break
 
-  v=`readlink -m "${p}"link1` || break
+  v=`readlink -m "${p}link1"` || break
   test "$v" = "$my_pwd/$tmp/regfile" || break
 
-  v=`readlink -m "${p}"./link1/` || break
+  v=`readlink -m "${p}./link1/"` || break
   test "$v" = "$my_pwd/$tmp/regfile" || break
 
-  v=`readlink -m "${p}"link1/more` || break
+  v=`readlink -m "${p}link1/more"` || break
   test "$v" = "$my_pwd/$tmp/regfile/more" || break
 
-  v=`readlink -m "${p}"./link1/more/` || break
+  v=`readlink -m "${p}./link1/more/"` || break
   test "$v" = "$my_pwd/$tmp/regfile/more" || break
 
-  v=`readlink -m "${p}"link2` || break
+  v=`readlink -m "${p}link2"` || break
   test "$v" = "$my_pwd/$tmp/subdir" || break
 
-  v=`readlink -m "${p}"./link2/` || break
+  v=`readlink -m "${p}./link2/"` || break
   test "$v" = "$my_pwd/$tmp/subdir" || break
 
-  v=`readlink -m "${p}"link2/more` || break
+  v=`readlink -m "${p}link2/more"` || break
   test "$v" = "$my_pwd/$tmp/subdir/more" || break
 
-  v=`readlink -m "${p}"./link2/more/` || break
+  v=`readlink -m "${p}./link2/more/"` || break
   test "$v" = "$my_pwd/$tmp/subdir/more" || break
 
-  v=`readlink -m "${p}"link2/more/more2` || break
+  v=`readlink -m "${p}link2/more/more2"` || break
   test "$v" = "$my_pwd/$tmp/subdir/more/more2" || break
 
-  v=`readlink -m "${p}"./link2/more/more2/` || break
+  v=`readlink -m "${p}./link2/more/more2/"` || break
   test "$v" = "$my_pwd/$tmp/subdir/more/more2" || break
 
-  v=`readlink -m "${p}"link3` || break
+  v=`readlink -m "${p}link3"` || break
   test "$v" = "$my_pwd/$tmp/missing" || break
 
-  v=`readlink -m "${p}"./link3/` || break
+  v=`readlink -m "${p}./link3/"` || break
   test "$v" = "$my_pwd/$tmp/missing" || break
 
-  v=`readlink -m "${p}"link3/more` || break
+  v=`readlink -m "${p}link3/more"` || break
   test "$v" = "$my_pwd/$tmp/missing/more" || break
 
-  v=`readlink -m "${p}"./link3/more/` || break
+  v=`readlink -m "${p}./link3/more/"` || break
   test "$v" = "$my_pwd/$tmp/missing/more" || break
 
-  v=`readlink -m "${p}"link4` || break
+  v=`readlink -m "${p}link4"` || break
   test "$v" = "$my_pwd/$tmp/subdir/missing" || break
 
-  v=`readlink -m "${p}"./link4/` || break
+  v=`readlink -m "${p}./link4/"` || break
   test "$v" = "$my_pwd/$tmp/subdir/missing" || break
 
-  v=`readlink -m "${p}"link4/more` || break
+  v=`readlink -m "${p}link4/more"` || break
   test "$v" = "$my_pwd/$tmp/subdir/missing/more" || break
 
-  v=`readlink -m "${p}"./link4/more/` || break
+  v=`readlink -m "${p}./link4/more/"` || break
   test "$v" = "$my_pwd/$tmp/subdir/missing/more" || break
 
   fail=0

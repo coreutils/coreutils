@@ -1,5 +1,11 @@
 2007-02-23  Bruno Haible  <bruno@clisp.org>
 
+	* tests/readlink/can-e: Put the closing double-quote at the end of a
+	backquoted word, not in the middle. Works around a bug in sh on
+	OSF/1 4.0d.
+	* tests/readlink/can-f: Likewise.
+	* tests/readlink/can-m: Likewise.
+
 	* tests/du/slink: Skip the test if executing on an nfsv3 file system.
 	This avoids a test failure at least on OSF/1 4.0d.
 
