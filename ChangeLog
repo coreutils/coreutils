@@ -1,5 +1,9 @@
 2007-02-23  Bruno Haible  <bruno@clisp.org>
 
+	Handle better the combination of old Perl and a pre-c99 compiler.
+	* man/Makefile.am (.x.1): If the autoconf test has determined that
+	perl is missing or not a sufficient version, do nothing.
+
 	* tests/readlink/can-e: Put the closing double-quote at the end of a
 	backquoted word, not in the middle. Works around a bug in sh on
 	OSF/1 4.0d.
