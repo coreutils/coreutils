@@ -97,6 +97,18 @@ Here is one possible patch to correct the problem:
 +#ifndef __LP64__
 
 
+************************
+OSF/1 4.0d build failure
+------------------------
+
+If you use /usr/bin/make on an OSF/1 4.0d system, it will fail due
+to the presence of the "[" target.  That version of make appears to
+treat "[" as some syntax relating to locks.  To work around that,
+the best solution is to use GNU make.  Otherwise, simply remove
+all mention of "[$(EXEEXT)" from src/Makefile.
+
+
+
 **********************
 Running tests as root:
 ----------------------

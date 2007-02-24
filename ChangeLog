@@ -1,5 +1,8 @@
 2007-02-24  Jim Meyering  <jim@meyering.net>
 
+	* README: Document the OSF/1 4.0d build failure and work-around.
+	Reported by Bruno Haible.
+
 	* NEWS: Use a simple "+" suffix to denote pre-release, not "-dirty".
 	Nicer connotations.
 	* configure.ac: Use 6.7+, not 6.7-dirty.
