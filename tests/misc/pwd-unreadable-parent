@@ -28,10 +28,9 @@ fi
 
 skip=1
 # Run this test IFF:
-# if __GETCWD_PREFIX is not defined (system getcwd is good enough)
+# if REPLACE_GETCWD is 0 (system getcwd is good enough)
 #   or HAVE_PARTLY_WORKING_GETCWD is defined
-grep '^/\* #undef __GETCWD_PREFIX ' $CONFIG_HEADER > /dev/null &&
-  skip=0
+test $REPLACE_GETCWD = 0 && skip=0
 test $skip = 1 &&
   grep '^#define HAVE_PARTLY_WORKING_GETCWD ' $CONFIG_HEADER > /dev/null &&
     skip=0

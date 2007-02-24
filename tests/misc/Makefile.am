@@ -29,6 +29,7 @@ TESTS_ENVIRONMENT = \
   CU_TEST_NAME=`basename $(abs_srcdir)`,$$tst \
   PATH="$(VG_PATH_PREFIX)`pwd`/../../src$(PATH_SEPARATOR)$$PATH" \
   CONFIG_HEADER=$(CONFIG_HEADER) \
+  REPLACE_GETCWD=$(REPLACE_GETCWD) \
   PROG=`../../src/basename -- "$$tst"`
 
 # Do not choose a name that is a shell keyword like 'if', or a

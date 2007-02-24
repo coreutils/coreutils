@@ -1,5 +1,11 @@
 2007-02-24  Jim Meyering  <jim@meyering.net>
 
+	Don't skip this test on new-enough Linux/GNU systems.
+	* tests/misc/pwd-unreadable-parent: Test $REPLACE_GETCWD = 0,
+	rather than for __GETCWD_PREFIX in config.h (the latter is no
+	longer defined, ever, due to gnulib changes).
+	* tests/misc/Makefile.am (TESTS_ENVIRONMENT): Define REPLACE_GETCWD.
+
 	Remove the "gnits" option; it prohibits my using "+" as a version
 	string suffix, and all it does (beyond the default "gnu" option)
 	is to _require_ the THANKS file.
