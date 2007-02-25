@@ -1,5 +1,8 @@
 GNU coreutils NEWS                                    -*- outline -*-
 
+* Noteworthy changes in release 6.8+ (????-??-??) [not-unstable]
+
+
 * Noteworthy changes in release 6.8 (2007-02-24) [not-unstable]
 
 ** Bug fixes
@@ -47,8 +50,6 @@ GNU coreutils NEWS                                    -*- outline -*-
   sort's new --compress-program=PROG option specifies a compression
   program to use when writing and reading temporary files.
   This can help save both time and disk space when sorting large inputs.
-
-** New features
 
   sort accepts the new option -C, which acts like -c except no diagnostic
   is printed.  Its --check option now accepts an optional argument, and
