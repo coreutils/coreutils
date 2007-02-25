@@ -1,5 +1,9 @@
 2007-02-25  Jim Meyering  <jim@meyering.net>
 
+	* Makefile.maint (announcement): Adjust so that it works with
+	announce-gen's --gnulib-snapshot-time-stamp option.
+	Indent one of the command lines using TAB, not 8 spaces.
+
 	Post-release version change.
 	* NEWS: Add a line for 6.8+.
 	* configure.ac (AC_INIT): Set new version string.
