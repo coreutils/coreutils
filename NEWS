@@ -2,6 +2,11 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release 6.8+ (????-??-??) [not-unstable]
 
+** Bug fixes
+
+  The default block size and output format for df -P are now unaffected by
+  the DF_BLOCK_SIZE, BLOCK_SIZE, and BLOCKSIZE environment variables.  It
+  is still affected by POSIXLY_CORRECT, though.
 
 * Noteworthy changes in release 6.8 (2007-02-24) [not-unstable]
 

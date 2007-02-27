@@ -796,10 +796,7 @@ main (int argc, char **argv)
   inode_format = false;
   show_all_fs = false;
   show_listed_fs = false;
-
-  human_output_opts = human_options (getenv ("DF_BLOCK_SIZE"), false,
-				     &output_block_size);
-
+  human_output_opts = -1;
   print_type = false;
   file_systems_processed = false;
   posix_format = false;
@@ -874,6 +871,18 @@ main (int argc, char **argv)
 	default:
 	  usage (EXIT_FAILURE);
 	}
+    }
+
+  if (human_output_opts == -1)
+    {
+      if (posix_format)
+	{
+	  human_output_opts = 0;
+	  output_block_size = (getenv ("POSIXLY_CORRECT") ? 512 : 1024);
+	}
+      else
+	human_output_opts = human_options (getenv ("DF_BLOCK_SIZE"), false,
+					   &output_block_size);
     }
 
   /* Fail if the same file system type was both selected and excluded.  */

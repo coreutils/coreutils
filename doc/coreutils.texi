@@ -9481,6 +9481,13 @@ some network mounts), the columns are misaligned.
 
 @item
 The labels in the header output line are changed to conform to @acronym{POSIX}.
+
+@item
+The default block size and output format are unaffected by the
+@env{DF_BLOCK_SIZE}, @env{BLOCK_SIZE} and @env{BLOCKSIZE} environment
+variables.  However, the default block size is still affected by
+@env{POSIXLY_CORRECT}: it is 512 if @env{POSIXLY_CORRECT} is set, 1024
+otherwise.  @xref{Block size}.
 @end enumerate
 
 @optSi

@@ -1,3 +1,10 @@
+2007-02-27  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Make df -P immune to effects of e.g., the BLOCK_SIZE envvar.
+	* NEWS: With -P, the default block size and output format is not
+	affected by DF_BLOCK_SIZE, BLOCK_SIZE, or BLOCKSIZE.
+	* src/df.c (main): Implement this.
+
 2007-02-25  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.maint (announcement): Adjust so that it works with
