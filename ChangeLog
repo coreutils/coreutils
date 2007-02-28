@@ -1,3 +1,7 @@
+2007-02-28  Jim Meyering  <jim@meyering.net>
+
+	* Makefile.maint (gnulib_snapshot_date): Remove now-unused definition.
+
 2007-02-27  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Make df -P immune to effects of e.g., the BLOCK_SIZE envvar.
