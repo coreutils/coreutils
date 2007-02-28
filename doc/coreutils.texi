@@ -558,8 +558,8 @@ symbolic link to a directory.  @xref{Target directory}.
 @itemx --si
 @opindex --si
 @cindex SI output
-Append an SI-style abbreviation to each size, such as @samp{MB} for
-megabytes.  Powers of 1000 are used, not 1024; @samp{MB} stands for
+Append an SI-style abbreviation to each size, such as @samp{M} for
+megabytes.  Powers of 1000 are used, not 1024; @samp{M} stands for
 1,000,000 bytes.  This option is equivalent to
 @option{--block-size=si}.  Use the @option{-h} or
 @option{--human-readable} option if
