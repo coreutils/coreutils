@@ -2798,7 +2798,7 @@ is_directory (const struct fileinfo *f)
 static void
 get_link_name (char const *filename, struct fileinfo *f, bool command_line_arg)
 {
-  f->linkname = xreadlink (filename, f->stat.st_size);
+  f->linkname = xreadlink_with_size (filename, f->stat.st_size);
   if (f->linkname == NULL)
     file_failure (command_line_arg, _("cannot read symbolic link %s"),
 		  filename);

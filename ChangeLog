@@ -1,3 +1,12 @@
+2007-02-28  Bruno Haible  <bruno@clisp.org>
+
+	* bootstrap.conf (gnulib_modules): Replace xreadlink with
+	xreadlink-with-size. Add xreadlink.
+	* src/copy.c (copy_internal): Update.
+	* src/ls.c (is_directory): Update.
+	* src/stat.c (print_stat): Update.
+	* src/readlink.c (main): Use the one-argument xreadlink function.
+
 2007-02-28  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* doc/coreutils.texi (Common options): --si outputs "M", not "MB".

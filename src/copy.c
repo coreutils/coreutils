@@ -1720,7 +1720,7 @@ copy_internal (char const *src_name, char const *dst_name,
     }
   else if (S_ISLNK (src_mode))
     {
-      char *src_link_val = xreadlink (src_name, src_sb.st_size);
+      char *src_link_val = xreadlink_with_size (src_name, src_sb.st_size);
       if (src_link_val == NULL)
 	{
 	  error (0, errno, _("cannot read symbolic link %s"), quote (src_name));
@@ -1740,7 +1740,8 @@ copy_internal (char const *src_name, char const *dst_name,
 		 FIXME: This behavior isn't documented, and seems wrong
 		 in some cases, e.g., if the destination symlink has the
 		 wrong ownership, permissions, or time stamps.  */
-	      char *dest_link_val = xreadlink (dst_name, dst_sb.st_size);
+	      char *dest_link_val =
+		xreadlink_with_size (dst_name, dst_sb.st_size);
 	      if (STREQ (dest_link_val, src_link_val))
 		same_link = true;
 	      free (dest_link_val);
