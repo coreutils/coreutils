@@ -1,5 +1,8 @@
 2007-03-01  Jim Meyering  <jim@meyering.net>
 
+	* Makefile.maint (warn_cflags): Hoist, adding "-Dlint -O".
+	(my-distcheck): Use the new variable, instead of too-long literal.
+
 	Make "make syntax-check" rules less coreutils-specific.
 	* Makefile.maint (sc_cast_of_x_alloc_return_value): Use CVS_LIST_EXCEPT.
 	(sc_cast_of_alloca_return_value): Likewise.
