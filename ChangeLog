@@ -1,5 +1,9 @@
 2007-03-01  Jim Meyering  <jim@meyering.net>
 
+	Run the writable-files check only for release-building targets.
+	* Makefile.maint (local-checks-available): Remove writable-files.
+	(alpha beta major): Put it here, instead.
+
 	"make syntax-check" now runs only Makefile.cfg-selected tests
 	* Makefile.maint (syntax-check-rules): Hoist this definition so that
 	it precedes the indirect use in the definition of $(local-check).
