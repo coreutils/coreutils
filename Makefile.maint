@@ -103,16 +103,12 @@ sc_cast_of_argument_to_free:
 	    exit 1; } || :
 
 sc_cast_of_x_alloc_return_value:
-	@grep -nE --exclude=$(srcdir)/lib/xalloc.h			\
-		--exclude=$(srcdir)/lib/regex.c				\
-	    '\*\) *x(m|c|re)alloc\>'					\
-	    $(srcdir)/{lib,src}/*.[chy] &&				\
+	@grep -nE '\*\) *x(m|c|re)alloc\>' $$($(CVS_LIST_EXCEPT)) &&	\
 	  { echo '$(ME): don'\''t cast x*alloc return value' 1>&2;	\
 	    exit 1; } || :
 
 sc_cast_of_alloca_return_value:
-	@grep -nE '\*\) *alloca\>'					\
-	    $(srcdir)/src/*.[chy] &&					\
+	@grep -nE '\*\) *alloca\>' $$($(CVS_LIST_EXCEPT)) &&		\
 	  { echo '$(ME): don'\''t cast alloca return value' 1>&2;	\
 	    exit 1; } || :
 
@@ -212,7 +208,9 @@ sc_prohibit_jm_in_m4:
 	      1>&2; exit 1; } || :
 
 sc_root_tests:
-	@t1=sc-root.expected; t2=sc-root.actual;			\
+	@if test -d tests \
+	      && grep check-root tests/Makefile.am>/dev/null 2>&1; then \
+	t1=sc-root.expected; t2=sc-root.actual;				\
 	grep -nl '^PRIV_CHECK_ARG=require-root'				\
 	  $$($(CVS_LIST) tests) |sed s,tests,., |sort > $$t1;		\
 	sed -n 's,	cd \([^ ]*\) .*MAKE..check TESTS=\(.*\),./\1/\2,p' \
@@ -221,7 +219,8 @@ sc_root_tests:
 	rm -f $$t1 $$t2;						\
 	test "$$diff"							\
 	  && { echo 'tests/Makefile.am: missing check-root action'>&2;	\
-	       exit 1; } || :
+	       exit 1; } || :;						\
+	fi
 
 headers_with_interesting_macro_defs = \
   exit.h	\

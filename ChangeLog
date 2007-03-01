@@ -1,5 +1,11 @@
 2007-03-01  Jim Meyering  <jim@meyering.net>
 
+	Make "make syntax-check" rules less coreutils-specific.
+	* Makefile.maint (sc_cast_of_x_alloc_return_value): Use CVS_LIST_EXCEPT.
+	(sc_cast_of_alloca_return_value): Likewise.
+	(sc_root_tests): Do nothing if there is no check-root target
+	in tests/Makefile.am.
+
 	Run the writable-files check only for release-building targets.
 	* Makefile.maint (local-checks-available): Remove writable-files.
 	(alpha beta major): Put it here, instead.
