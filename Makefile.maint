@@ -69,6 +69,10 @@ export LC_ALL = C
 # in system.h.  E.g. today I removed from tail.c a useless definition of
 # ENOSYS.  It was useless because system.h ensures it's defined.
 
+# Collect the names of rules starting with `sc_'.
+syntax-check-rules := $(shell sed -n 's/^\(sc_[a-zA-Z0-9_-]*\):.*/\1/p' $(ME))
+.PHONY: $(syntax-check-rules)
+
 # Checks that don't require cvs.
 # Run `changelog-check' last, as previous test may reveal problems requiring
 # new ChangeLog entries.
@@ -79,13 +83,9 @@ local-checks-available = \
   makefile-check check-AUTHORS
 .PHONY: $(local-checks-available)
 
-local-check = $(filter-out $(local-checks-to-skip), $(local-checks-available))
+local-check := $(filter-out $(local-checks-to-skip), $(local-checks-available))
 
-# Collect the names of rules starting with `sc_'.
-syntax-check-rules := $(shell sed -n 's/^\(sc_[a-zA-Z0-9_-]*\):.*/\1/p' $(ME))
-.PHONY: $(syntax-check-rules)
-
-syntax-check: $(syntax-check-rules)
+syntax-check: $(local-check)
 #	@grep -nE '#  *include <(limits|std(def|arg|bool))\.h>'		\
 #	    $$(find -type f -name '*.[chly]') &&			\
 #	  { echo '$(ME): found conditional include' 1>&2;		\

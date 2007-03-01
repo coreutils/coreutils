@@ -1,3 +1,11 @@
+2007-03-01  Jim Meyering  <jim@meyering.net>
+
+	"make syntax-check" now runs only Makefile.cfg-selected tests
+	* Makefile.maint (syntax-check-rules): Hoist this definition so that
+	it precedes the indirect use in the definition of $(local-check).
+	(local-check): Use :=, not just "=".
+	(syntax-check): Depend on $(local-check), not $(syntax-check-rules).
+
 2007-02-28  Bruno Haible  <bruno@clisp.org>
 
 	* bootstrap.conf (gnulib_modules): Replace xreadlink with
