@@ -128,7 +128,7 @@ sc_prohibit_atoi_atof:
 # Using EXIT_SUCCESS as the first argument to error is misleading,
 # since when that parameter is 0, error does not exit.  Use `0' instead.
 sc_error_exit_success:
-	@grep -nF 'error (EXIT_SUCCESS,'					\
+	@grep -nF 'error (EXIT_SUCCESS,'				\
 	    $$(find -type f -name '*.[chly]') &&			\
 	  { echo '$(ME): found error (EXIT_SUCCESS' 1>&2;		\
 	    exit 1; } || :
@@ -367,22 +367,22 @@ makefile-check:
 	  && { echo 'Makefile.maint: use $$(...), not @...@' 1>&2; exit 1; } || :
 
 news-date-check: NEWS
-	today=`date +%Y-%m-%d`;	\
-	if head NEWS | grep '^\*.* $(VERSION_REGEXP) ('$$today')' \
-	    >/dev/null; then \
-	  :; \
-	else \
-	  echo "version or today's date is not in NEWS" 1>&2; \
-	  exit 1; \
+	today=`date +%Y-%m-%d`;						\
+	if head NEWS | grep '^\*.* $(VERSION_REGEXP) ('$$today')'	\
+	    >/dev/null; then						\
+	  :;								\
+	else								\
+	  echo "version or today's date is not in NEWS" 1>&2;		\
+	  exit 1;							\
 	fi
 
 changelog-check:
-	if head ChangeLog | grep 'Version $(VERSION_REGEXP)\.$$' \
-	    >/dev/null; then \
-	  :; \
-	else \
-	  echo "$(VERSION) not in ChangeLog" 1>&2; \
-	  exit 1; \
+	if head ChangeLog | grep 'Version $(VERSION_REGEXP)\.$$'	\
+	    >/dev/null; then						\
+	  :;								\
+	else								\
+	  echo "$(VERSION) not in ChangeLog" 1>&2;			\
+	  exit 1;							\
 	fi
 
 m4-check:
@@ -469,7 +469,7 @@ copyright-check:
 # Abort early if this tag has already been used.
 vc-tag-check:
 	used=no;							\
-	if $(VC) --help | grep CVS; then					\
+	if $(VC) --help | grep CVS; then				\
 	  $(CVS) -n log -h README|grep -e $(this-vc-tag): >/dev/null	\
 	    && used=yes;						\
 	else								\
@@ -515,11 +515,9 @@ null_AM_MAKEFLAGS = \
 
 warn_cflags = -Dlint -O -Werror -Wall -Wformat -Wshadow -Wpointer-arith
 
-# Detect format-string/arg-list mismatches that would normally be obscured
-# by the use of _().  The --disable-nls effectively defines away that macro,
-# and building with CFLAGS='-Wformat -Werror' causes any format warning to be
-# treated as a failure.  Also, check for shadowing problems with -Wshadow,
-# and for pointer arithmetic problems with -Wpointer-arith.
+# Use -Wformat -Werror to detect format-string/arg-list mismatches.
+# Also, check for shadowing problems with -Wshadow, and for pointer
+# arithmetic problems with -Wpointer-arith.
 # These CFLAGS are pretty strict.  If you build this target, you probably
 # have to have a recent version of gcc and glibc headers.
 TMPDIR ?= /tmp
@@ -595,7 +593,7 @@ emit_upload_commands:
 	@echo =====================================
 	@echo =====================================
 	@echo "$(srcdir)/build-aux/gnupload $(GNUPLOADFLAGS) \\"
-	@echo "    --to $(gnu_rel_host):coreutils \\"
+	@echo "    --to $(gnu_rel_host):$(PACKAGE) \\"
 	@echo "  $(rel-files)"
 	@echo '# send the /tmp/announcement e-mail'
 	@echo =====================================

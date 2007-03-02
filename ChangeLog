@@ -1,3 +1,9 @@
+2007-03-02  Jim Meyering  <jim@meyering.net>
+
+	Remove another coreutils-ism.  Formatting cleanup.
+	* Makefile.maint (my-distcheck): Update an outdated comment.
+	(emit_upload_commands): Use $(PACKAGE) rather than "coreutils".
+
 2007-03-01  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.maint (warn_cflags): Hoist, adding "-Dlint -O".
