@@ -3,6 +3,7 @@
 	Remove another coreutils-ism.  Formatting cleanup.
 	* Makefile.maint (my-distcheck): Update an outdated comment.
 	(emit_upload_commands): Use $(PACKAGE) rather than "coreutils".
+	(my-distcheck): Skip the c99/c89 check if there's no such .diff file.
 
 2007-03-01  Jim Meyering  <jim@meyering.net>
 
