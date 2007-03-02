@@ -1,5 +1,7 @@
 2007-03-02  Jim Meyering  <jim@meyering.net>
 
+	* tests/misc/pwd-long: Also allow "+" in $PWD.
+
 	Remove another coreutils-ism.  Formatting cleanup.
 	* Makefile.maint (my-distcheck): Update an outdated comment.
 	(emit_upload_commands): Use $(PACKAGE) rather than "coreutils".
