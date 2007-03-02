@@ -1,5 +1,11 @@
 2007-03-02  Jim Meyering  <jim@meyering.net>
 
+	pwd-unreadable-parent: Skip test on non-Linux/GNU systems.
+	* tests/misc/pwd-unreadable-parent: Rather than trying to decide
+	whether this test has a chance of succeeding, run it only when
+	$(host_os) is linux-gnu.  It was failing on powerpc-apple-darwin8.8.0
+	* tests/misc/Makefile.am (TESTS_ENVIRONMENT): Add host_os=$(host_os).
+
 	* tests/misc/pwd-long: Also allow "+" in $PWD.
 
 	Remove another coreutils-ism.  Formatting cleanup.

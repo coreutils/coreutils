@@ -26,17 +26,9 @@ if test "$VERBOSE" = yes; then
   readlink --version
 fi
 
-skip=1
-# Run this test IFF:
-# if REPLACE_GETCWD is 0 (system getcwd is good enough)
-#   or HAVE_PARTLY_WORKING_GETCWD is defined
-test $REPLACE_GETCWD = 0 && skip=0
-test $skip = 1 &&
-  grep '^#define HAVE_PARTLY_WORKING_GETCWD ' $CONFIG_HEADER > /dev/null &&
-    skip=0
-test $skip = 1 &&
+test $host_os != linux-gnu &&
   {
-    echo 1>&2 "$0: inadequate system getcwd; skipping this test"
+    echo 1>&2 "$0: vendor getcwd may be inadequate; skipping this test"
     (exit 77); exit 77
   }
 

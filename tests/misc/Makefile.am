@@ -30,6 +30,7 @@ TESTS_ENVIRONMENT = \
   PATH="$(VG_PATH_PREFIX)`pwd`/../../src$(PATH_SEPARATOR)$$PATH" \
   CONFIG_HEADER=$(CONFIG_HEADER) \
   REPLACE_GETCWD=$(REPLACE_GETCWD) \
+  host_os=$(host_os) \
   PROG=`../../src/basename -- "$$tst"`
 
 # Do not choose a name that is a shell keyword like 'if', or a
