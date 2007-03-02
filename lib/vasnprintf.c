@@ -146,7 +146,7 @@ VASNPRINTF (CHAR_T *resultbuf, size_t *lengthp, const CHAR_T *format, va_list ar
 #if HAVE_ALLOCA
     if (buf_neededlength < 4000 / sizeof (CHAR_T))
       {
-	buf = (CHAR_T *) alloca (buf_neededlength * sizeof (CHAR_T));
+	buf = alloca (buf_neededlength * sizeof (CHAR_T));
 	buf_malloced = NULL;
       }
     else
