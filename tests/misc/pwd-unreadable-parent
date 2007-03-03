@@ -32,6 +32,14 @@ test $host_os != linux-gnu &&
     (exit 77); exit 77
   }
 
+# Linux ia64 has the gl_FUNC_GETCWD_ABORT_BUG, so we can't use
+# the system getcwd.
+test $REPLACE_GETCWD = 1 &&
+  {
+    echo 1>&2 "$0: can't use buggy system getcwd; skipping this test"
+    (exit 77); exit 77
+  }
+
 pwd=`pwd`
 t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
 trap 'status=$?; cd "$pwd" && chmod -R u+rwx $t0 && rm -rf $t0 && exit $status' 0
