@@ -1,3 +1,12 @@
+2007-03-03  Andrew Church  <achurch@achurch.org>  (tiny change)
+	    Paul Eggert  <eggert@cs.ucla.edu>
+
+	Fix a bug: cp -x would fail to set mount point permissions.
+	* NEWS: mention cp -x bug fix
+	* src/copy.c (copy_internal): Don't return immediately after
+	copying a mount point that we do not intend to recurse under.
+	Based on a patch by Andrew Church.
+
 2007-03-03  Jim Meyering  <jim@meyering.net>
 
 	pwd-unreadable-parent: Skip test on ia64/Linux, too.

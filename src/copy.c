@@ -1604,19 +1604,20 @@ copy_internal (char const *src_name, char const *dst_name,
 	    emit_verbose (src_name, dst_name, NULL);
 	}
 
-      /* Are we crossing a file system boundary?  */
+      /* Decide whether to copy the contents of the directory.  */
       if (x->one_file_system && device != 0 && device != src_sb.st_dev)
-	return true;
-
-      /* Copy the contents of the directory.  */
-
-      if (! copy_dir (src_name, dst_name, new_dst, &src_sb, dir, x,
-		      copy_into_self))
 	{
-	  /* Don't just return here -- otherwise, the failure to read a
-	     single file in a source directory would cause the containing
-	     destination directory not to have owner/perms set properly.  */
-	  delayed_ok = false;
+	  /* Here, we are crossing a file system boundary and cp's -x option
+	     is in effect: so don't copy the contents of this directory. */
+	}
+      else
+	{
+	  /* Copy the contents of the directory.  Don't just return if
+	     this fails -- otherwise, the failure to read a single file
+	     in a source directory would cause the containing destination
+	     directory not to have owner/perms set properly.  */
+	  delayed_ok = copy_dir (src_name, dst_name, new_dst, &src_sb, dir, x,
+				 copy_into_self);
 	}
     }
   else if (x->symbolic_link)

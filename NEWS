@@ -4,6 +4,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  cp -x (--one-file-system) would fail to set mount point permissions
+
   The default block size and output format for df -P are now unaffected by
   the DF_BLOCK_SIZE, BLOCK_SIZE, and BLOCKSIZE environment variables.  It
   is still affected by POSIXLY_CORRECT, though.
