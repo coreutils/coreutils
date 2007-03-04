@@ -1,3 +1,7 @@
+2007-03-04  Jim Meyering  <jim@meyering.net>
+
+	* vasnprintf.c (VASNPRINTF): Add missing semicolon.
+
 2007-03-02  Jim Meyering  <jim@meyering.net>
 
 	* vasnprintf.c (VASNPRINTF): Remove cast of alloca return value.

@@ -469,7 +469,7 @@ VASNPRINTF (CHAR_T *resultbuf, size_t *lengthp, const CHAR_T *format, va_list ar
 		      if (tmp_length < precision)
 			tmp_length = precision;
 		      /* Account for sign, decimal point etc. */
-		      tmp_length += 12
+		      tmp_length += 12;
 		      if (tmp_length < 12)
 			goto out_of_memory;
 		      break;
