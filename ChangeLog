@@ -1,3 +1,13 @@
+2007-03-08  Jim Meyering  <jim@meyering.net>
+
+	Make bootstrap a little more general.
+	* bootstrap (build_aux): Factor out/use this definition.
+	Formally require a "AC_CONFIG_AUX_DIR($build_aux)" line in configure.ac.
+	(insert_sorted_if_absent): Move function definition "up", to
+	precede new first use.
+	If $build_aux/ doesn't exist initially, create it, and
+	mark it as ignored.
+
 2007-03-03  Andrew Church  <achurch@achurch.org>  (tiny change)
 	    Paul Eggert  <eggert@cs.ucla.edu>
 
