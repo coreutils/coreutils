@@ -219,6 +219,8 @@ mountlist.h
 mpsort.c
 mpsort.h
 nanosleep.c
+netinet_in.h
+netinet_in_.h
 obstack.c
 obstack.h
 offtostr.c
