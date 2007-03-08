@@ -704,20 +704,21 @@ is_empty_dir (int fd_cwd, char const *dir)
   return saved_errno == 0 ? true : false;
 }
 
-/* Return true if FILE is determined to be an unwritable non-symlink.
-   Otherwise, return false (including when lstat'ing it fails).
+/* Return -1 if FILE is an unwritable non-symlink,
+   0 if it is writable or some other type of file,
+   a positive error number if there is some problem in determining the answer.
    Set *BUF to the file status.
    This is to avoid calling euidaccess when FILE is a symlink.  */
-static bool
+static int
 write_protected_non_symlink (int fd_cwd,
 			     char const *file,
 			     Dirstack_state const *ds,
 			     struct stat *buf)
 {
   if (cache_fstatat (fd_cwd, file, buf, AT_SYMLINK_NOFOLLOW) != 0)
-    return false;
+    return errno;
   if (S_ISLNK (buf->st_mode))
-    return false;
+    return 0;
   /* Here, we know FILE is not a symbolic link.  */
 
   /* In order to be reentrant -- i.e., to avoid changing the working
@@ -771,9 +772,16 @@ write_protected_non_symlink (int fd_cwd,
     size_t file_name_len
       = obstack_object_size (&ds->dir_stack) + strlen (file);
 
-    return (file_name_len < MIN (PATH_MAX, 8192)
-	    ? euidaccess (full_filename (file), W_OK) != 0 && errno == EACCES
-	    : euidaccess_stat (buf, W_OK) != 0);
+    if (MIN (PATH_MAX, 8192) <= file_name_len)
+      return - euidaccess_stat (buf, W_OK);
+    if (euidaccess (full_filename (file), W_OK) == 0)
+      return 0;
+    if (errno == EACCES)
+      return -1;
+
+    /* Perhaps some other process has removed the file, or perhaps this
+       is a buggy NFS client.  */
+    return errno;
   }
 }
 
@@ -794,75 +802,73 @@ prompt (int fd_cwd, Dirstack_state const *ds, char const *filename,
 	struct rm_options const *x, enum Prompt_action mode,
 	Ternary *is_empty)
 {
-  bool write_protected = false;
+  int write_protected = 0;
 
   *is_empty = T_UNKNOWN;
 
   if (x->interactive == RMI_NEVER)
     return RM_OK;
 
-  if (((!x->ignore_missing_files & ((x->interactive == RMI_ALWAYS)
-				    | x->stdin_tty))
-       && (write_protected = write_protected_non_symlink (fd_cwd, filename,
-							  ds, sbuf)))
-      || x->interactive == RMI_ALWAYS)
+  if (!x->ignore_missing_files
+      & ((x->interactive == RMI_ALWAYS) | x->stdin_tty))
+    write_protected = write_protected_non_symlink (fd_cwd, filename, ds, sbuf);
+
+  if (write_protected || x->interactive == RMI_ALWAYS)
     {
-      if (cache_fstatat (fd_cwd, filename, sbuf, AT_SYMLINK_NOFOLLOW) != 0)
+      if (write_protected <= 0
+	  && cache_fstatat (fd_cwd, filename, sbuf, AT_SYMLINK_NOFOLLOW) != 0)
 	{
 	  /* This happens, e.g., with `rm '''.  */
-	  error (0, errno, _("cannot remove %s"),
-		 quote (full_filename (filename)));
-	  return RM_ERROR;
+	  write_protected = errno;
 	}
 
-      if (S_ISDIR (sbuf->st_mode) && !x->recursive)
+      if (write_protected <= 0)
 	{
-	  error (0, EISDIR, _("cannot remove %s"),
-		 quote (full_filename (filename)));
-	  return RM_ERROR;
-	}
-
-      /* Using permissions doesn't make sense for symlinks.  */
-      if (S_ISLNK (sbuf->st_mode))
-	{
-	  if (x->interactive != RMI_ALWAYS)
+	  /* Using permissions doesn't make sense for symlinks.  */
+	  if (S_ISLNK (sbuf->st_mode) && x->interactive != RMI_ALWAYS)
 	    return RM_OK;
-	  write_protected = false;
+
+	  if (S_ISDIR (sbuf->st_mode) && !x->recursive)
+	    write_protected = EISDIR;
+	}
+
+      char const *quoted_name = quote (full_filename (filename));
+
+      if (0 < write_protected)
+	{
+	  error (0, write_protected, _("cannot remove %s"), quoted_name);
+	  return RM_ERROR;
 	}
 
       /* Issue the prompt.  */
-      {
-	char const *quoted_name = quote (full_filename (filename));
-
-	/* FIXME: use a variant of error (instead of fprintf) that doesn't
-	   append a newline.  Then we won't have to declare program_name in
-	   this file.  */
-	if (S_ISDIR (sbuf->st_mode)
-	    && x->recursive
-	    && mode == PA_DESCEND_INTO_DIR
-	    && ((*is_empty = (is_empty_dir (fd_cwd, filename) ? T_YES : T_NO))
-		== T_NO))
+      /* FIXME: use a variant of error (instead of fprintf) that doesn't
+	 append a newline.  Then we won't have to declare program_name in
+	 this file.  */
+      if (S_ISDIR (sbuf->st_mode)
+	  && x->recursive
+	  && mode == PA_DESCEND_INTO_DIR
+	  && ((*is_empty = (is_empty_dir (fd_cwd, filename) ? T_YES : T_NO))
+	      == T_NO))
+	fprintf (stderr,
+		 (write_protected
+		  ? _("%s: descend into write-protected directory %s? ")
+		  : _("%s: descend into directory %s? ")),
+		 program_name, quoted_name);
+      else
+	{
+	  /* TRANSLATORS: You may find it more convenient to translate
+	     the equivalent of _("%s: remove %s (write-protected) %s? ").
+	     It should avoid grammatical problems with the output
+	     of file_type.  */
 	  fprintf (stderr,
 		   (write_protected
-		    ? _("%s: descend into write-protected directory %s? ")
-		    : _("%s: descend into directory %s? ")),
-		   program_name, quoted_name);
-	else
-	  {
-	    /* TRANSLATORS: You may find it more convenient to translate
-	       the equivalent of _("%s: remove %s (write-protected) %s? ").
-	       It should avoid grammatical problems with the output
-	       of file_type.  */
-	    fprintf (stderr,
-		     (write_protected
-		      ? _("%s: remove write-protected %s %s? ")
-		      : _("%s: remove %s %s? ")),
-		     program_name, file_type (sbuf), quoted_name);
-	  }
+		    ? _("%s: remove write-protected %s %s? ")
+		    : _("%s: remove %s %s? ")),
+		   program_name, file_type (sbuf), quoted_name);
+	}
 
-	if (!yesno ())
-	  return RM_USER_DECLINED;
-      }
+      if (!yesno ())
+	return RM_USER_DECLINED;
     }
   return RM_OK;
 }
