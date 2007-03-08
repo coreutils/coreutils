@@ -1,5 +1,7 @@
 2007-03-08  Jim Meyering  <jim@meyering.net>
 
+	* bootstrap: Run libtool, if necessary.
+
 	Make bootstrap a little more general.
 	* bootstrap (build_aux): Factor out/use this definition.
 	Formally require a "AC_CONFIG_AUX_DIR($build_aux)" line in configure.ac.

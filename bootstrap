@@ -478,11 +478,17 @@ rm -fr $bt $bt2 || exit
 # Reconfigure, getting other files.
 
 for command in \
+  libtool \
   'aclocal --force -I m4' \
   'autoconf --force' \
   'autoheader --force' \
   'automake --add-missing --copy --force-missing';
 do
+  if test "$command" = libtool; then
+    grep '^[	 ]*AM_PROG_LIBTOOL\>' configure.ac >/dev/null ||
+      continue
+    command='libtoolize -c -f'
+  fi
   echo "$0: $command ..."
   $command || exit
 done
