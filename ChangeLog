@@ -1,3 +1,7 @@
+2007-03-08  Jim Meyering  <jim@meyering.net>
+
+	* src/c99-to-c89.diff: Reflect the new c99'ism, update offsets.
+
 2007-03-08  Paul Eggert  <eggert@cs.ucla.edu>
 
 	rm without -f: give a better diagnostic when euidaccess fails.
