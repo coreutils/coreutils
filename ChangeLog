@@ -1,5 +1,9 @@
 2007-03-08  Jim Meyering  <jim@meyering.net>
 
+	Generalize a few more cvs-isms.
+	* bootstrap (checkout_only_file): Rename from CVS_only_file.
+	Change comments and diagnostics not to say "CVS".
+
 	* bootstrap: Run libtool, if necessary.
 
 	Make bootstrap a little more general.

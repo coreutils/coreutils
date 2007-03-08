@@ -1,6 +1,6 @@
 #! /bin/sh
 
-# Bootstrap this package from CVS.
+# Bootstrap this package from checked-out sources.
 
 # Copyright (C) 2003, 2004, 2005, 2006, 2007 Free Software Foundation, Inc.
 
@@ -49,8 +49,8 @@ Options:
  --force                  Attempt to bootstrap even if the sources seem
                           not to have been checked out.
  --skip-po                Do not download po files.
- --cvs-user=USERNAME      Set the CVS username to be used when accessing
-                          the gnulib repository.
+ --cvs-user=USERNAME      Set the username to use when checking out
+                          sources from the gnulib repository.
 
 If the file .bootstrap.conf exists in the current working directory, its
 contents are read as shell variables to configure the bootstrap.
@@ -118,7 +118,7 @@ excluded_files=
 
 # File that should exist in the top directory of a checked out hierarchy,
 # but not in a distribution tarball.
-CVS_only_file=README-hacking
+checkout_only_file=README-hacking
 
 # Whether to use copies instead of symlinks.
 copy=false
@@ -143,7 +143,7 @@ do
   --skip-po)
     SKIP_PO=t;;
   --force)
-    CVS_only_file=;;
+    checkout_only_file=;;
   --copy)
     copy=true;;
   *)
@@ -152,7 +152,7 @@ do
   esac
 done
 
-if test -n "$CVS_only_file" && test ! -r "$CVS_only_file"; then
+if test -n "$checkout_only_file" && test ! -r "$checkout_only_file"; then
   echo "$0: Bootstrapping from a non-checked-out distribution is risky." >&2
   exit 1
 fi
@@ -183,7 +183,7 @@ if test ! -d $build_aux; then
   done
 fi
 
-echo "$0: Bootstrapping CVS $package..."
+echo "$0: Bootstrapping from checked-out $package sources..."
 
 cleanup_gnulib() {
   status=$?
