@@ -1,3 +1,9 @@
+printf:
+  Now that gnulib supports *printf("%a"), import one of the
+  *printf-posix modules so that printf(1) will support %a even on
+  platforms where the native *printf(3) is deficient.
+  Suggestion form Eric Blake.
+
 strip: add an option to specify the program used to strip binaries.
   suggestion from Karl Berry
 
