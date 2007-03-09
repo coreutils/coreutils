@@ -1,3 +1,13 @@
+2007-03-09  Jim Meyering  <jim@meyering.net>
+
+	Avoid test failures on Darwin 7.9.0 (MacOS X 10.3.9)
+	* tests/chgrp/basic: Don't let failure by chgrp to set the
+	group of a symlink make this test fail.  Do give a diagnostic.
+	In the chgrp-no-change-ctime test, add darwin7.9.0 as another
+	known-failing system.
+	When failing on some other system, print $host_triplet, too.
+	Reported by Peter Fales.
+
 2007-03-08  Jim Meyering  <jim@meyering.net>
 
 	* src/c99-to-c89.diff: Reflect the new c99'ism, update offsets.
