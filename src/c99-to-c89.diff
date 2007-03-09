@@ -32,7 +32,7 @@ index 4728bdd..7477da5 100644
      hash_free (top->unremovable);
    obstack_blank (&ds->Active_dir, -(int) sizeof (struct AD_ent));
 @@ -815,6 +817,7 @@ prompt (int fd_cwd, Dirstack_state const *ds, char const *filename,
- 
+
    if (write_protected || x->interactive == RMI_ALWAYS)
      {
 +      char const *quoted_name = quote (full_filename (filename));
@@ -42,7 +42,7 @@ index 4728bdd..7477da5 100644
 @@ -832,8 +835,6 @@ prompt (int fd_cwd, Dirstack_state const *ds, char const *filename,
  	    write_protected = EISDIR;
  	}
- 
+
 -      char const *quoted_name = quote (full_filename (filename));
 -
        if (0 < write_protected)
@@ -65,7 +65,7 @@ index 4728bdd..7477da5 100644
    if (status == RM_NONEMPTY_DIR)
      {
 @@ -1525,6 +1528,8 @@ rm_1 (Dirstack_state *ds, char const *filename,
- 
+
    ds_clear (ds);
    return status;
 +  }
