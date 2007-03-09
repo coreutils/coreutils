@@ -558,6 +558,10 @@
 	Use reap_some.
 	(avoid_trashing_input, merge, sort, main): Adapt to mergefps.
 
+	The idea of compressing sorts temporary files was first
+	suggested/implemented by Jay Soffian in 1998, and again
+	by Charles Randall in 2001.
+
 2007-01-20  Jim Meyering  <jim@meyering.net>
 
 	* tests/misc/pwd-long: Work properly even when run from the
