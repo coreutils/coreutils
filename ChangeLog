@@ -6,6 +6,7 @@
 	In the chgrp-no-change-ctime test, add darwin7.9.0 as another
 	known-failing system.
 	When failing on some other system, print $host_triplet, too.
+	Also avoid test failures on Darwin 8.8.x (MacOS X 10.4).
 	Reported by Peter Fales.
 
 2007-03-08  Jim Meyering  <jim@meyering.net>
