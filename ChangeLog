@@ -1,3 +1,7 @@
+2007-03-10  Jim Meyering  <jim@meyering.net>
+
+	* Makefile.maint (po-check): Exclude c99-to-c89.diff.
+
 2007-03-09  Jim Meyering  <jim@meyering.net>
 
 	Avoid test failures on Darwin 7.9.0 (MacOS X 10.3.9)
