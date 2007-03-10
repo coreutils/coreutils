@@ -1,5 +1,11 @@
 2007-03-10  Jim Meyering  <jim@meyering.net>
 
+	Try to fix today's NFS-related failure: Treat ESTALE like EACCES.
+	* gl/lib/savewd.c: Copy this file from gnulib, then change
+	"errno != EACCES" to (errno != EACCES && errno != ESTALE).
+	The symptom was this failure in tests/install/basic-1:
+	ginstall: cannot create directory `rel/a': Stale NFS file handle
+
 	The preceding change solved part of the problem.  Now ginstall fails.
 	* tests/install/basic-1: Temporarily, don't redirect ginstall's
 	stderr to /dev/null, so I can see why the NFS autobuilder's NFS test
