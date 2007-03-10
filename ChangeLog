@@ -1,5 +1,10 @@
 2007-03-10  Jim Meyering  <jim@meyering.net>
 
+	The preceding change solved part of the problem.  Now ginstall fails.
+	* tests/install/basic-1: Temporarily, don't redirect ginstall's
+	stderr to /dev/null, so I can see why the NFS autobuilder's NFS test
+	is failing.
+
 	* tests/install/basic-1: When setting up an unreadable "." in an
 	inaccessible parent, make the parent inaccessible *after* making "."
 	unreadable.  Otherwise, running "chmod a-r ." in an already-

@@ -131,7 +131,7 @@ test -d xx/rel && fail=1
 # inaccessible parent.  coreutils 5.97 fails this test.
 mkdir -p sub1/d || fail=1
 (cd sub1/d && chmod a-r . && chmod a-rx .. &&
- ginstall -d "$abs/xx/zz" rel/a rel/b 2> /dev/null) || fail=1
+ ginstall -d "$abs/xx/zz" rel/a rel/b) || fail=1
 chmod 755 sub1 sub1/d || fail=1
 test -d xx/zz || fail=1
 test -d sub1/d/rel/a || fail=1
