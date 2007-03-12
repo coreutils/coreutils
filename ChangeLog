@@ -1,3 +1,9 @@
+2007-03-12  Jim Meyering  <jim@meyering.net>
+
+	Make bootstrap.conf a tiny bit more generic.
+	* bootstrap.conf (XGETTEXT_OPTIONS): Exclude gettext-related .m4
+	files when e.g., AM_GNU_GETTEXT([external] appears in configure.ac.
+
 2007-03-10  Jim Meyering  <jim@meyering.net>
 
 	Try to fix today's NFS-related failure: Treat ESTALE like EACCES.
