@@ -265,7 +265,7 @@ static struct symbol_value const flags[] =
   {"direct",	O_DIRECT},
   {"directory",	O_DIRECTORY},
   {"dsync",	O_DSYNC},
-  {"noatime",	HAVE_WORKING_O_NOATIME ? O_NOATIME : 0},
+  {"noatime",	O_NOATIME},
   {"noctty",	O_NOCTTY},
   {"nofollow",	HAVE_WORKING_O_NOFOLLOW ? O_NOFOLLOW : 0},
   {"nolinks",	O_NOLINKS},
@@ -452,7 +452,7 @@ Each CONV symbol may be:\n\
       fputs (_("\
   noerror   continue after read errors\n\
   sync      pad every input block with NULs to ibs-size; when used\n\
-              with block or unblock, pad with spaces rather than NULs\n\
+            with block or unblock, pad with spaces rather than NULs\n\
   fdatasync  physically write output file data before finishing\n\
   fsync     likewise, but also write metadata\n\
 "), stdout);
@@ -472,7 +472,7 @@ Each FLAG symbol may be:\n\
 	fputs (_("  sync      likewise, but also for metadata\n"), stdout);
       if (O_NONBLOCK)
 	fputs (_("  nonblock  use non-blocking I/O\n"), stdout);
-      if (HAVE_WORKING_O_NOATIME)
+      if (O_NOATIME)
 	fputs (_("  noatime   do not update access time\n"), stdout);
       if (O_NOCTTY)
 	fputs (_("  noctty    do not assign controlling terminal from file\n"),

@@ -1,5 +1,5 @@
 /* printf - format and print data
-   Copyright (C) 1990-2006 Free Software Foundation, Inc.
+   Copyright (C) 1990-2007 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -129,7 +129,7 @@ FORMAT controls the output as in C printf.  Interpreted sequences are:\n\
       fputs (_("\
   %%      a single %\n\
   %b      ARGUMENT as a string with `\\' escapes interpreted,\n\
-            except that octal escapes are of the form \\0 or \\0NNN\n\
+          except that octal escapes are of the form \\0 or \\0NNN\n\
 \n\
 and all C format specifications ending with one of diouxXfeEgGcs, with\n\
 ARGUMENTs converted to proper type first.  Variable widths are handled.\n\

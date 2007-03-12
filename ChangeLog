@@ -1,3 +1,428 @@
+2007-03-12  Jim Meyering  <jim@meyering.net>
+
+	Make bootstrap.conf a tiny bit more generic.
+	* bootstrap.conf (XGETTEXT_OPTIONS): Exclude gettext-related .m4
+	files when e.g., AM_GNU_GETTEXT([external] appears in configure.ac.
+
+2007-03-10  Jim Meyering  <jim@meyering.net>
+
+	Try to fix today's NFS-related failure: Treat ESTALE like EACCES.
+	* gl/lib/savewd.c: Copy this file from gnulib, then change
+	"errno != EACCES" to (errno != EACCES && errno != ESTALE).
+	The symptom was this failure in tests/install/basic-1:
+	ginstall: cannot create directory `rel/a': Stale NFS file handle
+
+	The preceding change solved part of the problem.  Now ginstall fails.
+	* tests/install/basic-1: Temporarily, don't redirect ginstall's
+	stderr to /dev/null, so I can see why the NFS autobuilder's NFS test
+	is failing.
+
+	* tests/install/basic-1: When setting up an unreadable "." in an
+	inaccessible parent, make the parent inaccessible *after* making "."
+	unreadable.  Otherwise, running "chmod a-r ." in an already-
+	inaccessible parent would fail on NFS with "Stale NFS file handle".
+	Reported by Bob Proulx.
+
+	* Makefile.maint (po-check): Exclude c99-to-c89.diff.
+
+2007-03-09  Jim Meyering  <jim@meyering.net>
+
+	Avoid test failures on Darwin 7.9.0 (MacOS X 10.3.9)
+	* tests/chgrp/basic: Don't let failure by chgrp to set the
+	group of a symlink make this test fail.  Do give a diagnostic.
+	In the chgrp-no-change-ctime test, add darwin7.9.0 as another
+	known-failing system.
+	When failing on some other system, print $host_triplet, too.
+	Also avoid test failures on Darwin 8.8.x (MacOS X 10.4).
+	Reported by Peter Fales.
+
+2007-03-08  Jim Meyering  <jim@meyering.net>
+
+	* src/c99-to-c89.diff: Reflect the new c99'ism, update offsets.
+
+2007-03-08  Paul Eggert  <eggert@cs.ucla.edu>
+
+	rm without -f: give a better diagnostic when euidaccess fails.
+	* src/remove.c (write_protected_non_symlink): Return int, not bool,
+	so that we can indicate failure too (as a postive error number).
+	(prompt): If write_protected_non_symlink fails, report that error
+	number and fail rather than charging ahead and removing the dubious
+	entry.  Redo the logic of printing a diagnostic so that we need to
+	invoke quote (full_filename (...)) only once.  More details at:
+	<http://thread.gmane.org/gmane.comp.gnu.coreutils.bugs/9952/focus=9996>
+
+2007-03-08  Jim Meyering  <jim@meyering.net>
+
+	Generalize a few more cvs-isms.
+	* bootstrap (checkout_only_file): Rename from CVS_only_file.
+	Change comments and diagnostics not to say "CVS".
+
+	* bootstrap: Run libtool, if necessary.
+
+	Make bootstrap a little more general.
+	* bootstrap (build_aux): Factor out/use this definition.
+	Formally require a "AC_CONFIG_AUX_DIR($build_aux)" line in configure.ac.
+	(insert_sorted_if_absent): Move function definition "up", to
+	precede new first use.
+	If $build_aux/ doesn't exist initially, create it, and
+	mark it as ignored.
+
+2007-03-03  Andrew Church  <achurch@achurch.org>  (tiny change)
+	    Paul Eggert  <eggert@cs.ucla.edu>
+
+	Fix a bug: cp -x would fail to set mount point permissions.
+	* NEWS: mention cp -x bug fix
+	* src/copy.c (copy_internal): Don't return immediately after
+	copying a mount point that we do not intend to recurse under.
+	Based on a patch by Andrew Church.
+
+2007-03-03  Jim Meyering  <jim@meyering.net>
+
+	pwd-unreadable-parent: Skip test on ia64/Linux, too.
+	* tests/misc/pwd-unreadable-parent: Also skip when $REPLACE_GETCWD.
+	Reported by Bob Proulx.
+
+2007-03-02  Jim Meyering  <jim@meyering.net>
+
+	pwd-unreadable-parent: Skip test on non-Linux/GNU systems.
+	* tests/misc/pwd-unreadable-parent: Rather than trying to decide
+	whether this test has a chance of succeeding, run it only when
+	$(host_os) is linux-gnu.  It was failing on powerpc-apple-darwin8.8.0
+	* tests/misc/Makefile.am (TESTS_ENVIRONMENT): Add host_os=$(host_os).
+
+	* tests/misc/pwd-long: Also allow "+" in $PWD.
+
+	Remove another coreutils-ism.  Formatting cleanup.
+	* Makefile.maint (my-distcheck): Update an outdated comment.
+	(emit_upload_commands): Use $(PACKAGE) rather than "coreutils".
+	(my-distcheck): Skip the c99/c89 check if there's no such .diff file.
+
+2007-03-01  Jim Meyering  <jim@meyering.net>
+
+	* Makefile.maint (warn_cflags): Hoist, adding "-Dlint -O".
+	(my-distcheck): Use the new variable, instead of too-long literal.
+
+	Make "make syntax-check" rules less coreutils-specific.
+	* Makefile.maint (sc_cast_of_x_alloc_return_value): Use CVS_LIST_EXCEPT.
+	(sc_cast_of_alloca_return_value): Likewise.
+	(sc_root_tests): Do nothing if there is no check-root target
+	in tests/Makefile.am.
+
+	Run the writable-files check only for release-building targets.
+	* Makefile.maint (local-checks-available): Remove writable-files.
+	(alpha beta major): Put it here, instead.
+
+	"make syntax-check" now runs only Makefile.cfg-selected tests
+	* Makefile.maint (syntax-check-rules): Hoist this definition so that
+	it precedes the indirect use in the definition of $(local-check).
+	(local-check): Use :=, not just "=".
+	(syntax-check): Depend on $(local-check), not $(syntax-check-rules).
+
+2007-02-28  Bruno Haible  <bruno@clisp.org>
+
+	* bootstrap.conf (gnulib_modules): Replace xreadlink with
+	xreadlink-with-size. Add xreadlink.
+	* src/copy.c (copy_internal): Update.
+	* src/ls.c (is_directory): Update.
+	* src/stat.c (print_stat): Update.
+	* src/readlink.c (main): Use the one-argument xreadlink function.
+
+2007-02-28  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* doc/coreutils.texi (Common options): --si outputs "M", not "MB".
+	Problem reported by Philip Rowlands in
+	<http://lists.gnu.org/archive/html/bug-coreutils/2007-02/msg00283.html>.
+
+2007-02-28  Jim Meyering  <jim@meyering.net>
+
+	* .x-sc_file_system: Add the new test, tests/misc/df-P, to this
+	list of exceptions, for the "make distcheck" sc_file_system rule.
+
+	* Makefile.maint (gnulib_snapshot_date): Remove now-unused definition.
+
+2007-02-27  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Make df -P immune to effects of e.g., the BLOCK_SIZE envvar.
+	* NEWS: With -P, the default block size and output format is not
+	affected by DF_BLOCK_SIZE, BLOCK_SIZE, or BLOCKSIZE.
+	* src/df.c (main): Implement this.
+
+2007-02-27  Jim Meyering  <jim@meyering.net>
+
+	Add a test for the above.
+	* tests/misc/df-P: New file.
+	* tests/misc/Makefile.am (TESTS): Add df-P.
+
+2007-02-25  Jim Meyering  <jim@meyering.net>
+
+	* Makefile.maint (announcement): Adjust so that it works with
+	announce-gen's --gnulib-snapshot-time-stamp option.
+	Indent one of the command lines using TAB, not 8 spaces.
+
+	Post-release version change.
+	* NEWS: Add a line for 6.8+.
+	* configure.ac (AC_INIT): Set new version string.
+
+2007-02-24  Jim Meyering  <jim@meyering.net>
+
+	Version 6.8.
+	* NEWS: Record release date and new version number.
+	* configure.ac (AC_INIT): New version number.
+
+	Don't skip this test on new-enough Linux/GNU systems.
+	* tests/misc/pwd-unreadable-parent: Test $REPLACE_GETCWD = 0,
+	rather than for __GETCWD_PREFIX in config.h (the latter is no
+	longer defined, ever, due to gnulib changes).
+	* tests/misc/Makefile.am (TESTS_ENVIRONMENT): Define REPLACE_GETCWD.
+
+	Remove the "gnits" option; it prohibits my using "+" as a version
+	string suffix, and all it does (beyond the default "gnu" option)
+	is to _require_ the THANKS file.
+	* configure.ac (AM_INIT_AUTOMAKE): Remove it.
+
+	Remove all AUTOMAKE_OPTIONS settings in Makefile.am files.
+	* tests/chgrp/Makefile.am, tests/chmod/Makefile.am:
+	* tests/chown/Makefile.am, tests/cp/Makefile.am:
+	* tests/du/Makefile.am, tests/expr/Makefile.am:
+	* tests/factor/Makefile.am, tests/general/Makefile.am:
+	* tests/install/Makefile.am, tests/ln/Makefile.am:
+	* tests/ls/Makefile.am, tests/mkdir/Makefile.am:
+	* tests/mv/Makefile.am, tests/readlink/Makefile.am:
+	* tests/rm/Makefile.am, tests/rmdir/Makefile.am:
+	* tests/seq/Makefile.am, tests/stty/Makefile.am:
+	* tests/tee/Makefile.am, tests/touch/Makefile.am:
+
+	* README: Document the OSF/1 4.0d build failure and work-around.
+	Reported by Bruno Haible.
+
+	* NEWS: Use a simple "+" suffix to denote pre-release, not "-dirty".
+	Nicer connotations.
+	* configure.ac: Use 6.7+, not 6.7-dirty.
+
+2007-02-24  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* NEWS: sort no longer compresses temporaries by default.
+	* bootstrap.conf: Remove findprog.
+	* doc/coreutils.texi (sort invocation): The default is to not
+	compress.  Don't treat "" specially.
+	* src/sort.c: Don't include findprog.h.
+	(create_temp): Compress only if the user specified --compress-program.
+	* tests/misc/sort-compress: Adjusts tests to match new behavior.
+
+2007-02-24  Jim Meyering  <jim@meyering.net>
+
+	Avoid a shell syntax error, when building with an inadequate Perl.
+	* man/Makefile.am (.x.1): Add quotes around $(PERL) in case, since
+	it can expand to "/.../missing perl".
+
+	* man/Makefile.am (.x.1): Warn when unable to update a man page.
+	Suggestion from Bruno Haible.
+
+2007-02-23  Bruno Haible  <bruno@clisp.org>
+
+	Handle better the combination of old Perl and a pre-c99 compiler.
+	* man/Makefile.am (.x.1): If the autoconf test has determined that
+	perl is missing or not a sufficient version, do nothing.
+
+	* tests/readlink/can-e: Put the closing double-quote at the end of a
+	backquoted word, not in the middle. Works around a bug in sh on
+	OSF/1 4.0d.
+	* tests/readlink/can-f: Likewise.
+	* tests/readlink/can-m: Likewise.
+
+	* tests/du/slink: Skip the test if executing on an nfsv3 file system.
+	This avoids a test failure at least on OSF/1 4.0d.
+
+2007-02-23  Jim Meyering  <jim@meyering.net>
+
+	* src/date.c (usage): Split a diagnostic that had grown to be
+	longer than the C89 maximum of 509 bytes.
+
+2007-02-23  Ed Santiago <ed@edsantiago.com>
+
+	* src/date.c (usage): Mention that --rfc-3339 uses space, not 'T',
+	for a separator.  Include sample RFC 2822 and 3339 output.
+
+2007-02-23  Jim Meyering  <jim@meyering.net>
+
+	With -Dlint, make shuf free all heap-allocated storage.
+	* src/shuf.c (main): Move declaration of input_lines to
+	function scope, and initialize to NULL, so we can free it.
+	[lint]: Free all malloc'd memory.
+	* tests/misc/shuf: Also test shuf's -e and -i options.
+
+2007-02-22  Jim Meyering  <jim@meyering.net>
+
+	Merge in a change from some other incarnation of this file (gzip?)
+	* bootstrap (gnulib_tool): Skip get_translations if there is no po/ dir.
+
+	Adjust preceding change not to perform an unaligned access.
+	* src/copy.c (copy_reg): Undo previous change.  Instead, make
+	it clearer that we're using a single-byte sentinel, and
+	[lint]: Initialize sizeof (uintptr_t) - 1 bytes after the sentinel.
+	Reported by Andreas Schwab.
+
+	Placate valgrind, wrt ./cp --sparse=always
+	* src/copy.c (copy_reg): Place the sentinel by setting a
+	full word's worth of bits, not just a single byte's worth.
+	This avoids a harmless (but distracting) case of memory being
+	used-uninitialized.
+
+2007-02-21  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Honor dd's noatime flag if possible, even if not supported on build fs
+	* doc/coreutils.texi (dd invocation): Warn that noatime might not be
+	reliable.
+	* src/dd.c (flags, usage): Look at O_NOATIME, not
+	HAVE_WORKING_O_NOATIME, to decide whether to support the noatime
+	flag, so that dd attempts O_NOATIME even if the build file system
+	does not support it.  Problem reported by Jim Meyering today in
+	bug-coreutils.
+	* tests/dd/misc: Generate a warning, not a failure, if noatime
+	exists but fails.
+
+2007-02-21  Jim Meyering  <jim@meyering.net>
+
+	* tests/misc/date: Remove vestigial use of Data::Dumper.
+
+2007-02-20  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/copy.c (cached_umask): Cast -1 to mode_t to avoid a warning
+	about out-of-range initializer with Sun C 5.8.
+
+2007-02-20  Jim Meyering  <jim@meyering.net>
+
+	* bootstrap (CVS_only_file): Use README-hacking.
+
+	Now that we use GIT, not cvs, rename README-cvs.
+	* README-hacking: Renamed from...
+	Update to reflect that we now use git.
+
+	* README-cvs: ...this.
+
+	* src/env.c (main): When invoked with no arguments (i.e. when printing
+	the environment), use a local variable to iterate through the global
+	"environ" array, rather than "environ" itself.  This is solely to
+	avoid changing the environment for an LD_PRELOAD-substituted "puts"
+	or "exit" function.  Tiny patch by Harvey Eneman.  See
+	<http://thread.gmane.org/gmane.comp.gnu.coreutils.bugs/9735>.
+	* THANKS: Update.
+
+	* bootstrap: Move definitions of temporary directory names and the
+	new bt_regex "up" to precede all uses, so it's clearer what their
+	scope is.  Also, use [.], rather than \\., since the former works
+	even if eval'd.
+
+	* bootstrap: Remove occurrences of $bt (._bootmp) from lib/Makefile.
+	Based on the bison 2007-02-19 change by Joel E. Denny.
+
+2007-02-19  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* NEWS: sort now uses a --compress-program option rather than
+	an environment variable.
+	* doc/coreutils.texi (sort invocation): Document this.
+	* src/sort.c (usage): Likewise.
+	(COMPRESS_PROGRAM_OPTION): New const.
+	(long_options, create_temp, main): Support new option.
+	* tests/misc/sort-compress: Test it.
+
+2007-02-19  Jim Meyering  <jim@meyering.net>
+
+	* bootstrap: Fix typo s/dowloading/downloading/ in --help output.
+
+2007-02-18  Jim Meyering  <jim@meyering.net>
+
+	* src/system.h: Don't include exit.h, now that it's subsumed
+	by the gnulib-generated stdlib.h.
+
+	* tests/rm/fail-eacces: Skip this test when running as root.
+	Reported by Matthew Woehlke.
+
+	* bootstrap: Use "._bootmp" as the temporary directory name,
+	not ".#bootmp".  The latter's "#" caused trouble with the new,
+	gnulib-added "LINK_WARNING_H = $(top_srcdir)/.#bootmp/..." line.
+
+2007-02-14  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* bootstrap.conf (gnulib_modules): Add c-strcase.  Remove strcase.
+	* src/dircolors.c: Include c-strcase.h.
+	(dc_parse_stream): Use c_strcasecmp rather than
+	strcasecmp to avoid unreliable results in locales like Turkish
+	where strcasecmp is incompatible with the C locale.
+
+2007-02-13  Jim Meyering  <jim@meyering.net>
+
+	Also check for and print stderr output, in case a program fails.
+	* tests/misc/tty-eof: Occasionally (not reproducible), this
+	test would fail, with one or more programs exiting nonzero, e.g.,
+	tty-eof: sha224sum exited with status 1 (expected 0)
+	Now, maybe we'll get a clue, the next time that happens.
+
+2007-02-12  Jim Meyering  <jim@meyering.net>
+
+	* .x-sc_useless_cpp_parens: Ignore a false-positive in a shell script.
+
+	* tests/misc/pwd-unreadable-parent: Skip the test if we're
+	definitely using the replacement.
+	* tests/misc/Makefile.am (TESTS_ENVIRONMENT): Define CONFIG_HEADER.
+
+2007-02-10  Jim Meyering  <jim@meyering.net>
+
+	Remove excess leading spaces that would make help2man misbehave.
+	* src/printf.c (usage): Remove excess spaces on 2nd line of %b desc.
+	* src/nl.c (usage): Remove excess spaces on 2nd line of pBRE desc.
+	* src/dd.c (usage): Remove excess spaces on 2nd line of sync desc.
+	* src/date.c (usage): Use two spaces after each optional flag, not one.
+	Reported by Thomas Huriaux in <http://bugs.debian.org/410407>.
+
+	* Makefile.maint (longopt_re): Relax the regexp, making square
+	brackets optional, so it matches the newly reported violations, too.
+
+	* src/csplit.c (usage): Use two spaces (not one) to separate
+	each option string from its description, so help2man formats
+	the derived man page properly.  Reported by Thomas Huriaux in
+	<http://bugs.debian.org/410407>.
+	* src/df.c (usage): Likewise.
+	* src/du.c (usage): Likewise.
+	* src/install.c (usage): Likewise.
+	* src/ls.c (usage): Likewise.
+
+2007-02-03  Jim Meyering  <jim@meyering.net>
+
+	Test for today's gnulib/lib/getcwd.c fix affecting pwd and readlink
+	* NEWS: Mention the bug fix.
+	* tests/misc/pwd-unreadable-parent: New file.
+	* tests/misc/Makefile.am (TESTS): Ad pwd-unreadable-parent.
+
+2007-02-02  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* NEWS: Document fix for cp --preserve=mode.
+	* src/copy.c (copy_internal): Omit the group- or other-writeable
+	permissions when creating a directory, to avoid a race condition
+	if the special mode bits aren't right just after the directory is
+	created.
+	* src/cp.c (make_dir_parents_private): Likewise.
+	* tests/cp/parent-perm-race: Test for the "cp --preserve=mode"
+	race fix in copy.c.
+
+	* NEWS: Document fix for cp --parents.
+	* src/cp.c (make_dir_parents_private): Report the error sooner with
+	"cp --parents DIR/FILE DEST" when DIR is a non-directory, thus not
+	creating the directory, DEST/DIR.
+	* tests/cp/cp-parents: Test for the non-race-condition bug fixed
+	by the above change.
+
+2007-02-02  Jim Meyering  <jim@meyering.net>
+
+	* src/nl.c (proc_text): Use "NULL", not "(struct re_registers *) 0".
+
+	* src/c99-to-c89.diff: Make shred.c Index: and a/b prefixes
+	consistent, so this can be applied with patch -p0.
+	Reported by Matthew Woehlke.
+
+	* Makefile.maint (patch-check): Use patch with its -p2 option,
+	since that makes this check slightly more strict.
+
 2007-01-29  Jim Meyering  <jim@meyering.net>
 
 	Plug a leak in ls.
@@ -159,6 +584,10 @@
 	(sort): Call create_temp instead of create_temp_file.
 	Use reap_some.
 	(avoid_trashing_input, merge, sort, main): Adapt to mergefps.
+
+	The idea of compressing sorts temporary files was first
+	suggested/implemented by Jay Soffian in 1998, and again
+	by Charles Randall in 2001.
 
 2007-01-20  Jim Meyering  <jim@meyering.net>
 

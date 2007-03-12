@@ -1,5 +1,5 @@
 /* nl -- number lines of files
-   Copyright (C) 89, 92, 1995-2006 Free Software Foundation, Inc.
+   Copyright (C) 89, 92, 1995-2007 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -217,7 +217,7 @@ second character implies :.  Type \\\\ for \\.  STYLE is one of:\n\
   t         number only nonempty lines\n\
   n         number no lines\n\
   pBRE      number only lines that contain a match for the basic regular\n\
-              expression, BRE\n\
+            expression, BRE\n\
 \n\
 FORMAT is one of:\n\
 \n\
@@ -348,7 +348,7 @@ proc_text (void)
       break;
     case 'p':
       switch (re_search (current_regex, line_buf.buffer, line_buf.length - 1,
-			 0, line_buf.length - 1, (struct re_registers *) 0))
+			 0, line_buf.length - 1, NULL))
 	{
 	case -2:
 	  error (EXIT_FAILURE, errno, _("error in regular expression search"));

@@ -29,6 +29,8 @@ if test "$VERBOSE" = yes; then
   dd --version
 fi
 
+fail=0
+warn=0
 test_failure=0
 echo data > $tmp_in || test_failure=1
 ln $tmp_in $tmp_in2 || test_failure=1
@@ -63,8 +65,15 @@ sleep 1
 if dd iflag=noatime if=$tmp_in of=$tmp_out 2> /dev/null; then
   new_ls=`ls -u --full-time $tmp_in`
   if test "x$old_ls" != "x$new_ls"; then
-    echo "dd iflag=noatime updated atime; O_NOATIME bug in your kernel?" >&2
-    fail=1
+    cat >&2 <<EOF
+=================================================================
+$0: WARNING!!!
+This operating system has the O_NOATIME file status flag,
+but it is silently ignored in some cases.
+Therefore, dd options like iflag=noatime may be silently ignored.
+=================================================================
+EOF
+    warn=77
   fi
 fi
 
@@ -77,6 +86,7 @@ fi
 outbytes=`echo x | dd bs=3 ibs=10 obs=10 conv=sync 2>/dev/null | wc -c`
 test "$outbytes" -eq 3 || fail=1
 
-rm -f $tmp_in $tmp_in2 $tmp_sym $tmp_out
+rm -f $tmp_in $tmp_in2 $tmp_sym $tmp_out || fail=1
 
+test $fail -eq 0 && fail=$warn
 exit $fail

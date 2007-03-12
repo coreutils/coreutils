@@ -1,5 +1,5 @@
 /* du -- summarize disk usage
-   Copyright (C) 1988-1991, 1995-2006 Free Software Foundation, Inc.
+   Copyright (C) 1988-1991, 1995-2007 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -295,7 +295,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
                           fragmentation, indirect blocks, and the like\n\
 "), stdout);
       fputs (_("\
-  -B, --block-size=SIZE use SIZE-byte blocks\n\
+  -B, --block-size=SIZE  use SIZE-byte blocks\n\
   -b, --bytes           equivalent to `--apparent-size --block-size=1'\n\
   -c, --total           produce a grand total\n\
   -D, --dereference-args  dereference FILEs that are symbolic links\n\
@@ -323,7 +323,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (_("\
   -x, --one-file-system  skip directories on different file systems\n\
   -X FILE, --exclude-from=FILE  Exclude files that match any pattern in FILE.\n\
-      --exclude=PATTERN Exclude files that match PATTERN.\n\
+      --exclude=PATTERN  Exclude files that match PATTERN.\n\
       --max-depth=N     print the total for a directory (or file, with --all)\n\
                           only if it is N or fewer levels below the command\n\
                           line argument;  --max-depth=0 is the same as\n\
@@ -334,7 +334,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
                           directory, or any of its subdirectories\n\
       --time=WORD       show time as WORD instead of modification time:\n\
                           atime, access, use, ctime or status\n\
-      --time-style=STYLE show times using style STYLE:\n\
+      --time-style=STYLE  show times using style STYLE:\n\
                           full-iso, long-iso, iso, +FORMAT\n\
                           FORMAT is interpreted like `date'\n\
 "), stdout);

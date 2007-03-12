@@ -19,6 +19,11 @@ backupfile.h
 base64.c
 base64.h
 basename.c
+c-ctype.c
+c-ctype.h
+c-strcase.h
+c-strcasecmp.c
+c-strncasecmp.c
 c-strtod.c
 c-strtod.h
 c-strtold.c
@@ -174,6 +179,7 @@ lstat.h
 malloc.c
 mbchar.c
 mbchar.h
+mbscasecmp.c
 mbswidth.c
 mbswidth.h
 mbuiter.h
@@ -207,6 +213,8 @@ mountlist.h
 mpsort.c
 mpsort.h
 nanosleep.c
+netinet_in.h
+netinet_in_.h
 obstack.c
 obstack.h
 offtostr.c
@@ -292,8 +300,12 @@ stdint.h
 stdint_.h
 stdio--.h
 stdio-safer.h
+stdio.h
+stdio_.h
 stdlib--.h
 stdlib-safer.h
+stdlib.h
+stdlib_.h
 stpcpy.c
 strcasecmp.c
 strcspn.c
@@ -324,6 +336,8 @@ sys_time_.h
 t-fpending
 tempname.c
 tempname.h
+time.h
+time_.h
 time_r.c
 time_r.h
 timespec.h
@@ -368,6 +382,7 @@ xmemcoll.c
 xmemcoll.h
 xnanosleep.c
 xnanosleep.h
+xreadlink-with-size.c
 xreadlink.c
 xreadlink.h
 xstrndup.c

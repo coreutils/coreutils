@@ -1,5 +1,5 @@
 /* cp.c  -- file copying (main routines)
-   Copyright (C) 89, 90, 91, 1995-2006 Free Software Foundation.
+   Copyright (C) 89, 90, 91, 1995-2007 Free Software Foundation.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -415,6 +415,7 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
 	      mode_t src_mode;
 	      mode_t omitted_permissions;
 	      mode_t mkdir_mode;
+	      int src_errno;
 
 	      /* This component does not exist.  We must set
 		 *new_dst and new->mode inside this loop because,
@@ -422,15 +423,28 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
 		 make_dir_parents_private creates only e_dir/../a if
 		 ./b already exists. */
 	      *new_dst = true;
-	      if (XSTAT (x, src, &stats))
+	      src_errno = (XSTAT (x, src, &stats) != 0
+			   ? errno
+			   : S_ISDIR (stats.st_mode)
+			   ? 0
+			   : ENOTDIR);
+	      if (src_errno)
 		{
-		  error (0, errno, _("failed to get attributes of %s"),
+		  error (0, src_errno, _("failed to get attributes of %s"),
 			 quote (src));
 		  return false;
 		}
 	      src_mode = stats.st_mode;
-	      omitted_permissions =
-		x->preserve_ownership ? src_mode & (S_IRWXG | S_IRWXO) : 0;
+
+	      /* If the ownership or special mode bits might change,
+		 omit some permissions at first, so unauthorized users
+		 cannot nip in before the file is ready.  */
+	      omitted_permissions = (src_mode
+				     & (x->preserve_ownership
+					? S_IRWXG | S_IRWXO
+					: x->preserve_mode
+					? S_IWGRP | S_IWOTH
+					: 0));
 
 	      /* POSIX says mkdir's behavior is implementation-defined when
 		 (src_mode & ~S_IRWXUGO) != 0.  However, common practice is

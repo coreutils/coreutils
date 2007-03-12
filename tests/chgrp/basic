@@ -1,8 +1,7 @@
 #!/bin/sh
 # make sure chgrp is reasonable
 
-# Copyright (C) 2000, 2001, 2003, 2004, 2005, 2006 Free Software
-# Foundation, Inc.
+# Copyright (C) 2000-2007 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -79,7 +78,11 @@ test `stat --printf=%g f` = $g1 || fail=1
 # This should not change the group of f.
 chgrp -h $g2 symlink
 test `stat --printf=%g f` = $g1 || fail=1
-test `stat --printf=%g symlink` = $g2 || fail=1
+
+# Don't fail if chgrp failed to set the group of a symlink.
+# Some systems don't support that.
+test `stat --printf=%g symlink` = $g2 ||
+  echo 'info: failed to set group of symlink' 1>&2
 
 chown --from=:$g1 :$g2 f; test `stat --printf=%g f` = $g2 || fail=1
 
@@ -110,15 +113,19 @@ sleep 1
 chgrp $g1 f
 
 # The following no-change chgrp command is supposed to update f's ctime,
-# but on OpenBSD, it appears to be a no-op for some file system types
-# (at least NFS) so g's ctime is more recent.  This is not a big deal;
+# but on OpenBSD and Darwin 7.9.0 and 8.8.0 (aka MacOS X 10.3.9 and 10.4),
+# it appears to be a no-op for some file system types (at least NFS) so g's
+# ctime is more recent.  This is not a big deal;
 # this test works fine when the files are on a local file system (/tmp).
 chgrp '' f
 test "`ls -C -c -t f g`" = 'f  g' || \
   {
     case $host_triplet in
-      *openbsd*) echo ignoring known OpenBSD-specific chgrp failure 1>&2  ;;
-      *)         echo no-change chgrp failed to update ctime 1>&2; fail=1 ;;
+      *openbsd*) echo ignoring known OpenBSD-specific chgrp failure 1>&2 ;;
+      *darwin7.9.*|*darwin8.8.*)
+        echo ignoring known MacOS X-specific chgrp failure 1>&2 ;;
+      *) echo $host_triplet: no-change chgrp failed to update ctime 1>&2;
+	    fail=1 ;;
     esac
   }
 

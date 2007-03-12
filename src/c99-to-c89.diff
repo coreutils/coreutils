@@ -31,7 +31,24 @@ index 4728bdd..7477da5 100644
    if (top->unremovable)
      hash_free (top->unremovable);
    obstack_blank (&ds->Active_dir, -(int) sizeof (struct AD_ent));
-@@ -1481,6 +1483,7 @@ rm_1 (Dirstack_state *ds, char const *fi
+@@ -815,6 +817,7 @@ prompt (int fd_cwd, Dirstack_state const *ds, char const *filename,
+
+   if (write_protected || x->interactive == RMI_ALWAYS)
+     {
++      char const *quoted_name = quote (full_filename (filename));
+       if (write_protected <= 0
+ 	  && cache_fstatat (fd_cwd, filename, sbuf, AT_SYMLINK_NOFOLLOW) != 0)
+ 	{
+@@ -832,8 +835,6 @@ prompt (int fd_cwd, Dirstack_state const *ds, char const *filename,
+ 	    write_protected = EISDIR;
+ 	}
+
+-      char const *quoted_name = quote (full_filename (filename));
+-
+       if (0 < write_protected)
+ 	{
+ 	  error (0, write_protected, _("cannot remove %s"), quoted_name);
+@@ -1487,6 +1488,7 @@ rm_1 (Dirstack_state *ds, char const *filename,
        return RM_ERROR;
      }
 
@@ -39,7 +56,7 @@ index 4728bdd..7477da5 100644
    struct stat st;
    cache_stat_init (&st);
    cycle_check_init (&ds->cycle_check_state);
-@@ -1503,6 +1506,7 @@ rm_1 (Dirstack_state *ds, char const *fi
+@@ -1509,6 +1511,7 @@ rm_1 (Dirstack_state *ds, char const *filename,
    AD_push_initial (ds);
    AD_INIT_OTHER_MEMBERS ();
 
@@ -47,7 +64,7 @@ index 4728bdd..7477da5 100644
    enum RM_status status = remove_entry (AT_FDCWD, ds, filename, &st, x, NULL);
    if (status == RM_NONEMPTY_DIR)
      {
-@@ -1519,6 +1523,8 @@ rm_1 (Dirstack_state *ds, char const *fi
+@@ -1525,6 +1528,8 @@ rm_1 (Dirstack_state *ds, char const *filename,
 
    ds_clear (ds);
    return status;
@@ -83,13 +100,13 @@ index 364a21c..7a24014 100644
 +  }
 +  }
  }
-Index: shred.c
+Index: src/shred.c
 ===================================================================
 RCS file: /fetish/cu/src/shred.c,v
 retrieving revision 1.130
 diff -u -p -r1.130 shred.c
---- shred.c     3 Sep 2006 02:53:16 -0000       1.130
-+++ shred.c     3 Oct 2006 13:48:24 -0000
+--- a/src/shred.c     3 Sep 2006 02:53:16 -0000       1.130
++++ b/src/shred.c     3 Oct 2006 13:48:24 -0000
 @@ -464,7 +464,7 @@ dopass (int fd, char const *qname, off_t
  		     out.  Thus, it shouldn't give up on bad blocks.  This
  		     code works because lim is always a multiple of

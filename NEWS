@@ -1,6 +1,16 @@
 GNU coreutils NEWS                                    -*- outline -*-
 
-* Noteworthy changes in release 6.7-dirty (????-??-??) [stable]
+* Noteworthy changes in release 6.8+ (????-??-??) [not-unstable]
+
+** Bug fixes
+
+  cp -x (--one-file-system) would fail to set mount point permissions
+
+  The default block size and output format for df -P are now unaffected by
+  the DF_BLOCK_SIZE, BLOCK_SIZE, and BLOCKSIZE environment variables.  It
+  is still affected by POSIXLY_CORRECT, though.
+
+* Noteworthy changes in release 6.8 (2007-02-24) [not-unstable]
 
 ** Bug fixes
 
@@ -9,6 +19,16 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   chmod no longer fails in an environment (e.g., a chroot) with openat
   support but with insufficient /proc support.
+
+  "cp --parents F/G D" no longer creates a directory D/F when F is not
+  a directory (and F/G is therefore invalid).
+
+  "cp --preserve=mode" would create directories that briefly had
+  too-generous permissions in some cases.  For example, when copying a
+  directory with permissions 777 the destination directory might
+  temporarily be setgid on some file systems, which would allow other
+  users to create subfiles with the same group as the directory.  Fix
+  similar problems with 'install' and 'mv'.
 
   cut no longer dumps core for usage like "cut -f2- f1 f2" with two or
   more file arguments.  This was due to a double-free bug, introduced
@@ -24,6 +44,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   a reasonable diagnostic.  Before, it would print this:
   "mv: cannot remove `/etc/passwd': Not a directory".
 
+  pwd and "readlink -e ." no longer fail unnecessarily when a parent
+  directory is unreadable.
+
   "rm -rf /etc/passwd" (run by non-root) now prints a diagnostic.
   Before it would print nothing.
 
@@ -31,11 +54,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New features
 
-  By default, sort usually compresses each temporary file it writes.
-  When sorting very large inputs, this can result in sort using far
-  less temporary disk space and in improved performance.
-
-** New features
+  sort's new --compress-program=PROG option specifies a compression
+  program to use when writing and reading temporary files.
+  This can help save both time and disk space when sorting large inputs.
 
   sort accepts the new option -C, which acts like -c except no diagnostic
   is printed.  Its --check option now accepts an optional argument, and

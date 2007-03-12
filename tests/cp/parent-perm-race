@@ -1,7 +1,7 @@
 #!/bin/sh
 # Make sure cp -pR --parents isn't too generous with parent permissions.
 
-# Copyright (C) 2006 Free Software Foundation, Inc.
+# Copyright (C) 2006, 2007 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -32,37 +32,47 @@ framework_failure=0
 mkdir -p $tmp || framework_failure=1
 cd $tmp || framework_failure=1
 
-umask 022
-mkdir -p a d || framework_failure=1
-mkfifo a/fifo || {
-  echo "$0: fifos not supported; skipping this test." 1>&2
-  (exit 77); exit 77
-}
+umask 002
+mkdir mode ownership d || framework_failure=1
+chmod g+s d 2>/dev/null # The cp test is valid either way.
 
-# Copy a fifo's contents.  That way, we can examine d/a's
-# state while cp is running.
-cp -p -R --copy-contents --parents a d &
-cp_pid=$!
+fail=0
 
-(
-  # Now 'cp' is reading the fifo.
-  # Check the permissions of the temporary destination
-  # directory that 'cp' has made.
-  ls -ld d/a >d/ls.out
+for attr in mode ownership
+do
+  mkfifo $attr/fifo || {
+    echo "$0: fifos not supported; skipping this test." 1>&2
+    (exit 77); exit 77
+  }
 
-  # Close the fifo so that "cp" can continue.  But output first,
-  # before exiting, otherwise some shells would optimize away the file
-  # descriptor that holds the fifo open.
-  echo foo
-) >a/fifo
+  # Copy a fifo's contents.  That way, we can examine d/$attr's
+  # state while cp is running.
+  cp --preserve=$attr -R --copy-contents --parents $attr d &
+  cp_pid=$!
 
-case `cat d/ls.out` in
-d???--[-S]--[-S]*)
-  fail=0;;
-*)
-  fail=1;;
-esac
+  (
+    # Now 'cp' is reading the fifo.
+    # Check the permissions of the temporary destination
+    # directory that 'cp' has made.
+    ls -ld d/$attr >d/$attr.ls
 
-wait $cp_pid || fail=1
+    # Close the fifo so that "cp" can continue.  But output first,
+    # before exiting, otherwise some shells would optimize away the file
+    # descriptor that holds the fifo open.
+    echo foo
+  ) >$attr/fifo
+
+  ls_output=`cat d/$attr.ls` || fail=1
+  case $attr,$ls_output in
+  ownership,d???--[-S]--[-S]* | \
+  mode,d????-??-?* | \
+  mode,d??[-x]?w[-x]?-[-x]* )
+    ;;
+  *)
+    fail=1;;
+  esac
+
+  wait $cp_pid || fail=1
+done
 
 (exit $fail); exit $fail

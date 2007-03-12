@@ -1,5 +1,5 @@
 /* date - print or set the system date and time
-   Copyright (C) 1989-2006 Free Software Foundation, Inc.
+   Copyright (C) 1989-2007 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -142,10 +142,15 @@ Display the current time in the given FORMAT, or set the system date.\n\
 "), stdout);
       fputs (_("\
   -r, --reference=FILE      display the last modification time of FILE\n\
-  -R, --rfc-2822            output date and time in RFC 2822 format\n\
+  -R, --rfc-2822            output date and time in RFC 2822 format.\n\
+                            Example: Mon, 07 Aug 2006 12:34:56 -0600\n\
+"), stdout);
+      fputs (_("\
       --rfc-3339=TIMESPEC   output date and time in RFC 3339 format.\n\
                             TIMESPEC=`date', `seconds', or `ns' for\n\
                             date and time to the indicated precision.\n\
+                            Date and time components are separated by\n\
+                            a single space: 2006-08-07 12:34:56-06:00\n\
   -s, --set=STRING          set time described by STRING\n\
   -u, --utc, --universal    print or set Coordinated Universal Time\n\
 "), stdout);
@@ -227,11 +232,11 @@ By default, date pads numeric fields with zeroes.\n\
       fputs (_("\
 The following optional flags may follow `%':\n\
 \n\
-  - (hyphen) do not pad the field\n\
-  _ (underscore) pad with spaces\n\
-  0 (zero) pad with zeros\n\
-  ^ use upper case if possible\n\
-  # use opposite case if possible\n\
+  -  (hyphen) do not pad the field\n\
+  _  (underscore) pad with spaces\n\
+  0  (zero) pad with zeros\n\
+  ^  use upper case if possible\n\
+  #  use opposite case if possible\n\
 "), stdout);
       fputs (_("\
 \n\

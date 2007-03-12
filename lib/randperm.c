@@ -1,6 +1,6 @@
 /* Generate random permutations.
 
-   Copyright (C) 2006 Free Software Foundation, Inc.
+   Copyright (C) 2006, 2007 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -58,9 +58,9 @@ randperm_bound (size_t h, size_t n)
   return bound;
 }
 
-/* From R, allocate and return the first H elements of a random
-   permutation of N elements.  H must not exceed N.  Return NULL if H
-   is zero.  */
+/* From R, allocate and return a malloc'd array of the first H elements
+   of a random permutation of N elements.  H must not exceed N.
+   Return NULL if H is zero.  */
 
 size_t *
 randperm_new (struct randint_source *r, size_t h, size_t n)

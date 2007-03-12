@@ -28,6 +28,9 @@ TESTS_ENVIRONMENT = \
   BUILD_SRC_DIR="`pwd`/../../src" \
   CU_TEST_NAME=`basename $(abs_srcdir)`,$$tst \
   PATH="$(VG_PATH_PREFIX)`pwd`/../../src$(PATH_SEPARATOR)$$PATH" \
+  CONFIG_HEADER=$(CONFIG_HEADER) \
+  REPLACE_GETCWD=$(REPLACE_GETCWD) \
+  host_os=$(host_os) \
   PROG=`../../src/basename -- "$$tst"`
 
 # Do not choose a name that is a shell keyword like 'if', or a
@@ -37,6 +40,8 @@ TESTS_ENVIRONMENT = \
 # will execute the test script rather than the standard utility.
 
 TESTS = \
+  df-P \
+  pwd-unreadable-parent \
   cut \
   wc-files0-from \
   wc-files0 \

@@ -1,5 +1,5 @@
 /* df - summarize free disk space
-   Copyright (C) 91, 1995-2006 Free Software Foundation, Inc.
+   Copyright (C) 91, 1995-2007 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -748,7 +748,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
   -a, --all             include dummy file systems\n\
-  -B, --block-size=SIZE use SIZE-byte blocks\n\
+  -B, --block-size=SIZE  use SIZE-byte blocks\n\
   -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\n\
   -H, --si              likewise, but use powers of 1000 not 1024\n\
 "), stdout);
@@ -796,10 +796,7 @@ main (int argc, char **argv)
   inode_format = false;
   show_all_fs = false;
   show_listed_fs = false;
-
-  human_output_opts = human_options (getenv ("DF_BLOCK_SIZE"), false,
-				     &output_block_size);
-
+  human_output_opts = -1;
   print_type = false;
   file_systems_processed = false;
   posix_format = false;
@@ -874,6 +871,18 @@ main (int argc, char **argv)
 	default:
 	  usage (EXIT_FAILURE);
 	}
+    }
+
+  if (human_output_opts == -1)
+    {
+      if (posix_format)
+	{
+	  human_output_opts = 0;
+	  output_block_size = (getenv ("POSIXLY_CORRECT") ? 512 : 1024);
+	}
+      else
+	human_output_opts = human_options (getenv ("DF_BLOCK_SIZE"), false,
+					   &output_block_size);
     }
 
   /* Fail if the same file system type was both selected and excluded.  */

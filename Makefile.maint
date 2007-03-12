@@ -69,23 +69,23 @@ export LC_ALL = C
 # in system.h.  E.g. today I removed from tail.c a useless definition of
 # ENOSYS.  It was useless because system.h ensures it's defined.
 
+# Collect the names of rules starting with `sc_'.
+syntax-check-rules := $(shell sed -n 's/^\(sc_[a-zA-Z0-9_-]*\):.*/\1/p' $(ME))
+.PHONY: $(syntax-check-rules)
+
 # Checks that don't require cvs.
 # Run `changelog-check' last, as previous test may reveal problems requiring
 # new ChangeLog entries.
 local-checks-available = \
-  po-check copyright-check writable-files m4-check author_mark_check \
+  po-check copyright-check m4-check author_mark_check \
   changelog-check patch-check strftime-check $(syntax-check-rules) \
   makefile_path_separator_check \
   makefile-check check-AUTHORS
 .PHONY: $(local-checks-available)
 
-local-check = $(filter-out $(local-checks-to-skip), $(local-checks-available))
+local-check := $(filter-out $(local-checks-to-skip), $(local-checks-available))
 
-# Collect the names of rules starting with `sc_'.
-syntax-check-rules := $(shell sed -n 's/^\(sc_[a-zA-Z0-9_-]*\):.*/\1/p' $(ME))
-.PHONY: $(syntax-check-rules)
-
-syntax-check: $(syntax-check-rules)
+syntax-check: $(local-check)
 #	@grep -nE '#  *include <(limits|std(def|arg|bool))\.h>'		\
 #	    $$(find -type f -name '*.[chly]') &&			\
 #	  { echo '$(ME): found conditional include' 1>&2;		\
@@ -103,16 +103,12 @@ sc_cast_of_argument_to_free:
 	    exit 1; } || :
 
 sc_cast_of_x_alloc_return_value:
-	@grep -nE --exclude=$(srcdir)/lib/xalloc.h			\
-		--exclude=$(srcdir)/lib/regex.c				\
-	    '\*\) *x(m|c|re)alloc\>'					\
-	    $(srcdir)/{lib,src}/*.[chy] &&				\
+	@grep -nE '\*\) *x(m|c|re)alloc\>' $$($(CVS_LIST_EXCEPT)) &&	\
 	  { echo '$(ME): don'\''t cast x*alloc return value' 1>&2;	\
 	    exit 1; } || :
 
 sc_cast_of_alloca_return_value:
-	@grep -nE '\*\) *alloca\>'					\
-	    $(srcdir)/src/*.[chy] &&					\
+	@grep -nE '\*\) *alloca\>' $$($(CVS_LIST_EXCEPT)) &&		\
 	  { echo '$(ME): don'\''t cast alloca return value' 1>&2;	\
 	    exit 1; } || :
 
@@ -132,7 +128,7 @@ sc_prohibit_atoi_atof:
 # Using EXIT_SUCCESS as the first argument to error is misleading,
 # since when that parameter is 0, error does not exit.  Use `0' instead.
 sc_error_exit_success:
-	@grep -nF 'error (EXIT_SUCCESS,'					\
+	@grep -nF 'error (EXIT_SUCCESS,'				\
 	    $$(find -type f -name '*.[chly]') &&			\
 	  { echo '$(ME): found error (EXIT_SUCCESS' 1>&2;		\
 	    exit 1; } || :
@@ -212,7 +208,9 @@ sc_prohibit_jm_in_m4:
 	      1>&2; exit 1; } || :
 
 sc_root_tests:
-	@t1=sc-root.expected; t2=sc-root.actual;			\
+	@if test -d tests \
+	      && grep check-root tests/Makefile.am>/dev/null 2>&1; then \
+	t1=sc-root.expected; t2=sc-root.actual;				\
 	grep -nl '^PRIV_CHECK_ARG=require-root'				\
 	  $$($(CVS_LIST) tests) |sed s,tests,., |sort > $$t1;		\
 	sed -n 's,	cd \([^ ]*\) .*MAKE..check TESTS=\(.*\),./\1/\2,p' \
@@ -221,7 +219,8 @@ sc_root_tests:
 	rm -f $$t1 $$t2;						\
 	test "$$diff"							\
 	  && { echo 'tests/Makefile.am: missing check-root action'>&2;	\
-	       exit 1; } || :
+	       exit 1; } || :;						\
+	fi
 
 headers_with_interesting_macro_defs = \
   exit.h	\
@@ -301,7 +300,7 @@ sc_trailing_blank:
 # Match lines like the following, but where there is only one space
 # between the options and the description:
 #   -D, --all-repeated[=delimit-method]  print all duplicate lines\n
-longopt_re = --[a-z][0-9A-Za-z-]*(\[=[0-9A-Za-z-]*\])?
+longopt_re = --[a-z][0-9A-Za-z-]*(\[?=[0-9A-Za-z-]*\]?)?
 sc_two_space_separator_in_usage:
 	@grep -nE '^   *(-[A-Za-z],)? $(longopt_re) [^ ].*\\$$'		\
 	    $$($(CVS_LIST_EXCEPT)) &&					\
@@ -329,7 +328,7 @@ sc_useless_cpp_parens:
 patch-check:
 	rm -rf src-c89 $@.1 $@.2
 	cp -a src src-c89
-	(cd src-c89; patch -V never --fuzz=0) < src/c99-to-c89.diff \
+	(cd src-c89; patch -p2 -V never --fuzz=0) < src/c99-to-c89.diff \
 	  > $@.1 2>&1
 	if test "$${REGEN_PATCH+set}" = set; then \
 	  diff -upr src src-c89 > new-diff || : ; fi
@@ -368,22 +367,22 @@ makefile-check:
 	  && { echo 'Makefile.maint: use $$(...), not @...@' 1>&2; exit 1; } || :
 
 news-date-check: NEWS
-	today=`date +%Y-%m-%d`;	\
-	if head NEWS | grep '^\*.* $(VERSION_REGEXP) ('$$today')' \
-	    >/dev/null; then \
-	  :; \
-	else \
-	  echo "version or today's date is not in NEWS" 1>&2; \
-	  exit 1; \
+	today=`date +%Y-%m-%d`;						\
+	if head NEWS | grep '^\*.* $(VERSION_REGEXP) ('$$today')'	\
+	    >/dev/null; then						\
+	  :;								\
+	else								\
+	  echo "version or today's date is not in NEWS" 1>&2;		\
+	  exit 1;							\
 	fi
 
 changelog-check:
-	if head ChangeLog | grep 'Version $(VERSION_REGEXP)\.$$' \
-	    >/dev/null; then \
-	  :; \
-	else \
-	  echo "$(VERSION) not in ChangeLog" 1>&2; \
-	  exit 1; \
+	if head ChangeLog | grep 'Version $(VERSION_REGEXP)\.$$'	\
+	    >/dev/null; then						\
+	  :;								\
+	else								\
+	  echo "$(VERSION) not in ChangeLog" 1>&2;			\
+	  exit 1;							\
 	fi
 
 m4-check:
@@ -401,6 +400,7 @@ po-check:
 	  for file in $$($(CVS_LIST_EXCEPT)) lib/*.[ch]; do		\
 	    case $$file in						\
 	    djgpp/* | man/*) continue;;					\
+	    */c99-to-c89.diff) continue;;				\
 	    esac;							\
 	    case $$file in						\
 	    *.[ch])							\
@@ -470,7 +470,7 @@ copyright-check:
 # Abort early if this tag has already been used.
 vc-tag-check:
 	used=no;							\
-	if $(VC) --help | grep CVS; then					\
+	if $(VC) --help | grep CVS; then				\
 	  $(CVS) -n log -h README|grep -e $(this-vc-tag): >/dev/null	\
 	    && used=yes;						\
 	else								\
@@ -514,11 +514,11 @@ null_AM_MAKEFLAGS = \
   AUTOHEADER=false \
   MAKEINFO=false
 
-# Detect format-string/arg-list mismatches that would normally be obscured
-# by the use of _().  The --disable-nls effectively defines away that macro,
-# and building with CFLAGS='-Wformat -Werror' causes any format warning to be
-# treated as a failure.  Also, check for shadowing problems with -Wshadow,
-# and for pointer arithmetic problems with -Wpointer-arith.
+warn_cflags = -Dlint -O -Werror -Wall -Wformat -Wshadow -Wpointer-arith
+
+# Use -Wformat -Werror to detect format-string/arg-list mismatches.
+# Also, check for shadowing problems with -Wshadow, and for pointer
+# arithmetic problems with -Wpointer-arith.
 # These CFLAGS are pretty strict.  If you build this target, you probably
 # have to have a recent version of gcc and glibc headers.
 TMPDIR ?= /tmp
@@ -529,7 +529,7 @@ my-distcheck: $(local-check) $(release_archive_dir)/$(prev-tgz)
 	GZIP=$(GZIP_ENV) $(AMTAR) -C $(t) -zxf $(distdir).tar.gz
 	cd $(t)/$(distdir)				\
 	  && ./configure --disable-nls			\
-	  && $(MAKE) CFLAGS='-Werror -Wall -Wformat -Wshadow -Wpointer-arith' \
+	  && $(MAKE) CFLAGS='$(warn_cflags)'		\
 	      AM_MAKEFLAGS='$(null_AM_MAKEFLAGS)'	\
 	  && $(MAKE) dvi				\
 	  && $(MAKE) check				\
@@ -537,11 +537,13 @@ my-distcheck: $(local-check) $(release_archive_dir)/$(prev-tgz)
 	(cd $(t) && mv $(distdir) $(distdir).old	\
 	  && $(AMTAR) -zxf - ) < $(distdir).tar.gz
 	diff -ur $(t)/$(distdir).old $(t)/$(distdir)
-	cd $(t)/$(distdir)				\
-	  && (cd src && patch -V never --fuzz=0 <c99-to-c89.diff) \
-	  && ./configure --disable-largefile		\
-	       CFLAGS='-Werror -ansi -pedantic -Wno-long-long' \
-	  && $(MAKE)
+	if test -f $(srcdir)/src/c99-to-c89.diff; then			\
+	  cd $(t)/$(distdir)						\
+	    && (cd src && patch -V never --fuzz=0 <c99-to-c89.diff)	\
+	    && ./configure --disable-largefile				\
+	         CFLAGS='-Werror -ansi -pedantic -Wno-long-long'	\
+	    && $(MAKE);							\
+	fi
 	-rm -rf $(t)
 	@echo "========================"; \
 	echo "$(distdir).tar.gz is ready for distribution"; \
@@ -564,12 +566,12 @@ xd-delta = $(PACKAGE)-$(PREV_VERSION)-$(VERSION).xdelta
 
 rel-files = $(xd-delta) $(DIST_ARCHIVES)
 
-# Approximate date of last "update" by the date on the ChangeLog file.
-gnulib_snapshot_date = \
-  $$(date -u --date $$(stat --printf @%Y $(gnulib_dir)/ChangeLog) \
-     '+%Y-%m-%d %T %z')
+# Approximate the date of last gnulib "update" by the ChangeLog file's
+# mtime, and provide that date in the announcement.
 announcement: NEWS ChangeLog $(rel-files)
-	@./build-aux/announce-gen					\
+	@cl_date=$$(stat --printf @%Y $(gnulib_dir)/ChangeLog);		\
+	utc_date=$$(date -u --date $$cl_date '+%Y-%m-%d %T %z');	\
+	./build-aux/announce-gen					\
 	    --release-type=$(RELEASE_TYPE)				\
 	    --package=$(PACKAGE)					\
 	    --prev=$(PREV_VERSION)					\
@@ -577,7 +579,7 @@ announcement: NEWS ChangeLog $(rel-files)
 	    --gpg-key-id=$(gpg_key_ID)					\
 	    --news=NEWS							\
 	    --bootstrap-tools=autoconf,automake,bison,gnulib		\
-            --gnulib-snapshot-date=$(gnulib_snapshot_date)		\
+	    --gnulib-snapshot-time-stamp="$$utc_date"			\
 	    $(addprefix --url-dir=, $(url_dir_list))
 
 ## ---------------- ##
@@ -594,7 +596,7 @@ emit_upload_commands:
 	@echo =====================================
 	@echo =====================================
 	@echo "$(srcdir)/build-aux/gnupload $(GNUPLOADFLAGS) \\"
-	@echo "    --to $(gnu_rel_host):coreutils \\"
+	@echo "    --to $(gnu_rel_host):$(PACKAGE) \\"
 	@echo "  $(rel-files)"
 	@echo '# send the /tmp/announcement e-mail'
 	@echo =====================================
@@ -604,7 +606,7 @@ $(xd-delta): $(release_archive_dir)/$(prev-tgz) $(distdir).tar.gz
 	xdelta delta -9 $^ $@ || :
 
 .PHONY: alpha beta major
-alpha beta major: news-date-check changelog-check $(local-check)
+alpha beta major: news-date-check changelog-check $(local-check) writable-files
 	test $@ = major						\
 	  && { echo $(VERSION) | grep -E '^[0-9]+(\.[0-9]+)+$$'	\
 	       || { echo "invalid version string: $(VERSION)" 1>&2; exit 1;};}\

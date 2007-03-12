@@ -1,7 +1,6 @@
 # Make coreutils man pages.				-*-Makefile-*-
 
-# Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software
-# Foundation, Inc.
+# Copyright (C) 2002-2007 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -154,18 +153,26 @@ mapped_name = `echo $*|sed 's/install/ginstall/; s/test/[/'`
 # That is necessary to avoid failures for programs that are also shell built-in
 # functions like echo, false, printf, pwd.
 .x.1:
-	@rm -f $@
-	@echo "Updating man page $@";		\
-	rm -rf $t;				\
-	mkdir $t;				\
-	(cd $t && $(LN_S) ../../src/$(mapped_name) $*); \
-	$(PERL) -- $(srcdir)/help2man		\
-	    --source='$(PACKAGE_STRING)'	\
-	    --include=$(srcdir)/$*.x		\
-	    --output=$t/$@ $t/$*
-	@sed 's|$*\.td/||g' $t/$@ > $@
-	@chmod a-w $@
-	@rm -rf $t
+	@case '$(PERL)' in					\
+	  *"/missing "*)					\
+	    echo 'WARNING: cannot update man page $@ since perl is missing' \
+	      'or inadequate' 1>&2 \
+	    ;;							\
+	  *)							\
+	    rm -f $@						\
+	    && { echo "Updating man page $@";			\
+	         rm -rf $t;					\
+	         mkdir $t;					\
+	         (cd $t && $(LN_S) ../../src/$(mapped_name) $*); \
+	            $(PERL) -- $(srcdir)/help2man		\
+	             --source='$(PACKAGE_STRING)'		\
+	             --include=$(srcdir)/$*.x			\
+	             --output=$t/$@ $t/$*;			\
+	       }						\
+	    && sed 's|$*\.td/||g' $t/$@ > $@			\
+	    && chmod a-w $@					\
+	    && rm -rf $t ;;					\
+	esac
 
 check-local: check-x-vs-1 check-programs-vs-x
 

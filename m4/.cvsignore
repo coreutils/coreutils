@@ -123,6 +123,7 @@ lstat.m4
 mbchar.m4
 mbiter.m4
 mbrtowc.m4
+mbscasecmp.m4
 mbstate_t.m4
 mbswidth.m4
 md5.m4
@@ -192,7 +193,9 @@ stdbool.m4
 stdint.m4
 stdint_h.m4
 stdio-safer.m4
+stdio_h.m4
 stdlib-safer.m4
+stdlib_h.m4
 stpcpy.m4
 strcase.m4
 strcspn.m4
@@ -214,6 +217,7 @@ sys_socket_h.m4
 sys_stat_h.m4
 sys_time_h.m4
 tempname.m4
+time_h.m4
 time_r.m4
 timespec.m4
 tm_gmtoff.m4

@@ -1,5 +1,5 @@
 /* stat.c -- display file or file system status
-   Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006 Free Software Foundation.
+   Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007 Free Software Foundation.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -497,7 +497,7 @@ print_stat (char *pformat, size_t prefix_len, char m,
       out_string (pformat, prefix_len, quote (filename));
       if (S_ISLNK (statbuf->st_mode))
 	{
-	  char *linkname = xreadlink (filename, statbuf->st_size);
+	  char *linkname = xreadlink_with_size (filename, statbuf->st_size);
 	  if (linkname == NULL)
 	    {
 	      error (0, errno, _("cannot read symbolic link %s"),

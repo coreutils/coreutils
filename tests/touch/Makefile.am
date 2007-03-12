@@ -1,7 +1,6 @@
 # Make coreutils tests for "touch".		-*-Makefile-*-
 
-# Copyright (C) 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006
-# Free Software Foundation, Inc.
+# Copyright (C) 1998-2007 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,8 +16,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 # 02110-1301, USA.
-
-AUTOMAKE_OPTIONS = 1.3 gnits
 
 TESTS = \
   read-only \

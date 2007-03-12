@@ -1,6 +1,6 @@
 #! /bin/sh
 
-# Bootstrap this package from CVS.
+# Bootstrap this package from checked-out sources.
 
 # Copyright (C) 2003, 2004, 2005, 2006, 2007 Free Software Foundation, Inc.
 
@@ -29,6 +29,11 @@ nl='
 LC_ALL=C
 export LC_ALL
 
+# Temporary directory names.
+bt='._bootmp'
+bt_regex=`echo "$bt"| sed 's/\./[.]/g'`
+bt2=${bt}2
+
 usage() {
   echo >&2 "\
 Usage: $0 [OPTION]...
@@ -38,14 +43,14 @@ Options:
  --gnulib-srcdir=DIRNAME  Specify the local directory where gnulib
                           sources reside.  Use this if you already
                           have gnulib sources on your machine, and
-                          do not want to waste your bandwidth dowloading
+                          do not want to waste your bandwidth downloading
                           them again.
  --copy                   Copy files instead of creating symbolic links.
  --force                  Attempt to bootstrap even if the sources seem
                           not to have been checked out.
  --skip-po                Do not download po files.
- --cvs-user=USERNAME      Set the CVS username to be used when accessing
-                          the gnulib repository.
+ --cvs-user=USERNAME      Set the username to use when checking out
+                          sources from the gnulib repository.
 
 If the file .bootstrap.conf exists in the current working directory, its
 contents are read as shell variables to configure the bootstrap.
@@ -85,17 +90,18 @@ extract_package_name='
 '
 package=`sed -n "$extract_package_name" configure.ac` || exit
 
+build_aux=build-aux
 # Extra files from gnulib, which override files from other sources.
-gnulib_extra_files='
-	build-aux/install-sh
-	build-aux/missing
-	build-aux/mdate-sh
-	build-aux/texinfo.tex
-	build-aux/depcomp
-	build-aux/config.guess
-	build-aux/config.sub
+gnulib_extra_files="
+	$build_aux/install-sh
+	$build_aux/missing
+	$build_aux/mdate-sh
+	$build_aux/texinfo.tex
+	$build_aux/depcomp
+	$build_aux/config.guess
+	$build_aux/config.sub
 	doc/INSTALL
-'
+"
 
 # Other locale categories that need message catalogs.
 EXTRA_LOCALE_CATEGORIES=
@@ -112,7 +118,7 @@ excluded_files=
 
 # File that should exist in the top directory of a checked out hierarchy,
 # but not in a distribution tarball.
-CVS_only_file=README-cvs
+checkout_only_file=README-hacking
 
 # Whether to use copies instead of symlinks.
 copy=false
@@ -137,7 +143,7 @@ do
   --skip-po)
     SKIP_PO=t;;
   --force)
-    CVS_only_file=;;
+    checkout_only_file=;;
   --copy)
     copy=true;;
   *)
@@ -146,12 +152,38 @@ do
   esac
 done
 
-if test -n "$CVS_only_file" && test ! -r "$CVS_only_file"; then
+if test -n "$checkout_only_file" && test ! -r "$checkout_only_file"; then
   echo "$0: Bootstrapping from a non-checked-out distribution is risky." >&2
   exit 1
 fi
 
-echo "$0: Bootstrapping CVS $package..."
+# If $STR is not already on a line by itself in $FILE, insert it,
+# sorting the new contents of the file and replacing $FILE with the result.
+insert_sorted_if_absent() {
+  file=$1
+  str=$2
+  echo "$str" | sort -u - $file | cmp -s - $file \
+    || echo "$str" | sort -u - $file -o $file \
+    || exit 1
+}
+
+# Die if there is no AC_CONFIG_AUX_DIR($build_aux) line in configure.ac.
+grep '^[	 ]*AC_CONFIG_AUX_DIR('$build_aux')' configure.ac >/dev/null ||
+  {
+    echo "$0: expected line not found in configure.ac. Add the following:" >&2
+    echo "  AC_CONFIG_AUX_DIR($build_aux)" >&2.
+  }
+
+# If $build_aux doesn't exist, create it now, otherwise some bits
+# below will malfunction.  If creating it, also mark it as ignored.
+if test ! -d $build_aux; then
+  mkdir $build_aux
+  for ig in .cvsignore .gitignore; do
+    test -f $ig && insert_sorted_if_absent $ig $build_aux
+  done
+fi
+
+echo "$0: Bootstrapping from checked-out $package sources..."
 
 cleanup_gnulib() {
   status=$?
@@ -245,7 +277,9 @@ case $SKIP_PO in
     WGET_COMMAND='';;
   esac
 
-  get_translations po $package || exit
+  if test -d po; then
+    get_translations po $package || exit
+  fi
 
   if test -d runtime-po; then
     get_translations runtime-po $package-runtime || exit
@@ -314,7 +348,8 @@ cp_mark_as_generated()
     if test -z "$c1"; then
       cmp -s "$cp_src" "$cp_dst" || {
 	echo "$0: cp -f $cp_src $cp_dst" &&
-	cp -f "$cp_src" "$cp_dst"
+	rm -f "$cp_dst" &&
+	sed "s!$bt_regex/!!g" "$cp_src" > "$cp_dst"
       }
     else
       # Copy the file first to get proper permissions if it
@@ -323,7 +358,7 @@ cp_mark_as_generated()
       (
 	echo "$c1-*- buffer-read-only: t -*- vi: set ro:$c2" &&
 	echo "${c1}DO NOT EDIT! GENERATED AUTOMATICALLY!$c2" &&
-	cat "$cp_src"
+	sed "s!$bt_regex/!!g" "$cp_src"
       ) > $cp_dst-t &&
       if cmp -s "$cp_dst-t" "$cp_dst"; then
 	rm -f "$cp_dst-t"
@@ -350,16 +385,6 @@ version_controlled_file() {
   test $found = yes
 }
 
-# If $STR is not already on a line by itself in $FILE, insert it,
-# sorting the new contents of the file and replacing $FILE with the result.
-insert_sorted_if_absent() {
-  file=$1
-  str=$2
-  echo "$str" | sort -u - $file | cmp -s - $file \
-    || echo "$str" | sort -u - $file -o $file \
-    || exit
-}
-
 slurp() {
   for dir in . `(cd $1 && find * -type d -print)`; do
     copied=
@@ -371,7 +396,7 @@ slurp() {
       done
       if test $file = Makefile.am; then
         copied=$copied${sep}gnulib.mk; sep=$nl
-	remove_intl='/^[^#].*\/intl/s/^/#/'
+	remove_intl='/^[^#].*\/intl/s/^/#/;'"s!$bt_regex/!!g"
         sed "$remove_intl" $1/$dir/$file | cmp -s - $dir/gnulib.mk || {
 	  echo "$0: Copying $1/$dir/$file to $dir/gnulib.mk ..." &&
 	  rm -f $dir/gnulib.mk &&
@@ -415,9 +440,6 @@ slurp() {
 
 
 # Create boot temporary directories to import from gnulib and gettext.
-
-bt='.#bootmp'
-bt2=${bt}2
 rm -fr $bt $bt2 &&
 mkdir $bt $bt2 || exit
 
@@ -426,7 +448,7 @@ mkdir $bt $bt2 || exit
 gnulib_tool_options="\
  --import\
  --no-changelog\
- --aux-dir $bt/build-aux\
+ --aux-dir $bt/$build_aux\
  --doc-base $bt/doc\
  --lib lib$package\
  --m4-base $bt/m4/\
@@ -456,11 +478,17 @@ rm -fr $bt $bt2 || exit
 # Reconfigure, getting other files.
 
 for command in \
+  libtool \
   'aclocal --force -I m4' \
   'autoconf --force' \
   'autoheader --force' \
   'automake --add-missing --copy --force-missing';
 do
+  if test "$command" = libtool; then
+    grep '^[	 ]*AM_PROG_LIBTOOL\>' configure.ac >/dev/null ||
+      continue
+    command='libtoolize -c -f'
+  fi
   echo "$0: $command ..."
   $command || exit
 done

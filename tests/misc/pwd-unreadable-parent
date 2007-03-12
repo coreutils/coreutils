@@ -1,7 +1,9 @@
 #!/bin/sh
-# Ensure that shuf randomizes its input.
+# Ensure that pwd and "readlink -e ." work even when a parent directory
+# is unreadable.  Perform this test only on systems with a usable getcwd
+# function that has this capability.
 
-# Copyright (C) 2006, 2007 Free Software Foundation, Inc.
+# Copyright (C) 2007 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,8 +22,23 @@
 
 if test "$VERBOSE" = yes; then
   set -x
-  shuf --version
+  pwd --version
+  readlink --version
 fi
+
+test $host_os != linux-gnu &&
+  {
+    echo 1>&2 "$0: vendor getcwd may be inadequate; skipping this test"
+    (exit 77); exit 77
+  }
+
+# Linux ia64 has the gl_FUNC_GETCWD_ABORT_BUG, so we can't use
+# the system getcwd.
+test $REPLACE_GETCWD = 1 &&
+  {
+    echo 1>&2 "$0: can't use buggy system getcwd; skipping this test"
+    (exit 77); exit 77
+  }
 
 pwd=`pwd`
 t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
@@ -31,38 +48,23 @@ trap '(exit $?); exit $?' 1 2 13 15
 framework_failure=0
 mkdir -p $tmp || framework_failure=1
 cd $tmp || framework_failure=1
-seq 100 > in || framework_failure=1
+
+mkdir -p a/b || framework_failure=1
+cd a/b || framework_failure=1
+chmod a=x .. || framework_failure=1
 
 if test $framework_failure = 1; then
   echo "$0: failure in testing framework" 1>&2
   (exit 1); exit 1
 fi
 
+pwd_exe=$pwd/../../src/pwd
+
 fail=0
+$pwd_exe > exp || fail=1
+readlink -ev . > out || fail=1
 
-shuf in >out || fail=1
-
-# Fail if the input is the same as the output.
-# This is a probabilistic test :-)
-# However, the odds of failure are very low: 1 in 100! (~ 1 in 10^158)
-cmp in out > /dev/null && { fail=1; echo "not random?" 1>&2; }
-
-# Fail if the sorted output is not the same as the input.
-sort -n out > out1
-cmp in out1 || { fail=1; echo "not a permutation" 1>&2; }
-
-# Exercise shuf's -i option.
-shuf -i 1-100 > out || fail=1
-cmp in out > /dev/null && { fail=1; echo "not random?" 1>&2; }
-sort -n out > out1
-cmp in out1 || { fail=1; echo "not a permutation" 1>&2; }
-
-# Exercise shuf's -e option.
-t=`shuf -e a b c d e | sort | fmt`
-test "$t" = 'a b c d e' || { fail=1; echo "not a permutation" 1>&2; }
-
-# Before coreutils-6.3, this would infloop.
-# "seq 1860" produces 8193 (8K + 1) bytes of output.
-seq 1860 | shuf > /dev/null || fail=1
+cmp out exp || fail=1
+test $fail = 1 && diff out exp 2> /dev/null
 
 (exit $fail); exit $fail

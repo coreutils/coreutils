@@ -1,6 +1,6 @@
 /* Shuffle lines of text.
 
-   Copyright (C) 2006 Free Software Foundation, Inc.
+   Copyright (C) 2006, 2007 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -251,6 +251,7 @@ main (int argc, char **argv)
   char const *outfile = NULL;
   char *random_source = NULL;
   char eolbyte = '\n';
+  char **input_lines = NULL;
 
   int optc;
   int n_operands;
@@ -258,7 +259,7 @@ main (int argc, char **argv)
   size_t n_lines;
   char **line;
   struct randint_source *randint_source;
-  size_t const *permutation;
+  size_t *permutation;
 
   initialize_main (&argc, &argv);
   program_name = argv[0];
@@ -366,8 +367,6 @@ main (int argc, char **argv)
     }
   else
     {
-      char **input_lines;
-
       switch (n_operands)
 	{
 	case 0:
@@ -407,6 +406,16 @@ main (int argc, char **argv)
     error (EXIT_FAILURE, errno, "%s", quotearg_colon (outfile));
   if (write_permuted_output (head_lines, line, lo_input, permutation) != 0)
     error (EXIT_FAILURE, errno, _("write error"));
+
+#ifdef lint
+  free (permutation);
+  randint_all_free (randint_source);
+  if (input_lines)
+    {
+      free (input_lines[0]);
+      free (input_lines);
+    }
+#endif
 
   return EXIT_SUCCESS;
 }

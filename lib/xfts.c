@@ -1,6 +1,6 @@
 /* xfts.c -- a wrapper for fts_open
 
-   Copyright (C) 2003, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2005-2007 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -21,8 +21,8 @@
 #include <config.h>
 
 #include <stdbool.h>
+#include <stdlib.h>
 
-#include "exit.h"
 #include "error.h"
 
 #include "gettext.h"

@@ -1,7 +1,7 @@
 #!/bin/sh
 # Test "date".
 
-# Copyright (C) 2005, 2006 Free Software Foundation, Inc.
+# Copyright (C) 2005-2007 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -296,7 +296,6 @@ foreach my $i (1..364)
 		  {ENV_DEL => 'TZ'},
 		  ];
   }
-use Data::Dumper;
 
 # Append "\n" to each OUT=> RHS if the expected exit value is either
 # zero or not specified (defaults to zero).
