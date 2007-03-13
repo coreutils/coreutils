@@ -1,5 +1,8 @@
 2007-03-13  Jim Meyering  <jim@meyering.net>
 
+	Prepare to work on ACL-related failure when using Solaris ZFS.
+	* gl/lib/acl.c: New file, copied from gnulib.
+
 	Work around a failing test due to an NFS-based race condition.
 	* tests/cp/sparse: Accept a report that the copy is *smaller*.
 
