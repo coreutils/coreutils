@@ -1,3 +1,8 @@
+2007-03-13  Jim Meyering  <jim@meyering.net>
+
+	Work around a failing test due to an NFS-based race condition.
+	* tests/cp/sparse: Accept a report that the copy is *smaller*.
+
 2007-03-12  Jim Meyering  <jim@meyering.net>
 
 	Make bootstrap.conf a tiny bit more generic.
