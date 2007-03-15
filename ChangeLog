@@ -1,3 +1,10 @@
+2007-03-15  Jim Meyering  <jim@meyering.net>
+
+	Enforce policy: don't use *scanf functions.
+	* Makefile.maint (sc_prohibit_atoi_atof): Add to regexp and diagnostic.
+	* .x-sc_prohibit_atoi_atof: Give stty a temporary pass.
+	* TODO: note that stty.c needs this small clean-up.
+
 2007-03-13  Jim Meyering  <jim@meyering.net>
 
 	Prepare to work on ACL-related failure when using Solaris ZFS.

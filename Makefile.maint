@@ -117,12 +117,12 @@ sc_space_tab:
 	  { echo '$(ME): found SPACE-TAB sequence; remove the SPACE'	\
 		1>&2; exit 1; } || :
 
-# Don't use the old ato* functions in `real' code.
+# Don't use *scanf or the old ato* functions in `real' code.
 # They provide no error checking mechanism.
 # Instead, use strto* functions.
 sc_prohibit_atoi_atof:
-	@grep -nE '\<ato([filq]|ll)\>' $$($(CVS_LIST_EXCEPT)) &&	\
-	  { echo '$(ME): do not use ato''f, ato''i, ato''l, ato''ll, or ato''q'	\
+	@grep -nE '\<([fs]?scanf|ato([filq]|ll))\>' $$($(CVS_LIST_EXCEPT)) && \
+	  { echo '$(ME): do not use *scan''f, ato''f, ato''i, ato''l, ato''ll, or ato''q'	\
 		1>&2; exit 1; } || :
 
 # Using EXIT_SUCCESS as the first argument to error is misleading,

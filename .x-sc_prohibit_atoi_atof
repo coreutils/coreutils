@@ -6,3 +6,5 @@ ChangeLog
 ^lib/euidaccess-stat\.c$
 ^lib/group-member\.c$
 ^Makefile\.maint$
+^doc/coreutils.texi$
+^src/stty.c$

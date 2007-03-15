@@ -1,3 +1,6 @@
+stty.c:
+  use xstrtoul, not sscanf
+
 printf:
   Now that gnulib supports *printf("%a"), import one of the
   *printf-posix modules so that printf(1) will support %a even on
