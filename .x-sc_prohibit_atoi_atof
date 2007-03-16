@@ -1,5 +1,6 @@
 ^configure$
 ChangeLog
+^TODO$
 ^lib/mktime\.c$
 ^lib/getloadavg\.c$
 ^lib/euidaccess\.c$
