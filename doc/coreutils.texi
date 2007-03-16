@@ -3575,26 +3575,16 @@ can change this.
 @opindex --numeric-sort
 @cindex numeric sort
 @vindex LC_NUMERIC
-Sort numerically: the number begins each line; specifically, it consists
+Sort numerically.  The number begins each line and consists
 of optional blanks, an optional @samp{-} sign, and zero or more
 digits possibly separated by thousands separators, optionally followed
-by a decimal-point character and zero or more digits.  A string of
-no digits is interpreted as @samp{0}.  The @env{LC_NUMERIC}
+by a decimal-point character and zero or more digits.  An empty
+number is treated as @samp{0}.  The @env{LC_NUMERIC}
 locale specifies the decimal-point character and thousands separator.
 By default a blank is a space or a tab, but the @env{LC_CTYPE} locale
 can change this.
 
-Numeric sort uses what might be considered an unconventional method to
-compare strings representing floating point numbers.  Rather than first
-converting each string to the C @code{double} type and then comparing
-those values, @command{sort} aligns the decimal-point characters in the
-two strings and compares the strings a character at a time.  One benefit
-of using this approach is its speed.  In practice this is much more
-efficient than performing the two corresponding string-to-double (or
-even string-to-integer) conversions and then comparing doubles.  In
-addition, there is no corresponding loss of precision.  Converting each
-string to @code{double} before comparison would limit precision to about
-16 digits on most systems.
+Comparison is exact; there is no rounding error.
 
 Neither a leading @samp{+} nor exponential notation is recognized.
 To compare such strings numerically, use the
@@ -13939,6 +13929,12 @@ Print all numbers using @var{format}.
 @var{format} must contain exactly one of the @samp{printf}-style
 floating point conversion specifications @samp{%a}, @samp{%e},
 @samp{%f}, @samp{%g}, @samp{%A}, @samp{%E}, @samp{%F}, @samp{%G}.
+The @samp{%} may be followed by zero or more flags taken from the set
+@samp{-+#0 '}, then an optional width containing one or more digits,
+then an optional precision consisting of a @samp{.} followed by zero
+or more digits.  @var{format} may also contain any number of @samp{%%}
+conversion specifications.  All conversion specifications have the
+same meaning as with @samp{printf}.
 
 The default format is derived from @var{first}, @var{step}, and
 @var{last}.  If these all use a fixed point decimal representation,
@@ -13960,6 +13956,15 @@ decimal representation.
 (To have other kinds of padding, use @option{--format}).
 
 @end table
+
+You can get finer-grained control over output with @option{-f}:
+
+@example
+$ seq -f '(%9.2E)' -9e5 1.1e6 1.3e6
+(-9.00E+05)
+( 2.00E+05)
+( 1.30E+06)
+@end example
 
 If you want hexadecimal integer output, you can use @command{printf}
 to perform the conversion:
