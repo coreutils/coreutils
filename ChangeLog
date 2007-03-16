@@ -1,5 +1,7 @@
 2007-03-16  Jim Meyering  <jim@meyering.net>
 
+	* bootstrap: Update from gnulib.
+
 	* .x-sc_prohibit_atoi_atof: Add TODO here, too.
 
 2007-03-16  Paul Eggert  <eggert@cs.ucla.edu>
