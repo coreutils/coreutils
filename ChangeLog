@@ -1,5 +1,12 @@
 2007-03-16  Jim Meyering  <jim@meyering.net>
 
+	Begin adding support for Solaris ZFS (4 entries per trivial ACL)
+	* gl/lib/acl.c (ACL_NOT_WELL_SUPPORTED): New macro.
+	(file_has_acl, copy_acl): Use it, rather than enumerating errno values.
+	(is_trivial_acl): New function.  Incomplete, for now.
+	(file_has_acl, copy_acl): Use the new function, rather than
+	counting the number of entries in an ACL.
+
 	* bootstrap: Update from gnulib.
 
 	* .x-sc_prohibit_atoi_atof: Add TODO here, too.

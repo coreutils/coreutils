@@ -80,6 +80,9 @@
 # define acl_from_mode(mode) (NULL)
 #endif
 
+#define ACL_NOT_WELL_SUPPORTED(Errno) \
+  (Errno == ENOTSUP || Errno == ENOSYS || Errno == EINVAL)
+
 /* We detect the presence of POSIX 1003.1e (draft 17 -- abandoned) support
    by checking for HAVE_ACL_GET_FILE, HAVE_ACL_SET_FILE, and HAVE_ACL_FREE.
    Systems that have acl_get_file, acl_set_file, and acl_free must also
@@ -125,6 +128,24 @@ chmod_or_fchmod (const char *name, int desc, mode_t mode)
     return chmod (name, mode);
 }
 
+#if USE_ACL && HAVE_ACL_GET_FILE && HAVE_ACL_SET_FILE && HAVE_ACL_FREE
+/* FIXME: use acl_trivial instead, once we have a replacement function */
+static bool
+is_trivial_acl (acl_t acl)
+{
+  int n = acl_entries (acl);
+  if (n <= 3)
+    return true;
+  if (5 <= n)
+    return false;
+
+  /* Here, we know there are exactly 4 entries.
+     If they are for user, group, mask, and other, then return true;  */
+  /* FIXME */
+  return false;
+}
+#endif
+
 /* Return 1 if NAME has a nontrivial access control list, 0 if
    NAME only has no or a base access control list, and -1 on
    error.  SB must be set to the stat buffer of FILE.  */
@@ -159,7 +180,7 @@ file_has_acl (char const *name, struct stat const *sb)
 	  acl_t acl = acl_get_file (name, ACL_TYPE_ACCESS);
 	  if (acl)
 	    {
-	      ret = (3 < acl_entries (acl));
+	      ret = !is_trivial_acl (acl);
 	      acl_free (acl);
 	      if (ret == 0 && S_ISDIR (sb->st_mode))
 		{
@@ -177,7 +198,7 @@ file_has_acl (char const *name, struct stat const *sb)
 	    ret = -1;
 	}
       if (ret < 0)
-	return (errno == ENOSYS || errno == ENOTSUP) ? 0 : -1;
+	return ACL_NOT_WELL_SUPPORTED (errno) ? 0 : -1;
       return ret;
     }
 #endif
@@ -213,7 +234,7 @@ copy_acl (const char *src_name, int source_desc, const char *dst_name,
     acl = acl_get_file (src_name, ACL_TYPE_ACCESS);
   if (acl == NULL)
     {
-      if (errno == ENOSYS || errno == ENOTSUP)
+      if (ACL_NOT_WELL_SUPPORTED (errno))
 	return set_acl (dst_name, dest_desc, mode);
       else
         {
@@ -230,12 +251,11 @@ copy_acl (const char *src_name, int source_desc, const char *dst_name,
     {
       int saved_errno = errno;
 
-      if (errno == ENOSYS || errno == ENOTSUP)
+      if (ACL_NOT_WELL_SUPPORTED (errno))
         {
-	  int n = acl_entries (acl);
-
+	  bool trivial = is_trivial_acl (acl);
 	  acl_free (acl);
-	  if (n == 3)
+	  if (trivial)
 	    {
 	      if (chmod_or_fchmod (dst_name, dest_desc, mode) != 0)
 		saved_errno = errno;
@@ -366,7 +386,7 @@ set_acl (char const *name, int desc, mode_t mode)
       int saved_errno = errno;
       acl_free (acl);
 
-      if (errno == ENOTSUP || errno == ENOSYS || errno == EINVAL)
+      if (ACL_NOT_WELL_SUPPORTED (errno))
 	{
 	  if (chmod_or_fchmod (name, desc, mode) != 0)
 	    saved_errno = errno;
