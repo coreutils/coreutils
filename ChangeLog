@@ -1,3 +1,13 @@
+2007-03-16  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/copy.c: Include filemode.h.
+	(overwrite_prompt): Say "try to overwrite", not "overwrite", to
+	make it clearer that the attempt may fail.  Problem reported by
+	Dan Jacobson in:
+	http://lists.gnu.org/archive/html/bug-coreutils/2007-03/msg00130.html
+	Output symbolic mode as well as numeric.
+	* tests/mv/i-2 (fail): Adjust to new prompt format.
+
 2007-03-15  Jim Meyering  <jim@meyering.net>
 
 	Enforce policy: don't use *scanf functions.
