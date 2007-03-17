@@ -1,5 +1,9 @@
 2007-03-17  Jim Meyering  <jim@meyering.net>
 
+	Avoid an obscure build failure, prefer waitpid over wait.
+	* src/install.c (strip): Use waitpid, not wait.  It's equivalent,
+	but feels less obsolescent.
+
 	* bootstrap: Don't use \> in grep regexp.  For HP-UX.
 
 2007-03-16  Jim Meyering  <jim@meyering.net>

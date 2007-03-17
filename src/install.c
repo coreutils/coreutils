@@ -566,11 +566,10 @@ strip (char const *name)
       error (EXIT_FAILURE, errno, _("cannot run strip"));
       break;
     default:			/* Parent. */
-      /* Parent process. */
-      while (pid != wait (&status))	/* Wait for kid to finish. */
-	/* Do nothing. */ ;
-      if (status)
-	error (EXIT_FAILURE, 0, _("strip failed"));
+      if (waitpid (pid, &status, 0) < 0)
+	error (EXIT_FAILURE, errno, _("waiting for strip"));
+      else if (! WIFEXITED (status) || WEXITSTATUS (status))
+	error (EXIT_FAILURE, 0, _("strip process terminated abnormally"));
       break;
     }
 }
