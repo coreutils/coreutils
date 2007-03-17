@@ -175,10 +175,9 @@ grep '^[	 ]*AC_CONFIG_AUX_DIR(\['"$build_aux"'\])' configure.ac \
 grep '^[	 ]*AC_CONFIG_AUX_DIR('"$build_aux"')' configure.ac \
     >/dev/null && found_aux_dir=yes
 if test $found_aux_dir = no; then
-  {
-    echo "$0: expected line not found in configure.ac. Add the following:" >&2
-    echo "  AC_CONFIG_AUX_DIR([$build_aux])" >&2.
-  }
+  echo "$0: expected line not found in configure.ac. Add the following:" >&2
+  echo "  AC_CONFIG_AUX_DIR([$build_aux])" >&2.
+fi
 
 # If $build_aux doesn't exist, create it now, otherwise some bits
 # below will malfunction.  If creating it, also mark it as ignored.
