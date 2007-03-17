@@ -169,10 +169,15 @@ insert_sorted_if_absent() {
 }
 
 # Die if there is no AC_CONFIG_AUX_DIR($build_aux) line in configure.ac.
-grep '^[	 ]*AC_CONFIG_AUX_DIR('$build_aux')' configure.ac >/dev/null ||
+found_aux_dir=no
+grep '^[	 ]*AC_CONFIG_AUX_DIR(\['"$build_aux"'\])' configure.ac \
+    >/dev/null && found_aux_dir=yes
+grep '^[	 ]*AC_CONFIG_AUX_DIR('"$build_aux"')' configure.ac \
+    >/dev/null && found_aux_dir=yes
+if test $found_aux_dir = no; then
   {
     echo "$0: expected line not found in configure.ac. Add the following:" >&2
-    echo "  AC_CONFIG_AUX_DIR($build_aux)" >&2.
+    echo "  AC_CONFIG_AUX_DIR([$build_aux])" >&2.
   }
 
 # If $build_aux doesn't exist, create it now, otherwise some bits

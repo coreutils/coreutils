@@ -1,5 +1,10 @@
 2007-03-17  Jim Meyering  <jim@meyering.net>
 
+	Detect use of AC_CONFIG_AUX_DIR also when its argument is quoted.
+	* bootstrap: Put ""s around use of $build_aux, in case
+	someone uses a name containing shell meta-characters.
+	Reported by Alfred M. Szmidt.
+
 	* tests/misc/tty-eof: Add shuf to the list of tested commands.
 
 	Avoid test failure on NFS-mounted Solaris ZFS file system.
