@@ -1,3 +1,7 @@
+2007-03-17  Jim Meyering  <jim@meyering.net>
+
+	* bootstrap: Don't use \> in grep regexp.  For HP-UX.
+
 2007-03-16  Jim Meyering  <jim@meyering.net>
 
 	Begin adding support for Solaris ZFS (4 entries per trivial ACL)

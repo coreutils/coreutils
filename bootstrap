@@ -468,7 +468,7 @@ done
 
 # Import from gettext.
 with_gettext=yes
-grep '^[	 ]*AM_GNU_GETTEXT_VERSION\>' configure.ac >/dev/null || \
+grep '^[	 ]*AM_GNU_GETTEXT_VERSION(' configure.ac >/dev/null || \
     with_gettext=no
 
 if test $with_gettext = yes; then
