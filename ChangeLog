@@ -4,7 +4,6 @@
 	* bootstrap: Put ""s around use of $build_aux, in case
 	someone uses a name containing shell meta-characters.
 	Reported by Alfred M. Szmidt.
-
 	* tests/misc/tty-eof: Add shuf to the list of tested commands.
 
 	Avoid test failure on NFS-mounted Solaris ZFS file system.
