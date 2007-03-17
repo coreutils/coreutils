@@ -1,7 +1,7 @@
 #!/bin/sh
 # Compare actual numbers from du, assuming block size matches mine.
 
-# Copyright (C) 2003, 2006 Free Software Foundation, Inc.
+# Copyright (C) 2003, 2006-2007 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -80,20 +80,23 @@ EOF
 cmp out exp || fail=1
 test $fail = 1 && diff -u out exp 2> /dev/null
 
-rm -f out exp
-du --block-size=$B -a d | sort -r -k2,2 > out || fail=1
-echo === >> out
-du --block-size=$B -S d | sort -r -k2,2 >> out || fail=1
+# Perform this test only if "." is on a local file system.
+# Otherwise, it would fail e.g., on an NFS-mounted Solaris ZFS file system.
+if df --local . >/dev/null 2>&1; then
+  rm -f out exp
+  du --block-size=$B -a d | sort -r -k2,2 > out || fail=1
+  echo === >> out
+  du --block-size=$B -S d | sort -r -k2,2 >> out || fail=1
 
-t2=`stat --format=%b d/sub/2`
-ts=`stat --format=%b d/sub`
-t1=`stat --format=%b d/1`
-td=`stat --format=%b d`
-tot=`expr $t1 + $t2 + $ts + $td`
-d1=`expr $td + $t1`
-s2=`expr $ts + $t2`
+  t2=`stat --format=%b d/sub/2`
+  ts=`stat --format=%b d/sub`
+  t1=`stat --format=%b d/1`
+  td=`stat --format=%b d`
+  tot=`expr $t1 + $t2 + $ts + $td`
+  d1=`expr $td + $t1`
+  s2=`expr $ts + $t2`
 
-cat <<EOF | sed 's/ *#.*//' > exp
+  cat <<EOF | sed 's/ *#.*//' > exp
 $t2	d/sub/2
 $s2	d/sub
 $t1	d/1
@@ -103,7 +106,8 @@ $s2	d/sub
 $d1	d           # d + d/1; don't count the dir. entry for d/sub
 EOF
 
-cmp out exp || fail=1
-test $fail = 1 && diff out exp 2> /dev/null
+  cmp out exp || fail=1
+  test $fail = 1 && diff out exp 2> /dev/null
+fi
 
 (exit $fail); exit $fail

@@ -1,5 +1,8 @@
 2007-03-17  Jim Meyering  <jim@meyering.net>
 
+	Avoid test failure on NFS-mounted Solaris ZFS file system.
+	* tests/du/basic: Skip a test if "." is on a non-local file system.
+
 	Avoid an obscure build failure, prefer waitpid over wait.
 	* src/install.c (strip): Use waitpid, not wait.  It's equivalent,
 	but feels less obsolescent.
