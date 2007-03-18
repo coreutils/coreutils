@@ -1,3 +1,14 @@
+2007-03-18  Jim Meyering  <jim@meyering.net>
+
+	Fix a bug in how pr -m -s works.
+	* NEWS: Describe how the fix affects pr.
+	* src/pr.c (init_parameters): The --merge (-m) option does
+	not imply --expand-tabs (-e), so don't set "untabify_input".
+	Reported by Wis Macomson.
+	* tests/misc/pr: New file.  Test for the above fix.
+	* tests/misc/Makefile.am (TESTS): Add pr.
+	* THANKS: Update.
+
 2007-03-17  Jim Meyering  <jim@meyering.net>
 
 	Detect use of AC_CONFIG_AUX_DIR also when its argument is quoted.

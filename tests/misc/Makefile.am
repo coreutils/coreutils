@@ -40,6 +40,7 @@ TESTS_ENVIRONMENT = \
 # will execute the test script rather than the standard utility.
 
 TESTS = \
+  pr \
   df-P \
   pwd-unreadable-parent \
   cut \

@@ -10,6 +10,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   the DF_BLOCK_SIZE, BLOCK_SIZE, and BLOCKSIZE environment variables.  It
   is still affected by POSIXLY_CORRECT, though.
 
+  Using pr -m -s (i.e. merging files, with TAB as the output separator)
+  no longer inserts extraneous spaces between output columns.
+
+
 * Noteworthy changes in release 6.8 (2007-02-24) [not-unstable]
 
 ** Bug fixes
