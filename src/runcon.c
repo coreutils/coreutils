@@ -114,9 +114,9 @@ main (int argc, char **argv, char **envp)
 
   while (1)
     {
-      int c;
       int option_index = 0;
-      c = getopt_long (argc, argv, "r:t:u:l:c", long_options, &option_index);
+      int c = getopt_long (argc, argv, "+r:t:u:l:c", long_options,
+			   &option_index);
       if (c == -1)
 	break;
       switch (c)
