@@ -1,5 +1,11 @@
 2007-03-18  Jim Meyering  <jim@meyering.net>
 
+	Fix a generic NFS-related test failure.
+	* tests/mkdir/p-3: When setting up an unreadable "." in an
+	inaccessible parent, make the parent inaccessible *after* making "."
+	unreadable.  Otherwise, running "chmod a-r ." in an already-
+	inaccessible parent would fail on NFS with "Stale NFS file handle".
+
 	Fix a bug in how pr -m -s works.
 	* NEWS: Describe how the fix affects pr.
 	* src/pr.c (init_parameters): The --merge (-m) option does
