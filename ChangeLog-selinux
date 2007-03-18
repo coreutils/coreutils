@@ -1,3 +1,7 @@
+2007-03-18  Jim Meyering  <jim@meyering.net>
+
+	* src/runcon.c (main): Remove "." at end of a diagnostic.
+
 2007-02-02  Jim Meyering  <jim@meyering.net>
 
 	* src/runcon.c: New program.

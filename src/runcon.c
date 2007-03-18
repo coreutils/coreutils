@@ -180,7 +180,7 @@ main (int argc, char **argv, char **envp)
 
   if (is_selinux_enabled () != 1)
     error (EXIT_FAILURE, 0,
-	   _("runcon may be used only on a SELinux kernel."));
+	   _("runcon may be used only on a SELinux kernel"));
 
   if (context)
     {
