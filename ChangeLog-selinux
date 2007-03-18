@@ -1,5 +1,10 @@
 2007-03-18  Jim Meyering  <jim@meyering.net>
 
+	* src/runcon.c (main): Don't reorder arguments.  Reported by
+	Ulrich Drepper in <http://bugzilla.redhat.com/232652>.
+	* tests/misc/runcon-no-reorder: New file.  Test for the above.
+	* tests/misc/Makefile.am (TESTS): Add runcon-no-reorder.
+
 	* src/runcon.c (main): Remove "." at end of a diagnostic.
 
 2007-02-02  Jim Meyering  <jim@meyering.net>

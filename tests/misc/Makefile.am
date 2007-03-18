@@ -73,6 +73,7 @@ TESTS = \
   printf \
   printf-hex \
   pwd-long \
+  runcon-no-reorder \
   sha224sum \
   sha256sum \
   sha384sum \
