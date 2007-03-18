@@ -1,8 +1,11 @@
 ^configure$
 ChangeLog
+^TODO$
 ^lib/mktime\.c$
 ^lib/getloadavg\.c$
 ^lib/euidaccess\.c$
 ^lib/euidaccess-stat\.c$
 ^lib/group-member\.c$
 ^Makefile\.maint$
+^doc/coreutils.texi$
+^src/stty.c$

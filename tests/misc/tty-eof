@@ -67,6 +67,7 @@ $@ and (warn "$ME: this script requires Perl's Expect package >=1.11\n"),
     sha256sum
     sha384sum
     sha512sum
+    shuf
     sort
     sum
     tac

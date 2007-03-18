@@ -89,6 +89,7 @@ extract_package_name='
   }
 '
 package=`sed -n "$extract_package_name" configure.ac` || exit
+gnulib_name=lib$package
 
 build_aux=build-aux
 # Extra files from gnulib, which override files from other sources.
@@ -168,11 +169,15 @@ insert_sorted_if_absent() {
 }
 
 # Die if there is no AC_CONFIG_AUX_DIR($build_aux) line in configure.ac.
-grep '^[	 ]*AC_CONFIG_AUX_DIR('$build_aux')' configure.ac >/dev/null ||
-  {
-    echo "$0: expected line not found in configure.ac. Add the following:" >&2
-    echo "  AC_CONFIG_AUX_DIR($build_aux)" >&2.
-  }
+found_aux_dir=no
+grep '^[	 ]*AC_CONFIG_AUX_DIR(\['"$build_aux"'\])' configure.ac \
+    >/dev/null && found_aux_dir=yes
+grep '^[	 ]*AC_CONFIG_AUX_DIR('"$build_aux"')' configure.ac \
+    >/dev/null && found_aux_dir=yes
+if test $found_aux_dir = no; then
+  echo "$0: expected line not found in configure.ac. Add the following:" >&2
+  echo "  AC_CONFIG_AUX_DIR([$build_aux])" >&2.
+fi
 
 # If $build_aux doesn't exist, create it now, otherwise some bits
 # below will malfunction.  If creating it, also mark it as ignored.
@@ -450,7 +455,7 @@ gnulib_tool_options="\
  --no-changelog\
  --aux-dir $bt/$build_aux\
  --doc-base $bt/doc\
- --lib lib$package\
+ --lib $gnulib_name\
  --m4-base $bt/m4/\
  --source-base $bt/lib/\
  --tests-base $bt/tests\
@@ -466,13 +471,18 @@ done
 
 
 # Import from gettext.
+with_gettext=yes
+grep '^[	 ]*AM_GNU_GETTEXT_VERSION(' configure.ac >/dev/null || \
+    with_gettext=no
 
-echo "$0: (cd $bt2; autopoint) ..."
-cp configure.ac $bt2 &&
-(cd $bt2 && autopoint && rm configure.ac) &&
-slurp $bt2 $bt || exit
+if test $with_gettext = yes; then
+  echo "$0: (cd $bt2; autopoint) ..."
+  cp configure.ac $bt2 &&
+  (cd $bt2 && autopoint && rm configure.ac) &&
+  slurp $bt2 $bt || exit
 
-rm -fr $bt $bt2 || exit
+  rm -fr $bt $bt2 || exit
+fi
 
 
 # Reconfigure, getting other files.
@@ -504,36 +514,37 @@ for file in $gnulib_extra_files; do
   symlink_to_gnulib $file $dst || exit
 done
 
-
-# Create gettext configuration.
-echo "$0: Creating po/Makevars from po/Makevars.template ..."
-rm -f po/Makevars
-sed '
-  /^EXTRA_LOCALE_CATEGORIES *=/s/=.*/= '"$EXTRA_LOCALE_CATEGORIES"'/
-  /^MSGID_BUGS_ADDRESS *=/s/=.*/= bug-'"$package"'@gnu.org/
-  /^XGETTEXT_OPTIONS *=/{
-    s/$/ \\/
-    a\
-	'"$XGETTEXT_OPTIONS"' $${end_of_xgettext_options+}
-  }
-' po/Makevars.template >po/Makevars
-
-if test -d runtime-po; then
-  # Similarly for runtime-po/Makevars, but not quite the same.
-  rm -f runtime-po/Makevars
+if test $with_gettext = yes; then
+  # Create gettext configuration.
+  echo "$0: Creating po/Makevars from po/Makevars.template ..."
+  rm -f po/Makevars
   sed '
-    /^DOMAIN *=.*/s/=.*/= '"$package"'-runtime/
-    /^subdir *=.*/s/=.*/= runtime-po/
+    /^EXTRA_LOCALE_CATEGORIES *=/s/=.*/= '"$EXTRA_LOCALE_CATEGORIES"'/
     /^MSGID_BUGS_ADDRESS *=/s/=.*/= bug-'"$package"'@gnu.org/
     /^XGETTEXT_OPTIONS *=/{
       s/$/ \\/
       a\
-	  '"$XGETTEXT_OPTIONS_RUNTIME"' $${end_of_xgettext_options+}
+	  '"$XGETTEXT_OPTIONS"' $${end_of_xgettext_options+}
     }
-  ' <po/Makevars.template >runtime-po/Makevars
+  ' po/Makevars.template >po/Makevars
 
-  # Copy identical files from po to runtime-po.
-  (cd po && cp -p Makefile.in.in *-quot *.header *.sed *.sin ../runtime-po)
+  if test -d runtime-po; then
+    # Similarly for runtime-po/Makevars, but not quite the same.
+    rm -f runtime-po/Makevars
+    sed '
+      /^DOMAIN *=.*/s/=.*/= '"$package"'-runtime/
+      /^subdir *=.*/s/=.*/= runtime-po/
+      /^MSGID_BUGS_ADDRESS *=/s/=.*/= bug-'"$package"'@gnu.org/
+      /^XGETTEXT_OPTIONS *=/{
+	s/$/ \\/
+	a\
+	    '"$XGETTEXT_OPTIONS_RUNTIME"' $${end_of_xgettext_options+}
+      }
+    ' <po/Makevars.template >runtime-po/Makevars
+
+    # Copy identical files from po to runtime-po.
+    (cd po && cp -p Makefile.in.in *-quot *.header *.sed *.sin ../runtime-po)
+  fi
 fi
 
 echo "$0: done.  Now you can run './configure'."

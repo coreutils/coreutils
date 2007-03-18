@@ -1,5 +1,5 @@
 /* pr -- convert text files for printing.
-   Copyright (C) 88, 91, 1995-2006 Free Software Foundation, Inc.
+   Copyright (C) 88, 91, 1995-2007 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -1265,7 +1265,6 @@ init_parameters (int number_of_files)
         col_sep_string = column_separator;
 
       truncate_lines = true;
-      untabify_input = true;
       tabify_output = true;
     }
   else

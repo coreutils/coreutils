@@ -1,3 +1,69 @@
+2007-03-18  Jim Meyering  <jim@meyering.net>
+
+	Fix a bug in how pr -m -s works.
+	* NEWS: Describe how the fix affects pr.
+	* src/pr.c (init_parameters): The --merge (-m) option does
+	not imply --expand-tabs (-e), so don't set "untabify_input".
+	Reported by Wis Macomson.
+	* tests/misc/pr: New file.  Test for the above fix.
+	* tests/misc/Makefile.am (TESTS): Add pr.
+	* THANKS: Update.
+
+2007-03-17  Jim Meyering  <jim@meyering.net>
+
+	Detect use of AC_CONFIG_AUX_DIR also when its argument is quoted.
+	* bootstrap: Put ""s around use of $build_aux, in case
+	someone uses a name containing shell meta-characters.
+	Reported by Alfred M. Szmidt.
+	* tests/misc/tty-eof: Add shuf to the list of tested commands.
+
+	Avoid test failure on NFS-mounted Solaris ZFS file system.
+	* tests/du/basic: Skip a test if "." is on a non-local file system.
+
+	Avoid an obscure build failure, prefer waitpid over wait.
+	* src/install.c (strip): Use waitpid, not wait.  It's equivalent,
+	but feels less obsolescent.
+
+	* bootstrap: Don't use \> in grep regexp.  For HP-UX.
+
+2007-03-16  Jim Meyering  <jim@meyering.net>
+
+	Begin adding support for Solaris ZFS (4 entries per trivial ACL)
+	* gl/lib/acl.c (ACL_NOT_WELL_SUPPORTED): New macro.
+	(file_has_acl, copy_acl): Use it, rather than enumerating errno values.
+	(is_trivial_acl): New function.  Incomplete, for now.
+	(file_has_acl, copy_acl): Use the new function, rather than
+	counting the number of entries in an ACL.
+
+	* bootstrap: Update from gnulib.
+
+	* .x-sc_prohibit_atoi_atof: Add TODO here, too.
+
+2007-03-16  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/copy.c: Include filemode.h.
+	(overwrite_prompt): Say "try to overwrite", not "overwrite", to
+	make it clearer that the attempt may fail.  Problem reported by
+	Dan Jacobson in:
+	http://lists.gnu.org/archive/html/bug-coreutils/2007-03/msg00130.html
+	Output symbolic mode as well as numeric.
+	* tests/mv/i-2 (fail): Adjust to new prompt format.
+
+2007-03-15  Jim Meyering  <jim@meyering.net>
+
+	Enforce policy: don't use *scanf functions.
+	* Makefile.maint (sc_prohibit_atoi_atof): Add to regexp and diagnostic.
+	* .x-sc_prohibit_atoi_atof: Give stty a temporary pass.
+	* TODO: note that stty.c needs this small clean-up.
+
+2007-03-13  Jim Meyering  <jim@meyering.net>
+
+	Prepare to work on ACL-related failure when using Solaris ZFS.
+	* gl/lib/acl.c: New file, copied from gnulib.
+
+	Work around a failing test due to an NFS-based race condition.
+	* tests/cp/sparse: Accept a report that the copy is *smaller*.
+
 2007-03-12  Jim Meyering  <jim@meyering.net>
 
 	Make bootstrap.conf a tiny bit more generic.

@@ -38,6 +38,7 @@
 #include "euidaccess.h"
 #include "error.h"
 #include "fcntl--.h"
+#include "filemode.h"
 #include "filenamecat.h"
 #include "full-write.h"
 #include "getpagesize.h"
@@ -797,10 +798,14 @@ overwrite_prompt (char const *dst_name, struct stat const *dst_sb)
 {
   if (euidaccess (dst_name, W_OK) != 0)
     {
+      char perms[12];		/* "-rwxrwxrwx " ls-style modes. */
+      strmode (dst_sb->st_mode, perms);
+      perms[10] = '\0';
       fprintf (stderr,
-	       _("%s: overwrite %s, overriding mode %04lo? "),
+	       _("%s: try to overwrite %s, overriding mode %04lo (%s)? "),
 	       program_name, quote (dst_name),
-	       (unsigned long int) (dst_sb->st_mode & CHMOD_MODE_BITS));
+	       (unsigned long int) (dst_sb->st_mode & CHMOD_MODE_BITS),
+	       &perms[1]);
     }
   else
     {
