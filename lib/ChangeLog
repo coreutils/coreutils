@@ -1,3 +1,9 @@
+2007-03-20  Jim Meyering  <jim@meyering.net>
+
+	Fix a typo in the handling of %x and %X.
+	* vasnprintf.c (VASNPRINTF): When adding 2 to buffer length,
+	don't double it.
+
 2007-03-04  Jim Meyering  <jim@meyering.net>
 
 	* vasnprintf.c (VASNPRINTF): Add missing semicolon.
