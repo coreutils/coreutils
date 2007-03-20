@@ -1,3 +1,8 @@
+2007-03-19  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/Makefile.am (dir_LDADD, ls_LDADD, vdir_LDADD):
+	Add $(LIB_ACL_TRIVIAL).
+
 2007-03-18  Jim Meyering  <jim@meyering.net>
 
 	Fix a generic NFS-related test failure.
