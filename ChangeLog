@@ -5,6 +5,7 @@
 	Skip part of this test when "." is not a local file system.
 	* tests/install/basic-1: Otherwise, it would fail on some NFS
 	file systems.
+	* tests/mkdir/p-3: Likewise.
 
 2007-03-19  Paul Eggert  <eggert@cs.ucla.edu>
 
