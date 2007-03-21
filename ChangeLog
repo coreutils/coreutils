@@ -1,5 +1,10 @@
 2007-03-21  Jim Meyering  <jim@meyering.net>
 
+	Fix a test script not to claim an ext2 file system is of type xfs.
+	* tests/du/slink: When using df --local and df --type=TYPE,
+	test only the exit code.  Don't bother with stdout.
+	Prompted by a report by Thomas Schwinge of an inaccurate diagnostic.
+
 	* gl/lib/savewd.c: Remove this file, since the savewd_save change
 	is now in gnulib.  The other wasn't useful.
 

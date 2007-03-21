@@ -1,7 +1,7 @@
 #!/bin/sh
 # Ensure that the size of a long-named-symlink is > 0.
 
-# Copyright (C) 2002, 2003, 2004, 2006 Free Software Foundation, Inc.
+# Copyright (C) 2002-2007 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -34,25 +34,23 @@ cd $tmp || framework_failure=1
 
 # Determine if `.' is on a local (would non-NFS be sufficient?) file system.
 # On at least some NFS implementations, symlinks never take up space,
-df --local . | tail -n +2 > tmp
+
 # So if this is a non-local file system, skip the test.
-if test -s tmp; then
+if df --local . >/dev/null 2>&1; then
   : # Ok.
 else
   echo "$0: skipping this test, since \`.' is on a non-local file system" 1>&2
   (exit 77); exit 77
 fi
 
-df --type=xfs . | tail -n +2 > tmp
-if test -s tmp; then
+if df --type=xfs . >/dev/null 2>&1; then
   # At least on Irix-6.5.19, when using an xfs file system,
   # each created symlink (name lengths up to 255) would have a size of `0'.
   echo "$0: skipping this test, since \`.' is on an XFS file system" 1>&2
   (exit 77); exit 77
 fi
 
-df --type=nfsv3 . | tail -n +2 > tmp
-if test -s tmp; then
+if df --type=nfsv3 . >/dev/null 2>&1; then
   # At least on OSF/1 4.0d, when using an nfsv3 file system,
   # each created symlink can end up having a size of 0.
   echo "$0: skipping this test, since \`.' is on an NFS file system" 1>&2
