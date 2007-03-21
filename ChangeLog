@@ -1,3 +1,8 @@
+2007-03-21  Jim Meyering  <jim@meyering.net>
+
+	* gl/lib/savewd.c: Remove this file, since the savewd_save change
+	is now in gnulib.  The other wasn't useful.
+
 2007-03-20  Jim Meyering  <jim@meyering.net>
 
 	* gl/lib/acl.c: Remove this file, now that gnulib's version subsumes it.
