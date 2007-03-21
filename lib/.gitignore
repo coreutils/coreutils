@@ -1,7 +1,9 @@
 __fpending.c
 __fpending.h
+acl-internal.h
 acl.c
 acl.h
+acl_entries.c
 alloca.c
 alloca.h
 alloca_.h
@@ -79,6 +81,7 @@ fcntl-safer.h
 fcntl.h
 fcntl_.h
 fd-safer.c
+file-has-acl.c
 file-type.c
 file-type.h
 fileblocks.c
