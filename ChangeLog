@@ -1,3 +1,9 @@
+2007-03-22  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Improve a test script.
+	* tests/mv/hard-3: Check for 'ls' failure, too.
+	Generate more-useful debugging output when 'ls' fails.
+
 2007-03-21  Jim Meyering  <jim@meyering.net>
 
 	Fix a test script not to claim an ext2 file system is of type xfs.
