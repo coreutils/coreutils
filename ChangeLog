@@ -1,3 +1,7 @@
+2007-03-22  Jim Meyering  <jim@meyering.net>
+
+	* tests/mv/hard-3: Correct the preceding change: $3 -> $2.
+
 2007-03-22  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Improve a test script.
