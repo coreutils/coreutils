@@ -1,3 +1,8 @@
+2007-03-21  Eric Blake  <ebb9@byu.net>
+
+	* coreutils.texi (md5sum invocation): Document escapes in output
+	format.  Reported by Armijn Hemel.
+
 2007-03-15  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Fix manual in response to bug reports by Dan Jacobson.
