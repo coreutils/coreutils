@@ -1,3 +1,8 @@
+2007-03-23  Jim Meyering  <jim@meyering.net>
+
+	* README-package-renamed-to-coreutils: Add a URL for the FAQ,
+	and a couple more archive links.
+
 2007-03-22  Jim Meyering  <jim@meyering.net>
 
 	Post-release version change.
