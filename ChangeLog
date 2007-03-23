@@ -1,3 +1,8 @@
+2007-03-23  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/pathchk.c: Don't include euidaccess.h, as we don't call
+	euidaccess.
+
 2007-03-23  Jim Meyering  <jim@meyering.net>
 
 	* README-package-renamed-to-coreutils: Add a URL for the FAQ,
