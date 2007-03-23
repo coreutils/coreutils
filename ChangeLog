@@ -1,5 +1,9 @@
 2007-03-22  Jim Meyering  <jim@meyering.net>
 
+	Post-release version change.
+	* NEWS: Add a line for 6.9+.
+	* configure.ac (AC_INIT): Set new version string.
+
 	Version 6.9.
 	* NEWS: Record release date and new version number.
 	* configure.ac (AC_INIT): New version number.
