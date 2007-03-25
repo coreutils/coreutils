@@ -1,3 +1,26 @@
+2007-03-25  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Avoid the need for euidaccess and/or lstat on every directory entry
+	with 'rm -r dir' (without -f), if we are root, or if we are removing
+	a directory tree that is full of symbolic links.
+	* bootstrap.conf (gnulib_modules): Add write-any-file.
+	* src/copy.c: Include write-any-file.h.
+	(UNWRITABLE): Remove macro, replacing with....
+	(writable_destination): New function, which uses can_write_any_file
+	to avoid the need for euidaccess when we are privileged.
+	(overwrite_prompt, abandon_move): Use it.
+	* src/remove.c: Include write-any-file.h.
+	(D_TYPE): New macro.
+	(DT_UNKNOWN, DT_DIR, DT_LNK) [!HAVE_STRUCT_DIRENT_D_TYPE]: New macros.
+	(write_protected_non_symlink): Don't bother to stat if we can write
+	any file.
+	(prompt): New arg PDIRENT_TYPE.  All callers changed.
+	Use readdir dirent type to avoid the need for 'lstat' on each directory
+	entry in cases like 'rm -r dir', if we are root, or if the tree is
+	full of symbolic links.
+	(DT_IS_KNOWN, DT_MUST_BE): Remove.
+	(remove_entry): New arg DIRENT_TYPE_ARG.  All callers changed.
+
 2007-03-24  Jim Meyering  <jim@meyering.net>
 
 	If strace malfunctions, skip the test rather than failing it.
