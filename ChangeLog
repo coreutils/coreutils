@@ -1,3 +1,7 @@
+2007-03-25  Jim Meyering  <jim@meyering.net>
+
+	* src/c99-to-c89.diff: Regenerate.
+
 2007-03-25  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Avoid the need for euidaccess and/or lstat on every directory entry

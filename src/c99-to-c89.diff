@@ -4,9 +4,9 @@ RCS file: /fetish/cu/src/remove.c,v
 retrieving revision 1.158
 diff --git a/src/remove.c b/src/remove.c
 index 4728bdd..7477da5 100644
---- a/src/remove.c
-+++ b/src/remove.c
-@@ -236,9 +236,10 @@ pop_dir (Dirstack_state *ds)
+--- a/src/remove.c	2007-03-23 21:49:33.000000000 +0100
++++ b/src/remove.c	2007-03-25 09:58:29.000000000 +0200
+@@ -254,9 +254,10 @@ pop_dir (Dirstack_state *ds)
  {
    size_t n_lengths = obstack_object_size (&ds->len_stack) / sizeof (size_t);
    size_t *length = obstack_base (&ds->len_stack);
@@ -18,7 +18,7 @@ index 4728bdd..7477da5 100644
    assert (top_len >= 2);
 
    /* Pop the specified length of file name.  */
-@@ -370,10 +371,11 @@ AD_stack_top (Dirstack_state const *ds)
+@@ -388,10 +389,11 @@ AD_stack_top (Dirstack_state const *ds)
  static void
  AD_stack_pop (Dirstack_state *ds)
  {
@@ -31,24 +31,23 @@ index 4728bdd..7477da5 100644
    if (top->unremovable)
      hash_free (top->unremovable);
    obstack_blank (&ds->Active_dir, -(int) sizeof (struct AD_ent));
-@@ -815,6 +817,7 @@ prompt (int fd_cwd, Dirstack_state const *ds, char const *filename,
+@@ -873,6 +875,7 @@ prompt (int fd_cwd, Dirstack_state const
+ 	    break;
+ 	  }
 
-   if (write_protected || x->interactive == RMI_ALWAYS)
-     {
-+      char const *quoted_name = quote (full_filename (filename));
-       if (write_protected <= 0
- 	  && cache_fstatat (fd_cwd, filename, sbuf, AT_SYMLINK_NOFOLLOW) != 0)
- 	{
-@@ -832,8 +835,6 @@ prompt (int fd_cwd, Dirstack_state const *ds, char const *filename,
- 	    write_protected = EISDIR;
- 	}
++      {
+       char const *quoted_name = quote (full_filename (filename));
 
--      char const *quoted_name = quote (full_filename (filename));
--
        if (0 < write_protected)
- 	{
- 	  error (0, write_protected, _("cannot remove %s"), quoted_name);
-@@ -1487,6 +1488,7 @@ rm_1 (Dirstack_state *ds, char const *filename,
+@@ -912,6 +915,7 @@ prompt (int fd_cwd, Dirstack_state const
+ 		    : _("%s: remove %s %s? ")),
+ 		   program_name, file_type (sbuf), quoted_name);
+ 	}
++      }
+
+       if (!yesno ())
+ 	return RM_USER_DECLINED;
+@@ -1512,6 +1516,7 @@ rm_1 (Dirstack_state *ds, char const *fi
        return RM_ERROR;
      }
 
@@ -56,23 +55,23 @@ index 4728bdd..7477da5 100644
    struct stat st;
    cache_stat_init (&st);
    cycle_check_init (&ds->cycle_check_state);
-@@ -1509,6 +1511,7 @@ rm_1 (Dirstack_state *ds, char const *filename,
+@@ -1534,6 +1539,7 @@ rm_1 (Dirstack_state *ds, char const *fi
    AD_push_initial (ds);
    AD_INIT_OTHER_MEMBERS ();
 
 +  {
-   enum RM_status status = remove_entry (AT_FDCWD, ds, filename, &st, x, NULL);
+   enum RM_status status = remove_entry (AT_FDCWD, ds, filename,
+ 					DT_UNKNOWN, &st, x);
    if (status == RM_NONEMPTY_DIR)
-     {
-@@ -1525,6 +1528,8 @@ rm_1 (Dirstack_state *ds, char const *filename,
-
+@@ -1552,6 +1558,8 @@ rm_1 (Dirstack_state *ds, char const *fi
    ds_clear (ds);
    return status;
-+  }
-+  }
  }
++  }
++}
 
  /* Remove all files and/or directories specified by N_FILES and FILE.
+    Apply the options in X.  */
 Index: src/rm.c
 ===================================================================
 RCS file: /fetish/cu/src/rm.c,v
