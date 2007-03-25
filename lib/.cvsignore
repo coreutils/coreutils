@@ -383,6 +383,8 @@ wchar_.h
 wctype.h
 wctype_.h
 wcwidth.h
+write-any-file.c
+write-any-file.h
 xalloc-die.c
 xalloc.h
 xgetcwd.c
