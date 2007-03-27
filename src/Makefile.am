@@ -269,7 +269,7 @@ check: check-README check-misc
 check-README:
 	rm -rf $(pr) $(pm)
 	echo $(all_programs) \
-	 | tr -s ' ' '\n' | sed -e 's,$(EXEEXT)$$,,' \
+	 | tr -s ' ' '\n' | sed -e 's,$(EXEEXT)$$,,;s/ginstall/install/' \
 	 | $(ASSORT) -u > $(pm) && \
 	sed -n '/^The programs .* are:/,/^[a-zA-Z]/p' $(top_srcdir)/README \
 	  | sed -n '/^   */s///p' | tr -s ' ' '\n' > $(pr)
