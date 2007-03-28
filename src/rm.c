@@ -204,7 +204,7 @@ Note that if you use rm to remove a file, it is usually possible to recover\n\
 the contents of that file.  If you want more assurance that the contents are\n\
 truly unrecoverable, consider using shred.\n\
 "), stdout);
-      printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
+      emit_bug_reporting_address ();
     }
   exit (status);
 }

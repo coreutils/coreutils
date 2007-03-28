@@ -75,7 +75,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 \n\
 With no FILE, or when FILE is -, read standard input.\n\
 "), stdout);
-      printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
+      emit_bug_reporting_address ();
     }
 
   exit (status);

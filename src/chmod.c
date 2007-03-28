@@ -369,7 +369,7 @@ Change the mode of each FILE to MODE.\n\
 \n\
 Each MODE is of the form `[ugoa]*([-+=]([rwxXst]*|[ugo]))+'.\n\
 "), stdout);
-      printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
+      emit_bug_reporting_address ();
     }
   exit (status);
 }

@@ -92,7 +92,7 @@ Print information for USERNAME, or the current user.\n\
 \n\
 Without any OPTION, print some useful set of identified information.\n\
 "), stdout);
-      printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
+      emit_bug_reporting_address ();
     }
   exit (status);
 }

@@ -1509,7 +1509,7 @@ Read standard input if FILE is -.  Each PATTERN may be:\n\
 \n\
 A line OFFSET is a required `+' or `-' followed by a positive integer.\n\
 "), stdout);
-      printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
+      emit_bug_reporting_address ();
     }
   exit (status);
 }

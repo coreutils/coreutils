@@ -87,7 +87,7 @@ Print the prime factors of each NUMBER.\n\
 Print the prime factors of all specified integer NUMBERs.  If no arguments\n\
 are specified on the command line, they are read from standard input.\n\
 "), stdout);
-      printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
+      emit_bug_reporting_address ();
     }
   exit (status);
 }

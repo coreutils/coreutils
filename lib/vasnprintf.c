@@ -415,8 +415,9 @@ VASNPRINTF (CHAR_T *resultbuf, size_t *lengthp, const CHAR_T *format, va_list ar
 		      if (tmp_length < precision)
 			tmp_length = precision;
 		      /* Add 2, to account for a leading sign or alternate form.  */
-		      if (tmp_length <= SIZE_MAX / 2)
-			tmp_length *= 2;
+		      tmp_length += 2;
+		      if (tmp_length < 2)
+			goto out_of_memory;
 		      break;
 
 		    case 'f': case 'F':

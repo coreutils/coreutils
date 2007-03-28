@@ -235,6 +235,7 @@ wchar_t.m4
 wctype.m4
 wcwidth.m4
 wint_t.m4
+write-any-file.m4
 xalloc.m4
 xgetcwd.m4
 xnanosleep.m4

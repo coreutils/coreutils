@@ -70,7 +70,7 @@ Examples:\n\
   %s include/stdio.h .h  Output \"stdio\".\n\
 "),
 	      program_name, program_name);
-      printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
+      emit_bug_reporting_address ();
     }
   exit (status);
 }

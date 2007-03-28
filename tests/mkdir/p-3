@@ -3,7 +3,7 @@
 # causes immediate failure.  Also, ensure that we don't create
 # subsequent, relative command-line arguments in the wrong place.
 
-# Copyright (C) 2005, 2006 Free Software Foundation, Inc.
+# Copyright (C) 2005-2007 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -54,9 +54,13 @@ test -d "$p/b/b" && test -d "$p/z" || fail=1
 
 # Same as above, but a trailing relative name in an unreadable directory
 # whose parent is inaccessible.  coreutils 5.97 fails this test.
-(cd no-acce3s/d && chmod a-rx .. && chmod a-r . && mkdir -p a/b "$p/b/c" d/e &&
- test -d a/b && test -d d/e) || fail=1
-test -d "$p/b/c" || fail=1
+# Perform this test only if "." is on a local file system.
+# Otherwise, it would fail e.g., on an NFS-mounted file system.
+if df --local . >/dev/null 2>&1; then
+  (cd no-acce3s/d && chmod a-r . && chmod a-rx .. &&
+      mkdir -p a/b "$p/b/c" d/e && test -d a/b && test -d d/e) || fail=1
+  test -d "$p/b/c" || fail=1
+fi
 
 b=`ls "$p/a" | tr -d '\n'`
 # With coreutils-5.3.0, this would fail with $b=bu.

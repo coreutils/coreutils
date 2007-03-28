@@ -282,7 +282,7 @@ rotation).  Use --follow=name in that case.  That causes tail to track the\n\
 named file by reopening it periodically to see if it has been removed and\n\
 recreated by some other program.\n\
 "), stdout);
-      printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
+      emit_bug_reporting_address ();
     }
   exit (status);
 }

@@ -167,7 +167,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 A field is a run of whitespace, then non-whitespace characters.\n\
 Fields are skipped before chars.\n\
 "), stdout);
-      printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
+      emit_bug_reporting_address ();
     }
   exit (status);
 }

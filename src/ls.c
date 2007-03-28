@@ -4424,7 +4424,7 @@ colors, and can be set easily by the dircolors command.\n\
 \n\
 Exit status is 0 if OK, 1 if minor problems, 2 if serious trouble.\n\
 "), stdout);
-      printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
+      emit_bug_reporting_address ();
     }
   exit (status);
 }

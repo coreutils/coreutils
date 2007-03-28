@@ -399,7 +399,7 @@ Change the effective user id and group id to that of USER.\n\
 \n\
 A mere - implies -l.   If USER not given, assume root.\n\
 "), stdout);
-      printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
+      emit_bug_reporting_address ();
     }
   exit (status);
 }

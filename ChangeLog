@@ -1,4 +1,128 @@
+2007-03-28  Jim Meyering  <jim@meyering.net>
+
+	Help translators include translation team's web or email address.
+	* src/system.h (emit_bug_reporting_address): New function.
+	* src/base64.c: Use it rather than a literal printf.
+	* src/basename.c, src/cat.c, src/chgrp.c, src/chmod.c:
+	* src/chown.c, src/chroot.c, src/cksum.c, src/comm.c, src/cp.c:
+	* src/csplit.c, src/cut.c, src/date.c, src/dd.c, src/df.c:
+	* src/dircolors.c, src/dirname.c, src/du.c, src/echo.c, src/env.c:
+	* src/expand.c, src/expr.c, src/factor.c, src/fmt.c, src/fold.c:
+	* src/head.c, src/hostid.c, src/hostname.c, src/id.c, src/install.c:
+	* src/join.c, src/kill.c, src/link.c, src/ln.c, src/logname.c:
+	* src/ls.c, src/md5sum.c, src/mkdir.c, src/mkfifo.c, src/mknod.c:
+	* src/mv.c, src/nice.c, src/nl.c, src/nohup.c, src/od.c:
+	* src/paste.c, src/pathchk.c, src/pinky.c, src/pr.c, src/printenv.c:
+	* src/printf.c, src/ptx.c, src/pwd.c, src/readlink.c, src/rm.c:
+	* src/rmdir.c, src/seq.c, src/setuidgid.c, src/shred.c, src/shuf.c:
+	* src/sleep.c, src/sort.c, src/split.c, src/stat.c, src/stty.c:
+	* src/su.c, src/sum.c, src/sync.c, src/system.h, src/tac.c:
+	* src/tail.c, src/tee.c, src/test.c, src/touch.c, src/tr.c:
+	* src/true.c, src/tsort.c, src/tty.c, src/uname.c, src/unexpand.c:
+	* src/uniq.c, src/unlink.c, src/uptime.c, src/users.c, src/wc.c:
+	* src/who.c, src/whoami.c, src/yes.c: Likewise.
+
+	* src/stty.c: Don't include "vasprintf.h", now that its
+	declarations are guaranteed to be in gnulib's stdio.h.
+	* src/who.c: Likewise.
+
+2007-03-27  Jim Meyering  <jim@meyering.net>
+
+	* README: Use "install", not "ginstall" in the list of program names.
+	* src/Makefile.am (check-README): Substitute s/ginstall/install/.
+
+2007-03-25  Jim Meyering  <jim@meyering.net>
+
+	* src/c99-to-c89.diff: Regenerate.
+
+2007-03-25  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Avoid the need for euidaccess and/or lstat on every directory entry
+	with 'rm -r dir' (without -f), if we are root, or if we are removing
+	a directory tree that is full of symbolic links.
+	* bootstrap.conf (gnulib_modules): Add write-any-file.
+	* src/copy.c: Include write-any-file.h.
+	(UNWRITABLE): Remove macro, replacing with....
+	(writable_destination): New function, which uses can_write_any_file
+	to avoid the need for euidaccess when we are privileged.
+	(overwrite_prompt, abandon_move): Use it.
+	* src/remove.c: Include write-any-file.h.
+	(D_TYPE): New macro.
+	(DT_UNKNOWN, DT_DIR, DT_LNK) [!HAVE_STRUCT_DIRENT_D_TYPE]: New macros.
+	(write_protected_non_symlink): Don't bother to stat if we can write
+	any file.
+	(prompt): New arg PDIRENT_TYPE.  All callers changed.
+	Use readdir dirent type to avoid the need for 'lstat' on each directory
+	entry in cases like 'rm -r dir', if we are root, or if the tree is
+	full of symbolic links.
+	(DT_IS_KNOWN, DT_MUST_BE): Remove.
+	(remove_entry): New arg DIRENT_TYPE_ARG.  All callers changed.
+
+2007-03-24  Jim Meyering  <jim@meyering.net>
+
+	If strace malfunctions, skip the test rather than failing it.
+	* tests/mv/atomic: Required on a mips-unknown-linux-gnu system
+	running the aging linux-2.4.27-mipscvs-20040814.
+
+2007-03-23  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/pathchk.c: Don't include euidaccess.h, as we don't call
+	euidaccess.
+
+2007-03-23  Jim Meyering  <jim@meyering.net>
+
+	* README-package-renamed-to-coreutils: Add a URL for the FAQ,
+	and a couple more archive links.
+
+2007-03-22  Jim Meyering  <jim@meyering.net>
+
+	Post-release version change.
+	* NEWS: Add a line for 6.9+.
+	* configure.ac (AC_INIT): Set new version string.
+
+	Version 6.9.
+	* NEWS: Record release date and new version number.
+	* configure.ac (AC_INIT): New version number.
+
+	* tests/mv/hard-3: Correct the preceding change: $3 -> $2.
+
+2007-03-22  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Improve a test script.
+	* tests/mv/hard-3: Check for 'ls' failure, too.
+	Generate more-useful debugging output when 'ls' fails.
+
+2007-03-21  Jim Meyering  <jim@meyering.net>
+
+	Fix a test script not to claim an ext2 file system is of type xfs.
+	* tests/du/slink: When using df --local and df --type=TYPE,
+	test only the exit code.  Don't bother with stdout.
+	Prompted by a report by Thomas Schwinge of an inaccurate diagnostic.
+
+	* gl/lib/savewd.c: Remove this file, since the savewd_save change
+	is now in gnulib.  The other wasn't useful.
+
+2007-03-20  Jim Meyering  <jim@meyering.net>
+
+	* gl/lib/acl.c: Remove this file, now that gnulib's version subsumes it.
+
+	Skip part of this test when "." is not a local file system.
+	* tests/install/basic-1: Otherwise, it would fail on some NFS
+	file systems.
+	* tests/mkdir/p-3: Likewise.
+
+2007-03-19  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* src/Makefile.am (dir_LDADD, ls_LDADD, vdir_LDADD):
+	Add $(LIB_ACL_TRIVIAL).
+
 2007-03-18  Jim Meyering  <jim@meyering.net>
+
+	Fix a generic NFS-related test failure.
+	* tests/mkdir/p-3: When setting up an unreadable "." in an
+	inaccessible parent, make the parent inaccessible *after* making "."
+	unreadable.  Otherwise, running "chmod a-r ." in an already-
+	inaccessible parent would fail on NFS with "Stale NFS file handle".
 
 	Fix a bug in how pr -m -s works.
 	* NEWS: Describe how the fix affects pr.

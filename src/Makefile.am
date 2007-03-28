@@ -104,9 +104,9 @@ uptime_LDADD = $(LDADD) $(POW_LIB) $(GETLOADAVG_LIBS)
 
 su_LDADD = $(LDADD) $(LIB_CRYPT)
 
-dir_LDADD += $(LIB_ACL)
-ls_LDADD += $(LIB_ACL)
-vdir_LDADD += $(LIB_ACL)
+dir_LDADD += $(LIB_ACL_TRIVIAL) $(LIB_ACL)
+ls_LDADD += $(LIB_ACL_TRIVIAL) $(LIB_ACL)
+vdir_LDADD += $(LIB_ACL_TRIVIAL) $(LIB_ACL)
 cp_LDADD += $(LIB_ACL)
 mv_LDADD += $(LIB_ACL)
 ginstall_LDADD += $(LIB_ACL)
@@ -269,7 +269,7 @@ check: check-README check-misc
 check-README:
 	rm -rf $(pr) $(pm)
 	echo $(all_programs) \
-	 | tr -s ' ' '\n' | sed -e 's,$(EXEEXT)$$,,' \
+	 | tr -s ' ' '\n' | sed -e 's,$(EXEEXT)$$,,;s/ginstall/install/' \
 	 | $(ASSORT) -u > $(pm) && \
 	sed -n '/^The programs .* are:/,/^[a-zA-Z]/p' $(top_srcdir)/README \
 	  | sed -n '/^   */s///p' | tr -s ' ' '\n' > $(pr)

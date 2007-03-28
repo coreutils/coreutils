@@ -530,7 +530,7 @@ usage (int status)
 A lightweight `finger' program;  print user information.\n\
 The utmp file will be %s.\n\
 "), UTMP_FILE);
-      printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
+      emit_bug_reporting_address ();
     }
   exit (status);
 }

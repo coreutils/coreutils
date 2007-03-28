@@ -774,7 +774,7 @@ Beware that parentheses need to be escaped (e.g., by backslashes) for shells.\n\
 INTEGER may also be -l STRING, which evaluates to the length of STRING.\n\
 "), stdout);
       printf (USAGE_BUILTIN_WARNING, _("test and/or ["));
-      printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
+      emit_bug_reporting_address ();
     }
   exit (status);
 }

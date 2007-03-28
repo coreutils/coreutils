@@ -2,7 +2,7 @@
 # Ensure that using `cp --preserve=link' to copy hard-linked arguments
 # onto existing destinations works, even when one of the link operations fails.
 
-# Copyright (C) 2003, 2006 Free Software Foundation, Inc.
+# Copyright (C) 2003, 2006, 2007 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -78,12 +78,12 @@ test -f x/b || fail=1
 test -f c || fail=1
 
 # The i-node numbers of a and c must be the same.
-ia=`ls -i a|sed 's/ a$//'`
-ic=`ls -i c|sed 's/ c$//'`
-test $ia = $ic || fail=1
+ia=`ls -i a` || fail=1; set x $ia; ia=$2
+ic=`ls -i c` || fail=1; set x $ic; ic=$2
+test "$ia" = "$ic" || fail=1
 
 # The i-node number of x/b must be different.
-ib=`ls -i x/b|sed 's/ x.b$//'`
-test $ia = $ib && fail=1
+ib=`ls -i x/b` || fail=1; set x $ib; ib=$2
+test "$ia" = "$ib" && fail=1
 
 (exit $fail); exit $fail

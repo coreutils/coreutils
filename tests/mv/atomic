@@ -1,7 +1,7 @@
 #!/bin/sh
 # ensure that mv doesn't first unlink its destination in one particular case
 
-# Copyright (C) 2006, 2006 Free Software Foundation, Inc.
+# Copyright (C) 2006-2007 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -52,6 +52,12 @@ fi
 strace -V < /dev/null > ver 2>&1 || skip=1
 if test "$skip" = 1; then
   echo "$0: no strace program, so skipping this test" 1>&2
+  (exit 77); exit 77
+fi
+
+strace -qe unlink echo > /dev/null 2>&1 || skip=1
+if test "$skip" = 1; then
+  echo "$0: strace doesn't work, so skipping this test" 1>&2
   (exit 77); exit 77
 fi
 

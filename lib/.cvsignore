@@ -3,8 +3,10 @@ Makefile
 Makefile.in
 __fpending.c
 __fpending.h
+acl-internal.h
 acl.c
 acl.h
+acl_entries.c
 alloca.c
 alloca.h
 alloca_.h
@@ -84,6 +86,7 @@ fcntl-safer.h
 fcntl.h
 fcntl_.h
 fd-safer.c
+file-has-acl.c
 file-type.c
 file-type.h
 fileblocks.c
@@ -93,6 +96,7 @@ filenamecat.c
 filenamecat.h
 findprog.c
 findprog.h
+float+.h
 fnmatch.c
 fnmatch.h
 fnmatch_.h
@@ -380,6 +384,8 @@ wchar_.h
 wctype.h
 wctype_.h
 wcwidth.h
+write-any-file.c
+write-any-file.h
 xalloc-die.c
 xalloc.h
 xgetcwd.c

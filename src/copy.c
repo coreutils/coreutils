@@ -51,6 +51,7 @@
 #include "stat-time.h"
 #include "utimecmp.h"
 #include "utimens.h"
+#include "write-any-file.h"
 #include "xreadlink.h"
 #include "yesno.h"
 
@@ -62,11 +63,6 @@
 #define SAME_OWNER(A, B) ((A).st_uid == (B).st_uid)
 #define SAME_GROUP(A, B) ((A).st_gid == (B).st_gid)
 #define SAME_OWNER_AND_GROUP(A, B) (SAME_OWNER (A, B) && SAME_GROUP (A, B))
-
-#define UNWRITABLE(File_name, File_mode)		\
-  ( /* euidaccess is not meaningful for symlinks */	\
-    ! S_ISLNK (File_mode)				\
-    && euidaccess (File_name, W_OK) != 0)
 
 struct dir_list
 {
@@ -793,10 +789,20 @@ same_file_ok (char const *src_name, struct stat const *src_sb,
   return false;
 }
 
+/* Return true if FILE, with mode MODE, is writable in the sense of 'mv'.
+   Always consider a symbolic link to be writable.  */
+static bool
+writable_destination (char const *file, mode_t mode)
+{
+  return (S_ISLNK (mode)
+	  || can_write_any_file ()
+	  || euidaccess (file, W_OK) == 0);
+}
+
 static void
 overwrite_prompt (char const *dst_name, struct stat const *dst_sb)
 {
-  if (euidaccess (dst_name, W_OK) != 0)
+  if (! writable_destination (dst_name, dst_sb->st_mode))
     {
       char perms[12];		/* "-rwxrwxrwx " ls-style modes. */
       strmode (dst_sb->st_mode, perms);
@@ -978,7 +984,7 @@ abandon_move (const struct cp_options *x,
           || ((x->interactive == I_ASK_USER
                || (x->interactive == I_UNSPECIFIED
                    && x->stdin_tty
-                   && UNWRITABLE (dst_name, dst_sb->st_mode)))
+                   && ! writable_destination (dst_name, dst_sb->st_mode)))
               && (overwrite_prompt (dst_name, dst_sb), 1)
               && ! yesno ()));
 }

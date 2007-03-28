@@ -1,5 +1,5 @@
 /* GNU's who.
-   Copyright (C) 1992-2006 Free Software Foundation, Inc.
+   Copyright (C) 1992-2007 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -37,7 +37,6 @@
 #include "hard-locale.h"
 #include "inttostr.h"
 #include "quote.h"
-#include "vasprintf.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "who"
@@ -665,7 +664,7 @@ usage (int status)
 If FILE is not specified, use %s.  %s as FILE is common.\n\
 If ARG1 ARG2 given, -m presumed: `am i' or `mom likes' are usual.\n\
 "), UTMP_FILE, WTMP_FILE);
-      printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
+      emit_bug_reporting_address ();
     }
   exit (status);
 }
