@@ -91,6 +91,7 @@ filenamecat.c
 filenamecat.h
 findprog.c
 findprog.h
+float+.h
 fnmatch.c
 fnmatch.h
 fnmatch_.h
