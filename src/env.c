@@ -130,7 +130,7 @@ Set each NAME to VALUE in the environment and run COMMAND.\n\
 \n\
 A mere - implies -i.  If no COMMAND, print the resulting environment.\n\
 "), stdout);
-      printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
+      emit_bug_reporting_address ();
     }
   exit (status);
 }

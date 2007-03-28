@@ -137,7 +137,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 \n\
 N may have a multiplier suffix: b 512, k 1024, m 1024*1024.\n\
 "), stdout);
-      printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
+      emit_bug_reporting_address ();
     }
   exit (status);
 }

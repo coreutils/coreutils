@@ -1922,7 +1922,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 \n\
 With no FILE or if FILE is -, read Standard Input.  `-F /' by default.\n\
 "), stdout);
-      printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
+      emit_bug_reporting_address ();
     }
   exit (status);
 }

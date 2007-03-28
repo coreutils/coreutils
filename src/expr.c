@@ -163,7 +163,7 @@ Pattern matches return the string matched between \\( and \\) or null; if\n\
 Exit status is 0 if EXPRESSION is neither null nor 0, 1 if EXPRESSION is null\n\
 or 0, 2 if EXPRESSION is syntactically invalid, and 3 if an error occurred.\n\
 "), stdout);
-      printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
+      emit_bug_reporting_address ();
     }
   exit (status);
 }

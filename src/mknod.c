@@ -79,7 +79,7 @@ otherwise, as decimal.  TYPE may be:\n\
   c, u   create a character (unbuffered) special file\n\
   p      create a FIFO\n\
 "), stdout);
-      printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
+      emit_bug_reporting_address ();
     }
   exit (status);
 }

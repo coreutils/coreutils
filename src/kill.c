@@ -114,7 +114,7 @@ or an exit status of a process terminated by a signal.\n\
 PID is an integer; if negative it identifies a process group.\n\
 "), stdout);
       printf (USAGE_BUILTIN_WARNING, PROGRAM_NAME);
-      printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
+      emit_bug_reporting_address ();
     }
   exit (status);
 }

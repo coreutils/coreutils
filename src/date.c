@@ -245,7 +245,7 @@ then an optional modifier, which is either\n\
 E to use the locale's alternate representations if available, or\n\
 O to use the locale's alternate numeric symbols if available.\n\
 "), stdout);
-      printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
+      emit_bug_reporting_address ();
     }
   exit (status);
 }

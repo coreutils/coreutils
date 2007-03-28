@@ -226,7 +226,7 @@ FORMAT is one of:\n\
   rz   right justified, leading zeros\n\
 \n\
 "), stdout);
-      printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
+      emit_bug_reporting_address ();
     }
   exit (status);
 }
