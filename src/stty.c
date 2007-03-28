@@ -1,5 +1,5 @@
 /* stty -- change and print terminal line settings
-   Copyright (C) 1990-2005 Free Software Foundation, Inc.
+   Copyright (C) 1990-2005, 2007 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -62,7 +62,6 @@
 #include "error.h"
 #include "fd-reopen.h"
 #include "quote.h"
-#include "vasprintf.h"
 #include "xstrtol.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */

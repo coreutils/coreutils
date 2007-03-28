@@ -1,3 +1,9 @@
+2007-03-28  Jim Meyering  <jim@meyering.net>
+
+	* src/stty.c: Don't include "vasprintf.h", now that its
+	declarations are guaranteed to be in gnulib's stdio.h.
+	* src/who.c: Likewise.
+
 2007-03-27  Jim Meyering  <jim@meyering.net>
 
 	* README: Use "install", not "ginstall" in the list of program names.
