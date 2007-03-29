@@ -1,3 +1,7 @@
+2007-03-29  Jim Meyering  <jim@meyering.net>
+
+	* .vg-suppressions: Add libc-getpwuid-leak.
+
 2007-03-28  Jim Meyering  <jim@meyering.net>
 
 	Help translators include translation team's web or email address.
