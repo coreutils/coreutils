@@ -1,6 +1,6 @@
 # Suppress valgrind diagnostics we don't care about.
 
-# Copyright (C) 2003, 2004, 2006 Free Software Foundation, Inc.
+# Copyright (C) 2003, 2004, 2006-2007 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -76,4 +76,19 @@
    Memcheck:Cond
    fun:strlen
    fun:fillin_rpath
+}
+{
+   libc-getpwuid-leak
+   Memcheck:Leak
+   fun:malloc
+   fun:nss_parse_service_list
+   fun:__nss_database_lookup
+   obj:*
+   obj:*
+   fun:getpwuid_r@@GLIBC_2.2.5
+   fun:getpwuid
+   fun:getuser
+   fun:format_user_width
+   fun:gobble_file
+   fun:main
 }
