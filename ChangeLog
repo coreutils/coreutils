@@ -1,5 +1,7 @@
 2007-03-30  Jim Meyering  <jim@meyering.net>
 
+	* NEWS: Mention these SELinux changes.
+
 	* ChangeLog-selinux: Remove file.
 	Move its contents into this file, removing old dates.
 

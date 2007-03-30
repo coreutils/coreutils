@@ -2,6 +2,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release 6.9+ (????-??-??) [stable]
 
+** New features
+
+  Add SELinux support (FIXME: add details here)
+
 
 * Noteworthy changes in release 6.9 (2007-03-22) [stable]
 
