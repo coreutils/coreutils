@@ -1,3 +1,9 @@
+2007-04-02  Jim Meyering  <jim@meyering.net>
+
+	* src/copy.c (copy_reg): Initialize local "con", before calling
+	getfscreatecon, in case that function (or its inline stub) does
+	not set it.
+
 2007-04-01  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/ls.c (print_horizontal): Fix bug reported by Mike Frysinger:

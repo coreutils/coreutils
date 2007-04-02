@@ -306,7 +306,7 @@ copy_reg (char const *src_name, char const *dst_name,
 	 that is used when the destination file doesn't already exist.  */
       if (x->preserve_security_context && 0 <= dest_desc)
 	{
-	  security_context_t con;
+	  security_context_t con = NULL;
 	  if (getfscreatecon (&con) < 0)
 	    {
 	      error (0, errno, _("failed to get file system create context"));
