@@ -24,7 +24,7 @@ TESTS = \
   stat-dtype \
   inode dangle file-type recursive dired infloop \
   rt-1 time-1 symlink-slash follow-slink no-arg m-option \
-  stat-vs-dirent
+  stat-vs-dirent x-option
 
 EXTRA_DIST = $(TESTS)
 TESTS_ENVIRONMENT = \

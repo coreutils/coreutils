@@ -4074,16 +4074,16 @@ print_horizontal (void)
   size_t pos = 0;
   size_t cols = calculate_columns (false);
   struct column_info const *line_fmt = &column_info[cols - 1];
-  size_t name_length = length_of_file_name_and_frills (cwd_file);
+  struct fileinfo const *f = sorted_file[0];
+  size_t name_length = length_of_file_name_and_frills (f);
   size_t max_name_length = line_fmt->col_arr[0];
 
   /* Print first entry.  */
-  print_file_name_and_frills (cwd_file);
+  print_file_name_and_frills (f);
 
   /* Now the rest.  */
   for (filesno = 1; filesno < cwd_n_used; ++filesno)
     {
-      struct fileinfo const *f;
       size_t col = filesno % cols;
 
       if (col == 0)

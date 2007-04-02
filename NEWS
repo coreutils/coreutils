@@ -6,6 +6,11 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   Add SELinux support (FIXME: add details here)
 
+** Bug fixes
+
+  ls -x DIR would sometimes output the wrong string in place of the
+  first entry.  [introduced in coreutils-6.8]
+
 
 * Noteworthy changes in release 6.9 (2007-03-22) [stable]
 
