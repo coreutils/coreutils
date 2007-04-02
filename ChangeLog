@@ -1,3 +1,9 @@
+2007-04-01  Paul Eggert  <eggert@cs.ucla.edu>
+
+	gnulib moved md5 and sha1 modules into a new crypt/ directory; adapt
+	* bootstrap.conf (gnulib_modules): Adjust to gnulib's renaming of
+	md5 to crypt/md5 and sha1 to crypt/sha1.
+
 2007-03-30  Jim Meyering  <jim@meyering.net>
 
 	* NEWS: Mention these SELinux changes.
