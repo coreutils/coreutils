@@ -1,8 +1,7 @@
 #!/bin/sh
 # -*- perl -*-
 
-# Copyright (C) 1998, 2000, 2001, 2002, 2003, 2004, 2005, 2006 Free
-# Software Foundation, Inc.
+# Copyright (C) 1998, 2000-2007 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -58,6 +57,13 @@ my $mkdir2 = {PRE => sub {mkdir 'd',0755 or die "d: $!\n";
 my $rmdir2 = {POST => sub {rmdir 'd/e' or die "d/e: $!\n";
 			   rmdir 'd' or die "d: $!\n" }};
 
+my $target = {PRE => sub {
+		mkdir 'd',0755 or die "d: $!\n";
+		symlink '.', 'd/X' or die "d/X: $!\n";
+		$ENV{LS_COLORS}='ln=target'
+	      }};
+my $target2 = {POST => sub {unlink 'd/X' or die "d/X: $!\n";
+			    rmdir 'd' or die "d: $!\n" }};
 my $slink_d = {PRE => sub {symlink '/', 'd' or die "d: $!\n";
                            $ENV{LS_COLORS}='ln=01;36:di=01;34:or=40;31;01'
                            }};
@@ -119,6 +125,10 @@ my @Tests =
      ['sl-dF-color', '-dF --color=always d',
 				 {OUT => "\e[0m\e[01;36md\e[0m\@\n\e[m"},
 				  $slink_d, $unlink_d],
+
+     # Test for a bug fixed in coreutils-6.10.
+     ['sl-target', '--color=always d',
+      {OUT => "\e[0m\e[01;34mX\e[0m\n\e[m"}, $target, $target2],
 
      # Test for a bug that was introduced in coreutils-4.5.4; fixed in 4.5.5.
      # To demonstrate it, the file in question (with executable bit set)
