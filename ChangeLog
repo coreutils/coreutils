@@ -1,3 +1,9 @@
+2007-04-07  Eric Blake  <ebb9@byu.net>
+
+	Fix a bug in how the LS_COLORS ln=target attribute is handled.
+	* src/ls.c (gobble_file): Use "stat" (not lstat) also when the
+	ln=target attribute applies.  Reported by Kirk Kelsey.
+
 2007-04-02  Jim Meyering  <jim@meyering.net>
 
 	* src/copy.c (copy_reg): Initialize local "con", before calling
