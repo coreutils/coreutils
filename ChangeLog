@@ -1,3 +1,11 @@
+2007-04-10  Jim Meyering  <jim@meyering.net>
+
+	ls: don't form or compute the length of strings that won't be used.
+	* src/ls.c (gobble_file): Form and compute length of strings for
+	block size, owner, group, author, major+minor numbers and file size
+	only if they'll actually be used.  I.e., don't form most of them
+	when not producing long format output.
+
 2007-04-07  Jim Meyering  <jim@meyering.net>
 
 	Add a test for, and document, today's fix.

@@ -2735,34 +2735,38 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
 	f->filetype = normal;
 
       blocks = ST_NBLOCKS (f->stat);
-      {
-	char buf[LONGEST_HUMAN_READABLE + 1];
-	int len = mbswidth (human_readable (blocks, buf, human_output_opts,
-					    ST_NBLOCKSIZE, output_block_size),
-			    0);
-	if (block_size_width < len)
-	  block_size_width = len;
-      }
-
-      if (print_owner)
+      if (format == long_format || print_block_size)
 	{
-	  int len = format_user_width (f->stat.st_uid);
-	  if (owner_width < len)
-	    owner_width = len;
+	  char buf[LONGEST_HUMAN_READABLE + 1];
+	  int len = mbswidth (human_readable (blocks, buf, human_output_opts,
+					      ST_NBLOCKSIZE, output_block_size),
+			      0);
+	  if (block_size_width < len)
+	    block_size_width = len;
 	}
 
-      if (print_group)
+      if (format == long_format)
 	{
-	  int len = format_group_width (f->stat.st_gid);
-	  if (group_width < len)
-	    group_width = len;
-	}
+	  if (print_owner)
+	    {
+	      int len = format_user_width (f->stat.st_uid);
+	      if (owner_width < len)
+		owner_width = len;
+	    }
 
-      if (print_author)
-	{
-	  int len = format_user_width (f->stat.st_author);
-	  if (author_width < len)
-	    author_width = len;
+	  if (print_group)
+	    {
+	      int len = format_group_width (f->stat.st_gid);
+	      if (group_width < len)
+		group_width = len;
+	    }
+
+	  if (print_author)
+	    {
+	      int len = format_user_width (f->stat.st_author);
+	      if (author_width < len)
+		author_width = len;
+	    }
 	}
 
       if (print_scontext)
@@ -2772,35 +2776,36 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
 	    scontext_width = len;
 	}
 
-      {
-	char buf[INT_BUFSIZE_BOUND (uintmax_t)];
-	int len = strlen (umaxtostr (f->stat.st_nlink, buf));
-	if (nlink_width < len)
-	  nlink_width = len;
-      }
+      if (format == long_format)
+	{
+	  char b[INT_BUFSIZE_BOUND (uintmax_t)];
+	  int b_len = strlen (umaxtostr (f->stat.st_nlink, b));
+	  if (nlink_width < b_len)
+	    nlink_width = b_len;
 
-      if (S_ISCHR (f->stat.st_mode) || S_ISBLK (f->stat.st_mode))
-	{
-	  char buf[INT_BUFSIZE_BOUND (uintmax_t)];
-	  int len = strlen (umaxtostr (major (f->stat.st_rdev), buf));
-	  if (major_device_number_width < len)
-	    major_device_number_width = len;
-	  len = strlen (umaxtostr (minor (f->stat.st_rdev), buf));
-	  if (minor_device_number_width < len)
-	    minor_device_number_width = len;
-	  len = major_device_number_width + 2 + minor_device_number_width;
-	  if (file_size_width < len)
-	    file_size_width = len;
-	}
-      else
-	{
-	  char buf[LONGEST_HUMAN_READABLE + 1];
-	  uintmax_t size = unsigned_file_size (f->stat.st_size);
-	  int len = mbswidth (human_readable (size, buf, human_output_opts,
-					      1, file_output_block_size),
-			      0);
-	  if (file_size_width < len)
-	    file_size_width = len;
+	  if (S_ISCHR (f->stat.st_mode) || S_ISBLK (f->stat.st_mode))
+	    {
+	      char buf[INT_BUFSIZE_BOUND (uintmax_t)];
+	      int len = strlen (umaxtostr (major (f->stat.st_rdev), buf));
+	      if (major_device_number_width < len)
+		major_device_number_width = len;
+	      len = strlen (umaxtostr (minor (f->stat.st_rdev), buf));
+	      if (minor_device_number_width < len)
+		minor_device_number_width = len;
+	      len = major_device_number_width + 2 + minor_device_number_width;
+	      if (file_size_width < len)
+		file_size_width = len;
+	    }
+	  else
+	    {
+	      char buf[LONGEST_HUMAN_READABLE + 1];
+	      uintmax_t size = unsigned_file_size (f->stat.st_size);
+	      int len = mbswidth (human_readable (size, buf, human_output_opts,
+						  1, file_output_block_size),
+				  0);
+	      if (file_size_width < len)
+		file_size_width = len;
+	    }
 	}
     }
 
