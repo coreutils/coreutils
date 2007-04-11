@@ -1,3 +1,11 @@
+2007-04-11  Paul Eggert  <eggert@cs.ucla.edu>
+
+	split --line-bytes=N (-C N): don't create an empty file.
+	* src/split.c (line_bytes_split): Don't create an empty line
+	afterwards if the last buffer happens to be exactly full.
+	* tests/misc/split-fail: Add a test case for this.
+	* NEWS: mention this.
+
 2007-04-10  Jim Meyering  <jim@meyering.net>
 
 	ls: don't form or compute the length of strings that won't be used.

@@ -15,6 +15,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   ln=target attribute) would mistakenly output the string "target"
   before the name of each symlink.  [introduced in coreutils-6.0]
 
+  split --line-bytes=N (-C N) no longer creates an empty file
+  [this bug is present at least as far back as textutils-1.22 (Jan, 1997)]
+
 
 * Noteworthy changes in release 6.9 (2007-03-22) [stable]
 

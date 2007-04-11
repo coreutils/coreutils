@@ -1,7 +1,7 @@
 #!/bin/sh
 # split must fail when given length/count of zero.
 
-# Copyright (C) 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+# Copyright (C) 2003, 2004, 2005, 2006, 2007 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -46,6 +46,12 @@ split -a 0 in 2> /dev/null || fail=1
 split -b 0 in 2> /dev/null && fail=1
 split -C 0 in 2> /dev/null && fail=1
 split -l 0 in 2> /dev/null && fail=1
+
+# Make sure -C doesn't create empty files.
+rm -f x?? || fail=1
+echo x | split -C 1 || fail=1
+test -f xaa && test -f xab || fail=1
+test -f xac && fail=1
 
 # Make sure that the obsolete -N notation still works
 split -1 in 2> /dev/null || fail=1

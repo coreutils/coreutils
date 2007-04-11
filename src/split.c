@@ -336,7 +336,11 @@ line_bytes_split (size_t n_bytes)
 
       n_buffered += n_read;
       if (n_buffered != n_bytes)
-	eof = true;
+	{
+	  if (n_buffered == 0)
+	    break;
+	  eof = true;
+	}
 
       /* Find where to end this chunk.  */
       bp = buf + n_buffered;
