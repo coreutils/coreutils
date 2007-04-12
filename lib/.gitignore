@@ -157,6 +157,13 @@ human.c
 human.h
 i-ring.c
 i-ring.h
+iconv.h
+iconv_.h
+iconv_open-aix.gperf
+iconv_open-hpux.gperf
+iconv_open-irix.gperf
+iconv_open-osf.gperf
+iconv_open.c
 idcache.c
 imaxtostr.c
 inet_ntop.c

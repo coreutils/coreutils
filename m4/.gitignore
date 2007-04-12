@@ -86,6 +86,8 @@ host-os.m4
 human.m4
 i-ring.m4
 iconv.m4
+iconv_h.m4
+iconv_open.m4
 idcache.m4
 inet_ntop.m4
 inline.m4
