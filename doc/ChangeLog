@@ -1,3 +1,8 @@
+2007-04-16  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi (cut invocation): Adjust synopsis to show that an
+	OPTION is required.  Reported by Rudolf Kastl.
+
 2007-03-21  Eric Blake  <ebb9@byu.net>
 
 	* coreutils.texi (md5sum invocation): Document escapes in output

@@ -4921,7 +4921,7 @@ input file, or standard input if no files are given or for a file name of
 @samp{-}.  Synopsis:
 
 @example
-cut [@var{option}]@dots{} [@var{file}]@dots{}
+cut @var{option}@dots{} [@var{file}]@dots{}
 @end example
 
 In the table which follows, the @var{byte-list}, @var{character-list},

@@ -2,6 +2,7 @@
 
 	* src/cut.c (usage): Adjust synopsis to show that an OPTION is required.
 	Reported by Rudolf Kastl.
+	* THANKS: Add Rudolf Kastl.
 
 2007-04-11  Paul Eggert  <eggert@cs.ucla.edu>
 
