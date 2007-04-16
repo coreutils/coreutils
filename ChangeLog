@@ -1,3 +1,8 @@
+2007-04-16  Jim Meyering  <jim@meyering.net>
+
+	* src/cut.c (usage): Adjust synopsis to show that an OPTION is required.
+	Reported by Rudolf Kastl.
+
 2007-04-11  Paul Eggert  <eggert@cs.ucla.edu>
 
 	split --line-bytes=N (-C N): don't create an empty file.

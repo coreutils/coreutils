@@ -1,5 +1,5 @@
 /* cut - remove parts of lines of files
-   Copyright (C) 1997-2006 Free Software Foundation, Inc.
+   Copyright (C) 1997-2007 Free Software Foundation, Inc.
    Copyright (C) 1984 David M. Ihnat
 
    This program is free software; you can redistribute it and/or modify
@@ -186,7 +186,7 @@ usage (int status)
   else
     {
       printf (_("\
-Usage: %s [OPTION]... [FILE]...\n\
+Usage: %s OPTION... [FILE]...\n\
 "),
 	      program_name);
       fputs (_("\
