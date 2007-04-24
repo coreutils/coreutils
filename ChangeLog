@@ -1,3 +1,10 @@
+2007-04-24  Eric Blake  <ebb9@byu.net>
+
+	ls --color once again colors dangling symlinks correctly
+	* src/ls.c (gobble_file): Much like the 2007-04-07 fix,
+	add a term to the expression that decides whether we need
+	stat and/or lstat calls.  Reported by Andreas Frische.
+
 2007-04-16  Jim Meyering  <jim@meyering.net>
 
 	* src/cut.c (usage): Adjust synopsis to show that an OPTION is required.
