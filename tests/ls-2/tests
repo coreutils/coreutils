@@ -130,6 +130,19 @@ my @Tests =
      ['sl-target', '--color=always d',
       {OUT => "\e[0m\e[01;34mX\e[0m\n\e[m"}, $target, $target2],
 
+     # Test for another bug fixed in coreutils-6.10.
+     # This one bites only for a system/file system with d_type support.
+     ['sl-dangle', '--color=always d',
+      {OUT => "\e[0m\e[40;31;01mX\e[0m\n\e[m"},
+      {PRE => sub {
+		mkdir 'd',0755 or die "d: $!\n";
+		symlink 'non-existent', 'd/X' or die "d/X: $!\n";
+		$ENV{LS_COLORS}='or=40;31;01'
+	      }},
+      {POST => sub {unlink 'd/X' or die "d/X: $!\n";
+		    rmdir 'd' or die "d: $!\n" }},
+     ],
+
      # Test for a bug that was introduced in coreutils-4.5.4; fixed in 4.5.5.
      # To demonstrate it, the file in question (with executable bit set)
      # must not be a command line argument.

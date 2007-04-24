@@ -11,6 +11,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   ls -x DIR would sometimes output the wrong string in place of the
   first entry.  [introduced in coreutils-6.8]
 
+  ls --color would mistakenly color a dangling symlink as if it were
+  a regular symlink.  This would happen only when the dangling symlink
+  was not a command-line argument and in a directory with d_type support.
+  [introduced in coreutils-6.0]
+
   ls --color, (with a custom LS_COLORS envvar value including the
   ln=target attribute) would mistakenly output the string "target"
   before the name of each symlink.  [introduced in coreutils-6.0]
