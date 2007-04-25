@@ -1,3 +1,7 @@
+2007-04-25  Jim Meyering  <jim@meyering.net>
+
+	* autobuild.m4: Remove file.  Now, provided by gnulib.
+
 2007-01-19  Jim Meyering  <jim@meyering.net>
 
 	* .cvsignore, .gitignore: Add more bootstrap-inserted file names.

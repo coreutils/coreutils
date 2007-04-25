@@ -1,6 +1,7 @@
 2007-04-25  Jim Meyering  <jim@meyering.net>
 
 	* bootstrap.conf (gnulib_modules): Add fseeko and ftello.
+	(gnulib_modules): Add autobuild.
 
 2007-04-24  Jim Meyering  <jim@meyering.net>
 

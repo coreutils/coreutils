@@ -6,6 +6,7 @@ argmatch.m4
 arpa_inet_h.m4
 assert.m4
 atexit.m4
+autobuild.m4
 backupfile.m4
 base64.m4
 bison.m4
