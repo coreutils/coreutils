@@ -54,6 +54,7 @@ free.m4
 fseeko.m4
 fstypename.m4
 fsusage.m4
+ftello.m4
 ftruncate.m4
 fts.m4
 getaddrinfo.m4
