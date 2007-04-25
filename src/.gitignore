@@ -61,6 +61,7 @@ pwd
 readlink
 rm
 rmdir
+runcon
 seq
 setuidgid
 sha1sum
@@ -69,6 +70,7 @@ sha256sum
 sha384sum
 sha512sum
 shred
+shuf
 sleep
 sort
 split
@@ -99,4 +101,3 @@ wheel.h
 who
 whoami
 yes
-shuf

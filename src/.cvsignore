@@ -64,6 +64,7 @@ pwd
 readlink
 rm
 rmdir
+runcon
 seq
 setuidgid
 sha1sum
