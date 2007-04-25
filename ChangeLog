@@ -1,3 +1,7 @@
+2007-04-25  Jim Meyering  <jim@meyering.net>
+
+	* bootstrap.conf (gnulib_modules): Add fseeko.
+
 2007-04-24  Jim Meyering  <jim@meyering.net>
 
 	* THANKS: Add Andreas Frische.
