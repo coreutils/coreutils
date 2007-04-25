@@ -50,6 +50,7 @@ fnmatch.m4
 fpending.m4
 fprintftime.m4
 free.m4
+fseeko.m4
 fstypename.m4
 fsusage.m4
 ftruncate.m4
