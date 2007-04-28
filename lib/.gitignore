@@ -349,6 +349,10 @@ strtoumax.c
 strverscmp.c
 strverscmp.h
 sys
+sys_socket.h
+sys_socket_.h
+sys_stat.h
+sys_stat_.h
 sys_time.h
 sys_time_.h
 t-fpending

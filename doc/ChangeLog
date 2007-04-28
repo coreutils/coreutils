@@ -1,3 +1,8 @@
+2007-04-28  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* coreutils.texi (nohup invocation): Add advice about saving
+	output to a file.
+
 2007-04-16  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (cut invocation): Adjust synopsis to show that an

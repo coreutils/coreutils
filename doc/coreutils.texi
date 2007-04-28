@@ -13441,6 +13441,14 @@ However, if standard output is closed, standard error terminal output
 is instead appended to the file @file{nohup.out} or
 @file{$HOME/nohup.out} as above.
 
+To capture the command's output to a file other than @file{nohup.out}
+you can redirect it.  For example, to capture the output of
+@command{make}:
+
+@example
+nohup make > make.log
+@end example
+
 @command{nohup} does not automatically put the command it runs in the
 background; you must do that explicitly, by ending the command line
 with an @samp{&}.  Also, @command{nohup} does not alter the
