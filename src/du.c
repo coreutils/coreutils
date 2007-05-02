@@ -298,7 +298,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -B, --block-size=SIZE  use SIZE-byte blocks\n\
   -b, --bytes           equivalent to `--apparent-size --block-size=1'\n\
   -c, --total           produce a grand total\n\
-  -D, --dereference-args  dereference any listed FILE that is a symbolic link\n\
+  -D, --dereference-args  dereference only symlinks that are listed on the\n\
+                          command line\n\
 "), stdout);
       fputs (_("\
       --files0-from=F   summarize disk usage of the NUL-terminated file\n\

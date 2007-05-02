@@ -1,5 +1,8 @@
 2007-05-02  Jim Meyering  <jim@meyering.net>
 
+	* src/du.c (usage): Tweak description of --dereference-args (-D) again.
+	Prompted by another request for clarification from Justin Pryzby.
+
 	Invoke rm via 'setuidgid ... env PATH="$PATH" ...', as in fail-eperm.
 	* tests/rm/fail-2eperm: Patch from AIDA Shinra.
 	Reported by Peter Dyballa.
