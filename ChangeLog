@@ -1,3 +1,10 @@
+2007-05-02  Jim Meyering  <jim@meyering.net>
+
+	Invoke rm via 'setuidgid ... env PATH="$PATH" ...', as in fail-eperm.
+	* tests/rm/fail-2eperm: Patch from AIDA Shinra.
+	Reported by Peter Dyballa.
+	* THANKS: Add AIDA Shinra and Peter Dyballa.
+
 2007-04-28  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/nohup.c (usage): Describe how standard input and output

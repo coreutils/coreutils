@@ -2,7 +2,7 @@
 # Like fail-eperm, but the failure must be for a file encountered
 # while trying to remove the containing directory with the sticky bit set.
 
-# Copyright (C) 2003, 2006 Free Software Foundation, Inc.
+# Copyright (C) 2003, 2006-2007 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -52,13 +52,13 @@ fail=0
 
 # Try to ensure that $NON_ROOT_USERNAME can access
 # the required version of rm.
-rm_version=`setuidgid $NON_ROOT_USERNAME rm --version|sed -n '1s/.* //p'`
+rm_version=`setuidgid $NON_ROOT_USERNAME env PATH="$PATH" rm --version|sed -n '1s/.* //p'`
 case $rm_version in
   $PACKAGE_VERSION) ;;
   *) echo "$0: cannot access required version ($PACKAGE_VERSION) of rm" 1>&2
      fail=1 ;;
 esac
-setuidgid $NON_ROOT_USERNAME rm -rf a 2> out-t && fail=1
+setuidgid $NON_ROOT_USERNAME env PATH="$PATH" rm -rf a 2> out-t && fail=1
 
 # On some systems, we get `Not owner'.  Convert it.
 # On other systems (HPUX), we get `Permission denied'.  Convert it, too.
