@@ -383,10 +383,11 @@ for sizeof(double) or L for sizeof(long double).\n\
       fputs (_("\
 \n\
 RADIX is d for decimal, o for octal, x for hexadecimal or n for none.\n\
-BYTES is hexadecimal with 0x or 0X prefix, it is multiplied by 512\n\
-with b suffix, by 1024 with k and by 1048576 with m.  Adding a z suffix to\n\
-any type adds a display of printable characters to the end of each line\n\
-of output.  \
+BYTES is hexadecimal with 0x or 0X prefix, and may have a multiplier suffix:\n\
+b 512, kB 1000, K 1024, MB 1000*1000, M 1024*1024,\n\
+GB 1000*1000*1000, G 1024*1024*1024, and so on for T, P, E, Z, Y.\n\
+Adding a z suffix to any type displays printable characters at the end of each\n\
+output line.  \
 "), stdout);
       fputs (_("\
 --string without a number implies 3.  --width without a number\n\
@@ -1563,6 +1564,7 @@ main (int argc, char **argv)
   bool modern = false;
   bool width_specified = false;
   bool ok = true;
+  static char const multipliers[] = "bEGKkMmPTYZ0";
 
   /* The old-style `pseudo starting address' to be printed in parentheses
      after any true address.  */
@@ -1650,7 +1652,7 @@ it must be one character from [doxn]"),
 
 	case 'j':
 	  modern = true;
-	  s_err = xstrtoumax (optarg, NULL, 0, &n_bytes_to_skip, "bkm");
+	  s_err = xstrtoumax (optarg, NULL, 0, &n_bytes_to_skip, multipliers);
 	  if (s_err != LONGINT_OK)
 	    STRTOL_FATAL_ERROR (optarg, _("skip argument"), s_err);
 	  break;
@@ -1659,7 +1661,8 @@ it must be one character from [doxn]"),
 	  modern = true;
 	  limit_bytes_to_format = true;
 
-	  s_err = xstrtoumax (optarg, NULL, 0, &max_bytes_to_format, "bkm");
+	  s_err = xstrtoumax (optarg, NULL, 0, &max_bytes_to_format,
+			      multipliers);
 	  if (s_err != LONGINT_OK)
 	    STRTOL_FATAL_ERROR (optarg, _("limit argument"), s_err);
 	  break;
@@ -1670,7 +1673,7 @@ it must be one character from [doxn]"),
 	    string_min = 3;
 	  else
 	    {
-	      s_err = xstrtoumax (optarg, NULL, 0, &tmp, "bkm");
+	      s_err = xstrtoumax (optarg, NULL, 0, &tmp, multipliers);
 	      if (s_err != LONGINT_OK)
 		STRTOL_FATAL_ERROR (optarg, _("minimum string length"), s_err);
 

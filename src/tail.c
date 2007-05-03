@@ -267,7 +267,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 If the first character of N (the number of bytes or lines) is a `+',\n\
 print beginning with the Nth item from the start of each file, otherwise,\n\
 print the last N items in the file.  N may have a multiplier suffix:\n\
-b 512, k 1024, m 1024*1024.\n\
+b 512, kB 1000, K 1024, MB 1000*1000, M 1024*1024,\n\
+GB 1000*1000*1000, G 1024*1024*1024, and so on for T, P, E, Z, Y.\n\
 \n\
 "), stdout);
      fputs (_("\
@@ -1475,7 +1476,7 @@ parse_options (int argc, char **argv,
 
 	  {
 	    strtol_error s_err;
-	    s_err = xstrtoumax (optarg, NULL, 10, n_units, "bkm");
+	    s_err = xstrtoumax (optarg, NULL, 10, n_units, "bkKmMGTPEZY0");
 	    if (s_err != LONGINT_OK)
 	      {
 		error (EXIT_FAILURE, 0, "%s: %s", optarg,

@@ -131,7 +131,9 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
 \n\
-SIZE may have a multiplier suffix: b for 512, k for 1K, m for 1 Meg.\n\
+SIZE may have a multiplier suffix:\n\
+b 512, kB 1000, K 1024, MB 1000*1000, M 1024*1024,\n\
+GB 1000*1000*1000, G 1024*1024*1024, and so on for T, P, E, Z, Y.\n\
 "), stdout);
       emit_bug_reporting_address ();
     }
@@ -388,6 +390,7 @@ main (int argc, char **argv)
   char *buf;			/* file i/o buffer */
   size_t page_size = getpagesize ();
   uintmax_t n_units;
+  static char const multipliers[] = "bEGKkMmPTYZ0";
   int c;
   int digits_optind = 0;
 
@@ -432,7 +435,7 @@ main (int argc, char **argv)
 	  if (split_type != type_undef)
 	    FAIL_ONLY_ONE_WAY ();
 	  split_type = type_bytes;
-	  if (xstrtoumax (optarg, NULL, 10, &n_units, "bkm") != LONGINT_OK
+	  if (xstrtoumax (optarg, NULL, 10, &n_units, multipliers) != LONGINT_OK
 	      || n_units == 0)
 	    {
 	      error (0, 0, _("%s: invalid number of bytes"), optarg);
@@ -456,7 +459,7 @@ main (int argc, char **argv)
 	  if (split_type != type_undef)
 	    FAIL_ONLY_ONE_WAY ();
 	  split_type = type_byteslines;
-	  if (xstrtoumax (optarg, NULL, 10, &n_units, "bkm") != LONGINT_OK
+	  if (xstrtoumax (optarg, NULL, 10, &n_units, multipliers) != LONGINT_OK
 	      || n_units == 0 || SIZE_MAX < n_units)
 	    {
 	      error (0, 0, _("%s: invalid number of bytes"), optarg);

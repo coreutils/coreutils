@@ -1661,8 +1661,11 @@ The default is octal.
 Skip @var{bytes} input bytes before formatting and writing.  If
 @var{bytes} begins with @samp{0x} or @samp{0X}, it is interpreted in
 hexadecimal; otherwise, if it begins with @samp{0}, in octal; otherwise,
-in decimal.  Appending @samp{b} multiplies @var{bytes} by 512, @samp{k}
-by 1024, and @samp{m} by 1048576.
+in decimal.  Appending @samp{b} multiplies @var{bytes} by 512,
+@samp{kB} by 1000, @samp{K} by 1024,
+@samp{MB} by 1000*1000, @samp{M} by 1024*1024,
+@samp{GB} by 1000*1000*1000, @samp{GB} by 1024*1024*1024,
+and so on for @samp{T}, @samp{P}, @samp{E}, @samp{Z}, and @samp{Y}.
 
 @item -N @var{bytes}
 @itemx --read-bytes=@var{bytes}
@@ -1671,14 +1674,16 @@ by 1024, and @samp{m} by 1048576.
 Output at most @var{bytes} bytes of the input.  Prefixes and suffixes on
 @code{bytes} are interpreted as for the @option{-j} option.
 
-@item -S @var{n}
-@itemx --strings[=@var{n}]
+@item -S @var{bytes}
+@itemx --strings[=@var{bytes}]
 @opindex -S
 @opindex --strings
 @cindex string constants, outputting
 Instead of the normal output, output only @dfn{string constants}: at
-least @var{n} consecutive @acronym{ASCII} graphic characters,
+least @var{bytes} consecutive @acronym{ASCII} graphic characters,
 followed by a null (zero) byte.
+Prefixes and suffixes on @code{bytes} are interpreted as for the
+@option{-j} option.
 
 If @var{n} is omitted with @option{--strings}, the default is 3.
 
@@ -2490,11 +2495,14 @@ The program accepts the following options.  Also see @ref{Common options}.
 @itemx --bytes=@var{n}
 @opindex -c
 @opindex --bytes
-Print the first @var{n} bytes, instead of initial lines.  Appending
-@samp{b} multiplies @var{n} by 512, @samp{k} by 1024, and @samp{m}
-by 1048576.
+Print the first @var{n} bytes, instead of initial lines.
 However, if @var{n} starts with a @samp{-},
 print all but the last @var{n} bytes of each file.
+Appending @samp{b} multiplies @var{n} by 512,
+@samp{kB} by 1000, @samp{K} by 1024,
+@samp{MB} by 1000*1000, @samp{M} by 1024*1024,
+@samp{GB} by 1000*1000*1000, @samp{GB} by 1024*1024*1024,
+and so on for @samp{T}, @samp{P}, @samp{E}, @samp{Z}, and @samp{Y}.
 
 @itemx -n @var{n}
 @itemx --lines=@var{n}
@@ -2503,6 +2511,7 @@ print all but the last @var{n} bytes of each file.
 Output the first @var{n} lines.
 However, if @var{n} starts with a @samp{-},
 print all but the last @var{n} lines of each file.
+Size multiplier suffixes are the same as with the @option{-c} option.
 
 @item -q
 @itemx --quiet
@@ -2567,10 +2576,6 @@ only reverse files that are at most as large as its buffer, which is
 typically 32 KiB@.  A more reliable and versatile way to reverse files is
 the @sc{gnu} @command{tac} command.
 
-If any option-argument is a number @var{n} starting with a @samp{+},
-@command{tail} begins printing with the @var{n}th item from the start of
-each file, instead of from the end.
-
 The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
@@ -2579,9 +2584,14 @@ The program accepts the following options.  Also see @ref{Common options}.
 @itemx --bytes=@var{bytes}
 @opindex -c
 @opindex --bytes
-Output the last @var{bytes} bytes, instead of final lines.  Appending
-@samp{b} multiplies @var{bytes} by 512, @samp{k} by 1024, and @samp{m}
-by 1048576.
+Output the last @var{bytes} bytes, instead of final lines.
+However, if @var{n} starts with a @samp{+}, start printing with the
+@var{n}th byte from the start of each file, instead of from the end.
+Appending @samp{b} multiplies @var{bytes} by 512,
+@samp{kB} by 1000, @samp{K} by 1024,
+@samp{MB} by 1000*1000, @samp{M} by 1024*1024,
+@samp{GB} by 1000*1000*1000, @samp{GB} by 1024*1024*1024,
+and so on for @samp{T}, @samp{P}, @samp{E}, @samp{Z}, and @samp{Y}.
 
 @item -f
 @itemx --follow[=@var{how}]
@@ -2691,6 +2701,9 @@ This option is meaningful only when following by name.
 @opindex -n
 @opindex --lines
 Output the last @var{n} lines.
+However, if @var{n} starts with a @samp{+}, start printing with the
+@var{n}th line from the start of each file, instead of from the end.
+Size multiplier suffixes are the same as with the @option{-c} option.
 
 @item -q
 @itemx --quiet
@@ -2797,8 +2810,11 @@ option syntax @option{-@var{lines}}.  New scripts should use @option{-l
 @opindex -b
 @opindex --bytes
 Put the first @var{bytes} bytes of @var{input} into each output file.
-Appending @samp{b} multiplies @var{bytes} by 512, @samp{k} by 1024, and
-@samp{m} by 1048576.
+Appending @samp{b} multiplies @var{bytes} by 512,
+@samp{kB} by 1000, @samp{K} by 1024,
+@samp{MB} by 1000*1000, @samp{M} by 1024*1024,
+@samp{GB} by 1000*1000*1000, @samp{GB} by 1024*1024*1024,
+and so on for @samp{T}, @samp{P}, @samp{E}, @samp{Z}, and @samp{Y}.
 
 @item -C @var{bytes}
 @itemx --line-bytes=@var{bytes}

@@ -1,3 +1,20 @@
+2007-05-02  Paul Eggert  <eggert@cs.ucla.edu>
+
+	The following commands and options now support the standard size
+	suffixes kB, M, MB, G, GB, and so on for T, P, Y, Z, and Y:
+	head -c, head -n, od -j, od -N, od -S, split -b, split -C,
+	tail -c, tail -n.
+	* doc/coreutils.texi (od invocation, head invocation, tail invocation):
+	Document support for new size suffixes.
+	(head invocation, tail invocation):
+	Document that -n uses the same suffixes as -c.
+	(tail invocation): More-clearly document what leading "+" does.
+	* src/head.c (usage, string_to_integer): Support new suffixes.
+	* src/od.c (usage, main): Likewise.
+	* src/split.c (usage, main): Likewise.
+	* src/tail.c (usage, parse_options): Likewise.
+	Prompted by a patch from Evan Hunt.
+
 2007-05-02  Jim Meyering  <jim@meyering.net>
 
 	* src/du.c (usage): Tweak description of --dereference-args (-D) again.
