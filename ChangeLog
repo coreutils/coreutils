@@ -1,3 +1,10 @@
+2007-05-03  Jim Meyering  <jim@meyering.net>
+
+	Avoid test failure when run with a permissive umask.
+	* tests/rm/no-give-up: Set permissions of test directory properly,
+	i.e., not depending on umask prohibiting go=w.
+	Reported by AIDA Shinra.
+
 2007-05-02  Paul Eggert  <eggert@cs.ucla.edu>
 
 	The following commands and options now support the standard size
