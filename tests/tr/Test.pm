@@ -1,6 +1,6 @@
 # Test "tr".
 
-# Copyright (C) 1996, 1997, 2000, 2002, 2004, 2005, 2006 Free Software
+# Copyright (C) 1996, 1997, 2000, 2002, 2004-2007 Free Software
 # Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
@@ -135,6 +135,8 @@ my @tv = (
 # From Glenn Fowler.
 ['fowler-1', q|ah -H|, 'aha', '-H-', 0],
 
+# Prior to coreutils-6.10, this would provoke a failed assertion.
+['no-abort-1', '-c ' . q|a '[b*256]'|, 'abc', 'abb', 0],
 );
 
 sub test_vector

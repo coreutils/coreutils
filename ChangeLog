@@ -1,3 +1,13 @@
+2007-05-04  Jim Meyering  <jim@meyering.net>
+
+	tr -c: don't abort when translating with S2 larger than complement of S1
+	* src/tr.c (main): Remove invalid assertion triggered by e.g.,
+	tr -c a '[b*256]'.  There's nothing wrong with having Set2 larger
+	than Set1.  Reported by Guntram Blohm.
+	* tests/tr/Test.pm (no-abort-1): Test for the above.
+	* NEWS: Mention this bug fix.
+	* THANKS: Add Guntram Blohm.
+
 2007-05-03  Jim Meyering  <jim@meyering.net>
 
 	Avoid test failure when run with a permissive umask.

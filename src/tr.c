@@ -1,5 +1,5 @@
 /* tr -- a filter to translate characters
-   Copyright (C) 91, 1995-2006 Free Software Foundation, Inc.
+   Copyright (C) 91, 1995-2007 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -1816,7 +1816,6 @@ main (int argc, char **argv)
 		  xlate[i] = ch;
 		}
 	    }
-	  assert (get_next (s2, NULL) == -1 || truncate_set1);
 	}
       else
 	{

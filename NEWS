@@ -23,6 +23,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   split --line-bytes=N (-C N) no longer creates an empty file
   [this bug is present at least as far back as textutils-1.22 (Jan, 1997)]
 
+  tr -c no longer aborts when translating with Set2 larger than the
+  complement of Set1.
+
 
 * Noteworthy changes in release 6.9 (2007-03-22) [stable]
 
