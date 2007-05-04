@@ -1,5 +1,9 @@
 2007-05-04  Jim Meyering  <jim@meyering.net>
 
+	Avoid test failure when run with an unusual umask.
+	* tests/ls/color-dtype-dir: Set umask to 022.
+	Suggestion from AIDA Shinra.
+
 	Avoid failure of root-only test when run with a restrictive umask.
 	* tests/rm/no-give-up: Ensure that non-root can access "d/" through
 	root-owned ".".  Reported by AIDA Shinra.
