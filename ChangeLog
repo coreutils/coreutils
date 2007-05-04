@@ -1,5 +1,9 @@
 2007-05-04  Jim Meyering  <jim@meyering.net>
 
+	Avoid failure of root-only test when run with a restrictive umask.
+	* tests/rm/no-give-up: Ensure that non-root can access "d/" through
+	root-owned ".".  Reported by AIDA Shinra.
+
 	tr -c: don't abort when translating with S2 larger than complement of S1
 	* src/tr.c (main): Remove invalid assertion triggered by e.g.,
 	tr -c a '[b*256]'.  There's nothing wrong with having Set2 larger
