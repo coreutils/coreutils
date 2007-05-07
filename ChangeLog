@@ -1,3 +1,7 @@
+2007-05-07  Jim Meyering  <jim@meyering.net>
+
+	* NEWS: Mention that last week's tr bug dates back to 1992.
+
 2007-05-04  Jim Meyering  <jim@meyering.net>
 
 	Avoid test failure when run with an unusual umask.
