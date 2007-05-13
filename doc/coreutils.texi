@@ -4229,11 +4229,15 @@ This is equivalent to @option{--all-repeated} (@option{-D}).
 
 @item prepend
 Output a newline before each group of repeated lines.
+With @option{--zero-terminated} (@option{-z}), use
+an @acronym{ASCII} @sc{nul} (zero) byte instead of a newline.
 
 @item separate
 Separate groups of repeated lines with a single newline.
+With @option{--zero-terminated} (@option{-z}), use
+an @acronym{ASCII} @sc{nul} (zero) byte instead of a newline.
 This is the same as using @samp{prepend}, except that
-there is no newline before the first group, and hence
+no delimiter is inserted before the first group, and hence
 may be better suited for output direct to users.
 @end table
 
@@ -4260,6 +4264,19 @@ causes @command{uniq} to print unique lines, and nothing else.
 Compare at most @var{n} characters on each line (after skipping any specified
 fields and characters).  By default the entire rest of the lines are
 compared.
+
+@item -z
+@itemx --zero-terminated
+@opindex -z
+@opindex --zero-terminated
+@cindex sort zero-terminated lines
+Treat the input as a set of lines, each terminated by a null character
+(@acronym{ASCII} @sc{nul}) instead of a line feed
+(@acronym{ASCII} @sc{lf}).
+This option can be useful in conjunction with @samp{sort -z}, @samp{perl -0} or
+@samp{find -print0} and @samp{xargs -0} which do the same in order to
+reliably handle arbitrary file names (even those containing blanks
+or other special characters).
 
 @end table
 

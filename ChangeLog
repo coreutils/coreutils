@@ -1,3 +1,15 @@
+2007-05-12  James Youngman  <jay@gnu.org>
+
+	Add -z option to uniq.  Originally proposed by Egmont Koblinger.
+	* NEWS: Mention uniq's new option: --zero-terminated (-z).
+	* src/uniq.c: Add new option, --zero-terminated (-z), to make
+	uniq use the NUL byte as separator/delimiter rather than newline.
+	(check_file): Add a parameter: delimiter.  Update caller.
+	Use readlinebuffer_delim in place of readlinebuffer everywhere.
+	(main): Handle the new option.
+	(usage): Describe new option the same way sort does.
+	* doc/coreutils.texi (uniq invocation): Describe the new option.
+
 2007-05-07  Jim Meyering  <jim@meyering.net>
 
 	* NEWS: Mention that last week's tr bug dates back to 1992.

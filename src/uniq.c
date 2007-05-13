@@ -1,5 +1,5 @@
 /* uniq -- remove duplicate lines from a sorted file
-   Copyright (C) 86, 91, 1995-2006 Free Software Foundation, Inc.
+   Copyright (C) 86, 91, 1995-2007 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -119,6 +119,7 @@ static struct option const longopts[] =
   {"skip-fields", required_argument, NULL, 'f'},
   {"skip-chars", required_argument, NULL, 's'},
   {"check-chars", required_argument, NULL, 'w'},
+  {"zero-terminated", no_argument, NULL, 'z'},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
@@ -156,6 +157,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -i, --ignore-case     ignore differences in case when comparing\n\
   -s, --skip-chars=N    avoid comparing the first N characters\n\
   -u, --unique          only print unique lines\n\
+  -z, --zero-terminated  end lines with 0 byte, not newline\n\
 "), stdout);
      fputs (_("\
   -w, --check-chars=N   compare no more than N characters in lines\n\
@@ -268,7 +270,7 @@ writeline (struct linebuffer const *line,
    If either is "-", use the standard I/O stream for it instead. */
 
 static void
-check_file (const char *infile, const char *outfile)
+check_file (const char *infile, const char *outfile, char delimiter)
 {
   struct linebuffer lb1, lb2;
   struct linebuffer *thisline, *prevline;
@@ -300,7 +302,7 @@ check_file (const char *infile, const char *outfile)
 	{
 	  char *thisfield;
 	  size_t thislen;
-	  if (readlinebuffer (thisline, stdin) == 0)
+	  if (readlinebuffer_delim (thisline, stdin, delimiter) == 0)
 	    break;
 	  thisfield = find_field (thisline);
 	  thislen = thisline->length - 1 - (thisfield - thisline->buffer);
@@ -323,7 +325,7 @@ check_file (const char *infile, const char *outfile)
       uintmax_t match_count = 0;
       bool first_delimiter = true;
 
-      if (readlinebuffer (prevline, stdin) == 0)
+      if (readlinebuffer_delim (prevline, stdin, delimiter) == 0)
 	goto closefiles;
       prevfield = find_field (prevline);
       prevlen = prevline->length - 1 - (prevfield - prevline->buffer);
@@ -333,7 +335,7 @@ check_file (const char *infile, const char *outfile)
 	  bool match;
 	  char *thisfield;
 	  size_t thislen;
-	  if (readlinebuffer (thisline, stdin) == 0)
+	  if (readlinebuffer_delim (thisline, stdin, delimiter) == 0)
 	    {
 	      if (ferror (stdin))
 		goto closefiles;
@@ -363,7 +365,7 @@ check_file (const char *infile, const char *outfile)
 		  if ((delimit_groups == DM_PREPEND)
 		      || (delimit_groups == DM_SEPARATE
 			  && !first_delimiter))
-		    putchar ('\n');
+		    putchar (delimiter);
 		}
 	    }
 
@@ -406,6 +408,7 @@ main (int argc, char **argv)
   enum Skip_field_option_type skip_field_option_type = SFO_NONE;
   int nfiles = 0;
   char const *file[2];
+  char delimiter = '\n';	/* change with --zero-terminated, -z */
 
   file[0] = file[1] = "-";
   initialize_main (&argc, &argv);
@@ -434,7 +437,7 @@ main (int argc, char **argv)
       if (optc == -1
 	  || (posixly_correct && nfiles != 0)
 	  || ((optc = getopt_long (argc, argv,
-				   "-0123456789Dcdf:is:uw:", longopts, NULL))
+				   "-0123456789Dcdf:is:uw:z", longopts, NULL))
 	      == -1))
 	{
 	  if (argc <= optind)
@@ -530,6 +533,10 @@ main (int argc, char **argv)
 				  N_("invalid number of bytes to compare"));
 	  break;
 
+	case 'z':
+	  delimiter = '\0';
+	  break;
+
 	case_GETOPT_HELP_CHAR;
 
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
@@ -546,7 +553,7 @@ main (int argc, char **argv)
       usage (EXIT_FAILURE);
     }
 
-  check_file (file[0], file[1]);
+  check_file (file[0], file[1], delimiter);
 
   exit (EXIT_SUCCESS);
 }

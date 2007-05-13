@@ -6,6 +6,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   Add SELinux support (FIXME: add details here)
 
+  uniq accepts a new option: --zero-terminated (-z).  As with the sort
+  option of the same name, this makes uniq consume and produce
+  NUL-terminated lines rather than newline-terminated lines.
+
 ** Bug fixes
 
   ls -x DIR would sometimes output the wrong string in place of the
