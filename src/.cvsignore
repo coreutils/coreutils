@@ -5,6 +5,7 @@ Makefile.in
 base64
 basename
 cat
+chcon
 chgrp
 chmod
 chown

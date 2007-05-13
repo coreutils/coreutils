@@ -1,5 +1,22 @@
 2007-05-13  Jim Meyering  <jim@meyering.net>
 
+	Remove the generated tests/*/Makefile.am files from version control.
+	* tests/cut/Makefile.am: git-remove this generated file.
+	* tests/head/Makefile.am: Likewise.
+	* tests/join/Makefile.am: Likewise.
+	* tests/pr/Makefile.am: Likewise.
+	* tests/sort/Makefile.am: Likewise.
+	* tests/tac/Makefile.am: Likewise.
+	* tests/tail/Makefile.am: Likewise.
+	* tests/test/Makefile.am: Likewise.
+	* tests/tr/Makefile.am: Likewise.
+	* tests/uniq/Makefile.am: Likewise.
+	* tests/wc/Makefile.am: Likewise.
+	* .cvsignore, .gitignore: Ignore these generated files.
+
+	* src/.cvsignore, src/.gitignore: Add chcon here, ...
+	* .cvsignore, .gitignore: ... not here.
+
 	Test uniq's new --zero-terminated (-z) option.
 	* tests/uniq/Test.pm: When possible, create a "-z"-testing variant
 	of each existing test.
