@@ -1,3 +1,10 @@
+2007-05-13  Jim Meyering  <jim@meyering.net>
+
+	Test uniq's new --zero-terminated (-z) option.
+	* tests/uniq/Test.pm: When possible, create a "-z"-testing variant
+	of each existing test.
+	(2z, 3z, 4z, 5z, 20z, 122, 123): New tests from James Youngman.
+
 2007-05-12  James Youngman  <jay@gnu.org>
 
 	Add -z option to uniq.  Originally proposed by Egmont Koblinger.

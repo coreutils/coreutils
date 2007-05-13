@@ -1,7 +1,6 @@
 # Test "uniq".
 
-# Copyright (C) 1998, 1999, 2001, 2002, 2003, 2004, 2005, 2006 Free
-# Software Foundation, Inc.
+# Copyright (C) 1998, 1999, 2001-2007 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -34,6 +33,14 @@ my @tv = (
 ['5',  '',    "a\na\nb",         "a\nb\n",          0],
 ['6',  '',    "b\na\na\n",       "b\na\n",          0],
 ['7',  '',    "a\nb\nc\n",       "a\nb\nc\n",       0],
+
+# Ensure that newlines are not interpreted with -z.
+['2z', '-z',  "a\na\n",          "a\na\n\0",        0],
+['3z', '-z',  "a\na",            "a\na\0",          0],
+['4z', '-z',  "a\nb",            "a\nb\0",          0],
+['5z', '-z',  "a\na\nb",         "a\na\nb\0",       0],
+['20z','-dz', "a\na\n",          "",                0],
+
 # Make sure that eight bit characters work
 ['8',  '',    "ö\nv\n",          "ö\nv\n",          0],
 # Test output of -u option; only unique lines
@@ -107,10 +114,15 @@ my @tv = (
 ['120', '-d -u', "a\na\n\b",        "",                         0],
 ['121', '-d -u -w340282366920938463463374607431768211456',
 		 "a\na\n\b",        "",                         0],
+# Check that --zero-terminated is synonymous with -z.
+['122', '--zero-terminated',  "a\na\nb",         "a\na\nb\0",       0],
+['123', '--zero-terminated',  "a\0a\0b",         "a\0b\0",          0],
 );
 
 sub test_vector
 {
+  my @new;
+
   my $t;
   foreach $t (@tv)
     {
@@ -122,9 +134,29 @@ sub test_vector
 
       $ret
 	and $Test::input_via{$test_name} = {REDIR => 0};
+
+      push @new, $t;
+
+      ###########################################################
+      # When possible, create a "-z"-testing variant of each test.
+
+      # skip any test whose input or output already contains a NUL byte
+      $in =~ /\0/ || $exp =~ /\0/
+	and next;
+      # skip any test that uses the -z option
+      $flags =~ /z/
+	and next;
+      # skip the obsolete-syntax tests
+      $test_name =~ /^obs-plus/
+	and next;
+
+      (my $inz = $in) =~ tr/\n/\0/;
+      (my $expz = $exp) =~ tr/\n/\0/;
+      my $t2 = ["$test_name-z", "-z $flags", $inz, $expz, $ret];
+      push @new, $t2;
     }
 
-  return @tv;
+  return @new;
 }
 
 1;
