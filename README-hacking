@@ -16,6 +16,7 @@ tools we depend upon, including:
 - Bison <http://www.gnu.org/software/bison/>
 - Gettext <http://www.gnu.org/software/gettext/>
 - Gzip <http://www.gnu.org/software/gzip/>
+- Perl <http://www.cpan.org/>
 - Tar <http://www.gnu.org/software/tar/>
 - Wget <http://www.gnu.org/software/wget/>
 

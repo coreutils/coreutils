@@ -1,3 +1,10 @@
+2007-05-15  Jim Meyering  <jim@meyering.net>
+
+	Generate a dozen test-related Makefile.am files at bootstrap-time.
+	* README-hacking: Build-from-checkout now require Perl, too.
+	* bootstrap: Now that these generated Makefile.am files are no longer
+	under version control, they must be created at bootstrap time.
+
 2007-05-14  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* man/chmod.x: Document chmod's behavior with setuid and setgid bits.
