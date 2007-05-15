@@ -1,4 +1,4 @@
-'\" Copyright (C) 1998, 1999, 2001, 2006 Free Software Foundation, Inc.
+'\" Copyright (C) 1998, 1999, 2001, 2006, 2007 Free Software Foundation, Inc.
 '\"
 '\" This is free software.  You may redistribute copies of it under the terms
 '\" of the GNU General Public License <http://www.gnu.org/licenses/gpl.html>.
@@ -51,8 +51,7 @@ categories (\fBo\fP).
 .PP
 A numeric mode is from one to four octal digits (0\-7), derived by
 adding up the bits with values 4, 2, and 1.  Omitted digits are
-assumed to be leading zeros, except that if the first digit is
-omitted, a directory's set user and group ID bits are not affected.
+assumed to be leading zeros.
 The first digit selects the set user ID (4) and set group ID (2) and
 restricted deletion or sticky (1) attributes.  The second digit
 selects permissions for the user who owns the file: read (4), write (2),
@@ -72,6 +71,30 @@ In contrast,
 .B chmod
 ignores symbolic links encountered during recursive directory
 traversals.
+.SH "SETUID AND SETGID BITS"
+.B chmod
+clears the set-group-ID bit of a
+regular file if the file's group ID does not match the user's
+effective group ID or one of the user's supplementary group IDs,
+unless the user has appropriate privileges.  Additional restrictions
+may cause the set-user-ID and set-group-ID bits of
+.I MODE
+or
+.I RFILE
+to be ignored.  This behavior depends on the policy and
+functionality of the underlying
+.B chmod
+system call.  When in
+doubt, check the underlying system behavior.
+.PP
+.B chmod
+preserves a directory's set-user-ID and set-group-ID bits unless you
+explicitly specify otherwise.  You can set or clear the bits with
+symbolic modes like
+.B u+s
+and
+.BR g\-s ,
+and you can set (but not clear) the bits with a numeric mode.
 .SH "RESTRICTED DELETION FLAG OR STICKY BIT"
 The restricted deletion flag or sticky bit is a single bit, whose
 interpretation depends on the file type.  For directories, it prevents
