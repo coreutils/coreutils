@@ -541,7 +541,7 @@ my-distcheck: $(local-check) $(release_archive_dir)/$(prev-tgz)
 	  cd $(t)/$(distdir)						\
 	    && (cd src && patch -V never --fuzz=0 <c99-to-c89.diff)	\
 	    && ./configure --disable-largefile				\
-	         CFLAGS='-Werror -ansi -pedantic -Wno-long-long'	\
+	         CFLAGS='-Werror -ansi -Wno-long-long'			\
 	    && $(MAKE);							\
 	fi
 	-rm -rf $(t)

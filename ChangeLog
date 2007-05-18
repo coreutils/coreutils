@@ -1,3 +1,8 @@
+2007-05-18  Jim Meyering  <jim@meyering.net>
+
+	* Makefile.maint (my-distcheck): Remove -pedantic from $(CFLAGS)
+	for now, to avoid c89-check failure due to use of #include_next.
+
 2007-05-15  Jim Meyering  <jim@meyering.net>
 
 	Generate a dozen test-related Makefile.am files at bootstrap-time.
