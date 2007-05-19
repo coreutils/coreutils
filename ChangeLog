@@ -1,3 +1,9 @@
+2007-05-19  Jim Meyering  <jim@meyering.net>
+
+	Rename uses of futimens -> gl_futimens; glibc now declares the former.
+	* src/copy.c (copy_reg): Reflect renaming: futimens -> gl_futimens.
+	* src/touch.c (touch): Likewise.
+
 2007-05-18  Jim Meyering  <jim@meyering.net>
 
 	* Makefile.maint (my-distcheck): Remove -pedantic from $(CFLAGS)

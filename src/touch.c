@@ -1,5 +1,5 @@
 /* touch -- change modification and access times of files
-   Copyright (C) 87, 1989-1991, 1995-2005 Free Software Foundation, Inc.
+   Copyright (C) 87, 1989-1991, 1995-2005, 2007 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -182,7 +182,7 @@ touch (const char *file)
       t = timespec;
     }
 
-  ok = (futimens (fd, (fd == STDOUT_FILENO ? NULL : file), t) == 0);
+  ok = (gl_futimens (fd, (fd == STDOUT_FILENO ? NULL : file), t) == 0);
 
   if (fd == STDIN_FILENO)
     {
