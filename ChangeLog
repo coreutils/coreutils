@@ -1,3 +1,7 @@
+2007-05-20  Jim Meyering  <jim@meyering.net>
+
+	* TODO: Remove some now-completed or no longer relevant items.
+
 2007-05-19  Jim Meyering  <jim@meyering.net>
 
 	Rename uses of futimens -> gl_futimens; glibc now declares the former.

@@ -1,6 +1,3 @@
-stty.c:
-  use xstrtoul, not sscanf
-
 printf:
   Now that gnulib supports *printf("%a"), import one of the
   *printf-posix modules so that printf(1) will support %a even on
@@ -50,8 +47,6 @@ seq: give better diagnostics for invalid formats:
    e.g. no or too many % directives
 seq: consider allowing format string to contain no %-directives
 
-resolve RH report on cp -a forwarded by Tim Waugh
-
 tail: don't use xlseek; it *exits*.
   Instead, maybe use a macro and return nonzero.
 
@@ -63,11 +58,6 @@ lib/strftime.c: Since %N is the only format that we need but that
   glibc's strftime doesn't support, consider using a wrapper that
   would expand /%(-_)?\d*N/ to the desired string and then pass the
   resulting string to glibc's strftime.
-
-sort: Compress temporary files when doing large external sort/merges.
-  This improves performance when you can compress/uncompress faster than
-  you can read/write, which is common in these days of fast CPUs.
-  suggestion from Charles Randall on 2001-08-10
 
 unexpand: [http://www.opengroup.org/onlinepubs/007908799/xcu/unexpand.html]
   printf 'x\t \t y\n'|unexpand -t 8,9 should print its input, unmodified.
@@ -140,9 +130,6 @@ Changes expected to go in, someday.
 
   ------------------------------
 
-Have euidaccess.m4 check for eaccess as well as euidaccess
-If found, then do `#define euidaccess eaccess'.
-
 Remove long-deprecated options.  Search case-insensitive for
 `deprecated' and `remove in '.  Automate this.
 
@@ -180,8 +167,7 @@ ls.c: use gettime rather than clock_gettime, gettimeofday, time
 
 -----
 
-Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software Foundation,
-Inc.
+Copyright (C) 2002-2007 Free Software Foundation, Inc.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
