@@ -1654,42 +1654,61 @@ display_recoverable (struct termios *mode)
   putchar ('\n');
 }
 
+/* NOTE: identical to below, modulo use of tcflag_t */
+static int
+strtoul_tcflag_t (char const *s, int base, char **p, tcflag_t *result,
+		  char delim)
+{
+  unsigned long ul;
+  errno = 0;
+  ul = strtoul (s, p, base);
+  if (errno || **p != delim || *p == s || (tcflag_t) ul != ul)
+    return -1;
+  *result = ul;
+  return 0;
+}
+
+/* NOTE: identical to above, modulo use of cc_t */
+static int
+strtoul_cc_t (char const *s, int base, char **p, cc_t *result, char delim)
+{
+  unsigned long ul;
+  errno = 0;
+  ul = strtoul (s, p, base);
+  if (errno || **p != delim || *p == s || (cc_t) ul != ul)
+    return -1;
+  *result = ul;
+  return 0;
+}
+
+/* Parse the output of display_recoverable.
+   Return false if any part of it is invalid.  */
 static bool
 recover_mode (char const *arg, struct termios *mode)
 {
+  tcflag_t flag[4];
+  char const *s = arg;
   size_t i;
-  int n;
-  unsigned long int chr;
-  unsigned long int iflag, oflag, cflag, lflag;
+  for (i = 0; i < 4; i++)
+    {
+      char *p;
+      if (strtoul_tcflag_t (s, 16, &p, flag + i, ':') != 0)
+	return false;
+      s = p + 1;
+    }
+  mode->c_iflag = flag[0];
+  mode->c_oflag = flag[1];
+  mode->c_cflag = flag[2];
+  mode->c_lflag = flag[3];
 
-  /* Scan into temporaries since it is too much trouble to figure out
-     the right format for `tcflag_t'.  */
-  if (sscanf (arg, "%lx:%lx:%lx:%lx%n",
-	      &iflag, &oflag, &cflag, &lflag, &n) != 4)
-    return false;
-  mode->c_iflag = iflag;
-  mode->c_oflag = oflag;
-  mode->c_cflag = cflag;
-  mode->c_lflag = lflag;
-  if (mode->c_iflag != iflag
-      || mode->c_oflag != oflag
-      || mode->c_cflag != cflag
-      || mode->c_lflag != lflag)
-    return false;
-  arg += n;
   for (i = 0; i < NCCS; ++i)
     {
-      if (sscanf (arg, ":%lx%n", &chr, &n) != 1)
+      char *p;
+      char delim = i < NCCS - 1 ? ':' : '\0';
+      if (strtoul_cc_t (s, 16, &p, mode->c_cc + i, delim) != 0)
 	return false;
-      mode->c_cc[i] = chr;
-      if (mode->c_cc[i] != chr)
-	return false;
-      arg += n;
+      s = p + 1;
     }
-
-  /* Fail if there are too many fields.  */
-  if (*arg != '\0')
-    return false;
 
   return true;
 }

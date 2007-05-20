@@ -8,4 +8,4 @@ ChangeLog
 ^lib/group-member\.c$
 ^Makefile\.maint$
 ^doc/coreutils.texi$
-^src/stty.c$
+^tests/stty/invalid$

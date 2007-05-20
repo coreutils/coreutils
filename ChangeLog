@@ -1,5 +1,18 @@
 2007-05-20  Jim Meyering  <jim@meyering.net>
 
+	stty: diagnose an invalid hex value in 35-colon commmand-line argument
+	* NEWS: Mention this.
+	* src/stty.c (strtoul_tcflag_t, strtoul_cc_t): New functions.
+	(recover_mode): Use those functions (not sscanf), to parse the
+	string robustly.
+	* tests/stty/invalid: New file.  Test for the above.
+	* tests/stty/Makefile.am (TESTS): Add invalid.
+	* .x-sc_prohibit_atoi_atof: Don't exempt stty.c from this check.
+	Add tests/stty/invalid so we don't have to obfuscate the comment
+	about sscanf therein.
+	* Makefile.maint (sc_prohibit_atoi_atof): Mention sscanf in the
+	diagnostic, too.
+
 	* TODO: Remove some now-completed or no longer relevant items.
 
 2007-05-19  Jim Meyering  <jim@meyering.net>
