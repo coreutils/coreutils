@@ -57,6 +57,8 @@
 #define ADD_RANGE_PAIR(rp, low, high)			\
   do							\
     {							\
+      if (low == 0 || high == 0)			\
+	FATAL_ERROR (_("fields and positions are numbered from 1")); \
       if (n_rp >= n_rp_allocated)			\
 	{						\
 	  (rp) = X2NREALLOC (rp, &n_rp_allocated);	\

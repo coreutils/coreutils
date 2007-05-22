@@ -12,6 +12,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  cut now diagnoses a range starting with zero (e.g., -f 0-2) as invalid;
+  before, it would treat it as if it started with 1 (-f 1-2).
+
   "cut -f 2-0" now fails; before, it was equivalent to "cut -f 2-"
 
   cut now diagnoses the '-' in "cut -f -" as an invalid range, rather

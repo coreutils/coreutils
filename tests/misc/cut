@@ -1,7 +1,7 @@
 #!/bin/sh
 # Test "cut".                                                   -*- perl -*-
 
-# Copyright (C) 2006 Free Software Foundation, Inc.
+# Copyright (C) 2006, 2007 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@ $PERL -e 1 > /dev/null 2>&1 || {
   exit 77
 }
 
-exec $PERL -w -I$srcdir/.. -MCoreutils -- - <<\EOF
+exec $PERL -w -I$srcdir/.. -MCoreutils -- - <<\FILE_EOF
 require 5.003;
 use strict;
 
@@ -36,16 +36,29 @@ use strict;
 # Turn off localisation of executable's ouput.
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
 
+my $prog = 'cut';
+my $diag = <<EOF;
+$prog: fields and positions are numbered from 1
+Try \`cut --help' for more information.
+EOF
+
 my @Tests =
   (
-  # Provoke a double-free in cut from coreutils-6.7.
-  ['dbl-free', '-f2-', {IN=>{f=>'x'}}, {IN=>{g=>'y'}}, {OUT=>"x\ny\n"}],
+   # Provoke a double-free in cut from coreutils-6.7.
+   ['dbl-free', '-f2-', {IN=>{f=>'x'}}, {IN=>{g=>'y'}}, {OUT=>"x\ny\n"}],
+
+   # This failed (as it should) even before coreutils-6.10,
+   # but cut from 6.10 produces a more useful diagnostic.
+   ['zero-1', '-b0',   {ERR=>$diag}, {EXIT => 1} ],
+
+   # Before coreutils-6.10, specifying a range of 0-2 was not an error.
+   # It was treated just like "-2".
+   ['zero-2', '-f0-2', {ERR=>$diag}, {EXIT => 1} ],
   );
 
 my $save_temps = $ENV{DEBUG};
 my $verbose = $ENV{VERBOSE};
 
-my $prog = 'cut';
 my $fail = run_tests ($ME, $prog, \@Tests, $save_temps, $verbose);
 exit $fail;
-EOF
+FILE_EOF

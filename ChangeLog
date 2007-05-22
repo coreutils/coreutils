@@ -1,5 +1,12 @@
 2007-05-22  Jim Meyering  <jim@meyering.net>
 
+	cut: diagnose a range starting with 0 (-f 0-2) as invalid, and
+	give a better diagnostic for a field-number/offset of 0.
+	* NEWS: Mention the fix.
+	* src/cut.c (ADD_RANGE_PAIR): Add an explicit check.
+	Based on a patch from James Youngman.
+	* tests/misc/cut: Add tests for the above.
+
 	"cut -f 2-0" now fails; before, it was equivalent to "cut -f 2-"
 	Also, diagnose the '-' in "cut -f -" as an invalid range, rather
 	than interpreting it as the unlimited range, "1-".
@@ -8,6 +15,7 @@
 	of 0 as an unspecified range endpoint.
 	Give better diagnostics.
 	Adjust a comment so that it is true also for 64-bit size_t.
+
 	* tests/cut/Test.pm: Add tests for the above.
 
 	stty: fix a harmless syntax nit
