@@ -1,6 +1,6 @@
 # Test 'cut'.
 
-# Copyright (C) 1996, 1997, 1998, 1999, 2003, 2004 Free Software
+# Copyright (C) 1996, 1997, 1998, 1999, 2003, 2004, 2007 Free Software
 # Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
@@ -113,6 +113,13 @@ my @tv = (
 ['od-overlap4', '-b1-3,2-3 --output-d=:', "abcd\n",  "abc\n",	0],
 ['od-overlap5', '-b1-3,1-4 --output-d=:', "abcde\n",  "abcd\n",	0],
 
+# None of the following invalid ranges provoked an error before coreutils-6.10.
+['inval1',	'-f 2-0',	'',		'',		1],
+['inval2',	'-f -',		'',		'',		1],
+['inval3',	'-f 4,-',	'',		'',		1],
+['inval4',	'-f 1-2,-',	'',		'',		1],
+['inval5',	'-f 1-,-',	'',		'',		1],
+['inval6',	'-f -1,-',	'',		'',		1],
 );
 
 # Don't use a pipe for failing tests.  Otherwise, sometimes they

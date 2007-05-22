@@ -342,6 +342,8 @@ set_fields (const char *fieldstr)
 {
   size_t initial = 1;		/* Value of first number in a range.  */
   size_t value = 0;		/* If nonzero, a number being accumulated.  */
+  bool lhs_specified = false;
+  bool rhs_specified = false;
   bool dash_found = false;	/* True if a '-' is found in this field.  */
   bool field_found = false;	/* True if at least one field spec
 				   has been processed.  */
@@ -366,13 +368,8 @@ set_fields (const char *fieldstr)
 	  dash_found = true;
 	  fieldstr++;
 
-	  if (value)
-	    {
-	      initial = value;
-	      value = 0;
-	    }
-	  else
-	    initial = 1;
+	  initial = (lhs_specified ? value : 1);
+	  value = 0;
 	}
       else if (*fieldstr == ',' || isblank (*fieldstr) || *fieldstr == '\0')
 	{
@@ -382,9 +379,12 @@ set_fields (const char *fieldstr)
 	    {
 	      dash_found = false;
 
-	      /* A range.  Possibilites: -n, m-n, n-.
+	      if (!lhs_specified && !rhs_specified)
+		FATAL_ERROR (_("invalid range with no endpoint: -"));
+
+	      /* A range.  Possibilities: -n, m-n, n-.
 		 In any case, `initial' contains the start of the range. */
-	      if (value == 0)
+	      if (!rhs_specified)
 		{
 		  /* `n-'.  From `initial' to end of line. */
 		  eol_range_start = initial;
@@ -394,7 +394,7 @@ set_fields (const char *fieldstr)
 		{
 		  /* `m-n' or `-n' (1-n). */
 		  if (value < initial)
-		    FATAL_ERROR (_("invalid byte or field list"));
+		    FATAL_ERROR (_("invalid decreasing range"));
 
 		  /* Is there already a range going to end of line? */
 		  if (eol_range_start != 0)
@@ -432,7 +432,7 @@ set_fields (const char *fieldstr)
 		  value = 0;
 		}
 	    }
-	  else if (value != 0)
+	  else
 	    {
 	      /* A simple field number, not a range. */
 	      ADD_RANGE_PAIR (rp, value, value);
@@ -446,6 +446,8 @@ set_fields (const char *fieldstr)
 	    }
 
 	  fieldstr++;
+	  lhs_specified = false;
+	  rhs_specified = false;
 	}
       else if (ISDIGIT (*fieldstr))
 	{
@@ -456,10 +458,15 @@ set_fields (const char *fieldstr)
 	    num_start = fieldstr;
 	  in_digits = true;
 
+	  if (dash_found)
+	    rhs_specified = 1;
+	  else
+	    lhs_specified = 1;
+
 	  /* Detect overflow.  */
 	  if (!DECIMAL_DIGIT_ACCUMULATE (value, *fieldstr - '0', size_t))
 	    {
-	      /* In case the user specified -c4294967296,22,
+	      /* In case the user specified -c$(echo 2^64|bc),22,
 		 complain only about the first number.  */
 	      /* Determine the length of the offending number.  */
 	      size_t len = strspn (num_start, "0123456789");

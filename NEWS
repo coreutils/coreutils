@@ -12,6 +12,11 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  "cut -f 2-0" now fails; before, it was equivalent to "cut -f 2-"
+
+  cut now diagnoses the '-' in "cut -f -" as an invalid range, rather
+  than interpreting it as the unlimited range, "1-".
+
   ls -x DIR would sometimes output the wrong string in place of the
   first entry.  [introduced in coreutils-6.8]
 

@@ -1,5 +1,15 @@
 2007-05-22  Jim Meyering  <jim@meyering.net>
 
+	"cut -f 2-0" now fails; before, it was equivalent to "cut -f 2-"
+	Also, diagnose the '-' in "cut -f -" as an invalid range, rather
+	than interpreting it as the unlimited range, "1-".
+	* NEWS: Mention these changes.
+	* src/cut.c (set_fields): Don't interpret an accumulator "value"
+	of 0 as an unspecified range endpoint.
+	Give better diagnostics.
+	Adjust a comment so that it is true also for 64-bit size_t.
+	* tests/cut/Test.pm: Add tests for the above.
+
 	stty: fix a harmless syntax nit
 	* src/stty.c (visible): Use ";" as the statement terminator
 	between two assignments, not ",".
