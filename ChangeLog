@@ -1,3 +1,10 @@
+2007-05-22  Jim Meyering  <jim@meyering.net>
+
+	stty: fix a harmless syntax nit
+	* src/stty.c (visible): Use ";" as the statement terminator
+	between two assignments, not ",".
+	(integer_arg): Join an unnecessarily wrapped line.
+
 2007-05-20  Jim Meyering  <jim@meyering.net>
 
 	stty: diagnose an invalid hex value in 35-colon commmand-line argument

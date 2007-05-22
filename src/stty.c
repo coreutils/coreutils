@@ -1864,8 +1864,8 @@ visible (cc_t ch)
 	}
       else
 	{
-	  *bpout++ = 'M',
-	    *bpout++ = '-';
+	  *bpout++ = 'M';
+	  *bpout++ = '-';
 	  if (ch >= 128 + 32)
 	    {
 	      if (ch < 128 + 127)
@@ -1900,8 +1900,7 @@ static unsigned long int
 integer_arg (const char *s, unsigned long int maxval)
 {
   unsigned long int value;
-  if (xstrtoul (s, NULL, 0, &value, "bB") != LONGINT_OK
-      || maxval < value)
+  if (xstrtoul (s, NULL, 0, &value, "bB") != LONGINT_OK || maxval < value)
     {
       error (0, 0, _("invalid integer argument %s"), quote (s));
       usage (EXIT_FAILURE);
