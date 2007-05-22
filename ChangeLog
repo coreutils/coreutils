@@ -1,5 +1,11 @@
 2007-05-22  Jim Meyering  <jim@meyering.net>
 
+	Check for an up-to-date copyright year in coreutils.texi.
+	* Makefile.maint (copyright-check): Also check for an up-to-date
+	copyright year in doc/$().texi, if that file exists.
+	* doc/coreutils.texi: Add 2007 to list of Copyright years.
+	Reported by Karl Berry.
+
 	cut: diagnose a range starting with 0 (-f 0-2) as invalid, and
 	give a better diagnostic for a field-number/offset of 0.
 	* NEWS: Mention the fix.
