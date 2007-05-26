@@ -1,5 +1,5 @@
 /* wc - print the number of lines, words, and bytes in files
-   Copyright (C) 85, 91, 1995-2006 Free Software Foundation, Inc.
+   Copyright (C) 85, 91, 1995-2007 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -274,8 +274,6 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
       bool in_word = false;
       uintmax_t linepos = 0;
       mbstate_t state = { 0, };
-      uintmax_t last_error_line = 0;
-      int last_error_errno = 0;
 # if SUPPORT_OLD_MBRTOWC
       /* Back-up the state before each multibyte character conversion and
 	 move the last incomplete character of the buffer to the front
@@ -323,17 +321,10 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
 		}
 	      if (n == (size_t) -1)
 		{
-		  /* Signal repeated errors only once per line.  */
-		  if (!(lines + 1 == last_error_line
-			&& errno == last_error_errno))
-		    {
-		      char line_number_buf[INT_BUFSIZE_BOUND (uintmax_t)];
-		      last_error_line = lines + 1;
-		      last_error_errno = errno;
-		      error (0, errno, "%s:%s", file,
-			     umaxtostr (last_error_line, line_number_buf));
-		      ok = false;
-		    }
+		  /* Remember that we read a byte, but don't complain
+		     about the error.  Because of the decoding error,
+		     this is a considered to be byte but not a
+		     character (that is, chars is not incremented).  */
 		  p++;
 		  bytes_read--;
 		}

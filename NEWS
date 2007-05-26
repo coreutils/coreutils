@@ -10,6 +10,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   option of the same name, this makes uniq consume and produce
   NUL-terminated lines rather than newline-terminated lines.
 
+  wc no longer warns about character decoding errors in multibyte locales.
+  This means for example that "wc /bin/sh" now produces normal output
+  (though the word count will have no real meaning) rather than many
+  error messages.
+
 ** Bug fixes
 
   cut now diagnoses a range starting with zero (e.g., -f 0-2) as invalid;

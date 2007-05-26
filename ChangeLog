@@ -1,3 +1,12 @@
+2007-05-25  James Youngman  <jay@gnu.org>
+
+	wc: ignore multibyte-character decoding errors
+	* src/wc.c (wc): Don't issue an error message when mbrtowc
+	indicates that we have seen an invalid byte sequence.  This
+	makes "wc /bin/sh" bearable (though the word and line counts
+	are likely not to be useful).
+	* NEWS: Mention the change.
+
 2007-05-22  Jim Meyering  <jim@meyering.net>
 
 	Check for an up-to-date copyright year in coreutils.texi.
