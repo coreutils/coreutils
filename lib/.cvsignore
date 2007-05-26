@@ -97,6 +97,8 @@ filenamecat.h
 findprog.c
 findprog.h
 float+.h
+float.h
+float_.h
 fnmatch.c
 fnmatch.h
 fnmatch_.h
@@ -105,9 +107,11 @@ fopen-safer.c
 fprintftime.c
 fprintftime.h
 free.c
+fseeko.c
 fstatat.c
 fsusage.c
 fsusage.h
+ftello.c
 ftruncate.c
 fts-cycle.c
 fts.c

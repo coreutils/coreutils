@@ -47,6 +47,7 @@ filemode.m4
 filenamecat.m4
 findprog.m4
 flexmember.m4
+float_h.m4
 fnmatch.m4
 fpending.m4
 fprintftime.m4
