@@ -1,3 +1,8 @@
+2007-05-29  Jim Meyering  <jim@meyering.net>
+
+	* src/dircolors.hin: Add screen-256color.
+	Suggested by sdl.web@gmail.com in <http://bugzilla.redhat.com/239266>.
+
 2007-05-26  Jim Meyering  <jim@meyering.net>
 
 	* TODO: Add an entry for comm --output-delimiter=STR
