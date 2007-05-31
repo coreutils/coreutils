@@ -1,3 +1,7 @@
+2007-05-26  Jim Meyering  <jim@meyering.net>
+
+	* TODO: Add an entry for comm --output-delimiter=STR
+
 2007-05-25  James Youngman  <jay@gnu.org>
 
 	wc: ignore multibyte-character decoding errors
