@@ -1,3 +1,10 @@
+2007-05-31  Jim Meyering  <jim@meyering.net>
+
+	Pull printf-related code from gnulib, rather than using forked copy.
+	* bootstrap.conf (gnulib_modules): Don't avoid size_max and xsize
+	modules.  While I dislike xsize-style overflow avoidance, maintaining
+	a forked version of e.g., vasnprintf.c was too much work.
+
 2007-05-29  Jim Meyering  <jim@meyering.net>
 
 	* src/dircolors.hin: Add screen-256color.
