@@ -74,6 +74,7 @@ src/md5sum.c
 src/mkdir.c
 src/mkfifo.c
 src/mknod.c
+src/mktemp.c
 src/mv.c
 src/nice.c
 src/nl.c

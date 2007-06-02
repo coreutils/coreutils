@@ -75,6 +75,7 @@ md5sum.1:	$(common_dep)	$(srcdir)/md5sum.x	../src/md5sum.c
 mkdir.1:	$(common_dep)	$(srcdir)/mkdir.x	../src/mkdir.c
 mkfifo.1:	$(common_dep)	$(srcdir)/mkfifo.x	../src/mkfifo.c
 mknod.1:	$(common_dep)	$(srcdir)/mknod.x	../src/mknod.c
+mktemp.1:	$(common_dep)	$(srcdir)/mktemp.x	../src/mktemp.c
 mv.1:		$(common_dep)	$(srcdir)/mv.x		../src/mv.c
 nice.1:		$(common_dep)	$(srcdir)/nice.x	../src/nice.c
 nl.1:		$(common_dep)	$(srcdir)/nl.x		../src/nl.c

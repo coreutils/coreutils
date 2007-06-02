@@ -31,7 +31,8 @@ EXTRA_PROGRAMS = \
   $(build_if_possible__progs) \
   [ chcon chgrp chown chmod cp dd dircolors du \
   ginstall link ln dir vdir ls mkdir \
-  mkfifo mknod mv nohup readlink rm rmdir shred stat sync touch unlink \
+  mkfifo mknod mktemp \
+  mv nohup readlink rm rmdir shred stat sync touch unlink \
   cat cksum comm csplit cut expand fmt fold head join md5sum \
   nl od paste pr ptx sha1sum sha224sum sha256sum sha384sum sha512sum \
   shuf sort split sum tac tail tr tsort unexpand uniq wc \
@@ -96,6 +97,7 @@ ls_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME) $(LIB_SELINUX)
 pr_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME)
 shred_LDADD = $(LDADD) $(LIB_GETHRXTIME) $(LIB_FDATASYNC)
 shuf_LDADD = $(LDADD) $(LIB_GETHRXTIME)
+mktemp_LDADD = $(LDADD) $(LIB_GETHRXTIME)
 vdir_LDADD = $(LDADD) $(LIB_CLOCK_GETTIME) $(LIB_SELINUX)
 
 ## If necessary, add -lm to resolve use of pow in lib/strtod.c.

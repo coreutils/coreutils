@@ -1,5 +1,27 @@
 2007-10-07  Jim Meyering  <meyering@redhat.com>
 
+	New program: mktemp.
+	* NEWS: Mention this.
+	* README: Add mktemp to the list.
+	* AUTHORS: Add this: mktemp: Jim Meyering
+	* src/mktemp.c: New file.
+	* src/Makefile.am (bin_PROGRAMS): Add mktemp.
+	(mktemp_LDADD): Add $(LIB_GETHRXTIME).
+	* man/mktemp.x: New file.
+	* man/Makefile.am (dist_man_MANS): Add mktemp.1.
+	(mktemp.1): New dependency.
+	* man/.cvsignore: Add mktemp.1.
+	* man/.gitignore: New file.
+	* src/.cvsignore, src/.gitignore: Add mktemp.
+	* tests/misc/mktemp: New file.
+	* tests/misc/Makefile.am (TESTS): Add mktemp.
+	* tests/Coreutils.pm (run_tests): Give the POST-test function
+	access to stdout and stderr contents, so it can verify that
+	the named-on-stdout file/dir does indeed exist and has proper
+	permissions, etc.
+	[po/ChangeLog]
+	* POTFILES.in: Add src/mktemp.c.
+
 	Make tempname more random, via the randint module.
 	* gl/modules/tempname (Depends-on): Add randint and stdbool.
 	* gl/lib/tempname.c: Include randint.h and stdbool.h.

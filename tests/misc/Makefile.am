@@ -43,6 +43,7 @@ TESTS = \
   date \
   xstrtol \
   od \
+  mktemp \
   arch \
   pr \
   df-P \
