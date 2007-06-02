@@ -189,6 +189,7 @@ localcharset.c
 localcharset.h
 long-options.c
 long-options.h
+lseek.c
 lstat.c
 lstat.h
 malloc.c
@@ -250,6 +251,7 @@ posixver.c
 posixver.h
 printf-args.c
 printf-args.h
+printf-parse.c
 printf-parse.h
 putenv.c
 quote.c
@@ -308,6 +310,7 @@ sha1.c
 sha1.h
 sig2str.c
 sig2str.h
+size_max.h
 snprintf.c
 snprintf.h
 socket.h
@@ -369,6 +372,7 @@ time_r.h
 timespec.h
 uinttostr.c
 umaxtostr.c
+unicodeio.c
 unicodeio.h
 unistd--.h
 unistd-safer.h
@@ -385,6 +389,7 @@ utimecmp.c
 utimecmp.h
 utimens.c
 utimens.h
+vasnprintf.c
 vasnprintf.h
 vasprintf.c
 vasprintf.h
@@ -413,6 +418,7 @@ xnanosleep.h
 xreadlink-with-size.c
 xreadlink.c
 xreadlink.h
+xsize.h
 xstrndup.c
 xstrndup.h
 xstrtod.c

@@ -125,6 +125,7 @@ long-options.m4
 longdouble.m4
 longlong.m4
 ls-mntd-fs.m4
+lseek.m4
 lstat.m4
 mbchar.m4
 mbiter.m4
