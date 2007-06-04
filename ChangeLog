@@ -1,3 +1,12 @@
+2007-06-04  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* doc/coreutils.texi (Common options): Mention that -h and
+	--human-readable are equivalent to --block-size=human-readable.
+	Documentation problem reported by Steve Ward in
+	<http://lists.gnu.org/archive/html/bug-coreutils/2007-06/msg00007.html>.
+	(du invocation): Use optSi rather than duplicating the macro's
+	contents (incorrectly, since we claimed a "B" was output).
+
 2007-05-31  Jim Meyering  <jim@meyering.net>
 
 	Pull printf-related code from gnulib, rather than using forked copy.

@@ -573,6 +573,7 @@ you prefer powers of 1024.
 @cindex human-readable output
 Append a size letter to each size, such as @samp{M} for mebibytes.
 Powers of 1024 are used, not 1000; @samp{M} stands for 1,048,576 bytes.
+This option is equivalent to @option{--block-size=human-readable}.
 Use the @option{--si} option if you prefer powers of 1000.
 @end macro
 
@@ -9765,13 +9766,7 @@ Output a null byte at the end of each line, rather than a newline.
 This option enables other programs to parse the output of @command{du}
 even when that output would contain file names with embedded newlines.
 
-@itemx --si
-@opindex --si
-@cindex SI output
-Append an SI-style abbreviation to each size, such as @samp{MB} for
-megabytes.  Powers of 1000 are used, not 1024; @samp{MB} stands for
-1,000,000 bytes.  Use the @option{-h} or @option{--human-readable} option if
-you prefer powers of 1024.
+@optSi
 
 @item -s
 @itemx --summarize
