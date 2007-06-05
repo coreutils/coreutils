@@ -3,4 +3,4 @@ uname \- print system information
 [DESCRIPTION]
 .\" Add any additional description here
 [SEE ALSO]
-uname(2)
+arch(1), uname(2)

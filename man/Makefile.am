@@ -32,7 +32,7 @@ dist_man_MANS = \
   tty.1 unexpand.1 uniq.1 unlink.1 vdir.1 wc.1 \
   whoami.1 yes.1 $(MAN)
 optional_mans = \
-  chroot.1 hostid.1 nice.1 pinky.1 stty.1 uname.1 uptime.1 users.1 who.1
+  arch.1 chroot.1 hostid.1 nice.1 pinky.1 stty.1 uname.1 uptime.1 users.1 who.1
 
 
 man_aux = $(dist_man_MANS:.1=.x) $(optional_mans:.1=.x)
@@ -42,6 +42,9 @@ MAINTAINERCLEANFILES = $(dist_man_MANS)
 
 # Depend on configure.ac to get version number changes.
 common_dep = $(top_srcdir)/configure.ac
+
+# Note that arch depends on uname.c
+arch.1:		$(common_dep)	$(srcdir)/arch.x	../src/uname.c
 
 base64.1:	$(common_dep)	$(srcdir)/base64.x	../src/base64.c
 basename.1:	$(common_dep)	$(srcdir)/basename.x	../src/basename.c

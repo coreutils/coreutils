@@ -2,6 +2,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release 6.9+ (????-??-??) [stable]
 
+** New programs
+
+  arch: equivalent to uname -m
+
 ** Changes in behavior
 
   pr -F no longer suppresses the footer or the first two blank lines in

@@ -1,7 +1,7 @@
 /* uname -- print system information
 
-   Copyright (C) 1989, 1992, 1993, 1996, 1997, 1999, 2000, 2001, 2002,
-   2003, 2004, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1989, 1992, 1993, 1996, 1997, 1999-2005, 2007
+   Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -54,11 +54,13 @@
 #include "system.h"
 #include "error.h"
 #include "quote.h"
+#include "uname.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
-#define PROGRAM_NAME "uname"
+#define PROGRAM_NAME (uname_mode == UNAME_UNAME ? "uname" : "arch")
 
 #define AUTHORS "David MacKenzie"
+#define ARCH_AUTHORS "David MacKenzie", "Karel Zak"
 
 /* Values that are bitwise or'd into `toprint'. */
 /* Kernel name. */
@@ -88,7 +90,7 @@
 /* The name this program was run with, for error messages. */
 char *program_name;
 
-static struct option const long_options[] =
+static struct option const uname_long_options[] =
 {
   {"all", no_argument, NULL, 'a'},
   {"kernel-name", no_argument, NULL, 's'},
@@ -106,6 +108,13 @@ static struct option const long_options[] =
   {NULL, 0, NULL, 0}
 };
 
+static struct option const arch_long_options[] =
+{
+  {GETOPT_HELP_OPTION_DECL},
+  {GETOPT_VERSION_OPTION_DECL},
+  {NULL, 0, NULL, 0}
+};
+
 void
 usage (int status)
 {
@@ -115,7 +124,10 @@ usage (int status)
   else
     {
       printf (_("Usage: %s [OPTION]...\n"), program_name);
-      fputs (_("\
+
+      if (uname_mode == UNAME_UNAME)
+        {
+          fputs (_("\
 Print certain system information.  With no OPTION, same as -s.\n\
 \n\
   -a, --all                print all information, in the following order,\n\
@@ -124,13 +136,22 @@ Print certain system information.  With no OPTION, same as -s.\n\
   -n, --nodename           print the network node hostname\n\
   -r, --kernel-release     print the kernel release\n\
 "), stdout);
-      fputs (_("\
+          fputs (_("\
   -v, --kernel-version     print the kernel version\n\
   -m, --machine            print the machine hardware name\n\
   -p, --processor          print the processor type or \"unknown\"\n\
   -i, --hardware-platform  print the hardware platform or \"unknown\"\n\
   -o, --operating-system   print the operating system\n\
 "), stdout);
+	}
+      else
+        {
+	  fputs (_("\
+Print machine architecture.\n\
+\n\
+"), stdout);
+	}
+
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       emit_bug_reporting_address ();
@@ -151,10 +172,98 @@ print_element (char const *element)
   fputs (element, stdout);
 }
 
+
+/* Set all the option flags according to the switches specified.
+   Return the mask indicating which elements to print.  */
+
+static int
+decode_switches (int argc, char **argv)
+{
+  int c;
+  unsigned int toprint = 0;
+
+  if (uname_mode == UNAME_ARCH)
+    {
+      while ((c = getopt_long (argc, argv, "",
+			       arch_long_options, NULL)) != -1)
+	{
+	  switch (c)
+	    {
+	    case_GETOPT_HELP_CHAR;
+
+	    case_GETOPT_VERSION_CHAR (PROGRAM_NAME, ARCH_AUTHORS);
+
+	    default:
+	      usage (EXIT_FAILURE);
+	    }
+        }
+      toprint = PRINT_MACHINE;
+    }
+  else
+    {
+      while ((c = getopt_long (argc, argv, "asnrvmpio",
+			       uname_long_options, NULL)) != -1)
+        {
+	  switch (c)
+	    {
+	    case 'a':
+	      toprint = UINT_MAX;
+	      break;
+
+	    case 's':
+	      toprint |= PRINT_KERNEL_NAME;
+	      break;
+
+	    case 'n':
+	      toprint |= PRINT_NODENAME;
+	      break;
+
+	    case 'r':
+	      toprint |= PRINT_KERNEL_RELEASE;
+	      break;
+
+	    case 'v':
+	      toprint |= PRINT_KERNEL_VERSION;
+	      break;
+
+	    case 'm':
+	      toprint |= PRINT_MACHINE;
+	      break;
+
+	    case 'p':
+	      toprint |= PRINT_PROCESSOR;
+	      break;
+
+	    case 'i':
+	      toprint |= PRINT_HARDWARE_PLATFORM;
+	      break;
+
+	    case 'o':
+	      toprint |= PRINT_OPERATING_SYSTEM;
+	      break;
+
+	    case_GETOPT_HELP_CHAR;
+
+	    case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
+
+	    default:
+	      usage (EXIT_FAILURE);
+	    }
+	}
+    }
+
+  if (argc != optind)
+    {
+      error (0, 0, _("extra operand %s"), quote (argv[optind]));
+      usage (EXIT_FAILURE);
+    }
+
+  return toprint;
+}
+
 int
 main (int argc, char **argv)
 {
-  int c;
   static char const unknown[] = "unknown";
 
   /* Mask indicating which elements to print. */
@@ -168,60 +277,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  while ((c = getopt_long (argc, argv, "asnrvmpio", long_options, NULL)) != -1)
-    {
-      switch (c)
-	{
-	case 'a':
-	  toprint = UINT_MAX;
-	  break;
-
-	case 's':
-	  toprint |= PRINT_KERNEL_NAME;
-	  break;
-
-	case 'n':
-	  toprint |= PRINT_NODENAME;
-	  break;
-
-	case 'r':
-	  toprint |= PRINT_KERNEL_RELEASE;
-	  break;
-
-	case 'v':
-	  toprint |= PRINT_KERNEL_VERSION;
-	  break;
-
-	case 'm':
-	  toprint |= PRINT_MACHINE;
-	  break;
-
-	case 'p':
-	  toprint |= PRINT_PROCESSOR;
-	  break;
-
-	case 'i':
-	  toprint |= PRINT_HARDWARE_PLATFORM;
-	  break;
-
-	case 'o':
-	  toprint |= PRINT_OPERATING_SYSTEM;
-	  break;
-
-	case_GETOPT_HELP_CHAR;
-
-	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
-
-	default:
-	  usage (EXIT_FAILURE);
-	}
-    }
-
-  if (argc != optind)
-    {
-      error (0, 0, _("extra operand %s"), quote (argv[optind]));
-      usage (EXIT_FAILURE);
-    }
+  toprint = decode_switches (argc, argv);
 
   if (toprint == 0)
     toprint = PRINT_KERNEL_NAME;

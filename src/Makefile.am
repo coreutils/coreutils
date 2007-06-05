@@ -16,7 +16,8 @@
 ## along with this program; if not, write to the Free Software Foundation,
 ## Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-EXTRA_PROGRAMS = chroot df hostid nice pinky stty su uname uptime users who
+EXTRA_PROGRAMS = chroot df hostid nice pinky stty su uname uptime users who \
+  arch
 
 bin_SCRIPTS = groups
 bin_PROGRAMS = [ chcon chgrp chown chmod cp dd dircolors du \
@@ -44,7 +45,8 @@ noinst_HEADERS = \
   remove.h \
   system.h \
   wheel-size.h \
-  wheel.h
+  wheel.h \
+  uname.h
 
 EXTRA_DIST = dcgen dircolors.hin tac-pipe.c \
   groups.sh wheel-gen.pl extract-magic c99-to-c89.diff
@@ -202,6 +204,9 @@ chgrp_SOURCES = chgrp.c chown-core.c
 
 mv_SOURCES = mv.c copy.c cp-hash.c remove.c
 rm_SOURCES = rm.c remove.c
+
+uname_SOURCES = uname.c uname-uname.c
+arch_SOURCES = uname.c uname-arch.c
 
 md5sum_SOURCES = md5sum.c
 md5sum_CPPFLAGS = -DHASH_ALGO_MD5=1 $(AM_CPPFLAGS)

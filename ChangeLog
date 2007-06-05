@@ -1,3 +1,31 @@
+2007-07-10  Karel Zak  <kzak@redhat.com>
+
+	New program: arch
+	* NEWS: Mention arch.
+	* README: Add arch to the list of programs.
+	* AUTHORS: Add arch.
+	* src/uname.c: Include "uname.h".
+	(PROGRAM_NAME): Handle arch, too.
+	(ARCH_AUTHORS): Define.
+	(uname_long_options, arch_long_options): Renamed and new globals.
+	(usage): Handle arch-mode as well as uname-mode.
+	(decode_switches): New function, extracted from main,
+	to handle arch-mode as well as uname-mode.
+	(main): Handle both modes.
+	* src/uname-arch.c: New program, alias for "uname -m".
+	* src/uname-uname.c: New file, default uname mode.
+	* src/uname.h: New file, uname modes.
+	* src/Makefile.am (EXTRA_PROGRAMS): Add arch.
+	(uname_SOURCES, arch_SOURCES): Define.
+	* man/arch.x: New file.
+	* man/Makefile.am (dist_man_MANS): Add arch.1.
+	(arch.1): New dependency.
+	* tests/misc/arch: New test, compare "arch" with "uname -m"
+	* configure.ac (OPTIONAL_BIN_PROGS): Add arch.
+	(MAN): Add arch.1.
+	* .x-sc_require_config_h: Exempt uname-arch.c and uname-uname.c
+	from the always-include-<config.h> rule.
+
 2007-07-10  Jim Meyering  <jim@meyering.net>
 
 	Change "version 2" to "version 3" in all copyright notices.

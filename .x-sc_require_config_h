@@ -26,3 +26,5 @@
 ^src/ls-vdir\.c$
 ^src/rand-isaac\.c$
 ^src/tac-pipe\.c$
+^src/uname-arch\.c$
+^src/uname-uname\.c$

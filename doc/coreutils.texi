@@ -35,6 +35,7 @@
 
 @dircategory Individual utilities
 @direntry
+* arch: (coreutils)arch invocation.             Print machine hardware name.
 * base64: (coreutils)base64 invocation.         Base64 encode/decode data.
 * basename: (coreutils)basename invocation.     Strip directory and suffix.
 * cat: (coreutils)cat invocation.               Concatenate and write files.
@@ -396,6 +397,7 @@ User information
 
 System context
 
+* arch invocation::              Print machine hardware name
 * date invocation::              Print or set system date and time
 * uname invocation::             Print system information
 * hostname invocation::          Print or set system name
@@ -12336,6 +12338,7 @@ This section describes commands that print or change system-wide
 information.
 
 @menu
+* arch invocation::             Print machine hardware name.
 * date invocation::             Print or set system date and time.
 * uname invocation::            Print system information.
 * hostname invocation::         Print or set system name.
@@ -12966,6 +12969,26 @@ date -u -d '1970-01-01 946684800 seconds' +"%Y-%m-%d %T %z"
 @end smallexample
 
 @end itemize
+
+
+@node arch invocation
+@section @command{arch}: Print machine hardware name
+
+@pindex arch
+@cindex print machine hardware name
+@cindex system information, printing
+
+@command{arch} prints the machine hardware name,
+and is equivalent to @samp{uname -m}.
+Synopsis:
+
+@example
+arch [@var{option}]
+@end example
+
+The program accepts the @ref{Common options} only.
+
+@exitstatus
 
 
 @node uname invocation
