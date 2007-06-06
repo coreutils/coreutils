@@ -8719,7 +8719,7 @@ rmdir [@var{option}]@dots{} @var{directory}@dots{}
 If any @var{directory} argument does not refer to an existing empty
 directory, it is an error.
 
-The program accepts the following option.  Also see @ref{Common options}.
+The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
