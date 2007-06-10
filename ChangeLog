@@ -1,3 +1,14 @@
+2007-06-10  Jim Meyering  <jim@meyering.net>
+
+	bug-fix: cp would fail to write through a dangling symlink
+	* NEWS: Mention the bug fix.
+	* src/copy.c (copy_reg): When open fails with EEXIST, the destination
+	is lstat'able, and a symlink, call open again, but now without O_EXCL.
+	* tests/cp/thru-dangling: New file, to test for the above fix.
+	* tests/cp/Makefile.am (TESTS): Add thru-dangling.
+	* THANKS: Add Michael McLagan.
+	Bug report from Michael McLagan in <http://bugzilla.redhat.com/243588>.
+
 2007-06-04  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* doc/coreutils.texi (Common options): Mention that -h and

@@ -352,8 +352,24 @@ copy_reg (char const *src_name, char const *dst_name,
     }
 
   if (*new_dst)
-    dest_desc = open (dst_name, O_WRONLY | O_CREAT | O_EXCL | O_BINARY,
-		      dst_mode & ~omitted_permissions);
+    {
+      int open_flags = O_WRONLY | O_CREAT | O_BINARY;
+      dest_desc = open (dst_name, open_flags | O_EXCL,
+			dst_mode & ~omitted_permissions);
+
+      /* When trying to copy through a dangling destination symlink,
+	 the above open fails with EEXIST.  If that happens, and
+	 lstat'ing the DST_NAME shows that it is a symlink, repeat
+	 the open call, but this time without O_EXCL.  */
+      if (dest_desc < 0 && errno == EEXIST)
+	{
+	  struct stat dangling_link_sb;
+	  if (lstat (dst_name, &dangling_link_sb) == 0
+	      && S_ISLNK (dangling_link_sb.st_mode))
+	    dest_desc = open (dst_name, open_flags,
+			      dst_mode & ~omitted_permissions);
+	}
+    }
   else
     omitted_permissions = 0;
 
