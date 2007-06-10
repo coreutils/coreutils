@@ -1,7 +1,6 @@
 absolute-header.m4
 acl.m4
 alloca.m4
-allocsa.m4
 argmatch.m4
 arpa_inet_h.m4
 assert.m4
@@ -97,6 +96,7 @@ inet_ntop.m4
 inline.m4
 intl.m4
 intldir.m4
+intlmacosx.m4
 intmax.m4
 intmax_t.m4
 inttostr.m4
@@ -121,6 +121,7 @@ longlong.m4
 ls-mntd-fs.m4
 lseek.m4
 lstat.m4
+malloca.m4
 mbchar.m4
 mbiter.m4
 mbrtowc.m4

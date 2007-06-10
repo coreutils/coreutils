@@ -7,9 +7,6 @@ acl_entries.c
 alloca.c
 alloca.h
 alloca_.h
-allocsa.c
-allocsa.h
-allocsa.valgrind
 argmatch.c
 argmatch.h
 asnprintf.c
@@ -193,6 +190,9 @@ lseek.c
 lstat.c
 lstat.h
 malloc.c
+malloca.c
+malloca.h
+malloca.valgrind
 mbchar.c
 mbchar.h
 mbscasecmp.c
