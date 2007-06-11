@@ -1,3 +1,10 @@
+2007-06-11  Jim Meyering  <jim@meyering.net>
+
+	* README: Mention README-hacking, for whose who start from
+	cloned/checked-out sources rather than from a distribution tarball.
+	Reported by Steve Ward.
+	* THANKS: Add Steve Ward.
+
 2007-06-10  Jim Meyering  <jim@meyering.net>
 
 	bug-fix: cp would fail to write through a dangling symlink

@@ -18,7 +18,10 @@ The programs that can be built with this package are:
 
 See the file NEWS for a list of major changes in the current release.
 
-See the file INSTALL for compilation and installation instructions.
+If you obtained this file as part of a "cvs checkout" or "git clone",
+then see the README-hacking file.  If this file came to you as part of a
+tar archive, then see the file INSTALL for compilation and installation
+instructions.
 
 These programs are intended to conform to POSIX (with BSD and other
 extensions), like the rest of the GNU system.  By default they conform
