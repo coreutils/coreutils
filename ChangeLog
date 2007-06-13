@@ -1,3 +1,8 @@
+2007-06-13  Jim Meyering  <jim@meyering.net>
+
+	* README-hacking: List Gperf as a build-requirement, too.
+	Reported by Steve Ward.
+
 2007-06-11  Jim Meyering  <jim@meyering.net>
 
 	* README: Mention README-hacking, for whose who start from
