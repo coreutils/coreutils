@@ -1,6 +1,6 @@
 /* rmdir -- remove directories
 
-   Copyright (C) 90, 91, 1995-2002, 2004, 2005, 2006 Free Software
+   Copyright (C) 90, 91, 1995-2002, 2004, 2005, 2006, 2007 Free Software
    Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
@@ -31,7 +31,7 @@
 
 #include "system.h"
 #include "error.h"
-#include "quotearg.h"
+#include "quote.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "rmdir"
@@ -107,7 +107,7 @@ remove_parents (char *dir)
 
       /* Give a diagnostic for each attempted removal if --verbose.  */
       if (verbose)
-	error (0, 0, _("removing directory, %s"), dir);
+	error (0, 0, _("removing directory, %s"), quote (dir));
 
       ok = (rmdir (dir) == 0);
 
@@ -121,7 +121,9 @@ remove_parents (char *dir)
 	    }
 	  else
 	    {
-	      error (0, errno, "%s", quotearg_colon (dir));
+	      /* Barring race conditions, DIR is expected to be a directory.  */
+	      error (0, errno, _("failed to remove directory %s"),
+		     quote (dir));
 	    }
 	  break;
 	}
@@ -213,7 +215,9 @@ main (int argc, char **argv)
 	      && errno_rmdir_non_empty (errno))
 	    continue;
 
-	  error (0, errno, "%s", quotearg_colon (dir));
+	  /* Here, the diagnostic is less precise, since we have no idea
+	     whether DIR is a directory.  */
+	  error (0, errno, _("failed to remove %s"), quote (dir));
 	  ok = false;
 	}
       else if (remove_empty_parents)

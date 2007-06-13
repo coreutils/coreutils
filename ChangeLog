@@ -1,5 +1,12 @@
 2007-06-13  Jim Meyering  <jim@meyering.net>
 
+	rmdir: give better diagnostics
+	* src/rmdir.c (remove_parents): Give a more descriptive/consistent
+	diagnostic upon failure.
+	(main): Likewise.
+	Suggestion from Joey Hess.
+	* THANKS: Add Joey Hess.
+
 	Don't include "quotearg.h" when it is not used.
 	* Makefile.maint (sc_prohibit_quotearg_without_use): New rule.
 	* src/cp.c: Don't include "quotearg.h".  It wasn't used.
