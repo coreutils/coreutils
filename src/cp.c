@@ -32,7 +32,6 @@
 #include "filenamecat.h"
 #include "lchmod.h"
 #include "quote.h"
-#include "quotearg.h"
 #include "stat-time.h"
 #include "utimens.h"
 #include "acl.h"

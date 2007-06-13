@@ -1,5 +1,9 @@
 2007-06-13  Jim Meyering  <jim@meyering.net>
 
+	Don't include "quotearg.h" when it is not used.
+	* Makefile.maint (sc_prohibit_quotearg_without_use): New rule.
+	* src/cp.c: Don't include "quotearg.h".  It wasn't used.
+
 	* README-hacking: List Gperf as a build-requirement, too.
 	Reported by Steve Ward.
 
