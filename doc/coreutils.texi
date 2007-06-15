@@ -1308,7 +1308,7 @@ Equivalent to @option{-vET}.
 @itemx --number-nonblank
 @opindex -b
 @opindex --number-nonblank
-Number all nonblank output lines, starting with 1.
+Number all nonempty output lines, starting with 1.
 
 @item -e
 @opindex -e
@@ -1330,8 +1330,9 @@ Number all output lines, starting with 1.
 @itemx --squeeze-blank
 @opindex -s
 @opindex --squeeze-blank
-@cindex squeezing blank lines
-Replace multiple adjacent blank lines with a single blank line.
+@cindex squeezing empty lines
+Suppress repeated adjacent empty lines; output just one empty line
+instead of several.
 
 @item -t
 @opindex -t

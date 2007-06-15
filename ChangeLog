@@ -1,3 +1,11 @@
+2007-06-14  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Clarify what "cat" documentation means by "blank" lines.
+	* doc/coreutils.texi (cat invocation): "Blank" lines actually mean
+	empty lines.
+	* src/cat.c (usage): Say that "nonblank" means nonempty.  Clarify
+	--squeeze-blank.
+
 2007-06-13  Jim Meyering  <jim@meyering.net>
 
 	rmdir: give better diagnostics
