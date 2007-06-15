@@ -1,3 +1,12 @@
+2007-06-15  Jim Meyering  <jim@meyering.net>
+
+	Don't include "quote.h" when it is not used.
+	* src/md5sum.c: Remove unnecessary inclusion of "quote.h".
+	* src/expr.c: Likewise.
+	* src/shred.c: Likewise.
+	* Makefile.maint (sc_prohibit_quote_without_use): New rule.
+	* src/c99-to-c89.diff: Adjust offsets.
+
 2007-06-14  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Clarify what "cat" documentation means by "blank" lines.

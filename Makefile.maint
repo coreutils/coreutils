@@ -179,6 +179,18 @@ sc_prohibit_quotearg_without_use:
 	else :;								\
 	fi
 
+# Don't include quote.h unless you use one of its functions.
+sc_prohibit_quote_without_use:
+	@if $(CVS_LIST_EXCEPT) | grep '\.c$$' > /dev/null; then		\
+	  files=$$(grep -l '# *include "quote\.h"'			\
+		    $$($(CVS_LIST_EXCEPT) | grep '\.c$$')) &&		\
+	  grep -LE '\<quote(_n)? \(' $$files			\
+	      | grep . &&						\
+	    { echo "$(ME): the above files include "quote.h" but don't use it" \
+		  1>&2; exit 1; } || :;					\
+	else :;								\
+	fi
+
 sc_obsolete_symbols:
 	@grep -nE '\<(HAVE''_FCNTL_H|O''_NDELAY)\>'			\
 	     $$($(CVS_LIST_EXCEPT)) &&					\

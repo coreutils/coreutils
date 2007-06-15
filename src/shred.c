@@ -1,6 +1,6 @@
 /* shred.c - overwrite files and devices to make it harder to recover data
 
-   Copyright (C) 1999-2006 Free Software Foundation, Inc.
+   Copyright (C) 1999-2007 Free Software Foundation, Inc.
    Copyright (C) 1997, 1998, 1999 Colin Plumb.
 
    This program is free software; you can redistribute it and/or modify
@@ -101,7 +101,6 @@
 #include "human.h"
 #include "inttostr.h"
 #include "quotearg.h"		/* For quotearg_colon */
-#include "quote.h"		/* For quotearg_colon */
 #include "randint.h"
 #include "randread.h"
 

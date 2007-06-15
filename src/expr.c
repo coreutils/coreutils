@@ -1,5 +1,5 @@
 /* expr -- evaluate expressions.
-   Copyright (C) 86, 1991-1997, 1999-2006 Free Software Foundation, Inc.
+   Copyright (C) 86, 1991-1997, 1999-2007 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -37,7 +37,6 @@
 #include "long-options.h"
 #include "error.h"
 #include "inttostr.h"
-#include "quote.h"
 #include "quotearg.h"
 #include "strnumcmp.h"
 #include "xstrtol.h"
