@@ -89,9 +89,15 @@ for args in 'foo symlink' 'symlink foo' 'foo foo' 'sl1 sl2' 'foo hardlink'; do
 	cp $options $args 2>_err
 	echo $? $options
 
-	# Normalize the program name in the error output,
+	# Normalize the program name and diagnostics in the error output,
 	# and put brackets around the output.
-	test -s _err && echo "[`sed 's/^[^:][^:]*:/cp:/' _err`]"
+	if test -s _err; then
+	  sed '
+	    s/^[^:]*:\([^:]*\).*/cp:\1/
+	    1s/^/[/
+	    $s/$/]/
+	  ' _err
+        fi
 	# Strip off all but the file names.
 	ls="`ls -gG --ignore=_err . \
 	    | sed \
@@ -128,13 +134,13 @@ cat <<\EOF > $expected
 0 -bd (foo symlink symlink.~1~ -> foo)
 0 -bf (foo symlink symlink.~1~ -> foo)
 0 -bdf (foo symlink symlink.~1~ -> foo)
-0 -l (foo symlink -> foo)
+1 -l [cp: cannot create link `symlink'] (foo symlink -> foo)
 0 -dl (foo symlink -> foo)
-0 -fl (foo symlink -> foo)
+0 -fl (foo symlink)
 0 -dfl (foo symlink)
-0 -bl (foo symlink -> foo)
+0 -bl (foo symlink symlink.~1~ -> foo)
 0 -bdl (foo symlink symlink.~1~ -> foo)
-0 -bfl (foo symlink -> foo)
+0 -bfl (foo symlink symlink.~1~ -> foo)
 0 -bdfl (foo symlink symlink.~1~ -> foo)
 
 1 [cp: `symlink' and `foo' are the same file] (foo symlink -> foo)
@@ -179,10 +185,10 @@ cat <<\EOF > $expected
 0 -bd (foo sl1 -> foo sl2 -> foo sl2.~1~ -> foo)
 0 -bf (foo sl1 -> foo sl2 sl2.~1~ -> foo)
 0 -bdf (foo sl1 -> foo sl2 -> foo sl2.~1~ -> foo)
-0 -l (foo sl1 -> foo sl2 -> foo)
+1 -l [cp: cannot create link `sl2'] (foo sl1 -> foo sl2 -> foo)
 0 -fl (foo sl1 -> foo sl2 -> foo)
-0 -bl (foo sl1 -> foo sl2 -> foo)
-0 -bfl (foo sl1 -> foo sl2 -> foo)
+0 -bl (foo sl1 -> foo sl2 -> foo sl2.~1~ -> foo)
+0 -bfl (foo sl1 -> foo sl2 -> foo sl2.~1~ -> foo)
 
 1 [cp: `foo' and `hardlink' are the same file] (foo hardlink)
 1 -d [cp: `foo' and `hardlink' are the same file] (foo hardlink)

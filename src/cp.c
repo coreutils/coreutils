@@ -181,14 +181,14 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -f, --force                  if an existing destination file cannot be\n\
                                  opened, remove it and try again\n\
   -i, --interactive            prompt before overwrite\n\
-  -H                           follow command-line symbolic links\n\
+  -H                           follow command-line symbolic links in SOURCE\n\
 "), stdout);
       fputs (_("\
   -l, --link                   link files instead of copying\n\
-  -L, --dereference            always follow symbolic links\n\
+  -L, --dereference            always follow symbolic links in SOURCE\n\
 "), stdout);
       fputs (_("\
-  -P, --no-dereference         never follow symbolic links\n\
+  -P, --no-dereference         never follow symbolic links in SOURCE\n\
 "), stdout);
       fputs (_("\
   -p                           same as --preserve=mode,ownership,timestamps\n\
@@ -393,7 +393,7 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
 
   *attr_list = NULL;
 
-  if (XSTAT (x, dst_dir, &stats))
+  if (stat (dst_dir, &stats) != 0)
     {
       /* A parent of CONST_DIR does not exist.
 	 Make all missing intermediate directories. */
@@ -413,7 +413,7 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
 	  *attr_list = new;
 
 	  *slash = '\0';
-	  if (XSTAT (x, dir, &stats))
+	  if (stat (dir, &stats) != 0)
 	    {
 	      mode_t src_mode;
 	      mode_t omitted_permissions;
@@ -426,7 +426,7 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
 		 make_dir_parents_private creates only e_dir/../a if
 		 ./b already exists. */
 	      *new_dst = true;
-	      src_errno = (XSTAT (x, src, &stats) != 0
+	      src_errno = (stat (src, &stats) != 0
 			   ? errno
 			   : S_ISDIR (stats.st_mode)
 			   ? 0

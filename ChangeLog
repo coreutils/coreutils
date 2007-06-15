@@ -1,3 +1,40 @@
+2007-06-15  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Correct cp's handling of destination symlinks in some cases.
+	* NEWS: "cp" no longer considers a destination symlink to be the
+	same as the referenced file when copying links or making backups.
+	* src/copy.c (copy_reg): When following a symlink, use the
+	followed name in later chown etc. requests, so that the created
+	file is affected, rather than the symlink.  Use O_NOFOLLOW on
+	source when not dereferencing symlinks; this avoids a race.
+	Preserve errno correctly when doing multiple open attempts on the
+	destination.
+	(copy_internal): Follow destination symlinks only when copying a
+	regular file and only when we don't intend to remove or rename the
+	destination first, regardless of whether following source
+	symlinks; this is because since POSIX and tradition (e.g.,
+	FreeBSD) say we should ordinarily follow destination symlinks if
+	the system calls would ordinarily do so.
+	* src/copy.h (struct cp_options): Add comment that 'dereference'
+	is only for source files.
+	* src/cp.c (usage): Note that --derereference etc. are only for
+	source files.
+	(make_dir_parents_private): Follow symlinks, regardless of whether
+	--dereference is specified, because these are destination symlinks.
+	* tests/cp/same-file: Adjust tests to match revised behavior.
+	Filter out perror output since it might vary from host to host.
+	Use sed alone instead of also using echo.
+
+	* doc/coreutils.texi (cp invocation): Document the behavior better when
+	the destination is a symlink.  Clarify source versus destination
+	symlinks.  Describe the new behavior for destination symlinks.
+
+2007-06-15  Jim Meyering  <jim@meyering.net>
+
+	* src/copy.c: Include "canonicalize.h".
+	(copy_reg): Use canonicalize_filename_mode to follow the symlink,
+	so that we can always open with O_EXCL and avoid a race.
+
 2007-06-15  Jim Meyering  <jim@meyering.net>
 
 	Don't include "quote.h" when it is not used.

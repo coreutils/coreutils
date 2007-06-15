@@ -34,6 +34,7 @@
 #include "acl.h"
 #include "backupfile.h"
 #include "buffer-lcm.h"
+#include "canonicalize.h"
 #include "copy.h"
 #include "cp-hash.h"
 #include "euidaccess.h"
@@ -261,14 +262,19 @@ copy_reg (char const *src_name, char const *dst_name,
 {
   char *buf;
   char *buf_alloc = NULL;
+  char *name_alloc = NULL;
+  char const *followed_dest_name = dst_name;
   int dest_desc;
+  int dest_errno;
   int source_desc;
   mode_t src_mode = src_sb->st_mode;
   struct stat sb;
   struct stat src_open_sb;
   bool return_val = true;
 
-  source_desc = open (src_name, O_RDONLY | O_BINARY);
+  source_desc = open (src_name,
+		      (O_RDONLY | O_BINARY
+		       | (x->dereference == DEREF_NEVER ? O_NOFOLLOW : 0)));
   if (source_desc < 0)
     {
       error (0, errno, _("cannot open %s for reading"), quote (src_name));
@@ -298,6 +304,7 @@ copy_reg (char const *src_name, char const *dst_name,
   if (! *new_dst)
     {
       dest_desc = open (dst_name, O_WRONLY | O_TRUNC | O_BINARY);
+      dest_errno = errno;
 
       /* When using cp --preserve=context to copy to an existing destination,
 	 use the default context rather than that of the source.  Why?
@@ -353,21 +360,35 @@ copy_reg (char const *src_name, char const *dst_name,
 
   if (*new_dst)
     {
-      int open_flags = O_WRONLY | O_CREAT | O_BINARY;
-      dest_desc = open (dst_name, open_flags | O_EXCL,
+      int open_flags = O_WRONLY | O_CREAT | O_EXCL | O_BINARY;
+      dest_desc = open (dst_name, open_flags,
 			dst_mode & ~omitted_permissions);
+      dest_errno = errno;
 
       /* When trying to copy through a dangling destination symlink,
 	 the above open fails with EEXIST.  If that happens, and
 	 lstat'ing the DST_NAME shows that it is a symlink, repeat
-	 the open call, but this time without O_EXCL.  */
-      if (dest_desc < 0 && errno == EEXIST)
+	 the open call, but this time with the name of the final,
+	 missing directory entry.  */
+      if (dest_desc < 0 && dest_errno == EEXIST)
 	{
 	  struct stat dangling_link_sb;
 	  if (lstat (dst_name, &dangling_link_sb) == 0
 	      && S_ISLNK (dangling_link_sb.st_mode))
-	    dest_desc = open (dst_name, open_flags,
-			      dst_mode & ~omitted_permissions);
+	    {
+	      /* FIXME: This is way overkill, since all that's needed
+		 is to follow the symlink that is the last file name
+		 component.  */
+	      name_alloc =
+		canonicalize_filename_mode (dst_name, CAN_MISSING);
+	      if (name_alloc)
+		{
+		  followed_dest_name = name_alloc;
+		  dest_desc = open (followed_dest_name, open_flags,
+				    dst_mode & ~omitted_permissions);
+		  dest_errno = errno;
+		}
+	    }
 	}
     }
   else
@@ -375,7 +396,8 @@ copy_reg (char const *src_name, char const *dst_name,
 
   if (dest_desc < 0)
     {
-      error (0, errno, _("cannot create regular file %s"), quote (dst_name));
+      error (0, dest_errno, _("cannot create regular file %s"),
+	     quote (dst_name));
       return_val = false;
       goto close_src_desc;
     }
@@ -567,7 +589,7 @@ copy_reg (char const *src_name, char const *dst_name,
       timespec[0] = get_stat_atime (src_sb);
       timespec[1] = get_stat_mtime (src_sb);
 
-      if (gl_futimens (dest_desc, dst_name, timespec) != 0)
+      if (gl_futimens (dest_desc, followed_dest_name, timespec) != 0)
 	{
 	  error (0, errno, _("preserving times for %s"), quote (dst_name));
 	  if (x->require_preserve)
@@ -580,7 +602,7 @@ copy_reg (char const *src_name, char const *dst_name,
 
   if (x->preserve_ownership && ! SAME_OWNER_AND_GROUP (*src_sb, sb))
     {
-      switch (set_owner (x, dst_name, dest_desc,
+      switch (set_owner (x, followed_dest_name, dest_desc,
 			 src_sb->st_uid, src_sb->st_gid))
 	{
 	case -1:
@@ -593,24 +615,24 @@ copy_reg (char const *src_name, char const *dst_name,
 	}
     }
 
-  set_author (dst_name, dest_desc, src_sb);
+  set_author (followed_dest_name, dest_desc, src_sb);
 
   if (x->preserve_mode || x->move_mode)
     {
-      if (copy_acl (src_name, source_desc, dst_name, dest_desc, src_mode) != 0
+      if (copy_acl (src_name, source_desc, followed_dest_name, dest_desc, src_mode) != 0
 	  && x->require_preserve)
 	return_val = false;
     }
   else if (x->set_mode)
     {
-      if (set_acl (dst_name, dest_desc, x->mode) != 0)
+      if (set_acl (followed_dest_name, dest_desc, x->mode) != 0)
 	return_val = false;
     }
   else if (omitted_permissions)
     {
       omitted_permissions &= ~ cached_umask ();
       if (omitted_permissions
-	  && fchmod_or_lchmod (dest_desc, dst_name, dst_mode) != 0)
+	  && fchmod_or_lchmod (dest_desc, followed_dest_name, dst_mode) != 0)
 	{
 	  error (0, errno, _("preserving permissions for %s"),
 		 quote (dst_name));
@@ -633,6 +655,7 @@ close_src_desc:
     }
 
   free (buf_alloc);
+  free (name_alloc);
   return return_val;
 }
 
@@ -1137,7 +1160,21 @@ copy_internal (char const *src_name, char const *dst_name,
 
   if (!new_dst)
     {
-      if (XSTAT (x, dst_name, &dst_sb) != 0)
+      /* Regular files can be created by writing through symbolic
+	 links, but other files cannot.  So use stat on the
+	 destination when copying a regular file, and lstat otherwise.
+	 However, if we intend to unlink or remove the destination
+	 first, use lstat, since a copy won't actually be made to the
+	 destination in that case.  */
+      if ((((S_ISREG (src_mode)
+	     || (x->copy_as_regular
+		 && ! (S_ISDIR (src_mode) || S_ISLNK (src_mode))))
+	    && ! (x->move_mode || x->symbolic_link || x->hard_link
+		  || x->backup_type != no_backups
+		  || x->unlink_dest_before_opening))
+	   ? stat (dst_name, &dst_sb)
+	   : lstat (dst_name, &dst_sb))
+	  != 0)
 	{
 	  if (errno != ENOENT)
 	    {
@@ -1151,7 +1188,7 @@ copy_internal (char const *src_name, char const *dst_name,
 	}
       else
 	{ /* Here, we know that dst_name exists, at least to the point
-	     that it is XSTAT'able.  */
+	     that it is stat'able or lstat'table.  */
 	  bool return_now;
 	  bool unlink_src;
 

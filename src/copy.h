@@ -87,7 +87,7 @@ struct cp_options
      them, symbolic links,) as if they were regular files.  */
   bool copy_as_regular;
 
-  /* How to handle symlinks.  */
+  /* How to handle symlinks in the source.  */
   enum Dereference_symlink dereference;
 
   /* If true, remove each existing destination nondirectory before

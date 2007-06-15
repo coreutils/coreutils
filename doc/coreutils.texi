@@ -6910,12 +6910,21 @@ By default, @command{cp} does not copy directories.  However, the
 copy recursively by descending into source directories and copying files
 to corresponding destination directories.
 
-By default, @command{cp} follows symbolic links only when not copying
+When copying from a symbolic link, @command{cp} normally follows the
+link only when not copying
 recursively.  This default can be overridden with the
 @option{--archive} (@option{-a}), @option{-d}, @option{--dereference}
 (@option{-L}), @option{--no-dereference} (@option{-P}), and
 @option{-H} options.  If more than one of these options is specified,
 the last one silently overrides the others.
+
+When copying to a symbolic link, @command{cp} normally follows the
+link when creating or copying to a regular file, even if the link is
+dangling.  However, @command{cp} does not follow these links when
+creating directories or special files.  Also, when an option like
+@option{--backup} or @option{--link} acts to rename or remove the
+destination before copying, @command{cp} renames or removes the
+symbolic link rather than the file it points to.
 
 By default, @command{cp} copies the contents of special files only
 when not copying recursively.  This default can be overridden with the
@@ -6996,10 +7005,10 @@ Equivalent to @option{--no-dereference --preserve=links}.
 @opindex --force
 When copying without this option and an existing destination file cannot
 be opened for writing, the copy fails.  However, with @option{--force}),
-when a destination file cannot be opened, @command{cp} then unlinks it and
+when a destination file cannot be opened, @command{cp} then removes it and
 tries to open it again.  Contrast this behavior with that enabled by
 @option{--link} and @option{--symbolic-link}, whereby the destination file
-is never opened but rather is unlinked unconditionally.  Also see the
+is never opened but rather is removed unconditionally.  Also see the
 description of @option{--remove-destination}.
 
 This option is independent of the @option{--interactive} or
@@ -7029,7 +7038,7 @@ Make hard links instead of copies of non-directories.
 @itemx --dereference
 @opindex -L
 @opindex --dereference
-Always follow symbolic links.
+Follow symbolic links when copying from them.
 
 @item -P
 @itemx --no-dereference
@@ -7037,7 +7046,8 @@ Always follow symbolic links.
 @opindex --no-dereference
 @cindex symbolic links, copying
 Copy symbolic links as symbolic links rather than copying the files that
-they point to.
+they point to.  This option affects only symbolic links in the source;
+symbolic links in the destination are always followed if possible.
 
 @item -p
 @itemx @w{@kbd{--preserve}[=@var{attribute_list}]}
@@ -7127,8 +7137,8 @@ about each existing destination file.
 @cindex copying directories recursively
 @cindex recursively copying directories
 @cindex non-directories, copying as special files
-Copy directories recursively.  Symbolic links are not followed by
-default; see the @option{--archive} (@option{-a}), @option{-d},
+Copy directories recursively.  By default, do not follow symbolic
+links in the source; see the @option{--archive} (@option{-a}), @option{-d},
 @option{--dereference} (@option{-L}), @option{--no-dereference}
 (@option{-P}), and @option{-H} options.  Special files are copied by
 creating a destination file of the same type as the source; see the
