@@ -1,5 +1,5 @@
 /* chgrp -- change group ownership of files
-   Copyright (C) 89, 90, 91, 1995-2006 Free Software Foundation, Inc.
+   Copyright (C) 89, 90, 91, 1995-2007 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -92,7 +92,7 @@ parse_group (const char *name)
 	  unsigned long int tmp;
 	  if (! (xstrtoul (name, NULL, 10, &tmp, "") == LONGINT_OK
 		 && tmp <= GID_T_MAX))
-	    error (EXIT_FAILURE, 0, _("invalid group %s"), quote (name));
+	    error (EXIT_FAILURE, 0, _("invalid group: %s"), quote (name));
 	  gid = tmp;
 	}
       endgrent ();		/* Save a file descriptor. */

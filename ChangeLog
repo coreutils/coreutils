@@ -1,3 +1,13 @@
+2007-06-16  Jim Meyering  <jim@meyering.net>
+
+	Make chgrp and chown diagnostics consistent.
+	* src/chown.c (main): Emit the diagnostic before the file name,
+	not after it, to be consistent with chgrp's diagnostic.
+	* src/chgrp.c (parse_group): Emit a ":" between the diagnostic
+	and the file name.
+	Reported by Egmont Koblinger.
+	* THANKS: Add Egmont Koblinger.
+
 2007-06-15  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Correct cp's handling of destination symlinks in some cases.

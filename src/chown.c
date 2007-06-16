@@ -1,5 +1,5 @@
 /* chown -- change user and group ownership of files
-   Copyright (C) 89, 90, 91, 1995-2006 Free Software Foundation, Inc.
+   Copyright (C) 89, 90, 91, 1995-2007 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -239,7 +239,7 @@ main (int argc, char **argv)
 					     &required_uid, &required_gid,
 					     &u_dummy, &g_dummy);
 	    if (e)
-	      error (EXIT_FAILURE, 0, "%s: %s", quote (optarg), e);
+	      error (EXIT_FAILURE, 0, "%s: %s", e, quote (optarg));
 	    break;
 	  }
 
@@ -308,7 +308,7 @@ main (int argc, char **argv)
       const char *e = parse_user_spec (argv[optind], &uid, &gid,
 				       &chopt.user_name, &chopt.group_name);
       if (e)
-        error (EXIT_FAILURE, 0, "%s: %s", quote (argv[optind]), e);
+        error (EXIT_FAILURE, 0, "%s: %s", e, quote (argv[optind]));
 
       /* If a group is specified but no user, set the user name to the
 	 empty string so that diagnostics say "ownership :GROUP"
