@@ -21,9 +21,6 @@ tools we depend upon, including:
 - Tar <http://www.gnu.org/software/tar/>
 - Wget <http://www.gnu.org/software/wget/>
 
-As of this writing, the latest stable version of Gzip is 1.2.4 but we
-suggest using test version 1.3.5 (or later, if one becomes available).
-
 Valgrind <http://valgrind.org/> is also highly recommended, if
 Valgrind supports your architecture.
 
