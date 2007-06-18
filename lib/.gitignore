@@ -228,6 +228,8 @@ mountlist.c
 mountlist.h
 mpsort.c
 mpsort.h
+mreadlink-with-size.c
+mreadlink.h
 nanosleep.c
 netinet_in.h
 netinet_in_.h
@@ -415,9 +417,6 @@ xmemcoll.c
 xmemcoll.h
 xnanosleep.c
 xnanosleep.h
-xreadlink-with-size.c
-xreadlink.c
-xreadlink.h
 xsize.h
 xstrndup.c
 xstrndup.h

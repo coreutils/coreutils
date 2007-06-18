@@ -1,5 +1,14 @@
 2007-06-18  Jim Meyering  <jim@meyering.net>
 
+	Use mreadlink_with_size (doesn't exit), not xreadlink_with_size.
+	* bootstrap.conf (gnulib_modules): Add readlink-with-size.
+	Remove xreadlink and xreadlink-with-size.
+	* src/copy.c (copy_internal): Use mreadlink_with_size,
+	not xreadlink_with_size.
+	* src/ls.c (get_link_name): Likewise.
+	* src/readlink.c (main): Likewise.
+	* src/stat.c (print_stat): Likewise.
+
 	* README-hacking: Don't mention Gzip 1.2.4, now that 1.3.12 is out.
 
 2007-06-16  Jim Meyering  <jim@meyering.net>

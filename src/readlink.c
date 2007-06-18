@@ -1,5 +1,5 @@
 /* readlink -- display value of a symbolic link.
-   Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007 Free Software Foundation, Inc.
+   Copyright (C) 2002-2007 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@
 #include "system.h"
 #include "canonicalize.h"
 #include "error.h"
-#include "xreadlink.h"
+#include "mreadlink.h"
 #include "quote.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -159,7 +159,7 @@ main (int argc, char **argv)
 
   value = (can_mode != -1
 	   ? canonicalize_filename_mode (fname, can_mode)
-	   : xreadlink (fname));
+	   : mreadlink_with_size (fname, 63));
   if (value)
     {
       printf ("%s%s", value, (no_newline ? "" : "\n"));
