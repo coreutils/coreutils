@@ -48,7 +48,8 @@ cd $tmp || framework_failure=1
 . "$abs_srcdir/../setgid-check"
 
 mkdir foo bar || framework_failure=1
-mkdir -p a/b/c d e || framework_failure=1
+mkdir -p a/b/c d e g || framework_failure=1
+ln -s d/a sym || framework_failure=1
 touch f || framework_failure=1
 
 if test $framework_failure = 1; then
@@ -75,8 +76,11 @@ test -d d/f && fail=1
 # Check that re_protect works.
 chmod go=w d/a
 cp -a --parents d/a/b/c e || fail=1
+cp -a --parents sym/b/c g || fail=1
 p=`ls -ld e/d|cut -b-10`; case $p in drwxr-xr-x);; *) fail=1;; esac
 p=`ls -ld e/d/a|cut -b-10`; case $p in drwx-w--w-);; *) fail=1;; esac
+p=`ls -ld g/sym|cut -b-10`; case $p in drwx-w--w-);; *) fail=1;; esac
 p=`ls -ld e/d/a/b/c|cut -b-10`; case $p in drwxr-xr-x);; *) fail=1;; esac
+p=`ls -ld g/sym/b/c|cut -b-10`; case $p in drwxr-xr-x);; *) fail=1;; esac
 
 (exit $fail); exit $fail

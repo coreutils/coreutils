@@ -18,7 +18,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 ** Bug fixes
 
   cp no longer fails to write through a dangling symlink
-  [bug introduced in coreutils-6.7].  Also, 'cp' no longer considers a
+  [bug introduced in coreutils-6.7].  cp --parents no
+  longer mishandles symlinks to directories in file name
+  components in the source, e.g., "cp --parents symlink/a/b
+  d" no longer fails.  Also, 'cp' no longer considers a
   destination symlink to be the same as the referenced file when
   copying links or making backups.  For example, if SYM is a symlink
   to FILE, "cp -l FILE SYM" now reports an error instead of silently

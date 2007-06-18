@@ -36,6 +36,10 @@
 #include "utimens.h"
 #include "acl.h"
 
+#if ! HAVE_LCHOWN
+# define lchown(name, uid, gid) chown (name, uid, gid)
+#endif
+
 #define ASSIGN_BASENAME_STRDUPA(Dest, File_name)	\
   do							\
     {							\
@@ -56,7 +60,7 @@
    need to be fixed after copying. */
 struct dir_attr
 {
-  mode_t mode;
+  struct stat st;
   bool restore_mode;
   size_t slash_offset;
   struct dir_attr *next;
@@ -290,16 +294,7 @@ re_protect (char const *const_dst_name, size_t src_offset,
 
   for (p = attr_list; p; p = p->next)
     {
-      struct stat src_sb;
-
       dst_name[p->slash_offset] = '\0';
-
-      if (XSTAT (x, src_name, &src_sb))
-	{
-	  error (0, errno, _("failed to get attributes of %s"),
-		 quote (src_name));
-	  return false;
-	}
 
       /* Adjust the times (and if possible, ownership) for the copy.
 	 chown turns off set[ug]id bits for non-root,
@@ -309,8 +304,8 @@ re_protect (char const *const_dst_name, size_t src_offset,
 	{
 	  struct timespec timespec[2];
 
-	  timespec[0] = get_stat_atime (&src_sb);
-	  timespec[1] = get_stat_mtime (&src_sb);
+	  timespec[0] = get_stat_atime (&p->st);
+	  timespec[1] = get_stat_mtime (&p->st);
 
 	  if (utimens (dst_name, timespec))
 	    {
@@ -322,7 +317,7 @@ re_protect (char const *const_dst_name, size_t src_offset,
 
       if (x->preserve_ownership)
 	{
-	  if (chown (dst_name, src_sb.st_uid, src_sb.st_gid) != 0
+	  if (lchown (dst_name, p->st.st_uid, p->st.st_gid) != 0
 	      && ! chown_failure_ok (x))
 	    {
 	      error (0, errno, _("failed to preserve ownership for %s"),
@@ -333,12 +328,12 @@ re_protect (char const *const_dst_name, size_t src_offset,
 
       if (x->preserve_mode)
 	{
-	  if (copy_acl (src_name, -1, dst_name, -1, src_sb.st_mode))
+	  if (copy_acl (src_name, -1, dst_name, -1, p->st.st_mode) != 0)
 	    return false;
 	}
       else if (p->restore_mode)
 	{
-	  if (lchmod (dst_name, p->mode) != 0)
+	  if (lchmod (dst_name, p->st.st_mode) != 0)
 	    {
 	      error (0, errno, _("failed to preserve permissions for %s"),
 		     quote (dst_name));
@@ -421,14 +416,14 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
 	      int src_errno;
 
 	      /* This component does not exist.  We must set
-		 *new_dst and new->mode inside this loop because,
+		 *new_dst and new->st.st_mode inside this loop because,
 		 for example, in the command `cp --parents ../a/../b/c e_dir',
 		 make_dir_parents_private creates only e_dir/../a if
 		 ./b already exists. */
 	      *new_dst = true;
-	      src_errno = (stat (src, &stats) != 0
+	      src_errno = (stat (src, &new->st) != 0
 			   ? errno
-			   : S_ISDIR (stats.st_mode)
+			   : S_ISDIR (new->st.st_mode)
 			   ? 0
 			   : ENOTDIR);
 	      if (src_errno)
@@ -437,7 +432,7 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
 			 quote (src));
 		  return false;
 		}
-	      src_mode = stats.st_mode;
+	      src_mode = new->st.st_mode;
 
 	      /* If the ownership or special mode bits might change,
 		 omit some permissions at first, so unauthorized users
@@ -485,7 +480,7 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
 		  if (omitted_permissions & ~stats.st_mode
 		      || (stats.st_mode & S_IRWXU) != S_IRWXU)
 		    {
-		      new->mode = stats.st_mode | omitted_permissions;
+		      new->st.st_mode = stats.st_mode | omitted_permissions;
 		      new->restore_mode = true;
 		    }
 		}

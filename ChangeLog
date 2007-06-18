@@ -1,3 +1,31 @@
+2007-06-18  Paul Eggert  <eggert@cs.ucla.edu>
+
+	A few more symlink-related fixes.  Fix a bug triggered by cp
+	--parents and symlinks.  Close some race conditions possible when
+	the destination replaces a newly-created file with a symlink.
+	* NEWS: Document that 'cp --parents' no longer mishandles
+	symlinks in file name components of source.
+	* src/copy.c (HAVE_LCHOWN): Default to false.
+	(lchown) [!defined HAVE_LCHOWN]: Define to chown, for convenience.
+	* src/cp.c (lchown) [!HAVE_LCHOWN]: Likewise.
+	* src/install.c (lchown [!HAVE_LCHOWN]: Likewise.
+	* src/copy.c (set_owner): Use lchown instead of chown, for safety
+	in case the file got replaced by a symlink in the meantime.
+	* src/cp.c (re_protect): Likewise.
+	* src/install.c (change_attributes): Likewise.
+	* src/copy.c (copy_internal): Use ordinary C rather than an #if.
+	* src/cp.c (lchown) [!HAVE_LCHOWN]: Define to chown, for convenience.
+	(struct dir_attr): Cache the entire struct stat of the directory,
+	rather than just its mode, so that we needn't stat the directory
+	twice (which can lead to races).
+	(re_protect): Don't use XSTAT as that's not appropriate in
+	this context (symlinks should be followed here).  Instead, use
+	the cached stat value.
+	(make_dir_parents_private): Save dir's entire struct stat, not
+	just its mode.
+	* tests/cp/cp-parents: Add test to check against bug with
+	cp --parents and symlinks.
+
 2007-06-18  Jim Meyering  <jim@meyering.net>
 
 	Use mreadlink_with_size (doesn't exit), not xreadlink_with_size.

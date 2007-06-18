@@ -62,6 +62,11 @@
 # define fchown(fd, uid, gid) (-1)
 #endif
 
+#ifndef HAVE_LCHOWN
+# define HAVE_LCHOWN false
+# define lchown(name, uid, gid) chown (name, uid, gid)
+#endif
+
 #define SAME_OWNER(A, B) ((A).st_uid == (B).st_uid)
 #define SAME_GROUP(A, B) ((A).st_gid == (B).st_gid)
 #define SAME_OWNER_AND_GROUP(A, B) (SAME_OWNER (A, B) && SAME_GROUP (A, B))
@@ -172,7 +177,9 @@ copy_dir (char const *src_name_in, char const *dst_name_in, bool new_dst,
 
 /* Set the owner and owning group of DEST_DESC to the st_uid and
    st_gid fields of SRC_SB.  If DEST_DESC is undefined (-1), set
-   the owner and owning group of DST_NAME instead.  DEST_DESC must
+   the owner and owning group of DST_NAME instead; for
+   safety prefer lchown if the system supports it since no
+   symbolic links should be involved.  DEST_DESC must
    refer to the same file as DEST_NAME if defined.
    Return 1 if the syscall succeeds, 0 if it fails but it's OK
    not to preserve ownership, -1 otherwise.  */
@@ -188,7 +195,7 @@ set_owner (const struct cp_options *x, char const *dst_name, int dest_desc,
     }
   else
     {
-      if (chown (dst_name, uid, gid) == 0)
+      if (lchown (dst_name, uid, gid) == 0)
 	return 1;
     }
 
@@ -212,6 +219,9 @@ static void
 set_author (const char *dst_name, int dest_desc, const struct stat *src_sb)
 {
 #if HAVE_STRUCT_STAT_ST_AUTHOR
+  /* FIXME: Modify the following code so that it does not
+     follow symbolic links.  */
+
   /* Preserve the st_author field.  */
   file_t file = (dest_desc < 0
 		 ? file_name_lookup (dst_name, 0, 0)
@@ -1909,20 +1919,21 @@ copy_internal (char const *src_name, char const *dst_name,
 	{
 	  /* Preserve the owner and group of the just-`copied'
 	     symbolic link, if possible.  */
-#if HAVE_LCHOWN
-	  if (lchown (dst_name, src_sb.st_uid, src_sb.st_gid) != 0
+	  if (HAVE_LCHOWN
+	      && lchown (dst_name, src_sb.st_uid, src_sb.st_gid) != 0
 	      && ! chown_failure_ok (x))
 	    {
 	      error (0, errno, _("failed to preserve ownership for %s"),
 		     dst_name);
 	      goto un_backup;
 	    }
-#else
-	  /* Can't preserve ownership of symlinks.
-	     FIXME: maybe give a warning or even error for symlinks
-	     in directories with the sticky bit set -- there, not
-	     preserving owner/group is a potential security problem.  */
-#endif
+	  else
+	    {
+	      /* Can't preserve ownership of symlinks.
+		 FIXME: maybe give a warning or even error for symlinks
+		 in directories with the sticky bit set -- there, not
+		 preserving owner/group is a potential security problem.  */
+	    }
 	}
     }
   else

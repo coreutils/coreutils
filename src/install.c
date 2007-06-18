@@ -62,6 +62,10 @@ static bool use_default_selinux_context = true;
 # define endpwent() ((void) 0)
 #endif
 
+#if ! HAVE_LCHOWN
+# define lchown(name, uid, gid) chown (name, uid, gid)
+#endif
+
 /* Initial number of entries in each hash table entry's table of inodes.  */
 #define INITIAL_HASH_MODULE 100
 
@@ -606,7 +610,7 @@ change_attributes (char const *name)
      want to know.  */
 
   if (! (owner_id == (uid_t) -1 && group_id == (gid_t) -1)
-      && chown (name, owner_id, group_id) != 0)
+      && lchown (name, owner_id, group_id) != 0)
     error (0, errno, _("cannot change ownership of %s"), quote (name));
   else if (chmod (name, mode) != 0)
     error (0, errno, _("cannot change permissions of %s"), quote (name));
