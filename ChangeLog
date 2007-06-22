@@ -1,3 +1,7 @@
+2007-06-22  Pádraig Brady  <P@draigBrady.com>  (trivial change)
+
+	* tests/seq/basic: Add test cases for seq off-by-one problem.
+
 2007-06-22  Jim Meyering  <jim@meyering.net>
 
 	* src/stat.c (long_options): Add a FIXME comment to help ensure
