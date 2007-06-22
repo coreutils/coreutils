@@ -1,3 +1,9 @@
+2007-06-22  Jim Meyering  <jim@meyering.net>
+
+	* src/stat.c (long_options): Add a FIXME comment to help ensure
+	that the deprecated and undocumented "--filesystem" option is
+	removed someday.
+
 2007-06-18  Paul Eggert  <eggert@cs.ucla.edu>
 
 	A few more symlink-related fixes.  Fix a bug triggered by cp
