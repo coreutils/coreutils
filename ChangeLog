@@ -1,3 +1,13 @@
+2007-06-23  Jim Meyering  <jim@meyering.net>
+
+	Prefer "STREQ (a, b)" over "strcmp (a, b) == 0"; similar for != 0.
+	* src/base64.c (main): Likewise.
+	* src/install.c (setdefaultfilecon): Likewise.
+	* src/sort.c (main): Likewise.
+	* Makefile.maint (sc_prohibit_strcmp): New rule.
+	* .x-sc_prohibit_strcmp: New file, to list the few exceptions.
+	* Makefile.am (EXTRA_DIST): Add .x-sc_prohibit_strcmp.
+
 2007-06-22  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: seq no longer mishandles obvious cases like

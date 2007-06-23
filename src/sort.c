@@ -2930,7 +2930,7 @@ main (int argc, char **argv)
 	  break;
 
 	case COMPRESS_PROGRAM_OPTION:
-	  if (compress_program && strcmp (compress_program, optarg) != 0)
+	  if (compress_program && !STREQ (compress_program, optarg))
 	    error (SORT_FAILURE, 0, _("multiple compress programs specified"));
 	  compress_program = optarg;
 	  break;

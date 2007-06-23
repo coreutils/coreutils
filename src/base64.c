@@ -296,7 +296,7 @@ main (int argc, char **argv)
   else
     infile = "-";
 
-  if (strcmp (infile, "-") == 0)
+  if (STREQ (infile, "-"))
     input_fh = stdin;
   else
     {
@@ -312,7 +312,7 @@ main (int argc, char **argv)
 
   if (fclose (input_fh) == EOF)
     {
-      if (strcmp (infile, "-") == 0)
+      if (STREQ (infile, "-"))
 	error (EXIT_FAILURE, errno, _("closing standard input"));
       else
 	error (EXIT_FAILURE, errno, "%s", infile);

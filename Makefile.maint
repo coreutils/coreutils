@@ -125,6 +125,13 @@ sc_prohibit_atoi_atof:
 	  { echo '$(ME): do not use *scan''f, ato''f, ato''i, ato''l, ato''ll, ato''q, or ss''canf'	\
 		1>&2; exit 1; } || :
 
+# Use STREQ rather than comparing strcmp == 0, or != 0.
+sc_prohibit_strcmp:
+	@grep -nE '! *str''cmp \(|\<str''cmp \([^)]+\) *==' \
+	    $$($(CVS_LIST_EXCEPT)) && \
+	  { echo '$(ME): use STREQ in place of the above uses of str''cmp' \
+		1>&2; exit 1; } || :
+
 # Using EXIT_SUCCESS as the first argument to error is misleading,
 # since when that parameter is 0, error does not exit.  Use `0' instead.
 sc_error_exit_success:
