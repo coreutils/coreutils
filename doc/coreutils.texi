@@ -14052,34 +14052,16 @@ $ seq 18446744073709551616 1 18446744073709551618
 18446744073709551618
 @end example
 
-Be careful when using @command{seq} with a fractional @var{increment};
-otherwise you may see surprising results.  Most people would expect to
-see @code{0.000003} printed as the last number in this example:
+Be careful when using @command{seq} with outlandish values: otherwise
+you may see surprising results, as @command{seq} uses floating point
+internally.  For example, on the x86 platform, where the internal
+representation uses a 64-bit fraction, the command:
 
 @example
-$ seq -s ' ' 0 0.000001 0.000003
-0.000000 0.000001 0.000002
+seq 1 0.0000000000000000001 1.0000000000000000009
 @end example
 
-But that doesn't happen on many systems because @command{seq} is
-implemented using binary floating point arithmetic (via the C
-@code{long double} type)---which means decimal fractions like @code{0.000001}
-cannot be represented exactly.  That in turn means some nonintuitive
-conditions like @w{@code{0.000001 * 3 > 0.000003}} will end up being true.
-
-To work around that in the above example, use a slightly larger number as
-the @var{last} value:
-
-@example
-$ seq -s ' ' 0 0.000001 0.0000031
-0.000000 0.000001 0.000002 0.000003
-@end example
-
-In general, when using an @var{increment} with a fractional part, where
-(@var{last} - @var{first}) / @var{increment} is (mathematically) a whole
-number, specify a slightly larger (or smaller, if @var{increment} is negative)
-value for @var{last} to ensure that @var{last} is the final value printed
-by seq.
+outputs 1.0000000000000000007 twice and skips 1.0000000000000000008.
 
 @exitstatus
 

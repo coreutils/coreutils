@@ -1,5 +1,5 @@
 /* seq - print sequence of numbers to standard output.
-   Copyright (C) 1994-2006 Free Software Foundation, Inc.
+   Copyright (C) 1994-2007 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -210,15 +210,53 @@ print_numbers (char const *fmt,
 	       long double first, long double step, long double last)
 {
   long double i;
+  long double x0 IF_LINT (= 0);
 
   for (i = 0; /* empty */; i++)
     {
       long double x = first + i * step;
+
       if (step < 0 ? x < last : last < x)
-	break;
+	{
+	  /* If we go one past the end, but that number prints the
+	     same way "last" does, and prints differently from the
+	     previous number, then print "last".  This avoids problems
+	     with rounding.  For example, with the x86 it causes "seq
+	     0 0.000001 0.000003" to print 0.000003 instead of
+	     stopping at 0.000002.  */
+
+	  if (i)
+	    {
+	      char *x_str = NULL;
+	      char *last_str = NULL;
+	      if (asprintf (&x_str, fmt, x) < 0
+		  || asprintf (&last_str, fmt, last) < 0)
+		xalloc_die ();
+
+	      if (STREQ (x_str, last_str))
+		{
+		  char *x0_str = NULL;
+		  if (asprintf (&x0_str, fmt, x0) < 0)
+		    xalloc_die ();
+		  if (!STREQ (x0_str, x_str))
+		    {
+		      fputs (separator, stdout);
+		      fputs (x_str, stdout);
+		    }
+		  free (x0_str);
+		}
+
+	      free (x_str);
+	      free (last_str);
+	    }
+
+	  break;
+	}
+
       if (i)
 	fputs (separator, stdout);
       printf (fmt, x);
+      x0 = x;
     }
 
   if (i)

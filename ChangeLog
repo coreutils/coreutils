@@ -1,3 +1,13 @@
+2007-06-22  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* NEWS: seq no longer mishandles obvious cases like
+	"seq 0 0.000001 0.000003" by omitting the last output number.
+	* doc/coreutils.texi (seq invocation): Remove advice about workaround
+	for seq off-by-one problem, since the bug is fixed now.  Replace
+	it with more-generic advice about rounding errors.
+	* src/seq.c (long_double_format, print_numbers):
+	New arg NUMERIC_FORMAT.  All uses changed.
+
 2007-06-22  Pádraig Brady  <P@draigBrady.com>  (trivial change)
 
 	* tests/seq/basic: Add test cases for seq off-by-one problem.
