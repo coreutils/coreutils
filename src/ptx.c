@@ -1,5 +1,5 @@
 /* Permuted index for GNU, with keywords in their context.
-   Copyright (C) 1990, 1991, 1993, 1998-2006 Free Software Foundation, Inc.
+   Copyright (C) 1990, 1991, 1993, 1998-2007 Free Software Foundation, Inc.
    François Pinard <pinard@iro.umontreal.ca>, 1988.
 
    This program is free software; you can redistribute it and/or modify
@@ -1937,7 +1937,6 @@ static const struct option long_options[] =
 {
   {"auto-reference", no_argument, NULL, 'A'},
   {"break-file", required_argument, NULL, 'b'},
-  {"copyright", no_argument, NULL, 'C'}, /* Deprecated, remove in 2007.  */
   {"flag-truncation", required_argument, NULL, 'F'},
   {"ignore-case", no_argument, NULL, 'f'},
   {"gap-size", required_argument, NULL, 'g'},
@@ -1987,7 +1986,7 @@ main (int argc, char **argv)
   setchrclass (NULL);
 #endif
 
-  while (optchar = getopt_long (argc, argv, "ACF:GM:ORS:TW:b:i:fg:o:trw:",
+  while (optchar = getopt_long (argc, argv, "AF:GM:ORS:TW:b:i:fg:o:trw:",
 				long_options, NULL),
 	 optchar != EOF)
     {
@@ -2084,11 +2083,6 @@ main (int argc, char **argv)
 	  output_format = XARGMATCH ("--format", optarg,
 				     format_args, format_vals);
 	case_GETOPT_HELP_CHAR;
-
-	case 'C':
-	  error (0, 0, _("\
-the --copyright option is deprecated; use --version instead"));
-          /* fallthrough */
 
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 	}

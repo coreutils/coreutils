@@ -44,6 +44,14 @@ GNU coreutils NEWS                                    -*- outline -*-
   and installation of other programs, don't be surprised if some parts
   of "make check" fail.
 
+** Remove deprecated options
+
+  df no longer accepts the --kilobytes option.
+  du no longer accepts the --kilobytes or --megabytes options.
+  ls no longer accepts the --kilobytes option.
+  ptx longer accepts the --copyright option.
+  who no longer accepts -i or --idle.
+
 ** Bug fixes
 
   cp no longer fails to write through a dangling symlink

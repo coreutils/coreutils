@@ -1,5 +1,12 @@
 2007-07-14  Jim Meyering  <jim@meyering.net>
 
+	Remove long-deprecated options.
+	* NEWS: Mention this.
+	* src/df.c, src/ls.c: Remove --kilobytes option.
+	* src/du.c: Remove --kilobytes and --megabytes options.
+	* src/who.c: Remove -i and --idle options.
+	* src/ptx.c: Remove --copyright option.
+
 	Change interface: make 2nd param _space_-separated, not comma-separated
 	* m4/include-exclude-prog.m4 (gl_INCLUDE_EXCLUDE_PROG): Remove now-
 	unnecessary use of tr.

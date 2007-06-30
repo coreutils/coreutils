@@ -166,7 +166,6 @@ static struct option const longopts[] = {
   {"count", no_argument, NULL, 'q'},
   {"dead", no_argument, NULL, 'd'},
   {"heading", no_argument, NULL, 'H'},
-  {"idle", no_argument, NULL, 'i'}, /* FIXME: deprecated: remove in late 2006 */
   {"login", no_argument, NULL, 'l'},
   {"lookup", no_argument, NULL, LOOKUP_OPTION},
   {"message", no_argument, NULL, 'T'},
@@ -683,7 +682,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  while ((optc = getopt_long (argc, argv, "abdilmpqrstuwHT", longopts, NULL))
+  while ((optc = getopt_long (argc, argv, "abdlmpqrstuwHT", longopts, NULL))
 	 != -1)
     {
       switch (optc)
@@ -757,11 +756,6 @@ main (int argc, char **argv)
 	  include_mesg = true;
 	  break;
 
-	case 'i':
-	  error (0, 0,
-		 _("Warning: -i will be removed in a future release; \
-  use -u instead"));
-	  /* Fall through.  */
 	case 'u':
 	  need_users = true;
 	  include_idle = true;
