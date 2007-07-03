@@ -536,9 +536,9 @@ static int lines_per_page = 66;
 
 /* Number of lines in the header and footer can be reset to 0 using
    the -t flag. */
-static int lines_per_header = 5;
+enum { lines_per_header = 5 };
 static int lines_per_body;
-static int lines_per_footer = 5;
+enum { lines_per_footer = 5 };
 
 /* (-w|-W) Width in characters of the page.  Does not include the width of
    the margin. */
@@ -1213,12 +1213,6 @@ static void
 init_parameters (int number_of_files)
 {
   int chars_used_by_number = 0;
-
-  if (use_form_feed)
-    {
-      lines_per_header = 3;
-      lines_per_footer = 0;
-    }
 
   lines_per_body = lines_per_page - lines_per_header - lines_per_footer;
   if (lines_per_body <= 0)
@@ -2395,9 +2389,6 @@ print_header (void)
   int lhs_spaces;
   int rhs_spaces;
 
-  if (!use_form_feed)
-    printf ("\n\n");
-
   output_position = 0;
   pad_across_to (chars_per_margin);
   print_white_space ();
@@ -2414,7 +2405,7 @@ print_header (void)
   lhs_spaces = available_width >> 1;
   rhs_spaces = available_width - lhs_spaces;
 
-  printf ("%s%*s%s%*s%s\n\n\n",
+  printf ("\n\n%s%*s%s%*s%s\n\n\n",
 	  date_text, lhs_spaces, " ", file_text, rhs_spaces, " ", page_text);
 
   print_a_header = false;
@@ -2869,7 +2860,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
 \n\
--T implied by -l nn when nn <= 10 or <= 3 with -F. With no FILE, or when\n\
+-t is implied if PAGE_LENGTH <= 10.  With no FILE, or when\n\
 FILE is -, read standard input.\n\
 "), stdout);
       emit_bug_reporting_address ();

@@ -2,6 +2,11 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release 6.9+ (????-??-??) [stable]
 
+** Changes in behavior
+
+  pr -F no longer suppresses the footer or the first two blank lines in
+  the header.  This is for compatibility with BSD and POSIX.
+
 ** New features
 
   Add SELinux support (FIXME: add details here)

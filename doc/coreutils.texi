@@ -2040,11 +2040,9 @@ pr [@var{option}]@dots{} [@var{file}]@dots{}
 By default, a 5-line header is printed at each page: two blank lines;
 a line with the date, the file name, and the page count; and two more
 blank lines.  A footer of five blank lines is also printed.
-With the @option{-F}
-option, a 3-line header is printed: the leading two blank lines are
-omitted; no footer is used.  The default @var{page_length} in both cases is 66
-lines.  The default number of text lines changes from 56 (without @option{-F})
-to 63 (with @option{-F}).  The text line of the header takes the form
+The default @var{page_length} is 66
+lines.  The default number of text lines is therefore 56.
+The text line of the header takes the form
 @samp{@var{date} @var{string} @var{page}}, with spaces inserted around
 @var{string} so that the line takes up the full @var{page_width}.  Here,
 @var{date} is the date (see the @option{-D} or @option{--date-format}
@@ -2198,9 +2196,8 @@ is 8).
 @opindex -F
 @opindex -f
 @opindex --form-feed
-Use a form feed instead of newlines to separate output pages.  The default
-page length of 66 lines is not altered.  But the number of lines of text
-per page changes from default 56 to 63 lines.
+Use a form feed instead of newlines to separate output pages.  This does
+not alter the default page length of 66 lines.
 
 @item -h @var{HEADER}
 @itemx --header=@var{HEADER}
@@ -2240,9 +2237,8 @@ to disentangle the old (@acronym{POSIX}-compliant) options @option{-w} and
 @opindex --length
 Set the page length to @var{page_length} (default 66) lines, including
 the lines of the header [and the footer].  If @var{page_length} is less
-than or equal to 10 (or <= 3 with @option{-F}), the header and footer are
-omitted, and all form feeds set in input files are eliminated, as if
-the @option{-T} option had been given.
+than or equal to 10, the header and footer are omitted, as if the
+@option{-t} option had been given.
 
 @item -m
 @itemx --merge
