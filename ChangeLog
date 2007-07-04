@@ -1,3 +1,168 @@
+2007-07-04  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* NEWS: pr -F no longer suppresses the footer or the first two blank
+	lines in the header.
+	* doc/coreutils.texi (pr invocation): Likewise.  Also, a too-short
+	page length implies -t, not -T.
+	* src/pr.c (lines_per_header, lines_per_footer): Now constants.
+	(init_parameters): Don't try to change them.
+	(print_header): Use the same header and footer format regardless of
+	wither form feeds are being used.
+	(usage): Adjust to above change when describing too-short page length.
+	Too-short page length impliesy -t, not -T.
+	* tests/pr/2-S_f-t_notab: Adjust to the fact that -F now affects
+	only formfeed handling; it does not change the header.
+	* tests/pr/2-Sf-t_notab: Likewise.
+	* tests/pr/2f-t_notab: Likewise.
+	* tests/pr/2s_f-t_notab: Likewise.
+	* tests/pr/2s_w60f-t_nota: Likewise.
+	* tests/pr/2sf-t_notab: Likewise.
+	* tests/pr/2sw60f-t_notab: Likewise.
+	* tests/pr/2w60f-t_notab: Likewise.
+	* tests/pr/3a3f-0F: Likewise.
+	* tests/pr/3b3f-0F: Likewise.
+	* tests/pr/3b3f-0FF: Likewise.
+	* tests/pr/3b3f-FF: Likewise.
+	* tests/pr/3f-0F: Likewise.
+	* tests/pr/3f-FF: Likewise.
+	* tests/pr/Test.pm: Likewise.
+	* tests/pr/a3f-0F: Likewise.
+	* tests/pr/a3f-0FF: Likewise.
+	* tests/pr/a3f-FF: Likewise.
+	* tests/pr/b3f-0F: Likewise.
+	* tests/pr/b3f-0FF: Likewise.
+	* tests/pr/b3f-FF: Likewise.
+	* tests/pr/3-5l17f-t: Remove, since it's been renamed to another
+	file whose name has a line count 7 larger,
+	reflecting the new line count needed for this behavior.
+	* tests/pr/3a3l8f-t: Likewise.
+	* tests/pr/3b3l8f-t: Likewise.
+	* tests/pr/3l17f-t: Likewise.
+	* tests/pr/3ml17f-t: Likewise.
+	* tests/pr/Ja3l17f-lm: Likewise.
+	* tests/pr/Jb3l17f-lm: Likewise.
+	* tests/pr/Jml17f-lm-lo: Likewise.
+	* tests/pr/W-72l17f-ll: Likewise.
+	* tests/pr/W20l17f-ll: Likewise.
+	* tests/pr/W26l17f-ll: Likewise.
+	* tests/pr/W27l17f-ll: Likewise.
+	* tests/pr/W28l17f-ll: Likewise.
+	* tests/pr/W35Ja3l17f-lm: Likewise.
+	* tests/pr/W35Jb3l17f-lm: Likewise.
+	* tests/pr/W35Jml17f-lmlo: Likewise.
+	* tests/pr/W35a3l17f-lm: Likewise.
+	* tests/pr/W35b3l17f-lm: Likewise.
+	* tests/pr/W35ml17f-lm-lo: Likewise.
+	* tests/pr/W72Jl17f-ll: Likewise.
+	* tests/pr/a3l17f-lm: Likewise.
+	* tests/pr/a3l8f-t: Likewise.
+	* tests/pr/b3l17f-lm: Likewise.
+	* tests/pr/b3l8f-t: Likewise.
+	* tests/pr/l17f-t: Likewise.
+	* tests/pr/ml17f-0F: Likewise.
+	* tests/pr/ml17f-lm-lo: Likewise.
+	* tests/pr/ml17f-t: Likewise.
+	* tests/pr/ml17f-t-0F: Likewise.
+	* tests/pr/n+2-5l17f-0FF: Likewise.
+	* tests/pr/n+2l17f-0FF: Likewise.
+	* tests/pr/n+2l17f-bl: Likewise.
+	* tests/pr/n+3l17f-0FF: Likewise.
+	* tests/pr/n+3l17f-bl: Likewise.
+	* tests/pr/n+3ml13f-bl-FF: Likewise.
+	* tests/pr/n+3ml17f-bl-tn: Likewise.
+	* tests/pr/n+3ml17f-tn-bl: Likewise.
+	* tests/pr/n+4b2l10f-0FF: Likewise.
+	* tests/pr/n+5-8b3l10f-FF: Likewise.
+	* tests/pr/n+5a3l6f-0FF: Likewise.
+	* tests/pr/n+6b3l6f-FF: Likewise.
+	* tests/pr/nJml17f-lmlmlo: Likewise.
+	* tests/pr/nJml17f-lmlolm: Likewise.
+	* tests/pr/nN1+3l17f-bl: Likewise.
+	* tests/pr/nN15l17f-bl: Likewise.
+	* tests/pr/nSml13-bl-FF: Likewise.
+	* tests/pr/nSml13-t-t-FF: Likewise.
+	* tests/pr/nSml13-t-tFFFF: Likewise.
+	* tests/pr/nSml17-bl-FF: Likewise.
+	* tests/pr/nSml17-t-t-FF: Likewise.
+	* tests/pr/nSml17-t-tFFFF: Likewise.
+	* tests/pr/nl17f-bl: Likewise.
+	* tests/pr/o3Jml17f-lm-lo: Likewise.
+	* tests/pr/o3a3Sl17f-tn: Likewise.
+	* tests/pr/o3a3Snl17f-tn: Likewise.
+	* tests/pr/o3a3l17f-tn: Likewise.
+	* tests/pr/o3b3Sl17f-tn: Likewise.
+	* tests/pr/o3b3Snl17f-tn: Likewise.
+	* tests/pr/o3b3l17f-tn: Likewise.
+	* tests/pr/o3mSl17f-bl-tn: Likewise.
+	* tests/pr/o3mSnl17fbltn: Likewise.
+	* tests/pr/o3ml17f-bl-tn: Likewise.
+	* tests/pr/w72l17f-ll: Likewise.
+	* tests/pr/3-5l24f-t: New file, containing the contents of the
+	file with the same name but with the line count smaller by 7,
+	reflecting the new behavior with -F.
+	* tests/pr/3a3l15f-t: Likewise.
+	* tests/pr/3b3l15f-t: Likewise.
+	* tests/pr/3l24f-t: Likewise.
+	* tests/pr/3ml24f-t: Likewise.
+	* tests/pr/Ja3l24f-lm: Likewise.
+	* tests/pr/Jb3l24f-lm: Likewise.
+	* tests/pr/Jml24f-lm-lo: Likewise.
+	* tests/pr/W-72l24f-ll: Likewise.
+	* tests/pr/W20l24f-ll: Likewise.
+	* tests/pr/W26l24f-ll: Likewise.
+	* tests/pr/W27l24f-ll: Likewise.
+	* tests/pr/W28l24f-ll: Likewise.
+	* tests/pr/W35Ja3l24f-lm: Likewise.
+	* tests/pr/W35Jb3l24f-lm: Likewise.
+	* tests/pr/W35Jml24f-lmlo: Likewise.
+	* tests/pr/W35a3l24f-lm: Likewise.
+	* tests/pr/W35b3l24f-lm: Likewise.
+	* tests/pr/W35ml24f-lm-lo: Likewise.
+	* tests/pr/W72Jl24f-ll: Likewise.
+	* tests/pr/a3l15f-t: Likewise.
+	* tests/pr/a3l24f-lm: Likewise.
+	* tests/pr/b3l15f-t: Likewise.
+	* tests/pr/b3l24f-lm: Likewise.
+	* tests/pr/l24f-t: Likewise.
+	* tests/pr/ml24f-0F: Likewise.
+	* tests/pr/ml24f-lm-lo: Likewise.
+	* tests/pr/ml24f-t: Likewise.
+	* tests/pr/ml24f-t-0F: Likewise.
+	* tests/pr/n+2-5l24f-0FF: Likewise.
+	* tests/pr/n+2l24f-0FF: Likewise.
+	* tests/pr/n+2l24f-bl: Likewise.
+	* tests/pr/n+3l24f-0FF: Likewise.
+	* tests/pr/n+3l24f-bl: Likewise.
+	* tests/pr/n+3ml20f-bl-FF: Likewise.
+	* tests/pr/n+3ml24f-bl-tn: Likewise.
+	* tests/pr/n+3ml24f-tn-bl: Likewise.
+	* tests/pr/n+4b2l17f-0FF: Likewise.
+	* tests/pr/n+5-8b3l17f-FF: Likewise.
+	* tests/pr/n+5a3l13f-0FF: Likewise.
+	* tests/pr/n+6b3l13f-FF: Likewise.
+	* tests/pr/nJml24f-lmlmlo: Likewise.
+	* tests/pr/nJml24f-lmlolm: Likewise.
+	* tests/pr/nN1+3l24f-bl: Likewise.
+	* tests/pr/nN15l24f-bl: Likewise.
+	* tests/pr/nSml20-bl-FF: Likewise.
+	* tests/pr/nSml20-t-t-FF: Likewise.
+	* tests/pr/nSml20-t-tFFFF: Likewise.
+	* tests/pr/nSml24-bl-FF: Likewise.
+	* tests/pr/nSml24-t-t-FF: Likewise.
+	* tests/pr/nSml24-t-tFFFF: Likewise.
+	* tests/pr/nl24f-bl: Likewise.
+	* tests/pr/o3Jml24f-lm-lo: Likewise.
+	* tests/pr/o3a3Sl24f-tn: Likewise.
+	* tests/pr/o3a3Snl24f-tn: Likewise.
+	* tests/pr/o3a3l24f-tn: Likewise.
+	* tests/pr/o3b3Sl24f-tn: Likewise.
+	* tests/pr/o3b3Snl24f-tn: Likewise.
+	* tests/pr/o3b3l24f-tn: Likewise.
+	* tests/pr/o3mSl24f-bl-tn: Likewise.
+	* tests/pr/o3mSnl24fbltn: Likewise.
+	* tests/pr/o3ml24f-bl-tn: Likewise.
+	* tests/pr/w72l24f-ll: Likewise.
+
 2007-06-23  Jim Meyering  <jim@meyering.net>
 
 	Prefer "STREQ (a, b)" over "strcmp (a, b) == 0"; similar for != 0.
