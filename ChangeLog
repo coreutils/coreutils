@@ -1,5 +1,7 @@
 2007-07-05  Jim Meyering  <jim@meyering.net>
 
+	* bootstrap: Merge in changes from gnulib.
+
 	* src/id.c: Include "getugroups.h" rather than declaring manually.
 
 2007-07-04  Paul Eggert  <eggert@cs.ucla.edu>

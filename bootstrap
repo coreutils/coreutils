@@ -52,7 +52,7 @@ Options:
  --cvs-user=USERNAME      Set the username to use when checking out
                           sources from the gnulib repository.
 
-If the file .bootstrap.conf exists in the current working directory, its
+If the file bootstrap.conf exists in the current working directory, its
 contents are read as shell variables to configure the bootstrap.
 
 Running without arguments will suffice in most cases.
@@ -60,6 +60,9 @@ Running without arguments will suffice in most cases.
 }
 
 # Configuration.
+
+# Name of the Makefile.am
+gnulib_mk=gnulib.mk
 
 # List of gnulib modules needed.
 gnulib_modules=
@@ -69,8 +72,7 @@ gnulib_files=
 
 # Translation Project URL, for the registry of all projects
 # and for the translation-team master directory.
-TP_URL='http://www.iro.umontreal.ca/translation/registry.cgi?domain='
-TP_PO_URL='http://www.iro.umontreal.ca/translation/teams/PO/'
+TP_URL="http://translationproject.org/latest/"
 
 extract_package_name='
   /^AC_INIT(/{
@@ -103,6 +105,9 @@ gnulib_extra_files="
 	$build_aux/config.sub
 	doc/INSTALL
 "
+
+# Additional gnulib-tool options to use.  Use "\newline" to break lines.
+gnulib_tool_option_extras=
 
 # Other locale categories that need message catalogs.
 EXTRA_LOCALE_CATEGORIES=
@@ -176,7 +181,8 @@ grep '^[	 ]*AC_CONFIG_AUX_DIR('"$build_aux"')' configure.ac \
     >/dev/null && found_aux_dir=yes
 if test $found_aux_dir = no; then
   echo "$0: expected line not found in configure.ac. Add the following:" >&2
-  echo "  AC_CONFIG_AUX_DIR([$build_aux])" >&2.
+  echo "  AC_CONFIG_AUX_DIR([$build_aux])" >&2
+  exit 1
 fi
 
 # If $build_aux doesn't exist, create it now, otherwise some bits
@@ -242,31 +248,12 @@ get_translations() {
   ?*)
     echo "$0: getting translations into $subdir for $domain..." &&
 
-    (cd $subdir && rm -f dummy `ls | sed -n '/\.gmo$/p; /\.po/p'`) &&
-    $WGET_COMMAND -O "$subdir/$domain.html" "$TP_URL$domain" &&
-
-    sed -n 's|.*"http://[^"]*/translation/teams/PO/\([^/"]*\)/'"$domain"'-\([^/"]*\)\.[^."]*\.po".*|\1.\2|p' <"$subdir/$domain.html" |
-    sort -k 1,1 -k 2,2n -k2,2 -k3,3n -k3,3 -k4,4n -k4,4 -k5,5n -k5.5 |
-    awk -F. '
-      { if (lang && $1 != lang) print lang, ver }
-      { lang = $1; ver = substr($0, index($0, ".") + 1) }
-      END { if (lang) print lang, ver }
-    ' | awk -v domain="$domain" -v subdir="$subdir" '
-      {
-	lang = $1
-	ver = $2
-	urlfmt = ""
-	printf "{ $WGET_COMMAND -O %s/%s.po '\'"$TP_PO_URL"'/%s/%s-%s.%s.po'\'' &&\n", subdir, lang, lang, domain, ver, lang
-	printf "  msgfmt -c -o /dev/null %s/%s.po || {\n", subdir, lang
-	printf "    echo >&2 '\'"$0"': omitting translation for %s'\''\n", lang
-	printf "    rm -f %s/%s.po; }; } &&\n", subdir, lang
-      }
-      END { print ":" }
-    ' | WGET_COMMAND="$WGET_COMMAND" sh;;
+    (cd $subdir && rm -f dummy `ls | sed -n '/\.gmo$/p; /\.po/p'` &&
+     $WGET_COMMAND -r -l1 -nd -np -A.po $TP_URL/$domain)
+    ;;
   esac &&
   ls "$subdir"/*.po 2>/dev/null |
-    sed 's|.*/||; s|\.po$||' >"$subdir/LINGUAS" &&
-  rm -f "$subdir/$domain.html"
+    sed 's|.*/||; s|\.po$||' >"$subdir/LINGUAS"
 }
 
 case $SKIP_PO in
@@ -400,12 +387,12 @@ slurp() {
 	test "$dir/$file" = "$excluded_file" && continue 2
       done
       if test $file = Makefile.am; then
-        copied=$copied${sep}gnulib.mk; sep=$nl
+        copied=$copied${sep}$gnulib_mk; sep=$nl
 	remove_intl='/^[^#].*\/intl/s/^/#/;'"s!$bt_regex/!!g"
-        sed "$remove_intl" $1/$dir/$file | cmp -s - $dir/gnulib.mk || {
-	  echo "$0: Copying $1/$dir/$file to $dir/gnulib.mk ..." &&
-	  rm -f $dir/gnulib.mk &&
-	  sed "$remove_intl" $1/$dir/$file >$dir/gnulib.mk
+        sed "$remove_intl" $1/$dir/$file | cmp -s - $dir/$gnulib_mk || {
+	  echo "$0: Copying $1/$dir/$file to $dir/$gnulib_mk ..." &&
+	  rm -f $dir/$gnulib_mk &&
+	  sed "$remove_intl" $1/$dir/$file >$dir/$gnulib_mk
 	}
       elif { test "${2+set}" = set && test -r $2/$dir/$file; } ||
 	   version_controlled_file $dir $file; then
@@ -460,6 +447,7 @@ gnulib_tool_options="\
  --source-base $bt/lib/\
  --tests-base $bt/tests\
  --local-dir gl\
+$gnulib_tool_option_extras\
 "
 echo "$0: $gnulib_tool $gnulib_tool_options --import ..."
 $gnulib_tool $gnulib_tool_options --import $gnulib_modules &&
@@ -521,10 +509,10 @@ done
 
 
 # Get some extra files from gnulib, overriding existing files.
-
 for file in $gnulib_extra_files; do
   case $file in
   */INSTALL) dst=INSTALL;;
+  build-aux/*) dst=$build_aux/`expr "$file" : 'build-aux/\(.*\)'`;;
   *) dst=$file;;
   esac
   symlink_to_gnulib $file $dst || exit
