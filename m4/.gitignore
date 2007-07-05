@@ -92,6 +92,7 @@ iconv.m4
 iconv_h.m4
 iconv_open.m4
 idcache.m4
+include_next.m4
 inet_ntop.m4
 inline.m4
 intl.m4
@@ -138,6 +139,7 @@ memmove.m4
 mempcpy.m4
 memrchr.m4
 memset.m4
+mgetgroups.m4
 mkancesdirs.m4
 mkdir-p.m4
 mkdir-slash.m4

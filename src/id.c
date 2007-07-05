@@ -30,6 +30,7 @@
 #include "system.h"
 #include "error.h"
 #include "getugroups.h"
+#include "mgetgroups.h"
 #include "quote.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -278,50 +279,6 @@ print_group (gid_t gid)
     printf ("%s", grp->gr_name);
 }
 
-#if HAVE_GETGROUPS
-
-/* FIXME: document */
-
-static bool
-xgetgroups (const char *username, gid_t gid, int *n_groups,
-	    GETGROUPS_T **groups)
-{
-  int max_n_groups;
-  int ng;
-  GETGROUPS_T *g = NULL;
-
-  if (!username)
-    max_n_groups = getgroups (0, NULL);
-  else
-    max_n_groups = getugroups (0, NULL, username, gid);
-
-  if (max_n_groups < 0)
-    ng = -1;
-  else
-    {
-      g = xnmalloc (max_n_groups, sizeof *g);
-      if (!username)
-	ng = getgroups (max_n_groups, g);
-      else
-	ng = getugroups (max_n_groups, g, username, gid);
-    }
-
-  if (ng < 0)
-    {
-      error (0, errno, _("cannot get supplemental group list"));
-      free (g);
-      return false;
-    }
-  else
-    {
-      *n_groups = ng;
-      *groups = g;
-      return true;
-    }
-}
-
-#endif /* HAVE_GETGROUPS */
-
 /* Print all of the distinct groups the user is in. */
 
 static void
@@ -342,13 +299,15 @@ print_group_list (const char *username)
 
 #if HAVE_GETGROUPS
   {
-    int n_groups;
     GETGROUPS_T *groups;
-    int i;
+    size_t i;
 
-    if (! xgetgroups (username, (pwd ? pwd->pw_gid : (gid_t) -1),
-		      &n_groups, &groups))
+    int n_groups = mgetgroups (username, (pwd ? pwd->pw_gid : (gid_t) -1),
+			       &groups);
+    if (n_groups < 0)
       {
+	error (0, errno, _("failed to get groups for user %s"),
+	       quote (username));
 	ok = false;
 	return;
       }
@@ -400,13 +359,15 @@ print_full_info (const char *username)
 
 #if HAVE_GETGROUPS
   {
-    int n_groups;
     GETGROUPS_T *groups;
-    int i;
+    size_t i;
 
-    if (! xgetgroups (username, (pwd ? pwd->pw_gid : (gid_t) -1),
-		      &n_groups, &groups))
+    int n_groups = mgetgroups (username, (pwd ? pwd->pw_gid : (gid_t) -1),
+			       &groups);
+    if (n_groups < 0)
       {
+	error (0, errno, _("failed to get groups for user %s"),
+	       quote (username));
 	ok = false;
 	return;
       }

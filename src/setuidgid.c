@@ -1,5 +1,5 @@
 /* setuidgid - run a command with the UID and GID of a specified user
-   Copyright (C) 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2003-2007 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@
 
 #include "error.h"
 #include "long-options.h"
+#include "mgetgroups.h"
 #include "quote.h"
 
 #define PROGRAM_NAME "setuidgid"
@@ -105,8 +106,21 @@ main (int argc, char **argv)
 	   _("unknown user-ID: %s"), quote (user_id));
 
 #if HAVE_SETGROUPS
-  if (setgroups (1, &pwd->pw_gid))
-    error (SETUIDGID_FAILURE, errno, _("cannot set supplemental group"));
+  {
+    GETGROUPS_T *groups;
+    int n_groups = mgetgroups (user_id, pwd->pw_gid, &groups);
+    if (n_groups < 0)
+      {
+	n_groups = 1;
+	groups = xmalloc (sizeof *groups);
+	*groups = pwd->pw_gid;
+      }
+
+    if (0 < n_groups && setgroups (n_groups, groups))
+      error (SETUIDGID_FAILURE, errno, _("cannot set supplemental group(s)"));
+
+    free (groups);
+  }
 #endif
 
   if (setgid (pwd->pw_gid))

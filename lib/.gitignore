@@ -144,6 +144,7 @@ gettext.h
 gettime.c
 gettimeofday.c
 getugroups.c
+getugroups.h
 getusershell.c
 gnulib.mk
 group-member.c
@@ -212,6 +213,8 @@ memmove.c
 mempcpy.c
 memrchr.c
 memset.c
+mgetgroups.c
+mgetgroups.h
 mkancesdirs.c
 mkancesdirs.h
 mkdir-p.c

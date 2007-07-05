@@ -144,6 +144,7 @@ memmove.m4
 mempcpy.m4
 memrchr.m4
 memset.m4
+mgetgroups.m4
 mkancesdirs.m4
 mkdir-p.m4
 mkdir-slash.m4

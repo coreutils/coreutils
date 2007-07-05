@@ -1,5 +1,23 @@
 2007-07-05  Jim Meyering  <jim@meyering.net>
 
+	setuidgid: set all groups, not just the primary one.
+	I wanted to use the xgetgroups function from id.c, so factored
+	it out and made it into a non-exiting function (hence the "m"
+	prefix rather than "x").
+	* src/setuidgid.c (main): Use mgetgroups.
+	Include "mgetgroups.h".
+
+	* src/id.c (xgetgroups): Remove function.
+	Include "mgetgroups.h".
+	(print_group_list): Use mgetgroups, not xgetgroups.
+
+	* gl/modules/mgetgroups: New module.
+	* gl/lib/mgetgroups.c: New file.  mgetgroups is derived from
+	id.c's xgetgroups function.
+	* bootstrap.conf (gnulib_modules): Add mgetgroups.
+	* gl/m4/mgetgroups.m4: New file.
+	* gl/lib/mgetgroups.h: New file.
+
 	* bootstrap: Merge in changes from gnulib.
 
 	* src/id.c: Include "getugroups.h" rather than declaring manually.
