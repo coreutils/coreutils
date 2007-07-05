@@ -29,14 +29,13 @@
 
 #include "system.h"
 #include "error.h"
+#include "getugroups.h"
 #include "quote.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "id"
 
 #define AUTHORS "Arnold Robbins", "David MacKenzie"
-
-int getugroups ();
 
 /* If nonzero, output only the SELinux context. -Z */
 static int just_context = 0;

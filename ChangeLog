@@ -1,3 +1,7 @@
+2007-07-05  Jim Meyering  <jim@meyering.net>
+
+	* src/id.c: Include "getugroups.h" rather than declaring manually.
+
 2007-07-04  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: pr -F no longer suppresses the footer or the first two blank
