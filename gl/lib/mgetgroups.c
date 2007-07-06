@@ -1,4 +1,4 @@
-/* getugroups.c -- return a list of the groups a user is in
+/* mgetgroups.c -- return a list of the groups a user is in
 
    Copyright (C) 2007 Free Software Foundation.
 
