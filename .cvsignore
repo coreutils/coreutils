@@ -1,6 +1,7 @@
 *.cache
 *.lineno
 *.log
+.gdb-history
 .kludge-stamp
 ABOUT-NLS
 INSTALL
