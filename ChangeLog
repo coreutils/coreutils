@@ -1,3 +1,10 @@
+2007-07-08  Jim Meyering  <jim@meyering.net>
+
+	Use <wchar.h>, not "wcwidth.h".
+	* src/wc.c: Now that gnulib provides the POSIX-specified <wchar.h>,
+	include it and <wctype.h>, rather than "wcwidth.h".
+	* src/ls.c: Include <wchar.h>, rather than "wcwidth.h".
+
 2007-07-05  Jim Meyering  <jim@meyering.net>
 
 	setuidgid: set all groups, not just the primary one.

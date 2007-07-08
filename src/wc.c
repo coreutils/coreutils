@@ -23,6 +23,8 @@
 #include <stdio.h>
 #include <getopt.h>
 #include <sys/types.h>
+#include <wchar.h>
+#include <wctype.h>
 
 #include "system.h"
 #include "error.h"
@@ -30,7 +32,6 @@
 #include "quote.h"
 #include "readtokens0.h"
 #include "safe-read.h"
-#include "wcwidth.h"
 
 #if !defined iswspace && !HAVE_ISWSPACE
 # define iswspace(wc) \

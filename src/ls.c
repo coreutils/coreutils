@@ -62,6 +62,7 @@
 #include <getopt.h>
 #include <signal.h>
 #include <selinux/selinux.h>
+#include <wchar.h>
 
 /* Use SA_NOCLDSTOP as a proxy for whether the sigaction machinery is
    present.  */
@@ -102,7 +103,6 @@
 #include "stat-time.h"
 #include "strftime.h"
 #include "strverscmp.h"
-#include "wcwidth.h"
 #include "xstrtol.h"
 #include "mreadlink.h"
 
