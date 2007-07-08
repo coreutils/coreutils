@@ -340,6 +340,7 @@ stpcpy.c
 strcasecmp.c
 strcspn.c
 strdup.c
+streq.h
 strftime.c
 strftime.h
 string.h
@@ -383,6 +384,8 @@ unistd--.h
 unistd-safer.h
 unistd.h
 unistd_.h
+unitypes.h
+uniwidth.h
 unlinkdir.c
 unlinkdir.h
 unlocked-io.h
@@ -406,6 +409,7 @@ wchar.h
 wchar_.h
 wctype.h
 wctype_.h
+wcwidth.c
 wcwidth.h
 write-any-file.c
 write-any-file.h
