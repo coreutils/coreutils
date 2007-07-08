@@ -1,5 +1,8 @@
 2007-07-08  Jim Meyering  <jim@meyering.net>
 
+	Run the coreutils-specific code only if tests/Makefile.am.in exists.
+	* bootstrap (mam_template): Move definition out of loop.
+
 	Create symlinks for gl/{lib,m4}/*, just as for gnulib/{lib,m4}/*.
 	* bootstrap (symlink_to_dir): Rename function from symlink_to_gnulib.
 	Add a directory parameter.  Update all callers.

@@ -484,20 +484,22 @@ fi
 
 # Coreutils is unusual in that it generates some of its test-related
 # Makefile.am files.  That must be done before invoking automake.
-PERL=perl
-for tool in cut head join pr sort tac tail test tr uniq wc; do
-  m=tests/$tool/Makefile.am
-  t=${m}t
-  mam_template=tests/Makefile.am.in
-  rm -f $m $t
-  sed -n '1,/^##test-files-begin/p' $mam_template > $t
-  echo "x = $tool" >> $t
-  srcdir=tests/$tool
-  $PERL -I$srcdir -w -- tests/mk-script $srcdir --list >> $t
-  sed -n '/^##test-files-end/,$p' $mam_template >> $t
-  chmod -w $t
-  mv $t $m
-done
+mam_template=tests/Makefile.am.in
+if test -f $mam_template; then
+  PERL=perl
+  for tool in cut head join pr sort tac tail test tr uniq wc; do
+    m=tests/$tool/Makefile.am
+    t=${m}t
+    rm -f $m $t
+    sed -n '1,/^##test-files-begin/p' $mam_template > $t
+    echo "x = $tool" >> $t
+    srcdir=tests/$tool
+    $PERL -I$srcdir -w -- tests/mk-script $srcdir --list >> $t
+    sed -n '/^##test-files-end/,$p' $mam_template >> $t
+    chmod -w $t
+    mv $t $m
+  done
+fi
 
 # Reconfigure, getting other files.
 
