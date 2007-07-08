@@ -284,6 +284,12 @@ symlink_to_gnulib()
   dst=${2-$1}
 
   test -f "$src" && {
+
+    # If the destination directory doesn't exist, create it.
+    # This is required at least for "lib/uniwidth/cjk.h".
+    dst_dir=`dirname "$dst"`
+    test -d "$dst_dir" || mkdir -p "$dst_dir"
+
     if $copy; then
       {
 	test ! -h "$dst" || {
