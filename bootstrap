@@ -29,6 +29,8 @@ nl='
 LC_ALL=C
 export LC_ALL
 
+local_gl_dir=gl
+
 # Temporary directory names.
 bt='._bootmp'
 bt_regex=`echo "$bt"| sed 's/\./[.]/g'`
@@ -278,10 +280,10 @@ case $SKIP_PO in
   fi;;
 esac
 
-symlink_to_gnulib()
+symlink_to_dir()
 {
-  src=$GNULIB_SRCDIR/$1
-  dst=${2-$1}
+  src=$1/$2
+  dst=${3-$2}
 
   test -f "$src" && {
 
@@ -334,7 +336,9 @@ cp_mark_as_generated()
   cp_dst=$2
 
   if cmp -s "$cp_src" "$GNULIB_SRCDIR/$cp_dst"; then
-    symlink_to_gnulib "$cp_dst"
+    symlink_to_dir "$GNULIB_SRCDIR" "$cp_dst"
+  elif cmp -s "$cp_src" "$local_gl_dir/$cp_dst"; then
+    symlink_to_dir $local_gl_dir "$cp_dst"
   else
     case $cp_dst in
       *.[ch])             c1='/* '; c2=' */';;
@@ -452,7 +456,7 @@ gnulib_tool_options="\
  --m4-base $bt/m4/\
  --source-base $bt/lib/\
  --tests-base $bt/tests\
- --local-dir gl\
+ --local-dir $local_gl_dir\
 $gnulib_tool_option_extras\
 "
 echo "$0: $gnulib_tool $gnulib_tool_options --import ..."
@@ -460,7 +464,7 @@ $gnulib_tool $gnulib_tool_options --import $gnulib_modules &&
 slurp $bt || exit
 
 for file in $gnulib_files; do
-  symlink_to_gnulib $file || exit
+  symlink_to_dir "$GNULIB_SRCDIR" $file || exit
 done
 
 
@@ -521,7 +525,7 @@ for file in $gnulib_extra_files; do
   build-aux/*) dst=$build_aux/`expr "$file" : 'build-aux/\(.*\)'`;;
   *) dst=$file;;
   esac
-  symlink_to_gnulib $file $dst || exit
+  symlink_to_dir "$GNULIB_SRCDIR" $file $dst || exit
 done
 
 if test $with_gettext = yes; then

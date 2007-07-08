@@ -1,5 +1,10 @@
 2007-07-08  Jim Meyering  <jim@meyering.net>
 
+	Create symlinks for gl/{lib,m4}/*, just as for gnulib/{lib,m4}/*.
+	* bootstrap (symlink_to_dir): Rename function from symlink_to_gnulib.
+	Add a directory parameter.  Update all callers.
+	(cp_mark_as_generated): Also check for -- and link to -- files in gl/.
+
 	* THANKS: Add Pádraig Brady.
 
 2007-07-08  Jim Meyering  <jim@meyering.net>
