@@ -1,3 +1,10 @@
+2007-07-09  Jim Meyering  <jim@meyering.net>
+
+	Compensate for new c99'isms in seq.c.
+	* Makefile.maint (patch-check): Use -p1, not -p2, so a patch
+	generated via "make patch-check REGEN=1" actually works.
+	* src/c99-to-c89.diff: Handle new c99'isms in seq.c.
+
 2007-07-09  Pádraig Brady <P@draigBrady.com>
 
 	Fix the automatic number width formatting in seq.

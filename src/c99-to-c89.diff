@@ -1,11 +1,6 @@
-Index: src/remove.c
-===================================================================
-RCS file: /fetish/cu/src/remove.c,v
-retrieving revision 1.158
-diff --git a/src/remove.c b/src/remove.c
-index 4728bdd..7477da5 100644
---- a/src/remove.c	2007-03-23 21:49:33.000000000 +0100
-+++ b/src/remove.c	2007-03-25 09:58:29.000000000 +0200
+diff -upr src/remove.c src/remove.c
+--- src/remove.c	2007-05-29 16:22:10.000000000 +0200
++++ src/remove.c	2007-07-09 19:15:47.000000000 +0200
 @@ -254,9 +254,10 @@ pop_dir (Dirstack_state *ds)
  {
    size_t n_lengths = obstack_object_size (&ds->len_stack) / sizeof (size_t);
@@ -72,14 +67,9 @@ index 4728bdd..7477da5 100644
 
  /* Remove all files and/or directories specified by N_FILES and FILE.
     Apply the options in X.  */
-Index: src/rm.c
-===================================================================
-RCS file: /fetish/cu/src/rm.c,v
-retrieving revision 1.140
-diff --git a/src/rm.c b/src/rm.c
-index 364a21c..7a24014 100644
---- a/src/rm.c
-+++ b/src/rm.c
+diff -upr src/rm.c src/rm.c
+--- src/rm.c	2007-05-29 16:22:10.000000000 +0200
++++ src/rm.c	2007-07-09 19:15:47.000000000 +0200
 @@ -355,6 +355,7 @@ main (int argc, char **argv)
  	       quote ("/"));
      }
@@ -99,13 +89,44 @@ index 364a21c..7a24014 100644
 +  }
 +  }
  }
-Index: src/shred.c
-===================================================================
-RCS file: /fetish/cu/src/shred.c,v
-retrieving revision 1.130
-diff -u -p -r1.130 shred.c
---- a/src/shred.c     3 Sep 2006 02:53:16 -0000       1.130
-+++ b/src/shred.c     3 Oct 2006 13:48:24 -0000
+diff -upr src/seq.c src/seq.c
+--- src/seq.c	2007-07-09 18:37:02.000000000 +0200
++++ src/seq.c	2007-07-09 19:15:47.000000000 +0200
+@@ -157,6 +157,7 @@ scan_arg (const char *arg)
+ 			: (decimal_point == arg                /* .#  -> 0.# */
+ 			   || ! ISDIGIT (decimal_point[-1]))); /* -.# -> 0.# */
+ 	}
++      {
+       char const *e = strchr (arg, 'e');
+       if (! e)
+ 	e = strchr (arg, 'E');
+@@ -165,6 +166,7 @@ scan_arg (const char *arg)
+ 	  long exponent = strtol (e + 1, NULL, 10);
+ 	  ret.precision += exponent < 0 ? -exponent : 0;
+ 	}
++      }
+     }
+
+   return ret;
+@@ -293,6 +295,7 @@ get_default_format (operand first, opera
+ 	  size_t last_width = last.width + (prec - last.precision);
+ 	  if (last.precision && prec == 0)
+ 	    last_width--;  /* don't include space for '.' */
++	  {
+ 	  size_t width = MAX (first_width, last_width);
+ 	  if (width <= INT_MAX)
+ 	    {
+@@ -300,6 +303,7 @@ get_default_format (operand first, opera
+ 	      sprintf (format_buf, "%%0%d.%dLf", w, prec);
+ 	      return format_buf;
+ 	    }
++	  }
+ 	}
+       else
+ 	{
+diff -upr src/shred.c src/shred.c
+--- src/shred.c	2007-06-23 12:19:19.000000000 +0200
++++ src/shred.c	2007-07-09 19:15:47.000000000 +0200
 @@ -463,7 +463,7 @@ dopass (int fd, char const *qname, off_t
  		     out.  Thus, it shouldn't give up on bad blocks.  This
  		     code works because lim is always a multiple of
