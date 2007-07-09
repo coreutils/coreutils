@@ -1,3 +1,12 @@
+2007-07-09  Pádraig Brady <P@draigBrady.com>
+
+	Fix the automatic number width formatting in seq.
+	* src/seq.c: Fix the -w logic. Ignore spaces and '+'
+	characters of input numbers when determining width.
+	Set format correctly for input numbers in scientific notation.
+	* tests/seq/basic: Add various number width tests.
+	Details: <http://thread.gmane.org/gmane.comp.gnu.coreutils.bugs/10903>
+
 2007-07-08  Jim Meyering  <jim@meyering.net>
 
 	Run the coreutils-specific code only if tests/Makefile.am.in exists.

@@ -135,23 +135,35 @@ scan_arg (const char *arg)
       usage (EXIT_FAILURE);
     }
 
+  /* We don't output spaces or '+' so don't include in width */
+  while (isspace (*arg) || *arg == '+')
+    arg++;
+
   ret.width = strlen (arg);
   ret.precision = INT_MAX;
 
-  if (! arg[strcspn (arg, "eExX")] && isfinite (ret.value))
+  if (! arg[strcspn (arg, "xX")] && isfinite (ret.value))
     {
       char const *decimal_point = strchr (arg, '.');
       if (! decimal_point)
 	ret.precision = 0;
       else
 	{
-	  size_t fraction_len = strlen (decimal_point + 1);
+	  size_t fraction_len = strcspn (decimal_point + 1, "eE");
 	  if (fraction_len <= INT_MAX)
 	    ret.precision = fraction_len;
-	  ret.width += (fraction_len == 0
+	  ret.width += (fraction_len == 0                      /* #.  -> #   */
 			? -1
-			: (decimal_point == arg
-			   || ! ISDIGIT (decimal_point[-1])));
+			: (decimal_point == arg                /* .#  -> 0.# */
+			   || ! ISDIGIT (decimal_point[-1]))); /* -.# -> 0.# */
+	}
+      char const *e = strchr (arg, 'e');
+      if (! e)
+	e = strchr (arg, 'E');
+      if (e)
+	{
+	  long exponent = strtol (e + 1, NULL, 10);
+	  ret.precision += exponent < 0 ? -exponent : 0;
 	}
     }
 
@@ -275,18 +287,18 @@ get_default_format (operand first, operand step, operand last)
     {
       if (equal_width)
 	{
+	  /* increase first_width by any increased precision in step */
 	  size_t first_width = first.width + (prec - first.precision);
+	  /* adjust last_width to use precision from first/step */
 	  size_t last_width = last.width + (prec - last.precision);
-	  if (first.width <= first_width
-	      && (last.width < last_width) == (prec < last.precision))
+	  if (last.precision && prec == 0)
+	    last_width--;  /* don't include space for '.' */
+	  size_t width = MAX (first_width, last_width);
+	  if (width <= INT_MAX)
 	    {
-	      size_t width = MAX (first_width, last_width);
-	      if (width <= INT_MAX)
-		{
-		  int w = width;
-		  sprintf (format_buf, "%%0%d.%dLf", w, prec);
-		  return format_buf;
-		}
+	      int w = width;
+	      sprintf (format_buf, "%%0%d.%dLf", w, prec);
+	      return format_buf;
 	    }
 	}
       else

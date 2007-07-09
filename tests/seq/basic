@@ -56,12 +56,18 @@ my @Tests =
    ['float-5',	qw(0.8 1e-1 0.9),	{OUT => [qw(0.8 0.9)]}],
    ['float-6',	qw(0.8 0.1 0.90000000000000000000),	{OUT => [qw(0.8 0.9)]}],
 
-   ['eq-wid-1',	qw(-w 1 -1 -1),	{OUT => [qw(01 00 -1)]}],
+   ['wid-1',	qw(.8 1e-2 .81),  {OUT => [qw(0.80 0.81)]}],
+   ['wid-2',	qw(.89999 1e-7 .8999901),  {OUT => [qw(0.8999900 0.8999901)]}],
 
+   ['eq-wid-1',	qw(-w 1 -1 -1),	{OUT => [qw(01 00 -1)]}],
    # Prior to 2.0g, this test would fail on e.g., HPUX systems
    # because it'd end up using %3.1f as the format instead of %4.1f.
-   # ['eq-wid-2',	qw(-w -.1 .1 .11),{OUT => [qw(-0.1 00.0 00.1)]}],
-   # ['eq-wid-3',	qw(-w 1 3.0),  {OUT => [qw(1 2 3)]}],
+   ['eq-wid-2',	qw(-w -.1 .1 .11),{OUT => [qw(-0.1 00.0 00.1)]}],
+   ['eq-wid-3',	qw(-w 1 3.0),  {OUT => [qw(1 2 3)]}],
+   ['eq-wid-4',	qw(-w .8 1e-2 .81),  {OUT => [qw(0.80 0.81)]}],
+   ['eq-wid-5',	qw(-w 1 .5 2),  {OUT => [qw(1.0 1.5 2.0)]}],
+   ['eq-wid-6',	qw(-w +1 2),  {OUT => [qw(1 2)]}],
+   ['eq-wid-7',	qw(-w "    .1"  "    .1"),  {OUT => [qw(0.1)]}],
 
    # Prior to coreutils-4.5.11, some of these were not accepted.
    ['fmt-1',	qw(-f %2.1f 1.5 .5 2),{OUT => [qw(1.5 2.0)]}],
