@@ -4,7 +4,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New programs
 
-  arch: equivalent to uname -m
+  arch: equivalent to uname -m, not installed by default
+  But don't install this program on Solaris systems.
 
 ** Changes in behavior
 
@@ -23,6 +24,17 @@ GNU coreutils NEWS                                    -*- outline -*-
   This means for example that "wc /bin/sh" now produces normal output
   (though the word count will have no real meaning) rather than many
   error messages.
+
+** New build options
+
+  By default, "make install" no longer attempts to install (or even build) su.
+  To change that, use ./configure --enable-install-program=su.
+  If you also want to install the new "arch" program, do this:
+  ./configure --enable-install-program=arch,su.
+
+  You can inhibit the compilation and installation of selected programs
+  at configure time.  For example, to avoid installing "hostname" and
+  "uptime", use ./configure --enable-no-install-program=hostname,uptime
 
 ** Bug fixes
 

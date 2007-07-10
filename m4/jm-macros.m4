@@ -2,8 +2,7 @@
 
 dnl Misc type-related macros for coreutils.
 
-# Copyright (C) 1998, 2000, 2001, 2002, 2003, 2004, 2005, 2006 Free Software
-# Foundation, Inc.
+# Copyright (C) 1998, 2000-2007 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -29,9 +28,7 @@ AC_DEFUN([coreutils_MACROS],
   AC_SUBST(GNU_PACKAGE)
 
   AM_MISSING_PROG(HELP2MAN, help2man)
-  AC_SUBST(OPTIONAL_BIN_PROGS)
   AC_SUBST(MAN)
-  AC_SUBST(DF_PROG)
 
   dnl This macro actually runs replacement code.  See isc-posix.m4.
   AC_REQUIRE([AC_ISC_POSIX])dnl
@@ -104,11 +101,6 @@ AC_DEFUN([coreutils_MACROS],
     ])
 
   AC_REQUIRE([AM_LANGINFO_CODESET])
-
-  # Build df only if there's a point to it.
-  if test $gl_cv_list_mounted_fs = yes && test $gl_cv_fs_space = yes; then
-    DF_PROG='df$(EXEEXT)'
-  fi
 ])
 
 AC_DEFUN([gl_CHECK_ALL_HEADERS],

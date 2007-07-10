@@ -16,11 +16,21 @@
 ## along with this program; if not, write to the Free Software Foundation,
 ## Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
-EXTRA_PROGRAMS = chroot df hostid nice pinky stty su uname uptime users who \
-  arch
+# These are the names of programs that are not installed by default.
+# This list is *not* intended for programs like who, nice, chroot, etc.,
+# that are built only when certain requisite system features are detected.
+# Hence, if you want to install programs from this list anyway, say A and B,
+# use --enable-install-program=A,B
+no_install__progs = \
+  arch su
 
-bin_SCRIPTS = groups
-bin_PROGRAMS = [ chcon chgrp chown chmod cp dd dircolors du \
+build_if_possible__progs = \
+  chroot df hostid nice pinky stty su uname uptime users who
+
+EXTRA_PROGRAMS = \
+  $(no_install__progs) \
+  $(build_if_possible__progs) \
+  [ chcon chgrp chown chmod cp dd dircolors du \
   ginstall link ln dir vdir ls mkdir \
   mkfifo mknod mv nohup readlink rm rmdir shred stat sync touch unlink \
   cat cksum comm csplit cut expand fmt fold head join md5sum \
@@ -30,8 +40,10 @@ bin_PROGRAMS = [ chcon chgrp chown chmod cp dd dircolors du \
   hostname id kill logname pathchk printenv printf pwd \
   runcon seq sleep tee \
   test true tty whoami yes \
-  base64 \
-  $(OPTIONAL_BIN_PROGS) $(DF_PROG)
+  base64
+
+bin_SCRIPTS = groups
+bin_PROGRAMS = $(OPTIONAL_BIN_PROGS)
 
 noinst_PROGRAMS = setuidgid
 
@@ -148,17 +160,21 @@ installed_su = $(DESTDIR)$(bindir)/`echo su|sed '$(transform)'`
 
 setuid_root_mode = a=rx,u+s
 
-INSTALL_SU = \
-  p=su; \
-  echo " $(INSTALL_PROGRAM) $$p $(installed_su)"; \
-  $(INSTALL_PROGRAM) $$p $(installed_su); \
-  echo " chown root $(installed_su)"; \
-  chown root $(installed_su); \
-  echo " chmod $(setuid_root_mode) $(installed_su)"; \
-  chmod $(setuid_root_mode) $(installed_su)
+install_su =						\
+  if test "$(INSTALL_SU)" = yes; then			\
+    p=su;						\
+    echo " $(INSTALL_PROGRAM) $$p $(installed_su)";	\
+    $(INSTALL_PROGRAM) $$p $(installed_su);		\
+    echo " chown root $(installed_su)";			\
+    chown root $(installed_su);				\
+    echo " chmod $(setuid_root_mode) $(installed_su)";	\
+    chmod $(setuid_root_mode) $(installed_su)		\
+  else							\
+    :;							\
+  fi
 
 install-root: su$(EXEEXT)
-	@$(INSTALL_SU)
+	@$(install_su)
 
 install-exec-local: su$(EXEEXT)
 	@TMPFILE=$(DESTDIR)$(bindir)/.su-$$$$; \
@@ -172,7 +188,7 @@ install-exec-local: su$(EXEEXT)
 	  && can_create_suid_root_executable=yes; \
 	rm -f $$TMPFILE; \
 	if test $$can_create_suid_root_executable = yes; then \
-	  $(INSTALL_SU); \
+	  $(install_su); \
 	else \
 	  echo "WARNING: insufficient access; not installing su"; \
 	  echo "NOTE: to install su, run 'make install-root' as root"; \

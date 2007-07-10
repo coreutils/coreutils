@@ -1,3 +1,23 @@
+2007-07-10  Jim Meyering  <jim@meyering.net>
+
+	Add support for enabling/disabling installation of specified programs.
+	* NEWS: Mention new configure-time options.
+	Mention that neither arch nor su is built/installed, by default.
+	* m4/include-exclude-prog.m4: New file.
+	* configure.ac: Use new macro, gl_ADD_PROG, rather than
+	manually appending to OPTIONAL_BIN_PROGS and MAN.
+	Move the code that adds "df" to the list of programs to build from
+	m4/jm-macros into this file.
+	Use gl_INCLUDE_EXCLUDE_PROG, then handle special cases: ginstall, [.
+	(NO_INSTALL_PROGS_DEFAULT): AC_SUBST it.  Used by man/Makefile.am.
+	* man/Makefile.am (dist_man_MANS): Remove from this list all man pages
+	corresponding to "bin" programs. Add $(MAN) instead.
+	(optional_mans): Remove all uses.
+	(check-x-vs-1): Adapt to work even though arch and su are typically
+	no longer built (and neither are their .1 files).
+	* src/Makefile.am (install_su): Rename from INSTALL_SU, now that
+	INSTALL_SU has a different meaning. Use the new $(INSTALL_SU) value.
+
 2007-07-10  Karel Zak  <kzak@redhat.com>
 
 	New program: arch

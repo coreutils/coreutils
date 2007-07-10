@@ -41,15 +41,13 @@ coreutils_MACROS
 
 AC_FUNC_FORK
 
+optional_bin_progs=
 AC_CHECK_FUNCS(uname,
-	OPTIONAL_BIN_PROGS="$OPTIONAL_BIN_PROGS arch\$(EXEEXT) uname\$(EXEEXT)"
-	MAN="$MAN arch.1 uname.1")
+	gl_ADD_PROG([optional_bin_progs], [uname]))
 AC_CHECK_FUNCS(chroot,
-	OPTIONAL_BIN_PROGS="$OPTIONAL_BIN_PROGS chroot\$(EXEEXT)"
-	MAN="$MAN chroot.1")
+	gl_ADD_PROG([optional_bin_progs], [chroot]))
 AC_CHECK_FUNCS(gethostid,
-	OPTIONAL_BIN_PROGS="$OPTIONAL_BIN_PROGS hostid\$(EXEEXT)"
-	MAN="$MAN hostid.1")
+	gl_ADD_PROG([optional_bin_progs], [hostid]))
 
 gl_WINSIZE_IN_PTEM
 
@@ -130,18 +128,16 @@ if test $utils_cv_func_setpriority = no; then
 fi
 case $utils_cv_func_setpriority,$ac_cv_func_nice in
 *yes*)
-  OPTIONAL_BIN_PROGS="$OPTIONAL_BIN_PROGS nice\$(EXEEXT)"
-  MAN="$MAN nice.1";;
+  gl_ADD_PROG([optional_bin_progs], [nice])
 esac
 
 AC_DEFUN([coreutils_DUMMY_1],
 [
   AC_REQUIRE([gl_READUTMP])
   if test $ac_cv_header_utmp_h = yes || test $ac_cv_header_utmpx_h = yes; then
-    OPTIONAL_BIN_PROGS="$OPTIONAL_BIN_PROGS pinky\$(EXEEXT)"
-    OPTIONAL_BIN_PROGS="$OPTIONAL_BIN_PROGS users\$(EXEEXT)"
-    OPTIONAL_BIN_PROGS="$OPTIONAL_BIN_PROGS who\$(EXEEXT)"
-    MAN="$MAN pinky.1 users.1 who.1"
+    gl_ADD_PROG([optional_bin_progs], [who])
+    gl_ADD_PROG([optional_bin_progs], [users])
+    gl_ADD_PROG([optional_bin_progs], [pinky])
   fi
 ])
 coreutils_DUMMY_1
@@ -172,15 +168,13 @@ if test -z "$have_ut_host"; then
   fi
 fi
 
-GNULIB_BOOT_TIME(
-  [OPTIONAL_BIN_PROGS="$OPTIONAL_BIN_PROGS uptime\$(EXEEXT)"
-  MAN="$MAN uptime.1"])
+GNULIB_BOOT_TIME([gl_ADD_PROG([optional_bin_progs], [uptime])])
 
 AC_SYS_POSIX_TERMIOS()
 gl_HEADER_TIOCGWINSZ_NEEDS_SYS_IOCTL
 
 if test $ac_cv_sys_posix_termios = yes; then
-  OPTIONAL_BIN_PROGS="$OPTIONAL_BIN_PROGS stty\$(EXEEXT)" MAN="$MAN stty.1"
+  gl_ADD_PROG([optional_bin_progs], [stty])
 
   AC_MSG_CHECKING(whether termios.h needs _XOPEN_SOURCE)
   AC_CACHE_VAL(su_cv_sys_termios_needs_xopen_source,
@@ -248,6 +242,61 @@ AC_CHECK_DECLS([strsignal, sys_siglist, _sys_siglist, __sys_siglist], , ,
 AC_CHECK_DECLS([strtoimax, strtoumax])
 
 cu_LIB_CHECK
+
+# Build df only if there's a point to it.
+if test $gl_cv_list_mounted_fs = yes && test $gl_cv_fs_space = yes; then
+  gl_ADD_PROG([optional_bin_progs], [df])
+fi
+
+############################################################################
+# Extract all literal names from the definition of $(EXTRA_PROGRAMS)
+# in src/Makefile.am, but don't expand the variable references.
+# Append each literal name to $optional_bin_progs.
+v=EXTRA_PROGRAMS
+for gl_i in `sed -n '/^'$v' =/,/[^\]$/p' $srcdir/src/Makefile.am \
+    | sed 's/^  *//;/^\$.*/d;/^'$v' =/d' \
+    | tr -s '\012\\' '  '`; do
+  gl_ADD_PROG([optional_bin_progs], $gl_i)
+done
+
+# As above, extract literal names from the definition of $(no_install__progs)
+# in src/Makefile.am, but don't expand the variable references.
+v=no_install__progs
+t=`sed -n '/^'$v' =/,/[^\]$/p' $srcdir/src/Makefile.am \
+    | sed 's/^  *//;/^\$.*/d;/^'$v' =/d' \
+    | tr -s '\012\\' '  '`
+# Remove any trailing space.
+no_install_progs_default=`echo "$t"|sed 's/ $//'`
+
+# Given the name of a variable containing a space-separated list of
+# install-by-default programs and the actual list do-not-install-by-default
+# programs, modify the former variable to reflect any "do-install" and
+# "don't-install" requests.
+# I.e., add any program name specified via --enable-install-program=..., and
+# remove any program name specified via --enable-no-install-program=...
+gl_INCLUDE_EXCLUDE_PROG([optional_bin_progs], [$no_install_progs_default])
+
+# Set INSTALL_SU if su installation has been requested via
+# --enable-install-program=su.
+AC_SUBST([INSTALL_SU])
+case " $optional_bin_progs " in
+  *' su '*) INSTALL_SU=yes ;;
+  *)        INSTALL_SU=no ;;
+esac
+
+# Change ginstall.1 to "install.h" in $MAN.
+MAN=`echo "$MAN"|sed 's/\<ginstall\.1\>/install.1/'`
+
+# Remove [.1, since writing a portable rule for it in man/Makefile.am
+# is not practical.  The sed LHS below uses the autoconf quadrigraph
+# representing '['.
+MAN=`echo "$MAN"|sed 's/\@<:@\.1//'`
+
+OPTIONAL_BIN_PROGS=`echo "$optional_bin_progs "|sed 's/ /\$(EXEEXT) /;s/ $//'`
+AC_SUBST(OPTIONAL_BIN_PROGS)
+NO_INSTALL_PROGS_DEFAULT=$no_install_progs_default
+AC_SUBST(NO_INSTALL_PROGS_DEFAULT)
+############################################################################
 
 AM_GNU_GETTEXT([external], [need-formatstring-macros])
 AM_GNU_GETTEXT_VERSION([0.15])
