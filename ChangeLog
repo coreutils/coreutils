@@ -1,3 +1,7 @@
+2007-07-10  Jim Meyering  <jim@meyering.net>
+
+	Change "version 2" to "version 3" in all copyright notices.
+
 2007-07-09  Jim Meyering  <jim@meyering.net>
 
 	Compensate for new c99'isms in seq.c.
