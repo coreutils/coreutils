@@ -286,6 +286,10 @@ all_programs = \
     $(bin_SCRIPTS) \
   $(EXTRA_PROGRAMS)
 
+built_programs.list:
+	@echo $(bin_PROGRAMS) $(bin_SCRIPTS) | tr ' ' '\n' \
+	  | sed -e 's,$(EXEEXT)$$,,' | $(ASSORT) -u
+
 all_programs.list:
 	@echo $(all_programs) | tr ' ' '\n' | sed -e 's,$(EXEEXT)$$,,' \
 	  | $(ASSORT) -u

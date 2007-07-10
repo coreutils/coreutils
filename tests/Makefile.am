@@ -5,11 +5,11 @@
 # current locale considers to be equal.
 ASSORT = LC_ALL=C sort
 
-all_programs = (cd ../src && MAKEFLAGS= $(MAKE) -s all_programs.list)
+built_programs = (cd ../src && MAKEFLAGS= $(MAKE) -s built_programs.list)
 
 TESTS = help-version
 TESTS_ENVIRONMENT = \
-  all_programs="`$(all_programs)`" \
+  built_programs="`$(built_programs)`" \
   PACKAGE_BUGREPORT=$(PACKAGE_BUGREPORT) \
   CU_TEST_NAME=`basename $(abs_srcdir)`,$$tst \
   PATH="$(VG_PATH_PREFIX)`pwd`/../src$(PATH_SEPARATOR)$$PATH"

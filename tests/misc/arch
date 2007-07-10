@@ -18,6 +18,12 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 # 02110-1301, USA.
 
+# skip this test if arch isn't being built.
+case " $built_programs " in
+  *" arch "*) ;;
+  *) (exit 77); exit 77 ;;
+esac
+
 if test "$VERBOSE" = yes; then
   set -x
   arch --version

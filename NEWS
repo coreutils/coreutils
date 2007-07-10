@@ -35,6 +35,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   You can inhibit the compilation and installation of selected programs
   at configure time.  For example, to avoid installing "hostname" and
   "uptime", use ./configure --enable-no-install-program=hostname,uptime
+  Note: currently, "make check" passes, even when arch and su are not
+  built (that's the new default).  However, if you inhibit the building
+  and installation of other programs, don't be surprised if some parts
+  of "make check" fail.
 
 ** Bug fixes
 

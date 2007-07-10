@@ -39,7 +39,7 @@ expected_failure_status_dir=2
 expected_failure_status_ls=2
 expected_failure_status_vdir=2
 
-case "$all_programs" in
+case "$built_programs" in
   *groups*)
     if test -w /dev/full && test -c /dev/full \
 	&& echo > /dev/full 2>/dev/null; then
@@ -59,7 +59,7 @@ scripts to fail, so it is being removed from the list of
 programs checked by this test.
 ************************************************
 EOF
-      all_programs=`echo $all_programs | tr ' ' '\n' | grep -v '^groups$'`
+      built_programs=`echo $built_programs | tr ' ' '\n' | grep -v '^groups$'`
     fi
   ;;
 esac
@@ -67,7 +67,7 @@ esac
 fail=0
 
 for lang in C fr da; do
-  for i in $all_programs; do
+  for i in $built_programs; do
 
     # Skip `test'; it doesn't accept --help or --version.
     test $i = test && continue;
@@ -196,7 +196,7 @@ stat_args=$tmp_in
 unlink_args=$tmp_in
 lbracket_args=": ]"
 
-for i in $all_programs; do
+for i in $built_programs; do
   # Skip these.
   case $i in chroot|stty|tty|false|chcon|runcon) continue;; esac
 

@@ -1,5 +1,16 @@
 2007-07-10  Jim Meyering  <jim@meyering.net>
 
+	Skip "arch" test if it's not built.
+	* tests/misc/Makefile.am (built_programs): Define.
+	(TESTS_ENVIRONMENT): Add $(built_programs), for...
+	* tests/misc/arch: ...this: skip the test if arch is not built.
+	* src/Makefile.am (built_programs.list): New rule.
+	* tests/Makefile.am (built_programs): Rename from all_programs.
+	(TESTS_ENVIRONMENT): Use built_programs, not all_programs.
+	* tests/help-version: Likewise.
+	* NEWS: Mention that using --enable-no-install-program=X may
+	cause "make check" to fail.
+
 	Add support for enabling/disabling installation of specified programs.
 	* NEWS: Mention new configure-time options.
 	Mention that neither arch nor su is built/installed, by default.

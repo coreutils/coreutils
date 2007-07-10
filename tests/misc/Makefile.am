@@ -19,7 +19,11 @@
 
 EXTRA_DIST = $(TESTS)
 
+built_programs = \
+  (cd $(top_builddir)/src && MAKEFLAGS= $(MAKE) -s built_programs.list)
+
 TESTS_ENVIRONMENT = \
+  built_programs="`$(built_programs)`" \
   top_srcdir=$(top_srcdir) \
   abs_top_builddir=$(abs_top_builddir) \
   srcdir=$(srcdir) \
@@ -40,6 +44,7 @@ TESTS_ENVIRONMENT = \
 # will execute the test script rather than the standard utility.
 
 TESTS = \
+  arch \
   pr \
   df-P \
   pwd-unreadable-parent \
