@@ -355,6 +355,11 @@ sc_useless_cpp_parens:
 	  { echo '$(ME): found useless parentheses in cpp directive'	\
 		1>&2; exit 1; } || :
 
+# Require the latest GPL.
+sc_GPL_version:
+	@grep -n 'either ''version [^3]' $$($(CVS_LIST_EXCEPT)) &&	\
+	  { echo '$(ME): GPL vN, N!=3' 1>&2; exit 1; } || :
+
 # Ensure that the c99-to-c89 patch applies cleanly.
 patch-check:
 	rm -rf src-c89 $@.1 $@.2

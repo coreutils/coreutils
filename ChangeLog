@@ -1,3 +1,9 @@
+2007-07-11  Jim Meyering  <jim@meyering.net>
+
+	If there's a GPL vN copyright comment, require that N == 3.
+	* Makefile.maint (sc_GPL_version): New rule.
+	* tests/misc/arch: Fix the sole violation.
+
 2007-07-10  Jim Meyering  <jim@meyering.net>
 
 	Skip "arch" test if it's not built.
