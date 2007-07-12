@@ -249,24 +249,43 @@ if test $gl_cv_list_mounted_fs = yes && test $gl_cv_fs_space = yes; then
 fi
 
 ############################################################################
+mk="$srcdir/src/Makefile.am"
 # Extract all literal names from the definition of $(EXTRA_PROGRAMS)
-# in src/Makefile.am, but don't expand the variable references.
+# in $mk but don't expand the variable references.
 # Append each literal name to $optional_bin_progs.
 v=EXTRA_PROGRAMS
-for gl_i in `sed -n '/^'$v' =/,/[^\]$/p' $srcdir/src/Makefile.am \
+for gl_i in `sed -n '/^'$v' =/,/[[^\]]$/p' $mk \
     | sed 's/^  *//;/^\$.*/d;/^'$v' =/d' \
     | tr -s '\012\\' '  '`; do
   gl_ADD_PROG([optional_bin_progs], $gl_i)
 done
 
 # As above, extract literal names from the definition of $(no_install__progs)
-# in src/Makefile.am, but don't expand the variable references.
+# in $mk but don't expand the variable references.
 v=no_install__progs
-t=`sed -n '/^'$v' =/,/[^\]$/p' $srcdir/src/Makefile.am \
+t=`sed -n '/^'$v' =/,/[[^\]]$/p' $mk \
     | sed 's/^  *//;/^\$.*/d;/^'$v' =/d' \
     | tr -s '\012\\' '  '`
 # Remove any trailing space.
 no_install_progs_default=`echo "$t"|sed 's/ $//'`
+
+# Unfortunately, due to the way autoconf's AS_HELP_STRING works, the
+# list of default-not-installed programs, "arch,su", must appear in two
+# places: in this file below, and in $mk.  Simply using comma-separated
+# variant of "$no_install_progs_default" cannot work.  And we can't
+# substitute the names into $mk because automake needs the literals, too.
+# The compromise is to ensure that the space-separated list extracted
+# above matches the comma-separated list below.
+c="$srcdir/configure.ac"
+t=`sed -n '/^g''l_INCLUDE_EXCLUDE_PROG(.* [\[\(.*\)\]])/s//\1/p' $c`
+u=`echo "$t"|sed 's/,/ /g'`
+case $u in
+  $no_install_progs_default) ;;
+  *) AC_MSG_ERROR([[internal error: g'l_INCLUDE_EXCLUDE_PROG's 2nd arg, $t,
+                   does not match the list of default-not-installed programs
+		   ($no_install_progs_default) extracted also recorded in $mk]],
+		   1) ;;
+esac
 
 # Given the name of a variable containing a space-separated list of
 # install-by-default programs and the actual list do-not-install-by-default
@@ -274,7 +293,7 @@ no_install_progs_default=`echo "$t"|sed 's/ $//'`
 # "don't-install" requests.
 # I.e., add any program name specified via --enable-install-program=..., and
 # remove any program name specified via --enable-no-install-program=...
-gl_INCLUDE_EXCLUDE_PROG([optional_bin_progs], [$no_install_progs_default])
+gl_INCLUDE_EXCLUDE_PROG([optional_bin_progs], [arch,su])
 
 # Set INSTALL_SU if su installation has been requested via
 # --enable-install-program=su.

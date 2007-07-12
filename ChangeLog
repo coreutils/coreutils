@@ -1,5 +1,14 @@
 2007-07-12  Jim Meyering  <jim@meyering.net>
 
+	Expand default-no-install prog list in ./configure --help output,
+	and fix some []-quoting bugs in sed expressions.
+	* configure.ac: Hard-code the list, "arch,su" here as well
+	as in src/Makefile.am, and ensure the two stay in sync.
+	* m4/include-exclude-prog.m4 (gl_INCLUDE_EXCLUDE_PROG): Use $2,
+	rather than the nearly-equivalent shell variable.
+	Karel Zak reported that ./configure --help's output included
+	the literal string, $gl_no_install_progs_default.
+
 	Clean up include-exclude-prog.m4.
 	* m4/include-exclude-prog.m4 (gl_ADD_PROG): Don't modify MAN.
 	(gl_REMOVE_PROG): Likewise.

@@ -43,8 +43,8 @@ AC_DEFUN([gl_INCLUDE_EXCLUDE_PROG],
   # use --enable-no-install-program=A,B
   AC_ARG_ENABLE([no-install-program],
     [AS_HELP_STRING([--enable-no-install-program=PROG_LIST],
-		    [do NOT install the programs in PROG_LIST (comma-separated,
-		    default: $gl_no_install_progs_default)])],
+		    [do NOT install the programs in PROG_LIST
+		    (comma-separated, default: $2)])],
     [gl_no_install_prog=$enableval],
     [gl_no_install_prog=]
   )
