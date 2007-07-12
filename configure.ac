@@ -284,6 +284,8 @@ case " $optional_bin_progs " in
   *)        INSTALL_SU=no ;;
 esac
 
+MAN=`echo "$optional_bin_progs "|sed 's/ /.1 /g;s/ $//'`
+
 # Change ginstall.1 to "install.h" in $MAN.
 MAN=`echo "$MAN"|sed 's/\<ginstall\.1\>/install.1/'`
 
@@ -292,7 +294,7 @@ MAN=`echo "$MAN"|sed 's/\<ginstall\.1\>/install.1/'`
 # representing '['.
 MAN=`echo "$MAN"|sed 's/\@<:@\.1//'`
 
-OPTIONAL_BIN_PROGS=`echo "$optional_bin_progs "|sed 's/ /\$(EXEEXT) /;s/ $//'`
+OPTIONAL_BIN_PROGS=`echo "$optional_bin_progs "|sed 's/ /\$(EXEEXT) /g;s/ $//'`
 AC_SUBST(OPTIONAL_BIN_PROGS)
 NO_INSTALL_PROGS_DEFAULT=$no_install_progs_default
 AC_SUBST(NO_INSTALL_PROGS_DEFAULT)

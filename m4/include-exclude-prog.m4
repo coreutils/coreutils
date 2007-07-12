@@ -1,4 +1,4 @@
-#serial 1
+#serial 2
 dnl Copyright (C) 2007 Free Software Foundation, Inc.
 dnl This file is free software; the Free Software Foundation
 dnl gives unlimited permission to copy and/or distribute it,
@@ -9,15 +9,17 @@ dnl From Jim Meyering.
 # Usage: gl_ADD_PROG([prog_list_var_name], [prog_name])
 AC_DEFUN([gl_ADD_PROG],
 [{
-  $1="$$1 $2"
-  MAN="$MAN $2.1"
+  if test -z "$$1"; then
+    $1=$2
+  else
+    $1="$$1 $2"
+  fi
 }])
 
 # Usage: gl_REMOVE_PROG([prog_list_var_name], [prog_name])
 AC_DEFUN([gl_REMOVE_PROG],
 [{
-  $1=`echo "$$1"|sed 's/\<'"$1"'//;s/  */ /g'`
-  MAN=`echo "$MAN"|sed 's/\<'"$1"'\.1//'`
+  $1=`echo "$$1"|sed 's/\<'"$1"'\>//;s/  */ /g;s/^  *//;s/  *$//'`
 }])
 
 # Given the name of a variable containing a space-separated list of

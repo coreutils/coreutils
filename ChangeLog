@@ -1,3 +1,14 @@
+2007-07-12  Jim Meyering  <jim@meyering.net>
+
+	Clean up include-exclude-prog.m4.
+	* m4/include-exclude-prog.m4 (gl_ADD_PROG): Don't modify MAN.
+	(gl_REMOVE_PROG): Likewise.
+	Add omitted "\>" in sed regexp.
+	Remove any leading or trailing spaces.
+	(gl_ADD_PROG): Remove any leading space.
+	* configure.ac: Instead, derive $MAN from $optional_bin_progs.
+	Append $(EXEEXT) to *all* names, not just the first one.
+
 2007-07-11  Jim Meyering  <jim@meyering.net>
 
 	If there's a GPL vN copyright comment, require that N == 3.
