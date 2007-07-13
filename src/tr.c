@@ -525,8 +525,9 @@ unquote (char const *s, struct E_string *es)
 		}
 	      break;
 	    case '\0':
-	      /* POSIX seems to require that a trailing backslash must
-		 stand for itself.  Weird.  */
+	      error (0, 0, _("warning: an unescaped backslash "
+			     "at end of string is not portable"));
+	      /* POSIX is not clear about this.  */
 	      es->escaped[j] = false;
 	      i--;
 	      c = '\\';

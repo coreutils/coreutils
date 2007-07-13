@@ -1,5 +1,12 @@
 2007-07-13  Jim Meyering  <jim@meyering.net>
 
+	Warn about non-portable use of unescaped backslash at end of string,
+	and treat it as if it were escaped.
+	* src/tr.c (unquote): Considering that such usage would make GNU tr
+	from coreutils-5.2.1 and earlier *fail*, the least we can do now is
+	to warn about it.  Solaris' tr ignores it.
+	* NEWS: Mention this.
+
 	Use proper backslash-quoting inside backticks.
 	* configure.ac: Otherwise we run afoul of strict GNU tr:
 	a string ending in a lone backslash would provoke a failure.
