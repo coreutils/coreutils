@@ -1,3 +1,9 @@
+2007-07-13  Jim Meyering  <jim@meyering.net>
+
+	Use proper backslash-quoting inside backticks.
+	* configure.ac: Otherwise we run afoul of strict GNU tr:
+	a string ending in a lone backslash would provoke a failure.
+
 2007-07-12  Jim Meyering  <jim@meyering.net>
 
 	Expand default-no-install prog list in ./configure --help output,
