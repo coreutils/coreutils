@@ -19,7 +19,7 @@ AC_DEFUN([gl_ADD_PROG],
 # Usage: gl_REMOVE_PROG([prog_list_var_name], [prog_name])
 AC_DEFUN([gl_REMOVE_PROG],
 [{
-  $1=`echo "$$1"|sed 's/\<'"$1"'\>//;s/  */ /g;s/^  *//;s/  *$//'`
+  $1=`echo "$$1"|sed 's/\<'"$2"'\>//;s/  */ /g;s/^  *//;s/  *$//'`
 }])
 
 # Given the name of a variable containing a space-separated list of
@@ -30,7 +30,7 @@ AC_DEFUN([gl_REMOVE_PROG],
 # Usage: gl_INCLUDE_EXCLUDE_PROG([prog_list_var_name], [NI_prog1])
 AC_DEFUN([gl_INCLUDE_EXCLUDE_PROG],
 [{
-  gl_no_install_progs_default=$2
+  gl_no_install_progs_default=`echo "$2"|tr -s , ' '`
   AC_ARG_ENABLE([install-program],
     [AS_HELP_STRING([--enable-install-program=PROG_LIST],
 		    [install the programs in PROG_LIST (comma-separated,
@@ -49,15 +49,18 @@ AC_DEFUN([gl_INCLUDE_EXCLUDE_PROG],
     [gl_no_install_prog=]
   )
 
+  # Convert to space separated lists.
+  gl_do_install_prog=`echo "$gl_do_install_prog"|tr -s , ' '`
+  gl_no_install_prog=`echo "$gl_no_install_prog"|tr -s , ' '`
+
   # For each not-to-be-installed program name, ensure that it's a
   # valid name, remove it from the list of programs to build/install,
   # as well as from the list of man pages to install.
-  extra_programs=
-  for gl_i in `echo "$gl_no_install_prog"|tr -s , ' '`; do
+  for gl_i in $gl_no_install_prog; do
 
     # Fail upon a request to install and not-install the same program.
-    case ",$gl_do_install_prog," in
-      *",$gl_i,"*) AC_MSG_ERROR(['$gl_i' is both included and excluded]) ;;
+    case " $gl_do_install_prog " in
+      *" $gl_i "*) AC_MSG_ERROR(['$gl_i' is both included and excluded]) ;;
     esac
 
     gl_msg=
@@ -79,7 +82,7 @@ AC_DEFUN([gl_INCLUDE_EXCLUDE_PROG],
     test "$gl_msg" != '' && AC_MSG_WARN([$gl_msg])
   done
 
-  for gl_i in `echo "$gl_do_install_prog"|tr -s , ' '`; do
+  for gl_i in $gl_do_install_prog; do
     case " $gl_no_install_progs_default " in
       *" $gl_i "*) gl_ADD_PROG([$1], $gl_i) ;;
       *) AC_MSG_WARN(['$gl_i' is not an optionally-installable program]) ;;
