@@ -270,16 +270,15 @@ t=`sed -n '/^'$v' =/,/[[^\]]$/p' $mk \
 no_install_progs_default=`echo "$t"|sed 's/ $//'`
 
 # Unfortunately, due to the way autoconf's AS_HELP_STRING works, the
-# list of default-not-installed programs, "arch,su", must appear in two
-# places: in this file below, and in $mk.  Simply using comma-separated
-# variant of "$no_install_progs_default" cannot work.  And we can't
-# substitute the names into $mk because automake needs the literals, too.
+# list of default-not-installed programs, "arch su", must appear in two
+# places: in this file below, and in $mk.  Using "$no_install_progs_default"
+# below cannot work.  And we can't substitute the names into $mk because
+# automake needs the literals, too.
 # The compromise is to ensure that the space-separated list extracted
-# above matches the comma-separated list below.
+# above matches the literal 2nd argument below.
 c="$srcdir/configure.ac"
 t=`sed -n '/^g''l_INCLUDE_EXCLUDE_PROG(.* [\[\(.*\)\]])/s//\1/p' $c`
-u=`echo "$t"|sed 's/,/ /g'`
-case $u in
+case $t in
   $no_install_progs_default) ;;
   *) AC_MSG_ERROR([[internal error: g'l_INCLUDE_EXCLUDE_PROG's 2nd arg, $t,
                    does not match the list of default-not-installed programs
@@ -293,7 +292,7 @@ esac
 # "don't-install" requests.
 # I.e., add any program name specified via --enable-install-program=..., and
 # remove any program name specified via --enable-no-install-program=...
-gl_INCLUDE_EXCLUDE_PROG([optional_bin_progs], [arch,su])
+gl_INCLUDE_EXCLUDE_PROG([optional_bin_progs], [arch su])
 
 # Set INSTALL_SU if su installation has been requested via
 # --enable-install-program=su.

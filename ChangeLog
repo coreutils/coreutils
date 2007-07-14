@@ -1,3 +1,12 @@
+2007-07-14  Jim Meyering  <jim@meyering.net>
+
+	Change interface: make 2nd param _space_-separated, not comma-separated
+	* m4/include-exclude-prog.m4 (gl_INCLUDE_EXCLUDE_PROG): Remove now-
+	unnecessary use of tr.
+	Improve comments.
+	* configure.ac: Adjust caller, as well as the code that ensures the
+	2nd parameter stays in sync with the list in src/Makefile.am.
+
 2007-07-14  Karel Zak  <kzak@redhat.com>
 
 	* m4/include-exclude-prog.m4 (gl_REMOVE_PROG): Fix typo: s/$2/$1/.

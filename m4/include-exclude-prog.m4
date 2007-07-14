@@ -24,13 +24,13 @@ AC_DEFUN([gl_REMOVE_PROG],
 
 # Given the name of a variable containing a space-separated list of
 # install-by-default programs and the list of do-not-install-by-default
-# programs, modify the former variable to reflect "don't-install" and
+# programs, modify the former variable to reflect "no-install" and
 # "do-install" requests.
 #
-# Usage: gl_INCLUDE_EXCLUDE_PROG([prog_list_var_name], [NI_prog1])
+# Usage: gl_INCLUDE_EXCLUDE_PROG([prog_list_var_name], [no_inst_prog_list])
 AC_DEFUN([gl_INCLUDE_EXCLUDE_PROG],
 [{
-  gl_no_install_progs_default=`echo "$2"|tr -s , ' '`
+  gl_no_install_progs_default='$2'
   AC_ARG_ENABLE([install-program],
     [AS_HELP_STRING([--enable-install-program=PROG_LIST],
 		    [install the programs in PROG_LIST (comma-separated,
