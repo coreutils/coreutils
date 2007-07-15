@@ -1,3 +1,7 @@
+2007-07-15  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi: Revise node structure per new fdl.texi.
+
 2007-06-06  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (rmdir invocation): Fix a tiny typo.

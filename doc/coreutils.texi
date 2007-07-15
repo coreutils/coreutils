@@ -197,7 +197,7 @@ Free Documentation License''.
 * File permissions::                   Access modes.
 * Date input formats::                 Specifying date strings.
 * Opening the software toolbox::       The software tools philosophy.
-* Copying This Manual::                License for copying this manual.
+* GNU Free Documentation License::     Copying and sharing this manual.
 * Index::                              General index.
 
 @detailmenu
@@ -466,7 +466,7 @@ Opening the software toolbox
 
 Copying This Manual
 
-* GNU Free Documentation License::  License for copying this manual.
+* GNU Free Documentation License::     Copying and sharing this manual.
 
 @end detailmenu
 @end menu
@@ -14662,12 +14662,8 @@ philosophy, these books are unparalleled, and I recommend them highly.
 Acknowledgment: I would like to express my gratitude to Brian Kernighan
 of Bell Labs, the original Software Toolsmith, for reviewing this column.
 
-@node Copying This Manual
-@appendix Copying This Manual
-
-@menu
-* GNU Free Documentation License::  License for copying this manual.
-@end menu
+@node GNU Free Documentation License
+@appendix GNU Free Documentation License
 
 @include fdl.texi
 
