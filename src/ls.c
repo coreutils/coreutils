@@ -1168,7 +1168,7 @@ main (int argc, char **argv)
     {
       /* Avoid following symbolic links when possible.  */
       if (is_colored (C_ORPHAN)
-	  || is_colored (C_EXEC)
+	  || (is_colored (C_EXEC) && color_symlink_as_referent)
 	  || (is_colored (C_MISSING) && format == long_format))
 	check_symlink_color = true;
 
@@ -2712,6 +2712,12 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
 	    }
 	  free (linkname);
 	}
+
+      /* When not distinguishing types of symlinks, pretend we know that
+	 it is stat'able, so that it will be colored as a regular symlink,
+	 and not as an orphan.  */
+      if (S_ISLNK (f->stat.st_mode) && !check_symlink_color)
+	f->linkok = true;
 
       if (S_ISLNK (f->stat.st_mode))
 	f->filetype = symbolic_link;

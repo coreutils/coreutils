@@ -1,3 +1,19 @@
+2007-07-15  Jim Meyering  <jim@meyering.net>
+
+	ls --color: Don't stat symlinks when neither ORPHAN nor MISSING
+	attribute has a color.
+	* src/ls.c (main): Don't set check_symlink_color when C_EXEC is
+	colored, unless ln=target (aka color_symlink_as_referent) is set.
+	(gobble_file): Set f->linkok = true also when !check_symlink_color.
+	http://thread.gmane.org/gmane.comp.gnu.coreutils.bugs/10608/focus=10927
+	Reported by Jeremy Maitin-Shepard.
+	* tests/strace: New file, contents extracted from...
+	* tests/mv/atomic: ...here.  Source strace.
+	* tests/ls/stat-free-symlinks: New file.  Test for the above.
+	Use strace to ensure that in this corner case, ls does not call stat.
+	* tests/ls/Makefile.am (TESTS): Add stat-free-symlinks.
+	* tests/Makefile.am (EXTRA_DIST): Add strace.
+
 2007-07-14  Jim Meyering  <jim@meyering.net>
 
 	Remove long-deprecated options.

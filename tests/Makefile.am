@@ -19,6 +19,7 @@ EXTRA_DIST = \
   expensive group-names input-tty lang-default mk-script \
   other-fs-tmpdir priv-check \
   rwx-to-mode sample-test selinux setgid-check sparse-file \
+  strace \
   umask-check very-expensive
 
 ## N O T E :: Please do not add new tests/ directories.

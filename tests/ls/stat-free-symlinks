@@ -1,7 +1,7 @@
 #!/bin/sh
-# ensure that mv doesn't first unlink its destination in one particular case
+# ensure that ls does not stat a symlink in an unusual case
 
-# Copyright (C) 2006-2007 Free Software Foundation, Inc.
+# Copyright (C) 2007 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,9 +20,10 @@
 
 if test "$VERBOSE" = yes; then
   set -x
-  mv --version
+  ls --version
 fi
 
+. $srcdir/../envvar-check
 . $srcdir/../strace
 
 pwd=`pwd`
@@ -34,16 +35,9 @@ framework_failure=0
 mkdir -p $tmp || framework_failure=1
 cd $tmp || framework_failure=1
 
-# Before the fix, mv would unnecessarily unlink the destination symlink:
-#   $ rm -rf s[12]; ln -s / s1; ln -s /tmp s2; strace -qe unlink /bin/mv -T s1 s2
-#   unlink("s2") = 0
-#
-# With the fix, it doesn't call unlink:
-#   $ rm -rf s[12]; ln -s / s1; ln -s /tmp s2; strace -qe unlink ./mv -T s1 s2
-#   $
-
-ln -s t1 s1 || framework_failure=1
-ln -s t2 s2 || framework_failure=1
+touch x || framework_failure=1
+chmod a+x x || framework_failure=1
+ln -s x link-to-x || framework_failure=1
 
 if test $framework_failure = 1; then
   echo "$0: failure in testing framework" 1>&2
@@ -52,13 +46,27 @@ fi
 
 fail=0
 
-strace -qe unlink mv -T s1 s2 > out 2>&1 || fail=1
-$EGREP 'unlink.*"s1"' out && fail=1
+# ls from coreutils 6.9 would unnecessarily stat a symlink in an unusual case:
+# When not coloring orphan and missing entries, and without ln=target,
+# ensure that ls -F (or -d, or -l: i.e., when not dereferencing)
+# does not stat a symlink to directory, and does still color that
+# symlink and an executable file properly.
 
-# Ensure that the source, s1, is gone.
-ls -dl s1 > /dev/null 2>&1 && fail=1
+LS_COLORS='or=0:mi=0:ex=01;32:ln=01;35' \
+  strace -qe stat ls -F --color=always x link-to-x > out 2> err || fail=1
 
-# Ensure that the destination, s2, contains the link from s1.
-test "`readlink s2`" = t1 || fail=1
+# With coreutils 6.9 and earlier, this file would contain a
+# line showing ls had called stat on "x".
+test -s err && fail=1
+
+# Check that output is colorized, as requested, too.
+{
+  printf '\e[0m\e[01;35mlink-to-x\e[0m@\n'
+  printf '\e[01;32mx\e[0m*\n'
+  printf '\e[m'
+} > exp || fail=1
+
+cmp out exp || fail=1
+test $fail = 1 && diff out exp 2> /dev/null
 
 (exit $fail); exit $fail

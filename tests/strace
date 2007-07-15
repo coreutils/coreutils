@@ -1,6 +1,6 @@
-# Make coreutils tests for "ls".		-*-Makefile-*-
+# Skip the current test if strace is not available or doesn't work.
 
-# Copyright (C) 1997-2003, 2006-2007 Free Software Foundation, Inc.
+# Copyright (C) 2007 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,21 +17,14 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 # 02110-1301, USA.
 
-TESTS = \
-  stat-free-symlinks \
-  nameless-uid \
-  color-dtype-dir \
-  stat-failed \
-  stat-dtype \
-  inode dangle file-type recursive dired infloop \
-  rt-1 time-1 symlink-slash follow-slink no-arg m-option \
-  stat-vs-dirent x-option
+strace -V < /dev/null > /dev/null 2>&1 ||
+{
+  echo "$0: no strace program, so skipping this test" 1>&2
+  (exit 77); exit 77
+}
 
-EXTRA_DIST = $(TESTS)
-TESTS_ENVIRONMENT = \
-  top_srcdir=$(top_srcdir) \
-  srcdir=$(srcdir) \
-  CU_TEST_NAME=`basename $(abs_srcdir)`,$$tst \
-  PATH="$(VG_PATH_PREFIX)`pwd`/../../src$(PATH_SEPARATOR)$$PATH" \
-  PERL="$(PERL)" \
-  PROG=ls
+strace -qe unlink echo > /dev/null 2>&1 ||
+{
+  echo "$0: strace doesn't work, so skipping this test" 1>&2
+  (exit 77); exit 77
+}
