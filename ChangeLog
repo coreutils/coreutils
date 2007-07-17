@@ -170,8 +170,8 @@
 2007-07-08  Jim Meyering  <jim@meyering.net>
 
 	Adapt to deeper hierarchy in gnulib.
-	* bootstrap (gnulib_tool): If the destination directory doesn't exist,
-	create it. This is required at least for "lib/uniwidth/cjk.h".
+	* bootstrap (symlink_to_dir): If the destination directory doesn't
+	exist, create it. This is required at least for "lib/uniwidth/cjk.h".
 
 	Use <wchar.h>, not "wcwidth.h".
 	* src/wc.c: Now that gnulib provides the POSIX-specified <wchar.h>,
