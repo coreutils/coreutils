@@ -1,3 +1,9 @@
+2007-07-19  Jim Meyering  <jim@meyering.net>
+
+	Fix a portability bug in the new ls-color test.
+	* tests/ls/stat-free-symlinks: Don't rely on the ability of
+	a built-in printf to interpolate '\e'.  Use '\033' instead.
+
 2007-07-18  Jim Meyering  <jim@meyering.net>
 
 	"cp -i --update older newer" no longer prompts; same for mv

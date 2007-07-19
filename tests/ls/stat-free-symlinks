@@ -61,9 +61,9 @@ test -s err && fail=1
 
 # Check that output is colorized, as requested, too.
 {
-  printf '\e[0m\e[01;35mlink-to-x\e[0m@\n'
-  printf '\e[01;32mx\e[0m*\n'
-  printf '\e[m'
+  printf '\033[0m\033[01;35mlink-to-x\033[0m@\n'
+  printf '\033[01;32mx\033[0m*\n'
+  printf '\033[m'
 } > exp || fail=1
 
 cmp out exp || fail=1
