@@ -1210,6 +1210,30 @@ copy_internal (char const *src_name, char const *dst_name,
 	      return false;
 	    }
 
+	  if (!S_ISDIR (src_mode) && x->update)
+	    {
+	      /* When preserving time stamps (but not moving within a file
+		 system), don't worry if the destination time stamp is
+		 less than the source merely because of time stamp
+		 truncation.  */
+	      int options = ((x->preserve_timestamps
+			      && ! (x->move_mode
+				    && dst_sb.st_dev == src_sb.st_dev))
+			     ? UTIMECMP_TRUNCATE_SOURCE
+			     : 0);
+
+	      if (0 <= utimecmp (dst_name, &dst_sb, &src_sb, options))
+		{
+		  /* We're using --update and the destination is not older
+		     than the source, so do not copy or move.  Pretend the
+		     rename succeeded, so the caller (if it's mv) doesn't
+		     end up removing the source file.  */
+		  if (rename_succeeded)
+		    *rename_succeeded = true;
+		  return true;
+		}
+	    }
+
 	  /* When there is an existing destination file, we may end up
 	     returning early, and hence not copying/moving the file.
 	     This may be due to an interactive `negative' reply to the
@@ -1300,30 +1324,6 @@ copy_internal (char const *src_name, char const *dst_name,
 			 _("cannot overwrite directory %s with non-directory"),
 			     quote (dst_name));
 		      return false;
-		    }
-		}
-
-	      if (x->update)
-		{
-		  /* When preserving time stamps (but not moving within a file
-		     system), don't worry if the destination time stamp is
-		     less than the source merely because of time stamp
-		     truncation.  */
-		  int options = ((x->preserve_timestamps
-				  && ! (x->move_mode
-					&& dst_sb.st_dev == src_sb.st_dev))
-				 ? UTIMECMP_TRUNCATE_SOURCE
-				 : 0);
-
-		  if (0 <= utimecmp (dst_name, &dst_sb, &src_sb, options))
-		    {
-		      /* We're using --update and the destination is not older
-			 than the source, so do not copy or move.  Pretend the
-			 rename succeeded, so the caller (if it's mv) doesn't
-			 end up removing the source file.  */
-		      if (rename_succeeded)
-			*rename_succeeded = true;
-		      return true;
 		    }
 		}
 	    }

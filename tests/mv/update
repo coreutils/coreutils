@@ -1,7 +1,7 @@
 #!/bin/sh
 # make sure --update works as advertised
 
-# Copyright (C) 2001, 2004, 2006 Free Software Foundation, Inc.
+# Copyright (C) 2001, 2004, 2006-2007 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -46,11 +46,16 @@ fi
 
 fail=0
 
-for cp_or_mv in cp mv; do
-  # This is a no-op.
-  $cp_or_mv --update old new || fail=1
-  case "`cat new`" in new) ;; *) fail=1 ;; esac
-  case "`cat old`" in old) ;; *) fail=1 ;; esac
+for interactive in '' -i; do
+  for cp_or_mv in cp mv; do
+    # This is a no-op, with no prompt.
+    # With coreutils-6.9 and earlier, using --update with -i would
+    # mistakenly elicit a prompt.
+    $cp_or_mv $interactive --update old new < /dev/null > out 2>&1 || fail=1
+    test -s out && fail=1
+    case "`cat new`" in new) ;; *) fail=1 ;; esac
+    case "`cat old`" in old) ;; *) fail=1 ;; esac
+  done
 done
 
 # This will actually perform the rename.

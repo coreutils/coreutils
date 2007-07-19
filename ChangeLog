@@ -1,3 +1,12 @@
+2007-07-18  Jim Meyering  <jim@meyering.net>
+
+	"cp -i --update older newer" no longer prompts; same for mv
+	* src/copy.c (copy_internal): Perform "update" check before the
+	possible interactive prompt.  Reported by zeno_AT_biyg_DOT_org
+	in <http://bugzilla.redhat.com/248591>
+	* tests/mv/update: Add tests for the above.
+	* NEWS: Mention the bug fix.
+
 2007-07-15  Jim Meyering  <jim@meyering.net>
 
 	ls --color: Don't stat symlinks when neither ORPHAN nor MISSING

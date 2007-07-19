@@ -65,6 +65,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   doing nothing.  The behavior of 'cp' is now better documented when
   the destination is a symlink.
 
+  "cp -i --update older newer" no longer prompts; same for mv
+
   cut now diagnoses a range starting with zero (e.g., -f 0-2) as invalid;
   before, it would treat it as if it started with 1 (-f 1-2).
 
