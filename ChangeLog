@@ -1,3 +1,7 @@
+2007-07-20  Andreas Schwab  <schwab@suse.de>
+
+	* src/sort.c (main): Don't free a pointer to non-malloc'd memory.
+
 2007-07-19  Jim Meyering  <jim@meyering.net>
 
 	Fix a portability bug in the new ls-color test.

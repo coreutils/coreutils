@@ -2874,10 +2874,7 @@ main (int argc, char **argv)
 		  if (! (key->sword | key->schar))
 		    key->sword = SIZE_MAX;
 		  if (! s || *set_ordering (s, key, bl_start))
-		    {
-		      free (key);
-		      key = NULL;
-		    }
+		    key = NULL;
 		  else
 		    {
 		      if (minus_pos_usage)
