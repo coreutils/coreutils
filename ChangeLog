@@ -1,3 +1,9 @@
+2007-07-20  Jim Meyering  <jim@meyering.net>
+
+	Document and add a test for today's sort bug fix.
+	* NEWS: Describe the bug fix.
+	* tests/sort/Test.pm (obs-inval): Add a test for today's fix.
+
 2007-07-20  Andreas Schwab  <schwab@suse.de>
 
 	* src/sort.c (main): Don't free a pointer to non-malloc'd memory.

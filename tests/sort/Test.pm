@@ -1,8 +1,7 @@
 # -*-perl-*-
 # Test "sort".
 
-# Copyright (C) 1996, 1997, 1998, 1999, 2001, 2002, 2003, 2004, 2005,
-# 2006 Free Software Foundation, Inc.
+# Copyright (C) 1996-1999, 2001-2007 Free Software Foundation, Inc.
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -282,6 +281,11 @@ my @tv = (
 
 ["bigfield", '-k 340282366920938463463374607431768211456',
  "2\n1\n", "1\n2\n", 0],
+
+# Using an old-style key-specifying option like +1 with an invalid
+# ordering-option character would cause sort to try to free an invalid
+# (non-malloc'd) pointer.  This bug affects coreutils-6.5 through 6.9.
+['obs-inval', '+1x', '', '', 2]
 );
 
 sub test_vector
