@@ -391,7 +391,11 @@ slurp() {
   for dir in . `(cd $1 && find * -type d -print)`; do
     copied=
     sep=
-    for file in `ls $1/$dir`; do
+    for file in `ls -a $1/$dir`; do
+      case $file in
+      .|..) continue;;
+      .*) continue;; # FIXME: should all file names starting with "." be ignored?
+      esac
       test -d $1/$dir/$file && continue
       for excluded_file in $excluded_files; do
 	test "$dir/$file" = "$excluded_file" && continue 2

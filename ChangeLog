@@ -1,3 +1,10 @@
+2007-07-21  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* bootstrap (slurp): Work even in environments where "ls" defaults
+	to "ls -A".  Put in a FIXME, though, since the current code does
+	not slurp files whose names start with ".", and this looks like
+	it might be a troublesome area.
+
 2007-07-20  Jim Meyering  <jim@meyering.net>
 
 	Document and add a test for today's sort bug fix.
