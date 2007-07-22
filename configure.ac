@@ -313,9 +313,14 @@ MAN=`echo "$MAN"|sed 's/\<ginstall\.1\>/install.1/'`
 MAN=`echo "$MAN"|sed 's/\@<:@\.1//'`
 
 OPTIONAL_BIN_PROGS=`echo "$optional_bin_progs "|sed 's/ /\$(EXEEXT) /g;s/ $//'`
-AC_SUBST(OPTIONAL_BIN_PROGS)
+AC_SUBST([OPTIONAL_BIN_PROGS])
 NO_INSTALL_PROGS_DEFAULT=$no_install_progs_default
-AC_SUBST(NO_INSTALL_PROGS_DEFAULT)
+AC_SUBST([NO_INSTALL_PROGS_DEFAULT])
+
+# Arrange to rerun configure whenever the file, src/Makefile.am,
+# containing the list of program names changes.
+CONFIG_STATUS_DEPENDENCIES='$(top_srcdir)/src/Makefile.am'
+AC_SUBST([CONFIG_STATUS_DEPENDENCIES])
 ############################################################################
 
 AM_GNU_GETTEXT([external], [need-formatstring-macros])

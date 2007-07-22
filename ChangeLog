@@ -1,3 +1,10 @@
+2007-07-22  Jim Meyering  <jim@meyering.net>
+
+	* configure.ac: Arrange to rerun configure whenever src/Makefile.am
+	changes.  That file contains the list of program names that must be
+	substituted into files like man/Makefile.
+	Add quotes around AC_SUBST arguments.
+
 2007-07-21  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* bootstrap (slurp): Work even in environments where "ls" defaults
