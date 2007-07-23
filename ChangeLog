@@ -1,5 +1,8 @@
 2007-07-23  Jim Meyering  <jim@meyering.net>
 
+	Update all copyright notices to use the newer form (e.g., remove
+	the postal address, and add the 'licenses' URL).
+
 	* COPYING: Update to Version 3.
 
 	Update c99/c89 patch for new, copyright-change-induced offsets.
