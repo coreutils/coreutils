@@ -4,7 +4,7 @@
 
 ## Copyright (C) 2001-2007 Free Software Foundation, Inc.
 ##
-## This program is free software; you can redistribute it and/or modify
+## This program is free software: you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
 ## the Free Software Foundation; either version 3, or (at your option)
 ## any later version.
@@ -366,8 +366,9 @@ patch-check:
 	cp -a src src-c89
 	(cd src-c89; patch -p1 -V never --fuzz=0) < src/c99-to-c89.diff \
 	  > $@.1 2>&1
-	if test "$${REGEN_PATCH+set}" = set; then \
-	  diff -upr src src-c89 | sed 's,src-c89/,src/,' > new-diff || : ; fi
+	if test "$$REGEN_PATCH" = yes; then \
+	  diff -upr src src-c89 | sed 's,src-c89/,src/,' \
+	    | grep -v '^Only in' > new-diff || : ; fi
 	grep -v '^patching file ' $@.1 > $@.2 || :
 	msg=ok; test -s $@.2 && msg='fuzzy patch' || : ;	\
 	rm -f src-c89/*.o || msg='rm failed';			\

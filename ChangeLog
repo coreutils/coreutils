@@ -1,3 +1,9 @@
+2007-07-23  Jim Meyering  <jim@meyering.net>
+
+	Update c99/c89 patch for new, copyright-change-induced offsets.
+	* Makefile.maint (patch-check): Filter out '^Only in...' lines.
+	* src/c99-to-c89.diff: Handle new c99'isms in seq.c.
+
 2007-07-22  Jim Meyering  <jim@meyering.net>
 
 	* configure.ac: Arrange to rerun configure whenever src/Makefile.am

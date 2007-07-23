@@ -1,7 +1,7 @@
 diff -upr src/remove.c src/remove.c
---- src/remove.c	2007-05-29 16:22:10.000000000 +0200
-+++ src/remove.c	2007-07-09 19:15:47.000000000 +0200
-@@ -254,9 +254,10 @@ pop_dir (Dirstack_state *ds)
+--- src/remove.c	2007-07-23 12:56:20.000000000 +0200
++++ src/remove.c	2007-07-23 13:03:12.000000000 +0200
+@@ -253,9 +253,10 @@ pop_dir (Dirstack_state *ds)
  {
    size_t n_lengths = obstack_object_size (&ds->len_stack) / sizeof (size_t);
    size_t *length = obstack_base (&ds->len_stack);
@@ -13,7 +13,7 @@ diff -upr src/remove.c src/remove.c
    assert (top_len >= 2);
 
    /* Pop the specified length of file name.  */
-@@ -388,10 +389,11 @@ AD_stack_top (Dirstack_state const *ds)
+@@ -387,10 +388,11 @@ AD_stack_top (Dirstack_state const *ds)
  static void
  AD_stack_pop (Dirstack_state *ds)
  {
@@ -26,7 +26,7 @@ diff -upr src/remove.c src/remove.c
    if (top->unremovable)
      hash_free (top->unremovable);
    obstack_blank (&ds->Active_dir, -(int) sizeof (struct AD_ent));
-@@ -873,6 +875,7 @@ prompt (int fd_cwd, Dirstack_state const
+@@ -872,6 +874,7 @@ prompt (int fd_cwd, Dirstack_state const
  	    break;
  	  }
 
@@ -34,7 +34,7 @@ diff -upr src/remove.c src/remove.c
        char const *quoted_name = quote (full_filename (filename));
 
        if (0 < write_protected)
-@@ -912,6 +915,7 @@ prompt (int fd_cwd, Dirstack_state const
+@@ -911,6 +914,7 @@ prompt (int fd_cwd, Dirstack_state const
  		    : _("%s: remove %s %s? ")),
  		   program_name, file_type (sbuf), quoted_name);
  	}
@@ -42,7 +42,7 @@ diff -upr src/remove.c src/remove.c
 
        if (!yesno ())
  	return RM_USER_DECLINED;
-@@ -1512,6 +1516,7 @@ rm_1 (Dirstack_state *ds, char const *fi
+@@ -1511,6 +1515,7 @@ rm_1 (Dirstack_state *ds, char const *fi
        return RM_ERROR;
      }
 
@@ -50,7 +50,7 @@ diff -upr src/remove.c src/remove.c
    struct stat st;
    cache_stat_init (&st);
    cycle_check_init (&ds->cycle_check_state);
-@@ -1534,6 +1539,7 @@ rm_1 (Dirstack_state *ds, char const *fi
+@@ -1533,6 +1538,7 @@ rm_1 (Dirstack_state *ds, char const *fi
    AD_push_initial (ds);
    AD_INIT_OTHER_MEMBERS ();
 
@@ -58,7 +58,7 @@ diff -upr src/remove.c src/remove.c
    enum RM_status status = remove_entry (AT_FDCWD, ds, filename,
  					DT_UNKNOWN, &st, x);
    if (status == RM_NONEMPTY_DIR)
-@@ -1552,6 +1558,8 @@ rm_1 (Dirstack_state *ds, char const *fi
+@@ -1551,6 +1557,8 @@ rm_1 (Dirstack_state *ds, char const *fi
    ds_clear (ds);
    return status;
  }
@@ -68,9 +68,9 @@ diff -upr src/remove.c src/remove.c
  /* Remove all files and/or directories specified by N_FILES and FILE.
     Apply the options in X.  */
 diff -upr src/rm.c src/rm.c
---- src/rm.c	2007-05-29 16:22:10.000000000 +0200
-+++ src/rm.c	2007-07-09 19:15:47.000000000 +0200
-@@ -355,6 +355,7 @@ main (int argc, char **argv)
+--- src/rm.c	2007-07-23 12:56:20.000000000 +0200
++++ src/rm.c	2007-07-23 13:03:12.000000000 +0200
+@@ -354,6 +354,7 @@ main (int argc, char **argv)
  	       quote ("/"));
      }
 
@@ -78,7 +78,7 @@ diff -upr src/rm.c src/rm.c
    size_t n_files = argc - optind;
    char const *const *file = (char const *const *) argv + optind;
 
-@@ -368,7 +369,10 @@ main (int argc, char **argv)
+@@ -367,7 +368,10 @@ main (int argc, char **argv)
        if (!yesno ())
  	exit (EXIT_SUCCESS);
      }
@@ -90,9 +90,9 @@ diff -upr src/rm.c src/rm.c
 +  }
  }
 diff -upr src/seq.c src/seq.c
---- src/seq.c	2007-07-09 18:37:02.000000000 +0200
-+++ src/seq.c	2007-07-09 19:15:47.000000000 +0200
-@@ -157,6 +157,7 @@ scan_arg (const char *arg)
+--- src/seq.c	2007-07-23 12:56:20.000000000 +0200
++++ src/seq.c	2007-07-23 13:03:12.000000000 +0200
+@@ -156,6 +156,7 @@ scan_arg (const char *arg)
  			: (decimal_point == arg                /* .#  -> 0.# */
  			   || ! ISDIGIT (decimal_point[-1]))); /* -.# -> 0.# */
  	}
@@ -100,7 +100,7 @@ diff -upr src/seq.c src/seq.c
        char const *e = strchr (arg, 'e');
        if (! e)
  	e = strchr (arg, 'E');
-@@ -165,6 +166,7 @@ scan_arg (const char *arg)
+@@ -164,6 +165,7 @@ scan_arg (const char *arg)
  	  long exponent = strtol (e + 1, NULL, 10);
  	  ret.precision += exponent < 0 ? -exponent : 0;
  	}
@@ -108,7 +108,7 @@ diff -upr src/seq.c src/seq.c
      }
 
    return ret;
-@@ -293,6 +295,7 @@ get_default_format (operand first, opera
+@@ -292,6 +294,7 @@ get_default_format (operand first, opera
  	  size_t last_width = last.width + (prec - last.precision);
  	  if (last.precision && prec == 0)
  	    last_width--;  /* don't include space for '.' */
@@ -116,7 +116,7 @@ diff -upr src/seq.c src/seq.c
  	  size_t width = MAX (first_width, last_width);
  	  if (width <= INT_MAX)
  	    {
-@@ -300,6 +303,7 @@ get_default_format (operand first, opera
+@@ -299,6 +302,7 @@ get_default_format (operand first, opera
  	      sprintf (format_buf, "%%0%d.%dLf", w, prec);
  	      return format_buf;
  	    }
@@ -125,9 +125,9 @@ diff -upr src/seq.c src/seq.c
        else
  	{
 diff -upr src/shred.c src/shred.c
---- src/shred.c	2007-06-23 12:19:19.000000000 +0200
-+++ src/shred.c	2007-07-09 19:15:47.000000000 +0200
-@@ -463,7 +463,7 @@ dopass (int fd, char const *qname, off_t
+--- src/shred.c	2007-07-23 12:56:20.000000000 +0200
++++ src/shred.c	2007-07-23 13:03:12.000000000 +0200
+@@ -462,7 +462,7 @@ dopass (int fd, char const *qname, off_t
  		     out.  Thus, it shouldn't give up on bad blocks.  This
  		     code works because lim is always a multiple of
  		     SECTOR_SIZE, except at the end.  */
