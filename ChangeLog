@@ -1,5 +1,7 @@
 2007-07-23  Jim Meyering  <jim@meyering.net>
 
+	* COPYING: Update to Version 3.
+
 	Update c99/c89 patch for new, copyright-change-induced offsets.
 	* Makefile.maint (patch-check): Filter out '^Only in...' lines.
 	* src/c99-to-c89.diff: Handle new c99'isms in seq.c.
