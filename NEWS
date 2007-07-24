@@ -90,6 +90,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   seq no longer mishandles obvious cases like "seq 0 0.000001 0.000003",
   so workarounds like "seq 0 0.000001 0.0000031" are no longer needed.
 
+  Obsolete sort usage with an invalid ordering-option character, e.g.,
+  "env _POSIX2_VERSION=199209 sort +1x" no longer makes sort free an
+  invalid pointer [introduced in coreutils-6.5]
+
   sorting very long lines (relative to the amount of available memory)
   no longer provokes unaligned memory access
 
@@ -117,10 +121,6 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   Using pr -m -s (i.e. merging files, with TAB as the output separator)
   no longer inserts extraneous spaces between output columns.
-
-  Obsolete sort usage with an invalid ordering-option character, e.g.,
-  "env _POSIX2_VERSION=199209 sort +1x" no longer makes sort free an
-  invalid pointer [introduced in coreutils-6.5]
 
 * Noteworthy changes in release 6.8 (2007-02-24) [not-unstable]
 
