@@ -283,7 +283,11 @@ my @tv = (
 # Using an old-style key-specifying option like +1 with an invalid
 # ordering-option character would cause sort to try to free an invalid
 # (non-malloc'd) pointer.  This bug affects coreutils-6.5 through 6.9.
-['obs-inval', '+1x', '', '', 2]
+['obs-inval', '+1x', '', '', 2],
+
+# Exercise the code that enlarges the line buffer.  See the thread here:
+# http://thread.gmane.org/gmane.comp.gnu.coreutils.bugs/11006
+['realloc-buf', '-S1', 'a'x4000 ."\n", 'a'x4000 ."\n", 0],
 );
 
 sub test_vector

@@ -1,3 +1,10 @@
+2007-07-24  Jim Meyering  <jim@meyering.net>
+
+	sort: add a test to exercise the affected code.
+	* tests/sort/Test.pm (realloc-buf): Exercise the code that changed
+	yesterday.  No other test in all of "make check" does this.
+	* NEWS: Mention the fix.
+
 2007-07-23  Paul Eggert  <eggert@cs.ucla.edu>
 
 	sort: avoid unaligned access.

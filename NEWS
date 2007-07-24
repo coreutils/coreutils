@@ -90,6 +90,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   seq no longer mishandles obvious cases like "seq 0 0.000001 0.000003",
   so workarounds like "seq 0 0.000001 0.0000031" are no longer needed.
 
+  sorting very long lines (relative to the amount of available memory)
+  no longer provokes unaligned memory access
+
   split --line-bytes=N (-C N) no longer creates an empty file
   [this bug is present at least as far back as textutils-1.22 (Jan, 1997)]
 
