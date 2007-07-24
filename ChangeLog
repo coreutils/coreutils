@@ -1,3 +1,12 @@
+2007-07-23  Paul Eggert  <eggert@cs.ucla.edu>
+
+	sort: avoid unaligned access.
+	* src/sort.c (fillbuf): When enlarging the line buffer, ensure that
+	the new size is a multiple of "sizeof (struct line)".  This avoids
+	alignment problems when indexing from the end of the buffer.
+	Problem reported by Andreas Schwab in
+	<http://lists.gnu.org/archive/html/bug-coreutils/2007-07/msg00158.html>.
+
 2007-07-23  Jim Meyering  <jim@meyering.net>
 
 	Update all copyright notices to use the newer form (e.g., remove

@@ -1488,9 +1488,14 @@ fillbuf (struct buffer *buf, FILE *fp, char const *file)
 	  return true;
 	}
 
-      /* The current input line is too long to fit in the buffer.
-	 Double the buffer size and try again.  */
-      buf->buf = X2REALLOC (buf->buf, &buf->alloc);
+      {
+	/* The current input line is too long to fit in the buffer.
+	   Double the buffer size and try again, keeping it properly
+	   aligned.  */
+	size_t line_alloc = buf->alloc / sizeof (struct line);
+	buf->buf = x2nrealloc (buf->buf, &line_alloc, sizeof (struct line));
+	buf->alloc = line_alloc * sizeof (struct line);
+      }
     }
 }
 
