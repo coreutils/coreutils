@@ -1,3 +1,9 @@
+2007-07-26  Bob Proulx  <bob@proulx.com>
+
+	sort: Improve sort --random-sort test.
+	* tests/misc/sort-rand: If "locale" is available pick a random
+	non-C locale and check "sort --random-sort" behavior using it.
+
 2007-07-24  Jim Meyering  <jim@meyering.net>
 
 	sort: add a test to exercise the affected code.

@@ -49,4 +49,18 @@ cmp in out > /dev/null && { fail=1; echo "not random?" 1>&2; }
 sort -n out > out1
 cmp in out1 || { fail=1; echo "not a permutation" 1>&2; }
 
+# If locale is available then use it to find a random non-C locale.
+if (locale --version) > /dev/null 2>&1; then
+  locale=`locale -a | sort --random-sort | awk '/^.._/{print;exit}'`
+  LC_ALL=$locale sort --random-sort in > out1 || fail=1
+  LC_ALL=$locale sort --random-sort in > out2 || fail=1
+
+  # Fail if the output "randomly" is the same twice in a row.
+  cmp out1 out2 > /dev/null && { fail=1; echo "not random with LC_ALL=$locale" 1>&2; }
+
+  # Fail if the sorted output is not the same as the input.
+  sort -n out > out1
+  cmp in out1 || { fail=1; echo "not a permutation with LC_ALL=$locale" 1>&2; }
+fi
+
 (exit $fail); exit $fail
