@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 TESTS = \
+  proc-zero-len \
   thru-dangling \
   cp-a-selinux \
   file-perm-race parent-perm-race \

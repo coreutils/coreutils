@@ -1,3 +1,16 @@
+2007-07-28  Jim Meyering  <jim@meyering.net>
+
+	Attempt to copy a regular file, even if stat says it is empty.
+	* NEWS: Document this bug fix.
+	* src/copy.c (copy_reg): Read from a regular file, even if it
+	appears (stat.st_size == 0) to be empty.  This reverts an
+	optimization introduced on 2005-11-23 for coreutils-6.0.
+	Otherwise, "cp /proc/cpuinfo /tmp" creates an empty file,
+	on e.g., linux-2.6.20.
+	* tests/cp/proc-zero-len: New file.  Test for the above.
+	* tests/cp/Makefile.am (TESTS): Add proc-zero-len.
+	Reported by Dan Berrangé.
+
 2007-07-26  Bob Proulx  <bob@proulx.com>
 
 	sort: Improve sort --random-sort test.

@@ -418,7 +418,6 @@ copy_reg (char const *src_name, char const *dst_name,
       goto close_src_and_dst_desc;
     }
 
-  if (! (S_ISREG (src_open_sb.st_mode) && src_open_sb.st_size == 0))
     {
       typedef uintptr_t word;
       off_t n_read_total = 0;

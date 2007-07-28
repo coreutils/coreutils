@@ -54,6 +54,11 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  cp attempts to read a regular file, even if stat says it is empty.
+  Before, "cp /proc/cpuinfo c" would create an empty file when the kernel
+  reports stat.st_size == 0, while "cat /proc/cpuinfo > c" would "work",
+  and create a nonempty one. [bug introduced in coreutils-6.0]
+
   cp no longer fails to write through a dangling symlink
   [bug introduced in coreutils-6.7].  cp --parents no
   longer mishandles symlinks to directories in file name
