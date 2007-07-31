@@ -80,6 +80,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   cut now diagnoses the '-' in "cut -f -" as an invalid range, rather
   than interpreting it as the unlimited range, "1-".
 
+  du -s now includes the size of any stat'able-but-inaccessible directory
+  in the total size.
+
   ls -x DIR would sometimes output the wrong string in place of the
   first entry.  [introduced in coreutils-6.8]
 
