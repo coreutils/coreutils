@@ -83,6 +83,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   du -s now includes the size of any stat'able-but-inaccessible directory
   in the total size.
 
+  du (without -s) prints whatever it knows of the size of an inaccessible
+  directory.  Before, du would print nothing for such a directory.
+
   ls -x DIR would sometimes output the wrong string in place of the
   first entry.  [introduced in coreutils-6.8]
 

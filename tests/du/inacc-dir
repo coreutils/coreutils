@@ -45,4 +45,15 @@ du -s a > out 2> /dev/null && fail=1
 cmp out exp || fail=1
 test $fail = 1 && diff out exp 2> /dev/null
 
+# Same as above, but don't use -s, so we print
+# an entry for the unreadable "sub", too.
+chmod 700 a/sub || fail=1
+du -k a > exp || fail=1
+chmod 0 a/sub || fail=1
+# Expect failure, ignore diagnostics.
+du -k a > out 2> /dev/null && fail=1
+
+cmp out exp || fail=1
+test $fail = 1 && diff out exp 2> /dev/null
+
 (exit $fail); exit $fail

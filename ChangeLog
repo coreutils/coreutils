@@ -1,5 +1,12 @@
 2007-07-31  Jim Meyering  <jim@meyering.net>
 
+	du: print size (probably incomplete) of each inaccessible directory
+	* src/du.c (process_file): Print what we know of the size of a
+	directory even when it is inaccessible.  What we print is just the
+	size of the directory itself, not counting any of its contents.
+	* tests/du/inacc-dir: Test for this.
+	* NEWS: Mention this change.
+
 	Add a test for du not counting size of inaccessible directories.
 	* tests/du/inacc-dir: New file. Test for fts.c bug fixed yesterday.
 	* tests/du/Makefile.am (TESTS): Add inacc-dir.

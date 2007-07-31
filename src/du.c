@@ -596,13 +596,8 @@ process_file (FTS *fts, FTSENT *ent)
     duinfo_add (&dulvl[level].ent, &dui);
 
   /* Even if this directory is unreadable or we can't chdir into it,
-     do let its size contribute to the total, ... */
+     do let its size contribute to the total. */
   duinfo_add (&tot_dui, &dui);
-
-  /* ... but don't print out a total for it, since without the size(s)
-     of any potential entries, it could be very misleading.  */
-  if (ent->fts_info == FTS_DNR)
-    return ok;
 
   /* If we're not counting an entry, e.g., because it's a hard link
      to a file we've already counted (and --count-links), then don't
