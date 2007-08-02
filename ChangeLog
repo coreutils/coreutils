@@ -1,5 +1,9 @@
 2007-08-02  Jim Meyering  <jim@meyering.net>
 
+	Adjust one more test to accommodate the recent fts change.
+	This matters only on systems with insufficient openat support.
+	* tests/du/inacc-dest: Adjust expected diagnostic.
+
 	Adjust the other two "no-x" tests and unify all three.
 	* tests/du/no-x: Factor out du-specific bits.
 	* tests/chmod/no-x: Use the same code.
