@@ -1,5 +1,10 @@
 2007-08-02  Jim Meyering  <jim@meyering.net>
 
+	Adjust the other two "no-x" tests and unify all three.
+	* tests/du/no-x: Factor out du-specific bits.
+	* tests/chmod/no-x: Use the same code.
+	* tests/chgrp/no-x: Use the same code.
+
 	Adapt du's no-x test not to fail on older Linux systems.
 	* tests/du/no-x: Accept a third variant of the diagnostic.
 

@@ -2,7 +2,7 @@
 # Make sure chmod gives the right diagnostic for a readable,
 # but inaccessible directory.
 
-# Copyright (C) 2003, 2006 Free Software Foundation, Inc.
+# Copyright (C) 2003, 2006-2007 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -46,25 +46,23 @@ fail=0
 # This must exit nonzero.
 chmod -R o=r d >/dev/null 2>out && fail=1
 
-cat <<\EOF > exp
-chmod: `d/no-x': Permission denied
+prog=chmod
+# NOTE: this code is the same for all tests/*/no-x tests.
+# Depending on whether fts is using native fdopendir, we see one
+# of the following diagnostics (note also the /y suffix in one case):
+#   prog: `d/no-x': Permission denied
+#   prog: cannot access `d/no-x/y': Permission denied
+#   prog: cannot read directory `d/no-x': Permission denied
+# Convert either of the latter two to the first one.
+sed "s/^$prog: cannot access /$prog: /" out > t && mv t out
+sed "s/^$prog: cannot read directory /$prog: /" out > t && mv t out
+sed 's,d/no-x/y,d/no-x,' out > t && mv t out
+
+cat <<EOF > exp
+$prog: \`d/no-x': Permission denied
 EOF
 
-# With native fdopendir, du uses a different code path.
-cat <<\EOF > exp-native-fdopendir
-chmod: cannot access `d/no-x/y': Permission denied
-EOF
-
-if cmp out exp >/dev/null 2>&1; then
-  :
-else
-  if cmp out exp-native-fdopendir; then
-    :
-  else
-    fail=1
-  fi
-fi
-
+cmp out exp || fail=1
 test $fail = 1 && diff out exp 2> /dev/null
 
 mkdir -p a/b
