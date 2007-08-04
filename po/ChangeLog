@@ -1,3 +1,7 @@
+2007-08-04  Jim Meyering  <jim@meyering.net>
+
+	* POTFILES.in: Remove lib/human.c.
+
 2007-02-02  Jim Meyering  <jim@meyering.net>
 
 	* POTFILES.in: Add src/runcon.c.
