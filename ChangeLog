@@ -1,3 +1,9 @@
+2007-08-04  Jim Meyering  <jim@meyering.net>
+
+	Exercise xstrtol's diagnostics via pr's --pages option.
+	* tests/misc/xstrtol: New file.
+	* tests/misc/Makefile.am (TESTS): Add xstrtol.
+
 2007-08-04  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Adapt to new human and xstrtol API.

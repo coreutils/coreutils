@@ -42,6 +42,7 @@ TESTS_ENVIRONMENT = \
 # will execute the test script rather than the standard utility.
 
 TESTS = \
+  xstrtol \
   arch \
   pr \
   df-P \
