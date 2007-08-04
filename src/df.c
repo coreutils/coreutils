@@ -121,7 +121,7 @@ enum
 static struct option const long_options[] =
 {
   {"all", no_argument, NULL, 'a'},
-  {"block-size", required_argument, NULL, 'B'},
+  {OPT_STR_INIT ("block-size"), required_argument, NULL, 'B'},
   {"inodes", no_argument, NULL, 'i'},
   {"human-readable", no_argument, NULL, 'h'},
   {"si", no_argument, NULL, 'H'},
@@ -776,7 +776,6 @@ kB 1000, K 1024, MB 1000*1000, M 1024*1024, and so on for G, T, P, E, Z, Y.\n\
 int
 main (int argc, char **argv)
 {
-  int c;
   struct stat *stats IF_LINT (= 0);
 
   initialize_main (&argc, &argv);
@@ -798,16 +797,26 @@ main (int argc, char **argv)
   posix_format = false;
   exit_status = EXIT_SUCCESS;
 
-  while ((c = getopt_long (argc, argv, "aB:iF:hHklmPTt:vx:", long_options, NULL))
-	 != -1)
+  for (;;)
     {
+      int oi = -1;
+      int c = getopt_long (argc, argv, "aB:iF:hHklmPTt:vx:", long_options,
+			   &oi);
+      if (c == -1)
+	break;
+
       switch (c)
 	{
 	case 'a':
 	  show_all_fs = true;
 	  break;
 	case 'B':
-	  human_output_opts = human_options (optarg, true, &output_block_size);
+	  {
+	    enum strtol_error e = human_options (optarg, &human_output_opts,
+						 &output_block_size);
+	    if (e != LONGINT_OK)
+	      STRTOL_FATAL_ERROR (OPT_STR (oi, c, long_options), optarg, e);
+	  }
 	  break;
 	case 'i':
 	  inode_format = true;
@@ -873,8 +882,8 @@ main (int argc, char **argv)
 	  output_block_size = (getenv ("POSIXLY_CORRECT") ? 512 : 1024);
 	}
       else
-	human_output_opts = human_options (getenv ("DF_BLOCK_SIZE"), false,
-					   &output_block_size);
+	human_options (getenv ("DF_BLOCK_SIZE"),
+		       &human_output_opts, &output_block_size);
     }
 
   /* Fail if the same file system type was both selected and excluded.  */

@@ -1450,8 +1450,8 @@ decode_switches (int argc, char **argv)
 
   {
     char const *ls_block_size = getenv ("LS_BLOCK_SIZE");
-    human_output_opts = human_options (ls_block_size, false,
-				       &output_block_size);
+    human_options (ls_block_size,
+		   &human_output_opts, &output_block_size);
     if (ls_block_size || getenv ("BLOCK_SIZE"))
       file_output_block_size = output_block_size;
   }
@@ -1793,8 +1793,13 @@ decode_switches (int argc, char **argv)
 	  break;
 
 	case BLOCK_SIZE_OPTION:
-	  human_output_opts = human_options (optarg, true, &output_block_size);
-	  file_output_block_size = output_block_size;
+	  {
+	    enum strtol_error e = human_options (optarg, &human_output_opts,
+						 &output_block_size);
+	    if (e != LONGINT_OK)
+	      STRTOL_FATAL_ERROR ("--block-size", optarg, e);
+	    file_output_block_size = output_block_size;
+	  }
 	  break;
 
 	case SI_OPTION:

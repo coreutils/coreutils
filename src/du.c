@@ -204,7 +204,7 @@ static struct option const long_options[] =
 {
   {"all", no_argument, NULL, 'a'},
   {"apparent-size", no_argument, NULL, APPARENT_SIZE_OPTION},
-  {"block-size", required_argument, NULL, 'B'},
+  {OPT_STR_INIT ("block-size"), required_argument, NULL, 'B'},
   {"bytes", no_argument, NULL, 'b'},
   {"count-links", no_argument, NULL, 'l'},
   {"dereference", no_argument, NULL, 'L'},
@@ -661,7 +661,6 @@ du_files (char **files, int bit_flags)
 int
 main (int argc, char **argv)
 {
-  int c;
   char *cwd_only[2];
   bool max_depth_specified = false;
   char **files;
@@ -692,12 +691,17 @@ main (int argc, char **argv)
 
   exclude = new_exclude ();
 
-  human_output_opts = human_options (getenv ("DU_BLOCK_SIZE"), false,
-				     &output_block_size);
+  human_options (getenv ("DU_BLOCK_SIZE"),
+		 &human_output_opts, &output_block_size);
 
-  while ((c = getopt_long (argc, argv, DEBUG_OPT "0abchHklmsxB:DLPSX:",
-			   long_options, NULL)) != -1)
+  for (;;)
     {
+      int oi = -1;
+      int c = getopt_long (argc, argv, DEBUG_OPT "0abchHklmsxB:DLPSX:",
+			   long_options, &oi);
+      if (c == -1)
+	break;
+
       switch (c)
 	{
 #if DU_DEBUG
@@ -788,7 +792,12 @@ main (int argc, char **argv)
 	  break;
 
 	case 'B':
-	  human_output_opts = human_options (optarg, true, &output_block_size);
+	  {
+	    enum strtol_error e = human_options (optarg, &human_output_opts,
+						 &output_block_size);
+	    if (e != LONGINT_OK)
+	      STRTOL_FATAL_ERROR (OPT_STR (oi, c, long_options), optarg, e);
+	  }
 	  break;
 
 	case 'D': /* This will eventually be 'H' (-H), too.  */

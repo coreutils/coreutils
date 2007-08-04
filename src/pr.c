@@ -796,14 +796,14 @@ cols_ready_to_print (void)
    using option +FIRST_PAGE:LAST_PAGE */
 
 static bool
-first_last_page (char const *pages)
+first_last_page (char const *option, char const *pages)
 {
   char *p;
   uintmax_t first;
   uintmax_t last = UINTMAX_MAX;
   strtol_error err = xstrtoumax (pages, &p, 10, &first, "");
   if (err != LONGINT_OK && err != LONGINT_INVALID_SUFFIX_CHAR)
-    _STRTOL_ERROR (EXIT_FAILURE, pages, _("page range"), err);
+    STRTOL_FATAL_ERROR (option, pages, err);
 
   if (p == pages || !first)
     return false;
@@ -813,7 +813,7 @@ first_last_page (char const *pages)
       char const *p1 = p + 1;
       err = xstrtoumax (p1, &p, 10, &last, "");
       if (err != LONGINT_OK)
-	_STRTOL_ERROR (EXIT_FAILURE, pages, _("page range"), err);
+	STRTOL_FATAL_ERROR (option, pages, err);
       if (p1 == p || last < first)
 	return false;
     }
@@ -902,7 +902,7 @@ main (int argc, char **argv)
 	case 1:			/* Non-option argument. */
 	  /* long option --page dominates old `+FIRST_PAGE ...'.  */
 	  if (! (first_page_number == 0
-		 && *optarg == '+' && first_last_page (optarg + 1)))
+		 && *optarg == '+' && first_last_page ("+", optarg + 1)))
 	    file_names[n_files++] = optarg;
 	  break;
 
@@ -911,7 +911,7 @@ main (int argc, char **argv)
 	    if (! optarg)
 	      error (EXIT_FAILURE, 0,
 		     _("`--pages=FIRST_PAGE[:LAST_PAGE]' missing argument"));
-	    else if (! first_last_page (optarg))
+	    else if (! first_last_page ("--pages", optarg))
 	      error (EXIT_FAILURE, 0, _("Invalid page range %s"),
 		     quote (optarg));
 	    break;

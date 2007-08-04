@@ -414,7 +414,7 @@ static struct option const long_options[] =
   {"output", required_argument, NULL, 'o'},
   {"reverse", no_argument, NULL, 'r'},
   {"stable", no_argument, NULL, 's'},
-  {"buffer-size", required_argument, NULL, 'S'},
+  {OPT_STR_INIT ("buffer-size"), required_argument, NULL, 'S'},
   {"field-separator", required_argument, NULL, 't'},
   {"temporary-directory", required_argument, NULL, 'T'},
   {"unique", no_argument, NULL, 'u'},
@@ -1032,7 +1032,7 @@ inittables (void)
 
 /* Specify the amount of main memory to use when sorting.  */
 static void
-specify_sort_size (char const *s)
+specify_sort_size (char const *option, char const *s)
 {
   uintmax_t n;
   char *suffix;
@@ -1088,7 +1088,7 @@ specify_sort_size (char const *s)
       e = LONGINT_OVERFLOW;
     }
 
-  STRTOL_FATAL_ERROR (s, _("sort size"), e);
+  STRTOL_FATAL_ERROR (option, s, e);
 }
 
 /* Return the default sort size.  */
@@ -2842,6 +2842,7 @@ main (int argc, char **argv)
 	 pedantic and a file was seen, unless the POSIX version
 	 predates 1003.1-2001 and -c was not seen and the operand is
 	 "-o FILE" or "-oFILE".  */
+      int oi = -1;
 
       if (c == -1
 	  || (posixly_correct && nfiles != 0
@@ -2851,7 +2852,7 @@ main (int argc, char **argv)
 		    && argv[optind][0] == '-' && argv[optind][1] == 'o'
 		    && (argv[optind][2] || optind + 1 != argc)))
 	  || ((c = getopt_long (argc, argv, short_options,
-				long_options, NULL))
+				long_options, &oi))
 	      == -1))
 	{
 	  if (argc <= optind)
@@ -3011,7 +3012,7 @@ main (int argc, char **argv)
 	  break;
 
 	case 'S':
-	  specify_sort_size (optarg);
+	  specify_sort_size (OPT_STR (oi, c, long_options), optarg);
 	  break;
 
 	case 't':

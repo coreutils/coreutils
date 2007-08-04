@@ -1,3 +1,22 @@
+2007-08-04  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Adapt to new human and xstrtol API.
+	* src/df.c (long_options): Prepend "--" to long options that
+	OPT_STR might decode.
+	* src/du.c (long_options): Likewise.
+	* src/od.c (long_options): Likewise.
+	* src/sort.c (long_options): Likewise.
+	* src/df.c (main): Adjust to new human and xstrtol API.
+	* src/du.c (main): Likewise.
+	* src/ls.c (decode_switches): Likewise.
+	* src/od.c (main): Likewise.
+	* src/pr.c (first_last_page): Likewise.  New argument OPTION.
+	All callers changed.
+	* src/sort.c (specify_sort_size): New arg OPTION.  All callers
+	changed.  Adjust to new xstrtol API.
+	* src/system.h (opt_str_storage): New static var.
+	(OPT_STR, LONG_OPT_STR, OPT_STR_INIT): New macros.
+
 2007-08-02  Jim Meyering  <jim@meyering.net>
 
 	Adjust one more test to accommodate the recent fts change.
