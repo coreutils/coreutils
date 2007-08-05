@@ -594,18 +594,26 @@ emit_bug_reporting_address (void)
 }
 
 /* Use OPT_IDX to decide whether to return either a short option
-   string "-C", or a long option string derived from LONG_OPTION.
+   string "-C", or a long option string derived from LONG_OPTIONS.
    OPT_IDX is -1 if the short option C was used; otherwise it is an
    index into LONG_OPTIONS, which should have a name preceded by two
    '-' characters.  */
-static char opt_str_storage[3] = {'-', 0, 0};
 #define OPT_STR(opt_idx, c, long_options)	\
   ((opt_idx) < 0				\
-   ? (opt_str_storage[1] = c, opt_str_storage)	\
+   ? short_opt_str (c)				\
    : LONG_OPT_STR (opt_idx, long_options))
 
 /* Likewise, but assume OPT_IDX is nonnegative.  */
 #define LONG_OPT_STR(opt_idx, long_options) ((long_options)[opt_idx].name - 2)
+
+/* Given the byte, C, return the string "-C" in static storage.  */
+static inline char *
+short_opt_str (char c)
+{
+  static char opt_str_storage[3] = {'-', 0, 0};
+  opt_str_storage[1] = c;
+  return opt_str_storage;
+}
 
 /* Define an option string that will be used with OPT_STR or LONG_OPT_STR.  */
 #define OPT_STR_INIT(name) ("--" name + 2)

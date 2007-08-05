@@ -1,3 +1,10 @@
+2007-08-05  Jim Meyering  <jim@meyering.net>
+
+	Encapsulate a static variable.
+	* src/system.h (opt_str_storage): Move static var into...
+	(short_opt_str): ... new static inline function.
+	(OPT_STR): Use the new function.
+
 2007-08-04  Jim Meyering  <jim@meyering.net>
 
 	Exercise xstrtol's diagnostics via pr's --pages option.
