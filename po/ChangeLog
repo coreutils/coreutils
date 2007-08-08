@@ -1,3 +1,8 @@
+2007-08-08  Jim Meyering  <jim@meyering.net>
+
+	Adapt to gnulib's latest xstrtol change.
+	* POTFILES.in: Use lib/xstrtol-error.c, not lib/xstrtol.h.
+
 2007-08-04  Jim Meyering  <jim@meyering.net>
 
 	* POTFILES.in: Remove lib/human.c.
