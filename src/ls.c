@@ -1375,7 +1375,6 @@ main (int argc, char **argv)
 static int
 decode_switches (int argc, char **argv)
 {
-  int c;
   char *time_style_option = NULL;
 
   /* Record whether there is an option specifying sort type.  */
@@ -1506,10 +1505,15 @@ decode_switches (int argc, char **argv)
       }
   }
 
-  while ((c = getopt_long (argc, argv,
-			   "abcdfghiklmnopqrstuvw:xABCDFGHI:LNQRST:UXZ1",
-			   long_options, NULL)) != -1)
+  for (;;)
     {
+      int oi = -1;
+      int c = getopt_long (argc, argv,
+			   "abcdfghiklmnopqrstuvw:xABCDFGHI:LNQRST:UXZ1",
+			   long_options, &oi);
+      if (c == -1)
+	break;
+
       switch (c)
 	{
 	case 'a':
@@ -1797,7 +1801,7 @@ decode_switches (int argc, char **argv)
 	    enum strtol_error e = human_options (optarg, &human_output_opts,
 						 &output_block_size);
 	    if (e != LONGINT_OK)
-	      STRTOL_FATAL_ERROR ("--block-size", optarg, e);
+	      xstrtol_fatal (e, oi, 0, long_options, optarg);
 	    file_output_block_size = output_block_size;
 	  }
 	  break;

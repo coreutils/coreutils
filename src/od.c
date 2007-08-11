@@ -281,14 +281,14 @@ enum
 
 static struct option const long_options[] =
 {
-  {OPT_STR_INIT ("skip-bytes"), required_argument, NULL, 'j'},
+  {"skip-bytes", required_argument, NULL, 'j'},
   {"address-radix", required_argument, NULL, 'A'},
-  {OPT_STR_INIT ("read-bytes"), required_argument, NULL, 'N'},
+  {"read-bytes", required_argument, NULL, 'N'},
   {"format", required_argument, NULL, 't'},
   {"output-duplicates", no_argument, NULL, 'v'},
-  {OPT_STR_INIT ("strings"), optional_argument, NULL, 'S'},
+  {"strings", optional_argument, NULL, 'S'},
   {"traditional", no_argument, NULL, TRADITIONAL_OPTION},
-  {OPT_STR_INIT ("width"), optional_argument, NULL, 'w'},
+  {"width", optional_argument, NULL, 'w'},
 
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
@@ -1655,7 +1655,7 @@ it must be one character from [doxn]"),
 	  modern = true;
 	  s_err = xstrtoumax (optarg, NULL, 0, &n_bytes_to_skip, multipliers);
 	  if (s_err != LONGINT_OK)
-	    STRTOL_FATAL_ERROR (OPT_STR (oi, c, long_options), optarg, s_err);
+	    xstrtol_fatal (s_err, oi, c, long_options, optarg);
 	  break;
 
 	case 'N':
@@ -1665,7 +1665,7 @@ it must be one character from [doxn]"),
 	  s_err = xstrtoumax (optarg, NULL, 0, &max_bytes_to_format,
 			      multipliers);
 	  if (s_err != LONGINT_OK)
-	    STRTOL_FATAL_ERROR (OPT_STR (oi, c, long_options), optarg, s_err);
+	    xstrtol_fatal (s_err, oi, c, long_options, optarg);
 	  break;
 
 	case 'S':
@@ -1676,8 +1676,7 @@ it must be one character from [doxn]"),
 	    {
 	      s_err = xstrtoumax (optarg, NULL, 0, &tmp, multipliers);
 	      if (s_err != LONGINT_OK)
-		STRTOL_FATAL_ERROR (OPT_STR (oi, c, long_options), optarg,
-				    s_err);
+		xstrtol_fatal (s_err, oi, c, long_options, optarg);
 
 	      /* The minimum string length may be no larger than SIZE_MAX,
 		 since we may allocate a buffer of this size.  */
@@ -1749,8 +1748,7 @@ it must be one character from [doxn]"),
 	      uintmax_t w_tmp;
 	      s_err = xstrtoumax (optarg, NULL, 10, &w_tmp, "");
 	      if (s_err != LONGINT_OK)
-		STRTOL_FATAL_ERROR (OPT_STR (oi, c, long_options), optarg,
-				    s_err);
+		xstrtol_fatal (s_err, oi, c, long_options, optarg);
 	      if (SIZE_MAX < w_tmp)
 		error (EXIT_FAILURE, 0, _("%s is too large"), optarg);
 	      desired_width = w_tmp;

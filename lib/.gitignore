@@ -430,6 +430,7 @@ xstrndup.h
 xstrtod.c
 xstrtod.h
 xstrtoimax.c
+xstrtol-error.c
 xstrtol.c
 xstrtol.h
 xstrtold.c

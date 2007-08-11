@@ -796,14 +796,14 @@ cols_ready_to_print (void)
    using option +FIRST_PAGE:LAST_PAGE */
 
 static bool
-first_last_page (char const *option, char const *pages)
+first_last_page (int oi, char c, char const *pages)
 {
   char *p;
   uintmax_t first;
   uintmax_t last = UINTMAX_MAX;
   strtol_error err = xstrtoumax (pages, &p, 10, &first, "");
   if (err != LONGINT_OK && err != LONGINT_INVALID_SUFFIX_CHAR)
-    STRTOL_FATAL_ERROR (option, pages, err);
+    xstrtol_fatal (err, oi, c, long_options, pages);
 
   if (p == pages || !first)
     return false;
@@ -813,7 +813,7 @@ first_last_page (char const *option, char const *pages)
       char const *p1 = p + 1;
       err = xstrtoumax (p1, &p, 10, &last, "");
       if (err != LONGINT_OK)
-	STRTOL_FATAL_ERROR (option, pages, err);
+	xstrtol_fatal (err, oi, c, long_options, pages);
       if (p1 == p || last < first)
 	return false;
     }
@@ -856,7 +856,6 @@ separator_string (const char *optarg_S)
 int
 main (int argc, char **argv)
 {
-  int c;
   int n_files;
   bool old_options = false;
   bool old_w = false;
@@ -881,9 +880,13 @@ main (int argc, char **argv)
 		? xmalloc ((argc - 1) * sizeof (char *))
 		: NULL);
 
-  while ((c = getopt_long (argc, argv, short_options, long_options, NULL))
-	 != -1)
+  for (;;)
     {
+      int oi = -1;
+      int c = getopt_long (argc, argv, short_options, long_options, &oi);
+      if (c == -1)
+	break;
+
       if (ISDIGIT (c))
 	{
 	  /* Accumulate column-count digits specified via old-style options. */
@@ -902,7 +905,7 @@ main (int argc, char **argv)
 	case 1:			/* Non-option argument. */
 	  /* long option --page dominates old `+FIRST_PAGE ...'.  */
 	  if (! (first_page_number == 0
-		 && *optarg == '+' && first_last_page ("+", optarg + 1)))
+		 && *optarg == '+' && first_last_page (-2, '+', optarg + 1)))
 	    file_names[n_files++] = optarg;
 	  break;
 
@@ -911,7 +914,7 @@ main (int argc, char **argv)
 	    if (! optarg)
 	      error (EXIT_FAILURE, 0,
 		     _("`--pages=FIRST_PAGE[:LAST_PAGE]' missing argument"));
-	    else if (! first_last_page ("--pages", optarg))
+	    else if (! first_last_page (oi, 0, optarg))
 	      error (EXIT_FAILURE, 0, _("Invalid page range %s"),
 		     quote (optarg));
 	    break;

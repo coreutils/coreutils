@@ -414,7 +414,7 @@ static struct option const long_options[] =
   {"output", required_argument, NULL, 'o'},
   {"reverse", no_argument, NULL, 'r'},
   {"stable", no_argument, NULL, 's'},
-  {OPT_STR_INIT ("buffer-size"), required_argument, NULL, 'S'},
+  {"buffer-size", required_argument, NULL, 'S'},
   {"field-separator", required_argument, NULL, 't'},
   {"temporary-directory", required_argument, NULL, 'T'},
   {"unique", no_argument, NULL, 'u'},
@@ -1032,7 +1032,7 @@ inittables (void)
 
 /* Specify the amount of main memory to use when sorting.  */
 static void
-specify_sort_size (char const *option, char const *s)
+specify_sort_size (int oi, char c, char const *s)
 {
   uintmax_t n;
   char *suffix;
@@ -1088,7 +1088,7 @@ specify_sort_size (char const *option, char const *s)
       e = LONGINT_OVERFLOW;
     }
 
-  STRTOL_FATAL_ERROR (option, s, e);
+  xstrtol_fatal (e, oi, c, long_options, s);
 }
 
 /* Return the default sort size.  */
@@ -3012,7 +3012,7 @@ main (int argc, char **argv)
 	  break;
 
 	case 'S':
-	  specify_sort_size (OPT_STR (oi, c, long_options), optarg);
+	  specify_sort_size (oi, c, optarg);
 	  break;
 
 	case 't':

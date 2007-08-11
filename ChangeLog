@@ -1,3 +1,20 @@
+2007-08-10  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Accommodate more xstrtol changes.
+	* src/df.c (long_options): Don't bother prepending "--" to long
+	options that OPT_STR might decode, as that hack is no longer needed.
+	(main): Invoke xstrtol_fatal rather than STRTOL_FATAL_ERROR.
+	* src/du.c (long_options, main): Likewise.
+	* src/ls.c (decode_switches): Likewise.
+	* src/od.c (long_options, main): Likewise.
+	* src/pr.c (first_last_page, main): Likewise.
+	* src/sort.c (long_options, specify_sort_size): Likewise.
+	* src/pr.c (first_last_page): Accept option index and option char
+	instead of an assembled option string.  All callers changed.
+	* src/sort.c (specify_sort_size): Likewise.
+	* src/system.h (OPT_STR, LONG_OPT_STR, short_opt_str, OPT_STR_INIT):
+	Remove.
+
 2007-08-05  Jim Meyering  <jim@meyering.net>
 
 	Encapsulate a static variable.

@@ -204,7 +204,7 @@ static struct option const long_options[] =
 {
   {"all", no_argument, NULL, 'a'},
   {"apparent-size", no_argument, NULL, APPARENT_SIZE_OPTION},
-  {OPT_STR_INIT ("block-size"), required_argument, NULL, 'B'},
+  {"block-size", required_argument, NULL, 'B'},
   {"bytes", no_argument, NULL, 'b'},
   {"count-links", no_argument, NULL, 'l'},
   {"dereference", no_argument, NULL, 'L'},
@@ -796,7 +796,7 @@ main (int argc, char **argv)
 	    enum strtol_error e = human_options (optarg, &human_output_opts,
 						 &output_block_size);
 	    if (e != LONGINT_OK)
-	      STRTOL_FATAL_ERROR (OPT_STR (oi, c, long_options), optarg, e);
+	      xstrtol_fatal (e, oi, c, long_options, optarg);
 	  }
 	  break;
 
