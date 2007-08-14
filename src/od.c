@@ -1034,13 +1034,12 @@ skip (uintmax_t n_skip)
 	{
 	  /* The st_size field is valid only for regular files
 	     (and for symbolic links, which cannot occur here).
-	     If the number of bytes left to skip is at least
-	     as large as the size of the current file, we can
-	     decrement n_skip and go on to the next file.  */
-
+	     If the number of bytes left to skip is larger than
+	     the size of the current file, we can decrement
+	     n_skip and go on to the next file.  */
 	  if (S_ISREG (file_stats.st_mode) && 0 <= file_stats.st_size)
 	    {
-	      if ((uintmax_t) file_stats.st_size <= n_skip)
+	      if ((uintmax_t) file_stats.st_size < n_skip)
 		n_skip -= file_stats.st_size;
 	      else
 		{

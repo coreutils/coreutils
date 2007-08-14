@@ -1,3 +1,12 @@
+2007-08-14  Jim Meyering  <jim@meyering.net>
+
+	od: fix a bug that arises when skipping exact length of file
+	* NEWS: Document the bug fix.
+	* src/od.c (skip): Call fseek even when n_skip is exactly the
+	same as the length of the current file.  Otherwise, the next
+	iteration would use unadjusted input stream pointer, thus ignoring
+	the desired "skip".  Report and patch by Paul GHALEB.
+
 2007-08-10  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Accommodate more xstrtol changes.

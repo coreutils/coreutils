@@ -98,6 +98,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   ln=target attribute) would mistakenly output the string "target"
   before the name of each symlink.  [introduced in coreutils-6.0]
 
+  "od -j L FILE" had a bug: when the number of bytes to skip, L, is exactly
+  the same as the length of FILE, od would skip *no* bytes.  When the number
+  of bytes to skip is exactly the sum of the lengths of the first N files,
+  od would skip only the first N-1 files. [introduced in textutils-2.0.9]
+
   seq no longer mishandles obvious cases like "seq 0 0.000001 0.000003",
   so workarounds like "seq 0 0.000001 0.0000031" are no longer needed.
 
