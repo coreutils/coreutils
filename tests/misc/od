@@ -1,0 +1,60 @@
+#!/bin/sh
+# -*- perl -*-
+# Exercise od
+
+# Copyright (C) 2006, 2007 Free Software Foundation, Inc.
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+: ${PERL=perl}
+: ${srcdir=.}
+
+PROG=`echo $0|sed 's,.*/,,'`; export PROG
+
+$PERL -e 1 > /dev/null 2>&1 || {
+  echo 1>&2 "$0: configure didn't find a usable version of Perl," \
+    "so can't run this test"
+  exit 77
+}
+
+exec $PERL -w -I$srcdir/.. -MCoreutils -- - <<\EOF
+require 5.003;
+use strict;
+
+(my $program_name = $0) =~ s|.*/||;
+
+# Turn off localisation of executable's ouput.
+@ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
+
+my @Tests =
+    (
+     # Skip the exact length of the input file.
+     # Before coreutils-6.10, this would ignore the "-j 1".
+     ['j-bug1', '-c -j 1 -An', {IN=>{g=>'a'}}, {OUT=>''}],
+     ['j-bug2', '-c -j 2 -An', {IN=>{g=>'a'}}, {IN=>{h=>'b'}}, {OUT=>''}],
+     # Skip the sum of the lengths of the first three inputs.
+     ['j-bug3', '-c -j 3 -An', {IN=>{g=>'a'}}, {IN=>{h=>'b'}},
+                                               {IN=>{i=>'c'}}, {OUT=>''}],
+     # Skip the sum of the lengths of the first three inputs, printing the 4th.
+     ['j-bug4', '-c -j 3 -An', {IN=>{g=>'a'}}, {IN=>{h=>'b'}},
+			       {IN=>{i=>'c'}}, {IN=>{j=>'d'}}, {OUT=>"   d\n"}],
+    );
+
+my $save_temps = $ENV{DEBUG};
+my $verbose = $ENV{VERBOSE};
+
+my $prog = $ENV{PROG} || die "$0: \$PROG not specified in environment\n";
+my $fail = run_tests ($program_name, $prog, \@Tests, $save_temps, $verbose);
+exit $fail;
+EOF

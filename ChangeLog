@@ -7,6 +7,9 @@
 	iteration would use unadjusted input stream pointer, thus ignoring
 	the desired "skip".  Report and patch by Paul GHALEB.
 
+	* tests/misc/od: New file, test for the above.
+	* tests/misc/Makefile.am (TESTS): Add od.
+
 2007-08-10  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Accommodate more xstrtol changes.
