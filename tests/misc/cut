@@ -36,10 +36,10 @@ use strict;
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
 
 my $prog = 'cut';
-my $diag = <<EOF;
+my $diag = <<DIAG_EOF;
 $prog: fields and positions are numbered from 1
 Try \`cut --help' for more information.
-EOF
+DIAG_EOF
 
 my @Tests =
   (
@@ -60,4 +60,4 @@ my $verbose = $ENV{VERBOSE};
 
 my $fail = run_tests ($ME, $prog, \@Tests, $save_temps, $verbose);
 exit $fail;
-FILE_EOF
+EOF

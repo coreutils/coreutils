@@ -24,6 +24,7 @@ TESTS_ENVIRONMENT = \
   built_programs="`$(built_programs)`" \
   top_srcdir=$(top_srcdir) \
   abs_top_builddir=$(abs_top_builddir) \
+  abs_top_srcdir=$(abs_top_srcdir) \
   srcdir=$(srcdir) \
   PACKAGE_VERSION=$(PACKAGE_VERSION) \
   PERL="$(PERL)" \
@@ -32,8 +33,7 @@ TESTS_ENVIRONMENT = \
   PATH="$(VG_PATH_PREFIX)`pwd`/../../src$(PATH_SEPARATOR)$$PATH" \
   CONFIG_HEADER=$(CONFIG_HEADER) \
   REPLACE_GETCWD=$(REPLACE_GETCWD) \
-  host_os=$(host_os) \
-  PROG=`../../src/basename -- "$$tst"`
+  host_os=$(host_os)
 
 # Do not choose a name that is a shell keyword like 'if', or a
 # commonly-used utility like 'cat' or 'test', as the name of a test.
@@ -42,8 +42,10 @@ TESTS_ENVIRONMENT = \
 # will execute the test script rather than the standard utility.
 
 TESTS = \
-  od \
+  head-elide-tail \
+  date \
   xstrtol \
+  od \
   arch \
   pr \
   df-P \
@@ -59,7 +61,6 @@ TESTS = \
   basename \
   close-stdout \
   csplit \
-  date \
   date-sec \
   df \
   dirname \
@@ -68,7 +69,6 @@ TESTS = \
   fold \
   groups-version \
   head-c \
-  head-elide-tail \
   head-pos \
   mknod \
   nice \
@@ -96,3 +96,9 @@ TESTS = \
   tac-continue \
   test-diag \
   tty-eof
+
+TEST_LOGS = $(TESTS:=.log)
+
+# Parallel replacement of Automake's check-TESTS target.
+# Include it last: TEST_LOGS has a default value there.
+include $(top_srcdir)/build-aux/check.mk

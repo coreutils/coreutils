@@ -1,7 +1,7 @@
 #!/bin/sh
 # -*-perl-*-
 
-# Copyright (C) 2006, 2007 Free Software Foundation, Inc.
+# Copyright (C) 2006-2007 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,6 +18,8 @@
 
 : ${PERL=perl}
 : ${srcdir=.}
+
+PROG=`echo $0|sed 's,.*/,,'`; export PROG
 
 $PERL -e 1 > /dev/null 2>&1 || {
   echo 1>&2 "$0: configure didn't find a usable version of Perl," \
