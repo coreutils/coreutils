@@ -98,6 +98,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   ln=target attribute) would mistakenly output the string "target"
   before the name of each symlink.  [introduced in coreutils-6.0]
 
+  od's --skip (-j) option now works even when the kernel says that a
+  nonempty regular file has stat.st_size = 0.  This happens at least
+  with files in /proc and linux-2.6.22.
+
   "od -j L FILE" had a bug: when the number of bytes to skip, L, is exactly
   the same as the length of FILE, od would skip *no* bytes.  When the number
   of bytes to skip is exactly the sum of the lengths of the first N files,

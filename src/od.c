@@ -1035,9 +1035,11 @@ skip (uintmax_t n_skip)
 	  /* The st_size field is valid only for regular files
 	     (and for symbolic links, which cannot occur here).
 	     If the number of bytes left to skip is larger than
-	     the size of the current file, we can decrement
-	     n_skip and go on to the next file.  */
-	  if (S_ISREG (file_stats.st_mode) && 0 <= file_stats.st_size)
+	     the size of the current file, we can decrement n_skip
+	     and go on to the next file.  Skip this optimization also
+	     when st_size is 0, because some kernels report that
+	     nonempty files in /proc have st_size == 0.  */
+	  if (S_ISREG (file_stats.st_mode) && 0 < file_stats.st_size)
 	    {
 	      if ((uintmax_t) file_stats.st_size < n_skip)
 		n_skip -= file_stats.st_size;

@@ -1,5 +1,12 @@
 2007-08-15  Jim Meyering  <jim@meyering.net>
 
+	od --skip (-j) works even on files in /proc, when the kernel lies
+	* src/od.c (skip): Don't let kernel misinformation (nonempty files
+	in /proc with stat.st_size == 0) make "od -j N" misbehave.
+	Patch by Paul Eggert.
+	* NEWS: Document this work-around.
+	* tests/misc/od-zero-len: New file, test for the above.
+
 	* src/printf.c (usage): Adjust summary to also mention OPTIONs.
 	From Karl Berry.
 
