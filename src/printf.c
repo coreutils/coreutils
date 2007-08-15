@@ -95,7 +95,7 @@ Usage: %s FORMAT [ARGUMENT]...\n\
 "),
 	      program_name, program_name);
       fputs (_("\
-Print ARGUMENT(s) according to FORMAT.\n\
+Print ARGUMENT(s) according to FORMAT, or execute according to OPTION:\n\
 \n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
