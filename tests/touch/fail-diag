@@ -1,7 +1,7 @@
 #!/bin/sh
 # make sure touch gives reasonable diagnostics
 
-# Copyright (C) 2001, 2002, 2003, 2004, 2006 Free Software Foundation, Inc.
+# Copyright (C) 2001-2004, 2006-2007 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -25,14 +25,9 @@ fi
 . $srcdir/../lang-default
 PRIV_CHECK_ARG=require-non-root . $srcdir/../priv-check
 
-pwd=`pwd`
-tmp=fail-diag.$$
-trap 'status=$?; cd "$pwd" && rm -rf $tmp && exit $status' 0
-trap '(exit $?); exit' 1 2 13 15
+. $srcdir/../test-lib.sh
 
 framework_failure=0
-mkdir $tmp || framework_failure=1
-cd $tmp || framework_failure=1
 
 d1=no-$$
 dir=/$d1/such-dir
@@ -51,7 +46,6 @@ cat <<EOF > exp
 touch: cannot touch \`$dir': No such file or directory
 EOF
 
-cmp out exp || fail=1
-test $fail = 1 && diff out exp 2> /dev/null
+compare out exp || fail=1
 
 (exit $fail); exit $fail

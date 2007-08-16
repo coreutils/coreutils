@@ -42,7 +42,7 @@ max < length($$0) {						\
   final= final (final ? "\n" : "") " " $$0;			\
   max = length($$0);						\
 }								\
-END { 								\
+END {								\
   for (i = 0; i < max + 2 ; ++i)				\
     line = line "=";						\
   print line;							\
@@ -53,10 +53,11 @@ END { 								\
 # If stdout is a tty, use colors.  If test -t is not supported, then
 # this fails; a conservative approach.  Of course do not redirect
 # stdout here, just stderr...
-am__tty_colors = 				\
+am__tty_colors =				\
 if test -t 1 2>/dev/null; then			\
   red='[0;31m';				\
   grn='[0;32m';				\
+  lgn='[1;32m';				\
   blu='[1;34m';				\
   std='[m';					\
 fi
@@ -79,7 +80,7 @@ case $$estatus:" $(XFAIL_TESTS) " in			\
     0:*" $$(basename $<) "*) col=$$red; res=XPASS;;	\
     0:*)                     col=$$grn; res=PASS ;;	\
     77:*)                    col=$$blu; res=SKIP ;;	\
-    *:*" $$(basename $<) "*) col=$$grn; res=XFAIL;;	\
+    *:*" $$(basename $<) "*) col=$$lgn; res=XFAIL;;	\
     *:*)                     col=$$red; res=FAIL ;;	\
 esac;							\
 echo "$${col}$$res$${std}: $$(basename $<)";		\
@@ -109,24 +110,29 @@ $(TEST_SUITE_LOG): $(TEST_LOGS)
 	skip=$$(echo "$$results" | grep -c '^SKIP');			\
 	xfail=$$(echo "$$results" | grep -c '^XFAIL');			\
 	xpass=$$(echo "$$results" | grep -c '^XPASS');			\
-	case fail=$$fail:xfail=$$xfail:xpass=$$xpass in			\
-	  fail=0:xfail=0:xpass=*)					\
-	    msg="All $$all tests passed.  ";;				\
-	  fail=0:xfail=*:xpass=*)					\
+	failures=$$(expr $$fail + $$xpass);				\
+	case fail=$$fail:xpass=$$xpass:xfail=$$xfail in			\
+	  fail=0:xpass=0:xfail=0)					\
+	    msg="All $$all tests passed.  ";				\
+	    exit=true;;							\
+	  fail=0:xpass=0:xfail=*)					\
 	    msg="All $$all tests behaved as expected";			\
-	    msg="$$msg ($$xfail expected failures).  ";;		\
-	  fail=*:xfail=*:xpass=0)					\
-	    msg="$$fail of $$all tests failed.  ";;			\
-	  fail=*:xfail=*:xpass=*)					\
-	    msg="$$fail of $$all tests did not behave as expected";	\
-	    msg="$$msg ($$xpass unexpected passes).  ";;		\
+	    msg="$$msg ($$xfail expected failures).  ";			\
+	    exit=true;;							\
+	  fail=*:xpass=0:xfail=*)					\
+	    msg="$$fail of $$all tests failed.  ";			\
+	    exit=false;;						\
+	  fail=*:xpass=*:xfail=*)					\
+	    msg="$$failures of $$all tests did not behave as expected";	\
+	    msg="$$msg ($$xpass unexpected passes).  ";			\
+	    exit=false;;						\
 	  *)								\
             echo >&2 "incorrect case"; exit 4;;				\
 	esac;								\
 	if test "$$skip" -ne 0; then					\
 	  msg="$$msg($$skip tests were not run).  ";			\
 	fi;								\
-	if test "$$fail" -ne 0; then					\
+	if test "$$failures" -ne 0; then				\
 	  {								\
 	    echo "$(PACKAGE_STRING): $(subdir)/$(TEST_SUITE_LOG)" |	\
 	      $(am__rst_title);						\
@@ -149,13 +155,13 @@ $(TEST_SUITE_LOG): $(TEST_LOGS)
 	  fi;								\
 	fi;								\
 	$(am__tty_colors);						\
-	if test "$$fail" -eq 0; then echo $$grn; else echo $$red; fi;	\
+	if $$exit; then echo $$grn; else echo $$red; fi;		\
 	  echo "$$msg" | $(am__text_box);				\
 	echo $$std;							\
-	if test x"$$VERBOSE" != x && test "$$fail" -ne 0; then		\
-	  cat $(TEST_SUITE_LOG);					\
-	fi;								\
-	test "$$fail" -eq 0
+	test x"$$VERBOSE" = x || $$exit || cat $(TEST_SUITE_LOG);	\
+	$$exit
+
+# if test x"$$VERBOSE" != x && ! $exit; then
 
 # Run all the tests.
 check-TESTS:
@@ -183,13 +189,13 @@ TEST_SUITE_HTML = $(TEST_SUITE_LOG:.log=.html)
 	  exit 2;							\
 	fi;								\
 	$$R2H $< >$@.tmp
-	mv $@.tmp $@
+	@mv $@.tmp $@
 
 # Be sure to run check-TESTS first, and then to convert the result.
 # Beware of concurrent executions.  And expect check-TESTS to fail.
 check-html:
 	@if $(MAKE) $(AM_MAKEFLAGS) check-TESTS; then :; else	\
-	  rv=$?;						\
+	  rv=$$?;						\
 	  $(MAKE) $(AM_MAKEFLAGS) $(TEST_SUITE_HTML);		\
 	  exit $$rv;						\
 	fi

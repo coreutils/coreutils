@@ -25,7 +25,6 @@ TESTS_ENVIRONMENT = \
   top_srcdir=$(top_srcdir) \
   abs_top_builddir=$(abs_top_builddir) \
   abs_top_srcdir=$(abs_top_srcdir) \
-  srcdir=$(srcdir) \
   PACKAGE_VERSION=$(PACKAGE_VERSION) \
   PERL="$(PERL)" \
   BUILD_SRC_DIR="`pwd`/../../src" \
@@ -43,6 +42,7 @@ TESTS_ENVIRONMENT = \
 
 TESTS = \
   head-elide-tail \
+  ls-time \
   date \
   xstrtol \
   od \
@@ -97,8 +97,4 @@ TESTS = \
   test-diag \
   tty-eof
 
-TEST_LOGS = $(TESTS:=.log)
-
-# Parallel replacement of Automake's check-TESTS target.
-# Include it last: TEST_LOGS has a default value there.
-include $(top_srcdir)/build-aux/check.mk
+include $(top_srcdir)/tests/check.mk

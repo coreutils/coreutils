@@ -1,0 +1,107 @@
+#!/bin/sh
+# Create a temporary directory, sort of like mktemp -d does.
+# Usage: mkdtemp /tmp phoey.XXXXXXXXXX
+
+# First, try to use the mktemp program.
+# Failing that, we'll roll our own mktemp-like function:
+#  - try to get random bytes from /dev/urandom
+#  - failing that, generate output from a combination of quickly-varying
+#      sources and gzip.  Ignore non-varying gzip header, and extract
+#      "random" bits from there.
+#  - given those bits, map to file-name bytes using tr, and try to create
+#      the desired directory.
+#  - make only $MAX_TRIES attempts
+
+ME=$(basename "$0")
+die() { echo >&2 "$ME: $@"; exit 1; }
+
+MAX_TRIES=4
+
+rand_bytes()
+{
+  n=$1
+
+  chars=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789
+
+  dev_rand=/dev/urandom
+  if test -r "$dev_rand"; then
+    # Note: 256-length($chars) == 194; 3 copies of $chars is 186 + 8 = 194.
+    head -c$n "$dev_rand" | tr -c $chars 01234567$chars$chars$chars
+    return
+  fi
+
+  cmds='date; date +%N; free; who -a; w; ps auxww; ps ef; netstat -n'
+  data=$( (eval "$cmds") 2>&1 | gzip )
+
+  n_plus_50=$(expr $n + 50)
+
+  # Ensure that $data has length at least 50+$n
+  while :; do
+    len=$(echo "$data"|wc -c)
+    test $n_plus_50 -le $len && break;
+    data=$( (echo "$data"; eval "$cmds") 2>&1 | gzip )
+  done
+
+  echo "$data" \
+    | dd bs=1 skip=50 count=$n 2>/dev/null \
+    | tr -c $chars 01234567$chars$chars$chars
+}
+
+mkdtemp()
+{
+  case $# in
+  2);;
+  *) die "Usage: $ME DIR TEMPLATE";;
+  esac
+
+  destdir=$1
+  template=$2
+
+  case $template in
+  *XXXX) ;;
+  *) die "invalid template: $template (must have a suffix of at least 4 X's)";;
+  esac
+
+  fail=0
+
+  # First, try to use mktemp.
+  d=$(env -u TMPDIR mktemp -d -t -p "$destdir" "$template" 2>/dev/null) \
+    || fail=1
+
+  # The resulting name must be in the specified directory.
+  case $d in "$destdir"*);; *) fail=1;; esac
+
+  # It must have created the directory.
+  test -d "$d" || fail=1
+
+  # It must have 0700 permissions.
+  perms=$(ls -dgo "$d" 2>/dev/null) || fail=1
+  case $perms in drwx------*) ;; *) fail=1;; esac
+
+  test $fail = 0 && {
+    echo "$d"
+    return
+  }
+
+  # If we reach this point, we'll have to create a directory manually.
+
+  # Get a copy of the template without its suffix of X's.
+  base_template=$(echo "$template"|sed 's/XX*$//')
+
+  # Calculate how many X's we've just removed.
+  nx=$(expr length "$template" - length "$base_template")
+
+  err=
+  i=1
+  while :; do
+    X=$(rand_bytes $nx)
+    candidate_dir="$destdir/$base_template$X"
+    err=$(mkdir -m 0700 "$candidate_dir" 2>&1) \
+      && { echo "$candidate_dir"; return; }
+    test $MAX_TRIES -le $i && break;
+    i=$(expr $i + 1)
+  done
+  die "$err"
+}
+
+mkdtemp "$@"

@@ -1,7 +1,7 @@
 #!/bin/sh
 # Make sure touch works on fifos without hanging.
 
-# Copyright (C) 2000 Free Software Foundation, Inc.
+# Copyright (C) 2000, 2007 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,6 +20,8 @@ if test "$VERBOSE" = yes; then
   set -x
   touch --version
 fi
+
+. $srcdir/../test-lib.sh
 
 framework_failure=0
 
@@ -41,6 +43,5 @@ fi
 fail=0
 
 touch $tmp || fail=1
-rm -rf $tmp
 
 exit $fail

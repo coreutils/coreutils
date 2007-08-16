@@ -22,7 +22,7 @@ TESTS = \
   stat-failed \
   stat-dtype \
   inode dangle file-type recursive dired infloop \
-  rt-1 time-1 symlink-slash follow-slink no-arg m-option \
+  rt-1 symlink-slash follow-slink no-arg m-option \
   stat-vs-dirent x-option
 
 EXTRA_DIST = $(TESTS)

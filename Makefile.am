@@ -20,6 +20,7 @@ EXTRA_DIST = Makefile.cfg Makefile.maint GNUmakefile \
   .prev-version THANKS-to-translators THANKStt.in \
   .vg-suppressions \
   .x-po-check \
+  .x-sc_GPL_version \
   .x-sc_file_system .x-sc_obsolete_symbols \
   .x-sc_prohibit_atoi_atof \
   .x-sc_prohibit_strcmp \

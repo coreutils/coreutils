@@ -7,6 +7,8 @@ if test "$VERBOSE" = yes; then
   touch --version
 fi
 
+. $srcdir/../test-lib.sh
+
 fail=0
 touch . || fail=1
 exit $fail

@@ -2,7 +2,7 @@
 # Make sure touch can update the times on a file that is neither
 # readable nor writable.
 
-# Copyright (C) 1999, 2000, 2002, 2006 Free Software Foundation, Inc.
+# Copyright (C) 1999, 2000, 2002, 2006-2007 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,34 +22,30 @@ if test "$VERBOSE" = yes; then
   touch --version
 fi
 
-. $srcdir/../envvar-check
+. $srcdir/../test-lib.sh
 
-DEFAULT_SLEEP_SECONDS=2
-SLEEP_SECONDS=${SLEEP_SECONDS=$DEFAULT_SLEEP_SECONDS}
+# Make sure t2 is newer than t1.
+touch -d '2000-01-01 00:00' t1 || framework_failure=1
+touch -d '2000-01-02 00:00' t2 || framework_failure=1
 
-t1=no-rw1
-t2=no-rw2
-rm -rf $t1 $t2
-: > $t1
+framework_failure=0
+set x `ls -t t1 t2`
+test "$*" = "x t2 t1" || framework_failure=1
 
-# Make sure $t2 is two seconds newer than $t1.
-echo sleeping for $SLEEP_SECONDS seconds...
-sleep $SLEEP_SECONDS
-: > $t2
+if test $framework_failure = 1; then
+  echo "$0: failure in testing framework" 1>&2
+  (exit 1); exit 1
+fi
+
 fail=0
 
-set x `ls -t $t1 $t2`
-test "$*" = "x $t2 $t1" || fail=1
+chmod 0 t1
+touch -d '2000-01-03 00:00' -c t1 || fail=1
 
-chmod 0 $t1
-touch -d tomorrow -c $t1 || fail=1
-
-set x `ls -t $t1 $t2`
-test "$*" = "x $t1 $t2" || fail=1
+set x `ls -t t1 t2`
+test "$*" = "x t1 t2" || fail=1
 
 # Also test the combination of --no-create and -a.
-touch -a --no-create $t1 || fail=1
-
-rm -f $t1 $t2
+touch -a --no-create t1 || fail=1
 
 exit $fail

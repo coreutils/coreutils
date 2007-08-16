@@ -14,13 +14,32 @@ TESTS_ENVIRONMENT = \
   CU_TEST_NAME=`basename $(abs_srcdir)`,$$tst \
   PATH="$(VG_PATH_PREFIX)`pwd`/../src$(PATH_SEPARATOR)$$PATH"
 
-EXTRA_DIST = \
-  $(TESTS) Coreutils.pm CuTmpdir.pm Makefile.am.in README acl envvar-check \
-  expensive group-names input-tty lang-default mk-script \
-  other-fs-tmpdir priv-check \
-  rwx-to-mode sample-test selinux setgid-check sparse-file \
-  strace \
-  umask-check very-expensive
+EXTRA_DIST =		\
+  $(TESTS)		\
+  Coreutils.pm		\
+  CuTmpdir.pm		\
+  Makefile.am.in	\
+  README		\
+  acl			\
+  check.mk		\
+  envvar-check		\
+  expensive		\
+  group-names		\
+  input-tty		\
+  lang-default		\
+  mk-script		\
+  mkdtemp		\
+  other-fs-tmpdir	\
+  priv-check		\
+  rwx-to-mode		\
+  sample-test		\
+  selinux		\
+  setgid-check		\
+  sparse-file		\
+  strace		\
+  test-lib.sh		\
+  umask-check		\
+  very-expensive
 
 ## N O T E :: Please do not add new tests/ directories.
 ## There are too many already.  Put new tests in misc/.

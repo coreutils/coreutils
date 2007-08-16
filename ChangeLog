@@ -332,6 +332,33 @@
 	* src/install.c (main): Likewise.
 	* NEWS: Document the fix.
 
+2007-08-20  Jim Meyering  <jim@meyering.net>
+
+	Parallel "make check" support.
+	* build-aux/check.mk: New file, from The Vaucanson Group.
+	* .x-sc_GPL_version: New file, to allow "version 2 or later"
+	in build-aux/check.mk.
+	* Makefile.am (EXTRA_DIST): Add .x-sc_GPL_version.
+	* tests/check.mk: New file.
+	* tests/Makefile.am (EXTRA_DIST): Add check.mk, mkdtemp and test-lib.sh.
+
+	Begin factoring "sample-test" out of test scripts.
+	* tests/test-lib.sh: New file, to be sourced by all tests that
+	were previously derived from the "sample-test" template.
+	* tests/mkdtemp: New file.
+	* tests/touch/dir-1: Use test-lib.sh.
+	* tests/touch/empty-file: Likewise.
+	* tests/touch/fail-diag: Likewise.
+	* tests/touch/fifo: Likewise.
+	* tests/touch/no-create-missing: Likewise.
+	* tests/touch/no-rights: Likewise.  Also, don't sleep.
+	* tests/touch/not-owner: Likewise.
+	* tests/touch/obsolescent: Likewise.
+	* tests/touch/read-only: Likewise.
+	* tests/touch/relative: Likewise.
+	* tests/touch/Makefile.am: Include $(top_srcdir)/tests/check.mk,
+	to get the parallel-"make check" bits.
+
 2007-08-18  Jim Meyering  <jim@meyering.net>
 
 	Use new "idcache.h" header.
@@ -372,6 +399,12 @@
 	Remove the then-unnecessary, hard-coded envvar "unset" commands.
 
 2007-08-15  Jim Meyering  <jim@meyering.net>
+
+	Move a slow test into tests/misc.
+	* tests/ls/time-1: Move this file to tests/misc/ls-time.
+	* tests/misc/ls-time: New file.  From tests/ls/time-1.
+	* tests/ls/Makefile.am (TESTS): Remove time-1.
+	* tests/misc/Makefile.am (TESTS): Add ls-time.
 
 	od --skip (-j) works even on files in /proc, when the kernel lies
 	* src/od.c (skip): Don't let kernel misinformation (nonempty files

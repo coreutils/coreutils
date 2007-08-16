@@ -16,12 +16,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 TESTS = \
+  2g \
   inacc-dir \
   one-file-system \
   inacc-dest \
   long-from-unreadable \
   long-sloop \
-  2g \
   files0-from \
   inaccessible-cwd \
   deref-args \
@@ -34,3 +34,5 @@ TESTS_ENVIRONMENT = \
   PERL="$(PERL)" \
   CU_TEST_NAME=`basename $(abs_srcdir)`,$$tst \
   PATH="$(VG_PATH_PREFIX)`pwd`/../../src$(PATH_SEPARATOR)$$PATH"
+
+include $(top_srcdir)/tests/check.mk
