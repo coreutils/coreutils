@@ -1,3 +1,8 @@
+2007-08-16  Jim Meyering  <jim@meyering.net>
+
+	* tests/ls/time-1: Include sample-test boilerplate code.
+	Remove the then-unnecessary, hard-coded envvar "unset" commands.
+
 2007-08-15  Jim Meyering  <jim@meyering.net>
 
 	od --skip (-j) works even on files in /proc, when the kernel lies
