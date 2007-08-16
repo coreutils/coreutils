@@ -1,5 +1,10 @@
 2007-08-16  Jim Meyering  <jim@meyering.net>
 
+	Consolidate od tests.
+	* tests/misc/od: Perform od-zero-len's test here.
+	Include boilerplate code, so tests run in a subdirectory.
+	* tests/misc/od-zero-len: Remove this file.
+
 	* tests/ls/time-1: Include sample-test boilerplate code.
 	Remove the then-unnecessary, hard-coded envvar "unset" commands.
 
