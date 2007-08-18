@@ -3,6 +3,7 @@
 EXTRA_DIST = $(TESTS)
 
 TESTS_ENVIRONMENT = \
+  abs_top_builddir=$(abs_top_builddir) \
   top_srcdir=$(top_srcdir) \
   srcdir=$(srcdir) \
   PERL="$(PERL)" \

@@ -2,7 +2,7 @@
 # -*-perl-*-
 # Test "dirname".
 
-# Copyright (C) 2006 Free Software Foundation, Inc.
+# Copyright (C) 2006-2007 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -26,8 +26,8 @@ $PERL -e 1 > /dev/null 2>&1 || {
   exit 77
 }
 
-d=$srcdir/..
-exec $PERL -w -I$d -MCoreutils -- - << \EOF
+me=`echo $0|sed 's,.*/,,'`
+exec $PERL -w -I$srcdir/.. -MCoreutils -M"CuTmpdir qw($me)" -- - << \EOF
 require 5.003;
 use strict;
 use File::stat;

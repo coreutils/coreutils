@@ -30,7 +30,8 @@ $PERL -e 1 > /dev/null 2>&1 || {
 SCRIPT_NAME=$0
 export SCRIPT_NAME
 
-exec $PERL -w -I$srcdir/.. -MCoreutils -- - <<\EOF
+me=`echo $0|sed 's,.*/,,'`
+exec $PERL -w -I$srcdir/.. -MCoreutils -M"CuTmpdir qw($me)" -- - <<\EOF
 require 5.003;
 use strict;
 

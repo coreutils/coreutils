@@ -15,7 +15,7 @@ TESTS_ENVIRONMENT = \
   PATH="$(VG_PATH_PREFIX)`pwd`/../src$(PATH_SEPARATOR)$$PATH"
 
 EXTRA_DIST = \
-  $(TESTS) Coreutils.pm Makefile.am.in README acl envvar-check \
+  $(TESTS) Coreutils.pm CuTmpdir.pm Makefile.am.in README acl envvar-check \
   expensive group-names input-tty lang-default mk-script \
   other-fs-tmpdir priv-check \
   rwx-to-mode sample-test selinux setgid-check sparse-file \

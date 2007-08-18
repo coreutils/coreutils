@@ -41,7 +41,8 @@ if test $filename_may_contain_newline = no; then
   exit 77
 fi
 
-exec $PERL -w -I$srcdir/.. -MCoreutils -- - <<\EOF
+me=`echo $0|sed 's,.*/,,'`
+exec $PERL -w -I$srcdir/.. -MCoreutils -M"CuTmpdir qw($me)" -- - <<\EOF
 require 5.003;
 use strict;
 

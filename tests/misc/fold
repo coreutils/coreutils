@@ -39,7 +39,8 @@ case $ver in
   exit 1;;
 esac
 
-exec $PERL -w -I$srcdir/.. -MCoreutils -- - <<\EOF
+me=`echo $0|sed 's,.*/,,'`
+exec $PERL -w -I$srcdir/.. -MCoreutils -M"CuTmpdir qw($me)" -- - <<\EOF
 #/
 require 5.003;
 use strict;

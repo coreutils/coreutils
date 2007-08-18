@@ -20,20 +20,6 @@
 : ${PERL=perl}
 : ${srcdir=.}
 
-pwd=`pwd`
-t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
-trap 'status=$?; cd "$pwd" && chmod -R u+rwx $t0 && rm -rf $t0 && exit $status' 0
-trap '(exit $?); exit $?' 1 2 13 15
-
-framework_failure=0
-mkdir -p $tmp || framework_failure=1
-cd $tmp || framework_failure=1
-
-if test $framework_failure = 1; then
-  echo "$0: failure in testing framework" 1>&2
-  (exit 1); exit 1
-fi
-
 PROG=`echo $0|sed 's,.*/,,'`; export PROG
 
 $PERL -e 1 > /dev/null 2>&1 || {
@@ -42,7 +28,9 @@ $PERL -e 1 > /dev/null 2>&1 || {
   exit 77
 }
 
-exec $PERL -w -I$pwd/.. -MCoreutils -- - <<\EOF
+me=`echo $0|sed 's,.*/,,'`
+me=`echo $0|sed 's,.*/,,'`
+exec $PERL -w -I$srcdir/.. -MCoreutils -M"CuTmpdir qw($me)" -- - <<\EOF
 require 5.003;
 use strict;
 

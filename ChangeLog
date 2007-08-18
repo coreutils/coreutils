@@ -1,3 +1,28 @@
+2007-08-18  Jim Meyering  <jim@meyering.net>
+
+	Run each Coreutils.pm-based test in its own subdirectory.
+	* tests/CuTmpdir.pm: New file.
+	* tests/Makefile.am (EXTRA_DIST): Add CuTmpdir.pm.
+	* tests/misc/od, tests/misc/base64, tests/misc/basename:
+	* tests/misc/cut, tests/misc/date, tests/misc/dirname:
+	* tests/misc/expand, tests/misc/fold, tests/misc/head-elide-tail:
+	* tests/misc/paste-no-nl, tests/misc/pr, tests/misc/sha224sum:
+	* tests/misc/sha256sum, tests/misc/sha384sum, tests/misc/sha512sum:
+	* tests/misc/sort-merge, tests/misc/stat-printf, tests/misc/test-diag:
+	* tests/misc/wc-files0-from, tests/misc/xstrtol:
+	* tests/dd/skip-seek, tests/dircolors/simple, tests/du/files0-from:
+	* tests/expr/basic, tests/factor/basic, tests/fmt/basic:
+	* tests/ls-2/tests, tests/md5sum/basic-1, tests/md5sum/newline-1:
+	* tests/seq/basic, tests/sha1sum/basic-1, tests/sha1sum/sample-vec:
+	* tests/sum/basic-1, tests/tsort/basic-1, tests/unexpand/basic-1:
+	* tests/mv/i-1, tests/rm/empty-name, tests/rm/unreadable: Use it.
+	* tests/misc/test-diag: Use "$ENV{abs_top_builddir}/src/test",
+	not "../../src/test", so it works when run from a subdirectory.
+	* tests/ls-2/tests: Create temp files and dirs from within the perl
+	script, so that they're removed, when run from a subdirectory.
+	* tests/ls-2/Makefile.am (TESTS_ENVIRONMENT): Define abs_top_builddir,
+	so we can use "$ENV{abs_top_builddir}/src/test" in a test script.
+
 2007-08-16  Jim Meyering  <jim@meyering.net>
 
 	Consolidate od tests.
