@@ -90,6 +90,7 @@
 #include "hash.h"
 #include "human.h"
 #include "filemode.h"
+#include "idcache.h"
 #include "inttostr.h"
 #include "ls.h"
 #include "lstat.h"
@@ -192,9 +193,6 @@ struct bin_str
     size_t len;			/* Number of bytes */
     const char *string;		/* Pointer to the same */
   };
-
-char *getgroup ();
-char *getuser ();
 
 #if ! HAVE_TCGETPGRP
 # define tcgetpgrp(Fd) 0

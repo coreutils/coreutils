@@ -1,5 +1,9 @@
 2007-08-18  Jim Meyering  <jim@meyering.net>
 
+	Use new "idcache.h" header.
+	* src/ls.c: Remove ancient declarations of getuser and getgroup.
+	Include "idcache.h", instead.
+
 	Run each Coreutils.pm-based test in its own subdirectory.
 	* tests/CuTmpdir.pm: New file.
 	* tests/Makefile.am (EXTRA_DIST): Add CuTmpdir.pm.

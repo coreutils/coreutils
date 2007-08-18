@@ -167,6 +167,7 @@ iconv_open-irix.gperf
 iconv_open-osf.gperf
 iconv_open.c
 idcache.c
+idcache.h
 imaxtostr.c
 inet_ntop.c
 inet_ntop.h
