@@ -1,3 +1,10 @@
+2007-08-20  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* NEWS: The old cp -p bug affected coreutils releases before 6.0.
+	Problem reported by Soren Spies in
+	<http://lists.gnu.org/archive/html/bug-coreutils/2007-08/msg00106.html>.
+	To be conservative, just say the bug was in all versions through 6.6.
+
 2007-08-19  Eric Blake  <ebb9@byu.net>
 
 	Avoid consuming too much seekable input when yesno is used.

@@ -218,7 +218,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   Fix similar problems with cp options like -p that imply
   --preserve=ownership, with install -d when combined with either -o
   or -g, and with mv when copying across file system boundaries.
-  This bug affects coreutils 6.0 through 6.6.
+  This bug affects all versions of coreutils through 6.6.
 
   du --one-file-system (-x) would skip subdirectories of any directory
   listed as second or subsequent command line argument.  This bug affects
