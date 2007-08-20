@@ -867,7 +867,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  atexit (close_stdout);
+  atexit (close_stdin);
 
   selinux_enabled = (0 < is_selinux_enabled ());
   cp_option_init (&x);

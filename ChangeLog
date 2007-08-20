@@ -1,3 +1,15 @@
+2007-08-19  Eric Blake  <ebb9@byu.net>
+
+	Avoid consuming too much seekable input when yesno is used.
+	* bootstrap.conf (gnulib_modules): Add closein.
+	* src/system.h (includes): Also include closein.h.
+	* src/mv.c (main): Use close_stdin, not close_stdout.
+	* src/cp.c (main): Likewise.
+	* src/ln.c (main): Likewise.
+	* src/rm.c (main): Likewise.
+	* src/install.c (main): Likewise.
+	* NEWS: Document the fix.
+
 2007-08-18  Jim Meyering  <jim@meyering.net>
 
 	Use new "idcache.h" header.

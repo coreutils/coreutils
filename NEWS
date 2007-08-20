@@ -72,6 +72,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   "cp -i --update older newer" no longer prompts; same for mv
 
+  "cp -i" now detects read errors on standard input, and no longer consumes
+  too much seekable input; same for ln, install, mv, and rm.
+
   cut now diagnoses a range starting with zero (e.g., -f 0-2) as invalid;
   before, it would treat it as if it started with 1 (-f 1-2).
 

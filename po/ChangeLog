@@ -1,3 +1,7 @@
+2007-08-19  Eric Blake  <ebb9@byu.net>
+
+	* POTFILES.in: Add lib/closein.c.
+
 2007-08-08  Jim Meyering  <jim@meyering.net>
 
 	Adapt to gnulib's latest xstrtol change.
@@ -238,7 +242,7 @@
 
 	-----
 
-	Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software
+	Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007 Free Software
 	Foundation, Inc.
 
 	Copying and distribution of this file, with or without

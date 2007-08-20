@@ -1,5 +1,5 @@
 /* `ln' program to create links between files.
-   Copyright (C) 1986, 1989-1991, 1995-2006 Free Software Foundation, Inc.
+   Copyright (C) 1986, 1989-1991, 1995-2007 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -398,7 +398,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  atexit (close_stdout);
+  atexit (close_stdin);
 
   /* FIXME: consider not calling getenv for SIMPLE_BACKUP_SUFFIX unless
      we'll actually use backup_suffix_string.  */

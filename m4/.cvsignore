@@ -19,6 +19,7 @@ chown.m4
 clock_time.m4
 cloexec.m4
 close-stream.m4
+closein.m4
 closeout.m4
 codeset.m4
 config-h.m4
@@ -41,6 +42,7 @@ extensions.m4
 fchdir.m4
 fcntl-safer.m4
 fcntl_h.m4
+fflush.m4
 file-type.m4
 fileblocks.m4
 filemode.m4
@@ -51,6 +53,8 @@ float_h.m4
 fnmatch.m4
 fpending.m4
 fprintftime.m4
+fpurge.m4
+freading.m4
 free.m4
 fseeko.m4
 fstypename.m4

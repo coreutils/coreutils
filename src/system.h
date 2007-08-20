@@ -419,6 +419,7 @@ enum
 #define VERSION_OPTION_DESCRIPTION \
   _("      --version  output version information and exit\n")
 
+#include "closein.h"
 #include "closeout.h"
 #include "version-etc.h"
 

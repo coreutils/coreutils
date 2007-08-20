@@ -39,6 +39,8 @@ cloexec.c
 cloexec.h
 close-stream.c
 close-stream.h
+closein.c
+closein.h
 closeout.c
 closeout.h
 concatpath.c
@@ -78,6 +80,7 @@ fcntl-safer.h
 fcntl.h
 fcntl_.h
 fd-safer.c
+fflush.c
 file-has-acl.c
 file-type.c
 file-type.h
@@ -98,6 +101,10 @@ fnmatch_loop.c
 fopen-safer.c
 fprintftime.c
 fprintftime.h
+fpurge.c
+fpurge.h
+freading.c
+freading.h
 free.c
 fseeko.c
 fstatat.c

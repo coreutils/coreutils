@@ -4,6 +4,7 @@
 # These are nominally temporary...
 lib/acl.c
 lib/argmatch.c
+lib/closein.c
 lib/closeout.c
 lib/error.c
 lib/euidaccess-stat.c
