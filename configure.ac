@@ -268,8 +268,8 @@ t=`sed -n '/^'$v' =/,/[[^\]]$/p' $mk \
 # Remove any trailing space.
 no_install_progs_default=`echo "$t"|sed 's/ $//'`
 
-# Unfortunately, due to the way autoconf's AS_HELP_STRING works, the
-# list of default-not-installed programs, "arch su", must appear in two
+# Unfortunately, due to the way autoconf's AS_HELP_STRING works, the list
+# of default-not-installed programs, "arch hostname su", must appear in two
 # places: in this file below, and in $mk.  Using "$no_install_progs_default"
 # below cannot work.  And we can't substitute the names into $mk because
 # automake needs the literals, too.
@@ -291,7 +291,7 @@ esac
 # "don't-install" requests.
 # I.e., add any program name specified via --enable-install-program=..., and
 # remove any program name specified via --enable-no-install-program=...
-gl_INCLUDE_EXCLUDE_PROG([optional_bin_progs], [arch su])
+gl_INCLUDE_EXCLUDE_PROG([optional_bin_progs], [arch hostname su])
 
 # Set INSTALL_SU if su installation has been requested via
 # --enable-install-program=su.

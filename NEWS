@@ -7,6 +7,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   arch: equivalent to uname -m, not installed by default
   But don't install this program on Solaris systems.
 
+** Programs no longer installed by default
+
+  hostname, su
+
 ** Changes in behavior
 
   pr -F no longer suppresses the footer or the first two blank lines in

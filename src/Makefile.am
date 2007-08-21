@@ -21,7 +21,7 @@
 # Hence, if you want to install programs from this list anyway, say A and B,
 # use --enable-install-program=A,B
 no_install__progs = \
-  arch su
+  arch hostname su
 
 build_if_possible__progs = \
   chroot df hostid nice pinky stty su uname uptime users who
