@@ -1,3 +1,11 @@
+2007-08-20  Bob Proulx  <bob@proulx.com>
+
+	Clarify touch documentation of file arguments.
+	* src/touch.c (usage): Improve wording of documentation regarding
+	file argument handling and special handling of - argument.
+	* doc/coreutils.texi (touch invocation): Likewise.
+	Documentation problem reported by Vincent Lefevre.
+
 2007-08-20  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* NEWS: The old cp -p bug affected coreutils releases before 6.0.

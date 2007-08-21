@@ -9271,10 +9271,11 @@ touch [@var{option}]@dots{} @var{file}@dots{}
 @end example
 
 @cindex empty files, creating
-Any @var{file} that does not exist is created empty.
+Any @var{file} argument that does not exist is created empty.
 
-A @var{file} of @samp{-} causes @command{touch} to change the
-times of the file associated with standard output.
+A @var{file} argument string of @samp{-} is handled specially and
+causes @command{touch} to change the times of the file associated with
+standard output.
 
 @cindex permissions, for changing file timestamps
 If changing both the access and modification times to the current

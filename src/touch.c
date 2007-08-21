@@ -233,6 +233,11 @@ usage (int status)
       fputs (_("\
 Update the access and modification times of each FILE to the current time.\n\
 \n\
+A FILE argument that does not exist is created empty.\n\
+\n\
+A FILE argument string of - is handled specially and causes touch to\n\
+change the times of the file associated with standard output.\n\
+\n\
 "), stdout);
       fputs (_("\
 Mandatory arguments to long options are mandatory for short options too.\n\
@@ -256,8 +261,6 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (_("\
 \n\
 Note that the -d and -t options accept different time-date formats.\n\
-\n\
-If a FILE is -, touch standard output.\n\
 "), stdout);
       emit_bug_reporting_address ();
     }
