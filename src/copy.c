@@ -85,7 +85,7 @@ struct F_triple
   dev_t st_dev;
 };
 
-/* Initial size of the above hash table.  */
+/* Initial size of the cp.dest_info hash table.  */
 #define DEST_INFO_INITIAL_CAPACITY 61
 
 static bool copy_internal (char const *src_name, char const *dst_name,
