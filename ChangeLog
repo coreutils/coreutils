@@ -1,5 +1,10 @@
 2007-08-22  Jim Meyering  <jim@meyering.net>
 
+	* src/date.c: Don't include "getline.h", now removed from gnulib;
+	its declarations are now in <stdio.h>.
+	* src/md5sum.c: Likewise.
+	* src/dircolors.c: Likewise.
+
 	* src/copy.c (DEST_INFO_INITIAL_CAPACITY): Correct a comment.
 
 2007-08-21  Jim Meyering  <jim@meyering.net>

@@ -28,7 +28,6 @@
 #include "argmatch.h"
 #include "error.h"
 #include "getdate.h"
-#include "getline.h"
 #include "inttostr.h"
 #include "posixtm.h"
 #include "quote.h"

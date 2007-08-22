@@ -35,7 +35,6 @@
 #if HASH_ALGO_SHA512 || HASH_ALGO_SHA384
 # include "sha512.h"
 #endif
-#include "getline.h"
 #include "error.h"
 #include "stdio--.h"
 

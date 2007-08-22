@@ -25,7 +25,6 @@
 #include "dircolors.h"
 #include "c-strcase.h"
 #include "error.h"
-#include "getline.h"
 #include "obstack.h"
 #include "quote.h"
 #include "xstrndup.h"
