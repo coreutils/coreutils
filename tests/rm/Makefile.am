@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 TESTS = \
+  v-slash \
   i-never \
   fail-eacces \
   one-file-system \

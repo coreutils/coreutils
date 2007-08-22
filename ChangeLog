@@ -1,5 +1,11 @@
 2007-08-22  Jim Meyering  <jim@meyering.net>
 
+	Change "rm --verbose -r a//" not to print extra slashes in a///b
+	* src/remove.c (push_dir): Don't copy trailing slashes onto the stack.
+	Reported by François Pinard.
+	* tests/rm/v-slash: New file.  Test for the above change.
+	* tests/rm/Makefile.am (TESTS): Add v-slash.
+
 	* src/date.c: Don't include "getline.h", now removed from gnulib;
 	its declarations are now in <stdio.h>.
 	* src/md5sum.c: Likewise.

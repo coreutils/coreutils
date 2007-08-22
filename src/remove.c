@@ -220,6 +220,10 @@ push_dir (Dirstack_state *ds, const char *dir_name)
 {
   size_t len = strlen (dir_name);
 
+  /* Don't copy trailing slashes.  */
+  while (1 < len && dir_name[len - 1] == '/')
+    --len;
+
   /* Append the string onto the stack.  */
   obstack_grow (&ds->dir_stack, dir_name, len);
 
