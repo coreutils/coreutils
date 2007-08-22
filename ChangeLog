@@ -1,5 +1,7 @@
 2007-08-22  Jim Meyering  <jim@meyering.net>
 
+	* src/c99-to-c89.diff: Adjust offsets.
+
 	Change "rm --verbose -r a//" not to print extra slashes in a///b
 	* src/remove.c (push_dir): Don't copy trailing slashes onto the stack.
 	Reported by François Pinard.

@@ -1,7 +1,7 @@
 diff -upr src/remove.c src/remove.c
 --- src/remove.c	2007-07-23 12:56:20.000000000 +0200
 +++ src/remove.c	2007-07-23 13:03:12.000000000 +0200
-@@ -253,9 +253,10 @@ pop_dir (Dirstack_state *ds)
+@@ -257,9 +257,10 @@ pop_dir (Dirstack_state *ds)
  {
    size_t n_lengths = obstack_object_size (&ds->len_stack) / sizeof (size_t);
    size_t *length = obstack_base (&ds->len_stack);
@@ -13,7 +13,7 @@ diff -upr src/remove.c src/remove.c
    assert (top_len >= 2);
 
    /* Pop the specified length of file name.  */
-@@ -387,10 +388,11 @@ AD_stack_top (Dirstack_state const *ds)
+@@ -391,10 +392,11 @@ AD_stack_top (Dirstack_state const *ds)
  static void
  AD_stack_pop (Dirstack_state *ds)
  {
@@ -26,7 +26,7 @@ diff -upr src/remove.c src/remove.c
    if (top->unremovable)
      hash_free (top->unremovable);
    obstack_blank (&ds->Active_dir, -(int) sizeof (struct AD_ent));
-@@ -872,6 +874,7 @@ prompt (int fd_cwd, Dirstack_state const
+@@ -876,6 +878,7 @@ prompt (int fd_cwd, Dirstack_state const
  	    break;
  	  }
 
@@ -34,7 +34,7 @@ diff -upr src/remove.c src/remove.c
        char const *quoted_name = quote (full_filename (filename));
 
        if (0 < write_protected)
-@@ -911,6 +914,7 @@ prompt (int fd_cwd, Dirstack_state const
+@@ -915,6 +918,7 @@ prompt (int fd_cwd, Dirstack_state const
  		    : _("%s: remove %s %s? ")),
  		   program_name, file_type (sbuf), quoted_name);
  	}
@@ -42,7 +42,7 @@ diff -upr src/remove.c src/remove.c
 
        if (!yesno ())
  	return RM_USER_DECLINED;
-@@ -1511,6 +1515,7 @@ rm_1 (Dirstack_state *ds, char const *fi
+@@ -1515,6 +1519,7 @@ rm_1 (Dirstack_state *ds, char const *fi
        return RM_ERROR;
      }
 
@@ -50,7 +50,7 @@ diff -upr src/remove.c src/remove.c
    struct stat st;
    cache_stat_init (&st);
    cycle_check_init (&ds->cycle_check_state);
-@@ -1533,6 +1538,7 @@ rm_1 (Dirstack_state *ds, char const *fi
+@@ -1537,6 +1542,7 @@ rm_1 (Dirstack_state *ds, char const *fi
    AD_push_initial (ds);
    AD_INIT_OTHER_MEMBERS ();
 
@@ -58,7 +58,7 @@ diff -upr src/remove.c src/remove.c
    enum RM_status status = remove_entry (AT_FDCWD, ds, filename,
  					DT_UNKNOWN, &st, x);
    if (status == RM_NONEMPTY_DIR)
-@@ -1551,6 +1557,8 @@ rm_1 (Dirstack_state *ds, char const *fi
+@@ -1555,6 +1561,8 @@ rm_1 (Dirstack_state *ds, char const *fi
    ds_clear (ds);
    return status;
  }
