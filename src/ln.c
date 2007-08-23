@@ -22,11 +22,14 @@
 #include <getopt.h>
 
 #include "system.h"
-#include "same.h"
 #include "backupfile.h"
 #include "error.h"
 #include "filenamecat.h"
+#include "file-set.h"
+#include "hash.h"
+#include "hash-triple.h"
 #include "quote.h"
+#include "same.h"
 #include "yesno.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -81,6 +84,15 @@ static bool hard_dir_link;
    command `ln --force --no-dereference file symlink-to-dir' deletes
    symlink-to-dir before creating the new link.  */
 static bool dereference_dest_dir_symlinks = true;
+
+/* This is a set of destination name/inode/dev triples for hard links
+   created by ln.  Use this data structure to avoid data loss via a
+   sequence of commands like this:
+   rm -rf a b c; mkdir a b c; touch a/f b/f; ln -f a/f b/f c && rm -r a b */
+static Hash_table *dest_set;
+
+/* Initial size of the dest_set hash table.  */
+enum { DEST_INFO_INITIAL_CAPACITY = 61 };
 
 static struct option const long_options[] =
 {
@@ -176,6 +188,18 @@ do_link (const char *source, const char *dest)
 	  error (0, errno, _("accessing %s"), quote (dest));
 	  return false;
 	}
+    }
+
+  /* If the current target was created as a hard link to another
+     source file, then refuse to unlink it.  */
+  if (dest_lstat_ok
+      && dest_set != NULL
+      && seen_file (dest_set, dest, &dest_stats))
+    {
+      error (0, 0,
+	     _("will not overwrite just-created %s with %s"),
+	     quote_n (0, dest), quote_n (1, source));
+      return false;
     }
 
   /* If --force (-f) has been specified without --backup, then before
@@ -278,6 +302,10 @@ do_link (const char *source, const char *dest)
 
   if (ok)
     {
+      /* Right after creating a hard link, do this: (note dest name and
+	 source_stats, which are also the just-linked-destinations stats) */
+      record_file (dest_set, dest, &source_stats);
+
       if (verbose)
 	{
 	  if (dest_backup)
@@ -514,6 +542,29 @@ main (int argc, char **argv)
   if (target_directory)
     {
       int i;
+
+      /* Create the data structure we'll use to record which hard links we
+	 create.  Used to ensure that ln detects an obscure corner case that
+	 might result in user data loss.  Create it only if needed.  */
+      if (2 <= n_files
+	  && remove_existing_files
+	  /* Don't bother trying to protect symlinks, since ln clobbering
+	     a just-created symlink won't ever lead to real data loss.  */
+	  && ! symbolic_link
+	  /* No destination hard link can be clobbered when making
+	     numbered backups.  */
+	  && backup_type != numbered_backups)
+
+	{
+	  dest_set = hash_initialize (DEST_INFO_INITIAL_CAPACITY,
+				      NULL,
+				      triple_hash,
+				      triple_compare,
+				      triple_free);
+	  if (dest_set == NULL)
+	    xalloc_die ();
+	}
+
       ok = true;
       for (i = 0; i < n_files; ++i)
 	{

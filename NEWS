@@ -56,6 +56,18 @@ GNU coreutils NEWS                                    -*- outline -*-
   ptx longer accepts the --copyright option.
   who no longer accepts -i or --idle.
 
+** Improved robustness
+
+  ln -f can no longer silently clobber a just-created hard link.
+  In some cases, ln could be seen as being responsible for data loss.
+  For example, given directories a, b, c, and files a/f and b/f, we
+  should be able to do this safely: ln -f a/f b/f c && rm -f a/f b/f
+  However, before this change, ln would succeed, and thus cause the
+  loss of the contents of a/f.
+
+  stty no longer silently accepts certain invalid hex values
+  in its 35-colon commmand-line argument
+
 ** Bug fixes
 
   cp attempts to read a regular file, even if stat says it is empty.
@@ -129,11 +141,6 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   tr -c no longer aborts when translating with Set2 larger than the
   complement of Set1.  [introduced with the original version, in 1992]
-
-** Improved robustness
-
-  stty no longer silently accepts certain invalid hex values
-  in its 35-colon commmand-line argument
 
 
 * Noteworthy changes in release 6.9 (2007-03-22) [stable]

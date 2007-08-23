@@ -1,5 +1,15 @@
 2007-08-23  Jim Meyering  <jim@meyering.net>
 
+	Don't let ln be a party to destroying user data.
+	* src/ln.c: Include "file-set.h", "hash.h" and "hash-triple.h".
+	(dest_set, DEST_INFO_INITIAL_CAPACITY): New globals.
+	(do_link): Refuse to remove a just-created link.
+	Record a name,dev,ino triple for each link we create.
+	(main): Initialize dest_set, if needed.
+	* tests/mv/childproof: Test for the above fix.
+	* NEWS: Document this.
+	Reported by Eric Blake.
+
 	Move functions from copy.c into new modules, since ln needs them, too.
 	* bootstrap.conf (gnulib_modules): Add file-set.
 	* gl/lib/file-set.c (record_file, seen_file): Functions from copy.c.
