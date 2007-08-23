@@ -1,5 +1,8 @@
 2007-08-23  Jim Meyering  <jim@meyering.net>
 
+	* src/dircolors.hin: Add xterm-16color, xterm-88color and eterm-color.
+	Suggestion from Dan Nicolaescu.
+
 	Don't let ln be a party to destroying user data.
 	* src/ln.c: Include "file-set.h", "hash.h" and "hash-triple.h".
 	(dest_set, DEST_INFO_INITIAL_CAPACITY): New globals.

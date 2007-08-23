@@ -27,6 +27,7 @@ TERM cons25
 TERM console
 TERM cygwin
 TERM dtterm
+TERM eterm-color
 TERM gnome
 TERM konsole
 TERM kterm
@@ -46,7 +47,9 @@ TERM screen-w
 TERM screen.linux
 TERM vt100
 TERM xterm
+TERM xterm-16color
 TERM xterm-256color
+TERM xterm-88color
 TERM xterm-color
 TERM xterm-debian
 
