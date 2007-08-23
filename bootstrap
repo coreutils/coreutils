@@ -435,7 +435,8 @@ slurp() {
 	# If an ignored file name ends with _.h, then also add
 	# the name with just ".h".  Many gnulib headers are generated,
 	# e.g., stdint_.h -> stdint.h, dirent_.h ->..., etc.
-	f=`echo "$copied"|sed 's/_\.h$/.h/'`
+	# Likewise for .gperf -> .h, .y -> .c, and .sin -> .sed
+	f=`echo "$copied"|sed 's/_\.h$/.h/;s/\.sin$/.sed/;s/\.y$/.c/;s/\.gperf$/.h/'`
 	insert_sorted_if_absent $ig "$f"
       fi
     done

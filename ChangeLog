@@ -1,5 +1,9 @@
 2007-08-23  Jim Meyering  <jim@meyering.net>
 
+	bootstrap: generate more ignorable names
+	* bootstrap (slurp): When generating ignorable names, also map
+	.sin to .sed, .gperf to .c, and .y to .c.
+
 	* Makefile.maint (patch-check): Don't remove temporaries upon failure.
 
 2007-08-22  Jim Meyering  <jim@meyering.net>
