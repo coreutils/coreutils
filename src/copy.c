@@ -44,7 +44,7 @@
 #include "full-write.h"
 #include "getpagesize.h"
 #include "hash.h"
-#include "hash-pjw.h"
+#include "hash-triple.h"
 #include "lchmod.h"
 #include "quote.h"
 #include "same.h"
@@ -75,14 +75,6 @@ struct dir_list
   struct dir_list *parent;
   ino_t ino;
   dev_t dev;
-};
-
-/* Describe a just-created or just-renamed destination file.  */
-struct F_triple
-{
-  char *name;
-  ino_t st_ino;
-  dev_t st_dev;
 };
 
 /* Initial size of the cp.dest_info hash table.  */
@@ -902,54 +894,6 @@ overwrite_prompt (char const *dst_name, struct stat const *dst_sb)
       fprintf (stderr, _("%s: overwrite %s? "),
 	       program_name, quote (dst_name));
     }
-}
-
-/* Hash an F_triple.  */
-static size_t
-triple_hash (void const *x, size_t table_size)
-{
-  struct F_triple const *p = x;
-
-  /* Also take the name into account, so that when moving N hard links to the
-     same file (all listed on the command line) all into the same directory,
-     we don't experience any N^2 behavior.  */
-  /* FIXME-maybe: is it worth the overhead of doing this
-     just to avoid N^2 in such an unusual case?  N would have
-     to be very large to make the N^2 factor noticable, and
-     one would probably encounter a limit on the length of
-     a command line before it became a problem.  */
-  size_t tmp = hash_pjw (p->name, table_size);
-
-  /* Ignoring the device number here should be fine.  */
-  return (tmp | p->st_ino) % table_size;
-}
-
-/* Hash an F_triple.  */
-static size_t
-triple_hash_no_name (void const *x, size_t table_size)
-{
-  struct F_triple const *p = x;
-
-  /* Ignoring the device number here should be fine.  */
-  return p->st_ino % table_size;
-}
-
-/* Compare two F_triple structs.  */
-static bool
-triple_compare (void const *x, void const *y)
-{
-  struct F_triple const *a = x;
-  struct F_triple const *b = y;
-  return (SAME_INODE (*a, *b) && same_name (a->name, b->name)) ? true : false;
-}
-
-/* Free an F_triple.  */
-static void
-triple_free (void *x)
-{
-  struct F_triple *a = x;
-  free (a->name);
-  free (a);
 }
 
 /* Initialize the hash table implementing a set of F_triple entries
@@ -1941,7 +1885,11 @@ copy_internal (char const *src_name, char const *dst_name,
     }
 
   if (command_line_arg)
-    record_file (x->dest_info, dst_name, NULL);
+    {
+      struct stat sb;
+      if (lstat (dst_name, &sb) == 0)
+	record_file (x->dest_info, dst_name, &sb);
+    }
 
   if ( ! preserve_metadata)
     return true;

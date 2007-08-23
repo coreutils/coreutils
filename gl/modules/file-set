@@ -1,0 +1,27 @@
+Description:
+Very specialized set-of-files code.
+
+Files:
+lib/file-set.c
+lib/file-set.h
+
+Depends-on:
+hash
+hash-triple
+stdbool
+xalloc
+xalloc-die
+
+configure.ac:
+
+Makefile.am:
+lib_SOURCES += file-set.c
+
+Include:
+"file-set.h"
+
+License:
+GPL
+
+Maintainer:
+Jim Meyering

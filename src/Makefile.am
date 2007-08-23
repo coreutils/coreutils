@@ -200,24 +200,27 @@ uninstall-local:
 	  rm -f $(installed_su); \
 	else :; fi
 
+copy_sources = copy.c cp-hash.c
+
 # Use `ginstall' in the definition of PROGRAMS and in dependencies to avoid
 # confusion with the `install' target.  The install rule transforms `ginstall'
 # to install before applying any user-specified name transformations.
 
 transform = s/ginstall/install/; @program_transform_name@
-ginstall_SOURCES = install.c copy.c cp-hash.c
+ginstall_SOURCES = install.c $(copy_sources)
 
 # This is for the '[' program.  Automake transliterates '[' to '_'.
 __SOURCES = lbracket.c
 
-cp_SOURCES = cp.c copy.c cp-hash.c
+cp_SOURCES = cp.c $(copy_sources)
 dir_SOURCES = ls.c ls-dir.c
 vdir_SOURCES = ls.c ls-vdir.c
+ln_SOURCES = ln.c
 ls_SOURCES = ls.c ls-ls.c
 chown_SOURCES = chown.c chown-core.c
 chgrp_SOURCES = chgrp.c chown-core.c
 
-mv_SOURCES = mv.c copy.c cp-hash.c remove.c
+mv_SOURCES = mv.c remove.c $(copy_sources)
 rm_SOURCES = rm.c remove.c
 
 uname_SOURCES = uname.c uname-uname.c

@@ -1,5 +1,29 @@
 2007-08-23  Jim Meyering  <jim@meyering.net>
 
+	Move functions from copy.c into new modules, since ln needs them, too.
+	* bootstrap.conf (gnulib_modules): Add file-set.
+	* gl/lib/file-set.c (record_file, seen_file): Functions from copy.c.
+	* gl/lib/file-set.h: Add prototypes.
+	* gl/lib/hash-triple.c (triple_hash, triple_hash_no_name):
+	(triple_compare, triple_free): Functions from copy.c.
+	* gl/lib/hash-triple.h (struct F_triple): Define.  From copy.c.
+	Add prototypes.
+	* gl/modules/file-set: New module.
+	* gl/modules/hash-triple: New module.
+	* src/Makefile.am (copy_sources): New variable.
+	(ginstall_SOURCES, cp_SOURCES, mv_SOURCES): Use it.
+	* src/copy.c: Include hash-triple.h.
+	No longer include hash-pjw.h.
+	(copy_internal): Don't pass a NULL third argument to record_file,
+	since that function no longer accepts that.
+	(record_file): Move this function to file-set.c.
+	Along the way, remove the code to allow a NULL stat-buffer pointer.
+	Adjust sole caller.
+	(seen_file): Move this function to file-set.c.
+	(struct F_triple): Move declaration to hash-triple.h.
+	(triple_compare, triple_free, triple_hash, triple_hash_no_name):
+	Move these functions to hash-triple.c.
+
 	bootstrap: generate more ignorable names
 	* bootstrap (slurp): When generating ignorable names, also map
 	.sin to .sed, .gperf to .c, and .y to .c.
