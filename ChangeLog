@@ -1,5 +1,9 @@
 2007-08-24  Jim Meyering  <jim@meyering.net>
 
+	bootstrap: when fetching .po files, do not remove .gmo files.
+	* bootstrap (get_translations): Don't remove *.gmo files!
+	They can be expensive to regenerate.
+
 	Create .gitignore and/or .cvsignore from scratch, if absent.
 	This is in preparation for my removing those files from version
 	control in the directories managed by gnulib-tool.

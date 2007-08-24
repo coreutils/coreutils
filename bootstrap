@@ -262,7 +262,7 @@ get_translations() {
   ?*)
     echo "$0: getting translations into $subdir for $domain..." &&
 
-    (cd $subdir && rm -f dummy `ls | sed -n '/\.gmo$/p; /\.po/p'` &&
+    (cd $subdir && rm -f dummy `ls | sed -n '/\.po/p'` &&
      $WGET_COMMAND -r -l1 -nd -np -A.po $TP_URL/$domain)
     ;;
   esac &&
