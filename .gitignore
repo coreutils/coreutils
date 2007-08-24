@@ -25,10 +25,14 @@ coreutils-*.tar.gz
 coreutils-*.tar.gz.sig
 coreutils-*.xdelta
 coreutils-*.xdelta.sig
+lib/.cvsignore
+lib/.gitignore
 lib/charset.alias
 lib/configmake.h
 lib/t-fpending
 lib/uniwidth/
+m4/.cvsignore
+m4/.gitignore
 po/*.gmo
 po/*.po
 po/LINGUAS

@@ -302,7 +302,19 @@ symlink_to_dir()
     # If the destination directory doesn't exist, create it.
     # This is required at least for "lib/uniwidth/cjk.h".
     dst_dir=`dirname "$dst"`
-    test -d "$dst_dir" || mkdir -p "$dst_dir"
+    if ! test -d "$dst_dir"; then
+      mkdir -p "$dst_dir"
+
+      # If we've just created a directory like lib/uniwidth,
+      # tell version control system(s) it's ignorable.
+      # FIXME: for now, this does only one level
+      parent=`dirname "$dst_dir"`
+      for dot_ig in x $vc_ignore; do
+	test $dot_ig = x && continue
+	ig=$parent/$dot_ig
+	insert_sorted_if_absent $ig `echo "$dst_dir"|sed 's,.*/,,'`
+      done
+    fi
 
     if $copy; then
       {
@@ -452,6 +464,11 @@ slurp() {
 	# e.g., stdint_.h -> stdint.h, dirent_.h ->..., etc.
 	# Likewise for .gperf -> .h, .y -> .c, and .sin -> .sed
 	f=`echo "$copied"|sed 's/_\.h$/.h/;s/\.sin$/.sed/;s/\.y$/.c/;s/\.gperf$/.h/'`
+	insert_sorted_if_absent $ig "$f"
+
+	# For files like sys_stat_.h and sys_time_.h, record as
+	# ignorable the directory we might eventually create: sys/.
+	f=`echo "$copied"|sed 's/sys_.*_\.h$/sys/'`
 	insert_sorted_if_absent $ig "$f"
       fi
     done

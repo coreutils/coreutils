@@ -1,5 +1,12 @@
 2007-08-24  Jim Meyering  <jim@meyering.net>
 
+	bootstrap: Ignore more.
+	* bootstrap (symlink_to_dir): Add a directory name like
+	uniwidth to e.g., lib/.gitignore.
+	(slurp): Handle the sys_stat_.h -> sys mapping, too.
+	* .hgignore: Remove this file, too.
+	* Makefile.am (EXTRA_DIST): Remove .gitignore and .hgignore.
+
 	No longer version-control .???ignore files in lib/, m4/, and po/.
 	* .gitignore: Ignore a few files in lib/, m4/, and po/ that are not
 	picked up automatically.
