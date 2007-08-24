@@ -53,11 +53,6 @@ typedef double LONG_DOUBLE;
 # define DBL_DIG 15
 #endif
 
-/* The number of decimal digits of precision in a long double.  */
-#ifndef LDBL_DIG
-# define LDBL_DIG DBL_DIG
-#endif
-
 #if HAVE_UNSIGNED_LONG_LONG_INT
 typedef unsigned long long int unsigned_long_long_int;
 #else

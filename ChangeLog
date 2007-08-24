@@ -1,5 +1,7 @@
 2007-08-24  Jim Meyering  <jim@meyering.net>
 
+	* src/od.c (LDBL_DIG): Remove now-unneeded definition.
+
 	Arrange to use tag names like vM.N, rather than COREUTILS-M_N.
 	* Makefile.maint (this-vc-tag) [git]: Simply use v$(VERSION).
 	(this-vc-tag-regexp): New variable.
