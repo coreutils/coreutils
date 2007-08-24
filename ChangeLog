@@ -1,3 +1,7 @@
+2007-08-25  Jim Meyering  <jim@meyering.net>
+
+	Remove all .cvsignore files from version control.
+
 2007-08-24  Jim Meyering  <jim@meyering.net>
 
 	bootstrap: Ignore more.

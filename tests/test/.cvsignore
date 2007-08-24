@@ -1,6 +1,0 @@
-*-tests
-*.E
-*.O
-*.X
-Makefile
-Makefile.in
