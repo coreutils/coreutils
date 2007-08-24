@@ -129,8 +129,20 @@ checkout_only_file=README-hacking
 # Whether to use copies instead of symlinks.
 copy=false
 
+# Set this to '.cvsignore .gitignore' in bootstrap.conf if you want
+# those files to be generated in directories like lib/, m4/, and po/.
+# Or set it to 'auto' to make this script select which to use based
+# on which version control system (if any) is used in the source directory.
+vc_ignore=auto
+
 # Override the default configuration, if necessary.
 test -r bootstrap.conf && . ./bootstrap.conf
+
+if test "$vc_ignore" = auto; then
+  vc_ignore=
+  test -d .git && vc_ignore=.gitignore
+  test -d CVS && vc_ignore="$vc_ignore .cvsignore"
+fi
 
 # Translate configuration into internal form.
 
@@ -168,6 +180,7 @@ fi
 insert_sorted_if_absent() {
   file=$1
   str=$2
+  test -f $file || touch $file
   echo "$str" | sort -u - $file | cmp -s - $file \
     || echo "$str" | sort -u - $file -o $file \
     || exit 1
@@ -189,8 +202,9 @@ fi
 # below will malfunction.  If creating it, also mark it as ignored.
 if test ! -d $build_aux; then
   mkdir $build_aux
-  for ig in .cvsignore .gitignore; do
-    test -f $ig && insert_sorted_if_absent $ig $build_aux
+  for dot_ig in x $vc_ignore; do
+    test $dot_ig = x && continue
+    insert_sorted_if_absent $dot_ig $build_aux
   done
 fi
 
@@ -428,9 +442,10 @@ slurp() {
       fi || exit
     done
 
-    for dot_ig in .cvsignore .gitignore; do
+    for dot_ig in x $vc_ignore; do
+      test $dot_ig = x && continue
       ig=$dir/$dot_ig
-      if test -n "$copied" && test -f $ig; then
+      if test -n "$copied"; then
 	insert_sorted_if_absent $ig "$copied"
 	# If an ignored file name ends with _.h, then also add
 	# the name with just ".h".  Many gnulib headers are generated,

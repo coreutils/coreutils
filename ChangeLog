@@ -1,5 +1,12 @@
 2007-08-24  Jim Meyering  <jim@meyering.net>
 
+	Create .gitignore and/or .cvsignore from scratch, if absent.
+	This is in preparation for my removing those files from version
+	control in the directories managed by gnulib-tool.
+	* bootstrap: New setting: vc_ignore.
+	(insert_sorted_if_absent): Create $file if absent.
+	Adapt to new, possibly empty, list: $vc_ignore.
+
 	* src/system.h (fseeko, ftello): Remove now-unneeded definitions.
 	* src/od.c (LDBL_DIG): Remove now-unneeded definition.
 
