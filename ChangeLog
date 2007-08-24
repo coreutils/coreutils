@@ -1,5 +1,12 @@
 2007-08-24  Jim Meyering  <jim@meyering.net>
 
+	No longer version-control .???ignore files in lib/, m4/, and po/.
+	* .gitignore: Ignore a few files in lib/, m4/, and po/ that are not
+	picked up automatically.
+	* lib/.gitignore, lib/.cvsignore: Remove files.
+	* m4/.gitignore, m4/.cvsignore: Remove files.
+	* po/.gitignore, po/.cvsignore: Remove files.
+
 	bootstrap: when fetching .po files, do not remove .gmo files.
 	* bootstrap (get_translations): Don't remove *.gmo files!
 	They can be expensive to regenerate.
