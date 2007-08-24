@@ -504,21 +504,6 @@ enum
 # define EOVERFLOW EINVAL
 #endif
 
-#if ! HAVE_FSEEKO
-# if ! defined fseeko
-#  define fseeko(s, o, w) ((o) == (long int) (o)	\
-			   ? fseek (s, o, w)		\
-			   : (errno = EOVERFLOW, -1))
-# endif
-# if ! defined ftello
-static inline off_t ftello (FILE *stream)
-{
-  verify (sizeof (long int) <= sizeof (off_t));
-  return ftell (stream);
-}
-# endif
-#endif
-
 #if ! HAVE_SYNC
 # define sync() /* empty */
 #endif

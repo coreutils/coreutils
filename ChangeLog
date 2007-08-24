@@ -1,5 +1,6 @@
 2007-08-24  Jim Meyering  <jim@meyering.net>
 
+	* src/system.h (fseeko, ftello): Remove now-unneeded definitions.
 	* src/od.c (LDBL_DIG): Remove now-unneeded definition.
 
 	Arrange to use tag names like vM.N, rather than COREUTILS-M_N.
