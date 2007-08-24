@@ -1,3 +1,10 @@
+2007-08-24  Jim Meyering  <jim@meyering.net>
+
+	Arrange to use tag names like vM.N, rather than COREUTILS-M_N.
+	* Makefile.maint (this-vc-tag) [git]: Simply use v$(VERSION).
+	(this-vc-tag-regexp): New variable.
+	(vc-tag-check): Use it, rather than $(this-vc-tag).
+
 2007-08-23  Jim Meyering  <jim@meyering.net>
 
 	* src/dircolors.hin: Add xterm-16color, xterm-88color and eterm-color.

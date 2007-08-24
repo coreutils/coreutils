@@ -44,9 +44,15 @@ endif
 PREV_VERSION := $(shell cat $(prev_version_file))
 VERSION_REGEXP = $(subst .,\.,$(VERSION))
 
+ifeq ($(VC),$(GIT))
+this-vc-tag = v$(VERSION)
+this-vc-tag-regexp = v$(VERSION_REGEXP)
+else
 tag-package = $(shell echo "$(PACKAGE)" | tr '[:lower:]' '[:upper:]')
 tag-this-version = $(subst .,_,$(VERSION))
 this-vc-tag = $(tag-package)-$(tag-this-version)
+this-vc-tag-regexp = $(this-vc-tag)
+endif
 my_distdir = $(PACKAGE)-$(VERSION)
 
 # Old releases are stored here.
@@ -513,10 +519,10 @@ copyright-check:
 vc-tag-check:
 	used=no;							\
 	if $(VC) --help | grep CVS; then				\
-	  $(CVS) -n log -h README|grep -e $(this-vc-tag): >/dev/null	\
+	  $(CVS) -n log -h README|grep -e $(this-vc-tag-regexp): >/dev/null \
 	    && used=yes;						\
 	else								\
-	  $(GIT) tag -l '^$(this-vc-tag)$$' && used=yes;		\
+	  $(GIT) tag -l '^$(this-vc-tag-regexp)$$' && used=yes;		\
 	fi;								\
 	if test "$$used" = yes; then					\
 	  echo "$(this-vc-tag) has already been used; not tagging" 1>&2; \
