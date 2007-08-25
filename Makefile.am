@@ -32,6 +32,7 @@ EXTRA_DIST = Makefile.cfg Makefile.maint GNUmakefile \
   bootstrap \
   bootstrap.conf \
   build-aux/cvsu \
+  build-aux/git-version-gen \
   build-aux/vc-list-files \
   gl/modules/getloadavg.diff \
   m4/ChangeLog \
@@ -53,7 +54,10 @@ ACLOCAL_AMFLAGS = -I m4
 check-root:
 	cd tests && $(MAKE) $@
 
+# Arrange so that .version appears only in distribution tarballs,
+# never in a checked-out repository.
 dist-hook:
+	echo $(VERSION) > $(distdir)/.version
 	test -x $(srcdir)/build-aux/install-sh
 
 distcheck-hook:

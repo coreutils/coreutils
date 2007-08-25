@@ -1,0 +1,59 @@
+#!/bin/sh
+# Print a version string.
+# This script is derived from GIT-VERSION-GEN from GIT: http://git.or.cz/.
+
+case $# in
+    2) ;;
+    *) echo 1>&2 "Usage: $0 \$VERSION \$srcdir/.version"; exit 1;;
+esac
+
+default_version=$1
+tarball_version_file=$2
+nl='
+'
+
+# First see if there is a tarball-only version file.
+# then try git-describe, then default.
+if test -f $tarball_version_file
+then
+    v=`cat $tarball_version_file` || exit 1
+    case $v in
+	*$nl*) v= ;; # reject multi-line output
+	[0-9]*) ;;
+	*) v= ;;
+    esac
+    test -z "$v" \
+	&& echo "$0: WARNING: $tarball_version_file seems to be damaged" 1>&2
+fi
+
+if test -n "$v"
+then
+    : # use $v
+elif test -d .git \
+    && v=`git describe --abbrev=4 HEAD 2>/dev/null` \
+    && case $v in
+	 # FIXME: remove this after v6.10.
+	 COREUTILS-[0-9]*) v=`echo "$v" | sed 's/^COREUTILS-//;s/_/./g'` ;;
+	 v[0-9]*) ;;
+	 *) (exit 1) ;;
+       esac
+then
+    v=`echo "$v" | sed 's/-/./g'`;
+else
+    v=$default_version
+fi
+
+v=`echo "$v" |sed 's/^v//'`
+
+dirty=`sh -c 'git diff-index --name-only HEAD' 2>/dev/null` || dirty=
+case "$dirty" in
+    '') ;;
+    *) # Append the suffix only if there isn't one already.
+	case $v in
+	  *-dirty) ;;
+	  *) v="$v-dirty" ;;
+	esac ;;
+esac
+
+# Omit the trailing newline, so that m4_esyscmd can use the result directly.
+echo "$v" | tr -d '\012'

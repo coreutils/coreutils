@@ -40,6 +40,17 @@
 
 2007-08-29  Jim Meyering  <jim@meyering.net>
 
+	Make inter-release --version output more useful.
+	Now, each snapshot has a version "number" like 6.9-219-g58ddd,
+	which indicates that it is built using the 219th change set
+	(in _some_ repository) following the "v6.9" tag, and that 58ddd
+	is a prefix of the commit SHA1.
+	* build-aux/git-version-gen: New file.
+	* configure.ac: Run it to set the version.
+	* Makefile.am (dist-hook): Arrange so that .version appears only
+	in distribution tarballs, never in a checked-out repository.
+	* .gitignore: Add .version here, too.  Just in case.
+
 	Ensure that TMPDIR is valid.  Otherwise, it would cause test failures.
 	* tests/misc/tty-eof: Set TMPDIR=.
 	* tests/misc/sort-compress: Likewise.
