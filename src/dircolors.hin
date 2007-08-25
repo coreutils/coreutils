@@ -99,12 +99,14 @@ EXEC 01;32
  # archives or compressed (bright red)
 .tar 01;31
 .tgz 01;31
+.svgz 01;31
 .arj 01;31
 .taz 01;31
 .lzh 01;31
 .zip 01;31
 .z   01;31
 .Z   01;31
+.dz  01;31
 .gz  01;31
 .bz2 01;31
 .bz  01;31
