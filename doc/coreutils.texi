@@ -198,7 +198,7 @@ Free Documentation License''.
 * Date input formats::                 Specifying date strings.
 * Opening the software toolbox::       The software tools philosophy.
 * GNU Free Documentation License::     Copying and sharing this manual.
-* Index::                              General index.
+* Concept index::                      General index.
 
 @detailmenu
  --- The Detailed Node Listing ---
@@ -14668,7 +14668,7 @@ of Bell Labs, the original Software Toolsmith, for reviewing this column.
 
 @include fdl.texi
 
-@node Index
+@node Concept index
 @unnumbered Index
 
 @printindex cp
