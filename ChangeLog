@@ -1,3 +1,8 @@
+2007-08-26  Jim Meyering  <jim@meyering.net>
+
+	* tests/misc/fold: Fix a typo: missing \ in a diagnostic
+	no one is likely ever to see.
+
 2007-08-25  Jim Meyering  <jim@meyering.net>
 
 	* src/dircolors.hin: Add .dz and .svgz as archive suffixes.

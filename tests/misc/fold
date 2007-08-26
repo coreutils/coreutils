@@ -2,7 +2,7 @@
 # -*- perl -*-
 # Exercise fold.
 
-# Copyright (C) 2003, 2005, 2006 Free Software Foundation, Inc.
+# Copyright (C) 2003, 2005-2007 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@ ver=`fold --version|sed 1q`
 case $ver in
   *" $PACKAGE_VERSION") ;;
   *) echo 1>&2 \
-   "$0: found unexpected version of fold, \`$ver'"
+   "$0: found unexpected version of fold, \`$ver'" \
      "(expected $PACKAGE_VERSION)"
   exit 1;;
 esac
