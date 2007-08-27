@@ -1,3 +1,10 @@
+2007-08-27  Jim Meyering  <jim@meyering.net>
+
+	Add some file system type names and magic numbers from glibc.
+	* src/stat.c (human_fstype): Add any file system names and values
+	present in glibc's linux_fsinfo.h but not in this list.
+	Alphabetize the S_* names and capitalize the hexadecimal constants.
+
 2007-08-26  Jim Meyering  <jim@meyering.net>
 
 	* tests/misc/fold: Fix a typo: missing \ in a diagnostic
