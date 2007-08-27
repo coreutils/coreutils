@@ -214,6 +214,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
 	 diff -u sym_stat sym_libc
       */
 
+      /* Also sync from the list in "man 2 statfs".  */
+
       /* IMPORTANT NOTE: Each of the following `case S_MAGIC_...:'
 	 statements must be followed by a hexadecimal constant in
 	 a comment.  The S_MAGIC_... name and constant are automatically
@@ -225,6 +227,12 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "affs";
     case S_MAGIC_AUTOFS: /* 0x187 */
       return "autofs";
+    case S_MAGIC_BEFS: /* 0x42465331 */
+      return "befs";
+    case S_MAGIC_BFS: /* 0x1BADFACE */
+      return "bfs";
+    case S_MAGIC_BINFMT_MISC: /* 0x42494e4d */
+      return "binfmt_misc";
     case S_MAGIC_CODA: /* 0x73757245 */
       return "coda";
     case S_MAGIC_COH: /* 0x012FF7B7 */
@@ -245,8 +253,12 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "ext2";
     case S_MAGIC_FAT: /* 0x4006 */
       return "fat";
+    case S_MAGIC_FUSECTL: /* 0x65735543 */
+      return "fusectl";
     case S_MAGIC_HPFS: /* 0xF995E849 */
       return "hpfs";
+    case S_MAGIC_HUGETLBFS: /* 0x958458f6 */
+      return "hugetlbfs";
     case S_MAGIC_ISOFS: /* 0x9660 */
       return "isofs";
     case S_MAGIC_ISOFS_R_WIN: /* 0x4004 */
@@ -273,8 +285,12 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "novell";
     case S_MAGIC_NFS: /* 0x6969 */
       return "nfs";
+    case S_MAGIC_NFSD: /* 0x6E667364 */
+      return "nfsd";
     case S_MAGIC_NTFS: /* 0x5346544E */
       return "ntfs";
+    case S_MAGIC_OPENPROM: /* 0x9fa1 */
+      return "openprom";
     case S_MAGIC_PROC: /* 0x9FA0 */
       return "proc";
     case S_MAGIC_QNX4: /* 0x002F */

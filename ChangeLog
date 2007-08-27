@@ -1,3 +1,9 @@
+2007-08-28  Jim Meyering  <jim@meyering.net>
+
+	Add file system type names and magic numbers from "man 2 statfs".
+	* src/stat.c (human_fstype): Also handle BEFS, BFS, BINFMT_MISC,
+	FUSECTL, HUGETLBFS, NFSD and OPENPROM.
+
 2007-08-27  Jim Meyering  <jim@meyering.net>
 
 	Add some file system type names and magic numbers from glibc.
