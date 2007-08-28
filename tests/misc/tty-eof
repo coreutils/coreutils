@@ -25,6 +25,9 @@ $PERL -e 1 > /dev/null 2>&1 || {
   exit 77
 }
 
+# Ensure that $TMPDIR is valid.
+TMPDIR=.; export TMPDIR
+
 ARGV_0=$0
 export ARGV_0
 

@@ -38,6 +38,9 @@ if test $framework_failure = 1; then
   (exit 1); exit 1
 fi
 
+# Ensure that $TMPDIR is valid.
+TMPDIR=.; export TMPDIR
+
 fail=0
 
 # This should force the use of temp files compressed with the default gzip

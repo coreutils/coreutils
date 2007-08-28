@@ -1,5 +1,9 @@
 2007-08-29  Jim Meyering  <jim@meyering.net>
 
+	Ensure that TMPDIR is valid.  Otherwise, it would cause test failures.
+	* tests/misc/tty-eof: Set TMPDIR=.
+	* tests/misc/sort-compress: Likewise.
+
 	Use EXIT_FAILURE, not EXIT_FAIL, now that EXIT_FAILURE is always 1.
 	* src/system.h (EXIT_FAIL): Remove definition.
 	* src/chroot.c (main): EXIT_FAIL -> EXIT_FAILURE.
