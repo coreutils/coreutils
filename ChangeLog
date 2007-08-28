@@ -1,5 +1,13 @@
 2007-08-28  Jim Meyering  <jim@meyering.net>
 
+	By default, do not install hostname anymore; no kidding, this time.
+	* src/Makefile.am (EXTRA_PROGRAMS): Remove hostname from this list,
+	now that it's no longer being installed by default.  This should
+	have been part of the 2007-08-21 change.
+	(check-duplicate-no-install): New rule to ensure this doesn't
+	happen again.
+	(check): Depend on it.
+
 	Reflect renaming: mreadlink-with-size -> areadlink-with-size.
 	* bootstrap.conf: Update module name.
 	* src/copy.c (copy_internal): Update header and function names.

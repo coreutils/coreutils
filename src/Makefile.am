@@ -36,7 +36,7 @@ EXTRA_PROGRAMS = \
   nl od paste pr ptx sha1sum sha224sum sha256sum sha384sum sha512sum \
   shuf sort split sum tac tail tr tsort unexpand uniq wc \
   basename date dirname echo env expr factor false \
-  hostname id kill logname pathchk printenv printf pwd \
+  id kill logname pathchk printenv printf pwd \
   runcon seq sleep tee \
   test true tty whoami yes \
   base64
@@ -300,7 +300,7 @@ pm = progs-makefile
 pr = progs-readme
 # Ensure that the list of programs in README matches the list
 # of programs we can build.
-check: check-README check-misc
+check: check-README check-misc check-duplicate-no-install
 .PHONY: check-README
 check-README:
 	rm -rf $(pr) $(pm)
@@ -310,6 +310,13 @@ check-README:
 	sed -n '/^The programs .* are:/,/^[a-zA-Z]/p' $(top_srcdir)/README \
 	  | sed -n '/^   */s///p' | tr -s ' ' '\n' > $(pr)
 	diff $(pm) $(pr) && rm -rf $(pr) $(pm)
+
+# Ensure that a by-default-not-installed program (listed in
+# $(no_install__progs) is not also listed in $(EXTRA_PROGRAMS), because
+# if that were to happen, it *would* be installed by default.
+.PHONY: check-duplicate-no-install
+check-duplicate-no-install: tr
+	test -z "`echo '$(EXTRA_PROGRAMS)'| ./tr ' ' '\n' | uniq -d`"
 
 # Ensure that the list of programs and author names is accurate.
 au_dotdot = authors-dotdot
