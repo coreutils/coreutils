@@ -2,7 +2,7 @@
 
 /* Modified to run with the GNU shell by bfox. */
 
-/* Copyright (C) 1987-2005 Free Software Foundation, Inc.
+/* Copyright (C) 1987-2005, 2007 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -769,6 +769,11 @@ EXPRESSION is true or false and sets exit status.  It is one of:\n\
 Except for -h and -L, all FILE-related tests dereference symbolic links.\n\
 Beware that parentheses need to be escaped (e.g., by backslashes) for shells.\n\
 INTEGER may also be -l STRING, which evaluates to the length of STRING.\n\
+"), stdout);
+      fputs (_("\
+\n\
+NOTE: [ honors the --help and --version options, but test does not.\n\
+test treats each of those as it treats any other nonempty STRING.\n\
 "), stdout);
       printf (USAGE_BUILTIN_WARNING, _("test and/or ["));
       emit_bug_reporting_address ();

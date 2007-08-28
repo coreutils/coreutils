@@ -1,5 +1,8 @@
 2007-08-28  Jim Meyering  <jim@meyering.net>
 
+	* src/test.c (usage): Note that [ honors --help and --version,
+	but that test does not.  Suggestion from Dan Jacobson.
+
 	By default, do not install hostname anymore; no kidding, this time.
 	* src/Makefile.am (EXTRA_PROGRAMS): Remove hostname from this list,
 	now that it's no longer being installed by default.  This should
