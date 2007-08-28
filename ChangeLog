@@ -1,3 +1,14 @@
+2007-08-29  Jim Meyering  <jim@meyering.net>
+
+	Use EXIT_FAILURE, not EXIT_FAIL, now that EXIT_FAILURE is always 1.
+	* src/system.h (EXIT_FAIL): Remove definition.
+	* src/chroot.c (main): EXIT_FAIL -> EXIT_FAILURE.
+	* src/env.c (main): Likewise.
+	* src/nice.c (main): Likewise.
+	* src/su.c (change_identity, main): Likewise.
+	* src/tty.c (main): Likewise.
+	Suggestion from Eric Blake.
+
 2007-08-28  Jim Meyering  <jim@meyering.net>
 
 	* src/test.c (usage): Note that [ honors --help and --version,

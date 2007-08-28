@@ -113,11 +113,9 @@ you must include <sys/types.h> before including this file
 #include <stdbool.h>
 #include <stdlib.h>
 
-/* Exit statuses for programs like 'env' that exec other programs.
-   EXIT_FAILURE might not be 1, so use EXIT_FAIL in such programs.  */
+/* Exit statuses for programs like 'env' that exec other programs.  */
 enum
 {
-  EXIT_FAIL = 1,
   EXIT_CANNOT_INVOKE = 126,
   EXIT_ENOENT = 127
 };

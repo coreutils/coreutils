@@ -124,5 +124,5 @@ main (int argc, char **argv)
 	puts (_("not a tty"));
     }
 
-  exit (isatty (STDIN_FILENO) ? EXIT_SUCCESS : EXIT_FAIL);
+  exit (isatty (STDIN_FILENO) ? EXIT_SUCCESS : EXIT_FAILURE);
 }

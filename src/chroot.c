@@ -70,25 +70,25 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  initialize_exit_failure (EXIT_FAIL);
+  initialize_exit_failure (EXIT_FAILURE);
   atexit (close_stdout);
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
 		      usage, AUTHORS, (char const *) NULL);
   if (getopt_long (argc, argv, "+", NULL, NULL) != -1)
-    usage (EXIT_FAIL);
+    usage (EXIT_FAILURE);
 
   if (argc <= optind)
     {
       error (0, 0, _("missing operand"));
-      usage (EXIT_FAIL);
+      usage (EXIT_FAILURE);
     }
 
   if (chroot (argv[optind]) != 0)
-    error (EXIT_FAIL, errno, _("cannot change root directory to %s"), argv[1]);
+    error (EXIT_FAILURE, errno, _("cannot change root directory to %s"), argv[1]);
 
   if (chdir ("/"))
-    error (EXIT_FAIL, errno, _("cannot chdir to root directory"));
+    error (EXIT_FAILURE, errno, _("cannot chdir to root directory"));
 
   if (argc == optind + 1)
     {

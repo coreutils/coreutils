@@ -104,7 +104,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  initialize_exit_failure (EXIT_FAIL);
+  initialize_exit_failure (EXIT_FAILURE);
   atexit (close_stdout);
 
   parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
@@ -135,7 +135,7 @@ main (int argc, char **argv)
 	  i += optind - 1;
 
 	  if (optc == '?')
-	    usage (EXIT_FAIL);
+	    usage (EXIT_FAILURE);
 	  else if (optc == 'n')
 	    adjustment_given = optarg;
 	  else /* optc == -1 */
@@ -151,7 +151,7 @@ main (int argc, char **argv)
       enum { MIN_ADJUSTMENT = 1 - 2 * NZERO, MAX_ADJUSTMENT = 2 * NZERO - 1 };
       long int tmp;
       if (LONGINT_OVERFLOW < xstrtol (adjustment_given, NULL, 10, &tmp, ""))
-	error (EXIT_FAIL, 0, _("invalid adjustment %s"),
+	error (EXIT_FAILURE, 0, _("invalid adjustment %s"),
 	       quote (adjustment_given));
       adjustment = MAX (MIN_ADJUSTMENT, MIN (tmp, MAX_ADJUSTMENT));
     }
@@ -161,13 +161,13 @@ main (int argc, char **argv)
       if (adjustment_given)
 	{
 	  error (0, 0, _("a command must be given with an adjustment"));
-	  usage (EXIT_FAIL);
+	  usage (EXIT_FAILURE);
 	}
       /* No command given; print the niceness.  */
       errno = 0;
       current_niceness = GET_NICENESS ();
       if (current_niceness == -1 && errno != 0)
-	error (EXIT_FAIL, errno, _("cannot get niceness"));
+	error (EXIT_FAILURE, errno, _("cannot get niceness"));
       printf ("%d\n", current_niceness);
       exit (EXIT_SUCCESS);
     }
@@ -178,11 +178,11 @@ main (int argc, char **argv)
 #else
   current_niceness = GET_NICENESS ();
   if (current_niceness == -1 && errno != 0)
-    error (EXIT_FAIL, errno, _("cannot get niceness"));
+    error (EXIT_FAILURE, errno, _("cannot get niceness"));
   ok = (setpriority (PRIO_PROCESS, 0, current_niceness + adjustment) == 0);
 #endif
   if (!ok)
-    error (errno == EPERM ? 0 : EXIT_FAIL, errno, _("cannot set niceness"));
+    error (errno == EPERM ? 0 : EXIT_FAILURE, errno, _("cannot set niceness"));
 
   execvp (argv[i], &argv[i]);
 

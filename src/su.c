@@ -299,13 +299,13 @@ change_identity (const struct passwd *pw)
 #ifdef HAVE_INITGROUPS
   errno = 0;
   if (initgroups (pw->pw_name, pw->pw_gid) == -1)
-    error (EXIT_FAIL, errno, _("cannot set groups"));
+    error (EXIT_FAILURE, errno, _("cannot set groups"));
   endgrent ();
 #endif
   if (setgid (pw->pw_gid))
-    error (EXIT_FAIL, errno, _("cannot set group id"));
+    error (EXIT_FAILURE, errno, _("cannot set group id"));
   if (setuid (pw->pw_uid))
-    error (EXIT_FAIL, errno, _("cannot set user id"));
+    error (EXIT_FAILURE, errno, _("cannot set user id"));
 }
 
 /* Run SHELL, or DEFAULT_SHELL if SHELL is empty.
@@ -419,7 +419,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  initialize_exit_failure (EXIT_FAIL);
+  initialize_exit_failure (EXIT_FAILURE);
   atexit (close_stdout);
 
   fast_startup = false;
@@ -456,7 +456,7 @@ main (int argc, char **argv)
 	case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 
 	default:
-	  usage (EXIT_FAIL);
+	  usage (EXIT_FAILURE);
 	}
     }
 
@@ -471,7 +471,7 @@ main (int argc, char **argv)
   pw = getpwnam (new_user);
   if (! (pw && pw->pw_name && pw->pw_name[0] && pw->pw_dir && pw->pw_dir[0]
 	 && pw->pw_passwd))
-    error (EXIT_FAIL, 0, _("user %s does not exist"), new_user);
+    error (EXIT_FAILURE, 0, _("user %s does not exist"), new_user);
 
   /* Make a copy of the password information and point pw at the local
      copy instead.  Otherwise, some systems (e.g. Linux) would clobber
@@ -494,7 +494,7 @@ main (int argc, char **argv)
 #ifdef SYSLOG_FAILURE
       log_su (pw, false);
 #endif
-      error (EXIT_FAIL, 0, _("incorrect password"));
+      error (EXIT_FAILURE, 0, _("incorrect password"));
     }
 #ifdef SYSLOG_SUCCESS
   else
