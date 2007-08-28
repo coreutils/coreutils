@@ -1,5 +1,12 @@
 2007-08-28  Jim Meyering  <jim@meyering.net>
 
+	Reflect renaming: mreadlink-with-size -> areadlink-with-size.
+	* bootstrap.conf: Update module name.
+	* src/copy.c (copy_internal): Update header and function names.
+	* src/ls.c (get_link_name): Likewise.
+	* src/readlink.c (main): Likewise.
+	* src/stat.c (print_stat): Likewise.
+
 	Add file system type names and magic numbers from "man 2 statfs".
 	* src/stat.c (human_fstype): Also handle BEFS, BFS, BINFMT_MISC,
 	FUSECTL, HUGETLBFS, NFSD and OPENPROM.

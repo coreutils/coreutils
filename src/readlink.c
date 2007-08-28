@@ -24,7 +24,7 @@
 #include "system.h"
 #include "canonicalize.h"
 #include "error.h"
-#include "mreadlink.h"
+#include "areadlink.h"
 #include "quote.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -158,7 +158,7 @@ main (int argc, char **argv)
 
   value = (can_mode != -1
 	   ? canonicalize_filename_mode (fname, can_mode)
-	   : mreadlink_with_size (fname, 63));
+	   : areadlink_with_size (fname, 63));
   if (value)
     {
       printf ("%s%s", value, (no_newline ? "" : "\n"));

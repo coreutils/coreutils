@@ -67,7 +67,7 @@
 #include "quotearg.h"
 #include "stat-time.h"
 #include "strftime.h"
-#include "mreadlink.h"
+#include "areadlink.h"
 
 #define alignof(type) offsetof (struct { char c; type x; }, x)
 
@@ -579,7 +579,7 @@ print_stat (char *pformat, size_t prefix_len, char m,
       out_string (pformat, prefix_len, quote (filename));
       if (S_ISLNK (statbuf->st_mode))
 	{
-	  char *linkname = mreadlink_with_size (filename, statbuf->st_size);
+	  char *linkname = areadlink_with_size (filename, statbuf->st_size);
 	  if (linkname == NULL)
 	    {
 	      error (0, errno, _("cannot read symbolic link %s"),

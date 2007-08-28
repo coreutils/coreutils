@@ -104,7 +104,7 @@
 #include "strftime.h"
 #include "strverscmp.h"
 #include "xstrtol.h"
-#include "mreadlink.h"
+#include "areadlink.h"
 
 #define PROGRAM_NAME (ls_mode == LS_LS ? "ls" \
 		      : (ls_mode == LS_MULTI_COL \
@@ -2840,7 +2840,7 @@ is_directory (const struct fileinfo *f)
 static void
 get_link_name (char const *filename, struct fileinfo *f, bool command_line_arg)
 {
-  f->linkname = mreadlink_with_size (filename, f->stat.st_size);
+  f->linkname = areadlink_with_size (filename, f->stat.st_size);
   if (f->linkname == NULL)
     file_failure (command_line_arg, _("cannot read symbolic link %s"),
 		  filename);

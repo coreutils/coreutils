@@ -53,7 +53,7 @@
 #include "utimecmp.h"
 #include "utimens.h"
 #include "write-any-file.h"
-#include "mreadlink.h"
+#include "areadlink.h"
 #include "yesno.h"
 
 #ifndef HAVE_FCHOWN
@@ -1815,7 +1815,7 @@ copy_internal (char const *src_name, char const *dst_name,
     }
   else if (S_ISLNK (src_mode))
     {
-      char *src_link_val = mreadlink_with_size (src_name, src_sb.st_size);
+      char *src_link_val = areadlink_with_size (src_name, src_sb.st_size);
       if (src_link_val == NULL)
 	{
 	  error (0, errno, _("cannot read symbolic link %s"), quote (src_name));
@@ -1836,7 +1836,7 @@ copy_internal (char const *src_name, char const *dst_name,
 		 in some cases, e.g., if the destination symlink has the
 		 wrong ownership, permissions, or time stamps.  */
 	      char *dest_link_val =
-		mreadlink_with_size (dst_name, dst_sb.st_size);
+		areadlink_with_size (dst_name, dst_sb.st_size);
 	      if (dest_link_val && STREQ (dest_link_val, src_link_val))
 		same_link = true;
 	      free (dest_link_val);
