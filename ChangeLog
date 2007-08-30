@@ -1,5 +1,9 @@
 2007-08-30  Eric Blake  <ebb9@byu.net>
 
+	* src/.gitignore: Ignore *.exe for platforms with non-empty $(EXEEXT).
+
+2007-08-30  Eric Blake  <ebb9@byu.net>
+
 	Use PACKAGE_NAME instead of GNU_PACKAGE.
 	* src/Makefile.am (.sh, uninstall-local): Adjust all users of
 	hand-rolled GNU_PACKAGE to instead use autoconf-provided
