@@ -17,7 +17,7 @@
 
 SUBDIRS = lib src doc man po tests
 EXTRA_DIST = Makefile.cfg Makefile.maint GNUmakefile \
-  .kludge-stamp .prev-version THANKS-to-translators THANKStt.in \
+  .prev-version THANKS-to-translators THANKStt.in \
   .vg-suppressions \
   .x-po-check \
   .x-sc_file_system .x-sc_obsolete_symbols \
@@ -54,15 +54,6 @@ ACLOCAL_AMFLAGS = -I m4
 check-root:
 	cd tests && $(MAKE) $@
 
-# Arrange so that .version appears only in distribution tarballs,
-# never in a checked-out repository.
-dist-hook:
-	echo $(VERSION) > $(distdir)/.version
-	test -x $(srcdir)/build-aux/install-sh
-
-distcheck-hook:
-	$(MAKE) my-distcheck
-
 # Just prior to distribution, ...
 # transform the automake-generated rule that runs `rm -f rm'.
 # On some systems, that command would fail with a diagnostic like
@@ -70,16 +61,21 @@ distcheck-hook:
 # in the shell's search path that running `rm' would run the `rm'
 # executable in the current directory.
 # Similarly, adjust the clean-binPROGRAMS rule.
-
 rm_subst = \
-  s!(rm -f (rm|\$$\(bin_PROGRAMS\)))$$!$$1 > /dev/null 2>&1 || /bin/$$1!
-MAINTAINERCLEANFILES = .kludge-stamp
-.kludge-stamp: $(srcdir)/src/Makefile.in
-	perl -pi -e '$(rm_subst)' $(srcdir)/src/Makefile.in
-	touch $@
+  s!(rm -f (rm\b|\$$\(bin_PROGRAMS\)$$))!$$1 > /dev/null 2>&1 || /bin/$$1!
 
+# Arrange so that .version appears only in distribution tarballs,
+# never in a checked-out repository.
+# The perl substitution is to change some key uses of "rm" to "/bin/rm".
+# See the rm_subst comment for details.
+dist-hook:
+	echo $(VERSION) > $(distdir)/.version
+	perl -pi -e '$(rm_subst)' $(distdir)/src/Makefile.in
 
-MAINTAINERCLEANFILES += THANKS-to-translators
+distcheck-hook:
+	$(MAKE) my-distcheck
+
+MAINTAINERCLEANFILES = THANKS-to-translators
 THANKS-to-translators: po/LINGUAS THANKStt.in
 	(								\
 	  cat $(srcdir)/THANKStt.in;					\

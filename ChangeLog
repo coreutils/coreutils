@@ -1,3 +1,25 @@
+2007-08-30  Jim Meyering  <jim@meyering.net>
+
+	Perform the s,rm,/bin/rm, fix-up properly.  No more kludge.
+	* Makefile.am (EXTRA_DIST): Remove .kludge-stamp.
+	(.kludge-stamp): Remove rule.  Instead, ...
+	(dist-hook): Do the job here, operating on the file in $(distdir).
+	(rm_subst): Adjust regexp to match "rm -f rm$(EXEEXT)", not "rm -f rm".
+	(MAINTAINERCLEANFILES): s/+=/=/, now that this is the sole use.
+	(dist-hook): Remove the legacy-from-cvs install-sh is-executable check.
+	* .gitignore: Remove .kludge-stamp.
+
+	Make inter-release --version output more useful.
+	Now, each snapshot has a version "number" like 6.9-219-g58ddd,
+	which indicates that it is built using the 219th change set
+	(in _some_ repository) following the "v6.9" tag, and that 58ddd
+	is a prefix of the commit SHA1.
+	* build-aux/git-version-gen: New file.
+	* configure.ac: Run it to set the version.
+	* Makefile.am (dist-hook): Arrange so that .version appears only
+	in distribution tarballs, never in a checked-out repository.
+	* .gitignore: Add .version here, too.  Just in case.
+
 2007-08-30  Eric Blake  <ebb9@byu.net>
 
 	* src/.gitignore: Ignore *.exe for platforms with non-empty $(EXEEXT).
@@ -38,18 +60,7 @@
 	* configure.ac (AC_CHECK_DECLS): No need to check strtoimax,
 	strtoumax, since gnulib does this.
 
-2007-08-29  Jim Meyering  <jim@meyering.net>
-
-	Make inter-release --version output more useful.
-	Now, each snapshot has a version "number" like 6.9-219-g58ddd,
-	which indicates that it is built using the 219th change set
-	(in _some_ repository) following the "v6.9" tag, and that 58ddd
-	is a prefix of the commit SHA1.
-	* build-aux/git-version-gen: New file.
-	* configure.ac: Run it to set the version.
-	* Makefile.am (dist-hook): Arrange so that .version appears only
-	in distribution tarballs, never in a checked-out repository.
-	* .gitignore: Add .version here, too.  Just in case.
+2007-08-30  Jim Meyering  <jim@meyering.net>
 
 	Ensure that TMPDIR is valid.  Otherwise, it would cause test failures.
 	* tests/misc/tty-eof: Set TMPDIR=.

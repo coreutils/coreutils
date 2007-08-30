@@ -5,7 +5,6 @@
 */.deps
 *~
 .gdb-history
-.kludge-stamp
 .version
 ABOUT-NLS
 INSTALL
