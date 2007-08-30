@@ -828,7 +828,7 @@ main (int margc, char **margv)
 	 to exit silently with status 0.  */
       if (margc < 2 || !STREQ (margv[margc - 1], "]"))
 	{
-	  parse_long_options (margc, margv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
+	  parse_long_options (margc, margv, PROGRAM_NAME, PACKAGE_NAME, VERSION,
 			      usage, AUTHORS, (char const *) NULL);
 	  test_syntax_error (_("missing `]'"), NULL);
 	}

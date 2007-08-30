@@ -1,5 +1,5 @@
 /* Exit with a status code indicating success.
-   Copyright (C) 1999-2003, 2005 Free Software Foundation, Inc.
+   Copyright (C) 1999-2003, 2005, 2007 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -73,7 +73,7 @@ main (int argc, char **argv)
 	usage (EXIT_STATUS);
 
       if (STREQ (argv[1], "--version"))
-	version_etc (stdout, PROGRAM_NAME, GNU_PACKAGE, VERSION, AUTHORS,
+	version_etc (stdout, PROGRAM_NAME, PACKAGE_NAME, VERSION, AUTHORS,
 		     (char *) NULL);
     }
 

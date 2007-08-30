@@ -1,6 +1,6 @@
 /* print the hexadecimal identifier for the current host
 
-   Copyright (C) 1997, 1999, 2000, 2001, 2002, 2003, 2004 Free
+   Copyright (C) 1997, 1999, 2000, 2001, 2002, 2003, 2004, 2007 Free
    Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
@@ -71,7 +71,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
+  parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE_NAME, VERSION,
 		      usage, AUTHORS, (char const *) NULL);
   if (getopt_long (argc, argv, "", NULL, NULL) != -1)
     usage (EXIT_FAILURE);

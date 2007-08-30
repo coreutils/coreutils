@@ -147,7 +147,7 @@ RELEASE_YEAR = \
 	sed \
 	  -e 's!@''bindir''@!$(bindir)!' \
 	  -e 's/@''RELEASE_YEAR'@/$(RELEASE_YEAR)/ \
-	  -e 's/@''GNU_PACKAGE''@/$(GNU_PACKAGE)/' \
+	  -e 's/@''PACKAGE_NAME''@/$(PACKAGE_NAME)/' \
 	  -e 's/@''PACKAGE_BUGREPORT''@/$(PACKAGE_BUGREPORT)/' \
 	  -e 's/@''VERSION''@/$(VERSION)/' $< > $@-t
 	chmod +x $@-t
@@ -195,7 +195,7 @@ install-exec-local: su$(EXEEXT)
 
 uninstall-local:
 # Remove su only if it's one we installed.
-	@if grep '$(GNU_PACKAGE)' $(installed_su) > /dev/null 2>&1; then \
+	@if grep '$(PACKAGE_NAME)' $(installed_su) > /dev/null 2>&1; then \
 	  echo "  rm -f $(installed_su)"; \
 	  rm -f $(installed_su); \
 	else :; fi

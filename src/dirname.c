@@ -1,6 +1,6 @@
 /* dirname -- strip suffix from file name
 
-   Copyright (C) 1990-1997, 1999-2002, 2004, 2005, 2006 Free Software
+   Copyright (C) 1990-1997, 1999-2002, 2004-2007 Free Software
    Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
@@ -83,7 +83,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  parse_long_options (argc, argv, PROGRAM_NAME, GNU_PACKAGE, VERSION,
+  parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE_NAME, VERSION,
 		      usage, AUTHORS, (char const *) NULL);
   if (getopt_long (argc, argv, "+", NULL, NULL) != -1)
     usage (EXIT_FAILURE);

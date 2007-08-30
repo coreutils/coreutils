@@ -21,11 +21,6 @@ dnl Misc type-related macros for coreutils.
 
 AC_DEFUN([coreutils_MACROS],
 [
-  GNU_PACKAGE="GNU $PACKAGE"
-  AC_DEFINE_UNQUOTED(GNU_PACKAGE, "$GNU_PACKAGE",
-    [The concatenation of the strings `GNU ', and PACKAGE.])
-  AC_SUBST(GNU_PACKAGE)
-
   AM_MISSING_PROG(HELP2MAN, help2man)
   AC_SUBST(MAN)
 

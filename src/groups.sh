@@ -30,10 +30,10 @@ Same as id -Gn.  If no USERNAME, use current process.
 
 Report bugs to <@PACKAGE_BUGREPORT@>."
 
-version='groups (@GNU_PACKAGE@) @VERSION@
+version='groups (@PACKAGE_NAME@) @VERSION@
 Copyright (C) @RELEASE_YEAR@ Free Software Foundation, Inc.
-This is free software.  You may redistribute copies of it under the terms of
-the GNU General Public License <http://www.gnu.org/licenses/gpl.html>.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
 There is NO WARRANTY, to the extent permitted by law.
 
 Written by David MacKenzie.'

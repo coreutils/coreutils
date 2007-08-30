@@ -1,3 +1,39 @@
+2007-08-30  Eric Blake  <ebb9@byu.net>
+
+	Use PACKAGE_NAME instead of GNU_PACKAGE.
+	* src/Makefile.am (.sh, uninstall-local): Adjust all users of
+	hand-rolled GNU_PACKAGE to instead use autoconf-provided
+	PACKAGE_NAME.
+	* src/basename.c (main): Likewise.
+	* src/chroot.c (main): Likewise.
+	* src/dirname.c (main): Likewise.
+	* src/echo.c (main): Likewise.
+	* src/expr.c (main): Likewise.
+	* src/factor.c (main): Likewise.
+	* src/groups.sh (version): Likewise.  Also, reflect change in
+	--version output due to GPLv3.
+	* src/hostid.c (main): Likewise.
+	* src/hostname.c (main): Likewise.
+	* src/link.c (main): Likewise.
+	* src/logname.c (main): Likewise.
+	* src/nice.c (main): Likewise.
+	* src/nohup.c (main): Likewise.
+	* src/printenv.c (main): Likewise.
+	* src/printf.c (main): Likewise.
+	* src/pwd.c (main): Likewise.
+	* src/setuidgid.c (main): Likewise.
+	* src/sleep.c (main): Likewise.
+	* src/system.h (case_GETOPT_VERSION_CHAR): Likewise.
+	* src/test.c (main): Likewise.
+	* src/true.c (main): Likewise.
+	* src/unlink.c (main): Likewise.
+	* src/uptime.c (main): Likewise.
+	* src/users.c (main): Likewise.
+	* src/whoami.c (main): Likewise.
+	* src/yes.c (main): Likewise.
+	* configure.ac (AC_CHECK_DECLS): No need to check strtoimax,
+	strtoumax, since gnulib does this.
+
 2007-08-29  Jim Meyering  <jim@meyering.net>
 
 	Ensure that TMPDIR is valid.  Otherwise, it would cause test failures.

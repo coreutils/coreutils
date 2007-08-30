@@ -237,9 +237,6 @@ AC_CHECK_DECLS([strsignal, sys_siglist, _sys_siglist, __sys_siglist], , ,
   [AC_INCLUDES_DEFAULT
 #include <signal.h>])
 
-# For src/kill.c and src/printf.c.
-AC_CHECK_DECLS([strtoimax, strtoumax])
-
 cu_LIB_CHECK
 
 # Build df only if there's a point to it.
