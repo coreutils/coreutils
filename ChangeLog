@@ -1,5 +1,9 @@
 2007-08-30  Jim Meyering  <jim@meyering.net>
 
+	Shorten the snapshot version string by removing the "g".
+	* build-aux/git-version-gen: Remove git-describe's "g" that would
+	always precede the abbreviated SHA1.  Suggestion from Dmitry V. Levin.
+
 	Perform the s,rm,/bin/rm, fix-up properly.  No more kludge.
 	* Makefile.am (EXTRA_DIST): Remove .kludge-stamp.
 	(.kludge-stamp): Remove rule.  Instead, ...
