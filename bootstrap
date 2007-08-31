@@ -252,7 +252,7 @@ gnulib_tool=$GNULIB_SRCDIR/gnulib-tool
 
 # Get translations.
 
-get_translations() {
+download_po_files() {
   subdir=$1
   domain=$2
 
@@ -265,9 +265,35 @@ get_translations() {
     (cd $subdir && rm -f dummy `ls | sed -n '/\.po/p'` &&
      $WGET_COMMAND -r -l1 -nd -np -A.po $TP_URL/$domain)
     ;;
-  esac &&
-  ls "$subdir"/*.po 2>/dev/null |
-    sed 's|.*/||; s|\.po$||' >"$subdir/LINGUAS"
+  esac
+}
+
+# Download .po files to $po_dir/.reference and copy only the new
+# or modified ones into $po_dir.  Also update $po_dir/LINGUAS.
+update_po_files() {
+  # Directory containing primary .po files.
+  # Overwrite them only when we're sure a .po file is new.
+  po_dir=$1
+  domain=$2
+
+  # Download *.po files into this dir.
+  # Usually contains *.s1 checksum files.
+  ref_po_dir="$po_dir/.reference"
+
+  test -d $ref_po_dir || mkdir $ref_po_dir || return
+  download_po_files $ref_po_dir $domain \
+    && ls "$ref_po_dir"/*.po 2>/dev/null |
+      sed 's|.*/||; s|\.po$||' > "$po_dir/LINGUAS"
+
+  for po in `cd $ref_po_dir && echo *.po|sed 's/\.po//g'`; do
+     new_po="$ref_po_dir/$po.po"
+     cksum_file="$ref_po_dir/$po.s1"
+     if ! sha1sum -c "$cksum_file" < "$new_po" > /dev/null; then
+       echo "updated $po_dir/$po.po..."
+       cp "$new_po" "$po_dir/$po.po" && sha1sum < "$new_po" > "$cksum_file"
+     fi
+     rm -f "$new_po"
+  done
 }
 
 case $SKIP_PO in
@@ -284,11 +310,11 @@ case $SKIP_PO in
   esac
 
   if test -d po; then
-    get_translations po $package || exit
+    update_po_files po $package || exit
   fi
 
   if test -d runtime-po; then
-    get_translations runtime-po $package-runtime || exit
+    update_po_files runtime-po $package-runtime || exit
   fi;;
 esac
 

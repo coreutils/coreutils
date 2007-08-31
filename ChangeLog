@@ -1,3 +1,10 @@
+2007-08-31  Jim Meyering  <jim@meyering.net>
+
+	Solve the unnecessary-.po-file-regeneration problem once and for all.
+	* bootstrap (download_po_files): New function, renamed from
+	get_translations.  Now, downloads, but doesn't update LINGUAS.
+	(update_po_files): New function.
+
 2007-08-30  Jim Meyering  <jim@meyering.net>
 
 	Shorten the snapshot version string by removing the "g".
