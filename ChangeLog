@@ -1,3 +1,9 @@
+2007-08-31  Eric Blake  <ebb9@byu.net>
+
+	Test yesterday's change to groups.
+	* tests/misc/groups-version: New test.
+	* tests/misc/Makefile.am (TESTS): Add groups-version.
+
 2007-08-31  Jim Meyering  <jim@meyering.net>
 
 	Solve the unnecessary-.po-file-regeneration problem once and for all.

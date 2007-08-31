@@ -66,6 +66,7 @@ TESTS = \
   expand \
   false-status \
   fold \
+  groups-version \
   head-c \
   head-elide-tail \
   head-pos \
