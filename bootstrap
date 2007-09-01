@@ -288,7 +288,7 @@ update_po_files() {
   for po in `cd $ref_po_dir && echo *.po|sed 's/\.po//g'`; do
      new_po="$ref_po_dir/$po.po"
      cksum_file="$ref_po_dir/$po.s1"
-     if ! sha1sum -c "$cksum_file" < "$new_po" > /dev/null; then
+     if ! sha1sum -c --status "$cksum_file" < "$new_po" > /dev/null; then
        echo "updated $po_dir/$po.po..."
        cp "$new_po" "$po_dir/$po.po" && sha1sum < "$new_po" > "$cksum_file"
      fi

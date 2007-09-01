@@ -1,5 +1,7 @@
 2007-09-01  Jim Meyering  <jim@meyering.net>
 
+	* bootstrap (gnulib_tool): Make sha1sum check quietly.
+
 	Ensure that snapshot version changes make it to groups, too.
 	* src/Makefile.am (groups): Depend on Makefile.
 
