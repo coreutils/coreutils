@@ -142,6 +142,10 @@ RELEASE_YEAR = \
   `sed -n '/.*COPYRIGHT_YEAR = \([0-9][0-9][0-9][0-9]\) };/s//\1/p' \
     $(top_srcdir)/lib/version-etc.c`
 
+# Ensure that version changes (reflected in Makefile's VERSION definition)
+# are reflected into groups --version also between releases.
+groups: Makefile
+
 .sh:
 	rm -f $@ $@-t
 	sed \

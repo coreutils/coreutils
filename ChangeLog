@@ -1,5 +1,8 @@
 2007-09-01  Jim Meyering  <jim@meyering.net>
 
+	Ensure that snapshot version changes make it to groups, too.
+	* src/Makefile.am (groups): Depend on Makefile.
+
 	Make groups-version executable,
 	* tests/misc/groups-version: ... as it was in the patch.
 
