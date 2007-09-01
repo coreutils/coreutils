@@ -1,5 +1,15 @@
 2007-10-07  Jim Meyering  <meyering@redhat.com>
 
+	Copy from gnulib the parts of tempname that we'll modify.
+	* gl/lib/tempname.c: Copy from gnulib.
+	* gl/lib/tempname.h: Likewise.
+	* gl/modules/tempname: Likewise.
+	Allow GPLv2 on temporarily(?)-imported file from gnulib/libc.
+	* .x-sc_GPL_version: New file.
+	* Makefile.am (EXTRA_DIST): Add .x-sc_GPL_version
+
+2007-10-07  Jim Meyering  <meyering@redhat.com>
+
 	Avoid a pseudo-leak in sort.
 	* src/sort.c (main) [lint]: Avoid a nominal leak.
 

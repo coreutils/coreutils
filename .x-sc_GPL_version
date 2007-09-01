@@ -1,1 +1,3 @@
 ^build-aux/check\.mk$
+^gl/lib/tempname\.c$
+^gl/lib/tempname\.h$

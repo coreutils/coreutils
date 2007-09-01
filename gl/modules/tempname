@@ -1,0 +1,28 @@
+Description:
+gen_tempname() function: create a private temporary file or directory.
+
+Files:
+lib/tempname.c
+lib/tempname.h
+m4/tempname.m4
+
+Depends-on:
+extensions
+gettimeofday
+stdint
+sys_stat
+sys_time
+
+configure.ac:
+gl_FUNC_GEN_TEMPNAME
+
+Makefile.am:
+
+Include:
+"tempname.h"
+
+License:
+LGPL
+
+Maintainer:
+Eric Blake and Jim Meyering
