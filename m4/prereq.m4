@@ -1,4 +1,4 @@
-#serial 73
+#serial 74
 
 dnl We use gl_ for non Autoconf macros.
 m4_pattern_forbid([^gl_[ABCDEFGHIJKLMNOPQRSTUVXYZ]])dnl
@@ -7,8 +7,7 @@ m4_pattern_forbid([^gl_[ABCDEFGHIJKLMNOPQRSTUVXYZ]])dnl
 # directory of the coreutils package.
 
 
-# Copyright (C) 1998, 2000, 2001, 2003, 2004, 2005, 2006 Free Software
-# Foundation, Inc.
+# Copyright (C) 1998, 2000, 2001, 2003-2007 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -41,10 +40,6 @@ AC_DEFUN([gl_PREREQ],
   AC_REQUIRE([gl_FD_REOPEN])
   AC_REQUIRE([gl_FUNC_XFTS])
   AC_REQUIRE([gl_MEMXFRM])
-  AC_REQUIRE([gl_RANDINT])
-  AC_REQUIRE([gl_RANDPERM])
-  AC_REQUIRE([gl_RANDREAD])
-  AC_REQUIRE([gl_ROOT_DEV_INO])
   AC_REQUIRE([gl_SHA256])
   AC_REQUIRE([gl_SHA512])
   AC_REQUIRE([gl_STRINTCMP])

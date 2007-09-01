@@ -1,0 +1,34 @@
+Description:
+Generate buffers of random data.
+
+Files:
+lib/rand-isaac.c
+lib/rand-isaac.h
+lib/randread.c
+lib/randread.h
+
+Depends-on:
+error
+exitfail
+fopen-safer
+gethrxtime
+quotearg
+rand-isaac
+stdbool
+stdint
+unlocked-io
+xalloc
+
+configure.ac:
+
+Makefile.am:
+lib_SOURCES += randread.c randread.h rand-isaac.c rand-isaac.h
+
+Include:
+"randread.h"
+
+License
+GPL
+
+Maintainer:
+Paul Eggert

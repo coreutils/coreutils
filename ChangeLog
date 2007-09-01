@@ -1,5 +1,24 @@
 2007-10-07  Jim Meyering  <meyering@redhat.com>
 
+	Convert coreutils' rand*.{c,h,m4} into modules.
+	First step: move these files to gl/lib:
+	* lib/rand-isaac.c, lib/rand-isaac.h
+	* lib/randint.c, lib/randint.h
+	* lib/randperm.c, lib/randperm.h
+	* lib/randread.c, lib/randread.h
+	Step 2: add modules/rand* and remove now-unneeded .m4 files.
+	* gl/modules/randint: New file.
+	* gl/modules/randperm: New file.
+	* gl/modules/randread: New file.
+	* m4/randint.m4: Remove file.
+	* m4/randperm.m4: Remove file.
+	* m4/randread.m4: Remove file.
+	Step 3: use the new modules
+	* bootstrap.conf (gnulib_modules): Add randint and randperm.
+	* m4/prereq.m4 (gl_RANDINT, gl_RANDREAD, gl_RANDPERM): Don't require;
+	These have been removed.
+	(gl_ROOT_DEV_INO): Don't require; already handled via bootstrap.conf.
+
 	Copy from gnulib the parts of tempname that we'll modify.
 	* gl/lib/tempname.c: Copy from gnulib.
 	* gl/lib/tempname.h: Likewise.
