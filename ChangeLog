@@ -1,5 +1,21 @@
 2007-10-07  Jim Meyering  <meyering@redhat.com>
 
+	Make tempname more random, via the randint module.
+	* gl/modules/tempname (Depends-on): Add randint and stdbool.
+	* gl/lib/tempname.c: Include randint.h and stdbool.h.
+	(uint64_t): Remove definition.  Not needed.
+	[_LIBC] (RANDOM_BITS): Remove this block, now that we have proper
+	random bits.
+	(check_x_suffix): New function.
+	(gen_tempname_len): Rename from __gen_tempname.
+	Add a parameter, x_suffix_len, telling how many X's there must be at
+	the end of the template.
+	Use pseudo-random numbers all the way, rather than adding 7777
+	from one iteration to the next.
+	(__gen_tempname): New function, to call gen_tempname_len, requiring a
+	suffix length of 6.
+	* gl/lib/tempname.h: Add prototype for gen_tempname_len.
+
 	Convert coreutils' rand*.{c,h,m4} into modules.
 	First step: move these files to gl/lib:
 	* lib/rand-isaac.c, lib/rand-isaac.h

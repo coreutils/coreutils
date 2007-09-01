@@ -1,5 +1,5 @@
 Description:
-gen_tempname() function: create a private temporary file or directory.
+gen_tempname, gen_tempname_len: create a private temporary file or directory.
 
 Files:
 lib/tempname.c
@@ -9,6 +9,8 @@ m4/tempname.m4
 Depends-on:
 extensions
 gettimeofday
+randint
+stdbool
 stdint
 sys_stat
 sys_time

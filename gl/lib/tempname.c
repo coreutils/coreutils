@@ -23,6 +23,7 @@
 #if !_LIBC
 # include <config.h>
 # include "tempname.h"
+# include "randint.h"
 #endif
 
 #include <sys/types.h>
@@ -47,6 +48,7 @@
 # define __GT_NOCREATE	3
 #endif
 
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
@@ -76,34 +78,6 @@
 
 #if ! (HAVE___SECURE_GETENV || _LIBC)
 # define __secure_getenv getenv
-#endif
-
-#ifdef _LIBC
-# include <hp-timing.h>
-# if HP_TIMING_AVAIL
-#  define RANDOM_BITS(Var) \
-  if (__builtin_expect (value == UINT64_C (0), 0))			      \
-    {									      \
-      /* If this is the first time this function is used initialize	      \
-	 the variable we accumulate the value in to some somewhat	      \
-	 random value.  If we'd not do this programs at startup time	      \
-	 might have a reduced set of possible names, at least on slow	      \
-	 machines.  */							      \
-      struct timeval tv;						      \
-      __gettimeofday (&tv, NULL);					      \
-      value = ((uint64_t) tv.tv_usec << 16) ^ tv.tv_sec;		      \
-    }									      \
-  HP_TIMING_NOW (Var)
-# endif
-#endif
-
-/* Use the widest available unsigned type if uint64_t is not
-   available.  The algorithm below extracts a number less than 62**6
-   (approximately 2**35.725) from uint64_t, so ancient hosts where
-   uintmax_t is only 32 bits lose about 3.725 bits of randomness,
-   which is better than not having mkstemp at all.  */
-#if !defined UINT64_MAX && !defined uint64_t
-# define uint64_t uintmax_t
 #endif
 
 #if _LIBC
@@ -179,12 +153,18 @@ __path_search (char *tmpl, size_t tmpl_len, const char *dir, const char *pfx,
 }
 #endif /* _LIBC */
 
+static inline bool
+check_x_suffix (char const *s, size_t len)
+{
+  return strspn (s, "X") == len;
+}
+
 /* These are the characters used in temporary file names.  */
 static const char letters[] =
 "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
-/* Generate a temporary file name based on TMPL.  TMPL must match the
-   rules for mk[s]temp (i.e. end in "XXXXXX").  The name constructed
+/* Generate a temporary file name based on TMPL.  TMPL must end in a
+   a sequence of at least X_SUFFIX_LEN "X"s.  The name constructed
    does not exist at the time of the call to __gen_tempname.  TMPL is
    overwritten with the result.
 
@@ -198,16 +178,15 @@ static const char letters[] =
 
    We use a clever algorithm to get hard-to-predict names. */
 int
-__gen_tempname (char *tmpl, int kind)
+gen_tempname_len (char *tmpl, int kind, size_t x_suffix_len)
 {
-  int len;
+  size_t len;
   char *XXXXXX;
-  static uint64_t value;
-  uint64_t random_time_bits;
   unsigned int count;
   int fd = -1;
   int save_errno = errno;
   struct_stat64 st;
+  struct randint_source *rand_src;
 
   /* A lower bound on the number of temporary files to attempt to
      generate.  The maximum total number of temporary file names that
@@ -226,43 +205,28 @@ __gen_tempname (char *tmpl, int kind)
 #endif
 
   len = strlen (tmpl);
-  if (len < 6 || strcmp (&tmpl[len - 6], "XXXXXX"))
+  if (len < x_suffix_len || ! check_x_suffix (&tmpl[len - x_suffix_len],
+					      x_suffix_len))
     {
       __set_errno (EINVAL);
       return -1;
     }
 
+  rand_src = randint_all_new (NULL, 8);
+  if (! rand_src)
+    return -1;
+
   /* This is where the Xs start.  */
-  XXXXXX = &tmpl[len - 6];
+  XXXXXX = &tmpl[len - x_suffix_len];
 
-  /* Get some more or less random data.  */
-#ifdef RANDOM_BITS
-  RANDOM_BITS (random_time_bits);
-#else
-  {
-    struct timeval tv;
-    __gettimeofday (&tv, NULL);
-    random_time_bits = ((uint64_t) tv.tv_usec << 16) ^ tv.tv_sec;
-  }
-#endif
-  value += random_time_bits ^ __getpid ();
-
-  for (count = 0; count < attempts; value += 7777, ++count)
+  for (count = 0; count < attempts; ++count)
     {
-      uint64_t v = value;
+      size_t i;
 
-      /* Fill in the random bits.  */
-      XXXXXX[0] = letters[v % 62];
-      v /= 62;
-      XXXXXX[1] = letters[v % 62];
-      v /= 62;
-      XXXXXX[2] = letters[v % 62];
-      v /= 62;
-      XXXXXX[3] = letters[v % 62];
-      v /= 62;
-      XXXXXX[4] = letters[v % 62];
-      v /= 62;
-      XXXXXX[5] = letters[v % 62];
+      for (i = 0; i < x_suffix_len; i++)
+	{
+	  XXXXXX[i] = letters[randint_genmax (rand_src, sizeof letters - 2)];
+	}
 
       switch (kind)
 	{
@@ -279,7 +243,7 @@ __gen_tempname (char *tmpl, int kind)
 	  break;
 
 	case __GT_NOCREATE:
-	  /* This case is backward from the other three.  __gen_tempname
+	  /* This case is backward from the other three.  This function
 	     succeeds if __xstat fails because the name does not exist.
 	     Note the continue to bypass the common logic at the bottom
 	     of the loop.  */
@@ -288,11 +252,15 @@ __gen_tempname (char *tmpl, int kind)
 	      if (errno == ENOENT)
 		{
 		  __set_errno (save_errno);
-		  return 0;
+		  fd = 0;
+		  goto done;
 		}
 	      else
-		/* Give up now. */
-		return -1;
+		{
+		  /* Give up now. */
+		  fd = -1;
+		  goto done;
+		}
 	    }
 	  continue;
 
@@ -303,13 +271,32 @@ __gen_tempname (char *tmpl, int kind)
       if (fd >= 0)
 	{
 	  __set_errno (save_errno);
-	  return fd;
+	  goto done;
 	}
       else if (errno != EEXIST)
-	return -1;
+	{
+	  fd = -1;
+	  goto done;
+	}
     }
+
+  randint_all_free (rand_src);
 
   /* We got out of the loop because we ran out of combinations to try.  */
   __set_errno (EEXIST);
   return -1;
+
+ done:
+  {
+    int saved_errno = errno;
+    randint_all_free (rand_src);
+    __set_errno (saved_errno);
+  }
+  return fd;
+}
+
+int
+__gen_tempname (char *tmpl, int kind)
+{
+  return gen_tempname_len (tmpl, kind, 6);
 }

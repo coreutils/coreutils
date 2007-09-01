@@ -1,6 +1,6 @@
 /* Create a temporary file or directory.
 
-   Copyright (C) 2006 Free Software Foundation, Inc.
+   Copyright (C) 2006, 2007 Free Software Foundation, Inc.
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -37,4 +37,6 @@
    GT_DIR:		create a directory, which will be mode 0700.
 
    We use a clever algorithm to get hard-to-predict names. */
+#include <stddef.h>
 extern int gen_tempname (char *tmpl, int kind);
+extern int gen_tempname_len (char *tmpl, int kind, size_t x_suffix_len);
