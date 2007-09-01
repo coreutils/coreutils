@@ -1,3 +1,8 @@
+2007-09-01  Jim Meyering  <jim@meyering.net>
+
+	Make groups-version executable,
+	* tests/misc/groups-version: ... as it was in the patch.
+
 2007-08-31  Eric Blake  <ebb9@byu.net>
 
 	Test yesterday's change to groups.
