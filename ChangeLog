@@ -1,3 +1,11 @@
+2007-09-02  Jim Meyering  <jim@meyering.net>
+
+	bootstrap: uses rsync to download the .po files
+	* bootstrap (po_download_command_format): New global.
+	(download_po_files): Use rsync.
+	(update_po_files): Don't remove .po files after download,
+	so future rsync runs can take advantage of the copies.
+
 2007-09-01  Jim Meyering  <jim@meyering.net>
 
 	* bootstrap (gnulib_tool): Make sha1sum check quietly.

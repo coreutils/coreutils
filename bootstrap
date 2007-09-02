@@ -70,9 +70,13 @@ gnulib_modules=
 # Any gnulib files needed that are not in modules.
 gnulib_files=
 
-# Translation Project URL, for the registry of all projects
-# and for the translation-team master directory.
-TP_URL="http://translationproject.org/latest/"
+# The command to download all .po files for a specified domain into
+# a specified directory.  Fill in the first %s is the domain name, and
+# the second with the destination directory.  Use rsync's -L and -r
+# options because the latest/%s directory and the .po files within are
+# all symlinks.
+po_download_command_format=\
+"rsync -Lrtvz 'translationproject.org::tp/latest/%s/' '%s'"
 
 extract_package_name='
   /^AC_INIT(/{
@@ -255,17 +259,9 @@ gnulib_tool=$GNULIB_SRCDIR/gnulib-tool
 download_po_files() {
   subdir=$1
   domain=$2
-
-  case $WGET_COMMAND in
-  '')
-    echo "$0: wget not available; skipping translations";;
-  ?*)
-    echo "$0: getting translations into $subdir for $domain..." &&
-
-    (cd $subdir && rm -f dummy `ls | sed -n '/\.po/p'` &&
-     $WGET_COMMAND -r -l1 -nd -np -A.po $TP_URL/$domain)
-    ;;
-  esac
+  echo "$0: getting translations into $subdir for $domain..."
+  cmd=`printf "$po_download_command_format" "$domain" "$subdir"`
+  eval "$cmd"
 }
 
 # Download .po files to $po_dir/.reference and copy only the new
@@ -292,7 +288,6 @@ update_po_files() {
        echo "updated $po_dir/$po.po..."
        cp "$new_po" "$po_dir/$po.po" && sha1sum < "$new_po" > "$cksum_file"
      fi
-     rm -f "$new_po"
   done
 }
 
