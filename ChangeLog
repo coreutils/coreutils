@@ -1,5 +1,7 @@
 2007-09-02  Jim Meyering  <jim@meyering.net>
 
+	* bootstrap (WGET_COMMAND): Remove code to set this variable.
+
 	Ensure that $(VERSION) is up to date for dist-related targets.
 	* GNUmakefile: Arrange to rerun autoconf, if the version reported by
 	git-version-gen doesn't match $(VERSION), but only for dist targets.

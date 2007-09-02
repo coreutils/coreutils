@@ -293,17 +293,6 @@ update_po_files() {
 
 case $SKIP_PO in
 '')
-  case `wget --help` in
-  *'--no-cache'*)
-    WGET_COMMAND='wget -nv --no-cache';;
-  *'--cache=on/off'*)
-    WGET_COMMAND='wget -nv --cache=off';;
-  *'--non-verbose'*)
-    WGET_COMMAND='wget -nv';;
-  *)
-    WGET_COMMAND='';;
-  esac
-
   if test -d po; then
     update_po_files po $package || exit
   fi
