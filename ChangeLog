@@ -1,5 +1,9 @@
 2007-09-02  Jim Meyering  <jim@meyering.net>
 
+	Ensure that $(VERSION) is up to date for dist-related targets.
+	* GNUmakefile: Arrange to rerun autoconf, if the version reported by
+	git-version-gen doesn't match $(VERSION), but only for dist targets.
+
 	bootstrap: uses rsync to download the .po files
 	* bootstrap (po_download_command_format): New global.
 	(download_po_files): Use rsync.
