@@ -1,5 +1,9 @@
 2007-09-03  Jim Meyering  <jim@meyering.net>
 
+	Invoke $(AUTOCONF) manually, if needed to get an updated version string.
+	* GNUmakefile: Don't actually touch configure.ac.
+	That would make git-version-gen always print "...-dirty".
+
 	Don't change '-'s to '.'s in the string from git-describe.
 	* build-aux/git-version-gen: Leave '-'s in the string from git-describe.
 	Otherwise, s/-/./g would make it too hard to distinguish the base
