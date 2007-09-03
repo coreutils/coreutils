@@ -18,8 +18,8 @@ tools we depend upon, including:
 - Gperf <http://www.gnu.org/software/gperf/>
 - Gzip <http://www.gnu.org/software/gzip/>
 - Perl <http://www.cpan.org/>
+- Rsync <http://samba.anu.edu.au/rsync/>
 - Tar <http://www.gnu.org/software/tar/>
-- Wget <http://www.gnu.org/software/wget/>
 
 Valgrind <http://valgrind.org/> is also highly recommended, if
 Valgrind supports your architecture.
