@@ -38,8 +38,8 @@ elif test -d .git \
 	 *) (exit 1) ;;
        esac
 then
-    # Remove the "g" in git-describe's output string; change each - to a '.'
-    v=`echo "$v" | sed 's/\(.*\)-g/\1-/;s/-/./g'`;
+    # Remove the "g" in git-describe's output string.
+    v=`echo "$v" | sed 's/\(.*\)-g/\1-/'`;
 else
     v=$default_version
 fi

@@ -1,5 +1,12 @@
 2007-09-03  Jim Meyering  <jim@meyering.net>
 
+	Don't change '-'s to '.'s in the string from git-describe.
+	* build-aux/git-version-gen: Leave '-'s in the string from git-describe.
+	Otherwise, s/-/./g would make it too hard to distinguish the base
+	version number from the appended .DD suffixes.
+
+2007-09-03  Jim Meyering  <jim@meyering.net>
+
 	* README-hacking: Require rsync, rather than wget.
 
 2007-09-02  Jim Meyering  <jim@meyering.net>
