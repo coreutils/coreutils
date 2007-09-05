@@ -2651,7 +2651,8 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
 			  ?  getfilecon (absolute_name, &f->scontext)
 			  : lgetfilecon (absolute_name, &f->scontext));
 	  err = (attr_len < 0);
-	  file_has_security_context = (err == 0);
+	  file_has_security_context =
+	    (err == 0 && ! STREQ ("unlabeled", f->scontext));
 
 	  /* When requesting security context information, don't make
 	     ls fail just because the file (even a command line argument)

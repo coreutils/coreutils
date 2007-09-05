@@ -1,3 +1,12 @@
+2007-09-05  Jim Meyering  <jim@meyering.net>
+
+	Adapt to new SELinux behavior: "?" vs. new "unlabeled"
+	* src/ls.c (gobble_file): Interpret the new "unlabeled" indicator
+	from getfilecon/lgetfilecon the same way we interpret a negative
+	return value: no security context.  So we don't print the "+".
+	* tests/selinux: Recognize that "unlabeled" means insufficient
+	support for SELinux, just like "?".
+
 2007-09-03  Jim Meyering  <jim@meyering.net>
 
 	Invoke $(AUTOCONF) manually, if needed to get an updated version string.

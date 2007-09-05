@@ -1,4 +1,4 @@
-# Is a test expensive?
+# Skip this test if there is insufficient SELinux support.
 # Copyright (C) 2007 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
@@ -14,9 +14,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-test "`ls -Zd .`" = '? .' &&
-  {
+case `ls -Zd .` in
+  '? .'|'unlabeled .')
     echo "$0: skipping this test; this system (or maybe just" 1>&2
     echo "   the current file system) lacks SELinux support" 1>&2
     (exit 77); exit 77
-  }
+  ;;
+esac
