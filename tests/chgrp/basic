@@ -21,23 +21,9 @@ if test "$VERBOSE" = yes; then
   chgrp --version
 fi
 
-. $srcdir/../envvar-check
 . $srcdir/../lang-default
 . $srcdir/../group-names
-
-pwd=`pwd`
-tmp=basic.$$
-trap 'status=$?; cd "$pwd" && rm -rf $tmp && exit $status' 0
-trap '(exit $?); exit' 1 2 13 15
-
-framework_failure=0
-mkdir $tmp || framework_failure=1
-cd $tmp || framework_failure=1
-
-if test $framework_failure = 1; then
-  echo 'failure in testing framework' 1>&2
-  (exit 1); exit 1
-fi
+. $srcdir/../test-lib.sh
 
 fail=0
 

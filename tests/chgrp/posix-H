@@ -1,7 +1,7 @@
 #!/bin/sh
 # Test POSIX-mandated -H option.
 
-# Copyright (C) 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+# Copyright (C) 2003-2007 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,29 +22,17 @@ if test "$VERBOSE" = yes; then
 fi
 
 . $srcdir/../group-names
+. $srcdir/../test-lib.sh
+
 set _ $groups; shift
 g1=$1
 g2=$2
 
-pwd=`pwd`
-t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
-trap 'status=$?; cd "$pwd" && chmod -R u+rwx $t0 && rm -rf $t0 && exit $status' 0
-trap '(exit $?); exit $?' 1 2 13 15
-
-framework_failure=0
-mkdir -p $tmp || framework_failure=1
-cd $tmp || framework_failure=1
-
-mkdir 1 2 3 || framework_failure=1
-touch 1/1F 2/2F 3/3F || framework_failure=1
-ln -s 1 1s || framework_failure=1
-ln -s ../3 2/2s || framework_failure=1
-chgrp -R $g1 1 2 3 || framework_failure=1
-
-if test $framework_failure = 1; then
-  echo "$0: failure in testing framework" 1>&2
-  (exit 1); exit 1
-fi
+mkdir 1 2 3 || framework_failure
+touch 1/1F 2/2F 3/3F || framework_failure
+ln -s 1 1s || framework_failure
+ln -s ../3 2/2s || framework_failure
+chgrp -R $g1 1 2 3 || framework_failure
 
 fail=0
 

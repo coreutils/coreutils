@@ -13,6 +13,7 @@ FIXME_hook_this_to_make_distcheck:
 # Append this, because automake does the same.
 TESTS_ENVIRONMENT +=			\
   abs_top_srcdir=$(abs_top_srcdir)	\
+  abs_top_builddir=$(abs_top_builddir)	\
   srcdir=$(srcdir)
 
 TEST_LOGS = $(TESTS:=.log)

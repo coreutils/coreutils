@@ -3,8 +3,7 @@
 # Before fileutils-4.1.2, some of them didn't.
 # Also, before coreutils-5.3.1, =[ugo] sometimes didn't work.
 
-# Copyright (C) 2001, 2002, 2004, 2005, 2006 Free Software Foundation,
-# Inc.
+# Copyright (C) 2001, 2002, 2004-2007 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,20 +23,9 @@ if test "$VERBOSE" = yes; then
   chmod --version
 fi
 
-pwd=`pwd`
-tmp=equals.$$
-trap 'status=$?; cd "$pwd" && rm -rf $tmp && exit $status' 0
-trap '(exit $?); exit' 1 2 13 15
+. $srcdir/../test-lib.sh
 
-framework_failure=0
-mkdir $tmp || framework_failure=1
-cd $tmp || framework_failure=1
-touch f || framework_failure=1
-
-if test $framework_failure = 1; then
-  echo "$0: failure in testing framework" 1>&2
-  (exit 1); exit 1
-fi
+touch f || framework_failure
 
 fail=0
 

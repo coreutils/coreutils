@@ -34,7 +34,8 @@ TESTS = \
 EXTRA_DIST = $(TESTS) trailing-slash
 TESTS_ENVIRONMENT =			\
   MAKE=$(MAKE)				\
-  abs_top_builddir=$(abs_top_builddir)	\
   CONFIG_HEADER=$(CONFIG_HEADER)	\
   CU_TEST_NAME=`basename $(abs_srcdir)`,$$tst \
   PATH="$(VG_PATH_PREFIX)`pwd`/../../src$(PATH_SEPARATOR)$$PATH"
+
+include $(top_srcdir)/tests/check.mk

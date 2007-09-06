@@ -8,6 +8,12 @@ if test $? != 11; then
   (exit 77); exit 77
 fi
 
+framework_failure()
+{
+  echo "$0: failure in testing framework" 1>&2
+  (exit 1); exit 1
+}
+
 test_dir_=$(pwd)
 
 this_test_() { echo "./$0" | sed 's,.*/,,'; }
