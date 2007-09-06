@@ -4,7 +4,7 @@
 # For additional constraints, see the comment in copy.c.
 # Before coreutils-5.2.1, this test would fail.
 
-# Copyright (C) 2004, 2005, 2006 Free Software Foundation, Inc.
+# Copyright (C) 2004-2007 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,32 +24,15 @@ if test "$VERBOSE" = yes; then
   mv --version
 fi
 
-. $srcdir/../other-fs-tmpdir
-. $srcdir/../envvar-check
+. $srcdir/../test-lib.sh
+cleanup_() { rm -rf "$other_partition_tmpdir"; }
+. "$abs_top_srcdir/tests/other-fs-tmpdir"
 
-pwd=`pwd`
-t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
-trap 'status=$?; cd "$pwd" && chmod -R u+rwx $t0 && rm -rf $t0 && exit $status' 0
-trap '(exit $?); exit' 1 2 13 15
-
-if test -z "$other_partition_tmpdir"; then
-  (exit 77); exit 77
-fi
-t0="$t0 $other_partition_tmpdir"
-
-framework_failure=0
-mkdir -p $tmp || framework_failure=1
-cd $tmp || framework_failure=1
-touch f || framework_failure=1
-ln f g || framework_failure=1
-mkdir a b || framework_failure=1
-touch a/1 || framework_failure=1
-ln a/1 b/1 || framework_failure=1
-
-if test $framework_failure = 1; then
-  echo "$0: failure in testing framework" 1>&2
-  (exit 1); exit 1
-fi
+touch f || framework_failure
+ln f g || framework_failure
+mkdir a b || framework_failure
+touch a/1 || framework_failure
+ln a/1 b/1 || framework_failure
 
 fail=0
 

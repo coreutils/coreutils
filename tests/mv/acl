@@ -2,7 +2,7 @@
 # move files/directories across file system boundaries
 # and make sure acls are preserved
 
-# Copyright (C) 2005, 2006 Free Software Foundation, Inc.
+# Copyright (C) 2005-2007 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,9 +18,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . $srcdir/../acl
-. $srcdir/../other-fs-tmpdir
-# Make sure we get English translations.
-. $srcdir/../lang-default
 
 # Skip this test if cp was built without ACL support:
 grep '^#define USE_ACL 0' $CONFIG_HEADER > /dev/null && \
@@ -36,29 +33,14 @@ if test "$VERBOSE" = yes; then
   setfacl --version
 fi
 
-if test -z "$other_partition_tmpdir"; then
-  (exit 77); exit 77
-fi
+. $srcdir/../lang-default
+. $srcdir/../test-lib.sh
+cleanup_() { rm -rf "$other_partition_tmpdir"; }
+. "$abs_top_srcdir/tests/other-fs-tmpdir"
 
-pwd=`pwd`
-t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
-trap 'status=$?; cd "$pwd" && chmod -R u+rwx $t0 && rm -rf $t0 && exit $status' 0
-trap '(exit $?); exit $?' 1 2 13 15
-
-t0="$t0 $other_partition_tmpdir"
-
-framework_failure=0
-mkdir -p $tmp || framework_failure=1
-cd $tmp || framework_failure=1
-
-touch file || framework_failure=1
+touch file || framework_failure
 t1=$other_partition_tmpdir/t1
-touch $t1 || framework_failure=1
-
-if test $framework_failure = 1; then
-  echo 'failure in testing framework'
-  (exit 1); exit 1
-fi
+touch $t1 || framework_failure
 
 skip=no
 # Ensure that setfacl and getfacl work on this file system.
@@ -76,28 +58,23 @@ test $skip != no &&
 
 # move the access acl of a file
 mv file $other_partition_tmpdir || fail=1
-acl2=`cd $other_partition_tmpdir && getfacl file` || framework_failure=1
+acl2=`cd $other_partition_tmpdir && getfacl file` || framework_failure
 test "$acl1" = "$acl2" || fail=1
 
 # move the access acl of a directory
-mkdir dir || framework_failure=1
-setfacl -m user:bin:rw dir || framework_failure=1
-acl1=`getfacl dir` || framework_failure=1
+mkdir dir || framework_failure
+setfacl -m user:bin:rw dir || framework_failure
+acl1=`getfacl dir` || framework_failure
 mv dir $other_partition_tmpdir || fail=1
-acl2=`cd $other_partition_tmpdir && getfacl dir` || framework_failure=1
+acl2=`cd $other_partition_tmpdir && getfacl dir` || framework_failure
 test "$acl1" = "$acl2" || fail=1
 
 # move the default acl of a directory
-mkdir dir2 || framework_failure=1
-setfacl -d -m user:bin:rw dir2 || framework_failure=1
-acl1=`getfacl dir2` || framework_failure=1
+mkdir dir2 || framework_failure
+setfacl -d -m user:bin:rw dir2 || framework_failure
+acl1=`getfacl dir2` || framework_failure
 mv dir2 $other_partition_tmpdir || fail=1
-acl2=`cd $other_partition_tmpdir && getfacl dir2` || framework_failure=1
+acl2=`cd $other_partition_tmpdir && getfacl dir2` || framework_failure
 test "$acl1" = "$acl2" || fail=1
-
-if test $framework_failure = 1; then
-  echo 'failure in testing framework'
-  (exit 1); exit 1
-fi
 
 exit $fail

@@ -4,7 +4,7 @@
 # Also, ensure that "mv dir non-exist-dir/" works.
 # Also, ensure that "cp dir non-exist-dir/" works.
 
-# Copyright (C) 2004, 2006 Free Software Foundation, Inc.
+# Copyright (C) 2004, 2006-2007 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,22 +24,9 @@ if test "$VERBOSE" = yes; then
   mv --version
 fi
 
-pwd=`pwd`
-tmp=mv-tslash.$$
-trap 'status=$?; cd "$pwd" && exec 1>&2; rm -rf $tmp && exit $status' 0
-trap '(exit $?); exit' 1 2 13 15
+. $srcdir/../test-lib.sh
 
-. $srcdir/../envvar-check
-
-framework_failure=0
-mkdir $tmp || framework_failure=1
-cd $tmp || framework_failure=1
-mkdir foo || framework_failure=1
-
-if test $framework_failure = 1; then
-  echo 'failure in testing framework' 1>&2
-  exit 1
-fi
+mkdir foo || framework_failure
 
 fail=0
 
@@ -48,12 +35,8 @@ mv foo/ bar || fail=1
 # mv and cp would misbehave for coreutils versions [5.3.0..5.97], 6.0 and 6.1
 for cmd in mv 'cp -r'; do
   for opt in '' -T -u; do
-    rm -rf d e || framework_failure=1
-    mkdir d    || framework_failure=1
-    if test $framework_failure = 1; then
-      echo 'failure in testing framework'
-      (exit 1); exit 1
-    fi
+    rm -rf d e || framework_failure
+    mkdir d    || framework_failure
 
     $cmd $opt d e/ || fail=1
     if test "$cmd" = mv; then

@@ -46,3 +46,5 @@ TESTS_ENVIRONMENT = \
   PATH="$(VG_PATH_PREFIX)`pwd`/../../src$(PATH_SEPARATOR)$$PATH" \
   CONFIG_HEADER=$(CONFIG_HEADER) \
   PROG=mv
+
+include $(top_srcdir)/tests/check.mk

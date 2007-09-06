@@ -1,7 +1,7 @@
 #!/bin/sh
 # Show that mv doesn't preserve links to files the user has declined to move.
 
-# Copyright (C) 2002, 2004, 2005, 2006 Free Software Foundation, Inc.
+# Copyright (C) 2002, 2004-2007 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,28 +21,15 @@ if test "$VERBOSE" = yes; then
   mv --version
 fi
 
-. $srcdir/../envvar-check
 . $srcdir/../lang-default
+. $srcdir/../test-lib.sh
 
-pwd=`pwd`
-tmp=i-link-no.$$
-trap 'status=$?; cd "$pwd" && rm -rf $tmp && exit $status' 0
-trap '(exit $?); exit' 1 2 13 15
-
-framework_failure=0
-mkdir $tmp || framework_failure=1
-cd $tmp || framework_failure=1
-mkdir a b || framework_failure=1
-echo foo > a/foo || framework_failure=1
-ln a/foo a/bar || framework_failure=1
-echo FUBAR > b/FUBAR || framework_failure=1
-ln b/FUBAR b/bar || framework_failure=1
-chmod a-w b/bar || framework_failure=1
-
-if test $framework_failure = 1; then
-  echo "$0: failure in testing framework" 1>&2
-  (exit 1); exit 1
-fi
+mkdir a b || framework_failure
+echo foo > a/foo || framework_failure
+ln a/foo a/bar || framework_failure
+echo FUBAR > b/FUBAR || framework_failure
+ln b/FUBAR b/bar || framework_failure
+chmod a-w b/bar || framework_failure
 
 fail=0
 
@@ -54,11 +41,8 @@ cat <<EOF > exp_err
 mv: the --reply option is deprecated; use -i or -f instead
 EOF
 
-cmp err exp_err || fail=1
-test $fail = 1 && diff err exp_err 2> /dev/null
-
-cmp out exp || fail=1
-test $fail = 1 && diff out exp 2> /dev/null
+compare err exp_err || fail=1
+compare out exp || fail=1
 
 case "`cat b/foo`" in
   foo) ;;

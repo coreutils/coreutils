@@ -2,7 +2,7 @@
 # Make sure that the copying code used in an inter-partition
 # move unlinks a destination symlink before opening it.
 
-# Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+# Copyright (C) 1999, 2000, 2007 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,12 +22,9 @@ if test "$VERBOSE" = yes; then
   mv --version
 fi
 
-. $srcdir/../other-fs-tmpdir
-. $srcdir/../envvar-check
-
-if test -z "$other_partition_tmpdir"; then
-  exit 77
-fi
+. $srcdir/../test-lib.sh
+cleanup_() { rm -rf "$other_partition_tmpdir"; }
+. "$abs_top_srcdir/tests/other-fs-tmpdir"
 
 rem_file="$other_partition_tmpdir/file"
 rem_symlink="$other_partition_tmpdir/symlink"
@@ -35,18 +32,10 @@ file=to-sym-$$
 
 fail=0
 
-trap 'rm -fr $file $other_partition_tmpdir; exit $fail' 0 1 2 3 15
-
-framework_failure=0
-rm -f $file || framework_failure=1
-echo local > $file || framework_failure=1
-echo remote > $rem_file || framework_failure=1
-ln -s $rem_file $rem_symlink || framework_failure=1
-
-if test $framework_failure = 1; then
-  echo 'failure in testing framework'
-  exit 1
-fi
+rm -f $file || framework_failure
+echo local > $file || framework_failure
+echo remote > $rem_file || framework_failure
+ln -s $rem_file $rem_symlink || framework_failure
 
 # This mv command should succeed, unlinking the symlink
 # before copying.

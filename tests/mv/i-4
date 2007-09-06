@@ -1,7 +1,7 @@
 #!/bin/sh
 # make sure `mv -i a b' does its job with a positive response
 
-# Copyright (C) 2001, 2005, 2006 Free Software Foundation, Inc.
+# Copyright (C) 2001, 2005-2007 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,28 +21,13 @@ if test "$VERBOSE" = yes; then
   mv --version
 fi
 
-. $srcdir/../envvar-check
 . $srcdir/../lang-default
-
-pwd=`pwd`
-tmp=mv-i4-$$
-trap 'status=$?; cd "$pwd" && rm -rf $tmp && exit $status' 0
-trap 'exit $?' 1 2 13 15
-
-framework_failure=0
-mkdir $tmp || framework_failure=1
-cd $tmp || framework_failure=1
-
+. $srcdir/../test-lib.sh
 
 for i in a b; do
-  echo $i > $i || framework_failure=1
+  echo $i > $i || framework_failure
 done
-echo y > y || framework_failure=1
-
-if test $framework_failure = 1; then
-  echo 'failure in testing framework'
-  exit 1
-fi
+echo y > y || framework_failure
 
 fail=0
 mv -i a b < y >/dev/null 2>&1 || fail=1

@@ -1,7 +1,7 @@
 #! /bin/sh
 # Demonstrate how mv fails when it tries to move a directory into itself.
 
-# Copyright (C) 1998, 1999, 2000, 2002 Free Software Foundation, Inc.
+# Copyright (C) 1998, 1999, 2000, 2002, 2007 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,24 +21,17 @@ if test "$VERBOSE" = yes; then
   mv --version
 fi
 
+. $srcdir/../lang-default
+. $srcdir/../test-lib.sh
+
 dir=toself-dir
 file=toself-file
 
-test_failure=0
-
-rm -rf $dir $file || test_failure=1
-mkdir -p $dir/a/b || test_failure=1
-touch $file || test_failure=1
-
-if test $test_failure = 1; then
-  echo 'failure in testing framework'
-  exit 1
-fi
+rm -rf $dir $file || framework_failure
+mkdir -p $dir/a/b || framework_failure
+touch $file || framework_failure
 
 fail=0
-
-# Make sure we get English translations.
-. $srcdir/../lang-default
 
 # This mv command should fail.
 mv $dir $file $dir > out 2>&1 && fail=1
@@ -53,7 +46,7 @@ cat > exp <<\EOF
 XXX: cannot move `SRC' to a subdirectory of itself, `DEST'
 EOF
 
-cmp out2 exp || fail=1
+compare out2 exp || fail=1
 
 # Make sure the file is gone.
 test -f $file && fail=1
@@ -62,6 +55,5 @@ test -d $dir || fail=1
 test -d $dir/$dir && fail=1
 # Make sure the file has been moved to the right place.
 test -f $dir/$file || fail=1
-rm -rf $dir $file out out2 exp
 
 exit $fail

@@ -2,7 +2,7 @@
 # move a directory containing hard-linked files and
 # make sure the links are preserved
 
-# Copyright (C) 1998, 1999, 2000, 2004, 2006 Free Software Foundation, Inc.
+# Copyright (C) 1998, 1999, 2000, 2004, 2006-2007 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,34 +22,16 @@ if test "$VERBOSE" = yes; then
   mv --version
 fi
 
-. $srcdir/../other-fs-tmpdir
-# Make sure we get English translations.
 . $srcdir/../lang-default
-
-pwd=`pwd`
-t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
-trap 'status=$?; cd "$pwd" && chmod -R u+rwx $t0 && rm -rf $t0 && exit $status' 0
-trap '(exit $?); exit $?' 1 2 13 15
-
-framework_failure=0
-mkdir -p $tmp || framework_failure=1
-cd $tmp || framework_failure=1
-
-if test -z "$other_partition_tmpdir"; then
-  (exit 77); exit 77
-fi
+. $srcdir/../test-lib.sh
+cleanup_() { rm -rf "$other_partition_tmpdir"; }
+. "$abs_top_srcdir/tests/other-fs-tmpdir"
 
 dir=hlink
 
-framework_failure=0
-mkdir $dir || framework_failure=1
-> $dir/a || framework_failure=1
-ln $dir/a $dir/b || framework_failure=1
-
-if test $framework_failure = 1; then
-  echo 'failure in testing framework'
-  (exit 1); exit 1
-fi
+mkdir $dir || framework_failure
+> $dir/a || framework_failure
+ln $dir/a $dir/b || framework_failure
 
 mv $dir $other_partition_tmpdir || fail=1
 
@@ -60,7 +42,5 @@ ls -1i $other_partition_tmpdir/$dir > out || fail=1
 a=`sed -n 's/ a$//p' out`
 b=`sed -n 's/ b$//p' out`
 test "$a" = "$b" || fail=1
-
-rm -fr out $dir $other_partition_tmpdir
 
 exit $fail

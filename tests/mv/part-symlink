@@ -2,7 +2,7 @@
 # make sure cp and mv can handle many combinations of local and
 # other-partition regular/symlink'd files.
 
-# Copyright (C) 2000, 2003, 2004, 2006 Free Software Foundation, Inc.
+# Copyright (C) 2000, 2003, 2004, 2006-2007 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,34 +23,16 @@ if test "$VERBOSE" = yes; then
   cp --version
 fi
 
-pwd=`pwd`
-tmp=part-sl.$$
-trap 'status=$?; cd "$pwd" && exec 1>&2; rm -rf $tmp $other_partition_tmpdir && exit $status' 0
-trap '(exit $?); exit' 1 2 13 15
-
-pwd_tmp=$pwd/$tmp
-
-. $srcdir/../other-fs-tmpdir
-. $srcdir/../envvar-check
-# Make sure the programs use C-locale formats/translations.
 . $srcdir/../lang-default
+. $srcdir/../test-lib.sh
+cleanup_() { rm -rf "$other_partition_tmpdir"; }
+. "$abs_top_srcdir/tests/other-fs-tmpdir"
+
+pwd_tmp=`pwd`
 
 # Unset CDPATH.  Otherwise, output from the `cd dir' command
 # can make this test fail.
 (unset CDPATH) >/dev/null 2>&1 && unset CDPATH
-
-if test -z "$other_partition_tmpdir"; then
-  (exit 77); exit 77
-fi
-
-framework_failure=0
-mkdir $tmp || framework_failure=1
-cd $tmp || framework_failure=1
-
-if test $framework_failure = 1; then
-  echo 'failure in testing framework'
-  exit 1
-fi
 
 fail=0
 
@@ -220,8 +202,7 @@ cat <<\EOF > $expected
 
 EOF
 
-# Some folks may don't have diff.
-cmp $expected $actual \
-  || { diff -c $expected $actual 1>&2; fail=1; }
+# Redirect to stderr, since stdout is already
+compare $expected $actual || fail=1
 
 (exit $fail); exit $fail
