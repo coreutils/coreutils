@@ -1,3 +1,9 @@
+2007-09-07  Bob Proulx  <bob@proulx.com>
+
+	Add a test: demonstrate that chmod ignores a dangling symlink
+	* tests/chmod/thru-dangling: New test.  Fails.
+	* tests/chmod/Makefile.am (TESTS): Add thru-dangling.
+
 2007-09-05  Jim Meyering  <jim@meyering.net>
 
 	Adapt to new SELinux behavior: "?" vs. new "unlabeled"
