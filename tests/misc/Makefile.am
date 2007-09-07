@@ -62,6 +62,7 @@ TESTS = \
   close-stdout \
   csplit \
   date-sec \
+  dircolors \
   df \
   dirname \
   expand \

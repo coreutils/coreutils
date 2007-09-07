@@ -342,7 +342,6 @@ AC_CONFIG_FILES(
   tests/cp/Makefile
   tests/cut/Makefile
   tests/dd/Makefile
-  tests/dircolors/Makefile
   tests/du/Makefile
   tests/expr/Makefile
   tests/factor/Makefile
