@@ -2,7 +2,7 @@
 # Ensure dd treats `--' properly.
 # Also test some flag values.
 
-# Copyright (C) 1999, 2004, 2005, 2006 Free Software Foundation, Inc.
+# Copyright (C) 1999, 2004-2007 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,15 +17,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-tmp_in=dd-in.$$
-tmp_in2=dd-in2.$$
-tmp_sym=dd-sym.$$
-tmp_out=dd-out.$$
-
 if test "$VERBOSE" = yes; then
   set -x
   dd --version
 fi
+
+. $srcdir/../test-lib.sh
+
+tmp_in=dd-in.$$
+tmp_in2=dd-in2.$$
+tmp_sym=dd-sym.$$
+tmp_out=dd-out.$$
 
 fail=0
 warn=0
@@ -39,14 +41,14 @@ if test $test_failure = 1; then
 fi
 
 dd if=$tmp_in of=$tmp_out 2> /dev/null || fail=1
-cmp $tmp_in $tmp_out || fail=1
+compare $tmp_in $tmp_out || fail=1
 
 rm $tmp_out
 dd -- if=$tmp_in of=$tmp_out 2> /dev/null || fail=1
-cmp $tmp_in $tmp_out || fail=1
+compare $tmp_in $tmp_out || fail=1
 
 if dd oflag=append if=$tmp_in of=$tmp_out 2> /dev/null; then
-  cmp $tmp_in $tmp_out || fail=1
+  compare $tmp_in $tmp_out || fail=1
 fi
 
 if dd iflag=nofollow if=$tmp_in count=0 2> /dev/null; then
@@ -83,8 +85,6 @@ fi
 
 outbytes=`echo x | dd bs=3 ibs=10 obs=10 conv=sync 2>/dev/null | wc -c`
 test "$outbytes" -eq 3 || fail=1
-
-rm -f $tmp_in $tmp_in2 $tmp_sym $tmp_out || fail=1
 
 test $fail -eq 0 && fail=$warn
 exit $fail

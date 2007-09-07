@@ -11,3 +11,5 @@ TESTS_ENVIRONMENT = \
   PROG=dd
 
 TESTS = misc not-rewound skip-seek skip-seek2 unblock-sync
+
+include $(top_srcdir)/tests/check.mk
