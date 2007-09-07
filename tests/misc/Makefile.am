@@ -66,6 +66,7 @@ TESTS = \
   df \
   dirname \
   expand \
+  expr \
   false-status \
   fold \
   groups-version \
