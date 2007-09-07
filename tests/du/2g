@@ -3,7 +3,7 @@
 # Before coreutils-5.93, on systems with a signed, 32-bit stat.st_blocks
 # one of du's computations would overflow.
 
-# Copyright (C) 2005, 2006 Free Software Foundation, Inc.
+# Copyright (C) 2005-2007 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,24 +23,10 @@ if test "$VERBOSE" = yes; then
   du --version
 fi
 
-. $srcdir/../envvar-check
-
 # Creating a 2GB file counts as `very expensive'.
 . $srcdir/../very-expensive
 
-pwd=`pwd`
-t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
-trap 'status=$?; cd "$pwd" && chmod -R u+rwx $t0 && rm -rf $t0 && exit $status' 0
-trap '(exit $?); exit $?' 1 2 13 15
-
-framework_failure=0
-mkdir -p $tmp || framework_failure=1
-cd $tmp || framework_failure=1
-
-if test $framework_failure = 1; then
-  echo "$0: failure in testing framework" 1>&2
-  (exit 1); exit 1
-fi
+. $srcdir/../test-lib.sh
 
 fail=0
 
@@ -85,7 +71,6 @@ cat <<\EOF > exp || fail=1
 ~2M
 EOF
 
-cmp out exp || fail=1
-test $fail = 1 && diff out exp 2> /dev/null
+compare out exp || fail=1
 
 (exit $fail); exit $fail

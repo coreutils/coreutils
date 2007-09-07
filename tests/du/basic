@@ -22,30 +22,17 @@ if test "$VERBOSE" = yes; then
 fi
 
 # DU_BLOCK_SIZE could cause problems
-. $srcdir/../envvar-check
 . $srcdir/../lang-default
+. $srcdir/../test-lib.sh
 
-pwd=`pwd`
-t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
-trap 'status=$?; cd "$pwd" && chmod -R u+rwx $t0 && rm -rf $t0 && exit $status' 0
-trap '(exit $?); exit $?' 1 2 13 15
-
-framework_failure=0
-mkdir -p $tmp || framework_failure=1
-cd $tmp || framework_failure=1
-mkdir -p a/b d d/sub || framework_failure=1
+mkdir -p a/b d d/sub || framework_failure
 
 # Ensure that these files contain more than 64 bytes, so that we don't
 # immediately disqualify file systems (e.g., NetApp) on which smaller
 # files take up zero disk blocks.
-printf '%*s' 257 make-sure-the-file-is-non-empty > a/b/F || framework_failure=1
+printf '%*s' 257 make-sure-the-file-is-non-empty > a/b/F || framework_failure
 printf %4096s x > d/1
 cp d/1 d/sub/2
-
-if test $framework_failure = 1; then
-  echo "$0: failure in testing framework" 1>&2
-  (exit 1); exit 1
-fi
 
 fail=0
 
@@ -75,8 +62,7 @@ $a	a       # size of dir entry, a
 $tot	a
 EOF
 
-cmp out exp || fail=1
-test $fail = 1 && diff -u out exp 2> /dev/null
+compare out exp || fail=1
 
 # Perform this test only if "." is on a local file system.
 # Otherwise, it would fail e.g., on an NFS-mounted Solaris ZFS file system.
@@ -104,8 +90,7 @@ $s2	d/sub
 $d1	d           # d + d/1; don't count the dir. entry for d/sub
 EOF
 
-  cmp out exp || fail=1
-  test $fail = 1 && diff out exp 2> /dev/null
+  compare out exp || fail=1
 fi
 
 (exit $fail); exit $fail

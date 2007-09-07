@@ -20,7 +20,6 @@
 : ${PERL=perl}
 : ${srcdir=.}
 
-. $srcdir/../envvar-check
 
 $PERL -e 1 > /dev/null 2>&1 || {
   echo 1>&2 "$0: configure didn't find a usable version of Perl," \
