@@ -70,6 +70,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  chmod no longer ignores a dangling symlink.  Now, chmod fails
+  with a diagnostic saying that it cannot operate on such a file.
+  [bug introduced in coreutils-5.1.0]
+
   cp attempts to read a regular file, even if stat says it is empty.
   Before, "cp /proc/cpuinfo c" would create an empty file when the kernel
   reports stat.st_size == 0, while "cat /proc/cpuinfo > c" would "work",

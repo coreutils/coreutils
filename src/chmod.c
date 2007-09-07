@@ -1,5 +1,5 @@
 /* chmod -- change permission modes of files
-   Copyright (C) 89, 90, 91, 1995-2006 Free Software Foundation, Inc.
+   Copyright (C) 89, 90, 91, 1995-2007 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -219,6 +219,11 @@ process_file (FTS *fts, FTSENT *ent)
 	     quote (file_full_name));
       ok = false;
       break;
+
+    case FTS_SLNONE:
+      error (0, 0, _("cannot operate on dangling symlink %s"),
+	     quote (file_full_name));
+      ok = false;
 
     default:
       break;

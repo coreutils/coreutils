@@ -40,6 +40,10 @@ fi
 fail=0
 
 # This operation cannot succeed since the symbolic link dangles.
-chmod 644 dangle && fail=1
+chmod 644 dangle 2> out && fail=1
+
+echo "chmod: cannot operate on dangling symlink \`dangle'" > exp
+cmp out exp || fail=1
+test $fail = 1 && diff out exp 2> /dev/null
 
 (exit $fail); exit $fail

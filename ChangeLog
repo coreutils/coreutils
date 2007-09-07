@@ -1,3 +1,11 @@
+2007-09-07  Jim Meyering  <jim@meyering.net>
+
+	chmod: don't ignore a dangling symlink
+	* NEWS: Mention the bug fix.
+	* src/chmod.c (process_file): Handle the case of FTS_SLNONE,
+	i.e., give a diagnostic saying we cannot operate on such a file.
+	* tests/chmod/thru-dangling: Compare new stderr output with expected.
+
 2007-09-07  Bob Proulx  <bob@proulx.com>
 
 	Add a test: demonstrate that chmod ignores a dangling symlink
