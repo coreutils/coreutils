@@ -33,11 +33,10 @@ require 5.003;
 use strict;
 
 (my $program_name = $0) =~ s|.*/||;
+my $prog = 'factor';
 
 # Turn off localisation of executable's ouput.
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
-
-my $prog = $ENV{PROG} || die "$0: \$PROG not specified in environment\n";
 
 my @Tests =
     (

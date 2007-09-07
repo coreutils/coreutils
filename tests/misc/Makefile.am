@@ -67,6 +67,7 @@ TESTS = \
   dirname \
   expand \
   expr \
+  factor \
   false-status \
   fold \
   groups-version \
