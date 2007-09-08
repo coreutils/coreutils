@@ -349,7 +349,6 @@ AC_CONFIG_FILES(
   tests/ln/Makefile
   tests/ls-2/Makefile
   tests/ls/Makefile
-  tests/md5sum/Makefile
   tests/misc/Makefile
   tests/mkdir/Makefile
   tests/mv/Makefile

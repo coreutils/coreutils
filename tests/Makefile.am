@@ -45,7 +45,7 @@ EXTRA_DIST =		\
 ## There are too many already.  Put new tests in misc/.
 SUBDIRS = \
   chgrp chmod chown cp cut dd du head \
-  install join ln ls ls-2 md5sum misc mkdir mv od pr readlink rm rmdir \
+  install join ln ls ls-2 misc mkdir mv od pr readlink rm rmdir \
   seq sha1sum shred sort stty sum tac tail tail-2 tee test touch tr \
   tsort unexpand uniq wc
 ## N O T E :: Please do not add new directories.
