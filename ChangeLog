@@ -1,3 +1,8 @@
+2007-09-08  Jim Meyering  <jim@meyering.net>
+
+	Accommodate gnulib's renaming: __fpending.h -> fpending.h.
+	* lib/t-fpending.c: Include "fpending.h", not "__fpending.h".
+
 2007-09-07  Jim Meyering  <jim@meyering.net>
 
 	chmod: don't ignore a dangling symlink
