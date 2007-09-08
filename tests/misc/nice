@@ -1,7 +1,7 @@
 #! /bin/sh
 # Test "nice".
 
-# Copyright (C) 2002, 2003, 2005, 2006 Free Software Foundation, Inc.
+# Copyright (C) 2002, 2003, 2005-2007 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,12 +16,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# This script takes no arguments.
-
-if test -n "$DJDIR"; then
-  echo "$0: cannot test nice on DJGPP" >&2
-  exit 77
+if test "$VERBOSE" = yes; then
+  set -x
+  nice --version
 fi
+
+. $srcdir/../test-lib.sh
 
 tests='
 0 empty 10

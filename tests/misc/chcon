@@ -8,22 +8,9 @@ fi
 
 . $srcdir/../lang-default
 PRIV_CHECK_ARG=require-root . $srcdir/../priv-check
-
-pwd=`pwd`
-t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
-trap 'status=$?; cd $pwd; chmod -R u+rwx $t0; rm -rf $t0 && exit $status' 0
-trap '(exit $?); exit $?' 1 2 13 15
-
-framework_failure=0
-mkdir -p $tmp || framework_failure=1
-cd $tmp || framework_failure=1
-mkdir -p d/sub/s2 || framework_failure=1
-touch f g d/sub/1 d/sub/2 || framework_failure=1
-
-if test $framework_failure = 1; then
-  echo "$0: failure in testing framework" 1>&2
-  (exit 1); exit 1
-fi
+. $srcdir/../test-lib.sh
+mkdir -p d/sub/s2 || framework_failure
+touch f g d/sub/1 d/sub/2 || framework_failure
 
 fail=0
 
@@ -67,7 +54,6 @@ f|-robject_r|root:object_r:file_t:SystemLow-SystemHigh
 f|-ttmp_t|root:object_r:tmp_t:SystemLow-SystemHigh
 EOF
 
-cmp out exp || fail=1
-test $fail = 1 && diff out exp 2> /dev/null
+compare out exp || fail=1
 
 (exit $fail); exit $fail

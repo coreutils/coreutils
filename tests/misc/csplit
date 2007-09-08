@@ -1,8 +1,7 @@
 #!/bin/sh
 # various csplit tests
 
-# Copyright (C) 2001, 2002, 2003, 2004, 2005 2006 Free Software
-# Foundation, Inc.
+# Copyright (C) 2001-2007 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,20 +22,7 @@ if test "$VERBOSE" = yes; then
 fi
 
 . $srcdir/../lang-default
-
-pwd=`pwd`
-tmp=csplit.$$
-trap 'status=$?; cd "$pwd" && rm -rf $tmp && exit $status' 0
-trap '(exit $?); exit' 1 2 13 15
-
-framework_failure=0
-mkdir $tmp || framework_failure=1
-cd $tmp || framework_failure=1
-
-if test $framework_failure = 1; then
-  echo "$0: failure in testing framework" 1>&2
-  (exit 1); exit 1
-fi
+. $srcdir/../test-lib.sh
 
 fail=0
 
@@ -48,16 +34,14 @@ cat <<EOF > exp
 0
 2
 EOF
-cmp out exp || fail=1
-test $fail = 1 && diff out exp 2> /dev/null
+compare out exp || fail=1
 rm -f in out exp
 
 # Ensure that xx02 contains just two newlines.
 # This would fail due to reading from freed buffer with coreutils-5.0.91.
 printf '\n\n' > exp
 cp xx02 out || fail=1
-cmp out exp || fail=1
-test $fail = 1 && diff out exp 2> /dev/null
+compare out exp || fail=1
 rm -f in out exp
 
 # csplit would infloop
@@ -67,8 +51,7 @@ cat <<EOF > exp
 0
 3
 EOF
-cmp out exp || fail=1
-test $fail = 1 && diff out exp 2> /dev/null
+compare out exp || fail=1
 rm -f in out exp
 
 # `echo |csplit - 1 1' used to abort.
@@ -79,13 +62,11 @@ cat <<EOF > exp
 0
 1
 EOF
-cmp out exp || fail=1
-test $fail = 1 && diff out exp 2> /dev/null
+compare out exp || fail=1
 cat <<\EOF > experr
 csplit: warning: line number `1' is the same as preceding line number
 EOF
-cmp err experr || fail=1
-test $fail = 1 && diff err experr 2> /dev/null
+compare err experr || fail=1
 rm -f in out exp err experr
 
 # make sure `csplit FILE 0' fails.
@@ -99,8 +80,7 @@ csplit: line number `1' is smaller than preceding line number, 2
 csplit: warning: line number `3' is the same as preceding line number
 csplit: `3': line number out of range
 EOF
-cmp err experr || fail=1
-test $fail = 1 && diff err experr 2> /dev/null
+compare err experr || fail=1
 
 # Ensure that lines longer than the initial buffer length don't cause
 # trouble (e.g. reading from freed memory, resulting in corrupt output).
@@ -109,6 +89,6 @@ test $fail = 1 && diff err experr 2> /dev/null
 rm -f in out exp err experr xx??
 printf 'x%8199s\nx\n%8199s\nx\n' x x > in
 csplit in '/x\{1\}/' '{*}' > /dev/null || fail=1
-cat xx?? | cmp - in || fail=1
+cat xx?? | compare - in || fail=1
 
 (exit $fail); exit $fail

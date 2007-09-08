@@ -3,7 +3,7 @@
 # when it encounters an error with say the first one.
 # With coreutils-5.2.1 and earlier, this test would fail.
 
-# Copyright (C) 2004, 2006 Free Software Foundation, Inc.
+# Copyright (C) 2004, 2006, 2007 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@ if test "$VERBOSE" = yes; then
 fi
 
 . $srcdir/../lang-default
+. $srcdir/../test-lib.sh
 
 # See if the envvar is defined.
 if test x = "x$FULL_PARTITION_TMPDIR"; then
@@ -37,17 +38,8 @@ if ! test -d "$FULL_PARTITION_TMPDIR"; then
   (exit 1); exit 1
 fi
 
-pwd=`pwd`
-t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
-trap 'status=$?; cd "$pwd" && chmod -R u+rwx $t0 && rm -rf $t0 && exit $status' 0
-trap '(exit $?); exit $?' 1 2 13 15
-
-framework_failure=0
-mkdir -p $tmp || framework_failure=1
-cd $tmp || framework_failure=1
 
 fp_tmp="$FULL_PARTITION_TMPDIR/tac-cont-$$"
-t0="$t0 $fp_tmp"
 # Make sure we can create an empty file there (i.e. no shortage of inodes).
 if ! touch $fp_tmp; then
   echo "$0: $fp_tmp: cannot create empty file" 1>&2
@@ -62,11 +54,6 @@ if seq 1000 > $fp_tmp 2>/dev/null; then
 fi
 
 seq 5 > in
-
-if test $framework_failure = 1; then
-  echo "$0: failure in testing framework" 1>&2
-  (exit 1); exit 1
-fi
 
 fail=0
 
@@ -84,7 +71,6 @@ cat <<\EOF > exp || fail=1
 1
 EOF
 
-cmp out exp || fail=1
-test $fail = 1 && diff out exp 2> /dev/null
+compare out exp || fail=1
 
 (exit $fail); exit $fail

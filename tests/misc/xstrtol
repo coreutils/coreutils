@@ -21,8 +21,6 @@ if test "$VERBOSE" = yes; then
   pr --version
 fi
 
-. $srcdir/../envvar-check
-
 : ${PERL=perl}
 : ${srcdir=.}
 

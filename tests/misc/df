@@ -21,6 +21,8 @@ if test "$VERBOSE" = yes; then
   df --version
 fi
 
+. $srcdir/../test-lib.sh
+
 case `df .` in
 *'
 '*)

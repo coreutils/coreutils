@@ -21,7 +21,6 @@
 : ${PERL=perl}
 : ${srcdir=.}
 
-. $srcdir/../envvar-check
 
 PROG=`echo $0|sed 's,.*/,,'`; export PROG
 
