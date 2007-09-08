@@ -69,6 +69,8 @@ TESTS = \
   expr \
   factor \
   false-status \
+  fmt \
+  fmt-long-line \
   fold \
   groups-version \
   head-c \

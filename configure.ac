@@ -343,7 +343,6 @@ AC_CONFIG_FILES(
   tests/cut/Makefile
   tests/dd/Makefile
   tests/du/Makefile
-  tests/fmt/Makefile
   tests/head/Makefile
   tests/install/Makefile
   tests/join/Makefile
