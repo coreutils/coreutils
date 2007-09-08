@@ -1,7 +1,7 @@
 #!/bin/sh
 # Ensure that ls -l works on files with nameless uid and/or gid
 
-# Copyright (C) 2006 Free Software Foundation, Inc.
+# Copyright (C) 2006-2007 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,9 +21,9 @@ if test "$VERBOSE" = yes; then
   ls --version
 fi
 
-. $srcdir/../envvar-check
 . $srcdir/../lang-default
 PRIV_CHECK_ARG=require-root . $srcdir/../priv-check
+. $srcdir/../test-lib.sh
 
 $PERL -e 1 > /dev/null 2>&1 || {
   echo 1>&2 "$0: configure didn't find a usable version of Perl," \
@@ -38,22 +38,8 @@ if test x$nameless_uid = x; then
   (exit 77); exit 77
 fi
 
-pwd=`pwd`
-t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
-trap 'status=$?; cd "$pwd" && chmod -R u+rwx $t0 && rm -rf $t0 && exit $status' 0
-trap '(exit $?); exit $?' 1 2 13 15
-
-framework_failure=0
-mkdir -p $tmp || framework_failure=1
-cd $tmp || framework_failure=1
-
-touch f || framework_failure=1
-chown $nameless_uid f || framework_failure=1
-
-if test $framework_failure = 1; then
-  echo "$0: failure in testing framework" 1>&2
-  (exit 1); exit 1
-fi
+touch f || framework_failure
+chown $nameless_uid f || framework_failure
 
 fail=0
 

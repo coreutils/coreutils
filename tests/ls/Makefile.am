@@ -33,3 +33,5 @@ TESTS_ENVIRONMENT = \
   PATH="$(VG_PATH_PREFIX)`pwd`/../../src$(PATH_SEPARATOR)$$PATH" \
   PERL="$(PERL)" \
   PROG=ls
+
+include $(top_srcdir)/tests/check.mk
