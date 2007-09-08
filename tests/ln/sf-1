@@ -1,7 +1,7 @@
 #!/bin/sh
 # Test "ln -sf".
 
-# Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+# Copyright (C) 1997-2000, 2007 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,8 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-test=sf-1
-
 if test "$VERBOSE" = yes; then
   set -x
   ln --version
@@ -25,19 +23,10 @@ fi
 
 # Make sure we get English translations.
 . $srcdir/../lang-default
+. $srcdir/../test-lib.sh
 
-tmp=t-ln.$$
-
-test_failure=0
-mkdir $tmp || test_failure=1
-cd $tmp || test_failure=1
-echo foo > a || test_failure=1
-ln -s . b || test_failure=1
-
-if test $test_failure = 1; then
-  echo 'failure in testing framework'
-  exit 1
-fi
+echo foo > a || framework_failure
+ln -s . b || framework_failure
 
 fail=0
 ln -sf a b > err 2>&1 && fail=1
@@ -45,8 +34,5 @@ case `cat err` in
   *'are the same file') ;;
   *) fail=1 ;;
 esac
-
-cd ..
-rm -rf $tmp
 
 exit $fail

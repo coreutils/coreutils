@@ -1,7 +1,7 @@
 #!/bin/sh
 # Miscellaneous tests for "ln".
 
-# Copyright (C) 1998, 1999, 2000, 2004, 2006 Free Software Foundation, Inc.
+# Copyright (C) 1998-2000, 2004, 2006-2007 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,14 +21,7 @@ if test "$VERBOSE" = yes; then
   ln --version
 fi
 
-pwd=`pwd`
-tmp=t2-ln.$$
-trap 'status=$?; cd "$pwd" && rm -rf $tmp && exit $status' 0
-trap '(exit $?); exit' 1 2 13 15
-
-framework_failure=0
-mkdir $tmp || framework_failure=1
-cd $tmp || framework_failure=1
+. $srcdir/../test-lib.sh
 
 t=tln-symlink
 d=tln-subdir
@@ -38,60 +31,60 @@ fail=0
 
 # Create a simple symlink with both source and destination files
 # in current directory.
-touch $f || framework_failure=1
-rm -f $t || framework_failure=1
+touch $f || framework_failure
+rm -f $t || framework_failure
 ln -s $f $t || fail=1
 test -f $t || fail=1
 rm $t $f
 
 # Create a symlink with source file and explicit destination directory/file.
-touch $f || framework_failure=1
-rm -rf $d || framework_failure=1
-mkdir $d || framework_failure=1
+touch $f || framework_failure
+rm -rf $d || framework_failure
+mkdir $d || framework_failure
 ln -s ../$f $d/$t || fail=1
 test -f $d/$t || fail=1
 rm -rf $d $f
 
 # Create a symlink with source file and destination directory.
-touch $f || framework_failure=1
-rm -rf $d || framework_failure=1
-mkdir $d || framework_failure=1
+touch $f || framework_failure
+rm -rf $d || framework_failure
+mkdir $d || framework_failure
 ln -s ../$f $d || fail=1
 test -f $d/$f || fail=1
 rm -rf $d $f
 
 # See whether a trailing slash is followed too far.
-touch $f || framework_failure=1
-rm -rf $d || framework_failure=1
-mkdir $d $d/$f || framework_failure=1
+touch $f || framework_failure
+rm -rf $d || framework_failure
+mkdir $d $d/$f || framework_failure
 ln $f $d/ 2> /dev/null && fail=1
 ln -s $f $d/ 2> /dev/null && fail=1
 rm -rf $d $f
 
 # Make sure we get a failure with existing dest without -f option
-touch $t || framework_failure=1
+touch $t || framework_failure
 # FIXME: don't ignore the error message but rather test
 # it to make sure it's the right one.
 ln -s $t $t 2> /dev/null && fail=1
 rm $t
 
 # Make sure -sf fails when src and dest are the same
-touch $t || framework_failure=1
+touch $t || framework_failure
 ln -sf $t $t 2> /dev/null && fail=1
 rm $t
 
 # Create a symlink with source file and no explicit directory
-rm -rf $d || framework_failure=1
-mkdir $d || framework_failure=1
-touch $d/$f || framework_failure=1
+rm -rf $d || framework_failure
+mkdir $d || framework_failure
+touch $d/$f || framework_failure
 ln -s $d/$f || fail=1
 test -f $f || fail=1
 rm -rf $d $f
 
 # Create a symlink with source file and destination symlink-to-directory.
-rm -rf $d $f $ld || framework_failure=1
-touch $f || framework_failure=1
-mkdir $d || framework_failure=1
+rm -rf $d $f $ld || framework_failure
+touch $f || framework_failure
+mkdir $d || framework_failure
 ln -s $d $ld
 ln -s ../$f $ld || fail=1
 test -f $d/$f || fail=1
@@ -99,9 +92,9 @@ rm -rf $d $f $ld
 
 # Create a symlink with source file and destination symlink-to-directory.
 # BUT use the new --no-dereference option.
-rm -rf $d $f $ld || framework_failure=1
-touch $f || framework_failure=1
-mkdir $d || framework_failure=1
+rm -rf $d $f $ld || framework_failure
+touch $f || framework_failure
+mkdir $d || framework_failure
 ln -s $d $ld
 af=`pwd`/$f
 ln --no-dereference -fs "$af" $ld || fail=1
@@ -110,20 +103,20 @@ rm -rf $d $f $ld
 
 # Try to create a symlink with backup where the destination file exists
 # and the backup file name is a hard link to the destination file.
-touch a b || framework_failure=1
-ln b b~ || framework_failure=1
+touch a b || framework_failure
+ln b b~ || framework_failure
 ln -f --b=simple a b || fail=1
 
 # ===================================================
 # determine if link(2) follows symlinks on this system
-touch a || framework_failure=1
-ln -s a symlink || framework_failure=1
-ln symlink hard-to-sym > /dev/null 2>&1 || framework_failure=1
+touch a || framework_failure
+ln -s a symlink || framework_failure
+ln symlink hard-to-sym > /dev/null 2>&1 || framework_failure
 ls=`ls -lG hard-to-sym`x
 case "$ls" in
   *'hard-to-symx') link_follows_symlink=yes ;;
   *'hard-to-sym -> ax') link_follows_symlink=no ;;
-  *) framework_failure=1 ;;
+  *) framework_failure ;;
 esac
 
 if test $link_follows_symlink = no; then
@@ -143,7 +136,7 @@ rm -rf a symlink hard-to-sym hard-to-dangle
 # This was fixed in 4.0.34.  Broken in 4.0r.
 for cmd in ln cp mv ginstall; do
   rm -rf a x a.orig
-  touch a x || framework_failure=1
+  touch a x || framework_failure
   $cmd --backup=simple --suffix=.orig x a || fail=1
   test -f a.orig || fail=1
 done
@@ -156,9 +149,4 @@ ln foo '' 2> /dev/null
 
 # ===================================================
 
-if test $framework_failure = 1; then
-  echo 'failure in testing framework' 1>&2
-  exit 1
-fi
-
-exit $fail
+(exit $fail); exit $fail

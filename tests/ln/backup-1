@@ -2,7 +2,7 @@
 # Try to create a symlink with backup where the destination file exists
 # and the backup file name is a hard link to the destination file.
 
-# Copyright (C) 1999 Free Software Foundation, Inc.
+# Copyright (C) 1999, 2007 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,17 +24,11 @@ if test "$VERBOSE" = yes; then
   ln --version
 fi
 
-trap "rm -rf a b b~" 0 1 2 3 15
+. $srcdir/../test-lib.sh
 
-framework_failure=0
-touch a b || framework_failure=1
-
-if test $framework_failure = 1; then
-  echo 'failure in testing framework'
-  exit 1
-fi
+touch a b || framework_failure
 
 ln b b~ || fail=1
 ln -f --b=simple a b || fail=1
 
-exit $fail
+(exit $fail); exit $fail
