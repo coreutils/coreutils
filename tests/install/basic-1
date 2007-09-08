@@ -21,37 +21,16 @@ if test "$VERBOSE" = yes; then
   ginstall --version
 fi
 
-# Make sure we get English translations.
-LANGUAGE=C
-export LANGUAGE
-LC_ALL=C
-export LC_ALL
-LANG=C
-export LANG
-
-. $srcdir/../envvar-check
 PRIV_CHECK_ARG=require-non-root . $srcdir/../priv-check
+. $srcdir/../lang-default
+. $srcdir/../test-lib.sh
 
 dir=dir
 file=file
 
-pwd=`pwd`
-t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
-trap 'status=$?; cd "$pwd" && chmod -R u+rwx $t0 && rm -rf $t0 && exit $status' 0
-trap '(exit $?); exit $?' 1 2 13 15
-
-framework_failure=0
-mkdir -p $tmp || framework_failure=1
-cd $tmp || framework_failure=1
-
-rm -rf $dir $file || framework_failure=1
-mkdir -p $dir || framework_failure=1
-echo foo > $file || framework_failure=1
-
-if test $framework_failure = 1; then
-  echo 'failure in testing framework'
-  exit 1
-fi
+rm -rf $dir $file || framework_failure
+mkdir -p $dir || framework_failure
+echo foo > $file || framework_failure
 
 fail=0
 ginstall $file $dir || fail=1
@@ -64,7 +43,7 @@ test -f $dir/$file || fail=1
 dd=dd$EXEEXT
 dd2=dd2$EXEEXT
 
-just_built_dd=$pwd/../../src/$dd
+just_built_dd=$abs_top_builddir/src/$dd
 
 test -r "$just_built_dd" || \
   {
@@ -109,11 +88,11 @@ test -d newdir2 || fail=1
 test -d newdir3 || fail=1
 
 # This fails because mkdir-p.c's make_dir_parents fails to return to its
-# initial working directory ($abs) after creating the first argument, and
+# initial working directory ($iwd) after creating the first argument, and
 # hence cannot do anything meaningful with the following relative-named dirs.
-abs=$pwd/$tmp
+iwd=`pwd`
 mkdir sub || fail=1
-(cd sub && chmod 0 . && ginstall -d "$abs/xx/yy" rel/sub1 rel/sub2 2> /dev/null) && fail=1
+(cd sub && chmod 0 . && ginstall -d "$iwd/xx/yy" rel/sub1 rel/sub2 2> /dev/null) && fail=1
 chmod 755 sub
 
 # Ensure that the first argument-dir has been created.
@@ -131,7 +110,7 @@ test -d xx/rel && fail=1
 if df --local . >/dev/null 2>&1; then
   mkdir -p sub1/d || fail=1
   (cd sub1/d && chmod a-r . && chmod a-rx .. &&
-   ginstall -d "$abs/xx/zz" rel/a rel/b) || fail=1
+   ginstall -d "$iwd/xx/zz" rel/a rel/b) || fail=1
   chmod 755 sub1 sub1/d || fail=1
   test -d xx/zz || fail=1
   test -d sub1/d/rel/a || fail=1
