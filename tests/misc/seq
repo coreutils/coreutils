@@ -36,8 +36,6 @@ use strict;
 # Turn off localisation of executable's ouput.
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
 
-my $prog = $ENV{PROG} || die "$0: \$PROG not specified in environment\n";
-
 my @Tests =
   (
    ['onearg-1',	qw(10),		{OUT => [(1..10)]}],
@@ -95,6 +93,7 @@ foreach $t (@Tests)
 
 my $save_temps = $ENV{SAVE_TEMPS};
 my $verbose = $ENV{VERBOSE};
+my $prog = 'seq';
 
 my $fail = run_tests ($program_name, $prog, \@Tests, $save_temps, $verbose);
 exit $fail;

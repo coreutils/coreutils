@@ -357,7 +357,6 @@ AC_CONFIG_FILES(
   tests/readlink/Makefile
   tests/rm/Makefile
   tests/rmdir/Makefile
-  tests/seq/Makefile
   tests/sha1sum/Makefile
   tests/shred/Makefile
   tests/sort/Makefile
