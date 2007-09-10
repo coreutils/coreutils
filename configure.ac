@@ -361,7 +361,6 @@ AC_CONFIG_FILES(
   tests/shred/Makefile
   tests/sort/Makefile
   tests/stty/Makefile
-  tests/sum/Makefile
   tests/tac/Makefile
   tests/tail-2/Makefile
   tests/tail/Makefile

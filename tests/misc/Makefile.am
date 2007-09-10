@@ -101,6 +101,8 @@ TESTS = \
   split-l \
   stat-fmt \
   stat-printf \
+  sum \
+  sum-sysv \
   tac-continue \
   test-diag \
   tsort \
