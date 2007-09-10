@@ -103,6 +103,7 @@ TESTS = \
   stat-printf \
   tac-continue \
   test-diag \
-  tty-eof
+  tty-eof \
+  unexpand
 
 include $(top_srcdir)/tests/check.mk

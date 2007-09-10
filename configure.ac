@@ -370,7 +370,6 @@ AC_CONFIG_FILES(
   tests/touch/Makefile
   tests/tr/Makefile
   tests/tsort/Makefile
-  tests/unexpand/Makefile
   tests/uniq/Makefile
   tests/wc/Makefile
   )
