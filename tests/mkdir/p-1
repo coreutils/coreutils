@@ -1,7 +1,7 @@
 #!/bin/sh
 # Test "mkdir -p".
 
-# Copyright (C) 1997, 2000, 2002, 2006 Free Software Foundation, Inc.
+# Copyright (C) 1997, 2000, 2002, 2006, 2007 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,13 +21,10 @@ if test "$VERBOSE" = yes; then
   mkdir --version
 fi
 
-pwd=`pwd`
-tmp=`echo "$0"|sed 's,.*/,,'`.tmp
-trap 'status=$?; cd "$pwd" && rm -rf $tmp && exit $status' 0
-trap '(exit $?); exit' 1 2 13 15
+. $srcdir/../test-lib.sh
 
-mkdir --parents "$pwd/$tmp" || fail=1
-
-test -d $tmp || fail=1
+fail=0
+mkdir --parents "`pwd`/t" || fail=1
+test -d t || fail=1
 
 exit $fail

@@ -1,7 +1,7 @@
 #!/bin/sh
 # verify that mkdir honors special bits in MODE
 
-# Copyright (C) 2000, 2006 Free Software Foundation, Inc.
+# Copyright (C) 2000, 2006, 2007 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,13 +21,12 @@ if test "$VERBOSE" = yes; then
   mkdir --version
 fi
 
-tmp=mkdir-sp-$$
-trap 'status=$?; rm -rf $tmp && exit $status' 0
-trap 'exit $?' 1 2 13 15
+. $srcdir/../test-lib.sh
 
 set_mode_string=u=rwx,g=rx,o=w,-s,+t
 output_mode_string=drwxr-x-wT
 
+tmp=t
 mkdir -m$set_mode_string $tmp || fail=1
 
 test -d $tmp || fail=1
