@@ -103,6 +103,7 @@ TESTS = \
   stat-printf \
   tac-continue \
   test-diag \
+  tsort \
   tty-eof \
   unexpand
 

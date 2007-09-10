@@ -47,7 +47,7 @@ SUBDIRS = \
   chgrp chmod chown cp cut dd du head \
   install join ln ls ls-2 misc mkdir mv od pr readlink rm rmdir \
   sha1sum shred sort stty sum tac tail tail-2 tee test touch tr \
-  tsort uniq wc
+  uniq wc
 ## N O T E :: Please do not add new directories.
 
 all_t = t1 t2 t3 t4 t5 t6 t7 t8 t9

@@ -369,7 +369,6 @@ AC_CONFIG_FILES(
   tests/test/Makefile
   tests/touch/Makefile
   tests/tr/Makefile
-  tests/tsort/Makefile
   tests/uniq/Makefile
   tests/wc/Makefile
   )
