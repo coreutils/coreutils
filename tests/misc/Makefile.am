@@ -81,6 +81,8 @@ TESTS = \
   nice \
   nl \
   nohup \
+  od-N \
+  od-x8 \
   paste-no-nl \
   pathchk1 \
   printf \
@@ -88,10 +90,14 @@ TESTS = \
   pwd-long \
   runcon-no-reorder \
   seq \
+  sha1sum \
+  sha1sum-vec \
   sha224sum \
   sha256sum \
   sha384sum \
   sha512sum \
+  shred-exact \
+  shred-remove \
   shuf \
   sort-compress \
   sort-merge \
@@ -101,6 +107,9 @@ TESTS = \
   split-l \
   stat-fmt \
   stat-printf \
+  stty \
+  stty-invalid \
+  stty-row-col \
   sum \
   sum-sysv \
   tac-continue \
@@ -110,5 +119,6 @@ TESTS = \
   tsort \
   tty-eof \
   unexpand
+
 
 include $(top_srcdir)/tests/check.mk

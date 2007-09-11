@@ -1,7 +1,7 @@
 #!/bin/sh
 # Verify that `od -N N' reads no more than N bytes of input.
 
-# Copyright (C) 2001, 2004, 2005, 2006 Free Software Foundation, Inc.
+# Copyright (C) 2001, 2004, 2005, 2006, 2007 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,20 +21,9 @@ if test "$VERBOSE" = yes; then
   od --version
 fi
 
-pwd=`pwd`
-tmp=od-N.$$
-trap 'status=$?; cd "$pwd" && rm -rf $tmp && exit $status' 0
-trap '(exit $?); exit' 1 2 13 15
+. $srcdir/../test-lib.sh
 
-framework_failure=0
-mkdir $tmp || framework_failure=1
-cd $tmp || framework_failure=1
-echo abcdefg > in || framework_failure=1
-
-if test $framework_failure = 1; then
-  echo 'failure in testing framework' 1>&2
-  (exit 1); exit 1
-fi
+echo abcdefg > in || framework_failure
 
 fail=0
 
@@ -43,9 +32,6 @@ cat <<EOF > exp || fail=1
    a   b   c
    d   e   f
 EOF
-cmp out exp || {
-  fail=1
-  diff out exp 2> /dev/null
-  }
+compare out exp || fail=1
 
 (exit $fail); exit $fail

@@ -124,7 +124,4 @@ EOF
   fail=1
 fi
 
-cd ..
-rm -rf $tmp
-
 exit $fail

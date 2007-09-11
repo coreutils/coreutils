@@ -1,7 +1,7 @@
 #!/bin/sh
 # Test "sha1sum".
 
-# Copyright (C) 2000, 2003, 2005, 2006 Free Software Foundation, Inc.
+# Copyright (C) 2000, 2003, 2005-2007 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -84,7 +84,7 @@ foreach $t (@Tests)
 my $save_temps = $ENV{DEBUG};
 my $verbose = $ENV{VERBOSE};
 
-my $prog = $ENV{PROG} || die "$0: \$PROG not specified in environment\n";
+my $prog = 'sha1sum';
 my $fail = run_tests ($program_name, $prog, \@Tests, $save_temps, $verbose);
 exit $fail;
 EOF

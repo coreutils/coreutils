@@ -352,15 +352,11 @@ AC_CONFIG_FILES(
   tests/misc/Makefile
   tests/mkdir/Makefile
   tests/mv/Makefile
-  tests/od/Makefile
   tests/pr/Makefile
   tests/readlink/Makefile
   tests/rm/Makefile
   tests/rmdir/Makefile
-  tests/sha1sum/Makefile
-  tests/shred/Makefile
   tests/sort/Makefile
-  tests/stty/Makefile
   tests/tac/Makefile
   tests/tail-2/Makefile
   tests/tail/Makefile
