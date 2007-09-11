@@ -104,6 +104,8 @@ TESTS = \
   sum \
   sum-sysv \
   tac-continue \
+  tee \
+  tee-dash \
   test-diag \
   tsort \
   tty-eof \

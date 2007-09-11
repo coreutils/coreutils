@@ -364,7 +364,6 @@ AC_CONFIG_FILES(
   tests/tac/Makefile
   tests/tail-2/Makefile
   tests/tail/Makefile
-  tests/tee/Makefile
   tests/test/Makefile
   tests/touch/Makefile
   tests/tr/Makefile
