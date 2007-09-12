@@ -347,7 +347,6 @@ AC_CONFIG_FILES(
   tests/install/Makefile
   tests/join/Makefile
   tests/ln/Makefile
-  tests/ls-2/Makefile
   tests/ls/Makefile
   tests/misc/Makefile
   tests/mkdir/Makefile

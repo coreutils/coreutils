@@ -43,6 +43,7 @@ TESTS_ENVIRONMENT = \
 TESTS = \
   head-elide-tail \
   ls-time \
+  ls-misc \
   date \
   xstrtol \
   od \
