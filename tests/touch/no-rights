@@ -25,17 +25,11 @@ fi
 . $srcdir/../test-lib.sh
 
 # Make sure t2 is newer than t1.
-touch -d '2000-01-01 00:00' t1 || framework_failure=1
-touch -d '2000-01-02 00:00' t2 || framework_failure=1
+touch -d '2000-01-01 00:00' t1 || framework_failure
+touch -d '2000-01-02 00:00' t2 || framework_failure
 
-framework_failure=0
 set x `ls -t t1 t2`
-test "$*" = "x t2 t1" || framework_failure=1
-
-if test $framework_failure = 1; then
-  echo "$0: failure in testing framework" 1>&2
-  (exit 1); exit 1
-fi
+test "$*" = "x t2 t1" || framework_failure
 
 fail=0
 

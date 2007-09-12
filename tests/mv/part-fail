@@ -25,8 +25,8 @@ if test "$VERBOSE" = yes; then
 fi
 
 . $srcdir/../lang-default
-PRIV_CHECK_ARG=require-non-root . $srcdir/../priv-check
 . $srcdir/../test-lib.sh
+skip_if_root_
 cleanup_() { t=$other_partition_tmpdir; chmod -R 700 "$t"; rm -rf "$t"; }
 . "$abs_top_srcdir/tests/other-fs-tmpdir"
 

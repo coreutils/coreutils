@@ -38,16 +38,15 @@ fail=0
 
 : ${TOUCH_DIR_LIST=.}
 
-framework_failure=0
 
 for d in $TOUCH_DIR_LIST; do
   rm -rf $d/a $d/b $d/c
-  > $d/a || framework_failure=1
-  test -f $d/a || framework_failure=1
-  > $d/b || framework_failure=1
-  test -f $d/b || framework_failure=1
-  > $d/c || framework_failure=1
-  test -f $d/c || framework_failure=1
+  > $d/a || framework_failure
+  test -f $d/a || framework_failure
+  > $d/b || framework_failure
+  test -f $d/b || framework_failure
+  > $d/c || framework_failure
+  test -f $d/c || framework_failure
 done
 
 echo sleeping for $SLEEP_SECONDS seconds...

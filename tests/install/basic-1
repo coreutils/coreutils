@@ -21,9 +21,9 @@ if test "$VERBOSE" = yes; then
   ginstall --version
 fi
 
-PRIV_CHECK_ARG=require-non-root . $srcdir/../priv-check
 . $srcdir/../lang-default
 . $srcdir/../test-lib.sh
+skip_if_root_
 
 dir=dir
 file=file

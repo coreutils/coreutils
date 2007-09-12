@@ -23,8 +23,9 @@ if test "$VERBOSE" = yes; then
 fi
 
 . $srcdir/../lang-default
-PRIV_CHECK_ARG=require-non-root . $srcdir/../priv-check
+. $srcdir/../input-tty
 . $srcdir/../test-lib.sh
+skip_if_root_
 
 touch f g h i || framework_failure
 chmod 0 g i || framework_failure
@@ -40,7 +41,7 @@ kill $pid
 
 # Make sure out contains the prompt.
 case "`cat out`" in
-  "mv: overwrite \`g', overriding mode 0000?"*) ;;
+  "mv: try to overwrite \`g', overriding mode 0000"*) ;;
   *) fail=1 ;;
 esac
 

@@ -1,7 +1,7 @@
 #!/bin/sh
 # Try to remove '.' and '..' recursively.
 
-# Copyright (C) 2006 Free Software Foundation, Inc.
+# Copyright (C) 2006, 2007 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,39 +16,26 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
 if test "$VERBOSE" = yes; then
-  rm --version
   set -x
+  rm --version
 fi
 
-pwd=`pwd`
-t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
-trap 'status=$?; cd "$pwd" && rm -rf $t0 && exit $status' 0
-trap '(exit $?); exit' 1 2 13 15
+. $srcdir/../test-lib.sh
 
-framework_failure=0
-mkdir -p $tmp || framework_failure=1
-cd $tmp || framework_failure=1
-
-touch a || framework_failure=1
-cd "$pwd" || framework_failure=1
-
-if test $framework_failure = 1; then
-  echo 'failure in testing framework'
-  (exit 1); exit 1
-fi
+mkdir d || framework_failure
+touch d/a || framework_failure
 
 fail=0
-rm -fr $tmp/. 2>/dev/null && fail=1
-rm -fr $tmp/./ 2>/dev/null && fail=1
-rm -fr $tmp/.//// 2>/dev/null && fail=1
-rm -fr $tmp/.. 2>/dev/null && fail=1
-rm -fr $tmp/../ 2>/dev/null && fail=1
+rm -fr d/. 2>/dev/null && fail=1
+rm -fr d/./ 2>/dev/null && fail=1
+rm -fr d/.//// 2>/dev/null && fail=1
+rm -fr d/.. 2>/dev/null && fail=1
+rm -fr d/../ 2>/dev/null && fail=1
 
 # This test is too dangerous -- if there's a bug you're wiped out!
 # rm -fr / 2>/dev/null && fail=1
 
-test -f $tmp/a || fail=1
+test -f d/a || fail=1
 
 (exit $fail); exit $fail

@@ -24,13 +24,7 @@ fi
 
 . $srcdir/../test-lib.sh
 
-framework_failure=0
-TZ=UTC0 touch --date='2004-01-16 12:00 +0000' f || framework_failure=1
-
-if test $framework_failure = 1; then
-  echo "$0: failure in testing framework" 1>&2
-  (exit 1); exit 1
-fi
+TZ=UTC0 touch --date='2004-01-16 12:00 +0000' f || framework_failure
 
 fail=0
 

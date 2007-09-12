@@ -1,7 +1,7 @@
 #!/bin/sh
 # make sure rmdir's --ignore-fail-on-non-empty option works
 
-# Copyright (C) 1999 Free Software Foundation, Inc.
+# Copyright (C) 1999, 2007 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,23 +21,17 @@ if test "$VERBOSE" = yes; then
   rmdir --version
 fi
 
-tmp=rmdir.$$
-trap "rm -rf $tmp" 0 1 2 3 15
+. $srcdir/../test-lib.sh
 
-test_failure=0
-mkdir -p $tmp/a/b $tmp/x || test_failure=1
-
-if test $test_failure = 1; then
-  echo "$0: failure in testing framework" 1>&2
-  exit 1
-fi
+cwd=`pwd`
+mkdir -p $cwd/a/b $cwd/x || framework_failure
 
 fail=0
-rmdir -p --ignore-fail-on-non-empty $tmp/a/b || fail=1
-# $tmp/x should remain
-test -d $tmp/x || fail=1
-# $tmp/{a,b} should be gone
-test -d $tmp/a && fail=1
-test -d $tmp/a/b && fail=1
+rmdir -p --ignore-fail-on-non-empty $cwd/a/b || fail=1
+# $cwd/x should remain
+test -d $cwd/x || fail=1
+# $cwd/{a,b} should be gone
+test -d $cwd/a && fail=1
+test -d $cwd/a/b && fail=1
 
 exit $fail

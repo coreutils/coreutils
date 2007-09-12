@@ -32,10 +32,18 @@ TESTS = \
   perm-1 \
   i-link-no \
   part-fail \
-  dup-source childproof i-4 i-5 update i-2 mv-special-1 \
-  into-self into-self-2 into-self-3 into-self-4 \
+  dup-source childproof update mv-special-1 \
+  into-self \
+  into-self-2 \
+  into-self-3 \
+  into-self-4 \
+  i-1 \
+  i-2 \
+  i-3 \
+  i-4 \
+  i-5 \
   backup-is-src \
-  i-1 hard-link-1 force partition-perm to-symlink dir-file diag \
+  hard-link-1 force partition-perm to-symlink dir-file diag \
   part-symlink part-rename trailing-slash
 
 EXTRA_DIST = $(TESTS) vfat

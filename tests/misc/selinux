@@ -12,8 +12,8 @@ fi
 
 . $srcdir/../lang-default
 . $srcdir/../selinux
-PRIV_CHECK_ARG=require-non-root . $srcdir/../priv-check
 . $srcdir/../test-lib.sh
+skip_if_root_
 
 # Create a regular file, dir, fifo.
 touch f || framework_failure

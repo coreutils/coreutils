@@ -23,7 +23,6 @@ if test "$VERBOSE" = yes; then
 fi
 
 . $srcdir/../lang-default
-PRIV_CHECK_ARG=require-non-root . $srcdir/../priv-check
 
 test=../../src/test
 if $test -w /; then
@@ -37,6 +36,7 @@ if $test -O / || $test -G /; then
 fi
 
 . $srcdir/../test-lib.sh
+skip_if_root_
 
 fail=0
 

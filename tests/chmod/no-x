@@ -23,10 +23,10 @@ if test "$VERBOSE" = yes; then
 fi
 
 . $srcdir/../lang-default
-PRIV_CHECK_ARG=require-non-root . $srcdir/../priv-check
 . $srcdir/../test-lib.sh
+skip_if_root_
 
-mkdir -p d/no-x/y || framework_failure
+mkdir -p d/no-x/y a/b || framework_failure
 chmod u=rw d/no-x || framework_failure
 
 fail=0
@@ -52,7 +52,6 @@ EOF
 
 compare out exp || fail=1
 
-mkdir -p a/b
 cd a
 # This will fail with ``chmod: fts_read failed: Permission denied''
 chmod a-x . b 2> /dev/null && fail=1

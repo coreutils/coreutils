@@ -23,8 +23,8 @@ if test "$VERBOSE" = yes; then
 fi
 
 . $srcdir/../lang-default
-PRIV_CHECK_ARG=require-non-root . $srcdir/../priv-check
 . $srcdir/../test-lib.sh
+skip_if_root_
 
 mkdir -p no-write/dir || framework_failure
 chmod u-w no-write || framework_failure

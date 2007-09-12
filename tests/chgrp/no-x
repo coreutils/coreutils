@@ -24,9 +24,8 @@ fi
 
 . $srcdir/../lang-default
 . $srcdir/../group-names
-PRIV_CHECK_ARG=require-non-root . $srcdir/../priv-check
-
 . $srcdir/../test-lib.sh
+skip_if_root_
 
 set _ $groups; shift
 g1=$1

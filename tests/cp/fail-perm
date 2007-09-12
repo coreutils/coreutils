@@ -22,8 +22,8 @@ if test "$VERBOSE" = yes; then
 fi
 
 . $srcdir/../lang-default
-PRIV_CHECK_ARG=require-non-root . $srcdir/../priv-check
 . $srcdir/../test-lib.sh
+skip_if_root_
 
 mkdir D D/D || framework_failure
 touch D/a || framework_failure

@@ -23,13 +23,7 @@ fi
 
 . $srcdir/../test-lib.sh
 
-framework_failure=0
-
-tmp=fifo-$$
-rm -rf $tmp
-mkfifo $tmp || framework_failure=1
-
-if test $framework_failure = 1; then
+if ! mkfifo fifo; then
   # Make an exception of this case -- usually we interpret framework-creation
   # failure as a test failure.  However, in this case, when running on a SunOS
   # system using a disk NFS mounted from OpenBSD, the above fails like this:
@@ -42,6 +36,6 @@ fi
 
 fail=0
 
-touch $tmp || fail=1
+touch fifo || fail=1
 
 exit $fail

@@ -21,23 +21,14 @@ if test "$VERBOSE" = yes; then
   touch --version
 fi
 
-. $srcdir/../envvar-check
 . $srcdir/../lang-default
-PRIV_CHECK_ARG=require-non-root . $srcdir/../priv-check
-
 . $srcdir/../test-lib.sh
-
-framework_failure=0
+skip_if_root_
 
 d1=no-$$
 dir=/$d1/such-dir
 # Ensure that $d1 doesn't already exist.
-ls -d $d1 2> /dev/null && framework_failure=1
-
-if test $framework_failure = 1; then
-  echo 'failure in testing framework' 1>&2
-  (exit 1); exit 1
-fi
+ls -d $d1 2> /dev/null && framework_failure
 
 fail=0
 

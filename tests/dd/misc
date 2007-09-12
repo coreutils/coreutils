@@ -31,14 +31,9 @@ tmp_out=dd-out.$$
 
 fail=0
 warn=0
-test_failure=0
-echo data > $tmp_in || test_failure=1
-ln $tmp_in $tmp_in2 || test_failure=1
-ln -s $tmp_in $tmp_sym || test_failure=1
-if test $test_failure = 1; then
-  echo 'failure in testing framework'
-  exit 1
-fi
+echo data > $tmp_in || framework_failure
+ln $tmp_in $tmp_in2 || framework_failure
+ln -s $tmp_in $tmp_sym || framework_failure
 
 dd if=$tmp_in of=$tmp_out 2> /dev/null || fail=1
 compare $tmp_in $tmp_out || fail=1

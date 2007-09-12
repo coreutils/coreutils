@@ -35,8 +35,8 @@ if test "$VERBOSE" = yes; then
   cp --version
 fi
 
-PRIV_CHECK_ARG=require-non-root . $srcdir/../priv-check
 . $srcdir/../test-lib.sh
+skip_if_root_
 
 mkdir -p x dst/x || framework_failure
 touch dst/x/b || framework_failure

@@ -17,6 +17,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 TESTS = \
+  deep-1 \
+  hash \
+  dangling-symlink \
   v-slash \
   i-never \
   fail-eacces \
@@ -32,8 +35,8 @@ TESTS = \
   dir-no-w \
   fail-2eperm \
   cycle i-no-r fail-eperm \
-  dangling-symlink rm1 rm2 rm3 rm4 rm5 \
-  unread2 r-1 r-2 r-3 r-4 i-1 ir-1 f-1 sunos-1 deep-1 hash \
+  rm1 rm2 rm3 rm4 rm5 \
+  unread2 r-1 r-2 r-3 r-4 i-1 ir-1 f-1 sunos-1 \
   interactive-always interactive-once \
   isatty # unreadable empty-name
 EXTRA_DIST = $(TESTS)
@@ -48,3 +51,5 @@ TESTS_ENVIRONMENT = \
   PATH="$(VG_PATH_PREFIX)`pwd`/../../src$(PATH_SEPARATOR)$$PATH" \
   PACKAGE_VERSION=$(PACKAGE_VERSION) \
   PROG=rm
+
+include $(top_srcdir)/tests/check.mk
