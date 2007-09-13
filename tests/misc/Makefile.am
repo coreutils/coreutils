@@ -22,9 +22,6 @@ built_programs = \
 
 TESTS_ENVIRONMENT = \
   built_programs="`$(built_programs)`" \
-  top_srcdir=$(top_srcdir) \
-  abs_top_builddir=$(abs_top_builddir) \
-  abs_top_srcdir=$(abs_top_srcdir) \
   PACKAGE_VERSION=$(PACKAGE_VERSION) \
   PERL="$(PERL)" \
   BUILD_SRC_DIR="`pwd`/../../src" \
