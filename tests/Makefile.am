@@ -50,7 +50,7 @@ SUBDIRS = \
   uniq wc
 ## N O T E :: Please do not add new directories.
 
-all_t = t1 t2 t3 t4 t5 t6 t7 t8 t9
+all_t = t1 t2 t3 t4 t5 t6 t7 t8 t9 ta
 .PHONY: check-root $(all_t)
 check-root: $(all_t)
 
@@ -72,6 +72,8 @@ t8:
 	cd misc  && $(MAKE) check TESTS=chcon
 t9:
 	cd cp    && $(MAKE) check TESTS=cp-a-selinux
+ta:
+	cd mkdir && $(MAKE) check TESTS=writable-under-readonly
 
 check-recursive: root-hint
 

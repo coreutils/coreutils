@@ -8,8 +8,6 @@
 ##
 ## The complete GNU General Public Licence Notice can be found as the
 ## `COPYING' file in the root directory.
-##
-## The Vaucanson Group consists of people listed in the `AUTHORS' file.
 
 ## Override the definition from Automake to generate a log file with
 ## failed tests.  It also supports parallel make checks.

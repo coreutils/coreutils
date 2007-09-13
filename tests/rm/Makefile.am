@@ -33,12 +33,15 @@ TESTS = \
   unread3 \
   no-give-up \
   dir-no-w \
+  empty-name \
   fail-2eperm \
   cycle i-no-r fail-eperm \
   rm1 rm2 rm3 rm4 rm5 \
   unread2 r-1 r-2 r-3 r-4 i-1 ir-1 f-1 sunos-1 \
+  unreadable \
   interactive-always interactive-once \
-  isatty # unreadable empty-name
+  isatty
+
 EXTRA_DIST = $(TESTS)
 TESTS_ENVIRONMENT = \
   RM=../../src/rm \

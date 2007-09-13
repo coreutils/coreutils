@@ -1,7 +1,7 @@
 #!/bin/sh
 # Test "rm" and unreadable directories.
 
-# Copyright (C) 1998, 2003, 2005, 2006 Free Software Foundation, Inc.
+# Copyright (C) 1998, 2003, 2005-2007 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -43,12 +43,12 @@ my @Tests =
     (
      # test-name options input expected-output
      #
-     ['unreadable-1', '-rf', $d,
-      {EXIT => 1}, {ERR => "$prog: $d/.: Permission denied\n"}, $mkdir],
+     # Removing an empty, unwritable directory succeeds.
+     ['unreadable-1', '-rf', $d, {EXIT => 0}, $mkdir],
+
      ['unreadable-2', '-rf', $d,
       {EXIT => 1},
-      {ERR => "$prog: $d/.: Permission denied\n" .
-       "$prog: cannot remove directory `$d': File exists\n"},
+      {ERR => "$prog: cannot remove \`$d': Permission denied\n"},
       {PRE => sub { (mkdir $d,0700 and mkdir "$d/x",0700 and chmod 0100,$d)
                     or die "$d: $!\n"}} ],
     );

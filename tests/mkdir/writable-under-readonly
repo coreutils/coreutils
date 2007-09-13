@@ -1,8 +1,7 @@
 #!/bin/sh
-# This is just for the record.
-# This test is not run.
+# FIXME: convert this to a root-only test.
 
-# Copyright (C) 2005 Free Software Foundation, Inc.
+# Copyright (C) 2005, 2007 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -25,20 +24,31 @@
 #
 # Demonstrate the problem, as root:
 
-mount='sudo mount'
+if test "$VERBOSE" = yes; then
+  set -x
+  mkdir --version
+fi
 
+PRIV_CHECK_ARG=require-root . $srcdir/../priv-check
+. $srcdir/../test-lib.sh
+
+# FIXME: for now, skip it unconditionally
+skip_test_ temporarily disabled
+
+# FIXME: define cleanup_ to do the umount
+
+# FIXME: use mktemp
 cd /tmp                                    \
   && dd if=/dev/zero of=1 bs=8192 count=50 \
   && dd if=/dev/zero of=2 bs=8192 count=50 \
   && mkdir -p mnt-ro && mkfs -t ext2 1 && mkfs -t ext2 2 \
-  && $mount -o loop=/dev/loop3 1 mnt-ro    \
+  && mount -o loop=/dev/loop3 1 mnt-ro    \
   && mkdir -p mnt-ro/rw                    \
-  && $mount -o remount,ro mnt-ro           \
-  && $mount -o loop=/dev/loop4 2 mnt-ro/rw
+  && mount -o remount,ro mnt-ro           \
+  && mount -o loop=/dev/loop4 2 mnt-ro/rw
 
 mkdir -p mnt-ro/rw/sub || fail=1
 
 # To clean up
 umount /tmp/2
 umount /tmp/1
-rm -rf /tmp/[12]

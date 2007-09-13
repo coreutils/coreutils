@@ -32,4 +32,8 @@ tail -n 1 t &
 tail_pid=$!
 kill $yes_pid
 sleep 1
-kill $tail_pid
+
+fail=0
+kill $tail_pid && fail=1 || :
+
+(exit $fail); exit $fail

@@ -1,5 +1,6 @@
 ## Process this file with automake to produce Makefile.in -*-Makefile-*-.
-TESTS = fail-perm ignore t-slash
+TESTS = \
+  fail-perm ignore t-slash
 
 EXTRA_DIST = $(TESTS)
 TESTS_ENVIRONMENT = \

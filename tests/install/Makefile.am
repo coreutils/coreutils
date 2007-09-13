@@ -1,5 +1,10 @@
 ## Process this file with automake to produce Makefile.in -*-Makefile-*-.
-TESTS = trap basic-1 create-leading d-slashdot
+TESTS = \
+  basic-1 \
+  create-leading \
+  d-slashdot \
+  trap
+
 EXTRA_DIST = $(TESTS)
 TESTS_ENVIRONMENT = \
   EXEEXT='$(EXEEXT)' \
