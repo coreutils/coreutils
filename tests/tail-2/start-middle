@@ -2,7 +2,7 @@
 # Verify that tail works even when it's reading from a file
 # that is not at its beginning.  Based on a report from John Roll.
 
-# Copyright (C) 2001, 2002, 2004, 2006 Free Software Foundation, Inc.
+# Copyright (C) 2001, 2002, 2004, 2006-2007 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,21 +22,9 @@ if test "$VERBOSE" = yes; then
   tail --version
 fi
 
-pwd=`pwd`
-tmp=tail-mid.$$
-trap 'status=$?; cd "$pwd" && rm -rf $tmp && exit $status' 0
-trap '(exit $?); exit' 1 2 13 15
+. $srcdir/../test-lib.sh
 
-framework_failure=0
-mkdir $tmp || framework_failure=1
-cd $tmp || framework_failure=1
-
-(echo 1; echo 2) > k || framework_failure=1
-
-if test $framework_failure = 1; then
-  echo "$0: failure in testing framework" 1>&2
-  (exit 1); exit 1
-fi
+(echo 1; echo 2) > k || framework_failure
 
 fail=0
 
@@ -45,7 +33,6 @@ cat <<EOF > exp
 2
 EOF
 
-cmp out exp || fail=1
-test $fail = 1 && diff out exp 2> /dev/null
+compare out exp || fail=1
 
 (exit $fail); exit $fail

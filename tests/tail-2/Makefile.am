@@ -30,3 +30,5 @@ TESTS = \
   append-only \
   tail-n0f \
   big-4gb proc-ksyms start-middle assert assert-2
+
+include $(top_srcdir)/tests/check.mk

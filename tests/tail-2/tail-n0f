@@ -2,7 +2,7 @@
 # Make sure that `tail -n0 -f' and `tail -c0 -f' sleep
 # rather than doing what amounted to a busy-wait.
 
-# Copyright (C) 2003, 2006 Free Software Foundation, Inc.
+# Copyright (C) 2003, 2006-2007 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,7 +17,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
 # This bug was fixed for 5.0.91
 # It skips the test if your system lacks a /proc/$pid/status
 # file, or if its contents don't look right.
@@ -26,6 +25,8 @@ if test "$VERBOSE" = yes; then
   set -x
   tail --version
 fi
+
+. $srcdir/../test-lib.sh
 
 sleep 2 &
 pid=$!
@@ -37,21 +38,8 @@ grep '^State:[	 ]*[S]' /proc/$pid/status > /dev/null 2>&1 || \
   }
 kill $pid
 
-pwd=`pwd`
-t0=`echo "$0"|sed 's,.*/,,'`.tmp; tmp=$t0/$$
-trap 'status=$?; cd "$pwd" && chmod -R u+rwx $t0 && rm -rf $t0 && exit $status' 0
-trap '(exit $?); exit $?' 1 2 13 15
-
-framework_failure=0
-mkdir -p $tmp || framework_failure=1
-cd $tmp || framework_failure=1
-touch empty || framework_failure=1
-echo anything > nonempty || framework_failure=1
-
-if test $framework_failure = 1; then
-  echo "$0: failure in testing framework" 1>&2
-  (exit 1); exit 1
-fi
+touch empty || framework_failure
+echo anything > nonempty || framework_failure
 
 fail=0
 
