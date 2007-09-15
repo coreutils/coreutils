@@ -21,6 +21,7 @@ if test "$VERBOSE" = yes; then
   rm --version
 fi
 
+. $srcdir/../lang-default
 . $srcdir/../test-lib.sh
 
 mkdir a || framework_failure
