@@ -1,3 +1,207 @@
+2007-09-16  Jim Meyering  <jim@meyering.net>
+
+	Revamp most test scripts.
+
+	* tests/rm/v-slash: Avoid test failure with non-C locale.
+	Reported by Michael Stone.
+
+	Enable some previously omitted test scripts.  Add a test cross-check.
+	* tests/rm/Makefile.am (TESTS): Add empty-name and unreadable.
+	* tests/rm/empty-name: Likewise.
+	* tests/rm/unreadable: Reenable this test.  Adjust for new rm.
+	* tests/mkdir/Makefile.am: Add writable-under-readonly.
+	* tests/mkdir/writable-under-readonly: Add some comments.
+	This test is always skipped, for now.
+	* tests/Makefile.am (ta): Hook up the new root-only script.
+	* tests/tail-2/infloop-1: Make this test pass.
+	* tests/tail-2/Makefile.am (TESTS): Add infloop-1.
+	* tests/tail-2/fflush: Remove unused file.
+	* tests/check.mk (vc_executable_is_in_TESTS): More portable.
+	* tests/check.mk (check): Depend on the above.
+	* build-aux/check.mk: Remove comment mentioning AUTHORS file.
+
+	Factor out definitions in TESTS_ENVIRONMENT of srcdir, top_srcdir, etc.
+	tests/check.mk (top_srcdir): Define.
+	tests/*/Makefile.am: Remove definitions of $(srcdir), $(top_srcdir),
+	$(abs_top_srcdir), and $(abs_top_builddir), since they're
+	defined via the included tests/check.mk.
+
+	tests/general: Remove from VC, this long-unused directory and contents.
+
+	Adapt tests/tail-2/ to use test-lib.sh.
+	Adapt tests/readlink/ to use test-lib.sh.
+
+	Move the sole test in tests/ls-2/ to tests/misc/.
+	* tests/ls-2/basic-1: Move this file to ...
+	* tests/misc/ls-misc: ...here.  Don't rely on $PROG in env.
+	* tests/misc/Makefile.am (TESTS): Add ls-misc.
+	* tests/Makefile.am (SUBDIRS): Remove ls-2.
+	* tests/ls-2: Remove the directory.
+	* configure.ac (AC_CONFIG_FILES): Remove tests/ls-2/Makefile.
+
+	More misc, test-related changes. (some to allow running tests as root)
+
+	Move all tests from test/{od,sha1sum,shred,stty} to tests/misc/.
+	Reflect these renamings:
+	od/od-N             misc/od-N
+	od/x8               misc/od-x8
+	sha1sum/basic-1     misc/sha1sum
+	sha1sum/sample-vec  misc/sha1sum-vec
+	shred/exact         misc/shred-exact
+	shred/remove        misc/shred-remove
+	stty/basic-1        misc/stty
+	stty/invalid        misc/stty-invalid
+	stty/row-col-1      misc/stty-row-col
+	* tests/misc/Makefile.am (TESTS): Add the new files.
+	* tests/Makefile.am (SUBDIRS): Remove the dir names.
+	* tests/od, tests/sha1sum, tests/shred, tests/stty: Remove the
+	directories.
+	* configure.ac (AC_CONFIG_FILES): Remove the corresponding Makefile
+	names.
+
+	Move the two tests in tests/tee to tests/misc/.
+	* tests/tee/basic: Move this file to ...
+	* tests/misc/tee: ...here.  Don't rely on $PROG in env.
+	* tests/tee/dash: Move this file to ...
+	* tests/misc/tee-dash: ...here.  Don't rely on $PROG in env.
+	* tests/misc/Makefile.am (TESTS): Add tee.
+	* tests/Makefile.am (SUBDIRS): Remove tee.
+	* tests/tee: Remove the directory.
+	* configure.ac (AC_CONFIG_FILES): Remove tests/tee/Makefile
+
+	Move the two tests in tests/sum/ to tests/misc/.
+	* tests/sum/basic-1: Move this file to ...
+	* tests/misc/sum: ...here.  Don't rely on $PROG in env.
+	* tests/sum/sysv: Move this file to ...
+	* tests/misc/sum-sysv: ...here.  Adapt it to use test-lib.sh.
+	* tests/misc/Makefile.am (TESTS): Add sum and sum-sysv.
+	* tests/Makefile.am (SUBDIRS): Remove sum.
+	* tests/sum: Remove the directory.
+	* configure.ac (AC_CONFIG_FILES): Remove tests/sum/Makefile.
+
+	Move the sole test in tests/tsort/ to tests/misc/tsort.
+	* tests/tsort/basic-1: Move this file to ...
+	* tests/misc/tsort: ...here.  Don't rely on $PROG in env.
+	* tests/misc/Makefile.am (TESTS): Add tsort.
+	* tests/Makefile.am (SUBDIRS): Remove tsort.
+	* tests/tsort: Remove the directory.
+	* configure.ac (AC_CONFIG_FILES): Remove tests/tsort/Makefile.
+
+	Move the sole test in tests/unexpand to tests/misc/unexpand.
+	* tests/unexpand/basic-1: Move this file to ...
+	* tests/misc/unexpand: ...here.  Don't rely on $PROG in env.
+	* tests/misc/Makefile.am (TESTS): Add unexpand.
+	* tests/Makefile.am (SUBDIRS): Remove unexpand.
+	* tests/unexpand: Remove the directory.
+	* configure.ac (AC_CONFIG_FILES): Remove tests/unexpand/Makefile.
+
+	Move the sole test in tests/seq to tests/misc/seq.
+	* tests/seq/basic: Move this file to ...
+	* tests/misc/seq: ...here.  Don't rely on $PROG in env.
+	* tests/misc/Makefile.am (TESTS): Add seq.
+	* tests/Makefile.am (SUBDIRS): Remove seq.
+	* tests/seq: Remove the directory.
+	* configure.ac (AC_CONFIG_FILES): Remove tests/seq/Makefile
+
+	Convert tests/mkdir/ to use test-lib.sh.
+
+	Move the two tests in tests/md5sum to tests/misc/md5sum.
+	* tests/md5sum/basic-1: Move this file to ...
+	* tests/misc/md5sum: ...here.  Don't rely on $PROG in env.
+	* tests/md5sum/newline-1: Move this file to ...
+	* tests/misc/md5sum-newline: ...here.  Don't rely on $PROG in env.
+	* tests/misc/Makefile.am (TESTS): Add md5sum.
+	* tests/Makefile.am (SUBDIRS): Remove md5sum.
+	* tests/md5sum: Remove the directory.
+	* configure.ac (AC_CONFIG_FILES): Remove tests/md5sum/Makefile
+
+	tests/sample-test: Update to use test-lib.sh.
+
+	Convert tests/misc/ to use test-lib.sh, too.
+	Convert tests/ls/, too.
+	Convert tests/ln/, too.
+	Convert tests/install/, too.
+
+	Move the two tests in tests/fmt to tests/misc/fmt.
+	* tests/fmt/basic: Move this file to ...
+	* tests/misc/fmt: ...here.  Don't rely on $PROG in env.
+	* tests/fmt/long-line: Move this file to ...
+	* tests/misc/fmt-long-line: ...here.
+	* tests/misc/Makefile.am (TESTS): Add fmt.
+	* tests/Makefile.am (SUBDIRS): Remove fmt.
+	* tests/fmt: Remove the directory.
+	* configure.ac (AC_CONFIG_FILES): Remove tests/fmt/Makefile
+
+	Move the sole test in tests/factor to tests/misc/factor.
+	* tests/factor/basic: Move this file to ...
+	* tests/misc/factor: ...here.  Don't rely on $PROG in env.
+	* tests/misc/Makefile.am (TESTS): Add factor.
+	* tests/Makefile.am (SUBDIRS): Remove factor.
+	* tests/factor: Remove the directory.
+	* configure.ac (AC_CONFIG_FILES): Remove tests/factor/Makefile
+
+	Move the sole test in tests/expr to tests/misc/expr.
+	* tests/expr/basic: Move this file to ...
+	* tests/misc/expr: ...here.  Don't rely on $PROG in env.
+	* tests/misc/Makefile.am (TESTS): Add expr.
+	* tests/Makefile.am (SUBDIRS): Remove expr.
+	* tests/expr: Remove the directory.
+	* configure.ac (AC_CONFIG_FILES): Remove tests/expr/Makefile
+
+	Convert tests/du/*, too.
+
+	Move the sole test in tests/dircolors to tests/misc/dircolors.
+	* tests/dircolors/simple: Move this file to...
+	* tests/misc/dircolors: ...here.  Don't rely on $PROG in env.
+	* tests/misc/Makefile.am (TESTS): Add dircolors.
+	* tests/Makefile.am (SUBDIRS): Remove dircolors.
+	* tests/dircolors: Remove the directory.
+	* configure.ac (AC_CONFIG_FILES): Remove tests/dircolors/Makefile
+
+	Convert tests/dd/*, too.
+
+	Convert tests/mv, too.
+	* tests/other-fs-tmpdir: Before, all callers would exit 77 upon
+	failure to find the required dir.  Now, exit 77 in this script so
+	callers don't have to.  Adjust callers.
+
+	Adjust chgrp, chmod, chown, cp tests to use test-lib.sh.
+	* tests/check.mk: Also define abs_top_builddir.
+
+	Parallel "make check" support.
+	* build-aux/check.mk: New file, from The Vaucanson Group.
+	* .x-sc_GPL_version: New file, to allow "version 2 or later"
+	in build-aux/check.mk.
+	* Makefile.am (EXTRA_DIST): Add .x-sc_GPL_version.
+	* tests/check.mk: New file.
+	* tests/Makefile.am (EXTRA_DIST): Add check.mk, mkdtemp and test-lib.sh.
+
+	Begin factoring "sample-test" out of test scripts.
+	* tests/test-lib.sh: New file, to be sourced by all tests that
+	were previously derived from the "sample-test" template.
+	* tests/mkdtemp: New file.
+	* tests/touch/dir-1: Use test-lib.sh.
+	* tests/touch/empty-file: Likewise.
+	* tests/touch/fail-diag: Likewise.
+	* tests/touch/fifo: Likewise.
+	* tests/touch/no-create-missing: Likewise.
+	* tests/touch/no-rights: Likewise.  Also, don't sleep.
+	* tests/touch/not-owner: Likewise.
+	* tests/touch/obsolescent: Likewise.
+	* tests/touch/read-only: Likewise.
+	* tests/touch/relative: Likewise.
+	* tests/touch/Makefile.am: Include $(top_srcdir)/tests/check.mk,
+	to get the parallel-"make check" bits.
+
+	Move a slow test into tests/misc.
+	* tests/check.mk: Wrapper.
+	* tests/ls/time-1: Move this file to tests/misc/ls-time.
+	* tests/misc/ls-time: New file.  From tests/ls/time-1.
+	* tests/ls/Makefile.am (TESTS): Remove time-1.
+	* tests/misc/Makefile.am (TESTS): Add ls-time.
+
+	Add support for parallel "make check" (in tests/misc, for now)
+
 2007-09-08  Jim Meyering  <jim@meyering.net>
 
 	Accommodate gnulib's renaming: __fpending.h -> fpending.h.
