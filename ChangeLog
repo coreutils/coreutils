@@ -1,5 +1,7 @@
 2007-09-16  Jim Meyering  <jim@meyering.net>
 
+	* tests/misc/tac-continue: Arrange to remove a temporary file.
+
 	* tests/check.mk (vc_exe_in_TESTS): Don't rely on the value of
 	$(TESTS), so that "make check TESTS=test-name" works once again.
 
