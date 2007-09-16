@@ -1,5 +1,7 @@
 2007-09-16  Jim Meyering  <jim@meyering.net>
 
+	* tests/CuTmpdir.pm: Use File::Find + chmod syscall, not chmod -R.
+
 	Revamp most test scripts.
 
 	* tests/rm/v-slash: Avoid test failure with non-C locale.

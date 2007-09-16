@@ -20,10 +20,17 @@ use strict;
 use warnings;
 
 use File::Temp;
+use File::Find;
 
 our $ME = $0 || "<???>";
 
 my $dir;
+
+sub skip_test
+{
+  warn "$ME: skipping test: unsafe working directory name\n";
+  exit 77;
+}
 
 sub import {
   my $prefix = $_[1];
@@ -33,15 +40,35 @@ sub import {
       my $cwd = $@ ? '.' : Cwd::getcwd();
       $prefix = "$cwd/$prefix";
     }
+
+  # Untaint for the upcoming mkdir.
+  $prefix =~ m!^([-+\@\w./]+)$!
+    or skip_test;
+  $prefix = $1;
+
   $dir = File::Temp::tempdir("$prefix.tmp-XXXX", CLEANUP => 1 );
   chdir $dir
     or warn "$ME: failed to chdir to $dir: $!\n";
 }
 
+sub wanted
+{
+  my $name = $_;
+
+  # Skip symlinks and non-directories.
+  -l $name || !-d _
+    and return;
+
+  chmod 0700, $name;
+}
+
 END {
   my $saved_errno = $?;
-  # FIXME: use File::Find
-  system qw (chmod -R 700), $dir;
+  chdir $dir
+    or warn "$ME: failed to chdir to $dir: $!\n";
+  # Perform the equivalent of find . -type d -print0|xargs -0 chmod -R 700.
+  my $options = {untaint => 1, wanted => \&wanted};
+  find ($options, '.');
   $? = $saved_errno;
 }
 
