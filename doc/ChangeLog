@@ -1,3 +1,8 @@
+2007-09-19  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi (expr invocation): Correct description of relative
+	operator precedence.  Reported by hanpingtian@gmail.com.
+
 2007-08-25  Eric Blake  <ebb9@byu.net>
 
 	Avoid case-insensitive clash in one-page-per-node html docs.

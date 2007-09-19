@@ -10804,7 +10804,7 @@ Exit status:
 @cindex expressions, string
 
 @command{expr} supports pattern matching and other string operators.  These
-have lower precedence than both the numeric and relational operators (in
+have higher precedence than both the numeric and relational operators (in
 the next sections).
 
 @table @samp
@@ -10884,8 +10884,9 @@ To make @command{expr} interpret keywords as strings, you must use the
 @cindex expressions, numeric
 
 @command{expr} supports the usual numeric operators, in order of increasing
-precedence.  The string operators (previous section) have lower precedence,
-the connectives (next section) have higher.
+precedence.  These numeric operators have higher precedence than the
+string operators described in the previous section, and lower precedence
+than the connectives (next section).
 
 @table @samp
 
@@ -10918,7 +10919,7 @@ integers; an error occurs if this cannot be done.
 @cindex relations, numeric or string
 
 @command{expr} supports the usual logical connectives and relations.  These
-are higher precedence than either the string or numeric operators
+have lower precedence than the string and numeric operators
 (previous sections).  Here is the list, lowest-precedence operator first.
 
 @table @samp
