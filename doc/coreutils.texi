@@ -10884,8 +10884,8 @@ To make @command{expr} interpret keywords as strings, you must use the
 @cindex expressions, numeric
 
 @command{expr} supports the usual numeric operators, in order of increasing
-precedence.  These numeric operators have higher precedence than the
-string operators described in the previous section, and lower precedence
+precedence.  These numeric operators have lower precedence than the
+string operators described in the previous section, and higher precedence
 than the connectives (next section).
 
 @table @samp
