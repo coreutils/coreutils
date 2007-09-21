@@ -1,3 +1,8 @@
+2007-09-21  Jim Meyering  <jim@meyering.net>
+
+	Avoid test failure due to now-parallelized tests.
+	* tests/du/two-args: Run "du .." from a sub-directory one level deeper.
+
 2007-09-16  Jim Meyering  <jim@meyering.net>
 
 	* tests/misc/tac-continue: Arrange to remove a temporary file.
