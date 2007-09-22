@@ -1,5 +1,8 @@
 #!/bin/sh
 # Ensure that rm -rf unremovable-non-dir gives a diagnostic.
+# Test both a regular file and a symlink -- it makes a difference to rm.
+# With the symlink, rm from coreutils-6.9 would fail with a misleading
+# ELOOP diagnostic.
 
 # Copyright (C) 2006-2007 Free Software Foundation, Inc.
 
@@ -25,7 +28,19 @@ fi
 . $srcdir/../test-lib.sh
 skip_if_root_
 
-mkdir d && touch d/f && chmod a-w d || framework_failure
+ok=0
+mkdir d           &&
+  touch d/f       &&
+  ln -s f d/slink &&
+  chmod a-w d     &&
+  ok=1
+test $ok = 1 || framework_failure
+
+mkdir e           &&
+  ln -s f e/slink &&
+  chmod a-w e     &&
+  ok=1
+test $ok = 1 || framework_failure
 
 fail=0
 
@@ -33,7 +48,13 @@ rm -rf d/f 2> out && fail=1
 cat <<\EOF > exp
 rm: cannot remove `d/f': Permission denied
 EOF
+compare out exp || fail=1
 
+# This used to fail with ELOOP.
+rm -rf e 2> out && fail=1
+cat <<\EOF > exp
+rm: cannot remove `e/slink': Permission denied
+EOF
 compare out exp || fail=1
 
 (exit $fail); exit $fail

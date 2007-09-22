@@ -1,5 +1,18 @@
 2007-09-22  Jim Meyering  <jim@meyering.net>
 
+	rm: give a sensible diagnostic when failing to remove a symlink
+	On some systems (those with openat et al), when rm would fail to
+	remove a symlink, it would fail with the misleading diagnostic,
+	"Too many levels of symbolic links".
+	* NEWS: Mention the bug fix.
+	* src/remove.c (is_nondir_lstat): New function.
+	(remove_entry): Use it to catch failed-to-remove symlink (and any
+	other non-dir) here so that we don't fall through and try to treat
+	it as directory, which -- with a symlink -- would provoke the bogus
+	ELOOP failure.
+	* tests/rm/fail-eacces: Add a test for the above.
+	* src/c99-to-c89.diff: Adjust offsets.
+
 	rm: fix a tiny, nearly inconsequential bug.
 	Don't perform a "."-relative lstat, when the file in question
 	may well not be in ".".  Although this is a bug, a few attempts
