@@ -927,11 +927,11 @@ prompt (int fd_cwd, Dirstack_state const *ds, char const *filename,
    *ST is FILENAME's tstatus.
    Do not modify errno.  */
 static inline bool
-is_dir_lstat (char const *filename, struct stat *st)
+is_dir_lstat (int fd_cwd, char const *filename, struct stat *st)
 {
   int saved_errno = errno;
   bool is_dir =
-    (cache_fstatat (AT_FDCWD, filename, st, AT_SYMLINK_NOFOLLOW) == 0
+    (cache_fstatat (fd_cwd, filename, st, AT_SYMLINK_NOFOLLOW) == 0
      && S_ISDIR (st->st_mode));
   errno = saved_errno;
   return is_dir;
@@ -1061,7 +1061,8 @@ remove_entry (int fd_cwd, Dirstack_state const *ds, char const *filename,
       /* Upon a failed attempt to unlink a directory, most non-Linux systems
 	 set errno to the POSIX-required value EPERM.  In that case, change
 	 errno to EISDIR so that we emit a better diagnostic.  */
-      if (! x->recursive && errno == EPERM && is_dir_lstat (filename, st))
+      if (! x->recursive && errno == EPERM && is_dir_lstat (fd_cwd,
+							    filename, st))
 	errno = EISDIR;
 
       if (! x->recursive

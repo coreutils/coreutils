@@ -1,3 +1,15 @@
+2007-09-22  Jim Meyering  <jim@meyering.net>
+
+	rm: fix a tiny, nearly inconsequential bug.
+	Don't perform a "."-relative lstat, when the file in question
+	may well not be in ".".  Although this is a bug, a few attempts
+	to exercise it on a linux-2.6.22 system failed.  You probably need
+	a pre-openat system to trigger the failure.  The consequence of this
+	bug would be a lower-quality diagnostic upon failed dir removal.
+	* src/remove.c (is_dir_lstat): Add a parameter, fd_cwd.
+	Use it instead of hard-coding AT_FDCWD.
+	(remove_entry): Call is_dir_lstat with fd_cwd.
+
 2007-09-22  Karl Berry  <karl@freefriends.org>
 
 	* TODO: It'd be nice to add renice.
