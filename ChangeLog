@@ -1,3 +1,7 @@
+2007-09-22  Karl Berry  <karl@freefriends.org>
+
+	* TODO: It'd be nice to add renice.
+
 2007-09-21  Jim Meyering  <jim@meyering.net>
 
 	Avoid test failure due to now-parallelized tests.
