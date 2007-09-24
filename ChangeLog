@@ -1,5 +1,7 @@
 2007-09-24  Jim Meyering  <jim@meyering.net>
 
+	* NEWS: The recent rm-diagnostic fix also affects cross-partition "mv".
+
 	copy.c: Remove definitions of factored-out functions.
 	* src/copy.c: Include "file-set.h".
 	(seen_file, record_file): Remove functions that I factored

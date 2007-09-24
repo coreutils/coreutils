@@ -204,7 +204,14 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   "rm -rf D" would emit an misleading diagnostic when failing to
   remove a symbolic link within the unwritable directory, D.
-  Introduced in coreutils-6.0.
+  Introduced in coreutils-6.0.  Similarly, when a cross-partition
+  "mv" fails because the source directory is unwritable, it now gives
+  a reasonable diagnostic.  Before, this would print
+    $ mkdir /tmp/x; touch /tmp/x/y; chmod -w /tmp/x;
+    $ test $(stat -c %d /tmp/x) -ne $(stat -c %d .) && mv /tmp/x/y .
+    mv: cannot remove `/tmp/x/y': Not a directory
+  Now it prints this:
+    mv: cannot remove `/tmp/x/y': Permission denied.
 
 ** New features
 
