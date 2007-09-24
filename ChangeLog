@@ -1,3 +1,10 @@
+2007-09-24  Jim Meyering  <jim@meyering.net>
+
+	copy.c: Remove definitions of factored-out functions.
+	* src/copy.c: Include "file-set.h".
+	(seen_file, record_file): Remove functions that I factored
+	out on 2007-08-23.
+
 2007-09-22  Jim Meyering  <jim@meyering.net>
 
 	Don't print the commands of a 10-line script that's run in each subdir.
