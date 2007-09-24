@@ -1,3 +1,11 @@
+2007-09-27  Jim Meyering  <jim@meyering.net>
+
+	Add a test to exercise a readlink bug.
+	* tests/misc/readlink-fp-loop: New file.  Test for the readlink bug
+	fixed through today's change to Gnulib's canonicalize module.
+	* tests/misc/Makefile.am (TESTS): Add readlink-fp-loop.
+	Bug report and a test case from mpb.mail@gmail.com.
+
 2007-09-25  Pádraig Brady <P@draigBrady.com>
 
 	* doc/coreutils.texi (date invocation):

@@ -86,6 +86,7 @@ TESTS = \
   printf \
   printf-hex \
   pwd-long \
+  readlink-fp-loop \
   runcon-no-reorder \
   seq \
   sha1sum \
