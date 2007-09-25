@@ -8,27 +8,18 @@
 #include "same.h"
 #include "same-inode.h"
 
-/* Hash an F_triple.  */
+/* Hash an F_triple, and *do* consider the file name.  */
 size_t
 triple_hash (void const *x, size_t table_size)
 {
   struct F_triple const *p = x;
-
-  /* Also take the name into account, so that when moving N hard links to the
-     same file (all listed on the command line) all into the same directory,
-     we don't experience any N^2 behavior.  */
-  /* FIXME-maybe: is it worth the overhead of doing this
-     just to avoid N^2 in such an unusual case?  N would have
-     to be very large to make the N^2 factor noticable, and
-     one would probably encounter a limit on the length of
-     a command line before it became a problem.  */
   size_t tmp = hash_pjw (p->name, table_size);
 
   /* Ignoring the device number here should be fine.  */
-  return (tmp | p->st_ino) % table_size;
+  return (tmp ^ p->st_ino) % table_size;
 }
 
-/* Hash an F_triple.  */
+/* Hash an F_triple, without considering the file name.  */
 size_t
 triple_hash_no_name (void const *x, size_t table_size)
 {

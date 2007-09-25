@@ -1,3 +1,10 @@
+2007-09-25  Jim Meyering  <jim@meyering.net>
+
+	Use XOR, not OR to combine bits.
+	* gl/lib/hash-triple.c (triple_hash): Use XOR (^), not OR (|), to
+	combine the bits from hashing the name and those of the inode number.
+	Add a few comments and remove out-of-context ones.
+
 2007-09-24  Jim Meyering  <jim@meyering.net>
 
 	* NEWS: The recent rm-diagnostic fix also affects cross-partition "mv".
