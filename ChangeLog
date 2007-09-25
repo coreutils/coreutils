@@ -1,5 +1,12 @@
 2007-09-27  Jim Meyering  <jim@meyering.net>
 
+	Move file-set and hash-triple modules to gnulib.
+	* bootstrap.conf (gnulib_modules): Remove file-set, now that
+	it's in gnulib, and the canonicalize module requires it there.
+	* gl/lib/file-set.c, gl/lib/file-set.h, gl/modules/hash-triple: Remove.
+	* gl/lib/hash-triple.c, gl/lib/hash-triple.h, gl/modules/file-set:
+	Remove.
+
 	Add a test to exercise a readlink bug.
 	* tests/misc/readlink-fp-loop: New file.  Test for the readlink bug
 	fixed through today's change to Gnulib's canonicalize module.
