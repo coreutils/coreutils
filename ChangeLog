@@ -1,3 +1,8 @@
+2007-09-25  Pádraig Brady <P@draigBrady.com>
+
+	* doc/coreutils.texi (date invocation):
+	Make "Date input formats" easier to navigate to.
+
 2007-09-25  Jim Meyering  <jim@meyering.net>
 
 	Use XOR, not OR to combine bits.

@@ -411,6 +411,7 @@ System context
 * Padding and other flags::      Pad with zeros, spaces, etc.
 * Setting the time::             Changing the system clock.
 * Options for date::             Instead of the current time.
+* Date input formats::           Specifying date strings.
 * Examples of date::             Examples.
 
 Modified command invocation
@@ -12395,6 +12396,9 @@ described below.
 * Padding and other flags::        Pad with zeros, spaces, etc.
 * Setting the time::               Changing the system clock.
 * Options for date::               Instead of the current time.
+@detailmenu
+* Date input formats::             Specifying date strings.
+@end detailmenu
 * Examples of date::               Examples.
 @end menu
 
@@ -12725,7 +12729,7 @@ format.  It can contain month names, time zones, @samp{am} and @samp{pm},
 @samp{yesterday}, etc.  For example, @option{--date="2004-02-27
 14:19:13.489392193 +0530"} specifies the instant of time that is
 489,392,193 nanoseconds after February 27, 2004 at 2:19:13 PM in a
-time zone that is 5 hours and 30 minutes east of @acronym{UTC}.
+time zone that is 5 hours and 30 minutes east of @acronym{UTC}.@*
 @xref{Date input formats}.
 
 @item -f @var{datefile}
