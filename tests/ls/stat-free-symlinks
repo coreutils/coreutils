@@ -41,7 +41,7 @@ LS_COLORS='or=0:mi=0:ex=01;32:ln=01;35' \
 
 # With coreutils 6.9 and earlier, this file would contain a
 # line showing ls had called stat on "x".
-test -s err && fail=1
+grep '^stat("x"' err && fail=1
 
 # Check that output is colorized, as requested, too.
 {

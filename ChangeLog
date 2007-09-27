@@ -1,5 +1,8 @@
 2007-09-27  Jim Meyering  <jim@meyering.net>
 
+	Avoid spurious test failure when SELinux stats "selinux/class".
+	* tests/ls/stat-free-symlinks: Grep for more precise /^stat("x"/.
+
 	Move file-set and hash-triple modules to gnulib.
 	* bootstrap.conf (gnulib_modules): Remove file-set, now that
 	it's in gnulib, and the canonicalize module requires it there.
