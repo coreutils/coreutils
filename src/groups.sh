@@ -52,6 +52,8 @@ do
     -*)
       echo "$0: invalid option: $arg" >&2
       exit 1 ;;
+    *)
+      break ;;
   esac
 done
 

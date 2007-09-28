@@ -1,3 +1,7 @@
+2007-09-28  Eric Blake  <ebb9@byu.net>
+
+	* src/groups.sh: Don't ignore first argument if later argument is --.
+
 2007-09-27  Jim Meyering  <jim@meyering.net>
 
 	Avoid spurious test failure when SELinux stats "selinux/class".
