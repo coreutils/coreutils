@@ -70,6 +70,7 @@ TESTS = \
   fmt \
   fmt-long-line \
   fold \
+  groups-dash \
   groups-version \
   head-c \
   head-pos \
