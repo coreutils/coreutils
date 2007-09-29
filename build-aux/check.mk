@@ -97,6 +97,10 @@ rm $@-t
 %.log: %$(EXEEXT)
 	@$(am__check_pre) $${dir}$< $(am__check_post)
 
+# The exact same commands, but for scripts without extension.
+%.log: %
+	@$(am__check_pre) $${dir}$< $(am__check_post)
+
 TEST_LOGS ?= $(TESTS:.test=.log)
 TEST_SUITE_LOG = test-suite.log
 
