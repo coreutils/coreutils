@@ -178,7 +178,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       --backup[=CONTROL]       make a backup of each existing destination file\n\
   -b                           like --backup but does not accept an argument\n\
       --copy-contents          copy contents of special files when recursive\n\
-  -d                           same as --no-dereference --preserve=link\n\
+  -d                           same as --no-dereference --preserve=links\n\
 "), stdout);
       fputs (_("\
   -f, --force                  if an existing destination file cannot be\n\

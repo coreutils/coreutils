@@ -1,3 +1,9 @@
+2007-09-30  Jim Meyering  <jim@meyering.net>
+
+	cp: do not abbreviate in --help output.
+	* src/cp.c (usage): Don't abbreviate: s/=link/=links/.
+	Reported by Géraud Meyer in <http://bugs.debian.org/444137>.
+
 2007-09-29  Eric Blake  <ebb9@byu.net>
 
 	Test previous patch.
