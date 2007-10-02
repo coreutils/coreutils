@@ -1008,6 +1008,7 @@ copy_internal (char const *src_name, char const *dst_name,
   bool delayed_ok;
   bool copied_as_regular = false;
   bool preserve_metadata;
+  bool use_stat = true;
 
   if (x->move_mode && rename_succeeded)
     *rename_succeeded = false;
@@ -1054,12 +1055,14 @@ copy_internal (char const *src_name, char const *dst_name,
 	 However, if we intend to unlink or remove the destination
 	 first, use lstat, since a copy won't actually be made to the
 	 destination in that case.  */
-      if ((((S_ISREG (src_mode)
-	     || (x->copy_as_regular
-		 && ! (S_ISDIR (src_mode) || S_ISLNK (src_mode))))
-	    && ! (x->move_mode || x->symbolic_link || x->hard_link
-		  || x->backup_type != no_backups
-		  || x->unlink_dest_before_opening))
+      use_stat =
+	((S_ISREG (src_mode)
+	  || (x->copy_as_regular
+	      && ! (S_ISDIR (src_mode) || S_ISLNK (src_mode))))
+	 && ! (x->move_mode || x->symbolic_link || x->hard_link
+	       || x->backup_type != no_backups
+	       || x->unlink_dest_before_opening));
+      if ((use_stat
 	   ? stat (dst_name, &dst_sb)
 	   : lstat (dst_name, &dst_sb))
 	  != 0)
@@ -1076,7 +1079,7 @@ copy_internal (char const *src_name, char const *dst_name,
 	}
       else
 	{ /* Here, we know that dst_name exists, at least to the point
-	     that it is stat'able or lstat'table.  */
+	     that it is stat'able or lstat'able.  */
 	  bool return_now;
 	  bool unlink_src;
 
@@ -1294,6 +1297,41 @@ copy_internal (char const *src_name, char const *dst_name,
 	      if (x->verbose)
 		printf (_("removed %s\n"), quote (dst_name));
 	    }
+	}
+    }
+
+  /* Ensure we don't try to copy through a symlink that was
+     created by a prior call to this function.  */
+  if (command_line_arg
+      && x->dest_info
+      && ! x->move_mode
+      && x->backup_type == no_backups)
+    {
+      bool lstat_ok = true;
+      struct stat tmp_buf;
+      struct stat *dst_lstat_sb;
+
+      /* If we called lstat above, good: use that data.
+	 Otherwise, call lstat here, in case dst_name is a symlink.  */
+      if ( ! use_stat)
+	dst_lstat_sb = &dst_sb;
+      else
+	{
+	  if (lstat (dst_name, &tmp_buf) == 0)
+	    dst_lstat_sb = &tmp_buf;
+	  else
+	    lstat_ok = false;
+	}
+
+      /* Never copy through a symlink we've just created.  */
+      if (lstat_ok
+	  && S_ISLNK (dst_lstat_sb->st_mode)
+	  && seen_file (x->dest_info, dst_name, dst_lstat_sb))
+	{
+	  error (0, 0,
+		 _("will not copy %s through just-created symlink %s"),
+		 quote_n (0, src_name), quote_n (1, dst_name));
+	  return false;
 	}
     }
 
@@ -1820,8 +1858,10 @@ copy_internal (char const *src_name, char const *dst_name,
       goto un_backup;
     }
 
-  if (command_line_arg)
+  if (command_line_arg && x->dest_info)
     {
+      /* Now that the destination file is very likely to exist,
+	 add its info to the set.  */
       struct stat sb;
       if (lstat (dst_name, &sb) == 0)
 	record_file (x->dest_info, dst_name, &sb);

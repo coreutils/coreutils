@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 TESTS = \
+  abuse \
   proc-zero-len \
   thru-dangling \
   cp-a-selinux \
