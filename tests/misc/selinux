@@ -25,7 +25,11 @@ fail=0
 ctx=root:object_r:tmp_t
 # FIXME, what if $ctx is no different from the default.  Not likely.
 # give each a different context, via chcon
-chcon $ctx f d p || fail=1
+chcon $ctx f d p 2>/dev/null || {
+  echo 1>&2 'skipping this test: "chcon '$ctx' ..." failed'
+  (exit 77); exit 77
+}
+
 # inspect that context with both ls -Z and stat.
 for i in d f p; do
   c=`ls -dogZ $i|cut -d' ' -f3`; test x$c = x$ctx || fail=1

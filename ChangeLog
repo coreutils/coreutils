@@ -1,3 +1,7 @@
+2007-10-03  Jim Meyering  <jim@meyering.net>
+
+	* tests/misc/selinux: Skip this test if the initial chcon fails.
+
 2007-10-02  Jim Meyering  <jim@meyering.net>
 
 	Never copy through a symlink that cp has just created.
