@@ -469,16 +469,16 @@ slurp() {
       ig=$dir/$dot_ig
       if test -n "$copied"; then
 	insert_sorted_if_absent $ig "$copied"
-	# If an ignored file name ends with _.h, then also add
+	# If an ignored file name ends with .in.h, then also add
 	# the name with just ".h".  Many gnulib headers are generated,
-	# e.g., stdint_.h -> stdint.h, dirent_.h ->..., etc.
+	# e.g., stdint.in.h -> stdint.h, dirent.in.h ->..., etc.
 	# Likewise for .gperf -> .h, .y -> .c, and .sin -> .sed
-	f=`echo "$copied"|sed 's/_\.h$/.h/;s/\.sin$/.sed/;s/\.y$/.c/;s/\.gperf$/.h/'`
+	f=`echo "$copied"|sed 's/\.in\.h$/.h/;s/\.sin$/.sed/;s/\.y$/.c/;s/\.gperf$/.h/'`
 	insert_sorted_if_absent $ig "$f"
 
-	# For files like sys_stat_.h and sys_time_.h, record as
+	# For files like sys_stat.in.h and sys_time.in.h, record as
 	# ignorable the directory we might eventually create: sys/.
-	f=`echo "$copied"|sed 's/sys_.*_\.h$/sys/'`
+	f=`echo "$copied"|sed 's/sys_.*\.in\.h$/sys/'`
 	insert_sorted_if_absent $ig "$f"
       fi
     done
