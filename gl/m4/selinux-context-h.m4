@@ -1,5 +1,5 @@
 # serial 1   -*- Autoconf -*-
-# Copyright (C) 2006 Free Software Foundation, Inc.
+# Copyright (C) 2006, 2007 Free Software Foundation, Inc.
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
 # with or without modifications, as long as this notice is preserved.
@@ -9,7 +9,6 @@
 
 AC_DEFUN([gl_HEADERS_SELINUX_CONTEXT_H],
 [
-  AC_LIBSOURCES([se-context_.h])
   # Check for <selinux/context.h>,
   AC_CHECK_HEADERS([selinux/context.h],
 		   [SELINUX_CONTEXT_H=],

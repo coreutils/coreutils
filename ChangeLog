@@ -1,5 +1,13 @@
 2007-10-04  Jim Meyering  <jim@meyering.net>
 
+	Adapt to new gnulib naming scheme.
+	* gl/lib/se-context.in.h: Rename from gl/lib/se-context_.h.
+	* gl/lib/se-selinux.in.h: Rename from gl/lib/se-selinux_.h.
+	* gl/m4/selinux-context-h.m4: Remove use of AC_LIBSOURCES.
+	* gl/m4/selinux-selinux-h.m4: Likewise.
+	* gl/modules/selinux-h (Files, Makefile.am): Reflect renaming.
+	(Makefile.am) [lib_SOURCES]: Add se-context.in.h and se-selinux.in.h.
+
 	* lib/search_.h: Remove unused file.
 
 	* bootstrap (slurp): Adapt to _.h -> .in.h name change.
