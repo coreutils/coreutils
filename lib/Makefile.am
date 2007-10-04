@@ -1,6 +1,6 @@
 ## Makefile for gnulib/lib				-*-Makefile-*-
 
-# Copyright (C) 1995-2006 Free Software Foundation, Inc.
+# Copyright (C) 1995-2007 Free Software Foundation, Inc.
 
 ## This program is free software: you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -19,18 +19,9 @@ include gnulib.mk
 
 AM_CFLAGS = $(WARNING_CFLAGS) $(WERROR_CFLAGS)
 
-noinst_PROGRAMS = t-fpending
-LDADD = $(noinst_LIBRARIES)
-
 libcoreutils_a_SOURCES += \
   buffer-lcm.c buffer-lcm.h \
   xmemxfrm.c xmemxfrm.h
 
 libcoreutils_a_LIBADD += $(LIBOBJS)
 libcoreutils_a_DEPENDENCIES += $(LIBOBJS)
-
-check: unit-test
-
-.PHONY: unit-test
-unit-test: t-fpending
-	./t-fpending > /dev/null

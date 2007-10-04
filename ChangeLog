@@ -1,3 +1,10 @@
+2007-10-04  Jim Meyering  <jim@meyering.net>
+
+	Remove test program: lib/t-fpending.c.
+	* lib/t-fpending.c: Remove file.  Now, this test is in gnulib.
+	* lib/Makefile.am: Remove associated rules.
+	* .gitignore: Remove lib/t-fpending.
+
 2007-10-03  Jim Meyering  <jim@meyering.net>
 
 	* tests/misc/selinux: Skip this test if the initial chcon fails.
