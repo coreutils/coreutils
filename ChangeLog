@@ -1,6 +1,7 @@
 2007-10-04  Jim Meyering  <jim@meyering.net>
 
 	* bootstrap (slurp): Adapt to _.h -> .in.h name change.
+	(update_po_files): Work also when there are no .po files in po/.
 
 	Remove test program: lib/t-fpending.c.
 	* lib/t-fpending.c: Remove file.  Now, this test is in gnulib.
