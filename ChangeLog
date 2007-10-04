@@ -1,5 +1,7 @@
 2007-10-04  Jim Meyering  <jim@meyering.net>
 
+	* lib/search_.h: Remove unused file.
+
 	* bootstrap (slurp): Adapt to _.h -> .in.h name change.
 	(update_po_files): Work also when there are no .po files in po/.
 
