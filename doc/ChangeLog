@@ -1,3 +1,8 @@
+2007-10-05  Jim Meyering  <jim@meyering.net>
+
+	* coreutils.texi (chroot invocation): List two systems on which
+	chroot works when run by non-root.
+
 2007-09-19  Jim Meyering  <jim@meyering.net>
 
 	* coreutils.texi (expr invocation): Correct description of relative

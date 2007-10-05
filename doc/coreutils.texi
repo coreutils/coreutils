@@ -13203,7 +13203,11 @@ user, etc.
 @cindex root directory, running a program in a specified
 
 @command{chroot} runs a command with a specified root directory.
-On many systems, only the super-user can do this.
+On many systems, only the super-user can do this.@footnote{However,
+some systems (e.g., FreeBSD) can be configured to allow certain regular
+users to use the @code{chroot} system call, and hence to run this program.
+Also, on Cygwin, anyone can run the @command{chroot} command, because the
+underlying function is non-privileged due to lack of support in MS-Windows.}
 Synopses:
 
 @example
