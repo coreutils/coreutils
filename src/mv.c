@@ -32,6 +32,7 @@
 #include "filenamecat.h"
 #include "quote.h"
 #include "remove.h"
+#include "root-dev-ino.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "mv"
@@ -92,7 +93,6 @@ static void
 rm_option_init (struct rm_options *x)
 {
   x->ignore_missing_files = false;
-  x->root_dev_ino = NULL;
   x->recursive = true;
   x->one_file_system = false;
 
@@ -108,6 +108,14 @@ rm_option_init (struct rm_options *x)
      the initial working directory, in case one of those is a
      `.'-relative name.  */
   x->require_restore_cwd = true;
+
+  {
+    static struct dev_ino dev_ino_buf;
+    x->root_dev_ino = get_root_dev_ino (&dev_ino_buf);
+    if (x->root_dev_ino == NULL)
+      error (EXIT_FAILURE, errno, _("failed to get attributes of %s"),
+	     quote ("/"));
+  }
 }
 
 static void

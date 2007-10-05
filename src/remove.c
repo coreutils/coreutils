@@ -1082,7 +1082,8 @@ remove_entry (int fd_cwd, Dirstack_state const *ds, char const *filename,
 
       if (! x->recursive
 	  || (cache_stat_ok (st) && !S_ISDIR (st->st_mode))
-	  || (errno == EACCES && is_nondir_lstat (fd_cwd, filename, st))
+	  || ((errno == EACCES || errno == EPERM)
+	      && is_nondir_lstat (fd_cwd, filename, st))
 	  )
 	{
 	  if (ignorable_missing (x, errno))

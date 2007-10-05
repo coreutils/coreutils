@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 TESTS = \
+  sticky-to-xpart \
   hard-verbose \
   backup-dir \
   dir2dir \

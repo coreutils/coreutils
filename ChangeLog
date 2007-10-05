@@ -1,5 +1,27 @@
 2007-10-05  Jim Meyering  <meyering@redhat.com>
 
+	Make a failing cross-partition mv give a sensible diagnostic.
+	A cross-partition move of a file in a sticky tmpdir and owned by
+	another user would evoke an invalid diagnostic after copying it:
+	  mv: cannot remove `x': Operation not permitted
+	Either of the following (mv.c, remove.c) changes would fix the bug by
+	itself.  I think it's slightly better to use both; the added cost is
+	minimal: mv: an extra lstat-per-mv-cmdline-arg-that-goes-cross-partition,
+	rm: an extra lstat-per-unlink-that-fails-w/EPERM.
+	* src/remove.c (remove_entry): Also lstat the file upon EPERM.
+	* src/mv.c (rm_option_init): Initialize root_dev_ino just as is done
+	in rm, so that a cross-partition invoked remove.c:rm call works the
+	same way as one invoked from the command-line use of "rm".  That
+	setting of root_dev_ino makes rm() do the equivalent of an additional
+	lstat for each argument, which in turn gives rm enough information to
+	issue the right diagnostic.
+	* tests/mv/sticky-to-xpart (version): New file.  Test for the above.
+	* tests/mv/Makefile.am (TESTS): Add sticky-to-xpart.
+	Arrange for "make check-root" to run the new root-only test.
+	* tests/Makefile.am (tb): New target, to run the new root-only test.
+	(all_t): Add tb.
+	* src/c99-to-c89.diff: Adjust offsets.
+
 	Add PACKAGE_VERSION to TESTS_ENVIRONMENT via check.mk.
 	* tests/check.mk (TESTS_ENVIRONMENT): Add PACKAGE_VERSION here,
 	rather than in every Makefile.am that needs it.
