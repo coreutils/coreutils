@@ -1,3 +1,11 @@
+2007-10-05  Jim Meyering  <meyering@redhat.com>
+
+	Add PACKAGE_VERSION to TESTS_ENVIRONMENT via check.mk.
+	* tests/check.mk (TESTS_ENVIRONMENT): Add PACKAGE_VERSION here,
+	rather than in every Makefile.am that needs it.
+	* tests/rm/Makefile.am (TESTS_ENVIRONMENT): Remove PACKAGE_VERSION.
+	* tests/misc/Makefile.am (TESTS_ENVIRONMENT): Likewise.
+
 2007-10-04  Jim Meyering  <jim@meyering.net>
 
 	Adapt to new gnulib naming scheme.

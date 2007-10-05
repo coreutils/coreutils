@@ -34,6 +34,7 @@ check: vc_exe_in_TESTS
 # Append this, because automake does the same.
 TESTS_ENVIRONMENT +=			\
   top_srcdir=$(top_srcdir)		\
+  PACKAGE_VERSION=$(PACKAGE_VERSION)	\
   abs_top_srcdir=$(abs_top_srcdir)	\
   abs_top_builddir=$(abs_top_builddir)	\
   srcdir=$(srcdir)
