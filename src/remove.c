@@ -305,7 +305,8 @@ right_justify (char *dst, size_t dst_len, const char *src, size_t src_len,
 /* Using the global directory name obstack, create the full name FILENAME.
    Return it in sometimes-realloc'd space that should not be freed by the
    caller.  Realloc as necessary.  If realloc fails, use a static buffer
-   and put as long a suffix in that buffer as possible.  */
+   and put as long a suffix in that buffer as possible.  Be careful not
+   to change errno.  */
 
 #define full_filename(Filename) full_filename_ (ds, Filename)
 static char *
@@ -313,6 +314,7 @@ full_filename_ (Dirstack_state const *ds, const char *filename)
 {
   static char *buf = NULL;
   static size_t n_allocated = 0;
+  int saved_errno = errno;
 
   size_t dir_len = obstack_object_size (&ds->dir_stack);
   char *dir_name = obstack_base (&ds->dir_stack);
@@ -350,6 +352,7 @@ full_filename_ (Dirstack_state const *ds, const char *filename)
 	      memcpy (static_buf, ELLIPSES_PREFIX,
 		      sizeof (ELLIPSES_PREFIX) - 1);
 	    }
+	  errno = saved_errno;
 	  return p;
 	}
 
@@ -372,6 +375,7 @@ full_filename_ (Dirstack_state const *ds, const char *filename)
       assert (strlen (buf) + 1 == n_bytes_needed);
     }
 
+  errno = saved_errno;
   return buf;
 }
 

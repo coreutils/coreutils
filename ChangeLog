@@ -1,5 +1,9 @@
 2007-10-07  Jim Meyering  <meyering@redhat.com>
 
+	Don't let a helper function modify errno.
+	* src/remove.c (full_filename_): Save and restore errno.
+	Spotted by Bruno Haible.
+
 	Reflect 2->3 GPL copyright version update in gnulib.
 	* gl/lib/tempname.h: Update copyright from gnulib.
 	* gl/lib/tempname.c: Likewise.
