@@ -1,5 +1,10 @@
 2007-10-07  Jim Meyering  <meyering@redhat.com>
 
+	Reflect 2->3 GPL copyright version update in gnulib.
+	* gl/lib/tempname.h: Update copyright from gnulib.
+	* gl/lib/tempname.c: Likewise.
+	* .x-sc_GPL_version: Don't make an exception for those two files.
+
 	* configure.ac (AM_INIT_AUTOMAKE): Don't use dist-lzma just yet.
 
 	New program: mktemp.
