@@ -1008,7 +1008,7 @@ copy_internal (char const *src_name, char const *dst_name,
   bool delayed_ok;
   bool copied_as_regular = false;
   bool preserve_metadata;
-  bool use_stat = true;
+  bool have_dst_lstat = false;
 
   if (x->move_mode && rename_succeeded)
     *rename_succeeded = false;
@@ -1055,7 +1055,7 @@ copy_internal (char const *src_name, char const *dst_name,
 	 However, if we intend to unlink or remove the destination
 	 first, use lstat, since a copy won't actually be made to the
 	 destination in that case.  */
-      use_stat =
+      bool use_stat =
 	((S_ISREG (src_mode)
 	  || (x->copy_as_regular
 	      && ! (S_ISDIR (src_mode) || S_ISLNK (src_mode))))
@@ -1083,6 +1083,7 @@ copy_internal (char const *src_name, char const *dst_name,
 	  bool return_now;
 	  bool unlink_src;
 
+	  have_dst_lstat = !use_stat;
 	  if (! same_file_ok (src_name, &src_sb, dst_name, &dst_sb,
 			      x, &return_now, &unlink_src))
 	    {
@@ -1313,7 +1314,7 @@ copy_internal (char const *src_name, char const *dst_name,
 
       /* If we called lstat above, good: use that data.
 	 Otherwise, call lstat here, in case dst_name is a symlink.  */
-      if ( ! use_stat)
+      if (have_dst_lstat)
 	dst_lstat_sb = &dst_sb;
       else
 	{

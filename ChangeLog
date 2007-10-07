@@ -1,3 +1,8 @@
+2007-10-07  Jim Meyering  <meyering@redhat.com>
+
+	Avoid a used-uninitialized error.
+	* src/copy.c (copy_internal): Don't overload "use_stat".
+
 2007-10-05  Jim Meyering  <meyering@redhat.com>
 
 	Make a failing cross-partition mv give a sensible diagnostic.
