@@ -1,5 +1,7 @@
 2007-10-07  Jim Meyering  <meyering@redhat.com>
 
+	* configure.ac (AM_INIT_AUTOMAKE): Don't use dist-lzma just yet.
+
 	New program: mktemp.
 	* NEWS: Mention this.
 	* README: Add mktemp to the list.

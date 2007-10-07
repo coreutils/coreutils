@@ -32,7 +32,7 @@ AC_CONFIG_AUX_DIR(build-aux)
 AC_CONFIG_HEADERS([lib/config.h:lib/config.hin])
 
 AB_INIT()
-AM_INIT_AUTOMAKE([1.10 dist-lzma])
+AM_INIT_AUTOMAKE([1.10 dist-bzip2])
 
 AC_PROG_CC_STDC
 AM_PROG_CC_C_O
