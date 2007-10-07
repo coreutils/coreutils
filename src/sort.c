@@ -3165,6 +3165,7 @@ main (int argc, char **argv)
 	sortfiles[i].name = files[i];
 
       merge (sortfiles, 0, nfiles, outfile);
+      IF_LINT (free (sortfiles));
     }
   else
     sort (files, nfiles, outfile);
