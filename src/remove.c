@@ -165,6 +165,11 @@ struct dirstack_state
 };
 typedef struct dirstack_state Dirstack_state;
 
+/* A static buffer and its allocated size, these variables are used by
+   xfull_filename and full_filename to form full, relative file names.  */
+static char *g_buf;
+static size_t g_n_allocated;
+
 /* Like fstatat, but cache the result.  If ST->st_size is -1, the
    status has not been gotten yet.  If less than -1, fstatat failed
    with errno == -1 - ST->st_size.  Otherwise, the status has already
@@ -302,6 +307,60 @@ right_justify (char *dst, size_t dst_len, const char *src, size_t src_len,
   return dst_len - src_len;
 }
 
+/* Using the global directory name obstack, create the full name of FILENAME.
+   Return it in sometimes-realloc'd space that should not be freed by the
+   caller.  Realloc as necessary.  If realloc fails, return NULL.  */
+
+static char *
+full_filename0 (Dirstack_state const *ds, const char *filename)
+{
+  size_t dir_len = obstack_object_size (&ds->dir_stack);
+  char *dir_name = obstack_base (&ds->dir_stack);
+  size_t filename_len = strlen (filename);
+  size_t n_bytes_needed = dir_len + filename_len + 1;
+
+  if (g_n_allocated < n_bytes_needed)
+    {
+      char *new_buf = realloc (g_buf, n_bytes_needed);
+      if (new_buf == NULL)
+	return NULL;
+
+      g_buf = new_buf;
+      g_n_allocated = n_bytes_needed;
+    }
+
+  if (STREQ (filename, ".") && dir_len)
+    {
+      /* FILENAME is just `.' and dir_len is nonzero.
+	 Copy the directory part, omitting the trailing slash,
+	 and append a trailing zero byte.  */
+      char *p = mempcpy (g_buf, dir_name, dir_len - 1);
+      *p = 0;
+    }
+  else
+    {
+      /* Copy the directory part, including trailing slash, and then
+	 append the filename part, including a trailing zero byte.  */
+      memcpy (mempcpy (g_buf, dir_name, dir_len), filename, filename_len + 1);
+      assert (strlen (g_buf) + 1 == n_bytes_needed);
+    }
+
+  return g_buf;
+}
+
+/* Using the global directory name obstack, create the full name of FILENAME.
+   Return it in sometimes-realloc'd space that should not be freed by the
+   caller.  Realloc as necessary.  If realloc fails, die.  */
+
+static char *
+xfull_filename (Dirstack_state const *ds, const char *filename)
+{
+  char *buf = full_filename0 (ds, filename);
+  if (buf == NULL)
+    xalloc_die ();
+  return buf;
+}
+
 /* Using the global directory name obstack, create the full name FILENAME.
    Return it in sometimes-realloc'd space that should not be freed by the
    caller.  Realloc as necessary.  If realloc fails, use a static buffer
@@ -312,71 +371,36 @@ right_justify (char *dst, size_t dst_len, const char *src, size_t src_len,
 static char *
 full_filename_ (Dirstack_state const *ds, const char *filename)
 {
-  static char *buf = NULL;
-  static size_t n_allocated = 0;
   int saved_errno = errno;
-
-  size_t dir_len = obstack_object_size (&ds->dir_stack);
-  char *dir_name = obstack_base (&ds->dir_stack);
-  size_t n_bytes_needed;
-  size_t filename_len;
-
-  filename_len = strlen (filename);
-  n_bytes_needed = dir_len + filename_len + 1;
-
-  if (n_allocated < n_bytes_needed)
+  char *full_name = full_filename0 (ds, filename);
+  if (full_name)
     {
-      /* This code requires that realloc accept NULL as the first arg.
-         This function must not use xrealloc.  Otherwise, an out-of-memory
-	 error involving a file name to be expanded here wouldn't ever
-	 be issued.  Use realloc and fall back on using a static buffer
-	 if memory allocation fails.  */
-      char *new_buf = realloc (buf, n_bytes_needed);
-      n_allocated = n_bytes_needed;
+      errno = saved_errno;
+      return full_name;
+    }
 
-      if (new_buf == NULL)
-	{
+  {
 #define SBUF_SIZE 512
 #define ELLIPSES_PREFIX "[...]"
-	  static char static_buf[SBUF_SIZE];
-	  bool truncated;
-	  size_t len;
-	  char *p;
+    static char static_buf[SBUF_SIZE];
+    bool truncated;
+    size_t len;
+    char *p;
+    char *dir_name = obstack_base (&ds->dir_stack);
+    size_t dir_len = obstack_object_size (&ds->dir_stack);
 
-	  free (buf);
-	  len = right_justify (static_buf, SBUF_SIZE, filename,
-			       filename_len + 1, &p, &truncated);
-	  right_justify (static_buf, len, dir_name, dir_len, &p, &truncated);
-	  if (truncated)
-	    {
-	      memcpy (static_buf, ELLIPSES_PREFIX,
-		      sizeof (ELLIPSES_PREFIX) - 1);
-	    }
-	  errno = saved_errno;
-	  return p;
-	}
-
-      buf = new_buf;
-    }
-
-  if (filename_len == 1 && *filename == '.' && dir_len)
-    {
-      /* FILENAME is just `.' and dir_len is nonzero.
-	 Copy the directory part, omitting the trailing slash,
-	 and append a trailing zero byte.  */
-      char *p = mempcpy (buf, dir_name, dir_len - 1);
-      *p = 0;
-    }
-  else
-    {
-      /* Copy the directory part, including trailing slash, and then
-	 append the filename part, including a trailing zero byte.  */
-      memcpy (mempcpy (buf, dir_name, dir_len), filename, filename_len + 1);
-      assert (strlen (buf) + 1 == n_bytes_needed);
-    }
-
-  errno = saved_errno;
-  return buf;
+    free (g_buf);
+    len = right_justify (static_buf, SBUF_SIZE, filename,
+			 strlen (filename) + 1, &p, &truncated);
+    right_justify (static_buf, len, dir_name, dir_len, &p, &truncated);
+    if (truncated)
+      {
+	memcpy (static_buf, ELLIPSES_PREFIX,
+		sizeof (ELLIPSES_PREFIX) - 1);
+      }
+    errno = saved_errno;
+    return p;
+  }
 }
 
 static inline size_t
@@ -512,7 +536,7 @@ AD_pop_and_chdir (DIR *dirp, int *fdp, Dirstack_state *ds)
 	 searchable, when using Solaris' openat.  Without this openat
 	 call, tests/rm2 would fail to remove directories a/2 and a/3.  */
       if (fd < 0)
-	fd = openat (AT_FDCWD, full_filename ("."), O_RDONLY);
+	fd = openat (AT_FDCWD, xfull_filename (ds, "."), O_RDONLY);
 
       if (fd < 0)
 	{
@@ -765,13 +789,13 @@ write_protected_non_symlink (int fd_cwd,
 	Disadvantage: changes working directory (not reentrant) and can't
 	work if save_cwd fails.
 
-     3) if (euidaccess (full_filename (file), W_OK) == 0)
-	Disadvantage: doesn't work if full_filename is too long.
+     3) if (euidaccess (xfull_filename (file), W_OK) == 0)
+	Disadvantage: doesn't work if xfull_filename is too long.
 	Inefficient for very deep trees (O(Depth^2)).
 
      4) If the full pathname is sufficiently short (say, less than
 	PATH_MAX or 8192 bytes, whichever is shorter):
-	use method (3) (i.e., euidaccess (full_filename (file), W_OK));
+	use method (3) (i.e., euidaccess (xfull_filename (file), W_OK));
 	Otherwise: vfork, fchdir in the child, run euidaccess in the
 	child, then the child exits with a status that tells the parent
 	whether euidaccess succeeded.
@@ -785,7 +809,7 @@ write_protected_non_symlink (int fd_cwd,
 
      5) If the full file name is sufficiently short (say, less than
 	PATH_MAX or 8192 bytes, whichever is shorter):
-	use method (3) (i.e., euidaccess (full_filename (file), W_OK));
+	use method (3) (i.e., euidaccess (xfull_filename (file), W_OK));
 	Otherwise: look just at the file bits.  Perhaps issue a warning
 	the first time this occurs.
 
@@ -801,7 +825,7 @@ write_protected_non_symlink (int fd_cwd,
 
     if (MIN (PATH_MAX, 8192) <= file_name_len)
       return - euidaccess_stat (buf, W_OK);
-    if (euidaccess (full_filename (file), W_OK) == 0)
+    if (euidaccess (xfull_filename (ds, file), W_OK) == 0)
       return 0;
     if (errno == EACCES)
       return -1;

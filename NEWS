@@ -199,6 +199,17 @@ GNU coreutils NEWS                                    -*- outline -*-
   pwd and "readlink -e ." no longer fail unnecessarily when a parent
   directory is unreadable.
 
+  rm (without -f) could prompt when it shouldn't, or fail to prompt
+  when it should, when operating on a full name longer than 511 bytes
+  and getting an ENOMEM error while trying to form the long name.
+
+  rm could mistakenly traverse into the wrong directory under unusual
+  conditions: when a full name longer than 511 bytes specifies a search-only
+  directory, and when forming that name fails with ENOMEM, rm would attempt
+  to open a truncated-to-511-byte name with the first five bytes replaced
+  with "[...]".  If such a directory were to actually exist, rm would attempt
+  to remove it.
+
   "rm -rf /etc/passwd" (run by non-root) now prints a diagnostic.
   Before it would print nothing.
 
