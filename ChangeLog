@@ -1,5 +1,9 @@
 2007-10-07  Jim Meyering  <meyering@redhat.com>
 
+	Avoid seq malfunction on non-POSIX systems: mingw, BeOS, Interix.
+	* bootstrap.conf (gnulib_modules): Add vasprintf-posix.
+	Suggestion from Bruno Haible.
+
 	Avoid a used-uninitialized error.
 	* src/copy.c (copy_internal): Don't overload "use_stat".
 
