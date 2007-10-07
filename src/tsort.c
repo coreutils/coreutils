@@ -1,5 +1,5 @@
 /* tsort - topological sort.
-   Copyright (C) 1998-2005 Free Software Foundation, Inc.
+   Copyright (C) 1998-2005, 2007 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -486,7 +486,7 @@ tsort (const char *file)
 	  struct successor *p = head->top;
 
 	  /* T5. Output front of queue.  */
-	  printf ("%s\n", head->str);
+	  puts (head->str);
 	  head->str = NULL;	/* Avoid printing the same string twice.  */
 	  n_strings--;
 
