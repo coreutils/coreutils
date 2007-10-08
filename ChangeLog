@@ -1,5 +1,13 @@
 2007-10-08  Jim Meyering  <meyering@redhat.com>
 
+	When forming a truncated name, use the "[...]" prefix even for
+	an extremely long name in the current directory
+	* src/remove.c (full_filename_): Rename a local variable.
+	Use two separate "truncated" variables, in case the second
+	call to right_justify does not indicate any truncation -- which
+	would happen only if the single component FILENAME were longer
+	than 511 bytes and DIR_NAME were empty.
+
 	rm could malfunction under unusual circumstances:
 	When operating on a relative name longer than 511 bytes,
 	and (when either processing a directory that is neither writable

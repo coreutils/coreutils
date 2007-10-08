@@ -383,17 +383,20 @@ full_filename_ (Dirstack_state const *ds, const char *filename)
 #define SBUF_SIZE 512
 #define ELLIPSES_PREFIX "[...]"
     static char static_buf[SBUF_SIZE];
-    bool truncated;
-    size_t len;
+    bool file_truncated;
+    bool dir_truncated;
+    size_t n_bytes_remaining;
     char *p;
     char *dir_name = obstack_base (&ds->dir_stack);
     size_t dir_len = obstack_object_size (&ds->dir_stack);
 
     free (g_buf);
-    len = right_justify (static_buf, SBUF_SIZE, filename,
-			 strlen (filename) + 1, &p, &truncated);
-    right_justify (static_buf, len, dir_name, dir_len, &p, &truncated);
-    if (truncated)
+    n_bytes_remaining = right_justify (static_buf, SBUF_SIZE, filename,
+				       strlen (filename) + 1, &p,
+				       &file_truncated);
+    right_justify (static_buf, n_bytes_remaining, dir_name, dir_len,
+		   &p, &dir_truncated);
+    if (file_truncated || dir_truncated)
       {
 	memcpy (static_buf, ELLIPSES_PREFIX,
 		sizeof (ELLIPSES_PREFIX) - 1);
