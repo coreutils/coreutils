@@ -74,6 +74,7 @@ TESTS = \
   groups-version \
   head-c \
   head-pos \
+  help-version \
   md5sum \
   md5sum-newline \
   mknod \

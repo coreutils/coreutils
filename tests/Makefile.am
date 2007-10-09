@@ -7,7 +7,6 @@ ASSORT = LC_ALL=C sort
 
 built_programs = (cd ../src && MAKEFLAGS= $(MAKE) -s built_programs.list)
 
-TESTS = help-version
 TESTS_ENVIRONMENT = \
   built_programs="`$(built_programs)`" \
   PACKAGE_BUGREPORT=$(PACKAGE_BUGREPORT) \

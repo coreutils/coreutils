@@ -1,5 +1,11 @@
 2007-10-09  Jim Meyering  <meyering@redhat.com>
 
+	Move the help-version test into misc/.
+	* tests/help-version: Move to...
+	* tests/misc/help-version: ...here.
+	Source test-lib.sh, as usual.
+	Use $abs_top_builddir, rather than ".." and "../..".
+
 	Make the runcon-no-reorder test slightly more general.
 	* tests/misc/runcon-no-reorder: Don't hard-code "unconstrained_t".
 	Use slightly more general "runcon $(id -Z)".
