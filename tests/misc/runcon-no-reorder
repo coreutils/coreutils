@@ -34,7 +34,7 @@ fail=0
 # On such a system it fails with the above diagnostic, which is fine.
 # Before the no-reorder change, it would have failed with a diagnostic
 # about -j being an invalid option.
-runcon -t unconfined_t true -j 2> out && : > exp
+runcon $(id -Z) true -j 2> out && : > exp
 
 compare out exp || fail=1
 

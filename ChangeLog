@@ -1,5 +1,10 @@
 2007-10-09  Jim Meyering  <meyering@redhat.com>
 
+	Make the runcon-no-reorder test slightly more general.
+	* tests/misc/runcon-no-reorder: Don't hard-code "unconstrained_t".
+	Use slightly more general "runcon $(id -Z)".
+	Suggestion from Stephen Smalley.
+
 	Skip the chcon test on a system with no SELinux support.
 	* tests/test-lib.sh (require_selinux_): New function.
 	* tests/misc/chcon: Use it.
