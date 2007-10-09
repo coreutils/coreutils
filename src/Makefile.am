@@ -182,29 +182,35 @@ install-root: su$(EXEEXT)
 	@$(install_su)
 
 install-exec-local: su$(EXEEXT)
-	@TMPFILE=$(DESTDIR)$(bindir)/.su-$$$$; \
-	rm -f $$TMPFILE; \
-	echo > $$TMPFILE; \
+	@if test "$(INSTALL_SU)" = yes; then			\
+	  TMPFILE=$(DESTDIR)$(bindir)/.su-$$$$;			\
+	  rm -f $$TMPFILE;					\
+	  echo > $$TMPFILE;					\
 ## See if we can create a setuid root executable in $(bindir).
 ## If not, then don't even try to install su.
-	can_create_suid_root_executable=no; \
-	chown root $$TMPFILE > /dev/null 2>&1 \
-	  && chmod $(setuid_root_mode) $$TMPFILE > /dev/null 2>&1 \
-	  && can_create_suid_root_executable=yes; \
-	rm -f $$TMPFILE; \
-	if test $$can_create_suid_root_executable = yes; then \
-	  $(install_su); \
-	else \
-	  echo "WARNING: insufficient access; not installing su"; \
-	  echo "NOTE: to install su, run 'make install-root' as root"; \
+	  can_create_suid_root_executable=no;			\
+	  chown root $$TMPFILE > /dev/null 2>&1			\
+	    && chmod $(setuid_root_mode) $$TMPFILE > /dev/null 2>&1 \
+	    && can_create_suid_root_executable=yes;		\
+	  rm -f $$TMPFILE;					\
+	  if test $$can_create_suid_root_executable = yes; then \
+	    $(install_su);					\
+	  else							\
+	    echo "WARNING: insufficient access; not installing su"; \
+	    echo "NOTE: to install su, run 'make install-root' as root"; \
+	  fi;							\
+	else :;							\
 	fi
 
 uninstall-local:
 # Remove su only if it's one we installed.
-	@if grep '$(PACKAGE_NAME)' $(installed_su) > /dev/null 2>&1; then \
-	  echo "  rm -f $(installed_su)"; \
-	  rm -f $(installed_su); \
-	else :; fi
+	@if test "$(INSTALL_SU)" = yes; then			\
+	  if grep '$(PACKAGE_NAME)' $(installed_su) > /dev/null 2>&1; then \
+	    echo "  rm -f $(installed_su)"; \
+	    rm -f $(installed_su); \
+	  else :; \
+	  fi; \
+	fi
 
 copy_sources = copy.c cp-hash.c
 

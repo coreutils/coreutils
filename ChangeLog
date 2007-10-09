@@ -1,3 +1,11 @@
+2007-10-09  Jim Meyering  <meyering@redhat.com>
+
+	Now that we don't install su, don't make misleading suggestions.
+	* src/Makefile.am (install-exec-local) [$(INSTALL_SU) != yes]:
+	Don't suggest running "make install-root".
+	(uninstall-local) [$(INSTALL_SU) != yes]: Don't even check
+	the installed binary.
+
 2007-10-08  Jim Meyering  <meyering@redhat.com>
 
 	When forming a truncated name, use the "[...]" prefix even for
