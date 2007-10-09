@@ -1,5 +1,7 @@
 2007-10-09  Jim Meyering  <meyering@redhat.com>
 
+	* configure.ac (AM_INIT_AUTOMAKE): Use dist-lzma, rather than dist-bzip2.
+
 	Now that we don't install su, don't make misleading suggestions.
 	* src/Makefile.am (install-exec-local) [$(INSTALL_SU) != yes]:
 	Don't suggest running "make install-root".
