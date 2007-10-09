@@ -361,7 +361,7 @@ Conditions
 
 Redirection
 
-* tee invocation::               Redirect output to multiple files
+* tee invocation::               Redirect output to multiple files or processes
 
 File name manipulation
 
@@ -11010,12 +11010,12 @@ useful redirection is performed by a separate command, not by the shell;
 it's described here.
 
 @menu
-* tee invocation::              Redirect output to multiple files.
+* tee invocation::              Redirect output to multiple files or processes.
 @end menu
 
 
 @node tee invocation
-@section @command{tee}: Redirect output to multiple files
+@section @command{tee}: Redirect output to multiple files or processes
 
 @pindex tee
 @cindex pipe fitting
@@ -11055,6 +11055,72 @@ them.
 Ignore interrupt signals.
 
 @end table
+
+The @command{tee} is useful when you happen to be transferring a large
+amount of data and also want to summarize that data without reading
+it a second time.  For example, when you are downloading a DVD image,
+you often want to verify its signature or checksum right away.
+The inefficient way to do it is simply:
+
+@example
+wget http://example.com/some.iso && sha1sum some.iso
+@end example
+
+One problem with the above is that it makes you wait for the
+download to complete before starting the time-consuming SHA1 computation.
+Perhaps even more importantly, the above requires reading
+the DVD image a second time (the first was from the network).
+
+The efficient way to do it is to interleave the download
+and SHA1 computation.  Then, you'll get the checksum for
+free, because the entire process parallelizes so well:
+
+@example
+wget -O - http://example.com/dvd.iso \
+  | tee >(sha1sum > dvd.sha1) > dvd.iso
+@end example
+
+That makes @command{tee} write not just to the expected output file,
+but also to a pipe running @command{sha1sum} and saving the final
+checksum in a file named @file{dvd.sha1}.
+
+Note, however, that this example relies on a feature of modern shells
+called process substitution (the @samp{>(command)} syntax, above),
+so you can use @command{zsh}, @command{bash}, or @command{ksh}, but
+not a minimal @command{/bin/sh}.
+
+You can extend this example to make @command{tee} write to two processes,
+computing MD5 and SHA1 checksums in parallel:
+
+@example
+wget -O - http://example.com/dvd.iso \
+  | tee >(sha1sum > dvd.sha1) \
+        >(md5sum > dvd.md5) \
+  > dvd.iso
+@end example
+
+This technique is also useful when you want to make a @emph{compressed}
+copy of the contents of a pipe.
+Consider a tool to graphically summarize disk usage data from @samp{du -ak}.
+For a large hierarchy, @samp{du -ak} can run for a long time,
+and can easily produce terabytes of data, so you won't want to
+rerun the command unnecessarily.  Nor will you want to save
+the uncompressed output.
+
+Doing it the inefficient way, you can't even start the GUI
+until after you've compressed all of the @command{du} output:
+
+@example
+du -ak | gzip -9 > /tmp/du.gz
+gzip -d /tmp/du.gz | xdiskusage -a
+@end example
+
+With @command{tee} and process substitution, you start the GUI
+right away and eliminate the decompression completely:
+
+@example
+du -ak | tee >(gzip -9 > /tmp/du.gz) | xdiskusage -a
+@end example
 
 @exitstatus
 

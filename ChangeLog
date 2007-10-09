@@ -1,3 +1,9 @@
+2007-10-16  Jim Meyering  <meyering@redhat.com>
+
+	Show how to make tee redirect to multiple processes.
+	* doc/coreutils.texi (tee invocation): Tee can redirect output
+	to multiple _processes_, too.
+
 2007-10-14  Jim Meyering  <meyering@redhat.com>
 
 	Pull all TESTS_ENVIRONMENT settings "up" into tests/check.mk.
