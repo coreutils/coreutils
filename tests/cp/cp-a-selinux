@@ -23,9 +23,9 @@ if test "$VERBOSE" = yes; then
 fi
 
 . $srcdir/../lang-default
-. $srcdir/../selinux
 PRIV_CHECK_ARG=require-root . $srcdir/../priv-check
 . $srcdir/../test-lib.sh
+require_selinux_
 
 cwd=`pwd`
 cleanup_() { cd /; umount "$cwd/mnt"; }

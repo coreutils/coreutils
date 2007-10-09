@@ -9,6 +9,8 @@ fi
 . $srcdir/../lang-default
 PRIV_CHECK_ARG=require-root . $srcdir/../priv-check
 . $srcdir/../test-lib.sh
+require_selinux_
+
 mkdir -p d/sub/s2 || framework_failure
 touch f g d/sub/1 d/sub/2 || framework_failure
 

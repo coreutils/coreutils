@@ -33,7 +33,6 @@ EXTRA_DIST =		\
   priv-check		\
   rwx-to-mode		\
   sample-test		\
-  selinux		\
   setgid-check		\
   sparse-file		\
   strace		\

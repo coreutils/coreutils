@@ -11,9 +11,9 @@ if test "$VERBOSE" = yes; then
 fi
 
 . $srcdir/../lang-default
-. $srcdir/../selinux
 . $srcdir/../test-lib.sh
 skip_if_root_
+require_selinux_
 
 # Create a regular file, dir, fifo.
 touch f || framework_failure

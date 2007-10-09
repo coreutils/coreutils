@@ -39,6 +39,16 @@ skip_if_()
   esac
 }
 
+require_selinux_()
+{
+  case `ls -Zd .` in
+    '? .'|'unlabeled .')
+      skip_test_ "this system (or maybe just" \
+        "the current file system) lacks SELinux support"
+    ;;
+  esac
+}
+
 skip_if_root_() { uid_is_privileged_ && skip_test_ "must be run as non-root"; }
 error_() { echo "$0: $@" 1>&2; (exit 1); exit 1; }
 framework_failure() { error_ 'failure in testing framework'; }
@@ -73,3 +83,7 @@ elif ( cmp --version < /dev/null 2>&1 | grep GNU ) 2>&1 > /dev/null; then
 else
   compare() { cmp "$@"; }
 fi
+
+# Local Variables:
+# indent-tabs-mode: nil
+# End:

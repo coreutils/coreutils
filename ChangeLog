@@ -1,5 +1,14 @@
 2007-10-09  Jim Meyering  <meyering@redhat.com>
 
+	Skip the chcon test on a system with no SELinux support.
+	* tests/test-lib.sh (require_selinux_): New function.
+	* tests/misc/chcon: Use it.
+	* tests/misc/selinux: Use it here, too.
+	* tests/cp/cp-a-selinux: and here.
+	* tests/selinux: Remove file.
+	* tests/Makefile.am (EXTRA_DIST): Remove selinux.
+	Reported by Mike Frysinger and Bauke Jan Douma.
+
 	* src/dircolors.hin: Recognize .lzma as a compressed-file suffix.
 
 	* configure.ac (AM_INIT_AUTOMAKE): Use dist-lzma, rather than dist-bzip2.
