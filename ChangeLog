@@ -1,3 +1,9 @@
+2007-10-14  Jim Meyering  <meyering@redhat.com>
+
+	Fix a minor typo.
+	* configure.ac (AC_INIT): Fix a typo (s/9.6/6.9/) that makes a
+	difference only when running "make dist" without a .git/ subdir.
+
 2007-10-09  Jim Meyering  <meyering@redhat.com>
 
 	Move the help-version test into misc/.

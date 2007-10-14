@@ -23,7 +23,7 @@ AC_PREREQ(2.61)
 # Make inter-release version strings look like, e.g., v6.9-219-g58ddd, which
 # indicates that it is built from the 219th delta (in _some_ repository)
 # following the v6.9 tag, and that 58ddd is a prefix of the commit SHA1.
-AC_INIT([GNU coreutils], m4_esyscmd([build-aux/git-version-gen 9.6+ .version]),
+AC_INIT([GNU coreutils], m4_esyscmd([build-aux/git-version-gen 6.9+ .version]),
 	[bug-coreutils@gnu.org])
 
 AC_CONFIG_SRCDIR(src/ls.c)
