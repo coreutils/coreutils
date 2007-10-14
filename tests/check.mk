@@ -32,12 +32,23 @@ check: vc_exe_in_TESTS
 .PHONY: vc_exe_in_TESTS
 
 # Append this, because automake does the same.
-TESTS_ENVIRONMENT +=			\
-  top_srcdir=$(top_srcdir)		\
-  PACKAGE_VERSION=$(PACKAGE_VERSION)	\
-  abs_top_srcdir=$(abs_top_srcdir)	\
-  abs_top_builddir=$(abs_top_builddir)	\
-  srcdir=$(srcdir)
+TESTS_ENVIRONMENT =				\
+  abs_top_builddir='$(abs_top_builddir)'	\
+  abs_top_srcdir='$(abs_top_srcdir)'		\
+  built_programs="`$(built_programs)`"		\
+  host_os=$(host_os)				\
+  host_triplet='$(host_triplet)'		\
+  srcdir='$(srcdir)'				\
+  top_srcdir='$(top_srcdir)'			\
+  CONFIG_HEADER='$(CONFIG_HEADER)'		\
+  CU_TEST_NAME=`basename $(abs_srcdir)`,$$tst	\
+  EGREP='$(EGREP)'				\
+  EXEEXT='$(EXEEXT)'				\
+  MAKE=$(MAKE)					\
+  PACKAGE_VERSION=$(PACKAGE_VERSION)		\
+  PERL='$(PERL)'				\
+  REPLACE_GETCWD=$(REPLACE_GETCWD)		\
+  PATH='$(abs_top_builddir)/src$(PATH_SEPARATOR)'"$$PATH"
 
 TEST_LOGS = $(TESTS:=.log)
 

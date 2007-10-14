@@ -26,10 +26,5 @@ TESTS = \
   stat-vs-dirent x-option
 
 EXTRA_DIST = $(TESTS)
-TESTS_ENVIRONMENT = \
-  CU_TEST_NAME=`basename $(abs_srcdir)`,$$tst \
-  PATH="$(VG_PATH_PREFIX)`pwd`/../../src$(PATH_SEPARATOR)$$PATH" \
-  PERL="$(PERL)" \
-  PROG=ls
 
 include $(top_srcdir)/tests/check.mk

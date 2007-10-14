@@ -48,12 +48,5 @@ TESTS = \
   part-symlink part-rename trailing-slash
 
 EXTRA_DIST = $(TESTS) vfat
-TESTS_ENVIRONMENT = \
-  PERL="$(PERL)" \
-  EGREP="$(EGREP)" \
-  CU_TEST_NAME=`basename $(abs_srcdir)`,$$tst \
-  PATH="$(VG_PATH_PREFIX)`pwd`/../../src$(PATH_SEPARATOR)$$PATH" \
-  CONFIG_HEADER=$(CONFIG_HEADER) \
-  PROG=mv
 
 include $(top_srcdir)/tests/check.mk

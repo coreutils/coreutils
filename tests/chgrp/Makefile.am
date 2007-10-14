@@ -8,9 +8,5 @@ TESTS = \
   recurse
 
 EXTRA_DIST = $(TESTS)
-TESTS_ENVIRONMENT = \
-  host_triplet=$(host_triplet) \
-  CU_TEST_NAME=`basename $(abs_srcdir)`,$$tst \
-  PATH="$(VG_PATH_PREFIX)`pwd`/../../src$(PATH_SEPARATOR)$$PATH"
 
 include $(top_srcdir)/tests/check.mk

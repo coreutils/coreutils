@@ -43,13 +43,5 @@ TESTS = \
   isatty
 
 EXTRA_DIST = $(TESTS)
-TESTS_ENVIRONMENT = \
-  RM=../../src/rm \
-  MKDIR=../../src/mkdir \
-  CONFIG_HEADER=$(CONFIG_HEADER) \
-  PERL="$(PERL)" \
-  CU_TEST_NAME=`basename $(abs_srcdir)`,$$tst \
-  PATH="$(VG_PATH_PREFIX)`pwd`/../../src$(PATH_SEPARATOR)$$PATH" \
-  PROG=rm
 
 include $(top_srcdir)/tests/check.mk

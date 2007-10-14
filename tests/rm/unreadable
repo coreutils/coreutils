@@ -37,7 +37,7 @@ use strict;
 
 my $d = "dir-$$";
 my $mkdir = {PRE => sub {mkdir $d,0100 or die "$d: $!\n"}};
-my $prog = $ENV{PROG} || die "$0: \$PROG not specified in environment\n";
+my $prog = 'rm';
 
 my @Tests =
     (

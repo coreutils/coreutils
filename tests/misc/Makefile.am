@@ -20,16 +20,6 @@ EXTRA_DIST = $(TESTS)
 built_programs = \
   (cd $(top_builddir)/src && MAKEFLAGS= $(MAKE) -s built_programs.list)
 
-TESTS_ENVIRONMENT = \
-  built_programs="`$(built_programs)`" \
-  PERL="$(PERL)" \
-  BUILD_SRC_DIR="`pwd`/../../src" \
-  CU_TEST_NAME=`basename $(abs_srcdir)`,$$tst \
-  PATH="$(VG_PATH_PREFIX)`pwd`/../../src$(PATH_SEPARATOR)$$PATH" \
-  CONFIG_HEADER=$(CONFIG_HEADER) \
-  REPLACE_GETCWD=$(REPLACE_GETCWD) \
-  host_os=$(host_os)
-
 # Do not choose a name that is a shell keyword like 'if', or a
 # commonly-used utility like 'cat' or 'test', as the name of a test.
 # Otherwise, VPATH builds will fail on hosts like Solaris, since they

@@ -79,9 +79,10 @@ do
   }
 until (++$i == $n);
 
-my $build_src_dir = $ENV{BUILD_SRC_DIR};
-$build_src_dir
-  or die "$ME: envvar BUILD_SRC_DIR not defined\n";
+my $abs_top_builddir = $ENV{abs_top_builddir};
+$abs_top_builddir
+  or die "$ME: envvar abs_top_builddir not defined\n";
+my $build_src_dir = "$abs_top_builddir/src";
 if ($build_src_dir !~ m!^([-+.:/\w]+)$!)
   {
     warn "$0: skipping this test; odd build source directory name:\n"

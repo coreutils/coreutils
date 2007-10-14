@@ -1,5 +1,33 @@
 2007-10-14  Jim Meyering  <meyering@redhat.com>
 
+	Pull all TESTS_ENVIRONMENT settings "up" into tests/check.mk.
+	* tests/Makefile.am.in (TESTS_ENVIRONMENT): Remove definition.
+	* tests/chgrp/Makefile.am: Likewise.
+	* tests/chmod/Makefile.am: Likewise.
+	* tests/chown/Makefile.am: Likewise.
+	* tests/cp/Makefile.am: Likewise.
+	* tests/dd/Makefile.am: Likewise.
+	* tests/du/Makefile.am: Likewise.
+	* tests/install/Makefile.am: Likewise.
+	* tests/ln/Makefile.am: Likewise.
+	* tests/ls/Makefile.am: Likewise.
+	* tests/misc/Makefile.am: Likewise.
+	* tests/mkdir/Makefile.am: Likewise.
+	* tests/mv/Makefile.am: Likewise.
+	* tests/readlink/Makefile.am: Likewise.
+	* tests/rm/Makefile.am: Likewise.
+	* tests/rmdir/Makefile.am: Likewise.
+	* tests/tail-2/Makefile.am: Likewise.
+	* tests/touch/Makefile.am: Likewise.
+	* tests/check.mk (TESTS_ENVIRONMENT) [EXEEXT, EGREP, MAKE, PERL]:
+	[CONFIG_HEADER, build_programs, host_os, host_triplet, PATH]:
+	[REPLACE_GETCWD, CU_TEST_NAME]: Add definitions here.
+	* tests/misc/pwd-long: Use $abs_top_builddir/src, not $BUILD_SRC_DIR.
+	* tests/dd/skip-seek: Don't use $ENV{PROG}.
+	* tests/rm/empty-name: Likewise.
+	* tests/rm/unreadable: Likewise.
+	* tests/mv/i-1: Likewise.
+
 	Fix a minor typo.
 	* configure.ac (AC_INIT): Fix a typo (s/9.6/6.9/) that makes a
 	difference only when running "make dist" without a .git/ subdir.
