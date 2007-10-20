@@ -1,5 +1,11 @@
 2007-10-20  Jim Meyering  <meyering@redhat.com>
 
+	Detect printf(3) failure due to ENOMEM.
+	* src/printf.c: Include "xprintf.h"
+	(print_direc): Use xprintf, rather than printf.
+	* bootstrap.conf (gnulib_modules): Add xprintf.
+	* po/POTFILES.in: Add lib/xprintf.c.
+
 	Put always-failing programs first in PATH, so tests cannot mistakenly
 	run installed versions.
 	* Makefile.maint (my-distcheck): Set up a bogus bin/ dir, to be used

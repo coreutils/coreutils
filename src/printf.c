@@ -56,6 +56,7 @@
 #include "long-options.h"
 #include "quote.h"
 #include "unicodeio.h"
+#include "xprintf.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "printf"
@@ -373,16 +374,16 @@ print_direc (const char *start, size_t length, char conversion,
 	if (!have_field_width)
 	  {
 	    if (!have_precision)
-	      printf (p, arg);
+	      xprintf (p, arg);
 	    else
-	      printf (p, precision, arg);
+	      xprintf (p, precision, arg);
 	  }
 	else
 	  {
 	    if (!have_precision)
-	      printf (p, field_width, arg);
+	      xprintf (p, field_width, arg);
 	    else
-	      printf (p, field_width, precision, arg);
+	      xprintf (p, field_width, precision, arg);
 	  }
       }
       break;
@@ -396,16 +397,16 @@ print_direc (const char *start, size_t length, char conversion,
 	if (!have_field_width)
 	  {
 	    if (!have_precision)
-	      printf (p, arg);
+	      xprintf (p, arg);
 	    else
-	      printf (p, precision, arg);
+	      xprintf (p, precision, arg);
 	  }
 	else
 	  {
 	    if (!have_precision)
-	      printf (p, field_width, arg);
+	      xprintf (p, field_width, arg);
 	    else
-	      printf (p, field_width, precision, arg);
+	      xprintf (p, field_width, precision, arg);
 	  }
       }
       break;
@@ -423,41 +424,41 @@ print_direc (const char *start, size_t length, char conversion,
 	if (!have_field_width)
 	  {
 	    if (!have_precision)
-	      printf (p, arg);
+	      xprintf (p, arg);
 	    else
-	      printf (p, precision, arg);
+	      xprintf (p, precision, arg);
 	  }
 	else
 	  {
 	    if (!have_precision)
-	      printf (p, field_width, arg);
+	      xprintf (p, field_width, arg);
 	    else
-	      printf (p, field_width, precision, arg);
+	      xprintf (p, field_width, precision, arg);
 	  }
       }
       break;
 
     case 'c':
       if (!have_field_width)
-	printf (p, *argument);
+	xprintf (p, *argument);
       else
-	printf (p, field_width, *argument);
+	xprintf (p, field_width, *argument);
       break;
 
     case 's':
       if (!have_field_width)
 	{
 	  if (!have_precision)
-	    printf (p, argument);
+	    xprintf (p, argument);
 	  else
-	    printf (p, precision, argument);
+	    xprintf (p, precision, argument);
 	}
       else
 	{
 	  if (!have_precision)
-	    printf (p, field_width, argument);
+	    xprintf (p, field_width, argument);
 	  else
-	    printf (p, field_width, precision, argument);
+	    xprintf (p, field_width, precision, argument);
 	}
       break;
     }
