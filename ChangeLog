@@ -1,6 +1,7 @@
 2007-10-20  Jim Meyering  <meyering@redhat.com>
 
 	* doc/coreutils.texi (tee invocation): Fix typo.  Add a little.
+	Add a cross-reference to bashref's Process Substitution node.
 
 	Adjust tests to pass, now that Test.pm ones use check.mk.
 	* tests/check.mk (vc_exe_in_TESTS): Adjust regexp not to match the

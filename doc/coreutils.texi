@@ -11085,9 +11085,12 @@ but also to a pipe running @command{sha1sum} and saving the final
 checksum in a file named @file{dvd.sha1}.
 
 Note, however, that this example relies on a feature of modern shells
-called process substitution (the @samp{>(command)} syntax, above),
-so it works with e.g., @command{zsh}, @command{bash}, or @command{ksh},
-but not with a minimal @command{/bin/sh}.  So if you use this technique
+called @dfn{process substitution}
+(the @samp{>(command)} syntax, above;
+@xref{Process Substitution,,Process Substitution, bashref,
+The Bash Reference Manual}.),
+so it works with @command{zsh}, @command{bash}, and @command{ksh},
+but not with @command{/bin/sh}.  So if you write code like this
 in a shell script, be sure to start the script with @samp{#!/bin/bash}.
 
 You can extend this example to make @command{tee} write to two processes,
