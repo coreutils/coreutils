@@ -11056,7 +11056,7 @@ Ignore interrupt signals.
 
 @end table
 
-The @command{tee} is useful when you happen to be transferring a large
+The @command{tee} command is useful when you happen to be transferring a large
 amount of data and also want to summarize that data without reading
 it a second time.  For example, when you are downloading a DVD image,
 you often want to verify its signature or checksum right away.
@@ -11086,8 +11086,9 @@ checksum in a file named @file{dvd.sha1}.
 
 Note, however, that this example relies on a feature of modern shells
 called process substitution (the @samp{>(command)} syntax, above),
-so you can use @command{zsh}, @command{bash}, or @command{ksh}, but
-not a minimal @command{/bin/sh}.
+so it works with e.g., @command{zsh}, @command{bash}, or @command{ksh},
+but not with a minimal @command{/bin/sh}.  So if you use this technique
+in a shell script, be sure to start the script with @samp{#!/bin/bash}.
 
 You can extend this example to make @command{tee} write to two processes,
 computing MD5 and SHA1 checksums in parallel:

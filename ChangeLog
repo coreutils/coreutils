@@ -1,5 +1,7 @@
 2007-10-20  Jim Meyering  <meyering@redhat.com>
 
+	* doc/coreutils.texi (tee invocation): Fix typo.  Add a little.
+
 	Adjust tests to pass, now that Test.pm ones use check.mk.
 	* tests/check.mk (vc_exe_in_TESTS): Adjust regexp not to match the
 	"TESTS = $x-tests" line in each Test.pm-derived Makefile.am file.
