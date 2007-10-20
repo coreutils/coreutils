@@ -1,3 +1,8 @@
+2007-10-20  Jim Meyering  <meyering@redhat.com>
+
+	Ensure that Test.pm-derived tests use the right $PATH.
+	* tests/Makefile.am.in: Include $(top_srcdir)/tests/check.mk.
+
 2007-10-20  Bob Proulx  <bob@proulx.com>
 
 	Prevent "make check" from leaving mktemp /tmp/tmp.* files behind.

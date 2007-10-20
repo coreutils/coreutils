@@ -47,3 +47,5 @@ $(srcdir)/Makefile.am: ../Makefile.am.in Test.pm $(mk_script)
 	sed -n '/^##test-files-end/,$$p' $(srcdir)/../Makefile.am.in >> $@t
 	chmod -w $@t
 	mv $@t $@
+
+include $(top_srcdir)/tests/check.mk
