@@ -15,17 +15,19 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Ensure that all version-controlled executable files are listed in TESTS.
+# Collect test names from the line matching /^TESTS = \\$$/ to the following
+# one that does not end in '\'.
 _v = TESTS
 vc_exe_in_TESTS: Makefile
-	@if test -d $(top_srcdir)/.git; then			\
-	  sed -n '/^$(_v) =/,/[^\]$$/p' $(srcdir)/Makefile.am	\
-	    | sed 's/^  *//;/^\$$.*/d;/^$(_v) =/d'		\
-	    | tr -s '\012\\' '  ' | fmt -1 | sort -u > t1 &&	\
-	  for f in `$(top_srcdir)/build-aux/vc-list-files .`; do \
-	    test -f "$$f" && test -x "$$f" && echo "$$f";	\
-	  done | sort -u > t2 &&				\
-	  diff -u t1 t2 || exit 1;				\
-	  rm -f t1 t2;						\
+	@if test -d $(top_srcdir)/.git; then				\
+	  sed -n '/^$(_v) = \\$$/,/[^\]$$/p' $(srcdir)/Makefile.am	\
+	    | sed 's/^  *//;/^\$$.*/d;/^$(_v) =/d'			\
+	    | tr -s '\012\\' '  ' | fmt -1 | sort -u > t1 &&		\
+	  for f in `$(top_srcdir)/build-aux/vc-list-files .`; do	\
+	    test -f "$$f" && test -x "$$f" && echo "$$f";		\
+	  done | sort -u > t2 &&					\
+	  diff -u t1 t2 || exit 1;					\
+	  rm -f t1 t2;							\
 	else :; fi
 
 check: vc_exe_in_TESTS

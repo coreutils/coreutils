@@ -1,5 +1,10 @@
 2007-10-20  Jim Meyering  <meyering@redhat.com>
 
+	Adjust tests to pass, now that Test.pm ones use check.mk.
+	* tests/check.mk (vc_exe_in_TESTS): Adjust regexp not to match the
+	"TESTS = $x-tests" line in each Test.pm-derived Makefile.am file.
+	* tests/sort/main: Remove this unused file.
+
 	Ensure that Test.pm-derived tests use the right $PATH.
 	* tests/Makefile.am.in: Include $(top_srcdir)/tests/check.mk.
 
