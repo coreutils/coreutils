@@ -200,6 +200,8 @@ stat_args=$tmp_in
 unlink_args=$tmp_in
 lbracket_args=": ]"
 
+# Ensure that each program "works" (exits successfully) when doing
+# something more than --help or --version.
 for i in $built_programs; do
   # Skip these.
   case $i in chroot|stty|tty|false|chcon|runcon) continue;; esac
