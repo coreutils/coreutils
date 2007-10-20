@@ -136,6 +136,9 @@ mknod_args=--version
 # on some systems, and we shouldn't let that stop `make check'.
 uptime_args=--version
 
+# Create a file in the current directory, not in $TMPDIR.
+mktemp_args=mktemp.XXXX
+
 cmp_args="$tmp_in $tmp_in2"
 
 # Tell dd not to print the line with transfer rate and total.

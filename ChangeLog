@@ -1,3 +1,9 @@
+2007-10-20  Bob Proulx  <bob@proulx.com>
+
+	Prevent "make check" from leaving mktemp /tmp/tmp.* files behind.
+	* tests/misc/help-version (mktemp_args): Tell mktemp to create
+	its temporary file in the current directory.
+
 2007-10-16  Jim Meyering  <meyering@redhat.com>
 
 	Show how to make tee redirect to multiple processes.
