@@ -1,5 +1,10 @@
 2007-10-20  Jim Meyering  <meyering@redhat.com>
 
+	Put always-failing programs first in PATH, so tests cannot mistakenly
+	run installed versions.
+	* Makefile.maint (my-distcheck): Set up a bogus bin/ dir, to be used
+	for "make check".
+
 	* doc/coreutils.texi (tee invocation): Fix typo.  Add a little.
 	Add a cross-reference to bashref's Process Substitution node.
 

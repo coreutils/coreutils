@@ -562,13 +562,23 @@ null_AM_MAKEFLAGS = \
   AUTOHEADER=false \
   MAKEINFO=false
 
+built_programs = $$(cd src && MAKEFLAGS= $(MAKE) -s built_programs.list)
+
 warn_cflags = -Dlint -O -Werror -Wall -Wformat -Wshadow -Wpointer-arith
+bin=bin-$$$$
 
 # Use -Wformat -Werror to detect format-string/arg-list mismatches.
 # Also, check for shadowing problems with -Wshadow, and for pointer
 # arithmetic problems with -Wpointer-arith.
 # These CFLAGS are pretty strict.  If you build this target, you probably
 # have to have a recent version of gcc and glibc headers.
+# The for-loop below ensures that there is a bin/ directory full of all
+# of the programs under test (except the few that are required for basic
+# Makefile rules), all symlinked to the just-built "false" program.
+# This is to ensure that if ever a test neglects to make PATH include
+# the build srcdir, these always-failing programs will run.
+# Otherwise, it is too easy to test the wrong programs.
+# Note that "false" itself is a symlink to true, so it too will malfunction.
 TMPDIR ?= /tmp
 t=$(TMPDIR)/$(PACKAGE)/test
 my-distcheck: $(local-check) $(release_archive_dir)/$(prev-tgz)
@@ -580,7 +590,16 @@ my-distcheck: $(local-check) $(release_archive_dir)/$(prev-tgz)
 	  && $(MAKE) CFLAGS='$(warn_cflags)'		\
 	      AM_MAKEFLAGS='$(null_AM_MAKEFLAGS)'	\
 	  && $(MAKE) dvi				\
-	  && $(MAKE) check				\
+	  && mkdir $(bin)				\
+	  && for i in $(built_programs); do		\
+	       case $$i in				\
+		 rm|expr|basename|echo|sort|ls|tr);;	\
+		 *) ln -s ../src/false $(bin)/$$i;;	\
+	       esac;					\
+	     done					\
+	  && ln -sf ../src/true $(bin)/false		\
+	  && PATH=`pwd`/$(bin):$$PATH $(MAKE) check	\
+	  && rm -rf $(bin)				\
 	  && $(MAKE) distclean
 	(cd $(t) && mv $(distdir) $(distdir).old	\
 	  && $(AMTAR) -zxf - ) < $(distdir).tar.gz
