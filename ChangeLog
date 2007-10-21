@@ -1,5 +1,7 @@
 2007-10-21  Jim Meyering  <meyering@redhat.com>
 
+	* NEWS: Mention the printf fix.
+
 	Reorder tests to run more basic ones earlier.
 	* tests/misc/Makefile.am (TESTS): Reorder.
 	* tests/Makefile.am (SUBDIRS): Reorder.

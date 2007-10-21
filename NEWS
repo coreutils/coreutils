@@ -132,6 +132,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   of bytes to skip is exactly the sum of the lengths of the first N files,
   od would skip only the first N-1 files. [introduced in textutils-2.0.9]
 
+  ./printf %.10000000f 1 could get an internal ENOMEM error and generate
+  no output, yet erroneously exit with status 0.  Now it diagnoses the error
+  and exits with nonzero status.  [present in initial implementation]
+
   seq no longer mishandles obvious cases like "seq 0 0.000001 0.000003",
   so workarounds like "seq 0 0.000001 0.0000031" are no longer needed.
 
@@ -146,9 +150,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   [this bug is present at least as far back as textutils-1.22 (Jan, 1997)]
 
   tr -c no longer aborts when translating with Set2 larger than the
-  complement of Set1.  [introduced with the original version, in 1992]
+  complement of Set1.  [present in the original version, in 1992]
 
   tr no longer rejects an unmatched [:lower:] or [:upper:] in SET1.
+  [present in the original version]
 
 
 * Noteworthy changes in release 6.9 (2007-03-22) [stable]
