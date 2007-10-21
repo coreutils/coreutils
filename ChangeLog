@@ -24,6 +24,7 @@
 	(print_direc): Use xprintf, rather than printf.
 	* bootstrap.conf (gnulib_modules): Add xprintf.
 	* po/POTFILES.in: Add lib/xprintf.c.
+	Reported by Bruno Haible.
 
 	Put always-failing programs first in PATH, so tests cannot mistakenly
 	run installed versions.
