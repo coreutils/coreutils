@@ -39,11 +39,19 @@ EXTRA_DIST =		\
   umask-check		\
   very-expensive
 
+# Regarding ordering in SUBDIRS, place early in the list the tools that
+# are most commonly used in test scripts.  Every test script uses rm
+# and chmod, so they have to be very early.
+# Ordering within misc/ should handle the rest.
+
 ## N O T E :: Please do not add new tests/ directories.
 ## There are too many already.  Put new tests in misc/.
 SUBDIRS = \
-  chgrp chmod chown cp cut dd du head \
-  install join ln ls misc mkdir mv pr readlink rm rmdir \
+  rm \
+  chmod \
+  misc \
+  chgrp chown cp cut dd du head \
+  install join ln ls mkdir mv pr readlink rmdir \
   sort tac tail tail-2 test touch tr \
   uniq wc
 ## N O T E :: Please do not add new directories.

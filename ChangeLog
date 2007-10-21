@@ -1,5 +1,9 @@
 2007-10-21  Jim Meyering  <meyering@redhat.com>
 
+	Reorder tests to run more basic ones earlier.
+	* tests/misc/Makefile.am (TESTS): Reorder.
+	* tests/Makefile.am (SUBDIRS): Reorder.
+
 	tr: do not reject an unmatched [:lower:] or [:upper:] in SET1.
 	* NEWS: Mention this.
 	* src/tr.c (get_next) [RE_CHAR_CLASS]: Don't skip the loop when

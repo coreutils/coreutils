@@ -26,7 +26,14 @@ built_programs = \
 # will expand 'if test ...' to 'if .../test ...', and the '.../test'
 # will execute the test script rather than the standard utility.
 
+# Ordering:
+# help-version comes early because it's a basic sanity test.
+# Put seq early, since lots of other tests use it.
+# Put head-elide-tail early, because it's long-running.
+
 TESTS = \
+  help-version \
+  seq \
   head-elide-tail \
   ls-time \
   ls-misc \
@@ -64,7 +71,6 @@ TESTS = \
   groups-version \
   head-c \
   head-pos \
-  help-version \
   md5sum \
   md5sum-newline \
   mknod \
@@ -80,7 +86,6 @@ TESTS = \
   pwd-long \
   readlink-fp-loop \
   runcon-no-reorder \
-  seq \
   sha1sum \
   sha1sum-vec \
   sha224sum \
