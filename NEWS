@@ -148,6 +148,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   tr -c no longer aborts when translating with Set2 larger than the
   complement of Set1.  [introduced with the original version, in 1992]
 
+  tr no longer rejects an unmatched [:lower:] or [:upper:] in SET1.
+
 
 * Noteworthy changes in release 6.9 (2007-03-22) [stable]
 

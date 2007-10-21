@@ -1077,27 +1077,15 @@ get_next (struct Spec_list *s, enum Upper_Lower_class *class)
     case RE_CHAR_CLASS:
       if (class)
 	{
-	  bool upper_or_lower;
 	  switch (p->u.char_class)
 	    {
 	    case CC_LOWER:
 	      *class = UL_LOWER;
-	      upper_or_lower = true;
 	      break;
 	    case CC_UPPER:
 	      *class = UL_UPPER;
-	      upper_or_lower = true;
 	      break;
 	    default:
-	      upper_or_lower = false;
-	      break;
-	    }
-
-	  if (upper_or_lower)
-	    {
-	      s->tail = p->next;
-	      s->state = NEW_ELEMENT;
-	      return_val = 0;
 	      break;
 	    }
 	}
@@ -1833,12 +1821,11 @@ main (int argc, char **argv)
 	      c1 = get_next (s1, &class_s1);
 	      c2 = get_next (s2, &class_s2);
 
-	      /* When constructing the translation array, either one of the
-		 values returned by paired calls to get_next must be from
-		 [:upper:] and the other is [:lower:], or neither can be from
-		 upper or lower.  */
-
-	      if ((class_s1 == UL_NONE) != (class_s2 == UL_NONE))
+	      /* When translating and there is an [:upper:] or [:lower:]
+		 class in SET2, then there must be a corresponding [:lower:]
+		 or [:upper:] class in SET1.  */
+	      if (class_s1 == UL_NONE
+		  && (class_s2 == UL_LOWER || class_s2 == UL_UPPER))
 		error (EXIT_FAILURE, 0,
 		       _("misaligned [:upper:] and/or [:lower:] construct"));
 

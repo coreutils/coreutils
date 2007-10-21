@@ -1,3 +1,14 @@
+2007-10-21  Jim Meyering  <meyering@redhat.com>
+
+	tr: do not reject an unmatched [:lower:] or [:upper:] in SET1.
+	* NEWS: Mention this.
+	* src/tr.c (get_next) [RE_CHAR_CLASS]: Don't skip the loop when
+	processing [:lower:] and [:upper:].
+	(main): Require [:lower:] or [:upper:] in SET1 only when
+	when one of those is specified in SET2.
+	* tests/tr/Test.pm: Add tests for this fix.
+	Reported by Per Starbäck.
+
 2007-10-20  Jim Meyering  <meyering@redhat.com>
 
 	* tests/misc/help-version: Add a comment.

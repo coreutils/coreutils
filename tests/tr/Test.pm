@@ -135,6 +135,10 @@ my @tv = (
 
 # Prior to coreutils-6.10, this would provoke a failed assertion.
 ['no-abort-1', '-c ' . q|a '[b*256]'|, 'abc', 'abb', 0],
+
+# Up to coreutils-6.9, tr rejected an unmatched [:lower:] or [:upper:] in SET1.
+['s1-lower', q|'[:lower:]' '[.*]'|, '#$%123abcABC', '#$%123...ABC', 0],
+['s1-upper', q|'[:upper:]' '[.*]'|, '#$%123abcABC', '#$%123abc...', 0],
 );
 
 sub test_vector
