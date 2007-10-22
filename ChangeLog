@@ -1,3 +1,7 @@
+2007-10-22  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* README-hacking: Describe how to build with LZMA.
+
 2007-10-22  Jim Meyering  <meyering@redhat.com>
 
 	Remove git-version-gen's first parameter.
