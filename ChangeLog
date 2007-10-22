@@ -1,3 +1,11 @@
+2007-10-22  Jim Meyering  <meyering@redhat.com>
+
+	Remove git-version-gen's first parameter.
+	* build-aux/git-version-gen: Add comments.
+	Remove first command-line parameter.
+	* configure.ac: Remove corresponding first argument.
+	* GNUmakefile (_curr-ver): Likewise.
+
 2007-10-21  Jim Meyering  <meyering@redhat.com>
 
 	* NEWS: Mention the printf fix.
