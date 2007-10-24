@@ -1,5 +1,9 @@
 2007-10-24  Jim Meyering  <meyering@redhat.com>
 
+	Avoid diagnostics from sha1sum when there is no cached checksum.
+	* bootstrap (update_po_files): Skip the sha1sum check if the po.s1
+	file hasn't been created yet.
+
 	Get gnulib from the git repository, not from an obsolete cvs one.
 	* bootstrap: Suggestion from Micah Cowan.
 

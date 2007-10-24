@@ -286,7 +286,8 @@ update_po_files() {
     case $po in x) continue;; esac
     new_po="$ref_po_dir/$po.po"
     cksum_file="$ref_po_dir/$po.s1"
-    if ! sha1sum -c --status "$cksum_file" < "$new_po" > /dev/null; then
+    if ! test -f "$cksum_file" ||
+	! sha1sum -c --status "$cksum_file" < "$new_po" > /dev/null; then
       echo "updated $po_dir/$po.po..."
       cp "$new_po" "$po_dir/$po.po" && sha1sum < "$new_po" > "$cksum_file"
     fi
