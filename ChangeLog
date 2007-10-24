@@ -1,3 +1,9 @@
+2007-10-24  Jim Meyering  <meyering@redhat.com>
+
+	Don't fail part 2 of tests/rm/unreadable when run as root.
+	* tests/rm/unreadable: With UID == 0, expect different results.
+	Reported by Mike Frysinger.
+
 2007-10-23  Jim Meyering  <meyering@redhat.com>
 
 	* README-hacking: Refer to LZMA Utils <http://tukaani.org/lzma/>.

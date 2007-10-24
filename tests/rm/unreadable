@@ -38,6 +38,7 @@ use strict;
 my $d = "dir-$$";
 my $mkdir = {PRE => sub {mkdir $d,0100 or die "$d: $!\n"}};
 my $prog = 'rm';
+my $uid = $<;
 
 my @Tests =
     (
@@ -47,8 +48,9 @@ my @Tests =
      ['unreadable-1', '-rf', $d, {EXIT => 0}, $mkdir],
 
      ['unreadable-2', '-rf', $d,
-      {EXIT => 1},
-      {ERR => "$prog: cannot remove \`$d': Permission denied\n"},
+      {EXIT => $uid == 0 ? 0 : 1},
+      {ERR => $uid == 0 ? ''
+                        : "$prog: cannot remove \`$d': Permission denied\n"},
       {PRE => sub { (mkdir $d,0700 and mkdir "$d/x",0700 and chmod 0100,$d)
                     or die "$d: $!\n"}} ],
     );
