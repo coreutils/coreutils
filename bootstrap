@@ -23,7 +23,6 @@ nl='
 '
 
 # Ensure file names are sorted consistently across platforms.
-# Also, ensure diagnostics are in English, e.g., "wget --help" below.
 LC_ALL=C
 export LC_ALL
 
@@ -243,7 +242,7 @@ case ${GNULIB_SRCDIR--} in
 
     trap cleanup_gnulib 1 2 13 15
 
-    cvs -z3 -q -d ${CVS_PREFIX}cvs.savannah.gnu.org:/cvsroot/gnulib co gnulib ||
+    git clone --depth 2 git://git.sv.gnu.org/gnulib ||
       cleanup_gnulib
 
     trap - 1 2 13 15

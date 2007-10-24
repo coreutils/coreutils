@@ -1,5 +1,8 @@
 2007-10-24  Jim Meyering  <meyering@redhat.com>
 
+	Get gnulib from the git repository, not from an obsolete cvs one.
+	* bootstrap: Suggestion from Micah Cowan.
+
 	Doc improvements.
 	* README-hacking: Prefer the no-hyphen variant of git commands,
 	e.g., use "git pull" not "git-pull".
