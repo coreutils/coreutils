@@ -25,7 +25,7 @@ Valgrind <http://valgrind.org/> is also highly recommended, if
 Valgrind supports your architecture.
 
 Only building the initial full source tree will be a bit painful.
-Later, a plain `git-pull && make' should be sufficient.
+Later, a plain `git pull && make' should be sufficient.
 
 * LZMA
 
@@ -43,7 +43,8 @@ Automake on 2007-10-09 but is not yet available in a stable Automake
 version.  So until Automake 1.11 comes out, you'll need to get the
 bleeding-edge Automake version with a command like this:
 
-	$ cvs -d sources.redhat.com:/cvs/automake co automake
+	$ git clone git://git.sv.gnu.org/automake
+	$ cd automake
 	$ ./bootstrap
 	$ ./configure
 	$ make install
@@ -52,9 +53,12 @@ and build and install that version.
 
 * First GIT checkout
 
-Obviously, if you are reading these notes, you did manage to check out
-this package from GIT.  The next step is to get other files needed to
-build, which are extracted from other source packages:
+You can get a copy of the source repository like this:
+
+	$ git clone git://git.sv.gnu.org/coreutils
+
+The next step is to get other files needed to build, which are
+extracted from other source packages:
 
 	$ ./bootstrap
 
@@ -67,7 +71,7 @@ And there you are!  Just
 At this point, there should be no difference between your local copy,
 and the GIT master copy:
 
-	$ git-diff
+	$ git diff
 
 should output no difference.
 

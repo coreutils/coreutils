@@ -1,5 +1,14 @@
 2007-10-24  Jim Meyering  <meyering@redhat.com>
 
+	Doc improvements.
+	* README-hacking: Prefer the no-hyphen variant of git commands,
+	e.g., use "git pull" not "git-pull".
+	Don't presume that the only way to read this document is via a
+	prior git clone: provide instructions for cloning coreutils, too.
+
+	* README-hacking: Add "cd automake" in build instructions.
+	From Bob Proulx.
+
 	Don't fail part 2 of tests/rm/unreadable when run as root.
 	* tests/rm/unreadable: With UID == 0, expect different results.
 	Reported by Mike Frysinger.
