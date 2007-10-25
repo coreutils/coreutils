@@ -1,3 +1,10 @@
+2007-10-24  Micah Cowan  <micah@cowan.name>
+
+	Tell xgettext that "ARG1 % ARG2" is not a C format string.
+	* src/expr.c (usage): Add a comment to override xgettext's default
+	behavior, which would classify "ARG1 % ARG2" as a fprintf-style
+	format string.
+
 2007-10-24  Jim Meyering  <meyering@redhat.com>
 
 	Avoid diagnostics from sha1sum when there is no cached checksum.

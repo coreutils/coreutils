@@ -128,6 +128,8 @@ separates increasing precedence groups.  EXPRESSION may be:\n\
   ARG1 + ARG2       arithmetic sum of ARG1 and ARG2\n\
   ARG1 - ARG2       arithmetic difference of ARG1 and ARG2\n\
 "), stdout);
+      /* Tell xgettext that the "% A" below is not a printf-style
+	 format string:  xgettext:no-c-format */
       fputs (_("\
 \n\
   ARG1 * ARG2       arithmetic product of ARG1 and ARG2\n\
