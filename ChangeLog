@@ -1,5 +1,11 @@
 2007-10-24  Micah Cowan  <micah@cowan.name>
 
+	Remove vestiges of cvs-gnulib-checkout process.  Now we use git.
+	* bootstrap: Remove support for now-unnecessary option, --cvs-user,
+	and envvars CVS_USER, CVS_RSH.
+
+2007-10-24  Micah Cowan  <micah@cowan.name>
+
 	Tell xgettext that "ARG1 % ARG2" is not a C format string.
 	* src/expr.c (usage): Add a comment to override xgettext's default
 	behavior, which would classify "ARG1 % ARG2" as a fprintf-style

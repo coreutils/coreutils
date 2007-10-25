@@ -48,8 +48,6 @@ Options:
  --force                  Attempt to bootstrap even if the sources seem
                           not to have been checked out.
  --skip-po                Do not download po files.
- --cvs-user=USERNAME      Set the username to use when checking out
-                          sources from the gnulib repository.
 
 If the file bootstrap.conf exists in the current working directory, its
 contents are read as shell variables to configure the bootstrap.
@@ -159,8 +157,6 @@ do
     exit;;
   --gnulib-srcdir=*)
     GNULIB_SRCDIR=`expr "$option" : '--gnulib-srcdir=\(.*\)'`;;
-  --cvs-user=*)
-    CVS_USER=`expr "$option" : '--cvs-user=\(.*\)'`;;
   --skip-po)
     SKIP_PO=t;;
   --force)
@@ -225,20 +221,6 @@ case ${GNULIB_SRCDIR--} in
 -)
   if [ ! -d gnulib ]; then
     echo "$0: getting gnulib files..."
-
-    case ${CVS_AUTH-pserver} in
-    pserver)
-      CVS_PREFIX=':pserver:anonymous@';;
-    ssh)
-      CVS_PREFIX="$CVS_USER${CVS_USER+@}";;
-    *)
-      echo "$0: $CVS_AUTH: Unknown CVS access method" >&2
-      exit 1;;
-    esac
-
-    case $CVS_RSH in
-    '') CVS_RSH=ssh; export CVS_RSH;;
-    esac
 
     trap cleanup_gnulib 1 2 13 15
 
