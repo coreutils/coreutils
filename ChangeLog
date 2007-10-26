@@ -1,3 +1,9 @@
+2007-10-26  Jim Meyering  <meyering@redhat.com>
+
+	Add a test for the printf fix of 2007-10-21.
+	* tests/misc/printf-surprise: New file.  Test for 2007-10-21's fix.
+	* tests/misc/Makefile.am (TESTS): Add printf-surprise.
+
 2007-10-24  Micah Cowan  <micah@cowan.name>
 
 	Remove vestiges of cvs-gnulib-checkout process.  Now we use git.

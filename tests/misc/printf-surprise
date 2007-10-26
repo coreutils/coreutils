@@ -1,0 +1,43 @@
+#!/bin/sh
+# Detect printf(3) failure even when it doesn't set stream error indicator
+
+# Copyright (C) 2007 Free Software Foundation, Inc.
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+prog="$abs_top_builddir/src/printf"
+
+if test "$VERBOSE" = yes; then
+  set -x
+  "$prog" --version
+fi
+
+. $srcdir/../test-lib.sh
+
+fail=0
+
+# The literal width below is 2^31-1.
+# I expect this usage of the printf program to fail.
+# However, it depends on the C library printf function.
+# It could conceivably output "1." and 2GB worth of '0's.
+# You can provoke misbehavior with a much smaller width if you limit
+# virtual memory via, e.g., ulimit -v 10000, but using ulimit would
+# be tricky, since it's not portable.
+"$prog" %.2147483647f 1 > /dev/null 2> err && fail=1
+echo "$prog: cannot perform formatted output: Cannot allocate memory" \
+  > exp || framework_failure
+
+compare err exp || fail=1
+
+(exit $fail); exit $fail

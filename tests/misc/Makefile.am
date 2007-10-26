@@ -83,6 +83,7 @@ TESTS = \
   pathchk1 \
   printf \
   printf-hex \
+  printf-surprise \
   pwd-long \
   readlink-fp-loop \
   runcon-no-reorder \
@@ -115,6 +116,5 @@ TESTS = \
   tsort \
   tty-eof \
   unexpand
-
 
 include $(top_srcdir)/tests/check.mk
