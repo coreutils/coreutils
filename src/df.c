@@ -938,10 +938,10 @@ main (int argc, char **argv)
       /* Couldn't read the table of mounted file systems.
 	 Fail if df was invoked with no file name arguments;
 	 Otherwise, merely give a warning and proceed.  */
+      int status =          (optind < argc ? 0 : EXIT_FAILURE);
       const char *warning = (optind < argc ? _("Warning: ") : "");
-      int status = (optind < argc ? 0 : EXIT_FAILURE);
-      error (status, errno,
-	     _("%scannot read table of mounted file systems"), warning);
+      error (status, errno, "%s%s", warning,
+	     _("cannot read table of mounted file systems"));
     }
 
   if (require_sync)

@@ -1,5 +1,9 @@
 2007-10-27  Jim Meyering  <meyering@redhat.com>
 
+	Adjust format string so msgfmt doesn't object.
+	* src/df.c (main): Use "%s%s" (not %smsg) to print "msg" with or
+	without a "Warning: " prefix.  Reported by Clytie Siddall.
+
 	Clean up tests/Makefile.am.
 	* tests/Makefile.am (EXTRA_DIST): Remove $(TESTS).  No longer defined.
 	(TESTS_ENVIRONMENT): Remove definition.
