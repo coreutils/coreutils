@@ -1,5 +1,7 @@
 2007-10-26  Jim Meyering  <meyering@redhat.com>
 
+	* build-aux/check.mk: Merge with latest from Akim.
+
 	Add a test for the printf fix of 2007-10-21.
 	* tests/misc/printf-surprise: New file.  Test for 2007-10-21's fix.
 	* tests/misc/Makefile.am (TESTS): Add printf-surprise.

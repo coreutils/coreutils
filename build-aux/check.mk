@@ -25,6 +25,14 @@
 ## Define TEST_SUITE_LOG to be the name of the global log to create.
 ## Define TEST_LOGS to the set of logs to include in it.  It defaults
 ## to $(TESTS:.test=.log).
+##
+## In addition to the magic "exit 77 means SKIP" feature (which was
+## imported from automake), there is a magic "exit 177 means FAIL" feature
+## which is useful if you need to issue a hard error no matter whether the
+## test is XFAIL or not.
+
+# Set this to `false' to disable hard errors.
+ENABLE_HARD_ERRORS ?= :
 
 ## We use GNU Make extensions (%-rules), and override check-TESTS.
 AUTOMAKE_OPTIONS = -Wno-portability -Wno-override
@@ -60,9 +68,11 @@ if test -t 1 2>/dev/null; then			\
   std='[m';					\
 fi
 
-# To be inserted before the command running the test.  Stores in $dir
-# the directory containing $<, and passes the TEST_ENVIRONMENT.
+# To be inserted before the command running the test.  Creates the
+# directory for the log if needed.  Stores in $dir the directory
+# containing $<, and passes the TEST_ENVIRONMENT.
 am__check_pre =					\
+$(mkdir_p) "$$(dirname $@)";			\
 if test -f ./$<; then dir=./;			\
 elif test -f $<; then dir=;			\
 else dir="$(srcdir)/"; fi;			\
@@ -73,16 +83,26 @@ $(TESTS_ENVIRONMENT)
 am__check_post =					\
 >$@-t 2>&1;						\
 estatus=$$?;						\
+if test $$estatus -eq 177; then				\
+  $(ENABLE_HARD_ERRORS) || estatus=1;			\
+fi;							\
 $(am__tty_colors);					\
-case $$estatus:" $(XFAIL_TESTS) " in			\
-    0:*" $$(basename $<) "*) col=$$red; res=XPASS;;	\
-    0:*)                     col=$$grn; res=PASS ;;	\
-    77:*)                    col=$$blu; res=SKIP ;;	\
-    *:*" $$(basename $<) "*) col=$$lgn; res=XFAIL;;	\
-    *:*)                     col=$$red; res=FAIL ;;	\
+xfailed=PASS;						\
+for xfail in : $(XFAIL_TESTS); do			\
+  case $< in						\
+    $$xfail | */$$xfail) xfailed=XFAIL; break;		\
+  esac;							\
+done;							\
+case $$estatus:$$xfailed in				\
+    0:XFAIL) col=$$red; res=XPASS;;			\
+    0:*)     col=$$grn; res=PASS ;;			\
+    77:*)    col=$$blu; res=SKIP ;;			\
+    177:*)   col=$$red; res=FAIL ;;			\
+    *:XFAIL) col=$$lgn; res=XFAIL;;			\
+    *:*)     col=$$red; res=FAIL ;;			\
 esac;							\
-echo "$${col}$$res$${std}: $$(basename $<)";		\
-echo "$$res: $$(basename $<) (exit: $$estatus)" |	\
+echo "$${col}$$res$${std}: $@";				\
+echo "$$res: $@ (exit: $$estatus)" |			\
   $(am__rst_section) >$@;				\
 cat $@-t >>$@;						\
 rm $@-t
@@ -94,6 +114,12 @@ rm $@-t
 	@$(am__check_pre) $${dir}$< $(am__check_post)
 
 # The exact same commands, but for programs.
+#
+# Should be active by default, because it sometimes triggers when in
+# should not.  For instance I had foo.chk tests that relied on
+# directories with the name, without extensions (foo).  Then Make
+# tried to run the directories to produce foo.log, not foo.chk.
+#
 %.log: %$(EXEEXT)
 	@$(am__check_pre) $${dir}$< $(am__check_post)
 
