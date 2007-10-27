@@ -7,14 +7,7 @@ ASSORT = LC_ALL=C sort
 
 built_programs = (cd ../src && MAKEFLAGS= $(MAKE) -s built_programs.list)
 
-TESTS_ENVIRONMENT = \
-  built_programs="`$(built_programs)`" \
-  PACKAGE_BUGREPORT=$(PACKAGE_BUGREPORT) \
-  CU_TEST_NAME=`basename $(abs_srcdir)`,$$tst \
-  PATH="$(VG_PATH_PREFIX)`pwd`/../src$(PATH_SEPARATOR)$$PATH"
-
 EXTRA_DIST =		\
-  $(TESTS)		\
   Coreutils.pm		\
   CuTmpdir.pm		\
   Makefile.am.in	\
