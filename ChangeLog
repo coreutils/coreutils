@@ -1,5 +1,8 @@
 2007-10-28  Jim Meyering  <meyering@redhat.com>
 
+	Require gnulib's printf-posix module, to support Interix.
+	* bootstrap.conf (gnulib_modules): Add printf-posix.
+
 	Help xgettext recognize more printf-style format strings.
 	* bootstrap.conf (XGETTEXT_OPTIONS): Add directives for
 	error, error_at_line, xasprintf, xfprintf and xprintf.
