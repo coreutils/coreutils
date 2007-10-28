@@ -1,5 +1,8 @@
 2007-10-28  Jim Meyering  <meyering@redhat.com>
 
+	Define ENODATA, for FreeBSD 5.0 and 6.1.
+	* src/system.h (ENODATA): Define, if missing.
+
 	Run autoreconf, not just autoconf, to avoid warnings.
 	* GNUmakefile (dummy): Otherwise, we'd sometimes get a warning
 	about autoconf version mismatch between what was used to generate

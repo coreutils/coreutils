@@ -109,6 +109,9 @@ you must include <sys/types.h> before including this file
 #ifndef ENOSYS
 # define ENOSYS (-1)
 #endif
+#ifndef ENODATA
+# define ENODATA (-1)
+#endif
 
 #include <stdbool.h>
 #include <stdlib.h>
