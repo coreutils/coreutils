@@ -1,5 +1,9 @@
 2007-10-28  Jim Meyering  <meyering@redhat.com>
 
+	Define ENOTSUP, not ENOSYS.  Needed on OpenBSD 3.9.
+	* gl/lib/se-context.in.h (ENOTSUP): Define if missing.
+	* gl/lib/se-selinux.in.h: Likewise.
+
 	Define ENODATA, for FreeBSD 5.0 and 6.1.
 	* src/system.h (ENODATA): Define, if missing.
 

@@ -3,13 +3,13 @@
 
 # include <sys/types.h>
 # include <errno.h>
-/* Some systems don't have ENOSYS.  */
-# ifndef ENOSYS
-#  ifdef ENOTSUP
-#   define ENOSYS ENOTSUP
+/* Some systems don't have ENOTSUP.  */
+# ifndef ENOTSUP
+#  ifdef ENOSYS
+#   define ENOTSUP ENOSYS
 #  else
-/* Some systems don't have ENOTSUP either.  */
-#   define ENOSYS EINVAL
+/* Some systems don't have ENOSYS either.  */
+#   define ENOTSUP EINVAL
 #  endif
 # endif
 
