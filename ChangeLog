@@ -1,5 +1,10 @@
 2007-10-28  Jim Meyering  <meyering@redhat.com>
 
+	Run autoreconf, not just autoconf, to avoid warnings.
+	* GNUmakefile (dummy): Otherwise, we'd sometimes get a warning
+	about autoconf version mismatch between what was used to generate
+	aclocal.m4 and the currently-running autoconf.
+
 	Require gnulib's printf-posix module, to support Interix.
 	* bootstrap.conf (gnulib_modules): Add printf-posix.
 
