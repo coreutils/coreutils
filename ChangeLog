@@ -1,3 +1,9 @@
+2007-10-28  Jim Meyering  <meyering@redhat.com>
+
+	Help xgettext recognize more printf-style format strings.
+	* bootstrap.conf (XGETTEXT_OPTIONS): Add directives for
+	error, error_at_line, xasprintf, xfprintf and xprintf.
+
 2007-10-27  Jim Meyering  <meyering@redhat.com>
 
 	Adjust format string so msgfmt doesn't object.
