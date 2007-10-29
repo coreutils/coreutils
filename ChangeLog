@@ -1,3 +1,8 @@
+2007-10-29  Jim Meyering  <meyering@redhat.com>
+
+	Change a "make dist" diagnostic.
+	* GNUmakefile: Don't imply that $(_curr-ver) is the new version string.
+
 2007-10-29  Bob Proulx  <bob@proulx.com>
 
 	Improve color terminal escape usage.
