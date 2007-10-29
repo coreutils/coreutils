@@ -1,5 +1,9 @@
 2007-10-29  Jim Meyering  <meyering@redhat.com>
 
+	Always initialize terminal colorization string variables.
+	* build-aux/check.mk (am__tty_colors): Always initialize red, grn, etc.,
+	In case they're defined in the environment.
+
 	Avoid test failure in non-srcdir build vs. the git tree.
 	* tests/check.mk (vc_exe_in_TESTS): Run this test only in a
 	srcdir build directory.  Reported by Andreas Schwab.

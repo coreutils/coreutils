@@ -66,6 +66,12 @@ if test -t 1 2>/dev/null; then			\
   lgn='[1;32m';				\
   blu='[1;34m';				\
   std='[m';					\
+else;						\
+  red=;						\
+  grn=;						\
+  lgn=;						\
+  blu=;						\
+  std=;						\
 fi
 
 # To be inserted before the command running the test.  Creates the
