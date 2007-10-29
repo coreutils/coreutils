@@ -66,7 +66,7 @@ if test -t 1 2>/dev/null && test -n "$$TERM"; then	\
   lgn='[1;32m';				\
   blu='[1;34m';				\
   std='[m';					\
-else;						\
+else						\
   red=;						\
   grn=;						\
   lgn=;						\

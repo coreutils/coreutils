@@ -1,5 +1,8 @@
 2007-10-29  Jim Meyering  <meyering@redhat.com>
 
+	Remove spurious semicolon after "else".
+	* build-aux/check.mk (am__tty_colors): Fix syntax error.
+
 	If $TERM is empty, don't use colors.  This helps the buildbot,
 	since it produces its result in an environment with a tty, but
 	we don't want color codes in that case.
