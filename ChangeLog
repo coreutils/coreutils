@@ -1,5 +1,9 @@
 2007-10-29  Jim Meyering  <meyering@redhat.com>
 
+	Don't try to colorize a dumb terminal.
+	* build-aux/check.mk (am__tty_colors): Skip colors if $TERM is "dumb".
+	Thanks to Bob Proulx.
+
 	Remove gnulib's printf-posix module, for now.
 	* bootstrap.conf (gnulib_modules): It caused too many test failures.
 
