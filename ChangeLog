@@ -1,3 +1,9 @@
+2007-10-29  Bob Proulx  <bob@proulx.com>
+
+	Improve color terminal escape usage.
+	* build-aux/check.mk (am__tty_colors): Use 'tput' to deduce
+	terminal color capabilities.
+
 2007-10-29  Jim Meyering  <meyering@redhat.com>
 
 	Don't try to colorize a dumb terminal.

@@ -56,23 +56,27 @@ END {								\
   print line;							\
 }'
 
-# If stdout is a tty, use colors.  If test -t is not supported, then
-# this fails; a conservative approach.  Of course do not redirect
-# stdout here, just stderr...
+# If stdout is a tty and TERM is smart then use colors.  If test -t or
+# tput are not supported then this fails; a conservative approach.  Of
+# course do not redirect stdout here, just stderr...
 am__tty_colors =				\
-if test -t 1 2>/dev/null && test -n "$$TERM" && test "$$TERM" != dumb; then \
-  red='[0;31m';				\
-  grn='[0;32m';				\
-  lgn='[1;32m';				\
-  blu='[1;34m';				\
-  std='[m';					\
-else						\
-  red=;						\
-  grn=;						\
-  lgn=;						\
-  blu=;						\
-  std=;						\
-fi
+red=;						\
+grn=;						\
+lgn=;						\
+blu=;						\
+std=;						\
+test "X$$TERM" != Xdumb &&			\
+test -t 1 2>/dev/null &&			\
+tput bold 1 >/dev/null 2>&1 &&			\
+tput setaf 1 >/dev/null 2>&1 &&			\
+tput sgr0 >/dev/null 2>&1 &&			\
+{						\
+    red=$$(tput setaf 1);			\
+    grn=$$(tput setaf 2);			\
+    lgn=$$(tput bold)$$(tput setaf 2);		\
+    blu=$$(tput setaf 4);			\
+    std=$$(tput sgr0);				\
+}
 
 # To be inserted before the command running the test.  Creates the
 # directory for the log if needed.  Stores in $dir the directory
