@@ -19,7 +19,7 @@
 # one that does not end in '\'.
 _v = TESTS
 vc_exe_in_TESTS: Makefile
-	@if test -d $(top_srcdir)/.git; then				\
+	@if test -d $(top_srcdir)/.git && test $(srcdir) = .; then	\
 	  sed -n '/^$(_v) = \\$$/,/[^\]$$/p' $(srcdir)/Makefile.am	\
 	    | sed 's/^  *//;/^\$$.*/d;/^$(_v) =/d'			\
 	    | tr -s '\012\\' '  ' | fmt -1 | sort -u > t1 &&		\
