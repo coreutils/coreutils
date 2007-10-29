@@ -60,7 +60,7 @@ END {								\
 # this fails; a conservative approach.  Of course do not redirect
 # stdout here, just stderr...
 am__tty_colors =				\
-if test -t 1 2>/dev/null; then			\
+if test -t 1 2>/dev/null && test -n "$$TERM"; then	\
   red='[0;31m';				\
   grn='[0;32m';				\
   lgn='[1;32m';				\

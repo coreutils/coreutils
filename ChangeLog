@@ -1,5 +1,10 @@
 2007-10-29  Jim Meyering  <meyering@redhat.com>
 
+	If $TERM is empty, don't use colors.  This helps the buildbot,
+	since it produces its result in an environment with a tty, but
+	we don't want color codes in that case.
+	* build-aux/check.mk (am__tty_colors): Test for nonempty $TERM.
+
 	Always initialize terminal colorization string variables.
 	* build-aux/check.mk (am__tty_colors): Always initialize red, grn, etc.,
 	In case they're defined in the environment.
