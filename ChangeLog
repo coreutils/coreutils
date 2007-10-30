@@ -1,3 +1,8 @@
+2007-10-30  Jim Meyering  <meyering@redhat.com>
+
+	Avoid seq floating-point test failure on FreeBSD 6.1.
+	* tests/misc/seq (float-4): Also accept -0.0.
+
 2007-10-29  Jim Meyering  <meyering@redhat.com>
 
 	Change a "make dist" diagnostic.
