@@ -1,5 +1,9 @@
 2007-10-31  Jim Meyering  <meyering@redhat.com>
 
+	Fix a "make distcheck" failure.
+	* Makefile.maint (my-distcheck): Don't stub-out dirname,
+	since build-aux/check.mk now uses it.
+
 	* bootstrap.conf (gnulib_modules): Add xprintf-posix.
 
 2007-10-30  Jim Meyering  <meyering@redhat.com>

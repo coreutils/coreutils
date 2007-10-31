@@ -594,6 +594,7 @@ my-distcheck: $(local-check) $(release_archive_dir)/$(prev-tgz)
 	  && for i in $(built_programs); do		\
 	       case $$i in				\
 		 rm|expr|basename|echo|sort|ls|tr);;	\
+		 dirname);;				\
 		 *) ln -s ../src/false $(bin)/$$i;;	\
 	       esac;					\
 	     done					\
