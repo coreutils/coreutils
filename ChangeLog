@@ -1,3 +1,7 @@
+2007-10-31  Jim Meyering  <meyering@redhat.com>
+
+	* bootstrap.conf (gnulib_modules): Add xprintf-posix.
+
 2007-10-30  Jim Meyering  <meyering@redhat.com>
 
 	Avoid seq floating-point test failure on FreeBSD 6.1.
