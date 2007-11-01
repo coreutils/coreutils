@@ -1,5 +1,9 @@
 2007-11-01  Jim Meyering  <meyering@redhat.com>
 
+	Add example inspired by "make dist" running gzip and lzma in sequence.
+	* doc/coreutils.texi (tee invocation): Show how to run tar just
+	once, compressing the tee'd output streams in parallel.
+
 	Say that the first process substitution example is contrived.
 	* doc/coreutils.texi (tee invocation): ... and show how to do
 	it properly.  Pointed out by James Antill.

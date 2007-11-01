@@ -11136,6 +11136,32 @@ right away and eliminate the decompression completely:
 du -ak | tee >(gzip -9 > /tmp/du.gz) | xdiskusage -a
 @end example
 
+Finally, if you regularly create more than one type of
+compressed tarball at once, for example when @code{make dist} creates
+both @command{gzip}-compressed and @command{bzip2}-compressed tarballs,
+there may be a better way.
+Typical @command{automake}-generated @file{Makefile} rules create
+the two compressed tar archives with commands in sequence, like this
+(slightly simplified):
+
+@example
+tardir=your-pkg-M.N
+tar chof - "$tardir" | gzip  -9 -c > your-pkg-M.N.tar.gz
+tar chof - "$tardir" | bzip2 -9 -c > your-pkg-M.N.tar.bz2
+@end example
+
+However, if the hierarchy you are archiving and compressing is larger
+than a couple megabytes, and especially if you are using a multi-processor
+system with plenty of memory, then you can do much better by reading the
+directory contents only once and running the compression programs in parallel:
+
+@example
+tardir=your-pkg-M.N
+tar chof - "$tardir" \
+  | tee >(gzip -9 -c > your-pkg-M.N.tar.gz) \
+  | bzip2 -9 -c > your-pkg-M.N.tar.bz2
+@end example
+
 @exitstatus
 
 
