@@ -1,5 +1,11 @@
 2007-11-01  Jim Meyering  <meyering@redhat.com>
 
+	Use mktemp, not mkdtemp, to create test directories.
+	* tests/test-lib.sh: Use the mktemp binary we've just built,
+	not the mkdtemp script.
+	* tests/mkdtemp: Remove file.
+	* tests/Makefile.am (EXTRA_DIST): Remove mkdtemp.
+
 	Adjust a seq subtest not to depend on the vagaries of floating point.
 	* tests/misc/seq (float-3): Use 10.94 as the endpoint, not 10.95,
 	since 10.95 was precisely in the middle of the interval, and with

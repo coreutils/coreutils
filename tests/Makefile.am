@@ -20,7 +20,6 @@ EXTRA_DIST =		\
   input-tty		\
   lang-default		\
   mk-script		\
-  mkdtemp		\
   other-fs-tmpdir	\
   priv-check		\
   rwx-to-mode		\
