@@ -1,5 +1,9 @@
 2007-11-01  Jim Meyering  <meyering@redhat.com>
 
+	Say that the first process substitution example is contrived.
+	* doc/coreutils.texi (tee invocation): ... and show how to do
+	it properly.  Pointed out by James Antill.
+
 	Use mktemp, not mkdtemp, to create test directories.
 	* tests/test-lib.sh: Use the mktemp binary we've just built,
 	not the mkdtemp script.

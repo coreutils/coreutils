@@ -11076,6 +11076,7 @@ and SHA1 computation.  Then, you'll get the checksum for
 free, because the entire process parallelizes so well:
 
 @example
+# slightly contrived, to demonstrate process substitution
 wget -O - http://example.com/dvd.iso \
   | tee >(sha1sum > dvd.sha1) > dvd.iso
 @end example
@@ -11093,8 +11094,17 @@ so it works with @command{zsh}, @command{bash}, and @command{ksh},
 but not with @command{/bin/sh}.  So if you write code like this
 in a shell script, be sure to start the script with @samp{#!/bin/bash}.
 
+Since the above example writes to one file and one process,
+a more conventional and portable use of @command{tee} is even better:
+
+@example
+wget -O - http://example.com/dvd.iso \
+  | tee dvd.iso | sha1sum > dvd.sha1
+@end example
+
 You can extend this example to make @command{tee} write to two processes,
-computing MD5 and SHA1 checksums in parallel:
+computing MD5 and SHA1 checksums in parallel.  In this case,
+process substitution is required:
 
 @example
 wget -O - http://example.com/dvd.iso \
