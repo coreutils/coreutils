@@ -54,7 +54,7 @@ fail=0
 
 # Map this longer, and rarer, diagnostic to the common one.
 # printf: cannot perform formatted output: Cannot allocate memory" \
-sed 's/cannot perform/write error/' err > k && mv k err
+sed 's/cannot perform .*/write error/' err > k && mv k err
 case $(cat err) in
   "$prog: write error") diagnostic=y ;;
   '') diagnostic=n ;;

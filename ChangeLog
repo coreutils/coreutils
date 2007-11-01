@@ -1,5 +1,8 @@
 2007-11-01  Jim Meyering  <meyering@redhat.com>
 
+	* tests/misc/printf-surprise: Correct sed transform.
+	Reported by Bob Proulx.
+
 	Add example inspired by "make dist" running gzip and lzma in sequence.
 	* doc/coreutils.texi (tee invocation): Show how to run tar just
 	once, compressing the tee'd output streams in parallel.
