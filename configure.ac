@@ -217,8 +217,8 @@ gl_WINSIZE_IN_PTEM
 
 gl_HEADER_TIOCGWINSZ_IN_TERMIOS_H
 
-if test $jm_cv_sys_tiocgwinsz_needs_termios_h = no && \
-   test $jm_cv_sys_tiocgwinsz_needs_sys_ioctl_h = no; then
+if test $gl_cv_sys_tiocgwinsz_needs_termios_h = no && \
+   test $gl_cv_sys_tiocgwinsz_needs_sys_ioctl_h = no; then
   AC_MSG_CHECKING(TIOCGWINSZ in sys/pty.h)
   AC_CACHE_VAL(su_cv_sys_tiocgwinsz_in_sys_pty_h,
   [AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <sys/types.h>
