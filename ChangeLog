@@ -1,5 +1,11 @@
 2007-11-01  Jim Meyering  <meyering@redhat.com>
 
+	Adjust a seq subtest not to depend on the vagaries of floating point.
+	* tests/misc/seq (float-3): Use 10.94 as the endpoint, not 10.95,
+	since 10.95 was precisely in the middle of the interval, and with
+	a %.1f format could map to either 10.9 or 11.0.
+	Reported by Mike Frysinger
+
 	Make the new printf-surprise test more precise.
 	* tests/test-lib.sh (require_ulimit_): New function.
 	* tests/misc/printf-surprise: Use ulimit -v to trigger the fixed bug,
