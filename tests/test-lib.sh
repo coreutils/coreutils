@@ -14,6 +14,21 @@ skip_test_()
   (exit 77); exit 77
 }
 
+require_ulimit_()
+{
+  ulimit_works=yes
+  # Expect to be able to exec a program in 10MB of virtual memory,
+  # but not in 20KB.  I chose "date".  It must not be a shell built-in
+  # function, so you can't use echo, printf, true, etc.
+  # Of course, in coreutils, I could use $top_builddir/src/true,
+  # but this should be able to work for other projects, too.
+  ( ulimit -v 10000; date ) > /dev/null 2>&1 || ulimit_works=no
+  ( ulimit -v 20;    date ) > /dev/null 2>&1 && ulimit_works=no
+
+  test $ulimit_works = no \
+    && skip_test_ "this shell lacks ulimit support"
+}
+
 uid_is_privileged_()
 {
   # Make sure id -u succeeds.

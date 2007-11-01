@@ -24,20 +24,51 @@ if test "$VERBOSE" = yes; then
 fi
 
 . $srcdir/../test-lib.sh
+require_ulimit_
 
 fail=0
 
-# The literal width below is 2^31-1.
-# I expect this usage of the printf program to fail.
-# However, it depends on the C library printf function.
-# It could conceivably output "1." and 2GB worth of '0's.
-# You can provoke misbehavior with a much smaller width if you limit
-# virtual memory via, e.g., ulimit -v 10000, but using ulimit would
-# be tricky, since it's not portable.
-"$prog" %.2147483647f 1 > /dev/null 2> err && fail=1
-echo "$prog: cannot perform formatted output: Cannot allocate memory" \
-  > exp || framework_failure
+# Up to coreutils-6.9, "printf %.Nf 0" would encounter an ENOMEM internal
+# error from glibc's printf(3) function whenever N was large relative to
+# the size of available memory.  As of Oct 2007, that internal stream-
+# related failure was not reflected (for any libc I know of) in the usual
+# stream error indicator that is tested by ferror.  The result was that
+# while the printf command obviously failed (generated no output),
+# it mistakenly exited successfully (exit status of 0).
 
-compare err exp || fail=1
+# Testing it is tricky, because there is so much variance
+# in quality for this corner of printf(3) implementations.
+# Most implementations do attempt to allocate N bytes of storage.
+# Using the maximum value for N (2^31-1) causes glibc to try to
+# allocate almost 2^64 bytes, while freeBSD 6.1's implementation
+# correctly outputs almost 2GB worth of 0's, which takes too long.
+# We want to test implementations that allocate N bytes, but without
+# triggering the above extremes.
+
+# The compromise is to limit virtual memory to something reasonable,
+# and to make an N-byte-allocating-printf require more than that, thus
+# triggering the printf(3) misbehavior -- which, btw, is required by ISO C99.
+
+( ulimit -v 10000
+  "$prog" %20000000f 0 2>err | head -c 10 >out )
+
+# Map this longer, and rarer, diagnostic to the common one.
+# printf: cannot perform formatted output: Cannot allocate memory" \
+sed 's/cannot perform/write error/' err > k && mv k err
+case $(cat err) in
+  "$prog: write error") diagnostic=y ;;
+  '') diagnostic=n ;;
+  *) diagnostic=unexpected ;;
+esac
+n_out=$(wc -c < out)
+
+case $n_out:$diagnostic in
+  10:n) ;; # ok, succeeds w/no diagnostic: FreeBSD 6.1
+  0:y)  ;; # ok, glibc, when printf(3) fails with ENOMEM
+
+  # 10:y) ;; # Fail: doesn't happen: nobody succeeds with a diagnostic
+  # 0:n)  ;; # Fail pre-patch: no output, no diag
+  *) fail=1;
+esac
 
 (exit $fail); exit $fail

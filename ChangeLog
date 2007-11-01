@@ -1,5 +1,13 @@
 2007-11-01  Jim Meyering  <meyering@redhat.com>
 
+	Make the new printf-surprise test more precise.
+	* tests/test-lib.sh (require_ulimit_): New function.
+	* tests/misc/printf-surprise: Use ulimit -v to trigger the fixed bug,
+	and rather than checking printf's exit status (which would go wrong
+	on FreeBSD 6.1, since their printf(3) function doesn't require
+	lots of memory in this case) simply test whether it outputs
+	the first 10 bytes.
+
 	Accommodate FreeBSD 6.1 hard-link-to-symlink differences.
 	* tests/cp/same-file: Detect when linking to a symlink links to
 	the target of the symlink (FreeBSD 6.1 does this, Linux does not),
