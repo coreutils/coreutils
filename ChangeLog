@@ -1,3 +1,12 @@
+2007-11-01  Jim Meyering  <meyering@redhat.com>
+
+	Accommodate FreeBSD 6.1 hard-link-to-symlink differences.
+	* tests/cp/same-file: Detect when linking to a symlink links to
+	the target of the symlink (FreeBSD 6.1 does this, Linux does not),
+	and skip the few tests that would otherwise fail.
+	Redirect output of final comparison to stderr, since all stdout
+	is already redirected.
+
 2007-10-31  Jim Meyering  <meyering@redhat.com>
 
 	Fix a "make distcheck" failure.

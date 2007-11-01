@@ -32,6 +32,19 @@ fi
 
 VERSION_CONTROL=numbered; export VERSION_CONTROL
 
+# Determine whether a hard link to a symlink points to the symlink
+# itself or to its referent.  For example, the link from FreeBSD6.1
+# does dereference a symlink, but the one from Linux does not.
+ln -s no-such dangling-slink
+ln dangling-slink hard-link > /dev/null 2>&1 \
+  && hard_link_to_symlink_does_the_deref=no \
+  || hard_link_to_symlink_does_the_deref=yes
+rm -f no-such dangling-slink hard-link
+
+test $hard_link_to_symlink_does_the_deref = yes \
+    && remove_these_sed='/^0 -[bf]*l .*sl1 ->/d' \
+    || remove_these_sed='/^ELIDE NO TEST OUTPUT/d'
+
 actual=actual-$$
 expected=expected-$$
 
@@ -46,6 +59,9 @@ for args in 'foo symlink' 'symlink foo' 'foo foo' 'sl1 sl2' 'foo hardlink'; do
     case $args$options in
       # These tests are not portable.
       # They all involve making a hard link to a symbolic link.
+      # In the past, we've skipped the tests that are not portable,
+      # by doing "continue" here and eliminating the corresponding
+      # expected output lines below.  Don't do that anymore.
       'symlink foo'-dfl)
 	continue;;
       'symlink foo'-bdl)
@@ -59,6 +75,18 @@ for args in 'foo symlink' 'symlink foo' 'foo foo' 'sl1 sl2' 'foo hardlink'; do
       'sl1 sl2'-dl)
 	continue;;
     esac
+
+    # cont'd  Instead, skip them only on systems for which link does
+    # dereference a symlink.  Detect and skip such tests here.
+    case $hard_link_to_symlink_does_the_deref:$args:$options in
+      'yes:sl1 sl2:-fl')
+	continue ;;
+      'yes:sl1 sl2:-bl')
+	continue ;;
+      'yes:sl1 sl2:-bfl')
+	continue ;;
+    esac
+
     rm -rf dir
     mkdir dir
     cd dir
@@ -108,7 +136,7 @@ for args in 'foo symlink' 'symlink foo' 'foo foo' 'sl1 sl2' 'foo hardlink'; do
   echo
 done
 
-cat <<\EOF > $expected
+cat <<\EOF | sed "$remove_these_sed" > $expected
 1 [cp: `foo' and `symlink' are the same file] (foo symlink -> foo)
 1 -d [cp: `foo' and `symlink' are the same file] (foo symlink -> foo)
 1 -f [cp: `foo' and `symlink' are the same file] (foo symlink -> foo)
@@ -196,6 +224,6 @@ EOF
 
 fail=0;
 
-compare $expected $actual || fail=1
+compare $expected $actual 1>&2 || fail=1
 
 (exit $fail); exit $fail
