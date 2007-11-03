@@ -1,6 +1,6 @@
 #!/bin/sh
 # Print a version string.
-scriptversion=2007-11-03.18
+scriptversion=2007-11-03.22
 
 # Copyright (C) 2007 Free Software Foundation
 #
@@ -69,6 +69,9 @@ else
 fi
 
 v=`echo "$v" |sed 's/^v//'`
+
+# Don't declare a version "dirty" merely because a time stamp has changed.
+git-status > /dev/null 2>&1
 
 dirty=`sh -c 'git diff-index --name-only HEAD' 2>/dev/null` || dirty=
 case "$dirty" in

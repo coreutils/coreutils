@@ -1,5 +1,8 @@
 2007-11-03  Jim Meyering  <meyering@redhat.com>
 
+	git-version-gen: Sync from autoconf's version.
+	* build-aux/git-version-gen: Run git-status
+
 	Sync copyright and scriptversion bits from gnulib.
 	* build-aux/git-version-gen: No semantic change.
 
