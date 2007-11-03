@@ -139,6 +139,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   seq no longer mishandles obvious cases like "seq 0 0.000001 0.000003",
   so workarounds like "seq 0 0.000001 0.0000031" are no longer needed.
 
+  seq would mistakenly reject some valid format strings containing %%,
+  and would mistakenly accept some invalid ones. e.g., %g%% and %%g, resp.
+
   Obsolete sort usage with an invalid ordering-option character, e.g.,
   "env _POSIX2_VERSION=199209 sort +1x" no longer makes sort free an
   invalid pointer [introduced in coreutils-6.5]

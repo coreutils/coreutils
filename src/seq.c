@@ -120,6 +120,14 @@ struct operand
 };
 typedef struct operand operand;
 
+/* Description of what a number-generating format will generate.  */
+struct layout
+{
+  /* Number of bytes before and after the number.  */
+  size_t prefix_len;
+  size_t suffix_len;
+};
+
 /* Read a long double value from the command line.
    Return if the string is correct else signal error.  */
 
@@ -171,17 +179,22 @@ scan_arg (const char *arg)
 
 /* If FORMAT is a valid printf format for a double argument, return
    its long double equivalent, possibly allocated from dynamic
-   storage; otherwise, return NULL.  */
+   storage, and store into *LAYOUT a description of the output layout;
+   otherwise, return NULL.  */
 
 static char const *
-long_double_format (char const *fmt)
+long_double_format (char const *fmt, struct layout *layout)
 {
   size_t i;
-  size_t prefix_len;
+  size_t prefix_len = 0;
+  size_t suffix_len = 0;
+  size_t length_modifier_offset;
   bool has_L;
 
-  for (i = 0; ! (fmt[i] == '%' && fmt[i + 1] != '%'); i++)
-    if (! fmt[i])
+  for (i = 0; ! (fmt[i] == '%' && fmt[i + 1] != '%'); i += (fmt[i] == '%') + 1)
+    if (fmt[i])
+      prefix_len++;
+    else
       return NULL;
 
   i++;
@@ -193,20 +206,25 @@ long_double_format (char const *fmt)
       i += strspn (fmt + i, "0123456789");
     }
 
-  prefix_len = i;
+  length_modifier_offset = i;
   has_L = (fmt[i] == 'L');
   i += has_L;
   if (! strchr ("efgaEFGA", fmt[i]))
     return NULL;
 
-  for (i++; ! (fmt[i] == '%' && fmt[i + 1] != '%'); i++)
-    if (! fmt[i])
+  for (i++; ! (fmt[i] == '%' && fmt[i + 1] != '%'); i += (fmt[i] == '%') + 1)
+    if (fmt[i])
+      suffix_len++;
+    else
       {
 	size_t format_size = i + 1;
 	char *ldfmt = xmalloc (format_size + 1);
-	memcpy (ldfmt, fmt, prefix_len);
-	ldfmt[prefix_len] = 'L';
-	strcpy (ldfmt + prefix_len + 1, fmt + prefix_len + has_L);
+	memcpy (ldfmt, fmt, length_modifier_offset);
+	ldfmt[length_modifier_offset] = 'L';
+	strcpy (ldfmt + length_modifier_offset + 1,
+		fmt + length_modifier_offset + has_L);
+	layout->prefix_len = prefix_len;
+	layout->suffix_len = suffix_len;
 	return ldfmt;
       }
 
@@ -217,7 +235,7 @@ long_double_format (char const *fmt)
    given or default stepping and format.  */
 
 static void
-print_numbers (char const *fmt,
+print_numbers (char const *fmt, struct layout layout,
 	       long double first, long double step, long double last)
 {
   long double i;
@@ -229,8 +247,8 @@ print_numbers (char const *fmt,
 
       if (step < 0 ? x < last : last < x)
 	{
-	  /* If we go one past the end, but that number prints the
-	     same way "last" does, and prints differently from the
+	  /* If we go one past the end, but that number prints as a
+	     value equal to "last", and prints differently from the
 	     previous number, then print "last".  This avoids problems
 	     with rounding.  For example, with the x86 it causes "seq
 	     0 0.000001 0.000003" to print 0.000003 instead of
@@ -238,13 +256,15 @@ print_numbers (char const *fmt,
 
 	  if (i)
 	    {
-	      char *x_str = NULL;
-	      char *last_str = NULL;
-	      if (asprintf (&x_str, fmt, x) < 0
-		  || asprintf (&last_str, fmt, last) < 0)
+	      long double x_val;
+	      char *x_str;
+	      int x_strlen = asprintf (&x_str, fmt, x);
+	      if (x_strlen < 0)
 		xalloc_die ();
+	      x_str[x_strlen - layout.suffix_len] = '\0';
 
-	      if (STREQ (x_str, last_str))
+	      if (xstrtold (x_str + layout.prefix_len, NULL, &x_val, c_strtold)
+		  && x_val == last)
 		{
 		  char *x0_str = NULL;
 		  if (asprintf (&x0_str, fmt, x0) < 0)
@@ -258,7 +278,6 @@ print_numbers (char const *fmt,
 		}
 
 	      free (x_str);
-	      free (last_str);
 	    }
 
 	  break;
@@ -317,6 +336,7 @@ main (int argc, char **argv)
   operand first = { 1, 1, 0 };
   operand step = { 1, 1, 0 };
   operand last;
+  struct layout layout = { 0, 0 };
 
   /* The printf(3) format used for output.  */
   char const *format_str = NULL;
@@ -385,7 +405,7 @@ main (int argc, char **argv)
 
   if (format_str)
     {
-      char const *f = long_double_format (format_str);
+      char const *f = long_double_format (format_str, &layout);
       if (! f)
 	{
 	  error (0, 0, _("invalid format string: %s"), quote (format_str));
@@ -418,7 +438,7 @@ format string may not be specified when printing equal width strings"));
   if (format_str == NULL)
     format_str = get_default_format (first, step, last);
 
-  print_numbers (format_str, first.value, step.value, last.value);
+  print_numbers (format_str, layout, first.value, step.value, last.value);
 
   exit (EXIT_SUCCESS);
 }

@@ -1,3 +1,24 @@
+2007-11-03  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Fix bug with "seq 10.8 0.1 10.95", plus another bug with %% in format.
+
+	* NEWS: Mention the %%-in-format bug fix.
+	* src/seq.c (struct layout): New type.
+	(long_double_format): New arg LAYOUT.  Fill it in.  Fix mishandling
+	of %% in formats.
+	(print_numbers): New arg LAYOUT.  Don't convert LAST to output format
+	when deciding whether to go slightly past LAST.  Instead, convert
+	X to output format and back.  This fixes a bug reported by
+	Andreas Schwab in
+	<http://lists.gnu.org/archive/html/bug-coreutils/2007-10/msg00237.html>
+	where "seq 10.8 0.1 10.95" would output 11.0 on platforms where
+	10.95 rounds to a value that prints as 11.0 when only one digit
+	past the decimal point is asked for.
+	(main): Compute layout, for benefit of print_numbers.
+	* tests/misc/seq (float-3): Undo previous change, since the bug
+	should be fixed now.
+	(fmt-b): New test, for the %% bug.
+
 2007-11-01  Jim Meyering  <meyering@redhat.com>
 
 	* tests/misc/printf-surprise: Correct sed transform.
