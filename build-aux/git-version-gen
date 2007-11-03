@@ -1,5 +1,24 @@
 #!/bin/sh
 # Print a version string.
+scriptversion=2007-11-03.18
+
+# Copyright (C) 2007 Free Software Foundation
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3, or (at your option)
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+# 02110-1301, USA.
+
 # This script is derived from GIT-VERSION-GEN from GIT: http://git.or.cz/.
 # It may be run two ways:
 # - from a git repository in which the git-describe command below
@@ -63,3 +82,10 @@ esac
 
 # Omit the trailing newline, so that m4_esyscmd can use the result directly.
 echo "$v" | tr -d '\012'
+
+# Local variables:
+# eval: (add-hook 'write-file-hooks 'time-stamp)
+# time-stamp-start: "scriptversion="
+# time-stamp-format: "%:y-%02m-%02d.%02H"
+# time-stamp-end: "$"
+# End:
