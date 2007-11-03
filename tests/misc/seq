@@ -36,6 +36,8 @@ use strict;
 # Turn off localisation of executable's ouput.
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
 
+my $prog = 'seq';
+
 my @Tests =
   (
    ['onearg-1',	qw(10),		{OUT => [(1..10)]}],
@@ -80,6 +82,12 @@ my @Tests =
    ['fmt-9',	'-f "% -3.0f"', qw(-1 0), {OUT => ['-1 ', ' 0 ']}],
    ['fmt-a',	'-f "% -.0f"',qw(-1 0), {OUT => ['-1', ' 0']}],
    ['fmt-b',	qw(-f %%%g%% 1),	{OUT => ['%1%']}],
+
+   # In coreutils-[6.0..6.9], this would mistakenly succeed and print "%Lg".
+   ['fmt-c',	qw(-f %%g 1), {EXIT => 1},
+    {ERR => "seq: invalid format string: `%%g'\n"
+     . "Try `seq --help' for more information.\n"},
+],
   );
 
 # Append a newline to each entry in the OUT array.
@@ -96,7 +104,6 @@ foreach $t (@Tests)
 
 my $save_temps = $ENV{SAVE_TEMPS};
 my $verbose = $ENV{VERBOSE};
-my $prog = 'seq';
 
 my $fail = run_tests ($program_name, $prog, \@Tests, $save_temps, $verbose);
 exit $fail;
