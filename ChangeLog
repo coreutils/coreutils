@@ -1,5 +1,9 @@
 2007-11-03  Jim Meyering  <meyering@redhat.com>
 
+	Change the first '-' to '.' in the snapshot version string,
+	e.g., 6.9-377-08144 -> 6.9.377-08144
+	* build-aux/git-version-gen: ... and add comments.
+
 	seq: add another test for the %% bug.
 	* tests/misc/seq (fmt-c): Test the other fixed case, too.
 

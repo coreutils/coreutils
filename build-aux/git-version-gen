@@ -42,8 +42,9 @@ elif test -d .git \
 	 *) (exit 1) ;;
        esac
 then
-    # Remove the "g" in git-describe's output string.
-    v=`echo "$v" | sed 's/\(.*\)-g/\1-/'`;
+    # Change the first '-' to a '.', so version-comparing tools work properly.
+    # Remove the "g" in git-describe's output string, to save a byte.
+    v=`echo "$v" | sed 's/-/./;s/\(.*\)-g/\1-/'`;
 else
     v=UNKNOWN
 fi
