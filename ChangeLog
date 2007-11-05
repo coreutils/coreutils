@@ -1,5 +1,7 @@
 2007-11-05  Jim Meyering  <meyering@redhat.com>
 
+	* src/c99-to-c89.diff: Adjust offsets.
+
 	Don't use GNU-sed-specific \< \> operators here, either.
 	* m4/include-exclude-prog.m4 (gl_REMOVE_PROG): Use a loop, as below.
 

@@ -92,7 +92,7 @@ diff -upr src/rm.c src/rm.c
 diff -upr src/seq.c src/seq.c
 --- src/seq.c	2007-07-23 12:56:20.000000000 +0200
 +++ src/seq.c	2007-07-23 13:03:12.000000000 +0200
-@@ -156,6 +156,7 @@ scan_arg (const char *arg)
+@@ -164,6 +164,7 @@ scan_arg (const char *arg)
  			: (decimal_point == arg                /* .#  -> 0.# */
  			   || ! ISDIGIT (decimal_point[-1]))); /* -.# -> 0.# */
  	}
@@ -100,7 +100,7 @@ diff -upr src/seq.c src/seq.c
        char const *e = strchr (arg, 'e');
        if (! e)
  	e = strchr (arg, 'E');
-@@ -164,6 +165,7 @@ scan_arg (const char *arg)
+@@ -172,6 +173,7 @@ scan_arg (const char *arg)
  	  long exponent = strtol (e + 1, NULL, 10);
  	  ret.precision += exponent < 0 ? -exponent : 0;
  	}
@@ -108,7 +108,7 @@ diff -upr src/seq.c src/seq.c
      }
 
    return ret;
-@@ -292,6 +294,7 @@ get_default_format (operand first, opera
+@@ -311,6 +313,7 @@ get_default_format (operand first, opera
  	  size_t last_width = last.width + (prec - last.precision);
  	  if (last.precision && prec == 0)
  	    last_width--;  /* don't include space for '.' */
@@ -116,7 +116,7 @@ diff -upr src/seq.c src/seq.c
  	  size_t width = MAX (first_width, last_width);
  	  if (width <= INT_MAX)
  	    {
-@@ -299,6 +302,7 @@ get_default_format (operand first, opera
+@@ -318,6 +321,7 @@ get_default_format (operand first, opera
  	      sprintf (format_buf, "%%0%d.%dLf", w, prec);
  	      return format_buf;
  	    }
