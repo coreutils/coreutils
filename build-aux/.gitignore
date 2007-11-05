@@ -4,6 +4,7 @@ config.guess
 config.rpath
 config.sub
 depcomp
+git-version-gen
 gnupload
 install-sh
 link-warning.h

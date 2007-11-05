@@ -1,3 +1,10 @@
+2007-11-05  Jim Meyering  <meyering@redhat.com>
+
+	Get git-version-gen from gnulib.
+	* build-aux/git-version-gen: Remove file.
+	* build-aux/.gitignore: Add git-version-gen.
+	* bootstrap.conf (gnulib_modules): Add git-version-gen.
+
 2007-11-03  Jim Meyering  <meyering@redhat.com>
 
 	git-version-gen: Sync from autoconf's version.
