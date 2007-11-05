@@ -1,5 +1,8 @@
 2007-11-05  Jim Meyering  <meyering@redhat.com>
 
+	Use tighter regexps when performing name substitution.
+	* man/Makefile.am (mapped_name): Add ^ and $$ anchors.
+
 	Don't use GNU-sed-specific \< \> operators.
 	* configure.ac (MAN): Transform ginstall.1 to install.1 using
 	a loop, rather than sed with \<...\>.
