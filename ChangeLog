@@ -1,5 +1,9 @@
 2007-11-05  Jim Meyering  <meyering@redhat.com>
 
+	Fix bootstrap failure to handle files like lib/uniwidth/cjk.h.
+	* bootstrap (cp_mark_as_generated): Create any required parent
+	destination directories before copying a file into place.
+
 	* src/c99-to-c89.diff: Adjust offsets.
 
 	Don't use GNU-sed-specific \< \> operators here, either.
