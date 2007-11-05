@@ -19,7 +19,8 @@ AC_DEFUN([gl_ADD_PROG],
 # Usage: gl_REMOVE_PROG([prog_list_var_name], [prog_name])
 AC_DEFUN([gl_REMOVE_PROG],
 [{
-  $1=`echo "$$1"|sed 's/\<'"$2"'\>//;s/  */ /g;s/^  *//;s/  *$//'`
+  $1=`for gl_rem_i in $$1; do
+        test "$gl_rem_i" = "$2" || echo "$gl_rem_i" done | tr '\012' ' '; echo`
 }])
 
 # Given the name of a variable containing a space-separated list of
