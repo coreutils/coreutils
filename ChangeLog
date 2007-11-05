@@ -1,5 +1,11 @@
 2007-11-05  Jim Meyering  <meyering@redhat.com>
 
+	Don't use GNU-sed-specific \< \> operators.
+	* configure.ac (MAN): Transform ginstall.1 to install.1 using
+	a loop, rather than sed with \<...\>.
+	Problem reported by Bruno Haible.
+	Andreas Schwab reminded me that \< and \> are not portable.
+
 	Get git-version-gen from gnulib.
 	* build-aux/git-version-gen: Remove file.
 	* build-aux/.gitignore: Add git-version-gen.

@@ -307,7 +307,7 @@ esac
 MAN=`echo "$optional_bin_progs "|sed 's/ /.1 /g;s/ $//'`
 
 # Change ginstall.1 to "install.h" in $MAN.
-MAN=`echo "$MAN"|sed 's/\<ginstall\.1\>/install.1/'`
+MAN=`for m in $MAN; do test $m = ginstall.1 && m=install.1; echo $m; done | tr '\012' ' '; echo`
 
 # Remove [.1, since writing a portable rule for it in man/Makefile.am
 # is not practical.  The sed LHS below uses the autoconf quadrigraph
