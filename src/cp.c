@@ -316,13 +316,18 @@ re_protect (char const *const_dst_name, size_t src_offset,
 
       if (x->preserve_ownership)
 	{
-	  if (lchown (dst_name, p->st.st_uid, p->st.st_gid) != 0
-	      && ! chown_failure_ok (x))
-	    {
-	      error (0, errno, _("failed to preserve ownership for %s"),
-		     quote (dst_name));
-	      return false;
-	    }
+          if (lchown (dst_name, p->st.st_uid, p->st.st_gid) != 0)
+            {
+              if (! chown_failure_ok (x))
+                {
+                  error (0, errno, _("failed to preserve ownership for %s"),
+                         quote (dst_name));
+                  return false;
+                }
+              /* Failing to preserve ownership is OK. Still, try to preserve
+                 the group, but ignore the possible error. */
+              (void) lchown (dst_name, -1, p->st.st_gid);
+            }
 	}
 
       if (x->preserve_mode)

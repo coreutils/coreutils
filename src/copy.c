@@ -172,7 +172,8 @@ copy_dir (char const *src_name_in, char const *dst_name_in, bool new_dst,
    safety prefer lchown if the system supports it since no
    symbolic links should be involved.  DEST_DESC must
    refer to the same file as DEST_NAME if defined.
-   Return 1 if the syscall succeeds, 0 if it fails but it's OK
+   Upon failure to set both UID and GID, try to set only the GID.
+   Return 1 if the initial syscall succeeds, 0 if it fails but it's OK
    not to preserve ownership, -1 otherwise.  */
 
 static int
@@ -183,11 +184,27 @@ set_owner (const struct cp_options *x, char const *dst_name, int dest_desc,
     {
       if (fchown (dest_desc, uid, gid) == 0)
 	return 1;
+      if (errno == EPERM || errno == EINVAL)
+        {
+	  /* We've failed to set *both*.  Now, try to set just the group
+	     ID, but ignore any failure here, and don't change errno.  */
+          int saved_errno = errno;
+          (void) fchown (dest_desc, -1, gid);
+          errno = saved_errno;
+        }
     }
   else
     {
       if (lchown (dst_name, uid, gid) == 0)
 	return 1;
+      if (errno == EPERM || errno == EINVAL)
+        {
+	  /* We've failed to set *both*.  Now, try to set just the group
+	     ID, but ignore any failure here, and don't change errno.  */
+          int saved_errno = errno;
+          (void) lchown (dst_name, -1, gid);
+          errno = saved_errno;
+        }
     }
 
   if (! chown_failure_ok (x))

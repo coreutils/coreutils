@@ -1,3 +1,11 @@
+2007-11-24  Jim Meyering  <meyering@redhat.com>
+
+	"cp -p" tries to preserve GID even if preserving the UID fails.
+	* NEWS: Mention this new feature.
+	* src/copy.c (set_owner): Try to preserve just the GID,
+	when initial fchown/lchown fails.
+	* src/cp.c (re_protect): Likewise.
+
 2007-11-23  Jim Meyering  <meyering@redhat.com>
 
 	* src/runcon.c (main): Remove unused parameter, "envp".
