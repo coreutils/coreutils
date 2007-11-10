@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-SUBDIRS = lib src doc man po tests
+SUBDIRS = lib src doc man po tests gnulib-tests
 EXTRA_DIST = Makefile.cfg Makefile.maint GNUmakefile \
   .prev-version THANKS-to-translators THANKStt.in \
   .vg-suppressions \

@@ -598,4 +598,10 @@ if test $with_gettext = yes; then
   fi
 fi
 
+# Horrible, coreutils-specific kludge.
+# Change paths in gnulib-tests/gnulib.mk from "../.." to "..".
+m=gnulib-tests/gnulib.mk
+sed 's,\.\./\.\.,..,g' $m > $m-t
+mv -f $m-t $m
+
 echo "$0: done.  Now you can run './configure'."

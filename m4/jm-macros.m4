@@ -1,4 +1,4 @@
-#serial 105   -*- autoconf -*-
+#serial 106   -*- autoconf -*-
 
 dnl Misc type-related macros for coreutils.
 
@@ -38,7 +38,7 @@ AC_DEFUN([coreutils_MACROS],
   # By default, argmatch should fail calling usage (1).
   AC_DEFINE(ARGMATCH_DIE, [usage (1)],
 	    [Define to the function xargmatch calls on failures.])
-  AC_DEFINE(ARGMATCH_DIE_DECL, [extern void usage ()],
+  AC_DEFINE(ARGMATCH_DIE_DECL, [void usage ()],
 	    [Define to the declaration of the xargmatch failure function.])
 
   # used by ls

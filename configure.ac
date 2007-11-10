@@ -336,6 +336,7 @@ AC_CONFIG_FILES(
   po/Makefile.in
   src/Makefile
   tests/Makefile
+  gnulib-tests/Makefile
   tests/chgrp/Makefile
   tests/chmod/Makefile
   tests/chown/Makefile
