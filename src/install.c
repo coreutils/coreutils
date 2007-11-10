@@ -213,6 +213,38 @@ setdefaultfilecon (char const *file)
   if (lstat (file, &st) != 0)
     return;
 
+  if (IS_ABSOLUTE_FILE_NAME (file))
+    {
+      /* Calling matchpathcon_init_prefix (NULL, "/first_component/")
+	 is an optimization to minimize the expense of the following
+	 matchpathcon call.  */
+      char const *p0;
+      char const *p = file + 1;
+      while (ISSLASH (*p))
+	++p;
+
+      /* Record final leading slash, for when FILE starts with two or more.  */
+      p0 = p - 1;
+
+      if (*p)
+	{
+	  char *prefix;
+	  do
+	    {
+	      ++p;
+	    }
+	  while (*p && !ISSLASH (*p));
+
+	  prefix = malloc (p - p0 + 2);
+	  if (prefix)
+	    {
+	      stpcpy (stpncpy (prefix, p0, p - p0), "/");
+	      matchpathcon_init_prefix (NULL, prefix);
+	      free (prefix);
+	    }
+	}
+    }
+
   /* If there's an error determining the context, or it has none,
      return to allow default context */
   if ((matchpathcon (file, st.st_mode, &scontext) != 0) ||

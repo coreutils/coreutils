@@ -51,4 +51,7 @@ static inline int security_compute_create (security_context_t scon,
 					   security_class_t tclass,
 					   security_context_t *newcon)
   { errno = ENOTSUP; return -1; }
+static inline int matchpathcon_init_prefix (char const *path,
+					    char const *prefix)
+  { errno = ENOTSUP; return -1; }
 #endif
