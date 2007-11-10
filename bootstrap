@@ -492,7 +492,7 @@ gnulib_tool_options="\
  --source-base $bt/lib/\
  --tests-base $bt/tests\
  --local-dir $local_gl_dir\
-$gnulib_tool_option_extras\
+ $gnulib_tool_option_extras\
 "
 echo "$0: $gnulib_tool $gnulib_tool_options --import ..."
 $gnulib_tool $gnulib_tool_options --import $gnulib_modules &&

@@ -1,5 +1,10 @@
 2007-11-09  Jim Meyering  <meyering@redhat.com>
 
+	bootstrap: fix typo to enable use of $gnulib_tool_option_extras.
+	* bootstrap (gnulib_tool_options): Add a space before the use
+	of $gnulib_tool_option_extras, so that it's separated from the
+	preceding argument.
+
 	install+SELinux: reduce a 12x performance hit to ~1.5x
 	* src/install.c (setdefaultfilecon): Call matchpathcon_init_prefix,
 	to mitigate what would otherwise be a large performance hit due to
