@@ -1,3 +1,11 @@
+2007-11-12  Benno Schulenberg  <bensberg@justemail.net>
+
+	Clarify description of cp's -a option.
+	* src/cp.c (usage) [-a]: Remove unnecessary 'P'.
+	Since option -d of 'cp' includes the function of -P, mentioning the
+	latter in the description of option -a is redundant and therefore
+	slightly confusing, as the reader tries to figure out what it adds.
+
 2007-11-09  Jim Meyering  <meyering@redhat.com>
 
 	bootstrap: fix typo to enable use of $gnulib_tool_option_extras.
