@@ -5,6 +5,7 @@
 	Since option -d of 'cp' includes the function of -P, mentioning the
 	latter in the description of option -a is redundant and therefore
 	slightly confusing, as the reader tries to figure out what it adds.
+	* doc/coreutils.texi (cp invocation): Likewise: s/-dpPR/-dpR/.
 
 2007-11-09  Jim Meyering  <meyering@redhat.com>
 

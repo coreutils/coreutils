@@ -6949,7 +6949,7 @@ Preserve as much as possible of the structure and attributes of the
 original files in the copy (but do not attempt to preserve internal
 directory structure; i.e., @samp{ls -U} may list the entries in a copied
 directory in a different order).
-Equivalent to @option{-dpPR}.
+Equivalent to @option{-dpR}.
 
 @item -b
 @itemx @w{@kbd{--backup}[=@var{method}]}
