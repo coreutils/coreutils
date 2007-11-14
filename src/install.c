@@ -213,6 +213,7 @@ setdefaultfilecon (char const *file)
   if (lstat (file, &st) != 0)
     return;
 
+#ifdef ENABLE_WHEN_MATCHPATHCON_IS_MORE_EFFICIENT
   if (IS_ABSOLUTE_FILE_NAME (file))
     {
       /* Calling matchpathcon_init_prefix (NULL, "/first_component/")
@@ -254,6 +255,7 @@ setdefaultfilecon (char const *file)
 	freecon (scontext);
       return;
     }
+#endif
 
   if (lsetfilecon (file, scontext) < 0 && errno != ENOTSUP)
     error (0, errno,
