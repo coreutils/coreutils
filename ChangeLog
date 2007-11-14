@@ -1,5 +1,8 @@
 2007-11-14  Jim Meyering  <meyering@redhat.com>
 
+	Another bootstrap kludge.
+	* bootstrap: Ensure gnulib-tests/test-*.sh are executable
+
 	#ifdef-out matchpathcon-related code, for now.
 	* src/install.c (setdefaultfilecon): #ifdef-out all of the
 	matchpathcon-related code, until it's more efficient.
