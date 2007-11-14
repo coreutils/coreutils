@@ -3,6 +3,7 @@
 	#ifdef-out matchpathcon-related code, for now.
 	* src/install.c (setdefaultfilecon): #ifdef-out all of the
 	matchpathcon-related code, until it's more efficient.
+	(setdefaultfilecon): Instead of the above, stub-out the entire function.
 
 	Use gnulib's stpncpy module, now required by install.c
 	* bootstrap.conf (gnulib_modules): Add stpncpy.

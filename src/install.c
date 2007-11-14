@@ -197,6 +197,7 @@ cp_option_init (struct cp_options *x)
   x->src_info = NULL;
 }
 
+#ifdef ENABLE_WHEN_MATCHPATHCON_IS_MORE_EFFICIENT
 /* Modify file context to match the specified policy.
    If an error occurs the file will remain with the default directory
    context.  */
@@ -213,7 +214,6 @@ setdefaultfilecon (char const *file)
   if (lstat (file, &st) != 0)
     return;
 
-#ifdef ENABLE_WHEN_MATCHPATHCON_IS_MORE_EFFICIENT
   if (IS_ABSOLUTE_FILE_NAME (file))
     {
       /* Calling matchpathcon_init_prefix (NULL, "/first_component/")
@@ -255,7 +255,6 @@ setdefaultfilecon (char const *file)
 	freecon (scontext);
       return;
     }
-#endif
 
   if (lsetfilecon (file, scontext) < 0 && errno != ENOTSUP)
     error (0, errno,
@@ -265,6 +264,13 @@ setdefaultfilecon (char const *file)
   freecon (scontext);
   return;
 }
+#else
+static void
+setdefaultfilecon (char const *file)
+{
+  (void) file;
+}
+#endif
 
 /* FILE is the last operand of this command.  Return true if FILE is a
    directory.  But report an error there is a problem accessing FILE,
