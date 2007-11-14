@@ -1,5 +1,8 @@
 2007-11-14  Jim Meyering  <meyering@redhat.com>
 
+	Use gnulib's stpncpy module, now required by install.c
+	* bootstrap.conf (gnulib_modules): Add stpncpy.
+
 	Enable gnulib-tool's --with-tests option.
 	* bootstrap: After all is done, transform the generated
 	gnulib-tests/gnulib.mk.
