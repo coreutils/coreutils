@@ -1,3 +1,12 @@
+2007-11-15  Jim Meyering  <meyering@redhat.com>
+
+	Avoid misbehavior of a cross-device "mv" or "install".
+	Those programs must not dereference a destination symlink.
+	* src/copy.c (copy_reg): Don't treat a dangling destination symlink
+	differently in move mode.  In move mode, the only way the added
+	O_EXCL can cause failure is when some other process has recreated
+	the file this code unlinked a few instructions before.
+
 2007-11-14  Jim Meyering  <meyering@redhat.com>
 
 	Another bootstrap kludge.

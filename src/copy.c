@@ -371,8 +371,9 @@ copy_reg (char const *src_name, char const *dst_name,
 	 the above open fails with EEXIST.  If that happens, and
 	 lstat'ing the DST_NAME shows that it is a symlink, repeat
 	 the open call, but this time with the name of the final,
-	 missing directory entry.  */
-      if (dest_desc < 0 && dest_errno == EEXIST)
+	 missing directory entry.  All of this is relevant only for
+	 cp, i.e., not in move_mode. */
+      if (dest_desc < 0 && dest_errno == EEXIST && ! x->move_mode)
 	{
 	  struct stat dangling_link_sb;
 	  if (lstat (dst_name, &dangling_link_sb) == 0
