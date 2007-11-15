@@ -1,3 +1,8 @@
+2007-11-15  Andreas Schwab  <schwab@suse.de>
+
+	* m4/include-exclude-prog.m4 (gl_REMOVE_PROG): Fix syntax error.
+	Remove trailing space from result.
+
 2007-11-15  Jim Meyering  <meyering@redhat.com>
 
 	Avoid misbehavior of a cross-device "mv" or "install".

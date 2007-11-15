@@ -20,7 +20,8 @@ AC_DEFUN([gl_ADD_PROG],
 AC_DEFUN([gl_REMOVE_PROG],
 [{
   $1=`for gl_rem_i in $$1; do
-        test "$gl_rem_i" = "$2" || echo "$gl_rem_i" done | tr '\012' ' '; echo`
+        test "$gl_rem_i" = "$2" || echo "$gl_rem_i"
+      done | tr '\012' ' ' | sed 's/ $//'; echo`
 }])
 
 # Given the name of a variable containing a space-separated list of
