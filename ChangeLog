@@ -1,3 +1,12 @@
+2007-11-16  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Port readlink-fp-loop to Solaris.
+	* tests/misc/readlink-fp-loop (symlink_loop_msg): New var,
+	which records the symlink-loop message, whose wording is
+	not standardized by Posix.  Do not rely on "echo x > p/1"
+	to work when p/1 has a lot of indirect symlinks.  (I'm surprised
+	that it works on Linux.  Perhaps a Linux bug?)
+
 2007-11-15  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Port to Solaris 'make' and use a Posixish shell on Solaris.

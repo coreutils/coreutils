@@ -45,8 +45,12 @@ compare out exp || fail=1
 # Construct a real loop and make sure readlink still detects it.
 ln -sf ../s/1 d/2 || framework_failure
 readlink -v -e p/1 2> out && fail=1
-echo readlink: p/1: Too many levels of symbolic links > exp || framework_failure
-compare out exp || fail=1
+readlink_msg=$(cat out)
+case $readlink_msg in
+  'readlink: p/1: '*) ;;
+  *) fail=1;;
+esac
+symlink_loop_msg=${readlink_msg#'readlink: p/1: '}
 
 # Exercise the hash table code.
 ln -nsf ../s/3 d/2 || framework_failure
@@ -55,7 +59,7 @@ ln -nsf ../p/5 d/4 || framework_failure
 ln -nsf ../p/6 d/5 || framework_failure
 ln -nsf ../p/7 d/6 || framework_failure
 ln -nsf ../p/8 d/7 || framework_failure
-echo x > p/1       || framework_failure
+echo x > d/8       || framework_failure
 readlink -v -e p/1 > out || fail=1
 echo "$cwd/d/8" > exp || fail=1
 compare out exp || fail=1
@@ -63,7 +67,7 @@ compare out exp || fail=1
 # A trivial loop
 ln -s loop loop
 readlink -v -e loop 2> out && fail=1
-echo readlink: loop: Too many levels of symbolic links > exp || framework_failure
+echo "readlink: loop: $symlink_loop_msg" > exp || framework_failure
 compare out exp || fail=1
 
 (exit $fail); exit $fail
