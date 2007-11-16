@@ -1,3 +1,10 @@
+2007-11-16  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Port tests/rmdir/ignore away from GNU/Linux.
+	* tests/rmdir/ignore: Don't assume that rmdir($PWD) will fail
+	with errno==ENOTEMPTY when $PWD is not empty; Posix also allows
+	rmdir to fail with errno==EBUSY.
+
 2007-11-16  Jim Meyering  <meyering@redhat.com>
 
 	Avoid an obscure new "make distcheck" failure.

@@ -24,14 +24,14 @@ fi
 . $srcdir/../test-lib.sh
 
 cwd=`pwd`
-mkdir -p $cwd/a/b $cwd/x || framework_failure
+mkdir -p $cwd/a/b/c $cwd/a/x || framework_failure
 
 fail=0
-rmdir -p --ignore-fail-on-non-empty $cwd/a/b || fail=1
-# $cwd/x should remain
-test -d $cwd/x || fail=1
-# $cwd/{a,b} should be gone
-test -d $cwd/a && fail=1
+rmdir -p --ignore-fail-on-non-empty $cwd/a/b/c || fail=1
+# $cwd/a/x should remain
+test -d $cwd/a/x || fail=1
+# $cwd/a/b and $cwd/a/b/c should be gone
 test -d $cwd/a/b && fail=1
+test -d $cwd/a/b/c && fail=1
 
 exit $fail
