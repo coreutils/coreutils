@@ -20,7 +20,7 @@
 : ${PERL=perl}
 : ${srcdir=.}
 
-$PERL -e 1 > /dev/null 2>&1 || {
+$PERL -e 'use warnings;' > /dev/null 2>&1 || {
   echo 1>&2 "$0: configure didn't find a usable version of Perl," \
     "so can't run this test"
   exit 77

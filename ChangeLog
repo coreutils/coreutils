@@ -1,3 +1,46 @@
+2007-11-15  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Port to Solaris 8 perl, which does not support "use warnings;".
+	* tests/dd/skip-seek: Skip test if "use warnings;" fails.
+	* tests/du/files0-from: Likewise.
+	* tests/misc/base64: Likewise.
+	* tests/misc/basename: Likewise.
+	* tests/misc/cut: Likewise.
+	* tests/misc/date: Likewise.
+	* tests/misc/dircolors: Likewise.
+	* tests/misc/dirname: Likewise.
+	* tests/misc/expand: Likewise.
+	* tests/misc/expr: Likewise.
+	* tests/misc/factor: Likewise.
+	* tests/misc/fmt: Likewise.
+	* tests/misc/fold: Likewise.
+	* tests/misc/head-elide-tail: Likewise.
+	* tests/misc/ls-misc: Likewise.
+	* tests/misc/md5sum: Likewise.
+	* tests/misc/md5sum-newline: Likewise.
+	* tests/misc/mktemp: Likewise.
+	* tests/misc/od: Likewise.
+	* tests/misc/paste-no-nl: Likewise.
+	* tests/misc/pr: Likewise.
+	* tests/misc/seq: Likewise.
+	* tests/misc/sha1sum: Likewise.
+	* tests/misc/sha1sum-vec: Likewise.
+	* tests/misc/sha224sum: Likewise.
+	* tests/misc/sha256sum: Likewise.
+	* tests/misc/sha384sum: Likewise.
+	* tests/misc/sha512sum: Likewise.
+	* tests/misc/sort-merge: Likewise.
+	* tests/misc/stat-printf: Likewise.
+	* tests/misc/sum: Likewise.
+	* tests/misc/test-diag: Likewise.
+	* tests/misc/tsort: Likewise.
+	* tests/misc/unexpand: Likewise.
+	* tests/misc/wc-files0-from: Likewise.
+	* tests/misc/xstrtol: Likewise.
+	* tests/mv/i-1: Likewise.
+	* tests/rm/empty-name: Likewise.
+	* tests/rm/unreadable: Likewise.
+
 2007-11-15  Andreas Schwab  <schwab@suse.de>
 
 	* m4/include-exclude-prog.m4 (gl_REMOVE_PROG): Fix syntax error.
