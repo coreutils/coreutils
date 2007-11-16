@@ -1,3 +1,9 @@
+2007-11-16  Jim Meyering  <meyering@redhat.com>
+
+	Avoid an obscure new "make distcheck" failure.
+	* Makefile.maint (my-distcheck): Also allow 'mv', for its use
+	in gnulib-tests/Makefile.
+
 2007-11-16  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Port readlink-fp-loop to Solaris.
