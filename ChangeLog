@@ -1,5 +1,44 @@
 2007-11-15  Paul Eggert  <eggert@cs.ucla.edu>
 
+	Port to Solaris 'make' and use a Posixish shell on Solaris.
+	* bootstrap.conf (gnulib_modules): Add gnu-make, posix-shell.
+	* build-aux/check.mk (SHELL): Set to $(PREFERABLY_POSIX_SHELL),
+	so that commands can assume Posix syntax.
+	(ENABLE_HARD_ERRORS, TEST_LOGS): Don't use GNU Make's "?=" syntax.
+	(SH_E_WORKAROUND): New macro.
+	(am__check_pre, $(TEST_SUITE_LOG)): Use it.
+	(am__check_pre): Fail if "mkdir" fails.  Use $(SHELL)
+	rather than relying on the "#!/bin/sh" in the file, so that tests
+	can use Posix syntax.
+	(am__check_pre, am__tty_colors): Use $$src rather than $$<, to
+	support the Posix-make $(TEST_LOGS) rule.
+	(%.log: %.test, %.log: %$(EXEEXT)): Remove unused inference rules
+	that rely on a GNU Make extension and cause Solaris 'make' to fail.
+	(SUFFIXES): New macro, so that we can use Posix style inference rules.
+	(%.log: %): Use this rule only if GNU_MAKE.
+	Set $$src so that macros can use $$src rather than $$<.
+	(CHECK-FORCE, DEPENDENCY, $(TEST_LOGS)): New macros and rules,
+	which rely only on Posix 'make' semantics, and are used only with
+	non-GNU 'make' implementations.  $(TEST_LOGS) invokes 'make'
+	recursively (and a bit inefficiently) to simulate the GNU 'make'
+	rules.
+	(.log.html): Renamed from "%.html: %.log", so that it relies only
+	on Posix 'make' semantics.
+	(check-clean, .PHONY): Do not depend on check-clean-local, since
+	Solaris 'make' complains about nonexistent rules like that.
+	* src/Makefile.am (SUFFIXES): Remove; no longer needed.
+	(groups): Use a specific rule rather than an inference rule that
+	is only instantiated once.  The inference-rule approach does not
+	work with Solaris 'make', which gets confused by the "groups:
+	Makefile" line.  It's not clear from the Posix spec that Solaris
+	'make' is buggy here, so instead of worrying about it, rewrite
+	the makefile so that it clearly conforms to Posix.
+	* tests/check.mk (TESTS_ENVIRONMENT): Export PACKAGE_BUGREPORT.
+	GNU 'make' does this automatically for us, but Solaris 'make'
+	doesn't.
+
+2007-11-15  Paul Eggert  <eggert@cs.ucla.edu>
+
 	Port to Solaris 8 perl, which does not support "use warnings;".
 	* tests/dd/skip-seek: Skip test if "use warnings;" fails.
 	* tests/du/files0-from: Likewise.

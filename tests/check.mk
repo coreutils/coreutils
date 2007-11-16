@@ -47,6 +47,7 @@ TESTS_ENVIRONMENT =				\
   EGREP='$(EGREP)'				\
   EXEEXT='$(EXEEXT)'				\
   MAKE=$(MAKE)					\
+  PACKAGE_BUGREPORT='$(PACKAGE_BUGREPORT)'	\
   PACKAGE_VERSION=$(PACKAGE_VERSION)		\
   PERL='$(PERL)'				\
   REPLACE_GETCWD=$(REPLACE_GETCWD)		\
@@ -55,5 +56,4 @@ TESTS_ENVIRONMENT =				\
 TEST_LOGS = $(TESTS:=.log)
 
 # Parallel replacement of Automake's check-TESTS target.
-# CAVEAT: code in the following relies on GNU make.
 include $(top_srcdir)/build-aux/check.mk

@@ -23,18 +23,24 @@
 ## wait for all the tests to be compiled).
 ##
 ## Define TEST_SUITE_LOG to be the name of the global log to create.
-## Define TEST_LOGS to the set of logs to include in it.  It defaults
-## to $(TESTS:.test=.log).
+## Define TEST_LOGS to the set of logs to include in it.  One possibility
+## is $(TESTS:.test=.log).
 ##
 ## In addition to the magic "exit 77 means SKIP" feature (which was
 ## imported from automake), there is a magic "exit 177 means FAIL" feature
 ## which is useful if you need to issue a hard error no matter whether the
 ## test is XFAIL or not.
 
-# Set this to `false' to disable hard errors.
-ENABLE_HARD_ERRORS ?= :
+# Use a POSIX-compatible shell if available, as this file uses
+# features of the POSIX shell that are not supported by some standard
+# shell implementations (e.g., Solaris 10 /bin/sh).
+SHELL = $(PREFERABLY_POSIX_SHELL)
 
-## We use GNU Make extensions (%-rules), and override check-TESTS.
+# Set this to `false' to disable hard errors.
+ENABLE_HARD_ERRORS = :
+
+## We use GNU Make extensions (%-rules) inside GNU_MAKE checks,
+## and we override check-TESTS.
 AUTOMAKE_OPTIONS = -Wno-portability -Wno-override
 
 # Restructured Text title and section.
@@ -78,15 +84,21 @@ tput sgr0 >/dev/null 2>&1 &&			\
     std=$$(tput sgr0);				\
 }
 
+# Solaris 10 'make', and several other traditional 'make' implementations,
+# pass "-e" to $(SHELL).  This contradicts POSIX.  Work around the problem
+# by disabling -e (using the XSI extension "set +e") if it's set.
+SH_E_WORKAROUND = case $$- in *e*) set +e;; esac
+
 # To be inserted before the command running the test.  Creates the
 # directory for the log if needed.  Stores in $dir the directory
-# containing $<, and passes the TEST_ENVIRONMENT.
+# containing $src, and passes TESTS_ENVIRONMENT.
 am__check_pre =					\
-$(mkdir_p) "$$(dirname $@)";			\
-if test -f ./$<; then dir=./;			\
-elif test -f $<; then dir=;			\
+$(SH_E_WORKAROUND);				\
+$(mkdir_p) "$$(dirname $@)" || exit;		\
+if test -f "./$$src"; then dir=./;		\
+elif test -f "$$src"; then dir=;		\
 else dir="$(srcdir)/"; fi;			\
-$(TESTS_ENVIRONMENT)
+$(TESTS_ENVIRONMENT) $(SHELL)
 
 # To be appended to the command running the test.  Handles the stdout
 # and stderr redirection, and catch the exit status.
@@ -99,7 +111,7 @@ fi;							\
 $(am__tty_colors);					\
 xfailed=PASS;						\
 for xfail in : $(XFAIL_TESTS); do			\
-  case $< in						\
+  case $$src in						\
     $$xfail | */$$xfail) xfailed=XFAIL; break;		\
   esac;							\
 done;							\
@@ -117,31 +129,34 @@ echo "$$res: $@ (exit: $$estatus)" |			\
 cat $@-t >>$@;						\
 rm $@-t
 
-# From a test file to a log file.
-# Do not use a regular `.test.log:' rule here, since in that case the
-# following rule (without incoming extension) will mask this one.
-%.log: %.test
-	@$(am__check_pre) $${dir}$< $(am__check_post)
+SUFFIXES = .html .log
 
-# The exact same commands, but for programs.
-#
-# Should be active by default, because it sometimes triggers when in
-# should not.  For instance I had foo.chk tests that relied on
-# directories with the name, without extensions (foo).  Then Make
-# tried to run the directories to produce foo.log, not foo.chk.
-#
-%.log: %$(EXEEXT)
-	@$(am__check_pre) $${dir}$< $(am__check_post)
-
-# The exact same commands, but for scripts without extension.
+# From a test (with no extension) to a log file.
+if GNU_MAKE
 %.log: %
-	@$(am__check_pre) $${dir}$< $(am__check_post)
+	@src='$<'; $(am__check_pre) "$$dir$$src" $(am__check_post)
+else
+# With POSIX 'make', inference rules cannot have FOO.log depend on FOO.
+# Work around the problem by calculating the dependency dynamically, and
+# then invoking a submake with the calculated dependency.
+CHECK-FORCE:
+DEPENDENCY = CHECK-FORCE
+$(TEST_LOGS): $(DEPENDENCY)
+	@if test '$(DEPENDENCY)' = CHECK-FORCE; then			\
+	  dst=$@;							\
+	  exec $(MAKE) $(AM_MAKEFLAGS) DEPENDENCY='$(srcdir)'/$${dst%.log} $@;\
+	else								\
+	  src='$(DEPENDENCY)';						\
+	  $(am__check_pre) "$$dir$$src" $(am__check_post);		\
+	fi
+endif
 
-TEST_LOGS ?= $(TESTS:.test=.log)
+#TEST_LOGS = $(TESTS:.test=.log)
 TEST_SUITE_LOG = test-suite.log
 
 $(TEST_SUITE_LOG): $(TEST_LOGS)
-	@results=$$(for f in $(TEST_LOGS); do sed 1q $$f; done);	\
+	@$(SH_E_WORKAROUND);						\
+	results=$$(for f in $(TEST_LOGS); do sed 1q $$f; done);		\
 	all=$$(echo "$$results" | wc -l | sed -e 's/^[ \t]*//');	\
 	fail=$$(echo "$$results" | grep -c '^FAIL');			\
 	pass=$$(echo "$$results" | grep -c '^PASS');			\
@@ -215,7 +230,7 @@ check-TESTS:
 
 TEST_SUITE_HTML = $(TEST_SUITE_LOG:.log=.html)
 
-%.html: %.log
+.log.html:
 	@for r2h in $(RST2HTML) $$RST2HTML rst2html rst2html.py;	\
 	do								\
 	  if ($$r2h --version) >/dev/null 2>&1; then			\
@@ -245,7 +260,7 @@ check-html:
 ## Clean.  ##
 ## ------- ##
 
-check-clean: check-clean-local
+check-clean:
 	rm -f $(CHECK_CLEANFILES) $(TEST_SUITE_LOG) $(TEST_SUITE_HTML) $(TEST_LOGS)
-.PHONY: check-clean check-clean-local
+.PHONY: check-clean
 clean-local: check-clean

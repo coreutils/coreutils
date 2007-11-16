@@ -137,25 +137,22 @@ stat_LDADD = $(LDADD) $(LIB_SELINUX)
 
 $(PROGRAMS): ../lib/libcoreutils.a
 
-SUFFIXES = .sh
-
 # Get the release year from ../lib/version-etc.c.
 RELEASE_YEAR = \
   `sed -n '/.*COPYRIGHT_YEAR = \([0-9][0-9][0-9][0-9]\) };/s//\1/p' \
     $(top_srcdir)/lib/version-etc.c`
 
-# Ensure that version changes (reflected in Makefile's VERSION definition)
+# This depends on 'Makefile', so that version changes
+#(reflected in Makefile's VERSION definition)
 # are reflected into groups --version also between releases.
-groups: Makefile
-
-.sh:
+groups: groups.sh Makefile
 	rm -f $@ $@-t
 	sed \
 	  -e 's!@''bindir''@!$(bindir)!' \
 	  -e 's/@''RELEASE_YEAR'@/$(RELEASE_YEAR)/ \
 	  -e 's/@''PACKAGE_NAME''@/$(PACKAGE_NAME)/' \
 	  -e 's/@''PACKAGE_BUGREPORT''@/$(PACKAGE_BUGREPORT)/' \
-	  -e 's/@''VERSION''@/$(VERSION)/' $< > $@-t
+	  -e 's/@''VERSION''@/$(VERSION)/' $(srcdir)/groups.sh > $@-t
 	chmod +x $@-t
 	mv $@-t $@
 
