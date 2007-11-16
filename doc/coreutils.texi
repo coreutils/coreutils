@@ -6920,10 +6920,15 @@ recursively.  This default can be overridden with the
 @option{-H} options.  If more than one of these options is specified,
 the last one silently overrides the others.
 
-When copying to a symbolic link, @command{cp} normally follows the
-link when creating or copying to a regular file, even if the link is
-dangling.  However, @command{cp} does not follow these links when
-creating directories or special files.  Also, when an option like
+When copying to a symbolic link, @command{cp} follows the
+link only when it refers to an existing regular file.
+However, when copying to a dangling symbolic link, @command{cp}
+refuses by default, and fails with a diagnostic, since the operation
+is inherently dangerous.  This behavior is contrary to historical
+practice and to @acronym{POSIX}.
+Set @env{POSIXLY_CORRECT} to make @command{cp} attempt to create
+the target of a dangling destination symlink, in spite of the possible risk.
+Also, when an option like
 @option{--backup} or @option{--link} acts to rename or remove the
 destination before copying, @command{cp} renames or removes the
 symbolic link rather than the file it points to.

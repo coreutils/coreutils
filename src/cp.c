@@ -761,6 +761,13 @@ cp_option_init (struct cp_options *x)
 
   x->update = false;
   x->verbose = false;
+
+  /* By default, refuse to open a dangling destination symlink, because
+     in general one cannot do that safely, give the current semantics of
+     open's O_EXCL flag, (which POSIX doesn't even allow cp to use, btw).
+     But POSIX requires it.  */
+  x->open_dangling_dest_symlink = getenv ("POSIXLY_CORRECT") != NULL;
+
   x->dest_info = NULL;
   x->src_info = NULL;
 }

@@ -190,6 +190,7 @@ cp_option_init (struct cp_options *x)
   x->mode = S_IRUSR | S_IWUSR;
   x->stdin_tty = false;
 
+  x->open_dangling_dest_symlink = false;
   x->update = false;
   x->preserve_security_context = false;
   x->verbose = false;

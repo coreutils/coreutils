@@ -15,6 +15,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Changes in behavior
 
+  cp, by default, refuses to copy through a dangling destination symlink
+  Set POSIXLY_CORRECT if you require the old, risk-prone behavior.
+
   pr -F no longer suppresses the footer or the first two blank lines in
   the header.  This is for compatibility with BSD and POSIX.
 

@@ -33,7 +33,6 @@
 #include "acl.h"
 #include "backupfile.h"
 #include "buffer-lcm.h"
-#include "canonicalize.h"
 #include "copy.h"
 #include "cp-hash.h"
 #include "euidaccess.h"
@@ -265,7 +264,6 @@ copy_reg (char const *src_name, char const *dst_name,
   char *buf;
   char *buf_alloc = NULL;
   char *name_alloc = NULL;
-  char const *followed_dest_name = dst_name;
   int dest_desc;
   int dest_errno;
   int source_desc;
@@ -362,34 +360,38 @@ copy_reg (char const *src_name, char const *dst_name,
 
   if (*new_dst)
     {
-      int open_flags = O_WRONLY | O_CREAT | O_EXCL | O_BINARY;
-      dest_desc = open (dst_name, open_flags,
+      int open_flags = O_WRONLY | O_CREAT | O_BINARY;
+      dest_desc = open (dst_name, open_flags | O_EXCL ,
 			dst_mode & ~omitted_permissions);
       dest_errno = errno;
 
       /* When trying to copy through a dangling destination symlink,
 	 the above open fails with EEXIST.  If that happens, and
-	 lstat'ing the DST_NAME shows that it is a symlink, repeat
-	 the open call, but this time with the name of the final,
-	 missing directory entry.  All of this is relevant only for
-	 cp, i.e., not in move_mode. */
+	 lstat'ing the DST_NAME shows that it is a symlink, then we
+	 have a problem: trying to resolve this dangling symlink to
+	 a directory/destination-entry pair is fundamentally racy,
+	 so punt.  If POSIXLY_CORRECT is set, simply call open again,
+	 but without O_EXCL (potentially dangerous).  If not, fail
+	 with a diagnostic.  These shenanigans are necessary only
+	 when copying, i.e., not in move_mode.  */
       if (dest_desc < 0 && dest_errno == EEXIST && ! x->move_mode)
 	{
 	  struct stat dangling_link_sb;
 	  if (lstat (dst_name, &dangling_link_sb) == 0
 	      && S_ISLNK (dangling_link_sb.st_mode))
 	    {
-	      /* FIXME: This is way overkill, since all that's needed
-		 is to follow the symlink that is the last file name
-		 component.  */
-	      name_alloc =
-		canonicalize_filename_mode (dst_name, CAN_MISSING);
-	      if (name_alloc)
+	      if (x->open_dangling_dest_symlink)
 		{
-		  followed_dest_name = name_alloc;
-		  dest_desc = open (followed_dest_name, open_flags,
+		  dest_desc = open (dst_name, open_flags,
 				    dst_mode & ~omitted_permissions);
 		  dest_errno = errno;
+		}
+	      else
+		{
+		  error (0, 0, _("not writing through dangling symlink %s"),
+			 quote (dst_name));
+		  return_val = false;
+		  goto close_src_desc;
 		}
 	    }
 	}
@@ -591,7 +593,7 @@ copy_reg (char const *src_name, char const *dst_name,
       timespec[0] = get_stat_atime (src_sb);
       timespec[1] = get_stat_mtime (src_sb);
 
-      if (gl_futimens (dest_desc, followed_dest_name, timespec) != 0)
+      if (gl_futimens (dest_desc, dst_name, timespec) != 0)
 	{
 	  error (0, errno, _("preserving times for %s"), quote (dst_name));
 	  if (x->require_preserve)
@@ -604,7 +606,7 @@ copy_reg (char const *src_name, char const *dst_name,
 
   if (x->preserve_ownership && ! SAME_OWNER_AND_GROUP (*src_sb, sb))
     {
-      switch (set_owner (x, followed_dest_name, dest_desc,
+      switch (set_owner (x, dst_name, dest_desc,
 			 src_sb->st_uid, src_sb->st_gid))
 	{
 	case -1:
@@ -617,24 +619,24 @@ copy_reg (char const *src_name, char const *dst_name,
 	}
     }
 
-  set_author (followed_dest_name, dest_desc, src_sb);
+  set_author (dst_name, dest_desc, src_sb);
 
   if (x->preserve_mode || x->move_mode)
     {
-      if (copy_acl (src_name, source_desc, followed_dest_name, dest_desc, src_mode) != 0
+      if (copy_acl (src_name, source_desc, dst_name, dest_desc, src_mode) != 0
 	  && x->require_preserve)
 	return_val = false;
     }
   else if (x->set_mode)
     {
-      if (set_acl (followed_dest_name, dest_desc, x->mode) != 0)
+      if (set_acl (dst_name, dest_desc, x->mode) != 0)
 	return_val = false;
     }
   else if (omitted_permissions)
     {
       omitted_permissions &= ~ cached_umask ();
       if (omitted_permissions
-	  && fchmod_or_lchmod (dest_desc, followed_dest_name, dst_mode) != 0)
+	  && fchmod_or_lchmod (dest_desc, dst_name, dst_mode) != 0)
 	{
 	  error (0, errno, _("preserving permissions for %s"),
 		 quote (dst_name));

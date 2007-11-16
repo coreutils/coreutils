@@ -146,6 +146,7 @@ cp_option_init (struct cp_options *x)
   x->mode = 0;
   x->stdin_tty = isatty (STDIN_FILENO);
 
+  x->open_dangling_dest_symlink = false;
   x->update = false;
   x->verbose = false;
   x->dest_info = NULL;

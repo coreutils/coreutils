@@ -1,3 +1,21 @@
+2007-11-22  Jim Meyering  <meyering@redhat.com>
+
+	cp: by default, refuse to copy through a dangling destination symlink
+	* NEWS: Mention this change.
+	* doc/coreutils.texi (cp invocation): Describe the new behavior.
+	* src/copy.c: No longer include "canonicalize.h".
+	(copy_reg): Upon failure to open a dangling destination symlink,
+	don't canonicalize the name, but rather fail (default) or, with
+	POSIXLY_CORRECT, repeat the open call without O_EXCL (potentially
+	dangerous).
+	* src/copy.h (struct cp_options) [open_dangling_dest_symlink]:
+	New member.  Reorder the others, grouping "bool" and "enum"
+	members together.
+	* tests/cp/thru-dangling: Test for changed and new behavior.
+	* src/cp.c (cp_option_init): Initialize new member.
+	* src/install.c (cp_option_init): Likewise.
+	* src/mv.c (cp_option_init): Likewise.
+
 2007-11-21  Pádraig Brady <P@draigBrady.com>
 
 	* doc/coreutils.texi (split invocation): Improve the

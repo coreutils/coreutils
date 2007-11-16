@@ -82,12 +82,24 @@ struct cp_options
 {
   enum backup_type backup_type;
 
+  /* How to handle symlinks in the source.  */
+  enum Dereference_symlink dereference;
+
+  /* This value is used to determine whether to prompt before removing
+     each existing destination file.  It works differently depending on
+     whether move_mode is set.  See code/comments in copy.c.  */
+  enum Interactive interactive;
+
+  /* Control creation of sparse files.  */
+  enum Sparse_type sparse_mode;
+
+  /* Set the mode of the destination file to exactly this value
+     if SET_MODE is nonzero.  */
+  mode_t mode;
+
   /* If true, copy all files except (directories and, if not dereferencing
      them, symbolic links,) as if they were regular files.  */
   bool copy_as_regular;
-
-  /* How to handle symlinks in the source.  */
-  enum Dereference_symlink dereference;
 
   /* If true, remove each existing destination nondirectory before
      trying to open it.  */
@@ -103,11 +115,6 @@ struct cp_options
   /* If true, create hard links instead of copying files.
      Create destination directories as usual. */
   bool hard_link;
-
-  /* This value is used to determine whether to prompt before removing
-     each existing destination file.  It works differently depending on
-     whether move_mode is set.  See code/comments in copy.c.  */
-  enum Interactive interactive;
 
   /* If true, rather than copying, first attempt to use rename.
      If that fails, then resort to copying.  */
@@ -168,13 +175,6 @@ struct cp_options
      set it based on current umask modified by UMASK_KILL.  */
   bool set_mode;
 
-  /* Set the mode of the destination file to exactly this value
-     if SET_MODE is nonzero.  */
-  mode_t mode;
-
-  /* Control creation of sparse files.  */
-  enum Sparse_type sparse_mode;
-
   /* If true, create symbolic links instead of copying files.
      Create destination directories as usual. */
   bool symbolic_link;
@@ -188,6 +188,11 @@ struct cp_options
 
   /* If true, stdin is a tty.  */
   bool stdin_tty;
+
+  /* If true, open a dangling destination symlink when not in move_mode.
+     Otherwise, copy_reg gives a diagnostic (it refuses to write through
+     such a symlink) and returns false.  */
+  bool open_dangling_dest_symlink;
 
   /* This is a set of destination name/inode/dev triples.  Each such triple
      represents a file we have created corresponding to a source file name
