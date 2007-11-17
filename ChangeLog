@@ -1,5 +1,9 @@
 2007-11-17  Jim Meyering  <meyering@redhat.com>
 
+	Correct preceding patch.
+	* src/seq.c (print_numbers): Also handle first < last && step < 0.
+	* tests/misc/seq [empty-rev]: New test for this case.
+
 	"seq .1 .1" would mistakenly generate no output on some systems
 	* NEWS: Say this.
 	* src/seq.c (print_numbers): Handle another floating point corner case.

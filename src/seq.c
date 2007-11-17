@@ -285,7 +285,7 @@ print_numbers (char const *fmt, struct layout layout,
 	     Hence the first conjunct: don't break out of this loop when
 	     i == 0.  *unless* first and last themselves are out of order,
 	     in which case we must print nothing, e.g. for ./seq -1  */
-	  if (i || last < first)
+	  if (i || (0 < step && last < first) || (step < 0 && first < last))
 	    break;
 	}
 
