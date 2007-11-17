@@ -142,6 +142,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   seq would mistakenly reject some valid format strings containing %%,
   and would mistakenly accept some invalid ones. e.g., %g%% and %%g, resp.
 
+  "seq .1 .1" would mistakenly generate no output on some systems
+
   Obsolete sort usage with an invalid ordering-option character, e.g.,
   "env _POSIX2_VERSION=199209 sort +1x" no longer makes sort free an
   invalid pointer [introduced in coreutils-6.5]

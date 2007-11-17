@@ -1,3 +1,10 @@
+2007-11-17  Jim Meyering  <meyering@redhat.com>
+
+	"seq .1 .1" would mistakenly generate no output on some systems
+	* NEWS: Say this.
+	* src/seq.c (print_numbers): Handle another floating point corner case.
+	This avoids failure of seq's eq-wid-7 test on FreeBSD 6.1.
+
 2007-11-16  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Port tests/rmdir/ignore away from GNU/Linux.

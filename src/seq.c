@@ -280,7 +280,13 @@ print_numbers (char const *fmt, struct layout layout,
 	      free (x_str);
 	    }
 
-	  break;
+	  /* With floating point arithmetic, we may well reach this point
+	     with i == 0 and first == last.  E.g., ./seq .1 .1 on FreeBSD 6.1.
+	     Hence the first conjunct: don't break out of this loop when
+	     i == 0.  *unless* first and last themselves are out of order,
+	     in which case we must print nothing, e.g. for ./seq -1  */
+	  if (i || last < first)
+	    break;
 	}
 
       if (i)
