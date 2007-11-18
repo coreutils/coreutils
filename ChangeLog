@@ -1,5 +1,9 @@
 2007-11-18  Jim Meyering  <meyering@redhat.com>
 
+	Remove unused parameter in remove.c.
+	* src/remove.c (fd_to_subdirp): Remove unused parameter.
+	(remove_cwd_entries, remove_dir): Update callers.
+
 	bootstrap: work also with 4-argument variant of AC_INIT (from gnulib)
 	2007-11-18  Sergey Poznyakoff  <gray@gnu.org.ua>
 	* bootstrap (gnulib_extra_files): Adjust sed command.
