@@ -77,9 +77,10 @@ po_download_command_format=\
 
 extract_package_name='
   /^AC_INIT(/{
-     /.*,.*,.*,/{
+     /.*,.*,.*, */{
        s///
        s/[][]//g
+       s/)$//
        p
        q
      }
