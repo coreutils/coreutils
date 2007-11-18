@@ -1,5 +1,7 @@
 2007-11-18  Jim Meyering  <meyering@redhat.com>
 
+	* src/c99-to-c89.diff: Adjust seq.c offsets.
+
 	Remove unused parameter in remove.c.
 	* src/remove.c (fd_to_subdirp): Remove unused parameter.
 	(remove_cwd_entries, remove_dir): Update callers.
