@@ -108,7 +108,7 @@ diff -upr src/seq.c src/seq.c
      }
 
    return ret;
-@@ -317,6 +319,7 @@ get_default_format (operand first, opera
+@@ -311,6 +313,7 @@ get_default_format (operand first, opera
  	  size_t last_width = last.width + (prec - last.precision);
  	  if (last.precision && prec == 0)
  	    last_width--;  /* don't include space for '.' */
@@ -116,7 +116,7 @@ diff -upr src/seq.c src/seq.c
  	  size_t width = MAX (first_width, last_width);
  	  if (width <= INT_MAX)
  	    {
-@@ -324,6 +327,7 @@ get_default_format (operand first, opera
+@@ -318,6 +321,7 @@ get_default_format (operand first, opera
  	      sprintf (format_buf, "%%0%d.%dLf", w, prec);
  	      return format_buf;
  	    }

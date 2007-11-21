@@ -1,3 +1,7 @@
+2007-11-21  Jim Meyering  <meyering@redhat.com>
+
+	* src/c99-to-c89.diff: Adjust seq.c offsets.
+
 2007-11-18  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/seq.c (print_numbers): Rewrite in an attempt to avoid the
