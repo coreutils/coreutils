@@ -2789,12 +2789,6 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
-@item -a @var{length}
-@itemx --suffix-length=@var{length}
-@opindex -a
-@opindex --suffix-length
-Use suffixes of length @var{length}.  The default @var{length} is 2.
-
 @item -l @var{lines}
 @itemx --lines=@var{lines}
 @opindex -l
@@ -2805,27 +2799,36 @@ For compatibility @command{split} also supports an obsolete
 option syntax @option{-@var{lines}}.  New scripts should use @option{-l
 @var{lines}} instead.
 
-@item -b @var{bytes}
-@itemx --bytes=@var{bytes}
+@item -b @var{size}
+@itemx --bytes=@var{size}
 @opindex -b
 @opindex --bytes
-Put the first @var{bytes} bytes of @var{input} into each output file.
-Appending @samp{b} multiplies @var{bytes} by 512,
-@samp{kB} by 1000, @samp{K} by 1024,
-@samp{MB} by 1000*1000, @samp{M} by 1024*1024,
-@samp{GB} by 1000*1000*1000, @samp{GB} by 1024*1024*1024,
-and so on for @samp{T}, @samp{P}, @samp{E}, @samp{Z}, and @samp{Y}.
+Put @var{size} bytes of @var{input} into each output file.
+@var{size} is a number which may be followed by one of these
+multiplicative suffixes:
+@example
+@samp{b}  =>       512 ("blocks")
+@samp{KB} =>      1000 (KiloBytes)
+@samp{K}  =>      1024 (KibiBytes)
+@samp{MB} => 1000*1000 (MegaBytes)
+@samp{M}  => 1024*1024 (MebiBytes)
+@end example
+and so on for @samp{G}, @samp{T}, @samp{P}, @samp{E}, @samp{Z}, and @samp{Y}.
 
-@item -C @var{bytes}
-@itemx --line-bytes=@var{bytes}
+@item -C @var{size}
+@itemx --line-bytes=@var{size}
 @opindex -C
 @opindex --line-bytes
 Put into each output file as many complete lines of @var{input} as
-possible without exceeding @var{bytes} bytes.  For lines longer than
-@var{bytes} bytes, put @var{bytes} bytes into each output file until
-less than @var{bytes} bytes of the line are left, then continue
-normally.  @var{bytes} has the same format as for the @option{--bytes}
-option.
+possible without exceeding @var{size} bytes.  Individual lines longer than
+@var{size} bytes are broken into multiple files.
+@var{size} has the same format as for the @option{--bytes} option.
+
+@item -a @var{length}
+@itemx --suffix-length=@var{length}
+@opindex -a
+@opindex --suffix-length
+Use suffixes of length @var{length}.  The default @var{length} is 2.
 
 @item -d
 @itemx --numeric-suffixes

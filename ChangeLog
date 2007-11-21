@@ -1,3 +1,8 @@
+2007-11-21  PÃ¡draig Brady <P@draigBrady.com>
+
+	* doc/coreutils.texi (split invocation): Improve the
+	descriptions of the split command options.
+
 2007-11-21  Jim Meyering  <meyering@redhat.com>
 
 	* src/c99-to-c89.diff: Adjust seq.c offsets.
