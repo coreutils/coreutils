@@ -238,24 +238,32 @@ static void
 print_numbers (char const *fmt, struct layout layout,
 	       long double first, long double step, long double last)
 {
-  long double i;
-  long double x0 IF_LINT (= 0);
+  bool out_of_range = (step < 0 ? first < last : last < first);
 
-  for (i = 0; /* empty */; i++)
+  if (! out_of_range)
     {
-      long double x = first + i * step;
+      long double x = first;
+      long double i;
 
-      if (step < 0 ? x < last : last < x)
+      for (i = 1; ; i++)
 	{
-	  /* If we go one past the end, but that number prints as a
-	     value equal to "last", and prints differently from the
-	     previous number, then print "last".  This avoids problems
-	     with rounding.  For example, with the x86 it causes "seq
-	     0 0.000001 0.000003" to print 0.000003 instead of
-	     stopping at 0.000002.  */
+	  long double x0 = x;
+	  printf (fmt, x);
+	  if (out_of_range)
+	    break;
+	  x = first + i * step;
+	  out_of_range = (step < 0 ? x < last : last < x);
 
-	  if (i)
+	  if (out_of_range)
 	    {
+	      /* If the number just past LAST prints as a value equal
+		 to LAST, and prints differently from the previous
+		 number, then print the number.  This avoids problems
+		 with rounding.  For example, with the x86 it causes
+		 "seq 0 0.000001 0.000003" to print 0.000003 instead
+		 of stopping at 0.000002.  */
+
+	      bool print_extra_number = false;
 	      long double x_val;
 	      char *x_str;
 	      int x_strlen = asprintf (&x_str, fmt, x);
@@ -269,34 +277,20 @@ print_numbers (char const *fmt, struct layout layout,
 		  char *x0_str = NULL;
 		  if (asprintf (&x0_str, fmt, x0) < 0)
 		    xalloc_die ();
-		  if (!STREQ (x0_str, x_str))
-		    {
-		      fputs (separator, stdout);
-		      fputs (x_str, stdout);
-		    }
+		  print_extra_number = !STREQ (x0_str, x_str);
 		  free (x0_str);
 		}
 
 	      free (x_str);
+	      if (! print_extra_number)
+		break;
 	    }
 
-	  /* With floating point arithmetic, we may well reach this point
-	     with i == 0 and first == last.  E.g., ./seq .1 .1 on FreeBSD 6.1.
-	     Hence the first conjunct: don't break out of this loop when
-	     i == 0.  *unless* first and last themselves are out of order,
-	     in which case we must print nothing, e.g. for ./seq -1  */
-	  if (i || (0 < step && last < first) || (step < 0 && first < last))
-	    break;
+	  fputs (separator, stdout);
 	}
 
-      if (i)
-	fputs (separator, stdout);
-      printf (fmt, x);
-      x0 = x;
+      fputs (terminator, stdout);
     }
-
-  if (i)
-    fputs (terminator, stdout);
 }
 
 /* Return the default format given FIRST, STEP, and LAST.  */
