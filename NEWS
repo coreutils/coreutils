@@ -108,6 +108,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   cut now diagnoses the '-' in "cut -f -" as an invalid range, rather
   than interpreting it as the unlimited range, "1-".
 
+  date -d now accepts strings of the form e.g., 'YYYYMMDD +N days',
+  in addition to the usual 'YYYYMMDD N days'.
+
   du -s now includes the size of any stat'able-but-inaccessible directory
   in the total size.
 

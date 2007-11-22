@@ -1,3 +1,10 @@
+2007-11-23  Jim Meyering  <meyering@redhat.com>
+
+	Add tests to show new class of strings accepted by date -d.
+	* tests/misc/date (rel-1day, rel-plus1): New tests for the recent
+	change in gnulib's getdate.y.
+	* NEWS: Mention the fix.
+
 2007-11-22  Jim Meyering  <meyering@redhat.com>
 
 	Quiet warnings about unused parameters.

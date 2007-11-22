@@ -126,6 +126,11 @@ my @Tests =
 
      ['rel-3a', "-d '$d1 4 seconds ago' $fmt", {OUT=>"$d0 08:17:44"}],
 
+     # This has always worked, ...
+     ['rel-1day',  "-d '20050101  1 day'  +%F", {OUT=>"2005-01-02"}],
+     # ...but up to coreutils-6.9, this was rejected due to the "+".
+     ['rel-plus1', "-d '20050101 +1 day'  +%F", {OUT=>"2005-01-02"}],
+
      ['next-s', "-d '$d1 next second' '+%Y-%m-%d %T'", {OUT=>"$d0 $ts"}],
      ['next-m', "-d '$d1 next minute' '+%Y-%m-%d %T'", {OUT=>"$d0 $tm"}],
      ['next-h', "-d '$d1 next hour'   '+%Y-%m-%d %T'", {OUT=>"$d0 $th"}],
