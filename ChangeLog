@@ -1,5 +1,12 @@
 2007-11-22  Jim Meyering  <meyering@redhat.com>
 
+	Make it easier to diagnose PATH-induced "make distcheck" failures.
+	* Makefile.maint (write_loser): Define.
+	(my-distcheck): Use an always-failing wrapper script, that gives
+	a diagnostic, not "false".
+	Run only "make -C tests check" with the restrictive PATH.
+	Run the new gnulib-tests/ with the usual PATH.
+
 	cp: by default, refuse to copy through a dangling destination symlink
 	* NEWS: Mention this change.
 	* doc/coreutils.texi (cp invocation): Describe the new behavior.

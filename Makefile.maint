@@ -567,6 +567,8 @@ built_programs = $$(cd src && MAKEFLAGS= $(MAKE) -s built_programs.list)
 warn_cflags = -Dlint -O -Werror -Wall -Wformat -Wshadow -Wpointer-arith
 bin=bin-$$$$
 
+write_loser = printf '\#!%s\necho $$0: bad path 1>&2; exit 1\n' '$(SHELL)'
+
 # Use -Wformat -Werror to detect format-string/arg-list mismatches.
 # Also, check for shadowing problems with -Wshadow, and for pointer
 # arithmetic problems with -Wpointer-arith.
@@ -591,15 +593,18 @@ my-distcheck: $(local-check) $(release_archive_dir)/$(prev-tgz)
 	      AM_MAKEFLAGS='$(null_AM_MAKEFLAGS)'	\
 	  && $(MAKE) dvi				\
 	  && mkdir $(bin)				\
+	  && ($(write_loser)) > $(bin)/loser            \
+	  && chmod a+x $(bin)/loser                     \
 	  && for i in $(built_programs); do		\
 	       case $$i in				\
 		 rm|expr|basename|echo|sort|ls|tr);;	\
 		 mv|dirname);;				\
-		 *) ln -s ../src/false $(bin)/$$i;;	\
+		 *) ln $(bin)/loser $(bin)/$$i;;	\
 	       esac;					\
 	     done					\
 	  && ln -sf ../src/true $(bin)/false		\
-	  && PATH=`pwd`/$(bin):$$PATH $(MAKE) check	\
+	  && PATH=`pwd`/$(bin):$$PATH $(MAKE) -C tests check \
+	  && $(MAKE) -C gnulib-tests check		\
 	  && rm -rf $(bin)				\
 	  && $(MAKE) distclean
 	(cd $(t) && mv $(distdir) $(distdir).old	\
