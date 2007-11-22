@@ -47,7 +47,7 @@ ifeq (0,$(MAKELEVEL))
   ifneq (,$(_is-dist-target))
     _curr-ver := $(shell build-aux/git-version-gen .version)
     ifneq ($(_curr-ver),$(VERSION))
-      $(info INFO: running autoreconf for new version string; old: $(_curr-ver))
+      $(info INFO: running autoreconf for new version string: $(_curr-ver))
       dummy := $(shell rm -rf autom4te.cache; autoreconf)
     endif
   endif

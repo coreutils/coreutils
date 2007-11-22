@@ -1,5 +1,7 @@
 2007-11-22  Jim Meyering  <meyering@redhat.com>
 
+	* GNUmakefile: Correct the "rerunning..." diagnostic.
+
 	Make it easier to diagnose PATH-induced "make distcheck" failures.
 	* Makefile.maint (write_loser): Define.
 	(my-distcheck): Use an always-failing wrapper script, that gives
