@@ -1,5 +1,8 @@
 2007-11-24  Jim Meyering  <meyering@redhat.com>
 
+	setuidgid: accept numeric UID, and new option -g GID,GID1,GID2,...
+	* src/setuidgid.c: Add functionality for the new test above.
+
 	"cp -p" tries to preserve GID even if preserving the UID fails.
 	* NEWS: Mention this new feature.
 	* src/copy.c (set_owner): Try to preserve just the GID,

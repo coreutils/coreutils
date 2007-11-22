@@ -27,7 +27,7 @@
 
 #include "error.h"
 #include "long-options.h"
-#include "mgetgroups.h"
+#include "getugroups.h"
 #include "quote.h"
 
 #define PROGRAM_NAME "setuidgid"
@@ -72,8 +72,9 @@ This program is useful only when run by root (user ID zero).\n\
 int
 main (int argc, char **argv)
 {
-  char const *user_id;
-  struct passwd *pwd;
+  uid_t uid;
+  GETGROUPS_T gids[NGROUPS];
+  size_t gids_count = 0;
 
   initialize_main (&argc, &argv);
   program_name = argv[0];
@@ -86,8 +87,40 @@ main (int argc, char **argv)
 
   parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE_NAME, VERSION,
 		      usage, AUTHORS, (char const *) NULL);
-  if (getopt_long (argc, argv, "+", NULL, NULL) != -1)
-    usage (SETUIDGID_FAILURE);
+  {
+    int c;
+    while ((c = getopt_long (argc, argv, "+g:", NULL, NULL)) != -1)
+      {
+        switch (c)
+          {
+            case 'g':
+              {
+                char *ptr = optarg;
+                while (*ptr != '\0')
+                  {
+                    if (gids_count == NGROUPS)
+                      {
+                        error (0, 0, _("invalid argument %s"), quote (optarg));
+                        usage (SETUIDGID_FAILURE);
+                      }
+
+                    /* FIXME: Integer overflow */
+                    gids[gids_count++] = strtoul (ptr, &ptr, 10);
+                  
+                    if (*ptr != '\0' && *ptr++ != ',')
+                      {
+                        error (0, 0, _("invalid argument %s"), quote (optarg));
+                        usage (SETUIDGID_FAILURE);
+                      }
+                  }
+                break;
+              }
+            
+            default:
+              usage (SETUIDGID_FAILURE);
+          }
+      }
+  }
 
   if (argc <= optind + 1)
     {
@@ -98,37 +131,61 @@ main (int argc, char **argv)
       usage (SETUIDGID_FAILURE);
     }
 
-  user_id = argv[optind];
-  pwd = getpwnam (user_id);
-  if (pwd == NULL)
-    error (SETUIDGID_FAILURE, errno,
-	   _("unknown user-ID: %s"), quote (user_id));
-
-#if HAVE_SETGROUPS
   {
-    GETGROUPS_T *groups;
-    int n_groups = mgetgroups (user_id, pwd->pw_gid, &groups);
-    if (n_groups < 0)
+    const struct passwd *pwd;
+    char *ptr;
+
+    /* FIXME: Integer overflow */
+    uid = strtoul (argv[optind], &ptr, 10);
+    if (*ptr != '\0')
       {
-	n_groups = 1;
-	groups = xmalloc (sizeof *groups);
-	*groups = pwd->pw_gid;
+        pwd = getpwnam (argv[optind]);
+        if (pwd == NULL)
+          {
+            error (SETUIDGID_FAILURE, errno,
+                   _("unknown user-ID: %s"), quote (argv[optind]));
+            usage (SETUIDGID_FAILURE);
+          }
+        uid = pwd->pw_uid;
+      }
+    else if (gids_count == 0)
+      {
+        pwd = getpwuid (uid);
+        /* FIXME: Error message */
+        if (pwd == NULL)
+          {
+            error (SETUIDGID_FAILURE, errno,
+                   _("to use user-ID %s you need to use -g too"),
+                   quote (argv[optind]));
+            usage (SETUIDGID_FAILURE);
+          }
       }
 
-    if (0 < n_groups && setgroups (n_groups, groups))
+#if HAVE_SETGROUPS
+    if (gids_count == 0)
+      {
+        const int tmp = getugroups (NGROUPS, gids, pwd->pw_name, pwd->pw_gid);
+        if (tmp <= 0)
+          {
+            gids[0] = pwd->pw_gid;
+            gids_count = 1;
+          }
+      }
+
+    if (setgroups (gids_count, gids))
       error (SETUIDGID_FAILURE, errno, _("cannot set supplemental group(s)"));
-
-    free (groups);
-  }
+#else
+    gids[0] = pwd->pw_gid;
 #endif
+  }
 
-  if (setgid (pwd->pw_gid))
+  if (setgid (gids[0]))
     error (SETUIDGID_FAILURE, errno,
-	   _("cannot set group-ID to %lu"), (unsigned long int) pwd->pw_gid);
+	   _("cannot set group-ID to %lu"), (unsigned long int) gids[0]);
 
-  if (setuid (pwd->pw_uid))
+  if (setuid (uid))
     error (SETUIDGID_FAILURE, errno,
-	   _("cannot set user-ID to %lu"), (unsigned long int) pwd->pw_uid);
+	   _("cannot set user-ID to %lu"), (unsigned long int) uid);
 
   {
     char **cmd = argv + optind + 1;
