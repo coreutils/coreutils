@@ -227,6 +227,10 @@ set_author (const char *dst_name, int dest_desc, const struct stat *src_sb)
 	       quote (dst_name));
       mach_port_deallocate (mach_task_self (), file);
     }
+#else
+  (void) dst_name;
+  (void) dest_desc;
+  (void) src_sb;
 #endif
 }
 

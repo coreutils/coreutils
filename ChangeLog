@@ -1,5 +1,9 @@
 2007-11-22  Jim Meyering  <meyering@redhat.com>
 
+	Quiet warnings about unused parameters.
+	* src/copy.c (set_author) [!HAVE_STRUCT_STAT_ST_AUTHOR]:
+	"Use" each of the parameters.
+
 	* GNUmakefile: Correct the "rerunning..." diagnostic.
 
 	Make it easier to diagnose PATH-induced "make distcheck" failures.
