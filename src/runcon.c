@@ -90,7 +90,7 @@ With neither CONTEXT nor COMMAND, print the current security context.\n\
 }
 
 int
-main (int argc, char **argv, char **envp)
+main (int argc, char **argv)
 {
   char *role = NULL;
   char *range = NULL;
