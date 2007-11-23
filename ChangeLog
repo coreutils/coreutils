@@ -1,5 +1,7 @@
 2007-11-24  Jim Meyering  <meyering@redhat.com>
 
+	* src/setuidgid.c: Normalize leading white space: no more TABs.
+
 	Test the new feature: cp -p preserves the GID whenever possible.
 	* tests/cp/preserve-gid: New file.  Test for today's change.
 	* tests/cp/Makefile.am (TESTS): Add preserve-gid.

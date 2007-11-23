@@ -45,14 +45,14 @@ usage (int status)
 {
   if (status != EXIT_SUCCESS)
     fprintf (stderr, _("Try `%s --help' for more information.\n"),
-	     program_name);
+             program_name);
   else
     {
       printf (_("\
 Usage: %s USERNAME COMMAND [ARGUMENT]...\n\
   or:  %s OPTION\n\
 "),
-	      program_name, program_name);
+              program_name, program_name);
 
       fputs (_("\
 Drop any supplemental groups, assume the user-ID and group-ID of\n\
@@ -86,7 +86,7 @@ main (int argc, char **argv)
   atexit (close_stdout);
 
   parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE_NAME, VERSION,
-		      usage, AUTHORS, (char const *) NULL);
+                      usage, AUTHORS, (char const *) NULL);
   {
     int c;
     while ((c = getopt_long (argc, argv, "+g:", NULL, NULL)) != -1)
@@ -106,7 +106,7 @@ main (int argc, char **argv)
 
                     /* FIXME: Integer overflow */
                     gids[gids_count++] = strtoul (ptr, &ptr, 10);
-                  
+
                     if (*ptr != '\0' && *ptr++ != ',')
                       {
                         error (0, 0, _("invalid argument %s"), quote (optarg));
@@ -115,7 +115,7 @@ main (int argc, char **argv)
                   }
                 break;
               }
-            
+
             default:
               usage (SETUIDGID_FAILURE);
           }
@@ -125,9 +125,9 @@ main (int argc, char **argv)
   if (argc <= optind + 1)
     {
       if (argc < optind + 1)
-	error (0, 0, _("missing operand"));
+        error (0, 0, _("missing operand"));
       else
-	error (0, 0, _("missing operand after %s"), quote (argv[optind]));
+        error (0, 0, _("missing operand after %s"), quote (argv[optind]));
       usage (SETUIDGID_FAILURE);
     }
 
@@ -181,11 +181,11 @@ main (int argc, char **argv)
 
   if (setgid (gids[0]))
     error (SETUIDGID_FAILURE, errno,
-	   _("cannot set group-ID to %lu"), (unsigned long int) gids[0]);
+           _("cannot set group-ID to %lu"), (unsigned long int) gids[0]);
 
   if (setuid (uid))
     error (SETUIDGID_FAILURE, errno,
-	   _("cannot set user-ID to %lu"), (unsigned long int) uid);
+           _("cannot set user-ID to %lu"), (unsigned long int) uid);
 
   {
     char **cmd = argv + optind + 1;
@@ -197,3 +197,9 @@ main (int argc, char **argv)
     exit (exit_status);
   }
 }
+
+/*
+ * Local variables:
+ *  indent-tabs-mode: nil
+ * End:
+ */
