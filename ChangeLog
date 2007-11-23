@@ -1,5 +1,10 @@
 2007-11-24  Jim Meyering  <meyering@redhat.com>
 
+	setuidgid: minor clean-up.
+	* setuidgid.c: Include "xstrtoul.h".
+	(main): Detect overflow in string-to-gid_t and -to-uid_t conversions.
+	Improve diagnostics.
+
 	* src/setuidgid.c: Normalize leading white space: no more TABs.
 
 	Test the new feature: cp -p preserves the GID whenever possible.

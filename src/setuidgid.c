@@ -29,6 +29,7 @@
 #include "long-options.h"
 #include "getugroups.h"
 #include "quote.h"
+#include "xstrtol.h"
 
 #define PROGRAM_NAME "setuidgid"
 
@@ -95,23 +96,31 @@ main (int argc, char **argv)
           {
             case 'g':
               {
-                char *ptr = optarg;
-                while (*ptr != '\0')
+                unsigned long int tmp_ul;
+                char *gr = optarg;
+                char *ptr;
+                while (true)
                   {
                     if (gids_count == NGROUPS)
                       {
-                        error (0, 0, _("invalid argument %s"), quote (optarg));
+                        error (0, 0, _("too many groups: %s"), quote (optarg));
                         usage (SETUIDGID_FAILURE);
                       }
 
-                    /* FIXME: Integer overflow */
-                    gids[gids_count++] = strtoul (ptr, &ptr, 10);
+                    if (! (xstrtoul (gr, &ptr, 10, &tmp_ul, NULL) == LONGINT_OK
+                           && tmp_ul <= GID_T_MAX))
+                      error (EXIT_FAILURE, 0, _("invalid group %s"),
+                             quote (gr));
+                    gids[gids_count++] = tmp_ul;
 
-                    if (*ptr != '\0' && *ptr++ != ',')
+                    if (*ptr == '\0')
+                      break;
+                    if (*ptr != ',')
                       {
-                        error (0, 0, _("invalid argument %s"), quote (optarg));
+                        error (0, 0, _("invalid group %s"), quote (gr));
                         usage (SETUIDGID_FAILURE);
                       }
+                    gr = ptr + 1;
                   }
                 break;
               }
@@ -133,17 +142,25 @@ main (int argc, char **argv)
 
   {
     const struct passwd *pwd;
+    unsigned long int tmp_ul;
+    char *user = argv[optind];
     char *ptr;
+    bool have_uid = false;
 
-    /* FIXME: Integer overflow */
-    uid = strtoul (argv[optind], &ptr, 10);
-    if (*ptr != '\0')
+    if (xstrtoul (user, &ptr, 10, &tmp_ul, "") == LONGINT_OK
+        && tmp_ul <= UID_T_MAX)
       {
-        pwd = getpwnam (argv[optind]);
+        uid = tmp_ul;
+        have_uid = true;
+      }
+
+    if (!have_uid)
+      {
+        pwd = getpwnam (user);
         if (pwd == NULL)
           {
             error (SETUIDGID_FAILURE, errno,
-                   _("unknown user-ID: %s"), quote (argv[optind]));
+                   _("unknown user-ID: %s"), quote (user));
             usage (SETUIDGID_FAILURE);
           }
         uid = pwd->pw_uid;
@@ -155,8 +172,7 @@ main (int argc, char **argv)
         if (pwd == NULL)
           {
             error (SETUIDGID_FAILURE, errno,
-                   _("to use user-ID %s you need to use -g too"),
-                   quote (argv[optind]));
+                   _("to use user-ID %s you need to use -g too"), quote (user));
             usage (SETUIDGID_FAILURE);
           }
       }
