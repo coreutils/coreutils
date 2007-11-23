@@ -1,5 +1,11 @@
 2007-11-24  Jim Meyering  <meyering@redhat.com>
 
+	Test the new feature: cp -p preserves the GID whenever possible.
+	* tests/cp/preserve-gid: New file.  Test for today's change.
+	* tests/cp/Makefile.am (TESTS): Add preserve-gid.
+	* tests/Makefile.am (all_t): Add tc.
+	(tc): New target.
+
 	setuidgid: accept numeric UID, and new option -g GID,GID1,GID2,...
 	* src/setuidgid.c: Add functionality for the new test above.
 
