@@ -1,5 +1,10 @@
 2007-11-24  Jim Meyering  <meyering@redhat.com>
 
+	Tweak new test.
+	* tests/cp/preserve-gid: Split some long lines.
+	Prepend "+" to numeric uid and gid chown arguments, on principle.
+	Use skip_test_.
+
 	setuidgid: minor clean-up.
 	* setuidgid.c: Include "xstrtoul.h".
 	(main): Detect overflow in string-to-gid_t and -to-uid_t conversions.

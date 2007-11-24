@@ -22,7 +22,7 @@ PRIV_CHECK_ARG=require-root . "$srcdir/../priv-check"
 
 create() {
   echo "$1" > "$1" || exit 1
-  chown "$2:$3" "$1" || exit 1
+  chown "+$2:+$3" "$1" || exit 1
 }
 
 t0() {
@@ -42,7 +42,8 @@ t1() {
   f=$1; shift
   u=$1; shift
   g=$1; shift
-  t0 "$f" "$u" "$g" setuidgid -g "$nameless_gid1,$nameless_gid2" "$nameless_uid" "$@"
+  t0 "$f" "$u" "$g" setuidgid -g "$nameless_gid1,$nameless_gid2" \
+      "$nameless_uid" "$@"
 }
 
 if test "x$VERBOSE" = xyes; then
@@ -50,16 +51,17 @@ if test "x$VERBOSE" = xyes; then
   cp --version
 fi
 
-nameless_uid=`$PERL -e 'foreach my $i (1000..16*1024-1) { getpwuid $i or (print "$i\n"), exit }'`
-nameless_gid1=`$PERL -e 'foreach my $i (1000..16*1024) { getgrgid $i or (print "$i\n"), exit }'`
-nameless_gid2=`$PERL -e 'foreach my $i ('"$nameless_gid1"'+1..16*1024) { getgrgid $i or (print "$i\n"), exit }'`
+nameless_uid=`$PERL -le 'foreach my $i (1000..16*1024-1) { getpwuid $i or (print $i), exit }'`
+nameless_gid1=`$PERL -le 'foreach my $i (1000..16*1024) { getgrgid $i or (print $i), exit }'`
+nameless_gid2=`$PERL -le 'foreach my $i ('"$nameless_gid1"'+1..16*1024) { getgrgid $i or (print $i), exit }'`
 
-if [ -z "$nameless_uid" ] || [ -z "$nameless_gid1" ] || [ -z "$nameless_gid2" ]; then
-  echo "$0: couldn't find a nameless UID or GID" 1>&2
-  (exit 77); exit 77
+if test -z "$nameless_uid" \
+    || test -z "$nameless_gid1" \
+    || test -z "$nameless_gid2"; then
+  skip_test_ "couldn't find a nameless UID or GID"
 fi
 
-chown "$nameless_uid" .
+chown "+$nameless_uid" .
 
 create a0 0 0
 create b0 "$nameless_uid" "$nameless_gid1"
