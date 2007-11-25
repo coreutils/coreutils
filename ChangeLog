@@ -1,5 +1,9 @@
 2007-11-25  Jim Meyering  <meyering@redhat.com>
 
+	Document install's -D option.
+	* doc/coreutils.texi (install invocation): Document -D.
+	Reported by Akim Demialle.
+
 	setuidgid: Update --help output.
 	* src/setuidgid.c (usage): Describe -g GID[,GID1...] option.
 	Mention that USER may be a numeric ID or a user name.

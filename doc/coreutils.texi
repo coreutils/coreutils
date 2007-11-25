@@ -7633,6 +7633,13 @@ The program accepts the following options.  Also see @ref{Common options}.
 @opindex -c
 Ignored; for compatibility with old Unix versions of @command{install}.
 
+@item -D
+@opindex -D
+Create any missing parent directories of @var{dest},
+then copy @var{source} to @var{dest}.
+This option is ignored if a destination directory is specified
+via @option{--target-directory=DIR}.
+
 @item -d
 @itemx --directory
 @opindex -d
