@@ -1,3 +1,9 @@
+2007-11-25  Jim Meyering  <meyering@redhat.com>
+
+	setuidgid: Update --help output.
+	* src/setuidgid.c (usage): Describe -g GID[,GID1...] option.
+	Mention that USER may be a numeric ID or a user name.
+
 2007-11-24  Jim Meyering  <meyering@redhat.com>
 
 	Tweak new test.
