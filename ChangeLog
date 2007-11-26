@@ -1,3 +1,12 @@
+2007-11-26  Jim Meyering  <meyering@redhat.com>
+
+	setuidgid.c: more cleanup
+	* src/setuidgid.c: Include "mgetgroups.h".
+	(main): Don't presume there's a fixed limit on the maximum number
+	of group IDs.  Don't use NGROUPS; it's artificially low.
+	Change the name of a local: s/gids_count/n_gids/.
+	Remove non-portable "const": s/const int tmp =.../int tmp =.../
+
 2007-11-25  Jim Meyering  <meyering@redhat.com>
 
 	Document install's -D option.

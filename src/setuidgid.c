@@ -27,7 +27,7 @@
 
 #include "error.h"
 #include "long-options.h"
-#include "getugroups.h"
+#include "mgetgroups.h"
 #include "quote.h"
 #include "xstrtol.h"
 
@@ -78,8 +78,10 @@ int
 main (int argc, char **argv)
 {
   uid_t uid;
-  GETGROUPS_T gids[NGROUPS];
-  size_t gids_count = 0;
+  GETGROUPS_T *gids = NULL;
+  size_t n_gids = 0;
+  size_t n_gids_allocated = 0;
+  gid_t primary_gid;
 
   initialize_main (&argc, &argv);
   program_name = argv[0];
@@ -105,17 +107,13 @@ main (int argc, char **argv)
                 char *ptr;
                 while (true)
                   {
-                    if (gids_count == NGROUPS)
-                      {
-                        error (0, 0, _("too many groups: %s"), quote (optarg));
-                        usage (SETUIDGID_FAILURE);
-                      }
-
                     if (! (xstrtoul (gr, &ptr, 10, &tmp_ul, NULL) == LONGINT_OK
                            && tmp_ul <= GID_T_MAX))
                       error (EXIT_FAILURE, 0, _("invalid group %s"),
                              quote (gr));
-                    gids[gids_count++] = tmp_ul;
+                    if (n_gids == n_gids_allocated)
+                      gids = x2nrealloc (gids, &n_gids_allocated, sizeof *gids);
+                    gids[n_gids++] = tmp_ul;
 
                     if (*ptr == '\0')
                       break;
@@ -169,10 +167,9 @@ main (int argc, char **argv)
           }
         uid = pwd->pw_uid;
       }
-    else if (gids_count == 0)
+    else if (n_gids == 0)
       {
         pwd = getpwuid (uid);
-        /* FIXME: Error message */
         if (pwd == NULL)
           {
             error (SETUIDGID_FAILURE, errno,
@@ -182,26 +179,27 @@ main (int argc, char **argv)
       }
 
 #if HAVE_SETGROUPS
-    if (gids_count == 0)
+    if (n_gids == 0)
       {
-        const int tmp = getugroups (NGROUPS, gids, pwd->pw_name, pwd->pw_gid);
-        if (tmp <= 0)
-          {
-            gids[0] = pwd->pw_gid;
-            gids_count = 1;
-          }
+        n_gids = mgetgroups (pwd->pw_name, pwd->pw_gid, &gids);
+        if (n_gids <= 0)
+          error (1, errno, _("failed to get groups for user %s"),
+                 quote (pwd->pw_name));
       }
 
-    if (setgroups (gids_count, gids))
-      error (SETUIDGID_FAILURE, errno, _("cannot set supplemental group(s)"));
+    if (setgroups (n_gids, gids))
+      error (SETUIDGID_FAILURE, errno,
+             _("failed to set supplemental group(s)"));
+
+    primary_gid = gids[0];
 #else
-    gids[0] = pwd->pw_gid;
+    primary_gid = pwd->pw_gid;
 #endif
   }
 
-  if (setgid (gids[0]))
+  if (setgid (primary_gid))
     error (SETUIDGID_FAILURE, errno,
-           _("cannot set group-ID to %lu"), (unsigned long int) gids[0]);
+           _("cannot set group-ID to %lu"), (unsigned long int) primary_gid);
 
   if (setuid (uid))
     error (SETUIDGID_FAILURE, errno,
