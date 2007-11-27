@@ -1,3 +1,11 @@
+2007-11-27  Jim Meyering  <meyering@redhat.com>
+
+	Fix md5sum+sha*sum on sparc: regenerate files with latest autoconf.
+	* configure et al: Regenerate with very latest version of autoconf
+	(v2.61a-312-gb524b0f), to fix md5sum and sha*sum miscompilation
+	on big-endian systems (like sparc) due to lack of the required
+	definition in of WORDS_BIGENDIAN in lib/config.h.
+
 2007-11-26  Jim Meyering  <meyering@redhat.com>
 
 	setuidgid.c: more cleanup
