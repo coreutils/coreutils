@@ -1,5 +1,9 @@
 2007-11-27  Jim Meyering  <meyering@redhat.com>
 
+	Don't block use of 'cat' or 'wc' in "make check".
+	* Makefile.maint (my-distcheck): Add "cat" and "wc" to the list
+	of programs that we can't blacklist.
+
 	Fix md5sum+sha*sum on sparc: regenerate files with latest autoconf.
 	* configure et al: Regenerate with very latest version of autoconf
 	(v2.61a-312-gb524b0f), to fix md5sum and sha*sum miscompilation
