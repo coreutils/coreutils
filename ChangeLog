@@ -1,3 +1,7 @@
+2007-11-28  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* gl/modules/randread (Depends-on): Remove nonexistent rand-isaac.
+
 2007-11-27  Jim Meyering  <meyering@redhat.com>
 
 	Don't block use of 'cat' or 'wc' in "make check".

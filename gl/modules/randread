@@ -13,7 +13,6 @@ exitfail
 fopen-safer
 gethrxtime
 quotearg
-rand-isaac
 stdbool
 stdint
 unlocked-io
