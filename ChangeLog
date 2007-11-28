@@ -1,3 +1,7 @@
+2007-11-28  Jim Meyering  <meyering@redhat.com>
+
+	* README: Document the known problem with gettext <= 0.17.
+
 2007-11-28  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* gl/modules/randread (Depends-on): Remove nonexistent rand-isaac.
