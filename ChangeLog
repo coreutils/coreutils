@@ -1,3 +1,9 @@
+2007-11-28  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Close a file descriptor leak when cp --preserve=context fails.
+	* src/copy.c (copy_reg): Close dest_desc too, if getfscreatecon
+	or fsetfilecon fail.
+
 2007-11-28  Jim Meyering  <meyering@redhat.com>
 
 	* README: Document the known problem with gettext <= 0.17.

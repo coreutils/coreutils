@@ -341,7 +341,7 @@ copy_reg (char const *src_name, char const *dst_name,
 	      if (x->require_preserve_context)
 		{
 		  return_val = false;
-		  goto close_src_desc;
+		  goto close_src_and_dst_desc;
 		}
 	    }
 
@@ -356,7 +356,7 @@ copy_reg (char const *src_name, char const *dst_name,
 		    {
 		      return_val = false;
 		      freecon (con);
-		      goto close_src_desc;
+		      goto close_src_and_dst_desc;
 		    }
 		}
 	      freecon(con);
