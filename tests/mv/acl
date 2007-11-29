@@ -42,14 +42,14 @@ touch file || framework_failure
 t1=$other_partition_tmpdir/t1
 touch $t1 || framework_failure
 
-skip=no
+skip_partition=none
 # Ensure that setfacl and getfacl work on this file system.
-setfacl -m user:bin:rw file 2> /dev/null || skip=.
+setfacl -m user:bin:rw file 2> /dev/null || skip_partition=.
 # And on the destination file system.
-setfacl -m user:bin:rw $t1 || skip=$other_partition_tmpdir
-acl1=`getfacl file` || skip=yes
+setfacl -m user:bin:rw $t1 || skip_partition=$other_partition_tmpdir
+acl1=`getfacl file` || skip_partition=.
 
-test $skip != no &&
+test $skip_partition != none &&
   {
     echo "$0: '$skip' is not on a suitable file system for this test" 1>&2
     echo "$0: skipping this test" 1>&2
