@@ -17,8 +17,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-. $srcdir/../acl
-
 # Skip this test if cp was built without ACL support:
 grep '^#define USE_ACL 0' $CONFIG_HEADER > /dev/null && \
   {
@@ -35,6 +33,8 @@ fi
 
 . $srcdir/../lang-default
 . $srcdir/../test-lib.sh
+require_acl_
+
 cleanup_() { rm -rf "$other_partition_tmpdir"; }
 . "$abs_top_srcdir/tests/other-fs-tmpdir"
 

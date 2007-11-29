@@ -12,7 +12,6 @@ EXTRA_DIST =		\
   CuTmpdir.pm		\
   Makefile.am.in	\
   README		\
-  acl			\
   check.mk		\
   envvar-check		\
   expensive		\

@@ -14,6 +14,16 @@ skip_test_()
   (exit 77); exit 77
 }
 
+require_acl_()
+{
+  getfacl --version < /dev/null > /dev/null 2>&1 \
+    && setfacl --version < /dev/null > /dev/null 2>&1 \
+      || skip_test_ "This test requires getfacl and setfacl."
+
+  id -u bin > /dev/null 2>&1 \
+    || skip_test_ "This test requires a local user named bin."
+}
+
 require_ulimit_()
 {
   ulimit_works=yes
