@@ -24,11 +24,8 @@
 : ${PERL=perl}
 : ${srcdir=.}
 
-$PERL -e 'use warnings;' > /dev/null 2>&1 || {
-  echo 1>&2 "$0: configure didn't find a usable version of Perl," \
-    "so can't run this test"
-  exit 77
-}
+$PERL -e 'use warnings;' > /dev/null 2>&1 ||
+  skip_test_ "configure didn't find a usable version of Perl"
 
 me=`echo $0|sed 's,.*/,,'`
 exec $PERL -w -I$srcdir/.. -MCoreutils -M"CuTmpdir qw($me)" -- - << \EOF

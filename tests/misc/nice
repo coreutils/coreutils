@@ -58,8 +58,7 @@ niceness=`nice`
 if test "$niceness" = 0; then
     : ok
 else
-  echo "$0: this test must be run at nice level 0" 1>&2
-  exit 77
+  skip_test_ "this test must be run at nice level 0"
 fi
 
 fail=0

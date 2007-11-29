@@ -26,13 +26,11 @@ fi
 
 test=../../src/test
 if $test -w /; then
-  echo Skipping because you have write access to /.
-  (exit 77); exit 77
+  skip_test_ you have write access to /.
 fi
 
 if $test -O / || $test -G /; then
-  echo Skipping because you own /.
-  (exit 77); exit 77
+  skip_test_ "you own /."
 fi
 
 . $srcdir/../test-lib.sh

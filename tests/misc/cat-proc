@@ -2,7 +2,7 @@
 # Ensure that cat -E produces same output as cat, module `$'s,
 # even when applied to a file in /proc.
 
-# Copyright (C) 2006 Free Software Foundation, Inc.
+# Copyright (C) 2006-2007 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,10 +27,7 @@ fi
 
 f=/proc/cpuinfo
 test -f $f \
-  || {
-       echo "$0: no $f skipping this test" 1>&2
-       (exit 77); exit 77
-     }
+  || skip_test_ "no $f"
 
 fail=0
 

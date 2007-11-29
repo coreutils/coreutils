@@ -36,9 +36,7 @@ rm -f 'a
 b'
 
 if test $filename_may_contain_newline = no; then
-  echo 1>&2 "$0: can't create newline-containing file name," \
-    "so can't run this test"
-  exit 77
+  skip_test_ "failed to create newline-containing file name"
 fi
 
 me=`echo $0|sed 's,.*/,,'`

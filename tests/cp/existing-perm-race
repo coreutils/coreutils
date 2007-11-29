@@ -31,10 +31,8 @@ g2=$2
 fail=0
 
 umask 077
-mkfifo fifo || {
-  echo "$0: fifos not supported; skipping this test." 1>&2
-  (exit 77); exit 77
-}
+mkfifo fifo ||
+  skip_test_ "fifos not supported"
 
 touch fifo-copy &&
 chgrp $g1 fifo &&

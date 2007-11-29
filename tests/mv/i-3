@@ -33,7 +33,7 @@ chmod 0 g i || framework_failure
 fail=0
 
 ls /dev/stdin >/dev/null 2>&1 \
-  || { (exit 77); exit; }
+  || skip_test_ 'there is no /dev/stdin file'
 
 mv f g < /dev/stdin > out 2>&1 & pid=$!
 sleep 1

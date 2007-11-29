@@ -30,10 +30,8 @@ touch f || framework_failure
 # Skip this test if there's an underlying kernel bug.
 mkdir a b b/a || framework_failure
 
-mv a b || {
-  echo "$0: skipping this test: your kernel's rename syscall is buggy" 1>&2
-  (exit 77); exit 77
-}
+mv a b ||
+  skip_test_ "your kernel's rename syscall is buggy"
 
 fail=0
 

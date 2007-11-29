@@ -58,8 +58,7 @@ NA LAST NA
 set $tests
 
 saved_size=`stty size` && test -n "$saved_size" \
-  || { echo "$0: skipping this test: can't get window size" 1>&2;
-       exit 77; exit; }
+  || skip_test_ "can't get window size"
 
 fail=0
 while :; do

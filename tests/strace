@@ -16,13 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 strace -V < /dev/null > /dev/null 2>&1 ||
-{
-  echo "$0: no strace program, so skipping this test" 1>&2
-  (exit 77); exit 77
-}
+  skip_test_ 'no strace program'
 
 strace -qe unlink echo > /dev/null 2>&1 ||
-{
-  echo "$0: strace doesn't work, so skipping this test" 1>&2
-  (exit 77); exit 77
-}
+  skip_test_ 'strace does not work'

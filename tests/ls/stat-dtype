@@ -34,9 +34,7 @@ fi
 mkdir -p c/d || framework_failure
 chmod a-x c || framework_failure
 if test "X`ls -p c 2>&1`" != Xd/; then
-  echo "$0: '.' is not on a suitable file system for this test" 1>&2
-  echo "$0: skipping this test" 1>&2
-  (exit 77); exit 77
+  skip_test_ "'.' is not on a suitable file system for this test"
 fi
 
 mkdir d || framework_failure

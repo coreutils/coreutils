@@ -30,8 +30,7 @@ skip=yes
 grep '^#define HAVE_OPENAT' $CONFIG_HEADER > /dev/null && skip=no
 test -d /proc/self/fd && skip=no
 if test $skip = yes; then
-  echo 1>&2 "$0: no openat support, so skipping this test"
-  (exit 77); exit 77
+  skip_test_ 'this system lacks openat support'
 fi
 
 . $srcdir/../test-lib.sh

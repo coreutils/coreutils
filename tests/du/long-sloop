@@ -58,14 +58,9 @@ echo foo > $i
 # renders it as `Number of symbolic links encountered during path
 # name traversal exceeds MAXSYMLINKS'.
 
-cat $file > /dev/null 2> err && \
-  {
-    cat <<EOF >&2
-$0: Your system appears to be able to handle more than $n symlinks
-in file name resolution, so skipping this test.
-EOF
-    (exit 77); exit 77
-  }
+cat $file > /dev/null 2> err &&
+    skip_test_ 'Your system appears to be able to handle more than $n symlinks
+in file name resolution'
 too_many=`sed 's/.*: //' err`
 
 fail=0

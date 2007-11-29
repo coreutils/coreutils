@@ -28,10 +28,7 @@ if ! mkfifo fifo; then
   # failure as a test failure.  However, in this case, when running on a SunOS
   # system using a disk NFS mounted from OpenBSD, the above fails like this:
   # mkfifo: cannot make fifo `fifo-10558': Not owner
-  echo '********************************************'
-  echo 'NOTICE: unable to create test prerequisites'
-  echo '********************************************'
-  exit 77
+  skip_test_ 'NOTICE: unable to create test prerequisites'
 fi
 
 fail=0

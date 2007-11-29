@@ -37,11 +37,7 @@ fi
 
 proc_file=/proc/self/fd
 if test ! -d $proc_file; then
-  cat <<EOF >&2
-$0: Skipping this test.
-It would fail, since your system lacks /proc support.
-EOF
-  (exit 77); exit 77
+  skip_test_ 'This test would fail, since your system lacks /proc support.'
 fi
 
 dir=`printf '%200s\n' ' '|tr ' ' x`

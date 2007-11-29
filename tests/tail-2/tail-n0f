@@ -31,11 +31,8 @@ fi
 sleep 2 &
 pid=$!
 sleep .5
-grep '^State:[	 ]*[S]' /proc/$pid/status > /dev/null 2>&1 || \
-  {
-    echo "$0:/proc/$pid/status: missing or 'different': skipping this test" 1>&2
-    (exit 77); exit 77
-  }
+grep '^State:[	 ]*[S]' /proc/$pid/status > /dev/null 2>&1 ||
+  skip_test_ "/proc/$pid/status: missing or 'different'"
 kill $pid
 
 touch empty || framework_failure

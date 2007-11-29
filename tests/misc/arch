@@ -16,19 +16,18 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+. $srcdir/../test-lib.sh
+
 # skip this test if arch isn't being built.
 case " $built_programs " in
   *" arch "*) ;;
-  *) (exit 77); exit 77 ;;
+  *) skip_test_ 'not building arch';;
 esac
 
 if test "$VERBOSE" = yes; then
   set -x
   arch --version
 fi
-
-. $srcdir/../test-lib.sh
-
 
 fail=0
 

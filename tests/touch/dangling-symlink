@@ -39,14 +39,12 @@ if test $fail = 1; then
     *linux-gnu*)
       case "`uname -r`" in
         2.3.9[0-9]*)
-	  cat 1>&2 <<EOF
-====================================================
-$0: WARNING!!!
+	  skip_test_ \
+'****************************************************
+WARNING!!!
 This version of the Linux kernel causes touch to fail
 when operating on dangling symlinks.
-====================================================
-EOF
-	  exit 77
+****************************************************'
 	  ;;
       esac
       ;;

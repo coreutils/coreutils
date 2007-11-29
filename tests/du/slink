@@ -30,22 +30,19 @@ fi
 if df --local . >/dev/null 2>&1; then
   : # Ok.
 else
-  echo "$0: skipping this test, since \`.' is on a non-local file system" 1>&2
-  (exit 77); exit 77
+  skip_test_ "\`.' is on a non-local file system"
 fi
 
 if df --type=xfs . >/dev/null 2>&1; then
   # At least on Irix-6.5.19, when using an xfs file system,
   # each created symlink (name lengths up to 255) would have a size of `0'.
-  echo "$0: skipping this test, since \`.' is on an XFS file system" 1>&2
-  (exit 77); exit 77
+  skip_test_ "\`.' is on an XFS file system"
 fi
 
 if df --type=nfsv3 . >/dev/null 2>&1; then
   # At least on OSF/1 4.0d, when using an nfsv3 file system,
   # each created symlink can end up having a size of 0.
-  echo "$0: skipping this test, since \`.' is on an NFS file system" 1>&2
-  (exit 77); exit 77
+  skip_test_ "\`.' is on an NFS file system"
 fi
 
 fail=0

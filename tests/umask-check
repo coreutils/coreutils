@@ -1,7 +1,7 @@
 # -*- sh -*-
 # Disable the current test if umask doesn't work as usual.
 
-# Copyright (C) 2005 Free Software Foundation, Inc.
+# Copyright (C) 2005, 2007 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,10 +27,5 @@ rm -f file1 file2
 
 case $perms in
 *'
-'*)
-  cat <<EOF >&2
-$0: Since it looks like you're running this test in a directory with
-something other than the usual umask semantics, we're skipping this test.
-EOF
-  (exit 77); exit 77
+'*) skip_test_ 'your build directory has unusual umask semantics'
 esac

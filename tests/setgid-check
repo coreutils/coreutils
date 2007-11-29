@@ -2,7 +2,7 @@
 # Disable the current test if the working directory seems to have
 # the setgid bit set.
 
-# Copyright (C) 2000, 2002, 2004, 2005 Free Software Foundation, Inc.
+# Copyright (C) 2000, 2002, 2004, 2005, 2007 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -33,9 +33,5 @@ case $p in
   *) cwd_is_setgid=yes;;
 esac
 if test $cwd_is_setgid = yes; then
-  cat <<EOF >&2
-$0: Since it looks like you're running this test in a directory with
-the setgid bit set, we're skipping this test.
-EOF
-  (exit 77); exit 77
+  skip_test_ 'this directory has the setgid bit set'
 fi

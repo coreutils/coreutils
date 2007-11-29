@@ -1,7 +1,7 @@
 # -*- sh -*-
 # Does the current (working-dir.) file system support sparse files?
 
-# Copyright (C) 2006 Free Software Foundation, Inc.
+# Copyright (C) 2006, 2007 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -25,7 +25,5 @@ set x `du -sk $t`
 kb_size=$2
 rm -f $t
 if test $kb_size -ge 128; then
-  echo "$0: skipping this test, since this file system doesn't support" \
-    sparse files 1>&2
-  (exit 77); exit 77
+  skip_test_ 'this file system does not support sparse files'
 fi

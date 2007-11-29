@@ -24,10 +24,8 @@ fi
 
 . $srcdir/../test-lib.sh
 
-od -t x8 /dev/null >/dev/null || {
-  echo >&2 "$0: 8-byte test skipped"
-  exit 77
-}
+od -t x8 /dev/null >/dev/null ||
+  skip_test_ "od lacks support for 8-byte quantities"
 
 echo abcdefgh |tr -d '\n' > in || framework_failure
 

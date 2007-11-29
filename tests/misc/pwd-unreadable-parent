@@ -27,18 +27,12 @@ fi
 . $srcdir/../test-lib.sh
 
 test $host_os != linux-gnu &&
-  {
-    echo 1>&2 "$0: vendor getcwd may be inadequate; skipping this test"
-    (exit 77); exit 77
-  }
+  skip_test_ 'vendor getcwd may be inadequate'
 
 # Linux ia64 has the gl_FUNC_GETCWD_ABORT_BUG, so we can't use
 # the system getcwd.
 test $REPLACE_GETCWD = 1 &&
-  {
-    echo 1>&2 "$0: can't use buggy system getcwd; skipping this test"
-    (exit 77); exit 77
-  }
+  skip_test_ "can't use buggy system getcwd; skipping this test"
 
 mkdir -p a/b || framework_failure
 cd a/b || framework_failure

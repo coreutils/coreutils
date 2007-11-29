@@ -44,11 +44,8 @@ chmod g+s d 2> /dev/null && "$test" -g d ||
   }
 
 # "chmod g+s d" does nothing on some NFS file systems.
-"$test" -g d || {
-  echo 1>&2 "$0: cannot create setgid directories," \
-    "so can't run this test"
-  exit 77
-}
+"$test" -g d ||
+  skip_test_ 'cannot create setgid directories'
 
 fail=0
 

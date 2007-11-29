@@ -34,8 +34,7 @@ $PERL -e 1 > /dev/null 2>&1 || {
 nameless_uid=`$PERL -e 'foreach my $i (1000..16*1024) { getpwuid $i or (print "$i\n"), exit }'`
 
 if test x$nameless_uid = x; then
-  echo "$0: couldn't find a nameless UID" 1>&2
-  (exit 77); exit 77
+  skip_test_ "couldn't find a nameless UID"
 fi
 
 touch f || framework_failure
