@@ -80,7 +80,7 @@ this_test=$(this_test_)
 # a partition, or to undo any other global state changes.
 cleanup_() { :; }
 
-t_=$($abs_top_builddir/src/mktemp -d --tmp="$test_dir_" cu-$this_test.XXXXXXXXXX)\
+t_=$("$abs_top_builddir/src/mktemp" -d --tmp="$test_dir_" cu-$this_test.XXXXXXXXXX)\
     || error_ "failed to create temporary directory in $test_dir_"
 
 # Run each test from within a temporary sub-directory named after the
@@ -89,7 +89,7 @@ trap 'st=$?; cleanup_; d='"$t_"';
     cd '"$test_dir_"' && chmod -R u+rwx "$d" && rm -rf "$d" && exit $st' 0
 trap '(exit $?); exit $?' 1 2 13 15
 
-cd $t_ || error_ "failed to cd to $t_"
+cd "$t_" || error_ "failed to cd to $t_"
 
 if ( diff --version < /dev/null 2>&1 | grep GNU ) 2>&1 > /dev/null; then
   compare() { diff -u "$@"; }

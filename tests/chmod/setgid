@@ -30,7 +30,7 @@ test=$abs_top_builddir/src/test
 umask 0
 mkdir d || framework_failure
 
-chmod g+s d 2> /dev/null && $test -g d ||
+chmod g+s d 2> /dev/null && "$test" -g d ||
   {
     # This is required because on some systems (at least NetBSD 1.4.2A),
     # it may happen that when you create a directory, its group isn't one
@@ -44,7 +44,7 @@ chmod g+s d 2> /dev/null && $test -g d ||
   }
 
 # "chmod g+s d" does nothing on some NFS file systems.
-$test -g d || {
+"$test" -g d || {
   echo 1>&2 "$0: cannot create setgid directories," \
     "so can't run this test"
   exit 77

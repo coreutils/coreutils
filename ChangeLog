@@ -1,5 +1,13 @@
 2007-11-30  Ralf Wildenhues  <Ralf.Wildenhues@gmx.de>
 
+	Add quotes to protect against white space in build dir name.
+	* tests/check.mk (TESTS_ENVIRONMENT): Quote $(abs_srcdir).
+	* tests/chmod/setgid: Quote absolute names.
+	* tests/misc/help-version: Likewise.
+	* tests/misc/pwd-unreadable-parent: Likewise.
+	* tests/rmdir/ignore: Likewise.
+	* tests/test-lib.sh: Likewise.
+
 	Define `tst', for CU_TEST_NAME.
 	* build-aux/check.mk (am__check_pre): Set `tst', for
 	CU_TEST_NAME in tests/check.mk.

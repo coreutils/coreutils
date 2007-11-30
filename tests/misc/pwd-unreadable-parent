@@ -47,7 +47,7 @@ chmod a=x .. || framework_failure
 pwd_exe="$abs_top_builddir/src/pwd"
 
 fail=0
-$pwd_exe > exp || fail=1
+"$pwd_exe" > exp || fail=1
 readlink -ev . > out || fail=1
 
 compare out exp || fail=1
