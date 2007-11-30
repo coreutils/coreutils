@@ -1,5 +1,9 @@
 2007-11-30  Ralf Wildenhues  <Ralf.Wildenhues@gmx.de>
 
+	Define `tst', for CU_TEST_NAME.
+	* build-aux/check.mk (am__check_pre): Set `tst', for
+	CU_TEST_NAME in tests/check.mk.
+
 	* tests/CuTmpdir.pm (END): Do not do the cleanup if $dir is not
 	defined, because it then goes wild and changes the mode of all
 	directories below $HOME.  Undefined $dir can happen if the test

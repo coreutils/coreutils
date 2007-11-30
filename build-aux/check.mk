@@ -94,6 +94,7 @@ SH_E_WORKAROUND = case $$- in *e*) set +e;; esac
 # containing $src, and passes TESTS_ENVIRONMENT.
 am__check_pre =					\
 $(SH_E_WORKAROUND);				\
+tst=`echo "$$src" | sed 's|^.*/||'`;		\
 $(mkdir_p) "$$(dirname $@)" || exit;		\
 if test -f "./$$src"; then dir=./;		\
 elif test -f "$$src"; then dir=;		\
