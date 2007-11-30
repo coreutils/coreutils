@@ -35,9 +35,24 @@ use strict;
 # Turn off localisation of executable's ouput.
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
 
+# If the string $S is a well-behaved file name, simply return it.
+# If it contains white space, quotes, etc., quote it, and return the new string.
+sub shell_quote($)
+{
+  my ($s) = @_;
+  if ($s =~ m![^\w+/.,-]!)
+    {
+      # Convert each single quote to '\''
+      $s =~ s/\'/\'\\\'\'/g;
+      # Then single quote the string.
+      $s = "'$s'";
+    }
+  return $s;
+}
+
 # Set up files used by the setuid-etc tests; skip this entire test if
 # that cannot be done.
-my $test = "$ENV{abs_top_builddir}/src/test";
+my $test = shell_quote "$ENV{abs_top_builddir}/src/test";
 system (qq(touch setuid && chmod u+s setuid && $test -u setuid &&
 	   touch setgid && chmod g+s setgid && $test -g setgid &&
 	   mkdir sticky && chmod +t sticky  && $test -k sticky &&

@@ -1,5 +1,13 @@
 2007-11-30  Jim Meyering  <meyering@redhat.com>
 
+	Be extra careful to quote $abs_top_builddir-derived names.
+	* tests/misc/ls-misc (shell_quote): New function.
+	Use it to quote file names derived from $abs_top_builddir,
+	in case it contains shell meta-characters.  This is not currently
+	needed, since CuTmpdir detects the fishy name and skips the test.
+	But it's important enough to add the extra protection.
+	Reported by Ralf Wildenhues.
+
 	Include test name in the "unsafe working directory name" diagnostic.
 	* tests/CuTmpdir.pm (import): If $ME is '-', use $prefix.
 
