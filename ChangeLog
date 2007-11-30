@@ -1,3 +1,8 @@
+2007-11-30  Jim Meyering  <meyering@redhat.com>
+
+	Include test name in the "unsafe working directory name" diagnostic.
+	* tests/CuTmpdir.pm (import): If $ME is '-', use $prefix.
+
 2007-11-30  Ralf Wildenhues  <Ralf.Wildenhues@gmx.de>
 
 	Add quotes to protect against white space in build dir name.

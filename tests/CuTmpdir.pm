@@ -34,6 +34,10 @@ sub skip_test
 
 sub import {
   my $prefix = $_[1];
+
+  $ME eq '-' && defined $prefix
+    and $ME = $prefix;
+
   if ($prefix !~ /^\//)
     {
       eval 'use Cwd';
