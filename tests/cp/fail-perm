@@ -25,6 +25,7 @@ fi
 . $srcdir/../test-lib.sh
 skip_if_root_
 
+chmod g-s . || framework_failure
 mkdir D D/D || framework_failure
 touch D/a || framework_failure
 chmod 0 D/a || framework_failure

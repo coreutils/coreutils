@@ -1,5 +1,8 @@
 2007-11-30  Jim Meyering  <meyering@redhat.com>
 
+	Avoid a spurious test failure when build directory is set-GID.
+	* tests/cp/fail-perm: Ensure that '.'s set-GID bit is off.
+
 	Be extra careful to quote $abs_top_builddir-derived names.
 	* tests/misc/ls-misc (shell_quote): New function.
 	Use it to quote file names derived from $abs_top_builddir,
