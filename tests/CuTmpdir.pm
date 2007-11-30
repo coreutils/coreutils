@@ -64,11 +64,14 @@ sub wanted
 
 END {
   my $saved_errno = $?;
-  chdir $dir
-    or warn "$ME: failed to chdir to $dir: $!\n";
-  # Perform the equivalent of find . -type d -print0|xargs -0 chmod -R 700.
-  my $options = {untaint => 1, wanted => \&wanted};
-  find ($options, '.');
+  if (defined $dir)
+    {
+      chdir $dir
+	or warn "$ME: failed to chdir to $dir: $!\n";
+      # Perform the equivalent of find . -type d -print0|xargs -0 chmod -R 700.
+      my $options = {untaint => 1, wanted => \&wanted};
+      find ($options, '.');
+    }
   $? = $saved_errno;
 }
 
