@@ -87,6 +87,19 @@ require_selinux_()
   esac
 }
 
+very_expensive_()
+{
+  if test "$RUN_VERY_EXPENSIVE_TESTS" != yes; then
+    skip_test_ '
+This test is very expensive, so it is disabled by default.
+To run it anyway, rerun make check with the RUN_VERY_EXPENSIVE_TESTS
+environment variable set to yes.  E.g.,
+
+  env RUN_VERY_EXPENSIVE_TESTS=yes make check
+'
+  fi
+}
+
 skip_if_root_() { uid_is_privileged_ && skip_test_ "must be run as non-root"; }
 error_() { echo "$0: $@" 1>&2; (exit 1); exit 1; }
 framework_failure() { error_ 'failure in testing framework'; }

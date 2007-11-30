@@ -23,10 +23,10 @@ if test "$VERBOSE" = yes; then
   du --version
 fi
 
-# Creating a 2GB file counts as `very expensive'.
-. $srcdir/../very-expensive
-
 . $srcdir/../test-lib.sh
+
+# Creating a 2GB file counts as `very expensive'.
+very_expensive_
 
 fail=0
 

@@ -564,6 +564,15 @@
 
 2007-11-30  Jim Meyering  <meyering@redhat.com>
 
+	Move the very-expensive file into test-lib.sh.
+	* tests/very-expensive: Remove file.
+	* tests/test-lib.sh (very_expensive_): New function.
+	* tests/Makefile.am (EXTRA_DIST): Remove very-expensive.
+	* tests/cp/perm: Call the new function, rather than sourcing the file.
+	* tests/tail-2/assert: Likewise.
+	* tests/tail-2/assert-2: Likewise.
+	* tests/du/2g: Likewise.
+
 	Avoid a spurious test failure when build directory is set-GID.
 	* tests/cp/fail-perm: Ensure that '.'s set-GID bit is off.
 
