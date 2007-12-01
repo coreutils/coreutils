@@ -679,12 +679,13 @@ $(xd-delta): $(release_archive_dir)/$(prev-tgz) $(distdir).tar.gz
 	xdelta delta -9 $^ $@ || :
 
 .PHONY: alpha beta major
-alpha beta major: news-date-check changelog-check $(local-check) writable-files
+alpha beta major: $(local-check) writable-files
 	test $@ = major						\
 	  && { echo $(VERSION) | grep -E '^[0-9]+(\.[0-9]+)+$$'	\
 	       || { echo "invalid version string: $(VERSION)" 1>&2; exit 1;};}\
 	  || :
 	$(MAKE) vc-dist
+	$(MAKE) news-date-check changelog-check
 	$(MAKE) $(xd-delta)
 	$(MAKE) -s announcement RELEASE_TYPE=$@ > /tmp/announce-$(my_distdir)
 	ln $(rel-files) $(release_archive_dir)

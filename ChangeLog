@@ -1,5 +1,10 @@
 2007-12-01  Jim Meyering  <meyering@redhat.com>
 
+	Defer NEWS and ChangeLog checks until after the version-changing tag.
+	* Makefile.maint (alpha beta major): Don't depend on the
+	news-date-check changelog-check targets.  They must fail before
+	applying the version-changing tag.  Instead, run them after "vc-dist".
+
 	* NEWS: Record release date and new version number.
 	Mention some of the SELinux changes.
 	* src/stat.c (main): Adjust a comment.
