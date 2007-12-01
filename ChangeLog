@@ -1,5 +1,10 @@
 2007-12-01  Jim Meyering  <meyering@redhat.com>
 
+	Change release procedure: tag *before* running e.g., "make stable".
+	* Makefile.maint (vc-dist): Don't tag.  Now, you must apply the tag
+	before running "make beta", "make stable", etc.
+	(vc-tag-check): Remove rule.  No longer makes sense.
+
 	* Makefile.maint (vc-tag-check): Correct check for existing git tag.
 
 	Defer NEWS and ChangeLog checks until after the version-changing tag.
