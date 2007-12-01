@@ -124,6 +124,13 @@ struct cp_options
      whose owner is not the effective user ID.  */
   bool chown_privileges;
 
+  /* Whether this process has appropriate privileges to do the
+     following operations on a file even when it is owned by some
+     other user: set the file's atime, mtime, mode, or ACL; remove or
+     rename an entry in the file even though it is a sticky directory,
+     or to mount on the file.  */
+  bool owner_privileges;
+
   /* If true, when copying recursively, skip any subdirectories that are
      on different file systems from the one we started on.  */
   bool one_file_system;
@@ -230,7 +237,7 @@ bool copy (char const *src_name, char const *dst_name,
 void dest_info_init (struct cp_options *);
 void src_info_init (struct cp_options *);
 
-bool chown_privileges (void);
+void cp_options_default (struct cp_options *);
 bool chown_failure_ok (struct cp_options const *);
 mode_t cached_umask (void);
 

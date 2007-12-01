@@ -66,6 +66,10 @@
 # define lchown(name, uid, gid) chown (name, uid, gid)
 #endif
 
+#ifndef USE_ACL
+# define USE_ACL 0
+#endif
+
 #define SAME_OWNER(A, B) ((A).st_uid == (B).st_uid)
 #define SAME_GROUP(A, B) ((A).st_gid == (B).st_gid)
 #define SAME_OWNER_AND_GROUP(A, B) (SAME_OWNER (A, B) && SAME_GROUP (A, B))
@@ -87,6 +91,7 @@ static bool copy_internal (char const *src_name, char const *dst_name,
 			   bool command_line_arg,
 			   bool *copy_into_self,
 			   bool *rename_succeeded);
+static bool owner_failure_ok (struct cp_options const *x);
 
 /* Pointers to the file names:  they're used in the diagnostic that is issued
    when we detect the user is trying to copy a directory into itself.  */
@@ -173,13 +178,43 @@ copy_dir (char const *src_name_in, char const *dst_name_in, bool new_dst,
    symbolic links should be involved.  DEST_DESC must
    refer to the same file as DEST_NAME if defined.
    Upon failure to set both UID and GID, try to set only the GID.
+   NEW_DST is true if the file was newly created; otherwise,
+   DST_SB is the status of the destination.
    Return 1 if the initial syscall succeeds, 0 if it fails but it's OK
    not to preserve ownership, -1 otherwise.  */
 
 static int
 set_owner (const struct cp_options *x, char const *dst_name, int dest_desc,
-	   uid_t uid, gid_t gid)
+	   struct stat const *src_sb, bool new_dst,
+	   struct stat const *dst_sb)
 {
+  uid_t uid = src_sb->st_uid;
+  gid_t gid = src_sb->st_gid;
+
+  /* Naively changing the ownership of an already-existing file before
+     changing its permissions would create a window of vulnerability if
+     the file's old permissions are too generous for the new owner and
+     group.  Avoid the window by first changing to a restrictive
+     temporary mode if necessary.  */
+
+  if (!new_dst & (x->preserve_mode | x->move_mode | x->set_mode))
+    {
+      mode_t old_mode = dst_sb->st_mode;
+      mode_t new_mode =
+	(x->preserve_mode | x->move_mode ? src_sb->st_mode : x->mode);
+      mode_t restrictive_temp_mode = old_mode & new_mode & S_IRWXU;
+
+      if ((USE_ACL
+	   || (old_mode & CHMOD_MODE_BITS
+	       & (~new_mode | S_ISUID | S_ISGID | S_ISVTX)))
+	  && qset_acl (dst_name, dest_desc, restrictive_temp_mode) != 0)
+	{
+	  if (! owner_failure_ok (x))
+	    error (0, errno, _("clearing permissions for %s"), quote (dst_name));
+	  return -x->require_preserve;
+	}
+    }
+
   if (HAVE_FCHOWN && dest_desc != -1)
     {
       if (fchown (dest_desc, uid, gid) == 0)
@@ -627,8 +662,7 @@ copy_reg (char const *src_name, char const *dst_name,
 
   if (x->preserve_ownership && ! SAME_OWNER_AND_GROUP (*src_sb, sb))
     {
-      switch (set_owner (x, dst_name, dest_desc,
-			 src_sb->st_uid, src_sb->st_gid))
+      switch (set_owner (x, dst_name, dest_desc, src_sb, *new_dst, &sb))
 	{
 	case -1:
 	  return_val = false;
@@ -1928,7 +1962,7 @@ copy_internal (char const *src_name, char const *dst_name,
   if (x->preserve_ownership
       && (new_dst || !SAME_OWNER_AND_GROUP (src_sb, dst_sb)))
     {
-      switch (set_owner (x, dst_name, -1, src_sb.st_uid, src_sb.st_gid))
+      switch (set_owner (x, dst_name, -1, &src_sb, new_dst, &dst_sb))
 	{
 	case -1:
 	  return false;
@@ -2059,23 +2093,26 @@ copy (char const *src_name, char const *dst_name,
 			options, true, copy_into_self, rename_succeeded);
 }
 
-/* Return true if this process has appropriate privileges to chown a
-   file whose owner is not the effective user ID.  */
+/* Set *X to the default options for a value of type struct cp_options.  */
 
-extern bool
-chown_privileges (void)
+void
+cp_options_default (struct cp_options *x)
 {
+  memset (x, 0, sizeof *x);
 #ifdef PRIV_FILE_CHOWN
-  bool result;
-  priv_set_t *pset = priv_allocset ();
-  if (!pset)
-    xalloc_die ();
-  result = (getppriv (PRIV_EFFECTIVE, pset) == 0
-	    && priv_ismember (pset, PRIV_FILE_CHOWN));
-  priv_freeset (pset);
-  return result;
+  {
+    priv_set_t *pset = priv_allocset ();
+    if (!pset)
+      xalloc_die ();
+    if (getppriv (PRIV_EFFECTIVE, pset) == 0)
+      {
+	x->chown_privileges = priv_ismember (pset, PRIV_FILE_CHOWN);
+	x->owner_privileges = priv_ismember (pset, PRIV_FILE_OWNER);
+      }
+    priv_freeset (pset);
+  }
 #else
-  return (geteuid () == 0);
+  x->chown_privileges = x->owner_privileges = (geteuid () == 0);
 #endif
 }
 
@@ -2091,6 +2128,16 @@ chown_failure_ok (struct cp_options const *x)
      or if the target system doesn't support file ownership.  */
 
   return ((errno == EPERM || errno == EINVAL) && !x->chown_privileges);
+}
+
+/* Similarly, return true if it's OK for chmod and similar operations
+   to fail, where errno is the error number that chmod failed with and
+   X is the copying option set.  */
+
+static bool
+owner_failure_ok (struct cp_options const *x)
+{
+  return ((errno == EPERM || errno == EINVAL) && !x->owner_privileges);
 }
 
 /* Return the user's umask, caching the result.  */

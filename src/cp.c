@@ -737,13 +737,13 @@ do_copy (int n_files, char **file, const char *target_directory,
 static void
 cp_option_init (struct cp_options *x)
 {
+  cp_options_default (x);
   x->copy_as_regular = true;
   x->dereference = DEREF_UNDEFINED;
   x->unlink_dest_before_opening = false;
   x->unlink_dest_after_failed_open = false;
   x->hard_link = false;
   x->interactive = I_UNSPECIFIED;
-  x->chown_privileges = chown_privileges ();
   x->move_mode = false;
   x->one_file_system = false;
 

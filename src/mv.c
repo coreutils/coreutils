@@ -123,6 +123,7 @@ cp_option_init (struct cp_options *x)
 {
   bool selinux_enabled = (0 < is_selinux_enabled ());
 
+  cp_options_default (x);
   x->copy_as_regular = false;  /* FIXME: maybe make this an option */
   x->dereference = DEREF_NEVER;
   x->unlink_dest_before_opening = false;
@@ -130,7 +131,6 @@ cp_option_init (struct cp_options *x)
   x->hard_link = false;
   x->interactive = I_UNSPECIFIED;
   x->move_mode = true;
-  x->chown_privileges = chown_privileges ();
   x->one_file_system = false;
   x->preserve_ownership = true;
   x->preserve_links = true;

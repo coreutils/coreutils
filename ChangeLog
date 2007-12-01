@@ -1,3 +1,21 @@
+2007-11-28  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Fix a security race with "cp -p A B" when B already exists.
+	* src/copy.h (struct cp_options): New member owner_privileges.
+	* src/copy.c (USE_ACL): Define to 0 if not defined, for convenience.
+	(owner_failure_ok): New function.
+	(set_owner): Avoid a security-related race by doing an extra chmod
+	first if it looks like there might be trouble right after a chown.
+	Accept a source struct stat rather than a uid and gid, and
+	accept a boolean NEW_DST and destination struct stat.
+	All callers changed.
+	* src/copy.h (cp_options_default): New function, replacing the
+	old chown_privileges.
+	* src/copy.c (cp_options_default): Likewise.
+	* src/cp.c (cp_option_init): Use it.
+	* src/install.c (cp_option_init): Likewise.
+	* src/mv.c (cp_option_init): Likewise.
+
 2007-11-30  Jim Meyering  <meyering@redhat.com>
 
 	Avoid a spurious test failure when build directory is set-GID.

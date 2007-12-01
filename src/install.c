@@ -163,6 +163,7 @@ static struct option const long_options[] =
 static void
 cp_option_init (struct cp_options *x)
 {
+  cp_options_default (x);
   x->copy_as_regular = true;
   x->dereference = DEREF_ALWAYS;
   x->unlink_dest_before_opening = true;
@@ -170,7 +171,6 @@ cp_option_init (struct cp_options *x)
   x->hard_link = false;
   x->interactive = I_UNSPECIFIED;
   x->move_mode = false;
-  x->chown_privileges = chown_privileges ();
   x->one_file_system = false;
   x->preserve_ownership = false;
   x->preserve_links = false;
