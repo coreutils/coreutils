@@ -30,14 +30,14 @@ fail=0
 saved_state=`stty -g` || fail=1
 stty $saved_state || fail=1
 
-# Before coreutils-6.10, if stty were given an argument with 35 colons
+# Before coreutils-6.9.90, if stty were given an argument with 35 colons
 # separating 36 hexadecimal strings, stty would fail to diagnose as invalid
 # any number that was out of range as long as sscanf happened to
 # overflow/wrap it back into the range of the corresponding type (either
 # tcflag_t or cc_t).
 
-# For each of the following, before 6.10, stty would fail to
-# diagnose the error on at least Solaris 10.
+# For each of the following, with coreutils-6.9 and earlier,
+# stty would fail to diagnose the error on at least Solaris 10.
 hex_2_64=10000000000000000
 stty `echo $saved_state |sed 's/^[^:]*:/'$hex_2_64:/`     2>/dev/null && fail=1
 stty `echo $saved_state |sed 's/:[0-9a-f]*$/:'$hex_2_64/` 2>/dev/null && fail=1

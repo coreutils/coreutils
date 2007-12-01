@@ -138,11 +138,11 @@ my @Tests =
 				 {OUT => "\e[0m\e[01;36md\e[0m\@\n\e[m"},
 				  $slink_d, $unlink_d],
 
-     # Test for a bug fixed in coreutils-6.10.
+     # Test for a bug fixed after coreutils-6.9.
      ['sl-target', '--color=always d',
       {OUT => "\e[0m\e[01;34mX\e[0m\n\e[m"}, $target, $target2],
 
-     # Test for another bug fixed in coreutils-6.10.
+     # Test for another bug fixed after coreutils-6.9.
      # This one bites only for a system/file system with d_type support.
      ['sl-dangle', '--color=always d',
       {OUT => "\e[0m\e[40;31;01mX\e[0m\n\e[m"},

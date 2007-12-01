@@ -46,11 +46,11 @@ my @Tests =
    # Provoke a double-free in cut from coreutils-6.7.
    ['dbl-free', '-f2-', {IN=>{f=>'x'}}, {IN=>{g=>'y'}}, {OUT=>"x\ny\n"}],
 
-   # This failed (as it should) even before coreutils-6.10,
-   # but cut from 6.10 produces a more useful diagnostic.
+   # This failed (as it should) even before coreutils-6.9.90,
+   # but cut from 6.9.90 produces a more useful diagnostic.
    ['zero-1', '-b0',   {ERR=>$diag}, {EXIT => 1} ],
 
-   # Before coreutils-6.10, specifying a range of 0-2 was not an error.
+   # Up to coreutils-6.9, specifying a range of 0-2 was not an error.
    # It was treated just like "-2".
    ['zero-2', '-f0-2', {ERR=>$diag}, {EXIT => 1} ],
   );

@@ -111,7 +111,7 @@ my @tv = (
 ['od-overlap4', '-b1-3,2-3 --output-d=:', "abcd\n",  "abc\n",	0],
 ['od-overlap5', '-b1-3,1-4 --output-d=:', "abcde\n",  "abcd\n",	0],
 
-# None of the following invalid ranges provoked an error before coreutils-6.10.
+# None of the following invalid ranges provoked an error up to coreutils-6.9.
 ['inval1',	'-f 2-0',	'',		'',		1],
 ['inval2',	'-f -',		'',		'',		1],
 ['inval3',	'-f 4,-',	'',		'',		1],

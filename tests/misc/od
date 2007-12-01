@@ -59,7 +59,7 @@ my $proc_file_byte_count = $len;
 my @Tests =
     (
      # Skip the exact length of the input file.
-     # Before coreutils-6.10, this would ignore the "-j 1".
+     # Up to coreutils-6.9, this would ignore the "-j 1".
      ['j-bug1', '-c -j 1 -An', {IN=>{g=>'a'}}, {OUT=>''}],
      ['j-bug2', '-c -j 2 -An', {IN=>{g=>'a'}}, {IN=>{h=>'b'}}, {OUT=>''}],
      # Skip the sum of the lengths of the first three inputs.

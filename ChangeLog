@@ -1,3 +1,13 @@
+2007-12-01  Jim Meyering  <meyering@rho.meyering.net>
+
+	Change comments: say bug present up to coreutils-6.9, not fixed in 6.10.
+	* tests/cut/Test.pm: Adjust comment.
+	* tests/misc/cut: Likewise.
+	* tests/misc/ls-misc: Likewise.
+	* tests/misc/od: Likewise.
+	* tests/misc/stty-invalid: Likewise.
+	* tests/tr/Test.pm: Likewise.
+
 2007-11-29  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Add a test for cp -p and existing file permissions.

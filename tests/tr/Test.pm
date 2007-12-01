@@ -133,7 +133,7 @@ my @tv = (
 # From Glenn Fowler.
 ['fowler-1', q|ah -H|, 'aha', '-H-', 0],
 
-# Prior to coreutils-6.10, this would provoke a failed assertion.
+# Up to coreutils-6.9, this would provoke a failed assertion.
 ['no-abort-1', '-c ' . q|a '[b*256]'|, 'abc', 'abb', 0],
 
 # Up to coreutils-6.9, tr rejected an unmatched [:lower:] or [:upper:] in SET1.
