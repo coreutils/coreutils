@@ -1,5 +1,7 @@
 2007-12-01  Jim Meyering  <meyering@redhat.com>
 
+	* Makefile.maint (vc-tag-check): Correct check for existing git tag.
+
 	Defer NEWS and ChangeLog checks until after the version-changing tag.
 	* Makefile.maint (alpha beta major): Don't depend on the
 	news-date-check changelog-check targets.  They must fail before

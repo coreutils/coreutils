@@ -522,7 +522,7 @@ vc-tag-check:
 	  $(CVS) -n log -h README|grep -e $(this-vc-tag-regexp): >/dev/null \
 	    && used=yes;						\
 	else								\
-	  $(GIT) tag -l '^$(this-vc-tag-regexp)$$' && used=yes;		\
+	  test -n `$(GIT) tag -l '$(this-vc-tag)'` && used=yes;		\
 	fi;								\
 	if test "$$used" = yes; then					\
 	  echo "$(this-vc-tag) has already been used; not tagging" 1>&2; \
