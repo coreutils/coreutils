@@ -1,13 +1,17 @@
 GNU coreutils NEWS                                    -*- outline -*-
 
-* Noteworthy changes in release 6.9+ (????-??-??) [stable]
+* Noteworthy changes in release 6.9.90 (2007-12-01) [beta]
 
 ** New programs
 
   arch: equivalent to uname -m, not installed by default
   But don't install this program on Solaris systems.
 
+  chcon: change the SELinux security context of a file
+
   mktemp: create a temporary file or directory (or names)
+
+  runcon: run a program in a different SELinux security context
 
 ** Programs no longer installed by default
 
@@ -27,7 +31,17 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New features
 
-  Add SELinux support (FIXME: add details here)
+  Add SELinux support, based on the patch from Fedora:
+  * cp accepts new --preserve=context option.
+  * "cp -a" works with SELinux:
+  Now, cp -a attempts to preserve context, but failure to do so does
+  not change cp's exit status.  However "cp --preserve=context" is
+  similar, but failure *does* cause cp to exit with nonzero status.
+  * install accepts new "-Z, --context=C" option.
+  * id accepts new "-Z" option.
+  * stat honors the new %C format directive: SELinux security context string
+  * ls accepts a slightly modified -Z option.
+  * ls: contrary to Fedora version, does not accept --lcontext and --scontext
 
   cp -p tries to preserve the GID of a file even if preserving the UID
   is not possible.

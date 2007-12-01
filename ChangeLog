@@ -1,5 +1,9 @@
 2007-12-01  Jim Meyering  <meyering@redhat.com>
 
+	* NEWS: Record release date and new version number.
+	Mention some of the SELinux changes.
+	* src/stat.c (main): Adjust a comment.
+
 	* TODO: Add some entries (documentation needed),
 	and remove the one for mktemp.
 

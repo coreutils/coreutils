@@ -1040,7 +1040,7 @@ main (int argc, char *argv[])
 	  terse = true;
 	  break;
 
-	case 'Z':  /* FIXME: remove in 2008, warn in 2007 */
+	case 'Z':  /* FIXME: remove in 2010, warn in mid 2008 */
 	  /* Ignored, for compatibility with distributions
 	     that implemented this before upstream.  */
 	  break;
