@@ -1,3 +1,12 @@
+document the following in coreutils.texi:
+  runcon
+  chcon
+  mktemp
+  [
+  pinky
+  uptime
+Also document the SELinux changes.
+
 comm: add an option, --output-delimiter=STR
   Files to change: src/comm.c, ChangeLog, NEWS, doc/coreutils.texi,
   Add a new file, tests/misc/comm (use another file in that directory as
@@ -57,8 +66,6 @@ seq: consider allowing format string to contain no %-directives
 
 tail: don't use xlseek; it *exits*.
   Instead, maybe use a macro and return nonzero.
-
-add mktemp?  Suggested by Nelson Beebe
 
 tr: support nontrivial equivalence classes, e.g. [=e=] with LC_COLLATE=fr_FR
 

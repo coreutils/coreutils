@@ -1,5 +1,8 @@
 2007-12-01  Jim Meyering  <meyering@redhat.com>
 
+	* TODO: Add some entries (documentation needed),
+	and remove the one for mktemp.
+
 	Add "extern" keyword to declaration of cp_options_default.
 	* src/copy.c (cp_options_default): Mark as "extern", so the
 	"sc_tight_scope" part of "make distcheck" passes.
