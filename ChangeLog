@@ -1,5 +1,7 @@
 2007-12-01  Jim Meyering  <meyering@redhat.com>
 
+	Version 6.9.90.
+
 	* NEWS: Remove the now-untrue statement about cp vs. dangling symlinks
 
 	Change release procedure: tag *before* running e.g., "make stable".
