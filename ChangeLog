@@ -1,3 +1,11 @@
+2007-11-29  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Add a test for cp -p and existing file permissions.
+	* tests/cp/Makefile.am (TESTS): Add existing-perm-race.
+	* tests/cp/existing-perm-race: New test.  It isn't much of a
+	test yet, since it's hard to catch the race, but it has a FIXME
+	that will let us do a better test later.
+
 2007-11-28  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Fix a security race with "cp -p A B" when B already exists.

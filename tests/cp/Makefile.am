@@ -21,6 +21,7 @@ TESTS = \
   thru-dangling \
   cp-a-selinux \
   file-perm-race parent-perm-race \
+  existing-perm-race \
   backup-dir \
   src-base-dot \
   sparse \
