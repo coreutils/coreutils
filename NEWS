@@ -101,16 +101,14 @@ GNU coreutils NEWS                                    -*- outline -*-
   reports stat.st_size == 0, while "cat /proc/cpuinfo > c" would "work",
   and create a nonempty one. [bug introduced in coreutils-6.0]
 
-  cp no longer fails to write through a dangling symlink
-  [bug introduced in coreutils-6.7].  cp --parents no
-  longer mishandles symlinks to directories in file name
-  components in the source, e.g., "cp --parents symlink/a/b
-  d" no longer fails.  Also, 'cp' no longer considers a
-  destination symlink to be the same as the referenced file when
-  copying links or making backups.  For example, if SYM is a symlink
-  to FILE, "cp -l FILE SYM" now reports an error instead of silently
-  doing nothing.  The behavior of 'cp' is now better documented when
-  the destination is a symlink.
+  cp --parents no longer mishandles symlinks to directories in file
+  name components in the source, e.g., "cp --parents symlink/a/b d"
+  no longer fails.  Also, 'cp' no longer considers a destination
+  symlink to be the same as the referenced file when copying links
+  or making backups.  For example, if SYM is a symlink to FILE,
+  "cp -l FILE SYM" now reports an error instead of silently doing
+  nothing.  The behavior of 'cp' is now better documented when the
+  destination is a symlink.
 
   "cp -i --update older newer" no longer prompts; same for mv
 
