@@ -1,4 +1,10 @@
-2007-12-01  Jim Meyering  <meyering@rho.meyering.net>
+2007-12-01  Jim Meyering  <meyering@redhat.com>
+
+	Add "extern" keyword to declaration of cp_options_default.
+	* src/copy.c (cp_options_default): Mark as "extern", so the
+	"sc_tight_scope" part of "make distcheck" passes.
+
+2007-12-01  Jim Meyering  <meyering@redhat.com>
 
 	Change comments: say bug present up to coreutils-6.9, not fixed in 6.10.
 	* tests/cut/Test.pm: Adjust comment.

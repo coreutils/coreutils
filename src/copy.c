@@ -2095,7 +2095,7 @@ copy (char const *src_name, char const *dst_name,
 
 /* Set *X to the default options for a value of type struct cp_options.  */
 
-void
+extern void
 cp_options_default (struct cp_options *x)
 {
   memset (x, 0, sizeof *x);
