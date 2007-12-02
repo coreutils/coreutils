@@ -1,5 +1,10 @@
 2007-12-02  Jim Meyering  <meyering@redhat.com>
 
+	Copy a .po file into place also when the target doesn't exist.
+	* bootstrap (gnulib_tool): ... not just when the checksum differs.
+	So now, if I manually remove po/xx.po, rerunning bootstrap will
+	copy the latest into place.
+
 	Make my-distcheck depend on "check".
 	* Makefile.maint (my-distcheck): Also depend on "check", so I can't tag
 	and release something that fails "make check" (however harmless) when
