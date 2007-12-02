@@ -1,5 +1,10 @@
 2007-12-02  Jim Meyering  <meyering@redhat.com>
 
+	Make my-distcheck depend on "check".
+	* Makefile.maint (my-distcheck): Also depend on "check", so I can't tag
+	and release something that fails "make check" (however harmless) when
+	run in a checked-out-from-git dir, but not in the distributed tarball.
+
 	* NEWS: Add the usual "Noteworthy changes in release 6.9.91..." line.
 
 	Remove just-installed su, if unable to make it set-UID root.
