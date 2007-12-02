@@ -1,5 +1,7 @@
 2007-12-02  Jim Meyering  <meyering@redhat.com>
 
+	* NEWS: Add the usual "Noteworthy changes in release 6.9.91..." line.
+
 	Remove just-installed su, if unable to make it set-UID root.
 	Normally, su isn't even installed.  However, if you configure with
 	--enable-install-program=su, and then install with insufficient
