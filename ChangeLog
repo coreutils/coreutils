@@ -1,3 +1,14 @@
+2007-12-02  Jim Meyering  <meyering@redhat.com>
+
+	Remove just-installed su, if unable to make it set-UID root.
+	Normally, su isn't even installed.  However, if you configure with
+	--enable-install-program=su, and then install with insufficient
+	privileges, we now make sure to remove the just-installed binary.
+	* src/Makefile.am (install-exec-hook): Rename from install-exec-local,
+	so that this rule is guaranteed to be run *after* installation.
+	If unable to chown and chmod the installed "su" program, remove it.
+	Reported by Greg Schaefer.
+
 2007-12-01  Bob Proulx  <bob@proulx.com>
 
 	Make existing-perm-race executable.

@@ -178,7 +178,7 @@ install_su =						\
 install-root: su$(EXEEXT)
 	@$(install_su)
 
-install-exec-local: su$(EXEEXT)
+install-exec-hook: su$(EXEEXT)
 	@if test "$(INSTALL_SU)" = yes; then			\
 	  TMPFILE=$(DESTDIR)$(bindir)/.su-$$$$;			\
 	  rm -f $$TMPFILE;					\
@@ -195,6 +195,7 @@ install-exec-local: su$(EXEEXT)
 	  else							\
 	    echo "WARNING: insufficient access; not installing su"; \
 	    echo "NOTE: to install su, run 'make install-root' as root"; \
+	    rm -f $(installed_su);				\
 	  fi;							\
 	else :;							\
 	fi
