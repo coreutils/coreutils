@@ -1,3 +1,8 @@
+2007-12-01  Bob Proulx  <bob@proulx.com>
+
+	Make existing-perm-race executable.
+	* tests/cp/existing-perm-race: Update file mode.
+
 2007-12-01  Jim Meyering  <meyering@redhat.com>
 
 	Version 6.9.90.
