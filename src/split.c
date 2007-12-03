@@ -1,5 +1,5 @@
 /* split.c -- split a file into pieces.
-   Copyright (C) 1988, 1991, 1995-2006 Free Software Foundation, Inc.
+   Copyright (C) 1988, 1991, 1995-2007 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -30,7 +30,6 @@
 #include "error.h"
 #include "fd-reopen.h"
 #include "fcntl--.h"
-#include "getpagesize.h"
 #include "full-read.h"
 #include "full-write.h"
 #include "inttostr.h"

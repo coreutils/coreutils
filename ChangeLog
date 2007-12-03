@@ -1,3 +1,13 @@
+2007-12-04  Jim Meyering  <meyering@rho.meyering.net>
+
+	Reflect change in gnulib: don't include getpagesize.h,
+	now that it's provided by unistd.h.
+	* src/cat.c: Don't include getpagesize.h.
+	* src/copy.c: Likewise.
+	* src/dd.c: Likewise.
+	* src/shred.c: Likewise.
+	* src/split.c: Likewise.
+
 2007-12-02  Jim Meyering  <meyering@redhat.com>
 
 	Copy a .po file into place also when the target doesn't exist.

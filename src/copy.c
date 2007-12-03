@@ -42,7 +42,6 @@
 #include "filemode.h"
 #include "filenamecat.h"
 #include "full-write.h"
-#include "getpagesize.h"
 #include "hash.h"
 #include "hash-triple.h"
 #include "lchmod.h"

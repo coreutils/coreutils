@@ -28,7 +28,6 @@
 #include "error.h"
 #include "fd-reopen.h"
 #include "gethrxtime.h"
-#include "getpagesize.h"
 #include "human.h"
 #include "long-options.h"
 #include "quote.h"

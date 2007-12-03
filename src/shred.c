@@ -96,7 +96,6 @@
 #include "xstrtol.h"
 #include "error.h"
 #include "fcntl--.h"
-#include "getpagesize.h"
 #include "human.h"
 #include "inttostr.h"
 #include "quotearg.h"		/* For quotearg_colon */
