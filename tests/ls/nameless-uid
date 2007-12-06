@@ -21,15 +21,12 @@ if test "$VERBOSE" = yes; then
   ls --version
 fi
 
+: ${srcdir=.}
+. $srcdir/../require-perl
+
 . $srcdir/../lang-default
 PRIV_CHECK_ARG=require-root . $srcdir/../priv-check
 . $srcdir/../test-lib.sh
-
-$PERL -e 1 > /dev/null 2>&1 || {
-  echo 1>&2 "$0: configure didn't find a usable version of Perl," \
-    "so can't run this test"
-  (exit 77); exit 77
-}
 
 nameless_uid=`$PERL -e 'foreach my $i (1000..16*1024) { getpwuid $i or (print "$i\n"), exit }'`
 

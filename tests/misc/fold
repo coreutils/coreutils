@@ -17,16 +17,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-: ${PERL=perl}
 : ${srcdir=.}
-
-PROG=`echo $0|sed 's,.*/,,'`; export PROG
-
-$PERL -e 'use warnings;' > /dev/null 2>&1 || {
-  echo 1>&2 "$0: configure didn't find a usable version of Perl," \
-    "so can't run this test"
-  exit 77
-}
+. $srcdir/../require-perl
 
 # Ensure that we don't run an older version of fold.
 # Prior to 5.0.91, some of the tests below would cause fold to infloop,
@@ -63,7 +55,7 @@ my @Tests =
 my $save_temps = $ENV{DEBUG};
 my $verbose = $ENV{VERBOSE};
 
-my $prog = $ENV{PROG} || die "$0: \$PROG not specified in environment\n";
+my $prog = 'fold';
 my $fail = run_tests ($program_name, $prog, \@Tests, $save_temps, $verbose);
 exit $fail;
 EOF

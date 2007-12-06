@@ -17,13 +17,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-: ${PERL=perl}
-
-$PERL -e 1 > /dev/null 2>&1 || {
-  echo 1>&2 "$0: configure didn't find a usable version of Perl," \
-    "so can't run this test"
-  exit 77
-}
+: ${srcdir=.}
+. $srcdir/../require-perl
 
 # Ensure that $TMPDIR is valid.
 TMPDIR=.; export TMPDIR

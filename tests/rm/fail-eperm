@@ -29,11 +29,8 @@ fi
 
 PRIV_CHECK_ARG=require-non-root . $srcdir/../priv-check
 
-: ${PERL=perl}
 : ${srcdir=.}
-
-$PERL -e 1 > /dev/null 2>&1 ||
-  skip_test_ "configure didn't find a usable version of Perl"
+. $srcdir/../require-perl
 
 ARGV_0=$0
 export ARGV_0

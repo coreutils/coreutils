@@ -20,7 +20,7 @@ EXTRA_DIST =		\
   lang-default		\
   mk-script		\
   other-fs-tmpdir	\
-  priv-check		\
+  require-perl		\
   rwx-to-mode		\
   sample-test		\
   setgid-check		\

@@ -1,0 +1,6 @@
+: ${PERL=perl}
+$PERL -e 'use warnings' > /dev/null 2>&1 || {
+  echo 1>&2 "$0: configure did not find a usable version of Perl," \
+    "so skipping this test"
+  (exit 77); exit 77
+}
