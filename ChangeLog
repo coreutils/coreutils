@@ -1,3 +1,11 @@
+2007-12-09  Jim Meyering  <meyering@redhat.com>
+
+	"rm" as root would fail to unlink a non-directory on OS X 10.4.x
+	* src/remove.c (remove_entry) ["can unlink directories"]: Fix a
+	mistakenly reversed condition.
+	* NEWS: Mention this bug fix.
+	Reported by Pieter Bowman.
+
 2007-12-08  Jim Meyering  <meyering@redhat.com>
 
 	* src/c99-to-c89.diff: Adjust shred.c offsets.

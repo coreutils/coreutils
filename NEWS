@@ -2,6 +2,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release 6.9.91 (????-??-??) [beta]
 
+  "rm" would fail to unlink a non-directory when run in an environment
+  in which the user running rm is capable of unlinking a directory.
+  [bug introduced in coreutils-6.9]
+
 
 * Noteworthy changes in release 6.9.90 (2007-12-01) [beta]
 

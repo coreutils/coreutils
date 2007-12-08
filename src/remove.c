@@ -1150,7 +1150,7 @@ remove_entry (int fd_cwd, Dirstack_state const *ds, char const *filename,
 	    dirent_type = DT_DIR;
 	}
 
-      if (dirent_type == DT_DIR)
+      if (dirent_type != DT_DIR)
 	{
 	  /* At this point, barring race conditions, FILENAME is known
 	     to be a non-directory, so it's ok to try to unlink it.  */
