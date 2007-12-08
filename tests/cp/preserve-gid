@@ -17,8 +17,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 . "$srcdir/../lang-default"
-PRIV_CHECK_ARG=require-root . "$srcdir/../priv-check"
 . "$srcdir/../test-lib.sh"
+require_root_
 
 create() {
   echo "$1" > "$1" || exit 1

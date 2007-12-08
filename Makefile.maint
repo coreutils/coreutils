@@ -246,7 +246,7 @@ sc_root_tests:
 	@if test -d tests \
 	      && grep check-root tests/Makefile.am>/dev/null 2>&1; then \
 	t1=sc-root.expected; t2=sc-root.actual;				\
-	grep -nl '^PRIV_CHECK_ARG=require-root'				\
+	grep -nl '^require_root_$$'					\
 	  $$($(CVS_LIST) tests) |sed s,tests,., |sort > $$t1;		\
 	sed -n 's,	cd \([^ ]*\) .*MAKE..check TESTS=\(.*\),./\1/\2,p' \
 	  $(srcdir)/tests/Makefile.am |sort > $$t2;			\

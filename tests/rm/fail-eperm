@@ -27,7 +27,8 @@ fi
 # searching below.  root can simply create the required
 # dir/files and run the test as someone else.
 
-PRIV_CHECK_ARG=require-non-root . $srcdir/../priv-check
+. $srcdir/../test-lib.sh
+skip_if_root_
 
 : ${srcdir=.}
 . $srcdir/../require-perl

@@ -22,8 +22,8 @@ if test "$VERBOSE" = yes; then
   rm --version
 fi
 
-PRIV_CHECK_ARG=require-root . $srcdir/../priv-check
 . $srcdir/../test-lib.sh
+require_root_
 
 mkdir d || framework_failure
 touch d/f || framework_failure

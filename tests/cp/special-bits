@@ -25,8 +25,8 @@ if test "$VERBOSE" = yes; then
   cp --version
 fi
 
-PRIV_CHECK_ARG=require-root . $srcdir/../priv-check
 . $srcdir/../test-lib.sh
+require_root_
 
 touch a b c || framework_failure
 chmod u+sx,go= a || framework_failure

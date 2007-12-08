@@ -25,8 +25,8 @@ fi
 . $srcdir/../require-perl
 
 . $srcdir/../lang-default
-PRIV_CHECK_ARG=require-root . $srcdir/../priv-check
 . $srcdir/../test-lib.sh
+require_root_
 
 nameless_uid=`$PERL -e 'foreach my $i (1000..16*1024) { getpwuid $i or (print "$i\n"), exit }'`
 

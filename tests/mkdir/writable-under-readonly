@@ -29,8 +29,8 @@ if test "$VERBOSE" = yes; then
   mkdir --version
 fi
 
-PRIV_CHECK_ARG=require-root . $srcdir/../priv-check
 . $srcdir/../test-lib.sh
+require_root_
 
 # FIXME: for now, skip it unconditionally
 skip_test_ temporarily disabled

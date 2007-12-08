@@ -22,8 +22,8 @@ if test "$VERBOSE" = yes; then
 fi
 
 . $srcdir/../lang-default
-PRIV_CHECK_ARG=require-root . $srcdir/../priv-check
 . $srcdir/../test-lib.sh
+require_root_
 
 touch f || framework_failure
 

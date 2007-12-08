@@ -21,9 +21,9 @@ if test "$VERBOSE" = yes; then
   rm --version
 fi
 
-PRIV_CHECK_ARG=require-root . $srcdir/../priv-check
 . $srcdir/../lang-default
 . $srcdir/../test-lib.sh
+require_root_
 
 # If used, these must *follow* test-lib.sh.
 cleanup_() { rm -rf "$other_partition_tmpdir"; }

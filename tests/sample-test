@@ -23,9 +23,9 @@ fi
 
 # FIXME: . $srcdir/../envvar-check
 # FIXME: . $srcdir/../lang-default
-# FIXME: PRIV_CHECK_ARG=require-root . $srcdir/../priv-check
 . $srcdir/../test-lib.sh
-# FIXME skip_if_root_
+# FIXME: skip_if_root_
+# FIXME: require_root_
 
 # If used, these must *follow* test-lib.sh.
 # FIXME: cleanup_() { rm -rf "$other_partition_tmpdir"; }

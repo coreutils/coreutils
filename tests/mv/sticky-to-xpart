@@ -26,8 +26,8 @@ fi
 
 . $srcdir/../envvar-check
 . $srcdir/../lang-default
-PRIV_CHECK_ARG=require-root . $srcdir/../priv-check
 . $srcdir/../test-lib.sh
+require_root_
 
 cleanup_() { rm -rf "$other_partition_tmpdir"; }
 . "$abs_top_srcdir/tests/other-fs-tmpdir"
