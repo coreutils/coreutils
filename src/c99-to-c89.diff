@@ -127,7 +127,7 @@ diff -upr src/seq.c src/seq.c
 diff -upr src/shred.c src/shred.c
 --- src/shred.c	2007-07-23 12:56:20.000000000 +0200
 +++ src/shred.c	2007-07-23 13:03:12.000000000 +0200
-@@ -462,7 +462,7 @@ dopass (int fd, char const *qname, off_t
+@@ -461,7 +461,7 @@ dopass (int fd, char const *qname, off_t
  		     out.  Thus, it shouldn't give up on bad blocks.  This
  		     code works because lim is always a multiple of
  		     SECTOR_SIZE, except at the end.  */
