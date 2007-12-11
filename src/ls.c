@@ -315,6 +315,7 @@ static time_t current_time = TYPE_MINIMUM (time_t);
 static int current_time_ns = -1;
 
 static bool print_scontext;
+static char UNKNOWN_SECURITY_CONTEXT[] = "?";
 
 /* Whether any of the files has an ACL.  This affects the width of the
    mode column.  */
@@ -2516,11 +2517,8 @@ clear_files (void)
       struct fileinfo *f = sorted_file[i];
       free (f->name);
       free (f->linkname);
-      if (f->scontext)
-	{
-	  freecon (f->scontext);
-	  f->scontext = NULL;
-	}
+      if (f->scontext != UNKNOWN_SECURITY_CONTEXT)
+	freecon (f->scontext);
     }
 
   cwd_n_used = 0;
@@ -2594,8 +2592,6 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
 				     )))))
 
     {
-      /* FIXME-c99: move this decl "down", once ls.c stabilizes.  */
-      bool file_has_security_context = false;
       /* Absolute name of this file.  */
       char *absolute_name;
       bool do_deref;
@@ -2645,23 +2641,6 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
 	  break;
 	}
 
-      if (err == 0 && print_scontext)
-	{
-	  int attr_len = (do_deref
-			  ?  getfilecon (absolute_name, &f->scontext)
-			  : lgetfilecon (absolute_name, &f->scontext));
-	  err = (attr_len < 0);
-	  file_has_security_context =
-	    (err == 0 && ! STREQ ("unlabeled", f->scontext));
-
-	  /* When requesting security context information, don't make
-	     ls fail just because the file (even a command line argument)
-	     isn't on the right type of file system.  I.e., a getfilecon
-	     failure isn't in the same class as a stat failure.  */
-	  if (err && (errno == ENOTSUP || errno == ENODATA))
-	    err = 0;
-	}
-
       if (err != 0)
 	{
 	  /* Failure to stat a command line argument leads to
@@ -2680,12 +2659,39 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
 
       f->stat_ok = true;
 
-      if (format == long_format)
+      if (format == long_format || print_scontext)
 	{
-	  int n = file_has_acl (absolute_name, &f->stat);
-	  f->have_acl = (0 < n || file_has_security_context);
-	  any_has_acl |= f->have_acl;
-	  if (n < 0)
+	  bool have_acl = false;
+	  int attr_len = (do_deref
+			  ?  getfilecon (absolute_name, &f->scontext)
+			  : lgetfilecon (absolute_name, &f->scontext));
+	  err = (attr_len < 0);
+
+	  if (err == 0)
+	    have_acl = ! STREQ ("unlabeled", f->scontext);
+	  else
+	    {
+	      f->scontext = UNKNOWN_SECURITY_CONTEXT;
+
+	      /* When requesting security context information, don't make
+		 ls fail just because the file (even a command line argument)
+		 isn't on the right type of file system.  I.e., a getfilecon
+		 failure isn't in the same class as a stat failure.  */
+	      if (errno == ENOTSUP || errno == ENODATA)
+		err = 0;
+	    }
+
+	  if (err == 0 && ! have_acl && format == long_format)
+	    {
+	      int n = file_has_acl (absolute_name, &f->stat);
+	      err = (n < 0);
+	      have_acl = (0 < n);
+	    }
+
+	  f->have_acl = have_acl;
+	  any_has_acl |= have_acl;
+
+	  if (err)
 	    error (0, errno, "%s", quotearg_colon (absolute_name));
 	}
 
@@ -2775,7 +2781,7 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
 
       if (print_scontext)
 	{
-	  int len = f->scontext ? strlen (f->scontext) : 0;
+	  int len = strlen (f->scontext);
 	  if (scontext_width < len)
 	    scontext_width = len;
 	}
@@ -3520,8 +3526,7 @@ print_long_format (const struct fileinfo *f)
 	format_user (f->stat.st_author, author_width, f->stat_ok);
 
       if (print_scontext)
-	format_user_or_group ((f->scontext ? f->scontext : "?"),
-			      0, scontext_width);
+	format_user_or_group (f->scontext, 0, scontext_width);
 
       p = buf;
     }
@@ -3860,8 +3865,7 @@ print_file_name_and_frills (const struct fileinfo *f)
 			    ST_NBLOCKSIZE, output_block_size));
 
   if (print_scontext)
-    printf ("%*s ", format == with_commas ? 0 : scontext_width,
-	    (f->scontext ? f->scontext : "?"));
+    printf ("%*s ", format == with_commas ? 0 : scontext_width, f->scontext);
 
   print_name_with_quoting (f->name, FILE_OR_LINK_MODE (f), f->linkok,
 			   f->stat_ok, f->filetype, NULL);

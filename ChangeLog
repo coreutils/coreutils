@@ -1,3 +1,15 @@
+2007-12-11  Paul Eggert  <eggert@cs.ucla.edu>
+
+	"ls -l" wouldn't output "+" on SELinux hosts unless -Z was also given.
+	* src/ls.c (gobble_file): Also get the file context if -l is specified.
+	Treat getfilecon failures like file_has_acl failures.
+	(UNKNOWN_SECURITY_CONTEXT): New constant.
+	(clear_files): Don't free it.
+	(gobble_file): Set unknown security contexts to it; that way, we
+	don't have to have special cases for unknown contexts.
+	(print_long_format, print_file_name_and_frills): Don't worry
+	about scontext being null, since it's always some string now.
+
 2007-12-11  Jim Meyering  <meyering@redhat.com>
 
 	* NEWS: Add the "Bug fixes" heading.
