@@ -1,3 +1,7 @@
+2007-12-11  Jim Meyering  <meyering@redhat.com>
+
+	* NEWS: Add the "Bug fixes" heading.
+
 2007-12-09  Jim Meyering  <meyering@redhat.com>
 
 	"rm" as root would fail to unlink a non-directory on OS X 10.4.x
