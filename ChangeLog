@@ -1,3 +1,9 @@
+2007-12-11  Jim Meyering  <meyering@redhat.com>
+
+	Add a test to exercise today's bug fix.
+	* tests/misc/selinux: Test for today's bug fix.
+	* NEWS: Mention the SELinux "ls -l" fix.
+
 2007-12-11  Paul Eggert  <eggert@cs.ucla.edu>
 
 	"ls -l" wouldn't output "+" on SELinux hosts unless -Z was also given.
