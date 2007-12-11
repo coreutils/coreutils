@@ -27,12 +27,6 @@ fi
 # searching below.  root can simply create the required
 # dir/files and run the test as someone else.
 
-. $srcdir/../test-lib.sh
-skip_if_root_
-
-: ${srcdir=.}
-. $srcdir/../require-perl
-
 ARGV_0=$0
 export ARGV_0
 
@@ -41,6 +35,11 @@ require 5.003;
 use strict;
 
 (my $ME = $ENV{ARGV_0}) =~ s|.*/||;
+
+my $uid = $<;
+# skip if root
+$uid == 0
+  and (warn "$ME: can't run this test as root: skipping this test"), exit 77;
 
 my $verbose = $ENV{VERBOSE} && $ENV{VERBOSE} eq 'yes';
 
