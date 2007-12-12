@@ -202,7 +202,7 @@ cat <<\EOF > $expected
 
 EOF
 
-# Redirect to stderr, since stdout is already
-compare $expected $actual || fail=1
+# Redirect to stderr, since stdout is already taken.
+compare $expected $actual 1>&2 || fail=1
 
 (exit $fail); exit $fail
