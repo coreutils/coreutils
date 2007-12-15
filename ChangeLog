@@ -1,3 +1,7 @@
+2007-12-15  Jim Meyering  <meyering@redhat.com>
+
+	* Makefile.cfg (gpg_key_ID): Use new, longer signing subkey.
+
 2007-12-12  Jim Meyering  <meyering@redhat.com>
 
 	* tests/mv/part-symlink: Redirect diff output to stderr.
