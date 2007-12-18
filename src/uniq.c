@@ -168,6 +168,13 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 A field is a run of whitespace, then non-whitespace characters.\n\
 Fields are skipped before chars.\n\
 "), stdout);
+     fputs (_("\
+\n\
+Note: while uniq can be useful even with unsorted input, in most applications\n\
+the input is sorted in a manner consistent with field-selection options.\n\
+E.g., use `sort' if `uniq' uses no such option (or simply use `sort -u');\n\
+use `sort -k 3b' with uniq -f2.\n\
+"), stdout);
       emit_bug_reporting_address ();
     }
   exit (status);

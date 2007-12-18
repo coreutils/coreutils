@@ -1,3 +1,8 @@
+2007-12-18  Jim Meyering  <meyering@redhat.com>
+
+	* src/uniq.c (usage): Note that sorting uniq's input is often useful.
+	Suggested by Eric Blake.
+
 2007-12-15  Jim Meyering  <meyering@redhat.com>
 
 	Version 6.9.91.
