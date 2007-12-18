@@ -171,9 +171,9 @@ Fields are skipped before chars.\n\
      fputs (_("\
 \n\
 Note: while uniq can be useful even with unsorted input, in most applications\n\
-the input is sorted in a manner consistent with field-selection options.\n\
+the input is sorted in a manner consistent with key-selection options.\n\
 E.g., use `sort' if `uniq' uses no such option (or simply use `sort -u');\n\
-use `sort -k 3b' with uniq -f2.\n\
+use `sort -k 3b' with `uniq -f2'.\n\
 "), stdout);
       emit_bug_reporting_address ();
     }
