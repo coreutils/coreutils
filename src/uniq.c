@@ -170,10 +170,8 @@ Fields are skipped before chars.\n\
 "), stdout);
      fputs (_("\
 \n\
-Note: while uniq can be useful even with unsorted input, in most applications\n\
-the input is sorted in a manner consistent with key-selection options.\n\
-E.g., use `sort' if `uniq' uses no such option (or simply use `sort -u');\n\
-use `sort -k 3b' with `uniq -f2'.\n\
+Note: 'uniq' does not detect repeated lines unless they are adjacent.\n\
+You may want to sort the input first, or use `sort -u' without `uniq'.\n\
 "), stdout);
       emit_bug_reporting_address ();
     }
