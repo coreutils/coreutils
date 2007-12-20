@@ -1,3 +1,10 @@
+2007-12-20  Jim Meyering  <meyering@redhat.com>
+
+	Avoid spurious "make check" failures due to omitted programs.
+	* man/Makefile.am (distcheck-hook): Make check rules dependents of
+	this target, not of check-local, so that people aren't distracted by
+	failures due to programs omitted via --enable-no-install-program=...
+
 2007-12-19  Paul Eggert  <eggert@cs.ucla.edu>
 
 	* src/uniq.c (usage): Improve wording in --help "Note".

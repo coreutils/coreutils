@@ -163,7 +163,7 @@ mapped_name = `echo $*|sed 's/^install$$/ginstall/; s/^test$$/[/'`
 	    && rm -rf $t ;;					\
 	esac
 
-check-local: check-x-vs-1 check-programs-vs-x
+distcheck-hook: check-x-vs-1 check-programs-vs-x
 
 # Sort in traditional ASCII order, regardless of the current locale;
 # otherwise we may get into trouble with distinct strings that the
