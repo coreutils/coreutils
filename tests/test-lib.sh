@@ -29,6 +29,19 @@ require_ulimit_()
     && skip_test_ "this shell lacks ulimit support"
 }
 
+require_built_()
+{
+  skip_=no
+  for i in "$@"; do
+    case " $built_programs " in
+      *" $i "*) ;;
+      *) echo "$i: not built" 1>&2; skip_=yes ;;
+    esac
+  done
+
+  test $skip_ = yes && skip_test_ "required program(s) not built"
+}
+
 uid_is_privileged_()
 {
   # Make sure id -u succeeds.

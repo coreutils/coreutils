@@ -1,5 +1,10 @@
 2007-12-20  Jim Meyering  <meyering@redhat.com>
 
+	Avoid another "make check" failure due to omitted programs.
+	* tests/test-lib.sh (require_built_): New function.
+	* tests/misc/groups-version: Use it to skip this test if
+	either groups or id is not built.
+
 	Avoid spurious "make check" failures due to omitted programs.
 	* man/Makefile.am (distcheck-hook): Make check rules dependents of
 	this target, not of check-local, so that people aren't distracted by
