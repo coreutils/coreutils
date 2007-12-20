@@ -279,12 +279,12 @@ no_install_progs_default=`echo "$t"|sed 's/ $//'`
 # The compromise is to ensure that the space-separated list extracted
 # above matches the literal 2nd argument below.
 c="$srcdir/configure.ac"
-t=`sed -n '/^g''l_INCLUDE_EXCLUDE_PROG(.* [\[\(.*\)\]])/s//\1/p' $c`
+t=`sed -n '/^g''l_INCLUDE_EXCLUDE_PROG(.* [\[\(.*\)\]])/{s//\1/;s/,/ /gp}' $c`
 case $t in
   $no_install_progs_default) ;;
   *) AC_MSG_ERROR([[internal error: g'l_INCLUDE_EXCLUDE_PROG's 2nd arg, $t,
                    does not match the list of default-not-installed programs
-		   ($no_install_progs_default) extracted also recorded in $mk]],
+		   ($no_install_progs_default) also recorded in $mk]],
 		   1) ;;
 esac
 
@@ -294,7 +294,10 @@ esac
 # "don't-install" requests.
 # I.e., add any program name specified via --enable-install-program=..., and
 # remove any program name specified via --enable-no-install-program=...
-gl_INCLUDE_EXCLUDE_PROG([optional_bin_progs], [arch hostname su])
+# Note how the second argument below is a literal, with "," separators.
+# That is required due to the way the macro works, and since the
+# corresponding ./configure option argument is comma-separated on input.
+gl_INCLUDE_EXCLUDE_PROG([optional_bin_progs], [arch,hostname,su])
 
 # Set INSTALL_SU if su installation has been requested via
 # --enable-install-program=su.
