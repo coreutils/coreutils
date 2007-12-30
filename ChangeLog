@@ -1,3 +1,7 @@
+2007-12-30  Mike Frysinger <vapier@gentoo.org>
+
+	* src/dircolors.hin (TERM): Add gnome-256color.
+
 2007-12-21  Ralf Wildenhues  <Ralf.Wildenhues@gmx.de>
 
 	* doc/coreutils.texi: Fix a typo.  Avoid the term `relationals'.

@@ -29,6 +29,7 @@ TERM cygwin
 TERM dtterm
 TERM eterm-color
 TERM gnome
+TERM gnome-256color
 TERM konsole
 TERM kterm
 TERM linux
