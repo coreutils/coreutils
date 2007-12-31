@@ -1,7 +1,6 @@
 # Make coreutils documentation.				-*-Makefile-*-
 
-# Copyright (C) 1995, 1996, 1997, 1998, 2001, 2002, 2003, 2004, 2005,
-# 2006 Free Software Foundation, Inc.
+# Copyright (C) 1995-1998, 2001-2007 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -45,28 +44,56 @@ $(INFO_DEPS): $(EXTRA_DIST)
 _W = (^|[^A-Za-z0-9_])
 W_ = ([^A-Za-z0-9_]|$$)
 
+syntax_checks =		\
+  sc-avoid-io		\
+  sc-avoid-non-zero	\
+  sc-avoid-timezone	\
+  sc-avoid-zeroes	\
+  sc-exponent-grouping	\
+  sc-use-small-caps-NUL
+
+.PHONY: $(syntax_checks) check-texinfo
+
 # List words/regexps here that should not appear in the texinfo documentation.
-# E.g., use @sc{nul}, not `NUL'
-# Use `time zone', not `timezone'.
-# Use `zeros', not `zeroes' (nothing wrong with `zeroes'. just be consistent).
-check-texinfo:
+check-texinfo: $(syntax_checks)
 	fail=0; \
-	grep timezone $(srcdir)/*.texi && fail=1; \
-	$(EGREP) '$(_W)IO$(W_)' $(srcdir)/*.texi && fail=1; \
-	grep non-zero $(srcdir)/*.texi && fail=1; \
 	grep '@url{' $(srcdir)/*.texi && fail=1; \
-	$(EGREP) '$(_W)NUL$(W_)' $(srcdir)/*.texi && fail=1; \
 	grep '\$$@"' $(srcdir)/*.texi && fail=1; \
 	grep -n '[^[:punct:]]@footnote' $(srcdir)/*.texi && fail=1; \
-	grep -n filename $(srcdir)/*.texi|$(EGREP) -v 'setfilename|[{]filename[}]' \
+	grep -n filename $(srcdir)/*.texi \
+	    | $(EGREP) -v 'setfilename|[{]filename[}]' \
 	  && fail=1; \
 	$(PERL) -e 1 2> /dev/null && { $(PERL) -ne \
 	  '/\bPOSIX\b/ && !/\@acronym{POSIX}/ && !/^\* / || /{posix}/ and print,exit 1' \
 	  $(srcdir)/*.texi 2> /dev/null || fail=1; }; \
-	$(EGREP) -i '$(_W)zeroes$(W_)' $(srcdir)/*.texi && fail=1; \
 	$(EGREP) -i '$(_W)builtins?$(W_)' $(srcdir)/*.texi && fail=1; \
 	$(EGREP) -i '$(_W)path(name)?s?$(W_)' $(srcdir)/*.texi \
 	  | $(EGREP) -v '@vindex PATH$$|@env[{]PATH[}]' && fail=1; \
 	exit $$fail
+
+# Use `time zone', not `timezone'.
+sc-avoid-timezone:
+	$(EGREP) timezone $(srcdir)/*.texi && exit 1 || :
+
+# Check for insufficient exponent grouping, e.g.,
+# @math{2^64} should be @math{2^{64}}.
+sc-exponent-grouping:
+	$(EGREP) '\{.*\^[0-9][0-9]' $(srcdir)/*.texi && exit 1 || :
+
+# E.g., use @sc{nul}, not NUL.
+sc-use-small-caps-NUL:
+	$(EGREP) '$(_W)NUL$(W_)' $(srcdir)/*.texi && exit 1 || :
+
+# Say I/O, not IO.
+sc-avoid-io:
+	$(EGREP) '$(_W)IO$(W_)' $(srcdir)/*.texi && exit 1 || :
+
+# I prefer nonzero over non-zero.
+sc-avoid-non-zero:
+	$(EGREP) non-zero $(srcdir)/*.texi && exit 1 || :
+
+# Use `zeros', not `zeroes' (nothing wrong with `zeroes'. just be consistent).
+sc-avoid-zeroes:
+	$(EGREP) -i '$(_W)zeroes$(W_)' $(srcdir)/*.texi && exit 1 || :
 
 check: check-texinfo

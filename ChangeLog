@@ -3,6 +3,14 @@
 	* doc/coreutils.texi (Block size): Put braces around multi-digit
 	exponents.  Reported by Darrel Francis.
 
+	Add a syntax check, so this doesn't recur.  Reorganize existing checks.
+	* doc/Makefile.am (sc-exponent-grouping):
+	(syntax_checks): New variable.
+	(sc-avoid-io, sc-avoid-non-zero, sc-avoid-timezone):
+	(sc-avoid-zeroes, sc-use-small-caps-NUL): New rules, extracted
+	from check-texinfo.
+	(check-texinfo): Depend on $(syntax_checks).
+
 2007-12-30  Mike Frysinger <vapier@gentoo.org>
 
 	* src/dircolors.hin (TERM): Add gnome-256color.
