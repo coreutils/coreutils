@@ -861,7 +861,7 @@ kilobyte: @math{10^3 = 1000}.
 @itemx K
 @itemx KiB
 @cindex kibibyte, definition of
-kibibyte: @math{2^10 = 1024}.  @samp{K} is special: the SI prefix is
+kibibyte: @math{2^{10} = 1024}.  @samp{K} is special: the SI prefix is
 @samp{k} and the IEC 60027-2 prefix is @samp{Ki}, but tradition and
 @acronym{POSIX} use @samp{k} to mean @samp{KiB}.
 @item MB
@@ -870,48 +870,48 @@ megabyte: @math{10^6 = 1,000,000}.
 @item M
 @itemx MiB
 @cindex mebibyte, definition of
-mebibyte: @math{2^20 = 1,048,576}.
+mebibyte: @math{2^{20} = 1,048,576}.
 @item GB
 @cindex gigabyte, definition of
 gigabyte: @math{10^9 = 1,000,000,000}.
 @item G
 @itemx GiB
 @cindex gibibyte, definition of
-gibibyte: @math{2^30 = 1,073,741,824}.
+gibibyte: @math{2^{30} = 1,073,741,824}.
 @item TB
 @cindex terabyte, definition of
-terabyte:  @math{10^12 = 1,000,000,000,000}.
+terabyte:  @math{10^{12} = 1,000,000,000,000}.
 @item T
 @itemx TiB
 @cindex tebibyte, definition of
-tebibyte: @math{2^40 = 1,099,511,627,776}.
+tebibyte: @math{2^{40} = 1,099,511,627,776}.
 @item PB
 @cindex petabyte, definition of
-petabyte: @math{10^15 = 1,000,000,000,000,000}.
+petabyte: @math{10^{15} = 1,000,000,000,000,000}.
 @item P
 @itemx PiB
 @cindex pebibyte, definition of
-pebibyte: @math{2^50 = 1,125,899,906,842,624}.
+pebibyte: @math{2^{50} = 1,125,899,906,842,624}.
 @item EB
 @cindex exabyte, definition of
-exabyte: @math{10^18 = 1,000,000,000,000,000,000}.
+exabyte: @math{10^{18} = 1,000,000,000,000,000,000}.
 @item E
 @itemx EiB
 @cindex exbibyte, definition of
-exbibyte: @math{2^60 = 1,152,921,504,606,846,976}.
+exbibyte: @math{2^{60} = 1,152,921,504,606,846,976}.
 @item ZB
 @cindex zettabyte, definition of
-zettabyte: @math{10^21 = 1,000,000,000,000,000,000,000}
+zettabyte: @math{10^{21} = 1,000,000,000,000,000,000,000}
 @item Z
 @itemx ZiB
-@math{2^70 = 1,180,591,620,717,411,303,424}.
+@math{2^{70} = 1,180,591,620,717,411,303,424}.
 (@samp{Zi} is a @acronym{GNU} extension to IEC 60027-2.)
 @item YB
 @cindex yottabyte, definition of
-yottabyte: @math{10^24 = 1,000,000,000,000,000,000,000,000}.
+yottabyte: @math{10^{24} = 1,000,000,000,000,000,000,000,000}.
 @item Y
 @itemx YiB
-@math{2^80 = 1,208,925,819,614,629,174,706,176}.
+@math{2^{80} = 1,208,925,819,614,629,174,706,176}.
 (@samp{Yi} is a @acronym{GNU} extension to IEC 60027-2.)
 @end table
 
@@ -14190,9 +14190,9 @@ To generate octal output, use the printf @code{%o} format instead
 of @code{%x}.
 
 On most systems, seq can produce whole-number output for values up to
-at least @code{2^53}.  Larger integers are approximated.  The details
+at least @math{2^{53}}.  Larger integers are approximated.  The details
 differ depending on your floating-point implementation, but a common
-case is that @command{seq} works with integers through @code{2^64},
+case is that @command{seq} works with integers through @math{2^{64}},
 and larger integers may not be numerically correct:
 
 @example
