@@ -1,3 +1,9 @@
+2008-01-02  Jim Meyering  <jim@meyering.net>
+
+	Update copyright date.
+	* tests/sample-test: Likewise.
+	* doc/coreutils.texi: Likewise.
+
 2007-12-31  Jim Meyering  <jim@meyering.net>
 
 	* doc/coreutils.texi (Block size): Put braces around multi-digit
