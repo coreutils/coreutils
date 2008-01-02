@@ -1,5 +1,7 @@
 2008-01-02  Jim Meyering  <jim@meyering.net>
 
+	* .gitignore: Ignore lzma-compressed files, too.
+
 	Update copyright date.
 	* tests/sample-test: Likewise.
 	* doc/coreutils.texi: Likewise.
