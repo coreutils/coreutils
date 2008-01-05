@@ -2,6 +2,12 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release 6.? (????-??-??) [?]
 
+** Bug fixes
+
+  tr's case conversion would fail in a locale with differing numbers
+  of lower case and upper case characters.  E.g., this would fail:
+  env LC_CTYPE=en_US.iso88591 tr '[:upper:]' '[:lower:]'
+  [bug introduced in coreutils-6.9.90]
 
 
 * Noteworthy changes in release 6.9.91 (2007-12-15) [beta]

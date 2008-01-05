@@ -1,3 +1,15 @@
+2008-01-05  Jim Meyering  <meyering@redhat.com>
+
+	Avoid tr case-conversion failure in some locales.
+	* src/tr.c (skip_construct): New function.
+	(main): When processing a pair of case-converting classes, don't
+	iterate through the elements of each [:upper:] or [:lower:] class.
+	Reported by Gerald Pfeifer in
+	<http://thread.gmane.org/gmane.comp.gnu.coreutils.bugs/12218>.
+	* tests/tr/Test.pm [tolower-F]: New test for the above fix.
+	[upcase-xtra, dncase-xtra]: New tests, for a related code path.
+	* NEWS: Mention the tr bug fix.
+
 2008-01-02  Jim Meyering  <jim@meyering.net>
 
 	* .gitignore: Ignore lzma-compressed files, too.

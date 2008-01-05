@@ -1,5 +1,5 @@
 /* tr -- a filter to translate characters
-   Copyright (C) 91, 1995-2007 Free Software Foundation, Inc.
+   Copyright (C) 91, 1995-2008 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -1019,6 +1019,15 @@ build_spec_list (const struct E_string *es, struct Spec_list *result)
   return true;
 }
 
+/* Advance past the current construct.
+   S->tail must be non-NULL.  */
+static void
+skip_construct (struct Spec_list *s)
+{
+  s->tail = s->tail->next;
+  s->state = NEW_ELEMENT;
+}
+
 /* Given a Spec_list S (with its saved state implicit in the values
    of its members `tail' and `state'), return the next single character
    in the expansion of S's constructs.  If the last character of S was
@@ -1809,6 +1818,7 @@ main (int argc, char **argv)
 	{
 	  int c1, c2;
 	  int i;
+	  bool case_convert = false;
 	  enum Upper_Lower_class class_s1;
 	  enum Upper_Lower_class class_s2;
 
@@ -1818,6 +1828,16 @@ main (int argc, char **argv)
 	  s2->state = BEGIN_STATE;
 	  for (;;)
 	    {
+	      /* When the previous pair identified case-converting classes,
+		 advance S1 and S2 so that each points to the following
+		 construct.  */
+	      if (case_convert)
+		{
+		  skip_construct (s1);
+		  skip_construct (s2);
+		  case_convert = false;
+		}
+
 	      c1 = get_next (s1, &class_s1);
 	      c2 = get_next (s2, &class_s2);
 
@@ -1831,12 +1851,14 @@ main (int argc, char **argv)
 
 	      if (class_s1 == UL_LOWER && class_s2 == UL_UPPER)
 		{
+		  case_convert = true;
 		  for (i = 0; i < N_CHARS; i++)
 		    if (islower (i))
 		      xlate[i] = toupper (i);
 		}
 	      else if (class_s1 == UL_UPPER && class_s2 == UL_LOWER)
 		{
+		  case_convert = true;
 		  for (i = 0; i < N_CHARS; i++)
 		    if (isupper (i))
 		      xlate[i] = tolower (i);
