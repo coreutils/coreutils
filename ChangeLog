@@ -1,3 +1,10 @@
+2008-01-06  Paul Eggert  <eggert@cs.ucla.edu>
+
+	touch: ignore "-d now" option, when appropriate
+	* src/touch.c (main): Treat "-d now" as if it were absent, if
+	neither -a nor -m is specified.  Problem reported by Dan Jacobson in:
+	http://lists.gnu.org/archive/html/bug-coreutils/2008-01/msg00010.html
+
 2008-01-05  Jim Meyering  <meyering@redhat.com>
 
 	Avoid tr case-conversion failure in some locales.

@@ -368,9 +368,29 @@ main (int argc, char **argv)
     {
       if (flex_date)
 	{
-	  get_reldate (&newtime[0], flex_date, NULL);
+	  struct timespec now;
+	  gettime (&now);
+	  get_reldate (&newtime[0], flex_date, &now);
 	  newtime[1] = newtime[0];
 	  date_set = true;
+
+	  /* If neither -a nor -m is specified, treat "-d now" as if
+	     it were absent; this lets "touch" succeed more often in
+	     the presence of restrictive permissions.  */
+	  if (change_times == (CH_ATIME | CH_MTIME)
+	      && newtime[0].tv_sec == now.tv_sec
+	      && newtime[0].tv_nsec == now.tv_nsec)
+	    {
+	      /* Check that it really was "-d now", and not a time
+		 stamp that just happens to be the current time.  */
+	      struct timespec notnow, notnow1;
+	      notnow.tv_sec = now.tv_sec ^ 1;
+	      notnow.tv_nsec = now.tv_nsec;
+	      get_reldate (&notnow1, flex_date, &notnow);
+	      if (notnow1.tv_sec == notnow.tv_sec
+		  && notnow1.tv_nsec == notnow.tv_nsec)
+		date_set = false;
+	    }
 	}
     }
 
