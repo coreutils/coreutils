@@ -1,6 +1,6 @@
 # Make coreutils tests for "touch".		-*-Makefile-*-
 
-# Copyright (C) 1998-2007 Free Software Foundation, Inc.
+# Copyright (C) 1998-2008 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 TESTS = \
+  now-owned-by-other \
   read-only \
   relative \
   not-owner \

@@ -48,7 +48,7 @@ SUBDIRS = \
   uniq wc
 ## N O T E :: Please do not add new directories.
 
-all_t = t1 t2 t3 t4 t5 t6 t7 t8 t9 ta tb tc
+all_t = t1 t2 t3 t4 t5 t6 t7 t8 t9 ta tb tc td
 .PHONY: check-root $(all_t)
 check-root: $(all_t)
 
@@ -76,6 +76,8 @@ tb:
 	cd mv    && $(MAKE) check TESTS=sticky-to-xpart
 tc:
 	cd cp    && $(MAKE) check TESTS=preserve-gid
+td:
+	cd touch && $(MAKE) check TESTS=now-owned-by-other
 
 check-recursive: root-hint
 
