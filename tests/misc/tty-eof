@@ -2,7 +2,7 @@
 # -*- perl -*-
 # Test whether programs exit upon a single EOF from a tty.
 
-# Copyright (C) 2003, 2006, 2007 Free Software Foundation, Inc.
+# Copyright (C) 2003, 2006, 2007, 2008 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -92,7 +92,7 @@ $@ and (warn "$ME: this script requires Perl's Expect package >=1.11\n"),
       $exp->send("\cD");  # This is Control-D.  FIXME: what if that's not EOF?
       $exp->expect (0, '-re', "^a b\\r?\$");
       my $found = $exp->expect (1, '-re', "^.+\$");
-      # $found and warn "F: $found: " . $exp->exp_match () . "\n";
+      $found and warn "F: $found: " . $exp->exp_match () . "\n";
       $exp->expect(1, 'eof');
       # Expect no output from cut, since we gave it no input.
       defined $found || $cmd =~ /^cut/

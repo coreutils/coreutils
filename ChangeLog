@@ -1,5 +1,12 @@
 2008-01-07  Jim Meyering  <meyering@redhat.com>
 
+	Make a racy test failure less likely to happen.
+	* tests/misc/tty-eof: Uncomment a debug "warn".
+	This change happens to make this test far less likely to fail.
+	With that statement commented out, this test would fail about
+	20% of the time on my desktop.  Now, it's gone 100 iterations
+	in a row with no failure.
+
 	* NEWS: Mention the cp bug fix.
 
 2008-01-07  Jan Blunck  <jblunck@suse.de>
