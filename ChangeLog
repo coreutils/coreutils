@@ -1,5 +1,8 @@
 2008-01-07  Jim Meyering  <meyering@redhat.com>
 
+	cp (but not copy.c): plug a small leak.
+	* src/cp.c (do_copy) [--parents]: Free the attribute list.
+
 	Make a racy test failure less likely to happen.
 	* tests/misc/tty-eof: Uncomment a debug "warn".
 	This change happens to make this test far less likely to fail.

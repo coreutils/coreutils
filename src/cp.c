@@ -683,6 +683,16 @@ do_copy (int n_files, char **file, const char *target_directory,
 				  attr_list, x);
 	    }
 
+	  if (parents_option)
+	    {
+	      while (attr_list)
+		{
+		  struct dir_attr *p = attr_list;
+		  attr_list = attr_list->next;
+		  free (p);
+		}
+	    }
+
 	  free (dst_name);
 	}
     }
