@@ -1,6 +1,6 @@
 # Make coreutils tests for cp.				-*-Makefile-*-
 
-# Copyright (C) 1997-2001, 2003, 2005-2007 Free Software Foundation, Inc.
+# Copyright (C) 1997-2001, 2003, 2005-2008 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 TESTS = \
+  parent-perm \
   abuse \
   proc-zero-len \
   thru-dangling \

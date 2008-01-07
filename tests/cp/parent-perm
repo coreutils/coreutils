@@ -1,0 +1,38 @@
+#!/bin/sh
+# Ensure that cp --parents works properly with a preexisting dest. directory
+
+# Copyright (C) 2008 Free Software Foundation, Inc.
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  cp --version
+fi
+
+. $srcdir/../envvar-check
+. $srcdir/../test-lib.sh
+
+mkdir -p a/b/c a/b/d e || framework_failure
+touch a/b/c/foo a/b/d/foo || framework_failure
+cp -p --parent a/b/c/foo e || framework_failure
+
+fail=0
+cp -p --parent a/b/d/foo e || fail=1
+
+# Ensure that permissions on just-created directory, e/a/,
+# are the same as those on original, a/.
+test $(stat --printf %A a) = $(stat --printf %A e/a) || fail=1
+
+(exit $fail); exit $fail

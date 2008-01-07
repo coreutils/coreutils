@@ -1,3 +1,10 @@
+2008-01-07  Jim Meyering  <meyering@redhat.com>
+
+	cp: add a test for today's bug fix.
+	* tests/cp/parent-perm: New script.  Test today's change.
+	Based on reproducer from Jan Blunck.
+	* tests/cp/Makefile.am (TESTS): Add parent-perm.
+
 2008-01-06  Jim Meyering  <meyering@redhat.com>
 
 	touch: add a test for today's change.
