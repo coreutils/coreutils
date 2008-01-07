@@ -403,6 +403,7 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
 	slash++;
       while ((slash = strchr (slash, '/')))
 	{
+	  int src_errno;
 	  /* Add this directory to the list of directories whose modes need
 	     fixing later. */
 	  struct dir_attr *new = xmalloc (sizeof *new);
@@ -412,12 +413,22 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
 	  *attr_list = new;
 
 	  *slash = '\0';
+	  src_errno = (stat (src, &new->st) != 0
+		       ? errno
+		       : S_ISDIR (new->st.st_mode)
+		       ? 0
+		       : ENOTDIR);
+	  if (src_errno)
+	    {
+	      error (0, src_errno, _("failed to get attributes of %s"),
+		     quote (src));
+	      return false;
+	    }
 	  if (stat (dir, &stats) != 0)
 	    {
 	      mode_t src_mode;
 	      mode_t omitted_permissions;
 	      mode_t mkdir_mode;
-	      int src_errno;
 
 	      /* This component does not exist.  We must set
 		 *new_dst and new->st.st_mode inside this loop because,
@@ -425,17 +436,6 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
 		 make_dir_parents_private creates only e_dir/../a if
 		 ./b already exists. */
 	      *new_dst = true;
-	      src_errno = (stat (src, &new->st) != 0
-			   ? errno
-			   : S_ISDIR (new->st.st_mode)
-			   ? 0
-			   : ENOTDIR);
-	      if (src_errno)
-		{
-		  error (0, src_errno, _("failed to get attributes of %s"),
-			 quote (src));
-		  return false;
-		}
 	      src_mode = new->st.st_mode;
 
 	      /* If the ownership or special mode bits might change,
