@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in -*-Makefile-*-
 
-## Copyright (C) 1990, 1991, 1993-2007 Free Software Foundation, Inc.
+## Copyright (C) 1990, 1991, 1993-2008 Free Software Foundation, Inc.
 
 ## This program is free software: you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -126,9 +126,9 @@ uptime_LDADD = $(LDADD) $(POW_LIB) $(GETLOADAVG_LIBS)
 
 su_LDADD = $(LDADD) $(LIB_CRYPT)
 
-dir_LDADD += $(LIB_ACL_TRIVIAL) $(LIB_ACL)
-ls_LDADD += $(LIB_ACL_TRIVIAL) $(LIB_ACL)
-vdir_LDADD += $(LIB_ACL_TRIVIAL) $(LIB_ACL)
+dir_LDADD += $(LIB_ACL)
+ls_LDADD += $(LIB_ACL)
+vdir_LDADD += $(LIB_ACL)
 cp_LDADD += $(LIB_ACL)
 mv_LDADD += $(LIB_ACL)
 ginstall_LDADD += $(LIB_ACL)

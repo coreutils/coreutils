@@ -1,3 +1,9 @@
+2008-01-08  Jim Meyering  <meyering@redhat.com>
+
+	Remove uses of now-undefined Makefile variable.
+	* src/Makefile.am (dir_LDADD, ls_LDADD, vdir_LDADD): Remove uses
+	of no-longer-defined variable, $(LIB_ACL_TRIVIAL).
+
 2008-01-07  Jim Meyering  <meyering@redhat.com>
 
 	cp (but not copy.c): plug a small leak.
