@@ -1,5 +1,9 @@
 2008-01-08  Jim Meyering  <meyering@redhat.com>
 
+	parent-perm: avoid a bizarre test failure.
+	* tests/cp/parent-perm: Accommodate the situation in which
+	chmod ("dir", 02755) returns 0 yet fails to set the S_ISGID bit.
+
 	Remove uses of now-undefined Makefile variable.
 	* src/Makefile.am (dir_LDADD, ls_LDADD, vdir_LDADD): Remove uses
 	of no-longer-defined variable, $(LIB_ACL_TRIVIAL).
