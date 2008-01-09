@@ -403,28 +403,39 @@ make_dir_parents_private (char const *const_dir, size_t src_offset,
 	slash++;
       while ((slash = strchr (slash, '/')))
 	{
-	  int src_errno;
-	  /* Add this directory to the list of directories whose modes need
-	     fixing later. */
-	  struct dir_attr *new = xmalloc (sizeof *new);
-	  new->slash_offset = slash - dir;
-	  new->restore_mode = false;
-	  new->next = *attr_list;
-	  *attr_list = new;
+	  struct dir_attr *new IF_LINT (= NULL);
+	  bool missing_dir;
 
 	  *slash = '\0';
-	  src_errno = (stat (src, &new->st) != 0
-		       ? errno
-		       : S_ISDIR (new->st.st_mode)
-		       ? 0
-		       : ENOTDIR);
-	  if (src_errno)
+	  missing_dir = (stat (dir, &stats) != 0);
+
+	  if (missing_dir | x->preserve_ownership | x->preserve_mode
+	      | x->preserve_timestamps)
 	    {
-	      error (0, src_errno, _("failed to get attributes of %s"),
-		     quote (src));
-	      return false;
+	      /* Add this directory to the list of directories whose
+		 modes might need fixing later. */
+	      struct stat src_st;
+	      int src_errno = (stat (src, &src_st) != 0
+			       ? errno
+			       : S_ISDIR (src_st.st_mode)
+			       ? 0
+			       : ENOTDIR);
+	      if (src_errno)
+		{
+		  error (0, src_errno, _("failed to get attributes of %s"),
+			 quote (src));
+		  return false;
+		}
+
+	      new = xmalloc (sizeof *new);
+	      new->st = src_st;
+	      new->slash_offset = slash - dir;
+	      new->restore_mode = false;
+	      new->next = *attr_list;
+	      *attr_list = new;
 	    }
-	  if (stat (dir, &stats) != 0)
+
+	  if (missing_dir)
 	    {
 	      mode_t src_mode;
 	      mode_t omitted_permissions;

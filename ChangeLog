@@ -1,3 +1,11 @@
+2008-01-08  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Fix a minor race condition when using cp -p --parents.
+	* src/cp.c (make_dir_parents_private): If stat fails on the parent
+	directory, do not add it to the list of directories whose modes
+	might need fixing later.  Also, do not bother invoking 'stat'
+	unless the stat results might be needed later.
+
 2008-01-08  Jim Meyering  <meyering@redhat.com>
 
 	parent-perm: avoid a bizarre test failure.
