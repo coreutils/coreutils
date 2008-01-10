@@ -15,6 +15,7 @@ tools we depend upon, including:
 - Autoconf <http://www.gnu.org/software/autoconf/>
 - Bison <http://www.gnu.org/software/bison/>
 - Gettext <http://www.gnu.org/software/gettext/>
+- Git <http://git.or.cz/>
 - Gperf <http://www.gnu.org/software/gperf/>
 - Gzip <http://www.gnu.org/software/gzip/>
 - Perl <http://www.cpan.org/>

@@ -1,3 +1,7 @@
+2008-01-10  Jim Meyering  <meyering@redhat.com>
+
+	* README-hacking: Add Git to the list of required tools.
+
 2008-01-08  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Fix a minor race condition when using cp -p --parents.
