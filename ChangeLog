@@ -1,3 +1,9 @@
+2008-01-11  Jim Meyering  <meyering@redhat.com>
+
+	* tests/tr/Test.pm: Prefer en_US.ISO-8859-1 to en_US.iso88591.
+	Suggestions from James Youngman and Pádraig Brady in
+	http://thread.gmane.org/gmane.comp.gnu.coreutils.bugs/12218/focus=12227
+
 2008-01-10  Jim Meyering  <meyering@redhat.com>
 
 	* README-hacking: Add Git to the list of required tools.

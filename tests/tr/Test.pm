@@ -142,7 +142,7 @@ my @tv = (
 
 # Up to coreutils-6.9.91, this would fail with the diagnostic:
 # tr: misaligned [:upper:] and/or [:lower:] construct
-# with LC_CTYPE=en_US.iso88591.
+# with LC_CTYPE=en_US.ISO-8859-1.
 ['tolower-F',q|'[:upper:]' '[:lower:]'|, 'A', 'a', 0],
 
 # When doing a case-converting translation with something after the
@@ -151,7 +151,7 @@ my @tv = (
 ['dncase-xtra',q|'[:upper:].' '[:lower:]x'|,	'ABC.', 'abcx', 0],
 );
 
-$Test::env{'tolower-F'} = ['LC_CTYPE=en_US.iso88591'];
+$Test::env{'tolower-F'} = ['LC_CTYPE=en_US.ISO-8859-1'];
 
 sub test_vector
 {
