@@ -24,9 +24,16 @@ fi
 . $srcdir/../envvar-check
 . $srcdir/../test-lib.sh
 
+. $abs_srcdir/../umask-check
+
 mkdir -p a/b/c a/b/d e || framework_failure
 touch a/b/c/foo a/b/d/foo || framework_failure
 cp -p --parent a/b/c/foo e || framework_failure
+
+# Make permissions of e/a different, so that we exercise the
+# code in cp -p --parents that propagates permissions even
+# to a destination directory that it doesn't create.
+chmod g-rx e/a e/a/b || framework_failure
 
 fail=0
 cp -p --parent a/b/d/foo e || fail=1
@@ -41,7 +48,10 @@ cp -p --parent a/b/d/foo e || fail=1
 # so "a/" inherits that.  However, when the user does not belong to
 # the group of the build directory, chmod ("a/e", 02755) returns 0,
 # yet fails to set the S_ISGID bit.
-test $(stat --printf %A a|sed s/s/x/g) = $(stat --printf %A e/a|sed s/s/x/g) ||
+for dir in a a/b a/b/d; do
+  test $(stat --printf %A $dir|sed s/s/x/g) \
+     = $(stat --printf %A e/$dir|sed s/s/x/g) ||
   fail=1
+done
 
 (exit $fail); exit $fail
