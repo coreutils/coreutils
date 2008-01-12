@@ -2,7 +2,7 @@
 # This Makefile fragment is shared between the coreutils,
 # CPPI, Bison, and Autoconf.
 
-## Copyright (C) 2001-2007 Free Software Foundation, Inc.
+## Copyright (C) 2001-2008 Free Software Foundation, Inc.
 ##
 ## This program is free software: you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -617,9 +617,14 @@ rel-check:
 	md5sum -c $$md5_tmp < $$tarz
 
 prev-tgz = $(PACKAGE)-$(PREV_VERSION).tar.gz
+
+# FIXME: stop distributing xdelta files in 2008, unless someone speaks up.
+# So far, not one person has said they'd miss this.
 xd-delta = $(PACKAGE)-$(PREV_VERSION)-$(VERSION).xdelta
 
 rel-files = $(xd-delta) $(DIST_ARCHIVES)
+
+gnulib-version = $$(cd $(gnulib_dir) && git describe)
 
 # Approximate the date of last gnulib "update" by the ChangeLog file's
 # mtime, and provide that date in the announcement.
@@ -634,7 +639,7 @@ announcement: NEWS ChangeLog $(rel-files)
 	    --gpg-key-id=$(gpg_key_ID)					\
 	    --news=NEWS							\
 	    --bootstrap-tools=autoconf,automake,bison,gnulib		\
-	    --gnulib-snapshot-time-stamp="$$utc_date"			\
+	    --gnulib-version=$(gnulib-version)				\
 	    $(addprefix --url-dir=, $(url_dir_list))
 
 ## ---------------- ##

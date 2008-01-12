@@ -1,3 +1,11 @@
+2008-01-12  Jim Meyering  <meyering@redhat.com>
+
+	Use new version of announce-gen.
+	* Makefile.maint (announcement): Remove use of the
+	--gnulib-snapshot-time-stamp option.
+	Use new --gnulib-version option instead.
+	(gnulib-version): New variable.
+
 2008-01-11  Jim Meyering  <meyering@redhat.com>
 
 	* Version 6.9.92.
