@@ -1,3 +1,7 @@
+2008-01-12  Mike Frysinger  <vapier@gentoo.org>
+
+	* src/dircolors.hin (image formats): Add the .svg suffix.
+
 2008-01-12  Jim Meyering  <meyering@redhat.com>
 
 	Use new version of announce-gen.

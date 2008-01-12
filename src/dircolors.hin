@@ -1,7 +1,7 @@
 # Configuration file for dircolors, a utility to help you set the
 # LS_COLORS environment variable used by GNU ls with the --color option.
 
-# Copyright (C) 1996, 1999-2007
+# Copyright (C) 1996, 1999-2008
 # Free Software Foundation, Inc.
 # Copying and distribution of this file, with or without modification,
 # are permitted provided the copyright notice and this notice are preserved.
@@ -138,6 +138,7 @@ EXEC 01;32
 .tif 01;35
 .tiff 01;35
 .png 01;35
+.svg 01;35
 .mng 01;35
 .pcx 01;35
 .mov 01;35
