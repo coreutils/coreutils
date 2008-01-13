@@ -1,7 +1,7 @@
 # -*- autoconf -*-
 # Process this file with autoconf to produce a configure script.
 
-# Copyright (C) 1991, 1993-2007 Free Software Foundation, Inc.
+# Copyright (C) 1991, 1993-2008 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -279,7 +279,8 @@ no_install_progs_default=`echo "$t"|sed 's/ $//'`
 # The compromise is to ensure that the space-separated list extracted
 # above matches the literal 2nd argument below.
 c="$srcdir/configure.ac"
-t=`sed -n '/^g''l_INCLUDE_EXCLUDE_PROG(.* [\[\(.*\)\]])/{s//\1/;s/,/ /gp}' $c`
+t=`sed -n '/^g''l_INCLUDE_EXCLUDE_PROG(.* [\[\(.*\)\]])/{s//\1/;s/,/ /gp
+}' $c`
 case $t in
   $no_install_progs_default) ;;
   *) AC_MSG_ERROR([[internal error: g'l_INCLUDE_EXCLUDE_PROG's 2nd arg, $t,

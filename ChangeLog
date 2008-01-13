@@ -1,3 +1,7 @@
+2008-01-13  Elias Pipping  <pipping@gentoo.org>
+
+	* configure.ac: Correct a non-portable use of sed.
+
 2008-01-12  Mike Frysinger  <vapier@gentoo.org>
 
 	* src/dircolors.hin (image formats): Add the .svg suffix.
