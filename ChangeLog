@@ -1,3 +1,10 @@
+2008-01-13  Jim Meyering  <meyering@redhat.com>
+
+	Remove each output redirection target before writing to it.
+	* tests/check.mk (vc_exe_in_TESTS): Remove t1 and t2 _first_,
+	in case they exist beforehand and are not writable.
+	* build-aux/check.mk (am__check_pre): Likewise, remove $@-t.
+
 2008-01-13  Elias Pipping  <pipping@gentoo.org>
 
 	* configure.ac: Correct a non-portable use of sed.
