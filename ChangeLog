@@ -1,5 +1,7 @@
 2008-01-16  Jim Meyering  <meyering@redhat.com>
 
+	* NEWS: Mention the configure.ac fix.
+
 	* TODO: Add an introduction.
 	Remove a few entries.  Update a few others.
 
