@@ -1,3 +1,8 @@
+2008-01-16  Jim Meyering  <meyering@redhat.com>
+
+	* TODO: Add an introduction.
+	Remove a few entries.  Update a few others.
+
 2008-01-13  Jim Meyering  <meyering@redhat.com>
 
 	Remove each output redirection target before writing to it.

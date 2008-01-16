@@ -1,3 +1,10 @@
+If you're interested in helping, here are some tasks that we've considered
+over the years.  Beware: some are quite old and no longer valid.  To avoid
+wasting your time by duplicating work or by working on a task that is no
+longer pertinent, please search the mailing list and post your intent
+before embarking on a big project.
+
+==================================================
 document the following in coreutils.texi:
   runcon
   chcon
@@ -20,6 +27,7 @@ printf:
 
 renice: POSIX utility, needs implementing.
   suggestion from Karl Berry (among others).
+  Bob Proulx is working on this.
 
 install: add an option to specify the program used to strip binaries.
   suggestion from Karl Berry
@@ -43,6 +51,7 @@ See if we can be consistent about where --verbose sends its output:
     head, tail, rm, cp, mv, ln, chmod, chown, chgrp, install, ln
   These send it to stderr:
     shred mkdir split
+  shred must write --verbose output to stderr
   readlink is different
 
 Write an autoconf test to work around build failure in HPUX's 64-bit mode.
@@ -115,10 +124,6 @@ Changes expected to go in, someday.
 
   dd patch from Olivier Delhomme
 
-  Andreas Gruenbacher's xattr changes
-
-  Apply Bruno Haible's hostname changes
-
   test/mv/*: clean up $other_partition_tmpdir in all cases
 
   ls: when both -l and --dereference-command-line-symlink-to-dir are
@@ -163,8 +168,12 @@ Implement Ulrich Drepper's suggestion to use getgrouplist rather
   buggy use of getgrouplist by never passing it a buffer of length zero.
   See https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=200327
 
-remove `%s' notation:
+remove `%s' notation (now that they're all gone, add a Makefile.maint sc_
+    rule to ensure no new ones are added):
   grep -E "\`%.{,4}s'" src/*.c
+
+remove all uses of the `register' keyword: Done.  add a Makefile.maint rule
+  for this, too.
 
 remove or adjust chown's --changes option, since it
   can't always do what it currently says it does.
@@ -173,8 +182,6 @@ Adapt tools like wc, tr, fmt, etc. (most of the textutils) to be
   multibyte aware.  The problem is that I want to avoid duplicating
   significant blocks of logic, yet I also want to incur only minimal
   (preferably `no') cost when operating in single-byte mode.
-
-Remove all uses of the `register' keyword
 
 pr's use of nstrftime can make it malloc a very large (up to SIZE_MAX) buffer
 
