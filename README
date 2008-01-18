@@ -58,9 +58,16 @@ and from the corresponding --help usage message.  Patches to the template
 files (man/*.x) are welcome.  However, the authoritative documentation
 is in texinfo form in the doc directory.
 
-If you run the tests on a SunOS4.1.4 system, expect the ctime-part of
-the ls `time-1' test to fail.  I believe that is due to a bug in the
-way Sun implemented link(2) and chmod(2).
+
+*****************************************
+On Mac OS X 10.5.1 (Darwin 9.1), test failure
+-----------------------------------------
+
+Mac OS X 10.5.1 (Darwin 9.1) provides only partial (and incompatible)
+ACL support, so although "./configure && make" succeeds, "make check"
+exposes numerous failures.  The solution is to turn off ACL support
+manually via "./configure --disable-acl".  For details, see
+<http://thread.gmane.org/gmane.comp.gnu.coreutils.bugs/12292/focus=12318>.
 
 
 *****************************************
@@ -139,7 +146,7 @@ I find that it is best to unpack and build as a non-privileged
 user, and then to run the following command as that user in order
 to run the privilege-requiring tests:
 
-  sudo env NON_ROOT_USERNAME=$USER make -k check
+  sudo env NON_ROOT_USERNAME=$USER make -k check-root
 
 If you can run the tests as root, please do so and report any
 problems.  We get much less test coverage in that mode, and it's

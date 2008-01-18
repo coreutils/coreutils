@@ -1,3 +1,10 @@
+2008-01-18  Jim Meyering  <meyering@redhat.com>
+
+	Update README.
+	* README: Remove a note about failing tests on SunOS 4.
+	On Mac OS 10.5.1 (Darwin 9.1), you'll need --disable-acl.
+	(Running tests as root): Recommend using "check-root", not "check".
+
 2008-01-17  Jim Meyering  <meyering@redhat.com>
 
 	Do not define-away __attribute__ when __STRICT_ANSI__ is set.
