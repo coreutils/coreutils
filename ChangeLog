@@ -1,5 +1,7 @@
 2008-01-22  Jim Meyering  <meyering@redhat.com>
 
+	* NEWS: Record release date.
+
 	* README-hacking: Update to reflect existence of automake-1.10.1.
 
 2008-01-18  Jim Meyering  <meyering@redhat.com>
