@@ -39,18 +39,7 @@ from configure.ac before bootstrapping.
 If you do want to build LZMA tarballs, you'll need to make sure you
 have the latest stable version of the LZMA Utils
 <http://tukaani.org/lzma/>.  Also, you'll need a version of
-Automake that supports the dist-lzma feature, which was added to
-Automake on 2007-10-09 but is not yet available in a stable Automake
-version.  So until Automake 1.11 comes out, you'll need to get the
-bleeding-edge Automake version with a command like this:
-
-	$ git clone git://git.sv.gnu.org/automake
-	$ cd automake
-	$ ./bootstrap
-	$ ./configure
-	$ make install
-
-and build and install that version.
+Automake that supports the dist-lzma feature, like automake-1.10.1.
 
 * First GIT checkout
 
