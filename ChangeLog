@@ -1,5 +1,8 @@
 2008-01-22  Jim Meyering  <meyering@redhat.com>
 
+	Require automake-1.10.1, for its support of dist-lzma.
+	* configure.ac (AM_INIT_AUTOMAKE): Require 1.10.1.
+
 	Version 6.10.
 
 	* NEWS: Record release date.
