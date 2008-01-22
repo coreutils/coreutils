@@ -18,10 +18,9 @@ The programs that can be built with this package are:
 
 See the file NEWS for a list of major changes in the current release.
 
-If you obtained this file as part of a "cvs checkout" or "git clone",
-then see the README-hacking file.  If this file came to you as part of a
-tar archive, then see the file INSTALL for compilation and installation
-instructions.
+If you obtained this file as part of a "git clone", then see the
+README-hacking file.  If this file came to you as part of a tar archive,
+then see the file INSTALL for compilation and installation instructions.
 
 These programs are intended to conform to POSIX (with BSD and other
 extensions), like the rest of the GNU system.  By default they conform
@@ -185,14 +184,13 @@ If you sent a complete patch and, after a couple weeks you haven't
 received any acknowledgement, please ping us.  A complete patch includes
 a well-written ChangeLog entry, unified (diff -u format) diffs relative
 to the most recent test release (or, better, relative to the latest
-sources in the CVS repository), an explanation for why the patch is
+sources in the public repository), an explanation for why the patch is
 necessary or useful, and if at all possible, enough information to
 reproduce whatever problem prompted it.  Plus, you'll earn lots of
 karma if you include a test case to exercise any bug(s) you fix.
-Instructions for checking out the latest source via CVS are here:
+Here are instructions for checking out the latest development sources:
 
-  http://savannah.gnu.org/cvs/?group=coreutils
-
+  http://savannah.gnu.org/git/?group=coreutils
 
 If your patch adds a new feature, please try to get some sort of consensus
 that it is a worthwhile change.  One way to do that is to send mail to
