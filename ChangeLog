@@ -1,3 +1,8 @@
+2008-01-23  Zvi Har'El  <rl@math.technion.ac.il>
+
+	Add a ";", so "make install" works with --enable-install-program=su.
+	* src/Makefile.am (install_su): Add a semicolon.  (tiny change)
+
 2008-01-23  Jim Meyering  <meyering@redhat.com>
 
 	Avoid misinterpreting mgetgroups failure in running root-only tests.

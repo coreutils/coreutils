@@ -170,7 +170,7 @@ install_su =						\
     echo " chown root $(installed_su)";			\
     chown root $(installed_su);				\
     echo " chmod $(setuid_root_mode) $(installed_su)";	\
-    chmod $(setuid_root_mode) $(installed_su)		\
+    chmod $(setuid_root_mode) $(installed_su);		\
   else							\
     :;							\
   fi
