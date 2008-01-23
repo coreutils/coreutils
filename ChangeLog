@@ -1,3 +1,7 @@
+2008-01-23  Jim Meyering  <meyering@redhat.com>
+
+	* TODO: Update the note on getgrouplist.
+
 2008-01-23  Zvi Har'El  <rl@math.technion.ac.il>
 
 	Add a ";", so "make install" works with --enable-install-program=su.
