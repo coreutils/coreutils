@@ -1,5 +1,9 @@
 2008-01-23  Jim Meyering  <meyering@redhat.com>
 
+	Avoid misinterpreting mgetgroups failure in running root-only tests.
+	* src/setuidgid.c (main): Don't misinterpret as size_t an error
+	return from mgetgroups.  Reported by Theodoros V. Kalamatianos.
+
 	* README: Remove/convert a few stray mentions of CVS.
 
 2008-01-22  Jim Meyering  <meyering@redhat.com>

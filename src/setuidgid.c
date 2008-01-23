@@ -1,5 +1,5 @@
 /* setuidgid - run a command with the UID and GID of a specified user
-   Copyright (C) 2003-2007 Free Software Foundation, Inc.
+   Copyright (C) 2003-2008 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -181,10 +181,11 @@ main (int argc, char **argv)
 #if HAVE_SETGROUPS
     if (n_gids == 0)
       {
-        n_gids = mgetgroups (pwd->pw_name, pwd->pw_gid, &gids);
-        if (n_gids <= 0)
+        int n = mgetgroups (pwd->pw_name, pwd->pw_gid, &gids);
+        if (n <= 0)
           error (1, errno, _("failed to get groups for user %s"),
                  quote (pwd->pw_name));
+        n_gids = n;
       }
 
     if (setgroups (n_gids, gids))
