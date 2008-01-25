@@ -1,5 +1,10 @@
 2008-01-23  Jim Meyering  <meyering@redhat.com>
 
+	Clean up build-related rules.
+	* Makefile.cfg (gnulib_dir): Update comment.
+	* Makefile.maint (announcement) [cl_date, utc_date]: Don't set
+	now-unused variables.
+
 	* TODO: Update the note on getgrouplist.
 
 2008-01-23  Zvi Har'El  <rl@math.technion.ac.il>

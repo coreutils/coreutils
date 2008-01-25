@@ -629,9 +629,7 @@ gnulib-version = $$(cd $(gnulib_dir) && git describe)
 # Approximate the date of last gnulib "update" by the ChangeLog file's
 # mtime, and provide that date in the announcement.
 announcement: NEWS ChangeLog $(rel-files)
-	@cl_date=$$(stat --printf @%Y $(gnulib_dir)/ChangeLog);		\
-	utc_date=$$(date -u --date $$cl_date '+%Y-%m-%d %T %z');	\
-	./build-aux/announce-gen					\
+	@./build-aux/announce-gen					\
 	    --release-type=$(RELEASE_TYPE)				\
 	    --package=$(PACKAGE)					\
 	    --prev=$(PREV_VERSION)					\
