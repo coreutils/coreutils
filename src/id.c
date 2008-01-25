@@ -1,5 +1,5 @@
 /* id -- print real and effective UIDs and GIDs
-   Copyright (C) 1989-2007 Free Software Foundation, Inc.
+   Copyright (C) 1989-2008 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -19,7 +19,6 @@
 
 #include <config.h>
 #include <stdio.h>
-#include <getopt.h>
 #include <sys/types.h>
 #include <pwd.h>
 #include <grp.h>
@@ -28,9 +27,9 @@
 
 #include "system.h"
 #include "error.h"
-#include "getugroups.h"
 #include "mgetgroups.h"
 #include "quote.h"
+#include "group-list.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "id"
@@ -41,8 +40,6 @@
 static int just_context = 0;
 
 static void print_user (uid_t uid);
-static void print_group (gid_t gid);
-static void print_group_list (const char *username);
 static void print_full_info (const char *username);
 
 /* The name this program was run with. */
@@ -216,15 +213,27 @@ of a different user"));
     }
 
   if (just_user)
-    print_user (use_real ? ruid : euid);
+    {
+      print_user (use_real ? ruid : euid);
+    }
   else if (just_group)
-    print_group (use_real ? rgid : egid);
+    {
+      if (!print_group (use_real ? rgid : egid, use_name))
+	ok = false;
+    }
   else if (just_group_list)
-    print_group_list (argv[optind]);
+    {
+      if (!print_group_list (argv[optind], ruid, rgid, egid, use_name))
+	ok = false;
+    }
   else if (just_context)
-    fputs (context, stdout);
+    {
+      fputs (context, stdout);
+    }
   else
-    print_full_info (argv[optind]);
+    {
+      print_full_info (argv[optind]);
+    }
   putchar ('\n');
 
   exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
@@ -252,74 +261,6 @@ print_user (uid_t uid)
     printf ("%lu", (unsigned long int) uid);
   else
     printf ("%s", pwd->pw_name);
-}
-
-/* Print the name or value of group ID GID. */
-
-static void
-print_group (gid_t gid)
-{
-  struct group *grp = NULL;
-
-  if (use_name)
-    {
-      grp = getgrgid (gid);
-      if (grp == NULL)
-	{
-	  error (0, 0, _("cannot find name for group ID %lu"),
-		 (unsigned long int) gid);
-	  ok = false;
-	}
-    }
-
-  if (grp == NULL)
-    printf ("%lu", (unsigned long int) gid);
-  else
-    printf ("%s", grp->gr_name);
-}
-
-/* Print all of the distinct groups the user is in. */
-
-static void
-print_group_list (const char *username)
-{
-  struct passwd *pwd;
-
-  pwd = getpwuid (ruid);
-  if (pwd == NULL)
-    ok = false;
-
-  print_group (rgid);
-  if (egid != rgid)
-    {
-      putchar (' ');
-      print_group (egid);
-    }
-
-#if HAVE_GETGROUPS
-  {
-    GETGROUPS_T *groups;
-    size_t i;
-
-    int n_groups = mgetgroups (username, (pwd ? pwd->pw_gid : (gid_t) -1),
-			       &groups);
-    if (n_groups < 0)
-      {
-	error (0, errno, _("failed to get groups for user %s"),
-	       quote (username));
-	ok = false;
-	return;
-      }
-
-    for (i = 0; i < n_groups; i++)
-      if (groups[i] != rgid && groups[i] != egid)
-	{
-	  putchar (' ');
-	  print_group (groups[i]);
-	}
-    free (groups);
-  }
-#endif /* HAVE_GETGROUPS */
 }
 
 /* Print all of the info about the user's user and group IDs. */
@@ -365,8 +306,15 @@ print_full_info (const char *username)
 			       &groups);
     if (n_groups < 0)
       {
-	error (0, errno, _("failed to get groups for user %s"),
-	       quote (username));
+	if (username)
+	  {
+	    error (0, errno, _("failed to get groups for user %s"),
+		   quote (username));
+	  }
+	else
+	  {
+	    error (0, errno, _("failed to get groups for the current process"));
+	  }
 	ok = false;
 	return;
       }

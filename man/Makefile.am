@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-dist_man_MANS = groups.1 $(MAN)
+dist_man_MANS = $(MAN)
 
 man_aux = $(dist_man_MANS:.1=.x)
 
@@ -59,7 +59,7 @@ factor.1:	$(common_dep)	$(srcdir)/factor.x	../src/factor.c
 false.1:	$(common_dep)	$(srcdir)/false.x	../src/false.c
 fmt.1:		$(common_dep)	$(srcdir)/fmt.x		../src/fmt.c
 fold.1:		$(common_dep)	$(srcdir)/fold.x	../src/fold.c
-groups.1:	$(common_dep)	$(srcdir)/groups.x	../src/groups.sh
+groups.1:	$(common_dep)	$(srcdir)/groups.x	../src/groups.c
 head.1:		$(common_dep)	$(srcdir)/head.x	../src/head.c
 hostid.1:	$(common_dep)	$(srcdir)/hostid.x	../src/hostid.c
 hostname.1:	$(common_dep)	$(srcdir)/hostname.x	../src/hostname.c

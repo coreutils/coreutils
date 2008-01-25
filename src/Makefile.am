@@ -33,7 +33,7 @@ EXTRA_PROGRAMS = \
   ginstall link ln dir vdir ls mkdir \
   mkfifo mknod mktemp \
   mv nohup readlink rm rmdir shred stat sync touch unlink \
-  cat cksum comm csplit cut expand fmt fold head join md5sum \
+  cat cksum comm csplit cut expand fmt fold head join groups md5sum \
   nl od paste pr ptx sha1sum sha224sum sha256sum sha384sum sha512sum \
   shuf sort split sum tac tail tr tsort unexpand uniq wc \
   basename date dirname echo env expr factor false \
@@ -42,7 +42,6 @@ EXTRA_PROGRAMS = \
   test true tty whoami yes \
   base64
 
-bin_SCRIPTS = groups
 bin_PROGRAMS = $(OPTIONAL_BIN_PROGS)
 
 noinst_PROGRAMS = setuidgid
@@ -53,6 +52,7 @@ noinst_HEADERS = \
   cp-hash.h \
   dircolors.h \
   fs.h \
+  group-list.h \
   ls.h \
   remove.h \
   system.h \
@@ -61,7 +61,7 @@ noinst_HEADERS = \
   uname.h
 
 EXTRA_DIST = dcgen dircolors.hin tac-pipe.c \
-  groups.sh wheel-gen.pl extract-magic c99-to-c89.diff
+  wheel-gen.pl extract-magic c99-to-c89.diff
 BUILT_SOURCES =
 CLEANFILES = $(SCRIPTS) su
 
@@ -142,20 +142,6 @@ RELEASE_YEAR = \
   `sed -n '/.*COPYRIGHT_YEAR = \([0-9][0-9][0-9][0-9]\) };/s//\1/p' \
     $(top_srcdir)/lib/version-etc.c`
 
-# This depends on 'Makefile', so that version changes
-#(reflected in Makefile's VERSION definition)
-# are reflected into groups --version also between releases.
-groups: groups.sh Makefile
-	rm -f $@ $@-t
-	sed \
-	  -e 's!@''bindir''@!$(bindir)!' \
-	  -e 's/@''RELEASE_YEAR'@/$(RELEASE_YEAR)/ \
-	  -e 's/@''PACKAGE_NAME''@/$(PACKAGE_NAME)/' \
-	  -e 's/@''PACKAGE_BUGREPORT''@/$(PACKAGE_BUGREPORT)/' \
-	  -e 's/@''VERSION''@/$(VERSION)/' $(srcdir)/groups.sh > $@-t
-	chmod +x $@-t
-	mv $@-t $@
-
 all-local: su$(EXEEXT)
 
 installed_su = $(DESTDIR)$(bindir)/`echo su|sed '$(transform)'`
@@ -225,6 +211,8 @@ __SOURCES = lbracket.c
 cp_SOURCES = cp.c $(copy_sources)
 dir_SOURCES = ls.c ls-dir.c
 vdir_SOURCES = ls.c ls-vdir.c
+id_SOURCES = id.c group-list.c
+groups_SOURCES = groups.c group-list.c
 ln_SOURCES = ln.c
 ls_SOURCES = ls.c ls-ls.c
 chown_SOURCES = chown.c chown-core.c

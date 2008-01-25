@@ -4,6 +4,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  configure --enable-no-install-program=groups now works.
+
+
   ls no longer segfaults on files in /proc when linked with an older version
   of libselinux.  E.g., ls -l /proc/sys would dereference a NULL pointer.
 

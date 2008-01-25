@@ -1,5 +1,5 @@
 # List of files which contain translatable strings.
-# Copyright (C) 1996-2007 Free Software Foundation, Inc.
+# Copyright (C) 1996-2008 Free Software Foundation, Inc.
 
 # These are nominally temporary...
 lib/acl.c
@@ -60,6 +60,8 @@ src/factor.c
 src/false.c
 src/fmt.c
 src/fold.c
+src/group-list.c
+src/groups.c
 src/head.c
 src/hostid.c
 src/hostname.c

@@ -12226,6 +12226,15 @@ Print only the user ID.
 
 @exitstatus
 
+@macro primaryAndSupplementaryGroups{cmd,arg}
+Primary and supplementary groups for a process are normally inherited
+from its parent and are usually unchanged since login.  This means
+that if you change the group database after logging in, @command{\cmd\}
+will not reflect your changes within your existing login session.
+Running @command{\cmd\} with a \arg\ causes the user and group
+database to be consulted afresh, and so will give a different result.
+@end macro
+@primaryAndSupplementaryGroups{id,user argument}
 
 @node logname invocation
 @section @command{logname}: Print current login name
@@ -12275,13 +12284,16 @@ options}.
 groups for each given @var{username}, or the current process if no names
 are given.  If more than one name is given, the name of each user is
 printed before
-the list of that user's groups.  Synopsis:
+the list of that user's groups and the user name is separated from the
+group list by a colon.  Synopsis:
 
 @example
 groups [@var{username}]@dots{}
 @end example
 
 The group lists are equivalent to the output of the command @samp{id -Gn}.
+
+@primaryAndSupplementaryGroups{groups,list of users}
 
 The only options are @option{--help} and @option{--version}.  @xref{Common
 options}.
