@@ -1,6 +1,6 @@
 # Make coreutils.					-*-Makefile-*-
 
-# Copyright (C) 1990, 1993-2007 Free Software Foundation, Inc.
+# Copyright (C) 1990, 1993-2008 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -76,6 +76,7 @@ dist-hook:
 distcheck-hook:
 	$(MAKE) my-distcheck
 
+DISTCLEANFILES = VERSION
 MAINTAINERCLEANFILES = THANKS-to-translators
 THANKS-to-translators: po/LINGUAS THANKStt.in
 	(								\

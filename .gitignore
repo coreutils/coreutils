@@ -11,6 +11,7 @@ INSTALL
 Makefile
 Makefile.in
 THANKS-to-translators
+VERSION
 aclocal.m4
 autom4te.cache
 config.cache

@@ -1,6 +1,6 @@
 # Make coreutils man pages.				-*-Makefile-*-
 
-# Copyright (C) 2002-2007 Free Software Foundation, Inc.
+# Copyright (C) 2002-2008 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,8 +22,8 @@ man_aux = $(dist_man_MANS:.1=.x)
 EXTRA_DIST = $(man_aux) $(NO_INSTALL_PROGS_DEFAULT:%=%.x) help2man
 MAINTAINERCLEANFILES = $(dist_man_MANS)
 
-# Depend on configure.ac to get version number changes.
-common_dep = $(top_srcdir)/configure.ac
+# Depend on ../VERSION to get version number changes.
+common_dep = ../VERSION
 
 # Note that arch depends on uname.c
 arch.1:		$(common_dep)	$(srcdir)/arch.x	../src/uname.c
@@ -198,3 +198,6 @@ check-programs-vs-x:
 	    || { echo missing $$p.x 1>&2; status=1; };	\
 	done;						\
 	exit $$status
+
+../VERSION:
+	echo $(VERSION) > $@-t && mv $@-t $@

@@ -1,5 +1,14 @@
 2008-01-26  Jim Meyering  <meyering@redhat.com>
 
+	Ensure that each version string change propagates to man pages.
+	* man/Makefile.am (common_dep): Don't depend on configure.ac for
+	version changes.  Instead, depend on ../VERSION.
+	(../VERSION): New rule.
+	* Makefile.am (DISTCLEANFILES): Define.
+	* GNUmakefile: Update ./VERSION.
+	* .gitignore: List VERSION.
+	Reported by Sven Joachim.
+
 	Avoid cp/preserve-gid test failure on Mac OS 10.5.1 (Darwin 9.1)
 	* tests/cp/preserve-gid: Set group as well as owner on ".".
 	Reported by Elias Pipping.
