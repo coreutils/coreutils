@@ -33,8 +33,14 @@ t0() {
   "$@" "$f" b || exit 1
   s=`stat -c '%u %g' b`
   if test "x$s" != "x$u $g"; then
-    echo "$0: $* $f b: $u $g != $s" 1>&2
-    (exit 1); exit 1
+    # Allow the actual group to match that of the parent directory
+    # (it was set to 0 above).
+    if test "x$s" = "x$u 0"; then
+      :
+    else
+      echo "$0: $* $f b: $u $g != $s" 1>&2
+      (exit 1); exit 1
+    fi
   fi
 }
 

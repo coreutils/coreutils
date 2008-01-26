@@ -1,5 +1,10 @@
 2008-01-26  Jim Meyering  <meyering@redhat.com>
 
+	Work around Darwin9's set-GID-like group ownership inheritance.
+	This avoids another spurious Mac OS 10.5.1 (Darwin 9.1) test failure.
+	* tests/cp/preserve-gid: Accept a group ID of 0, as well.
+	Reported by Elias Pipping.
+
 	Emit "info coreutils 'PROG invocation'" into the man page,
 	rather than just "info PROG".  The latter would often fail
 	or simply display the man page.
