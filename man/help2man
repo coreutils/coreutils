@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 
 # Generate a short man page from --help and --version output.
-# Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004
+# Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2008
 # Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
@@ -567,7 +567,7 @@ and
 .B %s
 programs are properly installed at your site, the command
 .IP
-.B info %s
+.B info coreutils '%s invocation'
 .PP
 should give you access to the complete manual.
 EOT

@@ -1,5 +1,11 @@
 2008-01-26  Jim Meyering  <meyering@redhat.com>
 
+	Emit "info coreutils 'PROG invocation'" into the man page,
+	rather than just "info PROG".  The latter would often fail
+	or simply display the man page.
+	* man/help2man: Change the template.
+	Prompted by http://bugs.debian.org/399684
+
 	chcon: correct description of --no-dereference (-h) option.
 	* src/chcon.c (usage): Remove invalid reference to lchown.
 	Reported by Göran Uddeborg.
