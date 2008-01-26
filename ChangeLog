@@ -1,5 +1,9 @@
 2008-01-26  Jim Meyering  <meyering@redhat.com>
 
+	chcon: correct description of --no-dereference (-h) option.
+	* src/chcon.c (usage): Remove invalid reference to lchown.
+	Reported by Göran Uddeborg.
+
 	Ensure that each version string change propagates to man pages.
 	* man/Makefile.am (common_dep): Don't depend on configure.ac for
 	version changes.  Instead, depend on ../VERSION.

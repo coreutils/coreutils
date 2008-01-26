@@ -1,5 +1,5 @@
 /* chcon -- change security context of files
-   Copyright (C) 2005-2007 Free Software Foundation, Inc.
+   Copyright (C) 2005-2008 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -373,7 +373,6 @@ With --reference, change the security context of each FILE to that of RFILE.\n\
 \n\
   -c, --changes          like verbose but report only when a change is made\n\
   -h, --no-dereference   affect symbolic links instead of any referenced file\n\
-                         (available only on systems with lchown system call)\n\
 "), stdout);
       fputs (_("\
       --reference=RFILE  use RFILE's security context rather than specifying\n\
