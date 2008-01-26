@@ -1,3 +1,7 @@
+2008-01-26  Mike Frysinger  <vapier@gentoo.org>
+
+	* src/dircolors.hin (TERM): Add jfbterm.
+
 2008-01-23  Jim Meyering  <meyering@redhat.com>
 
 	Clean up build-related rules.
