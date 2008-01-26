@@ -1,5 +1,9 @@
 2008-01-26  Jim Meyering  <meyering@redhat.com>
 
+	Avoid cp/preserve-gid test failure on Mac OS 10.5.1 (Darwin 9.1)
+	* tests/cp/preserve-gid: Set group as well as owner on ".".
+	Reported by Elias Pipping.
+
 	Improve a warning about non-portable "mv" usage.
 	* doc/coreutils.texi (mv invocation): Adjust the warning: moving a
 	dir-symlink-specified-with-a-trailing-slash works in a surprising
