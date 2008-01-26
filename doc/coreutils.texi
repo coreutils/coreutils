@@ -7773,10 +7773,14 @@ is a terminal, and the @option{-f} or @option{--force} option is not given,
 own the file, or have write permission on its directory.)  If the
 response is not affirmative, the file is skipped.
 
-@emph{Warning}: If you try to move a symlink that points to a directory,
-and you specify the symlink with a trailing slash, then @command{mv}
-doesn't move the symlink but instead moves the directory referenced
-by the symlink.  @xref{Trailing slashes}.
+@emph{Warning}: Avoid specifying a source name with a trailing slash,
+when it might be a symlink to a directory.
+Otherwise, @command{mv} may do something very surprising, since
+its behavior depends on the underlying rename system call.
+On modern Linux systems, it fails with @code{errno=ENOTDIR}.
+However, on other systems (at least FreeBSD 6.1 and Solaris 10) it silently
+renames not the symlink but rather the directory referenced by the symlink.
+@xref{Trailing slashes}.
 
 The program accepts the following options.  Also see @ref{Common options}.
 

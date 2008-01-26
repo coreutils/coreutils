@@ -1,3 +1,11 @@
+2008-01-26  Jim Meyering  <meyering@redhat.com>
+
+	Improve a warning about non-portable "mv" usage.
+	* doc/coreutils.texi (mv invocation): Adjust the warning: moving a
+	dir-symlink-specified-with-a-trailing-slash works in a surprising
+	manner only on some systems.  Reported by Tomas Pospisek in
+	http://bugs.debian.org/343652.
+
 2008-01-26  Mike Frysinger  <vapier@gentoo.org>
 
 	* src/dircolors.hin (TERM): Add jfbterm.
