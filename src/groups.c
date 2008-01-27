@@ -65,13 +65,6 @@ the current process (which is different if the groups database has changed).\n")
   exit (status);
 }
 
-static void
-write_error (void)
-{
-  error (0, errno, _("write error"));
-}
-
-
 int
 main (int argc, char **argv)
 {
@@ -111,11 +104,7 @@ main (int argc, char **argv)
 
       if (!print_group_list (NULL, ruid, rgid, egid, true))
         ok = false;
-      if (EOF == putchar ('\n'))
-        {
-          write_error ();
-          ok = false;
-        }
+      putchar ('\n');
     }
   else
     {
@@ -128,18 +117,10 @@ main (int argc, char **argv)
           ruid = pwd->pw_uid;
           rgid = egid = pwd->pw_gid;
 
-          if (printf ("%s : ", argv[optind]) < 0)
-            {
-              write_error ();
-              ok = false;
-            }
+          printf ("%s : ", argv[optind]);
           if (!print_group_list (argv[optind++], ruid, rgid, egid, true))
             ok = false;
-          if (EOF == putchar ('\n'))
-            {
-              write_error ();
-              ok = false;
-            }
+          putchar ('\n');
         }
     }
 

@@ -109,21 +109,9 @@ print_group (gid_t gid, bool use_name)
     }
 
   if (grp == NULL)
-    {
-      if (printf ("%lu", (unsigned long int) gid) < 0)
-        {
-          error (0, errno, _("write error"));
-          ok = false;
-        }
-    }
+    printf ("%lu", (unsigned long int) gid);
   else
-    {
-      if (printf ("%s", grp->gr_name) < 0)
-        {
-          error (0, errno, _("write error"));
-          ok = false;
-        }
-    }
+    printf ("%s", grp->gr_name);
   return ok;
 }
 
