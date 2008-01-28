@@ -22,8 +22,8 @@ man_aux = $(dist_man_MANS:.1=.x)
 EXTRA_DIST = $(man_aux) $(NO_INSTALL_PROGS_DEFAULT:%=%.x) help2man
 MAINTAINERCLEANFILES = $(dist_man_MANS)
 
-# Depend on ../VERSION to get version number changes.
-common_dep = ../VERSION
+# Depend on ../.version to get version number changes.
+common_dep = ../.version
 
 # Note that arch depends on uname.c
 arch.1:		$(common_dep)	$(srcdir)/arch.x	../src/uname.c
@@ -198,6 +198,3 @@ check-programs-vs-x:
 	    || { echo missing $$p.x 1>&2; status=1; };	\
 	done;						\
 	exit $$status
-
-../VERSION:
-	echo $(VERSION) > $@-t && mv $@-t $@

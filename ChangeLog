@@ -1,5 +1,17 @@
 2008-01-29  Jim Meyering  <meyering@redhat.com>
 
+	Avoid "make distcheck" failure: newly-created man/*.1 files not removed
+	* Makefile.am (EXTRA_DIST): Add .version.
+	(.version): New rule.
+	(dist-hook): Don't create $(distdir)/.version here, now that it's
+	being distributed.
+	* man/Makefile.am (common_dep): Use ../.version, not ../VERSION.
+	(../VERSION): Remove rule.
+	* GNUmakefile (dummy): Create .version, not VERSION.
+	Add an extra "...:= $(shell..." statement to ensure that
+	.version exists even when the preceding code is not run.
+	* .gitignore: Remove both .version and VERSION.
+
 	ls: don't segfault on files in /proc with an old libselinux
 	* src/ls.c (gobble_file): Work around a bug in libselinux1-2.0.15
 	whereby getfilecon returns 0 yet sets the context to NULL.

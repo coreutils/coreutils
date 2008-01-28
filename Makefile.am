@@ -18,6 +18,7 @@
 SUBDIRS = lib src doc man po tests gnulib-tests
 EXTRA_DIST = Makefile.cfg Makefile.maint GNUmakefile \
   .prev-version THANKS-to-translators THANKStt.in \
+  .version \
   .vg-suppressions \
   .x-po-check \
   .x-sc_GPL_version \
@@ -65,12 +66,12 @@ check-root:
 rm_subst = \
   s!(rm -f (rm\b|\$$\(bin_PROGRAMS\)$$))!$$1 > /dev/null 2>&1 || /bin/$$1!
 
-# Arrange so that .version appears only in distribution tarballs,
-# never in a checked-out repository.
+.version:
+	echo $(VERSION) > $@-t && mv $@-t $@
+
 # The perl substitution is to change some key uses of "rm" to "/bin/rm".
 # See the rm_subst comment for details.
 dist-hook:
-	echo $(VERSION) > $(distdir)/.version
 	perl -pi -e '$(rm_subst)' $(distdir)/src/Makefile.in
 
 distcheck-hook:

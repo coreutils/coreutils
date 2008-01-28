@@ -49,9 +49,14 @@ ifeq (0,$(MAKELEVEL))
     ifneq ($(_curr-ver),$(VERSION))
       $(info INFO: running autoreconf for new version string: $(_curr-ver))
       dummy := $(shell rm -rf autom4te.cache; autoreconf)
-      dummy := $(shell echo $(_curr-ver) > VERSION)
+      dummy := $(shell echo $(_curr-ver) > .version)
+      _created_version_file = 1
     endif
   endif
+endif
+
+ifneq ($(_created_version_file),1)
+  dummy := $(shell test -f .version || echo $(VERSION) > .version)
 endif
 
 include $(srcdir)/Makefile.cfg
