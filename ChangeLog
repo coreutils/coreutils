@@ -1,3 +1,9 @@
+2008-01-29  Michael Stone  <mstone@debian.org>
+
+	Improve the description of when dd outputs its final statistics.
+	* doc/coreutils.texi (dd invocation): Say that dd prints stats
+	upon normal termination and upon SIGINT.
+
 2008-01-29  Jim Meyering  <meyering@redhat.com>
 
 	Avoid "make distcheck" failure: newly-created man/*.1 files not removed

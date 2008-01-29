@@ -7559,7 +7559,8 @@ process makes it print I/O statistics to standard error
 and then resume copying.  In the example below,
 @command{dd} is run in the background to copy 10 million blocks.
 The @command{kill} command makes it output intermediate I/O statistics,
-and when @command{dd} completes, it outputs the final statistics.
+and when @command{dd} completes normally or is killed by the
+@code{SIGINT} signal, it outputs the final statistics.
 
 @example
 $ dd if=/dev/zero of=/dev/null count=10MB & pid=$!
