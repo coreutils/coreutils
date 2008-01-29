@@ -1,3 +1,14 @@
+2008-01-29  Jim Meyering  <meyering@redhat.com>
+
+	ls: don't segfault on files in /proc with an old libselinux
+	* src/ls.c (gobble_file): Work around a bug in libselinux1-2.0.15
+	whereby getfilecon returns 0 yet sets the context to NULL.
+	Reported by Jan Moringen via Michael Stone in
+	http://bugs.debian.org/463043
+	* tests/ls/Makefile.am (TESTS): Add proc-selinux-segfault.
+	* tests/ls/proc-selinux-segfault: Test for the above fix.
+	* NEWS: Mention the fix.
+
 2008-01-26  Jim Meyering  <meyering@redhat.com>
 
 	Work around Darwin9's set-GID-like group ownership inheritance.

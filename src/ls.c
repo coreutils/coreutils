@@ -1,5 +1,5 @@
 /* `dir', `vdir' and `ls' directory listing programs for GNU.
-   Copyright (C) 85, 88, 90, 91, 1995-2007 Free Software Foundation, Inc.
+   Copyright (C) 85, 88, 90, 91, 1995-2008 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -2666,6 +2666,17 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
 			  ?  getfilecon (absolute_name, &f->scontext)
 			  : lgetfilecon (absolute_name, &f->scontext));
 	  err = (attr_len < 0);
+
+	  /* Contrary to its documented API, getfilecon may return 0,
+	     yet set f->scontext to NULL (on at least Debian's libselinux1
+	     2.0.15-2+b1), so work around that bug.
+	     FIXME: remove this work-around in 2011, or whenever affected
+	     versions of libselinux are long gone.  */
+	  if (attr_len == 0)
+	    {
+	      err = 0;
+	      f->scontext = xstrdup ("unlabeled");
+	    }
 
 	  if (err == 0)
 	    have_acl = ! STREQ ("unlabeled", f->scontext);
