@@ -66,6 +66,7 @@ check-root:
 rm_subst = \
   s!(rm -f (rm\b|\$$\(bin_PROGRAMS\)$$))!$$1 > /dev/null 2>&1 || /bin/$$1!
 
+BUILT_SOURCES = .version
 .version:
 	echo $(VERSION) > $@-t && mv $@-t $@
 

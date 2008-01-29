@@ -1,3 +1,8 @@
+2008-01-29  Jim Meyering  <meyering@redhat.com>
+
+	* Makefile.am (BUILT_SOURCES): Ensure that .version exists.
+	Reported by Bob Proulx.
+
 2008-01-29  Bob Proulx  <bob@proulx.com>
 
 	Improve the man pages of --date=STRING for 'date' and 'touch'.
