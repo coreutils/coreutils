@@ -1,3 +1,10 @@
+2008-01-29  Bob Proulx  <bob@proulx.com>
+
+	Improve the man pages of --date=STRING for 'date' and 'touch'.
+	* man/date.x: Add a compact description of the --date=STRING.
+	* man/touch.x: Likewise.
+	Reported by A. Costa in http://bugs.debian.org/363011
+
 2008-01-29  Michael Stone  <mstone@debian.org>
 
 	Improve the description of when dd outputs its final statistics.
