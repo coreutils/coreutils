@@ -1,5 +1,7 @@
 2008-01-30  Jim Meyering  <meyering@redhat.com>
 
+	* src/c99-to-c89.diff: Adjust remove.c offsets.
+
 	Improve "rmdir --ignore-fail-on-non-empty"
 	* src/rmdir.c (remove_parents, main): With --ignore-fail-on-non-empty,
 	suppress a diagnostic also for other errno values, which can arise

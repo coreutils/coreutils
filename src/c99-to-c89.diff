@@ -26,7 +26,7 @@ diff -upr src/remove.c src/remove.c
    if (top->unremovable)
      hash_free (top->unremovable);
    obstack_blank (&ds->Active_dir, -(int) sizeof (struct AD_ent));
-@@ -907,6 +909,7 @@ prompt (int fd_cwd, Dirstack_state const
+@@ -877,6 +879,7 @@ prompt (int fd_cwd, Dirstack_state const
  	    break;
  	  }
 
@@ -34,7 +34,7 @@ diff -upr src/remove.c src/remove.c
        char const *quoted_name = quote (full_filename (filename));
 
        if (0 < write_protected)
-@@ -946,6 +949,7 @@ prompt (int fd_cwd, Dirstack_state const
+@@ -916,6 +919,7 @@ prompt (int fd_cwd, Dirstack_state const
  		    : _("%s: remove %s %s? ")),
  		   program_name, file_type (sbuf), quoted_name);
  	}
@@ -42,7 +42,7 @@ diff -upr src/remove.c src/remove.c
 
        if (!yesno ())
  	return RM_USER_DECLINED;
-@@ -1565,6 +1569,7 @@ rm_1 (Dirstack_state *ds, char const *fi
+@@ -1535,6 +1539,7 @@ rm_1 (Dirstack_state *ds, char const *fi
        return RM_ERROR;
      }
 
@@ -50,7 +50,7 @@ diff -upr src/remove.c src/remove.c
    struct stat st;
    cache_stat_init (&st);
    cycle_check_init (&ds->cycle_check_state);
-@@ -1587,6 +1592,7 @@ rm_1 (Dirstack_state *ds, char const *fi
+@@ -1557,6 +1562,7 @@ rm_1 (Dirstack_state *ds, char const *fi
    AD_push_initial (ds);
    AD_INIT_OTHER_MEMBERS ();
 
@@ -58,7 +58,7 @@ diff -upr src/remove.c src/remove.c
    enum RM_status status = remove_entry (AT_FDCWD, ds, filename,
  					DT_UNKNOWN, &st, x);
    if (status == RM_NONEMPTY_DIR)
-@@ -1605,6 +1611,8 @@ rm_1 (Dirstack_state *ds, char const *fi
+@@ -1575,6 +1581,8 @@ rm_1 (Dirstack_state *ds, char const *fi
    ds_clear (ds);
    return status;
  }
