@@ -1,5 +1,5 @@
 /* remove.c -- core functions for removing files and directories
-   Copyright (C) 88, 90, 91, 1994-2007 Free Software Foundation, Inc.
+   Copyright (C) 88, 90, 91, 1994-2008 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -724,36 +724,6 @@ AD_is_removable (Dirstack_state const *ds, char const *file)
 {
   struct AD_ent *top = AD_stack_top (ds);
   return ! (top->unremovable && hash_lookup (top->unremovable, file));
-}
-
-/* Return true if DIR is determined to be an empty directory.  */
-static bool
-is_empty_dir (int fd_cwd, char const *dir)
-{
-  DIR *dirp;
-  struct dirent const *dp;
-  int saved_errno;
-  int fd = openat (fd_cwd, dir,
-		   (O_RDONLY | O_DIRECTORY
-		    | O_NOCTTY | O_NOFOLLOW | O_NONBLOCK));
-
-  if (fd < 0)
-    return false;
-
-  dirp = fdopendir (fd);
-  if (dirp == NULL)
-    {
-      close (fd);
-      return false;
-    }
-
-  errno = 0;
-  dp = readdir_ignoring_dot_and_dotdot (dirp);
-  saved_errno = errno;
-  closedir (dirp);
-  if (dp != NULL)
-    return false;
-  return saved_errno == 0 ? true : false;
 }
 
 /* Return -1 if FILE is an unwritable non-symlink,

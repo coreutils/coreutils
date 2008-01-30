@@ -384,6 +384,36 @@ readdir_ignoring_dot_and_dotdot (DIR *dirp)
     }
 }
 
+/* Return true if DIR is determined to be an empty directory.  */
+static inline bool
+is_empty_dir (int fd_cwd, char const *dir)
+{
+  DIR *dirp;
+  struct dirent const *dp;
+  int saved_errno;
+  int fd = openat (fd_cwd, dir,
+		   (O_RDONLY | O_DIRECTORY
+		    | O_NOCTTY | O_NOFOLLOW | O_NONBLOCK));
+
+  if (fd < 0)
+    return false;
+
+  dirp = fdopendir (fd);
+  if (dirp == NULL)
+    {
+      close (fd);
+      return false;
+    }
+
+  errno = 0;
+  dp = readdir_ignoring_dot_and_dotdot (dirp);
+  saved_errno = errno;
+  closedir (dirp);
+  if (dp != NULL)
+    return false;
+  return saved_errno == 0 ? true : false;
+}
+
 /* Factor out some of the common --help and --version processing code.  */
 
 /* These enum values cannot possibly conflict with the option values

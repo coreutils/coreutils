@@ -74,11 +74,39 @@ static struct option const longopts[] =
 
 /* Return true if ERROR_NUMBER is one of the values associated
    with a failed rmdir due to non-empty target directory.  */
-
 static bool
 errno_rmdir_non_empty (int error_number)
 {
   return (error_number == RMDIR_ERRNO_NOT_EMPTY);
+}
+
+/* Return true if when rmdir fails with errno == ERROR_NUMBER
+   the directory may be empty.  */
+static bool
+errno_may_be_empty (int error_number)
+{
+  switch (error_number)
+    {
+    case EACCES:
+    case EPERM:
+    case EROFS:
+    case EEXIST:
+    case EBUSY:
+      return true;
+    default:
+      return false;
+    }
+}
+
+/* Return true if an rmdir failure with errno == error_number
+   for DIR is ignorable.  */
+static bool
+ignorable_failure (int error_number, char const *dir)
+{
+  return (ignore_fail_on_non_empty
+	  && (errno_rmdir_non_empty (error_number)
+	      || (errno_may_be_empty (error_number)
+		  && is_empty_dir (AT_FDCWD, dir))));
 }
 
 /* Remove any empty parent directories of DIR.
@@ -113,8 +141,7 @@ remove_parents (char *dir)
       if (!ok)
 	{
 	  /* Stop quietly if --ignore-fail-on-non-empty. */
-	  if (ignore_fail_on_non_empty
-	      && errno_rmdir_non_empty (errno))
+	  if (ignorable_failure (errno, dir))
 	    {
 	      ok = true;
 	    }
@@ -210,8 +237,7 @@ main (int argc, char **argv)
 
       if (rmdir (dir) != 0)
 	{
-	  if (ignore_fail_on_non_empty
-	      && errno_rmdir_non_empty (errno))
+	  if (ignorable_failure (errno, dir))
 	    continue;
 
 	  /* Here, the diagnostic is less precise, since we have no idea

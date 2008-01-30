@@ -1,3 +1,17 @@
+2008-01-30  Jim Meyering  <meyering@redhat.com>
+
+	Improve "rmdir --ignore-fail-on-non-empty"
+	* src/rmdir.c (remove_parents, main): With --ignore-fail-on-non-empty,
+	suppress a diagnostic also for other errno values, which can arise
+	with read-only media or when the parent directory has the immutable
+	attribute (set via chattr +i).
+	(errno_may_be_empty, ignorable_failure): New functions.
+	* src/remove.c (is_empty_dir): Move function to ...
+	* src/system.h (is_empty_dir): ...here, and make it inline.
+	Suggested by Josselin Mouette in <http://bugs.debian.org/363011>
+	via Bob Proulx.
+	* NEWS: Mention the improvement.
+
 2008-01-29  Paul Eggert  <eggert@cs.ucla.edu>
 
 	Don't modify argv in dd.
