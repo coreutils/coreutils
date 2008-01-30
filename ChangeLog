@@ -1,5 +1,7 @@
 2008-01-30  Jim Meyering  <meyering@redhat.com>
 
+	* src/c99-to-c89.diff: Adjust remove.c offsets, again.
+
 	Now that system.h defines is_empty_dir, include "openat.h".
 	* src/system.h: Include "openat.h" here, ...
 	* src/chcon.c: ... not here.
