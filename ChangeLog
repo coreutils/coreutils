@@ -1,3 +1,10 @@
+2008-01-31  Bob Proulx  <bob@proulx.com>
+
+	Improve wording of date and time man page.
+	* man/date.x: Improve compact description of the --date=STRING.
+	* man/touch.x: Likewise.
+	Suggested by A. Costa.
+
 2008-01-31  Jim Meyering  <meyering@redhat.com>
 
 	Remove alignment constraint from the sha*_read_ctx functions.
