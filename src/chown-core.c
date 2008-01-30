@@ -26,7 +26,6 @@
 #include "chown-core.h"
 #include "error.h"
 #include "inttostr.h"
-#include "openat.h"
 #include "quote.h"
 #include "root-dev-ino.h"
 #include "xfts.h"

@@ -359,6 +359,7 @@ uid_t getuid ();
 #include "same-inode.h"
 
 #include "dirname.h"
+#include "openat.h"
 
 static inline bool
 dot_or_dotdot (char const *file_name)

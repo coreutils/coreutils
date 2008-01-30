@@ -1,5 +1,12 @@
 2008-01-30  Jim Meyering  <meyering@redhat.com>
 
+	Now that system.h defines is_empty_dir, include "openat.h".
+	* src/system.h: Include "openat.h" here, ...
+	* src/chcon.c: ... not here.
+	* src/chmod.c: Likewise.
+	* src/chown-core.c: Likewise.
+	* src/remove.c: Likewise.
+
 	* src/c99-to-c89.diff: Adjust remove.c offsets.
 
 	Improve "rmdir --ignore-fail-on-non-empty"

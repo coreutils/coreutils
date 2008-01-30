@@ -33,7 +33,6 @@
 #include "hash-pjw.h"
 #include "lstat.h"
 #include "obstack.h"
-#include "openat.h"
 #include "quote.h"
 #include "remove.h"
 #include "root-dev-ino.h"

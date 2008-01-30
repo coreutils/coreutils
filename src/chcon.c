@@ -22,7 +22,6 @@
 #include "system.h"
 #include "dev-ino.h"
 #include "error.h"
-#include "openat.h"
 #include "quote.h"
 #include "quotearg.h"
 #include "root-dev-ino.h"

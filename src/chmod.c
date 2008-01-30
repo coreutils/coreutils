@@ -1,5 +1,5 @@
 /* chmod -- change permission modes of files
-   Copyright (C) 89, 90, 91, 1995-2007 Free Software Foundation, Inc.
+   Copyright (C) 89, 90, 91, 1995-2008 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -26,7 +26,6 @@
 #include "error.h"
 #include "filemode.h"
 #include "modechange.h"
-#include "openat.h"
 #include "quote.h"
 #include "quotearg.h"
 #include "root-dev-ino.h"
