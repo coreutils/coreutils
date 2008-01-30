@@ -1,3 +1,11 @@
+2008-01-29  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Don't modify argv in dd.
+	* src/dd.c (operand_is): New function.
+	(scanargs): Use it so that we don't need to modify argv, as a nicety.
+	Problem reported by Adam Goode in
+	<http://lists.gnu.org/archive/html/bug-coreutils/2008-01/msg00264.html>.
+
 2008-01-29  Jim Meyering  <meyering@redhat.com>
 
 	* Makefile.am (BUILT_SOURCES): Ensure that .version exists.

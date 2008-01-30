@@ -867,6 +867,17 @@ parse_integer (const char *str, bool *invalid)
   return n;
 }
 
+/* Return true if OPERAND is of the form "NAME=...".  */
+
+static bool
+operand_is (char const *operand, char const *name)
+{
+  while (*name)
+    if (*name++ != *operand++)
+      return false;
+  return *operand == '=';
+}
+
 static void
 scanargs (int argc, char **argv)
 {
@@ -884,22 +895,22 @@ scanargs (int argc, char **argv)
 	  error (0, 0, _("unrecognized operand %s"), quote (name));
 	  usage (EXIT_FAILURE);
 	}
-      *val++ = '\0';
+      val++;
 
-      if (STREQ (name, "if"))
+      if (operand_is (name, "if"))
 	input_file = val;
-      else if (STREQ (name, "of"))
+      else if (operand_is (name, "of"))
 	output_file = val;
-      else if (STREQ (name, "conv"))
+      else if (operand_is (name, "conv"))
 	conversions_mask |= parse_symbols (val, conversions,
 					   N_("invalid conversion: %s"));
-      else if (STREQ (name, "iflag"))
+      else if (operand_is (name, "iflag"))
 	input_flags |= parse_symbols (val, flags,
 				      N_("invalid input flag: %s"));
-      else if (STREQ (name, "oflag"))
+      else if (operand_is (name, "oflag"))
 	output_flags |= parse_symbols (val, flags,
 				       N_("invalid output flag: %s"));
-      else if (STREQ (name, "status"))
+      else if (operand_is (name, "status"))
 	status_flags |= parse_symbols (val, statuses,
 				       N_("invalid status flag: %s"));
       else
@@ -907,38 +918,37 @@ scanargs (int argc, char **argv)
 	  bool invalid = false;
 	  uintmax_t n = parse_integer (val, &invalid);
 
-	  if (STREQ (name, "ibs"))
+	  if (operand_is (name, "ibs"))
 	    {
 	      invalid |= ! (0 < n && n <= MAX_BLOCKSIZE (INPUT_BLOCK_SLOP));
 	      input_blocksize = n;
 	      conversions_mask |= C_TWOBUFS;
 	    }
-	  else if (STREQ (name, "obs"))
+	  else if (operand_is (name, "obs"))
 	    {
 	      invalid |= ! (0 < n && n <= MAX_BLOCKSIZE (OUTPUT_BLOCK_SLOP));
 	      output_blocksize = n;
 	      conversions_mask |= C_TWOBUFS;
 	    }
-	  else if (STREQ (name, "bs"))
+	  else if (operand_is (name, "bs"))
 	    {
 	      invalid |= ! (0 < n && n <= MAX_BLOCKSIZE (INPUT_BLOCK_SLOP));
 	      blocksize = n;
 	    }
-	  else if (STREQ (name, "cbs"))
+	  else if (operand_is (name, "cbs"))
 	    {
 	      invalid |= ! (0 < n && n <= SIZE_MAX);
 	      conversion_blocksize = n;
 	    }
-	  else if (STREQ (name, "skip"))
+	  else if (operand_is (name, "skip"))
 	    skip_records = n;
-	  else if (STREQ (name, "seek"))
+	  else if (operand_is (name, "seek"))
 	    seek_records = n;
-	  else if (STREQ (name, "count"))
+	  else if (operand_is (name, "count"))
 	    max_records = n;
 	  else
 	    {
-	      error (0, 0, _("unrecognized operand %s=%s"),
-		     quote_n (0, name), quote_n (1, val));
+	      error (0, 0, _("unrecognized operand %s"), quote (name));
 	      usage (EXIT_FAILURE);
 	    }
 
