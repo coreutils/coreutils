@@ -1,5 +1,9 @@
 2008-01-31  Jim Meyering  <meyering@redhat.com>
 
+	Pull vc-list-files from gnulib.
+	* bootstrap.conf (gnulib_modules): Add vc-list-files.
+	* build-aux/vc-list-files: Remove file.
+
 	Improve the cp/parent-perm test.
 	* tests/cp/parent-perm: Also check that perms of existing dest
 	dirs are changed to match those of corresponding src dir
