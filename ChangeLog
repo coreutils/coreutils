@@ -1,3 +1,13 @@
+2008-01-30  Paul Eggert  <eggert@cs.ucla.edu>
+
+	Don't modify argv in dd due to ',' in arguments.
+	* src/dd.c: Include quotearg.h.
+	(operand_matches): New function.
+	(parse_symbols, operand_is): Use it.
+	(parse_symbols): 1st arg is now const pointer.  Don't modify it.
+	msgid arg is now just the message, not a format.
+	(scanargs): Add some 'const's to check for problems like the above.
+
 2008-01-30  Jim Meyering  <meyering@redhat.com>
 
 	* src/c99-to-c89.diff: Adjust remove.c offsets, again.

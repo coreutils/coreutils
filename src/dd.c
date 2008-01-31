@@ -1,5 +1,5 @@
 /* dd -- convert a file while copying it.
-   Copyright (C) 85, 90, 91, 1995-2007 Free Software Foundation, Inc.
+   Copyright (C) 85, 90, 91, 1995-2008 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -31,6 +31,7 @@
 #include "human.h"
 #include "long-options.h"
 #include "quote.h"
+#include "quotearg.h"
 #include "xstrtol.h"
 #include "xtime.h"
 
@@ -796,41 +797,50 @@ write_output (void)
   oc = 0;
 }
 
+/* Return true if STR is of the form "PATTERN" or "PATTERNDELIM...".  */
+
+static bool
+operand_matches (char const *str, char const *pattern, char delim)
+{
+  while (*pattern)
+    if (*str++ != *pattern++)
+      return false;
+  return !*str || *str == delim;
+}
+
 /* Interpret one "conv=..." or similar operand STR according to the
    symbols in TABLE, returning the flags specified.  If the operand
-   cannot be parsed, use ERROR_MSGID to generate a diagnostic.
-   As a by product, this function replaces each `,' in STR with a NUL byte.  */
+   cannot be parsed, use ERROR_MSGID to generate a diagnostic.  */
 
 static int
-parse_symbols (char *str, struct symbol_value const *table,
+parse_symbols (char const *str, struct symbol_value const *table,
 	       char const *error_msgid)
 {
   int value = 0;
 
-  do
+  for (;;)
     {
+      char const *strcomma = strchr (str, ',');
       struct symbol_value const *entry;
-      char *new = strchr (str, ',');
-      if (new != NULL)
-	*new++ = '\0';
-      for (entry = table; ; entry++)
+
+      for (entry = table;
+	   ! (operand_matches (str, entry->symbol, ',') && entry->value);
+	   entry++)
 	{
 	  if (! entry->symbol[0])
 	    {
-	      error (0, 0, _(error_msgid), quote (str));
+	      size_t slen = strcomma ? strcomma - str : strlen (str);
+	      error (0, 0, "%s: %s", _(error_msgid),
+		     quotearg_n_style_mem (0, locale_quoting_style, str, slen));
 	      usage (EXIT_FAILURE);
 	    }
-	  if (STREQ (entry->symbol, str))
-	    {
-	      if (! entry->value)
-		error (EXIT_FAILURE, 0, _(error_msgid), quote (str));
-	      value |= entry->value;
-	      break;
-	    }
 	}
-      str = new;
+
+      value |= entry->value;
+      if (!strcomma)
+	break;
+      str = strcomma + 1;
     }
-  while (str);
 
   return value;
 }
@@ -867,29 +877,25 @@ parse_integer (const char *str, bool *invalid)
   return n;
 }
 
-/* Return true if OPERAND is of the form "NAME=...".  */
+/* OPERAND is of the form "X=...".  Return true if X is NAME.  */
 
 static bool
 operand_is (char const *operand, char const *name)
 {
-  while (*name)
-    if (*name++ != *operand++)
-      return false;
-  return *operand == '=';
+  return operand_matches (operand, name, '=');
 }
 
 static void
-scanargs (int argc, char **argv)
+scanargs (int argc, char *const *argv)
 {
   int i;
   size_t blocksize = 0;
 
   for (i = optind; i < argc; i++)
     {
-      char *name, *val;
+      char const *name = argv[i];
+      char const *val = strchr (name, '=');
 
-      name = argv[i];
-      val = strchr (name, '=');
       if (val == NULL)
 	{
 	  error (0, 0, _("unrecognized operand %s"), quote (name));
@@ -903,16 +909,16 @@ scanargs (int argc, char **argv)
 	output_file = val;
       else if (operand_is (name, "conv"))
 	conversions_mask |= parse_symbols (val, conversions,
-					   N_("invalid conversion: %s"));
+					   N_("invalid conversion"));
       else if (operand_is (name, "iflag"))
 	input_flags |= parse_symbols (val, flags,
-				      N_("invalid input flag: %s"));
+				      N_("invalid input flag"));
       else if (operand_is (name, "oflag"))
 	output_flags |= parse_symbols (val, flags,
-				       N_("invalid output flag: %s"));
+				       N_("invalid output flag"));
       else if (operand_is (name, "status"))
 	status_flags |= parse_symbols (val, statuses,
-				       N_("invalid status flag: %s"));
+				       N_("invalid status flag"));
       else
 	{
 	  bool invalid = false;
