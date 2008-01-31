@@ -1,5 +1,14 @@
 2008-01-31  Jim Meyering  <meyering@redhat.com>
 
+	Remove alignment constraint from the sha*_read_ctx functions.
+	* lib/sha256.c (set_uint32): New function.
+	(sha256_read_ctx, sha224_read_ctx): Use it.
+	* lib/sha512.c (set_uint64): New function.
+	(sha512_read_ctx, sha384_read_ctx): Use it.
+	* lib/sha256.h: Remove warning about alignment constraint.
+	* lib/sha512.h: Likewise.
+	Prompted by similar changes in gnulib's sha1 and md[45] modules.
+
 	Adapt to new version of vc-list-files.
 	* tests/check.mk (vc_exe_in_TESTS): Adapt to new constraint
 	that vc-list-files be run only from $(top_srcdir).

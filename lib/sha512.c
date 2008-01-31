@@ -1,7 +1,7 @@
 /* sha512.c - Functions to compute SHA512 and SHA384 message digest of files or
    memory blocks according to the NIST specification FIPS-180-2.
 
-   Copyright (C) 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2006, 2008 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -92,18 +92,25 @@ sha384_init_ctx (struct sha512_ctx *ctx)
   ctx->buflen = 0;
 }
 
-/* Put result from CTX in first 64 bytes following RESBUF.  The result
-   must be in little endian byte order.
+/* Copy the value from V into the memory location pointed to by *CP,
+   If your architecture allows unaligned access, this is equivalent to
+   * (__typeof__ (v) *) cp = v  */
+static inline void
+set_uint64 (char *cp, u64 v)
+{
+  memcpy (cp, &v, sizeof v);
+}
 
-   IMPORTANT: On some systems it is required that RESBUF is correctly
-   aligned for a 64-bit value.  */
+/* Put result from CTX in first 64 bytes following RESBUF.
+   The result must be in little endian byte order.  */
 void *
 sha512_read_ctx (const struct sha512_ctx *ctx, void *resbuf)
 {
   int i;
+  char *r = resbuf;
 
   for (i = 0; i < 8; i++)
-    ((u64 *) resbuf)[i] = SWAP (ctx->state[i]);
+    set_uint64 (r + i * sizeof ctx->state[0], SWAP (ctx->state[i]));
 
   return resbuf;
 }
@@ -112,18 +119,16 @@ void *
 sha384_read_ctx (const struct sha512_ctx *ctx, void *resbuf)
 {
   int i;
+  char *r = resbuf;
 
   for (i = 0; i < 6; i++)
-    ((u64 *) resbuf)[i] = SWAP (ctx->state[i]);
+    set_uint64 (r + i * sizeof ctx->state[0], SWAP (ctx->state[i]));
 
   return resbuf;
 }
 
 /* Process the remaining bytes in the internal buffer and the usual
-   prolog according to the standard and write the result to RESBUF.
-
-   IMPORTANT: On some systems it is required that RESBUF is correctly
-   aligned for a 64-bit value.  */
+   prolog according to the standard and write the result to RESBUF.  */
 static void
 sha512_conclude_ctx (struct sha512_ctx *ctx)
 {
