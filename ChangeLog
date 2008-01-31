@@ -1,5 +1,9 @@
 2008-01-31  Jim Meyering  <meyering@redhat.com>
 
+	Adapt to new version of vc-list-files.
+	* tests/check.mk (vc_exe_in_TESTS): Adapt to new constraint
+	that vc-list-files be run only from $(top_srcdir).
+
 	Pull vc-list-files from gnulib.
 	* bootstrap.conf (gnulib_modules): Add vc-list-files.
 	* build-aux/vc-list-files: Remove file.
