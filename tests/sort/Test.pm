@@ -1,7 +1,7 @@
 # -*-perl-*-
 # Test "sort".
 
-# Copyright (C) 1996-1999, 2001-2007 Free Software Foundation, Inc.
+# Copyright (C) 1996-1999, 2001-2008 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -128,8 +128,9 @@ my @tv = (
 ["10e", '-k 1.2,1.2', "ab\nba\n", "ba\nab\n", 0],
 #
 # The way sort works on these inputs (10f and 10g) seems wrong to me.
-# See May 30 ChangeLog entry.  POSIX doesn't seem to say one way or
-# the other, but that's the way all other sort implementations work.
+# See http://git.sv.gnu.org/gitweb/?p=coreutils.git;a=commitdiff;h=3c467c0d223
+# POSIX doesn't seem to say one way or the other, but that's the way all
+# other sort implementations work.
 ["10f", '-t : -k 1.3,1.3', ":ab\n:ba\n", ":ba\n:ab\n", 0],
 ["10g", '-k 1.4,1.4', "a ab\nb ba\n", "b ba\na ab\n", 0],
 #
