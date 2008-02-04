@@ -1,3 +1,7 @@
+2008-02-04  Jim Meyering  <meyering@redhat.com>
+
+	* Makefile.maint (announcement): Remove stale comment.
+
 2008-02-02  Jim Meyering  <meyering@redhat.com>
 
 	Clarify a comment.

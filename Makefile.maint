@@ -626,8 +626,6 @@ rel-files = $(xd-delta) $(DIST_ARCHIVES)
 
 gnulib-version = $$(cd $(gnulib_dir) && git describe)
 
-# Approximate the date of last gnulib "update" by the ChangeLog file's
-# mtime, and provide that date in the announcement.
 announcement: NEWS ChangeLog $(rel-files)
 	@./build-aux/announce-gen					\
 	    --release-type=$(RELEASE_TYPE)				\
