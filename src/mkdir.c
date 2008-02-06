@@ -1,5 +1,5 @@
 /* mkdir -- make directories
-   Copyright (C) 90, 1995-2002, 2004-2007 Free Software Foundation, Inc.
+   Copyright (C) 90, 1995-2002, 2004-2008 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -79,6 +79,19 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   exit (status);
 }
 
+/* Verbose formatted output of variable count of arguments.  */
+static void
+verbose_output (FILE *fp, char const *fmt, ...)
+{
+  va_list ap;
+  fputs (program_name, fp);
+  fputs (": ", fp);
+  va_start (ap, fmt);
+  vfprintf (fp, fmt, ap);
+  va_end (ap);
+  fputc ('\n', fp);
+}
+
 /* Options passed to subsidiary functions.  */
 struct mkdir_options
 {
@@ -105,7 +118,7 @@ announce_mkdir (char const *dir, void *options)
 {
   struct mkdir_options const *o = options;
   if (o->created_directory_format)
-    error (0, 0, o->created_directory_format, quote (dir));
+    verbose_output (stdout, o->created_directory_format, quote (dir));
 }
 
 /* Make ancestor directory DIR, whose last component is COMPONENT,

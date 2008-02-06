@@ -10,6 +10,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   "rmdir --ignore-fail-on-non-empty" detects and ignores the failure
   in more cases when a directory is empty.
 
+** Consistency
+
+  mkdir and split now write --verbose output to stdout, not stderr.
+
 
 * Noteworthy changes in release 6.10 (2008-01-22) [stable]
 

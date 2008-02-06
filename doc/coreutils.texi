@@ -2838,7 +2838,7 @@ Use digits in suffixes rather than lower-case letters.
 
 @itemx --verbose
 @opindex --verbose
-Write a diagnostic to standard error just before each output file is opened.
+Write a diagnostic just before each output file is opened.
 
 @end table
 

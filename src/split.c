@@ -1,5 +1,5 @@
 /* split.c -- split a file into pieces.
-   Copyright (C) 1988, 1991, 1995-2007 Free Software Foundation, Inc.
+   Copyright (C) 1988, 1991, 1995-2008 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -122,8 +122,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -l, --lines=NUMBER      put NUMBER lines per output file\n\
 "), DEFAULT_SUFFIX_LENGTH);
       fputs (_("\
-      --verbose           print a diagnostic to standard error just\n\
-                            before each output file is opened\n\
+      --verbose           print a diagnostic just before each\n\
+                            output file is opened\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
@@ -208,7 +208,7 @@ cwrite (bool new_file_flag, const char *bp, size_t bytes)
 
       next_file_name ();
       if (verbose)
-	fprintf (stderr, _("creating file %s\n"), quote (outfile));
+	fprintf (stdout, _("creating file %s\n"), quote (outfile));
       output_desc = open (outfile,
 			  O_WRONLY | O_CREAT | O_TRUNC | O_BINARY,
 			  (S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP

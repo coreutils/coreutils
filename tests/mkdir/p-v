@@ -1,7 +1,7 @@
 #!/bin/sh
 # Test mkdir -pv.
 
-# Copyright (C) 2006, 2007 Free Software Foundation, Inc.
+# Copyright (C) 2006-2008 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@ fi
 . $srcdir/../lang-default
 . $srcdir/../test-lib.sh
 
-mkdir -pv foo/a/b/c/d 2>out || exit
+mkdir -pv foo/a/b/c/d >out || exit
 
 diff - out <<\EOF
 mkdir: created directory `foo'

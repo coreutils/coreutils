@@ -1,7 +1,7 @@
 #!/bin/sh
 # Show that split -a works.
 
-# Copyright (C) 2002-2007 Free Software Foundation, Inc.
+# Copyright (C) 2002-2008 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -39,7 +39,7 @@ test -f xaz && fail=1
 rm -f x*
 
 # With a longer suffix, it must succeed.
-split --verbose -b 1 -a 2 in 2> err || fail=1
+split --verbose -b 1 -a 2 in > err || fail=1
 test -f xaa || fail=1
 test -f xaz || fail=1
 test -f xba || fail=1

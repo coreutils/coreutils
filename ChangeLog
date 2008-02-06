@@ -1,3 +1,17 @@
+2008-02-06  Steven Schubiger  <schubiger@gmail.com>
+
+	mkdir, split: write --verbose output to stdout, not stderr.
+	* src/mkdir.c (verbose_output): New function.
+	(announce_mkdir): Use it.
+	* src/split.c (usage): Update.
+	* src/split.c (cwrite): Write to stdout, not stderr.
+	* doc/coreutils.texi (split invocation): Remove the mention
+	of --verbose output being printed to stderr.
+	* tests/mkdir/p-v: Redirect stdout, not stderr.
+	* tests/misc/split-a: Likewise.
+	* NEWS: Mention this change.
+	* TODO: Remove this item.
+
 2008-02-04  Jim Meyering  <meyering@redhat.com>
 
 	* Makefile.maint (announcement): Remove stale comment.

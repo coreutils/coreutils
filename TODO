@@ -46,14 +46,6 @@ And once that's done, add an exclusion so that `cp --link'
 no longer incurs the overhead of saving src. dev/ino and dest. filename
 in the hash table.
 
-See if we can be consistent about where --verbose sends its output:
-  These all send --verbose output to stdout:
-    head, tail, rm, cp, mv, ln, chmod, chown, chgrp, install, ln
-  These send it to stderr:
-    shred mkdir split
-  shred must write --verbose output to stderr
-  readlink is different
-
 Write an autoconf test to work around build failure in HPUX's 64-bit mode.
 See notes in README -- and remove them once there's a work-around.
 
