@@ -1,5 +1,9 @@
 2008-02-07  Jim Meyering  <meyering@redhat.com>
 
+	Fix a typo in description of size suffixes: s/GB/G/.
+	* doc/coreutils.texi (od invocation, head invocation, tail invocation):
+	Spotted by Bert Wesarg.
+
 	* NEWS [6.9.90]: Mention the added feature that head, od, split and
 	tail now accept the standard size suffixes (kB, M, MB, G, GB, and
 	so on for T, P, Y, Z, and Y) on arguments to selected options.
