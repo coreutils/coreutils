@@ -1,5 +1,12 @@
 2008-02-07  Jim Meyering  <meyering@redhat.com>
 
+	We *do* need two different version files.
+	One for tarball-only, the other to be updated any time we
+	get a new value of $(VERSION).
+	* Makefile.am (dist-hook): Create .tarball-version in dist tarball.
+	* GNUmakefile (_curr-ver): Make git-version-gen use it.
+	* .gitignore: Ignore it.
+
 	Fix a typo in description of size suffixes: s/GB/G/.
 	* doc/coreutils.texi (od invocation, head invocation, tail invocation):
 	Spotted by Bert Wesarg.

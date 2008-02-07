@@ -70,9 +70,12 @@ BUILT_SOURCES = .version
 .version:
 	echo $(VERSION) > $@-t && mv $@-t $@
 
+# Arrange so that .tarball-version appears only in the distribution
+# tarball, and never in a checked-out repository.
 # The perl substitution is to change some key uses of "rm" to "/bin/rm".
 # See the rm_subst comment for details.
 dist-hook:
+	echo $(VERSION) > $(distdir)/.tarball-version
 	perl -pi -e '$(rm_subst)' $(distdir)/src/Makefile.in
 
 distcheck-hook:

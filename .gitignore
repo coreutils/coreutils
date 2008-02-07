@@ -5,6 +5,7 @@
 */.deps
 *~
 .gdb-history
+.tarball-version
 ABOUT-NLS
 INSTALL
 Makefile
