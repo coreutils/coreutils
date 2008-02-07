@@ -1,3 +1,9 @@
+2008-02-07  Jim Meyering  <meyering@redhat.com>
+
+	* NEWS [6.9.90]: Mention the added feature that head, od, split and
+	tail now accept the standard size suffixes (kB, M, MB, G, GB, and
+	so on for T, P, Y, Z, and Y) on arguments to selected options.
+
 2008-02-06  Steven Schubiger  <schubiger@gmail.com>
 
 	mkdir, split: write --verbose output to stdout, not stderr.

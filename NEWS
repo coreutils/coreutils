@@ -98,6 +98,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   * ls accepts a slightly modified -Z option.
   * ls: contrary to Fedora version, does not accept --lcontext and --scontext
 
+  The following commands and options now support the standard size
+  suffixes kB, M, MB, G, GB, and so on for T, P, Y, Z, and Y:
+  head -c, head -n, od -j, od -N, od -S, split -b, split -C,
+  tail -c, tail -n.
+
   cp -p tries to preserve the GID of a file even if preserving the UID
   is not possible.
 
