@@ -31,6 +31,9 @@ EXTRA_DIST = Makefile.cfg Makefile.maint GNUmakefile \
   .x-sc_unmarked_diagnostics \
   .x-sc_useless_cpp_parens \
   ChangeLog-2005 \
+  ChangeLog-2006 \
+  ChangeLog-2007 \
+  ChangeLog-2008 \
   bootstrap \
   bootstrap.conf \
   build-aux/cvsu \
@@ -74,9 +77,19 @@ BUILT_SOURCES = .version
 # tarball, and never in a checked-out repository.
 # The perl substitution is to change some key uses of "rm" to "/bin/rm".
 # See the rm_subst comment for details.
-dist-hook:
+dist-hook: gen-ChangeLog
 	echo $(VERSION) > $(distdir)/.tarball-version
 	perl -pi -e '$(rm_subst)' $(distdir)/src/Makefile.in
+
+gen_start_date = 2008-02-08
+.PHONY: gen-ChangeLog
+gen-ChangeLog:
+	if test -d .git; then						\
+	  $(top_srcdir)/build-aux/gitlog-to-changelog			\
+	    --since=$(gen_start_date) > $(distdir)/cl-t;		\
+	  rm -f $(distdir)/ChangeLog;					\
+	  mv $(distdir)/cl-t $(distdir)/ChangeLog;			\
+	fi
 
 distcheck-hook:
 	$(MAKE) my-distcheck
