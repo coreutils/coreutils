@@ -101,6 +101,13 @@ syntax-check: $(local-check)
 #	    exit 1; } || :
 # FIXME: don't allow `#include .strings\.h' anywhere
 
+sc_avoid_if_before_free:
+	@$(srcdir)/build-aux/useless-if-before-free			\
+		$(useless_free_options)					\
+	    $$($(CVS_LIST_EXCEPT)) &&					\
+	  { echo '$(ME): found useless "if" before "free" above' 1>&2;	\
+	    exit 1; } || :
+
 sc_cast_of_argument_to_free:
 	@grep -nE '\<free \(\(' $$($(CVS_LIST_EXCEPT)) &&		\
 	  { echo '$(ME): don'\''t cast free argument' 1>&2;		\
