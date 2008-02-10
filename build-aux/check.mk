@@ -89,6 +89,11 @@ tput sgr0 >/dev/null 2>&1 &&			\
 # by disabling -e (using the XSI extension "set +e") if it's set.
 SH_E_WORKAROUND = case $$- in *e*) set +e;; esac
 
+# Emulate dirname with sed.
+# This approximation fails when the input is a single-component
+# absolute directory name like /foo, but that never happens here.
+approx_dirname_filter = sed 's,^[^/]*$$,.,;s,//*[^/]*$$,,'
+
 # To be inserted before the command running the test.  Creates the
 # directory for the log if needed.  Stores in $dir the directory
 # containing $src, and passes TESTS_ENVIRONMENT.
@@ -96,7 +101,7 @@ am__check_pre =					\
 $(SH_E_WORKAROUND);				\
 tst=`echo "$$src" | sed 's|^.*/||'`;		\
 rm -f $@-t;					\
-$(mkdir_p) "$$(dirname $@)" || exit;		\
+$(mkdir_p) "$$(echo '$@'|$(approx_dirname_filter))" || exit; \
 if test -f "./$$src"; then dir=./;		\
 elif test -f "$$src"; then dir=;		\
 else dir="$(srcdir)/"; fi;			\
