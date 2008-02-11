@@ -1,7 +1,7 @@
 #!/bin/sh
 # ensure that mv doesn't first unlink its destination in one particular case
 
-# Copyright (C) 2006-2007 Free Software Foundation, Inc.
+# Copyright (C) 2006-2008 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,8 +21,8 @@ if test "$VERBOSE" = yes; then
   mv --version
 fi
 
-. $srcdir/../strace
 . $srcdir/../test-lib.sh
+require_strace_
 
 # Before the fix, mv would unnecessarily unlink the destination symlink:
 #   $ rm -rf s[12]; ln -s / s1; ln -s /tmp s2; strace -qe unlink /bin/mv -T s1 s2

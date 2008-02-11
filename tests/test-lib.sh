@@ -39,6 +39,16 @@ require_ulimit_()
     && skip_test_ "this shell lacks ulimit support"
 }
 
+# Skip the current test if strace is not available or doesn't work.
+require_strace_()
+{
+  strace -V < /dev/null > /dev/null 2>&1 ||
+    skip_test_ 'no strace program'
+
+  strace -qe unlink echo > /dev/null 2>&1 ||
+    skip_test_ 'strace does not work'
+}
+
 require_built_()
 {
   skip_=no
