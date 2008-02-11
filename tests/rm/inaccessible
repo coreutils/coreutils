@@ -2,7 +2,7 @@
 # Ensure that rm works even when run from a directory
 # for which the user has no access at all.
 
-# Copyright (C) 2004, 2006, 2007 Free Software Foundation, Inc.
+# Copyright (C) 2004, 2006-2008 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@ if test "$VERBOSE" = yes; then
 fi
 
 . $srcdir/../lang-default
+. $srcdir/../test-lib.sh
 
 # Skip this test if your system has neither the openat-style functions
 # nor /proc/self/fd support with which to emulate them.
@@ -33,7 +34,6 @@ if test $skip = yes; then
   skip_test_ 'this system lacks openat support'
 fi
 
-. $srcdir/../test-lib.sh
 skip_if_root_
 
 p=`pwd`
