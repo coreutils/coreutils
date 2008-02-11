@@ -25,7 +25,6 @@ EXTRA_DIST =		\
   sample-test		\
   setgid-check		\
   sparse-file		\
-  strace		\
   test-lib.sh		\
   umask-check
 
