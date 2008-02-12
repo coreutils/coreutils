@@ -4350,7 +4350,9 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
       --group-directories-first\n\
-                             group directories before files\n\
+                             group directories before files.\n\
+                               augment with a --sort option, but any\n\
+                               use of --sort=none (-U) disables grouping\n\
 "), stdout);
       fputs (_("\
   -G, --no-group             in a long listing, don't print group names\n\

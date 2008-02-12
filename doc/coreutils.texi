@@ -5894,6 +5894,8 @@ directories and the files separately using the selected sort key
 (see --sort option).
 That is, this option specifies a primary sort key,
 and the --sort option specifies a secondary key.
+However, any use of @option{--sort=none}
+(@option{-U}) disables this option altogether.
 
 @item --hide=PATTERN
 @opindex --hide=@var{pattern}
