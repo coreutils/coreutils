@@ -3997,19 +3997,13 @@ print_color_indicator (const char *name, mode_t mode, int linkok,
 static void
 put_indicator (const struct bin_str *ind)
 {
-  size_t i;
-  const char *p;
-
   if (! used_color)
     {
       used_color = true;
       prep_non_filename_text ();
     }
 
-  p = ind->string;
-
-  for (i = ind->len; i != 0; --i)
-    putchar (*(p++));
+  fwrite (ind->string, ind->len, 1, stdout);
 }
 
 static size_t
