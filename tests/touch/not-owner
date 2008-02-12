@@ -2,7 +2,7 @@
 # Make sure that touch gives reasonable diagnostics when applied
 # to an unwritable directory owned by some other user.
 
-# Copyright (C) 2003-2007 Free Software Foundation, Inc.
+# Copyright (C) 2003-2008 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,8 +23,9 @@ if test "$VERBOSE" = yes; then
 fi
 
 . $srcdir/../lang-default
+. $srcdir/../test-lib.sh
 
-test=../../src/test
+test=$abs_top_builddir/src/test
 if $test -w /; then
   skip_test_ you have write access to /.
 fi
@@ -33,7 +34,6 @@ if $test -O / || $test -G /; then
   skip_test_ "you own /."
 fi
 
-. $srcdir/../test-lib.sh
 skip_if_root_
 
 fail=0
