@@ -1,7 +1,7 @@
 #!/bin/sh
 # -*- perl -*-
 
-# Copyright (C) 1998, 2000-2007 Free Software Foundation, Inc.
+# Copyright (C) 1998, 2000-2008 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -55,8 +55,14 @@ system (qq(touch setuid && chmod u+s setuid && $test -u setuid &&
   or (warn "$program_name: cannot create setuid/setgid/sticky files,"
       . "so can't run this test\n"), exit 77;
 
-my $mkdir = {PRE => sub {mkdir 'd',0755 or die "d: $!\n"}};
-my $rmdir = {POST => sub {rmdir 'd' or die "d: $!\n"}};
+sub mkdir_d {mkdir 'd',0755 or die "d: $!\n"}
+sub rmdir_d {rmdir 'd'      or die "d: $!\n"}
+my $mkdir = {PRE => sub {mkdir_d}};
+my $rmdir = {POST => sub {rmdir_d}};
+my $mkdir_reg = {PRE => sub {mkdir_d; open (FH, '>d/f') && close FH
+			       or die "d/f: $!\n" }};
+my $rmdir_reg = {POST => sub {unlink 'd/f' or die "d/f: $!\n";
+			      rmdir 'd' or die "d: $!\n"}};
 
 my $mkdir2 = {PRE => sub {mkdir 'd',0755 or die "d: $!\n";
 			  mkdir 'd/e',0755 or die "d/e: $!\n" }};
@@ -131,6 +137,11 @@ my @Tests =
      ['sl-dF-color', '-dF --color=always d',
 				 {OUT => "\e[0m\e[01;36md\e[0m\@\n\e[m"},
 				  $slink_d, $unlink_d],
+
+     # A listing with no output should have no color sequences at all.
+     ['no-c-empty', '--color=always d', {OUT => ""}, $mkdir, $rmdir],
+     # A listing with only regular files should have no color sequences at all.
+     ['no-c-reg', '--color=always d', {OUT => "f\n"}, $mkdir_reg, $rmdir_reg],
 
      # Test for a bug fixed after coreutils-6.9.
      ['sl-target', '--color=always d',

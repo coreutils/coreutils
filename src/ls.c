@@ -207,7 +207,7 @@ static bool file_ignored (char const *name);
 static uintmax_t gobble_file (char const *name, enum filetype type,
 			      ino_t inode, bool command_line_arg,
 			      char const *dirname);
-static void print_color_indicator (const char *name, mode_t mode, int linkok,
+static bool print_color_indicator (const char *name, mode_t mode, int linkok,
 				   bool stat_ok, enum filetype type);
 static void put_indicator (const struct bin_str *ind);
 static void add_ignore_pattern (const char *pattern);
@@ -488,6 +488,12 @@ ARGMATCH_VERIFY (indicator_style_args, indicator_style_types);
 
 static bool print_with_color;
 
+/* Whether we used any colors in the output so far.  If so, we will
+   need to restore the default color later.  If not, we will need to
+   call prep_non_filename_text before using color for the first time. */
+
+static bool used_color = false;
+
 enum color_type
   {
     color_never,		/* 0: default or --color=never */
@@ -506,14 +512,15 @@ enum Dereference_symlink
 
 enum indicator_no
   {
-    C_LEFT, C_RIGHT, C_END, C_NORM, C_FILE, C_DIR, C_LINK, C_FIFO, C_SOCK,
+    C_LEFT, C_RIGHT, C_END, C_RESET, C_NORM, C_FILE, C_DIR, C_LINK,
+    C_FIFO, C_SOCK,
     C_BLK, C_CHR, C_MISSING, C_ORPHAN, C_EXEC, C_DOOR, C_SETUID, C_SETGID,
     C_STICKY, C_OTHER_WRITABLE, C_STICKY_OTHER_WRITABLE
   };
 
 static const char *const indicator_name[]=
   {
-    "lc", "rc", "ec", "no", "fi", "di", "ln", "pi", "so",
+    "lc", "rc", "ec", "rs", "no", "fi", "di", "ln", "pi", "so",
     "bd", "cd", "mi", "or", "ex", "do", "su", "sg", "st",
     "ow", "tw", NULL
   };
@@ -530,8 +537,9 @@ static struct bin_str color_indicator[] =
     { LEN_STR_PAIR ("\033[") },		/* lc: Left of color sequence */
     { LEN_STR_PAIR ("m") },		/* rc: Right of color sequence */
     { 0, NULL },			/* ec: End color (replaces lc+no+rc) */
-    { LEN_STR_PAIR ("0") },		/* no: Normal */
-    { LEN_STR_PAIR ("0") },		/* fi: File: default */
+    { LEN_STR_PAIR ("0") },		/* rs: Reset to ordinary colors */
+    { 0, NULL },			/* no: Normal */
+    { 0, NULL },			/* fi: File: default */
     { LEN_STR_PAIR ("01;34") },		/* di: Directory: bright blue */
     { LEN_STR_PAIR ("01;36") },		/* ln: Symlink: bright cyan */
     { LEN_STR_PAIR ("33") },		/* pi: Pipe: yellow/brown */
@@ -1071,7 +1079,8 @@ process_signals (void)
       int stops;
       sigset_t oldset;
 
-      restore_default_color ();
+      if (used_color)
+	restore_default_color ();
       fflush (stdout);
 
       sigprocmask (SIG_BLOCK, &caught_signals, &oldset);
@@ -1211,8 +1220,6 @@ main (int argc, char **argv)
 	    }
 #endif
 	}
-
-      prep_non_filename_text ();
     }
 
   if (dereference == DEREF_UNDEFINED)
@@ -1327,7 +1334,8 @@ main (int argc, char **argv)
     {
       int j;
 
-      restore_default_color ();
+      if (used_color)
+	restore_default_color ();
       fflush (stdout);
 
       /* Restore the default signal handling.  */
@@ -3790,8 +3798,9 @@ print_name_with_quoting (const char *p, mode_t mode, int linkok,
 			 bool stat_ok, enum filetype type,
 			 struct obstack *stack)
 {
-  if (print_with_color)
-    print_color_indicator (p, mode, linkok, stat_ok, type);
+  bool used_color_this_time
+    = (print_with_color
+       && print_color_indicator (p, mode, linkok, stat_ok, type));
 
   if (stack)
     PUSH_CURRENT_DIRED_POS (stack);
@@ -3801,7 +3810,7 @@ print_name_with_quoting (const char *p, mode_t mode, int linkok,
   if (stack)
     PUSH_CURRENT_DIRED_POS (stack);
 
-  if (print_with_color)
+  if (used_color_this_time)
     {
       process_signals ();
       prep_non_filename_text ();
@@ -3816,7 +3825,7 @@ prep_non_filename_text (void)
   else
     {
       put_indicator (&color_indicator[C_LEFT]);
-      put_indicator (&color_indicator[C_NORM]);
+      put_indicator (&color_indicator[C_RESET]);
       put_indicator (&color_indicator[C_RIGHT]);
     }
 }
@@ -3891,7 +3900,8 @@ print_type_indicator (bool stat_ok, mode_t mode, enum filetype type)
     DIRED_PUTCHAR (c);
 }
 
-static void
+/* Returns whether any color sequence was printed. */
+static bool
 print_color_indicator (const char *name, mode_t mode, int linkok,
 		       bool stat_ok, enum filetype filetype)
 {
@@ -3968,9 +3978,19 @@ print_color_indicator (const char *name, mode_t mode, int linkok,
 	}
     }
 
-  put_indicator (&color_indicator[C_LEFT]);
-  put_indicator (ext ? &(ext->seq) : &color_indicator[type]);
-  put_indicator (&color_indicator[C_RIGHT]);
+  {
+    const struct bin_str *const s
+      = ext ? &(ext->seq) : &color_indicator[type];
+    if (s->string != NULL)
+      {
+	put_indicator (&color_indicator[C_LEFT]);
+	put_indicator (s);
+	put_indicator (&color_indicator[C_RIGHT]);
+	return true;
+      }
+    else
+      return false;
+  }
 }
 
 /* Output a color indicator (which may contain nulls).  */
@@ -3979,6 +3999,12 @@ put_indicator (const struct bin_str *ind)
 {
   size_t i;
   const char *p;
+
+  if (! used_color)
+    {
+      used_color = true;
+      prep_non_filename_text ();
+    }
 
   p = ind->string;
 

@@ -133,9 +133,6 @@ Changes expected to go in, someday.
 
   Pending copyright papers:
   ------------------------
-  ls --color: Ed Avis' patch to suppress escape sequences for
-    non-highlighted files
-
   getpwnam from Bruce Korb
 
   pb (progress bar) from Miika Pekkarinen

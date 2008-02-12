@@ -6,12 +6,15 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   configure --enable-no-install-program=groups now works.
 
-
   ls no longer segfaults on files in /proc when linked with an older version
   of libselinux.  E.g., ls -l /proc/sys would dereference a NULL pointer.
 
   "rmdir --ignore-fail-on-non-empty" detects and ignores the failure
   in more cases when a directory is empty.
+
+** Improvements
+
+  ls --color no longer outputs unnecessary escape sequences
 
 ** Consistency
 
