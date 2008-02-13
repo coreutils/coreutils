@@ -91,7 +91,7 @@ gen-ChangeLog:
 	  mv $(distdir)/cl-t $(distdir)/ChangeLog;			\
 	fi
 
-distcheck-hook:
+distcheck-hook: check-ls-dircolors
 	$(MAKE) my-distcheck
 
 DISTCLEANFILES = VERSION
@@ -103,3 +103,15 @@ THANKS-to-translators: po/LINGUAS THANKStt.in
 	    echo http://www.iro.umontreal.ca/contrib/po/HTML/team-$$lang.html; \
 	  done;								\
 	) > $@-tmp && mv $@-tmp $@
+
+# Ensure that the sets of two-letter codes in ls.c and dircolors.c
+# remain in sync.
+.PHONY: check-ls-dircolors
+check-ls-dircolors:
+	dc=$$(sed -n '/static.*ls_codes\[/,/};'/p src/dircolors.c	\
+	  |sed -n '/^  *"/p'|tr , '\n'|sed 's/^  *//'			\
+	  |sed -n 's/^"\(..\)"/\1/p'|sort -u);				\
+	ls=$$(sed -n '/static.*indicator_name\[/,/};'/p src/ls.c	\
+	  |sed -n '/^  *"/p'|tr , '\n'|sed 's/^  *//'			\
+	  |sed -n 's/^"\(..\)"/\1/p'|sort -u);				\
+	test "$$dc" = "$$ls"
