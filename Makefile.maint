@@ -69,20 +69,13 @@ export LC_ALL = C
 ## Sanity checks.  ##
 ## --------------- ##
 
-# FIXME: add a check to prohibit definition in src/*.c of symbols defined
-# in system.h.  E.g. today I removed from tail.c a useless definition of
-# ENOSYS.  It was useless because system.h ensures it's defined.
-
 # Collect the names of rules starting with `sc_'.
 syntax-check-rules := $(shell sed -n 's/^\(sc_[a-zA-Z0-9_-]*\):.*/\1/p' $(ME))
 .PHONY: $(syntax-check-rules)
 
-# Checks that don't require cvs.
-# Run `changelog-check' last, as previous test may reveal problems requiring
-# new ChangeLog entries.
 local-checks-available = \
   po-check copyright-check m4-check author_mark_check \
-  changelog-check patch-check strftime-check $(syntax-check-rules) \
+  patch-check strftime-check $(syntax-check-rules) \
   makefile_path_separator_check \
   makefile-check check-AUTHORS
 .PHONY: $(local-checks-available)
