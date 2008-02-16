@@ -29,6 +29,19 @@ use strict;
 # Turn off localisation of executable's ouput.
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
 
+my $saved_ls_colors;
+
+sub push_ls_colors($)
+{
+  $saved_ls_colors = $ENV{LS_COLORS};
+  $ENV{LS_COLORS} = $_[0];
+}
+
+sub restore_ls_colors()
+{
+  $ENV{LS_COLORS} = $saved_ls_colors;
+}
+
 # If the string $S is a well-behaved file name, simply return it.
 # If it contains white space, quotes, etc., quote it, and return the new string.
 sub shell_quote($)
@@ -46,14 +59,17 @@ sub shell_quote($)
 
 # Set up files used by the setuid-etc tests; skip this entire test if
 # that cannot be done.
-my $test = shell_quote "$ENV{abs_top_builddir}/src/test";
-system (qq(touch setuid && chmod u+s setuid && $test -u setuid &&
+sub setuid_setup()
+{
+  my $test = shell_quote "$ENV{abs_top_builddir}/src/test";
+  system (qq(touch setuid && chmod u+s setuid && $test -u setuid &&
 	   touch setgid && chmod g+s setgid && $test -g setgid &&
 	   mkdir sticky && chmod +t sticky  && $test -k sticky &&
 	   mkdir owt    && chmod +t,o+w owt && $test -k owt &&
 	   mkdir owr    && chmod o+w owr)) == 0
-  or (warn "$program_name: cannot create setuid/setgid/sticky files,"
-      . "so can't run this test\n"), exit 77;
+	     or (warn "$program_name: cannot create setuid/setgid/sticky files,"
+		 . "so can't run this test\n"), exit 77;
+}
 
 sub mkdir_d {mkdir 'd',0755 or die "d: $!\n"}
 sub rmdir_d {rmdir 'd'      or die "d: $!\n"}
@@ -72,14 +88,16 @@ my $rmdir2 = {POST => sub {rmdir 'd/e' or die "d/e: $!\n";
 my $target = {PRE => sub {
 		mkdir 'd',0755 or die "d: $!\n";
 		symlink '.', 'd/X' or die "d/X: $!\n";
-		$ENV{LS_COLORS}='ln=target'
+		push_ls_colors('ln=target')
 	      }};
 my $target2 = {POST => sub {unlink 'd/X' or die "d/X: $!\n";
-			    rmdir 'd' or die "d: $!\n" }};
+			    rmdir 'd' or die "d: $!\n";
+			    restore_ls_colors
+			    }};
 my $slink_d = {PRE => sub {symlink '/', 'd' or die "d: $!\n";
-                           $ENV{LS_COLORS}='ln=01;36:di=01;34:or=40;31;01'
+                           push_ls_colors('ln=01;36:di=01;34:or=40;31;01')
                            }};
-my $unlink_d = {POST => sub {unlink 'd' or die "d: $!\n"}};
+my $unlink_d = {POST => sub {unlink 'd' or die "d: $!\n"; restore_ls_colors}};
 
 my $mkdir_d_slink = {PRE => sub {mkdir 'd',0755 or die "d: $!\n";
 				 symlink '/', 'd/s' or die "d/s: $!\n" }};
@@ -93,9 +111,10 @@ sub make_j_d ()
   chmod 0555, 'j/d' or die "making j/d executable: $!\n";
 }
 
-my $exe_in_subdir = {PRE => sub { make_j_d (); $ENV{LS_COLORS}='ex=01;32' }};
+my $exe_in_subdir = {PRE => sub { make_j_d (); push_ls_colors('ex=01;32') }};
 my $remove_j = {POST => sub {unlink 'j/d' or die "j/d: $!\n";
-                             rmdir 'j' or die "j: $!\n" }};
+                             rmdir 'j' or die "j: $!\n";
+			     restore_ls_colors }};
 
 my $q_bell = {IN => {"q\a" => ''}};
 my @Tests =
@@ -154,10 +173,11 @@ my @Tests =
       {PRE => sub {
 		mkdir 'd',0755 or die "d: $!\n";
 		symlink 'non-existent', 'd/X' or die "d/X: $!\n";
-		$ENV{LS_COLORS}='or=40;31;01'
+		push_ls_colors('or=40;31;01')
 	      }},
       {POST => sub {unlink 'd/X' or die "d/X: $!\n";
-		    rmdir 'd' or die "d: $!\n" }},
+		    rmdir 'd' or die "d: $!\n";
+		    restore_ls_colors; }},
      ],
 
      # Test for a bug that was introduced in coreutils-4.5.4; fixed in 4.5.5.
@@ -185,6 +205,7 @@ my @Tests =
 	    . "\e[m"
 	 },
 
+	{PRE => sub { my $foo = `ls > /tmp/ls` }},
 	{POST => sub {
          unlink qw(setuid setgid);
 	 foreach my $dir (qw(owr owt sticky)) {rmdir $dir} }},
@@ -195,10 +216,26 @@ my @Tests =
       $mkdir_d_slink, $rmdir_d_slink],
     );
 
+# Start with an unset LS_COLORS environment variable.
+delete $ENV{LS_COLORS};
+
 my $save_temps = $ENV{SAVE_TEMPS};
 my $verbose = $ENV{VERBOSE};
 
 my $prog = 'ls';
+
+setuid_setup;
 my $fail = run_tests ($program_name, $prog, \@Tests, $save_temps, $verbose);
+$fail
+  and exit 1;
+
+# Be careful to use the just-build dircolors.
+my $e = `$ENV{abs_top_builddir}/src/dircolors -b`;
+$e =~ s/^LS_COLORS=\'//;
+$e =~ s/\';.*//sm;
+$ENV{LS_COLORS} = $e;
+
+setuid_setup;
+$fail = run_tests ($program_name, $prog, \@Tests, $save_temps, $verbose);
 exit $fail;
 EOF
