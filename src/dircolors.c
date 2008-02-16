@@ -1,5 +1,5 @@
 /* dircolors - output commands to set the LS_COLOR environment variable
-   Copyright (C) 1996-2007 Free Software Foundation, Inc.
+   Copyright (C) 1996-2008 Free Software Foundation, Inc.
    Copyright (C) 1994, 1995, 1997, 1998, 1999, 2000 H. Peter Anvin
 
    This program is free software: you can redistribute it and/or modify
@@ -59,7 +59,7 @@ static struct obstack lsc_obstack;
 
 static const char *const slack_codes[] =
 {
-  "NORMAL", "NORM", "FILE", "DIR", "LNK", "LINK",
+  "NORMAL", "NORM", "FILE", "RESET", "DIR", "LNK", "LINK",
   "SYMLINK", "ORPHAN", "MISSING", "FIFO", "PIPE", "SOCK", "BLK", "BLOCK",
   "CHR", "CHAR", "DOOR", "EXEC", "LEFT", "LEFTCODE", "RIGHT", "RIGHTCODE",
   "END", "ENDCODE", "SUID", "SETUID", "SGID", "SETGID", "STICKY",
@@ -68,7 +68,7 @@ static const char *const slack_codes[] =
 
 static const char *const ls_codes[] =
 {
-  "no", "no", "fi", "di", "ln", "ln", "ln", "or", "mi", "pi", "pi",
+  "no", "no", "fi", "rs", "di", "ln", "ln", "ln", "or", "mi", "pi", "pi",
   "so", "bd", "bd", "cd", "cd", "do", "ex", "lc", "lc", "rc", "rc", "ec", "ec",
   "su", "su", "sg", "sg", "st", "ow", "ow", "tw", "tw", NULL
 };
