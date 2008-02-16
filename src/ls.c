@@ -311,8 +311,7 @@ static struct pending *pending_dirs;
 /* Current time in seconds and nanoseconds since 1970, updated as
    needed when deciding whether a file is recent.  */
 
-static time_t current_time = TYPE_MINIMUM (time_t);
-static int current_time_ns = -1;
+static struct timespec current_time;
 
 static bool print_scontext;
 static char UNKNOWN_SECURITY_CONTEXT[] = "?";
@@ -1154,6 +1153,9 @@ main (int argc, char **argv)
   exit_status = EXIT_SUCCESS;
   print_dir_name = true;
   pending_dirs = NULL;
+
+  current_time.tv_sec = TYPE_MINIMUM (time_t);
+  current_time.tv_nsec = -1;
 
   i = decode_switches (argc, argv);
 
@@ -3306,42 +3308,6 @@ long_time_expected_width (void)
   return width;
 }
 
-/* Get the current time.  */
-
-static void
-get_current_time (void)
-{
-#if HAVE_CLOCK_GETTIME && defined CLOCK_REALTIME
-  {
-    struct timespec timespec;
-    if (clock_gettime (CLOCK_REALTIME, &timespec) == 0)
-      {
-	current_time = timespec.tv_sec;
-	current_time_ns = timespec.tv_nsec;
-	return;
-      }
-  }
-#endif
-
-  /* The clock does not have nanosecond resolution, so get the maximum
-     possible value for the current time that is consistent with the
-     reported clock.  That way, files are not considered to be in the
-     future merely because their time stamps have higher resolution
-     than the clock resolution.  */
-
-#if HAVE_GETTIMEOFDAY
-  {
-    struct timeval timeval;
-    gettimeofday (&timeval, NULL);
-    current_time = timeval.tv_sec;
-    current_time_ns = timeval.tv_usec * 1000 + 999;
-  }
-#else
-  current_time = time (NULL);
-  current_time_ns = 999999999;
-#endif
-}
-
 /* Print the user or group name NAME, with numeric id ID, using a
    print width of WIDTH columns.  */
 
@@ -3441,8 +3407,6 @@ print_long_format (const struct fileinfo *f)
      ];
   size_t s;
   char *p;
-  time_t when;
-  int when_ns;
   struct timespec when_timespec;
   struct tm *when_local;
 
@@ -3475,9 +3439,6 @@ print_long_format (const struct fileinfo *f)
     default:
       abort ();
     }
-
-  when = when_timespec.tv_sec;
-  when_ns = when_timespec.tv_nsec;
 
   p = buf;
 
@@ -3579,35 +3540,37 @@ print_long_format (const struct fileinfo *f)
 
   if (f->stat_ok && when_local)
     {
-      time_t six_months_ago;
+      struct timespec six_months_ago;
       bool recent;
       char const *fmt;
 
       /* If the file appears to be in the future, update the current
 	 time, in case the file happens to have been modified since
 	 the last time we checked the clock.  */
-      if (current_time < when
-	  || (current_time == when && current_time_ns < when_ns))
+      if (timespec_cmp (current_time, when_timespec) < 0)
 	{
-	  /* Note that get_current_time calls gettimeofday which, on some non-
+	  /* Note that gettime may call gettimeofday which, on some non-
 	     compliant systems, clobbers the buffer used for localtime's result.
 	     But it's ok here, because we use a gettimeofday wrapper that
 	     saves and restores the buffer around the gettimeofday call.  */
-	  get_current_time ();
+	  gettime (&current_time);
 	}
 
       /* Consider a time to be recent if it is within the past six
 	 months.  A Gregorian year has 365.2425 * 24 * 60 * 60 ==
 	 31556952 seconds on the average.  Write this value as an
 	 integer constant to avoid floating point hassles.  */
-      six_months_ago = current_time - 31556952 / 2;
-      recent = (six_months_ago <= when
-		&& (when < current_time
-		    || (when == current_time && when_ns <= current_time_ns)));
+      six_months_ago.tv_sec = current_time.tv_sec - 31556952 / 2;
+      six_months_ago.tv_nsec = current_time.tv_nsec;
+
+      recent = (timespec_cmp (six_months_ago, when_timespec) < 0
+		&& (timespec_cmp (when_timespec, current_time) < 0));
       fmt = long_time_format[recent];
 
+      /* We assume here that all time zones are offset from UTC by a
+	 whole number of seconds.  */
       s = nstrftime (p, TIME_STAMP_LEN_MAXIMUM + 1, fmt,
-		     when_local, 0, when_ns);
+		     when_local, 0, when_timespec.tv_nsec);
     }
 
   if (s || !*p)
@@ -3627,8 +3590,9 @@ print_long_format (const struct fileinfo *f)
 	       (! f->stat_ok
 		? "?"
 		: (TYPE_SIGNED (time_t)
-		   ? imaxtostr (when, hbuf)
-		   : umaxtostr (when, hbuf))));
+		   ? imaxtostr (when_timespec.tv_sec, hbuf)
+		   : umaxtostr (when_timespec.tv_sec, hbuf))));
+      /* FIXME: (maybe) We discarded when_timespec.tv_nsec. */
       p += strlen (p);
     }
 
