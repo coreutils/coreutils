@@ -177,6 +177,33 @@ scan_arg (const char *arg)
   return ret;
 }
 
+/* Validate the format, FMT.  Print a diagnostic and exit
+   if there is not exactly one %-directive.  */
+
+static void
+validate_format (char const *fmt)
+{
+  unsigned int n_directives = 0;
+  char const *p;
+
+  for (p = fmt; *p; p++)
+    {
+      if (p[0] == '%' && p[1] != '%' && p[1] != '\0')
+	{
+	  ++n_directives;
+	  ++p;
+	}
+    }
+  if (! n_directives)
+    {
+      error (0, 0, _("no %% directive in format string %s"), quote (fmt));
+      usage (EXIT_FAILURE);
+    }
+  else if (1 < n_directives)
+    error (EXIT_FAILURE, 0, _("too many %% directives in format string %s"),
+	   quote (fmt));
+}
+
 /* If FORMAT is a valid printf format for a double argument, return
    its long double equivalent, possibly allocated from dynamic
    storage, and store into *LAYOUT a description of the output layout;
@@ -405,6 +432,7 @@ main (int argc, char **argv)
 
   if (format_str)
     {
+      validate_format (format_str);
       char const *f = long_double_format (format_str, &layout);
       if (! f)
 	{

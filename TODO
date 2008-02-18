@@ -61,8 +61,6 @@ printf: consider adapting builtins/printf.def from bash
 
 df: add `--total' option, suggested here http://bugs.debian.org/186007
 
-seq: give better diagnostics for invalid formats:
-   e.g. no or too many % directives
 seq: consider allowing format string to contain no %-directives
 
 tail: don't use xlseek; it *exits*.

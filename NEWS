@@ -25,6 +25,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   ls --color no longer outputs unnecessary escape sequences
 
+  seq gives better diagnostics for invalid formats.
+
 ** Consistency
 
   mkdir and split now write --verbose output to stdout, not stderr.

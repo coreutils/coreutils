@@ -87,10 +87,14 @@ my @Tests =
    # "seq: memory exhausted".  In coreutils-6.0..6.8, it would mistakenly
    # succeed and print a blank line.
    ['fmt-eos1', qw(-f % 1), {EXIT => 1},
-    {ERR => "seq: invalid format string: `%'\n" . $try_help }],
+    {ERR => "seq: no % directive in format string `%'\n" . $try_help }],
    ['fmt-eos2', qw(-f %g% 1), {EXIT => 1},
     {ERR => "seq: invalid format string: `%g%'\n" . $try_help }],
 
+   ['fmt-d',	qw(-f "" 1), {EXIT => 1},
+    {ERR => "seq: no % directive in format string `'\n" . $try_help }],
+   ['fmt-e',	qw(-f %g%g 1), {EXIT => 1},
+    {ERR => "seq: too many % directives in format string `%g%g'\n"}],
   );
 
 # Append a newline to each entry in the OUT array.
