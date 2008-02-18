@@ -2,7 +2,7 @@
 # -*- perl -*-
 # Test "seq".
 
-# Copyright (C) 1999, 2000, 2003, 2005-2007 Free Software Foundation, Inc.
+# Copyright (C) 1999, 2000, 2003, 2005-2008 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -31,6 +31,7 @@ use strict;
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
 
 my $prog = 'seq';
+my $try_help = "Try `$prog --help' for more information.\n";
 
 my @Tests =
   (
@@ -80,9 +81,16 @@ my @Tests =
 
    # In coreutils-[6.0..6.9], this would mistakenly succeed and print "%Lg".
    ['fmt-c',	qw(-f %%g 1), {EXIT => 1},
-    {ERR => "seq: invalid format string: `%%g'\n"
-     . "Try `seq --help' for more information.\n"},
-],
+    {ERR => "seq: invalid format string: `%%g'\n" . $try_help }],
+
+   # In coreutils-6.9..6.10, this would fail with an erroneous diagnostic:
+   # "seq: memory exhausted".  In coreutils-6.0..6.8, it would mistakenly
+   # succeed and print a blank line.
+   ['fmt-eos1', qw(-f % 1), {EXIT => 1},
+    {ERR => "seq: invalid format string: `%'\n" . $try_help }],
+   ['fmt-eos2', qw(-f %g% 1), {EXIT => 1},
+    {ERR => "seq: invalid format string: `%g%'\n" . $try_help }],
+
   );
 
 # Append a newline to each entry in the OUT array.

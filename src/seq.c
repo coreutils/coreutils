@@ -1,5 +1,5 @@
 /* seq - print sequence of numbers to standard output.
-   Copyright (C) 1994-2007 Free Software Foundation, Inc.
+   Copyright (C) 1994-2008 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -209,7 +209,7 @@ long_double_format (char const *fmt, struct layout *layout)
   length_modifier_offset = i;
   has_L = (fmt[i] == 'L');
   i += has_L;
-  if (! strchr ("efgaEFGA", fmt[i]))
+  if (fmt[i] == '\0' || ! strchr ("efgaEFGA", fmt[i]))
     return NULL;
 
   for (i++; ! (fmt[i] == '%' && fmt[i + 1] != '%'); i += (fmt[i] == '%') + 1)
