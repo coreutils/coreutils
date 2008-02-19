@@ -5149,10 +5149,10 @@ sort a file on its default join field, but if you select a non-default
 locale, join field, separator, or comparison options, then you should
 do so consistently between @command{join} and @command{sort}.
 
-As a @acronym{GNU} extension, if the input has no unpairable lines the
-sort order can be any order that considers two fields to be equal if and
-only if the sort comparison described above considers them to be equal.
-For example:
+If the input has no unpairable lines, a @acronym{GNU} extension is
+available; the sort order can be any order that considers two fields
+to be equal if and only if the sort comparison described above
+considers them to be equal.  For example:
 
 @example
 $ cat file1
@@ -5168,6 +5168,19 @@ a a1 a2
 c c1 c2
 b b1 b2
 @end example
+
+If the @option{--check-order} option is given, unsorted inputs will
+cause a fatal error message.  If the option @option{--nocheck-order}
+is given, unsorted inputs will never cause an error message.  If
+neither of these options is given, wrongly sorted inputs are diagnosed
+only if an input file is found to contain unpairable lines.  If an
+input file is diagnosed as being unsorted, the @command{join} command
+will exit with a nonzero status (and the output should not be used).
+
+Forcing @command{join} to process wrongly sorted input files
+containing unpairable lines by specifying @option{--nocheck-order} is
+not guaranteed to produce any particular output.  The output will
+probably not correspond with whatever you hoped it would be.
 
 The defaults are:
 @itemize
@@ -5187,6 +5200,12 @@ The program accepts the following options.  Also see @ref{Common options}.
 @opindex -a
 Print a line for each unpairable line in file @var{file-number} (either
 @samp{1} or @samp{2}), in addition to the normal output.
+
+@item --check-order
+Fail with an error message if either input file is wrongly ordered.
+
+@item --nocheck-order
+Do not check that both input files are in sorted order.  This is the default.
 
 @item -e @var{string}
 @opindex -e

@@ -1,6 +1,6 @@
 # Test "join".
 
-# Copyright (C) 1996, 1999, 2000, 2003, 2004 Free Software Foundation, Inc.
+# Copyright (C) 1996, 1999-2000, 2003-2004, 2008 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -140,7 +140,38 @@ my @tv = (
 # FIXME: change this to ensure the diagnostic makes sense
 ['invalid-j', '-j x', {}, "", 1],
 
-);
+# With ordering check, inputs in order
+['chkodr-1', '--check-order',
+  [" a 1\n b 2\n", " a Y\n b Z\n"], "a 1 Y\nb 2 Z\n", 0],
+
+# Without check, inputs in order
+['chkodr-2', '--nocheck-order',
+ [" a 1\n b 2\n", " a Y\n b Z\n"], "a 1 Y\nb 2 Z\n", 0],
+
+# Without check, both inputs out of order (in fact, in reverse order)
+# but all pairable.  Support for this is a GNU extension.
+['chkodr-3', '--nocheck-order',
+ [" b 1\n a 2\n", " b Y\n a Z\n"], "b 1 Y\na 2 Z\n", 0],
+
+# The extension should work without --nocheck-order, since that is the
+# default.
+['chkodr-4', '',
+ [" b 1\n a 2\n", " b Y\n a Z\n"], "b 1 Y\na 2 Z\n", 0],
+
+# With check, both inputs out of order (in fact, in reverse order)
+['chkodr-5', '--check-order',
+ [" b 1\n a 2\n", " b Y\n a Z\n"], "", 1],
+
+# Without order check, both inputs out of order and some lines
+# unpairable.  This is NOT supported by the GNU extension.  All that
+# we really care about for this test is that the return status is
+# zero, since that is the only way to actually verify that the
+# --nocheck-order option had any effect.   We don't actually want to
+# guarantee that join produces this output on stdout.
+['chkodr-6', '--nocheck-order',
+ [" b 1\n a 2\n", " b Y\n c Z\n"], "b 1 Y\n", 0]
+)
+;
 
 
 sub test_vector
