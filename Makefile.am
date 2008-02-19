@@ -108,10 +108,12 @@ THANKS-to-translators: po/LINGUAS THANKStt.in
 # remain in sync.
 .PHONY: check-ls-dircolors
 check-ls-dircolors:
-	dc=$$(sed -n '/static.*ls_codes\[/,/};'/p src/dircolors.c	\
-	  |sed -n '/^  *"/p'|tr , '\n'|sed 's/^  *//'			\
-	  |sed -n 's/^"\(..\)"/\1/p'|sort -u);				\
-	ls=$$(sed -n '/static.*indicator_name\[/,/};'/p src/ls.c	\
-	  |sed -n '/^  *"/p'|tr , '\n'|sed 's/^  *//'			\
-	  |sed -n 's/^"\(..\)"/\1/p'|sort -u);				\
+	dc=$$(sed -n '/static.*ls_codes\[/,/};'/p		\
+	    $(srcdir)/src/dircolors.c				\
+	  |sed -n '/^  *"/p'|tr , '\n'|sed 's/^  *//'		\
+	  |sed -n 's/^"\(..\)"/\1/p'|sort -u);			\
+	ls=$$(sed -n '/static.*indicator_name\[/,/};'/\p	\
+	    $(srcdir)/src/ls.c					\
+	  |sed -n '/^  *"/p'|tr , '\n'|sed 's/^  *//'		\
+	  |sed -n 's/^"\(..\)"/\1/p'|sort -u);			\
 	test "$$dc" = "$$ls"
