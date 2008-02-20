@@ -31,6 +31,7 @@
 #include "stdio--.h"
 #include "xmemcoll.h"
 #include "xstrtol.h"
+#include "argmatch.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "join"
@@ -80,6 +81,9 @@ struct seq
 
 /* The name this program was run with.  */
 char *program_name;
+
+/* The previous line read from each file. */
+static struct line *prevline[2];
 
 /* True if the LC_COLLATE locale is hard.  */
 static bool hard_LC_COLLATE;
@@ -300,8 +304,6 @@ freeline (struct line *line)
 static bool
 get_line (FILE *fp, struct line *line, int which)
 {
-  static struct line *prevline[2];
-
   initbuffer (&line->buf);
 
   if (! readlinebuffer (&line->buf, fp))
@@ -322,9 +324,24 @@ get_line (FILE *fp, struct line *line, int which)
     {
       checkorder (prevline[which - 1], line, which);
       freeline (prevline[which - 1]);
+      free (prevline[which - 1]);
     }
   prevline[which - 1] = dup_line (line);
   return true;
+}
+
+static void
+free_prevline (void)
+{
+  size_t i;
+
+  for (i = 0; i < ARRAY_CARDINALITY (prevline); i++)
+    {
+      if (prevline[i])
+	freeline (prevline[i]);
+      free (prevline[i]);
+      prevline[i] = NULL;
+    }
 }
 
 static void
@@ -352,8 +369,7 @@ getseq (FILE *fp, struct seq *seq, int whichfile)
 }
 
 /* Read a line from FP and add it to SEQ, as the first item if FIRST is
- * true, else as the next.
- */
+   true, else as the next.  */
 static bool
 advance_seq (FILE *fp, struct seq *seq, bool first, int whichfile)
 {
@@ -438,16 +454,16 @@ keycmp (struct line const *line1, struct line const *line2)
 
 
 /* Check that successive input lines PREV and CURRENT from input file
- * WHATFILE are presented in order, unless the user may be relying on
- * the GNU extension that input lines may be out of order if no input
- * lines are unpairable.
- *
- * If the user specified --nocheck-order, the check is not made.
- * If the user specified --check-order, the problem is fatal.
- * Otherwise (the default), the message is simply a warning.
- *
- * A message is printed at most once per input file.
- */
+   WHATFILE are presented in order, unless the user may be relying on
+   the GNU extension that input lines may be out of order if no input
+   lines are unpairable.
+
+   If the user specified --nocheck-order, the check is not made.
+   If the user specified --check-order, the problem is fatal.
+   Otherwise (the default), the message is simply a warning.
+
+   A message is printed at most once per input file. */
+
 static void
 checkorder (const struct line *prev,
 	    const struct line *current,
@@ -668,10 +684,9 @@ join (FILE *fp1, FILE *fp2)
     }
 
   /* If the user did not specify --check-order, and the we read the
-   * tail ends of both inputs to verify that they are in order.  We
-   * skip the rest of the tail once we have issued a warning for that
-   * file, unless we actually need to print the unpairable lines.
-   */
+     tail ends of both inputs to verify that they are in order.  We
+     skip the rest of the tail once we have issued a warning for that
+     file, unless we actually need to print the unpairable lines.  */
   if (check_input_order != CHECK_ORDER_DISABLED
       && !(issued_disorder_warning[0] && issued_disorder_warning[1]))
     checktail = true;
@@ -925,6 +940,7 @@ main (int argc, char **argv)
   hard_LC_COLLATE = hard_locale (LC_COLLATE);
 
   atexit (close_stdout);
+  atexit (free_prevline);
 
   print_pairables = true;
   seen_unpairable = false;
