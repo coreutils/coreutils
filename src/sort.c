@@ -1,5 +1,5 @@
 /* sort - sort lines of text (with all kinds of options).
-   Copyright (C) 1988, 1991-2007 Free Software Foundation, Inc.
+   Copyright (C) 1988, 1991-2008 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -329,6 +329,9 @@ Ordering options:\n\
   -n, --numeric-sort          compare according to string numerical value\n\
   -R, --random-sort           sort by random hash of keys\n\
       --random-source=FILE    get random bytes from FILE (default /dev/urandom)\n\
+      --sort=WORD             sort according to WORD:\n\
+                                general-numeric -g, month -M, numeric -n,\n\
+                                random -R\n\
   -r, --reverse               reverse the result of comparisons\n\
 \n\
 "), stdout);
@@ -391,7 +394,8 @@ enum
 {
   CHECK_OPTION = CHAR_MAX + 1,
   COMPRESS_PROGRAM_OPTION,
-  RANDOM_SOURCE_OPTION
+  RANDOM_SOURCE_OPTION,
+  SORT_OPTION
 };
 
 static char const short_options[] = "-bcCdfgik:mMno:rRsS:t:T:uy:z";
@@ -411,6 +415,7 @@ static struct option const long_options[] =
   {"numeric-sort", no_argument, NULL, 'n'},
   {"random-sort", no_argument, NULL, 'R'},
   {"random-source", required_argument, NULL, RANDOM_SOURCE_OPTION},
+  {"sort", required_argument, NULL, SORT_OPTION},
   {"output", required_argument, NULL, 'o'},
   {"reverse", no_argument, NULL, 'r'},
   {"stable", no_argument, NULL, 's'},
@@ -433,6 +438,16 @@ static char const check_types[] =
   'C', 'C', 'c'
 };
 ARGMATCH_VERIFY (check_args, check_types);
+
+static char const *const sort_args[] =
+{
+  "general-numeric", "month", "numeric", "random", NULL
+};
+static char const sort_types[] =
+{
+  'g', 'M', 'n', 'R'
+};
+ARGMATCH_VERIFY (sort_args, sort_types);
 
 /* The set of signals that are caught.  */
 static sigset_t caught_signals;
@@ -2902,6 +2917,9 @@ main (int argc, char **argv)
 	    files[nfiles++] = optarg;
 	  break;
 
+	case SORT_OPTION:
+	  c = XARGMATCH ("--sort", optarg, sort_args, sort_types);
+	  /* Fall through. */
 	case 'b':
 	case 'd':
 	case 'f':

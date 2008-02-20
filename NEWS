@@ -21,6 +21,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   join now verifies that the inputs are in sorted order.  This check can
   be turned off with the --nocheck-order option.
 
+  sort accepts the new option --sort=WORD, where WORD can be one of
+  general-numeric, month, numeric or random.  These are equivalent to the
+  options --general-numeric-sort/-g, --month-sort/-M, --numeric-sort/-n
+  and --random-sort/-R, resp.
+
 ** Improvements
 
   ls --color no longer outputs unnecessary escape sequences

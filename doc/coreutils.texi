@@ -3536,8 +3536,10 @@ The @env{LC_CTYPE} locale determines character types.
 
 @item -g
 @itemx --general-numeric-sort
+@itemx --sort=general-numeric
 @opindex -g
 @opindex --general-numeric-sort
+@opindex --sort
 @cindex general numeric sort
 @vindex LC_NUMERIC
 Sort numerically, using the standard C function @code{strtod} to convert
@@ -3580,8 +3582,10 @@ This option has no effect if the stronger @option{--dictionary-order}
 
 @item -M
 @itemx --month-sort
+@itemx --sort=month
 @opindex -M
 @opindex --month-sort
+@opindex --sort
 @cindex months, sorting by
 @vindex LC_TIME
 An initial string, consisting of any amount of blanks, followed
@@ -3594,8 +3598,10 @@ can change this.
 
 @item -n
 @itemx --numeric-sort
+@itemx --sort=numeric
 @opindex -n
 @opindex --numeric-sort
+@opindex --sort
 @cindex numeric sort
 @vindex LC_NUMERIC
 Sort numerically.  The number begins each line and consists
@@ -3623,8 +3629,10 @@ appear earlier in the output instead of later.
 
 @item -R
 @itemx --random-sort
+@itemx --sort=random
 @opindex -R
 @opindex --random-sort
+@opindex --sort
 @cindex random sort
 Sort by hashing the input keys and then sorting the hash values.
 Choose the hash function at random, ensuring that it is free of

@@ -274,6 +274,7 @@ my @tv = (
 ["incompat4", '-c -o /dev/null', '', '', 2],
 ["incompat5", '-C -o /dev/null', '', '', 2],
 ["incompat6", '-cC', '', '', 2],
+["incompat7", '--sort=random -n', '', '', 2],
 
 # -t '\0' is accepted, as of coreutils-5.0.91
 ['nul-tab', "-k2,2 -t '\\0'", "a\0z\01\nb\0y\02\n", "b\0y\02\na\0z\01\n", 0],
@@ -289,6 +290,9 @@ my @tv = (
 # Exercise the code that enlarges the line buffer.  See the thread here:
 # http://thread.gmane.org/gmane.comp.gnu.coreutils.bugs/11006
 ['realloc-buf', '-S1', 'a'x4000 ."\n", 'a'x4000 ."\n", 0],
+
+["sort-numeric", '--sort=numeric', ".01\n0\n", "0\n.01\n", 0],
+["sort-gennum", '--sort=general-numeric', "1e2\n2e1\n", "2e1\n1e2\n", 0],
 );
 
 sub test_vector
