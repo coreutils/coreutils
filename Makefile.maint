@@ -56,7 +56,6 @@ endif
 my_distdir = $(PACKAGE)-$(VERSION)
 
 # Old releases are stored here.
-# Used for diffs and xdeltas.
 release_archive_dir ?= ../release
 
 # Prevent programs like 'sort' from considering distinct strings to be equal.
@@ -477,16 +476,14 @@ makefile_path_separator_check:
 # Check that `make alpha' will not fail at the end of the process.
 writable-files:
 	if test -d $(release_archive_dir); then :; else			\
-	  mkdir $(release_archive_dir);					\
+	  for file in $(distdir).tar.gz					\
+	              $(release_archive_dir)/$(distdir).tar.gz; do	\
+	    test -e $$file || continue;					\
+	    test -w $$file						\
+	      || { echo ERROR: $$file is not writable; fail=1; };	\
+	  done;								\
+	  test "$$fail" && exit 1 || :
 	fi
-	for file in $(distdir).tar.gz $(xd-delta)			\
-	            $(release_archive_dir)/$(distdir).tar.gz		\
-	            $(release_archive_dir)/$(xd-delta); do		\
-	  test -e $$file || continue;					\
-	  test -w $$file						\
-	    || { echo ERROR: $$file is not writable; fail=1; };		\
-	done;								\
-	test "$$fail" && exit 1 || :
 
 v_etc_file = lib/version-etc.c
 sample-test = tests/sample-test
@@ -565,7 +562,7 @@ write_loser = printf '\#!%s\necho $$0: bad path 1>&2; exit 1\n' '$(SHELL)'
 # Note that "false" itself is a symlink to true, so it too will malfunction.
 TMPDIR ?= /tmp
 t=$(TMPDIR)/$(PACKAGE)/test
-my-distcheck: $(local-check) $(release_archive_dir)/$(prev-tgz) check
+my-distcheck: $(local-check) check
 	-rm -rf $(t)
 	mkdir -p $(t)
 	GZIP=$(GZIP_ENV) $(AMTAR) -C $(t) -zxf $(distdir).tar.gz
@@ -616,13 +613,7 @@ rel-check:
 	echo "$(md5)  -" > $$md5_tmp; \
 	md5sum -c $$md5_tmp < $$tarz
 
-prev-tgz = $(PACKAGE)-$(PREV_VERSION).tar.gz
-
-# FIXME: stop distributing xdelta files in 2008, unless someone speaks up.
-# So far, not one person has said they'd miss this.
-xd-delta = $(PACKAGE)-$(PREV_VERSION)-$(VERSION).xdelta
-
-rel-files = $(xd-delta) $(DIST_ARCHIVES)
+rel-files = $(DIST_ARCHIVES)
 
 gnulib-version = $$(cd $(gnulib_dir) && git describe)
 
@@ -658,9 +649,6 @@ emit_upload_commands:
 	@echo =====================================
 	@echo =====================================
 
-$(xd-delta): $(release_archive_dir)/$(prev-tgz) $(distdir).tar.gz
-	xdelta delta -9 $^ $@ || :
-
 .PHONY: alpha beta major
 alpha beta major: $(local-check) writable-files
 	test $@ = major						\
@@ -669,10 +657,11 @@ alpha beta major: $(local-check) writable-files
 	  || :
 	$(MAKE) vc-dist
 	$(MAKE) news-date-check changelog-check
-	$(MAKE) $(xd-delta)
 	$(MAKE) -s announcement RELEASE_TYPE=$@ > /tmp/announce-$(my_distdir)
-	ln $(rel-files) $(release_archive_dir)
-	chmod a-w $(rel-files)
+	if test -d $(release_archive_dir); then			\
+	  ln $(rel-files) $(release_archive_dir);		\
+	  chmod a-w $(rel-files);				\
+	fi
 	$(MAKE) -s emit_upload_commands RELEASE_TYPE=$@
 	echo $(VERSION) > $(prev_version_file)
 	$(VC) commit -m \
