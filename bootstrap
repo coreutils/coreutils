@@ -2,7 +2,7 @@
 
 # Bootstrap this package from checked-out sources.
 
-# Copyright (C) 2003, 2004, 2005, 2006, 2007 Free Software Foundation, Inc.
+# Copyright (C) 2003-2008 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -537,6 +537,13 @@ if test -f $mam_template; then
     mv $t $m
   done
 fi
+
+# Remove dangling symlinks in gnulib-populated directories, since
+# a dangling m4/*.m4 symlink would cause aclocal to fail.
+# This depends on GNU find, and a relatively recent version at that.
+# Ignore any failure for now, since it's only to avoid the relatively
+# unusual case in which a symlinked-to file in gnulib/ or gl/ is removed.
+find m4 lib build-aux -depth -type l -xtype l -delete > /dev/null 2>&1
 
 # Reconfigure, getting other files.
 
