@@ -9686,6 +9686,11 @@ directory.  Normally the disk space is printed in units of
 1024 bytes, but this can be overridden (@pxref{Block size}).
 Non-integer quantities are rounded up to the next higher unit.
 
+If two or more hard links point to the same file, only one of the hard
+links is counted.  The @var{file} argument order affects which links
+are counted, and changing the argument order may change the numbers
+that @command{du} outputs.
+
 The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
