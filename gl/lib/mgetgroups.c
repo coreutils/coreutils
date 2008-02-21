@@ -23,10 +23,26 @@
 
 #include <unistd.h>
 #include <stdint.h>
+#include <string.h>
 #include <errno.h>
-
+#if HAVE_GETGROUPLIST
+#include <grp.h>
+#endif
 #include "getugroups.h"
 #include "xalloc.h"
+
+
+static void *
+allocate_groupbuf (int size)
+{
+  if (xalloc_oversized (size, sizeof (GETGROUPS_T)))
+    {
+      errno = ENOMEM;
+      return NULL;
+    }
+
+  return malloc (size * sizeof (GETGROUPS_T));
+}
 
 /* Like getugroups, but store the result in malloc'd storage.
    Set *GROUPS to the malloc'd list of all group IDs of which USERNAME
@@ -37,11 +53,50 @@
    the number of groups.  */
 
 int
-mgetgroups (const char *username, gid_t gid, GETGROUPS_T **groups)
+mgetgroups (char const *username, gid_t gid, GETGROUPS_T **groups)
 {
   int max_n_groups;
   int ng;
   GETGROUPS_T *g;
+
+#if HAVE_GETGROUPLIST
+  /* We prefer to use getgrouplist if available, because it has better
+     performance characteristics.
+
+     In glibc 2.3.2, getgrouplist is buggy.  If you pass a zero as the
+     size of the output buffer, getgrouplist will still write to the
+     buffer.  Contrary to what some versions of the getgrouplist
+     manpage say, this doesn't happen with nonzero buffer sizes.
+     Therefore our usage here just avoids a zero sized buffer.  */
+  if (username)
+    {
+      enum { INITIAL_GROUP_BUFSIZE = 1u };
+      /* INITIAL_GROUP_BUFSIZE is initially small to ensure good test coverage */
+      GETGROUPS_T smallbuf[INITIAL_GROUP_BUFSIZE];
+
+      max_n_groups = INITIAL_GROUP_BUFSIZE;
+      ng = getgrouplist (username, gid, smallbuf, &max_n_groups);
+
+      g = allocate_groupbuf (max_n_groups);
+      if (g == NULL)
+	return -1;
+
+      *groups = g;
+      if (INITIAL_GROUP_BUFSIZE < max_n_groups)
+	{
+	  return getgrouplist (username, gid, g, &max_n_groups);
+	  /* XXX: Ignoring the race with group size increase */
+	}
+      else
+	{
+	  /* smallbuf was big enough, so we already have our data */
+	  memcpy (g, smallbuf, max_n_groups * sizeof *g);
+	  return 0;
+	}
+      /* getgrouplist failed, fall through and use getugroups instead. */
+    }
+  /* else no username, so fall through and use getgroups. */
+#endif
 
   max_n_groups = (username
 		  ? getugroups (0, NULL, username, gid)
@@ -52,13 +107,7 @@ mgetgroups (const char *username, gid_t gid, GETGROUPS_T **groups)
   if (max_n_groups < 0)
       max_n_groups = 5;
 
-  if (xalloc_oversized (max_n_groups, sizeof *g))
-    {
-      errno = ENOMEM;
-      return -1;
-    }
-
-  g = malloc (max_n_groups * sizeof *g);
+  g = allocate_groupbuf (max_n_groups);
   if (g == NULL)
     return -1;
 

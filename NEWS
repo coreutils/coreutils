@@ -6,6 +6,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   configure --enable-no-install-program=groups now works.
 
+  id now uses getgrouplist, when possible.  This results in
+  much better performance when there are many users and/or groups.
+
   ls no longer segfaults on files in /proc when linked with an older version
   of libselinux.  E.g., ls -l /proc/sys would dereference a NULL pointer.
 
