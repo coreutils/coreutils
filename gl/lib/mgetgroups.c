@@ -26,7 +26,7 @@
 #include <string.h>
 #include <errno.h>
 #if HAVE_GETGROUPLIST
-#include <grp.h>
+# include <grp.h>
 #endif
 #include "getugroups.h"
 #include "xalloc.h"
@@ -70,30 +70,47 @@ mgetgroups (char const *username, gid_t gid, GETGROUPS_T **groups)
      Therefore our usage here just avoids a zero sized buffer.  */
   if (username)
     {
-      enum { INITIAL_GROUP_BUFSIZE = 1u };
-      /* INITIAL_GROUP_BUFSIZE is initially small to ensure good test coverage */
-      GETGROUPS_T smallbuf[INITIAL_GROUP_BUFSIZE];
+      enum { N_GROUPS_INIT = 10 };
+      GETGROUPS_T smallbuf[N_GROUPS_INIT];
 
-      max_n_groups = INITIAL_GROUP_BUFSIZE;
+      max_n_groups = N_GROUPS_INIT;
       ng = getgrouplist (username, gid, smallbuf, &max_n_groups);
 
       g = allocate_groupbuf (max_n_groups);
       if (g == NULL)
 	return -1;
 
-      *groups = g;
-      if (INITIAL_GROUP_BUFSIZE < max_n_groups)
-	{
-	  return getgrouplist (username, gid, g, &max_n_groups);
-	  /* XXX: Ignoring the race with group size increase */
-	}
-      else
+      if (max_n_groups <= N_GROUPS_INIT)
 	{
 	  /* smallbuf was big enough, so we already have our data */
 	  memcpy (g, smallbuf, max_n_groups * sizeof *g);
-	  return 0;
+	  *groups = g;
+	  return max_n_groups;
 	}
-      /* getgrouplist failed, fall through and use getugroups instead. */
+
+      while (1)
+	{
+	  GETGROUPS_T *h;
+	  ng = getgrouplist (username, gid, g, &max_n_groups);
+	  if (0 <= ng)
+	    {
+	      *groups = g;
+	      return ng;
+	    }
+
+	  /* When getgrouplist fails, it guarantees that
+	     max_n_groups reflects the new number of groups.  */
+
+	  if (xalloc_oversized (max_n_groups, sizeof *h)
+	      || (h = realloc (g, max_n_groups * sizeof *h) == NULL))
+	    {
+	      int saved_errno = errno;
+	      free (g);
+	      errno = saved_errno;
+	      return -1;
+	    }
+	  g = h;
+	}
     }
   /* else no username, so fall through and use getgroups. */
 #endif
