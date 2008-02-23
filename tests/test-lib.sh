@@ -39,6 +39,11 @@ require_ulimit_()
     && skip_test_ "this shell lacks ulimit support"
 }
 
+require_readable_root_()
+{
+  test -r / || skip_test_ "/ is not readable"
+}
+
 # Skip the current test if strace is not available or doesn't work.
 require_strace_()
 {
