@@ -103,7 +103,7 @@ mgetgroups (char const *username, gid_t gid, GETGROUPS_T **groups)
 	     max_n_groups reflects the new number of groups.  */
 
 	  if (xalloc_oversized (max_n_groups, sizeof *h)
-	      || (h = realloc (g, max_n_groups * sizeof *h) == NULL))
+	      || (h = realloc (g, max_n_groups * sizeof *h)) == NULL)
 	    {
 	      int saved_errno = errno;
 	      free (g);
