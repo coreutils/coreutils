@@ -96,6 +96,17 @@ foreach my $dir (@dir_list)
 
 	    close RM;
 	    my $rc = $?;
+	    # This test opportunistically looks for files that can't
+	    # be removed but those files may already have been removed
+	    # by their owners by the time we get to them.  It is a
+	    # race condition.  If so then the rm is successful and our
+	    # test is thwarted.  Detect this case and ignore.
+	    if ($rc == 0)
+	      {
+		next if ! -e $target_file;
+		die "$ME: unexpected exit status from `$cmd';\n"
+		  . "  got 0, expected 1\n";
+	      }
 	    if (0x80 < $rc)
 	      {
 		my $status = $rc >> 8;
