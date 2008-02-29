@@ -30,7 +30,7 @@ GZIP_ENV = '--no-name --best $(gzip_rsyncable)'
 CVS = cvs
 GIT = git
 VC = $(GIT)
-VC-tag = git-tag -s -m '$(VERSION)'
+VC-tag = git tag -s -m '$(VERSION)'
 
 CVS_LIST = build-aux/vc-list-files
 
