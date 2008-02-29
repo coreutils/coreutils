@@ -121,6 +121,9 @@ XGETTEXT_OPTIONS='\\\
  --flag=error:3:c-format --flag=error_at_line:5:c-format\\\
 '
 
+# Package bug report address for gettext files
+MSGID_BUGS_ADDRESS=bug-$package@gnu.org
+
 # Files we don't want to import.
 excluded_files=
 
@@ -406,7 +409,7 @@ version_controlled_file() {
     grep -F "/$file/" $dir/CVS/Entries 2>/dev/null |
 	     grep '^/[^/]*/[0-9]' > /dev/null && found=yes
   elif test -d .git; then
-    git-rm -n "$dir/$file" > /dev/null 2>&1 && found=yes
+    git rm -n "$dir/$file" > /dev/null 2>&1 && found=yes
   else
     echo "$0: no version control for $dir/$file?" >&2
   fi
@@ -580,7 +583,7 @@ if test $with_gettext = yes; then
   rm -f po/Makevars
   sed '
     /^EXTRA_LOCALE_CATEGORIES *=/s/=.*/= '"$EXTRA_LOCALE_CATEGORIES"'/
-    /^MSGID_BUGS_ADDRESS *=/s/=.*/= bug-'"$package"'@gnu.org/
+    /^MSGID_BUGS_ADDRESS *=/s/=.*/= '"$MSGID_BUGS_ADDRESS"'/
     /^XGETTEXT_OPTIONS *=/{
       s/$/ \\/
       a\
