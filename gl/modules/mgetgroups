@@ -7,7 +7,6 @@ lib/mgetgroups.h
 m4/mgetgroups.m4
 
 Depends-on:
-free
 getugroups
 xalloc
 
