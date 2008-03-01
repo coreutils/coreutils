@@ -5,8 +5,6 @@
 # current locale considers to be equal.
 ASSORT = LC_ALL=C sort
 
-built_programs = (cd ../src && MAKEFLAGS= $(MAKE) -s built_programs.list)
-
 EXTRA_DIST =		\
   Coreutils.pm		\
   CuTmpdir.pm		\

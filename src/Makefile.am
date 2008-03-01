@@ -288,7 +288,7 @@ all_programs = \
 
 built_programs.list:
 	@echo $(bin_PROGRAMS) $(bin_SCRIPTS) | tr ' ' '\n' \
-	  | sed -e 's,$(EXEEXT)$$,,' | $(ASSORT) -u
+	  | sed -e 's,$(EXEEXT)$$,,' | $(ASSORT) -u | tr '\n' ' '
 
 all_programs.list:
 	@echo $(all_programs) | tr ' ' '\n' | sed -e 's,$(EXEEXT)$$,,' \
