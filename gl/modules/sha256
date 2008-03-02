@@ -1,0 +1,24 @@
+Description:
+Compute SHA224 and SHA256 checksums.
+
+Files:
+lib/sha256.h
+lib/sha256.c
+m4/sha256.m4
+
+Depends-on:
+stdint
+
+configure.ac:
+gl_SHA256
+
+Makefile.am:
+
+Include:
+"sha256.h"
+
+License:
+LGPLv2+
+
+Maintainer:
+Jim Meyering

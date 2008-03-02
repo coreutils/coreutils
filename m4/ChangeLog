@@ -1,3 +1,7 @@
+2008-03-02  Jim Meyering  <meyering@redhat.com>
+
+	* prereq.m4: Don't require gl_SHA256 or gl_SHA512.
+
 2007-08-30  Eric Blake  <ebb9@byu.net>
 
 	* jm-macros.m4 (coreutils_MACROS): Remove GNU_PACKAGE.
