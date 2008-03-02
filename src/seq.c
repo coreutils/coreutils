@@ -194,7 +194,7 @@ validate_format (char const *fmt)
 	  ++p;
 	}
     }
-  if (! n_directives)
+  if (n_directives == 0)
     {
       error (0, 0, _("no %% directive in format string %s"), quote (fmt));
       usage (EXIT_FAILURE);
@@ -236,6 +236,7 @@ long_double_format (char const *fmt, struct layout *layout)
   length_modifier_offset = i;
   has_L = (fmt[i] == 'L');
   i += has_L;
+  /* In a valid format string, fmt[i] must be one of these specifiers.  */
   if (fmt[i] == '\0' || ! strchr ("efgaEFGA", fmt[i]))
     return NULL;
 
