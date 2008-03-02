@@ -51,7 +51,7 @@ ifeq (0,$(MAKELEVEL))
                    $(srcdir)/.tarball-version)
     ifneq ($(_curr-ver),$(VERSION))
       $(info INFO: running autoreconf for new version string: $(_curr-ver))
-      _dummy := $(shell rm -rf autom4te.cache; autoreconf)
+      _dummy := $(shell rm -rf autom4te.cache; (cd $(srcdir) && autoreconf))
       _created_version_file = 1
     endif
   endif
