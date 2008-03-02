@@ -47,7 +47,7 @@ _curr-ver := $(VERSION)
 ifeq (0,$(MAKELEVEL))
   _is-dist-target = $(filter dist% alpha beta major,$(MAKECMDGOALS))
   ifneq (,$(_is-dist-target))
-    _curr-ver := $(shell $(srcdir)/build-aux/git-version-gen \
+    _curr-ver := $(shell cd $(srcdir) && ./build-aux/git-version-gen \
                    $(srcdir)/.tarball-version)
     ifneq ($(_curr-ver),$(VERSION))
       $(info INFO: running autoreconf for new version string: $(_curr-ver))
