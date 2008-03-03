@@ -75,6 +75,8 @@ all:
 	@echo "You must run ./configure before running \`make'." 1>&2
 	@exit 1
 
+check dist distcheck install: all
+
 endif
 
 # Tell version 3.79 and up of GNU make to not build goals in this
