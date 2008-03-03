@@ -32,6 +32,8 @@ struct sha512_ctx
   u64 buffer[32];
 };
 
+enum { SHA384_DIGEST_SIZE = 48 };
+enum { SHA512_DIGEST_SIZE = 64 };
 
 /* Initialize structure containing state of computation. */
 extern void sha512_init_ctx (struct sha512_ctx *ctx);
