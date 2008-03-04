@@ -31,6 +31,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Improvements
 
+  id and groups work around an AFS-related bug whereby those programs
+  would print an invalid group number, when given no user-name argument.
+
   ls --color no longer outputs unnecessary escape sequences
 
   seq gives better diagnostics for invalid formats.

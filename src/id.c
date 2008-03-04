@@ -196,17 +196,22 @@ of a different user"));
     error (EXIT_FAILURE, 0,
 	   _("cannot print only names or real IDs in default format"));
 
+  char const *user_name;
   if (argc - optind == 1)
     {
-      struct passwd *pwd = getpwnam (argv[optind]);
+      struct passwd const *pwd = getpwnam (argv[optind]);
       if (pwd == NULL)
 	error (EXIT_FAILURE, 0, _("%s: No such user"), argv[optind]);
+      user_name = argv[optind];
       ruid = euid = pwd->pw_uid;
       rgid = egid = pwd->pw_gid;
     }
   else
     {
+      struct passwd const *pwd;
       euid = geteuid ();
+      pwd = getpwuid (euid);
+      user_name = pwd ? pwd->pw_name : NULL;
       ruid = getuid ();
       egid = getegid ();
       rgid = getgid ();
@@ -223,7 +228,7 @@ of a different user"));
     }
   else if (just_group_list)
     {
-      if (!print_group_list (argv[optind], ruid, rgid, egid, use_name))
+      if (!print_group_list (user_name, ruid, rgid, egid, use_name))
 	ok = false;
     }
   else if (just_context)
@@ -232,7 +237,7 @@ of a different user"));
     }
   else
     {
-      print_full_info (argv[optind]);
+      print_full_info (user_name);
     }
   putchar ('\n');
 
