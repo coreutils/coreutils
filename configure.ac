@@ -339,7 +339,7 @@ dnl non-maintainers to use unreleased autoconf, hence the version test.
 dnl TODO remove the version check once autoconf 2.62 is released.
 
 dnl Disabled for now, since this would cause "make distclean" to
-dnl remove the sole copy of the file in a non-VPATH build.
+dnl remove the sole copy of GNUmakefile in a non-VPATH build.
 dnl TODO restore once automake has been fixed to do the right thing.
 dnl m4_if(m4_version_compare([2.61a.100],
 dnl       m4_defn([m4_PACKAGE_VERSION])), [1], [],
