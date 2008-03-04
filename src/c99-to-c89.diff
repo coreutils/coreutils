@@ -152,5 +152,21 @@ diff -upr src/shred.c src/shred.c
  		  if (errnum == EIO && 0 <= size && (soff | SECTOR_MASK) < lim)
  		    {
  		      size_t soff1 = (soff | SECTOR_MASK) + 1;
---- src/seq.c	2008-02-18 22:53:29.000000000 +0100
-+++ src-c89/seq.c	2008-02-18 23:16:35.000000000 +0100
+--- src/id.c	2008-03-04 18:50:55.000000000 +0100
++++ src/id.c	2008-03-04 19:32:24.000000000 +0100
+@@ -196,6 +196,7 @@ of a different user"));
+     error (EXIT_FAILURE, 0,
+ 	   _("cannot print only names or real IDs in default format"));
+
++  {
+   char const *user_name;
+   if (argc - optind == 1)
+     {
+@@ -239,6 +240,7 @@ of a different user"));
+     {
+       print_full_info (user_name);
+     }
++  }
+   putchar ('\n');
+
+   exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
