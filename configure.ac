@@ -337,8 +337,13 @@ dnl Allow maintainer rules under GNU make even in VPATH builds.  This does
 dnl not work in autoconf 2.61 or earlier, but we don't want to require
 dnl non-maintainers to use unreleased autoconf, hence the version test.
 dnl TODO remove the version check once autoconf 2.62 is released.
-m4_if(m4_version_compare([2.61a.100], m4_defn([m4_PACKAGE_VERSION])), [1], [],
-      [AC_CONFIG_LINKS([GNUmakefile:GNUmakefile])])
+
+dnl Disabled for now, since this would cause "make distclean" to
+dnl remove the sole copy of the file in a non-VPATH build.
+dnl TODO restore once automake has been fixed to do the right thing.
+dnl m4_if(m4_version_compare([2.61a.100],
+dnl       m4_defn([m4_PACKAGE_VERSION])), [1], [],
+dnl       [AC_CONFIG_LINKS([GNUmakefile:GNUmakefile])])
 
 AC_CONFIG_FILES(
   Makefile
