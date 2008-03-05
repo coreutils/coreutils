@@ -38,7 +38,7 @@ CVS_LIST_EXCEPT = \
   $(CVS_LIST) | if test -f .x-$@; then grep -vEf .x-$@; else grep -v ChangeLog; fi
 
 ifeq ($(origin prev_version_file), undefined)
-  prev_version_file = .prev-version
+  prev_version_file = $(srcdir)/.prev-version
 endif
 
 PREV_VERSION := $(shell cat $(prev_version_file))
@@ -69,7 +69,8 @@ export LC_ALL = C
 ## --------------- ##
 
 # Collect the names of rules starting with `sc_'.
-syntax-check-rules := $(shell sed -n 's/^\(sc_[a-zA-Z0-9_-]*\):.*/\1/p' $(ME))
+syntax-check-rules := $(shell sed -n 's/^\(sc_[a-zA-Z0-9_-]*\):.*/\1/p' \
+                        $(srcdir)/$(ME))
 .PHONY: $(syntax-check-rules)
 
 local-checks-available = \
