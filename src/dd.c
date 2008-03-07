@@ -392,6 +392,25 @@ static char const ebcdic_to_ascii[] =
   '\070', '\071', '\372', '\373', '\374', '\375', '\376', '\377'
 };
 
+/* True if we need to close the standard output *stream*.  */
+static bool close_stdout_required = true;
+
+/* The only reason to close the standard output *stream* is if
+   parse_long_options fails (as it does for --help or --version).
+   In any other case, dd uses only the STDOUT_FILENO file descriptor,
+   and the "cleanup" function calls "close (STDOUT_FILENO)".
+   Closing the file descriptor and then letting the usual atexit-run
+   close_stdout function call "fclose (stdout)" would result in a
+   harmless failure of the close syscall (with errno EBADF).
+   This function serves solely to avoid the unnecessary close_stdout
+   call, once parse_long_options has succeeded.  */
+static void
+maybe_close_stdout (void)
+{
+  if (close_stdout_required)
+    close_stdout ();
+}
+
 void
 usage (int status)
 {
@@ -1655,12 +1674,14 @@ main (int argc, char **argv)
   textdomain (PACKAGE);
 
   /* Arrange to close stdout if parse_long_options exits.  */
-  atexit (close_stdout);
+  atexit (maybe_close_stdout);
 
   page_size = getpagesize ();
 
   parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE, VERSION,
 		      usage, AUTHORS, (char const *) NULL);
+  close_stdout_required = false;
+
   if (getopt_long (argc, argv, "", NULL, NULL) != -1)
     usage (EXIT_FAILURE);
 
