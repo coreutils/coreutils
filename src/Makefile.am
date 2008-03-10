@@ -388,9 +388,12 @@ s2 = '/^\#define AUTHORS \\\\/{;n;$(sed_filter);p;q;}'
 sc_tight_scope: $(all_programs)
 	@t=exceptions-$$$$;						\
 	trap "s=$$?; rm -f $$t; exit $$s" 0 1 2 13 15;			\
-	( printf '^main$$\n^usage$$\n';					\
+	( printf 'main\nusage\n';					\
 	  grep -h -A1 '^extern .*[^;]$$' $(SOURCES)			\
-	    | grep -vE '^(extern |--)' |sed 's/^/^/;s/ .*/$$/' ) > $$t;	\
+	    | grep -vE '^(extern |--)' | sed 's/ .*//';			\
+	  perl -ne '/^extern \S+ (\S*) \(/ and print "$$1\n"'		\
+	    $(noinst_HEADERS);						\
+	) | $(ASSORT) -u | sed 's/^/^/;s/$$/$$/' > $$t;			\
 	nm -e *.$(OBJEXT)						\
 	    | sed -n 's/.* T //p'					\
 	    | grep -Ev -f $$t &&					\
