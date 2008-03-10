@@ -1,5 +1,5 @@
 /* install - copy files and set attributes
-   Copyright (C) 89, 90, 91, 1995-2007 Free Software Foundation, Inc.
+   Copyright (C) 89, 90, 91, 1995-2008 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -34,6 +34,7 @@
 #include "mkancesdirs.h"
 #include "mkdir-p.h"
 #include "modechange.h"
+#include "prog-fprintf.h"
 #include "quote.h"
 #include "quotearg.h"
 #include "savewd.h"
@@ -762,7 +763,7 @@ announce_mkdir (char const *dir, void *options)
 {
   struct cp_options const *x = options;
   if (x->verbose)
-    error (0, 0, _("creating directory %s"), quote (dir));
+    prog_fprintf (stdout, _("creating directory %s"), quote (dir));
 }
 
 /* Make ancestor directory DIR, whose last file name component is

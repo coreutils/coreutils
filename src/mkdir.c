@@ -27,6 +27,7 @@
 #include "lchmod.h"
 #include "mkdir-p.h"
 #include "modechange.h"
+#include "prog-fprintf.h"
 #include "quote.h"
 #include "savewd.h"
 
@@ -79,19 +80,6 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   exit (status);
 }
 
-/* Verbose formatted output of variable count of arguments.  */
-static void
-verbose_output (FILE *fp, char const *fmt, ...)
-{
-  va_list ap;
-  fputs (program_name, fp);
-  fputs (": ", fp);
-  va_start (ap, fmt);
-  vfprintf (fp, fmt, ap);
-  va_end (ap);
-  fputc ('\n', fp);
-}
-
 /* Options passed to subsidiary functions.  */
 struct mkdir_options
 {
@@ -118,7 +106,7 @@ announce_mkdir (char const *dir, void *options)
 {
   struct mkdir_options const *o = options;
   if (o->created_directory_format)
-    verbose_output (stdout, o->created_directory_format, quote (dir));
+    prog_fprintf (stdout, o->created_directory_format, quote (dir));
 }
 
 /* Make ancestor directory DIR, whose last component is COMPONENT,

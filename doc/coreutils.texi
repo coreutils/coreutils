@@ -8190,7 +8190,7 @@ If a file has multiple links, only the named links will be removed.
 @itemx --verbose
 @opindex -v
 @opindex --verbose
-Display status updates as sterilization proceeds.
+Display to standard error all status updates as sterilization proceeds.
 
 @item -x
 @itemx --exact

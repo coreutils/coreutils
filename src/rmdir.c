@@ -1,6 +1,6 @@
 /* rmdir -- remove directories
 
-   Copyright (C) 90, 91, 1995-2002, 2004, 2005, 2006, 2007 Free Software
+   Copyright (C) 90, 91, 1995-2002, 2004-2008 Free Software
    Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
@@ -30,6 +30,7 @@
 
 #include "system.h"
 #include "error.h"
+#include "prog-fprintf.h"
 #include "quote.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -134,7 +135,7 @@ remove_parents (char *dir)
 
       /* Give a diagnostic for each attempted removal if --verbose.  */
       if (verbose)
-	error (0, 0, _("removing directory, %s"), quote (dir));
+	prog_fprintf (stdout, _("removing directory, %s"), quote (dir));
 
       ok = (rmdir (dir) == 0);
 
@@ -233,7 +234,7 @@ main (int argc, char **argv)
 
       /* Give a diagnostic for each attempted removal if --verbose.  */
       if (verbose)
-	error (0, 0, _("removing directory, %s"), dir);
+	prog_fprintf (stdout, _("removing directory, %s"), quote (dir));
 
       if (rmdir (dir) != 0)
 	{

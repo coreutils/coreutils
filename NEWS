@@ -40,7 +40,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Consistency
 
-  mkdir and split now write --verbose output to stdout, not stderr.
+  install, mkdir, rmdir and split now write --verbose output to stdout,
+  not to stderr.
 
 
 * Noteworthy changes in release 6.10 (2008-01-22) [stable]

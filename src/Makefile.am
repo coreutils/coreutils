@@ -54,6 +54,7 @@ noinst_HEADERS = \
   fs.h \
   group-list.h \
   ls.h \
+  prog-fprintf.h \
   remove.h \
   system.h \
   wheel-size.h \
@@ -203,7 +204,7 @@ copy_sources = copy.c cp-hash.c
 # to install before applying any user-specified name transformations.
 
 transform = s/ginstall/install/; @program_transform_name@
-ginstall_SOURCES = install.c $(copy_sources)
+ginstall_SOURCES = install.c prog-fprintf.c $(copy_sources)
 
 # This is for the '[' program.  Automake transliterates '[' to '_'.
 __SOURCES = lbracket.c
@@ -220,6 +221,9 @@ chgrp_SOURCES = chgrp.c chown-core.c
 
 mv_SOURCES = mv.c remove.c $(copy_sources)
 rm_SOURCES = rm.c remove.c
+
+mkdir_SOURCES = mkdir.c prog-fprintf.c
+rmdir_SOURCES = rmdir.c prog-fprintf.c
 
 uname_SOURCES = uname.c uname-uname.c
 arch_SOURCES = uname.c uname-arch.c
