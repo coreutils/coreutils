@@ -415,6 +415,8 @@ version_controlled_file() {
 	     grep '^/[^/]*/[0-9]' > /dev/null && found=yes
   elif test -d .git; then
     git rm -n "$dir/$file" > /dev/null 2>&1 && found=yes
+  elif test -d .svn; then
+    svn log -r HEAD "$dir/$file" > /dev/null 2>&1 && found=yes
   else
     echo "$0: no version control for $dir/$file?" >&2
   fi
@@ -623,7 +625,5 @@ fi
 m=gnulib-tests/gnulib.mk
 sed 's,\.\./\.\.,..,g' $m > $m-t
 mv -f $m-t $m
-
-chmod a+x gnulib-tests/test-*.sh
 
 echo "$0: done.  Now you can run './configure'."
