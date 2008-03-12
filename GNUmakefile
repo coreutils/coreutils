@@ -40,10 +40,13 @@ export TAR_OPTIONS = --owner=0 --group=0 --numeric-owner
 
 include Makefile
 
-_curr-ver := $(VERSION)
+# Some projects override e.g., _autoreconf here.
+-include $(srcdir)/GNUmakefile.cfg
+
+_autoreconf ?= autoreconf
 
 # Ensure that $(VERSION) is up to date for dist-related targets, but not
-# for others: running autoreconf and recompiling everything isn't cheap.
+# for others: rerunning autoreconf and recompiling everything isn't cheap.
 ifeq (0,$(MAKELEVEL))
   _is-dist-target = $(filter-out %clean, \
     $(filter dist% alpha beta major,$(MAKECMDGOALS)))
@@ -52,7 +55,7 @@ ifeq (0,$(MAKELEVEL))
                    $(srcdir)/.tarball-version)
     ifneq ($(_curr-ver),$(VERSION))
       $(info INFO: running autoreconf for new version string: $(_curr-ver))
-      _dummy := $(shell rm -rf autom4te.cache; (cd $(srcdir) && autoreconf))
+      _dummy := $(shell cd $(srcdir) && rm -rf autom4te.cache && $(_autoreconf)))
     endif
   endif
 endif
