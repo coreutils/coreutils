@@ -1,5 +1,5 @@
 /* printf - format and print data
-   Copyright (C) 1990-2007 Free Software Foundation, Inc.
+   Copyright (C) 1990-2008 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -48,7 +48,6 @@
 #include <config.h>
 #include <stdio.h>
 #include <sys/types.h>
-#include <getopt.h>
 
 #include "system.h"
 #include "c-strtod.h"
