@@ -178,6 +178,18 @@ sc_prohibit_assert_without_use:
 	else :;								\
 	fi
 
+# Prohibit the inclusion of getopt.h without an actual use.
+sc_prohibit_getopt_without_use:
+	@if $(CVS_LIST_EXCEPT) | grep '\.c$$' > /dev/null; then		\
+	  files=$$(grep -l '# *include <getopt\.h>'			\
+		    $$($(CVS_LIST_EXCEPT) | grep '\.c$$')) &&		\
+	  grep -E -L '\<getopt(_long)? \(' $$files			\
+	      | grep . &&						\
+	    { echo "$(ME): the above files include <assert.h> but don't use it" \
+		  1>&2; exit 1; } || :;					\
+	else :;								\
+	fi
+
 # Don't include quotearg.h unless you use one of its functions.
 sc_prohibit_quotearg_without_use:
 	@if $(CVS_LIST_EXCEPT) | grep '\.c$$' > /dev/null; then		\
