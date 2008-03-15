@@ -345,7 +345,7 @@ sha512_process_bytes (const void *buffer, size_t len, struct sha512_ctx *ctx)
 
       if (ctx->buflen > 128)
 	{
-	  sha512_process_block (ctx->buffer, ctx->buflen & ~63, ctx);
+	  sha512_process_block (ctx->buffer, ctx->buflen & ~127, ctx);
 
 	  ctx->buflen &= 127;
 	  /* The regions in the following copy operation cannot overlap.  */
