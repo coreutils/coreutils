@@ -1,0 +1,299 @@
+Prerequisites
+=============
+You will need the "git" version control tools.
+On Fedora-based systems, do "yum install git".
+On Debian-based ones install the "git-core" package.
+Then run "git --version".  If that says it's older than
+version 1.4.4, then you'd do well to get a newer version.
+At worst, just download the latest stable release from
+http://git.or.cz/ and build from source.
+
+
+Use the latest upstream sources
+===============================
+Base any changes you make on the latest upstream sources.
+You can get a copy of the latest with this command:
+
+    git clone git://git.sv.gnu.org/coreutils
+
+That downloads the entire repository, including revision control history
+dating back to 1991.  The repository (the part you download, and which
+resides in coreutils/.git) currently weighs in at about 30MB.  So you
+don't want to download it more often than necessary.  Once downloaded,
+you can get incremental updates by running this command from inside
+your new coreutils/ directory:
+
+    git pull
+
+
+*Before* you commit changes
+===========================
+
+In this project, we much prefer patches that automatically record
+authorship.  That is important not just to give credit where due, but
+also from a legal standpoint (see below).  To create author-annotated
+patches with git, you must first tell git who you are.  That information
+is best recorded in your ~/.gitconfig file.  Edit that file, creating
+it if needed, and put your name and email address in place of these
+example values:
+
+[user]
+  name = Joe X. User
+  email = joe.user@example.com
+
+
+Your first commit: the quick and dirty way
+==========================================
+First of all, realize that to "commit" a change in git is a purely
+local operation.  It affects only the local repository (the .git/ dir)
+in your current coreutils/ hierarchy.
+
+To try this out, modify a file or two.  If you create a new file, you'll
+need to tell git about it with "git add new-file.c".  Commit all changes
+with "git commit -a".  That prompts you for a log message, which should
+include a one-line summary, a blank line, and ChangeLog-style entries
+for all affected files.  More on that below.
+
+Once your change is committed, you can create a proper patch that includes
+a log message and authorship information as well as any permissions
+changes.  Use this command to save that single, most-recent change set:
+
+  git format-patch --stdout --signoff HEAD~1 > DIFF
+
+The trouble with this approach is that you've just checked in a change
+(remember, it's only local) on the "master" branch, and that's where new
+changes would normally appear when you pull the latest from "upstream".
+When you "pull" from a remote repository to get the latest, your local
+changes on "master" may well induce conflicts.   For this reason, you
+may want to keep "master" free of any local changes, so that you can
+use it to track unadulterated upstream sources.
+
+However, if your cloned directory is for a one-shot patch submission and
+you're going to remove it right afterwards, then this approach is fine.
+Otherwise, for a more sustainable (and more generally useful, IMHO)
+process, read on about "topic" branches.
+
+
+Make your changes on a private "topic" branch
+=============================================
+So you checked out coreutils like this:
+
+  git clone git://git.sv.gnu.org/coreutils
+
+Now, cd into the coreutils/ directory and run:
+
+  git checkout -b my-topic
+
+That creates the my-topic branch and puts you on it.
+To see which branch you're on, type "git branch".
+Right after the clone, you were on "master" (aka the trunk).
+To get back to the trunk, do this:
+
+  git checkout master
+
+Note 1:
+    Be careful to run "git pull" only when on the "master" branch,
+    not when on a branch.  With newer versions of git, you can't cause
+    trouble if you forget, so this is a good reason to ensure you're
+    using 1.5.3.1 or newer.
+
+Note 2:
+    It's best not to try to switch from one branch to another if
+    you have pending (uncommitted) changes.  Sometimes it works,
+    sometimes the checkout will fail, telling you that your local
+    modifications conflict with changes required to switch branches.
+    However, in any case, you will *not* lose your uncommitted changes.
+
+Anyhow, get back onto your just-created branch:
+
+  git checkout my-topic
+
+Now, modify some file and commit it:
+
+  git commit some-file.c
+
+Personally, no matter what package I'm working on, I find it useful to
+put the ChangeLog entries *only* in the commit log, initially, unless
+I plan to commit/push right away.  Otherwise, I tend to get unnecessary
+merge conflicts with each rebase (see below).  In coreutils, I've gone
+a step further, and no longer maintain an explicit ChangeLog file in
+version control.  Instead, in a git working directory, you can view
+ChangeLog information via "git log".  However, each distribution tarball
+does include a ChangeLog file that is automatically generated from the
+git logs.
+
+So, you've committed a change.  But it's only in your local repository,
+and only on your "my-topic" branch.  Let's say you wait a day, and
+then see that someone else changed something and pushed it to the
+public repository.  Now, you want to update your trunk and "rebase"
+your changes on the branch so that they are once again relative to the
+tip of the trunk.  Currently, your branch is attached to the trunk at
+the next-to-last change set.
+
+First: update the trunk from the public repo:
+[you've first made sure that "git diff" produces no output]
+
+  git checkout master
+  git pull
+
+Now, return to your branch, and "rebase" relative to trunk (master):
+
+  git checkout my-topic
+  git rebase master
+
+If there are no conflicts, this requires no more work from you.
+However, let's say there was one in ChangeLog, since you didn't
+follow my advice and modified it anyway.
+git rebase will tell you there was a conflict and in which
+file, and instruct you to resolve it and then resume with
+"git rebase --continue" once that's done.
+
+So you resolve as usual, by editing ChangeLog (which has the
+usual conflict markers), then type "git rebase --continue".
+That will fail, with a diagnostic telling you to mark
+the file as "conflict resolved" by doing this:
+
+  git add ChangeLog
+
+Then, finally, you can proceed (possibly onto more conflict resolution,
+if there are conflicts in other files):
+
+  git rebase --continue
+
+Once it finishes, your changes on the branch are now relative to
+the tip of the trunk.
+
+Now use git format-patch, as above.
+
+
+
+
+
+
+
+Coreutils-specific:
+
+No more ChangeLog files
+=======================
+Do not modify any of the ChangeLog files in coreutils.  Starting in
+2008, the policy changed.  Before, we would insert the exact same text
+(or worse, sometimes slightly differing) into both the ChangeLog file
+and the commit log.  Now we put that information only in the commit log,
+and generate the top-level ChangeLog file from logs at "make dist" time.
+As such, there are strict requirements on the form of the commit log
+messages.
+
+
+Commit log requirements
+=======================
+Your commit log should always start with a one-line summary, the second
+line should be blank, and the remaining lines are usually ChangeLog-style
+entries for all affected files.  Omit the leading TABs that you're used
+to seeing in a "real" ChangeLog file.
+
+
+Use SPACE-only indentation in new files.
+========================================
+In any new file, eliminate all leading TABs (e.g., via running GNU indent
+with --no-tabs) and put these lines at the end of the file:
+[FIXME: suggest vim syntax to do same thing, if it can be done safely.
+ Most distros now "set nomodeline" by default for a good reason. ]
+
+/*
+ * Local variables:
+ * indent-tabs-mode: nil
+ * End:
+ */
+
+Do not change TABs to spaces or vice versa in any existing file.
+
+
+Send patches to bug-coreutils@gnu.org
+=====================================
+
+
+Add documentation
+=================
+If you add a feature or change some user-visible aspect of a program,
+document it.  If you add an option, document it both in --help output
+(i.e., in the usage function that generates the --help output) and in
+doc/coreutils.texi.  The man pages are generated from --help output, so
+you shouldn't need to change anything under man/.  User-visible changes
+are usually documented in NEWS, too.
+
+
+Add tests
+==========
+Nearly every significant change must be accompanied by a test suite
+addition that exercises it.  If you fix a bug, add at least one test that
+fails without the patch, but that succeeds once your patch is applied.
+If you add a feature, add tests to exercise as much of the new code
+as possible.
+
+There are hundreds of tests in the tests/ directories.  You can use
+tests/sample-test as a template, or one of the various Perl-based ones
+in tests/misc.
+
+If writing tests is not your thing, don't worry too much about it,
+but do provide scenarios, input/output pairs, or whatever, along with
+examples of running the tool to demonstrate the new or changed feature,
+and someone else will massage that into a test (writing portable tests
+can be a challenge).
+
+
+Copyright assignment
+====================
+If your change is significant (i.e., if it adds more than ~10 lines),
+then you'll have to have a copyright assignment on file with the FSF.
+Since that involves first an email exchange between you and the FSF,
+and then the exchange (FSF to you, then back) of an actual sheet of paper
+with your signature on it, and finally, some administrative processing
+in Boston, the process can take a few weeks.
+
+The forms to choose from are in gnulib's doc/Copyright/ directory.
+If you want to assign a single change, you should use the file,
+doc/Copyright/request-assign.changes:
+
+    http://git.sv.gnu.org/gitweb/?p=gnulib.git;a=blob;f=doc/Copyright/request-assign.changes;hb=HEAD
+
+If you would like to assign past and future coreutils work,
+you'd use doc/Copyright/request-assign.future:
+
+    http://git.sv.gnu.org/gitweb/?p=gnulib.git;a=blob;f=doc/Copyright/request-assign.future;hb=HEAD
+
+
+Run "make syntax-check", or even "make distcheck"
+================================================
+Making either of those targets runs many integrity and
+coreutils-specific policy-conformance tests.  For example, the former
+ensures that you add no trailing blanks and no uses of certain deprecated
+functions.  The latter performs all "syntax-check" tests, and also
+ensures that the build completes with no warnings when using a certain
+set of gcc -W... options.  Don't even bother running "make distcheck"
+unless you have a very up to date installation including recent versions
+of gcc and the linux kernel, and modern GNU tools.
+
+
+Ensure that your changes are indented properly.
+===============================================
+Format the code the way GNU indent does.
+In a file with the "indent-tabs-mode: nil" directive at the end,
+running "indent --no-tabs" should induce no change.
+With other files, there will be some existing differences.
+Try not to add any more.
+
+
+-------------------------------------------
+
+Miscellaneous useful git commands
+=================================
+
+  * gitk: give a graphical view of the revision graph
+  * git log: to get most of the same info in text form
+  * git log -p: same as above, but with diffs
+  * git log -p SOME_FILE: same as above, but limit to SOME_FILE
+  * git reset --soft HEAD^: Commit the delta required to restore
+      state to the revision just before HEAD (i.e., next-to-last).
+  * git rebase -i master: run this from on a branch, and it gives
+      you an interface with which you can reorder and modify arbitrary
+      change sets on that branch.
