@@ -182,19 +182,19 @@ endef
 
 # Prohibit the inclusion of assert.h without an actual use of assert.
 sc_prohibit_assert_without_use:
-	@h='<assert.h>' re='\<assert \(' $(_header_without_use)
+	@h='<assert.h>' re='\<assert *\(' $(_header_without_use)
 
 # Prohibit the inclusion of getopt.h without an actual use.
 sc_prohibit_getopt_without_use:
-	@h='<getopt.h>' re='\<getopt(_long)? \(' $(_header_without_use)
+	@h='<getopt.h>' re='\<getopt(_long)? *\(' $(_header_without_use)
 
 # Don't include quotearg.h unless you use one of its functions.
 sc_prohibit_quotearg_without_use:
-	@h='"quotearg.h"' re='\<quotearg(_[^ ]+)? \(' $(_header_without_use)
+	@h='"quotearg.h"' re='\<quotearg(_[^ ]+)? *\(' $(_header_without_use)
 
 # Don't include quote.h unless you use one of its functions.
 sc_prohibit_quote_without_use:
-	@h='"quote.h"' re='\<quote(_n)? \(' $(_header_without_use)
+	@h='"quote.h"' re='\<quote(_n)? *\(' $(_header_without_use)
 
 sc_obsolete_symbols:
 	@grep -nE '\<(HAVE''_FCNTL_H|O''_NDELAY)\>'			\
