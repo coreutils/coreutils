@@ -27,7 +27,6 @@ gzip_rsyncable := \
   $(shell gzip --help 2>/dev/null|grep rsyncable >/dev/null && echo --rsyncable)
 GZIP_ENV = '--no-name --best $(gzip_rsyncable)'
 
-CVS = cvs
 GIT = git
 VC = $(GIT)
 VC-tag = git tag -s -m '$(VERSION)'
