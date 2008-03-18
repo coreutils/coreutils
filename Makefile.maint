@@ -166,53 +166,36 @@ sc_require_config_h:
 	else :;								\
 	fi
 
+# To use this "command" macro, you must first define two shell variables:
+# h: the header, enclosed in <> or ""
+# re: a regular expression that matches IFF something provided by $h is used.
+define _header_without_use
+  h_esc=`echo "$$h"|sed 's/\./\\./'`;					\
+  if $(CVS_LIST_EXCEPT) | grep '\.c$$' > /dev/null; then		\
+    files=$$(grep -l '^# *include '"$$h_esc"				\
+	     $$($(CVS_LIST_EXCEPT) | grep '\.c$$')) &&			\
+    grep -LE "$$re" $$files | grep . &&					\
+      { echo "$(ME): the above files include $$h but don't use it"	\
+	1>&2; exit 1; } || :;						\
+  else :;								\
+  fi
+endef
+
 # Prohibit the inclusion of assert.h without an actual use of assert.
 sc_prohibit_assert_without_use:
-	@if $(CVS_LIST_EXCEPT) | grep '\.c$$' > /dev/null; then		\
-	  files=$$(grep -l '# *include <assert\.h>'			\
-		    $$($(CVS_LIST_EXCEPT) | grep '\.c$$')) &&		\
-	  grep -L '\<assert (' $$files					\
-	      | grep . &&						\
-	    { echo "$(ME): the above files include <assert.h> but don't use it" \
-		  1>&2; exit 1; } || :;					\
-	else :;								\
-	fi
+	@h='<assert.h>' re='\<assert \(' $(_header_without_use)
 
 # Prohibit the inclusion of getopt.h without an actual use.
 sc_prohibit_getopt_without_use:
-	@if $(CVS_LIST_EXCEPT) | grep '\.c$$' > /dev/null; then		\
-	  files=$$(grep -l '# *include <getopt\.h>'			\
-		    $$($(CVS_LIST_EXCEPT) | grep '\.c$$')) &&		\
-	  grep -E -L '\<getopt(_long)? \(' $$files			\
-	      | grep . &&						\
-	    { echo "$(ME): the above files include <getopt.h> but don't use it" \
-		  1>&2; exit 1; } || :;					\
-	else :;								\
-	fi
+	@h='<getopt.h>' re='\<getopt(_long)? \(' $(_header_without_use)
 
 # Don't include quotearg.h unless you use one of its functions.
 sc_prohibit_quotearg_without_use:
-	@if $(CVS_LIST_EXCEPT) | grep '\.c$$' > /dev/null; then		\
-	  files=$$(grep -l '# *include "quotearg\.h"'			\
-		    $$($(CVS_LIST_EXCEPT) | grep '\.c$$')) &&		\
-	  grep -LE '\<quotearg(_[^ ]+)? \(' $$files			\
-	      | grep . &&						\
-	    { echo "$(ME): the above files include "quotearg.h" but don't use it" \
-		  1>&2; exit 1; } || :;					\
-	else :;								\
-	fi
+	@h='"quotearg.h"' re='\<quotearg(_[^ ]+)? \(' $(_header_without_use)
 
 # Don't include quote.h unless you use one of its functions.
 sc_prohibit_quote_without_use:
-	@if $(CVS_LIST_EXCEPT) | grep '\.c$$' > /dev/null; then		\
-	  files=$$(grep -l '# *include "quote\.h"'			\
-		    $$($(CVS_LIST_EXCEPT) | grep '\.c$$')) &&		\
-	  grep -LE '\<quote(_n)? \(' $$files			\
-	      | grep . &&						\
-	    { echo "$(ME): the above files include "quote.h" but don't use it" \
-		  1>&2; exit 1; } || :;					\
-	else :;								\
-	fi
+	@h='"quote.h"' re='\<quote(_n)? \(' $(_header_without_use)
 
 sc_obsolete_symbols:
 	@grep -nE '\<(HAVE''_FCNTL_H|O''_NDELAY)\>'			\
