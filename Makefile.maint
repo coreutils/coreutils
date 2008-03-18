@@ -150,7 +150,7 @@ sc_file_system:
 	    exit 1; } || :
 
 sc_no_have_config_h:
-	@grep -n 'HAVE''_CONFIG_H' $$($(CVS_LIST_EXCEPT)) &&		\
+	@grep -n '^# *if.*HAVE''_CONFIG_H' $$($(CVS_LIST_EXCEPT)) &&	\
 	  { echo '$(ME): found use of HAVE''_CONFIG_H; remove'		\
 		1>&2; exit 1; } || :
 
