@@ -185,7 +185,7 @@ sc_prohibit_getopt_without_use:
 		    $$($(CVS_LIST_EXCEPT) | grep '\.c$$')) &&		\
 	  grep -E -L '\<getopt(_long)? \(' $$files			\
 	      | grep . &&						\
-	    { echo "$(ME): the above files include <assert.h> but don't use it" \
+	    { echo "$(ME): the above files include <getopt.h> but don't use it" \
 		  1>&2; exit 1; } || :;					\
 	else :;								\
 	fi
