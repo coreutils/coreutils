@@ -1339,10 +1339,11 @@ copy_internal (char const *src_name, char const *dst_name,
 	      new_dst = true;
 	    }
 	  else if (! S_ISDIR (dst_sb.st_mode)
+		   /* Never unlink dst_name when in move mode.  */
+		   && ! x->move_mode
 		   && (x->unlink_dest_before_opening
 		       || (x->preserve_links && 1 < dst_sb.st_nlink)
-		       || (!x->move_mode
-			   && x->dereference == DEREF_NEVER
+		       || (x->dereference == DEREF_NEVER
 			   && S_ISLNK (src_sb.st_mode))
 		       ))
 	    {

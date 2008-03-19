@@ -12,6 +12,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   ls no longer segfaults on files in /proc when linked with an older version
   of libselinux.  E.g., ls -l /proc/sys would dereference a NULL pointer.
 
+  mv would mistakenly unlink a destination file before calling rename,
+  when the destination had two or more hard links.  It no longer does that.
+  [bug introduced in coreutils-5.3.0]
+
   "rmdir --ignore-fail-on-non-empty" detects and ignores the failure
   in more cases when a directory is empty.
 
