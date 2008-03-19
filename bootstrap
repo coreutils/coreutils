@@ -626,4 +626,7 @@ m=gnulib-tests/gnulib.mk
 sed 's,\.\./\.\.,..,g' $m > $m-t
 mv -f $m-t $m
 
+# Make tests executable.
+chmod a+x gnulib-tests/test-*.sh
+
 echo "$0: done.  Now you can run './configure'."
