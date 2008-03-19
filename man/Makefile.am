@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 dist_man_MANS = $(MAN)
+BUILT_SOURCES = $(MAN)
 
 man_aux = $(dist_man_MANS:.1=.x)
 
