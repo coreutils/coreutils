@@ -205,7 +205,6 @@ my @Tests =
 	    . "\e[m"
 	 },
 
-	{PRE => sub { my $foo = `ls > /tmp/ls` }},
 	{POST => sub {
          unlink qw(setuid setgid);
 	 foreach my $dir (qw(owr owt sticky)) {rmdir $dir} }},
