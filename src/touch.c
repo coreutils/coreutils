@@ -1,5 +1,6 @@
 /* touch -- change modification and access times of files
-   Copyright (C) 87, 1989-1991, 1995-2005, 2007 Free Software Foundation, Inc.
+   Copyright (C) 87, 1989-1991, 1995-2005, 2007-2008
+   Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -30,7 +31,6 @@
 #include "posixtm.h"
 #include "posixver.h"
 #include "quote.h"
-#include "safe-read.h"
 #include "stat-time.h"
 #include "utimens.h"
 

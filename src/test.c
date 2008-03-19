@@ -2,7 +2,7 @@
 
 /* Modified to run with the GNU shell by bfox. */
 
-/* Copyright (C) 1987-2005, 2007 Free Software Foundation, Inc.
+/* Copyright (C) 1987-2005, 2007-2008 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -38,7 +38,6 @@
 #endif
 
 #include "system.h"
-#include "error.h"
 #include "euidaccess.h"
 #include "inttostr.h"
 #include "quote.h"

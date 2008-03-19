@@ -25,7 +25,6 @@
 
 #include "error.h"
 #include "filenamecat.h"
-#include "long-options.h"
 #include "quote.h"
 #include "tempname.h"
 
