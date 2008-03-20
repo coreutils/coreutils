@@ -592,10 +592,12 @@ my-distcheck: $(local-check) check
 	mkdir -p $(t)
 	GZIP=$(GZIP_ENV) $(AMTAR) -C $(t) -zxf $(distdir).tar.gz
 	cd $(t)/$(distdir)				\
-	  && ./configure --disable-nls			\
+	  && ./configure --disable-nls --prefix=$(t)/i	\
 	  && $(MAKE) CFLAGS='$(warn_cflags)'		\
 	      AM_MAKEFLAGS='$(null_AM_MAKEFLAGS)'	\
 	  && $(MAKE) dvi				\
+	  && $(MAKE) install				\
+	  && test -f $(mandir)/man1/ls.1		\
 	  && mkdir $(bin)				\
 	  && ($(write_loser)) > $(bin)/loser            \
 	  && chmod a+x $(bin)/loser                     \
