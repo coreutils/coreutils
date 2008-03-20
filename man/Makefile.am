@@ -15,14 +15,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# We must include at least one literal name here, so that
-# automake-1.10.1 emits the required install-man* rules.
-dist_man_MANS = rm.1 $(MAN)
+dist_man1_MANS = $(MAN)
 
-man_aux = $(dist_man_MANS:.1=.x)
+man_aux = $(dist_man1_MANS:.1=.x)
 
 EXTRA_DIST = $(man_aux) $(NO_INSTALL_PROGS_DEFAULT:%=%.x) help2man
-MAINTAINERCLEANFILES = $(dist_man_MANS)
+MAINTAINERCLEANFILES = $(dist_man1_MANS)
 
 # Depend on ../.version to get version number changes.
 common_dep = ../.version
@@ -173,7 +171,7 @@ distcheck-hook: check-x-vs-1 check-programs-vs-x
 ASSORT = LC_ALL=C sort
 
 # Ensure that for each .x file in this directory, there is a
-# corresponding .1 file in the definition of $(dist_man_MANS) above.
+# corresponding .1 file in the definition of $(dist_man1_MANS) above.
 # But since that expansion usually lacks programs like su and arch,
 # add them here manually.
 .PHONY: check-x-vs-1
@@ -181,7 +179,7 @@ check-x-vs-1:
 	PATH=../src$(PATH_SEPARATOR)$$PATH; export PATH;		\
 	t=ls-files.$$$$;						\
 	(cd $(srcdir) && ls -1 *.x) | sed 's/\.x$$//' | $(ASSORT) > $$t;\
-	(echo $(dist_man_MANS) $(NO_INSTALL_PROGS_DEFAULT)		\
+	(echo $(dist_man1_MANS) $(NO_INSTALL_PROGS_DEFAULT)		\
 	  | tr -s ' ' '\n' | sed 's/\.1$$//')				\
 	  | $(ASSORT) -u | diff - $$t || { rm $$t; exit 1; };		\
 	rm $$t
