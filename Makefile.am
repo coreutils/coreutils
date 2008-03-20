@@ -16,7 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 SUBDIRS = lib src doc man po tests gnulib-tests
-EXTRA_DIST = Makefile.cfg Makefile.maint GNUmakefile \
+EXTRA_DIST = cfg.mk maint.mk GNUmakefile \
   .prev-version THANKS-to-translators THANKStt.in \
   .version \
   .vg-suppressions \

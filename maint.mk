@@ -19,7 +19,7 @@
 
 # This is reported not to work with make-3.79.1
 # ME := $(word $(words $(MAKEFILE_LIST)),$(MAKEFILE_LIST))
-ME := Makefile.maint
+ME := maint.mk
 
 # Do not save the original name or timestamp in the .tar.gz file.
 # Use --rsyncable if available.
@@ -428,7 +428,7 @@ check-AUTHORS:
 # to emit a definition for each substituted variable.
 makefile-check:
 	grep -nE '@[A-Z_0-9]+@' `find . -name Makefile.am` \
-	  && { echo 'Makefile.maint: use $$(...), not @...@' 1>&2; exit 1; } || :
+	  && { echo '$(ME): use $$(...), not @...@' 1>&2; exit 1; } || :
 
 news-date-check: NEWS
 	today=`date +%Y-%m-%d`;						\
@@ -451,7 +451,7 @@ changelog-check:
 
 m4-check:
 	@grep -n 'AC_DEFUN([^[]' m4/*.m4 \
-	  && { echo 'Makefile.maint: quote the first arg to AC_DEFUN' 1>&2; \
+	  && { echo '$(ME): quote the first arg to AC_DEFUN' 1>&2; \
 	       exit 1; } || :
 
 # Verify that all source files using _() are listed in po/POTFILES.in.
@@ -484,7 +484,7 @@ po-check:
 # gettext recognizes it as a string requiring translation.
 author_mark_check:
 	@grep -n '^# *define AUTHORS "[^"]* and ' src/*.c |grep -v ' N_ (' && \
-	  { echo 'Makefile.maint: enclose the above strings in N_ (...)' 1>&2; \
+	  { echo '$(ME): enclose the above strings in N_ (...)' 1>&2; \
 	    exit 1; } || :
 
 # Sometimes it is useful to change the PATH environment variable
@@ -493,7 +493,7 @@ author_mark_check:
 # It'd be better to use `find -print0 ...|xargs -0 ...', but less portable,
 # and there probably aren't many projects with so many Makefile.am files
 # that we'd have to worry about limits on command line length.
-msg = 'Makefile.maint: Do not use `:'\'' above; use @PATH_SEPARATOR@ instead'
+msg = '$(ME): Do not use `:'\'' above; use @PATH_SEPARATOR@ instead'
 makefile_path_separator_check:
 	@grep -n 'PATH=.*:' `find $(srcdir) -name Makefile.am` \
 	  && { echo $(msg) 1>&2; exit 1; } || :

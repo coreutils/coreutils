@@ -1,11 +1,6 @@
-^configure$
 ChangeLog
 ^TODO$
-^lib/mktime\.c$
-^lib/getloadavg\.c$
-^lib/euidaccess\.c$
 ^lib/euidaccess-stat\.c$
-^lib/group-member\.c$
-^Makefile\.maint$
+^maint\.mk$
 ^doc/coreutils.texi$
 ^tests/misc/stty-invalid$
