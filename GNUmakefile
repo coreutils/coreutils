@@ -44,15 +44,19 @@ include Makefile
 -include $(srcdir)/cfg.mk
 include $(srcdir)/maint.mk
 
+# Allow cfg.mk to override these.
+_build-aux ?= build-aux
 _autoreconf ?= autoreconf
 
 # Ensure that $(VERSION) is up to date for dist-related targets, but not
 # for others: rerunning autoreconf and recompiling everything isn't cheap.
-ifeq (0,$(MAKELEVEL))
+_have-git-version-gen := \
+  $(shell test -f $(srcdir)/$(_build-aux)/git-version-gen && echo yes)
+ifeq ($(_have-git-version-gen)0,yes$(MAKELEVEL))
   _is-dist-target = $(filter-out %clean, \
     $(filter dist% alpha beta major,$(MAKECMDGOALS)))
   ifneq (,$(_is-dist-target))
-    _curr-ver := $(shell cd $(srcdir) && ./build-aux/git-version-gen \
+    _curr-ver := $(shell cd $(srcdir) && ./$(_build-aux)/git-version-gen \
                    $(srcdir)/.tarball-version)
     ifneq ($(_curr-ver),$(VERSION))
       $(info INFO: running autoreconf for new version string: $(_curr-ver))
