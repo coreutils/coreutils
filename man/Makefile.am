@@ -15,7 +15,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-dist_man_MANS = $(MAN)
+# We must include at least one literal name here, so that
+# automake-1.10.1 emits the required install-man* rules.
+dist_man_MANS = rm.1 $(MAN)
 
 man_aux = $(dist_man_MANS:.1=.x)
 
