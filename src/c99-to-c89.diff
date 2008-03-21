@@ -1,7 +1,25 @@
+--- src/id.c	2008-03-04 18:50:55.000000000 +0100
++++ src/id.c	2008-03-04 19:32:24.000000000 +0100
+@@ -196,6 +196,7 @@ of a different user"));
+     error (EXIT_FAILURE, 0,
+ 	   _("cannot print only names or real IDs in default format"));
+
++  {
+   char const *user_name;
+   if (argc - optind == 1)
+     {
+@@ -239,6 +240,7 @@ of a different user"));
+     {
+       print_full_info (user_name);
+     }
++  }
+   putchar ('\n');
+
+   exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 diff -upr src/remove.c src/remove.c
 --- src/remove.c	2007-07-23 12:56:20.000000000 +0200
 +++ src/remove.c	2007-07-23 13:03:12.000000000 +0200
-@@ -261,9 +261,10 @@ pop_dir (Dirstack_state *ds)
+@@ -264,9 +264,10 @@ pop_dir (Dirstack_state *ds)
  {
    size_t n_lengths = obstack_object_size (&ds->len_stack) / sizeof (size_t);
    size_t *length = obstack_base (&ds->len_stack);
@@ -13,7 +31,7 @@ diff -upr src/remove.c src/remove.c
    assert (top_len >= 2);
 
    /* Pop the specified length of file name.  */
-@@ -421,10 +422,11 @@ AD_stack_top (Dirstack_state const *ds)
+@@ -424,10 +425,11 @@ AD_stack_top (Dirstack_state const *ds)
  static void
  AD_stack_pop (Dirstack_state *ds)
  {
@@ -26,7 +44,7 @@ diff -upr src/remove.c src/remove.c
    if (top->unremovable)
      hash_free (top->unremovable);
    obstack_blank (&ds->Active_dir, -(int) sizeof (struct AD_ent));
-@@ -876,6 +878,7 @@ prompt (int fd_cwd, Dirstack_state const
+@@ -879,6 +881,7 @@ prompt (int fd_cwd, Dirstack_state const
  	    break;
  	  }
 
@@ -34,7 +52,7 @@ diff -upr src/remove.c src/remove.c
        char const *quoted_name = quote (full_filename (filename));
 
        if (0 < write_protected)
-@@ -915,6 +918,7 @@ prompt (int fd_cwd, Dirstack_state const
+@@ -918,6 +921,7 @@ prompt (int fd_cwd, Dirstack_state const
  		    : _("%s: remove %s %s? ")),
  		   program_name, file_type (sbuf), quoted_name);
  	}
@@ -42,7 +60,7 @@ diff -upr src/remove.c src/remove.c
 
        if (!yesno ())
  	return RM_USER_DECLINED;
-@@ -1534,6 +1538,7 @@ rm_1 (Dirstack_state *ds, char const *fi
+@@ -1537,6 +1541,7 @@ rm_1 (Dirstack_state *ds, char const *fi
        return RM_ERROR;
      }
 
@@ -50,7 +68,7 @@ diff -upr src/remove.c src/remove.c
    struct stat st;
    cache_stat_init (&st);
    cycle_check_init (&ds->cycle_check_state);
-@@ -1556,6 +1561,7 @@ rm_1 (Dirstack_state *ds, char const *fi
+@@ -1559,6 +1564,7 @@ rm_1 (Dirstack_state *ds, char const *fi
    AD_push_initial (ds);
    AD_INIT_OTHER_MEMBERS ();
 
@@ -58,7 +76,7 @@ diff -upr src/remove.c src/remove.c
    enum RM_status status = remove_entry (AT_FDCWD, ds, filename,
  					DT_UNKNOWN, &st, x);
    if (status == RM_NONEMPTY_DIR)
-@@ -1574,6 +1580,8 @@ rm_1 (Dirstack_state *ds, char const *fi
+@@ -1577,6 +1583,8 @@ rm_1 (Dirstack_state *ds, char const *fi
    ds_clear (ds);
    return status;
  }
@@ -152,21 +170,3 @@ diff -upr src/shred.c src/shred.c
  		  if (errnum == EIO && 0 <= size && (soff | SECTOR_MASK) < lim)
  		    {
  		      size_t soff1 = (soff | SECTOR_MASK) + 1;
---- src/id.c	2008-03-04 18:50:55.000000000 +0100
-+++ src/id.c	2008-03-04 19:32:24.000000000 +0100
-@@ -196,6 +196,7 @@ of a different user"));
-     error (EXIT_FAILURE, 0,
- 	   _("cannot print only names or real IDs in default format"));
-
-+  {
-   char const *user_name;
-   if (argc - optind == 1)
-     {
-@@ -239,6 +240,7 @@ of a different user"));
-     {
-       print_full_info (user_name);
-     }
-+  }
-   putchar ('\n');
-
-   exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);

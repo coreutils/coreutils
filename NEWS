@@ -42,6 +42,11 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   seq gives better diagnostics for invalid formats.
 
+** Portability
+
+  rm now works properly even on systems like BeOS and Haiku,
+  which have negative errno values.
+
 ** Consistency
 
   install, mkdir, rmdir and split now write --verbose output to stdout,
