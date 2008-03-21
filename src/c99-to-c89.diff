@@ -126,7 +126,7 @@ diff -upr src/seq.c src/seq.c
      }
 
    return ret;
-@@ -338,6 +340,7 @@ get_default_format (operand first, opera
+@@ -339,6 +341,7 @@ get_default_format (operand first, opera
  	  size_t last_width = last.width + (prec - last.precision);
  	  if (last.precision && prec == 0)
  	    last_width--;  /* don't include space for '.' */
@@ -134,7 +134,7 @@ diff -upr src/seq.c src/seq.c
  	  size_t width = MAX (first_width, last_width);
  	  if (width <= INT_MAX)
  	    {
-@@ -345,6 +348,7 @@ get_default_format (operand first, opera
+@@ -346,6 +349,7 @@ get_default_format (operand first, opera
  	      sprintf (format_buf, "%%0%d.%dLf", w, prec);
  	      return format_buf;
  	    }
@@ -142,7 +142,7 @@ diff -upr src/seq.c src/seq.c
  	}
        else
  	{
-@@ -433,6 +437,7 @@ main (int argc, char **argv)
+@@ -434,6 +438,7 @@ main (int argc, char **argv)
    if (format_str)
      {
        validate_format (format_str);
@@ -150,7 +150,7 @@ diff -upr src/seq.c src/seq.c
        char const *f = long_double_format (format_str, &layout);
        if (! f)
  	{
-@@ -440,6 +445,7 @@ main (int argc, char **argv)
+@@ -441,6 +446,7 @@ main (int argc, char **argv)
  	  usage (EXIT_FAILURE);
  	}
        format_str = f;
