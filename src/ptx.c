@@ -1,5 +1,5 @@
 /* Permuted index for GNU, with keywords in their context.
-   Copyright (C) 1990, 1991, 1993, 1998-2007 Free Software Foundation, Inc.
+   Copyright (C) 1990, 1991, 1993, 1998-2008 Free Software Foundation, Inc.
    François Pinard <pinard@iro.umontreal.ca>, 1988.
 
    This program is free software: you can redistribute it and/or modify
@@ -310,91 +310,93 @@ copy_unescaped_string (const char *string)
   cursor = result;
 
   while (*string)
-    if (*string == '\\')
-      {
-	string++;
-	switch (*string)
-	  {
-	  case 'x':		/* \xhhh escape, 3 chars maximum */
-	    value = 0;
-	    for (length = 0, string++;
-		 length < 3 && isxdigit (to_uchar (*string));
-		 length++, string++)
-	      value = value * 16 + HEXTOBIN (*string);
-	    if (length == 0)
-	      {
-		*cursor++ = '\\';
-		*cursor++ = 'x';
-	      }
-	    else
+    {
+      if (*string == '\\')
+	{
+	  string++;
+	  switch (*string)
+	    {
+	    case 'x':		/* \xhhh escape, 3 chars maximum */
+	      value = 0;
+	      for (length = 0, string++;
+		   length < 3 && isxdigit (to_uchar (*string));
+		   length++, string++)
+		value = value * 16 + HEXTOBIN (*string);
+	      if (length == 0)
+		{
+		  *cursor++ = '\\';
+		  *cursor++ = 'x';
+		}
+	      else
+		*cursor++ = value;
+	      break;
+
+	    case '0':		/* \0ooo escape, 3 chars maximum */
+	      value = 0;
+	      for (length = 0, string++;
+		   length < 3 && ISODIGIT (*string);
+		   length++, string++)
+		value = value * 8 + OCTTOBIN (*string);
 	      *cursor++ = value;
-	    break;
+	      break;
 
-	  case '0':		/* \0ooo escape, 3 chars maximum */
-	    value = 0;
-	    for (length = 0, string++;
-		 length < 3 && ISODIGIT (*string);
-		 length++, string++)
-	      value = value * 8 + OCTTOBIN (*string);
-	    *cursor++ = value;
-	    break;
-
-	  case 'a':		/* alert */
+	    case 'a':		/* alert */
 #if __STDC__
-	    *cursor++ = '\a';
+	      *cursor++ = '\a';
 #else
-	    *cursor++ = 7;
+	      *cursor++ = 7;
 #endif
-	    string++;
-	    break;
-
-	  case 'b':		/* backspace */
-	    *cursor++ = '\b';
-	    string++;
-	    break;
-
-	  case 'c':		/* cancel the rest of the output */
-	    while (*string)
 	      string++;
-	    break;
+	      break;
 
-	  case 'f':		/* form feed */
-	    *cursor++ = '\f';
-	    string++;
-	    break;
+	    case 'b':		/* backspace */
+	      *cursor++ = '\b';
+	      string++;
+	      break;
 
-	  case 'n':		/* new line */
-	    *cursor++ = '\n';
-	    string++;
-	    break;
+	    case 'c':		/* cancel the rest of the output */
+	      while (*string)
+		string++;
+	      break;
 
-	  case 'r':		/* carriage return */
-	    *cursor++ = '\r';
-	    string++;
-	    break;
+	    case 'f':		/* form feed */
+	      *cursor++ = '\f';
+	      string++;
+	      break;
 
-	  case 't':		/* horizontal tab */
-	    *cursor++ = '\t';
-	    string++;
-	    break;
+	    case 'n':		/* new line */
+	      *cursor++ = '\n';
+	      string++;
+	      break;
 
-	  case 'v':		/* vertical tab */
+	    case 'r':		/* carriage return */
+	      *cursor++ = '\r';
+	      string++;
+	      break;
+
+	    case 't':		/* horizontal tab */
+	      *cursor++ = '\t';
+	      string++;
+	      break;
+
+	    case 'v':		/* vertical tab */
 #if __STDC__
-	    *cursor++ = '\v';
+	      *cursor++ = '\v';
 #else
-	    *cursor++ = 11;
+	      *cursor++ = 11;
 #endif
-	    string++;
-	    break;
+	      string++;
+	      break;
 
-	  default:
-	    *cursor++ = '\\';
-	    *cursor++ = *string++;
-	    break;
-	  }
-      }
-    else
-      *cursor++ = *string++;
+	    default:
+	      *cursor++ = '\\';
+	      *cursor++ = *string++;
+	      break;
+	    }
+	}
+      else
+	*cursor++ = *string++;
+    }
 
   *cursor = '\0';
   return result;
