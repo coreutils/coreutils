@@ -1,6 +1,6 @@
 # Make miscellaneous coreutils tests.			-*-Makefile-*-
 
-# Copyright (C) 2001-2007 Free Software Foundation, Inc.
+# Copyright (C) 2001-2008 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -38,6 +38,7 @@ TESTS = \
   ls-time \
   ls-misc \
   date \
+  ptx-overrun \
   xstrtol \
   od \
   mktemp \

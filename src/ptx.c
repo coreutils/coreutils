@@ -388,6 +388,10 @@ copy_unescaped_string (const char *string)
 	      string++;
 	      break;
 
+	    case '\0':		/* lone backslash at end of string */
+	      /* ignore it */
+	      break;
+
 	    default:
 	      *cursor++ = '\\';
 	      *cursor++ = *string++;
