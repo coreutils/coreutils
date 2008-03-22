@@ -280,7 +280,8 @@ no_install_progs_default=`echo "$t"|sed 's/ $//'`
 # The compromise is to ensure that the space-separated list extracted
 # above matches the literal 2nd argument below.
 c="$srcdir/configure.ac"
-t=`sed -n '/^g''l_INCLUDE_EXCLUDE_PROG(.* [\[\(.*\)\]])/{s//\1/;s/,/ /gp
+re='^g''l_INCLUDE_EXCLUDE_PROG(.* [\[\(.*\)\]])'
+t=`sed -n '/'"$re"'/{s/'"$re"'/\1/;s/,/ /gp
 }' $c`
 case $t in
   $no_install_progs_default) ;;
