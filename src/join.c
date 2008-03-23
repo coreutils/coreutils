@@ -300,7 +300,8 @@ freeline (struct line *line)
    Report an error and exit if the comparison fails.  */
 
 static int
-keycmp (struct line const *line1, struct line const *line2)
+keycmp (struct line const *line1, struct line const *line2,
+	size_t jf_1, size_t jf_2)
 {
   /* Start of field to compare in each file.  */
   char *beg1;
@@ -310,10 +311,10 @@ keycmp (struct line const *line1, struct line const *line2)
   size_t len2;		/* Length of fields to compare.  */
   int diff;
 
-  if (join_field_1 < line1->nfields)
+  if (jf_1 < line1->nfields)
     {
-      beg1 = line1->fields[join_field_1].beg;
-      len1 = line1->fields[join_field_1].len;
+      beg1 = line1->fields[jf_1].beg;
+      len1 = line1->fields[jf_1].len;
     }
   else
     {
@@ -321,10 +322,10 @@ keycmp (struct line const *line1, struct line const *line2)
       len1 = 0;
     }
 
-  if (join_field_2 < line2->nfields)
+  if (jf_2 < line2->nfields)
     {
-      beg2 = line2->fields[join_field_2].beg;
-      len2 = line2->fields[join_field_2].len;
+      beg2 = line2->fields[jf_2].beg;
+      len2 = line2->fields[jf_2].len;
     }
   else
     {
@@ -376,7 +377,8 @@ check_order (const struct line *prev,
     {
       if (!issued_disorder_warning[whatfile-1])
 	{
-	  if (keycmp (prev, current) > 0)
+	  size_t join_field = whatfile == 1 ? join_field_1 : join_field_2;
+	  if (keycmp (prev, current, join_field, join_field) > 0)
 	    {
 	      error ((check_input_order == CHECK_ORDER_ENABLED
 		      ? EXIT_FAILURE : 0),
@@ -605,7 +607,8 @@ join (FILE *fp1, FILE *fp2)
   while (seq1.count && seq2.count)
     {
       size_t i;
-      diff = keycmp (&seq1.lines[0], &seq2.lines[0]);
+      diff = keycmp (&seq1.lines[0], &seq2.lines[0],
+		     join_field_1, join_field_2);
       if (diff < 0)
 	{
 	  if (print_unpairables_1)
@@ -633,7 +636,8 @@ join (FILE *fp1, FILE *fp2)
 	    ++seq1.count;
 	    break;
 	  }
-      while (!keycmp (&seq1.lines[seq1.count - 1], &seq2.lines[0]));
+      while (!keycmp (&seq1.lines[seq1.count - 1], &seq2.lines[0],
+		      join_field_1, join_field_2));
 
       /* Keep reading lines from file2 as long as they continue to
          match the current line from file1.  */
@@ -645,7 +649,8 @@ join (FILE *fp1, FILE *fp2)
 	    ++seq2.count;
 	    break;
 	  }
-      while (!keycmp (&seq1.lines[0], &seq2.lines[seq2.count - 1]));
+      while (!keycmp (&seq1.lines[0], &seq2.lines[seq2.count - 1],
+		      join_field_1, join_field_2));
 
       if (print_pairables)
 	{

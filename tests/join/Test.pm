@@ -169,7 +169,11 @@ my @tv = (
 # --nocheck-order option had any effect.   We don't actually want to
 # guarantee that join produces this output on stdout.
 ['chkodr-6', '--nocheck-order',
- [" b 1\n a 2\n", " b Y\n c Z\n"], "b 1 Y\n", 0]
+ [" b 1\n a 2\n", " b Y\n c Z\n"], "b 1 Y\n", 0],
+
+# Before 6.10.143, this would mistakenly fail with the diagnostic:
+# join: File 1 is not in sorted order
+['chkodr-7', '-12', ["2 a\n1 b\n", ""], "", 0],
 )
 ;
 
