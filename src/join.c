@@ -149,9 +149,6 @@ static struct line uni_blank;
 /* If nonzero, ignore case when comparing join fields.  */
 static bool ignore_case;
 
-
-static void checkorder (const struct line *, const struct line *, int);
-
 void
 usage (int status)
 {
@@ -298,6 +295,101 @@ freeline (struct line *line)
   line->buf.buffer = NULL;
 }
 
+/* Return <0 if the join field in LINE1 compares less than the one in LINE2;
+   >0 if it compares greater; 0 if it compares equal.
+   Report an error and exit if the comparison fails.  */
+
+static int
+keycmp (struct line const *line1, struct line const *line2)
+{
+  /* Start of field to compare in each file.  */
+  char *beg1;
+  char *beg2;
+
+  size_t len1;
+  size_t len2;		/* Length of fields to compare.  */
+  int diff;
+
+  if (join_field_1 < line1->nfields)
+    {
+      beg1 = line1->fields[join_field_1].beg;
+      len1 = line1->fields[join_field_1].len;
+    }
+  else
+    {
+      beg1 = NULL;
+      len1 = 0;
+    }
+
+  if (join_field_2 < line2->nfields)
+    {
+      beg2 = line2->fields[join_field_2].beg;
+      len2 = line2->fields[join_field_2].len;
+    }
+  else
+    {
+      beg2 = NULL;
+      len2 = 0;
+    }
+
+  if (len1 == 0)
+    return len2 == 0 ? 0 : -1;
+  if (len2 == 0)
+    return 1;
+
+  if (ignore_case)
+    {
+      /* FIXME: ignore_case does not work with NLS (in particular,
+         with multibyte chars).  */
+      diff = memcasecmp (beg1, beg2, MIN (len1, len2));
+    }
+  else
+    {
+      if (hard_LC_COLLATE)
+	return xmemcoll (beg1, len1, beg2, len2);
+      diff = memcmp (beg1, beg2, MIN (len1, len2));
+    }
+
+  if (diff)
+    return diff;
+  return len1 < len2 ? -1 : len1 != len2;
+}
+
+/* Check that successive input lines PREV and CURRENT from input file
+   WHATFILE are presented in order, unless the user may be relying on
+   the GNU extension that input lines may be out of order if no input
+   lines are unpairable.
+
+   If the user specified --nocheck-order, the check is not made.
+   If the user specified --check-order, the problem is fatal.
+   Otherwise (the default), the message is simply a warning.
+
+   A message is printed at most once per input file. */
+
+static void
+check_order (const struct line *prev,
+	     const struct line *current,
+	     int whatfile)
+{
+  if (check_input_order != CHECK_ORDER_DISABLED
+      && ((check_input_order == CHECK_ORDER_ENABLED) || seen_unpairable))
+    {
+      if (!issued_disorder_warning[whatfile-1])
+	{
+	  if (keycmp (prev, current) > 0)
+	    {
+	      error ((check_input_order == CHECK_ORDER_ENABLED
+		      ? EXIT_FAILURE : 0),
+		     0, _("File %d is not in sorted order"), whatfile);
+
+	      /* If we get to here, the message was just a warning, but we
+		 want only to issue it once. */
+	      issued_disorder_warning[whatfile-1] = true;
+	    }
+	}
+    }
+}
+
 /* Read a line from FP into LINE and split it into fields.
    Return true if successful.  */
 
@@ -322,7 +414,7 @@ get_line (FILE *fp, struct line *line, int which)
 
   if (prevline[which - 1])
     {
-      checkorder (prevline[which - 1], line, which);
+      check_order (prevline[which - 1], line, which);
       freeline (prevline[which - 1]);
       free (prevline[which - 1]);
     }
@@ -390,103 +482,6 @@ delseq (struct seq *seq)
       freeline (&seq->lines[i]);
   free (seq->lines);
 }
-
-/* Return <0 if the join field in LINE1 compares less than the one in LINE2;
-   >0 if it compares greater; 0 if it compares equal.
-   Report an error and exit if the comparison fails.  */
-
-static int
-keycmp (struct line const *line1, struct line const *line2)
-{
-  /* Start of field to compare in each file.  */
-  char *beg1;
-  char *beg2;
-
-  size_t len1;
-  size_t len2;		/* Length of fields to compare.  */
-  int diff;
-
-  if (join_field_1 < line1->nfields)
-    {
-      beg1 = line1->fields[join_field_1].beg;
-      len1 = line1->fields[join_field_1].len;
-    }
-  else
-    {
-      beg1 = NULL;
-      len1 = 0;
-    }
-
-  if (join_field_2 < line2->nfields)
-    {
-      beg2 = line2->fields[join_field_2].beg;
-      len2 = line2->fields[join_field_2].len;
-    }
-  else
-    {
-      beg2 = NULL;
-      len2 = 0;
-    }
-
-  if (len1 == 0)
-    return len2 == 0 ? 0 : -1;
-  if (len2 == 0)
-    return 1;
-
-  if (ignore_case)
-    {
-      /* FIXME: ignore_case does not work with NLS (in particular,
-         with multibyte chars).  */
-      diff = memcasecmp (beg1, beg2, MIN (len1, len2));
-    }
-  else
-    {
-      if (hard_LC_COLLATE)
-	return xmemcoll (beg1, len1, beg2, len2);
-      diff = memcmp (beg1, beg2, MIN (len1, len2));
-    }
-
-  if (diff)
-    return diff;
-  return len1 < len2 ? -1 : len1 != len2;
-}
-
-
-
-/* Check that successive input lines PREV and CURRENT from input file
-   WHATFILE are presented in order, unless the user may be relying on
-   the GNU extension that input lines may be out of order if no input
-   lines are unpairable.
-
-   If the user specified --nocheck-order, the check is not made.
-   If the user specified --check-order, the problem is fatal.
-   Otherwise (the default), the message is simply a warning.
-
-   A message is printed at most once per input file. */
-
-static void
-checkorder (const struct line *prev,
-	    const struct line *current,
-	    int whatfile)
-{
-  if (check_input_order != CHECK_ORDER_DISABLED
-      && ((check_input_order == CHECK_ORDER_ENABLED) || seen_unpairable))
-    {
-      if (!issued_disorder_warning[whatfile-1])
-	{
-	  if (keycmp (prev, current) > 0)
-	    {
-	      error ((check_input_order == CHECK_ORDER_ENABLED ? 1 : 0),
-		     0, _("File %d is not in sorted order"), whatfile);
-
-	      /* If we get to here, the message was just a warning, but we
-		 want only to issue it once. */
-	      issued_disorder_warning[whatfile-1] = true;
-	    }
-	}
-    }
-}
-
 
 
 /* Print field N of LINE if it exists and is nonempty, otherwise
