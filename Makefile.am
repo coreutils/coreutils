@@ -16,7 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 SUBDIRS = lib src doc man po tests gnulib-tests
-EXTRA_DIST = cfg.mk maint.mk GNUmakefile \
+EXTRA_DIST = cfg.mk maint.mk \
   .prev-version THANKS-to-translators THANKStt.in \
   .version \
   .vg-suppressions \
@@ -93,11 +93,6 @@ gen-ChangeLog:
 
 distcheck-hook: check-ls-dircolors
 	$(MAKE) my-distcheck
-
-# Arrange to remove the symlink to GNUmakefile in VPATH builds.
-# TODO remove this once automake vs. AC_CONFIG_LINKS issue is fixed.
-distclean-local:
-	if test x"$(VPATH)" != x ; then rm -f GNUmakefile ; fi
 
 DISTCLEANFILES = VERSION
 MAINTAINERCLEANFILES = THANKS-to-translators

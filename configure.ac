@@ -334,20 +334,6 @@ AC_SUBST([CONFIG_STATUS_DEPENDENCIES])
 AM_GNU_GETTEXT([external], [need-formatstring-macros])
 AM_GNU_GETTEXT_VERSION([0.15])
 
-dnl Allow maintainer rules under GNU make even in VPATH builds.  This does
-dnl not work in autoconf 2.61 or earlier, but we don't want to require
-dnl non-maintainers to use unreleased autoconf, hence the version test.
-dnl TODO remove the version check once autoconf 2.62 is released.
-dnl Meanwhile, we must use a shell variable so that we bypass automake's
-dnl attempts to remove the sole copy of GNUmakefile in a non-VPATH build
-dnl during 'make distclean'.
-dnl TODO avoid the shell variable once automake is fixed.
-GNUmakefile=GNUmakefile
-m4_if(m4_version_compare([2.61a.100],
-	m4_defn([m4_PACKAGE_VERSION])), [1], [],
-      [AC_CONFIG_LINKS([$GNUmakefile:$GNUmakefile], [],
-	[GNUmakefile=$GNUmakefile])])
-
 AC_CONFIG_FILES(
   Makefile
   doc/Makefile

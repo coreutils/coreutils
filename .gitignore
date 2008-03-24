@@ -10,6 +10,7 @@
 .version
 ABOUT-NLS
 ChangeLog
+GNUmakefile
 ID
 INSTALL
 Makefile
@@ -50,6 +51,7 @@ lib/libcoreutils.a
 lib/printf.c
 lib/progname.c
 lib/progname.h
+lib/selinux
 m4/.cvsignore
 m4/.gitignore
 po/*.gmo
