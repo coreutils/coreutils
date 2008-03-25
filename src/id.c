@@ -211,7 +211,7 @@ of a different user"));
       struct passwd const *pwd;
       euid = geteuid ();
       pwd = getpwuid (euid);
-      user_name = pwd ? pwd->pw_name : NULL;
+      user_name = pwd ? xstrdup (pwd->pw_name) : NULL;
       ruid = getuid ();
       egid = getegid ();
       rgid = getgid ();
