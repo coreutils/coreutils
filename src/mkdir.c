@@ -192,7 +192,7 @@ main (int argc, char **argv)
   if (scontext && setfscreatecon (scontext) < 0)
     error (EXIT_FAILURE, errno,
 	   _("failed to set default file creation context to %s"),
-	   quote (optarg));
+	   quote (scontext));
 
   if (options.make_ancestor_function || specified_mode)
     {
