@@ -297,7 +297,8 @@ freeline (struct line *line)
 
 /* Return <0 if the join field in LINE1 compares less than the one in LINE2;
    >0 if it compares greater; 0 if it compares equal.
-   Report an error and exit if the comparison fails.  */
+   Report an error and exit if the comparison fails.
+   Use join fields JF_1 and JF_2 respectively.  */
 
 static int
 keycmp (struct line const *line1, struct line const *line2,
