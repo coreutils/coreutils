@@ -1,0 +1,38 @@
+#!/bin/sh
+# ensure that an invalid context doesn't cause a segfault
+
+# Copyright (C) 2008 Free Software Foundation, Inc.
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  mkdir --version
+fi
+
+. $srcdir/../envvar-check
+. $srcdir/../lang-default
+. $srcdir/../test-lib.sh
+
+c=invalid-selinux-context
+
+fail=0
+mkdir -Z $c dir-arg 2> out && fail=1
+cat <<EOF > exp || fail=1
+mkdir: failed to set default file creation context to \`$c': Invalid argument
+EOF
+
+compare out exp || fail=1
+
+(exit $fail); exit $fail

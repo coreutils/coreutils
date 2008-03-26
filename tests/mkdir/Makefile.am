@@ -1,5 +1,6 @@
 ## Process this file with automake to produce Makefile.in -*-Makefile-*-.
 TESTS = \
+  selinux \
   p-1 \
   p-2 \
   p-3 \
