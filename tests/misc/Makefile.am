@@ -80,7 +80,7 @@ TESTS = \
   nohup \
   od-N \
   od-x8 \
-  paste-no-nl \
+  paste \
   pathchk1 \
   printf \
   printf-hex \

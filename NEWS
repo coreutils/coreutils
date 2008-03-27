@@ -18,6 +18,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   when the destination had two or more hard links.  It no longer does that.
   [bug introduced in coreutils-5.3.0]
 
+  "paste -d'\' file" no longer overruns memory (heap since coreutils-5.1.2,
+  stack before then) [bug present in the original version, in 1992]
+
   "ptx -F'\' long-file-name" would overrun a malloc'd buffer and corrupt
   the heap.  That was triggered by a lone backslash (or odd number of them)
   at the end of the option argument to --flag-truncation=STRING (-F),

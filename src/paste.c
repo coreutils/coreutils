@@ -1,5 +1,5 @@
 /* paste - merge lines of files
-   Copyright (C) 1997-2005 Free Software Foundation, Inc.
+   Copyright (C) 1997-2005, 2008 Free Software Foundation, Inc.
    Copyright (C) 1984 David M. Ihnat
 
    This program is free software: you can redistribute it and/or modify
@@ -42,6 +42,7 @@
 #include <sys/types.h>
 #include "system.h"
 #include "error.h"
+#include "quotearg.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "paste"
@@ -79,12 +80,17 @@ static struct option const longopts[] =
 /* Set globals delims and delim_end.  Copy STRPTR to DELIMS, converting
    backslash representations of special characters in STRPTR to their actual
    values. The set of possible backslash characters has been expanded beyond
-   that recognized by the Unix version.  */
+   that recognized by the Unix version.
+   Return 0 upon success.
+   If the string ends in an odd number of backslashes, ignore the
+   final backslash and return nonzero.  */
 
-static void
+static int
 collapse_escapes (char const *strptr)
 {
   char *strout = xstrdup (strptr);
+  bool backslash_at_end = false;
+
   delims = strout;
 
   while (*strptr)
@@ -123,6 +129,14 @@ collapse_escapes (char const *strptr)
 	      *strout++ = '\v';
 	      break;
 
+	    case '\\':
+	      *strout++ = '\\';
+	      break;
+
+	    case '\0':
+	      backslash_at_end = true;
+	      goto done;
+
 	    default:
 	      *strout++ = *strptr;
 	      break;
@@ -130,7 +144,11 @@ collapse_escapes (char const *strptr)
 	  strptr++;
 	}
     }
+
+ done:;
+
   delim_end = strout;
+  return backslash_at_end ? 1 : 0;
 }
 
 /* Report a write error and exit.  */
@@ -481,7 +499,15 @@ main (int argc, char **argv)
   if (optind == argc)
     argv[argc++] = "-";
 
-  collapse_escapes (delim_arg);
+  if (collapse_escapes (delim_arg))
+    {
+      /* Don't use the default quoting style, because that would double the
+	 number of displayed backslashes, making the diagnostic look bogus.  */
+      set_quoting_style (NULL, escape_quoting_style);
+      error (EXIT_FAILURE, 0,
+	     _("delimiter list ends with an unescaped backslash: %s"),
+	     quotearg_colon (delim_arg));
+    }
 
   if (!serial_merge)
     ok = paste_parallel (argc - optind, &argv[optind]);
