@@ -23,13 +23,7 @@ fi
 
 . $srcdir/../test-lib.sh
 
-if ! mkfifo fifo; then
-  # Make an exception of this case -- usually we interpret framework-creation
-  # failure as a test failure.  However, in this case, when running on a SunOS
-  # system using a disk NFS mounted from OpenBSD, the above fails like this:
-  # mkfifo: cannot make fifo `fifo-10558': Not owner
-  skip_test_ 'NOTICE: unable to create test prerequisites'
-fi
+mkfifo_or_skip_ fifo
 
 fail=0
 

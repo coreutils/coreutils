@@ -120,6 +120,18 @@ skip_if_root_() { uid_is_privileged_ && skip_test_ "must be run as non-root"; }
 error_() { echo "$0: $@" 1>&2; (exit 1); exit 1; }
 framework_failure() { error_ 'failure in testing framework'; }
 
+mkfifo_or_skip_()
+{
+  test $# = 1 || framework_failure
+  if ! mkfifo "$1"; then
+    # Make an exception of this case -- usually we interpret framework-creation
+    # failure as a test failure.  However, in this case, when running on a SunOS
+    # system using a disk NFS mounted from OpenBSD, the above fails like this:
+    # mkfifo: cannot make fifo `fifo-10558': Not owner
+    skip_test_ 'NOTICE: unable to create test prerequisites'
+  fi
+}
+
 test_dir_=$(pwd)
 
 this_test_() { echo "./$0" | sed 's,.*/,,'; }
