@@ -19,6 +19,8 @@
 if test "$VERBOSE" = yes; then
   set -x
   mkdir --version
+  mkfifo --version
+  mknod --version
 fi
 
 . $srcdir/../envvar-check
@@ -32,7 +34,20 @@ mkdir -Z $c dir-arg 2> out && fail=1
 cat <<EOF > exp || fail=1
 mkdir: failed to set default file creation context to \`$c': Invalid argument
 EOF
+compare out exp || fail=1
 
+# Until coreutils-6.10.150, mknod and mkfifo had the same problem:
+
+mknod -Z $c b p 2> out && fail=1
+cat <<EOF > exp || fail=1
+mknod: failed to set default file creation context to \`$c': Invalid argument
+EOF
+compare out exp || fail=1
+
+mkfifo -Z $c f 2> out && fail=1
+cat <<EOF > exp || fail=1
+mkfifo: failed to set default file creation context to \`$c': Invalid argument
+EOF
 compare out exp || fail=1
 
 (exit $fail); exit $fail

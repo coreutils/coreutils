@@ -13,6 +13,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   of libselinux.  E.g., ls -l /proc/sys would dereference a NULL pointer.
 
   "mkdir -Z x dir" no longer segfaults when diagnosing invalid context "x"
+  mkfifo and mknod would fail similarly.  Now they're fixed.
 
   mv would mistakenly unlink a destination file before calling rename,
   when the destination had two or more hard links.  It no longer does that.
