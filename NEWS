@@ -5,6 +5,7 @@ GNU coreutils NEWS                                    -*- outline -*-
 ** New programs
 
   timeout: Run a command with bounded time.
+  truncate: Set the size of a file to a specified size.
 
 ** New features
 

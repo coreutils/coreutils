@@ -120,6 +120,7 @@ src/timeout.c
 src/touch.c
 src/tr.c
 src/true.c
+src/truncate.c
 src/tsort.c
 src/tty.c
 src/uname.c

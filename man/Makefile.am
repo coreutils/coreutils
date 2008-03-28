@@ -117,6 +117,7 @@ timeout.1:	$(common_dep)	$(srcdir)/timeout.x	../src/timeout.c
 touch.1:	$(common_dep)	$(srcdir)/touch.x	../src/touch.c
 tr.1:		$(common_dep)	$(srcdir)/tr.x		../src/tr.c
 true.1:		$(common_dep)	$(srcdir)/true.x	../src/true.c
+truncate.1:	$(common_dep)	$(srcdir)/truncate.x	../src/truncate.c
 tsort.1:	$(common_dep)	$(srcdir)/tsort.x	../src/tsort.c
 tty.1:		$(common_dep)	$(srcdir)/tty.x		../src/tty.c
 uname.1:	$(common_dep)	$(srcdir)/uname.x	../src/uname.c

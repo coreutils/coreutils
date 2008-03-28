@@ -1,0 +1,55 @@
+#!/bin/sh
+# Validate truncate integer overflow
+
+# Copyright (C) 2008 Free Software Foundation, Inc.
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  truncate --version
+fi
+
+. $srcdir/test-lib.sh
+
+fail=0
+
+# -= overflow
+truncate -s-1 create-zero-len-file || fail=1
+
+echo > non-empty-file
+
+truncate -s2147483648 -c no-such-file && _FILE_OFFSET_BITS=64
+
+if [ $_FILE_OFFSET_BITS -eq 64 ]; then
+    # signed overflow
+    truncate -s9223372036854775808 file && fail=1
+
+    # *= signed overflow
+    truncate --io-blocks --size="1E" file && fail=1
+
+    # += signed overflow
+    truncate -s+9223372036854775807 non-empty-file && fail=1
+else
+    # signed overflow
+    truncate -s2147483648 file && fail=1
+
+    # *= signed overflow
+    truncate --io-blocks --size="1G" file && fail=1
+
+    # += signed overflow
+    truncate -s+2147483647 non-empty-file && fail=1
+fi
+
+(exit $fail); exit $fail

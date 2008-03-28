@@ -117,6 +117,7 @@
 * touch: (coreutils)touch invocation.           Change file timestamps.
 * tr: (coreutils)tr invocation.                 Translate characters.
 * true: (coreutils)true invocation.             Do nothing, successfully.
+* truncate: (coreutils)truncate invocation.     Shrink/extend size of a file.
 * tsort: (coreutils)tsort invocation.           Topological sort.
 * tty: (coreutils)tty invocation.               Print terminal name.
 * uname: (coreutils)uname invocation.           Print system information.
@@ -185,7 +186,7 @@ Free Documentation License''.
 * Basic operations::                   cp dd install mv rm shred
 * Special file types::                 ln mkdir rmdir mkfifo mknod
 * Changing file attributes::           chgrp chmod chown touch
-* Disk usage::                         df du stat sync
+* Disk usage::                         df du stat sync truncate
 * Printing text::                      echo printf yes
 * Conditions::                         false true test expr
 * Redirection::                        tee
@@ -334,6 +335,7 @@ Disk usage
 * du invocation::               Estimate file space usage
 * stat invocation::             Report file or file system status
 * sync invocation::             Synchronize data on disk with memory
+* truncate invocation::         Shrink or extend the size of a file
 
 Printing text
 
@@ -9571,6 +9573,7 @@ file status information, and write buffers to disk.
 * du invocation::               Estimate file space usage.
 * stat invocation::             Report file or file system status.
 * sync invocation::             Synchronize memory and disk.
+* truncate invocation::         Shrink or extend the size of a file.
 @end menu
 
 
@@ -10210,6 +10213,81 @@ is written to disk.
 
 Any arguments are ignored, except for a lone @option{--help} or
 @option{--version} (@pxref{Common options}).
+
+@exitstatus
+
+
+@node truncate invocation
+@section @command{truncate}: Shrink or extend the size of a file
+
+@pindex truncate
+@cindex truncating, file sizes
+
+@command{truncate} shrinks or extends the size of each @var{file} to the
+specified size. Synopsis:
+
+@example
+truncate @var{option}@dots{} @var{file}@dots{}
+@end example
+
+@cindex files, creating
+Any @var{file} that does not exist is created.
+
+@cindex sparse files, creating
+@cindex holes, creating files with
+If a @var{file} is larger than the specified size, the extra data is lost.
+If a @var{file} is shorter, it is extended and the extended part (or hole)
+reads as zero bytes.
+
+The program accepts the following options.  Also see @ref{Common options}.
+
+@table @samp
+
+@item -c
+@itemx --no-create
+@opindex -c
+@opindex --no-create
+Do not create files that do not exist.
+
+@item -o
+@itemx --io-blocks
+@opindex -o
+@opindex --io-blocks
+Treat @var{size} as number of I/O blocks of the @var{FILE} rather than bytes.
+
+@item -r @var{rfile}
+@itemx --reference=@var{rfile}
+@opindex -r
+@opindex --reference
+Set the size of each @var{file} to the same size as @var{rfile}.
+
+@item -s @var{size}
+@itemx --size=@var{size}
+@opindex -s
+@opindex --size
+Set the size of each @var{file} to this @var{size}.
+@var{size} is a number which may be followed by one of these
+multiplicative suffixes:
+@example
+@samp{KB} =>      1000 (KiloBytes)
+@samp{K}  =>      1024 (KibiBytes)
+@samp{MB} => 1000*1000 (MegaBytes)
+@samp{M}  => 1024*1024 (MebiBytes)
+@end example
+and so on for @samp{G}, @samp{T}, @samp{P}, @samp{E}, @samp{Z}, and @samp{Y}.
+
+@var{size} may also be prefixed by one of the following to adjust
+the size of each @var{file} based on their current size:
+@example
+@samp{+}  => extend by
+@samp{-}  => reduce by
+@samp{<}  => at most
+@samp{>}  => at least
+@samp{/}  => round down to multiple of
+@samp{%}  => round up to multiple of
+@end example
+
+@end table
 
 @exitstatus
 

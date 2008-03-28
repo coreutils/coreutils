@@ -28,6 +28,7 @@ root_tests =					\
   ls/nameless-uid				\
   misc/chcon					\
   misc/selinux					\
+  misc/truncate-owned-by-other			\
   mkdir/writable-under-readonly			\
   mv/sticky-to-xpart				\
   rm/fail-2eperm				\
@@ -212,6 +213,14 @@ TESTS =						\
   misc/timeout					\
   misc/timeout-parameters			\
   misc/tr					\
+  misc/truncate-dangling-symlink		\
+  misc/truncate-dir-fail			\
+  misc/truncate-fail-diag			\
+  misc/truncate-fifo				\
+  misc/truncate-no-create-missing		\
+  misc/truncate-overflow			\
+  misc/truncate-parameters			\
+  misc/truncate-relative			\
   misc/tsort					\
   misc/tty-eof					\
   misc/unexpand					\

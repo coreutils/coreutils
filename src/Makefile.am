@@ -39,7 +39,7 @@ EXTRA_PROGRAMS = \
   basename date dirname echo env expr factor false \
   id kill logname pathchk printenv printf pwd \
   runcon seq sleep tee \
-  test timeout true tty whoami yes \
+  test timeout true truncate tty whoami yes \
   base64
 
 bin_PROGRAMS = $(OPTIONAL_BIN_PROGS)
