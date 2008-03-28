@@ -87,6 +87,7 @@ tac
 tail
 tee
 test
+timeout
 touch
 tr
 true

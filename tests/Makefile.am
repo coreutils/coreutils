@@ -209,6 +209,8 @@ TESTS =						\
   misc/tee					\
   misc/tee-dash					\
   misc/test-diag				\
+  misc/timeout					\
+  misc/timeout-parameters			\
   misc/tr					\
   misc/tsort					\
   misc/tty-eof					\

@@ -1,0 +1,55 @@
+#!/bin/sh
+# Validate timeout parameter combinations
+
+# Copyright (C) 2008 Free Software Foundation, Inc.
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  timeout --version
+fi
+
+. $srcdir/test-lib.sh
+
+fail=0
+
+# --help and --version must be specified alone
+timeout --help --version && fail=1
+
+# invalid timeout
+timeout invalid sleep 0 && fail=1
+
+# invalid timeout suffix
+timeout 42D sleep 0 && fail=1
+
+# timeout overflow
+timeout 4294967296 sleep 0 && fail=1
+
+# timeout overflow
+timeout 49711d sleep 0 && fail=1
+
+# invalid signal spec
+timeout --signal=invalid sleep 0 && fail=1
+
+# invalid signal number
+timeout --signal=128 sleep 0 && fail=1
+
+# invalid command
+timeout 1 . && fail=1
+
+# non existant command
+timeout 1 ... && fail=1
+
+(exit $fail); exit $fail

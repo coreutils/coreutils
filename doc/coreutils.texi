@@ -113,6 +113,7 @@
 * tail: (coreutils)tail invocation.             Output the last part of files.
 * tee: (coreutils)tee invocation.               Redirect to multiple files.
 * test: (coreutils)test invocation.             File/string tests.
+* timeout: (coreutils)timeout invocation.       Run with time limit.
 * touch: (coreutils)touch invocation.           Change file timestamps.
 * tr: (coreutils)tr invocation.                 Translate characters.
 * true: (coreutils)true invocation.             Do nothing, successfully.
@@ -192,7 +193,7 @@ Free Documentation License''.
 * Working context::                    pwd stty printenv tty
 * User information::                   id logname whoami groups users who
 * System context::                     date uname hostname hostid
-* Modified command invocation::        chroot env nice nohup su
+* Modified command invocation::        chroot env nice nohup su timeout
 * Process control::                    kill
 * Delaying::                           sleep
 * Numeric operations::                 factor seq
@@ -210,6 +211,7 @@ Common Options
 * Exit status::                 Indicating program success or failure.
 * Backup options::              Backup options
 * Block size::                  Block size
+* Signal specifications::       Specifying signals
 * Disambiguating names and IDs:: chgrp and chown owner and group syntax
 * Random sources::              Sources of random data
 * Target directory::            Target directory
@@ -423,6 +425,7 @@ Modified command invocation
 * nice invocation::              Run a command with modified niceness
 * nohup invocation::             Run a command immune to hangups
 * su invocation::                Run a command with substitute user and group ID
+* timeout invocation::           Run a command with a time limit
 
 Process control
 
@@ -650,6 +653,7 @@ name.
 * Exit status::                 Indicating program success or failure.
 * Backup options::              -b -S, in some programs.
 * Block size::                  BLOCK_SIZE and --block-size, in some programs.
+* Signal specifications::       Specifying signals using the --signal option.
 * Disambiguating names and IDs:: chgrp and chown owner and group syntax
 * Random sources::              --random-source, in some programs.
 * Target directory::            Specifying a target directory, in some programs.
@@ -681,8 +685,8 @@ other exit status values and a few associate different
 meanings with the values @samp{0} and @samp{1}.
 Here are some of the exceptions:
 @command{chroot}, @command{env}, @command{expr},
-@command{nice}, @command{nohup}, @command{printenv},
-@command{sort}, @command{su}, @command{test}, @command{tty}.
+@command{nice}, @command{nohup}, @command{printenv}, @command{sort},
+@command{su}, @command{test}, @command{timeout}, @command{tty}.
 
 
 @node Backup options
@@ -930,6 +934,95 @@ is the default unless the @env{POSIXLY_CORRECT} environment variable is
 set.  The @option{-h} or @option{--human-readable} option is equivalent to
 @option{--block-size=human-readable}.  The @option{--si} option is
 equivalent to @option{--block-size=si}.
+
+@node Signal specifications
+@section Signal specifications
+@cindex signals, specifying
+
+A @var{signal} may be a signal name like @samp{HUP}, or a signal
+number like @samp{1}, or an exit status of a process terminated by the
+signal.  A signal name can be given in canonical form or prefixed by
+@samp{SIG}.  The case of the letters is ignored. The following signal names
+and numbers are supported on all @acronym{POSIX} compliant systems:
+
+@table @samp
+@item HUP
+1.  Hangup.
+@item INT
+2.  Terminal interrupt.
+@item QUIT
+3.  Terminal quit.
+@item ABRT
+6.  Process abort.
+@item KILL
+9.  Kill (cannot be caught or ignored).
+@item ALRM
+14.  Alarm Clock.
+@item TERM
+15.  Termination.
+@end table
+
+@noindent
+Other supported signal names have system-dependent corresponding
+numbers.  All systems conforming to @acronym{POSIX} 1003.1-2001 also
+support the following signals:
+
+@table @samp
+@item BUS
+Access to an undefined portion of a memory object.
+@item CHLD
+Child process terminated, stopped, or continued.
+@item CONT
+Continue executing, if stopped.
+@item FPE
+Erroneous arithmetic operation.
+@item ILL
+Illegal Instruction.
+@item PIPE
+Write on a pipe with no one to read it.
+@item SEGV
+Invalid memory reference.
+@item STOP
+Stop executing (cannot be caught or ignored).
+@item TSTP
+Terminal stop.
+@item TTIN
+Background process attempting read.
+@item TTOU
+Background process attempting write.
+@item URG
+High bandwidth data is available at a socket.
+@item USR1
+User-defined signal 1.
+@item USR2
+User-defined signal 2.
+@end table
+
+@noindent
+@acronym{POSIX} 1003.1-2001 systems that support the @acronym{XSI} extension
+also support the following signals:
+
+@table @samp
+@item POLL
+Pollable event.
+@item PROF
+Profiling timer expired.
+@item SYS
+Bad system call.
+@item TRAP
+Trace/breakpoint trap.
+@item VTALRM
+Virtual timer expired.
+@item XCPU
+CPU time limit exceeded.
+@item XFSZ
+File size limit exceeded.
+@end table
+
+@noindent
+@acronym{POSIX} 1003.1-2001 systems that support the @acronym{XRT} extension
+also support at least eight real-time signals called @samp{RTMIN},
+@samp{RTMIN+1}, @dots{}, @samp{RTMAX-1}, @samp{RTMAX}.
 
 @node Disambiguating names and IDs
 @section chown and chgrp: Disambiguating user names and IDs
@@ -13379,6 +13472,7 @@ user, etc.
 * nice invocation::             Modify niceness.
 * nohup invocation::            Immunize to hangups.
 * su invocation::               Modify user and group ID.
+* timeout invocation::          Run with time limit.
 @end menu
 
 
@@ -13884,6 +13978,64 @@ used to supporting the bosses and sysadmins in whatever they do, you
 might find this idea strange at first.
 
 
+@node timeout invocation
+@section @command{timeout}: Run a command with a time limit
+
+@pindex timeout
+@cindex time limit
+@cindex run commands with bounded time
+
+@command{timeout} runs the given @var{command} and kills it if it is
+still running after the specified time interval.  Synopsis:
+
+@example
+timeout [@var{option}] @var{number}[smhd] @var{command} [@var{arg}]@dots{}
+@end example
+
+@cindex time units
+@var{number} is an integer followed by an optional unit; the default
+is seconds.  The units are:
+
+@table @samp
+@item s
+seconds
+@item m
+minutes
+@item h
+hours
+@item d
+days
+@end table
+
+@var{command} must not be a special built-in utility (@pxref{Special
+built-in utilities}).
+
+The program accepts the following option.  Also see @ref{Common options}.
+Options must precede operands.
+
+@table @samp
+@item -s @var{signal}
+@itemx --signal=@var{signal}
+@opindex -s
+@opindex --signal
+Send this @var{signal} to @var{command} on timeout, rather than the
+default @samp{TERM} signal. @var{signal} may be a name like @samp{HUP}
+or a number. Also see @xref{Signal specifications}.
+
+@end table
+
+@cindex exit status of @command{timeout}
+Exit status:
+
+@display
+110 if @var{command} times out
+125 if @command{timeout} itself fails
+126 if @var{command} is found but cannot be invoked
+127 if @var{command} cannot be found
+the exit status of @var{command} otherwise
+@end display
+
+
 @node Process control
 @chapter Process control
 
@@ -13962,88 +14114,8 @@ number like @samp{1}, or an exit status of a process terminated by the
 signal.  A signal name can be given in canonical form or prefixed by
 @samp{SIG}.  The case of the letters is ignored, except for the
 @option{-@var{signal}} option which must use upper case to avoid
-ambiguity with lower case option letters.  The following signal names
-and numbers are supported on all @acronym{POSIX} compliant systems:
-
-@table @samp
-@item HUP
-1.  Hangup.
-@item INT
-2.  Terminal interrupt.
-@item QUIT
-3.  Terminal quit.
-@item ABRT
-6.  Process abort.
-@item KILL
-9.  Kill (cannot be caught or ignored).
-@item ALRM
-14.  Alarm Clock.
-@item TERM
-15.  Termination.
-@end table
-
-@noindent
-Other supported signal names have system-dependent corresponding
-numbers.  All systems conforming to @acronym{POSIX} 1003.1-2001 also
-support the following signals:
-
-@table @samp
-@item BUS
-Access to an undefined portion of a memory object.
-@item CHLD
-Child process terminated, stopped, or continued.
-@item CONT
-Continue executing, if stopped.
-@item FPE
-Erroneous arithmetic operation.
-@item ILL
-Illegal Instruction.
-@item PIPE
-Write on a pipe with no one to read it.
-@item SEGV
-Invalid memory reference.
-@item STOP
-Stop executing (cannot be caught or ignored).
-@item TSTP
-Terminal stop.
-@item TTIN
-Background process attempting read.
-@item TTOU
-Background process attempting write.
-@item URG
-High bandwidth data is available at a socket.
-@item USR1
-User-defined signal 1.
-@item USR2
-User-defined signal 2.
-@end table
-
-@noindent
-@acronym{POSIX} 1003.1-2001 systems that support the @acronym{XSI} extension
-also support the following signals:
-
-@table @samp
-@item POLL
-Pollable event.
-@item PROF
-Profiling timer expired.
-@item SYS
-Bad system call.
-@item TRAP
-Trace/breakpoint trap.
-@item VTALRM
-Virtual timer expired.
-@item XCPU
-CPU time limit exceeded.
-@item XFSZ
-File size limit exceeded.
-@end table
-
-@noindent
-@acronym{POSIX} 1003.1-2001 systems that support the @acronym{XRT} extension
-also support at least eight real-time signals called @samp{RTMIN},
-@samp{RTMIN+1}, @dots{}, @samp{RTMAX-1}, @samp{RTMAX}.
-
+ambiguity with lower case option letters.  For a list of supported
+signal names and numbers see @xref{Signal specifications}.
 
 @node Delaying
 @chapter Delaying

@@ -84,6 +84,7 @@ tac: Jay Lepreau, David MacKenzie
 tail: Paul Rubin, David MacKenzie, Ian Lance Taylor, Jim Meyering
 tee: Mike Parker, Richard M. Stallman, David MacKenzie
 test: Kevin Braunsdorf, Matthew Bradburn
+timeout: Pádraig Brady
 touch: Paul Rubin, Arnold Robbins, Jim Kingdon, David MacKenzie, Randy Smith
 tr: Jim Meyering
 true: Jim Meyering

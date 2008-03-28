@@ -39,7 +39,7 @@ EXTRA_PROGRAMS = \
   basename date dirname echo env expr factor false \
   id kill logname pathchk printenv printf pwd \
   runcon seq sleep tee \
-  test true tty whoami yes \
+  test timeout true tty whoami yes \
   base64
 
 bin_PROGRAMS = $(OPTIONAL_BIN_PROGS)
@@ -54,6 +54,7 @@ noinst_HEADERS = \
   fs.h \
   group-list.h \
   ls.h \
+  operand2sig.h \
   prog-fprintf.h \
   remove.h \
   system.h \
@@ -233,6 +234,8 @@ ln_SOURCES = ln.c
 ls_SOURCES = ls.c ls-ls.c
 chown_SOURCES = chown.c chown-core.c
 chgrp_SOURCES = chgrp.c chown-core.c
+kill_SOURCES = kill.c operand2sig.c
+timeout_SOURCES = timeout.c operand2sig.c
 
 mv_SOURCES = mv.c remove.c $(copy_sources)
 rm_SOURCES = rm.c remove.c

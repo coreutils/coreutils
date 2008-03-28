@@ -2,6 +2,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release 7.0 (????-??-??) [beta]
 
+** New programs
+
+  timeout: Run a command with bounded time.
+
 ** New features
 
   md5sum now accepts the new option, --quiet, to suppress the printing of

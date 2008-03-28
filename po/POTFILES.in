@@ -84,6 +84,7 @@ src/nice.c
 src/nl.c
 src/nohup.c
 src/od.c
+src/operand2sig.c
 src/paste.c
 src/pathchk.c
 src/pinky.c
@@ -115,6 +116,7 @@ src/tac.c
 src/tail.c
 src/tee.c
 src/test.c
+src/timeout.c
 src/touch.c
 src/tr.c
 src/true.c

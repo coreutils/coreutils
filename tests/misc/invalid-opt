@@ -33,6 +33,7 @@ my %exit_status =
     nohup => 127,
     sort => 2,
     test => 0,
+    timeout => 125,
     true => 0,
     tty => 2,
     printf => 0,
