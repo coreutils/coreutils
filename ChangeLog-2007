@@ -2606,7 +2606,7 @@
 
 2007-05-20  Jim Meyering  <jim@meyering.net>
 
-	stty: diagnose an invalid hex value in 35-colon commmand-line argument
+	stty: diagnose an invalid hex value in 35-colon command-line argument
 	* NEWS: Mention this.
 	* src/stty.c (strtoul_tcflag_t, strtoul_cc_t): New functions.
 	(recover_mode): Use those functions (not sscanf), to parse the

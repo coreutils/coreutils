@@ -196,7 +196,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   loss of the contents of a/f.
 
   stty no longer silently accepts certain invalid hex values
-  in its 35-colon commmand-line argument
+  in its 35-colon command-line argument
 
 ** Bug fixes
 
