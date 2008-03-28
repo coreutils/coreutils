@@ -1,7 +1,7 @@
 #! /bin/sh
 # Test -D option.
 
-# Copyright (C) 2000, 2001, 2006, 2007 Free Software Foundation, Inc.
+# Copyright (C) 2000-2001, 2006-2008 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -37,4 +37,4 @@ ginstall -D $file no-dir1/no-dir2/dest || fail=1
 test -d no-dir1/no-dir2 || fail=1
 test -r no-dir1/no-dir2/dest || fail=1
 
-exit $fail
+(exit $fail); exit $fail

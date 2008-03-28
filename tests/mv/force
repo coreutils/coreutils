@@ -1,7 +1,7 @@
 #!/bin/sh
 # move a file onto itself
 
-# Copyright (C) 1999, 2000, 2002, 2007 Free Software Foundation, Inc.
+# Copyright (C) 1999, 2000, 2002, 2007-2008 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -44,4 +44,4 @@ test `cat $ff` = force-contents || fail=1
 # device and inodes are the same.
 mv $ff $ff2 || fail=1
 
-exit $fail
+(exit $fail); exit $fail

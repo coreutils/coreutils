@@ -1,7 +1,7 @@
 #!/bin/sh
 # FIXME: convert this to a root-only test.
 
-# Copyright (C) 2005, 2007 Free Software Foundation, Inc.
+# Copyright (C) 2005, 2007-2008 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -37,6 +37,7 @@ skip_test_ temporarily disabled
 
 # FIXME: define cleanup_ to do the umount
 
+fail=0
 # FIXME: use mktemp
 cd /tmp                                    \
   && dd if=/dev/zero of=1 bs=8192 count=50 \
@@ -52,3 +53,5 @@ mkdir -p mnt-ro/rw/sub || fail=1
 # To clean up
 umount /tmp/2
 umount /tmp/1
+
+(exit $fail); exit $fail

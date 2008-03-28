@@ -55,4 +55,4 @@ EOF
 
 compare out2 exp || fail=1
 
-exit $fail
+(exit $fail); exit $fail

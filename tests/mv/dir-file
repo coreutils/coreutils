@@ -1,7 +1,7 @@
 #!/bin/sh
 # mv must fail when src and dest are mismatched directory/non-directory.
 
-# Copyright (C) 2000, 2006-2007 Free Software Foundation, Inc.
+# Copyright (C) 2000, 2006-2008 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -32,4 +32,4 @@ fail=0
 mv dir file > /dev/null 2>&1 && fail=1
 mv file dir > /dev/null 2>&1 && fail=1
 
-exit $fail
+(exit $fail); exit $fail

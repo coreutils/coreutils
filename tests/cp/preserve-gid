@@ -99,4 +99,5 @@ t1 b1 "$nameless_uid" "$nameless_gid2" cp -p
 t1 c0 "$nameless_uid" "$nameless_gid1" cp -p
 t1 c1 "$nameless_uid" "$nameless_gid2" cp -p
 
-(exit 0); exit 0
+fail=0
+(exit $fail); exit $fail

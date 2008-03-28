@@ -24,7 +24,8 @@ fi
 . $srcdir/../lang-default
 . $srcdir/../test-lib.sh
 
-mkdir -pv foo/a/b/c/d >out || exit
+fail=0
+mkdir -pv foo/a/b/c/d >out || fail=1
 
 diff - out <<\EOF
 mkdir: created directory `foo'
@@ -33,3 +34,5 @@ mkdir: created directory `foo/a/b'
 mkdir: created directory `foo/a/b/c'
 mkdir: created directory `foo/a/b/c/d'
 EOF
+
+(exit $fail); exit $fail

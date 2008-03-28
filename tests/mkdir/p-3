@@ -3,7 +3,7 @@
 # causes immediate failure.  Also, ensure that we don't create
 # subsequent, relative command-line arguments in the wrong place.
 
-# Copyright (C) 2005-2007 Free Software Foundation, Inc.
+# Copyright (C) 2005-2008 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -52,4 +52,4 @@ b=`ls "$p/a" | tr -d '\n'`
 # With coreutils-5.3.0, this would fail with $b=bu.
 test "x$b" = xb || fail=1
 
-exit $fail
+(exit $fail); exit $fail

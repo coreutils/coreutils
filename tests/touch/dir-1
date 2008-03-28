@@ -11,4 +11,4 @@ fi
 
 fail=0
 touch . || fail=1
-exit $fail
+(exit $fail); exit $fail

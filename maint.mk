@@ -1,6 +1,6 @@
 # -*-Makefile-*-
-# This Makefile fragment is shared between the coreutils,
-# CPPI, Bison, and Autoconf.
+# This Makefile fragment tries to be general-purpose enough to be
+# used by at least coreutils, idutils, CPPI, Bison, and Autoconf.
 
 ## Copyright (C) 2001-2008 Free Software Foundation, Inc.
 ##
@@ -334,6 +334,22 @@ sc_system_h_headers: .re-list
 		 grep -Ev '((copy|system)\.h|parse-gram\.c)$$')		\
 	    && { echo '$(ME): the above are already included via system.h'\
 		  1>&2;  exit 1; } || :;				\
+	fi
+
+# Require that the final line of each test-lib.sh-using test be this one:
+# (exit $fail); exit $fail
+# Note: this test requires GNU grep's --label= option.
+sc_require_test_exit_idiom:
+	@if test -f $(srcdir)/tests/test-lib.sh; then			\
+	  die=0;							\
+	  for i in $$(grep -l -F /../test-lib.sh $$($(VC_LIST) tests)); do \
+	    tail -n1 $$i | grep '^(exit \$$fail); exit \$$fail$$' > /dev/null \
+	      && : || { die=1; echo $$i; }				\
+	  done;								\
+	  test $$die = 1 &&						\
+	    { echo 1>&2 '$(ME): the final line in each of the above is not:'; \
+	      echo 1>&2 '(exit $$fail); exit $$fail';			\
+	      exit 1; } || :;						\
 	fi
 
 sc_sun_os_names:
