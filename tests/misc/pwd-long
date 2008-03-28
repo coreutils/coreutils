@@ -1,4 +1,5 @@
 #!/bin/sh
+# -*- perl -*-
 # Ensure that pwd works even when run from a very deep directory.
 
 # Copyright (C) 2006-2008 Free Software Foundation, Inc.
@@ -112,3 +113,7 @@ if ($expected ne $actual)
     exit 1;
   }
 EOF
+
+fail=$?
+
+(exit $fail); exit $fail
