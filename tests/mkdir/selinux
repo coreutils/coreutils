@@ -28,26 +28,19 @@ fi
 . $srcdir/../test-lib.sh
 
 c=invalid-selinux-context
+msg="failed to set default file creation context to \`$c':"
 
-fail=0
-mkdir -Z $c dir-arg 2> out && fail=1
-cat <<EOF > exp || fail=1
-mkdir: failed to set default file creation context to \`$c': Invalid argument
-EOF
-compare out exp || fail=1
+# Test each of mkdir, mknod, mkfifo with "-Z invalid-context".
 
-# Until coreutils-6.10.150, mknod and mkfifo had the same problem:
+for cmd_w_arg in 'mkdir dir' 'mknod b p' 'mkfifo f'; do
+  $cmd_w_arg -Z $c 2> out && fail=1
+  set $cmd_w_arg; cmd=$1
+  echo "$cmd: $msg" > exp || fail=1
 
-mknod -Z $c b p 2> out && fail=1
-cat <<EOF > exp || fail=1
-mknod: failed to set default file creation context to \`$c': Invalid argument
-EOF
-compare out exp || fail=1
-
-mkfifo -Z $c f 2> out && fail=1
-cat <<EOF > exp || fail=1
-mkfifo: failed to set default file creation context to \`$c': Invalid argument
-EOF
-compare out exp || fail=1
+  # Some systems fail with ENOTSUP, some with EINVAL.
+  sed 's/ Invalid argument$//;s/ Operation not supported$//' out > k || fail=1
+  mv k out || fail=1
+  compare out exp || fail=1
+done
 
 (exit $fail); exit $fail
