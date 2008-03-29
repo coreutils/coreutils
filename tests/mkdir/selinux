@@ -37,8 +37,11 @@ for cmd_w_arg in 'mkdir dir' 'mknod b p' 'mkfifo f'; do
   set $cmd_w_arg; cmd=$1
   echo "$cmd: $msg" > exp || fail=1
 
-  # Some systems fail with ENOTSUP, some with EINVAL.
-  sed 's/ Invalid argument$//;s/ Operation not supported$//' out > k || fail=1
+  # Some systems fail with ENOTSUP, or EINVAL, or even ENOENT.
+  sed					\
+    -e 's/ Invalid argument$//'		\
+    -e 's/ Operation not supported$//'	\
+    -e 's/ No such file or directory$//' out > k || fail=1
   mv k out || fail=1
   compare out exp || fail=1
 done
