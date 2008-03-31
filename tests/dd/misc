@@ -46,6 +46,13 @@ if dd oflag=append if=$tmp_in of=$tmp_out 2> /dev/null; then
   compare $tmp_in $tmp_out || fail=1
 fi
 
+case $(cat /dev/stdin <$tmp_in 2>/dev/null) in
+(data)
+  rm -f $tmp_out
+  dd if=/dev/stdin of=$tmp_out <$tmp_in || fail=1
+  compare $tmp_in $tmp_out || fail=1
+esac
+
 if dd iflag=nofollow if=$tmp_in count=0 2> /dev/null; then
   dd iflag=nofollow if=$tmp_sym count=0 2> /dev/null && fail=1
 fi

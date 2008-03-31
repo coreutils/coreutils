@@ -1,6 +1,6 @@
 /* Invoke open, but return either a desired file descriptor or -1.
 
-   Copyright (C) 2005, 2006 Free Software Foundation, Inc.
+   Copyright (C) 2005, 2006, 2008 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -31,15 +31,13 @@
 int
 fd_reopen (int desired_fd, char const *file, int flags, mode_t mode)
 {
-  int fd;
+  int fd = open (file, flags, mode);
 
-  close (desired_fd);
-  fd = open (file, flags, mode);
   if (fd == desired_fd || fd < 0)
     return fd;
   else
     {
-      int fd2 = fcntl (fd, F_DUPFD, desired_fd);
+      int fd2 = dup2 (fd, desired_fd);
       int saved_errno = errno;
       close (fd);
       errno = saved_errno;
