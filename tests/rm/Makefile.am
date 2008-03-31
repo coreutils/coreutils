@@ -1,7 +1,6 @@
 # Make coreutils tests for "rm".			-*-Makefile-*-
 
-# Copyright (C) 1997, 1998, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007
-# Free Software Foundation, Inc.
+# Copyright (C) 1997-1998, 2000-2008 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 TESTS = \
+  deep-2 \
   deep-1 \
   hash \
   dangling-symlink \

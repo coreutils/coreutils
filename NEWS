@@ -30,6 +30,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   at the end of the option argument to --flag-truncation=STRING (-F),
   --word-regexp=REGEXP (-W), or --sentence-regexp=REGEXP (-S).
 
+  "rm -r DIR" would mistakenly declare to be "write protected" -- and
+  prompt about -- full DIR-relative names longer than MIN (PATH_MAX, 8192).
+
   "rmdir --ignore-fail-on-non-empty" detects and ignores the failure
   in more cases when a directory is empty.
 

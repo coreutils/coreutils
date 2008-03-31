@@ -799,7 +799,7 @@ write_protected_non_symlink (int fd_cwd,
       = obstack_object_size (&ds->dir_stack) + strlen (file);
 
     if (MIN (PATH_MAX, 8192) <= file_name_len)
-      return - euidaccess_stat (buf, W_OK);
+      return euidaccess_stat (buf, W_OK) ? 0 : -1;
     if (euidaccess (xfull_filename (ds, file), W_OK) == 0)
       return 0;
     if (errno == EACCES)
