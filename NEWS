@@ -6,6 +6,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   configure --enable-no-install-program=groups now works.
 
+  dd once again works with unnecessary options like if=/dev/stdin and
+  of=/dev/stdout.  [bug introduced in fileutils-4.0h]
+
   id now uses getgrouplist, when possible.  This results in
   much better performance when there are many users and/or groups.
 
