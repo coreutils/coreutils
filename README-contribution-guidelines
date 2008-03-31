@@ -8,6 +8,9 @@ version 1.4.4, then you'd do well to get a newer version.
 At worst, just download the latest stable release from
 http://git.or.cz/ and build from source.
 
+For details on building the programs in this package, see
+the file, README-hacking.
+
 
 Use the latest upstream sources
 ===============================
@@ -166,8 +169,17 @@ the tip of the trunk.
 Now use git format-patch, as above.
 
 
+Amending the most recent change on your private branch
+======================================================
+Let's say you've just committed a change on your private
+branch, and then realize that something about it is not right.
+It's easy to adjust:
 
+  edit your files # this can include running "git add NEW" or "git rm BAD"
+  git commit --amend -e -a
+  git format-patch --stdout --signoff HEAD~1 > your-branch.diff
 
+That replaces the most recent commit with the revised one.
 
 
 
