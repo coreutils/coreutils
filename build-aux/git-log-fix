@@ -1,0 +1,44 @@
+# This file is expected to be used via gitlog-to-changelog's --amend=FILE
+# option.  It specifies what changes to make to each given SHA1's commit
+# log and metadata, using Perl-eval'able expressions.
+
+3a169f4c5d9159283548178668d2fae6fced3030
+# fix title:
+s/all tile types/all file types/
+
+e181802521d4e19e367dbe8cfa877296bb5dafb2
+# fix the title!
+s,seq:,factor:,
+
+3ece0355d52e41a1b079c0c46477a32250278c11
+# correct the URL
+s,<http.+?>,<http://bugs.debian.org/412688>,
+
+ed5c4e770a27862813c0182be8680abeb005d15b
+# Wrong bug ID:
+s,/363011,/350541,
+# in this:
+# Suggested by Josselin Mouette in <http://bugs.debian.org/363011>
+
+1379ed974f1fa39b12e2ffab18b3f7a607082202
+# Due to a bug in vc-dwim, I mis-attributed a patch by Paul to myself.
+# Change the author to be Paul.  Note the escaped "@":
+s,Jim .*>,Paul Eggert <eggert\@cs.ucla.edu>,
+
+209850fd7e1e89cf8937310878bd22d70e3588a5
+s/isspace/isblank/
+# in this:
+# * tests/misc/uniq: New file.  Test for the above, but only
+# when isspace(0240).
+
+760bc6f7e73014e934a744a9d46ea8dbf5ba25c8
+s/Now, each/Now, the/;
+s!(elicits.*)\.!first $1, and the second works properly.!
+# change the log from this:
+#   Without this, `truncate -s '> -1' F` would truncate F to length 0,
+#   and `truncate -s " +1" F` would truncate F to 1 byte.  Now, each
+#   elicits a diagnostic.
+# to this:
+#   Without this, `truncate -s '> -1' F` would truncate F to length 0,
+#   and `truncate -s " +1" F` would truncate F to 1 byte.  Now, the
+#   first elicits a diagnostic, and the second works properly.
