@@ -1178,7 +1178,7 @@ or @option{-P} is specified.
 
 
 @node Treating / specially
-@section Treating / specially
+@section Treating @file{/} specially
 
 Certain commands can operate destructively on entire hierarchies.
 For example, if a user with appropriate privileges mistakenly runs
@@ -2170,9 +2170,9 @@ e.g., @option{--date-format="Monday morning"}.
 
 @vindex POSIXLY_CORRECT
 @vindex LC_TIME
-Normally the date
-format defaults to @samp{%Y-%m-%d %H:%M} (for example, @samp{2001-12-04
-23:59}); but if the @env{POSIXLY_CORRECT} environment variable is set
+The default date format is @samp{%Y-%m-%d %H:%M} (for example,
+@samp{2001-12-04 23:59});
+but if the @env{POSIXLY_CORRECT} environment variable is set
 and the @env{LC_TIME} locale category specifies the @acronym{POSIX}
 locale, the default is @samp{%b %e %H:%M %Y} (for example,
 @samp{Dec@ @ 4 23:59 2001}.
@@ -3091,7 +3091,8 @@ the length of the longest line in any @file{.c} or @file{.h} file in the
 current hierarchy, do this:
 
 @example
-find . -name '*.[ch]' -print0 | wc -L --files0-from=- | tail -n1
+find . -name '*.[ch]' -print0 |
+  wc -L --files0-from=- | tail -n1
 @end example
 
 Do not specify any @var{FILE} on the command line when using this option.
@@ -7955,7 +7956,7 @@ removal is requested.  Equivalent to @option{-I}.
 @vindex always @r{interactive option}
 - Prompt for every file being removed.  Equivalent to @option{-i}.
 @end itemize
-Specifying @option{--interactive} and no @var{when} is equivalent to
+@option{--interactive} with no @var{when} is equivalent to
 @option{--interactive=always}.
 
 @itemx --one-file-system
