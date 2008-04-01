@@ -557,7 +557,9 @@ fi
 # since this is only a convenience to help developers avoid the relatively
 # unusual case in which a symlinked-to .m4 file is git-removed from gnulib
 # between successive runs of this script.
-find "$m4_base" -name '*.m4' -depth -type l -xtype l -delete > /dev/null 2>&1
+find "$m4_base" "$source_base" \
+  -name '*.m4' -depth -type l -xtype l -delete > /dev/null 2>&1
+
 
 # Reconfigure, getting other files.
 
