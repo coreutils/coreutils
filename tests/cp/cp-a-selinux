@@ -2,7 +2,7 @@
 # Ensure that cp -a and cp --preserve=context work properly.
 # In particular, test on a writable NFS partition.
 
-# Copyright (C) 2007 Free Software Foundation, Inc.
+# Copyright (C) 2007-2008 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -35,8 +35,11 @@ dd if=/dev/zero of=blob bs=8192 count=200 > /dev/null 2>&1 \
                                              || framework_failure
 mkdir mnt                                    || framework_failure
 mkfs -t ext2 -F blob > /dev/null 2>&1        || framework_failure
-mount -oloop,context=system_u:object_r:removable_t blob mnt \
-                                             || framework_failure
+
+# This context is special: it works even when mcstransd isn't running.
+ctx=root:object_r:tmp_t:s0
+
+mount -oloop,context=$ctx blob mnt           || framework_failure
 cd mnt                                       || framework_failure
 
 echo > f                                     || framework_failure

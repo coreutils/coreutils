@@ -17,10 +17,13 @@ touch f g d/sub/1 d/sub/2 || framework_failure
 fail=0
 
 # Set to a specified context.
+# Use root:object_r:tmp_t:s0.  It is special in that
+# it works even when mcstransd isn't running.
 u1=root
 r1=object_r
 t1=tmp_t
-ctx=$u1:$r1:$t1
+range=s0
+ctx=$u1:$r1:$t1:$range
 chcon $ctx f || fail=1
 stat --printf='f|%C\n' f > out || fail=1
 
@@ -32,8 +35,7 @@ stat --printf='g|%C\n' g >> out || fail=1
 u2=user_u
 r2=object_r
 t2=file_t
-l2=SystemLow-SystemHigh
-for i in --user=$u2 --role=$r2 --type=$t2 --range=$l2; do
+for i in --user=$u2 --role=$r2 --type=$t2 --range=$range; do
   chcon $i f || fail=1
   stat --printf="f|$i|"'%C\n' f >> out || fail=1
 done
@@ -47,13 +49,13 @@ done
 cat <<EOF > exp || fail=1
 f|$ctx
 g|$ctx
-f|--user=$u2|$u2:$r1:$t1
-f|--role=$r2|$u2:$r2:$t1
-f|--type=$t2|$u2:$r2:$t2
-f|--range=$l2|$u2:$r2:$t2:$l2
-f|-uroot|root:object_r:file_t:SystemLow-SystemHigh
-f|-robject_r|root:object_r:file_t:SystemLow-SystemHigh
-f|-ttmp_t|root:object_r:tmp_t:SystemLow-SystemHigh
+f|--user=$u2|$u2:$r1:$t1:$range
+f|--role=$r2|$u2:$r2:$t1:$range
+f|--type=$t2|$u2:$r2:$t2:$range
+f|--range=$range|$u2:$r2:$t2:$range
+f|-uroot|root:object_r:file_t:$range
+f|-robject_r|root:object_r:file_t:$range
+f|-ttmp_t|root:object_r:tmp_t:$range
 EOF
 
 compare out exp || fail=1
