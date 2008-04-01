@@ -2181,7 +2181,7 @@ locale, the default is @samp{%b %e %H:%M %Y} (for example,
 Time stamps are listed according to the time zone rules specified by
 the @env{TZ} environment variable, or by the system default rules if
 @env{TZ} is not set.  @xref{TZ Variable,, Specifying the Time Zone
-with @env{TZ}, libc, The GNU C Library}.
+with @env{TZ}, libc, The GNU C Library Reference Manual}.
 
 @item -e[@var{in-tabchar}[@var{in-tabwidth}]]
 @itemx --expand-tabs[=@var{in-tabchar}[@var{in-tabwidth}]]
@@ -6584,7 +6584,7 @@ programs like @command{make} that rely on file timestamps.
 Time stamps are listed according to the time zone rules specified by
 the @env{TZ} environment variable, or by the system default rules if
 @env{TZ} is not set.  @xref{TZ Variable,, Specifying the Time Zone
-with @env{TZ}, libc, The GNU C Library}.
+with @env{TZ}, libc, The GNU C Library Reference Manual}.
 
 The following option changes how file timestamps are printed.
 
@@ -9353,7 +9353,8 @@ operations, for a user to change the ctime field to a user-specified value.
 Time stamps assume the time zone rules specified by the @env{TZ}
 environment variable, or by the system default rules if @env{TZ} is
 not set.  @xref{TZ Variable,, Specifying the Time Zone with @env{TZ},
-libc, The GNU C Library}.  You can avoid ambiguities during
+libc, The GNU C Library Reference Manual}.
+You can avoid ambiguities during
 daylight saving transitions by using @sc{utc} time stamps.
 
 The program accepts the following options.  Also see @ref{Common options}.
@@ -10077,7 +10078,7 @@ The valid format sequences for file systems are:
 Time stamps are listed according to the time zone rules specified by
 the @env{TZ} environment variable, or by the system default rules if
 @env{TZ} is not set.  @xref{TZ Variable,, Specifying the Time Zone
-with @env{TZ}, libc, The GNU C Library}.
+with @env{TZ}, libc, The GNU C Library Reference Manual}.
 @end table
 
 @exitstatus
@@ -10225,8 +10226,10 @@ printf @var{format} [@var{argument}]@dots{}
 
 @command{printf} prints the @var{format} string, interpreting @samp{%}
 directives and @samp{\} escapes to format numeric and string arguments
-in a way that is mostly similar to the C @samp{printf} function.  The
-differences are as follows:
+in a way that is mostly similar to the C @samp{printf} function.
+@xref{Output Conversion Syntax,, @command{printf} format directives,
+libc, The GNU C Library Reference Manual}, for details.
+The differences are as follows:
 
 @itemize @bullet
 
@@ -12406,7 +12409,7 @@ i}, as in @samp{who am i}.
 Time stamps are listed according to the time zone rules specified by
 the @env{TZ} environment variable, or by the system default rules if
 @env{TZ} is not set.  @xref{TZ Variable,, Specifying the Time Zone
-with @env{TZ}, libc, The GNU C Library}.
+with @env{TZ}, libc, The GNU C Library Reference Manual}.
 
 The program accepts the following options.  Also see @ref{Common options}.
 
@@ -12546,7 +12549,7 @@ so the output looks like @samp{Thu Mar @ 3 13:47:51 PST 2005}.
 Normally, @command{date} uses the time zone rules indicated by the
 @env{TZ} environment variable, or the system default rules if @env{TZ}
 is not set.  @xref{TZ Variable,, Specifying the Time Zone with
-@env{TZ}, libc, The GNU C Library}.
+@env{TZ}, libc, The GNU C Library Reference Manual}.
 
 @findex strftime @r{and @command{date}}
 @cindex time formats
