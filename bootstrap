@@ -549,8 +549,8 @@ if test -f $mam_template; then
   done
 fi
 
-# Remove any dangling symlink matching "*.m4" in the gnulib-populated
-# $m4_base directory, since such a file would cause aclocal to fail.
+# Remove any dangling symlink matching "*.m4" or "*.[ch]" in some
+# gnulib-populated directories.  Such .m4 files would cause aclocal to fail.
 # The following requires GNU find 4.2.3 or newer.  Considering the usual
 # portability constraints of this script, that may seem a very demanding
 # requirement, but it should be ok.  Ignore any failure, which is fine,
@@ -558,7 +558,8 @@ fi
 # unusual case in which a symlinked-to .m4 file is git-removed from gnulib
 # between successive runs of this script.
 find "$m4_base" "$source_base" \
-  -depth -name '*.m4' -type l -xtype l -delete > /dev/null 2>&1
+  -depth \( -name '*.m4' -o -name '*.[ch]' \) \
+  -type l -xtype l -delete > /dev/null 2>&1
 
 
 # Reconfigure, getting other files.
