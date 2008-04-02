@@ -65,6 +65,16 @@
 # define lchown(name, uid, gid) chown (name, uid, gid)
 #endif
 
+#ifndef HAVE_MKFIFO
+static int
+rpl_mkfifo (char const *file, mode_t mode)
+{
+  errno = ENOTSUP;
+  return -1;
+}
+#define mkfifo rpl_mkfifo
+#endif
+
 #ifndef USE_ACL
 # define USE_ACL 0
 #endif
@@ -1828,9 +1838,7 @@ copy_internal (char const *src_name, char const *dst_name,
 	 does not.  But fall back on mkfifo, because on some BSD systems,
 	 mknod always fails when asked to create a FIFO.  */
       if (mknod (dst_name, src_mode & ~omitted_permissions, 0) != 0)
-#if HAVE_MKFIFO
 	if (mkfifo (dst_name, src_mode & ~S_IFIFO & ~omitted_permissions) != 0)
-#endif
 	  {
 	    error (0, errno, _("cannot create fifo %s"), quote (dst_name));
 	    goto un_backup;
