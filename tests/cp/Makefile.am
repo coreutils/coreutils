@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 TESTS = \
+  special-f \
   parent-perm \
   abuse \
   proc-zero-len \

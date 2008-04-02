@@ -6,6 +6,11 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   configure --enable-no-install-program=groups now works.
 
+  "cp -fR fifo E" now succeeds with an existing E.  Before this fix, using
+  -fR to copy a fifo or "special" file onto an existing file would fail
+  with EEXIST.  Now, it once again unlinks the destination before trying
+  to create the destination file.  [bug introduced in coreutils-5.90]
+
   dd once again works with unnecessary options like if=/dev/stdin and
   of=/dev/stdout.  [bug introduced in fileutils-4.0h]
 

@@ -1354,7 +1354,7 @@ copy_internal (char const *src_name, char const *dst_name,
 		   && (x->unlink_dest_before_opening
 		       || (x->preserve_links && 1 < dst_sb.st_nlink)
 		       || (x->dereference == DEREF_NEVER
-			   && S_ISLNK (src_sb.st_mode))
+			   && ! S_ISREG (src_sb.st_mode))
 		       ))
 	    {
 	      if (unlink (dst_name) != 0 && errno != ENOENT)

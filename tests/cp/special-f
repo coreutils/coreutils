@@ -1,0 +1,42 @@
+#!/bin/sh
+# Ensure that "cp -Rf fifo E" unlinks E and retries.
+# Up until coreutils-6.10.171, it would not.
+
+# Copyright (C) 2008 Free Software Foundation, Inc.
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  cp --version
+fi
+
+. $srcdir/../envvar-check
+. $srcdir/../lang-default
+. $srcdir/../test-lib.sh
+
+mkfifo fifo ||
+  skip_test_ "fifos not supported"
+touch e || framework-failure
+
+fail=0
+
+# Without -f, expect it to fail.
+cp -R fifo e || fail=1
+
+# With -f, it must succeed.
+cp -Rf fifo e || fail=1
+test -p fifo || fail=1
+
+(exit $fail); exit $fail
