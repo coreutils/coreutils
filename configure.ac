@@ -268,7 +268,7 @@ done
 v=no_install__progs
 t=`sed -n '/^'$v' =/,/[[^\]]$/p' $mk \
     | sed 's/^  *//;/^\$.*/d;/^'$v' =/d' \
-    | tr -s '\\012\\\\' '  '`
+    | tr -s '\\015\\012\\\\' '   '`
 # Remove any trailing space.
 no_install_progs_default=`echo "$t"|sed 's/ $//'`
 
