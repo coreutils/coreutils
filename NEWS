@@ -6,6 +6,12 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   stat -f recognizes the Lustre file system type
 
+** Changes in behavior
+
+  ls -l now marks SELinux-only files with the less obtrusive '.',
+  rather than '+'.  A file with any other combination of MAC and ACL
+  is still marked with a '+'.
+
 
 * Noteworthy changes in release 7.0 (2008-10-05) [beta]
 

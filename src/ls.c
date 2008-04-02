@@ -154,6 +154,12 @@ verify (sizeof filetype_letter - 1 == arg_directory + 1);
     C_LINK, C_SOCK, C_FILE, C_DIR			\
   }
 
+enum acl_type
+  {
+    ACL_T_NONE,
+    ACL_T_SELINUX_ONLY,
+    ACL_T_YES
+  };
 
 struct fileinfo
   {
@@ -182,7 +188,7 @@ struct fileinfo
 
     /* For long listings, true if the file has an access control list,
        or an SELinux security context.  */
-    bool have_acl;
+    enum acl_type acl_type;
   };
 
 #define LEN_STR_PAIR(s) sizeof (s) - 1, s
@@ -2689,6 +2695,7 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
 
       if (format == long_format || print_scontext)
 	{
+	  bool have_selinux = false;
 	  bool have_acl = false;
 	  int attr_len = (do_deref
 			  ?  getfilecon (absolute_name, &f->scontext)
@@ -2707,7 +2714,7 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
 	    }
 
 	  if (err == 0)
-	    have_acl = ! STREQ ("unlabeled", f->scontext);
+	    have_selinux = ! STREQ ("unlabeled", f->scontext);
 	  else
 	    {
 	      f->scontext = UNKNOWN_SECURITY_CONTEXT;
@@ -2720,15 +2727,19 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
 		err = 0;
 	    }
 
-	  if (err == 0 && ! have_acl && format == long_format)
+	  if (err == 0 && format == long_format)
 	    {
 	      int n = file_has_acl (absolute_name, &f->stat);
 	      err = (n < 0);
 	      have_acl = (0 < n);
 	    }
 
-	  f->have_acl = have_acl;
-	  any_has_acl |= have_acl;
+	  f->acl_type = (!have_selinux && !have_acl
+			 ? ACL_T_NONE
+			 : (have_selinux && !have_acl
+			    ? ACL_T_SELINUX_ONLY
+			    : ACL_T_YES));
+	  any_has_acl |= f->acl_type != ACL_T_NONE;
 
 	  if (err)
 	    error (0, errno, "%s", quotearg_colon (absolute_name));
@@ -3449,7 +3460,9 @@ print_long_format (const struct fileinfo *f)
     }
   if (! any_has_acl)
     modebuf[10] = '\0';
-  else if (f->have_acl)
+  else if (f->acl_type == ACL_T_SELINUX_ONLY)
+    modebuf[10] = '.';
+  else if (f->acl_type == ACL_T_YES)
     modebuf[10] = '+';
 
   switch (time_type)

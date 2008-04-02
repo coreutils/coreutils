@@ -6474,9 +6474,11 @@ applies to the file.  When the character following the file mode bits is a
 space, there is no alternate access method.  When it is a printing
 character, then there is such a method.
 
-For a file with an extended access control list, a @samp{+} character is
-listed.  Basic access control lists are equivalent to the permissions
-listed, and are not considered an alternate access method.
+GNU @command{ls} uses a @samp{.} character to indicate a file
+with an SELinux security context, but no other alternate access method.
+
+A file with any other combination of alternate access methods
+is marked with a @samp{+} character.
 
 @item -n
 @itemx --numeric-uid-gid

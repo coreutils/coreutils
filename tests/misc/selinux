@@ -34,8 +34,8 @@ for i in d f p; do
   c=`stat --printf %C $i`; test x$c = x$ctx || fail=1
 done
 
-# ensure that ls -l output includes the "+".
-c=`ls -l f|cut -c11`; test "$c" = + || fail=1
+# ensure that ls -l output includes the ".".
+c=`ls -l f|cut -c11`; test "$c" = . || fail=1
 
 # Copy each to a new directory and ensure that context is preserved.
 cp -r --preserve=all d f p s1 || fail=1
