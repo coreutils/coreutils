@@ -36,7 +36,9 @@
 #include "physmem.h"
 #include "posixver.h"
 #include "quote.h"
+#include "quotearg.h"
 #include "randread.h"
+#include "readtokens0.h"
 #include "stdio--.h"
 #include "stdlib--.h"
 #include "strnumcmp.h"
@@ -303,8 +305,9 @@ usage (int status)
     {
       printf (_("\
 Usage: %s [OPTION]... [FILE]...\n\
+  or:  %s [OPTION]... --files0-from=F\n\
 "),
-	      program_name);
+	      program_name, program_name);
       fputs (_("\
 Write sorted concatenation of all FILE(s) to standard output.\n\
 \n\
@@ -341,6 +344,10 @@ Other options:\n\
   -C, --check=quiet, --check=silent  like -c, but do not report first bad line\n\
       --compress-program=PROG  compress temporaries with PROG;\n\
                               decompress them with PROG -d\n\
+      --files0-from=F       read input from the files specified by\n\
+                            NUL-terminated names in file F\n\
+"), stdout);
+      fputs (_("\
   -k, --key=POS1[,POS2]     start a key at POS1, end it at POS2 (origin 1)\n\
   -m, --merge               merge already sorted files; do not sort\n\
 "), stdout);
@@ -393,6 +400,7 @@ enum
 {
   CHECK_OPTION = CHAR_MAX + 1,
   COMPRESS_PROGRAM_OPTION,
+  FILES0_FROM_OPTION,
   RANDOM_SOURCE_OPTION,
   SORT_OPTION
 };
@@ -406,6 +414,7 @@ static struct option const long_options[] =
   {"compress-program", required_argument, NULL, COMPRESS_PROGRAM_OPTION},
   {"dictionary-order", no_argument, NULL, 'd'},
   {"ignore-case", no_argument, NULL, 'f'},
+  {"files0-from", required_argument, NULL, FILES0_FROM_OPTION},
   {"general-numeric-sort", no_argument, NULL, 'g'},
   {"ignore-nonprinting", no_argument, NULL, 'i'},
   {"key", required_argument, NULL, 'k'},
@@ -2751,6 +2760,8 @@ main (int argc, char **argv)
   bool posixly_correct = (getenv ("POSIXLY_CORRECT") != NULL);
   bool obsolete_usage = (posix2_version () < 200112);
   char **files;
+  char *files_from = NULL;
+  struct Tokens tok;
   char const *outfile = NULL;
 
   initialize_main (&argc, &argv);
@@ -2954,6 +2965,10 @@ main (int argc, char **argv)
 	  compress_program = optarg;
 	  break;
 
+	case FILES0_FROM_OPTION:
+	  files_from = optarg;
+	  break;
+
 	case 'k':
 	  key = key_init (&key_buf);
 
@@ -3096,6 +3111,65 @@ main (int argc, char **argv)
 	default:
 	  usage (SORT_FAILURE);
 	}
+    }
+
+  if (files_from)
+    {
+      FILE *stream;
+
+      /* When using --files0-from=F, you may not specify any files
+	 on the command-line.  */
+      if (nfiles)
+	{
+	  error (0, 0, _("extra operand %s"), quote (files[0]));
+	  fprintf (stderr, "%s\n",
+		   _("file operands cannot be combined with --files0-from"));
+	  usage (SORT_FAILURE);
+	}
+
+      if (STREQ (files_from, "-"))
+	stream = stdin;
+      else
+	{
+	  stream = fopen (files_from, "r");
+	  if (stream == NULL)
+	    error (SORT_FAILURE, errno, _("cannot open %s for reading"),
+		   quote (files_from));
+	}
+
+      readtokens0_init (&tok);
+
+      if (! readtokens0 (stream, &tok) || fclose (stream) != 0)
+	error (SORT_FAILURE, 0, _("cannot read file names from %s"),
+	       quote (files_from));
+
+      if (tok.n_tok)
+	{
+	  size_t i;
+	  free (files);
+	  files = tok.tok;
+	  nfiles = tok.n_tok;
+	  for (i = 0; i < nfiles; i++)
+	  {
+	      if (STREQ (files[i], "-"))
+		error (SORT_FAILURE, 0, _("when reading file names from stdin, "
+					  "no file name of %s allowed"),
+		       quote (files[i]));
+	      else if (files[i][0] == '\0')
+		{
+		  /* Using the standard `filename:line-number:' prefix here is
+		     not totally appropriate, since NUL is the separator, not NL,
+		     but it might be better than nothing.  */
+		  unsigned long int file_number = i + 1;
+		  error (SORT_FAILURE, 0,
+			 _("%s:%lu: invalid zero-length file name"),
+			 quotearg_colon (files_from), file_number);
+		}
+	  }
+	}
+      else
+	error (SORT_FAILURE, 0, _("no input from %s"),
+	       quote (files_from));
     }
 
   /* Inheritance of global options to individual keys. */

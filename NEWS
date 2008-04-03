@@ -18,6 +18,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   md5sum now accepts the new option, --quiet, to suppress the printing of
   'OK' messages.  sha1sum, sha224sum, sha384sum, and sha512sum accept it, too.
 
+  sort accepts a new option, --files0-from=F, that specifies a file
+  containing a null-separated list of files to sort.  This list is used
+  instead of filenames passed on the command-line to avoid problems with
+  maximum command-line (argv) length.
+
 ** Bug fixes
 
   chcon --verbose now prints a newline after each message

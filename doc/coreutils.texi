@@ -3172,7 +3172,7 @@ Print only the newline counts.
 @opindex --max-line-length
 Print only the maximum line lengths.
 
-@macro filesZeroFromOption{cmd,withTotalOption}
+@macro filesZeroFromOption{cmd,withTotalOption,subListOutput}
 @itemx --files0-from=@var{FILE}
 @opindex --files0-from=@var{FILE}
 @c This is commented out to avoid a texi2dvi failure.
@@ -3184,13 +3184,13 @@ This is useful \withTotalOption\
 when the list of file names is so long that it may exceed a command line
 length limitation.
 In such cases, running @command{\cmd\} via @command{xargs} is undesirable
-because it splits the list into pieces and makes @command{\cmd\} print a
-total for each sublist rather than for the entire list.
+because it splits the list into pieces and makes @command{\cmd\} print
+\subListOutput\ for each sublist rather than for the entire list.
 One way to produce a list of null-byte-terminated file names is with @sc{gnu}
 @command{find}, using its @option{-print0} predicate.
 Do not specify any @var{FILE} on the command line when using this option.
 @end macro
-@filesZeroFromOption{wc,}
+@filesZeroFromOption{wc,,a total}
 
 For example, to find the length of the longest line in any @file{.c} or
 @file{.h} file in the current hierarchy, do this:
@@ -3778,6 +3778,8 @@ Terminate with an error if @var{prog} exits with nonzero status.
 
 White space and the backslash character should not appear in
 @var{prog}; they are reserved for future use.
+
+@filesZeroFromOption{sort,,sorted output}
 
 @item -k @var{pos1}[,@var{pos2}]
 @itemx --key=@var{pos1}[,@var{pos2}]

@@ -193,6 +193,7 @@ TESTS =						\
   misc/shuf					\
   misc/sort					\
   misc/sort-compress				\
+  misc/sort-files0-from				\
   misc/sort-merge				\
   misc/sort-rand				\
   misc/split-a					\
