@@ -913,7 +913,7 @@ main (int argc, char **argv)
 	      error (EXIT_FAILURE, 0,
 		     _("`--pages=FIRST_PAGE[:LAST_PAGE]' missing argument"));
 	    else if (! first_last_page (oi, 0, optarg))
-	      error (EXIT_FAILURE, 0, _("Invalid page range %s"),
+	      error (EXIT_FAILURE, 0, _("invalid page range %s"),
 		     quote (optarg));
 	    break;
 	  }
@@ -1099,11 +1099,11 @@ main (int argc, char **argv)
 
   if (parallel_files & explicit_columns)
     error (EXIT_FAILURE, 0,
-	 _("Cannot specify number of columns when printing in parallel."));
+	 _("cannot specify number of columns when printing in parallel"));
 
   if (parallel_files & print_across_flag)
     error (EXIT_FAILURE, 0,
-       _("Cannot specify both printing across and printing in parallel."));
+       _("cannot specify both printing across and printing in parallel"));
 
 /* Translate some old short options to new/long options.
    To meet downward compatibility with other UNIX pr utilities
@@ -2394,7 +2394,7 @@ print_header (void)
   print_white_space ();
 
   if (page_number == 0)
-    error (EXIT_FAILURE, 0, _("Page number overflow"));
+    error (EXIT_FAILURE, 0, _("page number overflow"));
 
   /* The translator must ensure that formatting the translation of
      "Page %"PRIuMAX does not generate more than (sizeof page_text - 1)

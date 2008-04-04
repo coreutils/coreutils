@@ -144,6 +144,29 @@ sc_error_exit_success:
 	  { echo '$(ME): found error (EXIT_SUCCESS' 1>&2;		\
 	    exit 1; } || :
 
+# `FATAL:' should be fully upper-cased in error messages
+# `WARNING:' should be fully upper-cased, or fully lower-cased
+sc_error_message_warn_fatal:
+	@grep -nEA2 '[^rp]error \(' $$($(VC_LIST_EXCEPT))		\
+	    | grep -E '"Warning|"Fatal|"fatal' &&			\
+	  { echo '$(ME): use FATAL, WARNING or warning'	1>&2;		\
+	    exit 1; } || :
+
+# Error messages should not start with a capital letter
+sc_error_message_uppercase:
+	@grep -nEA2 '[^rp]error \(' $$($(VC_LIST_EXCEPT))		\
+	    | grep -E '"[A-Z]'						\
+	    | grep -vE '"FATAL|"WARNING|"Java|"C#|PRIuMAX' &&		\
+	  { echo '$(ME): found capitalized error message' 1>&2;		\
+	    exit 1; } || :
+
+# Error messages should not end with a period
+sc_error_message_period:
+	@grep -nEA2 '[^rp]error \(' $$($(VC_LIST_EXCEPT))		\
+	    | grep -E '[^."]\."' &&					\
+	  { echo '$(ME): found error message ending in period' 1>&2;	\
+	    exit 1; } || :
+
 sc_file_system:
 	@grep -ni 'file''system' $$($(VC_LIST_EXCEPT)) &&		\
 	  { echo '$(ME): found use of "file''system";'			\

@@ -38,9 +38,8 @@ my @Tests =
    ['simply-inval', "--pages=x", {EXIT => 1},
     {ERR=>"$prog: invalid --pages argument `x'\n"}],
 
-   # FIXME: should be lower case "invalid".
    ['inv-pg-range', "--pages=9x", {EXIT => 1},
-    {ERR=>"$prog: Invalid page range `9x'\n"}],
+    {ERR=>"$prog: invalid page range `9x'\n"}],
   );
 
 my $save_temps = $ENV{DEBUG};

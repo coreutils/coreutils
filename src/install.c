@@ -420,8 +420,8 @@ main (int argc, char **argv)
 	case PRESERVE_CONTEXT_OPTION:
 	  if ( ! selinux_enabled)
 	    {
-	      error (0, 0, _("Warning: ignoring --preserve-context; "
-			     "this kernel is not SELinux-enabled."));
+	      error (0, 0, _("WARNING: ignoring --preserve-context; "
+			     "this kernel is not SELinux-enabled"));
 	      break;
 	    }
 	  x.preserve_security_context = true;
@@ -430,8 +430,8 @@ main (int argc, char **argv)
 	case 'Z':
 	  if ( ! selinux_enabled)
 	    {
-	      error (0, 0, _("Warning: ignoring --context (-Z); "
-			     "this kernel is not SELinux-enabled."));
+	      error (0, 0, _("WARNING: ignoring --context (-Z); "
+			     "this kernel is not SELinux-enabled"));
 	      break;
 	    }
 	  scontext = optarg;
@@ -487,7 +487,7 @@ main (int argc, char **argv)
     {
       if (target_directory)
 	error (EXIT_FAILURE, 0,
-	       _("Cannot combine --target-directory (-t) "
+	       _("cannot combine --target-directory (-t) "
 		 "and --no-target-directory (-T)"));
       if (2 < n_files)
 	{

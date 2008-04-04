@@ -1838,7 +1838,7 @@ it must be one character from [doxn]"),
 	{
 	  error (0, 0, _("extra operand %s"), quote (argv[optind + 1]));
 	  error (0, 0, "%s\n",
-		 _("Compatibility mode supports at most one file."));
+		 _("compatibility mode supports at most one file"));
 	  usage (EXIT_FAILURE);
 	}
     }

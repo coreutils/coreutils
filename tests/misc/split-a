@@ -38,7 +38,7 @@ for f in $files; do
   printf 'creating file `%s'\''\n' $f
 done > exp || framework_failure
 
-echo split: Output file suffixes exhausted \
+echo split: output file suffixes exhausted \
   > exp-too-short || framework_failure
 
 fail=0

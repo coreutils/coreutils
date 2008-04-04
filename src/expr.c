@@ -777,9 +777,9 @@ eval2 (bool evaluate)
 	      if (errno)
 		{
 		  error (0, errno, _("string comparison failed"));
-		  error (0, 0, _("Set LC_ALL='C' to work around the problem."));
+		  error (0, 0, _("set LC_ALL='C' to work around the problem"));
 		  error (EXPR_INVALID, 0,
-			 _("The strings compared were %s and %s."),
+			 _("the strings compared were %s and %s"),
 			 quotearg_n_style (0, locale_quoting_style, l->u.s),
 			 quotearg_n_style (1, locale_quoting_style, r->u.s));
 		}

@@ -52,9 +52,9 @@ xmemxfrm (char *restrict dest, size_t destsize,
   if (errno)
     {
       error (0, errno, _("string transformation failed"));
-      error (0, 0, _("Set LC_ALL='C' to work around the problem."));
+      error (0, 0, _("set LC_ALL='C' to work around the problem"));
       error (exit_failure, 0,
-	     _("The untransformed string was %s."),
+	     _("the untransformed string was %s"),
 	     quotearg_n_style_mem (0, locale_quoting_style, src, srcsize));
     }
 

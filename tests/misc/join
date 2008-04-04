@@ -166,7 +166,7 @@ my @tv = (
 # With check, both inputs out of order (in fact, in reverse order)
 ['chkodr-5', '--check-order',
  [" b 1\n a 2\n", " b Y\n a Z\n"], "", 1,
- "$prog: File 1 is not in sorted order\n"],
+ "$prog: file 1 is not in sorted order\n"],
 
 # Without order check, both inputs out of order and some lines
 # unpairable.  This is NOT supported by the GNU extension.  All that

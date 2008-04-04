@@ -592,7 +592,7 @@ do_copy (int n_files, char **file, const char *target_directory,
     {
       if (target_directory)
 	error (EXIT_FAILURE, 0,
-	       _("Cannot combine --target-directory (-t) "
+	       _("cannot combine --target-directory (-t) "
 		 "and --no-target-directory (-T)"));
       if (2 < n_files)
 	{

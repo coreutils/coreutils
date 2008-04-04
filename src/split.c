@@ -189,7 +189,7 @@ next_file_name (void)
 	  sufindex[i] = 0;
 	  outfile_mid[i] = suffix_alphabet[sufindex[i]];
 	}
-      error (EXIT_FAILURE, 0, _("Output file suffixes exhausted"));
+      error (EXIT_FAILURE, 0, _("output file suffixes exhausted"));
     }
 }
 

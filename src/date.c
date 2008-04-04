@@ -441,8 +441,8 @@ main (int argc, char **argv)
 	{
 	  error (0, 0,
 		 _("the argument %s lacks a leading `+';\n"
-		   "When using an option to specify date(s), any non-option\n"
-		   "argument must be a format string beginning with `+'."),
+		   "when using an option to specify date(s), any non-option\n"
+		   "argument must be a format string beginning with `+'"),
 		 quote (argv[optind]));
 	  usage (EXIT_FAILURE);
 	}

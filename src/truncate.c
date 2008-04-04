@@ -326,7 +326,7 @@ main (int argc, char **argv)
   /* must specify either size or reference file */
   if ((ref_file && got_size) || (!ref_file && !got_size))
     {
-      error (0, 0, _("You must specify one of %s or %s"),
+      error (0, 0, _("you must specify one of %s or %s"),
              quote_n (0, "--size"), quote_n (1, "--reference"));
       usage (EXIT_FAILURE);
     }

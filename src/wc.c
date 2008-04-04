@@ -646,7 +646,7 @@ main (int argc, char **argv)
 	{
 	  error (0, 0, _("extra operand %s"), quote (argv[optind]));
 	  fprintf (stderr, "%s\n",
-		   _("File operands cannot be combined with --files0-from."));
+		   _("file operands cannot be combined with --files0-from"));
 	  usage (EXIT_FAILURE);
 	}
 

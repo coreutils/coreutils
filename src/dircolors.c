@@ -448,8 +448,8 @@ to select a shell syntax are mutually exclusive"));
       error (0, 0, _("extra operand %s"), quote (argv[!print_database]));
       if (print_database)
 	fprintf (stderr, "%s\n",
-		 _("File operands cannot be combined with "
-		   "--print-database (-p)."));
+		 _("file operands cannot be combined with "
+		   "--print-database (-p)"));
       usage (EXIT_FAILURE);
     }
 

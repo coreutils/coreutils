@@ -380,7 +380,7 @@ check_order (const struct line *prev,
 	    {
 	      error ((check_input_order == CHECK_ORDER_ENABLED
 		      ? EXIT_FAILURE : 0),
-		     0, _("File %d is not in sorted order"), whatfile);
+		     0, _("file %d is not in sorted order"), whatfile);
 
 	      /* If we get to here, the message was just a warning, but we
 		 want only to issue it once. */
