@@ -224,13 +224,16 @@ static struct month monthtab[] =
 };
 
 /* During the merge phase, the number of files to merge at once. */
-#define NMERGE 16
+#define NMERGE_DEFAULT 16
 
 /* Minimum size for a merge or check buffer.  */
 #define MIN_MERGE_BUFFER_SIZE (2 + sizeof (struct line))
 
 /* Minimum sort size; the code might not work with smaller sizes.  */
-#define MIN_SORT_SIZE (NMERGE * MIN_MERGE_BUFFER_SIZE)
+#define MIN_SORT_SIZE (nmerge * MIN_MERGE_BUFFER_SIZE)
+
+/* Maximum merge buffers we can theoretically support */
+#define MAX_NMERGE (SIZE_MAX / MIN_MERGE_BUFFER_SIZE)
 
 /* The number of bytes needed for a merge or check buffer, which can
    function relatively efficiently even if it holds only one line.  If
@@ -281,6 +284,10 @@ static struct keyfield *keylist;
 
 /* Program used to (de)compress temp files.  Must accept -d.  */
 static char const *compress_program;
+
+/* Maximum number of files to merge in one go.  If more than this
+   number are present, temp files will be used. */
+static unsigned int nmerge = NMERGE_DEFAULT;
 
 static void sortlines_temp (struct line *, size_t, struct line *);
 
@@ -340,6 +347,12 @@ Ordering options:\n\
       fputs (_("\
 Other options:\n\
 \n\
+"), stdout);
+      fputs (_("\
+      --batch-size=NMERGE   merge at most NMERGE inputs at once;\n\
+                            for more use temp files\n\
+"), stdout);
+      fputs (_("\
   -c, --check, --check=diagnose-first  check for sorted input; do not sort\n\
   -C, --check=quiet, --check=silent  like -c, but do not report first bad line\n\
       --compress-program=PROG  compress temporaries with PROG;\n\
@@ -401,6 +414,7 @@ enum
   CHECK_OPTION = CHAR_MAX + 1,
   COMPRESS_PROGRAM_OPTION,
   FILES0_FROM_OPTION,
+  NMERGE_OPTION,
   RANDOM_SOURCE_OPTION,
   SORT_OPTION
 };
@@ -427,6 +441,7 @@ static struct option const long_options[] =
   {"output", required_argument, NULL, 'o'},
   {"reverse", no_argument, NULL, 'r'},
   {"stable", no_argument, NULL, 's'},
+  {"batch-size", required_argument, NULL, NMERGE_OPTION},
   {"buffer-size", required_argument, NULL, 'S'},
   {"field-separator", required_argument, NULL, 't'},
   {"temporary-directory", required_argument, NULL, 'T'},
@@ -1051,6 +1066,68 @@ inittables (void)
 	     sizeof *monthtab, struct_month_cmp);
     }
 #endif
+}
+
+/* Specify how many inputs may be merged at once.
+   This may be set on the command-line with the
+   --batch-size option. */
+static void
+specify_nmerge (int oi, char c, char const *s)
+{
+  uintmax_t n;
+  struct rlimit rlimit;
+  unsigned int max_nmerge = (unsigned int) MAX_NMERGE;
+  enum strtol_error e = xstrtoumax (s, NULL, 10, &n, NULL);
+
+  /* Try to find out how many file descriptors we'll be able
+     to open.  We need at least nmerge + 3 (STDIN_FILENO,
+     STDOUT_FILENO and STDERR_FILENO). */
+  if (getrlimit (RLIMIT_NOFILE, &rlimit) == 0)
+    max_nmerge = MIN (max_nmerge, rlimit.rlim_cur - 3);
+
+  if (e == LONGINT_OK)
+    {
+      nmerge = n;
+      if (nmerge != n)
+	e = LONGINT_OVERFLOW;
+      else
+	{
+	  if (nmerge < 2)
+	    {
+	      error (0, 0, _("invalid --%s argument %s"),
+		     long_options[oi].name, quote(s));
+	      error (SORT_FAILURE, 0,
+		     _("minimum --%s argument is %s"),
+		     long_options[oi].name, quote("2"));
+	    }
+	  else if (max_nmerge < nmerge)
+	    {
+	      e = LONGINT_OVERFLOW;
+	    }
+	  else
+	    {
+	      /* Need to re-check that we meet the minimum
+		 requirement for memory usage with the new,
+		 potentially larger, nmerge. */
+	      sort_size = MAX (sort_size, MIN_SORT_SIZE);
+
+	      return;
+	    }
+	}
+    }
+
+  if (e == LONGINT_OVERFLOW)
+    {
+      char max_nmerge_buf[INT_BUFSIZE_BOUND (unsigned int)];
+      uinttostr (max_nmerge, max_nmerge_buf);
+      error (0, 0, _("--%s argument %s too large"),
+	     long_options[oi].name, quote(s));
+      error (SORT_FAILURE, 0,
+	     _("maximum --%s argument with current rlimit is %s"),
+	     long_options[oi].name, quote (max_nmerge_buf));
+    }
+  else
+    xstrtol_fatal (e, oi, c, long_options, s);
 }
 
 /* Specify the amount of main memory to use when sorting.  */
@@ -2037,15 +2114,20 @@ static void
 mergefps (struct sortfile *files, size_t ntemps, size_t nfiles,
 	  FILE *ofp, char const *output_file)
 {
-  FILE *fps[NMERGE];		/* Input streams for each file.  */
-  struct buffer buffer[NMERGE];	/* Input buffers for each file. */
+  FILE **fps = xnmalloc (nmerge, sizeof *fps);
+				/* Input streams for each file.  */
+  struct buffer *buffer = xnmalloc (nmerge, sizeof *buffer);
+				/* Input buffers for each file. */
   struct line saved;		/* Saved line storage for unique check. */
   struct line const *savedline = NULL;
 				/* &saved if there is a saved line. */
   size_t savealloc = 0;		/* Size allocated for the saved line. */
-  struct line const *cur[NMERGE]; /* Current line in each line table. */
-  struct line const *base[NMERGE]; /* Base of each line table.  */
-  size_t ord[NMERGE];		/* Table representing a permutation of fps,
+  struct line const **cur = xnmalloc (nmerge, sizeof *cur);
+				/* Current line in each line table. */
+  struct line const **base = xnmalloc (nmerge, sizeof *base);
+				/* Base of each line table.  */
+  size_t *ord = xnmalloc (nmerge, sizeof *ord);
+				/* Table representing a permutation of fps,
 				   such that cur[ord[0]] is the smallest line
 				   and will be next output. */
   size_t i;
@@ -2218,6 +2300,11 @@ mergefps (struct sortfile *files, size_t ntemps, size_t nfiles,
     }
 
   xfclose (ofp, output_file);
+  free(fps);
+  free(buffer);
+  free(ord);
+  free(base);
+  free(cur);
 }
 
 /* Merge into T the two sorted arrays of lines LO (with NLO members)
@@ -2405,7 +2492,7 @@ static void
 merge (struct sortfile *files, size_t ntemps, size_t nfiles,
        char const *output_file)
 {
-  while (NMERGE < nfiles)
+  while (nmerge < nfiles)
     {
       /* Number of input files processed so far.  */
       size_t in;
@@ -2421,20 +2508,20 @@ merge (struct sortfile *files, size_t ntemps, size_t nfiles,
       size_t cheap_slots;
 
       /* Do as many NMERGE-size merges as possible.  */
-      for (out = in = 0; out < nfiles / NMERGE; out++, in += NMERGE)
+      for (out = in = 0; out < nfiles / nmerge; out++, in += nmerge)
 	{
 	  FILE *tfp;
 	  pid_t pid;
 	  char *temp = create_temp (&tfp, &pid);
-	  size_t nt = MIN (ntemps, NMERGE);
+	  size_t nt = MIN (ntemps, nmerge);
 	  ntemps -= nt;
-	  mergefps (&files[in], nt, NMERGE, tfp, temp);
+	  mergefps (&files[in], nt, nmerge, tfp, temp);
 	  files[out].name = temp;
 	  files[out].pid = pid;
 	}
 
       remainder = nfiles - in;
-      cheap_slots = NMERGE - out % NMERGE;
+      cheap_slots = nmerge - out % nmerge;
 
       if (cheap_slots < remainder)
 	{
@@ -3025,6 +3112,10 @@ main (int argc, char **argv)
 
 	case 'm':
 	  mergeonly = true;
+	  break;
+
+	case NMERGE_OPTION:
+	  specify_nmerge (oi, c, optarg);
 	  break;
 
 	case 'o':

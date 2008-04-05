@@ -23,6 +23,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   instead of filenames passed on the command-line to avoid problems with
   maximum command-line (argv) length.
 
+  sort accepts a new option --batch-size=NMERGE, where NMERGE
+  represents the maximum number of inputs that will be merged at once.
+  When processing more than NMERGE inputs, sort uses temporary files.
+
 ** Bug fixes
 
   chcon --verbose now prints a newline after each message
