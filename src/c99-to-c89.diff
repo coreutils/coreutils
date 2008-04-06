@@ -44,15 +44,31 @@ diff -upr src/remove.c src/remove.c
    if (top->unremovable)
      hash_free (top->unremovable);
    obstack_blank (&ds->Active_dir, -(int) sizeof (struct AD_ent));
-@@ -879,6 +881,7 @@ prompt (int fd_cwd, Dirstack_state const
+@@ -836,14 +838,13 @@ prompt (int fd_cwd, Dirstack_state const
+ {
+   int write_protected = 0;
+   int dirent_type = *pdirent_type;
++  int wp_errno = 0;
+
+   *is_empty = T_UNKNOWN;
+
+   if (x->interactive == RMI_NEVER)
+     return RM_OK;
+
+-  int wp_errno = 0;
+-
+   if (!x->ignore_missing_files
+       && ((x->interactive == RMI_ALWAYS) || x->stdin_tty)
+       && dirent_type != DT_LNK)
+@@ -891,6 +892,7 @@ prompt (int fd_cwd, Dirstack_state const
  	    break;
  	  }
 
 +      {
        char const *quoted_name = quote (full_filename (filename));
 
-       if (0 < write_protected)
-@@ -918,6 +921,7 @@ prompt (int fd_cwd, Dirstack_state const
+       if (write_protected < 0)
+@@ -930,6 +932,7 @@ prompt (int fd_cwd, Dirstack_state const
  		    : _("%s: remove %s %s? ")),
  		   program_name, file_type (sbuf), quoted_name);
  	}
@@ -60,7 +76,7 @@ diff -upr src/remove.c src/remove.c
 
        if (!yesno ())
  	return RM_USER_DECLINED;
-@@ -1537,6 +1541,7 @@ rm_1 (Dirstack_state *ds, char const *fi
+@@ -1549,6 +1552,7 @@ rm_1 (Dirstack_state *ds, char const *fi
        return RM_ERROR;
      }
 
@@ -68,7 +84,7 @@ diff -upr src/remove.c src/remove.c
    struct stat st;
    cache_stat_init (&st);
    cycle_check_init (&ds->cycle_check_state);
-@@ -1559,6 +1564,7 @@ rm_1 (Dirstack_state *ds, char const *fi
+@@ -1571,6 +1575,7 @@ rm_1 (Dirstack_state *ds, char const *fi
    AD_push_initial (ds);
    AD_INIT_OTHER_MEMBERS ();
 
@@ -76,7 +92,7 @@ diff -upr src/remove.c src/remove.c
    enum RM_status status = remove_entry (AT_FDCWD, ds, filename,
  					DT_UNKNOWN, &st, x);
    if (status == RM_NONEMPTY_DIR)
-@@ -1577,6 +1583,8 @@ rm_1 (Dirstack_state *ds, char const *fi
+@@ -1589,6 +1594,8 @@ rm_1 (Dirstack_state *ds, char const *fi
    ds_clear (ds);
    return status;
  }
