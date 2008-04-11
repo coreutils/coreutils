@@ -3074,7 +3074,7 @@ Print only the newline counts.
 @opindex --max-line-length
 Print only the maximum line lengths.
 
-@macro files0fromOption{cmd,withTotalOption}
+@macro filesZeroFromOption{cmd,withTotalOption}
 @itemx --files0-from=@var{FILE}
 @opindex --files0-from=@var{FILE}
 @cindex including files from @command{\cmd\}
@@ -3090,7 +3090,7 @@ One way to produce a list of null-byte-terminated file names is with @sc{gnu}
 @command{find}, using its @option{-print0} predicate.
 Do not specify any @var{FILE} on the command line when using this option.
 @end macro
-@files0fromOption{wc,}
+@filesZeroFromOption{wc,}
 
 For example, to find the length of the longest line in any @file{.c} or
 @file{.h} file in the current hierarchy, do this:
@@ -9757,7 +9757,8 @@ Does not affect other symbolic links.  This is helpful for finding
 out the disk usage of directories, such as @file{/usr/tmp}, which
 are often symbolic links.
 
-@files0fromOption{du, with the @option{--total} (@option{-c}) option}
+@c --files0-from=FILE
+@filesZeroFromOption{du, with the @option{--total} (@option{-c}) option}
 
 @optHumanReadable
 
