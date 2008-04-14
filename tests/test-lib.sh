@@ -44,14 +44,17 @@ require_readable_root_()
   test -r / || skip_test_ "/ is not readable"
 }
 
-# Skip the current test if strace is not available or doesn't work.
+# Skip the current test if strace is not available or doesn't work
+# with the named syscall.  Usage: require_strace_ unlink
 require_strace_()
 {
+  test $# = 1 || framework_failure
+
   strace -V < /dev/null > /dev/null 2>&1 ||
     skip_test_ 'no strace program'
 
-  strace -qe unlink echo > /dev/null 2>&1 ||
-    skip_test_ 'strace does not work'
+  strace -qe "$1" echo > /dev/null 2>&1 ||
+    skip_test_ 'strace -qe "'"$1"'" does not work'
 }
 
 require_built_()

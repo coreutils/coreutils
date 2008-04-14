@@ -22,7 +22,7 @@ if test "$VERBOSE" = yes; then
 fi
 
 . $srcdir/../test-lib.sh
-require_strace_
+require_strace_ stat
 
 touch x || framework_failure
 chmod a+x x || framework_failure

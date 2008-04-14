@@ -22,7 +22,7 @@ if test "$VERBOSE" = yes; then
 fi
 
 . $srcdir/../test-lib.sh
-require_strace_
+require_strace_ unlink
 
 # Before the fix, mv would unnecessarily unlink the destination symlink:
 #   $ rm -f a b b2; touch a b; ln b b2; strace -e unlink /p/bin/mv a b
