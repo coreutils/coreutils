@@ -40,6 +40,7 @@ for cmd_w_arg in 'mkdir dir' 'mknod b p' 'mkfifo f'; do
   # Some systems fail with ENOTSUP, EINVAL, ENOENT, or even
   # "Unknown system error", or "Function not implemented".
   sed					\
+    -e 's/ Not supported$//'		\
     -e 's/ Invalid argument$//'		\
     -e 's/ Unknown system error$//'	\
     -e 's/ Operation not supported$//'	\
