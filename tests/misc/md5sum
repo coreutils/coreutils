@@ -1,7 +1,7 @@
 #!/bin/sh
 # Basic tests for "md5sum".
 
-# Copyright (C) 1998, 1999, 2003, 2005, 2007 Free Software Foundation, Inc.
+# Copyright (C) 1998-1999, 2003, 2005, 2007-2008 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@ exec $PERL -w -I$srcdir/.. -MCoreutils -M"CuTmpdir qw($me)" -- - <<\EOF
 require 5.003;
 use strict;
 
-(my $program_name = $0) =~ s|.*/||;
+my $prog = 'md5sum';
 
 # Turn off localisation of executable's ouput.
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
@@ -64,6 +64,8 @@ my @Tests =
      ['check-bsd3', '--check', '--status',
 				{IN=> {'f.md5' => "MD5 (f) = $degenerate\n"}},
 				{AUX=> {f=> 'bar'}}, {EXIT=> 1}],
+     ['bsd-segv', '--check', {IN=> {'z' => "MD5 ("}}, {EXIT=> 1},
+      {ERR=> "$prog: z: no properly formatted MD5 checksum lines found\n"}],
     );
 
 # Insert the `--text' argument for each test.
@@ -76,7 +78,6 @@ foreach $t (@Tests)
 my $save_temps = $ENV{DEBUG};
 my $verbose = $ENV{VERBOSE};
 
-my $prog = 'md5sum';
-my $fail = run_tests ($program_name, $prog, \@Tests, $save_temps, $verbose);
+my $fail = run_tests ($prog, $prog, \@Tests, $save_temps, $verbose);
 exit $fail;
 EOF
