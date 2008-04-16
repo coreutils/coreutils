@@ -30,9 +30,15 @@ fi
 c=invalid-selinux-context
 msg="failed to set default file creation context to \`$c':"
 
+# In OpenBSD's /bin/sh, mknod is a shell built-in.
+# In that case, just skip the mknod test.
+( mknod --version 2>&1 ) | grep 'GNU coreutils' \
+    && mknod='mknod b p' \
+    || mknod='mkdir dir'
+
 # Test each of mkdir, mknod, mkfifo with "-Z invalid-context".
 
-for cmd_w_arg in 'mkdir dir' 'mknod b p' 'mkfifo f'; do
+for cmd_w_arg in 'mkdir dir' "$mknod" 'mkfifo f'; do
   $cmd_w_arg -Z $c 2> out && fail=1
   set $cmd_w_arg; cmd=$1
   echo "$cmd: $msg" > exp || fail=1
