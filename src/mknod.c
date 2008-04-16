@@ -83,6 +83,7 @@ otherwise, as decimal.  TYPE may be:\n\
   c, u   create a character (unbuffered) special file\n\
   p      create a FIFO\n\
 "), stdout);
+      printf (USAGE_BUILTIN_WARNING, PROGRAM_NAME);
       emit_bug_reporting_address ();
     }
   exit (status);
