@@ -17,9 +17,6 @@
 
 EXTRA_DIST = $(TESTS)
 
-built_programs = \
-  (cd $(top_builddir)/src && MAKEFLAGS= $(MAKE) -s built_programs.list)
-
 # Do not choose a name that is a shell keyword like 'if', or a
 # commonly-used utility like 'cat' or 'test', as the name of a test.
 # Otherwise, VPATH builds will fail on hosts like Solaris, since they
