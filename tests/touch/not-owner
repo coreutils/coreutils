@@ -22,8 +22,8 @@ if test "$VERBOSE" = yes; then
   touch --version
 fi
 
-. $srcdir/../lang-default
-. $srcdir/../test-lib.sh
+. $top_srcdir/tests/lang-default
+. $top_srcdir/tests/test-lib.sh
 
 if env -- test -w /; then
   skip_test_ you have write access to /.

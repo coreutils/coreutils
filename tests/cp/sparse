@@ -1,7 +1,7 @@
 #!/bin/sh
 # Test cp --sparse=always
 
-# Copyright (C) 2006-2007 Free Software Foundation, Inc.
+# Copyright (C) 2006-2008 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,8 +21,8 @@ if test "$VERBOSE" = yes; then
   cp --version
 fi
 
-. $srcdir/../sparse-file
-. $srcdir/../test-lib.sh
+. $top_srcdir/tests/sparse-file
+. $top_srcdir/tests/test-lib.sh
 
 # Create a sparse file.
 # It has to be at least 128K in order to be sparse on some systems.

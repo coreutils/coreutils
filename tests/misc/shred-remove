@@ -21,7 +21,7 @@ if test "$VERBOSE" = yes; then
   shred --version
 fi
 
-. $srcdir/../test-lib.sh
+. $top_srcdir/tests/test-lib.sh
 skip_if_root_
 
 # The length of the basename is what matters.

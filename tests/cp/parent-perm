@@ -21,8 +21,8 @@ if test "$VERBOSE" = yes; then
   cp --version
 fi
 
-. $srcdir/../envvar-check
-. $srcdir/../test-lib.sh
+. $top_srcdir/tests/envvar-check
+. $top_srcdir/tests/test-lib.sh
 
 . $abs_srcdir/../umask-check
 

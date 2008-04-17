@@ -1,7 +1,7 @@
 #!/bin/sh
 # Test the -I option added to coreutils 6.0
 
-# Copyright (C) 2006, 2007 Free Software Foundation, Inc.
+# Copyright (C) 2006-2008 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,8 +23,8 @@ if test "$VERBOSE" = yes; then
   rm --version
 fi
 
-. $srcdir/../lang-default
-. $srcdir/../test-lib.sh
+. $top_srcdir/tests/lang-default
+. $top_srcdir/tests/test-lib.sh
 
 mkdir -p dir1-1 dir2-1 dir2-2 || framework_failure
 touch file1-1 file2-1 file2-2 file2-3 file3-1 file3-2 file3-3 file3-4 \

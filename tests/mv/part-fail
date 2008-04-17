@@ -4,7 +4,7 @@
 # This is a bit fragile since it relies on the string used
 # for EPERM: `permission denied'.
 
-# Copyright (C) 2002, 2004, 2006-2007 Free Software Foundation, Inc.
+# Copyright (C) 2002, 2004, 2006-2008 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,8 +24,8 @@ if test "$VERBOSE" = yes; then
   mv --version
 fi
 
-. $srcdir/../lang-default
-. $srcdir/../test-lib.sh
+. $top_srcdir/tests/lang-default
+. $top_srcdir/tests/test-lib.sh
 skip_if_root_
 cleanup_() { t=$other_partition_tmpdir; chmod -R 700 "$t"; rm -rf "$t"; }
 . "$abs_top_srcdir/tests/other-fs-tmpdir"

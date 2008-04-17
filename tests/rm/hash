@@ -3,7 +3,7 @@
 # Before then, rm would fail occasionally, sometimes via
 # a failed assertion, others with a seg fault.
 
-# Copyright (C) 2000, 2002, 2003, 2004, 2006, 2007 Free Software Foundation, Inc.
+# Copyright (C) 2000, 2002, 2003, 2004, 2006-2008 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,14 +18,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-. $srcdir/../expensive
+. $top_srcdir/tests/expensive
 
 if test "$VERBOSE" = yes; then
   set -x
   rm --version
 fi
 
-. $srcdir/../test-lib.sh
+. $top_srcdir/tests/test-lib.sh
 
 # Create a hierarchy with 3*26 leaf directories, each at depth 153.
 echo "$0: creating 78 trees, each of depth 153; this will take a while..." >&2

@@ -2,7 +2,7 @@
 # ensure that mv gives one diagnostic, not two, when failing
 # due to lack of permissions
 
-# Copyright (C) 2002, 2004, 2006-2007 Free Software Foundation, Inc.
+# Copyright (C) 2002, 2004, 2006-2008 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,8 +22,8 @@ if test "$VERBOSE" = yes; then
   mv --version
 fi
 
-. $srcdir/../lang-default
-. $srcdir/../test-lib.sh
+. $top_srcdir/tests/lang-default
+. $top_srcdir/tests/test-lib.sh
 skip_if_root_
 
 mkdir -p no-write/dir || framework_failure

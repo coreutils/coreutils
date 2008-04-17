@@ -343,31 +343,14 @@ AC_CONFIG_FILES(
   src/Makefile
   tests/Makefile
   gnulib-tests/Makefile
-  tests/chgrp/Makefile
-  tests/chmod/Makefile
-  tests/chown/Makefile
-  tests/cp/Makefile
   tests/cut/Makefile
-  tests/dd/Makefile
-  tests/du/Makefile
   tests/head/Makefile
-  tests/install/Makefile
   tests/join/Makefile
-  tests/ln/Makefile
-  tests/ls/Makefile
-  tests/misc/Makefile
-  tests/mkdir/Makefile
-  tests/mv/Makefile
   tests/pr/Makefile
-  tests/readlink/Makefile
-  tests/rm/Makefile
-  tests/rmdir/Makefile
   tests/sort/Makefile
   tests/tac/Makefile
-  tests/tail-2/Makefile
   tests/tail/Makefile
   tests/test/Makefile
-  tests/touch/Makefile
   tests/tr/Makefile
   tests/uniq/Makefile
   tests/wc/Makefile

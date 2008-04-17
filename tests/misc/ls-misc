@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 : ${srcdir=.}
-. $srcdir/../require-perl
+. $top_srcdir/tests/require-perl
 
 me=`echo $0|sed 's,.*/,,'`
 exec $PERL -w -I$srcdir/.. -MCoreutils -M"CuTmpdir qw($me)" -- - << \EOF

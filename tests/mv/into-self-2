@@ -23,8 +23,8 @@ if test "$VERBOSE" = yes; then
   mv --version
 fi
 
-. $srcdir/../lang-default
-. $srcdir/../test-lib.sh
+. $top_srcdir/tests/lang-default
+. $top_srcdir/tests/test-lib.sh
 cleanup_() { rm -rf "$other_partition_tmpdir"; }
 . "$abs_top_srcdir/tests/other-fs-tmpdir"
 

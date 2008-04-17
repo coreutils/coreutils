@@ -22,7 +22,7 @@ if test "$VERBOSE" = yes; then
   dd --version
 fi
 
-. $srcdir/../test-lib.sh
+. $top_srcdir/tests/test-lib.sh
 
 tmp_in=dd-in.$$
 tmp_in2=dd-in2.$$

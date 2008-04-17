@@ -21,8 +21,8 @@ if test "$VERBOSE" = yes; then
   touch --version
 fi
 
-. $srcdir/../envvar-check
-. $srcdir/../test-lib.sh
+. $top_srcdir/tests/envvar-check
+. $top_srcdir/tests/test-lib.sh
 require_root_
 
 group_num=$(id -g $NON_ROOT_USERNAME)

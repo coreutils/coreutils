@@ -21,7 +21,7 @@ if test "$VERBOSE" = yes; then
   touch --version
 fi
 
-. $srcdir/../test-lib.sh
+. $top_srcdir/tests/test-lib.sh
 
 mkfifo_or_skip_ fifo
 

@@ -2,7 +2,7 @@
 # -*- perl -*-
 # Basic tests for "fmt".
 
-# Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007 Free Software
+# Copyright (C) 2001, 2002, 2003, 2004, 2005-2008 Free Software
 # Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 : ${srcdir=.}
-. $srcdir/../require-perl
+. $top_srcdir/tests/require-perl
 
 # Export this to avoid hassles when run in a UTF-8 locale,
 # since we use 8-bit characters below, and those values are

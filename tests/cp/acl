@@ -18,7 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Make sure we get English translations.
-. $srcdir/../lang-default
+. $top_srcdir/tests/lang-default
 
 if test "$VERBOSE" = yes; then
   set -x
@@ -27,7 +27,7 @@ if test "$VERBOSE" = yes; then
   setfacl --version
 fi
 
-. $srcdir/../test-lib.sh
+. $top_srcdir/tests/test-lib.sh
 require_acl_
 
 # Skip this test if cp was built without ACL support:

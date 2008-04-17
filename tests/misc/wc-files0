@@ -1,7 +1,7 @@
 #!/bin/sh
 # Show that wc's new --files0-from option works.
 
-# Copyright (C) 2006, 2007 Free Software Foundation, Inc.
+# Copyright (C) 2006-2008 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,8 +21,8 @@ if test "$VERBOSE" = yes; then
   wc --version
 fi
 
-. $srcdir/../lang-default
-. $srcdir/../test-lib.sh
+. $top_srcdir/tests/lang-default
+. $top_srcdir/tests/test-lib.sh
 
 echo 2 > 2b || framework_failure
 echo 2 words > 2w || framework_failure

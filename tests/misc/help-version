@@ -25,8 +25,8 @@ test "$VERBOSE" = yes && set -x
 test "x$SHELL" = x && SHELL=/bin/sh
 export SHELL
 
-. $srcdir/../envvar-check
-. $srcdir/../test-lib.sh
+. $top_srcdir/tests/envvar-check
+. $top_srcdir/tests/test-lib.sh
 
 expected_failure_status_nohup=127
 expected_failure_status_printenv=2

@@ -86,6 +86,39 @@ uid_is_privileged_()
   esac
 }
 
+# Convert an ls-style permission string, like drwxr----x and -rw-r-x-wx
+# to the equivalent chmod --mode (-m) argument, (=,u=rwx,g=r,o=x and
+# =,u=rw,g=rx,o=wx).  Ignore ACLs.
+rwx_to_mode_()
+{
+  case $# in
+    1) rwx=$1;;
+    *) echo "$0: wrong number of arguments" 1>&2
+      echo "Usage: $0 ls-style-mode-string" 1>&2
+      return;;
+  esac
+
+  case $rwx in
+    [ld-][rwx-][rwx-][rwxsS-][rwx-][rwx-][rwxsS-][rwx-][rwx-][rwxtT-]) ;;
+    [ld-][rwx-][rwx-][rwxsS-][rwx-][rwx-][rwxsS-][rwx-][rwx-][rwxtT-]+) ;;
+    *) echo "$0: invalid mode string: $rwx" 1>&2; return;;
+  esac
+
+  # Perform these conversions:
+  # S  s
+  # s  xs
+  # T  t
+  # t  xt
+  # The `T' and `t' ones are only valid for `other'.
+  s='s/S/@/;s/s/x@/;s/@/s/'
+  t='s/T/@/;s/t/x@/;s/@/t/'
+
+  u=`echo $rwx|sed 's/^.\(...\).*/,u=\1/;s/-//g;s/^,u=$//;'$s`
+  g=`echo $rwx|sed 's/^....\(...\).*/,g=\1/;s/-//g;s/^,g=$//;'$s`
+  o=`echo $rwx|sed 's/^.......\(...\).*/,o=\1/;s/-//g;s/^,o=$//;'$s';'$t`
+  echo "=$u$g$o"
+}
+
 skip_if_()
 {
   case $1 in
@@ -145,7 +178,7 @@ test_dir_=$(pwd)
 this_test_() { echo "./$0" | sed 's,.*/,,'; }
 this_test=$(this_test_)
 
-. $srcdir/../envvar-check
+. $top_srcdir/tests/envvar-check
 
 # This is a stub function that is run upon trap (upon regular exit and
 # interrupt).  Override it with a per-test function, e.g., to unmount

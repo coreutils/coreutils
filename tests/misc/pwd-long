@@ -18,9 +18,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 : ${srcdir=.}
-. $srcdir/../require-perl
+. $top_srcdir/tests/require-perl
 
-. $srcdir/../test-lib.sh
+. $top_srcdir/tests/test-lib.sh
 require_readable_root_
 
 ARGV_0=$0

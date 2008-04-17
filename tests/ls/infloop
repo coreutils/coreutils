@@ -2,7 +2,7 @@
 # show that the following no longer makes ls infloop
 # mkdir loop; cd loop; ln -s ../loop sub; ls -RL
 
-# Copyright (C) 2001-2002, 2004, 2006-2007 Free Software Foundation, Inc.
+# Copyright (C) 2001-2002, 2004, 2006-2008 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,8 +22,8 @@ if test "$VERBOSE" = yes; then
   ls --version
 fi
 
-. $srcdir/../lang-default
-. $srcdir/../test-lib.sh
+. $top_srcdir/tests/lang-default
+. $top_srcdir/tests/test-lib.sh
 
 mkdir loop || framework_failure
 ln -s ../loop loop/sub || framework_failure

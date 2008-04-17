@@ -29,7 +29,7 @@ if test "$VERBOSE" = yes; then
   mkdir --version
 fi
 
-. $srcdir/../test-lib.sh
+. $top_srcdir/tests/test-lib.sh
 require_root_
 
 # FIXME: for now, skip it unconditionally

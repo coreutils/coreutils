@@ -22,9 +22,9 @@ if test "$VERBOSE" = yes; then
   cp --version
 fi
 
-. $srcdir/../envvar-check
-. $srcdir/../lang-default
-. $srcdir/../test-lib.sh
+. $top_srcdir/tests/envvar-check
+. $top_srcdir/tests/lang-default
+. $top_srcdir/tests/test-lib.sh
 
 mkfifo fifo ||
   skip_test_ "fifos not supported"

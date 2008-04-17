@@ -24,7 +24,7 @@ if test "$VERBOSE" = yes; then
   ls --version
 fi
 
-. $srcdir/../test-lib.sh
+. $top_srcdir/tests/test-lib.sh
 
 # Don't let a different umask perturb the results.
 umask 22

@@ -18,7 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 : ${srcdir=.}
-. $srcdir/../require-perl
+. $top_srcdir/tests/require-perl
 
 SCRIPT_NAME=$0
 export SCRIPT_NAME

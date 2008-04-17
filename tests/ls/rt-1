@@ -1,7 +1,7 @@
 #!/bin/sh
 # Make sure name is used as secondary key when sorting on mtime or ctime.
 
-# Copyright (C) 1998, 2001-2002, 2004, 2006-2007 Free Software Foundation, Inc.
+# Copyright (C) 1998, 2001-2002, 2004, 2006-2008 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-. $srcdir/../lang-default
+. $top_srcdir/tests/lang-default
 
 if test "$VERBOSE" = yes; then
   set -x
@@ -24,7 +24,7 @@ if test "$VERBOSE" = yes; then
   touch --version
 fi
 
-. $srcdir/../test-lib.sh
+. $top_srcdir/tests/test-lib.sh
 
 date=1998-01-15
 

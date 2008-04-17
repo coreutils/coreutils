@@ -1,6 +1,6 @@
 #!/bin/sh
 # Ensure that du counts the size of an inaccessible directory.
-# Copyright (C) 2007 Free Software Foundation, Inc.
+# Copyright (C) 2007-2008 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@ if test "$VERBOSE" = yes; then
   du --version
 fi
 
-. $srcdir/../test-lib.sh
+. $top_srcdir/tests/test-lib.sh
 skip_if_root_
 
 mkdir -p a/sub || framework_failure

@@ -1,7 +1,7 @@
 #!/bin/sh
 # Make sure that rm -r '' fails.
 
-# Copyright (C) 1998, 2003, 2005, 2007 Free Software Foundation, Inc.
+# Copyright (C) 1998, 2003, 2005, 2007-2008 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 # but relative to `/' rather than relative to the current directory.
 
 : ${srcdir=.}
-. $srcdir/../require-perl
+. $top_srcdir/tests/require-perl
 
 me=`echo $0|sed 's,.*/,,'`
 exec $PERL -w -I$srcdir/.. -MCoreutils -M"CuTmpdir qw($me)" -- - << \EOF

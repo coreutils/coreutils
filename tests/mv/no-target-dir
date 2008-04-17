@@ -2,7 +2,7 @@
 # ensure that --no-target-directory (-T) works when the destination is
 # an empty directory.
 
-# Copyright (C) 2006-2007 Free Software Foundation, Inc.
+# Copyright (C) 2006-2008 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@ if test "$VERBOSE" = yes; then
   mv --version
 fi
 
-. $srcdir/../test-lib.sh
+. $top_srcdir/tests/test-lib.sh
 
 mkdir -p d/sub empty src d2/sub e2 || framework_failure
 touch f || framework_failure

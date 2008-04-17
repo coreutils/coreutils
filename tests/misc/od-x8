@@ -2,7 +2,7 @@
 # verify that od -t x8 works properly
 # This would fail before coreutils-4.5.2.
 
-# Copyright (C) 2002, 2005-2007 Free Software Foundation, Inc.
+# Copyright (C) 2002, 2005-2008 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@ if test "$VERBOSE" = yes; then
   od --version
 fi
 
-. $srcdir/../test-lib.sh
+. $top_srcdir/tests/test-lib.sh
 
 od -t x8 /dev/null >/dev/null ||
   skip_test_ "od lacks support for 8-byte quantities"

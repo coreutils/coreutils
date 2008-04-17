@@ -24,7 +24,7 @@ if test "$VERBOSE" = yes; then
   ginstall --version
 fi
 
-. $srcdir/../test-lib.sh
+. $top_srcdir/tests/test-lib.sh
 
 fail=0
 

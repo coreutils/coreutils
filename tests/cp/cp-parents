@@ -2,7 +2,7 @@
 # cp -R --parents dir-specified-with-trailing-slash/ other-dir
 # would get a failed assertion.
 
-# Copyright (C) 2000, 2002, 2004, 2005, 2006-2007 Free Software
+# Copyright (C) 2000, 2002, 2004, 2005, 2006-2008 Free Software
 # Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
@@ -23,8 +23,8 @@ if test "$VERBOSE" = yes; then
   mv --version
 fi
 
-. $srcdir/../umask-check
-. $srcdir/../test-lib.sh
+. $top_srcdir/tests/umask-check
+. $top_srcdir/tests/test-lib.sh
 
 # Run the setgid check from the just-created directory.
 . "$abs_top_srcdir/tests/setgid-check"
