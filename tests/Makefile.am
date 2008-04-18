@@ -30,36 +30,24 @@ EXTRA_DIST =		\
 SUBDIRS = cut head join pr sort tac tail test tr uniq wc
 ## N O T E :: Please do not add new directories.
 
-all_t = t1 t2 t3 t4 t5 t6 t7 t8 t9 ta tb tc td
-.PHONY: check-root $(all_t)
-check-root: $(all_t)
+root_tests =					\
+  chown/basic					\
+  cp/cp-a-selinux				\
+  cp/preserve-gid				\
+  cp/special-bits				\
+  ls/nameless-uid				\
+  misc/chcon					\
+  mkdir/writable-under-readonly			\
+  mv/sticky-to-xpart				\
+  rm/fail-2eperm				\
+  rm/no-give-up					\
+  rm/one-file-system				\
+  tail-2/append-only				\
+  touch/now-owned-by-other
 
-t1:
-	$(MAKE) check TESTS=chown/basic
-t2:
-	$(MAKE) check TESTS=cp/special-bits
-t3:
-	$(MAKE) check TESTS=rm/no-give-up
-t4:
-	$(MAKE) check TESTS=rm/fail-2eperm
-t5:
-	$(MAKE) check TESTS=tail-2/append-only
-t6:
-	$(MAKE) check TESTS=rm/one-file-system
-t7:
-	$(MAKE) check TESTS=ls/nameless-uid
-t8:
-	$(MAKE) check TESTS=misc/chcon
-t9:
-	$(MAKE) check TESTS=cp/cp-a-selinux
-ta:
-	$(MAKE) check TESTS=mkdir/writable-under-readonly
-tb:
-	$(MAKE) check TESTS=mv/sticky-to-xpart
-tc:
-	$(MAKE) check TESTS=cp/preserve-gid
-td:
-	$(MAKE) check TESTS=touch/now-owned-by-other
+.PHONY: check-root
+check-root:
+	$(MAKE) check TESTS='$(root_tests)' SUBDIRS=
 
 check-recursive: root-hint
 
@@ -68,7 +56,7 @@ check-recursive: root-hint
 root-hint:
 	@echo '***********************************************************'
 	@echo "NOTICE: Some tests may be run only as root."
-	@echo "  Do \`make check-root' as \`root' to run these tests."
+	@echo "  See the 'Running tests as root' section in README."
 	@echo '***********************************************************'
 
 EXTRA_DIST += $(TESTS)

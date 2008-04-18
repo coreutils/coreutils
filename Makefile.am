@@ -57,7 +57,7 @@ ACLOCAL_AMFLAGS = -I m4
 
 # Some tests always need root privileges, others need them only sometimes.
 check-root:
-	cd tests && $(MAKE) $@
+	cd tests && $(MAKE) $@ SUBDIRS=
 
 # Just prior to distribution, ...
 # transform the automake-generated rule that runs `rm -f rm'.

@@ -266,14 +266,17 @@ sc_prohibit_jm_in_m4:
 	    { echo '$(ME): do not use jm_ in m4 macro names'		\
 	      1>&2; exit 1; } || :
 
+# Ensure that each root-requiring test is run via the "check-root" rule.
 sc_root_tests:
 	@if test -d tests \
 	      && grep check-root tests/Makefile.am>/dev/null 2>&1; then \
 	t1=sc-root.expected; t2=sc-root.actual;				\
 	grep -nl '^require_root_$$'					\
-	  $$($(VC_LIST) tests) |sed s,tests,., |sort > $$t1;		\
-	sed -n 's,	cd \([^ ]*\) .*MAKE..check TESTS=\(.*\),./\1/\2,p' \
-	  $(srcdir)/tests/Makefile.am |sort > $$t2;			\
+	  $$($(VC_LIST) tests) |sed s,tests/,, |sort > $$t1;		\
+	sed -n '/^root_tests =[	 ]*\\$$/,/[^\]$$/p'			\
+	  $(srcdir)/tests/Makefile.am					\
+	    | sed 's/^  *//;/^root_tests =/d'				\
+	    | tr -s '\012\\' '  ' | fmt -1 | sort > $$t2;		\
 	diff -u $$t1 $$t2 || diff=1;					\
 	rm -f $$t1 $$t2;						\
 	test "$$diff"							\
