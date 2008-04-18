@@ -66,6 +66,14 @@ my @Tests =
 				{AUX=> {f=> 'bar'}}, {EXIT=> 1}],
      ['bsd-segv', '--check', {IN=> {'z' => "MD5 ("}}, {EXIT=> 1},
       {ERR=> "$prog: z: no properly formatted MD5 checksum lines found\n"}],
+
+     # Ensure that when there's a NUL byte among the checksum hex digits
+     # we detect the invalid formatting and don't even open the file.
+     # Up to coreutils-6.10, this would report:
+     #   h: FAILED
+     #   md5sum: WARNING: 1 of 1 computed checksum did NOT match
+     ['nul-in-cksum', '--check', {IN=> {'h'=>("\0"x32)."  h\n"}}, {EXIT=> 1},
+      {ERR=> "$prog: h: no properly formatted MD5 checksum lines found\n"}],
     );
 
 # Insert the `--text' argument for each test.

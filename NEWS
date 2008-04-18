@@ -25,6 +25,13 @@ GNU coreutils NEWS                                    -*- outline -*-
   sha1sum, sha224sum, sha384sum, and sha512sum are affected, too.
   [bug introduced in coreutils-5.1.0]
 
+  md5sum -c would accept a NUL-containing checksum string like "abcd\0..."
+  and would unnecessarily read and compute the checksum of the named file,
+  and then compare that checksum to the invalid one: guaranteed to fail.
+  Now, it recognizes that the line is not valid and skips it.
+  sha1sum, sha224sum, sha384sum, and sha512sum are affected, too.
+  [bug present in the original version, in coreutils-4.5.1, 1995]
+
   "mkdir -Z x dir" no longer segfaults when diagnosing invalid context "x"
   mkfifo and mknod would fail similarly.  Now they're fixed.
 

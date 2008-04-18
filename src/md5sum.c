@@ -343,16 +343,19 @@ split_3 (char *s, size_t s_len,
   return true;
 }
 
+/* Return true if S is a NUL-terminated string of DIGEST_HEX_BYTES hex digits.
+   Otherwise, return false.  */
 static bool
 hex_digits (unsigned char const *s)
 {
-  while (*s)
+  unsigned int i;
+  for (i = 0; i < digest_hex_bytes; i++)
     {
       if (!isxdigit (*s))
         return false;
       ++s;
     }
-  return true;
+  return *s == '\0';
 }
 
 /* An interface to the function, DIGEST_STREAM.
