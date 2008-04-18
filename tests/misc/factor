@@ -22,7 +22,7 @@
 . $top_srcdir/tests/require-perl
 
 me=`echo $0|sed 's,.*/,,'`
-exec $PERL -w -I$srcdir/.. -MCoreutils -M"CuTmpdir qw($me)" -- - << \EOF
+exec $PERL -w -I$top_srcdir/tests -MCoreutils -M"CuTmpdir qw($me)" -- - <<\EOF
 require 5.003;
 use strict;
 
