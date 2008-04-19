@@ -102,7 +102,6 @@ EXEC 01;32
  # archives or compressed (bright red)
 .tar 01;31
 .tgz 01;31
-.svgz 01;31
 .arj 01;31
 .taz 01;31
 .lzh 01;31
@@ -141,6 +140,7 @@ EXEC 01;32
 .tiff 01;35
 .png 01;35
 .svg 01;35
+.svgz 01;35
 .mng 01;35
 .pcx 01;35
 .mov 01;35
@@ -162,6 +162,7 @@ EXEC 01;32
 .flc 01;35
 .avi 01;35
 .fli 01;35
+.flv 01;35
 .gl 01;35
 .dl 01;35
 .xcf 01;35
