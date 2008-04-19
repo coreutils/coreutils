@@ -523,7 +523,7 @@ writable-files:
 	    test -w $$file						\
 	      || { echo ERROR: $$file is not writable; fail=1; };	\
 	  done;								\
-	  test "$$fail" && exit 1 || :
+	  test "$$fail" && exit 1 || : ;				\
 	fi
 
 v_etc_file = lib/version-etc.c
