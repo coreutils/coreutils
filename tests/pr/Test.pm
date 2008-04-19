@@ -1,6 +1,6 @@
 # -*-perl-*-
 
-# Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2004, 2005, 2007
+# Copyright (C) 1996-2002, 2004, 2005, 2007-2008
 # Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
@@ -373,6 +373,16 @@ my @tv = (
 # Before coreutils-5.3.1, --pages=1:-1 would be treated like
 # --pages=1:18446744073709551615.
 ['neg-page', '--pages=1:-1', '', '', 1],
+
+# Up to coreutils-6.10, this would cause pr to decrement its
+# internal "input_position" below zero and sometimes segfault.
+['neg-inp-pos1', '-t -e', "\b\b\b\b\b\b\tx\n", "        x\n", 0],
+# NB: while there are 4 backspaces in the input, there are only 3 in the output
+['neg-inp-pos2', '-t -e', "abc\b\b\b\b\tx", "abc\b\b\b        x\n", 0],
+
+# This would clobber so much of the heap, it'd segfault or abort every time.
+['smash-heap', '-t -e300', "a".("\b"x50)."\t", "a\b".(" "x300)."\n", 0],
+['smash-heap8', '-t -e',   "a".("\b"x50)."\t", "a\b".(" "x  8)."\n", 0],
 );
 #']]);
 

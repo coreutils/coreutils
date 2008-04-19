@@ -2726,7 +2726,17 @@ char_to_clump (char c)
       *s = c;
     }
 
-  input_position += width;
+  /* Too many backspaces must put us in position 0 -- never negative.  */
+  if (width < 0 && input_position == 0)
+    {
+      chars = 0;
+      input_position = 0;
+    }
+  else if (width < 0 && input_position <= -width)
+    input_position = 0;
+  else
+    input_position += width;
+
   return chars;
 }
 

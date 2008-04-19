@@ -42,6 +42,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   "paste -d'\' file" no longer overruns memory (heap since coreutils-5.1.2,
   stack before then) [bug present in the original version, in 1992]
 
+  "pr -e" with a mix of backspaces and TABs no longer corrupts the heap
+  [bug present in the original version, in 1992]
+
   "ptx -F'\' long-file-name" would overrun a malloc'd buffer and corrupt
   the heap.  That was triggered by a lone backslash (or odd number of them)
   at the end of the option argument to --flag-truncation=STRING (-F),
