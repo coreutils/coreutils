@@ -173,6 +173,23 @@ mkfifo_or_skip_()
   fi
 }
 
+# Skip the current test if umask doesn't work as usual.
+# This test should be run in the temporary directory that ends
+# up being removed via the trap commands.
+working_umask_or_skip_()
+{
+  umask 022
+  touch file1 file2
+  chmod 644 file2
+  perms=`ls -l file1 file2 | sed 's/ .*//' | uniq`
+  rm -f file1 file2
+
+  case $perms in
+  *'
+  '*) skip_test_ 'your build directory has unusual umask semantics'
+  esac
+}
+
 test_dir_=$(pwd)
 
 this_test_() { echo "./$0" | sed 's,.*/,,'; }

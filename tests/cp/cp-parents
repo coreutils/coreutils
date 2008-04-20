@@ -23,8 +23,9 @@ if test "$VERBOSE" = yes; then
   mv --version
 fi
 
-. $top_srcdir/tests/umask-check
 . $top_srcdir/tests/test-lib.sh
+
+working_umask_or_skip_
 
 # Run the setgid check from the just-created directory.
 . "$abs_top_srcdir/tests/setgid-check"

@@ -22,8 +22,7 @@ EXTRA_DIST =		\
   sample-test		\
   setgid-check		\
   sparse-file		\
-  test-lib.sh		\
-  umask-check
+  test-lib.sh
 
 ## N O T E :: Please do not add new tests/ directories.
 ## There are too many already.  Put new tests in misc/.

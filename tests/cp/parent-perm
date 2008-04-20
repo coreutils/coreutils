@@ -24,7 +24,7 @@ fi
 . $top_srcdir/tests/envvar-check
 . $top_srcdir/tests/test-lib.sh
 
-. $abs_srcdir/../umask-check
+working_umask_or_skip_
 
 mkdir -p a/b/c a/b/d e || framework_failure
 touch a/b/c/foo a/b/d/foo || framework_failure
