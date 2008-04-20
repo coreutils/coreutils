@@ -3,7 +3,7 @@
 # is unreadable.  Perform this test only on systems with a usable getcwd
 # function that has this capability.
 
-# Copyright (C) 2007 Free Software Foundation, Inc.
+# Copyright (C) 2007-2008 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 
 if test "$VERBOSE" = yes; then
   set -x
-  pwd --version
+  env -- pwd --version
   readlink --version
 fi
 
@@ -38,10 +38,8 @@ mkdir -p a/b || framework_failure
 cd a/b || framework_failure
 chmod a=x .. || framework_failure
 
-pwd_exe="$abs_top_builddir/src/pwd"
-
 fail=0
-"$pwd_exe" > exp || fail=1
+env -- pwd > exp || fail=1
 readlink -ev . > out || fail=1
 
 compare out exp || fail=1

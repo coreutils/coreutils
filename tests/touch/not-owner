@@ -25,12 +25,11 @@ fi
 . $srcdir/../lang-default
 . $srcdir/../test-lib.sh
 
-test=$abs_top_builddir/src/test
-if $test -w /; then
+if env -- test -w /; then
   skip_test_ you have write access to /.
 fi
 
-if $test -O / || $test -G /; then
+if env -- test -O / || env -- test -G /; then
   skip_test_ "you own /."
 fi
 
