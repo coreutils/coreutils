@@ -4449,6 +4449,32 @@ status that does not depend on the result of the comparison.
 Upon normal completion @command{comm} produces an exit code of zero.
 If there is an error it exits with nonzero status.
 
+@macro checkOrderOption{cmd}
+If the @option{--check-order} option is given, unsorted inputs will
+cause a fatal error message.  If the option @option{--nocheck-order}
+is given, unsorted inputs will never cause an error message.  If
+neither of these options is given, wrongly sorted inputs are diagnosed
+only if an input file is found to contain unpairable lines.  If an
+input file is diagnosed as being unsorted, the @command{\cmd\} command
+will exit with a nonzero status (and the output should not be used).
+
+Forcing @command{\cmd\} to process wrongly sorted input files
+containing unpairable lines by specifying @option{--nocheck-order} is
+not guaranteed to produce any particular output.  The output will
+probably not correspond with whatever you hoped it would be.
+@end macro
+@checkOrderOption{comm}
+
+@table @samp
+
+@item --check-order
+Fail with an error message if either input file is wrongly ordered.
+
+@item --nocheck-order
+Do not check that both input files are in sorted order.
+
+@end table
+
 
 @node tsort invocation
 @section @command{tsort}: Topological sort
@@ -5290,18 +5316,7 @@ c c1 c2
 b b1 b2
 @end example
 
-If the @option{--check-order} option is given, unsorted inputs will
-cause a fatal error message.  If the option @option{--nocheck-order}
-is given, unsorted inputs will never cause an error message.  If
-neither of these options is given, wrongly sorted inputs are diagnosed
-only if an input file is found to contain unpairable lines.  If an
-input file is diagnosed as being unsorted, the @command{join} command
-will exit with a nonzero status (and the output should not be used).
-
-Forcing @command{join} to process wrongly sorted input files
-containing unpairable lines by specifying @option{--nocheck-order} is
-not guaranteed to produce any particular output.  The output will
-probably not correspond with whatever you hoped it would be.
+@checkOrderOption{join}
 
 The defaults are:
 @itemize

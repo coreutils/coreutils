@@ -51,8 +51,31 @@ static bool only_file_2;
 /* If true, print lines that are found in both files. */
 static bool both;
 
+/* If nonzero, we have seen at least one unpairable line. */
+static bool seen_unpairable;
+
+/* If nonzero, we have warned about disorder in that file. */
+static bool issued_disorder_warning[2];
+
+/* If nonzero, check that the input is correctly ordered. */
+static enum
+  {
+    CHECK_ORDER_DEFAULT,
+    CHECK_ORDER_ENABLED,
+    CHECK_ORDER_DISABLED
+  } check_input_order;
+
+enum
+{
+  CHECK_ORDER_OPTION = CHAR_MAX + 1,
+  NOCHECK_ORDER_OPTION
+};
+
+
 static struct option const long_options[] =
 {
+  {"check-order", no_argument, NULL, CHECK_ORDER_OPTION},
+  {"nocheck-order", no_argument, NULL, NOCHECK_ORDER_OPTION},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
@@ -86,6 +109,12 @@ and column three contains lines common to both files.\n\
   -1              suppress lines unique to FILE1\n\
   -2              suppress lines unique to FILE2\n\
   -3              suppress lines that appear in both files\n\
+"), stdout);
+      fputs (_("\
+\n\
+  --check-order     check that the input is correctly sorted, even\n\
+                      if all input lines are pairable\n\
+  --nocheck-order   do not check that the input is correctly sorted\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
@@ -132,6 +161,53 @@ writeline (const struct linebuffer *line, FILE *stream, int class)
   fwrite (line->buffer, sizeof (char), line->length, stream);
 }
 
+/* Check that successive input lines PREV and CURRENT from input file
+   WHATFILE are presented in order.
+
+   If the user specified --nocheck-order, the check is not made.
+   If the user specified --check-order, the problem is fatal.
+   Otherwise (the default), the message is simply a warning.
+
+   A message is printed at most once per input file.
+
+   This funtion was copied (nearly) verbatim from `src/join.c'. */
+
+static void
+check_order (const struct linebuffer *prev,
+	     const struct linebuffer *current,
+	     int whatfile)
+{
+
+  if (check_input_order != CHECK_ORDER_DISABLED
+      && ((check_input_order == CHECK_ORDER_ENABLED) || seen_unpairable))
+    {
+      if (!issued_disorder_warning[whatfile - 1])
+	{
+	  int order;
+
+	  if (hard_LC_COLLATE)
+	    order = xmemcoll (prev->buffer, prev->length - 1,
+			      current->buffer, current->length - 1);
+	  else
+	    {
+	      size_t len = min (prev->length, current->length) - 1;
+	      order = memcmp (prev->buffer, current->buffer, len);
+	    }
+
+	  if (order > 0)
+	    {
+	      error ((check_input_order == CHECK_ORDER_ENABLED
+		      ? EXIT_FAILURE : 0),
+		     0, _("file %d is not in sorted order"), whatfile);
+
+	      /* If we get to here, the message was just a warning, but we
+		 want only to issue it once. */
+	      issued_disorder_warning[whatfile - 1] = true;
+	    }
+	}
+    }
+}
+
 /* Compare INFILES[0] and INFILES[1].
    If either is "-", use the standard input for that file.
    Assume that each input file is sorted;
@@ -140,28 +216,42 @@ writeline (const struct linebuffer *line, FILE *stream, int class)
 static void
 compare_files (char **infiles)
 {
-  /* For each file, we have one linebuffer in lb1.  */
-  struct linebuffer lb1[2];
+  /* For each file, we have four linebuffers in lba. */
+  struct linebuffer lba[2][4];
 
   /* thisline[i] points to the linebuffer holding the next available line
      in file i, or is NULL if there are no lines left in that file.  */
   struct linebuffer *thisline[2];
 
+  /* all_line[i][alt[i][0]] also points to the linebuffer holding the
+     current line in file i. We keep two buffers of history around so we
+     can look two lines back when we get to the end of a file. */
+  struct linebuffer *all_line[2][4];
+
+  /* This is used to rotate through the buffers for each input file. */
+  int alt[2][3];
+
   /* streams[i] holds the input stream for file i.  */
   FILE *streams[2];
 
-  int i;
+  int i, j;
 
   /* Initialize the storage. */
   for (i = 0; i < 2; i++)
     {
-      initbuffer (&lb1[i]);
-      thisline[i] = &lb1[i];
+      for (j = 0; j < 4; j++)
+	{
+	  initbuffer (&lba[i][j]);
+	  all_line[i][j] = &lba[i][j];
+	}
+      alt[i][0] = 0;
+      alt[i][1] = 0;
+      alt[i][2] = 0;
       streams[i] = (STREQ (infiles[i], "-") ? stdin : fopen (infiles[i], "r"));
       if (!streams[i])
 	error (EXIT_FAILURE, errno, "%s", infiles[i]);
 
-      thisline[i] = readlinebuffer (thisline[i], streams[i]);
+      thisline[i] = readlinebuffer (all_line[i][alt[i][0]], streams[i]);
       if (ferror (streams[i]))
 	error (EXIT_FAILURE, errno, "%s", infiles[i]);
     }
@@ -169,6 +259,7 @@ compare_files (char **infiles)
   while (thisline[0] || thisline[1])
     {
       int order;
+      bool fill_up[2] = { false, false };
 
       /* Compare the next available lines of the two files.  */
 
@@ -195,25 +286,47 @@ compare_files (char **infiles)
       /* Output the line that is lesser. */
       if (order == 0)
 	writeline (thisline[1], stdout, 3);
-      else if (order > 0)
-	writeline (thisline[1], stdout, 2);
       else
-	writeline (thisline[0], stdout, 1);
+	{
+	  seen_unpairable = true;
+	  if (order > 0)
+	    writeline (thisline[1], stdout, 2);
+	  else
+	    writeline (thisline[0], stdout, 1);
+	}
 
       /* Step the file the line came from.
 	 If the files match, step both files.  */
       if (order >= 0)
-	{
-	  thisline[1] = readlinebuffer (thisline[1], streams[1]);
-	  if (ferror (streams[1]))
-	    error (EXIT_FAILURE, errno, "%s", infiles[1]);
-	}
+	fill_up[1] = true;
       if (order <= 0)
-	{
-	  thisline[0] = readlinebuffer (thisline[0], streams[0]);
-	  if (ferror (streams[0]))
-	    error (EXIT_FAILURE, errno, "%s", infiles[0]);
-	}
+	fill_up[0] = true;
+
+      for (i = 0; i < 2; i++)
+	if (fill_up[i])
+	  {
+	    /* Rotate the buffers for this file. */
+	    alt[i][2] = alt[i][1];
+	    alt[i][1] = alt[i][0];
+	    alt[i][0] = (alt[i][0] + 1) & 0x03;
+
+	    thisline[i] = readlinebuffer (all_line[i][alt[i][0]], streams[i]);
+
+	    if (thisline[i])
+	      check_order (all_line[i][alt[i][1]], thisline[i], i + 1);
+
+	    /* If this is the end of the file we may need to re-check
+	       the order of the previous two lines, since we might have
+	       discovered an unpairable match since we checked before. */
+	    else if (all_line[i][alt[i][2]]->buffer)
+	      check_order (all_line[i][alt[i][2]],
+			   all_line[i][alt[i][1]], i + 1);
+
+	    if (ferror (streams[i]))
+	      error (EXIT_FAILURE, errno, "%s", infiles[i]);
+
+	    fill_up[i] = false;
+	  }
     }
 
   for (i = 0; i < 2; i++)
@@ -239,6 +352,10 @@ main (int argc, char **argv)
   only_file_2 = true;
   both = true;
 
+  seen_unpairable = false;
+  issued_disorder_warning[0] = issued_disorder_warning[1] = false;
+  check_input_order = CHECK_ORDER_DEFAULT;
+
   while ((c = getopt_long (argc, argv, "123", long_options, NULL)) != -1)
     switch (c)
       {
@@ -252,6 +369,14 @@ main (int argc, char **argv)
 
       case '3':
 	both = false;
+	break;
+
+      case NOCHECK_ORDER_OPTION:
+	check_input_order = CHECK_ORDER_DISABLED;
+	break;
+
+      case CHECK_ORDER_OPTION:
+	check_input_order = CHECK_ORDER_ENABLED;
 	break;
 
       case_GETOPT_HELP_CHAR;
@@ -279,5 +404,8 @@ main (int argc, char **argv)
 
   compare_files (argv + optind);
 
-  exit (EXIT_SUCCESS);
+  if (issued_disorder_warning[0] || issued_disorder_warning[1])
+    exit (EXIT_FAILURE);
+  else
+    exit (EXIT_SUCCESS);
 }

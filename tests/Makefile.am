@@ -146,6 +146,7 @@ TESTS =						\
   misc/base64					\
   misc/basename					\
   misc/close-stdout				\
+  misc/comm					\
   misc/csplit					\
   misc/date-sec					\
   misc/dircolors				\

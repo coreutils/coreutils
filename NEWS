@@ -9,6 +9,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New features
 
+  comm now verifies that the inputs are in sorted order.  This check can
+  be turned off with the --nocheck-order option.
+
   md5sum now accepts the new option, --quiet, to suppress the printing of
   'OK' messages.  sha1sum, sha224sum, sha384sum, and sha512sum accept it, too.
 
