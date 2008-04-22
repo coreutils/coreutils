@@ -259,7 +259,7 @@ mk="$srcdir/src/Makefile.am"
 v=EXTRA_PROGRAMS
 for gl_i in `sed -n '/^'$v' =/,/[[^\]]$/p' $mk \
     | sed 's/^  *//;/^\$.*/d;/^'$v' =/d' \
-    | tr -s '\\012\\\\' '  '`; do
+    | tr -s '\\015\\012\\\\' '  '`; do
   gl_ADD_PROG([optional_bin_progs], $gl_i)
 done
 
@@ -310,10 +310,11 @@ case " $optional_bin_progs " in
   *)        INSTALL_SU=no ;;
 esac
 
-MAN=`echo "$optional_bin_progs "|sed 's/ /.1 /g;s/ $//'`
+MAN=`echo "$optional_bin_progs "|sed 's/ /.1 /g;s/ $//'|tr -d '\\015\\012'`
 
 # Change ginstall.1 to "install.h" in $MAN.
-MAN=`for m in $MAN; do test $m = ginstall.1 && m=install.1; echo $m; done | tr '\012' ' '; echo`
+MAN=`for m in $MAN; do test $m = ginstall.1 && m=install.1; echo $m; done \
+  | tr '\015\012' ' '; echo`
 
 # Remove [.1, since writing a portable rule for it in man/Makefile.am
 # is not practical.  The sed LHS below uses the autoconf quadrigraph
