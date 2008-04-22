@@ -431,16 +431,17 @@ NEWS_hash = \
      $(srcdir)/NEWS | md5sum -)
 
 # Ensure that we don't accidentally insert an entry into an old NEWS block.
-old_NEWS_hash = c58d611d93d218181ed77f81ff2395ff  -
 sc_immutable_NEWS:
 	@if test -f $(srcdir)/NEWS; then				\
 	  test "$(NEWS_hash)" = '$(old_NEWS_hash)' && : ||		\
 	    { echo '$(ME): you have modified old NEWS' 1>&2; exit 1; };	\
 	fi
 
-# Update the hash stored above.  Do this after each release.
+# Update the hash stored above.  Do this after each release and
+# for any corrections to old entries.
 update-NEWS-hash: NEWS
-	perl -pi -e 's/^(old_NEWS_hash = ).*/$${1}'"$(NEWS_hash)/" $(ME)
+	perl -pi -e 's/^(old_NEWS_hash = ).*/$${1}'"$(NEWS_hash)/" \
+	  $(srcdir)/cfg.mk
 
 # Ensure that the c99-to-c89 patch applies cleanly.
 patch-check:
