@@ -42,6 +42,7 @@ endif
 
 PREV_VERSION := $(shell cat $(prev_version_file))
 VERSION_REGEXP = $(subst .,\.,$(VERSION))
+PREV_VERSION_REGEXP = $(subst .,\.,$(PREV_VERSION))
 
 ifeq ($(VC),$(GIT))
 this-vc-tag = v$(VERSION)
@@ -424,6 +425,22 @@ sc_perl_coreutils_test:
 	      echo 1>&2 '(exit $$fail); exit $$fail';			\
 	      exit 1; } || :;						\
 	fi
+
+NEWS_hash = \
+  $$(sed -n '/^\*.* $(PREV_VERSION_REGEXP) ([0-9-]*)/,$$p' \
+     $(srcdir)/NEWS | md5sum -)
+
+# Ensure that we don't accidentally insert an entry into an old NEWS block.
+old_NEWS_hash = c58d611d93d218181ed77f81ff2395ff  -
+sc_immutable_NEWS:
+	@if test -f $(srcdir)/NEWS; then				\
+	  test "$(NEWS_hash)" = '$(old_NEWS_hash)' && : ||		\
+	    { echo '$(ME): you have modified old NEWS' 1>&2; exit 1; };	\
+	fi
+
+# Update the hash stored above.  Do this after each release.
+update-NEWS-hash: NEWS
+	perl -pi -e 's/^(old_NEWS_hash = ).*/$${1}'"$(NEWS_hash)/" $(ME)
 
 # Ensure that the c99-to-c89 patch applies cleanly.
 patch-check:
