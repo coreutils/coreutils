@@ -407,6 +407,24 @@ sc_GPL_version:
 	@grep -n 'either ''version [^3]' $$($(VC_LIST_EXCEPT)) &&	\
 	  { echo '$(ME): GPL vN, N!=3' 1>&2; exit 1; } || :
 
+exec_perl_re = \
+  exec \$$PERL -w -I\$$top_srcdir/tests -MCoreutils \
+    -M"CuTmpdir qw(\$$me)" -- - <<\\EOF
+# Ensure that each test invoking $PERL with -MCoreutils uses the same line.
+sc_perl_coreutils_test:
+	@if test -f $(srcdir)/tests/Coreutils.pm; then			\
+	  die=0;							\
+	  for i in $$(grep -l '^exec  *\$$PERL.*MCoreutils'		\
+		$$($(VC_LIST) tests)); do				\
+	    grep '$(exec_perl_re)' $$i > /dev/null			\
+	      && : || { die=1; echo $$i; }				\
+	  done;								\
+	  test $$die = 1 &&						\
+	    { echo 1>&2 '$(ME): each of the above execs PERL differently:'; \
+	      echo 1>&2 '(exit $$fail); exit $$fail';			\
+	      exit 1; } || :;						\
+	fi
+
 # Ensure that the c99-to-c89 patch applies cleanly.
 patch-check:
 	rm -rf src-c89 $@.1 $@.2
