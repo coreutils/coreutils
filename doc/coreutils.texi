@@ -4473,8 +4473,15 @@ Fail with an error message if either input file is wrongly ordered.
 @item --nocheck-order
 Do not check that both input files are in sorted order.
 
-@end table
+Other options are:
 
+@item --output-delimiter=@var{str}
+Print @var{str} between adjacent output columns,
+rather than the default of a single TAB character.
+
+The delimiter @var{str} may not be empty.
+
+@end table
 
 @node tsort invocation
 @section @command{tsort}: Topological sort

@@ -115,6 +115,27 @@ my @Tests =
     {EXIT=>1},
     {OUT => "\t\t2\n"},
     {ERR => "$prog: file 1 is not in sorted order\n"}],
+
+   # alternate delimiter: ','
+   ['delim-comma', '--output-delimiter=,', @inputs,
+    {OUT=>"1\n,2\n,,3\n"} ],
+
+   # two-character alternate delimiter: '++'
+   ['delim-2char', '--output-delimiter=++', @inputs,
+    {OUT=>"1\n++2\n++++3\n"} ],
+
+   # invalid empty delimiter
+   ['delim-empty', '--output-delimiter=', @inputs, {EXIT=>1},
+    {ERR => "$prog: empty `--output-delimiter' not allowed\n"}],
+
+   # invalid dual delimiter
+   ['delim-dual', '--output-delimiter=,', '--output-delimiter=+',
+    @inputs, {EXIT=>1}, {ERR => "$prog: multiple delimiters specified\n"}],
+
+   # valid dual delimiter specification
+   ['delim-dual2', '--output-delimiter=,', '--output-delimiter=,', @inputs,
+    {OUT=>"1\n,2\n,,3\n"} ],
+
  );
 
 my $save_temps = $ENV{DEBUG};

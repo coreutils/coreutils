@@ -20,11 +20,6 @@ cp --recursive: use fts and *at functions to perform directory traversals
   become very long, and requires space and time that is quadratic in the
   depth of the hierarchy.  [Bo Borgerson is working on this]
 
-comm: add an option, --output-delimiter=STR
-  Files to change: src/comm.c, ChangeLog, NEWS, doc/coreutils.texi,
-  Add a new file, tests/misc/comm (use another file in that directory as
-  a template), to exercise the new option.  Suggestion from Dan Jacobson.
-
 printf:
   Now that gnulib supports *printf("%a"), import one of the
   *printf-posix modules so that printf(1) will support %a even on

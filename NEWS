@@ -12,6 +12,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   comm now verifies that the inputs are in sorted order.  This check can
   be turned off with the --nocheck-order option.
 
+  comm accepts new option, --output-delimiter=STR, that allows specification
+  of an output delimiter other than the default single TAB.
+
   md5sum now accepts the new option, --quiet, to suppress the printing of
   'OK' messages.  sha1sum, sha224sum, sha384sum, and sha512sum accept it, too.
 

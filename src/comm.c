@@ -65,10 +65,18 @@ static enum
     CHECK_ORDER_DISABLED
   } check_input_order;
 
+/* Output columns will be delimited with this string, which may be set
+   on the command-line with --output-delimiter=STR.  The default is a
+   single TAB character. */
+static char const *delimiter;
+
+/* For long options that have no equivalent short option, use a
+   non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
 {
   CHECK_ORDER_OPTION = CHAR_MAX + 1,
-  NOCHECK_ORDER_OPTION
+  NOCHECK_ORDER_OPTION,
+  OUTPUT_DELIMITER_OPTION
 };
 
 
@@ -76,6 +84,7 @@ static struct option const long_options[] =
 {
   {"check-order", no_argument, NULL, CHECK_ORDER_OPTION},
   {"nocheck-order", no_argument, NULL, NOCHECK_ORDER_OPTION},
+  {"output-delimiter", required_argument, NULL, OUTPUT_DELIMITER_OPTION},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
@@ -116,6 +125,9 @@ and column three contains lines common to both files.\n\
                       if all input lines are pairable\n\
   --nocheck-order   do not check that the input is correctly sorted\n\
 "), stdout);
+      fputs (_("\
+  --output-delimiter=STR  separate columns with STR\n\
+"), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       emit_bug_reporting_address ();
@@ -141,20 +153,20 @@ writeline (const struct linebuffer *line, FILE *stream, int class)
     case 2:
       if (!only_file_2)
 	return;
-      /* Print a TAB if we are printing lines from file 1.  */
+      /* Print a delimiter if we are printing lines from file 1.  */
       if (only_file_1)
-	putc ('\t', stream);
+	fputs (delimiter, stream);
       break;
 
     case 3:
       if (!both)
 	return;
-      /* Print a TAB if we are printing lines from file 1.  */
+      /* Print a delimiter if we are printing lines from file 1.  */
       if (only_file_1)
-	putc ('\t', stream);
-      /* Print a TAB if we are printing lines from file 2.  */
+	fputs (delimiter, stream);
+      /* Print a delimiter if we are printing lines from file 2.  */
       if (only_file_2)
-	putc ('\t', stream);
+	fputs (delimiter, stream);
       break;
     }
 
@@ -379,6 +391,17 @@ main (int argc, char **argv)
 	check_input_order = CHECK_ORDER_ENABLED;
 	break;
 
+      case OUTPUT_DELIMITER_OPTION:
+	if (delimiter && !STREQ (delimiter, optarg))
+	  error (EXIT_FAILURE, 0, _("multiple delimiters specified"));
+	delimiter = optarg;
+	if (!*delimiter)
+	  {
+	    error (EXIT_FAILURE, 0, _("empty %s not allowed"),
+		   quote ("--output-delimiter"));
+	  }
+	break;
+
       case_GETOPT_HELP_CHAR;
 
       case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
@@ -401,6 +424,10 @@ main (int argc, char **argv)
       error (0, 0, _("extra operand %s"), quote (argv[optind + 2]));
       usage (EXIT_FAILURE);
     }
+
+  /* The default delimiter is a TAB. */
+  if (!delimiter)
+    delimiter = "\t";
 
   compare_files (argv + optind);
 
