@@ -102,7 +102,7 @@ main (int argc, char **argv)
       egid = getegid ();
       rgid = getgid ();
 
-      if (!print_group_list (getlogin (), ruid, rgid, egid, true))
+      if (!print_group_list (NULL, ruid, rgid, egid, true))
         ok = false;
       putchar ('\n');
     }
