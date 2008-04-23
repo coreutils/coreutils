@@ -179,11 +179,11 @@ main (int argc, char **argv)
 cannot display context when selinux not enabled or when displaying the id\n\
 of a different user"));
 
-  /* If we are on a selinux-enabled kernel, get our context.
-     Otherwise, leave the context variable alone - it has
-     been initialized known invalid value; if we see this invalid
-     value later, we will know we are on a non-selinux kernel.  */
-  if (selinux_enabled)
+  /* If we are on a selinux-enabled kernel and no user is specified,
+     get our context. Otherwise, leave the context variable alone -
+     it has been initialized known invalid value and will be not
+     displayed in print_full_info() */
+  if (selinux_enabled && argc == optind)
     {
       if (getcon (&context) && just_context)
         error (EXIT_FAILURE, 0, _("can't get process context"));

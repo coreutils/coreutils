@@ -163,6 +163,7 @@ TESTS =						\
   misc/groups-version				\
   misc/head-c					\
   misc/head-pos					\
+  misc/id-context				\
   misc/md5sum					\
   misc/md5sum-newline				\
   misc/mknod					\
