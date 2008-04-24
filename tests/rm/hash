@@ -18,14 +18,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-. $top_srcdir/tests/expensive
-
 if test "$VERBOSE" = yes; then
   set -x
   rm --version
 fi
 
 . $top_srcdir/tests/test-lib.sh
+expensive_
 
 # Create a hierarchy with 3*26 leaf directories, each at depth 153.
 echo "$0: creating 78 trees, each of depth 153; this will take a while..." >&2

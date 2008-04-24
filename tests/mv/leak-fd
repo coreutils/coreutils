@@ -23,14 +23,14 @@ if test "$VERBOSE" = yes; then
   mv --version
 fi
 
-# This test is relatively expensive, and might well evoke a
-# framework-failure on systems with a smaller command-line length
-. $top_srcdir/tests/expensive
-
 . $top_srcdir/tests/test-lib.sh
 skip_if_root_
 cleanup_() { rm -rf "$other_partition_tmpdir"; }
 . "$abs_top_srcdir/tests/other-fs-tmpdir"
+
+# This test is relatively expensive, and might well evoke a
+# framework-failure on systems with a smaller command-line length
+expensive_
 
 b="0 1 2 3 4 5 6 7 8 9
 a b c d e f g h i j k l m n o p q r s t u v w x y z

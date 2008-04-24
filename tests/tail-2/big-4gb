@@ -22,8 +22,8 @@ if test "$VERBOSE" = yes; then
   tail --version
 fi
 
-. $top_srcdir/tests/expensive
 . $top_srcdir/tests/test-lib.sh
+expensive_
 
 # Create a file of size exactly 4GB (2^32) with 8 bytes
 # at the beginning and another set of 8 bytes at the end.

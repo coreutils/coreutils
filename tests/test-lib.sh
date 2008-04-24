@@ -151,6 +151,19 @@ environment variable set to yes.  E.g.,
   fi
 }
 
+expensive_()
+{
+  if test "$RUN_EXPENSIVE_TESTS" != yes; then
+    skip_test_ '
+This test is relatively expensive, so it is disabled by default.
+To run it anyway, rerun make check with the RUN_EXPENSIVE_TESTS
+environment variable set to yes.  E.g.,
+
+  env RUN_EXPENSIVE_TESTS=yes make check
+'
+  fi
+}
+
 require_root_()
 {
   uid_is_privileged_ || skip_test_ "must be run as root"

@@ -21,10 +21,11 @@ if test "$VERBOSE" = yes; then
   du --version
 fi
 
+. $top_srcdir/tests/test-lib.sh
+
 # Call this an expensive test.  It's not that expensive, but command line
 # limitations might induce failure on some losing systems.
-. $top_srcdir/tests/expensive
-. $top_srcdir/tests/test-lib.sh
+expensive_
 
 # Create 1296 (36^2) files.
 # Their names and separating spaces take up 3887 bytes.

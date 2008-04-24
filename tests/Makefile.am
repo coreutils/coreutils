@@ -12,7 +12,6 @@ EXTRA_DIST =		\
   README		\
   check.mk		\
   envvar-check		\
-  expensive		\
   group-names		\
   input-tty		\
   lang-default		\
