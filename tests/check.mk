@@ -18,12 +18,16 @@
 # Collect test names from the line matching /^TESTS = \\$$/ to the following
 # one that does not end in '\'.
 _v = TESTS
+_w = root_tests
 vc_exe_in_TESTS: Makefile
 	@rm -f t1 t2
 	@if test -d $(top_srcdir)/.git && test $(srcdir) = .; then	\
-	  sed -n '/^$(_v) =[	 ]*\\$$/,/[^\]$$/p'			\
+	  { sed -n '/^$(_v) =[	 ]*\\$$/,/[^\]$$/p'			\
 		$(srcdir)/Makefile.am					\
-	    | sed 's/^  *//;/^\$$.*/d;/^$(_v) =/d'			\
+	    | sed 's/^  *//;/^\$$.*/d;/^$(_v) =/d';			\
+	    sed -n '/^$(_w) =[	 ]*\\$$/,/[^\]$$/p'			\
+		$(srcdir)/Makefile.am					\
+	    | sed 's/^  *//;/^\$$.*/d;/^$(_w) =/d'; }			\
 	    | tr -s '\012\\' '  ' | fmt -1 | sort -u > t1 &&		\
 	  for f in `cd $(top_srcdir) && build-aux/vc-list-files $(subdir)`; do \
 	    f=`echo $$f|sed 's!^$(subdir)/!!'`;				\

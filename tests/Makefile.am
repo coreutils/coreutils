@@ -88,7 +88,6 @@ TESTS =						\
   rm/empty-inacc				\
   rm/empty-name					\
   rm/f-1					\
-  rm/fail-2eperm				\
   rm/fail-eacces				\
   rm/fail-eperm					\
   rm/hash					\
@@ -101,8 +100,6 @@ TESTS =						\
   rm/interactive-once				\
   rm/ir-1					\
   rm/isatty					\
-  rm/no-give-up					\
-  rm/one-file-system				\
   rm/r-1					\
   rm/r-2					\
   rm/r-3					\
@@ -136,7 +133,6 @@ TESTS =						\
   misc/pr					\
   misc/df-P					\
   misc/pwd-unreadable-parent			\
-  misc/chcon					\
   misc/chcon-fail				\
   misc/selinux					\
   misc/cut					\
@@ -218,7 +214,6 @@ TESTS =						\
   chmod/thru-dangling				\
   chmod/umask-x					\
   chmod/usage					\
-  chown/basic					\
   chown/deref					\
   chown/preserve-root				\
   chown/separator				\
@@ -228,7 +223,6 @@ TESTS =						\
   cp/backup-dir					\
   cp/backup-is-src				\
   cp/cp-HL					\
-  cp/cp-a-selinux				\
   cp/cp-deref					\
   cp/cp-i					\
   cp/cp-mv-backup				\
@@ -251,13 +245,11 @@ TESTS =						\
   cp/parent-perm-race				\
   cp/perm					\
   cp/preserve-2					\
-  cp/preserve-gid				\
   cp/proc-zero-len				\
   cp/r-vs-symlink				\
   cp/same-file					\
   cp/slink-2-slink				\
   cp/sparse					\
-  cp/special-bits				\
   cp/special-f					\
   cp/src-base-dot				\
   cp/symlink-slash				\
@@ -306,7 +298,6 @@ TESTS =						\
   ls/infloop					\
   ls/inode					\
   ls/m-option					\
-  ls/nameless-uid				\
   ls/no-arg					\
   ls/proc-selinux-segfault			\
   ls/recursive					\
@@ -328,7 +319,6 @@ TESTS =						\
   mkdir/selinux					\
   mkdir/special-1				\
   mkdir/t-slash					\
-  mkdir/writable-under-readonly			\
   mv/acl					\
   mv/atomic					\
   mv/atomic2					\
@@ -365,7 +355,6 @@ TESTS =						\
   mv/partition-perm				\
   mv/perm-1					\
   mv/reply-no					\
-  mv/sticky-to-xpart				\
   mv/to-symlink					\
   mv/trailing-slash				\
   mv/update					\
@@ -376,7 +365,6 @@ TESTS =						\
   rmdir/fail-perm				\
   rmdir/ignore					\
   rmdir/t-slash					\
-  tail-2/append-only				\
   tail-2/assert					\
   tail-2/assert-2				\
   tail-2/big-4gb				\
@@ -392,9 +380,9 @@ TESTS =						\
   touch/no-create-missing			\
   touch/no-rights				\
   touch/not-owner				\
-  touch/now-owned-by-other			\
   touch/obsolescent				\
   touch/read-only				\
-  touch/relative
+  touch/relative				\
+  $(root_tests)
 
 include $(top_srcdir)/tests/check.mk
