@@ -41,9 +41,7 @@ for u in 31 37 2; do
 	  for o_perm in r w x rw wx xr rwx; do
 	    touch src || exit 1
 	    chmod u=r,g=rx,o= src || exit 1
-	    set _ `ls -l src`
-	    shift
-	    expected_perms=$1
+	    expected_perms=$(stat --format=%A src)
 	    rm -f dest
 	    test $existing_dest = yes && {
 	      touch dest || exit 1
@@ -52,8 +50,7 @@ for u in 31 37 2; do
 	    $cmd $force src dest || exit 1
 	    test "$cmd" = mv && test -f src && exit 1
 	    test "$cmd" = cp && { test -f src || exit 1; }
-	    set _ `ls -l dest`
-	    shift
+	    actual_perms=$(stat --format=%A dest)
 
 	    case "$cmd:$force:$existing_dest" in
 	      cp:*:yes)
@@ -68,7 +65,7 @@ for u in 31 37 2; do
 		  expected_perms=`echo $expected_perms|sed 's/..\(..\).$/--\1-/'`
 		;;
 	    esac
-	    test _$1 = _$expected_perms || exit 1
+	    test _$actual_perms = _$expected_perms || exit 1
 	    # Perform only one iteration when there's no existing destination.
 	    test $existing_dest = no && break 3
 	  done
