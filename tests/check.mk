@@ -36,6 +36,9 @@ vc_exe_in_TESTS: Makefile
 check: vc_exe_in_TESTS
 .PHONY: vc_exe_in_TESTS
 
+built_programs = \
+  (cd $(top_builddir)/src && MAKEFLAGS= $(MAKE) -s built_programs.list)
+
 # Append this, because automake does the same.
 TESTS_ENVIRONMENT =				\
   abs_top_builddir='$(abs_top_builddir)'	\
