@@ -23,10 +23,9 @@ EXTRA_DIST =		\
   sparse-file		\
   test-lib.sh
 
-## N O T E :: Please do not add new tests/ directories.
-## There are too many already.  Put new tests in misc/.
+## N O T E :: Do not add more names to this list.
+## N O T E :: Even these are expected to go away.
 SUBDIRS = cut head join pr sort tac tail test tr uniq wc
-## N O T E :: Please do not add new directories.
 
 root_tests =					\
   chown/basic					\
@@ -66,46 +65,52 @@ EXTRA_DIST += $(TESTS)
 # will execute the test script rather than the standard utility.
 
 # Regarding ordering in SUBDIRS, place early in the list the tools that
-# are most commonly used in test scripts.  Every test script uses rm
-# and chmod, so they have to be very early.
-# Ordering within misc/ should handle the rest.
+# are most commonly used in test scripts.  Nearly every test script uses
+# rm and chmod, so they appear early in the list.
 
-# Ordering:
+# Notes on the ordering of these tests:
 # help-version comes early because it's a basic sanity test.
 # Put seq early, since lots of other tests use it.
+# Put tests that sleep early, but not all together, so in parallel builds
+# they share time with tests that burn CPU, not with others that sleep.
 # Put head-elide-tail early, because it's long-running.
 
 TESTS =						\
   misc/help-version				\
-  chgrp/basic					\
   rm/cycle					\
+  chmod/no-x					\
+  chgrp/basic					\
   rm/dangling-symlink				\
+  misc/ls-time					\
   rm/deep-1					\
   rm/deep-2					\
   rm/dir-no-w					\
   rm/dir-nonrecur				\
   rm/dot-rel					\
+  rm/isatty					\
   rm/empty-inacc				\
   rm/empty-name					\
   rm/f-1					\
   rm/fail-eacces				\
   rm/fail-eperm					\
+  tail-2/assert					\
   rm/hash					\
   rm/i-1					\
   rm/i-never					\
   rm/i-no-r					\
+  tail-2/infloop-1				\
   rm/ignorable					\
   rm/inaccessible				\
   rm/interactive-always				\
   rm/interactive-once				\
   rm/ir-1					\
-  rm/isatty					\
   rm/r-1					\
   rm/r-2					\
   rm/r-3					\
   rm/r-4					\
   rm/readdir-bug				\
   rm/rm1					\
+  touch/empty-file				\
   rm/rm2					\
   rm/rm3					\
   rm/rm4					\
@@ -122,7 +127,7 @@ TESTS =						\
   chgrp/recurse					\
   misc/seq					\
   misc/head-elide-tail				\
-  misc/ls-time					\
+  tail-2/tail-n0f				\
   misc/ls-misc					\
   misc/date					\
   misc/ptx-overrun				\
@@ -208,7 +213,6 @@ TESTS =						\
   chmod/equal-x					\
   chmod/equals					\
   chmod/inaccessible				\
-  chmod/no-x					\
   chmod/octal					\
   chmod/setgid					\
   chmod/thru-dangling				\
@@ -365,16 +369,12 @@ TESTS =						\
   rmdir/fail-perm				\
   rmdir/ignore					\
   rmdir/t-slash					\
-  tail-2/assert					\
   tail-2/assert-2				\
   tail-2/big-4gb				\
-  tail-2/infloop-1				\
   tail-2/proc-ksyms				\
   tail-2/start-middle				\
-  tail-2/tail-n0f				\
   touch/dangling-symlink			\
   touch/dir-1					\
-  touch/empty-file				\
   touch/fail-diag				\
   touch/fifo					\
   touch/no-create-missing			\
