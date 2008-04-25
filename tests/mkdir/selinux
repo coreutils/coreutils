@@ -27,7 +27,6 @@ fi
 # mcstrans-0.2.8-1.fc9, the following commands may mistakenly exit
 # successfully, in spite of the invalid context string.
 
-. $top_srcdir/tests/envvar-check
 . $top_srcdir/tests/lang-default
 . $top_srcdir/tests/test-lib.sh
 

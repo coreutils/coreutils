@@ -21,7 +21,6 @@ if test "$VERBOSE" = yes; then
   ls --version
 fi
 
-. $top_srcdir/tests/envvar-check
 . $top_srcdir/tests/test-lib.sh
 
 f=/proc/sys
