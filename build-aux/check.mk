@@ -104,6 +104,8 @@ am__check_pre =					\
 $(SH_E_WORKAROUND);				\
 tst=`echo "$$src" | sed 's|^.*/||'`;		\
 rm -f $@-t;					\
+trap 'st=$$?; rm -f '\''$(abs_builddir)/$@-t'\''; (exit $$st); exit $$st' \
+  1 2 13 15;					\
 $(mkdir_p) "$$(echo '$@'|$(_dirname))" || exit;	\
 if test -f "./$$src"; then dir=./;		\
 elif test -f "$$src"; then dir=;		\
