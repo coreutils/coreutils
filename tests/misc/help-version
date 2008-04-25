@@ -40,6 +40,9 @@ expected_failure_status_vdir=2
 
 fail=0
 
+test "$built_programs" \
+  || { echo "$this_test: no programs built!?!" 1>&2; (exit $fail); exit $fail; }
+
 for lang in C fr da; do
   for i in $built_programs; do
 
