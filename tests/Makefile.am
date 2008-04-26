@@ -25,7 +25,7 @@ EXTRA_DIST =		\
 
 ## N O T E :: Do not add more names to this list.
 ## N O T E :: Even these are expected to go away.
-SUBDIRS = cut head join pr sort tac tail test tr uniq wc
+SUBDIRS = cut head join pr sort tac tail test tr uniq
 
 root_tests =					\
   chown/basic					\
@@ -141,6 +141,7 @@ TESTS =						\
   misc/chcon-fail				\
   misc/selinux					\
   misc/cut					\
+  misc/wc					\
   misc/wc-files0-from				\
   misc/wc-files0				\
   misc/cat-proc					\
