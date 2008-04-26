@@ -47,8 +47,6 @@ for lang in C fr da; do
 
     # Skip `test'; it doesn't accept --help or --version.
     test $i = test && continue;
-    test $i = chcon && continue;
-    test $i = runcon && continue;
 
     # false fails even when invoked with --help or --version.
     if test $i = false; then

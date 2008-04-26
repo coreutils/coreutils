@@ -400,6 +400,7 @@ one takes effect.\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
+      emit_bug_reporting_address ();
     }
   exit (status);
 }

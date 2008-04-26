@@ -4,6 +4,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  chcon, runcon: --help output now includes the bug-reporting address
+
   id with no options now prints the SELinux context only when invoked
   with no USERNAME argument.
 
