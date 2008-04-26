@@ -1,5 +1,5 @@
 /* uniq -- remove duplicate lines from a sorted file
-   Copyright (C) 86, 91, 1995-2007 Free Software Foundation, Inc.
+   Copyright (C) 86, 91, 1995-2008 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -213,9 +213,9 @@ find_field (const struct linebuffer *line)
 
   for (count = 0; count < skip_fields && i < size; count++)
     {
-      while (i < size && isblank (lp[i]))
+      while (i < size && isblank (to_uchar (lp[i])))
 	i++;
-      while (i < size && !isblank (lp[i]))
+      while (i < size && !isblank (to_uchar (lp[i])))
 	i++;
     }
 

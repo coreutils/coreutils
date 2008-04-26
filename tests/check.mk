@@ -45,6 +45,7 @@ built_programs = \
 
 # Append this, because automake does the same.
 TESTS_ENVIRONMENT =				\
+  LOCALE_FR='$(LOCALE_FR)'			\
   abs_top_builddir='$(abs_top_builddir)'	\
   abs_top_srcdir='$(abs_top_srcdir)'		\
   built_programs="`$(built_programs)`"		\

@@ -1,0 +1,58 @@
+#!/bin/sh
+# Test for a subtle, system-and-locale-dependent bug in uniq.
+
+# Copyright (C) 2008 Free Software Foundation, Inc.
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+case $LOCALE_FR in
+''|none) echo "$0: skipping this test -- no appropriate locale" 1>&2; exit 77;;
+esac
+
+: ${srcdir=.}
+. $top_srcdir/tests/require-perl
+
+me=`echo $0|sed 's,.*/,,'`
+exec $PERL -w -I$top_srcdir/tests -MCoreutils -M"CuTmpdir qw($me)" -- - <<\EOF
+require 5.003;
+use strict;
+
+my $prog = 'uniq';
+
+# Turn off localization of executable's output.
+@ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
+
+# I've only ever triggered the problem in a non-C locale.
+my $locale = $ENV{LOCALE_FR};
+
+# See if isblank returns true for nbsp.
+my $x = `env printf '\xa0'| LC_ALL=$locale tr '[:blank:]' x`;
+# If so, expect just one line of output in the schar test.
+# Otherwise, expect two.
+my $in = " y z\n\xa0 y z\n";
+my $schar_exp = $x eq 'x' ? " y z\n" : $in;
+
+my @Tests =
+    (
+     ['schar', '-f1',  {IN => $in}, {OUT => $schar_exp},
+      {ENV => "LC_ALL=$locale"},
+     ],
+    );
+
+my $save_temps = $ENV{DEBUG};
+my $verbose = $ENV{VERBOSE};
+
+my $fail = run_tests ($prog, $prog, \@Tests, $save_temps, $verbose);
+exit $fail;
+EOF

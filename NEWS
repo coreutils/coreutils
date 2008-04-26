@@ -13,6 +13,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   Printing of such large-numbered, kernel-only (not in /etc/group) group-IDs
   was suppressed in 6.11 due to ignorance that they are useful.
 
+  uniq: avoid subtle field-skipping malfunction due to isblank misuse.
+  In some locales on some systems, isblank(240) (aka &nbsp) is nonzero.
+  On such systems, uniq --skip-fields=N would fail to skip the proper
+  number of fields for some inputs.
+
   tac: avoid segfault with --regex (-r) and multiple files, e.g.,
   "echo > x; tac -r x x".  [bug present at least in textutils-1.8b, from 1992]
 

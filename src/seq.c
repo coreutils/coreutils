@@ -145,7 +145,7 @@ scan_arg (const char *arg)
     }
 
   /* We don't output spaces or '+' so don't include in width */
-  while (isspace (*arg) || *arg == '+')
+  while (isspace (to_uchar (*arg)) || *arg == '+')
     arg++;
 
   ret.width = strlen (arg);

@@ -1,5 +1,5 @@
 /* cut - remove parts of lines of files
-   Copyright (C) 1997-2007 Free Software Foundation, Inc.
+   Copyright (C) 1997-2008 Free Software Foundation, Inc.
    Copyright (C) 1984 David M. Ihnat
 
    This program is free software: you can redistribute it and/or modify
@@ -372,7 +372,8 @@ set_fields (const char *fieldstr)
 	  initial = (lhs_specified ? value : 1);
 	  value = 0;
 	}
-      else if (*fieldstr == ',' || isblank (*fieldstr) || *fieldstr == '\0')
+      else if (*fieldstr == ',' ||
+	       isblank (to_uchar (*fieldstr)) || *fieldstr == '\0')
 	{
 	  in_digits = false;
 	  /* Ending the string, or this field/byte sublist. */

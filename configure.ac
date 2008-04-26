@@ -335,6 +335,9 @@ AC_SUBST([CONFIG_STATUS_DEPENDENCIES])
 AM_GNU_GETTEXT([external], [need-formatstring-macros])
 AM_GNU_GETTEXT_VERSION([0.15])
 
+# For a test of uniq: it uses the $LOCALE_FR envvar.
+gt_LOCALE_FR
+
 AC_CONFIG_FILES(
   Makefile
   doc/Makefile

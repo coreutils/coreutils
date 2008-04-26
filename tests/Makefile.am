@@ -211,6 +211,7 @@ TESTS =						\
   misc/tsort					\
   misc/tty-eof					\
   misc/unexpand					\
+  misc/uniq					\
   chmod/c-option				\
   chmod/equal-x					\
   chmod/equals					\
