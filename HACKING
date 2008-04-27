@@ -26,10 +26,15 @@ That downloads the entire repository, including revision control history
 dating back to 1991.  The repository (the part you download, and which
 resides in coreutils/.git) currently weighs in at about 30MB.  So you
 don't want to download it more often than necessary.  Once downloaded,
-you can get incremental updates by running this command from inside
-your new coreutils/ directory:
+you can get incremental updates by running one of these commands from
+inside your new coreutils/ directory:
 
+If you have made *no* changes:
     git pull
+
+If you *have* made changes and committed them to "master", do this:
+    git fetch
+    git rebase origin
 
 
 *Before* you commit changes
