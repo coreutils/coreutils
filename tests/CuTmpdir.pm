@@ -45,11 +45,16 @@ sub chmod_1
 
 sub chmod_tree
 {
-  chdir $dir
-    or warn "$ME: failed to chdir to $dir: $!\n";
-  # Perform the equivalent of find . -type d -print0|xargs -0 chmod -R 700.
-  my $options = {untaint => 1, wanted => \&chmod_1};
-  find ($options, '.');
+  if (chdir $dir)
+    {
+      # Perform the equivalent of find . -type d -print0|xargs -0 chmod -R 700.
+      my $options = {untaint => 1, wanted => \&chmod_1};
+      find ($options, '.');
+    }
+  else
+    {
+      warn "$ME: failed to chdir to $dir: $!\n";
+    }
 }
 
 sub import {
