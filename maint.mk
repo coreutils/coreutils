@@ -102,7 +102,7 @@ sc_avoid_if_before_free:
 	    exit 1; } || :
 
 sc_cast_of_argument_to_free:
-	@grep -nE '\<free \(\(' $$($(VC_LIST_EXCEPT)) &&		\
+	@grep -nE '\<free *\( *\(' $$($(VC_LIST_EXCEPT)) &&		\
 	  { echo '$(ME): don'\''t cast free argument' 1>&2;		\
 	    exit 1; } || :
 
@@ -150,6 +150,7 @@ sc_file_system:
 	    'rewrite to use "file system"' 1>&2;			\
 	    exit 1; } || :
 
+# Don't use cpp tests of this symbol.  All code assumes config.h is included.
 sc_no_have_config_h:
 	@grep -n '^# *if.*HAVE''_CONFIG_H' $$($(VC_LIST_EXCEPT)) &&	\
 	  { echo '$(ME): found use of HAVE''_CONFIG_H; remove'		\
