@@ -52,18 +52,6 @@ sub chmod_tree
   find ($options, '.');
 }
 
-sub on_sig_remove_tmpdir
-{
-  my ($sig) = @_;
-  if (defined $dir)
-    {
-      chmod_tree;
-      File::Temp::cleanup;
-    }
-  $SIG{$sig} = 'DEFAULT';
-  kill $sig, $$;
-}
-
 sub import {
   my $prefix = $_[1];
 
@@ -82,9 +70,22 @@ sub import {
     or skip_test $prefix;
   $prefix = $1;
 
+  my $original_pid = $$;
+
+  my $on_sig_remove_tmpdir = sub {
+    my ($sig) = @_;
+    if ($$ == $original_pid and defined $dir)
+      {
+	chmod_tree;
+	File::Temp::cleanup;
+      }
+    $SIG{$sig} = 'DEFAULT';
+    kill $sig, $$;
+  };
+
   foreach my $sig (qw (INT TERM HUP))
     {
-      $SIG{$sig} = \&on_sig_remove_tmpdir;
+      $SIG{$sig} = $on_sig_remove_tmpdir;
     }
 
   $dir = File::Temp::tempdir("$prefix.tmp-XXXX", CLEANUP => 1 );
