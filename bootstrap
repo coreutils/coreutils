@@ -535,7 +535,9 @@ fi
 mam_template=tests/Makefile.am.in
 if test -f $mam_template; then
   PERL=perl
-  for tool in cut head join pr sort tac tail test tr uniq; do
+  tool_subdirs=`$PERL -ne '/^SUBDIRS = (.*)/ and print $1' tests/Makefile.am`
+  test "$tool_subdirs" = '' && { echo "$0: no more SUBDIRS: FIXME"1>&2; exit 1;}
+  for tool in $tool_subdirs; do
     m=tests/$tool/Makefile.am
     t=${m}t
     rm -f $m $t
