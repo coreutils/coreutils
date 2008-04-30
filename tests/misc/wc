@@ -29,8 +29,6 @@ my $prog = 'wc';
 # Turn off localisation of executable's ouput.
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
 
-my $degenerate = "d41d8cd98f00b204e9800998ecf8427e";
-
 my @Tests =
     (
      ['a0', '-c',  {IN_PIPE=>''},            {OUT=>"0\n"}],
