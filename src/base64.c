@@ -223,7 +223,7 @@ do_decode (FILE *in, FILE *out, bool ignore_garbage)
 	  if (k == 1 && ctx.i == 0)
 	    break;
 	  n = BLOCKSIZE;
-	  ok = base64_decode (&ctx, inbuf, (k == 0 ? sum : 0), outbuf, &n);
+	  ok = base64_decode_ctx (&ctx, inbuf, (k == 0 ? sum : 0), outbuf, &n);
 
 	  if (fwrite (outbuf, 1, n, out) < n)
 	    error (EXIT_FAILURE, errno, _("write error"));

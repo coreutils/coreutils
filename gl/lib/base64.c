@@ -449,20 +449,32 @@ decode_4 (char const *restrict in, size_t inlen,
    Initially, CTX must have been initialized via base64_decode_ctx_init.
    Subsequent calls to this function must reuse whatever state is recorded
    in that buffer.  It is necessary for when a quadruple of base64 input
-   bytes spans two input buffers.  */
+   bytes spans two input buffers.
+
+   If CTX is NULL then newlines are treated as garbage and the input
+   buffer is processed as a unit.  */
 
 bool
-base64_decode (struct base64_decode_context *ctx,
-	       const char *restrict in, size_t inlen,
-	       char *restrict out, size_t *outlen)
+base64_decode_ctx (struct base64_decode_context *ctx,
+		   const char *restrict in, size_t inlen,
+		   char *restrict out, size_t *outlen)
 {
   size_t outleft = *outlen;
-  bool flush_ctx = inlen == 0;
+  bool ignore_newlines = ctx != NULL;
+  bool flush_ctx = false;
+  unsigned int ctx_i = 0;
+
+  if (ignore_newlines)
+    {
+      ctx_i = ctx->i;
+      flush_ctx = inlen == 0;
+    }
+
 
   while (true)
     {
       size_t outleft_save = outleft;
-      if (ctx->i == 0 && !flush_ctx)
+      if (ctx_i == 0 && !flush_ctx)
 	{
 	  while (true)
 	    {
@@ -482,7 +494,7 @@ base64_decode (struct base64_decode_context *ctx,
 
       /* Handle the common case of 72-byte wrapped lines.
 	 This also handles any other multiple-of-4-byte wrapping.  */
-      if (inlen && *in == '\n')
+      if (inlen && *in == '\n' && ignore_newlines)
 	{
 	  ++in;
 	  --inlen;
@@ -495,12 +507,17 @@ base64_decode (struct base64_decode_context *ctx,
 
       {
 	char const *in_end = in + inlen;
-	char const *non_nl = get_4 (ctx, &in, in_end, &inlen);
+	char const *non_nl;
+
+	if (ignore_newlines)
+	  non_nl = get_4 (ctx, &in, in_end, &inlen);
+	else
+	  non_nl = in;  /* Might have nl in this case. */
 
 	/* If the input is empty or consists solely of newlines (0 non-newlines),
 	   then we're done.  Likewise if there are fewer than 4 bytes when not
-	   flushing context.  */
-	if (inlen == 0 || (inlen < 4 && !flush_ctx))
+	   flushing context and not treating newlines as garbage.  */
+	if (inlen == 0 || (inlen < 4 && !flush_ctx && ignore_newlines))
 	  {
 	    inlen = 0;
 	    break;
@@ -529,9 +546,9 @@ base64_decode (struct base64_decode_context *ctx,
    input was invalid, in which case *OUT is NULL and *OUTLEN is
    undefined. */
 bool
-base64_decode_alloc (struct base64_decode_context *ctx,
-		     const char *in, size_t inlen, char **out,
-		     size_t *outlen)
+base64_decode_alloc_ctx (struct base64_decode_context *ctx,
+			 const char *in, size_t inlen, char **out,
+			 size_t *outlen)
 {
   /* This may allocate a few bytes too many, depending on input,
      but it's not worth the extra CPU time to compute the exact size.
@@ -544,7 +561,7 @@ base64_decode_alloc (struct base64_decode_context *ctx,
   if (!*out)
     return true;
 
-  if (!base64_decode (ctx, in, inlen, *out, &needlen))
+  if (!base64_decode_ctx (ctx, in, inlen, *out, &needlen))
     {
       free (*out);
       *out = NULL;
