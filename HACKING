@@ -317,3 +317,30 @@ Miscellaneous useful git commands
   * git rebase -i master: run this from on a branch, and it gives
       you an interface with which you can reorder and modify arbitrary
       change sets on that branch.
+
+-------------------------------------------
+
+Finding things to do
+====================
+If you don't know where to start, check out the TODO file for projects
+that look like they're at your skill-/interest-level.  Another good
+option is always to improve tests.  You never know what you might
+uncover when you improve test coverage, and even if you don't find
+any bugs your contribution is sure to be appreciated.
+
+A good way to quickly assess current test coverage is to use "lcov"
+to generate HTML coverage reports.  Follow these steps:
+
+  # configure with coverage information
+  ./configure CFLAGS="-g -fprofile-arcs -ftest-coverage"
+  make
+  # run whatever tests you want, i.e.:
+  make check
+  # run lcov
+  lcov -t coreutils -q -d lib -b lib -o lib.lcov -c
+  lcov -t coreutils -q -d src -b src -o src.lcov -c
+  # generate HTML from the output
+  genhtml -p `pwd` -t coreutils -q --output-directory lcov-html *.lcov
+
+Then just open the index.html file (in the generated lcov-html directory)
+in your favorite web browser.

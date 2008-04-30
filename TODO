@@ -106,6 +106,9 @@ Remove suspicious uses of alloca (ones that may allocate more than
 Adapt these contribution guidelines for coreutils:
   http://sources.redhat.com/automake/contribute.html
 
+Improve test coverage.
+  See HACKING for instructions on generating an html test coverage report.
+  Find a program that has poor coverage and improve.
 
 Changes expected to go in, someday.
 ======================================
