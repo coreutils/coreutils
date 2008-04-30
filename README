@@ -145,7 +145,7 @@ I find that it is best to unpack and build as a non-privileged
 user, and then to run the following command as that user in order
 to run the privilege-requiring tests:
 
-  sudo env NON_ROOT_USERNAME=$USER make -k check-root
+  sudo env PATH="$PATH" NON_ROOT_USERNAME=$USER make -k check-root
 
 If you can run the tests as root, please do so and report any
 problems.  We get much less test coverage in that mode, and it's
