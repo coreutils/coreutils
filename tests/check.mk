@@ -43,8 +43,11 @@ check: vc_exe_in_TESTS
 built_programs = \
   (cd $(top_builddir)/src && MAKEFLAGS= $(MAKE) -s built_programs.list)
 
-# Append this, because automake does the same.
+# Note that the first line is a statement.  It ensures that environment
+# variables that can perturb tests are unset.  The rest are envvar settings
+# that propagate build-related Makefile variables to test scripts.
 TESTS_ENVIRONMENT =				\
+  . $(top_srcdir)/tests/envvar-check;		\
   LOCALE_FR='$(LOCALE_FR)'			\
   abs_top_builddir='$(abs_top_builddir)'	\
   abs_top_srcdir='$(abs_top_srcdir)'		\

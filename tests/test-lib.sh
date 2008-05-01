@@ -208,8 +208,6 @@ test_dir_=$(pwd)
 this_test_() { echo "./$0" | sed 's,.*/,,'; }
 this_test=$(this_test_)
 
-. $top_srcdir/tests/envvar-check
-
 # This is a stub function that is run upon trap (upon regular exit and
 # interrupt).  Override it with a per-test function, e.g., to unmount
 # a partition, or to undo any other global state changes.

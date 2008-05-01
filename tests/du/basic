@@ -21,7 +21,6 @@ if test "$VERBOSE" = yes; then
   du --version
 fi
 
-# DU_BLOCK_SIZE could cause problems
 . $top_srcdir/tests/lang-default
 . $top_srcdir/tests/test-lib.sh
 
