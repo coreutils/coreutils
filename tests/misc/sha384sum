@@ -26,7 +26,7 @@ use strict;
 
 (my $program_name = $0) =~ s|.*/||;
 
-# Turn off localisation of executable's ouput.
+# Turn off localization of executable's output.
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
 
 my $sha_degenerate = "38b060a751ac96384cd9327eb1b1e36a21fdb71114be07434c0cc7bf63f6e1da274edebfe76f65fbd51ad2f14898b95b";

@@ -26,7 +26,7 @@ use strict;
 
 (my $program_name = $0) =~ s|.*/||;
 
-# Turn off localisation of executable's ouput.
+# Turn off localization of executable's output.
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
 
 my $saved_ls_colors;

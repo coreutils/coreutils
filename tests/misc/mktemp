@@ -54,7 +54,7 @@ sub check_tmp($$)
     and do { unlink $file or die "$ME: failed to unlink $file: $!\n" };
 }
 
-# Turn off localisation of executable's ouput.
+# Turn off localization of executable's output.
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
 my $prog = 'mktemp';
 

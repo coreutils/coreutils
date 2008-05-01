@@ -31,7 +31,7 @@ use strict;
 
 (my $ME = $0) =~ s|.*/||;
 
-# Turn off localisation of executable's output.
+# Turn off localization of executable's output.
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
 
 my $prog = 'pr';

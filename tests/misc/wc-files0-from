@@ -31,7 +31,7 @@ use strict;
 
 my $prog = 'wc';
 
-# Turn off localization of executable's ouput.
+# Turn off localization of executable's output.
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
 
 my @Tests =
