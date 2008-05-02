@@ -23,39 +23,38 @@ fi
 
 . $top_srcdir/tests/test-lib.sh
 
-(echo ' '; yes) | head -n1000 | tr '\n' ' ' > in || framework_failure
+printf '%2030s\n' ' '|sed 's/../ y/g' > in || framework_failure
 
 cat <<\EOF > exp || framework_failure
-  y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
-  y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
-  y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
-  y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
-  y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
-  y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
-  y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
-  y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
-  y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
-  y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
-  y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
-  y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
-  y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
-  y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
-  y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
-  y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
-  y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
-  y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
-  y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
-  y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
-  y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
-  y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
-  y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
-  y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
-  y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
-  y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
-  y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
-  y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
-  y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
-  y y
+ y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
+ y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
+ y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
+ y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
+ y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
+ y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
+ y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
+ y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
+ y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
+ y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
+ y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
+ y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
+ y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
+ y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
+ y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
+ y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
+ y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
+ y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
+ y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
+ y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
+ y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
+ y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
+ y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
+ y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
+ y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
+ y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
+ y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
+ y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
+ y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y y
 EOF
 
 fail=0
