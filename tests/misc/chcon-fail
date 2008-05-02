@@ -7,7 +7,6 @@ if test "$VERBOSE" = yes; then
   chcon --version
 fi
 
-. $top_srcdir/tests/lang-default
 . $top_srcdir/tests/test-lib.sh
 
 fail=0

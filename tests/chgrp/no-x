@@ -22,7 +22,6 @@ if test "$VERBOSE" = yes; then
   chgrp --version
 fi
 
-. $top_srcdir/tests/lang-default
 . $top_srcdir/tests/group-names
 . $top_srcdir/tests/test-lib.sh
 skip_if_root_

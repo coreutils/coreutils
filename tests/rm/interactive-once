@@ -23,7 +23,6 @@ if test "$VERBOSE" = yes; then
   rm --version
 fi
 
-. $top_srcdir/tests/lang-default
 . $top_srcdir/tests/test-lib.sh
 
 mkdir -p dir1-1 dir2-1 dir2-2 || framework_failure

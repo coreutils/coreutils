@@ -22,7 +22,6 @@ if test "$VERBOSE" = yes; then
   rm --version
 fi
 
-. $top_srcdir/tests/lang-default
 . $top_srcdir/tests/test-lib.sh
 
 # Skip this test if your system has neither the openat-style functions

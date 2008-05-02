@@ -10,7 +10,6 @@ if test "$VERBOSE" = yes; then
   stat --version
 fi
 
-. $top_srcdir/tests/lang-default
 . $top_srcdir/tests/test-lib.sh
 skip_if_root_
 require_selinux_

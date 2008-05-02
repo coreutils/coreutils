@@ -25,7 +25,6 @@ fi
 
 
 # Make sure we get English translations.
-. $top_srcdir/tests/lang-default
 
 . $top_srcdir/tests/test-lib.sh
 skip_if_root_

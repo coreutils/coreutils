@@ -21,7 +21,6 @@ if test "$VERBOSE" = yes; then
   chgrp --version
 fi
 
-. $top_srcdir/tests/lang-default
 . $top_srcdir/tests/test-lib.sh
 require_root_
 

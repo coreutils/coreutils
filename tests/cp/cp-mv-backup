@@ -22,7 +22,6 @@ if test "$VERBOSE" = yes; then
 fi
 
 # Ensure that ls sorts the same way for everyone.
-. $top_srcdir/tests/lang-default
 
 . $top_srcdir/tests/test-lib.sh
 

@@ -21,7 +21,6 @@ if test "$VERBOSE" = yes; then
   split --version
 fi
 
-. $top_srcdir/tests/lang-default
 . $top_srcdir/tests/test-lib.sh
 
 touch in || framework_failure

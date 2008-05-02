@@ -21,7 +21,6 @@ if test "$VERBOSE" = yes; then
   nohup --version
 fi
 
-. $top_srcdir/tests/lang-default
 . $top_srcdir/tests/test-lib.sh
 
 fail=0
