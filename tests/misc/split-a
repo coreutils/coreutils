@@ -24,11 +24,25 @@ fi
 . $top_srcdir/tests/lang-default
 . $top_srcdir/tests/test-lib.sh
 
-fail=0
+a_z='a b c d e f g h i j k l m n o p q r s t u v w x y z'
 
 # Generate a 27-byte file
-# yes|tr -d y|head -n27 > in
-echo abcdefghijklmnopqrstuvwxyz > in
+printf %s $a_z 0 |tr -d ' ' > in || framework_failure
+
+files=
+for i in $a_z; do
+  files="${files}xa$i "
+done
+files="${files}xba"
+
+for f in $files; do
+  printf 'creating file `%s'\''\n' $f
+done > exp || framework_failure
+
+echo split: Output file suffixes exhausted \
+  > exp-too-short || framework_failure
+
+fail=0
 
 # This should fail.
 split -b 1 -a 1 in 2> err && fail=1
@@ -37,44 +51,22 @@ test -f xz || fail=1
 test -f xaa && fail=1
 test -f xaz && fail=1
 rm -f x*
+compare err exp-too-short || fail=1
 
 # With a longer suffix, it must succeed.
 split --verbose -b 1 -a 2 in > err || fail=1
-test -f xaa || fail=1
-test -f xaz || fail=1
-test -f xba || fail=1
+compare err exp || fail=1
+
+# Ensure that xbb is *not* created.
 test -f xbb && fail=1
 
-cat <<\EOF > exp
-creating file `xaa'
-creating file `xab'
-creating file `xac'
-creating file `xad'
-creating file `xae'
-creating file `xaf'
-creating file `xag'
-creating file `xah'
-creating file `xai'
-creating file `xaj'
-creating file `xak'
-creating file `xal'
-creating file `xam'
-creating file `xan'
-creating file `xao'
-creating file `xap'
-creating file `xaq'
-creating file `xar'
-creating file `xas'
-creating file `xat'
-creating file `xau'
-creating file `xav'
-creating file `xaw'
-creating file `xax'
-creating file `xay'
-creating file `xaz'
-creating file `xba'
-EOF
-
-compare err exp || fail=1
+# Ensure that the 27 others files *were* created, and with expected contents.
+n=1
+for f in $files; do
+  expected_byte=$(cut -b $n in)
+  b=$(cat $f) || fail=1
+  test "$b" = "$expected_byte" || fail=1
+  n=$(expr $n + 1)
+done
 
 (exit $fail); exit $fail
