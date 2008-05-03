@@ -22,8 +22,8 @@ if test "$VERBOSE" = yes; then
   du --version
 fi
 
-. $top_srcdir/tests/sparse-file
 . $top_srcdir/tests/test-lib.sh
+require_sparse_support_
 
 dd bs=1 seek=8G of=big < /dev/null 2> /dev/null
 if test $? != 0; then

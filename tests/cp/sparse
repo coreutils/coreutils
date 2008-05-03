@@ -21,8 +21,8 @@ if test "$VERBOSE" = yes; then
   cp --version
 fi
 
-. $top_srcdir/tests/sparse-file
 . $top_srcdir/tests/test-lib.sh
+require_sparse_support_
 
 # Create a sparse file.
 # It has to be at least 128K in order to be sparse on some systems.

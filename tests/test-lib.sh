@@ -197,6 +197,23 @@ of group names or numbers.  E.g.,
   esac
 }
 
+# Does the current (working-dir) file system support sparse files?
+require_sparse_support_()
+{
+  test $# = 0 || framework_failure
+  # Test whether we can create a sparse file.
+  # For example, on Darwin6.5 with a file system of type hfs, it's not possible.
+  # NTFS requires 128K before a hole appears in a sparse file.
+  t=sparse.$$
+  dd bs=1 seek=128K of=$t < /dev/null 2> /dev/null
+  set x `du -sk $t`
+  kb_size=$2
+  rm -f $t
+  if test $kb_size -ge 128; then
+    skip_test_ 'this file system does not support sparse files'
+  fi
+}
+
 mkfifo_or_skip_()
 {
   test $# = 1 || framework_failure

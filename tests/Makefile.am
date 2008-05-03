@@ -19,7 +19,6 @@ EXTRA_DIST =		\
   require-perl		\
   sample-test		\
   setgid-check		\
-  sparse-file		\
   test-lib.sh
 
 ## N O T E :: Do not add more names to this list.
