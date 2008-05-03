@@ -174,6 +174,29 @@ skip_if_root_() { uid_is_privileged_ && skip_test_ "must be run as non-root"; }
 error_() { echo "$0: $@" 1>&2; (exit 1); exit 1; }
 framework_failure() { error_ 'failure in testing framework'; }
 
+# Set `groups' to a space-separated list of at least two groups
+# of which the user is a member.
+require_membership_in_two_groups_()
+{
+  test $# = 0 || framework_failure
+
+  groups=${COREUTILS_GROUPS-`(id -G || /usr/xpg4/bin/id -G) 2>/dev/null`}
+  case "$groups" in
+    *' '*) ;;
+    *) skip_test_ '
+$0: this test requires that you be a member of more than one group,
+but running `id -G'\'' either failed or found just one.  If you really
+are a member of at least two groups, then rerun this test with
+COREUTILS_GROUPS set in your environment to the space-separated list
+of group names or numbers.  E.g.,
+
+  env COREUTILS_GROUPS='users cdrom' make check
+
+'
+     ;;
+  esac
+}
+
 mkfifo_or_skip_()
 {
   test $# = 1 || framework_failure

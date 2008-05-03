@@ -12,7 +12,6 @@ EXTRA_DIST =		\
   README		\
   check.mk		\
   envvar-check		\
-  group-names		\
   input-tty		\
   lang-default		\
   mk-script		\
