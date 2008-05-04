@@ -13,6 +13,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   Printing of such large-numbered, kernel-only (not in /etc/group) group-IDs
   was suppressed in 6.11 due to ignorance that they are useful.
 
+  tac: avoid segfault with --regex (-r) and multiple files, e.g.,
+  "echo > x; tac -r x x".  [bug present at least in textutils-1.8b, from 1992]
+
 
 * Noteworthy changes in release 6.11 (2008-04-19) [stable]
 

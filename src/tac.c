@@ -110,6 +110,7 @@ static size_t G_buffer_size;
 /* The compiled regular expression representing `separator'. */
 static struct re_pattern_buffer compiled_separator;
 static char compiled_separator_fastmap[UCHAR_MAX + 1];
+static struct re_registers regs;
 
 static struct option const longopts[] =
 {
@@ -212,7 +213,6 @@ tac_seekable (int input_fd, const char *file)
   char first_char = *separator;	/* Speed optimization, non-regexp. */
   char const *separator1 = separator + 1; /* Speed optimization, non-regexp. */
   size_t match_length1 = match_length - 1; /* Speed optimization, non-regexp. */
-  struct re_registers regs;
 
   /* Find the size of the input file. */
   file_pos = lseek (input_fd, (off_t) 0, SEEK_END);

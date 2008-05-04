@@ -1,0 +1,45 @@
+#!/bin/sh
+# -*- perl -*-
+
+# Copyright (C) 2008 Free Software Foundation, Inc.
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+: ${top_srcdir=../..}
+. $top_srcdir/tests/require-perl
+
+me=`echo $0|sed 's,.*/,,'`
+exec $PERL -w -I$top_srcdir/tests -MCoreutils -M"CuTmpdir qw($me)" -- - <<\EOF
+require 5.003;
+use strict;
+
+my $prog = 'tac';
+
+# Turn off localization of executable's output.
+@ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
+
+my @Tests =
+(
+  ['segfault', '-r', {IN=>"a\n"}, {IN=>"b\n"}, {OUT=>"a\nb\n"}],
+  ['segfault2','-r', {IN=>"a\nb\n"}, {IN=>"1\n2\n"}, {OUT=>"b\na\n2\n1\n"}],
+);
+
+# @Tests = triple_test \@Tests;
+
+my $save_temps = $ENV{DEBUG};
+my $verbose = $ENV{VERBOSE};
+
+my $fail = run_tests ($prog, $prog, \@Tests, $save_temps, $verbose);
+exit $fail;
+EOF

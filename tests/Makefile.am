@@ -203,6 +203,7 @@ TESTS =						\
   misc/stty-row-col				\
   misc/sum					\
   misc/sum-sysv					\
+  misc/tac					\
   misc/tac-continue				\
   misc/tee					\
   misc/tee-dash					\
