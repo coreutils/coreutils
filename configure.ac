@@ -347,7 +347,6 @@ AC_CONFIG_FILES(
   src/Makefile
   tests/Makefile
   gnulib-tests/Makefile
-  tests/cut/Makefile
   tests/join/Makefile
   tests/pr/Makefile
   tests/sort/Makefile
