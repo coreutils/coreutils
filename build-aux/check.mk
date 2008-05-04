@@ -100,6 +100,8 @@ _dirname = \
 # To be inserted before the command running the test.  Creates the
 # directory for the log if needed.  Stores in $dir the directory
 # containing $src, and passes TESTS_ENVIRONMENT.
+# Save and restore TERM around use of TESTS_ENVIRONMENT,
+# in case that unsets it.
 am__check_pre =					\
 $(SH_E_WORKAROUND);				\
 tst=`echo "$$src" | sed 's|^.*/||'`;		\
@@ -110,6 +112,7 @@ $(mkdir_p) "$$(echo '$@'|$(_dirname))" || exit;	\
 if test -f "./$$src"; then dir=./;		\
 elif test -f "$$src"; then dir=;		\
 else dir="$(srcdir)/"; fi;			\
+__SAVED_TERM=$$TERM;				\
 $(TESTS_ENVIRONMENT) $(SHELL)
 
 # To be appended to the command running the test.  Handles the stdout
@@ -120,6 +123,7 @@ estatus=$$?;						\
 if test $$estatus -eq 177; then				\
   $(ENABLE_HARD_ERRORS) || estatus=1;			\
 fi;							\
+TERM=$$__SAVED_TERM; export TERM;			\
 $(am__tty_colors);					\
 xfailed=PASS;						\
 for xfail in : $(XFAIL_TESTS); do			\
