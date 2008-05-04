@@ -23,7 +23,7 @@ EXTRA_DIST =		\
 
 ## N O T E :: Do not add more names to this list.
 ## N O T E :: Even these are expected to go away.
-SUBDIRS = cut head join pr sort tac tail test tr uniq
+SUBDIRS = cut join pr sort tac tail test tr uniq
 
 root_tests =					\
   chown/basic					\
@@ -124,6 +124,7 @@ TESTS =						\
   chgrp/posix-H					\
   chgrp/recurse					\
   misc/seq					\
+  misc/head					\
   misc/head-elide-tail				\
   tail-2/tail-n0f				\
   misc/ls-misc					\

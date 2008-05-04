@@ -25,7 +25,7 @@ use File::Compare qw(compare);
 
 @ISA = qw(Exporter);
 ($VERSION = '$Revision: 1.5 $ ') =~ tr/[0-9].//cd;
-@EXPORT = qw (run_tests);
+@EXPORT = qw (run_tests triple_test);
 
 my $debug = $ENV{DEBUG};
 
@@ -560,6 +560,47 @@ sub run_tests ($$$$$)
   unlink @junk_files if ! $save_temps;
 
   return $fail;
+}
+
+# For each test in @$TESTS, generate two additional tests,
+# one using stdin, the other using a pipe. I.e., given this one
+# ['idem-0', {IN=>''}, {OUT=>''}],
+# generate these:
+# ['idem-0.r', '<', {IN=>''}, {OUT=>''}],
+# ['idem-0.p', {IN_PIPE=>''}, {OUT=>''}],
+# Generate new tests only if there is exactly one input spec.
+# The returned list of tests contains each input test, followed
+# by zero or two derived tests.
+sub triple_test($)
+{
+  my ($tests) = @_;
+  my @new;
+  foreach my $t (@$tests)
+    {
+      push @new, $t;
+
+      my @in;
+      my @args;
+      my @list_of_hash;
+      foreach my $e (@$t)
+	{
+	  !ref $e
+	    and push (@args, $e), next;
+
+	  ref $e && ref $e eq 'HASH'
+	    or (warn "$0: $t->[0]: unexpected entry type\n"), next;
+	  defined $e->{IN}
+	    and (push @in, $e->{IN}), next;
+	  push @list_of_hash, $e;
+	}
+      # Add variants IFF there is exactly one input file.
+      @in == 1
+	or next;
+      shift @args; # discard test name
+      push @new, ["$t->[0].r", @args, '<', {IN => $in[0]}, @list_of_hash];
+      push @new, ["$t->[0].p", @args, {IN_PIPE => $in[0]}, @list_of_hash];
+    }
+  return @new;
 }
 
 ## package return
