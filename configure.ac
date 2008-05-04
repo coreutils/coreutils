@@ -354,6 +354,5 @@ AC_CONFIG_FILES(
   tests/tail/Makefile
   tests/test/Makefile
   tests/tr/Makefile
-  tests/uniq/Makefile
   )
 AC_OUTPUT
