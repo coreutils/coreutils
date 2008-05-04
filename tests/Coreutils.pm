@@ -247,12 +247,13 @@ sub run_tests ($$$$$)
 	  $seen_8dot3{$t8} = $test_name;
 	}
 
-      # The test name may be no longer than 12 bytes,
-      # so that we can add a two-byte suffix without exceeding
-      # the maximum of 14 imposed on some old file systems.
-      if (14 < (length $test_name) + 2)
+      # The test name may be no longer than 30 bytes.
+      # Yes, this is an arbitrary limit.  If it causes trouble,
+      # consider removing it.
+      my $max = 30;
+      if ($max < length $test_name)
 	{
-	  warn "$program_name: $test_name: test name is too long (> 12)\n";
+	  warn "$program_name: $test_name: test name is too long (> $max)\n";
 	  $bad_test_name = 1;
 	}
     }
@@ -288,8 +289,13 @@ sub run_tests ($$$$$)
 	      next;
 	    }
 
-	  die "$program_name: $test_name: invalid test spec\n"
-	    if ref $io_spec ne 'HASH';
+	  if (ref $io_spec ne 'HASH')
+	    {
+	      eval 'use Data::Dumper';
+	      die "$program_name: $test_name: invalid entry in test spec; "
+		. "expected HASH-ref,\nbut got this:\n"
+		  . Data::Dumper->Dump ([\$io_spec], ['$io_spec']) . "\n";
+	    }
 
 	  my $n = keys %$io_spec;
 	  die "$program_name: $test_name: spec has $n elements --"
@@ -440,9 +446,11 @@ sub run_tests ($$$$$)
       $actual{ERR} = "$test_name.E";
       push @junk_files, $actual{OUT}, $actual{ERR};
       my @cmd = ($prog, @args, "> $actual{OUT}", "2> $actual{ERR}");
+      $env_prefix
+	and unshift @cmd, $env_prefix;
       defined $input_pipe_cmd
 	and unshift @cmd, $input_pipe_cmd;
-      my $cmd_str = $env_prefix . join (' ', @cmd);
+      my $cmd_str = join (' ', @cmd);
 
       # Delete from the environment any symbols specified by syntax
       # like this: {ENV_DEL => 'TZ'}.
