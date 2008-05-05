@@ -24,7 +24,7 @@ use 5.005;
 use strict;
 use Getopt::Long;
 use Text::Tabs qw(expand);
-use POSIX qw(strftime setlocale LC_ALL);
+use POSIX qw(strftime setlocale);
 use locale;
 
 my $this_program = 'help2man';
