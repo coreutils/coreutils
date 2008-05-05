@@ -32,6 +32,7 @@ root_tests =					\
   cp/special-bits				\
   ls/nameless-uid				\
   misc/chcon					\
+  misc/selinux					\
   mkdir/writable-under-readonly			\
   mv/sticky-to-xpart				\
   rm/fail-2eperm				\

@@ -226,6 +226,21 @@ mkfifo_or_skip_()
   fi
 }
 
+skip_if_mcstransd_is_running_()
+{
+  test $# = 0 || framework_failure
+
+  # When mcstransd is running, you'll see only the 3-component
+  # version of file-system context strings.  Detect that,
+  # and if it's running, skip this test.
+  local ctx=$(stat --printf='%C\n' .) || framework_failure
+  case $ctx in
+    *:*:*:*) ;; # four components is ok
+    *) # anything else probably means mcstransd is running
+        skip_test_ "unexpected context '$ctx'; turn off mcstransd" ;;
+  esac
+}
+
 # Skip the current test if umask doesn't work as usual.
 # This test should be run in the temporary directory that ends
 # up being removed via the trap commands.
