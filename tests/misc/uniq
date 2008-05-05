@@ -34,6 +34,60 @@ my $try = "Try \`$prog --help' for more information.\n";
 # Turn off localization of executable's output.
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
 
+# When possible, create a "-z"-testing variant of each test.
+sub add_z_variants($)
+{
+  my ($tests) = @_;
+  my @new;
+ TEST:
+  foreach my $t (@$tests)
+    {
+      push @new, $t;
+
+      # skip the obsolete-syntax tests
+      $t->[0] =~ /^obs-plus/
+	and next;
+
+      my @args;
+      my @list_of_hash;
+
+      foreach my $e (@$t)
+	{
+	  !ref $e
+	    and push (@args, $e), next;
+
+	  ref $e && ref $e eq 'HASH'
+	    or (warn "$0: $t->[0]: unexpected entry type\n"), next;
+	  my $tmp = $e;
+	  foreach my $k (qw(IN OUT))
+	    {
+	      my $val = $e->{$k};
+	      # skip any test whose input or output already contains a NUL byte
+	      if (defined $val)
+		{
+		  $val =~ /\0/
+		    and next TEST;
+
+		  # Convert each NL in input or output to \0.
+		  $val =~ s/\n/\0/g;
+		  $tmp = {$k => $val};
+		  last;
+		}
+	    }
+	  push @list_of_hash, $tmp;
+	}
+
+      shift @args; # discard test name
+
+      # skip any test that uses the -z option
+      grep /z/, @args
+	and next;
+
+      push @new, ["$t->[0]-z", '-z', @args, @list_of_hash];
+    }
+  return @new;
+}
+
 # I've only ever triggered the problem in a non-C locale.
 my $locale = $ENV{LOCALE_FR};
 
@@ -155,26 +209,7 @@ foreach my $t (@Tests)
       and push @$t, {ENV=>'_POSIX2_VERSION=199209'};
   }
 
-my $ignore = <<\EOF1;
-###########################################################
-# When possible, create a "-z"-testing variant of each test.
-
-# skip any test whose input or output already contains a NUL byte
-$in =~ /\0/ || $exp =~ /\0/
-  and next;
-# skip any test that uses the -z option
-$flags =~ /z/
-  and next;
-# skip the obsolete-syntax tests
-$test_name =~ /^obs-plus/
-  and next;
-
-(my $inz = $in) =~ tr/\n/\0/;
-(my $expz = $exp) =~ tr/\n/\0/;
-my $t2 = ["$test_name-z", "-z $flags", $inz, $expz, $ret];
-push @new, $t2;
-EOF1
-
+@Tests = add_z_variants \@Tests;
 @Tests = triple_test \@Tests;
 
 my $save_temps = $ENV{DEBUG};
