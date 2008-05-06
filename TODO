@@ -14,6 +14,12 @@ document the following in coreutils.texi:
   uptime
 Also document the SELinux changes.
 
+cp --recursive: use fts and *at functions to perform directory traversals
+  in source and destination hierarchy rather than forming full file names.
+  The latter (current) approach fails unnecessarily when the names
+  become very long, and requires space and time that is quadratic in the
+  depth of the hierarchy.  [Bo Borgerson is working on this]
+
 comm: add an option, --output-delimiter=STR
   Files to change: src/comm.c, ChangeLog, NEWS, doc/coreutils.texi,
   Add a new file, tests/misc/comm (use another file in that directory as
@@ -95,10 +101,6 @@ sort: Investigate better sorting algorithms; see Knuth vol. 3.
   algorithm to try next should be merge insertion.  See Knuth section
   5.3.1, who credits Lester Ford, Jr. and Selmer Johnson, American
   Mathematical Monthly 66 (1959), 387-389.
-
-cp --recursive: perform dir traversals in source and dest hierarchy rather
-  than forming full file names.  The latter (current) approach fails
-  unnecessarily when the names become very long.
 
 Remove suspicious uses of alloca (ones that may allocate more than
    about 4k)
