@@ -23,7 +23,7 @@ EXTRA_DIST =		\
 
 ## N O T E :: Do not add more names to this list.
 ## N O T E :: Even these are expected to go away.
-SUBDIRS = join pr sort tac tail test tr
+SUBDIRS = join pr sort tac tail test
 
 root_tests =					\
   chown/basic					\
@@ -208,6 +208,7 @@ TESTS =						\
   misc/tee					\
   misc/tee-dash					\
   misc/test-diag				\
+  misc/tr					\
   misc/tsort					\
   misc/tty-eof					\
   misc/unexpand					\

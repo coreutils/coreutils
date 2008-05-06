@@ -353,6 +353,5 @@ AC_CONFIG_FILES(
   tests/tac/Makefile
   tests/tail/Makefile
   tests/test/Makefile
-  tests/tr/Makefile
   )
 AC_OUTPUT
