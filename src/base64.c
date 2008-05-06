@@ -44,8 +44,6 @@ static const struct option long_options[] = {
   {"decode", no_argument, 0, 'd'},
   {"wrap", required_argument, 0, 'w'},
   {"ignore-garbage", no_argument, 0, 'i'},
-  {"help", no_argument, 0, GETOPT_HELP_CHAR},
-  {"version", no_argument, 0, GETOPT_VERSION_CHAR},
 
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
@@ -257,7 +255,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  while ((opt = getopt_long (argc, argv, "dqiw:", long_options, NULL)) != -1)
+  while ((opt = getopt_long (argc, argv, "diw:", long_options, NULL)) != -1)
     switch (opt)
       {
       case 'd':
