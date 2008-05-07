@@ -214,6 +214,11 @@ sub run_tests ($$$$$)
 {
   my ($program_name, $prog, $t_spec, $save_temps, $verbose) = @_;
 
+  # To indicate that $prog is a shell built-in, you'd make it a string 'ref'.
+  # E.g., call run_tests ($prog, \$prog, \@Tests, $save_temps, $verbose);
+  # If it's a ref, invoke it via "env":
+  my @prog = ref $prog ? ('env', $$prog) : $prog;
+
   # Warn about empty t_spec.
   # FIXME
 
@@ -260,7 +265,7 @@ sub run_tests ($$$$$)
   return 1 if $bad_test_name;
 
   # FIXME check exit status
-  system ($prog, '--version') if $verbose;
+  system (@prog, '--version') if $verbose;
 
   my @junk_files;
   my $fail = 0;
@@ -445,7 +450,7 @@ sub run_tests ($$$$$)
       $actual{OUT} = "$test_name.O";
       $actual{ERR} = "$test_name.E";
       push @junk_files, $actual{OUT}, $actual{ERR};
-      my @cmd = ($prog, @args, "> $actual{OUT}", "2> $actual{ERR}");
+      my @cmd = (@prog, @args, "> $actual{OUT}", "2> $actual{ERR}");
       $env_prefix
 	and unshift @cmd, $env_prefix;
       defined $input_pipe_cmd
