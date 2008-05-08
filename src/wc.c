@@ -1,5 +1,5 @@
 /* wc - print the number of lines, words, and bytes in files
-   Copyright (C) 85, 91, 1995-2007 Free Software Foundation, Inc.
+   Copyright (C) 85, 91, 1995-2008 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@
 #include "system.h"
 #include "error.h"
 #include "inttostr.h"
+#include "mbchar.h"
 #include "quote.h"
 #include "readtokens0.h"
 #include "safe-read.h"
@@ -274,6 +275,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
       bool in_word = false;
       uintmax_t linepos = 0;
       mbstate_t state = { 0, };
+      bool in_shift = false;
 # if SUPPORT_OLD_MBRTOWC
       /* Back-up the state before each multibyte character conversion and
 	 move the last incomplete character of the buffer to the front
@@ -308,70 +310,81 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
 	      wchar_t wide_char;
 	      size_t n;
 
-# if SUPPORT_OLD_MBRTOWC
-	      backup_state = state;
-# endif
-	      n = mbrtowc (&wide_char, p, bytes_read, &state);
-	      if (n == (size_t) -2)
+	      if (!in_shift && is_basic (*p))
 		{
-# if SUPPORT_OLD_MBRTOWC
-		  state = backup_state;
-# endif
-		  break;
-		}
-	      if (n == (size_t) -1)
-		{
-		  /* Remember that we read a byte, but don't complain
-		     about the error.  Because of the decoding error,
-		     this is a considered to be byte but not a
-		     character (that is, chars is not incremented).  */
-		  p++;
-		  bytes_read--;
+		  /* Handle most ASCII characters quickly, without calling
+		     mbrtowc().  */
+		  n = 1;
+		  wide_char = *p;
 		}
 	      else
 		{
+		  in_shift = true;
+# if SUPPORT_OLD_MBRTOWC
+		  backup_state = state;
+# endif
+		  n = mbrtowc (&wide_char, p, bytes_read, &state);
+		  if (n == (size_t) -2)
+		    {
+# if SUPPORT_OLD_MBRTOWC
+		      state = backup_state;
+# endif
+		      break;
+		    }
+		  if (n == (size_t) -1)
+		    {
+		      /* Remember that we read a byte, but don't complain
+			 about the error.  Because of the decoding error,
+			 this is a considered to be byte but not a
+			 character (that is, chars is not incremented).  */
+		      p++;
+		      bytes_read--;
+		      continue;
+		    }
+		  if (mbsinit (&state))
+		    in_shift = false;
 		  if (n == 0)
 		    {
 		      wide_char = 0;
 		      n = 1;
 		    }
-		  p += n;
-		  bytes_read -= n;
-		  chars++;
-		  switch (wide_char)
+		}
+	      p += n;
+	      bytes_read -= n;
+	      chars++;
+	      switch (wide_char)
+		{
+		case '\n':
+		  lines++;
+		  /* Fall through. */
+		case '\r':
+		case '\f':
+		  if (linepos > linelength)
+		    linelength = linepos;
+		  linepos = 0;
+		  goto mb_word_separator;
+		case '\t':
+		  linepos += 8 - (linepos % 8);
+		  goto mb_word_separator;
+		case ' ':
+		  linepos++;
+		  /* Fall through. */
+		case '\v':
+		mb_word_separator:
+		  words += in_word;
+		  in_word = false;
+		  break;
+		default:
+		  if (iswprint (wide_char))
 		    {
-		    case '\n':
-		      lines++;
-		      /* Fall through. */
-		    case '\r':
-		    case '\f':
-		      if (linepos > linelength)
-			linelength = linepos;
-		      linepos = 0;
-		      goto mb_word_separator;
-		    case '\t':
-		      linepos += 8 - (linepos % 8);
-		      goto mb_word_separator;
-		    case ' ':
-		      linepos++;
-		      /* Fall through. */
-		    case '\v':
-		    mb_word_separator:
-		      words += in_word;
-		      in_word = false;
-		      break;
-		    default:
-		      if (iswprint (wide_char))
-			{
-			  int width = wcwidth (wide_char);
-			  if (width > 0)
-			    linepos += width;
-			  if (iswspace (wide_char))
-			    goto mb_word_separator;
-			  in_word = true;
-			}
-		      break;
+		      int width = wcwidth (wide_char);
+		      if (width > 0)
+			linepos += width;
+		      if (iswspace (wide_char))
+			goto mb_word_separator;
+		      in_word = true;
 		    }
+		  break;
 		}
 	    }
 	  while (bytes_read > 0);
