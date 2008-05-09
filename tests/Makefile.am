@@ -23,7 +23,7 @@ EXTRA_DIST =		\
 
 ## N O T E :: Do not add more names to this list.
 ## N O T E :: Even these are expected to go away.
-SUBDIRS = join pr sort tail
+SUBDIRS = join pr tail
 
 root_tests =					\
   chown/basic					\
@@ -191,6 +191,7 @@ TESTS =						\
   misc/shred-exact				\
   misc/shred-remove				\
   misc/shuf					\
+  misc/sort					\
   misc/sort-compress				\
   misc/sort-merge				\
   misc/sort-rand				\
