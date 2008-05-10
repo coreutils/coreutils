@@ -23,7 +23,7 @@ EXTRA_DIST =		\
 
 ## N O T E :: Do not add more names to this list.
 ## N O T E :: Even these are expected to go away.
-SUBDIRS = join pr tail
+SUBDIRS = join pr
 
 root_tests =					\
   chown/basic					\
@@ -207,6 +207,7 @@ TESTS =						\
   misc/sum-sysv					\
   misc/tac					\
   misc/tac-continue				\
+  misc/tail					\
   misc/tee					\
   misc/tee-dash					\
   misc/test-diag				\

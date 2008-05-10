@@ -1,7 +1,7 @@
-# Test "tail".
+#!/bin/sh
+# Test tail.
 
-# Copyright (C) 1997, 1998, 2002, 2004, 2005, 2006 Free Software
-# Foundation, Inc.
+# Copyright (C) 2008 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,9 +16,19 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Test;
-require 5.002;
+: ${srcdir=.}
+. $top_srcdir/tests/require-perl
+
+me=`echo $0|sed 's,.*/,,'`
+exec $PERL -w -I$top_srcdir/tests -MCoreutils -M"CuTmpdir qw($me)" -- - <<\EOF
+require 5.003;
 use strict;
+
+my $prog = 'tail';
+my $normalize_filename = {ERR_SUBST => 's/^$prog: .*?:/$prog: -:/'};
+
+# Turn off localization of executable's output.
+@ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
 
 my @tv = (
 # test name, options, input, expected output, expected return code
@@ -28,7 +38,6 @@ my @tv = (
 ['obs-c3', '-1c', 'abcd', 'd', 0],
 ['obs-c4', '-9c', 'abcd', 'abcd', 0],
 ['obs-c5', '-12c', 'x' . ('y' x 12) . 'z', ('y' x 11) . 'z', 0],
-
 
 ['obs-l1', '-1l', 'x', 'x', 0],
 ['obs-l2', '-1l', "x\ny\n", "y\n", 0],
@@ -52,25 +61,26 @@ my @tv = (
 
 ['obs-b', '-b', "x\n" x (512 * 10 / 2 + 1), "x\n" x (512 * 10 / 2), 0],
 
-# This should get
-# `tail: cannot open `+cl' for reading: No such file or directory'
-['err-1', '+cl', '', '', 1],
+['err-1', '+cl', '', '', 1,
+ "$prog: cannot open `+cl' for reading: No such file or directory\n"],
 
-# This should get `tail: l: invalid number of bytes'
-['err-2', '-cl', '', '', 1],
+['err-2', '-cl', '', '', 1,
+ "$prog: l: invalid number of bytes\n"],
 
-# This should get
-# `tail: cannot open `+2cz' for reading: No such file or directory'
-['err-3', '+2cz', '', '', 1],
+['err-3', '+2cz', '', '', 1,
+ "$prog: cannot open `+2cz' for reading: No such file or directory\n"],
 
 # This should get `tail: invalid option -- 2'
-['err-4', '-2cX', '', '', 1],
+['err-4', '-2cX', '', '', 1,
+ "$prog: option used in invalid context -- 2\n"],
 
 # Since the number is larger than 2^64, this should provoke
 # the diagnostic: `tail: 99999999999999999999: invalid number of bytes'
 # on all systems... probably, for now, maybe.
-['err-5', '-c99999999999999999999', '', '', 1],
-['err-6', '-c', '', '', 1],
+['err-5', '-c99999999999999999999', '', '', 1,
+ "$prog: 99999999999999999999: invalid number of bytes\n"],
+['err-6', '-c --', '', '', 1,
+ "$prog: -: invalid number of bytes\n", $normalize_filename],
 
 # Same as -n 10
 ['minus-1', '-', '', '', 0],
@@ -98,45 +108,40 @@ my @tv = (
 ['f-pipe-1', '-f -n 1', "a\nb\n", "b\n", 0],
 );
 
-sub test_vector
-{
-  my $t;
-  foreach $t (@tv)
-    {
-      my ($test_name, $flags, $in, $exp, $ret) = @$t;
+my @Tests;
 
-      if ($test_name =~ /^(obs-plus-|minus-)/)
-        {
-	  $Test::env{$test_name} = ['_POSIX2_VERSION=199209'];
-        }
-      if ($test_name =~ /^(err-6|c-2)$/)
-        {
-	  $Test::env{$test_name} = ['_POSIX2_VERSION=200112'];
-        }
-      if ($test_name =~ /^f-pipe-/)
-        {
-	  $Test::env{$test_name} = ['POSIXLY_CORRECT=1'];
-        }
+foreach my $t (@tv)
+  {
+    my ($test_name, $flags, $in, $exp, $ret, $err_msg) = @$t;
+    my $e = [$test_name, $flags, {IN=>$in}, {OUT=>$exp}];
+    $ret
+      and push @$e, {EXIT=>$ret}, {ERR=>$err_msg};
 
-      # If you run the minus* tests with a FILE arg they'd hang.
-      # If you run the err-1 or err-3 tests with a FILE, they'd misinterpret
-      # the arg unless we are using the obsolete form.
-      if ($test_name =~ /^(minus|err-[13])/)
-	{
-	  $Test::input_via{$test_name} = {REDIR => 0, PIPE => 0};
-	}
-      elsif ($test_name =~ /^f-/)
-	{
-	  # Using redirection or a file would make this hang.
-	  $Test::input_via{$test_name} = {PIPE => 0};
-	}
-      else
-	{
-	  $Test::input_via{$test_name} = {REDIR => 0, FILE => 0, PIPE => 0}
-	}
-    }
+    $test_name =~ /^(obs-plus-|minus-)/
+      and push @$e, {ENV=>'_POSIX2_VERSION=199209'};
 
-  return @tv;
-}
+    $test_name =~ /^(err-6|c-2)$/
+      and push @$e, {ENV=>'_POSIX2_VERSION=200112'};
 
-1;
+    $test_name =~ /^f-pipe-/
+      and push @$e, {ENV=>'POSIXLY_CORRECT=1'};
+
+    push @Tests, $e;
+  }
+
+@Tests = triple_test \@Tests;
+
+# If you run the minus* tests with a FILE arg they'd hang.
+# If you run the err-1 or err-3 tests with a FILE, they'd misinterpret
+# the arg unless we are using the obsolete form.
+@Tests = grep { $_->[0] !~ /^(minus|err-[13])/ || $_->[0] =~ /\.[rp]$/ } @Tests;
+
+# Using redirection or a file would make this hang.
+@Tests = grep { $_->[0] !~ /^f-/ || $_->[0] =~ /\.p$/ } @Tests;
+
+my $save_temps = $ENV{DEBUG};
+my $verbose = $ENV{VERBOSE};
+
+my $fail = run_tests ($prog, $prog, \@Tests, $save_temps, $verbose);
+exit $fail;
+EOF
