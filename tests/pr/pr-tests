@@ -1,7 +1,7 @@
-# -*-perl-*-
+#!/bin/sh
+# Test pr.
 
-# Copyright (C) 1996-2002, 2004, 2005, 2007-2008
-# Free Software Foundation, Inc.
+# Copyright (C) 2008 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,9 +16,18 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Test;
-require 5.002;
+: ${srcdir=.}
+. $top_srcdir/tests/require-perl
+
+me=`echo $0|sed 's,.*/,,'`
+exec $PERL -w -I$top_srcdir/tests -MCoreutils -M"CuTmpdir qw($me)" -- - <<\EOF
+require 5.003;
 use strict;
+
+# Turn off localization of executable's output.
+@ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
+
+my $prog = 'pr';
 
 my @tv = (
 
@@ -33,7 +42,7 @@ my @tv = (
 # combinations of options and FF-arrangements
 #
 # One FF at start of file (one empty page)
-['1a', '', [\'0Ft'], [\'0F'], 0],
+# ['1a', '', [\'0Ft'], [\'0F'], 0],
 ['1b', '', [\'0Fnt'], [\'0F'], 0],
 ['1c', '+3', [\'0Ft'], [\'3-0F'], 0],
 ['1d', '+3 -f', [\'0Ft'], [\'3f-0F'], 0],
@@ -367,12 +376,15 @@ my @tv = (
 # The --columns=2 must override preceding column-count-specifying options.
 ['col-long', '-W3 -t -1 --columns=2',     "a\nb\nc\n", "a c\nb\n", 0],
 # Make sure these fail.
-['col-0', '-0', '', '', 1],
-['col-inval', '-'.'9'x100, '', '', 1],
+['col-0', '-0', '', '', 1,
+ "$prog: invalid number of columns: `0'\n"],
+['col-inval', '-'.'9'x100, '', '', 1,
+ "$prog: invalid number of columns: `". ('9'x100) ."'\n"],
 
 # Before coreutils-5.3.1, --pages=1:-1 would be treated like
 # --pages=1:18446744073709551615.
-['neg-page', '--pages=1:-1', '', '', 1],
+['neg-page', '--pages=1:-1', '', '', 1,
+ "$prog: invalid --pages argument `1:-1'\n"],
 
 # Up to coreutils-6.10, this would cause pr to decrement its
 # internal "input_position" below zero and sometimes segfault.
@@ -384,30 +396,54 @@ my @tv = (
 ['smash-heap', '-t -e300', "a".("\b"x50)."\t", "a\b".(" "x300)."\n", 0],
 ['smash-heap8', '-t -e',   "a".("\b"x50)."\t", "a\b".(" "x  8)."\n", 0],
 );
-#']]);
 
-sub test_vector
-{
-  my $common_option_prefix = '--date-format="-- Date/Time --" -h x';
+# Convert the above old-style test vectors to the newer
+# format used by Coreutils.pm.
 
-  my @new_tv;
-  my $t;
-  foreach $t (@tv)
-    {
-      my ($test_name, $flags, $in, $exp, $ret) = @$t;
+my $pfx = "$ENV{abs_top_srcdir}/tests/pr";
 
-      # Prepend the common options to $FLAGS.
-      my $sep = ($flags ? ' ' : '');
-      $flags = "$common_option_prefix$sep$flags";
-      push (@new_tv, [$test_name, $flags, $in, $exp, $ret]);
+# Normalize otherwise-variable output page headers.
+my $common_option_prefix = '--date-format="-- Date/Time --" -h x';
 
-      # For any use of -N, create an identical test with --columns=N.
-      (my $new_flags = $flags) =~ s/(^| )-(\d+)( |$)/$1--columns=$2$3/g;
-      $new_flags ne $flags
-	and push (@new_tv, ["$test_name.C", $new_flags, $in, $exp, $ret]);
-    }
+my @Tests;
+foreach my $t (@tv)
+  {
+    my ($test_name, $flags, $in, $exp, $ret, $err_msg) = @$t;
+    my $new_ent = [$test_name, $common_option_prefix, $flags];
+    if (!ref $in)
+      {
+        push @$new_ent, {IN=>$in};
+      }
+    else
+      {
+        foreach my $e (@$in)
+          {
+            my $file_name = $$e;
+            push @$new_ent, {IN=>{"$pfx/$file_name"=>undef}};
+          }
+      }
+    if (!ref $exp)
+      {
+        push @$new_ent, {OUT=>$exp};
+      }
+    else
+      {
+        foreach my $e (@$exp)
+          {
+            my $file_name = $$e;
+            push @$new_ent, {OUT=>{"$pfx/$file_name"=>undef}};
+          }
+      }
+    $ret
+      and push @$new_ent, {EXIT=>$ret}, {ERR=>$err_msg};
+    push @Tests, $new_ent;
+  }
 
-  return @new_tv;
-}
+@Tests = triple_test \@Tests;
 
-1;
+my $save_temps = $ENV{DEBUG};
+my $verbose = $ENV{VERBOSE};
+
+my $fail = run_tests ($prog, $prog, \@Tests, $save_temps, $verbose);
+exit $fail;
+EOF

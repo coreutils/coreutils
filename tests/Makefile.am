@@ -19,11 +19,12 @@ EXTRA_DIST =		\
   require-perl		\
   sample-test		\
   setgid-check		\
-  test-lib.sh
+  test-lib.sh		\
+  $(pr_data)
 
 ## N O T E :: Do not add more names to this list.
 ## N O T E :: Even these are expected to go away.
-SUBDIRS = join pr
+SUBDIRS = join
 
 root_tests =					\
   chown/basic					\
@@ -137,6 +138,7 @@ TESTS =						\
   misc/mktemp					\
   misc/arch					\
   misc/pr					\
+  pr/pr-tests					\
   misc/df-P					\
   misc/pwd-unreadable-parent			\
   misc/chcon-fail				\
@@ -391,5 +393,167 @@ TESTS =						\
   touch/read-only				\
   touch/relative				\
   $(root_tests)
+
+pr_data =					\
+  pr/0F						\
+  pr/0FF					\
+  pr/0FFnt					\
+  pr/0FFt					\
+  pr/0FnFnt					\
+  pr/0FnFt					\
+  pr/0Fnt					\
+  pr/0Ft					\
+  pr/2-S_f-t_notab				\
+  pr/2-Sf-t_notab				\
+  pr/2f-t_notab					\
+  pr/2s_f-t_notab				\
+  pr/2s_w60f-t_nota				\
+  pr/2sf-t_notab				\
+  pr/2sw60f-t_notab				\
+  pr/2w60f-t_notab				\
+  pr/3-0F					\
+  pr/3-5l24f-t					\
+  pr/3-FF					\
+  pr/3a2l17-FF					\
+  pr/3a3f-0F					\
+  pr/3a3l15-t					\
+  pr/3a3l15f-t					\
+  pr/3b2l17-FF					\
+  pr/3b3f-0F					\
+  pr/3b3f-0FF					\
+  pr/3b3f-FF					\
+  pr/3b3l15-t					\
+  pr/3b3l15f-t					\
+  pr/3f-0F					\
+  pr/3f-FF					\
+  pr/3l24-t					\
+  pr/3l24f-t					\
+  pr/3ml24-FF					\
+  pr/3ml24-t					\
+  pr/3ml24-t-FF					\
+  pr/3ml24f-t					\
+  pr/4-7l24-FF					\
+  pr/4l24-FF					\
+  pr/FF						\
+  pr/FFn					\
+  pr/FFtn					\
+  pr/FnFn					\
+  pr/Ja3l24f-lm					\
+  pr/Jb3l24f-lm					\
+  pr/Jml24f-lm-lo				\
+  pr/W-72l24f-ll				\
+  pr/W20l24f-ll					\
+  pr/W26l24f-ll					\
+  pr/W27l24f-ll					\
+  pr/W28l24f-ll					\
+  pr/W35Ja3l24f-lm				\
+  pr/W35Jb3l24f-lm				\
+  pr/W35Jml24f-lmlo				\
+  pr/W35a3l24f-lm				\
+  pr/W35b3l24f-lm				\
+  pr/W35ml24f-lm-lo				\
+  pr/W72Jl24f-ll				\
+  pr/a2l15-FF					\
+  pr/a2l17-FF					\
+  pr/a3-0F					\
+  pr/a3f-0F					\
+  pr/a3f-0FF					\
+  pr/a3f-FF					\
+  pr/a3l15-t					\
+  pr/a3l15f-t					\
+  pr/a3l24f-lm					\
+  pr/b2l15-FF					\
+  pr/b2l17-FF					\
+  pr/b3-0F					\
+  pr/b3f-0F					\
+  pr/b3f-0FF					\
+  pr/b3f-FF					\
+  pr/b3l15-t					\
+  pr/b3l15f-t					\
+  pr/b3l24f-lm					\
+  pr/l24-FF					\
+  pr/l24-t					\
+  pr/l24f-t					\
+  pr/loli					\
+  pr/ml20-FF-t					\
+  pr/ml24-FF					\
+  pr/ml24-t					\
+  pr/ml24-t-FF					\
+  pr/ml24f-0F					\
+  pr/ml24f-lm-lo				\
+  pr/ml24f-t					\
+  pr/ml24f-t-0F					\
+  pr/n+2-5l24f-0FF				\
+  pr/n+2l24f-0FF				\
+  pr/n+2l24f-bl					\
+  pr/n+3-7l24-FF				\
+  pr/n+3l24f-0FF				\
+  pr/n+3l24f-bl					\
+  pr/n+3ml20f-bl-FF				\
+  pr/n+3ml24f-bl-tn				\
+  pr/n+3ml24f-tn-bl				\
+  pr/n+4-8a2l17-FF				\
+  pr/n+4b2l17f-0FF				\
+  pr/n+5-8b3l17f-FF				\
+  pr/n+5a3l13f-0FF				\
+  pr/n+6a2l17-FF				\
+  pr/n+6b3l13f-FF				\
+  pr/n+7l24-FF					\
+  pr/n+8l20-FF					\
+  pr/nJml24f-lmlmlo				\
+  pr/nJml24f-lmlolm				\
+  pr/nN1+3l24f-bl				\
+  pr/nN15l24f-bl				\
+  pr/nSml20-bl-FF				\
+  pr/nSml20-t-t-FF				\
+  pr/nSml20-t-tFFFF				\
+  pr/nSml24-bl-FF				\
+  pr/nSml24-t-t-FF				\
+  pr/nSml24-t-tFFFF				\
+  pr/nl24f-bl					\
+  pr/o3Jml24f-lm-lo				\
+  pr/o3a3Sl24f-tn				\
+  pr/o3a3Snl24f-tn				\
+  pr/o3a3l24f-tn				\
+  pr/o3b3Sl24f-tn				\
+  pr/o3b3Snl24f-tn				\
+  pr/o3b3l24f-tn				\
+  pr/o3mSl24f-bl-tn				\
+  pr/o3mSnl24fbltn				\
+  pr/o3ml24f-bl-tn				\
+  pr/t-0FF					\
+  pr/t-FF					\
+  pr/t-bl					\
+  pr/t-t					\
+  pr/tFFn					\
+  pr/tFFt					\
+  pr/tFFt-bl					\
+  pr/tFFt-ll					\
+  pr/tFFt-lm					\
+  pr/tFnFt					\
+  pr/t_notab					\
+  pr/t_tab					\
+  pr/t_tab_					\
+  pr/ta3-0FF					\
+  pr/ta3-FF					\
+  pr/tb3-0FF					\
+  pr/tb3-FF					\
+  pr/tn						\
+  pr/tn2e5o3-t_tab				\
+  pr/tn2e8-t_tab				\
+  pr/tn2e8o3-t_tab				\
+  pr/tn_2e8-t_tab				\
+  pr/tn_2e8S-t_tab				\
+  pr/tne8-t_tab					\
+  pr/tne8o3-t_tab				\
+  pr/tt-0FF					\
+  pr/tt-FF					\
+  pr/tt-bl					\
+  pr/tt-t					\
+  pr/tta3-0FF					\
+  pr/tta3-FF					\
+  pr/ttb3-0FF					\
+  pr/ttb3-FF					\
+  pr/w72l24f-ll
 
 include $(top_srcdir)/tests/check.mk
