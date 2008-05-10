@@ -8,13 +8,11 @@ ASSORT = LC_ALL=C sort
 EXTRA_DIST =		\
   Coreutils.pm		\
   CuTmpdir.pm		\
-  Makefile.am.in	\
   README		\
   check.mk		\
   envvar-check		\
   input-tty		\
   lang-default		\
-  mk-script		\
   other-fs-tmpdir	\
   require-perl		\
   sample-test		\
@@ -40,7 +38,7 @@ root_tests =					\
 
 .PHONY: check-root
 check-root:
-	$(MAKE) check TESTS='$(root_tests)' SUBDIRS=
+	$(MAKE) check TESTS='$(root_tests)'
 
 check-recursive: root-hint
 
@@ -60,11 +58,10 @@ EXTRA_DIST += $(TESTS)
 # will expand 'if test ...' to 'if .../test ...', and the '.../test'
 # will execute the test script rather than the standard utility.
 
-# Regarding ordering in SUBDIRS, place early in the list the tools that
-# are most commonly used in test scripts.  Nearly every test script uses
-# rm and chmod, so they appear early in the list.
-
 # Notes on the ordering of these tests:
+# Place early in the list tests of the tools that
+# are most commonly used in test scripts themselves.
+# E.g., nearly every test script uses rm and chmod.
 # help-version comes early because it's a basic sanity test.
 # Put seq early, since lots of other tests use it.
 # Put tests that sleep early, but not all together, so in parallel builds

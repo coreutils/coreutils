@@ -530,27 +530,6 @@ if test $with_gettext = yes; then
   rm -fr $bt $bt2 || exit
 fi
 
-# Coreutils is unusual in that it generates some of its test-related
-# Makefile.am files.  That must be done before invoking automake.
-mam_template=tests/Makefile.am.in
-if test -f $mam_template; then
-  PERL=perl
-  tool_subdirs=`$PERL -ne '/^SUBDIRS = (.*)/ and print $1' tests/Makefile.am`
-  test "$tool_subdirs" = '' && { echo "$0: no more SUBDIRS: FIXME"1>&2; exit 1;}
-  for tool in $tool_subdirs; do
-    m=tests/$tool/Makefile.am
-    t=${m}t
-    rm -f $m $t
-    sed -n '1,/^##test-files-begin/p' $mam_template > $t
-    echo "x = $tool" >> $t
-    srcdir=tests/$tool
-    $PERL -I$srcdir -w -- tests/mk-script $srcdir --list >> $t
-    sed -n '/^##test-files-end/,$p' $mam_template >> $t
-    chmod -w $t
-    mv $t $m
-  done
-fi
-
 # Remove any dangling symlink matching "*.m4" or "*.[ch]" in some
 # gnulib-populated directories.  Such .m4 files would cause aclocal to fail.
 # The following requires GNU find 4.2.3 or newer.  Considering the usual
