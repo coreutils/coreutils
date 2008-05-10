@@ -67,5 +67,3 @@ po/coreutils.pot
 po/stamp-po
 stamp-h1
 tests/*/*.log
-tests/join/Makefile.am
-tests/join/join-tests

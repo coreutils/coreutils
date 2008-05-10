@@ -1,6 +1,7 @@
-# Test "join".
+#!/bin/sh
+# Test join.
 
-# Copyright (C) 1996, 1999-2000, 2003-2004, 2008 Free Software Foundation, Inc.
+# Copyright (C) 2008 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,9 +16,18 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package Test;
-require 5.002;
+: ${srcdir=.}
+. $top_srcdir/tests/require-perl
+
+me=`echo $0|sed 's,.*/,,'`
+exec $PERL -w -I$top_srcdir/tests -MCoreutils -M"CuTmpdir qw($me)" -- - <<\EOF
+require 5.003;
 use strict;
+
+# Turn off localization of executable's output.
+@ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
+
+my $prog = 'join';
 
 my $delim = chr 0247;
 sub t_subst ($)
@@ -138,7 +148,8 @@ my @tv = (
  ["a\n", "b\n"], " a b\n", 0],
 
 # FIXME: change this to ensure the diagnostic makes sense
-['invalid-j', '-j x', {}, "", 1],
+['invalid-j', '-j x', {}, "", 1,
+ "$prog: invalid field number: `x'\n"],
 
 # With ordering check, inputs in order
 ['chkodr-1', '--check-order',
@@ -160,7 +171,8 @@ my @tv = (
 
 # With check, both inputs out of order (in fact, in reverse order)
 ['chkodr-5', '--check-order',
- [" b 1\n a 2\n", " b Y\n a Z\n"], "", 1],
+ [" b 1\n a 2\n", " b Y\n a Z\n"], "", 1,
+ "$prog: File 1 is not in sorted order\n"],
 
 # Without order check, both inputs out of order and some lines
 # unpairable.  This is NOT supported by the GNU extension.  All that
@@ -174,13 +186,42 @@ my @tv = (
 # Before 6.10.143, this would mistakenly fail with the diagnostic:
 # join: File 1 is not in sorted order
 ['chkodr-7', '-12', ["2 a\n1 b\n", ""], "", 0],
-)
-;
+);
 
+# Convert the above old-style test vectors to the newer
+# format used by Coreutils.pm.
 
-sub test_vector
-{
-  return @tv;
-}
+my @Tests;
+foreach my $t (@tv)
+  {
+    my ($test_name, $flags, $in, $exp, $ret, $err_msg) = @$t;
+    my $new_ent = [$test_name, $flags];
+    if (!ref $in)
+      {
+        push @$new_ent, {IN=>$in};
+      }
+    elsif (ref $in eq 'HASH')
+      {
+        # ignore
+      }
+    else
+      {
+        foreach my $e (@$in)
+          {
+            push @$new_ent, {IN=>$e};
+          }
+      }
+    push @$new_ent, {OUT=>$exp};
+    $ret
+      and push @$new_ent, {EXIT=>$ret}, {ERR=>$err_msg};
+    push @Tests, $new_ent;
+  }
 
-1;
+@Tests = triple_test \@Tests;
+
+my $save_temps = $ENV{DEBUG};
+my $verbose = $ENV{VERBOSE};
+
+my $fail = run_tests ($prog, $prog, \@Tests, $save_temps, $verbose);
+exit $fail;
+EOF

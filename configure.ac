@@ -347,6 +347,5 @@ AC_CONFIG_FILES(
   src/Makefile
   tests/Makefile
   gnulib-tests/Makefile
-  tests/join/Makefile
   )
 AC_OUTPUT

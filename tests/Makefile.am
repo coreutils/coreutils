@@ -22,10 +22,6 @@ EXTRA_DIST =		\
   test-lib.sh		\
   $(pr_data)
 
-## N O T E :: Do not add more names to this list.
-## N O T E :: Even these are expected to go away.
-SUBDIRS = join
-
 root_tests =					\
   chown/basic					\
   cp/cp-a-selinux				\
@@ -138,6 +134,7 @@ TESTS =						\
   misc/mktemp					\
   misc/arch					\
   misc/pr					\
+  misc/join					\
   pr/pr-tests					\
   misc/df-P					\
   misc/pwd-unreadable-parent			\
