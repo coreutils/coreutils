@@ -67,7 +67,7 @@ my @Tests =
    {OUT=>".___4.__3._2._1.____z.___y.__x"}],
 );
 
-# @Tests = triple_test \@Tests;
+@Tests = triple_test \@Tests;
 
 my $save_temps = $ENV{DEBUG};
 my $verbose = $ENV{VERBOSE};
