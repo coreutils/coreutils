@@ -70,8 +70,8 @@ for lang in C fr da; do
 
     # Make sure they fail upon `disk full' error.
     if test -w /dev/full && test -c /dev/full; then
-      "$abs_top_builddir/src/$i" --help    >/dev/full 2>/dev/null && fail=1
-      "$abs_top_builddir/src/$i" --version >/dev/full 2>/dev/null && fail=1
+      env $i --help    >/dev/full 2>/dev/null && fail=1
+      env $i --version >/dev/full 2>/dev/null && fail=1
       status=$?
       test $i = [ && prog=lbracket || prog=$i
       eval "expected=\$expected_failure_status_$prog"

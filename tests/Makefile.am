@@ -173,6 +173,7 @@ TESTS =						\
   misc/paste					\
   misc/pathchk1					\
   misc/printf					\
+  misc/printf-cov				\
   misc/printf-hex				\
   misc/printf-surprise				\
   misc/pwd-long					\
