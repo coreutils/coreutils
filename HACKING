@@ -187,7 +187,7 @@ It's easy to adjust:
   git commit --amend -e -a
   git format-patch --stdout --signoff HEAD~1 > your-branch.diff
 
-That replaces the most recent commit with the revised one.
+That replaces the most recent change-set with the revised one.
 
 
 
@@ -228,8 +228,12 @@ with --no-tabs) and put these lines at the end of the file:
 Do not change TABs to spaces or vice versa in any existing file.
 
 
-Send patches to bug-coreutils@gnu.org
-=====================================
+Send patches to the address listed in --help output
+===================================================
+Please follow the guidelines in the "Sending your patches." section of
+git's own SubmittingPatches:
+
+  http://git.kernel.org/?p=git/git.git;a=blob;f=Documentation/SubmittingPatches
 
 
 Add documentation
@@ -237,7 +241,7 @@ Add documentation
 If you add a feature or change some user-visible aspect of a program,
 document it.  If you add an option, document it both in --help output
 (i.e., in the usage function that generates the --help output) and in
-doc/coreutils.texi.  The man pages are generated from --help output, so
+doc/*.texi.  The man pages are generated from --help output, so
 you shouldn't need to change anything under man/.  User-visible changes
 are usually documented in NEWS, too.
 
@@ -276,22 +280,24 @@ doc/Copyright/request-assign.changes:
 
     http://git.sv.gnu.org/gitweb/?p=gnulib.git;a=blob;f=doc/Copyright/request-assign.changes;hb=HEAD
 
-If you would like to assign past and future coreutils work,
+If you would like to assign past and future contributions to a project,
 you'd use doc/Copyright/request-assign.future:
 
     http://git.sv.gnu.org/gitweb/?p=gnulib.git;a=blob;f=doc/Copyright/request-assign.future;hb=HEAD
+
+You may make assignments for up to four projects at a time.
 
 
 Run "make syntax-check", or even "make distcheck"
 ================================================
 Making either of those targets runs many integrity and
-coreutils-specific policy-conformance tests.  For example, the former
+project-specific policy-conformance tests.  For example, the former
 ensures that you add no trailing blanks and no uses of certain deprecated
 functions.  The latter performs all "syntax-check" tests, and also
 ensures that the build completes with no warnings when using a certain
 set of gcc -W... options.  Don't even bother running "make distcheck"
-unless you have a very up to date installation including recent versions
-of gcc and the linux kernel, and modern GNU tools.
+unless you have a reasonably up to date installation including recent
+versions of gcc and the linux kernel, and modern GNU tools.
 
 
 Ensure that your changes are indented properly.
