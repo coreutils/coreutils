@@ -16,11 +16,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-prog="$abs_top_builddir/src/printf"
+prog=printf
 
 if test "$VERBOSE" = yes; then
   set -x
-  "$prog" --version
+  env $prog --version
 fi
 
 . $top_srcdir/tests/test-lib.sh
@@ -50,7 +50,7 @@ fail=0
 # triggering the printf(3) misbehavior -- which, btw, is required by ISO C99.
 
 ( ulimit -v 10000
-  "$prog" %20000000f 0 2>err | head -c 10 >out )
+  env $prog %20000000f 0 2>err | head -c 10 >out )
 
 # Map this longer, and rarer, diagnostic to the common one.
 # printf: cannot perform formatted output: Cannot allocate memory" \

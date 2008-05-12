@@ -217,7 +217,7 @@ sub run_tests ($$$$$)
   # To indicate that $prog is a shell built-in, you'd make it a string 'ref'.
   # E.g., call run_tests ($prog, \$prog, \@Tests, $save_temps, $verbose);
   # If it's a ref, invoke it via "env":
-  my @prog = ref $prog ? ('env', $$prog) : $prog;
+  my @prog = ref $prog ? (qw(env --), $$prog) : $prog;
 
   # Warn about empty t_spec.
   # FIXME

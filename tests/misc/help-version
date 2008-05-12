@@ -50,10 +50,8 @@ for lang in C fr da; do
 
     # false fails even when invoked with --help or --version.
     if test $i = false; then
-      env LC_MESSAGES=$lang "$abs_top_builddir/src/$i" --help \
-	  >/dev/null && fail=1
-      env LC_MESSAGES=$lang "$abs_top_builddir/src/$i" --version \
-	  >/dev/null && fail=1
+      env LC_MESSAGES=$lang $i" --help >/dev/null && fail=1
+      env LC_MESSAGES=$lang $i" --version >/dev/null && fail=1
       continue
     fi
 
@@ -61,8 +59,8 @@ for lang in C fr da; do
     test $i = install && i=ginstall
 
     # Make sure they exit successfully, under normal conditions.
-    "$abs_top_builddir/src/$i" --help    > h-$i     || fail=1
-    "$abs_top_builddir/src/$i" --version >/dev/null || fail=1
+    env $i --help    > h-$i     || fail=1
+    env $i --version >/dev/null || fail=1
 
     # Make sure they mention the bug-reporting address in --help output.
     grep "$PACKAGE_BUGREPORT" h-$i > /dev/null || fail=1
@@ -188,7 +186,7 @@ for i in $built_programs; do
   # echo ================== $i
   test $i = [ && prog=lbracket || prog=$i
   eval "args=\$${prog}_args"
-  if "$abs_top_builddir/src/$i" $args < $tmp_in > $tmp_out; then
+  if env $i $args < $tmp_in > $tmp_out; then
     : # ok
   else
     echo FAIL: $i
