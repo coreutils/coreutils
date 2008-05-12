@@ -50,6 +50,20 @@ built_programs = \
 TESTS_ENVIRONMENT =				\
   . $(top_srcdir)/tests/lang-default;		\
   . $(top_srcdir)/tests/envvar-check;		\
+  shell_or_perl_() {				\
+    if grep '^\#!/usr/bin/perl' "$$1" > /dev/null; then		\
+      if $(PERL) -e 'use warnings' > /dev/null 2>&1; then	\
+        $(PERL) -w -I$(top_srcdir)/tests -MCoreutils		\
+	      -M"CuTmpdir qw($$tst)" -- "$$1";	\
+      else					\
+	echo 1>&2 "$$tst: configure did not find a usable version of Perl," \
+	  "so skipping this test";		\
+	(exit 77);				\
+      fi;					\
+    else					\
+      $(SHELL) "$$1";				\
+    fi;						\
+  };						\
   LOCALE_FR='$(LOCALE_FR)'			\
   abs_top_builddir='$(abs_top_builddir)'	\
   abs_top_srcdir='$(abs_top_srcdir)'		\
@@ -67,7 +81,8 @@ TESTS_ENVIRONMENT =				\
   PACKAGE_VERSION=$(PACKAGE_VERSION)		\
   PERL='$(PERL)'				\
   REPLACE_GETCWD=$(REPLACE_GETCWD)		\
-  PATH='$(abs_top_builddir)/src$(PATH_SEPARATOR)'"$$PATH"
+  PATH='$(abs_top_builddir)/src$(PATH_SEPARATOR)'"$$PATH" \
+  shell_or_perl_
 
 TEST_LOGS = $(TESTS:=.log)
 

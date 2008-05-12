@@ -113,7 +113,7 @@ if test -f "./$$src"; then dir=./;		\
 elif test -f "$$src"; then dir=;		\
 else dir="$(srcdir)/"; fi;			\
 __SAVED_TERM=$$TERM;				\
-$(TESTS_ENVIRONMENT) $(SHELL)
+$(TESTS_ENVIRONMENT)
 
 # To be appended to the command running the test.  Handles the stdout
 # and stderr redirection, and catch the exit status.
