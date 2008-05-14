@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/perl
 # Newline tests for "md5sum".
 
 # Copyright (C) 1999, 2000, 2003, 2005, 2007-2008 Free Software Foundation, Inc.
@@ -16,32 +16,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-: ${srcdir=.}
-. $top_srcdir/tests/require-perl
-
-# See if we can create a filename that contains a newline.
-# Be careful to do it in a subshell so that we can redirect the
-# error output if it fails.
-(> 'a
-b') 2> /dev/null \
-  && filename_may_contain_newline=yes \
-  || filename_may_contain_newline=no
-rm -f 'a
-b'
-
-if test $filename_may_contain_newline = no; then
-  skip_test_ "failed to create newline-containing file name"
-fi
-
-me=`echo $0|sed 's,.*/,,'`
-exec $PERL -w -I$top_srcdir/tests -MCoreutils -M"CuTmpdir qw($me)" -- - <<\EOF
-require 5.003;
 use strict;
 
 (my $program_name = $0) =~ s|.*/||;
 
 # Turn off localization of executable's output.
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
+
+# See if we can create a file name that contains a newline.
+# Use system, since Perl doesn't let you do this with "open".
+system ('touch', "a\nb") == 0
+  or (warn "$0: failed to create newline-containing file name\n"), exit 77;
 
 my $degenerate = "d41d8cd98f00b204e9800998ecf8427e";
 my $t = '--text';
@@ -57,4 +42,3 @@ my $verbose = $ENV{VERBOSE};
 my $prog = 'md5sum';
 my $fail = run_tests ($program_name, $prog, \@Tests, $save_temps, $verbose);
 exit $fail;
-EOF

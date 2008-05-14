@@ -1,5 +1,4 @@
-#!/bin/sh
-# -*- perl -*-
+#!/usr/bin/perl
 # Test dd's skip and seek options.
 
 # Copyright (C) 2000-2008 Free Software Foundation, Inc.
@@ -17,15 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-: ${srcdir=.}
-. $top_srcdir/tests/require-perl
-
-SCRIPT_NAME=$0
-export SCRIPT_NAME
-
-me=`echo $0|sed 's,.*/,,'`
-exec $PERL -w -I$top_srcdir/tests -MCoreutils -M"CuTmpdir qw($me)" -- - <<\EOF
-require 5.003;
 use strict;
 
 (my $program_name = $0) =~ s|.*/||;
@@ -33,7 +23,6 @@ use strict;
 # Turn off localization of executable's output.
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
 my $out = 'out';
-my $script_name = $ENV{SCRIPT_NAME};
 
 my @Tests =
     (
@@ -87,4 +76,3 @@ my $verbose = $ENV{VERBOSE};
 my $prog = 'dd';
 my $fail = run_tests ($program_name, $prog, \@Tests, $save_temps, $verbose);
 exit $fail;
-EOF

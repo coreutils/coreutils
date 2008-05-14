@@ -16,7 +16,6 @@ package Coreutils;
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-require 5.003;
 use strict;
 use vars qw($VERSION @ISA @EXPORT);
 

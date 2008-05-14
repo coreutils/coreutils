@@ -1,5 +1,4 @@
-#!/bin/sh
-# -*- perl -*-
+#!/usr/bin/perl
 # Exercise fold.
 
 # Copyright (C) 2003, 2005-2008 Free Software Foundation, Inc.
@@ -17,26 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-: ${srcdir=.}
-. $top_srcdir/tests/require-perl
-
-# Ensure that we don't run an older version of fold.
-# Prior to 5.0.91, some of the tests below would cause fold to infloop,
-# and since `make check' might be run even after a build failure, it'd
-# expose just such an older version.
-ver=`fold --version|sed 1q`
-case $ver in
-  *" $PACKAGE_VERSION") ;;
-  *) echo 1>&2 \
-   "$0: found unexpected version of fold, \`$ver'" \
-     "(expected $PACKAGE_VERSION)"
-  exit 1;;
-esac
-
-me=`echo $0|sed 's,.*/,,'`
-exec $PERL -w -I$top_srcdir/tests -MCoreutils -M"CuTmpdir qw($me)" -- - <<\EOF
-#/
-require 5.003;
 use strict;
 
 (my $program_name = $0) =~ s|.*/||;
@@ -58,4 +37,3 @@ my $verbose = $ENV{VERBOSE};
 my $prog = 'fold';
 my $fail = run_tests ($program_name, $prog, \@Tests, $save_temps, $verbose);
 exit $fail;
-EOF

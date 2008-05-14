@@ -1,6 +1,8 @@
-#!/bin/sh
-# -*- perl -*-
+#!/usr/bin/perl
 # Test whether programs exit upon a single EOF from a tty.
+# Ensure that e.g., cat exits upon a single EOF (^D) from a tty.
+# Do the same for all programs that can read stdin,
+# require no arguments and that write to standard output.
 
 # Copyright (C) 2003, 2006, 2007, 2008 Free Software Foundation, Inc.
 
@@ -17,23 +19,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-: ${srcdir=.}
-. $top_srcdir/tests/require-perl
-
-# Ensure that $TMPDIR is valid.
-TMPDIR=.; export TMPDIR
-
-ARGV_0=$0
-export ARGV_0
-
-exec $PERL -w -- - <<\EOF
-
-# Ensure that cat exits upon a single EOF (^D) from a tty.
-# Do the same for all programs that can read stdin,
-# require no arguments and that write to standard output.
 use strict;
-
-(my $ME = $ENV{ARGV_0}) =~ s|.*/||;
+(my $ME = $0) =~ s|.*/||;
 
 # Some older versions of Expect.pm (e.g. 1.07) lack the log_user method,
 # so check for that, too.
@@ -121,4 +108,3 @@ $@ and (warn "$ME: this script requires Perl's Expect package >=1.11\n"),
 
   exit $fail
 }
-EOF

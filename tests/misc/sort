@@ -1,5 +1,4 @@
-#!/bin/sh
-# -*- perl -*-
+#!/usr/bin/perl
 
 # Copyright (C) 2008 Free Software Foundation, Inc.
 
@@ -16,12 +15,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-: ${top_srcdir=../..}
-. $top_srcdir/tests/require-perl
-
-me=`echo $0|sed 's,.*/,,'`
-exec $PERL -w -I$top_srcdir/tests -MCoreutils -M"CuTmpdir qw($me)" -- - <<\EOF
-require 5.003;
 use strict;
 
 my $prog = 'sort';
@@ -60,7 +53,7 @@ my @Tests =
 ["02a", '-c', {IN=>"A\nB\nC\n"}, {OUT=>''}],
 ["02b", '-c', {IN=>"A\nC\nB\n"}, {OUT=>''}, {EXIT=>1},
  {ERR=>"$prog: -:3: disorder: B\n"}, $normalize_filename],
-["02c", qw(-c -k1,1), {IN=>"a\na b\n"}, {OUT=>''}],
+["02c", '-c -k1,1', {IN=>"a\na b\n"}, {OUT=>''}],
 ["02d", '-C', {IN=>"A\nB\nC\n"}, {OUT=>''}],
 ["02e", '-C', {IN=>"A\nC\nB\n"}, {OUT=>''}, {EXIT=>1}],
 # This should fail because there are duplicate keys
@@ -74,7 +67,7 @@ my @Tests =
 #
 ["03a", '-k1', {IN=>"B\nA\n"}, {OUT=>"A\nB\n"}],
 ["03b", '-k1,1', {IN=>"B\nA\n"}, {OUT=>"A\nB\n"}],
-["03c", qw(-k1 -k2), {IN=>"A b\nA a\n"}, {OUT=>"A a\nA b\n"}],
+["03c", '-k1 -k2', {IN=>"A b\nA a\n"}, {OUT=>"A a\nA b\n"}],
 # Fail with a diagnostic when -k specifies field == 0.
 ["03d", '-k0', {EXIT=>2},
  {ERR=>"$prog: -: invalid field specification `0'\n"},
@@ -85,11 +78,11 @@ my @Tests =
 ["03f", '-k1.1,-k0', {EXIT=>2},
  {ERR=>"$prog: invalid number after `,': invalid count at start of `-k0'\n"}],
 # This is ok.
-["03g", '-k1.1,1.0'],
+["03g", '-k1.1,1.0', {IN=>''}],
 # This is equivalent to 3f.
-["03h", '-k1.1,1'],
+["03h", '-k1.1,1', {IN=>''}],
 # This too, is equivalent to 3f.
-["03i", '-k1,1'],
+["03i", '-k1,1', {IN=>''}],
 #
 ["04a", '-nc', {IN=>"2\n11\n"}],
 ["04b", '-n', {IN=>"11\n2\n"}, {OUT=>"2\n11\n"}],
@@ -99,28 +92,28 @@ my @Tests =
 #
 ["05a", '-k1,2', {IN=>"A B\nA A\n"}, {OUT=>"A A\nA B\n"}],
 ["05b", '-k1,2', {IN=>"A B A\nA A Z\n"}, {OUT=>"A A Z\nA B A\n"}],
-["05c", qw(-k1 -k2), {IN=>"A B A\nA A Z\n"}, {OUT=>"A A Z\nA B A\n"}],
+["05c", '-k1 -k2', {IN=>"A B A\nA A Z\n"}, {OUT=>"A A Z\nA B A\n"}],
 ["05d", '-k2,2', {IN=>"A B A\nA A Z\n"}, {OUT=>"A A Z\nA B A\n"}],
 ["05e", '-k2,2', {IN=>"A B Z\nA A A\n"}, {OUT=>"A A A\nA B Z\n"}],
 ["05f", '-k2,2', {IN=>"A B A\nA A Z\n"}, {OUT=>"A A Z\nA B A\n"}],
 #
-["06a", qw(-k 1,2), {IN=>"A B\nA A\n"}, {OUT=>"A A\nA B\n"}],
-["06b", qw(-k 1,2), {IN=>"A B A\nA A Z\n"}, {OUT=>"A A Z\nA B A\n"}],
-["06c", qw(-k 1 -k 2), {IN=>"A B A\nA A Z\n"}, {OUT=>"A A Z\nA B A\n"}],
-["06d", qw(-k 2,2), {IN=>"A B A\nA A Z\n"}, {OUT=>"A A Z\nA B A\n"}],
-["06e", qw(-k 2,2), {IN=>"A B Z\nA A A\n"}, {OUT=>"A A A\nA B Z\n"}],
-["06f", qw(-k 2,2), {IN=>"A B A\nA A Z\n"}, {OUT=>"A A Z\nA B A\n"}],
+["06a", '-k 1,2', {IN=>"A B\nA A\n"}, {OUT=>"A A\nA B\n"}],
+["06b", '-k 1,2', {IN=>"A B A\nA A Z\n"}, {OUT=>"A A Z\nA B A\n"}],
+["06c", '-k 1 -k 2', {IN=>"A B A\nA A Z\n"}, {OUT=>"A A Z\nA B A\n"}],
+["06d", '-k 2,2', {IN=>"A B A\nA A Z\n"}, {OUT=>"A A Z\nA B A\n"}],
+["06e", '-k 2,2', {IN=>"A B Z\nA A A\n"}, {OUT=>"A A A\nA B Z\n"}],
+["06f", '-k 2,2', {IN=>"A B A\nA A Z\n"}, {OUT=>"A A Z\nA B A\n"}],
 #
-["07a", qw(-k 2,3), {IN=>"9 a b\n7 a a\n"}, {OUT=>"7 a a\n9 a b\n"}],
-["07b", qw(-k 2,3), {IN=>"a a b\nz a a\n"}, {OUT=>"z a a\na a b\n"}],
-["07c", qw(-k 2,3), {IN=>"y k b\nz k a\n"}, {OUT=>"z k a\ny k b\n"}],
-["07d", qw(+1 -3), {IN=>"y k b\nz k a\n"}, {OUT=>"z k a\ny k b\n"}],
+["07a", '-k 2,3', {IN=>"9 a b\n7 a a\n"}, {OUT=>"7 a a\n9 a b\n"}],
+["07b", '-k 2,3', {IN=>"a a b\nz a a\n"}, {OUT=>"z a a\na a b\n"}],
+["07c", '-k 2,3', {IN=>"y k b\nz k a\n"}, {OUT=>"z k a\ny k b\n"}],
+["07d", '+1 -3', {IN=>"y k b\nz k a\n"}, {OUT=>"z k a\ny k b\n"}],
 #
 # report an error for `.' without following char spec
-["08a", qw(-k 2.,3), {EXIT=>2},
+["08a", '-k 2.,3', {EXIT=>2},
  {ERR=>"$prog: invalid number after `.': invalid count at start of `,3'\n"}],
 # report an error for `,' without following POS2
-["08b", qw(-k 2,), {EXIT=>2},
+["08b", '-k 2,', {EXIT=>2},
  {ERR=>"$prog: invalid number after `,': invalid count at start of `'\n"}],
 #
 # Test new -g option.
@@ -131,61 +124,61 @@ my @Tests =
 ["09d", '-k2g', {IN=>"a 1e2\nb 2e1\n"}, {OUT=>"b 2e1\na 1e2\n"}],
 #
 # Bug reported by Roger Peel <R.Peel@ee.surrey.ac.uk>
-["10a", qw(-t : -k 2.2,2.2), {IN=>":ba\n:ab\n"}, {OUT=>":ba\n:ab\n"}],
+["10a", '-t : -k 2.2,2.2', {IN=>":ba\n:ab\n"}, {OUT=>":ba\n:ab\n"}],
 # Equivalent to above, but using obsolescent `+pos -pos' option syntax.
-["10b", qw(-t : +1.1 -1.2), {IN=>":ba\n:ab\n"}, {OUT=>":ba\n:ab\n"}],
+["10b", '-t : +1.1 -1.2', {IN=>":ba\n:ab\n"}, {OUT=>":ba\n:ab\n"}],
 #
 # The same as the preceding two, but with input lines reversed.
-["10c", qw(-t : -k 2.2,2.2), {IN=>":ab\n:ba\n"}, {OUT=>":ba\n:ab\n"}],
+["10c", '-t : -k 2.2,2.2', {IN=>":ab\n:ba\n"}, {OUT=>":ba\n:ab\n"}],
 # Equivalent to above, but using obsolescent `+pos -pos' option syntax.
-["10d", qw(-t : +1.1 -1.2), {IN=>":ab\n:ba\n"}, {OUT=>":ba\n:ab\n"}],
+["10d", '-t : +1.1 -1.2', {IN=>":ab\n:ba\n"}, {OUT=>":ba\n:ab\n"}],
 # Try without -t...
 # But note that we have to count the delimiting space at the beginning
 # of each field that has it.
-["10a0", qw(-k 2.3,2.3), {IN=>"z ba\nz ab\n"}, {OUT=>"z ba\nz ab\n"}],
-["10a1", qw(-k 1.2,1.2), {IN=>"ba\nab\n"}, {OUT=>"ba\nab\n"}],
-["10a2", qw(-b -k 2.2,2.2), {IN=>"z ba\nz ab\n"}, {OUT=>"z ba\nz ab\n"}],
+["10a0", '-k 2.3,2.3', {IN=>"z ba\nz ab\n"}, {OUT=>"z ba\nz ab\n"}],
+["10a1", '-k 1.2,1.2', {IN=>"ba\nab\n"}, {OUT=>"ba\nab\n"}],
+["10a2", '-b -k 2.2,2.2', {IN=>"z ba\nz ab\n"}, {OUT=>"z ba\nz ab\n"}],
 #
 # An even simpler example demonstrating the bug.
-["10e", qw(-k 1.2,1.2), {IN=>"ab\nba\n"}, {OUT=>"ba\nab\n"}],
+["10e", '-k 1.2,1.2', {IN=>"ab\nba\n"}, {OUT=>"ba\nab\n"}],
 #
 # The way sort works on these inputs (10f and 10g) seems wrong to me.
 # See http://git.sv.gnu.org/gitweb/?p=coreutils.git;a=commitdiff;h=3c467c0d223
 # POSIX doesn't seem to say one way or the other, but that's the way all
 # other sort implementations work.
-["10f", qw(-t : -k 1.3,1.3), {IN=>":ab\n:ba\n"}, {OUT=>":ba\n:ab\n"}],
-["10g", qw(-k 1.4,1.4), {IN=>"a ab\nb ba\n"}, {OUT=>"b ba\na ab\n"}],
+["10f", '-t : -k 1.3,1.3', {IN=>":ab\n:ba\n"}, {OUT=>":ba\n:ab\n"}],
+["10g", '-k 1.4,1.4', {IN=>"a ab\nb ba\n"}, {OUT=>"b ba\na ab\n"}],
 #
 # Exercise bug re using -b to skip trailing blanks.
-["11a", qw(-t: -k1,1b -k2,2), {IN=>"a\t:a\na :b\n"}, {OUT=>"a\t:a\na :b\n"}],
-["11b", qw(-t: -k1,1b -k2,2), {IN=>"a :b\na\t:a\n"}, {OUT=>"a\t:a\na :b\n"}],
-["11c", qw(-t: -k2,2b -k3,3), {IN=>"z:a\t:a\na :b\n"}, {OUT=>"z:a\t:a\na :b\n"}],
+["11a", '-t: -k1,1b -k2,2', {IN=>"a\t:a\na :b\n"}, {OUT=>"a\t:a\na :b\n"}],
+["11b", '-t: -k1,1b -k2,2', {IN=>"a :b\na\t:a\n"}, {OUT=>"a\t:a\na :b\n"}],
+["11c", '-t: -k2,2b -k3,3', {IN=>"z:a\t:a\na :b\n"}, {OUT=>"z:a\t:a\na :b\n"}],
 # Before 1.22m, the first key comparison reported equality.
 # With 1.22m, they compare different: "a" sorts before "a\n",
 # and the second key spec isn't even used.
-["11d", qw(-t: -k2,2b -k3,3), {IN=>"z:a :b\na\t:a\n"}, {OUT=>"a\t:a\nz:a :b\n"}],
+["11d", '-t: -k2,2b -k3,3', {IN=>"z:a :b\na\t:a\n"}, {OUT=>"a\t:a\nz:a :b\n"}],
 #
 # Exercise bug re comparing `-' and integers.
-["12a", qw(-n -t: +1), {IN=>"a:1\nb:-\n"}, {OUT=>"b:-\na:1\n"}],
-["12b", qw(-n -t: +1), {IN=>"b:-\na:1\n"}, {OUT=>"b:-\na:1\n"}],
+["12a", '-n -t: +1', {IN=>"a:1\nb:-\n"}, {OUT=>"b:-\na:1\n"}],
+["12b", '-n -t: +1', {IN=>"b:-\na:1\n"}, {OUT=>"b:-\na:1\n"}],
 # Try some other (e.g. `X') invalid character.
-["12c", qw(-n -t: +1), {IN=>"a:1\nb:X\n"}, {OUT=>"b:X\na:1\n"}],
-["12d", qw(-n -t: +1), {IN=>"b:X\na:1\n"}, {OUT=>"b:X\na:1\n"}],
+["12c", '-n -t: +1', {IN=>"a:1\nb:X\n"}, {OUT=>"b:X\na:1\n"}],
+["12d", '-n -t: +1', {IN=>"b:X\na:1\n"}, {OUT=>"b:X\na:1\n"}],
 # From Karl Heuer
 ["13a", '+0.1n', {IN=>"axx\nb-1\n"}, {OUT=>"b-1\naxx\n"}],
 ["13b", '+0.1n', {IN=>"b-1\naxx\n"}, {OUT=>"b-1\naxx\n"}],
 #
 # From Carl Johnson <carlj@cjlinux.home.org>
-["14a", qw(-d -u), {IN=>"mal\nmal-\nmala\n"}, {OUT=>"mal\nmala\n"}],
+["14a", '-d -u', {IN=>"mal\nmal-\nmala\n"}, {OUT=>"mal\nmala\n"}],
 # Be sure to fix the (translate && ignore) case in keycompare.
-["14b", qw(-f -d -u), {IN=>"mal\nmal-\nmala\n"}, {OUT=>"mal\nmala\n"}],
+["14b", '-f -d -u', {IN=>"mal\nmal-\nmala\n"}, {OUT=>"mal\nmala\n"}],
 #
 # Experiment with -i.
-["15a", qw(-i -u), {IN=>"a\na\1\n"}, {OUT=>"a\n"}],
-["15b", qw(-i -u), {IN=>"a\n\1a\n"}, {OUT=>"a\n"}],
-["15c", qw(-i -u), {IN=>"a\1\na\n"}, {OUT=>"a\1\n"}],
-["15d", qw(-i -u), {IN=>"\1a\na\n"}, {OUT=>"\1a\n"}],
-["15e", qw(-i -u), {IN=>"a\n\1\1\1\1\1a\1\1\1\1\n"}, {OUT=>"a\n"}],
+["15a", '-i -u', {IN=>"a\na\1\n"}, {OUT=>"a\n"}],
+["15b", '-i -u', {IN=>"a\n\1a\n"}, {OUT=>"a\n"}],
+["15c", '-i -u', {IN=>"a\1\na\n"}, {OUT=>"a\1\n"}],
+["15d", '-i -u', {IN=>"\1a\na\n"}, {OUT=>"\1a\n"}],
+["15e", '-i -u', {IN=>"a\n\1\1\1\1\1a\1\1\1\1\n"}, {OUT=>"a\n"}],
 
 # From Erick Branderhorst -- fixed around 1.19e
 ["16a", '-f',
@@ -201,7 +194,7 @@ my @Tests =
 
 # Just like above, because the global `-b' has no effect on the
 # key specifier when a key-specific option (`n' in this case) is used.
-["18b", qw(-b -k1.1,1.2n), {IN=>" 901\n100\n"}, {OUT=>" 901\n100\n"}],
+["18b", '-b -k1.1,1.2n', {IN=>" 901\n100\n"}, {OUT=>" 901\n100\n"}],
 
 # Here we're comparing ` 90' and `10', because the `b' on the key-end specifier
 # makes sort ignore leading blanks when determining that key's *end*.
@@ -213,15 +206,15 @@ my @Tests =
 
 # This compares `90' and `10', as it ignores leading blanks for both
 # key start and key end.
-["18e", qw(-nb -k1.1,1.2), {IN=>" 901\n100\n"}, {OUT=>"100\n 901\n"}],
+["18e", '-nb -k1.1,1.2', {IN=>" 901\n100\n"}, {OUT=>"100\n 901\n"}],
 
 # This looks odd, but works properly -- 2nd keyspec is never
 # used because all lines are different.
-["19a", qw(+0 +1nr), {IN=>"b 2\nb 1\nb 3\n"}, {OUT=>"b 1\nb 2\nb 3\n"}],
+["19a", '+0 +1nr', {IN=>"b 2\nb 1\nb 3\n"}, {OUT=>"b 1\nb 2\nb 3\n"}],
 
 # The test *intended* by the author of the above, but using the
 # more-intuitive POSIX-style -k options.
-["19b", qw(-k1,1 -k2nr), {IN=>"b 2\nb 1\nb 3\n"}, {OUT=>"b 3\nb 2\nb 1\n"}],
+["19b", '-k1,1 -k2nr', {IN=>"b 2\nb 1\nb 3\n"}, {OUT=>"b 3\nb 2\nb 1\n"}],
 
 # This test failed when sort-1.22 was compiled on a Next x86 system
 # without optimization.  Without optimization gcc uses the buggy version
@@ -243,8 +236,8 @@ my @Tests =
 ["21g", '-fu', {IN=>"a\n_\n"}, {OUT=>"a\n_\n"}],
 
 # This test failed until 1.22f.  From Zvi Har'El.
-["22a", qw(-k 2,2fd -k 1,1r), {IN=>"3 b\n4 B\n"}, {OUT=>"4 B\n3 b\n"}],
-["22b", qw(-k 2,2d  -k 1,1r), {IN=>"3 b\n4 b\n"}, {OUT=>"4 b\n3 b\n"}],
+["22a", '-k 2,2fd -k 1,1r', {IN=>"3 b\n4 B\n"}, {OUT=>"4 B\n3 b\n"}],
+["22b", '-k 2,2d  -k 1,1r', {IN=>"3 b\n4 b\n"}, {OUT=>"4 b\n3 b\n"}],
 
 ["no-file1", 'no-file', {EXIT=>2}, {ERR=>$no_file}],
 # This test failed until 1.22f.  Sort didn't give an error.
@@ -345,4 +338,3 @@ my $verbose = $ENV{VERBOSE};
 
 my $fail = run_tests ($prog, $prog, \@Tests, $save_temps, $verbose);
 exit $fail;
-EOF

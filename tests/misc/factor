@@ -1,5 +1,4 @@
-#!/bin/sh
-# -*-perl-*-
+#!/usr/bin/perl
 # Basic tests for "factor".
 
 # Copyright (C) 1998, 1999, 2000, 2003, 2004, 2005, 2007-2008 Free Software
@@ -18,12 +17,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-: ${srcdir=.}
-. $top_srcdir/tests/require-perl
-
-me=`echo $0|sed 's,.*/,,'`
-exec $PERL -w -I$top_srcdir/tests -MCoreutils -M"CuTmpdir qw($me)" -- - <<\EOF
-require 5.003;
 use strict;
 
 (my $program_name = $0) =~ s|.*/||;
@@ -103,4 +96,3 @@ my $verbose = $ENV{VERBOSE};
 
 my $fail = run_tests ($program_name, $prog, \@Tests, $save_temps, $verbose);
 exit $fail;
-EOF

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/perl
 # Basic tests for "wc".
 
 # Copyright (C) 1997, 2003, 2006, 2008 Free Software Foundation, Inc.
@@ -16,12 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-: ${srcdir=.}
-. $top_srcdir/tests/require-perl
-
-me=`echo $0|sed 's,.*/,,'`
-exec $PERL -w -I$top_srcdir/tests -MCoreutils -M"CuTmpdir qw($me)" -- - <<\EOF
-require 5.003;
 use strict;
 
 my $prog = 'wc';
@@ -54,4 +48,3 @@ my $verbose = $ENV{VERBOSE};
 
 my $fail = run_tests ($prog, $prog, \@Tests, $save_temps, $verbose);
 exit $fail;
-EOF

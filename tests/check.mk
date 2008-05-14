@@ -49,11 +49,14 @@ built_programs = \
 # variables to test scripts.
 TESTS_ENVIRONMENT =				\
   . $(top_srcdir)/tests/lang-default;		\
+  tmp__=$$TMPDIR; test -d $tmp__ || tmp__=.;	\
   . $(top_srcdir)/tests/envvar-check;		\
+  TMPDIR=$$tmp__; export TMPDIR;		\
   shell_or_perl_() {				\
-    if grep '^\#!/usr/bin/perl' "$$1" > /dev/null; then		\
-      if $(PERL) -e 'use warnings' > /dev/null 2>&1; then	\
-        $(PERL) -w -I$(top_srcdir)/tests -MCoreutils		\
+    if grep '^\#!/usr/bin/perl' "$$1" > /dev/null; then			\
+      if $(PERL) -e 'use warnings' > /dev/null 2>&1; then		\
+	grep '^\#!/usr/bin/perl -T' "$$1" > /dev/null && T_=T || T_=;	\
+        $(PERL) -w$$T_ -I$(top_srcdir)/tests -MCoreutils		\
 	      -M"CuTmpdir qw($$tst)" -- "$$1";	\
       else					\
 	echo 1>&2 "$$tst: configure did not find a usable version of Perl," \
