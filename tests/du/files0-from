@@ -1,5 +1,6 @@
 #!/usr/bin/perl
 # Exercise du's --files0-from option.
+# FIXME: keep this file in sync with tests/misc/wc-files0-from.
 
 # Copyright (C) 2004, 2005, 2007-2008 Free Software Foundation, Inc.
 
@@ -20,7 +21,7 @@ use strict;
 
 (my $program_name = $0) =~ s|.*/||;
 
-$ENV{PROG} = 'du';
+my $prog = 'du';
 
 # Turn off localization of executable's output.
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
@@ -29,15 +30,20 @@ my @Tests =
   (
    # invalid extra command line argument
    ['f-extra-arg', '--files0-from=- no-such', {IN=>"a"}, {EXIT=>1},
-    {ERR => "du: extra operand `no-such'\n"
-	. "File operands cannot be combined with --files0-from.\n"
-	. "Try `du --help' for more information.\n"}
+    {ERR => "$prog: extra operand `no-such'\n"
+        . "File operands cannot be combined with --files0-from.\n"
+        . "Try `$prog --help' for more information.\n"}
     ],
 
    # missing input file
    ['missing', '--files0-from=missing', {EXIT=>1},
-    {ERR => "du: cannot open `missing' for reading: "
+    {ERR => "$prog: cannot open `missing' for reading: "
      . "No such file or directory\n"}],
+
+   # input file name of '-'
+   ['minus-in-stdin', '--files0-from=-', '<', {IN=>{f=>'-'}}, {EXIT=>1},
+    {ERR => "$prog: when reading file names from stdin, no file name of"
+     . " `-' allowed\n"}],
 
    # empty input, regular file
    ['empty', '--files0-from=@AUX@', {AUX=>''}],
@@ -47,12 +53,12 @@ my @Tests =
 
    # one NUL
    ['nul-1', '--files0-from=-', '<', {IN=>"\0"}, {EXIT=>1},
-    {ERR => "du: -:1: invalid zero-length file name\n"}],
+    {ERR => "$prog: -:1: invalid zero-length file name\n"}],
 
    # two NULs
    ['nul-2', '--files0-from=-', '<', {IN=>"\0\0"}, {EXIT=>1},
-    {ERR => "du: -:1: invalid zero-length file name\n"
-          . "du: -:2: invalid zero-length file name\n"}],
+    {ERR => "$prog: -:1: invalid zero-length file name\n"
+          . "$prog: -:2: invalid zero-length file name\n"}],
 
    # one file name, no NUL
    ['1', '--files0-from=-', '<',
@@ -74,16 +80,15 @@ my @Tests =
     {IN=>{f=>"g\0g\0"}}, {AUX=>{g=>''}},
     {OUT=>"0\tg\n0\tg\n"}, {OUT_SUBST=>'s/^\d+/0/'} ],
 
-   # Ensure that du processes FILEs following a zero-length name.
+   # Ensure that $prog processes FILEs following a zero-length name.
    ['zero-len', '--files0-from=-', '<',
     {IN=>{f=>"\0g\0"}}, {AUX=>{g=>''}},
     {OUT=>"0\tg\n"}, {OUT_SUBST=>'s/^\d+/0/'},
-    {ERR => "du: -:1: invalid zero-length file name\n"}, {EXIT=>1} ],
+    {ERR => "$prog: -:1: invalid zero-length file name\n"}, {EXIT=>1} ],
   );
 
 my $save_temps = $ENV{DEBUG};
 my $verbose = $ENV{VERBOSE};
 
-my $prog = $ENV{PROG} || die "$0: \$PROG not specified in environment\n";
 my $fail = run_tests ($program_name, $prog, \@Tests, $save_temps, $verbose);
 exit $fail;

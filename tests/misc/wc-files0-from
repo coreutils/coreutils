@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 # Exercise wc's --files0-from option.
-# This file bears a striking resemblance to tests/du/files0-from.
+# FIXME: keep this file in sync with tests/du/files0-from.
 
 # Copyright (C) 2006-2008 Free Software Foundation, Inc.
 
@@ -31,8 +31,8 @@ my @Tests =
    # invalid extra command line argument
    ['f-extra-arg', '--files0-from=- no-such', {IN=>"a"}, {EXIT=>1},
     {ERR => "$prog: extra operand `no-such'\n"
-	. "File operands cannot be combined with --files0-from.\n"
-	. "Try `$prog --help' for more information.\n"}
+        . "File operands cannot be combined with --files0-from.\n"
+        . "Try `$prog --help' for more information.\n"}
     ],
 
    # missing input file
@@ -40,21 +40,26 @@ my @Tests =
     {ERR => "$prog: cannot open `missing' for reading: "
      . "No such file or directory\n"}],
 
-   # empty input
-   ['empty', '--files0-from=-'],
+   # input file name of '-'
+   ['minus-in-stdin', '--files0-from=-', '<', {IN=>{f=>'-'}}, {EXIT=>1},
+    {ERR => "$prog: when reading file names from stdin, no file name of"
+     . " `-' allowed\n"}],
+
+   # empty input, regular file
+   ['empty', '--files0-from=@AUX@', {AUX=>''}],
 
    # empty input, from non-regular file
    ['empty-nonreg', '--files0-from=/dev/null'],
 
    # one NUL
    ['nul-1', '--files0-from=-', '<', {IN=>"\0"}, {EXIT=>1},
-    {ERR => "$prog: : No such file or directory\n"}],
+    {ERR => "$prog: -:1: invalid zero-length file name\n"}],
 
    # two NULs
    ['nul-2', '--files0-from=-', '<', {IN=>"\0\0"}, {EXIT=>1},
     {OUT=>"0 0 0 total\n"},
-    {ERR => "$prog: : No such file or directory\n"
-          . "$prog: : No such file or directory\n"}],
+    {ERR => "$prog: -:1: invalid zero-length file name\n"
+          . "$prog: -:2: invalid zero-length file name\n"}],
 
    # one file name, no NUL
    ['1', '--files0-from=-', '<',
@@ -74,11 +79,11 @@ my @Tests =
     {IN=>{f=>"g\0g\0"}}, {AUX=>{g=>''}},
      {OUT=>"0 0 0 g\n0 0 0 g\n0 0 0 total\n"} ],
 
-   # Ensure that wc processes FILEs following a zero-length name.
+   # Ensure that $prog processes FILEs following a zero-length name.
    ['zero-len', '--files0-from=-', '<',
     {IN=>{f=>"\0g\0"}}, {AUX=>{g=>''}},
     {OUT=>"0 0 0 g\n0 0 0 total\n"},
-    {ERR => "$prog: : No such file or directory\n"}, {EXIT=>1} ],
+    {ERR => "$prog: -:1: invalid zero-length file name\n"}, {EXIT=>1} ],
   );
 
 my $save_temps = $ENV{DEBUG};
