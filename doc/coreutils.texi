@@ -10302,7 +10302,9 @@ characters, specified as
 four hexadecimal digits @var{hhhh}, and @samp{\U} for 32-bit Unicode
 characters, specified as eight hexadecimal digits @var{hhhhhhhh}.
 @command{printf} outputs the Unicode characters
-according to the @env{LC_CTYPE} locale.
+according to the @env{LC_CTYPE} locale.  Unicode characters in the ranges
+U+0000...U+009F, U+D800...U+DFFF cannot be specified by this syntax, except
+for U+0024 ($), U+0040 (@@), and U+0060 (@`).
 
 The processing of @samp{\u} and @samp{\U} requires a full-featured
 @code{iconv} facility.  It is activated on systems with glibc 2.2 (or newer),
