@@ -1,5 +1,5 @@
 /* du -- summarize disk usage
-   Copyright (C) 1988-1991, 1995-2007 Free Software Foundation, Inc.
+   Copyright (C) 1988-1991, 1995-2008 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -977,10 +977,22 @@ main (int argc, char **argv)
 	if ( ! files[i])
 	  break;
 
+	if (files_from && STREQ (files_from, "-") && STREQ (files[i], "-"))
+	  {
+	    /* Give a better diagnostic in an unusual case:
+	       printf - | du --files0-from=- */
+	    error (0, 0, _("when reading file names from stdin, "
+			   "no file name of %s allowed"),
+		   quote ("-"));
+	    continue;
+	  }
+
 	if (files[i][0])
 	  i++;
 	else
 	  {
+	    /* Diagnose a zero-length file name.  When it's one
+	       among many, knowing the record number may help.  */
 	    if (files_from)
 	      {
 		/* Using the standard `filename:line-number:' prefix here is

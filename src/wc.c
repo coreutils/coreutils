@@ -30,6 +30,7 @@
 #include "inttostr.h"
 #include "mbchar.h"
 #include "quote.h"
+#include "quotearg.h"
 #include "readtokens0.h"
 #include "safe-read.h"
 
@@ -683,15 +684,39 @@ main (int argc, char **argv)
   ok = true;
   for (i = 0; i < nfiles; i++)
     {
-      if (files_from && STREQ (files_from, "-") && STREQ (files[i], "-"))
+      if (files[i])
 	{
-	  ok = false;
-	  error (0, 0,
-		 _("when reading file names from stdin, "
-		   "no file name of %s allowed"),
-		 quote ("-"));
-	  continue;
+	  if (files_from && STREQ (files_from, "-") && STREQ (files[i], "-"))
+	    {
+	      ok = false;
+	      /* Give a better diagnostic in an unusual case:
+		 printf - | wc --files0-from=- */
+	      error (0, 0, _("when reading file names from stdin, "
+			     "no file name of %s allowed"),
+		     quote ("-"));
+	      continue;
+	    }
+
+	  /* Diagnose a zero-length file name.  When it's one
+	     among many, knowing the record number may help.  */
+	  if (files[i][0] == '\0')
+	    {
+	      ok = false;
+	      if (files_from)
+		{
+		  /* Using the standard `filename:line-number:' prefix here is
+		     not totally appropriate, since NUL is the separator, not NL,
+		     but it might be better than nothing.  */
+		  unsigned long int file_number = i + 1;
+		  error (0, 0, "%s:%lu: %s", quotearg_colon (files_from),
+			 file_number, _("invalid zero-length file name"));
+		}
+	      else
+		error (0, 0, "%s", _("invalid zero-length file name"));
+	      continue;
+	    }
 	}
+
       ok &= wc_file (files[i], &fstatus[i]);
     }
 
