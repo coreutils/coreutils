@@ -39,36 +39,47 @@ fail=0
 # Testing it is tricky, because there is so much variance
 # in quality for this corner of printf(3) implementations.
 # Most implementations do attempt to allocate N bytes of storage.
-# Using the maximum value for N (2^31-1) causes glibc to try to
+# Using the maximum value for N (2^31-1) causes glibc-2.7 to try to
 # allocate almost 2^64 bytes, while freeBSD 6.1's implementation
 # correctly outputs almost 2GB worth of 0's, which takes too long.
 # We want to test implementations that allocate N bytes, but without
 # triggering the above extremes.
 
+# Some other versions of glibc-2.7 have a snprintf function that segfaults
+# when an internal (technically unnecessary!) memory allocation fails.
+
 # The compromise is to limit virtual memory to something reasonable,
 # and to make an N-byte-allocating-printf require more than that, thus
 # triggering the printf(3) misbehavior -- which, btw, is required by ISO C99.
 
-( ulimit -v 10000
-  env $prog %20000000f 0 2>err | head -c 10 >out )
+mkfifo fifo || framework_failure
+
+head -c 10 fifo > out &
+( ulimit -v 10000; env $prog %20000000f 0 2>err-msg > fifo )
+exit=$?
 
 # Map this longer, and rarer, diagnostic to the common one.
 # printf: cannot perform formatted output: Cannot allocate memory" \
-sed 's/cannot perform .*/write error/' err > k && mv k err
-case $(cat err) in
+sed 's/cannot perform .*/write error/' err-msg > k && mv k err-msg
+err_msg=$(cat err-msg)
+case $err_msg in
   "$prog: write error") diagnostic=y ;;
   '') diagnostic=n ;;
   *) diagnostic=unexpected ;;
 esac
 n_out=$(wc -c < out)
 
-case $n_out:$diagnostic in
-  10:n) ;; # ok, succeeds w/no diagnostic: FreeBSD 6.1
-  0:y)  ;; # ok, glibc, when printf(3) fails with ENOMEM
+case $n_out:$diagnostic:$exit in
+  10:n:0) ;; # ok, succeeds w/no diagnostic: FreeBSD 6.1
+  0:y:1)  ;; # ok, glibc-2.8 and newer, when printf(3) fails with ENOMEM
+
+  *:139)     # segfault; known bug at least in debian unstable's libc6 2.7-11
+     echo 1>&2 "$0: bug in snprintf causes low-mem use of printf to segfault"
+     fail=77;;
 
   # 10:y) ;; # Fail: doesn't happen: nobody succeeds with a diagnostic
   # 0:n)  ;; # Fail pre-patch: no output, no diag
-  *) fail=1;
+  *) fail=1;;
 esac
 
 (exit $fail); exit $fail
