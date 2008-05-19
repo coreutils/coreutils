@@ -75,6 +75,12 @@ AM_CPPFLAGS = -I$(top_srcdir)/lib
 # replacement functions defined in libcoreutils.a.
 LDADD = ../lib/libcoreutils.a $(LIBINTL) ../lib/libcoreutils.a
 
+cat_LDADD = $(LDADD)
+df_LDADD = $(LDADD)
+du_LDADD = $(LDADD)
+ptx_LDADD = $(LDADD)
+split_LDADD = $(LDADD)
+
 # for eaccess in lib/euidaccess.c.
 chcon_LDADD = $(LDADD) $(LIB_SELINUX)
 cp_LDADD = $(LDADD) $(LIB_EACCESS) $(LIB_SELINUX)
@@ -136,6 +142,14 @@ mv_LDADD += $(LIB_ACL)
 ginstall_LDADD += $(LIB_ACL)
 
 stat_LDADD = $(LDADD) $(LIB_SELINUX)
+
+# Append $(LIBICONV) to each program that uses proper_name_utf8.
+cat_LDADD += $(LIBICONV)
+cp_LDADD += $(LIBICONV)
+df_LDADD += $(LIBICONV)
+du_LDADD += $(LIBICONV)
+ptx_LDADD += $(LIBICONV)
+split_LDADD += $(LIBICONV)
 
 $(PROGRAMS): ../lib/libcoreutils.a
 

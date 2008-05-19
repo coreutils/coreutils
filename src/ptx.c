@@ -34,10 +34,10 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "ptx"
 
-/* Note to translator: Please translate "F. Pinard" to "François
-   Pinard" if "ç" (c-with-cedilla) is available in the
-   translation's character set and encoding.  */
-#define AUTHORS _("F. Pinard")
+/* TRANSLATORS: Please translate "F. Pinard" to "François Pinard"
+   if "ç" (c-with-cedilla) is available in the translation's character
+   set and encoding.  */
+#define AUTHORS proper_name_utf8 ("F. Pinard", "Fran\xc3\xa7ois Pinard")
 
 /* Number of possible characters in a byte.  */
 #define CHAR_SET_SIZE 256

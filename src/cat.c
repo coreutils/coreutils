@@ -1,5 +1,5 @@
 /* cat -- concatenate files and print on the standard output.
-   Copyright (C) 88, 90, 91, 1995-2007 Free Software Foundation, Inc.
+   Copyright (C) 88, 90, 91, 1995-2008 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -43,7 +43,9 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "cat"
 
-#define AUTHORS "Torbjorn Granlund", "Richard M. Stallman"
+#define AUTHORS \
+  proper_name_utf8 ("Torbjorn Granlund", "Torbj\303\266rn Granlund"), \
+    "Richard M. Stallman"
 
 /* Undefine, to avoid warning about redefinition on some systems.  */
 #undef max

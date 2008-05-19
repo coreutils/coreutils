@@ -50,7 +50,8 @@ extern bool fts_debug;
 #define PROGRAM_NAME "du"
 
 #define AUTHORS \
-  "Torbjorn Granlund", "David MacKenzie, Paul Eggert", "Jim Meyering"
+  proper_name_utf8 ("Torbjorn Granlund", "Torbj\303\266rn Granlund"), \
+  "David MacKenzie, Paul Eggert", "Jim Meyering"
 
 #if DU_DEBUG
 # define FTS_CROSS_CHECK(Fts) fts_cross_check (Fts)

@@ -1,5 +1,5 @@
 /* df - summarize free disk space
-   Copyright (C) 91, 1995-2007 Free Software Foundation, Inc.
+   Copyright (C) 91, 1995-2008 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -38,7 +38,8 @@
 #define PROGRAM_NAME "df"
 
 #define AUTHORS \
-  "Torbjorn Granlund", "David MacKenzie", "Paul Eggert"
+  proper_name_utf8 ("Torbjorn Granlund", "Torbj\303\266rn Granlund"), \
+    "David MacKenzie", "Paul Eggert"
 
 /* Name this program was run with. */
 char *program_name;
