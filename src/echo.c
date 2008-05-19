@@ -1,5 +1,5 @@
 /* echo.c, derived from code echo.c in Bash.
-   Copyright (C) 87,89, 1991-1997, 1999-2005, 2007 Free Software
+   Copyright (C) 87,89, 1991-1997, 1999-2005, 2007-2008 Free Software
    Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
