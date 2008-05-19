@@ -350,10 +350,11 @@ check-AUTHORS: $(all_programs)
 	  elif test "$$i" = test; then			\
 	    exe='[';					\
 	  fi;						\
-	  ./$$exe --version				\
+	  LC_ALL=en_US.UTF-8 ./$$exe --version			\
+	    | perl -0 -pi -e 's/,\n/, /gm'		\
 	    |sed -n '/Written by /{ s//'"$$i"': /; s/,* and /, /; s/\.$$//; p; }'; \
 	done > $(au_actual)
-	sed -n '/:/p' $(top_srcdir)/AUTHORS > $(au_dotdot)
+	sed -n '/^[^ ][^ ]*:/p' $(top_srcdir)/AUTHORS > $(au_dotdot)
 	diff $(au_actual) $(au_dotdot) && rm -f $(au_actual) $(au_dotdot)
 
 # Make sure we don't define any S_IS* macros in src/*.c files.
