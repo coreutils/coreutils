@@ -85,7 +85,7 @@
 diff -upr src/rm.c src/rm.c
 --- src/rm.c	2007-07-23 12:56:20.000000000 +0200
 +++ src/rm.c	2007-07-23 13:03:12.000000000 +0200
-@@ -354,6 +354,7 @@ main (int argc, char **argv)
+@@ -357,6 +357,7 @@ main (int argc, char **argv)
  	       quote ("/"));
      }
 
@@ -93,7 +93,7 @@ diff -upr src/rm.c src/rm.c
    size_t n_files = argc - optind;
    char const *const *file = (char const *const *) argv + optind;
 
-@@ -367,7 +368,10 @@ main (int argc, char **argv)
+@@ -370,7 +371,10 @@ main (int argc, char **argv)
        if (!yesno ())
  	exit (EXIT_SUCCESS);
      }
