@@ -49,7 +49,9 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "csplit"
 
-#define AUTHORS "Stuart Kemp", "David MacKenzie"
+#define AUTHORS \
+  proper_name ("Stuart Kemp"), \
+  proper_name ("David MacKenzie")
 
 /* Increment size of area for control records. */
 #define ALLOC_SIZE 20

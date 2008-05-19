@@ -36,7 +36,9 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "uniq"
 
-#define AUTHORS "Richard Stallman", "David MacKenzie"
+#define AUTHORS \
+  proper_name ("Richard Stallman"), \
+  proper_name ("David MacKenzie")
 
 #define SWAP_LINES(A, B)			\
   do						\

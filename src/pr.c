@@ -325,7 +325,9 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "pr"
 
-#define AUTHORS "Pete TerMaat", "Roland Huebner"
+#define AUTHORS \
+  proper_name ("Pete TerMaat"), \
+  proper_name ("Roland Huebner")
 
 /* Used with start_position in the struct COLUMN described below.
    If start_position == ANYWHERE, we aren't truncating columns and

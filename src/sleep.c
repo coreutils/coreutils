@@ -30,7 +30,9 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "sleep"
 
-#define AUTHORS "Jim Meyering", "Paul Eggert"
+#define AUTHORS \
+  proper_name ("Jim Meyering"), \
+  proper_name ("Paul Eggert")
 
 /* The name by which this program was run. */
 char *program_name;

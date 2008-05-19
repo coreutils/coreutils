@@ -110,7 +110,9 @@
 		      : (ls_mode == LS_MULTI_COL \
 			 ? "dir" : "vdir"))
 
-#define AUTHORS "Richard Stallman", "David MacKenzie"
+#define AUTHORS \
+  proper_name ("Richard Stallman"), \
+  proper_name ("David MacKenzie")
 
 #define obstack_chunk_alloc malloc
 #define obstack_chunk_free free

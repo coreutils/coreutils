@@ -31,7 +31,9 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "dirname"
 
-#define AUTHORS "David MacKenzie", "Jim Meyering"
+#define AUTHORS \
+  proper_name ("David MacKenzie"), \
+  proper_name ("Jim Meyering")
 
 /* The name this program was run with. */
 char *program_name;

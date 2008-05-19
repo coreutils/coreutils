@@ -41,7 +41,9 @@ enum { PRINTENV_FAILURE = 2 };
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "printenv"
 
-#define AUTHORS "David MacKenzie", "Richard Mlynarik"
+#define AUTHORS \
+  proper_name ("David MacKenzie"), \
+  proper_name ("Richard Mlynarik")
 
 /* The name this program was run with. */
 char *program_name;

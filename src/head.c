@@ -42,7 +42,9 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "head"
 
-#define AUTHORS "David MacKenzie", "Jim Meyering"
+#define AUTHORS \
+  proper_name ("David MacKenzie"), \
+  proper_name ("Jim Meyering")
 
 /* Number of lines/chars/blocks to head. */
 #define DEFAULT_NUMBER 10

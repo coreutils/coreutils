@@ -31,7 +31,9 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "sum"
 
-#define AUTHORS "Kayvan Aghaiepour", "David MacKenzie"
+#define AUTHORS \
+  proper_name ("Kayvan Aghaiepour"), \
+  proper_name ("David MacKenzie")
 
 /* The name this program was run with. */
 char *program_name;

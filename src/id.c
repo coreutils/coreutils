@@ -34,7 +34,9 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "id"
 
-#define AUTHORS "Arnold Robbins", "David MacKenzie"
+#define AUTHORS \
+  proper_name ("Arnold Robbins"), \
+  proper_name ("David MacKenzie")
 
 /* If nonzero, output only the SELinux context. -Z */
 static int just_context = 0;

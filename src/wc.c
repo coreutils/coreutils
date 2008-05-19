@@ -42,7 +42,9 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "wc"
 
-#define AUTHORS "Paul Rubin", "David MacKenzie"
+#define AUTHORS \
+  proper_name ("Paul Rubin"), \
+  proper_name ("David MacKenzie")
 
 /* Size of atomic reads. */
 #define BUFFER_SIZE (16 * 1024)

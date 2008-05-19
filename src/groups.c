@@ -35,7 +35,9 @@ char *program_name;
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "groups"
 
-#define AUTHORS "David MacKenzie", "James Youngman"
+#define AUTHORS \
+  proper_name ("David MacKenzie"), \
+  proper_name ("James Youngman")
 
 
 static struct option const longopts[] =

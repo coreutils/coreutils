@@ -785,7 +785,9 @@ test treats each of those as it treats any other nonempty STRING.\n\
 # define main test_command
 #endif
 
-#define AUTHORS "Kevin Braunsdorf", "Matthew Bradburn"
+#define AUTHORS \
+  proper_name ("Kevin Braunsdorf"), \
+  proper_name ("Matthew Bradburn")
 
 /*
  * [:
