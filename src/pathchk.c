@@ -35,7 +35,10 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "pathchk"
 
-#define AUTHORS "Paul Eggert", "David MacKenzie", "Jim Meyering"
+#define AUTHORS \
+  proper_name ("Paul Eggert"), \
+  proper_name ("David MacKenzie"), \
+  proper_name ("Jim Meyering")
 
 #ifndef _POSIX_PATH_MAX
 # define _POSIX_PATH_MAX 256

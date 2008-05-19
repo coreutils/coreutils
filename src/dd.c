@@ -40,7 +40,10 @@ static void process_signals (void);
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "dd"
 
-#define AUTHORS "Paul Rubin", "David MacKenzie", "Stuart Kemp"
+#define AUTHORS \
+  proper_name ("Paul Rubin"), \
+  proper_name ("David MacKenzie"), \
+  proper_name ("Stuart Kemp")
 
 /* Use SA_NOCLDSTOP as a proxy for whether the sigaction machinery is
    present.  SA_NODEFER and SA_RESETHAND are XSI extensions.  */

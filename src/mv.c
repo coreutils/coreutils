@@ -37,7 +37,10 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "mv"
 
-#define AUTHORS "Mike Parker", "David MacKenzie", "Jim Meyering"
+#define AUTHORS \
+  proper_name ("Mike Parker"), \
+  proper_name ("David MacKenzie"), \
+  proper_name ("Jim Meyering")
 
 /* Initial number of entries in each hash table entry's table of inodes.  */
 #define INITIAL_HASH_MODULE 100

@@ -28,7 +28,10 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "tee"
 
-#define AUTHORS "Mike Parker", "Richard M. Stallman", "David MacKenzie"
+#define AUTHORS \
+  proper_name ("Mike Parker"), \
+  proper_name ("Richard M. Stallman"), \
+  proper_name ("David MacKenzie")
 
 static bool tee_files (int nfiles, const char **files);
 

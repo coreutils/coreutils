@@ -33,7 +33,10 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "pinky"
 
-#define AUTHORS "Joseph Arceneaux", "David MacKenzie", "Kaveh Ghazi"
+#define AUTHORS \
+  proper_name ("Joseph Arceneaux"), \
+  proper_name ("David MacKenzie"), \
+  proper_name ("Kaveh Ghazi")
 
 #ifndef MAXHOSTNAMELEN
 # define MAXHOSTNAMELEN 64

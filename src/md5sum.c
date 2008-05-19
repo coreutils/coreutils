@@ -88,7 +88,10 @@
 #define DIGEST_HEX_BYTES (DIGEST_BITS / 4)
 #define DIGEST_BIN_BYTES (DIGEST_BITS / 8)
 
-#define AUTHORS "Ulrich Drepper", "Scott Miller", "David Madore"
+#define AUTHORS \
+  proper_name ("Ulrich Drepper"), \
+  proper_name ("Scott Miller"), \
+  proper_name ("David Madore")
 
 /* The minimum length of a valid digest line.  This length does
    not include any newline character at the end of a line.  */
