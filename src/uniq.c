@@ -165,8 +165,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
      fputs (VERSION_OPTION_DESCRIPTION, stdout);
      fputs (_("\
 \n\
-A field is a run of whitespace, then non-whitespace characters.\n\
-Fields are skipped before chars.\n\
+A field is a run of blanks (usually spaces and/or TABs), then non-blank\n\
+characters.  Fields are skipped before chars.\n\
 "), stdout);
      fputs (_("\
 \n\
