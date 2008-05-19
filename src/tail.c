@@ -1,5 +1,5 @@
 /* tail -- output the last part of file(s)
-   Copyright (C) 1989, 90, 91, 1995-2006 Free Software Foundation, Inc.
+   Copyright (C) 1989, 90, 91, 1995-2006, 2008 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -49,7 +49,10 @@
 #define PROGRAM_NAME "tail"
 
 #define AUTHORS \
-  "Paul Rubin", "David MacKenzie, Ian Lance Taylor", "Jim Meyering"
+  proper_name ("Paul Rubin"), \
+  proper_name ("David MacKenzie"), \
+  proper_name ("Ian Lance Taylor"), \
+  proper_name ("Jim Meyering")
 
 /* Number of items to tail.  */
 #define DEFAULT_N_LINES 10

@@ -54,7 +54,8 @@
 
 #define AUTHORS \
   proper_name_utf8 ("Torbjorn Granlund", "Torbj\303\266rn Granlund"), \
-    "David MacKenzie", "Jim Meyering"
+  proper_name ("David MacKenzie"), \
+  proper_name ("Jim Meyering")
 
 /* Used by do_copy, make_dir_parents_private, and re_protect
    to keep a list of leading directories whose protections

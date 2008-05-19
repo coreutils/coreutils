@@ -45,7 +45,7 @@
 
 #define AUTHORS \
   proper_name_utf8 ("Torbjorn Granlund", "Torbj\303\266rn Granlund"), \
-    "Richard M. Stallman"
+  proper_name ("Richard M. Stallman")
 
 /* Undefine, to avoid warning about redefinition on some systems.  */
 #undef max

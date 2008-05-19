@@ -1,5 +1,5 @@
 /* `rm' file deletion utility for GNU.
-   Copyright (C) 88, 90, 91, 1994-2007 Free Software Foundation, Inc.
+   Copyright (C) 88, 90, 91, 1994-2008 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -61,7 +61,10 @@
 #define PROGRAM_NAME "rm"
 
 #define AUTHORS \
-  "Paul Rubin", "David MacKenzie, Richard Stallman", "Jim Meyering"
+  proper_name ("Paul Rubin"), \
+  proper_name ("David MacKenzie"), \
+  proper_name ("Richard Stallman"), \
+  proper_name ("Jim Meyering")
 
 /* Name this program was run with.  */
 char *program_name;

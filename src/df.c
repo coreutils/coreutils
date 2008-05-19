@@ -39,7 +39,8 @@
 
 #define AUTHORS \
   proper_name_utf8 ("Torbjorn Granlund", "Torbj\303\266rn Granlund"), \
-    "David MacKenzie", "Paul Eggert"
+  proper_name ("David MacKenzie"), \
+  proper_name ("Paul Eggert")
 
 /* Name this program was run with. */
 char *program_name;

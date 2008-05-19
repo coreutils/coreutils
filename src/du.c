@@ -51,7 +51,9 @@ extern bool fts_debug;
 
 #define AUTHORS \
   proper_name_utf8 ("Torbjorn Granlund", "Torbj\303\266rn Granlund"), \
-  "David MacKenzie, Paul Eggert", "Jim Meyering"
+  proper_name ("David MacKenzie"), \
+  proper_name ("Paul Eggert"), \
+  proper_name ("Jim Meyering")
 
 #if DU_DEBUG
 # define FTS_CROSS_CHECK(Fts) fts_cross_check (Fts)

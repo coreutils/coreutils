@@ -38,7 +38,11 @@
 #define PROGRAM_NAME "touch"
 
 #define AUTHORS \
-"Paul Rubin", "Arnold Robbins, Jim Kingdon, David MacKenzie", "Randy Smith"
+  proper_name ("Paul Rubin"), \
+  proper_name ("Arnold Robbins"), \
+  proper_name ("Jim Kingdon"), \
+  proper_name ("David MacKenzie"), \
+  proper_name ("Randy Smith")
 
 /* Bitmasks for `change_times'. */
 #define CH_ATIME 1

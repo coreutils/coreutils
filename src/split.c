@@ -42,7 +42,7 @@
 
 #define AUTHORS \
   proper_name_utf8 ("Torbjorn Granlund", "Torbj\303\266rn Granlund"), \
-    "Richard M. Stallman"
+  proper_name ("Richard M. Stallman")
 
 #define DEFAULT_SUFFIX_LENGTH 2
 
