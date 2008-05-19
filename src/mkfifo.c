@@ -30,7 +30,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "mkfifo"
 
-#define AUTHORS "David MacKenzie"
+#define AUTHORS proper_name ("David MacKenzie")
 
 /* The name this program was run with. */
 char *program_name;

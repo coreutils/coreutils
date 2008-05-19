@@ -34,7 +34,7 @@
 
 #define PROGRAM_NAME "nohup"
 
-#define AUTHORS "Jim Meyering"
+#define AUTHORS proper_name ("Jim Meyering")
 
 /* Exit statuses.  */
 enum

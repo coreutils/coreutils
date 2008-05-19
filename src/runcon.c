@@ -43,7 +43,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "runcon"
 
-#define AUTHORS "Russell Coker"
+#define AUTHORS proper_name ("Russell Coker")
 
 static struct option long_options[] = {
   {"role", required_argument, NULL, 'r'},

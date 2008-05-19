@@ -33,7 +33,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "whoami"
 
-#define AUTHORS "Richard Mlynarik"
+#define AUTHORS proper_name ("Richard Mlynarik")
 
 /* The name this program was run with. */
 char *program_name;

@@ -37,7 +37,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "nice"
 
-#define AUTHORS "David MacKenzie"
+#define AUTHORS proper_name ("David MacKenzie")
 
 #if HAVE_NICE
 # define GET_NICENESS() nice (0)

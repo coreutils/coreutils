@@ -38,7 +38,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "seq"
 
-#define AUTHORS "Ulrich Drepper"
+#define AUTHORS proper_name ("Ulrich Drepper")
 
 /* If true print all number with equal width.  */
 static bool equal_width;

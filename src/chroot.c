@@ -29,7 +29,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "chroot"
 
-#define AUTHORS "Roland McGrath"
+#define AUTHORS proper_name ("Roland McGrath")
 
 /* The name this program was run with, for error messages. */
 char *program_name;

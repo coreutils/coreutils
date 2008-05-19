@@ -40,7 +40,7 @@ enum
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "tty"
 
-#define AUTHORS "David MacKenzie"
+#define AUTHORS proper_name ("David MacKenzie")
 
 /* The name under which this program was run. */
 char *program_name;

@@ -37,7 +37,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "basename"
 
-#define AUTHORS "FIXME unknown"
+#define AUTHORS proper_name ("FIXME unknown")
 
 /* The name this program was run with. */
 char *program_name;

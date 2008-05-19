@@ -30,7 +30,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "readlink"
 
-#define AUTHORS "Dmitry V. Levin"
+#define AUTHORS proper_name ("Dmitry V. Levin")
 
 /* Name this program was run with.  */
 char *program_name;

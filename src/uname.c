@@ -58,7 +58,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME (uname_mode == UNAME_UNAME ? "uname" : "arch")
 
-#define AUTHORS "David MacKenzie"
+#define AUTHORS proper_name ("David MacKenzie")
 #define ARCH_AUTHORS "David MacKenzie", "Karel Zak"
 
 /* Values that are bitwise or'd into `toprint'. */

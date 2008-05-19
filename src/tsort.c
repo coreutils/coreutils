@@ -36,7 +36,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "tsort"
 
-#define AUTHORS "Mark Kettenis"
+#define AUTHORS proper_name ("Mark Kettenis")
 
 /* Token delimiters when reading from a file.  */
 #define DELIM " \t\n"

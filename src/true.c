@@ -30,7 +30,7 @@
 # define PROGRAM_NAME "false"
 #endif
 
-#define AUTHORS "Jim Meyering"
+#define AUTHORS proper_name ("Jim Meyering")
 
 /* The name this program was run with. */
 char *program_name;

@@ -37,7 +37,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "cksum"
 
-#define AUTHORS "Q. Frank Xia"
+#define AUTHORS proper_name ("Q. Frank Xia")
 
 #include <stdio.h>
 #include <sys/types.h>

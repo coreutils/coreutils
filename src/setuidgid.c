@@ -35,7 +35,7 @@
 
 /* I wrote this program from scratch, based on the description of
    D.J. Bernstein's program: http://cr.yp.to/daemontools/setuidgid.html.  */
-#define AUTHORS "Jim Meyering"
+#define AUTHORS proper_name ("Jim Meyering")
 
 #define SETUIDGID_FAILURE 111
 

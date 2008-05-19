@@ -34,7 +34,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "shuf"
 
-#define AUTHORS "Paul Eggert"
+#define AUTHORS proper_name ("Paul Eggert")
 
 /* The name this program was run with. */
 char *program_name;

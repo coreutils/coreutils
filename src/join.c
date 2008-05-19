@@ -36,7 +36,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "join"
 
-#define AUTHORS "Mike Haertel"
+#define AUTHORS proper_name ("Mike Haertel")
 
 #define join system_join
 

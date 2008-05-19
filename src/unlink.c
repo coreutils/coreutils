@@ -33,7 +33,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "unlink"
 
-#define AUTHORS "Michael Stone"
+#define AUTHORS proper_name ("Michael Stone")
 
 /* Name this program was run with.  */
 char *program_name;

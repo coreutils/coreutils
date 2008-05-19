@@ -150,7 +150,7 @@ statfs (char const *filename, struct fs_info *buf)
 
 #define PROGRAM_NAME "stat"
 
-#define AUTHORS "Michael Meskes"
+#define AUTHORS proper_name ("Michael Meskes")
 
 enum
 {

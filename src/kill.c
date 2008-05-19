@@ -39,7 +39,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "kill"
 
-#define AUTHORS "Paul Eggert"
+#define AUTHORS proper_name ("Paul Eggert")
 
 #if ! (HAVE_DECL_STRSIGNAL || defined strsignal)
 # if ! (HAVE_DECL_SYS_SIGLIST || defined sys_siglist)

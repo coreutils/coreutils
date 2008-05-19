@@ -82,7 +82,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "shred"
 
-#define AUTHORS "Colin Plumb"
+#define AUTHORS proper_name ("Colin Plumb")
 
 #include <config.h>
 

@@ -32,7 +32,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "dircolors"
 
-#define AUTHORS "H. Peter Anvin"
+#define AUTHORS proper_name ("H. Peter Anvin")
 
 #define obstack_chunk_alloc malloc
 #define obstack_chunk_free free

@@ -24,7 +24,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "echo"
 
-#define AUTHORS "FIXME unknown"
+#define AUTHORS proper_name ("FIXME unknown")
 
 /* echo [-neE] [arg ...]
 Output the ARGs.  If -n is specified, the trailing newline is

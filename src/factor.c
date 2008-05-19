@@ -36,7 +36,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "factor"
 
-#define AUTHORS "Paul Rubin"
+#define AUTHORS proper_name ("Paul Rubin")
 
 /* Token delimiters when reading from a file.  */
 #define DELIM "\n\t "

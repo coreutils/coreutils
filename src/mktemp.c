@@ -31,7 +31,7 @@
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "mktemp"
 
-#define AUTHORS "Jim Meyering"
+#define AUTHORS proper_name ("Jim Meyering")
 
 static const char *default_template = "tmp.XXXXXXXXXX";
 
