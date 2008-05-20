@@ -208,6 +208,8 @@ setdefaultfilecon (char const *file)
 {
   struct stat st;
   security_context_t scontext = NULL;
+  static bool first_call = true;
+
   if (selinux_enabled != 1)
     {
       /* Indicate no context found. */
@@ -216,11 +218,15 @@ setdefaultfilecon (char const *file)
   if (lstat (file, &st) != 0)
     return;
 
-  if (IS_ABSOLUTE_FILE_NAME (file))
+  if (first_call && IS_ABSOLUTE_FILE_NAME (file))
     {
       /* Calling matchpathcon_init_prefix (NULL, "/first_component/")
 	 is an optimization to minimize the expense of the following
-	 matchpathcon call.  */
+	 matchpathcon call.  Do it only once, just before the first
+	 matchpathcon call.  We *could* call matchpathcon_fini after
+	 the final matchpathcon call, but that's not necessary, since
+	 by then we're about to exit, and besides, the buffers it
+	 would free are still reachable.  */
       char const *p0;
       char const *p = file + 1;
       while (ISSLASH (*p))
@@ -247,6 +253,7 @@ setdefaultfilecon (char const *file)
 	    }
 	}
     }
+  first_call = false;
 
   /* If there's an error determining the context, or it has none,
      return to allow default context */
