@@ -629,31 +629,62 @@ bin=bin-$$$$
 
 write_loser = printf '\#!%s\necho $$0: bad path 1>&2; exit 1\n' '$(SHELL)'
 
+TMPDIR ?= /tmp
+t=$(TMPDIR)/$(PACKAGE)/test
+pfx=$(t)/i
+
+# Verify that a twisted use of --program-transform-name=PROGRAM works.
+define install-transform-check
+  rm -rf $(pfx);					\
+  $(MAKE) program_transform_name='s/.*/zyx/'		\
+      prefix=$(pfx) install				\
+    && test "$$(echo $(pfx)/bin/*)" = "$(pfx)/bin/zyx"	\
+    && test "$$(echo $(pfx)/share/man/man1/*)" =	\
+                    "$(pfx)/share/man/man1/zyx.1"
+endef
+
+# Install, then verify that all binaries and man pages are in place.
+# Note that neither the binary, ginstall, nor the ].1 man page is installed.
+define my-instcheck
+  $(MAKE) prefix=$(pfx) install				\
+    && test ! -f $(pfx)/bin/ginstall			\
+    && { fail=0;					\
+      for i in $(built_programs); do			\
+        test "$$i" = ginstall && i=install;		\
+        for j in "$(pfx)/bin/$$i"			\
+                 "$(pfx)/share/man/man1/$$i.1"; do	\
+          case $$j in *'[.1') continue;; esac;		\
+          test -f "$$j" && :				\
+            || { echo "$$j not installed"; fail=1; };	\
+        done;						\
+      done;						\
+      test $$fail = 1 && exit 1 || :;			\
+    }
+endef
+
 # Use -Wformat -Werror to detect format-string/arg-list mismatches.
 # Also, check for shadowing problems with -Wshadow, and for pointer
 # arithmetic problems with -Wpointer-arith.
 # These CFLAGS are pretty strict.  If you build this target, you probably
 # have to have a recent version of gcc and glibc headers.
-# The for-loop below ensures that there is a bin/ directory full of all
-# of the programs under test (except the few that are required for basic
-# Makefile rules), all symlinked to the just-built "false" program.
+# The hard-linking for-loop below ensures that there is a bin/ directory
+# full of all of the programs under test (except the ones that are required
+# for basic Makefile rules), all symlinked to the just-built "false" program.
 # This is to ensure that if ever a test neglects to make PATH include
 # the build srcdir, these always-failing programs will run.
 # Otherwise, it is too easy to test the wrong programs.
 # Note that "false" itself is a symlink to true, so it too will malfunction.
-TMPDIR ?= /tmp
-t=$(TMPDIR)/$(PACKAGE)/test
-my-distcheck: $(local-check) check
+my-distcheck: $(DIST_ARCHIVES) $(local-check) check
 	-rm -rf $(t)
 	mkdir -p $(t)
 	GZIP=$(GZIP_ENV) $(AMTAR) -C $(t) -zxf $(distdir).tar.gz
 	cd $(t)/$(distdir)				\
-	  && ./configure --disable-nls --prefix=$(t)/i	\
+	  && ./configure --disable-nls			\
 	  && $(MAKE) CFLAGS='$(warn_cflags)'		\
 	      AM_MAKEFLAGS='$(null_AM_MAKEFLAGS)'	\
 	  && $(MAKE) dvi				\
-	  && $(MAKE) install				\
-	  && test -f $(mandir)/man1/ls.1		\
+	  && $(install-transform-check)			\
+	  && $(my-instcheck)				\
 	  && mkdir $(bin)				\
 	  && ($(write_loser)) > $(bin)/loser            \
 	  && chmod a+x $(bin)/loser                     \
