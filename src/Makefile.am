@@ -218,7 +218,7 @@ copy_sources = copy.c cp-hash.c
 # confusion with the `install' target.  The install rule transforms `ginstall'
 # to install before applying any user-specified name transformations.
 
-transform = s/ginstall/install/; @program_transform_name@
+transform = s/ginstall/install/; $(program_transform_name)
 ginstall_SOURCES = install.c prog-fprintf.c $(copy_sources)
 
 # This is for the '[' program.  Automake transliterates '[' to '_'.
@@ -427,3 +427,36 @@ sc_tight_scope: $(all_programs)
 	    | grep -Ev -f $$t &&					\
 	  { echo 'the above variables should have static scope' 1>&2;	\
 	    exit 1; } || :
+
+.PHONY: cu-install-binPROGRAMS
+install-exec-am:
+	@case '$(program_transform_name):$(EXEEXT)' in		\
+	  's,x,x,:') cu=cu-;; *) cu= ;; esac;			\
+	$(MAKE) $(AM_MAKEFLAGS) binPROGRAMS_INSTALL=./ginstall	\
+	  $${cu}install-binPROGRAMS
+	@$(NORMAL_INSTALL)
+	$(MAKE) $(AM_MAKEFLAGS) install-exec-hook
+
+# The following rule is used only when --program-transform-name
+# has not been used and there is no .exe "extension".
+# Override the automake-generated rule so that we can install
+# all binaries with a single install command.  However, ...
+# install ginstall and [ separately.  "ginstall" because we rename
+# it to "install", and "[" because using it unquoted will cause a
+# syntax error with some shells.  Be careful to install each of these
+# exceptions only if it is to be installed (i.e., not excluded via
+# --enable-no-install-program=PROG_LIST.
+filtered_PROGS = \
+  `echo "$(bin_PROGRAMS)" | sed 's/ *\<ginstall\> */ /;s/ *\[ */ /'`
+d_bindir = $(DESTDIR)$(bindir)
+cu-install-binPROGRAMS: $(bin_PROGRAMS)
+	$(NORMAL_INSTALL)
+	test -z "$(bindir)" || $(MKDIR_P) "$(d_bindir)"
+	test x = 'x$(bin_PROGRAMS)' && exit || :
+	case '$(bin_PROGRAMS)' in *\[*) \
+	  echo "$(binPROGRAMS_INSTALL) '[' '$(d_bindir)/['"; \
+	  $(binPROGRAMS_INSTALL) '[' '$(d_bindir)/[';; esac
+	case '$(bin_PROGRAMS)' in *ginstall*) \
+	  echo "$(binPROGRAMS_INSTALL) ginstall '$(d_bindir)/install'";\
+	  $(binPROGRAMS_INSTALL) ginstall '$(d_bindir)/install';; esac
+	$(binPROGRAMS_INSTALL) $(filtered_PROGS) '$(d_bindir)'
