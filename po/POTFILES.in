@@ -6,6 +6,7 @@ lib/acl.c
 lib/argmatch.c
 lib/closein.c
 lib/closeout.c
+lib/copy-acl.c
 lib/error.c
 lib/euidaccess-stat.c
 lib/file-type.c
