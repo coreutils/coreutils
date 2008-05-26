@@ -2,7 +2,6 @@
 # Copyright (C) 1996-2008 Free Software Foundation, Inc.
 
 # These are nominally temporary...
-lib/acl.c
 lib/argmatch.c
 lib/closein.c
 lib/closeout.c
@@ -20,6 +19,7 @@ lib/randread.c
 lib/regcomp.c
 lib/root-dev-ino.h
 lib/rpmatch.c
+lib/set-mode-acl.c
 lib/unicodeio.c
 lib/userspec.c
 lib/version-etc.c
