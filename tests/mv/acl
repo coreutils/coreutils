@@ -32,7 +32,7 @@ grep '^#define USE_ACL 0' $CONFIG_HEADER > /dev/null &&
   skip_test_ "insufficient ACL support"
 
 cleanup_() { rm -rf "$other_partition_tmpdir"; }
-. "$abs_top_srcdir/tests/other-fs-tmpdir"
+. "$abs_srcdir/other-fs-tmpdir"
 
 touch file || framework_failure
 t1=$other_partition_tmpdir/t1

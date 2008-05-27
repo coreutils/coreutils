@@ -23,7 +23,7 @@ fi
 
 . $top_srcdir/tests/test-lib.sh
 cleanup_() { rm -rf "$other_partition_tmpdir"; }
-. "$abs_top_srcdir/tests/other-fs-tmpdir"
+. "$abs_srcdir/other-fs-tmpdir"
 
 : > file
 chmod a=rwx file

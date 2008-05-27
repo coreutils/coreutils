@@ -27,7 +27,7 @@ fi
 . $top_srcdir/tests/test-lib.sh
 skip_if_root_
 cleanup_() { t=$other_partition_tmpdir; chmod -R 700 "$t"; rm -rf "$t"; }
-. "$abs_top_srcdir/tests/other-fs-tmpdir"
+. "$abs_srcdir/other-fs-tmpdir"
 
 touch k $other_partition_tmpdir/k || framework_failure
 chmod u-w $other_partition_tmpdir || framework_failure

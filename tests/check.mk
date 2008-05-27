@@ -70,6 +70,7 @@ TESTS_ENVIRONMENT =				\
   LOCALE_FR='$(LOCALE_FR)'			\
   abs_top_builddir='$(abs_top_builddir)'	\
   abs_top_srcdir='$(abs_top_srcdir)'		\
+  abs_srcdir='$(abs_srcdir)'			\
   built_programs="`$(built_programs)`"		\
   host_os=$(host_os)				\
   host_triplet='$(host_triplet)'		\

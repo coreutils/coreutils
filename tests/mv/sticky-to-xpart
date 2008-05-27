@@ -28,7 +28,7 @@ fi
 require_root_
 
 cleanup_() { rm -rf "$other_partition_tmpdir"; }
-. "$abs_top_srcdir/tests/other-fs-tmpdir"
+. "$abs_srcdir/other-fs-tmpdir"
 
 # Set up to run a test where non-root user tries to move a root-owned
 # file from a sticky tmpdir to a directory owned by that user on
