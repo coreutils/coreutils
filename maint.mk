@@ -697,7 +697,9 @@ my-distcheck: $(DIST_ARCHIVES) $(local-check) check
 	     done					\
 	  && ln -sf ../src/true $(bin)/false		\
 	  && PATH=`pwd`/$(bin):$$PATH $(MAKE) -C tests check \
-	  && $(MAKE) -C gnulib-tests check		\
+	  && { test -d gnulib-tests			\
+	         && $(MAKE) -C gnulib-tests check	\
+	         || :; }				\
 	  && rm -rf $(bin)				\
 	  && $(MAKE) distclean
 	(cd $(t) && mv $(distdir) $(distdir).old	\
