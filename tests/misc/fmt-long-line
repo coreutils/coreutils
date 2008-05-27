@@ -21,7 +21,7 @@ if test "$VERBOSE" = yes; then
   fmt --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
 printf '%2030s\n' ' '|sed 's/../ y/g' > in || framework_failure
 

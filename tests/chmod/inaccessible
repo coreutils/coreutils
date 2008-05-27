@@ -21,7 +21,7 @@ if test "$VERBOSE" = yes; then
   chmod --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
 mkdir -p d/e || framework_failure
 chmod 0 d/e d || framework_failure

@@ -23,7 +23,7 @@ if test "$VERBOSE" = yes; then
   cp --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
 # Unset CDPATH.  Otherwise, output from the `cd dir' command
 # can make this test fail.

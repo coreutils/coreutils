@@ -21,7 +21,7 @@ if test "$VERBOSE" = yes; then
   split --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
 a_z='a b c d e f g h i j k l m n o p q r s t u v w x y z'
 

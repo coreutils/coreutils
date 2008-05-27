@@ -21,7 +21,7 @@ if test "$VERBOSE" = yes; then
   touch --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
 _POSIX2_VERSION=199209; export _POSIX2_VERSION
 POSIXLY_CORRECT=1; export POSIXLY_CORRECT

@@ -21,7 +21,7 @@ if test "$VERBOSE" = yes; then
   tee --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
 fail=0
 tee - </dev/null || fail=1

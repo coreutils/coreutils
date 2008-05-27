@@ -21,8 +21,8 @@ if test "$VERBOSE" = yes; then
   FIXME --version
 fi
 
-# FIXME: . $top_srcdir/tests/lang-default
-. $top_srcdir/tests/test-lib.sh
+# FIXME: . $srcdir/lang-default
+. $srcdir/test-lib.sh
 # FIXME: skip_if_root_
 # FIXME: require_root_
 

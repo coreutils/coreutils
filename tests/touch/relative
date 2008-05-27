@@ -22,7 +22,7 @@ if test "$VERBOSE" = yes; then
   touch --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
 TZ=UTC0 touch --date='2004-01-16 12:00 +0000' f || framework_failure
 

@@ -21,7 +21,7 @@ if test "$VERBOSE" = yes; then
   chown --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
 id_u=`id -u` || framework_failure
 test -n "$id_u" || framework_failure

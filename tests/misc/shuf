@@ -21,7 +21,7 @@ if test "$VERBOSE" = yes; then
   shuf --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
 seq 100 > in || framework_failure
 

@@ -20,7 +20,7 @@ if test "$VERBOSE" = yes; then
   id --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 # Require selinux - when selinux is disabled, id never prints scontext.
 require_selinux_
 

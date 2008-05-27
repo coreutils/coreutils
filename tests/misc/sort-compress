@@ -21,7 +21,7 @@ if test "$VERBOSE" = yes; then
   sort --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
 seq -w 2000 > exp || framework_failure
 tac exp > in || framework_failure

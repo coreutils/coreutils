@@ -21,7 +21,7 @@ if test "$VERBOSE" = yes; then
   chmod --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
 ln -s non-existent dangle || framework_failure
 

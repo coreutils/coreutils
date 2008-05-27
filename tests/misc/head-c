@@ -21,7 +21,7 @@ if test "$VERBOSE" = yes; then
   head --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
 echo abc > in || framework_failure
 

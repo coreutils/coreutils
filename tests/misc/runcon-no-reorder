@@ -21,7 +21,7 @@ if test "$VERBOSE" = yes; then
   runcon --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
 cat <<\EOF > exp || framework_failure
 runcon: runcon may be used only on a SELinux kernel

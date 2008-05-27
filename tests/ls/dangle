@@ -21,7 +21,7 @@ if test "$VERBOSE" = yes; then
   ls --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
 ln -s no-such-file dangle || framework_failure
 mkdir -p dir/sub || framework_failure

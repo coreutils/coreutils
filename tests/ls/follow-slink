@@ -21,7 +21,7 @@ if test "$VERBOSE" = yes; then
   ls --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
 # Isolate output files from directory being listed
 mkdir dir dir/sub dir1 || framework_failure

@@ -22,7 +22,7 @@ if test "$VERBOSE" = yes; then
   tail --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
 (echo 1; echo 2) > k || framework_failure
 

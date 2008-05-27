@@ -21,7 +21,7 @@ if test "$VERBOSE" = yes; then
   dd --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
 printf 000100020003xx > in || framework_failure
 

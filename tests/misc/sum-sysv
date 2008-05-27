@@ -22,7 +22,7 @@ if test "$VERBOSE" = yes; then
 fi
 
 : ${srcdir=.}
-. $top_srcdir/tests/require-perl
+. $srcdir/require-perl
 
 # Avoid a problem when run in a UTF-8 locale.
 # Otherwise, Perl would try to (and fail to) interpret
@@ -30,7 +30,7 @@ fi
 LC_ALL=C
 export LC_ALL
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
 fail=0
 

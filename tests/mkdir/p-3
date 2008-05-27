@@ -23,7 +23,7 @@ if test "$VERBOSE" = yes; then
   mkdir --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 skip_if_root_
 
 mkdir no-access || framework_failure

@@ -21,7 +21,7 @@ if test "$VERBOSE" = yes; then
   mv --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
 mkdir a || framework_failure
 touch b || framework_failure

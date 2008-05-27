@@ -35,7 +35,7 @@ if test "$VERBOSE" = yes; then
   cp --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 skip_if_root_
 
 mkdir -p x dst/x || framework_failure

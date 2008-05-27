@@ -21,7 +21,7 @@ if test "$VERBOSE" = yes; then
   readlink --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
 mkdir subdir || framework_failure
 touch regfile || framework_failure

@@ -21,7 +21,7 @@ if test "$VERBOSE" = yes; then
   wc --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
 echo 2 > 2b || framework_failure
 echo 2 words > 2w || framework_failure

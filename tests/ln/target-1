@@ -26,7 +26,7 @@ if test "$VERBOSE" = yes; then
   ln --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
 mkdir d || framework_failure
 fail=0

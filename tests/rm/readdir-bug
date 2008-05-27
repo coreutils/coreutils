@@ -22,7 +22,7 @@ if test "$VERBOSE" = yes; then
   rm --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
 # Create a directory containing many files.
 # What counts is a combination of the number of files and

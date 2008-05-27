@@ -22,7 +22,7 @@ if test "$VERBOSE" = yes; then
   chmod --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
 umask 0
 mkdir d || framework_failure

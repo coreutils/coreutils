@@ -21,7 +21,7 @@ if test "$VERBOSE" = yes; then
   groups --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
 # Coreutils 6.9 and earlier failed to display information on first argument
 # if later argument was --.

@@ -23,7 +23,7 @@ if test "$VERBOSE" = yes; then
   env $prog --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 require_ulimit_
 
 fail=0

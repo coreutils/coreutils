@@ -21,7 +21,7 @@ if test "$VERBOSE" = yes; then
   rmdir --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
 cwd=`pwd`
 mkdir -p "$cwd/a/b/c" "$cwd/a/x" || framework_failure

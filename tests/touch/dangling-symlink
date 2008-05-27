@@ -22,7 +22,7 @@ if test "$VERBOSE" = yes; then
   touch --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
 rm -f touch-target t-symlink
 ln -s touch-target t-symlink

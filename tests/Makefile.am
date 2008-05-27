@@ -552,4 +552,4 @@ pr_data =					\
   pr/ttb3-FF					\
   pr/w72l24f-ll
 
-include $(top_srcdir)/tests/check.mk
+include $(srcdir)/check.mk

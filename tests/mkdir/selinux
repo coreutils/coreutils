@@ -27,7 +27,7 @@ fi
 # mcstrans-0.2.8-1.fc9, the following commands may mistakenly exit
 # successfully, in spite of the invalid context string.
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
 c=invalid-selinux-context
 msg="failed to set default file creation context to \`$c':"

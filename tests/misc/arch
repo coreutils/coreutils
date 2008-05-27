@@ -16,7 +16,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
 # skip this test if arch isn't being built.
 case " $built_programs " in

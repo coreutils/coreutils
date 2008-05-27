@@ -21,7 +21,7 @@ if test "$VERBOSE" = yes; then
   cp --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
 mkdir -p a b/a/c || framework_failure
 touch a/c || framework_failure

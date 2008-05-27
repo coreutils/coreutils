@@ -21,7 +21,7 @@ if test "$VERBOSE" = yes; then
   cp --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
 umask 002
 mkdir mode ownership d || framework_failure

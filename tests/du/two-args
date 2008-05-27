@@ -22,7 +22,7 @@ if test "$VERBOSE" = yes; then
   du --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
 # Run this test from a sub-directory one level deeper than normal,
 # so that the "du .." below doesn't traverse sibling directories

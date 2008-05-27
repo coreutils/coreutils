@@ -21,7 +21,7 @@ if test "$VERBOSE" = yes; then
   mv --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 require_strace_ unlink
 
 # Before the fix, mv would unnecessarily unlink the destination symlink:

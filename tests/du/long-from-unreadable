@@ -33,7 +33,7 @@ if test "$VERBOSE" = yes; then
   du --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
 proc_file=/proc/self/fd
 if test ! -d $proc_file; then

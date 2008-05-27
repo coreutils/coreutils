@@ -21,7 +21,7 @@ if test "$VERBOSE" = yes; then
   chown --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 skip_if_root_
 
 mkdir d && ln -s / d/slink-to-root

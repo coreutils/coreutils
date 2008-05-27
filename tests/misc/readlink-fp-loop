@@ -21,7 +21,7 @@ if test "$VERBOSE" = yes; then
   readlink --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 cwd=$("$abs_top_builddir/src/pwd")
 
 # To trigger this bug, we have to construct a name/situation during

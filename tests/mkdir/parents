@@ -21,7 +21,7 @@ if test "$VERBOSE" = yes; then
   mkdir --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 . "$abs_srcdir/setgid-check"
 
 mkdir -m 700 e-dir || framework_failure

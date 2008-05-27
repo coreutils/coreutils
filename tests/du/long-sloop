@@ -23,7 +23,7 @@ if test "$VERBOSE" = yes; then
   du --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
 # Create lots of directories, each containing a single symlink
 # pointing at the next directory in the list.

@@ -24,7 +24,7 @@ if test "$VERBOSE" = yes; then
   rm --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
 ln -s no-file dangle
 ln -s / symlink

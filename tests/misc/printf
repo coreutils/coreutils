@@ -23,7 +23,7 @@ if test "$VERBOSE" = yes; then
   "$prog" --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
 fail=0
 

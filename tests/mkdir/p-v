@@ -21,7 +21,7 @@ if test "$VERBOSE" = yes; then
   mkdir --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
 fail=0
 mkdir -pv foo/a/b/c/d >out || fail=1

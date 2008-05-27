@@ -22,7 +22,7 @@ if test "$VERBOSE" = yes; then
   touch --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
 # Make sure t2 is newer than t1.
 touch -d '2000-01-01 00:00' t1 || framework_failure

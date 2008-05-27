@@ -21,7 +21,7 @@ if test "$VERBOSE" = yes; then
   rm --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
 # Root can run this test, but it always succeeds, since for root, all
 # files are writable, and write_protected_non_symlink never reaches

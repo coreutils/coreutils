@@ -23,7 +23,7 @@ if test "$VERBOSE" = yes; then
   tac --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
 # See if the envvar is defined.
 if test x = "x$FULL_PARTITION_TMPDIR"; then

@@ -23,7 +23,7 @@ if test "$VERBOSE" = yes; then
   rm --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 expensive_
 
 # Create a hierarchy with 3*26 leaf directories, each at depth 153.

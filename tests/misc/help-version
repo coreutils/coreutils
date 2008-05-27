@@ -25,7 +25,7 @@ test "$VERBOSE" = yes && set -x
 test "x$SHELL" = x && SHELL=/bin/sh
 export SHELL
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
 expected_failure_status_nohup=127
 expected_failure_status_printenv=2

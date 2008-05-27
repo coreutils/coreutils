@@ -21,7 +21,7 @@ if test "$VERBOSE" = yes; then
   ln --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
 printf '1\n2\n3\n4\n5\n' > in || framework_failure
 

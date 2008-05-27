@@ -22,7 +22,7 @@ if test "$VERBOSE" = yes; then
 fi
 
 # Make sure we get English translations.
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
 echo foo > a || framework_failure
 ln -s . b || framework_failure

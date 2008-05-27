@@ -23,7 +23,7 @@ if test "$VERBOSE" = yes; then
   du --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
 mkdir -p dir/sub
 ( cd dir && { echo non-empty > f1; ln f1 f2; echo non-empty > sub/F; } )

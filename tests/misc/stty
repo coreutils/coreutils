@@ -22,8 +22,8 @@ if test "$VERBOSE" = yes; then
 fi
 
 # Make sure there's a tty on stdin.
-. $top_srcdir/tests/input-tty
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/input-tty
+. $srcdir/test-lib.sh
 
 # The following list of reversible options was generated with
 # grep -w REV stty.c|sed -n '/^  {"/{s//REV_/;s/".*/=1/;p;}'|fmt

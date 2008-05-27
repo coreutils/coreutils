@@ -22,7 +22,7 @@ if test "$VERBOSE" = yes; then
   chgrp --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 require_membership_in_two_groups_
 skip_if_root_
 

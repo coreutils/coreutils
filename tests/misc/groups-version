@@ -21,7 +21,7 @@ if test "$VERBOSE" = yes; then
   groups --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 require_built_ groups id
 
 fail=0

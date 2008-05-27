@@ -22,7 +22,7 @@ if test "$VERBOSE" = yes; then
   cp --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
 touch file || framework_failure
 ln -s file a || framework_failure

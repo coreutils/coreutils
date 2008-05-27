@@ -24,7 +24,7 @@ if test "$VERBOSE" = yes; then
 fi
 
 # Not "expensive" per se, but sleeping for so long is annoying.
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 very_expensive_
 
 ok='ok ok ok'

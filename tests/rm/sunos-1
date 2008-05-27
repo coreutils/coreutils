@@ -26,7 +26,7 @@ if test "$VERBOSE" = yes; then
   rm --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
 fail=0
 rm -r '' > /dev/null 2>&1 && fail=1

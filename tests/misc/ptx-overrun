@@ -21,7 +21,7 @@ if test "$VERBOSE" = yes; then
   ptx --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
 # Using a long file name makes an abort more likely.
 # Even with no file name, valgrind detects the buffer overrun.

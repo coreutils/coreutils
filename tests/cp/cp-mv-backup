@@ -23,7 +23,7 @@ fi
 
 # Ensure that ls sorts the same way for everyone.
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
 umask 022
 

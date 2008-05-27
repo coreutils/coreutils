@@ -22,7 +22,7 @@ if test "$VERBOSE" = yes; then
   chmod --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 skip_if_root_
 
 mkdir -p d/no-x/y a/b || framework_failure

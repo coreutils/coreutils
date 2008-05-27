@@ -21,7 +21,7 @@ if test "$VERBOSE" = yes; then
   mv --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
 dir1=is3-dir1
 dir2=is3-dir2

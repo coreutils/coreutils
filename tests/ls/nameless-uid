@@ -22,9 +22,9 @@ if test "$VERBOSE" = yes; then
 fi
 
 : ${srcdir=.}
-. $top_srcdir/tests/require-perl
+. $srcdir/require-perl
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 require_root_
 
 nameless_uid=`$PERL -e 'foreach my $i (1000..16*1024) { getpwuid $i or (print "$i\n"), exit }'`

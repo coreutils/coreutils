@@ -21,7 +21,7 @@ if test "$VERBOSE" = yes; then
   tee --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
 echo line >sample || framework_failure
 nums=`seq 9` || framework_failure

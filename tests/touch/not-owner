@@ -22,7 +22,7 @@ if test "$VERBOSE" = yes; then
   touch --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
 if env -- test -w /; then
   skip_test_ you have write access to /.
