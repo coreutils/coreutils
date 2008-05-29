@@ -32,6 +32,8 @@
 @c * [: (coreutils)[ invocation.                   File/string tests.
 @c * pinky: (coreutils)pinky invocation.           FIXME.
 @c * uptime: (coreutils)uptime invocation.         FIXME.
+@c * mktemp: (coreutils)mktemp invocation.         FIXME.
+@c * chcon: (coreutils)chcon invocation.           FIXME.
 
 @dircategory Individual utilities
 @direntry
@@ -9838,8 +9840,12 @@ Display only a total for each argument.
 @itemx --separate-dirs
 @opindex -S
 @opindex --separate-dirs
-Report the size of each directory separately, not including the sizes
-of subdirectories.
+Normally, in the output of @command{du} (when not using @option{--summarize}),
+the size listed next to a directory name, @var{d}, represents the sum
+of sizes of all entries beneath @var{d} as well as the size of @var{d} itself.
+With @option{--separate-dirs}, the size reported for a directory name,
+@var{d}, is merely the @code{stat.st_size}-derived size of the directory
+entry, @var{d}.
 
 @itemx --time
 @opindex --time
