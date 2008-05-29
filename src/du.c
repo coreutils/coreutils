@@ -482,7 +482,7 @@ process_file (FTS *fts, FTSENT *ent)
   bool skip;
 
   /* If necessary, set FTS_SKIP before returning.  */
-  skip = excluded_file_name (exclude, ent->fts_path);
+  skip = excluded_file_name (exclude, file);
   if (skip)
     fts_set (fts, ent, FTS_SKIP);
 
