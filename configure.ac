@@ -32,7 +32,6 @@ AC_CONFIG_SRCDIR(src/ls.c)
 AC_CONFIG_AUX_DIR(build-aux)
 AC_CONFIG_HEADERS([lib/config.h:lib/config.hin])
 
-AB_INIT()
 AM_INIT_AUTOMAKE([1.10.1 dist-lzma])
 
 AC_PROG_CC_STDC
