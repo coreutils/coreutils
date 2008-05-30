@@ -6,6 +6,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   chcon, runcon: --help output now includes the bug-reporting address
 
+  cp -p copies permissions more portably.  For example, on MacOS X 10.5,
+  "cp -p some-fifo some-file" no longer fails while trying to copy the
+  permissions from the some-fifo argument.
+
   id with no options now prints the SELinux context only when invoked
   with no USERNAME argument.
 
