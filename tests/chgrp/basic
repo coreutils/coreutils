@@ -96,7 +96,7 @@ sleep 1
 chgrp $g1 f
 
 # The following no-change chgrp command is supposed to update f's ctime,
-# but on OpenBSD and Darwin 7.9.0 and 8.8.0 (aka MacOS X 10.3.9 and 10.4),
+# but on OpenBSD and Darwin 7.9.0-8.11.1 (aka MacOS X 10.3.9 - 10.4.11)
 # it appears to be a no-op for some file system types (at least NFS) so g's
 # ctime is more recent.  This is not a big deal;
 # this test works fine when the files are on a local file system (/tmp).
@@ -105,7 +105,7 @@ test "`ls -C -c -t f g`" = 'f  g' || \
   {
     case $host_triplet in
       *openbsd*) echo ignoring known OpenBSD-specific chgrp failure 1>&2 ;;
-      *darwin7.9.*|*darwin8.8.*)
+      *darwin7.9.*|*darwin8.*)
         echo ignoring known MacOS X-specific chgrp failure 1>&2 ;;
       *) echo $host_triplet: no-change chgrp failed to update ctime 1>&2;
 	    fail=1 ;;
