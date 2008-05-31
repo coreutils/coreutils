@@ -256,6 +256,8 @@ sha384sum_CPPFLAGS = -DHASH_ALGO_SHA384=1 $(AM_CPPFLAGS)
 sha512sum_SOURCES = md5sum.c
 sha512sum_CPPFLAGS = -DHASH_ALGO_SHA512=1 $(AM_CPPFLAGS)
 
+ginstall_CPPFLAGS = -DENABLE_MATCHPATHCON=1 $(AM_CPPFLAGS)
+
 editpl = sed -e 's,@''PERL''@,$(PERL),g'
 
 BUILT_SOURCES += dircolors.h

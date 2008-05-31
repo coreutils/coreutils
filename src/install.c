@@ -199,7 +199,7 @@ cp_option_init (struct cp_options *x)
   x->src_info = NULL;
 }
 
-#ifdef ENABLE_WHEN_MATCHPATHCON_IS_MORE_EFFICIENT
+#ifdef ENABLE_MATCHPATHCON
 /* Modify file context to match the specified policy.
    If an error occurs the file will remain with the default directory
    context.  */
