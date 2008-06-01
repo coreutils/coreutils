@@ -1860,8 +1860,7 @@ address.
 
 @command{base64} transforms data read from a file, or standard input,
 into (or from) base64 encoded form.  The base64 encoded form uses
-printable @acronym{ASCII} characters to represent binary data, see
-@uref{ftp://ftp.rfc-editor.org/in-notes/rfc3548.txt, RFC 3548}.
+printable @acronym{ASCII} characters to represent binary data.
 Synopses:
 
 @smallexample
@@ -1870,6 +1869,8 @@ base64 --decode [@var{option}]@dots{} [@var{file}]
 @end smallexample
 
 The base64 encoding expands data to roughly 133% of the original.
+The format conforms to
+@uref{ftp://ftp.rfc-editor.org/in-notes/rfc4648.txt, RFC 4648}.
 
 The program accepts the following options.  Also see @ref{Common options}.
 
