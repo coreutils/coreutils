@@ -765,6 +765,14 @@ emit_upload_commands:
 	@echo =====================================
 	@echo =====================================
 
+noteworthy = * Noteworthy changes in release ?.? (????-??-??) [?]
+define emit-commit-log
+  printf '%s\n' 'post-release administrivia' '' \
+    '* NEWS: Add header line for next release.' \
+    '* .prev-version: Record previous version.' \
+    '* cfg.mk (old_NEWS_hash): Auto-update.'
+endef
+
 .PHONY: alpha beta major
 alpha beta major: $(local-check) writable-files
 	test $@ = major						\
@@ -780,6 +788,7 @@ alpha beta major: $(local-check) writable-files
 	fi
 	$(MAKE) -s emit_upload_commands RELEASE_TYPE=$@
 	echo $(VERSION) > $(prev_version_file)
-	$(VC) commit -m \
-	  '* $(prev_version_file): Record previous version.' \
-	  $(prev_version_file)
+	$(MAKE) update-NEWS-hash
+	perl -pi -e '$$. == 3 and print "$(noteworthy)\n\n\n"' NEWS
+	$(emit-commit-log) > .ci-msg
+	$(VC) commit -F .ci-msg
