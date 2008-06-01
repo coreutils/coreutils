@@ -117,6 +117,9 @@ static bool status_only = false;
    improperly formatted checksum line.  */
 static bool warn = false;
 
+/* With --check, suppress the "OK" printed for each verified file.  */
+static bool quiet = false;
+
 /* The name this program was run with.  */
 char *program_name;
 
@@ -124,13 +127,15 @@ char *program_name;
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
 {
-  STATUS_OPTION = CHAR_MAX + 1
+  STATUS_OPTION = CHAR_MAX + 1,
+  QUIET_OPTION
 };
 
 static const struct option long_options[] =
 {
   { "binary", no_argument, NULL, 'b' },
   { "check", no_argument, NULL, 'c' },
+  { "quiet", no_argument, NULL, QUIET_OPTION },
   { "status", no_argument, NULL, STATUS_OPTION },
   { "text", no_argument, NULL, 't' },
   { "warn", no_argument, NULL, 'w' },
@@ -177,7 +182,8 @@ With no FILE, or when FILE is -, read standard input.\n\
 "), stdout);
       fputs (_("\
 \n\
-The following two options are useful only when verifying checksums:\n\
+The following three options are useful only when verifying checksums:\n\
+      --quiet             don't print OK for each successfully verified file\n\
       --status            don't output anything, status code shows success\n\
   -w, --warn              warn about improperly formatted checksum lines\n\
 \n\
@@ -530,8 +536,10 @@ digest_check (const char *checkfile_name)
 
 	      if (!status_only)
 		{
-		  printf ("%s: %s\n", filename,
-			  (cnt != digest_bin_bytes ? _("FAILED") : _("OK")));
+		  if (cnt != digest_bin_bytes)
+		    printf ("%s: %s\n", filename, _("FAILED"));
+		  else if (!quiet)
+		    printf ("%s: %s\n", filename, _("OK"));
 		  fflush (stdout);
 		}
 	    }
@@ -624,6 +632,7 @@ main (int argc, char **argv)
       case STATUS_OPTION:
 	status_only = true;
 	warn = false;
+	quiet = false;
 	break;
       case 't':
 	binary = 0;
@@ -631,6 +640,12 @@ main (int argc, char **argv)
       case 'w':
 	status_only = false;
 	warn = true;
+	quiet = false;
+	break;
+      case QUIET_OPTION:
+	status_only = false;
+	warn = false;
+	quiet = true;
 	break;
       case_GETOPT_HELP_CHAR;
       case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
@@ -659,6 +674,13 @@ main (int argc, char **argv)
     {
       error (0, 0,
        _("the --warn option is meaningful only when verifying checksums"));
+      usage (EXIT_FAILURE);
+    }
+
+  if (quiet & !do_check)
+    {
+      error (0, 0,
+       _("the --quiet option is meaningful only when verifying checksums"));
       usage (EXIT_FAILURE);
     }
 

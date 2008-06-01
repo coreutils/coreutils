@@ -45,6 +45,15 @@ my @Tests =
 				{OUT=>"f: OK\n"}],
      ['check-2', '--check', '--status', {IN=>{'f.md5' => "$degenerate  f\n"}},
 				{AUX=> {f=> 'foo'}}, {EXIT=> 1}],
+     ['check-quiet1', '--check', '--quiet', {AUX=> {f=> ''}},
+				{IN=> {'f.md5' => "$degenerate  f\n"}},
+				{OUT=>""}],
+     ['check-quiet2', '--check', '--quiet',
+				{IN=>{'f.md5' => "$degenerate  f\n"}},
+				{AUX=> {f=> 'foo'}}, {OUT=>"f: FAILED\n"},
+				{ERR=>"md5sum: WARNING: 1 of 1 computed"
+				       . " checksum did NOT match\n"},
+				{EXIT=> 1}],
      # The sha1sum and md5sum drivers share a lot of code.
      # Ensure that md5sum does *not* share the part that makes
      # sha1sum accept BSD format.

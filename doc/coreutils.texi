@@ -3277,6 +3277,15 @@ an MD5 checksum inconsistent with the associated file, or if no valid
 line is found, @command{md5sum} exits with nonzero status.  Otherwise,
 it exits successfully.
 
+@itemx --quiet
+@opindex --quiet
+@cindex verifying MD5 checksums
+This option is useful only when verifying checksums.
+When verifying checksums, don't generate an 'OK' message per successfully
+checked file.  Files that fail the verification are reported in the
+default one-line-per-file format.  If there is any checksum mismatch,
+print a warning summarizing the failures to standard error.
+
 @itemx --status
 @opindex --status
 @cindex verifying MD5 checksums

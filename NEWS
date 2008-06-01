@@ -2,6 +2,11 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release 7.0 (????-??-??) [beta]
 
+** New features
+
+  md5sum now accepts the new option, --quiet, to suppress the printing of
+  'OK' messages.  sha1sum, sha224sum, sha384sum, and sha512sum accept it, too.
+
 
 * Noteworthy changes in release 6.12 (2008-05-31) [stable]
 
