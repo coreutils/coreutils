@@ -781,5 +781,5 @@ alpha beta major: $(local-check) writable-files
 	$(MAKE) -s emit_upload_commands RELEASE_TYPE=$@
 	echo $(VERSION) > $(prev_version_file)
 	$(VC) commit -m \
-	  '$(prev_version_file): Record previous version: $(VERSION).' \
+	  '* $(prev_version_file): Record previous version.' \
 	  $(prev_version_file)
