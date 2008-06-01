@@ -240,9 +240,9 @@ main (int argc, char **argv)
   FILE *input_fh;
   const char *infile;
 
-  /* True if --decode has bene given and we should decode data. */
+  /* True if --decode has been given and we should decode data. */
   bool decode = false;
-  /* True if we should ignore non-alphabetic characters. */
+  /* True if we should ignore non-base64-alphabetic characters. */
   bool ignore_garbage = false;
   /* Wrap encoded base64 data around the 76:th column, by default. */
   uintmax_t wrap_column = 76;
