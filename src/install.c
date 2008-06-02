@@ -66,6 +66,10 @@ static bool use_default_selinux_context = true;
 # define lchown(name, uid, gid) chown (name, uid, gid)
 #endif
 
+#if ! HAVE_MATCHPATHCON_INIT_PREFIX
+# define matchpathcon_init_prefix(a, p) /* empty */
+#endif
+
 /* Initial number of entries in each hash table entry's table of inodes.  */
 #define INITIAL_HASH_MODULE 100
 

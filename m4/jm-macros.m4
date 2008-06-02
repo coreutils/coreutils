@@ -2,7 +2,7 @@
 
 dnl Misc type-related macros for coreutils.
 
-# Copyright (C) 1998, 2000-2007 Free Software Foundation, Inc.
+# Copyright (C) 1998, 2000-2008 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -45,6 +45,9 @@ AC_DEFUN([coreutils_MACROS],
   AC_REQUIRE([gl_CLOCK_TIME])
   # used by shred
   AC_CHECK_FUNCS_ONCE(directio)
+
+  # Used by install.c.
+  AC_CHECK_FUNCS_ONCE([matchpathcon_init_prefix])
 
   AC_CHECK_FUNCS_ONCE( \
     endgrent \
