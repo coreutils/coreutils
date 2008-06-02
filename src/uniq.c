@@ -14,7 +14,7 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
-/* Written by Richard Stallman and David MacKenzie. */
+/* Written by Richard M. Stallman and David MacKenzie. */
 
 #include <config.h>
 
@@ -37,7 +37,7 @@
 #define PROGRAM_NAME "uniq"
 
 #define AUTHORS \
-  proper_name ("Richard Stallman"), \
+  proper_name ("Richard M. Stallman"), \
   proper_name ("David MacKenzie")
 
 #define SWAP_LINES(A, B)			\

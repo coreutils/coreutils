@@ -32,7 +32,7 @@
 #define PROGRAM_NAME "comm"
 
 #define AUTHORS \
-  proper_name ("Richard Stallman"), \
+  proper_name ("Richard M. Stallman"), \
   proper_name ("David MacKenzie")
 
 /* Undefine, to avoid warning about redefinition on some systems.  */

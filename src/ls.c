@@ -111,7 +111,7 @@
 			 ? "dir" : "vdir"))
 
 #define AUTHORS \
-  proper_name ("Richard Stallman"), \
+  proper_name ("Richard M. Stallman"), \
   proper_name ("David MacKenzie")
 
 #define obstack_chunk_alloc malloc

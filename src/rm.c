@@ -63,7 +63,7 @@
 #define AUTHORS \
   proper_name ("Paul Rubin"), \
   proper_name ("David MacKenzie"), \
-  proper_name ("Richard Stallman"), \
+  proper_name ("Richard M. Stallman"), \
   proper_name ("Jim Meyering")
 
 /* Name this program was run with.  */

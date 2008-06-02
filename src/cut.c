@@ -40,7 +40,7 @@
 #define PROGRAM_NAME "cut"
 
 #define AUTHORS \
-  proper_name ("David Ihnat"), \
+  proper_name ("David M. Ihnat"), \
   proper_name ("David MacKenzie"), \
   proper_name ("Jim Meyering")
 

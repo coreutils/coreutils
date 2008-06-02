@@ -11,14 +11,14 @@ chmod: David MacKenzie, Jim Meyering
 chown: David MacKenzie, Jim Meyering
 chroot: Roland McGrath
 cksum: Q. Frank Xia
-comm: Richard Stallman, David MacKenzie
+comm: Richard M. Stallman, David MacKenzie
 cp: Torbjörn Granlund, David MacKenzie, Jim Meyering
 csplit: Stuart Kemp, David MacKenzie
-cut: David Ihnat, David MacKenzie, Jim Meyering
+cut: David M. Ihnat, David MacKenzie, Jim Meyering
 date: David MacKenzie
 dd: Paul Rubin, David MacKenzie, Stuart Kemp
 df: Torbjörn Granlund, David MacKenzie, Paul Eggert
-dir: Richard Stallman, David MacKenzie
+dir: Richard M. Stallman, David MacKenzie
 dircolors: H. Peter Anvin
 dirname: David MacKenzie, Jim Meyering
 du: Torbjörn Granlund, David MacKenzie, Paul Eggert, Jim Meyering
@@ -41,7 +41,7 @@ kill: Paul Eggert
 link: Michael Stone
 ln: Mike Parker, David MacKenzie
 logname: FIXME: unknown
-ls: Richard Stallman, David MacKenzie
+ls: Richard M. Stallman, David MacKenzie
 md5sum: Ulrich Drepper, Scott Miller, David Madore
 mkdir: David MacKenzie
 mkfifo: David MacKenzie
@@ -61,7 +61,7 @@ printf: David MacKenzie
 ptx: François Pinard
 pwd: Jim Meyering
 readlink: Dmitry V. Levin
-rm: Paul Rubin, David MacKenzie, Richard Stallman, Jim Meyering
+rm: Paul Rubin, David MacKenzie, Richard M. Stallman, Jim Meyering
 rmdir: David MacKenzie
 runcon: Russell Coker
 seq: Ulrich Drepper
@@ -91,11 +91,11 @@ tsort: Mark Kettenis
 tty: David MacKenzie
 uname: David MacKenzie
 unexpand: David MacKenzie
-uniq: Richard Stallman, David MacKenzie
+uniq: Richard M. Stallman, David MacKenzie
 unlink: Michael Stone
 uptime: Joseph Arceneaux, David MacKenzie, Kaveh Ghazi
 users: Joseph Arceneaux, David MacKenzie
-vdir: Richard Stallman, David MacKenzie
+vdir: Richard M. Stallman, David MacKenzie
 wc: Paul Rubin, David MacKenzie
 who: Joseph Arceneaux, David MacKenzie, Michael Stone
 whoami: Richard Mlynarik
