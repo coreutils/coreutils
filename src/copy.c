@@ -72,7 +72,7 @@ rpl_mkfifo (char const *file, mode_t mode)
   errno = ENOTSUP;
   return -1;
 }
-#define mkfifo rpl_mkfifo
+# define mkfifo rpl_mkfifo
 #endif
 
 #ifndef USE_ACL

@@ -75,7 +75,7 @@
 
 /* Internal failure.  */
 #ifndef ECANCELED
-#define ECANCELED 125
+# define ECANCELED 125
 #endif
 
 static int timed_out;
