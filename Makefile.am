@@ -22,7 +22,9 @@ EXTRA_DIST = cfg.mk maint.mk \
   .vg-suppressions \
   .x-po-check \
   .x-sc_GPL_version \
-  .x-sc_file_system .x-sc_obsolete_symbols \
+  .x-sc_file_system \
+  .x-sc_obsolete_symbols \
+  .x-sc_program_name \
   .x-sc_prohibit_atoi_atof \
   .x-sc_prohibit_strcmp \
   .x-sc_require_config_h \

@@ -341,6 +341,18 @@ sc_system_h_headers: .re-list
 		  1>&2;  exit 1; } || :;				\
 	fi
 
+# Ensure that each .c file containing a "main" function also
+# declares "char *program_name", with or without "const".
+sc_program_name:
+	@if $(VC_LIST_EXCEPT) | grep '\.c$$' > /dev/null; then		\
+	  files=$$(grep -l '^main *(' $$($(VC_LIST_EXCEPT) | grep '\.c$$')); \
+	  grep -EL '^(char const|(const )?char) \*program_name;' $$files \
+	      | grep . &&						\
+	  { echo '$(ME): the above files do not declare program_name'	\
+		1>&2; exit 1; } || :;					\
+	else :;								\
+	fi
+
 # Require that the final line of each test-lib.sh-using test be this one:
 # (exit $fail); exit $fail
 # Note: this test requires GNU grep's --label= option.
