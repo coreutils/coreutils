@@ -82,7 +82,8 @@ static int timed_out;
 static int term_signal = SIGTERM;  /* same default as kill command.  */
 static int monitored_pid;
 static int sigs_to_ignore[NSIG];   /* so monitor can ignore sigs it resends.  */
-static char *program_name;
+
+char *program_name;
 
 static struct option const long_options[] = {
   {"signal", required_argument, NULL, 's'},
