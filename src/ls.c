@@ -245,7 +245,7 @@ static void parse_ls_color (void);
 void usage (int status);
 
 /* The name this program was run with.  */
-char *program_name;
+char const *program_name;
 
 /* Initial size of hash table.
    Most hierarchies are likely to be shallower than this.  */

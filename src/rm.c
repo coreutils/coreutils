@@ -67,7 +67,7 @@
   proper_name ("Jim Meyering")
 
 /* Name this program was run with.  */
-char *program_name;
+char const *program_name;
 
 /* For long options that have no equivalent short option, use a
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */

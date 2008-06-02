@@ -194,7 +194,7 @@ es_match (struct E_string const *es, size_t i, char c)
 }
 
 /* The name by which this program was run.  */
-char *program_name;
+char const *program_name;
 
 /* When true, each sequence in the input of a repeated character
    (call it c) is replaced (in the output) by a single occurrence of c

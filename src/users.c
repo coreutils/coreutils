@@ -36,7 +36,7 @@
   proper_name ("David MacKenzie")
 
 /* The name this program was run with. */
-char *program_name;
+char const *program_name;
 
 static int
 userid_compare (const void *v_a, const void *v_b)

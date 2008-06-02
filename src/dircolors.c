@@ -87,7 +87,7 @@ static struct option const long_options[] =
     {NULL, 0, NULL, 0}
   };
 
-char *program_name;
+char const *program_name;
 
 void
 usage (int status)

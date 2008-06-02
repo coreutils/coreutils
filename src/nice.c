@@ -56,7 +56,7 @@
 #endif
 
 /* The name this program was run with. */
-char *program_name;
+char const *program_name;
 
 static struct option const longopts[] =
 {

@@ -49,7 +49,7 @@
 #define CH_MTIME 2
 
 /* The name by which this program was run. */
-char *program_name;
+char const *program_name;
 
 /* Which timestamps to change. */
 static int change_times;

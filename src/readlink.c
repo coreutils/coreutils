@@ -33,7 +33,7 @@
 #define AUTHORS proper_name ("Dmitry V. Levin")
 
 /* Name this program was run with.  */
-char *program_name;
+char const *program_name;
 
 /* If true, do not output the trailing newline.  */
 static bool no_newline;

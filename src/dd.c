@@ -129,7 +129,7 @@ enum
   };
 
 /* The name this program was run with. */
-char *program_name;
+char const *program_name;
 
 /* The name of the input file, or NULL for the standard input. */
 static char const *input_file = NULL;

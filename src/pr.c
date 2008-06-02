@@ -446,7 +446,7 @@ static void print_sep_string (void);
 static void separator_string (const char *optarg_S);
 
 /* The name under which this program was invoked. */
-char *program_name;
+char const *program_name;
 
 /* All of the columns to print.  */
 static COLUMN *column_vector;

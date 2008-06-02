@@ -168,7 +168,7 @@ static void put_word (WORD *w);
 static void put_space (int space);
 
 /* The name this program was run with.  */
-const char *program_name;
+char const *program_name;
 
 /* Option values.  */
 

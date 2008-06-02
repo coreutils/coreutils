@@ -51,7 +51,7 @@ enum { DEFAULT_ECHO_TO_XPG = false };
 #endif
 
 /* The name this program was run with. */
-char *program_name;
+char const *program_name;
 
 void
 usage (int status)

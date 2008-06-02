@@ -34,7 +34,7 @@
 #define AUTHORS proper_name ("Jim Meyering")
 
 /* The name this program was run with, for error messages. */
-char *program_name;
+char const *program_name;
 
 void
 usage (int status)

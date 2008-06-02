@@ -97,7 +97,7 @@ int putenv ();
 extern char **environ;
 
 /* The name by which this program was run. */
-char *program_name;
+char const *program_name;
 
 static struct option const longopts[] =
 {

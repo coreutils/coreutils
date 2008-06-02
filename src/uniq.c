@@ -51,7 +51,7 @@
   while (0)
 
 /* The name this program was run with. */
-char *program_name;
+char const *program_name;
 
 /* True if the LC_COLLATE locale is hard.  */
 static bool hard_LC_COLLATE;

@@ -44,7 +44,7 @@
 static bool equal_width;
 
 /* The name that this program was run with.  */
-char *program_name;
+char const *program_name;
 
 /* The string used to separate two numbers.  */
 static char const *separator;

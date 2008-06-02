@@ -45,7 +45,7 @@
 char *ttyname ();
 
 /* The name this program was run with. */
-const char *program_name;
+char const *program_name;
 
 /* If true, display the hours:minutes since each user has touched
    the keyboard, or blank if within the last minute, or days followed

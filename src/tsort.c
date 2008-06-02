@@ -60,7 +60,7 @@ struct item
 };
 
 /* The name this program was run with. */
-char *program_name;
+char const *program_name;
 
 /* The head of the sorted list.  */
 static struct item *head = NULL;

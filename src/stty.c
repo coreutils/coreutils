@@ -456,7 +456,7 @@ static struct option longopts[] =
 };
 
 /* The name this program was run with. */
-char *program_name;
+char const *program_name;
 
 static void wrapf (const char *message, ...)
      __attribute__ ((__format__ (__printf__, 1, 2)));

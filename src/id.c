@@ -45,7 +45,7 @@ static void print_user (uid_t uid);
 static void print_full_info (const char *username);
 
 /* The name this program was run with. */
-char *program_name;
+char const *program_name;
 
 /* If true, output user/group name instead of ID number. -n */
 static bool use_name = false;

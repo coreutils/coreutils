@@ -48,7 +48,7 @@
 int getloadavg ();
 
 /* The name this program was run with. */
-char *program_name;
+char const *program_name;
 
 static void
 print_uptime (size_t n, const STRUCT_UTMP *this)

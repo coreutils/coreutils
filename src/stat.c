@@ -173,7 +173,7 @@ static struct option const long_options[] = {
   {NULL, 0, NULL, 0}
 };
 
-char *program_name;
+char const *program_name;
 
 /* Whether to follow symbolic links;  True for --dereference (-L).  */
 static bool follow_links;

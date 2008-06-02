@@ -69,7 +69,7 @@
 #define Sword 1
 
 /* The name this program was run with. */
-char *program_name;
+char const *program_name;
 
 /* Program options.  */
 

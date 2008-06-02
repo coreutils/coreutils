@@ -114,7 +114,7 @@ struct tspec
   };
 
 /* The name this program was run with.  */
-char *program_name;
+char const *program_name;
 
 /* Convert the number of 8-bit bytes of a binary representation to
    the number of characters (digits + sign if the type is signed)

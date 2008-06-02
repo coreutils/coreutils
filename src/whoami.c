@@ -36,7 +36,7 @@
 #define AUTHORS proper_name ("Richard Mlynarik")
 
 /* The name this program was run with. */
-char *program_name;
+char const *program_name;
 
 void
 usage (int status)

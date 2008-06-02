@@ -127,7 +127,7 @@ struct dulevel
 };
 
 /* Name under which this program was invoked.  */
-char *program_name;
+char const *program_name;
 
 /* If true, display counts for all files, not just directories.  */
 static bool opt_all = false;

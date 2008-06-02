@@ -60,7 +60,7 @@ static const unsigned char wheel_tab[] =
 #define WHEEL_END (wheel_tab + (sizeof wheel_tab / sizeof wheel_tab[0]))
 
 /* The name this program was run with. */
-char *program_name;
+char const *program_name;
 
 void
 usage (int status)

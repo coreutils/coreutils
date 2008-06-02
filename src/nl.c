@@ -62,7 +62,7 @@ enum section
 };
 
 /* The name this program was run with. */
-char *program_name;
+char const *program_name;
 
 /* Format of body lines (-b).  */
 static char const *body_type = "t";

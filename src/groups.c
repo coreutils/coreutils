@@ -30,7 +30,7 @@
 #include "group-list.h"
 
 /* The name this program was run with. */
-char *program_name;
+char const *program_name;
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "groups"

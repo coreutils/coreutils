@@ -46,7 +46,7 @@ enum { PRINTENV_FAILURE = 2 };
   proper_name ("Richard Mlynarik")
 
 /* The name this program was run with. */
-char *program_name;
+char const *program_name;
 
 extern char **environ;
 

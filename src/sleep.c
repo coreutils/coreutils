@@ -36,7 +36,7 @@
   proper_name ("Paul Eggert")
 
 /* The name by which this program was run. */
-char *program_name;
+char const *program_name;
 
 void
 usage (int status)

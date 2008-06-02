@@ -59,7 +59,7 @@ enum Verbosity
 };
 
 /* The name the program was run with. */
-char *program_name;
+char const *program_name;
 
 /* The desired change to the mode.  */
 static struct mode_change *change;

@@ -42,7 +42,7 @@ static bool append;
 static bool ignore_interrupts;
 
 /* The name that this program was run with. */
-char *program_name;
+char const *program_name;
 
 static struct option const long_options[] =
 {

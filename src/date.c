@@ -78,7 +78,7 @@ ARGMATCH_VERIFY (time_spec_string, time_spec);
 static char const rfc_2822_format[] = "%a, %d %b %Y %H:%M:%S %z";
 
 /* The name this program was run with, for error messages. */
-char *program_name;
+char const *program_name;
 
 /* For long options that have no equivalent short option, use a
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */

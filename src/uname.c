@@ -87,7 +87,7 @@
 #define PRINT_OPERATING_SYSTEM 128
 
 /* The name this program was run with, for error messages. */
-char *program_name;
+char const *program_name;
 
 static struct option const uname_long_options[] =
 {

@@ -38,7 +38,7 @@
 #define AUTHORS proper_name ("Simon Josefsson")
 
 /* The invocation name of this program.  */
-char *program_name;
+char const *program_name;
 
 static const struct option long_options[] = {
   {"decode", no_argument, 0, 'd'},

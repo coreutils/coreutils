@@ -121,7 +121,7 @@ enum operating_mode
   };
 
 /* The name this program was run with. */
-char *program_name;
+char const *program_name;
 
 static enum operating_mode operating_mode;
 

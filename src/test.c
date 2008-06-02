@@ -48,7 +48,7 @@
 # include <sys/param.h>
 #endif
 
-char *program_name;
+char const *program_name;
 
 /* Exit status for syntax errors, etc.  */
 enum { TEST_TRUE, TEST_FALSE, TEST_FAILURE };

@@ -99,7 +99,7 @@
 char *ttyname ();
 
 /* The name this program was run with. */
-char *program_name;
+char const *program_name;
 
 /* If true, attempt to canonicalize hostnames via a DNS lookup. */
 static bool do_lookup;

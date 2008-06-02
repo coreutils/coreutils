@@ -114,7 +114,7 @@ main (void)
 # define BUFLEN (1 << 16)
 
 /* The name this program was run with.  */
-char *program_name;
+char const *program_name;
 
 static uint_fast32_t const crctab[256] =
 {

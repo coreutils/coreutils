@@ -129,7 +129,7 @@ static void save_line_to_file (const struct cstring *line);
 void usage (int status);
 
 /* The name this program was run with. */
-char *program_name;
+char const *program_name;
 
 /* Start of buffer list. */
 static struct buffer_record *head = NULL;

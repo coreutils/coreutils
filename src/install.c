@@ -93,7 +93,7 @@ static int make_ancestor (char const *dir, char const *component,
 void usage (int status);
 
 /* The name this program was run with, for error messages. */
-char *program_name;
+char const *program_name;
 
 /* The user name that will own the files, or NULL to make the owner
    the current user ID. */

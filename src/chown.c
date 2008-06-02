@@ -48,7 +48,7 @@
   proper_name ("Jim Meyering")
 
 /* The name the program was run with. */
-char *program_name;
+char const *program_name;
 
 /* The argument to the --reference option.  Use the owner and group IDs
    of this file.  This file must exist.  */

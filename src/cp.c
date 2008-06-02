@@ -89,7 +89,7 @@ enum
 #define INITIAL_ENTRY_TAB_SIZE 70
 
 /* The invocation name of this program.  */
-char *program_name;
+char const *program_name;
 
 /* True if the kernel is SELinux enabled.  */
 static bool selinux_enabled;

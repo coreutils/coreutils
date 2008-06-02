@@ -73,7 +73,7 @@ static struct option long_options[] = {
 };
 
 /* The name the program was run with. */
-char *program_name;
+char const *program_name;
 
 void
 usage (int status)

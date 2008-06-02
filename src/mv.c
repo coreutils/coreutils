@@ -57,7 +57,7 @@ enum
 };
 
 /* The name this program was run with. */
-char *program_name;
+char const *program_name;
 
 /* Remove any trailing slashes from each SOURCE argument.  */
 static bool remove_trailing_slashes;

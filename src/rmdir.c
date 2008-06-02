@@ -39,7 +39,7 @@
 #define AUTHORS proper_name ("David MacKenzie")
 
 /* The name this program was run with. */
-char *program_name;
+char const *program_name;
 
 /* If true, remove empty parent directories.  */
 static bool remove_empty_parents;

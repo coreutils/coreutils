@@ -47,7 +47,7 @@
 #define DEFAULT_SUFFIX_LENGTH 2
 
 /* The name this program was run with. */
-char *program_name;
+char const *program_name;
 
 /* Base name of output files.  */
 static char const *outbase;

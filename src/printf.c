@@ -79,7 +79,7 @@ static char const *const cfcc_msg =
  N_("warning: %s: character(s) following character constant have been ignored");
 
 /* The name this program was run with. */
-char *program_name;
+char const *program_name;
 
 void
 usage (int status)

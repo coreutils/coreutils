@@ -58,7 +58,7 @@
 #endif
 
 /* The name by which the program was run, for error messages.  */
-char *program_name;
+char const *program_name;
 
 /* FIXME: document */
 static enum backup_type backup_type;

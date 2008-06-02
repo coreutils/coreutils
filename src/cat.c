@@ -52,7 +52,7 @@
 #define max(h,i) ((h) > (i) ? (h) : (i))
 
 /* Name under which this program was invoked.  */
-char *program_name;
+char const *program_name;
 
 /* Name of input file.  May be "-".  */
 static char const *infile;

@@ -82,7 +82,7 @@ typedef struct valinfo VALUE;
 static char **args;
 
 /* The name this program was run with. */
-char *program_name;
+char const *program_name;
 
 static VALUE *eval (bool);
 static bool nomoreargs (void);

@@ -65,7 +65,7 @@ enum header_mode
 };
 
 /* The name this program was run with. */
-char *program_name;
+char const *program_name;
 
 /* Have we ever read standard input?  */
 static bool have_read_stdin;

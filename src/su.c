@@ -129,7 +129,7 @@ static void run_shell (char const *, char const *, char **, size_t)
      ATTRIBUTE_NORETURN;
 
 /* The name this program was run with.  */
-char *program_name;
+char const *program_name;
 
 /* If true, pass the `-f' option to the subshell.  */
 static bool fast_startup;

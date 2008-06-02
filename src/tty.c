@@ -43,7 +43,7 @@ enum
 #define AUTHORS proper_name ("David MacKenzie")
 
 /* The name under which this program was run. */
-char *program_name;
+char const *program_name;
 
 /* If true, return an exit status but produce no output. */
 static bool silent;

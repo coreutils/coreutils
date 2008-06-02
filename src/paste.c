@@ -55,7 +55,7 @@
 #define EMPTY_DELIM '\0'
 
 /* Name this program was run with. */
-char *program_name;
+char const *program_name;
 
 /* If nonzero, we have read standard input at some point. */
 static bool have_read_stdin;

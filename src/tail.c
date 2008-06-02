@@ -163,7 +163,7 @@ static uintmax_t max_n_unchanged_stats_between_opens =
   DEFAULT_MAX_N_UNCHANGED_STATS_BETWEEN_OPENS;
 
 /* The name this program was run with.  */
-char *program_name;
+char const *program_name;
 
 /* The process ID of the process (presumably on the current host)
    that is writing to all followed files.  */

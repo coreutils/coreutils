@@ -43,7 +43,7 @@
 #endif
 
 /* The name the program was run with. */
-char *program_name;
+char const *program_name;
 
 /* The argument to the --reference option.  Use the group ID of this file.
    This file must exist.  */

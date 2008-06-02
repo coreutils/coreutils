@@ -43,7 +43,7 @@ enum
     NOHUP_FAILURE = 127
   };
 
-char *program_name;
+char const *program_name;
 
 void
 usage (int status)

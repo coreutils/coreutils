@@ -76,7 +76,7 @@ tac -r -s '.\|
 #define WRITESIZE 8192
 
 /* The name this program was run with. */
-char *program_name;
+char const *program_name;
 
 /* The string that separates the records of the file. */
 static char const *separator;

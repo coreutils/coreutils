@@ -52,7 +52,7 @@
 #define OUTPUT_BLOCK 256
 
 /* The name this program was run with.  */
-char *program_name;
+char const *program_name;
 
 /* If true, convert blanks even after nonblank characters have been
    read on the line.  */

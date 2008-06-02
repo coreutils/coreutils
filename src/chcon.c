@@ -56,7 +56,7 @@ enum Verbosity
 };
 
 /* The name the program was run with. */
-char *program_name;
+char const *program_name;
 
 /* If nonzero, and the systems has support for it, change the context
    of symbolic links rather than any files they point to.  */

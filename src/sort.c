@@ -184,7 +184,7 @@ struct month
 };
 
 /* The name this program was run with. */
-char *program_name;
+char const *program_name;
 
 /* FIXME: None of these tables work with multibyte character sets.
    Also, there are many other bugs when handling multibyte characters.

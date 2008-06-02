@@ -37,7 +37,7 @@
   proper_name ("David MacKenzie")
 
 /* The name this program was run with. */
-char *program_name;
+char const *program_name;
 
 /* True if any of the files read were the standard input. */
 static bool have_read_stdin;

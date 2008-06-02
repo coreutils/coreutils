@@ -43,7 +43,7 @@
   proper_name ("Paul Eggert")
 
 /* Name this program was run with. */
-char *program_name;
+char const *program_name;
 
 /* If true, show inode information. */
 static bool inode_format;

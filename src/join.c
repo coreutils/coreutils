@@ -80,7 +80,7 @@ struct seq
   };
 
 /* The name this program was run with.  */
-char *program_name;
+char const *program_name;
 
 /* The previous line read from each file. */
 static struct line *prevline[2];

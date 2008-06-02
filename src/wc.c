@@ -50,7 +50,7 @@
 #define BUFFER_SIZE (16 * 1024)
 
 /* The name this program was run with. */
-char *program_name;
+char const *program_name;
 
 /* Cumulative number of lines, words, chars and bytes in all files so far.
    max_line_length is the maximum over all files processed so far.  */
