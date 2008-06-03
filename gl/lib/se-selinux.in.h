@@ -29,9 +29,6 @@ static inline int setfscreatecon (security_context_t con)
 static inline int matchpathcon (char const *s, mode_t m,
 				security_context_t *con)
   { errno = ENOTSUP; return -1; }
-static inline int matchpathcon_init_prefix (const char *path,
-					    const char *prefix)
-  { errno = ENOTSUP; return -1; }
 static inline int getfilecon (char const *s, security_context_t *con)
   { errno = ENOTSUP; return -1; }
 static inline int lgetfilecon (char const *s, security_context_t *con)
