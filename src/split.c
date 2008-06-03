@@ -46,9 +46,6 @@
 
 #define DEFAULT_SUFFIX_LENGTH 2
 
-/* The name this program was run with. */
-char const *program_name;
-
 /* Base name of output files.  */
 static char const *outbase;
 
@@ -395,7 +392,7 @@ main (int argc, char **argv)
   int digits_optind = 0;
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

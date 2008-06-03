@@ -83,8 +83,6 @@ static int term_signal = SIGTERM;  /* same default as kill command.  */
 static int monitored_pid;
 static int sigs_to_ignore[NSIG];   /* so monitor can ignore sigs it resends.  */
 
-char const *program_name;
-
 static struct option const long_options[] = {
   {"signal", required_argument, NULL, 's'},
   {NULL, 0, NULL, 0}
@@ -224,7 +222,7 @@ main (int argc, char **argv)
   char *ep;
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

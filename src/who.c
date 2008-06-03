@@ -98,9 +98,6 @@
 
 char *ttyname ();
 
-/* The name this program was run with. */
-char const *program_name;
-
 /* If true, attempt to canonicalize hostnames via a DNS lookup. */
 static bool do_lookup;
 
@@ -677,7 +674,7 @@ main (int argc, char **argv)
   bool assumptions = true;
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

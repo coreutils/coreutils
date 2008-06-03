@@ -88,9 +88,6 @@ enum
 /* Initial number of entries in the inode hash table.  */
 #define INITIAL_ENTRY_TAB_SIZE 70
 
-/* The invocation name of this program.  */
-char const *program_name;
-
 /* True if the kernel is SELinux enabled.  */
 static bool selinux_enabled;
 
@@ -898,7 +895,7 @@ main (int argc, char **argv)
   bool no_target_directory = false;
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

@@ -42,9 +42,6 @@
 # define endgrent() ((void) 0)
 #endif
 
-/* The name the program was run with. */
-char const *program_name;
-
 /* The argument to the --reference option.  Use the group ID of this file.
    This file must exist.  */
 static char *reference_file;
@@ -184,7 +181,7 @@ main (int argc, char **argv)
   int optc;
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

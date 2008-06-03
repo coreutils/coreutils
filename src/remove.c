@@ -128,8 +128,6 @@ struct AD_ent
 # define DT_LNK 2
 #endif
 
-extern char *program_name;
-
 struct dirstack_state
 {
   /* The name of the directory (starting with and relative to a command

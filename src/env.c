@@ -96,9 +96,6 @@ int putenv ();
 
 extern char **environ;
 
-/* The name by which this program was run. */
-char const *program_name;
-
 static struct option const longopts[] =
 {
   {"ignore-environment", no_argument, NULL, 'i'},
@@ -143,7 +140,7 @@ main (int argc, char **argv)
   bool ignore_environment = false;
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

@@ -36,9 +36,6 @@
   proper_name ("Kayvan Aghaiepour"), \
   proper_name ("David MacKenzie")
 
-/* The name this program was run with. */
-char const *program_name;
-
 /* True if any of the files read were the standard input. */
 static bool have_read_stdin;
 
@@ -228,7 +225,7 @@ main (int argc, char **argv)
   bool (*sum_func) (const char *, int) = bsd_sum_file;
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

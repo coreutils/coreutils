@@ -18,9 +18,9 @@
 #include <stdarg.h>
 #include <sys/types.h>
 
-#include "prog-fprintf.h"
+#include "system.h"
 
-extern char *program_name;
+#include "prog-fprintf.h"
 
 /* Display program name followed by variable list.
    Used for e.g. verbose output */

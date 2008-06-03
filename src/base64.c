@@ -37,9 +37,6 @@
 
 #define AUTHORS proper_name ("Simon Josefsson")
 
-/* The invocation name of this program.  */
-char const *program_name;
-
 static const struct option long_options[] = {
   {"decode", no_argument, 0, 'd'},
   {"wrap", required_argument, 0, 'w'},
@@ -248,7 +245,7 @@ main (int argc, char **argv)
   uintmax_t wrap_column = 76;
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

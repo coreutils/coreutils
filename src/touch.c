@@ -48,9 +48,6 @@
 #define CH_ATIME 1
 #define CH_MTIME 2
 
-/* The name by which this program was run. */
-char const *program_name;
-
 /* Which timestamps to change. */
 static int change_times;
 
@@ -280,7 +277,7 @@ main (int argc, char **argv)
   char const *flex_date = NULL;
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

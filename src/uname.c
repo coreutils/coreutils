@@ -86,9 +86,6 @@
 /* Operating system.  */
 #define PRINT_OPERATING_SYSTEM 128
 
-/* The name this program was run with, for error messages. */
-char const *program_name;
-
 static struct option const uname_long_options[] =
 {
   {"all", no_argument, NULL, 'a'},
@@ -269,7 +266,7 @@ main (int argc, char **argv)
   unsigned int toprint = 0;
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

@@ -128,9 +128,6 @@ static void delete_all_files (bool);
 static void save_line_to_file (const struct cstring *line);
 void usage (int status);
 
-/* The name this program was run with. */
-char const *program_name;
-
 /* Start of buffer list. */
 static struct buffer_record *head = NULL;
 
@@ -1330,7 +1327,7 @@ main (int argc, char **argv)
   unsigned long int val;
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

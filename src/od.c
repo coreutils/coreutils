@@ -113,9 +113,6 @@ struct tspec
     int field_width;
   };
 
-/* The name this program was run with.  */
-char const *program_name;
-
 /* Convert the number of 8-bit bytes of a binary representation to
    the number of characters (digits + sign if the type is signed)
    required to represent the same quantity in the specified base/type.
@@ -1565,7 +1562,7 @@ main (int argc, char **argv)
   uintmax_t pseudo_start IF_LINT (= 0);
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

@@ -75,9 +75,6 @@ tac -r -s '.\|
 /* The number of bytes per atomic write. */
 #define WRITESIZE 8192
 
-/* The name this program was run with. */
-char const *program_name;
-
 /* The string that separates the records of the file. */
 static char const *separator;
 
@@ -575,7 +572,7 @@ main (int argc, char **argv)
   char const *const *file;
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

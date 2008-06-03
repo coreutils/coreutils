@@ -128,9 +128,6 @@ enum
     STATUS_NOXFER = 01
   };
 
-/* The name this program was run with. */
-char const *program_name;
-
 /* The name of the input file, or NULL for the standard input. */
 static char const *input_file = NULL;
 
@@ -1671,7 +1668,7 @@ main (int argc, char **argv)
   off_t offset;
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

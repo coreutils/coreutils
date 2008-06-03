@@ -50,9 +50,6 @@ on System V systems with the -E option.
 enum { DEFAULT_ECHO_TO_XPG = false };
 #endif
 
-/* The name this program was run with. */
-char const *program_name;
-
 void
 usage (int status)
 {
@@ -134,7 +131,7 @@ main (int argc, char **argv)
   bool do_v9 = DEFAULT_ECHO_TO_XPG;
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

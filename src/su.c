@@ -128,9 +128,6 @@ extern char **environ;
 static void run_shell (char const *, char const *, char **, size_t)
      ATTRIBUTE_NORETURN;
 
-/* The name this program was run with.  */
-char const *program_name;
-
 /* If true, pass the `-f' option to the subshell.  */
 static bool fast_startup;
 
@@ -414,7 +411,7 @@ main (int argc, char **argv)
   struct passwd pw_copy;
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

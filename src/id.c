@@ -44,9 +44,6 @@ static int just_context = 0;
 static void print_user (uid_t uid);
 static void print_full_info (const char *username);
 
-/* The name this program was run with. */
-char const *program_name;
-
 /* If true, output user/group name instead of ID number. -n */
 static bool use_name = false;
 
@@ -121,7 +118,7 @@ main (int argc, char **argv)
   bool just_user = false;
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

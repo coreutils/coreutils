@@ -32,9 +32,6 @@
 
 #define AUTHORS proper_name ("Dmitry V. Levin")
 
-/* Name this program was run with.  */
-char const *program_name;
-
 /* If true, do not output the trailing newline.  */
 static bool no_newline;
 
@@ -105,7 +102,7 @@ main (int argc, char **argv)
   int optc;
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

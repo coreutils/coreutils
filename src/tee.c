@@ -41,9 +41,6 @@ static bool append;
 /* If true, ignore interrupts. */
 static bool ignore_interrupts;
 
-/* The name that this program was run with. */
-char const *program_name;
-
 static struct option const long_options[] =
 {
   {"append", no_argument, NULL, 'a'},
@@ -86,7 +83,7 @@ main (int argc, char **argv)
   int optc;
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

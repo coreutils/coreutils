@@ -42,9 +42,6 @@
   proper_name ("David MacKenzie"), \
   proper_name ("Paul Eggert")
 
-/* Name this program was run with. */
-char const *program_name;
-
 /* If true, show inode information. */
 static bool inode_format;
 
@@ -781,7 +778,7 @@ main (int argc, char **argv)
   struct stat *stats IF_LINT (= 0);
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

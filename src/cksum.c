@@ -113,9 +113,6 @@ main (void)
 /* Number of bytes to read at once.  */
 # define BUFLEN (1 << 16)
 
-/* The name this program was run with.  */
-char const *program_name;
-
 static uint_fast32_t const crctab[256] =
 {
   0x00000000,
@@ -284,7 +281,7 @@ main (int argc, char **argv)
   bool ok;
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

@@ -29,9 +29,6 @@
 #include "error.h"
 #include "group-list.h"
 
-/* The name this program was run with. */
-char const *program_name;
-
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "groups"
 
@@ -76,7 +73,7 @@ main (int argc, char **argv)
   uid_t ruid;
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

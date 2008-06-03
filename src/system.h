@@ -462,6 +462,8 @@ enum
    of the 100 binaries. */
 #define proper_name(x) (x)
 
+#include "progname.h"
+
 #define case_GETOPT_VERSION_CHAR(Program_name, Authors)			\
   case GETOPT_VERSION_CHAR:						\
     version_etc (stdout, Program_name, PACKAGE_NAME, VERSION, Authors,	\

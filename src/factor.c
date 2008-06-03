@@ -59,9 +59,6 @@ static const unsigned char wheel_tab[] =
 #define WHEEL_START (wheel_tab + WHEEL_SIZE)
 #define WHEEL_END (wheel_tab + (sizeof wheel_tab / sizeof wheel_tab[0]))
 
-/* The name this program was run with. */
-char const *program_name;
-
 void
 usage (int status)
 {
@@ -192,7 +189,7 @@ main (int argc, char **argv)
   bool ok;
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

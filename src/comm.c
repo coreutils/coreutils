@@ -39,9 +39,6 @@
 #undef min
 #define min(x, y) ((x) < (y) ? (x) : (y))
 
-/* The name this program was run with. */
-char const *program_name;
-
 /* True if the LC_COLLATE locale is hard.  */
 static bool hard_LC_COLLATE;
 
@@ -230,7 +227,7 @@ main (int argc, char **argv)
   int c;
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

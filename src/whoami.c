@@ -35,9 +35,6 @@
 
 #define AUTHORS proper_name ("Richard Mlynarik")
 
-/* The name this program was run with. */
-char const *program_name;
-
 void
 usage (int status)
 {
@@ -66,7 +63,7 @@ main (int argc, char **argv)
   uid_t uid;
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

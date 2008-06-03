@@ -120,9 +120,6 @@ static bool warn = false;
 /* With --check, suppress the "OK" printed for each verified file.  */
 static bool quiet = false;
 
-/* The name this program was run with.  */
-char const *program_name;
-
 /* For long options that have no equivalent short option, use a
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
@@ -613,7 +610,7 @@ main (int argc, char **argv)
 
   /* Setting values of global variables.  */
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

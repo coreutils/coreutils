@@ -79,9 +79,6 @@ struct seq
     struct line *lines;
   };
 
-/* The name this program was run with.  */
-char const *program_name;
-
 /* The previous line read from each file. */
 static struct line *prevline[2];
 
@@ -934,7 +931,7 @@ main (int argc, char **argv)
   int i;
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

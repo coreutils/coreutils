@@ -49,9 +49,6 @@
 /* Size of atomic reads. */
 #define BUFFER_SIZE (16 * 1024)
 
-/* The name this program was run with. */
-char const *program_name;
-
 /* Cumulative number of lines, words, chars and bytes in all files so far.
    max_line_length is the maximum over all files processed so far.  */
 static uintmax_t total_lines;
@@ -589,7 +586,7 @@ main (int argc, char **argv)
   struct Tokens tok;
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

@@ -77,9 +77,6 @@ ARGMATCH_VERIFY (time_spec_string, time_spec);
 /* A format suitable for Internet RFC 2822.  */
 static char const rfc_2822_format[] = "%a, %d %b %Y %H:%M:%S %z";
 
-/* The name this program was run with, for error messages. */
-char const *program_name;
-
 /* For long options that have no equivalent short option, use a
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
@@ -325,7 +322,7 @@ main (int argc, char **argv)
   int option_specified_date;
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

@@ -42,9 +42,6 @@ enum
 
 #define AUTHORS proper_name ("David MacKenzie")
 
-/* The name under which this program was run. */
-char const *program_name;
-
 /* If true, return an exit status but produce no output. */
 static bool silent;
 
@@ -85,7 +82,7 @@ main (int argc, char **argv)
   int optc;
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

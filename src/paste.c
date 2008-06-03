@@ -54,9 +54,6 @@
 /* Indicates that no delimiter should be added in the current position. */
 #define EMPTY_DELIM '\0'
 
-/* Name this program was run with. */
-char const *program_name;
-
 /* If nonzero, we have read standard input at some point. */
 static bool have_read_stdin;
 
@@ -466,7 +463,7 @@ main (int argc, char **argv)
   char const *delim_arg = "\t";
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

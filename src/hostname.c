@@ -50,9 +50,6 @@ sethostname (char *name, size_t namelen)
 # define HAVE_SETHOSTNAME 1  /* Now we have it... */
 #endif
 
-/* The name this program was run with. */
-char const *program_name;
-
 void
 usage (int status)
 {
@@ -81,7 +78,7 @@ main (int argc, char **argv)
   char *hostname;
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

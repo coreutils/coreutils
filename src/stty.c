@@ -455,9 +455,6 @@ static struct option longopts[] =
   {NULL, 0, NULL, 0}
 };
 
-/* The name this program was run with. */
-char const *program_name;
-
 static void wrapf (const char *message, ...)
      __attribute__ ((__format__ (__printf__, 1, 2)));
 
@@ -745,7 +742,7 @@ main (int argc, char **argv)
   const char *device_name;
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

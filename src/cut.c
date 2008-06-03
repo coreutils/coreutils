@@ -120,9 +120,6 @@ enum operating_mode
     field_mode
   };
 
-/* The name this program was run with. */
-char const *program_name;
-
 static enum operating_mode operating_mode;
 
 /* If true do not output lines containing no delimeter characters.
@@ -762,7 +759,7 @@ main (int argc, char **argv)
   char *spec_list_string IF_LINT(= NULL);
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

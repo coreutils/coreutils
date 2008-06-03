@@ -68,9 +68,6 @@
 /* Imported from "regex.c".  */
 #define Sword 1
 
-/* The name this program was run with. */
-char const *program_name;
-
 /* Program options.  */
 
 enum Format
@@ -1980,7 +1977,7 @@ main (int argc, char **argv)
   /* Decode program options.  */
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

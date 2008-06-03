@@ -44,9 +44,6 @@
 
 char *ttyname ();
 
-/* The name this program was run with. */
-char const *program_name;
-
 /* If true, display the hours:minutes since each user has touched
    the keyboard, or blank if within the last minute, or days followed
    by a 'd' if not within the last day. */
@@ -544,7 +541,7 @@ main (int argc, char **argv)
   int n_users;
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

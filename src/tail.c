@@ -162,9 +162,6 @@ enum header_mode
 static uintmax_t max_n_unchanged_stats_between_opens =
   DEFAULT_MAX_N_UNCHANGED_STATS_BETWEEN_OPENS;
 
-/* The name this program was run with.  */
-char const *program_name;
-
 /* The process ID of the process (presumably on the current host)
    that is writing to all followed files.  */
 static pid_t pid;
@@ -1599,7 +1596,7 @@ main (int argc, char **argv)
   double sleep_interval = 1.0;
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

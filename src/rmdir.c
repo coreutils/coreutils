@@ -38,9 +38,6 @@
 
 #define AUTHORS proper_name ("David MacKenzie")
 
-/* The name this program was run with. */
-char const *program_name;
-
 /* If true, remove empty parent directories.  */
 static bool remove_empty_parents;
 
@@ -193,7 +190,7 @@ main (int argc, char **argv)
   int optc;
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

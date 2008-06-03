@@ -81,9 +81,6 @@ typedef struct valinfo VALUE;
 /* The arguments given to the program, minus the program name.  */
 static char **args;
 
-/* The name this program was run with. */
-char const *program_name;
-
 static VALUE *eval (bool);
 static bool nomoreargs (void);
 static bool null (VALUE *v);
@@ -188,7 +185,7 @@ main (int argc, char **argv)
   VALUE *v;
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

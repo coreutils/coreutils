@@ -126,9 +126,6 @@ struct dulevel
   struct duinfo subdir;
 };
 
-/* Name under which this program was invoked.  */
-char const *program_name;
-
 /* If true, display counts for all files, not just directories.  */
 static bool opt_all = false;
 
@@ -685,7 +682,7 @@ main (int argc, char **argv)
   cwd_only[1] = NULL;
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

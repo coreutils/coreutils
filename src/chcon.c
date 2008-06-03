@@ -55,9 +55,6 @@ enum Verbosity
   V_off
 };
 
-/* The name the program was run with. */
-char const *program_name;
-
 /* If nonzero, and the systems has support for it, change the context
    of symbolic links rather than any files they point to.  */
 static bool affect_symlink_referent;
@@ -426,7 +423,7 @@ main (int argc, char **argv)
   int optc;
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

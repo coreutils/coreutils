@@ -64,9 +64,6 @@ enum header_mode
   multiple_files, always, never
 };
 
-/* The name this program was run with. */
-char const *program_name;
-
 /* Have we ever read standard input?  */
 static bool have_read_stdin;
 
@@ -920,7 +917,7 @@ main (int argc, char **argv)
   char const *const *file_list;
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

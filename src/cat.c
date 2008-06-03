@@ -51,9 +51,6 @@
 #undef max
 #define max(h,i) ((h) > (i) ? (h) : (i))
 
-/* Name under which this program was invoked.  */
-char const *program_name;
-
 /* Name of input file.  May be "-".  */
 static char const *infile;
 
@@ -565,7 +562,7 @@ main (int argc, char **argv)
   };
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

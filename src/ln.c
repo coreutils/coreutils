@@ -57,9 +57,6 @@
   lstat (File, Stat_buf)
 #endif
 
-/* The name by which the program was run, for error messages.  */
-char const *program_name;
-
 /* FIXME: document */
 static enum backup_type backup_type;
 
@@ -423,7 +420,7 @@ main (int argc, char **argv)
   char **file;
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

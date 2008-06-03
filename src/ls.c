@@ -244,9 +244,6 @@ static void sort_files (void);
 static void parse_ls_color (void);
 void usage (int status);
 
-/* The name this program was run with.  */
-char const *program_name;
-
 /* Initial size of hash table.
    Most hierarchies are likely to be shallower than this.  */
 #define INITIAL_TABLE_SIZE 30
@@ -1150,7 +1147,7 @@ main (int argc, char **argv)
 #endif
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

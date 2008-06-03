@@ -43,9 +43,6 @@
 /* If true print all number with equal width.  */
 static bool equal_width;
 
-/* The name that this program was run with.  */
-char const *program_name;
-
 /* The string used to separate two numbers.  */
 static char const *separator;
 
@@ -380,7 +377,7 @@ main (int argc, char **argv)
   char const *format_str = NULL;
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

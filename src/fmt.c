@@ -167,9 +167,6 @@ static void put_line (WORD *w, int indent);
 static void put_word (WORD *w);
 static void put_space (int space);
 
-/* The name this program was run with.  */
-char const *program_name;
-
 /* Option values.  */
 
 /* If true, first 2 lines may have different indent (default false).  */
@@ -324,7 +321,7 @@ main (int argc, char **argv)
   char const *max_width_option = NULL;
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

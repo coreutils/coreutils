@@ -60,9 +60,6 @@
 # endif
 #endif
 
-/* The name this program was run with, for error messages.  */
-char const *program_name;
-
 static char const short_options[] =
   "0::1::2::3::4::5::6::7::8::9::"
   "A::B::C::D::E::F::G::H::I::J::K::L::M::"
@@ -241,7 +238,7 @@ main (int argc, char **argv)
   char signame[SIG2STR_MAX];
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

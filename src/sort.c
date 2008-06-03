@@ -183,9 +183,6 @@ struct month
   int val;
 };
 
-/* The name this program was run with. */
-char const *program_name;
-
 /* FIXME: None of these tables work with multibyte character sets.
    Also, there are many other bugs when handling multibyte characters.
    One way to fix this is to rewrite `sort' to use wide characters
@@ -2757,7 +2754,7 @@ main (int argc, char **argv)
   char const *outfile = NULL;
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

@@ -87,8 +87,6 @@ static struct option const long_options[] =
     {NULL, 0, NULL, 0}
   };
 
-char const *program_name;
-
 void
 usage (int status)
 {
@@ -402,7 +400,7 @@ main (int argc, char **argv)
   bool print_database = false;
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

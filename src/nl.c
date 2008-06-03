@@ -61,9 +61,6 @@ enum section
   Header, Body, Footer, Text
 };
 
-/* The name this program was run with. */
-char const *program_name;
-
 /* Format of body lines (-b).  */
 static char const *body_type = "t";
 
@@ -460,7 +457,7 @@ main (int argc, char **argv)
   bool ok = true;
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

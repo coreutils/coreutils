@@ -193,9 +193,6 @@ es_match (struct E_string const *es, size_t i, char c)
   return es->s[i] == c && !es->escaped[i];
 }
 
-/* The name by which this program was run.  */
-char const *program_name;
-
 /* When true, each sequence in the input of a repeated character
    (call it c) is replaced (in the output) by a single occurrence of c
    for every c in the squeeze set.  */
@@ -1671,7 +1668,7 @@ main (int argc, char **argv)
   struct Spec_list *s2 = &buf2;
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

@@ -342,13 +342,13 @@ sc_system_h_headers: .re-list
 	fi
 
 # Ensure that each .c file containing a "main" function also
-# declares "char *program_name", with or without "const".
+# calls set_program_name.
 sc_program_name:
 	@if $(VC_LIST_EXCEPT) | grep '\.c$$' > /dev/null; then		\
 	  files=$$(grep -l '^main *(' $$($(VC_LIST_EXCEPT) | grep '\.c$$')); \
-	  grep -EL '^(char const|(const )?char) \*program_name;' $$files \
+	  grep -LE 'set_program_name *\(m?argv\[0\]\);' $$files		\
 	      | grep . &&						\
-	  { echo '$(ME): the above files do not declare program_name'	\
+	  { echo '$(ME): the above files do not call set_program_name'	\
 		1>&2; exit 1; } || :;					\
 	else :;								\
 	fi

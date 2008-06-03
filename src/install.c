@@ -96,9 +96,6 @@ static int make_ancestor (char const *dir, char const *component,
 			  void *options);
 void usage (int status);
 
-/* The name this program was run with, for error messages. */
-char const *program_name;
-
 /* The user name that will own the files, or NULL to make the owner
    the current user ID. */
 static char *owner_name;
@@ -338,7 +335,7 @@ main (int argc, char **argv)
   selinux_enabled = (0 < is_selinux_enabled ());
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

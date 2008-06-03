@@ -107,9 +107,6 @@ static bool owner_failure_ok (struct cp_options const *x);
 static char const *top_level_src_name;
 static char const *top_level_dst_name;
 
-/* The invocation name of this program.  */
-extern char *program_name;
-
 /* FIXME: describe */
 /* FIXME: rewrite this to use a hash table so we avoid the quadratic
    performance hit that's probably noticeable only on trees deeper

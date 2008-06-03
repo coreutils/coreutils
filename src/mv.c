@@ -56,9 +56,6 @@ enum
   STRIP_TRAILING_SLASHES_OPTION
 };
 
-/* The name this program was run with. */
-char const *program_name;
-
 /* Remove any trailing slashes from each SOURCE argument.  */
 static bool remove_trailing_slashes;
 
@@ -364,7 +361,7 @@ main (int argc, char **argv)
   char **file;
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

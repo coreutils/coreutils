@@ -48,8 +48,6 @@
 # include <sys/param.h>
 #endif
 
-char const *program_name;
-
 /* Exit status for syntax errors, etc.  */
 enum { TEST_TRUE, TEST_FALSE, TEST_FAILURE };
 
@@ -809,7 +807,7 @@ main (int margc, char **margv)
     return (test_error_return);
 #else /* TEST_STANDALONE */
   initialize_main (&margc, &margv);
-  program_name = margv[0];
+  set_program_name (margv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

@@ -445,9 +445,6 @@ static void cleanup (void);
 static void print_sep_string (void);
 static void separator_string (const char *optarg_S);
 
-/* The name under which this program was invoked. */
-char const *program_name;
-
 /* All of the columns to print.  */
 static COLUMN *column_vector;
 
@@ -869,7 +866,7 @@ main (int argc, char **argv)
   size_t n_alloc = 0;
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);

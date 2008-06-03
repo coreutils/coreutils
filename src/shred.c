@@ -148,9 +148,6 @@ static struct option const long_opts[] =
   {NULL, 0, NULL, 0}
 };
 
-/* Global variable for error printing purposes */
-char const *program_name; /* Initialized before any possible use */
-
 void
 usage (int status)
 {
@@ -1100,7 +1097,7 @@ main (int argc, char **argv)
   char const *random_source = NULL;
 
   initialize_main (&argc, &argv);
-  program_name = argv[0];
+  set_program_name (argv[0]);
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
