@@ -123,7 +123,7 @@ main (int argc, char **argv)
 	  char **fake_argv = argv + (i - 1);
 
 	  /* Ensure that any getopt diagnostics use the right name.  */
-	  fake_argv[0] = (char *) program_name;
+	  fake_argv[0] = argv[0];
 
 	  /* Initialize getopt_long's internal state.  */
 	  optind = 0;
