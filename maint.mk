@@ -456,15 +456,18 @@ update-NEWS-hash: NEWS
 	perl -pi -e 's/^(old_NEWS_hash = ).*/$${1}'"$(NEWS_hash)/" \
 	  $(srcdir)/cfg.mk
 
+epoch_date = 1970-01-01 00:00:00.000000000 +0000
 # Ensure that the c99-to-c89 patch applies cleanly.
 patch-check:
 	rm -rf src-c89 $@.1 $@.2
 	cp -a src src-c89
 	(cd src-c89; patch -p1 -V never --fuzz=0) < src/c99-to-c89.diff \
 	  > $@.1 2>&1
-	if test "$$REGEN_PATCH" = yes; then \
+	if test "$(REGEN_PATCH)" = yes; then \
 	  diff -upr src src-c89 | sed 's,src-c89/,src/,' \
-	    | grep -v '^Only in' > new-diff || : ; fi
+	    | grep -vE '^(Only in|File )' \
+	    | perl -pe 's/^((?:\+\+\+|---) \S+\t).*/$${1}$(epoch_date)/' \
+	    > new-diff || : ; fi
 	grep -v '^patching file ' $@.1 > $@.2 || :
 	msg=ok; test -s $@.2 && msg='fuzzy patch' || : ;	\
 	rm -f src-c89/*.o || msg='rm failed';			\
