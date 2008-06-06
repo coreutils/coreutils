@@ -166,7 +166,7 @@ specifies Coordinated Universal Time.  Interpreted sequences are:\n\
   %c   locale's date and time (e.g., Thu Mar  3 23:05:25 2005)\n\
 "), stdout);
       fputs (_("\
-  %C   century; like %Y, except omit last two digits (e.g., 21)\n\
+  %C   century; like %Y, except omit last two digits (e.g., 20)\n\
   %d   day of month (e.g, 01)\n\
   %D   date; same as %m/%d/%y\n\
   %e   day of month, space padded; same as %_d\n\
