@@ -705,7 +705,9 @@ endef
 # the build srcdir, these always-failing programs will run.
 # Otherwise, it is too easy to test the wrong programs.
 # Note that "false" itself is a symlink to true, so it too will malfunction.
-my-distcheck: $(DIST_ARCHIVES) $(local-check) check
+my-distcheck: $(DIST_ARCHIVES) $(local-check)
+	$(MAKE) syntax-check
+	$(MAKE) check
 	-rm -rf $(t)
 	mkdir -p $(t)
 	GZIP=$(GZIP_ENV) $(AMTAR) -C $(t) -zxf $(distdir).tar.gz
