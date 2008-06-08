@@ -421,21 +421,14 @@ sc_GPL_version:
 	@grep -n 'either ''version [^3]' $$($(VC_LIST_EXCEPT)) &&	\
 	  { echo '$(ME): GPL vN, N!=3' 1>&2; exit 1; } || :
 
-exec_perl_re = \
-  exec \$$PERL -w -I\$$top_srcdir/tests -MCoreutils \
-    -M"CuTmpdir qw(\$$me)" -- - <<\\EOF
-# Ensure that each test invoking $PERL with -MCoreutils uses the same line.
-sc_perl_coreutils_test:
+# Perl-based tests used to exec perl from a #!/bin/sh script.
+# Now they all start with #!/usr/bin/perl and the portability
+# infrastructure is in tests/Makefile.am.  Make sure no old-style
+# script sneaks back in.
+sc_no_exec_perl_coreutils:
 	@if test -f $(srcdir)/tests/Coreutils.pm; then			\
-	  die=0;							\
-	  for i in $$(grep -l '^exec  *\$$PERL.*MCoreutils'		\
-		$$($(VC_LIST) tests)); do				\
-	    grep '$(exec_perl_re)' $$i > /dev/null			\
-	      && : || { die=1; echo $$i; }				\
-	  done;								\
-	  test $$die = 1 &&						\
-	    { echo 1>&2 '$(ME): each of the above execs PERL differently:'; \
-	      echo 1>&2 '(exit $$fail); exit $$fail';			\
+	  grep '^exec  *\$$PERL.*MCoreutils' $$($(VC_LIST) tests) &&	\
+	    { echo 1>&2 '$(ME): found anachronistic Perl-based tests';	\
 	      exit 1; } || :;						\
 	fi
 
