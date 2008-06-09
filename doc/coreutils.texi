@@ -14106,7 +14106,7 @@ or a number. Also see @xref{Signal specifications}.
 Exit status:
 
 @display
-110 if @var{command} times out
+124 if @var{command} times out
 125 if @command{timeout} itself fails
 126 if @var{command} is found but cannot be invoked
 127 if @var{command} cannot be found

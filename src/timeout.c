@@ -20,14 +20,14 @@
    We try to behave like a shell starting a single (foreground) job,
    and will kill the job if we receive the alarm signal we setup.
    The exit status of the job is returned, or one of these errors:
-     ETIMEDOUT          110      job timed out
-     ECANCELED          125      internal error
+     EXIT_TIMEDOUT      124      job timed out
+     EXIT_CANCELED      125      internal error
      EXIT_CANNOT_INVOKE 126      error executing job
      EXIT_ENOENT        127      couldn't find job to exec
 
    Caveats:
      If user specifies the KILL (9) signal is to be sent on timeout,
-     the monitor is killed and so exits with 128+9 rather than ETIMEDOUT.
+     the monitor is killed and so exits with 128+9 rather than 124.
 
      If you start a command in the background, which reads from the tty
      and so is immediately sent SIGTTIN to stop, then the timeout
@@ -73,10 +73,11 @@
 
 #define AUTHORS proper_name_utf8 ("Padraig Brady", "P\303\241draig Brady")
 
+/* Note ETIMEDOUT is 110 on linux but this is non standard */
+#define EXIT_TIMEDOUT 124
+
 /* Internal failure.  */
-#ifndef ECANCELED
-# define ECANCELED 125
-#endif
+#define EXIT_CANCELED 125
 
 static int timed_out;
 static int term_signal = SIGTERM;  /* same default as kill command.  */
@@ -151,7 +152,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\n\
-If the command times out, then we exit with status ETIMEDOUT,\n\
+If the command times out, then we exit with status 124,\n\
 otherwise the normal exit status of the command is returned.\n\
 If no signal is specified, the TERM signal is sent. The TERM signal\n\
 will kill processes which do not catch this signal. For other processes,\n\
@@ -227,7 +228,7 @@ main (int argc, char **argv)
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
 
-  initialize_exit_failure (ECANCELED);
+  initialize_exit_failure (EXIT_CANCELED);
   atexit (close_stdout);
 
   parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE_NAME, VERSION,
@@ -240,16 +241,16 @@ main (int argc, char **argv)
         case 's':
           term_signal = operand2sig (optarg, signame);
           if (term_signal == -1)
-            usage (ECANCELED);
+            usage (EXIT_CANCELED);
           break;
         default:
-          usage (ECANCELED);
+          usage (EXIT_CANCELED);
           break;
         }
     }
 
   if (argc - optind < 2)
-    usage (ECANCELED);
+    usage (EXIT_CANCELED);
 
   if (xstrtoul (argv[optind], &ep, 10, &timeout, NULL)
       /* Invalid interval. Note 0 disables timeout  */
@@ -260,7 +261,7 @@ main (int argc, char **argv)
       || !apply_time_suffix ((unsigned int *) &timeout, *ep))
     {
       error (0, 0, _("invalid time interval %s"), quote (argv[optind]));
-      usage (ECANCELED);
+      usage (EXIT_CANCELED);
     }
   optind++;
 
@@ -321,7 +322,7 @@ main (int argc, char **argv)
         status = WTERMSIG (status) + 128;     /* what sh does at least.  */
 
       if (timed_out)
-        return ETIMEDOUT;
+        return EXIT_TIMEDOUT;
       else
         return status;
     }
