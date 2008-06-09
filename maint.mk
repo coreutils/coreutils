@@ -466,6 +466,23 @@ sc_immutable_NEWS:
 	    { echo '$(ME): you have modified old NEWS' 1>&2; exit 1; };	\
 	fi
 
+# Each program that uses proper_name_utf8 must link with
+# one of the ICONV libraries.
+sc_proper_name_utf8_requires_ICONV:
+	progs=$$(grep -l 'proper_name_utf8 ''("' $$($(VC_LIST_EXCEPT)));\
+	if test "x$$progs" != x; then					\
+	  fail=0;							\
+	  for p in $$progs; do						\
+	    dir=$$(dirname "$$p");					\
+	    base=$$(basename "$$p" .c);					\
+	    grep "$${base}_LDADD.*ICONV)" $$dir/Makefile.am > /dev/null	\
+	      || { fail=1; echo 1>&2 "$(ME): $$p uses proper_name_utf8"; }; \
+	  done;								\
+	  test $$fail = 1 &&						\
+	    { echo 1>&2 '$(ME): the above not link with any ICONV library'; \
+	      exit 1; } || :;						\
+	fi
+
 # Update the hash stored above.  Do this after each release and
 # for any corrections to old entries.
 update-NEWS-hash: NEWS

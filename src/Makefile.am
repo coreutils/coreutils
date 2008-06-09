@@ -81,6 +81,8 @@ df_LDADD = $(LDADD)
 du_LDADD = $(LDADD)
 ptx_LDADD = $(LDADD)
 split_LDADD = $(LDADD)
+timeout_LDADD = $(LDADD)
+truncate_LDADD = $(LDADD)
 
 # for eaccess in lib/euidaccess.c.
 chcon_LDADD = $(LDADD) $(LIB_SELINUX)
@@ -151,6 +153,8 @@ df_LDADD += $(LIBICONV)
 du_LDADD += $(LIBICONV)
 ptx_LDADD += $(LIBICONV)
 split_LDADD += $(LIBICONV)
+timeout_LDADD += $(LIBICONV)
+truncate_LDADD += $(LIBICONV)
 
 $(PROGRAMS): ../lib/libcoreutils.a
 
