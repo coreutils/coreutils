@@ -35,6 +35,17 @@ test -n "$id_g" || framework_failure
 id_gn=`id -gn` || framework_failure
 test -n "$id_gn" || framework_failure
 
+# FreeBSD 6.x's getgrnam fails to look up a group name containing
+# a space. On such a system, skip this test if the group name contains
+# a byte not in the portable filename character set.
+case $host_triplet in
+  *-freebsd6.*)
+    case $id_gn in
+      *[^a-zA-Z0-9._-]*) skip_test_ "invalid group name: $id_gn";;
+    esac;;
+  *) ;;
+esac
+
 fail=0
 
 chown '' . || fail=1
