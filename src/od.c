@@ -34,12 +34,6 @@
 
 #include <float.h>
 
-#ifdef HAVE_LONG_DOUBLE
-typedef long double LONG_DOUBLE;
-#else
-typedef double LONG_DOUBLE;
-#endif
-
 /* The default number of input bytes per output line.  */
 #define DEFAULT_BYTES_PER_BLOCK 16
 
@@ -159,7 +153,7 @@ static const int width_bytes[] =
   sizeof (unsigned_long_long_int),
   sizeof (float),
   sizeof (double),
-  sizeof (LONG_DOUBLE)
+  sizeof (long double)
 };
 
 /* Ensure that for each member of `enum size_spec' there is an
@@ -259,7 +253,7 @@ static bool have_read_stdin;
 /* Map the size in bytes to a type identifier.  */
 static enum size_spec integral_type_size[MAX_INTEGRAL_TYPE_SIZE + 1];
 
-#define MAX_FP_TYPE_SIZE sizeof (LONG_DOUBLE)
+#define MAX_FP_TYPE_SIZE sizeof (long double)
 static enum size_spec fp_type_size[MAX_FP_TYPE_SIZE + 1];
 
 static char const short_options[] = "A:aBbcDdeFfHhIij:LlN:OoS:st:vw::Xx";
@@ -472,7 +466,6 @@ print_double (size_t n_bytes, void const *block, char const *fmt_string)
     printf (fmt_string, *p++);
 }
 
-#ifdef HAVE_LONG_DOUBLE
 static void
 print_long_double (size_t n_bytes, void const *block, char const *fmt_string)
 {
@@ -481,7 +474,6 @@ print_long_double (size_t n_bytes, void const *block, char const *fmt_string)
   for (i = n_bytes / sizeof *p; i != 0; i--)
     printf (fmt_string, *p++);
 }
-#endif
 
 static void
 dump_hexl_mode_trailer (size_t n_bytes, const char *block)
@@ -782,7 +774,7 @@ this system doesn't provide a %lu-byte integral type"), quote (s_orig), size);
 
 	case 'L':
 	  ++s;
-	  size = sizeof (LONG_DOUBLE);
+	  size = sizeof (long double);
 	  break;
 
 	default:
@@ -827,13 +819,11 @@ this system doesn't provide a %lu-byte floating point type"),
 	  precision = DBL_DIG;
 	  break;
 
-#ifdef HAVE_LONG_DOUBLE
 	case FLOAT_LONG_DOUBLE:
 	  print_function = print_long_double;
 	  pre_fmt_string = " %%%d.%dLe";
 	  precision = LDBL_DIG;
 	  break;
-#endif
 
 	default:
 	  abort ();
@@ -1586,10 +1576,10 @@ main (int argc, char **argv)
     fp_type_size[i] = NO_SIZE;
 
   fp_type_size[sizeof (float)] = FLOAT_SINGLE;
-  /* The array entry for `double' is filled in after that for LONG_DOUBLE
-     so that if `long double' is the same type or if long double isn't
-     supported FLOAT_LONG_DOUBLE will never be used.  */
-  fp_type_size[sizeof (LONG_DOUBLE)] = FLOAT_LONG_DOUBLE;
+  /* The array entry for `double' is filled in after that for `long double'
+     so that if they are the same size, we avoid any overhead of
+     long double computation in libc.  */
+  fp_type_size[sizeof (long double)] = FLOAT_LONG_DOUBLE;
   fp_type_size[sizeof (double)] = FLOAT_DOUBLE;
 
   n_specs = 0;
