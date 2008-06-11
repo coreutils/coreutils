@@ -138,7 +138,6 @@ TESTS =						\
   misc/df-P					\
   misc/pwd-unreadable-parent			\
   misc/chcon-fail				\
-  misc/selinux					\
   misc/cut					\
   misc/wc					\
   misc/wc-files0-from				\
