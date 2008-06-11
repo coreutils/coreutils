@@ -29,6 +29,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   HP-UX 11, Tru64, AIX, IRIX 6.5, and Cygwin, "ls -l" now displays the presence
   of an ACL on a file via a '+' sign after the mode, and "cp -p" copies ACLs.
 
+  od now aligns fields across lines when printing multiple -t
+  specifiers, and no longer prints fields that resulted entirely from
+  padding the input out to the least common multiple width.
 
 * Noteworthy changes in release 6.12 (2008-05-31) [stable]
 

@@ -87,13 +87,13 @@ enum output_format
 enum
   {
     FMT_BYTES_ALLOCATED =
-      MAX ((sizeof " %0" - 1 + INT_STRLEN_BOUND (int)
+      MAX ((sizeof "%*s%0" - 1 + INT_STRLEN_BOUND (int)
 	    + MAX (sizeof "ld",
 		   MAX (sizeof PRIdMAX,
 			MAX (sizeof PRIoMAX,
 			     MAX (sizeof PRIuMAX,
 				  sizeof PRIxMAX))))),
-	   sizeof " %.Le" + 2 * INT_STRLEN_BOUND (int))
+	   sizeof "%*s%.Le" + 2 * INT_STRLEN_BOUND (int))
   };
 
 /* Each output format specification (from `-t spec' or from
@@ -102,10 +102,11 @@ struct tspec
   {
     enum output_format fmt;
     enum size_spec size;
-    void (*print_function) (size_t, void const *, char const *);
+    void (*print_function) (size_t, size_t, void const *, char const *, int);
     char fmt_string[FMT_BYTES_ALLOCATED];
     bool hexl_mode_trailer;
     int field_width;
+    int pad_width;
   };
 
 /* Convert the number of 8-bit bytes of a binary representation to
@@ -388,12 +389,17 @@ implies 32.  By default, od uses -A o -t oS -w16.\n\
 
 #define PRINT_TYPE(N, T)                                                \
 static void                                                             \
-N (size_t n_bytes, void const *block, char const *fmt_string)           \
+N (size_t fields, size_t limit, void const *block,                      \
+   char const *fmt_string, int pad)                                     \
 {                                                                       \
   T const *p = block;                                                   \
   size_t i;                                                             \
-  for (i = n_bytes / sizeof *p; i != 0; i--)                            \
-    xprintf (fmt_string, *p++);                                         \
+  for (i = fields; limit < i; i--)                                      \
+    {                                                                   \
+      int local_pad = (pad + i / 2) / i;                                \
+      xprintf (fmt_string, local_pad, "", *p++);                        \
+      pad -= local_pad;                                                 \
+    }                                                                   \
 }
 
 PRINT_TYPE (print_s_char, signed char)
@@ -424,13 +430,14 @@ dump_hexl_mode_trailer (size_t n_bytes, const char *block)
 }
 
 static void
-print_named_ascii (size_t n_bytes, void const *block,
-		   const char *unused_fmt_string ATTRIBUTE_UNUSED)
+print_named_ascii (size_t fields, size_t limit, void const *block,
+		   const char *unused_fmt_string ATTRIBUTE_UNUSED, int pad)
 {
   unsigned char const *p = block;
   size_t i;
-  for (i = n_bytes; i > 0; i--)
+  for (i = fields; limit < i; i--)
     {
+      int local_pad = (pad + i / 2) / i;
       int masked_c = *p++ & 0x7f;
       const char *s;
       char buf[5];
@@ -445,18 +452,20 @@ print_named_ascii (size_t n_bytes, void const *block,
 	  s = buf;
 	}
 
-      xprintf (" %3s", s);
+      xprintf ("%*s%3s", local_pad, "", s);
+      pad -= local_pad;
     }
 }
 
 static void
-print_ascii (size_t n_bytes, void const *block,
-	     const char *unused_fmt_string ATTRIBUTE_UNUSED)
+print_ascii (size_t fields, size_t limit, void const *block,
+	     const char *unused_fmt_string ATTRIBUTE_UNUSED, int pad)
 {
   unsigned char const *p = block;
   size_t i;
-  for (i = n_bytes; i > 0; i--)
+  for (i = fields; limit < i; i--)
     {
+      int local_pad = (pad + i / 2) / i;
       unsigned char c = *p++;
       const char *s;
       char buf[5];
@@ -500,7 +509,8 @@ print_ascii (size_t n_bytes, void const *block,
 	  s = buf;
 	}
 
-      xprintf (" %3s", s);
+      xprintf ("%*s%3s", local_pad, "", s);
+      pad -= local_pad;
     }
 }
 
@@ -540,8 +550,9 @@ simple_strtoul (const char *s, const char **p, unsigned long int *val)
        fmt = SIGNED_DECIMAL;
        size = INT or LONG; (whichever integral_type_size[4] resolves to)
        print_function = print_int; (assuming size == INT)
-       fmt_string = "%011d%c";
+       fmt_string = "%*s%011d";
       }
+   pad_width is determined later, but is at least 1
    S_ORIG is solely for reporting errors.  It should be the full format
    string argument.
    */
@@ -554,7 +565,7 @@ decode_one_format (const char *s_orig, const char *s, const char **next,
   unsigned long int size;
   enum output_format fmt;
   const char *pre_fmt_string;
-  void (*print_function) (size_t, void const *, char const *);
+  void (*print_function) (size_t, size_t, void const *, char const *, int);
   const char *p;
   char c;
   int field_width;
@@ -628,28 +639,28 @@ this system doesn't provide a %lu-byte integral type"), quote (s_orig), size);
 	{
 	case 'd':
 	  fmt = SIGNED_DECIMAL;
-	  sprintf (tspec->fmt_string, " %%%d%s",
+	  sprintf (tspec->fmt_string, "%%*s%%%d%s",
 		   (field_width = bytes_to_signed_dec_digits[size]),
 		   ISPEC_TO_FORMAT (size_spec, "d", "ld", PRIdMAX));
 	  break;
 
 	case 'o':
 	  fmt = OCTAL;
-	  sprintf (tspec->fmt_string, " %%0%d%s",
+	  sprintf (tspec->fmt_string, "%%*s%%0%d%s",
 		   (field_width = bytes_to_oct_digits[size]),
 		   ISPEC_TO_FORMAT (size_spec, "o", "lo", PRIoMAX));
 	  break;
 
 	case 'u':
 	  fmt = UNSIGNED_DECIMAL;
-	  sprintf (tspec->fmt_string, " %%%d%s",
+	  sprintf (tspec->fmt_string, "%%*s%%%d%s",
 		   (field_width = bytes_to_unsigned_dec_digits[size]),
 		   ISPEC_TO_FORMAT (size_spec, "u", "lu", PRIuMAX));
 	  break;
 
 	case 'x':
 	  fmt = HEXADECIMAL;
-	  sprintf (tspec->fmt_string, " %%0%d%s",
+	  sprintf (tspec->fmt_string, "%%*s%%0%d%s",
 		   (field_width = bytes_to_hex_digits[size]),
 		   ISPEC_TO_FORMAT (size_spec, "x", "lx", PRIxMAX));
 	  break;
@@ -743,19 +754,19 @@ this system doesn't provide a %lu-byte floating point type"),
 	case FLOAT_SINGLE:
 	  print_function = print_float;
 	  /* Don't use %#e; not all systems support it.  */
-	  pre_fmt_string = " %%%d.%de";
+	  pre_fmt_string = "%%*s%%%d.%de";
 	  precision = FLT_DIG;
 	  break;
 
 	case FLOAT_DOUBLE:
 	  print_function = print_double;
-	  pre_fmt_string = " %%%d.%de";
+	  pre_fmt_string = "%%*s%%%d.%de";
 	  precision = DBL_DIG;
 	  break;
 
 	case FLOAT_LONG_DOUBLE:
 	  print_function = print_long_double;
-	  pre_fmt_string = " %%%d.%dLe";
+	  pre_fmt_string = "%%*s%%%d.%dLe";
 	  precision = LDBL_DIG;
 	  break;
 
@@ -1118,18 +1129,23 @@ write_block (uintmax_t current_offset, size_t n_bytes,
       prev_pair_equal = false;
       for (i = 0; i < n_specs; i++)
 	{
+	  int datum_width = width_bytes[spec[i].size];
+	  int fields_per_block = bytes_per_block / datum_width;
+	  int blank_fields = (bytes_per_block - n_bytes) / datum_width;
 	  if (i == 0)
 	    format_address (current_offset, '\0');
 	  else
 	    printf ("%*s", address_pad_len, "");
-	  (*spec[i].print_function) (n_bytes, curr_block, spec[i].fmt_string);
+	  (*spec[i].print_function) (fields_per_block, blank_fields,
+				     curr_block, spec[i].fmt_string,
+				     spec[i].pad_width);
 	  if (spec[i].hexl_mode_trailer)
 	    {
 	      /* space-pad out to full line width, then dump the trailer */
-	      int datum_width = width_bytes[spec[i].size];
-	      int blank_fields = (bytes_per_block - n_bytes) / datum_width;
-	      int field_width = spec[i].field_width + 1;
-	      printf ("%*s", blank_fields * field_width, "");
+	      int field_width = spec[i].field_width;
+	      int pad_width = (spec[i].pad_width * blank_fields
+			       / fields_per_block);
+	      printf ("%*s", blank_fields * field_width + pad_width, "");
 	      dump_hexl_mode_trailer (n_bytes, curr_block);
 	    }
 	  putchar ('\n');
@@ -1333,13 +1349,12 @@ dump (void)
 
       l_c_m = get_lcm ();
 
-      /* Make bytes_to_write the smallest multiple of l_c_m that
+      /* Ensure zero-byte padding up to the smallest multiple of l_c_m that
 	 is at least as large as n_bytes_read.  */
       bytes_to_write = l_c_m * ((n_bytes_read + l_c_m - 1) / l_c_m);
 
       memset (block[idx] + n_bytes_read, 0, bytes_to_write - n_bytes_read);
-      write_block (current_offset, bytes_to_write,
-		   block[!idx], block[idx]);
+      write_block (current_offset, n_bytes_read, block[!idx], block[idx]);
       current_offset += n_bytes_read;
     }
 
@@ -1479,6 +1494,7 @@ main (int argc, char **argv)
   bool modern = false;
   bool width_specified = false;
   bool ok = true;
+  size_t width_per_block = 0;
   static char const multipliers[] = "bEGKkMmPTYZ0";
 
   /* The old-style `pseudo starting address' to be printed in parentheses
@@ -1839,11 +1855,31 @@ it must be one character from [doxn]"),
 	bytes_per_block = l_c_m;
     }
 
-#ifdef DEBUG
+  /* Compute padding necessary to align output block.  */
   for (i = 0; i < n_specs; i++)
     {
-      printf (_("%d: fmt=\"%s\" width=%d\n"),
-	      i, spec[i].fmt_string, width_bytes[spec[i].size]);
+      int fields_per_block = bytes_per_block / width_bytes[spec[i].size];
+      int block_width = (spec[i].field_width + 1) * fields_per_block;
+      if (width_per_block < block_width)
+	width_per_block = block_width;
+    }
+  for (i = 0; i < n_specs; i++)
+    {
+      int fields_per_block = bytes_per_block / width_bytes[spec[i].size];
+      int block_width = spec[i].field_width * fields_per_block;
+      spec[i].pad_width = width_per_block - block_width;
+    }
+
+#ifdef DEBUG
+  printf (_("lcm=%d, width_per_block=%zu\n"), l_c_m, width_per_block);
+  for (i = 0; i < n_specs; i++)
+    {
+      int fields_per_block = bytes_per_block / width_bytes[spec[i].size];
+      assert (bytes_per_block % width_bytes[spec[i].size] == 0);
+      assert (1 <= spec[i].pad_width / fields_per_block);
+      printf (_("%d: fmt=\"%s\" in_width=%d out_width=%d pad=%d\n"),
+	      i, spec[i].fmt_string, width_bytes[spec[i].size],
+	      spec[i].field_width, spec[i].pad_width);
     }
 #endif
 

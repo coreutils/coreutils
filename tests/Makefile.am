@@ -171,6 +171,7 @@ TESTS =						\
   misc/nl					\
   misc/nohup					\
   misc/od-N					\
+  misc/od-multiple-t				\
   misc/od-x8					\
   misc/paste					\
   misc/pathchk1					\
