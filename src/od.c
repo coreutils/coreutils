@@ -25,6 +25,7 @@
 #include "system.h"
 #include "error.h"
 #include "quote.h"
+#include "xprintf.h"
 #include "xstrtol.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -385,95 +386,28 @@ implies 32.  By default, od uses -A o -t oS -w16.\n\
 
 /* Define the print functions.  */
 
-static void
-print_s_char (size_t n_bytes, void const *block, char const *fmt_string)
-{
-  signed char const *p = block;
-  size_t i;
-  for (i = n_bytes / sizeof *p; i != 0; i--)
-    printf (fmt_string, *p++);
+#define PRINT_TYPE(N, T)                                                \
+static void                                                             \
+N (size_t n_bytes, void const *block, char const *fmt_string)           \
+{                                                                       \
+  T const *p = block;                                                   \
+  size_t i;                                                             \
+  for (i = n_bytes / sizeof *p; i != 0; i--)                            \
+    xprintf (fmt_string, *p++);                                         \
 }
 
-static void
-print_char (size_t n_bytes, void const *block, char const *fmt_string)
-{
-  unsigned char const *p = block;
-  size_t i;
-  for (i = n_bytes / sizeof *p; i != 0; i--)
-    printf (fmt_string, *p++);
-}
+PRINT_TYPE (print_s_char, signed char)
+PRINT_TYPE (print_char, unsigned char)
+PRINT_TYPE (print_s_short, short int)
+PRINT_TYPE (print_short, unsigned short int)
+PRINT_TYPE (print_int, unsigned int)
+PRINT_TYPE (print_long, unsigned long int)
+PRINT_TYPE (print_long_long, unsigned_long_long_int)
+PRINT_TYPE (print_float, float)
+PRINT_TYPE (print_double, double)
+PRINT_TYPE (print_long_double, long double)
 
-static void
-print_s_short (size_t n_bytes, void const *block, char const *fmt_string)
-{
-  short int const *p = block;
-  size_t i;
-  for (i = n_bytes / sizeof *p; i != 0; i--)
-    printf (fmt_string, *p++);
-}
-
-static void
-print_short (size_t n_bytes, void const *block, char const *fmt_string)
-{
-  unsigned short int const *p = block;
-  size_t i;
-  for (i = n_bytes / sizeof *p; i != 0; i--)
-    printf (fmt_string, *p++);
-}
-
-static void
-print_int (size_t n_bytes, void const *block, char const *fmt_string)
-{
-  unsigned int const *p = block;
-  size_t i;
-  for (i = n_bytes / sizeof *p; i != 0; i--)
-    printf (fmt_string, *p++);
-}
-
-static void
-print_long (size_t n_bytes, void const *block, char const *fmt_string)
-{
-  unsigned long int const *p = block;
-  size_t i;
-  for (i = n_bytes / sizeof *p; i != 0; i--)
-    printf (fmt_string, *p++);
-}
-
-static void
-print_long_long (size_t n_bytes, void const *block, char const *fmt_string)
-{
-  unsigned_long_long_int const *p = block;
-  size_t i;
-  for (i = n_bytes / sizeof *p; i != 0; i--)
-    printf (fmt_string, *p++);
-}
-
-static void
-print_float (size_t n_bytes, void const *block, char const *fmt_string)
-{
-  float const *p = block;
-  size_t i;
-  for (i = n_bytes / sizeof *p; i != 0; i--)
-    printf (fmt_string, *p++);
-}
-
-static void
-print_double (size_t n_bytes, void const *block, char const *fmt_string)
-{
-  double const *p = block;
-  size_t i;
-  for (i = n_bytes / sizeof *p; i != 0; i--)
-    printf (fmt_string, *p++);
-}
-
-static void
-print_long_double (size_t n_bytes, void const *block, char const *fmt_string)
-{
-  long double const *p = block;
-  size_t i;
-  for (i = n_bytes / sizeof *p; i != 0; i--)
-    printf (fmt_string, *p++);
-}
+#undef PRINT_TYPE
 
 static void
 dump_hexl_mode_trailer (size_t n_bytes, const char *block)
@@ -511,7 +445,7 @@ print_named_ascii (size_t n_bytes, void const *block,
 	  s = buf;
 	}
 
-      printf (" %3s", s);
+      xprintf (" %3s", s);
     }
 }
 
@@ -566,7 +500,7 @@ print_ascii (size_t n_bytes, void const *block,
 	  s = buf;
 	}
 
-      printf (" %3s", s);
+      xprintf (" %3s", s);
     }
 }
 
