@@ -258,7 +258,7 @@ mk="$srcdir/src/Makefile.am"
 v=EXTRA_PROGRAMS
 for gl_i in `sed -n '/^'$v' =/,/[[^\]]$/p' $mk \
     | sed 's/^  *//;/^\$.*/d;/^'$v' =/d' \
-    | tr -s '\\015\\012\\\\' '  '`; do
+    | tr -s '\\015\\012\\\\' '   '`; do
   gl_ADD_PROG([optional_bin_progs], $gl_i)
 done
 
