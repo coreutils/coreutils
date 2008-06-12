@@ -79,8 +79,7 @@ enum
   OUTPUT_DELIMITER_OPTION
 };
 
-
-static struct option const long_options[] =
+static const struct option const long_options[] =
 {
   {"check-order", no_argument, NULL, CHECK_ORDER_OPTION},
   {"nocheck-order", no_argument, NULL, NOCHECK_ORDER_OPTION},

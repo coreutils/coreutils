@@ -84,7 +84,7 @@ enum
   RANDOM_SOURCE_OPTION = CHAR_MAX + 1
 };
 
-static struct option const long_opts[] =
+static const struct option const long_opts[] =
 {
   {"echo", no_argument, NULL, 'e'},
   {"input-range", required_argument, NULL, 'i'},

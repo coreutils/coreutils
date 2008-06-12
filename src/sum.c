@@ -39,7 +39,7 @@
 /* True if any of the files read were the standard input. */
 static bool have_read_stdin;
 
-static struct option const longopts[] =
+static const struct option const longopts[] =
 {
   {"sysv", no_argument, NULL, 's'},
   {GETOPT_HELP_OPTION_DECL},

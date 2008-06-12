@@ -67,7 +67,7 @@ static char *delims;
 /* A pointer to the character after the end of `delims'. */
 static char const *delim_end;
 
-static struct option const longopts[] =
+static const struct option const longopts[] =
 {
   {"serial", no_argument, NULL, 's'},
   {"delimiters", required_argument, NULL, 'd'},

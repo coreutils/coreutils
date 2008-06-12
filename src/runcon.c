@@ -61,7 +61,8 @@
 
 #define AUTHORS proper_name ("Russell Coker")
 
-static struct option long_options[] = {
+static const struct option const long_options[] =
+{
   {"role", required_argument, NULL, 'r'},
   {"type", required_argument, NULL, 't'},
   {"user", required_argument, NULL, 'u'},

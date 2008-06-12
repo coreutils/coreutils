@@ -264,7 +264,7 @@ static bool in_delete_set[N_CHARS];
    two specification strings and the delete switch is not given.  */
 static char xlate[N_CHARS];
 
-static struct option const long_options[] =
+static const struct option const long_options[] =
 {
   {"complement", no_argument, NULL, 'c'},
   {"delete", no_argument, NULL, 'd'},

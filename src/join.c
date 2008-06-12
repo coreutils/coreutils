@@ -130,7 +130,7 @@ enum
 };
 
 
-static struct option const longopts[] =
+static const struct option const longopts[] =
 {
   {"ignore-case", no_argument, NULL, 'i'},
   {"check-order", no_argument, NULL, CHECK_ORDER_OPTION},

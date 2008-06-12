@@ -483,6 +483,12 @@ sc_proper_name_utf8_requires_ICONV:
 	      exit 1; } || :;						\
 	fi
 
+sc_const_long_option:
+	@grep '^ *static.*struct option ' $$($(VC_LIST_EXCEPT))		\
+	  | grep -v 'const struct option const' && {			\
+	      echo 1>&2 '$(ME): add "const" to the above declarations'; \
+	      exit 1; } || :
+
 # Update the hash stored above.  Do this after each release and
 # for any corrections to old entries.
 update-NEWS-hash: NEWS

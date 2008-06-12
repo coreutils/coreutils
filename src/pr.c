@@ -740,7 +740,7 @@ enum
 static char const short_options[] =
   "-0123456789D:FJN:S::TW:abcde::fh:i::l:mn::o:rs::tvw:";
 
-static struct option const long_options[] =
+static const struct option const long_options[] =
 {
   {"pages", required_argument, NULL, PAGES_OPTION},
   {"columns", required_argument, NULL, COLUMNS_OPTION},

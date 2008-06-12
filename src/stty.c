@@ -204,7 +204,7 @@ struct mode_info
     unsigned long mask;		/* Other bits to turn off for this mode.  */
   };
 
-static struct mode_info mode_info[] =
+static const struct mode_info const mode_info[] =
 {
   {"parenb", control, REV, PARENB, 0},
   {"parodd", control, REV, PARODD, 0},
@@ -368,7 +368,7 @@ struct control_info
 
 /* Control characters. */
 
-static struct control_info control_info[] =
+static const struct control_info const control_info[] =
 {
   {"intr", CINTR, VINTR},
   {"quit", CQUIT, VQUIT},
@@ -418,7 +418,7 @@ static char const *visible (cc_t ch);
 static unsigned long int baud_to_value (speed_t speed);
 static bool recover_mode (char const *arg, struct termios *mode);
 static int screen_columns (void);
-static bool set_mode (struct mode_info *info, bool reversed,
+static bool set_mode (struct mode_info const *info, bool reversed,
 		      struct termios *mode);
 static unsigned long int integer_arg (const char *s, unsigned long int max);
 static speed_t string_to_baud (const char *arg);
@@ -432,7 +432,7 @@ static void display_settings (enum output_type output_type,
 static void display_speed (struct termios *mode, bool fancy);
 static void display_window_size (bool fancy, char const *device_name);
 static void sane_mode (struct termios *mode);
-static void set_control_char (struct control_info *info,
+static void set_control_char (struct control_info const *info,
 			      const char *arg,
 			      struct termios *mode);
 static void set_speed (enum speed_setting type, const char *arg,
@@ -445,7 +445,7 @@ static int max_col;
 /* Current position, to know when to wrap. */
 static int current_col;
 
-static struct option longopts[] =
+static const struct option const longopts[] =
 {
   {"all", no_argument, NULL, 'a'},
   {"save", no_argument, NULL, 'g'},
@@ -1061,7 +1061,7 @@ main (int argc, char **argv)
    return true.  */
 
 static bool
-set_mode (struct mode_info *info, bool reversed, struct termios *mode)
+set_mode (struct mode_info const *info, bool reversed, struct termios *mode)
 {
   tcflag_t *bitsp;
 
@@ -1267,7 +1267,7 @@ set_mode (struct mode_info *info, bool reversed, struct termios *mode)
 }
 
 static void
-set_control_char (struct control_info *info, const char *arg,
+set_control_char (struct control_info const *info, const char *arg,
 		  struct termios *mode)
 {
   unsigned long int value;
@@ -1716,7 +1716,7 @@ struct speed_map
   unsigned long int value;	/* Numeric value. */
 };
 
-static struct speed_map speeds[] =
+static const struct speed_map const speeds[] =
 {
   {"0", B0, 0},
   {"50", B50, 50},

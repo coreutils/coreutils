@@ -86,7 +86,7 @@ enum
 
 static char const short_options[] = "d:f:I::r:Rs:u";
 
-static struct option const long_options[] =
+static const struct option const long_options[] =
 {
   {"date", required_argument, NULL, 'd'},
   {"file", required_argument, NULL, 'f'},

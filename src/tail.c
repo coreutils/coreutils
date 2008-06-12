@@ -185,7 +185,7 @@ enum
   LONG_FOLLOW_OPTION
 };
 
-static struct option const long_options[] =
+static const struct option const long_options[] =
 {
   {"bytes", required_argument, NULL, 'c'},
   {"follow", optional_argument, NULL, LONG_FOLLOW_OPTION},

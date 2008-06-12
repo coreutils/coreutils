@@ -192,7 +192,7 @@ static size_t control_used;
 /* The set of signals that are caught.  */
 static sigset_t caught_signals;
 
-static struct option const longopts[] =
+static const struct option const longopts[] =
 {
   {"digits", required_argument, NULL, 'n'},
   {"quiet", no_argument, NULL, 'q'},

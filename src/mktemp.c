@@ -42,7 +42,7 @@ enum
   TMPDIR_OPTION = CHAR_MAX + 1
 };
 
-static struct option const longopts[] =
+static const struct option const longopts[] =
 {
   {"directory", no_argument, NULL, 'd'},
   {"quiet", no_argument, NULL, 'q'},

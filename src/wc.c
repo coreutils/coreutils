@@ -85,7 +85,7 @@ enum
   FILES0_FROM_OPTION = CHAR_MAX + 1
 };
 
-static struct option const longopts[] =
+static const struct option const longopts[] =
 {
   {"bytes", no_argument, NULL, 'c'},
   {"chars", no_argument, NULL, 'm'},

@@ -37,7 +37,7 @@
   proper_name ("James Youngman")
 
 
-static struct option const longopts[] =
+static const struct option const longopts[] =
 {
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},

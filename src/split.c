@@ -79,7 +79,7 @@ enum
   VERBOSE_OPTION = CHAR_MAX + 1
 };
 
-static struct option const longopts[] =
+static const struct option const longopts[] =
 {
   {"bytes", required_argument, NULL, 'b'},
   {"lines", required_argument, NULL, 'l'},

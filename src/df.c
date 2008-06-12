@@ -117,7 +117,7 @@ enum
   SYNC_OPTION
 };
 
-static struct option const long_options[] =
+static const struct option const long_options[] =
 {
   {"all", no_argument, NULL, 'a'},
   {"block-size", required_argument, NULL, 'B'},

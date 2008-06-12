@@ -236,7 +236,7 @@ struct symbol_value
 };
 
 /* Conversion symbols, for conv="...".  */
-static struct symbol_value const conversions[] =
+static const struct symbol_value const conversions[] =
 {
   {"ascii", C_ASCII | C_TWOBUFS},	/* EBCDIC to ASCII. */
   {"ebcdic", C_EBCDIC | C_TWOBUFS},	/* ASCII to EBCDIC. */
@@ -257,7 +257,7 @@ static struct symbol_value const conversions[] =
 };
 
 /* Flags, for iflag="..." and oflag="...".  */
-static struct symbol_value const flags[] =
+static const struct symbol_value const flags[] =
 {
   {"append",	O_APPEND},
   {"binary",	O_BINARY},
@@ -275,7 +275,7 @@ static struct symbol_value const flags[] =
 };
 
 /* Status, for status="...".  */
-static struct symbol_value const statuses[] =
+static const struct symbol_value const statuses[] =
 {
   {"noxfer",	STATUS_NOXFER},
   {"",		0}

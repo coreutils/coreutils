@@ -45,7 +45,7 @@ static bool have_read_stdin;
 
 static char const shortopts[] = "bsw:0::1::2::3::4::5::6::7::8::9::";
 
-static struct option const longopts[] =
+static const struct option const longopts[] =
 {
   {"bytes", no_argument, NULL, 'b'},
   {"spaces", no_argument, NULL, 's'},

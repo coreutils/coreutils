@@ -45,7 +45,7 @@ enum
 /* If true, return an exit status but produce no output. */
 static bool silent;
 
-static struct option const longopts[] =
+static const struct option const longopts[] =
 {
   {"silent", no_argument, NULL, 's'},
   {"quiet", no_argument, NULL, 's'},

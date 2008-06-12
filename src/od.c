@@ -174,7 +174,7 @@ static const int width_bytes[] =
 verify (sizeof width_bytes / sizeof width_bytes[0] == N_SIZE_SPECS);
 
 /* Names for some non-printing characters.  */
-static char const charname[33][4] =
+static const char const charname[33][4] =
 {
   "nul", "soh", "stx", "etx", "eot", "enq", "ack", "bel",
   "bs", "ht", "nl", "vt", "ff", "cr", "so", "si",
@@ -281,7 +281,7 @@ enum
   TRADITIONAL_OPTION = CHAR_MAX + 1
 };
 
-static struct option const long_options[] =
+static const struct option const long_options[] =
 {
   {"skip-bytes", required_argument, NULL, 'j'},
   {"address-radix", required_argument, NULL, 'A'},

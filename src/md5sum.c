@@ -128,7 +128,7 @@ enum
   QUIET_OPTION
 };
 
-static const struct option long_options[] =
+static const struct option const long_options[] =
 {
   { "binary", no_argument, NULL, 'b' },
   { "check", no_argument, NULL, 'c' },

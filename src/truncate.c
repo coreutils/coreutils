@@ -50,7 +50,8 @@ static bool block_mode;
 /* (-r) Reference file to use size from */
 static char const *ref_file;
 
-static struct option const longopts[] = {
+static const struct option const longopts[] =
+{
   {"no-create", no_argument, NULL, 'c'},
   {"io-blocks", no_argument, NULL, 'o'},
   {"reference", required_argument, NULL, 'r'},

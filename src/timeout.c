@@ -84,7 +84,8 @@ static int term_signal = SIGTERM;  /* same default as kill command.  */
 static int monitored_pid;
 static int sigs_to_ignore[NSIG];   /* so monitor can ignore sigs it resends.  */
 
-static struct option const long_options[] = {
+static const struct option const long_options[] =
+{
   {"signal", required_argument, NULL, 's'},
   {NULL, 0, NULL, 0}
 };

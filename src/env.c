@@ -96,7 +96,7 @@ int putenv ();
 
 extern char **environ;
 
-static struct option const longopts[] =
+static const struct option const longopts[] =
 {
   {"ignore-environment", no_argument, NULL, 'i'},
   {"unset", required_argument, NULL, 'u'},

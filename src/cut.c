@@ -164,7 +164,7 @@ enum
   COMPLEMENT_OPTION
 };
 
-static struct option const longopts[] =
+static const struct option const longopts[] =
 {
   {"bytes", required_argument, NULL, 'b'},
   {"characters", required_argument, NULL, 'c'},

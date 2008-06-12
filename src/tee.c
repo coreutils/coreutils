@@ -41,7 +41,7 @@ static bool append;
 /* If true, ignore interrupts. */
 static bool ignore_interrupts;
 
-static struct option const long_options[] =
+static const struct option const long_options[] =
 {
   {"append", no_argument, NULL, 'a'},
   {"ignore-interrupts", no_argument, NULL, 'i'},

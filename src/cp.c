@@ -120,7 +120,7 @@ static int const reply_vals[] =
 };
 ARGMATCH_VERIFY (reply_args, reply_vals);
 
-static struct option const long_opts[] =
+static const struct option const long_opts[] =
 {
   {"archive", no_argument, NULL, 'a'},
   {"backup", optional_argument, NULL, 'b'},

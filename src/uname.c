@@ -86,7 +86,7 @@
 /* Operating system.  */
 #define PRINT_OPERATING_SYSTEM 128
 
-static struct option const uname_long_options[] =
+static const struct option const uname_long_options[] =
 {
   {"all", no_argument, NULL, 'a'},
   {"kernel-name", no_argument, NULL, 's'},
@@ -104,7 +104,7 @@ static struct option const uname_long_options[] =
   {NULL, 0, NULL, 0}
 };
 
-static struct option const arch_long_options[] =
+static const struct option const arch_long_options[] =
 {
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},

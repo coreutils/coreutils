@@ -1935,7 +1935,7 @@ With no FILE or if FILE is -, read Standard Input.  `-F /' by default.\n\
 `----------------------------------------------------------------------*/
 
 /* Long options equivalences.  */
-static const struct option long_options[] =
+static const struct option const long_options[] =
 {
   {"auto-reference", no_argument, NULL, 'A'},
   {"break-file", required_argument, NULL, 'b'},

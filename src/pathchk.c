@@ -78,7 +78,7 @@ enum
   PORTABILITY_OPTION = CHAR_MAX + 1
 };
 
-static struct option const longopts[] =
+static const struct option const longopts[] =
 {
   {"portability", no_argument, NULL, PORTABILITY_OPTION},
   {GETOPT_HELP_OPTION_DECL},

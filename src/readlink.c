@@ -38,7 +38,7 @@ static bool no_newline;
 /* If true, report error messages.  */
 static bool verbose;
 
-static struct option const longopts[] =
+static const struct option const longopts[] =
 {
   {"canonicalize", no_argument, NULL, 'f'},
   {"canonicalize-existing", no_argument, NULL, 'e'},

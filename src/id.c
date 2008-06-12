@@ -58,7 +58,7 @@ static bool ok = true;
    knows when `context' has not been set to a meaningful value.  */
 static security_context_t context = NULL;
 
-static struct option const longopts[] =
+static const struct option const longopts[] =
 {
   {"context", no_argument, NULL, 'Z'},
   {"group", no_argument, NULL, 'g'},

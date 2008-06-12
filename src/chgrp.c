@@ -56,7 +56,7 @@ enum
   REFERENCE_FILE_OPTION
 };
 
-static struct option const long_options[] =
+static const struct option const long_options[] =
 {
   {"recursive", no_argument, NULL, 'R'},
   {"changes", no_argument, NULL, 'c'},
