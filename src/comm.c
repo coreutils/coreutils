@@ -141,7 +141,7 @@ and column three contains lines common to both files.\n\
    2 for a line only in file 2, 3 for a line in both. */
 
 static void
-writeline (const struct linebuffer *line, FILE *stream, int class)
+writeline (struct linebuffer const *line, FILE *stream, int class)
 {
   switch (class)
     {
@@ -185,8 +185,8 @@ writeline (const struct linebuffer *line, FILE *stream, int class)
    This funtion was copied (nearly) verbatim from `src/join.c'. */
 
 static void
-check_order (const struct linebuffer *prev,
-	     const struct linebuffer *current,
+check_order (struct linebuffer const *prev,
+	     struct linebuffer const *current,
 	     int whatfile)
 {
 
@@ -206,7 +206,7 @@ check_order (const struct linebuffer *prev,
 	      order = memcmp (prev->buffer, current->buffer, len);
 	    }
 
-	  if (order > 0)
+	  if (0 < order)
 	    {
 	      error ((check_input_order == CHECK_ORDER_ENABLED
 		      ? EXIT_FAILURE : 0),
@@ -301,15 +301,15 @@ compare_files (char **infiles)
       else
 	{
 	  seen_unpairable = true;
-	  if (order > 0)
-	    writeline (thisline[1], stdout, 2);
-	  else
+	  if (order <= 0)
 	    writeline (thisline[0], stdout, 1);
+	  else
+	    writeline (thisline[1], stdout, 2);
 	}
 
       /* Step the file the line came from.
 	 If the files match, step both files.  */
-      if (order >= 0)
+      if (0 <= order)
 	fill_up[1] = true;
       if (order <= 0)
 	fill_up[0] = true;
