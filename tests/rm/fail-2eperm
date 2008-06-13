@@ -39,8 +39,7 @@ fail=0
 rm_version=`setuidgid $NON_ROOT_USERNAME env PATH="$PATH" rm --version|sed -n '1s/.* //p'`
 case $rm_version in
   $PACKAGE_VERSION) ;;
-  *) echo "$0: cannot access just-built rm as user $NON_ROOT_USERNAME" 1>&2
-     fail=1 ;;
+  *) skip_test_ "cannot access just-built rm as user $NON_ROOT_USERNAME";;
 esac
 setuidgid $NON_ROOT_USERNAME env PATH="$PATH" rm -rf a 2> out-t && fail=1
 

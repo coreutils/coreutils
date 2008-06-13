@@ -33,7 +33,8 @@ cleanup_() { cd /; umount "$cwd/mnt"; }
 dd if=/dev/zero of=blob bs=8192 count=200 > /dev/null 2>&1 \
                                              || framework_failure
 mkdir mnt                                    || framework_failure
-mkfs -t ext2 -F blob                         || framework_failure
+mkfs -t ext2 -F blob ||
+  skip_test_ "failed to create an ext2 file system"
 
 # This context is special: it works even when mcstransd isn't running.
 ctx=root:object_r:tmp_t:s0
