@@ -564,4 +564,5 @@ pr_data =					\
   pr/ttb3-FF					\
   pr/w72l24f-ll
 
+AUTOMAKE_OPTIONS =
 include $(srcdir)/check.mk

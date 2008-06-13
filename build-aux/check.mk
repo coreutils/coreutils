@@ -41,7 +41,7 @@ ENABLE_HARD_ERRORS = :
 
 ## We use GNU Make extensions (%-rules) inside GNU_MAKE checks,
 ## and we override check-TESTS.
-AUTOMAKE_OPTIONS = -Wno-portability -Wno-override
+AUTOMAKE_OPTIONS += -Wno-portability -Wno-override
 
 # Restructured Text title and section.
 am__rst_title   = sed 's/.*/   &   /;h;s/./=/g;p;x;p;g;p;s/.*//'
@@ -145,7 +145,7 @@ echo "$$res: $@ (exit: $$estatus)" |			\
 cat $@-t >>$@;						\
 rm $@-t
 
-SUFFIXES = .html .log
+SUFFIXES += .html .log
 
 # From a test (with no extension) to a log file.
 if GNU_MAKE

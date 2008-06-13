@@ -91,6 +91,7 @@ TESTS_ENVIRONMENT =				\
 TEST_LOGS = $(TESTS:=.log)
 
 # Parallel replacement of Automake's check-TESTS target.
+SUFFIXES =
 include $(top_srcdir)/build-aux/check.mk
 
 VERBOSE = yes
