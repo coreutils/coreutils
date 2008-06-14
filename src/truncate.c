@@ -143,7 +143,7 @@ do_ftruncate (int fd, char const *fname, off_t ssize, rel_mode_t rel_mode)
     }
   if (block_mode)
     {
-      size_t const blksize = ST_BLKSIZE (sb);
+      size_t blksize = ST_BLKSIZE (sb);
       if (ssize < OFF_T_MIN / blksize || ssize > OFF_T_MAX / blksize)
         {
           error (0, 0,
@@ -156,7 +156,7 @@ do_ftruncate (int fd, char const *fname, off_t ssize, rel_mode_t rel_mode)
     }
   if (rel_mode)
     {
-      uintmax_t const fsize = sb.st_size;
+      uintmax_t fsize = sb.st_size;
 
       if (sb.st_size < 0)
         {
@@ -186,7 +186,7 @@ do_ftruncate (int fd, char const *fname, off_t ssize, rel_mode_t rel_mode)
         /* 1..ssize -> ssize */
         {
           /* Here ssize>=1 && fsize>=0 */
-          uintmax_t const overflow = ((fsize + ssize - 1) / ssize) * ssize;
+          uintmax_t overflow = ((fsize + ssize - 1) / ssize) * ssize;
           if (overflow > OFF_T_MAX)
             {
               error (0, 0, _("overflow rounding up size of file %s"),
@@ -218,7 +218,7 @@ do_ftruncate (int fd, char const *fname, off_t ssize, rel_mode_t rel_mode)
          specifies ftruncate's behavior only for these file types.
          For example, do not complain when Linux 2.4 ftruncate
          fails on /dev/fd0.  */
-      int const ftruncate_errno = errno;
+      int ftruncate_errno = errno;
       if (fstat (fd, &sb) != 0)
         {
           error (0, errno, _("cannot fstat %s"), quote (fname));
@@ -365,7 +365,7 @@ main (int argc, char **argv)
              `truncate -s0 .` should gen EISDIR error */
           if (!(no_create && errno == ENOENT))
             {
-              int const open_errno = errno;
+              int open_errno = errno;
               struct stat sb;
               if (stat (fname, &sb) == 0)
                 {
