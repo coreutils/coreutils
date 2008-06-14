@@ -479,7 +479,7 @@ sc_proper_name_utf8_requires_ICONV:
 	      || { fail=1; echo 1>&2 "$(ME): $$p uses proper_name_utf8"; }; \
 	  done;								\
 	  test $$fail = 1 &&						\
-	    { echo 1>&2 '$(ME): the above not link with any ICONV library'; \
+	    { echo 1>&2 '$(ME): the above do not link with any ICONV library'; \
 	      exit 1; } || :;						\
 	fi
 
