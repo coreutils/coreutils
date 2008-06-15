@@ -1,4 +1,4 @@
-#serial 106   -*- autoconf -*-
+#serial 107   -*- autoconf -*-
 
 dnl Misc type-related macros for coreutils.
 
@@ -48,6 +48,9 @@ AC_DEFUN([coreutils_MACROS],
 
   # Used by install.c.
   AC_CHECK_FUNCS_ONCE([matchpathcon_init_prefix])
+
+  # Used by sort.c.
+  AC_CHECK_FUNCS_ONCE([nl_langinfo])
 
   AC_CHECK_FUNCS_ONCE( \
     endgrent \
