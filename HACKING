@@ -69,7 +69,7 @@ Once your change is committed, you can create a proper patch that includes
 a log message and authorship information as well as any permissions
 changes.  Use this command to save that single, most-recent change set:
 
-  git format-patch --stdout --signoff HEAD~1 > DIFF
+  git format-patch --stdout HEAD~1 > DIFF
 
 The trouble with this approach is that you've just checked in a change
 (remember, it's only local) on the "master" branch, and that's where new
@@ -185,7 +185,7 @@ It's easy to adjust:
 
   edit your files # this can include running "git add NEW" or "git rm BAD"
   git commit --amend -e -a
-  git format-patch --stdout --signoff HEAD~1 > your-branch.diff
+  git format-patch --stdout HEAD~1 > your-branch.diff
 
 That replaces the most recent change-set with the revised one.
 
@@ -210,6 +210,13 @@ Your commit log should always start with a one-line summary, the second
 line should be blank, and the remaining lines are usually ChangeLog-style
 entries for all affected files.  Omit the leading TABs that you're used
 to seeing in a "real" ChangeLog file.
+
+Try to make the summary line fit one of the following forms:
+
+  program_name: change-description
+  prog1, prog2: change-description
+  doc: change-description
+  tests: change-description
 
 
 Use SPACE-only indentation in new files.
@@ -244,6 +251,26 @@ document it.  If you add an option, document it both in --help output
 doc/*.texi.  The man pages are generated from --help output, so
 you shouldn't need to change anything under man/.  User-visible changes
 are usually documented in NEWS, too.
+
+When writing prose (documentation, comments, log entries), use an
+active voice, not a passive one.  I.e., say "print the frobnozzle",
+not "the frobnozzle will be printed".
+
+
+Minor syntactic preferences
+===========================
+[I hesitate to write this one down, because it appears to be an
+ acquired taste, at least for native-English speakers.  It seems odd
+ (if not truly backwards) to nearly anyone who doesn't have a strong
+ mathematics background and perhaps a streak of something odd in their
+ character ;-) ]
+In writing arithmetic comparisons, use "<" and "<=" rather than
+">" and ">=".  For some justification, read this:
+  http://thread.gmane.org/gmane.comp.version-control.git/3903/focus=4126
+
+const placement:
+Write "Type const *var", not "const Type *var".
+FIXME: dig up justification
 
 
 Add tests
