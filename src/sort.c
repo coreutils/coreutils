@@ -205,7 +205,7 @@ static char fold_toupper[UCHAR_LIM];
 
 /* Table mapping month names to integers.
    Alphabetic order allows binary search. */
-static const struct month const monthtab[] =
+static struct month const monthtab[] =
 {
   {"APR", 4},
   {"AUG", 8},
