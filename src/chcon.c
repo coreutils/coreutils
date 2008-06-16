@@ -300,7 +300,7 @@ process_file (FTS *fts, FTSENT *ent)
   if (ok)
     {
       if (verbose)
-	printf (_("changing security context of %s"),
+	printf (_("changing security context of %s\n"),
 		quote (file_full_name));
 
       if (change_file_context (fts->fts_cwd_fd, file) != 0)

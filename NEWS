@@ -20,6 +20,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  chcon --verbose now prints a newline after each message
+
   od no longer suffers from platform bugs in printf(3).  This is
   probably most noticeable when using 'od -tfL' to print long doubles.
 
