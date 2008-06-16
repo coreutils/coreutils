@@ -547,7 +547,7 @@ main (int argc, char **argv)
   bool show_tabs = false;
   int file_open_mode = O_RDONLY;
 
-  static const struct option const long_options[] =
+  static struct option const long_options[] =
   {
     {"number-nonblank", no_argument, NULL, 'b'},
     {"number", no_argument, NULL, 'n'},

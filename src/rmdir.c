@@ -55,7 +55,7 @@ enum
   IGNORE_FAIL_ON_NON_EMPTY_OPTION = CHAR_MAX + 1
 };
 
-static const struct option const longopts[] =
+static struct option const longopts[] =
 {
   /* Don't name this `--force' because it's not close enough in meaning
      to e.g. rm's -f option.  */

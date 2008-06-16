@@ -55,7 +55,7 @@
 # define NZERO 20
 #endif
 
-static const struct option const longopts[] =
+static struct option const longopts[] =
 {
   {"adjustment", required_argument, NULL, 'n'},
   {NULL, 0, NULL, 0}

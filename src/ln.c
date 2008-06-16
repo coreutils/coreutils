@@ -93,7 +93,7 @@ static Hash_table *dest_set;
 /* Initial size of the dest_set hash table.  */
 enum { DEST_INFO_INITIAL_CAPACITY = 61 };
 
-static const struct option const long_options[] =
+static struct option const long_options[] =
 {
   {"backup", optional_argument, NULL, 'b'},
   {"directory", no_argument, NULL, 'F'},

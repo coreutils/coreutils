@@ -133,7 +133,7 @@ enum
   RANDOM_SOURCE_OPTION = CHAR_MAX + 1
 };
 
-static const struct option const long_opts[] =
+static struct option const long_opts[] =
 {
   {"exact", no_argument, NULL, 'x'},
   {"force", no_argument, NULL, 'f'},

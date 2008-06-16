@@ -300,7 +300,7 @@ With no FILE, or when FILE is -, read standard input.\n"),
 
 /* Decode options and launch execution.  */
 
-static const struct option const long_options[] =
+static struct option const long_options[] =
 {
   {"crown-margin", no_argument, NULL, 'c'},
   {"prefix", required_argument, NULL, 'p'},

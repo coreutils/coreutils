@@ -87,7 +87,7 @@ static int exit_status;
 
 static char const shortopts[] = "it:0::1::2::3::4::5::6::7::8::9::";
 
-static const struct option const longopts[] =
+static struct option const longopts[] =
 {
   {"tabs", required_argument, NULL, 't'},
   {"initial", no_argument, NULL, 'i'},

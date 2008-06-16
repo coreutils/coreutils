@@ -485,7 +485,7 @@ sc_proper_name_utf8_requires_ICONV:
 
 sc_const_long_option:
 	@grep '^ *static.*struct option ' $$($(VC_LIST_EXCEPT))		\
-	  | grep -v 'const struct option const' && {			\
+	  | grep -Ev 'const struct option|struct option const' && {	\
 	      echo 1>&2 '$(ME): add "const" to the above declarations'; \
 	      exit 1; } || :
 

@@ -200,7 +200,7 @@ enum
   TIME_STYLE_OPTION
 };
 
-static const struct option const long_options[] =
+static struct option const long_options[] =
 {
   {"all", no_argument, NULL, 'a'},
   {"apparent-size", no_argument, NULL, APPARENT_SIZE_OPTION},

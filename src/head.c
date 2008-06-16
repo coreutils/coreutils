@@ -82,7 +82,7 @@ enum
   PRESUME_INPUT_PIPE_OPTION = CHAR_MAX + 1
 };
 
-static const struct option const long_options[] =
+static struct option const long_options[] =
 {
   {"bytes", required_argument, NULL, 'c'},
   {"lines", required_argument, NULL, 'n'},

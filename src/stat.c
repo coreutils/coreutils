@@ -157,7 +157,7 @@ enum
   PRINTF_OPTION = CHAR_MAX + 1
 };
 
-static const struct option const long_options[] =
+static struct option const long_options[] =
 {
   {"context", no_argument, 0, 'Z'},
   {"dereference", no_argument, NULL, 'L'},

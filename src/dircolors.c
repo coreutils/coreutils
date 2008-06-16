@@ -75,7 +75,7 @@ static const char *const ls_codes[] =
 #define array_len(Array) (sizeof (Array) / sizeof *(Array))
 verify (array_len (slack_codes) == array_len (ls_codes));
 
-static const struct option const long_options[] =
+static struct option const long_options[] =
   {
     {"bourne-shell", no_argument, NULL, 'b'},
     {"sh", no_argument, NULL, 'b'},

@@ -204,7 +204,7 @@ struct mode_info
     unsigned long mask;		/* Other bits to turn off for this mode.  */
   };
 
-static const struct mode_info const mode_info[] =
+static struct mode_info const mode_info[] =
 {
   {"parenb", control, REV, PARENB, 0},
   {"parodd", control, REV, PARODD, 0},
@@ -368,7 +368,7 @@ struct control_info
 
 /* Control characters. */
 
-static const struct control_info const control_info[] =
+static struct control_info const control_info[] =
 {
   {"intr", CINTR, VINTR},
   {"quit", CQUIT, VQUIT},
@@ -445,7 +445,7 @@ static int max_col;
 /* Current position, to know when to wrap. */
 static int current_col;
 
-static const struct option const longopts[] =
+static struct option const longopts[] =
 {
   {"all", no_argument, NULL, 'a'},
   {"save", no_argument, NULL, 'g'},
@@ -1716,7 +1716,7 @@ struct speed_map
   unsigned long int value;	/* Numeric value. */
 };
 
-static const struct speed_map const speeds[] =
+static struct speed_map const speeds[] =
 {
   {"0", B0, 0},
   {"50", B50, 50},

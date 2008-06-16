@@ -84,7 +84,7 @@ enum interactive_type
     interactive_always		/* 2: default, -i or --interactive=always */
   };
 
-static const struct option const long_opts[] =
+static struct option const long_opts[] =
 {
   {"directory", no_argument, NULL, 'd'},
   {"force", no_argument, NULL, 'f'},

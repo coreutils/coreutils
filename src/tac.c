@@ -111,7 +111,7 @@ static struct re_pattern_buffer compiled_separator;
 static char compiled_separator_fastmap[UCHAR_MAX + 1];
 static struct re_registers regs;
 
-static const struct option const longopts[] =
+static struct option const longopts[] =
 {
   {"before", no_argument, NULL, 'b'},
   {"regex", no_argument, NULL, 'r'},

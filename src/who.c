@@ -159,7 +159,7 @@ enum
   LOOKUP_OPTION = CHAR_MAX + 1
 };
 
-static const struct option const longopts[] =
+static struct option const longopts[] =
 {
   {"all", no_argument, NULL, 'a'},
   {"boot", no_argument, NULL, 'b'},

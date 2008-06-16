@@ -33,7 +33,7 @@
 
 #define AUTHORS proper_name ("David MacKenzie")
 
-static const struct option const longopts[] =
+static struct option const longopts[] =
 {
   {GETOPT_SELINUX_CONTEXT_OPTION_DECL},
   {"mode", required_argument, NULL, 'm'},

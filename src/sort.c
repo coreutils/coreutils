@@ -399,7 +399,7 @@ enum
 
 static char const short_options[] = "-bcCdfgik:mMno:rRsS:t:T:uy:z";
 
-static const struct option const long_options[] =
+static struct option const long_options[] =
 {
   {"ignore-leading-blanks", no_argument, NULL, 'b'},
   {"check", optional_argument, NULL, CHECK_OPTION},

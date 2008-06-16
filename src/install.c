@@ -138,7 +138,7 @@ enum
   PRESERVE_CONTEXT_OPTION = CHAR_MAX + 1
 };
 
-static const struct option const long_options[] =
+static struct option const long_options[] =
 {
   {"backup", optional_argument, NULL, 'b'},
   {GETOPT_SELINUX_CONTEXT_OPTION_DECL},

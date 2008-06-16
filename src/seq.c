@@ -51,7 +51,7 @@ static char const *separator;
 /* FIXME: make this an option.  */
 static char const terminator[] = "\n";
 
-static const struct option const long_options[] =
+static struct option const long_options[] =
 {
   { "equal-width", no_argument, NULL, 'w'},
   { "format", required_argument, NULL, 'f'},

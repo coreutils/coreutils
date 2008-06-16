@@ -144,7 +144,7 @@ static intmax_t line_no;
 /* True if we have ever read standard input.  */
 static bool have_read_stdin;
 
-static const struct option const longopts[] =
+static struct option const longopts[] =
 {
   {"header-numbering", required_argument, NULL, 'h'},
   {"body-numbering", required_argument, NULL, 'b'},

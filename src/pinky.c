@@ -78,7 +78,7 @@ static bool include_where = true;
 static char const *time_format;
 static int time_format_width;
 
-static const struct option const longopts[] =
+static struct option const longopts[] =
 {
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},

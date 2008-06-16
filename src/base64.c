@@ -37,7 +37,7 @@
 
 #define AUTHORS proper_name ("Simon Josefsson")
 
-static const struct option const long_options[] =
+static struct option const long_options[] =
 {
   {"decode", no_argument, 0, 'd'},
   {"wrap", required_argument, 0, 'w'},

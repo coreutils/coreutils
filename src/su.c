@@ -137,7 +137,7 @@ static bool simulate_login;
 /* If true, change some environment vars to indicate the user su'd to.  */
 static bool change_environment;
 
-static const struct option const longopts[] =
+static struct option const longopts[] =
 {
   {"command", required_argument, NULL, 'c'},
   {"fast", no_argument, NULL, 'f'},

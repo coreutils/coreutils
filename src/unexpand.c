@@ -96,7 +96,7 @@ enum
   CONVERT_FIRST_ONLY_OPTION = CHAR_MAX + 1
 };
 
-static const struct option const longopts[] =
+static struct option const longopts[] =
 {
   {"tabs", required_argument, NULL, 't'},
   {"all", no_argument, NULL, 'a'},

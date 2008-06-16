@@ -66,7 +66,7 @@ static char const short_options[] =
   "N::O::P::Q::R::S::T::U::V::W::X::Y::Z::"
   "ln:s:t";
 
-static const struct option const long_options[] =
+static struct option const long_options[] =
 {
   {"list", no_argument, NULL, 'l'},
   {"signal", required_argument, NULL, 's'},

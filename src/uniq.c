@@ -107,7 +107,7 @@ static enum delimit_method const delimit_method_map[] =
 /* Select whether/how to delimit groups of duplicate lines.  */
 static enum delimit_method delimit_groups;
 
-static const struct option const longopts[] =
+static struct option const longopts[] =
 {
   {"count", no_argument, NULL, 'c'},
   {"repeated", no_argument, NULL, 'd'},

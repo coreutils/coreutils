@@ -77,7 +77,7 @@ enum
   TIME_OPTION = CHAR_MAX + 1
 };
 
-static const struct option const longopts[] =
+static struct option const longopts[] =
 {
   {"time", required_argument, NULL, TIME_OPTION},
   {"no-create", no_argument, NULL, 'c'},

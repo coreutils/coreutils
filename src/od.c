@@ -281,7 +281,7 @@ enum
   TRADITIONAL_OPTION = CHAR_MAX + 1
 };
 
-static const struct option const long_options[] =
+static struct option const long_options[] =
 {
   {"skip-bytes", required_argument, NULL, 'j'},
   {"address-radix", required_argument, NULL, 'A'},

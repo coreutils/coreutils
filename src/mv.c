@@ -71,7 +71,7 @@ static int const reply_vals[] =
   I_ALWAYS_YES, I_ALWAYS_NO, I_ASK_USER
 };
 
-static const struct option const long_options[] =
+static struct option const long_options[] =
 {
   {"backup", optional_argument, NULL, 'b'},
   {"force", no_argument, NULL, 'f'},
