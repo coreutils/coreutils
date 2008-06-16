@@ -273,6 +273,15 @@ Write "Type const *var", not "const Type *var".
 FIXME: dig up justification
 
 
+Be nice to translators
+======================
+Don't change translatable strings if you can avoid it.
+If you must rearrange individual lines (e.g., in multi-line --help
+strings), extract and create new strings, rather than extracting
+and moving into existing blocks.  This avoids making unnecessary
+work for translators.
+
+
 Add tests
 ==========
 Nearly every significant change must be accompanied by a test suite
