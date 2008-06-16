@@ -5329,7 +5329,7 @@ The defaults are:
 @itemize
 @item the join field is the first field in each line;
 @item fields in the input are separated by one or more blanks, with leading
-      blanks on the line ignored;
+blanks on the line ignored;
 @item fields in the output are separated by a space;
 @item each output line consists of the join field, the remaining
 fields from @var{file1}, then the remaining fields from @var{file2}.
