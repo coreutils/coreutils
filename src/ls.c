@@ -672,7 +672,7 @@ enum { TIME_STAMP_LEN_MAXIMUM = MAX (1000, INT_STRLEN_BOUND (time_t)) };
 /* strftime formats for non-recent and recent files, respectively, in
    -l output.  */
 
-static const char const *long_time_format[2] =
+static char const *long_time_format[2] =
   {
     /* strftime format for non-recent files (older than 6 months), in
        -l output.  This should contain the year, month and day (at
@@ -3151,7 +3151,7 @@ static int rev_xstrcoll_df_version (V a, V b)
     }                                                               \
   }
 
-static const qsortFunc const sort_functions[][2][2][2] =
+static qsortFunc const sort_functions[][2][2][2] =
   {
     LIST_SORTFUNCTION_VARIANTS (name),
     LIST_SORTFUNCTION_VARIANTS (extension),

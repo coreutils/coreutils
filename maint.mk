@@ -483,6 +483,14 @@ sc_proper_name_utf8_requires_ICONV:
 	      exit 1; } || :;						\
 	fi
 
+# Warn about "c0nst struct Foo const foo[]",
+# but not about "char const *const foo" or "#define const const".
+sc_redundant_const:
+	@grep -E '\bconst\b[[:space:][:alnum:]]{2,}\bconst\b'		\
+		$$($(VC_LIST_EXCEPT)) &&				\
+	    { echo 1>&2 '$(ME): redundant "const" in declarations';	\
+	      exit 1; } || :
+
 sc_const_long_option:
 	@grep '^ *static.*struct option ' $$($(VC_LIST_EXCEPT))		\
 	  | grep -Ev 'const struct option|struct option const' && {	\
