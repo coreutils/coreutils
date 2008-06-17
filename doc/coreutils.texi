@@ -9915,7 +9915,7 @@ out the disk usage of directories, such as @file{/usr/tmp}, which
 are often symbolic links.
 
 @c --files0-from=FILE
-@filesZeroFromOption{du, with the @option{--total} (@option{-c}) option}
+@filesZeroFromOption{du,, with the @option{--total} (@option{-c}) option}
 
 @optHumanReadable
 
