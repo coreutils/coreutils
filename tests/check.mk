@@ -43,7 +43,7 @@ check: vc_exe_in_TESTS
 built_programs = \
   (cd $(top_builddir)/src && MAKEFLAGS= $(MAKE) -s built_programs.list)
 
-# Note that the first lines are statements.  They ensures that environment
+# Note that the first lines are statements.  They ensure that environment
 # variables that can perturb tests are unset or set to expected values.
 # The rest are envvar settings that propagate build-related Makefile
 # variables to test scripts.
