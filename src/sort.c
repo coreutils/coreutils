@@ -1105,14 +1105,7 @@ specify_nmerge (int oi, char c, char const *s)
 	      e = LONGINT_OVERFLOW;
 	    }
 	  else
-	    {
-	      /* Need to re-check that we meet the minimum
-		 requirement for memory usage with the new,
-		 potentially larger, nmerge. */
-	      sort_size = MAX (sort_size, MIN_SORT_SIZE);
-
-	      return;
-	    }
+	    return;
 	}
     }
 
@@ -3319,6 +3312,11 @@ main (int argc, char **argv)
       free (files);
       files = &minus;
     }
+
+  /* Need to re-check that we meet the minimum requirement for memory
+     usage with the final value for NMERGE. */
+  if (0 < sort_size)
+    sort_size = MAX (sort_size, MIN_SORT_SIZE);
 
   if (checkonly)
     {
