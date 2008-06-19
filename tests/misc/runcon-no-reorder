@@ -23,9 +23,8 @@ fi
 
 . $srcdir/test-lib.sh
 
-cat <<\EOF > exp || framework_failure
-runcon: runcon may be used only on a SELinux kernel
-EOF
+diag='runcon: runcon may be used only on a SELinux kernel'
+echo "$diag" > exp || framework_failure
 
 fail=0
 
@@ -34,6 +33,14 @@ fail=0
 # Before the no-reorder change, it would have failed with a diagnostic
 # about -j being an invalid option.
 runcon $(id -Z) true -j 2> out && : > exp
+
+# When run on a system with no /selinux/context (i.e., in a chroot),
+# it chcon fails with this: "runcon: invalid context: \
+# root:system_r:unconfined_t:s0-s0:c0.c1023: No such file or directory"
+# That diagnostic is ok, too, so map it to the more common one.
+case `cat out` in
+  'runcon: invalid context: '*) echo "$diag" > out;;
+esac
 
 compare out exp || fail=1
 
