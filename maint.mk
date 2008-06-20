@@ -469,7 +469,7 @@ sc_immutable_NEWS:
 # Each program that uses proper_name_utf8 must link with
 # one of the ICONV libraries.
 sc_proper_name_utf8_requires_ICONV:
-	progs=$$(grep -l 'proper_name_utf8 ''("' $$($(VC_LIST_EXCEPT)));\
+	@progs=$$(grep -l 'proper_name_utf8 ''("' $$($(VC_LIST_EXCEPT)));\
 	if test "x$$progs" != x; then					\
 	  fail=0;							\
 	  for p in $$progs; do						\
@@ -545,7 +545,7 @@ check-AUTHORS:
 # not @...@ in Makefile.am, now that we can rely on automake
 # to emit a definition for each substituted variable.
 makefile-check:
-	grep -nE '@[A-Z_0-9]+@' `find . -name Makefile.am` \
+	@grep -nE '@[A-Z_0-9]+@' `find . -name Makefile.am` \
 	  && { echo '$(ME): use $$(...), not @...@' 1>&2; exit 1; } || :
 
 news-date-check: NEWS
@@ -575,7 +575,7 @@ m4-check:
 # Verify that all source files using _() are listed in po/POTFILES.in.
 # FIXME: don't hard-code file names below; use a more general mechanism.
 po-check:
-	if test -f po/POTFILES.in; then					\
+	@if test -f po/POTFILES.in; then					\
 	  grep -E -v '^(#|$$)' po/POTFILES.in				\
 	    | grep -v '^src/false\.c$$' | sort > $@-1;			\
 	  files=;							\
