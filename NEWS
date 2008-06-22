@@ -46,6 +46,12 @@ GNU coreutils NEWS                                    -*- outline -*-
   specifiers, and no longer prints fields that resulted entirely from
   padding the input out to the least common multiple width.
 
+** Changes in behavior
+
+  stat's --context (-Z) option has always been a no-op.
+  Now it evokes a warning that it is obsolete and will be removed.
+
+
 * Noteworthy changes in release 6.12 (2008-05-31) [stable]
 
 ** Bug fixes

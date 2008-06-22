@@ -1039,9 +1039,13 @@ main (int argc, char *argv[])
 	  terse = true;
 	  break;
 
-	case 'Z':  /* FIXME: remove in 2010, warn in mid 2008 */
-	  /* Ignored, for compatibility with distributions
-	     that implemented this before upstream.  */
+	case 'Z':  /* FIXME: remove in 2010 */
+	  /* Ignore, for compatibility with distributions
+	     that implemented this before upstream.
+	     But warn of impending removal.  */
+	  error (0, 0,
+		 _("the --context (-Z) option is obsolete and will be removed\n"
+		   "in a future release"));
 	  break;
 
 	case_GETOPT_HELP_CHAR;
