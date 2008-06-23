@@ -22,7 +22,7 @@ dir: Richard M. Stallman, David MacKenzie
 dircolors: H. Peter Anvin
 dirname: David MacKenzie, Jim Meyering
 du: Torbjörn Granlund, David MacKenzie, Paul Eggert, Jim Meyering
-echo: FIXME unknown
+echo: Brian Fox, Chet Ramey
 env: Richard Mlynarik, David MacKenzie
 expand: David MacKenzie
 expr: Mike Parker
