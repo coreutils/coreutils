@@ -74,10 +74,21 @@ static int
 parse_len (char const *str, off_t *size)
 {
   enum strtol_error e;
-  /* OFF_T_MAX = INTMAX_MAX */
-  e = xstrtoimax (str, NULL, 10, size, "EgGkKmMPtTYZ0");
-  errno = (e == LONGINT_OVERFLOW) ? EOVERFLOW : 0;
-  return (e == LONGINT_OK) ? 0 : -1;
+  intmax_t tmp_size;
+  e = xstrtoimax (str, NULL, 10, &tmp_size, "EgGkKmMPtTYZ0");
+  if (e == LONGINT_OK
+      && !(OFF_T_MIN <= tmp_size && tmp_size <= OFF_T_MAX))
+    e = LONGINT_OVERFLOW;
+
+  if (e == LONGINT_OK)
+    {
+      errno = 0;
+      *size = tmp_size;
+      return 0;
+    }
+
+  errno = (e == LONGINT_OVERFLOW ? EOVERFLOW : 0);
+  return -1;
 }
 
 static void
@@ -243,7 +254,7 @@ int
 main (int argc, char **argv)
 {
   bool got_size = false;
-  off_t size;
+  off_t size IF_LINT (= 0);
   rel_mode_t rel_mode = rm_abs;
   mode_t omode;
   int c, errors = 0, fd = -1, oflags;
