@@ -41,10 +41,7 @@ timeout 4294967296 sleep 0 && fail=1
 timeout 49711d sleep 0 && fail=1
 
 # invalid signal spec
-timeout --signal=invalid sleep 0 && fail=1
-
-# invalid signal number
-timeout --signal=128 sleep 0 && fail=1
+timeout --signal=invalid 1 sleep 0 && fail=1
 
 # invalid command
 timeout 1 . && fail=1
