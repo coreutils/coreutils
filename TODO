@@ -14,6 +14,13 @@ document the following in coreutils.texi:
   uptime
 Also document the SELinux changes.
 
+Suggestion from Paul Eggert:
+  More generally, there's not that much use for imaxtostr nowadays,
+  since the inttypes module and newer versions of gettext allow things
+  like _("truncating %s at %" PRIdMAX " bytes") to work portably.
+  I suspect that (if someone cares to take the time) we can remove
+  all instances of imaxtostr and umaxtostr in coreutils and gnulib.
+
 cp --recursive: use fts and *at functions to perform directory traversals
   in source and destination hierarchy rather than forming full file names.
   The latter (current) approach fails unnecessarily when the names
