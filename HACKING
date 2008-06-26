@@ -69,7 +69,7 @@ Once your change is committed, you can create a proper patch that includes
 a log message and authorship information as well as any permissions
 changes.  Use this command to save that single, most-recent change set:
 
-  git format-patch --stdout HEAD~1 > DIFF
+  git format-patch --stdout -1 > DIFF
 
 The trouble with this approach is that you've just checked in a change
 (remember, it's only local) on the "master" branch, and that's where new
@@ -185,7 +185,7 @@ It's easy to adjust:
 
   edit your files # this can include running "git add NEW" or "git rm BAD"
   git commit --amend -e -a
-  git format-patch --stdout HEAD~1 > your-branch.diff
+  git format-patch --stdout -1 > your-branch.diff
 
 That replaces the most recent change-set with the revised one.
 
