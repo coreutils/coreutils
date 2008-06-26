@@ -277,6 +277,17 @@ passname (unsigned char const *data, char name[PASS_NAME_SIZE])
     memcpy (name, "random", PASS_NAME_SIZE);
 }
 
+/* Return true when it's ok to ignore an fsync or fdatasync
+   failure that set errno to ERRNO_VAL.  */
+static bool
+ignorable_sync_errno (int errno_val)
+{
+  return (errno_val == EINVAL
+	  || errno_val == EBADF
+	  /* HP-UX does this */
+	  || errno_val == EISDIR);
+}
+
 /* Request that all data for FD be transferred to the corresponding
    storage device.  QNAME is the file name (quoted for colons).
    Report any errors found.  Return 0 on success, -1
@@ -292,7 +303,7 @@ dosync (int fd, char const *qname)
   if (fdatasync (fd) == 0)
     return 0;
   err = errno;
-  if (err != EINVAL && err != EBADF)
+  if ( ! ignorable_sync_errno (err))
     {
       error (0, err, _("%s: fdatasync failed"), qname);
       errno = err;
@@ -303,7 +314,7 @@ dosync (int fd, char const *qname)
   if (fsync (fd) == 0)
     return 0;
   err = errno;
-  if (err != EINVAL && err != EBADF)
+  if ( ! ignorable_sync_errno (err))
     {
       error (0, err, _("%s: fsync failed"), qname);
       errno = err;
