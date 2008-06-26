@@ -43,12 +43,14 @@ for cmd_w_arg in 'mkdir dir' 'mknod b p' 'mkfifo f'; do
 
   # Some systems fail with ENOTSUP, EINVAL, ENOENT, or even
   # "Unknown system error", or "Function not implemented".
+  # For AIX 5.3: "Unsupported attribute value"
   sed					\
     -e 's/ Not supported$//'		\
     -e 's/ Invalid argument$//'		\
     -e 's/ Unknown system error$//'	\
     -e 's/ Operation not supported$//'	\
     -e 's/ Function not implemented$//'	\
+    -e 's/ Unsupported attribute value$//'	\
     -e 's/ No such file or directory$//' out > k || fail=1
   mv k out || fail=1
   compare out exp || fail=1
