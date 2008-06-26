@@ -573,16 +573,15 @@ m4-check:
 	       exit 1; } || :
 
 # Verify that all source files using _() are listed in po/POTFILES.in.
-# FIXME: don't hard-code file names below; use a more general mechanism.
 po-check:
-	@if test -f po/POTFILES.in; then					\
+	@if test -f po/POTFILES.in; then				\
 	  grep -E -v '^(#|$$)' po/POTFILES.in				\
 	    | grep -v '^src/false\.c$$' | sort > $@-1;			\
 	  files=;							\
 	  for file in $$($(VC_LIST_EXCEPT)) lib/*.[ch]; do		\
 	    case $$file in						\
-	    djgpp/* | man/*) continue;;					\
-	    */c99-to-c89.diff) continue;;				\
+	      *.?|*.??) ;;						\
+	      *) continue;;						\
 	    esac;							\
 	    case $$file in						\
 	    *.[ch])							\
