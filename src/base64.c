@@ -214,7 +214,7 @@ do_decode (FILE *in, FILE *out, bool ignore_garbage)
 	 However, when it processes the final input buffer, we want
 	 to iterate it one additional time, but with an indicator
 	 telling it to flush what is in CTX.  */
-      for (k = 0; k < 1 + feof (in); k++)
+      for (k = 0; k < 1 + !!feof (in); k++)
 	{
 	  if (k == 1 && ctx.i == 0)
 	    break;
