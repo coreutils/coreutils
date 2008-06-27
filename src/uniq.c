@@ -203,14 +203,14 @@ size_opt (char const *opt, char const *msgid)
    return a pointer to the beginning of the line's field to be compared. */
 
 static char *
-find_field (const struct linebuffer *line)
+find_field (struct linebuffer const *line)
 {
   size_t count;
-  char *lp = line->buffer;
+  char const *lp = line->buffer;
   size_t size = line->length - 1;
   size_t i = 0;
 
-  for (count = 0; count < skip_fields && i < size; count++)
+  for (count = 0; count < skip_fields; count++)
     {
       while (i < size && isblank (to_uchar (lp[i])))
 	i++;
@@ -221,7 +221,7 @@ find_field (const struct linebuffer *line)
   for (count = 0; count < skip_chars && i < size; count++)
     i++;
 
-  return lp + i;
+  return line->buffer + i;
 }
 
 /* Return false if two strings OLD and NEW match, true if not.
