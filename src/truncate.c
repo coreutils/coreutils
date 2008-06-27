@@ -189,9 +189,9 @@ do_ftruncate (int fd, char const *fname, off_t ssize, rel_mode_t rel_mode)
         }
 
       if (rel_mode == rm_min)
-        nsize = MAX (fsize, ssize);
+        nsize = MAX (fsize, (uintmax_t) ssize);
       else if (rel_mode == rm_max)
-        nsize = MIN (fsize, ssize);
+        nsize = MIN (fsize, (uintmax_t) ssize);
       else if (rel_mode == rm_rdn)
         /* 0..ssize-1 -> 0 */
         nsize = (fsize / ssize) * ssize;
