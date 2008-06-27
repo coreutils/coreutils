@@ -34,7 +34,6 @@
 #include "error.h"
 #include "full-write.h"
 #include "full-read.h"
-#include "inttostr.h"
 #include "quote.h"
 #include "safe-read.h"
 #include "xstrtol.h"

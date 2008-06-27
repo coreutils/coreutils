@@ -35,7 +35,6 @@
 #include <regex.h>
 #include "long-options.h"
 #include "error.h"
-#include "inttostr.h"
 #include "quotearg.h"
 #include "strnumcmp.h"
 #include "xstrtol.h"

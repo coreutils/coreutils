@@ -35,7 +35,6 @@
 #include "fprintftime.h"
 #include "hash.h"
 #include "human.h"
-#include "inttostr.h"
 #include "quote.h"
 #include "quotearg.h"
 #include "readtokens0.h"
@@ -413,10 +412,7 @@ show_date (const char *format, struct timespec when)
   if (! tm)
     {
       char buf[INT_BUFSIZE_BOUND (intmax_t)];
-      error (0, 0, _("time %s is out of range"),
-	     (TYPE_SIGNED (time_t)
-	      ? imaxtostr (when.tv_sec, buf)
-	      : umaxtostr (when.tv_sec, buf)));
+      error (0, 0, _("time %s is out of range"), timetostr (when.tv_sec, buf));
       fputs (buf, stdout);
       return;
     }

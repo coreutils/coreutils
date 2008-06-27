@@ -27,7 +27,6 @@
 
 #include "system.h"
 #include "error.h"
-#include "inttostr.h"
 #include "long-options.h"
 #include "quote.h"
 #include "readtokens.h"

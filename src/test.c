@@ -39,7 +39,6 @@
 
 #include "system.h"
 #include "euidaccess.h"
-#include "inttostr.h"
 #include "quote.h"
 #include "stat-time.h"
 #include "strnumcmp.h"

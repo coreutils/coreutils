@@ -27,7 +27,6 @@
 
 #include "system.h"
 #include "error.h"
-#include "inttostr.h"
 #include "mbchar.h"
 #include "quote.h"
 #include "quotearg.h"

@@ -62,7 +62,6 @@
 #include "file-type.h"
 #include "fs.h"
 #include "getopt.h"
-#include "inttostr.h"
 #include "quote.h"
 #include "quotearg.h"
 #include "stat-time.h"
@@ -415,9 +414,7 @@ human_time (struct timespec t)
 			+ sizeof "-MM-DD HH:MM:SS.NNNNNNNNN +ZZZZ"))];
   struct tm const *tm = localtime (&t.tv_sec);
   if (tm == NULL)
-    return (TYPE_SIGNED (time_t)
-	    ? imaxtostr (t.tv_sec, str)
-	    : umaxtostr (t.tv_sec, str));
+    return timetostr (t.tv_sec, str);
   nstrftime (str, sizeof str, "%Y-%m-%d %H:%M:%S.%N %z", tm, 0, t.tv_nsec);
   return str;
 }

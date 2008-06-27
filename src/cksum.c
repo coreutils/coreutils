@@ -108,7 +108,6 @@ main (void)
 # include <getopt.h>
 # include "long-options.h"
 # include "error.h"
-# include "inttostr.h"
 
 /* Number of bytes to read at once.  */
 # define BUFLEN (1 << 16)

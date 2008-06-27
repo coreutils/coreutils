@@ -29,7 +29,6 @@
 
 #include "error.h"
 #include "fd-reopen.h"
-#include "inttostr.h"
 #include "quote.h"
 #include "safe-read.h"
 #include "stdio--.h"

@@ -27,7 +27,6 @@
 #include "canon-host.h"
 #include "error.h"
 #include "hard-locale.h"
-#include "inttostr.h"
 #include "readutmp.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -197,7 +196,7 @@ time_string (const STRUCT_UTMP *utmp_ent)
       return buf;
     }
   else
-    return TYPE_SIGNED (time_t) ? imaxtostr (t, buf) : umaxtostr (t, buf);
+    return timetostr (t, buf);
 }
 
 /* Display a line of information about UTMP_ENT. */

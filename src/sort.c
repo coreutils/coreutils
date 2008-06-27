@@ -31,7 +31,6 @@
 #include "error.h"
 #include "hard-locale.h"
 #include "hash.h"
-#include "inttostr.h"
 #include "md5.h"
 #include "physmem.h"
 #include "posixver.h"

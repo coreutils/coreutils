@@ -97,7 +97,6 @@
 #include "error.h"
 #include "fcntl--.h"
 #include "human.h"
-#include "inttostr.h"
 #include "quotearg.h"		/* For quotearg_colon */
 #include "randint.h"
 #include "randread.h"

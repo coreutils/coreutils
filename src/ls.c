@@ -91,7 +91,6 @@
 #include "human.h"
 #include "filemode.h"
 #include "idcache.h"
-#include "inttostr.h"
 #include "ls.h"
 #include "lstat.h"
 #include "mbswidth.h"
@@ -3596,9 +3595,7 @@ print_long_format (const struct fileinfo *f)
       sprintf (p, "%*s ", long_time_expected_width (),
 	       (! f->stat_ok
 		? "?"
-		: (TYPE_SIGNED (time_t)
-		   ? imaxtostr (when_timespec.tv_sec, hbuf)
-		   : umaxtostr (when_timespec.tv_sec, hbuf))));
+		: timetostr (when_timespec.tv_sec, hbuf)));
       /* FIXME: (maybe) We discarded when_timespec.tv_nsec. */
       p += strlen (p);
     }

@@ -28,7 +28,6 @@
 #include "argmatch.h"
 #include "error.h"
 #include "getdate.h"
-#include "inttostr.h"
 #include "posixtm.h"
 #include "quote.h"
 #include "stat-time.h"
@@ -540,10 +539,7 @@ show_date (const char *format, struct timespec when)
   if (! tm)
     {
       char buf[INT_BUFSIZE_BOUND (intmax_t)];
-      error (0, 0, _("time %s is out of range"),
-	     (TYPE_SIGNED (time_t)
-	      ? imaxtostr (when.tv_sec, buf)
-	      : umaxtostr (when.tv_sec, buf)));
+      error (0, 0, _("time %s is out of range"), timetostr (when.tv_sec, buf));
       return false;
     }
 

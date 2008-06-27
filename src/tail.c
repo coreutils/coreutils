@@ -35,7 +35,6 @@
 #include "c-strtod.h"
 #include "error.h"
 #include "fcntl--.h"
-#include "inttostr.h"
 #include "isapipe.h"
 #include "posixver.h"
 #include "quote.h"

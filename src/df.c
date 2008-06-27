@@ -28,7 +28,6 @@
 #include "error.h"
 #include "fsusage.h"
 #include "human.h"
-#include "inttostr.h"
 #include "mountlist.h"
 #include "quote.h"
 #include "save-cwd.h"

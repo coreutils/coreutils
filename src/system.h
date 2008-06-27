@@ -619,3 +619,13 @@ emit_bug_reporting_address (void)
      bugs (typically your translation team's web or email address).  */
   printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
 }
+
+#include "inttostr.h"
+
+static inline char *
+timetostr (time_t t, char *buf)
+{
+  return (TYPE_SIGNED (time_t)
+	  ? imaxtostr (t, buf)
+	  : umaxtostr (t, buf));
+}

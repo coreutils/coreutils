@@ -32,7 +32,6 @@
 #include "fcntl--.h"
 #include "full-read.h"
 #include "full-write.h"
-#include "inttostr.h"
 #include "quote.h"
 #include "safe-read.h"
 #include "xstrtol.h"
