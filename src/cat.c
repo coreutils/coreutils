@@ -90,7 +90,7 @@ usage (int status)
   else
     {
       printf (_("\
-Usage: %s [OPTION] [FILE]...\n\
+Usage: %s [OPTION]... [FILE]...\n\
 "),
 	      program_name);
       fputs (_("\

@@ -49,7 +49,7 @@ usage (int status)
 	     program_name);
   else
     {
-      printf (_("Usage: %s [OPTION] NAME...\n"), program_name);
+      printf (_("Usage: %s [OPTION]... NAME...\n"), program_name);
       fputs (_("\
 Create named pipes (FIFOs) with the given NAMEs.\n\
 \n\

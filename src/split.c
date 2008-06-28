@@ -100,7 +100,7 @@ usage (int status)
   else
     {
       printf (_("\
-Usage: %s [OPTION] [INPUT [PREFIX]]\n\
+Usage: %s [OPTION]... [INPUT [PREFIX]]\n\
 "),
 	      program_name);
     fputs (_("\

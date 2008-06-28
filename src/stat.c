@@ -908,7 +908,7 @@ usage (int status)
 	     program_name);
   else
     {
-      printf (_("Usage: %s [OPTION] FILE...\n"), program_name);
+      printf (_("Usage: %s [OPTION]... FILE...\n"), program_name);
       fputs (_("\
 Display file or file system status.\n\
 \n\

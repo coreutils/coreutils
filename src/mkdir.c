@@ -55,7 +55,7 @@ usage (int status)
 	     program_name);
   else
     {
-      printf (_("Usage: %s [OPTION] DIRECTORY...\n"), program_name);
+      printf (_("Usage: %s [OPTION]... DIRECTORY...\n"), program_name);
       fputs (_("\
 Create the DIRECTORY(ies), if they do not already exist.\n\
 \n\

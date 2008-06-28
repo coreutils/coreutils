@@ -150,7 +150,7 @@ usage (int status)
   else
     {
       printf (_("\
-Usage: %s [OPTION] [FILE]...\n\
+Usage: %s [OPTION]... [FILE]...\n\
 Print or check %s (%d-bit) checksums.\n\
 With no FILE, or when FILE is -, read standard input.\n\
 \n\
