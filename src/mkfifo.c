@@ -55,10 +55,10 @@ Create named pipes (FIFOs) with the given NAMEs.\n\
 \n\
 "), stdout);
       fputs (_("\
-  -Z, --context=CTX  set the SELinux security context of each NAME to CTX\n\
+Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
-Mandatory arguments to long options are mandatory for short options too.\n\
+  -Z, --context=CTX  set the SELinux security context of each NAME to CTX\n\
 "), stdout);
       fputs (_("\
   -m, --mode=MODE   set file permission bits to MODE, not a=rw - umask\n\
