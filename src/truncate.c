@@ -286,6 +286,9 @@ main (int argc, char **argv)
           break;
 
         case 's':
+          /* skip any whitespace */
+          while (isspace (*optarg))
+            optarg++;
           switch (*optarg)
             {
             case '<':
@@ -305,6 +308,9 @@ main (int argc, char **argv)
               optarg++;
               break;
             }
+          /* skip any whitespace */
+          while (isspace (*optarg))
+            optarg++;
           if (*optarg == '+' || *optarg == '-')
             {
               if (rel_mode)
