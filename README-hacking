@@ -30,16 +30,11 @@ Later, a plain `git pull && make' should be sufficient.
 
 * LZMA
 
-The coreutils build procedure can build distribution tarballs with the
-LZMA compression scheme.  This feature is so new that it is not
-supported by the latest version of Automake.  If you don't care about
-building LZMA tarballs, you can manually remove the string "dist-lzma"
-from configure.ac before bootstrapping.
-
-If you do want to build LZMA tarballs, you'll need to make sure you
-have the latest stable version of the LZMA Utils
-<http://tukaani.org/lzma/>.  Also, you'll need a version of
-Automake that supports the dist-lzma feature, like automake-1.10.1.
+This package's build procedure uses LZMA to create a compressed
+distribution tarball.  Using this feature of Automake requires
+version 1.10.1 or newer, as well as the lzma program itself.
+Make sure you have the latest stable version of the LZMA Utils
+from <http://tukaani.org/lzma/>.
 
 * First GIT checkout
 
@@ -69,7 +64,7 @@ Enjoy!
 
 -----
 
-Copyright (C) 2002-2007 Free Software Foundation, Inc.
+Copyright (C) 2002-2008 Free Software Foundation, Inc.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
