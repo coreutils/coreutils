@@ -126,6 +126,26 @@
    Subtracting doesn't always work, due to overflow.  */
 #define longdiff(a, b) ((a) < (b) ? -1 : (a) > (b))
 
+/* Unix-based readdir implementations have historically returned a dirent.d_ino
+   value that is sometimes not equal to the stat-obtained st_ino value for
+   that same entry.  This error occurs for a readdir entry that refers
+   to a mount point.  readdir's error is to return the inode number of
+   the underlying directory -- one that typically cannot be stat'ed, as
+   long as a file system is mounted on that directory.  RELIABLE_D_INO
+   encapsulates whether we can use the more efficient approach of relying
+   on readdir-supplied d_ino values, or whether we must incur the cost of
+   calling stat or lstat to obtain each guaranteed-valid inode number.  */
+
+#ifndef READDIR_LIES_ABOUT_MOUNTPOINT_D_INO
+# define READDIR_LIES_ABOUT_MOUNTPOINT_D_INO 1
+#endif
+
+#if READDIR_LIES_ABOUT_MOUNTPOINT_D_INO
+# define RELIABLE_D_INO(dp) NOT_AN_INODE_NUMBER
+#else
+# define RELIABLE_D_INO(dp) D_INO (dp)
+#endif
+
 #if ! HAVE_STRUCT_STAT_ST_AUTHOR
 # define st_author st_uid
 #endif
@@ -2501,7 +2521,8 @@ print_dir (char const *name, char const *realname, bool command_line_arg)
 # endif
                 }
 #endif
-              total_blocks += gobble_file (next->d_name, type, D_INO (next),
+              total_blocks += gobble_file (next->d_name, type,
+                                           RELIABLE_D_INO (next),
                                            false, name);
 
               /* In this narrow case, print out each name right away, so

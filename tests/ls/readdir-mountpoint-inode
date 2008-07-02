@@ -1,0 +1,72 @@
+#!/bin/sh
+# ensure that ls -i works also for mount points
+
+# Copyright (C) 2009 Free Software Foundation, Inc.
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  ls --version
+fi
+
+. $srcdir/test-lib.sh
+
+fail=0
+
+mount_points=$(df --local -P 2>&1 | sed -n 's,.*[0-9]% \(/.\),\1,p')
+test -z "$mount_points" && skip_test_ "this test requires a non-root mount point"
+
+# Given e.g., /dev/shm, produce the list of GNU ls options that
+# let us list just that entry using readdir data from its parent:
+# ls -i -I '[^s]*' -I 's[^h]*' -I 'sh[^m]*' -I 'shm?*' -I '.?*' \
+# -I '?' -I '??' /dev
+
+ls_ignore_options()
+{
+  name=$1
+  opts="-I '.?*' -I '$name?*'"
+  while :; do
+    glob=$(echo "$name"|sed 's/\(.*\)\(.\)$/\1[^\2]*/')
+    opts="$opts -I '$glob'"
+    name=$(echo "$name"|sed 's/.$//')
+    test -z "$name" && break
+    glob=$(echo "$name"|sed 's/./?/g')
+    opts="$opts -I '$glob'"
+  done
+  echo "$opts"
+}
+
+inode_via_readdir()
+{
+  mount_point=$1
+  base=$(basename $mount_point)
+  case $base in
+    .*) skip_test_ 'mount point component starts with "."' ;;
+    *[*?]*) skip_test_ 'mount point component contains "?" or "*"' ;;
+  esac
+  opts=$(ls_ignore_options "$base")
+  parent_dir=$(dirname $mount_point)
+  eval "ls -i $opts $parent_dir" | sed 's/ .*//'
+}
+
+# FIXME: use a timeout, in case stat'ing mount points takes too long.
+
+for dir in $mount_points; do
+  readdir_inode=$(inode_via_readdir $dir)
+  stat_inode=$(env stat --format=%i $dir)
+  test "$readdir_inode" = "$stat_inode" || fail=1
+done
+
+Exit $fail

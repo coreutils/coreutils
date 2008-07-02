@@ -16,6 +16,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   printing a summary to stderr.
   [bug introduced in coreutils-6.11]
 
+  ls -i now prints consistent inode numbers also for mount points.
+  This makes ls -i DIR less efficient on systems with dysfunctional readdir,
+  because ls must stat every file in order to obtain a guaranteed-valid
+  inode number.  [bug introduced in coreutils-6.0]
+
 ** New features
 
   cp --reflink accepts a new "auto" parameter which falls back to

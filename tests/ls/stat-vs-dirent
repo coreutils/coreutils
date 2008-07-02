@@ -49,12 +49,7 @@ while :; do
         The flaw isn't serious for coreutils, but it might break other tools,
         so you should report it to your operating system vendor." 1>&2
 
-      # This test fails too often, and we don't want to be distracted
-      # with reports, since the code that could be affected by the losing
-      # behavior (pwd and getcwd) works around any mismatch.
-      # So do continue to issue the warning, but don't count it as a
-      # real failure.
-      # fail=1
+      fail=1
       break
     fi
   fi

@@ -358,6 +358,7 @@ TESTS =						\
   ls/no-arg					\
   ls/no-cap					\
   ls/proc-selinux-segfault			\
+  ls/readdir-mountpoint-inode			\
   ls/recursive					\
   ls/rt-1					\
   ls/stat-dtype					\
