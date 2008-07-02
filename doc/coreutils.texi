@@ -12710,6 +12710,24 @@ automatic dial-up internet access.
 @opindex --heading
 Print a line of column headings.
 
+@item -p
+@itemx --process
+@opindex -p
+@opindex --process
+List active processes spawned by init.
+
+@item -r
+@itemx --runlevel
+@opindex -r
+@opindex --runlevel
+Print the current (and maybe previous) run-level of the init process.
+
+@item -t
+@itemx --time
+@opindex -t
+@opindex --time
+Print last system clock change.
+
 @item -w
 @itemx -T
 @itemx --mesg
