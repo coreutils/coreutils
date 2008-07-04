@@ -437,11 +437,15 @@ sc_tight_scope: $(all_programs)
 	  { echo 'the above variables should have static scope' 1>&2;	\
 	    exit 1; } || :
 
-.PHONY: cu-install-binPROGRAMS
+# Use the just-built ./ginstall, when not cross-compiling.
+# Override automake's install-one-at-a-time rule, when possible.
 install-exec-am:
-	@case '$(program_transform_name):$(EXEEXT)' in		\
+	@(./ginstall --version) > /dev/null 2>&1		\
+	  && install=./ginstall					\
+	  || install='$(INSTALL_PROGRAM)';			\
+	case '$(program_transform_name):$(EXEEXT)' in		\
 	  's,x,x,:') cu=cu-;; *) cu= ;; esac;			\
-	$(MAKE) $(AM_MAKEFLAGS) binPROGRAMS_INSTALL=./ginstall	\
+	$(MAKE) $(AM_MAKEFLAGS) binPROGRAMS_INSTALL="$$install"	\
 	  $${cu}install-binPROGRAMS
 	@$(NORMAL_INSTALL)
 	$(MAKE) $(AM_MAKEFLAGS) install-exec-hook
@@ -458,6 +462,7 @@ install-exec-am:
 filtered_PROGS = \
   `echo "$(bin_PROGRAMS)" | sed 's/ *\<ginstall\> */ /;s/ *\[ */ /'`
 d_bindir = $(DESTDIR)$(bindir)
+.PHONY: cu-install-binPROGRAMS
 cu-install-binPROGRAMS: $(bin_PROGRAMS)
 	$(NORMAL_INSTALL)
 	test -z "$(bindir)" || $(MKDIR_P) "$(d_bindir)"
