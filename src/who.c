@@ -30,6 +30,7 @@
 #include <sys/types.h>
 #include "system.h"
 
+#include "c-ctype.h"
 #include "canon-host.h"
 #include "readutmp.h"
 #include "error.h"
@@ -511,7 +512,7 @@ print_runlevel (const STRUCT_UTMP *utmp_ent)
   sprintf (comment, "%s%c", _("last="), (last == 'N') ? 'S' : last);
 
   print_line (-1, "", ' ', -1, runlevline, time_string (utmp_ent),
-	      "", "", comment, "");
+	      "", "", c_isprint (last) ? comment : "", "");
 
   return;
 }
