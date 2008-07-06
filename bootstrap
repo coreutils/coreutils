@@ -526,9 +526,8 @@ if test $with_gettext = yes; then
   cp configure.ac $bt2 &&
   (cd $bt2 && autopoint && rm configure.ac) &&
   slurp $bt2 $bt || exit
-
-  rm -fr $bt $bt2 || exit
 fi
+rm -fr $bt $bt2 || exit
 
 # Remove any dangling symlink matching "*.m4" or "*.[ch]" in some
 # gnulib-populated directories.  Such .m4 files would cause aclocal to fail.
