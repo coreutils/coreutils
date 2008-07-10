@@ -67,6 +67,7 @@ TESTS_ENVIRONMENT =				\
       $(SHELL) "$$1";				\
     fi;						\
   };						\
+  export					\
   LOCALE_FR='$(LOCALE_FR)'			\
   abs_top_builddir='$(abs_top_builddir)'	\
   abs_top_srcdir='$(abs_top_srcdir)'		\
@@ -86,7 +87,7 @@ TESTS_ENVIRONMENT =				\
   PERL='$(PERL)'				\
   REPLACE_GETCWD=$(REPLACE_GETCWD)		\
   PATH='$(abs_top_builddir)/src$(PATH_SEPARATOR)'"$$PATH" \
-  shell_or_perl_
+  ; shell_or_perl_
 
 TEST_LOGS = $(TESTS:=.log)
 
