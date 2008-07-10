@@ -28,6 +28,7 @@ my @Tests =
    ['t1', '--tabs=3',     {IN=>"a\tb"}, {OUT=>"a  b"}],
    ['t2', '--tabs=3,6,9', {IN=>"a\tb\tc\td\te"}, {OUT=>"a  b  c  d e"}],
    ['i1', '--tabs=3 -i', {IN=>"\ta\tb"}, {OUT=>"   a\tb"}],
+   ['i2', '--tabs=3 -i', {IN=>" \ta\tb"}, {OUT=>"   a\tb"}],
   );
 
 my $save_temps = $ENV{DEBUG};
