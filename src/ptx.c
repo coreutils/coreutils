@@ -1353,6 +1353,8 @@ fix_output_parameters (void)
 	 right side, or one on either side.  */
 
       before_max_width -= 2 * truncation_string_length;
+      if (before_max_width < 0)
+	before_max_width = 0;
       keyafter_max_width -= 2 * truncation_string_length;
     }
   else
@@ -2112,11 +2114,10 @@ main (int argc, char **argv)
 
       for (file_index = 0; file_index < number_input_files; file_index++)
 	{
-	  input_file_name[file_index] = argv[optind];
 	  if (!*argv[optind] || STREQ (argv[optind], "-"))
-	    input_file_name[0] = NULL;
+	    input_file_name[file_index] = NULL;
 	  else
-	    input_file_name[0] = argv[optind];
+	    input_file_name[file_index] = argv[optind];
 	  optind++;
 	}
     }

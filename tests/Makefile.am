@@ -120,6 +120,7 @@ TESTS =						\
   chgrp/no-x					\
   chgrp/posix-H					\
   chgrp/recurse					\
+  misc/ptx					\
   misc/test					\
   misc/seq					\
   misc/head					\
