@@ -169,6 +169,12 @@ EXEC 01;32
 .xwd 01;35
 .yuv 01;35
 
+# http://wiki.xiph.org/index.php/MIME_Types_and_File_Extensions
+.axv 01;35
+.anx 01;35
+.ogv 01;35
+.ogx 01;35
+
 # audio formats
 .aac 00;36
 .au 00;36
@@ -181,3 +187,9 @@ EXEC 01;32
 .ogg 00;36
 .ra 00;36
 .wav 00;36
+
+# http://wiki.xiph.org/index.php/MIME_Types_and_File_Extensions
+.axa 00;36
+.oga 00;36
+.spx 00;36
+.xspf 00;36
