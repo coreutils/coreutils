@@ -360,6 +360,22 @@ Miscellaneous useful git commands
       you an interface with which you can reorder and modify arbitrary
       change sets on that branch.
 
+  * if you "misplace" a change set, i.e., via git reset --hard ..., so that
+    it's no longer reachable by any branch, you can use "git fsck" to find
+    its SHA1 and then tag it or cherry-pick it onto an existing branch.
+    For example, run this:
+      git fsck --lost-found HEAD && cd .git/lost-found/commit \
+	&& for i in *; do git show $i|grep SOME_IDENTIFYING_STRING \
+	&& echo $i; done
+    The "git fsck ..." command creates the .git/lost-found/... hierarchy
+    listing all unreachable objects.  Then the for loop
+    print SHA1s for commits that match via log or patch.
+    For example, say that found 556fbb57216b119155cdda824c98dc579b8121c8,
+    you could run "git show 556fbb57216b119" to examine the change set,
+    or "git checkout -b found 556fbb5721" to give it a branch name.
+    Finally, you might run "git checkout master && git cherry-pick 556fbb5721"
+    to put that change on the tip of "master".
+
 -------------------------------------------
 
 Finding things to do
