@@ -6994,6 +6994,15 @@ colors to use for which file types and extensions.  Otherwise, a
 precompiled database is used.  For details on the format of these files,
 run @samp{dircolors --print-database}.
 
+To make @command{dircolors} read a @file{~/.dircolors} file if it
+exists, you can put the following lines in your @file{~/.bashrc} (or
+adapt them to your favorite shell):
+
+@example
+d=.dircolors
+test -r $d && eval "$(dircolors $d)"
+@end example
+
 @vindex LS_COLORS
 @vindex SHELL @r{environment variable, and color}
 The output is a shell command to set the @env{LS_COLORS} environment
