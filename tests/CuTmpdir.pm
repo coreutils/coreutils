@@ -45,7 +45,7 @@ sub chmod_1
 
 sub chmod_tree
 {
-  if (chdir $dir)
+  if (defined $dir && chdir $dir)
     {
       # Perform the equivalent of find . -type d -print0|xargs -0 chmod -R 700.
       my $options = {untaint => 1, wanted => \&chmod_1};
