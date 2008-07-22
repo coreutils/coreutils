@@ -667,6 +667,7 @@ cvs-check: vc-diff-check
 
 maintainer-distcheck:
 	$(MAKE) distcheck
+	$(MAKE) taint-distcheck
 	$(MAKE) my-distcheck
 
 
@@ -694,6 +695,36 @@ write_loser = printf '\#!%s\necho $$0: bad path 1>&2; exit 1\n' '$(SHELL)'
 TMPDIR ?= /tmp
 t=$(TMPDIR)/$(PACKAGE)/test
 pfx=$(t)/i
+
+# More than once, tainted build and source directory names would
+# have caused at least one "make check" test to apply "chmod 700"
+# to all directories under $HOME.  Make sure it doesn't happen again.
+tp := $(shell echo "$(TMPDIR)/$(PACKAGE)-$$$$")
+t_prefix = $(tp)/a
+t_taint = '$(t_prefix) b'
+fake_home = $(tp)/home
+
+# Ensure that tests run from tainted build and src dir names work,
+# and don't affect anything in $HOME.  Create witness files in $HOME,
+# record their attributes, and build/test.  Then ensure that the
+# witnesses were not affected.
+taint-distcheck: $(DIST_ARCHIVES)
+	test -d $(t_taint) && chmod -R 700 $(t_taint) || :
+	-rm -rf $(t_taint) $(fake_home)
+	mkdir -p $(t_prefix) $(t_taint) $(fake_home)
+	GZIP=$(GZIP_ENV) $(AMTAR) -C $(t_taint) -zxf $(distdir).tar.gz
+	mkfifo $(fake_home)/fifo
+	touch $(fake_home)/f
+	mkdir -p $(fake_home)/d/e
+	ls -lR $(fake_home) $(t_prefix) > $(tp)/.ls-before
+	cd $(t_taint)/$(distdir)			\
+	  && ./configure				\
+	  && $(MAKE)					\
+	  && HOME=$(fake_home) $(MAKE) check		\
+	  && ls -lR $(fake_home) $(t_prefix) > $(tp)/.ls-after \
+	  && diff $(tp)/.ls-before $(tp)/.ls-after	\
+	  && test -d $(t_prefix)
+	rm -rf $(tp)
 
 # Verify that a twisted use of --program-transform-name=PROGRAM works.
 define install-transform-check
