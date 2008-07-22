@@ -271,10 +271,16 @@ cleanup_() { :; }
 t_=$("$abs_top_builddir/src/mktemp" -d --tmp="$test_dir_" cu-$this_test.XXXXXXXXXX)\
     || error_ "failed to create temporary directory in $test_dir_"
 
+remove_tmp_()
+{
+  local st=$?
+  cleanup_
+  cd "$test_dir_" && chmod -R u+rwx "$t_" && rm -rf "$t_" && exit $st
+}
+
 # Run each test from within a temporary sub-directory named after the
 # test itself, and arrange to remove it upon exception or normal exit.
-trap 'st=$?; cleanup_; d='"$t_"';
-    cd '"$test_dir_"' && chmod -R u+rwx "$d" && rm -rf "$d" && exit $st' 0
+trap remove_tmp_ 0
 trap '(exit $?); exit $?' 1 2 13 15
 
 cd "$t_" || error_ "failed to cd to $t_"
