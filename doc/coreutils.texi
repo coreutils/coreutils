@@ -7721,9 +7721,11 @@ standard platforms.
 
 @item fullblock
 @opindex fullblock
-Read full blocks from input if possible. read() may return early
-if a full block is not available, so retry until data is available
-or end of file is reached. This flag can be used only for the iflag option.
+Accumulate full blocks from input.  The @code{read} system call
+may return early if a full block is not available.
+When that happens, continue calling @code{read} to fill the remainder
+of the block.
+This flag can be used only with @code{iflag}.
 
 @end table
 

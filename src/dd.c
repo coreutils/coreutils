@@ -225,7 +225,7 @@ static sig_atomic_t volatile interrupt_signal;
 /* A count of the number of pending info signals that have been received.  */
 static sig_atomic_t volatile info_signal_count;
 
-/* Function used for read (to handle iflag=fullblock parameter) */
+/* Function used for read (to handle iflag=fullblock parameter).  */
 static ssize_t (*iread_fnc) (int fd, char *buf, size_t size);
 
 /* A longest symbol in the struct symbol_values tables below.  */
@@ -259,8 +259,32 @@ static struct symbol_value const conversions[] =
   {"", 0}
 };
 
+enum
+  {
+    /* Use a value that is larger than that of any other O_ symbol.  */
+    O_FULLBLOCK = ((MAX (O_APPEND,
+		    MAX (O_BINARY,
+		    MAX (O_DIRECT,
+		    MAX (O_DIRECTORY,
+		    MAX (O_DSYNC,
+		    MAX (O_NOATIME,
+		    MAX (O_NOCTTY,
+		    MAX (O_NOFOLLOW,
+		    MAX (O_NOLINKS,
+		    MAX (O_NONBLOCK,
+		    MAX (O_SYNC, O_TEXT)))))))))))) << 1)
+  };
+
+/* Ensure that we didn't shift it off the end.  */
+verify (O_FULLBLOCK != 0);
+
+/* Ensure that this is a single-bit value.  */
+verify ((O_FULLBLOCK &
+	 ( O_APPEND | O_BINARY | O_DIRECT | O_DIRECTORY | O_DSYNC
+	   | O_NOATIME | O_NOCTTY | O_NOFOLLOW | O_NOLINKS | O_NONBLOCK
+	   | O_SYNC | O_TEXT)) == 0);
+
 /* Flags, for iflag="..." and oflag="...".  */
-#define O_FULLBLOCK 010000000 /* Read only full blocks from input */
 static struct symbol_value const flags[] =
 {
   {"append",	O_APPEND},
@@ -275,7 +299,7 @@ static struct symbol_value const flags[] =
   {"nonblock",	O_NONBLOCK},
   {"sync",	O_SYNC},
   {"text",	O_TEXT},
-  {"fullblock", O_FULLBLOCK}, /* Read only full blocks from input */
+  {"fullblock", O_FULLBLOCK}, /* Accumulate full blocks from input.  */
   {"",		0}
 };
 
@@ -493,6 +517,8 @@ Each FLAG symbol may be:\n\
 	fputs (_("  dsync     use synchronized I/O for data\n"), stdout);
       if (O_SYNC)
 	fputs (_("  sync      likewise, but also for metadata\n"), stdout);
+      fputs (_("  fullblock  accumulate full blocks of input (iflag only)\n"),
+	     stdout);
       if (O_NONBLOCK)
 	fputs (_("  nonblock  use non-blocking I/O\n"), stdout);
       if (O_NOATIME)
@@ -767,7 +793,7 @@ iread (int fd, char *buf, size_t size)
     }
 }
 
-/* Wrapper around iread function which reads full blocks if possible */
+/* Wrapper around iread function to accumulate full blocks.  */
 static ssize_t
 iread_fullblock (int fd, char *buf, size_t size)
 {
@@ -775,7 +801,7 @@ iread_fullblock (int fd, char *buf, size_t size)
 
   while (0 < size)
     {
-      ssize_t ncurr = iread(fd, buf, size);
+      ssize_t ncurr = iread (fd, buf, size);
       if (ncurr < 0)
 	return ncurr;
       if (ncurr == 0)
@@ -1031,9 +1057,10 @@ scanargs (int argc, char *const *argv)
       error (0, 0, "%s: %s", _("invalid output flag"), "'fullblock'");
       usage (EXIT_FAILURE);
     }
-  iread_fnc = (input_flags & O_FULLBLOCK)?
-    iread_fullblock:
-    iread;
+  iread_fnc = ((input_flags & O_FULLBLOCK)
+	       ? iread_fullblock
+	       : iread);
+  input_flags &= ~O_FULLBLOCK;
 
   if (multiple_bits_set (conversions_mask & (C_ASCII | C_EBCDIC | C_IBM)))
     error (EXIT_FAILURE, 0, _("cannot combine any two of {ascii,ebcdic,ibm}"));

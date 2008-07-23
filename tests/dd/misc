@@ -90,12 +90,11 @@ test "$outbytes" -eq 3 || fail=1
 
 (echo a; sleep .1; echo b) \
   | LC_ALL=C dd bs=4 status=noxfer iflag=fullblock >out 2>err || fail=1
-echo "a
-b" > out_ok
+printf 'a\nb\n' > out_ok || framework_failure
 echo "1+0 records in
-1+0 records out" > err_ok
-compare out out_ok || fail=1
-compare err err_ok || fail=1
+1+0 records out" > err_ok || framework_failure
+compare out_ok out || fail=1
+compare err_ok err || fail=1
 
 test $fail -eq 0 && fail=$warn
 

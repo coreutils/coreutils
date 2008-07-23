@@ -15,6 +15,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   comm accepts new option, --output-delimiter=STR, that allows specification
   of an output delimiter other than the default single TAB.
 
+  dd accepts iflag=fullblock to make it accumulate full input blocks.
+  With this new option, after a short read, dd repeatedly calls read,
+  until it fills the incomplete block, reaches EOF, or encounters an error.
+
   md5sum now accepts the new option, --quiet, to suppress the printing of
   'OK' messages.  sha1sum, sha224sum, sha384sum, and sha512sum accept it, too.
 
@@ -26,10 +30,6 @@ GNU coreutils NEWS                                    -*- outline -*-
   sort accepts a new option --batch-size=NMERGE, where NMERGE
   represents the maximum number of inputs that will be merged at once.
   When processing more than NMERGE inputs, sort uses temporary files.
-
-  dd accepts a new parameter iflag=fullblock which turn on reading of full
-  blocks  where possible. If this parameter is used and 'read' call is
-  terminated during read, it will be called again for remainder input.
 
 ** Bug fixes
 
