@@ -225,6 +225,9 @@ static sig_atomic_t volatile interrupt_signal;
 /* A count of the number of pending info signals that have been received.  */
 static sig_atomic_t volatile info_signal_count;
 
+/* Function used for read (to handle iflag=fullblock parameter) */
+static ssize_t (*iread_fnc) (int fd, char *buf, size_t size);
+
 /* A longest symbol in the struct symbol_values tables below.  */
 #define LONGEST_SYMBOL "fdatasync"
 
@@ -257,6 +260,7 @@ static struct symbol_value const conversions[] =
 };
 
 /* Flags, for iflag="..." and oflag="...".  */
+#define O_FULLBLOCK 010000000 /* Read only full blocks from input */
 static struct symbol_value const flags[] =
 {
   {"append",	O_APPEND},
@@ -271,6 +275,7 @@ static struct symbol_value const flags[] =
   {"nonblock",	O_NONBLOCK},
   {"sync",	O_SYNC},
   {"text",	O_TEXT},
+  {"fullblock", O_FULLBLOCK}, /* Read only full blocks from input */
   {"",		0}
 };
 
@@ -762,6 +767,27 @@ iread (int fd, char *buf, size_t size)
     }
 }
 
+/* Wrapper around iread function which reads full blocks if possible */
+static ssize_t
+iread_fullblock (int fd, char *buf, size_t size)
+{
+  ssize_t nread = 0;
+
+  while (0 < size)
+    {
+      ssize_t ncurr = iread(fd, buf, size);
+      if (ncurr < 0)
+	return ncurr;
+      if (ncurr == 0)
+	break;
+      nread += ncurr;
+      buf   += ncurr;
+      size  -= ncurr;
+    }
+
+  return nread;
+}
+
 /* Write to FD the buffer BUF of size SIZE, processing any signals
    that arrive.  Return the number of bytes written, setting errno if
    this is less than SIZE.  Keep trying if there are partial
@@ -1000,6 +1026,15 @@ scanargs (int argc, char *const *argv)
   if (input_flags & (O_DSYNC | O_SYNC))
     input_flags |= O_RSYNC;
 
+  if (output_flags & O_FULLBLOCK)
+    {
+      error (0, 0, "%s: %s", _("invalid output flag"), "'fullblock'");
+      usage (EXIT_FAILURE);
+    }
+  iread_fnc = (input_flags & O_FULLBLOCK)?
+    iread_fullblock:
+    iread;
+
   if (multiple_bits_set (conversions_mask & (C_ASCII | C_EBCDIC | C_IBM)))
     error (EXIT_FAILURE, 0, _("cannot combine any two of {ascii,ebcdic,ibm}"));
   if (multiple_bits_set (conversions_mask & (C_BLOCK | C_UNBLOCK)))
@@ -1197,7 +1232,7 @@ skip (int fdesc, char const *file, uintmax_t records, size_t blocksize,
 
       do
 	{
-	  ssize_t nread = iread (fdesc, buf, blocksize);
+	  ssize_t nread = iread_fnc (fdesc, buf, blocksize);
 	  if (nread < 0)
 	    {
 	      if (fdesc == STDIN_FILENO)
@@ -1508,7 +1543,7 @@ dd_copy (void)
 		(conversions_mask & (C_BLOCK | C_UNBLOCK)) ? ' ' : '\0',
 		input_blocksize);
 
-      nread = iread (STDIN_FILENO, ibuf, input_blocksize);
+      nread = iread_fnc (STDIN_FILENO, ibuf, input_blocksize);
 
       if (nread == 0)
 	break;			/* EOF.  */

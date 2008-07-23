@@ -88,6 +88,15 @@ fi
 outbytes=`echo x | dd bs=3 ibs=10 obs=10 conv=sync 2>/dev/null | wc -c`
 test "$outbytes" -eq 3 || fail=1
 
+(echo a; sleep .1; echo b) \
+  | LC_ALL=C dd bs=4 status=noxfer iflag=fullblock >out 2>err || fail=1
+echo "a
+b" > out_ok
+echo "1+0 records in
+1+0 records out" > err_ok
+compare out out_ok || fail=1
+compare err err_ok || fail=1
+
 test $fail -eq 0 && fail=$warn
 
 (exit $fail); exit $fail

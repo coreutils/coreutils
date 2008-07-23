@@ -27,6 +27,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   represents the maximum number of inputs that will be merged at once.
   When processing more than NMERGE inputs, sort uses temporary files.
 
+  dd accepts a new parameter iflag=fullblock which turn on reading of full
+  blocks  where possible. If this parameter is used and 'read' call is
+  terminated during read, it will be called again for remainder input.
+
 ** Bug fixes
 
   chcon --verbose now prints a newline after each message

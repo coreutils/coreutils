@@ -7719,6 +7719,12 @@ platforms that distinguish binary from text I/O.
 Use text I/O.  Like @samp{binary}, this option has no effect on
 standard platforms.
 
+@item fullblock
+@opindex fullblock
+Read full blocks from input if possible. read() may return early
+if a full block is not available, so retry until data is available
+or end of file is reached. This flag can be used only for the iflag option.
+
 @end table
 
 These flags are not supported on all systems, and @samp{dd} rejects
