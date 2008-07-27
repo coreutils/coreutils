@@ -40,6 +40,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   od no longer suffers from platform bugs in printf(3).  This is
   probably most noticeable when using 'od -tfL' to print long doubles.
 
+  shuf --head-count is now correctly documented.  The documentation
+  previously claimed it was called --head-lines.
+
 ** Improvements
 
   Improved support for access control lists (ACLs): On MacOS X, Solaris 7..10,

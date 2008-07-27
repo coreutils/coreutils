@@ -60,7 +60,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (_("\
   -e, --echo                treat each ARG as an input line\n\
   -i, --input-range=LO-HI   treat each number LO through HI as an input line\n\
-  -n, --head-lines=LINES    output at most LINES lines\n\
+  -n, --head-count=COUNT    output at most COUNT lines\n\
   -o, --output=FILE         write result to FILE instead of standard output\n\
       --random-source=FILE  get random bytes from FILE (default /dev/urandom)\n\
   -z, --zero-terminated     end lines with 0 byte, not newline\n\

@@ -4176,11 +4176,11 @@ operation modes:
 @table @samp
 
 @item -n @var{lines}
-@itemx --head-lines=@var{lines}
+@itemx --head-count=@var{count}
 @opindex -n
-@opindex --head-lines
+@opindex --head-count
 @cindex head of output
-Output at most @var{lines} lines.  By default, all input lines are
+Output at most @var{count} lines.  By default, all input lines are
 output.
 
 @item -o @var{output-file}
