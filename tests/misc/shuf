@@ -51,4 +51,9 @@ test "$t" = 'a b c d e' || { fail=1; echo "not a permutation" 1>&2; }
 # "seq 1860" produces 8193 (8K + 1) bytes of output.
 seq 1860 | shuf > /dev/null || fail=1
 
+# coreutils-6.12 and earlier would output a newline terminator, not \0.
+shuf --zero-terminated -i 1-1 > out || fail=1
+printf '1\0' > exp || framework_failure
+cmp out exp || { fail=1; echo "missing NUL terminator?" 1>&2; }
+
 (exit $fail); exit $fail

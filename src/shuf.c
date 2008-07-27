@@ -214,7 +214,7 @@ read_input (FILE *in, char eolbyte, char ***pline)
 
 static int
 write_permuted_output (size_t n_lines, char * const *line, size_t lo_input,
-		       size_t const *permutation)
+		       size_t const *permutation, char eolbyte)
 {
   size_t i;
 
@@ -230,7 +230,7 @@ write_permuted_output (size_t n_lines, char * const *line, size_t lo_input,
     for (i = 0; i < n_lines; i++)
       {
 	unsigned long int n = lo_input + permutation[i];
-	if (printf ("%lu\n", n) < 0)
+	if (printf ("%lu%c", n, eolbyte) < 0)
 	  return -1;
       }
 
@@ -400,7 +400,8 @@ main (int argc, char **argv)
 
   if (outfile && ! freopen (outfile, "w", stdout))
     error (EXIT_FAILURE, errno, "%s", quotearg_colon (outfile));
-  if (write_permuted_output (head_lines, line, lo_input, permutation) != 0)
+  if (write_permuted_output (head_lines, line, lo_input, permutation, eolbyte)
+      != 0)
     error (EXIT_FAILURE, errno, _("write error"));
 
 #ifdef lint
