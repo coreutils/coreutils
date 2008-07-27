@@ -22,8 +22,6 @@ GNU coreutils NEWS                                    -*- outline -*-
   md5sum now accepts the new option, --quiet, to suppress the printing of
   'OK' messages.  sha1sum, sha224sum, sha384sum, and sha512sum accept it, too.
 
-  shuf honors the --zero-terminated (-z) option, even with --input-range=LO-HI
-
   sort accepts a new option, --files0-from=F, that specifies a file
   containing a null-separated list of files to sort.  This list is used
   instead of filenames passed on the command-line to avoid problems with
@@ -39,6 +37,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   od no longer suffers from platform bugs in printf(3).  This is
   probably most noticeable when using 'od -tfL' to print long doubles.
+
+  shuf honors the --zero-terminated (-z) option, even with --input-range=LO-HI
 
   shuf --head-count is now correctly documented.  The documentation
   previously claimed it was called --head-lines.
