@@ -273,7 +273,7 @@ update_po_files() {
 
   langs=`cd $ref_po_dir && echo *.po|sed 's/\.po//g'`
   test "$langs" = '*' && langs=x
-  for po in `cd $ref_po_dir && echo *.po|sed 's/\.po//g'`; do
+  for po in $langs; do
     case $po in x) continue;; esac
     new_po="$ref_po_dir/$po.po"
     cksum_file="$ref_po_dir/$po.s1"
