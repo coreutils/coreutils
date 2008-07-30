@@ -51,6 +51,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   join has significantly better performance due to better memory management
 
+  ls now uses constant memory when not sorting and using one_per_line format,
+  no matter how many files are in a given directory
+
   od now aligns fields across lines when printing multiple -t
   specifiers, and no longer prints fields that resulted entirely from
   padding the input out to the least common multiple width.

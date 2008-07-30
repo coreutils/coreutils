@@ -2402,6 +2402,20 @@ print_dir (char const *name, char const *realname, bool command_line_arg)
 #endif
 	      total_blocks += gobble_file (next->d_name, type, D_INO (next),
 					   false, name);
+
+	      /* In this narrow case, print out each name right away, so
+		 ls uses constant memory while processing the entries of
+		 this directory.  Useful when there are many (millions)
+		 of entries in a directory.  */
+	      if (format == one_per_line && sort_type == sort_none)
+		{
+		  /* We must call sort_files in spite of
+		     "sort_type == sort_none" for its initialization
+		     of the sorted_file vector.  */
+		  sort_files ();
+		  print_current_files ();
+		  clear_files ();
+		}
 	    }
 	}
       else if (errno != 0)
