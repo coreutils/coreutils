@@ -174,7 +174,7 @@ be caught.\n"), stdout);
 static bool
 apply_time_suffix (unsigned int *x, char suffix_char)
 {
-  int multiplier=1;
+  int multiplier = 1;
 
   switch (suffix_char)
     {
@@ -270,13 +270,13 @@ main (int argc, char **argv)
   argv += optind;
 
   /* Ensure we're in our own group so all subprocesses can be killed.
-   * Note we don't put the just child in a separate group as
-   * then we would need to worry about foreground and background groups
-   * and propagating signals between them.  */
+     Note we don't just put the child in a separate group as
+     then we would need to worry about foreground and background groups
+     and propagating signals between them.  */
   setpgid (0, 0);
 
   /* Setup handlers before fork() so that we
-   * handle any signals caused by child, without races.  */
+     handle any signals caused by child, without races.  */
   install_signal_handlers ();
   signal (SIGTTIN, SIG_IGN);    /* don't sTop if background child needs tty.  */
   signal (SIGTTOU, SIG_IGN);    /* don't sTop if background child needs tty.  */
@@ -309,12 +309,12 @@ main (int argc, char **argv)
       alarm ((unsigned int) timeout);
 
       /* We're just waiting for a single process here, so wait() suffices.
-       * Note the signal() calls above on linux and BSD at least, essentially
-       * call the lower level sigaction() with the SA_RESTART flag set, which
-       * ensures the following wait call will only return if the child exits,
-       * not on this process receiving a signal. Also we're not passing
-       * WUNTRACED | WCONTINUED to a waitpid() call and so will not get
-       * indication that the child has stopped or continued.  */
+         Note the signal() calls above on linux and BSD at least, essentially
+         call the lower level sigaction() with the SA_RESTART flag set, which
+         ensures the following wait call will only return if the child exits,
+         not on this process receiving a signal. Also we're not passing
+         WUNTRACED | WCONTINUED to a waitpid() call and so will not get
+         indication that the child has stopped or continued.  */
       wait (&status);
 
       if (WIFEXITED (status))
