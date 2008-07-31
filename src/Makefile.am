@@ -129,6 +129,9 @@ seq_LDADD = $(LDADD) $(POW_LIB)
 # and the `nanosleep' reference in lib/xnanosleep.c.
 nanosec_libs = $(LDADD) $(POW_LIB) $(LIB_NANOSLEEP)
 
+# for various GMP functions
+factor_LDADD = $(LDADD) $(LIB_GMP)
+
 sleep_LDADD = $(nanosec_libs)
 tail_LDADD = $(nanosec_libs)
 

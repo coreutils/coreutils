@@ -19,6 +19,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   With this new option, after a short read, dd repeatedly calls read,
   until it fills the incomplete block, reaches EOF, or encounters an error.
 
+  factor accepts arbitrarily large numbers and factors them using
+  Pollard's rho algorithm.
+
   md5sum now accepts the new option, --quiet, to suppress the printing of
   'OK' messages.  sha1sum, sha224sum, sha384sum, and sha512sum accept it, too.
 

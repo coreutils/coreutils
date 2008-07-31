@@ -127,9 +127,6 @@ Changes expected to go in, someday.
   an implicit --NO-dereference-command-line-symlink-to-dir meaning.
   Pointed out by Karl Berry.
 
-  A more efficient version of factor, and possibly one that
-  accepts inputs of size 2^64 and larger.
-
   dd: consider adding an option to suppress `bytes/block read/written'
   output to stderr.  Suggested here:
     http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=165045

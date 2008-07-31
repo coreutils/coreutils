@@ -244,6 +244,7 @@ AC_CHECK_DECLS([strsignal, sys_siglist, _sys_siglist, __sys_siglist], , ,
 #include <signal.h>])
 
 cu_LIB_CHECK
+cu_GMP
 
 # Build df only if there's a point to it.
 if test $gl_cv_list_mounted_fs = yes && test $gl_cv_fs_space = yes; then
