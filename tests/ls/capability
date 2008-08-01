@@ -1,0 +1,43 @@
+#!/bin/sh
+# Ensure "ls --color" properly colorizes file with capability.
+
+# Copyright (C) 2008 Free Software Foundation, Inc.
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  ls --version
+fi
+
+. $srcdir/test-lib.sh
+require_root_
+
+(setcap --help) 2>&1 |grep 'usage: setcap' > /dev/null \
+  || skip_test_ "setcap utility not found"
+fail=0
+
+# Don't let a different umask perturb the results.
+umask 22
+
+touch test
+setcap cap_net_bind_service=ep test \
+  || skip_test_ "setcap doesn't work"
+code='30;41'
+LS_COLORS="ca=$code" \
+  ls --color=always test > out || fail=1
+printf "\033[0m\033[${code}mtest\033[0m\n\033[m" > out_ok || fail=1
+compare out out_ok || fail=1
+
+(exit $fail); exit $fail

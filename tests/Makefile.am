@@ -25,6 +25,7 @@ root_tests =					\
   cp/cp-a-selinux				\
   cp/preserve-gid				\
   cp/special-bits				\
+  ls/capability					\
   ls/nameless-uid				\
   misc/chcon					\
   misc/selinux					\

@@ -82,6 +82,19 @@ AC_DEFUN([coreutils_MACROS],
     AC_CHECK_FUNCS(fdatasync)
   LIBS=$coreutils_saved_libs
 
+  # Check whether libcap is usable -- for ls --color support
+  AC_ARG_ENABLE([libcap],
+    AC_HELP_STRING([--disable-libcap], [disable libcap support]),
+    AC_MSG_WARN([libcap support disabled by user]),
+    [AC_CHECK_LIB([cap], [cap_get_file],
+      [AC_CHECK_HEADER([sys/capability.h],
+        [LIB_CAP=-lcap AC_DEFINE([HAVE_CAP], 1, [libcap usability])],
+        [AC_MSG_WARN([header sys/capability.h was not found, support for libcap will not be built])]
+      )],
+      [AC_MSG_WARN([libcap library was not found or not usable, support for libcap will not be built])])
+    ])
+  AC_SUBST([LIB_CAP])
+
   # See if linking `seq' requires -lm.
   # It does on nearly every system.  The single exception (so far) is
   # BeOS which has all the math functions in the normal runtime library

@@ -38,6 +38,10 @@
 #include <config.h>
 #include <sys/types.h>
 
+#ifdef HAVE_CAP
+# include <sys/capability.h>
+#endif
+
 #if HAVE_TERMIOS_H
 # include <termios.h>
 #endif
@@ -513,14 +517,14 @@ enum indicator_no
     C_LEFT, C_RIGHT, C_END, C_RESET, C_NORM, C_FILE, C_DIR, C_LINK,
     C_FIFO, C_SOCK,
     C_BLK, C_CHR, C_MISSING, C_ORPHAN, C_EXEC, C_DOOR, C_SETUID, C_SETGID,
-    C_STICKY, C_OTHER_WRITABLE, C_STICKY_OTHER_WRITABLE
+    C_STICKY, C_OTHER_WRITABLE, C_STICKY_OTHER_WRITABLE, C_CAP
   };
 
 static const char *const indicator_name[]=
   {
     "lc", "rc", "ec", "rs", "no", "fi", "di", "ln", "pi", "so",
     "bd", "cd", "mi", "or", "ex", "do", "su", "sg", "st",
-    "ow", "tw", NULL
+    "ow", "tw", "ca", NULL
   };
 
 struct color_ext_type
@@ -553,6 +557,7 @@ static struct bin_str color_indicator[] =
     { LEN_STR_PAIR ("37;44") },		/* st: sticky: black on blue */
     { LEN_STR_PAIR ("34;42") },		/* ow: other-writable: blue on green */
     { LEN_STR_PAIR ("30;42") },		/* tw: ow w/ sticky: black on green */
+    { LEN_STR_PAIR ("30;41") },		/* capability: black on red */
   };
 
 /* FIXME: comment  */
@@ -3910,6 +3915,37 @@ print_type_indicator (bool stat_ok, mode_t mode, enum filetype type)
     DIRED_PUTCHAR (c);
 }
 
+#ifdef HAVE_CAP
+/* Return true if NAME has a capability (see linux/capability.h) */
+static bool
+has_capability (char const *name)
+{
+  char *result;
+  bool has_cap;
+
+  cap_t cap_d = cap_get_file (name);
+  if (cap_d == NULL)
+    return false;
+
+  result = cap_to_text (cap_d, NULL);
+  cap_free (cap_d);
+  if (!result)
+    return false;
+
+  /* check if human-readable capability string is empty */
+  has_cap = !!*result;
+
+  cap_free (result);
+  return has_cap;
+}
+#else
+static bool
+has_capability (char const *name)
+{
+  return false;
+}
+#endif
+
 /* Returns whether any color sequence was printed. */
 static bool
 print_color_indicator (const char *name, mode_t mode, int linkok,
@@ -3937,6 +3973,8 @@ print_color_indicator (const char *name, mode_t mode, int linkok,
 	    type = C_SETUID;
 	  else if ((mode & S_ISGID) != 0)
 	    type = C_SETGID;
+	  else if (has_capability (name))
+	    type = C_CAP;
 	  else if ((mode & S_IXUGO) != 0)
 	    type = C_EXEC;
 	}

@@ -34,6 +34,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   represents the maximum number of inputs that will be merged at once.
   When processing more than NMERGE inputs, sort uses temporary files.
 
+  ls now colorizes files with capabilities if libcap is available
+
 ** Bug fixes
 
   chcon --verbose now prints a newline after each message
