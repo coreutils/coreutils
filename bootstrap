@@ -165,7 +165,7 @@ do
     usage
     exit;;
   --gnulib-srcdir=*)
-    GNULIB_SRCDIR=`expr "$option" : '--gnulib-srcdir=\(.*\)'`;;
+    GNULIB_SRCDIR=`expr "X$option" : 'X--gnulib-srcdir=\(.*\)'`;;
   --skip-po)
     SKIP_PO=t;;
   --force)
