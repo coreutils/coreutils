@@ -21,8 +21,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   With this new option, after a short read, dd repeatedly calls read,
   until it fills the incomplete block, reaches EOF, or encounters an error.
 
-  factor accepts arbitrarily large numbers and factors them using
-  Pollard's rho algorithm.
+  If the GNU MP library is available at configure time, factor and
+  expr support arbitrarily large numbers.  Pollard's rho algorithm is
+  used to factor large numbers.
 
   ls now colorizes files with capabilities if libcap is available
 

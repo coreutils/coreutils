@@ -130,6 +130,9 @@ seq_LDADD = $(LDADD) $(POW_LIB)
 nanosec_libs = $(LDADD) $(POW_LIB) $(LIB_NANOSLEEP)
 
 # for various GMP functions
+expr_LDADD = $(LDADD) $(LIB_GMP)
+
+# for various GMP functions
 factor_LDADD = $(LDADD) $(LIB_GMP)
 
 sleep_LDADD = $(nanosec_libs)

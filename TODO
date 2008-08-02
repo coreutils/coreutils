@@ -155,6 +155,11 @@ remove all uses of the `register' keyword: Done.  add a maint.mk rule
 remove or adjust chown's --changes option, since it
   can't always do what it currently says it does.
 
+Support arbitrary-precision arithmetic in those tools for which it
+makes sense.  Factor and expr already support this via libgmp.
+The "test" program is covered via its string-based comparison of
+integers.  To be converted: seq.
+
 Adapt tools like wc, tr, fmt, etc. (most of the textutils) to be
   multibyte aware.  The problem is that I want to avoid duplicating
   significant blocks of logic, yet I also want to incur only minimal

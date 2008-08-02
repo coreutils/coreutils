@@ -25,7 +25,7 @@ du: Torbjörn Granlund, David MacKenzie, Paul Eggert, Jim Meyering
 echo: Brian Fox, Chet Ramey
 env: Richard Mlynarik, David MacKenzie
 expand: David MacKenzie
-expr: Mike Parker
+expr: Mike Parker, James Youngman
 factor: Paul Rubin
 false: Jim Meyering
 fmt: Ross Paterson
