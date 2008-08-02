@@ -159,8 +159,9 @@ CHECK-FORCE:
 DEPENDENCY = CHECK-FORCE
 $(TEST_LOGS): $(DEPENDENCY)
 	@if test '$(DEPENDENCY)' = CHECK-FORCE; then			\
-	  dst=$@;							\
-	  exec $(MAKE) $(AM_MAKEFLAGS) DEPENDENCY='$(srcdir)'/$${dst%.log} $@;\
+	  dst=$@; src=$${dst%.log};					\
+	  test -x "$$src" || src='$(srcdir)'/$$src;			\
+	  exec $(MAKE) $(AM_MAKEFLAGS) DEPENDENCY="$$src" $@;		\
 	else								\
 	  src='$(DEPENDENCY)';						\
 	  $(am__check_pre) "$$dir$$src" $(am__check_post);		\
