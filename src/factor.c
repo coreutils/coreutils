@@ -16,8 +16,8 @@
 
 /* Written by Paul Rubin <phr@ocf.berkeley.edu>.
    Adapted for GNU, fixed to factor UINT_MAX by Jim Meyering.
-   Arbitrary-precision code adapted by James Youngman from factorize.c
-   of GNU MP, version 4.2.2.
+   Arbitrary-precision code adapted by James Youngman from Torbjörn
+   Granlund's factorize.c, from GNU MP version 4.2.2.
 */
 
 #include <config.h>
