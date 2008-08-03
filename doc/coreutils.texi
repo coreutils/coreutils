@@ -7984,7 +7984,7 @@ response is not affirmative, the file is skipped.
 when it might be a symlink to a directory.
 Otherwise, @command{mv} may do something very surprising, since
 its behavior depends on the underlying rename system call.
-On modern Linux systems, it fails with @code{errno=ENOTDIR}.
+On a system with a modern Linux-based kernel, it fails with @code{errno=ENOTDIR}.
 However, on other systems (at least FreeBSD 6.1 and Solaris 10) it silently
 renames not the symlink but rather the directory referenced by the symlink.
 @xref{Trailing slashes}.
