@@ -2715,7 +2715,7 @@ gobble_file (char const *name, enum filetype type, ino_t inode,
 		 ls fail just because the file (even a command line argument)
 		 isn't on the right type of file system.  I.e., a getfilecon
 		 failure isn't in the same class as a stat failure.  */
-	      if (errno == ENOTSUP || errno == ENODATA)
+	      if (errno == ENOTSUP || errno == EOPNOTSUPP || errno == ENODATA)
 		err = 0;
 	    }
 
