@@ -58,7 +58,8 @@ usage (int status)
       printf (_("\
 Usage: %s [VARIABLE]...\n\
   or:  %s OPTION\n\
-If no environment VARIABLE specified, print them all.\n\
+Print the values of the specified environment VARIABLE(s).\n\
+If no VARIABLE is specified, print name and value pairs for them all.\n\
 \n\
 "),
 	      program_name, program_name);
