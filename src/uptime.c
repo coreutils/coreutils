@@ -193,7 +193,7 @@ usage (int status)
 	     program_name);
   else
     {
-      printf (_("Usage: %s [OPTION]... [ FILE ]\n"), program_name);
+      printf (_("Usage: %s [OPTION]... [FILE]\n"), program_name);
       printf (_("\
 Print the current time, the length of time the system has been up,\n\
 the number of users on the system, and the average number of jobs\n\

@@ -155,7 +155,7 @@ usage (int status)
 	     program_name);
   else
     {
-      printf (_("Usage: %s [OPTIONS] FILE [...]\n"), program_name);
+      printf (_("Usage: %s [OPTION]... FILE...\n"), program_name);
       fputs (_("\
 Overwrite the specified FILE(s) repeatedly, in order to make it harder\n\
 for even very expensive hardware probing to recover the data.\n\

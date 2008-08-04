@@ -210,7 +210,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
       --complement        complement the set of selected bytes, characters\n\
-                            or fields.\n\
+                            or fields\n\
 "), stdout);
       fputs (_("\
   -s, --only-delimited    do not print lines not containing delimiters\n\

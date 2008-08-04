@@ -41,7 +41,7 @@ usage (int status)
   else
     {
       printf (_("\
-Usage: %s NEWROOT [COMMAND...]\n\
+Usage: %s NEWROOT [COMMAND [ARG]...]\n\
   or:  %s OPTION\n\
 "), program_name, program_name);
       fputs (_("\

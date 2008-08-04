@@ -103,7 +103,7 @@ usage (int status)
 	     program_name);
   else
     {
-      printf (_("Usage: %s [OPTION]... [ FILE ]\n"), program_name);
+      printf (_("Usage: %s [OPTION]... [FILE]\n"), program_name);
       printf (_("\
 Output who is currently logged in according to FILE.\n\
 If FILE is not specified, use %s.  %s as FILE is common.\n\

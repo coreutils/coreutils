@@ -504,9 +504,9 @@ usage (int status)
   else
     {
       printf (_("\
-Usage: %s [-F DEVICE] [--file=DEVICE] [SETTING]...\n\
-  or:  %s [-F DEVICE] [--file=DEVICE] [-a|--all]\n\
-  or:  %s [-F DEVICE] [--file=DEVICE] [-g|--save]\n\
+Usage: %s [-F DEVICE | --file=DEVICE] [SETTING]...\n\
+  or:  %s [-F DEVICE | --file=DEVICE] [-a|--all]\n\
+  or:  %s [-F DEVICE | --file=DEVICE] [-g|--save]\n\
 "),
 	      program_name, program_name, program_name);
       fputs (_("\
