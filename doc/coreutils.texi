@@ -31,7 +31,6 @@
 @c FIXME: the following need documentation
 @c * [: (coreutils)[ invocation.                   File/string tests.
 @c * pinky: (coreutils)pinky invocation.           FIXME.
-@c * uptime: (coreutils)uptime invocation.         FIXME.
 @c * mktemp: (coreutils)mktemp invocation.         FIXME.
 @c * chcon: (coreutils)chcon invocation.           FIXME.
 
@@ -124,6 +123,7 @@
 * unexpand: (coreutils)unexpand invocation.     Convert spaces to tabs.
 * uniq: (coreutils)uniq invocation.             Uniquify files.
 * unlink: (coreutils)unlink invocation.         Removal via unlink(2).
+* uptime: (coreutils)uptime invocation.         Print uptime and load.
 * users: (coreutils)users invocation.           Print current user names.
 * vdir: (coreutils)vdir invocation.             List directories verbosely.
 * wc: (coreutils)wc invocation.                 Line, word, and byte counts.
@@ -193,7 +193,7 @@ Free Documentation License''.
 * File name manipulation::             dirname basename pathchk
 * Working context::                    pwd stty printenv tty
 * User information::                   id logname whoami groups users who
-* System context::                     date uname hostname hostid
+* System context::                     date uname hostname hostid uptime
 * Modified command invocation::        chroot env nice nohup su timeout
 * Process control::                    kill
 * Delaying::                           sleep
@@ -407,7 +407,8 @@ System context
 * date invocation::              Print or set system date and time
 * uname invocation::             Print system information
 * hostname invocation::          Print or set system name
-* hostid invocation::            Print numeric host identifier.
+* hostid invocation::            Print numeric host identifier
+* uptime invocation::            Print system uptime and load
 
 @command{date}: Print or set system date and time
 
@@ -12786,6 +12787,7 @@ information.
 * uname invocation::            Print system information.
 * hostname invocation::         Print or set system name.
 * hostid invocation::           Print numeric host identifier.
+* uptime invocation::           Print system uptime and load
 @end menu
 
 
@@ -13614,6 +13616,36 @@ the case.
 
 @exitstatus
 
+@node uptime invocation
+@section @command{uptime}: Print system uptime and load
+
+@pindex uptime
+@cindex printing the system uptime and load
+
+@command{uptime} prints the current time, the system's uptime, the
+number of logged-in users and the current load average.
+
+If an argument is specified, it is used as the file to be read
+to discover how many users are logged in.  If no argument is
+specified, a system default is used (@command{uptime --help} indicates
+the default setting).
+
+The only options are @option{--help} and @option{--version}.
+@xref{Common options}.
+
+For example, here's what it prints right now on one system I use:
+
+@example
+$ uptime
+ 14:07  up   3:35,  3 users,  load average: 1.39, 1.15, 1.04
+@end example
+
+The precise method of calculation of load average varies somewhat
+between systems.  Some systems calculate it as the average number of
+runnable processes over the last 1, 5 and 15 minutes, but some systems
+also include processes in the uninterruptible sleep state (that is,
+those processes which are waiting for disk I/O).  The Linux kernel
+includes uninterruptible processes.
 
 @node Modified command invocation
 @chapter Modified command invocation

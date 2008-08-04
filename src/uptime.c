@@ -36,6 +36,7 @@
 #include "long-options.h"
 #include "quote.h"
 #include "readutmp.h"
+#include "fprintftime.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "uptime"
@@ -126,12 +127,10 @@ print_uptime (size_t n, const STRUCT_UTMP *this)
   uphours = (uptime - (updays * 86400)) / 3600;
   upmins = (uptime - (updays * 86400) - (uphours * 3600)) / 60;
   tmn = localtime (&time_now);
+  /* procps' version of uptime also prints the seconds field, but
+     previous versions of coreutils don't. */
   if (tmn)
-    printf (_(" %2d:%02d%s  up "),
-	    ((tmn->tm_hour % 12) == 0 ? 12 : tmn->tm_hour % 12),
-	    /* FIXME: use strftime, not am, pm.  Uli reports that
-	       the german translation is meaningless.  */
-	    tmn->tm_min, (tmn->tm_hour < 12 ? _("am") : _("pm")));
+    fprintftime (stdout, _(" %H:%M%P  up "), tmn, 0, 0);
   else
     printf (_(" ??:????  up "));
   if (uptime == (time_t) -1)
@@ -197,10 +196,21 @@ usage (int status)
       printf (_("\
 Print the current time, the length of time the system has been up,\n\
 the number of users on the system, and the average number of jobs\n\
-in the run queue over the last 1, 5 and 15 minutes.\n\
+in the run queue over the last 1, 5 and 15 minutes."));
+#ifdef __linux__
+      /* It would be better to introduce a configure test for this,
+	 but such a test is hard to write.  For the moment then, we
+	 have a hack which depends on the preprocessor used at compile
+	 time to tell us what the running kernel is.  Ugh.  */
+      printf(_("  \
+Processes in\n\
+an uninterruptible sleep state also contribute to the load average.\n"));
+#else
+      printf(_("\n"));
+#endif
+      printf (_("\
 If FILE is not specified, use %s.  %s as FILE is common.\n\
-\n\
-"),
+\n"),
 	      UTMP_FILE, WTMP_FILE);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
