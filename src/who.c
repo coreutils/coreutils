@@ -427,7 +427,7 @@ print_user (const STRUCT_UTMP *utmp_ent, time_t boottime)
 static void
 print_boottime (const STRUCT_UTMP *utmp_ent)
 {
-  print_line (-1, "", ' ', -1, "system boot",
+  print_line (-1, "", ' ', -1, _("system boot"),
 	      time_string (utmp_ent), "", "", "", "");
 }
 
@@ -472,7 +472,7 @@ print_login (const STRUCT_UTMP *utmp_ent)
 
   /* FIXME: add idle time? */
 
-  print_line (-1, "LOGIN", ' ', sizeof utmp_ent->ut_line, utmp_ent->ut_line,
+  print_line (-1, _("LOGIN"), ' ', sizeof utmp_ent->ut_line, utmp_ent->ut_line,
 	      time_string (utmp_ent), "", pidstr, comment, "");
   free (comment);
 }
