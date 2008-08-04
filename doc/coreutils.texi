@@ -4625,6 +4625,8 @@ precedes @code{main}.
 The only options are @option{--help} and @option{--version}.  @xref{Common
 options}.
 
+@exitstatus
+
 @node tsort background
 @section @command{tsort}: Background
 
@@ -4659,8 +4661,6 @@ an archive file.
 Anyhow, that's where tsort came from.  To solve an old problem with
 the way the linker handled archive files, which has since been solved
 in different ways.
-
-@exitstatus
 
 
 @node ptx invocation
