@@ -152,8 +152,7 @@ Display the current time in the given FORMAT, or set the system date.\n\
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
 \n\
-FORMAT controls the output.  The only valid option for the second form\n\
-specifies Coordinated Universal Time.  Interpreted sequences are:\n\
+FORMAT controls the output.  Interpreted sequences are:\n\
 \n\
   %%   a literal %\n\
   %a   locale's abbreviated weekday name (e.g., Sun)\n\
