@@ -13094,7 +13094,7 @@ date +%_d/%_m -d "Feb 1"
 
 As a @acronym{GNU} extension, you can specify the field width
 (after any flag, if present) as a decimal number.  If the natural size of the
-output is of the field has less than the specified number of characters,
+output of the field has less than the specified number of characters,
 the result is written right adjusted and padded to the given
 size.  For example, @samp{%9B} prints the right adjusted month name in
 a field of width 9.
