@@ -278,11 +278,10 @@ enum
 /* Ensure that we didn't shift it off the end.  */
 verify (O_FULLBLOCK != 0);
 
+#define MULTIPLE_BITS_SET(i) (((i) & ((i) - 1)) != 0)
+
 /* Ensure that this is a single-bit value.  */
-verify ((O_FULLBLOCK &
-	 ( O_APPEND | O_BINARY | O_DIRECT | O_DIRECTORY | O_DSYNC
-	   | O_NOATIME | O_NOCTTY | O_NOFOLLOW | O_NOLINKS | O_NONBLOCK
-	   | O_SYNC | O_TEXT)) == 0);
+verify ( ! MULTIPLE_BITS_SET (O_FULLBLOCK));
 
 /* Flags, for iflag="..." and oflag="...".  */
 static struct symbol_value const flags[] =
@@ -576,7 +575,7 @@ translate_charset (char const *new_trans)
 static inline bool
 multiple_bits_set (int i)
 {
-  return (i & (i - 1)) != 0;
+  return MULTIPLE_BITS_SET (i);
 }
 
 /* Print transfer statistics.  */
