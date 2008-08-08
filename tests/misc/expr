@@ -24,6 +24,11 @@ my $prog = 'expr';
 # Turn off localization of executable's output.
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
 
+my $big =      '98782897298723498732987928734';
+my $big_p1 =   '98782897298723498732987928735';
+my $big_sum = '197565794597446997465975857469';
+my $big_prod = '9758060798730154302876482828124348356960410232492450771490';
+
 my @Tests =
     (
      ['a', '5 + 6', {OUT => '11'}],
@@ -149,7 +154,18 @@ my @Tests =
      ['fail-c', {ERR => "$prog: missing operand\n"
 		 . "Try `$prog --help' for more information.\n"},
       {EXIT => 2}],
+
+     ['bignum-add', "$big + 1", {OUT => $big_p1}],
+     ['bignum-add2', "$big + $big_p1", {OUT => $big_sum}],
+     ['bignum-sub', "$big_p1 - 1", {OUT => $big}],
+     ['bignum-sub2', "$big_sum - $big", {OUT => $big_p1}],
+     ['bignum-mul', "$big_p1 '*' $big", {OUT => $big_prod}],
+     ['bignum-div', "$big_prod / $big", {OUT => $big_p1}],
     );
+
+# If using --bignum fails, remove all /^bignum-/ tests
+`expr --bignum 1`
+  or @Tests = grep {$_->[0] !~ /^bignum-/} @Tests;
 
 # Append a newline to end of each expected `OUT' string.
 my $t;
