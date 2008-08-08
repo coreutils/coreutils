@@ -28,25 +28,6 @@
   proper_name ("Brian Fox"), \
   proper_name ("Chet Ramey")
 
-/* echo [-neE] [arg ...]
-Output the ARGs.  If -n is specified, the trailing newline is
-suppressed.  If the -e option is given, interpretation of the
-following backslash-escaped characters is turned on:
-	\a	alert (bell)
-	\b	backspace
-	\c	suppress trailing newline
-	\f	form feed
-	\n	new line
-	\r	carriage return
-	\t	horizontal tab
-	\v	vertical tab
-	\\	backslash
-	\0NNN	the character whose ASCII code is NNN (octal).
-
-You can explicitly turn off the interpretation of the above characters
-on System V systems with the -E option.
-*/
-
 /* If true, interpret backslash escapes by default.  */
 #ifndef DEFAULT_ECHO_TO_XPG
 enum { DEFAULT_ECHO_TO_XPG = false };
@@ -86,7 +67,7 @@ If -e is in effect, the following sequences are recognized:\n\
   \\b     backspace\n\
 "), stdout);
       fputs (_("\
-  \\c     suppress trailing newline\n\
+  \\c     produce no further output\n\
   \\f     form feed\n\
   \\n     new line\n\
   \\r     carriage return\n\

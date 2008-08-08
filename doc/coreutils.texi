@@ -10394,7 +10394,7 @@ alert (bell)
 @item \b
 backspace
 @item \c
-suppress trailing newline
+produce no further output
 @item \f
 form feed
 @item \n
