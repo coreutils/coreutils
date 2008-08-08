@@ -11068,18 +11068,19 @@ however.
 
 By default, @command{expr} performs operations using native arithmetic
 types, but if a numeric overflow occurs and @command{expr} was built
-with support for the GNU MP library, @command{expr}, it will switch to
-using arbitrary-precision arithmetic.
+with support for the GNU MP library, @command{expr}, it
+uses arbitrary-precision arithmetic.
 
 Apart from @option{--help} and @option{--version} (@pxref{Common
 options}), the following options are supported:
 
 @table @samp
 @item --bignum
-Forces the use of the GNU MP library.
+Perform arithmetic operations using unlimited precision via the GNU MP library.
 @item --no-bignum
-Forces the use of native operations only.  In the event of a numeric
-overflow, @command{expr} will fail, even if GNU MP is available.
+Use only limited-precision native operations.
+In the event of numeric overflow, @command{expr} fails,
+even if GNU MP is available.
 @end table
 
 @cindex exit status of @command{expr}
@@ -14412,13 +14413,13 @@ Print a short help on standard output, then exit without further
 processing.
 
 @item --bignum
-Forces the use of the GNU MP library.   By default, @command{factor}
-selects between using GNU MP and using native operations on the basis
-of the length of the number to be factored.
+Always use unlimited precision arithmetic via the GNU MP library.
+By default, @command{factor} selects between using GNU MP and using
+native operations on the basis of the length of the number to be factored.
 
 @item --no-bignum
-Forces the use of native operations instead of GNU MP.  This causes
-@command{factor} to fail for larger inputs.
+Always use limited-precision native operations, not GNU MP.
+This causes @command{factor} to fail for larger inputs.
 
 @item --version
 Print the program version on standard output, then exit without further
