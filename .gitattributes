@@ -1,0 +1,7 @@
+*.texi diff=texinfo
+
+# Put something like the following e.g., in your ~/.gitconfig file
+# # Include proper "function name" string in diffs of texinfo.
+# # Derived from the regexp in emacs' lisp/add-log.el.
+# [diff "texinfo"]
+#         funcname = "^@node[ \t]\\+\\([^,]\\+\\)"
