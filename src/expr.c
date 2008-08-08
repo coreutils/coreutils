@@ -225,10 +225,20 @@ integer_overflow (char op)
 	   "but arbitrary-precision arithmetic is not available"), op);
 }
 
+static void die (int exit_status, int errno_val, char const *msg)
+  ATTRIBUTE_NORETURN;
+static void
+die (int exit_status, int errno_val, char const *msg)
+{
+  assert (exit_status != 0);
+  error (exit_status, errno_val, "%s", msg);
+  abort (); /* notreached */
+}
+
 static void
 string_too_long (void)
 {
-  error (EXPR_FAILURE, ERANGE, _("string too long"));
+  die (EXPR_FAILURE, ERANGE, _("string too long"));
 }
 
 enum
@@ -543,33 +553,6 @@ toarith (VALUE *v)
     }
 }
 
-/* Convert V into an integer (that is, a non-arbitrary-precision value)
-   Return true on success, false on failure.  */
-static bool
-toint (VALUE *v)
-{
-  if (!toarith (v))
-    return false;
-#if HAVE_GMP
-  if (v->type == mp_integer)
-    {
-      if (mpz_fits_slong_p (v->u.z))
-	{
-	  long value = mpz_get_si (v->u.z);
-	  mpz_clear (v->u.z);
-	  v->u.i = value;
-	  v->type = integer;
-	}
-      else
-	return false;		/* value was too big. */
-    }
-#else
-  if (v->type == mp_integer)
-    abort ();			/* should not happen. */
-#endif
-  return true;
-}
-
 /* Extract a size_t value from a positive arithmetic value, V.
    The extracted value is stored in *VAL. */
 static bool
@@ -829,10 +812,10 @@ eval6 (bool evaluate)
 		  v->type = mp_integer;
 		}
 	      else
-		string_too_long ();
-#else
-	      string_too_long ();
 #endif
+		{
+		  string_too_long ();
+		}
 	    }
 	}
       freev (l);
@@ -865,14 +848,12 @@ eval6 (bool evaluate)
 	      if (negative)
 		v = str_value ("");
 	      else
-		error (EXPR_FAILURE, ERANGE,
-		       _("string offset is too large"));
+		die (EXPR_FAILURE, ERANGE, _("string offset is too large"));
 	  else
 	    if (negative)
 	      v = str_value ("");
 	    else
-	      error (EXPR_FAILURE, ERANGE,
-		     _("substring length too large"));
+	      die (EXPR_FAILURE, ERANGE, _("substring length too large"));
 	}
       freev (l);
       freev (i1);
@@ -1025,7 +1006,6 @@ dodivide (VALUE *l, VALUE *r, bool want_modulus)
      and R is not 0. */
 #if HAVE_GMP
   {
-    bool round_up = false;	/* do we round up? */
     int sign_l, sign_r;
     promote (l);
     promote (r);
