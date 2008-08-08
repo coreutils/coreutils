@@ -67,12 +67,12 @@ Echo the STRING(s) to standard output.\n\
   -n             do not output the trailing newline\n\
 "), stdout);
       fputs (_(DEFAULT_ECHO_TO_XPG
-	       ? "\
+	       ? N_("\
   -e             enable interpretation of backslash escapes (default)\n\
-  -E             disable interpretation of backslash escapes\n"
-	       : "\
+  -E             disable interpretation of backslash escapes\n")
+	       : N_("\
   -e             enable interpretation of backslash escapes\n\
-  -E             disable interpretation of backslash escapes (default)\n"),
+  -E             disable interpretation of backslash escapes (default)\n")),
 	     stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
