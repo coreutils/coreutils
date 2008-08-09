@@ -266,10 +266,10 @@ usage (int status)
 	     program_name);
   else
     {
-      printf (_("Usage: %s [-DIGITS] [OPTION]... [FILE]...\n"), program_name);
+      printf (_("Usage: %s [-WIDTH] [OPTION]... [FILE]...\n"), program_name);
       fputs (_("\
 Reformat each paragraph in the FILE(s), writing to standard output.\n\
-If no FILE or if FILE is `-', read standard input.\n\
+The option -WIDTH is an abbreviated form of --width=DIGITS.\n\
 \n\
 "), stdout);
       fputs (_("\
