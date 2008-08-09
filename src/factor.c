@@ -530,7 +530,8 @@ Usage: %s [NUMBER]...\n\
 "),
 	      program_name, program_name);
       fputs (_("\
-Print the prime factors of each NUMBER.\n\
+Print the prime factors of each specified integer NUMBER.  If none\n\
+are specified on the command line, read them from standard input.\n\
 \n\
 "), stdout);
       fputs (_("\
@@ -539,11 +540,6 @@ Print the prime factors of each NUMBER.\n\
 	       stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
-      fputs (_("\
-\n\
-Print the prime factors of all specified integer NUMBERs.  If no arguments\n\
-are specified on the command line, they are read from standard input.\n\
-"), stdout);
       emit_bug_reporting_address ();
     }
   exit (status);
