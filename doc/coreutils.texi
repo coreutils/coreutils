@@ -11296,7 +11296,7 @@ expr index abcdef cz
 @result{} 3
 expr index index a
 @error{} expr: syntax error
-expr index quote index a
+expr index + index a
 @result{} 0
 @end example
 
