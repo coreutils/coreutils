@@ -173,11 +173,6 @@ main (int argc, char **argv)
     error (EXIT_FAILURE, 0,
 	   _("cannot print security context when user specified"));
 
-  if (just_context && !selinux_enabled)
-    error (EXIT_FAILURE, 0, _("\
-cannot display context when selinux not enabled or when displaying the id\n\
-of a different user"));
-
   /* If we are on a selinux-enabled kernel and no user is specified,
      get our context. Otherwise, leave the context variable alone -
      it has been initialized known invalid value and will be not
