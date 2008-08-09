@@ -270,19 +270,19 @@ print_full_info (const char *username)
   struct passwd *pwd;
   struct group *grp;
 
-  printf ("uid=%lu", (unsigned long int) ruid);
+  printf (_("uid=%lu"), (unsigned long int) ruid);
   pwd = getpwuid (ruid);
   if (pwd)
     printf ("(%s)", pwd->pw_name);
 
-  printf (" gid=%lu", (unsigned long int) rgid);
+  printf (_(" gid=%lu"), (unsigned long int) rgid);
   grp = getgrgid (rgid);
   if (grp)
     printf ("(%s)", grp->gr_name);
 
   if (euid != ruid)
     {
-      printf (" euid=%lu", (unsigned long int) euid);
+      printf (_(" euid=%lu"), (unsigned long int) euid);
       pwd = getpwuid (euid);
       if (pwd)
 	printf ("(%s)", pwd->pw_name);
@@ -290,7 +290,7 @@ print_full_info (const char *username)
 
   if (egid != rgid)
     {
-      printf (" egid=%lu", (unsigned long int) egid);
+      printf (_(" egid=%lu"), (unsigned long int) egid);
       grp = getgrgid (egid);
       if (grp)
 	printf ("(%s)", grp->gr_name);
@@ -333,5 +333,5 @@ print_full_info (const char *username)
   }
 #endif /* HAVE_GETGROUPS */
   if (context != NULL)
-    printf (" context=%s", context);
+    printf (_(" context=%s"), context);
 }
