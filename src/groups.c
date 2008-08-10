@@ -52,10 +52,10 @@ usage (int status)
              program_name);
   else
     {
-      printf (_("Usage: %s [OPTION]... [USERNAME]\n"), program_name);
+      printf (_("Usage: %s [OPTION]... [USERNAME]...\n"), program_name);
       fputs (_("\
-Print information for USERNAME or, if no USERNAME is specified,\n\
-the current process (which is different if the groups database has changed).\n"),
+Print group memberships for each USERNAME or, if no USERNAME is specified, for\n\
+the current process (which may differ if the groups database has changed).\n"),
              stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
