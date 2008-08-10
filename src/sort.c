@@ -76,6 +76,13 @@ struct rlimit { size_t rlim_cur; };
 # endif
 #endif
 
+#if !defined OPEN_MAX && defined NR_OPEN
+# define OPEN_MAX NR_OPEN
+#endif
+#if !defined OPEN_MAX
+# define OPEN_MAX 20
+#endif
+
 #ifndef STDC_HEADERS
 double strtod ();
 #endif
@@ -230,9 +237,6 @@ static struct month monthtab[] =
 
 /* Minimum sort size; the code might not work with smaller sizes.  */
 #define MIN_SORT_SIZE (nmerge * MIN_MERGE_BUFFER_SIZE)
-
-/* Maximum merge buffers we can theoretically support */
-#define MAX_NMERGE (SIZE_MAX / MIN_MERGE_BUFFER_SIZE)
 
 /* The number of bytes needed for a merge or check buffer, which can
    function relatively efficiently even if it holds only one line.  If
@@ -1075,14 +1079,15 @@ specify_nmerge (int oi, char c, char const *s)
 {
   uintmax_t n;
   struct rlimit rlimit;
-  unsigned int max_nmerge = (unsigned int) MAX_NMERGE;
   enum strtol_error e = xstrtoumax (s, NULL, 10, &n, NULL);
 
   /* Try to find out how many file descriptors we'll be able
      to open.  We need at least nmerge + 3 (STDIN_FILENO,
      STDOUT_FILENO and STDERR_FILENO). */
-  if (getrlimit (RLIMIT_NOFILE, &rlimit) == 0)
-    max_nmerge = MIN (max_nmerge, rlimit.rlim_cur - 3);
+  unsigned int max_nmerge = ((getrlimit (RLIMIT_NOFILE, &rlimit) == 0
+			      ? rlimit.rlim_cur
+			      : OPEN_MAX)
+			     - 3);
 
   if (e == LONGINT_OK)
     {
