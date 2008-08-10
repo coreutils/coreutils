@@ -83,10 +83,6 @@ struct rlimit { size_t rlim_cur; };
 # define OPEN_MAX 20
 #endif
 
-#ifndef STDC_HEADERS
-double strtod ();
-#endif
-
 #define UCHAR_LIM (UCHAR_MAX + 1)
 
 #ifndef DEFAULT_TMPDIR
