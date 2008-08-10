@@ -55,9 +55,9 @@ my @Tests =
         {ERR=>"$prog: invalid --batch-size argument `a'\n"}, {EXIT=>2}],
 
      ['nmerge-big', "-m --batch-size=$bigint", @inputs,
-	{ERR_SUBST=>'s/current rlimit is .+\n/current rlimit is/'},
+	{ERR_SUBST=>'s/(current rlimit is) \d+/$1/'},
         {ERR=>"$prog: --batch-size argument `$bigint' too large\n".
-	      "$prog: maximum --batch-size argument with current rlimit is"},
+	      "$prog: maximum --batch-size argument with current rlimit is\n"},
         {EXIT=>2}],
 
      # This should work since nmerge >= the number of input files
