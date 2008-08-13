@@ -69,12 +69,15 @@ CLEANFILES = $(SCRIPTS) su
 
 AM_CPPFLAGS = -I$(top_srcdir)/lib
 
+noinst_LIBRARIES = libver.a
+libver_a_SOURCES = version.c version.h
+
 # Sometimes, the expansion of $(LIBINTL) includes -lc which may
 # include modules defining variables like `optind', so libcoreutils.a
 # must precede $(LIBINTL) in order to ensure we use GNU getopt.
 # But libcoreutils.a must also follow $(LIBINTL), since libintl uses
 # replacement functions defined in libcoreutils.a.
-LDADD = ../lib/libcoreutils.a $(LIBINTL) ../lib/libcoreutils.a
+LDADD = libver.a ../lib/libcoreutils.a $(LIBINTL) ../lib/libcoreutils.a
 
 cat_LDADD = $(LDADD)
 df_LDADD = $(LDADD)
@@ -435,8 +438,8 @@ sc_tight_scope: $(all_programs)
 	  { echo 'the above functions should have static scope' 1>&2;	\
 	    exit 1; } || : ;						\
 	( printf '^program_name$$\n';					\
-	  sed -n 's/^extern int \([^ ][^ ]*\);$$/^\1$$/p'		\
-	    $(noinst_HEADERS) ) > $$t;					\
+	  perl -ne '/^extern .*?\**(\w+);/ and print "^$$1\$$\n"'	\
+	    *.h ) > $$t;						\
 	nm -e *.$(OBJEXT)						\
 	    | sed -n 's/.* [BD] //p'					\
 	    | grep -Ev -f $$t &&					\

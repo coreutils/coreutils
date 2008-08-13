@@ -103,7 +103,7 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE_NAME, VERSION,
+  parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE_NAME, Version,
 		      usage, AUTHORS, (char const *) NULL);
   if (getopt_long (argc, argv, "+", NULL, NULL) != -1)
     usage (EXIT_FAILURE);

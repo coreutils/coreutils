@@ -104,7 +104,7 @@ main (int argc, char **argv)
   initialize_exit_failure (EXIT_FAILURE);
   atexit (close_stdout);
 
-  parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE_NAME, VERSION,
+  parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE_NAME, Version,
 		      usage, AUTHORS, (char const *) NULL);
 
   for (i = 1; i < argc; /* empty */)

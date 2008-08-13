@@ -1739,7 +1739,7 @@ main (int argc, char **argv)
 
   page_size = getpagesize ();
 
-  parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE, VERSION,
+  parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE, Version,
 		      usage, AUTHORS, (char const *) NULL);
   close_stdout_required = false;
 

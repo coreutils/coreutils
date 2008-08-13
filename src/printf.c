@@ -645,7 +645,7 @@ main (int argc, char **argv)
 
   posixly_correct = (getenv ("POSIXLY_CORRECT") != NULL);
 
-  parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE_NAME, VERSION,
+  parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE_NAME, Version,
 		      usage, AUTHORS, (char const *) NULL);
 
   /* The above handles --help and --version.

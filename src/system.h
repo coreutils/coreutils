@@ -115,6 +115,7 @@ you must include <sys/types.h> before including this file
 
 #include <stdbool.h>
 #include <stdlib.h>
+#include "version.h"
 
 /* Exit statuses for programs like 'env' that exec other programs.  */
 enum
@@ -466,7 +467,7 @@ enum
 
 #define case_GETOPT_VERSION_CHAR(Program_name, Authors)			\
   case GETOPT_VERSION_CHAR:						\
-    version_etc (stdout, Program_name, PACKAGE_NAME, VERSION, Authors,	\
+    version_etc (stdout, Program_name, PACKAGE_NAME, Version, Authors,	\
                  (char *) NULL);					\
     exit (EXIT_SUCCESS);						\
     break;

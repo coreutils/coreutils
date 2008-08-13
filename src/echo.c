@@ -122,7 +122,7 @@ main (int argc, char **argv)
   atexit (close_stdout);
 
   if (allow_options)
-    parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE_NAME, VERSION,
+    parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE_NAME, Version,
 			usage, AUTHORS, (char const *) NULL);
 
   --argc;
