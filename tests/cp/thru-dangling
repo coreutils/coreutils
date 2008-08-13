@@ -38,7 +38,7 @@ compare err exp-err || fail=1
 test -f no-such && fail=1
 
 # But you can set POSIXLY_CORRECT to get the historical behavior.
-POSIXLY_CORRECT=1 cp f dangle > out 2>&1 || fail=1
+env POSIXLY_CORRECT=1 cp f dangle > out 2>&1 || fail=1
 cat no-such >> out || fail=1
 
 compare out exp || fail=1
