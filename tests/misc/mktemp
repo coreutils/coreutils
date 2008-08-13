@@ -49,6 +49,7 @@ sub check_tmp($$)
 # Turn off localization of executable's output.
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
 my $prog = 'mktemp';
+my $bad_dir = 'no/such/dir';
 
 my @Tests =
     (
@@ -97,6 +98,12 @@ my @Tests =
       {POST => sub { my ($f) = @_; defined $f or return; chomp $f;
        check_tmp $f, 'F'; unlink $f; rmdir 'a' or die "rmdir a: $!\n" }}
      ],
+
+     ['pipe-bad-tmpdir',
+      {ENV => "TMPDIR=$bad_dir"},
+      {ERR_SUBST => "s,($bad_dir/)[^']+': .*,\$1...,"},
+      {ERR => "$prog: failed to create file via template `$bad_dir/...\n"},
+      {EXIT => 1}],
     );
 
 my $save_temps = $ENV{DEBUG};

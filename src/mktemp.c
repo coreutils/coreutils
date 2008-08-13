@@ -242,12 +242,16 @@ main (int argc, char **argv)
                    quote (template));
         }
 
-      dest_name = file_name_concat (dest_dir, template, NULL);
+      template = file_name_concat (dest_dir, template, NULL);
     }
   else
     {
-      dest_name = xstrdup (template);
+      template = xstrdup (template);
     }
+
+  /* Make a copy to be used in case of diagnostic, since failing
+     mkstemp may leave the buffer in an undefined state.  */
+  dest_name = xstrdup (template);
 
   if (create_directory)
     {
@@ -255,7 +259,7 @@ main (int argc, char **argv)
       if (err != 0)
         {
           error (0, errno, _("failed to create directory via template %s"),
-                 quote (dest_name));
+                 quote (template));
           status = EXIT_FAILURE;
         }
     }
@@ -265,7 +269,7 @@ main (int argc, char **argv)
       if (fd < 0 || (!dry_run && close (fd) != 0))
         {
           error (0, errno, _("failed to create file via template %s"),
-                 quote (dest_name));
+                 quote (template));
           status = EXIT_FAILURE;
         }
     }

@@ -22,6 +22,8 @@ my $prog = 'tac';
 # Turn off localization of executable's output.
 @ENV{qw(LANGUAGE LANG LC_ALL)} = ('C') x 3;
 
+my $bad_dir = 'no/such/dir';
+
 my @Tests =
 (
   ['segfault', '-r', {IN=>"a\n"}, {IN=>"b\n"}, {OUT=>"a\nb\n"}],
@@ -58,6 +60,13 @@ my @Tests =
   ['opt-br2', qw(-b -r -s '\._+'),
    {IN=>".__x.___y.____z._1._2.__3.___4"},
    {OUT=>".___4.__3._2._1.____z.___y.__x"}],
+
+  ['pipe-bad-tmpdir',
+   {ENV => "TMPDIR=$bad_dir"},
+   {IN_PIPE => "a\n"},
+   {ERR_SUBST => "s,`$bad_dir': .*,...,"},
+   {ERR => "$prog: cannot create temporary file in ...\n"},
+   {EXIT => 1}],
 );
 
 @Tests = triple_test \@Tests;

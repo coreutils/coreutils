@@ -741,7 +741,8 @@ create_temp_file (int *pfd)
   errno = saved_errno;
 
   if (fd < 0)
-    die (_("cannot create temporary file"), file);
+    error (SORT_FAILURE, errno, _("cannot create temporary file in %s"),
+	   quote (temp_dir));
 
   *pfd = fd;
   return node;

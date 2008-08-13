@@ -66,8 +66,9 @@ my @Tests =
      # this should fail since nmerge < # of input files, so
      # temp files are needed
      ['nmerge-no', "-m --batch-size=2 -T$badtmp", @inputs,
-        {ERR_SUBST=>"s|: $badtmp/sort.+||"},
-        {ERR=>"$prog: cannot create temporary file\n"}, {EXIT=>2}],
+        {ERR_SUBST=>"s|': .*|':|"},
+        {ERR=>"$prog: cannot create temporary file in `$badtmp':\n"},
+	{EXIT=>2}],
 
      # This used to fail because setting batch-size without also setting
      # buffer size would cause the buffer size to be set to the minimum.

@@ -454,7 +454,8 @@ copy_to_temp (FILE **g_tmp, char **g_tempfile, int input_fd, char const *file)
   fd = mkstemp (template);
   if (fd < 0)
     {
-      error (0, errno, _("cannot create temporary file %s"), quote (tempfile));
+      error (0, errno, _("cannot create temporary file in %s"),
+	     quote (tempdir));
       return false;
     }
 
