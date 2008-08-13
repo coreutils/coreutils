@@ -292,7 +292,8 @@ main (int argc, char **argv)
 #if HAVE_GMP
 	    mode = MP_ALWAYS;
 #else
-	    error (0, 0, _("arbitrary-precision support is not available"));
+	    error (EXPR_FAILURE, 0,
+		   _("arbitrary-precision support is not available"));
 #endif
 	    break;
 
