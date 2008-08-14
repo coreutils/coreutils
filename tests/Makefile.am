@@ -198,6 +198,7 @@ TESTS =						\
   misc/sort-files0-from				\
   misc/sort-merge				\
   misc/sort-rand				\
+  misc/sort-version				\
   misc/split-a					\
   misc/split-fail				\
   misc/split-l					\

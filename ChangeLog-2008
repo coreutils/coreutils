@@ -1,3 +1,10 @@
+2008-07-05  Bruce Korb  <bkorb@gnu.org>
+
+	* src/sort.c: implement version number sort
+	(compare_version): new procedure to do it.
+	* tests/misc/sort-version: new test file
+	* tests/Makefile.am: add it to the list
+
 2008-02-07  Jim Meyering  <meyering@redhat.com>
 
 	We *do* need two different version files.

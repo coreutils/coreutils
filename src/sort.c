@@ -178,6 +178,7 @@ struct keyfield
 				   Handle numbers in exponential notation. */
   bool month;			/* Flag for comparison by month name. */
   bool reverse;			/* Reverse the sense of comparison. */
+  bool version;			/* sort by version number */
   struct keyfield *next;	/* Next keyfield to try. */
 };
 
@@ -336,10 +337,11 @@ Ordering options:\n\
   -M, --month-sort            compare (unknown) < `JAN' < ... < `DEC'\n\
   -n, --numeric-sort          compare according to string numerical value\n\
   -R, --random-sort           sort by random hash of keys\n\
+  -V, --version-sort          sort by numeric version (see strverscmp(3C))\n\
       --random-source=FILE    get random bytes from FILE (default /dev/urandom)\n\
       --sort=WORD             sort according to WORD:\n\
                                 general-numeric -g, month -M, numeric -n,\n\
-                                random -R\n\
+                                random -R, version -V\n\
   -r, --reverse               reverse the result of comparisons\n\
 \n\
 "), stdout);
@@ -418,7 +420,7 @@ enum
   SORT_OPTION
 };
 
-static char const short_options[] = "-bcCdfgik:mMno:rRsS:t:T:uy:z";
+static char const short_options[] = "-bcCdfgik:mMno:rRsS:t:T:uVy:z";
 
 static struct option const long_options[] =
 {
@@ -434,6 +436,7 @@ static struct option const long_options[] =
   {"merge", no_argument, NULL, 'm'},
   {"month-sort", no_argument, NULL, 'M'},
   {"numeric-sort", no_argument, NULL, 'n'},
+  {"version-sort", no_argument, NULL, 'V'},
   {"random-sort", no_argument, NULL, 'R'},
   {"random-source", required_argument, NULL, RANDOM_SOURCE_OPTION},
   {"sort", required_argument, NULL, SORT_OPTION},
@@ -451,25 +454,43 @@ static struct option const long_options[] =
   {NULL, 0, NULL, 0},
 };
 
+#define CHECK_TABLE \
+  _ct_("quiet",          'C') \
+  _ct_("silent",         'C') \
+  _ct_("diagnose-first", 'c')
+
 static char const *const check_args[] =
 {
-  "quiet", "silent", "diagnose-first", NULL
+#define _ct_(_s, _c) _s,
+  CHECK_TABLE NULL
+#undef  _ct_
 };
 static char const check_types[] =
 {
-  'C', 'C', 'c'
+#define _ct_(_s, _c) _c,
+  CHECK_TABLE
+#undef  _ct_
 };
-ARGMATCH_VERIFY (check_args, check_types);
+
+#define SORT_TABLE \
+  _st_("general-numeric", 'g') \
+  _st_("month",           'M') \
+  _st_("numeric",         'n') \
+  _st_("random",          'R') \
+  _st_("version",         'V')
 
 static char const *const sort_args[] =
 {
-  "general-numeric", "month", "numeric", "random", NULL
+#define _st_(_s, _c) _s,
+  SORT_TABLE NULL
+#undef  _st_
 };
 static char const sort_types[] =
 {
-  'g', 'M', 'n', 'R'
+#define _st_(_s, _c) _c,
+  SORT_TABLE
+#undef  _st_
 };
-ARGMATCH_VERIFY (sort_args, sort_types);
 
 /* The set of signals that are caught.  */
 static sigset_t caught_signals;
@@ -1796,6 +1817,32 @@ compare_random (char *restrict texta, size_t lena,
   return diff;
 }
 
+/* Compare the keys TEXTA (of length LENA) and TEXTB (of length LENB)
+   using strverscmp.  */
+
+static int
+compare_version (char *restrict texta, size_t lena,
+                char *restrict textb, size_t lenb)
+{
+  int diff;
+
+  /*
+   *  It is necessary to save the character after the end of the field.
+   *  "strverscmp" works with NUL terminated strings.  Our blocks of
+   *  text are not necessarily terminated with a NUL byte.
+   */
+  char sv_a = texta[lena];
+  char sv_b = textb[lenb];
+
+  texta[lena] = textb[lenb] = '\0';
+  diff = strverscmp (texta, textb);
+
+  texta[lena] = sv_a;
+  textb[lenb] = sv_b;
+
+  return diff;
+}
+
 /* Compare two lines A and B trying every key in sequence until there
    are no more keys or a difference is found. */
 
@@ -1835,6 +1882,10 @@ keycompare (const struct line *a, const struct line *b)
 		  (texta, textb));
 	  *lima = savea, *limb = saveb;
 	}
+
+      else if (key->version)
+        diff = compare_version (texta, lena, textb, lenb);
+
       else if (key->month)
 	diff = getmonth (texta, lena) - getmonth (textb, lenb);
       /* Sorting like this may become slow, so in a simple locale the user
@@ -2691,10 +2742,11 @@ check_ordering_compatibility (void)
 
   for (key = keylist; key; key = key->next)
     if ((1 < (key->random + key->numeric + key->general_numeric + key->month
-	      + !!key->ignore))
+	      + key->version + !!key->ignore))
 	|| (key->random && key->translate))
       {
-	char opts[7];
+        /* The following is too big, but guaranteed to be "big enough". */
+	char opts[sizeof short_options];
 	char *p = opts;
 	if (key->ignore == nondictionary)
 	  *p++ = 'd';
@@ -2708,6 +2760,8 @@ check_ordering_compatibility (void)
 	  *p++ = 'M';
 	if (key->numeric)
 	  *p++ = 'n';
+	if (key->version)
+	  *p++ = 'V';
 	if (key->random)
 	  *p++ = 'R';
 	*p = '\0';
@@ -2808,6 +2862,9 @@ set_ordering (const char *s, struct keyfield *key, enum blanktype blanktype)
 	  break;
 	case 'r':
 	  key->reverse = true;
+	  break;
+	case 'V':
+	  key->version = true;
 	  break;
 	default:
 	  return (char *) s;
@@ -2936,7 +2993,7 @@ main (int argc, char **argv)
   gkey.sword = gkey.eword = SIZE_MAX;
   gkey.ignore = NULL;
   gkey.translate = NULL;
-  gkey.numeric = gkey.general_numeric = gkey.random = false;
+  gkey.numeric = gkey.general_numeric = gkey.random = gkey.version = false;
   gkey.month = gkey.reverse = false;
   gkey.skipsblanks = gkey.skipeblanks = false;
 
@@ -3020,6 +3077,7 @@ main (int argc, char **argv)
 	case 'n':
 	case 'r':
 	case 'R':
+	case 'V':
 	  {
 	    char str[2];
 	    str[0] = c;
@@ -3260,11 +3318,16 @@ main (int argc, char **argv)
   /* Inheritance of global options to individual keys. */
   for (key = keylist; key; key = key->next)
     {
-      if (! (key->ignore || key->translate
-             || (key->skipsblanks | key->reverse
-                 | key->skipeblanks | key->month | key->numeric
-                 | key->general_numeric
-                 | key->random)))
+      if (! (key->ignore
+	     || key->translate
+	     || (key->skipsblanks
+		 | key->reverse
+		 | key->skipeblanks
+		 | key->month
+		 | key->numeric
+		 | key->version
+		 | key->general_numeric
+		 | key->random)))
         {
           key->ignore = gkey.ignore;
           key->translate = gkey.translate;
@@ -3275,15 +3338,21 @@ main (int argc, char **argv)
           key->general_numeric = gkey.general_numeric;
           key->random = gkey.random;
           key->reverse = gkey.reverse;
+          key->version = gkey.version;
         }
 
       need_random |= key->random;
     }
 
-  if (!keylist && (gkey.ignore || gkey.translate
-		   || (gkey.skipsblanks | gkey.skipeblanks | gkey.month
-		       | gkey.numeric | gkey.general_numeric
-                       | gkey.random)))
+  if (!keylist && (gkey.ignore
+		   || gkey.translate
+		   || (gkey.skipsblanks
+		       | gkey.skipeblanks
+		       | gkey.month
+		       | gkey.numeric
+		       | gkey.general_numeric
+		       | gkey.random
+		       | gkey.version)))
     {
       insertkey (&gkey);
       need_random |= gkey.random;

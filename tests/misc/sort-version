@@ -1,0 +1,65 @@
+#!/usr/bin/echo do-not-run-this-directly.-Use-a-shell
+# -*- Mode: shell-script -*-
+
+if test "$VERBOSE" = yes; then
+  set -x
+  sort --version
+fi
+
+. $top_srcdir/tests/test-lib.sh
+
+s_file=sort-ver-src
+g_file=sort-ver-good
+r_file=sort-ver-res
+
+cat > $s_file <<- _EOF_
+	string start 5.0.0 end of str
+	string start 5.00.0 end of str
+	string start 5.1.0 end of str
+	string start 5.10.0 end of str
+	string start 5.2.0 end of str
+	string start 5.20.0 end of str
+	string start 5.3.0 end of str
+	string start 5.30.0 end of str
+	string start 5.4.0 end of str
+	string start 5.40.0 end of str
+	string start 5.5.0 end of str
+	string start 5.50.0 end of str
+	string start 5.6.0 end of str
+	string start 5.60.0 end of str
+	string start 5.7.0 end of str
+	string start 5.70.0 end of str
+	string start 5.8.0 end of str
+	string start 5.80.0 end of str
+	string start 5.9.0 end of str
+	string start 5.90.0 end of str
+	_EOF_
+
+
+cat > $g_file <<- _EOF_
+	string start 5.00.0 end of str
+	string start 5.0.0 end of str
+	string start 5.1.0 end of str
+	string start 5.2.0 end of str
+	string start 5.3.0 end of str
+	string start 5.4.0 end of str
+	string start 5.5.0 end of str
+	string start 5.6.0 end of str
+	string start 5.7.0 end of str
+	string start 5.8.0 end of str
+	string start 5.9.0 end of str
+	string start 5.10.0 end of str
+	string start 5.20.0 end of str
+	string start 5.30.0 end of str
+	string start 5.40.0 end of str
+	string start 5.50.0 end of str
+	string start 5.60.0 end of str
+	string start 5.70.0 end of str
+	string start 5.80.0 end of str
+	string start 5.90.0 end of str
+	_EOF_
+
+fail=0
+sort --sort=version -o $r_file $s_file
+compare $g_file $r_file >/dev/null 2>&1 || fail=1
+(exit $fail) ; exit $fail

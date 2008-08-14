@@ -3733,6 +3733,16 @@ Neither a leading @samp{+} nor exponential notation is recognized.
 To compare such strings numerically, use the
 @option{--general-numeric-sort} (@option{-g}) option.
 
+@item -V
+@itemx --version-sort
+@opindex -V
+@opindex --version-sort
+@cindex version number sort
+@vindex LC_NUMERIC
+Sort per @code{strverscmp(3)}.  This is a normal string comparison, except
+that embedded decimal numbers are sorted by numeric value
+(see @option{--numeric-sort} above).
+
 @item -r
 @itemx --reverse
 @opindex -r
