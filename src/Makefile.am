@@ -70,7 +70,7 @@ CLEANFILES = $(SCRIPTS) su
 AM_CPPFLAGS = -I$(top_srcdir)/lib
 
 noinst_LIBRARIES = libver.a
-libver_a_SOURCES = version.c version.h
+nodist_libver_a_SOURCES = version.c version.h
 
 # Sometimes, the expansion of $(LIBINTL) includes -lc which may
 # include modules defining variables like `optind', so libcoreutils.a
@@ -311,6 +311,22 @@ fs.h: stat.c extract-magic
 	@chmod a-w $@t
 	mv $@t $@
 
+BUILT_SOURCES += version.c
+version.c: Makefile
+	rm -f $@
+	printf '#include <config.h>\n' > $@t
+	printf 'char const *Version = "$(PACKAGE_VERSION)";\n' >> $@t
+	@chmod a-w $@t
+	mv $@t $@
+
+BUILT_SOURCES += version.h
+version.h: Makefile
+	rm -f $@
+	printf 'extern char const *Version;\n' > $@t
+	@chmod a-w $@t
+	mv $@t $@
+
+DISTCLEANFILES = version.c version.h
 MAINTAINERCLEANFILES = $(BUILT_SOURCES)
 
 # Sort in traditional ASCII order, regardless of the current locale;

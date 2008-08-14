@@ -67,5 +67,7 @@ po/POTFILES
 po/checksums
 po/coreutils.pot
 po/stamp-po
+src/version.c
+src/version.h
 stamp-h1
 tests/*/*.log
