@@ -39,8 +39,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   represents the maximum number of inputs that will be merged at once.
   When processing more than NMERGE inputs, sort uses temporary files.
 
-  sort accepts still another new option --version-sort, specifying that
-  ordering is to be based on strverscmp(3).
+  sort accepts a new option --version-sort (-V, --sort=version),
+  specifying that ordering is to be based on strverscmp(3).
 
 ** Bug fixes
 

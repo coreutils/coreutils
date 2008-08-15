@@ -1822,19 +1822,19 @@ compare_random (char *restrict texta, size_t lena,
 
 static int
 compare_version (char *restrict texta, size_t lena,
-                char *restrict textb, size_t lenb)
+		 char *restrict textb, size_t lenb)
 {
   int diff;
 
-  /*
-   *  It is necessary to save the character after the end of the field.
-   *  "strverscmp" works with NUL terminated strings.  Our blocks of
-   *  text are not necessarily terminated with a NUL byte.
-   */
+  /* It is necessary to save the character after the end of the field.
+     "strverscmp" works with NUL terminated strings.  Our blocks of
+     text are not necessarily terminated with a NUL byte. */
   char sv_a = texta[lena];
   char sv_b = textb[lenb];
 
-  texta[lena] = textb[lenb] = '\0';
+  texta[lena] = '\0';
+  textb[lenb] = '\0';
+
   diff = strverscmp (texta, textb);
 
   texta[lena] = sv_a;
@@ -1882,10 +1882,8 @@ keycompare (const struct line *a, const struct line *b)
 		  (texta, textb));
 	  *lima = savea, *limb = saveb;
 	}
-
       else if (key->version)
-        diff = compare_version (texta, lena, textb, lenb);
-
+	diff = compare_version (texta, lena, textb, lenb);
       else if (key->month)
 	diff = getmonth (texta, lena) - getmonth (textb, lenb);
       /* Sorting like this may become slow, so in a simple locale the user
@@ -2745,7 +2743,7 @@ check_ordering_compatibility (void)
 	      + key->version + !!key->ignore))
 	|| (key->random && key->translate))
       {
-        /* The following is too big, but guaranteed to be "big enough". */
+	/* The following is too big, but guaranteed to be "big enough". */
 	char opts[sizeof short_options];
 	char *p = opts;
 	if (key->ignore == nondictionary)

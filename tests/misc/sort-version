@@ -1,18 +1,29 @@
-#!/usr/bin/echo do-not-run-this-directly.-Use-a-shell
-# -*- Mode: shell-script -*-
+#!/bin/sh
+# exercise sort's --sort=version option
+
+# Copyright (C) 2008 Free Software Foundation, Inc.
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 if test "$VERBOSE" = yes; then
   set -x
   sort --version
 fi
 
-. $top_srcdir/tests/test-lib.sh
+. $srcdir/test-lib.sh
 
-s_file=sort-ver-src
-g_file=sort-ver-good
-r_file=sort-ver-res
-
-cat > $s_file <<- _EOF_
+cat > in <<- _EOF_
 	string start 5.0.0 end of str
 	string start 5.00.0 end of str
 	string start 5.1.0 end of str
@@ -35,8 +46,7 @@ cat > $s_file <<- _EOF_
 	string start 5.90.0 end of str
 	_EOF_
 
-
-cat > $g_file <<- _EOF_
+cat > exp <<- _EOF_
 	string start 5.00.0 end of str
 	string start 5.0.0 end of str
 	string start 5.1.0 end of str
@@ -60,6 +70,6 @@ cat > $g_file <<- _EOF_
 	_EOF_
 
 fail=0
-sort --sort=version -o $r_file $s_file
-compare $g_file $r_file >/dev/null 2>&1 || fail=1
-(exit $fail) ; exit $fail
+sort --sort=version -o out in || fail=1
+compare exp out || fail=1
+(exit $fail); exit $fail
