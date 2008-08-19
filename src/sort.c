@@ -362,7 +362,8 @@ Other options:\n\
                             NUL-terminated names in file F\n\
 "), stdout);
       fputs (_("\
-  -k, --key=POS1[,POS2]     start a key at POS1, end it at POS2 (origin 1)\n\
+  -k, --key=POS1[,POS2]     start a key at POS1 (origin 1), end it at POS2\n\
+                            (default end of line)\n\
   -m, --merge               merge already sorted files; do not sort\n\
 "), stdout);
       fputs (_("\
