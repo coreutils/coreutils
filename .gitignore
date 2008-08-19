@@ -44,6 +44,7 @@ coreutils-*.tar.lzma.sig
 gnulib-tests
 lib/.cvsignore
 lib/.gitignore
+lib/arpa
 lib/binary-io.h
 lib/charset.alias
 lib/configmake.h
@@ -52,6 +53,7 @@ lib/printf.c
 lib/progname.c
 lib/progname.h
 lib/selinux
+lib/uniwidth
 m4/.cvsignore
 m4/.gitignore
 po/*.gmo
