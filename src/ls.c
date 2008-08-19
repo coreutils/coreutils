@@ -105,7 +105,6 @@
 #include "same.h"
 #include "stat-time.h"
 #include "strftime.h"
-#include "strverscmp.h"
 #include "xstrtol.h"
 #include "areadlink.h"
 
