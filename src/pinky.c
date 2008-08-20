@@ -250,7 +250,8 @@ print_entry (const STRUCT_UTMP *utmp_ent)
       name[UT_USER_SIZE] = '\0';
       pw = getpwnam (name);
       if (pw == NULL)
-	printf (" %19s", "        ???");
+	/* TRANSLATORS: Real name is unknown; at most 19 characters. */
+	printf (" %19s", _("        ???"));
       else
 	{
 	  char *const comma = strchr (pw->pw_gecos, ',');
@@ -273,7 +274,8 @@ print_entry (const STRUCT_UTMP *utmp_ent)
       if (last_change)
 	printf (" %-6s", idle_string (last_change));
       else
-	printf (" %-6s", "???");
+	/* TRANSLATORS: Idle time is unknown; at most 5 characters. */
+	printf (" %-6s", _("?????"));
     }
 
   printf (" %s", time_string (utmp_ent));
@@ -328,6 +330,7 @@ print_long_entry (const char name[])
   printf (_("In real life: "));
   if (pw == NULL)
     {
+      /* TRANSLATORS: Real name is unknown; no hard limit. */
       printf (" %s", _("???\n"));
       return;
     }
