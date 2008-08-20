@@ -388,10 +388,10 @@ BYTES is hexadecimal with 0x or 0X prefix, and may have a multiplier suffix:\n\
 b 512, kB 1000, K 1024, MB 1000*1000, M 1024*1024,\n\
 GB 1000*1000*1000, G 1024*1024*1024, and so on for T, P, E, Z, Y.\n\
 Adding a z suffix to any type displays printable characters at the end of each\n\
-output line.  \
+output line.\n\
 "), stdout);
       fputs (_("\
---string without a number implies 3.  --width without a number\n\
+Option --string without a number implies 3; option --width without a number\n\
 implies 32.  By default, od uses -A o -t oS -w16.\n\
 "), stdout);
       emit_bug_reporting_address ();
