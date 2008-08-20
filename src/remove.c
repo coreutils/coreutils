@@ -1541,8 +1541,8 @@ rm_1 (Dirstack_state *ds, char const *filename,
   if (dot_or_dotdot (base))
     {
       error (0, 0, _(base == filename
-		     ? "cannot remove directory %s"
-		     : "cannot remove %s directory %s"),
+		     ? N_("cannot remove directory %s")
+		     : N_("cannot remove %s directory %s")),
 	     quote_n (0, base), quote_n (1, filename));
       return RM_ERROR;
     }

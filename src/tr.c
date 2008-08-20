@@ -1720,9 +1720,9 @@ main (int argc, char **argv)
 	  error (0, 0, _("missing operand after %s"), quote (argv[argc - 1]));
 	  fprintf (stderr, "%s\n",
 		   _(squeeze_repeats
-		     ? ("Two strings must be given when "
-			"both deleting and squeezing repeats.")
-		     : "Two strings must be given when translating."));
+		     ? N_("Two strings must be given when "
+			  "both deleting and squeezing repeats.")
+		     : N_("Two strings must be given when translating.")));
 	}
       usage (EXIT_FAILURE);
     }

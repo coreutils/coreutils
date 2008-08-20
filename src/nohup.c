@@ -162,8 +162,8 @@ main (int argc, char **argv)
       umask (umask_value);
       error (0, 0,
 	     _(ignoring_input
-	       ? "ignoring input and appending output to %s"
-	       : "appending output to %s"),
+	       ? N_("ignoring input and appending output to %s")
+	       : N_("appending output to %s")),
 	     quote (file));
       free (in_home);
     }
@@ -185,8 +185,8 @@ main (int argc, char **argv)
       if (!redirecting_stdout)
 	error (0, 0,
 	       _(ignoring_input
-		 ? "ignoring input and redirecting stderr to stdout"
-		 : "redirecting stderr to stdout"));
+		 ? N_("ignoring input and redirecting stderr to stdout")
+		 : N_("redirecting stderr to stdout")));
 
       if (dup2 (out_fd, STDERR_FILENO) < 0)
 	error (NOHUP_FAILURE, errno, _("failed to redirect standard error"));
