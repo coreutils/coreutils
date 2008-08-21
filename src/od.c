@@ -1894,13 +1894,13 @@ it must be one character from [doxn]"),
     }
 
 #ifdef DEBUG
-  printf (_("lcm=%d, width_per_block=%zu\n"), l_c_m, width_per_block);
+  printf ("lcm=%d, width_per_block=%zu\n", l_c_m, width_per_block);
   for (i = 0; i < n_specs; i++)
     {
       int fields_per_block = bytes_per_block / width_bytes[spec[i].size];
       assert (bytes_per_block % width_bytes[spec[i].size] == 0);
       assert (1 <= spec[i].pad_width / fields_per_block);
-      printf (_("%d: fmt=\"%s\" in_width=%d out_width=%d pad=%d\n"),
+      printf ("%d: fmt=\"%s\" in_width=%d out_width=%d pad=%d\n",
 	      i, spec[i].fmt_string, width_bytes[spec[i].size],
 	      spec[i].field_width, spec[i].pad_width);
     }
