@@ -2804,7 +2804,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
                     and trailer without -F)\n\
 "), stdout);
       fputs (_("\
-  -h HEADER, --header=HEADER\n\
+  -h, --header=HEADER\n\
                     use a centered HEADER instead of filename in page header,\n\
                     -h \"\" prints a blank line, don't use -h\"\"\n\
   -i[CHAR[WIDTH]], --output-tabs[=CHAR[WIDTH]]\n\
@@ -2813,7 +2813,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
                     alignment, --sep-string[=STRING] sets separators\n\
 "), stdout);
       fputs (_("\
-  -l PAGE_LENGTH, --length=PAGE_LENGTH\n\
+  -l, --length=PAGE_LENGTH\n\
                     set the page length to PAGE_LENGTH (66) lines\n\
                     (default number of lines of text 56, and with -F 63)\n\
   -m, --merge       print all files in parallel, one in each column,\n\
@@ -2823,12 +2823,12 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -n[SEP[DIGITS]], --number-lines[=SEP[DIGITS]]\n\
                     number lines, use DIGITS (5) digits, then SEP (TAB),\n\
                     default counting starts with 1st line of input file\n\
-  -N NUMBER, --first-line-number=NUMBER\n\
+  -N, --first-line-number=NUMBER\n\
                     start counting with NUMBER at 1st line of first\n\
                     page printed (see +FIRST_PAGE)\n\
 "), stdout);
       fputs (_("\
-  -o MARGIN, --indent=MARGIN\n\
+  -o, --indent=MARGIN\n\
                     offset each line with MARGIN (zero) spaces, do not\n\
                     affect -w or -W, MARGIN will be added to PAGE_WIDTH\n\
   -r, --no-file-warnings\n\
@@ -2843,8 +2843,6 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
   -SSTRING, --sep-string[=STRING]\n\
-"), stdout);
-      fputs (_("\
                     separate columns by STRING,\n\
                     without -S: Default separator <TAB> with -J and <space>\n\
                     otherwise (same as -S\" \"), no effect on column options\n\
@@ -2856,12 +2854,12 @@ Mandatory arguments to long options are mandatory for short options too.\n\
                     by form feeds set in input files\n\
   -v, --show-nonprinting\n\
                     use octal backslash notation\n\
-  -w PAGE_WIDTH, --width=PAGE_WIDTH\n\
+  -w, --width=PAGE_WIDTH\n\
                     set page width to PAGE_WIDTH (72) characters for\n\
                     multiple text-column output only, -s[char] turns off (72)\n\
 "), stdout);
       fputs (_("\
-  -W PAGE_WIDTH, --page-width=PAGE_WIDTH\n\
+  -W, --page-width=PAGE_WIDTH\n\
                     set page width to PAGE_WIDTH (72) characters always,\n\
                     truncate lines, except -J option is set, no interference\n\
                     with -S or -s\n\
