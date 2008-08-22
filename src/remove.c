@@ -918,12 +918,12 @@ prompt (int fd_cwd, Dirstack_state const *ds, char const *filename,
 	      return RM_ERROR;
 	    }
 
-	  /* TRANSLATORS: You may find it more convenient to translate
-	     the equivalent of _("%s: remove %s (write-protected) %s? ").
-	     It should avoid grammatical problems with the output
-	     of file_type.  */
 	  fprintf (stderr,
 		   (write_protected
+		    /* TRANSLATORS: You may find it more convenient to
+		       translate "%s: remove %s (write-protected) %s? "
+		       instead.  It should avoid grammatical problems
+		       with the output of file_type.  */
 		    ? _("%s: remove write-protected %s %s? ")
 		    : _("%s: remove %s %s? ")),
 		   program_name, file_type (sbuf), quoted_name);
