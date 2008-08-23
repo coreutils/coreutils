@@ -169,11 +169,11 @@ Remove the DIRECTORY(ies), if they are empty.\n\
 \n\
       --ignore-fail-on-non-empty\n\
                   ignore each failure that is solely because a directory\n\
-                  is non-empty\n\
+                    is non-empty\n\
 "), stdout);
       fputs (_("\
-  -p, --parents   Remove DIRECTORY and its ancestors.  E.g., `rmdir -p a/b/c' is\n\
-                  similar to `rmdir a/b/c a/b a'.\n\
+  -p, --parents   remove DIRECTORY and its ancestors; e.g., `rmdir -p a/b/c' is\n\
+                    similar to `rmdir a/b/c a/b a'\n\
   -v, --verbose   output a diagnostic for every directory processed\n\
 "), stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
