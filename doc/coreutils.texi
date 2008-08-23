@@ -3137,7 +3137,9 @@ prints both the byte counts and the word counts.
 
 With the @option{--max-line-length} option, @command{wc} prints the length
 of the longest line per file, and if there is more than one file it
-prints the maximum (not the sum) of those lengths.
+prints the maximum (not the sum) of those lengths.  The line lengths here
+are measured in screen columns, according to the current locale and
+assuming tab positions in every 8th column.
 
 The program accepts the following options.  Also see @ref{Common options}.
 
