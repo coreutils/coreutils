@@ -335,14 +335,18 @@ Ordering options:\n\
   -g, --general-numeric-sort  compare according to general numerical value\n\
   -i, --ignore-nonprinting    consider only printable characters\n\
   -M, --month-sort            compare (unknown) < `JAN' < ... < `DEC'\n\
+"), stdout);
+      fputs (_("\
   -n, --numeric-sort          compare according to string numerical value\n\
   -R, --random-sort           sort by random hash of keys\n\
-  -V, --version-sort          sort by numeric version (see strverscmp(3C))\n\
       --random-source=FILE    get random bytes from FILE (default /dev/urandom)\n\
+  -r, --reverse               reverse the result of comparisons\n\
+"), stdout);
+      fputs (_("\
       --sort=WORD             sort according to WORD:\n\
                                 general-numeric -g, month -M, numeric -n,\n\
                                 random -R, version -V\n\
-  -r, --reverse               reverse the result of comparisons\n\
+  -V, --version-sort          sort by numeric version (see strverscmp(3))\n\
 \n\
 "), stdout);
       fputs (_("\
