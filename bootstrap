@@ -383,9 +383,13 @@ cp_mark_as_generated()
 
     if test -z "$c1"; then
       cmp -s "$cp_src" "$cp_dst" || {
+	# Copy the file first to get proper permissions if it
+	# doesn't already exist.  Then overwrite the copy.
 	echo "$0: cp -f $cp_src $cp_dst" &&
 	rm -f "$cp_dst" &&
-	sed "s!$bt_regex/!!g" "$cp_src" > "$cp_dst"
+	cp "$cp_src" "$cp_dst-t" &&
+	sed "s!$bt_regex/!!g" "$cp_src" > "$cp_dst-t" &&
+	mv -f "$cp_dst-t" "$cp_dst"
       }
     else
       # Copy the file first to get proper permissions if it
@@ -609,8 +613,5 @@ fi
 m=gnulib-tests/gnulib.mk
 sed 's,\.\./\.\.,..,g' $m > $m-t
 mv -f $m-t $m
-
-# Make tests executable.
-chmod a+x gnulib-tests/test-*.sh
 
 echo "$0: done.  Now you can run './configure'."
