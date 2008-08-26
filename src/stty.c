@@ -551,7 +551,7 @@ Special characters:\n\
       fputs (_("\
 \n\
 Special settings:\n\
-  N             set the input and output speeds to N bauds\n\
+   N             set the input and output speeds to N bauds\n\
  * cols N        tell the kernel that the terminal has N columns\n\
  * columns N     same as cols N\n\
 "), stdout);
@@ -707,7 +707,7 @@ Combination settings:\n\
                  -onocr -onlret -ofill -ofdel nl0 cr0 tab0 bs0 vt0 ff0\n\
                  isig icanon iexten echo echoe echok -echonl -noflsh\n\
                  -xcase -tostop -echoprt echoctl echoke, all special\n\
-                 characters to their default values.\n\
+                 characters to their default values\n\
 "), stdout);
       fputs (_("\
 \n\
@@ -1043,7 +1043,7 @@ main (int argc, char **argv)
 #ifdef TESTING
 	      {
 		size_t i;
-		printf (_("new_mode: mode\n"));
+		printf ("new_mode: mode\n");
 		for (i = 0; i < sizeof (new_mode); i++)
 		  printf ("0x%02x: 0x%02x\n",
 			  *(((unsigned char *) &new_mode) + i),
