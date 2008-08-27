@@ -225,10 +225,6 @@ With no FILE, or when FILE is -, read standard input.\n\
 Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
      fputs (_("\
-      --retry              keep trying to open a file even if it is\n\
-                           inaccessible when tail starts or if it becomes\n\
-                           inaccessible later; useful when following by name,\n\
-                           i.e., with --follow=name\n\
   -c, --bytes=N            output the last N bytes; alternatively, use +N to\n\
                            output bytes starting with the Nth of each file\n\
 "), stdout);
@@ -254,8 +250,13 @@ Mandatory arguments to long options are mandatory for short options too.\n\
      fputs (_("\
       --pid=PID            with -f, terminate after process ID, PID dies\n\
   -q, --quiet, --silent    never output headers giving file names\n\
+      --retry              keep trying to open a file even when it is or\n\
+                             becomes inaccessible; useful when following by\n\
+                             name, i.e., with --follow=name\n\
+"), stdout);
+     fputs (_("\
   -s, --sleep-interval=S   with -f, sleep for approximately S seconds\n\
-                           (default 1.0) between iterations.\n\
+                             (default 1.0) between iterations\n\
   -v, --verbose            always output headers giving file names\n\
 "), stdout);
      fputs (HELP_OPTION_DESCRIPTION, stdout);
