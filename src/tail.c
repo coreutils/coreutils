@@ -297,7 +297,7 @@ valid_file_spec (struct File_spec const *f)
 static char const *
 pretty_name (struct File_spec const *f)
 {
-  return (STREQ (f->name, "-") ? "standard input" : f->name);
+  return (STREQ (f->name, "-") ? _("standard input") : f->name);
 }
 
 static void
