@@ -630,6 +630,9 @@ usage (int status)
     {
       printf (_("Usage: %s [OPTION]... [ FILE | ARG1 ARG2 ]\n"), program_name);
       fputs (_("\
+Print information about users who are currently logged in.\n\
+"), stdout);
+      fputs (_("\
 \n\
   -a, --all         same as -b -d --login -p -r -t -T -u\n\
   -b, --boot        time of last system boot\n\
