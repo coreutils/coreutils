@@ -130,17 +130,21 @@ print_uptime (size_t n, const STRUCT_UTMP *this)
   /* procps' version of uptime also prints the seconds field, but
      previous versions of coreutils don't. */
   if (tmn)
-    fprintftime (stdout, _(" %H:%M%P  up "), tmn, 0, 0);
+    /* TRANSLATORS: This prints the current clock time. */
+    fprintftime (stdout, _(" %H:%M%P  "), tmn, 0, 0);
   else
-    printf (_(" ??:????  up "));
+    printf (_(" ??:????  "));
   if (uptime == (time_t) -1)
-    printf (_("???? days ??:??,  "));
+    printf (_("up ???? days ??:??,  "));
   else
     {
       if (0 < updays)
-	printf (ngettext ("%ld day", "%ld days", select_plural (updays)),
-		updays);
-      printf (" %2d:%02d,  ", uphours, upmins);
+	printf (ngettext ("up %ld day %2d:%02d,  ",
+			  "up %ld days %2d:%02d,  ",
+			  select_plural (updays)),
+		updays, uphours, upmins);
+      else
+	printf ("up  %2d:%02d,  ", uphours, upmins);
     }
   printf (ngettext ("%lu user", "%lu users", entries),
 	  (unsigned long int) entries);
