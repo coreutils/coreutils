@@ -5,6 +5,12 @@ longer pertinent, please search the mailing list and post your intent
 before embarking on a big project.
 
 ==================================================
+Modify chmod so that it does not change an inode's st_ctime
+  when the selected operation would have no other effect.
+  First suggested by Hans Ecke <http://hans.ecke.ws> in
+    http://thread.gmane.org/gmane.comp.gnu.coreutils.bugs/2920
+  Discussed more recently on <http://bugs.debian.org/497514>.
+
 document the following in coreutils.texi:
   runcon
   chcon
