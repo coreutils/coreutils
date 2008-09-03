@@ -108,6 +108,12 @@ static struct mount_entry *mount_list;
 /* If true, print file system type as well.  */
 static bool print_type;
 
+/* If true, print a grand total at the end.  */
+static bool print_grand_total;
+
+/* Grand total data. */
+static struct fs_usage grand_fsu;
+
 /* For long options that have no equivalent short option, use a
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
@@ -129,6 +135,7 @@ static struct option const long_options[] =
   {"print-type", no_argument, NULL, 'T'},
   {"sync", no_argument, NULL, SYNC_OPTION},
   {"no-sync", no_argument, NULL, NO_SYNC_OPTION},
+  {"total", no_argument, NULL, 'c'},
   {"type", required_argument, NULL, 't'},
   {"exclude-type", required_argument, NULL, 'x'},
   {GETOPT_HELP_OPTION_DECL},
@@ -247,6 +254,41 @@ df_readable (bool negative, uintmax_t n, char *buf,
     }
 }
 
+/* Logical equivalence */
+#define LOG_EQ(a, b) (!(a) == !(b))
+
+/* Add integral value while using uintmax_t for value part and separate
+   negation flag. It adds value of SRC and SRC_NEG to DEST and DEST_NEG.
+   The result will be in DEST and DEST_NEG.  See df_readable to understand
+   how the negation flag is used.  */
+static void
+add_uint_with_neg_flag (uintmax_t *dest, bool *dest_neg,
+			uintmax_t src, bool src_neg)
+{
+  if (LOG_EQ (*dest_neg, src_neg))
+    {
+      *dest += src;
+      return;
+    }
+
+  if (*dest_neg)
+    *dest = -*dest;
+
+  if (src_neg)
+    src = -src;
+
+  if (src < *dest)
+    *dest -= src;
+  else
+    {
+      *dest = src - *dest;
+      *dest_neg = src_neg;
+    }
+
+  if (*dest_neg)
+    *dest = -*dest;
+}
+
 /* Display a space listing for the disk device with absolute file name DISK.
    If MOUNT_POINT is non-NULL, it is the name of the root of the
    file system on DISK.
@@ -263,7 +305,8 @@ df_readable (bool negative, uintmax_t n, char *buf,
 static void
 show_dev (char const *disk, char const *mount_point,
 	  char const *stat_file, char const *fstype,
-	  bool me_dummy, bool me_remote)
+	  bool me_dummy, bool me_remote,
+	  const struct fs_usage *force_fsu)
 {
   struct fs_usage fsu;
   char buf[3][LONGEST_HUMAN_READABLE + 2];
@@ -296,7 +339,9 @@ show_dev (char const *disk, char const *mount_point,
   if (!stat_file)
     stat_file = mount_point ? mount_point : disk;
 
-  if (get_fs_usage (stat_file, disk, &fsu))
+  if (force_fsu)
+    fsu = *force_fsu;
+  else if (get_fs_usage (stat_file, disk, &fsu))
     {
       error (0, errno, "%s", quote (stat_file));
       exit_status = EXIT_FAILURE;
@@ -347,6 +392,9 @@ show_dev (char const *disk, char const *mount_point,
       available = fsu.fsu_ffree;
       negate_available = false;
       available_to_root = available;
+
+      grand_fsu.fsu_files += total;
+      grand_fsu.fsu_ffree += available;
     }
   else
     {
@@ -373,6 +421,12 @@ show_dev (char const *disk, char const *mount_point,
       negate_available = (fsu.fsu_bavail_top_bit_set
 			  & (available != UINTMAX_MAX));
       available_to_root = fsu.fsu_bfree;
+
+      grand_fsu.fsu_blocks += input_units * total;
+      grand_fsu.fsu_bfree  += input_units * available_to_root;
+      add_uint_with_neg_flag (&grand_fsu.fsu_bavail,
+			      &grand_fsu.fsu_bavail_top_bit_set,
+			      input_units * available, negate_available);
     }
 
   used = UINTMAX_MAX;
@@ -550,7 +604,7 @@ show_disk (char const *disk)
     {
       show_dev (best_match->me_devname, best_match->me_mountdir, NULL,
 		best_match->me_type, best_match->me_dummy,
-		best_match->me_remote);
+		best_match->me_remote, NULL);
       return true;
     }
 
@@ -654,7 +708,8 @@ show_point (const char *point, const struct stat *statp)
 
   if (best_match)
     show_dev (best_match->me_devname, best_match->me_mountdir, point,
-	      best_match->me_type, best_match->me_dummy, best_match->me_remote);
+	      best_match->me_type, best_match->me_dummy, best_match->me_remote,
+	      NULL);
   else
     {
       /* We couldn't find the mount entry corresponding to POINT.  Go ahead and
@@ -665,7 +720,7 @@ show_point (const char *point, const struct stat *statp)
       char *mp = find_mount_point (point, statp);
       if (mp)
 	{
-	  show_dev (NULL, mp, NULL, NULL, false, false);
+	  show_dev (NULL, mp, NULL, NULL, false, false, NULL);
 	  free (mp);
 	}
     }
@@ -694,7 +749,7 @@ show_all_entries (void)
 
   for (me = mount_list; me; me = me->me_next)
     show_dev (me->me_devname, me->me_mountdir, NULL, me->me_type,
-	      me->me_dummy, me->me_remote);
+	      me->me_dummy, me->me_remote, NULL);
 }
 
 /* Add FSTYPE to the list of file system types to display. */
@@ -743,6 +798,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       fputs (_("\
   -a, --all             include dummy file systems\n\
   -B, --block-size=SIZE  use SIZE-byte blocks\n\
+      --total           produce a grand total\n\
   -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\n\
   -H, --si              likewise, but use powers of 1000 not 1024\n\
 "), stdout);
@@ -794,6 +850,8 @@ main (int argc, char **argv)
   file_systems_processed = false;
   posix_format = false;
   exit_status = EXIT_SUCCESS;
+  print_grand_total = false;
+  grand_fsu.fsu_blocksize = 1;
 
   for (;;)
     {
@@ -862,6 +920,10 @@ main (int argc, char **argv)
 	  break;
 	case 'x':
 	  add_excluded_fs_type (optarg);
+	  break;
+
+	case 'c':
+	  print_grand_total = true;
 	  break;
 
 	case_GETOPT_HELP_CHAR;
@@ -958,6 +1020,13 @@ main (int argc, char **argv)
     }
   else
     show_all_entries ();
+
+  if (print_grand_total)
+    {
+      if (inode_format)
+	grand_fsu.fsu_blocks = 1;
+      show_dev ("total", NULL, NULL, NULL, false, false, &grand_fsu);
+    }
 
   if (! file_systems_processed)
     error (EXIT_FAILURE, 0, _("no file systems processed"));

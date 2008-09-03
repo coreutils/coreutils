@@ -1,0 +1,42 @@
+#!/bin/sh
+# Ensure "df --total" produces /^total.../ line
+
+# Copyright (C) 2008 Free Software Foundation, Inc.
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  ls --version
+fi
+
+. $srcdir/test-lib.sh
+
+fail=0
+
+# Don't let a different umask perturb the results.
+umask 22
+
+RE_TOTAL='^total( +(-?[0-9]+|-)){3} +-?[0-9]+%$'
+
+df > tmp || fail=1
+$EGREP "$RE_TOTAL" tmp && fail=1
+
+df -i > tmp || fail=1
+$EGREP "$RE_TOTAL" tmp && fail=1
+
+df --total | $EGREP "$RE_TOTAL" || fail=1
+df -i --total | $EGREP "$RE_TOTAL" || fail=1
+
+(exit $fail); exit $fail

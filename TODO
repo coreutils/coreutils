@@ -72,8 +72,6 @@ Should printf '\0123' print "\n3"?
 
 printf: consider adapting builtins/printf.def from bash
 
-df: add `--total' option, suggested here http://bugs.debian.org/186007
-
 tail: don't use xlseek; it *exits*.
   Instead, maybe use a macro and return nonzero.
 

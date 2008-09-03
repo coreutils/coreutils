@@ -21,6 +21,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   With this new option, after a short read, dd repeatedly calls read,
   until it fills the incomplete block, reaches EOF, or encounters an error.
 
+  df accepts a new option --total, which produces a grand total of all
+  arguments after all arguments have been processed.
+
   If the GNU MP library is available at configure time, factor and
   expr support arbitrarily large numbers.  Pollard's rho algorithm is
   used to factor large numbers.

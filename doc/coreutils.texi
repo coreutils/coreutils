@@ -9692,6 +9692,13 @@ pseudo-file-systems, such as automounter entries.
 Scale sizes by @var{size} before printing them (@pxref{Block size}).
 For example, @option{-BG} prints sizes in units of 1,073,741,824 bytes.
 
+@itemx --total
+@opindex --total
+@cindex grand total of disk size, usage and available space
+Print a grand total of all arguments after all arguments have
+been processed.  This can be used to find out the total disk size, usage
+and available space of all listed devices.
+
 @optHumanReadable
 
 @item -H

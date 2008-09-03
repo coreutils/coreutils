@@ -79,6 +79,7 @@ TESTS_ENVIRONMENT =				\
   top_srcdir='$(top_srcdir)'			\
   CONFIG_HEADER='$(abs_top_builddir)/lib/config.h' \
   CU_TEST_NAME=`basename '$(abs_srcdir)'`,$$tst	\
+  AWK='$(AWK)'					\
   EGREP='$(EGREP)'				\
   EXEEXT='$(EXEEXT)'				\
   MAKE=$(MAKE)					\

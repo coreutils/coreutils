@@ -1,0 +1,78 @@
+#!/bin/sh
+# Ensure "df --total" computes well summary statistics
+
+# Copyright (C) 2008 Free Software Foundation, Inc.
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  ls --version
+fi
+
+. $srcdir/test-lib.sh
+
+fail=0
+
+# Don't let a different umask perturb the results.
+umask 22
+
+echo '
+BEGIN {
+  total     = 0
+  used      = 0
+  available = 0
+}
+{
+  if (NR==1 || $0==$1 || $0~/^total +(-?[0-9]+|-) +(-?[0-9]+|-) +(-?[0-9]+|-) +-?[0-9]+%$/)
+    next
+  if ($1~/^[0-9]/)
+    {
+      total     += $1
+      used      += $2
+      available += $3
+    }
+  else
+    {
+      total     += $2
+      used      += $3
+      available += $4
+    }
+}
+END {
+  print total
+  print used
+  print available
+}
+' > compute_sum.awk || fail=1
+
+echo '
+/^total +(-?[0-9]+|-) +(-?[0-9]+|-) +(-?[0-9]+|-) +-?[0-9]+%$/ {
+  print $2;
+  print $3;
+  print $4
+}
+' > parse_total.awk || fail=1
+
+df --total > tmp || fail=1
+$AWK -f compute_sum.awk tmp > out1 || fail=1
+$AWK -f parse_total.awk tmp > out2 || fail=1
+compare out1 out2 || fail=1
+
+df -i --total > tmp || fail=1
+$AWK -f compute_sum.awk tmp > out1 || fail=1
+$AWK -f parse_total.awk tmp > out2 || fail=1
+compare out1 out2 || fail=1
+
+(exit $fail); exit $fail
