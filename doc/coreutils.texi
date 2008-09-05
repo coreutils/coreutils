@@ -7923,6 +7923,11 @@ to when they were last installed.
 @cindex stripping symbol table information
 Strip the symbol tables from installed binary executables.
 
+@itemx --strip-program=@var{program}
+@opindex --strip-program
+@cindex symbol table information, stripping, program
+Program used to strip binaries.
+
 @optBackupSuffix
 
 @optTargetDirectory

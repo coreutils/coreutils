@@ -42,9 +42,6 @@ renice: POSIX utility, needs implementing.
   suggestion from Karl Berry (among others).
   Bob Proulx is working on this.
 
-install: add an option to specify the program used to strip binaries.
-  suggestion from Karl Berry
-
 doc/coreutils.texi:
   Address this comment: FIXME: mv's behavior in this case is system-dependent
   Better still: fix the code so it's *not* system-dependent.

@@ -28,6 +28,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   expr support arbitrarily large numbers.  Pollard's rho algorithm is
   used to factor large numbers.
 
+  install accepts a new option --strip-program to specify the program used to
+  strip binaries.
+
   ls now colorizes files with capabilities if libcap is available
 
   md5sum now accepts the new option, --quiet, to suppress the printing of

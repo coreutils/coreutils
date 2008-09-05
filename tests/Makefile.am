@@ -311,6 +311,7 @@ TESTS =						\
   install/basic-1				\
   install/create-leading			\
   install/d-slashdot				\
+  install/strip-program				\
   install/trap					\
   ln/backup-1					\
   ln/hard-backup				\

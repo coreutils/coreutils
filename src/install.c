@@ -131,11 +131,15 @@ static bool strip_files;
 /* If true, install a directory instead of a regular file. */
 static bool dir_arg;
 
+/* Program used to strip binaries, "strip" is default */
+static char *strip_program = "strip";
+
 /* For long options that have no equivalent short option, use a
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
 {
-  PRESERVE_CONTEXT_OPTION = CHAR_MAX + 1
+  PRESERVE_CONTEXT_OPTION = CHAR_MAX + 1,
+  STRIP_PROGRAM_OPTION
 };
 
 static struct option const long_options[] =
@@ -154,6 +158,7 @@ static struct option const long_options[] =
      a year or two later.  */
   {"preserve_context", no_argument, NULL, PRESERVE_CONTEXT_OPTION},
   {"strip", no_argument, NULL, 's'},
+  {"strip-program", required_argument, NULL, STRIP_PROGRAM_OPTION},
   {"suffix", required_argument, NULL, 'S'},
   {"target-directory", required_argument, NULL, 't'},
   {"verbose", no_argument, NULL, 'v'},
@@ -330,6 +335,7 @@ main (int argc, char **argv)
   bool no_target_directory = false;
   int n_files;
   char **file;
+  bool strip_program_specified = false;
   security_context_t scontext = NULL;
   /* set iff kernel has extra selinux system calls */
   selinux_enabled = (0 < is_selinux_enabled ());
@@ -372,6 +378,10 @@ main (int argc, char **argv)
 	  /* System V fork+wait does not work if SIGCHLD is ignored.  */
 	  signal (SIGCHLD, SIG_DFL);
 #endif
+	  break;
+	case STRIP_PROGRAM_OPTION:
+	  strip_program = xstrdup (optarg);
+	  strip_program_specified = true;
 	  break;
 	case 'd':
 	  dir_arg = true;
@@ -513,6 +523,10 @@ main (int argc, char **argv)
       dir_mode = mode_adjust (0, true, 0, change, &dir_mode_bits);
       free (change);
     }
+
+  if (strip_program_specified && !strip_files)
+    error (0, 0, _("WARNING: ignoring --strip-program option as -s option was "
+		   "not specified"));
 
   get_ids ();
 
@@ -708,8 +722,8 @@ strip (char const *name)
       error (EXIT_FAILURE, errno, _("fork system call failed"));
       break;
     case 0:			/* Child. */
-      execlp ("strip", "strip", name, NULL);
-      error (EXIT_FAILURE, errno, _("cannot run strip"));
+      execlp (strip_program, strip_program, name, NULL);
+      error (EXIT_FAILURE, errno, _("cannot run %s"), strip_program);
       break;
     default:			/* Parent. */
       if (waitpid (pid, &status, 0) < 0)
@@ -828,6 +842,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -p, --preserve-timestamps   apply access/modification times of SOURCE files\n\
                         to corresponding destination files\n\
   -s, --strip         strip symbol tables\n\
+      --strip-program=PROGRAM  program used to strip binaries\n\
   -S, --suffix=SUFFIX  override the usual backup suffix\n\
   -t, --target-directory=DIRECTORY  copy all SOURCE arguments into DIRECTORY\n\
   -T, --no-target-directory  treat DEST as a normal file\n\
