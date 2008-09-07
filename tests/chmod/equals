@@ -48,4 +48,4 @@ chmod a=,u=rwx,=u f || fail=1
 actual_perms=`ls -l f|cut -b-10`
 test "$actual_perms" = "-rwxr-x---" || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

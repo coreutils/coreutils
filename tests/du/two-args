@@ -42,4 +42,4 @@ du $t/1 $t/2 > /dev/null || fail=1
 du . $t > /dev/null || fail=1
 du .. $t > /dev/null || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

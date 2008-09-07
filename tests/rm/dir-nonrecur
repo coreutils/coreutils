@@ -36,4 +36,4 @@ EOF
 # Before coreutils-5.93 this test would fail on Solaris 9 and newer.
 compare out exp || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

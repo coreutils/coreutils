@@ -75,4 +75,4 @@ compare out exp || fail=1
 
 test -d z && fail=1
 
-(exit $fail); exit $fail
+Exit $fail

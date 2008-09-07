@@ -140,4 +140,4 @@ for p in "" "$pwd/$tmp/"; do
   test -z "$v" || fail=1
 done
 
-(exit $fail); exit $fail
+Exit $fail

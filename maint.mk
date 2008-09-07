@@ -377,18 +377,18 @@ sc_program_name:
 	fi
 
 # Require that the final line of each test-lib.sh-using test be this one:
-# (exit $fail); exit $fail
+# Exit $fail
 # Note: this test requires GNU grep's --label= option.
 sc_require_test_exit_idiom:
 	@if test -f $(srcdir)/tests/test-lib.sh; then			\
 	  die=0;							\
 	  for i in $$(grep -l -F /../test-lib.sh $$($(VC_LIST) tests)); do \
-	    tail -n1 $$i | grep '^(exit \$$fail); exit \$$fail$$' > /dev/null \
+	    tail -n1 $$i | grep '^Exit \$$fail$$' > /dev/null \
 	      && : || { die=1; echo $$i; }				\
 	  done;								\
 	  test $$die = 1 &&						\
 	    { echo 1>&2 '$(ME): the final line in each of the above is not:'; \
-	      echo 1>&2 '(exit $$fail); exit $$fail';			\
+	      echo 1>&2 'Exit $$fail';			\
 	      exit 1; } || :;						\
 	fi
 

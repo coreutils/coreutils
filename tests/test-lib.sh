@@ -5,13 +5,13 @@ unset function_test
 eval 'function_test() { return 11; }; function_test'
 if test $? != 11; then
   echo "$0: /bin/sh lacks support for functions; skipping this test." 1>&2
-  (exit 77); exit 77
+  Exit 77
 fi
 
 skip_test_()
 {
   echo "$0: skipping test: $@" 1>&2
-  (exit 77); exit 77
+  Exit 77
 }
 
 require_acl_()
@@ -184,7 +184,7 @@ require_root_()
 }
 
 skip_if_root_() { uid_is_privileged_ && skip_test_ "must be run as non-root"; }
-error_() { echo "$0: $@" 1>&2; (exit 1); exit 1; }
+error_() { echo "$0: $@" 1>&2; Exit 1; }
 framework_failure() { error_ 'failure in testing framework'; }
 
 # Set `groups' to a space-separated list of at least two groups
@@ -271,6 +271,18 @@ working_umask_or_skip_()
   esac
 }
 
+# We use a trap below for cleanup.  This requires us to go through
+# hoops to get the right exit status transported through the signal.
+# So use `Exit STATUS' instead of `exit STATUS' inside of the tests.
+# Turn off errexit here so that we don't trip the bug with OSF1/Tru64
+# sh inside this function.
+Exit ()
+{
+  set +e
+  (exit $1)
+  exit $1
+}
+
 test_dir_=$(pwd)
 
 this_test_() { echo "./$0" | sed 's,.*/,,'; }
@@ -294,7 +306,7 @@ remove_tmp_()
 # Run each test from within a temporary sub-directory named after the
 # test itself, and arrange to remove it upon exception or normal exit.
 trap remove_tmp_ 0
-trap '(exit $?); exit $?' 1 2 13 15
+trap 'Exit $?' 1 2 13 15
 
 cd "$t_" || error_ "failed to cd to $t_"
 

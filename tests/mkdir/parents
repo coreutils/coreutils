@@ -53,4 +53,4 @@ p=`ls -ld a/b/c|cut -b-10`; case $p in drwx------);; *) fail=1;; esac
 # `d's perms are determined by the -m argument.
 p=`ls -ld a/b/c/d|cut -b-10`; case $p in $d_mode_str);; *) fail=1;; esac
 
-(exit $fail); exit $fail
+Exit $fail

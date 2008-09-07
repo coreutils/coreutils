@@ -41,4 +41,4 @@ timeout 1 false && fail=1
 timeout 1 sleep 2
 test $? = 124 || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

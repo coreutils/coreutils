@@ -59,4 +59,4 @@ du -a $symlinks > out || fail=1
 # Require that at least one of these symlinks has a non-zero size.
 grep '^[1-9]' out > /dev/null || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

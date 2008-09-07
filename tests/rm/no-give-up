@@ -43,4 +43,4 @@ test -d d || fail=1
 # f must have been removed.
 test -f d/f && fail=1
 
-(exit $fail); exit $fail
+Exit $fail

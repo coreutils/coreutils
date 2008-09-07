@@ -57,4 +57,4 @@ test -d a/3 && fail=1
 chmod u+x b
 test -d b/3 || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

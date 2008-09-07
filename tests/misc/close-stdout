@@ -59,4 +59,4 @@ if test -w /dev/full && test -c /dev/full; then
   cp --verbose a b >/dev/full 2>/dev/null && fail=1
 fi
 
-(exit $fail); exit $fail
+Exit $fail

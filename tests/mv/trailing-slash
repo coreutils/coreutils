@@ -55,4 +55,4 @@ done
 #touch a a2
 #mv a a2/ && fail=1
 
-(exit $fail); exit $fail
+Exit $fail

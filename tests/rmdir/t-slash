@@ -31,4 +31,4 @@ fail=0
 # rmdir: `dir': No such file or directory
 rmdir -p dir/ || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

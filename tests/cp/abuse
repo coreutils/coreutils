@@ -52,4 +52,4 @@ for i in dangling-dest existing-dest; do
     && case $(cat t) in i);; *) fail=1;; esac
 done
 
-(exit $fail); exit $fail
+Exit $fail

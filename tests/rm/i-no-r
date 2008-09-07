@@ -36,4 +36,4 @@ rm -i dir < y > /dev/null 2>&1 && fail=1
 # The directory must remain.
 test -d dir || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

@@ -85,4 +85,4 @@ for p in empty -p; do
   done
 done
 
-(exit $fail); exit $fail
+Exit $fail

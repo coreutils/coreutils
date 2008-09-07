@@ -35,4 +35,4 @@ g_init=`stat --printf=%g f`
 chgrp -R $g2 d || fail=1
 test `stat --printf=%g f` = $g_init || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

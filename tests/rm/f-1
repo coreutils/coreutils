@@ -30,4 +30,4 @@ mkdir -p d || framework_failure
 fail=0
 rm -f d/no-such-file || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

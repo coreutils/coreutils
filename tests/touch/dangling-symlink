@@ -51,4 +51,4 @@ when operating on dangling symlinks.
   esac
 fi
 
-(exit $fail); exit $fail
+Exit $fail

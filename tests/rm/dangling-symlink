@@ -44,4 +44,4 @@ ls -l symlink > /dev/null 2>&1 && fail=1
 
 kill $pid > /dev/null 2>&1
 
-(exit $fail); exit $fail
+Exit $fail

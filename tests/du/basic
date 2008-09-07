@@ -91,4 +91,4 @@ EOF
   compare out exp || fail=1
 fi
 
-(exit $fail); exit $fail
+Exit $fail

@@ -48,4 +48,4 @@ fi
 # Compare expected and actual output.
 cmp t/E t/O || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

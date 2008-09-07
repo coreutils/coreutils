@@ -88,4 +88,4 @@ for case in $cases; do
   esac
 done
 
-(exit $fail); exit $fail
+Exit $fail

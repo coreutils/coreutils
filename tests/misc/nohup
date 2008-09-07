@@ -105,4 +105,4 @@ EOF
 nohup >/dev/null 2>&1
 test $? = 127 || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

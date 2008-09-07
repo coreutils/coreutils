@@ -40,4 +40,4 @@ LS_COLORS="ca=$code" \
 printf "\033[0m\033[${code}mtest\033[0m\n\033[m" > out_ok || fail=1
 compare out out_ok || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

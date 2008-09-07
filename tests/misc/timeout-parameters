@@ -49,4 +49,4 @@ timeout 1 . && fail=1
 # non existant command
 timeout 1 ... && fail=1
 
-(exit $fail); exit $fail
+Exit $fail

@@ -69,4 +69,4 @@ mv dir2 $other_partition_tmpdir || fail=1
 acl2=`cd $other_partition_tmpdir && getfacl dir2` || framework_failure
 test "$acl1" = "$acl2" || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

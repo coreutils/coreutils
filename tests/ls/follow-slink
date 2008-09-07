@@ -63,4 +63,4 @@ EOF
 compare out-L exp-L || fail=1
 compare out-FLR-sub exp-FLR-sub || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

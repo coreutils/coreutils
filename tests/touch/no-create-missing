@@ -41,4 +41,4 @@ if "$test" -w /dev/stdout >/dev/null &&
   touch -ca - >&- 2> /dev/null || fail=1
 fi
 
-(exit $fail); exit $fail
+Exit $fail

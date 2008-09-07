@@ -37,4 +37,4 @@ cp -R fifo e || fail=1
 cp -Rf fifo e || fail=1
 test -p fifo || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

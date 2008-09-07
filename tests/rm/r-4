@@ -38,4 +38,4 @@ rm -fr d/../ 2>/dev/null && fail=1
 
 test -f d/a || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

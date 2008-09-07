@@ -36,4 +36,4 @@ for n in 0 $nums; do
 	done
 done
 
-(exit $fail); exit $fail
+Exit $fail

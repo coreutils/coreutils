@@ -52,4 +52,4 @@ else
     truncate -s+2147483647 non-empty-file && fail=1
 fi
 
-(exit $fail); exit $fail
+Exit $fail

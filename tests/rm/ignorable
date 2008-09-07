@@ -32,4 +32,4 @@ fail=0
 # Example from Andreas Schwab.
 rm -f existing-non-dir/f > out 2>&1 || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

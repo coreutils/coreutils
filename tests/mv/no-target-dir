@@ -51,4 +51,4 @@ mv -fT src d2 2> /dev/null && fail=1
 # rename must fail, since the src is not a directory.
 mv -fT f e2 2> /dev/null && fail=1
 
-(exit $fail); exit $fail
+Exit $fail

@@ -75,4 +75,4 @@ compare out2 exp || fail=1
 # cd $other_partition_tmpdir
 # ls -l -A -R $other_partition_tmpdir
 
-(exit $fail); exit $fail
+Exit $fail

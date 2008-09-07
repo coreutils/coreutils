@@ -42,4 +42,4 @@ pid=$!
 tail --pid=$pid -f f > /dev/null 2>&1 || fail=1
 chattr -a f 2>/dev/null
 
-(exit $fail); exit $fail
+Exit $fail

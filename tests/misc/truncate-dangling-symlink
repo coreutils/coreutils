@@ -30,4 +30,4 @@ truncate -s0 t-symlink || fail=1
 
 test -f truncate-target || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

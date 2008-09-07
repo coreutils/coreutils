@@ -38,4 +38,4 @@ fail=0
 # When the command completes, expect it to fail.
 shred -u $file > /dev/null 2>&1 && fail=1 || :
 
-(exit $fail); exit $fail
+Exit $fail

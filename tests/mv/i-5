@@ -31,4 +31,4 @@ fail=0
 # coreutils 6.2 mv would neglect to prompt in this case.
 echo n | mv -i a b 2>/dev/null || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

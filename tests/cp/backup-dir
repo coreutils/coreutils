@@ -34,4 +34,4 @@ cp -ab x y || fail=1
 test -d y/x || fail=1
 test -d y/x~ && fail=1
 
-(exit $fail); exit $fail
+Exit $fail

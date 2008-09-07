@@ -27,4 +27,4 @@ fail=0
 false --version > /dev/null && fail=1
 false --help > /dev/null && fail=1
 
-(exit $fail); exit $fail
+Exit $fail

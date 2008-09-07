@@ -39,4 +39,4 @@ $EGREP "$RE_TOTAL" tmp && fail=1
 df --total | $EGREP "$RE_TOTAL" || fail=1
 df -i --total | $EGREP "$RE_TOTAL" || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

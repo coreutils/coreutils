@@ -40,4 +40,4 @@ test -d inacc && fail=1
 rm -rf a || fail=1
 test -d a && fail=1
 
-(exit $fail); exit $fail
+Exit $fail

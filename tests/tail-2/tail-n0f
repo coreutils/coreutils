@@ -56,4 +56,4 @@ for file in empty nonempty; do
   done
 done
 
-(exit $fail); exit $fail
+Exit $fail

@@ -33,4 +33,4 @@ fail=0
 
 du a b > out || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

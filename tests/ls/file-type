@@ -67,4 +67,4 @@ compare out3 exp3 || fail=1
 ls --color=auto -F sub > out || fail=1
 compare out exp || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

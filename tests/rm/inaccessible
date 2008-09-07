@@ -57,4 +57,4 @@ sed 's/: The file access permissions.*/: Permission denied/'<out>o1;mv o1 out
 
 compare out exp || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

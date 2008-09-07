@@ -72,4 +72,4 @@ cat > exp <<- _EOF_
 fail=0
 sort --sort=version -o out in || fail=1
 compare exp out || fail=1
-(exit $fail); exit $fail
+Exit $fail

@@ -37,4 +37,4 @@ ginstall -D $file no-dir1/no-dir2/dest || fail=1
 test -d no-dir1/no-dir2 || fail=1
 test -r no-dir1/no-dir2/dest || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

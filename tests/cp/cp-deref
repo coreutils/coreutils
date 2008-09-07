@@ -36,4 +36,4 @@ cp -RL a b d || fail=1
 test -d a/c || fail=1
 test -d b/c || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

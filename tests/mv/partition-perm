@@ -39,4 +39,4 @@ test -f $other_partition_tmpdir/file || fail=1
 mode=`ls -l $other_partition_tmpdir/file|cut -b-10`
 test "$mode" = "-rwxrwxrwx" || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

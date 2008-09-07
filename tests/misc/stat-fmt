@@ -32,4 +32,4 @@ for i in `seq 50`; do
   test "$out" = "$fmt" || fail=1
 done
 
-(exit $fail); exit $fail
+Exit $fail

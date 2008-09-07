@@ -49,4 +49,4 @@ esac
 
 test $fail = 1 && cat err
 
-(exit $fail); exit $fail
+Exit $fail

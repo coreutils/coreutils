@@ -31,4 +31,4 @@ fail=0
 
 rm -r a b || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

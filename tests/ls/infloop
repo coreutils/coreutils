@@ -44,4 +44,4 @@ EOF
 # Make sure we don't get the "bad" output.
 compare out bad > /dev/null 2>&1 && fail=1
 
-(exit $fail); exit $fail
+Exit $fail

@@ -31,4 +31,4 @@ touch a b || framework_failure
 ln b b~ || fail=1
 ln -f --b=simple a b || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

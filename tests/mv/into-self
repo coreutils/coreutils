@@ -55,4 +55,4 @@ test -d $dir/$dir && fail=1
 # Make sure the file has been moved to the right place.
 test -f $dir/$file || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

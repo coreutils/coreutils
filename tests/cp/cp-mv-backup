@@ -94,4 +94,4 @@ sed 's/: x/:/' $expected-tmp |cat $expected-tmp - > $expected
 
 compare $expected $actual || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

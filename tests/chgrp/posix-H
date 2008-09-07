@@ -72,4 +72,4 @@ for i in $not_changed; do
   test $group = $g1 || fail=1
 done
 
-(exit $fail); exit $fail
+Exit $fail

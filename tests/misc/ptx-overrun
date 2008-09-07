@@ -37,4 +37,4 @@ ptx -S 'foo\'   $f < /dev/null >> out || fail=1
 ptx -W 'bar\\\' $f < /dev/null >> out || fail=1
 compare out empty || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

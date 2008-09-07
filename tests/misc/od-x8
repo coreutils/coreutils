@@ -45,4 +45,4 @@ od -An -t x1 in \
 
 compare out exp || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

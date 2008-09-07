@@ -28,4 +28,4 @@ touch file
 chmod 755 file
 (umask 77 && chmod -x file) 2>/dev/null && fail=1
 
-(exit $fail); exit $fail
+Exit $fail

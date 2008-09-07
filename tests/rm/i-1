@@ -44,4 +44,4 @@ test -f $t/a && fail=1
 
 rm -rf $t
 
-(exit $fail); exit $fail
+Exit $fail

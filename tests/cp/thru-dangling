@@ -43,4 +43,4 @@ cat no-such >> out || fail=1
 
 compare out exp || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

@@ -31,4 +31,4 @@ chmod 0-followed-by-anything . 2> /dev/null && fail=1
 chmod 7-followed-by-anything . 2> /dev/null && fail=1
 chmod 8                      . 2> /dev/null && fail=1
 
-(exit $fail); exit $fail
+Exit $fail

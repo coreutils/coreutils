@@ -54,4 +54,4 @@ mkdir -p mnt-ro/rw/sub || fail=1
 umount /tmp/2
 umount /tmp/1
 
-(exit $fail); exit $fail
+Exit $fail

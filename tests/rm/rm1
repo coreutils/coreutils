@@ -50,4 +50,4 @@ test -d b/a/p || fail=1
 test -d b/c && fail=1
 test -d b/d && fail=1
 
-(exit $fail); exit $fail
+Exit $fail

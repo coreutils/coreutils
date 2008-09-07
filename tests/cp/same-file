@@ -225,4 +225,4 @@ fail=0;
 
 compare $expected $actual 1>&2 || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

@@ -36,4 +36,4 @@ chmod g+x .
 
 setuidgid $NON_ROOT_USERNAME env PATH="$PATH" touch -d now root-owned || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

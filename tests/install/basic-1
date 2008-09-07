@@ -126,4 +126,4 @@ ginstall: creating directory `sub3/a/b/c'
 `file' -> `sub3/a/b/c/file'
 EOF
 
-(exit $fail); exit $fail
+Exit $fail

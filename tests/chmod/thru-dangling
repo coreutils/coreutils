@@ -33,4 +33,4 @@ chmod 644 dangle 2> out && fail=1
 echo "chmod: cannot operate on dangling symlink \`dangle'" > exp
 compare out exp || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

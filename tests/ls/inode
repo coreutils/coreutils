@@ -67,4 +67,4 @@ test $# = 4 || fail=1
 # With -H, they must be different from inside a directory.
 test "$1" != "$3" || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

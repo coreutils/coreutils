@@ -92,7 +92,7 @@ In the output below, the date of last access for \`a' should
 have been $u1.
 EOF
   ls --full -lu a
-  (exit 77); exit 77
+  Exit 77
   ;;
 esac
 
@@ -123,4 +123,4 @@ EOF
   fail=1
 fi
 
-(exit $fail); exit $fail
+Exit $fail

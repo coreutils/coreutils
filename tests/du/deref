@@ -34,4 +34,4 @@ fail=0
 # du: `b': No such file or directory
 du -sD slink b > /dev/null 2>&1 || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

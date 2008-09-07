@@ -68,4 +68,4 @@ chmod 0 . || framework_failure
 fail=0
 du -s "$cwd/$dir" > /dev/null || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

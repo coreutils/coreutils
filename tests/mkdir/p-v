@@ -34,4 +34,4 @@ mkdir: created directory `foo/a/b/c'
 mkdir: created directory `foo/a/b/c/d'
 EOF
 
-(exit $fail); exit $fail
+Exit $fail

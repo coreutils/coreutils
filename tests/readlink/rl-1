@@ -45,4 +45,4 @@ test -z "$v" || fail=1
 v=`readlink missing` && fail=1
 test -z "$v" || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

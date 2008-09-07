@@ -86,4 +86,4 @@ test `stat --format %i a/f` = `stat --format %i c/f` || fail=1
 # b/f and c/f must not be linked
 test `stat --format %i b/f` = `stat --format %i c/f` && fail=1
 
-(exit $fail); exit $fail
+Exit $fail

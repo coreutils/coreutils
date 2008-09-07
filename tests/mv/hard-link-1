@@ -42,4 +42,4 @@ a=`sed -n 's/ a$//p' out`
 b=`sed -n 's/ b$//p' out`
 test "$a" = "$b" || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

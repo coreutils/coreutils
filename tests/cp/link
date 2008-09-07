@@ -33,4 +33,4 @@ fail=0
 cp -f --link src dest || fail=1
 cp -f --symbolic-link src dest2 || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

@@ -34,4 +34,4 @@ id | grep context= >/dev/null || fail=1
 id -nu > /dev/null \
   && id $(id -nu) | grep context= >/dev/null && fail=1
 
-(exit $fail); exit $fail
+Exit $fail

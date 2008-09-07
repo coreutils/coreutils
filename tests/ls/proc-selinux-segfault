@@ -29,4 +29,4 @@ test -r $f || f=.
 fail=0
 ls -l $f > out || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

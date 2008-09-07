@@ -149,4 +149,4 @@ ln foo '' 2> /dev/null
 
 # ===================================================
 
-(exit $fail); exit $fail
+Exit $fail

@@ -38,4 +38,4 @@ cp --sparse=always sparse copy || fail=1
 # Ensure that the copy has the same block count as the original.
 test `stat --printf %b copy` -le `stat --printf %b sparse` || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

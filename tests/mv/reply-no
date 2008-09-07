@@ -39,4 +39,4 @@ EOF
 
 compare out exp_err || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

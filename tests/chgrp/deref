@@ -62,4 +62,4 @@ chgrp --dereference $g1 symlink
 set _ `ls -ln f`; g=$5; test "$g" = $g1 || fail=1
 set _ `ls -ln symlink`; g=$5; test "$g" = $g2 || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

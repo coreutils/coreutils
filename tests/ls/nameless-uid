@@ -41,4 +41,4 @@ fail=0
 set -- `ls -o f` || fail=1
 test $3 = $nameless_uid || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

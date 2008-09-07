@@ -35,4 +35,4 @@ cp -R dir file 2>/dev/null && fail=1
 # In 4.0.35, it was.
 test -f file || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

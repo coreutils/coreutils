@@ -24,4 +24,4 @@ chcon --reference=f 2> /dev/null && fail=1
 # No file
 chcon -u anyone 2> /dev/null && fail=1
 
-(exit $fail); exit $fail
+Exit $fail

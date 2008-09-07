@@ -43,4 +43,4 @@ rm -rf b  || fail=1
 
 test -d b && fail=1
 
-(exit $fail); exit $fail
+Exit $fail

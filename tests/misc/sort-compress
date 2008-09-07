@@ -73,4 +73,4 @@ rm -f dzip ok
 PATH=. "$SORT" -S 1k in > out || fail=1
 compare exp out || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

@@ -37,4 +37,4 @@ truncate --size="/0" file && fail=1
 # division by zero
 truncate --size="%0" file && fail=1
 
-(exit $fail); exit $fail
+Exit $fail

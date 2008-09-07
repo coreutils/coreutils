@@ -41,4 +41,4 @@ test -f $file || fail=1
 test -f $file_backup || fail=1
 compare $file $file_backup > /dev/null || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

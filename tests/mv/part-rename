@@ -33,4 +33,4 @@ fail=0
 
 mv foo/ $other_partition_tmpdir/bar || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

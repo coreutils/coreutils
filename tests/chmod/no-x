@@ -59,4 +59,4 @@ chmod a-x . b 2> /dev/null && fail=1
 # an abort (exit with status 134) on recent glibc-based systems.
 test $? = 1 || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

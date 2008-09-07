@@ -50,4 +50,4 @@ test -s out && fail=1
 # the directory must have been removed
 test -d x && fail=1
 
-(exit $fail); exit $fail
+Exit $fail

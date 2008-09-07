@@ -31,4 +31,4 @@ fail=0
 # with link being applied to the dangling symlink.
 cp --link --no-dereference dangling-slink d2 || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

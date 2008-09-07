@@ -50,4 +50,4 @@ chown --no-dereference --from=0:1 2:010 slink || fail=1
 # owner/group on the symlink should be changed
 set _ `ls -n slink`; shift; test "$3:$4" = 2:10 || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

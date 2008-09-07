@@ -65,4 +65,4 @@ for u in $id_u "$id_un" ''; do
   done
 done
 
-(exit $fail); exit $fail
+Exit $fail

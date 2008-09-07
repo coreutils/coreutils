@@ -100,4 +100,4 @@ fi
 
 stty `cat $saved_state`
 
-(exit $fail); exit $fail
+Exit $fail

@@ -52,4 +52,4 @@ if (locale --version) > /dev/null 2>&1; then
   compare in out1 || { fail=1; echo "not a permutation with LC_ALL=$locale" 1>&2; }
 fi
 
-(exit $fail); exit $fail
+Exit $fail

@@ -47,4 +47,4 @@ done
 # Compare expected and actual output.
 compare $test.E $test.O || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

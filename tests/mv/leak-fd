@@ -57,4 +57,4 @@ rm .dirs
 out=$(ls -A) || fail=1
 test -z "$out" || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

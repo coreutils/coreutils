@@ -50,4 +50,4 @@ fail=0
 rm -rf t || fail=1
 test -d t && fail=1
 
-(exit $fail); exit $fail
+Exit $fail

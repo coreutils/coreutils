@@ -41,7 +41,7 @@ expected_failure_status_vdir=2
 fail=0
 
 test "$built_programs" \
-  || { echo "$this_test: no programs built!?!" 1>&2; (exit $fail); exit $fail; }
+  || { echo "$this_test: no programs built!?!" 1>&2; Exit $fail; }
 
 for lang in C fr da; do
   for i in $built_programs; do
@@ -199,4 +199,4 @@ for i in $built_programs; do
   rm -rf $tmp_in $tmp_in2 $tmp_out $tmp_dir
 done
 
-(exit $fail); exit $fail
+Exit $fail

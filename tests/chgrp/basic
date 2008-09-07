@@ -112,4 +112,4 @@ test "`ls -C -c -t f g`" = 'f  g' || \
     esac
   }
 
-(exit $fail); exit $fail
+Exit $fail

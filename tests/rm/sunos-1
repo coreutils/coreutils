@@ -31,4 +31,4 @@ fi
 fail=0
 rm -r '' > /dev/null 2>&1 && fail=1
 
-(exit $fail); exit $fail
+Exit $fail

@@ -38,4 +38,4 @@ for opt in --exact --zero; do
   test -f c && fail=1
 done
 
-(exit $fail); exit $fail
+Exit $fail

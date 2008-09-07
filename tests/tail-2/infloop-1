@@ -36,4 +36,4 @@ sleep 1
 fail=0
 kill $tail_pid && fail=1 || :
 
-(exit $fail); exit $fail
+Exit $fail

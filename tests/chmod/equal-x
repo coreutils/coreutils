@@ -36,4 +36,4 @@ for mode in =x =xX =Xx =x,=X =X,=x; do
   esac
 done
 
-(exit $fail); exit $fail
+Exit $fail

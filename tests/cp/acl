@@ -60,4 +60,4 @@ cp -p a/file b/ || fail=1
 acl2=`cd b && getfacl file` || framework_failure
 test "$acl1" = "$acl2" || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

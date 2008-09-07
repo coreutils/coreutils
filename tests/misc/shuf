@@ -56,4 +56,4 @@ shuf --zero-terminated -i 1-1 > out || fail=1
 printf '1\0' > exp || framework_failure
 cmp out exp || { fail=1; echo "missing NUL terminator?" 1>&2; }
 
-(exit $fail); exit $fail
+Exit $fail

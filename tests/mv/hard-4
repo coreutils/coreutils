@@ -40,4 +40,4 @@ test -r a && fail=1
 test -r b || fail=1
 test -r b~ || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

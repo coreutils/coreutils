@@ -45,4 +45,4 @@ stty `echo $saved_state |sed 's/:[0-9a-f]*$/:'$hex_2_64/` 2>/dev/null && fail=1
 # the state of our tty), try to restore the initial state.
 stty $saved_state || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

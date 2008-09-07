@@ -40,4 +40,4 @@ pathchk -P '' > /dev/null 2>&1 && fail=1
 pathchk -P -- - > /dev/null 2>&1 && fail=1
 pathchk -p -P x/- > /dev/null 2>&1 && fail=1
 
-(exit $fail); exit $fail
+Exit $fail

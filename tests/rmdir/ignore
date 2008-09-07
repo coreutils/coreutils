@@ -34,4 +34,4 @@ test -d "$cwd/a/x" || fail=1
 test -d "$cwd/a/b" && fail=1
 test -d "$cwd/a/b/c" && fail=1
 
-(exit $fail); exit $fail
+Exit $fail

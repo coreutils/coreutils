@@ -32,4 +32,4 @@ mkdir d || framework_failure
 fail=0
 ln -s --target-dir=d ../f || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

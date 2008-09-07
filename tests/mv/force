@@ -43,4 +43,4 @@ test `cat $ff` = force-contents || fail=1
 # device and inodes are the same.
 mv $ff $ff2 || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

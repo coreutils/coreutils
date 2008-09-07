@@ -98,4 +98,4 @@ compare err_ok err || fail=1
 
 test $fail -eq 0 && fail=$warn
 
-(exit $fail); exit $fail
+Exit $fail

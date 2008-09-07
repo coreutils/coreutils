@@ -42,4 +42,4 @@ test -s exp && { rm -f exp; echo nonempty > exp; }
 
 compare out exp || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

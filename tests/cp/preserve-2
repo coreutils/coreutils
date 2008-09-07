@@ -29,4 +29,4 @@ fail=0
 
 cp --preserve=mode,links f g || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

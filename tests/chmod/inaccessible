@@ -30,4 +30,4 @@ fail=0
 
 chmod u+rwx d d/e || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

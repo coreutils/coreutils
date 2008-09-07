@@ -87,4 +87,4 @@ test "$mode" = "-rwx------" || fail=1
 umask 022
 # --------------------------------------
 
-(exit $fail); exit $fail
+Exit $fail

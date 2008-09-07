@@ -57,4 +57,4 @@ esac
 
 wait $cp_pid || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

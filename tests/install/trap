@@ -35,4 +35,4 @@ fail=0
   exec ginstall -s "$abs_top_builddir/src/ginstall$EXEEXT" .
 )
 
-(exit $fail); exit $fail
+Exit $fail

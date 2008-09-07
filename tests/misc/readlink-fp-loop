@@ -70,4 +70,4 @@ readlink -v -e loop 2> out && fail=1
 echo "readlink: loop: $symlink_loop_msg" > exp || framework_failure
 compare out exp || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

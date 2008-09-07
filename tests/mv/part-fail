@@ -56,4 +56,4 @@ else
 fi
 test $fail = 1 && diff out exp 2> /dev/null
 
-(exit $fail); exit $fail
+Exit $fail

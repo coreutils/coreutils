@@ -44,4 +44,4 @@ compare xab exp-2 || fail=1
 compare xac exp-3 || fail=1
 test -f xad && fail=1
 
-(exit $fail); exit $fail
+Exit $fail

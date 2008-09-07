@@ -52,4 +52,4 @@ b=`ls "$p/a" | tr -d '\n'`
 # With coreutils-5.3.0, this would fail with $b=bu.
 test "x$b" = xb || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

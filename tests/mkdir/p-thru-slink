@@ -29,4 +29,4 @@ fail=0
 mkdir -p slink/x || fail=1
 test -d x || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

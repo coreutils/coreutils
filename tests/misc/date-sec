@@ -51,4 +51,4 @@ case "$s" in
   *) fail=1;;
 esac
 
-(exit $fail); exit $fail
+Exit $fail

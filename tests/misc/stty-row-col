@@ -81,4 +81,4 @@ done
 set x $saved_size
 stty rows $2 columns $3 || exit 1
 
-(exit $fail); exit $fail
+Exit $fail

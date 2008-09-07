@@ -45,4 +45,4 @@ fail=0
 # With coreutils-5.0, this would fail due to a file descriptor leak.
 du $f > out || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

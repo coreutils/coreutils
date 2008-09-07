@@ -57,4 +57,4 @@ test -f g || fail=1
 test -f h || fail=1
 compare g h || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

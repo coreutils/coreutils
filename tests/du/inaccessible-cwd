@@ -37,4 +37,4 @@ fail=0
 
 du "$cwd/a" > /dev/null || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

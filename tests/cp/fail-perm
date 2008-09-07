@@ -61,4 +61,4 @@ compare out exp || fail=1
 
 chmod 700 D
 
-(exit $fail); exit $fail
+Exit $fail

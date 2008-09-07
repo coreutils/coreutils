@@ -82,4 +82,4 @@ if test $fail != 0; then
 EOF
 fi
 
-(exit $fail); exit $fail
+Exit $fail

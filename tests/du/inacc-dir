@@ -44,4 +44,4 @@ du -k a > out 2> /dev/null && fail=1
 
 compare out exp || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

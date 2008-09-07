@@ -45,4 +45,4 @@ test -d "$t/b" && fail=1
 test -d "$t/d" && fail=1
 test -d "$t/e" && fail=1
 
-(exit $fail); exit $fail
+Exit $fail

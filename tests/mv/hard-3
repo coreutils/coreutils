@@ -71,4 +71,4 @@ test "$ia" = "$ic" || fail=1
 ib=`ls -i x/b` || fail=1; set x $ib; ib=$2
 test "$ia" = "$ib" && fail=1
 
-(exit $fail); exit $fail
+Exit $fail

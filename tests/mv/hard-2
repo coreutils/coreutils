@@ -79,4 +79,4 @@ ic=`ls -i c|sed 's/ c//'`
 test $ia = $ib || fail=1
 test $ia = $ic || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

@@ -42,4 +42,4 @@ test "$*" = "x t1 t2" || fail=1
 # Also test the combination of --no-create and -a.
 touch -a --no-create t1 || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

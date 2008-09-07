@@ -53,4 +53,4 @@ for dir in a a/b a/b/d; do
   fail=1
 done
 
-(exit $fail); exit $fail
+Exit $fail

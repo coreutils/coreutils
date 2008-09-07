@@ -55,4 +55,4 @@ rm -r $t || fail=1
 # Make sure all of $t was deleted.
 test -d $t && fail=1
 
-(exit $fail); exit $fail
+Exit $fail

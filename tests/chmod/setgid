@@ -50,4 +50,4 @@ chmod 755 d
 
 case `ls -ld d` in drwxr-sr-x*);; *) fail=1;; esac
 
-(exit $fail); exit $fail
+Exit $fail

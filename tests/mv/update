@@ -57,4 +57,4 @@ cp --update new old || fail=1
 case "`cat old`" in new) ;; *) fail=1 ;; esac
 case "`cat new`" in new) ;; *) fail=1 ;; esac
 
-(exit $fail); exit $fail
+Exit $fail

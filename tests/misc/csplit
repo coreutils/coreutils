@@ -90,4 +90,4 @@ printf 'x%8199s\nx\n%8199s\nx\n' x x > in
 csplit in '/x\{1\}/' '{*}' > /dev/null || fail=1
 cat xx?? | compare - in || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

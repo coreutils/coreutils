@@ -144,4 +144,4 @@ for p in "" "$pwd/$tmp/"; do
 
 done
 
-(exit $fail); exit $fail
+Exit $fail

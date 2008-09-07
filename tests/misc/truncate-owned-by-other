@@ -37,4 +37,4 @@ chmod g+x .
 
 setuidgid $NON_ROOT_USERNAME env PATH="$PATH" truncate -s0 root-owned || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

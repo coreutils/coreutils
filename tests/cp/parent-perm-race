@@ -64,4 +64,4 @@ do
   wait $cp_pid || fail=1
 done
 
-(exit $fail); exit $fail
+Exit $fail

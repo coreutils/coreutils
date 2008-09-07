@@ -87,4 +87,4 @@ case $n_out:$diagnostic:$exit in
   *) fail=1;;
 esac
 
-(exit $fail); exit $fail
+Exit $fail

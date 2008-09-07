@@ -111,4 +111,4 @@ EOF
 compare out expout || fail=1
 compare err experr || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

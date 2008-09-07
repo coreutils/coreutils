@@ -55,4 +55,4 @@ set _ `ls -ln e/ee`; g=$5; test "$g" = $g2 || fail=1
 # But it *should* change d/dd.
 set _ `ls -ln d/dd`; g=$5; test "$g" = $g1 || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

@@ -204,4 +204,4 @@ EOF
 # Redirect to stderr, since stdout is already taken.
 compare $expected $actual 1>&2 || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

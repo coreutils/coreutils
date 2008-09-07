@@ -30,4 +30,4 @@ if test -r $ksyms; then
   tail $ksyms > /dev/null || fail=1
 fi
 
-(exit $fail); exit $fail
+Exit $fail

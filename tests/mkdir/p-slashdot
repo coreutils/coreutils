@@ -31,4 +31,4 @@ test -d d1 || fail=1
 mkdir -p d2/.. || fail=1
 test -d d2 || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

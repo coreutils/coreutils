@@ -36,4 +36,4 @@ mv s s 2> /dev/null && fail=1
 # Before 4.0.36, `s' would have been removed.
 test -f s || fail=1
 
-(exit $fail); exit $fail
+Exit $fail

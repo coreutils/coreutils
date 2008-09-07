@@ -64,4 +64,4 @@ while :; do
   test $dev_ino = $root_dev_ino && break
 done
 
-(exit $fail); exit $fail
+Exit $fail
