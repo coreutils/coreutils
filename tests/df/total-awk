@@ -65,12 +65,14 @@ echo '
 }
 ' > parse_total.awk || fail=1
 
-df --total > tmp || fail=1
+# Use --block-size=512 to keep df from printing rounded-to-kilobyte
+# numbers which wouldn't necessarily add up to the displayed total.
+df --block-size=512 --total |tee tmp || fail=1
 $AWK -f compute_sum.awk tmp > out1 || fail=1
 $AWK -f parse_total.awk tmp > out2 || fail=1
 compare out1 out2 || fail=1
 
-df -i --total > tmp || fail=1
+df -i --block-size=512 --total |tee tmp || fail=1
 $AWK -f compute_sum.awk tmp > out1 || fail=1
 $AWK -f parse_total.awk tmp > out2 || fail=1
 compare out1 out2 || fail=1
