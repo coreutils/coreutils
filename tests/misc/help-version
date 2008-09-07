@@ -163,7 +163,8 @@ df_args=/
 # This is necessary in the unusual event that getpwuid (getuid ()) fails.
 id_args=-u
 
-sleep 10m &
+# Use env to avoid invoking built-in sleep of Solaris 11's /bin/sh.
+env sleep 10m &
 kill_args=$!
 
 link_args="$tmp_in link-target"
