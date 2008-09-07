@@ -22,8 +22,8 @@ if test "$VERBOSE" = yes; then
   mv --version
 fi
 
-. $srcdir/input-tty
 . $srcdir/test-lib.sh
+require_controlling_input_terminal_
 skip_if_root_
 
 touch f g h i || framework_failure

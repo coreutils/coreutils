@@ -21,9 +21,8 @@ if test "$VERBOSE" = yes; then
   stty --version
 fi
 
-# Make sure there's a tty on stdin.
-. $srcdir/input-tty
 . $srcdir/test-lib.sh
+require_controlling_input_terminal_
 
 fail=0
 

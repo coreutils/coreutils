@@ -11,7 +11,6 @@ EXTRA_DIST =		\
   README		\
   check.mk		\
   envvar-check		\
-  input-tty		\
   lang-default		\
   other-fs-tmpdir	\
   require-perl		\
