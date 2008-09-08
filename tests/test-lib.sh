@@ -246,11 +246,11 @@ skip_if_mcstransd_is_running_()
   # When mcstransd is running, you'll see only the 3-component
   # version of file-system context strings.  Detect that,
   # and if it's running, skip this test.
-  local ctx=$(stat --printf='%C\n' .) || framework_failure
-  case $ctx in
+  __ctx=$(stat --printf='%C\n' .) || framework_failure
+  case $__ctx in
     *:*:*:*) ;; # four components is ok
     *) # anything else probably means mcstransd is running
-        skip_test_ "unexpected context '$ctx'; turn off mcstransd" ;;
+        skip_test_ "unexpected context '$__ctx'; turn off mcstransd" ;;
   esac
 }
 
@@ -298,9 +298,9 @@ t_=$("$abs_top_builddir/src/mktemp" -d --tmp="$test_dir_" cu-$this_test.XXXXXXXX
 
 remove_tmp_()
 {
-  local st=$?
+  __st=$?
   cleanup_
-  cd "$test_dir_" && chmod -R u+rwx "$t_" && rm -rf "$t_" && exit $st
+  cd "$test_dir_" && chmod -R u+rwx "$t_" && rm -rf "$t_" && exit $__st
 }
 
 # Run each test from within a temporary sub-directory named after the
