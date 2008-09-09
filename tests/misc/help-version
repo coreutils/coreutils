@@ -51,8 +51,8 @@ for lang in C fr da; do
 
     # false fails even when invoked with --help or --version.
     if test $i = false; then
-      env LC_MESSAGES=$lang $i" --help >/dev/null && fail=1
-      env LC_MESSAGES=$lang $i" --version >/dev/null && fail=1
+      env LC_MESSAGES=$lang $i --help >/dev/null && fail=1
+      env LC_MESSAGES=$lang $i --version >/dev/null && fail=1
       continue
     fi
 
