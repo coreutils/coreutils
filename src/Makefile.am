@@ -463,39 +463,6 @@ sc_tight_scope: $(all_programs)
 	    exit 1; } || :
 
 # Use the just-built ./ginstall, when not cross-compiling.
-# Override automake's install-one-at-a-time rule, when possible.
-install-exec-am:
-	@(./ginstall --version) > /dev/null 2>&1		\
-	  && install=./ginstall					\
-	  || install='$(INSTALL_PROGRAM)';			\
-	case '$(program_transform_name):$(EXEEXT)' in		\
-	  's,x,x,:') cu=cu-;; *) cu= ;; esac;			\
-	$(MAKE) $(AM_MAKEFLAGS) binPROGRAMS_INSTALL="$$install"	\
-	  $${cu}install-binPROGRAMS
-	@$(NORMAL_INSTALL)
-	$(MAKE) $(AM_MAKEFLAGS) install-exec-hook
-
-# The following rule is used only when --program-transform-name
-# has not been used and there is no .exe "extension".
-# Override the automake-generated rule so that we can install
-# all binaries with a single install command.  However, ...
-# install ginstall and [ separately.  "ginstall" because we rename
-# it to "install", and "[" because using it unquoted will cause a
-# syntax error with some shells.  Be careful to install each of these
-# exceptions only if it is to be installed (i.e., not excluded via
-# --enable-no-install-program=PROG_LIST.
-filtered_PROGS = \
-  `echo "$(bin_PROGRAMS)" | sed 's/ *\<ginstall\> */ /;s/ *\[ */ /'`
-d_bindir = $(DESTDIR)$(bindir)
-.PHONY: cu-install-binPROGRAMS
-cu-install-binPROGRAMS: $(bin_PROGRAMS)
-	$(NORMAL_INSTALL)
-	test -z "$(bindir)" || $(MKDIR_P) "$(d_bindir)"
-	test x = 'x$(bin_PROGRAMS)' && exit || :
-	case '$(bin_PROGRAMS)' in *\[*) \
-	  echo "$(binPROGRAMS_INSTALL) '[' '$(d_bindir)/['"; \
-	  $(binPROGRAMS_INSTALL) '[' '$(d_bindir)/[';; esac
-	case '$(bin_PROGRAMS)' in *ginstall*) \
-	  echo "$(binPROGRAMS_INSTALL) ginstall '$(d_bindir)/install'";\
-	  $(binPROGRAMS_INSTALL) ginstall '$(d_bindir)/install';; esac
-	$(binPROGRAMS_INSTALL) $(filtered_PROGS) '$(d_bindir)'
+if !CROSS_COMPILING
+INSTALL_PROGRAM = ./ginstall
+endif

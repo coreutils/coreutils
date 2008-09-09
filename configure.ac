@@ -32,7 +32,7 @@ AC_CONFIG_SRCDIR(src/ls.c)
 AC_CONFIG_AUX_DIR(build-aux)
 AC_CONFIG_HEADERS([lib/config.h:lib/config.hin])
 
-AM_INIT_AUTOMAKE([1.10.1 dist-lzma])
+AM_INIT_AUTOMAKE([1.10a dist-lzma])
 
 AC_PROG_CC_STDC
 AM_PROG_CC_C_O
@@ -325,6 +325,8 @@ OPTIONAL_BIN_PROGS=`echo "$optional_bin_progs "|sed 's/ /\$(EXEEXT) /g;s/ $//'`
 AC_SUBST([OPTIONAL_BIN_PROGS])
 NO_INSTALL_PROGS_DEFAULT=$no_install_progs_default
 AC_SUBST([NO_INSTALL_PROGS_DEFAULT])
+
+AM_CONDITIONAL([CROSS_COMPILING], [test "$cross_compiling" = yes])
 
 # Arrange to rerun configure whenever the file, src/Makefile.am,
 # containing the list of program names changes.
