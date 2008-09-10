@@ -596,6 +596,16 @@ Remove any trailing slashes from each @var{source} argument.
 @xref{Trailing slashes}.
 @end macro
 
+@macro mayConflictWithShellBuiltIn{cmd}
+@cindex conflicts with shell built-ins
+@cindex built-in shell commands, conflicts with
+Due to shell aliases and built-in @command{\cmd\} command, using an
+unadorned @command{\cmd\} interactively or in a script may get you
+different functionality than that described here.  Invoke it via
+@command{env} (i.e., @code{env \cmd\ @dots{}}) to avoid interference
+from the shell.
+
+@end macro
 @cindex common options
 
 Certain options are available in all of these programs.  Rather than
@@ -8808,6 +8818,9 @@ files of this type.  Such devices can be read either a character at a
 time or a ``block'' (many characters) at a time, hence we say there are
 @dfn{block special} files and @dfn{character special} files.
 
+@c mknod is a shell built-in at least with OpenBSD's /bin/sh
+@mayConflictWithShellBuiltIn{mknod}
+
 The arguments after @var{name} specify the type of file to make:
 
 @table @samp
@@ -10147,6 +10160,7 @@ But it also can be used to report the information of the file systems the
 given files are located on.  If the files are links, @command{stat} can
 also give information about the files the links point to.
 
+@mayConflictWithShellBuiltIn{stat}
 
 @table @samp
 
@@ -10396,6 +10410,8 @@ space between each and a newline after the last one.  Synopsis:
 echo [@var{option}]@dots{} [@var{string}]@dots{}
 @end example
 
+@mayConflictWithShellBuiltIn{echo}
+
 The program accepts the following options.  Also see @ref{Common options}.
 Options must precede operands, and the normally-special argument
 @samp{--} has no special meaning and is treated like any other
@@ -10483,7 +10499,9 @@ directives and @samp{\} escapes to format numeric and string arguments
 in a way that is mostly similar to the C @samp{printf} function.
 @xref{Output Conversion Syntax,, @command{printf} format directives,
 libc, The GNU C Library Reference Manual}, for details.
-The differences are as follows:
+The differences are listed below.
+
+@mayConflictWithShellBuiltIn{printf}
 
 @itemize @bullet
 
@@ -10579,7 +10597,7 @@ The Unicode character syntaxes are useful for writing strings in a locale
 independent way.  For example, a string containing the Euro currency symbol
 
 @example
-$ /usr/local/bin/printf '\u20AC 14.95'
+$ env printf '\u20AC 14.95'
 @end example
 
 @noindent
@@ -10587,15 +10605,15 @@ will be output correctly in all locales supporting the Euro symbol
 (@acronym{ISO}-8859-15, UTF-8, and others).  Similarly, a Chinese string
 
 @example
-$ /usr/local/bin/printf '\u4e2d\u6587'
+$ env printf '\u4e2d\u6587'
 @end example
 
 @noindent
 will be output correctly in all Chinese locales (GB2312, BIG5, UTF-8, etc).
 
-Note that in these examples, the full name of @command{printf} has been
-given, to distinguish it from the GNU @code{bash} built-in function
-@command{printf}.
+Note that in these examples, the @command{printf} command has been
+invoked via @command{env} to ensure that we run the program found via
+your shell's search @code{PATH}, and not a shell alias or a built-in function.
 
 For larger strings, you don't need to look up the hexadecimal code
 values of each character one by one.  @acronym{ASCII} characters mixed with \u
@@ -10752,11 +10770,7 @@ test
 [ @var{option}
 @end example
 
-@cindex conflicts with shell built-ins
-@cindex built-in shell commands, conflicts with
-Because most shells have a built-in @command{test} command, using an
-unadorned @command{test} in a script or interactively may get you
-different functionality than that described here.
+@mayConflictWithShellBuiltIn{test}
 
 If @var{expression} is omitted, @command{test} returns false.
 If @var{expression} is a single argument,
@@ -11711,14 +11725,10 @@ so forth.  See also the user-related commands in the next section.
 That is, all components of the printed name will be actual directory
 names---none will be symbolic links.
 
-@cindex conflicts with shell built-ins
-@cindex built-in shell commands, conflicts with
-Because most shells have a built-in @command{pwd} command, using an
-unadorned @command{pwd} in a script or interactively may get you
-different functionality than that described here.
-
 The only options are a lone @option{--help} or
 @option{--version}.  @xref{Common options}.
+
+@mayConflictWithShellBuiltIn{pwd}
 
 @exitstatus
 
@@ -13897,11 +13907,7 @@ term ``niceness'' for compatibility with historical practice.
 @var{command} must not be a special built-in utility (@pxref{Special
 built-in utilities}).
 
-@cindex conflicts with shell built-ins
-@cindex built-in shell commands, conflicts with
-Because many shells have a built-in @command{nice} command, using an
-unadorned @command{nice} in a script or interactively may get you
-different functionality than that described here.
+@mayConflictWithShellBuiltIn{nice}
 
 The program accepts the following option.  Also see @ref{Common options}.
 Options must precede operands.
@@ -14292,6 +14298,8 @@ kill [-s @var{signal} | --signal @var{signal} | -@var{signal}] @var{pid}@dots{}
 kill [-l | --list | -t | --table] [@var{signal}]@dots{}
 @end example
 
+@mayConflictWithShellBuiltIn{kill}
+
 The first form of the @command{kill} command sends a signal to all
 @var{pid} arguments.  The default signal to send if none is specified
 is @samp{TERM}.  The special signal number @samp{0} does not denote a
@@ -14397,6 +14405,9 @@ digits).
 
 The only options are @option{--help} and @option{--version}.  @xref{Common
 options}.
+
+@c sleep is a shell built-in at least with Solaris 11's /bin/sh
+@mayConflictWithShellBuiltIn{sleep}
 
 @exitstatus
 
