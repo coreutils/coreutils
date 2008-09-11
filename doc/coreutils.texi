@@ -10613,7 +10613,7 @@ will be output correctly in all Chinese locales (GB2312, BIG5, UTF-8, etc).
 
 Note that in these examples, the @command{printf} command has been
 invoked via @command{env} to ensure that we run the program found via
-your shell's search @code{PATH}, and not a shell alias or a built-in function.
+your shell's search path, and not a shell alias or a built-in function.
 
 For larger strings, you don't need to look up the hexadecimal code
 values of each character one by one.  @acronym{ASCII} characters mixed with \u

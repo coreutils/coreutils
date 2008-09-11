@@ -1,6 +1,6 @@
 # Make coreutils documentation.				-*-Makefile-*-
 
-# Copyright (C) 1995-1998, 2001-2007 Free Software Foundation, Inc.
+# Copyright (C) 1995-1998, 2001-2008 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -68,7 +68,7 @@ check-texinfo: $(syntax_checks)
 	  $(srcdir)/*.texi 2> /dev/null || fail=1; }; \
 	$(EGREP) -i '$(_W)builtins?$(W_)' $(srcdir)/*.texi && fail=1; \
 	$(EGREP) -i '$(_W)path(name)?s?$(W_)' $(srcdir)/*.texi \
-	  | $(EGREP) -v '@vindex PATH$$|@env[{]PATH[}]' && fail=1; \
+	  | $(EGREP) -v 'search path|@vindex PATH$$|@env[{]PATH[}]' && fail=1; \
 	exit $$fail
 
 # Use `time zone', not `timezone'.
