@@ -31,7 +31,7 @@ GIT = git
 VC = $(GIT)
 VC-tag = git tag -s -m '$(VERSION)'
 
-VC_LIST = build-aux/vc-list-files
+VC_LIST = $(srcdir)/build-aux/vc-list-files
 
 VC_LIST_EXCEPT = \
   $(VC_LIST) | if test -f .x-$@; then grep -vEf .x-$@; else grep -v ChangeLog; fi
@@ -507,11 +507,16 @@ epoch_date = 1970-01-01 00:00:00.000000000 +0000
 # Ensure that the c99-to-c89 patch applies cleanly.
 patch-check:
 	rm -rf src-c89 $@.1 $@.2
-	cp -a src src-c89
-	(cd src-c89; patch -p1 -V never --fuzz=0) < src/c99-to-c89.diff \
+	cp -a $(srcdir)/src src-c89
+	if test "x$(srcdir)" != x.; then \
+	  cp -a src/* src-c89; \
+	  dotfiles=`ls src/.[!.]* 2>/dev/null`; \
+	  test -z "$$dotfiles" || cp -a src/.[!.]* src-c89; \
+	fi
+	(cd src-c89; patch -p1 -V never --fuzz=0) < $(srcdir)/src/c99-to-c89.diff \
 	  > $@.1 2>&1
 	if test "$(REGEN_PATCH)" = yes; then			\
-	  diff -upr src src-c89 | sed 's,src-c89/,src/,'	\
+	  diff -upr $(srcdir)/src src-c89 | sed 's,$(srcdir)/src-c89/,src/,'	\
 	    | grep -vE '^(Only in|File )'			\
 	    | perl -pe 's/^((?:\+\+\+|---) \S+\t).*/$${1}$(epoch_date)/;' \
 	       -e 's/^ $$//'					\

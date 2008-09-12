@@ -442,11 +442,14 @@ s2 = '/^\#define AUTHORS \\\\/{;n;$(sed_filter);p;q;}'
 sc_tight_scope: $(all_programs)
 	@t=exceptions-$$$$;						\
 	trap "s=$$?; rm -f $$t; exit $$s" 0 1 2 13 15;			\
+	src=`for f in $(SOURCES); do					\
+	       test -f $$f && d= || d=$(srcdir)/; echo $$d$$f; done`;	\
+	hdr=`for f in $(noinst_HEADERS); do				\
+	       test -f $$f && d= || d=$(srcdir)/; echo $$d$$f; done`;	\
 	( printf 'main\nusage\n';					\
-	  grep -h -A1 '^extern .*[^;]$$' $(SOURCES)			\
+	  grep -h -A1 '^extern .*[^;]$$' $$src				\
 	    | grep -vE '^(extern |--)' | sed 's/ .*//';			\
-	  perl -ne '/^extern \S+ (\S*) \(/ and print "$$1\n"'		\
-	    $(noinst_HEADERS);						\
+	  perl -ne '/^extern \S+ (\S*) \(/ and print "$$1\n"' $$hdr;	\
 	) | $(ASSORT) -u | sed 's/^/^/;s/$$/$$/' > $$t;			\
 	nm -e *.$(OBJEXT)						\
 	    | sed -n 's/.* T //p'					\
@@ -455,7 +458,7 @@ sc_tight_scope: $(all_programs)
 	    exit 1; } || : ;						\
 	( printf '^program_name$$\n';					\
 	  perl -ne '/^extern .*?\**(\w+);/ and print "^$$1\$$\n"'	\
-	    *.h ) > $$t;						\
+	    $$hdr *.h ) | $(ASSORT) -u > $$t;				\
 	nm -e *.$(OBJEXT)						\
 	    | sed -n 's/.* [BD] //p'					\
 	    | grep -Ev -f $$t &&					\

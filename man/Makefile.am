@@ -161,7 +161,6 @@ mapped_name = `echo $*|sed 's/^install$$/ginstall/; s/^test$$/[/'`
 	             --output=$t/$@ $t/$*;			\
 	       }						\
 	    && sed 's|$*\.td/||g' $t/$@ > $@			\
-	    && chmod a-w $@					\
 	    && rm -rf $t ;;					\
 	esac
 
