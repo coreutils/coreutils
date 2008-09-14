@@ -161,10 +161,6 @@ static struct option const long_options[] =
   {"context", no_argument, 0, 'Z'},
   {"dereference", no_argument, NULL, 'L'},
   {"file-system", no_argument, NULL, 'f'},
-
-  /* obsolete and undocumented alias: FIXME: remove in 2009 */
-  {"filesystem", no_argument, NULL, 'f'},
-
   {"format", required_argument, NULL, 'c'},
   {"printf", required_argument, NULL, PRINTF_OPTION},
   {"terse", no_argument, NULL, 't'},
