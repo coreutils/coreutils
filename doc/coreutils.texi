@@ -3084,6 +3084,56 @@ Do not print counts of output file sizes.
 
 @exitstatus
 
+Here is an example of its usage.
+First, create an empty directory for the exercise,
+and cd into it:
+
+@example
+$ mkdir d && cd d
+@end example
+
+Now, split the sequence of 1..14 on lines that end with 0 or 5:
+
+@example
+$ seq 14 | csplit - '/[05]$/' '@{*@}'
+8
+10
+15
+@end example
+
+Each number printed above is the size of an output
+file that csplit has just created.
+List the names of those output files:
+
+@example
+$ ls
+xx00  xx01  xx02
+@end example
+
+Use @command{head} to show their contents:
+
+@example
+$ head xx*
+==> xx00 <==
+1
+2
+3
+4
+
+==> xx01 <==
+5
+6
+7
+8
+9
+
+==> xx02 <==
+10
+11
+12
+13
+14
+@end example
 
 @node Summarizing files
 @chapter Summarizing files
