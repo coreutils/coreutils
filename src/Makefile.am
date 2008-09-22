@@ -466,6 +466,9 @@ sc_tight_scope: $(all_programs)
 	    exit 1; } || :
 
 # Use the just-built ./ginstall, when not cross-compiling.
-if !CROSS_COMPILING
-INSTALL_PROGRAM = ./ginstall
+if CROSS_COMPILING
+cu_install_program = @INSTALL_PROGRAM@
+else
+cu_install_program = ./ginstall
 endif
+INSTALL_PROGRAM = $(cu_install_program)
