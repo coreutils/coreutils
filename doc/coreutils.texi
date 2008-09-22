@@ -12783,29 +12783,7 @@ Print information corresponding to dead processes.
 @itemx --heading
 @opindex -H
 @opindex --heading
-Print column headings.
-
-@item -m
-@opindex -m
-Same as @samp{who am i}.
-
-@item -q
-@itemx --count
-@opindex -q
-@opindex --count
-Print only the login names and the number of users logged on.
-Overrides all other options.
-
-@item -s
-@opindex -s
-Ignored; for compatibility with other versions of @command{who}.
-
-@itemx -u
-@opindex -u
-@cindex idle time
-After the login time, print the number of hours and minutes that the
-user has been idle.  @samp{.} means the user was active in the last minute.
-@samp{old} means the user has been idle for more than 24 hours.
+Print a line of column headings.
 
 @item -l
 @itemx --login
@@ -12820,11 +12798,9 @@ Attempt to canonicalize hostnames found in utmp through a DNS lookup.  This
 is not the default because it can cause significant delays on systems with
 automatic dial-up internet access.
 
-@item -H
-@itemx --heading
-@opindex -H
-@opindex --heading
-Print a line of column headings.
+@item -m
+@opindex -m
+Same as @samp{who am i}.
 
 @item -p
 @itemx --process
@@ -12832,17 +12808,35 @@ Print a line of column headings.
 @opindex --process
 List active processes spawned by init.
 
+@item -q
+@itemx --count
+@opindex -q
+@opindex --count
+Print only the login names and the number of users logged on.
+Overrides all other options.
+
 @item -r
 @itemx --runlevel
 @opindex -r
 @opindex --runlevel
 Print the current (and maybe previous) run-level of the init process.
 
+@item -s
+@opindex -s
+Ignored; for compatibility with other versions of @command{who}.
+
 @item -t
 @itemx --time
 @opindex -t
 @opindex --time
 Print last system clock change.
+
+@itemx -u
+@opindex -u
+@cindex idle time
+After the login time, print the number of hours and minutes that the
+user has been idle.  @samp{.} means the user was active in the last minute.
+@samp{old} means the user has been idle for more than 24 hours.
 
 @item -w
 @itemx -T
