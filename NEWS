@@ -9,6 +9,13 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New features
 
+  chgrp, chmod, chown, chcon, du, rm: now all display linear performance,
+  even when operating on million-entry directories on ext3 and ext4 file
+  systems.  Before, they would exhibit O(N^2) performance, due to linear
+  per-entry seek time cost when operating on entries in readdir order.
+  Rm was improved directly, while the others inherit the improvement
+  from the newer version of fts in gnulib.
+
   comm now verifies that the inputs are in sorted order.  This check can
   be turned off with the --nocheck-order option.
 

@@ -72,6 +72,7 @@ EXTRA_DIST += $(TESTS)
 TESTS =						\
   misc/help-version				\
   misc/invalid-opt				\
+  rm/ext3-perf					\
   rm/cycle					\
   chmod/no-x					\
   chgrp/basic					\

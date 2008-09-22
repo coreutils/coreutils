@@ -60,6 +60,14 @@ enum
     CONSECUTIVE_READDIR_UNLINK_THRESHOLD = 10
   };
 
+/* If the heuristics in preprocess_dir suggest that there
+   are fewer than this many entries in a directory, then it
+   skips the preprocessing altogether.  */
+enum
+{
+  INODE_SORT_DIR_ENTRIES_THRESHOLD = 10000
+};
+
 /* FIXME: in 2009, or whenever Darwin 7.9.0 (aka MacOS X 10.3.9) is no
    longer relevant, remove this work-around code.  Then, there will be
    no need to perform the extra rewinddir call, ever.  */
@@ -215,6 +223,24 @@ static bool
 hash_compare_strings (void const *x, void const *y)
 {
   return STREQ (x, y) ? true : false;
+}
+
+/* Obstack allocator: longjump on failure.  */
+static void *
+rm_malloc (void *v_jumpbuf, long size)
+{
+  jmp_buf *jumpbuf = v_jumpbuf;
+  void *p = malloc (size);
+  if (p)
+    return p;
+  longjmp (*jumpbuf, 1);
+}
+
+/* With the 2-arg allocator, we must also provide a two-argument freer.  */
+static void
+rm_free (void *v_jumpbuf ATTRIBUTE_UNUSED, void *ptr)
+{
+  free (ptr);
 }
 
 static inline void
@@ -1225,6 +1251,141 @@ fd_to_subdirp (int fd_cwd, char const *f,
   return NULL;
 }
 
+struct readdir_data
+{
+  ino_t ino;
+  char name[FLEXIBLE_ARRAY_MEMBER];
+};
+
+/* A comparison function to sort on increasing inode number.  */
+static int
+compare_ino (void const *av, void const *bv)
+{
+  struct readdir_data const *const *a = av;
+  struct readdir_data const *const *b = bv;
+  return (a[0]->ino < b[0]->ino ? -1
+	  : b[0]->ino < a[0]->ino ? 1 : 0);
+}
+
+/* Return an approximation of the maximum number of dirent entries
+   in a directory with stat data *ST.  */
+static size_t
+dirent_count (struct stat const *st)
+{
+  return st->st_size / 16;
+}
+
+/* When a directory contains very many entries, operating on N entries in
+   readdir order can be very seek-intensive (be it to unlink or even to
+   merely stat each entry), to the point that it results in O(N^2) work.
+   This is file-system-specific: ext3 and ext4 (as of 2008) are susceptible,
+   but tmpfs is not.  The general solution is to process entries in inode
+   order.  That means reading all entries, and sorting them before operating
+   on any.  As such, it is useful only on systems with useful dirent.d_ino.
+   Since 'rm -r's removal process must traverse into directories and since
+   this preprocessing phase can allocate O(N) storage, here we store and
+   sort only non-directory entries, and then remove all of those, so that we
+   can free all allocated storage before traversing into any subdirectory.
+   Perform this optimization only when not interactive and not in verbose
+   mode, to keep the implementation simple and to minimize duplication.
+   Upon failure, simply free any resources and return.  */
+static void
+preprocess_dir (DIR **dirp, struct rm_options const *x)
+{
+#if HAVE_STRUCT_DIRENT_D_TYPE
+
+  struct stat st;
+  /* There are many reasons to return right away, skipping this
+     optimization.  The penalty for being wrong is that we will
+     perform a small amount of extra work.
+
+     Skip this optimization if... */
+
+  if (/* - there is a chance of interactivity */
+      x->interactive != RMI_NEVER
+
+      /* - we're in verbose mode */
+      || x->verbose
+
+      /* - privileged users can unlink nonempty directories.
+	 Otherwise, there'd be a race condition between the readdir
+	 call (in which we learn dirent.d_type) and the unlink, by
+	 which time the non-directory may be replaced with a directory. */
+      || ! cannot_unlink_dir ()
+
+      /* - we can't fstat the file descriptor */
+      || fstat (dirfd (*dirp), &st) != 0
+
+      /* - the directory is smaller than some threshold.
+	 Estimate the number of inodes with a heuristic.
+         There's no significant benefit to sorting if there are
+	 too few inodes.  */
+      || dirent_count (&st) < INODE_SORT_DIR_ENTRIES_THRESHOLD)
+    return;
+
+  /* FIXME: maybe test file system type, too; skip if it's tmpfs: see fts.c */
+
+  struct obstack o_readdir_data;  /* readdir data: inode,name pairs  */
+  struct obstack o_p;  /* an array of pointers to each inode,name pair */
+
+  /* Arrange to longjmp upon obstack allocation failure.  */
+  jmp_buf readdir_jumpbuf;
+  if (setjmp (readdir_jumpbuf))
+    goto cleanup;
+
+  obstack_init_minimal (&o_readdir_data);
+  obstack_init_minimal (&o_p);
+
+  obstack_specify_allocation_with_arg (&o_readdir_data, 0, 0,
+				       rm_malloc, rm_free, &readdir_jumpbuf);
+  obstack_specify_allocation_with_arg (&o_p, 0, 0,
+				       rm_malloc, rm_free, &readdir_jumpbuf);
+
+  /* Read all entries, storing <d_ino, d_name> for each non-dir one.
+     Maintain a parallel list of pointers into the primary buffer.  */
+  while (1)
+    {
+      struct dirent const *dp;
+      dp = readdir_ignoring_dot_and_dotdot (*dirp);
+      /* no need to distinguish EOF from failure */
+      if (dp == NULL)
+	break;
+
+      /* Skip known-directory and type-unknown entries.  */
+      if (D_TYPE (dp) == DT_UNKNOWN || D_TYPE (dp) == DT_DIR)
+	break;
+
+      size_t name_len = strlen (dp->d_name);
+      size_t ent_len = offsetof (struct readdir_data, name) + name_len + 1;
+      struct readdir_data *v = obstack_alloc (&o_readdir_data, ent_len);
+      v->ino = D_INO (dp);
+      memcpy (v->name, dp->d_name, name_len + 1);
+
+      /* Append V to the list of pointers.  */
+      obstack_ptr_grow (&o_p, v);
+    }
+
+  /* Compute size and finalize VV.  */
+  size_t n = obstack_object_size (&o_p) / sizeof (void *);
+  struct readdir_data **vv = obstack_finish (&o_p);
+
+  /* Sort on inode number.  */
+  qsort(vv, n, sizeof *vv, compare_ino);
+
+  /* Iterate through those pointers, unlinking each name.  */
+  for (size_t i = 0; i < n; i++)
+    {
+      /* ignore failure */
+      (void) unlinkat (dirfd (*dirp), vv[i]->name, 0);
+    }
+
+ cleanup:
+  obstack_free (&o_readdir_data, NULL);
+  obstack_free (&o_p, NULL);
+  rewinddir (*dirp);
+#endif
+}
+
 /* Remove entries in the directory open on DIRP
    Upon finding a directory that is both non-empty and that can be chdir'd
    into, return RM_OK and set *SUBDIR and fill in SUBDIR_SB, where
@@ -1246,6 +1407,10 @@ remove_cwd_entries (DIR **dirp,
 
   assert (VALID_STATUS (status));
   *subdir = NULL;
+
+  /* This is just an optimization.
+     It's not a fatal problem if it fails.  */
+  preprocess_dir (dirp, x);
 
   while (1)
     {
