@@ -920,7 +920,7 @@ main (int argc, char **argv)
 				     sparse_type_string, sparse_type);
 	  break;
 
-	case 'a':		/* Like -dpPR. */
+	case 'a':		/* Like -dpR. */
 	  x.dereference = DEREF_NEVER;
 	  x.preserve_links = true;
 	  x.preserve_ownership = true;
