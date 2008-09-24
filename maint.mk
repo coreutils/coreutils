@@ -551,7 +551,8 @@ check-AUTHORS:
 # not @...@ in Makefile.am, now that we can rely on automake
 # to emit a definition for each substituted variable.
 makefile-check:
-	@grep -nE '@[A-Z_0-9]+@' `find . -name Makefile.am` \
+	@grep -nE '@[A-Z_0-9]+@'					\
+	    $$($(VC_LIST_EXCEPT) | grep -E '(^|/)Makefile\.am$$')	\
 	  && { echo '$(ME): use $$(...), not @...@' 1>&2; exit 1; } || :
 
 news-date-check: NEWS
