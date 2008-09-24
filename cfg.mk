@@ -33,6 +33,8 @@ gpg_key_ID = B9AB9A16
 # at the top of the file for each `make distcheck' run.
 local-checks-to-skip = changelog-check strftime-check
 
+local-checks-to-skip += patch-check
+
 # The local directory containing the checked-out copy of gnulib used in this
 # release.  Used solely to get gnulib's SHA1 for the "announcement" target.
 gnulib_dir = /gnulib
