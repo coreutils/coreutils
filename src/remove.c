@@ -45,9 +45,6 @@
 #define dir_name rm_dir_name
 #define dir_len rm_dir_len
 
-#define obstack_chunk_alloc malloc
-#define obstack_chunk_free free
-
 /* This is the maximum number of consecutive readdir/unlink calls that
    can be made (with no intervening rewinddir or closedir/opendir) before
    triggering a bug that makes readdir return NULL even though some
@@ -245,13 +242,15 @@ push_dir (Dirstack_state *ds, const char *dir_name)
 /* Return the entry name of the directory on the top of the stack
    in malloc'd storage.  */
 static inline char *
-top_dir (Dirstack_state const *ds)
+top_dir (Dirstack_state *ds)
 {
   size_t n_lengths = obstack_object_size (&ds->len_stack) / sizeof (size_t);
   size_t *length = obstack_base (&ds->len_stack);
   size_t top_len = length[n_lengths - 1];
   char const *p = obstack_next_free (&ds->dir_stack) - top_len;
-  char *q = xmalloc (top_len);
+  char *q = malloc (top_len);
+  if (q == NULL)
+    longjmp (ds->current_arg_jumpbuf, 1);
   memcpy (q, p, top_len - 1);
   q[top_len - 1] = 0;
   return q;
@@ -440,14 +439,32 @@ AD_stack_clear (Dirstack_state *ds)
     }
 }
 
-static Dirstack_state *
-ds_init (void)
+/* Initialize obstack O just enough so that it may be freed
+   with obstack_free.  */
+static void
+obstack_init_minimal (struct obstack *o)
 {
-  Dirstack_state *ds = xmalloc (sizeof *ds);
-  obstack_init (&ds->dir_stack);
-  obstack_init (&ds->len_stack);
-  obstack_init (&ds->Active_dir);
-  return ds;
+  o->chunk = NULL;
+}
+
+static void
+ds_init (Dirstack_state *ds)
+{
+  unsigned int i;
+  struct obstack *o[3];
+  o[0] = &ds->dir_stack;
+  o[1] = &ds->len_stack;
+  o[2] = &ds->Active_dir;
+
+  /* Ensure each of these is NULL, in case init/allocation
+     fails and we end up calling ds_free on all three while only
+     one or two has been initialized.  */
+  for (i = 0; i < 3; i++)
+    obstack_init_minimal (o[i]);
+
+  for (i = 0; i < 3; i++)
+    obstack_specify_allocation_with_arg
+      (o[i], 0, 0, rm_malloc, rm_free, &ds->current_arg_jumpbuf);
 }
 
 static void
@@ -466,7 +483,6 @@ ds_free (Dirstack_state *ds)
   obstack_free (&ds->dir_stack, NULL);
   obstack_free (&ds->len_stack, NULL);
   obstack_free (&ds->Active_dir, NULL);
-  free (ds);
 }
 
 /* Pop the active directory (AD) stack and prepare to move `up' one level,
@@ -1594,9 +1610,18 @@ extern enum RM_status
 rm (size_t n_files, char const *const *file, struct rm_options const *x)
 {
   enum RM_status status = RM_OK;
-  Dirstack_state *ds = ds_init ();
+  Dirstack_state ds;
   int cwd_errno = 0;
   size_t i;
+
+  /* Arrange for obstack allocation failure to longjmp.  */
+  if (setjmp (ds.current_arg_jumpbuf))
+    {
+      status = RM_ERROR;
+      goto cleanup;
+    }
+
+  ds_init (&ds);
 
   for (i = 0; i < n_files; i++)
     {
@@ -1607,7 +1632,7 @@ rm (size_t n_files, char const *const *file, struct rm_options const *x)
 	}
       else
 	{
-	  enum RM_status s = rm_1 (ds, file[i], x, &cwd_errno);
+	  enum RM_status s = rm_1 (&ds, file[i], x, &cwd_errno);
 	  assert (VALID_STATUS (s));
 	  UPDATE_STATUS (status, s);
 	}
@@ -1620,7 +1645,8 @@ rm (size_t n_files, char const *const *file, struct rm_options const *x)
       status = RM_ERROR;
     }
 
-  ds_free (ds);
+ cleanup:;
+  ds_free (&ds);
 
   return status;
 }
