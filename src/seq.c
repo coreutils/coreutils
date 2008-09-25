@@ -306,7 +306,7 @@ print_numbers (char const *fmt, struct layout layout,
 		xalloc_die ();
 	      x_str[x_strlen - layout.suffix_len] = '\0';
 
-	      if (xstrtold (x_str + layout.prefix_len, NULL, &x_val, c_strtold)
+	      if (xstrtold (x_str + layout.prefix_len, NULL, &x_val, strtold)
 		  && abs_rel_diff (x_val, last) < DBL_EPSILON)
 		{
 		  char *x0_str = NULL;

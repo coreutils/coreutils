@@ -69,6 +69,7 @@ TESTS_ENVIRONMENT =				\
   };						\
   export					\
   LOCALE_FR='$(LOCALE_FR)'			\
+  LOCALE_FR_UTF8='$(LOCALE_FR_UTF8)'		\
   abs_top_builddir='$(abs_top_builddir)'	\
   abs_top_srcdir='$(abs_top_srcdir)'		\
   abs_srcdir='$(abs_srcdir)'			\

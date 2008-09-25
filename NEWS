@@ -55,6 +55,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   od no longer suffers from platform bugs in printf(3).  This is
   probably most noticeable when using 'od -tfL' to print long doubles.
 
+  seq -0.1 0.1 2 now prints 2,0 when locale's decimal point is ",".
+  Before, it would mistakenly omit the final number in that example.
+
   shuf honors the --zero-terminated (-z) option, even with --input-range=LO-HI
 
   shuf --head-count is now correctly documented.  The documentation
