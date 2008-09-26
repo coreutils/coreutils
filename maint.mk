@@ -809,13 +809,6 @@ my-distcheck: $(DIST_ARCHIVES) $(local-check)
 	(cd $(t) && mv $(distdir) $(distdir).old	\
 	  && $(AMTAR) -zxf - ) < $(distdir).tar.gz
 	diff -ur $(t)/$(distdir).old $(t)/$(distdir)
-	if test -f $(srcdir)/src/c99-to-c89.diff; then			\
-	  cd $(t)/$(distdir)						\
-	    && (cd src && patch -V never --fuzz=0 <c99-to-c89.diff)	\
-	    && ./configure --disable-largefile				\
-	         CFLAGS='-Werror -ansi -Wno-long-long'			\
-	    && $(MAKE);							\
-	fi
 	-rm -rf $(t)
 	@echo "========================"; \
 	echo "$(distdir).tar.gz is ready for distribution"; \
