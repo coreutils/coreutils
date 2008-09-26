@@ -550,8 +550,11 @@ check-AUTHORS:
 # Ensure that we use only the standard $(VAR) notation,
 # not @...@ in Makefile.am, now that we can rely on automake
 # to emit a definition for each substituted variable.
+# We use perl rather than "grep -nE ..." to exempt a single
+# use of an @...@-delimited variable name in src/Makefile.am.
 makefile-check:
-	@grep -nE '@[A-Z_0-9]+@'					\
+	@perl -ne '/\@[A-Z_0-9]+\@/ && !/^cu_install_program =/'	\
+	  -e 'and (print "$$ARGV:$$.: $$_"), $$m=1; END {exit !$$m}'	\
 	    $$($(VC_LIST_EXCEPT) | grep -E '(^|/)Makefile\.am$$')	\
 	  && { echo '$(ME): use $$(...), not @...@' 1>&2; exit 1; } || :
 
