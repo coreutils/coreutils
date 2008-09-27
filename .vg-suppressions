@@ -1,6 +1,6 @@
 # Suppress valgrind diagnostics we don't care about.
 
-# Copyright (C) 2003, 2004, 2006-2007 Free Software Foundation, Inc.
+# Copyright (C) 2003, 2004, 2006-2008 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -88,5 +88,13 @@
    fun:getuser
    fun:format_user_width
    fun:gobble_file
+   fun:main
+}
+{
+   utimensat-NULL
+   Memcheck:Param
+   utimensat(filename)
+   fun:futimens
+   fun:gl_futimens
    fun:main
 }
