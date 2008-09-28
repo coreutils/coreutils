@@ -301,12 +301,15 @@ print_numbers (char const *fmt, struct layout layout,
 	      bool print_extra_number = false;
 	      long double x_val;
 	      char *x_str;
-	      int x_strlen = asprintf (&x_str, fmt, x);
+	      int x_strlen;
+	      setlocale (LC_NUMERIC, "C");
+	      x_strlen = asprintf (&x_str, fmt, x);
+	      setlocale (LC_NUMERIC, "");
 	      if (x_strlen < 0)
 		xalloc_die ();
 	      x_str[x_strlen - layout.suffix_len] = '\0';
 
-	      if (xstrtold (x_str + layout.prefix_len, NULL, &x_val, strtold)
+	      if (xstrtold (x_str + layout.prefix_len, NULL, &x_val, c_strtold)
 		  && abs_rel_diff (x_val, last) < DBL_EPSILON)
 		{
 		  char *x0_str = NULL;
