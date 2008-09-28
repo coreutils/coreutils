@@ -1257,6 +1257,7 @@ struct readdir_data
   char name[FLEXIBLE_ARRAY_MEMBER];
 };
 
+#if HAVE_STRUCT_DIRENT_D_TYPE
 /* A comparison function to sort on increasing inode number.  */
 static int
 compare_ino (void const *av, void const *bv)
@@ -1274,6 +1275,7 @@ dirent_count (struct stat const *st)
 {
   return st->st_size / 16;
 }
+#endif /* HAVE_STRUCT_DIRENT_D_TYPE */
 
 /* When a directory contains very many entries, operating on N entries in
    readdir order can be very seek-intensive (be it to unlink or even to
