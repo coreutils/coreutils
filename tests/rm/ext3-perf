@@ -44,7 +44,7 @@ n=400000
 # Skip unless "." is on an ext[34] file system.
 # FIXME-maybe: try to find a suitable file system or allow
 # the user to specify it via an envvar.
-df -t ext3 -t ext4dev -t ext4 . \
+df -T -t ext3 -t ext4dev -t ext4 . \
   || skip_test_ 'this test runs only on an ext3 or ext4 file system'
 
 # Skip if there are too few inodes free.  Require some slack.
@@ -55,6 +55,7 @@ test $min_free_inodes -lt $free_inodes \
       "this test requires at least $min_free_inodes"
 
 ok=0
+start=$(date +%s)
 mkdir d &&
   cd d &&
     seq $n | xargs touch &&
@@ -63,13 +64,19 @@ mkdir d &&
   cd .. &&
   ok=1
 test $ok = 1 || framework_failure
+setup_duration=$(expr $(date +%s) - $start)
+echo creating a $n-entry directory took $setup_duration seconds
 
 fail=0
 start=$(date +%s)
-rm -rf d || fail=1
+timeout ${threshold_seconds}s rm -rf d; err=$?
 duration=$(expr $(date +%s) - $start)
-test $duration -lt $threshold_seconds ||
-  { fail=1; echo rm took longer than $threshold_seconds seconds; }
+
+case $err in
+  124) fail=1; echo rm took longer than $threshold_seconds seconds;;
+  0) ;;
+  *) fail=1;;
+esac
 
 echo removing a $n-entry directory took $duration seconds
 
