@@ -1277,6 +1277,45 @@ dirent_count (struct stat const *st)
 }
 #endif /* HAVE_STRUCT_DIRENT_D_TYPE */
 
+#if defined HAVE_SYS_VFS_H && HAVE_FSTATFS && HAVE_STRUCT_STATFS_F_TYPE
+# include <sys/statfs.h>
+# include "fs.h"
+/* FIXME: what about when f_type is not an integral type?
+   deal with that if/when it's encountered.  */
+static bool
+fs_handles_readdir_ordered_dirents_efficiently (uintmax_t fs_type)
+{
+  switch (fs_type)
+    {
+    case S_MAGIC_TMPFS:
+    case S_MAGIC_NFS:
+      return true;
+    default:
+      return false;
+    }
+}
+
+/* Return true if it is easy to determine the file system type of the
+   directory on which DIR_FD is open, and sorting dirents on inode numbers
+   is known to improve traversal performance with that type of file system.  */
+static bool
+dirent_inode_sort_may_be_useful (int dir_fd)
+{
+  /* Skip the sort only if we can determine efficiently
+     that skipping it is the right thing to do.
+     The cost of performing an unnecessary sort is negligible,
+     while the cost of *not* performing it can be O(N^2) with
+     a very large constant.  */
+  struct statfs fs_buf;
+  bool skip = (fstatfs (dir_fd, &fs_buf) == 0
+	       && fs_handles_readdir_ordered_dirents_efficiently
+	            (fs_buf.f_type));
+  return !skip;
+}
+#else
+static bool dirent_inode_sort_may_be_useful (int dir_fd) { return true; }
+#endif
+
 /* When a directory contains very many entries, operating on N entries in
    readdir order can be very seek-intensive (be it to unlink or even to
    merely stat each entry), to the point that it results in O(N^2) work.
@@ -1303,6 +1342,7 @@ preprocess_dir (DIR **dirp, struct rm_options const *x)
 
      Skip this optimization if... */
 
+  int dir_fd = dirfd (*dirp);
   if (/* - there is a chance of interactivity */
       x->interactive != RMI_NEVER
 
@@ -1316,13 +1356,16 @@ preprocess_dir (DIR **dirp, struct rm_options const *x)
       || ! cannot_unlink_dir ()
 
       /* - we can't fstat the file descriptor */
-      || fstat (dirfd (*dirp), &st) != 0
+      || fstat (dir_fd, &st) != 0
 
       /* - the directory is smaller than some threshold.
 	 Estimate the number of inodes with a heuristic.
          There's no significant benefit to sorting if there are
 	 too few inodes.  */
-      || dirent_count (&st) < INODE_SORT_DIR_ENTRIES_THRESHOLD)
+      || dirent_count (&st) < INODE_SORT_DIR_ENTRIES_THRESHOLD
+
+      /* Sort only if it might help.  */
+      || ! dirent_inode_sort_may_be_useful (dir_fd))
     return;
 
   /* FIXME: maybe test file system type, too; skip if it's tmpfs: see fts.c */
@@ -1378,7 +1421,7 @@ preprocess_dir (DIR **dirp, struct rm_options const *x)
   for (size_t i = 0; i < n; i++)
     {
       /* ignore failure */
-      (void) unlinkat (dirfd (*dirp), vv[i]->name, 0);
+      (void) unlinkat (dir_fd, vv[i]->name, 0);
     }
 
  cleanup:
