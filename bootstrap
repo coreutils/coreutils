@@ -49,7 +49,7 @@ Options:
                           not to have been checked out.
  --skip-po                Do not download po files.
 
-If the file bootstrap.conf exists in the current working directory, its
+If the file $0.conf exists in the same directory as this script, its
 contents are read as shell variables to configure the bootstrap.
 
 Running without arguments will suffice in most cases.
@@ -146,7 +146,13 @@ copy=false
 vc_ignore=auto
 
 # Override the default configuration, if necessary.
-test -r bootstrap.conf && . ./bootstrap.conf
+# Make sure that bootstrap.conf is sourced from the current directory
+# if we were invoked as "sh bootstrap".
+case "$0" in
+  */*) test -r "$0.conf" && . "$0.conf" ;;
+  *) test -r "$0.conf" && . ./"$0.conf" ;;
+esac
+
 
 if test "$vc_ignore" = auto; then
   vc_ignore=
@@ -218,17 +224,40 @@ fi
 
 echo "$0: Bootstrapping from checked-out $package sources..."
 
+# See if we can use gnulib's git-merge-changelog merge driver.
+if test -d .git && (git --version) >/dev/null 2>/dev/null ; then
+  if git config merge.merge-changelog.driver >/dev/null ; then
+    :
+  elif (git-merge-changelog --version) >/dev/null 2>/dev/null ; then
+    echo "initializing git-merge-changelog driver"
+    git config merge.merge-changelog.name 'GNU-style ChangeLog merge driver'
+    git config merge.merge-changelog.driver 'git-merge-changelog %O %A %B'
+  else
+    echo "consider installing git-merge-changelog from gnulib"
+  fi
+fi
+
+
 cleanup_gnulib() {
   status=$?
   rm -fr gnulib
   exit $status
 }
 
+git_modules_config () {
+  GIT_CONFIG_LOCAL=.gitmodules git config "$@"
+}
+
 # Get gnulib files.
 
 case ${GNULIB_SRCDIR--} in
 -)
-  if [ ! -d gnulib ]; then
+  if git_modules_config submodule.gnulib.url >/dev/null; then
+    echo "$0: getting gnulib files..."
+    git submodule init || exit $?
+    git submodule update || exit $?
+
+  elif [ ! -d gnulib ]; then
     echo "$0: getting gnulib files..."
 
     trap cleanup_gnulib 1 2 13 15
@@ -239,6 +268,20 @@ case ${GNULIB_SRCDIR--} in
     trap - 1 2 13 15
   fi
   GNULIB_SRCDIR=gnulib
+  ;;
+*)
+  # Redirect the gnulib submodule to the directory on the command line
+  # if possible.
+  if test -d "$GNULIB_SRCDIR"/.git && \
+	git_modules_config submodule.gnulib.url >/dev/null; then
+    git submodule init
+    GNULIB_SRCDIR=`cd $GNULIB_SRCDIR && pwd`
+    git config --replace-all submodule.gnulib.url $GNULIB_SRCDIR
+    echo "$0: getting gnulib files..."
+    git submodule update || exit $?
+    GNULIB_SRCDIR=gnulib
+  fi
+  ;;
 esac
 
 gnulib_tool=$GNULIB_SRCDIR/gnulib-tool
@@ -544,7 +587,6 @@ rm -fr $bt $bt2 || exit
 find "$m4_base" "$source_base" \
   -depth \( -name '*.m4' -o -name '*.[ch]' \) \
   -type l -xtype l -delete > /dev/null 2>&1
-
 
 # Reconfigure, getting other files.
 
