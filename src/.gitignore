@@ -39,6 +39,7 @@ hostname
 id
 join
 kill
+libver.a
 link
 ln
 localedir.h
