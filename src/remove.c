@@ -1275,11 +1275,10 @@ dirent_count (struct stat const *st)
 {
   return st->st_size / 16;
 }
-#endif /* HAVE_STRUCT_DIRENT_D_TYPE */
 
-#if defined HAVE_SYS_VFS_H && HAVE_FSTATFS && HAVE_STRUCT_STATFS_F_TYPE
-# include <sys/statfs.h>
-# include "fs.h"
+# if HAVE_SYS_VFS_H && HAVE_FSTATFS && HAVE_STRUCT_STATFS_F_TYPE
+#  include <sys/vfs.h>
+#  include "fs.h"
 
 /* Return false if it is easy to determine the file system type of
    the directory on which DIR_FD is open, and sorting dirents on
@@ -1313,9 +1312,10 @@ dirent_inode_sort_may_be_useful (int dir_fd)
       return true;
     }
 }
-#else
+# else /* !HAVE_STRUCT_STATFS_F_TYPE */
 static bool dirent_inode_sort_may_be_useful (int dir_fd) { return true; }
-#endif
+# endif /* !HAVE_STRUCT_STATFS_F_TYPE */
+#endif /* HAVE_STRUCT_DIRENT_D_TYPE */
 
 /* When a directory contains very many entries, operating on N entries in
    readdir order can be very seek-intensive (be it to unlink or even to
