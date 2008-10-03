@@ -40,6 +40,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   ls now colorizes files with capabilities if libcap is available
 
+  ls -v now uses filevercmp function as sort predicate (instead of strverscmp)
+
   md5sum now accepts the new option, --quiet, to suppress the printing of
   'OK' messages.  sha1sum, sha224sum, sha384sum, and sha512sum accept it, too.
 
@@ -53,7 +55,7 @@ GNU coreutils NEWS                                    -*- outline -*-
   When processing more than NMERGE inputs, sort uses temporary files.
 
   sort accepts a new option --version-sort (-V, --sort=version),
-  specifying that ordering is to be based on strverscmp(3).
+  specifying that ordering is to be based on filevercmp.
 
 ** Bug fixes
 

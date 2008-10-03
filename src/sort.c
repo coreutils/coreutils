@@ -29,6 +29,7 @@
 #include "system.h"
 #include "argmatch.h"
 #include "error.h"
+#include "filevercmp.h"
 #include "hard-locale.h"
 #include "hash.h"
 #include "md5.h"
@@ -346,7 +347,7 @@ Ordering options:\n\
       --sort=WORD             sort according to WORD:\n\
                                 general-numeric -g, month -M, numeric -n,\n\
                                 random -R, version -V\n\
-  -V, --version-sort          sort by numeric version (see strverscmp(3))\n\
+  -V, --version-sort          sort by numeric version\n\
 \n\
 "), stdout);
       fputs (_("\
@@ -1823,7 +1824,7 @@ compare_random (char *restrict texta, size_t lena,
 }
 
 /* Compare the keys TEXTA (of length LENA) and TEXTB (of length LENB)
-   using strverscmp.  */
+   using filevercmp. See lib/filevercmp.h for function description. */
 
 static int
 compare_version (char *restrict texta, size_t lena,
@@ -1832,7 +1833,7 @@ compare_version (char *restrict texta, size_t lena,
   int diff;
 
   /* It is necessary to save the character after the end of the field.
-     "strverscmp" works with NUL terminated strings.  Our blocks of
+     "filevercmp" works with NUL terminated strings.  Our blocks of
      text are not necessarily terminated with a NUL byte. */
   char sv_a = texta[lena];
   char sv_b = textb[lenb];
@@ -1840,7 +1841,7 @@ compare_version (char *restrict texta, size_t lena,
   texta[lena] = '\0';
   textb[lenb] = '\0';
 
-  diff = strverscmp (texta, textb);
+  diff = filevercmp (texta, textb);
 
   texta[lena] = sv_a;
   textb[lenb] = sv_b;

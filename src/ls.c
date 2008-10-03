@@ -94,6 +94,7 @@
 #include "hash.h"
 #include "human.h"
 #include "filemode.h"
+#include "filevercmp.h"
 #include "idcache.h"
 #include "ls.h"
 #include "lstat.h"
@@ -3123,8 +3124,9 @@ DEFINE_SORT_FUNCTIONS (extension, cmp_extension)
 
 /* Compare file versions.
    Unlike all other compare functions above, cmp_version depends only
-   on strverscmp, which does not fail (even for locale reasons), and does not
-   need a secondary sort key.
+   on filevercmp, which does not fail (even for locale reasons), and does not
+   need a secondary sort key. See lib/filevercmp.h for function description.
+
    All the other sort options, in fact, need xstrcoll and strcmp variants,
    because they all use a string comparison (either as the primary or secondary
    sort key), and xstrcoll has the ability to do a longjmp if strcoll fails for
@@ -3133,7 +3135,7 @@ DEFINE_SORT_FUNCTIONS (extension, cmp_extension)
 static inline int
 cmp_version (struct fileinfo const *a, struct fileinfo const *b)
 {
-  return strverscmp (a->name, b->name);
+  return filevercmp (a->name, b->name);
 }
 
 static int xstrcoll_version (V a, V b)
