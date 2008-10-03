@@ -284,8 +284,8 @@ main (int argc, char **argv)
   monitored_pid = fork ();
   if (monitored_pid == -1)
     {
-      perror ("fork");
-      return errno;
+      error (0, errno, _("fork system call failed"));
+      return EXIT_CANCELED;
     }
   else if (monitored_pid == 0)
     {                           /* child */
@@ -299,7 +299,7 @@ main (int argc, char **argv)
 
       /* exit like sh, env, nohup, ...  */
       exit_status = (errno == ENOENT ? EXIT_ENOENT : EXIT_CANNOT_INVOKE);
-      perror (argv[0]);
+      error (0, errno, _("cannot run command %s"), quote (argv[0]));
       return exit_status;
     }
   else
