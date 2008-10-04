@@ -26,7 +26,7 @@ fi
 working_umask_or_skip_
 
 cat <<EOF > b || framework_failure
-#!$POSIX_SHELL
+#!$PREFERABLY_POSIX_SHELL
 sed s/b/B/ \$1 > \$1.t && mv \$1.t \$1
 EOF
 chmod a+x b || framework_failure
