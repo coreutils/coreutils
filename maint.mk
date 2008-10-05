@@ -888,4 +888,4 @@ alpha beta major: $(local-check) writable-files
 	$(MAKE) update-NEWS-hash
 	perl -pi -e '$$. == 3 and print "$(noteworthy)\n\n\n"' NEWS
 	$(emit-commit-log) > .ci-msg
-	$(VC) commit -F .ci-msg
+	$(VC) commit -F .ci-msg -a
