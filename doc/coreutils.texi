@@ -32,7 +32,6 @@
 @c * [: (coreutils)[ invocation.                   File/string tests.
 @c * pinky: (coreutils)pinky invocation.           FIXME.
 @c * mktemp: (coreutils)mktemp invocation.         FIXME.
-@c * chcon: (coreutils)chcon invocation.           FIXME.
 
 @dircategory Individual utilities
 @direntry
@@ -40,6 +39,7 @@
 * base64: (coreutils)base64 invocation.         Base64 encode/decode data.
 * basename: (coreutils)basename invocation.     Strip directory and suffix.
 * cat: (coreutils)cat invocation.               Concatenate and write files.
+* chcon: (coreutils)chcon invocation.           Change SELinux CTX of files.
 * chgrp: (coreutils)chgrp invocation.           Change file groups.
 * chmod: (coreutils)chmod invocation.           Change file permissions.
 * chown: (coreutils)chown invocation.           Change file owners/groups.
@@ -95,6 +95,7 @@
 * readlink: (coreutils)readlink invocation.     Print referent of a symlink.
 * rm: (coreutils)rm invocation.                 Remove files.
 * rmdir: (coreutils)rmdir invocation.           Remove empty directories.
+* runcon: (coreutils)runcon invocation.         Run in specified SELinux CTX.
 * seq: (coreutils)seq invocation.               Print numeric sequences
 * sha1sum: (coreutils)sha1sum invocation.       Print or check SHA-1 digests.
 * sha2: (coreutils)sha2 utilities.              Print or check SHA-2 digests.
@@ -194,6 +195,7 @@ Free Documentation License''.
 * Working context::                    pwd stty printenv tty
 * User information::                   id logname whoami groups users who
 * System context::                     date uname hostname hostid uptime
+* SELinux context::                    chcon runcon
 * Modified command invocation::        chroot env nice nohup su timeout
 * Process control::                    kill
 * Delaying::                           sleep
@@ -420,6 +422,10 @@ System context
 * Options for date::             Instead of the current time.
 * Date input formats::           Specifying date strings.
 * Examples of date::             Examples.
+
+SELinux context
+* chcon invocation::             Change SELinux context of file
+* runcon invocation::            Run a command in specified SELinux context
 
 Modified command invocation
 
@@ -12882,6 +12888,177 @@ information.
 * uptime invocation::           Print system uptime and load
 @end menu
 
+@node SELinux context
+@chapter SELinux context
+
+@cindex SELinux context
+@cindex SELinux, context
+@cindex commands for SELinux context
+
+This section describes commands for operations with SELinux
+contexts.
+
+@menu
+* chcon invocation::            Change SELinux context of file
+* runcon invocation::           Run a command in specified SELinux context
+@end menu
+
+@node chcon invocation
+@section @command{chcon}: Change SELinux context of file.
+
+@pindex chcon
+@cindex changing security context
+@cindex change SELinux context
+
+@command{chcon} changes the SELinux security context of the selected files.
+Synopses:
+
+@smallexample
+chcon [@var{option}]@dots{} @var{context} @var{file}@dots{}
+chcon [@var{option}]@dots{} [-u @var{user}] [-r @var{role}] [-l @var{range}] [-t @var{type}] @var{file}@dots{}
+chcon [@var{option}]@dots{} --reference=@var{rfile} @var{file}@dots{}
+@end smallexample
+
+Change the SELinux security context of each @var{file} to @var{context}.
+With @option{--reference}, change the security context of each @var{file}
+to that of @var{rfile}.
+
+The program accepts the following options.  Also see @ref{Common options}.
+
+@table @samp
+
+@item -h
+@itemx --no-dereference
+@opindex -h
+@opindex --no-dereference
+@cindex no dereference
+Affect symbolic links instead of any referenced file.
+
+@item --reference=@var{rfile}
+@opindex --reference
+@cindex reference file
+Use @var{rfile}'s security context rather than specifying a @var{context} value.
+
+@item -R
+@itemx --recursive
+@opindex -R
+@opindex --recursive
+Operate on files and directories recursively.
+
+@choptH
+@xref{Traversing symlinks}.
+
+@choptL
+@xref{Traversing symlinks}.
+
+@choptP
+@xref{Traversing symlinks}.
+
+@item -v
+@itemx --verbose
+@opindex -v
+@opindex --verbose
+@cindex diagnostic
+Output a diagnostic for every file processed.
+
+@item -u @var{user}
+@itemx --user=@var{user}
+@opindex -u
+@opindex --user
+Set user @var{user} in the target security context.
+
+@item -r @var{role}
+@itemx --role=@var{role}
+@opindex -r
+@opindex --role
+Set role @var{role} in the target security context.
+
+@item -t @var{type}
+@itemx --type=@var{type}
+@opindex -t
+@opindex --type
+Set type @var{type} in the target security context.
+
+@item -l @var{range}
+@itemx --range=@var{range}
+@opindex -l
+@opindex --range
+Set range @var{range} in the target security context.
+
+@end table
+
+@exitstatus
+
+@node runcon invocation
+@section @command{runcon}: Run a command in specified SELinux context
+
+@pindex runcon
+@cindex run with security context
+
+
+@command{runcon} runs file in specified SELinux security context.
+
+Synopses:
+@smallexample
+runcon @var{context} @var{command} [@var{args}]
+runcon [ -c ] [-u @var{user}] [-r @var{role}] [-t @var{type}] [-l @var{range}] @var{command} [@var{args}]
+@end smallexample
+
+Run @var{command} with completely-specified @var{context}, or with
+current or transitioned security context modified by one or more of @var{level},
+@var{role}, @var{type} and @var{user}.
+
+If none of @option{-c}, @option{-t}, @option{-u}, @option{-r}, or @option{-l}
+is specified, the first argument is used as the complete context.
+Any additional arguments after @var{command}
+are interpreted as arguments to the command.
+
+With neither @var{context} nor @var{command}, print the current security context.
+
+The program accepts the following options.  Also see @ref{Common options}.
+
+@table @samp
+
+@item -c
+@itemx --compute
+@opindex -c
+@opindex --compute
+Compute process transition context before modifying.
+
+@item -u @var{user}
+@itemx --user=@var{user}
+@opindex -u
+@opindex --user
+Set user @var{user} in the target security context.
+
+@item -r @var{role}
+@itemx --role=@var{role}
+@opindex -r
+@opindex --role
+Set role @var{role} in the target security context.
+
+@item -t @var{type}
+@itemx --type=@var{type}
+@opindex -t
+@opindex --type
+Set type @var{type} in the target security context.
+
+@item -l @var{range}
+@itemx --range=@var{range}
+@opindex -l
+@opindex --range
+Set range @var{range} in the target security context.
+
+@end table
+
+@cindex exit status of @command{runcon}
+Exit status:
+
+@display
+126 if @var{command} is found but cannot be invoked
+127 if @command{runcon} itself fails or if @var{command} cannot be found
+the exit status of @var{command} otherwise
+@end display
 
 @node date invocation
 @section @command{date}: Print or set system date and time
