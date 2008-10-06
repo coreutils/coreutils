@@ -1276,7 +1276,8 @@ dirent_count (struct stat const *st)
   return st->st_size / 16;
 }
 
-# if HAVE_SYS_VFS_H && HAVE_FSTATFS && HAVE_STRUCT_STATFS_F_TYPE
+#if defined __linux__ \
+  && HAVE_SYS_VFS_H && HAVE_FSTATFS && HAVE_STRUCT_STATFS_F_TYPE
 #  include <sys/vfs.h>
 #  include "fs.h"
 
