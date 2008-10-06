@@ -2,6 +2,10 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 * Noteworthy changes in release ?.? (????-??-??) [?]
 
+** New features
+
+  stat -f recognizes the Lustre file system type
+
 
 * Noteworthy changes in release 7.0 (2008-10-05) [beta]
 

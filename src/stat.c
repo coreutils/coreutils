@@ -265,6 +265,8 @@ human_fstype (STRUCT_STATVFS const *statfsbuf)
       return "jffs";
     case S_MAGIC_JFS: /* 0x3153464A */
       return "jfs";
+    case S_MAGIC_LUSTRE: /* 0x0BD00BD0 */
+      return "lustre";
     case S_MAGIC_MINIX: /* 0x137F */
       return "minix";
     case S_MAGIC_MINIX_30: /* 0x138F */
