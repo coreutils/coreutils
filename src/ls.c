@@ -3944,7 +3944,7 @@ has_capability (char const *name)
 }
 #else
 static bool
-has_capability (char const *name)
+has_capability (char const *name ATTRIBUTE_UNUSED)
 {
   return false;
 }
