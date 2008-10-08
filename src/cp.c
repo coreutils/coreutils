@@ -76,7 +76,6 @@ enum
   NO_PRESERVE_ATTRIBUTES_OPTION,
   PARENTS_OPTION,
   PRESERVE_ATTRIBUTES_OPTION,
-  REPLY_OPTION,
   SPARSE_OPTION,
   STRIP_TRAILING_SLASHES_OPTION,
   UNLINK_DEST_BEFORE_OPENING
@@ -108,18 +107,6 @@ static enum Sparse_type const sparse_type[] =
 };
 ARGMATCH_VERIFY (sparse_type_string, sparse_type);
 
-/* Valid arguments to the `--reply' option. */
-static char const* const reply_args[] =
-{
-  "yes", "no", "query", NULL
-};
-/* The values that correspond to the above strings. */
-static int const reply_vals[] =
-{
-  I_ALWAYS_YES, I_ALWAYS_NO, I_ASK_USER
-};
-ARGMATCH_VERIFY (reply_args, reply_vals);
-
 static struct option const long_opts[] =
 {
   {"archive", no_argument, NULL, 'a'},
@@ -138,8 +125,6 @@ static struct option const long_opts[] =
   {"preserve", optional_argument, NULL, PRESERVE_ATTRIBUTES_OPTION},
   {"recursive", no_argument, NULL, 'R'},
   {"remove-destination", no_argument, NULL, UNLINK_DEST_BEFORE_OPENING},
-  {"reply", required_argument, NULL, REPLY_OPTION}, /* Deprecated 2005-07-03,
-						       remove in 2008. */
   {"sparse", required_argument, NULL, SPARSE_OPTION},
   {"strip-trailing-slashes", no_argument, NULL, STRIP_TRAILING_SLASHES_OPTION},
   {"suffix", required_argument, NULL, 'S'},
@@ -999,13 +984,6 @@ main (int argc, char **argv)
 	case 'r':
 	case 'R':
 	  x.recursive = true;
-	  break;
-
-	case REPLY_OPTION: /* Deprecated */
-	  x.interactive = XARGMATCH ("--reply", optarg,
-				     reply_args, reply_vals);
-	  error (0, 0,
-		 _("the --reply option is deprecated; use -i or -f instead"));
 	  break;
 
 	case UNLINK_DEST_BEFORE_OPENING:

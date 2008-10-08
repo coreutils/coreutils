@@ -19,6 +19,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Changes in behavior
 
+  cp and mv: the --reply={yes,no,query} option has been removed.
+  Using it has elicited a warning for the last three years.
+
   ls -l now marks SELinux-only files with the less obtrusive '.',
   rather than '+'.  A file with any other combination of MAC and ACL
   is still marked with a '+'.

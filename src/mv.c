@@ -24,7 +24,6 @@
 #include <selinux/selinux.h>
 
 #include "system.h"
-#include "argmatch.h"
 #include "backupfile.h"
 #include "copy.h"
 #include "cp-hash.h"
@@ -52,24 +51,11 @@
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
 enum
 {
-  REPLY_OPTION = CHAR_MAX + 1,
-  STRIP_TRAILING_SLASHES_OPTION
+  STRIP_TRAILING_SLASHES_OPTION = CHAR_MAX + 1
 };
 
 /* Remove any trailing slashes from each SOURCE argument.  */
 static bool remove_trailing_slashes;
-
-/* Valid arguments to the `--reply' option. */
-static char const* const reply_args[] =
-{
-  "yes", "no", "query", NULL
-};
-
-/* The values that correspond to the above strings. */
-static int const reply_vals[] =
-{
-  I_ALWAYS_YES, I_ALWAYS_NO, I_ASK_USER
-};
 
 static struct option const long_options[] =
 {
@@ -77,8 +63,6 @@ static struct option const long_options[] =
   {"force", no_argument, NULL, 'f'},
   {"interactive", no_argument, NULL, 'i'},
   {"no-target-directory", no_argument, NULL, 'T'},
-  {"reply", required_argument, NULL, REPLY_OPTION}, /* Deprecated 2005-07-03,
-						       remove in 2008. */
   {"strip-trailing-slashes", no_argument, NULL, STRIP_TRAILING_SLASHES_OPTION},
   {"suffix", required_argument, NULL, 'S'},
   {"target-directory", required_argument, NULL, 't'},
@@ -389,12 +373,6 @@ main (int argc, char **argv)
 	  break;
 	case 'i':
 	  x.interactive = I_ASK_USER;
-	  break;
-	case REPLY_OPTION: /* Deprecated */
-	  x.interactive = XARGMATCH ("--reply", optarg,
-				     reply_args, reply_vals);
-	  error (0, 0,
-		 _("the --reply option is deprecated; use -i or -f instead"));
 	  break;
 	case STRIP_TRAILING_SLASHES_OPTION:
 	  remove_trailing_slashes = true;

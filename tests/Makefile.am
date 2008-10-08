@@ -386,7 +386,6 @@ TESTS =						\
   mv/part-symlink				\
   mv/partition-perm				\
   mv/perm-1					\
-  mv/reply-no					\
   mv/to-symlink					\
   mv/trailing-slash				\
   mv/update					\

@@ -29,19 +29,16 @@ ln a/foo a/bar || framework_failure
 echo FUBAR > b/FUBAR || framework_failure
 ln b/FUBAR b/bar || framework_failure
 chmod a-w b/bar || framework_failure
+echo n > no || framework_failure
 
 fail=0
 
-mv --reply=no a/bar a/foo b > out 2> err || fail=1
-cat <<EOF > exp
-EOF
+mv a/bar a/foo b < no > out 2> err || fail=1
+touch exp
+touch exp_err
 
-cat <<EOF > exp_err
-mv: the --reply option is deprecated; use -i or -f instead
-EOF
-
-compare err exp_err || fail=1
 compare out exp || fail=1
+compare err exp_err || fail=1
 
 case "`cat b/foo`" in
   foo) ;;
