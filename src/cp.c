@@ -29,6 +29,7 @@
 #include "cp-hash.h"
 #include "error.h"
 #include "filenamecat.h"
+#include "ignore-value.h"
 #include "lchmod.h"
 #include "quote.h"
 #include "stat-time.h"
@@ -326,7 +327,7 @@ re_protect (char const *const_dst_name, size_t src_offset,
                 }
               /* Failing to preserve ownership is OK. Still, try to preserve
                  the group, but ignore the possible error. */
-              (void) lchown (dst_name, -1, p->st.st_gid);
+              ignore_value (lchown (dst_name, -1, p->st.st_gid));
             }
 	}
 

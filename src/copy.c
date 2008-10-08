@@ -44,6 +44,7 @@
 #include "full-write.h"
 #include "hash.h"
 #include "hash-triple.h"
+#include "ignore-value.h"
 #include "lchmod.h"
 #include "quote.h"
 #include "same.h"
@@ -230,7 +231,7 @@ set_owner (const struct cp_options *x, char const *dst_name, int dest_desc,
 	  /* We've failed to set *both*.  Now, try to set just the group
 	     ID, but ignore any failure here, and don't change errno.  */
           int saved_errno = errno;
-          (void) fchown (dest_desc, -1, gid);
+          ignore_value (fchown (dest_desc, -1, gid));
           errno = saved_errno;
         }
     }
@@ -243,7 +244,7 @@ set_owner (const struct cp_options *x, char const *dst_name, int dest_desc,
 	  /* We've failed to set *both*.  Now, try to set just the group
 	     ID, but ignore any failure here, and don't change errno.  */
           int saved_errno = errno;
-          (void) lchown (dst_name, -1, gid);
+          ignore_value (lchown (dst_name, -1, gid));
           errno = saved_errno;
         }
     }

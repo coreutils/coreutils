@@ -1423,7 +1423,7 @@ preprocess_dir (DIR **dirp, struct rm_options const *x)
   for (size_t i = 0; i < n; i++)
     {
       /* ignore failure */
-      (void) unlinkat (dir_fd, vv[i]->name, 0);
+      unlinkat (dir_fd, vv[i]->name, 0);
     }
 
  cleanup:
