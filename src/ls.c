@@ -715,11 +715,14 @@ static int exit_status;
 /* Exit statuses.  */
 enum
   {
-    /* "ls" had a minor problem (e.g., it could not stat a directory
-       entry).  */
+    /* "ls" had a minor problem.  E.g., while processing a directory,
+       ls obtained the name of an entry via readdir, yet was later
+       unable to stat that name.  This happens when listing a directory
+       in which entries are actively being removed or renamed.  */
     LS_MINOR_PROBLEM = 1,
 
-    /* "ls" had more serious trouble.  */
+    /* "ls" had more serious trouble (e.g., memory exhausted, invalid
+       option or failure to stat a command line argument.  */
     LS_FAILURE = 2
   };
 
@@ -4527,7 +4530,12 @@ colors, and can be set easily by the dircolors command.\n\
 "), stdout);
       fputs (_("\
 \n\
-Exit status is 0 if OK, 1 if minor problems, 2 if serious trouble.\n\
+Exit status:\n\
+0 if OK,\n\
+1 if minor problems (e.g., failure to access a file or directory not\n\
+  specified as a command line argument\n\
+2 if serious trouble (e.g., memory exhausted, invalid option or failure\n\
+  to access a file or directory specified as a command line argument).\n\
 "), stdout);
       emit_bug_reporting_address ();
     }
