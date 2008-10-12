@@ -351,7 +351,7 @@ pm = progs-makefile
 pr = progs-readme
 # Ensure that the list of programs in README matches the list
 # of programs we can build.
-check: check-README check-misc check-duplicate-no-install
+check: check-README check-duplicate-no-install
 .PHONY: check-README
 check-README:
 	rm -rf $(pr) $(pm)
@@ -390,18 +390,6 @@ check-AUTHORS: $(all_programs)
 	done > $(au_actual)
 	sed -n '/^[^ ][^ ]*:/p' $(top_srcdir)/AUTHORS > $(au_dotdot)
 	diff $(au_actual) $(au_dotdot) && rm -f $(au_actual) $(au_dotdot)
-
-# Make sure we don't define any S_IS* macros in src/*.c files.
-# Not a big deal, but they're already defined via system.h.
-#
-# Also make sure we don't use st_blocks.  Use ST_NBLOCKS instead.
-# This is a bit of a kludge, since it prevents use of the string
-# even in comments, but for now it does the job with no false positives.
-.PHONY: check-misc
-check-misc:
-	cd $(srcdir); grep '^# *define  *S_IS' $(SOURCES) && exit 1 || :
-	cd $(srcdir); grep st_blocks $(SOURCES) && exit 1 || :
-	cd $(srcdir); grep '^# *define .*defined' $(SOURCES) && exit 1 || :
 
 # Extract the list of authors from each file.
 sed_filter = s/^ *//;s/N_ (//;s/^"//;s/")*$$//

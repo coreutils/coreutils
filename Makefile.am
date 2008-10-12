@@ -26,6 +26,7 @@ EXTRA_DIST = cfg.mk maint.mk \
   .x-sc_obsolete_symbols \
   .x-sc_program_name \
   .x-sc_prohibit_atoi_atof \
+  .x-sc_prohibit_stat_st_blocks \
   .x-sc_prohibit_strcmp \
   .x-sc_require_config_h \
   .x-sc_space_tab .x-sc_sun_os_names \

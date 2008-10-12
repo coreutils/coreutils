@@ -455,6 +455,21 @@ sc_no_exec_perl_coreutils:
 	      exit 1; } || :;						\
 	fi
 
+# Make sure we don't use st_blocks.  Use ST_NBLOCKS instead.
+# This is a bit of a kludge, since it prevents use of the string
+# even in comments, but for now it does the job with no false positives.
+sc_prohibit_stat_st_blocks:
+	@grep -nE '[.>]st_blocks' $$($(VC_LIST_EXCEPT)) && \
+	  { echo '$(ME): do not use st_blocks; use ST_NBLOCKS'		\
+		1>&2; exit 1; } || :
+
+# Make sure we don't define any S_IS* macros in src/*.c files.
+# They're already defined via gnulib's sys/stat.h replacement.
+sc_prohibit_S_IS_definition:
+	@grep -nE '^ *# *define  *S_IS' $$($(VC_LIST_EXCEPT)) &&	\
+	  { echo '$(ME): do not define S_IS* macros; include <sys/stat.h>' \
+		1>&2; exit 1; } || :
+
 NEWS_hash = \
   $$(sed -n '/^\*.* $(PREV_VERSION_REGEXP) ([0-9-]*)/,$$p' \
      $(srcdir)/NEWS | md5sum -)
