@@ -1,0 +1,25 @@
+Description:
+a wrapper for frepoen
+
+Files:
+lib/xfreopen.c
+lib/xfreopen.h
+
+Depends-on:
+error
+exitfail
+quote
+
+configure.ac:
+
+Makefile.am:
+lib_SOURCES += xfreopen.c xfreopen.h
+
+Include:
+"xfreopen.h"
+
+License:
+LGPL
+
+Maintainer:
+Jim Meyering
