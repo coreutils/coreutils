@@ -188,7 +188,9 @@ main (int argc, char **argv)
     {
       /* From here on, redirect stderr to /dev/null.
          A diagnostic from getopt_long, above, would still go to stderr.  */
-      freopen ("/dev/null", "wb", stderr);
+      if (!freopen ("/dev/null", "wb", stderr))
+        error (EXIT_FAILURE, errno,
+               _("failed to redirect stderr to /dev/null"));
     }
 
   n_args = argc - optind;
