@@ -27,6 +27,7 @@
 #include "error.h"
 #include "quote.h"
 #include "safe-read.h"
+#include "xfreopen.h"
 #include "xstrtol.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -1750,9 +1751,9 @@ main (int argc, char **argv)
      non-printable characters, or characters which are stripped away
      by text-mode reads (like CR and ^Z).  */
   if (O_BINARY && ! isatty (STDIN_FILENO))
-    freopen (NULL, "rb", stdin);
+    xfreopen (NULL, "rb", stdin);
   if (O_BINARY && ! isatty (STDOUT_FILENO))
-    freopen (NULL, "wb", stdout);
+    xfreopen (NULL, "wb", stdout);
 
   if (squeeze_repeats && non_option_args == 1)
     {

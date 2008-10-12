@@ -28,6 +28,7 @@
 #include "error.h"
 #include "human.h"
 #include "safe-read.h"
+#include "xfreopen.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "sum"
@@ -97,7 +98,7 @@ bsd_sum_file (const char *file, int print_name)
       fp = stdin;
       have_read_stdin = true;
       if (O_BINARY && ! isatty (STDIN_FILENO))
-	freopen (NULL, "rb", stdin);
+	xfreopen (NULL, "rb", stdin);
     }
   else
     {
@@ -165,7 +166,7 @@ sysv_sum_file (const char *file, int print_name)
       fd = STDIN_FILENO;
       have_read_stdin = true;
       if (O_BINARY && ! isatty (STDIN_FILENO))
-	freopen (NULL, "rb", stdin);
+	xfreopen (NULL, "rb", stdin);
     }
   else
     {

@@ -36,6 +36,7 @@
 #include "full-read.h"
 #include "quote.h"
 #include "safe-read.h"
+#include "xfreopen.h"
 #include "xstrtol.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -838,7 +839,7 @@ head_file (const char *filename, uintmax_t n_units, bool count_lines,
       fd = STDIN_FILENO;
       filename = _("standard input");
       if (O_BINARY && ! isatty (STDIN_FILENO))
-	freopen (NULL, "rb", stdin);
+	xfreopen (NULL, "rb", stdin);
     }
   else
     {
@@ -1051,7 +1052,7 @@ main (int argc, char **argv)
 	       : default_file_list);
 
   if (O_BINARY && ! isatty (STDOUT_FILENO))
-    freopen (NULL, "wb", stdout);
+    xfreopen (NULL, "wb", stdout);
 
   for (i = 0; file_list[i]; ++i)
     ok &= head_file (file_list[i], n_units, count_lines, elide_from_end);

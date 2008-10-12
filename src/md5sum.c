@@ -37,6 +37,7 @@
 #endif
 #include "error.h"
 #include "stdio--.h"
+#include "xfreopen.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #if HASH_ALGO_MD5
@@ -391,7 +392,7 @@ digest_file (const char *filename, int *binary, unsigned char *bin_result)
 	  if (*binary < 0)
 	    *binary = ! isatty (STDIN_FILENO);
 	  if (*binary)
-	    freopen (NULL, "rb", stdin);
+	    xfreopen (NULL, "rb", stdin);
 	}
     }
   else

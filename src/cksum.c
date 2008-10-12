@@ -43,6 +43,7 @@
 #include <sys/types.h>
 #include <stdint.h>
 #include "system.h"
+#include "xfreopen.h"
 
 #ifdef CRCTAB
 
@@ -192,7 +193,7 @@ cksum (const char *file, bool print_name)
       fp = stdin;
       have_read_stdin = true;
       if (O_BINARY && ! isatty (STDIN_FILENO))
-	freopen (NULL, "rb", stdin);
+	xfreopen (NULL, "rb", stdin);
     }
   else
     {

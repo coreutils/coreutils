@@ -48,6 +48,7 @@ tac -r -s '.\|
 #include "quotearg.h"
 #include "safe-read.h"
 #include "stdlib--.h"
+#include "xfreopen.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "tac"
@@ -533,7 +534,7 @@ tac_file (const char *filename)
       fd = STDIN_FILENO;
       filename = _("standard input");
       if (O_BINARY && ! isatty (STDIN_FILENO))
-	freopen (NULL, "rb", stdin);
+	xfreopen (NULL, "rb", stdin);
     }
   else
     {
@@ -647,7 +648,7 @@ main (int argc, char **argv)
 	  : default_file_list);
 
   if (O_BINARY && ! isatty (STDOUT_FILENO))
-    freopen (NULL, "wb", stdout);
+    xfreopen (NULL, "wb", stdout);
 
   {
     size_t i;

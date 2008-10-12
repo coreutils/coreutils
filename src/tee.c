@@ -24,6 +24,7 @@
 #include "system.h"
 #include "error.h"
 #include "stdio--.h"
+#include "xfreopen.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "tee"
@@ -152,9 +153,9 @@ tee_files (int nfiles, const char **files)
     files[i] = files[i - 1];
 
   if (O_BINARY && ! isatty (STDIN_FILENO))
-    freopen (NULL, "rb", stdin);
+    xfreopen (NULL, "rb", stdin);
   if (O_BINARY && ! isatty (STDOUT_FILENO))
-    freopen (NULL, "wb", stdout);
+    xfreopen (NULL, "wb", stdout);
 
   /* In the array of NFILES + 1 descriptors, make
      the first one correspond to standard output.   */

@@ -34,6 +34,7 @@
 #include "full-write.h"
 #include "quote.h"
 #include "safe-read.h"
+#include "xfreopen.h"
 #include "xstrtol.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
@@ -544,7 +545,7 @@ main (int argc, char **argv)
 
   /* Binary I/O is safer when bytecounts are used.  */
   if (O_BINARY && ! isatty (STDIN_FILENO))
-    freopen (NULL, "rb", stdin);
+    xfreopen (NULL, "rb", stdin);
 
   /* No output file is open now.  */
   output_desc = -1;

@@ -40,6 +40,7 @@
 #include "quote.h"
 #include "safe-read.h"
 #include "stat-time.h"
+#include "xfreopen.h"
 #include "xnanosleep.h"
 #include "xstrtol.h"
 #include "xstrtod.h"
@@ -1273,7 +1274,7 @@ tail_file (struct File_spec *f, uintmax_t n_units)
       have_read_stdin = true;
       fd = STDIN_FILENO;
       if (O_BINARY && ! isatty (STDIN_FILENO))
-	freopen (NULL, "rb", stdin);
+	xfreopen (NULL, "rb", stdin);
     }
   else
     fd = open (f->name, O_RDONLY | O_BINARY);
@@ -1683,7 +1684,7 @@ main (int argc, char **argv)
     print_headers = true;
 
   if (O_BINARY && ! isatty (STDOUT_FILENO))
-    freopen (NULL, "wb", stdout);
+    xfreopen (NULL, "wb", stdout);
 
   for (i = 0; i < n_files; i++)
     ok &= tail_file (&F[i], n_units);

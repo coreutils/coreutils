@@ -25,6 +25,7 @@
 #include "system.h"
 #include "error.h"
 #include "quote.h"
+#include "xfreopen.h"
 #include "xprintf.h"
 #include "xstrtol.h"
 
@@ -864,7 +865,7 @@ open_next_file (void)
 	  in_stream = stdin;
 	  have_read_stdin = true;
 	  if (O_BINARY && ! isatty (STDIN_FILENO))
-	    freopen (NULL, "rb", stdin);
+	    xfreopen (NULL, "rb", stdin);
 	}
       else
 	{

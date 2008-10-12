@@ -39,6 +39,7 @@
 #include "full-write.h"
 #include "quote.h"
 #include "safe-read.h"
+#include "xfreopen.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "cat"
@@ -664,7 +665,7 @@ main (int argc, char **argv)
     {
       file_open_mode |= O_BINARY;
       if (O_BINARY && ! isatty (STDOUT_FILENO))
-	freopen (NULL, "wb", stdout);
+	xfreopen (NULL, "wb", stdout);
     }
 
   /* Check if any of the input files are the same as the output file.  */
@@ -684,7 +685,7 @@ main (int argc, char **argv)
 	  have_read_stdin = true;
 	  input_desc = STDIN_FILENO;
 	  if ((file_open_mode & O_BINARY) && ! isatty (STDIN_FILENO))
-	    freopen (NULL, "rb", stdin);
+	    xfreopen (NULL, "rb", stdin);
 	}
       else
 	{
