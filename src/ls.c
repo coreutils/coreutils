@@ -4531,11 +4531,11 @@ colors, and can be set easily by the dircolors command.\n\
       fputs (_("\
 \n\
 Exit status:\n\
-0 if OK,\n\
-1 if minor problems (e.g., failure to access a file or directory not\n\
-  specified as a command line argument\n\
-2 if serious trouble (e.g., memory exhausted, invalid option or failure\n\
-  to access a file or directory specified as a command line argument).\n\
+ 0  if OK,\n\
+ 1  if minor problems (e.g., failure to access a file or directory not\n\
+    specified as a command line argument,\n\
+ 2  if serious trouble (e.g., memory exhausted, invalid option or failure\n\
+    to access a file or directory specified as a command line argument).\n\
 "), stdout);
       emit_bug_reporting_address ();
     }
