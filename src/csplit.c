@@ -34,17 +34,6 @@
 #include "stdio--.h"
 #include "xstrtol.h"
 
-/* Use SA_NOCLDSTOP as a proxy for whether the sigaction machinery is
-   present.  */
-#ifndef SA_NOCLDSTOP
-# define SA_NOCLDSTOP 0
-# define sigprocmask(How, Set, Oset) /* empty */
-# define sigset_t int
-# if ! HAVE_SIGINTERRUPT
-#  define siginterrupt(sig, flag) /* empty */
-# endif
-#endif
-
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "csplit"
 
@@ -238,12 +227,10 @@ xalloc_die (void)
 static void
 interrupt_handler (int sig)
 {
-  if (! SA_NOCLDSTOP)
-    signal (sig, SIG_IGN);
-
   delete_all_files (true);
-
-  signal (sig, SIG_DFL);
+  /* The signal has been reset to SIG_DFL, but blocked during this
+     handler.  Force the default action of this signal once the
+     handler returns and the block is removed.  */
   raise (sig);
 }
 
@@ -1421,7 +1408,6 @@ main (int argc, char **argv)
       };
     enum { nsigs = sizeof sig / sizeof sig[0] };
 
-#if SA_NOCLDSTOP
     struct sigaction act;
 
     sigemptyset (&caught_signals);
@@ -1434,19 +1420,11 @@ main (int argc, char **argv)
 
     act.sa_handler = interrupt_handler;
     act.sa_mask = caught_signals;
-    act.sa_flags = 0;
+    act.sa_flags = SA_NODEFER | SA_RESETHAND;
 
     for (i = 0; i < nsigs; i++)
       if (sigismember (&caught_signals, sig[i]))
 	sigaction (sig[i], &act, NULL);
-#else
-    for (i = 0; i < nsigs; i++)
-      if (signal (sig[i], SIG_IGN) != SIG_IGN)
-	{
-	  signal (sig[i], interrupt_handler);
-	  siginterrupt (sig[i], 1);
-	}
-#endif
   }
 
   split_file ();
