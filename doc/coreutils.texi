@@ -11154,22 +11154,12 @@ may be used for grouping in the usual manner.  You must quote
 parentheses and many operators to avoid the shell evaluating them,
 however.
 
-By default, @command{expr} performs operations using native arithmetic
-types, but if a numeric overflow occurs and @command{expr} was built
-with support for the GNU MP library, @command{expr}, it
-uses arbitrary-precision arithmetic.
+When built with support for the GNU MP library, @command{expr} uses
+arbitrary-precision arithmetic; otherwise, it uses native arithmetic
+types and may fail due to arithmetic overflow.
 
-Apart from @option{--help} and @option{--version} (@pxref{Common
-options}), the following options are supported:
-
-@table @samp
-@item --bignum
-Perform arithmetic operations using unlimited precision via the GNU MP library.
-@item --no-bignum
-Use only limited-precision native operations.
-In the event of numeric overflow, @command{expr} fails,
-even if GNU MP is available.
-@end table
+The only options are @option{--help} and @option{--version}.  @xref{Common
+options}.  Options must precede operands.
 
 @cindex exit status of @command{expr}
 Exit status:

@@ -163,8 +163,8 @@ my @Tests =
      ['bignum-div', "$big_prod / $big", {OUT => $big_p1}],
     );
 
-# If using --bignum fails, remove all /^bignum-/ tests
-`expr --bignum 1`
+# If using big numbers fails, remove all /^bignum-/ tests
+`expr $big_prod '*' $big_prod '*' $big_prod`
   or @Tests = grep {$_->[0] !~ /^bignum-/} @Tests;
 
 # Append a newline to end of each expected `OUT' string.

@@ -33,15 +33,114 @@
 #include <sys/types.h>
 #include "system.h"
 
-#include <assert.h>
 #include <regex.h>
-#if HAVE_GMP
-#include <gmp.h>
-#endif
 #include "error.h"
+#include "long-options.h"
 #include "quotearg.h"
 #include "strnumcmp.h"
 #include "xstrtol.h"
+
+/* Various parts of this code assume size_t fits into unsigned long
+   int, the widest unsigned type that GMP supports.  */
+verify (SIZE_MAX <= ULONG_MAX);
+
+static void integer_overflow (char) ATTRIBUTE_NORETURN;
+
+#ifndef HAVE_GMP
+# define HAVE_GMP 0
+#endif
+
+#if HAVE_GMP
+# include <gmp.h>
+#else
+/* Approximate gmp.h well enough for expr.c's purposes.  */
+typedef intmax_t mpz_t[1];
+static void mpz_clear (mpz_t z) {}
+static void mpz_init_set_ui (mpz_t z, unsigned long int i) { z[0] = i; }
+static int
+mpz_init_set_str (mpz_t z, char *s, int base)
+{
+  return xstrtoimax (s, NULL, base, z, NULL) == LONGINT_OK ? 0 : -1;
+}
+static void
+mpz_add (mpz_t r, mpz_t a0, mpz_t b0)
+{
+  intmax_t a = a0[0];
+  intmax_t b = b0[0];
+  intmax_t val = a + b;
+  if ((val < a) != (b < 0))
+    integer_overflow ('+');
+  r[0] = val;
+}
+static void
+mpz_sub (mpz_t r, mpz_t a0, mpz_t b0)
+{
+  intmax_t a = a0[0];
+  intmax_t b = b0[0];
+  intmax_t val = a - b;
+  if ((a < val) != (b < 0))
+    integer_overflow ('-');
+  r[0] = val;
+}
+static void
+mpz_mul (mpz_t r, mpz_t a0, mpz_t b0)
+{
+  intmax_t a = a0[0];
+  intmax_t b = b0[0];
+  intmax_t val = a * b;
+  if (! (a == 0 || b == 0
+	 || ((val < 0) == ((a < 0) ^ (b < 0)) && val / a == b)))
+    integer_overflow ('*');
+  r[0] = val;
+}
+static void
+mpz_tdiv_q (mpz_t r, mpz_t a0, mpz_t b0)
+{
+  intmax_t a = a0[0];
+  intmax_t b = b0[0];
+
+  /* Some x86-style hosts raise an exception for INT_MIN / -1.  */
+  if (a < - INTMAX_MAX && b == -1)
+    integer_overflow ('/');
+  r[0] = a / b;
+}
+static void
+mpz_tdiv_r (mpz_t r, mpz_t a0, mpz_t b0)
+{
+  intmax_t a = a0[0];
+  intmax_t b = b0[0];
+
+  /* Some x86-style hosts raise an exception for INT_MIN % -1.  */
+  r[0] = a < - INTMAX_MAX && b == -1 ? 0 : a % b;
+}
+static char *
+mpz_get_str (char const *str, int base, mpz_t z)
+{
+  char buf[INT_BUFSIZE_BOUND (intmax_t)];
+  return xstrdup (imaxtostr (z[0], buf));
+}
+static int
+mpz_sgn (mpz_t z)
+{
+  return z[0] < 0 ? -1 : 0 < z[0];
+}
+static int
+mpz_fits_ulong_p (mpz_t z)
+{
+  return 0 <= z[0] && z[0] <= ULONG_MAX;
+}
+static unsigned long int
+mpz_get_ui (mpz_t z)
+{
+  return z[0];
+}
+static int
+mpz_out_str (FILE *stream, int base, mpz_t z)
+{
+  char buf[INT_BUFSIZE_BOUND (intmax_t)];
+  return fputs (imaxtostr (z[0], buf), stream) != EOF;
+}
+#endif
 
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "expr"
@@ -61,14 +160,10 @@ enum
     EXPR_FAILURE
   };
 
-/* The kinds of value we can have.
-   In the comments below, a variable is described as "arithmetic" if
-   it is either integer or mp_integer.   Variables are of type mp_integer
-   only if GNU MP is available, but the type designator is always defined. */
+/* The kinds of value we can have.  */
 enum valtype
 {
   integer,
-  mp_integer,
   string
 };
 typedef enum valtype TYPE;
@@ -79,12 +174,7 @@ struct valinfo
   TYPE type;			/* Which kind. */
   union
   {				/* The value itself. */
-    /* We could use intmax_t but that would integrate less well with GMP,
-       since GMP has mpz_set_si but no intmax_t equivalent. */
-    signed long int i;
-#if HAVE_GMP
-    mpz_t z;
-#endif
+    mpz_t i;
     char *s;
   } u;
 };
@@ -97,34 +187,6 @@ static VALUE *eval (bool);
 static bool nomoreargs (void);
 static bool null (VALUE *v);
 static void printv (VALUE *v);
-
-/* Arithmetic is done in one of three modes.
-
-   The --bignum option forces all arithmetic to use bignums other than
-   string indexing (mode==MP_ALWAYS).  The --no-bignum option forces
-   all arithmetic to use native types rather than bignums
-   (mode==MP_NEVER).
-
-   The default mode is MP_AUTO if GMP is available and MP_NEVER if
-   not.  Most functions will process a bignum if one is found, but
-   will not convert a native integer to a string if the mode is
-   MP_NEVER. */
-enum arithmetic_mode
-  {
-    MP_NEVER,			/* Never use bignums */
-#if HAVE_GMP
-    MP_ALWAYS,			/* Always use bignums. */
-    MP_AUTO,			/* Switch if result would otherwise overflow */
-#endif
-  };
-static enum arithmetic_mode mode =
-#if HAVE_GMP
-  MP_AUTO
-#else
-  MP_NEVER
-#endif
-  ;
-
 
 void
 usage (int status)
@@ -140,10 +202,6 @@ Usage: %s EXPRESSION\n\
 "),
 	      program_name, program_name);
       putchar ('\n');
-      fputs (_("\
-      --bignum     always use arbitrary-precision arithmetic\n\
-      --no-bignum  always use single-precision arithmetic\n"),
-	       stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       fputs (_("\
@@ -220,48 +278,23 @@ syntax_error (void)
 static void
 integer_overflow (char op)
 {
-  error (EXPR_FAILURE, 0,
-	 _("arithmetic operation %c produced an out of range value, "
-	   "but arbitrary-precision arithmetic is not available"), op);
-}
-
-static void die (int exit_status, int errno_val, char const *msg)
-  ATTRIBUTE_NORETURN;
-static void
-die (int exit_status, int errno_val, char const *msg)
-{
-  assert (exit_status != 0);
-  error (exit_status, errno_val, "%s", msg);
+  error (EXPR_FAILURE, ERANGE, "%c", op);
   abort (); /* notreached */
 }
 
+static void die (int errno_val, char const *msg)
+  ATTRIBUTE_NORETURN;
 static void
-string_too_long (void)
+die (int errno_val, char const *msg)
 {
-  die (EXPR_FAILURE, ERANGE, _("string too long"));
+  error (EXPR_FAILURE, errno_val, "%s", msg);
+  abort (); /* notreached */
 }
-
-enum
-{
-  USE_BIGNUM = CHAR_MAX + 1,
-  NO_USE_BIGNUM
-};
-
-static struct option const long_options[] =
-{
-  {"bignum", no_argument, NULL, USE_BIGNUM},
-  {"no-bignum", no_argument, NULL, NO_USE_BIGNUM},
-  {GETOPT_HELP_OPTION_DECL},
-  {GETOPT_VERSION_OPTION_DECL},
-  {NULL, 0, NULL, 0}
-};
 
 int
 main (int argc, char **argv)
 {
   VALUE *v;
-  int c;
-  int saved_optind;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -272,51 +305,23 @@ main (int argc, char **argv)
   initialize_exit_failure (EXPR_FAILURE);
   atexit (close_stdout);
 
-  /* The argument -0 should not result in an error message. */
-  opterr = 0;
-  saved_optind = 1;
-
-  while ((c = getopt_long (argc, argv, "+", long_options, NULL)) != -1)
+  parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE_NAME, VERSION,
+		      usage, AUTHORS, (char const *) NULL);
+  /* The above handles --help and --version.
+     Since there is no other invocation of getopt, handle `--' here.  */
+  if (argc > 1 && STREQ (argv[1], "--"))
     {
-      /* "expr -0" should interpret the -0 as an integer argument.
-	 arguments like --foo should also be interpreted as a string
-	 argument to be "evaluated".
-       */
-      if ('?' == c)
-	{
-	  optind = saved_optind;
-	  break;
-	}
-      else
-	switch (c)
-	  {
-	  case USE_BIGNUM:
-#if HAVE_GMP
-	    mode = MP_ALWAYS;
-#else
-	    error (EXPR_FAILURE, 0,
-		   _("arbitrary-precision support is not available"));
-#endif
-	    break;
-
-	  case NO_USE_BIGNUM:
-	    mode = MP_NEVER;
-	    break;
-
-	    case_GETOPT_HELP_CHAR;
-
-	    case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
-	  }
-      saved_optind = optind;
+      --argc;
+      ++argv;
     }
 
-  if (argc <= optind)
+  if (argc <= 1)
     {
       error (0, 0, _("missing operand"));
       usage (EXPR_INVALID);
     }
 
-  args = argv + optind;
+  args = argv + 1;
 
   v = eval (true);
   if (!nomoreargs ())
@@ -329,21 +334,11 @@ main (int argc, char **argv)
 /* Return a VALUE for I.  */
 
 static VALUE *
-int_value (long int i)
+int_value (unsigned long int i)
 {
   VALUE *v = xmalloc (sizeof *v);
-#if HAVE_GMP
-  if (mode == MP_ALWAYS)
-    {
-      /* all integer values are handled as bignums. */
-      mpz_init_set_si (v->u.z, i);
-      v->type = mp_integer;
-      return v;
-    }
-#endif
-
   v->type = integer;
-  v->u.i = i;
+  mpz_init_set_ui (v->u.i, i);
   return v;
 }
 
@@ -358,42 +353,15 @@ str_value (char const *s)
   return v;
 }
 
-
-static VALUE *
-substr_value (char const *s, size_t len, size_t pos, size_t nchars_wanted)
-{
-  if (pos >= len)
-    return str_value ("");
-  else
-    {
-      VALUE *v = xmalloc (sizeof *v);
-      size_t vlen = MIN (nchars_wanted, len - pos + 1);
-      char *vlim;
-      v->type = string;
-      v->u.s = xmalloc (vlen + 1);
-      vlim = mempcpy (v->u.s, s + pos, vlen);
-      *vlim = '\0';
-      return v;
-    }
-}
-
-
 /* Free VALUE V, including structure components.  */
 
 static void
 freev (VALUE *v)
 {
   if (v->type == string)
-    {
-      free (v->u.s);
-    }
-  else if (v->type == mp_integer)
-    {
-      assert (mode != MP_NEVER);
-#if HAVE_GMP
-      mpz_clear (v->u.z);
-#endif
-    }
+    free (v->u.s);
+  else
+    mpz_clear (v->u.i);
   free (v);
 }
 
@@ -405,21 +373,15 @@ printv (VALUE *v)
   switch (v->type)
     {
     case integer:
-      printf ("%ld\n", v->u.i);
+      mpz_out_str (stdout, 10, v->u.i);
+      putchar ('\n');
       break;
     case string:
       puts (v->u.s);
       break;
-#if HAVE_GMP
-    case mp_integer:
-      mpz_out_str (stdout, 10, v->u.z);
-      putchar ('\n');
-      break;
-#endif
     default:
       abort ();
     }
-
 }
 
 /* Return true if V is a null-string or zero-number.  */
@@ -430,11 +392,7 @@ null (VALUE *v)
   switch (v->type)
     {
     case integer:
-      return v->u.i == 0;
-#if HAVE_GMP
-    case mp_integer:
-      return mpz_sgn (v->u.z) == 0;
-#endif
+      return mpz_sgn (v->u.i) == 0;
     case string:
       {
 	char const *cp = v->u.s;
@@ -477,29 +435,16 @@ looks_like_integer (char const *cp)
 static void
 tostring (VALUE *v)
 {
-  char buf[INT_BUFSIZE_BOUND (long int)];
-
   switch (v->type)
     {
     case integer:
-      snprintf (buf, sizeof buf, "%ld", v->u.i);
-      v->u.s = xstrdup (buf);
-      v->type = string;
-      break;
-#if HAVE_GMP
-    case mp_integer:
       {
-	char *s = mpz_get_str (NULL, 10, v->u.z);
-	if (!s)
-	  {
-	    xalloc_die ();
-	  }
-	mpz_clear (v->u.z);
+	char *s = mpz_get_str (NULL, 10, v->u.i);
+	mpz_clear (v->u.i);
 	v->u.s = s;
 	v->type = string;
       }
       break;
-#endif
     case string:
       break;
     default:
@@ -507,8 +452,7 @@ tostring (VALUE *v)
     }
 }
 
-/* Coerce V to an arithmetic value.
-   Return true on success, false on failure.  */
+/* Coerce V to an integer value.  Return true on success, false on failure.  */
 
 static bool
 toarith (VALUE *v)
@@ -516,40 +460,17 @@ toarith (VALUE *v)
   switch (v->type)
     {
     case integer:
-    case mp_integer:
       return true;
-
     case string:
       {
-	long int value;
+	char *s = v->u.s;
 
-	if (! looks_like_integer (v->u.s))
+	if (! looks_like_integer (s))
 	  return false;
-	if (xstrtol (v->u.s, NULL, 10, &value, NULL) != LONGINT_OK)
-	  {
-#if HAVE_GMP
-	    if (mode != MP_NEVER)
-	      {
-		char *s = v->u.s;
-		if (mpz_init_set_str (v->u.z, s, 10))
-		  abort ();  /* Bug in looks_like_integer, perhaps. */
-		v->type = mp_integer;
-		free (s);
-	      }
-	    else
-	      {
-		error (EXPR_FAILURE, ERANGE, "%s", v->u.s);
-	      }
-#else
-	    error (EXPR_FAILURE, ERANGE, "%s", v->u.s);
-#endif
-	  }
-	else
-	  {
-	    free (v->u.s);
-	    v->u.i = value;
-	    v->type = integer;
-	  }
+	if (mpz_init_set_str (v->u.i, s, 10) != 0 && !HAVE_GMP)
+	  error (EXPR_FAILURE, ERANGE, "%s", s);
+	free (s);
+	v->type = integer;
 	return true;
       }
     default:
@@ -557,57 +478,22 @@ toarith (VALUE *v)
     }
 }
 
-/* Extract a size_t value from a positive arithmetic value, V.
-   The extracted value is stored in *VAL. */
-static bool
-getsize (const VALUE *v, size_t *val, bool *negative)
+/* Extract a size_t value from a integer value I.
+   If the value is negative, return SIZE_MAX.
+   If the value is too large, return SIZE_MAX - 1.  */
+static size_t
+getsize (mpz_t i)
 {
-  if (v->type == integer)
+  if (mpz_sgn (i) < 0)
+    return SIZE_MAX;
+  if (mpz_fits_ulong_p (i))
     {
-      if (v->u.i < 0)
-	{
-	  *negative = true;
-	  return false;
-	}
-      else
-	{
-	  *negative = false;
-	  *val = v->u.i;
-	  return true;
-	}
+      unsigned long int ul = mpz_get_ui (i);
+      if (ul < SIZE_MAX)
+	return ul;
     }
-  else if (v->type == mp_integer)
-    {
-#if HAVE_GMP
-      if (mpz_sgn (v->u.z) < 0)
-	{
-	  *negative = true;
-	  return false;
-	}
-      else if (mpz_fits_ulong_p (v->u.z))
-	{
-	  unsigned long ul;
-	  ul = mpz_get_ui (v->u.z);
-	  *val = ul;
-	  return true;
-	}
-      else
-	{
-	  *negative = false;
-	  return false;
-	}
-#else
-      abort ();
-#endif
-
-    }
-  else
-    {
-      abort ();			/* should not pass a string. */
-    }
+  return SIZE_MAX - 1;
 }
-
-
 
 /* Return true and advance if the next token matches STR exactly.
    STR must not be NULL.  */
@@ -787,41 +673,14 @@ eval6 (bool evaluate)
     }
   else if (nextarg ("index"))
     {
-      size_t pos, len;
+      size_t pos;
 
       l = eval6 (evaluate);
       r = eval6 (evaluate);
       tostring (l);
       tostring (r);
       pos = strcspn (l->u.s, r->u.s);
-      len = strlen (l->u.s);
-      if (pos == len)
-	{
-	  v = int_value (0);
-	}
-      else
-	{
-	  if (pos < LONG_MAX)
-	    {
-	      v = int_value (pos + 1);
-	    }
-	  else
-	    {
-#if HAVE_GMP
-	      if (mode != MP_NEVER
-		  && pos < ULONG_MAX)
-		{
-		  v = xmalloc (sizeof *v);
-		  mpz_init_set_ui (v->u.z, pos+1);
-		  v->type = mp_integer;
-		}
-	      else
-#endif
-		{
-		  string_too_long ();
-		}
-	    }
-	}
+      v = int_value (l->u.s[pos] ? pos + 1 : 0);
       freev (l);
       freev (r);
       return v;
@@ -839,25 +698,21 @@ eval6 (bool evaluate)
 	v = str_value ("");
       else
 	{
-	  size_t pos, len;
-	  bool negative = false;
+	  size_t pos = getsize (i1->u.i);
+	  size_t len = getsize (i2->u.i);
 
-	  if (getsize (i1, &pos, &negative))
-	    if (getsize (i2, &len, &negative))
-	      if (pos == 0 || len == 0)
-		v = str_value ("");
-	      else
-		v = substr_value (l->u.s, llen, pos-1, len);
-	    else
-	      if (negative)
-		v = str_value ("");
-	      else
-		die (EXPR_FAILURE, ERANGE, _("string offset is too large"));
+	  if (llen < pos || pos == 0 || len == 0 || len == SIZE_MAX)
+	    v = str_value ("");
 	  else
-	    if (negative)
-	      v = str_value ("");
-	    else
-	      die (EXPR_FAILURE, ERANGE, _("substring length too large"));
+	    {
+	      size_t vlen = MIN (len, llen - pos + 1);
+	      char *vlim;
+	      v = xmalloc (sizeof *v);
+	      v->type = string;
+	      v->u.s = xmalloc (vlen + 1);
+	      vlim = mempcpy (v->u.s, l->u.s + pos - 1, vlen);
+	      *vlim = '\0';
+	    }
 	}
       freev (l);
       freev (i1);
@@ -900,170 +755,6 @@ eval5 (bool evaluate)
     }
 }
 
-
-#if HAVE_GMP
-static void
-promote (VALUE *x)
-{
-  if (x->type == integer)
-    mpz_init_set_si (x->u.z, x->u.i);
-}
-#endif
-
-/* L = L * R.  Both L and R are arithmetic. */
-static void
-domult (VALUE *l, VALUE *r)
-{
-  if (l->type == integer && r->type == integer)
-    {
-      long int val = 0;
-      val = l->u.i * r->u.i;
-      if (! (l->u.i == 0 || r->u.i == 0
-	     || ((val < 0) == ((l->u.i < 0) ^ (r->u.i < 0))
-		 && val / l->u.i == r->u.i)))
-	{
-	  /* Result would (did) overflow.  Handle with MP if available. */
-	  if (mode != MP_NEVER)
-	    {
-#if HAVE_GMP
-	      mpz_init_set_si (l->u.z, l->u.i);
-	      mpz_mul_si (l->u.z, l->u.z, r->u.i); /* L*=R */
-	      l->type = mp_integer;
-#endif
-	    }
-	  else
-	    {
-	      integer_overflow ('*');
-	    }
-	}
-      else
-	{
-	  l->u.i = val;
-	}
-    }
-  else
-    {
-      /* At least one operand is already mp_integer, so promote the other. */
-#if HAVE_GMP
-      /* We could use mpz_mul_si here if R is not already mp_integer,
-	 but for the moment we'll try to minimise code paths. */
-      if (l->type == integer)
-	mpz_init_set_si (l->u.z, l->u.i);
-      if (r->type == integer)
-	mpz_init_set_si (r->u.z, r->u.i);
-      l->type = r->type = mp_integer;
-      mpz_mul (l->u.z, l->u.z, r->u.z); /* L*=R */
-#else
-      abort ();
-#endif
-    }
-}
-
-/* L = L / R or (if WANT_MODULUS) L = L % R */
-static void
-dodivide (VALUE *l, VALUE *r, bool want_modulus)
-{
-  if (r->type == integer && r->u.i == 0)
-    error (EXPR_INVALID, 0, _("division by zero"));
-#if HAVE_GMP
-  if (r->type == mp_integer && mpz_sgn (r->u.z) == 0)
-    error (EXPR_INVALID, 0, _("division by zero"));
-#endif
-  if (l->type == integer && r->type == integer)
-    {
-      if (l->u.i < - INT_MAX && r->u.i == -1)
-	{
-	  /* Some x86-style hosts raise an exception for
-	     INT_MIN / -1 and INT_MIN % -1, so handle these
-	     problematic cases specially.  */
-	  if (want_modulus)
-	    {
-	      /* X mod -1 is zero for all negative X.
-		 Although strictly this is implementation-defined,
-		 we don't want to coredump, so we avoid the calculation. */
-	      l->u.i = 0;
-	      return;
-	    }
-	  else
-	    {
-	      if (mode != MP_NEVER)
-		{
-#if HAVE_GMP
-		  /* Handle the case by promoting. */
-		  mpz_init_set_si (l->u.z, l->u.i);
-		  l->type = mp_integer;
-#endif
-		}
-	      else
-		{
-		  integer_overflow ('/');
-		}
-	    }
-	}
-      else
-	{
-	  l->u.i = want_modulus ? l->u.i % r->u.i : l->u.i / r->u.i;
-	  return;
-	}
-    }
-  /* If we get to here, at least one operand is mp_integer
-     and R is not 0. */
-#if HAVE_GMP
-  {
-    int sign_l, sign_r;
-    promote (l);
-    promote (r);
-    sign_l = mpz_sgn (l->u.z);
-    sign_r = mpz_sgn (r->u.z);
-
-    if (!want_modulus)
-      {
-	if (!sign_l)
-	  {
-	    mpz_set_si (l->u.z, 0);
-	  }
-	else if (sign_l < 0 || sign_r < 0)
-	  {
-	    /* At least one operand is negative.  For integer arithmetic,
-	       it's platform-dependent if the operation rounds up or down.
-	       We mirror what the implementation does. */
-	    switch ((3*sign_l) / (2*sign_r))
-	      {
-	      case  2:		/* round toward +inf. */
-	      case -1:		/* round toward +inf. */
-		mpz_cdiv_q (l->u.z, l->u.z, r->u.z);
-		break;
-	      case -2:		/* round toward -inf. */
-	      case  1:		/* round toward -inf */
-		mpz_fdiv_q (l->u.z, l->u.z, r->u.z);
-		break;
-	      default:
-		abort ();
-	      }
-	  }
-	else
-	  {
-	    /* Both operands positive.  Round toward -inf. */
-	    mpz_fdiv_q (l->u.z, l->u.z, r->u.z);
-	  }
-      }
-    else
-      {
-	mpz_mod (l->u.z, l->u.z, r->u.z); /* L = L % R */
-
-	/* If either operand is negative, it's platform-dependent if
-	   the remainer is positive or negative.  We mirror what the
-	   implementation does. */
-	if (sign_l % sign_r < 0)
-	  mpz_neg (l->u.z, l->u.z); /* L = (-L) */
-      }
-  }
-#else
-  abort ();
-#endif
-}
-
-
 /* Handle *, /, % operators.  */
 
 static VALUE *
@@ -1092,70 +783,16 @@ eval4 (bool evaluate)
 	{
 	  if (!toarith (l) || !toarith (r))
 	    error (EXPR_INVALID, 0, _("non-numeric argument"));
-	  switch (fxn)
-	    {
-	    case multiply:
-	      domult (l, r);
-	      break;
-	    case divide:
-	    case mod:
-	      dodivide (l, r, fxn==mod);
-	      break;
-	    }
+	  if (fxn != multiply && mpz_sgn (r->u.i) == 0)
+	    error (EXPR_INVALID, 0, _("division by zero"));
+	  ((fxn == multiply ? mpz_mul
+	    : fxn == divide ? mpz_tdiv_q
+	    : mpz_tdiv_r)
+	   (l->u.i, l->u.i, r->u.i));
 	}
       freev (r);
     }
 }
-
-/* L = L + R, or L = L - R */
-static void
-doadd (VALUE *l, VALUE *r, bool add)
-{
-  long int val = 0;
-
-  if (!toarith (l) || !toarith (r))
-    error (EXPR_INVALID, 0, _("non-numeric argument"));
-  if (l->type == integer && r->type == integer)
-    {
-      if (add)
-	{
-	  val = l->u.i + r->u.i;
-	  if ((val < l->u.i) == (r->u.i < 0))
-	    {
-	      l->u.i = val;
-	      return;
-	    }
-	}
-      else
-	{
-	  val = l->u.i - r->u.i;
-	  if ((l->u.i < val) == (r->u.i < 0))
-	    {
-	      l->u.i = val;
-	      return;
-	    }
-	}
-    }
-  /* If we get to here, either the operation overflowed or at least
-     one operand is an mp_integer. */
-  if (mode != MP_NEVER)
-    {
-#if HAVE_GMP
-      promote (l);
-      promote (r);
-      if (add)
-	mpz_add (l->u.z, l->u.z, r->u.z);
-      else
-	mpz_sub (l->u.z, l->u.z, r->u.z);
-#endif
-    }
-  else
-    {
-      integer_overflow ('-');
-    }
-}
-
-
 
 /* Handle +, - operators.  */
 
@@ -1164,7 +801,7 @@ eval3 (bool evaluate)
 {
   VALUE *l;
   VALUE *r;
-  bool add;
+  enum { plus, minus } fxn;
 
 #ifdef EVAL_TRACE
   trace ("eval3");
@@ -1173,15 +810,17 @@ eval3 (bool evaluate)
   while (1)
     {
       if (nextarg ("+"))
-	add = true;
+	fxn = plus;
       else if (nextarg ("-"))
-	add = false;
+	fxn = minus;
       else
 	return l;
       r = eval4 (evaluate);
       if (evaluate)
 	{
-	  doadd (l, r, add);
+	  if (!toarith (l) || !toarith (r))
+	    error (EXPR_INVALID, 0, _("non-numeric argument"));
+	  (fxn == plus ? mpz_add : mpz_sub) (l->u.i, l->u.i, r->u.i);
 	}
       freev (r);
     }
