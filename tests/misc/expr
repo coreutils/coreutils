@@ -39,6 +39,15 @@ my @Tests =
      ['f', '3 + -2', {OUT => '1'}],
      ['g', '-2 + -2', {OUT => '-4'}],
 
+     # Verify option processing.
+     # Added when option processing broke in the 7.0 beta release
+     ['opt1', '-- -11 + 12', {OUT => '1'}],
+     ['opt2', '-11 + 12', {OUT => '1'}],
+     ['opt3', '-- -1 + 2', {OUT => '1'}],
+     ['opt4', '-1 + 2', {OUT => '1'}],
+     # This evoked a syntax error diagnostic before 2.0.12.
+     ['opt5', '-- 2 + 2', {OUT => '4'}],
+
      ['paren1', '\( 100 % 6 \)', {OUT => '4'}],
      ['paren2', '\( 100 % 6 \) - 8', {OUT => '-4'}],
      ['paren3', '9 / \( 100 % 6 \) - 8', {OUT => '-6'}],
@@ -59,8 +68,6 @@ my @Tests =
      # In 5.1.3 and earlier, this would output the empty string.
      ['orempty', '"" \| ""', {OUT => '0'}, {EXIT => 1}],
 
-     # This evoked a syntax error diagnostic before 2.0.12.
-     ['minus2', '-- 2 + 2', {OUT => '4'}],
 
      # This erroneously succeeded and output `3' before 2.0.12.
      ['fail-a', '3 + -', {ERR => "$prog: non-numeric argument\n"},
