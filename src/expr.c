@@ -261,6 +261,7 @@ main (int argc, char **argv)
 {
   VALUE *v;
   int c;
+  int saved_optind;
 
   initialize_main (&argc, &argv);
   set_program_name (argv[0]);
@@ -273,6 +274,7 @@ main (int argc, char **argv)
 
   /* The argument -0 should not result in an error message. */
   opterr = 0;
+  saved_optind = 1;
 
   while ((c = getopt_long (argc, argv, "+", long_options, NULL)) != -1)
     {
@@ -282,7 +284,7 @@ main (int argc, char **argv)
        */
       if ('?' == c)
 	{
-	  --optind;
+	  optind = saved_optind;
 	  break;
 	}
       else
@@ -305,6 +307,7 @@ main (int argc, char **argv)
 
 	    case_GETOPT_VERSION_CHAR (PROGRAM_NAME, AUTHORS);
 	  }
+      saved_optind = optind;
     }
 
   if (argc <= optind)
