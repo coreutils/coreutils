@@ -7404,13 +7404,6 @@ cp --parents a/b/c existing_dir
 copies the file @file{a/b/c} to @file{existing_dir/a/b/c}, creating
 any missing intermediate directories.
 
-@c The --reply option was deprecated in 2005, and is scheduled to
-@c be removed in 2008.  It is already missing from the --help output.
-@itemx @w{@kbd{--reply}=@var{how}}
-@opindex --reply
-@cindex interactivity
-This option is deprecated.
-
 @item -R
 @itemx -r
 @itemx --recursive
@@ -8094,11 +8087,6 @@ Do not prompt the user before removing a destination file.
 Prompt whether to overwrite each existing destination file, regardless
 of its permissions.
 If the response is not affirmative, the file is skipped.
-
-@itemx @w{@kbd{--reply}=@var{how}}
-@opindex --reply
-@cindex interactivity
-This option is deprecated.
 
 @item -u
 @itemx --update
