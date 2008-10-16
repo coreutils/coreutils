@@ -126,8 +126,8 @@ mkdtemp_len (char *tmpl, size_t suff_len, bool dry_run)
 int
 main (int argc, char **argv)
 {
-  char *dest_dir;
-  char *dest_dir_arg = NULL;
+  char const *dest_dir;
+  char const *dest_dir_arg = NULL;
   bool suppress_stderr = false;
   int c;
   unsigned int n_args;
