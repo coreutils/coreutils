@@ -145,7 +145,10 @@ mpz_out_str (FILE *stream, int base, mpz_t z)
 /* The official name of this program (e.g., no `g' prefix).  */
 #define PROGRAM_NAME "expr"
 
-#define AUTHORS proper_name ("Mike Parker"), proper_name ("James Youngman")
+#define AUTHORS \
+  proper_name ("Mike Parker"), \
+  proper_name ("James Youngman"), \
+  proper_name ("Paul Eggert")
 
 /* Exit statuses.  */
 enum
