@@ -597,10 +597,15 @@ m4-check:
 	  && { echo '$(ME): quote the first arg to AC_DEFUN' 1>&2; \
 	       exit 1; } || :
 
+fix_po_file_diag = \
+'you have changed the set of files with translatable diagnostics;\n\
+apply the above patch\n'
+
 # Verify that all source files using _() are listed in po/POTFILES.in.
+po_file = po/POTFILES.in
 po-check:
-	@if test -f po/POTFILES.in; then				\
-	  grep -E -v '^(#|$$)' po/POTFILES.in				\
+	@if test -f $(po_file); then					\
+	  grep -E -v '^(#|$$)' $(po_file)				\
 	    | grep -v '^src/false\.c$$' | sort > $@-1;			\
 	  files=;							\
 	  for file in $$($(VC_LIST_EXCEPT)) lib/*.[ch]; do		\
@@ -617,7 +622,8 @@ po-check:
 	  done;								\
 	  grep -E -l '\b(N?_|gettext *)\([^)"]*("|$$)' $$files		\
 	    | sort -u > $@-2;						\
-	  diff -u $@-1 $@-2 || exit 1;					\
+	  diff -u -L $(po_file) -L $(po_file) $@-1 $@-2			\
+	    || { printf '$(ME): '$(fix_po_file_diag) 1>&2; exit 1; };	\
 	  rm -f $@-1 $@-2;						\
 	fi
 
