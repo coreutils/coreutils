@@ -785,6 +785,34 @@ define my-instcheck
     }
 endef
 
+define coreutils-path-check
+  {							\
+    if test -f $(srcdir)/src/true.c; then		\
+      fail=1;						\
+      mkdir $(bin)					\
+	&& ($(write_loser)) > $(bin)/loser		\
+	&& chmod a+x $(bin)/loser			\
+	&& for i in $(built_programs); do		\
+	       case $$i in				\
+		 rm|expr|basename|echo|sort|ls|tr);;	\
+		 cat|dirname|mv|wc);;			\
+		 *) ln $(bin)/loser $(bin)/$$i;;	\
+	       esac;					\
+	     done					\
+	  && ln -sf ../src/true $(bin)/false		\
+	  && PATH=`pwd`/$(bin):$$PATH $(MAKE) -C tests check \
+	  && { test -d gnulib-tests			\
+	         && $(MAKE) -C gnulib-tests check	\
+	         || :; }				\
+	  && rm -rf $(bin)				\
+	  && fail=0;					\
+    else						\
+      fail=0;						\
+    fi;							\
+    test $$fail = 1 && exit 1 || :;			\
+  }
+endef
+
 # Use -Wformat -Werror to detect format-string/arg-list mismatches.
 # Also, check for shadowing problems with -Wshadow, and for pointer
 # arithmetic problems with -Wpointer-arith.
@@ -810,22 +838,7 @@ my-distcheck: $(DIST_ARCHIVES) $(local-check)
 	  && $(MAKE) dvi				\
 	  && $(install-transform-check)			\
 	  && $(my-instcheck)				\
-	  && mkdir $(bin)				\
-	  && ($(write_loser)) > $(bin)/loser            \
-	  && chmod a+x $(bin)/loser                     \
-	  && for i in $(built_programs); do		\
-	       case $$i in				\
-		 rm|expr|basename|echo|sort|ls|tr);;	\
-		 cat|dirname|mv|wc);;			\
-		 *) ln $(bin)/loser $(bin)/$$i;;	\
-	       esac;					\
-	     done					\
-	  && ln -sf ../src/true $(bin)/false		\
-	  && PATH=`pwd`/$(bin):$$PATH $(MAKE) -C tests check \
-	  && { test -d gnulib-tests			\
-	         && $(MAKE) -C gnulib-tests check	\
-	         || :; }				\
-	  && rm -rf $(bin)				\
+	  && $(coreutils-path-check)			\
 	  && $(MAKE) distclean
 	(cd $(t) && mv $(distdir) $(distdir).old	\
 	  && $(AMTAR) -zxf - ) < $(distdir).tar.gz
