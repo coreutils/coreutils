@@ -30,7 +30,6 @@
 #include "error.h"
 #include "filenamecat.h"
 #include "ignore-value.h"
-#include "lchmod.h"
 #include "quote.h"
 #include "stat-time.h"
 #include "utimens.h"

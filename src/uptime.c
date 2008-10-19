@@ -46,8 +46,6 @@
   proper_name ("David MacKenzie"), \
   proper_name ("Kaveh Ghazi")
 
-int getloadavg ();
-
 static void
 print_uptime (size_t n, const STRUCT_UTMP *this)
 {

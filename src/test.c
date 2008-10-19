@@ -38,7 +38,6 @@
 #endif
 
 #include "system.h"
-#include "euidaccess.h"
 #include "quote.h"
 #include "stat-time.h"
 #include "strnumcmp.h"

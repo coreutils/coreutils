@@ -20,7 +20,6 @@
 #include <sys/types.h>
 
 #include "system.h"
-#include "dirfd.h"
 #include "error.h"
 #include "long-options.h"
 #include "quote.h"

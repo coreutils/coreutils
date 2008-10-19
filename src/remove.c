@@ -24,9 +24,7 @@
 
 #include "system.h"
 #include "cycle-check.h"
-#include "dirfd.h"
 #include "error.h"
-#include "euidaccess.h"
 #include "euidaccess-stat.h"
 #include "file-type.h"
 #include "hash.h"

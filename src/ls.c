@@ -87,7 +87,6 @@
 #include "acl.h"
 #include "argmatch.h"
 #include "dev-ino.h"
-#include "dirfd.h"
 #include "error.h"
 #include "filenamecat.h"
 #include "hard-locale.h"

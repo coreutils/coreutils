@@ -1,16 +1,13 @@
-Index: modules/getloadavg
-===================================================================
-RCS file: /sources/gnulib/gnulib/modules/getloadavg,v
-retrieving revision 1.13
-diff -u -p -r1.13 getloadavg
---- modules/getloadavg	22 Sep 2006 12:47:55 -0000	1.13
-+++ modules/getloadavg	23 Sep 2006 16:41:36 -0000
-@@ -14,7 +14,7 @@ stdbool
+diff --git a/modules/getloadavg b/modules/getloadavg
+index 2fbeb40..b79aaca 100644
+--- a/modules/getloadavg
++++ b/modules/getloadavg
+@@ -16,7 +16,7 @@ stdbool
  fcntl-safer
 
  configure.ac:
 -gl_GETLOADAVG([$gl_source_base])
 +gl_GETLOADAVG([lib])
+ gl_STDLIB_MODULE_INDICATOR([getloadavg])
 
  Makefile.am:
-

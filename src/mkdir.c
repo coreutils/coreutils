@@ -24,7 +24,6 @@
 
 #include "system.h"
 #include "error.h"
-#include "lchmod.h"
 #include "mkdir-p.h"
 #include "modechange.h"
 #include "prog-fprintf.h"
