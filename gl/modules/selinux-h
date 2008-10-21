@@ -18,7 +18,8 @@ lib_SOURCES += se-context.in.h se-selinux.in.h
 
 BUILT_SOURCES += $(SELINUX_SELINUX_H)
 selinux/selinux.h: se-selinux.in.h
-	mkdir -p selinux
+	rm -f $@-t $@
+	$(MKDIR_P) selinux
 	cp $(srcdir)/se-selinux.in.h $@-t
 	chmod a-x $@-t
 	mv $@-t $@
@@ -26,7 +27,8 @@ MOSTLYCLEANFILES += selinux/selinux.h selinux/selinux.h-t
 
 BUILT_SOURCES += $(SELINUX_CONTEXT_H)
 selinux/context.h: se-context.in.h
-	mkdir -p selinux
+	rm -f $@-t $@
+	$(MKDIR_P) selinux
 	cp $(srcdir)/se-context.in.h $@-t
 	chmod a-x $@-t
 	mv $@-t $@
@@ -38,19 +40,7 @@ Include:
 #include <selinux/context.h>
 
 License:
-LGPL
+LGPLv2+
 
 Maintainer:
 Jim Meyering
-
-# lib/selinux-at.c
-#
-#   # For runcon.
-#   AC_CHECK_HEADERS([selinux/flask.h])
-#
-#   ac_save_LIBS="$LIBS"
-#   AC_SEARCH_LIBS(setfilecon, selinux,
-#                  [test "$ac_cv_search_setfilecon" = "none required" ||
-#                   LIB_SELINUX=$ac_cv_search_setfilecon])
-#   AC_SUBST(LIB_SELINUX)
-#   LIBS="$ac_save_LIBS"
