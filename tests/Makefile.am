@@ -327,6 +327,7 @@ TESTS =						\
   ls/inode					\
   ls/m-option					\
   ls/no-arg					\
+  ls/no-cap					\
   ls/proc-selinux-segfault			\
   ls/recursive					\
   ls/rt-1					\
