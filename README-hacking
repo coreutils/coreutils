@@ -8,8 +8,8 @@ These requirements do not apply when building from a distribution tarball.
 We've opted to keep only the highest-level sources in the GIT repository.
 This eases our maintenance burden, (fewer merges etc.), but imposes more
 requirements on anyone wishing to build from the just-checked-out sources.
-For example, you have to use the latest stable versions of the maintainer
-tools we depend upon, including:
+Specific tools and versions will be checked for and listed by the
+bootstrap script shown below, and will include:
 
 - Automake <http://www.gnu.org/software/automake/>
 - Autoconf <http://www.gnu.org/software/autoconf/>
@@ -22,13 +22,15 @@ tools we depend upon, including:
 - Rsync <http://samba.anu.edu.au/rsync/>
 - Tar <http://www.gnu.org/software/tar/>
 
-Valgrind <http://valgrind.org/> is also highly recommended, if
-Valgrind supports your architecture.
-
 Only building the initial full source tree will be a bit painful.
 Later, a plain `git pull && make' should be sufficient.
 
-* LZMA
+- Valgrind
+
+Valgrind <http://valgrind.org/> is also highly recommended, if
+Valgrind supports your architecture. See also README-valgrind.
+
+- LZMA
 
 This package's build procedure uses LZMA to create a compressed
 distribution tarball.  Using this feature of Automake requires
@@ -40,23 +42,24 @@ from <http://tukaani.org/lzma/>.
 
 You can get a copy of the source repository like this:
 
-	$ git clone git://git.sv.gnu.org/coreutils
+        $ git clone git://git.sv.gnu.org/coreutils
+        $ cd coreutils
 
-The next step is to get other files needed to build, which are
-extracted from other source packages:
+The next step is to get and check other files needed to build,
+which are extracted from other source packages:
 
-	$ ./bootstrap
+        $ ./bootstrap
 
 And there you are!  Just
 
-	$ ./configure
-	$ make
-	$ make check
+        $ ./configure
+        $ make
+        $ make check
 
 At this point, there should be no difference between your local copy,
 and the GIT master copy:
 
-	$ git diff
+        $ git diff
 
 should output no difference.
 
@@ -78,3 +81,7 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+Local Variables:
+indent-tabs-mode: nil
+End:

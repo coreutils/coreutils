@@ -222,6 +222,92 @@ if test ! -d $build_aux; then
   done
 fi
 
+# Note this deviates from the version comparison in automake
+# in that it treats 1.5 < 1.5.0, and treats 1.4.4a < 1.4-p3a
+# but this should suffice as we won't be specifying old
+# version formats or redundant trailing .0 in bootstrap.conf.
+# If we did want full compatibility then we should probably
+# use m4_version_compare from autoconf.
+sort_ver() { #sort -V is not generally available
+  ver1="$1"
+  ver2="$2"
+
+  #split on '.' and compare each component
+  i=1
+  while : ; do
+    p1=$(echo "$ver1" | cut -d. -f$i)
+    p2=$(echo "$ver2" | cut -d. -f$i)
+    if [ ! "$p1" ]; then
+      echo "$1 $2"
+      break
+    elif [ ! "$p2" ]; then
+      echo "$2 $1"
+      break
+    elif [ ! "$p1" = "$p2" ]; then
+      if [ "$p1" -gt "$p2" ] 2>/dev/null; then #numeric comparision
+        echo "$2 $1"
+      elif [ "$p2" -gt "$p1" ] 2>/dev/null; then #numeric comparision
+        echo "$1 $2"
+      else #numeric, then lexographic comparison
+        lp=$(printf "$p1\n$p2\n" | LANG=C sort -n | tail -n1)
+        if [ "$lp" = "$p2" ]; then
+          echo "$1 $2"
+        else
+          echo "$2 $1"
+        fi
+      fi
+      break
+    fi
+    i=$(($i+1))
+  done
+}
+
+get_version() {
+  app=$1
+
+  $app --version >/dev/null 2>&1 || return 1
+
+  $app --version |
+  sed -n 's/[^0-9.]*\([0-9]\{1,\}\.[.a-z0-9-]\{,\}\).*/\1/p;T;q'
+}
+
+check_versions() {
+  ret=0
+
+  while read app req_ver; do
+    inst_ver=$(get_version $app)
+    if [ ! "$inst_ver" ]; then
+      echo "Error: '$app' not found" >&2
+      ret=1
+    elif [ ! "$req_ver" = "-" ]; then
+      latest_ver=$(sort_ver $req_ver $inst_ver | cut -d' ' -f2)
+      if [ ! "$latest_ver" = "$inst_ver" ]; then
+        echo "Error: '$app' version == $inst_ver is too old" >&2
+        echo "       '$app' version >= $req_ver is required" >&2
+        ret=1
+      fi
+    fi
+  done
+
+  return $ret
+}
+
+print_versions() {
+  echo "Program    Min_version"
+  echo "----------------------"
+  printf "$buildreq"
+  echo "----------------------"
+  #can't depend on column -t
+}
+
+if ! printf "$buildreq" | check_versions; then
+  test -f README-prereq &&
+  echo "Please see README-prereq for notes on obtaining these prerequisite programs:" >&2
+  echo
+  print_versions
+  exit 1
+fi
+
 echo "$0: Bootstrapping from checked-out $package sources..."
 
 # See if we can use gnulib's git-merge-changelog merge driver.
