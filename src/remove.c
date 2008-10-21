@@ -29,7 +29,6 @@
 #include "file-type.h"
 #include "hash.h"
 #include "hash-pjw.h"
-#include "lstat.h"
 #include "obstack.h"
 #include "quote.h"
 #include "remove.h"

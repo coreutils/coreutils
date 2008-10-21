@@ -96,7 +96,6 @@
 #include "filevercmp.h"
 #include "idcache.h"
 #include "ls.h"
-#include "lstat.h"
 #include "mbswidth.h"
 #include "mpsort.h"
 #include "obstack.h"

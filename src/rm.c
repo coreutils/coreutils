@@ -50,7 +50,6 @@
 #include "system.h"
 #include "argmatch.h"
 #include "error.h"
-#include "lstat.h"
 #include "quote.h"
 #include "quotearg.h"
 #include "remove.h"

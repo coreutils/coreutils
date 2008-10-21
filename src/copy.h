@@ -21,7 +21,6 @@
 
 # include <stdbool.h>
 # include "hash.h"
-# include "lstat.h"
 
 /* Control creation of sparse files (files with holes).  */
 enum Sparse_type
