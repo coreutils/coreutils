@@ -13,12 +13,13 @@ configure.ac:
 # For runcon.
 AC_CHECK_HEADERS([selinux/flask.h])
 AC_LIBOBJ([selinux-at])
-ac_save_LIBS="$LIBS"
-  AC_SEARCH_LIBS(setfilecon, selinux,
+gl_save_LIBS=$LIBS
+  LIB_SELINUX=
+  AC_SEARCH_LIBS([setfilecon], [selinux],
                  [test "$ac_cv_search_setfilecon" = "none required" ||
                   LIB_SELINUX=$ac_cv_search_setfilecon])
   AC_SUBST(LIB_SELINUX)
-LIBS="$ac_save_LIBS"
+LIBS=$gl_save_LIBS
 
 Makefile.am:
 
