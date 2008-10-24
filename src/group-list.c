@@ -83,9 +83,9 @@ print_group_list (const char *username,
             ok = false;
         }
     free (groups);
-    return ok;
   }
 #endif /* HAVE_GETGROUPS */
+  return ok;
 }
 
 
