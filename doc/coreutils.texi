@@ -14654,15 +14654,6 @@ The @command{factor} command supports only a small number of options:
 Print a short help on standard output, then exit without further
 processing.
 
-@item --bignum
-Always use unlimited precision arithmetic via the GNU MP library.
-By default, @command{factor} selects between using GNU MP and using
-native operations on the basis of the length of the number to be factored.
-
-@item --no-bignum
-Always use limited-precision native operations, not GNU MP.
-This causes @command{factor} to fail for larger inputs.
-
 @item --version
 Print the program version on standard output, then exit without further
 processing.

@@ -49,15 +49,6 @@
 
 static bool verbose = false;
 
-typedef enum
-  {
-    ALGO_AUTOSELECT,		/* default */
-    ALGO_GMP,			/* --bignum */
-    ALGO_SINGLE			/* --no-bignum */
-  } ALGORITHM_CHOICE;
-static ALGORITHM_CHOICE algorithm = ALGO_AUTOSELECT;
-
-
 #if HAVE_GMP
 static mpz_t *factor = NULL;
 static size_t nfactors_found = 0;
@@ -266,52 +257,6 @@ S4:
   mpz_clear (x);
   mpz_clear (y);
 }
-
-/* Arbitrary-precision factoring */
-static bool
-extract_factors_multi (char const *s)
-{
-  unsigned int division_limit;
-  size_t n_bits;
-  mpz_t t;
-
-  mpz_init (t);
-  if (1 != gmp_sscanf (s, "%Zd", t))
-    {
-      error (0, 0, _("%s is not a valid positive integer"), quote (s));
-      return false;
-    }
-
-  printf ("%s:", s);
-
-  if (mpz_sgn (t) == 0)
-    {
-      mpz_clear (t);
-      return true;		/* 0; no factors */
-    }
-
-  /* Set the trial division limit according to the size of t.  */
-  n_bits = mpz_sizeinbase (t, 2);
-  division_limit = MIN (n_bits, 1000);
-  division_limit *= division_limit;
-
-  factor_using_division (t, division_limit);
-
-  if (mpz_cmp_ui (t, 1) != 0)
-    {
-      debug ("[is number prime?] ");
-      if (mpz_probab_prime_p (t, 3))
-	{
-	  emit_factor (t);
-	}
-      else
-	{
-	  factor_using_pollard_rho (t, 1);
-	}
-    }
-  mpz_clear (t);
-  return true;
-}
 #endif
 
 /* The maximum number of factors, including -1, for negative numbers.  */
@@ -379,30 +324,18 @@ factor_wheel (uintmax_t n0, size_t max_n_factors, uintmax_t *factors)
 }
 
 /* Single-precision factoring */
-static bool
-print_factors_single (char const *s)
+static void
+print_factors_single (uintmax_t n)
 {
   uintmax_t factors[MAX_N_FACTORS];
-  uintmax_t n;
-  size_t n_factors;
+  size_t n_factors = factor_wheel (n, MAX_N_FACTORS, factors);
   size_t i;
   char buf[INT_BUFSIZE_BOUND (uintmax_t)];
-  strtol_error err;
 
-  if ((err = xstrtoumax (s, NULL, 10, &n, "")) != LONGINT_OK)
-    {
-      if (err == LONGINT_OVERFLOW)
-	error (0, 0, _("%s is too large"), quote (s));
-      else
-	error (0, 0, _("%s is not a valid positive integer"), quote (s));
-      return false;
-    }
-  n_factors = factor_wheel (n, MAX_N_FACTORS, factors);
   printf ("%s:", umaxtostr (n, buf));
   for (i = 0; i < n_factors; i++)
     printf (" %s", umaxtostr (factors[i], buf));
   putchar ('\n');
-  return true;
 }
 
 #if HAVE_GMP
@@ -450,67 +383,93 @@ free_factors (void)
   nfactors_found = 0;
 }
 
+/* Arbitrary-precision factoring */
+static void
+print_factors_multi (mpz_t t)
+{
+  mpz_out_str (stdout, 10, t);
+  putchar (':');
+
+  if (mpz_sgn (t) != 0)
+    {
+      /* Set the trial division limit according to the size of t.  */
+      size_t n_bits = mpz_sizeinbase (t, 2);
+      unsigned int division_limit = MIN (n_bits, 1000);
+      division_limit *= division_limit;
+
+      factor_using_division (t, division_limit);
+
+      if (mpz_cmp_ui (t, 1) != 0)
+	{
+	  debug ("[is number prime?] ");
+	  if (mpz_probab_prime_p (t, 3))
+	    emit_factor (t);
+	  else
+	    factor_using_pollard_rho (t, 1);
+	}
+    }
+
+  mpz_clear (t);
+  sort_and_print_factors ();
+  free_factors ();
+}
+#endif
+
 
 /* Emit the factors of the indicated number.  If we have the option of using
    either algorithm, we select on the basis of the length of the number.
    For longer numbers, we prefer the MP algorithm even if the native algorithm
-   has enough digits, because the algorithm is better.   The turnover point
-   depends on the value as well as the length, but since we don't already know
-   if the number presented has small factors, we just switch over at 6 digits.
-*/
+   has enough digits, because the algorithm is better.  The turnover point
+   depends on the value.  */
 static bool
 print_factors (char const *s)
 {
-  if (ALGO_AUTOSELECT == algorithm)
+  uintmax_t n;
+  strtol_error err = xstrtoumax (s, NULL, 10, &n, "");
+
+#if HAVE_GMP
+  enum { GMP_TURNOVER_POINT = 100000 };
+
+  if (err == LONGINT_OVERFLOW
+      || (err == LONGINT_OK && GMP_TURNOVER_POINT <= n))
     {
-      const size_t digits = strlen (s); /* upper limit on number of digits */
-      algorithm = digits < 6 ? ALGO_SINGLE : ALGO_GMP;
-    }
-  if (ALGO_GMP == algorithm)
-    {
-      debug ("[%s]", _("using arbitrary-precision arithmetic"));
-      if (extract_factors_multi (s))
+      mpz_t t;
+      mpz_init (t);
+      if (gmp_sscanf (s, "%Zd", t) == 1)
 	{
-	  sort_and_print_factors ();
-	  free_factors ();
+	  debug ("[%s]", _("using arbitrary-precision arithmetic"));
+	  print_factors_multi (t);
 	  return true;
 	}
-      else
-	{
-	  return false;
-	}
+      err = LONGINT_INVALID;
     }
-  else
+#endif
+
+  switch (err)
     {
+    case LONGINT_OK:
       debug ("[%s]", _("using single-precision arithmetic"));
-      return print_factors_single (s);
-    }
-}
-#else
-static bool
-print_factors (const char *s)	/* Single-precision only. */
-{
-  if (ALGO_GMP == algorithm)
-    {
-      error (0, 0, _("arbitrary-precision arithmetic is not available"));
+      print_factors_single (n);
+      return true;
+
+    case LONGINT_OVERFLOW:
+      error (0, 0, _("%s is too large"), quote (s));
+      return false;
+
+    default:
+      error (0, 0, _("%s is not a valid positive integer"), quote (s));
       return false;
     }
-  return print_factors_single (s);
 }
-#endif
 
 enum
 {
-  VERBOSE_OPTION = CHAR_MAX + 1,
-  USE_BIGNUM,
-  NO_USE_BIGNUM
+  VERBOSE_OPTION = CHAR_MAX + 1
 };
 
 static struct option const long_options[] =
 {
   {"verbose", no_argument, NULL, VERBOSE_OPTION},
-  {"bignum", no_argument, NULL, USE_BIGNUM},
-  {"no-bignum", no_argument, NULL, NO_USE_BIGNUM},
   {GETOPT_HELP_OPTION_DECL},
   {GETOPT_VERSION_OPTION_DECL},
   {NULL, 0, NULL, 0}
@@ -534,10 +493,6 @@ Print the prime factors of each specified integer NUMBER.  If none\n\
 are specified on the command line, read them from standard input.\n\
 \n\
 "), stdout);
-      fputs (_("\
-      --bignum     always use arbitrary-precision arithmetic\n\
-      --no-bignum  always use single-precision arithmetic\n"),
-	       stdout);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       emit_bug_reporting_address ();
@@ -586,14 +541,6 @@ main (int argc, char **argv)
 	{
 	case VERBOSE_OPTION:
 	  verbose = true;
-	  break;
-
-	case USE_BIGNUM:
-	  algorithm = ALGO_GMP;
-	  break;
-
-	case NO_USE_BIGNUM:
-	  algorithm = ALGO_SINGLE;
 	  break;
 
 	case_GETOPT_HELP_CHAR;
