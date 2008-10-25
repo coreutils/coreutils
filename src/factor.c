@@ -257,6 +257,14 @@ S4:
   mpz_clear (x);
   mpz_clear (y);
 }
+
+#else
+
+static void
+debug (char const *fmt ATTRIBUTE_UNUSED, ...)
+{
+}
+
 #endif
 
 /* The maximum number of factors, including -1, for negative numbers.  */
