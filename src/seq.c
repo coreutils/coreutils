@@ -20,8 +20,6 @@
 #include <getopt.h>
 #include <stdio.h>
 #include <sys/types.h>
-#include <math.h>
-#include <float.h>
 
 #include "system.h"
 #include "c-strtod.h"
@@ -258,14 +256,6 @@ long_double_format (char const *fmt, struct layout *layout)
   return NULL;
 }
 
-/* Return the absolute relative difference from x to y.  */
-static double
-abs_rel_diff (double x, double y)
-{
-  double s = (y == 0.0 ? 1 : y);
-  return fabs ((y - x) / s);
-}
-
 /* Actually print the sequence of numbers in the specified range, with the
    given or default stepping and format.  */
 
@@ -310,7 +300,7 @@ print_numbers (char const *fmt, struct layout layout,
 	      x_str[x_strlen - layout.suffix_len] = '\0';
 
 	      if (xstrtold (x_str + layout.prefix_len, NULL, &x_val, c_strtold)
-		  && abs_rel_diff (x_val, last) < DBL_EPSILON)
+		  && x_val == last)
 		{
 		  char *x0_str = NULL;
 		  if (asprintf (&x0_str, fmt, x0) < 0)

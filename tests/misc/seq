@@ -47,7 +47,10 @@ my @Tests =
     {OUT_SUBST => 's,^-0\.0$,0.0,'},
    ],
    ['float-5',	qw(0.8 1e-1 0.9),	{OUT => [qw(0.8 0.9)]}],
-   ['float-6',	qw(0.8 0.1 0.90000000000000000000),	{OUT => [qw(0.8 0.9)]}],
+   # Don't append lots of zeros to that 0.9000...; for example, changing the
+   # number to 0.90000000000000000000 tickles a bug in Solaris 8 strtold
+   # that would cause the test to fail.
+   ['float-6',	qw(0.8 0.1 0.9000000000000),	{OUT => [qw(0.8 0.9)]}],
 
    ['wid-1',	qw(.8 1e-2 .81),  {OUT => [qw(0.80 0.81)]}],
    ['wid-2',	qw(.89999 1e-7 .8999901),  {OUT => [qw(0.8999900 0.8999901)]}],
