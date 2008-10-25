@@ -6,6 +6,13 @@ GNU coreutils NEWS                                    -*- outline -*-
 
   stat -f recognizes the Lustre file system type
 
+** Bug fixes
+
+  seq 9223372036854775807 9223372036854775808 now prints only two numbers
+  on systems with extended long double support and good library support.
+  Even with this patch, on some systems, it still produces invalid output,
+  from 3 to at least 1026 lines long. [bug introduced in coreutils-6.11]
+
 ** Changes in behavior
 
   ls -l now marks SELinux-only files with the less obtrusive '.',

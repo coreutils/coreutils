@@ -124,6 +124,7 @@ TESTS =						\
   misc/ptx					\
   misc/test					\
   misc/seq					\
+  misc/seq-long-double					\
   misc/head					\
   misc/head-elide-tail				\
   tail-2/tail-n0f				\
