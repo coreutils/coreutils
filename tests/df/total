@@ -30,11 +30,8 @@ umask 22
 
 RE_TOTAL='^total( +(-?[0-9]+|-)){3} +-?[0-9]+%$'
 
-df > tmp || fail=1
-$EGREP "$RE_TOTAL" tmp && fail=1
-
-df -i > tmp || fail=1
-$EGREP "$RE_TOTAL" tmp && fail=1
+df    | $EGREP "$RE_TOTAL" && fail=1
+df -i | $EGREP "$RE_TOTAL" && fail=1
 
 df --total | $EGREP "$RE_TOTAL" || fail=1
 df -i --total | $EGREP "$RE_TOTAL" || fail=1
