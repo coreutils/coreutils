@@ -174,37 +174,10 @@ scan_arg (const char *arg)
   return ret;
 }
 
-/* Validate the format, FMT.  Print a diagnostic and exit
-   if there is not exactly one %-directive.  */
-
-static void
-validate_format (char const *fmt)
-{
-  unsigned int n_directives = 0;
-  char const *p;
-
-  for (p = fmt; *p; p++)
-    {
-      if (p[0] == '%' && p[1] != '%' && p[1] != '\0')
-	{
-	  ++n_directives;
-	  ++p;
-	}
-    }
-  if (n_directives == 0)
-    {
-      error (0, 0, _("no %% directive in format string %s"), quote (fmt));
-      usage (EXIT_FAILURE);
-    }
-  else if (1 < n_directives)
-    error (EXIT_FAILURE, 0, _("too many %% directives in format string %s"),
-	   quote (fmt));
-}
-
 /* If FORMAT is a valid printf format for a double argument, return
-   its long double equivalent, possibly allocated from dynamic
-   storage, and store into *LAYOUT a description of the output layout;
-   otherwise, return NULL.  */
+   its long double equivalent, allocated from dynamic storage, and
+   store into *LAYOUT a description of the output layout; otherwise,
+   report an error and exit.  */
 
 static char const *
 long_double_format (char const *fmt, struct layout *layout)
@@ -216,10 +189,12 @@ long_double_format (char const *fmt, struct layout *layout)
   bool has_L;
 
   for (i = 0; ! (fmt[i] == '%' && fmt[i + 1] != '%'); i += (fmt[i] == '%') + 1)
-    if (fmt[i])
+    {
+      if (!fmt[i])
+	error (EXIT_FAILURE, 0,
+	       _("format %s has no %% directive"), quote (fmt));
       prefix_len++;
-    else
-      return NULL;
+    }
 
   i++;
   i += strspn (fmt + i, "-+#0 '");
@@ -233,12 +208,17 @@ long_double_format (char const *fmt, struct layout *layout)
   length_modifier_offset = i;
   has_L = (fmt[i] == 'L');
   i += has_L;
-  /* In a valid format string, fmt[i] must be one of these specifiers.  */
-  if (fmt[i] == '\0' || ! strchr ("efgaEFGA", fmt[i]))
-    return NULL;
+  if (fmt[i] == '\0')
+    error (EXIT_FAILURE, 0, _("format %s ends in %%"), quote (fmt));
+  if (! strchr ("efgaEFGA", fmt[i]))
+    error (EXIT_FAILURE, 0,
+	   _("format %s has unknown %%%c directive"), quote (fmt), fmt[i]);
 
-  for (i++; ! (fmt[i] == '%' && fmt[i + 1] != '%'); i += (fmt[i] == '%') + 1)
-    if (fmt[i])
+  for (i++; ; i += (fmt[i] == '%') + 1)
+    if (fmt[i] == '%' && fmt[i + 1] != '%')
+      error (EXIT_FAILURE, 0, _("format %s has too many %% directives"),
+	     quote (fmt));
+    else if (fmt[i])
       suffix_len++;
     else
       {
@@ -252,8 +232,6 @@ long_double_format (char const *fmt, struct layout *layout)
 	layout->suffix_len = suffix_len;
 	return ldfmt;
       }
-
-  return NULL;
 }
 
 /* Actually print the sequence of numbers in the specified range, with the
@@ -432,16 +410,7 @@ main (int argc, char **argv)
     }
 
   if (format_str)
-    {
-      validate_format (format_str);
-      char const *f = long_double_format (format_str, &layout);
-      if (! f)
-	{
-	  error (0, 0, _("invalid format string: %s"), quote (format_str));
-	  usage (EXIT_FAILURE);
-	}
-      format_str = f;
-    }
+    format_str = long_double_format (format_str, &layout);
 
   last = scan_arg (argv[optind++]);
 
