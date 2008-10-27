@@ -324,6 +324,7 @@ TESTS =						\
   ls/dired					\
   ls/file-type					\
   ls/follow-slink				\
+  ls/hardlink					\
   ls/infloop					\
   ls/inode					\
   ls/m-option					\

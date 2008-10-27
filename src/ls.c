@@ -217,7 +217,8 @@ static uintmax_t gobble_file (char const *name, enum filetype type,
 			      ino_t inode, bool command_line_arg,
 			      char const *dirname);
 static bool print_color_indicator (const char *name, mode_t mode, int linkok,
-				   bool stat_ok, enum filetype type);
+				   bool stat_ok, enum filetype type,
+				   nlink_t nlink);
 static void put_indicator (const struct bin_str *ind);
 static void add_ignore_pattern (const char *pattern);
 static void attach (char *dest, const char *dirname, const char *name);
@@ -240,7 +241,7 @@ static void print_many_per_line (void);
 static void print_name_with_quoting (const char *p, mode_t mode,
 				     int linkok, bool stat_ok,
 				     enum filetype type,
-				     struct obstack *stack);
+				     struct obstack *stack, nlink_t nlink);
 static void prep_non_filename_text (void);
 static void print_type_indicator (bool stat_ok, mode_t mode,
 				  enum filetype type);
@@ -521,14 +522,14 @@ enum indicator_no
     C_LEFT, C_RIGHT, C_END, C_RESET, C_NORM, C_FILE, C_DIR, C_LINK,
     C_FIFO, C_SOCK,
     C_BLK, C_CHR, C_MISSING, C_ORPHAN, C_EXEC, C_DOOR, C_SETUID, C_SETGID,
-    C_STICKY, C_OTHER_WRITABLE, C_STICKY_OTHER_WRITABLE, C_CAP
+    C_STICKY, C_OTHER_WRITABLE, C_STICKY_OTHER_WRITABLE, C_CAP, C_HARDLINK
   };
 
 static const char *const indicator_name[]=
   {
     "lc", "rc", "ec", "rs", "no", "fi", "di", "ln", "pi", "so",
     "bd", "cd", "mi", "or", "ex", "do", "su", "sg", "st",
-    "ow", "tw", "ca", NULL
+    "ow", "tw", "ca", "hl", NULL
   };
 
 struct color_ext_type
@@ -561,7 +562,8 @@ static struct bin_str color_indicator[] =
     { LEN_STR_PAIR ("37;44") },		/* st: sticky: black on blue */
     { LEN_STR_PAIR ("34;42") },		/* ow: other-writable: blue on green */
     { LEN_STR_PAIR ("30;42") },		/* tw: ow w/ sticky: black on green */
-    { LEN_STR_PAIR ("30;41") },		/* capability: black on red */
+    { LEN_STR_PAIR ("30;41") },		/* ca: black on red */
+    { LEN_STR_PAIR ("44;37") },		/* hl: white on blue */
   };
 
 /* FIXME: comment  */
@@ -3636,7 +3638,8 @@ print_long_format (const struct fileinfo *f)
 
   DIRED_FPUTS (buf, stdout, p - buf);
   print_name_with_quoting (f->name, FILE_OR_LINK_MODE (f), f->linkok,
-			   f->stat_ok, f->filetype, &dired_obstack);
+			   f->stat_ok, f->filetype, &dired_obstack,
+			   f->stat.st_nlink);
 
   if (f->filetype == symbolic_link)
     {
@@ -3644,7 +3647,8 @@ print_long_format (const struct fileinfo *f)
 	{
 	  DIRED_FPUTS_LITERAL (" -> ", stdout);
 	  print_name_with_quoting (f->linkname, f->linkmode, f->linkok - 1,
-				   f->stat_ok, f->filetype, NULL);
+				   f->stat_ok, f->filetype, NULL,
+				   f->stat.st_nlink);
 	  if (indicator_style != none)
 	    print_type_indicator (true, f->linkmode, unknown);
 	}
@@ -3826,11 +3830,11 @@ quote_name (FILE *out, const char *name, struct quoting_options const *options,
 static void
 print_name_with_quoting (const char *p, mode_t mode, int linkok,
 			 bool stat_ok, enum filetype type,
-			 struct obstack *stack)
+			 struct obstack *stack, nlink_t nlink)
 {
   bool used_color_this_time
     = (print_with_color
-       && print_color_indicator (p, mode, linkok, stat_ok, type));
+       && print_color_indicator (p, mode, linkok, stat_ok, type, nlink));
 
   if (stack)
     PUSH_CURRENT_DIRED_POS (stack);
@@ -3882,7 +3886,7 @@ print_file_name_and_frills (const struct fileinfo *f)
     printf ("%*s ", format == with_commas ? 0 : scontext_width, f->scontext);
 
   print_name_with_quoting (f->name, FILE_OR_LINK_MODE (f), f->linkok,
-			   f->stat_ok, f->filetype, NULL);
+			   f->stat_ok, f->filetype, NULL, f->stat.st_nlink);
 
   if (indicator_style != none)
     print_type_indicator (f->stat_ok, f->stat.st_mode, f->filetype);
@@ -3964,7 +3968,8 @@ has_capability (char const *name ATTRIBUTE_UNUSED)
 /* Returns whether any color sequence was printed. */
 static bool
 print_color_indicator (const char *name, mode_t mode, int linkok,
-		       bool stat_ok, enum filetype filetype)
+		       bool stat_ok, enum filetype filetype,
+		       nlink_t nlink)
 {
   int type;
   struct color_ext_type *ext;	/* Color extension */
@@ -3992,6 +3997,8 @@ print_color_indicator (const char *name, mode_t mode, int linkok,
 	    type = C_CAP;
 	  else if ((mode & S_IXUGO) != 0)
 	    type = C_EXEC;
+	  else if (1 < nlink)
+	    type = C_HARDLINK;
 	}
       else if (S_ISDIR (mode))
 	{

@@ -4,6 +4,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New features
 
+  ls --color now highlights hard linked files, too
+
   stat -f recognizes the Lustre file system type
 
 ** Bug fixes

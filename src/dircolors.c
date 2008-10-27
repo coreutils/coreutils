@@ -63,14 +63,15 @@ static const char *const slack_codes[] =
   "SYMLINK", "ORPHAN", "MISSING", "FIFO", "PIPE", "SOCK", "BLK", "BLOCK",
   "CHR", "CHAR", "DOOR", "EXEC", "LEFT", "LEFTCODE", "RIGHT", "RIGHTCODE",
   "END", "ENDCODE", "SUID", "SETUID", "SGID", "SETGID", "STICKY",
-  "OTHER_WRITABLE", "OWR", "STICKY_OTHER_WRITABLE", "OWT", "CAPABILITY", NULL
+  "OTHER_WRITABLE", "OWR", "STICKY_OTHER_WRITABLE", "OWT", "CAPABILITY",
+  "HARDLINK", NULL
 };
 
 static const char *const ls_codes[] =
 {
   "no", "no", "fi", "rs", "di", "ln", "ln", "ln", "or", "mi", "pi", "pi",
   "so", "bd", "bd", "cd", "cd", "do", "ex", "lc", "lc", "rc", "rc", "ec", "ec",
-  "su", "su", "sg", "sg", "st", "ow", "ow", "tw", "tw", "ca", NULL
+  "su", "su", "sg", "sg", "st", "ow", "ow", "tw", "tw", "ca", "hl", NULL
 };
 #define array_len(Array) (sizeof (Array) / sizeof *(Array))
 verify (array_len (slack_codes) == array_len (ls_codes));

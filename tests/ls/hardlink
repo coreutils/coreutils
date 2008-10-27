@@ -1,0 +1,44 @@
+#!/bin/sh
+# Ensure "ls --color" properly colorizes hard linked files.
+
+# Copyright (C) 2008 Free Software Foundation, Inc.
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  ls --version
+fi
+
+. $srcdir/test-lib.sh
+working_umask_or_skip_
+
+touch file file1 || framework_failure
+ln file1 file2 || skip_test_ "can't create hard link"
+code='44;37'
+fail=0
+
+# regular file - not hard linked
+LS_COLORS="hl=$code" ls -U1 --color=always file > out || fail=1
+printf "file\n" > out_ok || fail=1
+compare out out_ok || fail=1
+
+# hard links
+LS_COLORS="hl=$code" ls -U1 --color=always file1 file2 > out || fail=1
+printf "\033[0m\033[44;37mfile1\033[0m
+\033[44;37mfile2\033[0m
+\033[m" > out_ok || fail=1
+compare out out_ok || fail=1
+
+Exit $fail
