@@ -132,7 +132,7 @@ static bool strip_files;
 static bool dir_arg;
 
 /* Program used to strip binaries, "strip" is default */
-static char *strip_program = "strip";
+static char const *strip_program = "strip";
 
 /* For long options that have no equivalent short option, use a
    non-character as a pseudo short option, starting with CHAR_MAX + 1.  */
