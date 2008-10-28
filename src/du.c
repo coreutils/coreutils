@@ -674,7 +674,7 @@ main (int argc, char **argv)
   /* If true, display only a total for each argument. */
   bool opt_summarize_only = false;
 
-  cwd_only[0] = ".";
+  cwd_only[0] = bad_cast (".");
   cwd_only[1] = NULL;
 
   initialize_main (&argc, &argv);

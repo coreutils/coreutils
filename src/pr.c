@@ -691,10 +691,10 @@ static bool use_col_separator = false;
 /* String used to separate columns if the -S option has been specified.
    Default without -S but together with one of the column options
    -a|COLUMN|-m is a `space' and with the -J option a `tab'. */
-static char *col_sep_string = "";
+static char *col_sep_string = (char *) "";
 static int col_sep_length = 0;
-static char *column_separator = " ";
-static char *line_separator = "\t";
+static char *column_separator = (char *) " ";
+static char *line_separator = (char *) "\t";
 
 /* Number of separator characters waiting to be printed as soon as we
    know that we have any input remaining to be printed. */
@@ -1030,7 +1030,7 @@ main (int argc, char **argv)
 	case 'S':
 	  old_s = false;
 	  /* Reset an additional input of -s, -S dominates -s */
-	  col_sep_string = "";
+	  col_sep_string = bad_cast ("");
 	  col_sep_length = 0;
 	  use_col_separator = true;
 	  if (optarg)

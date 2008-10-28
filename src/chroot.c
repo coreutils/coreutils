@@ -93,9 +93,9 @@ main (int argc, char **argv)
       /* No command.  Run an interactive shell.  */
       char *shell = getenv ("SHELL");
       if (shell == NULL)
-	shell = "/bin/sh";
+	shell = bad_cast ("/bin/sh");
       argv[0] = shell;
-      argv[1] = "-i";
+      argv[1] = bad_cast ("-i");
       argv[2] = NULL;
     }
   else

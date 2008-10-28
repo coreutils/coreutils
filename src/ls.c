@@ -1769,7 +1769,7 @@ decode_switches (int argc, char **argv)
 
 	case FULL_TIME_OPTION:
 	  format = long_format;
-	  time_style_option = "full-iso";
+	  time_style_option = bad_cast ("full-iso");
 	  break;
 
 	case COLOR_OPTION:
@@ -1887,7 +1887,7 @@ decode_switches (int argc, char **argv)
 
       if (! style)
 	if (! (style = getenv ("TIME_STYLE")))
-	  style = "locale";
+	  style = bad_cast ("locale");
 
       while (strncmp (style, posix_prefix, sizeof posix_prefix - 1) == 0)
 	{

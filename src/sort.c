@@ -3381,7 +3381,7 @@ main (int argc, char **argv)
 
   if (nfiles == 0)
     {
-      static char *minus = "-";
+      static char *minus = (char *) "-";
       nfiles = 1;
       free (files);
       files = &minus;

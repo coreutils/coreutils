@@ -686,7 +686,7 @@ main (int argc, char **argv)
     binary = 0;
 
   if (optind == argc)
-    argv[argc++] = "-";
+    argv[argc++] = bad_cast ("-");
 
   for (; optind < argc; ++optind)
     {

@@ -631,3 +631,9 @@ timetostr (time_t t, char *buf)
 	  ? imaxtostr (t, buf)
 	  : umaxtostr (t, buf));
 }
+
+static inline char *
+bad_cast (char const *s)
+{
+  return (char *) s;
+}

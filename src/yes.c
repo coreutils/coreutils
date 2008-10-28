@@ -75,7 +75,7 @@ main (int argc, char **argv)
   if (argc <= optind)
     {
       optind = argc;
-      argv[argc++] = "y";
+      argv[argc++] = bad_cast ("y");
     }
 
   for (;;)

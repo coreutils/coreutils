@@ -76,7 +76,7 @@ static char **file_list;
 /* Default for `file_list' if no files are given on the command line.  */
 static char *stdin_argv[] =
 {
-  "-", NULL
+  (char *) "-", NULL
 };
 
 /* True if we have ever read standard input.  */

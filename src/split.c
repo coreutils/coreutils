@@ -401,8 +401,8 @@ main (int argc, char **argv)
 
   /* Parse command line options.  */
 
-  infile = "-";
-  outbase = "x";
+  infile = bad_cast ( "-");
+  outbase = bad_cast ("x");
 
   while (1)
     {

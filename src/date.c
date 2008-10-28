@@ -385,7 +385,7 @@ main (int argc, char **argv)
 	  /* POSIX says that `date -u' is equivalent to setting the TZ
 	     environment variable, so this option should do nothing other
 	     than setting TZ.  */
-	  if (putenv ("TZ=UTC0") != 0)
+	  if (putenv (bad_cast ("TZ=UTC0")) != 0)
 	    xalloc_die ();
 	  TZSET;
 	  break;

@@ -1629,7 +1629,7 @@ main (int argc, char **argv)
     }
   else
     {
-      static char *dummy_stdin = "-";
+      static char *dummy_stdin = (char *) "-";
       n_files = 1;
       file = &dummy_stdin;
 

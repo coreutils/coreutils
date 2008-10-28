@@ -312,7 +312,7 @@ main (int argc, char **argv)
 	 empty string so that diagnostics say "ownership :GROUP"
 	 rather than "group GROUP".  */
       if (!chopt.user_name && chopt.group_name)
-        chopt.user_name = "";
+        chopt.user_name = bad_cast ("");
 
       optind++;
     }

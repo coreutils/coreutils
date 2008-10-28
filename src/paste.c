@@ -496,7 +496,7 @@ main (int argc, char **argv)
     }
 
   if (optind == argc)
-    argv[argc++] = "-";
+    argv[argc++] = bad_cast ("-");
 
   if (collapse_escapes (delim_arg))
     {
