@@ -31,7 +31,7 @@ chmod 600 d || framework_failure
 
 fail=0
 
-ls -Log d > out 2> err
+ls -Log d > out
 test $? = 1 || fail=1
 
 cat <<\EOF > exp || fail=1
@@ -43,7 +43,7 @@ sed 's/^l/?/' out | compare - exp || fail=1
 
 # Ensure that the offsets in --dired output are accurate.
 rm -f out exp
-ls --dired -l d > out 2> /dev/null && fail=1
+ls --dired -l d > out && fail=1
 
 cat <<\EOF > exp || fail=1
   total 0
