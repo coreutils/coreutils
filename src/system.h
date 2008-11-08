@@ -614,11 +614,12 @@ ptr_align (void const *ptr, size_t alignment)
 static inline void
 emit_bug_reporting_address (void)
 {
-  /* TRANSLATORS: The placeholder indicates the bug-reporting address
-     for this package.  Please add _another line_ saying
-     "Report translation bugs to <...>\n" with the address for translation
+  /* TRANSLATORS: The second placeholder indicates the bug-reporting
+     address for this package.  Please add _another line_ saying
+     "Report %s translation bugs to <...>\n" with the address for translation
      bugs (typically your translation team's web or email address).  */
-  printf (_("\nReport bugs to <%s>.\n"), PACKAGE_BUGREPORT);
+  printf (_("\nReport %s bugs to <%s>.\n"), last_component (program_name),
+	  PACKAGE_BUGREPORT);
 }
 
 #include "inttostr.h"
