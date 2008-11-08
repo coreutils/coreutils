@@ -816,6 +816,12 @@ Usage: %s [OPTION]... [-T] SOURCE DEST\n\
 "),
 	      program_name, program_name, program_name, program_name);
       fputs (_("\
+\n\
+This install program copies files (often just compiled) into destination\n\
+locations you choose.  If you want to download and install a ready-to-use\n\
+package on a GNU/Linux system, you should instead be using a package manager\n\
+like yum(1) or apt-get(1).\n\
+\n\
 In the first three forms, copy SOURCE to DEST or multiple SOURCE(s) to\n\
 the existing DIRECTORY, while setting permission modes and owner/group.\n\
 In the 4th form, create all components of the given DIRECTORY(ies).\n\
