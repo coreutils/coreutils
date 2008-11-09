@@ -611,15 +611,20 @@ ptr_align (void const *ptr, size_t alignment)
     ? false : (((Accum) = (Accum) * 10 + (Digit_val)), true))		\
   )
 
+#include "hard-locale.h"
 static inline void
 emit_bug_reporting_address (void)
 {
-  /* TRANSLATORS: The second placeholder indicates the bug-reporting
-     address for this package.  Please add _another line_ saying
-     "Report %s translation bugs to <...>\n" with the address for translation
-     bugs (typically your translation team's web or email address).  */
   printf (_("\nReport %s bugs to <%s>.\n"), last_component (program_name),
 	  PACKAGE_BUGREPORT);
+  /* TRANSLATORS: Replace LANG_CODE in this URL with your language code
+     <http://translationproject.org/team/LANG_CODE.html> to form one of
+     the URLs at http://translationproject.org/team/.  Otherwise, replace
+     the entire URL with your translation team's email address.  */
+  if (hard_locale (LC_MESSAGES))
+    printf (_("Report %s translation bugs to "
+	      "<http://translationproject.org/team/>\n"),
+	    last_component (program_name));
 }
 
 #include "inttostr.h"

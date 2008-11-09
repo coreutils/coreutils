@@ -314,7 +314,6 @@
 #include <sys/types.h>
 #include "system.h"
 #include "error.h"
-#include "hard-locale.h"
 #include "mbswidth.h"
 #include "quote.h"
 #include "stat-time.h"

@@ -26,7 +26,6 @@
 
 #include "canon-host.h"
 #include "error.h"
-#include "hard-locale.h"
 #include "readutmp.h"
 
 /* The official name of this program (e.g., no `g' prefix).  */

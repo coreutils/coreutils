@@ -23,7 +23,6 @@
 #include "system.h"
 #include "linebuffer.h"
 #include "error.h"
-#include "hard-locale.h"
 #include "quote.h"
 #include "stdio--.h"
 #include "xmemcoll.h"

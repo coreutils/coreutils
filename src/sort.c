@@ -30,7 +30,6 @@
 #include "argmatch.h"
 #include "error.h"
 #include "filevercmp.h"
-#include "hard-locale.h"
 #include "hash.h"
 #include "md5.h"
 #include "physmem.h"

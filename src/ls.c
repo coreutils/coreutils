@@ -89,7 +89,6 @@
 #include "dev-ino.h"
 #include "error.h"
 #include "filenamecat.h"
-#include "hard-locale.h"
 #include "hash.h"
 #include "human.h"
 #include "filemode.h"

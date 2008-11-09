@@ -26,7 +26,6 @@
 #include "argmatch.h"
 #include "linebuffer.h"
 #include "error.h"
-#include "hard-locale.h"
 #include "posixver.h"
 #include "quote.h"
 #include "xmemcoll.h"

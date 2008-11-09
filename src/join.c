@@ -24,7 +24,6 @@
 
 #include "system.h"
 #include "error.h"
-#include "hard-locale.h"
 #include "linebuffer.h"
 #include "memcasecmp.h"
 #include "quote.h"
