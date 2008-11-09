@@ -102,8 +102,8 @@ MAINTAINERCLEANFILES = THANKS-to-translators
 THANKS-to-translators: po/LINGUAS THANKStt.in
 	(								\
 	  cat $(srcdir)/THANKStt.in;					\
-	  for lang in `cat $(srcdir)/po/LINGUAS`; do				\
-	    echo http://www.iro.umontreal.ca/contrib/po/HTML/team-$$lang.html; \
+	  for lang in `cat $(srcdir)/po/LINGUAS`; do			\
+	    echo http://translationproject.org/team/$$lang.html;	\
 	  done;								\
 	) > $@-tmp && mv $@-tmp $@
 
