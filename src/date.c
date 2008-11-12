@@ -38,8 +38,6 @@
 
 #define AUTHORS proper_name ("David MacKenzie")
 
-int putenv ();
-
 static bool show_date (const char *format, struct timespec when);
 
 enum Time_spec
