@@ -54,8 +54,10 @@ EOF
 
 # Use --block-size=512 to keep df from printing rounded-to-kilobyte
 # numbers which wouldn't necessarily add up to the displayed total.
-df --total -P --block-size=512 |tee space || framework_failure
-df --total -i -P               |tee inode || framework_failure
+df --total -P --block-size=512 > space || framework_failure
+cat space  # this helps when debugging any test failure
+df --total -i -P               > inode || framework_failure
+cat inode
 
 fail=0
 $PERL -f check-df space || fail=1
