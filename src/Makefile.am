@@ -26,6 +26,8 @@ no_install__progs = \
 build_if_possible__progs = \
   chroot df hostid nice pinky stty su uname uptime users who
 
+AM_CFLAGS = $(WARN_CFLAGS) # $(WERROR_CFLAGS)
+
 EXTRA_PROGRAMS = \
   $(no_install__progs) \
   $(build_if_possible__progs) \

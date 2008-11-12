@@ -44,6 +44,39 @@ gl_EARLY
 gl_INIT
 coreutils_MACROS
 
+AC_ARG_ENABLE([gcc-warnings],
+  [AS_HELP_STRING([--enable-gcc-warnings],
+		  [turn on lots of GCC warnings (not recommended)])],
+  [case $enableval in
+     yes|no) ;;
+     *)      AC_MSG_ERROR([bad value $enableval for gcc-warnings option]) ;;
+   esac
+   gl_gcc_warnings=$enableval],
+  [gl_gcc_warnings=no]
+)
+
+if test "$gl_gcc_warnings" = yes; then
+  gl_WARN_ADD([-Werror], [WERROR_CFLAGS])
+  AC_SUBST([WERROR_CFLAGS])
+  gl_WARN_ADD([-Wall])
+  gl_WARN_ADD([-Wextra])
+  gl_WARN_ADD([-Wshadow])
+  gl_WARN_ADD([-Wno-sign-compare])
+  gl_WARN_ADD([-Wformat])
+  gl_WARN_ADD([-Wformat-security])
+  gl_WARN_ADD([-Wcast-align])
+  gl_WARN_ADD([-Wpointer-arith])
+  gl_WARN_ADD([-Wwrite-strings])
+  gl_WARN_ADD([-Wbad-function-cast])
+  gl_WARN_ADD([-Wmissing-declarations])
+  gl_WARN_ADD([-Wmissing-prototypes])
+  gl_WARN_ADD([-Wstrict-prototypes])
+  AC_SUBST([WARN_CFLAGS])
+  AC_DEFINE([lint], 1, [Define to 1 if the compiler is checking for lint.])
+  AC_DEFINE([_FORTIFY_SOURCE], 2,
+    [enable compile-time and run-time bounds-checking, and some warnings])
+fi
+
 AC_FUNC_FORK
 
 optional_bin_progs=

@@ -118,10 +118,10 @@
 /* The user to become if none is specified.  */
 #define DEFAULT_USER "root"
 
-char *crypt ();
-char *getusershell ();
-void endusershell ();
-void setusershell ();
+char *crypt (char const *key, char const *salt);
+char *getusershell (void);
+void endusershell (void);
+void setusershell (void);
 
 extern char **environ;
 

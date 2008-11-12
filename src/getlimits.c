@@ -55,7 +55,7 @@
 #define UID_T_MIN 0
 #define GID_T_MIN 0
 
-static void
+void
 usage (int status)
 {
   if (status != EXIT_SUCCESS)

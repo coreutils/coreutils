@@ -122,7 +122,7 @@ cleanup (int sig)
     _exit (128 + sig);
 }
 
-static void
+void
 usage (int status)
 {
   if (status != EXIT_SUCCESS)

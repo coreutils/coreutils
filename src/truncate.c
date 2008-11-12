@@ -91,7 +91,7 @@ parse_len (char const *str, off_t *size)
   return -1;
 }
 
-static void
+void
 usage (int status)
 {
   if (status != EXIT_SUCCESS)

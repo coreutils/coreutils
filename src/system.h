@@ -655,3 +655,5 @@ bad_cast (char const *s)
 {
   return (char *) s;
 }
+
+void usage (int status);

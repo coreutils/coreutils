@@ -40,7 +40,7 @@
 # define MAXHOSTNAMELEN 64
 #endif
 
-char *ttyname ();
+char *ttyname (int);
 
 /* If true, display the hours:minutes since each user has touched
    the keyboard, or blank if within the last minute, or days followed
