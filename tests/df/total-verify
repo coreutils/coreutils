@@ -18,7 +18,7 @@
 
 if test "$VERBOSE" = yes; then
   set -x
-  ls --version
+  df --version
 fi
 
 . $srcdir/test-lib.sh
