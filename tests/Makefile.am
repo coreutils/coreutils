@@ -285,7 +285,6 @@ TESTS =						\
   dd/skip-seek					\
   dd/skip-seek2					\
   dd/unblock-sync				\
-  df/total					\
   df/total-verify				\
   du/2g						\
   du/8gb					\
