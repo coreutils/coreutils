@@ -323,6 +323,10 @@ you'd use doc/Copyright/request-assign.future:
 
 You may make assignments for up to four projects at a time.
 
+In case you're wondering why we bother with all of this, read this:
+
+    http://www.gnu.org/licenses/why-assign.html
+
 
 Run "make syntax-check", or even "make distcheck"
 ================================================
