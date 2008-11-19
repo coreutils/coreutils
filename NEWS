@@ -10,6 +10,8 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  cp uses much less memory in some situations
+
   seq 9223372036854775807 9223372036854775808 now prints only two numbers
   on systems with extended long double support and good library support.
   Even with this patch, on some systems, it still produces invalid output,

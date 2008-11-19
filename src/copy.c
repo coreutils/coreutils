@@ -1411,6 +1411,10 @@ copy_internal (char const *src_name, char const *dst_name,
      we can arrange to create a hard link between the corresponding names
      in the destination tree.
 
+     When using the --link (-l) option, there is no need to take special
+     measures, because (barring race conditions) files that are hard-linked
+     in the source tree will also be hard-linked in the destination tree.
+
      Sometimes, when preserving links, we have to record dev/ino even
      though st_nlink == 1:
      - when in move_mode, since we may be moving a group of N hard-linked
@@ -1429,26 +1433,28 @@ copy_internal (char const *src_name, char const *dst_name,
      - likewise for -L except that it applies to all files, not just
 	command line arguments.
 
-     Also record directory dev/ino when using --recursive.  We'll use that
-     info to detect this problem: cp -R dir dir.  FIXME-maybe: ideally,
-     directory info would be recorded in a separate hash table, since
-     such entries are useful only while a single command line hierarchy
-     is being copied -- so that separate table could be cleared between
-     command line args.  Using the same hash table to preserve hard
-     links means that it may not be cleared.  */
+     Also, with --recursive, record dev/ino of each command-line directory.
+     We'll use that info to detect this problem: cp -R dir dir.  */
 
   if (x->move_mode && src_sb.st_nlink == 1)
     {
       earlier_file = src_to_dest_lookup (src_sb.st_ino, src_sb.st_dev);
     }
-  else if ((x->preserve_links
-	    && (1 < src_sb.st_nlink
-		|| (command_line_arg
-		    && x->dereference == DEREF_COMMAND_LINE_ARGUMENTS)
-		|| x->dereference == DEREF_ALWAYS))
-	   || (x->recursive && S_ISDIR (src_mode)))
+  else if (x->preserve_links
+	   && !x->hard_link
+	   && (1 < src_sb.st_nlink
+	       || (command_line_arg
+		   && x->dereference == DEREF_COMMAND_LINE_ARGUMENTS)
+	       || x->dereference == DEREF_ALWAYS))
     {
       earlier_file = remember_copied (dst_name, src_sb.st_ino, src_sb.st_dev);
+    }
+  else if (x->recursive && S_ISDIR (src_mode))
+    {
+      if (command_line_arg)
+	earlier_file = remember_copied (dst_name, src_sb.st_ino, src_sb.st_dev);
+      else
+	earlier_file = src_to_dest_lookup (src_sb.st_ino, src_sb.st_dev);
     }
 
   /* Did we copy this inode somewhere else (in this command line argument)
@@ -1730,8 +1736,8 @@ copy_internal (char const *src_name, char const *dst_name,
 	  /* Insert the created directory's inode and device
              numbers into the search structure, so that we can
              avoid copying it again.  */
-
-	  remember_copied (dst_name, dst_sb.st_ino, dst_sb.st_dev);
+	  if (!x->hard_link)
+	    remember_copied (dst_name, dst_sb.st_ino, dst_sb.st_dev);
 
 	  if (x->verbose)
 	    emit_verbose (src_name, dst_name, NULL);

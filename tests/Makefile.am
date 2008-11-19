@@ -262,6 +262,7 @@ TESTS =						\
   cp/file-perm-race				\
   cp/into-self					\
   cp/link					\
+  cp/link-heap					\
   cp/link-no-deref				\
   cp/link-preserve				\
   cp/no-deref-link1				\
