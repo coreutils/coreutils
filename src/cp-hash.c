@@ -19,14 +19,11 @@
 
 #include <config.h>
 
-#include <stdio.h>
 #include <sys/types.h>
 #include "system.h"
 
 #include "same.h"
-#include "quote.h"
 #include "hash.h"
-#include "error.h"
 #include "cp-hash.h"
 
 /* Use ST_DEV and ST_INO as the key, FILENAME as the value.
@@ -95,24 +92,6 @@ forget_created (ino_t ino, dev_t dev)
   ent = hash_delete (src_to_dest, &probe);
   if (ent)
     src_to_dest_free (ent);
-}
-
-/* Add FILE to the list of files that we have created.
-   Return true if successful.  */
-
-extern bool
-remember_created (char const *file)
-{
-  struct stat sb;
-
-  if (stat (file, &sb) < 0)
-    {
-      error (0, errno, "%s", quote (file));
-      return false;
-    }
-
-  remember_copied (file, sb.st_ino, sb.st_dev);
-  return true;
 }
 
 /* If INO/DEV correspond to an already-copied source file, return the
