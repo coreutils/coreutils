@@ -38,6 +38,10 @@ GNU coreutils NEWS                                    -*- outline -*-
   cp and mv: the --reply={yes,no,query} option has been removed.
   Using it has elicited a warning for the last three years.
 
+  dd: user specified offsets that are too big are handled better.
+  Previously, erroneous parameters to skip and seek could result
+  in redundant reading of the file with no warnings or errors.
+
   du: -H (initially equivalent to --si) is now equivalent to
   --dereference-args, and thus works as POSIX requires
 

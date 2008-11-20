@@ -1,0 +1,63 @@
+#!/bin/sh
+# test diagnostics are printed immediately when seeking beyond device.
+
+# Copyright (C) 2008 Free Software Foundation, Inc.
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  dd --version
+fi
+
+. $srcdir/test-lib.sh
+
+# need write access to device
+# (even though we don't actually write anything)
+require_root_
+
+get_device_size() {
+  BLOCKDEV=blockdev
+  $BLOCKDEV -V >/dev/null 2>&1 || BLOCKDEV=/sbin/blockdev
+  $BLOCKDEV --getsize64 "$1"
+}
+
+fail=0
+
+# Get path to device the current dir is on.
+# Note df can only get fs size, not device size.
+device=$(df -P --local . | tail -n1 | cut -d' ' -f1) ||
+  skip_test_ 'this test runs only on local file systems'
+
+dev_size=$(get_device_size "$device") ||
+  skip_test_ "failed to determine size of $device"
+
+# Don't use shell arithimetic as older version of dash use longs
+DEV_OFLOW=$(expr $dev_size + 1)
+
+timeout 1 dd bs=1 skip=$DEV_OFLOW count=0 status=noxfer < "$device" 2> err
+test "$?" = "1" || fail=1
+echo "dd: \`standard input': cannot skip: Invalid argument
+0+0 records in
+0+0 records out" > err_ok || framework_failure
+compare err_ok err || fail=1
+
+timeout 1 dd bs=1 seek=$DEV_OFLOW count=0 status=noxfer > "$device" 2> err
+test "$?" = "1" || fail=1
+echo "dd: \`standard output': cannot seek: Invalid argument
+0+0 records in
+0+0 records out" > err_ok || framework_failure
+compare err_ok err || fail=1
+
+Exit $fail

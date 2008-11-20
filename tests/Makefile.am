@@ -24,6 +24,7 @@ root_tests =					\
   cp/cp-a-selinux				\
   cp/preserve-gid				\
   cp/special-bits				\
+  dd/skip-seek-past-dev				\
   ls/capability					\
   ls/nameless-uid				\
   misc/chcon					\
@@ -287,6 +288,7 @@ TESTS =						\
   dd/reblock					\
   dd/skip-seek					\
   dd/skip-seek2					\
+  dd/skip-seek-past-file			\
   dd/unblock-sync				\
   df/total-verify				\
   du/2g						\

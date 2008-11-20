@@ -200,8 +200,7 @@ static bool input_seekable;
 static int input_seek_errno;
 
 /* File offset of the input, in bytes, along with a flag recording
-   whether it overflowed.  The offset is valid only if the input is
-   seekable and if the offset has not overflowed.  */
+   whether it overflowed.  */
 static uintmax_t input_offset;
 static bool input_offset_overflow;
 
@@ -1259,12 +1258,62 @@ skip (int fdesc, char const *file, uintmax_t records, size_t blocksize,
       && 0 <= skip_via_lseek (file, fdesc, offset, SEEK_CUR))
     {
       if (fdesc == STDIN_FILENO)
-	advance_input_offset (offset);
-      return 0;
+        {
+	   struct stat st;
+	   if (fstat (STDIN_FILENO, &st) != 0)
+	     error (EXIT_FAILURE, errno, _("cannot fstat %s"), quote (file));
+	   if (S_ISREG (st.st_mode) && st.st_size < (input_offset + offset))
+	     {
+	       /* When skipping past EOF, return the number of _full_ blocks
+		* that are not skipped, and set offset to EOF, so the caller
+		* can determine the requested skip was not satisfied.  */
+	       records = ( offset - st.st_size ) / blocksize;
+	       offset = st.st_size - input_offset;
+	     }
+	   else
+	     records = 0;
+	   advance_input_offset (offset);
+        }
+      else
+        records = 0;
+      return records;
     }
   else
     {
       int lseek_errno = errno;
+      off_t soffset;
+
+      /* The seek request may have failed above if it was too big
+         (> device size, > max file size, etc.)
+         Or it may not have been done at all (> OFF_T_MAX).
+         Therefore try to seek to the end of the file,
+         to avoid redundant reading.  */
+      if ((soffset = skip_via_lseek (file, fdesc, 0, SEEK_END)) >= 0)
+	{
+	  /* File is seekable, and we're at the end of it, and
+	     size <= OFF_T_MAX. So there's no point using read to advance.  */
+
+	  if (!lseek_errno)
+	    {
+	      /* The original seek was not attempted as offset > OFF_T_MAX.
+		 We should error for write as can't get to the desired
+		 location, even if OFF_T_MAX < max file size.
+		 For read we're not going to read any data anyway,
+		 so we should error for consistency.
+		 It would be nice to not error for /dev/{zero,null}
+		 for any offset, but that's not a significant issue.  */
+	      lseek_errno = EOVERFLOW;
+	    }
+
+	  if (fdesc == STDIN_FILENO)
+	    error (0, lseek_errno, _("%s: cannot skip"), quote (file));
+	  else
+	    error (0, lseek_errno, _("%s: cannot seek"), quote (file));
+	  /* If the file has a specific size and we've asked
+	     to skip/seek beyond the max allowable, then quit.  */
+	  quit (EXIT_FAILURE);
+	}
+      /* else file_size && offset > OFF_T_MAX or file ! seekable */
 
       do
 	{
@@ -1537,10 +1586,22 @@ dd_copy (void)
 
   if (skip_records != 0)
     {
-      skip (STDIN_FILENO, input_file, skip_records, input_blocksize, ibuf);
+      uintmax_t us_bytes = input_offset + (skip_records * input_blocksize);
+      uintmax_t us_blocks = skip (STDIN_FILENO, input_file,
+				  skip_records, input_blocksize, ibuf);
+      us_bytes -= input_offset;
+
       /* POSIX doesn't say what to do when dd detects it has been
-	 asked to skip past EOF, so I assume it's non-fatal if the
-	 call to 'skip' returns nonzero.  FIXME: maybe give a warning.  */
+	 asked to skip past EOF, so I assume it's non-fatal.
+	 There are 3 reasons why there might be unskipped blocks/bytes:
+	     1. file is too small
+	     2. pipe has not enough data
+	     3. short reads  */
+      if (us_blocks || (!input_offset_overflow && us_bytes))
+	{
+	  error (0, 0,
+		 _("%s: cannot skip to specified offset"), quote (input_file));
+	}
     }
 
   if (seek_records != 0)
@@ -1778,7 +1839,7 @@ main (int argc, char **argv)
 
   offset = lseek (STDIN_FILENO, 0, SEEK_CUR);
   input_seekable = (0 <= offset);
-  input_offset = offset;
+  input_offset = MAX(0, offset);
   input_seek_errno = errno;
 
   if (output_file == NULL)
