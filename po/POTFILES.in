@@ -62,6 +62,7 @@ src/factor.c
 src/false.c
 src/fmt.c
 src/fold.c
+src/getlimits.c
 src/group-list.c
 src/groups.c
 src/head.c

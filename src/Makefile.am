@@ -44,7 +44,7 @@ EXTRA_PROGRAMS = \
 
 bin_PROGRAMS = $(OPTIONAL_BIN_PROGS)
 
-noinst_PROGRAMS = setuidgid
+noinst_PROGRAMS = setuidgid getlimits
 
 noinst_HEADERS = \
   chown-core.h \
@@ -82,6 +82,7 @@ LDADD = libver.a ../lib/libcoreutils.a $(LIBINTL) ../lib/libcoreutils.a
 cat_LDADD = $(LDADD)
 df_LDADD = $(LDADD)
 du_LDADD = $(LDADD)
+getlimits_LDADD = $(LDADD)
 ptx_LDADD = $(LDADD)
 split_LDADD = $(LDADD)
 timeout_LDADD = $(LDADD)
@@ -160,6 +161,7 @@ cat_LDADD += $(LIBICONV)
 cp_LDADD += $(LIBICONV)
 df_LDADD += $(LIBICONV)
 du_LDADD += $(LIBICONV)
+getlimits_LDADD += $(LIBICONV)
 ptx_LDADD += $(LIBICONV)
 split_LDADD += $(LIBICONV)
 timeout_LDADD += $(LIBICONV)
