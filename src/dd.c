@@ -998,13 +998,11 @@ scanargs (int argc, char *const *argv)
 	    {
 	      invalid |= ! (0 < n && n <= MAX_BLOCKSIZE (INPUT_BLOCK_SLOP));
 	      input_blocksize = n;
-	      conversions_mask |= C_TWOBUFS;
 	    }
 	  else if (operand_is (name, "obs"))
 	    {
 	      invalid |= ! (0 < n && n <= MAX_BLOCKSIZE (OUTPUT_BLOCK_SLOP));
 	      output_blocksize = n;
-	      conversions_mask |= C_TWOBUFS;
 	    }
 	  else if (operand_is (name, "bs"))
 	    {
@@ -1036,15 +1034,12 @@ scanargs (int argc, char *const *argv)
   if (blocksize)
     input_blocksize = output_blocksize = blocksize;
 
-  /* If bs= was given, both `input_blocksize' and `output_blocksize' will
-     have been set to positive values.  If either has not been set,
-     bs= was not given, so make sure two buffers are used. */
-  if (input_blocksize == 0 || output_blocksize == 0)
-    conversions_mask |= C_TWOBUFS;
   if (input_blocksize == 0)
     input_blocksize = DEFAULT_BLOCKSIZE;
   if (output_blocksize == 0)
     output_blocksize = DEFAULT_BLOCKSIZE;
+  if (input_blocksize != output_blocksize)
+    conversions_mask |= C_TWOBUFS;
   if (conversion_blocksize == 0)
     conversions_mask &= ~(C_BLOCK | C_UNBLOCK);
 
