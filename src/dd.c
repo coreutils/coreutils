@@ -455,7 +455,7 @@ Usage: %s [OPERAND]...\n\
       fputs (_("\
 Copy a file, converting and formatting according to the operands.\n\
 \n\
-  bs=BYTES        force ibs=BYTES and obs=BYTES\n\
+  bs=BYTES        read and write BYTES bytes at a time\n\
   cbs=BYTES       convert BYTES bytes at a time\n\
   conv=CONVS      convert the file as per the comma separated symbol list\n\
   count=BLOCKS    copy only BLOCKS input blocks\n\
@@ -1033,13 +1033,17 @@ scanargs (int argc, char *const *argv)
 
   if (blocksize)
     input_blocksize = output_blocksize = blocksize;
+  else
+    {
+      /* POSIX says dd aggregates short reads into
+	 output_blocksize if bs= is not specified.  */
+      conversions_mask |= C_TWOBUFS;
+    }
 
   if (input_blocksize == 0)
     input_blocksize = DEFAULT_BLOCKSIZE;
   if (output_blocksize == 0)
     output_blocksize = DEFAULT_BLOCKSIZE;
-  if (input_blocksize != output_blocksize)
-    conversions_mask |= C_TWOBUFS;
   if (conversion_blocksize == 0)
     conversions_mask &= ~(C_BLOCK | C_UNBLOCK);
 
