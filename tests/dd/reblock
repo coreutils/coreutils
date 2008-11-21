@@ -1,0 +1,51 @@
+#!/bin/sh
+# test dd reblocking vs. bs=
+
+# Copyright (C) 2008 Free Software Foundation, Inc.
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  dd --version
+fi
+
+. $srcdir/lang-default
+. $srcdir/test-lib.sh
+
+cat <<\EOF > exp-reblock || framework_failure
+0+2 records in
+1+1 records out
+4 bytes (4 B) copied
+EOF
+
+cat <<\EOF > exp-no-reblock || framework_failure
+0+2 records in
+0+2 records out
+4 bytes (4 B) copied
+EOF
+
+fail=0
+
+# ensure that dd reblocks when bs= is not specified
+(echo x; sleep .1; echo y) | dd ibs=3 obs=3 > out 2> err || fail=1
+sed 's/,.*//' err > k && mv k err
+compare err exp-reblock || fail=1
+
+# Demonstrate that bs=N supersedes even following ibs= and obs= settings.
+(echo x; sleep .1; echo y) | dd bs=3 ibs=1 obs=1 > out 2> err || fail=1
+sed 's/,.*//' err > k && mv k err
+compare err exp-no-reblock || fail=1
+
+Exit $fail

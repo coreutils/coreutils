@@ -283,6 +283,7 @@ TESTS =						\
   cp/thru-dangling				\
   dd/misc					\
   dd/not-rewound				\
+  dd/reblock					\
   dd/skip-seek					\
   dd/skip-seek2					\
   dd/unblock-sync				\
