@@ -159,7 +159,8 @@ Free Documentation License''.
 @vskip 0pt plus 1filll
 @insertcopying
 @end titlepage
-
+@shortcontents
+@contents
 
 @ifnottex
 @node Top
@@ -15404,8 +15405,6 @@ of Bell Labs, the original Software Toolsmith, for reviewing this column.
 
 @printindex cp
 
-@shortcontents
-@contents
 @bye
 
 @c Local variables:
