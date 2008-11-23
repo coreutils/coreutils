@@ -10274,7 +10274,10 @@ $ stat --printf='%d:%i\n' / /usr
 @cindex terse output
 Print the information in terse form, suitable for parsing by other programs.
 
-The valid format sequences for files are:
+@end table
+
+The valid @var{format} directives for files with @option{--format} and
+@option{--printf} are:
 
 @itemize @bullet
 @item %a - Access rights in octal
@@ -10327,7 +10330,6 @@ Time stamps are listed according to the time zone rules specified by
 the @env{TZ} environment variable, or by the system default rules if
 @env{TZ} is not set.  @xref{TZ Variable,, Specifying the Time Zone
 with @env{TZ}, libc, The GNU C Library Reference Manual}.
-@end table
 
 @exitstatus
 
