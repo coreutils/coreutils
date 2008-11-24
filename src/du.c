@@ -30,6 +30,7 @@
 #include <assert.h>
 #include "system.h"
 #include "argmatch.h"
+#include "argv-iter.h"
 #include "error.h"
 #include "exclude.h"
 #include "fprintftime.h"
@@ -37,7 +38,6 @@
 #include "human.h"
 #include "quote.h"
 #include "quotearg.h"
-#include "readtokens0.h"
 #include "same.h"
 #include "stat-time.h"
 #include "xfts.h"
@@ -649,9 +649,6 @@ du_files (char **files, int bit_flags)
       fts_close (fts);
     }
 
-  if (print_grand_total)
-    print_size (&tot_dui, _("total"));
-
   return ok;
 }
 
@@ -660,10 +657,8 @@ main (int argc, char **argv)
 {
   char *cwd_only[2];
   bool max_depth_specified = false;
-  char **files;
   bool ok = true;
   char *files_from = NULL;
-  struct Tokens tok;
 
   /* Bit flags that control how fts works.  */
   int bit_flags = FTS_TIGHT_CYCLE_CHECK;
@@ -926,6 +921,7 @@ main (int argc, char **argv)
         }
     }
 
+  struct argv_iterator *ai;
   if (files_from)
     {
       /* When using --files0-from=F, you may not specify any files
@@ -942,78 +938,96 @@ main (int argc, char **argv)
 	error (EXIT_FAILURE, errno, _("cannot open %s for reading"),
 	       quote (files_from));
 
-      readtokens0_init (&tok);
-
-      if (! readtokens0 (stdin, &tok) || fclose (stdin) != 0)
-	error (EXIT_FAILURE, 0, _("cannot read file names from %s"),
-	       quote (files_from));
-
-      files = tok.tok;
+      ai = argv_iter_init_stream (stdin);
     }
   else
     {
-      files = (optind < argc ? argv + optind : cwd_only);
+      char **files = (optind < argc ? argv + optind : cwd_only);
+      ai = argv_iter_init_argv (files);
     }
+
+  if (!ai)
+    xalloc_die ();
 
   /* Initialize the hash structure for inode numbers.  */
   hash_init ();
 
-  /* Report and filter out any empty file names before invoking fts.
-     This works around a glitch in fts, which fails immediately
-     (without looking at the other file names) when given an empty
-     file name.  */
-  {
-    size_t i = 0;
-    size_t j;
-
-    for (j = 0; ; j++)
-      {
-	if (i != j)
-	  files[i] = files[j];
-
-	if ( ! files[i])
-	  break;
-
-	if (files_from && STREQ (files_from, "-") && STREQ (files[i], "-"))
-	  {
-	    /* Give a better diagnostic in an unusual case:
-	       printf - | du --files0-from=- */
-	    error (0, 0, _("when reading file names from stdin, "
-			   "no file name of %s allowed"),
-		   quote ("-"));
-	    continue;
-	  }
-
-	if (files[i][0])
-	  i++;
-	else
-	  {
-	    /* Diagnose a zero-length file name.  When it's one
-	       among many, knowing the record number may help.  */
-	    if (files_from)
-	      {
-		/* Using the standard `filename:line-number:' prefix here is
-		   not totally appropriate, since NUL is the separator, not NL,
-		   but it might be better than nothing.  */
-		unsigned long int file_number = j + 1;
-		error (0, 0, "%s:%lu: %s", quotearg_colon (files_from),
-		       file_number, _("invalid zero-length file name"));
-	      }
-	    else
-	      error (0, 0, "%s", _("invalid zero-length file name"));
-	  }
-      }
-
-    ok = (i == j);
-  }
-
   bit_flags |= symlink_deref_bits;
-  ok &= du_files (files, bit_flags);
+  static char *temp_argv[] = { NULL, NULL };
 
-  /* This isn't really necessary, but it does ensure we
-     exercise this function.  */
-  if (files_from)
-    readtokens0_free (&tok);
+  while (true)
+    {
+      bool skip_file = false;
+      enum argv_iter_err ai_err;
+      char *file_name = argv_iter (ai, &ai_err);
+      if (ai_err == AI_ERR_EOF)
+	break;
+      if (!file_name)
+	{
+	  switch (ai_err)
+	    {
+	    case AI_ERR_READ:
+	      error (0, errno, _("%s: read error"), quote (files_from));
+	      skip_file = true;
+	      continue;
+
+	    case AI_ERR_MEM:
+	      xalloc_die ();
+
+	    default:
+	      assert (!"unexpected error code from argv_iter");
+	    }
+	}
+      if (files_from && STREQ (files_from, "-") && STREQ (file_name, "-"))
+	{
+	  /* Give a better diagnostic in an unusual case:
+	     printf - | du --files0-from=- */
+	  error (0, 0, _("when reading file names from stdin, "
+			 "no file name of %s allowed"),
+		 quote (file_name));
+	  skip_file = true;
+	}
+
+      /* Report and skip any empty file names before invoking fts.
+	 This works around a glitch in fts, which fails immediately
+	 (without looking at the other file names) when given an empty
+	 file name.  */
+      if (!file_name[0])
+	{
+	  /* Diagnose a zero-length file name.  When it's one
+	     among many, knowing the record number may help.
+	     FIXME: currently print the record number only with
+	     --files0-from=FILE.  Maybe do it for argv, too?  */
+	  if (files_from == NULL)
+	    error (0, 0, "%s", _("invalid zero-length file name"));
+	  else
+	    {
+	      /* Using the standard `filename:line-number:' prefix here is
+		 not totally appropriate, since NUL is the separator, not NL,
+		 but it might be better than nothing.  */
+	      unsigned long int file_number = argv_iter_n_args (ai);
+	      error (0, 0, "%s:%lu: %s", quotearg_colon (files_from),
+		     file_number, _("invalid zero-length file name"));
+	    }
+	  skip_file = true;
+	}
+
+      if (skip_file)
+	ok = false;
+      else
+	{
+	  temp_argv[0] = file_name;
+	  ok &= du_files (temp_argv, bit_flags);
+	}
+    }
+
+  argv_iter_free (ai);
+
+  if (files_from && (ferror (stdin) || fclose (stdin) != 0))
+    error (EXIT_FAILURE, 0, _("error reading %s"), quote (files_from));
+
+  if (print_grand_total)
+    print_size (&tot_dui, _("total"));
 
   hash_free (htab);
 
