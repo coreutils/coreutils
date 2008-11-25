@@ -20,14 +20,17 @@
 #include <config.h>
 
 #include <stdio.h>
+#include <assert.h>
 #include <getopt.h>
 #include <sys/types.h>
 #include <wchar.h>
 #include <wctype.h>
 
 #include "system.h"
+#include "argv-iter.h"
 #include "error.h"
 #include "mbchar.h"
+#include "physmem.h"
 #include "quote.h"
 #include "quotearg.h"
 #include "readtokens0.h"
@@ -515,17 +518,19 @@ wc_file (char const *file, struct fstatus *fstatus)
 /* Return the file status for the NFILES files addressed by FILE.
    Optimize the case where only one number is printed, for just one
    file; in that case we can use a print width of 1, so we don't need
-   to stat the file.  */
+   to stat the file.  Handle the case of (nfiles == 0) in the same way;
+   that happens when we don't know how long the list of file names will be.  */
 
 static struct fstatus *
-get_input_fstatus (int nfiles, char * const *file)
+get_input_fstatus (int nfiles, char *const *file)
 {
-  struct fstatus *fstatus = xnmalloc (nfiles, sizeof *fstatus);
+  struct fstatus *fstatus = xnmalloc (nfiles ? nfiles : 1, sizeof *fstatus);
 
-  if (nfiles == 1
-      && ((print_lines + print_words + print_chars
-	   + print_bytes + print_linelength)
-	  == 1))
+  if (nfiles == 0
+      || (nfiles == 1
+	  && ((print_lines + print_words + print_chars
+	       + print_bytes + print_linelength)
+	      == 1)))
     fstatus[0].failed = 1;
   else
     {
@@ -577,7 +582,6 @@ compute_number_width (int nfiles, struct fstatus const *fstatus)
 int
 main (int argc, char **argv)
 {
-  int i;
   bool ok;
   int optc;
   int nfiles;
@@ -637,6 +641,8 @@ main (int argc, char **argv)
 	 | print_linelength))
     print_lines = print_words = print_bytes = true;
 
+  bool read_tokens = false;
+  struct argv_iterator *ai;
   if (files_from)
     {
       FILE *stream;
@@ -661,68 +667,113 @@ main (int argc, char **argv)
 		   quote (files_from));
 	}
 
-      readtokens0_init (&tok);
-
-      if (! readtokens0 (stream, &tok) || fclose (stream) != 0)
-	error (EXIT_FAILURE, 0, _("cannot read file names from %s"),
-	       quote (files_from));
-
-      files = tok.tok;
-      nfiles = tok.n_tok;
+      /* Read the file list into RAM if we can detect its size and that
+	 size is reasonable.  Otherwise, we'll read a name at a time.  */
+      struct stat st;
+      if (fstat (fileno (stream), &st) == 0
+	  && S_ISREG (st.st_mode)
+	  && st.st_size <= MIN (10 * 1024 * 1024, physmem_available () / 2))
+	{
+	  read_tokens = true;
+	  readtokens0_init (&tok);
+	  if (! readtokens0 (stream, &tok) || fclose (stream) != 0)
+	    error (EXIT_FAILURE, 0, _("cannot read file names from %s"),
+		   quote (files_from));
+	  files = tok.tok;
+	  nfiles = tok.n_tok;
+	  ai = argv_iter_init_argv (files);
+	}
+      else
+	{
+	  files = NULL;
+	  nfiles = 0;
+	  ai = argv_iter_init_stream (stream);
+	}
     }
   else
     {
-      static char *stdin_only[2];
+      static char *stdin_only[] = { NULL };
       files = (optind < argc ? argv + optind : stdin_only);
       nfiles = (optind < argc ? argc - optind : 1);
-      stdin_only[0] = NULL;
+      ai = argv_iter_init_argv (files);
     }
 
   fstatus = get_input_fstatus (nfiles, files);
   number_width = compute_number_width (nfiles, fstatus);
 
+  int i;
   ok = true;
-  for (i = 0; i < nfiles; i++)
+  for (i = 0; /* */; i++)
     {
-      if (files[i])
+      bool skip_file = false;
+      enum argv_iter_err ai_err;
+      char *file_name = argv_iter (ai, &ai_err);
+      if (ai_err == AI_ERR_EOF)
+	break;
+      if (!file_name)
 	{
-	  if (files_from && STREQ (files_from, "-") && STREQ (files[i], "-"))
+	  switch (ai_err)
 	    {
-	      ok = false;
-	      /* Give a better diagnostic in an unusual case:
-		 printf - | wc --files0-from=- */
-	      error (0, 0, _("when reading file names from stdin, "
-			     "no file name of %s allowed"),
-		     quote ("-"));
+	    case AI_ERR_READ:
+	      error (0, errno, _("%s: read error"), quote (files_from));
+	      skip_file = true;
 	      continue;
-	    }
-
-	  /* Diagnose a zero-length file name.  When it's one
-	     among many, knowing the record number may help.  */
-	  if (files[i][0] == '\0')
-	    {
-	      ok = false;
-	      if (files_from)
-		{
-		  /* Using the standard `filename:line-number:' prefix here is
-		     not totally appropriate, since NUL is the separator, not NL,
-		     but it might be better than nothing.  */
-		  unsigned long int file_number = i + 1;
-		  error (0, 0, "%s:%lu: %s", quotearg_colon (files_from),
-			 file_number, _("invalid zero-length file name"));
-		}
-	      else
-		error (0, 0, "%s", _("invalid zero-length file name"));
-	      continue;
+	    case AI_ERR_MEM:
+	      xalloc_die ();
+	    default:
+	      assert (!"unexpected error code from argv_iter");
 	    }
 	}
+      if (files_from && STREQ (files_from, "-") && STREQ (file_name, "-"))
+	{
+	  /* Give a better diagnostic in an unusual case:
+	     printf - | wc --files0-from=- */
+	  error (0, 0, _("when reading file names from stdin, "
+			 "no file name of %s allowed"),
+		 quote (file_name));
+	  skip_file = true;
+	}
 
-      ok &= wc_file (files[i], &fstatus[i]);
+      if (!file_name[0])
+	{
+	  /* Diagnose a zero-length file name.  When it's one
+	     among many, knowing the record number may help.
+	     FIXME: currently print the record number only with
+	     --files0-from=FILE.  Maybe do it for argv, too?  */
+	  if (files_from == NULL)
+	    error (0, 0, "%s", _("invalid zero-length file name"));
+	  else
+	    {
+	      /* Using the standard `filename:line-number:' prefix here is
+		 not totally appropriate, since NUL is the separator, not NL,
+		 but it might be better than nothing.  */
+	      unsigned long int file_number = argv_iter_n_args (ai);
+	      error (0, 0, "%s:%lu: %s", quotearg_colon (files_from),
+		     file_number, _("invalid zero-length file name"));
+	    }
+	  skip_file = true;
+	}
+
+      if (skip_file)
+	ok = false;
+      else
+	ok &= wc_file (file_name, &fstatus[nfiles ? i : 0]);
     }
 
-  if (1 < nfiles)
+  /* No arguments on the command line is fine.  That means read from stdin.
+     However, no arguments on the --files0-from input stream is an error
+     means don't read anything.  */
+  if (ok && !files_from && argv_iter_n_args (ai) == 0)
+    ok &= wc_file (NULL, &fstatus[0]);
+
+  if (read_tokens)
+    readtokens0_free (&tok);
+
+  if (1 < argv_iter_n_args (ai))
     write_counts (total_lines, total_words, total_chars, total_bytes,
 		  max_line_length, _("total"));
+
+  argv_iter_free (ai);
 
   free (fstatus);
 
