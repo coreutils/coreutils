@@ -2696,11 +2696,11 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
-@item -c @var{bytes}
-@itemx --bytes=@var{bytes}
+@item -c @var{n}
+@itemx --bytes=@var{n}
 @opindex -c
 @opindex --bytes
-Output the last @var{bytes} bytes, instead of final lines.
+Output the last @var{n} bytes, instead of final lines.
 However, if @var{n} starts with a @samp{+}, start printing with the
 @var{n}th byte from the start of each file, instead of from the end.
 Appending @samp{b} multiplies @var{bytes} by 512,
