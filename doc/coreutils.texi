@@ -2703,7 +2703,7 @@ The program accepts the following options.  Also see @ref{Common options}.
 Output the last @var{n} bytes, instead of final lines.
 However, if @var{n} starts with a @samp{+}, start printing with the
 @var{n}th byte from the start of each file, instead of from the end.
-Appending @samp{b} multiplies @var{bytes} by 512,
+Appending @samp{b} multiplies @var{n} by 512,
 @samp{kB} by 1000, @samp{K} by 1024,
 @samp{MB} by 1000*1000, @samp{M} by 1024*1024,
 @samp{GB} by 1000*1000*1000, @samp{G} by 1024*1024*1024,
