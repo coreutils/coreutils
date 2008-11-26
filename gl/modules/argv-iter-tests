@@ -1,0 +1,10 @@
+Files:
+tests/test-argv-iter.c
+
+Depends-on:
+
+configure.ac:
+
+Makefile.am:
+TESTS += test-argv-iter
+check_PROGRAMS += test-argv-iter
