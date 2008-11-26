@@ -630,8 +630,8 @@ multiplicative suffixes:
 @samp{K}  =>           1024 (KibiBytes)
 @samp{MB} =>      1000*1000 (MegaBytes)
 @samp{M}  =>      1024*1024 (MebiBytes)
-@samp{GB} => 1000*1000*1000 (GibiBytes)
-@samp{G}  => 1024*1024*1024 (GigaBytes)
+@samp{GB} => 1000*1000*1000 (GigaBytes)
+@samp{G}  => 1024*1024*1024 (GibiBytes)
 @end example
 and so on for @samp{T}, @samp{P}, @samp{E}, @samp{Z}, and @samp{Y}.
 @end macro
@@ -645,8 +645,8 @@ multiplicative suffixes:
 @samp{K}  =>           1024 (KibiBytes)
 @samp{MB} =>      1000*1000 (MegaBytes)
 @samp{M}  =>      1024*1024 (MebiBytes)
-@samp{GB} => 1000*1000*1000 (GibiBytes)
-@samp{G}  => 1024*1024*1024 (GigaBytes)
+@samp{GB} => 1000*1000*1000 (GigaBytes)
+@samp{G}  => 1024*1024*1024 (GibiBytes)
 @end example
 and so on for @samp{T}, @samp{P}, @samp{E}, @samp{Z}, and @samp{Y}.
 @end macro
