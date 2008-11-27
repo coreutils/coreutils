@@ -296,18 +296,22 @@ change_file_owner (FTS *fts, FTSENT *ent,
 	  fts_set (fts, ent, FTS_AGAIN);
 	  return true;
 	}
-      error (0, ent->fts_errno, _("cannot access %s"), quote (file_full_name));
+      if (! chopt->force_silent)
+        error (0, ent->fts_errno, _("cannot access %s"),
+	       quote (file_full_name));
       ok = false;
       break;
 
     case FTS_ERR:
-      error (0, ent->fts_errno, _("%s"), quote (file_full_name));
+      if (! chopt->force_silent)
+        error (0, ent->fts_errno, _("%s"), quote (file_full_name));
       ok = false;
       break;
 
     case FTS_DNR:
-      error (0, ent->fts_errno, _("cannot read directory %s"),
-	     quote (file_full_name));
+      if (! chopt->force_silent)
+        error (0, ent->fts_errno, _("cannot read directory %s"),
+	       quote (file_full_name));
       ok = false;
       break;
 
@@ -338,8 +342,9 @@ change_file_owner (FTS *fts, FTSENT *ent,
 	{
 	  if (fstatat (fts->fts_cwd_fd, file, &stat_buf, 0) != 0)
 	    {
-	      error (0, errno, _("cannot dereference %s"),
-		     quote (file_full_name));
+	      if (! chopt->force_silent)
+	        error (0, errno, _("cannot dereference %s"),
+		       quote (file_full_name));
 	      ok = false;
 	    }
 
@@ -492,7 +497,8 @@ chown_files (char **files, int bit_flags,
 	  if (errno != 0)
 	    {
 	      /* FIXME: try to give a better message  */
-	      error (0, errno, _("fts_read failed"));
+	      if (! chopt->force_silent)
+	        error (0, errno, _("fts_read failed"));
 	      ok = false;
 	    }
 	  break;

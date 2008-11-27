@@ -67,7 +67,7 @@ static mode_t umask_value;
 /* If true, change the modes of directories recursively. */
 static bool recurse;
 
-/* If true, force silence (no error messages). */
+/* If true, force silence (suppress most of error messages). */
 static bool force_silent;
 
 /* If true, diagnose surprises from naive misuses like "chmod -r file".
@@ -121,7 +121,7 @@ mode_changed (char const *file, mode_t old_mode, mode_t new_mode)
 
       if (stat (file, &new_stats) != 0)
 	{
-	  if (!force_silent)
+	  if (! force_silent)
 	    error (0, errno, _("getting new attributes of %s"), quote (file));
 	  return false;
 	}
@@ -203,24 +203,29 @@ process_file (FTS *fts, FTSENT *ent)
 	  fts_set (fts, ent, FTS_AGAIN);
 	  return true;
 	}
-      error (0, ent->fts_errno, _("cannot access %s"), quote (file_full_name));
+      if (! force_silent)
+        error (0, ent->fts_errno, _("cannot access %s"),
+	       quote (file_full_name));
       ok = false;
       break;
 
     case FTS_ERR:
-      error (0, ent->fts_errno, _("%s"), quote (file_full_name));
+      if (! force_silent)
+        error (0, ent->fts_errno, _("%s"), quote (file_full_name));
       ok = false;
       break;
 
     case FTS_DNR:
-      error (0, ent->fts_errno, _("cannot read directory %s"),
-	     quote (file_full_name));
+      if (! force_silent)
+        error (0, ent->fts_errno, _("cannot read directory %s"),
+	       quote (file_full_name));
       ok = false;
       break;
 
     case FTS_SLNONE:
-      error (0, 0, _("cannot operate on dangling symlink %s"),
-	     quote (file_full_name));
+      if (! force_silent)
+        error (0, 0, _("cannot operate on dangling symlink %s"),
+	       quote (file_full_name));
       ok = false;
 
     default:
@@ -319,7 +324,8 @@ process_files (char **files, int bit_flags)
 	  if (errno != 0)
 	    {
 	      /* FIXME: try to give a better message  */
-	      error (0, errno, _("fts_read failed"));
+	      if (! force_silent)
+	        error (0, errno, _("fts_read failed"));
 	      ok = false;
 	    }
 	  break;
