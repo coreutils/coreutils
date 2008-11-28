@@ -74,6 +74,7 @@ TESTS =						\
   misc/invalid-opt				\
   rm/ext3-perf					\
   rm/cycle					\
+  cp/link-heap					\
   chmod/no-x					\
   chgrp/basic					\
   rm/dangling-symlink				\
@@ -124,7 +125,7 @@ TESTS =						\
   misc/ptx					\
   misc/test					\
   misc/seq					\
-  misc/seq-long-double					\
+  misc/seq-long-double				\
   misc/head					\
   misc/head-elide-tail				\
   tail-2/tail-n0f				\
@@ -262,7 +263,6 @@ TESTS =						\
   cp/file-perm-race				\
   cp/into-self					\
   cp/link					\
-  cp/link-heap					\
   cp/link-no-deref				\
   cp/link-preserve				\
   cp/no-deref-link1				\
