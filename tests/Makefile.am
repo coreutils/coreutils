@@ -238,6 +238,7 @@ TESTS =						\
   chmod/inaccessible				\
   chmod/octal					\
   chmod/setgid					\
+  chmod/silent					\
   chmod/thru-dangling				\
   chmod/umask-x					\
   chmod/usage					\

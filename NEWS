@@ -10,6 +10,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** Bug fixes
 
+  chgrp, chmod, chown --silent (--quiet, -f) no longer print some diagnostics
+  [bug introduced in coreutils-5.1]
+
   cp uses much less memory in some situations
 
   du --files0-from=FILE no longer reads all of FILE into RAM before
