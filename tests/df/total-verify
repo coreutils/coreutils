@@ -23,6 +23,8 @@ fi
 
 . $srcdir/test-lib.sh
 
+df || skip_test_ "df fails"
+
 cat <<\EOF > check-df || framework_failure
 my ($total, $used, $avail) = (0, 0, 0);
 while (<>)
