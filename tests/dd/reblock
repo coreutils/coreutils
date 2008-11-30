@@ -44,7 +44,10 @@ sed 's/,.*//' err > k && mv k err
 compare err exp-reblock || fail=1
 
 # Demonstrate that bs=N supersedes even following ibs= and obs= settings.
-(echo x; sleep .1; echo y) | dd bs=3 ibs=1 obs=1 > out 2> err || fail=1
+# Choosing a delay of 0.1 would result in an occasional lost race where
+# the consumer's first read would consume 3 bytes rather than the expected 2.
+# Not wanting to sleep a full second, I'll raise that to 0.3.
+(printf ab; sleep .3; printf cd) | dd bs=3 ibs=1 obs=1 > out 2> err || fail=1
 sed 's/,.*//' err > k && mv k err
 compare err exp-no-reblock || fail=1
 
