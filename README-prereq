@@ -17,6 +17,7 @@ getting the prerequisites for particular systems.
     # rpmbuild --rebuild http://download.fedora.redhat.com/pub/fedora/linux/development/source/SRPMS/autoconf-2.63-1.fc10.src.rpm
     # rpm -Uvh /usr/src/redhat/RPMS/noarch/autoconf-2.63-1.fc8.noarch.rpm
   Apply the same method to install the lzma package.
+  [FIXME: mention xz when it's packaged]
 
   3. The latest released automake (1.10.1) was not new enough, so we download
   and build automake-1.10a from its repository and make it available
