@@ -1099,7 +1099,7 @@ int
 main (int argc, char **argv)
 {
   bool ok = true;
-  struct Options flags = { 0, };
+  DECLARE_ZEROED_AGGREGATE (struct Options, flags);
   char **file;
   int n_files;
   int c;

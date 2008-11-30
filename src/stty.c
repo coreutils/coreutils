@@ -726,7 +726,7 @@ main (int argc, char **argv)
 {
   /* Initialize to all zeroes so there is no risk memcmp will report a
      spurious difference in an uninitialized portion of the structure.  */
-  struct termios mode = { 0, };
+  DECLARE_ZEROED_AGGREGATE (struct termios, mode);
 
   enum output_type output_type;
   int optc;
@@ -999,7 +999,7 @@ main (int argc, char **argv)
     {
       /* Initialize to all zeroes so there is no risk memcmp will report a
 	 spurious difference in an uninitialized portion of the structure.  */
-      struct termios new_mode = { 0, };
+      DECLARE_ZEROED_AGGREGATE (struct termios, new_mode);
 
       if (tcsetattr (STDIN_FILENO, TCSADRAIN, &mode))
 	error (EXIT_FAILURE, errno, "%s", device_name);

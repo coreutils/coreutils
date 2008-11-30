@@ -3721,7 +3721,7 @@ quote_name (FILE *out, const char *name, struct quoting_options const *options,
 		     reach its end, replacing each non-printable multibyte
 		     character with a single question mark.  */
 		  {
-		    mbstate_t mbstate = { 0, };
+		    DECLARE_ZEROED_AGGREGATE (mbstate_t, mbstate);
 		    do
 		      {
 			wchar_t wc;
