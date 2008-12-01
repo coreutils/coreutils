@@ -363,7 +363,8 @@ Other options:\n\
       --compress-program=PROG  compress temporaries with PROG;\n\
                               decompress them with PROG -d\n\
       --files0-from=F       read input from the files specified by\n\
-                            NUL-terminated names in file F\n\
+                            NUL-terminated names in file F;\n\
+                            If F is - then read names from standard input\n\
 "), stdout);
       fputs (_("\
   -k, --key=POS1[,POS2]     start a key at POS1 (origin 1), end it at POS2\n\

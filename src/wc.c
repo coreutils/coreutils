@@ -121,7 +121,8 @@ read standard input.\n\
 "), stdout);
       fputs (_("\
       --files0-from=F    read input from the files specified by\n\
-                           NUL-terminated names in file F\n\
+                           NUL-terminated names in file F;\n\
+                           If F is - then read names from standard input\n\
   -L, --max-line-length  print the length of the longest line\n\
   -w, --words            print the word counts\n\
 "), stdout);

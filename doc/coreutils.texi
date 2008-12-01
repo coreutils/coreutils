@@ -3266,17 +3266,18 @@ Print only the maximum line lengths.
 @c This is commented out to avoid a texi2dvi failure.
 @c texi2dvi (GNU Texinfo 4.11) 1.104
 @c @cindex including files from @command{\cmd\}
-Rather than processing files named on the command line, process those
-named in file @var{FILE}; each name is terminated by a null byte.
+Disallow processing files named on the command line, and instead process
+those named in file @var{FILE}; each name being terminated by a NUL byte.
 This is useful \withTotalOption\
 when the list of file names is so long that it may exceed a command line
 length limitation.
 In such cases, running @command{\cmd\} via @command{xargs} is undesirable
 because it splits the list into pieces and makes @command{\cmd\} print
 \subListOutput\ for each sublist rather than for the entire list.
-One way to produce a list of null-byte-terminated file names is with @sc{gnu}
+One way to produce a list of NUL terminated file names is with @sc{gnu}
 @command{find}, using its @option{-print0} predicate.
-Do not specify any @var{FILE} on the command line when using this option.
+If @var{FILE} is @samp{-} then the NUL terminated file names
+are read from standard input.
 @end macro
 @filesZeroFromOption{wc,,a total}
 

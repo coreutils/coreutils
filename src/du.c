@@ -292,7 +292,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
       --files0-from=F   summarize disk usage of the NUL-terminated file\n\
-                          names specified in file F\n\
+                          names specified in file F;\n\
+                          If F is - then read names from standard input\n\
   -H                    like --si, but also evokes a warning; will soon\n\
                           change to be equivalent to --dereference-args (-D)\n\
   -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\n\
