@@ -32,15 +32,11 @@
 
 #define AUTHORS proper_name ("Jim Meyering")
 
-#if HAVE_SETHOSTNAME && !defined sethostname
-int sethostname ();
-#endif
-
 #if !defined HAVE_SETHOSTNAME && defined HAVE_SYSINFO && \
      defined HAVE_SYS_SYSTEMINFO_H
 # include <sys/systeminfo.h>
 
-int
+static int
 sethostname (char *name, size_t namelen)
 {
   /* Using sysinfo() is the SVR4 mechanism to set a hostname. */
