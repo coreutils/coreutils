@@ -82,6 +82,7 @@ emit_ul_factor (unsigned long int i)
   mpz_init (t);
   mpz_set_ui (t, i);
   emit_factor (t);
+  mpz_clear (t);
 }
 
 static void
