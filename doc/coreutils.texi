@@ -1835,7 +1835,7 @@ Output at most @var{bytes} bytes of the input.  Prefixes and suffixes on
 @cindex string constants, outputting
 Instead of the normal output, output only @dfn{string constants}: at
 least @var{bytes} consecutive @acronym{ASCII} graphic characters,
-followed by a null (zero) byte.
+followed by a zero byte (@acronym{ASCII} @sc{nul}).
 Prefixes and suffixes on @code{bytes} are interpreted as for the
 @option{-j} option.
 
@@ -1874,7 +1874,7 @@ hexadecimal
 @end table
 
 The type @code{a} outputs things like @samp{sp} for space, @samp{nl} for
-newline, and @samp{nul} for a null (zero) byte.  Only the least significant
+newline, and @samp{nul} for a zero byte.  Only the least significant
 seven bits of each byte is used; the high-order bit is ignored.
 Type @code{c} outputs
 @samp{ }, @samp{\n}, and @code{\0}, respectively.
@@ -3267,16 +3267,17 @@ Print only the maximum line lengths.
 @c texi2dvi (GNU Texinfo 4.11) 1.104
 @c @cindex including files from @command{\cmd\}
 Disallow processing files named on the command line, and instead process
-those named in file @var{file}; each name being terminated by a @sc{nul} byte.
+those named in file @var{file}; each name being terminated by a zero byte
+(@acronym{ASCII} @sc{nul}).
 This is useful \withTotalOption\
 when the list of file names is so long that it may exceed a command line
 length limitation.
 In such cases, running @command{\cmd\} via @command{xargs} is undesirable
 because it splits the list into pieces and makes @command{\cmd\} print
 \subListOutput\ for each sublist rather than for the entire list.
-One way to produce a list of @sc{nul} terminated file names is with @sc{gnu}
+One way to produce a list of @acronym{ASCII} @sc{nul} terminated file names is with @sc{gnu}
 @command{find}, using its @option{-print0} predicate.
-If @var{file} is @samp{-} then the @sc{nul} terminated file names
+If @var{file} is @samp{-} then the @acronym{ASCII} @sc{nul} terminated file names
 are read from standard input.
 @end macro
 @filesZeroFromOption{wc,,a total}
@@ -4003,9 +4004,8 @@ However, fields that extend to the end of the line,
 as @option{-k 2}, or fields consisting of a range, as @option{-k 2,3},
 retain the field separators present between the endpoints of the range.
 
-To specify a null character (@acronym{ASCII} @sc{nul}) as
-the field separator, use the two-character string @samp{\0}, e.g.,
-@samp{sort -t '\0'}.
+To specify @acronym{ASCII} @sc{nul} as the field separator,
+use the two-character string @samp{\0}, e.g., @samp{sort -t '\0'}.
 
 @item -T @var{tempdir}
 @itemx --temporary-directory=@var{tempdir}
@@ -4038,18 +4038,21 @@ For example, @code{sort -n -u} inspects only the value of the initial
 numeric string when checking for uniqueness, whereas @code{sort -n |
 uniq} inspects the entire line.  @xref{uniq invocation}.
 
+@macro zeroTerminatedOption
 @item -z
 @itemx --zero-terminated
 @opindex -z
 @opindex --zero-terminated
-@cindex sort zero-terminated lines
-Treat the input as a set of lines, each terminated by a null character
-(@acronym{ASCII} @sc{nul}) instead of a line feed
-(@acronym{ASCII} @sc{lf}).
+@cindex process zero-terminated items
+Delimit items with a zero byte rather than a newline (@acronym{ASCII} @sc{lf}).
+I.E. treat input as items separated by @acronym{ASCII} @sc{nul}
+and terminate output items with @acronym{ASCII} @sc{nul}.
 This option can be useful in conjunction with @samp{perl -0} or
 @samp{find -print0} and @samp{xargs -0} which do the same in order to
 reliably handle arbitrary file names (even those containing blanks
 or other special characters).
+@end macro
+@zeroTerminatedOption
 
 @end table
 
@@ -4297,18 +4300,7 @@ commands like @code{shuf -o F <F} and @code{cat F | shuf -o F}.
 Use @var{file} as a source of random data used to determine which
 permutation to generate.  @xref{Random sources}.
 
-@item -z
-@itemx --zero-terminated
-@opindex -z
-@opindex --zero-terminated
-@cindex sort zero-terminated lines
-Treat the input and output as a set of lines, each terminated by a zero byte
-(@acronym{ASCII} @sc{nul} (Null) character) instead of an
-@acronym{ASCII} @sc{lf} (Line Feed).
-This option can be useful in conjunction with @samp{perl -0} or
-@samp{find -print0} and @samp{xargs -0} which do the same in order to
-reliably handle arbitrary file names (even those containing blanks
-or other special characters).
+@zeroTerminatedOption
 
 @end table
 
@@ -4476,13 +4468,13 @@ This is equivalent to @option{--all-repeated} (@option{-D}).
 
 @item prepend
 Output a newline before each group of repeated lines.
-With @option{--zero-terminated} (@option{-z}), use
-an @acronym{ASCII} @sc{nul} (zero) byte instead of a newline.
+With @option{--zero-terminated} (@option{-z}), use a zero
+byte (@acronym{ASCII} @sc{nul}) instead of a newline.
 
 @item separate
 Separate groups of repeated lines with a single newline.
-With @option{--zero-terminated} (@option{-z}), use
-an @acronym{ASCII} @sc{nul} (zero) byte instead of a newline.
+With @option{--zero-terminated} (@option{-z}), use a zero
+byte (@acronym{ASCII} @sc{nul}) instead of a newline.
 This is the same as using @samp{prepend}, except that
 no delimiter is inserted before the first group, and hence
 may be better suited for output direct to users.
@@ -4512,18 +4504,7 @@ Compare at most @var{n} characters on each line (after skipping any specified
 fields and characters).  By default the entire rest of the lines are
 compared.
 
-@item -z
-@itemx --zero-terminated
-@opindex -z
-@opindex --zero-terminated
-@cindex sort zero-terminated lines
-Treat the input as a set of lines, each terminated by a null character
-(@acronym{ASCII} @sc{nul}) instead of a line feed
-(@acronym{ASCII} @sc{lf}).
-This option can be useful in conjunction with @samp{sort -z}, @samp{perl -0} or
-@samp{find -print0} and @samp{xargs -0} which do the same in order to
-reliably handle arbitrary file names (even those containing blanks
-or other special characters).
+@zeroTerminatedOption
 
 @end table
 
@@ -5032,10 +5013,10 @@ disabled, width of references is not taken into account in the output
 line width computations.
 
 @item
-All 256 bytes, even null bytes, are always read and processed from
-input file with no adverse effect, even if @sc{gnu} extensions are disabled.
-However, System V @command{ptx} does not accept 8-bit characters, a few
-control characters are rejected, and the tilde @kbd{~} is also rejected.
+All 256 bytes, even @acronym{ASCII} @sc{nul} bytes, are always read and
+processed from input file with no adverse effect, even if @sc{gnu} extensions
+are disabled. However, System V @command{ptx} does not accept 8-bit characters,
+a few control characters are rejected, and the tilde @kbd{~} is also rejected.
 
 @item
 Input line length is only limited by available memory, even if @sc{gnu}
@@ -7704,7 +7685,7 @@ The @samp{excl} and @samp{nocreat} conversions are mutually exclusive.
 Do not truncate the output file.
 
 @item sync
-@opindex sync @r{(padding with nulls)}
+@opindex sync @r{(padding with @acronym{ASCII} @sc{nul}s)}
 Pad every input block to size of @samp{ibs} with trailing zero bytes.
 When used with @samp{block} or @samp{unblock}, pad with spaces instead of
 zero bytes.
@@ -10091,9 +10072,10 @@ is at level 0, so @code{du --max-depth=0} is equivalent to @code{du -s}.
 @itemx --null
 @opindex --null
 @cindex output null-byte-terminated lines
-Output a null byte at the end of each line, rather than a newline.
-This option enables other programs to parse the output of @command{du}
-even when that output would contain file names with embedded newlines.
+Output a zero byte (@acronym{ASCII} @sc{nul}) at the end of each line,
+rather than a newline. This option enables other programs to parse the
+output of @command{du} even when that output would contain file names
+with embedded newlines.
 
 @optSi
 
@@ -10508,7 +10490,7 @@ produce no further output
 @item \f
 form feed
 @item \n
-new line
+newline
 @item \r
 carriage return
 @item \t
@@ -12070,7 +12052,8 @@ May be negated.
 @item ofdel
 @opindex ofdel
 @cindex pad character
-Use delete characters for fill instead of null characters.  Non-@acronym{POSIX}.
+Use @acronym{ASCII} @sc{del} characters for fill instead of
+@acronym{ASCII} @sc{nul} characters.  Non-@acronym{POSIX}.
 May be negated.
 
 @item nl1
@@ -14036,8 +14019,8 @@ These operands are evaluated left-to-right, so if two operands
 mention the same variable the earlier is ignored.
 
 Environment variable names can be empty, and can contain any
-characters other than @samp{=} and the null character (@acronym{ASCII}
-@sc{nul}).  However, it is wise to limit yourself to names that
+characters other than @samp{=} and @acronym{ASCII} @sc{nul}.
+However, it is wise to limit yourself to names that
 consist solely of underscores, digits, and @acronym{ASCII} letters,
 and that begin with a non-digit, as applications like the shell do not
 work well with other names.
