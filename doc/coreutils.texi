@@ -3261,13 +3261,13 @@ Print only the newline counts.
 Print only the maximum line lengths.
 
 @macro filesZeroFromOption{cmd,withTotalOption,subListOutput}
-@itemx --files0-from=@var{FILE}
-@opindex --files0-from=@var{FILE}
+@itemx --files0-from=@var{file}
+@opindex --files0-from=@var{file}
 @c This is commented out to avoid a texi2dvi failure.
 @c texi2dvi (GNU Texinfo 4.11) 1.104
 @c @cindex including files from @command{\cmd\}
 Disallow processing files named on the command line, and instead process
-those named in file @var{FILE}; each name being terminated by a NUL byte.
+those named in file @var{file}; each name being terminated by a NUL byte.
 This is useful \withTotalOption\
 when the list of file names is so long that it may exceed a command line
 length limitation.
@@ -3276,7 +3276,7 @@ because it splits the list into pieces and makes @command{\cmd\} print
 \subListOutput\ for each sublist rather than for the entire list.
 One way to produce a list of NUL terminated file names is with @sc{gnu}
 @command{find}, using its @option{-print0} predicate.
-If @var{FILE} is @samp{-} then the NUL terminated file names
+If @var{file} is @samp{-} then the NUL terminated file names
 are read from standard input.
 @end macro
 @filesZeroFromOption{wc,,a total}
@@ -10196,13 +10196,13 @@ When recursing, skip subdirectories or files matching @var{PATTERN}.
 For example, @code{du --exclude='*.o'} excludes files whose names
 end in @samp{.o}.
 
-@item -X @var{FILE}
-@itemx --exclude-from=@var{FILE}
-@opindex -X @var{FILE}
-@opindex --exclude-from=@var{FILE}
+@item -X @var{file}
+@itemx --exclude-from=@var{file}
+@opindex -X @var{file}
+@opindex --exclude-from=@var{file}
 @cindex excluding files from @command{du}
-Like @option{--exclude}, except take the patterns to exclude from @var{FILE},
-one per line.  If @var{FILE} is @samp{-}, take the patterns from standard
+Like @option{--exclude}, except take the patterns to exclude from @var{file},
+one per line.  If @var{file} is @samp{-}, take the patterns from standard
 input.
 
 @end table
@@ -10418,7 +10418,7 @@ Do not create files that do not exist.
 @itemx --io-blocks
 @opindex -o
 @opindex --io-blocks
-Treat @var{size} as number of I/O blocks of the @var{FILE} rather than bytes.
+Treat @var{size} as number of I/O blocks of the @var{file} rather than bytes.
 
 @item -r @var{rfile}
 @itemx --reference=@var{rfile}
