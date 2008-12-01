@@ -2024,13 +2024,13 @@ The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
 
-@item -w @var{COLS}
-@itemx --wrap=@var{COLS}
+@item -w @var{cols}
+@itemx --wrap=@var{cols}
 @opindex -w
 @opindex --wrap
 @cindex wrap data
 @cindex column to wrap data after
-During encoding, wrap lines after @var{COLS} characters.  This must be
+During encoding, wrap lines after @var{cols} characters.  This must be
 a positive number.
 
 The default is to wrap after 76 characters.  Use the value 0 to
@@ -2353,8 +2353,8 @@ is 8).
 Use a form feed instead of newlines to separate output pages.  This does
 not alter the default page length of 66 lines.
 
-@item -h @var{HEADER}
-@itemx --header=@var{HEADER}
+@item -h @var{header}
+@itemx --header=@var{header}
 @opindex -h
 @opindex --header
 Replace the file name in the header with the centered string @var{header}.
@@ -2424,11 +2424,11 @@ first line of the input file (not the first line printed, compare the
 Optional argument @var{number-separator} is the character appended to
 the line number to separate it from the text followed.  The default
 separator is the TAB character.  In a strict sense a TAB is always
-printed with single column output only.  The @var{TAB}-width varies
-with the @var{TAB}-position, e.g., with the left @var{margin} specified
+printed with single column output only.  The @var{tab}-width varies
+with the @var{tab}-position, e.g., with the left @var{margin} specified
 by @option{-o} option.  With multicolumn output priority is given to
 @samp{equal width of output columns} (a @acronym{POSIX} specification).
-The @var{TAB}-width is fixed to the value of the first column and does
+The @var{tab}-width is fixed to the value of the first column and does
 not change with different values of left @var{margin}.  That means a
 fixed number of spaces is always printed in the place of the
 @var{number-separator tab}.  The tabification depends upon the output
@@ -3267,16 +3267,16 @@ Print only the maximum line lengths.
 @c texi2dvi (GNU Texinfo 4.11) 1.104
 @c @cindex including files from @command{\cmd\}
 Disallow processing files named on the command line, and instead process
-those named in file @var{file}; each name being terminated by a NUL byte.
+those named in file @var{file}; each name being terminated by a @sc{nul} byte.
 This is useful \withTotalOption\
 when the list of file names is so long that it may exceed a command line
 length limitation.
 In such cases, running @command{\cmd\} via @command{xargs} is undesirable
 because it splits the list into pieces and makes @command{\cmd\} print
 \subListOutput\ for each sublist rather than for the entire list.
-One way to produce a list of NUL terminated file names is with @sc{gnu}
+One way to produce a list of @sc{nul} terminated file names is with @sc{gnu}
 @command{find}, using its @option{-print0} predicate.
-If @var{file} is @samp{-} then the NUL terminated file names
+If @var{file} is @samp{-} then the @sc{nul} terminated file names
 are read from standard input.
 @end macro
 @filesZeroFromOption{wc,,a total}
@@ -4363,8 +4363,8 @@ and the command @samp{shuf -i 1-4} might output:
 @noindent
 These examples all have four input lines, so @command{shuf} might
 produce any of the twenty-four possible permutations of the input.  In
-general, if there are @var{N} input lines, there are @var{N}! (i.e.,
-@var{N} factorial, or @var{N} * (@var{N} - 1) * @dots{} * 1) possible
+general, if there are @var{n} input lines, there are @var{n}! (i.e.,
+@var{n} factorial, or @var{n} * (@var{n} - 1) * @dots{} * 1) possible
 output permutations.
 
 @exitstatus
@@ -6270,7 +6270,7 @@ the main output:
 @end example
 
 @noindent
-The @var{begN} and @var{endN} are unsigned integers that record the
+The @var{begn} and @var{endn} are unsigned integers that record the
 byte position of the beginning and end of each file name in the output.
 This makes it easy for Emacs to find the names, even when they contain
 unusual characters such as space or newline, without fancy searching.
@@ -8416,11 +8416,11 @@ The program accepts the following options.  Also see @ref{Common options}.
 @cindex force deletion
 Override file permissions if necessary to allow overwriting.
 
-@item -@var{NUMBER}
-@itemx -n @var{NUMBER}
-@itemx --iterations=@var{NUMBER}
-@opindex -n @var{NUMBER}
-@opindex --iterations=@var{NUMBER}
+@item -@var{number}
+@itemx -n @var{number}
+@itemx --iterations=@var{number}
+@opindex -n @var{number}
+@opindex --iterations=@var{number}
 @cindex iterations, selecting the number of
 By default, @command{shred} uses 25 passes of overwrite.  This is enough
 for all of the useful overwrite patterns to be used at least once.
@@ -8433,13 +8433,13 @@ time to waste.
 Use @var{file} as a source of random data used to overwrite and to
 choose pass ordering.  @xref{Random sources}.
 
-@item -s @var{BYTES}
-@itemx --size=@var{BYTES}
-@opindex -s @var{BYTES}
-@opindex --size=@var{BYTES}
+@item -s @var{bytes}
+@itemx --size=@var{bytes}
+@opindex -s @var{bytes}
+@opindex --size=@var{bytes}
 @cindex size of file to shred
-Shred the first @var{BYTES} bytes of the file.  The default is to shred
-the whole file.  @var{BYTES} can be followed by a size specification like
+Shred the first @var{bytes} bytes of the file.  The default is to shred
+the whole file.  @var{bytes} can be followed by a size specification like
 @samp{K}, @samp{M}, or @samp{G} to specify a multiple.  @xref{Block size}.
 
 @item -u
@@ -9684,10 +9684,10 @@ the origin for any relative @var{time}s given, but is otherwise ignored.
 For example, @samp{-r foo -d '-5 seconds'} specifies a time stamp
 equal to five seconds before the corresponding time stamp for @file{foo}.
 
-@item -t [[@var{CC}]@var{YY}]@var{MMDDhhmm}[.@var{ss}]
+@item -t [[@var{cc}]@var{yy}]@var{mmddhhmm}[.@var{ss}]
 Use the argument (optional four-digit or two-digit years, months,
 days, hours, minutes, optional seconds) instead of the current time.
-If the year is specified with only two digits, then @var{CC}
+If the year is specified with only two digits, then @var{cc}
 is 20 for years in the range 0 @dots{} 68, and 19 for years in
 69 @dots{} 99.  If no digits of the year are specified,
 the argument is interpreted as a date in the current year.
@@ -9698,8 +9698,8 @@ the argument is interpreted as a date in the current year.
 On older systems, @command{touch} supports an obsolete syntax, as follows.
 If no timestamp is given with any of the @option{-d}, @option{-r}, or
 @option{-t} options, and if there are two or more @var{file}s and the
-first @var{file} is of the form @samp{@var{MMDDhhmm}[@var{YY}]} and this
-would be a valid argument to the @option{-t} option (if the @var{YY}, if
+first @var{file} is of the form @samp{@var{mmddhhmm}[@var{yy}]} and this
+would be a valid argument to the @option{-t} option (if the @var{yy}, if
 any, were moved to the front), and if the represented year
 is in the range 1969--1999, that argument is interpreted as the time
 for the other files instead of as a file name.
@@ -10079,8 +10079,8 @@ This option is equivalent to @option{--block-size=1M}.
 For each symbolic links encountered by @command{du},
 consider the disk space used by the symbolic link.
 
-@item --max-depth=@var{DEPTH}
-@opindex --max-depth=@var{DEPTH}
+@item --max-depth=@var{depth}
+@opindex --max-depth=@var{depth}
 @cindex limiting output of @command{du}
 Show the total for each directory (and file if --all) that is at
 most MAX_DEPTH levels down from the root of the hierarchy.  The root
@@ -10189,10 +10189,10 @@ begins with @samp{posix-} the @samp{posix-} is ignored; and if
 Skip directories that are on different file systems from the one that
 the argument being processed is on.
 
-@item --exclude=@var{PATTERN}
-@opindex --exclude=@var{PATTERN}
+@item --exclude=@var{pattern}
+@opindex --exclude=@var{pattern}
 @cindex excluding files from @command{du}
-When recursing, skip subdirectories or files matching @var{PATTERN}.
+When recursing, skip subdirectories or files matching @var{pattern}.
 For example, @code{du --exclude='*.o'} excludes files whose names
 end in @samp{.o}.
 
@@ -14543,7 +14543,7 @@ If @var{pid} is not positive, a system-dependent set of system
 processes is excluded from the list of processes to which the signal
 is sent.
 
-If a negative @var{PID} argument is desired as the first one, it
+If a negative @var{pid} argument is desired as the first one, it
 should be preceded by @option{--}.  However, as a common extension to
 @acronym{POSIX}, @option{--} is not required with @samp{kill
 -@var{signal} -@var{pid}}.  The following commands are equivalent:
