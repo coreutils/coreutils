@@ -30,10 +30,10 @@
 #include "system.h"
 #include "argmatch.h"
 #include "argv-iter.h"
+#include "di-set.h"
 #include "error.h"
 #include "exclude.h"
 #include "fprintftime.h"
-#include "hash.h"
 #include "human.h"
 #include "quote.h"
 #include "quotearg.h"
@@ -61,18 +61,10 @@ extern bool fts_debug;
 #endif
 
 /* Initial size of the hash table.  */
-#define INITIAL_TABLE_SIZE 103
-
-/* Hash structure for inode and device numbers.  The separate entry
-   structure makes it easier to rehash "in place".  */
-struct entry
-{
-  ino_t st_ino;
-  dev_t st_dev;
-};
+enum { INITIAL_DI_SET_SIZE = 103 };
 
 /* A set of dev/ino pairs.  */
-static Hash_table *htab;
+static struct di_set_state di_set;
 
 /* Define a class for collecting directory information. */
 
@@ -339,66 +331,20 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   exit (status);
 }
 
-static size_t
-entry_hash (void const *x, size_t table_size)
-{
-  struct entry const *p = x;
-
-  /* Ignoring the device number here should be fine.  */
-  /* The cast to uintmax_t prevents negative remainders
-     if st_ino is negative.  */
-  return (uintmax_t) p->st_ino % table_size;
-}
-
-/* Compare two dev/ino pairs.  Return true if they are the same.  */
-static bool
-entry_compare (void const *x, void const *y)
-{
-  struct entry const *a = x;
-  struct entry const *b = y;
-  return SAME_INODE (*a, *b) ? true : false;
-}
-
 /* Try to insert the INO/DEV pair into the global table, HTAB.
    Return true if the pair is successfully inserted,
    false if the pair is already in the table.  */
 static bool
 hash_ins (ino_t ino, dev_t dev)
 {
-  struct entry *ent;
-  struct entry *ent_from_table;
-
-  ent = xmalloc (sizeof *ent);
-  ent->st_ino = ino;
-  ent->st_dev = dev;
-
-  ent_from_table = hash_insert (htab, ent);
-  if (ent_from_table == NULL)
+  int inserted = di_set_insert (&di_set, dev, ino);
+  if (inserted < 0)
     {
       /* Insertion failed due to lack of memory.  */
       xalloc_die ();
     }
 
-  if (ent_from_table == ent)
-    {
-      /* Insertion succeeded.  */
-      return true;
-    }
-
-  /* That pair is already in the table, so ENT was not inserted.  Free it.  */
-  free (ent);
-
-  return false;
-}
-
-/* Initialize the hash table.  */
-static void
-hash_init (void)
-{
-  htab = hash_initialize (INITIAL_TABLE_SIZE, NULL,
-                          entry_hash, entry_compare, free);
-  if (htab == NULL)
-    xalloc_die ();
+  return inserted ? true : false;
 }
 
 /* FIXME: this code is nearly identical to code in date.c  */
@@ -958,8 +904,9 @@ main (int argc, char **argv)
   if (!ai)
     xalloc_die ();
 
-  /* Initialize the hash structure for inode numbers.  */
-  hash_init ();
+  /* Initialize the set of dev,inode pairs.  */
+  if (di_set_init (&di_set, INITIAL_DI_SET_SIZE))
+    xalloc_die ();
 
   bit_flags |= symlink_deref_bits;
   static char *temp_argv[] = { NULL, NULL };
@@ -1037,7 +984,7 @@ main (int argc, char **argv)
   if (print_grand_total)
     print_size (&tot_dui, _("total"));
 
-  hash_free (htab);
+  di_set_free (&di_set);
 
   exit (ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
