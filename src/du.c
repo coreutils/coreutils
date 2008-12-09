@@ -294,8 +294,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
       --files0-from=F   summarize disk usage of the NUL-terminated file\n\
                           names specified in file F;\n\
                           If F is - then read names from standard input\n\
-  -H                    like --si, but also evokes a warning; will soon\n\
-                          change to be equivalent to --dereference-args (-D)\n\
+  -H                    equivalent to --dereference-args (-D)\n\
   -h, --human-readable  print sizes in human readable format (e.g., 1K 234M 2G)\n\
       --si              like -h, but use powers of 1000 not 1024\n\
 "), stdout);
@@ -729,11 +728,6 @@ main (int argc, char **argv)
 	  output_block_size = 1;
 	  break;
 
-	case 'H':  /* FIXME: remove warning and move this "case 'H'" to
-		      precede --dereference-args in late 2006.  */
-	  error (0, 0, _("WARNING: use --si, not -H; the meaning of the -H\
- option will soon\nchange to be the same as that of --dereference-args (-D)"));
-	  /* fall through */
 	case HUMAN_SI_OPTION:
 	  human_output_opts = human_autoscale | human_SI;
 	  output_block_size = 1;
@@ -762,7 +756,7 @@ main (int argc, char **argv)
 	  }
 	  break;
 
-	case MEGABYTES_LONG_OPTION:
+	case MEGABYTES_LONG_OPTION: /* FIXME: remove in 2009 */
 	  error (0, 0,
 		 _("the --megabytes option is deprecated; use -m instead"));
 	  /* fall through */
@@ -792,7 +786,8 @@ main (int argc, char **argv)
 	  }
 	  break;
 
-	case 'D': /* This will eventually be 'H' (-H), too.  */
+	case 'H':  /* NOTE: before 2008-12, -H was equivalent to --si.  */
+	case 'D':
 	  symlink_deref_bits = FTS_COMFOLLOW | FTS_PHYSICAL;
 	  break;
 

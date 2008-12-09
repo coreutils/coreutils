@@ -32,6 +32,9 @@ GNU coreutils NEWS                                    -*- outline -*-
   cp and mv: the --reply={yes,no,query} option has been removed.
   Using it has elicited a warning for the last three years.
 
+  du: -H (initially equivalent to --si) is now equivalent to
+  --dereference-args, and thus works as POSIX requires
+
   ls -l now marks SELinux-only files with the less obtrusive '.',
   rather than '+'.  A file with any other combination of MAC and ACL
   is still marked with a '+'.

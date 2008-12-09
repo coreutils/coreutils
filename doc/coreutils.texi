@@ -10016,10 +10016,7 @@ are often symbolic links.
 
 @item -H
 @opindex -H
-Currently, @option{-H} is the same as @option{--si},
-except that @option{-H} evokes a warning.
-This option will be changed to be equivalent to
-@option{--dereference-args} (@option{-D}).
+Equivalent to @option{--dereference-args} (@option{-D}).
 
 @item -k
 @opindex -k
