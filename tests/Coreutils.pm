@@ -24,7 +24,7 @@ use File::Compare qw(compare);
 
 @ISA = qw(Exporter);
 ($VERSION = '$Revision: 1.5 $ ') =~ tr/[0-9].//cd;
-@EXPORT = qw (run_tests triple_test);
+@EXPORT = qw (run_tests triple_test getlimits);
 
 my $debug = $ENV{DEBUG};
 
@@ -202,6 +202,14 @@ sub _at_replace ($$)
 	  and $s =~ s/\@$eo\@/$f/g;
     }
   return $s;
+}
+
+sub getlimits()
+{
+  my $NV;
+  open $NV, "getlimits |" or die "Error running getlimits\n";
+  my %limits = map {split /=|\n/} <$NV>;
+  return \%limits;
 }
 
 # FIXME: cleanup on interrupt

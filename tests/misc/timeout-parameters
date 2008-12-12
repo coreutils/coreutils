@@ -22,6 +22,7 @@ if test "$VERBOSE" = yes; then
 fi
 
 . $srcdir/test-lib.sh
+getlimits_
 
 fail=0
 
@@ -35,10 +36,10 @@ timeout invalid sleep 0 && fail=1
 timeout 42D sleep 0 && fail=1
 
 # timeout overflow
-timeout 4294967296 sleep 0 && fail=1
+timeout $UINT_OFLOW sleep 0 && fail=1
 
 # timeout overflow
-timeout 49711d sleep 0 && fail=1
+timeout $(expr $UINT_MAX / 86400 + 1)d sleep 0 && fail=1
 
 # invalid signal spec
 timeout --signal=invalid 1 sleep 0 && fail=1

@@ -24,6 +24,7 @@ if test "$VERBOSE" = yes; then
 fi
 
 . $srcdir/test-lib.sh
+getlimits_
 
 # Run this test only with glibc and sizeof (long double) > sizeof (double).
 # Otherwise, there are known failures:
@@ -40,8 +41,8 @@ $CC -c long.c \
   || skip_test_ \
      'this test runs only on systems with glibc and long double != double'
 
-a=9223372036854775807
-b=$(echo $a|sed 's/7$/8/')
+a=$INTMAX_MAX
+b=$INTMAX_OFLOW
 
 fail=0
 seq $a $b > out || fail=1

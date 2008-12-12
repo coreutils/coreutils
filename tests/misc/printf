@@ -24,6 +24,7 @@ if test "$VERBOSE" = yes; then
 fi
 
 . $srcdir/test-lib.sh
+getlimits_
 
 fail=0
 
@@ -67,7 +68,8 @@ POSIXLY_CORRECT=1 \
 
 "$prog" '9 %*dx\n' -2 0 >>out || fail=1
 
-"$prog" '10 %.*dx\n' -2147483648 0 >>out || fail=1
+"$prog" '10 %.*dx\n' $INT_UFLOW 0 >>out || fail=1
+"$prog" '%.*dx\n' $INT_OFLOW 0 >>out 2> /dev/null && fail=1
 
 "$prog" '11 %*c\n' 2 x >>out || fail=1
 

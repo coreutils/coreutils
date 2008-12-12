@@ -22,6 +22,7 @@ if test "$VERBOSE" = yes; then
 fi
 
 . $srcdir/test-lib.sh
+getlimits_
 
 touch in || framework_failure
 
@@ -44,19 +45,9 @@ split -1 in 2> /dev/null || fail=1
 # Then make sure that -0 evokes a failure.
 split -0 in 2> /dev/null && fail=1
 
-# Ensure that split --lines=N and --bytes=N work for N=2^32,
-# assuming our host supports integers that wide.
-if _4gb=`expr 4294967296 + 0 2>/dev/null`; then
-  split --lines=$_4gb in || fail=1
-  split --bytes=$_4gb in || fail=1
-fi
-
-# Currently (coreutils-5.0.1) split --line-bytes=M fails
-# with `invalid number of bytes' for M=2^32 or larger.  Actually,
-# the limit is SIZE_MAX, which is 2^32 on 32-bit systems.
-# On 64-bit systems, there's no problem with a count of 2^32,
-# So disable this test in order to avoid the `failure' on 64-bit systems.
-#split --line-bytes=$_4gb 2> /dev/null in && fail=1
+split --lines=$UINTMAX_MAX in || fail=1
+split --bytes=$UINTMAX_MAX in || fail=1
+split --line-bytes=$SIZE_OFLOW 2> /dev/null in && fail=1
 
 # Make sure that a huge obsolete option evokes the right failure.
 split -99999999999999999991 2> out && fail=1

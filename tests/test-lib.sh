@@ -14,6 +14,13 @@ skip_test_()
   Exit 77
 }
 
+getlimits_()
+{
+    eval $(getlimits)
+    test "$INT_MAX" ||
+    error_ "Error running getlimits"
+}
+
 require_acl_()
 {
   getfacl --version < /dev/null > /dev/null 2>&1 \

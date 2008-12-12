@@ -22,6 +22,7 @@ if test "$VERBOSE" = yes; then
 fi
 
 . $srcdir/test-lib.sh
+getlimits_
 
 fail=0
 
@@ -30,26 +31,14 @@ truncate -s-1 create-zero-len-file || fail=1
 
 echo > non-empty-file
 
-truncate -s2147483648 -c no-such-file && _FILE_OFFSET_BITS=64
+# signed overflow
+truncate -s$OFF_T_OFLOW file && fail=1
 
-if [ $_FILE_OFFSET_BITS -eq 64 ]; then
-    # signed overflow
-    truncate -s9223372036854775808 file && fail=1
+# += signed overflow
+truncate -s+$OFF_T_MAX non-empty-file && fail=1
 
-    # *= signed overflow
-    truncate --io-blocks --size="1E" file && fail=1
-
-    # += signed overflow
-    truncate -s+9223372036854775807 non-empty-file && fail=1
-else
-    # signed overflow
-    truncate -s2147483648 file && fail=1
-
-    # *= signed overflow
-    truncate --io-blocks --size="1G" file && fail=1
-
-    # += signed overflow
-    truncate -s+2147483647 non-empty-file && fail=1
-fi
+# *= signed overflow
+IO_BLOCK_OFLOW=$(expr $OFF_T_MAX / $(stat -f -c%s .) + 1)
+truncate --io-blocks --size=$IO_BLOCK_OFLOW file && fail=1
 
 Exit $fail
