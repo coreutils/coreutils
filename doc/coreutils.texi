@@ -2424,14 +2424,14 @@ first line of the input file (not the first line printed, compare the
 Optional argument @var{number-separator} is the character appended to
 the line number to separate it from the text followed.  The default
 separator is the TAB character.  In a strict sense a TAB is always
-printed with single column output only.  The @var{tab}-width varies
-with the @var{tab}-position, e.g., with the left @var{margin} specified
+printed with single column output only.  The TAB width varies
+with the TAB position, e.g., with the left @var{margin} specified
 by @option{-o} option.  With multicolumn output priority is given to
 @samp{equal width of output columns} (a @acronym{POSIX} specification).
-The @var{tab}-width is fixed to the value of the first column and does
+The TAB width is fixed to the value of the first column and does
 not change with different values of left @var{margin}.  That means a
 fixed number of spaces is always printed in the place of the
-@var{number-separator tab}.  The tabification depends upon the output
+@var{number-separator} TAB.  The tabification depends upon the output
 position.
 
 @item -N @var{line_number}
