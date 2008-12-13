@@ -52,6 +52,9 @@ Options:
 If the file $0.conf exists in the same directory as this script, its
 contents are read as shell variables to configure the bootstrap.
 
+For build prerequisites, environment variables like \$AUTOCONF and \$AMTAR
+are honored.
+
 Running without arguments will suffice in most cases.
 "
 }
@@ -267,14 +270,22 @@ get_version() {
 
   $app --version >/dev/null 2>&1 || return 1
 
-  $app --version |
-  sed -n 's/[^0-9.]*\([0-9]\{1,\}\.[.a-z0-9-]\{,\}\).*/\1/p;T;q'
+  $app --version 2>&1 |
+  sed -n 's/[^0-9.]*\([0-9]\{1,\}\.[.a-z0-9-]*\).*/\1/p
+	  t done
+	  d
+	  :done
+	  q'
 }
 
 check_versions() {
   ret=0
 
   while read app req_ver; do
+    # Honor $APP variables ($TAR, $AUTOCONF, etc.)
+    appvar=`echo $app | tr '[a-z]' '[A-Z]'`
+    test "$appvar" = TAR && appvar=AMTAR
+    eval "app=\${$appvar-$app}"
     inst_ver=$(get_version $app)
     if [ ! "$inst_ver" ]; then
       echo "Error: '$app' not found" >&2
@@ -409,9 +420,9 @@ update_po_files() {
     cksum_file="$ref_po_dir/$po.s1"
     if ! test -f "$cksum_file" ||
 	! test -f "$po_dir/$po.po" ||
-	! sha1sum -c --status "$cksum_file" < "$new_po" > /dev/null; then
+	! ${SHA1SUM-sha1sum} -c --status "$cksum_file" < "$new_po" > /dev/null; then
       echo "updated $po_dir/$po.po..."
-      cp "$new_po" "$po_dir/$po.po" && sha1sum < "$new_po" > "$cksum_file"
+      cp "$new_po" "$po_dir/$po.po" && ${SHA1SUM-sha1sum} < "$new_po" > "$cksum_file"
     fi
   done
 }
@@ -656,9 +667,9 @@ grep '^[	 ]*AM_GNU_GETTEXT_VERSION(' configure.ac >/dev/null || \
     with_gettext=no
 
 if test $with_gettext = yes; then
-  echo "$0: (cd $bt2; autopoint) ..."
+  echo "$0: (cd $bt2; ${AUTOPOINT-autopoint}) ..."
   cp configure.ac $bt2 &&
-  (cd $bt2 && autopoint && rm configure.ac) &&
+  (cd $bt2 && ${AUTOPOINT-autopoint} && rm configure.ac) &&
   slurp $bt2 $bt || exit
 fi
 rm -fr $bt $bt2 || exit
@@ -679,10 +690,10 @@ find "$m4_base" "$source_base" \
 
 for command in \
   libtool \
-  'aclocal --force -I m4' \
-  'autoconf --force' \
-  'autoheader --force' \
-  'automake --add-missing --copy --force-missing';
+  "${ACLOCAL-aclocal} --force -I m4" \
+  "${AUTOCONF-autoconf} --force" \
+  "${AUTOHEADER-autoheader} --force" \
+  "${AUTOMAKE-automake} --add-missing --copy --force-missing"
 do
   if test "$command" = libtool; then
     use_libtool=0
@@ -695,7 +706,7 @@ do
       && use_libtool=1
     test $use_libtool = 0 \
       && continue
-    command='libtoolize -c -f'
+    command="${LIBTOOLIZE-libtoolize} -c -f"
   fi
   echo "$0: $command ..."
   $command || exit
