@@ -361,6 +361,14 @@ sc_GPL_version:
 	@grep -n 'either ''version [^3]' $$($(VC_LIST_EXCEPT)) &&	\
 	  { echo '$(ME): GPL vN, N!=3' 1>&2; exit 1; } || :
 
+cvs_keywords = \
+  Author|Date|Header|Id|Name|Locker|Log|RCSfile|Revision|Source|State
+
+sc_prohibit_cvs_keyword:
+	@re='\$$($(cvs_keywords))\$$'					\
+	    msg='do not use CVS keyword expansion'			\
+	  $(_prohibit_regexp)
+
 # Make sure we don't use st_blocks.  Use ST_NBLOCKS instead.
 # This is a bit of a kludge, since it prevents use of the string
 # even in comments, but for now it does the job with no false positives.
