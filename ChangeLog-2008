@@ -1,3 +1,8 @@
+2008-12-16  Jim Meyering  <meyering@redhat.com>
+
+	NB: ChangeLog files are no longer manually maintained.
+	See HACKING for details.
+
 2008-02-07  Jim Meyering  <meyering@redhat.com>
 
 	We *do* need two different version files.
