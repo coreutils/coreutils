@@ -567,7 +567,7 @@ and
 .B %s
 programs are properly installed at your site, the command
 .IP
-.B info coreutils '%s invocation'
+.B info coreutils \(aq%s invocation\(aq
 .PP
 should give you access to the complete manual.
 EOT

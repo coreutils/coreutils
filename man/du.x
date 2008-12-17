@@ -19,7 +19,7 @@ will match any files whose names end in
 .BR .o .
 Therefore, the command
 .IP
-.B du --exclude='*.o'
+.B du --exclude=\(aq*.o\(aq
 .PP
 will skip all files and subdirectories ending in
 .BR .o
