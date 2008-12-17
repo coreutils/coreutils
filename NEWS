@@ -12,6 +12,11 @@ GNU coreutils NEWS                                    -*- outline -*-
   part of the line after the start position was used as the sort key.
   [This bug appears to have been present in "the beginning".]
 
+** New programs
+
+  stdbuf: A new program to run a command with modified stdio buffering
+  for its standard streams.
+
 ** Changes in behavior
 
   ls --color: files with multiple hard links are no longer colored differently

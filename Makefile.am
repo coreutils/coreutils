@@ -52,6 +52,7 @@ syntax_check_exceptions =		\
   .x-sc_require_config_h_first		\
   .x-sc_space_tab			\
   .x-sc_sun_os_names			\
+  .x-sc_system_h_headers		\
   .x-sc_trailing_blank			\
   .x-sc_unmarked_diagnostics		\
   .x-sc_useless_cpp_parens

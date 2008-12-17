@@ -28,6 +28,7 @@ export SHELL
 . $srcdir/test-lib.sh
 
 expected_failure_status_nohup=127
+expected_failure_status_stdbuf=125
 expected_failure_status_timeout=125
 expected_failure_status_printenv=2
 expected_failure_status_tty=3
@@ -148,6 +149,7 @@ printf_args=foo
 seq_args=10
 sleep_args=0
 su_args=--version
+stdbuf_args="-oL true"
 timeout_args=--version
 
 # I'd rather not run sync, since it spins up disks that I've

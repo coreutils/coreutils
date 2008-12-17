@@ -76,6 +76,7 @@ sleep: Jim Meyering, Paul Eggert
 sort: Mike Haertel, Paul Eggert
 split: Torbjörn Granlund, Richard M. Stallman
 stat: Michael Meskes
+stdbuf: Pádraig Brady
 stty: David MacKenzie
 su: David MacKenzie
 sum: Kayvan Aghaiepour, David MacKenzie

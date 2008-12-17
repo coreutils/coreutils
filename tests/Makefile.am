@@ -217,6 +217,7 @@ TESTS =						\
   misc/split-l					\
   misc/stat-fmt					\
   misc/stat-printf				\
+  misc/stdbuf					\
   misc/stty					\
   misc/stty-invalid				\
   misc/stty-row-col				\

@@ -1,0 +1,3 @@
+^src/libstdbuf\.c$
+^src/system\.h$
+^src/copy\.h$

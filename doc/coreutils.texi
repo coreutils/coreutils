@@ -105,6 +105,7 @@
 * sort: (coreutils)sort invocation.             Sort text files.
 * split: (coreutils)split invocation.           Split into fixed-size pieces.
 * stat: (coreutils)stat invocation.             Report file(system) status.
+* stdbuf: (coreutils)stdbuf invocation.         Modify stdio buffering.
 * stty: (coreutils)stty invocation.             Print/change terminal settings.
 * su: (coreutils)su invocation.                 Modify user and group ID.
 * sum: (coreutils)sum invocation.               Print traditional checksum.
@@ -197,7 +198,7 @@ Free Documentation License''.
 * User information::                   id logname whoami groups users who
 * System context::                     date uname hostname hostid uptime
 * SELinux context::                    chcon runcon
-* Modified command invocation::        chroot env nice nohup su timeout
+* Modified command invocation::        chroot env nice nohup stdbuf su timeout
 * Process control::                    kill
 * Delaying::                           sleep
 * Numeric operations::                 factor seq
@@ -434,6 +435,7 @@ Modified command invocation
 * env invocation::               Run a command in a modified environment
 * nice invocation::              Run a command with modified niceness
 * nohup invocation::             Run a command immune to hangups
+* stdbuf invocation::            Run a command with modified I/O buffering
 * su invocation::                Run a command with substitute user and group ID
 * timeout invocation::           Run a command with a time limit
 
@@ -14160,6 +14162,7 @@ user, etc.
 * env invocation::              Modify environment variables.
 * nice invocation::             Modify niceness.
 * nohup invocation::            Immunize to hangups.
+* stdbuf invocation::           Modify buffering of standard streams.
 * su invocation::               Modify user and group ID.
 * timeout invocation::          Run with time limit.
 @end menu
@@ -14519,6 +14522,85 @@ Exit status:
 @display
 126 if @var{command} is found but cannot be invoked
 127 if @command{nohup} itself fails or if @var{command} cannot be found
+the exit status of @var{command} otherwise
+@end display
+
+
+@node stdbuf invocation
+@section @command{stdbuf}: Run a command with modified I/O stream buffering
+
+@pindex stdbuf
+@cindex standard streams, buffering
+@cindex line buffered
+
+@command{stdbuf} allows one modify the buffering operations of the
+three standard I/O streams associated with a program.  Synopsis:
+
+@example
+stdbuf @var{option}@dots{} @var{command}
+@end example
+
+Any additional @var{arg}s are passed as additional arguments to the
+@var{command}.
+
+The program accepts the following options.  Also see @ref{Common options}.
+
+@table @samp
+
+@item -i @var{mode}
+@itemx --input=@var{mode}
+@opindex -i
+@opindex --input
+Adjust the standard input stream buffering.
+
+@item -o @var{mode}
+@itemx --output=@var{mode}
+@opindex -o
+@opindex --output
+Adjust the standard output stream buffering.
+
+@item -e @var{mode}
+@itemx --error=@var{mode}
+@opindex -e
+@opindex --error
+Adjust the standard error stream buffering.
+
+@end table
+
+The @var{mode} can be specified as follows:
+
+@table @samp
+
+@item L
+Set the stream to line buffered mode.
+In this mode data is coalesced until a newline is output or
+input is read from any stream attached to a terminal device.
+This option is invalid with standard input.
+
+@item 0
+Disable buffering of the selected stream.
+In this mode data is output immediately and only the
+amount of data requested is read from input.
+
+@item @var{size}
+Specify the size of the buffer to use in fully buffered mode.
+@multiplierSuffixesNoBlocks{size}
+
+@end table
+
+NOTE: If @var{command} adjusts the buffering of its standard streams
+(@command{tee} does for e.g.) then that will override corresponding settings
+changed by @command{stdbuf}.  Also some filters (like @command{dd} and
+@command{cat} etc.) don't use streams for I/O, and are thus unaffected
+by @command{stdbuf} settings.
+
+@cindex exit status of @command{stdbuf}
+Exit status:
+
+@display
+125 if @command{stdbuf} itself fails
+126 if @var{command} is found but cannot be invoked
+127 if @var{command} cannot be found
 the exit status of @var{command} otherwise
 @end display
 

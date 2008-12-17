@@ -105,6 +105,7 @@ sleep.1:	$(common_dep)	$(srcdir)/sleep.x	../src/sleep.c
 sort.1:		$(common_dep)	$(srcdir)/sort.x	../src/sort.c
 split.1:	$(common_dep)	$(srcdir)/split.x	../src/split.c
 stat.1:		$(common_dep)	$(srcdir)/stat.x	../src/stat.c
+stdbuf.1:	$(common_dep)	$(srcdir)/stdbuf.x	../src/stdbuf.c
 stty.1:		$(common_dep)	$(srcdir)/stty.x	../src/stty.c
 su.1:		$(common_dep)	$(srcdir)/su.x		../src/su.c
 sum.1:		$(common_dep)	$(srcdir)/sum.x		../src/sum.c

@@ -73,6 +73,7 @@ src/id.c
 src/install.c
 src/join.c
 src/kill.c
+src/libstdbuf.c
 src/link.c
 src/ln.c
 src/logname.c
@@ -109,6 +110,7 @@ src/sleep.c
 src/sort.c
 src/split.c
 src/stat.c
+src/stdbuf.c
 src/stty.c
 src/su.c
 src/sum.c

@@ -321,6 +321,19 @@ if test $gl_cv_list_mounted_fs = yes && test $gl_cv_fs_space = yes; then
   gl_ADD_PROG([optional_bin_progs], [df])
 fi
 
+# Limit stdbuf to ELF systems with GCC
+optional_pkglib_progs=
+AC_MSG_CHECKING([whether this is an ELF system])
+AC_EGREP_CPP([yes], [#if __ELF__
+yes
+#endif], [elf_sys=yes], [elf_sys=no])
+AC_MSG_RESULT([$elf_sys])
+if test "$elf_sys" = "yes" && \
+   test "$GCC" = "yes"; then
+  gl_ADD_PROG([optional_bin_progs], [stdbuf])
+  gl_ADD_PROG([optional_pkglib_progs], [libstdbuf.so])
+fi
+
 ############################################################################
 mk="$srcdir/src/Makefile.am"
 # Extract all literal names from the definition of $(EXTRA_PROGRAMS)
@@ -393,6 +406,8 @@ MAN=`echo "$MAN"|sed 's/\@<:@\.1//'`
 
 OPTIONAL_BIN_PROGS=`echo "$optional_bin_progs "|sed 's/ /\$(EXEEXT) /g;s/ $//'`
 AC_SUBST([OPTIONAL_BIN_PROGS])
+OPTIONAL_PKGLIB_PROGS=`echo "$optional_pkglib_progs " | sed 's/ $//'`
+AC_SUBST([OPTIONAL_PKGLIB_PROGS])
 NO_INSTALL_PROGS_DEFAULT=$no_install_progs_default
 AC_SUBST([NO_INSTALL_PROGS_DEFAULT])
 
