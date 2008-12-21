@@ -1,0 +1,9 @@
+^lib/buffer-lcm\.c$
+^src/false\.c$
+^src/lbracket\.c$
+^src/ls-dir\.c$
+^src/ls-ls\.c$
+^src/ls-vdir\.c$
+^src/tac-pipe\.c$
+^src/uname-arch\.c$
+^src/uname-uname\.c$

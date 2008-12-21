@@ -191,6 +191,21 @@ sc_require_config_h:
 	else :;								\
 	fi
 
+# You must include <config.h> before including any other header file.
+sc_require_config_h_first:
+	@if $(VC_LIST_EXCEPT) | grep '\.c$$' > /dev/null; then		\
+	  fail=0;							\
+	  for i in $$($(VC_LIST_EXCEPT) | grep '\.c$$'); do		\
+	    grep '^# *include\>' $$i | sed 1q				\
+		| grep '^# *include <config\.h>' > /dev/null		\
+	      || { echo $$i; fail=1; };					\
+	  done;								\
+	  test $$fail = 1 &&						\
+	    { echo '$(ME): the above files include some other header'	\
+		'before <config.h>' 1>&2; exit 1; } || :;		\
+	else :;								\
+	fi
+
 # To use this "command" macro, you must first define two shell variables:
 # h: the header, enclosed in <> or ""
 # re: a regular expression that matches IFF something provided by $h is used.
