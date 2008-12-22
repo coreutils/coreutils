@@ -7729,6 +7729,14 @@ If you combine this flag with the @samp{of=@var{file}} operand,
 you should also specify @samp{conv=notrunc} unless you want the
 output file to be truncated before being appended to.
 
+@item cio
+@opindex cio
+@cindex concurrent I/O
+Use concurrent I/O mode for data.  This mode performs direct I/O
+and drops the @acronym{POSIX} requirement to serialize all I/O to the same file.
+A file cannot be opened in CIO mode and with a standard open at the
+same time.
+
 @item direct
 @opindex direct
 @cindex direct I/O

@@ -66,6 +66,12 @@ static void process_signals (void);
 # define SIGINFO SIGUSR1
 #endif
 
+/* This may belong in GNULIB's fcntl module instead.
+   Define O_CIO to 0 if it is not supported by this OS. */
+#ifndef O_CIO
+# define O_CIO 0
+#endif
+
 #if ! HAVE_FDATASYNC
 # define fdatasync(fd) (errno = ENOSYS, -1)
 #endif
@@ -264,6 +270,7 @@ enum
     /* Use a value that is larger than that of any other O_ symbol.  */
     O_FULLBLOCK = ((MAX (O_APPEND,
 		    MAX (O_BINARY,
+		    MAX (O_CIO,
 		    MAX (O_DIRECT,
 		    MAX (O_DIRECTORY,
 		    MAX (O_DSYNC,
@@ -272,7 +279,7 @@ enum
 		    MAX (O_NOFOLLOW,
 		    MAX (O_NOLINKS,
 		    MAX (O_NONBLOCK,
-		    MAX (O_SYNC, O_TEXT)))))))))))) << 1)
+		    MAX (O_SYNC, O_TEXT))))))))))))) << 1)
   };
 
 /* Ensure that we didn't shift it off the end.  */
@@ -288,6 +295,7 @@ static struct symbol_value const flags[] =
 {
   {"append",	O_APPEND},
   {"binary",	O_BINARY},
+  {"cio",	O_CIO},
   {"direct",	O_DIRECT},
   {"directory",	O_DIRECTORY},
   {"dsync",	O_DSYNC},
@@ -508,6 +516,8 @@ Each FLAG symbol may be:\n\
 \n\
   append    append mode (makes sense only for output; conv=notrunc suggested)\n\
 "), stdout);
+      if (O_CIO)
+	fputs (_("  cio       use concurrent I/O for data\n"), stdout);
       if (O_DIRECT)
 	fputs (_("  direct    use direct I/O for data\n"), stdout);
       if (O_DIRECTORY)
