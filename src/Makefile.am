@@ -169,6 +169,10 @@ split_LDADD += $(LIBICONV)
 timeout_LDADD += $(LIBICONV)
 truncate_LDADD += $(LIBICONV)
 
+# programs that use getaddrinfo (e.g., via canon_host)
+pinky_LDADD = $(LDADD) $(GETADDRINFO_LIB)
+who_LDADD = $(LDADD) $(GETADDRINFO_LIB)
+
 $(PROGRAMS): ../lib/libcoreutils.a
 
 # Get the release year from ../lib/version-etc.c.
