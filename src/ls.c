@@ -3681,7 +3681,6 @@ quote_name (FILE *out, const char *name, struct quoting_options const *options,
 
   if (qmark_funny_chars)
     {
-#if HAVE_MBRTOWC
       if (MB_CUR_MAX > 1)
 	{
 	  char const *p = buf;
@@ -3784,7 +3783,6 @@ quote_name (FILE *out, const char *name, struct quoting_options const *options,
 	  len = q - buf;
 	}
       else
-#endif
 	{
 	  char *p = buf;
 	  char const *plimit = buf + len;
@@ -3800,11 +3798,9 @@ quote_name (FILE *out, const char *name, struct quoting_options const *options,
     }
   else if (width != NULL)
     {
-#if HAVE_MBRTOWC
       if (MB_CUR_MAX > 1)
 	displayed_width = mbsnwidth (buf, len, 0);
       else
-#endif
 	{
 	  char const *p = buf;
 	  char const *plimit = buf + len;

@@ -196,7 +196,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
 
   /* If in the current locale, chars are equivalent to bytes, we prefer
      counting bytes, because that's easier.  */
-#if HAVE_MBRTOWC && (MB_LEN_MAX > 1)
+#if MB_LEN_MAX > 1
   if (MB_CUR_MAX > 1)
     {
       count_bytes = print_bytes;
@@ -272,7 +272,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
 	  bytes += bytes_read;
 	}
     }
-#if HAVE_MBRTOWC && (MB_LEN_MAX > 1)
+#if MB_LEN_MAX > 1
 # define SUPPORT_OLD_MBRTOWC 1
   else if (MB_CUR_MAX > 1)
     {
