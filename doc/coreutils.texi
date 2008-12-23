@@ -11916,6 +11916,7 @@ Enable RTS/CTS flow control.  Non-@acronym{POSIX}.  May be negated.
 @subsection Input settings
 
 @cindex input settings
+These settings control operations on data received from the terminal.
 
 @table @samp
 @item ignbrk
@@ -11988,7 +11989,8 @@ empty again.  May be negated.
 @opindex iuclc
 @cindex uppercase, translating to lowercase
 Translate uppercase characters to lowercase.  Non-@acronym{POSIX}.  May be
-negated.
+negated. Note ilcuc is not implemented, as one would not be able to issue
+almost any (lowercase) Unix command, after invoking it.
 
 @item ixany
 @opindex ixany
@@ -12007,7 +12009,7 @@ when the input buffer is full.  Non-@acronym{POSIX}.  May be negated.
 @subsection Output settings
 
 @cindex output settings
-These arguments specify output-related operations.
+These settings control operations on data sent to the terminal.
 
 @table @samp
 @item opost
@@ -12018,7 +12020,7 @@ Postprocess output.  May be negated.
 @opindex olcuc
 @cindex lowercase, translating to output
 Translate lowercase characters to uppercase.  Non-@acronym{POSIX}.  May be
-negated.
+negated. (Note ouclc is not currently implemented.)
 
 @item ocrnl
 @opindex ocrnl
@@ -12271,6 +12273,7 @@ as @code{tab3}.
 @opindex lcase
 @opindex LCASE
 Same as @code{xcase iuclc olcuc}.  Non-@acronym{POSIX}.  May be negated.
+(Used for terminals with uppercase characters only.)
 
 @item crt
 @opindex crt
