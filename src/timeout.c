@@ -164,17 +164,17 @@ be caught.\n"), stdout);
   exit (status);
 }
 
-/* Given an integer value *X, and a suffix character, SUFFIX_CHAR,
+/* Given a long integer value *X, and a suffix character, SUFFIX_CHAR,
    scale *X by the multiplier implied by SUFFIX_CHAR.  SUFFIX_CHAR may
    be the NUL byte or `s' to denote seconds, `m' for minutes, `h' for
    hours, or `d' for days.  If SUFFIX_CHAR is invalid, don't modify *X
-   and return false.  If *X would overflow, don't modify *X and return false.
-   Otherwise return true.  */
+   and return false.  If *X would overflow an integer, don't modify *X
+   and return false. Otherwise return true.  */
 
 static bool
-apply_time_suffix (unsigned int *x, char suffix_char)
+apply_time_suffix (unsigned long *x, char suffix_char)
 {
-  int multiplier = 1;
+  unsigned int multiplier = 1;
 
   switch (suffix_char)
     {
@@ -186,6 +186,8 @@ apply_time_suffix (unsigned int *x, char suffix_char)
     case 'h':
       multiplier *= 60;
     case 'm':
+      if (multiplier > UINT_MAX / 60) /* 16 bit overflow */
+        return false;
       multiplier *= 60;
       break;
     default:
@@ -193,7 +195,7 @@ apply_time_suffix (unsigned int *x, char suffix_char)
     }
 
   if (*x > UINT_MAX / multiplier)
-      return false;
+    return false;
 
   *x *= multiplier;
 
@@ -259,7 +261,7 @@ main (int argc, char **argv)
       /* Extra chars after the number and an optional s,m,h,d char.  */
       || (*ep && *(ep + 1))
       /* Check any suffix char and update timeout based on the suffix.  */
-      || !apply_time_suffix ((unsigned int *) &timeout, *ep))
+      || !apply_time_suffix (&timeout, *ep))
     {
       error (0, 0, _("invalid time interval %s"), quote (argv[optind]));
       usage (EXIT_CANCELED);
@@ -306,7 +308,7 @@ main (int argc, char **argv)
     {
       int status;
 
-      alarm ((unsigned int) timeout);
+      alarm (timeout);
 
       /* We're just waiting for a single process here, so wait() suffices.
          Note the signal() calls above on linux and BSD at least, essentially
