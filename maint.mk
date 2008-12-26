@@ -74,7 +74,7 @@ syntax-check-rules := $(shell sed -n 's/^\(sc_[a-zA-Z0-9_-]*\):.*/\1/p' \
 .PHONY: $(syntax-check-rules)
 
 local-checks-available = \
-  po-check copyright-check m4-check author_mark_check \
+  po-check copyright-check author_mark_check \
   patch-check $(syntax-check-rules) \
   makefile_path_separator_check \
   makefile-check check-AUTHORS
@@ -473,9 +473,10 @@ changelog-check:
 	  exit 1;							\
 	fi
 
-m4-check:
-	@grep -n 'AC_DEFUN([^[]' m4/*.m4 \
-	  && { echo '$(ME): quote the first arg to AC_DEFUN' 1>&2; \
+sc_m4_quote_check:
+	@grep -nE '(AC_DEFINE(_UNQUOTED)?|AC_DEFUN)\([^[]'		\
+	    $$($(VC_LIST_EXCEPT) | grep -E '(^configure\.ac|\.m4)$$')	\
+	  && { echo '$(ME): quote the first arg to AC_DEF*' 1>&2;	\
 	       exit 1; } || :
 
 fix_po_file_diag = \

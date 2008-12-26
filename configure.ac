@@ -133,7 +133,7 @@ else
 fi])dnl
 AC_MSG_RESULT($utils_cv_localtime_cache)
 if test $utils_cv_localtime_cache = yes; then
-  AC_DEFINE(LOCALTIME_CACHE, 1, [FIXME])
+  AC_DEFINE([LOCALTIME_CACHE], 1, [FIXME])
 fi
 
 # SCO-ODT-3.0 is reported to need -los to link programs using initgroups
@@ -146,7 +146,7 @@ AC_CHECK_FUNCS(syslog)
 if test $ac_cv_func_syslog = no; then
   # syslog is not in the default libraries.  See if it's in some other.
   for lib in bsd socket inet; do
-    AC_CHECK_LIB($lib, syslog, [AC_DEFINE(HAVE_SYSLOG, 1, [FIXME])
+    AC_CHECK_LIB($lib, syslog, [AC_DEFINE([HAVE_SYSLOG], 1, [FIXME])
       LIBS="$LIBS -l$lib"; break])
   done
 fi
@@ -189,7 +189,7 @@ AC_CACHE_VAL(su_cv_func_ut_host_in_utmp,
 AC_MSG_RESULT($su_cv_func_ut_host_in_utmp)
 if test $su_cv_func_ut_host_in_utmp = yes; then
   have_ut_host=1
-  AC_DEFINE(HAVE_UT_HOST, 1, [FIXME])
+  AC_DEFINE([HAVE_UT_HOST], 1, [FIXME])
 fi
 
 if test -z "$have_ut_host"; then
@@ -201,8 +201,8 @@ if test -z "$have_ut_host"; then
     [su_cv_func_ut_host_in_utmpx=no])])
   AC_MSG_RESULT($su_cv_func_ut_host_in_utmpx)
   if test $su_cv_func_ut_host_in_utmpx = yes; then
-    AC_DEFINE(HAVE_UTMPX_H, 1, [FIXME])
-    AC_DEFINE(HAVE_UT_HOST, 1, [FIXME])
+    AC_DEFINE([HAVE_UTMPX_H], 1, [FIXME])
+    AC_DEFINE([HAVE_UT_HOST], 1, [FIXME])
   fi
 fi
 
@@ -228,7 +228,7 @@ yes
    su_cv_sys_termios_needs_xopen_source=no))])
   AC_MSG_RESULT($su_cv_sys_termios_needs_xopen_source)
   test $su_cv_sys_termios_needs_xopen_source = yes &&
-    AC_DEFINE(TERMIOS_NEEDS_XOPEN_SOURCE, 1, [FIXME])
+    AC_DEFINE([TERMIOS_NEEDS_XOPEN_SOURCE], 1, [FIXME])
 
   AC_MSG_CHECKING(c_line in struct termios)
   AC_CACHE_VAL(su_cv_sys_c_line_in_termios,
@@ -241,7 +241,7 @@ yes
     [su_cv_sys_c_line_in_termios=no])])
   AC_MSG_RESULT($su_cv_sys_c_line_in_termios)
   test $su_cv_sys_c_line_in_termios = yes \
-    && AC_DEFINE(HAVE_C_LINE, 1, [FIXME])
+    && AC_DEFINE([HAVE_C_LINE], 1, [FIXME])
 fi
 
 # FIXME: note that this macro appears above, too.
@@ -267,7 +267,7 @@ if test $gl_cv_sys_tiocgwinsz_needs_termios_h = no && \
   AC_MSG_RESULT($su_cv_sys_tiocgwinsz_in_sys_pty_h)
 
   test $su_cv_sys_tiocgwinsz_in_sys_pty_h = yes \
-      && AC_DEFINE(GWINSZ_IN_SYS_PTY, 1,
+      && AC_DEFINE([GWINSZ_IN_SYS_PTY], 1,
                    [Define if your system defines TIOCGWINSZ in sys/pty.h.])
 fi
 
