@@ -74,9 +74,7 @@ syntax-check-rules := $(shell sed -n 's/^\(sc_[a-zA-Z0-9_-]*\):.*/\1/p' \
 .PHONY: $(syntax-check-rules)
 
 local-checks-available = \
-  po-check copyright-check author_mark_check \
   patch-check $(syntax-check-rules) \
-  makefile_path_separator_check \
   makefile-check check-AUTHORS
 .PHONY: $(local-checks-available)
 
@@ -485,7 +483,7 @@ apply the above patch\n'
 
 # Verify that all source files using _() are listed in po/POTFILES.in.
 po_file = po/POTFILES.in
-po-check:
+sc_po_check:
 	@if test -f $(po_file); then					\
 	  grep -E -v '^(#|$$)' $(po_file)				\
 	    | grep -v '^src/false\.c$$' | sort > $@-1;			\
@@ -512,7 +510,7 @@ po-check:
 # In a definition of #define AUTHORS "... and ..." where the RHS contains
 # the English word `and', the string must be marked with `N_ (...)' so that
 # gettext recognizes it as a string requiring translation.
-author_mark_check:
+sc_author_mark_check:
 	@grep -n '^# *define AUTHORS "[^"]* and ' src/*.c |grep -v ' N_ (' && \
 	  { echo '$(ME): enclose the above strings in N_ (...)' 1>&2; \
 	    exit 1; } || :
@@ -524,7 +522,7 @@ author_mark_check:
 # and there probably aren't many projects with so many Makefile.am files
 # that we'd have to worry about limits on command line length.
 msg = '$(ME): Do not use `:'\'' above; use @PATH_SEPARATOR@ instead'
-makefile_path_separator_check:
+sc_makefile_path_separator_check:
 	@grep -n 'PATH=.*:' `find $(srcdir) -name Makefile.am` \
 	  && { echo $(msg) 1>&2; exit 1; } || :
 
@@ -545,7 +543,7 @@ sample-test = tests/sample-test
 texi = doc/$(PACKAGE).texi
 # Make sure that the copyright date in $(v_etc_file) is up to date.
 # Do the same for the $(sample-test) and the main doc/.texi file.
-copyright-check:
+sc_copyright_check:
 	@if test -f $(v_etc_file); then \
 	  grep 'enum { COPYRIGHT_YEAR = '$$(date +%Y)' };' $(v_etc_file) \
 	    >/dev/null \
