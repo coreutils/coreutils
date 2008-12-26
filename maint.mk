@@ -75,7 +75,7 @@ syntax-check-rules := $(shell sed -n 's/^\(sc_[a-zA-Z0-9_-]*\):.*/\1/p' \
 
 local-checks-available = \
   po-check copyright-check m4-check author_mark_check \
-  patch-check strftime-check $(syntax-check-rules) \
+  patch-check $(syntax-check-rules) \
   makefile_path_separator_check \
   makefile-check check-AUTHORS
 .PHONY: $(local-checks-available)
@@ -281,105 +281,6 @@ sc_changelog:
 	  { echo '$(ME): found unexpected prefix in a ChangeLog' 1>&2;	\
 	    exit 1; } || :
 
-# Ensure that dd's definition of LONGEST_SYMBOL stays in sync
-# with the strings from the two affected variables.
-dd_c = $(srcdir)/src/dd.c
-sc_dd_max_sym_length:
-ifneq ($(wildcard $(dd_c)),)
-	@len=$$( (sed -n '/conversions\[\] =$$/,/^};/p' $(dd_c);\
-		 sed -n '/flags\[\] =$$/,/^};/p' $(dd_c) )	\
-		|sed -n '/"/s/^[^"]*"\([^"]*\)".*/\1/p'		\
-	      | wc --max-line-length);				\
-	max=$$(sed -n '/^#define LONGEST_SYMBOL /s///p' $(dd_c)	\
-	      |tr -d '"' | wc --max-line-length);		\
-	if test "$$len" = "$$max"; then :; else			\
-	  echo 'dd.c: LONGEST_SYMBOL is not longest' 1>&2;	\
-	  exit 1;						\
-	fi
-endif
-
-# Many m4 macros names once began with `jm_'.
-# On 2004-04-13, they were all changed to start with gl_ instead.
-# Make sure that none are inadvertently reintroduced.
-sc_prohibit_jm_in_m4:
-	@grep -nE 'jm_[A-Z]'						\
-		$$($(VC_LIST) m4 |grep '\.m4$$'; echo /dev/null) &&	\
-	    { echo '$(ME): do not use jm_ in m4 macro names'		\
-	      1>&2; exit 1; } || :
-
-# Ensure that each root-requiring test is run via the "check-root" rule.
-sc_root_tests:
-	@if test -d tests \
-	      && grep check-root tests/Makefile.am>/dev/null 2>&1; then \
-	t1=sc-root.expected; t2=sc-root.actual;				\
-	grep -nl '^require_root_$$'					\
-	  $$($(VC_LIST) tests) |sed s,tests/,, |sort > $$t1;		\
-	sed -n '/^root_tests =[	 ]*\\$$/,/[^\]$$/p'			\
-	  $(srcdir)/tests/Makefile.am					\
-	    | sed 's/^  *//;/^root_tests =/d'				\
-	    | tr -s '\012\\' '  ' | fmt -1 | sort > $$t2;		\
-	diff -u $$t1 $$t2 || diff=1 || diff=;				\
-	rm -f $$t1 $$t2;						\
-	test "$$diff"							\
-	  && { echo 'tests/Makefile.am: missing check-root action'>&2;	\
-	       exit 1; } || :;						\
-	fi
-
-headers_with_interesting_macro_defs = \
-  exit.h	\
-  fcntl_.h	\
-  fnmatch_.h	\
-  intprops.h	\
-  inttypes_.h	\
-  lchown.h	\
-  openat.h	\
-  stat-macros.h	\
-  stdint_.h
-
-# Create a list of regular expressions matching the names
-# of macros that are guaranteed by parts of gnulib to be defined.
-.re-defmac:
-	@(cd $(srcdir)/lib;						\
-	  for f in $(headers_with_interesting_macro_defs); do		\
-	    test -f $$f &&						\
-	      sed -n '/^# *define \([^_ (][^ (]*\)[ (].*/s//\1/p' $$f;	\
-	   done;							\
-	 ) | sort -u							\
-	   | grep -Ev 'ATTRIBUTE_NORETURN|SIZE_MAX'			\
-	   | sed 's/^/^# *define /'					\
-	  > $@-t
-	@mv $@-t $@
-
-# Don't define macros that we already get from gnulib header files.
-sc_always_defined_macros: .re-defmac
-	@if test -f $(srcdir)/src/system.h; then			\
-	  trap 'rc=$$?; rm -f .re-defmac; exit $$rc' 0 1 2 3 15;	\
-	  grep -f .re-defmac $$($(VC_LIST))				\
-	    && { echo '$(ME): define the above via some gnulib .h file'	\
-		  1>&2;  exit 1; } || :;				\
-	fi
-
-# Create a list of regular expressions matching the names
-# of files included from system.h.  Exclude a couple.
-.re-list:
-	@sed -n '/^# *include /s///p' $(srcdir)/src/system.h \
-	  | grep -Ev 'sys/(param|file)\.h' \
-	  | sed 's/ .*//;;s/^["<]/^# *include [<"]/;s/\.h[">]$$/\\.h[">]/' \
-	  > $@-t
-	@mv $@-t $@
-
-# Files in src/ should not include directly any of
-# the headers already included via system.h.
-sc_system_h_headers: .re-list
-	@if test -f $(srcdir)/src/system.h; then			\
-	  trap 'rc=$$?; rm -f .re-list; exit $$rc' 0 1 2 3 15;		\
-	  grep -nE -f .re-list						\
-	      $$($(VC_LIST) src |					\
-		 grep -Ev '((copy|system)\.h|parse-gram\.c)$$')		\
-	    && { echo '$(ME): the above are already included via system.h'\
-		  1>&2;  exit 1; } || :;				\
-	fi
-
 # Ensure that each .c file containing a "main" function also
 # calls set_program_name.
 sc_program_name:
@@ -408,20 +309,10 @@ sc_require_test_exit_idiom:
 	      exit 1; } || :;						\
 	fi
 
-sc_sun_os_names:
-	@grep -nEi \
-	    'solaris[^[:alnum:]]*2\.(7|8|9|[1-9][0-9])|sunos[^[:alnum:]][6-9]' \
-	    $$($(VC_LIST_EXCEPT)) &&					\
-	  { echo '$(ME): found misuse of Sun OS version numbers' 1>&2;	\
-	    exit 1; } || :
-
 sc_the_the:
 	@grep -ni '\<the ''the\>' $$($(VC_LIST_EXCEPT)) &&		\
 	  { echo '$(ME): found use of "the ''the";' 1>&2;		\
 	    exit 1; } || :
-
-sc_tight_scope:
-	$(MAKE) -C src $@
 
 sc_trailing_blank:
 	@grep -n '[	 ]$$' $$($(VC_LIST_EXCEPT)) &&			\
@@ -460,17 +351,6 @@ sc_GPL_version:
 	@grep -n 'either ''version [^3]' $$($(VC_LIST_EXCEPT)) &&	\
 	  { echo '$(ME): GPL vN, N!=3' 1>&2; exit 1; } || :
 
-# Perl-based tests used to exec perl from a #!/bin/sh script.
-# Now they all start with #!/usr/bin/perl and the portability
-# infrastructure is in tests/Makefile.am.  Make sure no old-style
-# script sneaks back in.
-sc_no_exec_perl_coreutils:
-	@if test -f $(srcdir)/tests/Coreutils.pm; then			\
-	  grep '^exec  *\$$PERL.*MCoreutils' $$($(VC_LIST) tests) &&	\
-	    { echo 1>&2 '$(ME): found anachronistic Perl-based tests';	\
-	      exit 1; } || :;						\
-	fi
-
 # Make sure we don't use st_blocks.  Use ST_NBLOCKS instead.
 # This is a bit of a kludge, since it prevents use of the string
 # even in comments, but for now it does the job with no false positives.
@@ -485,17 +365,6 @@ sc_prohibit_S_IS_definition:
 	@grep -nE '^ *# *define  *S_IS' $$($(VC_LIST_EXCEPT)) &&	\
 	  { echo '$(ME): do not define S_IS* macros; include <sys/stat.h>' \
 		1>&2; exit 1; } || :
-
-NEWS_hash = \
-  $$(sed -n '/^\*.* $(PREV_VERSION_REGEXP) ([0-9-]*)/,$$p' \
-     $(srcdir)/NEWS | md5sum -)
-
-# Ensure that we don't accidentally insert an entry into an old NEWS block.
-sc_immutable_NEWS:
-	@if test -f $(srcdir)/NEWS; then				\
-	  test "$(NEWS_hash)" = '$(old_NEWS_hash)' && : ||		\
-	    { echo '$(ME): you have modified old NEWS' 1>&2; exit 1; };	\
-	fi
 
 # Each program that uses proper_name_utf8 must link with
 # one of the ICONV libraries.
@@ -528,6 +397,17 @@ sc_const_long_option:
 	      echo 1>&2 '$(ME): add "const" to the above declarations'; \
 	      exit 1; } || :
 
+NEWS_hash = \
+  $$(sed -n '/^\*.* $(PREV_VERSION_REGEXP) ([0-9-]*)/,$$p' \
+     $(srcdir)/NEWS | md5sum -)
+
+# Ensure that we don't accidentally insert an entry into an old NEWS block.
+sc_immutable_NEWS:
+	@if test -f $(srcdir)/NEWS; then				\
+	  test "$(NEWS_hash)" = '$(old_NEWS_hash)' && : ||		\
+	    { echo '$(ME): you have modified old NEWS' 1>&2; exit 1; };	\
+	fi
+
 # Update the hash stored above.  Do this after each release and
 # for any corrections to old entries.
 update-NEWS-hash: NEWS
@@ -559,21 +439,6 @@ patch-check:
 	  || msg='compile failure with extra options';		\
 	test "$$msg" = ok && rm -rf src-c89 $@.1 $@.2 || echo "$$msg" 1>&2; \
 	test "$$msg" = ok
-
-# Ensure that date's --help output stays in sync with the info
-# documentation for GNU strftime.  The only exception is %N,
-# which date accepts but GNU strftime does not.
-extract_char = sed 's/^[^%][^%]*%\(.\).*/\1/'
-strftime-check:
-	if test -f $(srcdir)/src/date.c; then				\
-	  grep '^  %.  ' $(srcdir)/src/date.c | sort			\
-	    | $(extract_char) > $@-src;					\
-	  { echo N;							\
-	    info libc date calendar format | grep '^    `%.'\'		\
-	      | $(extract_char); } | sort > $@-info;			\
-	  diff -u $@-src $@-info || exit 1;				\
-	  rm -f $@-src $@-info;						\
-	fi
 
 check-AUTHORS:
 	$(MAKE) -C src $@
