@@ -279,7 +279,8 @@ enum
 		    MAX (O_NOFOLLOW,
 		    MAX (O_NOLINKS,
 		    MAX (O_NONBLOCK,
-		    MAX (O_SYNC, O_TEXT))))))))))))) << 1)
+		    MAX (O_SYNC,
+		    MAX (O_TEXT, 0)))))))))))))) << 1)
   };
 
 /* Ensure that we didn't shift it off the end.  */

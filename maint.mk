@@ -70,7 +70,7 @@ export LC_ALL = C
 
 # Collect the names of rules starting with `sc_'.
 syntax-check-rules := $(shell sed -n 's/^\(sc_[a-zA-Z0-9_-]*\):.*/\1/p' \
-                        $(srcdir)/$(ME))
+                        $(srcdir)/$(ME) $(srcdir)/cfg.mk)
 .PHONY: $(syntax-check-rules)
 
 local-checks-available = \
@@ -318,7 +318,7 @@ sc_root_tests:
 	  $(srcdir)/tests/Makefile.am					\
 	    | sed 's/^  *//;/^root_tests =/d'				\
 	    | tr -s '\012\\' '  ' | fmt -1 | sort > $$t2;		\
-	diff -u $$t1 $$t2 || diff=1;					\
+	diff -u $$t1 $$t2 || diff=1 || diff=;				\
 	rm -f $$t1 $$t2;						\
 	test "$$diff"							\
 	  && { echo 'tests/Makefile.am: missing check-root action'>&2;	\

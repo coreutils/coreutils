@@ -43,3 +43,17 @@ gnulib_dir = /gnulib
 export VERBOSE = yes
 
 old_NEWS_hash = e56dee27333ad86eaf0aa7ac7d04fca5  -
+
+# Ensure that the list of O_ symbols used to compute O_FULLBLOCK is complete.
+dd = $(srcdir)/src/dd.c
+sc_dd_O_FLAGS:
+	@rm -f $@.1 $@.2
+	@{ echo O_FULLBLOCK; perl -nle '/MAX \((O_\w*),/ and print $$1' \
+	  $(dd); } | sort > $@.1
+	@{ echo O_NOFOLLOW; perl -nle '/{"[a-z]+",\s*(O_\w+)},/ and print $$1' \
+	  $(dd); } | sort > $@.2
+	@diff -u $@.1 $@.2 || diff=1 || diff=;				\
+	rm -f $@.1 $@.2;						\
+	test "$$diff"							\
+	  && { echo '$(ME): $(dd) has inconsistent O_ flag lists'>&2;	\
+	       exit 1; } || :
