@@ -673,8 +673,15 @@ program description.  For example, the @command{env} command's options
 must appear before its operands, since in some cases the operands
 specify a command that itself contains options.
 
+Most programs that accept long options recognize unambiguous
+abbreviations of those options.  For example, @samp{rmdir
+--ignore-fail-on-non-empty} can be invoked as @samp{rmdir
+--ignore-fail} or even @samp{rmdir --i}.  Ambiguous options, such as
+@samp{ls --h}, are identified as such.
+
 Some of these programs recognize the @option{--help} and @option{--version}
-options only when one of them is the sole command line argument.
+options only when one of them is the sole command line argument.  For
+these programs, abbreviations of the long options are not recognized.
 
 @table @samp
 
