@@ -92,6 +92,17 @@ syntax-check: $(local-check)
 #	    exit 1; } || :
 # FIXME: don't allow `#include .strings\.h' anywhere
 
+# There are many rules below that prohibit constructs in this package.
+# If the offending construct can be matched with a grep-E-style regexp,
+# use this macro.  The shell variables "re" and "msg" must be defined.
+define _prohibit_regexp
+  dummy=; : so we do not need a semicolon before each use		\
+  test "x$$re" != x || { echo '$(ME): re not defined' 1>&2; exit 1; };	\
+  test "x$$msg" != x || { echo '$(ME): msg not defined' 1>&2; exit 1; };\
+  grep -nE "$$re" $$($(VC_LIST_EXCEPT)) &&				\
+    { echo '$(ME): '"$$msg" 1>&2; exit 1; } || :
+endef
+
 sc_avoid_if_before_free:
 	@$(srcdir)/build-aux/useless-if-before-free			\
 		$(useless_free_options)					\
@@ -100,32 +111,29 @@ sc_avoid_if_before_free:
 	    exit 1; } || :
 
 sc_cast_of_argument_to_free:
-	@grep -nE '\<free *\( *\(' $$($(VC_LIST_EXCEPT)) &&		\
-	  { echo '$(ME): don'\''t cast free argument' 1>&2;		\
-	    exit 1; } || :
+	@re='\<free *\( *\(' msg='don'\''t cast free argument'		\
+	  $(_prohibit_regexp)
 
 sc_cast_of_x_alloc_return_value:
-	@grep -nE '\*\) *x(m|c|re)alloc\>' $$($(VC_LIST_EXCEPT)) &&	\
-	  { echo '$(ME): don'\''t cast x*alloc return value' 1>&2;	\
-	    exit 1; } || :
+	@re='\*\) *x(m|c|re)alloc\>'					\
+	msg='don'\''t cast x*alloc return value'			\
+	  $(_prohibit_regexp)
 
 sc_cast_of_alloca_return_value:
-	@grep -nE '\*\) *alloca\>' $$($(VC_LIST_EXCEPT)) &&		\
-	  { echo '$(ME): don'\''t cast alloca return value' 1>&2;	\
-	    exit 1; } || :
+	@re='\*\) *alloca\>' msg='don'\''t cast alloca return value'	\
+	  $(_prohibit_regexp)
 
 sc_space_tab:
-	@grep -n '[ ]	' $$($(VC_LIST_EXCEPT)) &&			\
-	  { echo '$(ME): found SPACE-TAB sequence; remove the SPACE'	\
-		1>&2; exit 1; } || :
+	@re='[ ]	' msg='found SPACE-TAB sequence; remove the SPACE' \
+	  $(_prohibit_regexp)
 
 # Don't use *scanf or the old ato* functions in `real' code.
 # They provide no error checking mechanism.
 # Instead, use strto* functions.
 sc_prohibit_atoi_atof:
-	@grep -nE '\<([fs]?scanf|ato([filq]|ll))\>' $$($(VC_LIST_EXCEPT)) && \
-	  { echo '$(ME): do not use *scan''f, ato''f, ato''i, ato''l, ato''ll, ato''q, or ss''canf'	\
-		1>&2; exit 1; } || :
+	@re='\<([fs]?scanf|ato([filq]|ll))\>'				\
+	msg='do not use *scan''f, ato''f, ato''i, ato''l, ato''ll or ato''q' \
+	  $(_prohibit_regexp)
 
 # Use STREQ rather than comparing strcmp == 0, or != 0.
 sc_prohibit_strcmp:
@@ -203,6 +211,10 @@ sc_require_config_h_first:
 		'before <config.h>' 1>&2; exit 1; } || :;		\
 	else :;								\
 	fi
+
+sc_prohibit_HAVE_MBRTOWC:
+	@re='\bHAVE_MBRTOWC\b' msg="do not use $$re; it is always defined" \
+	  $(_prohibit_regexp)
 
 # To use this "command" macro, you must first define two shell variables:
 # h: the header, enclosed in <> or ""
@@ -353,16 +365,15 @@ sc_GPL_version:
 # This is a bit of a kludge, since it prevents use of the string
 # even in comments, but for now it does the job with no false positives.
 sc_prohibit_stat_st_blocks:
-	@grep -nE '[.>]st_blocks' $$($(VC_LIST_EXCEPT)) && \
-	  { echo '$(ME): do not use st_blocks; use ST_NBLOCKS'		\
-		1>&2; exit 1; } || :
+	@re='[.>]st_blocks' msg='do not use st_blocks; use ST_NBLOCKS'	\
+	  $(_prohibit_regexp)
 
 # Make sure we don't define any S_IS* macros in src/*.c files.
 # They're already defined via gnulib's sys/stat.h replacement.
 sc_prohibit_S_IS_definition:
-	@grep -nE '^ *# *define  *S_IS' $$($(VC_LIST_EXCEPT)) &&	\
-	  { echo '$(ME): do not define S_IS* macros; include <sys/stat.h>' \
-		1>&2; exit 1; } || :
+	@re='^ *# *define  *S_IS'					\
+	msg='do not define S_IS* macros; include <sys/stat.h>'		\
+	  $(_prohibit_regexp)
 
 # Each program that uses proper_name_utf8 must link with
 # one of the ICONV libraries.
