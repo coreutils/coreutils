@@ -198,7 +198,7 @@ insert_sorted_if_absent() {
   file=$1
   str=$2
   test -f $file || touch $file
-  echo "$str" | sort -u - $file | cmp -s - $file \
+  echo "$str" | sort -u - $file | cmp - $file > /dev/null \
     || echo "$str" | sort -u - $file -o $file \
     || exit 1
 }
@@ -585,7 +585,7 @@ slurp() {
       if test $file = Makefile.am; then
         copied=$copied${sep}$gnulib_mk; sep=$nl
 	remove_intl='/^[^#].*\/intl/s/^/#/;'"s!$bt_regex/!!g"
-        sed "$remove_intl" $1/$dir/$file | cmp -s - $dir/$gnulib_mk || {
+        sed "$remove_intl" $1/$dir/$file | cmp - $dir/$gnulib_mk > /dev/null || {
 	  echo "$0: Copying $1/$dir/$file to $dir/$gnulib_mk ..." &&
 	  rm -f $dir/$gnulib_mk &&
 	  sed "$remove_intl" $1/$dir/$file >$dir/$gnulib_mk
