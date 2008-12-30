@@ -1,7 +1,7 @@
-#serial 23
+#serial 24
 # Check declarations for this package.
 
-dnl Copyright (C) 1997, 1998, 1999, 2000, 2001, 2003, 2004, 2005, 2006
+dnl Copyright (C) 1997-2001, 2003-2006, 2008
 dnl Free Software Foundation, Inc.
 
 dnl This file is free software; the Free Software Foundation
@@ -16,7 +16,7 @@ AC_DEFUN([gl_CHECK_DECLS],
 [
   AC_REQUIRE([AC_HEADER_TIME])
 
-  AC_CHECK_HEADERS_ONCE(grp.h pwd.h)
+  AC_CHECK_HEADERS_ONCE([grp.h pwd.h])
   headers='
 #include <sys/types.h>
 

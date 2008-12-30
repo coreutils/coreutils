@@ -1,7 +1,7 @@
-# stat-prog.m4 serial 5
+# stat-prog.m4 serial 6
 # Record the prerequisites of src/stat.c from the coreutils package.
 
-# Copyright (C) 2002, 2003, 2004, 2006 Free Software Foundation, Inc.
+# Copyright (C) 2002-2004, 2006, 2008 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -68,7 +68,7 @@ AC_INCLUDES_DEFAULT
 	 [$statvfs_includes],
 	 [static statvfs s;
 	  return (s.s_fsid ^ 0) == 0;])],
-      [AC_DEFINE([STRUCT_STATVFS_F_FSID_IS_INTEGER], 1,
+      [AC_DEFINE([STRUCT_STATVFS_F_FSID_IS_INTEGER], [1],
 	 [Define to 1 if the f_fsid member of struct statvfs is an integer.])])
   else
     AC_CHECK_MEMBERS([struct statfs.f_namelen, struct statfs.f_type],,,
@@ -79,7 +79,7 @@ AC_INCLUDES_DEFAULT
 	   [$statfs_includes],
 	   [static statfs s;
 	    return (s.s_fsid ^ 0) == 0;])],
-	[AC_DEFINE([STRUCT_STATFS_F_FSID_IS_INTEGER], 1,
+	[AC_DEFINE([STRUCT_STATFS_F_FSID_IS_INTEGER], [1],
 	   [Define to 1 if the f_fsid member of struct statfs is an integer.])])
     fi
   fi

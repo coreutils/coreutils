@@ -1,9 +1,9 @@
-#serial 10
+#serial 11
 
 dnl Misc lib-related macros for coreutils.
 
-# Copyright (C) 1993, 1994, 1995, 1996, 1997, 2000, 2001, 2003, 2004,
-# 2005, 2006 Free Software Foundation, Inc.
+# Copyright (C) 1993-1997, 2000-2001, 2003-2006, 2008
+# Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,20 +24,20 @@ AC_DEFUN([cu_LIB_CHECK],
 [
 
   # Check for libypsec.a on Dolphin M88K machines.
-  AC_CHECK_LIB(ypsec, main)
+  AC_CHECK_LIB([ypsec], [main])
 
   # m88k running dgux 5.4 needs this
-  AC_CHECK_LIB(ldgc, main)
+  AC_CHECK_LIB([ldgc], [main])
 
   # The -lsun library is required for YP support on Irix-4.0.5 systems.
   # m88k/svr3 DolphinOS systems using YP need -lypsec for id.
-  AC_SEARCH_LIBS(yp_match, [sun ypsec])
+  AC_SEARCH_LIBS([yp_match], [sun ypsec])
 
   # SysV needs -lsec, older versions of Linux need -lshadow for
   # shadow passwords.  UnixWare 7 needs -lgen.
-  AC_SEARCH_LIBS(getspnam, [shadow sec gen])
+  AC_SEARCH_LIBS([getspnam], [shadow sec gen])
 
-  AC_CHECK_HEADERS(shadow.h)
+  AC_CHECK_HEADERS([shadow.h])
 
   # Requirements for su.c.
   shadow_includes="\
@@ -47,14 +47,14 @@ $ac_includes_default
 #endif
 "
   AC_CHECK_MEMBERS([struct spwd.sp_pwdp],,,[$shadow_includes])
-  AC_CHECK_FUNCS(getspnam)
+  AC_CHECK_FUNCS([getspnam])
 
   # SCO-ODT-3.0 is reported to need -lufc for crypt.
   # NetBSD needs -lcrypt for crypt.
   cu_saved_libs="$LIBS"
-  AC_SEARCH_LIBS(crypt, [ufc crypt],
+  AC_SEARCH_LIBS([crypt], [ufc crypt],
 		 [test "$ac_cv_search_crypt" = "none required" ||
 		  LIB_CRYPT="$ac_cv_search_crypt"])
   LIBS="$cu_saved_libs"
-  AC_SUBST(LIB_CRYPT)
+  AC_SUBST([LIB_CRYPT])
 ])

@@ -18,7 +18,7 @@
 
 dnl Written by Jim Meyering.
 
-AC_PREREQ(2.61)
+AC_PREREQ([2.61])
 
 # Make inter-release version strings look like, e.g., v6.9-219-g58ddd, which
 # indicates that it is built from the 219th delta (in _some_ repository)
@@ -27,9 +27,9 @@ AC_INIT([GNU coreutils],
 	m4_esyscmd([build-aux/git-version-gen .tarball-version]),
 	[bug-coreutils@gnu.org])
 
-AC_CONFIG_SRCDIR(src/ls.c)
+AC_CONFIG_SRCDIR([src/ls.c])
 
-AC_CONFIG_AUX_DIR(build-aux)
+AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_HEADERS([lib/config.h:lib/config.hin])
 
 AM_INIT_AUTOMAKE([1.10a dist-lzma])
@@ -72,25 +72,25 @@ if test "$gl_gcc_warnings" = yes; then
   gl_WARN_ADD([-Wmissing-prototypes])
   gl_WARN_ADD([-Wstrict-prototypes])
   AC_SUBST([WARN_CFLAGS])
-  AC_DEFINE([lint], 1, [Define to 1 if the compiler is checking for lint.])
-  AC_DEFINE([_FORTIFY_SOURCE], 2,
+  AC_DEFINE([lint], [1], [Define to 1 if the compiler is checking for lint.])
+  AC_DEFINE([_FORTIFY_SOURCE], [2],
     [enable compile-time and run-time bounds-checking, and some warnings])
 fi
 
 AC_FUNC_FORK
 
 optional_bin_progs=
-AC_CHECK_FUNCS(uname,
+AC_CHECK_FUNCS([uname],
 	gl_ADD_PROG([optional_bin_progs], [uname]))
-AC_CHECK_FUNCS(chroot,
+AC_CHECK_FUNCS([chroot],
 	gl_ADD_PROG([optional_bin_progs], [chroot]))
-AC_CHECK_FUNCS(gethostid,
+AC_CHECK_FUNCS([gethostid],
 	gl_ADD_PROG([optional_bin_progs], [hostid]))
 
 gl_WINSIZE_IN_PTEM
 
-AC_MSG_CHECKING(whether localtime caches TZ)
-AC_CACHE_VAL(utils_cv_localtime_cache,
+AC_MSG_CHECKING([whether localtime caches TZ])
+AC_CACHE_VAL([utils_cv_localtime_cache],
 [if test x$ac_cv_func_tzset = xyes; then
 AC_RUN_IFELSE([AC_LANG_SOURCE([[#include <time.h>
 #if STDC_HEADERS
@@ -131,22 +131,22 @@ else
 	# since we can't invalidate the cache if we don't have tzset.
 	utils_cv_localtime_cache=no
 fi])dnl
-AC_MSG_RESULT($utils_cv_localtime_cache)
+AC_MSG_RESULT([$utils_cv_localtime_cache])
 if test $utils_cv_localtime_cache = yes; then
-  AC_DEFINE([LOCALTIME_CACHE], 1, [FIXME])
+  AC_DEFINE([LOCALTIME_CACHE], [1], [FIXME])
 fi
 
 # SCO-ODT-3.0 is reported to need -los to link programs using initgroups
-AC_CHECK_FUNCS(initgroups)
+AC_CHECK_FUNCS([initgroups])
 if test $ac_cv_func_initgroups = no; then
-  AC_CHECK_LIB(os, initgroups)
+  AC_CHECK_LIB([os], [initgroups])
 fi
 
-AC_CHECK_FUNCS(syslog)
+AC_CHECK_FUNCS([syslog])
 if test $ac_cv_func_syslog = no; then
   # syslog is not in the default libraries.  See if it's in some other.
   for lib in bsd socket inet; do
-    AC_CHECK_LIB($lib, syslog, [AC_DEFINE([HAVE_SYSLOG], 1, [FIXME])
+    AC_CHECK_LIB([$lib], [syslog], [AC_DEFINE([HAVE_SYSLOG], [1], [FIXME])
       LIBS="$LIBS -l$lib"; break])
   done
 fi
@@ -180,29 +180,29 @@ AC_DEFUN([coreutils_DUMMY_1],
 ])
 coreutils_DUMMY_1
 
-AC_MSG_CHECKING(ut_host in struct utmp)
-AC_CACHE_VAL(su_cv_func_ut_host_in_utmp,
+AC_MSG_CHECKING([ut_host in struct utmp])
+AC_CACHE_VAL([su_cv_func_ut_host_in_utmp],
 [AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <sys/types.h>
 #include <utmp.h>]], [[struct utmp ut; return !sizeof ut.ut_host;]])],
   [su_cv_func_ut_host_in_utmp=yes],
   [su_cv_func_ut_host_in_utmp=no])])
-AC_MSG_RESULT($su_cv_func_ut_host_in_utmp)
+AC_MSG_RESULT([$su_cv_func_ut_host_in_utmp])
 if test $su_cv_func_ut_host_in_utmp = yes; then
   have_ut_host=1
-  AC_DEFINE([HAVE_UT_HOST], 1, [FIXME])
+  AC_DEFINE([HAVE_UT_HOST], [1], [FIXME])
 fi
 
 if test -z "$have_ut_host"; then
-  AC_MSG_CHECKING(ut_host in struct utmpx)
-  AC_CACHE_VAL(su_cv_func_ut_host_in_utmpx,
+  AC_MSG_CHECKING([ut_host in struct utmpx])
+  AC_CACHE_VAL([su_cv_func_ut_host_in_utmpx],
   [AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <sys/types.h>
 #include <utmpx.h>]], [[struct utmpx ut; return !sizeof ut.ut_host;]])],
     [su_cv_func_ut_host_in_utmpx=yes],
     [su_cv_func_ut_host_in_utmpx=no])])
-  AC_MSG_RESULT($su_cv_func_ut_host_in_utmpx)
+  AC_MSG_RESULT([$su_cv_func_ut_host_in_utmpx])
   if test $su_cv_func_ut_host_in_utmpx = yes; then
-    AC_DEFINE([HAVE_UTMPX_H], 1, [FIXME])
-    AC_DEFINE([HAVE_UT_HOST], 1, [FIXME])
+    AC_DEFINE([HAVE_UTMPX_H], [1], [FIXME])
+    AC_DEFINE([HAVE_UT_HOST], [1], [FIXME])
   fi
 fi
 
@@ -214,24 +214,24 @@ gl_HEADER_TIOCGWINSZ_NEEDS_SYS_IOCTL
 if test $ac_cv_sys_posix_termios = yes; then
   gl_ADD_PROG([optional_bin_progs], [stty])
 
-  AC_MSG_CHECKING(whether termios.h needs _XOPEN_SOURCE)
-  AC_CACHE_VAL(su_cv_sys_termios_needs_xopen_source,
-  [AC_EGREP_CPP(yes, [#include <termios.h>
+  AC_MSG_CHECKING([whether termios.h needs _XOPEN_SOURCE])
+  AC_CACHE_VAL([su_cv_sys_termios_needs_xopen_source],
+  [AC_EGREP_CPP([yes], [#include <termios.h>
 #ifdef IUCLC
 yes
 #endif], su_cv_sys_termios_needs_xopen_source=no,
-   AC_EGREP_CPP(yes, [#define _XOPEN_SOURCE
+   AC_EGREP_CPP([yes], [#define _XOPEN_SOURCE
 #include <termios.h>
 #ifdef IUCLC
 yes
 #endif], su_cv_sys_termios_needs_xopen_source=yes,
    su_cv_sys_termios_needs_xopen_source=no))])
-  AC_MSG_RESULT($su_cv_sys_termios_needs_xopen_source)
+  AC_MSG_RESULT([$su_cv_sys_termios_needs_xopen_source])
   test $su_cv_sys_termios_needs_xopen_source = yes &&
-    AC_DEFINE([TERMIOS_NEEDS_XOPEN_SOURCE], 1, [FIXME])
+    AC_DEFINE([TERMIOS_NEEDS_XOPEN_SOURCE], [1], [FIXME])
 
-  AC_MSG_CHECKING(c_line in struct termios)
-  AC_CACHE_VAL(su_cv_sys_c_line_in_termios,
+  AC_MSG_CHECKING([c_line in struct termios])
+  AC_CACHE_VAL([su_cv_sys_c_line_in_termios],
   [AC_LINK_IFELSE([AC_LANG_PROGRAM([[#if TERMIOS_NEEDS_XOPEN_SOURCE
 #define _XOPEN_SOURCE
 #endif
@@ -239,9 +239,9 @@ yes
 #include <termios.h>]], [[struct termios t; return !sizeof t.c_line;]])],
     [su_cv_sys_c_line_in_termios=yes],
     [su_cv_sys_c_line_in_termios=no])])
-  AC_MSG_RESULT($su_cv_sys_c_line_in_termios)
+  AC_MSG_RESULT([$su_cv_sys_c_line_in_termios])
   test $su_cv_sys_c_line_in_termios = yes \
-    && AC_DEFINE([HAVE_C_LINE], 1, [FIXME])
+    && AC_DEFINE([HAVE_C_LINE], [1], [FIXME])
 fi
 
 # FIXME: note that this macro appears above, too.
@@ -252,8 +252,8 @@ gl_HEADER_TIOCGWINSZ_IN_TERMIOS_H
 
 if test $gl_cv_sys_tiocgwinsz_needs_termios_h = no && \
    test $gl_cv_sys_tiocgwinsz_needs_sys_ioctl_h = no; then
-  AC_MSG_CHECKING(TIOCGWINSZ in sys/pty.h)
-  AC_CACHE_VAL(su_cv_sys_tiocgwinsz_in_sys_pty_h,
+  AC_MSG_CHECKING([TIOCGWINSZ in sys/pty.h])
+  AC_CACHE_VAL([su_cv_sys_tiocgwinsz_in_sys_pty_h],
   [AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <sys/types.h>
 #ifdef WINSIZE_IN_PTEM
 # include <sys/stream.h>
@@ -264,10 +264,10 @@ if test $gl_cv_sys_tiocgwinsz_needs_termios_h = no && \
 #include <sys/pty.h>]], [[int x = TIOCGWINSZ;]])],
     [su_cv_sys_tiocgwinsz_in_sys_pty_h=yes],
     [su_cv_sys_tiocgwinsz_in_sys_pty_h=no])])
-  AC_MSG_RESULT($su_cv_sys_tiocgwinsz_in_sys_pty_h)
+  AC_MSG_RESULT([$su_cv_sys_tiocgwinsz_in_sys_pty_h])
 
   test $su_cv_sys_tiocgwinsz_in_sys_pty_h = yes \
-      && AC_DEFINE([GWINSZ_IN_SYS_PTY], 1,
+      && AC_DEFINE([GWINSZ_IN_SYS_PTY], [1],
                    [Define if your system defines TIOCGWINSZ in sys/pty.h.])
 fi
 

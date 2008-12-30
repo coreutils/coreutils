@@ -1,4 +1,4 @@
-#serial 107   -*- autoconf -*-
+#serial 108   -*- autoconf -*-
 
 dnl Misc type-related macros for coreutils.
 
@@ -22,7 +22,7 @@ dnl Misc type-related macros for coreutils.
 AC_DEFUN([coreutils_MACROS],
 [
   AM_MISSING_PROG(HELP2MAN, help2man)
-  AC_SUBST(MAN)
+  AC_SUBST([MAN])
 
   dnl This macro actually runs replacement code.  See isc-posix.m4.
   AC_REQUIRE([AC_ISC_POSIX])dnl
@@ -44,7 +44,7 @@ AC_DEFUN([coreutils_MACROS],
   # used by ls
   AC_REQUIRE([gl_CLOCK_TIME])
   # used by shred
-  AC_CHECK_FUNCS_ONCE(directio)
+  AC_CHECK_FUNCS_ONCE([directio])
 
   # Used by install.c.
   AC_CHECK_FUNCS_ONCE([matchpathcon_init_prefix])
@@ -79,7 +79,7 @@ AC_DEFUN([coreutils_MACROS],
 		   [test "$ac_cv_search_fdatasync" = "none required" ||
 		    LIB_FDATASYNC=$ac_cv_search_fdatasync])
     AC_SUBST([LIB_FDATASYNC])
-    AC_CHECK_FUNCS(fdatasync)
+    AC_CHECK_FUNCS([fdatasync])
   LIBS=$coreutils_saved_libs
 
   # Check whether libcap is usable -- for ls --color support
@@ -89,7 +89,7 @@ AC_DEFUN([coreutils_MACROS],
     [AC_CHECK_LIB([cap], [cap_get_file],
       [AC_CHECK_HEADER([sys/capability.h],
 	[LIB_CAP=-lcap
-	 AC_DEFINE([HAVE_CAP], 1, [libcap usability])],
+	 AC_DEFINE([HAVE_CAP], [1], [libcap usability])],
 	[AC_MSG_WARN([header sys/capability.h was not found, support for libcap will not be built])]
       )],
       [AC_MSG_WARN([libcap library was not found or not usable, support for libcap will not be built])])
@@ -101,16 +101,16 @@ AC_DEFUN([coreutils_MACROS],
   # BeOS which has all the math functions in the normal runtime library
   # and doesn't have a separate math library.
 
-  AC_SUBST(SEQ_LIBM)
+  AC_SUBST([SEQ_LIBM])
   ac_seq_body='
      static double x, y;
      x = floor (x);
      x = rint (x);
      x = modf (x, &y);'
-  AC_TRY_LINK([#include <math.h>], $ac_seq_body, ,
+  AC_TRY_LINK([#include <math.h>], [$ac_seq_body], ,
     [ac_seq_save_LIBS="$LIBS"
      LIBS="$LIBS -lm"
-     AC_TRY_LINK([#include <math.h>], $ac_seq_body, SEQ_LIBM=-lm)
+     AC_TRY_LINK([#include <math.h>], [$ac_seq_body], [SEQ_LIBM=-lm])
      LIBS="$ac_seq_save_LIBS"
     ])
 
@@ -133,7 +133,7 @@ AC_DEFUN([gl_CHECK_ALL_HEADERS],
     syslog.h \
     termios.h \
   )
-  AC_CHECK_HEADERS(sys/sysctl.h, [], [],
+  AC_CHECK_HEADERS([sys/sysctl.h], [], [],
     [AC_INCLUDES_DEFAULT
      [#if HAVE_SYS_PARAM_H
        #include <sys/param.h>
@@ -174,12 +174,12 @@ AC_DEFUN([gl_CHECK_ALL_TYPES],
   AC_REQUIRE([AC_TYPE_PID_T])
   AC_REQUIRE([AC_TYPE_SIZE_T])
   AC_REQUIRE([AC_TYPE_UID_T])
-  AC_CHECK_TYPE(ino_t, unsigned long int)
+  AC_CHECK_TYPE([ino_t], [unsigned long int])
 
   dnl This relies on the fact that Autoconf's implementation of
   dnl AC_CHECK_TYPE checks includes unistd.h.
-  AC_CHECK_TYPE(major_t, unsigned int)
-  AC_CHECK_TYPE(minor_t, unsigned int)
+  AC_CHECK_TYPE([major_t], [unsigned int])
+  AC_CHECK_TYPE([minor_t], [unsigned int])
 
   AC_REQUIRE([AC_HEADER_MAJOR])
 ])

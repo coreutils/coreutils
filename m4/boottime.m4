@@ -1,7 +1,7 @@
-# boottime.m4 serial 3
+# boottime.m4 serial 4
 # Determine whether this system has infrastructure for obtaining the boot time.
 
-# Copyright (C) 1996, 2000, 2002, 2003, 2004, 2006 Free Software Foundation, Inc.
+# Copyright (C) 1996, 2000, 2002-2004, 2006, 2008 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,14 +20,14 @@
 * ----------------------------------------------------------
 AC_DEFUN([GNULIB_BOOT_TIME],
 [
-  AC_CHECK_FUNCS(sysctl)
-  AC_CHECK_HEADERS_ONCE(sys/param.h)
-  AC_CHECK_HEADERS(sys/sysctl.h, [], [],
+  AC_CHECK_FUNCS([sysctl])
+  AC_CHECK_HEADERS_ONCE([sys/param.h])
+  AC_CHECK_HEADERS([sys/sysctl.h], [], [],
     [AC_INCLUDES_DEFAULT
      [#if HAVE_SYS_PARAM_H
        #include <sys/param.h>
       #endif]])
-  AC_CHECK_HEADERS_ONCE(utmp.h utmpx.h OS.h)
+  AC_CHECK_HEADERS_ONCE([utmp.h utmpx.h OS.h])
   AC_CACHE_CHECK(
     [whether we can get the system boot time],
     [gnulib_cv_have_boot_time],
@@ -57,8 +57,8 @@ AC_DEFUN([GNULIB_BOOT_TIME],
 please_tell_us_how_to_determine_boot_time_on_your_system
 #endif
 ]])],
-       gnulib_cv_have_boot_time=yes,
-       gnulib_cv_have_boot_time=no)
+       [gnulib_cv_have_boot_time=yes],
+       [gnulib_cv_have_boot_time=no])
     ])
   AS_IF([test $gnulib_cv_have_boot_time = yes], [$1], [$2])
 ])

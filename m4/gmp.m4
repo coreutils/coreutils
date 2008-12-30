@@ -28,7 +28,7 @@ AC_DEFUN([cu_GMP],
       [test "$ac_cv_search___gmpz_init" = "none required" ||
        {
         LIB_GMP=$ac_cv_search___gmpz_init
-        AC_DEFINE([HAVE_GMP], 1,
+        AC_DEFINE([HAVE_GMP], [1],
           [Define if you have GNU libgmp (or replacement)])
        }])
     LIBS=$cu_saved_libs
