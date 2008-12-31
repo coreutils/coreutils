@@ -231,18 +231,21 @@ static size_t calculate_columns (bool by_columns);
 static void print_current_files (void);
 static void print_dir (char const *name, char const *realname,
 		       bool command_line_arg);
-static void print_file_name_and_frills (const struct fileinfo *f);
+static size_t print_file_name_and_frills (const struct fileinfo *f,
+					  size_t start_col);
 static void print_horizontal (void);
 static int format_user_width (uid_t u);
 static int format_group_width (gid_t g);
 static void print_long_format (const struct fileinfo *f);
 static void print_many_per_line (void);
-static void print_name_with_quoting (const char *p, mode_t mode,
-				     int linkok, bool stat_ok,
-				     enum filetype type,
-				     struct obstack *stack, nlink_t nlink);
+static size_t print_name_with_quoting (const char *p, mode_t mode,
+				       int linkok, bool stat_ok,
+				       enum filetype type,
+				       struct obstack *stack,
+				       nlink_t nlink,
+				       size_t start_col);
 static void prep_non_filename_text (void);
-static void print_type_indicator (bool stat_ok, mode_t mode,
+static bool print_type_indicator (bool stat_ok, mode_t mode,
 				  enum filetype type);
 static void print_with_commas (void);
 static void queue_directory (char const *name, char const *realname,
@@ -521,14 +524,15 @@ enum indicator_no
     C_LEFT, C_RIGHT, C_END, C_RESET, C_NORM, C_FILE, C_DIR, C_LINK,
     C_FIFO, C_SOCK,
     C_BLK, C_CHR, C_MISSING, C_ORPHAN, C_EXEC, C_DOOR, C_SETUID, C_SETGID,
-    C_STICKY, C_OTHER_WRITABLE, C_STICKY_OTHER_WRITABLE, C_CAP, C_HARDLINK
+    C_STICKY, C_OTHER_WRITABLE, C_STICKY_OTHER_WRITABLE, C_CAP, C_HARDLINK,
+    C_CLR_TO_EOL
   };
 
 static const char *const indicator_name[]=
   {
     "lc", "rc", "ec", "rs", "no", "fi", "di", "ln", "pi", "so",
     "bd", "cd", "mi", "or", "ex", "do", "su", "sg", "st",
-    "ow", "tw", "ca", "hl", NULL
+    "ow", "tw", "ca", "hl", "cl", NULL
   };
 
 struct color_ext_type
@@ -563,6 +567,7 @@ static struct bin_str color_indicator[] =
     { LEN_STR_PAIR ("30;42") },		/* tw: ow w/ sticky: black on green */
     { LEN_STR_PAIR ("30;41") },		/* ca: black on red */
     { LEN_STR_PAIR ("44;37") },		/* hl: white on blue */
+    { LEN_STR_PAIR ("\033[K") },	/* cl: clear to end of line */
   };
 
 /* FIXME: comment  */
@@ -3284,7 +3289,7 @@ print_current_files (void)
     case one_per_line:
       for (i = 0; i < cwd_n_used; i++)
 	{
-	  print_file_name_and_frills (sorted_file[i]);
+	  print_file_name_and_frills (sorted_file[i], 0);
 	  putchar ('\n');
 	}
       break;
@@ -3636,9 +3641,9 @@ print_long_format (const struct fileinfo *f)
     }
 
   DIRED_FPUTS (buf, stdout, p - buf);
-  print_name_with_quoting (f->name, FILE_OR_LINK_MODE (f), f->linkok,
-			   f->stat_ok, f->filetype, &dired_obstack,
-			   f->stat.st_nlink);
+  size_t w = print_name_with_quoting (f->name, FILE_OR_LINK_MODE (f), f->linkok,
+				      f->stat_ok, f->filetype, &dired_obstack,
+				      f->stat.st_nlink, p - buf);
 
   if (f->filetype == symbolic_link)
     {
@@ -3647,7 +3652,7 @@ print_long_format (const struct fileinfo *f)
 	  DIRED_FPUTS_LITERAL (" -> ", stdout);
 	  print_name_with_quoting (f->linkname, f->linkmode, f->linkok - 1,
 				   f->stat_ok, f->filetype, NULL,
-				   f->stat.st_nlink);
+				   f->stat.st_nlink, (p - buf) + w + 4);
 	  if (indicator_style != none)
 	    print_type_indicator (true, f->linkmode, unknown);
 	}
@@ -3822,10 +3827,11 @@ quote_name (FILE *out, const char *name, struct quoting_options const *options,
   return len;
 }
 
-static void
+static size_t
 print_name_with_quoting (const char *p, mode_t mode, int linkok,
 			 bool stat_ok, enum filetype type,
-			 struct obstack *stack, nlink_t nlink)
+			 struct obstack *stack, nlink_t nlink,
+			 size_t start_col)
 {
   bool used_color_this_time
     = (print_with_color
@@ -3834,7 +3840,8 @@ print_name_with_quoting (const char *p, mode_t mode, int linkok,
   if (stack)
     PUSH_CURRENT_DIRED_POS (stack);
 
-  dired_pos += quote_name (stdout, p, filename_quoting_options, NULL);
+  size_t width = quote_name (stdout, p, filename_quoting_options, NULL);
+  dired_pos += width;
 
   if (stack)
     PUSH_CURRENT_DIRED_POS (stack);
@@ -3843,7 +3850,11 @@ print_name_with_quoting (const char *p, mode_t mode, int linkok,
     {
       process_signals ();
       prep_non_filename_text ();
+      if (start_col / line_length != (start_col + width - 1) / line_length)
+	put_indicator (&color_indicator[C_CLR_TO_EOL]);
     }
+
+  return width;
 }
 
 static void
@@ -3863,8 +3874,8 @@ prep_non_filename_text (void)
    Also print file size, inode number, and filetype indicator character,
    as requested by switches.  */
 
-static void
-print_file_name_and_frills (const struct fileinfo *f)
+static size_t
+print_file_name_and_frills (const struct fileinfo *f, size_t start_col)
 {
   char buf[MAX (LONGEST_HUMAN_READABLE + 1, INT_BUFSIZE_BOUND (uintmax_t))];
 
@@ -3880,11 +3891,14 @@ print_file_name_and_frills (const struct fileinfo *f)
   if (print_scontext)
     printf ("%*s ", format == with_commas ? 0 : scontext_width, f->scontext);
 
-  print_name_with_quoting (f->name, FILE_OR_LINK_MODE (f), f->linkok,
-			   f->stat_ok, f->filetype, NULL, f->stat.st_nlink);
+  size_t width = print_name_with_quoting (f->name, FILE_OR_LINK_MODE (f),
+					  f->linkok, f->stat_ok, f->filetype,
+					  NULL, f->stat.st_nlink, start_col);
 
   if (indicator_style != none)
-    print_type_indicator (f->stat_ok, f->stat.st_mode, f->filetype);
+    width += print_type_indicator (f->stat_ok, f->stat.st_mode, f->filetype);
+
+  return width;
 }
 
 /* Given these arguments describing a file, return the single-byte
@@ -3921,12 +3935,13 @@ get_type_indicator (bool stat_ok, mode_t mode, enum filetype type)
   return c;
 }
 
-static void
+static bool
 print_type_indicator (bool stat_ok, mode_t mode, enum filetype type)
 {
   char c = get_type_indicator (stat_ok, mode, type);
   if (c)
     DIRED_PUTCHAR (c);
+  return !!c;
 }
 
 #ifdef HAVE_CAP
@@ -4128,7 +4143,7 @@ print_many_per_line (void)
 	  struct fileinfo const *f = sorted_file[filesno];
 	  size_t name_length = length_of_file_name_and_frills (f);
 	  size_t max_name_length = line_fmt->col_arr[col++];
-	  print_file_name_and_frills (f);
+	  print_file_name_and_frills (f, pos);
 
 	  filesno += rows;
 	  if (filesno >= cwd_n_used)
@@ -4153,7 +4168,7 @@ print_horizontal (void)
   size_t max_name_length = line_fmt->col_arr[0];
 
   /* Print first entry.  */
-  print_file_name_and_frills (f);
+  print_file_name_and_frills (f, 0);
 
   /* Now the rest.  */
   for (filesno = 1; filesno < cwd_n_used; ++filesno)
@@ -4172,7 +4187,7 @@ print_horizontal (void)
 	}
 
       f = sorted_file[filesno];
-      print_file_name_and_frills (f);
+      print_file_name_and_frills (f, pos);
 
       name_length = length_of_file_name_and_frills (f);
       max_name_length = line_fmt->col_arr[col];
@@ -4210,7 +4225,7 @@ print_with_commas (void)
 	  putchar (separator);
 	}
 
-      print_file_name_and_frills (f);
+      print_file_name_and_frills (f, pos);
       pos += len;
     }
   putchar ('\n');
