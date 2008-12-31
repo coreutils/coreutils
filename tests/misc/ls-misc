@@ -109,6 +109,7 @@ my $remove_j = {POST => sub {unlink 'j/d' or die "j/d: $!\n";
                              rmdir 'j' or die "j: $!\n";
 			     restore_ls_colors }};
 
+my $e = "\e[0m";
 my $q_bell = {IN => {"q\a" => ''}};
 my @Tests =
     (
@@ -144,10 +145,10 @@ my @Tests =
 
      # Test for a bug that was fixed in coreutils-4.5.4.
      ['sl-F-color', '-F --color=always d',
-				 {OUT => "\e[0m\e[01;36md\e[0m\@\n\e[m"},
+				 {OUT => "$e\e[01;36md$e\@\n\e[m"},
 				  $slink_d, $unlink_d],
      ['sl-dF-color', '-dF --color=always d',
-				 {OUT => "\e[0m\e[01;36md\e[0m\@\n\e[m"},
+				 {OUT => "$e\e[01;36md$e\@\n\e[m"},
 				  $slink_d, $unlink_d],
 
      # A listing with no output should have no color sequences at all.
@@ -157,12 +158,12 @@ my @Tests =
 
      # Test for a bug fixed after coreutils-6.9.
      ['sl-target', '--color=always d',
-      {OUT => "\e[0m\e[01;34mX\e[0m\n\e[m"}, $target, $target2],
+      {OUT => "$e\e[01;34mX$e\n\e[m"}, $target, $target2],
 
      # Test for another bug fixed after coreutils-6.9.
      # This one bites only for a system/file system with d_type support.
      ['sl-dangle', '--color=always d',
-      {OUT => "\e[0m\e[40;31;01mX\e[0m\n\e[m"},
+      {OUT => "$e\e[40;31;01mX$e\n\e[m"},
       {PRE => sub {
 		mkdir 'd',0755 or die "d: $!\n";
 		symlink 'non-existent', 'd/X' or die "d/X: $!\n";
@@ -177,7 +178,7 @@ my @Tests =
      # To demonstrate it, the file in question (with executable bit set)
      # must not be a command line argument.
      ['color-exe1', '--color=always j',
-				 {OUT => "\e[0m\e[01;32md\e[0m\n\e[m"},
+				 {OUT => "$e\e[01;32md$e\n\e[m"},
 				  $exe_in_subdir, $remove_j],
 
      # From Stéphane Chazelas.
@@ -190,11 +191,11 @@ my @Tests =
 
      ['setuid-etc', '-1 -d --color=always owr owt setgid setuid sticky',
 	 {OUT =>
-	    "\e[0m\e[34;42mowr\e[0m\n"
-	    . "\e[30;42mowt\e[0m\n"
-	    . "\e[30;43msetgid\e[0m\n"
-	    . "\e[37;41msetuid\e[0m\n"
-	    . "\e[37;44msticky\e[0m\n"
+	    "$e\e[34;42mowr$e\n"
+	    . "\e[30;42mowt$e\n"
+	    . "\e[30;43msetgid$e\n"
+	    . "\e[37;41msetuid$e\n"
+	    . "\e[37;44msticky$e\n"
 	    . "\e[m"
 	 },
 
