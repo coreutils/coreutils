@@ -376,7 +376,7 @@ File name manipulation
 
 * basename invocation::          Strip directory and suffix from a file name
 * dirname invocation::           Strip non-directory suffix from a file name
-* pathchk invocation::           Check file name portability
+* pathchk invocation::           Check file name validity and portability
 
 Working context
 
@@ -11572,7 +11572,7 @@ This section describes commands that manipulate file names.
 @menu
 * basename invocation::         Strip directory and suffix from a file name.
 * dirname invocation::          Strip non-directory suffix from a file name.
-* pathchk invocation::          Check file name portability.
+* pathchk invocation::          Check file name validity and portability.
 @end menu
 
 
@@ -11672,20 +11672,20 @@ dirname stdio.h
 
 
 @node pathchk invocation
-@section @command{pathchk}: Check file name portability
+@section @command{pathchk}: Check file name validity and portability
 
 @pindex pathchk
 @cindex file names, checking validity and portability
 @cindex valid file names, checking for
 @cindex portable file names, checking for
 
-@command{pathchk} checks portability of file names.  Synopsis:
+@command{pathchk} checks validity and portability of file names.  Synopsis:
 
 @example
 pathchk [@var{option}]@dots{} @var{name}@dots{}
 @end example
 
-For each @var{name}, @command{pathchk} prints a message if any of
+For each @var{name}, @command{pathchk} prints an error message if any of
 these conditions is true:
 
 @enumerate
@@ -11711,30 +11711,30 @@ Options must precede operands.
 @item -p
 @opindex -p
 Instead of performing checks based on the underlying file system,
-print a message if any of these conditions is true:
+print an error message if any of these conditions is true:
 
 @enumerate
 @item
 A file name is empty.
 
 @item
-The length of a file name or one of its components exceeds the
-@acronym{POSIX} minimum limits for portability.
+A file name contains a character outside the @acronym{POSIX} portable file
+name character set, namely, the ASCII letters and digits, @samp{.},
+@samp{_}, @samp{-}, and @samp{/}.
 
 @item
-A file name contains a character outside the portable file name
-character set, namely, the ASCII letters and digits, @samp{-},
-@samp{.}, @samp{/}, and @samp{_}.
+The length of a file name or one of its components exceeds the
+@acronym{POSIX} minimum limits for portability.
 @end enumerate
 
 @item -P
 @opindex -P
-Print a message if a file name is empty, or if it contains a component
+Print an error message if a file name is empty, or if it contains a component
 that begins with @samp{-}.
 
 @item --portability
 @opindex --portability
-Print a message if a file name is not portable to all @acronym{POSIX}
+Print an error message if a file name is not portable to all @acronym{POSIX}
 hosts.  This option is equivalent to @samp{-p -P}.
 
 @end table

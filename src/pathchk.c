@@ -96,7 +96,7 @@ usage (int status)
     {
       printf (_("Usage: %s [OPTION]... NAME...\n"), program_name);
       fputs (_("\
-Diagnose unportable constructs in NAME.\n\
+Diagnose invalid or unportable file names.\n\
 \n\
   -p                  check for most POSIX systems\n\
   -P                  check for empty names and leading \"-\"\n\
