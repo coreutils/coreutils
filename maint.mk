@@ -2,7 +2,7 @@
 # This Makefile fragment tries to be general-purpose enough to be
 # used by at least coreutils, idutils, CPPI, Bison, and Autoconf.
 
-## Copyright (C) 2001-2008 Free Software Foundation, Inc.
+## Copyright (C) 2001-2009 Free Software Foundation, Inc.
 ##
 ## This program is free software: you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -310,12 +310,12 @@ sc_require_test_exit_idiom:
 	@if test -f $(srcdir)/tests/test-lib.sh; then			\
 	  die=0;							\
 	  for i in $$(grep -l -F /../test-lib.sh $$($(VC_LIST) tests)); do \
-	    tail -n1 $$i | grep '^Exit \$$fail$$' > /dev/null \
+	    tail -n1 $$i | grep '^Exit \$$fail$$' > /dev/null		\
 	      && : || { die=1; echo $$i; }				\
 	  done;								\
 	  test $$die = 1 &&						\
 	    { echo 1>&2 '$(ME): the final line in each of the above is not:'; \
-	      echo 1>&2 'Exit $$fail';			\
+	      echo 1>&2 'Exit $$fail';					\
 	      exit 1; } || :;						\
 	fi
 
@@ -337,7 +337,7 @@ sc_two_space_separator_in_usage:
 	@grep -nE '^   *(-[A-Za-z],)? $(longopt_re) [^ ].*\\$$'		\
 	    $$($(VC_LIST_EXCEPT)) &&					\
 	  { echo "$(ME): help2man requires at least two spaces between"; \
-	    echo "$(ME): an option and its description"; \
+	    echo "$(ME): an option and its description";		\
 		1>&2; exit 1; } || :
 
 # Look for diagnostics that aren't marked for translation.
@@ -555,23 +555,23 @@ texi = doc/$(PACKAGE).texi
 # Make sure that the copyright date in $(v_etc_file) is up to date.
 # Do the same for the $(sample-test) and the main doc/.texi file.
 sc_copyright_check:
-	@if test -f $(v_etc_file); then \
+	@if test -f $(v_etc_file); then					\
 	  grep 'enum { COPYRIGHT_YEAR = '$$(date +%Y)' };' $(v_etc_file) \
-	    >/dev/null \
+	    >/dev/null							\
 	  || { echo 'out of date copyright in $(v_etc_file); update it' 1>&2; \
-	       exit 1; }; \
+	       exit 1; };						\
 	fi
-	@if test -f $(sample-test); then \
-	  grep '# Copyright (C) '$$(date +%Y)' Free' $(sample-test) \
-	    >/dev/null \
+	@if test -f $(sample-test); then				\
+	  grep '# Copyright (C) '$$(date +%Y)' Free' $(sample-test)	\
+	    >/dev/null							\
 	  || { echo 'out of date copyright in $(sample-test); update it' 1>&2; \
-	       exit 1; }; \
+	       exit 1; };						\
 	fi
-	@if test -f $(texi); then \
-	  grep 'Copyright @copyright{} .*'$$(date +%Y)' Free' $(texi) \
-	    >/dev/null \
-	  || { echo 'out of date copyright in $(texi); update it' 1>&2; \
-	       exit 1; }; \
+	@if test -f $(texi); then					\
+	  grep 'Copyright @copyright{} .*'$$(date +%Y)' Free' $(texi)	\
+	    >/dev/null							\
+	  || { echo 'out of date copyright in $(texi); update it' 1>&2;	\
+	       exit 1; };						\
 	fi
 
 vc-diff-check:
