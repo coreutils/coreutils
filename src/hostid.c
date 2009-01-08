@@ -1,6 +1,6 @@
 /* print the hexadecimal identifier for the current host
 
-   Copyright (C) 1997, 1999, 2000, 2001, 2002, 2003, 2004, 2007-2008 Free
+   Copyright (C) 1997, 1999, 2000, 2001, 2002, 2003, 2004, 2007-2009 Free
    Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
@@ -42,12 +42,10 @@ usage (int status)
   else
     {
       printf (_("\
-Usage: %s\n\
-  or:  %s OPTION\n\
+Usage: %s [OPTION]\n\
 Print the numeric identifier (in hexadecimal) for the current host.\n\
 \n\
-"),
-	      program_name, program_name);
+"), program_name);
       fputs (HELP_OPTION_DESCRIPTION, stdout);
       fputs (VERSION_OPTION_DESCRIPTION, stdout);
       emit_bug_reporting_address ();

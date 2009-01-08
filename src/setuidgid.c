@@ -1,5 +1,5 @@
 /* setuidgid - run a command with the UID and GID of a specified user
-   Copyright (C) 2003-2008 Free Software Foundation, Inc.
+   Copyright (C) 2003-2009 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -48,8 +48,8 @@ usage (int status)
   else
     {
       printf (_("\
-Usage: %s OPTION USER COMMAND [ARGUMENT]...\n\
-  or:  %s OPTION\n\
+Usage: %s [SHORT-OPTION]... USER COMMAND [ARGUMENT]...\n\
+  or:  %s LONG-OPTION\n\
 "),
               program_name, program_name);
 

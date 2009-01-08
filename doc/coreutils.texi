@@ -681,7 +681,7 @@ abbreviations of those options.  For example, @samp{rmdir
 
 Some of these programs recognize the @option{--help} and @option{--version}
 options only when one of them is the sole command line argument.  For
-these programs, abbreviations of the long options are not recognized.
+these programs, abbreviations of the long options are not always recognized.
 
 @table @samp
 
