@@ -526,14 +526,6 @@ sc_po_check:
 	  rm -f $@-1 $@-2;						\
 	fi
 
-# In a definition of #define AUTHORS "... and ..." where the RHS contains
-# the English word `and', the string must be marked with `N_ (...)' so that
-# gettext recognizes it as a string requiring translation.
-sc_author_mark_check:
-	@grep -n '^# *define AUTHORS "[^"]* and ' src/*.c |grep -v ' N_ (' && \
-	  { echo '$(ME): enclose the above strings in N_ (...)' 1>&2; \
-	    exit 1; } || :
-
 # Sometimes it is useful to change the PATH environment variable
 # in Makefiles.  When doing so, it's better not to use the Unix-centric
 # path separator of `:', but rather the automake-provided `@PATH_SEPARATOR@'.
