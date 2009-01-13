@@ -1,5 +1,5 @@
 /* mv -- move or rename files
-   Copyright (C) 86, 89, 90, 91, 1995-2008 Free Software Foundation, Inc.
+   Copyright (C) 86, 89, 90, 91, 1995-2009 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -62,6 +62,7 @@ static struct option const long_options[] =
   {"backup", optional_argument, NULL, 'b'},
   {"force", no_argument, NULL, 'f'},
   {"interactive", no_argument, NULL, 'i'},
+  {"no-clobber", no_argument, NULL, 'n'},
   {"no-target-directory", no_argument, NULL, 'T'},
   {"strip-trailing-slashes", no_argument, NULL, STRIP_TRAILING_SLASHES_OPTION},
   {"suffix", required_argument, NULL, 'S'},
@@ -296,6 +297,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -b                           like --backup but does not accept an argument\n\
   -f, --force                  do not prompt before overwriting\n\
   -i, --interactive            prompt before overwrite\n\
+  -n, --no-clobber             do not overwrite an existing file\n\
+If you specify more than one of -i, -f, -n, only the final one takes effect.\n\
 "), stdout);
       fputs (_("\
       --strip-trailing-slashes  remove any trailing slashes from each SOURCE\n\
@@ -358,7 +361,7 @@ main (int argc, char **argv)
      we'll actually use backup_suffix_string.  */
   backup_suffix_string = getenv ("SIMPLE_BACKUP_SUFFIX");
 
-  while ((c = getopt_long (argc, argv, "bfit:uvS:T", long_options, NULL))
+  while ((c = getopt_long (argc, argv, "bfint:uvS:T", long_options, NULL))
 	 != -1)
     {
       switch (c)
@@ -373,6 +376,9 @@ main (int argc, char **argv)
 	  break;
 	case 'i':
 	  x.interactive = I_ASK_USER;
+	  break;
+	case 'n':
+	  x.interactive = I_ALWAYS_NO;
 	  break;
 	case STRIP_TRAILING_SLASHES_OPTION:
 	  remove_trailing_slashes = true;
@@ -444,6 +450,13 @@ main (int argc, char **argv)
       else if (2 < n_files)
 	error (EXIT_FAILURE, 0, _("target %s is not a directory"),
 	       quote (file[n_files - 1]));
+    }
+
+  if (make_backups && x.interactive == I_ALWAYS_NO)
+    {
+      error (0, 0,
+	     _("options --backup and --no-clobber are mutually exclusive"));
+      usage (EXIT_FAILURE);
     }
 
   if (backup_suffix_string)

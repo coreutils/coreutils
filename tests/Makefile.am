@@ -379,6 +379,7 @@ TESTS =						\
   mv/into-self-3				\
   mv/into-self-4				\
   mv/leak-fd					\
+  mv/mv-n					\
   mv/mv-special-1				\
   mv/no-target-dir				\
   mv/part-fail					\

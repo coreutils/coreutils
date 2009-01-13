@@ -1,5 +1,5 @@
 /* cp.c  -- file copying (main routines)
-   Copyright (C) 89, 90, 91, 1995-2008 Free Software Foundation, Inc.
+   Copyright (C) 89, 90, 91, 1995-2009 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -116,6 +116,7 @@ static struct option const long_opts[] =
   {"force", no_argument, NULL, 'f'},
   {"interactive", no_argument, NULL, 'i'},
   {"link", no_argument, NULL, 'l'},
+  {"no-clobber", no_argument, NULL, 'n'},
   {"no-dereference", no_argument, NULL, 'P'},
   {"no-preserve", required_argument, NULL, NO_PRESERVE_ATTRIBUTES_OPTION},
   {"no-target-directory", no_argument, NULL, 'T'},
@@ -167,8 +168,10 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 "), stdout);
       fputs (_("\
   -f, --force                  if an existing destination file cannot be\n\
-                                 opened, remove it and try again\n\
-  -i, --interactive            prompt before overwrite\n\
+                                 opened, remove it and try again (redundant if\n\
+                                 the -n option is used)\n\
+  -i, --interactive            prompt before overwrite (overrides a previous -n\n\
+                                  option)\n\
   -H                           follow command-line symbolic links in SOURCE\n\
 "), stdout);
       fputs (_("\
@@ -176,6 +179,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -L, --dereference            always follow symbolic links in SOURCE\n\
 "), stdout);
       fputs (_("\
+  -n, --no-clobber             do not overwrite an existing file (overrides\n\
+                                 a previous -i option)\n\
   -P, --no-dereference         never follow symbolic links in SOURCE\n\
 "), stdout);
       fputs (_("\
@@ -894,7 +899,7 @@ main (int argc, char **argv)
      we'll actually use backup_suffix_string.  */
   backup_suffix_string = getenv ("SIMPLE_BACKUP_SUFFIX");
 
-  while ((c = getopt_long (argc, argv, "abdfHilLprst:uvxPRS:T",
+  while ((c = getopt_long (argc, argv, "abdfHilLnprst:uvxPRS:T",
 			   long_opts, NULL))
 	 != -1)
     {
@@ -948,6 +953,10 @@ main (int argc, char **argv)
 
 	case 'L':
 	  x.dereference = DEREF_ALWAYS;
+	  break;
+
+	case 'n':
+	  x.interactive = I_ALWAYS_NO;
 	  break;
 
 	case 'P':
@@ -1047,6 +1056,13 @@ main (int argc, char **argv)
   if (x.hard_link & x.symbolic_link)
     {
       error (0, 0, _("cannot make both hard and symbolic links"));
+      usage (EXIT_FAILURE);
+    }
+
+  if (make_backups && x.interactive == I_ALWAYS_NO)
+    {
+      error (0, 0,
+	     _("options --backup and --no-clobber are mutually exclusive"));
       usage (EXIT_FAILURE);
     }
 

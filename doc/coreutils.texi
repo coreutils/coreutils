@@ -7314,6 +7314,9 @@ description of @option{--remove-destination}.
 This option is independent of the @option{--interactive} or
 @option{-i} option: neither cancels the effect of the other.
 
+This option is redundant if the @option{--no-clobber} or @option{-n} option is
+used.
+
 @item -H
 @opindex -H
 If a command line argument specifies a symbolic link, then copy the
@@ -7326,7 +7329,8 @@ via recursive traversal.
 @opindex -i
 @opindex --interactive
 When copying a file other than a directory, prompt whether to
-overwrite an existing destination file.
+overwrite an existing destination file. The @option{-i} option overrides
+a previous @option{-n} option.
 
 @item -l
 @itemx --link
@@ -7339,6 +7343,14 @@ Make hard links instead of copies of non-directories.
 @opindex -L
 @opindex --dereference
 Follow symbolic links when copying from them.
+
+@item -n
+@itemx --no-clobber
+@opindex -n
+@opindex --no-clobber
+Do not overwrite an existing file. The @option{-n} option overrides a previous
+@option{-i} option. This option is mutually exclusive with @option{-b} or
+@option{--backup} option.
 
 @item -P
 @itemx --no-dereference
@@ -8099,6 +8111,11 @@ The program accepts the following options.  Also see @ref{Common options}.
 @opindex --force
 @cindex prompts, omitting
 Do not prompt the user before removing a destination file.
+@macro mvOptsIfn
+If you specify more than one of the @option{-i}, @option{-f}, @option{-n}
+options, only the final one takes effect.
+@end macro
+@mvOptsIfn
 
 @item -i
 @itemx --interactive
@@ -8108,6 +8125,16 @@ Do not prompt the user before removing a destination file.
 Prompt whether to overwrite each existing destination file, regardless
 of its permissions.
 If the response is not affirmative, the file is skipped.
+@mvOptsIfn
+
+@item -n
+@itemx --no-clobber
+@opindex -n
+@opindex --no-clobber
+@cindex prompts, omitting
+Do not overwrite an existing file.
+@mvOptsIfn
+This option is mutually exclusive with @option{-b} or @option{--backup} option.
 
 @item -u
 @itemx --update

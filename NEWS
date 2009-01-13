@@ -4,6 +4,9 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New features
 
+  cp and mv accept a new option, --no-clobber (-n): silently refrain
+  from overwriting any existing destination file
+
   dd accepts iflag=cio and oflag=cio to open the file in CIO (concurrent I/O)
   mode where this feature is available.
 
