@@ -1,5 +1,5 @@
 /* printf - format and print data
-   Copyright (C) 1990-2008 Free Software Foundation, Inc.
+   Copyright (C) 1990-2009 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -645,8 +645,20 @@ main (int argc, char **argv)
 
   posixly_correct = (getenv ("POSIXLY_CORRECT") != NULL);
 
-  parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE_NAME, Version,
-		      usage, AUTHORS, (char const *) NULL);
+  /* We directly parse options, rather than use parse_long_options, in
+     order to avoid accepting abbreviations.  */
+  if (argc == 2)
+    {
+      if (STREQ (argv[1], "--help"))
+	usage (EXIT_SUCCESS);
+
+      if (STREQ (argv[1], "--version"))
+	{
+	  version_etc (stdout, PROGRAM_NAME, PACKAGE_NAME, Version, AUTHORS,
+		       (char *) NULL);
+	  exit (EXIT_SUCCESS);
+	}
+    }
 
   /* The above handles --help and --version.
      Since there is no other invocation of getopt, handle `--' here.  */

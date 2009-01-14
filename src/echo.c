@@ -124,9 +124,20 @@ main (int argc, char **argv)
 
   atexit (close_stdout);
 
-  if (allow_options)
-    parse_long_options (argc, argv, PROGRAM_NAME, PACKAGE_NAME, Version,
-			usage, AUTHORS, (char const *) NULL);
+  /* We directly parse options, rather than use parse_long_options, in
+     order to avoid accepting abbreviations.  */
+  if (allow_options && argc == 2)
+    {
+      if (STREQ (argv[1], "--help"))
+	usage (EXIT_SUCCESS);
+
+      if (STREQ (argv[1], "--version"))
+	{
+	  version_etc (stdout, PROGRAM_NAME, PACKAGE_NAME, Version, AUTHORS,
+		       (char *) NULL);
+	  exit (EXIT_SUCCESS);
+	}
+    }
 
   --argc;
   ++argv;
