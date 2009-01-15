@@ -1,6 +1,6 @@
 /* shred.c - overwrite files and devices to make it harder to recover data
 
-   Copyright (C) 1999-2008 Free Software Foundation, Inc.
+   Copyright (C) 1999-2009 Free Software Foundation, Inc.
    Copyright (C) 1997, 1998, 1999 Colin Plumb.
 
    This program is free software: you can redistribute it and/or modify
@@ -399,7 +399,7 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
   /* Constant fill patterns need only be set up once. */
   if (type >= 0)
     {
-      lim = (0 <= size && size < sizeof_r ? size : sizeof r);
+      lim = (0 <= size && size < sizeof_r ? size : sizeof_r);
       fillpattern (type, r.u, lim);
       passname (r.u, pass_string);
     }
@@ -488,7 +488,7 @@ dopass (int fd, char const *qname, off_t *sizep, int type,
 
       /* Okay, we have written "soff" bytes. */
 
-      if (offset + soff < offset)
+      if (offset > OFF_T_MAX - (off_t) soff)
 	{
 	  error (0, 0, _("%s: file too large"), qname);
 	  return -1;
