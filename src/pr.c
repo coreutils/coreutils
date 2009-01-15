@@ -1,5 +1,5 @@
 /* pr -- convert text files for printing.
-   Copyright (C) 88, 91, 1995-2008 Free Software Foundation, Inc.
+   Copyright (C) 88, 91, 1995-2009 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -455,7 +455,7 @@ static char *buff;
 
 /* Index of the position in buff where the next character
    will be stored. */
-static int buff_current;
+static unsigned int buff_current;
 
 /* The number of characters in buff.
    Used for allocation of buff and to detect overflow of buff. */
@@ -1944,8 +1944,8 @@ static void
 store_columns (void)
 {
   int i, j;
-  int line = 0;
-  int buff_start;
+  unsigned int line = 0;
+  unsigned int buff_start;
   int last_col;		/* The rightmost column which will be saved in buff */
   COLUMN *p;
 
