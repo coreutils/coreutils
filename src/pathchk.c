@@ -1,5 +1,5 @@
 /* pathchk -- check whether file names are valid or portable
-   Copyright (C) 1991-2008 Free Software Foundation, Inc.
+   Copyright (C) 1991-2009 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -323,7 +323,7 @@ validate_file_name (char *file, bool check_basic_portability,
 		     dir);
 	      return false;
 	    }
-	  maxsize = MIN (size, SIZE_MAX);
+	  maxsize = MIN (size, SSIZE_MAX);
 	}
 
       if (maxsize <= filelen)
@@ -385,7 +385,7 @@ validate_file_name (char *file, bool check_basic_portability,
 	      len = pathconf (dir, _PC_NAME_MAX);
 	      *start = c;
 	      if (0 <= len)
-		name_max = MIN (len, SIZE_MAX);
+		name_max = MIN (len, SSIZE_MAX);
 	      else
 		switch (errno)
 		  {
