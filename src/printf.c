@@ -52,7 +52,6 @@
 #include "system.h"
 #include "c-strtod.h"
 #include "error.h"
-#include "long-options.h"
 #include "quote.h"
 #include "unicodeio.h"
 #include "xprintf.h"

@@ -673,7 +673,6 @@ posixtest (int nargs)
 }
 
 #if defined TEST_STANDALONE
-# include "long-options.h"
 
 void
 usage (int status)
