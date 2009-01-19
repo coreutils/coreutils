@@ -1,5 +1,5 @@
 /* system-dependent definitions for coreutils
-   Copyright (C) 1989, 1991-2008 Free Software Foundation, Inc.
+   Copyright (C) 1989, 1991-2009 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -35,19 +35,6 @@ you must include <sys/types.h> before including this file
 #endif
 
 #include <unistd.h>
-
-#ifndef STDIN_FILENO
-# define STDIN_FILENO 0
-#endif
-
-#ifndef STDOUT_FILENO
-# define STDOUT_FILENO 1
-#endif
-
-#ifndef STDERR_FILENO
-# define STDERR_FILENO 2
-#endif
-
 
 /* limits.h must come before pathmax.h because limits.h on some systems
    undefs PATH_MAX, whereas pathmax.h sets PATH_MAX.  */
