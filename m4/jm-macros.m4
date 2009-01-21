@@ -1,8 +1,8 @@
-#serial 108   -*- autoconf -*-
+#serial 109   -*- autoconf -*-
 
 dnl Misc type-related macros for coreutils.
 
-# Copyright (C) 1998, 2000-2008 Free Software Foundation, Inc.
+# Copyright (C) 1998, 2000-2009 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -154,7 +154,7 @@ AC_DEFUN([gl_CHECK_ALL_TYPES],
   AC_REQUIRE([AM_C_PROTOTYPES])
 
   dnl Checks for typedefs, structures, and compiler characteristics.
-  AC_REQUIRE([AC_C_BIGENDIAN])
+  AC_REQUIRE([gl_BIGENDIAN])
   AC_REQUIRE([AC_C_VOLATILE])
   AC_REQUIRE([AC_C_INLINE])
   AC_REQUIRE([AC_TYPE_UNSIGNED_LONG_LONG_INT])
