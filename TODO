@@ -107,6 +107,9 @@ sort: Investigate better sorting algorithms; see Knuth vol. 3.
   5.3.1, who credits Lester Ford, Jr. and Selmer Johnson, American
   Mathematical Monthly 66 (1959), 387-389.
 
+shred: Update shred as described here to conform to DoD 5220 rules:
+http://lists.gnu.org/archive/html/bug-coreutils/2007-05/msg00075.html
+
 Remove suspicious uses of alloca (ones that may allocate more than
    about 4k)
 

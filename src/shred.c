@@ -102,7 +102,7 @@
 #include "randread.h"
 
 /* Default number of times to overwrite.  */
-enum { DEFAULT_PASSES = 25 };
+enum { DEFAULT_PASSES = 3 };
 
 /* How many seconds to wait before checking whether to output another
    verbose output line.  */
