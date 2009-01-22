@@ -41,6 +41,8 @@ GNU coreutils NEWS                                    -*- outline -*-
   du: -H (initially equivalent to --si) is now equivalent to
   --dereference-args, and thus works as POSIX requires
 
+  shred: now does 3 overwrite passes by default rather than 25.
+
   ls -l now marks SELinux-only files with the less obtrusive '.',
   rather than '+'.  A file with any other combination of MAC and ACL
   is still marked with a '+'.

@@ -8445,10 +8445,10 @@ Override file permissions if necessary to allow overwriting.
 @opindex -n @var{number}
 @opindex --iterations=@var{number}
 @cindex iterations, selecting the number of
-By default, @command{shred} uses 25 passes of overwrite.  This is enough
-for all of the useful overwrite patterns to be used at least once.
-You can reduce this to save time, or increase it if you have a lot of
-time to waste.
+By default, @command{shred} uses @value{SHRED_DEFAULT_PASSES} passes of
+overwrite. You can reduce this to save time, or increase it if you think it's
+appropriate. After 25 passes all of the internal overwrite patterns will have
+been used at least once.
 
 @item --random-source=@var{file}
 @opindex --random-source

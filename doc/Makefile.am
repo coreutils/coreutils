@@ -29,10 +29,13 @@ EXTRA_DIST = perm.texi getdate.texi constants.texi fdl.texi
 # old systems.
 AM_MAKEINFOFLAGS = --no-split
 
-constants.texi: $(top_srcdir)/src/tail.c
+constants.texi: $(top_srcdir)/src/tail.c $(top_srcdir)/src/shred.c
 	LC_ALL=C \
 	sed -n -e 's/^#define \(DEFAULT_MAX[_A-Z]*\) \(.*\)/@set \1 \2/p' \
 	  $(top_srcdir)/src/tail.c > t-$@
+	LC_ALL=C \
+	sed -n -e 's/.*\(DEFAULT_PASSES\)[ =]* \([0-9]*\).*/@set SHRED_\1 \2/p'\
+	  $(top_srcdir)/src/shred.c >> t-$@
 	mv t-$@ $@
 
 MAINTAINERCLEANFILES = constants.texi
