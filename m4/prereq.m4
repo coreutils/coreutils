@@ -38,6 +38,7 @@ AC_DEFUN([gl_PREREQ],
   # handles that; see ../bootstrap.conf.
   AC_REQUIRE([gl_EUIDACCESS_STAT])
   AC_REQUIRE([gl_FD_REOPEN])
+  AC_REQUIRE([gl_FUNC_XATTR])
   AC_REQUIRE([gl_FUNC_XFTS])
   AC_REQUIRE([gl_MEMXFRM])
   AC_REQUIRE([gl_STRINTCMP])

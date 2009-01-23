@@ -4,6 +4,12 @@ GNU coreutils NEWS                                    -*- outline -*-
 
 ** New features
 
+  Add extended attribute support available on certain filesystems like ext2
+  and XFS.
+    cp: Tries to copy xattrs when --preserve=xattr specified
+    mv: Always tries to copy xattrs
+    install: Never copies xattrs
+
   cp and mv accept a new option, --no-clobber (-n): silently refrain
   from overwriting any existing destination file
 

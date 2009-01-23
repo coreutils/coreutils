@@ -187,7 +187,8 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -p                           same as --preserve=mode,ownership,timestamps\n\
       --preserve[=ATTR_LIST]   preserve the specified attributes (default:\n\
                                  mode,ownership,timestamps), if possible\n\
-                                 additional attributes: context, links, all\n\
+                                 additional attributes: context, links, xattr,\n\
+                                 all\n\
 "), stdout);
       fputs (_("\
       --no-preserve=ATTR_LIST  don't preserve the specified attributes\n\
@@ -764,6 +765,8 @@ cp_option_init (struct cp_options *x)
   x->preserve_timestamps = false;
   x->preserve_security_context = false;
   x->require_preserve_context = false;
+  x->preserve_xattr = false;
+  x->require_preserve_xattr = false;
 
   x->require_preserve = false;
   x->recursive = false;
@@ -800,18 +803,20 @@ decode_preserve_arg (char const *arg, struct cp_options *x, bool on_off)
       PRESERVE_OWNERSHIP,
       PRESERVE_LINK,
       PRESERVE_CONTEXT,
+      PRESERVE_XATTR,
       PRESERVE_ALL
     };
   static enum File_attribute const preserve_vals[] =
     {
       PRESERVE_MODE, PRESERVE_TIMESTAMPS,
-      PRESERVE_OWNERSHIP, PRESERVE_LINK, PRESERVE_CONTEXT, PRESERVE_ALL
+      PRESERVE_OWNERSHIP, PRESERVE_LINK, PRESERVE_CONTEXT, PRESERVE_XATTR,
+      PRESERVE_ALL
     };
   /* Valid arguments to the `--preserve' option. */
   static char const* const preserve_args[] =
     {
       "mode", "timestamps",
-      "ownership", "links", "context", "all", NULL
+      "ownership", "links", "context", "xattr", "all", NULL
     };
   ARGMATCH_VERIFY (preserve_args, preserve_vals);
 
@@ -852,6 +857,11 @@ decode_preserve_arg (char const *arg, struct cp_options *x, bool on_off)
 	  x->require_preserve_context = on_off;
 	  break;
 
+	case PRESERVE_XATTR:
+	  x->preserve_xattr = on_off;
+	  x->require_preserve_xattr = on_off;
+	  break;
+
 	case PRESERVE_ALL:
 	  x->preserve_mode = on_off;
 	  x->preserve_timestamps = on_off;
@@ -859,6 +869,7 @@ decode_preserve_arg (char const *arg, struct cp_options *x, bool on_off)
 	  x->preserve_links = on_off;
 	  if (selinux_enabled)
 	    x->preserve_security_context = on_off;
+	  x->preserve_xattr = on_off;
 	  break;
 
 	default:
@@ -1098,6 +1109,12 @@ main (int argc, char **argv)
 	       _("cannot preserve security context "
 		 "without an SELinux-enabled kernel"));
     }
+
+#if !USE_XATTR
+  if (x.require_preserve_xattr)
+    error (EXIT_FAILURE, 0, _("cannot preserve extended attributes, cp is "
+			      "built without xattr support"));
+#endif
 
   /* Allocate space for remembering copied and created files.  */
 

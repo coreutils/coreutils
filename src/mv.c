@@ -124,6 +124,7 @@ cp_option_init (struct cp_options *x)
   x->preserve_security_context = selinux_enabled;
   x->require_preserve = false;  /* FIXME: maybe make this an option */
   x->require_preserve_context = false;
+  x->preserve_xattr = true;
   x->recursive = true;
   x->sparse_mode = SPARSE_AUTO;  /* FIXME: maybe make this an option */
   x->symbolic_link = false;

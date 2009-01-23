@@ -1,0 +1,111 @@
+#!/bin/sh
+# Ensure that cp --preserve=xattr and mv preserve extended attributes and
+# install does not preserve extended attributes.
+
+# Copyright (C) 2009 Free Software Foundation, Inc.
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+if test "$VERBOSE" = yes; then
+  set -x
+  cp --version
+  mv --version
+  ginstall --version
+fi
+
+. $srcdir/test-lib.sh
+
+# Skip this test if cp was built without xattr support:
+touch src dest || framework_failure
+cp --preserve=xattr -n src dest 2>/dev/null \
+  || skip_test_ "coreutils built without xattr support"
+
+# this code was taken from test mv/backup-is-src
+cleanup_() { rm -rf "$other_partition_tmpdir"; }
+. "$abs_srcdir/other-fs-tmpdir"
+b_other="$other_partition_tmpdir/b"
+rm -f $b_other || framework_failure
+
+# testing xattr name-value pair
+xattr_name="user.foo"
+xattr_value="bar"
+xattr_pair="$xattr_name=\"$xattr_value\""
+
+# create new file and check its xattrs
+touch a || framework_failure
+getfattr -d a >out_a || skip_test_ "failed to get xattr of file"
+grep -F "$xattr_pair" out_a >/dev/null && framework_failure
+
+# try to set user xattr on file
+setfattr -n "$xattr_name" -v "$xattr_value" a >out_a \
+  || skip_test_ "failed to set xattr of file"
+getfattr -d a >out_a || skip_test_ "failed to get xattr of file"
+grep -F "$xattr_pair" out_a >/dev/null \
+  || skip_test_ "failed to set xattr of file"
+
+fail=0
+
+# cp should not preserve xattr by default
+cp a b || fail=1
+getfattr -d b >out_b || skip_test_ "failed to get xattr of file"
+grep -F "$xattr_pair" out_b >/dev/null && fail=1
+
+# test if --preserve=xattr option works
+cp --preserve=xattr a b || fail=1
+getfattr -d b >out_b || skip_test_ "failed to get xattr of file"
+grep -F "$xattr_pair" out_b >/dev/null || fail=1
+
+rm b || framework_failure
+
+# install should never preserve xattr
+ginstall a b || fail=1
+getfattr -d b >out_b || skip_test_ "failed to get xattr of file"
+grep -F "$xattr_pair" out_b >/dev/null && fail=1
+
+# mv should preserve xattr when renaming within a file system.
+# This is implicitly done by rename () and doesn't need explicit
+# xattr support in mv.
+mv a b || fail=1
+getfattr -d b >out_b || skip_test_ "failed to get xattr of file"
+grep -F "$xattr_pair" out_b >/dev/null || cat >&2 <<EOF
+=================================================================
+$0: WARNING!!!
+rename () does not preserve extended attributes
+=================================================================
+EOF
+
+# try to set user xattr on file on other partition
+test_mv=1
+touch $b_other || framework_failure
+setfattr -n "$xattr_name" -v "$xattr_value" $b_other >out_a 2>/dev/null \
+  || test_mv=0
+getfattr -d $b_other >out_b 2>/dev/null || test_mv=0
+grep -F "$xattr_pair" out_b >/dev/null || test_mv=0
+rm -f $b_other || framework_failure
+
+if test $test_mv -eq 1; then
+  # mv should preserve xattr when copying content from one partition to another
+  mv b $b_other || fail=1
+  getfattr -d $b_other >out_b 2>/dev/null || skip_test_ "failed to get xattr of file"
+  grep -F "$xattr_pair" out_b >/dev/null || fail=1
+else
+  cat >&2 <<EOF
+=================================================================
+$0: WARNING!!!
+failed to set xattr of file $b_other
+=================================================================
+EOF
+fi
+
+Exit $fail

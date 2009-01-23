@@ -234,6 +234,7 @@ TESTS =						\
   misc/tty-eof					\
   misc/unexpand					\
   misc/uniq					\
+  misc/xattr					\
   chmod/c-option				\
   chmod/equal-x					\
   chmod/equals					\

@@ -1,5 +1,5 @@
 /* copy.c -- core functions for copying files and directories
-   Copyright (C) 89, 90, 91, 1995-2008 Free Software Foundation, Inc.
+   Copyright (C) 89, 90, 91, 1995-2009 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -53,6 +53,13 @@
 #include "write-any-file.h"
 #include "areadlink.h"
 #include "yesno.h"
+
+#if USE_XATTR
+# include <attr/error_context.h>
+# include <attr/libattr.h>
+# include <stdarg.h>
+# include "verror.h"
+#endif
 
 #ifndef HAVE_FCHOWN
 # define HAVE_FCHOWN false
@@ -122,6 +129,72 @@ is_ancestor (const struct stat *sb, const struct dir_list *ancestors)
     }
   return false;
 }
+
+#if USE_XATTR
+static void
+copy_attr_error (struct error_context *ctx ATTRIBUTE_UNUSED,
+		 char const *fmt, ...)
+{
+  int err = errno;
+  va_list ap;
+
+  /* use verror module to print error message */
+  va_start (ap, fmt);
+  verror (0, err, fmt, ap);
+  va_end (ap);
+}
+
+static char const *
+copy_attr_quote (struct error_context *ctx ATTRIBUTE_UNUSED, char const *str)
+{
+  return quote (str);
+}
+
+static void
+copy_attr_free (struct error_context *ctx ATTRIBUTE_UNUSED,
+		char const *str ATTRIBUTE_UNUSED)
+{
+}
+
+static bool
+copy_attr_by_fd (char const *src_path, int src_fd,
+		 char const *dst_path, int dst_fd)
+{
+  struct error_context ctx =
+  {
+    .error = copy_attr_error,
+    .quote = copy_attr_quote,
+    .quote_free = copy_attr_free
+  };
+  return 0 == attr_copy_fd (src_path, src_fd, dst_path, dst_fd, 0, &ctx);
+}
+
+static bool
+copy_attr_by_name (char const *src_path, char const *dst_path)
+{
+  struct error_context ctx =
+  {
+    .error = copy_attr_error,
+    .quote = copy_attr_quote,
+    .quote_free = copy_attr_free
+  };
+  return 0 == attr_copy_file (src_path, dst_path, 0, &ctx);
+}
+#else /* USE_XATTR */
+
+static bool
+copy_attr_by_fd (char const *src_path, int src_fd,
+		 char const *dst_path, int dst_fd)
+{
+  return true;
+}
+
+static bool
+copy_attr_by_name (char const *src_path, char const *dst_path)
+{
+  return true;
+}
+#endif /* USE_XATTR */
 
 /* Read the contents of the directory SRC_NAME_IN, and recursively
    copy the contents to DST_NAME_IN.  NEW_DST is true if
@@ -680,6 +753,11 @@ copy_reg (char const *src_name, char const *dst_name,
     }
 
   set_author (dst_name, dest_desc, src_sb);
+
+  if (x->preserve_xattr && ! copy_attr_by_fd (src_name, source_desc,
+					      dst_name, dest_desc)
+      && x->require_preserve_xattr)
+    return false;
 
   if (x->preserve_mode || x->move_mode)
     {
@@ -1984,6 +2062,10 @@ copy_internal (char const *src_name, char const *dst_name,
     }
 
   set_author (dst_name, -1, &src_sb);
+
+  if (x->preserve_xattr && ! copy_attr_by_name (src_name, dst_name)
+      && x->require_preserve_xattr)
+    return false;
 
   if (x->preserve_mode || x->move_mode)
     {

@@ -200,6 +200,7 @@ cp_option_init (struct cp_options *x)
   x->open_dangling_dest_symlink = false;
   x->update = false;
   x->preserve_security_context = false;
+  x->preserve_xattr = false;
   x->verbose = false;
   x->dest_info = NULL;
   x->src_info = NULL;

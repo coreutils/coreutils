@@ -7365,7 +7365,7 @@ symbolic links in the destination are always followed if possible.
 @itemx @w{@kbd{--preserve}[=@var{attribute_list}]}
 @opindex -p
 @opindex --preserve
-@cindex file information, preserving
+@cindex file information, preserving, extended attributes, xattr
 Preserve the specified attributes of the original files.
 If specified, the @var{attribute_list} must be a comma-separated list
 of one or more of the following strings:
@@ -7392,6 +7392,11 @@ Preserve in the destination files
 any links between corresponding source files.
 @c Give examples illustrating how hard links are preserved.
 @c Also, show how soft links map to hard links with -L and -H.
+@itemx xattr
+Preserve extended attributes if @command{cp} is built with xattr support,
+and xattrs are supported and enabled on your file system.
+If SELinux context and/or ACLs are implemented using xattrs,
+they are preserved by this option as well.
 @itemx all
 Preserve all file attributes.
 Equivalent to specifying all of the above.
@@ -7935,6 +7940,9 @@ attributes of destination files.  It is typically used in Makefiles to
 copy programs into their destination directories.  It refuses to copy
 files onto themselves.
 
+@cindex extended attributes, xattr
+@command{install} never preserves extended attributes (xattr).
+
 The program accepts the following options.  Also see @ref{Common options}.
 
 @table @samp
@@ -8082,6 +8090,9 @@ three directories from one partition to another and the copy of the first
 directory succeeded, but the second didn't, the first would be left on
 the destination partition and the second and third would be left on the
 original partition.
+
+@cindex extended attributes, xattr
+@command{mv} always tries to copy extended attributes (xattr).
 
 @cindex prompting, and @command{mv}
 If a destination file exists but is normally unwritable, standard input

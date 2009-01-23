@@ -173,6 +173,19 @@ struct cp_options
      fail if it is unable to do so.  */
   bool require_preserve_context;
 
+  /* If true, attempt to preserve extended attributes using libattr.
+     Ignored if coreutils are compiled without xattr support. */
+  bool preserve_xattr;
+
+  /* Useful only when preserve_xattr is true.
+     If true, a failed attempt to preserve file's extended attributes
+     propagates failure "out" to the caller.  If false, a failure to
+     preserve file's extended attributes does not change the invoking
+     application's exit status.  Give diagnostics for failed syscalls
+     regardless of this setting.  For example, with "cp --preserve=xattr"
+     this flag is "true", while with "cp --preserve=all", it is false. */
+  bool require_preserve_xattr;
+
   /* If true, copy directories recursively and copy special files
      as themselves rather than copying their contents. */
   bool recursive;
