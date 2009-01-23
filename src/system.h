@@ -441,7 +441,11 @@ enum
 
 #include "closein.h"
 #include "closeout.h"
+
+#define emit_bug_reporting_address unused__emit_bug_reporting_address
 #include "version-etc.h"
+#undef emit_bug_reporting_address
+
 #include "propername.h"
 /* Define away proper_name (leaving proper_name_utf8, which affects far
    fewer programs), since it's not worth the cost of adding ~17KB to
@@ -617,6 +621,10 @@ emit_bug_reporting_address (void)
 {
   printf (_("\nReport %s bugs to <%s>.\n"), last_component (program_name),
 	  PACKAGE_BUGREPORT);
+  printf (_("%s home page: http://www.gnu.org/software/%s/\n"),
+	  PACKAGE_NAME, PACKAGE);
+  printf (_("General help using GNU software: http://www.gnu.org/gethelp/\n"));
+
   /* TRANSLATORS: Replace LANG_CODE in this URL with your language code
      <http://translationproject.org/team/LANG_CODE.html> to form one of
      the URLs at http://translationproject.org/team/.  Otherwise, replace
