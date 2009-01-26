@@ -194,6 +194,7 @@ TESTS =						\
   misc/sha384sum				\
   misc/sha512sum				\
   misc/shred-exact				\
+  misc/shred-passes				\
   misc/shred-remove				\
   misc/shuf					\
   misc/sort					\
