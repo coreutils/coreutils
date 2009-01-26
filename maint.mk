@@ -649,12 +649,12 @@ taint-distcheck: $(DIST_ARCHIVES)
 
 # Verify that a twisted use of --program-transform-name=PROGRAM works.
 define install-transform-check
-  rm -rf $(pfx);					\
-  $(MAKE) program_transform_name='s/.*/zyx/'		\
+  echo running install-transform-check			\
+    && rm -rf $(pfx)					\
+    && $(MAKE) program_transform_name='s/.*/zyx/'	\
       prefix=$(pfx) install				\
     && test "$$(echo $(pfx)/bin/*)" = "$(pfx)/bin/zyx"	\
-    && test "$$(echo $(pfx)/share/man/man1/*)" =	\
-                    "$(pfx)/share/man/man1/zyx.1"
+    && test "$$(find $(pfx)/share/man -type f|sed 's,.*/,,;s,\..*,,')" = "zyx"
 endef
 
 # Install, then verify that all binaries and man pages are in place.
