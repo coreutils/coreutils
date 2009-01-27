@@ -1,6 +1,6 @@
 # Make coreutils man pages.				-*-Makefile-*-
 
-# Copyright (C) 2002-2008 Free Software Foundation, Inc.
+# Copyright (C) 2002-2009 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -131,6 +131,10 @@ wc.1:		$(common_dep)	$(srcdir)/wc.x		../src/wc.c
 who.1:		$(common_dep)	$(srcdir)/who.x		../src/who.c
 whoami.1:	$(common_dep)	$(srcdir)/whoami.x	../src/whoami.c
 yes.1:		$(common_dep)	$(srcdir)/yes.x		../src/yes.c
+
+# This is required so that changes to e.g., emit_bug_reporting_address
+# provoke regeneration of all $(MAN) files.
+$(MAN): $(top_srcdir)/src/system.h
 
 SUFFIXES = .x .1
 
