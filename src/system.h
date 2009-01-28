@@ -621,6 +621,7 @@ emit_bug_reporting_address (void)
 {
   printf (_("\nReport %s bugs to <%s>.\n"), last_component (program_name),
 	  PACKAGE_BUGREPORT);
+  /* FIXME 2010: use AC_PACKAGE_URL once we require autoconf-2.64 */
   printf (_("%s home page: <http://www.gnu.org/software/%s/>.\n"),
 	  PACKAGE_NAME, PACKAGE);
   fputs (_("General help using GNU software: <http://www.gnu.org/gethelp/>.\n"),
