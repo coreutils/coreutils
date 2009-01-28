@@ -23,6 +23,7 @@ fi
 
 . $srcdir/test-lib.sh
 
+
 # shred a single letter, zero length file which should result in
 # 3 random passes and a single rename.
 touch f || framework_failure
@@ -32,10 +33,12 @@ shred: f: pass 2/3 (random)...
 shred: f: pass 3/3 (random)...
 shred: f: removing
 shred: f: renamed to 0
-shred: f: removed" > exp
+shred: f: removed" > exp || framework_failure
 
-shred -v -u f 2>out
+fail=0
 
-compare exp out || fail
+shred -v -u f 2>out || fail=1
+
+compare exp out || fail=1
 
 Exit $fail
