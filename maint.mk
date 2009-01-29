@@ -76,6 +76,11 @@ local-checks-available = \
   makefile-check check-AUTHORS
 .PHONY: $(local-checks-available)
 
+# Arrange to print the name of each syntax-checking rule just before running it.
+$(syntax-check-rules): %: %.m
+$(patsubst %, %.m, $(syntax-check-rules)):
+	@echo $(patsubst sc_%.m, %, $@)
+
 local-check := $(filter-out $(local-checks-to-skip), $(local-checks-available))
 
 syntax-check: $(local-check)
