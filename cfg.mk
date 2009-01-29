@@ -1,5 +1,5 @@
 # Customize maint.mk                           -*- makefile -*-
-# Copyright (C) 2003-2008 Free Software Foundation, Inc.
+# Copyright (C) 2003-2009 Free Software Foundation, Inc.
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -165,7 +165,7 @@ sc_sun_os_names:
 	    exit 1; } || :
 
 sc_tight_scope:
-	$(MAKE) -C src $@
+	@$(MAKE) -C src $@
 
 # Perl-based tests used to exec perl from a #!/bin/sh script.
 # Now they all start with #!/usr/bin/perl and the portability
@@ -183,7 +183,7 @@ sc_no_exec_perl_coreutils:
 # which date accepts but GNU strftime does not.
 extract_char = sed 's/^[^%][^%]*%\(.\).*/\1/'
 sc_strftime_check:
-	if test -f $(srcdir)/src/date.c; then				\
+	@if test -f $(srcdir)/src/date.c; then				\
 	  grep '^  %.  ' $(srcdir)/src/date.c | sort			\
 	    | $(extract_char) > $@-src;					\
 	  { echo N;							\

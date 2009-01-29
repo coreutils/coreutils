@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in -*-Makefile-*-
 
-## Copyright (C) 1990, 1991, 1993-2008 Free Software Foundation, Inc.
+## Copyright (C) 1990, 1991, 1993-2009 Free Software Foundation, Inc.
 
 ## This program is free software: you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -382,8 +382,8 @@ au_dotdot = authors-dotdot
 au_actual = authors-actual
 .PHONY: check-AUTHORS
 check-AUTHORS: $(all_programs)
-	rm -f $(au_actual) $(au_dotdot)
-	for i in `ls $(all_programs) | sed -e 's,$(EXEEXT)$$,,' \
+	@rm -f $(au_actual) $(au_dotdot)
+	@for i in `ls $(all_programs) | sed -e 's,$(EXEEXT)$$,,' \
 	    | $(ASSORT) -u`; do				\
 	  test "$$i" = '[' && continue;			\
 	  exe=$$i;					\
@@ -392,12 +392,12 @@ check-AUTHORS: $(all_programs)
 	  elif test "$$i" = test; then			\
 	    exe='[';					\
 	  fi;						\
-	  LC_ALL=en_US.UTF-8 ./$$exe --version			\
+	  LC_ALL=en_US.UTF-8 ./$$exe --version		\
 	    | perl -0 -pi -e 's/,\n/, /gm'		\
 	    |sed -n '/Written by /{ s//'"$$i"': /; s/,* and /, /; s/\.$$//; p; }'; \
 	done > $(au_actual)
-	sed -n '/^[^ ][^ ]*:/p' $(top_srcdir)/AUTHORS > $(au_dotdot)
-	diff $(au_actual) $(au_dotdot) && rm -f $(au_actual) $(au_dotdot)
+	@sed -n '/^[^ ][^ ]*:/p' $(top_srcdir)/AUTHORS > $(au_dotdot)
+	@diff $(au_actual) $(au_dotdot) && rm -f $(au_actual) $(au_dotdot)
 
 # Extract the list of authors from each file.
 sed_filter = s/^ *//;s/N_ (//;s/^"//;s/")*$$//
