@@ -3742,6 +3742,10 @@ is a space or a tab, but the @env{LC_CTYPE} locale can change this.
 Fold lowercase characters into the equivalent uppercase characters when
 comparing so that, for example, @samp{b} and @samp{B} sort as equal.
 The @env{LC_CTYPE} locale determines character types.
+When used with @option{--unique} those lower case equivalent lines are
+thrown away. (There is currently no way to throw away the upper case
+equivalent instead. (Any @option{--reverse} given would only affect
+the final result, after the throwing away.))
 
 @item -g
 @itemx --general-numeric-sort
