@@ -13485,6 +13485,11 @@ format.  It can contain month names, time zones, @samp{am} and @samp{pm},
 14:19:13.489392193 +0530"} specifies the instant of time that is
 489,392,193 nanoseconds after February 27, 2004 at 2:19:13 PM in a
 time zone that is 5 hours and 30 minutes east of @acronym{UTC}.@*
+Note: input currently must be in locale independent format. E.g., the
+LC_TIME=C below is needed to print back the correct date in many locales:
+@example
+date -d "$(LC_TIME=C date)"
+@end example
 @xref{Date input formats}.
 
 @item -f @var{datefile}
