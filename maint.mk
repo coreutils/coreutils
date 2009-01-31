@@ -283,6 +283,12 @@ sc_prohibit_root_dev_ino_without_use:
 	re='(\<ROOT_DEV_INO_(CHECK|WARN)\>|\<get_root_dev_ino *\()' \
 	  $(_header_without_use)
 
+# Prohibit the inclusion of c-ctype.h without an actual use.
+ctype_re = isalnum|isalpha|isascii|isblank|iscntrl|isdigit|isgraph|islower\
+|isprint|ispunct|isspace|isupper|isxdigit|tolower|toupper
+sc_prohibit_c_ctype_without_use:
+	@h='[<"]c-ctype.h[">]' re='\<c_($(ctype_re)) *\(' $(_header_without_use)
+
 sc_obsolete_symbols:
 	@re='\<(HAVE''_FCNTL_H|O''_NDELAY)\>'				\
 	msg='do not use HAVE''_FCNTL_H or O'_NDELAY			\
