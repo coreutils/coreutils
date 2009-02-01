@@ -607,6 +607,9 @@ for my $sect (@pre, (grep ! /^($filter)$/o, @include), @post)
 	    # Convert some latin1 chars to troff equivalents
 	    s/\xa0/\\ /g; # non-breaking space
 
+	    $sect eq 'REPORTING BUGS'
+		and s/\n(.)/\n.br\n$1/g;
+
 	    print;
 	}
     }
