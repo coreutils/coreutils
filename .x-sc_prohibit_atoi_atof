@@ -1,6 +1,1 @@
-ChangeLog
-^TODO$
 ^lib/euidaccess-stat\.c$
-^maint\.mk$
-^doc/coreutils.texi$
-^tests/misc/stty-invalid$

@@ -138,7 +138,7 @@ sc_space_tab:
 # They provide no error checking mechanism.
 # Instead, use strto* functions.
 sc_prohibit_atoi_atof:
-	@re='\<([fs]?scanf|ato([filq]|ll))\>'				\
+	@re='\<([fs]?scanf|ato([filq]|ll)) *\('				\
 	msg='do not use *scan''f, ato''f, ato''i, ato''l, ato''ll or ato''q' \
 	  $(_prohibit_regexp)
 
