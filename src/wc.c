@@ -1,5 +1,5 @@
 /* wc - print the number of lines, words, and bytes in files
-   Copyright (C) 85, 91, 1995-2008 Free Software Foundation, Inc.
+   Copyright (C) 85, 91, 1995-2009 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -249,7 +249,7 @@ wc (int fd, char const *file_x, struct fstatus *fstatus)
 	    }
 	}
     }
-  else if (!count_chars & !count_complicated)
+  else if (!count_chars && !count_complicated)
     {
       /* Use a separate loop when counting only lines or lines and bytes --
 	 but not chars or words.  */

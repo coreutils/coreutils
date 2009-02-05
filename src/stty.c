@@ -1,5 +1,5 @@
 /* stty -- change and print terminal line settings
-   Copyright (C) 1990-2005, 2007-2008 Free Software Foundation, Inc.
+   Copyright (C) 1990-2005, 2007-2009 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -815,7 +815,7 @@ main (int argc, char **argv)
 	     "mutually exclusive"));
 
   /* Specifying any other arguments with -a or -g gets an error.  */
-  if (!noargs & (verbose_output | recoverable_output))
+  if (!noargs && (verbose_output | recoverable_output))
     error (EXIT_FAILURE, 0,
 	   _("when specifying an output style, modes may not be set"));
 
