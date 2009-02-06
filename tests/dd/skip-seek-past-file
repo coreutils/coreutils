@@ -75,17 +75,22 @@ echo "dd: \`standard input': cannot skip: Value too large for defined data type
 compare err_ok err || fail=1
 
 # skipping > max file size should fail immediately
-# Note I'm guessing there is a small chance that an lseek() could actually work
-# and only a write() would fail (with EFBIG) when offset > max file size.
-# So this test will both test for that, and ensure that dd
-# exits immediately with an appropriate error when lseek() does error.
 if ! truncate --size=$OFF_T_MAX in 2>/dev/null; then
   # truncate is to ensure file system doesn't actually support OFF_T_MAX files
-  dd bs=1 skip=$OFF_T_MAX count=0 status=noxfer < file 2> err && fail=1
-  echo "dd: \`standard input': cannot skip: Invalid argument
-0+0 records in
-0+0 records out" > err_ok || framework_failure
-  compare err_ok err || fail=1
+  dd bs=1 skip=$OFF_T_MAX count=0 status=noxfer < file 2> err \
+    && lseek_ok=yes \
+    || lseek_ok=no
+  printf '%s\n' "dd: \`standard input': cannot skip: Invalid argument" \
+    '0+0 records in' '0+0 records out' > err_ok || framework_failure
+
+  if test $lseek_ok = yes; then
+    # On Solaris 10 at least, lseek(>max file size) succeeds,
+    # so just check for the skip warning.
+    compare skip_err err || fail=1
+  else
+    # On Linux at least lseek(>max file size) fails.
+    compare err_ok err || fail=1
+  fi
 fi
 
 Exit $fail
